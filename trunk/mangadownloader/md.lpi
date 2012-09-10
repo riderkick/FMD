@@ -1,0 +1,137 @@
+<?xml version="1.0"?>
+<CONFIG>
+  <ProjectOptions>
+    <Version Value="9"/>
+    <PathDelim Value="\"/>
+    <General>
+      <SessionStorage Value="InProjectDir"/>
+      <MainUnit Value="0"/>
+      <Title Value="md"/>
+      <ResourceType Value="res"/>
+    </General>
+    <i18n>
+      <EnableI18N LFM="False"/>
+    </i18n>
+    <VersionInfo>
+      <StringTable ProductVersion=""/>
+    </VersionInfo>
+    <MacroValues Count="1">
+      <Macro1 Name="LCLWidgetType" Value="win32"/>
+    </MacroValues>
+    <BuildModes Count="1">
+      <Item1 Name="Default" Default="True"/>
+    </BuildModes>
+    <PublishOptions>
+      <Version Value="2"/>
+      <IncludeFileFilter Value="*.(pas|pp|inc|lfm|lpr|lrs|lpi|lpk|sh|xml)"/>
+      <ExcludeFileFilter Value="*.(bak|ppu|o|so);*~;backup"/>
+    </PublishOptions>
+    <RunParams>
+      <local>
+        <FormatVersion Value="1"/>
+      </local>
+    </RunParams>
+    <RequiredPackages Count="3">
+      <Item1>
+        <PackageName Value="richmemopackage"/>
+      </Item1>
+      <Item2>
+        <PackageName Value="virtualtreeview_package"/>
+      </Item2>
+      <Item3>
+        <PackageName Value="LCL"/>
+      </Item3>
+    </RequiredPackages>
+    <Units Count="8">
+      <Unit0>
+        <Filename Value="md.lpr"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="md"/>
+      </Unit0>
+      <Unit1>
+        <Filename Value="mainunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="MainForm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="mainunit"/>
+      </Unit1>
+      <Unit2>
+        <Filename Value="data.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="data"/>
+      </Unit2>
+      <Unit3>
+        <Filename Value="..\baseunits\genericlib.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="genericlib"/>
+      </Unit3>
+      <Unit4>
+        <Filename Value="..\baseunits\downloads.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="downloads"/>
+      </Unit4>
+      <Unit5>
+        <Filename Value="..\baseunits\favorites.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="favorites"/>
+      </Unit5>
+      <Unit6>
+        <Filename Value="..\baseunits\zip.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="zip"/>
+      </Unit6>
+      <Unit7>
+        <Filename Value="..\baseunits\updatelist.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="updatelist"/>
+      </Unit7>
+    </Units>
+  </ProjectOptions>
+  <CompilerOptions>
+    <Version Value="11"/>
+    <PathDelim Value="\"/>
+    <Target>
+      <Filename Value="md"/>
+    </Target>
+    <SearchPaths>
+      <IncludeFiles Value="$(ProjOutDir)"/>
+      <OtherUnitFiles Value="E:\FreeSpace\FMD\baseunits\;E:\sdks\lazcomp\synapse\source\"/>
+      <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
+    </SearchPaths>
+    <CodeGeneration>
+      <SmartLinkUnit Value="True"/>
+      <Optimizations>
+        <OptimizationLevel Value="0"/>
+      </Optimizations>
+    </CodeGeneration>
+    <Linking>
+      <LinkSmart Value="True"/>
+      <Options>
+        <Win32>
+          <GraphicApplication Value="True"/>
+        </Win32>
+      </Options>
+    </Linking>
+    <Other>
+      <CompilerMessages>
+        <MsgFileName Value=""/>
+      </CompilerMessages>
+      <CompilerPath Value="$(CompPath)"/>
+    </Other>
+    <LCLWidgetType Value="win32"/>
+  </CompilerOptions>
+  <Debugging>
+    <Exceptions Count="3">
+      <Item1>
+        <Name Value="EAbort"/>
+      </Item1>
+      <Item2>
+        <Name Value="ECodetoolError"/>
+      </Item2>
+      <Item3>
+        <Name Value="EFOpenError"/>
+      </Item3>
+    </Exceptions>
+  </Debugging>
+</CONFIG>

@@ -1,0 +1,1394 @@
+object MainForm: TMainForm
+  Left = 157
+  Height = 466
+  Top = 40
+  Width = 750
+  Align = alBottom
+  Caption = 'Free Manga Downloader'
+  ClientHeight = 466
+  ClientWidth = 750
+  OnClose = FormClose
+  OnCreate = FormCreate
+  LCLVersion = '1.1'
+  object pnMainLeft: TPanel
+    AnchorSideRight.Control = spMainSplitter
+    Left = 0
+    Height = 446
+    Top = 0
+    Width = 195
+    Align = alLeft
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    ClientHeight = 446
+    ClientWidth = 195
+    TabOrder = 0
+    object cbSelectManga: TComboBox
+      Left = 8
+      Height = 21
+      Top = 8
+      Width = 144
+      Anchors = [akTop, akLeft, akRight]
+      ItemHeight = 13
+      Items.Strings = (
+        ''
+      )
+      Style = csDropDownList
+      TabOrder = 0
+    end
+    object edSearch: TEdit
+      Left = 8
+      Height = 21
+      Top = 36
+      Width = 144
+      Anchors = [akTop, akLeft, akRight]
+      OnKeyPress = edSearchKeyPress
+      TabOrder = 1
+      Text = 'Search...'
+    end
+    object vtMangaList: TVirtualStringTree
+      Left = 8
+      Height = 349
+      Hint = 'test'
+      Top = 88
+      Width = 176
+      Anchors = [akTop, akLeft, akRight, akBottom]
+      DefaultText = 'Node'
+      Header.AutoSizeIndex = 0
+      Header.Columns = <>
+      Header.DefaultHeight = 17
+      Header.MainColumn = -1
+      HintMode = hmHintAndDefault
+      ParentShowHint = False
+      PopupMenu = pmMangaList
+      ShowHint = True
+      TabOrder = 2
+      TreeOptions.PaintOptions = [toShowButtons, toShowDropmark, toShowRoot, toThemeAware, toUseBlendedImages]
+      TreeOptions.SelectionOptions = [toFullRowSelect, toRightClickSelect]
+      OnDblClick = vtMangaListDblClick
+      OnFreeNode = vtMangaListFreeNode
+      OnGetText = vtMangaListGetText
+      OnGetHint = vtMangaListGetHint
+      OnInitNode = vtMangaListInitNode
+    end
+    object btSearch: TBitBtn
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Side = asrBottom
+      Left = 160
+      Height = 21
+      Hint = 'Search manga from list'
+      Top = 36
+      Width = 24
+      Anchors = [akTop, akRight]
+      OnClick = btSearchClick
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 3
+    end
+    object lbMode: TLabel
+      Left = 8
+      Height = 13
+      Top = 64
+      Width = 125
+      Caption = 'Mode: Show all manga'
+      Font.Style = [fsBold]
+      ParentColor = False
+      ParentFont = False
+    end
+    object btRemoveFilter: TBitBtn
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Side = asrBottom
+      Left = 160
+      Height = 21
+      Hint = 'Remove filter'
+      Top = 64
+      Width = 24
+      Anchors = [akTop, akRight]
+      OnClick = btRemoveFilterClick
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 4
+    end
+    object btUpdateList: TBitBtn
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Side = asrBottom
+      Left = 160
+      Height = 21
+      Hint = 'Update manga list'
+      Top = 8
+      Width = 24
+      Anchors = [akTop, akRight]
+      OnClick = btUpdateListClick
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 5
+    end
+  end
+  object pcMain: TPageControl
+    Left = 195
+    Height = 446
+    Top = 0
+    Width = 555
+    ActivePage = tsDownload
+    Align = alClient
+    Font.Style = [fsBold]
+    ParentFont = False
+    TabIndex = 0
+    TabOrder = 1
+    OnChange = pcMainChange
+    object tsDownload: TTabSheet
+      Caption = 'Downloads'
+      ClientHeight = 420
+      ClientWidth = 547
+      object vtDownload: TVirtualStringTree
+        Left = 0
+        Height = 420
+        Top = 0
+        Width = 547
+        Align = alClient
+        DefaultText = 'Node'
+        Header.AutoSizeIndex = 0
+        Header.Columns = <        
+          item
+            Position = 0
+            Text = 'Manga'
+            Width = 100
+          end        
+          item
+            Position = 1
+            Text = 'Status'
+            Width = 200
+          end        
+          item
+            Position = 2
+            Text = 'Progress'
+            Width = 55
+          end        
+          item
+            Position = 3
+            Text = 'Website'
+            Width = 65
+          end        
+          item
+            Position = 4
+            Text = 'Save to'
+            Width = 150
+          end        
+          item
+            Position = 5
+            Text = 'Added'
+            Width = 80
+          end>
+        Header.DefaultHeight = 17
+        Header.Height = 25
+        Header.Options = [hoColumnResize, hoDrag, hoShowSortGlyphs, hoVisible]
+        Header.Style = hsXPStyle
+        ParentFont = False
+        PopupMenu = pmDownload
+        TabOrder = 0
+        TreeOptions.PaintOptions = [toShowButtons, toShowDropmark, toShowRoot, toThemeAware, toUseBlendedImages]
+        TreeOptions.SelectionOptions = [toFullRowSelect, toRightClickSelect]
+        OnFreeNode = vtDownloadFreeNode
+        OnGetText = vtDownloadGetText
+        OnInitNode = vtDownloadInitNode
+      end
+    end
+    object tsInformation: TTabSheet
+      Caption = 'Manga Infos'
+      ClientHeight = 420
+      ClientWidth = 547
+      object sbInformation: TScrollBox
+        Left = 0
+        Height = 420
+        Top = 0
+        Width = 547
+        HorzScrollBar.Page = 543
+        VertScrollBar.Page = 416
+        Align = alClient
+        ClientHeight = 416
+        ClientWidth = 543
+        TabOrder = 0
+        object pnInfomation: TPanel
+          Left = 0
+          Height = 234
+          Top = 0
+          Width = 543
+          Align = alTop
+          ClientHeight = 234
+          ClientWidth = 543
+          ParentFont = False
+          TabOrder = 0
+          object imCover: TImage
+            AnchorSideTop.Side = asrCenter
+            AnchorSideBottom.Side = asrCenter
+            Left = 8
+            Height = 216
+            Top = 8
+            Width = 154
+            Stretch = True
+          end
+          object rmInformation: TRichMemo
+            Left = 175
+            Height = 216
+            Top = 8
+            Width = 363
+            Anchors = [akTop, akLeft, akRight, akBottom]
+            HideSelection = False
+            ParentFont = False
+            ReadOnly = True
+            ScrollBars = ssVertical
+            TabOrder = 0
+          end
+        end
+        object spInfos: TSplitter
+          Cursor = crVSplit
+          Left = 0
+          Height = 5
+          Top = 234
+          Width = 543
+          Align = alTop
+          ResizeAnchor = akTop
+        end
+        object pnChapterList: TPanel
+          Left = 0
+          Height = 177
+          Top = 239
+          Width = 543
+          Align = alClient
+          ClientHeight = 177
+          ClientWidth = 543
+          TabOrder = 2
+          object clbChapterList: TCheckListBox
+            AnchorSideTop.Side = asrBottom
+            Left = 8
+            Height = 84
+            Top = 9
+            Width = 527
+            Anchors = [akTop, akLeft, akRight, akBottom]
+            ItemHeight = 0
+            MultiSelect = True
+            OnKeyPress = clbChapterListKeyPress
+            ParentFont = False
+            PopupMenu = pmChapterList
+            TabOrder = 0
+          end
+          object edSaveTo: TLabeledEdit
+            Left = 8
+            Height = 21
+            Top = 117
+            Width = 287
+            Anchors = [akLeft, akBottom]
+            EditLabel.AnchorSideLeft.Control = edSaveTo
+            EditLabel.AnchorSideRight.Control = edSaveTo
+            EditLabel.AnchorSideRight.Side = asrBottom
+            EditLabel.AnchorSideBottom.Control = edSaveTo
+            EditLabel.Left = 8
+            EditLabel.Height = 13
+            EditLabel.Top = 101
+            EditLabel.Width = 287
+            EditLabel.Caption = 'Save to'
+            EditLabel.ParentColor = False
+            EditLabel.ParentFont = False
+            ParentFont = False
+            TabOrder = 1
+          end
+          object btDownload: TBitBtn
+            Left = 415
+            Height = 30
+            Top = 108
+            Width = 91
+            Anchors = [akLeft, akBottom]
+            Caption = 'Download'
+            OnClick = btDownloadClick
+            TabOrder = 2
+          end
+          object btBrowse: TBitBtn
+            Left = 311
+            Height = 30
+            Top = 108
+            Width = 91
+            Anchors = [akLeft, akBottom]
+            Caption = 'Browse'
+            OnClick = btBrowseClick
+            TabOrder = 3
+          end
+          object cbAddAsStopped: TCheckBox
+            Left = 8
+            Height = 17
+            Top = 145
+            Width = 196
+            Anchors = [akLeft, akBottom]
+            Caption = 'Add to download list as stopped task'
+            OnChange = cbAddAsStoppedChange
+            ParentFont = False
+            TabOrder = 4
+          end
+          object cbAddToFavorites: TCheckBox
+            Left = 311
+            Height = 17
+            Top = 145
+            Width = 100
+            Anchors = [akLeft, akBottom]
+            Caption = 'Add to Favorites'
+            ParentFont = False
+            TabOrder = 5
+          end
+        end
+      end
+    end
+    object tsFilter: TTabSheet
+      Caption = 'Filter'
+      ClientHeight = 420
+      ClientWidth = 547
+      object sbFilter: TScrollBox
+        Left = 0
+        Height = 420
+        Top = 0
+        Width = 547
+        HorzScrollBar.Page = 543
+        VertScrollBar.Page = 416
+        Align = alClient
+        ClientHeight = 416
+        ClientWidth = 543
+        TabOrder = 0
+        object pnGenres: TPanel
+          Left = 0
+          Height = 216
+          Top = 0
+          Width = 543
+          Align = alTop
+          ClientHeight = 216
+          ClientWidth = 543
+          TabOrder = 0
+          object CheckBox1: TCheckBox
+            Left = 23
+            Height = 17
+            Top = 16
+            Width = 50
+            AllowGrayed = True
+            Caption = 'Action'
+            ParentFont = False
+            TabOrder = 0
+          end
+          object CheckBox2: TCheckBox
+            Left = 23
+            Height = 17
+            Top = 40
+            Width = 50
+            AllowGrayed = True
+            Caption = 'Action'
+            ParentFont = False
+            TabOrder = 1
+          end
+          object CheckBox3: TCheckBox
+            Left = 23
+            Height = 17
+            Top = 64
+            Width = 50
+            AllowGrayed = True
+            Caption = 'Action'
+            ParentFont = False
+            TabOrder = 2
+          end
+          object CheckBox4: TCheckBox
+            Left = 23
+            Height = 17
+            Top = 88
+            Width = 50
+            AllowGrayed = True
+            Caption = 'Action'
+            ParentFont = False
+            TabOrder = 3
+          end
+          object CheckBox5: TCheckBox
+            Left = 23
+            Height = 17
+            Top = 112
+            Width = 50
+            AllowGrayed = True
+            Caption = 'Action'
+            ParentFont = False
+            TabOrder = 4
+          end
+          object CheckBox6: TCheckBox
+            Left = 23
+            Height = 17
+            Top = 136
+            Width = 50
+            AllowGrayed = True
+            Caption = 'Action'
+            ParentFont = False
+            TabOrder = 5
+          end
+          object CheckBox7: TCheckBox
+            Left = 23
+            Height = 17
+            Top = 160
+            Width = 50
+            AllowGrayed = True
+            Caption = 'Action'
+            ParentFont = False
+            TabOrder = 6
+          end
+          object CheckBox8: TCheckBox
+            Left = 23
+            Height = 17
+            Top = 184
+            Width = 50
+            AllowGrayed = True
+            Caption = 'Action'
+            ParentFont = False
+            TabOrder = 7
+          end
+          object CheckBox9: TCheckBox
+            Left = 127
+            Height = 17
+            Top = 16
+            Width = 50
+            AllowGrayed = True
+            Caption = 'Action'
+            ParentFont = False
+            TabOrder = 8
+          end
+          object CheckBox10: TCheckBox
+            Left = 127
+            Height = 17
+            Top = 40
+            Width = 50
+            AllowGrayed = True
+            Caption = 'Action'
+            ParentFont = False
+            TabOrder = 9
+          end
+          object CheckBox11: TCheckBox
+            Left = 127
+            Height = 17
+            Top = 64
+            Width = 50
+            AllowGrayed = True
+            Caption = 'Action'
+            ParentFont = False
+            TabOrder = 10
+          end
+          object CheckBox12: TCheckBox
+            Left = 127
+            Height = 17
+            Top = 88
+            Width = 50
+            AllowGrayed = True
+            Caption = 'Action'
+            ParentFont = False
+            TabOrder = 11
+          end
+          object CheckBox13: TCheckBox
+            Left = 127
+            Height = 17
+            Top = 112
+            Width = 50
+            AllowGrayed = True
+            Caption = 'Action'
+            ParentFont = False
+            TabOrder = 12
+          end
+          object CheckBox14: TCheckBox
+            Left = 127
+            Height = 17
+            Top = 136
+            Width = 50
+            AllowGrayed = True
+            Caption = 'Action'
+            ParentFont = False
+            TabOrder = 13
+          end
+          object CheckBox15: TCheckBox
+            Left = 127
+            Height = 17
+            Top = 160
+            Width = 50
+            AllowGrayed = True
+            Caption = 'Action'
+            ParentFont = False
+            TabOrder = 14
+          end
+          object CheckBox16: TCheckBox
+            Left = 127
+            Height = 17
+            Top = 184
+            Width = 50
+            AllowGrayed = True
+            Caption = 'Action'
+            ParentFont = False
+            TabOrder = 15
+          end
+          object CheckBox17: TCheckBox
+            Left = 223
+            Height = 17
+            Top = 16
+            Width = 50
+            AllowGrayed = True
+            Caption = 'Action'
+            ParentFont = False
+            TabOrder = 16
+          end
+          object CheckBox18: TCheckBox
+            Left = 223
+            Height = 17
+            Top = 40
+            Width = 50
+            AllowGrayed = True
+            Caption = 'Action'
+            ParentFont = False
+            TabOrder = 17
+          end
+          object CheckBox19: TCheckBox
+            Left = 223
+            Height = 17
+            Top = 64
+            Width = 50
+            AllowGrayed = True
+            Caption = 'Action'
+            ParentFont = False
+            TabOrder = 18
+          end
+          object CheckBox20: TCheckBox
+            Left = 223
+            Height = 17
+            Top = 88
+            Width = 50
+            AllowGrayed = True
+            Caption = 'Action'
+            ParentFont = False
+            TabOrder = 19
+          end
+          object CheckBox21: TCheckBox
+            Left = 223
+            Height = 17
+            Top = 112
+            Width = 50
+            AllowGrayed = True
+            Caption = 'Action'
+            ParentFont = False
+            TabOrder = 20
+          end
+          object CheckBox22: TCheckBox
+            Left = 223
+            Height = 17
+            Top = 136
+            Width = 50
+            AllowGrayed = True
+            Caption = 'Action'
+            ParentFont = False
+            TabOrder = 21
+          end
+          object CheckBox23: TCheckBox
+            Left = 223
+            Height = 17
+            Top = 160
+            Width = 50
+            AllowGrayed = True
+            Caption = 'Action'
+            ParentFont = False
+            TabOrder = 22
+          end
+          object CheckBox24: TCheckBox
+            Left = 223
+            Height = 17
+            Top = 184
+            Width = 50
+            AllowGrayed = True
+            Caption = 'Action'
+            ParentFont = False
+            TabOrder = 23
+          end
+          object CheckBox25: TCheckBox
+            Left = 319
+            Height = 17
+            Top = 16
+            Width = 50
+            AllowGrayed = True
+            Caption = 'Action'
+            ParentFont = False
+            TabOrder = 24
+          end
+          object CheckBox26: TCheckBox
+            Left = 319
+            Height = 17
+            Top = 40
+            Width = 50
+            AllowGrayed = True
+            Caption = 'Action'
+            ParentFont = False
+            TabOrder = 25
+          end
+          object CheckBox27: TCheckBox
+            Left = 319
+            Height = 17
+            Top = 64
+            Width = 50
+            AllowGrayed = True
+            Caption = 'Action'
+            ParentFont = False
+            TabOrder = 26
+          end
+          object CheckBox28: TCheckBox
+            Left = 319
+            Height = 17
+            Top = 88
+            Width = 50
+            AllowGrayed = True
+            Caption = 'Action'
+            ParentFont = False
+            TabOrder = 27
+          end
+          object CheckBox29: TCheckBox
+            Left = 319
+            Height = 17
+            Top = 112
+            Width = 50
+            AllowGrayed = True
+            Caption = 'Action'
+            ParentFont = False
+            TabOrder = 28
+          end
+          object CheckBox30: TCheckBox
+            Left = 319
+            Height = 17
+            Top = 136
+            Width = 50
+            AllowGrayed = True
+            Caption = 'Action'
+            ParentFont = False
+            TabOrder = 29
+          end
+          object CheckBox31: TCheckBox
+            Left = 319
+            Height = 17
+            Top = 160
+            Width = 50
+            AllowGrayed = True
+            Caption = 'Action'
+            ParentFont = False
+            TabOrder = 30
+          end
+          object CheckBox32: TCheckBox
+            Left = 319
+            Height = 17
+            Top = 184
+            Width = 50
+            AllowGrayed = True
+            Caption = 'Action'
+            ParentFont = False
+            TabOrder = 31
+          end
+          object CheckBox33: TCheckBox
+            Left = 423
+            Height = 17
+            Top = 16
+            Width = 50
+            AllowGrayed = True
+            Caption = 'Action'
+            ParentFont = False
+            TabOrder = 32
+          end
+          object CheckBox34: TCheckBox
+            Left = 423
+            Height = 17
+            Top = 40
+            Width = 50
+            AllowGrayed = True
+            Caption = 'Action'
+            ParentFont = False
+            TabOrder = 33
+          end
+          object CheckBox35: TCheckBox
+            Left = 423
+            Height = 17
+            Top = 64
+            Width = 50
+            AllowGrayed = True
+            Caption = 'Action'
+            ParentFont = False
+            TabOrder = 34
+          end
+          object CheckBox36: TCheckBox
+            Left = 423
+            Height = 17
+            Top = 88
+            Width = 50
+            AllowGrayed = True
+            Caption = 'Action'
+            ParentFont = False
+            TabOrder = 35
+          end
+          object CheckBox37: TCheckBox
+            Left = 423
+            Height = 17
+            Top = 112
+            Width = 50
+            AllowGrayed = True
+            Caption = 'Action'
+            ParentFont = False
+            TabOrder = 36
+          end
+          object CheckBox38: TCheckBox
+            Left = 423
+            Height = 17
+            Top = 136
+            Width = 50
+            AllowGrayed = True
+            Caption = 'Action'
+            ParentFont = False
+            TabOrder = 37
+          end
+          object CheckBox39: TCheckBox
+            Left = 423
+            Height = 17
+            Top = 160
+            Width = 50
+            AllowGrayed = True
+            Caption = 'Action'
+            ParentFont = False
+            TabOrder = 38
+          end
+        end
+        object pnFilter: TPanel
+          Left = 0
+          Height = 200
+          Top = 216
+          Width = 543
+          Align = alTop
+          ClientHeight = 200
+          ClientWidth = 543
+          ParentFont = False
+          TabOrder = 1
+          object rbOne: TRadioButton
+            Left = 323
+            Height = 17
+            Top = 32
+            Width = 157
+            Caption = 'Have one of genres checked'
+            ParentFont = False
+            TabOrder = 1
+          end
+          object rbAll: TRadioButton
+            Left = 323
+            Height = 17
+            Top = 8
+            Width = 131
+            Caption = 'Have all genre checked'
+            Checked = True
+            ParentFont = False
+            TabOrder = 0
+            TabStop = True
+          end
+          object cbOnlyNew: TCheckBox
+            Left = 323
+            Height = 17
+            Top = 56
+            Width = 134
+            Caption = 'Search only new manga'
+            ParentFont = False
+            TabOrder = 2
+          end
+          object edFilterTitle: TEdit
+            Left = 135
+            Height = 21
+            Top = 8
+            Width = 146
+            TabOrder = 3
+          end
+          object edFilterArtists: TEdit
+            Left = 135
+            Height = 21
+            Top = 56
+            Width = 146
+            TabOrder = 4
+          end
+          object edFilterAuthors: TEdit
+            Left = 135
+            Height = 21
+            Top = 32
+            Width = 146
+            TabOrder = 5
+          end
+          object lbFilterTitle: TLabel
+            Left = 23
+            Height = 16
+            Top = 8
+            Width = 27
+            Alignment = taRightJustify
+            BidiMode = bdRightToLeft
+            Caption = 'Title'
+            Font.Height = -13
+            Font.Style = [fsBold]
+            ParentBidiMode = False
+            ParentColor = False
+            ParentFont = False
+          end
+          object lbFilterAuthors: TLabel
+            Left = 23
+            Height = 16
+            Top = 32
+            Width = 53
+            Alignment = taRightJustify
+            BidiMode = bdRightToLeft
+            Caption = 'Authors'
+            Font.Height = -13
+            Font.Style = [fsBold]
+            ParentBidiMode = False
+            ParentColor = False
+            ParentFont = False
+          end
+          object lbFilterArtists: TLabel
+            Left = 23
+            Height = 16
+            Top = 56
+            Width = 45
+            Alignment = taRightJustify
+            BidiMode = bdRightToLeft
+            Caption = 'Artists'
+            Font.Height = -13
+            Font.Style = [fsBold]
+            ParentBidiMode = False
+            ParentColor = False
+            ParentFont = False
+          end
+          object cbFilterStatus: TComboBox
+            Left = 135
+            Height = 21
+            Top = 80
+            Width = 146
+            ItemHeight = 13
+            ItemIndex = 2
+            Items.Strings = (
+              'Completed'
+              'Ongoing'
+              '<none>'
+            )
+            Style = csDropDownList
+            TabOrder = 6
+            Text = '<none>'
+          end
+          object lbFilterStatus: TLabel
+            Left = 23
+            Height = 16
+            Top = 80
+            Width = 43
+            Alignment = taRightJustify
+            BidiMode = bdRightToLeft
+            Caption = 'Status'
+            Font.Height = -13
+            Font.Style = [fsBold]
+            ParentBidiMode = False
+            ParentColor = False
+            ParentFont = False
+          end
+          object lbFilterSummary: TLabel
+            Left = 23
+            Height = 16
+            Top = 104
+            Width = 60
+            Alignment = taRightJustify
+            BidiMode = bdRightToLeft
+            Caption = 'Summary'
+            Font.Height = -13
+            Font.Style = [fsBold]
+            ParentBidiMode = False
+            ParentColor = False
+            ParentFont = False
+          end
+          object edFilterSummary: TEdit
+            Left = 135
+            Height = 21
+            Top = 104
+            Width = 344
+            TabOrder = 7
+          end
+          object btFilter: TButton
+            Left = 39
+            Height = 37
+            Top = 139
+            Width = 130
+            Caption = 'Filter'
+            Font.Color = clHighlight
+            Font.Height = -13
+            Font.Style = [fsBold]
+            OnClick = btFilterClick
+            ParentFont = False
+            TabOrder = 8
+          end
+          object btFilterReset: TButton
+            Left = 351
+            Height = 37
+            Top = 139
+            Width = 128
+            Caption = 'Reset value'
+            Font.Height = -13
+            Font.Style = [fsBold]
+            OnClick = btFilterResetClick
+            ParentFont = False
+            TabOrder = 9
+          end
+          object btRemoveFilterLarge: TBitBtn
+            AnchorSideLeft.Side = asrBottom
+            AnchorSideTop.Side = asrBottom
+            Left = 191
+            Height = 37
+            Hint = 'Remove filter'
+            Top = 139
+            Width = 136
+            Caption = 'Remove filter'
+            Font.Height = -13
+            Font.Style = [fsBold]
+            OnClick = btRemoveFilterClick
+            ParentFont = False
+            ParentShowHint = False
+            ShowHint = True
+            TabOrder = 10
+          end
+        end
+      end
+    end
+    object tsFavorites: TTabSheet
+      Caption = 'Favorites'
+      ClientHeight = 420
+      ClientWidth = 547
+      object vtFavorites: TVirtualStringTree
+        Left = 0
+        Height = 352
+        Top = 0
+        Width = 547
+        Align = alTop
+        Anchors = [akTop, akLeft, akRight, akBottom]
+        DefaultText = 'Node'
+        Header.AutoSizeIndex = 0
+        Header.Columns = <        
+          item
+            Position = 0
+            Text = 'Title'
+            Width = 150
+          end        
+          item
+            Position = 1
+            Text = 'Current chapter'
+            Width = 100
+          end        
+          item
+            Position = 2
+            Text = 'Website'
+            Width = 65
+          end        
+          item
+            Position = 3
+            Text = 'Save to'
+            Width = 200
+          end>
+        Header.DefaultHeight = 24
+        Header.Height = 24
+        Header.Options = [hoColumnResize, hoDrag, hoShowSortGlyphs, hoVisible]
+        Header.Style = hsXPStyle
+        ParentFont = False
+        PopupMenu = pmFavorites
+        TabOrder = 0
+        TreeOptions.PaintOptions = [toShowButtons, toShowDropmark, toShowRoot, toThemeAware, toUseBlendedImages]
+        TreeOptions.SelectionOptions = [toFullRowSelect, toRightClickSelect]
+        OnGetText = vtFavoritesGetText
+        OnInitNode = vtFavoritesInitNode
+      end
+      object btFavoritesCheckNewChapter: TBitBtn
+        Left = 33
+        Height = 40
+        Top = 370
+        Width = 160
+        Anchors = [akLeft, akBottom]
+        Caption = 'Check for new chapter'
+        OnClick = btFavoritesCheckNewChapterClick
+        TabOrder = 1
+      end
+    end
+    object tsOption: TTabSheet
+      Caption = 'Options'
+      ClientHeight = 420
+      ClientWidth = 547
+      object pnOptions: TPageControl
+        Left = 9
+        Height = 327
+        Top = 26
+        Width = 528
+        ActivePage = tsLanguage
+        Anchors = [akTop, akLeft, akRight, akBottom]
+        TabIndex = 0
+        TabOrder = 0
+        object tsLanguage: TTabSheet
+          Caption = 'Language'
+          ClientHeight = 301
+          ClientWidth = 520
+          object cbLanguages: TComboBox
+            Left = 28
+            Height = 21
+            Top = 32
+            Width = 140
+            ItemHeight = 13
+            Items.Strings = (
+              'English'
+            )
+            ParentFont = False
+            Style = csDropDownList
+            TabOrder = 0
+          end
+        end
+        object tsConnections: TTabSheet
+          Caption = 'Connections'
+          ClientHeight = 321
+          ClientWidth = 520
+          object sbDownloadConnections: TScrollBox
+            Left = 0
+            Height = 321
+            Top = 0
+            Width = 520
+            HorzScrollBar.Page = 516
+            VertScrollBar.Page = 317
+            Align = alClient
+            ClientHeight = 317
+            ClientWidth = 516
+            TabOrder = 0
+            object cbOptionUseProxy: TCheckBox
+              Left = 32
+              Height = 17
+              Top = 154
+              Width = 69
+              Caption = 'Use proxy'
+              OnChange = cbOptionUseProxyChange
+              ParentFont = False
+              TabOrder = 0
+            end
+            object gbOptionProxy: TGroupBox
+              Left = 12
+              Height = 104
+              Top = 178
+              Width = 498
+              Anchors = [akTop, akLeft, akRight]
+              Caption = 'Proxy config'
+              ClientHeight = 84
+              ClientWidth = 494
+              Enabled = False
+              ParentFont = False
+              TabOrder = 1
+              object lbOptionHost: TLabel
+                Left = 14
+                Height = 13
+                Top = 14
+                Width = 26
+                Caption = 'Host'
+                Font.Style = [fsBold]
+                ParentColor = False
+                ParentFont = False
+              end
+              object lbOptionPort: TLabel
+                Left = 14
+                Height = 13
+                Top = 46
+                Width = 20
+                Caption = 'Port'
+                ParentColor = False
+              end
+              object edOptionHost: TEdit
+                Left = 55
+                Height = 23
+                Top = 7
+                Width = 154
+                Font.CharSet = ANSI_CHARSET
+                Font.Height = -12
+                Font.Name = 'Default'
+                Font.Style = [fsBold]
+                ParentFont = False
+                TabOrder = 0
+              end
+              object edOptionPort: TEdit
+                Left = 55
+                Height = 23
+                Top = 39
+                Width = 154
+                Font.CharSet = ANSI_CHARSET
+                Font.Height = -12
+                Font.Name = 'Default'
+                Font.Style = [fsBold]
+                ParentFont = False
+                TabOrder = 1
+              end
+              object lbOptionUser: TLabel
+                AnchorSideLeft.Side = asrBottom
+                AnchorSideTop.Side = asrBottom
+                Left = 242
+                Height = 13
+                Top = 14
+                Width = 48
+                Anchors = [akTop, akRight]
+                Caption = 'Username'
+                ParentColor = False
+              end
+              object lbOptionPass: TLabel
+                AnchorSideLeft.Side = asrBottom
+                AnchorSideTop.Side = asrBottom
+                Left = 244
+                Height = 13
+                Top = 46
+                Width = 46
+                Anchors = [akTop, akRight]
+                Caption = 'Password'
+                ParentColor = False
+              end
+              object edOptionUser: TEdit
+                AnchorSideLeft.Side = asrBottom
+                AnchorSideTop.Side = asrBottom
+                Left = 302
+                Height = 23
+                Top = 7
+                Width = 154
+                Anchors = [akTop, akRight]
+                Font.CharSet = ANSI_CHARSET
+                Font.Height = -12
+                Font.Name = 'Default'
+                Font.Style = [fsBold]
+                ParentFont = False
+                TabOrder = 2
+              end
+              object edOptionPass: TEdit
+                AnchorSideLeft.Side = asrBottom
+                AnchorSideTop.Side = asrBottom
+                Left = 302
+                Height = 23
+                Top = 39
+                Width = 154
+                Anchors = [akTop, akRight]
+                Font.CharSet = ANSI_CHARSET
+                Font.Height = -12
+                Font.Name = 'Default'
+                ParentFont = False
+                TabOrder = 3
+              end
+            end
+            object seOptionMaxParallel: TSpinEdit
+              Left = 12
+              Height = 21
+              Top = 26
+              Width = 48
+              MaxValue = 8
+              MinValue = 1
+              ParentFont = False
+              ParentShowHint = False
+              TabOrder = 2
+              Value = 1
+            end
+            object lbOptionMaxParallel: TLabel
+              Left = 76
+              Height = 13
+              Top = 26
+              Width = 266
+              Caption = 'Number of downloaded tasks at the same time (Max: 8)'
+              ParentColor = False
+              ParentFont = False
+            end
+            object lbOptionMaxThread: TLabel
+              Left = 76
+              Height = 13
+              Top = 58
+              Width = 302
+              Caption = 'Number of downloaded files per task at the same time (Max: 8)'
+              ParentColor = False
+              ParentFont = False
+            end
+            object seOptionMaxThread: TSpinEdit
+              Left = 12
+              Height = 21
+              Top = 58
+              Width = 48
+              MaxValue = 8
+              MinValue = 1
+              ParentFont = False
+              ParentShowHint = False
+              TabOrder = 3
+              Value = 1
+            end
+            object seOptionMaxRetry: TSpinEdit
+              Left = 12
+              Height = 21
+              Top = 90
+              Width = 48
+              MaxValue = 0
+              ParentFont = False
+              ParentShowHint = False
+              TabOrder = 4
+            end
+            object lbOptionMaxRetry: TLabel
+              Left = 76
+              Height = 13
+              Top = 90
+              Width = 355
+              Caption = 'Number of retry times if tasks have download problems (0 = always retry)'
+              ParentColor = False
+              ParentFont = False
+            end
+          end
+        end
+        object tsSaveTo: TTabSheet
+          Caption = 'Save to'
+          ClientHeight = 321
+          ClientWidth = 520
+          object edOptionDefaultPath: TLabeledEdit
+            Left = 28
+            Height = 21
+            Top = 42
+            Width = 456
+            Anchors = [akTop, akLeft, akRight]
+            EditLabel.AnchorSideLeft.Control = edOptionDefaultPath
+            EditLabel.AnchorSideRight.Control = edOptionDefaultPath
+            EditLabel.AnchorSideRight.Side = asrBottom
+            EditLabel.AnchorSideBottom.Control = edOptionDefaultPath
+            EditLabel.Left = 28
+            EditLabel.Height = 13
+            EditLabel.Top = 26
+            EditLabel.Width = 456
+            EditLabel.Caption = 'Choose default download path:'
+            EditLabel.ParentColor = False
+            EditLabel.ParentFont = False
+            ParentFont = False
+            TabOrder = 0
+          end
+          object rgOptionCompress: TRadioGroup
+            Left = 28
+            Height = 60
+            Top = 82
+            Width = 461
+            Anchors = [akTop, akLeft, akRight]
+            AutoFill = True
+            Caption = 'Save downloaded chapters as'
+            ChildSizing.LeftRightSpacing = 6
+            ChildSizing.TopBottomSpacing = 6
+            ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+            ChildSizing.EnlargeVertical = crsHomogenousChildResize
+            ChildSizing.ShrinkHorizontal = crsScaleChilds
+            ChildSizing.ShrinkVertical = crsScaleChilds
+            ChildSizing.Layout = cclLeftToRightThenTopToBottom
+            ChildSizing.ControlsPerLine = 2
+            ClientHeight = 40
+            ClientWidth = 457
+            Columns = 2
+            ItemIndex = 0
+            Items.Strings = (
+              'None'
+              'ZIP'
+            )
+            ParentFont = False
+            TabOrder = 1
+          end
+        end
+      end
+      object btOptionApply: TButton
+        Left = 38
+        Height = 33
+        Top = 369
+        Width = 99
+        Anchors = [akBottom]
+        Caption = 'Apply'
+        OnClick = btOptionApplyClick
+        TabOrder = 1
+      end
+    end
+  end
+  object spMainSplitter: TSplitter
+    AnchorSideRight.Control = pcMain
+    Left = 195
+    Height = 466
+    Top = 8
+    Width = 5
+    Align = alNone
+    Anchors = [akTop, akLeft, akBottom]
+  end
+  object sbMain: TStatusBar
+    Left = 0
+    Height = 20
+    Top = 446
+    Width = 750
+    Panels = <    
+      item
+        Width = 150
+      end>
+    SimplePanel = False
+  end
+  object dlgSaveTo: TSelectDirectoryDialog
+    left = 80
+    top = 184
+  end
+  object pmDownload: TPopupMenu
+    left = 80
+    top = 239
+    object miDownloadStop: TMenuItem
+      Caption = 'Stop'
+      OnClick = miDownloadStopClick
+    end
+    object miDownloadRemuse: TMenuItem
+      Caption = 'Remuse'
+      OnClick = miDownloadRemuseClick
+    end
+    object miDownloadRemove: TMenuItem
+      Caption = 'Delete'
+      OnClick = miDownloadRemoveClick
+    end
+    object miDownloadRemoveFinishedTasks: TMenuItem
+      Caption = 'Delete all finished tasks'
+      OnClick = miDownloadRemoveFinishedTasksClick
+    end
+  end
+  object pmChapterList: TPopupMenu
+    left = 80
+    top = 296
+    object miChapterListCheckSelected: TMenuItem
+      Caption = 'Check selected'
+      OnClick = miChapterListCheckSelectedClick
+    end
+    object miChapterListUncheckSelected: TMenuItem
+      Caption = 'Uncheck selected'
+      OnClick = miChapterListUncheckSelectedClick
+    end
+    object miI1: TMenuItem
+      Caption = '-'
+    end
+    object miChapterListCheckAll: TMenuItem
+      Caption = 'Check all'
+      OnClick = miChapterListCheckAllClick
+    end
+    object miChapterListUncheckAll: TMenuItem
+      Caption = 'Uncheck all'
+      OnClick = miChapterListUncheckAllClick
+    end
+  end
+  object pmFavorites: TPopupMenu
+    left = 82
+    top = 350
+    object miFavoritesRemove: TMenuItem
+      Caption = 'Remove'
+      OnClick = miFavoritesRemoveClick
+    end
+    object miFavoritesChangeCurrentChapter: TMenuItem
+      Caption = 'Change "Current chapter"'
+      OnClick = miFavoritesChangeCurrentChapterClick
+    end
+    object miFavoritesChangeSaveTo: TMenuItem
+      Caption = 'Change "Save to"'
+      OnClick = miFavoritesChangeSaveToClick
+    end
+  end
+  object pmMangaList: TPopupMenu
+    left = 82
+    top = 408
+    object miMangaListAddToFavorites: TMenuItem
+      Caption = 'Add to Favorites'
+      OnClick = miMangaListAddToFavoritesClick
+    end
+  end
+  object tmBackup: TTimer
+    Interval = 60000
+    OnTimer = tmBackupTimer
+    left = 704
+    top = 80
+  end
+end
