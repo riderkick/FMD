@@ -1,6 +1,6 @@
 {
         File: updatelist.pas
-        License: GPL/LGPL
+        License: GPLv3
         This unit is part of Free Manga Downloader
 }
 

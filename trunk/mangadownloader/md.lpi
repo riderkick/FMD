@@ -96,7 +96,7 @@
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)"/>
-      <OtherUnitFiles Value="E:\FreeSpace\FMD\baseunits\;E:\sdks\lazcomp\synapse\source\"/>
+      <OtherUnitFiles Value="E:\FreeSpace\FMD\trunk\baseunits\;E:\sdks\lazcomp\synapse\source\"/>
       <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
     <CodeGeneration>
