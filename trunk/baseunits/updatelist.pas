@@ -18,11 +18,11 @@ type
 
   TUpdateMangaThread = class(TThread)
   protected
+    checkStyle        : Cardinal;
     names,
     links             : TStringList;
     isTerminated,
-    isSuspended,
-    isCheckNameAndLink: Boolean;
+    isSuspended       : Boolean;
     workPtr           : Cardinal;
     manager           : TUpdateMangaManagerThread;
     Info              : TMangaInformation;
@@ -37,7 +37,8 @@ type
   TUpdateMangaManagerThread = class(TThread)
   protected
     procedure   Execute; override;
-    procedure   ShowResult;
+    procedure   DlgNoManga;
+    procedure   DlgHaveManga;
   public
     isTerminated,
     isSuspended,
@@ -104,12 +105,21 @@ begin
   while NOT Terminated do
   begin
     while isSuspended do Sleep(16);
-    if isCheckNameAndLink then
-      if Info.GetNameAndLink(names, links,
-                             manager.website, IntToStr(workPtr)) = INFORMATION_NOT_FOUND then
-        manager.isDoneCheckNameAndLink:= TRUE
-      else
-        Synchronize(UpdateNamesAndLinks);
+    case CheckStyle of
+      CS_PAGE:
+        begin
+          if Info.GetNameAndLink(names, links,
+                                 manager.website, IntToStr(workPtr)) = INFORMATION_NOT_FOUND then
+            manager.isDoneCheckNameAndLink:= TRUE
+          else
+            Synchronize(UpdateNamesAndLinks);
+        end;
+      CS_INFO:
+        begin
+          Info.GetInfoFromURL(manager.website, manager.links[workPtr]);
+          Info.AddInfoToData(manager.names[workPtr], manager.links[workPtr], MainForm.dataProcess);
+        end;
+    end;
     Synchronize(DecThreadCount);
     Terminate;
   end;
@@ -141,29 +151,28 @@ begin
   inherited Destroy;
 end;
 
-procedure   TUpdateMangaManagerThread.ShowResult;
+procedure   TUpdateMangaManagerThread.DlgNoManga;
 begin
-  if names.Count > MainForm.dataProcess.Data.Count then
-    MessageDlg('', IntToStr(names.Count - MainForm.dataProcess.Data.Count) + ' new manga',
-                  mtInformation, [mbYes], 0)
-  else
-    MessageDlg('', 'Nothing new.',
+  MessageDlg('', 'Nothing new.',
                   mtInformation, [mbYes], 0);
   Terminate;
 end;
 
+procedure   TUpdateMangaManagerThread.DlgHaveManga;
+begin
+  MessageDlg('', IntToStr(links.Count) + ' new manga',
+                 mtInformation, [mbYes], 0)
+end;
+
 procedure   TUpdateMangaManagerThread.Execute;
 var
-  i, j, workPtr: Cardinal;
+  i, j, k, workPtr: Cardinal;
 begin
   while NOT Terminated do
   begin
     while isSuspended do Sleep(16);
     if websites.Count = 0 then
-    begin
-     // Synchronize(ShowResult);
       Terminate;
-    end;
     SetLength(threads, numberOfThreads);
 
     for i:= 0 to websites.Count-1 do
@@ -185,8 +194,8 @@ begin
             begin
               Inc(threadCount);
               threads[j]:= TUpdateMangaThread.Create;
+              threads[j].checkStyle:= CS_PAGE;
               threads[j].manager:= self;
-              threads[j].isCheckNameAndLink:= TRUE;
               threads[j].workPtr:= workPtr;
               threads[j].isSuspended:= FALSE;
               Inc(workPtr);
@@ -195,20 +204,48 @@ begin
         end;
         Sleep(100);
       end;
-    end;
+      while threadCount > 0 do Sleep(100);
 
-    while threadCount > 0 do Sleep(100);
-
-    if (isDoneCheckNameAndLink) then
-    begin
-      MainForm.sbMain.Panels[0].Text:= '';
-      Synchronize(ShowResult);
+      j:= 0;
+      repeat
+        if Find(links.Strings[j], MainForm.dataProcess.Link, Integer(workPtr)) then
+        begin
+          links.Delete(j);
+          names.Delete(j);
+        end
+        else
+          Inc(j);
+      until j = links.Count;
+      workPtr:= 0;
+      if links.Count = 0 then Synchronize(DlgNoManga);
+      while workPtr < links.Count do
+      begin
+        if (threadCount < numberOfThreads) then
+        begin
+          for j:= 0 to numberOfThreads-1 do
+            if (NOT Assigned(threads[j])) OR (threads[j].isTerminated) then
+            begin
+              Inc(threadCount);
+              threads[j]:= TUpdateMangaThread.Create;
+              threads[j].checkStyle:= CS_INFO;
+              threads[j].manager:= self;
+              threads[j].workPtr:= workPtr;
+              threads[j].isSuspended:= FALSE;
+              Inc(workPtr);
+              MainForm.sbMain.Panels[0].Text:= 'Updating list... ('+website+'.I.'+IntToStr(workPtr)+')';
+            end;
+        end;
+        Sleep(100);
+      end;
+      while threadCount > 0 do Sleep(100);
     end;
-
-    if (isDoneUpdateNecessary) then
-    begin
-      Terminate;
-    end;
+    Synchronize(DlgHaveManga);
+    MainForm.dataProcess.RemoveFilter;
+    MainForm.vtMangaList.Clear;
+    MainForm.vtMangaList.RootNodeCount:= MainForm.dataProcess.filterPos.Count;
+    MainForm.lbMode.Caption:= Format(stModeAll, [MainForm.dataProcess.filterPos.Count]);
+    MainForm.sbMain.Panels[0].Text:= '';
+    Terminate;
   end;
   Terminate;
 end;

@@ -15,6 +15,45 @@ uses
 
 type
   TDownloadManager = class;
+  TTaskThread = class;
+
+  // this class will replace the old TDownloadManager
+  TNewDownloadThread = class(TThread)
+  protected
+    function    GetLinkPageFromURL(const URL: AnsiString): Boolean;
+    function    GetPageNumberFromURL(const URL: AnsiString): Boolean;
+    procedure   Execute; override;
+  public
+    checkStyle    : Cardinal;
+
+    isTerminated,
+    isSuspended   : Boolean;
+    // ID of the site
+    workPtr       : Cardinal;
+    manager       : TTaskThread;
+    constructor Create;
+    destructor  Destroy; override;
+  end;
+
+  TTaskThread = class(TThread)
+
+  public
+    isTerminated,
+    isSuspended: Boolean;
+
+    workPtr    : Cardinal;
+    mangaSiteID: Cardinal;
+    pageNumber : Cardinal;
+    pageLink   : TStringList;
+    manager    : TDownloadManager;
+    threads    : array of TNewDownloadThread;
+
+    constructor Create;
+    destructor  Destroy; override;
+    procedure   StopAllTasks;
+  end;
+
+  // deprecated - will be replace later
   TDownloadThread = class(TThread)
   protected
     procedure   Execute; override;
@@ -80,6 +119,7 @@ type
     activeThreadsPerTask: TByteList;
 
     // current chapterLinks which thread is processing
+    pageNumbers,
     chapterPtr          : TCardinalList;
     threads             : TDownloadThreadList;//array of TDownloadThread;
 
@@ -107,6 +147,111 @@ type
 implementation
 
 uses mainunit;
+
+// ----- TNewDownloadThread -----
+
+constructor TNewDownloadThread.Create;
+begin
+  isTerminated:= FALSE;
+  isSuspended := TRUE;
+  FreeOnTerminate:= TRUE;
+  inherited Create(FALSE);
+end;
+
+destructor  TNewDownloadThread.Destroy;
+begin
+  isTerminated:= TRUE;
+  inherited Destroy;
+end;
+
+procedure   TNewDownloadThread.Execute;
+begin
+  while isSuspended do Sleep(100);
+end;
+
+function    TNewDownloadThread.GetPageNumberFromURL(const URL: AnsiString): Boolean;
+  function GetAnimeAPageNumber: Boolean;
+  var
+    i: Cardinal;
+    l: TStringList;
+  begin
+    l:= TStringList.Create;
+    Result:= GetPage(TObject(l), ANIMEA_ROOT +
+                                 StringReplace(URL, '.html', '', []) +
+                                 '-page-1.html',
+                                 manager.manager.retryConnect);
+    for i:= 0 to l.Count-1 do
+      if (Pos('Page 1 of ', l.Strings[i])<>0) then
+      begin
+        manager.pageNumber:= StrToInt(GetString(l.Strings[i], 'Page 1 of ', '<'));
+        break;
+      end;
+    l.Free;
+  end;
+
+begin
+  manager.pageNumber:= 0;
+  if manager.mangaSiteID = ANIMEA_ID then
+    Result:= GetAnimeAPageNumber;
+end;
+
+function    TNewDownloadThread.GetLinkPageFromURL(const URL: AnsiString): Boolean;
+  function GetAnimeALinkPage: Boolean;
+  var
+    i: Cardinal;
+    l: TStringList;
+  begin
+    l:= TStringList.Create;
+    Result:= GetPage(TObject(l),
+                     ANIMEA_ROOT +
+                     StringReplace(URL, '.html', '', []) +
+                     '-page-'+IntToStr(workPtr+1)+'.html',
+                     manager.manager.retryConnect);
+    for i:= 0 to l.Count-1 do
+      if (Pos('class="mangaimg', l.Strings[i])<>0) then
+      begin
+        manager.pageLink.Strings[workPtr]:= GetString(l.Strings[i], '<img src="', '"');
+        break;
+      end;
+    l.Free;
+  end;
+
+begin
+  if manager.mangaSiteID = ANIMEA_ID then
+    Result:= GetAnimeALinkPage;
+end;
+
+// ----- TTaskThread -----
+
+constructor TTaskThread.Create;
+begin
+  isTerminated:= FALSE;
+  isSuspended := TRUE;
+  FreeOnTerminate:= TRUE;
+  SetLength(threads, 0);
+  inherited Create(FALSE);
+end;
+
+destructor  TTaskThread.Destroy;
+begin
+  StopAllTasks;
+  pageLink.Free;
+  isTerminated:= TRUE;
+  inherited Destroy;
+end;
+
+procedure   TTaskThread.StopAllTasks;
+var
+  i, l: Cardinal;
+begin
+  l:= Length(threads);
+  if l > 0 then
+  begin
+    for i:= 0 to l-1 do
+      threads[i].Terminate;
+    SetLength(threads, 0);
+  end;
+end;
 
 // ----- TDownloadThread -----
 

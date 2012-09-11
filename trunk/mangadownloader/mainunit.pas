@@ -213,8 +213,16 @@ type
     procedure vtMangaListDblClick(Sender: TObject);
 
     procedure tmBackupTimer(Sender: TObject);
-  private
-    { private declarations }
+  public
+    options     : TIniFile;
+    favorites   : TFavoriteManager;
+    dataProcess : TDataProcess;
+    mangaInfo   : TMangaInfo;
+    DLManager   : TDownloadManager;
+    updateList  : TUpdateMangaManagerThread;
+    cover       : TJPEGImage;
+    ticks       : Cardinal;
+    backupTicks : Cardinal;
 
     // en: Too lazy to add it one by one
     // vi: Lười ...
@@ -250,16 +258,7 @@ type
     // en: load language file
     // vi: nạp ngôn ngữ
     procedure LoadLanguage(const pos: Integer);
-  public
-    options     : TIniFile;
-    favorites   : TFavoriteManager;
-    dataProcess : TDataProcess;
-    mangaInfo   : TMangaInfo;
-    DLManager   : TDownloadManager;
-    updateList  : TUpdateMangaManagerThread;
-    cover       : TJPEGImage;
-    ticks       : Cardinal;
-    backupTicks : Cardinal;
+
     { public declarations }
   end;
 

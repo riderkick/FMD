@@ -66,6 +66,7 @@ type
   end;
 
   TMangaInformation = class(TObject)
+  public
     mangaInfo: TMangaInfo;
     parse    : TStringList;
     procedure   OnTag (tag : String);
@@ -96,6 +97,7 @@ begin
   Data      := TStringList.Create;
 
   Title     := TStringList.Create;
+  Link      := TStringList.Create;
   Authors   := TStringList.Create;
   Artists   := TStringList.Create;
   Genres    := TStringList.Create;
@@ -109,15 +111,8 @@ end;
 
 destructor  TDataProcess.Destroy;
 begin
-  Title.Clear;
-  Authors.Clear;
-  Artists.Clear;
-  Genres.Clear;
-  Status.Clear;
-  Summary.Clear;
-  Data.Clear;
-
   Title.Free;
+  Link.Free;
   Authors.Free;
   Artists.Free;
   Genres.Free;
@@ -162,6 +157,7 @@ begin
 
   GetParams(l, data.Strings[i]);
   Title.Strings  [i]:= l.Strings[DATA_PARAM_NAME];
+  Link.Strings   [i]:= l.Strings[DATA_PARAM_LINK];
   Authors.Strings[i]:= l.Strings[DATA_PARAM_AUTHORS];
   Artists.Strings[i]:= l.Strings[DATA_PARAM_ARTISTS];
   Genres.Strings [i]:= l.Strings[DATA_PARAM_GENRES];
@@ -209,6 +205,7 @@ begin
     GetParams(l, data.Strings[i]);
 
     title.Add  (l.Strings[DATA_PARAM_NAME]);
+    link.Add   (l.Strings[DATA_PARAM_LINK]);
     authors.Add(l.Strings[DATA_PARAM_AUTHORS]);
     artists.Add(l.Strings[DATA_PARAM_ARTISTS]);
     genres.Add (l.Strings[DATA_PARAM_GENRES]);
@@ -601,7 +598,10 @@ end;
 
 procedure   TMangaInformation.AddInfoToData(const name, link : AnsiString;
                                             const DataProcess: TDataProcess);
+var
+  l: TStringList;
 begin
+  l:= TStringList.Create;
   DataProcess.Data.Add(SetParams(
              [name,
              link,
@@ -613,6 +613,15 @@ begin
              IntToStr(mangaInfo.numChapter),
              ConvertInt32ToStr(GetCurrentJDN),
             '0']));
+  GetParams(l, DataProcess.Data.Strings[DataProcess.Data.Count-1]);
+  DataProcess.title.Add  (l.Strings[DATA_PARAM_NAME]);
+  DataProcess.link.Add   (l.Strings[DATA_PARAM_LINK]);
+  DataProcess.authors.Add(l.Strings[DATA_PARAM_AUTHORS]);
+  DataProcess.artists.Add(l.Strings[DATA_PARAM_ARTISTS]);
+  DataProcess.genres.Add (l.Strings[DATA_PARAM_GENRES]);
+  DataProcess.status.Add (l.Strings[DATA_PARAM_STATUS]);
+  DataProcess.summary.Add(l.Strings[DATA_PARAM_SUMMARY]);
+  l.Free;
 end;
 
 end.

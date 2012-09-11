@@ -13,6 +13,11 @@ interface
 uses SysUtils, Classes, HTTPSend, graphics, genericlib, IniFiles;
 
 const
+  CS_PAGE = 0;
+  CS_INFO = 1;
+  CS_GETPAGENUMBER = 2;
+  CS_DOWNLOADPAGE  = 3;
+
   DATA_PARAM_NAME       = 0;
   DATA_PARAM_LINK       = 1;
   DATA_PARAM_AUTHORS    = 2;
@@ -180,6 +185,8 @@ function  RemoveSymbols(const input: AnsiString): AnsiString;
 // VI: Lấy chuỗi con từ chuỗi mẹ
 function  GetString(const source, sStart, sEnd: AnsiString): AnsiString;
 
+function  Find(const S: String; var List: TStringList; out index: Integer): Boolean;
+
 // EN: Get param from input
 // VI: Lấy param từ input
 procedure GetParams(var output: TStringList; input: AnsiString); overload;
@@ -305,6 +312,24 @@ begin
     l:= Pos(sEnd, s);
     if (l<>0) then
       Result:= LeftStr(s, l-1);
+  end;
+end;
+
+function  Find(const S: String; var List: TStringList; out index: Integer): Boolean;
+var
+  i: Cardinal;
+begin
+  Result:= FALSE;
+  index:= -1;
+  if List.Count = 0 then exit;
+  for i:= 0 to List.Count-1 do
+  begin
+    if CompareStr(S, List.Strings[i])=0 then
+    begin
+      index:= i;
+      Result:= TRUE;
+      break;
+    end;
   end;
 end;
 
