@@ -37,8 +37,7 @@ type
   TUpdateMangaManagerThread = class(TThread)
   protected
     procedure   Execute; override;
-    procedure   DlgNoManga;
-    procedure   DlgHaveManga;
+    procedure   DlgReport;
   public
     isTerminated,
     isSuspended,
@@ -151,14 +150,7 @@ begin
   inherited Destroy;
 end;
 
-procedure   TUpdateMangaManagerThread.DlgNoManga;
-begin
-  MessageDlg('', 'Nothing new.',
-                  mtInformation, [mbYes], 0);
-  Terminate;
-end;
-
-procedure   TUpdateMangaManagerThread.DlgHaveManga;
+procedure   TUpdateMangaManagerThread.DlgReport;
 begin
   MessageDlg('', IntToStr(links.Count) + ' new manga',
                  mtInformation, [mbYes], 0)
@@ -216,8 +208,12 @@ begin
         else
           Inc(j);
       until j = links.Count;
+      if links.Count = 0 then
+      begin
+        Synchronize(DlgReport);
+        Terminate;
+      end;
       workPtr:= 0;
-      if links.Count = 0 then Synchronize(DlgNoManga);
       while workPtr < links.Count do
       begin
         if (threadCount < numberOfThreads) then
@@ -239,7 +235,7 @@ begin
       end;
       while threadCount > 0 do Sleep(100);
     end;
-    Synchronize(DlgHaveManga);
+    Synchronize(DlgReport);
     MainForm.dataProcess.RemoveFilter;
     MainForm.vtMangaList.Clear;
     MainForm.vtMangaList.RootNodeCount:= MainForm.dataProcess.filterPos.Count;

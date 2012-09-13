@@ -15,8 +15,9 @@ uses SysUtils, Classes, HTTPSend, graphics, genericlib, IniFiles;
 const
   CS_PAGE = 0;
   CS_INFO = 1;
-  CS_GETPAGENUMBER = 2;
-  CS_DOWNLOADPAGE  = 3;
+  CS_GETPAGENUMBER   = 2;
+  CS_GETPAGELINK     = 3;
+  CS_DOWNLOAD        = 4;
 
   DATA_PARAM_NAME       = 0;
   DATA_PARAM_LINK       = 1;

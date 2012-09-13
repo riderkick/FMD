@@ -302,7 +302,7 @@ begin
   vtMangaList.RootNodeCount:= dataProcess.filterPos.Count;
 
   vtDownload.NodeDataSize  := SizeOf(TDownloadInfo)-4;
-  vtDownload.RootNodeCount := DLManager.numberOfTasks;
+  vtDownload.RootNodeCount := DLManager.threads.Count;
 
   vtFavorites.NodeDataSize := SizeOf(TFavoriteInfo);
   vtFavorites.RootNodeCount:= favorites.Count;
@@ -368,29 +368,29 @@ begin
       if NOT isCreate then
       begin
         DLManager.AddTask;
-        pos:= DLManager.numberOfTasks-1;
+        pos:= DLManager.threads.Count-1;
         isCreate:= TRUE;
       end;
-      DLManager.chapterName [pos].Add(Format('%.4d - %s', [i+1, mangaInfo.chapterName .Strings[i]]));
-      DLManager.chapterLinks[pos].Add(mangaInfo.chapterLinks.Strings[i]);
+      DLManager.threads[pos].chapterName .Add(Format('%.4d - %s', [i+1, mangaInfo.chapterName.Strings[i]]));
+      DLManager.threads[pos].chapterLinks.Add(mangaInfo.chapterLinks.Strings[i]);
     end;
   if NOT isCreate then exit;
 
   if cbAddAsStopped.Checked then
   begin
-    DLManager.downloadInfo[pos].Status := stStop;
+    DLManager.threads[pos].downloadInfo.Status:= stStop;
     DLManager.taskStatus.Add(STATUS_STOP);
   end
   else
   begin
-    DLManager.downloadInfo[pos].Status := stWait;
+    DLManager.threads[pos].downloadInfo.Status:= stWait;
     DLManager.taskStatus.Add(STATUS_WAIT);
   end;
-  DLManager.chapterPtr.Add(0);
-  // DLManager.activeThreadsPerTask.Add(DLManager.maxDLThreadsPerTask);
-  DLManager.downloadInfo[pos].title  := mangaInfo.title;
-  DLManager.downloadInfo[pos].Website:= mangaInfo.website;
-  DLManager.downloadInfo[pos].SaveTo := CorrectFile(edSaveTo.Text);
+  DLManager.threads[pos].currentDownloadChapterPtr:= 0;
+ // DLManager.activeThreadsPerTask.Add(DLManager.maxDLThreadsPerTask);
+  DLManager.threads[pos].downloadInfo.title  := mangaInfo.title;
+  DLManager.threads[pos].downloadInfo.Website:= mangaInfo.website;
+  DLManager.threads[pos].downloadInfo.SaveTo := CorrectFile(edSaveTo.Text);
 
   // Add to favorites
   if cbAddToFavorites.Checked then
@@ -404,7 +404,8 @@ begin
   UpdateVtDownload;
 
   DLManager.Backup;
-  DLManager.CheckAndActiveTask;
+ // DLManager.CheckAndActiveTask;
+  DLManager.threads.Items[pos].isSuspended:= FALSE;
   pcMain.PageIndex:= 0;
 end;
 
@@ -617,7 +618,7 @@ begin
                 mtConfirmation, [mbYes, mbNo], 0) = mrNo then exit;
   DLManager.RemoveFinishedTasks;
   vtDownload.Clear;
-  vtDownload.RootNodeCount:= DLManager.numberOfTasks;
+  vtDownload.RootNodeCount:= DLManager.threads.Count;
   DLManager.Backup;
 end;
 
@@ -626,7 +627,7 @@ begin
   if NOT Assigned(vtDownload.FocusedNode) then exit;
   DLManager.ActiveTask(vtDownload.FocusedNode.Index);
   vtDownload.Clear;
-  vtDownload.RootNodeCount:= DLManager.numberOfTasks;
+  vtDownload.RootNodeCount:= DLManager.threads.Count;
   DLManager.Backup;
 end;
 
@@ -637,7 +638,7 @@ begin
                 mtConfirmation, [mbYes, mbNo], 0) = mrNo then exit;
   DLManager.RemoveTask(vtDownload.FocusedNode.Index);
   vtDownload.Clear;
-  vtDownload.RootNodeCount:= DLManager.numberOfTasks;
+  vtDownload.RootNodeCount:= DLManager.threads.Count;
   DLManager.Backup;
 end;
 
@@ -648,7 +649,7 @@ begin
   if NOT Assigned(vtDownload.FocusedNode) then exit;
   DLManager.StopTask(vtDownload.FocusedNode.Index);
   vtDownload.Clear;
-  vtDownload.RootNodeCount:= DLManager.numberOfTasks;
+  vtDownload.RootNodeCount:= DLManager.threads.Count;
   DLManager.Backup;
 end;
 
@@ -1073,7 +1074,7 @@ end;
 procedure TMainForm.UpdateVtDownload;
 begin
   vtDownload.Clear;
-  vtDownload.RootNodeCount:= DLManager.numberOfTasks;
+  vtDownload.RootNodeCount:= DLManager.threads.Count;
 end;
 
 procedure TMainForm.UpdateVtFavorites;
@@ -1233,9 +1234,9 @@ begin
     lbMode.Caption:= Format(stModeAll, [dataProcess.filterPos.Count]);
 
   // sync download table infos
-  if DLManager.numberOfTasks > 0 then
+  if DLManager.threads.Count > 0 then
   begin
-    for i:= 0 to DLManager.numberOfTasks - 1 do
+    for i:= 0 to DLManager.threads.Count - 1 do
     begin
       case DLManager.taskStatus.Items[i] of
         STATUS_STOP    : DLManager.downloadInfo[i].Status:= stStop;

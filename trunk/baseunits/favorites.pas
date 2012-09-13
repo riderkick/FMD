@@ -228,7 +228,7 @@ begin
     begin
       currentChapter:= StrToInt(favoriteInfo[i].currentChapter);
       newChapter    := mangaInfo[i].numChapter;
-      if newChapter > currentChapter then
+     { if newChapter > currentChapter then
       begin
         DLManager.AddTask;
         pos:= DLManager.numberOfTasks-1;
@@ -257,7 +257,7 @@ begin
         favoriteInfo[i].currentChapter:= IntToStr(mangaInfo[i].numChapter);
         mangaInfo[i].chapterName .Free;
         mangaInfo[i].chapterLinks.Free;
-      end;
+      end;  }
     end;
     if Assigned(OnUpdateDownload) then
       OnUpdateDownload;

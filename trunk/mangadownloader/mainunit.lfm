@@ -127,11 +127,11 @@ object MainForm: TMainForm
     Height = 446
     Top = 0
     Width = 555
-    ActivePage = tsDownload
+    ActivePage = tsInformation
     Align = alClient
     Font.Style = [fsBold]
     ParentFont = False
-    TabIndex = 0
+    TabIndex = 1
     TabOrder = 1
     OnChange = pcMainChange
     object tsDownload: TTabSheet
