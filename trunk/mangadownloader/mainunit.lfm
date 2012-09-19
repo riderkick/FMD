@@ -1067,7 +1067,7 @@ object MainForm: TMainForm
               Width = 498
               Anchors = [akTop, akLeft, akRight]
               Caption = 'Proxy config'
-              ClientHeight = 84
+              ClientHeight = 86
               ClientWidth = 494
               Enabled = False
               ParentFont = False
@@ -1269,7 +1269,7 @@ object MainForm: TMainForm
             ChildSizing.ShrinkVertical = crsScaleChilds
             ChildSizing.Layout = cclLeftToRightThenTopToBottom
             ChildSizing.ControlsPerLine = 2
-            ClientHeight = 40
+            ClientHeight = 42
             ClientWidth = 457
             Columns = 2
             ItemIndex = 0

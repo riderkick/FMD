@@ -705,14 +705,15 @@ begin
   begin
     pos:= Node.Index;
     data:= Sender.GetNodeData(Node);
-    if Assigned(data) then
+    if (DLManager.threads.Count <> 0) then
+    if (Assigned(data)) AND ((DLManager.threads[pos] <> nil) OR (NOT DLManager.threads[pos].isTerminated)) then
     begin
-      data^.title   := DLManager.downloadInfo[pos].title;
-      data^.status  := DLManager.downloadInfo[pos].Status;
-      data^.progress:= DLManager.downloadInfo[pos].Progress;
-      data^.website := DLManager.downloadInfo[pos].Website;
-      data^.saveTo  := DLManager.downloadInfo[pos].SaveTo;
-      data^.dateTime:= DLManager.downloadInfo[pos].dateTime;
+      data^.title   := DLManager.threads[pos].downloadInfo.title;
+      data^.status  := DLManager.threads[pos].downloadInfo.Status;
+      data^.progress:= DLManager.threads[pos].downloadInfo.Progress;
+      data^.website := DLManager.threads[pos].downloadInfo.Website;
+      data^.saveTo  := DLManager.threads[pos].downloadInfo.SaveTo;
+      data^.dateTime:= DLManager.threads[pos].downloadInfo.dateTime;
       case Column of
         0: CellText:= data^.title;
         1: CellText:= data^.status;
@@ -735,12 +736,16 @@ begin
   begin
     pos:= Node.Index;
     data:= GetNodeData(Node);
-    data.title   := DLManager.downloadInfo[pos].title;
-    data.status  := DLManager.downloadInfo[pos].Status;
-    data.progress:= DLManager.downloadInfo[pos].Progress;
-    data.website := DLManager.downloadInfo[pos].Website;
-    data.saveTo  := DLManager.downloadInfo[pos].SaveTo;
-    data.dateTime:= DLManager.downloadInfo[pos].dateTime;
+    if (DLManager.threads.Count <> 0) then
+      if (DLManager.threads[pos] <> nil) OR (NOT DLManager.threads[pos].isTerminated) then
+      begin
+        data.title   := DLManager.threads[pos].downloadInfo.title;
+        data.status  := DLManager.threads[pos].downloadInfo.Status;
+        data.progress:= DLManager.threads[pos].downloadInfo.Progress;
+        data.website := DLManager.threads[pos].downloadInfo.Website;
+        data.saveTo  := DLManager.threads[pos].downloadInfo.SaveTo;
+        data.dateTime:= DLManager.threads[pos].downloadInfo.dateTime;
+      end;
   end;
 end;
 
@@ -1238,12 +1243,13 @@ begin
   begin
     for i:= 0 to DLManager.threads.Count - 1 do
     begin
-      case DLManager.taskStatus.Items[i] of
-        STATUS_STOP    : DLManager.downloadInfo[i].Status:= stStop;
-        STATUS_WAIT    : DLManager.downloadInfo[i].Status:= stWait;
-        STATUS_DOWNLOAD: DLManager.downloadInfo[i].Status:= stDownloading;
-        STATUS_FINISH  : DLManager.downloadInfo[i].Status:= stFinish;
-      end;
+      if (DLManager.threads[pos] <> nil) OR (NOT DLManager.threads[pos].isTerminated) then
+        case DLManager.taskStatus.Items[i] of
+          STATUS_STOP    : DLManager.threads[pos].downloadInfo.Status:= stStop;
+          STATUS_WAIT    : DLManager.threads[pos].downloadInfo.Status:= stWait;
+          STATUS_DOWNLOAD: DLManager.threads[pos].downloadInfo.Status:= stDownloading;
+          STATUS_FINISH  : DLManager.threads[pos].downloadInfo.Status:= stFinish;
+        end;
     end;
   end;
 

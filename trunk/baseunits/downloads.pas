@@ -128,7 +128,7 @@ type
 
     ini                 : TIniFile;
 
-    downloadInfo        : array of TDownloadInfo;
+   // downloadInfo        : array of TDownloadInfo;
     constructor Create;
     destructor  Destroy; override;
 
@@ -171,7 +171,8 @@ procedure   TNewDownloadThread.Execute;
 var
   i: Cardinal;
 begin
-  while isSuspended do Sleep(100);
+  while isSuspended do
+    Sleep(100);
   case checkStyle of
     // get page number, and prepare number of pagelinks for save links
     CS_GETPAGENUMBER:
@@ -302,63 +303,133 @@ end;
 
 destructor  TTaskThread.Destroy;
 begin
-  pageLinks.Free;
   Stop;
+  threads.Free;
+  pageLinks.Free;
   chapterName.Free;
   chapterLinks.Free;
-  pageLinks.Free;
   isTerminated:= TRUE;
   inherited Destroy;
 end;
 
 procedure   TTaskThread.Execute;
+
+  procedure   Checkout(const Flag: Cardinal);
+  var
+    i: Cardinal;
+  begin
+    Sleep(32);
+    if activeThreadCount >= manager.maxDLThreadsPerTask then exit;
+    for i:= 0 to manager.maxDLThreadsPerTask-1 do
+    begin
+      if i >= threads.Count then
+      begin
+        while isSuspended do Sleep(100);
+        Inc(activeThreadCount);
+        threads.Add(TNewDownloadThread.Create);
+        threads.Items[threads.Count-1].manager:= self;
+        threads.Items[threads.Count-1].workPtr:= workPtr;
+        threads.Items[threads.Count-1].checkStyle:= Flag;
+        threads.Items[threads.Count-1].isSuspended:= FALSE;
+        Inc(workPtr);
+        exit;
+       end
+      else
+      if (threads.Items[i].isTerminated) then
+      begin
+        while isSuspended do Sleep(100);
+        Inc(activeThreadCount);
+        threads.Items[i]:= TNewDownloadThread.Create;
+        threads.Items[i].manager:= self;
+        threads.Items[i].workPtr:= workPtr;
+        threads.Items[i].checkStyle:= Flag;
+        threads.Items[i].isSuspended:= FALSE;
+        Inc(workPtr);
+        exit;
+      end;
+    end;
+  end;
+
+  procedure  WaitFor;
+  var
+    done: Boolean;
+    i   : Cardinal;
+  begin
+    repeat
+      done:= TRUE;
+      for i:= 0 to threads.Count-1 do
+        if NOT threads[i].isTerminated then
+        begin
+          done:= FALSE;
+          sleep(100);
+        end;
+    until done;
+  end;
+
 var
   i, count: Cardinal;
 begin
   while isSuspended do Sleep(100);
   while currentDownloadChapterPtr < chapterLinks.Count do
   begin
+    activeThreadCount:= 1;
     while isSuspended do Sleep(100);
-    if activeThreadCount < manager.maxDLThreadsPerTask then
-      for i:= 0 to manager.maxDLThreadsPerTask-1 do
-      begin
-        while isSuspended do Sleep(100);
-        if i >= threads.Count then
-        begin
-          while isSuspended do Sleep(100);
-          threads.Add(TNewDownloadThread.Create);
-          threads.Items[i].workPtr:= workPtr;
-          threads.Items[i].checkStyle:= CS_GETPAGELINK;
-          threads.Items[i].isSuspended:= FALSE;
-          Inc(workPtr);
-          break;
-        end
-        else
-        if (threads.Items[i].isTerminated) then
-        begin
-          while isSuspended do Sleep(100);
-          threads.Items[i]:= TNewDownloadThread.Create;
-          threads.Items[i].workPtr:= workPtr;
-          threads.Items[i].checkStyle:= CS_GETPAGELINK;
-          threads.Items[i].isSuspended:= FALSE;
-          Inc(workPtr);
-          break;
-        end;
-      end;
+    // get page number
+    Stop;
+    threads.Add(TNewDownloadThread.Create);
+    i:= threads.Count-1;
+    threads.Items[threads.Count-1].manager:= self;
+    threads.Items[threads.Count-1].workPtr:= workPtr;
+    threads.Items[threads.Count-1].checkStyle:= CS_GETPAGENUMBER;
+    threads.Items[threads.Count-1].isSuspended:= FALSE;
+    CheckPath(downloadInfo.SaveTo+
+              '/'+
+              chapterName.Strings[currentDownloadChapterPtr]);
+    while (isSuspended) OR (NOT threads.Items[threads.Count-1].isTerminated) do
+      Sleep(100);
+
+    //get page links
+    workPtr:= 0;
+    downloadInfo.iProgress:= 0;
+    while workPtr < pageNumber do
+    begin
+      Checkout(CS_GETPAGELINK);
+      downloadInfo.Progress:= Format('%d/%d', [workPtr, pageNumber]);
+      downloadInfo.Status  := Format('%s (%d/%d)', [stPreparing, currentDownloadChapterPtr, chapterLinks.Count]);
+      Inc(downloadInfo.iProgress);
+      MainForm.vtDownload.Repaint;
+    end;
+    WaitFor;
+
+    //get page links
+    workPtr:= 0;
+    downloadInfo.iProgress:= 0;
+    while workPtr < pageLinks.Count do
+    begin
+      Checkout(CS_DOWNLOAD);
+      downloadInfo.Progress:= Format('%d/%d', [workPtr, pageLinks.Count]);
+      downloadInfo.Status  := Format('%s (%d/%d)', [stDownloading, currentDownloadChapterPtr, chapterLinks.Count]);
+      Inc(downloadInfo.iProgress);
+      MainForm.vtDownload.Repaint;
+    end;
+    WaitFor;
     Inc(currentDownloadChapterPtr);
   end;
+  Terminate;
 end;
 
 procedure   TTaskThread.Stop;
 var
   i: Cardinal;
 begin
-  if threads.Count > 0 then
-  begin
-    for i:= 0 to threads.Count-1 do
+  if threads.Count = 0 then exit;
+  for i:= 0 to threads.Count-1 do
+    if NOT threads.Items[i].isTerminated then
+    begin
+      threads.Items[i].Suspend;
       threads.Items[i].Terminate;
-    threads.Clear;
-  end;
+    end;
+  threads.Clear;
 end;
 
 // ----- TDownloadThread -----
@@ -634,7 +705,7 @@ begin
   // Some of these maybe unecessary because they are already in Restore
   taskStatus          := TByteList.Create;
   threads             := TTaskThreadList.Create;
-  SetLength(downloadInfo, 0);
+ // SetLength(downloadInfo, 0);
 
   isFinishTaskAccessed:= FALSE;
 
@@ -762,6 +833,8 @@ end;
 procedure   TDownloadManager.AddTask;
 begin
   threads.Add(TTaskThread.Create);
+  threads.Items[threads.Count-1].manager:= self;
+  //SetLength(downloadInfo, threads.Count);
 end;
 
 procedure   TDownloadManager.CheckAndActiveTask;
