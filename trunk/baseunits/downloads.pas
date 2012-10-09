@@ -15,10 +15,11 @@ uses
 
 type
   TDownloadManager = class;
+  TTaskThreadContainer = class;
   TTaskThread = class;
 
   // this class will replace the old TDownloadThread
-  TNewDownloadThread = class(TThread)
+  TDownloadThread = class(TThread)
   protected
     function    GetLinkPageFromURL(const URL: AnsiString): Boolean;
     function    GetPageNumberFromURL(const URL: AnsiString): Boolean;
@@ -37,7 +38,7 @@ type
     destructor  Destroy; override;
   end;
 
-  TDownloadThreadList = TFPGList<TNewDownloadThread>;
+  TDownloadThreadList = TFPGList<TDownloadThread>;
 
   TTaskThread = class(TThread)
   protected
@@ -46,10 +47,24 @@ type
     isTerminated,
     isSuspended: Boolean;
 
+    container  : TTaskThreadContainer;
+    threads    : TDownloadThreadList;
+
+    constructor Create;
+    destructor  Destroy; override;
+    procedure   Stop(const check: Boolean = TRUE);
+  end;
+
+  TTaskThreadContainer = class
+    thread : TTaskThread;
+    manager: TDownloadManager;
+
     downloadInfo: TDownloadInfo;
 
+    currentPageNumber,
     currentDownloadChapterPtr,
     activeThreadCount,
+    Status     : Cardinal;
     workPtr    : Cardinal;
     mangaSiteID: Cardinal;
     pageNumber : Cardinal;
@@ -57,53 +72,12 @@ type
     chapterName,
     chapterLinks,
     pageLinks  : TStringList;
-    manager    : TDownloadManager;
-    threads    : TDownloadThreadList;
 
     constructor Create;
     destructor  Destroy; override;
-    procedure   Stop;
   end;
 
-  // deprecated - will be replaced later
-  {TDownloadThread = class(TThread)
-  protected
-    procedure   Execute; override;
-
-    // en: Get page number from a chapter
-    // vi: Lấy số trang từ 1 chương
-    function    GetLinkPageFromURL(const URL: AnsiString): Boolean;
-    function    GetPageNumberFromURL(const URL: AnsiString): Boolean;
-    function    DownloadPage: Boolean;
-
-    procedure   Compress;
-    procedure   IncreasePrepareProgress;
-    procedure   IncreaseDownloadProgress;
-  public
-    isTerminate   : Boolean;
-    chapterPtr    : Cardinal;
-    // ID of the thread (0 will be the leader)
-    threadID      : Cardinal;
-    // ID of the task it served
-    taskID        : Cardinal;
-    // ID of the site
-    mangaSiteID   : Cardinal;
-    // starting point
-    workPtr       : Cardinal;
-    // number of pages of a chapter
-    pageNumber    : Cardinal;
-    // The pointer to the manager
-    manager       : TDownloadManager;
-
-    pass0,
-    pass1,
-    pass2,
-    lastPass      : Boolean;
-
-    constructor Create;
-  end; }
-
-  TTaskThreadList = TFPGList<TTaskThread>;
+  TTaskThreadContainerList = TFPGList<TTaskThreadContainer>;
 
   TDownloadManager = class(TObject)
   private
@@ -117,14 +91,10 @@ type
     maxDLTasks,
     maxDLThreadsPerTask : Cardinal;
 
-    // task status (finished, paused, ect)
-    taskStatus          : TByteList;
     // number of active thread per task
 
     // current chapterLinks which thread is processing
-    pageNumbers,
-    chapterPtr          : TCardinalList;
-    threads             : TTaskThreadList;//array of TDownloadThread;
+    containers          : TTaskThreadContainerList;
 
     ini                 : TIniFile;
 
@@ -136,10 +106,13 @@ type
     procedure   Backup;
 
     procedure   AddTask;
+    procedure   CheckAndActiveTaskAtStartup;
     procedure   CheckAndActiveTask;
+    function    CanActiveTask: Boolean;
     procedure   ActiveTask(const taskID: Cardinal);
     procedure   StopTask(const taskID: Cardinal);
     procedure   StopAllTasks;
+    procedure   StopAllDownloadTasksForExit;
     procedure   FinishTask(const taskID: Cardinal);
 
     procedure   RemoveTask(const taskID: Cardinal);
@@ -150,9 +123,9 @@ implementation
 
 uses mainunit;
 
-// ----- TNewDownloadThread -----
+// ----- TDownloadThread -----
 
-constructor TNewDownloadThread.Create;
+constructor TDownloadThread.Create;
 begin
   isTerminated:= FALSE;
   isSuspended := TRUE;
@@ -160,14 +133,14 @@ begin
   inherited Create(FALSE);
 end;
 
-destructor  TNewDownloadThread.Destroy;
+destructor  TDownloadThread.Destroy;
 begin
-  Dec(manager.activeThreadCount);
+  Dec(manager.container.activeThreadCount);
   isTerminated:= TRUE;
   inherited Destroy;
 end;
 
-procedure   TNewDownloadThread.Execute;
+procedure   TDownloadThread.Execute;
 var
   i: Cardinal;
 begin
@@ -177,15 +150,15 @@ begin
     // get page number, and prepare number of pagelinks for save links
     CS_GETPAGENUMBER:
       begin
-        GetPageNumberFromURL(manager.chapterLinks.Strings[manager.currentDownloadChapterPtr]);
-        manager.pageLinks.Clear;
-        for i:= 0 to manager.pageNumber-1 do
-          manager.pageLinks.Add('');
+        GetPageNumberFromURL(manager.container.chapterLinks.Strings[manager.container.currentDownloadChapterPtr]);
+        // prepare 'space' for link updater
+        for i:= 0 to manager.container.pageNumber-1 do
+          manager.container.pageLinks.Add('');
       end;
     // get page link
     CS_GETPAGELINK:
       begin
-        GetLinkPageFromURL(manager.chapterLinks.Strings[manager.currentDownloadChapterPtr]);
+        GetLinkPageFromURL(manager.container.chapterLinks.Strings[manager.container.currentDownloadChapterPtr]);
       end;
     // download page
     CS_DOWNLOAD:
@@ -196,7 +169,7 @@ begin
   Terminate;
 end;
 
-procedure   TNewDownloadThread.Compress;
+procedure   TDownloadThread.Compress;
 var
   Compresser: TCompress;
 begin
@@ -204,14 +177,14 @@ begin
   begin
     Sleep(100);
     Compresser:= TCompress.Create;
-    Compresser.Path:= manager.downloadInfo.SaveTo+'/'+
-                      manager.chapterName.Strings[manager.currentDownloadChapterPtr-1];
+    Compresser.Path:= manager.container.downloadInfo.SaveTo+'/'+
+                      manager.container.chapterName.Strings[manager.container.currentDownloadChapterPtr-1];
     Compresser.Execute;
     Compresser.Free;
   end;
 end;
 
-function    TNewDownloadThread.GetPageNumberFromURL(const URL: AnsiString): Boolean;
+function    TDownloadThread.GetPageNumberFromURL(const URL: AnsiString): Boolean;
   function GetAnimeAPageNumber: Boolean;
   var
     i: Cardinal;
@@ -221,23 +194,23 @@ function    TNewDownloadThread.GetPageNumberFromURL(const URL: AnsiString): Bool
     Result:= GetPage(TObject(l), ANIMEA_ROOT +
                                  StringReplace(URL, '.html', '', []) +
                                  '-page-1.html',
-                                 manager.manager.retryConnect);
+                                 manager.container.manager.retryConnect);
     for i:= 0 to l.Count-1 do
       if (Pos('Page 1 of ', l.Strings[i])<>0) then
       begin
-        manager.pageNumber:= StrToInt(GetString(l.Strings[i], 'Page 1 of ', '<'));
+        manager.container.pageNumber:= StrToInt(GetString(l.Strings[i], 'Page 1 of ', '<'));
         break;
       end;
     l.Free;
   end;
 
 begin
-  manager.pageNumber:= 0;
-  if manager.mangaSiteID = ANIMEA_ID then
+  manager.container.pageNumber:= 0;
+  if manager.container.mangaSiteID = ANIMEA_ID then
     Result:= GetAnimeAPageNumber;
 end;
 
-function    TNewDownloadThread.GetLinkPageFromURL(const URL: AnsiString): Boolean;
+function    TDownloadThread.GetLinkPageFromURL(const URL: AnsiString): Boolean;
   function GetAnimeALinkPage: Boolean;
   var
     i: Cardinal;
@@ -248,27 +221,27 @@ function    TNewDownloadThread.GetLinkPageFromURL(const URL: AnsiString): Boolea
                      ANIMEA_ROOT +
                      StringReplace(URL, '.html', '', []) +
                      '-page-'+IntToStr(workPtr+1)+'.html',
-                     manager.manager.retryConnect);
+                     manager.container.manager.retryConnect);
     for i:= 0 to l.Count-1 do
       if (Pos('class="mangaimg', l.Strings[i])<>0) then
       begin
-        manager.pageLinks.Strings[workPtr]:= GetString(l.Strings[i], '<img src="', '"');
+        manager.container.pageLinks.Strings[workPtr]:= GetString(l.Strings[i], '<img src="', '"');
         break;
       end;
     l.Free;
   end;
 
 begin
-  if manager.mangaSiteID = ANIMEA_ID then
+  if manager.container.mangaSiteID = ANIMEA_ID then
     Result:= GetAnimeALinkPage;
 end;
 
-function    TNewDownloadThread.DownloadPage: Boolean;
+function    TDownloadThread.DownloadPage: Boolean;
 var
   s, ext: String;
 begin
-  if manager.pageLinks.Strings[workPtr] = '' then exit;
-  s:= manager.pageLinks.Strings[workPtr];
+  if manager.container.pageLinks.Strings[workPtr] = '' then exit;
+  s:= manager.container.pageLinks.Strings[workPtr];
   if (Pos('.jpeg', LowerCase(s))<>0) OR (Pos('.jpg', LowerCase(s))<>0) then
     ext:= '.jpg'
   else
@@ -278,12 +251,12 @@ begin
   if Pos('.gif', LowerCase(s))<>0 then
     ext:= '.gif';
   SetCurrentDir(oldDir);
-  SavePage(manager.pageLinks.Strings[workPtr],
+  SavePage(manager.container.pageLinks.Strings[workPtr],
            Format('%s/%.3d%s',
-                  [manager.downloadInfo.SaveTo+
-                  '/'+manager.chapterName.Strings[manager.currentDownloadChapterPtr],
-                  workPtr+1, ext]), manager.manager.retryConnect);
-  manager.pageLinks.Strings[workPtr]:= '';
+                  [manager.container.downloadInfo.SaveTo+
+                  '/'+manager.container.chapterName.Strings[manager.container.currentDownloadChapterPtr],
+                  workPtr+1, ext]), manager.container.manager.retryConnect);
+  manager.container.pageLinks.Strings[workPtr]:= '';
   SetCurrentDir(oldDir);
 end;
 
@@ -291,9 +264,6 @@ end;
 
 constructor TTaskThread.Create;
 begin
-  chapterLinks:= TStringList.Create;
-  chapterName := TStringList.Create;
-  pageLinks   := TStringList.Create;
   isTerminated:= FALSE;
   isSuspended := TRUE;
   FreeOnTerminate:= TRUE;
@@ -305,9 +275,6 @@ destructor  TTaskThread.Destroy;
 begin
   Stop;
   threads.Free;
-  pageLinks.Free;
-  chapterName.Free;
-  chapterLinks.Free;
   isTerminated:= TRUE;
   inherited Destroy;
 end;
@@ -319,32 +286,36 @@ procedure   TTaskThread.Execute;
     i: Cardinal;
   begin
     Sleep(32);
-    if activeThreadCount >= manager.maxDLThreadsPerTask then exit;
-    for i:= 0 to manager.maxDLThreadsPerTask-1 do
+    if container.activeThreadCount >= container.manager.maxDLThreadsPerTask then exit;
+    for i:= 0 to container.manager.maxDLThreadsPerTask-1 do
     begin
       if i >= threads.Count then
       begin
         while isSuspended do Sleep(100);
-        Inc(activeThreadCount);
-        threads.Add(TNewDownloadThread.Create);
+        Inc(container.activeThreadCount);
+        threads.Add(TDownloadThread.Create);
         threads.Items[threads.Count-1].manager:= self;
-        threads.Items[threads.Count-1].workPtr:= workPtr;
+        threads.Items[threads.Count-1].workPtr:= container.workPtr;
         threads.Items[threads.Count-1].checkStyle:= Flag;
         threads.Items[threads.Count-1].isSuspended:= FALSE;
-        Inc(workPtr);
+        Inc(container.workPtr);
+        if Flag = CS_GETPAGELINK then
+          Inc(container.currentPageNumber);
         exit;
-       end
+      end
       else
       if (threads.Items[i].isTerminated) then
       begin
         while isSuspended do Sleep(100);
-        Inc(activeThreadCount);
-        threads.Items[i]:= TNewDownloadThread.Create;
+        Inc(container.activeThreadCount);
+        threads.Items[i]:= TDownloadThread.Create;
         threads.Items[i].manager:= self;
-        threads.Items[i].workPtr:= workPtr;
+        threads.Items[i].workPtr:= container.workPtr;
         threads.Items[i].checkStyle:= Flag;
         threads.Items[i].isSuspended:= FALSE;
-        Inc(workPtr);
+        Inc(container.workPtr);
+        if Flag = CS_GETPAGELINK then
+          Inc(container.currentPageNumber);
         exit;
       end;
     end;
@@ -370,58 +341,93 @@ var
   i, count: Cardinal;
 begin
   while isSuspended do Sleep(100);
-  while currentDownloadChapterPtr < chapterLinks.Count do
+  while container.currentDownloadChapterPtr < container.chapterLinks.Count do
   begin
-    activeThreadCount:= 1;
+    if Terminated then exit;
+    container.activeThreadCount:= 1;
     while isSuspended do Sleep(100);
+
     // get page number
-    Stop;
-    threads.Add(TNewDownloadThread.Create);
-    i:= threads.Count-1;
-    threads.Items[threads.Count-1].manager:= self;
-    threads.Items[threads.Count-1].workPtr:= workPtr;
-    threads.Items[threads.Count-1].checkStyle:= CS_GETPAGENUMBER;
-    threads.Items[threads.Count-1].isSuspended:= FALSE;
-    CheckPath(downloadInfo.SaveTo+
-              '/'+
-              chapterName.Strings[currentDownloadChapterPtr]);
-    while (isSuspended) OR (NOT threads.Items[threads.Count-1].isTerminated) do
-      Sleep(100);
-
-    //get page links
-    workPtr:= 0;
-    downloadInfo.iProgress:= 0;
-    while workPtr < pageNumber do
+    if container.currentPageNumber = 0 then
     begin
-      Checkout(CS_GETPAGELINK);
-      downloadInfo.Progress:= Format('%d/%d', [workPtr, pageNumber]);
-      downloadInfo.Status  := Format('%s (%d/%d)', [stPreparing, currentDownloadChapterPtr, chapterLinks.Count]);
-      Inc(downloadInfo.iProgress);
-      MainForm.vtDownload.Repaint;
+      if Terminated then exit;
+      Stop(FALSE);
+      threads.Add(TDownloadThread.Create);
+      i:= threads.Count-1;
+       // container.Status:= STATUS_PREPARE;
+      threads.Items[threads.Count-1].manager:= self;
+      threads.Items[threads.Count-1].workPtr:= container.workPtr;
+      threads.Items[threads.Count-1].checkStyle:= CS_GETPAGENUMBER;
+      threads.Items[threads.Count-1].isSuspended:= FALSE;
+      CheckPath(container.downloadInfo.SaveTo+
+                '/'+
+                container.chapterName.Strings[container.currentDownloadChapterPtr]);
+      while (isSuspended) OR (NOT threads.Items[threads.Count-1].isTerminated) do
+        Sleep(100);
     end;
-    WaitFor;
 
     //get page links
-    workPtr:= 0;
-    downloadInfo.iProgress:= 0;
-    while workPtr < pageLinks.Count do
+    if container.currentPageNumber < container.pageNumber then
     begin
+      container.workPtr:= container.currentPageNumber;
+      container.downloadInfo.iProgress:= 0;
+      while container.workPtr < container.pageNumber do
+      begin
+        if Terminated then exit;
+        Checkout(CS_GETPAGELINK);
+        container.downloadInfo.Progress:= Format('%d/%d', [container.workPtr, container.pageNumber]);
+        container.downloadInfo.Status  := Format('%s (%d/%d)', [stPreparing, container.currentDownloadChapterPtr, container.chapterLinks.Count]);
+        Inc(container.downloadInfo.iProgress);
+        MainForm.vtDownload.Repaint;
+      end;
+      WaitFor;
+    end;
+
+    //get page links
+   // container.Status:= STATUS_DOWNLOAD;
+    container.workPtr:= 0;
+    container.downloadInfo.iProgress:= 0;
+    while container.workPtr < container.pageLinks.Count do
+    begin
+      if Terminated then exit;
       Checkout(CS_DOWNLOAD);
-      downloadInfo.Progress:= Format('%d/%d', [workPtr, pageLinks.Count]);
-      downloadInfo.Status  := Format('%s (%d/%d)', [stDownloading, currentDownloadChapterPtr, chapterLinks.Count]);
-      Inc(downloadInfo.iProgress);
+      container.downloadInfo.Progress:= Format('%d/%d', [container.workPtr, container.pageLinks.Count]);
+      container.downloadInfo.Status  := Format('%s (%d/%d)', [stDownloading, container.currentDownloadChapterPtr, container.chapterLinks.Count]);
+      Inc(container.downloadInfo.iProgress);
       MainForm.vtDownload.Repaint;
     end;
     WaitFor;
-    Inc(currentDownloadChapterPtr);
+    if Terminated then exit;
+    container.currentPageNumber:= 0;
+    container.pageLinks.Clear;
+    Inc(container.currentDownloadChapterPtr);
   end;
   Terminate;
 end;
 
-procedure   TTaskThread.Stop;
+procedure   TTaskThread.Stop(const check: Boolean = TRUE);
 var
   i: Cardinal;
 begin
+  if check then
+  begin
+    if (container.workPtr >= container.pageLinks.Count) AND
+       (container.currentDownloadChapterPtr >= container.chapterLinks.Count) then
+    begin
+      container.downloadInfo.Status  := stFinish;
+      container.downloadInfo.Progress:= '';
+      container.Status:= STATUS_FINISH;
+      container.manager.CheckAndActiveTask;
+      MainForm.vtDownload.Repaint;
+    end
+    else
+    begin
+      container.downloadInfo.Status  := Format('%s (%d/%d)', [stStop, container.currentDownloadChapterPtr, container.chapterLinks.Count]);
+      container.Status:= STATUS_STOP;
+      container.manager.CheckAndActiveTask;
+      MainForm.vtDownload.Repaint;
+    end;
+  end;
   if threads.Count = 0 then exit;
   for i:= 0 to threads.Count-1 do
     if NOT threads.Items[i].isTerminated then
@@ -430,6 +436,28 @@ begin
       threads.Items[i].Terminate;
     end;
   threads.Clear;
+end;
+
+// ----- TTaskThreadContainer -----
+
+constructor TTaskThreadContainer.Create;
+begin
+  chapterLinks:= TStringList.Create;
+  chapterName := TStringList.Create;
+  pageLinks   := TStringList.Create;
+  workPtr:= 0;
+  currentPageNumber:= 0;
+  currentDownloadChapterPtr:= 0;
+  inherited Create;
+end;
+
+destructor  TTaskThreadContainer.Destroy;
+begin
+  thread.Terminate;
+  pageLinks.Free;
+  chapterName.Free;
+  chapterLinks.Free;
+  inherited Destroy;
 end;
 
 // ----- TDownloadThread -----
@@ -698,18 +726,13 @@ end;
 
 constructor TDownloadManager.Create;
 begin
+  inherited Create;
+
   // Create INI file
   ini:= TIniFile.Create(WORK_FOLDER + WORK_FILE);
   ini.CacheUpdates:= FALSE;
-
-  // Some of these maybe unecessary because they are already in Restore
-  taskStatus          := TByteList.Create;
-  threads             := TTaskThreadList.Create;
- // SetLength(downloadInfo, 0);
-
+  containers:= TTaskThreadContainerList.Create;
   isFinishTaskAccessed:= FALSE;
-
-  inherited Create;
 
   // Restore old INI file
   Restore;
@@ -718,11 +741,10 @@ end;
 destructor  TDownloadManager.Destroy;
 var i: Cardinal;
 begin
-  if threads.Count <> 0 then
-    for i:= 0 to threads.Count-1 do
-      if NOT threads.Items[i].isTerminated then
-        threads[i].Terminate;
-  taskStatus.Free;
+  if containers.Count <> 0 then
+    for i:= 0 to containers.Count-1 do
+      if NOT containers.Items[i].thread.isTerminated then
+        containers.Items[i].thread.Terminate;
   ini.Free;
   inherited Destroy;
 end;
@@ -730,61 +752,51 @@ end;
 procedure   TDownloadManager.Restore;
 var
   s: AnsiString;
+  tmp,
   i: Cardinal;
 begin
   // Restore general information first
- { numberOfTasks        := ini.ReadInteger('general', 'NumberOfTasks', 0);
-  SetLength(chapterLinks, ini.ReadInteger('general', 'NumberOfChapterLinks', 0));
-  SetLength(chapterName , ini.ReadInteger('general', 'NumberOfChapterName', 0));
-  SetLength(pageLinks   , ini.ReadInteger('general', 'NumberOfpageLinks', 0));
-
-  if numberOfTasks > 0 then
+  if containers.Count > 0 then
   begin
-    SetLength(downloadInfo, numberOfTasks);
-
-    // Restore chapter links, chapter name and page links
-    if Length(chapterLinks) > 0 then
+    for i:= 0 to containers.Count-1 do
     begin
-      for i:= 0 to Length(chapterLinks)-1 do
-      begin
-        if NOT Assigned(chapterLinks[i]) then
-          chapterLinks[i]:= TStringList.Create;
-        if NOT Assigned(chapterName [i]) then
-          chapterName [i]:= TStringList.Create;
-        if NOT Assigned(pageLinks [i]) then
-          pageLinks   [i]:= TStringList.Create;
-        chapterLinks[i].Clear;
-        chapterName [i].Clear;
-        pageLinks   [i].Clear;
-        s:= ini.ReadString('ChapterLinks', 'Strings'+IntToStr(i), '');
-        if s <> '' then
-          GetParams(chapterLinks[i], s);
-        s:= ini.ReadString('ChapterName', 'Strings'+IntToStr(i), '');
-        if s <> '' then
-          GetParams(chapterName[i], s);
-        s:= ini.ReadString('PageLinks', 'Strings'+IntToStr(i), '');
-        if s <> '' then
-          GetParams(pageLinks[i], s);
-      end;
+      containers.Items[i].Destroy;
     end;
-    activeThreadsPerTask.Clear;
-    taskStatus.Clear;
-    chapterPtr.Clear;
+    containers.Clear;
+  end;
+  tmp:= ini.ReadInteger('general', 'NumberOfTasks', 0);
+  if tmp = 0 then exit;
+  for i:= 0 to tmp-1 do
+  begin
+    containers.Add(TTaskThreadContainer.Create);
+    containers.Items[i].manager:= self;
+  end;
 
-    // Restore task information
-    for i:= 0 to numberOfTasks-1 do
-    begin
-      taskStatus.Add(ini.ReadInteger('task'+IntToStr(i), 'TaskStatus', 0));
-      chapterPtr.Add(ini.ReadInteger('task'+IntToStr(i), 'ChapterPtr', 0));
+  // Restore chapter links, chapter name and page links
+  for i:= 0 to containers.Count-1 do
+  begin
+    s:= ini.ReadString('task'+IntToStr(i), 'ChapterLinks', '');
+    if s <> '' then
+      GetParams(containers.Items[i].chapterLinks, s);
+    s:= ini.ReadString('task'+IntToStr(i), 'ChapterName', '');
+    if s <> '' then
+      GetParams(containers.Items[i].chapterName, s);
+    s:= ini.ReadString('task'+IntToStr(i), 'PageLinks', '');
+    if s <> '' then
+      GetParams(containers.Items[i].pageLinks, s);
 
-      downloadInfo[i].title    := ini.ReadString('task'+IntToStr(i), 'Title', '');
-      downloadInfo[i].status   := ini.ReadString('task'+IntToStr(i), 'Status', '');
-     // downloadInfo[i].fProgress:= ini.ReadFloat ('task'+IntToStr(i), 'Progress', 0);
-      downloadInfo[i].website  := ini.ReadString('task'+IntToStr(i), 'Website', '');
-      downloadInfo[i].saveTo   := ini.ReadString('task'+IntToStr(i), 'SaveTo', '');
-      downloadInfo[i].dateTime := ini.ReadString('task'+IntToStr(i), 'DateTime', '');
-    end;
-  end;  }
+    containers.Items[i].Status                   := ini.ReadInteger('task'+IntToStr(i), 'TaskStatus', 0);
+    containers.Items[i].currentDownloadChapterPtr:= ini.ReadInteger('task'+IntToStr(i), 'ChapterPtr', 0);
+    containers.Items[i].pageNumber               := ini.ReadInteger('task'+IntToStr(i), 'NumberOfPages', 0);
+    containers.Items[i].currentPageNumber        := ini.ReadInteger('task'+IntToStr(i), 'CurrentPage', 0);
+
+    containers.Items[i].downloadInfo.title   := ini.ReadString('task'+IntToStr(i), 'Title', 'NULL');
+    containers.Items[i].downloadInfo.status  := ini.ReadString('task'+IntToStr(i), 'Status', 'NULL');
+    containers.Items[i].downloadInfo.Progress:= ini.ReadString('task'+IntToStr(i), 'Progress', 'NULL');
+    containers.Items[i].downloadInfo.website := ini.ReadString('task'+IntToStr(i), 'Website', 'NULL');
+    containers.Items[i].downloadInfo.saveTo  := ini.ReadString('task'+IntToStr(i), 'SaveTo', 'NULL');
+    containers.Items[i].downloadInfo.dateTime:= ini.ReadString('task'+IntToStr(i), 'DateTime', 'NULL');
+  end;
 end;
 
 procedure   TDownloadManager.Backup;
@@ -792,49 +804,46 @@ var
   i: Cardinal;
 begin
   // Erase all sections
- { ini.EraseSection('ChapterLinks');
-  ini.EraseSection('ChapterName');
-  ini.EraseSection('PageLinks');
   for i:= 0 to ini.ReadInteger('general', 'NumberOfTasks', 0) do
     ini.EraseSection('task'+IntToStr(i));
   ini.EraseSection('general');
 
   // backup
-  if numberOfTasks > 0 then
+  if containers.Count > 0 then
   begin
-    ini.WriteInteger('general', 'NumberOfTasks', numberOfTasks);
-    ini.WriteInteger('general', 'NumberOfChapterLinks', Length(chapterLinks));
-    ini.WriteInteger('general', 'NumberOfChapterName', Length(chapterName));
-    ini.WriteInteger('general', 'NumberOfpageLinks', Length(pageLinks));
+    ini.WriteInteger('general', 'NumberOfTasks', containers.Count);
 
-    for i:= 0 to Length(chapterLinks)-1 do
-      ini.WriteString('ChapterLinks', 'Strings'+IntToStr(i), SetParams(threads[i].chapterLinks);
-    for i:= 0 to Length(chapterName)-1 do
-      ini.WriteString('ChapterName', 'Strings'+IntToStr(i), SetParams(threads[i].ChapterName);
-    if Length(pageLinks) > 0 then
-      for i:= 0 to Length(pageLinks)-1 do
-        ini.WriteString('PageLinks', 'Strings'+IntToStr(i), SetParams(threads[i].pageLinks);
-    for i:= 0 to numberOfTasks-1 do
+    for i:= 0 to containers.Count-1 do
     begin
-      ini.WriteInteger('task'+IntToStr(i), 'TaskStatus', taskStatus.Items[i]);
-      ini.WriteInteger('task'+IntToStr(i), 'ChapterPtr', threads[i].currentDownloadChapterPtr);
+     // ini.WriteInteger('task'+IntToStr(i), 'NumberOfChapterLinks', containers.Items[i].chapterLinks.Count);
+     // ini.WriteInteger('task'+IntToStr(i), 'NumberOfChapterName', containers.Items[i].chapterName.Count);
+     // ini.WriteInteger('task'+IntToStr(i), 'NumberOfPageLinks', containers.Items[i].pageLinks.Count);
 
-      ini.WriteString ('task'+IntToStr(i), 'Title', threads[i].downloadInfo.title);
-      ini.WriteString ('task'+IntToStr(i), 'Status', threads[i].downloadInfo.status);
-     // ini.WriteFloat  ('task'+IntToStr(i), 'Progress', downloadInfo[i].fProgress);
-      ini.WriteString ('task'+IntToStr(i), 'Website', threads[i].downloadInfo.website);
-      ini.WriteString ('task'+IntToStr(i), 'SaveTo', threads[i].downloadInfo.saveTo);
-      ini.WriteString ('task'+IntToStr(i), 'DateTime', threads[i].downloadInfo.dateTime);
+      ini.WriteString('task'+IntToStr(i), 'ChapterLinks', SetParams(containers.Items[i].chapterLinks));
+      ini.WriteString('task'+IntToStr(i), 'ChapterName', SetParams(containers.Items[i].ChapterName));
+      if containers.Items[i].pageLinks.Count > 0 then
+        ini.WriteString('task'+IntToStr(i), 'PageLinks', SetParams(containers.Items[i].pageLinks));
+
+      ini.WriteInteger('task'+IntToStr(i), 'TaskStatus', containers.Items[i].Status);
+      ini.WriteInteger('task'+IntToStr(i), 'ChapterPtr', containers.Items[i].currentDownloadChapterPtr);
+      ini.WriteInteger('task'+IntToStr(i), 'NumberOfPages', containers.Items[i].pageNumber);
+      ini.WriteInteger('task'+IntToStr(i), 'CurrentPage', containers.Items[i].currentPageNumber);
+
+      ini.WriteString ('task'+IntToStr(i), 'Title', containers.Items[i].downloadInfo.title);
+      ini.WriteString ('task'+IntToStr(i), 'Status', containers.Items[i].downloadInfo.status);
+      ini.WriteString ('task'+IntToStr(i), 'Progress', containers.Items[i].downloadInfo.Progress);
+      ini.WriteString ('task'+IntToStr(i), 'Website', containers.Items[i].downloadInfo.website);
+      ini.WriteString ('task'+IntToStr(i), 'SaveTo', containers.Items[i].downloadInfo.saveTo);
+      ini.WriteString ('task'+IntToStr(i), 'DateTime', containers.Items[i].downloadInfo.dateTime);
     end;
   end;
-  ini.UpdateFile;   }
+  ini.UpdateFile;
 end;
 
 procedure   TDownloadManager.AddTask;
 begin
-  threads.Add(TTaskThread.Create);
-  threads.Items[threads.Count-1].manager:= self;
-  //SetLength(downloadInfo, threads.Count);
+  containers.Add(TTaskThreadContainer.Create);
+  containers.Items[containers.Count-1].manager:= self;
 end;
 
 procedure   TDownloadManager.CheckAndActiveTask;
@@ -842,55 +851,87 @@ var
   i    : Cardinal;
   count: Cardinal = 0;
 begin
-  {if numberOfTasks>0 then
-    for i:= 0 to numberOfTasks-1 do
+  if containers.Count = 0 then exit;
+  for i:= 0 to containers.Count-1 do
+  begin
+    if containers.Items[i].Status = STATUS_DOWNLOAD then
+      Inc(count)
+    else
+    if containers.Items[i].Status = STATUS_WAIT then
     begin
-      if taskStatus.Items[i] = STATUS_WAIT then
-      begin
-        ActiveTask(i);
-        Inc(count);
-        if count >= maxDLTasks then
-          exit;
-      end;
-    end; }
+      ActiveTask(i);
+      Inc(count);
+    end;
+    if count >= maxDLTasks then
+      exit;
+  end;
+end;
+
+function    TDownloadManager.CanActiveTask: Boolean;
+var
+  i    : Cardinal;
+  count: Cardinal = 0;
+begin
+  Result:= FALSE;
+  for i:= 0 to containers.Count-1 do
+  begin
+    if containers.Items[i].Status = STATUS_DOWNLOAD then
+      Inc(count);
+    if count >= maxDLTasks then
+      exit;
+  end;
+  Result:= TRUE;
+end;
+
+procedure   TDownloadManager.CheckAndActiveTaskAtStartup;
+
+  procedure   ActiveTaskAtStartup(const taskID: Cardinal);
+  var
+    i, pos: Cardinal;
+  begin
+    i:= maxDLTasks;
+    if taskID >= containers.Count then exit;
+    if (NOT Assigned(containers.Items[taskID])) then exit;
+    if (containers.Items[taskID].Status = STATUS_WAIT) AND
+       (containers.Items[taskID].Status = STATUS_STOP) AND
+       (containers.Items[taskID].Status = STATUS_FINISH) then exit;
+    containers.Items[taskID].Status:= STATUS_DOWNLOAD;
+    containers.Items[taskID].thread:= TTaskThread.Create;
+    containers.Items[taskID].thread.container:= containers.Items[taskID];
+    containers.Items[taskID].thread.isSuspended:= FALSE;
+  end;
+
+var
+  i    : Cardinal;
+  count: Cardinal = 0;
+begin
+  if containers.Count = 0 then exit;
+  for i:= 0 to containers.Count-1 do
+  begin
+    if containers.Items[i].Status = STATUS_DOWNLOAD then
+    begin
+      ActiveTaskAtStartup(i);
+      Inc(count);
+    end;
+  end;
 end;
 
 procedure   TDownloadManager.ActiveTask(const taskID: Cardinal);
 var
   i, pos: Cardinal;
 begin
+  i:= maxDLTasks;
   // conditions
-  if taskID >= threads.Count then exit;
-  if (NOT Assigned(threads[taskID])) OR (threads[taskID].isTerminated) then exit;
-  if (taskStatus.Items[taskID] = STATUS_DOWNLOAD) AND
-     (taskStatus.Items[taskID] = STATUS_PREPARE) AND
-     (taskStatus.Items[taskID] = STATUS_FINISH) then exit;
-  threads[taskID].isSuspended:= FALSE;
-
- { if numberOfTasks>0 then
-  begin
-    pos:= 0;
-    for i:= 0 to numberOfTasks-1 do
-    begin
-      if taskStatus.Items[i] = STATUS_DOWNLOAD then
-        Inc(pos);
-    end;
-  end;
-  if pos >= maxDLTasks then exit;
-
-  // check if the manager had any active task yet
-  taskStatus.Items[taskID]:= STATUS_DOWNLOAD;
-  for i:= 0 to maxDLThreadsPerTask-1 do
-  begin
-    pos:= threads.Count;
-    threads.Add(TDownloadThread.Create);
-    threads.Items[pos].manager    := self;
-    threads.Items[pos].taskID     := taskID;
-    threads.Items[pos].threadID   := i;
-    threads.Items[pos].workPtr    := i;
-    threads.Items[pos].mangaSiteID:= GetMangaSiteID(downloadInfo[taskID].website);
-    threads.Items[pos].Resume;
-  end;   }
+ // if pos >= maxDLTasks then exit;
+  if taskID >= containers.Count then exit;
+  if (NOT Assigned(containers.Items[taskID])) then exit;
+  if (containers.Items[taskID].Status = STATUS_DOWNLOAD) AND
+     (containers.Items[taskID].Status = STATUS_PREPARE) AND
+     (containers.Items[taskID].Status = STATUS_FINISH) then exit;
+  containers.Items[taskID].Status:= STATUS_DOWNLOAD;
+  containers.Items[taskID].thread:= TTaskThread.Create;
+  containers.Items[taskID].thread.container:= containers.Items[taskID];
+  containers.Items[taskID].thread.isSuspended:= FALSE;
   // TODO
 end;
 
@@ -899,148 +940,104 @@ var
   i: Cardinal;
 begin
   // conditions
-  if taskID >= threads.Count then exit;
-  if (taskStatus.Items[taskID] <> STATUS_DOWNLOAD) AND
-     (taskStatus.Items[taskID] <> STATUS_PREPARE) AND
-     (taskStatus.Items[taskID] <> STATUS_WAIT) then exit;
+  if taskID >= containers.Count then exit;
+  if (containers.Items[taskID].Status <> STATUS_DOWNLOAD) AND
+     (containers.Items[taskID].Status <> STATUS_WAIT) then exit;
   // check and stop any active thread
-  if (taskStatus.Items[taskID] = STATUS_DOWNLOAD) then
-  threads[taskID].Stop;
-  threads[taskID].downloadInfo.Progress:= '';
-  threads[taskID].downloadInfo.Status  := stStop;
-  taskStatus.Items[taskID]:= STATUS_STOP;
+  if containers.Items[taskID].Status = STATUS_DOWNLOAD then
+  begin
+    containers.Items[taskID].thread.Terminate;
+    containers.Items[taskID].Status:= STATUS_STOP;
+  end
+  else
+  if containers.Items[taskID].Status = STATUS_WAIT then
+  begin
+    containers.Items[taskID].downloadInfo.Status:= stStop;
+    containers.Items[taskID].Status:= STATUS_STOP;
+  end;
+ // containers.Items[taskID].downloadInfo.Status:= Format('%s (%d/%d)', [stStop, containers.Items[taskID].currentDownloadChapterPtr, containers.Items[taskID].chapterLinks.Count]);
+  containers.Items[taskID].Status:= STATUS_STOP;
   Backup;
   Sleep(1000);
   CheckAndActiveTask;
-  threads[taskID].Terminate;
-  threads[taskID]:= nil;
 end;
 
 procedure   TDownloadManager.StopAllTasks;
 var
   i: Cardinal;
 begin
-  if threads.Count = 0 then exit;
+  if containers.Count = 0 then exit;
   // check and stop any active thread
-  for i:= 0 to threads.Count-1 do
+  for i:= 0 to containers.Count-1 do
   begin
-    if (taskStatus.Items[i] = STATUS_DOWNLOAD) then
+    if containers.Items[i].Status = STATUS_DOWNLOAD then
     begin
-      threads[i].Stop;
-      threads[i].downloadInfo.Progress:= '';
-      threads[i].downloadInfo.Status  := stStop;
-      taskStatus.Items[i]:= STATUS_STOP;
+      containers.Items[i].thread.Terminate;
+      containers.Items[i].Status:= STATUS_STOP;
+    end
+    else
+    if containers.Items[i].Status = STATUS_WAIT then
+    begin
+      containers.Items[i].downloadInfo.Status:= stStop;
+      containers.Items[i].Status:= STATUS_STOP;
     end;
   end;
   Backup;
+  MainForm.vtDownload.Repaint;
 end;
 
-procedure   TDownloadManager.FinishTask(const taskID: Cardinal);
+procedure   TDownloadManager.StopAllDownloadTasksForExit;
 var
   i: Cardinal;
 begin
- { if taskID >= numberOfTasks then exit;
-  if (taskStatus.Items[taskID] <> STATUS_DOWNLOAD) then exit;
-
-  if threads.Count = 0 then exit;
-
-  // remove finished threads
-  i:= 0;
-  repeat
-    if (threads.Items[i].taskID = taskID) then
-      RemoveThread(i)
-    else
-      Inc(i);
-  until i >= threads.Count;
-
-  // set information
-  pageLinks[taskID].Clear;
-  taskStatus.Items[taskID]:= STATUS_FINISH;
-  downloadInfo[taskID].Status:= stFinish;
-  MainForm.vtDownload.Repaint;
+  if containers.Count = 0 then exit;
+  for i:= 0 to containers.Count-1 do
+  begin
+    if containers.Items[i].Status = STATUS_DOWNLOAD then
+      containers.Items[i].thread.Terminate;
+  end;
   Backup;
-  CheckAndActiveTask;
-  isFinishTaskAccessed:= FALSE;}
+  MainForm.vtDownload.Repaint;
+end;
+
+procedure   TDownloadManager.FinishTask(const taskID: Cardinal);
+begin
 end;
 
 procedure   TDownloadManager.RemoveTask(const taskID: Cardinal);
 begin
-  if taskID >= threads.Count then exit;
-  taskStatus.Delete(taskID);
-  threads[taskID].Terminate;
-  threads.Delete(taskID);
+  if taskID >= containers.Count then exit;
+  // check and stop any active thread
+  if containers.Items[taskID].Status = STATUS_DOWNLOAD then
+  begin
+    containers.Items[taskID].thread.Terminate;
+    containers.Items[taskID].Status:= STATUS_STOP;
+  end
+  else
+  if containers.Items[taskID].Status = STATUS_WAIT then
+  begin
+    containers.Items[taskID].downloadInfo.Status:= stStop;
+    containers.Items[taskID].Status:= STATUS_STOP;
+  end;
+  containers.Delete(taskID);
 end;
 
 procedure   TDownloadManager.RemoveFinishedTasks;
 var
   i, j: Cardinal;
 begin
- { if numberOfTasks = 0 then exit;
-  // remove and sync thread's taskID
-  if threads.Count > 0 then
-  begin
-    for i:= 0 to threads.Count-1 do
-      threads.Items[i].Suspend;
-  end;
-  // remove other infos
+  if containers.Count = 0 then exit;
+  // remove
   i:= 0;
   repeat
-    if taskStatus.Items[i] = STATUS_FINISH then
+    if containers.Items[i].Status = STATUS_FINISH then
     begin
-      if chapterName[i] <> nil then
-      begin
-        chapterName [i].Free; chapterName [i]:= nil;
-        chapterLinks[i].Free; chapterLinks[i]:= nil;
-      end;
-      if pageLinks[i] <> nil then
-      begin
-        pageLinks[i].Free; pageLinks[i]:= nil;
-      end;
-      LeftTask(i);
-      Dec(numberOfTasks);
-      SetLength(chapterName , numberOfTasks);
-      SetLength(chapterLinks, numberOfTasks);
-      SetLength(pageLinks   , numberOfTasks);
-      SetLength(downloadInfo, numberOfTasks);
-
-      taskStatus.Delete(i);
-      activeThreadsPerTask.Delete(i);
-      chapterPtr.Delete(i);
-
-      if threads.Count > 0 then
-        for j:= 0 to threads.Count-1 do
-          if threads.Items[j].taskID > i then
-            Dec(threads.Items[j].taskID);
+      containers.Delete(i);
     end
     else
       Inc(i);
-  until i >= numberOfTasks;
-
-  // remuse threads
-  if threads.Count > 0 then
-    for i:= 0 to threads.Count-1 do
-      threads.Items[i].Resume;  }
+  until i >= containers.Count;
 end;
-
-{procedure   TDownloadManager.LeftThread(const pos: Cardinal);
-var
-  i, m: Cardinal;
-begin
-  m:= Length(threads);
-  if Pos+1 < m-1 then
-    for i:= Pos+1 to m-1 do
-      threads[i-1]:= threads[i];
-end;
-
-procedure   TDownloadManager.RightThread(const pos: Cardinal);
-var
-  i, m: Cardinal;
-begin
-  m:= Length(threads);
-  if Pos+1 < m-1 then
-    for i:= m-1 downto Pos+1 do
-      threads[i]:= threads[i-1];
-end;}
 
 end.
 

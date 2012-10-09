@@ -228,36 +228,36 @@ begin
     begin
       currentChapter:= StrToInt(favoriteInfo[i].currentChapter);
       newChapter    := mangaInfo[i].numChapter;
-     { if newChapter > currentChapter then
+      if newChapter > currentChapter then
       begin
         DLManager.AddTask;
-        pos:= DLManager.numberOfTasks-1;
+        pos:= DLManager.containers.Count-1;
         for j:= currentChapter to newChapter-1 do
         begin
-          DLManager.chapterName [pos].Add(Format('%.4d - %s', [j+1, mangaInfo[i].chapterName.Strings[j]]));
-          DLManager.chapterLinks[pos].Add(mangaInfo[i].chapterLinks.Strings[j]);
+          DLManager.containers.Items[pos].chapterName.Add(Format('%.4d - %s', [j+1, mangaInfo[i].chapterName.Strings[j]]));
+          DLManager.containers.Items[pos].chapterLinks.Add(mangaInfo[i].chapterLinks.Strings[j]);
         end;
         if NOT isNow then
         begin
-          DLManager.downloadInfo[pos].Status := stStop;
-          DLManager.taskStatus.Add(STATUS_STOP);
+          DLManager.containers.Items[pos].downloadInfo.Status:= stStop;
+          DLManager.containers.Items[pos].Status:= STATUS_STOP;
         end
         else
         begin
-          DLManager.downloadInfo[pos].Status := stWait;
-          DLManager.taskStatus.Add(STATUS_WAIT);
+          DLManager.containers.Items[pos].downloadInfo.Status:= stWait;
+          DLManager.containers.Items[pos].Status:= STATUS_WAIT;
         end;
-        DLManager.chapterPtr.Add(0);
+        DLManager.containers.Items[pos].currentDownloadChapterPtr:= 0;
         // DLManager.activeThreadsPerTask.Add(DLManager.maxDLThreadsPerTask);
-        DLManager.downloadInfo[pos].title  := favoriteInfo[i].title;
-        DLManager.downloadInfo[pos].Website:= favoriteInfo[i].website;
-        DLManager.downloadInfo[pos].SaveTo := favoriteInfo[i].SaveTo;
+        DLManager.containers.Items[pos].downloadInfo.title  := favoriteInfo[i].title;
+        DLManager.containers.Items[pos].downloadInfo.Website:= favoriteInfo[i].website;
+        DLManager.containers.Items[pos].downloadInfo.SaveTo := favoriteInfo[i].SaveTo;
 
         // update favorites's current chapter, and free pointers
         favoriteInfo[i].currentChapter:= IntToStr(mangaInfo[i].numChapter);
         mangaInfo[i].chapterName .Free;
         mangaInfo[i].chapterLinks.Free;
-      end;  }
+      end;
     end;
     if Assigned(OnUpdateDownload) then
       OnUpdateDownload;

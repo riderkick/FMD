@@ -302,7 +302,7 @@ begin
   vtMangaList.RootNodeCount:= dataProcess.filterPos.Count;
 
   vtDownload.NodeDataSize  := SizeOf(TDownloadInfo)-4;
-  vtDownload.RootNodeCount := DLManager.threads.Count;
+  vtDownload.RootNodeCount := DLManager.containers.Count;
 
   vtFavorites.NodeDataSize := SizeOf(TFavoriteInfo);
   vtFavorites.RootNodeCount:= favorites.Count;
@@ -316,7 +316,7 @@ begin
   if pcMain.PageIndex = 4 then
     pcMain.PageIndex:= 0;
 
-  DLManager.CheckAndActiveTask;
+  DLManager.CheckAndActiveTaskAtStartup;
 end;
 
 procedure TMainForm.cbOptionUseProxyChange(Sender: TObject);
@@ -345,7 +345,7 @@ begin
                 mtConfirmation, [mbYes, mbNo], 0) = mrYes then
   begin
     SaveFormInformation;
-    DLManager.StopAllTasks;
+    DLManager.StopAllDownloadTasksForExit;
     dataProcess.SaveToFile;
     dataProcess.Destroy;
     CloseAction:= caFree;
@@ -368,29 +368,29 @@ begin
       if NOT isCreate then
       begin
         DLManager.AddTask;
-        pos:= DLManager.threads.Count-1;
+        pos:= DLManager.containers.Count-1;
         isCreate:= TRUE;
       end;
-      DLManager.threads[pos].chapterName .Add(Format('%.4d - %s', [i+1, mangaInfo.chapterName.Strings[i]]));
-      DLManager.threads[pos].chapterLinks.Add(mangaInfo.chapterLinks.Strings[i]);
+      DLManager.containers.Items[pos].chapterName .Add(Format('%.4d - %s', [i+1, mangaInfo.chapterName.Strings[i]]));
+      DLManager.containers.Items[pos].chapterLinks.Add(mangaInfo.chapterLinks.Strings[i]);
     end;
   if NOT isCreate then exit;
 
   if cbAddAsStopped.Checked then
   begin
-    DLManager.threads[pos].downloadInfo.Status:= stStop;
-    DLManager.taskStatus.Add(STATUS_STOP);
+    DLManager.containers.Items[pos].downloadInfo.Status:= stStop;
+    DLManager.containers.Items[pos].Status:= STATUS_STOP;
   end
   else
   begin
-    DLManager.threads[pos].downloadInfo.Status:= stWait;
-    DLManager.taskStatus.Add(STATUS_WAIT);
+    DLManager.containers.Items[pos].downloadInfo.Status:= stWait;
+    DLManager.containers.Items[pos].Status:= STATUS_WAIT;
   end;
-  DLManager.threads[pos].currentDownloadChapterPtr:= 0;
+  DLManager.containers.Items[pos].currentDownloadChapterPtr:= 0;
  // DLManager.activeThreadsPerTask.Add(DLManager.maxDLThreadsPerTask);
-  DLManager.threads[pos].downloadInfo.title  := mangaInfo.title;
-  DLManager.threads[pos].downloadInfo.Website:= mangaInfo.website;
-  DLManager.threads[pos].downloadInfo.SaveTo := CorrectFile(edSaveTo.Text);
+  DLManager.containers.Items[pos].downloadInfo.title  := mangaInfo.title;
+  DLManager.containers.Items[pos].downloadInfo.Website:= mangaInfo.website;
+  DLManager.containers.Items[pos].downloadInfo.SaveTo := CorrectFile(edSaveTo.Text);
 
   // Add to favorites
   if cbAddToFavorites.Checked then
@@ -404,8 +404,8 @@ begin
   UpdateVtDownload;
 
   DLManager.Backup;
- // DLManager.CheckAndActiveTask;
-  DLManager.threads.Items[pos].isSuspended:= FALSE;
+  DLManager.CheckAndActiveTask;
+ // DLManager.containers.Items[pos].thread.isSuspended:= FALSE;
   pcMain.PageIndex:= 0;
 end;
 
@@ -618,16 +618,20 @@ begin
                 mtConfirmation, [mbYes, mbNo], 0) = mrNo then exit;
   DLManager.RemoveFinishedTasks;
   vtDownload.Clear;
-  vtDownload.RootNodeCount:= DLManager.threads.Count;
+  vtDownload.RootNodeCount:= DLManager.containers.Count;
   DLManager.Backup;
 end;
 
 procedure TMainForm.miDownloadRemuseClick(Sender: TObject);
+var i: cardinal;
 begin
   if NOT Assigned(vtDownload.FocusedNode) then exit;
+  if DLManager.containers.Items[vtDownload.FocusedNode.Index].Status <> STATUS_STOP then exit;
+  i:= DLManager.containers.Items[vtDownload.FocusedNode.Index].Status;
+  if NOT DLManager.CanActiveTask then exit;
   DLManager.ActiveTask(vtDownload.FocusedNode.Index);
   vtDownload.Clear;
-  vtDownload.RootNodeCount:= DLManager.threads.Count;
+  vtDownload.RootNodeCount:= DLManager.containers.Count;
   DLManager.Backup;
 end;
 
@@ -638,7 +642,7 @@ begin
                 mtConfirmation, [mbYes, mbNo], 0) = mrNo then exit;
   DLManager.RemoveTask(vtDownload.FocusedNode.Index);
   vtDownload.Clear;
-  vtDownload.RootNodeCount:= DLManager.threads.Count;
+  vtDownload.RootNodeCount:= DLManager.containers.Count;
   DLManager.Backup;
 end;
 
@@ -648,9 +652,7 @@ procedure TMainForm.miDownloadStopClick(Sender: TObject);
 begin
   if NOT Assigned(vtDownload.FocusedNode) then exit;
   DLManager.StopTask(vtDownload.FocusedNode.Index);
-  vtDownload.Clear;
-  vtDownload.RootNodeCount:= DLManager.threads.Count;
-  DLManager.Backup;
+  vtDownload.Repaint;
 end;
 
 procedure TMainForm.pcMainChange(Sender: TObject);
@@ -705,15 +707,15 @@ begin
   begin
     pos:= Node.Index;
     data:= Sender.GetNodeData(Node);
-    if (DLManager.threads.Count <> 0) then
-    if (Assigned(data)) AND ((DLManager.threads[pos] <> nil) OR (NOT DLManager.threads[pos].isTerminated)) then
+    if (DLManager.containers.Count <> 0) then
+    if (Assigned(data)) AND ((DLManager.containers.Items[pos] <> nil) OR (NOT DLManager.containers.Items[pos].thread.isTerminated)) then
     begin
-      data^.title   := DLManager.threads[pos].downloadInfo.title;
-      data^.status  := DLManager.threads[pos].downloadInfo.Status;
-      data^.progress:= DLManager.threads[pos].downloadInfo.Progress;
-      data^.website := DLManager.threads[pos].downloadInfo.Website;
-      data^.saveTo  := DLManager.threads[pos].downloadInfo.SaveTo;
-      data^.dateTime:= DLManager.threads[pos].downloadInfo.dateTime;
+      data^.title   := DLManager.containers.Items[pos].downloadInfo.title;
+      data^.status  := DLManager.containers.Items[pos].downloadInfo.Status;
+      data^.progress:= DLManager.containers.Items[pos].downloadInfo.Progress;
+      data^.website := DLManager.containers.Items[pos].downloadInfo.Website;
+      data^.saveTo  := DLManager.containers.Items[pos].downloadInfo.SaveTo;
+      data^.dateTime:= DLManager.containers.Items[pos].downloadInfo.dateTime;
       case Column of
         0: CellText:= data^.title;
         1: CellText:= data^.status;
@@ -736,15 +738,15 @@ begin
   begin
     pos:= Node.Index;
     data:= GetNodeData(Node);
-    if (DLManager.threads.Count <> 0) then
-      if (DLManager.threads[pos] <> nil) OR (NOT DLManager.threads[pos].isTerminated) then
+    if (DLManager.containers.Count <> 0) then
+      if (DLManager.containers.Items[pos] <> nil) OR (NOT DLManager.containers.Items[pos].thread.isTerminated) then
       begin
-        data.title   := DLManager.threads[pos].downloadInfo.title;
-        data.status  := DLManager.threads[pos].downloadInfo.Status;
-        data.progress:= DLManager.threads[pos].downloadInfo.Progress;
-        data.website := DLManager.threads[pos].downloadInfo.Website;
-        data.saveTo  := DLManager.threads[pos].downloadInfo.SaveTo;
-        data.dateTime:= DLManager.threads[pos].downloadInfo.dateTime;
+        data.title   := DLManager.containers.Items[pos].downloadInfo.title;
+        data.status  := DLManager.containers.Items[pos].downloadInfo.Status;
+        data.progress:= DLManager.containers.Items[pos].downloadInfo.Progress;
+        data.website := DLManager.containers.Items[pos].downloadInfo.Website;
+        data.saveTo  := DLManager.containers.Items[pos].downloadInfo.SaveTo;
+        data.dateTime:= DLManager.containers.Items[pos].downloadInfo.dateTime;
       end;
   end;
 end;
@@ -1079,7 +1081,7 @@ end;
 procedure TMainForm.UpdateVtDownload;
 begin
   vtDownload.Clear;
-  vtDownload.RootNodeCount:= DLManager.threads.Count;
+  vtDownload.RootNodeCount:= DLManager.containers.Count;
 end;
 
 procedure TMainForm.UpdateVtFavorites;
@@ -1239,16 +1241,16 @@ begin
     lbMode.Caption:= Format(stModeAll, [dataProcess.filterPos.Count]);
 
   // sync download table infos
-  if DLManager.threads.Count > 0 then
+  if DLManager.containers.Count > 0 then
   begin
-    for i:= 0 to DLManager.threads.Count - 1 do
+    for i:= 0 to DLManager.containers.Count - 1 do
     begin
-      if (DLManager.threads[pos] <> nil) OR (NOT DLManager.threads[pos].isTerminated) then
-        case DLManager.taskStatus.Items[i] of
-          STATUS_STOP    : DLManager.threads[pos].downloadInfo.Status:= stStop;
-          STATUS_WAIT    : DLManager.threads[pos].downloadInfo.Status:= stWait;
-          STATUS_DOWNLOAD: DLManager.threads[pos].downloadInfo.Status:= stDownloading;
-          STATUS_FINISH  : DLManager.threads[pos].downloadInfo.Status:= stFinish;
+      if (DLManager.containers.Items[pos] <> nil) OR (NOT DLManager.containers.Items[pos].thread.isTerminated) then
+        case DLManager.containers.Items[pos].Status of
+          STATUS_STOP    : DLManager.containers.Items[pos].downloadInfo.Status:= stStop;
+          STATUS_WAIT    : DLManager.containers.Items[pos].downloadInfo.Status:= stWait;
+          STATUS_DOWNLOAD: DLManager.containers.Items[pos].downloadInfo.Status:= stDownloading;
+          STATUS_FINISH  : DLManager.containers.Items[pos].downloadInfo.Status:= stFinish;
         end;
     end;
   end;

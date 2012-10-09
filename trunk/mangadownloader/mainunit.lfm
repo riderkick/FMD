@@ -1,7 +1,7 @@
 object MainForm: TMainForm
-  Left = 157
+  Left = 384
   Height = 466
-  Top = 40
+  Top = 146
   Width = 750
   Align = alBottom
   Caption = 'Free Manga Downloader'
@@ -1067,7 +1067,7 @@ object MainForm: TMainForm
               Width = 498
               Anchors = [akTop, akLeft, akRight]
               Caption = 'Proxy config'
-              ClientHeight = 86
+              ClientHeight = 84
               ClientWidth = 494
               Enabled = False
               ParentFont = False
@@ -1269,7 +1269,7 @@ object MainForm: TMainForm
             ChildSizing.ShrinkVertical = crsScaleChilds
             ChildSizing.Layout = cclLeftToRightThenTopToBottom
             ChildSizing.ControlsPerLine = 2
-            ClientHeight = 42
+            ClientHeight = 40
             ClientWidth = 457
             Columns = 2
             ItemIndex = 0
