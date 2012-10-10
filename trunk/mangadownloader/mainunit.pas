@@ -89,6 +89,7 @@ type
     edSaveTo: TLabeledEdit;
     edSearch: TEdit;
     gbOptionProxy: TGroupBox;
+    ImageList: TImageList;
     imCover: TImage;
     edOptionDefaultPath: TLabeledEdit;
     lbFilterSummary: TLabel;
@@ -316,6 +317,9 @@ begin
   if pcMain.PageIndex = 4 then
     pcMain.PageIndex:= 0;
 
+  // load icons
+  // btUpdateList.Glyph.LoadFromFile('images/download_18.png');
+
   DLManager.CheckAndActiveTaskAtStartup;
 end;
 
@@ -358,6 +362,7 @@ end;
 
 procedure TMainForm.btDownloadClick(Sender: TObject);
 var
+  day, month, year: Word;
   i, pos  : Cardinal;
   isCreate: Boolean = FALSE;
 begin
@@ -387,10 +392,11 @@ begin
     DLManager.containers.Items[pos].Status:= STATUS_WAIT;
   end;
   DLManager.containers.Items[pos].currentDownloadChapterPtr:= 0;
- // DLManager.activeThreadsPerTask.Add(DLManager.maxDLThreadsPerTask);
   DLManager.containers.Items[pos].downloadInfo.title  := mangaInfo.title;
   DLManager.containers.Items[pos].downloadInfo.Website:= mangaInfo.website;
   DLManager.containers.Items[pos].downloadInfo.SaveTo := CorrectFile(edSaveTo.Text);
+  DecodeDate(Now, year, month, day);
+  DLManager.containers.Items[pos].downloadInfo.dateTime:= IntToStr(Month)+'/'+IntToStr(Day)+'/'+IntToStr(Year);
 
   // Add to favorites
   if cbAddToFavorites.Checked then
@@ -616,7 +622,7 @@ procedure TMainForm.miDownloadRemoveFinishedTasksClick(Sender: TObject);
 begin
   if MessageDlg('', stDlgRemoveFinishTasks,
                 mtConfirmation, [mbYes, mbNo], 0) = mrNo then exit;
-  DLManager.RemoveFinishedTasks;
+  DLManager.RemoveAllFinishedTasks;
   vtDownload.Clear;
   vtDownload.RootNodeCount:= DLManager.containers.Count;
   DLManager.Backup;
@@ -1167,6 +1173,7 @@ begin
   stDownloading         := language.ReadString(lang, 'stDownloading', '');
   stFinish              := language.ReadString(lang, 'stFinish', '');
   stWait                := language.ReadString(lang, 'stWait', '');
+  btUpdateList  .Hint   := language.ReadString(lang, 'btUpdateListHint', '');
   btSearch      .Hint   := language.ReadString(lang, 'btSearchHint', '');
   btRemoveFilter.Hint   := language.ReadString(lang, 'btRemoveFilterHint', '');
   btRemoveFilterLarge.Hint:= btRemoveFilter.Hint;
@@ -1224,6 +1231,7 @@ begin
   lbFilterStatus.Caption := infoStatus;
   lbFilterSummary.Caption:= infoSummary;
 
+  stDlgNewManga          := language.ReadString(lang, 'stDlgNewManga', '');
   stDlgQuit              := language.ReadString(lang, 'stDlgQuit', '');
   stDlgRemoveTask        := language.ReadString(lang, 'stDlgRemoveTask', '');
   stDlgRemoveFinishTasks := language.ReadString(lang, 'stDlgRemoveFinishTasks', '');

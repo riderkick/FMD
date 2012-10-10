@@ -152,7 +152,7 @@ end;
 
 procedure   TUpdateMangaManagerThread.DlgReport;
 begin
-  MessageDlg('', IntToStr(links.Count) + ' new manga',
+  MessageDlg('', Format(stDlgNewManga, [links.Count]),
                  mtInformation, [mbYes], 0)
 end;
 

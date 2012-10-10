@@ -13,6 +13,9 @@ interface
 uses SysUtils, Classes, HTTPSend, graphics, genericlib, IniFiles;
 
 const
+  JPG_HEADER: array[0..2] of Byte = ($FF, $D8, $FF);
+  GIF_HEADER: array[0..2] of Byte = ($47, $49, $46);
+  PNG_HEADER: array[0..3] of Byte = ($89, $50, $4E, $47);
   CS_PAGE = 0;
   CS_INFO = 1;
   CS_GETPAGENUMBER   = 2;
@@ -78,6 +81,7 @@ var
   stModeAll,
   stModeFilter,
 
+  stCompressing,
   stPreparing,
   stDownloading,
   stWait,
@@ -106,6 +110,7 @@ var
   infoStatus,
   infoSummary,
   infoLink ,
+  stDlgNewManga,
   stDlgQuit,
   stDlgRemoveTask,
   stDlgRemoveFinishTasks,
@@ -406,50 +411,6 @@ begin
   Result:= StringReplace(Result, #13, '\r',  [rfReplaceAll]);
 end;
 
-{function  StringFilter(const  source: AnsiString): AnsiString;
-var Tmp1,
-    Tmp2,
-    tmp3,
-    tmp4,
-    tmp5,
-    tmp6: Integer;
-    Ln  : AnsiString;
-begin
-  Result:= source;
-  repeat
-    tmp1:= Pos('<p>', Result);
-    if tmp1<>0 then
-      Delete(Result, tmp1, 3);
-
-    tmp2:= Pos('</p>', Result);
-    if tmp2<>0 then
-      Delete(Result, tmp2, 4);
-
-    tmp3:= Pos('<br />', Result);
-    if tmp3<>0 then
-    begin
-      Delete(Result, tmp3, 6);
-      Insert('\n', Result, tmp3);
-    end;
-
-    tmp4:= Pos('&quot;', Result);
-    if tmp4<>0 then
-    begin
-      Delete(Result, tmp4, 6);
-      Insert('"', Result, tmp4);
-    end;
-
-    tmp5:= Pos(#10, Result);
-    if tmp5<>0 then
-      Delete(Result, tmp5, 1);
-
-    tmp6:= Pos(#13, Result);
-    if tmp6<>0 then
-      Delete(Result, tmp6, 1);
-  until (tmp1=0) AND (tmp2=0) AND (tmp3=0) AND (tmp4=0) AND (tmp5=0) AND
-        (tmp6=0);
-end; }
-
 function  PrepareSummaryForHint(const source: AnsiString):  AnsiString;
 var
   i: Cardinal = 1;
@@ -545,6 +506,8 @@ end;
 
 function  SavePage(URL: AnsiString; const Path: String; const Reconnect: Cardinal): Boolean;
 var
+  header : array [0..3] of Byte;
+  ext    : String;
   HTTP   : THTTPSend;
   counter: Cardinal = 0;
 begin
@@ -591,7 +554,26 @@ begin
       Sleep(500);
     end;
   end;
-  HTTP.Document.SaveToFile(Path);
+  HTTP.Document.Seek(0, soBeginning);
+  HTTP.Document.Read(header[0], 4);
+  if (header[0] = JPG_HEADER[0]) AND
+     (header[1] = JPG_HEADER[1]) AND
+     (header[2] = JPG_HEADER[2]) then
+    ext:= '.jpg'
+  else
+  if (header[0] = GIF_HEADER[0]) AND
+     (header[1] = GIF_HEADER[1]) AND
+     (header[2] = GIF_HEADER[2]) then
+    ext:= '.gif'
+  else
+  if (header[0] = PNG_HEADER[0]) AND
+     (header[1] = PNG_HEADER[1]) AND
+     (header[2] = PNG_HEADER[2]) AND
+     (header[3] = PNG_HEADER[3]) then
+    ext:= '.png'
+  else
+    ext:= '';
+  HTTP.Document.SaveToFile(Path+ext);
   HTTP.Free;
   Result:= TRUE;
 end;

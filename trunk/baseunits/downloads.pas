@@ -21,10 +21,12 @@ type
   // this class will replace the old TDownloadThread
   TDownloadThread = class(TThread)
   protected
+    // Get download link from URL
     function    GetLinkPageFromURL(const URL: AnsiString): Boolean;
+    // Get number of download link from URL
     function    GetPageNumberFromURL(const URL: AnsiString): Boolean;
+    // Download page - link from link list
     function    DownloadPage: Boolean;
-    procedure   Compress;
     procedure   Execute; override;
   public
     checkStyle    : Cardinal;
@@ -43,11 +45,14 @@ type
   TTaskThread = class(TThread)
   protected
     procedure   Execute; override;
+    procedure   Compress;
   public
     isTerminated,
     isSuspended: Boolean;
 
+    // container (for storing information)
     container  : TTaskThreadContainer;
+    // download threads
     threads    : TDownloadThreadList;
 
     constructor Create;
@@ -56,12 +61,16 @@ type
   end;
 
   TTaskThreadContainer = class
+    // task thread of this container
     thread : TTaskThread;
+    // download manager
     manager: TDownloadManager;
 
     downloadInfo: TDownloadInfo;
 
+    // current link index
     currentPageNumber,
+    // current chapter index
     currentDownloadChapterPtr,
     activeThreadCount,
     Status     : Cardinal;
@@ -82,17 +91,15 @@ type
   TDownloadManager = class(TObject)
   private
   public
-
     isFinishTaskAccessed: Boolean;
 
     compress,
     // number of tasks
     retryConnect,
+    // max. active tasks
     maxDLTasks,
+    // max. download threads per task
     maxDLThreadsPerTask : Cardinal;
-
-    // number of active thread per task
-
     // current chapterLinks which thread is processing
     containers          : TTaskThreadContainerList;
 
@@ -105,18 +112,28 @@ type
     procedure   Restore;
     procedure   Backup;
 
+    // Add new task to the list
     procedure   AddTask;
+    // Check and active previous work-in-progress tasks
     procedure   CheckAndActiveTaskAtStartup;
+    // Check and active waiting tasks
     procedure   CheckAndActiveTask;
+    // Check if we can active another wating task or not
     function    CanActiveTask: Boolean;
+    // Active a stopped task
     procedure   ActiveTask(const taskID: Cardinal);
+    // Stop a download/wait task
     procedure   StopTask(const taskID: Cardinal);
+    // Stop all download/wait tasks
     procedure   StopAllTasks;
+    // Stop all download task inside a task before terminate the program
     procedure   StopAllDownloadTasksForExit;
+    // Mark the task as "Finished"
     procedure   FinishTask(const taskID: Cardinal);
-
+    // Remove a task from list
     procedure   RemoveTask(const taskID: Cardinal);
-    procedure   RemoveFinishedTasks;
+    // Remove all finished tasks
+    procedure   RemoveAllFinishedTasks;
   end;
 
 implementation
@@ -167,21 +184,6 @@ begin
       end;
   end;
   Terminate;
-end;
-
-procedure   TDownloadThread.Compress;
-var
-  Compresser: TCompress;
-begin
-  //if manager.compress = 1 then
-  begin
-    Sleep(100);
-    Compresser:= TCompress.Create;
-    Compresser.Path:= manager.container.downloadInfo.SaveTo+'/'+
-                      manager.container.chapterName.Strings[manager.container.currentDownloadChapterPtr-1];
-    Compresser.Execute;
-    Compresser.Free;
-  end;
 end;
 
 function    TDownloadThread.GetPageNumberFromURL(const URL: AnsiString): Boolean;
@@ -237,11 +239,11 @@ begin
 end;
 
 function    TDownloadThread.DownloadPage: Boolean;
-var
-  s, ext: String;
+{var
+  s, ext: String;}
 begin
   if manager.container.pageLinks.Strings[workPtr] = '' then exit;
-  s:= manager.container.pageLinks.Strings[workPtr];
+ { s:= manager.container.pageLinks.Strings[workPtr];
   if (Pos('.jpeg', LowerCase(s))<>0) OR (Pos('.jpg', LowerCase(s))<>0) then
     ext:= '.jpg'
   else
@@ -249,13 +251,13 @@ begin
     ext:= '.png'
   else
   if Pos('.gif', LowerCase(s))<>0 then
-    ext:= '.gif';
+    ext:= '.gif'; }
   SetCurrentDir(oldDir);
   SavePage(manager.container.pageLinks.Strings[workPtr],
-           Format('%s/%.3d%s',
+           Format('%s/%.3d',
                   [manager.container.downloadInfo.SaveTo+
                   '/'+manager.container.chapterName.Strings[manager.container.currentDownloadChapterPtr],
-                  workPtr+1, ext]), manager.container.manager.retryConnect);
+                  workPtr+1{, ext}]), manager.container.manager.retryConnect);
   manager.container.pageLinks.Strings[workPtr]:= '';
   SetCurrentDir(oldDir);
 end;
@@ -277,6 +279,21 @@ begin
   threads.Free;
   isTerminated:= TRUE;
   inherited Destroy;
+end;
+
+procedure   TTaskThread.Compress;
+var
+  Compresser: TCompress;
+begin
+  if (container.manager.compress = 1) then
+  begin
+    Sleep(100);
+    Compresser:= TCompress.Create;
+    Compresser.Path:= container.downloadInfo.SaveTo+'/'+
+                      container.chapterName.Strings[container.currentDownloadChapterPtr];
+    Compresser.Execute;
+    Compresser.Free;
+  end;
 end;
 
 procedure   TTaskThread.Execute;
@@ -397,6 +414,7 @@ begin
       MainForm.vtDownload.Repaint;
     end;
     WaitFor;
+    Compress;
     if Terminated then exit;
     container.currentPageNumber:= 0;
     container.pageLinks.Clear;
@@ -1022,7 +1040,7 @@ begin
   containers.Delete(taskID);
 end;
 
-procedure   TDownloadManager.RemoveFinishedTasks;
+procedure   TDownloadManager.RemoveAllFinishedTasks;
 var
   i, j: Cardinal;
 begin
