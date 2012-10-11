@@ -14,7 +14,7 @@ unit data;
 interface
 
 uses
-  Classes, SysUtils, baseunit, HTTPSend, Dialogs;
+  Classes, SysUtils, baseunit;
 
 type
   TDataProcess = class(TObject)
@@ -87,7 +87,7 @@ var
 
 implementation
 
-uses FastHTMLParser, HTMLUtil;
+uses FastHTMLParser, HTMLUtil, HTTPSend;
 
 // ----- TDataProcess -----
 
@@ -429,6 +429,7 @@ function    TMangaInformation.GetNameAndLink(const names, links: TStringList;
                                              const website, URL: AnsiString): Byte;
 var
   source: TStringList;
+  Parser: TjsFastHTMLParser;
 
   function   AnimeAGetNameAndLink: Byte;
   var
@@ -445,6 +446,30 @@ var
       end;
     end;
   end;
+
+  function   MangaHereGetNameAndLink: Byte;
+  var
+    i: Cardinal;
+  begin
+    Result:= INFORMATION_NOT_FOUND;
+    parse.Clear;
+    Parser:= TjsFastHTMLParser.Create(PChar(source.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.Exec;
+    Parser.Free;
+    if parse.Count=0 then exit;
+    for i:= 0 to parse.Count-1 do
+    begin
+      if Pos('manga_info', parse.Strings[i]) <> 0 then
+      begin
+        Result:= NO_ERROR;
+        names.Add(StringFilter(GetString(parse.Strings[i], 'rel="', '" href')));
+        links.Add(StringReplace(GetString(parse.Strings[i], 'href="', '">'), MANGAHERE_ROOT, '', []));
+      end;
+    end;
+  end;
+
 begin
   source:= TStringList.Create;
   if website = ANIMEA_NAME then
@@ -456,6 +481,17 @@ begin
       exit;
     end;
     Result:= AnimeAGetNameAndLink;
+  end
+  else
+  if website = MANGAHERE_NAME then
+  begin
+    if NOT GetPage(TObject(source), MANGAHERE_ROOT + MANGAHERE_BROWSER, 0) then
+    begin
+      Result:= NET_PROBLEM;
+      source.Free;
+      exit;
+    end;
+    Result:= MangaHereGetNameAndLink;
   end;
   source.Free;
 end;
@@ -470,7 +506,7 @@ function   GetAnimeAInfoFromURL: Byte;
 var
   i, j: Cardinal;
 begin
-  if NOT GetPage(TObject(source), ANIMEA_ROOT + URL + ANIMEA_SKIP, 1) then
+  if NOT GetPage(TObject(source), ANIMEA_ROOT + URL + ANIMEA_SKIP, 0) then
   begin
     Result:= NET_PROBLEM;
     source.Free;
@@ -489,7 +525,7 @@ begin
   mangaInfo.website:= 'AnimeA';
 
   // using parser (cover link, summary, chapter name and link)
-  if parse.Count=0 then begin exit end;
+  if parse.Count=0 then exit;
   for i:= 0 to parse.Count-1 do
   begin
     // get cover link
@@ -567,6 +603,118 @@ begin
   Result:= NO_ERROR;
 end;
 
+function   GetMangaHereInfoFromURL: Byte;
+var
+  i, j: Cardinal;
+begin
+  if NOT GetPage(TObject(source), MANGAHERE_ROOT + URL, 0) then
+  begin
+    Result:= NET_PROBLEM;
+    source.Free;
+    exit;
+  end;
+
+  // parsing the HTML source
+  parse.Clear;
+  Parser:= TjsFastHTMLParser.Create(PChar(source.Text));
+  Parser.OnFoundTag := OnTag;
+  Parser.OnFoundText:= OnText;
+  Parser.Exec;
+
+  Parser.Free;
+
+  mangaInfo.website:= 'MangaHere';
+
+  // using parser (cover link, summary, chapter name and link)
+  if parse.Count=0 then exit;
+  for i:= 0 to parse.Count-1 do
+  begin
+    // get cover link
+    if GetTagName(parse.Strings[i]) = 'img' then
+      if (GetAttributeValue(GetTagAttribute(parse.Strings[i], 'class='))='img') then
+        mangaInfo.coverLink:= GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src'));
+
+      // get summary
+    if (Pos('id="show"', parse.Strings[i])) <> 0 then
+    begin
+      parse.Strings[i+1]:= StringFilter(parse.Strings[i+1]);
+      parse.Strings[i+1]:= StringReplace(parse.Strings[i+1], #10, '\n', [rfReplaceAll]);
+      parse.Strings[i+1]:= StringReplace(parse.Strings[i+1], #13, '\r', [rfReplaceAll]);
+      mangaInfo.summary:= parse.Strings[i+1];
+    end;
+
+      // get chapter name and links
+    if (GetTagName(parse.Strings[i]) = 'a') AND
+       (GetAttributeValue(GetTagAttribute(parse.Strings[i], 'class='))='color_0077') AND
+       (Pos('http://www.mangahere.com/manga/', GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href=')))<>0) then
+    begin
+      Inc(mangaInfo.numChapter);
+      mangaInfo.chapterLinks.Add(StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href=')), MANGAHERE_ROOT, '', [rfReplaceAll]));
+      parse.Strings[i+1]:= StringReplace(parse.Strings[i+1], #10, '', [rfReplaceAll]);
+      parse.Strings[i+1]:= StringReplace(parse.Strings[i+1], #13, '', [rfReplaceAll]);
+      parse.Strings[i+1]:= TrimLeft(parse.Strings[i+1]);
+      parse.Strings[i+1]:= TrimRight(parse.Strings[i+1]);
+      mangaInfo.chapterName.Add(TrimRight(RemoveSymbols(parse.Strings[i+1])));
+    end;
+
+    // get authors
+    if (Pos('Author(s):', parse.Strings[i])<>0) then
+      mangaInfo.authors:= parse.Strings[i+3];
+
+    // get artists
+    if (Pos('Artist(s):', parse.Strings[i])<>0) then
+      mangaInfo.authors:= parse.Strings[i+3];
+
+    // get genres
+    if (Pos('Genre(s):', parse.Strings[i])<>0) then
+    begin
+      mangaInfo.genres:= '';
+      for j:= 0 to 38 do
+        if Pos(LowerCase(Genre[j]), LowerCase(parse.Strings[i+2]))<>0 then
+          mangaInfo.genres:= mangaInfo.genres+(Genre[j]+', ');
+    end;
+
+    // get status
+    if (Pos('Status:', parse.Strings[i])<>0) then
+    begin
+      if Pos('Ongoing', parse.Strings[i+2])<>0 then
+        mangaInfo.status:= '1'   // ongoing
+      else
+      if Pos('Completed', parse.Strings[i+2])<>0 then
+        mangaInfo.status:= '0';  // completed
+    end;
+  end;
+
+  // using regular expressions (authors, artists, status, genres)
+ { for i:= 0 to source.Count-1 do
+  begin
+    // get artists
+    if (Pos('Artist(s):', source.Strings[i])<>0) then
+      mangaInfo.artists:= GetString(source.Strings[i], '</strong>', '<');
+  end; }
+
+  // Since chapter name and link are inverted, we need to invert them
+  if mangainfo.ChapterName.Count > 1 then
+  begin
+    i:= 0; j:= mangainfo.ChapterName.Count - 1;
+    while (i<j) do
+    begin
+      mangainfo.ChapterName.Exchange(i, j);
+      mangainfo.chapterLinks.Exchange(i, j);
+      Inc(i); Dec(j);
+    end;
+  end;
+
+  // Delete 'latest' chapter because it isnt exist
+  if (mangaInfo.status = '1') AND (mangainfo.ChapterName.Count > 0) then
+  begin
+    Dec(mangaInfo.numChapter);
+    mangainfo.ChapterName.Delete(mangainfo.ChapterName.Count-1);
+    mangainfo.chapterLinks.Delete(mangainfo.chapterLinks.Count-1);
+  end;
+  Result:= NO_ERROR;
+end;
+
 begin
   source:= TStringList.Create; source.Clear;
   mangaInfo.coverLink := '';
@@ -575,7 +723,10 @@ begin
   mangaInfo.chapterLinks.Clear;
 
   if website = ANIMEA_NAME then
-    Result:= GetAnimeAInfoFromURL;
+    Result:= GetAnimeAInfoFromURL
+  else
+  if website = MANGAHERE_NAME then
+    Result:= GetMangaHereInfoFromURL;
 end;
 
 procedure   TMangaInformation.SyncInfoToData(const DataProcess: TDataProcess; const index: Cardinal);

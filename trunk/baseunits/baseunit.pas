@@ -15,7 +15,7 @@ uses SysUtils, Classes, HTTPSend, graphics, genericlib, IniFiles;
 const
   JPG_HEADER: array[0..2] of Byte = ($FF, $D8, $FF);
   GIF_HEADER: array[0..2] of Byte = ($47, $49, $46);
-  PNG_HEADER: array[0..3] of Byte = ($89, $50, $4E, $47);
+  PNG_HEADER: array[0..2] of Byte = ($89, $50, $4E);
   CS_PAGE = 0;
   CS_INFO = 1;
   CS_GETPAGENUMBER   = 2;
@@ -75,9 +75,11 @@ const
   NET_PROBLEM           = 1;
   INFORMATION_NOT_FOUND = 2;
 
-  ANIMEA_NAME = 'AnimeA'; ANIMEA_ID   = 0;
+  ANIMEA_NAME    = 'AnimeA';    ANIMEA_ID    = 0;
+  MANGAHERE_NAME = 'MangaHere'; MANGAHERE_ID = 1;
 
 var
+  currentWebsite,
   stModeAll,
   stModeFilter,
 
@@ -101,6 +103,10 @@ var
   ANIMEA_BROWSER: String = '/browse.html?page=';
   ANIMEA_SKIP   : String = '?skip=1';
 
+  MANGAHERE_ROOT   : String = 'http://www.mangahere.com';
+  MANGAHERE_BROWSER: String = '/mangalist/';
+  MANGAHERE_SKIP   : String = '?skip=1';
+
   // en: dialog messages
   // vi: nội dung hộp thoại
   infoName,
@@ -120,7 +126,6 @@ var
   stDlgFavoritesIsRunning,
   stDlgNoNewChapter,
   stDlgHasNewChapter : String;
-
 
 type
   PMangaListItem = ^TMangaListItem;
@@ -203,6 +208,7 @@ function  SetParams(input: TObject): AnsiString; overload;
 function  SetParams(input: array of AnsiString): AnsiString; overload;
 
 function  StringFilter(const source: AnsiString): AnsiString;
+function  StringBreaks(const source: AnsiString): AnsiString;
 
 function  PrepareSummaryForHint(const source: AnsiString):  AnsiString;
 
@@ -285,7 +291,9 @@ end;
 
 function  GetMangaSiteID(const name: AnsiString): Cardinal;
 begin
-  if name = ANIMEA_NAME then Result:= 0;
+  if name = ANIMEA_NAME then Result:= ANIMEA_ID
+  else
+  if name = MANGAHERE_NAME then Result:= MANGAHERE_ID;
 end;
 
 function  RemoveSymbols(const input: AnsiString): AnsiString;
@@ -406,9 +414,19 @@ function  StringFilter(const source: AnsiString): AnsiString;
 begin
   if Length(source) = 0 then exit;
   Result:= source;
+  Result:= StringReplace(Result, '&amp', '', [rfReplaceAll]);
+  Result:= StringReplace(Result, '&nbsp', '', [rfReplaceAll]);
   Result:= StringReplace(Result, '&quot;', '"', [rfReplaceAll]);
   Result:= StringReplace(Result, #10, '\n',  [rfReplaceAll]);
   Result:= StringReplace(Result, #13, '\r',  [rfReplaceAll]);
+end;
+
+function  StringBreaks(const source: AnsiString): AnsiString;
+begin
+  if Length(source) = 0 then exit;
+  Result:= source;
+  Result:= StringReplace(Result, '\n', #10,  [rfReplaceAll]);
+  Result:= StringReplace(Result, '\r', #13,  [rfReplaceAll]);
 end;
 
 function  PrepareSummaryForHint(const source: AnsiString):  AnsiString;
@@ -561,16 +579,15 @@ begin
      (header[2] = JPG_HEADER[2]) then
     ext:= '.jpg'
   else
+  if (header[0] = PNG_HEADER[0]) AND
+     (header[1] = PNG_HEADER[1]) AND
+     (header[2] = PNG_HEADER[2]) then
+    ext:= '.png'
+  else
   if (header[0] = GIF_HEADER[0]) AND
      (header[1] = GIF_HEADER[1]) AND
      (header[2] = GIF_HEADER[2]) then
     ext:= '.gif'
-  else
-  if (header[0] = PNG_HEADER[0]) AND
-     (header[1] = PNG_HEADER[1]) AND
-     (header[2] = PNG_HEADER[2]) AND
-     (header[3] = PNG_HEADER[3]) then
-    ext:= '.png'
   else
     ext:= '';
   HTTP.Document.SaveToFile(Path+ext);

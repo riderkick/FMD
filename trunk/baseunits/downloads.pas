@@ -28,6 +28,8 @@ type
     // Download page - link from link list
     function    DownloadPage: Boolean;
     procedure   Execute; override;
+    procedure   OnTag(tag: String);
+    procedure   OnText(text: String);
   public
     checkStyle    : Cardinal;
 
@@ -36,6 +38,7 @@ type
     // ID of the site
     workPtr       : Cardinal;
     manager       : TTaskThread;
+    parse         : TStringList;
     constructor Create;
     destructor  Destroy; override;
   end;
@@ -138,9 +141,19 @@ type
 
 implementation
 
-uses mainunit;
+uses mainunit, FastHTMLParser, HTMLUtil;
 
 // ----- TDownloadThread -----
+
+procedure   TDownloadThread.OnTag(tag: String);
+begin
+  parse.Add(tag);
+end;
+
+procedure   TDownloadThread.OnText(text: String);
+begin
+  parse.Add(text);
+end;
 
 constructor TDownloadThread.Create;
 begin
@@ -187,6 +200,9 @@ begin
 end;
 
 function    TDownloadThread.GetPageNumberFromURL(const URL: AnsiString): Boolean;
+var
+  Parser: TjsFastHTMLParser;
+
   function GetAnimeAPageNumber: Boolean;
   var
     i: Cardinal;
@@ -206,13 +222,55 @@ function    TDownloadThread.GetPageNumberFromURL(const URL: AnsiString): Boolean
     l.Free;
   end;
 
+  function GetMangaHerePageNumber: Boolean;
+  var
+    i, j: Cardinal;
+    l   : TStringList;
+  begin
+    l:= TStringList.Create;
+    parse:= TStringList.Create;
+    Result:= GetPage(TObject(l),
+                     MANGAHERE_ROOT + URL,
+                     manager.container.manager.retryConnect);
+    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.Exec;
+    Parser.Free;
+    if parse.Count>0 then
+    begin
+      manager.container.pageNumber:= 0;
+      for i:= 0 to parse.Count-1 do
+      begin
+        if GetTagName(parse.Strings[i]) = 'option' then
+        begin
+          j:= i;
+          while GetTagName(parse.Strings[j]) = 'option' do
+          begin
+            Inc(manager.container.pageNumber);
+            Inc(j, 3);
+          end;
+          break;
+        end;
+      end;
+    end;
+    parse.Free;
+    l.Free;
+  end;
+
 begin
   manager.container.pageNumber:= 0;
   if manager.container.mangaSiteID = ANIMEA_ID then
-    Result:= GetAnimeAPageNumber;
+    Result:= GetAnimeAPageNumber
+  else
+  if manager.container.mangaSiteID = MANGAHERE_ID then
+    Result:= GetMangaHerePageNumber;
 end;
 
 function    TDownloadThread.GetLinkPageFromURL(const URL: AnsiString): Boolean;
+var
+  Parser: TjsFastHTMLParser;
+
   function GetAnimeALinkPage: Boolean;
   var
     i: Cardinal;
@@ -227,15 +285,48 @@ function    TDownloadThread.GetLinkPageFromURL(const URL: AnsiString): Boolean;
     for i:= 0 to l.Count-1 do
       if (Pos('class="mangaimg', l.Strings[i])<>0) then
       begin
-        manager.container.pageLinks.Strings[workPtr]:= GetString(l.Strings[i], '<img src="', '"');
+        manager.container.pageLinks.Strings[workPtr]:= GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src='));
         break;
       end;
     l.Free;
   end;
 
+  function GetMangaHereLinkPage: Boolean;
+  var
+    i: Cardinal;
+    l: TStringList;
+  begin
+    l:= TStringList.Create;
+    Result:= GetPage(TObject(l),
+                     MANGAHERE_ROOT + URL + IntToStr(workPtr+1)+'.html',
+                     manager.container.manager.retryConnect);
+    parse:= TStringList.Create;
+
+    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.Exec;
+    Parser.Free;
+
+    if parse.Count>0 then
+    begin
+      for i:= 0 to l.Count-1 do
+        if (Pos('http://c.mhcdn.net/store/', l.Strings[i])<>0) then
+        begin
+          manager.container.pageLinks.Strings[workPtr]:= GetString(l.Strings[i], '<img src="', '"');
+          break;
+        end;
+    end;
+    parse.Free;
+    l.Free;
+  end;
+
 begin
   if manager.container.mangaSiteID = ANIMEA_ID then
-    Result:= GetAnimeALinkPage;
+    Result:= GetAnimeALinkPage
+  else
+  if manager.container.mangaSiteID = MANGAHERE_ID then
+    Result:= GetMangaHereLinkPage;
 end;
 
 function    TDownloadThread.DownloadPage: Boolean;
@@ -446,13 +537,17 @@ begin
       MainForm.vtDownload.Repaint;
     end;
   end;
-  if threads.Count = 0 then exit;
-  for i:= 0 to threads.Count-1 do
-    if NOT threads.Items[i].isTerminated then
-    begin
-      threads.Items[i].Suspend;
-      threads.Items[i].Terminate;
-    end;
+  {if check then
+  begin
+    if threads.Count = 0 then exit;
+    for i:= 0 to threads.Count-1 do
+      if (Assigned(threads.Items[i])) AND (NOT threads.Items[i].isTerminated) then
+      begin
+       // threads.Items[i].Suspend;
+        threads.Items[i].Terminate;
+       // threads.Items[i].Free;
+      end;
+  end;}
   threads.Clear;
 end;
 

@@ -157,6 +157,7 @@ type
     vtMangaList: TVirtualStringTree;
 
     procedure btUpdateListClick(Sender: TObject);
+    procedure cbSelectMangaChange(Sender: TObject);
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCreate(Sender: TObject);
 
@@ -319,7 +320,7 @@ begin
 
   // load icons
   // btUpdateList.Glyph.LoadFromFile('images/download_18.png');
-
+  currentWebsite:= cbSelectManga.Items.Strings[cbSelectManga.ItemIndex];
   DLManager.CheckAndActiveTaskAtStartup;
 end;
 
@@ -376,6 +377,7 @@ begin
         pos:= DLManager.containers.Count-1;
         isCreate:= TRUE;
       end;
+      DLManager.containers.Items[pos].mangaSiteID:= GetMangaSiteID(mangaInfo.website);
       DLManager.containers.Items[pos].chapterName .Add(Format('%.4d - %s', [i+1, mangaInfo.chapterName.Strings[i]]));
       DLManager.containers.Items[pos].chapterLinks.Add(mangaInfo.chapterLinks.Strings[i]);
     end;
@@ -441,6 +443,23 @@ begin
     updateList.numberOfThreads:= 4;
     updateList.websites.Add(cbSelectManga.Items[cbSelectManga.ItemIndex]);
     updateList.isSuspended:= FALSE;
+  end;
+end;
+
+procedure TMainForm.cbSelectMangaChange(Sender: TObject);
+begin
+  if currentWebsite <> cbSelectManga.Items.Strings[cbSelectManga.ItemIndex] then
+  begin
+    dataProcess.RemoveFilter;
+    dataProcess.SaveToFile;
+    dataProcess.Destroy;
+    dataProcess:= TDataProcess.Create;
+    dataProcess.LoadFromFile(cbSelectManga.Items.Strings[cbSelectManga.ItemIndex]);
+    vtMangaList.Clear;
+    vtMangaList.RootNodeCount:= dataProcess.filterPos.Count;
+    lbMode.Caption:= Format(stModeAll, [dataProcess.filterPos.Count]);
+    currentWebsite:= cbSelectManga.Items[cbSelectManga.ItemIndex];
+    dataProcess.website:= cbSelectManga.Items[cbSelectManga.ItemIndex];
   end;
 end;
 
@@ -966,6 +985,19 @@ begin
       exit;
     end;
     root:= ANIMEA_ROOT + root;
+  end
+  else
+  if cbSelectManga.Items[cbSelectManga.ItemIndex] = MANGAHERE_NAME then
+  begin
+    root:= dataProcess.Param[
+      dataProcess.filterPos.Items[vtMangaList.FocusedNode.Index], DATA_PARAM_LINK];
+    if NOT GetMangaInfo(root, MANGAHERE_NAME) then
+    begin
+      MessageDlg('', stDlgCannotGetMangaInfo,
+                 mtInformation, [mbYes], 0);
+      exit;
+    end;
+    root:= MANGAHERE_ROOT + root;
   end;
 
   pcMain.PageIndex:= 1;
@@ -995,7 +1027,7 @@ begin
     else
       AddTextToInfo(infoStatus , 'Ongoing'+#10#13);
     AddTextToInfo(infoLink, root+#10#13);
-    AddTextToInfo(infoSummary, mangaInfo.summary);
+    AddTextToInfo(infoSummary, StringBreaks(mangaInfo.summary));
     cp.X:= 0; cp.Y:= 0; CaretPos:= cp;
   end;
   AddChapterNameToList;

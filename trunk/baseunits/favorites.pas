@@ -233,6 +233,7 @@ begin
       begin
         DLManager.AddTask;
         pos:= DLManager.containers.Count-1;
+        DLManager.containers.Items[pos].mangaSiteID:= GetMangaSiteID(mangaInfo[i].website);
         for j:= currentChapter to newChapter-1 do
         begin
           DLManager.containers.Items[pos].chapterName.Add(Format('%.4d - %s', [j+1, mangaInfo[i].chapterName.Strings[j]]));
