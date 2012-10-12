@@ -303,11 +303,11 @@ object MainForm: TMainForm
     Height = 446
     Top = 0
     Width = 555
-    ActivePage = tsInformation
+    ActivePage = tsDownload
     Align = alClient
     Font.Style = [fsBold]
     ParentFont = False
-    TabIndex = 1
+    TabIndex = 0
     TabOrder = 1
     OnChange = pcMainChange
     object tsDownload: TTabSheet
@@ -1513,6 +1513,13 @@ object MainForm: TMainForm
     object miDownloadRemoveFinishedTasks: TMenuItem
       Caption = 'Delete all finished tasks'
       OnClick = miDownloadRemoveFinishedTasksClick
+    end
+    object MenuItem1: TMenuItem
+      Caption = '-'
+    end
+    object miOpenFolder: TMenuItem
+      Caption = 'Open Folder'
+      OnClick = miOpenFolderClick
     end
   end
   object pmChapterList: TPopupMenu

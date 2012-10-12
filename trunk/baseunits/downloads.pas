@@ -258,13 +258,55 @@ var
     l.Free;
   end;
 
+  function GetMangaInnPageNumber: Boolean;
+  var
+    s   : String;
+    i, j: Cardinal;
+    l   : TStringList;
+  begin
+    l:= TStringList.Create;
+    parse:= TStringList.Create;
+    Result:= GetPage(TObject(l),
+                     MANGAINN_ROOT + URL,
+                     manager.container.manager.retryConnect);
+    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.Exec;
+    Parser.Free;
+    if parse.Count>0 then
+    begin
+      manager.container.pageNumber:= 1;
+      for i:= 0 to parse.Count-1 do
+      begin
+        if Pos('Previous', parse.Strings[i]) <> 0 then
+         // if Pos('Page', parse.Strings[i+2]) <> 0 then
+        begin
+          j:= i+7;
+          s:= parse.Strings[j];
+          while GetTagName(parse.Strings[j]) = 'option' do
+          begin
+            Inc(manager.container.pageNumber);
+            Inc(j, 3);
+          end;
+          break;
+        end;
+      end;
+    end;
+    parse.Free;
+    l.Free;
+  end;
+
 begin
   manager.container.pageNumber:= 0;
   if manager.container.mangaSiteID = ANIMEA_ID then
     Result:= GetAnimeAPageNumber
   else
   if manager.container.mangaSiteID = MANGAHERE_ID then
-    Result:= GetMangaHerePageNumber;
+    Result:= GetMangaHerePageNumber
+  else
+  if manager.container.mangaSiteID = MANGAINN_ID then
+    Result:= GetMangaInnPageNumber;
 end;
 
 function    TDownloadThread.GetLinkPageFromURL(const URL: AnsiString): Boolean;
@@ -285,7 +327,7 @@ var
     for i:= 0 to l.Count-1 do
       if (Pos('class="mangaimg', l.Strings[i])<>0) then
       begin
-        manager.container.pageLinks.Strings[workPtr]:= GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src='));
+        manager.container.pageLinks.Strings[workPtr]:= GetString(l.Strings[i], '<img src="', '"');
         break;
       end;
     l.Free;
@@ -310,12 +352,42 @@ var
 
     if parse.Count>0 then
     begin
-      for i:= 0 to l.Count-1 do
-        if (Pos('http://c.mhcdn.net/store/', l.Strings[i])<>0) then
+      for i:= 0 to parse.Count-1 do
+        if (Pos('http://c.mhcdn.net/store/', parse.Strings[i])<>0) then
         begin
-          manager.container.pageLinks.Strings[workPtr]:= GetString(l.Strings[i], '<img src="', '"');
+          manager.container.pageLinks.Strings[workPtr]:= GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src='));
           break;
         end;
+    end;
+    parse.Free;
+    l.Free;
+  end;
+
+  function GetMangaInnLinkPage: Boolean;
+  var
+    i: Cardinal;
+    l: TStringList;
+  begin
+    l:= TStringList.Create;
+    Result:= GetPage(TObject(l),
+                     MANGAINN_ROOT + URL + '/page_'+IntToStr(workPtr+1),
+                     manager.container.manager.retryConnect);
+    parse:= TStringList.Create;
+    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.Exec;
+    Parser.Free;
+
+    if parse.Count>0 then
+    begin
+      for i:= 0 to parse.Count-1 do
+        if GetTagName(parse.Strings[i]) = 'img' then
+          if GetAttributeValue(GetTagAttribute(parse.Strings[i], 'id='))='imgPage' then
+          begin
+            manager.container.pageLinks.Strings[workPtr]:= GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src='));
+            break;
+          end;
     end;
     parse.Free;
     l.Free;
@@ -326,7 +398,10 @@ begin
     Result:= GetAnimeALinkPage
   else
   if manager.container.mangaSiteID = MANGAHERE_ID then
-    Result:= GetMangaHereLinkPage;
+    Result:= GetMangaHereLinkPage
+  else
+  if manager.container.mangaSiteID = MANGAINN_ID then
+    Result:= GetMangaInnLinkPage;
 end;
 
 function    TDownloadThread.DownloadPage: Boolean;
@@ -348,7 +423,7 @@ begin
            Format('%s/%.3d',
                   [manager.container.downloadInfo.SaveTo+
                   '/'+manager.container.chapterName.Strings[manager.container.currentDownloadChapterPtr],
-                  workPtr+1{, ext}]), manager.container.manager.retryConnect);
+                  workPtr+1]), manager.container.manager.retryConnect);
   manager.container.pageLinks.Strings[workPtr]:= '';
   SetCurrentDir(oldDir);
 end;

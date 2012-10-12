@@ -77,6 +77,7 @@ const
 
   ANIMEA_NAME    = 'AnimeA';    ANIMEA_ID    = 0;
   MANGAHERE_NAME = 'MangaHere'; MANGAHERE_ID = 1;
+  MANGAINN_NAME  = 'MangaInn';  MANGAINN_ID  = 2;
 
 var
   currentWebsite,
@@ -106,6 +107,10 @@ var
   MANGAHERE_ROOT   : String = 'http://www.mangahere.com';
   MANGAHERE_BROWSER: String = '/mangalist/';
   MANGAHERE_SKIP   : String = '?skip=1';
+
+  MANGAINN_ROOT   : String = 'http://www.mangainn.com';
+  MANGAINN_BROWSER: String = '/mangalist/';
+  MANGAINN_SKIP   : String = '?skip=1';
 
   // en: dialog messages
   // vi: nội dung hộp thoại
@@ -186,6 +191,7 @@ type
 
 function  CorrectFile(const APath: String): String;
 function  CorrectFilePath(const APath: String): String;
+function  CorrectURL(const URL: String): String;
 procedure CheckPath(const S: AnsiString);
 
 function  GetMangaSiteID(const name: AnsiString): Cardinal;
@@ -209,6 +215,7 @@ function  SetParams(input: array of AnsiString): AnsiString; overload;
 
 function  StringFilter(const source: AnsiString): AnsiString;
 function  StringBreaks(const source: AnsiString): AnsiString;
+function  RemoveStringBreaks(const source: AnsiString): AnsiString;
 
 function  PrepareSummaryForHint(const source: AnsiString):  AnsiString;
 
@@ -234,6 +241,11 @@ begin
   for I:=1 to Length(Result) do
     if Result[I]= '\' then
       Result[I]:= '/';
+end;
+
+function  CorrectURL(const URL: String): String;
+begin
+  Result:= StringReplace(URL, ' ', '%20', [rfReplaceAll]);
 end;
 
 function  CorrectFilePath(const APath: String): String;
@@ -293,7 +305,9 @@ function  GetMangaSiteID(const name: AnsiString): Cardinal;
 begin
   if name = ANIMEA_NAME then Result:= ANIMEA_ID
   else
-  if name = MANGAHERE_NAME then Result:= MANGAHERE_ID;
+  if name = MANGAHERE_NAME then Result:= MANGAHERE_ID
+  else
+  if name = MANGAINN_NAME then Result:= MANGAINN_ID;
 end;
 
 function  RemoveSymbols(const input: AnsiString): AnsiString;
@@ -413,8 +427,7 @@ end;
 function  StringFilter(const source: AnsiString): AnsiString;
 begin
   if Length(source) = 0 then exit;
-  Result:= source;
-  Result:= StringReplace(Result, '&amp', '', [rfReplaceAll]);
+  Result:= StringReplace(source, '&amp', '', [rfReplaceAll]);
   Result:= StringReplace(Result, '&nbsp', '', [rfReplaceAll]);
   Result:= StringReplace(Result, '&quot;', '"', [rfReplaceAll]);
   Result:= StringReplace(Result, #10, '\n',  [rfReplaceAll]);
@@ -427,6 +440,13 @@ begin
   Result:= source;
   Result:= StringReplace(Result, '\n', #10,  [rfReplaceAll]);
   Result:= StringReplace(Result, '\r', #13,  [rfReplaceAll]);
+end;
+
+function  RemoveStringBreaks(const source: AnsiString): AnsiString;
+begin
+  if Length(source) = 0 then exit;
+  Result:= StringReplace(source, #10, '', [rfReplaceAll]);
+  Result:= StringReplace(Result, #13, '', [rfReplaceAll]);
 end;
 
 function  PrepareSummaryForHint(const source: AnsiString):  AnsiString;

@@ -13,8 +13,9 @@ interface
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
   ExtCtrls, ComCtrls, Grids, ColorBox, ActnList, Buttons, CheckLst, Spin, Menus,
-  customdrawncontrols, VirtualTrees, RichMemo, IniFiles, baseunit, data, types,
-  downloads, favorites, windows, LConvEncoding, updatelist, lclproc;
+  customdrawncontrols, VirtualTrees, RichMemo, IniFiles, Process,
+  baseunit, data, types, downloads, favorites, windows, LConvEncoding,
+  updatelist, lclproc;
 
 type
 
@@ -105,6 +106,8 @@ type
     lbOptionPass: TLabel;
     lbOptionPort: TLabel;
     lbOptionUser: TLabel;
+    MenuItem1: TMenuItem;
+    miOpenFolder: TMenuItem;
     miFavoritesRemove: TMenuItem;
     miMangaListAddToFavorites: TMenuItem;
     miFavoritesChangeCurrentChapter: TMenuItem;
@@ -191,6 +194,7 @@ type
     procedure miDownloadRemuseClick(Sender: TObject);
     procedure miDownloadRemoveClick(Sender: TObject);
     procedure miDownloadStopClick(Sender: TObject);
+    procedure miOpenFolderClick(Sender: TObject);
 
     procedure pcMainChange(Sender: TObject);
 
@@ -680,6 +684,18 @@ begin
   vtDownload.Repaint;
 end;
 
+procedure TMainForm.miOpenFolderClick(Sender: TObject);
+var
+  Process: TProcess;
+begin
+  if NOT Assigned(vtDownload.FocusedNode) then exit;
+  Process:= TProcess.Create(nil);
+  Process.CommandLine:= 'explorer.exe /e, '+
+                         StringReplace(DLManager.containers.Items[vtDownload.FocusedNode.Index].downloadInfo.SaveTo, '/', '\', [rfReplaceAll]);
+  Process.Execute;
+  Process.Free;
+end;
+
 procedure TMainForm.pcMainChange(Sender: TObject);
   procedure UpdateOptions;
   begin
@@ -998,6 +1014,19 @@ begin
       exit;
     end;
     root:= MANGAHERE_ROOT + root;
+  end
+  else
+  if cbSelectManga.Items[cbSelectManga.ItemIndex] = MANGAINN_NAME then
+  begin
+    root:= dataProcess.Param[
+      dataProcess.filterPos.Items[vtMangaList.FocusedNode.Index], DATA_PARAM_LINK];
+    if NOT GetMangaInfo(root, MANGAINN_NAME) then
+    begin
+      MessageDlg('', stDlgCannotGetMangaInfo,
+                 mtInformation, [mbYes], 0);
+      exit;
+    end;
+    root:= MANGAINN_ROOT + root;
   end;
 
   pcMain.PageIndex:= 1;
