@@ -1,7 +1,7 @@
 object MainForm: TMainForm
-  Left = 384
+  Left = 349
   Height = 466
-  Top = 146
+  Top = 89
   Width = 750
   Align = alBottom
   Caption = 'Free Manga Downloader'
@@ -303,11 +303,11 @@ object MainForm: TMainForm
     Height = 446
     Top = 0
     Width = 555
-    ActivePage = tsDownload
+    ActivePage = tsInformation
     Align = alClient
     Font.Style = [fsBold]
     ParentFont = False
-    TabIndex = 0
+    TabIndex = 1
     TabOrder = 1
     OnChange = pcMainChange
     object tsDownload: TTabSheet
@@ -1252,9 +1252,8 @@ object MainForm: TMainForm
                 Left = 14
                 Height = 13
                 Top = 14
-                Width = 26
+                Width = 22
                 Caption = 'Host'
-                Font.Style = [fsBold]
                 ParentColor = False
                 ParentFont = False
               end
@@ -1304,7 +1303,7 @@ object MainForm: TMainForm
               object lbOptionPass: TLabel
                 AnchorSideLeft.Side = asrBottom
                 AnchorSideTop.Side = asrBottom
-                Left = 244
+                Left = 242
                 Height = 13
                 Top = 46
                 Width = 46

@@ -78,6 +78,7 @@ const
   ANIMEA_NAME    = 'AnimeA';    ANIMEA_ID    = 0;
   MANGAHERE_NAME = 'MangaHere'; MANGAHERE_ID = 1;
   MANGAINN_NAME  = 'MangaInn';  MANGAINN_ID  = 2;
+  OURMANGA_NAME  = 'OurManga';  OURMANGA_ID  = 3;
 
 var
   currentWebsite,
@@ -106,11 +107,12 @@ var
 
   MANGAHERE_ROOT   : String = 'http://www.mangahere.com';
   MANGAHERE_BROWSER: String = '/mangalist/';
-  MANGAHERE_SKIP   : String = '?skip=1';
 
   MANGAINN_ROOT   : String = 'http://www.mangainn.com';
   MANGAINN_BROWSER: String = '/mangalist/';
-  MANGAINN_SKIP   : String = '?skip=1';
+
+  OURMANGA_ROOT   : String = 'http://www.ourmanga.com';
+  OURMANGA_BROWSER: String = '/directory/';
 
   // en: dialog messages
   // vi: nội dung hộp thoại
@@ -307,7 +309,9 @@ begin
   else
   if name = MANGAHERE_NAME then Result:= MANGAHERE_ID
   else
-  if name = MANGAINN_NAME then Result:= MANGAINN_ID;
+  if name = MANGAINN_NAME then Result:= MANGAINN_ID
+  else
+  if name = OURMANGA_NAME then Result:= OURMANGA_ID;
 end;
 
 function  RemoveSymbols(const input: AnsiString): AnsiString;
@@ -651,7 +655,7 @@ begin
   begin
     output.Clear;
     GetParams(output, merge.Strings[i]);
-    names.Add(output.Strings[1]);
+    names.Add(output.Strings[DATA_PARAM_NAME]);
   end;
   QSort(1, names.Count-1);
   output.Free;

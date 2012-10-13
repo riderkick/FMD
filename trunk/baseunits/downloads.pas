@@ -83,6 +83,7 @@ type
 
     chapterName,
     chapterLinks,
+    pageContainerLinks,
     pageLinks  : TStringList;
 
     constructor Create;
@@ -297,6 +298,78 @@ var
     l.Free;
   end;
 
+  function GetOurMangaPageNumber: Boolean;
+  // OurManga is a lot different than other site
+  var
+    isExtractpageContainerLinks: Boolean = FALSE;
+    correctURL,
+    s   : String;
+    i, j: Cardinal;
+    l   : TStringList;
+  begin
+    // pass 1: Find correct chapter
+    l:= TStringList.Create;
+    parse:= TStringList.Create;
+    Result:= GetPage(TObject(l),
+                     OURMANGA_ROOT + URL,
+                     manager.container.manager.retryConnect);
+    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.Exec;
+    Parser.Free;
+    if parse.Count>0 then
+    begin
+      manager.container.pageNumber:= 1;
+      for i:= 0 to parse.Count-1 do
+      begin
+        if (GetTagName(parse.Strings[i]) = 'a') AND
+           (Pos(OURMANGA_ROOT + URL, parse.Strings[i]) <> 0) then
+          correctURL:= GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href='));
+      end;
+    end;
+    parse.Clear;
+    l.Clear;
+
+    // pass 2: Find number of pages
+
+    Result:= GetPage(TObject(l),
+                     correctURL,
+                     manager.container.manager.retryConnect);
+    manager.container.pageContainerLinks.Clear;
+    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.Exec;
+    Parser.Free;
+    if parse.Count>0 then
+    begin
+      manager.container.pageNumber:= 0;
+      for i:= 0 to parse.Count-1 do
+      begin
+        if NOT isExtractpageContainerLinks then
+        begin
+          if (GetTagName(parse.Strings[i]) = 'select') AND
+             (GetAttributeValue(GetTagAttribute(parse.Strings[i], 'name=')) = 'page') then
+            isExtractpageContainerLinks:= TRUE;
+        end
+        else
+        begin
+          if (GetTagName(parse.Strings[i]) = 'option') then
+          begin
+            manager.container.pageContainerLinks.Add(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'value=')));
+            Inc(manager.container.pageNumber);
+          end
+          else
+          if Pos('</select>', parse.Strings[i])<>0 then
+            break;
+        end;
+      end;
+    end;
+    parse.Free;
+    l.Free;
+  end;
+
 begin
   manager.container.pageNumber:= 0;
   if manager.container.mangaSiteID = ANIMEA_ID then
@@ -306,7 +379,10 @@ begin
     Result:= GetMangaHerePageNumber
   else
   if manager.container.mangaSiteID = MANGAINN_ID then
-    Result:= GetMangaInnPageNumber;
+    Result:= GetMangaInnPageNumber
+  else
+  if manager.container.mangaSiteID = OURMANGA_ID then
+    Result:= GetOurMangaPageNumber;
 end;
 
 function    TDownloadThread.GetLinkPageFromURL(const URL: AnsiString): Boolean;
@@ -393,6 +469,45 @@ var
     l.Free;
   end;
 
+  function GetOurMangaLinkPage: Boolean;
+  var
+    j,
+    i: Cardinal;
+    l: TStringList;
+  begin
+    l:= TStringList.Create;
+    Result:= GetPage(TObject(l),
+                     OURMANGA_ROOT + URL + '/' + manager.container.pageContainerLinks.Strings[workPtr],
+                     manager.container.manager.retryConnect);
+    parse:= TStringList.Create;
+    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.Exec;
+    Parser.Free;
+    if parse.Count>0 then
+    begin
+      for i:= 0 to parse.Count-1 do
+        if (GetTagName(parse.Strings[i]) = 'div') AND
+           (GetAttributeValue(GetTagAttribute(parse.Strings[i], 'class=')) = 'prev_next_top') then
+        begin
+          j:= i;
+          repeat
+            Dec(j);
+            if GetTagName(parse.Strings[j]) = 'img' then
+            begin
+              manager.container.pageLinks.Strings[workPtr]:= GetAttributeValue(GetTagAttribute(parse.Strings[j], 'src='));
+              parse.Free;
+              l.Free;
+              exit;
+            end;
+          until j = 0;
+        end;
+    end;
+    parse.Free;
+    l.Free;
+  end;
+
 begin
   if manager.container.mangaSiteID = ANIMEA_ID then
     Result:= GetAnimeALinkPage
@@ -401,7 +516,10 @@ begin
     Result:= GetMangaHereLinkPage
   else
   if manager.container.mangaSiteID = MANGAINN_ID then
-    Result:= GetMangaInnLinkPage;
+    Result:= GetMangaInnLinkPage
+  else
+  if manager.container.mangaSiteID = OURMANGA_ID then
+    Result:= GetOurMangaLinkPage;
 end;
 
 function    TDownloadThread.DownloadPage: Boolean;
@@ -630,9 +748,10 @@ end;
 
 constructor TTaskThreadContainer.Create;
 begin
-  chapterLinks:= TStringList.Create;
-  chapterName := TStringList.Create;
-  pageLinks   := TStringList.Create;
+  chapterLinks     := TStringList.Create;
+  chapterName      := TStringList.Create;
+  pageLinks        := TStringList.Create;
+  pageContainerLinks:= TStringList.Create;
   workPtr:= 0;
   currentPageNumber:= 0;
   currentDownloadChapterPtr:= 0;
@@ -642,6 +761,7 @@ end;
 destructor  TTaskThreadContainer.Destroy;
 begin
   thread.Terminate;
+  pageContainerLinks.Free;
   pageLinks.Free;
   chapterName.Free;
   chapterLinks.Free;
@@ -972,6 +1092,9 @@ begin
     s:= ini.ReadString('task'+IntToStr(i), 'PageLinks', '');
     if s <> '' then
       GetParams(containers.Items[i].pageLinks, s);
+    s:= ini.ReadString('task'+IntToStr(i), 'PageContainerLinks', '');
+    if s <> '' then
+      GetParams(containers.Items[i].pageContainerLinks, s);
 
     containers.Items[i].Status                   := ini.ReadInteger('task'+IntToStr(i), 'TaskStatus', 0);
     containers.Items[i].currentDownloadChapterPtr:= ini.ReadInteger('task'+IntToStr(i), 'ChapterPtr', 0);
@@ -1011,6 +1134,8 @@ begin
       ini.WriteString('task'+IntToStr(i), 'ChapterName', SetParams(containers.Items[i].ChapterName));
       if containers.Items[i].pageLinks.Count > 0 then
         ini.WriteString('task'+IntToStr(i), 'PageLinks', SetParams(containers.Items[i].pageLinks));
+      if containers.Items[i].pageContainerLinks.Count > 0 then
+        ini.WriteString('task'+IntToStr(i), 'PageContainerLinks', SetParams(containers.Items[i].pageContainerLinks));
 
       ini.WriteInteger('task'+IntToStr(i), 'TaskStatus', containers.Items[i].Status);
       ini.WriteInteger('task'+IntToStr(i), 'ChapterPtr', containers.Items[i].currentDownloadChapterPtr);

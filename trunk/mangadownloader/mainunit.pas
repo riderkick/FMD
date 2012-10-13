@@ -1027,6 +1027,19 @@ begin
       exit;
     end;
     root:= MANGAINN_ROOT + root;
+  end
+  else
+  if cbSelectManga.Items[cbSelectManga.ItemIndex] = OURMANGA_NAME then
+  begin
+    root:= dataProcess.Param[
+      dataProcess.filterPos.Items[vtMangaList.FocusedNode.Index], DATA_PARAM_LINK];
+    if NOT GetMangaInfo(root, OURMANGA_NAME) then
+    begin
+      MessageDlg('', stDlgCannotGetMangaInfo,
+                 mtInformation, [mbYes], 0);
+      exit;
+    end;
+    root:= OURMANGA_ROOT + root;
   end;
 
   pcMain.PageIndex:= 1;
