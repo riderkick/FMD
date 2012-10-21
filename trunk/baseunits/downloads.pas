@@ -47,12 +47,14 @@ type
 
   TTaskThread = class(TThread)
   protected
+    procedure   CheckOut;
     procedure   Execute; override;
     procedure   Compress;
   public
     isTerminated,
     isSuspended: Boolean;
 
+    Flag: Cardinal;
     // container (for storing information)
     container  : TTaskThreadContainer;
     // download threads
@@ -184,7 +186,7 @@ begin
         GetPageNumberFromURL(manager.container.chapterLinks.Strings[manager.container.currentDownloadChapterPtr]);
         // prepare 'space' for link updater
         for i:= 0 to manager.container.pageNumber-1 do
-          manager.container.pageLinks.Add('');
+          manager.container.pageLinks.Add('W');
       end;
     // get page link
     CS_GETPAGELINK:
@@ -370,6 +372,45 @@ var
     l.Free;
   end;
 
+  function GetHentai2ReadPageNumber: Boolean;
+  var
+    s   : String;
+    i, j: Cardinal;
+    l   : TStringList;
+  begin
+    l:= TStringList.Create;
+    parse:= TStringList.Create;
+    Result:= GetPage(TObject(l),
+                     HENTAI2READ_ROOT + URL,
+                     manager.container.manager.retryConnect);
+    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
+    s:= HENTAI2READ_ROOT + URL;
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.Exec;
+    Parser.Free;
+    if parse.Count>0 then
+    begin
+      manager.container.pageNumber:= 0;
+      for i:= 0 to parse.Count-1 do
+      begin
+        if (GetTagName(parse.Strings[i]) = 'select') AND
+           (GetAttributeValue(GetTagAttribute(parse.Strings[i], 'class='))='cbo_wpm_pag') then
+        begin
+          j:= i+1;
+          while GetTagName(parse.Strings[j]) = 'option' do
+          begin
+            Inc(manager.container.pageNumber);
+            Inc(j, 3);
+          end;
+          break;
+        end;
+      end;
+    end;
+    parse.Free;
+    l.Free;
+  end;
+
 begin
   manager.container.pageNumber:= 0;
   if manager.container.mangaSiteID = ANIMEA_ID then
@@ -382,7 +423,10 @@ begin
     Result:= GetMangaInnPageNumber
   else
   if manager.container.mangaSiteID = OURMANGA_ID then
-    Result:= GetOurMangaPageNumber;
+    Result:= GetOurMangaPageNumber
+  else
+  if manager.container.mangaSiteID = HENTAI2READ_ID then
+    Result:= GetHentai2ReadPageNumber;
 end;
 
 function    TDownloadThread.GetLinkPageFromURL(const URL: AnsiString): Boolean;
@@ -415,9 +459,14 @@ var
     l: TStringList;
   begin
     l:= TStringList.Create;
-    Result:= GetPage(TObject(l),
-                     MANGAHERE_ROOT + URL + IntToStr(workPtr+1)+'.html',
-                     manager.container.manager.retryConnect);
+    if workPtr > 0 then
+      Result:= GetPage(TObject(l),
+                       MANGAHERE_ROOT + URL + IntToStr(workPtr+1)+'.html',
+                       manager.container.manager.retryConnect)
+    else
+      Result:= GetPage(TObject(l),
+                       MANGAHERE_ROOT + URL,
+                       manager.container.manager.retryConnect);
     parse:= TStringList.Create;
 
     Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
@@ -425,14 +474,15 @@ var
     Parser.OnFoundText:= OnText;
     Parser.Exec;
     Parser.Free;
-
     if parse.Count>0 then
     begin
       for i:= 0 to parse.Count-1 do
         if (Pos('http://c.mhcdn.net/store/', parse.Strings[i])<>0) then
         begin
           manager.container.pageLinks.Strings[workPtr]:= GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src='));
-          break;
+          parse.Free;
+          l.Free;
+          exit;
         end;
     end;
     parse.Free;
@@ -508,7 +558,41 @@ var
     l.Free;
   end;
 
+  function GetHentai2ReadLinkPage: Boolean;
+  var
+    i: Cardinal;
+    l: TStringList;
+  begin
+    l:= TStringList.Create;
+    Result:= GetPage(TObject(l),
+                     HENTAI2READ_ROOT + URL + IntToStr(workPtr+1)+'/',
+                     manager.container.manager.retryConnect);
+    parse:= TStringList.Create;
+    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.Exec;
+    Parser.Free;
+
+    if parse.Count>0 then
+    begin
+      for i:= 0 to parse.Count-1 do
+        if (GetTagName(parse.Strings[i]) = 'img') AND
+           (GetAttributeValue(GetTagAttribute(parse.Strings[i], 'id='))='img_mng_enl') then
+        begin
+          manager.container.pageLinks.Strings[workPtr]:= GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src='));
+          break;
+        end;
+    end;
+    parse.Free;
+    l.Free;
+  end;
+
+var
+  s: String;
+
 begin
+  if manager.container.pageLinks.Strings[workPtr] <> 'W' then exit;
   if manager.container.mangaSiteID = ANIMEA_ID then
     Result:= GetAnimeALinkPage
   else
@@ -519,14 +603,16 @@ begin
     Result:= GetMangaInnLinkPage
   else
   if manager.container.mangaSiteID = OURMANGA_ID then
-    Result:= GetOurMangaLinkPage;
+    Result:= GetOurMangaLinkPage
+  else
+  if manager.container.mangaSiteID = HENTAI2READ_ID then
+    Result:= GetHentai2ReadLinkPage;
 end;
 
 function    TDownloadThread.DownloadPage: Boolean;
 {var
   s, ext: String;}
 begin
-  if manager.container.pageLinks.Strings[workPtr] = '' then exit;
  { s:= manager.container.pageLinks.Strings[workPtr];
   if (Pos('.jpeg', LowerCase(s))<>0) OR (Pos('.jpg', LowerCase(s))<>0) then
     ext:= '.jpg'
@@ -536,6 +622,8 @@ begin
   else
   if Pos('.gif', LowerCase(s))<>0 then
     ext:= '.gif'; }
+  if (manager.container.pageLinks.Strings[workPtr] = '') OR
+     (manager.container.pageLinks.Strings[workPtr] = 'W') then exit;
   SetCurrentDir(oldDir);
   SavePage(manager.container.pageLinks.Strings[workPtr],
            Format('%s/%.3d',
@@ -580,47 +668,47 @@ begin
   end;
 end;
 
-procedure   TTaskThread.Execute;
-
-  procedure   Checkout(const Flag: Cardinal);
-  var
-    i: Cardinal;
+procedure   TTaskThread.Checkout;
+var
+  i: Cardinal;
+begin
+  Sleep(100);
+  if container.activeThreadCount >= container.manager.maxDLThreadsPerTask then exit;
+  for i:= 0 to container.manager.maxDLThreadsPerTask-1 do
   begin
-    Sleep(32);
-    if container.activeThreadCount >= container.manager.maxDLThreadsPerTask then exit;
-    for i:= 0 to container.manager.maxDLThreadsPerTask-1 do
+    if i >= threads.Count then
     begin
-      if i >= threads.Count then
-      begin
-        while isSuspended do Sleep(100);
-        Inc(container.activeThreadCount);
-        threads.Add(TDownloadThread.Create);
-        threads.Items[threads.Count-1].manager:= self;
-        threads.Items[threads.Count-1].workPtr:= container.workPtr;
-        threads.Items[threads.Count-1].checkStyle:= Flag;
-        threads.Items[threads.Count-1].isSuspended:= FALSE;
-        Inc(container.workPtr);
-        if Flag = CS_GETPAGELINK then
-          Inc(container.currentPageNumber);
-        exit;
-      end
-      else
-      if (threads.Items[i].isTerminated) then
-      begin
-        while isSuspended do Sleep(100);
-        Inc(container.activeThreadCount);
-        threads.Items[i]:= TDownloadThread.Create;
-        threads.Items[i].manager:= self;
-        threads.Items[i].workPtr:= container.workPtr;
-        threads.Items[i].checkStyle:= Flag;
-        threads.Items[i].isSuspended:= FALSE;
-        Inc(container.workPtr);
-        if Flag = CS_GETPAGELINK then
-          Inc(container.currentPageNumber);
-        exit;
-      end;
+      while isSuspended do Sleep(100);
+      Inc(container.activeThreadCount);
+      threads.Add(TDownloadThread.Create);
+      threads.Items[threads.Count-1].manager:= self;
+      threads.Items[threads.Count-1].workPtr:= container.workPtr;
+      threads.Items[threads.Count-1].checkStyle:= Flag;
+      threads.Items[threads.Count-1].isSuspended:= FALSE;
+      Inc(container.workPtr);
+      if Flag = CS_GETPAGELINK then
+        Inc(container.currentPageNumber);
+      exit;
+    end
+    else
+    if (threads.Items[i].isTerminated) then
+    begin
+      while isSuspended do Sleep(100);
+      Inc(container.activeThreadCount);
+      threads.Items[i]:= TDownloadThread.Create;
+      threads.Items[i].manager:= self;
+      threads.Items[i].workPtr:= container.workPtr;
+      threads.Items[i].checkStyle:= Flag;
+      threads.Items[i].isSuspended:= FALSE;
+      Inc(container.workPtr);
+      if Flag = CS_GETPAGELINK then
+        Inc(container.currentPageNumber);
+      exit;
     end;
   end;
+end;
+
+procedure   TTaskThread.Execute;
 
   procedure  WaitFor;
   var
@@ -630,11 +718,12 @@ procedure   TTaskThread.Execute;
     repeat
       done:= TRUE;
       for i:= 0 to threads.Count-1 do
-        if NOT threads[i].isTerminated then
-        begin
-          done:= FALSE;
-          sleep(100);
-        end;
+       // if threads[i].manager = @self then
+          if NOT threads[i].isTerminated then
+          begin
+            done:= FALSE;
+            sleep(100);
+          end;
     until done;
   end;
 
@@ -668,14 +757,17 @@ begin
     end;
 
     //get page links
-    if container.currentPageNumber < container.pageNumber then
+   // if container.currentPageNumber < container.pageNumber then
     begin
-      container.workPtr:= container.currentPageNumber;
+      container.workPtr:= 0;//container.currentPageNumber;
+   //   if container.workPtr > 0 then
+   //     Dec(container.workPtr);
       container.downloadInfo.iProgress:= 0;
-      while container.workPtr < container.pageNumber do
+      while container.workPtr < container.pageLinks.Count{container.pageNumber} do
       begin
         if Terminated then exit;
-        Checkout(CS_GETPAGELINK);
+        Flag:= CS_GETPAGELINK;
+        Checkout;
         container.downloadInfo.Progress:= Format('%d/%d', [container.workPtr, container.pageNumber]);
         container.downloadInfo.Status  := Format('%s (%d/%d)', [stPreparing, container.currentDownloadChapterPtr, container.chapterLinks.Count]);
         Inc(container.downloadInfo.iProgress);
@@ -691,14 +783,15 @@ begin
     while container.workPtr < container.pageLinks.Count do
     begin
       if Terminated then exit;
-      Checkout(CS_DOWNLOAD);
+      Flag:= CS_DOWNLOAD;
+      Checkout;
       container.downloadInfo.Progress:= Format('%d/%d', [container.workPtr, container.pageLinks.Count]);
       container.downloadInfo.Status  := Format('%s (%d/%d)', [stDownloading, container.currentDownloadChapterPtr, container.chapterLinks.Count]);
       Inc(container.downloadInfo.iProgress);
       MainForm.vtDownload.Repaint;
     end;
     WaitFor;
-    Compress;
+    Synchronize(Compress);
     if Terminated then exit;
     container.currentPageNumber:= 0;
     container.pageLinks.Clear;
@@ -1095,7 +1188,6 @@ begin
     s:= ini.ReadString('task'+IntToStr(i), 'PageContainerLinks', '');
     if s <> '' then
       GetParams(containers.Items[i].pageContainerLinks, s);
-
     containers.Items[i].Status                   := ini.ReadInteger('task'+IntToStr(i), 'TaskStatus', 0);
     containers.Items[i].currentDownloadChapterPtr:= ini.ReadInteger('task'+IntToStr(i), 'ChapterPtr', 0);
     containers.Items[i].pageNumber               := ini.ReadInteger('task'+IntToStr(i), 'NumberOfPages', 0);
@@ -1107,6 +1199,7 @@ begin
     containers.Items[i].downloadInfo.website := ini.ReadString('task'+IntToStr(i), 'Website', 'NULL');
     containers.Items[i].downloadInfo.saveTo  := ini.ReadString('task'+IntToStr(i), 'SaveTo', 'NULL');
     containers.Items[i].downloadInfo.dateTime:= ini.ReadString('task'+IntToStr(i), 'DateTime', 'NULL');
+    containers.Items[i].mangaSiteID:= GetMangaSiteID(containers.Items[i].downloadInfo.website);
   end;
 end;
 

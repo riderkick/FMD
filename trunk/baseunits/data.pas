@@ -39,7 +39,7 @@ type
     Summary   : TStringList;
 
     constructor Create;
-    destructor  Destroy;
+    destructor  Destroy; override;
     function    FirstParam(const index: Cardinal): AnsiString;
 
     // en: Break data into parts... This may be considered as bad coding, but
@@ -72,7 +72,9 @@ type
     procedure   OnTag (tag : String);
     procedure   OnText(text: String);
     constructor Create;
-    destructor  Destroy;
+    destructor  Destroy; override;
+    function    GetDirectoryPage(out Page: Cardinal;
+                                 const website: AnsiString): Byte;
     function    GetNameAndLink(const names, links: TStringList;
                                const website, URL: AnsiString): Byte;
     function    GetInfoFromURL(const website, URL: AnsiString): Byte;
@@ -111,6 +113,9 @@ end;
 
 destructor  TDataProcess.Destroy;
 begin
+  filterMark.Free;
+  filterPos.Free;
+
   Title.Free;
   Link.Free;
   Authors.Free;
@@ -425,6 +430,56 @@ begin
   parse.Add(text);
 end;
 
+function    TMangaInformation.GetDirectoryPage(out Page: Cardinal;
+                                               const website: AnsiString): Byte;
+var
+  s     : String;
+  source: TStringList;
+  Parser: TjsFastHTMLParser;
+
+  function   GetHentai2ReadDirectoryPage: Byte;
+  var
+    i: Cardinal;
+  begin
+    Result:= INFORMATION_NOT_FOUND;
+    if NOT GetPage(TObject(source), HENTAI2READ_ROOT + HENTAI2READ_BROWSER, 0) then
+    begin
+      Result:= NET_PROBLEM;
+      source.Free;
+      exit;
+    end;
+    parse.Clear;
+    Parser:= TjsFastHTMLParser.Create(PChar(source.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.Exec;
+    Parser.Free;
+    if parse.Count=0 then
+    begin
+      source.Free;
+      exit;
+    end;
+    for i:= 0 to parse.Count-1 do
+    begin
+      if (GetTagName(parse.Strings[i]) = 'img') AND
+         (GetAttributeValue(GetTagAttribute(parse.Strings[i], 'alt='))='Next Page') then
+      begin
+        s:= TrimRight(TrimLeft(parse.Strings[i-5]));
+        Page:= StrToInt(s);
+        Result:= NO_ERROR;
+        source.Free;
+        exit;
+      end;
+    end;
+    source.Free;
+  end;
+
+begin
+  source:= TStringList.Create;
+  if website = HENTAI2READ_NAME then
+    Result:= GetHentai2ReadDirectoryPage;
+end;
+
 function    TMangaInformation.GetNameAndLink(const names, links: TStringList;
                                              const website, URL: AnsiString): Byte;
 var
@@ -436,6 +491,12 @@ var
     i: Cardinal;
   begin
     Result:= INFORMATION_NOT_FOUND;
+    if NOT GetPage(TObject(source), ANIMEA_ROOT + ANIMEA_BROWSER + URL, 0) then
+    begin
+      Result:= NET_PROBLEM;
+      source.Free;
+      exit;
+    end;
     for i:= 0 to source.Count-1 do
     begin
       if Pos('manga_img', source.Strings[i]) <> 0 then
@@ -445,6 +506,7 @@ var
         names.Add(GetString(source.Strings[i], 'title="', ' Manga"'));
       end;
     end;
+    source.Free;
   end;
 
   function   MangaHereGetNameAndLink: Byte;
@@ -452,13 +514,23 @@ var
     i: Cardinal;
   begin
     Result:= INFORMATION_NOT_FOUND;
+    if NOT GetPage(TObject(source), MANGAHERE_ROOT + MANGAHERE_BROWSER, 0) then
+    begin
+      Result:= NET_PROBLEM;
+      source.Free;
+      exit;
+    end;
     parse.Clear;
     Parser:= TjsFastHTMLParser.Create(PChar(source.Text));
     Parser.OnFoundTag := OnTag;
     Parser.OnFoundText:= OnText;
     Parser.Exec;
     Parser.Free;
-    if parse.Count=0 then exit;
+    if parse.Count=0 then
+    begin
+      source.Free;
+      exit;
+    end;
     for i:= 0 to parse.Count-1 do
     begin
       if Pos('manga_info', parse.Strings[i]) <> 0 then
@@ -468,6 +540,7 @@ var
         links.Add(StringReplace(GetString(parse.Strings[i], 'href="', '">'), MANGAHERE_ROOT, '', []));
       end;
     end;
+    source.Free;
   end;
 
   function   MangaInnGetNameAndLink: Byte;
@@ -476,13 +549,23 @@ var
     s: String;
   begin
     Result:= INFORMATION_NOT_FOUND;
+    if NOT GetPage(TObject(source), MANGAINN_ROOT + MANGAINN_BROWSER, 0) then
+    begin
+      Result:= NET_PROBLEM;
+      source.Free;
+      exit;
+    end;
     parse.Clear;
     Parser:= TjsFastHTMLParser.Create(PChar(source.Text));
     Parser.OnFoundTag := OnTag;
     Parser.OnFoundText:= OnText;
     Parser.Exec;
     Parser.Free;
-    if parse.Count=0 then exit;
+    if parse.Count=0 then
+    begin
+      source.Free;
+      exit;
+    end;
     for i:= 0 to parse.Count-1 do
     begin
       if (GetTagName(parse.Strings[i]) = 'li') AND
@@ -497,6 +580,7 @@ var
         end;
       end;
     end;
+    source.Free;
   end;
 
   function   OurMangaGetNameAndLink: Byte;
@@ -506,13 +590,23 @@ var
     s: String;
   begin
     Result:= INFORMATION_NOT_FOUND;
+    if NOT GetPage(TObject(source), OURMANGA_ROOT + OURMANGA_BROWSER, 0) then
+    begin
+      Result:= NET_PROBLEM;
+      source.Free;
+      exit;
+    end;
     parse.Clear;
     Parser:= TjsFastHTMLParser.Create(PChar(source.Text));
     Parser.OnFoundTag := OnTag;
     Parser.OnFoundText:= OnText;
     Parser.Exec;
     Parser.Free;
-    if parse.Count=0 then exit;
+    if parse.Count=0 then
+    begin
+      source.Free;
+      exit;
+    end;
     for i:= 0 to parse.Count-1 do
     begin
       if (GetTagName(parse.Strings[i]) = 'div') AND
@@ -532,54 +626,68 @@ var
         end;
       end;
     end;
+    source.Free;
+  end;
+
+  function   Hentai2ReadGetNameAndLink: Byte;
+  var
+    i: Cardinal;
+    s: String;
+  begin
+    Result:= INFORMATION_NOT_FOUND;
+    if NOT GetPage(TObject(source), HENTAI2READ_ROOT + HENTAI2READ_BROWSER + URL, 0) then
+    begin
+      Result:= NET_PROBLEM;
+      source.Free;
+      exit;
+    end;
+    parse.Clear;
+    Parser:= TjsFastHTMLParser.Create(PChar(source.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.Exec;
+    Parser.Free;
+    if parse.Count=0 then
+    begin
+      source.Free;
+      exit;
+    end;
+    for i:= 0 to parse.Count-1 do
+    begin
+      if (GetTagName(parse.Strings[i]) = 'td') AND
+         ((GetAttributeValue(GetTagAttribute(parse.Strings[i], 'class='))='name Completed') OR
+          (GetAttributeValue(GetTagAttribute(parse.Strings[i], 'class='))='name Ongoing')) then
+      begin
+        begin
+          Result:= NO_ERROR;
+          s:= TrimLeft(TrimRight(StringFilter(GetAttributeValue(GetTagAttribute(parse.Strings[i+1], 'title=')))));
+        //  if s <> 'Hajimete no Aku' then
+          begin
+            names.Add(s);
+            links.Add(StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i+1], 'href=')), HENTAI2READ_ROOT, '', []));
+          end;
+        end;
+      end;
+    end;
+    source.Free;
   end;
 
 begin
   source:= TStringList.Create;
   if website = ANIMEA_NAME then
-  begin
-    if NOT GetPage(TObject(source), ANIMEA_ROOT + ANIMEA_BROWSER + URL, 0) then
-    begin
-      Result:= NET_PROBLEM;
-      source.Free;
-      exit;
-    end;
-    Result:= AnimeAGetNameAndLink;
-  end
+    Result:= AnimeAGetNameAndLink
   else
   if website = MANGAHERE_NAME then
-  begin
-    if NOT GetPage(TObject(source), MANGAHERE_ROOT + MANGAHERE_BROWSER, 0) then
-    begin
-      Result:= NET_PROBLEM;
-      source.Free;
-      exit;
-    end;
-    Result:= MangaHereGetNameAndLink;
-  end
+    Result:= MangaHereGetNameAndLink
   else
   if website = MANGAINN_NAME then
-  begin
-    if NOT GetPage(TObject(source), MANGAINN_ROOT + MANGAINN_BROWSER, 0) then
-    begin
-      Result:= NET_PROBLEM;
-      source.Free;
-      exit;
-    end;
-    Result:= MangaInnGetNameAndLink;
-  end
+    Result:= MangaInnGetNameAndLink
   else
   if website = OURMANGA_NAME then
-  begin
-    if NOT GetPage(TObject(source), OURMANGA_ROOT + OURMANGA_BROWSER, 0) then
-    begin
-      Result:= NET_PROBLEM;
-      source.Free;
-      exit;
-    end;
-    Result:= OurMangaGetNameAndLink;
-  end;
-  source.Free;
+    Result:= OurMangaGetNameAndLink
+  else
+  if website = HENTAI2READ_NAME then
+    Result:= Hentai2ReadGetNameAndLink;
 end;
 
 function    TMangaInformation.GetInfoFromURL(const website, URL: AnsiString): Byte;
@@ -1013,8 +1121,145 @@ begin
   Result:= NO_ERROR;
 end;
 
+function   GetHentai2ReadInfoFromURL: Byte;
+var
+  s: String;
+  isExtractChapters: Boolean = FALSE;
+  isExtractGenres  : Boolean = FALSE;
+  isExtractSummary : Boolean = FALSE;
+  i, j: Cardinal;
 begin
-  source:= TStringList.Create; source.Clear;
+  if NOT GetPage(TObject(source), HENTAI2READ_ROOT + URL, 0) then
+  begin
+    Result:= NET_PROBLEM;
+    source.Free;
+    exit;
+  end;
+
+  // parsing the HTML source
+  parse.Clear;
+  Parser:= TjsFastHTMLParser.Create(PChar(source.Text));
+  Parser.OnFoundTag := OnTag;
+  Parser.OnFoundText:= OnText;
+  Parser.Exec;
+
+  Parser.Free;
+
+  mangaInfo.website:= HENTAI2READ_NAME;
+
+  // using parser (cover link, summary, chapter name and link)
+  if parse.Count=0 then exit;
+  for i:= 0 to parse.Count-1 do
+  begin
+    // get cover link
+    if GetTagName(parse.Strings[i]) = 'div' then
+      if (GetAttributeValue(GetTagAttribute(parse.Strings[i], 'class='))='cover') then
+      begin
+        mangaInfo.coverLink:= GetAttributeValue(GetTagAttribute(parse.Strings[i+2], 'src='));
+        s:= mangaInfo.coverLink;
+      end;
+
+    // get summary
+    if isExtractSummary then
+    begin
+      s:= parse.Strings[i];
+      if s[1] <> '<' then
+      begin
+        parse.Strings[i]:= StringFilter(parse.Strings[i]);
+        parse.Strings[i]:= StringReplace(parse.Strings[i], #10, '\n', [rfReplaceAll]);
+        parse.Strings[i]:= StringReplace(parse.Strings[i], #13, '\r', [rfReplaceAll]);
+        mangaInfo.summary:= mangaInfo.summary+parse.Strings[i]+'\n\r';
+      end
+      else
+      if (GetTagName(parse.Strings[i]) = 'div') AND
+         (GetAttributeValue(GetTagAttribute(parse.Strings[i], 'class='))='box') then
+        isExtractSummary:= FALSE;
+    end;
+
+    if (Pos('Hentai Summary', parse.Strings[i])) <> 0 then
+    begin
+      isExtractSummary:= TRUE;
+      mangaInfo.summary:= '';
+    end;
+
+    // get chapter name and links
+    if isExtractChapters then
+    begin
+      if GetTagName(parse.Strings[i]) = 'a' then
+      begin
+        Inc(mangaInfo.numChapter);
+        mangaInfo.chapterLinks.Add(StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href=')), HENTAI2READ_ROOT, '', [rfReplaceAll]));
+        s:= StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href=')), HENTAI2READ_ROOT, '', [rfReplaceAll]);
+        parse.Strings[i+1]:= StringReplace(parse.Strings[i+1], #10, '', [rfReplaceAll]);
+        parse.Strings[i+1]:= StringReplace(parse.Strings[i+1], #13, '', [rfReplaceAll]);
+        parse.Strings[i+1]:= TrimLeft(parse.Strings[i+1]);
+        parse.Strings[i+1]:= TrimRight(parse.Strings[i+1]);
+        s:= RemoveSymbols(parse.Strings[i+1]);
+        mangaInfo.chapterName.Add(TrimRight(RemoveSymbols(parse.Strings[i+1])));
+      end
+      else
+      if (GetTagName(parse.Strings[i]) = 'div') AND
+         (GetAttributeValue(GetTagAttribute(parse.Strings[i], 'class='))='right') then
+        isExtractChapters:= FALSE;
+    end;
+
+    if Pos('Hentai Chapters', parse.Strings[i]) <> 0 then
+      isExtractChapters:= TRUE;
+
+    // get authors
+    if (Pos('Author(s):', parse.Strings[i])<>0) then
+      mangaInfo.authors:= parse.Strings[i+3];
+
+    // get artists
+    if (Pos('Artist(s):', parse.Strings[i])<>0) then
+      mangaInfo.artists:= parse.Strings[i+3];
+
+    // get genres
+    if (Pos('Genre(s):', parse.Strings[i])<>0) then
+    begin
+      mangaInfo.genres:= '';
+      isExtractGenres:= TRUE;
+    end;
+
+    if isExtractGenres then
+    begin
+      if GetTagName(parse.Strings[i]) = 'a' then
+        mangaInfo.genres:= TrimLeft(TrimRight(mangaInfo.genres+parse.Strings[i+1]))+', '
+      else
+      if (GetTagName(parse.Strings[i]) = 'div') AND
+         (GetAttributeValue(GetTagAttribute(parse.Strings[i], 'class='))='box') then
+        isExtractGenres:= FALSE;
+      {  for j:= 0 to 38 do
+          if Pos(LowerCase(Genre[j]), LowerCase(parse.Strings[i+2]))<>0 then
+            mangaInfo.genres:= mangaInfo.genres+(Genre[j]+', ');}
+    end;
+
+    // get status
+    if (Pos('Status:', parse.Strings[i])<>0) then
+    begin
+      if Pos('Ongoing', parse.Strings[i+4])<>0 then
+        mangaInfo.status:= '1'   // ongoing
+      else
+        mangaInfo.status:= '0';  // completed
+    end;
+  end;
+
+  // Since chapter name and link are inverted, we need to invert them
+  if mangainfo.ChapterName.Count > 1 then
+  begin
+    i:= 0; j:= mangainfo.ChapterName.Count - 1;
+    while (i<j) do
+    begin
+      mangainfo.ChapterName.Exchange(i, j);
+      mangainfo.chapterLinks.Exchange(i, j);
+      Inc(i); Dec(j);
+    end;
+  end;
+  Result:= NO_ERROR;
+end;
+
+begin
+  source:= TStringList.Create;
   mangaInfo.coverLink := '';
   mangaInfo.numChapter:= 0;
   mangaInfo.chapterName.Clear;
@@ -1030,7 +1275,10 @@ begin
     Result:= GetMangaInnInfoFromURL
   else
   if website = OURMANGA_NAME then
-    Result:= GetOurMangaInfoFromURL;
+    Result:= GetOurMangaInfoFromURL
+  else
+  if website = HENTAI2READ_NAME then
+    Result:= GetHentai2ReadInfoFromURL;
 end;
 
 procedure   TMangaInformation.SyncInfoToData(const DataProcess: TDataProcess; const index: Cardinal);

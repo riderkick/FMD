@@ -21,7 +21,7 @@ type
     Items: array of T;
     Count: Cardinal;
     constructor Create;
-    destructor  Destroy;
+    destructor  Destroy; override;
     procedure   Clear;
     procedure   Add(AValue: T);
     procedure   Insert(AValue: T; Pos: Cardinal);

@@ -83,6 +83,7 @@ type
     edFilterTitle: TEdit;
     edFilterAuthors: TEdit;
     edFilterArtists: TEdit;
+    edCustomGenres: TEdit;
     edOptionHost: TEdit;
     edOptionPass: TEdit;
     edOptionPort: TEdit;
@@ -93,6 +94,7 @@ type
     ImageList: TImageList;
     imCover: TImage;
     edOptionDefaultPath: TLabeledEdit;
+    lbFilterCustomGenres: TLabel;
     lbFilterSummary: TLabel;
     lbFilterStatus: TLabel;
     lbFilterTitle: TLabel;
@@ -456,7 +458,7 @@ begin
   begin
     dataProcess.RemoveFilter;
     dataProcess.SaveToFile;
-    dataProcess.Destroy;
+    dataProcess.Free;
     dataProcess:= TDataProcess.Create;
     dataProcess.LoadFromFile(cbSelectManga.Items.Strings[cbSelectManga.ItemIndex]);
     vtMangaList.Clear;
@@ -503,15 +505,16 @@ begin
     else
     if TCheckBox(pnGenres.Controls[i]).State = cbUnchecked then
       uncheckGenres.Add(TCheckBox(pnGenres.Controls[i]).Caption);
-    if dataProcess.Filter(checkGenres, uncheckGenres,
-                          edFilterTitle.Text, edFilterAuthors.Text,
-                          edFilterArtists.Text, IntToStr(cbFilterStatus.ItemIndex),
-                          edFilterSummary.Text, rbAll.Checked) then
-    begin
-      lbMode.Caption:=  Format(stModeFilter, [dataProcess.filterPos.Count]);
-      vtMangaList.Clear;
-      vtMangaList.RootNodeCount:= dataProcess.filterPos.Count;
-    end;
+  end;
+  CustomGenres(checkGenres, edCustomGenres.Text);
+  if dataProcess.Filter(checkGenres, uncheckGenres,
+                        edFilterTitle.Text, edFilterAuthors.Text,
+                        edFilterArtists.Text, IntToStr(cbFilterStatus.ItemIndex),
+                        edFilterSummary.Text, rbAll.Checked) then
+  begin
+    lbMode.Caption:=  Format(stModeFilter, [dataProcess.filterPos.Count]);
+    vtMangaList.Clear;
+    vtMangaList.RootNodeCount:= dataProcess.filterPos.Count;
   end;
   uncheckGenres.Free;
   checkGenres  .Free;
@@ -1040,6 +1043,19 @@ begin
       exit;
     end;
     root:= OURMANGA_ROOT + root;
+  end
+  else
+  if cbSelectManga.Items[cbSelectManga.ItemIndex] = HENTAI2READ_NAME then
+  begin
+    root:= dataProcess.Param[
+      dataProcess.filterPos.Items[vtMangaList.FocusedNode.Index], DATA_PARAM_LINK];
+    if NOT GetMangaInfo(root, HENTAI2READ_NAME) then
+    begin
+      MessageDlg('', stDlgCannotGetMangaInfo,
+                 mtInformation, [mbYes], 0);
+      exit;
+    end;
+    root:= HENTAI2READ_ROOT + root;
   end;
 
   pcMain.PageIndex:= 1;
@@ -1291,6 +1307,7 @@ begin
   miFavoritesChangeSaveTo.Caption:= language.ReadString(lang, 'miFavoritesChangeSaveToCaption', '');
   miMangaListAddToFavorites.Caption:= language.ReadString(lang, 'miMangaListAddToFavoritesCaption', '');
 
+  infoCustomGenres       := language.ReadString(lang, 'infoCustomGenres', '');
   infoName               := language.ReadString(lang, 'infoName', '');
   infoAuthors            := language.ReadString(lang, 'infoAuthors', '');
   infoArtists            := language.ReadString(lang, 'infoArtists', '');
@@ -1299,6 +1316,7 @@ begin
   infoSummary            := language.ReadString(lang, 'infoSummary', '');
   infoLink               := language.ReadString(lang, 'infoLink', '');
 
+  lbFilterCustomGenres.Caption:= infoCustomGenres;
   lbFilterTitle.Caption  := infoName;
   lbFilterAuthors.Caption:= infoAuthors;
   lbFilterArtists.Caption:= infoArtists;
@@ -1327,13 +1345,13 @@ begin
   begin
     for i:= 0 to DLManager.containers.Count - 1 do
     begin
-      if (DLManager.containers.Items[pos] <> nil) OR (NOT DLManager.containers.Items[pos].thread.isTerminated) then
-        case DLManager.containers.Items[pos].Status of
-          STATUS_STOP    : DLManager.containers.Items[pos].downloadInfo.Status:= stStop;
-          STATUS_WAIT    : DLManager.containers.Items[pos].downloadInfo.Status:= stWait;
-          STATUS_DOWNLOAD: DLManager.containers.Items[pos].downloadInfo.Status:= stDownloading;
-          STATUS_FINISH  : DLManager.containers.Items[pos].downloadInfo.Status:= stFinish;
-        end;
+     // if (DLManager.containers.Items[pos] <> nil) OR (NOT DLManager.containers.Items[pos].thread.isTerminated) then
+      case DLManager.containers.Items[pos].Status of
+        STATUS_STOP    : DLManager.containers.Items[pos].downloadInfo.Status:= stStop;
+        STATUS_WAIT    : DLManager.containers.Items[pos].downloadInfo.Status:= stWait;
+        STATUS_DOWNLOAD: DLManager.containers.Items[pos].downloadInfo.Status:= stDownloading;
+        STATUS_FINISH  : DLManager.containers.Items[pos].downloadInfo.Status:= stFinish;
+      end;
     end;
   end;
 

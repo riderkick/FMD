@@ -75,10 +75,11 @@ const
   NET_PROBLEM           = 1;
   INFORMATION_NOT_FOUND = 2;
 
-  ANIMEA_NAME    = 'AnimeA';    ANIMEA_ID    = 0;
-  MANGAHERE_NAME = 'MangaHere'; MANGAHERE_ID = 1;
-  MANGAINN_NAME  = 'MangaInn';  MANGAINN_ID  = 2;
-  OURMANGA_NAME  = 'OurManga';  OURMANGA_ID  = 3;
+  ANIMEA_NAME       = 'AnimeA';       ANIMEA_ID      = 0;
+  MANGAHERE_NAME    = 'MangaHere';    MANGAHERE_ID   = 1;
+  MANGAINN_NAME     = 'MangaInn';     MANGAINN_ID    = 2;
+  OURMANGA_NAME     = 'OurManga';     OURMANGA_ID    = 3;
+  HENTAI2READ_NAME  = 'Hentai2Read';  HENTAI2READ_ID = 4;
 
 var
   currentWebsite,
@@ -114,8 +115,12 @@ var
   OURMANGA_ROOT   : String = 'http://www.ourmanga.com';
   OURMANGA_BROWSER: String = '/directory/';
 
+  HENTAI2READ_ROOT   : String = 'http://hentai2read.com';
+  HENTAI2READ_BROWSER: String = '/hentai-list/all/any/name-az/';
+
   // en: dialog messages
   // vi: nội dung hộp thoại
+  infoCustomGenres,
   infoName,
   infoAuthors,
   infoArtists,
@@ -215,6 +220,8 @@ procedure GetParams(var output: TCardinalList; input: AnsiString); overload;
 function  SetParams(input: TObject): AnsiString; overload;
 function  SetParams(input: array of AnsiString): AnsiString; overload;
 
+procedure CustomGenres(var output: TStringList; input: AnsiString);
+
 function  StringFilter(const source: AnsiString): AnsiString;
 function  StringBreaks(const source: AnsiString): AnsiString;
 function  RemoveStringBreaks(const source: AnsiString): AnsiString;
@@ -311,7 +318,9 @@ begin
   else
   if name = MANGAINN_NAME then Result:= MANGAINN_ID
   else
-  if name = OURMANGA_NAME then Result:= OURMANGA_ID;
+  if name = OURMANGA_NAME then Result:= OURMANGA_ID
+  else
+  if name = HENTAI2READ_NAME then Result:= HENTAI2READ_ID;
 end;
 
 function  RemoveSymbols(const input: AnsiString): AnsiString;
@@ -438,6 +447,31 @@ begin
   Result:= StringReplace(Result, #13, '\r',  [rfReplaceAll]);
 end;
 
+procedure  CustomGenres(var output: TStringList; input: AnsiString);
+var
+  s: String = '';
+  i: Word;
+begin
+  if Length(input) = 0 then exit;
+  for i:= 1 to Length(input) do
+  begin
+    if input[i] = ',' then
+    begin
+      TrimLeft(TrimRight(s));
+      if Length(s) <> 0 then
+      begin
+        output.Add(s);
+        s:= '';
+      end;
+    end
+    else
+      s:= s+input[i];
+  end;
+  TrimLeft(TrimRight(s));
+  if Length(s) <> 0 then
+    output.Add(s);
+end;
+
 function  StringBreaks(const source: AnsiString): AnsiString;
 begin
   if Length(source) = 0 then exit;
@@ -500,7 +534,9 @@ begin
   HTTP.ProxyPort:= Port;
   HTTP.ProxyUser:= User;
   HTTP.ProxyHost:= Pass;
-  while (NOT HTTP.HTTPMethod('GET', URL)) AND
+  if Pos(HENTAI2READ_ROOT, URL) <> 0 then
+    HTTP.Headers.Insert(0, 'Referer:'+HENTAI2READ_ROOT+'/');
+  while (NOT HTTP.HTTPMethod('GET', URL)) OR
         (HTTP.ResultCode >= 500) do
   begin
     if Reconnect <> 0 then
@@ -521,7 +557,9 @@ begin
     URL:= CheckRedirect(HTTP);
     HTTP.Clear;
     HTTP.RangeStart:= 0;
-    while (NOT HTTP.HTTPMethod('GET', URL)) AND
+    if Pos(HENTAI2READ_ROOT, URL) <> 0 then
+      HTTP.Headers.Insert(0, 'Referer:'+HENTAI2READ_ROOT+'/');
+    while (NOT HTTP.HTTPMethod('GET', URL)) OR
         (HTTP.ResultCode >= 500) do
     begin
       if Reconnect <> 0 then
@@ -559,7 +597,9 @@ begin
   HTTP.ProxyPort:= Port;
   HTTP.ProxyUser:= User;
   HTTP.ProxyHost:= Pass;
-  while (NOT HTTP.HTTPMethod('GET', URL)) AND
+  if Pos(HENTAI2READ_ROOT, URL) <> 0 then
+    HTTP.Headers.Insert(0, 'Referer:'+HENTAI2READ_ROOT+'/');
+  while (NOT HTTP.HTTPMethod('GET', URL)) OR
         (HTTP.ResultCode >= 500) do
   begin
     if Reconnect <> 0 then
@@ -580,7 +620,9 @@ begin
     URL:= CheckRedirect(HTTP);
     HTTP.Clear;
     HTTP.RangeStart:= 0;
-    while (NOT HTTP.HTTPMethod('GET', URL)) AND
+    if Pos(HENTAI2READ_ROOT, URL) <> 0 then
+      HTTP.Headers.Insert(0, 'Referer:'+HENTAI2READ_ROOT+'/');
+    while (NOT HTTP.HTTPMethod('GET', URL)) OR
         (HTTP.ResultCode >= 500) do
     begin
       if Reconnect <> 0 then

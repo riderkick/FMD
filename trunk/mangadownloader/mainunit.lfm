@@ -1,24 +1,24 @@
 object MainForm: TMainForm
-  Left = 349
-  Height = 466
-  Top = 89
-  Width = 750
+  Left = 241
+  Height = 492
+  Top = 77
+  Width = 775
   Align = alBottom
   Caption = 'Free Manga Downloader'
-  ClientHeight = 466
-  ClientWidth = 750
+  ClientHeight = 492
+  ClientWidth = 775
   OnClose = FormClose
   OnCreate = FormCreate
   LCLVersion = '1.1'
   object pnMainLeft: TPanel
     AnchorSideRight.Control = spMainSplitter
     Left = 0
-    Height = 446
+    Height = 472
     Top = 0
     Width = 195
     Align = alLeft
     Anchors = [akTop, akLeft, akRight, akBottom]
-    ClientHeight = 446
+    ClientHeight = 472
     ClientWidth = 195
     TabOrder = 0
     object cbSelectManga: TComboBox
@@ -47,7 +47,7 @@ object MainForm: TMainForm
     end
     object vtMangaList: TVirtualStringTree
       Left = 8
-      Height = 349
+      Height = 375
       Hint = 'test'
       Top = 88
       Width = 176
@@ -300,25 +300,25 @@ object MainForm: TMainForm
   end
   object pcMain: TPageControl
     Left = 195
-    Height = 446
+    Height = 472
     Top = 0
-    Width = 555
-    ActivePage = tsInformation
+    Width = 580
+    ActivePage = tsDownload
     Align = alClient
     Font.Style = [fsBold]
     ParentFont = False
-    TabIndex = 1
+    TabIndex = 0
     TabOrder = 1
     OnChange = pcMainChange
     object tsDownload: TTabSheet
       Caption = 'Downloads'
-      ClientHeight = 420
-      ClientWidth = 547
+      ClientHeight = 446
+      ClientWidth = 572
       object vtDownload: TVirtualStringTree
         Left = 0
-        Height = 420
+        Height = 446
         Top = 0
-        Width = 547
+        Width = 572
         Align = alClient
         DefaultText = 'Node'
         Header.AutoSizeIndex = 0
@@ -512,27 +512,27 @@ object MainForm: TMainForm
     end
     object tsFilter: TTabSheet
       Caption = 'Filter'
-      ClientHeight = 420
-      ClientWidth = 547
+      ClientHeight = 446
+      ClientWidth = 572
       object sbFilter: TScrollBox
         Left = 0
-        Height = 420
+        Height = 446
         Top = 0
-        Width = 547
-        HorzScrollBar.Page = 543
-        VertScrollBar.Page = 416
+        Width = 572
+        HorzScrollBar.Page = 568
+        VertScrollBar.Page = 442
         Align = alClient
-        ClientHeight = 416
-        ClientWidth = 543
+        ClientHeight = 442
+        ClientWidth = 568
         TabOrder = 0
         object pnGenres: TPanel
           Left = 0
-          Height = 216
+          Height = 248
           Top = 0
-          Width = 543
+          Width = 568
           Align = alTop
-          ClientHeight = 216
-          ClientWidth = 543
+          ClientHeight = 248
+          ClientWidth = 568
           TabOrder = 0
           object CheckBox1: TCheckBox
             Left = 23
@@ -924,15 +924,37 @@ object MainForm: TMainForm
             ParentFont = False
             TabOrder = 38
           end
+          object lbFilterCustomGenres: TLabel
+            Left = 23
+            Height = 16
+            Top = 218
+            Width = 97
+            Alignment = taRightJustify
+            BidiMode = bdRightToLeft
+            Caption = 'Custom Genres'
+            Font.Height = -13
+            Font.Style = [fsBold]
+            ParentBidiMode = False
+            ParentColor = False
+            ParentFont = False
+          end
+          object edCustomGenres: TEdit
+            Left = 135
+            Height = 21
+            Top = 216
+            Width = 338
+            ParentFont = False
+            TabOrder = 39
+          end
         end
         object pnFilter: TPanel
           Left = 0
-          Height = 200
-          Top = 216
-          Width = 543
+          Height = 192
+          Top = 248
+          Width = 568
           Align = alTop
-          ClientHeight = 200
-          ClientWidth = 543
+          ClientHeight = 192
+          ClientWidth = 568
           ParentFont = False
           TabOrder = 1
           object rbOne: TRadioButton
@@ -1075,7 +1097,7 @@ object MainForm: TMainForm
             Left = 135
             Height = 21
             Top = 104
-            Width = 344
+            Width = 338
             TabOrder = 7
           end
           object btFilter: TButton
@@ -1092,7 +1114,7 @@ object MainForm: TMainForm
             TabOrder = 8
           end
           object btFilterReset: TButton
-            Left = 351
+            Left = 345
             Height = 37
             Top = 139
             Width = 128
@@ -1473,7 +1495,7 @@ object MainForm: TMainForm
   object spMainSplitter: TSplitter
     AnchorSideRight.Control = pcMain
     Left = 195
-    Height = 466
+    Height = 492
     Top = 8
     Width = 5
     Align = alNone
@@ -1482,8 +1504,8 @@ object MainForm: TMainForm
   object sbMain: TStatusBar
     Left = 0
     Height = 20
-    Top = 446
-    Width = 750
+    Top = 472
+    Width = 775
     Panels = <    
       item
         Width = 150
