@@ -251,7 +251,7 @@ var
           while GetTagName(parse.Strings[j]) = 'option' do
           begin
             Inc(manager.container.pageNumber);
-            Inc(j, 3);
+            Inc(j, 4);
           end;
           break;
         end;
