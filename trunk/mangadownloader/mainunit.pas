@@ -149,6 +149,7 @@ type
     spMainSplitter: TSplitter;
     sbMain: TStatusBar;
     tmBackup: TTimer;
+    TrayIcon: TTrayIcon;
     tsLanguage: TTabSheet;
     tsFavorites: TTabSheet;
     tsSaveTo: TTabSheet;
@@ -181,6 +182,7 @@ type
     procedure cbAddAsStoppedChange(Sender: TObject);
     procedure cbOptionUseProxyChange(Sender: TObject);
     procedure clbChapterListKeyPress(Sender: TObject; var Key: char);
+    procedure FormWindowStateChange(Sender: TObject);
 
     procedure miFavoritesRemoveClick(Sender: TObject);
     procedure miMangaListAddToFavoritesClick(Sender: TObject);
@@ -199,6 +201,7 @@ type
     procedure miOpenFolderClick(Sender: TObject);
 
     procedure pcMainChange(Sender: TObject);
+    procedure TrayIconDblClick(Sender: TObject);
 
     procedure vtDownloadFreeNode(Sender: TBaseVirtualTree; Node: PVirtualNode);
     procedure vtDownloadGetText(Sender: TBaseVirtualTree; Node: PVirtualNode;
@@ -347,6 +350,17 @@ begin
         if clbChapterList.Selected[i] then
           clbChapterList.Checked[i]:= NOT clbChapterList.Checked[i];
     end;
+  end;
+end;
+
+procedure TMainForm.FormWindowStateChange(Sender: TObject);
+begin
+  case WindowState of
+    wsMinimized:
+      begin
+        MainForm.Hide;
+        TrayIcon.Show;
+      end;
   end;
 end;
 
@@ -718,6 +732,13 @@ procedure TMainForm.pcMainChange(Sender: TObject);
 begin
   if pcMain.TabIndex = 4 then
     UpdateOptions;
+end;
+
+procedure TMainForm.TrayIconDblClick(Sender: TObject);
+begin
+  WindowState:= wsNormal;
+  MainForm.Show;
+  TrayIcon.Hide;
 end;
 
 // Download table

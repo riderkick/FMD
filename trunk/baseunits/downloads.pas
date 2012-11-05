@@ -50,6 +50,8 @@ type
     procedure   CheckOut;
     procedure   Execute; override;
     procedure   Compress;
+    // show notification when download completed
+    procedure   ShowBaloon;
   public
     isTerminated,
     isSuspended: Boolean;
@@ -668,6 +670,12 @@ begin
   end;
 end;
 
+procedure   TTaskThread.ShowBaloon;
+begin
+  MainForm.TrayIcon.BalloonHint:= '"'+container.downloadInfo.title+'" - Done';
+  MainForm.TrayIcon.ShowBalloonHint;
+end;
+
 procedure   TTaskThread.Checkout;
 var
   i: Cardinal;
@@ -797,6 +805,7 @@ begin
     container.pageLinks.Clear;
     Inc(container.currentDownloadChapterPtr);
   end;
+  Synchronize(ShowBaloon);
   Terminate;
 end;
 
