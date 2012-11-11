@@ -1044,6 +1044,8 @@ begin
   if cbSelectManga.ItemIndex < 0 then exit;
   if NOT vtMangaList.Focused then exit;
 
+  // ---------------------------------------------------
+
   if cbSelectManga.Items[cbSelectManga.ItemIndex] = ANIMEA_NAME then
   begin
     root:= dataProcess.Param[
@@ -1096,6 +1098,19 @@ begin
     root:= OURMANGA_ROOT + root;
   end
   else
+  if cbSelectManga.Items[cbSelectManga.ItemIndex] = VNSHARING_NAME then
+  begin
+    root:= dataProcess.Param[
+      dataProcess.filterPos.Items[vtMangaList.FocusedNode.Index], DATA_PARAM_LINK];
+    if NOT GetMangaInfo(root, VNSHARING_NAME) then
+    begin
+      MessageDlg('', stDlgCannotGetMangaInfo,
+                 mtInformation, [mbYes], 0);
+      exit;
+    end;
+    root:= VNSHARING_ROOT + root;
+  end
+  else
   if cbSelectManga.Items[cbSelectManga.ItemIndex] = HENTAI2READ_NAME then
   begin
     root:= dataProcess.Param[
@@ -1108,6 +1123,8 @@ begin
     end;
     root:= HENTAI2READ_ROOT + root;
   end;
+
+  // ---------------------------------------------------
 
   pcMain.PageIndex:= 1;
   edSaveTo.Text:= options.ReadString('saveto', 'SaveTo', '');

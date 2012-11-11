@@ -215,9 +215,11 @@ begin
           threads[j].isSuspended:= FALSE;
           Inc(workPtr);
           S:= 'Updating list: '+website+'[T.'+IntToStr(j)+'; CS.'+IntToStr(cs)+'] '+IntToStr(workPtr)+' / '+IntToStr(limit);
+          if cs = CS_INFO then
+            S:= S+' "'+links.Strings[workPtr-1]+'"';
         {$IFNDEF DOWNLOADER}
           Synchronize(ConsoleReport);
-          if (workPtr mod 100 = 0) AND (workPtr > 4) AND (cs = CS_INFO) then
+          if (workPtr mod 100 = 0) AND (workPtr > 50) AND (cs = CS_INFO) AND (mainDataProcess.Data.Count > 5) then
             Synchronize(SaveCurrentDatabase);
         {$ELSE}
           MainForm.sbMain.Panels[0].Text:= S;
@@ -245,7 +247,7 @@ begin
       dataProcess.LoadFromFile(website);
       names.Clear;
       links.Clear;
-
+     {
       workPtr:= 0;
       getInfo(1, CS_DIRECTORY_COUNT);
       while threadCount > 0 do Sleep(100);
@@ -253,16 +255,16 @@ begin
       workPtr:= 0;
       getInfo(directoryCount, CS_DIRECTORY_PAGE);
       while threadCount > 0 do Sleep(100);
-
-     // names.LoadFromFile(website+'_names.txt');
-     // links.LoadFromFile(website+'_links.txt');
-     // names.LoadFromFile(website+'_names.txt');
-     // links.LoadFromFile(website+'_links.txt');
+      }
+      names.LoadFromFile(website+'_names.txt');
+      links.LoadFromFile(website+'_links.txt');
+     // names.SaveToFile(website+'_names.txt');
+     // links.SaveToFile(website+'_links.txt');
       mainDataProcess:= TDataProcess.Create;
       mainDataProcess.LoadFromFile(website);
 
       j:= 0;
-      repeat
+    {  repeat
         if Find(links.Strings[j], mainDataProcess.Link, Integer(workPtr)) then
         begin
           links.Delete(j);
@@ -276,14 +278,14 @@ begin
       begin
         Synchronize(DlgReport);
         continue;
-      end;
-      workPtr:= 0;
+      end;  }
+      workPtr:= mainDataProcess.Data.Count;
 
       getInfo(links.Count, CS_INFO);
       Sleep(100);
       while threadCount > 0 do Sleep(100);
     end;
-    mainDataProcess.SaveToFile;
+    mainDataProcess.SaveToFile(website);
   {$IFNDEF DOWNLOADER}
     S:= 'Saving to '+website+'.dat ...';
     Synchronize(ConsoleReport);

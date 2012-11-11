@@ -150,7 +150,7 @@ type
 
 implementation
 
-uses mainunit, FastHTMLParser, HTMLUtil;
+uses mainunit, FastHTMLParser, HTMLUtil, SynaCode;
 
 // ----- TDownloadThread -----
 
@@ -431,6 +431,12 @@ begin
   if manager.container.mangaSiteID = OURMANGA_ID then
     Result:= GetOurMangaPageNumber
   else
+  if manager.container.mangaSiteID = VNSHARING_ID then
+  begin
+    Result:= TRUE;
+    manager.container.pageNumber:= 1;
+  end
+  else
   if manager.container.mangaSiteID = HENTAI2READ_ID then
     Result:= GetHentai2ReadPageNumber;
 end;
@@ -564,6 +570,44 @@ var
     l.Free;
   end;
 
+  function GetVnSharingLinkPage: Boolean;
+  var
+    s: String;
+    j,
+    i: Cardinal;
+    l: TStringList;
+  begin
+    l:= TStringList.Create;
+    Result:= GetPage(TObject(l),
+                     VNSHARING_ROOT + URL,
+                     manager.container.manager.retryConnect);
+    parse:= TStringList.Create;
+    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.Exec;
+    Parser.Free;
+    if parse.Count>0 then
+    begin
+      manager.container.pageLinks.Clear;
+      for i:= 0 to parse.Count-1 do
+      begin
+        if Pos('lstImages.push("', parse.Strings[i]) > 0 then
+        begin
+          s:= parse.Strings[i];
+          repeat
+            j:= Pos('lstImages.push("', s);
+            manager.container.pageLinks.Add(EncodeUrl(GetString(s, 'lstImages.push("', '");')));
+            Delete(s, Pos('lstImages.push("', s), 16);
+            j:= Pos('lstImages.push("', s);
+          until j = 0;
+        end;
+      end;
+    end;
+    parse.Free;
+    l.Free;
+  end;
+
   function GetHentai2ReadLinkPage: Boolean;
   var
     i: Cardinal;
@@ -610,6 +654,9 @@ begin
   else
   if manager.container.mangaSiteID = OURMANGA_ID then
     Result:= GetOurMangaLinkPage
+  else
+  if manager.container.mangaSiteID = VNSHARING_ID then
+    Result:= GetVnSharingLinkPage
   else
   if manager.container.mangaSiteID = HENTAI2READ_ID then
     Result:= GetHentai2ReadLinkPage;
@@ -777,7 +824,7 @@ begin
       WaitFor;
     end;
 
-    //get page links
+    //download pages
    // container.Status:= STATUS_DOWNLOAD;
     container.workPtr:= 0;
     container.downloadInfo.iProgress:= 0;

@@ -92,7 +92,7 @@ var
 
 implementation
 
-uses FastHTMLParser, HTMLUtil, HTTPSend;
+uses FastHTMLParser, HTMLUtil, HTTPSend, SynaCode;
 
 // ----- TDataProcess -----
 
@@ -722,12 +722,24 @@ var
 
   function   VnSharingGetNameAndLink: Byte;
   var
-    isGetNameAndLink: Boolean = FALSE;
     i: Cardinal;
     s: String;
+
+   { function  Truncated(const s: String): String;
+    var
+      p: Cardinal;
+    begin
+      Result:= s;
+      p:= Pos('?id', Result);
+      if p > 0 then
+        Delete(Result, p, Length(Result)-p+1);
+     // Result:= UTF8ToANSI(Result);//StringReplace(Result, ''''+#226#128#153, '''', [rfReplaceAll]);
+    end; }
+
   begin
     Result:= INFORMATION_NOT_FOUND;
-    if NOT GetPage(TObject(source), VNSHARING_ROOT + VNSHARING_BROWSER + URL, 0) then
+    // bad code
+    if NOT GetPage(TObject(source), VNSHARING_ROOT + VNSHARING_BROWSER + '?page='+ IntToStr(StrToInt(URL)+1), 0) then
     begin
       Result:= NET_PROBLEM;
       source.Free;
@@ -749,16 +761,17 @@ var
       if (Pos('/Truyen/', parse.Strings[i])>0) AND
          (GetAttributeValue(GetTagAttribute(parse.Strings[i], 'width='))<>'') then
       begin
-        if NOT isGetNameAndLink then
+       { if NOT isGetNameAndLink then
           isGetNameAndLink:= TRUE
         else
+        begin }
+        Result:= NO_ERROR;
+        s:= GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href='));
+        if s <> '/Truyen/Tenki-Yohou-no-Koibito?id=506' then
         begin
-          Result:= NO_ERROR;
+          links.Add(s);
           s:= StringFilter(TrimLeft(TrimRight(parse.Strings[i+1])));
-          begin
-            names.Add(s);
-            links.Add(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href=')));
-          end;
+          names.Add(HTMLEntitiesFilter(s));
         end;
       end;
     end;
@@ -1268,7 +1281,7 @@ var
   isExtractGenres : Boolean = FALSE;
   i, j: Cardinal;
 begin
-  if NOT GetPage(TObject(source), VNSHARING_ROOT + URL, 0) then
+  if NOT GetPage(TObject(source), VNSHARING_ROOT + URL + '&confirm=yes', 0) then
   begin
     Result:= NET_PROBLEM;
     source.Free;
@@ -1291,21 +1304,20 @@ begin
   begin
     // get cover
     if (GetTagName(parse.Strings[i]) = 'img') AND
-       (Pos('img width="190px" height="250px"', parse.Strings[i])>0)then
-      if Pos('/mangas/logos/', parse.Strings[i]) <> 0 then
-        mangaInfo.coverLink:= CorrectURL(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src=')));
+       (Pos('img width="190px" height="250px"', parse.Strings[i])>0) then
+      mangaInfo.coverLink:= CorrectURL(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src=')));
 
     // get summary
     if (Pos('Sơ lược:', parse.Strings[i]) <> 0) AND
        (isExtractSummary) then
     begin
       j:= i+4;
-      while Pos('</p>', parse.Strings[j])=0 do
+      while (j<parse.Count) AND (Pos('</p>', parse.Strings[j])=0) do
       begin
         s:= parse.Strings[j];
         if s[1] <> '<' then
         begin
-          parse.Strings[j]:= StringSignFilter(StringFilter(parse.Strings[j]));
+          parse.Strings[j]:= HTMLEntitiesFilter(StringFilter(parse.Strings[j]));
           parse.Strings[j]:= StringReplace(parse.Strings[j], #10, '\n', [rfReplaceAll]);
           parse.Strings[j]:= StringReplace(parse.Strings[j], #13, '\r', [rfReplaceAll]);
           mangaInfo.summary:= parse.Strings[j];
@@ -1316,22 +1328,23 @@ begin
     end;
 
       // get chapter name and links
-    if (GetTagName(parse.Strings[i]) = 'a') AND
+    if (i+1<parse.Count) AND
+       (GetTagName(parse.Strings[i]) = 'a') AND
        (Pos('/Truyen/', parse.Strings[i])>0) AND
        (Pos('title="Đọc', parse.Strings[i])>0) then
     begin
       Inc(mangaInfo.numChapter);
-      mangaInfo.chapterLinks.Add(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href=')));
+      mangaInfo.chapterLinks.Add(EncodeUrl(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href='))));
       parse.Strings[i+1]:= RemoveSymbols(TrimLeft(TrimRight(parse.Strings[i+1])));
-      mangaInfo.chapterName.Add(parse.Strings[i+1]);
+      mangaInfo.chapterName.Add(HTMLEntitiesFilter(parse.Strings[i+1]));
     end;
 
     // get authors
-    if (Pos('Tác giả:', parse.Strings[i])<>0) then
+    if  (i+4<parse.Count) AND (Pos('Tác giả:', parse.Strings[i])<>0) then
       mangaInfo.authors:= TrimLeft(parse.Strings[i+4]);
 
     // get artists
-    if (Pos('Họa sỹ:', parse.Strings[i])<>0) then
+    if (i+4<parse.Count) AND (Pos('Họa sỹ:', parse.Strings[i])<>0) then
       mangaInfo.artists:= TrimLeft(parse.Strings[i+4]);
 
     // get genres
@@ -1352,7 +1365,7 @@ begin
     end;
 
     // get status
-    if (Pos('Tình trạng:', parse.Strings[i])<>0) then
+    if (i+2<parse.Count) AND (Pos('Tình trạng:', parse.Strings[i])<>0) then
     begin
       if Pos('Đang tiến hành', parse.Strings[i+2])<>0 then
         mangaInfo.status:= '1'   // ongoing
@@ -1361,10 +1374,16 @@ begin
     end;
   end;
 
-  // Since chapter name and link are inverted, we need to invert them
-  if mangainfo.ChapterName.Count > 1 then
+  if mangaInfo.status = '1' then
   begin
-    i:= 0; j:= mangainfo.ChapterName.Count - 1;
+    Dec(mangaInfo.numChapter);
+    mangainfo.ChapterName.Delete(mangainfo.ChapterName.Count-1);
+    mangainfo.ChapterLinks.Delete(mangainfo.ChapterLinks.Count-1);
+  end;
+  // Since chapter name and link are inverted, we need to invert them
+  if mangainfo.ChapterLinks.Count > 1 then
+  begin
+    i:= 0; j:= mangainfo.ChapterLinks.Count - 1;
     while (i<j) do
     begin
       mangainfo.ChapterName.Exchange(i, j);

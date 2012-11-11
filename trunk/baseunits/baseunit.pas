@@ -228,8 +228,9 @@ function  SetParams(const input: array of String): String; overload;
 
 procedure CustomGenres(var output: TStringList; input: String);
 
+function  FixURL(const URL: String): String;
 function  StringFilter(const source: String): String;
-function  StringSignFilter(const source: String): String;
+function  HTMLEntitiesFilter(const source: String): String;
 function  StringBreaks(const source: String): String;
 function  RemoveStringBreaks(const source: String): String;
 
@@ -344,7 +345,7 @@ begin
       if Pos(Symbols[i], Result)<>0 then
       begin
         isDone:= FALSE;
-        Result:= StringReplace(Result, Symbols[i], '', []);
+        Result:= StringReplace(Result, Symbols[i], '', [rfReplaceAll]);
       end;
   until isDone;
 end;
@@ -446,6 +447,12 @@ begin
     Result:= Result + input[i] + SEPERATOR;
 end;
 
+function  FixURL(const URL: String): String;
+begin
+  Result:= StringReplace(URL, ' ', '%20', [rfReplaceAll]);
+  Result:= StringReplace(Result, ' ', '%20', [rfReplaceAll]);
+end;
+
 function  StringFilter(const source: String): String;
 begin
   if Length(source) = 0 then exit;
@@ -457,15 +464,65 @@ begin
   Result:= StringReplace(Result, #13, '\r',  [rfReplaceAll]);
 end;
 
-function  StringSignFilter(const source: String): String;
+function  HTMLEntitiesFilter(const source: String): String;
 begin
   if Length(source) = 0 then exit;
-  Result:= StringReplace(source, '&agrave;', 'a', [rfReplaceAll]);  // à
-  Result:= StringReplace(Result, '&ocirc;', 'o', [rfReplaceAll]);       // ô
-  Result:= StringReplace(Result, '&aacute;', 'a', [rfReplaceAll]);       // á
-  Result:= StringReplace(source, '&ecirc;', 'e', [rfReplaceAll]);        // ê
-  Result:= StringReplace(Result, '&igrave;', 'i', [rfReplaceAll]);       // ì
-  Result:= StringReplace(Result, '&atilde;', 'a', [rfReplaceAll]);       // ã
+
+  // uppercase
+
+  Result:= StringReplace(source, '&Agrave;', 'À', [rfReplaceAll]);
+  Result:= StringReplace(Result, '&Aacute;', 'Á', [rfReplaceAll]);
+  Result:= StringReplace(Result, '&Acirc;' , 'Â', [rfReplaceAll]);
+  Result:= StringReplace(Result, '&Atilde;', 'Ã', [rfReplaceAll]);
+
+  Result:= StringReplace(Result, '&Egrave;', 'È', [rfReplaceAll]);
+  Result:= StringReplace(Result, '&Eacute;', 'É', [rfReplaceAll]);
+  Result:= StringReplace(Result, '&Ecirc;' , 'Ê', [rfReplaceAll]);
+  Result:= StringReplace(Result, '&Etilde;', 'Ẽ', [rfReplaceAll]);
+
+  Result:= StringReplace(Result, '&Igrave;', 'Ì', [rfReplaceAll]);
+  Result:= StringReplace(Result, '&Iacute;', 'Í', [rfReplaceAll]);
+  Result:= StringReplace(Result, '&Itilde;', 'Ĩ', [rfReplaceAll]);
+
+  Result:= StringReplace(Result, '&ETH;'   , 'Đ', [rfReplaceAll]);
+
+  Result:= StringReplace(Result, '&Ograve;', 'Ò', [rfReplaceAll]);
+  Result:= StringReplace(Result, '&Oacute;', 'Ó', [rfReplaceAll]);
+  Result:= StringReplace(Result, '&Ocirc;' , 'Ô', [rfReplaceAll]);
+  Result:= StringReplace(Result, '&Otilde;', 'Õ', [rfReplaceAll]);
+
+  Result:= StringReplace(Result, '&Ugrave;', 'Ù', [rfReplaceAll]);
+  Result:= StringReplace(Result, '&Uacute;', 'Ú', [rfReplaceAll]);
+
+  Result:= StringReplace(Result, '&Yacute;', 'Ý', [rfReplaceAll]);
+
+  // lowercase
+
+  Result:= StringReplace(Result, '&agrave;', 'à', [rfReplaceAll]);
+  Result:= StringReplace(Result, '&aacute;', 'á', [rfReplaceAll]);
+  Result:= StringReplace(Result, '&acirc;' , 'â', [rfReplaceAll]);
+  Result:= StringReplace(Result, '&atilde;', 'ã', [rfReplaceAll]);
+
+  Result:= StringReplace(Result, '&egrave;', 'è', [rfReplaceAll]);
+  Result:= StringReplace(Result, '&eacute;', 'é', [rfReplaceAll]);
+  Result:= StringReplace(Result, '&etilde;', 'ẽ', [rfReplaceAll]);
+  Result:= StringReplace(Result, '&ecirc;' , 'ê', [rfReplaceAll]);
+
+  Result:= StringReplace(Result, '&igrave;', 'ì', [rfReplaceAll]);
+  Result:= StringReplace(Result, '&iacute;', 'í', [rfReplaceAll]);
+  Result:= StringReplace(Result, '&itilde;', 'ĩ', [rfReplaceAll]);
+
+  Result:= StringReplace(Result, '&eth;'   , 'đ', [rfReplaceAll]);
+
+  Result:= StringReplace(Result, '&ograve;', 'ò', [rfReplaceAll]);
+  Result:= StringReplace(Result, '&oacute;', 'ó', [rfReplaceAll]);
+  Result:= StringReplace(Result, '&ocirc;' , 'ô', [rfReplaceAll]);
+  Result:= StringReplace(Result, '&otilde;', 'õ', [rfReplaceAll]);
+
+  Result:= StringReplace(Result, '&ugrave;', 'ù', [rfReplaceAll]);
+  Result:= StringReplace(Result, '&uacute;', 'ú', [rfReplaceAll]);
+
+  Result:= StringReplace(Result, '&yacute;', 'ý', [rfReplaceAll]);
 end;
 
 procedure  CustomGenres(var output: TStringList; input: String);
