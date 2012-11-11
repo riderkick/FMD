@@ -22,9 +22,9 @@ type
   TDownloadThread = class(TThread)
   protected
     // Get download link from URL
-    function    GetLinkPageFromURL(const URL: AnsiString): Boolean;
+    function    GetLinkPageFromURL(const URL: String): Boolean;
     // Get number of download link from URL
-    function    GetPageNumberFromURL(const URL: AnsiString): Boolean;
+    function    GetPageNumberFromURL(const URL: String): Boolean;
     // Download page - link from link list
     function    DownloadPage: Boolean;
     procedure   Execute; override;
@@ -138,6 +138,10 @@ type
     procedure   StopAllDownloadTasksForExit;
     // Mark the task as "Finished"
     procedure   FinishTask(const taskID: Cardinal);
+    // move a task up
+    function    MoveUp(const taskID: Cardinal): Boolean;
+    // move a task down
+    function    MoveDown(const taskID: Cardinal): Boolean;
     // Remove a task from list
     procedure   RemoveTask(const taskID: Cardinal);
     // Remove all finished tasks
@@ -204,7 +208,7 @@ begin
   Terminate;
 end;
 
-function    TDownloadThread.GetPageNumberFromURL(const URL: AnsiString): Boolean;
+function    TDownloadThread.GetPageNumberFromURL(const URL: String): Boolean;
 var
   Parser: TjsFastHTMLParser;
 
@@ -431,7 +435,7 @@ begin
     Result:= GetHentai2ReadPageNumber;
 end;
 
-function    TDownloadThread.GetLinkPageFromURL(const URL: AnsiString): Boolean;
+function    TDownloadThread.GetLinkPageFromURL(const URL: String): Boolean;
 var
   Parser: TjsFastHTMLParser;
 
@@ -612,18 +616,7 @@ begin
 end;
 
 function    TDownloadThread.DownloadPage: Boolean;
-{var
-  s, ext: String;}
 begin
- { s:= manager.container.pageLinks.Strings[workPtr];
-  if (Pos('.jpeg', LowerCase(s))<>0) OR (Pos('.jpg', LowerCase(s))<>0) then
-    ext:= '.jpg'
-  else
-  if Pos('.png', LowerCase(s))<>0 then
-    ext:= '.png'
-  else
-  if Pos('.gif', LowerCase(s))<>0 then
-    ext:= '.gif'; }
   if (manager.container.pageLinks.Strings[workPtr] = '') OR
      (manager.container.pageLinks.Strings[workPtr] = 'W') then exit;
   SetCurrentDir(oldDir);
@@ -1056,7 +1049,7 @@ begin
     Suspend;
 end;
 
-function    TDownloadThread.GetPageNumberFromURL(const URL: AnsiString): Boolean;
+function    TDownloadThread.GetPageNumberFromURL(const URL: String): Boolean;
   function GetAnimeAPageNumber: Boolean;
   var
     i: Cardinal;
@@ -1082,7 +1075,7 @@ begin
     Result:= GetAnimeAPageNumber;
 end;
 
-function    TDownloadThread.GetLinkPageFromURL(const URL: AnsiString): Boolean;
+function    TDownloadThread.GetLinkPageFromURL(const URL: String): Boolean;
   function GetAnimeALinkPage: Boolean;
   var
     i: Cardinal;
@@ -1161,7 +1154,7 @@ end;
 
 procedure   TDownloadManager.Restore;
 var
-  s: AnsiString;
+  s: String;
   tmp,
   i: Cardinal;
 begin
@@ -1417,6 +1410,38 @@ end;
 
 procedure   TDownloadManager.FinishTask(const taskID: Cardinal);
 begin
+end;
+
+// move a task down
+function    TDownloadManager.MoveDown(const taskID: Cardinal): Boolean;
+var
+  tmp: TTaskThreadContainer;
+begin
+  if taskID > 0 then
+  begin
+    tmp:= containers.Items[taskID];
+    containers.Items[taskID]:= containers.Items[taskID+1];
+    containers.Items[taskID+1]:= tmp;
+    Result:= TRUE;
+  end
+  else
+    Result:= FALSE;
+end;
+
+// move a task up
+function    TDownloadManager.MoveUp(const taskID: Cardinal): Boolean;
+var
+  tmp: TTaskThreadContainer;
+begin
+  if taskID < containers.Count-1 then
+  begin
+    tmp:= containers.Items[taskID];
+    containers.Items[taskID]:= containers.Items[taskID-1];
+    containers.Items[taskID-1]:= tmp;
+    Result:= TRUE;
+  end
+  else
+    Result:= FALSE;
 end;
 
 procedure   TDownloadManager.RemoveTask(const taskID: Cardinal);

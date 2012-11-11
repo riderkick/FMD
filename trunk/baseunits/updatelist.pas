@@ -7,11 +7,11 @@
 unit updatelist;
 
 {$mode delphi}
-
+{$DEFINE DOWNLOADER}
 interface
 
 uses
-  Classes, SysUtils, Dialogs, data, baseunit;
+  Classes, SysUtils, data, baseunit;
 
 type
   TUpdateMangaManagerThread = class;
@@ -37,28 +37,36 @@ type
   TUpdateMangaManagerThread = class(TThread)
   protected
     procedure   Execute; override;
+    {$IFNDEF DOWNLOADER}
+    procedure   ConsoleReport;
+    procedure   SaveCurrentDatabase;
+    {$ENDIF}
+    procedure   RefreshList;
     procedure   DlgReport;
+    procedure   getInfo(const limit, cs: Cardinal);
   public
     isTerminated,
     isSuspended,
-    isDoneUpdateInformation,
-    isDoneUpdateNecessary,
-    isDoneCheckNameAndLink: Boolean;
+    isDoneUpdateNecessary : Boolean;
+    mainDataProcess,
     dataProcess           : TDataProcess;
     names,
     links,
     websites              : TStringList;
+    S,
     website               : String;
+    workPtr,
+    directoryCount,
     threadCount,
     numberOfThreads       : Cardinal;
     threads               : array of TUpdateMangaThread;
     constructor Create;
-    destructor  Destroy;
+    destructor  Destroy; override;
   end;
 
 implementation
 
-uses mainunit;
+uses mainunit, Dialogs;
 
 // ----- TUpdateMangaThread -----
 
@@ -68,16 +76,16 @@ begin
   links:= TStringList.Create;
   isSuspended:= TRUE;
   Info:= TMangaInformation.Create;
-  FreeOnTerminate:= TRUE;
   isTerminated   := FALSE;
+  FreeOnTerminate:= TRUE;
   inherited Create(FALSE);
 end;
 
 destructor  TUpdateMangaThread.Destroy;
 begin
-  names.Free;
-  links.Free;
   Info.Free;
+  links.Free;
+  names.Free;
   isTerminated:= TRUE;
   inherited Destroy;
 end;
@@ -101,27 +109,29 @@ end;
 
 procedure   TUpdateMangaThread.Execute;
 begin
-  while NOT Terminated do
-  begin
-    while isSuspended do Sleep(16);
-    case CheckStyle of
-      CS_PAGE:
-        begin
-          if Info.GetNameAndLink(names, links,
-                                 manager.website, IntToStr(workPtr)) = INFORMATION_NOT_FOUND then
-            manager.isDoneCheckNameAndLink:= TRUE
-          else
-            Synchronize(UpdateNamesAndLinks);
-        end;
-      CS_INFO:
-        begin
-          Info.GetInfoFromURL(manager.website, manager.links[workPtr]);
-          Info.AddInfoToData(manager.names[workPtr], manager.links[workPtr], MainForm.dataProcess);
-        end;
-    end;
-    Synchronize(DecThreadCount);
-    Terminate;
+  if Terminated then exit;
+  while isSuspended do Sleep(16);
+  case CheckStyle of
+    CS_DIRECTORY_COUNT:
+      begin
+        info.GetDirectoryPage(manager.directoryCount, manager.website);
+      end;
+    CS_DIRECTORY_PAGE:
+      begin
+        Info.GetNameAndLink(names, links, manager.website, IntToStr(workPtr));
+        Synchronize(UpdateNamesAndLinks);
+      end;
+    CS_INFO:
+      begin
+        Info.GetInfoFromURL(manager.website, manager.links[workPtr]);
+     // {$IFNDEF DOWNLOADER}
+        Info.AddInfoToDataWithoutBreak(manager.names[workPtr], manager.links[workPtr], manager.mainDataProcess);
+     // {$ELSE}
+     //   Info.AddInfoToData(manager.names[workPtr], manager.links[workPtr], manager.mainDataProcess);
+     // {$ENDIF}
+      end;
   end;
+  Synchronize(DecThreadCount);
 end;
 
 // ----- TUpdateMangaManagerThread -----
@@ -135,8 +145,6 @@ begin
   links  := TStringList.Create;
   isTerminated:= FALSE;
   FreeOnTerminate:= TRUE;
-  isDoneCheckNameAndLink:= FALSE;
-  isDoneUpdateNecessary := FALSE;
   inherited Create(FALSE);
 end;
 
@@ -146,21 +154,85 @@ begin
   names.Free;
   links.Free;
   SetLength(threads, 0);
+  {$IFDEF DOWNLOADER}
+  MainForm.isUpdating:= FALSE;
+  {$ENDIF}
   isTerminated:= TRUE;
   inherited Destroy;
 end;
 
+{$IFNDEF DOWNLOADER}
+procedure   TUpdateMangaManagerThread.ConsoleReport;
+begin
+  MainForm.Memo1.Lines.Add(S);
+end;
+
+procedure   TUpdateMangaManagerThread.SaveCurrentDatabase;
+begin
+  mainDataProcess.SaveToFile(website);
+  MainForm.Memo1.Lines.Clear;
+end;
+{$ENDIF}
+
+procedure   TUpdateMangaManagerThread.RefreshList;
+begin
+  {$IFDEF DOWNLOADER}
+  if MainForm.cbSelectManga.Items[MainForm.cbSelectManga.ItemIndex] = website then
+  begin
+    MainForm.dataProcess.RemoveFilter;
+    MainForm.dataProcess.Free;
+    MainForm.dataProcess:= TDataProcess.Create;
+    MainForm.dataProcess.LoadFromFile(website);
+    MainForm.vtMangaList.Clear;
+    MainForm.vtMangaList.RootNodeCount:= MainForm.dataProcess.filterPos.Count;
+    MainForm.lbMode.Caption:= Format(stModeAll, [MainForm.dataProcess.filterPos.Count]);
+    MainForm.sbMain.Panels[0].Text:= '';
+  end;
+  {$ENDIF}
+end;
+
 procedure   TUpdateMangaManagerThread.DlgReport;
 begin
-  MessageDlg('', Format(stDlgNewManga, [links.Count]),
-                 mtInformation, [mbYes], 0)
+  MessageDlg('', Format(stDlgNewManga, [website, links.Count]),
+                 mtInformation, [mbYes], 0);
+end;
+
+procedure   TUpdateMangaManagerThread.getInfo(const limit, cs: Cardinal);
+var
+  j: Cardinal;
+begin
+  while (workPtr < limit) do
+  begin
+    if (threadCount < numberOfThreads) then
+      for j:= 0 to numberOfThreads-1 do
+        if (NOT Assigned(threads[j])) OR (threads[j].isTerminated) then
+        begin
+          Inc(threadCount);
+          threads[j]:= TUpdateMangaThread.Create;
+          threads[j].checkStyle:= cs;
+          threads[j].manager:= self;
+          threads[j].workPtr:= workPtr;
+          threads[j].isSuspended:= FALSE;
+          Inc(workPtr);
+          S:= 'Updating list: '+website+'[T.'+IntToStr(j)+'; CS.'+IntToStr(cs)+'] '+IntToStr(workPtr)+' / '+IntToStr(limit);
+        {$IFNDEF DOWNLOADER}
+          Synchronize(ConsoleReport);
+          if (workPtr mod 100 = 0) AND (workPtr > 4) AND (cs = CS_INFO) then
+            Synchronize(SaveCurrentDatabase);
+        {$ELSE}
+          MainForm.sbMain.Panels[0].Text:= S;
+        {$ENDIF}
+          break;
+        end;
+    Sleep(100);
+  end;
 end;
 
 procedure   TUpdateMangaManagerThread.Execute;
 var
-  i, j, k, workPtr: Cardinal;
+  i, j, k: Cardinal;
 begin
-  while NOT Terminated do
+ // while NOT Terminated do
   begin
     while isSuspended do Sleep(16);
     if websites.Count = 0 then
@@ -171,36 +243,27 @@ begin
     begin
       website:= websites.Strings[i];
       dataProcess.LoadFromFile(website);
-      isDoneCheckNameAndLink := FALSE;
-      isDoneUpdateInformation:= FALSE;
       names.Clear;
       links.Clear;
 
       workPtr:= 0;
-      while NOT isDoneCheckNameAndLink do
-      begin
-        if threadCount < numberOfThreads then
-        begin
-          for j:= 0 to numberOfThreads-1 do
-            if (NOT Assigned(threads[j])) OR (threads[j].isTerminated) then
-            begin
-              Inc(threadCount);
-              threads[j]:= TUpdateMangaThread.Create;
-              threads[j].checkStyle:= CS_PAGE;
-              threads[j].manager:= self;
-              threads[j].workPtr:= workPtr;
-              threads[j].isSuspended:= FALSE;
-              Inc(workPtr);
-              MainForm.sbMain.Panels[0].Text:= 'Updating list... ('+website+'.P.'+IntToStr(workPtr)+')';
-            end;
-        end;
-        Sleep(100);
-      end;
+      getInfo(1, CS_DIRECTORY_COUNT);
       while threadCount > 0 do Sleep(100);
+
+      workPtr:= 0;
+      getInfo(directoryCount, CS_DIRECTORY_PAGE);
+      while threadCount > 0 do Sleep(100);
+
+     // names.LoadFromFile(website+'_names.txt');
+     // links.LoadFromFile(website+'_links.txt');
+     // names.LoadFromFile(website+'_names.txt');
+     // links.LoadFromFile(website+'_links.txt');
+      mainDataProcess:= TDataProcess.Create;
+      mainDataProcess.LoadFromFile(website);
 
       j:= 0;
       repeat
-        if Find(links.Strings[j], MainForm.dataProcess.Link, Integer(workPtr)) then
+        if Find(links.Strings[j], mainDataProcess.Link, Integer(workPtr)) then
         begin
           links.Delete(j);
           names.Delete(j);
@@ -208,42 +271,31 @@ begin
         else
           Inc(j);
       until j = links.Count;
+
       if links.Count = 0 then
       begin
         Synchronize(DlgReport);
-        Terminate;
+        continue;
       end;
       workPtr:= 0;
-      while workPtr < links.Count do
-      begin
-        if (threadCount < numberOfThreads) then
-        begin
-          for j:= 0 to numberOfThreads-1 do
-            if (NOT Assigned(threads[j])) OR (threads[j].isTerminated) then
-            begin
-              Inc(threadCount);
-              threads[j]:= TUpdateMangaThread.Create;
-              threads[j].checkStyle:= CS_INFO;
-              threads[j].manager:= self;
-              threads[j].workPtr:= workPtr;
-              threads[j].isSuspended:= FALSE;
-              Inc(workPtr);
-              MainForm.sbMain.Panels[0].Text:= 'Updating list... ('+website+'.I.'+IntToStr(workPtr)+')';
-            end;
-        end;
-        Sleep(100);
-      end;
+
+      getInfo(links.Count, CS_INFO);
+      Sleep(100);
       while threadCount > 0 do Sleep(100);
     end;
-    Synchronize(DlgReport);
-    MainForm.dataProcess.RemoveFilter;
-    MainForm.vtMangaList.Clear;
-    MainForm.vtMangaList.RootNodeCount:= MainForm.dataProcess.filterPos.Count;
-    MainForm.lbMode.Caption:= Format(stModeAll, [MainForm.dataProcess.filterPos.Count]);
+    mainDataProcess.SaveToFile;
+  {$IFNDEF DOWNLOADER}
+    S:= 'Saving to '+website+'.dat ...';
+    Synchronize(ConsoleReport);
+    S:= 'Done.';
+    Synchronize(ConsoleReport);
+  {$ELSE}
+    Synchronize(RefreshList);
     MainForm.sbMain.Panels[0].Text:= '';
-    Terminate;
+  {$ENDIF}
+    mainDataProcess.Free;
+    Synchronize(DlgReport);
   end;
-  Terminate;
 end;
 
 end.

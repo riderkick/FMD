@@ -109,6 +109,9 @@ type
     lbOptionPort: TLabel;
     lbOptionUser: TLabel;
     MenuItem1: TMenuItem;
+    MenuItem2: TMenuItem;
+    miDown: TMenuItem;
+    miUp: TMenuItem;
     miOpenFolder: TMenuItem;
     miFavoritesRemove: TMenuItem;
     miMangaListAddToFavorites: TMenuItem;
@@ -183,6 +186,7 @@ type
     procedure cbOptionUseProxyChange(Sender: TObject);
     procedure clbChapterListKeyPress(Sender: TObject; var Key: char);
     procedure FormWindowStateChange(Sender: TObject);
+    procedure miDownClick(Sender: TObject);
 
     procedure miFavoritesRemoveClick(Sender: TObject);
     procedure miMangaListAddToFavoritesClick(Sender: TObject);
@@ -199,6 +203,7 @@ type
     procedure miDownloadRemoveClick(Sender: TObject);
     procedure miDownloadStopClick(Sender: TObject);
     procedure miOpenFolderClick(Sender: TObject);
+    procedure miUpClick(Sender: TObject);
 
     procedure pcMainChange(Sender: TObject);
     procedure TrayIconDblClick(Sender: TObject);
@@ -225,6 +230,7 @@ type
 
     procedure tmBackupTimer(Sender: TObject);
   public
+    isUpdating  : Boolean;
     options     : TIniFile;
     favorites   : TFavoriteManager;
     dataProcess : TDataProcess;
@@ -284,6 +290,7 @@ implementation
 
 procedure TMainForm.FormCreate(Sender: TObject);
 begin
+  isUpdating := FALSE;
   ticks      := GetTickCount;
   backupTicks:= GetTickCount;
   oldDir     := GetCurrentDir;
@@ -457,13 +464,16 @@ end;
 
 procedure TMainForm.btUpdateListClick(Sender: TObject);
 begin
-  if (NOT Assigned(updateList)) OR (updateList.isTerminated) then
+  if (NOT isUpdating) OR (NOT Assigned(updateList)) OR (updateList.isTerminated) then
   begin
+    isUpdating:= TRUE;
     updateList:= TUpdateMangaManagerThread.Create;
     updateList.numberOfThreads:= 4;
     updateList.websites.Add(cbSelectManga.Items[cbSelectManga.ItemIndex]);
     updateList.isSuspended:= FALSE;
-  end;
+  end
+  else
+    MessageDlg('', stDlgUpdateAlreadyRunning, mtInformation, [mbYes], 0)
 end;
 
 procedure TMainForm.cbSelectMangaChange(Sender: TObject);
@@ -586,7 +596,7 @@ end;
 
 procedure TMainForm.miFavoritesChangeCurrentChapterClick(Sender: TObject);
 var
-  s: AnsiString;
+  s: String;
   i: Integer;
 begin
   if NOT Assigned(vtFavorites.FocusedNode) then exit;
@@ -658,6 +668,22 @@ end;
 
 // ----- vtDownload popup menu -----
 
+procedure TMainForm.miUpClick(Sender: TObject);
+begin
+  if DLManager.MoveUp(vtDownload.FocusedNode.Index) then
+  begin
+    vtDownload.Repaint;
+  end;
+end;
+
+procedure TMainForm.miDownClick(Sender: TObject);
+begin
+  if DLManager.MoveDown(vtDownload.FocusedNode.Index) then
+  begin
+    vtDownload.Repaint;
+  end;
+end;
+
 procedure TMainForm.miDownloadRemoveFinishedTasksClick(Sender: TObject);
 begin
   if MessageDlg('', stDlgRemoveFinishTasks,
@@ -673,11 +699,15 @@ var i: cardinal;
 begin
   if NOT Assigned(vtDownload.FocusedNode) then exit;
   if DLManager.containers.Items[vtDownload.FocusedNode.Index].Status <> STATUS_STOP then exit;
-  i:= DLManager.containers.Items[vtDownload.FocusedNode.Index].Status;
+  DLManager.containers.Items[vtDownload.FocusedNode.Index].Status:= STATUS_WAIT;
+  DLManager.containers.Items[vtDownload.FocusedNode.Index].downloadInfo.Status:= stWait;
+  // bad coding - print waiting string to the screen
+  vtDownload.Repaint;
+  //DLManager.CheckAndActiveTask;
   if NOT DLManager.CanActiveTask then exit;
   DLManager.ActiveTask(vtDownload.FocusedNode.Index);
-  vtDownload.Clear;
-  vtDownload.RootNodeCount:= DLManager.containers.Count;
+  // bad coding - print preparing/downloading string to the screen
+  vtDownload.Repaint;
   DLManager.Backup;
 end;
 
@@ -1155,7 +1185,7 @@ procedure TMainForm.SearchMangaList;
 var
   xNode  : PVirtualNode;
   data   : PMangaListItem;
-  name   : AnsiString;
+  name   : String;
   endSearch,
   current: Cardinal;
 begin
@@ -1344,16 +1374,17 @@ begin
   lbFilterStatus.Caption := infoStatus;
   lbFilterSummary.Caption:= infoSummary;
 
-  stDlgNewManga          := language.ReadString(lang, 'stDlgNewManga', '');
-  stDlgQuit              := language.ReadString(lang, 'stDlgQuit', '');
-  stDlgRemoveTask        := language.ReadString(lang, 'stDlgRemoveTask', '');
-  stDlgRemoveFinishTasks := language.ReadString(lang, 'stDlgRemoveFinishTasks', '');
-  stDlgTypeInNewChapter  := language.ReadString(lang, 'stDlgTypeInNewChapter', '');
-  stDlgTypeInNewSavePath := language.ReadString(lang, 'stDlgTypeInNewSavePath', '');
-  stDlgCannotGetMangaInfo:= language.ReadString(lang, 'stDlgCannotGetMangaInfo', '');
-  stDlgFavoritesIsRunning:= language.ReadString(lang, 'stDlgFavoritesIsRunning', '');
-  stDlgNoNewChapter      := language.ReadString(lang, 'stDlgNoNewChapter', '');
-  stDlgHasNewChapter     := language.ReadString(lang, 'stDlgHasNewChapter', '');
+  stDlgUpdateAlreadyRunning:= language.ReadString(lang, 'stDlgUpdateAlreadyRunning', '');
+  stDlgNewManga            := language.ReadString(lang, 'stDlgNewManga', '');
+  stDlgQuit                := language.ReadString(lang, 'stDlgQuit', '');
+  stDlgRemoveTask          := language.ReadString(lang, 'stDlgRemoveTask', '');
+  stDlgRemoveFinishTasks   := language.ReadString(lang, 'stDlgRemoveFinishTasks', '');
+  stDlgTypeInNewChapter    := language.ReadString(lang, 'stDlgTypeInNewChapter', '');
+  stDlgTypeInNewSavePath   := language.ReadString(lang, 'stDlgTypeInNewSavePath', '');
+  stDlgCannotGetMangaInfo  := language.ReadString(lang, 'stDlgCannotGetMangaInfo', '');
+  stDlgFavoritesIsRunning  := language.ReadString(lang, 'stDlgFavoritesIsRunning', '');
+  stDlgNoNewChapter        := language.ReadString(lang, 'stDlgNoNewChapter', '');
+  stDlgHasNewChapter       := language.ReadString(lang, 'stDlgHasNewChapter', '');
 
   language.Free;
   if dataProcess.isFiltered then

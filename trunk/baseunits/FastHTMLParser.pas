@@ -44,14 +44,14 @@
 //                                                                            //
 // The code is provided "AS-IS" and without WARRANTY OF ANY KIND,             //
 // expressed, implied or otherwise, including and without limitation, any     //
-// warranty of merchantability or fitness for a  particular purpose.          //
+// warranty of merchantability or fitness for a  particular purpose.        //
 //                                                                            //
 // In no event shall the author be liable for any special, incidental,        //
 // indirect or consequential damages whatsoever (including, without           //
 // limitation, damages for loss of profits, business interruption, loss       //
 // of information, or any other loss), whether or not advised of the          //
 // possibility of damage, and on any theory of liability, arising out of      //
-// or in connection with the use or inability to use this software.           //
+// or in connection with the use or inability to use this software.         //
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
 //                                                                            //
@@ -89,6 +89,7 @@ type
       Raw          : Pchar;
       constructor Create(sRaw:String);overload;
       constructor Create(pRaw:PChar);overload;
+      destructor Destroy; override;
       procedure Exec;
       procedure ExecUpCase; //same as Exec, but all tags are now converted to UPPERCASE (consistent)
   end;
@@ -102,16 +103,25 @@ begin
   SetLength(S, Length);
   StrLCopy(@S[1], StartIndex, Length);
   Result := S;
+  S:= '';
 end;
 
 constructor TjsFastHTMLParser.Create(sRaw:String);
 begin
   Raw := Pchar(sRaw);
+  inherited Create;
 end;
 
 constructor TjsFastHTMLParser.Create(pRaw:Pchar);
 begin
   Raw := pRaw;
+  inherited Create;
+end;
+
+destructor  TjsFastHTMLParser.Destroy;
+begin
+  Raw:= '';
+  inherited Destroy;
 end;
 
 procedure TjsFastHTMLParser.Exec;

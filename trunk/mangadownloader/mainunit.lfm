@@ -304,11 +304,11 @@ object MainForm: TMainForm
     Height = 472
     Top = 0
     Width = 580
-    ActivePage = tsDownload
+    ActivePage = tsInformation
     Align = alClient
     Font.Style = [fsBold]
     ParentFont = False
-    TabIndex = 0
+    TabIndex = 1
     TabOrder = 1
     OnChange = pcMainChange
     object tsDownload: TTabSheet
@@ -370,27 +370,27 @@ object MainForm: TMainForm
     end
     object tsInformation: TTabSheet
       Caption = 'Manga Infos'
-      ClientHeight = 420
-      ClientWidth = 547
+      ClientHeight = 446
+      ClientWidth = 572
       object sbInformation: TScrollBox
         Left = 0
-        Height = 420
+        Height = 446
         Top = 0
-        Width = 547
-        HorzScrollBar.Page = 543
-        VertScrollBar.Page = 416
+        Width = 572
+        HorzScrollBar.Page = 568
+        VertScrollBar.Page = 442
         Align = alClient
-        ClientHeight = 416
-        ClientWidth = 543
+        ClientHeight = 442
+        ClientWidth = 568
         TabOrder = 0
         object pnInfomation: TPanel
           Left = 0
           Height = 234
           Top = 0
-          Width = 543
+          Width = 568
           Align = alTop
           ClientHeight = 234
-          ClientWidth = 543
+          ClientWidth = 568
           ParentFont = False
           TabOrder = 0
           object imCover: TImage
@@ -406,7 +406,7 @@ object MainForm: TMainForm
             Left = 175
             Height = 216
             Top = 8
-            Width = 363
+            Width = 388
             Anchors = [akTop, akLeft, akRight, akBottom]
             HideSelection = False
             ParentFont = False
@@ -420,25 +420,25 @@ object MainForm: TMainForm
           Left = 0
           Height = 5
           Top = 234
-          Width = 543
+          Width = 568
           Align = alTop
           ResizeAnchor = akTop
         end
         object pnChapterList: TPanel
           Left = 0
-          Height = 177
+          Height = 203
           Top = 239
-          Width = 543
+          Width = 568
           Align = alClient
-          ClientHeight = 177
-          ClientWidth = 543
+          ClientHeight = 203
+          ClientWidth = 568
           TabOrder = 2
           object clbChapterList: TCheckListBox
             AnchorSideTop.Side = asrBottom
             Left = 8
-            Height = 84
+            Height = 110
             Top = 9
-            Width = 527
+            Width = 552
             Anchors = [akTop, akLeft, akRight, akBottom]
             ItemHeight = 0
             MultiSelect = True
@@ -450,7 +450,7 @@ object MainForm: TMainForm
           object edSaveTo: TLabeledEdit
             Left = 8
             Height = 21
-            Top = 117
+            Top = 143
             Width = 287
             Anchors = [akLeft, akBottom]
             EditLabel.AnchorSideLeft.Control = edSaveTo
@@ -459,7 +459,7 @@ object MainForm: TMainForm
             EditLabel.AnchorSideBottom.Control = edSaveTo
             EditLabel.Left = 8
             EditLabel.Height = 13
-            EditLabel.Top = 101
+            EditLabel.Top = 127
             EditLabel.Width = 287
             EditLabel.Caption = 'Save to'
             EditLabel.ParentColor = False
@@ -470,7 +470,7 @@ object MainForm: TMainForm
           object btDownload: TBitBtn
             Left = 415
             Height = 30
-            Top = 108
+            Top = 134
             Width = 91
             Anchors = [akLeft, akBottom]
             Caption = 'Download'
@@ -480,7 +480,7 @@ object MainForm: TMainForm
           object btBrowse: TBitBtn
             Left = 311
             Height = 30
-            Top = 108
+            Top = 134
             Width = 91
             Anchors = [akLeft, akBottom]
             Caption = 'Browse'
@@ -490,7 +490,7 @@ object MainForm: TMainForm
           object cbAddAsStopped: TCheckBox
             Left = 8
             Height = 17
-            Top = 145
+            Top = 171
             Width = 196
             Anchors = [akLeft, akBottom]
             Caption = 'Add to download list as stopped task'
@@ -501,7 +501,7 @@ object MainForm: TMainForm
           object cbAddToFavorites: TCheckBox
             Left = 311
             Height = 17
-            Top = 145
+            Top = 171
             Width = 100
             Anchors = [akLeft, akBottom]
             Caption = 'Add to Favorites'
@@ -1520,6 +1520,17 @@ object MainForm: TMainForm
   object pmDownload: TPopupMenu
     left = 80
     top = 239
+    object miUp: TMenuItem
+      Caption = 'Move up'
+      OnClick = miUpClick
+    end
+    object miDown: TMenuItem
+      Caption = 'Move down'
+      OnClick = miDownClick
+    end
+    object MenuItem2: TMenuItem
+      Caption = '-'
+    end
     object miDownloadStop: TMenuItem
       Caption = 'Stop'
       OnClick = miDownloadStopClick

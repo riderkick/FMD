@@ -16,11 +16,12 @@ const
   JPG_HEADER: array[0..2] of Byte = ($FF, $D8, $FF);
   GIF_HEADER: array[0..2] of Byte = ($47, $49, $46);
   PNG_HEADER: array[0..2] of Byte = ($89, $50, $4E);
-  CS_PAGE = 0;
-  CS_INFO = 1;
-  CS_GETPAGENUMBER   = 2;
-  CS_GETPAGELINK     = 3;
-  CS_DOWNLOAD        = 4;
+  CS_DIRECTORY_COUNT  = 0;
+  CS_DIRECTORY_PAGE   = 1;
+  CS_INFO             = 2;
+  CS_GETPAGENUMBER   = 3;
+  CS_GETPAGELINK     = 4;
+  CS_DOWNLOAD        = 5;
 
   DATA_PARAM_NAME       = 0;
   DATA_PARAM_LINK       = 1;
@@ -36,7 +37,7 @@ const
   FILTER_HIDE           = 0;
   FILTER_SHOW           = 1;
 
-  Genre: array [0..38] of AnsiString =
+  Genre: array [0..38] of String =
     ('Action'       , 'Adult'        , 'Adventure'    , 'Comedy',
      'Doujinshi'    , 'Drama'        , 'Ecchi'        , 'Fantasy',
      'Gender Bender', 'Harem'        , 'Hentai'       , 'Historical',
@@ -79,7 +80,8 @@ const
   MANGAHERE_NAME    = 'MangaHere';    MANGAHERE_ID   = 1;
   MANGAINN_NAME     = 'MangaInn';     MANGAINN_ID    = 2;
   OURMANGA_NAME     = 'OurManga';     OURMANGA_ID    = 3;
-  HENTAI2READ_NAME  = 'Hentai2Read';  HENTAI2READ_ID = 4;
+  VNSHARING_NAME    = 'VnSharing';    VNSHARING_ID   = 4;
+  HENTAI2READ_NAME  = 'Hentai2Read';  HENTAI2READ_ID = 5;
 
 var
   currentWebsite,
@@ -100,7 +102,7 @@ var
   oldDir: String;
   // EN: Param seperator
   // VI: Ký tự dùng để chia cắt param trong dữ liệu
-  SEPERATOR: AnsiString = #253#254;
+  SEPERATOR: String = '!%~';
 
   ANIMEA_ROOT   : String = 'http://manga.animea.net';
   ANIMEA_BROWSER: String = '/browse.html?page=';
@@ -115,6 +117,9 @@ var
   OURMANGA_ROOT   : String = 'http://www.ourmanga.com';
   OURMANGA_BROWSER: String = '/directory/';
 
+  VNSHARING_ROOT   : String = 'http://truyen.vnsharing.net';
+  VNSHARING_BROWSER: String = '/DanhSach';
+
   HENTAI2READ_ROOT   : String = 'http://hentai2read.com';
   HENTAI2READ_BROWSER: String = '/hentai-list/all/any/name-az/';
 
@@ -128,6 +133,7 @@ var
   infoStatus,
   infoSummary,
   infoLink ,
+  stDlgUpdateAlreadyRunning,
   stDlgNewManga,
   stDlgQuit,
   stDlgRemoveTask,
@@ -142,7 +148,7 @@ var
 type
   PMangaListItem = ^TMangaListItem;
   TMangaListItem = record
-    Text: AnsiString;
+    Text: String;
   end;
 
   PMangaInfo = ^TMangaInfo;
@@ -199,46 +205,47 @@ type
 function  CorrectFile(const APath: String): String;
 function  CorrectFilePath(const APath: String): String;
 function  CorrectURL(const URL: String): String;
-procedure CheckPath(const S: AnsiString);
+procedure CheckPath(const S: String);
 
-function  GetMangaSiteID(const name: AnsiString): Cardinal;
+function  GetMangaSiteID(const name: String): Cardinal;
 
-function  RemoveSymbols(const input: AnsiString): AnsiString;
+function  RemoveSymbols(const input: String): String;
 
 // EN: Get substring from source
 // VI: Lấy chuỗi con từ chuỗi mẹ
-function  GetString(const source, sStart, sEnd: AnsiString): AnsiString;
+function  GetString(const source, sStart, sEnd: String): String;
 
 function  Find(const S: String; var List: TStringList; out index: Integer): Boolean;
 
 // EN: Get param from input
 // VI: Lấy param từ input
-procedure GetParams(var output: TStringList; input: AnsiString); overload;
-procedure GetParams(var output: TCardinalList; input: AnsiString); overload;
+procedure GetParams(var output: TStringList; input: String); overload;
+procedure GetParams(var output: TCardinalList; input: String); overload;
 // EN: Set param from input
 // VI: Cài param từ input
-function  SetParams(input: TObject): AnsiString; overload;
-function  SetParams(input: array of AnsiString): AnsiString; overload;
+function  SetParams(input: TObject): String; overload;
+function  SetParams(const input: array of String): String; overload;
 
-procedure CustomGenres(var output: TStringList; input: AnsiString);
+procedure CustomGenres(var output: TStringList; input: String);
 
-function  StringFilter(const source: AnsiString): AnsiString;
-function  StringBreaks(const source: AnsiString): AnsiString;
-function  RemoveStringBreaks(const source: AnsiString): AnsiString;
+function  StringFilter(const source: String): String;
+function  StringSignFilter(const source: String): String;
+function  StringBreaks(const source: String): String;
+function  RemoveStringBreaks(const source: String): String;
 
-function  PrepareSummaryForHint(const source: AnsiString):  AnsiString;
+function  PrepareSummaryForHint(const source: String):  String;
 
 // EN: Get HTML source code from a URL
 // VI: Lấy webcode từ 1 URL
-function  GetPage(var output: TObject; URL: AnsiString; const Reconnect: Cardinal): Boolean;
-function  SavePage(URL: AnsiString; const Path: String; const Reconnect: Cardinal): Boolean;
+function  GetPage(var output: TObject; URL: String; const Reconnect: Cardinal): Boolean;
+function  SavePage(URL: String; const Path: String; const Reconnect: Cardinal): Boolean;
 
 procedure QuickSortData(var merge: TStringList);
 
 function  GetCurrentJDN: LongInt;
 
-function  ConvertInt32ToStr(const aValue: Cardinal)  : AnsiString;
-function  ConvertStrToInt32(const aStr  : AnsiString): Cardinal;
+{function  ConvertInt32ToStr(const aValue: Cardinal)  : String;
+function  ConvertStrToInt32(const aStr  : String): Cardinal;}
 procedure TransferMangaInfo(var dest: TMangaInfo; const source: TMangaInfo);
 
 implementation
@@ -270,11 +277,11 @@ begin
 end;
 
 // took from an old project - maybe bad code
-procedure CheckPath(const S: AnsiString);
+procedure CheckPath(const S: String);
 var
     wS,
     lcS,
-    lcS2: AnsiString;
+    lcS2: String;
     i,
     j   : Word;
 begin
@@ -310,7 +317,7 @@ begin
   Delete(wS, 1, 1);
 end;
 
-function  GetMangaSiteID(const name: AnsiString): Cardinal;
+function  GetMangaSiteID(const name: String): Cardinal;
 begin
   if name = ANIMEA_NAME then Result:= ANIMEA_ID
   else
@@ -320,10 +327,12 @@ begin
   else
   if name = OURMANGA_NAME then Result:= OURMANGA_ID
   else
+  if name = VNSHARING_NAME then Result:= VNSHARING_ID
+  else
   if name = HENTAI2READ_NAME then Result:= HENTAI2READ_ID;
 end;
 
-function  RemoveSymbols(const input: AnsiString): AnsiString;
+function  RemoveSymbols(const input: String): String;
 var
   i     : Cardinal;
   isDone: Boolean;
@@ -340,10 +349,10 @@ begin
   until isDone;
 end;
 
-function  GetString(const source, sStart, sEnd: AnsiString): AnsiString;
+function  GetString(const source, sStart, sEnd: String): String;
 var
   l: Word;
-  s: AnsiString;
+  s: String;
 begin
   Result:= '';
   l:= Pos(sStart, source);
@@ -374,7 +383,7 @@ begin
   end;
 end;
 
-procedure GetParams(var output: TStringList; input: AnsiString);
+procedure GetParams(var output: TStringList; input: String);
 var l: Word;
 begin
   repeat
@@ -387,7 +396,7 @@ begin
   until l = 0;
 end;
 
-procedure GetParams(var output: TCardinalList; input: AnsiString);
+procedure GetParams(var output: TCardinalList; input: String);
 var l: Word;
 begin
   repeat
@@ -400,7 +409,7 @@ begin
   until l = 0;
 end;
 
-function  SetParams(input: TObject): AnsiString;
+function  SetParams(input: TObject): String;
 var
   i: Cardinal;
 begin
@@ -427,7 +436,7 @@ begin
   end;
 end;
 
-function  SetParams(input: array of AnsiString): AnsiString;
+function  SetParams(const input: array of String): String;
 var
   i: Cardinal;
 begin
@@ -437,17 +446,29 @@ begin
     Result:= Result + input[i] + SEPERATOR;
 end;
 
-function  StringFilter(const source: AnsiString): AnsiString;
+function  StringFilter(const source: String): String;
 begin
   if Length(source) = 0 then exit;
   Result:= StringReplace(source, '&amp', '', [rfReplaceAll]);
   Result:= StringReplace(Result, '&nbsp', '', [rfReplaceAll]);
   Result:= StringReplace(Result, '&quot;', '"', [rfReplaceAll]);
+  Result:= StringReplace(Result, '&nbsp;', ' ', [rfReplaceAll]);
   Result:= StringReplace(Result, #10, '\n',  [rfReplaceAll]);
   Result:= StringReplace(Result, #13, '\r',  [rfReplaceAll]);
 end;
 
-procedure  CustomGenres(var output: TStringList; input: AnsiString);
+function  StringSignFilter(const source: String): String;
+begin
+  if Length(source) = 0 then exit;
+  Result:= StringReplace(source, '&agrave;', 'a', [rfReplaceAll]);  // à
+  Result:= StringReplace(Result, '&ocirc;', 'o', [rfReplaceAll]);       // ô
+  Result:= StringReplace(Result, '&aacute;', 'a', [rfReplaceAll]);       // á
+  Result:= StringReplace(source, '&ecirc;', 'e', [rfReplaceAll]);        // ê
+  Result:= StringReplace(Result, '&igrave;', 'i', [rfReplaceAll]);       // ì
+  Result:= StringReplace(Result, '&atilde;', 'a', [rfReplaceAll]);       // ã
+end;
+
+procedure  CustomGenres(var output: TStringList; input: String);
 var
   s: String = '';
   i: Word;
@@ -472,7 +493,7 @@ begin
     output.Add(s);
 end;
 
-function  StringBreaks(const source: AnsiString): AnsiString;
+function  StringBreaks(const source: String): String;
 begin
   if Length(source) = 0 then exit;
   Result:= source;
@@ -480,14 +501,14 @@ begin
   Result:= StringReplace(Result, '\r', #13,  [rfReplaceAll]);
 end;
 
-function  RemoveStringBreaks(const source: AnsiString): AnsiString;
+function  RemoveStringBreaks(const source: String): String;
 begin
   if Length(source) = 0 then exit;
   Result:= StringReplace(source, #10, '', [rfReplaceAll]);
   Result:= StringReplace(Result, #13, '', [rfReplaceAll]);
 end;
 
-function  PrepareSummaryForHint(const source: AnsiString):  AnsiString;
+function  PrepareSummaryForHint(const source: String):  String;
 var
   i: Cardinal = 1;
   j: Cardinal = 1;
@@ -509,7 +530,7 @@ end;
 
 function  CheckRedirect(const HTTP: THTTPSend): String;
 var
-  lineHeader: AnsiString;
+  lineHeader: String;
   i: Byte;
 begin
   Result:= '';
@@ -523,7 +544,7 @@ begin
   end;
 end;
 
-function  GetPage(var output: TObject; URL: AnsiString; const Reconnect: Cardinal): Boolean;
+function  GetPage(var output: TObject; URL: String; const Reconnect: Cardinal): Boolean;
 var
   HTTP   : THTTPSend;
   counter: Cardinal = 0;
@@ -584,7 +605,7 @@ begin
   Result:= TRUE;
 end;
 
-function  SavePage(URL: AnsiString; const Path: String; const Reconnect: Cardinal): Boolean;
+function  SavePage(URL: String; const Path: String; const Reconnect: Cardinal): Boolean;
 var
   header : array [0..3] of Byte;
   ext    : String;
@@ -667,7 +688,7 @@ var
 
   procedure QSort(L, R: Cardinal);
   var i, j: Cardinal;
-         X: AnsiString;
+         X: String;
   begin
     X:= names.Strings[(L+R) div 2];
     i:= L;
@@ -716,7 +737,7 @@ begin
   Result:= Round(day + (153*m+2)/5 + 365*y + y/4 - y/100 + y/400 - 32045);
 end;
 
-function  ConvertInt32ToStr(const aValue: Cardinal)  : AnsiString;
+{function  ConvertInt32ToStr(const aValue: Cardinal)  : String;
 begin
   Result:= '';
   Result:= Result+Char(aValue);
@@ -725,13 +746,13 @@ begin
   Result:= Result+Char(aValue shr 24);
 end;
 
-function  ConvertStrToInt32(const aStr  : AnsiString): Cardinal;
+function  ConvertStrToInt32(const aStr  : String): Cardinal;
 begin
   Result:= (Byte(aStr[4]) shl 24) OR
            (Byte(aStr[3]) shl 16) OR
            (Byte(aStr[2]) shl 8) OR
             Byte(aStr[1]);
-end;
+end;}
 
 procedure TransferMangaInfo(var dest: TMangaInfo; const source: TMangaInfo);
 var
