@@ -32,26 +32,37 @@ end;
 
 procedure   TCompress.Execute;
 var
+  fPath   : String;
   searcher: TFileSearcher;
   Zip     : TZipper;
   i       : Cardinal;
 begin
   try
+   // Path:= FixPath(Path);
+    fPath:= FixLastDir(Path);
+    RenameFileUTF8(Path, fPath);
     list:= TStringList.Create;
     searcher:= TFileSearcher.Create;
     searcher.OnFileFound:= OnFileFound;
-    searcher.Search(Path, '*.jpg;*.jpeg;*.png;*.gif', FALSE, ';');
+    searcher.Search(fPath, '*.jpg;*.jpeg;*.png;*.gif', FALSE, ';');
+
     if list.Count <> 0 then
     begin
+      // norm the list
+      //for i:= 0 to list.Count-1 do
+      //  list.Strings[i]:= ExtractFileName(list.Strings[i]);
       Zip:= TZipper.Create;
-      Zip.FileName:= Path+'.zip';
+      Zip.FileName:= fPath+'.zip';
+      //SetCurrentDirUTF8(ExtractFileDir(Path+'.zip'));
       for i:= 0 to list.Count-1 do
         Zip.Entries.AddFileEntry(list.Strings[i], Format('%.3d%s', [i, ExtractFileExt(list.Strings[i])]));
       Zip.ZipAllFiles;
       Zip.Free;
+      //SetCurrentDirUTF8(oldDir);
       for i:= 0 to list.Count-1 do
-        DeleteFile(list.Strings[i]);
-      RemoveDir(Path);
+        DeleteFileUTF8(list.Strings[i]);
+      RemoveDirUTF8(fPath);
+      RenameFileUTF8(fPath+'.zip', Path+'.zip');
     end;
   finally
     searcher.Free;

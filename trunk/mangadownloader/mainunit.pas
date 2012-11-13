@@ -15,7 +15,7 @@ uses
   ExtCtrls, ComCtrls, Grids, ColorBox, ActnList, Buttons, CheckLst, Spin, Menus,
   customdrawncontrols, VirtualTrees, RichMemo, IniFiles, Process,
   baseunit, data, types, downloads, favorites, windows, LConvEncoding,
-  updatelist, lclproc;
+  updatelist, lclproc, ActiveX;
 
 type
 
@@ -207,6 +207,14 @@ type
 
     procedure pcMainChange(Sender: TObject);
     procedure TrayIconDblClick(Sender: TObject);
+    procedure vtDownloadDragAllowed(Sender: TBaseVirtualTree;
+      Node: PVirtualNode; Column: TColumnIndex; var Allowed: Boolean);
+    procedure vtDownloadDragDrop(Sender: TBaseVirtualTree; Source: TObject;
+      DataObject: IDataObject; Formats: TFormatArray; Shift: TShiftState;
+      const Pt: TPoint; var Effect: Integer; Mode: TDropMode);
+    procedure vtDownloadDragOver(Sender: TBaseVirtualTree; Source: TObject;
+      Shift: TShiftState; State: TDragState; const Pt: TPoint; Mode: TDropMode;
+      var Effect: Integer; var Accept: Boolean);
 
     procedure vtDownloadFreeNode(Sender: TBaseVirtualTree; Node: PVirtualNode);
     procedure vtDownloadGetText(Sender: TBaseVirtualTree; Node: PVirtualNode;
@@ -769,6 +777,37 @@ begin
   WindowState:= wsNormal;
   MainForm.Show;
   TrayIcon.Hide;
+end;
+
+procedure TMainForm.vtDownloadDragAllowed(Sender: TBaseVirtualTree;
+  Node: PVirtualNode; Column: TColumnIndex; var Allowed: Boolean);
+begin
+  Allowed:= TRUE;
+end;
+
+procedure TMainForm.vtDownloadDragDrop(Sender: TBaseVirtualTree;
+  Source: TObject; DataObject: IDataObject; Formats: TFormatArray;
+  Shift: TShiftState; const Pt: TPoint; var Effect: Integer; Mode: TDropMode);
+var
+  pSource, pTarget: PVirtualNode;
+  attMode: TVTNodeAttachMode;
+begin
+  pSource:= TVirtualStringTree(Source).FocusedNode;
+  pTarget:= Sender.DropTargetNode;
+  case Mode of
+    dmNowhere        : attMode:= amNoWhere;
+    dmAbove          : attMode:= amInsertBefore;
+    dmOnNode, dmBelow: attMode:= amInsertAfter;
+  end;
+  Sender.MoveTo(pSource, pTarget, attMode, False);
+  DLManager.Swap(pSource^.Index, pTarget^.Index);
+end;
+
+procedure TMainForm.vtDownloadDragOver(Sender: TBaseVirtualTree;
+  Source: TObject; Shift: TShiftState; State: TDragState; const Pt: TPoint;
+  Mode: TDropMode; var Effect: Integer; var Accept: Boolean);
+begin
+  Accept:= (Source = Sender);
 end;
 
 // Download table

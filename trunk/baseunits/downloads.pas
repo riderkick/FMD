@@ -138,6 +138,8 @@ type
     procedure   StopAllDownloadTasksForExit;
     // Mark the task as "Finished"
     procedure   FinishTask(const taskID: Cardinal);
+    // Swap 2 tasks
+    function    Swap(const id1, id2: Cardinal): Boolean;
     // move a task up
     function    MoveUp(const taskID: Cardinal): Boolean;
     // move a task down
@@ -666,12 +668,11 @@ function    TDownloadThread.DownloadPage: Boolean;
 begin
   if (manager.container.pageLinks.Strings[workPtr] = '') OR
      (manager.container.pageLinks.Strings[workPtr] = 'W') then exit;
-  SetCurrentDir(oldDir);
   SavePage(manager.container.pageLinks.Strings[workPtr],
-           Format('%s/%.3d',
-                  [manager.container.downloadInfo.SaveTo+
-                  '/'+manager.container.chapterName.Strings[manager.container.currentDownloadChapterPtr],
-                  workPtr+1]), manager.container.manager.retryConnect);
+           manager.container.downloadInfo.SaveTo+
+           '/'+manager.container.chapterName.Strings[manager.container.currentDownloadChapterPtr],
+           Format('%.3d', [workPtr+1]),
+           manager.container.manager.retryConnect);
   manager.container.pageLinks.Strings[workPtr]:= '';
   SetCurrentDir(oldDir);
 end;
@@ -1457,6 +1458,18 @@ end;
 
 procedure   TDownloadManager.FinishTask(const taskID: Cardinal);
 begin
+end;
+
+// swap 2 task
+function    TDownloadManager.Swap(const id1, id2: Cardinal): Boolean;
+var
+  tmp: TTaskThreadContainer;
+begin
+  if (id1 >= containers.Count) OR (id2 >= containers.Count) then exit(FALSE);
+  tmp:= containers.Items[id1];
+  containers.Items[id1]:= containers.Items[id2];
+  containers.Items[id2]:= tmp;
+  Result:= TRUE;
 end;
 
 // move a task down

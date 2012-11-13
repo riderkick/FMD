@@ -304,11 +304,11 @@ object MainForm: TMainForm
     Height = 472
     Top = 0
     Width = 580
-    ActivePage = tsInformation
+    ActivePage = tsDownload
     Align = alClient
     Font.Style = [fsBold]
     ParentFont = False
-    TabIndex = 1
+    TabIndex = 0
     TabOrder = 1
     OnChange = pcMainChange
     object tsDownload: TTabSheet
@@ -363,6 +363,9 @@ object MainForm: TMainForm
         TabOrder = 0
         TreeOptions.PaintOptions = [toShowButtons, toShowDropmark, toShowRoot, toThemeAware, toUseBlendedImages]
         TreeOptions.SelectionOptions = [toFullRowSelect, toRightClickSelect]
+        OnDragAllowed = vtDownloadDragAllowed
+        OnDragOver = vtDownloadDragOver
+        OnDragDrop = vtDownloadDragDrop
         OnFreeNode = vtDownloadFreeNode
         OnGetText = vtDownloadGetText
         OnInitNode = vtDownloadInitNode
@@ -1606,7 +1609,7 @@ object MainForm: TMainForm
     Interval = 60000
     OnTimer = tmBackupTimer
     left = 704
-    top = 80
+    top = 72
   end
   object ImageList: TImageList
     left = 80
@@ -1947,6 +1950,6 @@ object MainForm: TMainForm
     }
     OnDblClick = TrayIconDblClick
     left = 80
-    top = 88
+    top = 72
   end
 end

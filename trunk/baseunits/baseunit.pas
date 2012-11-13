@@ -228,7 +228,8 @@ function  SetParams(const input: array of String): String; overload;
 
 procedure CustomGenres(var output: TStringList; input: String);
 
-function  FixURL(const URL: String): String;
+function  FixPath(const path: String): String;
+function  FixLastDir(const path: String): String;
 function  StringFilter(const source: String): String;
 function  HTMLEntitiesFilter(const source: String): String;
 function  StringBreaks(const source: String): String;
@@ -239,7 +240,7 @@ function  PrepareSummaryForHint(const source: String):  String;
 // EN: Get HTML source code from a URL
 // VI: Lấy webcode từ 1 URL
 function  GetPage(var output: TObject; URL: String; const Reconnect: Cardinal): Boolean;
-function  SavePage(URL: String; const Path: String; const Reconnect: Cardinal): Boolean;
+function  SavePage(URL: String;  const Path, name: String; const Reconnect: Cardinal): Boolean;
 
 procedure QuickSortData(var merge: TStringList);
 
@@ -250,6 +251,8 @@ function  ConvertStrToInt32(const aStr  : String): Cardinal;}
 procedure TransferMangaInfo(var dest: TMangaInfo; const source: TMangaInfo);
 
 implementation
+
+uses FileUtil;
 
 function  CorrectFile(const APath: String): String;
 var I: Integer;
@@ -310,11 +313,13 @@ begin
         lcS:= lcS+wS[j];
         Inc(j);
       until wS[j]='/';
-      if DirectoryExists(lcS2+lcS)=FALSE then
-        MkDir(lcS2+lcS);
+      if NOT DirectoryExistsUTF8(lcS2+lcS) then
+      begin
+        CreateDirUTF8(lcS2+lcS);
+      end;
     end;
   end;
-  SetCurrentDir(oldDir);
+  SetCurrentDirUTF8(oldDir);
   Delete(wS, 1, 1);
 end;
 
@@ -447,10 +452,40 @@ begin
     Result:= Result + input[i] + SEPERATOR;
 end;
 
-function  FixURL(const URL: String): String;
+function  FixPath(const path: String): String;
+var
+  i: Cardinal;
 begin
-  Result:= StringReplace(URL, ' ', '%20', [rfReplaceAll]);
-  Result:= StringReplace(Result, ' ', '%20', [rfReplaceAll]);
+  Result:= '';
+  if Length(path)=0 then exit;
+  for i:= 1 to Length(path) do
+  begin
+    if Byte(path[i])>=128 then
+      Result:= Result+'_'
+    else
+      Result:= Result+path[i];
+  end;
+end;
+
+function  FixLastDir(const path: String): String;
+var
+  i, p: Cardinal;
+begin
+  Result:= '';
+  if Length(path)=0 then exit;
+  i:= Length(path);
+  for i:= 1 to Length(path) do
+  begin
+    Result:= Result+path[i];
+    if path[i] = '/' then
+      p:= i;
+  end;
+  for i:= p to Length(Result)-1 do
+    if Byte(Result[i])>=128 then
+    begin
+      Delete(Result, i, 1);
+      Insert('_', Result, i);
+    end;
 end;
 
 function  StringFilter(const source: String): String;
@@ -662,12 +697,12 @@ begin
   Result:= TRUE;
 end;
 
-function  SavePage(URL: String; const Path: String; const Reconnect: Cardinal): Boolean;
+function  SavePage(URL: String; const Path, name: String; const Reconnect: Cardinal): Boolean;
 var
-  header : array [0..3] of Byte;
-  ext    : String;
-  HTTP   : THTTPSend;
-  counter: Cardinal = 0;
+  header  : array [0..3] of Byte;
+  ext     : String;
+  HTTP    : THTTPSend;
+  counter : Cardinal = 0;
 begin
   Result:= FALSE;
   HTTP:= THTTPSend.Create;
@@ -734,7 +769,9 @@ begin
     ext:= '.gif'
   else
     ext:= '';
-  HTTP.Document.SaveToFile(Path+ext);
+  SetCurrentDirUTF8(Path);
+  HTTP.Document.SaveToFile(name+ext);
+  SetCurrentDirUTF8(oldDir);
   HTTP.Free;
   Result:= TRUE;
 end;
@@ -844,7 +881,7 @@ end;
 
 procedure   TDownloadPageThread.Execute;
 begin
-  isSuccess:= SavePage(URL, Path, Retry);
+ // isSuccess:= SavePage(URL, Path, Retry);
   isDone   := TRUE;
   Suspend;
 end;
