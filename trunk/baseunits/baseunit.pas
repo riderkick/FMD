@@ -133,6 +133,15 @@ var
   infoStatus,
   infoSummary,
   infoLink ,
+
+  stDownloadManga,
+  stDownloadStatus,
+  stDownloadProgress,
+  stDownloadWebsite,
+  stDownloadSaveto,
+  stDownloadAdded,
+  stFavoritesCurrentChapter,
+
   stDlgUpdateAlreadyRunning,
   stDlgNewManga,
   stDlgQuit,

@@ -713,7 +713,7 @@ end;
 
 procedure   TTaskThread.ShowBaloon;
 begin
-  MainForm.TrayIcon.BalloonHint:= '"'+container.downloadInfo.title+'" - Done';
+  MainForm.TrayIcon.BalloonHint:= '"'+container.downloadInfo.title+'" - '+stFinish;
   MainForm.TrayIcon.ShowBalloonHint;
 end;
 

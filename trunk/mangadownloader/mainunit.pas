@@ -796,11 +796,19 @@ begin
   pTarget:= Sender.DropTargetNode;
   case Mode of
     dmNowhere        : attMode:= amNoWhere;
-    dmAbove          : attMode:= amInsertBefore;
-    dmOnNode, dmBelow: attMode:= amInsertAfter;
+    dmAbove          :
+      begin
+        attMode:= amInsertBefore;
+        DLManager.Swap(pSource^.Index, pTarget^.Index);
+      end;
+    dmOnNode, dmBelow:
+      begin
+        attMode:= amInsertAfter;
+        DLManager.Swap(pSource^.Index, pTarget^.Index);
+      end;
   end;
   Sender.MoveTo(pSource, pTarget, attMode, False);
-  DLManager.Swap(pSource^.Index, pTarget^.Index);
+
 end;
 
 procedure TMainForm.vtDownloadDragOver(Sender: TBaseVirtualTree;
@@ -1400,10 +1408,15 @@ begin
   rgOptionCompress.Caption:= language.ReadString(lang, 'rgOptionCompressCaption', '');         ;
 
   dlgSaveTo.Title         := language.ReadString(lang, 'dlgSaveToTitle', '');
+
+  miUp.Caption            := language.ReadString(lang, 'miUp', '');
+  miDown.Caption          := language.ReadString(lang, 'miDown', '');
   miDownloadStop.Caption  := language.ReadString(lang, 'miDownloadStopCaption', '');
   miDownloadRemuse.Caption:= language.ReadString(lang, 'miDownloadStopRemuse', '');
   miDownloadRemove.Caption:= language.ReadString(lang, 'miDownloadRemoveCaption', '');
   miDownloadRemoveFinishedTasks.Caption:= language.ReadString(lang, 'miDownloadRemoveFinishedTasksCaption', '');
+  miOpenFolder.Caption    := language.ReadString(lang, 'miOpenFolder', '');
+
   miChapterListCheckSelected.Caption:= language.ReadString(lang, 'miChapterListCheckSelectedCaption', '');
   miChapterListUncheckSelected.Caption:= language.ReadString(lang, 'miChapterListUncheckSelectedCaption', '');
   miChapterListCheckAll.Caption:= language.ReadString(lang, 'miChapterListCheckAllCaption', '');
@@ -1430,6 +1443,14 @@ begin
   lbFilterStatus.Caption := infoStatus;
   lbFilterSummary.Caption:= infoSummary;
 
+  stDownloadManga          := language.ReadString(lang, 'stDownloadManga', '');
+  stDownloadStatus         := language.ReadString(lang, 'stDownloadStatus', '');
+  stDownloadProgress       := language.ReadString(lang, 'stDownloadProgress', '');
+  stDownloadWebsite        := language.ReadString(lang, 'stDownloadWebsite', '');
+  stDownloadSaveto         := language.ReadString(lang, 'stDownloadSaveto', '');
+  stDownloadAdded          := language.ReadString(lang, 'stDownloadAdded', '');
+  stFavoritesCurrentChapter:= language.ReadString(lang, 'stFavoritesCurrentChapter', '');
+
   stDlgUpdateAlreadyRunning:= language.ReadString(lang, 'stDlgUpdateAlreadyRunning', '');
   stDlgNewManga            := language.ReadString(lang, 'stDlgNewManga', '');
   stDlgQuit                := language.ReadString(lang, 'stDlgQuit', '');
@@ -1454,21 +1475,33 @@ begin
     for i:= 0 to DLManager.containers.Count - 1 do
     begin
      // if (DLManager.containers.Items[pos] <> nil) OR (NOT DLManager.containers.Items[pos].thread.isTerminated) then
-      case DLManager.containers.Items[pos].Status of
-        STATUS_STOP    : DLManager.containers.Items[pos].downloadInfo.Status:= stStop;
-        STATUS_WAIT    : DLManager.containers.Items[pos].downloadInfo.Status:= stWait;
-        STATUS_DOWNLOAD: DLManager.containers.Items[pos].downloadInfo.Status:= stDownloading;
-        STATUS_FINISH  : DLManager.containers.Items[pos].downloadInfo.Status:= stFinish;
+      case DLManager.containers.Items[i].Status of
+        STATUS_STOP    : DLManager.containers.Items[i].downloadInfo.Status:= stStop;
+        STATUS_WAIT    : DLManager.containers.Items[i].downloadInfo.Status:= stWait;
+        STATUS_DOWNLOAD: DLManager.containers.Items[i].downloadInfo.Status:= stDownloading;
+        STATUS_FINISH  : DLManager.containers.Items[i].downloadInfo.Status:= stFinish;
       end;
     end;
   end;
+
+  vtDownload.Header.Columns.Items[0].Text:= stDownloadManga;
+  vtDownload.Header.Columns.Items[1].Text:= stDownloadStatus;
+  vtDownload.Header.Columns.Items[2].Text:= stDownloadProgress;
+  vtDownload.Header.Columns.Items[3].Text:= stDownloadWebsite;
+  vtDownload.Header.Columns.Items[4].Text:= stDownloadSaveto;
+  vtDownload.Header.Columns.Items[5].Text:= stDownloadAdded;
+
+  vtFavorites.Header.Columns.Items[0].Text:= stDownloadManga;
+  vtFavorites.Header.Columns.Items[1].Text:= stFavoritesCurrentChapter;
+  vtFavorites.Header.Columns.Items[2].Text:= stDownloadWebsite;
+  vtFavorites.Header.Columns.Items[3].Text:= stDownloadSaveto;
 
   vtDownload.Repaint;
 end;
 
 procedure TMainForm.tmBackupTimer(Sender: TObject);
 begin
-  DLManager.Backup;
+  //DLManager.Backup;
 end;
 
 end.

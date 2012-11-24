@@ -2,11 +2,11 @@ object MainForm: TMainForm
   Left = 241
   Height = 492
   Top = 77
-  Width = 775
+  Width = 755
   Align = alBottom
   Caption = 'Free Manga Downloader'
   ClientHeight = 492
-  ClientWidth = 775
+  ClientWidth = 755
   OnClose = FormClose
   OnCreate = FormCreate
   OnWindowStateChange = FormWindowStateChange
@@ -303,7 +303,7 @@ object MainForm: TMainForm
     Left = 195
     Height = 472
     Top = 0
-    Width = 580
+    Width = 560
     ActivePage = tsDownload
     Align = alClient
     Font.Style = [fsBold]
@@ -314,12 +314,12 @@ object MainForm: TMainForm
     object tsDownload: TTabSheet
       Caption = 'Downloads'
       ClientHeight = 446
-      ClientWidth = 572
+      ClientWidth = 552
       object vtDownload: TVirtualStringTree
         Left = 0
         Height = 446
         Top = 0
-        Width = 572
+        Width = 552
         Align = alClient
         DefaultText = 'Node'
         Header.AutoSizeIndex = 0
@@ -517,26 +517,26 @@ object MainForm: TMainForm
     object tsFilter: TTabSheet
       Caption = 'Filter'
       ClientHeight = 446
-      ClientWidth = 572
+      ClientWidth = 552
       object sbFilter: TScrollBox
         Left = 0
         Height = 446
         Top = 0
-        Width = 572
-        HorzScrollBar.Page = 568
+        Width = 552
+        HorzScrollBar.Page = 548
         VertScrollBar.Page = 442
         Align = alClient
         ClientHeight = 442
-        ClientWidth = 568
+        ClientWidth = 548
         TabOrder = 0
         object pnGenres: TPanel
           Left = 0
           Height = 248
           Top = 0
-          Width = 568
+          Width = 548
           Align = alTop
           ClientHeight = 248
-          ClientWidth = 568
+          ClientWidth = 548
           TabOrder = 0
           object CheckBox1: TCheckBox
             Left = 23
@@ -955,10 +955,10 @@ object MainForm: TMainForm
           Left = 0
           Height = 192
           Top = 248
-          Width = 568
+          Width = 548
           Align = alTop
           ClientHeight = 192
-          ClientWidth = 568
+          ClientWidth = 548
           ParentFont = False
           TabOrder = 1
           object rbOne: TRadioButton
@@ -1151,13 +1151,13 @@ object MainForm: TMainForm
     end
     object tsFavorites: TTabSheet
       Caption = 'Favorites'
-      ClientHeight = 420
-      ClientWidth = 547
+      ClientHeight = 446
+      ClientWidth = 552
       object vtFavorites: TVirtualStringTree
         Left = 0
-        Height = 352
+        Height = 378
         Top = 0
-        Width = 547
+        Width = 552
         Align = alTop
         Anchors = [akTop, akLeft, akRight, akBottom]
         DefaultText = 'Node'
@@ -1198,7 +1198,7 @@ object MainForm: TMainForm
       object btFavoritesCheckNewChapter: TBitBtn
         Left = 33
         Height = 40
-        Top = 370
+        Top = 396
         Width = 160
         Anchors = [akLeft, akBottom]
         Caption = 'Check for new chapter'
@@ -1208,21 +1208,21 @@ object MainForm: TMainForm
     end
     object tsOption: TTabSheet
       Caption = 'Options'
-      ClientHeight = 420
-      ClientWidth = 547
+      ClientHeight = 446
+      ClientWidth = 552
       object pnOptions: TPageControl
         Left = 9
-        Height = 327
+        Height = 353
         Top = 26
-        Width = 528
+        Width = 533
         ActivePage = tsLanguage
         Anchors = [akTop, akLeft, akRight, akBottom]
         TabIndex = 0
         TabOrder = 0
         object tsLanguage: TTabSheet
           Caption = 'Language'
-          ClientHeight = 301
-          ClientWidth = 520
+          ClientHeight = 327
+          ClientWidth = 525
           object cbLanguages: TComboBox
             Left = 28
             Height = 21
@@ -1239,18 +1239,18 @@ object MainForm: TMainForm
         end
         object tsConnections: TTabSheet
           Caption = 'Connections'
-          ClientHeight = 301
-          ClientWidth = 520
+          ClientHeight = 327
+          ClientWidth = 525
           object sbDownloadConnections: TScrollBox
             Left = 0
-            Height = 301
+            Height = 327
             Top = 0
-            Width = 520
-            HorzScrollBar.Page = 516
-            VertScrollBar.Page = 297
+            Width = 525
+            HorzScrollBar.Page = 521
+            VertScrollBar.Page = 323
             Align = alClient
-            ClientHeight = 297
-            ClientWidth = 516
+            ClientHeight = 323
+            ClientWidth = 521
             TabOrder = 0
             object cbOptionUseProxy: TCheckBox
               Left = 32
@@ -1266,11 +1266,11 @@ object MainForm: TMainForm
               Left = 12
               Height = 104
               Top = 178
-              Width = 498
+              Width = 503
               Anchors = [akTop, akLeft, akRight]
               Caption = 'Proxy config'
               ClientHeight = 84
-              ClientWidth = 494
+              ClientWidth = 499
               Enabled = False
               ParentFont = False
               TabOrder = 1
@@ -1318,7 +1318,7 @@ object MainForm: TMainForm
               object lbOptionUser: TLabel
                 AnchorSideLeft.Side = asrBottom
                 AnchorSideTop.Side = asrBottom
-                Left = 242
+                Left = 247
                 Height = 13
                 Top = 14
                 Width = 48
@@ -1329,7 +1329,7 @@ object MainForm: TMainForm
               object lbOptionPass: TLabel
                 AnchorSideLeft.Side = asrBottom
                 AnchorSideTop.Side = asrBottom
-                Left = 242
+                Left = 247
                 Height = 13
                 Top = 46
                 Width = 46
@@ -1340,7 +1340,7 @@ object MainForm: TMainForm
               object edOptionUser: TEdit
                 AnchorSideLeft.Side = asrBottom
                 AnchorSideTop.Side = asrBottom
-                Left = 302
+                Left = 307
                 Height = 23
                 Top = 7
                 Width = 154
@@ -1355,7 +1355,7 @@ object MainForm: TMainForm
               object edOptionPass: TEdit
                 AnchorSideLeft.Side = asrBottom
                 AnchorSideTop.Side = asrBottom
-                Left = 302
+                Left = 307
                 Height = 23
                 Top = 39
                 Width = 154
@@ -1433,13 +1433,13 @@ object MainForm: TMainForm
         end
         object tsSaveTo: TTabSheet
           Caption = 'Save to'
-          ClientHeight = 321
-          ClientWidth = 520
+          ClientHeight = 327
+          ClientWidth = 525
           object edOptionDefaultPath: TLabeledEdit
             Left = 28
             Height = 21
             Top = 42
-            Width = 456
+            Width = 461
             Anchors = [akTop, akLeft, akRight]
             EditLabel.AnchorSideLeft.Control = edOptionDefaultPath
             EditLabel.AnchorSideRight.Control = edOptionDefaultPath
@@ -1448,7 +1448,7 @@ object MainForm: TMainForm
             EditLabel.Left = 28
             EditLabel.Height = 13
             EditLabel.Top = 26
-            EditLabel.Width = 456
+            EditLabel.Width = 461
             EditLabel.Caption = 'Choose default download path:'
             EditLabel.ParentColor = False
             EditLabel.ParentFont = False
@@ -1459,7 +1459,7 @@ object MainForm: TMainForm
             Left = 28
             Height = 60
             Top = 82
-            Width = 461
+            Width = 466
             Anchors = [akTop, akLeft, akRight]
             AutoFill = True
             Caption = 'Save downloaded chapters as'
@@ -1472,7 +1472,7 @@ object MainForm: TMainForm
             ChildSizing.Layout = cclLeftToRightThenTopToBottom
             ChildSizing.ControlsPerLine = 2
             ClientHeight = 40
-            ClientWidth = 457
+            ClientWidth = 462
             Columns = 2
             ItemIndex = 0
             Items.Strings = (
@@ -1485,9 +1485,9 @@ object MainForm: TMainForm
         end
       end
       object btOptionApply: TButton
-        Left = 38
+        Left = 39
         Height = 33
-        Top = 369
+        Top = 395
         Width = 99
         Anchors = [akBottom]
         Caption = 'Apply'
@@ -1509,7 +1509,7 @@ object MainForm: TMainForm
     Left = 0
     Height = 20
     Top = 472
-    Width = 775
+    Width = 755
     Panels = <    
       item
         Width = 150
