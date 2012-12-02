@@ -44,6 +44,8 @@ type
     procedure   Left(const pos: Cardinal);
     procedure   Right(const pos: Cardinal);
   public
+    // store manga name that has new chapter after checking
+    newMangaStr    : String;
     isRunning      : Boolean;
     Count          : Cardinal;
     favorites      : TIniFile;
@@ -179,7 +181,8 @@ end;
 
 procedure   TFavoriteManager.Run;
 var
-  i: Cardinal;
+  i          : Cardinal;
+  newMangaStr: String;
 begin
   if isRunning then
   begin
@@ -219,8 +222,16 @@ begin
                mtInformation, [mbOk], 0)
   else
   begin
+    newMangaStr:= '';
+    for i:= 0 to Count-1 do
+    begin
+      currentChapter:= StrToInt(favoriteInfo[i].currentChapter);
+      newChapter    := mangaInfo[i].numChapter;
+      if newChapter > currentChapter then
+        newMangaStr:= newMangaStr + #10#13+ ' - '+favoriteInfo[i].title + ' ('+favoriteInfo[i].currentChapter+' -> '+IntToStr(newChapter)+')';
+    end;
     if MessageDlg('',
-                 Format(stDlgHasNewChapter, [newC]),
+                 Format(stDlgHasNewChapter, [newC]) + #10#13 + newMangaStr,
                  mtInformation, [mbYes, mbNo], 0) = mrYes then
       isNow:= TRUE
     else
@@ -231,6 +242,7 @@ begin
       newChapter    := mangaInfo[i].numChapter;
       if newChapter > currentChapter then
       begin
+        newMangaStr:= newMangaStr + #10#13+ ' - '+favoriteInfo[i].title;
         DLManager.AddTask;
         pos:= DLManager.containers.Count-1;
         DLManager.containers.Items[pos].mangaSiteID:= GetMangaSiteID(mangaInfo[i].website);

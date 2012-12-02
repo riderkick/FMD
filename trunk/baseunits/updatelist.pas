@@ -247,7 +247,7 @@ begin
       dataProcess.LoadFromFile(website);
       names.Clear;
       links.Clear;
-     {
+
       workPtr:= 0;
       getInfo(1, CS_DIRECTORY_COUNT);
       while threadCount > 0 do Sleep(100);
@@ -255,16 +255,17 @@ begin
       workPtr:= 0;
       getInfo(directoryCount, CS_DIRECTORY_PAGE);
       while threadCount > 0 do Sleep(100);
-      }
-      names.LoadFromFile(website+'_names.txt');
-      links.LoadFromFile(website+'_links.txt');
+
+     // names.LoadFromFile(website+'_names.txt');
+     // links.LoadFromFile(website+'_links.txt');
      // names.SaveToFile(website+'_names.txt');
      // links.SaveToFile(website+'_links.txt');
       mainDataProcess:= TDataProcess.Create;
       mainDataProcess.LoadFromFile(website);
 
+    {}
       j:= 0;
-    {  repeat
+      repeat
         if Find(links.Strings[j], mainDataProcess.Link, Integer(workPtr)) then
         begin
           links.Delete(j);
@@ -278,8 +279,8 @@ begin
       begin
         Synchronize(DlgReport);
         continue;
-      end;  }
-      workPtr:= mainDataProcess.Data.Count;
+      end;  {}
+      workPtr:= 0;//mainDataProcess.Data.Count;
 
       getInfo(links.Count, CS_INFO);
       Sleep(100);

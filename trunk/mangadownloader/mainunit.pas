@@ -346,6 +346,7 @@ begin
   // btUpdateList.Glyph.LoadFromFile('images/download_18.png');
   currentWebsite:= cbSelectManga.Items.Strings[cbSelectManga.ItemIndex];
   DLManager.CheckAndActiveTaskAtStartup;
+  TrayIcon.Show;
 end;
 
 procedure TMainForm.cbOptionUseProxyChange(Sender: TObject);
@@ -595,6 +596,12 @@ end;
 
 procedure TMainForm.miFavoritesRemoveClick(Sender: TObject);
 begin
+  if favorites.isRunning then
+  begin
+    MessageDlg('', stDlgFavoritesIsRunning,
+                mtInformation, [mbYes, mbNo], 0);
+    exit;
+  end;
   if NOT Assigned(vtFavorites.FocusedNode) then exit;
  // if MessageDlg('Question', 'Are you sure you want to remove?',
  //               mtConfirmation, [mbYes, mbNo], 0) = mrNo then exit;
@@ -607,6 +614,12 @@ var
   s: String;
   i: Integer;
 begin
+  if favorites.isRunning then
+  begin
+    MessageDlg('', stDlgFavoritesIsRunning,
+                mtInformation, [mbYes, mbNo], 0);
+    exit;
+  end;
   if NOT Assigned(vtFavorites.FocusedNode) then exit;
   s:= favorites.favoriteInfo[vtFavorites.FocusedNode.Index].currentChapter;
   repeat
@@ -623,6 +636,12 @@ end;
 
 procedure TMainForm.miFavoritesChangeSaveToClick(Sender: TObject);
 begin
+  if favorites.isRunning then
+  begin
+    MessageDlg('', stDlgFavoritesIsRunning,
+                mtInformation, [mbYes, mbNo], 0);
+    exit;
+  end;
   if NOT Assigned(vtFavorites.FocusedNode) then exit;
   if InputQuery('', stDlgTypeInNewSavePath, favorites.favoriteInfo[vtFavorites.FocusedNode.Index].SaveTo) then
   begin
@@ -776,7 +795,8 @@ procedure TMainForm.TrayIconDblClick(Sender: TObject);
 begin
   WindowState:= wsNormal;
   MainForm.Show;
-  TrayIcon.Hide;
+ // TrayIcon.Hide;
+  TrayIcon.Show;
 end;
 
 procedure TMainForm.vtDownloadDragAllowed(Sender: TBaseVirtualTree;
