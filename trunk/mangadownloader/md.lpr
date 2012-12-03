@@ -1,6 +1,10 @@
 {$define MANGADOWNLOADER}
 
 uses
+ // {$IFDEF UNIX}{$IFDEF UseCThreads}
+ // cthreads,
+ // {$ENDIF}{$ENDIF}
+  {$DEFINE UseCThreads}
   {$IFDEF UNIX}{$IFDEF UseCThreads}
   cthreads,
   {$ENDIF}{$ENDIF}
@@ -15,4 +19,4 @@ begin
   Application.CreateForm(TMainForm, MainForm);
   Application.Run;
 end.
-
+

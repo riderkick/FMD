@@ -48,6 +48,7 @@ type
   TTaskThread = class(TThread)
   protected
     procedure   CheckOut;
+    procedure   Repaint;
     procedure   Execute; override;
     procedure   Compress;
     // show notification when download completed
@@ -696,6 +697,11 @@ begin
   inherited Destroy;
 end;
 
+procedure   TTaskThread.Repaint;
+begin
+  MainForm.vtDownload.Repaint;
+end;
+
 procedure   TTaskThread.Compress;
 var
   Compresser: TCompress;
@@ -820,7 +826,11 @@ begin
         container.downloadInfo.Progress:= Format('%d/%d', [container.workPtr, container.pageNumber]);
         container.downloadInfo.Status  := Format('%s (%d/%d)', [stPreparing, container.currentDownloadChapterPtr, container.chapterLinks.Count]);
         Inc(container.downloadInfo.iProgress);
+        {$IFDEF WIN32}
         MainForm.vtDownload.Repaint;
+        {$ELSE}
+        Synchronize(Repaint);
+        {$ENDIF}
       end;
       WaitFor;
     end;
@@ -837,7 +847,11 @@ begin
       container.downloadInfo.Progress:= Format('%d/%d', [container.workPtr, container.pageLinks.Count]);
       container.downloadInfo.Status  := Format('%s (%d/%d)', [stDownloading, container.currentDownloadChapterPtr, container.chapterLinks.Count]);
       Inc(container.downloadInfo.iProgress);
+      {$IFDEF WIN32}
       MainForm.vtDownload.Repaint;
+      {$ELSE}
+      Synchronize(Repaint);
+      {$ENDIF}
     end;
     WaitFor;
     Synchronize(Compress);
@@ -863,14 +877,22 @@ begin
       container.downloadInfo.Progress:= '';
       container.Status:= STATUS_FINISH;
       container.manager.CheckAndActiveTask;
+      {$IFDEF WIN32}
       MainForm.vtDownload.Repaint;
+      {$ELSE}
+      Synchronize(Repaint);
+      {$ENDIF}
     end
     else
     begin
       container.downloadInfo.Status  := Format('%s (%d/%d)', [stStop, container.currentDownloadChapterPtr, container.chapterLinks.Count]);
       container.Status:= STATUS_STOP;
       container.manager.CheckAndActiveTask;
+      {$IFDEF WIN32}
       MainForm.vtDownload.Repaint;
+      {$ELSE}
+      Synchronize(Repaint);
+      {$ENDIF}
     end;
   end;
   {if check then
@@ -1540,4 +1562,4 @@ begin
 end;
 
 end.
-
+

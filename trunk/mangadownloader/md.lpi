@@ -8,6 +8,7 @@
       <MainUnit Value="0"/>
       <Title Value="md"/>
       <ResourceType Value="res"/>
+      <UseXPManifest Value="True"/>
       <Icon Value="0"/>
     </General>
     <i18n>

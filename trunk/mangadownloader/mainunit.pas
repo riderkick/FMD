@@ -14,8 +14,8 @@ uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
   ExtCtrls, ComCtrls, Grids, ColorBox, ActnList, Buttons, CheckLst, Spin, Menus,
   customdrawncontrols, VirtualTrees, RichMemo, IniFiles, Process,
-  baseunit, data, types, downloads, favorites, windows, LConvEncoding,
-  updatelist, lclproc, ActiveX;
+  baseunit, data, types, downloads, favorites, LConvEncoding,
+  updatelist, lclproc{, ActiveX};
 
 type
 
@@ -210,7 +210,7 @@ type
     procedure vtDownloadDragAllowed(Sender: TBaseVirtualTree;
       Node: PVirtualNode; Column: TColumnIndex; var Allowed: Boolean);
     procedure vtDownloadDragDrop(Sender: TBaseVirtualTree; Source: TObject;
-      DataObject: IDataObject; Formats: TFormatArray; Shift: TShiftState;
+      DataObject: TObject; Formats: TFormatArray; Shift: TShiftState;
       const Pt: TPoint; var Effect: Integer; Mode: TDropMode);
     procedure vtDownloadDragOver(Sender: TBaseVirtualTree; Source: TObject;
       Shift: TShiftState; State: TDragState; const Pt: TPoint; Mode: TDropMode;
@@ -299,8 +299,8 @@ implementation
 procedure TMainForm.FormCreate(Sender: TObject);
 begin
   isUpdating := FALSE;
-  ticks      := GetTickCount;
-  backupTicks:= GetTickCount;
+ // ticks      := GetTickCount;
+ // backupTicks:= GetTickCount;
   oldDir     := GetCurrentDir;
   oldDir     := CorrectFile(oldDir);
 
@@ -762,12 +762,14 @@ procedure TMainForm.miOpenFolderClick(Sender: TObject);
 var
   Process: TProcess;
 begin
+  {$IFDEF WIN32}
   if NOT Assigned(vtDownload.FocusedNode) then exit;
   Process:= TProcess.Create(nil);
   Process.CommandLine:= 'explorer.exe /e, '+
                          StringReplace(DLManager.containers.Items[vtDownload.FocusedNode.Index].downloadInfo.SaveTo, '/', '\', [rfReplaceAll]);
   Process.Execute;
   Process.Free;
+  {$ENDIF}
 end;
 
 procedure TMainForm.pcMainChange(Sender: TObject);
@@ -806,7 +808,7 @@ begin
 end;
 
 procedure TMainForm.vtDownloadDragDrop(Sender: TBaseVirtualTree;
-  Source: TObject; DataObject: IDataObject; Formats: TFormatArray;
+  Source: TObject; DataObject: TObject; Formats: TFormatArray;
   Shift: TShiftState; const Pt: TPoint; var Effect: Integer; Mode: TDropMode);
 var
   pSource, pTarget: PVirtualNode;
@@ -1071,7 +1073,7 @@ begin
     with rmInformation do
     begin
       Lines.Add(title);
-
+      {$IFDEF WIN32}
       GetTextAttributes(0, fp);
       fp.Style:= [fsBold, fsUnderline];
       fp.Size := fp.Size+1;
@@ -1080,6 +1082,7 @@ begin
         Length(UTF8ToUTF16(Lines[Lines.Count-1]))-Lines.Count-1,
         Length(UTF8ToUTF16(Lines[Lines.Count-1])),
         fp);
+      {$ENDIF}
       Lines.Add(infoText);
     end;
 end;
@@ -1372,7 +1375,7 @@ var
   i, p    : Cardinal;
 begin
   if pos < 0 then exit;
-  language:= TIniFile.Create('config\languages.ini');
+  language:= TIniFile.Create(CONFIG_FOLDER + LANGUAGE_FILE);
 
   p:= language.ReadInteger('select', 'numberOfLanguages', 0);
   if p <> 0 then

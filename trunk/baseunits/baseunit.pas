@@ -52,7 +52,11 @@ const
   Symbols: array [0..8] of Char =
     ('\', '/', ':', '*', '?', '"', '<', '>', '|');
 
+  {$IFDEF WIN32}
   DEFAULT_PATH  = 'c:\downloads';
+  {$ELSE}
+  DEFAULT_PATH  = '/downloads';
+  {$ENDIF}
 
   WORK_FOLDER   = 'works/';
   WORK_FILE     = 'works.ini';
@@ -62,6 +66,7 @@ const
   DATA_EXT      = '.dat';
   CONFIG_FOLDER = 'config/';
   CONFIG_FILE   = 'config.ini';
+  LANGUAGE_FILE = 'languages.ini';
 
   OPTION_MANGALIST = 0;
   OPTION_RECONNECT = 1;
@@ -302,7 +307,11 @@ begin
   lcS2:= '';
   if wS[2]<>':' then
   begin
+    {$IFDEF WIN32}
     lcS2:= CorrectFile(oldDir);
+    {$ELSE}
+    lcS2:= '';
+    {$ENDIF}
     Insert('/', wS, 1);
   end
   else
@@ -779,6 +788,7 @@ begin
   else
     ext:= '';
   SetCurrentDirUTF8(Path);
+ // HTTP.Document.SaveToFile('/home/akarin/FreeSpace/FMD/trunk/mangadownloader/downloads/' + name+ext);
   HTTP.Document.SaveToFile(name+ext);
   SetCurrentDirUTF8(oldDir);
   HTTP.Free;
@@ -895,4 +905,4 @@ begin
   Suspend;
 end;
 
-end.
+end.
