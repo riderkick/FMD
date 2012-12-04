@@ -1,6 +1,6 @@
 {
         File: mainunit.pas
-        License: GPLv3
+        License: GPLv2
         This unit is part of Free Manga Downloader
 }
 
@@ -217,6 +217,9 @@ type
       var Effect: Integer; var Accept: Boolean);
 
     procedure vtDownloadFreeNode(Sender: TBaseVirtualTree; Node: PVirtualNode);
+    procedure vtDownloadGetHint(Sender: TBaseVirtualTree; Node: PVirtualNode;
+      Column: TColumnIndex; var LineBreakStyle: TVTTooltipLineBreakStyle;
+      var HintText: String);
     procedure vtDownloadGetText(Sender: TBaseVirtualTree; Node: PVirtualNode;
       Column: TColumnIndex; TextType: TVSTTextType; var CellText: String);
     procedure vtDownloadInitNode(Sender: TBaseVirtualTree; ParentNode,
@@ -238,6 +241,9 @@ type
 
     procedure tmBackupTimer(Sender: TObject);
   public
+    // only for batoto: the directory page from the last time we check the site
+    batotoLastDirectoryPage: Cardinal;
+
     isUpdating  : Boolean;
     options     : TIniFile;
     favorites   : TFavoriteManager;
@@ -245,7 +251,7 @@ type
     mangaInfo   : TMangaInfo;
     DLManager   : TDownloadManager;
     updateList  : TUpdateMangaManagerThread;
-    cover       : TJPEGImage;
+    cover       : TPicture;
     ticks       : Cardinal;
     backupTicks : Cardinal;
 
@@ -322,7 +328,7 @@ begin
   ShowInformation;
   mangaInfo.chapterName := TStringList.Create;
   mangaInfo.chapterLinks:= TStringList.Create;
-  cover:= TJPEGImage.Create;
+  cover:= TPicture.Create;
 
   vtMangaList.NodeDataSize := SizeOf(TMangaListItem);
   vtMangaList.RootNodeCount:= dataProcess.filterPos.Count;
@@ -385,6 +391,7 @@ begin
   if MessageDlg('', stDlgQuit,
                 mtConfirmation, [mbYes, mbNo], 0) = mrYes then
   begin
+    options.WriteInteger('general', 'batotoLastDirectoryPage', batotoLastDirectoryPage);
     SaveFormInformation;
     DLManager.StopAllDownloadTasksForExit;
     dataProcess.SaveToFile;
@@ -860,6 +867,39 @@ begin
     Finalize(data^);
 end;
 
+procedure TMainForm.vtDownloadGetHint(Sender: TBaseVirtualTree;
+  Node: PVirtualNode; Column: TColumnIndex;
+  var LineBreakStyle: TVTTooltipLineBreakStyle; var HintText: String);
+var
+  l,
+  i: Cardinal;
+begin
+  l:= DLManager.containers.Items[Node.Index].chapterLinks.Count;
+  if l > 0 then
+  begin
+    HintText:= '';
+    if l < 5 then
+    begin
+      for i:= 0 to l-1 do
+      HintText:= HintText + #10#13 +
+        DLManager.containers.Items[Node.Index].chapterName.Strings[i] + ' : ' +
+        DLManager.containers.Items[Node.Index].chapterLinks.Strings[i];
+    end
+    else
+    begin
+      for i:= 0 to 1 do
+      HintText:= HintText + #10#13 +
+        DLManager.containers.Items[Node.Index].chapterName.Strings[i] + ' : ' +
+        DLManager.containers.Items[Node.Index].chapterLinks.Strings[i];
+      HintText:= HintText + #10#13 + '...';
+      for i:= l-2 to l-1 do
+      HintText:= HintText + #10#13 +
+        DLManager.containers.Items[Node.Index].chapterName.Strings[i] + ' : ' +
+        DLManager.containers.Items[Node.Index].chapterLinks.Strings[i];
+    end;
+  end;
+end;
+
 procedure TMainForm.vtDownloadGetText(Sender: TBaseVirtualTree;
   Node: PVirtualNode; Column: TColumnIndex; TextType: TVSTTextType;
   var CellText: String);
@@ -1089,9 +1129,10 @@ end;
 
 procedure TMainForm.ShowInformation;
 var
-  data: PMangaListItem;
-  cp  : TPoint;
-  root: String;
+  data  : PMangaListItem;
+  cp    : TPoint;
+  root  : String;
+  header: array [0..3] of Byte;
 
   function  GetMangaInfo(const website, URL: String): Boolean;
   var
@@ -1168,6 +1209,19 @@ begin
     root:= OURMANGA_ROOT + root;
   end
   else
+  if cbSelectManga.Items[cbSelectManga.ItemIndex] = BATOTO_NAME then
+  begin
+    root:= dataProcess.Param[
+      dataProcess.filterPos.Items[vtMangaList.FocusedNode.Index], DATA_PARAM_LINK];
+    if NOT GetMangaInfo(root, BATOTO_NAME) then
+    begin
+      MessageDlg('', stDlgCannotGetMangaInfo,
+                 mtInformation, [mbYes], 0);
+      exit;
+    end;
+    root:= BATOTO_ROOT + root;
+  end
+  else
   if cbSelectManga.Items[cbSelectManga.ItemIndex] = VNSHARING_NAME then
   begin
     root:= dataProcess.Param[
@@ -1206,8 +1260,16 @@ begin
 
     Clear;
 
-    if GetPage(TObject(cover), mangaInfo.coverLink, 1) then
-      imCover.Picture.Assign(cover);
+   { if (Pos('.jpg', mangaInfo.coverLink)>0) OR
+       (Pos('.jpeg', mangaInfo.coverLink)>0) then  }
+      if GetPage(TObject(cover), mangaInfo.coverLink, 1) then
+      begin
+     { cover.(header[0], 4);
+      if (header[0] = JPG_HEADER[0]) AND
+         (header[1] = JPG_HEADER[1]) AND
+         (header[2] = JPG_HEADER[2]) then
+     }   imCover.Picture.Assign(cover);
+      end;
 
     data:= vtMangaList.GetNodedata(vtMangaList.FocusedNode);
 
@@ -1257,7 +1319,9 @@ begin
     User:= options.ReadString('connections', 'User', '');
   end;
  // cbLanguages.ItemIndex := options.ReadInteger('languages', 'Select', 0);
-  cbAddAsStopped.Checked:= options.ReadBool('general', 'AddAsStopped', FALSE);
+
+  batotoLastDirectoryPage:= options.ReadInteger('general', 'batotoLastDirectoryPage', 244);
+  cbAddAsStopped.Checked := options.ReadBool('general', 'AddAsStopped', FALSE);
   LoadLanguage(options.ReadInteger('languages', 'Select', 0));
 
   DLManager.maxDLTasks         := options.ReadInteger('connections', 'NumberOfTasks', 1);
@@ -1419,8 +1483,6 @@ begin
   btFilter.Caption        := language.ReadString(lang, 'btFilterCaption', '');
   btRemoveFilterLarge.Caption:= language.ReadString(lang, 'btRemoveFilterLargeCaption', '');
 
-  btFavoritesCheckNewChapter.Caption:= language.ReadString(lang, 'btFavoritesCheckNewChapterCaption', '');
-
   btOptionApply.Caption   := language.ReadString(lang, 'btOptionApplyCaption', '');
   tsLanguage.Caption      := language.ReadString(lang, 'tsLanguageCaption', '');
   tsConnections.Caption   := language.ReadString(lang, 'tsConnectionsCaption', '');
@@ -1474,6 +1536,9 @@ begin
   stDownloadAdded          := language.ReadString(lang, 'stDownloadAdded', '');
   stFavoritesCurrentChapter:= language.ReadString(lang, 'stFavoritesCurrentChapter', '');
 
+  stFavoritesCheck         := language.ReadString(lang, 'stFavoritesCheck', '');
+  stFavoritesChecking      := language.ReadString(lang, 'stFavoritesChecking', '');
+
   stDlgUpdateAlreadyRunning:= language.ReadString(lang, 'stDlgUpdateAlreadyRunning', '');
   stDlgNewManga            := language.ReadString(lang, 'stDlgNewManga', '');
   stDlgQuit                := language.ReadString(lang, 'stDlgQuit', '');
@@ -1507,6 +1572,10 @@ begin
     end;
   end;
 
+  if favorites.isRunning then
+    btFavoritesCheckNewChapter.Caption:= stFavoritesChecking
+  else
+    btFavoritesCheckNewChapter.Caption:= stFavoritesCheck;
   vtDownload.Header.Columns.Items[0].Text:= stDownloadManga;
   vtDownload.Header.Columns.Items[1].Text:= stDownloadStatus;
   vtDownload.Header.Columns.Items[2].Text:= stDownloadProgress;

@@ -1,6 +1,6 @@
 {
         File: favorites.pas
-        License: GPLv3
+        License: GPLv2
         This unit is part of Free Manga Downloader
 }
 
@@ -74,6 +74,8 @@ type
   end;
 
 implementation
+
+uses mainunit;
 
 // ----- TFavoriteThread -----
 
@@ -192,6 +194,7 @@ begin
   end;
   if Count = 0 then exit;
   if threads.Count > 0 then exit;
+  MainForm.btFavoritesCheckNewChapter.Caption:= stFavoritesChecking;
   isRunning:= TRUE;
   for i:= 0 to numberOfThreads-1 do
   begin
@@ -212,6 +215,7 @@ var
   newC : Cardinal = 0;
   isNow: Boolean;
 begin
+  MainForm.btFavoritesCheckNewChapter.Caption:= stFavoritesCheck;
   for i:= 0 to Count-1 do
   begin
     if mangaInfo[i].numChapter > StrToInt(favoriteInfo[i].currentChapter) then
@@ -228,12 +232,16 @@ begin
       currentChapter:= StrToInt(favoriteInfo[i].currentChapter);
       newChapter    := mangaInfo[i].numChapter;
       if newChapter > currentChapter then
-        newMangaStr:= newMangaStr + #10#13+ ' - '+favoriteInfo[i].title + ' ('+favoriteInfo[i].currentChapter+' -> '+IntToStr(newChapter)+')';
+        newMangaStr:= newMangaStr + #10#13+ ' - '+favoriteInfo[i].title + ' <'+ favoriteInfo[i].Website +'> ' + favoriteInfo[i].currentChapter+' -> '+IntToStr(newChapter);
     end;
     if MessageDlg('',
                  Format(stDlgHasNewChapter, [newC]) + #10#13 + newMangaStr,
                  mtInformation, [mbYes, mbNo], 0) = mrYes then
-      isNow:= TRUE
+    begin
+      isNow:= TRUE;
+      if MainForm.pcMain.PageIndex = 3 then
+        MainForm.pcMain.PageIndex:= 0;
+    end
     else
       isNow:= FALSE;
     for i:= 0 to Count-1 do

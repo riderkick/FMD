@@ -9,6 +9,10 @@
       <Title Value="md"/>
       <ResourceType Value="res"/>
       <UseXPManifest Value="True"/>
+      <XPManifest>
+        <DpiAware Value="True"/>
+        <UIAccess Value="True"/>
+      </XPManifest>
       <Icon Value="0"/>
     </General>
     <i18n>
@@ -94,7 +98,7 @@
     <Version Value="11"/>
     <PathDelim Value="\"/>
     <Target>
-      <Filename Value="md"/>
+      <Filename Value="fmd"/>
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)"/>

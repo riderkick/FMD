@@ -1,6 +1,6 @@
 {
         File: baseunit.pas
-        License: GPLv3
+        License: GPLv2
         This unit is part of Free Manga Downloader
 }
 
@@ -85,8 +85,9 @@ const
   MANGAHERE_NAME    = 'MangaHere';    MANGAHERE_ID   = 1;
   MANGAINN_NAME     = 'MangaInn';     MANGAINN_ID    = 2;
   OURMANGA_NAME     = 'OurManga';     OURMANGA_ID    = 3;
-  VNSHARING_NAME    = 'VnSharing';    VNSHARING_ID   = 4;
-  HENTAI2READ_NAME  = 'Hentai2Read';  HENTAI2READ_ID = 5;
+  BATOTO_NAME       = 'Batoto';       BATOTO_ID      = 4;
+  VNSHARING_NAME    = 'VnSharing';    VNSHARING_ID   = 5;
+  HENTAI2READ_NAME  = 'Hentai2Read';  HENTAI2READ_ID = 6;
 
 var
   currentWebsite,
@@ -122,6 +123,9 @@ var
   OURMANGA_ROOT   : String = 'http://www.ourmanga.com';
   OURMANGA_BROWSER: String = '/directory/';
 
+  BATOTO_ROOT      : String = 'http://www.batoto.net';
+  BATOTO_BROWSER   : String = '/search';
+
   VNSHARING_ROOT   : String = 'http://truyen.vnsharing.net';
   VNSHARING_BROWSER: String = '/DanhSach';
 
@@ -146,6 +150,9 @@ var
   stDownloadSaveto,
   stDownloadAdded,
   stFavoritesCurrentChapter,
+
+  stFavoritesCheck,
+  stFavoritesChecking,
 
   stDlgUpdateAlreadyRunning,
   stDlgNewManga,
@@ -351,6 +358,8 @@ begin
   else
   if name = OURMANGA_NAME then Result:= OURMANGA_ID
   else
+  if name = BATOTO_NAME then Result:= BATOTO_ID
+  else
   if name = VNSHARING_NAME then Result:= VNSHARING_ID
   else
   if name = HENTAI2READ_NAME then Result:= HENTAI2READ_ID;
@@ -509,7 +518,9 @@ end;
 function  StringFilter(const source: String): String;
 begin
   if Length(source) = 0 then exit;
-  Result:= StringReplace(source, '&amp', '', [rfReplaceAll]);
+  Result:= StringReplace(source, '&#33;', '!', [rfReplaceAll]);
+  Result:= StringReplace(source, '&#036;', '$', [rfReplaceAll]);
+  Result:= StringReplace(Result, '&amp;', '&', [rfReplaceAll]);
   Result:= StringReplace(Result, '&nbsp', '', [rfReplaceAll]);
   Result:= StringReplace(Result, '&quot;', '"', [rfReplaceAll]);
   Result:= StringReplace(Result, '&nbsp;', ' ', [rfReplaceAll]);
@@ -586,7 +597,7 @@ begin
   if Length(input) = 0 then exit;
   for i:= 1 to Length(input) do
   begin
-    if input[i] = ',' then
+    if (input[i] = ',') OR (input[i] = ';') then
     begin
       TrimLeft(TrimRight(s));
       if Length(s) <> 0 then
@@ -709,8 +720,8 @@ begin
   if output is TStringList then
     TStringList(output).LoadFromStream(HTTP.Document)
   else
-  if output is TJPEGImage then
-    TJPEGImage(output).LoadFromStream(HTTP.Document);
+  if output is TPicture then
+    TPicture(output).LoadFromStream(HTTP.Document);
   HTTP.Free;
   Result:= TRUE;
 end;
@@ -905,4 +916,4 @@ begin
   Suspend;
 end;
 
-end.
+end.

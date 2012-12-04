@@ -1,6 +1,6 @@
 {
         File: downloads.pas
-        License: GPLv3
+        License: GPLv2
         This unit is part of Free Manga Downloader
 }
 
@@ -381,6 +381,47 @@ var
     l.Free;
   end;
 
+  function GetBatotoPageNumber: Boolean;
+  var
+    s   : String;
+    i, j: Cardinal;
+    l   : TStringList;
+  begin
+    l:= TStringList.Create;
+    parse:= TStringList.Create;
+    Result:= GetPage(TObject(l),
+                     BATOTO_ROOT + DecodeURL(URL) + '/1',
+                     manager.container.manager.retryConnect);
+    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.Exec;
+    Parser.Free;
+    parse.Add(BATOTO_ROOT + URL + '/1');
+    parse.SaveToFile('ttt.txt');
+    if parse.Count>0 then
+    begin
+      manager.container.pageNumber:= 1;
+      for i:= 0 to parse.Count-1 do
+      begin
+        if Pos('page_select', parse.Strings[i]) <> 0 then
+         // if Pos('Page', parse.Strings[i+2]) <> 0 then
+        begin
+          j:= i+2;
+          s:= parse.Strings[j];
+          while GetTagName(parse.Strings[j]) = 'option' do
+          begin
+            Inc(manager.container.pageNumber);
+            Inc(j, 3);
+          end;
+          break;
+        end;
+      end;
+    end;
+    parse.Free;
+    l.Free;
+  end;
+
   function GetHentai2ReadPageNumber: Boolean;
   var
     s   : String;
@@ -434,8 +475,12 @@ begin
   if manager.container.mangaSiteID = OURMANGA_ID then
     Result:= GetOurMangaPageNumber
   else
+  if manager.container.mangaSiteID = BATOTO_ID then
+    Result:= GetBatotoPageNumber
+  else
   if manager.container.mangaSiteID = VNSHARING_ID then
   begin
+    // all of the page links are in a html page
     Result:= TRUE;
     manager.container.pageNumber:= 1;
   end
@@ -573,6 +618,37 @@ var
     l.Free;
   end;
 
+  function GetBatotoLinkPage: Boolean;
+  var
+    i: Cardinal;
+    l: TStringList;
+  begin
+    l:= TStringList.Create;
+    Result:= GetPage(TObject(l),
+                     BATOTO_ROOT + DecodeURL(URL) + '/'+IntToStr(workPtr+1),
+                     manager.container.manager.retryConnect);
+    parse:= TStringList.Create;
+    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.Exec;
+    Parser.Free;
+
+    if parse.Count>0 then
+    begin
+      for i:= 0 to parse.Count-1 do
+        if GetTagName(parse.Strings[i]) = 'img' then
+          if (Pos('http://img.batoto.net/comics/', parse.Strings[i])>0) AND
+             (Pos('z-index: 1003', parse.Strings[i])>0) then
+          begin
+            manager.container.pageLinks.Strings[workPtr]:= GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src='));
+            break;
+          end;
+    end;
+    parse.Free;
+    l.Free;
+  end;
+
   function GetVnSharingLinkPage: Boolean;
   var
     s: String;
@@ -657,6 +733,9 @@ begin
   else
   if manager.container.mangaSiteID = OURMANGA_ID then
     Result:= GetOurMangaLinkPage
+  else
+  if manager.container.mangaSiteID = BATOTO_ID then
+    Result:= GetBatotoLinkPage
   else
   if manager.container.mangaSiteID = VNSHARING_ID then
     Result:= GetVnSharingLinkPage
@@ -839,22 +918,27 @@ begin
    // container.Status:= STATUS_DOWNLOAD;
     container.workPtr:= 0;
     container.downloadInfo.iProgress:= 0;
-    while container.workPtr < container.pageLinks.Count do
+
+    // will bypass the download section if links = nil
+    if container.chapterLinks.Count > 0 then
     begin
-      if Terminated then exit;
-      Flag:= CS_DOWNLOAD;
-      Checkout;
-      container.downloadInfo.Progress:= Format('%d/%d', [container.workPtr, container.pageLinks.Count]);
-      container.downloadInfo.Status  := Format('%s (%d/%d)', [stDownloading, container.currentDownloadChapterPtr, container.chapterLinks.Count]);
-      Inc(container.downloadInfo.iProgress);
-      {$IFDEF WIN32}
-      MainForm.vtDownload.Repaint;
-      {$ELSE}
-      Synchronize(Repaint);
-      {$ENDIF}
+      while container.workPtr < container.pageLinks.Count do
+      begin
+        if Terminated then exit;
+        Flag:= CS_DOWNLOAD;
+        Checkout;
+        container.downloadInfo.Progress:= Format('%d/%d', [container.workPtr, container.pageLinks.Count]);
+        container.downloadInfo.Status  := Format('%s (%d/%d)', [stDownloading, container.currentDownloadChapterPtr, container.chapterLinks.Count]);
+        Inc(container.downloadInfo.iProgress);
+        {$IFDEF WIN32}
+        MainForm.vtDownload.Repaint;
+        {$ELSE}
+        Synchronize(Repaint);
+        {$ENDIF}
+      end;
+      WaitFor;
+      Synchronize(Compress);
     end;
-    WaitFor;
-    Synchronize(Compress);
     if Terminated then exit;
     container.currentPageNumber:= 0;
     container.pageLinks.Clear;
@@ -1562,4 +1646,4 @@ begin
 end;
 
 end.
-
+

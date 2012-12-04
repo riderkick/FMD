@@ -1,6 +1,6 @@
 {
         File: updatelist.pas
-        License: GPLv3
+        License: GPLv2
         This unit is part of Free Manga Downloader
 }
 
@@ -256,10 +256,13 @@ begin
       getInfo(directoryCount, CS_DIRECTORY_PAGE);
       while threadCount > 0 do Sleep(100);
 
-     // names.LoadFromFile(website+'_names.txt');
-     // links.LoadFromFile(website+'_links.txt');
-     // names.SaveToFile(website+'_names.txt');
-     // links.SaveToFile(website+'_links.txt');
+
+      {$IFNDEF DOWNLOADER}
+      names.LoadFromFile(website+'_names.txt');
+      links.LoadFromFile(website+'_links.txt');
+      names.SaveToFile(website+'_names.txt');
+      links.SaveToFile(website+'_links.txt');
+      {$ENDIF}
       mainDataProcess:= TDataProcess.Create;
       mainDataProcess.LoadFromFile(website);
 

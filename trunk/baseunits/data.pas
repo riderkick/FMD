@@ -1,6 +1,6 @@
 {
         File: data.pas
-        License: GPLv3
+        License: GPLv2
         This unit is part of Free Manga Downloader
 }
 
@@ -67,8 +67,9 @@ type
 
   TMangaInformation = class(TObject)
   public
-    mangaInfo: TMangaInfo;
-    parse    : TStringList;
+    mangaInfo     : TMangaInfo;
+    parse         : TStringList;
+
     procedure   OnTag (tag : String);
     procedure   OnText(text: String);
     constructor Create;
@@ -228,12 +229,14 @@ end;
 
 procedure   TDataProcess.SaveToFile(const website: String);
 begin
+  if data.Count = 0 then exit;
   QuickSortData(data);
   data.SaveToFile(DATA_FOLDER+website+DATA_EXT);
 end;
 
 procedure   TDataProcess.SaveToFile;
 begin
+  if data.Count = 0 then exit;
   QuickSortData(data);
   data.SaveToFile(Filename+DATA_EXT);
 end;
@@ -480,6 +483,51 @@ var
     source.Free;
   end;
 
+  // get directory page from Batoto, because the structure of the site is quiet
+  // different from the others, we must do a scan to search for the page
+  function   GetBatotoDirectoryPage: Byte;
+  var
+    isFoundPage: Boolean = FALSE;
+    i: Cardinal;
+    s: String;
+  begin
+    Page:= 242;
+    while NOT isFoundPage do
+    begin
+      Inc(Page);
+      Result:= INFORMATION_NOT_FOUND;
+      if NOT GetPage(TObject(source), BATOTO_ROOT + BATOTO_BROWSER + '?&p=' + IntToStr(Page), 0) then
+      begin
+        Result:= NET_PROBLEM;
+        source.Free;
+        exit;
+      end;
+      isFoundPage:= TRUE;
+      parse.Clear;
+      Parser:= TjsFastHTMLParser.Create(PChar(source.Text));
+      Parser.OnFoundTag := OnTag;
+      Parser.OnFoundText:= OnText;
+      Parser.Exec;
+      Parser.Free;
+      if parse.Count=0 then
+      begin
+        source.Free;
+        exit;
+      end;
+      for i:= 0 to parse.Count-1 do
+      begin
+        if (GetTagName(parse.Strings[i]) = 'a') AND
+           (Pos('/comic/', parse.Strings[i])>0) then
+        begin
+          isFoundPage:= FALSE;
+          break;
+        end;
+      end;
+    end;
+    Dec(Page);
+    source.Free;
+  end;
+
   function   GetVnSharingDirectoryPage: Byte;
   var
     i: Cardinal;
@@ -559,6 +607,9 @@ begin
   if website = ANIMEA_NAME then
     Result:= GetAnimeADirectoryPage
   else
+  if website = BATOTO_NAME then
+    Result:= GetBatotoDirectoryPage
+  else
   if website = VNSHARING_NAME then
     Result:= GetVnSharingDirectoryPage
   else
@@ -577,6 +628,7 @@ var
   source: TStringList;
   Parser: TjsFastHTMLParser;
 
+  // get name and link of the manga from AnimeA
   function   AnimeAGetNameAndLink: Byte;
   var
     i: Cardinal;
@@ -600,6 +652,7 @@ var
     source.Free;
   end;
 
+  // get name and link of the manga from MangaHere
   function   MangaHereGetNameAndLink: Byte;
   var
     i: Cardinal;
@@ -634,6 +687,7 @@ var
     source.Free;
   end;
 
+  // get name and link of the manga from MangaInn
   function   MangaInnGetNameAndLink: Byte;
   var
     i: Cardinal;
@@ -674,6 +728,7 @@ var
     source.Free;
   end;
 
+  // get name and link of the manga from OurManga
   function   OurMangaGetNameAndLink: Byte;
   var
     isGetNameAndLink: Boolean = FALSE;
@@ -720,6 +775,47 @@ var
     source.Free;
   end;
 
+  // get name and link of the manga from Batoto
+  function   BatotoGetNameAndLink: Byte;
+  var
+    i: Cardinal;
+    s: String;
+  begin
+    Result:= INFORMATION_NOT_FOUND;
+    if NOT GetPage(TObject(source), BATOTO_ROOT + BATOTO_BROWSER + '?&p=' + URL, 0) then
+    begin
+      Result:= NET_PROBLEM;
+      source.Free;
+      exit;
+    end;
+    parse.Clear;
+    Parser:= TjsFastHTMLParser.Create(PChar(source.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.Exec;
+    Parser.Free;
+    if parse.Count=0 then
+    begin
+      source.Free;
+      exit;
+    end;
+    for i:= 0 to parse.Count-1 do
+    begin
+      if (GetTagName(parse.Strings[i]) = 'a') AND
+         (Pos('/comic/', parse.Strings[i])>0) then
+      begin
+        Result:= NO_ERROR;
+        s:= StringFilter(TrimLeft(TrimRight(parse.Strings[i+2])));
+        begin
+          names.Add(s);
+          links.Add(StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href=')), BATOTO_ROOT, '', []));
+        end;
+      end;
+    end;
+    source.Free;
+  end;
+
+  // get name and link of the manga from VnSharing
   function   VnSharingGetNameAndLink: Byte;
   var
     i: Cardinal;
@@ -778,6 +874,7 @@ var
     source.Free;
   end;
 
+  // get name and link of the manga from Hentai2Read
   function   Hentai2ReadGetNameAndLink: Byte;
   var
     i: Cardinal;
@@ -834,6 +931,9 @@ begin
   else
   if website = OURMANGA_NAME then
     Result:= OurMangaGetNameAndLink
+  else
+  if website = BATOTO_NAME then
+    Result:= BatotoGetNameAndLink
   else
   if website = VNSHARING_NAME then
     Result:= VnSharingGetNameAndLink
@@ -1189,6 +1289,7 @@ begin
        (isExtractSummary) then
     begin
       j:= i+2;
+      mangaInfo.summary:= '';
       while Pos('</p>', parse.Strings[j])=0 do
       begin
         s:= parse.Strings[j];
@@ -1197,7 +1298,7 @@ begin
           parse.Strings[j]:= StringFilter(parse.Strings[j]);
           parse.Strings[j]:= StringReplace(parse.Strings[j], #10, '\n', [rfReplaceAll]);
           parse.Strings[j]:= StringReplace(parse.Strings[j], #13, '\r', [rfReplaceAll]);
-          mangaInfo.summary:= parse.Strings[j];
+          mangaInfo.summary:= mangaInfo.summary + parse.Strings[j];
         end;
         Inc(j);
       end;
@@ -1213,7 +1314,7 @@ begin
       parse.Strings[i+1]:= StringReplace(parse.Strings[i+1], #10, '', [rfReplaceAll]);
       parse.Strings[i+1]:= StringReplace(parse.Strings[i+1], #13, '', [rfReplaceAll]);
       parse.Strings[i+1]:= TrimLeft(parse.Strings[i+1]);
-      parse.Strings[i+1]:= TrimRight(parse.Strings[i+1]);
+     // parse.Strings[i+1]:= TrimRight(parse.Strings[i+1]);
       mangaInfo.chapterName.Add(TrimRight(RemoveSymbols(parse.Strings[i+1])));
     end;
 
@@ -1270,6 +1371,124 @@ begin
     Dec(mangaInfo.numChapter);
     mangainfo.ChapterName.Delete(mangainfo.ChapterName.Count-1);
     mangainfo.chapterLinks.Delete(mangainfo.chapterLinks.Count-1);
+  end;
+  Result:= NO_ERROR;
+end;
+
+function   GetBatotoInfoFromURL: Byte;
+var
+  patchURL,
+  s: String;
+  isExtractGenres : Boolean = FALSE;
+  i, j: Cardinal;
+begin
+  patchURL:= UTF8ToANSI(URL);
+  Insert('comics/', patchURL, 10);
+  if NOT GetPage(TObject(source), BATOTO_ROOT + patchURL, 0) then
+  begin
+    Result:= NET_PROBLEM;
+    source.Free;
+    exit;
+  end;
+
+  // parsing the HTML source
+  parse.Clear;
+  Parser:= TjsFastHTMLParser.Create(PChar(source.Text));
+  Parser.OnFoundTag := OnTag;
+  Parser.OnFoundText:= OnText;
+  Parser.Exec;
+
+  Parser.Free;
+  source.Free;
+  mangaInfo.website:= BATOTO_NAME;
+
+  // using parser (cover link, summary, chapter name and link)
+  if parse.Count=0 then exit;
+  for i:= 0 to parse.Count-1 do
+  begin
+    // get cover link
+    if GetTagName(parse.Strings[i]) = 'img' then
+      if Pos('width:300px', parse.Strings[i-1]) <> 0 then
+        mangaInfo.coverLink:= CorrectURL(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src=')));
+
+
+    // get summary
+    if (Pos('Description:', parse.Strings[i]) <> 0) then
+    begin
+      j:= i+3;
+      mangaInfo.summary:= '';
+      while (Pos('</tr>', parse.Strings[j])=0) AND (j < parse.Count-1) do
+      begin
+        s:= parse.Strings[j];
+        if s[1] <> '<' then
+        begin
+          parse.Strings[j]:= StringFilter(parse.Strings[j]);
+          parse.Strings[j]:= StringReplace(parse.Strings[j], #10, '\n', [rfReplaceAll]);
+          parse.Strings[j]:= StringReplace(parse.Strings[j], #13, '\r', [rfReplaceAll]);
+          mangaInfo.summary:= mangaInfo.summary + parse.Strings[j];
+        end;
+        Inc(j);
+      end;
+    end;
+
+      // get chapter name and links
+    if (GetTagName(parse.Strings[i]) = 'a') AND
+       (Pos('/read/_/', parse.Strings[i])<>0) then
+    begin
+      Inc(mangaInfo.numChapter);
+      mangaInfo.chapterLinks.Add(EncodeUrl(StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href=')), BATOTO_ROOT, '', [rfReplaceAll])));
+      parse.Strings[i+2]:= StringReplace(parse.Strings[i+2], #10, '', [rfReplaceAll]);
+      parse.Strings[i+2]:= StringReplace(parse.Strings[i+2], #13, '', [rfReplaceAll]);
+      parse.Strings[i+2]:= TrimLeft(parse.Strings[i+2]);
+      mangaInfo.chapterName.Add(TrimRight(RemoveSymbols(parse.Strings[i+2])));
+    end;
+
+    // get authors
+    if (Pos('Author:', parse.Strings[i])<>0) then
+      mangaInfo.authors:= TrimLeft(parse.Strings[i+5]);
+
+    // get artists
+    if (Pos('Artist:', parse.Strings[i])<>0) then
+      mangaInfo.artists:= TrimLeft(parse.Strings[i+5]);
+
+    // get genres
+    if (Pos('Genres:', parse.Strings[i])<>0) then
+    begin
+      isExtractGenres:= TRUE;
+      mangaInfo.genres:= '';
+    end;
+
+    if isExtractGenres then
+    begin
+      s:= parse.Strings[i];
+      if s[1] <> '<' then
+        for j:= 0 to 38 do
+          if Pos(LowerCase(Genre[j]), LowerCase(parse.Strings[i]))<>0 then
+            mangaInfo.genres:= mangaInfo.genres+(Genre[j]+', ');
+      if Pos('</tr>', parse.Strings[i]) <> 0 then
+        isExtractGenres:= FALSE;
+    end;
+
+    // get status
+    if (Pos('Status:', parse.Strings[i])<>0) then
+    begin
+      if Pos('Ongoing', parse.Strings[i+4])<>0 then
+        mangaInfo.status:= '1'   // ongoing
+      else
+        mangaInfo.status:= '0';  // completed
+    end;
+  end;
+
+  // Since chapter name and link are inverted, we need to invert them
+  if mangainfo.ChapterName.Count > 1 then
+  begin
+    i:= 0; j:= mangainfo.ChapterName.Count - 1;
+    while (i<j) do
+    begin
+      mangainfo.ChapterName.Exchange(i, j);
+      mangainfo.chapterLinks.Exchange(i, j);
+      Inc(i); Dec(j);
+    end;
   end;
   Result:= NO_ERROR;
 end;
@@ -1546,6 +1765,9 @@ begin
   else
   if website = OURMANGA_NAME then
     Result:= GetOurMangaInfoFromURL
+  else
+  if website = BATOTO_NAME then
+    Result:= GetBatotoInfoFromURL
   else
   if website = VNSHARING_NAME then
     Result:= GetVnSharingInfoFromURL

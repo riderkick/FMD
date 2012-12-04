@@ -1,6 +1,6 @@
 {
         File: genericlib.pas
-        License: GPLv3
+        License: GPLv2
         This unit is part of Free Manga Downloader
 }
 

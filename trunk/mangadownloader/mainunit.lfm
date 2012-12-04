@@ -1,12 +1,12 @@
 object MainForm: TMainForm
   Left = 241
-  Height = 492
+  Height = 491
   Top = 77
-  Width = 755
+  Width = 792
   Align = alBottom
   Caption = 'Free Manga Downloader'
-  ClientHeight = 492
-  ClientWidth = 755
+  ClientHeight = 491
+  ClientWidth = 792
   OnClose = FormClose
   OnCreate = FormCreate
   OnWindowStateChange = FormWindowStateChange
@@ -14,12 +14,12 @@ object MainForm: TMainForm
   object pnMainLeft: TPanel
     AnchorSideRight.Control = spMainSplitter
     Left = 0
-    Height = 472
+    Height = 471
     Top = 0
     Width = 195
     Align = alLeft
     Anchors = [akTop, akLeft, akRight, akBottom]
-    ClientHeight = 472
+    ClientHeight = 471
     ClientWidth = 195
     TabOrder = 0
     object cbSelectManga: TComboBox
@@ -48,7 +48,7 @@ object MainForm: TMainForm
     end
     object vtMangaList: TVirtualStringTree
       Left = 8
-      Height = 375
+      Height = 374
       Hint = 'test'
       Top = 88
       Width = 176
@@ -181,58 +181,49 @@ object MainForm: TMainForm
       Width = 24
       Anchors = [akTop, akRight]
       Glyph.Data = {
-        76060000424D7606000000000000360000002800000014000000140000000100
-        2000000000004006000064000000640000000000000000000000000000000000
-        000000000000000000000000000000000000000000000000000000000000CB31
-        0004CB6500047C7C000100000000000000000000000000000000000000000000
-        0000000000000000000000000000000000000000000000000000000000000000
-        0000B658002DCA5E0079C75E00B3C96100D2C96200D6C85F00C2CB5E0090C15B
-        004A7E2800050000000000000000000000000000000000000000000000000000
-        00000000000000000000C86C000DCA5E0086CC6500ECDE7D1BFFE28F35FFE497
-        3EFFE49940FFE3933AFFE18627FFCF6B08FFC85D00B6C15E0035000000000000
-        00000000000000000000000000000000000000000000C96A0017C85F00BADC77
-        13FFE59D49FFE5AA5AFFE5AB58FFE5AB59FFE6AB59FFE6AB58FFE5AB59FFE5A5
-        55FFE28628FFCE6300E6C561004B000000000000000000000000000000000000
-        0000CB650004C55B00B1E07D1BFFE6AB60FFE7AF5FFFE7AF61FFE8AE63FFE7A6
-        59FFE6A456FFE7AB60FFE8B065FFE7AD5DFFE8B166FFE39038FFCB6100EBC35F
-        003200000000000000000000000000000000C0590069D8710DFFE8AB63FFE9B3
-        67FFE9B56FFFE49E50FFD8791FFFCB6706F6CB6502F0D16F13FFE18E3AFFE8B3
-        6DFFE9B267FFEAB66FFFE4892CFFC45900BA994C000900000000000000009148
-        000DC65E00D5E89A47FFEDBB76FFEDBC7AFFE29749FFCB6100EEC659007DC258
-        002DC35A0021C85B0058C65B00CEDA7E23FFEBB776FFEDBA74FFEAB069FFD26C
-        0AFFB857004B0000000000000000BD530045CD6C0EFCEEB673FFF0C384FFE9AE
-        6BFFCC6402F6C459005200000000000000000000000000000000C95F0017C759
-        00CCE39442FFF0C287FFEFC082FFE48C32FFC25700930000000000000000C557
-        0073DD8227FFF2C48AFFF3CA94FFE5923FFFC45900A500000000000000000000
-        0000000000000000000000000000C4560052D17013FDF0C085FFF5CA92FFEAA2
-        55FFC85D00C37C00000100000000C5590085E79035FFF6CD9AFFF5CD9BFFE184
-        27FFC558006D00000000000000000000000000000000C25D0025C6540023C355
-        001DC96502EEF0BB7FFFF7D2A2FFEEAE68FFC86000D7CB31000400000000C658
-        0081E68E36FFF9D3A6FFF8D5A9FFE38931FFC457007900000000000000000000
-        0000C162005FD16902E9CB6400EBC65C00A1CA6706EDF2C28DFFFBDAB0FFEFB0
-        6CFFC75F00D3BE3D000300000000C1510066D87D25FFF9D4A9FFFCE0BCFFEAA5
-        60FFC55900C7BB54000E00000000AA540005C75D00CFF2AE69FFF3C593FFD165
-        07FFD07520FFF7D7AFFFFCDEBAFFEBA45DFFC55800B50000000000000000C455
-        002FCA6506F5F5C694FFFFE7C8FFF8D4ADFFD4751BFFC452005600000000C44D
-        000CC85D00D6F5C18DFFFFF9EAFFEBBA89FFE9B480FFFDE3C4FFFBDDBAFFE387
-        2EFFC357007C0000000000000000A9510002C45600B5EA9849FFFFEED7FFFFEC
-        D4FFDF842FFFC251007000000000BF3F000BC75D00D3F3BF8BFFFFF1DFFFFFEC
-        D5FFFEE8CEFFFEE7CCFFF2BC86FFC96002E7B94B002B00000000000000000000
-        0000BE5A003ACD6502F2F0A256FFEE9F51FFCA6404EAC55C002B00000000B04D
-        000CC75C00D3F4C18FFFFFF6E7FFFDE8D1FFFFE9D1FFFCE5CBFFDF832DFFC252
-        00B87C7C000100000000000000000000000000000000C95F0047CA5A00A5C95A
-        00A0C562003D0000000000000000B648000DC65C00D4F3C495FFFFFAEFFFFEEB
-        D7FFFFEAD2FFFFEBD4FFEEBF8FFFD67214F7BE5C007600000000000000000000
-        000000000000000000000000000000000000000000000000000000000000B945
-        000AC65B00D8F6C698FFFFFFFFFFFFF7EBFFFFF4E5FFFFF1E0FFFFFDF1FFF3B8
-        7BFFC55B00DBBE3D000300000000000000000000000000000000000000000000
-        000000000000000000000000000000000000C15900A1E3882DFFE9A665FFE8A2
-        5FFFE8A15DFFE8A05BFFE8A25EFFE78B2FFFC05D00ABFF000000000000000000
-        0000000000000000000000000000000000000000000000000000000000000000
-        0000C4580019C95D00A2C85A00D3C55900D1C55900D1C55900D1C85B00D3CB5E
-        00A6C366001D0000000000000000000000000000000000000000000000000000
-        00000000000000000000000000000000000000000000CB650004C2610014BF59
-        0013C95C0012BF590013C2610014AA5400050000000000000000
+        46050000424D4605000000000000360000002800000012000000120000000100
+        2000000000001005000064000000640000000000000000000000000000000000
+        0000000000000000000000000000B6580003C75D000AC75E0011C95A0018C962
+        0019C6600013C95D000CBE5900057E2800000000000000000000000000000000
+        0000000000000000000000000000C86C0001CA5F000FC45F003DCE670880CF6B
+        0DB9CF6D0ED9CF6E0FDDCF6C0EC6CF690A95C6600352C1590019C15E00040000
+        000000000000000000000000000000000000C96A0002C862001ECF670676D372
+        12D5DD8527FBE2953CFFE49C45FFE59E47FFE49840FFDE8B2FFFD4771AEBCF69
+        0A9BC8610038C5610007000000000000000000000000CB650000C65E001ACE67
+        0888DA7E21EAE39A45FFE6AA5AFFE6AC5CFFE6A959FFE6A858FFE6AB5CFFE6AC
+        5CFFE5A14FFFDE872DF8D06C0DB3C8600038C35F00040000000000000000C059
+        000BCA630567D97B20E8E6A251FFE8B166FFE6AA5DFFE19746FFDA8832FBD986
+        2FF8DE913EFFE5A456FFE8B166FFE8AA5DFFDE8830F9CD670B9CBE58001B994C
+        000091480001BD5A0028D06E13C3E59B49FFEBB770FFE7AC63FFDA8732F8D26F
+        16BFCA650683CA640378CF6B10A9D77D27EAE4A154FFEBB771FFE9AA5EFFD679
+        1FECC25F0454B6560005BA520005C35E055AD57E27F5EDB570FFEDB978FFDC8D
+        3BFBCD680BA5C75B0038C3580010C45A000CC75B0025CA610778D87F2BEAEAAF
+        69FFEEBD7DFFE3933FFFCA660D97C057000DC456000BCC650D88E19240FFF2C4
+        8AFFECB06CFFD57923D3C65B0042C45900030000000000000000C95F0001C658
+        0023CF6B11A5E29C51FEF2C58BFFECAA61FFD06D14C7C4590013C559000DD06A
+        119CEBA152FFF5CC99FFEBA962FFD67319ABC55800220000000000000000C25D
+        0003C35B0021C5540020C9630374DE9244F7F4C993FFF0B878FFD17118DDC859
+        0019C657000DD0691298EBA257FFF9D4A8FFEEB170FFD6751FB3C4570028BB54
+        0000AA540000C6640377D4700EECCD6A0CD9C96305C6DF984FF7F8D1A4FFF2BC
+        80FFD07119D9C65B0017C1510009CA610D7BE09347FEFAD8AFFFF5C897FFD983
+        35E4C75D0553C0530006B4510006CC670DD5F3B87BFFECB57DFFD67B28FFE7AE
+        73FFFADCB7FFEFB172FFCF6B17BBC5580011C4550003C75D0348D67E2CEBF7CC
+        9DFFFDE2C3FFE5A15EFFCE67128EC3520013C349000BCD6910D9F7CB9EFFFBE9
+        D1FFF0C79CFFF6D4AFFFFADAB6FFE4974CFACC640D81C255000AA9510000C257
+        001BCF6B14A7E9A35DFCF9CEA2FFE59B53FACE681185C3530011B945000ACC68
+        11D7F6CA9EFFFFF0DEFFFEEAD2FFFEE7CDFFF2BF8CFFD37422E1C256013FB84C
+        000300000000BE5A0006C8610143D67419B2E08533D1D4731AACC862023BC55C
+        0004B34A000BCC6811D8F6CDA4FFFFF4E4FFFEE9D3FFFEE9D1FFF0BD8BFFD679
+        27E3C560055BBD5C00060000000000000000C95F0009CA5C002BCA5A0041C85D
+        0028C562000700000000B846000ACB6812DAF7D0AAFFFFFAF2FFFFF1E1FFFFEF
+        DCFFFBE8D1FFEDB277FDCD6C16C1C35900130000000000000000000000000000
+        000000000000000000000000000000000000B9450003C8630BB9EAA25BFFEFBF
+        90FFEFBB88FFEFB984FFEFBB87FFECA45AFFCC6C12C7C25B0013000000000000
+        000000000000000000000000000000000000000000000000000000000000C65D
+        0441D06A0FBCCF6B17DBCD6A16DACD6A16DACF6B16DBD26B10C3C9650653C161
+        0006000000000000000000000000000000000000000000000000000000000000
+        000000000000C75B0004C85E0018C45C0027C45A0026C45A0026C45C0027C55D
+        001AC45F0007C3660000
       }
       OnClick = btRemoveFilterClick
       ParentShowHint = False
@@ -301,25 +292,25 @@ object MainForm: TMainForm
   end
   object pcMain: TPageControl
     Left = 195
-    Height = 472
+    Height = 471
     Top = 0
-    Width = 560
-    ActivePage = tsInformation
+    Width = 597
+    ActivePage = tsFilter
     Align = alClient
     Font.Style = [fsBold]
     ParentFont = False
-    TabIndex = 1
+    TabIndex = 2
     TabOrder = 1
     OnChange = pcMainChange
     object tsDownload: TTabSheet
       Caption = 'Downloads'
-      ClientHeight = 446
-      ClientWidth = 552
+      ClientHeight = 445
+      ClientWidth = 589
       object vtDownload: TVirtualStringTree
         Left = 0
-        Height = 446
+        Height = 445
         Top = 0
-        Width = 552
+        Width = 589
         Align = alClient
         DefaultText = 'Node'
         Header.AutoSizeIndex = 0
@@ -358,8 +349,11 @@ object MainForm: TMainForm
         Header.Height = 25
         Header.Options = [hoColumnResize, hoDrag, hoShowSortGlyphs, hoVisible]
         Header.Style = hsXPStyle
+        HintMode = hmHintAndDefault
         ParentFont = False
+        ParentShowHint = False
         PopupMenu = pmDownload
+        ShowHint = True
         TabOrder = 0
         TreeOptions.PaintOptions = [toShowButtons, toShowDropmark, toShowRoot, toThemeAware, toUseBlendedImages]
         TreeOptions.SelectionOptions = [toFullRowSelect, toRightClickSelect]
@@ -368,32 +362,33 @@ object MainForm: TMainForm
         OnDragDrop = vtDownloadDragDrop
         OnFreeNode = vtDownloadFreeNode
         OnGetText = vtDownloadGetText
+        OnGetHint = vtDownloadGetHint
         OnInitNode = vtDownloadInitNode
       end
     end
     object tsInformation: TTabSheet
       Caption = 'Manga Infos'
-      ClientHeight = 446
-      ClientWidth = 552
+      ClientHeight = 445
+      ClientWidth = 589
       object sbInformation: TScrollBox
         Left = 0
-        Height = 446
+        Height = 445
         Top = 0
-        Width = 552
-        HorzScrollBar.Page = 548
-        VertScrollBar.Page = 442
+        Width = 589
+        HorzScrollBar.Page = 585
+        VertScrollBar.Page = 441
         Align = alClient
-        ClientHeight = 442
-        ClientWidth = 548
+        ClientHeight = 441
+        ClientWidth = 585
         TabOrder = 0
         object pnInfomation: TPanel
           Left = 0
           Height = 234
           Top = 0
-          Width = 548
+          Width = 585
           Align = alTop
           ClientHeight = 234
-          ClientWidth = 548
+          ClientWidth = 585
           ParentFont = False
           TabOrder = 0
           object imCover: TImage
@@ -409,7 +404,7 @@ object MainForm: TMainForm
             Left = 175
             Height = 216
             Top = 8
-            Width = 368
+            Width = 405
             Anchors = [akTop, akLeft, akRight, akBottom]
             HideSelection = False
             ParentFont = False
@@ -423,25 +418,25 @@ object MainForm: TMainForm
           Left = 0
           Height = 5
           Top = 234
-          Width = 548
+          Width = 585
           Align = alTop
           ResizeAnchor = akTop
         end
         object pnChapterList: TPanel
           Left = 0
-          Height = 203
+          Height = 202
           Top = 239
-          Width = 548
+          Width = 585
           Align = alClient
-          ClientHeight = 203
-          ClientWidth = 548
+          ClientHeight = 202
+          ClientWidth = 585
           TabOrder = 2
           object clbChapterList: TCheckListBox
             AnchorSideTop.Side = asrBottom
             Left = 8
-            Height = 110
+            Height = 109
             Top = 9
-            Width = 532
+            Width = 569
             Anchors = [akTop, akLeft, akRight, akBottom]
             ItemHeight = 0
             MultiSelect = True
@@ -453,7 +448,7 @@ object MainForm: TMainForm
           object edSaveTo: TLabeledEdit
             Left = 8
             Height = 21
-            Top = 143
+            Top = 142
             Width = 287
             Anchors = [akLeft, akBottom]
             EditLabel.AnchorSideLeft.Control = edSaveTo
@@ -462,7 +457,7 @@ object MainForm: TMainForm
             EditLabel.AnchorSideBottom.Control = edSaveTo
             EditLabel.Left = 8
             EditLabel.Height = 13
-            EditLabel.Top = 127
+            EditLabel.Top = 126
             EditLabel.Width = 287
             EditLabel.Caption = 'Save to'
             EditLabel.ParentColor = False
@@ -471,10 +466,10 @@ object MainForm: TMainForm
             TabOrder = 1
           end
           object btDownload: TBitBtn
-            Left = 423
+            Left = 439
             Height = 30
-            Top = 134
-            Width = 96
+            Top = 133
+            Width = 112
             Anchors = [akLeft, akBottom]
             Caption = 'Download'
             OnClick = btDownloadClick
@@ -483,8 +478,8 @@ object MainForm: TMainForm
           object btBrowse: TBitBtn
             Left = 311
             Height = 30
-            Top = 134
-            Width = 96
+            Top = 133
+            Width = 112
             Anchors = [akLeft, akBottom]
             Caption = 'Browse'
             OnClick = btBrowseClick
@@ -493,7 +488,7 @@ object MainForm: TMainForm
           object cbAddAsStopped: TCheckBox
             Left = 8
             Height = 17
-            Top = 171
+            Top = 170
             Width = 196
             Anchors = [akLeft, akBottom]
             Caption = 'Add to download list as stopped task'
@@ -504,7 +499,7 @@ object MainForm: TMainForm
           object cbAddToFavorites: TCheckBox
             Left = 311
             Height = 17
-            Top = 171
+            Top = 170
             Width = 100
             Anchors = [akLeft, akBottom]
             Caption = 'Add to Favorites'
@@ -516,27 +511,27 @@ object MainForm: TMainForm
     end
     object tsFilter: TTabSheet
       Caption = 'Filter'
-      ClientHeight = 446
-      ClientWidth = 552
+      ClientHeight = 445
+      ClientWidth = 589
       object sbFilter: TScrollBox
         Left = 0
-        Height = 446
+        Height = 445
         Top = 0
-        Width = 552
-        HorzScrollBar.Page = 548
-        VertScrollBar.Page = 442
+        Width = 589
+        HorzScrollBar.Page = 585
+        VertScrollBar.Page = 441
         Align = alClient
-        ClientHeight = 442
-        ClientWidth = 548
+        ClientHeight = 441
+        ClientWidth = 585
         TabOrder = 0
         object pnGenres: TPanel
           Left = 0
           Height = 248
           Top = 0
-          Width = 548
+          Width = 585
           Align = alTop
           ClientHeight = 248
-          ClientWidth = 548
+          ClientWidth = 585
           TabOrder = 0
           object CheckBox1: TCheckBox
             Left = 23
@@ -619,7 +614,7 @@ object MainForm: TMainForm
             TabOrder = 7
           end
           object CheckBox9: TCheckBox
-            Left = 127
+            Left = 135
             Height = 17
             Top = 16
             Width = 50
@@ -629,7 +624,7 @@ object MainForm: TMainForm
             TabOrder = 8
           end
           object CheckBox10: TCheckBox
-            Left = 127
+            Left = 135
             Height = 17
             Top = 40
             Width = 50
@@ -639,7 +634,7 @@ object MainForm: TMainForm
             TabOrder = 9
           end
           object CheckBox11: TCheckBox
-            Left = 127
+            Left = 135
             Height = 17
             Top = 64
             Width = 50
@@ -649,7 +644,7 @@ object MainForm: TMainForm
             TabOrder = 10
           end
           object CheckBox12: TCheckBox
-            Left = 127
+            Left = 135
             Height = 17
             Top = 88
             Width = 50
@@ -659,7 +654,7 @@ object MainForm: TMainForm
             TabOrder = 11
           end
           object CheckBox13: TCheckBox
-            Left = 127
+            Left = 135
             Height = 17
             Top = 112
             Width = 50
@@ -669,7 +664,7 @@ object MainForm: TMainForm
             TabOrder = 12
           end
           object CheckBox14: TCheckBox
-            Left = 127
+            Left = 135
             Height = 17
             Top = 136
             Width = 50
@@ -679,7 +674,7 @@ object MainForm: TMainForm
             TabOrder = 13
           end
           object CheckBox15: TCheckBox
-            Left = 127
+            Left = 135
             Height = 17
             Top = 160
             Width = 50
@@ -689,7 +684,7 @@ object MainForm: TMainForm
             TabOrder = 14
           end
           object CheckBox16: TCheckBox
-            Left = 127
+            Left = 135
             Height = 17
             Top = 184
             Width = 50
@@ -699,7 +694,7 @@ object MainForm: TMainForm
             TabOrder = 15
           end
           object CheckBox17: TCheckBox
-            Left = 223
+            Left = 251
             Height = 17
             Top = 16
             Width = 50
@@ -709,7 +704,7 @@ object MainForm: TMainForm
             TabOrder = 16
           end
           object CheckBox18: TCheckBox
-            Left = 223
+            Left = 251
             Height = 17
             Top = 40
             Width = 50
@@ -719,7 +714,7 @@ object MainForm: TMainForm
             TabOrder = 17
           end
           object CheckBox19: TCheckBox
-            Left = 223
+            Left = 251
             Height = 17
             Top = 64
             Width = 50
@@ -729,7 +724,7 @@ object MainForm: TMainForm
             TabOrder = 18
           end
           object CheckBox20: TCheckBox
-            Left = 223
+            Left = 251
             Height = 17
             Top = 88
             Width = 50
@@ -739,7 +734,7 @@ object MainForm: TMainForm
             TabOrder = 19
           end
           object CheckBox21: TCheckBox
-            Left = 223
+            Left = 251
             Height = 17
             Top = 112
             Width = 50
@@ -749,7 +744,7 @@ object MainForm: TMainForm
             TabOrder = 20
           end
           object CheckBox22: TCheckBox
-            Left = 223
+            Left = 251
             Height = 17
             Top = 136
             Width = 50
@@ -759,7 +754,7 @@ object MainForm: TMainForm
             TabOrder = 21
           end
           object CheckBox23: TCheckBox
-            Left = 223
+            Left = 251
             Height = 17
             Top = 160
             Width = 50
@@ -769,7 +764,7 @@ object MainForm: TMainForm
             TabOrder = 22
           end
           object CheckBox24: TCheckBox
-            Left = 223
+            Left = 251
             Height = 17
             Top = 184
             Width = 50
@@ -779,7 +774,7 @@ object MainForm: TMainForm
             TabOrder = 23
           end
           object CheckBox25: TCheckBox
-            Left = 319
+            Left = 363
             Height = 17
             Top = 16
             Width = 50
@@ -789,7 +784,7 @@ object MainForm: TMainForm
             TabOrder = 24
           end
           object CheckBox26: TCheckBox
-            Left = 319
+            Left = 363
             Height = 17
             Top = 40
             Width = 50
@@ -799,7 +794,7 @@ object MainForm: TMainForm
             TabOrder = 25
           end
           object CheckBox27: TCheckBox
-            Left = 319
+            Left = 363
             Height = 17
             Top = 64
             Width = 50
@@ -809,7 +804,7 @@ object MainForm: TMainForm
             TabOrder = 26
           end
           object CheckBox28: TCheckBox
-            Left = 319
+            Left = 363
             Height = 17
             Top = 88
             Width = 50
@@ -819,7 +814,7 @@ object MainForm: TMainForm
             TabOrder = 27
           end
           object CheckBox29: TCheckBox
-            Left = 319
+            Left = 363
             Height = 17
             Top = 112
             Width = 50
@@ -829,7 +824,7 @@ object MainForm: TMainForm
             TabOrder = 28
           end
           object CheckBox30: TCheckBox
-            Left = 319
+            Left = 363
             Height = 17
             Top = 136
             Width = 50
@@ -839,7 +834,7 @@ object MainForm: TMainForm
             TabOrder = 29
           end
           object CheckBox31: TCheckBox
-            Left = 319
+            Left = 363
             Height = 17
             Top = 160
             Width = 50
@@ -849,7 +844,7 @@ object MainForm: TMainForm
             TabOrder = 30
           end
           object CheckBox32: TCheckBox
-            Left = 319
+            Left = 363
             Height = 17
             Top = 184
             Width = 50
@@ -859,7 +854,7 @@ object MainForm: TMainForm
             TabOrder = 31
           end
           object CheckBox33: TCheckBox
-            Left = 423
+            Left = 471
             Height = 17
             Top = 16
             Width = 50
@@ -869,7 +864,7 @@ object MainForm: TMainForm
             TabOrder = 32
           end
           object CheckBox34: TCheckBox
-            Left = 423
+            Left = 471
             Height = 17
             Top = 40
             Width = 50
@@ -879,7 +874,7 @@ object MainForm: TMainForm
             TabOrder = 33
           end
           object CheckBox35: TCheckBox
-            Left = 423
+            Left = 471
             Height = 17
             Top = 64
             Width = 50
@@ -889,7 +884,7 @@ object MainForm: TMainForm
             TabOrder = 34
           end
           object CheckBox36: TCheckBox
-            Left = 423
+            Left = 471
             Height = 17
             Top = 88
             Width = 50
@@ -899,7 +894,7 @@ object MainForm: TMainForm
             TabOrder = 35
           end
           object CheckBox37: TCheckBox
-            Left = 423
+            Left = 471
             Height = 17
             Top = 112
             Width = 50
@@ -909,7 +904,7 @@ object MainForm: TMainForm
             TabOrder = 36
           end
           object CheckBox38: TCheckBox
-            Left = 423
+            Left = 471
             Height = 17
             Top = 136
             Width = 50
@@ -919,7 +914,7 @@ object MainForm: TMainForm
             TabOrder = 37
           end
           object CheckBox39: TCheckBox
-            Left = 423
+            Left = 471
             Height = 17
             Top = 160
             Width = 50
@@ -955,10 +950,10 @@ object MainForm: TMainForm
           Left = 0
           Height = 192
           Top = 248
-          Width = 548
+          Width = 585
           Align = alTop
           ClientHeight = 192
-          ClientWidth = 548
+          ClientWidth = 585
           ParentFont = False
           TabOrder = 1
           object rbOne: TRadioButton
@@ -1151,13 +1146,13 @@ object MainForm: TMainForm
     end
     object tsFavorites: TTabSheet
       Caption = 'Favorites'
-      ClientHeight = 446
-      ClientWidth = 552
+      ClientHeight = 445
+      ClientWidth = 589
       object vtFavorites: TVirtualStringTree
         Left = 0
-        Height = 378
+        Height = 377
         Top = 0
-        Width = 552
+        Width = 589
         Align = alTop
         Anchors = [akTop, akLeft, akRight, akBottom]
         DefaultText = 'Node'
@@ -1198,7 +1193,7 @@ object MainForm: TMainForm
       object btFavoritesCheckNewChapter: TBitBtn
         Left = 33
         Height = 40
-        Top = 396
+        Top = 395
         Width = 232
         Anchors = [akLeft, akBottom]
         Caption = 'Check for new chapter'
@@ -1499,7 +1494,7 @@ object MainForm: TMainForm
   object spMainSplitter: TSplitter
     AnchorSideRight.Control = pcMain
     Left = 195
-    Height = 492
+    Height = 491
     Top = 8
     Width = 5
     Align = alNone
@@ -1508,8 +1503,8 @@ object MainForm: TMainForm
   object sbMain: TStatusBar
     Left = 0
     Height = 20
-    Top = 472
-    Width = 755
+    Top = 471
+    Width = 792
     Panels = <    
       item
         Width = 150
