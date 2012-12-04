@@ -114,7 +114,15 @@ begin
   case CheckStyle of
     CS_DIRECTORY_COUNT:
       begin
+        {$IFDEF DOWNLOADER}
+        if manager.website = BATOTO_NAME then
+          manager.directoryCount:= MainForm.batotoLastDirectoryPage;
+        {$ENDIF}
         info.GetDirectoryPage(manager.directoryCount, manager.website);
+        {$IFDEF DOWNLOADER}
+        if manager.website = BATOTO_NAME then
+          MainForm.batotoLastDirectoryPage:= manager.directoryCount;
+        {$ENDIF}
       end;
     CS_DIRECTORY_PAGE:
       begin
@@ -258,8 +266,8 @@ begin
 
 
       {$IFNDEF DOWNLOADER}
-      names.LoadFromFile(website+'_names.txt');
-      links.LoadFromFile(website+'_links.txt');
+     // names.LoadFromFile(website+'_names.txt');
+     // links.LoadFromFile(website+'_links.txt');
       names.SaveToFile(website+'_names.txt');
       links.SaveToFile(website+'_links.txt');
       {$ENDIF}

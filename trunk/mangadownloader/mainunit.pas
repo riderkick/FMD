@@ -1222,6 +1222,19 @@ begin
     root:= BATOTO_ROOT + root;
   end
   else
+  if cbSelectManga.Items[cbSelectManga.ItemIndex] = MANGA24H_NAME then
+  begin
+    root:= dataProcess.Param[
+      dataProcess.filterPos.Items[vtMangaList.FocusedNode.Index], DATA_PARAM_LINK];
+    if NOT GetMangaInfo(root, MANGA24H_NAME) then
+    begin
+      MessageDlg('', stDlgCannotGetMangaInfo,
+                 mtInformation, [mbYes], 0);
+      exit;
+    end;
+    root:= MANGA24H_ROOT + root;
+  end
+  else
   if cbSelectManga.Items[cbSelectManga.ItemIndex] = VNSHARING_NAME then
   begin
     root:= dataProcess.Param[

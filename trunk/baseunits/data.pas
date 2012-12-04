@@ -74,7 +74,7 @@ type
     procedure   OnText(text: String);
     constructor Create;
     destructor  Destroy; override;
-    function    GetDirectoryPage(out Page: Cardinal;
+    function    GetDirectoryPage(var Page: Cardinal;
                                  const website: String): Byte;
     function    GetNameAndLink(const names, links: TStringList;
                                const website, URL: String): Byte;
@@ -439,7 +439,7 @@ begin
   parse.Add(text);
 end;
 
-function    TMangaInformation.GetDirectoryPage(out Page: Cardinal;
+function    TMangaInformation.GetDirectoryPage(var Page: Cardinal;
                                                const website: String): Byte;
 var
   s     : String;
@@ -528,6 +528,42 @@ var
     source.Free;
   end;
 
+  function   GetManga24hDirectoryPage: Byte;
+  var
+    i: Cardinal;
+  begin
+    Result:= INFORMATION_NOT_FOUND;
+    if NOT GetPage(TObject(source), MANGA24H_ROOT + MANGA24H_BROWSER, 0) then
+    begin
+      Result:= NET_PROBLEM;
+      source.Free;
+      exit;
+    end;
+    parse.Clear;
+    Parser:= TjsFastHTMLParser.Create(PChar(source.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.Exec;
+    Parser.Free;
+    if parse.Count=0 then
+    begin
+      source.Free;
+      exit;
+    end;
+    for i:= 0 to parse.Count-1 do
+    begin
+      if (Pos('span id=''total_number''', parse.Strings[i]) > 0) then
+      begin
+        s:= GetString(parse.Strings[i+1], 'Pages (', ')');
+        Page:= StrToInt(s);
+        Result:= NO_ERROR;
+        source.Free;
+        exit;
+      end;
+    end;
+    source.Free;
+  end;
+
   function   GetVnSharingDirectoryPage: Byte;
   var
     i: Cardinal;
@@ -610,6 +646,9 @@ begin
   if website = BATOTO_NAME then
     Result:= GetBatotoDirectoryPage
   else
+ { if website = MANGA24H_NAME then
+    Result:= GetManga24hDirectoryPage
+  else }
   if website = VNSHARING_NAME then
     Result:= GetVnSharingDirectoryPage
   else
@@ -815,6 +854,44 @@ var
     source.Free;
   end;
 
+  // get name and link of the manga from Manga24h
+  function   Manga24hGetNameAndLink: Byte;
+  var
+    i: Cardinal;
+    s: String;
+  begin
+    Result:= INFORMATION_NOT_FOUND;
+    if NOT GetPage(TObject(source), MANGA24H_ROOT + MANGA24H_BROWSER, 0) then
+    begin
+      Result:= NET_PROBLEM;
+      source.Free;
+      exit;
+    end;
+    parse.Clear;
+    Parser:= TjsFastHTMLParser.Create(PChar(source.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.Exec;
+    Parser.Free;
+    if parse.Count=0 then
+    begin
+      source.Free;
+      exit;
+    end;
+    for i:= 0 to parse.Count-1 do
+    begin
+      if (GetTagName(parse.Strings[i]) = 'h1') AND
+         (GetAttributeValue(GetTagAttribute(parse.Strings[i], 'class=')) = 'post_title') then
+      begin
+        Result:= NO_ERROR;
+        s:= StringFilter(TrimLeft(TrimRight(GetAttributeValue(GetTagAttribute(parse.Strings[i+2], 'title=')))));
+        names.Add(s);
+        links.Add('/'+StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i+2], 'href=')), MANGA24H_ROOT, '', []));
+      end;
+    end;
+    source.Free;
+  end;
+
   // get name and link of the manga from VnSharing
   function   VnSharingGetNameAndLink: Byte;
   var
@@ -934,6 +1011,9 @@ begin
   else
   if website = BATOTO_NAME then
     Result:= BatotoGetNameAndLink
+  else
+  if website = MANGA24H_NAME then
+    Result:= Manga24hGetNameAndLink
   else
   if website = VNSHARING_NAME then
     Result:= VnSharingGetNameAndLink
@@ -1375,6 +1455,7 @@ begin
   Result:= NO_ERROR;
 end;
 
+// get manga infos from batoto
 function   GetBatotoInfoFromURL: Byte;
 var
   patchURL,
@@ -1433,10 +1514,11 @@ begin
 
       // get chapter name and links
     if (GetTagName(parse.Strings[i]) = 'a') AND
-       (Pos('/read/_/', parse.Strings[i])<>0) then
+       (Pos('/read/_/', parse.Strings[i])<>0) AND
+       (Pos('English', parse.Strings[i+8])>0) then
     begin
       Inc(mangaInfo.numChapter);
-      mangaInfo.chapterLinks.Add(EncodeUrl(StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href=')), BATOTO_ROOT, '', [rfReplaceAll])));
+      mangaInfo.chapterLinks.Add((StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href=')), BATOTO_ROOT, '', [rfReplaceAll])));
       parse.Strings[i+2]:= StringReplace(parse.Strings[i+2], #10, '', [rfReplaceAll]);
       parse.Strings[i+2]:= StringReplace(parse.Strings[i+2], #13, '', [rfReplaceAll]);
       parse.Strings[i+2]:= TrimLeft(parse.Strings[i+2]);
@@ -1493,6 +1575,121 @@ begin
   Result:= NO_ERROR;
 end;
 
+// get manga infos from Manga24h site
+function   GetManga24hInfoFromURL: Byte;
+var
+ // patchURL,
+  s: String;
+  i, j: Cardinal;
+begin
+ // patchURL:= UTF8ToANSI(URL);
+ // Insert('comics/', patchURL, 10);
+  if NOT GetPage(TObject(source), MANGA24H_ROOT + URL, 0) then
+  begin
+    Result:= NET_PROBLEM;
+    source.Free;
+    exit;
+  end;
+
+  // parsing the HTML source
+  parse.Clear;
+  Parser:= TjsFastHTMLParser.Create(PChar(source.Text));
+  Parser.OnFoundTag := OnTag;
+  Parser.OnFoundText:= OnText;
+  Parser.Exec;
+
+  Parser.Free;
+  source.Free;
+  mangaInfo.website:= MANGA24H_NAME;
+
+  // using parser (cover link, summary, chapter name and link)
+  if parse.Count=0 then exit;
+  for i:= 0 to parse.Count-1 do
+  begin
+    // get cover link
+    if (GetTagName(parse.Strings[i]) = 'ul') AND
+       (Pos('mangadetail', parse.Strings[i]) > 0) then
+      // (GetAttributeValue(GetTagAttribute(parse.Strings[i], 'class=')) = 'post_title') then
+      if GetTagName(parse.Strings[i+4]) = 'img' then
+        mangaInfo.coverLink:= CorrectURL(GetAttributeValue(GetTagAttribute(parse.Strings[i+4], 'src=')));
+
+
+    // get summary
+    if (GetTagName(parse.Strings[i]) = 'div') AND
+       (GetAttributeValue(GetTagAttribute(parse.Strings[i], 'class=')) = 'mangacon') then
+    begin
+      j:= i+1;
+      mangaInfo.summary:= '';
+      while (Pos('<strong>', parse.Strings[j])=0) AND (j < parse.Count-1) AND
+            (Pos('id="thanks"', parse.Strings[j])=0) do
+      begin
+        s:= parse.Strings[j];
+        if (Length(s)>0) AND (s[1] <> '<') then
+        begin
+          parse.Strings[j]:= StringFilter(HTMLEntitiesFilter(parse.Strings[j]));
+          parse.Strings[j]:= StringReplace(parse.Strings[j], #10, '\n', [rfReplaceAll]);
+          parse.Strings[j]:= StringReplace(parse.Strings[j], #13, '\r', [rfReplaceAll]);
+          mangaInfo.summary:= mangaInfo.summary + TrimRight(TrimLeft(parse.Strings[j]));
+        end;
+        Inc(j);
+      end;
+    end;
+
+      // get chapter name and links
+    if (GetTagName(parse.Strings[i]) = 'th') AND
+       (Pos('scope="row" abbr', parse.Strings[i])<>0) then
+    begin
+      Inc(mangaInfo.numChapter);
+      mangaInfo.chapterLinks.Add(CorrectURL('/'+StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i+2], 'href=')), MANGA24H_ROOT, '', [rfReplaceAll])));
+      parse.Strings[i+3]:= HTMLEntitiesFilter(parse.Strings[i+3]);
+      parse.Strings[i+3]:= StringReplace(parse.Strings[i+3], #10, '', [rfReplaceAll]);
+      parse.Strings[i+3]:= StringReplace(parse.Strings[i+3], #13, '', [rfReplaceAll]);
+      parse.Strings[i+3]:= TrimLeft(parse.Strings[i+3]);
+      mangaInfo.chapterName.Add(TrimRight(RemoveSymbols(parse.Strings[i+3])));
+    end;
+
+    // get authors
+    if (Pos('Tác giả:', parse.Strings[i])<>0) then
+      mangaInfo.authors:= TrimLeft(StringFilter(parse.Strings[i+2]));
+
+    // get artists
+    if (Pos('Họa sỹ:', parse.Strings[i])<>0) then
+      mangaInfo.artists:= TrimLeft(StringFilter(parse.Strings[i+2]));
+
+    // get genres
+    if (Pos('Thể loại:', parse.Strings[i])<>0) then
+    begin
+      mangaInfo.genres:= '';
+      for j:= 0 to 38 do
+        if Pos(LowerCase(Genre[j]), LowerCase(parse.Strings[i+4]))<>0 then
+          mangaInfo.genres:= mangaInfo.genres+(Genre[j]+', ');
+    end;
+
+    // get status
+    if (Pos('Tình trạng:', parse.Strings[i])<>0) then
+    begin
+      if Pos('Đang Tiến Hành', parse.Strings[i+4])<>0 then
+        mangaInfo.status:= '1'   // ongoing
+      else
+        mangaInfo.status:= '0';  // completed
+    end;
+  end;
+
+  // Since chapter name and link are inverted, we need to invert them
+  if mangainfo.ChapterName.Count > 1 then
+  begin
+    i:= 0; j:= mangainfo.ChapterName.Count - 1;
+    while (i<j) do
+    begin
+      mangainfo.ChapterName.Exchange(i, j);
+      mangainfo.chapterLinks.Exchange(i, j);
+      Inc(i); Dec(j);
+    end;
+  end;
+  Result:= NO_ERROR;
+end;
+
+// get manga infos from VnSharing site
 function   GetVnSharingInfoFromURL: Byte;
 var
   s: String;
@@ -1768,6 +1965,9 @@ begin
   else
   if website = BATOTO_NAME then
     Result:= GetBatotoInfoFromURL
+  else
+  if website = MANGA24H_NAME then
+    Result:= GetManga24hInfoFromURL
   else
   if website = VNSHARING_NAME then
     Result:= GetVnSharingInfoFromURL

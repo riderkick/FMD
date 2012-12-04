@@ -86,8 +86,9 @@ const
   MANGAINN_NAME     = 'MangaInn';     MANGAINN_ID    = 2;
   OURMANGA_NAME     = 'OurManga';     OURMANGA_ID    = 3;
   BATOTO_NAME       = 'Batoto';       BATOTO_ID      = 4;
-  VNSHARING_NAME    = 'VnSharing';    VNSHARING_ID   = 5;
-  HENTAI2READ_NAME  = 'Hentai2Read';  HENTAI2READ_ID = 6;
+  MANGA24H_NAME     = 'Manga24h';     MANGA24H_ID    = 5;
+  VNSHARING_NAME    = 'VnSharing';    VNSHARING_ID   = 6;
+  HENTAI2READ_NAME  = 'Hentai2Read';  HENTAI2READ_ID = 7;
 
 var
   currentWebsite,
@@ -125,6 +126,9 @@ var
 
   BATOTO_ROOT      : String = 'http://www.batoto.net';
   BATOTO_BROWSER   : String = '/search';
+
+  MANGA24H_ROOT   : String = 'http://manga24h.com';
+  MANGA24H_BROWSER: String = '/manga/list';
 
   VNSHARING_ROOT   : String = 'http://truyen.vnsharing.net';
   VNSHARING_BROWSER: String = '/DanhSach';
@@ -360,6 +364,8 @@ begin
   else
   if name = BATOTO_NAME then Result:= BATOTO_ID
   else
+  if name = MANGA24H_NAME then Result:= MANGA24H_ID
+  else
   if name = VNSHARING_NAME then Result:= VNSHARING_ID
   else
   if name = HENTAI2READ_NAME then Result:= HENTAI2READ_ID;
@@ -519,11 +525,11 @@ function  StringFilter(const source: String): String;
 begin
   if Length(source) = 0 then exit;
   Result:= StringReplace(source, '&#33;', '!', [rfReplaceAll]);
-  Result:= StringReplace(source, '&#036;', '$', [rfReplaceAll]);
+  Result:= StringReplace(Result, '&#036;', '$', [rfReplaceAll]);
   Result:= StringReplace(Result, '&amp;', '&', [rfReplaceAll]);
-  Result:= StringReplace(Result, '&nbsp', '', [rfReplaceAll]);
+  Result:= StringReplace(Result, '&nbsp;', '', [rfReplaceAll]);
   Result:= StringReplace(Result, '&quot;', '"', [rfReplaceAll]);
-  Result:= StringReplace(Result, '&nbsp;', ' ', [rfReplaceAll]);
+ // Result:= StringReplace(Result, '&nbsp;', ' ', [rfReplaceAll]);
   Result:= StringReplace(Result, #10, '\n',  [rfReplaceAll]);
   Result:= StringReplace(Result, #13, '\r',  [rfReplaceAll]);
 end;

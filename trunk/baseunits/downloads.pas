@@ -401,7 +401,7 @@ var
     parse.SaveToFile('ttt.txt');
     if parse.Count>0 then
     begin
-      manager.container.pageNumber:= 1;
+      manager.container.pageNumber:= 0;
       for i:= 0 to parse.Count-1 do
       begin
         if Pos('page_select', parse.Strings[i]) <> 0 then
@@ -478,7 +478,8 @@ begin
   if manager.container.mangaSiteID = BATOTO_ID then
     Result:= GetBatotoPageNumber
   else
-  if manager.container.mangaSiteID = VNSHARING_ID then
+  if (manager.container.mangaSiteID = MANGA24H_ID) OR
+     (manager.container.mangaSiteID = VNSHARING_ID) then
   begin
     // all of the page links are in a html page
     Result:= TRUE;
@@ -638,12 +639,45 @@ var
     begin
       for i:= 0 to parse.Count-1 do
         if GetTagName(parse.Strings[i]) = 'img' then
-          if (Pos('http://img.batoto.net/comics/', parse.Strings[i])>0) AND
+          if (Pos('batoto.net/comics', parse.Strings[i])>0) AND
              (Pos('z-index: 1003', parse.Strings[i])>0) then
           begin
             manager.container.pageLinks.Strings[workPtr]:= GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src='));
             break;
           end;
+    end;
+    parse.Free;
+    l.Free;
+  end;
+
+  function GetManga24hLinkPage: Boolean;
+  var
+    s: String;
+    j,
+    i: Cardinal;
+    l: TStringList;
+  begin
+    l:= TStringList.Create;
+    Result:= GetPage(TObject(l),
+                     MANGA24H_ROOT + URL,
+                     manager.container.manager.retryConnect);
+    parse:= TStringList.Create;
+    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.Exec;
+    Parser.Free;
+    if parse.Count>0 then
+    begin
+      manager.container.pageLinks.Clear;
+      for i:= 0 to parse.Count-1 do
+      begin
+        if (GetTagName(parse.Strings[i]) = 'img')  AND
+           (GetAttributeValue(GetTagAttribute(parse.Strings[i], 'class=')) = 'm_picture') then
+        begin
+          manager.container.pageLinks.Add(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src=')));
+        end;
+      end;
     end;
     parse.Free;
     l.Free;
@@ -736,6 +770,9 @@ begin
   else
   if manager.container.mangaSiteID = BATOTO_ID then
     Result:= GetBatotoLinkPage
+  else
+  if manager.container.mangaSiteID = MANGA24H_ID then
+    Result:= GetManga24hLinkPage
   else
   if manager.container.mangaSiteID = VNSHARING_ID then
     Result:= GetVnSharingLinkPage
@@ -920,7 +957,7 @@ begin
     container.downloadInfo.iProgress:= 0;
 
     // will bypass the download section if links = nil
-    if container.chapterLinks.Count > 0 then
+    if container.pageLinks.Count > 0 then
     begin
       while container.workPtr < container.pageLinks.Count do
       begin
