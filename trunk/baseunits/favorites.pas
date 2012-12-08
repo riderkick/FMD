@@ -17,9 +17,12 @@ type
   TFavoriteManager = class;
   TFavoriteThread = class(TThread)
   protected
+    procedure UpdateName;
     procedure EndPass0;
     procedure Execute; override;
   public
+    currentManga  : String;
+
     isTerminated,
 
     isSuspended   : Boolean;
@@ -96,6 +99,11 @@ begin
   inherited Destroy;
 end;
 
+procedure   TFavoriteThread.UpdateName;
+begin
+  MainForm.btFavoritesCheckNewChapter.Caption:= stFavoritesChecking + ' '+currentManga;
+end;
+
 procedure   TFavoriteThread.EndPass0;
 begin
   if threadID = 0 then
@@ -110,8 +118,11 @@ begin
   workPtr:= threadID;
   while (NOT Terminated) AND (workPtr <= manager.Count-1) do
   begin
-    getInfo.GetInfoFromURL(manager.favoriteInfo[workPtr].website,
-                           manager.favoriteInfo[workPtr].link);
+    currentManga:= manager.favoriteInfo[workPtr].title + ' <' + manager.favoriteInfo[workPtr].website + '>';
+    Synchronize(UpdateName);
+    if getInfo.GetInfoFromURL(manager.favoriteInfo[workPtr].website,
+                              manager.favoriteInfo[workPtr].link, 5) = NET_PROBLEM then
+      break;
     manager.mangaInfo[workPtr].chapterName := TStringList.Create;
     manager.mangaInfo[workPtr].chapterLinks:= TStringList.Create;
     TransferMangaInfo(manager.mangaInfo[workPtr], getInfo.mangaInfo);

@@ -21,6 +21,9 @@ type
   // this class will replace the old TDownloadThread
   TDownloadThread = class(TThread)
   protected
+    // wait for changing directoet completed
+    procedure   SetChangeDirectoryFalse;
+    procedure   SetChangeDirectoryTrue;
     // Get download link from URL
     function    GetLinkPageFromURL(const URL: String): Boolean;
     // Get number of download link from URL
@@ -100,10 +103,11 @@ type
   TDownloadManager = class(TObject)
   private
   public
+    isRunningBackup,
     isFinishTaskAccessed: Boolean;
 
     compress,
-    // number of tasks
+    //
     retryConnect,
     // max. active tasks
     maxDLTasks,
@@ -153,7 +157,7 @@ type
 
 implementation
 
-uses mainunit, FastHTMLParser, HTMLUtil, SynaCode;
+uses mainunit, FastHTMLParser, HTMLUtil, SynaCode, FileUtil, HTTPSend;
 
 // ----- TDownloadThread -----
 
@@ -478,8 +482,10 @@ begin
   if manager.container.mangaSiteID = BATOTO_ID then
     Result:= GetBatotoPageNumber
   else
-  if (manager.container.mangaSiteID = MANGA24H_ID) OR
-     (manager.container.mangaSiteID = VNSHARING_ID) then
+  if (manager.container.mangaSiteID = KISSMANGA_ID) OR
+     (manager.container.mangaSiteID = MANGA24H_ID) OR
+     (manager.container.mangaSiteID = VNSHARING_ID) OR
+     (manager.container.mangaSiteID = FAKKU_ID) then
   begin
     // all of the page links are in a html page
     Result:= TRUE;
@@ -619,6 +625,44 @@ var
     l.Free;
   end;
 
+  function GetKissMangaLinkPage: Boolean;
+  var
+    s: String;
+    j,
+    i: Cardinal;
+    l: TStringList;
+  begin
+    l:= TStringList.Create;
+    Result:= GetPage(TObject(l),
+                     KISSMANGA_ROOT + URL,
+                     manager.container.manager.retryConnect);
+    parse:= TStringList.Create;
+    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.Exec;
+    Parser.Free;
+    if parse.Count>0 then
+    begin
+      manager.container.pageLinks.Clear;
+      for i:= 0 to parse.Count-1 do
+      begin
+        if Pos('lstImages.push("', parse.Strings[i]) > 0 then
+        begin
+          s:= parse.Strings[i];
+          repeat
+            j:= Pos('lstImages.push("', s);
+            manager.container.pageLinks.Add(EncodeUrl(GetString(s, 'lstImages.push("', '");')));
+            Delete(s, Pos('lstImages.push("', s), 16);
+            j:= Pos('lstImages.push("', s);
+          until j = 0;
+        end;
+      end;
+    end;
+    parse.Free;
+    l.Free;
+  end;
+
   function GetBatotoLinkPage: Boolean;
   var
     i: Cardinal;
@@ -751,6 +795,87 @@ var
     l.Free;
   end;
 
+  function GetFakkuLinkPage: Boolean;
+  var
+    i, j  : Cardinal;
+    l     : TStringList;
+    imgURL: String;
+  begin
+    l:= TStringList.Create;
+    // get number of pages
+    Result:= GetPage(TObject(l),
+                     FAKKU_ROOT + StringReplace(URL, '/read', '', []){ + '#page' + IntToStr(workPtr+1)},
+                     manager.container.manager.retryConnect);
+    parse:= TStringList.Create;
+    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.Exec;
+    Parser.Free;
+    j:= 0;
+    if parse.Count>0 then
+    begin
+      i:= 0;
+      manager.container.pageLinks.Clear;
+      while i < parse.Count-1 do
+      begin
+        if (Pos('favorites', parse.Strings[i])>0) AND
+           (Pos('pages', parse.Strings[i+4])>0) then
+        begin
+          j:= StrToInt(TrimRight(TrimLeft(parse.Strings[i+2])));
+          break;
+        end;
+        Inc(i);
+      end;
+    end;
+    // get link pages
+    l.Clear;
+    Result:= GetPage(TObject(l),
+                     FAKKU_ROOT + URL{ + '#page' + IntToStr(workPtr+1)},
+                     manager.container.manager.retryConnect);
+    parse.Clear;
+    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.Exec;
+    Parser.Free;
+    if parse.Count>0 then
+    begin
+      i:= 0;
+      manager.container.pageLinks.Clear;
+      while i < parse.Count-1 do
+      begin
+        if (Pos('return ''http://cdn.fakku.net/', parse.Strings[i])>0) then
+        begin
+        //  manager.container.pageLinks.Strings[workPtr]:=
+          imgURL:= 'http://cdn.fakku.net/' + GetString(parse.Strings[i], '''http://cdn.fakku.net/', '''');
+          break;
+        end;
+        Inc(i);
+        {if Pos('.thumb.', parse.Strings[i])>0 then
+        begin
+          parse.Strings[i]:= StringReplace(parse.Strings[i], '.thumb.', '', []);
+          Inc(j);
+        end
+        else
+        if Pos('\/thumbs\/', parse.Strings[i])>0 then
+        begin
+          parse.Strings[i]:= StringReplace(parse.Strings[i], '\/thumbs\/', '', []);
+          Inc(j);
+        end
+        else}
+      end;
+    end;
+    // build page files
+    for i:= 1 to j do
+    begin
+     // s:= imgURL + Format('%3.3d.jpg', [i]);
+      manager.container.pageLinks.Add(imgURL + Format('%3.3d.jpg', [i]));
+    end;
+    parse.Free;
+    l.Free;
+  end;
+
 var
   s: String;
 
@@ -768,6 +893,9 @@ begin
   if manager.container.mangaSiteID = OURMANGA_ID then
     Result:= GetOurMangaLinkPage
   else
+  if manager.container.mangaSiteID = KISSMANGA_ID then
+    Result:= GetKissMangaLinkPage
+  else
   if manager.container.mangaSiteID = BATOTO_ID then
     Result:= GetBatotoLinkPage
   else
@@ -778,10 +906,106 @@ begin
     Result:= GetVnSharingLinkPage
   else
   if manager.container.mangaSiteID = HENTAI2READ_ID then
-    Result:= GetHentai2ReadLinkPage;
+    Result:= GetHentai2ReadLinkPage
+  else
+  if manager.container.mangaSiteID = FAKKU_ID then
+    Result:= GetFakkuLinkPage;
+end;
+
+procedure   TDownloadThread.SetChangeDirectoryFalse;
+begin
+  isChangeDirectory:= FALSE;
+end;
+
+procedure   TDownloadThread.SetChangeDirectoryTrue;
+begin
+  isChangeDirectory:= TRUE;
 end;
 
 function    TDownloadThread.DownloadPage: Boolean;
+
+  function  SavePage(URL: String; const Path, name: String; const Reconnect: Cardinal): Boolean;
+  var
+    header  : array [0..3] of Byte;
+    ext     : String;
+    HTTP    : THTTPSend;
+    counter : Cardinal = 0;
+  begin
+    Result:= FALSE;
+    HTTP:= THTTPSend.Create;
+    HTTP.ProxyHost:= Host;
+    HTTP.ProxyPort:= Port;
+    HTTP.ProxyUser:= User;
+    HTTP.ProxyHost:= Pass;
+    if Pos(HENTAI2READ_ROOT, URL) <> 0 then
+      HTTP.Headers.Insert(0, 'Referer:'+HENTAI2READ_ROOT+'/');
+    while (NOT HTTP.HTTPMethod('GET', URL)) OR
+          (HTTP.ResultCode >= 500) do
+    begin
+      if Reconnect <> 0 then
+      begin
+        if Reconnect <= counter then
+        begin
+          HTTP.Free;
+          exit;
+        end;
+        Inc(counter);
+      end;
+      HTTP.Clear;
+      Sleep(500);
+    end;
+
+    while HTTP.ResultCode = 302 do
+    begin
+      URL:= CheckRedirect(HTTP);
+      HTTP.Clear;
+      HTTP.RangeStart:= 0;
+      if Pos(HENTAI2READ_ROOT, URL) <> 0 then
+        HTTP.Headers.Insert(0, 'Referer:'+HENTAI2READ_ROOT+'/');
+      while (NOT HTTP.HTTPMethod('GET', URL)) OR
+            (HTTP.ResultCode >= 500) do
+      begin
+        if Reconnect <> 0 then
+        begin
+          if Reconnect <= counter then
+          begin
+            HTTP.Free;
+            exit;
+          end;
+          Inc(counter);
+        end;
+        HTTP.Clear;
+        Sleep(500);
+      end;
+    end;
+    HTTP.Document.Seek(0, soBeginning);
+    HTTP.Document.Read(header[0], 4);
+    if (header[0] = JPG_HEADER[0]) AND
+       (header[1] = JPG_HEADER[1]) AND
+       (header[2] = JPG_HEADER[2]) then
+      ext:= '.jpg'
+    else
+    if (header[0] = PNG_HEADER[0]) AND
+       (header[1] = PNG_HEADER[1]) AND
+       (header[2] = PNG_HEADER[2]) then
+      ext:= '.png'
+    else
+    if (header[0] = GIF_HEADER[0]) AND
+       (header[1] = GIF_HEADER[1]) AND
+       (header[2] = GIF_HEADER[2]) then
+      ext:= '.gif'
+    else
+      ext:= '';
+
+    while isChangeDirectory do
+      Sleep(16);
+    Synchronize(SetChangeDirectoryTrue);
+    SetCurrentDirUTF8(Path);
+    HTTP.Document.SaveToFile(name+ext);
+    HTTP.Free;
+    Result:= TRUE;
+  end;
+
 begin
   if (manager.container.pageLinks.Strings[workPtr] = '') OR
      (manager.container.pageLinks.Strings[workPtr] = 'W') then exit;
@@ -791,7 +1015,8 @@ begin
            Format('%.3d', [workPtr+1]),
            manager.container.manager.retryConnect);
   manager.container.pageLinks.Strings[workPtr]:= '';
-  SetCurrentDir(oldDir);
+  SetCurrentDirUTF8(oldDir);
+  Synchronize(SetChangeDirectoryFalse);
 end;
 
 // ----- TTaskThread -----
@@ -1327,6 +1552,7 @@ begin
   ini.CacheUpdates:= FALSE;
   containers:= TTaskThreadContainerList.Create;
   isFinishTaskAccessed:= FALSE;
+  isRunningBackup     := FALSE;
 
   // Restore old INI file
   Restore;
@@ -1400,6 +1626,8 @@ procedure   TDownloadManager.Backup;
 var
   i: Cardinal;
 begin
+  if isRunningBackup then exit;
+  isRunningBackup:= TRUE;
   // Erase all sections
   for i:= 0 to ini.ReadInteger('general', 'NumberOfTasks', 0) do
     ini.EraseSection('task'+IntToStr(i));
@@ -1437,6 +1665,7 @@ begin
     end;
   end;
   ini.UpdateFile;
+  isRunningBackup:= FALSE;
 end;
 
 procedure   TDownloadManager.AddTask;

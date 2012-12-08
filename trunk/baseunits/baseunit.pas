@@ -16,9 +16,9 @@ const
   JPG_HEADER: array[0..2] of Byte = ($FF, $D8, $FF);
   GIF_HEADER: array[0..2] of Byte = ($47, $49, $46);
   PNG_HEADER: array[0..2] of Byte = ($89, $50, $4E);
-  CS_DIRECTORY_COUNT  = 0;
-  CS_DIRECTORY_PAGE   = 1;
-  CS_INFO             = 2;
+  CS_DIRECTORY_COUNT = 0;
+  CS_DIRECTORY_PAGE  = 1;
+  CS_INFO            = 2;
   CS_GETPAGENUMBER   = 3;
   CS_GETPAGELINK     = 4;
   CS_DOWNLOAD        = 5;
@@ -58,15 +58,16 @@ const
   DEFAULT_PATH  = '/downloads';
   {$ENDIF}
 
-  WORK_FOLDER   = 'works/';
-  WORK_FILE     = 'works.ini';
+  WORK_FOLDER       = 'works/';
+  WORK_FILE         = 'works.ini';
 
-  FAVORITES_FILE= 'favorites.ini';
-  DATA_FOLDER   = 'data/';
-  DATA_EXT      = '.dat';
-  CONFIG_FOLDER = 'config/';
-  CONFIG_FILE   = 'config.ini';
-  LANGUAGE_FILE = 'languages.ini';
+  FAVORITES_FILE    = 'favorites.ini';
+  DATA_FOLDER       = 'data/';
+  DATA_EXT          = '.dat';
+  CONFIG_FOLDER     = 'config/';
+  CONFIG_FILE       = 'config.ini';
+  MANGALISTINI_FILE = 'mangalist.ini';
+  LANGUAGE_FILE     = 'languages.ini';
 
   OPTION_MANGALIST = 0;
   OPTION_RECONNECT = 1;
@@ -85,12 +86,17 @@ const
   MANGAHERE_NAME    = 'MangaHere';    MANGAHERE_ID   = 1;
   MANGAINN_NAME     = 'MangaInn';     MANGAINN_ID    = 2;
   OURMANGA_NAME     = 'OurManga';     OURMANGA_ID    = 3;
-  BATOTO_NAME       = 'Batoto';       BATOTO_ID      = 4;
-  MANGA24H_NAME     = 'Manga24h';     MANGA24H_ID    = 5;
-  VNSHARING_NAME    = 'VnSharing';    VNSHARING_ID   = 6;
-  HENTAI2READ_NAME  = 'Hentai2Read';  HENTAI2READ_ID = 7;
+  KISSMANGA_NAME    = 'KissManga';    KISSMANGA_ID   = 4;
+  BATOTO_NAME       = 'Batoto';       BATOTO_ID      = 5;
+  MANGA24H_NAME     = 'Manga24h';     MANGA24H_ID    = 6;
+  VNSHARING_NAME    = 'VnSharing';    VNSHARING_ID   = 7;
+  HENTAI2READ_NAME  = 'Hentai2Read';  HENTAI2READ_ID = 8;
+  FAKKU_NAME        = 'Fakku';        FAKKU_ID       = 9;
 
 var
+  currentJDN       : Cardinal;
+  isChangeDirectory: Boolean = FALSE;
+
   currentWebsite,
   stModeAll,
   stModeFilter,
@@ -124,6 +130,9 @@ var
   OURMANGA_ROOT   : String = 'http://www.ourmanga.com';
   OURMANGA_BROWSER: String = '/directory/';
 
+  KISSMANGA_ROOT   : String = 'http://kissmanga.com';
+  KISSMANGA_BROWSER: String = '/MangaList';
+
   BATOTO_ROOT      : String = 'http://www.batoto.net';
   BATOTO_BROWSER   : String = '/search';
 
@@ -135,6 +144,11 @@ var
 
   HENTAI2READ_ROOT   : String = 'http://hentai2read.com';
   HENTAI2READ_BROWSER: String = '/hentai-list/all/any/name-az/';
+
+  FAKKU_ROOT             : String = 'http://www.fakku.net';
+  FAKKU_BROWSER          : String = '/manga/newest';
+  FAKKU_MANGA_BROWSER    : String = '/manga/newest';
+  FAKKU_DOUJINSHI_BROWSER: String = '/doujinshi/newest';
 
   // en: dialog messages
   // vi: nội dung hộp thoại
@@ -158,6 +172,7 @@ var
   stFavoritesCheck,
   stFavoritesChecking,
 
+  stDldMangaListSelect,
   stDlgUpdateAlreadyRunning,
   stDlgNewManga,
   stDlgQuit,
@@ -227,6 +242,7 @@ type
     constructor Create(CreateSuspended: Boolean);
   end;
 
+function  CheckRedirect(const HTTP: THTTPSend): String;
 function  CorrectFile(const APath: String): String;
 function  CorrectFilePath(const APath: String): String;
 function  CorrectURL(const URL: String): String;
@@ -286,6 +302,8 @@ begin
   for I:=1 to Length(Result) do
     if Result[I]= '\' then
       Result[I]:= '/';
+  if Result[Length(Result)]<>'/' then
+    Result:= Result + '/';
 end;
 
 function  CorrectURL(const URL: String): String;
@@ -362,13 +380,17 @@ begin
   else
   if name = OURMANGA_NAME then Result:= OURMANGA_ID
   else
+  if name = KISSMANGA_NAME then Result:= KISSMANGA_ID
+  else
   if name = BATOTO_NAME then Result:= BATOTO_ID
   else
   if name = MANGA24H_NAME then Result:= MANGA24H_ID
   else
   if name = VNSHARING_NAME then Result:= VNSHARING_ID
   else
-  if name = HENTAI2READ_NAME then Result:= HENTAI2READ_ID;
+  if name = HENTAI2READ_NAME then Result:= HENTAI2READ_ID
+  else
+  if name = FAKKU_NAME then Result:= FAKKU_ID;
 end;
 
 function  RemoveSymbols(const input: String): String;
@@ -804,10 +826,10 @@ begin
     ext:= '.gif'
   else
     ext:= '';
-  SetCurrentDirUTF8(Path);
+
+ // SetCurrentDirUTF8();
  // HTTP.Document.SaveToFile('/home/akarin/FreeSpace/FMD/trunk/mangadownloader/downloads/' + name+ext);
-  HTTP.Document.SaveToFile(name+ext);
-  SetCurrentDirUTF8(oldDir);
+  HTTP.Document.SaveToFile(Path+name+ext);
   HTTP.Free;
   Result:= TRUE;
 end;

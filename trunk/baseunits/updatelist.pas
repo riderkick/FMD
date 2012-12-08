@@ -57,6 +57,8 @@ type
     website               : String;
     workPtr,
     directoryCount,
+    // for fakku's doujinshi only
+    directoryCount2,
     threadCount,
     numberOfThreads       : Cardinal;
     threads               : array of TUpdateMangaThread;
@@ -118,7 +120,15 @@ begin
         if manager.website = BATOTO_NAME then
           manager.directoryCount:= MainForm.batotoLastDirectoryPage;
         {$ENDIF}
-        info.GetDirectoryPage(manager.directoryCount, manager.website);
+        if manager.website = FAKKU_NAME then
+        begin
+          FAKKU_BROWSER:= FAKKU_MANGA_BROWSER;
+          info.GetDirectoryPage(manager.directoryCount , manager.website);
+          FAKKU_BROWSER:= FAKKU_DOUJINSHI_BROWSER;
+          info.GetDirectoryPage(manager.directoryCount2, manager.website);
+        end
+        else
+          info.GetDirectoryPage(manager.directoryCount , manager.website);
         {$IFDEF DOWNLOADER}
         if manager.website = BATOTO_NAME then
           MainForm.batotoLastDirectoryPage:= manager.directoryCount;
@@ -126,12 +136,26 @@ begin
       end;
     CS_DIRECTORY_PAGE:
       begin
-        Info.GetNameAndLink(names, links, manager.website, IntToStr(workPtr));
+        if manager.website = FAKKU_NAME then
+        begin
+          if Integer(workPtr-manager.directoryCount) >= 0 then
+          begin
+            FAKKU_BROWSER:= FAKKU_DOUJINSHI_BROWSER;
+            Info.GetNameAndLink(names, links, manager.website, IntToStr(workPtr-manager.directoryCount));
+          end
+          else
+          begin
+            FAKKU_BROWSER:= FAKKU_MANGA_BROWSER;
+            Info.GetNameAndLink(names, links, manager.website, IntToStr(workPtr));
+          end;
+        end
+        else
+          Info.GetNameAndLink(names, links, manager.website, IntToStr(workPtr));
         Synchronize(UpdateNamesAndLinks);
       end;
     CS_INFO:
       begin
-        Info.GetInfoFromURL(manager.website, manager.links[workPtr]);
+        Info.GetInfoFromURL(manager.website, manager.links[workPtr], {$IFDEF DOWNLOADER}5{$ELSE}0{$ENDIF});
      // {$IFNDEF DOWNLOADER}
         Info.AddInfoToDataWithoutBreak(manager.names[workPtr], manager.links[workPtr], manager.mainDataProcess);
      // {$ELSE}
@@ -261,15 +285,17 @@ begin
       while threadCount > 0 do Sleep(100);
 
       workPtr:= 0;
-      getInfo(directoryCount, CS_DIRECTORY_PAGE);
+      if website = FAKKU_NAME then
+        getInfo(directoryCount+directoryCount2, CS_DIRECTORY_PAGE)
+      else
+        getInfo(directoryCount, CS_DIRECTORY_PAGE);
       while threadCount > 0 do Sleep(100);
 
-
       {$IFNDEF DOWNLOADER}
-     // names.LoadFromFile(website+'_names.txt');
-     // links.LoadFromFile(website+'_links.txt');
-      names.SaveToFile(website+'_names.txt');
-      links.SaveToFile(website+'_links.txt');
+      names.LoadFromFile(website+'_names.txt');
+      links.LoadFromFile(website+'_links.txt');
+     // names.SaveToFile(website+'_names.txt');
+     // links.SaveToFile(website+'_links.txt');
       {$ENDIF}
       mainDataProcess:= TDataProcess.Create;
       mainDataProcess.LoadFromFile(website);

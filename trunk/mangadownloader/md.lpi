@@ -48,7 +48,7 @@
         <PackageName Value="LCL"/>
       </Item3>
     </RequiredPackages>
-    <Units Count="8">
+    <Units Count="9">
       <Unit0>
         <Filename Value="md.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -92,6 +92,14 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="updatelist"/>
       </Unit7>
+      <Unit8>
+        <Filename Value="unit1.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="Form1"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="Unit1"/>
+      </Unit8>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
@@ -107,9 +115,6 @@
     </SearchPaths>
     <CodeGeneration>
       <SmartLinkUnit Value="True"/>
-      <Optimizations>
-        <OptimizationLevel Value="0"/>
-      </Optimizations>
     </CodeGeneration>
     <Linking>
       <LinkSmart Value="True"/>
