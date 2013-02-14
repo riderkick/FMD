@@ -297,11 +297,11 @@ object MainForm: TMainForm
     Height = 471
     Top = 0
     Width = 597
-    ActivePage = tsDownload
+    ActivePage = tsInformation
     Align = alClient
     Font.Style = [fsBold]
     ParentFont = False
-    TabIndex = 0
+    TabIndex = 1
     TabOrder = 1
     OnChange = pcMainChange
     object tsDownload: TTabSheet
@@ -1439,6 +1439,7 @@ object MainForm: TMainForm
               Height = 21
               Top = 90
               Width = 48
+              Enabled = False
               MaxValue = 0
               ParentFont = False
               ParentShowHint = False
@@ -1506,6 +1507,24 @@ object MainForm: TMainForm
             )
             ParentFont = False
             TabOrder = 1
+          end
+          object cbOptionPathConvert: TCheckBox
+            Left = 28
+            Height = 17
+            Top = 162
+            Width = 465
+            Caption = 'Change all all unicode symbols to "_" (choose this when you have problem with unicode path)'
+            ParentFont = False
+            TabOrder = 2
+          end
+          object cbOptionGenerateChapterName: TCheckBox
+            Left = 28
+            Height = 17
+            Top = 189
+            Width = 228
+            Caption = 'Generate chapter folder with chapter name'
+            ParentFont = False
+            TabOrder = 3
           end
         end
         object tsDialogs: TTabSheet

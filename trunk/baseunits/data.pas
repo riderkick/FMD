@@ -69,8 +69,10 @@ type
 
   TMangaInformation = class(TObject)
   public
-    mangaInfo     : TMangaInfo;
-    parse         : TStringList;
+    mangaInfo      : TMangaInfo;
+    parse          : TStringList;
+    isGenerateFolderChapterName,
+    isRemoveUnicode: Boolean;
 
     procedure   OnTag (tag : String);
     procedure   OnText(text: String);
@@ -1023,6 +1025,7 @@ var
       source.Free;
       exit;
     end;
+    source.SaveToFile('test.txt');
     parse.Clear;
     Parser:= TjsFastHTMLParser.Create(PChar(source.Text));
     Parser.OnFoundTag := OnTag;
@@ -1096,7 +1099,8 @@ var
         begin }
         Result:= NO_ERROR;
         s:= GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href='));
-        if s <> '/Truyen/Tenki-Yohou-no-Koibito?id=506' then
+       // if s <> '/Truyen/Tenki-Yohou-no-Koibito?id=506' then
+        if s <> '/Truyen/Bakuman-Fantasy-Weirdos?id=6238' then
         begin
           links.Add(s);
           s:= StringFilter(TrimLeft(TrimRight(parse.Strings[i+1])));

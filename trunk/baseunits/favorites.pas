@@ -267,7 +267,17 @@ begin
         DLManager.containers.Items[pos].mangaSiteID:= GetMangaSiteID(mangaInfo[i].website);
         for j:= currentChapter to newChapter-1 do
         begin
-          DLManager.containers.Items[pos].chapterName.Add(Format('%.4d - %s', [j+1, mangaInfo[i].chapterName.Strings[j]]));
+         // DLManager.containers.Items[pos].chapterName.Add(Format('%.4d - %s', [j+1, mangaInfo[i].chapterName.Strings[j]]));
+          if NOT MainForm.cbOptionGenerateChapterName.Checked then
+            DLManager.containers.Items[pos].chapterName .Add(Format('%.4d', [j+1]))
+          else
+          begin
+            if NOT MainForm.cbOptionPathConvert.Checked then
+              DLManager.containers.Items[pos].chapterName .Add(Format('%.4d - %s', [j+1, mangaInfo[i].chapterName.Strings[j]]))
+            else
+              DLManager.containers.Items[pos].chapterName .Add(Format('%.4d - %s', [j+1, UnicodeRemove(mangaInfo[i].chapterName.Strings[j])]));
+          end;
+
           DLManager.containers.Items[pos].chapterLinks.Add(mangaInfo[i].chapterLinks.Strings[j]);
         end;
         if NOT isNow then

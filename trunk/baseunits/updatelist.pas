@@ -292,10 +292,10 @@ begin
       while threadCount > 0 do Sleep(100);
 
       {$IFNDEF DOWNLOADER}
-      names.LoadFromFile(website+'_names.txt');
-      links.LoadFromFile(website+'_links.txt');
-     // names.SaveToFile(website+'_names.txt');
-     // links.SaveToFile(website+'_links.txt');
+     // names.LoadFromFile(website+'_names.txt');
+     // links.LoadFromFile(website+'_links.txt');
+      names.SaveToFile(website+'_names.txt');
+      links.SaveToFile(website+'_links.txt');
       {$ENDIF}
       mainDataProcess:= TDataProcess.Create;
       mainDataProcess.LoadFromFile(website);
@@ -331,10 +331,11 @@ begin
     Synchronize(ConsoleReport);
   {$ELSE}
     Synchronize(RefreshList);
+   // Synchronize(DlgReport);
     MainForm.sbMain.Panels[0].Text:= '';
   {$ENDIF}
     mainDataProcess.Free;
-    Synchronize(DlgReport);
+   // Synchronize(DlgReport);
   end;
 end;
 

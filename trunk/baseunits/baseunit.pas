@@ -242,6 +242,7 @@ type
     constructor Create(CreateSuspended: Boolean);
   end;
 
+function  UnicodeRemove(const S: String): String;
 function  CheckRedirect(const HTTP: THTTPSend): String;
 function  CorrectFile(const APath: String): String;
 function  CorrectFilePath(const APath: String): String;
@@ -295,6 +296,27 @@ implementation
 
 uses FileUtil;
 
+function  UnicodeRemove(const S: String): String;
+var i: Cardinal;
+begin
+ // if doRemoveName then
+    Result:= S;
+ { else
+  begin
+    result:= '';
+    exit;
+  end; }
+ // if NOT doRemoveUnicode then exit;
+  for i:= 1 to Length(Result) do
+  begin
+    if (Byte(Result[i])<31) OR (Byte(Result[i])>127) then
+    begin
+      Delete(Result, i, 1);
+      Insert('_', Result, i);
+    end;
+  end;
+end;
+
 function  CorrectFile(const APath: String): String;
 var I: Integer;
 begin
@@ -304,6 +326,8 @@ begin
       Result[I]:= '/';
   if Result[Length(Result)]<>'/' then
     Result:= Result + '/';
+  while system.Pos('//', Result) > 0 do
+    Result:= StringReplace(Result, '//', '/', []);
 end;
 
 function  CorrectURL(const URL: String): String;
@@ -550,7 +574,12 @@ begin
   Result:= StringReplace(Result, '&#036;', '$', [rfReplaceAll]);
   Result:= StringReplace(Result, '&amp;', '&', [rfReplaceAll]);
   Result:= StringReplace(Result, '&nbsp;', '', [rfReplaceAll]);
+  Result:= StringReplace(Result, '&ldquo;', '"', [rfReplaceAll]);
+  Result:= StringReplace(Result, '&ldquo;', '"', [rfReplaceAll]);
+  Result:= StringReplace(Result, '&rdquo;', '"', [rfReplaceAll]);
   Result:= StringReplace(Result, '&quot;', '"', [rfReplaceAll]);
+  Result:= StringReplace(Result, '&lsquo;', '''', [rfReplaceAll]);
+  Result:= StringReplace(Result, '&rsquo;', '''', [rfReplaceAll]);
  // Result:= StringReplace(Result, '&nbsp;', ' ', [rfReplaceAll]);
   Result:= StringReplace(Result, #10, '\n',  [rfReplaceAll]);
   Result:= StringReplace(Result, #13, '\r',  [rfReplaceAll]);
@@ -696,7 +725,9 @@ end;
 function  GetPage(var output: TObject; URL: String; const Reconnect: Cardinal): Boolean;
 var
   HTTP   : THTTPSend;
+  code   : Cardinal;
   counter: Cardinal = 0;
+  s      : String;
 begin
   Result:= FALSE;
   HTTP:= THTTPSend.Create;
@@ -705,10 +736,31 @@ begin
   HTTP.ProxyUser:= User;
   HTTP.ProxyHost:= Pass;
   if Pos(HENTAI2READ_ROOT, URL) <> 0 then
-    HTTP.Headers.Insert(0, 'Referer:'+HENTAI2READ_ROOT+'/');
-  while (NOT HTTP.HTTPMethod('GET', URL)) OR
-        (HTTP.ResultCode >= 500) do
+    HTTP.Headers.Insert(0, 'Referer:'+HENTAI2READ_ROOT+'/');{
+  else
+  if Pos(MANGA24H_ROOT, URL) <> 0 then
   begin
+    HTTP.Headers.Add('Accept: text/xml,application/xml,application/json,application/xhtml+xml,');
+    HTTP.Headers.Add('text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5');
+    HTTP.Headers.Add('Cache-Control: max-age=0');
+    HTTP.Headers.Add('Connection: keep-alive');
+    HTTP.Headers.Add('Keep-Alive: 300');
+    HTTP.Headers.Add('Accept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.7');
+    HTTP.Headers.Add('Accept-Language: en-us,en;q=0.5');
+    HTTP.Headers.Add('Pragma: ');
+
+    HTTP.UserAgent:= 'Mozilla/5.0 (Windows NT 5.1; rv:5.0) Gecko/20100101 Firefox/5.0 Firefox/5.0';
+    HTTP.Headers.Add('Referer:'+MANGA24H_ROOT+'/;');
+    HTTP.Headers.Add('Encoding:gzip,deflate;');
+
+    HTTP.Cookies.Text:=
+   // HTTP.Headers.Insert(0, 'Cookie:expires=Sat, 26-Jan-2013 00:00:01 GMT');
+  end;}
+  while (NOT HTTP.HTTPMethod('GET', URL)) OR
+        (HTTP.ResultCode > 500) do
+  begin
+    code:= HTTP.ResultCode;
+    HTTP.Document.SaveToFile('error.txt');
     if Reconnect <> 0 then
     begin
       if Reconnect <= counter then
@@ -721,14 +773,19 @@ begin
     HTTP.Clear;
     Sleep(500);
   end;
-
+ // HTTP.Document.SaveToFile('error.txt');
+ // code:= HTTP.ResultCode;
+ // s:= HTTP.Cookies.Text;
   while HTTP.ResultCode = 302 do
   begin
     URL:= CheckRedirect(HTTP);
     HTTP.Clear;
     HTTP.RangeStart:= 0;
     if Pos(HENTAI2READ_ROOT, URL) <> 0 then
-      HTTP.Headers.Insert(0, 'Referer:'+HENTAI2READ_ROOT+'/');
+      HTTP.Headers.Insert(0, 'Referer:'+HENTAI2READ_ROOT+'/');{
+    else
+    if Pos(MANGA24H_ROOT, URL) <> 0 then
+      HTTP.Headers.Insert(0, 'Cookie:expires=Sat, 26-Jan-2013 00:00:01 GMT');}
     while (NOT HTTP.HTTPMethod('GET', URL)) OR
         (HTTP.ResultCode >= 500) do
     begin

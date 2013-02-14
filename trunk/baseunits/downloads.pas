@@ -522,6 +522,7 @@ var
 
   function GetMangaHereLinkPage: Boolean;
   var
+    c: Char;
     i: Cardinal;
     l: TStringList;
   begin
@@ -544,13 +545,14 @@ var
     if parse.Count>0 then
     begin
       for i:= 0 to parse.Count-1 do
-        if (Pos('http://c.mhcdn.net/store/', parse.Strings[i])<>0) then
-        begin
-          manager.container.pageLinks.Strings[workPtr]:= GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src='));
-          parse.Free;
-          l.Free;
-          exit;
-        end;
+        for c:= 'a' to 'z' do
+          if (Pos('http://'+c+'.mhcdn.net/store/', parse.Strings[i])<>0) then
+          begin
+            manager.container.pageLinks.Strings[workPtr]:= GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src='));
+            parse.Free;
+            l.Free;
+            exit;
+          end;
     end;
     parse.Free;
     l.Free;
@@ -938,7 +940,10 @@ function    TDownloadThread.DownloadPage: Boolean;
     HTTP.ProxyUser:= User;
     HTTP.ProxyHost:= Pass;
     if Pos(HENTAI2READ_ROOT, URL) <> 0 then
-      HTTP.Headers.Insert(0, 'Referer:'+HENTAI2READ_ROOT+'/');
+      HTTP.Headers.Insert(0, 'Referer:'+HENTAI2READ_ROOT+'/')
+    else
+    if Pos(KISSMANGA_ROOT, URL) <> 0 then
+      HTTP.Headers.Insert(0, 'Referer:'+KISSMANGA_ROOT+'/');
     while (NOT HTTP.HTTPMethod('GET', URL)) OR
           (HTTP.ResultCode >= 500) do
     begin
@@ -961,7 +966,10 @@ function    TDownloadThread.DownloadPage: Boolean;
       HTTP.Clear;
       HTTP.RangeStart:= 0;
       if Pos(HENTAI2READ_ROOT, URL) <> 0 then
-        HTTP.Headers.Insert(0, 'Referer:'+HENTAI2READ_ROOT+'/');
+        HTTP.Headers.Insert(0, 'Referer:'+HENTAI2READ_ROOT+'/')
+      else
+      if Pos(KISSMANGA_ROOT, URL) <> 0 then
+        HTTP.Headers.Insert(0, 'Referer:'+KISSMANGA_ROOT+'/');
       while (NOT HTTP.HTTPMethod('GET', URL)) OR
             (HTTP.ResultCode >= 500) do
       begin
@@ -997,11 +1005,11 @@ function    TDownloadThread.DownloadPage: Boolean;
     else
       ext:= '';
 
-    while isChangeDirectory do
-      Sleep(16);
-    Synchronize(SetChangeDirectoryTrue);
-    SetCurrentDirUTF8(Path);
-    HTTP.Document.SaveToFile(name+ext);
+   // while isChangeDirectory do
+   //   Sleep(16);
+   // Synchronize(SetChangeDirectoryTrue);
+   // SetCurrentDirUTF8(Path);
+    HTTP.Document.SaveToFile(Path+'/'+name+ext);
     HTTP.Free;
     Result:= TRUE;
   end;
@@ -1016,7 +1024,7 @@ begin
            manager.container.manager.retryConnect);
   manager.container.pageLinks.Strings[workPtr]:= '';
   SetCurrentDirUTF8(oldDir);
-  Synchronize(SetChangeDirectoryFalse);
+ // Synchronize(SetChangeDirectoryFalse);
 end;
 
 // ----- TTaskThread -----
@@ -1775,15 +1783,17 @@ begin
   if containers.Items[taskID].Status = STATUS_DOWNLOAD then
   begin
     containers.Items[taskID].thread.Terminate;
+ {   containers.Items[taskID].downloadInfo.Status:= stStop;
     containers.Items[taskID].Status:= STATUS_STOP;
   end
   else
   if containers.Items[taskID].Status = STATUS_WAIT then
   begin
     containers.Items[taskID].downloadInfo.Status:= stStop;
-    containers.Items[taskID].Status:= STATUS_STOP;
+    containers.Items[taskID].Status:= STATUS_STOP; }
   end;
  // containers.Items[taskID].downloadInfo.Status:= Format('%s (%d/%d)', [stStop, containers.Items[taskID].currentDownloadChapterPtr, containers.Items[taskID].chapterLinks.Count]);
+  containers.Items[taskID].downloadInfo.Status:= stStop;
   containers.Items[taskID].Status:= STATUS_STOP;
   Backup;
   Sleep(1000);

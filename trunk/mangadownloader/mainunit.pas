@@ -73,6 +73,8 @@ type
     cbAddAsStopped: TCheckBox;
     cbAddToFavorites: TCheckBox;
     cbOptionShowQuitDialog: TCheckBox;
+    cbOptionPathConvert: TCheckBox;
+    cbOptionGenerateChapterName: TCheckBox;
     CheckBox5: TCheckBox;
     CheckBox6: TCheckBox;
     CheckBox7: TCheckBox;
@@ -472,6 +474,7 @@ end;
 procedure TMainForm.btDownloadClick(Sender: TObject);
 var
   s: String;
+  hh, mm, ss, ms,
   day, month, year: Word;
   i, pos  : Cardinal;
   isCreate: Boolean = FALSE;
@@ -487,7 +490,15 @@ begin
         isCreate:= TRUE;
       end;
       DLManager.containers.Items[pos].mangaSiteID:= GetMangaSiteID(mangaInfo.website);
-      DLManager.containers.Items[pos].chapterName .Add(Format('%.4d - %s', [i+1, mangaInfo.chapterName.Strings[i]]));
+      if NOT cbOptionGenerateChapterName.Checked then
+        DLManager.containers.Items[pos].chapterName .Add(Format('%.4d', [i+1]))
+      else
+      begin
+        if NOT cbOptionPathConvert.Checked then
+          DLManager.containers.Items[pos].chapterName .Add(Format('%.4d - %s', [i+1, mangaInfo.chapterName.Strings[i]]))
+        else
+          DLManager.containers.Items[pos].chapterName .Add(Format('%.4d - %s', [i+1, UnicodeRemove(mangaInfo.chapterName.Strings[i])]));
+      end;
       DLManager.containers.Items[pos].chapterLinks.Add(mangaInfo.chapterLinks.Strings[i]);
     end;
   if NOT isCreate then exit;
@@ -505,9 +516,13 @@ begin
   DLManager.containers.Items[pos].currentDownloadChapterPtr:= 0;
   DLManager.containers.Items[pos].downloadInfo.title  := mangaInfo.title;
   DLManager.containers.Items[pos].downloadInfo.Website:= mangaInfo.website;
-  DLManager.containers.Items[pos].downloadInfo.SaveTo := CorrectFile(edSaveTo.Text);
+  s:= CorrectFile(edSaveTo.Text);
+  if s[Length(s)] = '/' then
+    Delete(s, Length(s), 1);
+  DLManager.containers.Items[pos].downloadInfo.SaveTo:= s;
   DecodeDate(Now, year, month, day);
-  DLManager.containers.Items[pos].downloadInfo.dateTime:= IntToStr(Month)+'/'+IntToStr(Day)+'/'+IntToStr(Year);
+  DecodeTime(Time, hh, mm, ss, ms);
+  DLManager.containers.Items[pos].downloadInfo.dateTime:= IntToStr(Month)+'/'+IntToStr(Day)+'/'+IntToStr(Year)+' '+IntToStr(hh)+':'+IntToStr(mm)+':'+IntToStr(ss);
 
   // Add to favorites
   if cbAddToFavorites.Checked then
@@ -537,6 +552,7 @@ end;
 
 procedure TMainForm.btBrowseClick(Sender: TObject);
 begin
+  if edSaveTo.Text='' then exit;
   dlgSaveTo.InitialDir:= CorrectFile(edSaveTo.Text);
   if dlgSaveTo.Execute then
     edSaveTo.Text:= CorrectFile(dlgSaveTo.FileName);
@@ -1326,6 +1342,8 @@ begin
   options.WriteString ('connections', 'User', edOptionUser.Text);
 
   options.WriteString ('saveto', 'SaveTo', edOptionDefaultPath.Text);
+  options.WriteBool   ('saveto', 'PathConv', cbOptionPathConvert.Checked);
+  options.WriteBool   ('saveto', 'GenChapName', cbOptionGenerateChapterName.Checked);
   options.WriteInteger('saveto', 'Compress', rgOptionCompress.ItemIndex);
   DLManager.compress:= rgOptionCompress.ItemIndex;
 
@@ -1484,13 +1502,16 @@ var
   begin
     Result:= FALSE;
     Info:= TMangaInformation.Create;
+    Info.isGenerateFolderChapterName:= cbOptionGenerateChapterName.Checked;
+    Info.isRemoveUnicode:= cbOptionPathConvert.Checked;
     Info.mangaInfo.title:= dataProcess.Title.Strings[dataProcess.filterPos.Items[vtMangaList.FocusedNode.Index]];
       if Info.GetInfoFromURL(URL, website, 0)<>NO_ERROR then
       begin
         Info.Free;
         exit;
       end;
-      Info.SyncInfoToData(DataProcess, vtMangaList.FocusedNode.Index);
+      // fixed
+      Info.SyncInfoToData(DataProcess, dataProcess.filterPos.Items[vtMangaList.FocusedNode.Index]);
       TransferMangaInfo(mangaInfo, Info.mangaInfo);
     Info.Free;
     Result:= TRUE;
@@ -1694,6 +1715,8 @@ begin
   DLManager.maxDLThreadsPerTask:= options.ReadInteger('connections', 'NumberOfThreadsPerTask', 1);
   DLManager.retryConnect       := options.ReadInteger('connections', 'Retry', 0);
   DLManager.compress           := options.ReadInteger('saveto', 'Compress', 0);
+  cbOptionPathConvert.Checked  := options.ReadBool   ('saveto', 'PathConv', FALSE);
+  cbOptionGenerateChapterName.Checked:= options.ReadBool('saveto', 'GenChapName', FALSE);
 end;
 
 procedure TMainForm.LoadMangaOptions;
@@ -1734,7 +1757,7 @@ begin
 
   clbOptionMangaSiteSelection.Clear;
   for i:= 0 to websiteName.Count-1 do
-    clbOptionMangaSiteSelection.Items.Add('['+websiteLanguage.Strings[i]+'] '+websiteName.Strings[i]);
+    clbOptionMangaSiteSelection.Items.Add('[ '+websiteLanguage.Strings[i]+' ]  '+websiteName.Strings[i]);
 
   for i:= 0 to l.Count-1 do
   begin
@@ -1942,6 +1965,7 @@ begin
   miFavoritesChangeCurrentChapter.Caption:= language.ReadString(lang, 'miFavoritesChangeCurrentChapterCaption', '');
   miFavoritesChangeSaveTo.Caption:= language.ReadString(lang, 'miFavoritesChangeSaveToCaption', '');
   miMangaListAddToFavorites.Caption:= language.ReadString(lang, 'miMangaListAddToFavoritesCaption', '');
+  miHighlightNewManga.Caption:= language.ReadString(lang, 'miHighlightNewMangaCaption', '');
 
   infoCustomGenres       := language.ReadString(lang, 'infoCustomGenres', '');
   infoName               := language.ReadString(lang, 'infoName', '');
@@ -1965,8 +1989,11 @@ begin
   lbOptionMaxThread.Caption   := Format(language.ReadString(lang, 'lbOptionMaxThreadCaption', ''), [seOptionMaxThread.MaxValue]);
   lbOptionMaxRetry.Caption    := language.ReadString(lang, 'lbOptionMaxRetryCaption', '');
   lbOptionDialogs.Caption     := language.ReadString(lang, 'lbOptionDialogsCaption', '');
+  cbOptionPathConvert.Caption := language.ReadString(lang, 'cbOptionPathConvertCaption', '');
+  cbOptionPathConvert.Caption := language.ReadString(lang, 'cbOptionPathConvertCaption', '');
   cbOptionShowQuitDialog.Caption      := language.ReadString(lang, 'cbOptionShowQuitDialogCaption', '');
   cbOptionShowDeleteTaskDialog.Caption:= language.ReadString(lang, 'cbOptionShowDeleteTaskDialogCaption', '');
+  cbOptionGenerateChapterName.Caption := language.ReadString(lang, 'cbOptionGenerateChapterNameCaption', '');
 
   stDownloadManga          := language.ReadString(lang, 'stDownloadManga', '');
   stDownloadStatus         := language.ReadString(lang, 'stDownloadStatus', '');
@@ -2034,6 +2061,7 @@ end;
 
 procedure TMainForm.tmBackupTimer(Sender: TObject);
 begin
+  if DLManager.isRunningBackup then exit;
   DLManager.Backup;
 end;
 

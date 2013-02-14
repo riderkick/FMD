@@ -115,6 +115,7 @@
     </SearchPaths>
     <CodeGeneration>
       <SmartLinkUnit Value="True"/>
+      <TargetOS Value="win32"/>
     </CodeGeneration>
     <Linking>
       <LinkSmart Value="True"/>
