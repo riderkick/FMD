@@ -1207,7 +1207,8 @@ begin
         {$ENDIF}
       end;
       WaitFor;
-      Synchronize(Compress);
+     // Synchronize(Compress);
+      Compress;
     end;
     if Terminated then exit;
     container.currentPageNumber:= 0;

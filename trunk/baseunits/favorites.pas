@@ -218,6 +218,7 @@ end;
 
 procedure   TFavoriteManager.ShowResult;
 var
+  removeListStr   : String = '';
   day, month, year: Word;
   currentChapter,
   newChapter,
@@ -230,10 +231,17 @@ begin
   for i:= 0 to Count-1 do
   begin
     if mangaInfo[i].numChapter > StrToInt(favoriteInfo[i].currentChapter) then
-      Inc(newC)
+      Inc(newC);
+    if mangaInfo[i].status = '0' then
+    begin
+      if removeListStr = '' then
+        removeListStr:= removeListStr + #10#13#10#13 + stDlgRemoveCompletedManga;
+      removeListStr:= removeListStr + #10#13 + ' - ' + favoriteInfo[i].title + ' <'+mangaInfo[i].Website +'> ';
+    end;
   end;
+
   if newC = 0 then
-    MessageDlg('', stDlgNoNewChapter,
+    MessageDlg('', Format(stDlgNoNewChapter + '%s', [removeListStr]),
                mtInformation, [mbOk], 0)
   else
   begin
@@ -246,7 +254,7 @@ begin
         newMangaStr:= newMangaStr + #10#13+ ' - '+favoriteInfo[i].title + ' <'+ favoriteInfo[i].Website +'> ' + favoriteInfo[i].currentChapter+' -> '+IntToStr(newChapter);
     end;
     if MessageDlg('',
-                 Format(stDlgHasNewChapter, [newC]) + #10#13 + newMangaStr,
+                 Format(stDlgHasNewChapter + #10#13 + newMangaStr + '%s', [newC, removeListStr]),
                  mtInformation, [mbYes, mbNo], 0) = mrYes then
     begin
       isNow:= TRUE;
@@ -310,10 +318,6 @@ begin
     DLManager.CheckAndActiveTask;
   end;
 
-  if Assigned(OnUpdateFavorite) then
-    OnUpdateFavorite;
-
-  Backup;
   while threads.Count > 0 do
   begin
     threads.Items[0].Terminate;
@@ -321,6 +325,22 @@ begin
     threads.Delete(0);
   end;
   isRunning:= FALSE;
+
+  i:= 0;
+  while i < Count do
+  begin
+    if mangaInfo[i].status = '0' then
+    begin
+      Remove(i);
+    end
+    else
+      Inc(i);
+  end;
+
+  if Assigned(OnUpdateFavorite) then
+    OnUpdateFavorite;
+
+  Backup;
 end;
 
 procedure   TFavoriteManager.Add(const title, currentChapter, website,

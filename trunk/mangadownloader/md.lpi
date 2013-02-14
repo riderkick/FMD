@@ -48,7 +48,7 @@
         <PackageName Value="LCL"/>
       </Item3>
     </RequiredPackages>
-    <Units Count="9">
+    <Units Count="10">
       <Unit0>
         <Filename Value="md.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -100,6 +100,11 @@
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="Unit1"/>
       </Unit8>
+      <Unit9>
+        <Filename Value="..\baseunits\subthreads.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="subthreads"/>
+      </Unit9>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

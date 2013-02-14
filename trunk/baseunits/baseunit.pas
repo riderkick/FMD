@@ -183,7 +183,8 @@ var
   stDlgCannotGetMangaInfo,
   stDlgFavoritesIsRunning,
   stDlgNoNewChapter,
-  stDlgHasNewChapter : String;
+  stDlgHasNewChapter,
+  stDlgRemoveCompletedManga: String;
 
 type
   PMangaListItem = ^TMangaListItem;
@@ -193,6 +194,7 @@ type
 
   PMangaInfo = ^TMangaInfo;
   TMangaInfo = record
+    url,
     title,
     link,
     website,
@@ -967,6 +969,7 @@ procedure TransferMangaInfo(var dest: TMangaInfo; const source: TMangaInfo);
 var
   i: Cardinal;
 begin
+  dest.url        := source.url;
   dest.title      := source.title;
   dest.link       := source.link;
   dest.website    := source.website;

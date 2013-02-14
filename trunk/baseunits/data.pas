@@ -1254,7 +1254,8 @@ var
   i, j: Cardinal;
   isExtractGenres: Boolean = FALSE;
 begin
-  if NOT GetPage(TObject(source), ANIMEA_ROOT + URL + ANIMEA_SKIP, Reconnect) then
+  mangaInfo.url:= ANIMEA_ROOT + URL + ANIMEA_SKIP;
+  if NOT GetPage(TObject(source), mangaInfo.url, Reconnect) then
   begin
     Result:= NET_PROBLEM;
     source.Free;
@@ -1356,7 +1357,8 @@ function   GetMangaHereInfoFromURL: Byte;
 var
   i, j: Cardinal;
 begin
-  if NOT GetPage(TObject(source), MANGAHERE_ROOT + URL, Reconnect) then
+  mangaInfo.url:= MANGAHERE_ROOT + URL;
+  if NOT GetPage(TObject(source), mangaInfo.url, Reconnect) then
   begin
     Result:= NET_PROBLEM;
     source.Free;
@@ -1461,7 +1463,8 @@ var
   i, j: Cardinal;
   isExtractChapters: Boolean = FALSE;
 begin
-  if NOT GetPage(TObject(source), MANGAINN_ROOT + URL, Reconnect) then
+  mangaInfo.url:= MANGAINN_ROOT + URL;
+  if NOT GetPage(TObject(source), mangaInfo.url, Reconnect) then
   begin
     Result:= NET_PROBLEM;
     source.Free;
@@ -1562,7 +1565,8 @@ var
   isExtractGenres : Boolean = FALSE;
   i, j: Cardinal;
 begin
-  if NOT GetPage(TObject(source), OURMANGA_ROOT + URL, Reconnect) then
+  mangaInfo.url:= OURMANGA_ROOT + URL;
+  if NOT GetPage(TObject(source), mangaInfo.url, Reconnect) then
   begin
     Result:= NET_PROBLEM;
     source.Free;
@@ -1682,7 +1686,8 @@ var
   isExtractSummary: Boolean = TRUE;
   isExtractGenres : Boolean = FALSE;
 begin
-  if NOT GetPage(TObject(source), EncodeURL(KISSMANGA_ROOT + URL + '?confirm=yes'), Reconnect) then
+  mangaInfo.url:= EncodeURL(KISSMANGA_ROOT + URL + '?confirm=yes');
+  if NOT GetPage(TObject(source), mangaInfo.url, Reconnect) then
   begin
     Result:= NET_PROBLEM;
     source.Free;
@@ -1803,7 +1808,8 @@ var
 begin
   patchURL:= UTF8ToANSI(URL);
   Insert('comics/', patchURL, 10);
-  if NOT GetPage(TObject(source), BATOTO_ROOT + patchURL, Reconnect) then
+  mangaInfo.url:= BATOTO_ROOT + patchURL;
+  if NOT GetPage(TObject(source), mangaInfo.url, Reconnect) then
   begin
     Result:= NET_PROBLEM;
     source.Free;
@@ -1922,7 +1928,8 @@ var
 begin
  // patchURL:= UTF8ToANSI(URL);
  // Insert('comics/', patchURL, 10);
-  if NOT GetPage(TObject(source), MANGA24H_ROOT + URL, Reconnect) then
+  mangaInfo.url:= MANGA24H_ROOT + URL;
+  if NOT GetPage(TObject(source), mangaInfo.url, Reconnect) then
   begin
     Result:= NET_PROBLEM;
     source.Free;
@@ -2035,7 +2042,8 @@ var
   isExtractGenres : Boolean = FALSE;
   i, j: Cardinal;
 begin
-  if NOT GetPage(TObject(source), VNSHARING_ROOT + URL + '&confirm=yes', Reconnect) then
+  mangaInfo.url:= VNSHARING_ROOT + URL + '&confirm=yes';
+  if NOT GetPage(TObject(source), mangaInfo.url, Reconnect) then
   begin
     Result:= NET_PROBLEM;
     source.Free;
@@ -2156,7 +2164,8 @@ var
   isExtractSummary : Boolean = FALSE;
   i, j: Cardinal;
 begin
-  if NOT GetPage(TObject(source), HENTAI2READ_ROOT + URL, Reconnect) then
+  mangaInfo.url:= HENTAI2READ_ROOT + URL;
+  if NOT GetPage(TObject(source), mangaInfo.url, Reconnect) then
   begin
     Result:= NET_PROBLEM;
     source.Free;
@@ -2289,7 +2298,8 @@ var
   isExtractSummary : Boolean = FALSE;
   i, j: Cardinal;
 begin
-  if NOT GetPage(TObject(source), FAKKU_ROOT + URL, Reconnect) then
+  mangaInfo.url:= FAKKU_ROOT + URL;
+  if NOT GetPage(TObject(source), mangaInfo.url, Reconnect) then
   begin
     Result:= NET_PROBLEM;
     source.Free;

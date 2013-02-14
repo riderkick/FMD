@@ -14,8 +14,8 @@ uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
   ExtCtrls, ComCtrls, Grids, ColorBox, ActnList, Buttons, CheckLst, Spin, Menus,
   customdrawncontrols, VirtualTrees, RichMemo, IniFiles, Process,
-  baseunit, data, types, downloads, favorites, LConvEncoding,
-  updatelist, lclproc{, ActiveX};
+  baseunit, data, types, downloads, favorites, LConvEncoding, LCLIntf,
+  updatelist, lclproc, subthreads{, ActiveX};
 
 type
 
@@ -32,6 +32,7 @@ type
     btFilterReset: TButton;
     btOptionApply: TButton;
     btUpdateList: TBitBtn;
+    btReadOnline: TButton;
     cbOptionShowDeleteTaskDialog: TCheckBox;
     cbOptionUseProxy: TCheckBox;
     cbSelectManga: TComboBox;
@@ -178,6 +179,7 @@ type
     vtDownload: TVirtualStringTree;
     vtMangaList: TVirtualStringTree;
 
+    procedure btReadOnlineClick(Sender: TObject);
     procedure btUpdateListClick(Sender: TObject);
     procedure cbSelectMangaChange(Sender: TObject);
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
@@ -278,9 +280,11 @@ type
     mangaInfo   : TMangaInfo;
     DLManager   : TDownloadManager;
     updateList  : TUpdateMangaManagerThread;
-    cover       : TPicture;
     ticks       : Cardinal;
     backupTicks : Cardinal;
+
+    // doing stuff like get manga info, compress, ...
+    SubThread   : TSubThread;
 
     // en: Too lazy to add it one by one
     // vi: Lười ...
@@ -367,10 +371,9 @@ begin
   LoadMangaOptions;
   LoadFormInformation;
 
-  ShowInformation;
+ // ShowInformation;
   mangaInfo.chapterName := TStringList.Create;
   mangaInfo.chapterLinks:= TStringList.Create;
-  cover:= TPicture.Create;
 
   vtMangaList.NodeDataSize := SizeOf(TMangaListItem);
   vtMangaList.RootNodeCount:= dataProcess.filterPos.Count;
@@ -402,6 +405,14 @@ begin
   cbOptionShowQuitDialog.Checked      := options.ReadBool('dialogs', 'ShowQuitDialog', TRUE);
   cbOptionShowDeleteTaskDialog.Checked:= options.ReadBool('dialogs', 'ShowDeleteDldTaskDialog', TRUE);
   currentJDN:= GetCurrentJDN;
+
+  // read online
+  btReadOnline.Enabled:= FALSE;
+
+  // subthread
+  SubThread:= TSubThread.Create;
+  SubThread.OnShowInformation:= nil;
+  SubThread.isSuspended:= FALSE;
 end;
 
 procedure TMainForm.cbOptionUseProxyChange(Sender: TObject);
@@ -426,6 +437,11 @@ end;
 
 procedure TMainForm.FormDestroy(Sender: TObject);
 begin
+  SubThread.Terminate;
+  Sleep(200);
+ // SubThread.WaitFor;
+ // SubThread.Free;
+
   websiteSelect.Free;
   websiteName.Free;
   websiteLanguage.Free;
@@ -572,6 +588,11 @@ begin
   end
   else
     MessageDlg('', stDlgUpdateAlreadyRunning, mtInformation, [mbYes], 0)
+end;
+
+procedure TMainForm.btReadOnlineClick(Sender: TObject);
+begin
+  OpenURL(mangaInfo.url);
 end;
 
 procedure TMainForm.cbSelectMangaChange(Sender: TObject);
@@ -1442,7 +1463,11 @@ end;
 
 procedure TMainForm.vtMangaListDblClick(Sender: TObject);
 begin
-  ShowInformation;
+  if SubThread.isGetInfos then exit;
+  SubThread.website:= cbSelectManga.Items[MainForm.cbSelectManga.ItemIndex];
+  SubThread.link:= DataProcess.Param[DataProcess.filterPos.Items[vtMangaList.FocusedNode.Index], DATA_PARAM_LINK];
+  SubThread.isGetInfos:= TRUE;
+  //ShowInformation;
 end;
 
 procedure TMainForm.InitCheckboxes;
@@ -1480,9 +1505,9 @@ begin
       fp.Style:= [fsBold, fsUnderline];
       fp.Size := fp.Size+1;
       SetTextAttributes(
-        Length(UTF8ToUTF16(Lines.Text))-
-        Length(UTF8ToUTF16(Lines[Lines.Count-1]))-Lines.Count-1,
-        Length(UTF8ToUTF16(Lines[Lines.Count-1])),
+        UTF8Length(Lines.Text)-
+        UTF8Length(Lines[Lines.Count-1])-Lines.Count-1,
+        UTF8Length(Lines[Lines.Count-1]),
         fp);
       {$ENDIF}
       Lines.Add(infoText);
@@ -1491,190 +1516,21 @@ end;
 
 procedure TMainForm.ShowInformation;
 var
-  data  : PMangaListItem;
-  cp    : TPoint;
-  root  : String;
-  header: array [0..3] of Byte;
+  data: PMangaListItem;
+  cp  : TPoint;
 
-  function  GetMangaInfo(const website, URL: String): Boolean;
-  var
-    Info: TMangaInformation;
   begin
-    Result:= FALSE;
-    Info:= TMangaInformation.Create;
-    Info.isGenerateFolderChapterName:= cbOptionGenerateChapterName.Checked;
-    Info.isRemoveUnicode:= cbOptionPathConvert.Checked;
-    Info.mangaInfo.title:= dataProcess.Title.Strings[dataProcess.filterPos.Items[vtMangaList.FocusedNode.Index]];
-      if Info.GetInfoFromURL(URL, website, 0)<>NO_ERROR then
-      begin
-        Info.Free;
-        exit;
-      end;
-      // fixed
-      Info.SyncInfoToData(DataProcess, dataProcess.filterPos.Items[vtMangaList.FocusedNode.Index]);
-      TransferMangaInfo(mangaInfo, Info.mangaInfo);
-    Info.Free;
-    Result:= TRUE;
-  end;
-
-begin
-  if cbSelectManga.ItemIndex < 0 then exit;
-  if NOT vtMangaList.Focused then exit;
-
   // ---------------------------------------------------
-
-  if cbSelectManga.Items[cbSelectManga.ItemIndex] = ANIMEA_NAME then
-  begin
-    root:= dataProcess.Param[
-      dataProcess.filterPos.Items[vtMangaList.FocusedNode.Index], DATA_PARAM_LINK];
-    if NOT GetMangaInfo(root, ANIMEA_NAME) then
-    begin
-      MessageDlg('', stDlgCannotGetMangaInfo,
-                 mtInformation, [mbYes], 0);
-      exit;
-    end;
-    root:= ANIMEA_ROOT + root;
-  end
-  else
-  if cbSelectManga.Items[cbSelectManga.ItemIndex] = MANGAHERE_NAME then
-  begin
-    root:= dataProcess.Param[
-      dataProcess.filterPos.Items[vtMangaList.FocusedNode.Index], DATA_PARAM_LINK];
-    if NOT GetMangaInfo(root, MANGAHERE_NAME) then
-    begin
-      MessageDlg('', stDlgCannotGetMangaInfo,
-                 mtInformation, [mbYes], 0);
-      exit;
-    end;
-    root:= MANGAHERE_ROOT + root;
-  end
-  else
-  if cbSelectManga.Items[cbSelectManga.ItemIndex] = MANGAINN_NAME then
-  begin
-    root:= dataProcess.Param[
-      dataProcess.filterPos.Items[vtMangaList.FocusedNode.Index], DATA_PARAM_LINK];
-    if NOT GetMangaInfo(root, MANGAINN_NAME) then
-    begin
-      MessageDlg('', stDlgCannotGetMangaInfo,
-                 mtInformation, [mbYes], 0);
-      exit;
-    end;
-    root:= MANGAINN_ROOT + root;
-  end
-  else
-  if cbSelectManga.Items[cbSelectManga.ItemIndex] = KISSMANGA_NAME then
-  begin
-    root:= dataProcess.Param[
-      dataProcess.filterPos.Items[vtMangaList.FocusedNode.Index], DATA_PARAM_LINK];
-    if NOT GetMangaInfo(root, KISSMANGA_NAME) then
-    begin
-      MessageDlg('', stDlgCannotGetMangaInfo,
-                 mtInformation, [mbYes], 0);
-      exit;
-    end;
-    root:= KISSMANGA_ROOT + root;
-  end
-  else
-  if cbSelectManga.Items[cbSelectManga.ItemIndex] = OURMANGA_NAME then
-  begin
-    root:= dataProcess.Param[
-      dataProcess.filterPos.Items[vtMangaList.FocusedNode.Index], DATA_PARAM_LINK];
-    if NOT GetMangaInfo(root, OURMANGA_NAME) then
-    begin
-      MessageDlg('', stDlgCannotGetMangaInfo,
-                 mtInformation, [mbYes], 0);
-      exit;
-    end;
-    root:= OURMANGA_ROOT + root;
-  end
-  else
-  if cbSelectManga.Items[cbSelectManga.ItemIndex] = BATOTO_NAME then
-  begin
-    root:= dataProcess.Param[
-      dataProcess.filterPos.Items[vtMangaList.FocusedNode.Index], DATA_PARAM_LINK];
-    if NOT GetMangaInfo(root, BATOTO_NAME) then
-    begin
-      MessageDlg('', stDlgCannotGetMangaInfo,
-                 mtInformation, [mbYes], 0);
-      exit;
-    end;
-    root:= BATOTO_ROOT + root;
-  end
-  else
-  if cbSelectManga.Items[cbSelectManga.ItemIndex] = MANGA24H_NAME then
-  begin
-    root:= dataProcess.Param[
-      dataProcess.filterPos.Items[vtMangaList.FocusedNode.Index], DATA_PARAM_LINK];
-    if NOT GetMangaInfo(root, MANGA24H_NAME) then
-    begin
-      MessageDlg('', stDlgCannotGetMangaInfo,
-                 mtInformation, [mbYes], 0);
-      exit;
-    end;
-    root:= MANGA24H_ROOT + root;
-  end
-  else
-  if cbSelectManga.Items[cbSelectManga.ItemIndex] = VNSHARING_NAME then
-  begin
-    root:= dataProcess.Param[
-      dataProcess.filterPos.Items[vtMangaList.FocusedNode.Index], DATA_PARAM_LINK];
-    if NOT GetMangaInfo(root, VNSHARING_NAME) then
-    begin
-      MessageDlg('', stDlgCannotGetMangaInfo,
-                 mtInformation, [mbYes], 0);
-      exit;
-    end;
-    root:= VNSHARING_ROOT + root;
-  end
-  else
-  if cbSelectManga.Items[cbSelectManga.ItemIndex] = HENTAI2READ_NAME then
-  begin
-    root:= dataProcess.Param[
-      dataProcess.filterPos.Items[vtMangaList.FocusedNode.Index], DATA_PARAM_LINK];
-    if NOT GetMangaInfo(root, HENTAI2READ_NAME) then
-    begin
-      MessageDlg('', stDlgCannotGetMangaInfo,
-                 mtInformation, [mbYes], 0);
-      exit;
-    end;
-    root:= HENTAI2READ_ROOT + root;
-  end
-  else
-  if cbSelectManga.Items[cbSelectManga.ItemIndex] = FAKKU_NAME then
-  begin
-    root:= dataProcess.Param[
-      dataProcess.filterPos.Items[vtMangaList.FocusedNode.Index], DATA_PARAM_LINK];
-    if NOT GetMangaInfo(root, FAKKU_NAME) then
-    begin
-      MessageDlg('', stDlgCannotGetMangaInfo,
-                 mtInformation, [mbYes], 0);
-      exit;
-    end;
-    root:= FAKKU_ROOT + root;
-  end;
-
-  // ---------------------------------------------------
-
   pcMain.PageIndex:= 1;
   edSaveTo.Text:= options.ReadString('saveto', 'SaveTo', '');
 
   with rmInformation do
   begin
     imCover.Picture.Assign(nil);
-    cover.Clear;
+   // cover.Clear;
 
     Clear;
 
-   { if (Pos('.jpg', mangaInfo.coverLink)>0) OR
-       (Pos('.jpeg', mangaInfo.coverLink)>0) then  }
-      if GetPage(TObject(cover), mangaInfo.coverLink, 1) then
-      begin
-     { cover.(header[0], 4);
-      if (header[0] = JPG_HEADER[0]) AND
-         (header[1] = JPG_HEADER[1]) AND
-         (header[2] = JPG_HEADER[2]) then
-     }   imCover.Picture.Assign(cover);
-      end;
 
     data:= vtMangaList.GetNodedata(vtMangaList.FocusedNode);
 
@@ -1686,14 +1542,16 @@ begin
     AddTextToInfo(infoArtists, mangaInfo.artists+#10#13);
     AddTextToInfo(infoGenres , mangaInfo.genres +#10#13);
     if mangaInfo.status = '0' then
-      AddTextToInfo(infoStatus , 'Completed'+#10#13)
+      AddTextToInfo(infoStatus, cbFilterStatus.Items.Strings[0]+#10#13)
     else
-      AddTextToInfo(infoStatus , 'Ongoing'+#10#13);
-    AddTextToInfo(infoLink, root+#10#13);
+      AddTextToInfo(infoStatus, cbFilterStatus.Items.Strings[1]+#10#13);
+    AddTextToInfo(infoLink, mangaInfo.url+#10#13);
     AddTextToInfo(infoSummary, StringBreaks(mangaInfo.summary));
     cp.X:= 0; cp.Y:= 0; CaretPos:= cp;
   end;
   AddChapterNameToList;
+  if mangaInfo.link <> '' then
+    btReadOnline.Enabled:= TRUE;
 end;
 
 procedure TMainForm.LoadOptions;
@@ -1730,20 +1588,6 @@ begin
   websiteLanguage.Clear;
   websiteName.Clear;
   websiteSelect.Clear;
-
-  {s:= mangalistIni.ReadString('general', 'MangaListSelect', '');
-  GetParams(l, s);
-
-  // load mangalist
-  if l.Count <> 0 then
-  begin
-    cbSelectManga.Items.Clear;
-    for i:= 0 to l.Count-1 do
-      cbSelectManga.Items.Add(l.Strings[i]);
-    dataProcess.LoadFromFile(cbSelectManga.Items.Strings[0]);
-    dataProcess.website:= cbSelectManga.Items[0];
-    cbSelectManga.ItemIndex:= 0;
-  end;}
 
   s:= mangalistIni.ReadString('general', 'MangaListAvail', '');
   GetParams(websiteName, s);
@@ -1924,6 +1768,7 @@ begin
 
   edSaveTo.EditLabel.Caption:= language.ReadString(lang, 'edSaveToEditLabelCaption', '');
   btDownload    .Caption  := language.ReadString(lang, 'btDownloadCaption', '');
+  btReadOnline  .Caption  := language.ReadString(lang, 'btReadOnlineCaption', '');
   cbAddAsStopped.Caption  := language.ReadString(lang, 'cbAddAsStoppedCaption', '');
   cbAddToFavorites.Caption:= language.ReadString(lang, 'cbAddToFavoritesCaption', '');
 
@@ -2018,6 +1863,7 @@ begin
   stDlgFavoritesIsRunning  := language.ReadString(lang, 'stDlgFavoritesIsRunning', '');
   stDlgNoNewChapter        := language.ReadString(lang, 'stDlgNoNewChapter', '');
   stDlgHasNewChapter       := language.ReadString(lang, 'stDlgHasNewChapter', '');
+  stDlgRemoveCompletedManga:= language.ReadString(lang, 'stDlgRemoveCompletedManga', '');
 
   language.Free;
   if dataProcess.isFiltered then

@@ -468,20 +468,20 @@ object MainForm: TMainForm
             TabOrder = 1
           end
           object btDownload: TBitBtn
-            Left = 439
+            Left = 399
             Height = 30
             Top = 133
-            Width = 112
+            Width = 80
             Anchors = [akLeft, akBottom]
             Caption = 'Download'
             OnClick = btDownloadClick
             TabOrder = 2
           end
           object btBrowse: TBitBtn
-            Left = 311
+            Left = 303
             Height = 30
             Top = 133
-            Width = 112
+            Width = 80
             Anchors = [akLeft, akBottom]
             Caption = 'Browse'
             OnClick = btBrowseClick
@@ -507,6 +507,15 @@ object MainForm: TMainForm
             Caption = 'Add to Favorites'
             ParentFont = False
             TabOrder = 5
+          end
+          object btReadOnline: TButton
+            Left = 487
+            Height = 30
+            Top = 133
+            Width = 90
+            Caption = 'Read online'
+            OnClick = btReadOnlineClick
+            TabOrder = 6
           end
         end
       end
