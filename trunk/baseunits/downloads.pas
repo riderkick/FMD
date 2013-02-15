@@ -943,7 +943,10 @@ function    TDownloadThread.DownloadPage: Boolean;
       HTTP.Headers.Insert(0, 'Referer:'+HENTAI2READ_ROOT+'/')
     else
     if Pos(KISSMANGA_ROOT, URL) <> 0 then
-      HTTP.Headers.Insert(0, 'Referer:'+KISSMANGA_ROOT+'/');
+      HTTP.Headers.Insert(0, 'Referer:'+KISSMANGA_ROOT+'/')
+    else
+    if Pos(VNSHARING_ROOT, URL) <> 0 then
+      HTTP.Headers.Insert(0, 'Referer:'+VNSHARING_ROOT+'/');
     while (NOT HTTP.HTTPMethod('GET', URL)) OR
           (HTTP.ResultCode >= 500) do
     begin

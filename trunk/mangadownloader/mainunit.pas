@@ -1464,8 +1464,9 @@ end;
 procedure TMainForm.vtMangaListDblClick(Sender: TObject);
 begin
   if SubThread.isGetInfos then exit;
-  SubThread.website:= cbSelectManga.Items[MainForm.cbSelectManga.ItemIndex];
-  SubThread.link:= DataProcess.Param[DataProcess.filterPos.Items[vtMangaList.FocusedNode.Index], DATA_PARAM_LINK];
+  SubThread.mangaListPos:= vtMangaList.FocusedNode.Index;
+  SubThread.website:= cbSelectManga.Items[SubThread.mangaListPos];
+  SubThread.link:= DataProcess.Param[DataProcess.filterPos.Items[SubThread.mangaListPos], DATA_PARAM_LINK];
   SubThread.isGetInfos:= TRUE;
   //ShowInformation;
 end;
@@ -1516,10 +1517,8 @@ end;
 
 procedure TMainForm.ShowInformation;
 var
-  data: PMangaListItem;
-  cp  : TPoint;
-
-  begin
+  cp: TPoint;
+begin
   // ---------------------------------------------------
   pcMain.PageIndex:= 1;
   edSaveTo.Text:= options.ReadString('saveto', 'SaveTo', '');
@@ -1531,11 +1530,8 @@ var
 
     Clear;
 
-
-    data:= vtMangaList.GetNodedata(vtMangaList.FocusedNode);
-
-    mangaInfo.title:= dataProcess.Param[dataProcess.filterPos.Items[vtMangaList.FocusedNode.Index], DATA_PARAM_NAME];
-    mangaInfo.link := dataProcess.Param[dataProcess.filterPos.Items[vtMangaList.FocusedNode.Index], DATA_PARAM_LINK];
+    mangaInfo.title:= dataProcess.Param[dataProcess.filterPos.Items[SubThread.mangaListPos], DATA_PARAM_NAME];
+    mangaInfo.link := dataProcess.Param[dataProcess.filterPos.Items[SubThread.mangaListPos], DATA_PARAM_LINK];
 
     AddTextToInfo(infoName, mangaInfo.title+#10#13);
     AddTextToInfo(infoAuthors, mangaInfo.authors+#10#13);

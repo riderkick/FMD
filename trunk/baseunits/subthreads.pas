@@ -1,3 +1,9 @@
+{
+        File: subthreads.pas
+        License: GPLv2
+        This unit is part of Free Manga Downloader
+}
+
 unit subthreads;
 
 {$mode delphi}
@@ -15,7 +21,8 @@ type
     procedure   DoGetInfos;
     procedure   CallMainFormGetInfos;
   public
-    cover            : TPicture;
+    mangaListPos: Integer;
+    cover       : TPicture;
     isHasCover,
     isCanStop,
     isTerminated,
@@ -65,14 +72,14 @@ procedure   TSubThread.DoGetInfos;
     Result:= FALSE;
     Info.isGenerateFolderChapterName:= MainForm.cbOptionGenerateChapterName.Checked;
     Info.isRemoveUnicode:= MainForm.cbOptionPathConvert.Checked;
-    Info.mangaInfo.title:= MainForm.dataProcess.Title.Strings[MainForm.dataProcess.filterPos.Items[MainForm.vtMangaList.FocusedNode.Index]];
+    Info.mangaInfo.title:= MainForm.dataProcess.Title.Strings[MainForm.dataProcess.filterPos.Items[mangaListPos]];
     if Info.GetInfoFromURL(URL, website, 0)<>NO_ERROR then
     begin
      // Info.Free;
       exit;
     end;
     // fixed
-    Info.SyncInfoToData(MainForm.DataProcess, MainForm.DataProcess.filterPos.Items[MainForm.vtMangaList.FocusedNode.Index]);
+    Info.SyncInfoToData(MainForm.DataProcess, MainForm.DataProcess.filterPos.Items[mangaListPos]);
     Result:= TRUE;
   end;
 
