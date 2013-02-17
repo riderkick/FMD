@@ -76,6 +76,7 @@ type
     cbOptionShowQuitDialog: TCheckBox;
     cbOptionPathConvert: TCheckBox;
     cbOptionGenerateChapterName: TCheckBox;
+    cbOptionGenerateMangaFolderName: TCheckBox;
     CheckBox5: TCheckBox;
     CheckBox6: TCheckBox;
     CheckBox7: TCheckBox;
@@ -119,6 +120,8 @@ type
     lbOptionUser: TLabel;
     MenuItem1: TMenuItem;
     MenuItem2: TMenuItem;
+    MenuItem3: TMenuItem;
+    miOpenFolder2: TMenuItem;
     miHighlightNewManga: TMenuItem;
     miI2: TMenuItem;
     miDown: TMenuItem;
@@ -219,6 +222,7 @@ type
     procedure miDownloadRemuseClick(Sender: TObject);
     procedure miDownloadRemoveClick(Sender: TObject);
     procedure miDownloadStopClick(Sender: TObject);
+    procedure miOpenFolder2Click(Sender: TObject);
     procedure miOpenFolderClick(Sender: TObject);
     procedure miUpClick(Sender: TObject);
 
@@ -535,7 +539,18 @@ begin
   s:= CorrectFile(edSaveTo.Text);
   if s[Length(s)] = '/' then
     Delete(s, Length(s), 1);
+
+  // save to
+  if cbOptionGenerateMangaFolderName.Checked then
+  begin
+    if NOT cbOptionPathConvert.Checked then
+      s:= s + '/' + mangaInfo.title
+    else
+      s:= s + '/' + UnicodeRemove(mangaInfo.title);
+  end;
   DLManager.containers.Items[pos].downloadInfo.SaveTo:= s;
+
+  // time
   DecodeDate(Now, year, month, day);
   DecodeTime(Time, hh, mm, ss, ms);
   DLManager.containers.Items[pos].downloadInfo.dateTime:= IntToStr(Month)+'/'+IntToStr(Day)+'/'+IntToStr(Year)+' '+IntToStr(hh)+':'+IntToStr(mm)+':'+IntToStr(ss);
@@ -544,7 +559,7 @@ begin
   if cbAddToFavorites.Checked then
   begin
     favorites.Add(mangaInfo.title, IntToStr(mangaInfo.numChapter),
-                  mangaInfo.website, CorrectFile(edSaveTo.Text), mangaInfo.link);
+                  mangaInfo.website, s, mangaInfo.link);
     vtFavorites.NodeDataSize := SizeOf(TFavoriteInfo);
     vtFavorites.RootNodeCount:= favorites.Count;
   end;
@@ -708,14 +723,28 @@ end;
 
 procedure TMainForm.miMangaListAddToFavoritesClick(Sender: TObject);
 var
+  s  : String;
   pos: Cardinal;
 begin
   if NOT Assigned(vtMangaList.FocusedNode) then exit;
   pos:= vtMangaList.FocusedNode.Index;
+
+  s:= CorrectFile(options.ReadString('saveto', 'SaveTo', DEFAULT_PATH));
+  if s[Length(s)] = '/' then
+    Delete(s, Length(s), 1);
+
+  if cbOptionGenerateMangaFolderName.Checked then
+  begin
+    if NOT cbOptionPathConvert.Checked then
+      s:= s + '/' + dataProcess.Param[dataProcess.filterPos.Items[pos], DATA_PARAM_NAME]
+    else
+      s:= s + '/' + UnicodeRemove(dataProcess.Param[dataProcess.filterPos.Items[pos], DATA_PARAM_NAME]);
+  end;
+
   favorites.Add(dataProcess.Param[dataProcess.filterPos.Items[pos], DATA_PARAM_NAME],
                 dataProcess.Param[dataProcess.filterPos.Items[pos], DATA_PARAM_NUMCHAPTER],
                 dataProcess.website,
-                options.ReadString('saveto', 'SaveTo', DEFAULT_PATH),
+                s,
                 dataProcess.Param[dataProcess.filterPos.Items[pos], DATA_PARAM_LINK]);
   UpdateVtFavorites;
   pcMain.PageIndex:= 3;
@@ -991,11 +1020,25 @@ begin
   end;
 end;
 
+procedure TMainForm.miOpenFolder2Click(Sender: TObject);
+var
+  Process: TProcess;
+begin
+  {$IFDEF WINDOWS}
+  if NOT Assigned(vtFavorites.FocusedNode) then exit;
+  Process:= TProcess.Create(nil);
+  Process.CommandLine:= 'explorer.exe /e, '+
+                         StringReplace(Favorites.favoriteInfo[vtFavorites.FocusedNode.Index].SaveTo, '/', '\', [rfReplaceAll]);
+  Process.Execute;
+  Process.Free;
+  {$ENDIF}
+end;
+
 procedure TMainForm.miOpenFolderClick(Sender: TObject);
 var
   Process: TProcess;
 begin
-  {$IFDEF WIN32}
+  {$IFDEF WINDOWS}
   if NOT Assigned(vtDownload.FocusedNode) then exit;
   Process:= TProcess.Create(nil);
   Process.CommandLine:= 'explorer.exe /e, '+
@@ -1030,6 +1073,11 @@ procedure TMainForm.pcMainChange(Sender: TObject);
 
     cbOptionShowQuitDialog.Checked      := options.ReadBool('dialogs', 'ShowQuitDialog', TRUE);
     cbOptionShowDeleteTaskDialog.Checked:= options.ReadBool('dialogs', 'ShowDeleteDldTaskDialog', TRUE);
+
+    cbOptionPathConvert.Checked  := options.ReadBool   ('saveto', 'PathConv', FALSE);
+    cbOptionGenerateChapterName.Checked:= options.ReadBool('saveto', 'GenChapName', FALSE);
+    cbOptionGenerateMangaFolderName.Checked:= options.ReadBool('saveto', 'GenMangaName', FALSE);
+
 
     for i:= 0 to clbOptionMangaSiteSelection.Items.Count-1 do
       clbOptionMangaSiteSelection.Checked[i]:= FALSE;
@@ -1092,6 +1140,7 @@ begin
     pmFavorites.Items[0].Enabled:= FALSE;
     pmFavorites.Items[1].Enabled:= FALSE;
     pmFavorites.Items[2].Enabled:= FALSE;
+    pmFavorites.Items[4].Enabled:= FALSE;
   end
   else
   if vtFavorites.SelectedCount = 1 then
@@ -1099,12 +1148,18 @@ begin
     pmFavorites.Items[0].Enabled:= TRUE;
     pmFavorites.Items[1].Enabled:= TRUE;
     pmFavorites.Items[2].Enabled:= TRUE;
+    {$IFDEF WINDOWS}
+    pmFavorites.Items[4].Enabled:= TRUE;
+    {$ELSE}
+    pmFavorites.Items[4].Enabled:= FALSE;
+    {$ENDIF}
   end
   else
   begin
     pmFavorites.Items[0].Enabled:= TRUE;
     pmFavorites.Items[1].Enabled:= FALSE;
     pmFavorites.Items[2].Enabled:= FALSE;
+    pmFavorites.Items[4].Enabled:= FALSE;
   end;
 end;
 
@@ -1365,7 +1420,9 @@ begin
   options.WriteString ('saveto', 'SaveTo', edOptionDefaultPath.Text);
   options.WriteBool   ('saveto', 'PathConv', cbOptionPathConvert.Checked);
   options.WriteBool   ('saveto', 'GenChapName', cbOptionGenerateChapterName.Checked);
+  options.WriteBool   ('saveto', 'GenMangaName', cbOptionGenerateMangaFolderName.Checked);
   options.WriteInteger('saveto', 'Compress', rgOptionCompress.ItemIndex);
+
   DLManager.compress:= rgOptionCompress.ItemIndex;
 
   options.WriteInteger('languages', 'Select', cbLanguages.ItemIndex);
@@ -1463,9 +1520,9 @@ end;
 
 procedure TMainForm.vtMangaListDblClick(Sender: TObject);
 begin
-  if SubThread.isGetInfos then exit;
+  if (SubThread.isGetInfos) OR (NOT vtMangaList.Focused) then exit;
   SubThread.mangaListPos:= vtMangaList.FocusedNode.Index;
-  SubThread.website:= cbSelectManga.Items[SubThread.mangaListPos];
+  SubThread.website:= cbSelectManga.Items[cbSelectManga.ItemIndex];
   SubThread.link:= DataProcess.Param[DataProcess.filterPos.Items[SubThread.mangaListPos], DATA_PARAM_LINK];
   SubThread.isGetInfos:= TRUE;
   //ShowInformation;
@@ -1571,6 +1628,7 @@ begin
   DLManager.compress           := options.ReadInteger('saveto', 'Compress', 0);
   cbOptionPathConvert.Checked  := options.ReadBool   ('saveto', 'PathConv', FALSE);
   cbOptionGenerateChapterName.Checked:= options.ReadBool('saveto', 'GenChapName', FALSE);
+  cbOptionGenerateMangaFolderName.Checked:= options.ReadBool('saveto', 'GenMangaName', FALSE);
 end;
 
 procedure TMainForm.LoadMangaOptions;
@@ -1807,6 +1865,7 @@ begin
   miFavoritesChangeSaveTo.Caption:= language.ReadString(lang, 'miFavoritesChangeSaveToCaption', '');
   miMangaListAddToFavorites.Caption:= language.ReadString(lang, 'miMangaListAddToFavoritesCaption', '');
   miHighlightNewManga.Caption:= language.ReadString(lang, 'miHighlightNewMangaCaption', '');
+  miOpenFolder2.Caption  := miOpenFolder.Caption;
 
   infoCustomGenres       := language.ReadString(lang, 'infoCustomGenres', '');
   infoName               := language.ReadString(lang, 'infoName', '');
@@ -1831,10 +1890,10 @@ begin
   lbOptionMaxRetry.Caption    := language.ReadString(lang, 'lbOptionMaxRetryCaption', '');
   lbOptionDialogs.Caption     := language.ReadString(lang, 'lbOptionDialogsCaption', '');
   cbOptionPathConvert.Caption := language.ReadString(lang, 'cbOptionPathConvertCaption', '');
-  cbOptionPathConvert.Caption := language.ReadString(lang, 'cbOptionPathConvertCaption', '');
+  cbOptionGenerateChapterName.Caption    := language.ReadString(lang, 'cbOptionGenerateChapterNameCaption', '');
+  cbOptionGenerateMangaFolderName.Caption:= language.ReadString(lang, 'cbOptionGenerateMangaFolderNameCaption', '');
   cbOptionShowQuitDialog.Caption      := language.ReadString(lang, 'cbOptionShowQuitDialogCaption', '');
   cbOptionShowDeleteTaskDialog.Caption:= language.ReadString(lang, 'cbOptionShowDeleteTaskDialogCaption', '');
-  cbOptionGenerateChapterName.Caption := language.ReadString(lang, 'cbOptionGenerateChapterNameCaption', '');
 
   stDownloadManga          := language.ReadString(lang, 'stDownloadManga', '');
   stDownloadStatus         := language.ReadString(lang, 'stDownloadStatus', '');

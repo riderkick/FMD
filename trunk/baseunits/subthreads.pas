@@ -21,7 +21,7 @@ type
     procedure   DoGetInfos;
     procedure   CallMainFormGetInfos;
   public
-    mangaListPos: Integer;
+    mangaListPos: Cardinal;
     cover       : TPicture;
     isHasCover,
     isCanStop,

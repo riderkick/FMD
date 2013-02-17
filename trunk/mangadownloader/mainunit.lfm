@@ -1529,11 +1529,20 @@ object MainForm: TMainForm
           object cbOptionGenerateChapterName: TCheckBox
             Left = 28
             Height = 17
-            Top = 189
+            Top = 186
             Width = 228
             Caption = 'Generate chapter folder with chapter name'
             ParentFont = False
             TabOrder = 3
+          end
+          object cbOptionGenerateMangaFolderName: TCheckBox
+            Left = 28
+            Height = 17
+            Top = 210
+            Width = 239
+            Caption = 'Auto generate folder based on manga''s name'
+            ParentFont = False
+            TabOrder = 4
           end
         end
         object tsDialogs: TTabSheet
@@ -1696,6 +1705,13 @@ object MainForm: TMainForm
     object miFavoritesChangeSaveTo: TMenuItem
       Caption = 'Change "Save to"'
       OnClick = miFavoritesChangeSaveToClick
+    end
+    object MenuItem3: TMenuItem
+      Caption = '-'
+    end
+    object miOpenFolder2: TMenuItem
+      Caption = 'Open Folder'
+      OnClick = miOpenFolder2Click
     end
   end
   object pmMangaList: TPopupMenu

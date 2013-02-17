@@ -574,6 +574,7 @@ begin
   if Length(source) = 0 then exit;
   Result:= StringReplace(source, '&#33;', '!', [rfReplaceAll]);
   Result:= StringReplace(Result, '&#036;', '$', [rfReplaceAll]);
+  Result:= StringReplace(Result, '&#039;', '''', [rfReplaceAll]);
   Result:= StringReplace(Result, '&amp;', '&', [rfReplaceAll]);
   Result:= StringReplace(Result, '&nbsp;', '', [rfReplaceAll]);
   Result:= StringReplace(Result, '&ldquo;', '"', [rfReplaceAll]);
