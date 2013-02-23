@@ -485,6 +485,7 @@ begin
   if (manager.container.mangaSiteID = KISSMANGA_ID) OR
      (manager.container.mangaSiteID = MANGA24H_ID) OR
      (manager.container.mangaSiteID = VNSHARING_ID) OR
+     (manager.container.mangaSiteID = TRUYEN18_ID) OR
      (manager.container.mangaSiteID = FAKKU_ID) then
   begin
     // all of the page links are in a html page
@@ -878,6 +879,44 @@ var
     l.Free;
   end;
 
+  function GetTruyen18LinkPage: Boolean;
+  var
+    s: String;
+    j,
+    i: Cardinal;
+    l: TStringList;
+  begin
+    l:= TStringList.Create;
+    Result:= GetPage(TObject(l),
+                     VNSHARING_ROOT + URL,
+                     manager.container.manager.retryConnect);
+    parse:= TStringList.Create;
+    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.Exec;
+    Parser.Free;
+    if parse.Count>0 then
+    begin
+      manager.container.pageLinks.Clear;
+      for i:= 0 to parse.Count-1 do
+      begin
+        if Pos('[IMG]http://', parse.Strings[i]) > 0 then
+        begin
+          s:= parse.Strings[i];
+          repeat
+            j:= Pos('[IMG]http://', s);
+            manager.container.pageLinks.Add(EncodeUrl(GetString(s, '[IMG]', '[/IMG];')));
+            Delete(s, Pos('[IMG]http://', s), 16);
+            j:= Pos('[IMG]http://', s);
+          until j = 0;
+        end;
+      end;
+    end;
+    parse.Free;
+    l.Free;
+  end;
+
 var
   s: String;
 
@@ -911,7 +950,10 @@ begin
     Result:= GetHentai2ReadLinkPage
   else
   if manager.container.mangaSiteID = FAKKU_ID then
-    Result:= GetFakkuLinkPage;
+    Result:= GetFakkuLinkPage
+  else
+  if manager.container.mangaSiteID = TRUYEN18_ID then
+    Result:= GetTruyen18LinkPage;
 end;
 
 procedure   TDownloadThread.SetChangeDirectoryFalse;

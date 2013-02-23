@@ -300,7 +300,7 @@ begin
       mainDataProcess:= TDataProcess.Create;
       mainDataProcess.LoadFromFile(website);
 
-    {}
+      //
       j:= 0;
       repeat
         if Find(links.Strings[j], mainDataProcess.Link, Integer(workPtr)) then
@@ -316,7 +316,7 @@ begin
       begin
         Synchronize(DlgReport);
         continue;
-      end;  {}
+      end;  //
       workPtr:= 0;//mainDataProcess.Data.Count;
 
       getInfo(links.Count, CS_INFO);

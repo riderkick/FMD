@@ -1,7 +1,7 @@
 object MainForm: TMainForm
-  Left = 241
+  Left = 562
   Height = 491
-  Top = 77
+  Top = 19
   Width = 792
   Align = alBottom
   Caption = 'Free Manga Downloader'

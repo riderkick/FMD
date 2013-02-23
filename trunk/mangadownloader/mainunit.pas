@@ -1521,6 +1521,7 @@ end;
 procedure TMainForm.vtMangaListDblClick(Sender: TObject);
 begin
   if (SubThread.isGetInfos) OR (NOT vtMangaList.Focused) then exit;
+
   SubThread.mangaListPos:= vtMangaList.FocusedNode.Index;
   SubThread.website:= cbSelectManga.Items[cbSelectManga.ItemIndex];
   SubThread.link:= DataProcess.Param[DataProcess.filterPos.Items[SubThread.mangaListPos], DATA_PARAM_LINK];

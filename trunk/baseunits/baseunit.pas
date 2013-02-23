@@ -92,6 +92,7 @@ const
   VNSHARING_NAME    = 'VnSharing';    VNSHARING_ID   = 7;
   HENTAI2READ_NAME  = 'Hentai2Read';  HENTAI2READ_ID = 8;
   FAKKU_NAME        = 'Fakku';        FAKKU_ID       = 9;
+  TRUYEN18_NAME     = 'Truyen18';     TRUYEN18_ID    = 10;
 
 var
   currentJDN       : Cardinal;
@@ -149,6 +150,9 @@ var
   FAKKU_BROWSER          : String = '/manga/newest';
   FAKKU_MANGA_BROWSER    : String = '/manga/newest';
   FAKKU_DOUJINSHI_BROWSER: String = '/doujinshi/newest';
+
+  TRUYEN18_ROOT   : String = 'http://www.truyen18.org';
+  TRUYEN18_BROWSER: String = '/moi-dang/danhsach';
 
   // en: dialog messages
   // vi: nội dung hộp thoại
@@ -739,7 +743,10 @@ begin
   HTTP.ProxyUser:= User;
   HTTP.ProxyHost:= Pass;
   if Pos(HENTAI2READ_ROOT, URL) <> 0 then
-    HTTP.Headers.Insert(0, 'Referer:'+HENTAI2READ_ROOT+'/');{
+    HTTP.Headers.Insert(0, 'Referer:'+HENTAI2READ_ROOT+'/');
+ { else
+  if Pos(TRUYEN18_ROOT, URL) <> 0 then
+    HTTP.Headers.Insert(0, 'Referer:'+'http://adf.ly/2337104/http%3a%2f%2fwww.truyen18.org%2fhentai%2fkaren-chameleon%2f4220.html');
   else
   if Pos(MANGA24H_ROOT, URL) <> 0 then
   begin

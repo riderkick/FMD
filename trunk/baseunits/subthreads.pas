@@ -67,19 +67,24 @@ procedure   TSubThread.DoGetInfos;
 {var
   root: String;}
 
-  function  GetMangaInfo(const website, URL: String): Boolean;
+  function  GetMangaInfo(const URL, website: String): Boolean;
+  var
+    selectedWebsite: String;
+    filterPos      : Cardinal;
   begin
     Result:= FALSE;
+    filterPos:= MainForm.dataProcess.filterPos.Items[mangaListPos];
     Info.isGenerateFolderChapterName:= MainForm.cbOptionGenerateChapterName.Checked;
     Info.isRemoveUnicode:= MainForm.cbOptionPathConvert.Checked;
-    Info.mangaInfo.title:= MainForm.dataProcess.Title.Strings[MainForm.dataProcess.filterPos.Items[mangaListPos]];
-    if Info.GetInfoFromURL(URL, website, 0)<>NO_ERROR then
+    Info.mangaInfo.title:= MainForm.dataProcess.Title.Strings[filterPos];
+    if Info.GetInfoFromURL(website, URL, 0)<>NO_ERROR then
     begin
      // Info.Free;
       exit;
     end;
     // fixed
-    Info.SyncInfoToData(MainForm.DataProcess, MainForm.DataProcess.filterPos.Items[mangaListPos]);
+    if website = MainForm.cbSelectManga.Items[MainForm.cbSelectManga.ItemIndex] then
+      Info.SyncInfoToData(MainForm.DataProcess, filterPos);
     Result:= TRUE;
   end;
 
