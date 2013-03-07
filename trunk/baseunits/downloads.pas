@@ -402,7 +402,6 @@ var
     Parser.Exec;
     Parser.Free;
     parse.Add(BATOTO_ROOT + URL + '/1');
-    parse.SaveToFile('ttt.txt');
     if parse.Count>0 then
     begin
       manager.container.pageNumber:= 0;
@@ -465,6 +464,42 @@ var
     l.Free;
   end;
 
+  function GetMangaReaderPageNumber: Boolean;
+  var
+    s   : String;
+    i, j: Cardinal;
+    l   : TStringList;
+  begin
+    l:= TStringList.Create;
+    parse:= TStringList.Create;
+    Result:= GetPage(TObject(l),
+                     MANGAREADER_ROOT + URL,
+                     manager.container.manager.retryConnect);
+    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
+    s:= MANGAREADER_ROOT + URL;
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.Exec;
+    Parser.Free;
+    if parse.Count>0 then
+    begin
+      manager.container.pageNumber:= 0;
+      for i:= 0 to parse.Count-1 do
+      begin
+        if (Pos('</select>', parse.Strings[i])>0) AND
+           (Pos('</div>', parse.Strings[i+2])>0) then
+        begin
+          s:= parse.Strings[i+1];
+          Delete(s, Pos(' of ', s), 4);
+          manager.container.pageNumber:= StrToInt(TrimLeft(TrimRight(s)));
+          break;
+        end;
+      end;
+    end;
+    parse.Free;
+    l.Free;
+  end;
+
 begin
   manager.container.pageNumber:= 0;
   if manager.container.mangaSiteID = ANIMEA_ID then
@@ -481,6 +516,9 @@ begin
   else
   if manager.container.mangaSiteID = BATOTO_ID then
     Result:= GetBatotoPageNumber
+  else
+  if manager.container.mangaSiteID = MANGAREADER_ID then
+    Result:= GetMangaReaderPageNumber
   else
   if (manager.container.mangaSiteID = KISSMANGA_ID) OR
      (manager.container.mangaSiteID = MANGA24H_ID) OR
@@ -888,7 +926,7 @@ var
   begin
     l:= TStringList.Create;
     Result:= GetPage(TObject(l),
-                     VNSHARING_ROOT + URL,
+                     TRUYEN18_ROOT + URL,
                      manager.container.manager.retryConnect);
     parse:= TStringList.Create;
     Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
@@ -910,6 +948,83 @@ var
             Delete(s, Pos('[IMG]http://', s), 16);
             j:= Pos('[IMG]http://', s);
           until j = 0;
+        end;
+      end;
+    end;
+    parse.Free;
+    l.Free;
+  end;
+
+  function GetMangaReaderLinkPage: Boolean;
+  var
+    realURL,
+    s: String;
+    j,
+    i: Cardinal;
+    l: TStringList;
+
+    procedure  BreakURL;
+    var
+      isSlashed: Boolean = FALSE;
+      i,
+      oldI     : Cardinal;
+    begin
+      i:= 2;
+      realURL:= '/';
+      while i <= Length(URL) do
+      begin
+        if (NOT isSlashed) AND (URL[i] = '/') then
+        begin
+          isSlashed:= TRUE;
+          oldI:= i;
+          for i:= i-1 downto 1 do
+          begin
+            if URL[i] <> '-' then
+            begin
+              SetLength(realURL, Length(realURL)-1);
+            end
+            else
+            begin
+              realURL:= realURL + IntToStr(workPtr+1);
+              break;
+            end;
+          end;
+          i:= oldI;
+         // realURL:= realURL + '/';
+        end
+        else
+        begin
+          realURL:= realURL + URL[i];
+          Inc(i);
+        end;
+      end;
+    end;
+
+  begin
+    l:= TStringList.Create;
+    BreakURL;
+    Result:= GetPage(TObject(l),
+                     MANGAREADER_ROOT + realURL,
+                     manager.container.manager.retryConnect);
+    parse:= TStringList.Create;
+    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.Exec;
+    Parser.Free;
+    if parse.Count>0 then
+    begin
+     // manager.container.pageLinks.Clear;
+      for i:= 0 to parse.Count-1 do
+      begin
+        if GetTagName(parse.Strings[i]) = 'img' then
+        begin
+          if //(Pos(realURL, parse.Strings[i])>0) AND
+             (Pos('alt=', parse.Strings[i])>0) then
+          begin
+            manager.container.pageLinks.Strings[workPtr]:= GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src='));
+            break;
+          end;
         end;
       end;
     end;
@@ -953,7 +1068,10 @@ begin
     Result:= GetFakkuLinkPage
   else
   if manager.container.mangaSiteID = TRUYEN18_ID then
-    Result:= GetTruyen18LinkPage;
+    Result:= GetTruyen18LinkPage
+  else
+  if manager.container.mangaSiteID = MANGAREADER_ID then
+    Result:= GetMangaReaderLinkPage;
 end;
 
 procedure   TDownloadThread.SetChangeDirectoryFalse;
@@ -1059,6 +1177,7 @@ function    TDownloadThread.DownloadPage: Boolean;
     Result:= TRUE;
   end;
 
+//var s: String;
 begin
   if (manager.container.pageLinks.Strings[workPtr] = '') OR
      (manager.container.pageLinks.Strings[workPtr] = 'W') then exit;
@@ -1067,6 +1186,7 @@ begin
            '/'+manager.container.chapterName.Strings[manager.container.currentDownloadChapterPtr],
            Format('%.3d', [workPtr+1]),
            manager.container.manager.retryConnect);
+//  s:= manager.container.pageLinks.Strings[workPtr];
   manager.container.pageLinks.Strings[workPtr]:= '';
   SetCurrentDirUTF8(oldDir);
  // Synchronize(SetChangeDirectoryFalse);

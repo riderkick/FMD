@@ -93,6 +93,7 @@ const
   HENTAI2READ_NAME  = 'Hentai2Read';  HENTAI2READ_ID = 8;
   FAKKU_NAME        = 'Fakku';        FAKKU_ID       = 9;
   TRUYEN18_NAME     = 'Truyen18';     TRUYEN18_ID    = 10;
+  MANGAREADER_NAME  = 'MangaReader';  MANGAREADER_ID = 11;
 
 var
   currentJDN       : Cardinal;
@@ -153,6 +154,9 @@ var
 
   TRUYEN18_ROOT   : String = 'http://www.truyen18.org';
   TRUYEN18_BROWSER: String = '/moi-dang/danhsach';
+
+  MANGAREADER_ROOT   : String = 'http://www.mangareader.net';
+  MANGAREADER_BROWSER: String = '/alphabetical';
 
   // en: dialog messages
   // vi: nội dung hộp thoại
@@ -420,7 +424,9 @@ begin
   else
   if name = HENTAI2READ_NAME then Result:= HENTAI2READ_ID
   else
-  if name = FAKKU_NAME then Result:= FAKKU_ID;
+  if name = FAKKU_NAME then Result:= FAKKU_ID
+  else
+  if name = MANGAREADER_NAME then Result:= MANGAREADER_ID;
 end;
 
 function  RemoveSymbols(const input: String): String;
