@@ -606,9 +606,9 @@ begin
   if cbOptionGenerateMangaFolderName.Checked then
   begin
     if NOT cbOptionPathConvert.Checked then
-      s:= s + '/' + mangaInfo.title
+      s:= s + '/' + RemoveSymbols(mangaInfo.title)
     else
-      s:= s + '/' + UnicodeRemove(mangaInfo.title);
+      s:= s + '/' + RemoveSymbols(UnicodeRemove(mangaInfo.title));
   end;
   DLManager.containers.Items[pos].downloadInfo.SaveTo:= s;
 
