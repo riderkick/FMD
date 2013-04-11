@@ -58,6 +58,8 @@ const
   DEFAULT_PATH  = '/downloads';
   {$ENDIF}
 
+  README_FILE       = 'readme.rtf';
+
   WORK_FOLDER       = 'works/';
   WORK_FILE         = 'works.ini';
 

@@ -121,6 +121,9 @@ type
     MenuItem1: TMenuItem;
     MenuItem2: TMenuItem;
     MenuItem3: TMenuItem;
+    MenuItem4: TMenuItem;
+    miDownloadHideCompleted: TMenuItem;
+    miDownloadMerge: TMenuItem;
     miOpenFolder2: TMenuItem;
     miHighlightNewManga: TMenuItem;
     miI2: TMenuItem;
@@ -154,6 +157,7 @@ type
     rbOne: TRadioButton;
     rbAll: TRadioButton;
     rgOptionCompress: TRadioGroup;
+    rmAbout: TRichMemo;
     rmInformation: TRichMemo;
     sbFilter: TScrollBox;
     sbInformation: TScrollBox;
@@ -166,6 +170,7 @@ type
     spInfos: TSplitter;
     spMainSplitter: TSplitter;
     sbMain: TStatusBar;
+    tsAbout: TTabSheet;
     tsWebsites: TTabSheet;
     tsDialogs: TTabSheet;
     tmBackup: TTimer;
@@ -205,6 +210,8 @@ type
     procedure clbChapterListKeyPress(Sender: TObject; var Key: char);
     procedure FormDestroy(Sender: TObject);
     procedure FormWindowStateChange(Sender: TObject);
+    procedure miDownloadHideCompletedClick(Sender: TObject);
+    procedure miDownloadMergeClick(Sender: TObject);
     procedure miHighlightNewMangaClick(Sender: TObject);
     procedure miDownClick(Sender: TObject);
 
@@ -294,6 +301,9 @@ type
     // vi: Lười ...
     procedure InitCheckboxes;
 
+    // en: hide all completed tasks
+    procedure HideCompletedTasks(const isHide: Boolean);
+
     procedure AddChapterNameToList;
 
     // en: Add text to TRichMemo
@@ -344,7 +354,16 @@ implementation
 { TMainForm }
 
 procedure TMainForm.FormCreate(Sender: TObject);
+var
+  fs: TFileStream;
 begin
+  try
+    rmAbout.Clear;
+    fs:= TFileStream.Create(README_FILE, fmOpenRead or fmShareDenyNone);
+    rmAbout.LoadRichText(fs);
+  finally
+    fs.Free;
+  end;
   isUpdating := FALSE;
   isExiting  := FALSE;
  // ticks      := GetTickCount;
@@ -417,6 +436,8 @@ begin
   SubThread:= TSubThread.Create;
   SubThread.OnShowInformation:= nil;
   SubThread.isSuspended:= FALSE;
+
+  HideCompletedTasks(miDownloadHideCompleted.Checked);
 end;
 
 procedure TMainForm.cbOptionUseProxyChange(Sender: TObject);
@@ -460,6 +481,47 @@ begin
         TrayIcon.Show;
       end;
   end;
+end;
+
+procedure TMainForm.miDownloadHideCompletedClick(Sender: TObject);
+var
+  i: Cardinal;
+begin
+  miDownloadHideCompleted.Checked:= NOT miDownloadHideCompleted.Checked;
+  HideCompletedTasks(miDownloadHideCompleted.Checked);
+  options.WriteBool('general', 'HideCompleted', miDownloadHideCompleted.Checked);
+end;
+
+procedure TMainForm.miDownloadMergeClick(Sender: TObject);
+var
+  i, j: Cardinal;
+// merge all finished tasks that have same manga name, website and directory
+begin
+  i:= 0;
+  while i < DLManager.containers.Count do
+  begin
+    if DLManager.containers.Items[i].Status = STATUS_FINISH then
+    begin
+      j:= 0;
+      while j < DLManager.containers.Count do
+      begin
+        if (i<>j) AND
+           (DLManager.containers[j].Status = STATUS_FINISH) AND
+           SameText(DLManager.containers.Items[i].downloadInfo.title, DLManager.containers.Items[j].downloadInfo.title) AND
+           SameText(DLManager.containers.Items[i].downloadInfo.website, DLManager.containers.Items[j].downloadInfo.website) AND
+           SameText(DLManager.containers.Items[i].downloadInfo.saveTo, DLManager.containers.Items[j].downloadInfo.saveTo) then
+        begin
+          DLManager.containers.Items[i].chapterLinks.Text:= DLManager.containers.Items[i].chapterLinks.Text + DLManager.containers.Items[j].chapterLinks.Text;
+          DLManager.containers.Items[i].chapterName .Text:= DLManager.containers.Items[i].chapterName .Text + DLManager.containers.Items[j].chapterName .Text;
+          DLManager.RemoveTask(j);
+        end
+        else
+          Inc(j);
+      end;
+    end;
+    Inc(i);
+  end;
+  UpdateVtDownload;
 end;
 
 procedure TMainForm.miHighlightNewMangaClick(Sender: TObject);
@@ -902,8 +964,7 @@ begin
     if MessageDlg('', stDlgRemoveFinishTasks,
                   mtConfirmation, [mbYes, mbNo], 0) = mrNo then exit;
   DLManager.RemoveAllFinishedTasks;
-  vtDownload.Clear;
-  vtDownload.RootNodeCount:= DLManager.containers.Count;
+  UpdateVtDownload;
   DLManager.Backup;
 end;
 
@@ -971,8 +1032,7 @@ begin
   if (vtDownload.SelectedCount = 1) AND (Assigned(vtDownload.FocusedNode)) then
   begin
     DLManager.RemoveTask(vtDownload.FocusedNode.Index);
-    vtDownload.Clear;
-    vtDownload.RootNodeCount:= DLManager.containers.Count;
+    UpdateVtDownload;
     DLManager.Backup;
   end
   else
@@ -988,8 +1048,7 @@ begin
         Inc(i);
       xNode:= vtDownload.GetNext(xNode);
     end;
-    vtDownload.Clear;
-    vtDownload.RootNodeCount:= DLManager.containers.Count;
+    UpdateVtDownload;
     DLManager.Backup;
   end;
 end;
@@ -1089,9 +1148,24 @@ procedure TMainForm.pcMainChange(Sender: TObject);
     l.Free;
   end;
 
+var
+  fs: TFileStream;
 begin
-  if pcMain.TabIndex = 4 then
-    UpdateOptions;
+  case pcMain.TabIndex of
+    4:
+      UpdateOptions;
+    5:
+      begin
+      // load rtf file
+        try
+          rmAbout.Clear;
+          fs:= TFileStream.Create(README_FILE, fmOpenRead or fmShareDenyNone);
+          rmAbout.LoadRichText(fs);
+        finally
+          fs.Free;
+        end;
+      end;
+  end;
 end;
 
 procedure TMainForm.pmDownloadPopup(Sender: TObject);
@@ -1103,7 +1177,7 @@ begin
     pmDownload.Items[3].Enabled:= FALSE;
     pmDownload.Items[4].Enabled:= FALSE;
     pmDownload.Items[5].Enabled:= FALSE;
-    pmDownload.Items[8].Enabled:= FALSE;
+    pmDownload.Items[11].Enabled:= FALSE;
   end
   else
   if vtDownload.SelectedCount = 1 then
@@ -1113,7 +1187,7 @@ begin
     pmDownload.Items[3].Enabled:= TRUE;
     pmDownload.Items[4].Enabled:= TRUE;
     pmDownload.Items[5].Enabled:= TRUE;
-    pmDownload.Items[8].Enabled:= TRUE;
+    pmDownload.Items[11].Enabled:= TRUE;
   end
   else
   begin
@@ -1122,7 +1196,7 @@ begin
     pmDownload.Items[3].Enabled:= TRUE;
     pmDownload.Items[4].Enabled:= TRUE;
     pmDownload.Items[5].Enabled:= TRUE;
-    pmDownload.Items[8].Enabled:= FALSE;
+    pmDownload.Items[11].Enabled:= FALSE;
   end;
 end;
 
@@ -1540,6 +1614,30 @@ begin
   end;
 end;
 
+procedure TMainForm.HideCompletedTasks(const isHide: Boolean);
+var
+  i      : Cardinal;
+  xNode  : PVirtualNode;
+  canExit: Boolean = FALSE;
+begin
+  if vtDownload.RootNodeCount = 0 then exit;
+  xNode:= vtDownload.GetFirst;
+  for i:= 0 to vtDownload.RootNodeCount-1 do
+  begin
+    vtDownload.isVisible[xNode]:= TRUE;
+    if DLManager.containers.Items[i].Status = STATUS_FINISH then
+      vtDownload.isVisible[xNode]:= NOT isHide;
+    if canExit then
+      exit;
+
+    if xNode = vtDownload.GetLast then
+      canExit:= TRUE;
+    xNode:= vtDownload.GetNext(xNode);
+    if xNode = vtDownload.GetLast then
+      canExit:= TRUE;
+  end;
+end;
+
 procedure TMainForm.AddChapterNameToList;
 var
   i: Cardinal;
@@ -1619,6 +1717,7 @@ begin
   end;
  // cbLanguages.ItemIndex := options.ReadInteger('languages', 'Select', 0);
 
+  miDownloadHideCompleted.Checked:= options.ReadBool('general', 'HideCompleted', FALSE);
   batotoLastDirectoryPage:= mangalistIni.ReadInteger('general', 'batotoLastDirectoryPage', 244);
   cbAddAsStopped.Checked := options.ReadBool('general', 'AddAsStopped', FALSE);
   LoadLanguage(options.ReadInteger('languages', 'Select', 0));
@@ -1731,6 +1830,7 @@ procedure TMainForm.UpdateVtDownload;
 begin
   vtDownload.Clear;
   vtDownload.RootNodeCount:= DLManager.containers.Count;
+  HideCompletedTasks(miDownloadHideCompleted.Checked);
 end;
 
 procedure TMainForm.UpdateVtFavorites;
@@ -1854,6 +1954,8 @@ begin
   miDownloadRemuse.Caption:= language.ReadString(lang, 'miDownloadStopRemuse', '');
   miDownloadRemove.Caption:= language.ReadString(lang, 'miDownloadRemoveCaption', '');
   miDownloadRemoveFinishedTasks.Caption:= language.ReadString(lang, 'miDownloadRemoveFinishedTasksCaption', '');
+  miDownloadHideCompleted.Caption:= language.ReadString(lang, 'miDownloadHideCompletedTasksCaption', '');
+  miDownloadMerge.Caption := language.ReadString(lang, 'miDownloadMergeTasksCaption', '');
   miOpenFolder.Caption    := language.ReadString(lang, 'miOpenFolder', '');
 
   miChapterListCheckSelected.Caption:= language.ReadString(lang, 'miChapterListCheckSelectedCaption', '');
