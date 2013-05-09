@@ -2865,8 +2865,9 @@ var
   isExtractChapter: Boolean = FALSE;
   isExtractSummary: Boolean = TRUE;
   isExtractGenres : Boolean = FALSE;
-  i, j: Cardinal;
+  i, j, volumeCount: Cardinal;
 begin
+  volumeCount:= 0;
   mangaInfo.url:= MANGAPARK_ROOT + URL;// + '&confirm=yes';
   if NOT GetPage(TObject(source), mangaInfo.url, Reconnect) then
   begin
@@ -2928,8 +2929,11 @@ begin
        (parse.Strings[i+1] <> '3') AND
        (parse.Strings[i+1] <> '6') AND
        (parse.Strings[i+1] <> '10') AND
-       (parse.Strings[i+1] <> 'All') then
+       (parse.Strings[i+1] <> 'All'){ AND
+       (Pos('Vol.', parse.Strings[i+3]) = 0) }then
     begin
+      if Pos('Vol.', parse.Strings[i+3]) <> 0 then
+        Inc(volumeCount);
       Inc(mangaInfo.numChapter);
       s:= EncodeUrl(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href=')));
       Delete(s, Length(s), 1);
@@ -2972,22 +2976,47 @@ begin
   end;
 
   // check and delete duplicate links
-  i:= 0;
-  while i < mangainfo.ChapterName.Count-1 do
+  if (volumeCount < mangaInfo.numChapter) AND (volumeCount > 0) then
   begin
-    j:= i+1;
+    i:= 0;
+    while i < mangainfo.ChapterName.Count do
+    begin
+      if Pos('Vol.', mangainfo.ChapterName.Strings[i]) = 0 then
+      begin
+        mangainfo.ChapterName.Delete(i);
+        mangainfo.ChapterLinks.Delete(i);
+        Dec(mangaInfo.numChapter);
+      end
+      else
+        Inc(i);
+    end;
+  end;
+  {while i < mangainfo.ChapterName.Count-1 do
+  begin
+    j:= 0;
+    if Pos('Vol.', mangainfo.ChapterName.Strings[i]) = 0 then
     while j < mangainfo.ChapterName.Count do
     begin
-      if Pos(GetString(' '+mangainfo.ChapterName.Strings[i]+' ', ' ', ' '), mangainfo.ChapterName.Strings[j]) <> 0 then
+      if i=j then
       begin
+        Inc(j);
+        continue;
+      end;
+     // if Pos(GetString(' '+mangainfo.ChapterName.Strings[i]+' ', ' ', ' '), mangainfo.ChapterName.Strings[j]) <> 0 then
+      if GetString(mangainfo.ChapterName.Strings[i]+' ', 'Ch.', ' ') =
+         GetString(mangainfo.ChapterName.Strings[j]+' ', 'Ch.', ' ') then
+      begin
+        s:= GetString(' '+mangainfo.ChapterName.Strings[i]+' ', ' ', ' ');
         mangainfo.ChapterName.Delete(j);
         mangainfo.ChapterLinks.Delete(j);
+        Dec(mangaInfo.numChapter);
+        break;
       end
       else
         Inc(j);
     end;
     Inc(i);
-  end;
+  end;}
 
   // Since chapter name and link are inverted, we need to invert them
   if mangainfo.ChapterLinks.Count > 1 then

@@ -459,6 +459,11 @@ begin
         Result:= StringReplace(Result, Symbols[i], '', [rfReplaceAll]);
       end;
   until isDone;
+  if (Length(Result)>0) AND
+     (Result[Length(Result)] = '.') then
+  begin
+    Result[Length(Result)]:= '-';
+  end;
 end;
 
 function  GetString(const source, sStart, sEnd: String): String;

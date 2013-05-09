@@ -497,13 +497,13 @@ var
   i, j: Cardinal;
 // merge all finished tasks that have same manga name, website and directory
 begin
-  i:= 0;
-  while i < DLManager.containers.Count do
+  i:= DLManager.containers.Count-1;
+  while i > 0 do
   begin
     if DLManager.containers.Items[i].Status = STATUS_FINISH then
     begin
-      j:= 0;
-      while j < DLManager.containers.Count do
+      j:= i-1;
+      while j > 0 do
       begin
         if (i<>j) AND
            (DLManager.containers[j].Status = STATUS_FINISH) AND
@@ -514,12 +514,12 @@ begin
           DLManager.containers.Items[i].chapterLinks.Text:= DLManager.containers.Items[i].chapterLinks.Text + DLManager.containers.Items[j].chapterLinks.Text;
           DLManager.containers.Items[i].chapterName .Text:= DLManager.containers.Items[i].chapterName .Text + DLManager.containers.Items[j].chapterName .Text;
           DLManager.RemoveTask(j);
-        end
-        else
-          Inc(j);
+          Dec(i);
+        end;
+        Dec(j);
       end;
     end;
-    Inc(i);
+    Dec(i);
   end;
   UpdateVtDownload;
 end;
@@ -1236,6 +1236,7 @@ begin
     pmFavorites.Items[4].Enabled:= FALSE;
   end;
 end;
+
 
 procedure TMainForm.TrayIconDblClick(Sender: TObject);
 begin

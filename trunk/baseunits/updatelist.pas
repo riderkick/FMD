@@ -295,11 +295,11 @@ begin
       names.SaveToFile(website+'_names.txt');
       links.SaveToFile(website+'_links.txt');
 
-     { names.Clear;
+      names.Clear;
       links.Clear;
 
       names.LoadFromFile(website+'_names.txt');
-      links.LoadFromFile(website+'_links.txt');}
+      links.LoadFromFile(website+'_links.txt');
       {$ENDIF}
       mainDataProcess:= TDataProcess.Create;
       mainDataProcess.LoadFromFile(website);
