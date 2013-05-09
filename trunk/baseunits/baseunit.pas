@@ -96,6 +96,7 @@ const
   FAKKU_NAME        = 'Fakku';        FAKKU_ID       = 9;
   TRUYEN18_NAME     = 'Truyen18';     TRUYEN18_ID    = 10;
   MANGAREADER_NAME  = 'MangaReader';  MANGAREADER_ID = 11;
+  MANGAPARK_NAME    = 'MangaPark';    MANGAPARK_ID   = 12;
 
 var
   currentJDN       : Cardinal;
@@ -159,6 +160,12 @@ var
 
   MANGAREADER_ROOT   : String = 'http://www.mangareader.net';
   MANGAREADER_BROWSER: String = '/alphabetical';
+
+  MANGAPARK_ROOT   : String = 'http://www.mangapark.com';
+  MANGAPARK_BROWSER: String = '/list/';
+
+  GEHENTAI_ROOT   : String = 'http://g.e-hentai.org';
+  GEHENTAI_BROWSER: String = '?f_doujinshi=1&f_manga=1&f_artistcg=1&f_gamecg=1&f_western=0&f_non-h=1&f_imageset=1&f_cosplay=0&f_asianporn=0&f_misc=0&f_search=Search+Keywords&f_apply=Apply+Filter&advsearch=1&f_sname=on&f_stags=on&f_srdd=2';
 
   // en: dialog messages
   // vi: nội dung hộp thoại
@@ -304,9 +311,13 @@ function  GetCurrentJDN: LongInt;
 function  ConvertStrToInt32(const aStr  : String): Cardinal;}
 procedure TransferMangaInfo(var dest: TMangaInfo; const source: TMangaInfo);
 
+// cross platform funcs
+
+function  fmdGetTempPath: String;
+
 implementation
 
-uses FileUtil;
+uses FileUtil{$IFDEF WINDOWS}, Windows{$ENDIF};
 
 function  UnicodeRemove(const S: String): String;
 var i: Cardinal;
@@ -428,7 +439,9 @@ begin
   else
   if name = FAKKU_NAME then Result:= FAKKU_ID
   else
-  if name = MANGAREADER_NAME then Result:= MANGAREADER_ID;
+  if name = MANGAREADER_NAME then Result:= MANGAREADER_ID
+  else
+  if name = MANGAPARK_NAME then Result:= MANGAPARK_ID;
 end;
 
 function  RemoveSymbols(const input: String): String;
@@ -1018,6 +1031,17 @@ begin
  // isSuccess:= SavePage(URL, Path, Retry);
   isDone   := TRUE;
   Suspend;
+end;
+
+function    fmdGetTempPath: String;
+var
+  l: Cardinal;
+begin
+{$IFDEF WINDOWS}
+  SetLength(Result, 4096);
+  l:= GetTempPath(4096, PChar(Result));
+  SetLength(Result, l+1);
+{$ENDIF}
 end;
 
 end.

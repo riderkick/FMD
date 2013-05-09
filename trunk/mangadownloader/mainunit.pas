@@ -1621,8 +1621,8 @@ var
   canExit: Boolean = FALSE;
 begin
   if vtDownload.RootNodeCount = 0 then exit;
-  xNode:= vtDownload.GetFirst;
-  for i:= 0 to vtDownload.RootNodeCount-1 do
+  xNode:= vtDownload.GetLast;
+  for i:= vtDownload.RootNodeCount-1 downto 0 do
   begin
     vtDownload.isVisible[xNode]:= TRUE;
     if DLManager.containers.Items[i].Status = STATUS_FINISH then
@@ -1630,10 +1630,10 @@ begin
     if canExit then
       exit;
 
-    if xNode = vtDownload.GetLast then
+    if xNode = vtDownload.GetFirst then
       canExit:= TRUE;
-    xNode:= vtDownload.GetNext(xNode);
-    if xNode = vtDownload.GetLast then
+    xNode:= vtDownload.GetPrevious(xNode);
+    if xNode = vtDownload.GetFirst then
       canExit:= TRUE;
   end;
 end;

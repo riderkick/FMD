@@ -500,6 +500,41 @@ var
     l.Free;
   end;
 
+  function GetMangaParkPageNumber: Boolean;
+  var
+    s   : String;
+    i, j: Cardinal;
+    l   : TStringList;
+  begin
+    l:= TStringList.Create;
+    parse:= TStringList.Create;
+    Result:= GetPage(TObject(l),
+                     MANGAPARK_ROOT + URL + '1',
+                     manager.container.manager.retryConnect);
+    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
+    s:= MANGAPARK_ROOT + URL + '1';
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.Exec;
+    Parser.Free;
+    if parse.Count>0 then
+    begin
+      manager.container.pageNumber:= 0;
+      for i:= 0 to parse.Count-1 do
+      begin
+        if (Pos('1 of ', parse.Strings[i])>0) then
+        begin
+          s:= parse.Strings[i];
+          Delete(s, Pos('1 of ', s), 5);
+          manager.container.pageNumber:= StrToInt(TrimLeft(TrimRight(s)));
+          break;
+        end;
+      end;
+    end;
+    parse.Free;
+    l.Free;
+  end;
+
 begin
   manager.container.pageNumber:= 0;
   if manager.container.mangaSiteID = ANIMEA_ID then
@@ -519,6 +554,9 @@ begin
   else
   if manager.container.mangaSiteID = MANGAREADER_ID then
     Result:= GetMangaReaderPageNumber
+  else
+  if manager.container.mangaSiteID = MANGAPARK_ID then
+    Result:= GetMangaParkPageNumber
   else
   if (manager.container.mangaSiteID = KISSMANGA_ID) OR
      (manager.container.mangaSiteID = MANGA24H_ID) OR
@@ -1032,6 +1070,38 @@ var
     l.Free;
   end;
 
+  function GetMangaParkLinkPage: Boolean;
+  var
+    s: String;
+    j,
+    i: Cardinal;
+    l: TStringList;
+  begin
+    l:= TStringList.Create;
+    Result:= GetPage(TObject(l),
+                     MANGAPARK_ROOT + URL + IntToStr(workPtr+1),
+                     manager.container.manager.retryConnect);
+    parse:= TStringList.Create;
+    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.Exec;
+    Parser.Free;
+
+    if parse.Count>0 then
+    begin
+      for i:= 0 to parse.Count-1 do
+       // if GetTagName(parse.Strings[i]) = 'img' then
+        if (Pos('a target="_blank"', parse.Strings[i])>0) then
+        begin
+          manager.container.pageLinks.Strings[workPtr]:= GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href='));
+          break;
+        end;
+    end;
+    parse.Free;
+    l.Free;
+  end;
+
 var
   s: String;
 
@@ -1071,7 +1141,10 @@ begin
     Result:= GetTruyen18LinkPage
   else
   if manager.container.mangaSiteID = MANGAREADER_ID then
-    Result:= GetMangaReaderLinkPage;
+    Result:= GetMangaReaderLinkPage
+  else
+  if manager.container.mangaSiteID = MANGAPARK_ID then
+    Result:= GetMangaParkLinkPage;
 end;
 
 procedure   TDownloadThread.SetChangeDirectoryFalse;

@@ -292,10 +292,14 @@ begin
       while threadCount > 0 do Sleep(100);
 
       {$IFNDEF DOWNLOADER}
-     // names.LoadFromFile(website+'_names.txt');
-     // links.LoadFromFile(website+'_links.txt');
       names.SaveToFile(website+'_names.txt');
       links.SaveToFile(website+'_links.txt');
+
+     { names.Clear;
+      links.Clear;
+
+      names.LoadFromFile(website+'_names.txt');
+      links.LoadFromFile(website+'_links.txt');}
       {$ENDIF}
       mainDataProcess:= TDataProcess.Create;
       mainDataProcess.LoadFromFile(website);
