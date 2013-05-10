@@ -57,6 +57,7 @@ type
     // show notification when download completed
     procedure   ShowBaloon;
   public
+    anotherURL : String;
     isTerminated,
     isSuspended: Boolean;
 
@@ -512,7 +513,6 @@ var
                      MANGAPARK_ROOT + URL + '1',
                      manager.container.manager.retryConnect);
     Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
-    s:= MANGAPARK_ROOT + URL + '1';
     Parser.OnFoundTag := OnTag;
     Parser.OnFoundText:= OnText;
     Parser.Exec;
@@ -533,6 +533,45 @@ var
     end;
     parse.Free;
     l.Free;
+  end;
+
+  function GetGEHentaiPageNumber: Boolean;
+  var
+    s   : String;
+    i, j: Cardinal;
+    l   : TStringList;
+  begin
+    l:= TStringList.Create;
+    parse:= TStringList.Create;
+    Result:= GetPage(TObject(l),
+                     URL,
+                     manager.container.manager.retryConnect);
+    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.Exec;
+    Parser.Free;
+    if parse.Count>0 then
+    begin
+      manager.container.pageNumber:= 0;
+      for i:= 0 to parse.Count-1 do
+      begin
+        if (Pos(' @ ', parse.Strings[i])>0) then
+        begin
+          s:= GetString(' '+parse.Strings[i], ' ', ' @ ');
+          manager.container.pageNumber:= StrToInt(TrimLeft(TrimRight(s)));
+        end;
+        if Pos('background:transparent url', parse.Strings[i])>0 then
+        begin
+          manager.anotherURL:= GetAttributeValue(GetTagAttribute(parse.Strings[i+1], 'href='));
+       //   Delete(manager.anotherURL, Length(manager.anotherURL), 1);
+          break;
+        end;
+      end;
+    end;
+    parse.Free;
+    l.Free;
+    Sleep(250);
   end;
 
 begin
@@ -557,6 +596,9 @@ begin
   else
   if manager.container.mangaSiteID = MANGAPARK_ID then
     Result:= GetMangaParkPageNumber
+  else
+  if manager.container.mangaSiteID = GEHENTAI_ID then
+    Result:= GetGEHentaiPageNumber
   else
   if (manager.container.mangaSiteID = KISSMANGA_ID) OR
      (manager.container.mangaSiteID = MANGA24H_ID) OR
@@ -1102,6 +1144,46 @@ var
     l.Free;
   end;
 
+  function GetGEHentaiLinkPage: Boolean;
+  var
+    s: String;
+    j,
+    i: Cardinal;
+    l: TStringList;
+  begin
+    l:= TStringList.Create;
+    s:= manager.anotherURL;
+    Result:= GetPage(TObject(l),
+                     manager.anotherURL,// + IntToStr(workPtr+1),
+                     manager.container.manager.retryConnect);
+    parse:= TStringList.Create;
+    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.Exec;
+    Parser.Free;
+
+    if parse.Count>0 then
+    begin
+      for i:= 0 to parse.Count-1 do
+      begin
+        if Pos('http://ehgt.org/g/n.png', parse.Strings[i])>0 then
+        begin
+          manager.anotherURL:= GetAttributeValue(GetTagAttribute(parse.Strings[i-1], 'href='));
+        end;
+        if (Pos('<div id="i3">', parse.Strings[i])>0) then
+        begin
+          manager.container.pageLinks.Strings[workPtr]:= GetAttributeValue(GetTagAttribute(parse.Strings[i+2], 'src='));
+          s:= manager.container.pageLinks.Strings[workPtr];
+          break;
+        end;
+      end;
+    end;
+    parse.Free;
+    l.Free;
+    Sleep(400);
+  end;
+
 var
   s: String;
 
@@ -1144,7 +1226,10 @@ begin
     Result:= GetMangaReaderLinkPage
   else
   if manager.container.mangaSiteID = MANGAPARK_ID then
-    Result:= GetMangaParkLinkPage;
+    Result:= GetMangaParkLinkPage
+  else
+  if manager.container.mangaSiteID = GEHENTAI_ID then
+    Result:= GetGEHentaiLinkPage;
 end;
 
 procedure   TDownloadThread.SetChangeDirectoryFalse;
@@ -1172,13 +1257,13 @@ function    TDownloadThread.DownloadPage: Boolean;
     HTTP.ProxyPort:= Port;
     HTTP.ProxyUser:= User;
     HTTP.ProxyHost:= Pass;
-    if Pos(HENTAI2READ_ROOT, URL) <> 0 then
+    if manager.container.mangaSiteID = HENTAI2READ_ID then
       HTTP.Headers.Insert(0, 'Referer:'+HENTAI2READ_ROOT+'/')
     else
-    if Pos(KISSMANGA_ROOT, URL) <> 0 then
+    if manager.container.mangaSiteID = KISSMANGA_ID then
       HTTP.Headers.Insert(0, 'Referer:'+KISSMANGA_ROOT+'/')
     else
-    if Pos(VNSHARING_ROOT, URL) <> 0 then
+    if manager.container.mangaSiteID = VNSHARING_ID then
       HTTP.Headers.Insert(0, 'Referer:'+VNSHARING_ROOT+'/');
     while (NOT HTTP.HTTPMethod('GET', URL)) OR
           (HTTP.ResultCode >= 500) do
@@ -1262,6 +1347,8 @@ begin
 //  s:= manager.container.pageLinks.Strings[workPtr];
   manager.container.pageLinks.Strings[workPtr]:= '';
   SetCurrentDirUTF8(oldDir);
+  if manager.container.mangaSiteID = GEHENTAI_ID then
+    Sleep(400);
  // Synchronize(SetChangeDirectoryFalse);
 end;
 
@@ -1312,11 +1399,15 @@ end;
 
 procedure   TTaskThread.Checkout;
 var
-  i: Cardinal;
+  i, currentMaxThread: Cardinal;
 begin
   Sleep(100);
-  if container.activeThreadCount >= container.manager.maxDLThreadsPerTask then exit;
-  for i:= 0 to container.manager.maxDLThreadsPerTask-1 do
+  if container.mangaSiteID = GEHENTAI_ID then
+    currentMaxThread:= 1
+  else
+    currentMaxThread:= container.manager.maxDLThreadsPerTask;
+  if container.activeThreadCount >= currentMaxThread then exit;
+  for i:= 0 to currentMaxThread-1 do
   begin
     if i >= threads.Count then
     begin

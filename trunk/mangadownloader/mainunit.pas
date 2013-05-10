@@ -22,6 +22,7 @@ type
   { TMainForm }
 
   TMainForm = class(TForm)
+    btURL: TBitBtn;
     btFavoritesCheckNewChapter: TBitBtn;
     btBrowse: TBitBtn;
     btDownload: TBitBtn;
@@ -91,6 +92,7 @@ type
     edFilterAuthors: TEdit;
     edFilterArtists: TEdit;
     edCustomGenres: TEdit;
+    edURL: TEdit;
     edOptionHost: TEdit;
     edOptionPass: TEdit;
     edOptionPort: TEdit;
@@ -143,6 +145,7 @@ type
     miDownloadRemuse: TMenuItem;
     miDownloadRemove: TMenuItem;
     miChapterListUncheckAll: TMenuItem;
+    pnMainTop: TPanel;
     pmChapterList: TPopupMenu;
     pnOptions: TPageControl;
     pnChapterList: TPanel;
@@ -189,6 +192,7 @@ type
 
     procedure btReadOnlineClick(Sender: TObject);
     procedure btUpdateListClick(Sender: TObject);
+    procedure btURLClick(Sender: TObject);
     procedure cbSelectMangaChange(Sender: TObject);
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCreate(Sender: TObject);
@@ -297,6 +301,7 @@ type
     // doing stuff like get manga info, compress, ...
     SubThread   : TSubThread;
 
+    procedure CheckForTopPanel;
     // en: Too lazy to add it one by one
     // vi: Lười ...
     procedure InitCheckboxes;
@@ -419,6 +424,7 @@ begin
   // load icons
   // btUpdateList.Glyph.LoadFromFile('images/download_18.png');
   currentWebsite:= cbSelectManga.Items.Strings[cbSelectManga.ItemIndex];
+  CheckForTopPanel;
   DLManager.CheckAndActiveTaskAtStartup;
   TrayIcon.Show;
 
@@ -667,6 +673,21 @@ begin
     MessageDlg('', stDlgUpdateAlreadyRunning, mtInformation, [mbYes], 0)
 end;
 
+procedure TMainForm.btURLClick(Sender: TObject);
+begin
+  if (SubThread.isGetInfos) then exit;
+  if Pos(GEHENTAI_ROOT, edURL.Text) = 0 then
+  begin
+    MessageDlg('', stDlgURLNotSupport, mtInformation, [mbYes], 0);
+    exit;
+  end;
+
+  SubThread.mangaListPos:= -1;
+  SubThread.website:= GEHENTAI_NAME;//cbSelectManga.Items[cbSelectManga.ItemIndex];
+  SubThread.link:= edURL.Text;
+  SubThread.isGetInfos:= TRUE;
+end;
+
 procedure TMainForm.btReadOnlineClick(Sender: TObject);
 begin
   OpenURL(mangaInfo.url);
@@ -686,6 +707,7 @@ begin
     lbMode.Caption:= Format(stModeAll, [dataProcess.filterPos.Count]);
     currentWebsite:= cbSelectManga.Items[cbSelectManga.ItemIndex];
     dataProcess.website:= cbSelectManga.Items[cbSelectManga.ItemIndex];
+    CheckForTopPanel;
   end;
 end;
 
@@ -1237,7 +1259,6 @@ begin
   end;
 end;
 
-
 procedure TMainForm.TrayIconDblClick(Sender: TObject);
 begin
   WindowState:= wsNormal;
@@ -1604,6 +1625,14 @@ begin
   //ShowInformation;
 end;
 
+procedure TMainForm.CheckForTopPanel;
+begin
+  {if currentWebsite = GEHENTAI_NAME then
+    pnMainTop.Visible:= TRUE
+  else
+    pnMainTop.Visible:= FALSE;}
+end;
+
 procedure TMainForm.InitCheckboxes;
 var
   i: Cardinal;
@@ -1687,8 +1716,13 @@ begin
 
     Clear;
 
-    mangaInfo.title:= dataProcess.Param[dataProcess.filterPos.Items[SubThread.mangaListPos], DATA_PARAM_NAME];
-    mangaInfo.link := dataProcess.Param[dataProcess.filterPos.Items[SubThread.mangaListPos], DATA_PARAM_LINK];
+    if SubThread.mangaListPos <> -1 then
+    begin
+      mangaInfo.title:= dataProcess.Param[dataProcess.filterPos.Items[SubThread.mangaListPos], DATA_PARAM_NAME];
+      mangaInfo.link := dataProcess.Param[dataProcess.filterPos.Items[SubThread.mangaListPos], DATA_PARAM_LINK];
+    end
+    else
+      mangaInfo.link:= edURL.Text;
 
     AddTextToInfo(infoName, mangaInfo.title+#10#13);
     AddTextToInfo(infoAuthors, mangaInfo.authors+#10#13);
@@ -2010,6 +2044,7 @@ begin
   stFavoritesCheck         := language.ReadString(lang, 'stFavoritesCheck', '');
   stFavoritesChecking      := language.ReadString(lang, 'stFavoritesChecking', '');
 
+  stDlgURLNotSupport       := language.ReadString(lang, 'stDlgURLNotSupport', '');
   stDldMangaListSelect     := language.ReadString(lang, 'stDldMangaListSelect', '');
   stDlgUpdateAlreadyRunning:= language.ReadString(lang, 'stDlgUpdateAlreadyRunning', '');
   stDlgNewManga            := language.ReadString(lang, 'stDlgNewManga', '');

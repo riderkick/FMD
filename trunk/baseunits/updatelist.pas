@@ -78,6 +78,7 @@ begin
   links:= TStringList.Create;
   isSuspended:= TRUE;
   Info:= TMangaInformation.Create;
+  Info.isGetByUpdater:= TRUE;
   isTerminated   := FALSE;
   FreeOnTerminate:= TRUE;
   inherited Create(FALSE);
@@ -150,7 +151,9 @@ begin
           end;
         end
         else
+        begin
           Info.GetNameAndLink(names, links, manager.website, IntToStr(workPtr));
+        end;
         Synchronize(UpdateNamesAndLinks);
       end;
     CS_INFO:
@@ -276,6 +279,9 @@ begin
     for i:= 0 to websites.Count-1 do
     begin
       website:= websites.Strings[i];
+      if website = GEHENTAI_NAME then
+        numberOfThreads:= 1;
+
       dataProcess.LoadFromFile(website);
       names.Clear;
       links.Clear;
@@ -304,6 +310,7 @@ begin
       mainDataProcess:= TDataProcess.Create;
       mainDataProcess.LoadFromFile(website);
 
+     // Halt;
       //
       j:= 0;
       repeat

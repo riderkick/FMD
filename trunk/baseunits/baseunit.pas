@@ -97,6 +97,7 @@ const
   TRUYEN18_NAME     = 'Truyen18';     TRUYEN18_ID    = 10;
   MANGAREADER_NAME  = 'MangaReader';  MANGAREADER_ID = 11;
   MANGAPARK_NAME    = 'MangaPark';    MANGAPARK_ID   = 12;
+  GEHENTAI_NAME     = 'g.e-hentai (doujinshi)'; GEHENTAI_ID = 13;
 
 var
   currentJDN       : Cardinal;
@@ -165,7 +166,7 @@ var
   MANGAPARK_BROWSER: String = '/list/';
 
   GEHENTAI_ROOT   : String = 'http://g.e-hentai.org';
-  GEHENTAI_BROWSER: String = '?f_doujinshi=1&f_manga=1&f_artistcg=1&f_gamecg=1&f_western=0&f_non-h=1&f_imageset=1&f_cosplay=0&f_asianporn=0&f_misc=0&f_search=Search+Keywords&f_apply=Apply+Filter&advsearch=1&f_sname=on&f_stags=on&f_srdd=2';
+  GEHENTAI_BROWSER: String = '&f_doujinshi=on&advsearch=1&f_search=Search+Keywords&f_srdd=2&f_sname=on&f_stags=on&f_apply=Apply+Filter';
 
   // en: dialog messages
   // vi: nội dung hộp thoại
@@ -189,6 +190,7 @@ var
   stFavoritesCheck,
   stFavoritesChecking,
 
+  stDlgURLNotSupport,
   stDldMangaListSelect,
   stDlgUpdateAlreadyRunning,
   stDlgNewManga,
@@ -441,7 +443,9 @@ begin
   else
   if name = MANGAREADER_NAME then Result:= MANGAREADER_ID
   else
-  if name = MANGAPARK_NAME then Result:= MANGAPARK_ID;
+  if name = MANGAPARK_NAME then Result:= MANGAPARK_ID
+  else
+  if name = GEHENTAI_NAME then Result:= GEHENTAI_ID;
 end;
 
 function  RemoveSymbols(const input: String): String;

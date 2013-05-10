@@ -21,7 +21,7 @@ type
     procedure   DoGetInfos;
     procedure   CallMainFormGetInfos;
   public
-    mangaListPos: Cardinal;
+    mangaListPos: Integer;
     cover       : TPicture;
     isHasCover,
     isCanStop,
@@ -73,18 +73,27 @@ procedure   TSubThread.DoGetInfos;
     filterPos      : Cardinal;
   begin
     Result:= FALSE;
-    filterPos:= MainForm.dataProcess.filterPos.Items[mangaListPos];
+
+    if mangaListPos <> -1 then
+    begin
+      filterPos:= MainForm.dataProcess.filterPos.Items[mangaListPos];
+      Info.mangaInfo.title:= MainForm.dataProcess.Title.Strings[filterPos];
+    end;
+
     Info.isGenerateFolderChapterName:= MainForm.cbOptionGenerateChapterName.Checked;
     Info.isRemoveUnicode:= MainForm.cbOptionPathConvert.Checked;
-    Info.mangaInfo.title:= MainForm.dataProcess.Title.Strings[filterPos];
+
     if Info.GetInfoFromURL(website, URL, 0)<>NO_ERROR then
     begin
      // Info.Free;
       exit;
     end;
     // fixed
-    if website = MainForm.cbSelectManga.Items[MainForm.cbSelectManga.ItemIndex] then
-      Info.SyncInfoToData(MainForm.DataProcess, filterPos);
+    if mangaListPos <> -1 then
+    begin
+      if website = MainForm.cbSelectManga.Items[MainForm.cbSelectManga.ItemIndex] then
+        Info.SyncInfoToData(MainForm.DataProcess, filterPos);
+    end;
     Result:= TRUE;
   end;
 

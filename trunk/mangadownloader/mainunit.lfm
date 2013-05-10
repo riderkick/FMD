@@ -15,12 +15,12 @@ object MainForm: TMainForm
   object pnMainLeft: TPanel
     AnchorSideRight.Control = spMainSplitter
     Left = 0
-    Height = 471
-    Top = 0
+    Height = 439
+    Top = 32
     Width = 195
     Align = alLeft
     Anchors = [akTop, akLeft, akRight, akBottom]
-    ClientHeight = 471
+    ClientHeight = 439
     ClientWidth = 195
     TabOrder = 0
     object cbSelectManga: TComboBox
@@ -49,7 +49,7 @@ object MainForm: TMainForm
     end
     object vtMangaList: TVirtualStringTree
       Left = 8
-      Height = 374
+      Height = 342
       Hint = 'test'
       Top = 88
       Width = 176
@@ -294,8 +294,8 @@ object MainForm: TMainForm
   end
   object pcMain: TPageControl
     Left = 195
-    Height = 471
-    Top = 0
+    Height = 439
+    Top = 32
     Width = 597
     ActivePage = tsInformation
     Align = alClient
@@ -370,17 +370,17 @@ object MainForm: TMainForm
     end
     object tsInformation: TTabSheet
       Caption = 'Manga Infos'
-      ClientHeight = 445
+      ClientHeight = 413
       ClientWidth = 589
       object sbInformation: TScrollBox
         Left = 0
-        Height = 445
+        Height = 413
         Top = 0
         Width = 589
         HorzScrollBar.Page = 585
-        VertScrollBar.Page = 441
+        VertScrollBar.Page = 409
         Align = alClient
-        ClientHeight = 441
+        ClientHeight = 409
         ClientWidth = 585
         TabOrder = 0
         object pnInfomation: TPanel
@@ -426,17 +426,17 @@ object MainForm: TMainForm
         end
         object pnChapterList: TPanel
           Left = 0
-          Height = 202
+          Height = 170
           Top = 239
           Width = 585
           Align = alClient
-          ClientHeight = 202
+          ClientHeight = 170
           ClientWidth = 585
           TabOrder = 2
           object clbChapterList: TCheckListBox
             AnchorSideTop.Side = asrBottom
             Left = 8
-            Height = 109
+            Height = 77
             Top = 9
             Width = 569
             Anchors = [akTop, akLeft, akRight, akBottom]
@@ -450,7 +450,7 @@ object MainForm: TMainForm
           object edSaveTo: TLabeledEdit
             Left = 8
             Height = 21
-            Top = 142
+            Top = 110
             Width = 287
             Anchors = [akLeft, akBottom]
             EditLabel.AnchorSideLeft.Control = edSaveTo
@@ -459,7 +459,7 @@ object MainForm: TMainForm
             EditLabel.AnchorSideBottom.Control = edSaveTo
             EditLabel.Left = 8
             EditLabel.Height = 13
-            EditLabel.Top = 126
+            EditLabel.Top = 94
             EditLabel.Width = 287
             EditLabel.Caption = 'Save to'
             EditLabel.ParentColor = False
@@ -470,7 +470,7 @@ object MainForm: TMainForm
           object btDownload: TBitBtn
             Left = 399
             Height = 30
-            Top = 133
+            Top = 101
             Width = 80
             Anchors = [akLeft, akBottom]
             Caption = 'Download'
@@ -480,7 +480,7 @@ object MainForm: TMainForm
           object btBrowse: TBitBtn
             Left = 303
             Height = 30
-            Top = 133
+            Top = 101
             Width = 80
             Anchors = [akLeft, akBottom]
             Caption = 'Browse'
@@ -490,7 +490,7 @@ object MainForm: TMainForm
           object cbAddAsStopped: TCheckBox
             Left = 8
             Height = 17
-            Top = 170
+            Top = 138
             Width = 196
             Anchors = [akLeft, akBottom]
             Caption = 'Add to download list as stopped task'
@@ -501,7 +501,7 @@ object MainForm: TMainForm
           object cbAddToFavorites: TCheckBox
             Left = 311
             Height = 17
-            Top = 170
+            Top = 138
             Width = 100
             Anchors = [akLeft, akBottom]
             Caption = 'Add to Favorites'
@@ -511,8 +511,9 @@ object MainForm: TMainForm
           object btReadOnline: TButton
             Left = 487
             Height = 30
-            Top = 133
+            Top = 101
             Width = 90
+            Anchors = [akLeft, akBottom]
             Caption = 'Read online'
             OnClick = btReadOnlineClick
             TabOrder = 6
@@ -1641,6 +1642,34 @@ object MainForm: TMainForm
         Width = 150
       end>
     SimplePanel = False
+  end
+  object pnMainTop: TPanel
+    Left = 0
+    Height = 32
+    Top = 0
+    Width = 792
+    Align = alTop
+    ClientHeight = 32
+    ClientWidth = 792
+    TabOrder = 4
+    object edURL: TEdit
+      Left = 8
+      Height = 21
+      Top = 4
+      Width = 688
+      Anchors = [akTop, akLeft, akRight]
+      TabOrder = 0
+    end
+    object btURL: TBitBtn
+      Left = 712
+      Height = 21
+      Top = 4
+      Width = 75
+      Anchors = [akTop, akRight]
+      Caption = 'URL'
+      OnClick = btURLClick
+      TabOrder = 1
+    end
   end
   object dlgSaveTo: TSelectDirectoryDialog
     left = 80
