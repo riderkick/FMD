@@ -58,6 +58,8 @@ type
     procedure   ShowBaloon;
   public
     anotherURL : String;
+
+    isProcessToNextURL,
     isTerminated,
     isSuspended: Boolean;
 
@@ -199,8 +201,10 @@ begin
       begin
         GetPageNumberFromURL(manager.container.chapterLinks.Strings[manager.container.currentDownloadChapterPtr]);
         // prepare 'space' for link updater
-        for i:= 0 to manager.container.pageNumber-1 do
-          manager.container.pageLinks.Add('W');
+       // if manager.container.mangaSiteID <> GEHENTAI_ID then
+       if manager.container.pageNumber > 0 then
+          for i:= 0 to manager.container.pageNumber-1 do
+            manager.container.pageLinks.Add('W');
       end;
     // get page link
     CS_GETPAGELINK:
@@ -535,7 +539,7 @@ var
     l.Free;
   end;
 
-  function GetGEHentaiPageNumber: Boolean;
+  function GetGEHentaiPageNumber(const lURL: String; const isGetLinkPage: Boolean): Boolean;
   var
     s   : String;
     i, j: Cardinal;
@@ -543,9 +547,9 @@ var
   begin
     l:= TStringList.Create;
     parse:= TStringList.Create;
-    Result:= GetPage(TObject(l),
-                     URL,
-                     manager.container.manager.retryConnect);
+    Result:= gehGetPage(TObject(l),
+                        URL,
+                        manager.container.manager.retryConnect, lURL);
     Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
     Parser.OnFoundTag := OnTag;
     Parser.OnFoundText:= OnText;
@@ -556,7 +560,7 @@ var
       manager.container.pageNumber:= 0;
       for i:= 0 to parse.Count-1 do
       begin
-        if (Pos(' @ ', parse.Strings[i])>0) then
+        if (isGetLinkPage) AND (Pos(' @ ', parse.Strings[i])>0) then
         begin
           s:= GetString(' '+parse.Strings[i], ' ', ' @ ');
           manager.container.pageNumber:= StrToInt(TrimLeft(TrimRight(s)));
@@ -564,8 +568,9 @@ var
         if Pos('background:transparent url', parse.Strings[i])>0 then
         begin
           manager.anotherURL:= GetAttributeValue(GetTagAttribute(parse.Strings[i+1], 'href='));
-       //   Delete(manager.anotherURL, Length(manager.anotherURL), 1);
+          // if PageLinksCounter >= manager.container.pageNumber then
           break;
+          //   Delete(anotherURL, Length(anotherURL), 1);
         end;
       end;
     end;
@@ -573,6 +578,9 @@ var
     l.Free;
     Sleep(300);
   end;
+
+var
+  i: Cardinal;
 
 begin
   manager.container.pageNumber:= 0;
@@ -598,7 +606,13 @@ begin
     Result:= GetMangaParkPageNumber
   else
   if manager.container.mangaSiteID = GEHENTAI_ID then
-    Result:= GetGEHentaiPageNumber
+  begin
+    Result:= GetGEHentaiPageNumber('', TRUE);
+   { if manager.container.pageNumber > 20 then
+      for i:=1 to ((manager.container.pageNumber-1) div 20) do
+        Result:= GetGEHentaiPageNumber('?page=' + IntToStr(i), FALSE); }
+   // manager.container.pageLinks.SaveToFile('log.txt');
+  end
   else
   if (manager.container.mangaSiteID = KISSMANGA_ID) OR
      (manager.container.mangaSiteID = MANGA24H_ID) OR
@@ -1152,9 +1166,8 @@ var
     l: TStringList;
   begin
     l:= TStringList.Create;
-    s:= manager.anotherURL;
     Result:= GetPage(TObject(l),
-                     manager.anotherURL,// + IntToStr(workPtr+1),
+                     URL,// + IntToStr(workPtr+1),
                      manager.container.manager.retryConnect);
     parse:= TStringList.Create;
     Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
@@ -1174,14 +1187,14 @@ var
         if (Pos('<div id="i3">', parse.Strings[i])>0) then
         begin
           manager.container.pageLinks.Strings[workPtr]:= GetAttributeValue(GetTagAttribute(parse.Strings[i+2], 'src='));
-          s:= manager.container.pageLinks.Strings[workPtr];
+          manager.container.pageLinks.Strings[workPtr]:= StringReplace(manager.container.pageLinks.Strings[workPtr], '&amp;', '&', [rfReplaceAll]);
+          // s:= manager.container.pageLinks.Strings[workPtr];
           break;
         end;
       end;
     end;
     parse.Free;
     l.Free;
-    Sleep(400);
   end;
 
 var
@@ -1243,13 +1256,18 @@ begin
 end;
 
 function    TDownloadThread.DownloadPage: Boolean;
+var
+  fileSize: Cardinal;
 
   function  SavePage(URL: String; const Path, name: String; const Reconnect: Cardinal): Boolean;
   var
     header  : array [0..3] of Byte;
     ext     : String;
     HTTP    : THTTPSend;
+    i       : Cardinal;
     counter : Cardinal = 0;
+    s       : String;
+
   begin
     Result:= FALSE;
     HTTP:= THTTPSend.Create;
@@ -1264,7 +1282,10 @@ function    TDownloadThread.DownloadPage: Boolean;
       HTTP.Headers.Insert(0, 'Referer:'+KISSMANGA_ROOT+'/')
     else
     if manager.container.mangaSiteID = VNSHARING_ID then
-      HTTP.Headers.Insert(0, 'Referer:'+VNSHARING_ROOT+'/');
+      HTTP.Headers.Insert(0, 'Referer:'+VNSHARING_ROOT+'/')
+    else
+    if  manager.container.mangaSiteID = GEHENTAI_ID then
+      HTTP.Headers.Insert(0, 'Referer:'+manager.container.pageLinks.Strings[workPtr]);
     while (NOT HTTP.HTTPMethod('GET', URL)) OR
           (HTTP.ResultCode >= 500) OR
           (HTTP.ResultCode = 403) do
@@ -1331,18 +1352,52 @@ function    TDownloadThread.DownloadPage: Boolean;
    //   Sleep(16);
    // Synchronize(SetChangeDirectoryTrue);
    // SetCurrentDirUTF8(Path);
-    HTTP.Document.SaveToFile(Path+'/'+name+ext);
+
+   { if manager.container.mangaSiteID = GEHENTAI_ID then
+    begin
+      for i:=0 to http.Headers.Count-1 do
+      begin
+        s:= UpperCase(HTTP.Headers[i]);
+        if pos('CONTENT-LENGTH:', s)>0 then
+        begin
+          fileSize:= StrToIntDef(Copy(s,pos(':', s)+1, Length(s)),0);
+          break;
+        end;
+      end;
+      if fileSize <> 925 then
+        HTTP.Document.SaveToFile(Path+'/'+name+ext);
+    end
+    else }
+      HTTP.Document.SaveToFile(Path+'/'+name+ext);
     HTTP.Free;
     Result:= TRUE;
   end;
 
-//var s: String;
+var
+  lastTime, curTime  : Cardinal;
+  anotherURLBackup, s: String;
+label
+  start;
+
 begin
+start:
   if manager.container.mangaSiteID = GEHENTAI_ID then
   begin
+    manager.isProcessToNextURL:= FALSE;
     Sleep(500);
-    GetLinkPageFromURL(manager.container.chapterLinks.Strings[manager.container.currentDownloadChapterPtr]);
+    lastTime:= fmdGetTickCount;
+
+    anotherURLBackup:= manager.anotherURL;
+    GetLinkPageFromURL(anotherURLBackup);
+    manager.isProcessToNextURL:= TRUE;
+    curTime:= fmdGetTickCount-lastTime;
+    if curTime<3000 then
+      Sleep(3000-curTime)
+    else
+      Sleep(250);
   end;
+ // s:= manager.container.pageLinks.Strings[workPtr];
+ // manager.container.pageLinks.SaveToFile('log.txt');
   if (manager.container.pageLinks.Strings[workPtr] = '') OR
      (manager.container.pageLinks.Strings[workPtr] = 'W') then exit;
   SavePage(manager.container.pageLinks.Strings[workPtr],
@@ -1351,8 +1406,15 @@ begin
            Format('%.3d', [workPtr+1]),
            manager.container.manager.retryConnect);
 //  s:= manager.container.pageLinks.Strings[workPtr];
+ { if manager.container.mangaSiteID = GEHENTAI_ID then
+    if fileSize = 925 then
+    begin
+      anotherURL:= anotherURLBackup;
+      goto start;
+    end; }
   manager.container.pageLinks.Strings[workPtr]:= '';
   SetCurrentDirUTF8(oldDir);
+
  // Synchronize(SetChangeDirectoryFalse);
 end;
 
@@ -1360,6 +1422,8 @@ end;
 
 constructor TTaskThread.Create;
 begin
+  isProcessToNextURL:= FALSE;
+  anotherURL  := '';
   isTerminated:= FALSE;
   isSuspended := TRUE;
   FreeOnTerminate:= TRUE;
@@ -1404,12 +1468,25 @@ end;
 procedure   TTaskThread.Checkout;
 var
   i, currentMaxThread: Cardinal;
+  s: String;
 begin
-  Sleep(100);
+  currentMaxThread:= container.manager.maxDLThreadsPerTask;
   if container.mangaSiteID = GEHENTAI_ID then
+  begin
+    if (container.workPtr <> 0) then
+    begin
+      while NOT isProcessToNextURL do
+        Sleep(32);
+    end;
+    Sleep(500*currentMaxThread);
+  end
+  else
+    Sleep(100);
+  {if container.mangaSiteID = GEHENTAI_ID then
     currentMaxThread:= 1
   else
-    currentMaxThread:= container.manager.maxDLThreadsPerTask;
+    currentMaxThread:= container.manager.maxDLThreadsPerTask;}
+
   if container.activeThreadCount >= currentMaxThread then exit;
   for i:= 0 to currentMaxThread-1 do
   begin
@@ -1468,6 +1545,7 @@ var
   i, count: Cardinal;
 begin
   while isSuspended do Sleep(100);
+
   while container.currentDownloadChapterPtr < container.chapterLinks.Count do
   begin
     if Terminated then exit;
@@ -2027,10 +2105,15 @@ begin
   if containers.Count = 0 then exit;
   for i:= 0 to containers.Count-1 do
   begin
+    if (containers.Items[i].Status = STATUS_DOWNLOAD) AND
+       (containers.Items[i].mangaSiteID = GEHENTAI_ID) then
+      Inc(geCount);
+  end;
+
+  for i:= 0 to containers.Count-1 do
+  begin
     if containers.Items[i].Status = STATUS_DOWNLOAD then
     begin
-      if containers.Items[i].mangaSiteID = GEHENTAI_ID then
-        Inc(geCount);
       Inc(count);
     end
     else

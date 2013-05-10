@@ -302,6 +302,7 @@ function  PrepareSummaryForHint(const source: String):  String;
 
 // EN: Get HTML source code from a URL
 // VI: Lấy webcode từ 1 URL
+function  gehGetPage(var output: TObject; URL: String; const Reconnect: Cardinal; const lURL: String = ''): Boolean;
 function  GetPage(var output: TObject; URL: String; const Reconnect: Cardinal): Boolean;
 function  SavePage(URL: String;  const Path, name: String; const Reconnect: Cardinal): Boolean;
 
@@ -316,6 +317,7 @@ procedure TransferMangaInfo(var dest: TMangaInfo; const source: TMangaInfo);
 // cross platform funcs
 
 function  fmdGetTempPath: String;
+function  fmdGetTickCount: Cardinal;
 
 implementation
 
@@ -759,6 +761,85 @@ begin
   end;
 end;
 
+var
+  gehHTTP: THTTPSend;
+
+function  gehGetPage(var output: TObject; URL: String; const Reconnect: Cardinal; const lURL: String = ''): Boolean;
+var
+  code   : Cardinal;
+  counter: Cardinal = 0;
+  s      : String;
+label
+  globReturn;
+begin
+  if (lURL <> '') AND (Pos('?nw=session', URL) > 0) then
+  begin
+    Delete(URL, Length(URL)-10, 11);
+    URL:= URL + lURL;
+  end;
+
+  Result:= FALSE;
+
+globReturn:
+  gehHTTP.ProxyHost:= Host;
+  gehHTTP.ProxyPort:= Port;
+  gehHTTP.ProxyUser:= User;
+  gehHTTP.ProxyHost:= Pass;
+  gehHTTP.Headers.Insert(0, 'Referer:'+URL);
+
+  while (NOT gehHTTP.HTTPMethod('GET', URL)) OR
+        (gehHTTP.ResultCode > 500) do
+  begin
+    code:= gehHTTP.ResultCode;
+    if Reconnect <> 0 then
+    begin
+      if Reconnect <= counter then
+      begin
+        exit;
+      end;
+      Inc(counter);
+    end;
+    gehHTTP.Clear;
+    Sleep(500);
+  end;
+  if Pos('?nw=session', URL) > 0 then
+  begin
+    gehHTTP.Clear;
+    Delete(URL, Length(URL)-10, 11);
+   // URL:= URL + lURL;
+    goto globReturn;
+  end;
+  gehHTTP.Document.SaveToFile('error.txt');
+  while gehHTTP.ResultCode = 302 do
+  begin
+    URL:= CheckRedirect(gehHTTP);
+    gehHTTP.Clear;
+    gehHTTP.RangeStart:= 0;
+
+    while (NOT gehHTTP.HTTPMethod('GET', URL)) OR
+        (gehHTTP.ResultCode >= 500) do
+    begin
+      if Reconnect <> 0 then
+      begin
+        if Reconnect <= counter then
+        begin
+          exit;
+        end;
+        Inc(counter);
+      end;
+      gehHTTP.Clear;
+      Sleep(500);
+    end;
+  end;
+  if output is TStringList then
+    TStringList(output).LoadFromStream(gehHTTP.Document)
+  else
+  if output is TPicture then
+    TPicture(output).LoadFromStream(gehHTTP.Document);
+  Result:= TRUE;
+  gehHTTP.Clear;
+end;
+
 function  GetPage(var output: TObject; URL: String; const Reconnect: Cardinal): Boolean;
 var
   HTTP   : THTTPSend;
@@ -768,6 +849,12 @@ var
 label
   globReturn;
 begin
+ { if (lURL <> '') AND (Pos('?nw=session', URL) > 0) then
+  begin
+    Delete(URL, Length(URL)-10, 11);
+    URL:= URL + lURL;
+  end; }
+
   Result:= FALSE;
   HTTP:= THTTPSend.Create;
 globReturn:
@@ -776,8 +863,10 @@ globReturn:
   HTTP.ProxyUser:= User;
   HTTP.ProxyHost:= Pass;
   if Pos(HENTAI2READ_ROOT, URL) <> 0 then
-    HTTP.Headers.Insert(0, 'Referer:'+HENTAI2READ_ROOT+'/');
- // else
+    HTTP.Headers.Insert(0, 'Referer:'+HENTAI2READ_ROOT+'/')
+  else
+  if Pos(GEHENTAI_ROOT, URL) <> 0 then
+    HTTP.Headers.Insert(0, 'Referer:'+URL);
   //  HTTP.Headers.Insert(0, 'Referer:'+GEHENTAI_ROOT+'/')
  //   HTTP.Headers.Insert(0, '{''User-Agent'' : ''Mozilla/5.0 (X11; Linux i686) AppleWebKit/535.11 (KHTML, like Gecko) Ubuntu/11.10 Chromium/17.0.963.79 Chrome/17.0.963.79 Safari/535.11''}');
 
@@ -807,7 +896,7 @@ globReturn:
         (HTTP.ResultCode > 500) do
   begin
     code:= HTTP.ResultCode;
-    HTTP.Document.SaveToFile('error.txt');
+   // HTTP.Document.SaveToFile('error.txt');
     if Reconnect <> 0 then
     begin
       if Reconnect <= counter then
@@ -824,11 +913,10 @@ globReturn:
   begin
     HTTP.Clear;
     Delete(URL, Length(URL)-10, 11);
+   // URL:= URL + lURL;
     goto globReturn;
   end;
  // HTTP.Document.SaveToFile('error2.txt');
- // code:= HTTP.ResultCode;
- // s:= HTTP.Cookies.Text;
   while HTTP.ResultCode = 302 do
   begin
     URL:= CheckRedirect(HTTP);
@@ -1066,4 +1154,13 @@ begin
 {$ENDIF}
 end;
 
+function  fmdGetTickCount: Cardinal;
+begin
+  {$IFDEF WINDOWS}
+  Result:= GetTickCount;
+ {$ENDIF}
+end;
+
+begin
+  gehHTTP:= THTTPSend.Create;
 end.
