@@ -578,15 +578,23 @@ begin
         isCreate:= TRUE;
       end;
       DLManager.containers.Items[pos].mangaSiteID:= GetMangaSiteID(mangaInfo.website);
-      if NOT cbOptionGenerateChapterName.Checked then
-        DLManager.containers.Items[pos].chapterName .Add(Format('%.4d', [i+1]))
-      else
+      if (mangaInfo.website <> GEHENTAI_NAME) AND
+         (mangaInfo.website <> FAKKU_NAME) then
       begin
-        if NOT cbOptionPathConvert.Checked then
-          DLManager.containers.Items[pos].chapterName .Add(Format('%.4d - %s', [i+1, mangaInfo.chapterName.Strings[i]]))
+        s:= Format('%.4d', [i+1]);
+        if NOT cbOptionGenerateChapterName.Checked then
         else
-          DLManager.containers.Items[pos].chapterName .Add(Format('%.4d - %s', [i+1, UnicodeRemove(mangaInfo.chapterName.Strings[i])]));
-      end;
+          begin
+          if NOT cbOptionPathConvert.Checked then
+            s:= s + '- ' + mangaInfo.chapterName.Strings[i]
+          else
+            s:= s + '- ' + UnicodeRemove(mangaInfo.chapterName.Strings[i]);
+        end;
+      end
+      else
+        s:= mangaInfo.title;
+
+      DLManager.containers.Items[pos].chapterName .Add(s);
       DLManager.containers.Items[pos].chapterLinks.Add(mangaInfo.chapterLinks.Strings[i]);
     end;
   if NOT isCreate then exit;
@@ -675,16 +683,23 @@ end;
 
 procedure TMainForm.btURLClick(Sender: TObject);
 begin
+  cbAddToFavorites.Checked:= FALSE;
+  cbAddToFavorites.Enabled:= FALSE;
   if (SubThread.isGetInfos) then exit;
+  if Pos('http://', edURL.Text) = 0 then
+    edURL.Text:= 'http://' + edURL.Text;
   if Pos(GEHENTAI_ROOT, edURL.Text) = 0 then
   begin
     MessageDlg('', stDlgURLNotSupport, mtInformation, [mbYes], 0);
     exit;
   end;
 
+  if Pos(GEHENTAI_ROOT, edURL.Text) <> 0 then
+    SubThread.link:= edURL.Text + '?nw=session';
+
   SubThread.mangaListPos:= -1;
   SubThread.website:= GEHENTAI_NAME;//cbSelectManga.Items[cbSelectManga.ItemIndex];
-  SubThread.link:= edURL.Text;
+ // SubThread.link:= edURL.Text;
   SubThread.isGetInfos:= TRUE;
 end;
 
@@ -1616,6 +1631,7 @@ end;
 
 procedure TMainForm.vtMangaListDblClick(Sender: TObject);
 begin
+  cbAddToFavorites.Enabled:= TRUE;
   if (SubThread.isGetInfos) OR (NOT vtMangaList.Focused) then exit;
 
   SubThread.mangaListPos:= vtMangaList.FocusedNode.Index;
@@ -1671,11 +1687,20 @@ end;
 procedure TMainForm.AddChapterNameToList;
 var
   i: Cardinal;
+  s: String;
 begin
   clbChapterList.Clear;
   if mangaInfo.chapterName.Count <> 0 then
-    for i:= 0 to mangaInfo.chapterName.Count - 1 do
-      clbChapterList.Items.Add(Format('%.4d - %s', [i+1, mangaInfo.chapterName.Strings[i]]));
+  begin
+    s:= mangaInfo.website;
+    if (mangaInfo.website <> GEHENTAI_NAME) AND
+       (mangaInfo.website <> FAKKU_NAME) then
+      for i:= 0 to mangaInfo.chapterName.Count - 1 do
+        clbChapterList.Items.Add(Format('%.4d - %s', [i+1, mangaInfo.chapterName.Strings[i]]))
+    else
+      for i:= 0 to mangaInfo.chapterName.Count - 1 do
+        clbChapterList.Items.Add(mangaInfo.chapterName.Strings[i]);
+  end;
 end;
 
 procedure TMainForm.AddTextToInfo(title, infoText: String);

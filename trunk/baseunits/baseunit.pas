@@ -765,15 +765,22 @@ var
   code   : Cardinal;
   counter: Cardinal = 0;
   s      : String;
+label
+  globReturn;
 begin
   Result:= FALSE;
   HTTP:= THTTPSend.Create;
+globReturn:
   HTTP.ProxyHost:= Host;
   HTTP.ProxyPort:= Port;
   HTTP.ProxyUser:= User;
   HTTP.ProxyHost:= Pass;
   if Pos(HENTAI2READ_ROOT, URL) <> 0 then
     HTTP.Headers.Insert(0, 'Referer:'+HENTAI2READ_ROOT+'/');
+ // else
+  //  HTTP.Headers.Insert(0, 'Referer:'+GEHENTAI_ROOT+'/')
+ //   HTTP.Headers.Insert(0, '{''User-Agent'' : ''Mozilla/5.0 (X11; Linux i686) AppleWebKit/535.11 (KHTML, like Gecko) Ubuntu/11.10 Chromium/17.0.963.79 Chrome/17.0.963.79 Safari/535.11''}');
+
  { else
   if Pos(TRUYEN18_ROOT, URL) <> 0 then
     HTTP.Headers.Insert(0, 'Referer:'+'http://adf.ly/2337104/http%3a%2f%2fwww.truyen18.org%2fhentai%2fkaren-chameleon%2f4220.html');
@@ -813,7 +820,13 @@ begin
     HTTP.Clear;
     Sleep(500);
   end;
- // HTTP.Document.SaveToFile('error.txt');
+  if Pos('?nw=session', URL) > 0 then
+  begin
+    HTTP.Clear;
+    Delete(URL, Length(URL)-10, 11);
+    goto globReturn;
+  end;
+ // HTTP.Document.SaveToFile('error2.txt');
  // code:= HTTP.ResultCode;
  // s:= HTTP.Cookies.Text;
   while HTTP.ResultCode = 302 do

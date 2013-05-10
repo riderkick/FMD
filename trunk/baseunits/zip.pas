@@ -62,6 +62,8 @@ begin
       for i:= 0 to list.Count-1 do
         DeleteFileUTF8(list.Strings[i]);
       RemoveDirUTF8(fPath);
+      if fPath[Length(fPath)] = '/' then
+        Delete(fPath, Length(fPath), 1);
       RenameFileUTF8(fPath+'.zip', Path+'.zip');
     end;
   finally

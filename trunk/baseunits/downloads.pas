@@ -571,7 +571,7 @@ var
     end;
     parse.Free;
     l.Free;
-    Sleep(250);
+    Sleep(300);
   end;
 
 begin
@@ -1266,7 +1266,8 @@ function    TDownloadThread.DownloadPage: Boolean;
     if manager.container.mangaSiteID = VNSHARING_ID then
       HTTP.Headers.Insert(0, 'Referer:'+VNSHARING_ROOT+'/');
     while (NOT HTTP.HTTPMethod('GET', URL)) OR
-          (HTTP.ResultCode >= 500) do
+          (HTTP.ResultCode >= 500) OR
+          (HTTP.ResultCode = 403) do
     begin
       if Reconnect <> 0 then
       begin
@@ -1348,7 +1349,7 @@ begin
   manager.container.pageLinks.Strings[workPtr]:= '';
   SetCurrentDirUTF8(oldDir);
   if manager.container.mangaSiteID = GEHENTAI_ID then
-    Sleep(400);
+    Sleep(500);
  // Synchronize(SetChangeDirectoryFalse);
 end;
 
@@ -2014,19 +2015,36 @@ end;
 
 procedure   TDownloadManager.CheckAndActiveTask;
 var
-  i    : Cardinal;
-  count: Cardinal = 0;
+  geCount: Cardinal = 0;
+  i      : Cardinal;
+  count  : Cardinal = 0;
 begin
   if containers.Count = 0 then exit;
   for i:= 0 to containers.Count-1 do
   begin
     if containers.Items[i].Status = STATUS_DOWNLOAD then
-      Inc(count)
+    begin
+      if containers.Items[i].mangaSiteID = GEHENTAI_ID then
+        Inc(geCount);
+      Inc(count);
+    end
     else
     if containers.Items[i].Status = STATUS_WAIT then
     begin
-      ActiveTask(i);
-      Inc(count);
+      if containers.Items[i].mangaSiteID = GEHENTAI_ID then
+      begin
+        if geCount = 0 then
+        begin
+          ActiveTask(i);
+          Inc(geCount);
+          Inc(count);
+        end;
+      end
+      else
+      begin
+        ActiveTask(i);
+        Inc(count);
+      end;
     end;
     if count >= maxDLTasks then
       exit;
