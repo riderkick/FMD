@@ -1338,6 +1338,11 @@ function    TDownloadThread.DownloadPage: Boolean;
 
 //var s: String;
 begin
+  if manager.container.mangaSiteID = GEHENTAI_ID then
+  begin
+    Sleep(500);
+    GetLinkPageFromURL(manager.container.chapterLinks.Strings[manager.container.currentDownloadChapterPtr]);
+  end;
   if (manager.container.pageLinks.Strings[workPtr] = '') OR
      (manager.container.pageLinks.Strings[workPtr] = 'W') then exit;
   SavePage(manager.container.pageLinks.Strings[workPtr],
@@ -1348,8 +1353,6 @@ begin
 //  s:= manager.container.pageLinks.Strings[workPtr];
   manager.container.pageLinks.Strings[workPtr]:= '';
   SetCurrentDirUTF8(oldDir);
-  if manager.container.mangaSiteID = GEHENTAI_ID then
-    Sleep(500);
  // Synchronize(SetChangeDirectoryFalse);
 end;
 
@@ -1492,6 +1495,7 @@ begin
 
     //get page links
    // if container.currentPageNumber < container.pageNumber then
+    if (container.mangaSiteID <> GEHENTAI_ID) then
     begin
       container.workPtr:= 0;//container.currentPageNumber;
    //   if container.workPtr > 0 then
@@ -1520,7 +1524,7 @@ begin
     container.downloadInfo.iProgress:= 0;
 
     // will bypass the download section if links = nil
-    if container.pageLinks.Count > 0 then
+    if (container.pageLinks.Count > 0) then
     begin
       while container.workPtr < container.pageLinks.Count do
       begin
@@ -1540,6 +1544,7 @@ begin
      // Synchronize(Compress);
       Compress;
     end;
+
     if Terminated then exit;
     container.currentPageNumber:= 0;
     container.pageLinks.Clear;
