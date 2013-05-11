@@ -143,7 +143,7 @@ var
   BATOTO_BROWSER   : String = '/search';
 
   MANGA24H_ROOT   : String = 'http://manga24h.com';
-  MANGA24H_BROWSER: String = '/manga/list';
+  MANGA24H_BROWSER: String = '/manga/update/page/';
 
   VNSHARING_ROOT   : String = 'http://truyen.vnsharing.net';
   VNSHARING_BROWSER: String = '/DanhSach';
@@ -764,6 +764,7 @@ end;
 var
   gehHTTP: THTTPSend;
 
+// will remove this later
 function  gehGetPage(var output: TObject; URL: String; const Reconnect: Cardinal; const lURL: String = ''): Boolean;
 var
   code   : Cardinal;
@@ -809,7 +810,7 @@ globReturn:
    // URL:= URL + lURL;
     goto globReturn;
   end;
-  gehHTTP.Document.SaveToFile('error.txt');
+ // gehHTTP.Document.SaveToFile('error.txt');
   while gehHTTP.ResultCode = 302 do
   begin
     URL:= CheckRedirect(gehHTTP);
@@ -849,7 +850,7 @@ var
 label
   globReturn;
 begin
- { if (lURL <> '') AND (Pos('?nw=session', URL) > 0) then
+{ if (lURL <> '') AND (Pos('?nw=session', URL) > 0) then
   begin
     Delete(URL, Length(URL)-10, 11);
     URL:= URL + lURL;

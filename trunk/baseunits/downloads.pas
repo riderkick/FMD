@@ -401,6 +401,8 @@ var
     Result:= GetPage(TObject(l),
                      BATOTO_ROOT + DecodeURL(URL) + '/1',
                      manager.container.manager.retryConnect);
+    for i:= 0 to 69 do
+      l.Delete(0);
     Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
     Parser.OnFoundTag := OnTag;
     Parser.OnFoundText:= OnText;
@@ -807,6 +809,8 @@ var
     Result:= GetPage(TObject(l),
                      BATOTO_ROOT + DecodeURL(URL) + '/'+IntToStr(workPtr+1),
                      manager.container.manager.retryConnect);
+    for i:= 0 to 69 do
+      l.Delete(0);
     parse:= TStringList.Create;
     Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
     Parser.OnFoundTag := OnTag;
@@ -851,8 +855,9 @@ var
       manager.container.pageLinks.Clear;
       for i:= 0 to parse.Count-1 do
       begin
-        if (GetTagName(parse.Strings[i]) = 'img')  AND
-           (GetAttributeValue(GetTagAttribute(parse.Strings[i], 'class=')) = 'm_picture') then
+        if (GetTagName(parse.Strings[i]) = 'img') AND
+           (Pos('style="border:3px', parse.Strings[i])<>0) then
+          // (GetAttributeValue(GetTagAttribute(parse.Strings[i], 'class=')) = 'm_picture') then
         begin
           manager.container.pageLinks.Add(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src=')));
         end;

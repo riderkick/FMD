@@ -629,9 +629,9 @@ var
     end;
     for i:= 0 to parse.Count-1 do
     begin
-      if (Pos('span id=''total_number''', parse.Strings[i]) > 0) then
+      if (Pos('Pages (', parse.Strings[i]) > 0) then
       begin
-        s:= GetString(parse.Strings[i+1], 'Pages (', ')');
+        s:= GetString(parse.Strings[i], 'Pages (', ')');
         Page:= StrToInt(s);
         Result:= NO_ERROR;
         source.Free;
@@ -875,9 +875,9 @@ begin
   if website = BATOTO_NAME then
     Result:= GetBatotoDirectoryPage
   else
- { if website = MANGA24H_NAME then
+  if website = MANGA24H_NAME then
     Result:= GetManga24hDirectoryPage
-  else }
+  else
   if website = VNSHARING_NAME then
     Result:= GetVnSharingDirectoryPage
   else
@@ -1142,7 +1142,7 @@ var
     s: String;
   begin
     Result:= INFORMATION_NOT_FOUND;
-    if NOT GetPage(TObject(source), MANGA24H_ROOT + MANGA24H_BROWSER, 0) then
+    if NOT GetPage(TObject(source), MANGA24H_ROOT + MANGA24H_BROWSER + IntToStr(StrToInt(URL)+1), 0) then
     begin
       Result:= NET_PROBLEM;
       source.Free;
@@ -1162,13 +1162,14 @@ var
     end;
     for i:= 0 to parse.Count-1 do
     begin
-      if (GetTagName(parse.Strings[i]) = 'h1') AND
-         (GetAttributeValue(GetTagAttribute(parse.Strings[i], 'class=')) = 'post_title') then
+      if (Pos('<strong>', parse.Strings[i])<>0) AND
+         (Pos('</strong>', parse.Strings[i+2])<>0) AND
+         (GetAttributeValue(GetTagAttribute(parse.Strings[i-1], 'href=')) <> '') then
       begin
         Result:= NO_ERROR;
-        s:= StringFilter(TrimLeft(TrimRight(GetAttributeValue(GetTagAttribute(parse.Strings[i+2], 'title=')))));
+        s:= StringFilter(TrimLeft(TrimRight(parse.Strings[i+1])));
         names.Add(s);
-        links.Add('/'+StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i+2], 'href=')), MANGA24H_ROOT, '', []));
+        links.Add('/'+StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i-1], 'href=')), MANGA24H_ROOT, '', []));
       end;
     end;
     source.Free;
@@ -2112,6 +2113,8 @@ begin
     exit;
   end;
 
+  for i:= 0 to 73 do
+    source.Delete(0);
   // parsing the HTML source
   parse.Clear;
   Parser:= TjsFastHTMLParser.Create(PChar(source.Text));
@@ -2221,6 +2224,7 @@ var
  // patchURL,
   s: String;
   i, j: Cardinal;
+  isExtractSummary: Boolean = FALSE;
 begin
  // patchURL:= UTF8ToANSI(URL);
  // Insert('comics/', patchURL, 10);
@@ -2242,21 +2246,21 @@ begin
   Parser.Free;
   source.Free;
   mangaInfo.website:= MANGA24H_NAME;
+  mangaInfo.summary:= '';
 
   // using parser (cover link, summary, chapter name and link)
   if parse.Count=0 then exit;
   for i:= 0 to parse.Count-1 do
   begin
     // get cover link
-    if (GetTagName(parse.Strings[i]) = 'ul') AND
-       (Pos('mangadetail', parse.Strings[i]) > 0) then
-      // (GetAttributeValue(GetTagAttribute(parse.Strings[i], 'class=')) = 'post_title') then
-      if GetTagName(parse.Strings[i+4]) = 'img' then
-        mangaInfo.coverLink:= CorrectURL(GetAttributeValue(GetTagAttribute(parse.Strings[i+4], 'src=')));
-
+    if (Pos('class="img-rounded"', parse.Strings[i]) > 0) then
+    begin
+      mangaInfo.coverLink:= CorrectURL(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src=')));
+      s:= mangaInfo.coverLink;
+    end;
 
     // get summary
-    if (GetTagName(parse.Strings[i]) = 'div') AND
+    {if (GetTagName(parse.Strings[i]) = 'div') AND
        (GetAttributeValue(GetTagAttribute(parse.Strings[i], 'class=')) = 'mangacon') then
     begin
       j:= i+1;
@@ -2274,31 +2278,44 @@ begin
         end;
         Inc(j);
       end;
-    end;
+    end;}
+
+    if (Pos('<tbody>', parse.Strings[i])<>0) AND (NOT isExtractSummary) then
+      isExtractSummary:= TRUE;
+
+    if (Pos('</tbody>', parse.Strings[i])<>0) AND (isExtractSummary) then
+      isExtractSummary:= FALSE;
+
 
       // get chapter name and links
-    if (GetTagName(parse.Strings[i]) = 'th') AND
-       (Pos('scope="row" abbr', parse.Strings[i])<>0) then
+    if (isExtractSummary) AND
+       (Pos('<td>', parse.Strings[i])<>0) AND
+       (GetAttributeValue(GetTagAttribute(parse.Strings[i+1], 'href=')) <> '') AND
+       (Pos('</a>', parse.Strings[i+3])<>0) then
     begin
       Inc(mangaInfo.numChapter);
-      mangaInfo.chapterLinks.Add(CorrectURL('/'+StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i+2], 'href=')), MANGA24H_ROOT, '', [rfReplaceAll])));
-      parse.Strings[i+3]:= HTMLEntitiesFilter(parse.Strings[i+3]);
-      parse.Strings[i+3]:= StringReplace(parse.Strings[i+3], #10, '', [rfReplaceAll]);
-      parse.Strings[i+3]:= StringReplace(parse.Strings[i+3], #13, '', [rfReplaceAll]);
-      parse.Strings[i+3]:= TrimLeft(parse.Strings[i+3]);
-      mangaInfo.chapterName.Add(TrimRight(RemoveSymbols(parse.Strings[i+3])));
+      mangaInfo.chapterLinks.Add(CorrectURL('/'+StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i+1], 'href=')), MANGA24H_ROOT, '', [rfReplaceAll])));
+      parse.Strings[i+2]:= HTMLEntitiesFilter(parse.Strings[i+2]);
+      parse.Strings[i+2]:= StringReplace(parse.Strings[i+2], #10, '', [rfReplaceAll]);
+      parse.Strings[i+2]:= StringReplace(parse.Strings[i+2], #13, '', [rfReplaceAll]);
+      parse.Strings[i+2]:= TrimLeft(parse.Strings[i+2]);
+      mangaInfo.chapterName.Add(TrimRight(RemoveSymbols(parse.Strings[i+2])));
     end;
 
+    // get title
+    if (Pos('"Truyen tranh ', parse.Strings[i])<>0) AND (mangaInfo.title = '') then
+      mangaInfo.authors:= TrimLeft(StringFilter(GetString(parse.Strings[i+1], '"Truyen tranh ', ',Doc truyen tranh')));
+
     // get authors
-    if (Pos('Tác giả:', parse.Strings[i])<>0) then
-      mangaInfo.authors:= TrimLeft(StringFilter(parse.Strings[i+2]));
+    if (Pos('Tác giả : ', parse.Strings[i])<>0) then
+      mangaInfo.authors:= TrimLeft(StringFilter(parse.Strings[i+3]));
 
     // get artists
-    if (Pos('Họa sỹ:', parse.Strings[i])<>0) then
-      mangaInfo.artists:= TrimLeft(StringFilter(parse.Strings[i+2]));
+    if (Pos('Họa sỹ : ', parse.Strings[i])<>0) then
+      mangaInfo.artists:= TrimLeft(StringFilter(parse.Strings[i+3]));
 
     // get genres
-    if (Pos('Thể loại:', parse.Strings[i])<>0) then
+    if (Pos('Thể loại : ', parse.Strings[i])<>0) then
     begin
       mangaInfo.genres:= '';
       for j:= 0 to 38 do
@@ -2307,9 +2324,9 @@ begin
     end;
 
     // get status
-    if (Pos('Tình trạng:', parse.Strings[i])<>0) then
+    if (Pos('Tình Trạng: ', parse.Strings[i])<>0) then
     begin
-      if Pos('Đang Tiến Hành', parse.Strings[i+4])<>0 then
+      if Pos('1', parse.Strings[i+4])<>0 then
         mangaInfo.status:= '1'   // ongoing
       else
         mangaInfo.status:= '0';  // completed
