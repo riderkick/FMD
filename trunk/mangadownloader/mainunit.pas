@@ -592,7 +592,15 @@ begin
         end;
       end
       else
-        s:= mangaInfo.title;
+      begin
+        s:= RemoveSymbols(TrimLeft(TrimRight(mangaInfo.title)));
+        if Length(s)>64 then
+        begin
+          s:= UnicodeRemove(s);
+          SetLength(s, 64);
+          s:= TrimLeft(TrimRight(s));
+        end;
+      end;
 
       DLManager.containers.Items[pos].chapterName .Add(s);
       DLManager.containers.Items[pos].chapterLinks.Add(mangaInfo.chapterLinks.Strings[i]);

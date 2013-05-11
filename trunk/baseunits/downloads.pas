@@ -34,6 +34,7 @@ type
     procedure   OnTag(tag: String);
     procedure   OnText(text: String);
   public
+    anotherURL    : String;
     checkStyle    : Cardinal;
 
     isTerminated,
@@ -59,7 +60,6 @@ type
   public
     anotherURL : String;
 
-    isProcessToNextURL,
     isTerminated,
     isSuspended: Boolean;
 
@@ -570,9 +570,7 @@ var
         if Pos('background:transparent url', parse.Strings[i])>0 then
         begin
           manager.anotherURL:= GetAttributeValue(GetTagAttribute(parse.Strings[i+1], 'href='));
-          // if PageLinksCounter >= manager.container.pageNumber then
           break;
-          //   Delete(anotherURL, Length(anotherURL), 1);
         end;
       end;
     end;
@@ -992,18 +990,6 @@ var
           break;
         end;
         Inc(i);
-        {if Pos('.thumb.', parse.Strings[i])>0 then
-        begin
-          parse.Strings[i]:= StringReplace(parse.Strings[i], '.thumb.', '', []);
-          Inc(j);
-        end
-        else
-        if Pos('\/thumbs\/', parse.Strings[i])>0 then
-        begin
-          parse.Strings[i]:= StringReplace(parse.Strings[i], '\/thumbs\/', '', []);
-          Inc(j);
-        end
-        else}
       end;
     end;
     // build page files
@@ -1165,6 +1151,7 @@ var
 
   function GetGEHentaiLinkPage: Boolean;
   var
+    s1,s2,
     s: String;
     j,
     i: Cardinal;
@@ -1187,7 +1174,16 @@ var
       begin
         if Pos('http://ehgt.org/g/n.png', parse.Strings[i])>0 then
         begin
-          manager.anotherURL:= GetAttributeValue(GetTagAttribute(parse.Strings[i-1], 'href='));
+          s:= GetAttributeValue(GetTagAttribute(parse.Strings[i-1], 'href='));
+          s1:= manager.anotherURL+' ';
+          s2:= s+' ';
+          Delete(s1, 1, 13);
+          Delete(s2, 1, 13);
+          // compare 2 strings to determine new URL
+          if StrToInt(GetString(s1, '-', ' ')) < StrToInt(GetString(s2, '-', ' ')) then
+          begin
+            manager.anotherURL:= s;
+          end;
         end;
         if (Pos('<div id="i3">', parse.Strings[i])>0) then
         begin
@@ -1380,7 +1376,7 @@ var
 
 var
   lastTime, curTime  : Cardinal;
-  anotherURLBackup, s: String;
+  s: String;
 label
   start;
 
@@ -1388,13 +1384,11 @@ begin
 start:
   if manager.container.mangaSiteID = GEHENTAI_ID then
   begin
-    manager.isProcessToNextURL:= FALSE;
     Sleep(500);
     lastTime:= fmdGetTickCount;
 
-    anotherURLBackup:= manager.anotherURL;
-    GetLinkPageFromURL(anotherURLBackup);
-    manager.isProcessToNextURL:= TRUE;
+   // anotherURLBackup:= manager.anotherURL;
+    GetLinkPageFromURL(anotherURL);
     curTime:= fmdGetTickCount-lastTime;
     if curTime<3000 then
       Sleep(3000-curTime)
@@ -1427,7 +1421,6 @@ end;
 
 constructor TTaskThread.Create;
 begin
-  isProcessToNextURL:= FALSE;
   anotherURL  := '';
   isTerminated:= FALSE;
   isSuspended := TRUE;
@@ -1475,22 +1468,29 @@ var
   i, currentMaxThread: Cardinal;
   s: String;
 begin
-  currentMaxThread:= container.manager.maxDLThreadsPerTask;
+  if (container.mangaSiteID = GEHENTAI_ID) AND (container.manager.maxDLThreadsPerTask>4) then
+    currentMaxThread:= 4
+  else
+    currentMaxThread:= container.manager.maxDLThreadsPerTask;
   if container.mangaSiteID = GEHENTAI_ID then
   begin
     if (container.workPtr <> 0) then
     begin
-      while NOT isProcessToNextURL do
+      repeat
         Sleep(32);
+        s:= anotherURL;
+        Delete(s, 1, 13);
+       // if container.workPtr >= (container.pageNumber-1) then
+       //   exit;
+        if (s <> '') AND
+           (StrToInt(GetString(s+' ', '-', ' ')) = (container.workPtr+1)) then
+          break;
+      until FALSE;
     end;
     Sleep(500*currentMaxThread);
   end
   else
     Sleep(100);
-  {if container.mangaSiteID = GEHENTAI_ID then
-    currentMaxThread:= 1
-  else
-    currentMaxThread:= container.manager.maxDLThreadsPerTask;}
 
   if container.activeThreadCount >= currentMaxThread then exit;
   for i:= 0 to currentMaxThread-1 do
@@ -1500,6 +1500,8 @@ begin
       while isSuspended do Sleep(100);
       Inc(container.activeThreadCount);
       threads.Add(TDownloadThread.Create);
+      if container.mangaSiteID = GEHENTAI_ID then
+        threads.Items[threads.Count-1].anotherURL:= anotherURL;
       threads.Items[threads.Count-1].manager:= self;
       threads.Items[threads.Count-1].workPtr:= container.workPtr;
       threads.Items[threads.Count-1].checkStyle:= Flag;
@@ -1515,6 +1517,8 @@ begin
       while isSuspended do Sleep(100);
       Inc(container.activeThreadCount);
       threads.Items[i]:= TDownloadThread.Create;
+      if container.mangaSiteID = GEHENTAI_ID then
+        threads.Items[i].anotherURL:= anotherURL;
       threads.Items[i].manager:= self;
       threads.Items[i].workPtr:= container.workPtr;
       threads.Items[i].checkStyle:= Flag;
