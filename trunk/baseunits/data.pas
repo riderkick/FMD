@@ -568,7 +568,7 @@ var
     i: Cardinal;
     s: String;
   begin
-    Page:= 242;
+   // Page:= batotoLastDirectoryPage;
     while NOT isFoundPage do
     begin
       Inc(Page);
@@ -581,6 +581,8 @@ var
       end;
       isFoundPage:= TRUE;
       parse.Clear;
+      for i:= 0 to 69 do
+        source.Delete(0);
       Parser:= TjsFastHTMLParser.Create(PChar(source.Text));
       Parser.OnFoundTag := OnTag;
       Parser.OnFoundText:= OnText;
@@ -1109,6 +1111,8 @@ var
       exit;
     end;
     parse.Clear;
+    for i:= 0 to 69 do
+      source.Delete(0);
     Parser:= TjsFastHTMLParser.Create(PChar(source.Text));
     Parser.OnFoundTag := OnTag;
     Parser.OnFoundText:= OnText;

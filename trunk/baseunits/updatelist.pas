@@ -119,7 +119,7 @@ begin
       begin
         {$IFDEF DOWNLOADER}
         if manager.website = BATOTO_NAME then
-          manager.directoryCount:= MainForm.batotoLastDirectoryPage;
+          manager.directoryCount:= batotoLastDirectoryPage;
         {$ENDIF}
         if manager.website = FAKKU_NAME then
         begin
@@ -132,7 +132,7 @@ begin
           info.GetDirectoryPage(manager.directoryCount , manager.website);
         {$IFDEF DOWNLOADER}
         if manager.website = BATOTO_NAME then
-          MainForm.batotoLastDirectoryPage:= manager.directoryCount;
+          {MainForm.}batotoLastDirectoryPage:= manager.directoryCount;
         {$ENDIF}
       end;
     CS_DIRECTORY_PAGE:

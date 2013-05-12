@@ -100,6 +100,8 @@ const
   GEHENTAI_NAME     = 'g.e-hentai (doujinshi)'; GEHENTAI_ID = 13;
 
 var
+  // only for batoto: the directory page from the last time we check the site
+  batotoLastDirectoryPage: Cardinal = 286;
   currentJDN       : Cardinal;
   isChangeDirectory: Boolean = FALSE;
 

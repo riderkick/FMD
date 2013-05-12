@@ -284,9 +284,6 @@ type
     websiteLanguage: TStringList;
     websiteSelect  : TList;
 
-    // only for batoto: the directory page from the last time we check the site
-    batotoLastDirectoryPage: Cardinal;
-
     isUpdating  : Boolean;
     mangalistIni,
     options     : TIniFile;
@@ -1740,7 +1737,8 @@ var
 begin
   // ---------------------------------------------------
   pcMain.PageIndex:= 1;
-  edSaveTo.Text:= options.ReadString('saveto', 'SaveTo', '');
+  if edSaveTo.Text='' then
+    edSaveTo.Text:= options.ReadString('saveto', 'SaveTo', '');
 
   with rmInformation do
   begin

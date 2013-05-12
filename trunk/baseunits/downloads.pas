@@ -1270,6 +1270,13 @@ var
     s       : String;
 
   begin
+    if (FileExists(Path+'/'+name+'.jpg')) OR
+       (FileExists(Path+'/'+name+'.png')) OR
+       (FileExists(Path+'/'+name+'.gif')) then
+    begin
+      Result:= TRUE;
+      exit;
+    end;
     Result:= FALSE;
     HTTP:= THTTPSend.Create;
     HTTP.ProxyHost:= Host;
