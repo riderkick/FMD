@@ -1130,6 +1130,9 @@ var
       begin
         Result:= NO_ERROR;
         s:= StringFilter(TrimLeft(TrimRight(parse.Strings[i+2])));
+        if (Pos('bloody-rose-r8162', parse.Strings[i]) = 0) AND
+           (Pos('dragon-and-weed-origins-outbreak-r6901', parse.Strings[i]) = 0) AND
+           (Pos('dragon-and-weed-origins-the-fallen-r8180', parse.Strings[i]) = 0) then
         begin
           names.Add(s);
           links.Add(StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href=')), BATOTO_ROOT, '', []));
@@ -2117,8 +2120,9 @@ begin
     exit;
   end;
 
-  for i:= 0 to 73 do
-    source.Delete(0);
+  if source.Count > 72 then
+    for i:= 0 to 73 do
+      source.Delete(0);
   // parsing the HTML source
   parse.Clear;
   Parser:= TjsFastHTMLParser.Create(PChar(source.Text));
@@ -2162,6 +2166,7 @@ begin
       // get chapter name and links
     if (GetTagName(parse.Strings[i]) = 'a') AND
        (Pos('/read/_/', parse.Strings[i])<>0) AND
+       (i+8 < parse.Count-1) AND
        (Pos('English', parse.Strings[i+8])>0) then
     begin
       Inc(mangaInfo.numChapter);
@@ -2173,11 +2178,13 @@ begin
     end;
 
     // get authors
-    if (Pos('Author:', parse.Strings[i])<>0) then
-      mangaInfo.authors:= TrimLeft(parse.Strings[i+5]);
+    if (i+5 < parse.Count-1) AND
+       (Pos('Author:', parse.Strings[i])<>0) then
+       mangaInfo.authors:= TrimLeft(parse.Strings[i+5]);
 
     // get artists
-    if (Pos('Artist:', parse.Strings[i])<>0) then
+    if (i+5 < parse.Count-1) AND
+       (Pos('Artist:', parse.Strings[i])<>0) then
       mangaInfo.artists:= TrimLeft(parse.Strings[i+5]);
 
     // get genres
@@ -2201,7 +2208,8 @@ begin
     // get status
     if (Pos('Status:', parse.Strings[i])<>0) then
     begin
-      if Pos('Ongoing', parse.Strings[i+4])<>0 then
+      if (i+4 < parse.Count-1) AND
+         (Pos('Ongoing', parse.Strings[i+4])<>0) then
         mangaInfo.status:= '1'   // ongoing
       else
         mangaInfo.status:= '0';  // completed
@@ -2264,13 +2272,12 @@ begin
     end;
 
     // get summary
-    {if (GetTagName(parse.Strings[i]) = 'div') AND
-       (GetAttributeValue(GetTagAttribute(parse.Strings[i], 'class=')) = 'mangacon') then
+    if (Pos('"clearfix"', parse.Strings[i])>0) AND
+       (Pos('<p>', parse.Strings[i+3])>0) then
     begin
-      j:= i+1;
+      j:= i+5;
       mangaInfo.summary:= '';
-      while (Pos('<strong>', parse.Strings[j])=0) AND (j < parse.Count-1) AND
-            (Pos('id="thanks"', parse.Strings[j])=0) do
+      while (Pos('<!-- Tablesorter: optional -->', parse.Strings[j])=0) AND (j<parse.Count-1) do
       begin
         s:= parse.Strings[j];
         if (Length(s)>0) AND (s[1] <> '<') then
@@ -2282,7 +2289,7 @@ begin
         end;
         Inc(j);
       end;
-    end;}
+    end;
 
     if (Pos('<tbody>', parse.Strings[i])<>0) AND (NOT isExtractSummary) then
       isExtractSummary:= TRUE;
@@ -2311,15 +2318,15 @@ begin
       mangaInfo.authors:= TrimLeft(StringFilter(GetString(parse.Strings[i+1], '"Truyen tranh ', ',Doc truyen tranh')));
 
     // get authors
-    if (Pos('Tác giả : ', parse.Strings[i])<>0) then
+    if (Pos('Tác giả :', parse.Strings[i])<>0) then
       mangaInfo.authors:= TrimLeft(StringFilter(parse.Strings[i+3]));
 
     // get artists
-    if (Pos('Họa sỹ : ', parse.Strings[i])<>0) then
+    if (Pos('Họa sỹ :', parse.Strings[i])<>0) then
       mangaInfo.artists:= TrimLeft(StringFilter(parse.Strings[i+3]));
 
     // get genres
-    if (Pos('Thể loại : ', parse.Strings[i])<>0) then
+    if (Pos('Thể loại :', parse.Strings[i])<>0) then
     begin
       mangaInfo.genres:= '';
       for j:= 0 to 38 do
@@ -2328,12 +2335,12 @@ begin
     end;
 
     // get status
-    if (Pos('Tình Trạng: ', parse.Strings[i])<>0) then
+    if (Pos('Tình Trạng:', parse.Strings[i])<>0) then
     begin
-      if Pos('1', parse.Strings[i+4])<>0 then
-        mangaInfo.status:= '1'   // ongoing
+      if Pos('Hoàn Thành', parse.Strings[i+4])<>0 then
+        mangaInfo.status:= '0'   // ongoing
       else
-        mangaInfo.status:= '0';  // completed
+        mangaInfo.status:= '1';  // completed
     end;
   end;
 
