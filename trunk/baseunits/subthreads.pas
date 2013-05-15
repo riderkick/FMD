@@ -12,7 +12,7 @@ interface
 
 uses
   Classes, SysUtils, Dialogs, Controls, IniFiles, baseunit, data, fgl, downloads,
-  Graphics;
+  Graphics, Process;
 
 type
   TSubThread = class(TThread)
@@ -20,7 +20,9 @@ type
     procedure   Execute; override;
     procedure   DoGetInfos;
     procedure   CallMainFormGetInfos;
+    procedure   CallMainFormUpdate;
   public
+    isFirst     : Boolean;
     mangaListPos: Integer;
     cover       : TPicture;
     isHasCover,
@@ -43,8 +45,13 @@ implementation
 uses
   mainunit;
 
+var
+  LRevision: Cardinal;
+  LVersion : String;
+
 constructor TSubThread.Create;
 begin
+  isFirst        := TRUE;
   isCanStop      := FALSE;
   isSuspended    := TRUE;
   isTerminated   := FALSE;
@@ -129,11 +136,58 @@ begin
   Info.Free;
 end;
 
-procedure   TSubThread.Execute;
+procedure   TSubThread.CallMainFormUpdate;
+var
+  Process: TProcess;
 begin
+  if MessageDlg('', Format(stDlgNewVersion, [LVersion, LRevision]),
+                        mtInformation, [mbYes, mbNo], 0) = mrYes then
+  begin
+    Process:= TProcess.Create(nil);
+    Process.CommandLine:= oldDir + 'updater.exe 1';
+    Process.Execute;
+    MainForm.CloseNow;
+    Halt;
+  end;
+end;
+
+procedure   TSubThread.Execute;
+var
+  l: TStringList;
+  i: Cardinal;
+
+begin
+  LRevision:= 0;
   while isSuspended do Sleep(32);
   while NOT Terminated do
   begin
+    if isFirst then
+    begin
+      Sleep(2000);
+      isFirst:= FALSE;
+      l:= TStringList.Create;
+
+      l.NameValueSeparator:= '=';
+      if (GetPage(TObject(l), UPDATE_URL + 'version.txt', 0)) AND (l.Count > 0) then
+      begin
+        for i:= 0 to l.Count-1 do
+        begin
+          if l.Names[i] = 'Revision' then
+            LRevision := StrToInt(l.ValueFromIndex[i]);
+          if l.Names[i] = 'Version' then
+            LVersion  := l.ValueFromIndex[i];
+        end;
+
+
+        if LRevision > Revision then
+        begin
+          Synchronize(CallMainFormUpdate);
+        end;
+      end;
+
+      l.Free;
+    end;
+
     isCanStop:= FALSE;
     if isGetInfos then
     begin

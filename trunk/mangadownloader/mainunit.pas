@@ -298,6 +298,8 @@ type
     // doing stuff like get manga info, compress, ...
     SubThread   : TSubThread;
 
+    procedure CloseNow;
+
     procedure CheckForTopPanel;
     // en: Too lazy to add it one by one
     // vi: Lười ...
@@ -426,6 +428,7 @@ begin
   TrayIcon.Show;
 
   // load some necessary options at startup
+  Revision                            := options.ReadInteger('general', 'Revision', 0);
   seOptionNewMangaTime.Value          := options.ReadInteger('general', 'NewMangaTime', 3);
   miHighLightNewManga.Checked         := options.ReadBool('general', 'HighLightNewManga', FALSE);
   cbOptionShowQuitDialog.Checked      := options.ReadBool('dialogs', 'ShowQuitDialog', TRUE);
@@ -545,13 +548,19 @@ begin
       exit;
     end;
   end;
+  CloseNow;
+  CloseAction:= caFree;
+end;
+
+procedure TMainForm.CloseNow;
+begin
   isExiting:= TRUE;
   mangalistIni.WriteInteger('general', 'batotoLastDirectoryPage', batotoLastDirectoryPage);
   SaveFormInformation;
   DLManager.StopAllDownloadTasksForExit;
   dataProcess.SaveToFile;
   dataProcess.Destroy;
-  CloseAction:= caFree;
+  Halt;
 end;
 
 // -----
@@ -2075,6 +2084,7 @@ begin
   stFavoritesCheck         := language.ReadString(lang, 'stFavoritesCheck', '');
   stFavoritesChecking      := language.ReadString(lang, 'stFavoritesChecking', '');
 
+  stDlgNewVersion          := language.ReadString(lang, 'stDlgNewVersion', '');
   stDlgURLNotSupport       := language.ReadString(lang, 'stDlgURLNotSupport', '');
   stDldMangaListSelect     := language.ReadString(lang, 'stDldMangaListSelect', '');
   stDlgUpdateAlreadyRunning:= language.ReadString(lang, 'stDlgUpdateAlreadyRunning', '');

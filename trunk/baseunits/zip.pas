@@ -44,7 +44,7 @@ begin
     list:= TStringList.Create;
     searcher:= TFileSearcher.Create;
     searcher.OnFileFound:= OnFileFound;
-    searcher.Search(fPath, '*.jpg;*.jpeg;*.png;*.gif', FALSE, ';');
+    searcher.Search(fPath, '*.jpg;*.jpeg;*.png;*.gif', FALSE, FALSE);
 
     if list.Count <> 0 then
     begin

@@ -100,6 +100,7 @@ const
   GEHENTAI_NAME     = 'g.e-hentai (doujinshi)'; GEHENTAI_ID = 13;
 
 var
+  Revision         : Cardinal;
   // only for batoto: the directory page from the last time we check the site
   batotoLastDirectoryPage: Cardinal = 286;
   currentJDN       : Cardinal;
@@ -170,6 +171,8 @@ var
   GEHENTAI_ROOT   : String = 'http://g.e-hentai.org';
   GEHENTAI_BROWSER: String = '&f_doujinshi=on&advsearch=1&f_search=Search+Keywords&f_srdd=2&f_sname=on&f_stags=on&f_apply=Apply+Filter';
 
+  UPDATE_URL      : String = 'http://akarin.byethost5.com/fmd/';
+
   // en: dialog messages
   // vi: nội dung hộp thoại
   infoCustomGenres,
@@ -192,6 +195,7 @@ var
   stFavoritesCheck,
   stFavoritesChecking,
 
+  stDlgNewVersion,
   stDlgURLNotSupport,
   stDldMangaListSelect,
   stDlgUpdateAlreadyRunning,
