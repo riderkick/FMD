@@ -35,6 +35,7 @@ type
     btOptionApply: TButton;
     btUpdateList: TBitBtn;
     btReadOnline: TButton;
+    cbOptionAutoCheckUpdate: TCheckBox;
     cbOptionShowDeleteTaskDialog: TCheckBox;
     cbOptionUseProxy: TCheckBox;
     cbSelectManga: TComboBox;
@@ -101,6 +102,7 @@ type
     edSaveTo: TLabeledEdit;
     edSearch: TEdit;
     gbOptionProxy: TGroupBox;
+    gbOptionUpdate: TGroupBox;
     ImageList: TImageList;
     imCover: TImage;
     edOptionDefaultPath: TLabeledEdit;
@@ -447,6 +449,12 @@ begin
   SubThread:= TSubThread.Create;
   SubThread.OnShowInformation:= nil;
   SubThread.isSuspended:= FALSE;
+
+  if cbOptionAutoCheckUpdate.Checked then
+  begin
+    SubThread.updateCounter:= 0;
+    SubThread.isCheckForLatestVer:= TRUE;
+  end;
 
   HideCompletedTasks(miDownloadHideCompleted.Checked);
 end;
@@ -1565,6 +1573,8 @@ begin
   options.WriteBool   ('saveto', 'GenMangaName', cbOptionGenerateMangaFolderName.Checked);
   options.WriteInteger('saveto', 'Compress', rgOptionCompress.ItemIndex);
 
+  options.WriteBool   ('update', 'AutoCheckUpdateAtStartup', cbOptionAutoCheckUpdate.Checked);
+
   DLManager.compress:= rgOptionCompress.ItemIndex;
 
   options.WriteInteger('languages', 'Select', cbLanguages.ItemIndex);
@@ -1818,9 +1828,11 @@ begin
   DLManager.maxDLThreadsPerTask:= options.ReadInteger('connections', 'NumberOfThreadsPerTask', 1);
   DLManager.retryConnect       := options.ReadInteger('connections', 'Retry', 0);
   DLManager.compress           := options.ReadInteger('saveto', 'Compress', 0);
+
+  cbOptionPathConvert.Checked  := options.ReadBool   ('saveto', 'PathConv', FALSE);
   cbOptionPathConvert.Checked  := options.ReadBool   ('saveto', 'PathConv', FALSE);
   cbOptionGenerateChapterName.Checked:= options.ReadBool('saveto', 'GenChapName', FALSE);
-  cbOptionGenerateMangaFolderName.Checked:= options.ReadBool('saveto', 'GenMangaName', FALSE);
+  cbOptionAutoCheckUpdate.Checked:= options.ReadBool('update', 'AutoCheckUpdateAtStartup', TRUE);
 end;
 
 procedure TMainForm.LoadMangaOptions;
@@ -2084,6 +2096,7 @@ begin
   lbOptionMaxThread.Caption   := Format(language.ReadString(lang, 'lbOptionMaxThreadCaption', ''), [seOptionMaxThread.MaxValue]);
   lbOptionMaxRetry.Caption    := language.ReadString(lang, 'lbOptionMaxRetryCaption', '');
   lbOptionDialogs.Caption     := language.ReadString(lang, 'lbOptionDialogsCaption', '');
+  cbOptionAutoCheckUpdate.Caption:= language.ReadString(lang, 'cbOptionAutoCheckUpdateCaption', '');
   cbOptionPathConvert.Caption := language.ReadString(lang, 'cbOptionPathConvertCaption', '');
   cbOptionGenerateChapterName.Caption    := language.ReadString(lang, 'cbOptionGenerateChapterNameCaption', '');
   cbOptionGenerateMangaFolderName.Caption:= language.ReadString(lang, 'cbOptionGenerateMangaFolderNameCaption', '');

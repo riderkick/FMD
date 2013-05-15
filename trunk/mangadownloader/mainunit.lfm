@@ -297,11 +297,11 @@ object MainForm: TMainForm
     Height = 439
     Top = 32
     Width = 597
-    ActivePage = tsInformation
+    ActivePage = tsOption
     Align = alClient
     Font.Style = [fsBold]
     ParentFont = False
-    TabIndex = 1
+    TabIndex = 4
     TabOrder = 1
     OnChange = pcMainChange
     object tsDownload: TTabSheet
@@ -1215,11 +1215,11 @@ object MainForm: TMainForm
     end
     object tsOption: TTabSheet
       Caption = 'Options'
-      ClientHeight = 445
+      ClientHeight = 413
       ClientWidth = 589
       object pnOptions: TPageControl
         Left = 9
-        Height = 352
+        Height = 320
         Top = 26
         Width = 570
         ActivePage = tsGeneral
@@ -1228,7 +1228,7 @@ object MainForm: TMainForm
         TabOrder = 0
         object tsGeneral: TTabSheet
           Caption = 'General'
-          ClientHeight = 326
+          ClientHeight = 294
           ClientWidth = 562
           object cbLanguages: TComboBox
             Left = 52
@@ -1271,20 +1271,41 @@ object MainForm: TMainForm
             ParentColor = False
             ParentFont = False
           end
+          object gbOptionUpdate: TGroupBox
+            Left = 12
+            Height = 104
+            Top = 178
+            Width = 540
+            Anchors = [akTop, akLeft, akRight]
+            Caption = 'Update'
+            ClientHeight = 84
+            ClientWidth = 536
+            ParentFont = False
+            TabOrder = 2
+            object cbOptionAutoCheckUpdate: TCheckBox
+              Left = 22
+              Height = 17
+              Top = 6
+              Width = 130
+              Caption = 'Check for new version '
+              ParentFont = False
+              TabOrder = 0
+            end
+          end
         end
         object tsConnections: TTabSheet
           Caption = 'Connections'
-          ClientHeight = 326
+          ClientHeight = 294
           ClientWidth = 562
           object sbDownloadConnections: TScrollBox
             Left = 0
-            Height = 326
+            Height = 294
             Top = 0
             Width = 562
             HorzScrollBar.Page = 558
-            VertScrollBar.Page = 322
+            VertScrollBar.Page = 290
             Align = alClient
-            ClientHeight = 322
+            ClientHeight = 290
             ClientWidth = 558
             TabOrder = 0
             object cbOptionUseProxy: TCheckBox
@@ -1469,7 +1490,7 @@ object MainForm: TMainForm
         end
         object tsSaveTo: TTabSheet
           Caption = 'Save to'
-          ClientHeight = 326
+          ClientHeight = 294
           ClientWidth = 562
           object edOptionDefaultPath: TLabeledEdit
             Left = 28
@@ -1596,7 +1617,7 @@ object MainForm: TMainForm
       object btOptionApply: TButton
         Left = 45
         Height = 33
-        Top = 394
+        Top = 362
         Width = 99
         Anchors = [akBottom]
         Caption = 'Apply'

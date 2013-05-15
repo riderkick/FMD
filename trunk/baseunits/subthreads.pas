@@ -60,8 +60,8 @@ var
 constructor TSubThread.Create;
 begin
   fImportant     := '';
-  updateCounter  := 0;
-  isCheckForLatestVer        := TRUE;
+  updateCounter  := 1;
+  isCheckForLatestVer:= FALSE;
   isCanStop      := FALSE;
   isSuspended    := TRUE;
   isTerminated   := FALSE;
