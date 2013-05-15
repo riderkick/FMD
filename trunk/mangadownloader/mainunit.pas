@@ -22,6 +22,7 @@ type
   { TMainForm }
 
   TMainForm = class(TForm)
+    btCheckVersion: TBitBtn;
     btURL: TBitBtn;
     btFavoritesCheckNewChapter: TBitBtn;
     btBrowse: TBitBtn;
@@ -190,6 +191,7 @@ type
     vtDownload: TVirtualStringTree;
     vtMangaList: TVirtualStringTree;
 
+    procedure btCheckVersionClick(Sender: TObject);
     procedure btReadOnlineClick(Sender: TObject);
     procedure btUpdateListClick(Sender: TObject);
     procedure btURLClick(Sender: TObject);
@@ -354,6 +356,9 @@ var
 implementation
 
 {$R *.lfm}
+
+uses
+  logform;
 
 { TMainForm }
 
@@ -720,6 +725,17 @@ end;
 procedure TMainForm.btReadOnlineClick(Sender: TObject);
 begin
   OpenURL(mangaInfo.url);
+end;
+
+procedure TMainForm.btCheckVersionClick(Sender: TObject);
+begin
+  if subthread.isCheckForLatestVer then
+    MessageDlg('', stDlgUpdaterIsRunning, mtInformation, [mbYes], 0)
+  else
+  begin
+    subthread.isCheckForLatestVer:= TRUE;
+    btCheckVersion.Caption:= stFavoritesChecking;
+  end;
 end;
 
 procedure TMainForm.cbSelectMangaChange(Sender: TObject);
@@ -2084,6 +2100,12 @@ begin
   stFavoritesCheck         := language.ReadString(lang, 'stFavoritesCheck', '');
   stFavoritesChecking      := language.ReadString(lang, 'stFavoritesChecking', '');
 
+  stUpdaterCheck           := language.ReadString(lang, 'stUpdaterCheck', '');
+  btCheckVersion.Caption:= stUpdaterCheck;
+
+  stDlgUpdaterVersionRequire:= language.ReadString(lang, 'stDlgUpdaterVersionRequire', '');
+  stDlgUpdaterIsRunning    := language.ReadString(lang, 'stDlgUpdaterIsRunning', '');
+  stDlgLatestVersion       := language.ReadString(lang, 'stDlgLatestVersion', '');
   stDlgNewVersion          := language.ReadString(lang, 'stDlgNewVersion', '');
   stDlgURLNotSupport       := language.ReadString(lang, 'stDlgURLNotSupport', '');
   stDldMangaListSelect     := language.ReadString(lang, 'stDldMangaListSelect', '');

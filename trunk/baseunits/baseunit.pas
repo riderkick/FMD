@@ -70,6 +70,7 @@ const
   CONFIG_FILE       = 'config.ini';
   MANGALISTINI_FILE = 'mangalist.ini';
   LANGUAGE_FILE     = 'languages.ini';
+  LOG_FILE          = 'changelog.txt';
 
   OPTION_MANGALIST = 0;
   OPTION_RECONNECT = 1;
@@ -195,6 +196,11 @@ var
   stFavoritesCheck,
   stFavoritesChecking,
 
+  stUpdaterCheck,
+
+  stDlgUpdaterVersionRequire,
+  stDlgUpdaterIsRunning,
+  stDlgLatestVersion,
   stDlgNewVersion,
   stDlgURLNotSupport,
   stDldMangaListSelect,

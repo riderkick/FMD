@@ -47,7 +47,7 @@
         <PackageName Value="LCL"/>
       </Item3>
     </RequiredPackages>
-    <Units Count="10">
+    <Units Count="11">
       <Unit0>
         <Filename Value="md.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -104,6 +104,14 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="subthreads"/>
       </Unit9>
+      <Unit10>
+        <Filename Value="logform.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="Log"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="logform"/>
+      </Unit10>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

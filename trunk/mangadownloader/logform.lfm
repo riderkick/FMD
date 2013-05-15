@@ -1,0 +1,22 @@
+object Log: TLog
+  Left = 291
+  Height = 365
+  Top = 127
+  Width = 371
+  BorderStyle = bsToolWindow
+  Caption = 'Log'
+  ClientHeight = 365
+  ClientWidth = 371
+  OnCreate = FormCreate
+  Position = poDesktopCenter
+  LCLVersion = '1.1'
+  object mmLog: TMemo
+    Left = 0
+    Height = 365
+    Top = 0
+    Width = 371
+    Align = alClient
+    ReadOnly = True
+    TabOrder = 0
+  end
+end

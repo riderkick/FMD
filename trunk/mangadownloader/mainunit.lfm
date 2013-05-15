@@ -297,11 +297,11 @@ object MainForm: TMainForm
     Height = 439
     Top = 32
     Width = 597
-    ActivePage = tsInformation
+    ActivePage = tsAbout
     Align = alClient
     Font.Style = [fsBold]
     ParentFont = False
-    TabIndex = 1
+    TabIndex = 5
     TabOrder = 1
     OnChange = pcMainChange
     object tsDownload: TTabSheet
@@ -1158,11 +1158,11 @@ object MainForm: TMainForm
     end
     object tsFavorites: TTabSheet
       Caption = 'Favorites'
-      ClientHeight = 445
+      ClientHeight = 413
       ClientWidth = 589
       object vtFavorites: TVirtualStringTree
         Left = 0
-        Height = 377
+        Height = 345
         Top = 0
         Width = 589
         Align = alTop
@@ -1205,7 +1205,7 @@ object MainForm: TMainForm
       object btFavoritesCheckNewChapter: TBitBtn
         Left = 33
         Height = 40
-        Top = 395
+        Top = 363
         Width = 528
         Anchors = [akLeft, akRight, akBottom]
         Caption = 'Check for new chapter'
@@ -1606,20 +1606,31 @@ object MainForm: TMainForm
     end
     object tsAbout: TTabSheet
       Caption = 'About'
-      ClientHeight = 445
+      ClientHeight = 413
       ClientWidth = 589
       object rmAbout: TRichMemo
         Left = 0
-        Height = 445
+        Height = 346
         Top = 0
         Width = 589
-        Align = alClient
+        Align = alTop
+        Anchors = [akTop, akLeft, akRight, akBottom]
         Font.Style = [fsBold]
         HideSelection = False
         ParentFont = False
         ReadOnly = True
         ScrollBars = ssVertical
         TabOrder = 0
+      end
+      object btCheckVersion: TBitBtn
+        Left = 25
+        Height = 40
+        Top = 362
+        Width = 528
+        Anchors = [akLeft, akRight, akBottom]
+        Caption = 'Check for new version'
+        OnClick = btCheckVersionClick
+        TabOrder = 1
       end
     end
   end

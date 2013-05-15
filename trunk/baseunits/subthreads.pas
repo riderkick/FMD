@@ -19,10 +19,16 @@ type
   protected
     procedure   Execute; override;
     procedure   DoGetInfos;
+    procedure   CallMainFormShowLog;
     procedure   CallMainFormGetInfos;
     procedure   CallMainFormUpdate;
+    procedure   CallMainFormUpdateRequire;
+    procedure   CallMainFormImportant;
+    procedure   CallMainFormLatestVer;
+    procedure   CallMainFormSetButton;
   public
-    isFirst     : Boolean;
+    updateCounter: Cardinal;
+    isCheckForLatestVer     : Boolean;
     mangaListPos: Integer;
     cover       : TPicture;
     isHasCover,
@@ -31,6 +37,7 @@ type
     isSuspended : Boolean;
     OnShowInformation: procedure of object;
 
+    fImportant,
     website, link: String;
     isGetInfos   : Boolean;
     Info         : TMangaInformation;
@@ -43,15 +50,18 @@ type
 implementation
 
 uses
-  mainunit;
+  mainunit, logform;
 
 var
+  LRequireRevision: Cardinal = 1;
   LRevision: Cardinal;
   LVersion : String;
 
 constructor TSubThread.Create;
 begin
-  isFirst        := TRUE;
+  fImportant     := '';
+  updateCounter  := 0;
+  isCheckForLatestVer        := TRUE;
   isCanStop      := FALSE;
   isSuspended    := TRUE;
   isTerminated   := FALSE;
@@ -121,6 +131,11 @@ begin
   boolResult:= GetPage(TObject(cover), Info.mangaInfo.coverLink, 1);
 end;
 
+procedure   TSubThread.CallMainFormShowLog;
+begin
+  Log.ShowLog;
+end;
+
 procedure   TSubThread.CallMainFormGetInfos;
 begin
   TransferMangaInfo(MainForm.mangaInfo, Info.mangaInfo);
@@ -151,6 +166,30 @@ begin
   end;
 end;
 
+procedure   TSubThread.CallMainFormUpdateRequire;
+begin
+  MessageDlg('', Format(stDlgUpdaterVersionRequire, [LRequireRevision]), mtInformation, [mbYes], 0);
+end;
+
+procedure   TSubThread.CallMainFormImportant;
+var
+  Process: TProcess;
+begin
+  MessageDlg('', fImportant, mtInformation, [mbYes], 0);
+ // MainForm.CloseNow;
+ // Halt;
+end;
+
+procedure   TSubThread.CallMainFormLatestVer;
+begin
+  MessageDlg('', stDlgLatestVersion, mtInformation, [mbYes], 0);
+end;
+
+procedure   TSubThread.CallMainFormSetButton;
+begin
+  MainForm.btCheckVersion.Caption:= stUpdaterCheck;
+end;
+
 procedure   TSubThread.Execute;
 var
   l: TStringList;
@@ -161,10 +200,12 @@ begin
   while isSuspended do Sleep(32);
   while NOT Terminated do
   begin
-    if isFirst then
+    if isCheckForLatestVer then
     begin
       Sleep(2000);
-      isFirst:= FALSE;
+      if FileExists(WORK_FOLDER + LOG_FILE) then
+        Synchronize(CallMainFormShowLog);
+
       l:= TStringList.Create;
 
       l.NameValueSeparator:= '=';
@@ -172,19 +213,38 @@ begin
       begin
         for i:= 0 to l.Count-1 do
         begin
-          if l.Names[i] = 'Revision' then
-            LRevision := StrToInt(l.ValueFromIndex[i]);
+          if l.Names[i] = '' then
+            LRevision:= StrToInt(l.ValueFromIndex[i]);
+          if l.Names[i] = 'RequireRevision' then
+            LRequireRevision:= StrToInt(l.ValueFromIndex[i]);
           if l.Names[i] = 'Version' then
-            LVersion  := l.ValueFromIndex[i];
+            LVersion:= l.ValueFromIndex[i];
+          if l.Names[i] = 'Important' then
+          begin
+            fImportant:= l.ValueFromIndex[i];
+            Synchronize(CallMainFormImportant);
+          end;
         end;
 
-
+        if LRequireRevision > Revision then
+          Synchronize(CallMainFormUpdateRequire)
+        else
         if LRevision > Revision then
         begin
           Synchronize(CallMainFormUpdate);
+        end
+        else
+        begin
+          if updateCounter > 0 then
+          begin
+            Synchronize(CallMainFormLatestVer);
+          end;
+          Synchronize(CallMainFormSetButton);
         end;
       end;
+      Inc(updateCounter);
 
+      isCheckForLatestVer:= FALSE;
       l.Free;
     end;
 
