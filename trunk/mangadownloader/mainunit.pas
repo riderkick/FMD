@@ -524,6 +524,7 @@ begin
         begin
           DLManager.containers.Items[i].chapterLinks.Text:= DLManager.containers.Items[i].chapterLinks.Text + DLManager.containers.Items[j].chapterLinks.Text;
           DLManager.containers.Items[i].chapterName .Text:= DLManager.containers.Items[i].chapterName .Text + DLManager.containers.Items[j].chapterName .Text;
+          DLManager.containers.Items[i].downloadInfo.dateTime:= DLManager.containers.Items[j].downloadInfo.dateTime;
           DLManager.RemoveTask(j);
           Dec(i);
         end;
