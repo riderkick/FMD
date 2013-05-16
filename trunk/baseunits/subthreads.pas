@@ -213,7 +213,7 @@ begin
       begin
         for i:= 0 to l.Count-1 do
         begin
-          if l.Names[i] = '' then
+          if l.Names[i] = 'Revision' then
             LRevision:= StrToInt(l.ValueFromIndex[i]);
           if l.Names[i] = 'RequireRevision' then
             LRequireRevision:= StrToInt(l.ValueFromIndex[i]);

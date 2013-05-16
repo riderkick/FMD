@@ -90,7 +90,7 @@
         <UnitName Value="updatelist"/>
         <EditorIndex Value="2"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="220"/>
+        <TopLine Value="285"/>
         <CursorPos X="47" Y="232"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
@@ -114,8 +114,8 @@
         <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="217"/>
-        <CursorPos X="29" Y="65"/>
+        <TopLine Value="211"/>
+        <CursorPos X="36" Y="216"/>
         <UsageCount Value="158"/>
         <Loaded Value="True"/>
       </Unit9>
