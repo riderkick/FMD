@@ -37,6 +37,7 @@ type
     isSuspended : Boolean;
     OnShowInformation: procedure of object;
 
+    fNote, fNoteForThisRevision,
     fImportant,
     website, link: String;
     isGetInfos   : Boolean;
@@ -155,8 +156,8 @@ procedure   TSubThread.CallMainFormUpdate;
 var
   Process: TProcess;
 begin
-  if MessageDlg('', Format(stDlgNewVersion, [LVersion, LRevision]),
-                        mtInformation, [mbYes, mbNo], 0) = mrYes then
+  if MessageDlg('', Format(stDlgNewVersion + #10#13 + fNote, [LVersion, LRevision]),
+                    mtInformation, [mbYes, mbNo], 0) = mrYes then
   begin
     Process:= TProcess.Create(nil);
     Process.CommandLine:= oldDir + 'updater.exe 1';
@@ -198,21 +199,27 @@ var
 begin
   LRevision:= 0;
   while isSuspended do Sleep(32);
+  Sleep(2000);
+  if FileExists(WORK_FOLDER + LOG_FILE) then
+    Synchronize(CallMainFormShowLog);
   while NOT Terminated do
   begin
     if isCheckForLatestVer then
     begin
       Sleep(2000);
-      if FileExists(WORK_FOLDER + LOG_FILE) then
-        Synchronize(CallMainFormShowLog);
-
       l:= TStringList.Create;
 
       l.NameValueSeparator:= '=';
       if (GetPage(TObject(l), UPDATE_URL + 'version.txt', 0)) AND (l.Count > 0) then
       begin
+        fNote:= '';
+        fNoteForThisRevision:= '';
         for i:= 0 to l.Count-1 do
         begin
+          if l.Names[i] = IntToStr(Revision) then
+            fNoteForThisRevision:= l.ValueFromIndex[i];
+          if l.Names[i] = 'Note' then
+            fNote:= l.ValueFromIndex[i];
           if l.Names[i] = 'Revision' then
             LRevision:= StrToInt(l.ValueFromIndex[i]);
           if l.Names[i] = 'RequireRevision' then

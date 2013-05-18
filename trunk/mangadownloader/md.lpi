@@ -47,7 +47,7 @@
         <PackageName Value="LCL"/>
       </Item3>
     </RequiredPackages>
-    <Units Count="11">
+    <Units Count="12">
       <Unit0>
         <Filename Value="md.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -112,6 +112,11 @@
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="logform"/>
       </Unit10>
+      <Unit11>
+        <Filename Value="..\baseunits\updatedb.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="updatedb"/>
+      </Unit11>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

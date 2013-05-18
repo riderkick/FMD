@@ -15,7 +15,7 @@ uses
   ExtCtrls, ComCtrls, Grids, ColorBox, ActnList, Buttons, CheckLst, Spin, Menus,
   customdrawncontrols, VirtualTrees, RichMemo, IniFiles, Process,
   baseunit, data, types, downloads, favorites, LConvEncoding, LCLIntf,
-  updatelist, lclproc, subthreads{, ActiveX};
+  updatelist, updatedb, lclproc, subthreads{, ActiveX};
 
 type
 
@@ -289,12 +289,14 @@ type
     websiteSelect  : TList;
 
     isUpdating  : Boolean;
+    updates,
     mangalistIni,
     options     : TIniFile;
     favorites   : TFavoriteManager;
     dataProcess : TDataProcess;
     mangaInfo   : TMangaInfo;
     DLManager   : TDownloadManager;
+    updateDB    : TUpdateDBThread;
     updateList  : TUpdateMangaManagerThread;
     ticks       : Cardinal;
     backupTicks : Cardinal;
@@ -321,6 +323,9 @@ type
     // en: Show manga information
     // vi: Xuất thông tin về manga
     procedure ShowInformation;
+
+    // get manga list from server
+    procedure RunGetList;
 
     // en: Load config from config.ini
     // vi: Lấy thông tin từ config.ini
@@ -393,6 +398,9 @@ begin
 
   options     := TIniFile.Create(oldDir + CONFIG_FOLDER + CONFIG_FILE);
   options.CacheUpdates:= FALSE;
+
+  updates     := TIniFile.Create(oldDir + CONFIG_FOLDER + UPDATE_FILE);
+  updates.CacheUpdates:= FALSE;
 
   mangalistIni:= TIniFile.Create(oldDir + CONFIG_FOLDER + MANGALISTINI_FILE);
   mangalistIni.CacheUpdates:= FALSE;
@@ -697,13 +705,20 @@ end;
 
 procedure TMainForm.btUpdateListClick(Sender: TObject);
 begin
-  if (NOT isUpdating) OR (NOT Assigned(updateList)) OR (updateList.isTerminated) then
+  if (NOT isUpdating){ OR (NOT Assigned(updateList)) OR (updateList.isTerminated) }then
   begin
-    isUpdating:= TRUE;
-    updateList:= TUpdateMangaManagerThread.Create;
-    updateList.numberOfThreads:= 4;
-    updateList.websites.Add(cbSelectManga.Items[cbSelectManga.ItemIndex]);
-    updateList.isSuspended:= FALSE;
+    if dataProcess.Title.Count > 1 then
+    begin
+      isUpdating:= TRUE;
+      updateList:= TUpdateMangaManagerThread.Create;
+      updateList.numberOfThreads:= 4;
+      updateList.websites.Add(cbSelectManga.Items[cbSelectManga.ItemIndex]);
+      updateList.isSuspended:= FALSE;
+    end
+    else
+    begin
+      RunGetList;
+    end;
   end
   else
     MessageDlg('', stDlgUpdateAlreadyRunning, mtInformation, [mbYes], 0)
@@ -751,11 +766,17 @@ procedure TMainForm.cbSelectMangaChange(Sender: TObject);
 begin
   if currentWebsite <> cbSelectManga.Items.Strings[cbSelectManga.ItemIndex] then
   begin
-    dataProcess.RemoveFilter;
-    dataProcess.SaveToFile;
+    if dataProcess.Title.Count > 0 then
+    begin
+      dataProcess.RemoveFilter;
+      dataProcess.SaveToFile;
+    end;
     dataProcess.Free;
     dataProcess:= TDataProcess.Create;
-    dataProcess.LoadFromFile(cbSelectManga.Items.Strings[cbSelectManga.ItemIndex]);
+    if NOT dataProcess.LoadFromFile(cbSelectManga.Items.Strings[cbSelectManga.ItemIndex]) then
+    begin
+      RunGetList;
+    end;
     vtMangaList.Clear;
     vtMangaList.RootNodeCount:= dataProcess.filterPos.Count;
     lbMode.Caption:= Format(stModeAll, [dataProcess.filterPos.Count]);
@@ -1808,6 +1829,18 @@ begin
     btReadOnline.Enabled:= TRUE;
 end;
 
+procedure TMainForm.RunGetList;
+begin
+  if (MessageDlg('', stDlgUpdaterWantToUpdateDB, mtInformation, [mbYes, mbNo], 0)=mrYes) AND
+     (NOT isUpdating) then
+  begin
+    isUpdating:= TRUE;
+    updateDB:= TUpdateDBThread.Create;
+    updateDB.websiteName:= cbSelectManga.Items[cbSelectManga.ItemIndex];
+    updateDB.isSuspended:= FALSE;
+  end;
+end;
+
 procedure TMainForm.LoadOptions;
 begin
   if options.ReadBool('connections', 'UseProxy', FALSE) then
@@ -2135,6 +2168,8 @@ begin
   stDlgNoNewChapter        := language.ReadString(lang, 'stDlgNoNewChapter', '');
   stDlgHasNewChapter       := language.ReadString(lang, 'stDlgHasNewChapter', '');
   stDlgRemoveCompletedManga:= language.ReadString(lang, 'stDlgRemoveCompletedManga', '');
+  stDlgUpdaterWantToUpdateDB:= language.ReadString(lang, 'stDlgUpdaterWantToUpdateDB', '');
+  stDlgUpdaterCannotConnectToServer:= language.ReadString(lang, 'stDlgUpdaterCannotConnectToServer', '');
 
   language.Free;
   if dataProcess.isFiltered then

@@ -10,7 +10,7 @@ uses
   {$ENDIF}{$ENDIF}
   Interfaces, // this includes the LCL widgetset
   Forms, mainunit, virtualtreeview_package, richmemopackage, zip, updatelist,
-  subthreads, logform;
+  subthreads, logform, updatedb;
 
 {$R *.res}
 

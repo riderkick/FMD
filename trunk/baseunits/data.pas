@@ -104,6 +104,7 @@ uses FastHTMLParser, HTMLUtil, HTTPSend, SynaCode;
 
 constructor TDataProcess.Create;
 begin
+  inherited Create;
   isFiltered:= FALSE;
   Data      := TStringList.Create;
 
@@ -118,7 +119,6 @@ begin
 
   filterMark:= TByteList.Create;
   filterPos := TCardinalList.Create;
-  inherited Create;
 end;
 
 destructor  TDataProcess.Destroy;
@@ -191,8 +191,7 @@ var
   Filename: String;
 begin
   Filename:= DATA_FOLDER+website;
-  if NOT FileExists(Filename+DATA_EXT) then exit(FALSE);
-  l:= TStringList.Create;
+
   data.Clear;
   filterMark.Clear;
   filterPos .Clear;
@@ -205,33 +204,38 @@ begin
   summary.Clear;
   jdn.Clear;
 
-  Filename:= DATA_FOLDER+website;
+  if NOT FileExists(Filename+DATA_EXT) then exit(FALSE);
+  l:= TStringList.Create;
 
   self.Filename:= Filename;
 
   data.LoadFromFile(Filename+DATA_EXT);
-  QuickSortData(data);
+
+  if data.Count > 0 then
+  begin
+    QuickSortData(data);
  { for i:= 0 to 2 do
     Data.Delete(Data.Count-1);
   SaveToFile;
   Halt;}
-  for i:= 0 to data.Count-1 do
-  begin
+    for i:= 0 to data.Count-1 do
+    begin
 
-    filterMark.Add(FILTER_SHOW);
-    filterPos.Add(i);
+      filterMark.Add(FILTER_SHOW);
+      filterPos.Add(i);
 
-    l.Clear;
-    GetParams(l, data.Strings[i]);
+      l.Clear;
+      GetParams(l, data.Strings[i]);
 
-    title.Add  (l.Strings[DATA_PARAM_NAME]);
-    link.Add   (l.Strings[DATA_PARAM_LINK]);
-    authors.Add(l.Strings[DATA_PARAM_AUTHORS]);
-    artists.Add(l.Strings[DATA_PARAM_ARTISTS]);
-    genres.Add (l.Strings[DATA_PARAM_GENRES]);
-    status.Add (l.Strings[DATA_PARAM_STATUS]);
-    summary.Add(l.Strings[DATA_PARAM_SUMMARY]);
-    jdn.Add    (Pointer(StrToInt(l.Strings[DATA_PARAM_JDN])));
+      title.Add  (l.Strings[DATA_PARAM_NAME]);
+      link.Add   (l.Strings[DATA_PARAM_LINK]);
+      authors.Add(l.Strings[DATA_PARAM_AUTHORS]);
+      artists.Add(l.Strings[DATA_PARAM_ARTISTS]);
+      genres.Add (l.Strings[DATA_PARAM_GENRES]);
+      status.Add (l.Strings[DATA_PARAM_STATUS]);
+      summary.Add(l.Strings[DATA_PARAM_SUMMARY]);
+      jdn.Add    (Pointer(StrToInt(l.Strings[DATA_PARAM_JDN])));
+    end;
   end;
   l.Free;
   Result:= TRUE;
@@ -452,11 +456,11 @@ end;
 
 constructor TMangaInformation.Create;
 begin
+  inherited Create;
   parse:= TStringList.Create;
   mangaInfo.chapterName := TStringList.Create;
   mangaInfo.chapterLinks:= TStringList.Create;
   isGetByUpdater:= FALSE;
-  inherited Create;
 end;
 
 destructor  TMangaInformation.Destroy;

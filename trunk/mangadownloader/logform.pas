@@ -1,3 +1,9 @@
+{
+        File: logform.pas
+        License: GPLv2
+        This unit is part of Free Manga Downloader
+}
+
 unit logform;
 
 {$mode objfpc}{$H+}

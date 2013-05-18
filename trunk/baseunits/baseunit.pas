@@ -68,6 +68,7 @@ const
   DATA_EXT          = '.dat';
   CONFIG_FOLDER     = 'config/';
   CONFIG_FILE       = 'config.ini';
+  UPDATE_FILE       = 'updates.ini';
   MANGALISTINI_FILE = 'mangalist.ini';
   LANGUAGE_FILE     = 'languages.ini';
   LOG_FILE          = 'changelog.txt';
@@ -215,7 +216,9 @@ var
   stDlgFavoritesIsRunning,
   stDlgNoNewChapter,
   stDlgHasNewChapter,
-  stDlgRemoveCompletedManga: String;
+  stDlgRemoveCompletedManga,
+  stDlgUpdaterWantToUpdateDB,
+  stDlgUpdaterCannotConnectToServer: String;
 
 type
   PMangaListItem = ^TMangaListItem;
@@ -283,6 +286,7 @@ function  CorrectURL(const URL: String): String;
 procedure CheckPath(const S: String);
 
 function  GetMangaSiteID(const name: String): Cardinal;
+function  GetMangaDatabaseURL(const name: String): String;
 
 function  RemoveSymbols(const input: String): String;
 
@@ -460,6 +464,11 @@ begin
   if name = MANGAPARK_NAME then Result:= MANGAPARK_ID
   else
   if name = GEHENTAI_NAME then Result:= GEHENTAI_ID;
+end;
+
+function  GetMangaDatabaseURL(const name: String): String;
+begin
+  result:= 'http://aarnet.dl.sourceforge.net/project/fmd/FMD/lists/'+name+'.zip';
 end;
 
 function  RemoveSymbols(const input: String): String;

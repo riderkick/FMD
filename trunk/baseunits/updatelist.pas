@@ -68,12 +68,14 @@ type
 
 implementation
 
-uses mainunit, Dialogs;
+uses
+  mainunit, Dialogs;
 
 // ----- TUpdateMangaThread -----
 
 constructor TUpdateMangaThread.Create;
 begin
+  inherited Create(FALSE);
   names:= TStringList.Create;
   links:= TStringList.Create;
   isSuspended:= TRUE;
@@ -81,7 +83,6 @@ begin
   Info.isGetByUpdater:= TRUE;
   isTerminated   := FALSE;
   FreeOnTerminate:= TRUE;
-  inherited Create(FALSE);
 end;
 
 destructor  TUpdateMangaThread.Destroy;
@@ -173,6 +174,7 @@ end;
 
 constructor TUpdateMangaManagerThread.Create;
 begin
+  inherited Create(FALSE);
   websites   := TStringList.Create;
   isSuspended:= TRUE;
   dataProcess:= TDataProcess.Create;
@@ -180,7 +182,6 @@ begin
   links  := TStringList.Create;
   isTerminated:= FALSE;
   FreeOnTerminate:= TRUE;
-  inherited Create(FALSE);
 end;
 
 destructor  TUpdateMangaManagerThread.Destroy;
@@ -298,8 +299,8 @@ begin
       while threadCount > 0 do Sleep(100);
 
       {$IFNDEF DOWNLOADER}
-     { names.SaveToFile(website+'_names.txt');
-      links.SaveToFile(website+'_links.txt');}
+      names.SaveToFile(website+'_names.txt');
+      links.SaveToFile(website+'_links.txt');
 
       names.Clear;
       links.Clear;
