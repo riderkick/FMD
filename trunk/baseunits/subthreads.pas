@@ -12,7 +12,7 @@ interface
 
 uses
   Classes, SysUtils, Dialogs, Controls, IniFiles, baseunit, data, fgl, downloads,
-  Graphics, Process;
+  Graphics, Process, lclintf;
 
 type
   TSubThread = class(TThread)
@@ -169,7 +169,10 @@ end;
 
 procedure   TSubThread.CallMainFormUpdateRequire;
 begin
-  MessageDlg('', Format(stDlgUpdaterVersionRequire, [LRequireRevision]), mtInformation, [mbYes], 0);
+  if MessageDlg('', Format(stDlgUpdaterVersionRequire, [LRequireRevision]), mtInformation, [mbYes, mbNo], 0)=mrYes then
+  begin
+    OpenURL('https://sourceforge.net/projects/fmd/');
+  end;
 end;
 
 procedure   TSubThread.CallMainFormImportant;

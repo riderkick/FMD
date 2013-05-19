@@ -867,6 +867,7 @@ begin
   edFilterArtists.Caption:= '';
   edFilterSummary.Caption:= '';
   cbFilterStatus .ItemIndex:= 2;
+  edCustomGenres .Caption:= '';
 end;
 
 procedure TMainForm.edSearchKeyPress(Sender: TObject; var Key: char);
@@ -1928,6 +1929,12 @@ var
   current: Cardinal;
 begin
   name:= LowerCase(edSearch.text);
+  if vtMangaList.RootNodeCount = 0 then
+  begin
+    MessageDlg('Info', '"'+name+'" not found!',
+               mtInformation, [mbYes], 0);
+    exit;
+  end;
   if NOT Assigned(vtMangaList.FocusedNode) then
   begin
     xNode:= vtMangaList.GetFirst;

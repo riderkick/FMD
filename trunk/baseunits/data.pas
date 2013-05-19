@@ -2521,7 +2521,8 @@ begin
       mangaInfo.title:= GetString(parse.Strings[i], 'meta name="description" content="', ' hentai chapters');
 
     // get cover link
-    if GetTagName(parse.Strings[i]) = 'div' then
+    if (GetTagName(parse.Strings[i]) = 'div') AND
+       (i<parse.Count-3) then
       if (GetAttributeValue(GetTagAttribute(parse.Strings[i], 'class='))='cover') then
       begin
         mangaInfo.coverLink:= GetAttributeValue(GetTagAttribute(parse.Strings[i+2], 'src='));
@@ -2530,7 +2531,7 @@ begin
     // get chapter name and links
     if isExtractChapters then
     begin
-      if (GetTagName(parse.Strings[i]) = 'a') AND (i+1 < parse.Count-1) then
+      if (GetTagName(parse.Strings[i]) = 'a') AND (i < parse.Count-2) then
       begin
         Inc(mangaInfo.numChapter);
         mangaInfo.chapterLinks.Add(StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href=')), HENTAI2READ_ROOT, '', [rfReplaceAll]));
@@ -2554,7 +2555,7 @@ begin
     begin
       j:= i+5;
       mangaInfo.summary:= '';
-      while (j<parse.Count) AND (Pos('<div class="box">', parse.Strings[j])=0) do
+      while (j<parse.Count) AND (Pos('<div class="box">', parse.Strings[j])=0) AND (j<parse.Count-1) do
       begin
         s:= parse.Strings[j];
         if s[1] <> '<' then
@@ -2573,15 +2574,15 @@ begin
       isExtractChapters:= TRUE;
 
     // get authors
-    if (Pos('Author(s):', parse.Strings[i])<>0) then
+    if (Pos('Author(s):', parse.Strings[i])<>0) AND (i<parse.Count-6) then
       mangaInfo.authors:= parse.Strings[i+5];
 
     // get artists
-    if (Pos('Artist(s):', parse.Strings[i])<>0) then
+    if (Pos('Artist(s):', parse.Strings[i])<>0) AND (i<parse.Count-6) then
       mangaInfo.artists:= parse.Strings[i+5];
 
     // get genres
-    if (Pos('Genre(s):', parse.Strings[i])<>0) then
+    if (Pos('Genre(s):', parse.Strings[i])<>0) AND (i<parse.Count-6) then
     begin
       mangaInfo.genres:= '';
       isExtractGenres:= TRUE;
@@ -2598,7 +2599,7 @@ begin
     end;
 
     // get status
-    if (Pos('Status:', parse.Strings[i])<>0) AND (i+4 <= parse.Count-1) then
+    if (Pos('Status:', parse.Strings[i])<>0) AND (i <= parse.Count-5) then
     begin
       if Pos('Ongoing', parse.Strings[i+4])<>0 then
         mangaInfo.status:= '1'   // ongoing

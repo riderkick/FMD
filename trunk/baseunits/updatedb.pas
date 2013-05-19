@@ -39,9 +39,8 @@ begin
     MainForm.vtMangaList.Clear;
     MainForm.vtMangaList.RootNodeCount:= MainForm.dataProcess.filterPos.Count;
     MainForm.lbMode.Caption:= Format(stModeAll, [MainForm.dataProcess.filterPos.Count]);
-    MainForm.sbMain.Panels[0].Text:= '';
   end;
-  MainForm.isUpdating:= FALSE;
+  CallMainFormShowEndGetting;
 end;
 
 constructor TUpdateDBThread.Create;

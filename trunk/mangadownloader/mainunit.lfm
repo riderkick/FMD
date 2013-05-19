@@ -297,11 +297,11 @@ object MainForm: TMainForm
     Height = 439
     Top = 32
     Width = 597
-    ActivePage = tsOption
+    ActivePage = tsFilter
     Align = alClient
     Font.Style = [fsBold]
     ParentFont = False
-    TabIndex = 4
+    TabIndex = 2
     TabOrder = 1
     OnChange = pcMainChange
     object tsDownload: TTabSheet
@@ -523,27 +523,27 @@ object MainForm: TMainForm
     end
     object tsFilter: TTabSheet
       Caption = 'Filter'
-      ClientHeight = 445
+      ClientHeight = 413
       ClientWidth = 589
       object sbFilter: TScrollBox
         Left = 0
-        Height = 445
+        Height = 413
         Top = 0
         Width = 589
-        HorzScrollBar.Page = 585
-        VertScrollBar.Page = 441
+        HorzScrollBar.Page = 569
+        VertScrollBar.Page = 409
         Align = alClient
-        ClientHeight = 441
-        ClientWidth = 585
+        ClientHeight = 409
+        ClientWidth = 569
         TabOrder = 0
         object pnGenres: TPanel
           Left = 0
           Height = 248
           Top = 0
-          Width = 585
+          Width = 569
           Align = alTop
           ClientHeight = 248
-          ClientWidth = 585
+          ClientWidth = 569
           TabOrder = 0
           object CheckBox1: TCheckBox
             Left = 23
@@ -962,10 +962,10 @@ object MainForm: TMainForm
           Left = 0
           Height = 192
           Top = 248
-          Width = 585
+          Width = 569
           Align = alTop
           ClientHeight = 192
-          ClientWidth = 585
+          ClientWidth = 569
           ParentFont = False
           TabOrder = 1
           object rbOne: TRadioButton
