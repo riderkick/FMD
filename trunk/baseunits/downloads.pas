@@ -11,7 +11,7 @@ unit downloads;
 interface
 
 uses
-  Classes, SysUtils, IniFiles, baseunit, data, fgl, zip;
+  Classes, SysUtils, IniFiles, baseunit, data, fgl, zip, ExtCtrls, Graphics;
 
 type
   TDownloadManager = class;
@@ -161,6 +161,19 @@ type
 implementation
 
 uses mainunit, FastHTMLParser, HTMLUtil, SynaCode, FileUtil, HTTPSend;
+
+// utility
+
+procedure picScale(P1: TPicture; var P2: TPicture; const x, y: Integer);
+var
+  ARect: TRect;
+begin
+  P2.Clear;
+  P2.BitMap.Width := X;
+  P2.BitMap.Height:= Y;
+  Arect:= Rect(0, 0, X, Y);
+  P2.BitMap.Canvas.StretchDraw(ARect, P1.BitMap);
+end;
 
 // ----- TDownloadThread -----
 
@@ -1267,6 +1280,8 @@ var
     i       : Cardinal;
     counter : Cardinal = 0;
     s       : String;
+    dest,
+    source  : TPicture;
 
   begin
     if (FileExists(Path+'/'+name+'.jpg')) OR
@@ -1375,6 +1390,23 @@ var
         HTTP.Document.SaveToFile(Path+'/'+name+ext);
     end
     else }
+
+    if (ext='.png') OR (ext='.jpg') then
+    begin
+      source:= TPicture.Create;
+      dest  := TPicture.Create;
+
+      source.LoadFromStream(HTTP.Document);
+      picScale(source, dest, 100, 100);
+
+      dest  .SaveToFile(Path+'/'+name+ext);
+
+      dest  .Clear;
+      dest  .Free;
+      source.Clear;
+      source.Free;
+    end
+    else
       HTTP.Document.SaveToFile(Path+'/'+name+ext);
     HTTP.Free;
     Result:= TRUE;

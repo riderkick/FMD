@@ -9,8 +9,8 @@ uses
   cthreads,
   {$ENDIF}{$ENDIF}
   Interfaces, // this includes the LCL widgetset
-  Forms, mainunit, virtualtreeview_package, richmemopackage, zip, updatelist,
-  subthreads, logform, updatedb;
+  Forms, mainunit, virtualtreeview_package, richmemopackage, pack_powerpdf, zip,
+  updatelist, subthreads, logform, updatedb;
 
 {$R *.res}
 

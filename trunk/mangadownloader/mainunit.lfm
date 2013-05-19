@@ -297,20 +297,20 @@ object MainForm: TMainForm
     Height = 439
     Top = 32
     Width = 597
-    ActivePage = tsFilter
+    ActivePage = tsDownload
     Align = alClient
     Font.Style = [fsBold]
     ParentFont = False
-    TabIndex = 2
+    TabIndex = 0
     TabOrder = 1
     OnChange = pcMainChange
     object tsDownload: TTabSheet
       Caption = 'Downloads'
-      ClientHeight = 445
+      ClientHeight = 413
       ClientWidth = 589
       object vtDownload: TVirtualStringTree
         Left = 0
-        Height = 445
+        Height = 413
         Top = 0
         Width = 589
         Align = alClient

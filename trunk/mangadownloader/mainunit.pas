@@ -612,7 +612,7 @@ begin
         s:= Format('%.4d', [i+1]);
         if NOT cbOptionGenerateChapterName.Checked then
         else
-          begin
+        begin
           if NOT cbOptionPathConvert.Checked then
             s:= s + '- ' + mangaInfo.chapterName.Strings[i]
           else
@@ -1233,7 +1233,7 @@ procedure TMainForm.pcMainChange(Sender: TObject);
 
     cbOptionPathConvert.Checked  := options.ReadBool   ('saveto', 'PathConv', FALSE);
     cbOptionGenerateChapterName.Checked:= options.ReadBool('saveto', 'GenChapName', FALSE);
-    cbOptionGenerateMangaFolderName.Checked:= options.ReadBool('saveto', 'GenMangaName', FALSE);
+    cbOptionGenerateMangaFolderName.Checked:= options.ReadBool('saveto', 'GenMangaName', TRUE);
 
 
     for i:= 0 to clbOptionMangaSiteSelection.Items.Count-1 do
@@ -1866,6 +1866,7 @@ begin
   cbOptionPathConvert.Checked  := options.ReadBool   ('saveto', 'PathConv', FALSE);
   cbOptionPathConvert.Checked  := options.ReadBool   ('saveto', 'PathConv', FALSE);
   cbOptionGenerateChapterName.Checked:= options.ReadBool('saveto', 'GenChapName', FALSE);
+  cbOptionGenerateMangaFolderName.Checked:= options.ReadBool('saveto', 'GenMangaName', TRUE);
   cbOptionAutoCheckUpdate.Checked:= options.ReadBool('update', 'AutoCheckUpdateAtStartup', TRUE);
 end;
 
