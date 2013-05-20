@@ -100,6 +100,7 @@ const
   MANGAREADER_NAME  = 'MangaReader';  MANGAREADER_ID = 11;
   MANGAPARK_NAME    = 'MangaPark';    MANGAPARK_ID   = 12;
   GEHENTAI_NAME     = 'g.e-hentai (doujinshi)'; GEHENTAI_ID = 13;
+  MANGAFOX_NAME     = 'MangaFox';     MANGAFOX_ID    = 14;
 
 var
   Revision         : Cardinal;
@@ -172,6 +173,9 @@ var
 
   GEHENTAI_ROOT   : String = 'http://g.e-hentai.org';
   GEHENTAI_BROWSER: String = '&f_doujinshi=on&advsearch=1&f_search=Search+Keywords&f_srdd=2&f_sname=on&f_stags=on&f_apply=Apply+Filter';
+
+  MANGAFOX_ROOT   : String = 'http://mangafox.me';
+  MANGAFOX_BROWSER: String = '/directory/';
 
   UPDATE_URL      : String = 'http://akarin.byethost5.com/fmd/';
 
@@ -463,7 +467,9 @@ begin
   else
   if name = MANGAPARK_NAME then Result:= MANGAPARK_ID
   else
-  if name = GEHENTAI_NAME then Result:= GEHENTAI_ID;
+  if name = GEHENTAI_NAME then Result:= GEHENTAI_ID
+  else
+  if name = MANGAFOX_NAME then Result:= MANGAFOX_ID;
 end;
 
 function  GetMangaDatabaseURL(const name: String): String;
@@ -884,9 +890,7 @@ globReturn:
   HTTP.ProxyPort:= Port;
   HTTP.ProxyUser:= User;
   HTTP.ProxyHost:= Pass;
-  if Pos(HENTAI2READ_ROOT, URL) <> 0 then
-    HTTP.Headers.Insert(0, 'Referer:'+HENTAI2READ_ROOT+'/')
-  else
+
   if Pos(GEHENTAI_ROOT, URL) <> 0 then
     HTTP.Headers.Insert(0, 'Referer:'+URL);
   //  HTTP.Headers.Insert(0, 'Referer:'+GEHENTAI_ROOT+'/')
@@ -918,7 +922,7 @@ globReturn:
         (HTTP.ResultCode > 500) do
   begin
     code:= HTTP.ResultCode;
-   // HTTP.Document.SaveToFile('error.txt');
+    HTTP.Document.SaveToFile('error.txt');
     if Reconnect <> 0 then
     begin
       if Reconnect <= counter then
@@ -945,10 +949,7 @@ globReturn:
     HTTP.Clear;
     HTTP.RangeStart:= 0;
     if Pos(HENTAI2READ_ROOT, URL) <> 0 then
-      HTTP.Headers.Insert(0, 'Referer:'+HENTAI2READ_ROOT+'/');{
-    else
-    if Pos(MANGA24H_ROOT, URL) <> 0 then
-      HTTP.Headers.Insert(0, 'Cookie:expires=Sat, 26-Jan-2013 00:00:01 GMT');}
+      HTTP.Headers.Insert(0, 'Referer:'+HENTAI2READ_ROOT+'/');
     while (NOT HTTP.HTTPMethod('GET', URL)) OR
         (HTTP.ResultCode >= 500) do
     begin
