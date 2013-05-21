@@ -19,6 +19,7 @@ type
     list: TStringList;
     procedure   OnFileFound(FileIterator: TFileIterator);
   public
+    ext,
     Path: String;
     procedure   Execute;
   end;
@@ -52,7 +53,7 @@ begin
       //for i:= 0 to list.Count-1 do
       //  list.Strings[i]:= ExtractFileName(list.Strings[i]);
       Zip:= TZipper.Create;
-      Zip.FileName:= fPath+'.zip';
+      Zip.FileName:= fPath+ext;
       //SetCurrentDirUTF8(ExtractFileDir(Path+'.zip'));
       for i:= 0 to list.Count-1 do
         Zip.Entries.AddFileEntry(list.Strings[i], Format('%.3d%s', [i, ExtractFileExt(list.Strings[i])]));
@@ -64,7 +65,7 @@ begin
       RemoveDirUTF8(fPath);
       if fPath[Length(fPath)] = '/' then
         Delete(fPath, Length(fPath), 1);
-      RenameFileUTF8(fPath+'.zip', Path+'.zip');
+      RenameFileUTF8(fPath+ext, Path+ext);
     end;
   finally
     searcher.Free;

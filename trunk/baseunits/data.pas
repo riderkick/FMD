@@ -3309,9 +3309,7 @@ begin
        (Pos('title="Thanks for Contributing!', parse.Strings[i])>0) then
     begin
       Inc(mangaInfo.numChapter);
-     // s:= GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href='));
       s:= GetString(parse.Strings[i], 'href="', '/1.html"');
-     // s:= EncodeUrl(s);
       mangaInfo.chapterLinks.Add(s);
       s:= RemoveSymbols(TrimLeft(TrimRight(parse.Strings[i+1])));
       mangaInfo.chapterName.Add(StringFilter(HTMLEntitiesFilter(s)));

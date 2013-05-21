@@ -1556,10 +1556,14 @@ procedure   TTaskThread.Compress;
 var
   Compresser: TCompress;
 begin
-  if (container.manager.compress = 1) then
+  if (container.manager.compress >= 1) then
   begin
     Sleep(100);
     Compresser:= TCompress.Create;
+    case container.manager.compress of
+      1: Compresser.ext:= '.zip';
+      2: Compresser.ext:= '.cbz';
+    end;
     Compresser.Path:= container.downloadInfo.SaveTo+'/'+
                       container.chapterName.Strings[container.currentDownloadChapterPtr];
     Compresser.Execute;

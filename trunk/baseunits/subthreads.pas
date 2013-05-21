@@ -28,7 +28,7 @@ type
     procedure   CallMainFormSetButton;
   public
     updateCounter: Cardinal;
-    isCheckForLatestVer     : Boolean;
+    isCheckForLatestVer: Boolean;
     mangaListPos: Integer;
     cover       : TPicture;
     isHasCover,

@@ -80,6 +80,7 @@ type
     cbOptionPathConvert: TCheckBox;
     cbOptionGenerateChapterName: TCheckBox;
     cbOptionGenerateMangaFolderName: TCheckBox;
+    cbOptionMinimizeToTray: TCheckBox;
     CheckBox5: TCheckBox;
     CheckBox6: TCheckBox;
     CheckBox7: TCheckBox;
@@ -102,7 +103,6 @@ type
     edSaveTo: TLabeledEdit;
     edSearch: TEdit;
     gbOptionProxy: TGroupBox;
-    gbOptionUpdate: TGroupBox;
     ImageList: TImageList;
     imCover: TImage;
     edOptionDefaultPath: TLabeledEdit;
@@ -504,7 +504,8 @@ begin
   case WindowState of
     wsMinimized:
       begin
-        MainForm.Hide;
+        if cbOptionMinimizeToTray.Checked then
+          MainForm.Hide;
         TrayIcon.Show;
       end;
   end;
@@ -1214,6 +1215,7 @@ procedure TMainForm.pcMainChange(Sender: TObject);
   begin
     l:= TStringList.Create;
 
+    cbOptionMinimizeToTray.Checked:= options.ReadBool('general', 'MinimizeToTray', FALSE);
     seOptionNewMangaTime.Value:= options.ReadInteger('general', 'NewMangaTime', 3);
 
     seOptionMaxParallel.Value:= options.ReadInteger('connections', 'NumberOfTasks', 1);
@@ -1235,6 +1237,7 @@ procedure TMainForm.pcMainChange(Sender: TObject);
     cbOptionGenerateChapterName.Checked:= options.ReadBool('saveto', 'GenChapName', FALSE);
     cbOptionGenerateMangaFolderName.Checked:= options.ReadBool('saveto', 'GenMangaName', TRUE);
 
+    cbOptionAutoCheckUpdate.Checked:= options.ReadBool('update', 'AutoCheckUpdateAtStartup', FALSE);
 
     for i:= 0 to clbOptionMangaSiteSelection.Items.Count-1 do
       clbOptionMangaSiteSelection.Checked[i]:= FALSE;
@@ -1254,6 +1257,7 @@ begin
       UpdateOptions;
     5:
       begin
+        UpdateOptions;
       // load rtf file
         try
           rmAbout.Clear;
@@ -1263,6 +1267,8 @@ begin
           fs.Free;
         end;
       end;
+    else
+      UpdateOptions;
   end;
 end;
 
@@ -1578,6 +1584,7 @@ begin
     currentWebsite:= cbSelectManga.Items[0];
   end;
 
+  options.WriteBool   ('general', 'MinimizeToTray', cbOptionMinimizeToTray.Checked);
   options.WriteInteger('general', 'NewMangaTime', seOptionNewMangaTime.Value);
 
   options.WriteInteger('connections', 'NumberOfTasks', seOptionMaxParallel.Value);
@@ -1696,6 +1703,11 @@ procedure TMainForm.vtMangaListDblClick(Sender: TObject);
 begin
   cbAddToFavorites.Enabled:= TRUE;
   if (SubThread.isGetInfos) OR (NOT vtMangaList.Focused) then exit;
+
+  imCover.Picture.Assign(nil);
+  rmInformation.Clear;
+  rmInformation.Lines.Add('Loading ...');
+  clbChapterList.Clear;
 
   SubThread.mangaListPos:= vtMangaList.FocusedNode.Index;
   SubThread.website:= cbSelectManga.Items[cbSelectManga.ItemIndex];
@@ -1853,6 +1865,7 @@ begin
   end;
  // cbLanguages.ItemIndex := options.ReadInteger('languages', 'Select', 0);
 
+  cbOptionMinimizeToTray.Checked := options.ReadBool('general', 'MinimizeToTray', FALSE);
   miDownloadHideCompleted.Checked:= options.ReadBool('general', 'HideCompleted', FALSE);
   batotoLastDirectoryPage:= mangalistIni.ReadInteger('general', 'batotoLastDirectoryPage', 244);
   cbAddAsStopped.Checked := options.ReadBool('general', 'AddAsStopped', FALSE);
@@ -2137,6 +2150,8 @@ begin
   lbOptionMaxThread.Caption   := Format(language.ReadString(lang, 'lbOptionMaxThreadCaption', ''), [seOptionMaxThread.MaxValue]);
   lbOptionMaxRetry.Caption    := language.ReadString(lang, 'lbOptionMaxRetryCaption', '');
   lbOptionDialogs.Caption     := language.ReadString(lang, 'lbOptionDialogsCaption', '');
+
+  cbOptionMinimizeToTray.Caption:= language.ReadString(lang, 'cbOptionMinimizeToTrayCaption', '');
   cbOptionAutoCheckUpdate.Caption:= language.ReadString(lang, 'cbOptionAutoCheckUpdateCaption', '');
   cbOptionPathConvert.Caption := language.ReadString(lang, 'cbOptionPathConvertCaption', '');
   cbOptionGenerateChapterName.Caption    := language.ReadString(lang, 'cbOptionGenerateChapterNameCaption', '');

@@ -297,11 +297,11 @@ object MainForm: TMainForm
     Height = 439
     Top = 32
     Width = 597
-    ActivePage = tsDownload
+    ActivePage = tsOption
     Align = alClient
     Font.Style = [fsBold]
     ParentFont = False
-    TabIndex = 0
+    TabIndex = 4
     TabOrder = 1
     OnChange = pcMainChange
     object tsDownload: TTabSheet
@@ -1231,9 +1231,9 @@ object MainForm: TMainForm
           ClientHeight = 294
           ClientWidth = 562
           object cbLanguages: TComboBox
-            Left = 52
+            Left = 12
             Height = 21
-            Top = 58
+            Top = 34
             Width = 140
             ItemHeight = 13
             Items.Strings = (
@@ -1244,17 +1244,17 @@ object MainForm: TMainForm
             TabOrder = 0
           end
           object lbOptionLanguage: TLabel
-            Left = 26
+            Left = 12
             Height = 13
-            Top = 27
+            Top = 18
             Width = 102
             Caption = 'lbOptionLanguage'
             ParentColor = False
           end
           object seOptionNewMangaTime: TSpinEdit
-            Left = 26
+            Left = 12
             Height = 21
-            Top = 106
+            Top = 66
             Width = 58
             MaxValue = 365
             MinValue = 1
@@ -1263,34 +1263,31 @@ object MainForm: TMainForm
             Value = 1
           end
           object lbOptionNewMangaTime: TLabel
-            Left = 100
+            Left = 84
             Height = 13
-            Top = 106
+            Top = 74
             Width = 115
             Caption = 'lbOptionNewMangaTime'
             ParentColor = False
             ParentFont = False
           end
-          object gbOptionUpdate: TGroupBox
+          object cbOptionMinimizeToTray: TCheckBox
             Left = 12
-            Height = 104
-            Top = 178
-            Width = 540
-            Anchors = [akTop, akLeft, akRight]
-            Caption = 'Update'
-            ClientHeight = 84
-            ClientWidth = 536
+            Height = 17
+            Top = 114
+            Width = 136
+            Caption = 'cbOptionMinimizeToTray'
             ParentFont = False
             TabOrder = 2
-            object cbOptionAutoCheckUpdate: TCheckBox
-              Left = 22
-              Height = 17
-              Top = 6
-              Width = 130
-              Caption = 'Check for new version '
-              ParentFont = False
-              TabOrder = 0
-            end
+          end
+          object cbOptionAutoCheckUpdate: TCheckBox
+            Left = 12
+            Height = 17
+            Top = 138
+            Width = 130
+            Caption = 'Check for new version '
+            ParentFont = False
+            TabOrder = 3
           end
         end
         object tsConnections: TTabSheet
@@ -1527,14 +1524,15 @@ object MainForm: TMainForm
             ChildSizing.ShrinkHorizontal = crsScaleChilds
             ChildSizing.ShrinkVertical = crsScaleChilds
             ChildSizing.Layout = cclLeftToRightThenTopToBottom
-            ChildSizing.ControlsPerLine = 2
+            ChildSizing.ControlsPerLine = 3
             ClientHeight = 40
             ClientWidth = 499
-            Columns = 2
+            Columns = 3
             ItemIndex = 0
             Items.Strings = (
               'None'
               'ZIP'
+              'CBZ'
             )
             ParentFont = False
             TabOrder = 1
@@ -1569,7 +1567,7 @@ object MainForm: TMainForm
         end
         object tsDialogs: TTabSheet
           Caption = 'Dialogs'
-          ClientHeight = 326
+          ClientHeight = 294
           ClientWidth = 562
           object cbOptionShowQuitDialog: TCheckBox
             Left = 60
