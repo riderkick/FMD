@@ -101,7 +101,7 @@ procedure   TSubThread.DoGetInfos;
     Info.isGenerateFolderChapterName:= MainForm.cbOptionGenerateChapterName.Checked;
     Info.isRemoveUnicode:= MainForm.cbOptionPathConvert.Checked;
 
-    if Info.GetInfoFromURL(website, URL, 0)<>NO_ERROR then
+    if Info.GetInfoFromURL(website, URL, 2)<>NO_ERROR then
     begin
      // Info.Free;
       exit;

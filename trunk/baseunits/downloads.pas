@@ -1102,6 +1102,11 @@ var
       i,
       oldI     : Cardinal;
     begin
+      if Pos('.html', URL) = 0 then
+      begin
+        realURL:= URL + '/' + IntToStr(workPtr+1);
+        exit;
+      end;
       i:= 2;
       realURL:= '/';
       while i <= Length(URL) do

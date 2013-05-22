@@ -101,6 +101,7 @@ const
   MANGAPARK_NAME    = 'MangaPark';    MANGAPARK_ID   = 12;
   GEHENTAI_NAME     = 'g.e-hentai (doujinshi)'; GEHENTAI_ID = 13;
   MANGAFOX_NAME     = 'MangaFox';     MANGAFOX_ID    = 14;
+  MANGATRADERS_NAME = 'MangaTraders'; MANGATRADERS_ID= 15;
 
 var
   Revision         : Cardinal;
@@ -176,6 +177,9 @@ var
 
   MANGAFOX_ROOT   : String = 'http://mangafox.me';
   MANGAFOX_BROWSER: String = '/directory/';
+
+  MANGATRADERS_ROOT: String = 'http://www.mangatraders.com';
+  MANGATRADERS_BROWSER: String = '/manga/serieslist/';
 
   UPDATE_URL      : String = 'http://akarin.byethost5.com/fmd/';
 
@@ -469,7 +473,9 @@ begin
   else
   if name = GEHENTAI_NAME then Result:= GEHENTAI_ID
   else
-  if name = MANGAFOX_NAME then Result:= MANGAFOX_ID;
+  if name = MANGAFOX_NAME then Result:= MANGAFOX_ID
+  else
+  if name = MANGATRADERS_NAME then Result:= MANGATRADERS_ID;
 end;
 
 function  GetMangaDatabaseURL(const name: String): String;
@@ -1166,6 +1172,8 @@ begin
   Suspend;
 end;
 
+// OS dependent
+
 function    fmdGetTempPath: String;
 var
   l: Cardinal;
@@ -1179,7 +1187,7 @@ end;
 
 function  fmdGetTickCount: Cardinal;
 begin
-  {$IFDEF WINDOWS}
+ {$IFDEF WINDOWS}
   Result:= GetTickCount;
  {$ENDIF}
 end;

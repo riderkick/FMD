@@ -3045,7 +3045,8 @@ begin
     // get status
     if (i+2<parse.Count) AND (Pos('Status:', parse.Strings[i])<>0) then
     begin
-      if Pos('Ongoing', parse.Strings[i+2])<>0 then
+      if (Pos('Ongoing', parse.Strings[i+2])<>0) OR
+         (Pos('Ongoing', parse.Strings[i+4])<>0) then
         mangaInfo.status:= '1'   // ongoing
       else
         mangaInfo.status:= '0';  // completed

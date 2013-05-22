@@ -4,7 +4,7 @@ object Log: TLog
   Top = 127
   Width = 371
   BorderStyle = bsToolWindow
-  Caption = 'Log'
+  Caption = 'Changelog'
   ClientHeight = 365
   ClientWidth = 371
   OnCreate = FormCreate
@@ -17,6 +17,7 @@ object Log: TLog
     Width = 371
     Align = alClient
     ReadOnly = True
+    ScrollBars = ssVertical
     TabOrder = 0
   end
 end
