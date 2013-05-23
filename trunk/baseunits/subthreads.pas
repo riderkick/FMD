@@ -19,6 +19,7 @@ type
   protected
     procedure   Execute; override;
     procedure   DoGetInfos;
+    procedure   CallMainFormCannotGetInfo;
     procedure   CallMainFormShowLog;
     procedure   CallMainFormGetInfos;
     procedure   CallMainFormUpdate;
@@ -103,7 +104,7 @@ procedure   TSubThread.DoGetInfos;
 
     if Info.GetInfoFromURL(website, URL, 2)<>NO_ERROR then
     begin
-     // Info.Free;
+      Info.Free;
       exit;
     end;
     // fixed
@@ -123,13 +124,22 @@ begin
 
   if NOT GetMangaInfo(link, website) then
   begin
-    MessageDlg('', stDlgCannotGetMangaInfo,
-               mtInformation, [mbYes], 0);
+    Synchronize(CallMainFormCannotGetInfo);
     exit;
   end;
 
   cover.Clear;
   boolResult:= GetPage(TObject(cover), Info.mangaInfo.coverLink, 1);
+  Synchronize(CallMainFormGetInfos);
+  isGetInfos:= FALSE;
+end;
+
+procedure   TSubThread.CallMainFormCannotGetInfo;
+begin
+  MessageDlg('', stDlgCannotGetMangaInfo,
+               mtInformation, [mbYes], 0);
+  MainForm.rmInformation.Clear;
+  isGetInfos:= FALSE;
 end;
 
 procedure   TSubThread.CallMainFormShowLog;
@@ -265,8 +275,6 @@ begin
     begin
       Info:= TMangaInformation.Create;
       DoGetInfos;
-      Synchronize(CallMainFormGetInfos);
-      isGetInfos:= FALSE;
     end;
     isCanStop:= TRUE;
     Sleep(64);

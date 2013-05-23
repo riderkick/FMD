@@ -2206,9 +2206,15 @@ begin
     exit;
   end;
 
-  if source.Count > 72 then
-    for i:= 0 to 73 do
+  if source.Count > 77 then
+    for i:= 0 to 77 do
       source.Delete(0);
+  source.Insert(0, '<aaa>');
+  {while Pos('<![endif]-->', source.Strings[0]) = 0 do
+  begin
+    source.Delete(0);
+  end;
+  source.Delete(0); }
   // parsing the HTML source
   parse.Clear;
   Parser:= TjsFastHTMLParser.Create(PChar(source.Text));
@@ -2322,7 +2328,8 @@ var
  // patchURL,
   s: String;
   i, j: Cardinal;
-  isExtractSummary: Boolean = FALSE;
+  isExtractChapters: Boolean = FALSE;
+  isExtractSummary : Boolean = FALSE;
 begin
  // patchURL:= UTF8ToANSI(URL);
  // Insert('comics/', patchURL, 10);
@@ -2363,7 +2370,7 @@ begin
     begin
       j:= i+5;
       mangaInfo.summary:= '';
-      while (Pos('<!-- Tablesorter: optional -->', parse.Strings[j])=0) AND (j<parse.Count-1) do
+      while (Pos('$(document).ready(function()', parse.Strings[j])=0) AND (j<parse.Count-1) do
       begin
         s:= parse.Strings[j];
         if (Length(s)>0) AND (s[1] <> '<') then
@@ -2378,14 +2385,14 @@ begin
     end;
 
     if (Pos('<tbody>', parse.Strings[i])<>0) AND (NOT isExtractSummary) then
-      isExtractSummary:= TRUE;
+      isExtractChapters:= TRUE;
 
     if (Pos('</tbody>', parse.Strings[i])<>0) AND (isExtractSummary) then
-      isExtractSummary:= FALSE;
+      isExtractChapters:= FALSE;
 
 
       // get chapter name and links
-    if (isExtractSummary) AND
+    if (isExtractChapters) AND
        (Pos('<td>', parse.Strings[i])<>0) AND
        (GetAttributeValue(GetTagAttribute(parse.Strings[i+1], 'href=')) <> '') AND
        (Pos('</a>', parse.Strings[i+3])<>0) then
@@ -3290,7 +3297,7 @@ begin
           parse.Strings[j]:= HTMLEntitiesFilter(StringFilter(parse.Strings[j]));
           parse.Strings[j]:= StringReplace(parse.Strings[j], #10, '\n', [rfReplaceAll]);
           parse.Strings[j]:= StringReplace(parse.Strings[j], #13, '\r', [rfReplaceAll]);
-          mangaInfo.summary:= parse.Strings[j];
+          mangaInfo.summary:= mangaInfo.summary + parse.Strings[j];
         end;
         Inc(j);
       end;
