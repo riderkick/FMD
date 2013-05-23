@@ -2243,7 +2243,7 @@ begin
           parse.Strings[j]:= StringFilter(parse.Strings[j]);
           parse.Strings[j]:= StringReplace(parse.Strings[j], #10, '\n', [rfReplaceAll]);
           parse.Strings[j]:= StringReplace(parse.Strings[j], #13, '\r', [rfReplaceAll]);
-          mangaInfo.summary:= mangaInfo.summary + parse.Strings[j];
+          mangaInfo.summary:= mangaInfo.summary + StringFilter(parse.Strings[j]);
         end;
         Inc(j);
       end;

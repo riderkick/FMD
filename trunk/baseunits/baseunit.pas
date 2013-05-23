@@ -106,7 +106,7 @@ const
 var
   Revision         : Cardinal;
   // only for batoto: the directory page from the last time we check the site
-  batotoLastDirectoryPage: Cardinal = 286;
+  batotoLastDirectoryPage: Cardinal = 289;
   currentJDN       : Cardinal;
   isChangeDirectory: Boolean = FALSE;
 
@@ -642,6 +642,9 @@ function  StringFilter(const source: String): String;
 begin
   if Length(source) = 0 then exit;
   Result:= StringReplace(source, '&#33;', '!', [rfReplaceAll]);
+  Result:= StringReplace(Result, '&#36;', '$', [rfReplaceAll]);
+  Result:= StringReplace(Result, '&#39;', '''', [rfReplaceAll]);
+  Result:= StringReplace(Result, '&#033;', '!', [rfReplaceAll]);
   Result:= StringReplace(Result, '&#036;', '$', [rfReplaceAll]);
   Result:= StringReplace(Result, '&#039;', '''', [rfReplaceAll]);
   Result:= StringReplace(Result, '&amp;', '&', [rfReplaceAll]);

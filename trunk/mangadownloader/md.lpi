@@ -13,6 +13,7 @@
         <DpiAware Value="True"/>
         <UIAccess Value="True"/>
       </XPManifest>
+      <Icon Value="0"/>
     </General>
     <i18n>
       <EnableI18N LFM="False"/>

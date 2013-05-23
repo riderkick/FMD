@@ -127,6 +127,8 @@ type
     MenuItem2: TMenuItem;
     MenuItem3: TMenuItem;
     MenuItem4: TMenuItem;
+    mnUpdateList: TMenuItem;
+    mnUpdateDownFromServer: TMenuItem;
     miDownloadHideCompleted: TMenuItem;
     miDownloadMerge: TMenuItem;
     miOpenFolder2: TMenuItem;
@@ -160,6 +162,7 @@ type
     pmDownload: TPopupMenu;
     pmFavorites: TPopupMenu;
     pmMangaList: TPopupMenu;
+    pmUpdate: TPopupMenu;
     rbOne: TRadioButton;
     rbAll: TRadioButton;
     rgOptionCompress: TRadioGroup;
@@ -240,6 +243,8 @@ type
     procedure miOpenFolder2Click(Sender: TObject);
     procedure miOpenFolderClick(Sender: TObject);
     procedure miUpClick(Sender: TObject);
+    procedure mnUpdateDownFromServerClick(Sender: TObject);
+    procedure mnUpdateListClick(Sender: TObject);
 
     procedure pcMainChange(Sender: TObject);
     procedure pmDownloadPopup(Sender: TObject);
@@ -269,6 +274,7 @@ type
     procedure vtMangaListBeforeCellPaint(Sender: TBaseVirtualTree;
       TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
       CellPaintMode: TVTCellPaintMode; CellRect: TRect; var ContentRect: TRect);
+    procedure vtMangaListChange(Sender: TBaseVirtualTree; Node: PVirtualNode);
 
     procedure vtMangaListFreeNode(Sender: TBaseVirtualTree; Node: PVirtualNode);
     procedure vtMangaListGetHint(Sender: TBaseVirtualTree; Node: PVirtualNode;
@@ -303,6 +309,9 @@ type
 
     // doing stuff like get manga info, compress, ...
     SubThread   : TSubThread;
+
+    // load about information
+    procedure LoadAbout;
 
     procedure CloseNow;
 
@@ -465,6 +474,11 @@ begin
   end;
 
   HideCompletedTasks(miDownloadHideCompleted.Checked);
+
+  // why this doesn't work ?
+  case pcMain.TabIndex of
+    5: LoadAbout;
+  end;
 end;
 
 procedure TMainForm.cbOptionUseProxyChange(Sender: TObject);
@@ -586,6 +600,19 @@ begin
   Halt;
 end;
 
+procedure TMainForm.LoadAbout;
+var
+  fs: TFileStream;
+begin
+  try
+    rmAbout.Clear;
+    fs:= TFileStream.Create(README_FILE, fmOpenRead or fmShareDenyNone);
+    rmAbout.LoadRichText(fs);
+  finally
+    fs.Free;
+  end;
+end;
+
 // -----
 
 procedure TMainForm.btDownloadClick(Sender: TObject);
@@ -705,24 +732,21 @@ end;
 // -----
 
 procedure TMainForm.btUpdateListClick(Sender: TObject);
+var
+  button   : TControl;
+  lowerLeft: TPoint;
 begin
-  if (NOT isUpdating){ OR (NOT Assigned(updateList)) OR (updateList.isTerminated) }then
-  begin
-    if dataProcess.Title.Count > 1 then
-    begin
-      isUpdating:= TRUE;
-      updateList:= TUpdateMangaManagerThread.Create;
-      updateList.numberOfThreads:= 4;
-      updateList.websites.Add(cbSelectManga.Items[cbSelectManga.ItemIndex]);
-      updateList.isSuspended:= FALSE;
-    end
-    else
-    begin
-      RunGetList;
-    end;
-  end
+  if dataProcess.Title.Count = 0 then
+    pmUpdate.Items[0].Enabled:= FALSE
   else
-    MessageDlg('', stDlgUpdateAlreadyRunning, mtInformation, [mbYes], 0)
+    pmUpdate.Items[0].Enabled:= TRUE;
+  if Sender is TControl then
+  begin
+    button   := TControl(Sender);
+    lowerLeft:= Point(button.Left, button.Top + button.Height*2 + (button.Height div 2));
+    lowerLeft:= ClientToScreen(lowerLeft);
+    pmUpdate.Popup(lowerLeft.X, lowerLeft.Y);
+  end;
 end;
 
 procedure TMainForm.btURLClick(Sender: TObject);
@@ -1049,6 +1073,33 @@ begin
   end;
 end;
 
+procedure TMainForm.mnUpdateDownFromServerClick(Sender: TObject);
+begin
+  if (NOT isUpdating) then
+  begin
+    RunGetList;
+  end
+  else
+    MessageDlg('', stDlgUpdateAlreadyRunning, mtInformation, [mbYes], 0);
+end;
+
+procedure TMainForm.mnUpdateListClick(Sender: TObject);
+begin
+  if (NOT isUpdating) then
+  begin
+   // if dataProcess.Title.Count > 1 then
+    begin
+      isUpdating:= TRUE;
+      updateList:= TUpdateMangaManagerThread.Create;
+      updateList.numberOfThreads:= 4;
+      updateList.websites.Add(cbSelectManga.Items[cbSelectManga.ItemIndex]);
+      updateList.isSuspended:= FALSE;
+    end;
+  end
+  else
+    MessageDlg('', stDlgUpdateAlreadyRunning, mtInformation, [mbYes], 0);
+end;
+
 procedure TMainForm.miDownClick(Sender: TObject);
 begin
   if DLManager.MoveDown(vtDownload.FocusedNode.Index) then
@@ -1249,8 +1300,6 @@ procedure TMainForm.pcMainChange(Sender: TObject);
     l.Free;
   end;
 
-var
-  fs: TFileStream;
 begin
   case pcMain.TabIndex of
     4:
@@ -1259,13 +1308,7 @@ begin
       begin
         UpdateOptions;
       // load rtf file
-        try
-          rmAbout.Clear;
-          fs:= TFileStream.Create(README_FILE, fmOpenRead or fmShareDenyNone);
-          rmAbout.LoadRichText(fs);
-        finally
-          fs.Free;
-        end;
+        LoadAbout;
       end;
     else
       UpdateOptions;
@@ -1652,6 +1695,12 @@ begin
     finally
     end;
   end;
+end;
+
+procedure TMainForm.vtMangaListChange(Sender: TBaseVirtualTree;
+  Node: PVirtualNode);
+begin
+
 end;
 
 procedure TMainForm.vtMangaListFreeNode(Sender: TBaseVirtualTree;
@@ -2075,6 +2124,10 @@ begin
   stFinish              := language.ReadString(lang, 'stFinish', '');
   stWait                := language.ReadString(lang, 'stWait', '');
   btUpdateList  .Hint   := language.ReadString(lang, 'btUpdateListHint', '');
+
+  mnUpdateList.Caption  := language.ReadString(lang, 'mnUpdateListCaption', '');
+  mnUpdateDownFromServer.Caption:= language.ReadString(lang, 'mnUpdateDownFromServerCaption', '');
+
   btSearch      .Hint   := language.ReadString(lang, 'btSearchHint', '');
   btRemoveFilter.Hint   := language.ReadString(lang, 'btRemoveFilterHint', '');
   btRemoveFilterLarge.Hint:= btRemoveFilter.Hint;
@@ -2171,7 +2224,7 @@ begin
   stFavoritesChecking      := language.ReadString(lang, 'stFavoritesChecking', '');
 
   stUpdaterCheck           := language.ReadString(lang, 'stUpdaterCheck', '');
-  btCheckVersion.Caption:= stUpdaterCheck;
+  btCheckVersion.Caption   := stUpdaterCheck;
 
   stDlgUpdaterVersionRequire:= language.ReadString(lang, 'stDlgUpdaterVersionRequire', '');
   stDlgUpdaterIsRunning    := language.ReadString(lang, 'stDlgUpdaterIsRunning', '');

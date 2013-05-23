@@ -164,7 +164,9 @@ begin
     Process.Execute;
     MainForm.CloseNow;
     Halt;
-  end;
+  end
+  else
+    MainForm.btCheckVersion.Caption:= stUpdaterCheck;
 end;
 
 procedure   TSubThread.CallMainFormUpdateRequire;
