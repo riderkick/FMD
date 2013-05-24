@@ -15,6 +15,7 @@ uses
   Graphics, Process, lclintf;
 
 type
+  // some tasks will be done by SubThread
   TSubThread = class(TThread)
   protected
     procedure   Execute; override;

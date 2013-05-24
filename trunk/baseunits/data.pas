@@ -98,7 +98,8 @@ var
 
 implementation
 
-uses FastHTMLParser, HTMLUtil, HTTPSend, SynaCode;
+uses
+  HTMLParser, FastHTMLParser, HTMLUtil, HTTPSend, SynaCode;
 
 // ----- TDataProcess -----
 
@@ -568,6 +569,7 @@ var
   // different from the others, we must do a scan to search for the page
   function   GetBatotoDirectoryPage: Byte;
   var
+    myParser: THTMLParser;
     isFoundPage: Boolean = FALSE;
     i: Cardinal;
     s: String;
@@ -585,13 +587,11 @@ var
       end;
       isFoundPage:= TRUE;
       parse.Clear;
-      for i:= 0 to 69 do
-        source.Delete(0);
-      Parser:= TjsFastHTMLParser.Create(PChar(source.Text));
-      Parser.OnFoundTag := OnTag;
-      Parser.OnFoundText:= OnText;
-      Parser.Exec;
-      Parser.Free;
+      myParser:= THTMLParser.Create(PChar(source.Text));
+      myParser.OnFoundTag := OnTag;
+      myParser.OnFoundText:= OnText;
+      myParser.Exec;
+      myParser.Free;
       if parse.Count=0 then
       begin
         source.Free;
@@ -1145,6 +1145,7 @@ var
   // get name and link of the manga from Batoto
   function   BatotoGetNameAndLink: Byte;
   var
+    myParser: THTMLParser;
     i: Cardinal;
     s: String;
   begin
@@ -1156,13 +1157,11 @@ var
       exit;
     end;
     parse.Clear;
-    for i:= 0 to 69 do
-      source.Delete(0);
-    Parser:= TjsFastHTMLParser.Create(PChar(source.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
-    Parser.Exec;
-    Parser.Free;
+    myParser:= THTMLParser.Create(PChar(source.Text));
+    myParser.OnFoundTag := OnTag;
+    myParser.OnFoundText:= OnText;
+    myParser.Exec;
+    myParser.Free;
     if parse.Count=0 then
     begin
       source.Free;
@@ -1192,6 +1191,7 @@ var
   var
     i: Cardinal;
     s: String;
+    myParser: THTMLParser;
   begin
     Result:= INFORMATION_NOT_FOUND;
     if NOT GetPage(TObject(source), MANGA24H_ROOT + MANGA24H_BROWSER + IntToStr(StrToInt(URL)+1), 0) then
@@ -1202,11 +1202,11 @@ var
     end;
     source.SaveToFile('test.txt');
     parse.Clear;
-    Parser:= TjsFastHTMLParser.Create(PChar(source.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
-    Parser.Exec;
-    Parser.Free;
+    myParser:= THTMLParser.Create(PChar(source.Text));
+    myParser.OnFoundTag := OnTag;
+    myParser.OnFoundText:= OnText;
+    myParser.Exec;
+    myParser.Free;
     if parse.Count=0 then
     begin
       source.Free;
@@ -2195,6 +2195,8 @@ var
   s: String;
   isExtractGenres : Boolean = FALSE;
   i, j: Cardinal;
+  myParser: THTMLParser;
+
 begin
   patchURL:= UTF8ToANSI(URL);
   Insert('comics/', patchURL, 10);
@@ -2206,27 +2208,22 @@ begin
     exit;
   end;
 
-  if source.Count > 77 then
-    for i:= 0 to 77 do
-      source.Delete(0);
+ { if source.Count > 81 then
+    for i:= 0 to 81 do
+      source.Delete(0); }
   source.Insert(0, '<aaa>');
-  {while Pos('<![endif]-->', source.Strings[0]) = 0 do
-  begin
-    source.Delete(0);
-  end;
-  source.Delete(0); }
-  // parsing the HTML source
-  parse.Clear;
-  Parser:= TjsFastHTMLParser.Create(PChar(source.Text));
-  Parser.OnFoundTag := OnTag;
-  Parser.OnFoundText:= OnText;
-  Parser.Exec;
 
-  Parser.Free;
+  // parsing the HTML source using our own HTML parser
+  parse.Clear;
+  myParser:= THTMLParser.Create(PChar(source.Text));
+  myParser.OnFoundTag := OnTag;
+  myParser.OnFoundText:= OnText;
+  myParser.Exec;
+  myParser.Free;
+
   source.Free;
   mangaInfo.website:= BATOTO_NAME;
 
-  // using parser (cover link, summary, chapter name and link)
   if parse.Count=0 then exit;
   for i:= 0 to parse.Count-1 do
   begin
@@ -2235,6 +2232,10 @@ begin
       if Pos('width:300px', parse.Strings[i-1]) <> 0 then
         mangaInfo.coverLink:= CorrectURL(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src=')));
 
+    // get title
+    if (mangaInfo.title = '') AND
+       (GetTagName(parse.Strings[i]) = '"og:title"') then
+      mangaInfo.title:= StringFilter(GetString(parse.Strings[j], '"og:title" content="', ' - Scanlations'));
 
     // get summary
     if (Pos('Description:', parse.Strings[i]) <> 0) then
@@ -3578,7 +3579,7 @@ begin
   DataProcess.genres.Add (l.Strings[DATA_PARAM_GENRES]);
   DataProcess.status.Add (l.Strings[DATA_PARAM_STATUS]);
   DataProcess.summary.Add(l.Strings[DATA_PARAM_SUMMARY]);
-  DataProcess.jdn.Add    (Pointer(StrToInt(l.Strings[DATA_PARAM_JDN])));
+  DataProcess.jdn.Add    (Pointer(StrToInt(l.Strings[DATA_PARAM_JDN])-100));
   l.Free;
 end;
 

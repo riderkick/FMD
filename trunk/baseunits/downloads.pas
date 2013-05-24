@@ -160,7 +160,7 @@ type
 
 implementation
 
-uses mainunit, FastHTMLParser, HTMLUtil, SynaCode, FileUtil, HTTPSend;
+uses mainunit, HTMLParser, FastHTMLParser, HTMLUtil, SynaCode, FileUtil, HTTPSend;
 
 // utility
 
@@ -235,7 +235,8 @@ end;
 
 function    TDownloadThread.GetPageNumberFromURL(const URL: String): Boolean;
 var
-  Parser: TjsFastHTMLParser;
+  myParser: THTMLParser;
+  Parser  : TjsFastHTMLParser;
 
   function GetAnimeAPageNumber: Boolean;
   var
@@ -414,13 +415,11 @@ var
     Result:= GetPage(TObject(l),
                      BATOTO_ROOT + DecodeURL(URL) + '/1',
                      manager.container.manager.retryConnect);
-    for i:= 0 to 69 do
-      l.Delete(0);
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
-    Parser.Exec;
-    Parser.Free;
+    myParser:= THTMLParser.Create(PChar(l.Text));
+    myParser.OnFoundTag := OnTag;
+    myParser.OnFoundText:= OnText;
+    myParser.Exec;
+    myParser.Free;
     parse.Add(BATOTO_ROOT + URL + '/1');
     if parse.Count>0 then
     begin
@@ -679,7 +678,8 @@ end;
 
 function    TDownloadThread.GetLinkPageFromURL(const URL: String): Boolean;
 var
-  Parser: TjsFastHTMLParser;
+  myParser: THTMLParser;
+  Parser  : TjsFastHTMLParser;
 
   function GetAnimeALinkPage: Boolean;
   var
@@ -855,14 +855,13 @@ var
     Result:= GetPage(TObject(l),
                      BATOTO_ROOT + DecodeURL(URL) + '/'+IntToStr(workPtr+1),
                      manager.container.manager.retryConnect);
-    for i:= 0 to 69 do
-      l.Delete(0);
+
     parse:= TStringList.Create;
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
-    Parser.Exec;
-    Parser.Free;
+    myParser:= THTMLParser.Create(PChar(l.Text));
+    myParser.OnFoundTag := OnTag;
+    myParser.OnFoundText:= OnText;
+    myParser.Exec;
+    myParser.Free;
 
     if parse.Count>0 then
     begin
