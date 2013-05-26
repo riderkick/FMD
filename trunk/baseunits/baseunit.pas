@@ -64,6 +64,7 @@ const
   WORK_FILE         = 'works.ini';
 
   FAVORITES_FILE    = 'favorites.ini';
+  IMAGE_FOLDER      = 'images/';
   DATA_FOLDER       = 'data/';
   DATA_EXT          = '.dat';
   CONFIG_FOLDER     = 'config/';

@@ -15,7 +15,7 @@ uses
   ExtCtrls, ComCtrls, Grids, ColorBox, ActnList, Buttons, CheckLst, Spin, Menus,
   customdrawncontrols, VirtualTrees, RichMemo, IniFiles, Process,
   baseunit, data, types, downloads, favorites, LConvEncoding, LCLIntf,
-  updatelist, updatedb, lclproc, subthreads{, ActiveX};
+  updatelist, updatedb, lclproc, subthreads{, ActiveX}, AnimatedGif, MemBitmap;
 
 type
 
@@ -104,6 +104,7 @@ type
     edSaveTo: TLabeledEdit;
     edSearch: TEdit;
     gbOptionProxy: TGroupBox;
+    itAnimate: TIdleTimer;
     ImageList: TImageList;
     imCover: TImage;
     edOptionDefaultPath: TLabeledEdit;
@@ -152,6 +153,7 @@ type
     miDownloadRemuse: TMenuItem;
     miDownloadRemove: TMenuItem;
     miChapterListUncheckAll: TMenuItem;
+    pbWait: TPaintBox;
     pnMainTop: TPanel;
     pmChapterList: TPopupMenu;
     pnOptions: TPageControl;
@@ -223,6 +225,7 @@ type
     procedure clbChapterListKeyPress(Sender: TObject; var Key: char);
     procedure FormDestroy(Sender: TObject);
     procedure FormWindowStateChange(Sender: TObject);
+    procedure itAnimateTimer(Sender: TObject);
     procedure miDownloadHideCompletedClick(Sender: TObject);
     procedure miDownloadMergeClick(Sender: TObject);
     procedure miHighlightNewMangaClick(Sender: TObject);
@@ -308,6 +311,8 @@ type
     updateList  : TUpdateMangaManagerThread;
     ticks       : Cardinal;
     backupTicks : Cardinal;
+    // animation gif
+    gifWaiting  : TAnimatedGif;
 
     // doing stuff like get manga info, compress, ...
     SubThread   : TSubThread;
@@ -482,6 +487,13 @@ begin
     5: LoadAbout;
   end;
   cbOptionLetFMDDo.ItemIndex:= options.ReadInteger('general', 'LetFMDDo', 0);
+
+  if FileExists(IMAGE_FOLDER + 'waiting.gif') then
+  begin
+    gifWaiting:= TAnimatedGif.Create(IMAGE_FOLDER + 'waiting.gif');
+    gifWaiting.EraseColor:= self.Color;
+    gifWaiting.BackgroundMode:= gbmSaveBackgroundOnce;
+  end;
 end;
 
 procedure TMainForm.cbOptionUseProxyChange(Sender: TObject);
@@ -526,6 +538,14 @@ begin
         TrayIcon.Show;
       end;
   end;
+end;
+
+procedure TMainForm.itAnimateTimer(Sender: TObject);
+var
+  r: TRect;
+begin
+  r.Left:= 53; r.Top:= 84; r.Right:= 101; r.Bottom:= 131;
+  gifWaiting.Update(pbWait.Canvas, r);
 end;
 
 procedure TMainForm.miDownloadHideCompletedClick(Sender: TObject);
@@ -776,6 +796,13 @@ begin
   SubThread.website:= GEHENTAI_NAME;//cbSelectManga.Items[cbSelectManga.ItemIndex];
  // SubThread.link:= edURL.Text;
   SubThread.isGetInfos:= TRUE;
+
+  imCover.Picture.Assign(nil);
+  rmInformation.Clear;
+  rmInformation.Lines.Add('Loading ...');
+  clbChapterList.Clear;
+  if Assigned(gifWaiting) then
+    itAnimate.Enabled:= TRUE;
 end;
 
 procedure TMainForm.btReadOnlineClick(Sender: TObject);
@@ -1774,6 +1801,9 @@ begin
   SubThread.link:= DataProcess.Param[DataProcess.filterPos.Items[SubThread.mangaListPos], DATA_PARAM_LINK];
   SubThread.isGetInfos:= TRUE;
   //ShowInformation;
+
+  if Assigned(gifWaiting) then
+    itAnimate.Enabled:= TRUE;
 end;
 
 procedure TMainForm.CheckForTopPanel;
@@ -1865,6 +1895,7 @@ procedure TMainForm.ShowInformation;
 var
   cp: TPoint;
 begin
+  itAnimate.Enabled:= FALSE;
   // ---------------------------------------------------
   pcMain.PageIndex:= 1;
   if edSaveTo.Text='' then
