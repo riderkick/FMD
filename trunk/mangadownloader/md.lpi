@@ -131,7 +131,7 @@
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)"/>
-      <OtherUnitFiles Value="E:\FreeSpace\FMD\trunk\baseunits\;E:\sdks\lazcomp\synapse\source\"/>
+      <OtherUnitFiles Value="E:\FreeSpace\FMD\trunk\baseunits\;E:\sdks\lazcomp\synapse\source\;E:\sdks\lazcomp\indy9\source\"/>
       <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
     <CodeGeneration>
@@ -139,13 +139,9 @@
       <TargetOS Value="win32"/>
       <Optimizations>
         <VariablesInRegisters Value="True"/>
-        <OptimizationLevel Value="3"/>
       </Optimizations>
     </CodeGeneration>
     <Linking>
-      <Debugging>
-        <GenerateDebugInfo Value="False"/>
-      </Debugging>
       <LinkSmart Value="True"/>
       <Options>
         <Win32>

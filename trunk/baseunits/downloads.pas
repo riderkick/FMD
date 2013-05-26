@@ -407,21 +407,46 @@ var
 
   function GetBatotoPageNumber: Boolean;
   var
+    isGoOn: Boolean = FALSE;
     s   : String;
     i, j: Cardinal;
     l   : TStringList;
+  label
+    reload;
   begin
     l:= TStringList.Create;
     parse:= TStringList.Create;
+  reload:
+    parse.Clear;
+    l.Clear;
     Result:= GetPage(TObject(l),
-                     BATOTO_ROOT + DecodeURL(URL) + '/1',
+                     BATOTO_ROOT + URL, // + '/1',
                      manager.container.manager.retryConnect);
-    myParser:= THTMLParser.Create(PChar(l.Text));
-    myParser.OnFoundTag := OnTag;
-    myParser.OnFoundText:= OnText;
-    myParser.Exec;
-    myParser.Free;
-    parse.Add(BATOTO_ROOT + URL + '/1');
+
+    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.SlowExec;
+    Parser.Free;
+
+    if parse.Count > 0 then
+    begin
+      for i:= 0 to parse.Count-1 do
+      begin
+        if (Pos('page_select', parse.Strings[i])<>0) then
+        begin
+          isGoOn:= TRUE;
+          break;
+        end;
+      end;
+    end;
+    if NOT isGoOn then
+    begin
+      Sleep(3000);
+      goto reload;
+    end;
+
+   // parse.Add(BATOTO_ROOT + URL + '/1');
     if parse.Count>0 then
     begin
       manager.container.pageNumber:= 0;
@@ -849,20 +874,43 @@ var
 
   function GetBatotoLinkPage: Boolean;
   var
+    isGoOn: Boolean = FALSE;
     i: Cardinal;
     l: TStringList;
+  label
+    reload;
   begin
     l:= TStringList.Create;
+    parse:= TStringList.Create;
+  reload:
+    parse.Clear;
+    l.Clear;
     Result:= GetPage(TObject(l),
-                     BATOTO_ROOT + DecodeURL(URL) + '/'+IntToStr(workPtr+1),
+                     BATOTO_ROOT + URL + '/'+IntToStr(workPtr+1),
                      manager.container.manager.retryConnect);
 
-    parse:= TStringList.Create;
-    myParser:= THTMLParser.Create(PChar(l.Text));
-    myParser.OnFoundTag := OnTag;
-    myParser.OnFoundText:= OnText;
-    myParser.Exec;
-    myParser.Free;
+    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.SlowExec;
+    Parser.Free;
+
+    if parse.Count > 0 then
+    begin
+      for i:= 0 to parse.Count-1 do
+      begin
+        if (Pos('page_select', parse.Strings[i])<>0) then
+        begin
+          isGoOn:= TRUE;
+          break;
+        end;
+      end;
+    end;
+    if NOT isGoOn then
+    begin
+      Sleep(3000);
+      goto reload;
+    end;
 
     if parse.Count>0 then
     begin
@@ -1599,7 +1647,7 @@ begin
   else
   if (container.mangaSiteID = BATOTO_ID) then
   begin
-    Sleep(150);
+  //  Sleep(150);
   {  if Flag = CS_GETPAGELINK then
     begin
       if container.manager.maxDLThreadsPerTask>2 then
@@ -1609,15 +1657,8 @@ begin
     {if container.workPtr < 3 then
       currentMaxThread:= 3
     else}
-      currentMaxThread:= 1;
-  end
-  else
-  if container.manager.maxDLThreadsPerTask = 1 then
-  begin
-    {if container.workPtr < 3 then
-      currentMaxThread:= 3
-    else}
-      currentMaxThread:= 1;
+  //    currentMaxThread:= 1;
+    currentMaxThread:= container.manager.maxDLThreadsPerTask;
   end
   else
     currentMaxThread:= container.manager.maxDLThreadsPerTask;
@@ -2292,7 +2333,7 @@ begin
           Inc(geCount);
           Inc(count);
         end;
-      end
+      end {
       else
       if containers.Items[i].mangaSiteID = BATOTO_ID then
       begin
@@ -2302,7 +2343,7 @@ begin
           Inc(batotoCount);
           Inc(count);
         end;
-      end
+      end }
       else
       begin
         ActiveTask(i);

@@ -91,6 +91,7 @@ procedure   TSubThread.DoGetInfos;
   var
     selectedWebsite: String;
     filterPos      : Cardinal;
+    times          : Cardinal;
   begin
     Result:= FALSE;
 
@@ -103,7 +104,11 @@ procedure   TSubThread.DoGetInfos;
     Info.isGenerateFolderChapterName:= MainForm.cbOptionGenerateChapterName.Checked;
     Info.isRemoveUnicode:= MainForm.cbOptionPathConvert.Checked;
 
-    if Info.GetInfoFromURL(website, URL, 2)<>NO_ERROR then
+    if website = BATOTO_NAME then
+      times:= 0
+    else
+      times:= 3;
+    if Info.GetInfoFromURL(website, URL, times)<>NO_ERROR then
     begin
       Info.Free;
       exit;
@@ -140,6 +145,8 @@ begin
   MessageDlg('', stDlgCannotGetMangaInfo,
                mtInformation, [mbYes], 0);
   MainForm.rmInformation.Clear;
+  MainForm.itAnimate.Enabled:= FALSE;
+  MainForm.pbWait.Visible:= FALSE;
   isGetInfos:= FALSE;
 end;
 

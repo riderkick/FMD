@@ -802,7 +802,10 @@ begin
   rmInformation.Lines.Add('Loading ...');
   clbChapterList.Clear;
   if Assigned(gifWaiting) then
+  begin
     itAnimate.Enabled:= TRUE;
+    MainForm.pbWait.Visible:= TRUE;
+  end;
 end;
 
 procedure TMainForm.btReadOnlineClick(Sender: TObject);
@@ -1803,7 +1806,10 @@ begin
   //ShowInformation;
 
   if Assigned(gifWaiting) then
+  begin
     itAnimate.Enabled:= TRUE;
+    MainForm.pbWait.Visible:= TRUE;
+  end;
 end;
 
 procedure TMainForm.CheckForTopPanel;
@@ -1896,6 +1902,7 @@ var
   cp: TPoint;
 begin
   itAnimate.Enabled:= FALSE;
+  MainForm.pbWait.Visible:= FALSE;
   // ---------------------------------------------------
   pcMain.PageIndex:= 1;
   if edSaveTo.Text='' then

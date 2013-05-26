@@ -91,6 +91,7 @@ type
       constructor Create(pRaw:PChar);overload;
       destructor Destroy; override;
       procedure Exec;
+      procedure SlowExec;
       procedure ExecUpCase; //same as Exec, but all tags are now converted to UPPERCASE (consistent)
   end;
 
@@ -188,6 +189,79 @@ begin
             Inc(P);Inc(I);
           end;
         end;
+
+        Inc(P);Inc(I);
+        if I>=TL then
+        begin
+          Done := True;
+          Break;
+        end;
+      end;
+      if Done then Break;
+      { Copy this tag to buffer }
+      L := P-TagStart+1;
+
+      if (Assigned(OnFoundTag)) then
+        OnFoundTag(CopyBuffer( TagStart, L ));
+
+      Inc(P);Inc(I);
+      if I>=TL then Break;
+
+    until (Done);
+  end;
+end;
+
+procedure TjsFastHTMLParser.SlowExec;
+Var
+  L     : Integer;
+  TL    : Integer;
+  I     : Integer;
+  Done  : Boolean;
+  TagStart,
+  TextStart,
+  P     : PChar;   // Pointer to current char.
+  C     : Char;
+begin
+  TL := StrLen(Raw);
+  I  := 0;
+  P  := Raw;
+  Done := False;
+  if P<>nil then
+  begin
+    TagStart := nil;
+    repeat
+      TextStart := P;
+      { Get next tag position }
+      while Not (P^ in [ '<', #0 ]) do
+      begin
+        Inc(P);Inc(I);
+        if I>=TL then
+        begin
+          Done := True;
+          Break;
+        end;
+      end;
+      if Done then Break;
+
+      { Is there any text before ? }
+      if (TextStart<>nil) and (P>TextStart) then
+      begin
+
+        L := P-TextStart;
+        { Yes, copy to buffer }
+
+        if (assigned(OnFoundText)) then
+          OnFoundText(CopyBuffer( TextStart, L ));
+
+      end else
+      begin
+        TextStart:=nil;
+      end;
+      { No }
+
+      TagStart := P;
+      while Not (P^ in [ '>', #0]) do
+      begin
 
         Inc(P);Inc(I);
         if I>=TL then

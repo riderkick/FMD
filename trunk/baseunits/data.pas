@@ -2191,35 +2191,68 @@ end;
 // get manga infos from batoto
 function   GetBatotoInfoFromURL: Byte;
 var
+  count   : Cardinal = 0;
   patchURL,
   s: String;
+  isGoOn          : Boolean = FALSE;
   isExtractGenres : Boolean = FALSE;
   i, j: Cardinal;
   myParser: THTMLParser;
-
+label
+  reload;
 begin
-  patchURL:= UTF8ToANSI(URL);
+ // patchURL:= UTF8ToANSI(URL);
+  patchURL:= URL;
   Insert('comics/', patchURL, 10);
   mangaInfo.url:= BATOTO_ROOT + patchURL;
-  if NOT GetPage(TObject(source), mangaInfo.url, Reconnect) then
-  begin
-    Result:= NET_PROBLEM;
-    source.Free;
-    exit;
-  end;
 
- { if source.Count > 81 then
-    for i:= 0 to 81 do
-      source.Delete(0); }
-  source.Insert(0, '<aaa>');
+reload:
+  source.Clear;
+  {if NOT isGetByUpdater then
+  begin
+    if NOT bttGetPage(TObject(source), mangaInfo.url, Reconnect) then
+    begin
+      Result:= NET_PROBLEM;
+      source.Free;
+      exit;
+    end;
+  end
+  else}
+  begin
+    if NOT GetPage(TObject(source), mangaInfo.url, Reconnect) then
+    begin
+      Result:= NET_PROBLEM;
+      source.Free;
+      exit;
+    end;
+  end;
 
   // parsing the HTML source using our own HTML parser
   parse.Clear;
-  myParser:= THTMLParser.Create(PChar(source.Text));
-  myParser.OnFoundTag := OnTag;
-  myParser.OnFoundText:= OnText;
-  myParser.Exec;
-  myParser.Free;
+  Parser:= TjsFastHTMLParser.Create(PChar(source.Text));
+  Parser.OnFoundTag := OnTag;
+  Parser.OnFoundText:= OnText;
+  Parser.SlowExec;
+  Parser.Free;
+
+  if parse.Count > 0 then
+  begin
+    for i:= 0 to parse.Count-1 do
+    begin
+      if (Pos('Author:', parse.Strings[i])<>0) then
+      begin
+        isGoOn:= TRUE;
+        break;
+      end;
+    end;
+  end;
+  if NOT isGoOn then
+  begin
+    Inc(count);
+    Sleep(3000);
+    if count < 16 then
+      goto reload;
+  end;
 
   source.Free;
   mangaInfo.website:= BATOTO_NAME;
@@ -2266,7 +2299,7 @@ begin
       mangaInfo.chapterLinks.Add((StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href=')), BATOTO_ROOT, '', [rfReplaceAll])));
       parse.Strings[i+2]:= StringReplace(parse.Strings[i+2], #10, '', [rfReplaceAll]);
       parse.Strings[i+2]:= StringReplace(parse.Strings[i+2], #13, '', [rfReplaceAll]);
-      parse.Strings[i+2]:= TrimLeft(parse.Strings[i+2]);
+      parse.Strings[i+2]:= StringFilter(TrimLeft(parse.Strings[i+2]));
       mangaInfo.chapterName.Add(TrimRight(RemoveSymbols(parse.Strings[i+2])));
     end;
 

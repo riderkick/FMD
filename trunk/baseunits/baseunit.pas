@@ -334,6 +334,7 @@ function  PrepareSummaryForHint(const source: String):  String;
 // EN: Get HTML source code from a URL
 // VI: Lấy webcode từ 1 URL
 function  gehGetPage(var output: TObject; URL: String; const Reconnect: Cardinal; const lURL: String = ''): Boolean;
+function  bttGetPage(var output: TObject; URL: String; const Reconnect: Cardinal): Boolean;
 function  GetPage(var output: TObject; URL: String; const Reconnect: Cardinal): Boolean;
 function  SavePage(URL: String;  const Path, name: String; const Reconnect: Cardinal): Boolean;
 
@@ -353,7 +354,7 @@ procedure fmdPowerOff;
 
 implementation
 
-uses FileUtil{$IFDEF WINDOWS}, Windows{$ENDIF};
+uses FileUtil{$IFDEF WINDOWS}, Windows{$ENDIF}, Synacode;
 
 {$IFDEF WINDOWS}
 
@@ -895,6 +896,7 @@ begin
 end;
 
 var
+  bttHTTP,
   gehHTTP: THTTPSend;
 
 // will remove this later
@@ -974,6 +976,70 @@ globReturn:
   gehHTTP.Clear;
 end;
 
+// will remove this later
+function  bttGetPage(var output: TObject; URL: String; const Reconnect: Cardinal): Boolean;
+var
+  code   : Cardinal;
+  counter: Cardinal = 0;
+  s      : String;
+begin
+  Result:= FALSE;
+  bttHTTP.ProxyHost:= Host;
+  bttHTTP.ProxyPort:= Port;
+  bttHTTP.ProxyUser:= User;
+  bttHTTP.ProxyHost:= Pass;
+
+  bttHTTP.Clear;
+  bttHTTP.MimeType:= 'Content-Type: application/x-www-form-urlencoded';
+  bttHTTP.KeepAlive:= TRUE;
+  bttHTTP.KeepAliveTimeout:= 1000;
+
+  while (NOT bttHTTP.HTTPMethod('GET', URL)) OR
+        (bttHTTP.ResultCode > 500) do
+  begin
+    code:= bttHTTP.ResultCode;
+    if Reconnect <> 0 then
+    begin
+      if Reconnect <= counter then
+      begin
+        exit;
+      end;
+      Inc(counter);
+    end;
+    bttHTTP.Clear;
+    Sleep(500);
+  end;
+ // bttHTTP.Document.SaveToFile('error.txt');
+  while bttHTTP.ResultCode = 302 do
+  begin
+    URL:= CheckRedirect(bttHTTP);
+    bttHTTP.Clear;
+    bttHTTP.RangeStart:= 0;
+
+    while (NOT bttHTTP.HTTPMethod('GET', URL)) OR
+        (bttHTTP.ResultCode >= 500) do
+    begin
+      if Reconnect <> 0 then
+      begin
+        if Reconnect <= counter then
+        begin
+          exit;
+        end;
+        Inc(counter);
+      end;
+      bttHTTP.Clear;
+      Sleep(500);
+    end;
+  end;
+  if output is TStringList then
+    TStringList(output).LoadFromStream(bttHTTP.Document)
+  else
+  if output is TPicture then
+    TPicture(output).LoadFromStream(bttHTTP.Document);
+  Result:= TRUE;
+  bttHTTP.Clear;
+end;
+
 function  GetPage(var output: TObject; URL: String; const Reconnect: Cardinal): Boolean;
 var
   HTTP   : THTTPSend;
@@ -998,37 +1064,27 @@ globReturn:
   HTTP.ProxyHost:= Pass;
 
   if Pos(GEHENTAI_ROOT, URL) <> 0 then
-    HTTP.Headers.Insert(0, 'Referer:'+URL);
-  //  HTTP.Headers.Insert(0, 'Referer:'+GEHENTAI_ROOT+'/')
- //   HTTP.Headers.Insert(0, '{''User-Agent'' : ''Mozilla/5.0 (X11; Linux i686) AppleWebKit/535.11 (KHTML, like Gecko) Ubuntu/11.10 Chromium/17.0.963.79 Chrome/17.0.963.79 Safari/535.11''}');
-
- { else
-  if Pos(TRUYEN18_ROOT, URL) <> 0 then
-    HTTP.Headers.Insert(0, 'Referer:'+'http://adf.ly/2337104/http%3a%2f%2fwww.truyen18.org%2fhentai%2fkaren-chameleon%2f4220.html');
+    HTTP.Headers.Insert(0, 'Referer:'+URL)
   else
+  if Pos(BATOTO_ROOT, URL) <> 0 then
+  begin
+    HTTP.MimeType:= 'Content-Type: application/x-www-form-urlencoded';
+    HTTP.KeepAlive:= TRUE;
+    HTTP.KeepAliveTimeout:= 1000;
+  end;
+ {
   if Pos(MANGA24H_ROOT, URL) <> 0 then
   begin
     HTTP.Headers.Add('Accept: text/xml,application/xml,application/json,application/xhtml+xml,');
     HTTP.Headers.Add('text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5');
-    HTTP.Headers.Add('Cache-Control: max-age=0');
-    HTTP.Headers.Add('Connection: keep-alive');
-    HTTP.Headers.Add('Keep-Alive: 300');
-    HTTP.Headers.Add('Accept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.7');
-    HTTP.Headers.Add('Accept-Language: en-us,en;q=0.5');
-    HTTP.Headers.Add('Pragma: ');
-
     HTTP.UserAgent:= 'Mozilla/5.0 (Windows NT 5.1; rv:5.0) Gecko/20100101 Firefox/5.0 Firefox/5.0';
-    HTTP.Headers.Add('Referer:'+MANGA24H_ROOT+'/;');
     HTTP.Headers.Add('Encoding:gzip,deflate;');
-
-    HTTP.Cookies.Text:=
-   // HTTP.Headers.Insert(0, 'Cookie:expires=Sat, 26-Jan-2013 00:00:01 GMT');
   end;}
+
   while (NOT HTTP.HTTPMethod('GET', URL)) OR
         (HTTP.ResultCode > 500) do
   begin
     code:= HTTP.ResultCode;
-    HTTP.Document.SaveToFile('error.txt');
     if Reconnect <> 0 then
     begin
       if Reconnect <= counter then
@@ -1307,4 +1363,6 @@ end;
 
 begin
   gehHTTP:= THTTPSend.Create;
+  bttHTTP:= THTTPSend.Create;
+ // bttHTTP.Headers.Insert(0, 'Referer:'+BATOTO_ROOT+'/');
 end.
