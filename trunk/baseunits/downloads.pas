@@ -133,7 +133,7 @@ type
     // Check and active previous work-in-progress tasks
     procedure   CheckAndActiveTaskAtStartup;
     // Check and active waiting tasks
-    procedure   CheckAndActiveTask;
+    procedure   CheckAndActiveTask(const isCheckForFMDDo: Boolean = FALSE);
     // Check if we can active another wating task or not
     function    CanActiveTask: Boolean;
     // Active a stopped task
@@ -160,7 +160,8 @@ type
 
 implementation
 
-uses mainunit, HTMLParser, FastHTMLParser, HTMLUtil, SynaCode, FileUtil, HTTPSend;
+uses
+  lazutf8classes, mainunit, HTMLParser, FastHTMLParser, HTMLUtil, SynaCode, FileUtil, HTTPSend;
 
 // utility
 
@@ -1358,6 +1359,7 @@ var
     s       : String;
     dest,
     source  : TPicture;
+    fstream : TFileStreamUTF8;
 
   begin
     if (FileExists(Path+'/'+name+'.jpg')) OR
@@ -1483,7 +1485,11 @@ var
       source.Free;
     end
     else}
-      HTTP.Document.SaveToFile(Path+'/'+name+ext);
+
+    fstream:= TFileStreamUTF8.Create(Path+'/'+name+ext, fmCreate);
+    HTTP.Document.SaveToStream(fstream);
+    fstream.Free;
+  //    HTTP.Document.SaveToFile(Path+'/'+name+ext);
     HTTP.Free;
     Result:= TRUE;
   end;
@@ -1586,10 +1592,36 @@ var
   i, currentMaxThread: Cardinal;
   s: String;
 begin
+  // ugly code, need to be fixed later
+
   if (container.mangaSiteID = GEHENTAI_ID) AND (container.manager.maxDLThreadsPerTask>4) then
     currentMaxThread:= 4
   else
+  if (container.mangaSiteID = BATOTO_ID) then
+  begin
+    Sleep(150);
+  {  if Flag = CS_GETPAGELINK then
+    begin
+      if container.manager.maxDLThreadsPerTask>2 then
+        currentMaxThread:= 2;
+    end
+    else  }
+    {if container.workPtr < 3 then
+      currentMaxThread:= 3
+    else}
+      currentMaxThread:= 1;
+  end
+  else
+  if container.manager.maxDLThreadsPerTask = 1 then
+  begin
+    {if container.workPtr < 3 then
+      currentMaxThread:= 3
+    else}
+      currentMaxThread:= 1;
+  end
+  else
     currentMaxThread:= container.manager.maxDLThreadsPerTask;
+
   if container.mangaSiteID = GEHENTAI_ID then
   begin
     if (container.workPtr <> 0) then
@@ -1610,7 +1642,7 @@ begin
   else
     Sleep(100);
 
-  if container.activeThreadCount >= currentMaxThread then exit;
+  if container.activeThreadCount > currentMaxThread then exit;
   for i:= 0 to currentMaxThread-1 do
   begin
     if i >= threads.Count then
@@ -1771,7 +1803,7 @@ begin
       container.downloadInfo.Status  := stFinish;
       container.downloadInfo.Progress:= '';
       container.Status:= STATUS_FINISH;
-      container.manager.CheckAndActiveTask;
+      container.manager.CheckAndActiveTask(TRUE);
       {$IFDEF WIN32}
       MainForm.vtDownload.Repaint;
       {$ELSE}
@@ -2223,18 +2255,24 @@ begin
   containers.Items[containers.Count-1].manager:= self;
 end;
 
-procedure   TDownloadManager.CheckAndActiveTask;
+procedure   TDownloadManager.CheckAndActiveTask(const isCheckForFMDDo: Boolean = FALSE);
 var
-  geCount: Cardinal = 0;
-  i      : Cardinal;
-  count  : Cardinal = 0;
+  batotoCount: Cardinal = 0;
+  geCount    : Cardinal = 0;
+  i          : Cardinal;
+  count      : Cardinal = 0;
 begin
   if containers.Count = 0 then exit;
   for i:= 0 to containers.Count-1 do
   begin
-    if (containers.Items[i].Status = STATUS_DOWNLOAD) AND
-       (containers.Items[i].mangaSiteID = GEHENTAI_ID) then
-      Inc(geCount);
+    if (containers.Items[i].Status = STATUS_DOWNLOAD) then
+    begin
+      if (containers.Items[i].mangaSiteID = GEHENTAI_ID) then
+        Inc(geCount)
+      else
+      if (containers.Items[i].mangaSiteID = BATOTO_ID) then
+        Inc(batotoCount);
+    end;
   end;
 
   for i:= 0 to containers.Count-1 do
@@ -2256,6 +2294,16 @@ begin
         end;
       end
       else
+      if containers.Items[i].mangaSiteID = BATOTO_ID then
+      begin
+        if batotoCount = 0 then
+        begin
+          ActiveTask(i);
+          Inc(batotoCount);
+          Inc(count);
+        end;
+      end
+      else
       begin
         ActiveTask(i);
         Inc(count);
@@ -2263,6 +2311,25 @@ begin
     end;
     if count >= maxDLTasks then
       exit;
+  end;
+
+  if (count = 0) AND (isCheckForFMDDo) then
+  begin
+    case MainForm.cbOptionLetFMDDo.ItemIndex of
+      DO_EXIT_FMD:
+        begin
+          MainForm.CloseNow;
+          Sleep(2000);
+          Halt;
+        end;
+      DO_TURNOFF:
+        begin
+          MainForm.CloseNow;
+          Sleep(3000);
+          fmdPowerOff;
+          Halt;
+        end;
+    end;
   end;
 end;
 

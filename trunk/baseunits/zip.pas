@@ -26,6 +26,9 @@ type
 
 implementation
 
+uses
+  lazutf8classes;
+
 procedure   TCompress.OnFileFound(FileIterator: TFileIterator);
 begin
   list.Add(FileIterator.Filename);
@@ -33,10 +36,12 @@ end;
 
 procedure   TCompress.Execute;
 var
+  s,
   fPath   : String;
   searcher: TFileSearcher;
   Zip     : TZipper;
   i       : Cardinal;
+  fstream : TFileStreamUTF8;
 begin
   try
    // Path:= FixPath(Path);
@@ -56,8 +61,19 @@ begin
       Zip.FileName:= fPath+ext;
       //SetCurrentDirUTF8(ExtractFileDir(Path+'.zip'));
       for i:= 0 to list.Count-1 do
-        Zip.Entries.AddFileEntry(list.Strings[i], Format('%.3d%s', [i, ExtractFileExt(list.Strings[i])]));
-      Zip.ZipAllFiles;
+      begin
+        {$IFDEF WINDOWS}
+        s:= StringReplace(list.Strings[i], '/', '\', [rfReplaceAll]);
+        {$ELSE}
+        s:= list.Strings[i];
+        {$ENDIF}
+        Zip.Entries.AddFileEntry(s, Format('%.3d%s', [i, ExtractFileExt(list.Strings[i])]));
+      end;
+
+      fstream:= TFileStreamUTF8.Create(fPath+ext, fmCreate);
+     // Zip.ZipAllFiles;
+      Zip.SaveToStream(fstream);
+      fstream.Free;
       Zip.Free;
       //SetCurrentDirUTF8(oldDir);
       for i:= 0 to list.Count-1 do

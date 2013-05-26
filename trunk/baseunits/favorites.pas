@@ -218,6 +218,7 @@ end;
 
 procedure   TFavoriteManager.ShowResult;
 var
+  isHasNewChapter : Boolean = FALSE;
   removeListStr   : String = '';
   day, month, year: Word;
   currentChapter,
@@ -269,6 +270,7 @@ begin
       newChapter    := mangaInfo[i].numChapter;
       if newChapter > currentChapter then
       begin
+        isHasNewChapter:= TRUE;
         newMangaStr:= newMangaStr + #10#13+ ' - '+favoriteInfo[i].title;
         DLManager.AddTask;
         pos:= DLManager.containers.Count-1;
@@ -315,7 +317,8 @@ begin
     if Assigned(OnUpdateDownload) then
       OnUpdateDownload;
     DLManager.Backup;
-    DLManager.CheckAndActiveTask;
+    if (isHasNewChapter) AND (isNow) then
+      DLManager.CheckAndActiveTask;
   end;
 
   while threads.Count > 0 do

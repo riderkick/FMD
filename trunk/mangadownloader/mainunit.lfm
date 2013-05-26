@@ -1204,7 +1204,7 @@ object MainForm: TMainForm
             Left = 12
             Height = 21
             Top = 34
-            Width = 140
+            Width = 212
             ItemHeight = 13
             Items.Strings = (
               'English'
@@ -1224,7 +1224,7 @@ object MainForm: TMainForm
           object seOptionNewMangaTime: TSpinEdit
             Left = 12
             Height = 21
-            Top = 66
+            Top = 138
             Width = 58
             MaxValue = 365
             MinValue = 1
@@ -1235,7 +1235,7 @@ object MainForm: TMainForm
           object lbOptionNewMangaTime: TLabel
             Left = 84
             Height = 13
-            Top = 74
+            Top = 138
             Width = 115
             Caption = 'lbOptionNewMangaTime'
             ParentColor = False
@@ -1244,7 +1244,7 @@ object MainForm: TMainForm
           object cbOptionMinimizeToTray: TCheckBox
             Left = 12
             Height = 17
-            Top = 114
+            Top = 170
             Width = 136
             Caption = 'cbOptionMinimizeToTray'
             ParentFont = False
@@ -1253,11 +1253,32 @@ object MainForm: TMainForm
           object cbOptionAutoCheckUpdate: TCheckBox
             Left = 12
             Height = 17
-            Top = 138
+            Top = 194
             Width = 130
             Caption = 'Check for new version '
             ParentFont = False
             TabOrder = 3
+          end
+          object cbOptionLetFMDDo: TComboBox
+            Left = 12
+            Height = 21
+            Top = 90
+            Width = 212
+            ItemHeight = 13
+            ItemIndex = 0
+            Items.Strings = (
+              ''
+            )
+            ParentFont = False
+            TabOrder = 4
+          end
+          object lbOptionLetFMDDo: TLabel
+            Left = 12
+            Height = 13
+            Top = 74
+            Width = 104
+            Caption = 'lbOptionLetFMDDo'
+            ParentColor = False
           end
         end
         object tsConnections: TTabSheet

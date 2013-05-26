@@ -90,6 +90,7 @@ type
     clbOptionMangaSiteSelection: TCheckListBox;
     clbChapterList: TCheckListBox;
     cbLanguages: TComboBox;
+    cbOptionLetFMDDo: TComboBox;
     edFilterSummary: TEdit;
     edFilterTitle: TEdit;
     edFilterAuthors: TEdit;
@@ -106,6 +107,7 @@ type
     ImageList: TImageList;
     imCover: TImage;
     edOptionDefaultPath: TLabeledEdit;
+    lbOptionLetFMDDo: TLabel;
     lbOptionNewMangaTime: TLabel;
     lbOptionLanguage: TLabel;
     lbOptionDialogs: TLabel;
@@ -479,6 +481,7 @@ begin
   case pcMain.TabIndex of
     5: LoadAbout;
   end;
+  cbOptionLetFMDDo.ItemIndex:= options.ReadInteger('general', 'LetFMDDo', 0);
 end;
 
 procedure TMainForm.cbOptionUseProxyChange(Sender: TObject);
@@ -586,6 +589,7 @@ begin
     end;
   end;
   CloseNow;
+  Halt;
   CloseAction:= caFree;
 end;
 
@@ -597,7 +601,7 @@ begin
   DLManager.StopAllDownloadTasksForExit;
   dataProcess.SaveToFile;
   dataProcess.Destroy;
-  Halt;
+ // Halt;
 end;
 
 procedure TMainForm.LoadAbout;
@@ -649,13 +653,16 @@ begin
       end
       else
       begin
-        s:= RemoveSymbols(TrimLeft(TrimRight(mangaInfo.title)));
-        if Length(s)>64 then
+        if NOT cbOptionPathConvert.Checked then
+          s:= RemoveSymbols(TrimLeft(TrimRight(mangaInfo.title)))
+        else
+          s:= UnicodeRemove(RemoveSymbols(TrimLeft(TrimRight(mangaInfo.title))));
+       { if Length(s)>64 then
         begin
-          s:= UnicodeRemove(s);
+        //  s:= UnicodeRemove(s);
           SetLength(s, 64);
           s:= TrimLeft(TrimRight(s));
-        end;
+        end; }
       end;
 
       DLManager.containers.Items[pos].chapterName .Add(s);
@@ -1268,6 +1275,8 @@ procedure TMainForm.pcMainChange(Sender: TObject);
 
     cbOptionMinimizeToTray.Checked:= options.ReadBool('general', 'MinimizeToTray', FALSE);
     seOptionNewMangaTime.Value:= options.ReadInteger('general', 'NewMangaTime', 3);
+    cbOptionLetFMDDo.ItemIndex:= options.ReadInteger('general', 'LetFMDDo', 0);
+    cbOptionLetFMDDoItemIndex:= cbOptionLetFMDDo.ItemIndex;
 
     seOptionMaxParallel.Value:= options.ReadInteger('connections', 'NumberOfTasks', 1);
     seOptionMaxThread.Value:= options.ReadInteger('connections', 'NumberOfThreadsPerTask', 1);
@@ -1288,7 +1297,7 @@ procedure TMainForm.pcMainChange(Sender: TObject);
     cbOptionGenerateChapterName.Checked:= options.ReadBool('saveto', 'GenChapName', FALSE);
     cbOptionGenerateMangaFolderName.Checked:= options.ReadBool('saveto', 'GenMangaName', TRUE);
 
-    cbOptionAutoCheckUpdate.Checked:= options.ReadBool('update', 'AutoCheckUpdateAtStartup', FALSE);
+    cbOptionAutoCheckUpdate.Checked:= options.ReadBool('update', 'AutoCheckUpdateAtStartup', TRUE);
 
     for i:= 0 to clbOptionMangaSiteSelection.Items.Count-1 do
       clbOptionMangaSiteSelection.Checked[i]:= FALSE;
@@ -1629,6 +1638,8 @@ begin
 
   options.WriteBool   ('general', 'MinimizeToTray', cbOptionMinimizeToTray.Checked);
   options.WriteInteger('general', 'NewMangaTime', seOptionNewMangaTime.Value);
+  options.WriteInteger('general', 'LetFMDDo', cbOptionLetFMDDo.ItemIndex);
+  cbOptionLetFMDDoItemIndex:= cbOptionLetFMDDo.ItemIndex;
 
   options.WriteInteger('connections', 'NumberOfTasks', seOptionMaxParallel.Value);
   options.WriteInteger('connections', 'NumberOfThreadsPerTask', seOptionMaxThread.Value);
@@ -1917,6 +1928,9 @@ begin
   cbOptionMinimizeToTray.Checked := options.ReadBool('general', 'MinimizeToTray', FALSE);
   miDownloadHideCompleted.Checked:= options.ReadBool('general', 'HideCompleted', FALSE);
   batotoLastDirectoryPage:= mangalistIni.ReadInteger('general', 'batotoLastDirectoryPage', 244);
+  cbOptionLetFMDDo.ItemIndex:= options.ReadInteger('general', 'LetFMDDo', 0);
+  cbOptionLetFMDDoItemIndex := cbOptionLetFMDDo.ItemIndex;
+
   cbAddAsStopped.Checked := options.ReadBool('general', 'AddAsStopped', FALSE);
   LoadLanguage(options.ReadInteger('languages', 'Select', 0));
 
@@ -2093,6 +2107,7 @@ end;
 procedure TMainForm.LoadLanguage(const pos: Integer);
 var
   language: TIniFile;
+  s,
   lang    : String;
   i, p    : Cardinal;
 begin
@@ -2246,6 +2261,14 @@ begin
   stDlgRemoveCompletedManga:= language.ReadString(lang, 'stDlgRemoveCompletedManga', '');
   stDlgUpdaterWantToUpdateDB:= language.ReadString(lang, 'stDlgUpdaterWantToUpdateDB', '');
   stDlgUpdaterCannotConnectToServer:= language.ReadString(lang, 'stDlgUpdaterCannotConnectToServer', '');
+
+  lbOptionLetFMDDo.Caption := language.ReadString(lang, 'lbOptionLetFMDDoCaption', '');
+  s:= language.ReadString(lang, 'cbOptionLetFMDDo', '');
+
+  // add information to cbOptionLetFMDDo
+  cbOptionLetFMDDo.Items.Clear;
+  GetParams(TStringList(cbOptionLetFMDDo.Items), s);
+ // cbOptionLetFMDDo.ItemIndex:= 0;
 
   language.Free;
   if dataProcess.isFiltered then

@@ -82,6 +82,9 @@ const
   STATUS_DOWNLOAD  = 3;
   STATUS_FINISH    = 4;
 
+  DO_EXIT_FMD      = 1;
+  DO_TURNOFF       = 2;
+
   NO_ERROR              = 0;
   NET_PROBLEM           = 1;
   INFORMATION_NOT_FOUND = 2;
@@ -104,6 +107,9 @@ const
   MANGATRADERS_NAME = 'MangaTraders'; MANGATRADERS_ID= 15;
 
 var
+  // cbOptionLetFMDDoItemIndex
+  cbOptionLetFMDDoItemIndex: Cardinal = 0;
+
   Revision         : Cardinal;
   // only for batoto: the directory page from the last time we check the site
   batotoLastDirectoryPage: Cardinal = 289;
@@ -306,7 +312,7 @@ function  Find(const S: String; var List: TStringList; out index: Integer): Bool
 
 // EN: Get param from input
 // VI: Lấy param từ input
-procedure GetParams(var output: TStringList; input: String); overload;
+procedure GetParams(const output: TStringList; input: String); overload;
 procedure GetParams(var output: TCardinalList; input: String); overload;
 // EN: Set param from input
 // VI: Cài param từ input
@@ -342,10 +348,97 @@ procedure TransferMangaInfo(var dest: TMangaInfo; const source: TMangaInfo);
 
 function  fmdGetTempPath: String;
 function  fmdGetTickCount: Cardinal;
+procedure fmdPowerOff;
 
 implementation
 
 uses FileUtil{$IFDEF WINDOWS}, Windows{$ENDIF};
+
+{$IFDEF WINDOWS}
+
+// thanks Leledumbo for the code
+const
+  SE_CREATE_TOKEN_NAME = 'SeCreateTokenPrivilege';
+  SE_ASSIGNPRIMARYTOKEN_NAME = 'SeAssignPrimaryTokenPrivilege';
+  SE_LOCK_MEMORY_NAME = 'SeLockMemoryPrivilege';
+  SE_INCREASE_QUOTA_NAME = 'SeIncreaseQuotaPrivilege';
+  SE_UNSOLICITED_INPUT_NAME = 'SeUnsolicitedInputPrivilege';
+  SE_MACHINE_ACCOUNT_NAME = 'SeMachineAccountPrivilege';
+  SE_TCB_NAME = 'SeTcbPrivilege';
+  SE_SECURITY_NAME = 'SeSecurityPrivilege';
+  SE_TAKE_OWNERSHIP_NAME = 'SeTakeOwnershipPrivilege';
+  SE_LOAD_DRIVER_NAME = 'SeLoadDriverPrivilege';
+  SE_SYSTEM_PROFILE_NAME = 'SeSystemProfilePrivilege';
+  SE_SYSTEMTIME_NAME = 'SeSystemtimePrivilege';
+  SE_PROF_SINGLE_PROCESS_NAME = 'SeProfileSingleProcessPrivilege';
+  SE_INC_BASE_PRIORITY_NAME = 'SeIncreaseBasePriorityPrivilege';
+  SE_CREATE_PAGEFILE_NAME = 'SeCreatePagefilePrivilege';
+  SE_CREATE_PERMANENT_NAME = 'SeCreatePermanentPrivilege';
+  SE_BACKUP_NAME = 'SeBackupPrivilege';
+  SE_RESTORE_NAME = 'SeRestorePrivilege';
+  SE_SHUTDOWN_NAME = 'SeShutdownPrivilege';
+  SE_DEBUG_NAME = 'SeDebugPrivilege';
+  SE_AUDIT_NAME = 'SeAuditPrivilege';
+  SE_SYSTEM_ENVIRONMENT_NAME = 'SeSystemEnvironmentPrivilege';
+  SE_CHANGE_NOTIFY_NAME = 'SeChangeNotifyPrivilege';
+  SE_REMOTE_SHUTDOWN_NAME = 'SeRemoteShutdownPrivilege';
+  SE_UNDOCK_NAME = 'SeUndockPrivilege';
+  SE_SYNC_AGENT_NAME = 'SeSyncAgentPrivilege';
+  SE_ENABLE_DELEGATION_NAME = 'SeEnableDelegationPrivilege';
+  SE_MANAGE_VOLUME_NAME = 'SeManageVolumePrivilege';
+
+function SetSuspendState(hibernate, forcecritical, disablewakeevent: Boolean): Boolean; stdcall; external 'powrprof.dll' name 'SetSuspendState';
+function IsHibernateAllowed: Boolean; stdcall; external 'powrprof.dll' name 'IsPwrHibernateAllowed';
+function IsPwrSuspendAllowed: Boolean; stdcall; external 'powrprof.dll' name 'IsPwrSuspendAllowed';
+function IsPwrShutdownAllowed: Boolean; stdcall; external 'powrprof.dll' name 'IsPwrShutdownAllowed';
+function LockWorkStation: Boolean; stdcall; external 'user32.dll' name 'LockWorkStation';
+
+function NTSetPrivilege(sPrivilege: string; bEnabled: Boolean): Boolean;
+var
+  hToken: THandle;
+  TokenPriv: TOKEN_PRIVILEGES;
+  PrevTokenPriv: TOKEN_PRIVILEGES;
+  ReturnLength: Cardinal;
+begin
+  Result := True;
+  // Only for Windows NT/2000/XP and later.
+  if not (Win32Platform = VER_PLATFORM_WIN32_NT) then Exit;
+  Result := False;
+
+  // obtain the processes token
+  if OpenProcessToken(GetCurrentProcess(),
+    TOKEN_ADJUST_PRIVILEGES or TOKEN_QUERY, hToken) then
+  begin
+    try
+      // Get the locally unique identifier (LUID) .
+      if LookupPrivilegeValue(nil, PChar(sPrivilege),
+        TokenPriv.Privileges[0].Luid) then
+      begin
+        TokenPriv.PrivilegeCount := 1; // one privilege to set
+
+        case bEnabled of
+          True: TokenPriv.Privileges[0].Attributes  := SE_PRIVILEGE_ENABLED;
+          False: TokenPriv.Privileges[0].Attributes := 0;
+        end;
+
+        ReturnLength := 0; // replaces a var parameter
+        PrevTokenPriv := TokenPriv;
+
+        // enable or disable the privilege
+
+        AdjustTokenPrivileges(hToken, False, TokenPriv, SizeOf(PrevTokenPriv),
+          PrevTokenPriv, ReturnLength);
+      end;
+    finally
+      CloseHandle(hToken);
+    end;
+  end;
+  // test the return value of AdjustTokenPrivileges.
+  Result := GetLastError = ERROR_SUCCESS;
+  if not Result then
+    raise Exception.Create(SysErrorMessage(GetLastError));
+end;
+{$ENDIF}
 
 function  UnicodeRemove(const S: String): String;
 var i: Cardinal;
@@ -480,7 +573,8 @@ end;
 
 function  GetMangaDatabaseURL(const name: String): String;
 begin
-  result:= 'http://aarnet.dl.sourceforge.net/project/fmd/FMD/lists/'+name+'.zip';
+ // result:= 'http://aarnet.dl.sourceforge.net/project/fmd/FMD/lists/'+name+'.zip';
+  result:= 'http://tenet.dl.sourceforge.net/project/fmd/FMD/lists/'+name+'.zip';
 end;
 
 function  RemoveSymbols(const input: String): String;
@@ -539,7 +633,7 @@ begin
   end;
 end;
 
-procedure GetParams(var output: TStringList; input: String);
+procedure GetParams(const output: TStringList; input: String);
 var l: Word;
 begin
   repeat
@@ -647,6 +741,8 @@ begin
   Result:= StringReplace(Result, '&#033;', '!', [rfReplaceAll]);
   Result:= StringReplace(Result, '&#036;', '$', [rfReplaceAll]);
   Result:= StringReplace(Result, '&#039;', '''', [rfReplaceAll]);
+  Result:= StringReplace(Result, '&gt;', '>', [rfReplaceAll]);
+  Result:= StringReplace(Result, '&lt;', '<', [rfReplaceAll]);
   Result:= StringReplace(Result, '&amp;', '&', [rfReplaceAll]);
   Result:= StringReplace(Result, '&nbsp;', '', [rfReplaceAll]);
   Result:= StringReplace(Result, '&ldquo;', '"', [rfReplaceAll]);
@@ -1193,6 +1289,19 @@ begin
  {$IFDEF WINDOWS}
   Result:= GetTickCount;
  {$ENDIF}
+end;
+
+procedure fmdPowerOff;
+const
+  SE_SHUTDOWN_NAME = 'SeShutdownPrivilege';
+begin
+{$IFDEF WINDOWS}
+  if IsPwrShutdownAllowed then
+  begin
+    NTSetPrivilege(SE_SHUTDOWN_NAME, True);
+    ExitWindowsEx(EWX_POWEROFF OR EWX_FORCE, 0);
+  end;
+{$ENDIF}
 end;
 
 begin

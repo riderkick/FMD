@@ -45,7 +45,17 @@ begin
 end;
 
 procedure TLog.ShowLog;
+var
+  l: TStringList;
 begin
+  if FileExists(WORK_FOLDER + 'note.txt') then
+  begin
+    l:= TStringList.Create;
+    l.LoadFromFile(WORK_FOLDER + 'note.txt');
+    MessageDlg('', l.Text, mtInformation, [mbYes], 0);
+    DeleteFile(WORK_FOLDER + 'note.txt');
+    l.Free;
+  end;
   mmLog.Lines.Create;
   mmLog.Lines.LoadFromFile(WORK_FOLDER + LOG_FILE);
   Visible:= TRUE;

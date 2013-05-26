@@ -3579,7 +3579,7 @@ begin
   DataProcess.genres.Add (l.Strings[DATA_PARAM_GENRES]);
   DataProcess.status.Add (l.Strings[DATA_PARAM_STATUS]);
   DataProcess.summary.Add(l.Strings[DATA_PARAM_SUMMARY]);
-  DataProcess.jdn.Add    (Pointer(StrToInt(l.Strings[DATA_PARAM_JDN])-100));
+  DataProcess.jdn.Add    (Pointer(StrToInt(l.Strings[DATA_PARAM_JDN])));
   l.Free;
 end;
 
