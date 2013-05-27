@@ -420,7 +420,7 @@ var
     parse.Clear;
     l.Clear;
     Result:= GetPage(TObject(l),
-                     BATOTO_ROOT + URL, // + '/1',
+                     BATOTO_ROOT + URL + '/1',
                      manager.container.manager.retryConnect);
 
     Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
