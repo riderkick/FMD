@@ -18,8 +18,11 @@ type
   // some tasks will be done by SubThread
   TSubThread = class(TThread)
   protected
+    FURL: String;
     procedure   Execute; override;
     procedure   DoGetInfos;
+    // for Batoto only - since it use IE, this must be called in main thread
+    procedure   CallMainFormGetBatotoInfo;
     procedure   CallMainFormCannotGetInfo;
     procedure   CallMainFormShowLog;
     procedure   CallMainFormGetInfos;
@@ -83,6 +86,11 @@ begin
   inherited Destroy;
 end;
 
+procedure   TSubThread.CallMainFormGetBatotoInfo;
+begin
+  Info.GetInfoFromURL(website, FURL, 0);
+end;
+
 procedure   TSubThread.DoGetInfos;
 {var
   root: String;}
@@ -108,11 +116,29 @@ procedure   TSubThread.DoGetInfos;
       times:= 0
     else
       times:= 3;
+
+    {$IFDEF WINDOWS}
+    if ((website <> BATOTO_NAME) OR (NOT OptionBatotoUseIEChecked)) then
+    begin
+      if Info.GetInfoFromURL(website, URL, times)<>NO_ERROR then
+      begin
+        Info.Free;
+        exit;
+      end;
+    end
+    else
+    begin
+      FURL:= URL;
+      Synchronize(CallMainFormGetBatotoInfo);
+    end;
+    {$ELSE}
     if Info.GetInfoFromURL(website, URL, times)<>NO_ERROR then
     begin
       Info.Free;
       exit;
     end;
+    {$ENDIF}
+
     // fixed
     if mangaListPos <> -1 then
     begin

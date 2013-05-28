@@ -10,6 +10,15 @@ object Log: TLog
   OnCreate = FormCreate
   Position = poDesktopCenter
   LCLVersion = '1.1'
+  object pnIE: TPanel
+    Left = 66
+    Height = 50
+    Top = 39
+    Width = 170
+    Caption = 'pnIE'
+    TabOrder = 0
+    Visible = False
+  end
   object mmLog: TMemo
     Left = 0
     Height = 365
@@ -24,6 +33,6 @@ object Log: TLog
     ParentFont = False
     ReadOnly = True
     ScrollBars = ssVertical
-    TabOrder = 0
+    TabOrder = 1
   end
 end

@@ -37,19 +37,25 @@
         <FormatVersion Value="1"/>
       </local>
     </RunParams>
-    <RequiredPackages Count="4">
+    <RequiredPackages Count="6">
       <Item1>
-        <PackageName Value="pack_powerpdf"/>
+        <PackageName Value="LazActiveX"/>
       </Item1>
       <Item2>
-        <PackageName Value="richmemopackage"/>
+        <PackageName Value="SHDocVwP"/>
       </Item2>
       <Item3>
-        <PackageName Value="virtualtreeview_package"/>
+        <PackageName Value="pack_powerpdf"/>
       </Item3>
       <Item4>
-        <PackageName Value="LCL"/>
+        <PackageName Value="richmemopackage"/>
       </Item4>
+      <Item5>
+        <PackageName Value="virtualtreeview_package"/>
+      </Item5>
+      <Item6>
+        <PackageName Value="LCL"/>
+      </Item6>
     </RequiredPackages>
     <Units Count="12">
       <Unit0>
@@ -131,7 +137,7 @@
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)"/>
-      <OtherUnitFiles Value="E:\FreeSpace\FMD\trunk\baseunits\;E:\sdks\lazcomp\synapse\source\;E:\sdks\lazcomp\indy9\source\"/>
+      <OtherUnitFiles Value="E:\FreeSpace\FMD\trunk\baseunits\;E:\sdks\lazcomp\synapse\source\"/>
       <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
     <CodeGeneration>
@@ -139,6 +145,7 @@
       <TargetOS Value="win32"/>
       <Optimizations>
         <VariablesInRegisters Value="True"/>
+        <OptimizationLevel Value="3"/>
       </Optimizations>
     </CodeGeneration>
     <Linking>

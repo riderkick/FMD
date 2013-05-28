@@ -67,7 +67,6 @@ object MainForm: TMainForm
       TreeOptions.PaintOptions = [toShowButtons, toShowDropmark, toShowRoot, toThemeAware, toUseBlendedImages]
       TreeOptions.SelectionOptions = [toFullRowSelect, toRightClickSelect]
       OnBeforeCellPaint = vtMangaListBeforeCellPaint
-      OnChange = vtMangaListChange
       OnDblClick = vtMangaListDblClick
       OnFreeNode = vtMangaListFreeNode
       OnGetText = vtMangaListGetText
@@ -1286,6 +1285,15 @@ object MainForm: TMainForm
             Caption = 'lbOptionLetFMDDo'
             ParentColor = False
           end
+          object cbOptionBatotoUseIE: TCheckBox
+            Left = 12
+            Height = 17
+            Top = 218
+            Width = 123
+            Caption = 'cbOptionBatotoUseIE'
+            ParentFont = False
+            TabOrder = 5
+          end
         end
         object tsConnections: TTabSheet
           Caption = 'Connections'
@@ -1591,6 +1599,15 @@ object MainForm: TMainForm
             Width = 88
             Caption = 'lbOptionDialogs'
             ParentColor = False
+          end
+          object cbOptionShowFavoriteDialog: TCheckBox
+            Left = 60
+            Height = 17
+            Top = 126
+            Width = 158
+            Caption = 'cbOptionShowFavoriteDialog'
+            ParentFont = False
+            TabOrder = 2
           end
         end
         object tsWebsites: TTabSheet

@@ -13,9 +13,10 @@ interface
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
   ExtCtrls, ComCtrls, Grids, ColorBox, ActnList, Buttons, CheckLst, Spin, Menus,
-  customdrawncontrols, VirtualTrees, RichMemo, IniFiles, Process,
+  customdrawncontrols, VirtualTrees, RichMemo, SHDocVw, IniFiles, Process,
   baseunit, data, types, downloads, favorites, LConvEncoding, LCLIntf,
-  updatelist, updatedb, lclproc, subthreads{, ActiveX}, AnimatedGif, MemBitmap;
+  updatelist, updatedb, lclproc, subthreads, AnimatedGif, MemBitmap
+  {$IFDEF WINDOWS}, ActiveX{$ENDIF};
 
 type
 
@@ -36,6 +37,7 @@ type
     btUpdateList: TBitBtn;
     btReadOnline: TButton;
     cbOptionAutoCheckUpdate: TCheckBox;
+    cbOptionBatotoUseIE: TCheckBox;
     cbOptionShowDeleteTaskDialog: TCheckBox;
     cbOptionUseProxy: TCheckBox;
     cbSelectManga: TComboBox;
@@ -81,6 +83,7 @@ type
     cbOptionGenerateChapterName: TCheckBox;
     cbOptionGenerateMangaFolderName: TCheckBox;
     cbOptionMinimizeToTray: TCheckBox;
+    cbOptionShowFavoriteDialog: TCheckBox;
     CheckBox5: TCheckBox;
     CheckBox6: TCheckBox;
     CheckBox7: TCheckBox;
@@ -279,7 +282,6 @@ type
     procedure vtMangaListBeforeCellPaint(Sender: TBaseVirtualTree;
       TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
       CellPaintMode: TVTCellPaintMode; CellRect: TRect; var ContentRect: TRect);
-    procedure vtMangaListChange(Sender: TBaseVirtualTree; Node: PVirtualNode);
 
     procedure vtMangaListFreeNode(Sender: TBaseVirtualTree; Node: PVirtualNode);
     procedure vtMangaListGetHint(Sender: TBaseVirtualTree; Node: PVirtualNode;
@@ -464,6 +466,7 @@ begin
   miHighLightNewManga.Checked         := options.ReadBool('general', 'HighLightNewManga', FALSE);
   cbOptionShowQuitDialog.Checked      := options.ReadBool('dialogs', 'ShowQuitDialog', TRUE);
   cbOptionShowDeleteTaskDialog.Checked:= options.ReadBool('dialogs', 'ShowDeleteDldTaskDialog', TRUE);
+  cbOptionShowFavoriteDialog.Checked  := options.ReadBool('dialogs', 'ShowFavoritesDialog', TRUE);
   currentJDN:= GetCurrentJDN;
 
   // read online
@@ -743,6 +746,7 @@ end;
 
 procedure TMainForm.btFavoritesCheckNewChapterClick(Sender: TObject);
 begin
+  favorites.isShowDialog:= cbOptionShowFavoriteDialog.Checked;
   favorites.Run;
 end;
 
@@ -958,9 +962,9 @@ begin
   if cbOptionGenerateMangaFolderName.Checked then
   begin
     if NOT cbOptionPathConvert.Checked then
-      s:= s + '/' + dataProcess.Param[dataProcess.filterPos.Items[pos], DATA_PARAM_NAME]
+      s:= s + '/' + RemoveSymbols(dataProcess.Param[dataProcess.filterPos.Items[pos], DATA_PARAM_NAME])
     else
-      s:= s + '/' + UnicodeRemove(dataProcess.Param[dataProcess.filterPos.Items[pos], DATA_PARAM_NAME]);
+      s:= s + '/' + RemoveSymbols(UnicodeRemove(dataProcess.Param[dataProcess.filterPos.Items[pos], DATA_PARAM_NAME]));
   end;
 
   favorites.Add(dataProcess.Param[dataProcess.filterPos.Items[pos], DATA_PARAM_NAME],
@@ -1307,6 +1311,8 @@ procedure TMainForm.pcMainChange(Sender: TObject);
     seOptionNewMangaTime.Value:= options.ReadInteger('general', 'NewMangaTime', 3);
     cbOptionLetFMDDo.ItemIndex:= options.ReadInteger('general', 'LetFMDDo', 0);
     cbOptionLetFMDDoItemIndex:= cbOptionLetFMDDo.ItemIndex;
+    cbOptionBatotoUseIE.Checked:= options.ReadBool('general', 'BatotoUseIE', TRUE);
+    OptionBatotoUseIEChecked:= cbOptionBatotoUseIE.Checked;
 
     seOptionMaxParallel.Value:= options.ReadInteger('connections', 'NumberOfTasks', 1);
     seOptionMaxThread.Value:= options.ReadInteger('connections', 'NumberOfThreadsPerTask', 1);
@@ -1322,6 +1328,7 @@ procedure TMainForm.pcMainChange(Sender: TObject);
 
     cbOptionShowQuitDialog.Checked      := options.ReadBool('dialogs', 'ShowQuitDialog', TRUE);
     cbOptionShowDeleteTaskDialog.Checked:= options.ReadBool('dialogs', 'ShowDeleteDldTaskDialog', TRUE);
+    cbOptionShowFavoriteDialog.Checked  := options.ReadBool('dialogs', 'ShowFavoritesDialog', TRUE);
 
     cbOptionPathConvert.Checked  := options.ReadBool   ('saveto', 'PathConv', FALSE);
     cbOptionGenerateChapterName.Checked:= options.ReadBool('saveto', 'GenChapName', FALSE);
@@ -1670,6 +1677,8 @@ begin
   options.WriteInteger('general', 'NewMangaTime', seOptionNewMangaTime.Value);
   options.WriteInteger('general', 'LetFMDDo', cbOptionLetFMDDo.ItemIndex);
   cbOptionLetFMDDoItemIndex:= cbOptionLetFMDDo.ItemIndex;
+  options.WriteBool   ('general', 'BatotoUseIE', cbOptionBatotoUseIE.Checked);
+  OptionBatotoUseIEChecked:= cbOptionBatotoUseIE.Checked;
 
   options.WriteInteger('connections', 'NumberOfTasks', seOptionMaxParallel.Value);
   options.WriteInteger('connections', 'NumberOfThreadsPerTask', seOptionMaxThread.Value);
@@ -1694,6 +1703,7 @@ begin
 
   options.WriteBool   ('dialogs', 'ShowQuitDialog', cbOptionShowQuitDialog.Checked);
   options.WriteBool   ('dialogs', 'ShowDeleteDldTaskDialog', cbOptionShowDeleteTaskDialog.Checked);
+  options.WriteBool   ('dialogs', 'ShowFavoritesDialog', cbOptionShowFavoriteDialog.Checked);
 
   options.UpdateFile;
 
@@ -1736,12 +1746,6 @@ begin
     finally
     end;
   end;
-end;
-
-procedure TMainForm.vtMangaListChange(Sender: TBaseVirtualTree;
-  Node: PVirtualNode);
-begin
-
 end;
 
 procedure TMainForm.vtMangaListFreeNode(Sender: TBaseVirtualTree;
@@ -1793,6 +1797,8 @@ procedure TMainForm.vtMangaListDblClick(Sender: TObject);
 begin
   cbAddToFavorites.Enabled:= TRUE;
   if (SubThread.isGetInfos) OR (NOT vtMangaList.Focused) then exit;
+
+  pcMain.TabIndex:= 1;
 
   imCover.Picture.Assign(nil);
   rmInformation.Clear;
@@ -1968,6 +1974,8 @@ begin
   batotoLastDirectoryPage:= mangalistIni.ReadInteger('general', 'batotoLastDirectoryPage', 244);
   cbOptionLetFMDDo.ItemIndex:= options.ReadInteger('general', 'LetFMDDo', 0);
   cbOptionLetFMDDoItemIndex := cbOptionLetFMDDo.ItemIndex;
+  cbOptionBatotoUseIE.Checked:= options.ReadBool('general', 'BatotoUseIE', TRUE);
+  OptionBatotoUseIEChecked   := cbOptionBatotoUseIE.Checked;
 
   cbAddAsStopped.Checked := options.ReadBool('general', 'AddAsStopped', FALSE);
   LoadLanguage(options.ReadInteger('languages', 'Select', 0));
@@ -2264,6 +2272,8 @@ begin
   cbOptionGenerateMangaFolderName.Caption:= language.ReadString(lang, 'cbOptionGenerateMangaFolderNameCaption', '');
   cbOptionShowQuitDialog.Caption      := language.ReadString(lang, 'cbOptionShowQuitDialogCaption', '');
   cbOptionShowDeleteTaskDialog.Caption:= language.ReadString(lang, 'cbOptionShowDeleteTaskDialogCaption', '');
+  cbOptionShowFavoriteDialog.Caption:= language.ReadString(lang, 'cbOptionShowFavoriteDialogCaption', '');
+  cbOptionBatotoUseIE.Caption:= language.ReadString(lang, 'cbOptionBatotoUseIECaption', '');
 
   stDownloadManga          := language.ReadString(lang, 'stDownloadManga', '');
   stDownloadStatus         := language.ReadString(lang, 'stDownloadStatus', '');

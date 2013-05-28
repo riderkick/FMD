@@ -99,7 +99,7 @@ var
 implementation
 
 uses
-  HTMLParser, FastHTMLParser, HTMLUtil, HTTPSend, SynaCode;
+  HTMLParser, FastHTMLParser, HTMLUtil, HTTPSend, SynaCode{$IFDEF WINDOWS}, IECore{$ENDIF};
 
 // ----- TDataProcess -----
 
@@ -2200,6 +2200,15 @@ var
   myParser: THTMLParser;
 label
   reload;
+
+  function IEUp(const s: String): String;
+  begin
+    if OptionBatotoUseIEChecked then
+      Result:= UpCase(s)
+    else
+      Result:= s;
+  end;
+
 begin
  // patchURL:= UTF8ToANSI(URL);
   patchURL:= URL;
@@ -2208,7 +2217,18 @@ begin
 
 reload:
   source.Clear;
-  {if NOT isGetByUpdater then
+  {$IFDEF WINDOWS}
+  if isGetByUpdater then
+  begin
+    if NOT GetPage(TObject(source), mangaInfo.url, Reconnect) then
+    begin
+      Result:= NET_PROBLEM;
+      source.Free;
+      exit;
+    end;
+  end
+  else
+  if NOT OptionBatotoUseIEChecked then
   begin
     if NOT bttGetPage(TObject(source), mangaInfo.url, Reconnect) then
     begin
@@ -2217,15 +2237,18 @@ reload:
       exit;
     end;
   end
-  else}
+  else
   begin
-    if NOT GetPage(TObject(source), mangaInfo.url, Reconnect) then
-    begin
-      Result:= NET_PROBLEM;
-      source.Free;
-      exit;
-    end;
+    IEGetPage(TObject(source), mangaInfo.url, Reconnect);
   end;
+  {$ELSE}
+  if NOT GetPage(TObject(source), mangaInfo.url, Reconnect) then
+  begin
+    Result:= NET_PROBLEM;
+    source.Free;
+    exit;
+  end;
+  {$ENDIF}
 
   // parsing the HTML source using our own HTML parser
   parse.Clear;
@@ -2235,6 +2258,7 @@ reload:
   Parser.SlowExec;
   Parser.Free;
 
+  {$IFDEF WINDOWS}
   if parse.Count > 0 then
   begin
     for i:= 0 to parse.Count-1 do
@@ -2253,6 +2277,7 @@ reload:
     if count < 16 then
       goto reload;
   end;
+  {$ENDIF}
 
   source.Free;
   mangaInfo.website:= BATOTO_NAME;
@@ -2261,21 +2286,35 @@ reload:
   for i:= 0 to parse.Count-1 do
   begin
     // get cover link
-    if GetTagName(parse.Strings[i]) = 'img' then
-      if Pos('width:300px', parse.Strings[i-1]) <> 0 then
+    if GetTagName(parse.Strings[i]) = IEUp('img') then
+    begin
+      if (NOT OptionBatotoUseIEChecked) AND (Pos('width:300px', parse.Strings[i-1]) <> 0) then
+        mangaInfo.coverLink:= CorrectURL(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src=')))
+      else
+      if (OptionBatotoUseIEChecked) AND (Pos('WIDTH: 300px', parse.Strings[i-1]) <> 0) then
         mangaInfo.coverLink:= CorrectURL(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src=')));
+    end;
 
     // get title
-    if (mangaInfo.title = '') AND
-       (GetTagName(parse.Strings[i]) = '"og:title"') then
-      mangaInfo.title:= StringFilter(GetString(parse.Strings[j], '"og:title" content="', ' - Scanlations'));
+    if NOT OptionBatotoUseIEChecked then
+    begin
+      if (mangaInfo.title = '') AND
+         (GetTagName(parse.Strings[i]) = '"og:title"') then
+        mangaInfo.title:= StringFilter(GetString(parse.Strings[i], '"og:title" content="', ' - Scanlations'));
+    end
+    else
+    begin
+      if (mangaInfo.title = '') AND
+         (GetTagName(parse.Strings[i]) = '"og:title"') then
+        mangaInfo.title:= StringFilter(GetString(parse.Strings[i], 'META content="', ' - Scanlations'));
+    end;
 
     // get summary
     if (Pos('Description:', parse.Strings[i]) <> 0) then
     begin
       j:= i+3;
       mangaInfo.summary:= '';
-      while (Pos('</tr>', parse.Strings[j])=0) AND (j < parse.Count-1) do
+      while (Pos(IEUp('</tr>'), parse.Strings[j])=0) AND (j < parse.Count-1) do
       begin
         s:= parse.Strings[j];
         if s[1] <> '<' then
@@ -2289,11 +2328,26 @@ reload:
       end;
     end;
 
-      // get chapter name and links
-    if (GetTagName(parse.Strings[i]) = 'a') AND
+      // get chapter name and links (bad code)
+    if (NOT OptionBatotoUseIEChecked) AND
+       (GetTagName(parse.Strings[i]) = IEUp('a')) AND
        (Pos('/read/_/', parse.Strings[i])<>0) AND
        (i+8 < parse.Count-1) AND
        (Pos('English', parse.Strings[i+8])>0) then
+    begin
+      Inc(mangaInfo.numChapter);
+      mangaInfo.chapterLinks.Add((StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href=')), BATOTO_ROOT, '', [rfReplaceAll])));
+      parse.Strings[i+2]:= StringReplace(parse.Strings[i+2], #10, '', [rfReplaceAll]);
+      parse.Strings[i+2]:= StringReplace(parse.Strings[i+2], #13, '', [rfReplaceAll]);
+      parse.Strings[i+2]:= StringFilter(TrimLeft(parse.Strings[i+2]));
+      mangaInfo.chapterName.Add(TrimRight(RemoveSymbols(parse.Strings[i+2])));
+    end
+    else
+    if (OptionBatotoUseIEChecked) AND
+       (GetTagName(parse.Strings[i]) = IEUp('a')) AND
+       (Pos('/read/_/', parse.Strings[i])<>0) AND
+       (i+2 < parse.Count-1) AND
+       (Pos('English', parse.Strings[i-3])>0) then
     begin
       Inc(mangaInfo.numChapter);
       mangaInfo.chapterLinks.Add((StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href=')), BATOTO_ROOT, '', [rfReplaceAll])));
@@ -2327,7 +2381,7 @@ reload:
         for j:= 0 to 38 do
           if Pos(LowerCase(Genre[j]), LowerCase(parse.Strings[i]))<>0 then
             mangaInfo.genres:= mangaInfo.genres+(Genre[j]+', ');
-      if Pos('</tr>', parse.Strings[i]) <> 0 then
+      if Pos(IEUp('</tr>'), parse.Strings[i]) <> 0 then
         isExtractGenres:= FALSE;
     end;
 

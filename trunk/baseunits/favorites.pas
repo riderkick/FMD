@@ -17,8 +17,10 @@ type
   TFavoriteManager = class;
   TFavoriteThread = class(TThread)
   protected
+    FWebsite, FURL: String;
     procedure UpdateName;
     procedure EndPass0;
+    procedure CallMainFormGetBatotoInfo;
     procedure Execute; override;
   public
     currentManga  : String;
@@ -49,6 +51,7 @@ type
   public
     // store manga name that has new chapter after checking
     newMangaStr    : String;
+    isShowDialog,
     isRunning      : Boolean;
     Count          : Cardinal;
     favorites      : TIniFile;
@@ -88,6 +91,7 @@ begin
   pass0:= FALSE;
   FreeOnTerminate:= TRUE;
   getInfo := TMangaInformation.Create;
+  getInfo.isGetByUpdater:= FALSE;
   isSuspended:= TRUE;
   inherited Create(FALSE);
 end;
@@ -102,6 +106,11 @@ end;
 procedure   TFavoriteThread.UpdateName;
 begin
   MainForm.btFavoritesCheckNewChapter.Caption:= stFavoritesChecking + ' '+currentManga;
+end;
+
+procedure   TFavoriteThread.CallMainFormGetBatotoInfo;
+begin
+  getInfo.GetInfoFromURL(FWebsite, FURL, 5);
 end;
 
 procedure   TFavoriteThread.EndPass0;
@@ -120,9 +129,18 @@ begin
   begin
     currentManga:= manager.favoriteInfo[workPtr].title + ' <' + manager.favoriteInfo[workPtr].website + '>';
     Synchronize(UpdateName);
-    if getInfo.GetInfoFromURL(manager.favoriteInfo[workPtr].website,
-                              manager.favoriteInfo[workPtr].link, 5) = NET_PROBLEM then
-      break;
+    if manager.favoriteInfo[workPtr].website <> BATOTO_NAME then
+    begin
+      if getInfo.GetInfoFromURL(manager.favoriteInfo[workPtr].website,
+                                manager.favoriteInfo[workPtr].link, 5) = NET_PROBLEM then
+        break;
+    end
+    else
+    begin
+      FWebsite:= manager.favoriteInfo[workPtr].website;
+      FURL    := manager.favoriteInfo[workPtr].link;
+      Synchronize(CallMainFormGetBatotoInfo);
+    end;
     manager.mangaInfo[workPtr].chapterName := TStringList.Create;
     manager.mangaInfo[workPtr].chapterLinks:= TStringList.Create;
     TransferMangaInfo(manager.mangaInfo[workPtr], getInfo.mangaInfo);
@@ -254,16 +272,21 @@ begin
       if newChapter > currentChapter then
         newMangaStr:= newMangaStr + #10#13+ ' - '+favoriteInfo[i].title + ' <'+ favoriteInfo[i].Website +'> ' + favoriteInfo[i].currentChapter+' -> '+IntToStr(newChapter);
     end;
-    if MessageDlg('',
-                 Format(stDlgHasNewChapter + #10#13 + newMangaStr + '%s', [newC, removeListStr]),
-                 mtInformation, [mbYes, mbNo], 0) = mrYes then
+    if isShowDialog then
     begin
-      isNow:= TRUE;
-      if MainForm.pcMain.PageIndex = 3 then
-        MainForm.pcMain.PageIndex:= 0;
+      if MessageDlg('',
+                   Format(stDlgHasNewChapter + #10#13 + newMangaStr + '%s', [newC, removeListStr]),
+                   mtInformation, [mbYes, mbNo], 0) = mrYes then
+      begin
+        isNow:= TRUE;
+        if MainForm.pcMain.PageIndex = 3 then
+          MainForm.pcMain.PageIndex:= 0;
+      end
+      else
+        isNow:= FALSE;
     end
     else
-      isNow:= FALSE;
+      isNow:= TRUE;
     for i:= 0 to Count-1 do
     begin
       currentChapter:= StrToInt(favoriteInfo[i].currentChapter);

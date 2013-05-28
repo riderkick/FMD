@@ -235,6 +235,8 @@ var
   stDlgUpdaterWantToUpdateDB,
   stDlgUpdaterCannotConnectToServer: String;
 
+  OptionBatotoUseIEChecked: Boolean = TRUE;
+
 type
   PMangaListItem = ^TMangaListItem;
   TMangaListItem = record
@@ -472,6 +474,7 @@ begin
       Result[I]:= '/';
   if Result[Length(Result)]<>'/' then
     Result:= Result + '/';
+ // Result:= StringReplace(Result, '\', '/', [rfReplaceAll]);
   while system.Pos('//', Result) > 0 do
     Result:= StringReplace(Result, '//', '/', []);
 end;

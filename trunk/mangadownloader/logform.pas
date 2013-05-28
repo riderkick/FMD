@@ -11,7 +11,8 @@ unit logform;
 interface
 
 uses
-  Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls;
+  Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
+  ExtCtrls;
 
 type
 
@@ -19,6 +20,7 @@ type
 
   TLog = class(TForm)
     mmLog: TMemo;
+    pnIE: TPanel;
     procedure FormCreate(Sender: TObject);
   private
     { private declarations }
