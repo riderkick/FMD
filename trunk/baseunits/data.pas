@@ -2239,7 +2239,12 @@ reload:
   end
   else
   begin
-    IEGetPage(TObject(source), mangaInfo.url, Reconnect);
+    if NOT IEGetPage(TObject(source), mangaInfo.url, Reconnect) then
+    begin
+      Result:= NET_PROBLEM;
+      source.Free;
+      exit;
+    end;
   end;
   {$ELSE}
   if NOT GetPage(TObject(source), mangaInfo.url, Reconnect) then

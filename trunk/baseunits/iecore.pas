@@ -11,7 +11,7 @@ unit iecore;
 interface
 
 uses
-  Classes, SysUtils, MSHTML_4_0_TLB, SHDocVw, Variants, ActiveX, Forms;
+  Classes, SysUtils, MSHTML_4_0_TLB, SHDocVw, Variants, ActiveX, activexcontainer, Forms;
 
 const
   GET_FEATURE_FROM_THREAD = $00000001;
@@ -90,18 +90,42 @@ uses
 // reconnect is not working yet
 function  IEGetPage(var output: TObject; URL: String; const Reconnect: Cardinal): Boolean;
 var
-  Core: TIECore;
-  rnd : Cardinal;
-  rndS: String;
+  Core    : TIECore;
+  rnd     : Cardinal;
+  rndS    : String;
+  retry   : Cardinal = 0;
+  baseTime: Cardinal;
 begin
   Core:= TIECore.Create(LogForm.Log.pnIE);
 
   CoInternetSetFeatureEnabled(FEATURE_DISABLE_NAVIGATION_SOUNDS, SET_FEATURE_ON_PROCESS, TRUE);
 
+  baseTime:= fmdGetTickCount;
   Core.Load(URL);
  // while NOT Core.isLoadComplete do
   while (Core.Browser.ReadyState <>  READYSTATE_COMPLETE) do
+  begin
+    Sleep(16);
     Application.ProcessMessages;
+    if baseTime-fmdGetTickCount > 30000 then
+    begin
+      if retry = 0 then
+      begin
+        Inc(retry);
+        Core.Browser.Stop;
+        baseTime:= fmdGetTickCount;
+        Core.Load(URL);
+      end
+      else
+      begin
+        Core.Browser.Stop;
+        Core.Free;
+        CoInternetSetFeatureEnabled(FEATURE_DISABLE_NAVIGATION_SOUNDS, SET_FEATURE_ON_PROCESS, FALSE);
+        Result:= FALSE;
+        exit;
+      end;
+    end;
+  end;
   if output is TStringList then
   begin
     rnd:= Random(4000000);
@@ -114,6 +138,7 @@ begin
   end;
   Core.Free;
   CoInternetSetFeatureEnabled(FEATURE_DISABLE_NAVIGATION_SOUNDS, SET_FEATURE_ON_PROCESS, FALSE);
+  Result:= TRUE;
 end;
 
 procedure   TIECore.OnDocumentComplete(Sender: TObject; pDisp: IDispatch; var URL: OleVariant);
