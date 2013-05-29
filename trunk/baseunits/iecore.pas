@@ -90,6 +90,7 @@ uses
 // reconnect is not working yet
 function  IEGetPage(var output: TObject; URL: String; const Reconnect: Cardinal): Boolean;
 var
+  Saved8087CW: Word;
   Core    : TIECore;
   rnd     : Cardinal;
   rndS    : String;
@@ -101,15 +102,21 @@ begin
   CoInternetSetFeatureEnabled(FEATURE_DISABLE_NAVIGATION_SOUNDS, SET_FEATURE_ON_PROCESS, TRUE);
 
   baseTime:= fmdGetTickCount;
+
+  Saved8087CW:= Get8087CW;
+
+  Set8087CW($133F);
   Core.Load(URL);
+
  // while NOT Core.isLoadComplete do
-  while (Core.Browser.ReadyState <>  READYSTATE_COMPLETE) do
+  while (Core.Browser.ReadyState <> READYSTATE_COMPLETE) do
   begin
     Sleep(16);
     Application.ProcessMessages;
-    if baseTime-fmdGetTickCount > 30000 then
+    if fmdGetTickCount-baseTime > 30000 then
     begin
-      if retry = 0 then
+      break;
+      {if retry = 0 then
       begin
         Inc(retry);
         Core.Browser.Stop;
@@ -123,9 +130,11 @@ begin
         CoInternetSetFeatureEnabled(FEATURE_DISABLE_NAVIGATION_SOUNDS, SET_FEATURE_ON_PROCESS, FALSE);
         Result:= FALSE;
         exit;
-      end;
+      end;}
     end;
   end;
+  Core.Browser.Stop;
+  Set8087CW(Saved8087CW);
   if output is TStringList then
   begin
     rnd:= Random(4000000);

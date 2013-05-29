@@ -1,3 +1,9 @@
+{
+        File: updatedb.pas
+        License: GPLv2
+        This unit is part of Free Manga Downloader
+}
+
 unit updatedb;
 
 {$mode delphi}
@@ -16,7 +22,7 @@ type
     procedure   CallMainFormRefreshList;
     procedure   Execute; override;
   public
-    websiteName    : String;
+    websiteName  : String;
     isTerminated,
     isSuspended  : Boolean;
     constructor Create;

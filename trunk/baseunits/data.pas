@@ -1725,7 +1725,7 @@ begin
     begin
       Inc(mangaInfo.numChapter);
       mangaInfo.chapterLinks.Add(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href')));
-      mangaInfo.chapterName.Add(TrimRight(RemoveSymbols(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'title'))+' '+parse.Strings[i+3])));
+      mangaInfo.chapterName.Add(StringFilter(TrimRight(RemoveSymbols(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'title'))+' '+parse.Strings[i+3]))));
     end;
   end;
 
@@ -1795,7 +1795,7 @@ begin
       parse.Strings[i+1]:= StringReplace(parse.Strings[i+1], #13, '', [rfReplaceAll]);
       parse.Strings[i+1]:= TrimLeft(parse.Strings[i+1]);
       parse.Strings[i+1]:= TrimRight(parse.Strings[i+1]);
-      mangaInfo.chapterName.Add(TrimRight(RemoveSymbols(parse.Strings[i+1])));
+      mangaInfo.chapterName.Add(StringFilter(TrimRight(RemoveSymbols(parse.Strings[i+1]))));
     end;
 
     // get authors
@@ -1911,7 +1911,7 @@ begin
         parse.Strings[i+2]:= TrimRight(parse.Strings[i+2]);
         parse.Strings[i+4]:= TrimLeft(parse.Strings[i+4]);
         parse.Strings[i+4]:= TrimRight(parse.Strings[i+4]);
-        mangaInfo.chapterName.Add(RemoveSymbols(parse.Strings[i+2] + parse.Strings[i+4]));
+        mangaInfo.chapterName.Add(StringFilter(RemoveSymbols(parse.Strings[i+2] + parse.Strings[i+4])));
       end;
 
     // get authors
@@ -2010,7 +2010,7 @@ begin
       parse.Strings[i+1]:= StringReplace(parse.Strings[i+1], #13, '', [rfReplaceAll]);
       parse.Strings[i+1]:= TrimLeft(parse.Strings[i+1]);
      // parse.Strings[i+1]:= TrimRight(parse.Strings[i+1]);
-      mangaInfo.chapterName.Add(TrimRight(RemoveSymbols(parse.Strings[i+1])));
+      mangaInfo.chapterName.Add(StringFilter(TrimRight(RemoveSymbols(parse.Strings[i+1]))));
     end;
 
     // get authors
@@ -2135,7 +2135,7 @@ begin
       parse.Strings[i+1]:= StringReplace(parse.Strings[i+1], #13, '', [rfReplaceAll]);
       parse.Strings[i+1]:= TrimLeft(parse.Strings[i+1]);
       parse.Strings[i+1]:= TrimRight(parse.Strings[i+1]);
-      mangaInfo.chapterName.Add(TrimRight(RemoveSymbols(parse.Strings[i+1])));
+      mangaInfo.chapterName.Add(StringFilter(TrimRight(RemoveSymbols(parse.Strings[i+1]))));
     end;
 
     // get authors
@@ -2345,7 +2345,7 @@ reload:
       parse.Strings[i+2]:= StringReplace(parse.Strings[i+2], #10, '', [rfReplaceAll]);
       parse.Strings[i+2]:= StringReplace(parse.Strings[i+2], #13, '', [rfReplaceAll]);
       parse.Strings[i+2]:= StringFilter(TrimLeft(parse.Strings[i+2]));
-      mangaInfo.chapterName.Add(TrimRight(RemoveSymbols(parse.Strings[i+2])));
+      mangaInfo.chapterName.Add(StringFilter(TrimRight(RemoveSymbols(parse.Strings[i+2]))));
     end
     else
     if (OptionBatotoUseIEChecked) AND
@@ -2471,7 +2471,7 @@ begin
           parse.Strings[j]:= StringFilter(HTMLEntitiesFilter(parse.Strings[j]));
           parse.Strings[j]:= StringReplace(parse.Strings[j], #10, '\n', [rfReplaceAll]);
           parse.Strings[j]:= StringReplace(parse.Strings[j], #13, '\r', [rfReplaceAll]);
-          mangaInfo.summary:= mangaInfo.summary + TrimRight(TrimLeft(parse.Strings[j]));
+          mangaInfo.summary:= mangaInfo.summary + StringFilter(TrimRight(TrimLeft(parse.Strings[j])));
         end;
         Inc(j);
       end;
@@ -2496,7 +2496,7 @@ begin
       parse.Strings[i+2]:= StringReplace(parse.Strings[i+2], #10, '', [rfReplaceAll]);
       parse.Strings[i+2]:= StringReplace(parse.Strings[i+2], #13, '', [rfReplaceAll]);
       parse.Strings[i+2]:= TrimLeft(parse.Strings[i+2]);
-      mangaInfo.chapterName.Add(TrimRight(RemoveSymbols(parse.Strings[i+2])));
+      mangaInfo.chapterName.Add(StringFilter(TrimRight(RemoveSymbols(parse.Strings[i+2]))));
     end;
 
     // get title
@@ -2608,7 +2608,7 @@ begin
       Inc(mangaInfo.numChapter);
       mangaInfo.chapterLinks.Add(EncodeUrl(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href='))));
       parse.Strings[i+1]:= RemoveSymbols(TrimLeft(TrimRight(parse.Strings[i+1])));
-      mangaInfo.chapterName.Add(HTMLEntitiesFilter(parse.Strings[i+1]));
+      mangaInfo.chapterName.Add(StringFilter(HTMLEntitiesFilter(parse.Strings[i+1])));
     end;
 
     // get authors
@@ -2723,7 +2723,7 @@ begin
         parse.Strings[i+1]:= TrimLeft(parse.Strings[i+1]);
         parse.Strings[i+1]:= TrimRight(parse.Strings[i+1]);
         s:= RemoveSymbols(parse.Strings[i+1]);
-        mangaInfo.chapterName.Add(TrimRight(RemoveSymbols(parse.Strings[i+1])));
+        mangaInfo.chapterName.Add(StringFilter(TrimRight(RemoveSymbols(parse.Strings[i+1]))));
       end
       else
       if (GetTagName(parse.Strings[i]) = 'div') AND
@@ -3116,7 +3116,7 @@ begin
       Inc(mangaInfo.numChapter);
       mangaInfo.chapterLinks.Add(EncodeUrl(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href='))));
       parse.Strings[i+1]:= RemoveSymbols(TrimLeft(TrimRight(parse.Strings[i+1]))) + RemoveSymbols(TrimLeft(TrimRight(parse.Strings[i+3])));
-      mangaInfo.chapterName.Add(HTMLEntitiesFilter(parse.Strings[i+1]));
+      mangaInfo.chapterName.Add(StringFilter(HTMLEntitiesFilter(parse.Strings[i+1])));
     end;
 
     // get authors
@@ -3248,7 +3248,7 @@ begin
       Delete(s, Length(s), 1);
       mangaInfo.chapterLinks.Add(s);
       s:= RemoveSymbols(TrimLeft(TrimRight(parse.Strings[i+3]))) + RemoveSymbols(TrimLeft(TrimRight(parse.Strings[i+6])));
-      mangaInfo.chapterName.Add(StringFilter(HTMLEntitiesFilter(s)));
+      mangaInfo.chapterName.Add(StringFilter(StringFilter(HTMLEntitiesFilter(s))));
     end;
 
     // get authors
@@ -3413,7 +3413,7 @@ begin
       s:= GetString(parse.Strings[i], 'href="', '/1.html"');
       mangaInfo.chapterLinks.Add(s);
       s:= RemoveSymbols(TrimLeft(TrimRight(parse.Strings[i+1])));
-      mangaInfo.chapterName.Add(StringFilter(HTMLEntitiesFilter(s)));
+      mangaInfo.chapterName.Add(StringFilter(StringFilter(HTMLEntitiesFilter(s))));
     end;
 
     // get authors

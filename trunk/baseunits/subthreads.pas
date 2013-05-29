@@ -18,7 +18,8 @@ type
   // some tasks will be done by SubThread
   TSubThread = class(TThread)
   protected
-    FURL: String;
+    FIsLoaded: Integer;
+    FURL     : String;
     procedure   Execute; override;
     procedure   DoGetInfos;
     // for Batoto only - since it use IE, this must be called in main thread
@@ -88,7 +89,7 @@ end;
 
 procedure   TSubThread.CallMainFormGetBatotoInfo;
 begin
-  Info.GetInfoFromURL(website, FURL, 0);
+  FIsLoaded:= Info.GetInfoFromURL(website, FURL, 0);
 end;
 
 procedure   TSubThread.DoGetInfos;
@@ -130,6 +131,11 @@ procedure   TSubThread.DoGetInfos;
     begin
       FURL:= URL;
       Synchronize(CallMainFormGetBatotoInfo);
+      if FIsLoaded<>NO_ERROR then
+      begin
+        Info.Free;
+        exit;
+      end;
     end;
     {$ELSE}
     if Info.GetInfoFromURL(website, URL, times)<>NO_ERROR then
