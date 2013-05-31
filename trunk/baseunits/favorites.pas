@@ -129,7 +129,8 @@ begin
   begin
     currentManga:= manager.favoriteInfo[workPtr].title + ' <' + manager.favoriteInfo[workPtr].website + '>';
     Synchronize(UpdateName);
-    if manager.favoriteInfo[workPtr].website <> BATOTO_NAME then
+    if (manager.favoriteInfo[workPtr].website <> BATOTO_NAME) OR
+       (NOT OptionBatotoUseIEChecked) then
     begin
       if getInfo.GetInfoFromURL(manager.favoriteInfo[workPtr].website,
                                 manager.favoriteInfo[workPtr].link, 5) = NET_PROBLEM then

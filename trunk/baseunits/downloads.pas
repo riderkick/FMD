@@ -613,6 +613,43 @@ var
     l.Free;
   end;
 
+  function GetMangaTradersPageNumber: Boolean;
+  var
+    isStartGetPageNumber: Boolean = FALSE;
+    s   : String;
+    i, j: Cardinal;
+    l   : TStringList;
+  begin
+    l:= TStringList.Create;
+    parse:= TStringList.Create;
+    Result:= GetPage(TObject(l),
+                     MANGATRADERS_ROOT + URL,
+                     manager.container.manager.retryConnect);
+    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.Exec;
+    Parser.Free;
+    if parse.Count>0 then
+    begin
+      manager.container.pageNumber:= 0;
+      for i:= 0 to parse.Count-1 do
+      begin
+        if (NOT isStartGetPageNumber) AND
+           (Pos('option value="1"  selected="selected"', parse.Strings[i]) > 0) then
+          isStartGetPageNumber:= TRUE;
+        if (isStartGetPageNumber) AND
+           (Pos('</option>', parse.Strings[i])>0) then
+          Inc(manager.container.pageNumber);
+        if (isStartGetPageNumber) AND
+           (Pos('</select>', parse.Strings[i])>0) then
+          break;
+      end;
+    end;
+    parse.Free;
+    l.Free;
+  end;
+
   function GetGEHentaiPageNumber(const lURL: String; const isGetLinkPage: Boolean): Boolean;
   var
     s   : String;
@@ -676,6 +713,9 @@ begin
   else
   if manager.container.mangaSiteID = MANGAREADER_ID then
     Result:= GetMangaReaderPageNumber
+  else
+  if manager.container.mangaSiteID = MANGATRADERS_ID then
+    Result:= GetMangaTradersPageNumber
   else
   if manager.container.mangaSiteID = GEHENTAI_ID then
   begin
@@ -1283,6 +1323,38 @@ var
     l.Free;
   end;
 
+  function GetMangaTradersLinkPage: Boolean;
+  var
+    s: String;
+    j,
+    i: Cardinal;
+    l: TStringList;
+  begin
+    l:= TStringList.Create;
+    s:= MANGATRADERS_ROOT + URL + '/page/' + IntToStr(workPtr+1);
+    Result:= GetPage(TObject(l),
+                     s,
+                     manager.container.manager.retryConnect);
+    parse:= TStringList.Create;
+    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.Exec;
+    Parser.Free;
+
+    if parse.Count>0 then
+    begin
+      for i:= 0 to parse.Count-1 do
+        if (Pos('"image_display"', parse.Strings[i])>0) then
+        begin
+          manager.container.pageLinks.Strings[workPtr]:= GetAttributeValue(GetTagAttribute(parse.Strings[i+4], 'src='));
+          break;
+        end;
+    end;
+    parse.Free;
+    l.Free;
+  end;
+
   function GetGEHentaiLinkPage: Boolean;
   var
     s1,s2,
@@ -1339,6 +1411,9 @@ begin
   if manager.container.pageLinks.Strings[workPtr] <> 'W' then exit;
   if manager.container.mangaSiteID = ANIMEA_ID then
     Result:= GetAnimeALinkPage
+  else
+  if manager.container.mangaSiteID = MANGATRADERS_ID then
+    Result:= GetMangaTradersLinkPage
   else
   if manager.container.mangaSiteID = MANGAHERE_ID then
     Result:= GetMangaHereLinkPage

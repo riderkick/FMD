@@ -782,22 +782,121 @@ end;
 
 procedure TMainForm.btURLClick(Sender: TObject);
 begin
-  cbAddToFavorites.Checked:= FALSE;
-  cbAddToFavorites.Enabled:= FALSE;
   if (SubThread.isGetInfos) then exit;
+
   if Pos('http://', edURL.Text) = 0 then
     edURL.Text:= 'http://' + edURL.Text;
-  if Pos(GEHENTAI_ROOT, edURL.Text) = 0 then
+
+  if Pos(GEHENTAI_ROOT, edURL.Text) <> 0 then
+  begin
+    cbAddToFavorites.Checked:= FALSE;
+    cbAddToFavorites.Enabled:= FALSE;
+  end;
+
+  if Pos(ANIMEA_ROOT, edURL.Text) > 0 then
+  begin
+    SubThread.link   := edURL.Text;
+    Delete(SubThread.link, 1, Length(ANIMEA_ROOT));
+    SubThread.website:= ANIMEA_NAME
+  end
+  else
+  if Pos(BATOTO_ROOT, edURL.Text) > 0 then
+  begin
+    SubThread.link   := edURL.Text;
+    Delete(SubThread.link, 1, Length(BATOTO_ROOT));
+    SubThread.website:= BATOTO_NAME
+  end
+  else
+  if Pos(MANGAFOX_ROOT, edURL.Text) > 0 then
+    SubThread.website:= MANGAFOX_NAME
+  else
+  if Pos(MANGAHERE_ROOT, edURL.Text) > 0 then
+  begin
+    SubThread.link   := edURL.Text;
+    Delete(SubThread.link, 1, Length(MANGAHERE_ROOT));
+    SubThread.website:= MANGAHERE_NAME
+  end
+  else
+  if Pos(MANGAINN_ROOT, edURL.Text) > 0 then
+  begin
+    SubThread.link   := edURL.Text;
+    Delete(SubThread.link, 1, Length(MANGAINN_ROOT));
+    SubThread.website:= MANGAINN_NAME
+  end
+  else
+  if Pos(MANGAPARK_ROOT, edURL.Text) > 0 then
+  begin
+    SubThread.link   := edURL.Text;
+    Delete(SubThread.link, 1, Length(MANGAPARK_ROOT));
+    SubThread.website:= MANGAPARK_NAME
+  end
+  else
+  if Pos(OURMANGA_ROOT, edURL.Text) > 0 then
+  begin
+    SubThread.link   := edURL.Text;
+    Delete(SubThread.link, 1, Length(OURMANGA_ROOT));
+    SubThread.website:= OURMANGA_NAME
+  end
+  else
+  if Pos(KISSMANGA_ROOT, edURL.Text) > 0 then
+  begin
+    SubThread.link   := edURL.Text;
+    Delete(SubThread.link, 1, Length(KISSMANGA_ROOT));
+    SubThread.website:= KISSMANGA_NAME
+  end
+  else
+  if Pos(MANGA24H_ROOT, edURL.Text) > 0 then
+  begin
+    SubThread.link   := edURL.Text;
+    Delete(SubThread.link, 1, Length(MANGA24H_ROOT));
+    SubThread.website:= MANGA24H_NAME
+  end
+  else
+  if Pos(FAKKU_ROOT, edURL.Text) > 0 then
+  begin
+    SubThread.link   := edURL.Text;
+    Delete(SubThread.link, 1, Length(FAKKU_ROOT));
+    SubThread.website:= FAKKU_NAME
+  end
+  else
+  if Pos(HENTAI2READ_ROOT, edURL.Text) > 0 then
+  begin
+    SubThread.link   := edURL.Text;
+    Delete(SubThread.link, 1, Length(HENTAI2READ_ROOT));
+    SubThread.website:= HENTAI2READ_NAME
+  end
+  else
+  if Pos(MANGATRADERS_ROOT, edURL.Text) > 0 then
+  begin
+    SubThread.link   := edURL.Text;
+    Delete(SubThread.link, 1, Length(MANGATRADERS_ROOT));
+    SubThread.website:= MANGATRADERS_NAME
+  end
+  else
+  if Pos(GEHENTAI_ROOT, edURL.Text) > 0 then
+    SubThread.website:= GEHENTAI_NAME
+  else
   begin
     MessageDlg('', stDlgURLNotSupport, mtInformation, [mbYes], 0);
     exit;
   end;
 
   if Pos(GEHENTAI_ROOT, edURL.Text) <> 0 then
-    SubThread.link:= edURL.Text + '?nw=session';
+    SubThread.link:= SubThread.link + '?nw=session'
+  else
+  if ((Pos(KISSMANGA_ROOT, edURL.Text) <> 0) OR
+     (Pos(VNSHARING_ROOT, edURL.Text) <> 0)) AND
+     (Pos('&confirm=yes', edURL.Text) <> 0) then
+    Delete(SubThread.link, Pos('&confirm=yes', SubThread.link), Length('&confirm=yes'))
+  else
+  if (Pos(ANIMEA_ROOT, edURL.Text) <> 0) AND
+     (Pos('?skip=1', edURL.Text) <> 0) then
+    Delete(SubThread.link, Pos('?skip=1', SubThread.link), Length('?skip=1'));
 
   SubThread.mangaListPos:= -1;
-  SubThread.website:= GEHENTAI_NAME;//cbSelectManga.Items[cbSelectManga.ItemIndex];
+  pcMain.TabIndex:= 1;
+
+  //cbSelectManga.Items[cbSelectManga.ItemIndex];
  // SubThread.link:= edURL.Text;
   SubThread.isGetInfos:= TRUE;
 
@@ -1311,7 +1410,7 @@ procedure TMainForm.pcMainChange(Sender: TObject);
     seOptionNewMangaTime.Value:= options.ReadInteger('general', 'NewMangaTime', 3);
     cbOptionLetFMDDo.ItemIndex:= options.ReadInteger('general', 'LetFMDDo', 0);
     cbOptionLetFMDDoItemIndex:= cbOptionLetFMDDo.ItemIndex;
-    cbOptionBatotoUseIE.Checked:= options.ReadBool('general', 'BatotoUseIE', TRUE);
+    cbOptionBatotoUseIE.Checked:= options.ReadBool('general', 'BatotoUseIE', FALSE);
     OptionBatotoUseIEChecked:= cbOptionBatotoUseIE.Checked;
 
     seOptionMaxParallel.Value:= options.ReadInteger('connections', 'NumberOfTasks', 1);
@@ -1974,7 +2073,7 @@ begin
   batotoLastDirectoryPage:= mangalistIni.ReadInteger('general', 'batotoLastDirectoryPage', 244);
   cbOptionLetFMDDo.ItemIndex:= options.ReadInteger('general', 'LetFMDDo', 0);
   cbOptionLetFMDDoItemIndex := cbOptionLetFMDDo.ItemIndex;
-  cbOptionBatotoUseIE.Checked:= options.ReadBool('general', 'BatotoUseIE', TRUE);
+  cbOptionBatotoUseIE.Checked:= options.ReadBool('general', 'BatotoUseIE', FALSE);
   OptionBatotoUseIEChecked   := cbOptionBatotoUseIE.Checked;
 
   cbAddAsStopped.Checked := options.ReadBool('general', 'AddAsStopped', FALSE);

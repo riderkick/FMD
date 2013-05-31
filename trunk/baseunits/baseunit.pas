@@ -235,7 +235,7 @@ var
   stDlgUpdaterWantToUpdateDB,
   stDlgUpdaterCannotConnectToServer: String;
 
-  OptionBatotoUseIEChecked: Boolean = TRUE;
+  OptionBatotoUseIEChecked: Boolean = FALSE;
 
 type
   PMangaListItem = ^TMangaListItem;
