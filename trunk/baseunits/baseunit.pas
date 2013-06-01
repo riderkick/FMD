@@ -741,6 +741,7 @@ function  StringFilter(const source: String): String;
 begin
   if Length(source) = 0 then exit;
   Result:= StringReplace(source, '&#33;', '!', [rfReplaceAll]);
+  Result:= StringReplace(source, '&amp;amp;quot;', '"', [rfReplaceAll]);
   Result:= StringReplace(Result, '&#36;', '$', [rfReplaceAll]);
   Result:= StringReplace(Result, '&#39;', '''', [rfReplaceAll]);
   Result:= StringReplace(Result, '&#033;', '!', [rfReplaceAll]);

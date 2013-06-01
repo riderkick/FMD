@@ -2376,6 +2376,7 @@ reload:
   Parser.OnFoundText:= OnText;
   Parser.SlowExec;
   Parser.Free;
+ // parse.SaveToFile('error2.txt');
 
   {$IFDEF WINDOWS}
   if parse.Count > 0 then
@@ -2418,14 +2419,14 @@ reload:
     if NOT OptionBatotoUseIEChecked then
     begin
       if (mangaInfo.title = '') AND
-         (GetTagName(parse.Strings[i]) = '"og:title"') then
+         (Pos('"og:title"', parse.Strings[i]) > 0) then
         mangaInfo.title:= StringFilter(GetString(parse.Strings[i], '"og:title" content="', ' - Scanlations'));
     end
     else
     begin
       if (mangaInfo.title = '') AND
-         (GetTagName(parse.Strings[i]) = '"og:title"') then
-        mangaInfo.title:= StringFilter(GetString(parse.Strings[i], 'META content="', ' - Scanlations'));
+         (Pos('<TITLE>', parse.Strings[i]) > 0) then
+        mangaInfo.title:= StringFilter(GetString('~!@' + parse.Strings[i+1], '~!@', ' - Scanlations'));
     end;
 
     // get summary

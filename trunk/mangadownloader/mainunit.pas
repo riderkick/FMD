@@ -1410,7 +1410,7 @@ procedure TMainForm.pcMainChange(Sender: TObject);
     seOptionNewMangaTime.Value:= options.ReadInteger('general', 'NewMangaTime', 3);
     cbOptionLetFMDDo.ItemIndex:= options.ReadInteger('general', 'LetFMDDo', 0);
     cbOptionLetFMDDoItemIndex:= cbOptionLetFMDDo.ItemIndex;
-    cbOptionBatotoUseIE.Checked:= options.ReadBool('general', 'BatotoUseIE', FALSE);
+    cbOptionBatotoUseIE.Checked:= options.ReadBool('general', 'BatotoUseIE', TRUE);
     OptionBatotoUseIEChecked:= cbOptionBatotoUseIE.Checked;
 
     seOptionMaxParallel.Value:= options.ReadInteger('connections', 'NumberOfTasks', 1);
@@ -2073,7 +2073,7 @@ begin
   batotoLastDirectoryPage:= mangalistIni.ReadInteger('general', 'batotoLastDirectoryPage', 244);
   cbOptionLetFMDDo.ItemIndex:= options.ReadInteger('general', 'LetFMDDo', 0);
   cbOptionLetFMDDoItemIndex := cbOptionLetFMDDo.ItemIndex;
-  cbOptionBatotoUseIE.Checked:= options.ReadBool('general', 'BatotoUseIE', FALSE);
+  cbOptionBatotoUseIE.Checked:= options.ReadBool('general', 'BatotoUseIE', TRUE);
   OptionBatotoUseIEChecked   := cbOptionBatotoUseIE.Checked;
 
   cbAddAsStopped.Checked := options.ReadBool('general', 'AddAsStopped', FALSE);
