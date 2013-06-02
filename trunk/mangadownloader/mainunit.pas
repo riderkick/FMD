@@ -852,6 +852,13 @@ begin
     SubThread.website:= MANGA24H_NAME
   end
   else
+  if Pos(VNSHARING_ROOT, edURL.Text) > 0 then
+  begin
+    SubThread.link   := edURL.Text;
+    Delete(SubThread.link, 1, Length(VNSHARING_ROOT));
+    SubThread.website:= VNSHARING_NAME
+  end
+  else
   if Pos(FAKKU_ROOT, edURL.Text) > 0 then
   begin
     SubThread.link   := edURL.Text;

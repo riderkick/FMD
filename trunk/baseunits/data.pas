@@ -2615,8 +2615,8 @@ begin
     end;
 
     // get title
-    if (Pos('"Truyen tranh ', parse.Strings[i])<>0) AND (mangaInfo.title = '') then
-      mangaInfo.authors:= TrimLeft(StringFilter(GetString(parse.Strings[i+1], '"Truyen tranh ', ',Doc truyen tranh')));
+    if (Pos('<title>', parse.Strings[i])<>0) AND (mangaInfo.title = '') then
+      mangaInfo.title:= TrimLeft(StringFilter(GetString('~!@'+parse.Strings[i+1], '~!@', ' - Truyen Tranh Online')));
 
     // get authors
     if (Pos('Tác giả :', parse.Strings[i])<>0) then
@@ -2967,8 +2967,8 @@ begin
   begin
     // get manga title
     if (mangaInfo.title = '') AND
-       (Pos('<a href="/manga" title="">', parse.Strings[i]) > 0) then
-      mangaInfo.title:= TrimLeft(TrimRight(parse.Strings[i+5]));
+       (Pos(' View Online Page 1', parse.Strings[i]) > 0) then
+      mangaInfo.title:= TrimLeft(TrimRight(GetString(parse.Strings[i], 'title="', ' View Online Page 1')));
 
     // get cover
     if GetTagName(parse.Strings[i]) = 'img' then
@@ -3332,7 +3332,7 @@ begin
     // get manga title
     if (mangaInfo.title = '') AND
        (Pos('<title>', parse.Strings[i]) > 0) then
-      mangaInfo.title:= TrimLeft(TrimRight(GetString(parse.Strings[i+1], ' Manga - Read ', ' Online For ')));
+      mangaInfo.title:= StringFilter(TrimLeft(TrimRight(GetString(parse.Strings[i+1], ' Manga - Read ', ' Online For '))));
 
     // get cover
     if (GetTagName(parse.Strings[i]) = 'meta') AND
