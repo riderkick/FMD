@@ -2677,7 +2677,7 @@ function    TDownloadManager.MoveDown(const taskID: Cardinal): Boolean;
 var
   tmp: TTaskThreadContainer;
 begin
-  if taskID > 0 then
+  if (taskID >= 0) AND (taskID < containers.Count-1) then
   begin
     tmp:= containers.Items[taskID];
     containers.Items[taskID]:= containers.Items[taskID+1];
@@ -2693,7 +2693,7 @@ function    TDownloadManager.MoveUp(const taskID: Cardinal): Boolean;
 var
   tmp: TTaskThreadContainer;
 begin
-  if taskID < containers.Count-1 then
+  if (taskID > 0) AND (taskID <= containers.Count-1) then
   begin
     tmp:= containers.Items[taskID];
     containers.Items[taskID]:= containers.Items[taskID-1];

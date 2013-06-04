@@ -260,7 +260,7 @@ begin
     end;
   end;
 
-  if newC = 0 then
+  if (isShowDialog) AND (newC = 0) then
     MessageDlg('', Format(stDlgNoNewChapter + '%s', [removeListStr]),
                mtInformation, [mbOk], 0)
   else

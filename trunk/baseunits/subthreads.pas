@@ -57,7 +57,7 @@ type
 implementation
 
 uses
-  mainunit, logform;
+  mainunit, logform, fileutil;
 
 var
   LRequireRevision: Cardinal = 1;
@@ -206,11 +206,12 @@ procedure   TSubThread.CallMainFormUpdate;
 var
   Process: TProcess;
 begin
-  if MessageDlg('', Format(stDlgNewVersion + #10#13 + fNote, [LVersion, LRevision]),
+  if MessageDlg('', Format(stDlgNewVersion + #10#13#10#13 + fNote, [LVersion, LRevision]),
                     mtInformation, [mbYes, mbNo], 0) = mrYes then
   begin
+    CopyFile(oldDir + 'updater.exe', oldDir + 'old_updater.exe');
     Process:= TProcess.Create(nil);
-    Process.CommandLine:= oldDir + 'updater.exe 1';
+    Process.CommandLine:= oldDir + 'old_updater.exe 1';
     Process.Execute;
     MainForm.CloseNow;
     Halt;
@@ -257,6 +258,8 @@ begin
   Sleep(2000);
   if FileExists(WORK_FOLDER + LOG_FILE) then
     Synchronize(CallMainFormShowLog);
+  if FileExists(oldDir + 'old_updater.exe') then
+    DeleteFile(oldDir + 'old_updater.exe');
   while NOT Terminated do
   begin
     if isCheckForLatestVer then
