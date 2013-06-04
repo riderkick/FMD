@@ -84,6 +84,7 @@ type
     cbOptionGenerateMangaFolderName: TCheckBox;
     cbOptionMinimizeToTray: TCheckBox;
     cbOptionShowFavoriteDialog: TCheckBox;
+    cbOptionAutoNumberChapter: TCheckBox;
     CheckBox5: TCheckBox;
     CheckBox6: TCheckBox;
     CheckBox7: TCheckBox;
@@ -107,6 +108,7 @@ type
     edSaveTo: TLabeledEdit;
     edSearch: TEdit;
     gbOptionProxy: TGroupBox;
+    gbOptionRenaming: TGroupBox;
     itAnimate: TIdleTimer;
     ImageList: TImageList;
     imCover: TImage;
@@ -645,7 +647,7 @@ end;
 
 procedure TMainForm.btDownloadClick(Sender: TObject);
 var
-  s: String;
+  s, s1: String;
   hh, mm, ss, ms,
   day, month, year: Word;
   i, pos  : Cardinal;
@@ -665,14 +667,28 @@ begin
       if (mangaInfo.website <> GEHENTAI_NAME) AND
          (mangaInfo.website <> FAKKU_NAME) then
       begin
-        s:= Format('%.4d', [i+1]);
-        if NOT cbOptionGenerateChapterName.Checked then
+        s:= '';
+        if cbOptionAutoNumberChapter.Checked then
+          s:= Format('%.4d', [i+1]);
+       { if NOT cbOptionGenerateChapterName.Checked then
         else
         begin
           if NOT cbOptionPathConvert.Checked then
-            s:= s + '- ' + mangaInfo.chapterName.Strings[i]
+            s:= s + ' - ' + mangaInfo.chapterName.Strings[i]
           else
-            s:= s + '- ' + UnicodeRemove(mangaInfo.chapterName.Strings[i]);
+            s:= s + ' - ' + UnicodeRemove(mangaInfo.chapterName.Strings[i]);
+        end; }
+        if cbOptionGenerateChapterName.Checked then
+        begin
+          if cbOptionPathConvert.Checked then
+            s1:= Format('%s', [UnicodeRemove(mangaInfo.chapterName.Strings[i])])
+          else
+            s1:= Format('%s', [mangaInfo.chapterName.Strings[i]]);
+
+          if s = '' then
+            s:= s1
+          else
+            s:= s + ' - ' + s1;
         end;
       end
       else
@@ -681,14 +697,10 @@ begin
           s:= RemoveSymbols(TrimLeft(TrimRight(mangaInfo.title)))
         else
           s:= UnicodeRemove(RemoveSymbols(TrimLeft(TrimRight(mangaInfo.title))));
-       { if Length(s)>64 then
-        begin
-        //  s:= UnicodeRemove(s);
-          SetLength(s, 64);
-          s:= TrimLeft(TrimRight(s));
-        end; }
       end;
 
+      if s='' then
+        s:= Format('%.4d', [i+1]);
       DLManager.containers.Items[pos].chapterName .Add(s);
       DLManager.containers.Items[pos].chapterLinks.Add(mangaInfo.chapterLinks.Strings[i]);
     end;
@@ -788,7 +800,9 @@ begin
   if Pos('http://', edURL.Text) = 0 then
     edURL.Text:= 'http://' + edURL.Text;
 
-  if Pos(GEHENTAI_ROOT, edURL.Text) <> 0 then
+  if (Pos(GEHENTAI_ROOT, edURL.Text) <> 0) OR
+     (Pos(FAKKU_ROOT, edURL.Text) <> 0) OR
+     (Pos(MANGATRADERS_ROOT, edURL.Text) <> 0) then
   begin
     cbAddToFavorites.Checked:= FALSE;
     cbAddToFavorites.Enabled:= FALSE;
@@ -1422,7 +1436,8 @@ procedure TMainForm.pcMainChange(Sender: TObject);
     cbOptionLetFMDDo.ItemIndex:= options.ReadInteger('general', 'LetFMDDo', 0);
     cbOptionLetFMDDoItemIndex:= cbOptionLetFMDDo.ItemIndex;
     cbOptionBatotoUseIE.Checked:= options.ReadBool('general', 'BatotoUseIE', TRUE);
-    OptionBatotoUseIEChecked:= cbOptionBatotoUseIE.Checked;
+    OptionBatotoUseIEChecked      := cbOptionBatotoUseIE.Checked;
+
 
     seOptionMaxParallel.Value:= options.ReadInteger('connections', 'NumberOfTasks', 1);
     seOptionMaxThread.Value:= options.ReadInteger('connections', 'NumberOfThreadsPerTask', 1);
@@ -1443,6 +1458,8 @@ procedure TMainForm.pcMainChange(Sender: TObject);
     cbOptionPathConvert.Checked  := options.ReadBool   ('saveto', 'PathConv', FALSE);
     cbOptionGenerateChapterName.Checked:= options.ReadBool('saveto', 'GenChapName', FALSE);
     cbOptionGenerateMangaFolderName.Checked:= options.ReadBool('saveto', 'GenMangaName', TRUE);
+    cbOptionAutoNumberChapter.Checked:= options.ReadBool('saveto', 'AutoNumberChapter', TRUE);
+    OptionAutoNumberChapterChecked:= cbOptionAutoNumberChapter.Checked;
 
     cbOptionAutoCheckUpdate.Checked:= options.ReadBool('update', 'AutoCheckUpdateAtStartup', TRUE);
 
@@ -1542,7 +1559,9 @@ end;
 
 procedure TMainForm.pmMangaListPopup(Sender: TObject);
 begin
-  if cbSelectManga.Items[cbSelectManga.ItemIndex] = MANGASTREAM_NAME then
+  if (cbSelectManga.Items[cbSelectManga.ItemIndex] = MANGASTREAM_NAME) OR
+     (cbSelectManga.Items[cbSelectManga.ItemIndex] = FAKKU_NAME){ OR
+     (cbSelectManga.Items[cbSelectManga.ItemIndex] = MANGATRADERS_NAME)} then
     pmMangaList.Items[0].Enabled:= FALSE
   else
     pmMangaList.Items[0].Enabled:= TRUE;
@@ -1812,6 +1831,8 @@ begin
   options.WriteBool   ('saveto', 'GenChapName', cbOptionGenerateChapterName.Checked);
   options.WriteBool   ('saveto', 'GenMangaName', cbOptionGenerateMangaFolderName.Checked);
   options.WriteInteger('saveto', 'Compress', rgOptionCompress.ItemIndex);
+  options.WriteBool   ('saveto', 'AutoNumberChapter', cbOptionAutoNumberChapter.Checked);
+  OptionAutoNumberChapterChecked:= cbOptionAutoNumberChapter.Checked;
 
   options.WriteBool   ('update', 'AutoCheckUpdateAtStartup', cbOptionAutoCheckUpdate.Checked);
 
@@ -1913,7 +1934,9 @@ end;
 
 procedure TMainForm.vtMangaListDblClick(Sender: TObject);
 begin
-  if cbSelectManga.Items[cbSelectManga.ItemIndex] = MANGASTREAM_NAME then
+  if (cbSelectManga.Items[cbSelectManga.ItemIndex] = MANGASTREAM_NAME) OR
+     (cbSelectManga.Items[cbSelectManga.ItemIndex] = FAKKU_NAME){ OR
+     (cbSelectManga.Items[cbSelectManga.ItemIndex] = MANGATRADERS_NAME)} then
   begin
     cbAddToFavorites.Checked:= FALSE;
     cbAddToFavorites.Enabled:= FALSE;
@@ -2098,8 +2121,12 @@ begin
   batotoLastDirectoryPage:= mangalistIni.ReadInteger('general', 'batotoLastDirectoryPage', 244);
   cbOptionLetFMDDo.ItemIndex:= options.ReadInteger('general', 'LetFMDDo', 0);
   cbOptionLetFMDDoItemIndex := cbOptionLetFMDDo.ItemIndex;
+
   cbOptionBatotoUseIE.Checked:= options.ReadBool('general', 'BatotoUseIE', TRUE);
-  OptionBatotoUseIEChecked   := cbOptionBatotoUseIE.Checked;
+  cbOptionAutoNumberChapter.Checked:= options.ReadBool('general', 'AutoNumberChapter', TRUE);
+
+  OptionBatotoUseIEChecked      := cbOptionBatotoUseIE.Checked;
+  OptionAutoNumberChapterChecked:= cbOptionAutoNumberChapter.Checked;
 
   cbAddAsStopped.Checked := options.ReadBool('general', 'AddAsStopped', FALSE);
   LoadLanguage(options.ReadInteger('languages', 'Select', 0));
@@ -2113,6 +2140,8 @@ begin
   cbOptionPathConvert.Checked  := options.ReadBool   ('saveto', 'PathConv', FALSE);
   cbOptionGenerateChapterName.Checked:= options.ReadBool('saveto', 'GenChapName', FALSE);
   cbOptionGenerateMangaFolderName.Checked:= options.ReadBool('saveto', 'GenMangaName', TRUE);
+  cbOptionAutoNumberChapter.Checked:= options.ReadBool('saveto', 'AutoNumberChapter', TRUE);
+
   cbOptionAutoCheckUpdate.Checked:= options.ReadBool('update', 'AutoCheckUpdateAtStartup', TRUE);
 end;
 
@@ -2341,6 +2370,7 @@ begin
   cbOptionUseProxy.Caption:= language.ReadString(lang, 'cbOptionUseProxyCaption', '');
   edOptionDefaultPath.EditLabel.Caption:= language.ReadString(lang, 'edOptionDefaultPathEditLabelCaption', '');
   rgOptionCompress.Caption:= language.ReadString(lang, 'rgOptionCompressCaption', '');         ;
+  gbOptionRenaming.Caption:= language.ReadString(lang, 'gbOptionRenamingCaption', '');         ;
 
   dlgSaveTo.Title         := language.ReadString(lang, 'dlgSaveToTitle', '');
 
@@ -2398,6 +2428,7 @@ begin
   cbOptionShowDeleteTaskDialog.Caption:= language.ReadString(lang, 'cbOptionShowDeleteTaskDialogCaption', '');
   cbOptionShowFavoriteDialog.Caption:= language.ReadString(lang, 'cbOptionShowFavoriteDialogCaption', '');
   cbOptionBatotoUseIE.Caption:= language.ReadString(lang, 'cbOptionBatotoUseIECaption', '');
+  cbOptionAutoNumberChapter.Caption:= language.ReadString(lang, 'cbOptionAutoNumberChapterCaption', '');
 
   stDownloadManga          := language.ReadString(lang, 'stDownloadManga', '');
   stDownloadStatus         := language.ReadString(lang, 'stDownloadStatus', '');

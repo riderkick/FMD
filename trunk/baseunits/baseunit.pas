@@ -239,7 +239,8 @@ var
   stDlgUpdaterWantToUpdateDB,
   stDlgUpdaterCannotConnectToServer: String;
 
-  OptionBatotoUseIEChecked: Boolean = FALSE;
+  OptionBatotoUseIEChecked: Boolean = TRUE;
+  OptionAutoNumberChapterChecked: Boolean = TRUE;
 
 type
   PMangaListItem = ^TMangaListItem;

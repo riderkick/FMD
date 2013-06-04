@@ -238,6 +238,7 @@ end;
 procedure   TFavoriteManager.ShowResult;
 var
   isHasNewChapter : Boolean = FALSE;
+  s, s1           : String;
   removeListStr   : String = '';
   day, month, year: Word;
   currentChapter,
@@ -302,16 +303,25 @@ begin
         for j:= currentChapter to newChapter-1 do
         begin
          // DLManager.containers.Items[pos].chapterName.Add(Format('%.4d - %s', [j+1, mangaInfo[i].chapterName.Strings[j]]));
-          if NOT MainForm.cbOptionGenerateChapterName.Checked then
-            DLManager.containers.Items[pos].chapterName .Add(Format('%.4d', [j+1]))
-          else
+          s:= '';
+          if MainForm.cbOptionAutoNumberChapter.Checked then
+            s:= Format('%.4d', [j+1]);
+          if MainForm.cbOptionGenerateChapterName.Checked then
           begin
-            if NOT MainForm.cbOptionPathConvert.Checked then
-              DLManager.containers.Items[pos].chapterName .Add(Format('%.4d - %s', [j+1, mangaInfo[i].chapterName.Strings[j]]))
+            if MainForm.cbOptionPathConvert.Checked then
+              s1:= Format('%s', [UnicodeRemove(mangaInfo[i].chapterName.Strings[j])])
             else
-              DLManager.containers.Items[pos].chapterName .Add(Format('%.4d - %s', [j+1, UnicodeRemove(mangaInfo[i].chapterName.Strings[j])]));
+              s1:= Format('%s', [mangaInfo[i].chapterName.Strings[j]]);
+
+            if s = '' then
+              s:= s1
+            else
+              s:= s + ' - ' + s1;
           end;
 
+          if s='' then
+            s:= Format('%.4d', [j+1]);
+          DLManager.containers.Items[pos].chapterName .Add(s);
           DLManager.containers.Items[pos].chapterLinks.Add(mangaInfo[i].chapterLinks.Strings[j]);
         end;
         if NOT isNow then
@@ -332,7 +342,7 @@ begin
         DecodeDate(Now, year, month, day);
         DLManager.containers.Items[pos].downloadInfo.dateTime:= IntToStr(Month)+'/'+IntToStr(Day)+'/'+IntToStr(Year);
 
-        // update favorites's current chapter, and free pointers
+        // bad coding - update favorites's current chapter, and free pointers
         favoriteInfo[i].currentChapter:= IntToStr(mangaInfo[i].numChapter);
         mangaInfo[i].chapterName .Free;
         mangaInfo[i].chapterLinks.Free;
@@ -343,6 +353,13 @@ begin
     DLManager.Backup;
     if (isHasNewChapter) AND (isNow) then
       DLManager.CheckAndActiveTask;
+  end;
+
+  // update favorites's current chapter, and free pointers
+  for i:= 0 to Count-1 do
+  begin
+    if mangaInfo[i].numChapter>0 then
+      favoriteInfo[i].currentChapter:= IntToStr(mangaInfo[i].numChapter);
   end;
 
   while threads.Count > 0 do

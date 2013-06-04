@@ -1206,7 +1206,7 @@ object MainForm: TMainForm
           ClientHeight = 294
           ClientWidth = 562
           object cbLanguages: TComboBox
-            Left = 12
+            Left = 20
             Height = 21
             Top = 34
             Width = 212
@@ -1219,7 +1219,7 @@ object MainForm: TMainForm
             TabOrder = 0
           end
           object lbOptionLanguage: TLabel
-            Left = 12
+            Left = 20
             Height = 13
             Top = 18
             Width = 102
@@ -1227,7 +1227,7 @@ object MainForm: TMainForm
             ParentColor = False
           end
           object seOptionNewMangaTime: TSpinEdit
-            Left = 12
+            Left = 20
             Height = 21
             Top = 138
             Width = 58
@@ -1238,7 +1238,7 @@ object MainForm: TMainForm
             Value = 1
           end
           object lbOptionNewMangaTime: TLabel
-            Left = 84
+            Left = 92
             Height = 13
             Top = 138
             Width = 115
@@ -1247,7 +1247,7 @@ object MainForm: TMainForm
             ParentFont = False
           end
           object cbOptionMinimizeToTray: TCheckBox
-            Left = 12
+            Left = 20
             Height = 17
             Top = 170
             Width = 136
@@ -1256,7 +1256,7 @@ object MainForm: TMainForm
             TabOrder = 2
           end
           object cbOptionAutoCheckUpdate: TCheckBox
-            Left = 12
+            Left = 20
             Height = 17
             Top = 194
             Width = 130
@@ -1265,7 +1265,7 @@ object MainForm: TMainForm
             TabOrder = 3
           end
           object cbOptionLetFMDDo: TComboBox
-            Left = 12
+            Left = 20
             Height = 21
             Top = 90
             Width = 212
@@ -1278,7 +1278,7 @@ object MainForm: TMainForm
             TabOrder = 4
           end
           object lbOptionLetFMDDo: TLabel
-            Left = 12
+            Left = 20
             Height = 13
             Top = 74
             Width = 104
@@ -1286,7 +1286,7 @@ object MainForm: TMainForm
             ParentColor = False
           end
           object cbOptionBatotoUseIE: TCheckBox
-            Left = 12
+            Left = 20
             Height = 17
             Top = 218
             Width = 123
@@ -1495,7 +1495,7 @@ object MainForm: TMainForm
           ClientHeight = 294
           ClientWidth = 562
           object edOptionDefaultPath: TLabeledEdit
-            Left = 28
+            Left = 20
             Height = 21
             Top = 42
             Width = 498
@@ -1504,7 +1504,7 @@ object MainForm: TMainForm
             EditLabel.AnchorSideRight.Control = edOptionDefaultPath
             EditLabel.AnchorSideRight.Side = asrBottom
             EditLabel.AnchorSideBottom.Control = edOptionDefaultPath
-            EditLabel.Left = 28
+            EditLabel.Left = 20
             EditLabel.Height = 13
             EditLabel.Top = 26
             EditLabel.Width = 498
@@ -1515,9 +1515,9 @@ object MainForm: TMainForm
             TabOrder = 0
           end
           object rgOptionCompress: TRadioGroup
-            Left = 28
+            Left = 20
             Height = 60
-            Top = 82
+            Top = 74
             Width = 503
             Anchors = [akTop, akLeft, akRight]
             AutoFill = True
@@ -1542,32 +1542,52 @@ object MainForm: TMainForm
             ParentFont = False
             TabOrder = 1
           end
-          object cbOptionPathConvert: TCheckBox
-            Left = 28
-            Height = 17
-            Top = 162
-            Width = 465
-            Caption = 'Change all all unicode symbols to "_" (choose this when you have problem with unicode path)'
+          object gbOptionRenaming: TGroupBox
+            Left = 20
+            Height = 137
+            Top = 146
+            Width = 503
+            Anchors = [akTop, akLeft, akRight]
+            Caption = 'Renaming'
+            ClientHeight = 117
+            ClientWidth = 499
             ParentFont = False
             TabOrder = 2
-          end
-          object cbOptionGenerateChapterName: TCheckBox
-            Left = 28
-            Height = 17
-            Top = 186
-            Width = 228
-            Caption = 'Generate chapter folder with chapter name'
-            ParentFont = False
-            TabOrder = 3
-          end
-          object cbOptionGenerateMangaFolderName: TCheckBox
-            Left = 28
-            Height = 17
-            Top = 210
-            Width = 239
-            Caption = 'Auto generate folder based on manga''s name'
-            ParentFont = False
-            TabOrder = 4
+            object cbOptionGenerateMangaFolderName: TCheckBox
+              Left = 22
+              Height = 17
+              Top = 62
+              Width = 239
+              Caption = 'Auto generate folder based on manga''s name'
+              ParentFont = False
+              TabOrder = 0
+            end
+            object cbOptionGenerateChapterName: TCheckBox
+              Left = 22
+              Height = 17
+              Top = 38
+              Width = 228
+              Caption = 'Generate chapter folder with chapter name'
+              ParentFont = False
+              TabOrder = 1
+            end
+            object cbOptionPathConvert: TCheckBox
+              Left = 22
+              Height = 17
+              Top = 14
+              Width = 465
+              Caption = 'Change all all unicode symbols to "_" (choose this when you have problem with unicode path)'
+              ParentFont = False
+              TabOrder = 2
+            end
+            object cbOptionAutoNumberChapter: TCheckBox
+              Left = 22
+              Height = 17
+              Top = 86
+              Width = 162
+              Caption = 'cbOptionAutoNumberChapter'
+              TabOrder = 3
+            end
           end
         end
         object tsDialogs: TTabSheet
