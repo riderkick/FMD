@@ -665,6 +665,7 @@ begin
       end;
       DLManager.containers.Items[pos].mangaSiteID:= GetMangaSiteID(mangaInfo.website);
       if (mangaInfo.website <> GEHENTAI_NAME) AND
+         (mangaInfo.website <> MANGASTREAM_NAME) AND
          (mangaInfo.website <> FAKKU_NAME) then
       begin
         s:= '';
@@ -690,6 +691,14 @@ begin
           else
             s:= s + ' - ' + s1;
         end;
+      end
+      else
+      if (mangaInfo.website = MANGASTREAM_NAME) then
+      begin
+        if cbOptionPathConvert.Checked then
+          s:= Format('%s', [UnicodeRemove(mangaInfo.chapterName.Strings[i])])
+        else
+          s:= Format('%s', [mangaInfo.chapterName.Strings[i]]);
       end
       else
       begin
@@ -801,8 +810,8 @@ begin
     edURL.Text:= 'http://' + edURL.Text;
 
   if (Pos(GEHENTAI_ROOT, edURL.Text) <> 0) OR
-     (Pos(FAKKU_ROOT, edURL.Text) <> 0) OR
-     (Pos(MANGATRADERS_ROOT, edURL.Text) <> 0) then
+     (Pos(FAKKU_ROOT, edURL.Text) <> 0){ OR
+     (Pos(MANGATRADERS_ROOT, edURL.Text) <> 0)} then
   begin
     cbAddToFavorites.Checked:= FALSE;
     cbAddToFavorites.Enabled:= FALSE;

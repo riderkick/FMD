@@ -302,6 +302,7 @@ begin
         DLManager.containers.Items[pos].mangaSiteID:= GetMangaSiteID(mangaInfo[i].website);
         for j:= currentChapter to newChapter-1 do
         begin
+         // TODO: Fix for mangastream
          // DLManager.containers.Items[pos].chapterName.Add(Format('%.4d - %s', [j+1, mangaInfo[i].chapterName.Strings[j]]));
           s:= '';
           if MainForm.cbOptionAutoNumberChapter.Checked then
