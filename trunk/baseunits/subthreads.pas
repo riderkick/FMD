@@ -116,6 +116,9 @@ procedure   TSubThread.DoGetInfos;
     if website = BATOTO_NAME then
       times:= 0
     else
+    if website = GEHENTAI_NAME then
+      times:= 4
+    else
       times:= 3;
 
     {$IFDEF WINDOWS}

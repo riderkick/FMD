@@ -882,7 +882,10 @@ begin
   end
   else
   if Pos(GEHENTAI_ROOT, edURL.Text) > 0 then
+  begin
+    SubThread.link   := edURL.Text;
     SubThread.website:= GEHENTAI_NAME
+  end
   else
   begin
     MessageDlg('', stDlgURLNotSupport, mtInformation, [mbYes], 0);

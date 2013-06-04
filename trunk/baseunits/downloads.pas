@@ -1708,7 +1708,7 @@ start:
     if curTime<3000 then
       Sleep(3000-curTime)
     else
-      Sleep(250);
+      Sleep(300);
   end;
  // s:= manager.container.pageLinks.Strings[workPtr];
  // manager.container.pageLinks.SaveToFile('log.txt');
