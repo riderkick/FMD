@@ -299,9 +299,9 @@ begin
       while threadCount > 0 do Sleep(100);
 
       {$IFNDEF DOWNLOADER}
-    {  names.SaveToFile(website+'_names.txt');
+      names.SaveToFile(website+'_names.txt');
       links.SaveToFile(website+'_links.txt');
-                }
+
       names.Clear;
       links.Clear;
 

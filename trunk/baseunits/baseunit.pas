@@ -106,6 +106,7 @@ const
   GEHENTAI_NAME     = 'g.e-hentai (doujinshi)'; GEHENTAI_ID = 13;
   MANGAFOX_NAME     = 'MangaFox';     MANGAFOX_ID    = 14;
   MANGATRADERS_NAME = 'MangaTraders'; MANGATRADERS_ID= 15;
+  MANGASTREAM_NAME  = 'MangaStream';  MANGASTREAM_ID = 16;
 
 var
   // cbOptionLetFMDDoItemIndex
@@ -187,6 +188,9 @@ var
 
   MANGATRADERS_ROOT: String = 'http://www.mangatraders.com';
   MANGATRADERS_BROWSER: String = '/manga/serieslist/';
+
+  MANGASTREAM_ROOT: String = 'http://mangastream.com';
+  MANGASTREAM_BROWSER: String = '/manga';
 
   UPDATE_URL      : String = 'http://akarin.byethost5.com/fmd/';
 
@@ -573,7 +577,9 @@ begin
   else
   if name = MANGAFOX_NAME then Result:= MANGAFOX_ID
   else
-  if name = MANGATRADERS_NAME then Result:= MANGATRADERS_ID;
+  if name = MANGATRADERS_NAME then Result:= MANGATRADERS_ID
+  else
+  if name = MANGASTREAM_NAME then Result:= MANGASTREAM_ID;
 end;
 
 function  GetMangaDatabaseURL(const name: String): String;

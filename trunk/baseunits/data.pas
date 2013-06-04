@@ -1242,7 +1242,6 @@ var
       source.Free;
       exit;
     end;
-    source.SaveToFile('test.txt');
     parse.Clear;
     myParser:= THTMLParser.Create(PChar(source.Text));
     myParser.OnFoundTag := OnTag;
@@ -1623,6 +1622,44 @@ var
     source.Free;
   end;
 
+  // get name and link of the manga from MangaStream
+  function   MangaStreamGetNameAndLink: Byte;
+  var
+    tmp: Integer;
+    i: Cardinal;
+    s: String;
+  begin
+    Result:= INFORMATION_NOT_FOUND;
+    if NOT GetPage(TObject(source), MANGASTREAM_ROOT + MANGASTREAM_BROWSER, 0) then
+    begin
+      Result:= NET_PROBLEM;
+      source.Free;
+      exit;
+    end;
+    parse.Clear;
+    Parser:= TjsFastHTMLParser.Create(PChar(source.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.Exec;
+    Parser.Free;
+    if parse.Count=0 then
+    begin
+      source.Free;
+      exit;
+    end;
+    for i:= parse.Count-1 downto 5 do
+    begin
+      if (Pos('strong style="font-size:14px;', parse.Strings[i]) > 0) then
+      begin
+        Result:= NO_ERROR;
+        s:= StringFilter(TrimLeft(TrimRight(parse.Strings[i+1])));
+        names.Add(HTMLEntitiesFilter(s));
+        links.Add('');
+      end;
+    end;
+    source.Free;
+  end;
+
   // get name and link of the manga from g.e-hentai
   function   GEHentaiGetNameAndLink: Byte;
   var
@@ -1715,6 +1752,9 @@ begin
   else
   if website = MANGATRADERS_NAME then
     Result:= MangaTradersGetNameAndLink
+  else
+  if website = MANGASTREAM_NAME then
+    Result:= MangaStreamGetNameAndLink
   else
   if website = GEHENTAI_NAME then
     Result:= GEHentaiGetNameAndLink;
@@ -3774,6 +3814,84 @@ begin
   Result:= NO_ERROR;
 end;
 
+// get manga infos from mangastream site
+function   GetMangaStreamInfoFromURL: Byte;
+var
+  s: String;
+  isExtractChapter: Boolean = FALSE;
+  isExtractSummary: Boolean = TRUE;
+  isExtractGenres : Boolean = FALSE;
+  i, j: Cardinal;
+begin
+  mangaInfo.url:= MANGASTREAM_ROOT + MANGASTREAM_BROWSER;
+  if NOT GetPage(TObject(source), mangaInfo.url, Reconnect) then
+  begin
+    Result:= NET_PROBLEM;
+    source.Free;
+    exit;
+  end;
+
+  // parsing the HTML source
+  parse.Clear;
+  Parser:= TjsFastHTMLParser.Create(PChar(source.Text));
+  Parser.OnFoundTag := OnTag;
+  Parser.OnFoundText:= OnText;
+  Parser.Exec;
+
+  Parser.Free;
+  source.Free;
+  mangaInfo.website:= MANGASTREAM_NAME;
+
+  mangaInfo.coverLink:= '';
+  mangaInfo.summary:= '';
+  mangaInfo.authors:= '';
+  mangaInfo.artists:= '';
+  mangaInfo.genres:= '';
+  mangaInfo.status:= '1';
+
+  // using parser (cover link, summary, chapter name and link)
+  if parse.Count=0 then exit;
+  for i:= 0 to parse.Count-1 do
+  begin
+    // allow to get chapter name and links
+    if (NOT isExtractChapter) AND
+       (Pos(mangaInfo.title, parse.Strings[i])>0) AND
+       (Pos('strong style="font-size:14px;', parse.Strings[i-1])>0) then
+      isExtractChapter:= TRUE;
+
+    // doo not allow to get chapter name and links
+    if (isExtractChapter) AND
+       (Pos('strong style="font-size:14px;', parse.Strings[i])>0) AND
+       (Pos(mangaInfo.title, parse.Strings[i+1])=0) then
+      isExtractChapter:= FALSE;
+
+    // get chapter name and links
+    if (isExtractChapter) AND
+       (Pos('/read/', parse.Strings[i])>0) then
+    begin
+      Inc(mangaInfo.numChapter);
+      s:= GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href='));
+      Delete(s, Length(s)-1, 2);
+      mangaInfo.chapterLinks.Add(s);
+      s:= RemoveSymbols(TrimLeft(TrimRight(parse.Strings[i+1])));
+      mangaInfo.chapterName.Add(StringFilter(StringFilter(HTMLEntitiesFilter(s))));
+    end;
+  end;
+
+  // Since chapter name and link are inverted, we need to invert them
+  if mangainfo.ChapterLinks.Count > 1 then
+  begin
+    i:= 0; j:= mangainfo.ChapterLinks.Count - 1;
+    while (i<j) do
+    begin
+      mangainfo.ChapterName.Exchange(i, j);
+      mangainfo.chapterLinks.Exchange(i, j);
+      Inc(i); Dec(j);
+    end;
+  end;
+  Result:= NO_ERROR;
+end;
+
 // get manga infos from g.e-hentai site (dummy)
 function   GetGEHentaiInfoFromURL_Dummy: Byte;
 begin
@@ -3900,6 +4018,9 @@ begin
   else
   if website = MANGATRADERS_NAME then
     Result:= GetMangaTradersInfoFromURL
+  else
+  if website = MANGASTREAM_NAME then
+    Result:= GetMangaStreamInfoFromURL
   else
   if website = GEHENTAI_NAME then
   begin

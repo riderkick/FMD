@@ -2105,6 +2105,7 @@ object MainForm: TMainForm
     end
   end
   object pmMangaList: TPopupMenu
+    OnPopup = pmMangaListPopup
     left = 82
     top = 408
     object miMangaListAddToFavorites: TMenuItem

@@ -257,6 +257,7 @@ type
     procedure pcMainChange(Sender: TObject);
     procedure pmDownloadPopup(Sender: TObject);
     procedure pmFavoritesPopup(Sender: TObject);
+    procedure pmMangaListPopup(Sender: TObject);
     procedure TrayIconDblClick(Sender: TObject);
     procedure vtDownloadDragAllowed(Sender: TBaseVirtualTree;
       Node: PVirtualNode; Column: TColumnIndex; var Allowed: Boolean);
@@ -1536,6 +1537,14 @@ begin
   end;
 end;
 
+procedure TMainForm.pmMangaListPopup(Sender: TObject);
+begin
+  if cbSelectManga.Items[cbSelectManga.ItemIndex] = MANGASTREAM_NAME then
+    pmMangaList.Items[0].Enabled:= FALSE
+  else
+    pmMangaList.Items[0].Enabled:= TRUE;
+end;
+
 procedure TMainForm.TrayIconDblClick(Sender: TObject);
 begin
   WindowState:= wsNormal;
@@ -1901,7 +1910,13 @@ end;
 
 procedure TMainForm.vtMangaListDblClick(Sender: TObject);
 begin
-  cbAddToFavorites.Enabled:= TRUE;
+  if cbSelectManga.Items[cbSelectManga.ItemIndex] = MANGASTREAM_NAME then
+  begin
+    cbAddToFavorites.Checked:= FALSE;
+    cbAddToFavorites.Enabled:= FALSE;
+  end
+  else
+    cbAddToFavorites.Enabled:= TRUE;
   if (SubThread.isGetInfos) OR (NOT vtMangaList.Focused) then exit;
 
   pcMain.TabIndex:= 1;
