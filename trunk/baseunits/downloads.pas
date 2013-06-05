@@ -482,7 +482,6 @@ var
                      HENTAI2READ_ROOT + URL,
                      manager.container.manager.retryConnect);
     Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
-    s:= HENTAI2READ_ROOT + URL;
     Parser.OnFoundTag := OnTag;
     Parser.OnFoundText:= OnText;
     Parser.Exec;

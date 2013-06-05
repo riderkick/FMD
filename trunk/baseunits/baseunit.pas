@@ -164,6 +164,7 @@ var
   VNSHARING_BROWSER: String = '/DanhSach';
 
   HENTAI2READ_ROOT   : String = 'http://hentai2read.com';
+  HENTAI2READ_MROOT  : String = 'http://m.hentai2read.com';
   HENTAI2READ_BROWSER: String = '/hentai-list/all/any/name-az/';
 
   FAKKU_ROOT             : String = 'http://www.fakku.net';

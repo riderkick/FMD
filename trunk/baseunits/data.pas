@@ -2876,7 +2876,9 @@ begin
       if (GetTagName(parse.Strings[i]) = 'a') AND (i < parse.Count-2) then
       begin
         Inc(mangaInfo.numChapter);
-        mangaInfo.chapterLinks.Add(StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href=')), HENTAI2READ_ROOT, '', [rfReplaceAll]));
+        s:= StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href=')), HENTAI2READ_ROOT, '', [rfReplaceAll]);
+        s:= StringReplace(s, HENTAI2READ_MROOT, '', [rfReplaceAll]);
+        mangaInfo.chapterLinks.Add(s);
         s:= StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href=')), HENTAI2READ_ROOT, '', [rfReplaceAll]);
         parse.Strings[i+1]:= StringReplace(parse.Strings[i+1], #10, '', [rfReplaceAll]);
         parse.Strings[i+1]:= StringReplace(parse.Strings[i+1], #13, '', [rfReplaceAll]);
