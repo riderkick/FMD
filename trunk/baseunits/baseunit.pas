@@ -103,7 +103,7 @@ const
   TRUYEN18_NAME     = 'Truyen18';     TRUYEN18_ID    = 10;
   MANGAREADER_NAME  = 'MangaReader';  MANGAREADER_ID = 11;
   MANGAPARK_NAME    = 'MangaPark';    MANGAPARK_ID   = 12;
-  GEHENTAI_NAME     = 'g.e-hentai (doujinshi)'; GEHENTAI_ID = 13;
+  GEHENTAI_NAME     = 'E-Hentai';     GEHENTAI_ID    = 13;
   MANGAFOX_NAME     = 'MangaFox';     MANGAFOX_ID    = 14;
   MANGATRADERS_NAME = 'MangaTraders'; MANGATRADERS_ID= 15;
   MANGASTREAM_NAME  = 'MangaStream';  MANGASTREAM_ID = 16;
@@ -545,8 +545,9 @@ begin
       end;
     end;
   end;
+ // ForceDirectoriesUTF8(wS);
   SetCurrentDirUTF8(oldDir);
-  Delete(wS, 1, 1);
+ // Delete(wS, 1, 1);
 end;
 
 function  GetMangaSiteID(const name: String): Cardinal;

@@ -1275,6 +1275,7 @@ object MainForm: TMainForm
               ''
             )
             ParentFont = False
+            Style = csDropDownList
             TabOrder = 4
           end
           object lbOptionLetFMDDo: TLabel

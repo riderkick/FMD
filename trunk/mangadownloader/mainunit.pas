@@ -1567,6 +1567,8 @@ begin
 end;
 
 procedure TMainForm.pmMangaListPopup(Sender: TObject);
+var
+  pos: Cardinal;
 begin
   if (cbSelectManga.Items[cbSelectManga.ItemIndex] = MANGASTREAM_NAME) OR
      (cbSelectManga.Items[cbSelectManga.ItemIndex] = FAKKU_NAME){ OR
@@ -1574,6 +1576,14 @@ begin
     pmMangaList.Items[0].Enabled:= FALSE
   else
     pmMangaList.Items[0].Enabled:= TRUE;
+
+  if (Assigned(vtMangaList.FocusedNode)) then
+  begin
+    pos:= vtMangaList.FocusedNode.Index;
+    if favorites.IsMangaExist(dataProcess.Param[dataProcess.filterPos.Items[pos], DATA_PARAM_NAME],
+                              cbSelectManga.Items[cbSelectManga.ItemIndex]) then
+      pmMangaList.Items[0].Enabled:= FALSE;
+  end;
 end;
 
 procedure TMainForm.TrayIconDblClick(Sender: TObject);

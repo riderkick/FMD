@@ -1141,7 +1141,7 @@ var
     // get link pages
     l.Clear;
     Result:= GetPage(TObject(l),
-                     FAKKU_ROOT + URL{ + '#page' + IntToStr(workPtr+1)},
+                     FAKKU_ROOT + URL + '#page' + IntToStr(workPtr+1),
                      manager.container.manager.retryConnect);
     parse.Clear;
     Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
@@ -1155,6 +1155,13 @@ var
       manager.container.pageLinks.Clear;
       while i < parse.Count-1 do
       begin
+        if (Pos('return ''http://c.fakku.net/', parse.Strings[i])>0) then
+        begin
+        //  manager.container.pageLinks.Strings[workPtr]:=
+          imgURL:= 'http://c.fakku.net/' + GetString(parse.Strings[i], '''http://c.fakku.net/', '''');
+          break;
+        end
+        else
         if (Pos('return ''http://cdn.fakku.net/', parse.Strings[i])>0) then
         begin
         //  manager.container.pageLinks.Strings[workPtr]:=
