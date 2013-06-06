@@ -1415,7 +1415,11 @@ var
       for i:= 0 to parse.Count-1 do
         if (Pos('"image_display"', parse.Strings[i])>0) then
         begin
-          manager.container.pageLinks.Strings[workPtr]:= GetAttributeValue(GetTagAttribute(parse.Strings[i+4], 'src='));
+          s:= GetAttributeValue(GetTagAttribute(parse.Strings[i+4], 'src='));
+          if s <> '' then
+            manager.container.pageLinks.Strings[workPtr]:= s
+          else
+            manager.container.pageLinks.Strings[workPtr]:= GetAttributeValue(GetTagAttribute(parse.Strings[i+12], 'src='));
           break;
         end;
     end;
