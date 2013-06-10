@@ -3009,8 +3009,8 @@ begin
   begin
     // get manga title
     if (mangaInfo.title = '') AND
-       (Pos(' View Online Page 1', parse.Strings[i]) > 0) then
-      mangaInfo.title:= TrimLeft(TrimRight(GetString(parse.Strings[i], 'title="', ' View Online Page 1')));
+       (Pos(' title="">', parse.Strings[i]) > 0) then
+      mangaInfo.title:= TrimLeft(TrimRight(parse.Strings[i+5]));
 
     // get cover
     if GetTagName(parse.Strings[i]) = 'img' then

@@ -18,17 +18,26 @@ type
   // for "Download all" feature
   TSilentThread = class(TThread)
   protected
-    procedure   CallMainFormAddDownloadTask;
+    procedure   CallMainFormAfterChecking; virtual;
     procedure   CallMainFormDecreaseThreadCount;
     procedure   Execute; override;
   public
     Info        : TMangaInformation;
     isTerminated,
     isSuspended : Boolean;
+    // manga information from main thread
+    title,
     website, URL: String;
 
     constructor Create;
     destructor  Destroy; override;
+  end;
+
+  // for "Add to Favorites" feature
+  TAddToFavSilentThread = class(TSilentThread)
+  protected
+    procedure   CallMainFormAfterChecking; override;
+  public
   end;
 
 implementation
@@ -38,7 +47,7 @@ uses
 
 // ----- TSilentThread -----
 
-procedure   TSilentThread.CallMainFormAddDownloadTask;
+procedure   TSilentThread.CallMainFormAfterChecking;
 var
   hh, mm, ss, ms,
   day, month, year: Word;
@@ -151,7 +160,6 @@ var
   times: Cardinal;
 begin
   while isSuspended do Sleep(32);
-  Info:= TMangaInformation.Create;
 
   // some of the code was taken from subthreads's GetMangaInfo
   // since it's multi-thread, we cannot call IE for fetching info from Batoto
@@ -160,14 +168,13 @@ begin
   else
     times:= 3;
 
+  Info.mangaInfo.title:= title;
   if Info.GetInfoFromURL(website, URL, times)<>NO_ERROR then
   begin
     Info.Free;
     exit;
   end;
-  Synchronize(CallMainFormAddDownloadTask);
-
-  Info.Free;
+  Synchronize(CallMainFormAfterChecking);
   Synchronize(CallMainFormDecreaseThreadCount);
 end;
 
@@ -176,14 +183,47 @@ begin
   isSuspended    := TRUE;
   isTerminated   := FALSE;
   FreeOnTerminate:= TRUE;
+  Info:= TMangaInformation.Create;
 
   inherited Create(FALSE);
 end;
 
 destructor  TSilentThread.Destroy;
 begin
+  Info.Free;
   isTerminated:= TRUE;
   inherited Destroy;
+end;
+
+// ----- TAddToFavSilentThread -----
+
+procedure   TAddToFavSilentThread.CallMainFormAfterChecking;
+var
+  s: String;
+begin
+  with MainForm do
+  begin
+    if edSaveTo.Text = '' then
+      edSaveTo.Text:= options.ReadString('saveto', 'SaveTo', '');
+    s:= CorrectFile(edSaveTo.Text);
+    if s[Length(s)] = '/' then
+      Delete(s, Length(s), 1);
+
+    if cbOptionGenerateMangaFolderName.Checked then
+    begin
+      if NOT cbOptionPathConvert.Checked then
+        s:= s + '/' + RemoveSymbols(title)
+      else
+        s:= s + '/' + RemoveSymbols(UnicodeRemove(title));
+    end;
+
+    favorites.Add(title,
+                  IntToStr(Info.mangaInfo.numChapter),
+                  website,
+                  s,
+                  URL);
+    UpdateVtFavorites;
+  end;
 end;
 
 end.

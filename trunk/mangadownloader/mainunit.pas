@@ -1092,10 +1092,13 @@ end;
 
 procedure TMainForm.miMangaListAddToFavoritesClick(Sender: TObject);
 var
-  s  : String;
-  pos: Cardinal;
+  i           : Cardinal;
+  xNode       : PVirtualNode;
+  s           : String;
+  pos         : Cardinal;
+  silentThread: TAddToFavSilentThread;
 begin
-  if NOT Assigned(vtMangaList.FocusedNode) then exit;
+  {if NOT Assigned(vtMangaList.FocusedNode) then exit;
   pos:= vtMangaList.FocusedNode.Index;
 
   s:= CorrectFile(options.ReadString('saveto', 'SaveTo', DEFAULT_PATH));
@@ -1115,8 +1118,33 @@ begin
                 dataProcess.website,
                 s,
                 dataProcess.Param[dataProcess.filterPos.Items[pos], DATA_PARAM_LINK]);
-  UpdateVtFavorites;
+  UpdateVtFavorites; }
  // pcMain.PageIndex:= 3;
+
+  if vtMangaList.SelectedCount = 0 then exit;
+  if vtMangaList.SelectedCount >= 50 then exit;
+
+  xNode:= vtMangaList.GetFirst;
+  for i:= 0 to vtMangaList.RootNodeCount-1 do
+  begin
+    if vtMangaList.Selected[xNode] then
+    begin
+      // TODO
+      silentThread:= TAddToFavSilentThread.Create;
+      silentThread.website:= cbSelectManga.Items[cbSelectManga.ItemIndex];
+      silentThread.URL:= DataProcess.Param[DataProcess.filterPos.Items[i], DATA_PARAM_LINK];
+      silentThread.title:= DataProcess.Param[DataProcess.filterPos.Items[i], DATA_PARAM_NAME];
+      silentThread.isSuspended:= FALSE;
+      Inc(silentThreadCount);
+    end;
+    xNode:= vtMangaList.GetNext(xNode);
+  end;
+
+  // change status
+  if silentThreadCount > 0 then
+    sbMain.Panels[1].Text:= 'Loading: '+IntToStr(silentThreadCount)
+  else
+    sbMain.Panels[1].Text:= '';
 end;
 
 // ----- vtFavorites popup menu -----
@@ -1421,6 +1449,7 @@ var
 begin
   //if NOT Assigned(vtDownload.FocusedNode) then exit;
   if vtMangaList.SelectedCount = 0 then exit;
+  if vtMangaList.SelectedCount >= 50 then exit;
 
   xNode:= vtMangaList.GetFirst;
   for i:= 0 to vtMangaList.RootNodeCount-1 do
@@ -1431,6 +1460,7 @@ begin
       silentThread:= TSilentThread.Create;
       silentThread.website:= cbSelectManga.Items[cbSelectManga.ItemIndex];
       silentThread.URL:= DataProcess.Param[DataProcess.filterPos.Items[i], DATA_PARAM_LINK];
+      silentThread.title:= DataProcess.Param[DataProcess.filterPos.Items[i], DATA_PARAM_NAME];
       silentThread.isSuspended:= FALSE;
       Inc(silentThreadCount);
     end;
@@ -1618,6 +1648,7 @@ begin
     pmMangaList.Items[2].Enabled:= TRUE;
   end
   else
+  if vtMangaList.SelectedCount > 1 then
   begin
     pmMangaList.Items[0].Enabled:= FALSE;
     pmMangaList.Items[1].Enabled:= TRUE;
@@ -1627,16 +1658,16 @@ begin
   if (cbSelectManga.Items[cbSelectManga.ItemIndex] = MANGASTREAM_NAME) OR
      (cbSelectManga.Items[cbSelectManga.ItemIndex] = FAKKU_NAME){ OR
      (cbSelectManga.Items[cbSelectManga.ItemIndex] = MANGATRADERS_NAME)} then
-    pmMangaList.Items[0].Enabled:= FALSE
+    pmMangaList.Items[2].Enabled:= FALSE
   else
-    pmMangaList.Items[0].Enabled:= TRUE;
+    pmMangaList.Items[2].Enabled:= TRUE;
 
   if (Assigned(vtMangaList.FocusedNode)) then
   begin
     pos:= vtMangaList.FocusedNode.Index;
     if favorites.IsMangaExist(dataProcess.Param[dataProcess.filterPos.Items[pos], DATA_PARAM_NAME],
                               cbSelectManga.Items[cbSelectManga.ItemIndex]) then
-      pmMangaList.Items[0].Enabled:= FALSE;
+      pmMangaList.Items[2].Enabled:= FALSE;
   end;
 end;
 
@@ -1930,6 +1961,13 @@ begin
     Pass:= edOptionPass.Text;
     Port:= edOptionPort.Text;
     User:= edOptionUser.Text;
+  end
+  else
+  begin
+    Host:= '';
+    Pass:= '';
+    Port:= '';
+    User:= '';
   end;
 
   LoadLanguage(cbLanguages.ItemIndex);

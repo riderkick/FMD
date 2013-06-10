@@ -217,7 +217,7 @@ var
   i          : Cardinal;
   newMangaStr: String;
 begin
-  if isRunning then
+  if (isRunning) OR (MainForm.silentThreadCount > 0) then
   begin
     MessageDlg('', stDlgFavoritesIsRunning,
                 mtInformation, [mbYes, mbNo], 0);

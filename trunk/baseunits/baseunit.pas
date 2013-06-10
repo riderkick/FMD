@@ -934,7 +934,7 @@ globReturn:
   gehHTTP.ProxyHost:= Host;
   gehHTTP.ProxyPort:= Port;
   gehHTTP.ProxyUser:= User;
-  gehHTTP.ProxyHost:= Pass;
+  gehHTTP.ProxyPass:= Pass;
   gehHTTP.Headers.Insert(0, 'Referer:'+URL);
 
   while (NOT gehHTTP.HTTPMethod('GET', URL)) OR
@@ -1001,7 +1001,7 @@ begin
   bttHTTP.ProxyHost:= Host;
   bttHTTP.ProxyPort:= Port;
   bttHTTP.ProxyUser:= User;
-  bttHTTP.ProxyHost:= Pass;
+  bttHTTP.ProxyPass:= Pass;
 
   bttHTTP.Clear;
   bttHTTP.MimeType:= 'Content-Type: application/x-www-form-urlencoded';
@@ -1075,7 +1075,7 @@ globReturn:
   HTTP.ProxyHost:= Host;
   HTTP.ProxyPort:= Port;
   HTTP.ProxyUser:= User;
-  HTTP.ProxyHost:= Pass;
+  HTTP.ProxyPass:= Pass;
 
   if Pos(GEHENTAI_ROOT, URL) <> 0 then
     HTTP.Headers.Insert(0, 'Referer:'+URL)
@@ -1163,7 +1163,7 @@ begin
   HTTP.ProxyHost:= Host;
   HTTP.ProxyPort:= Port;
   HTTP.ProxyUser:= User;
-  HTTP.ProxyHost:= Pass;
+  HTTP.ProxyPass:= Pass;
   if Pos(HENTAI2READ_ROOT, URL) <> 0 then
     HTTP.Headers.Insert(0, 'Referer:'+HENTAI2READ_ROOT+'/');
   while (NOT HTTP.HTTPMethod('GET', URL)) OR

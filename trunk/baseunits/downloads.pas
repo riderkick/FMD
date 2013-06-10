@@ -1579,7 +1579,7 @@ var
     HTTP.ProxyHost:= Host;
     HTTP.ProxyPort:= Port;
     HTTP.ProxyUser:= User;
-    HTTP.ProxyHost:= Pass;
+    HTTP.ProxyPass:= Pass;
     if manager.container.mangaSiteID = HENTAI2READ_ID then
       HTTP.Headers.Insert(0, 'Referer:'+HENTAI2READ_ROOT+'/')
     else
