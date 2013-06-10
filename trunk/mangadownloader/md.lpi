@@ -57,7 +57,7 @@
         <PackageName Value="LCL"/>
       </Item6>
     </RequiredPackages>
-    <Units Count="12">
+    <Units Count="13">
       <Unit0>
         <Filename Value="md.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -127,6 +127,11 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="updatedb"/>
       </Unit11>
+      <Unit12>
+        <Filename Value="..\baseunits\silentthreads.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="silentthreads"/>
+      </Unit12>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
@@ -149,9 +154,6 @@
       </Optimizations>
     </CodeGeneration>
     <Linking>
-      <Debugging>
-        <GenerateDebugInfo Value="False"/>
-      </Debugging>
       <LinkSmart Value="True"/>
       <Options>
         <Win32>

@@ -15,7 +15,7 @@ uses
   ExtCtrls, ComCtrls, Grids, ColorBox, ActnList, Buttons, CheckLst, Spin, Menus,
   customdrawncontrols, VirtualTrees, RichMemo, SHDocVw, IniFiles, Process,
   baseunit, data, types, downloads, favorites, LConvEncoding, LCLIntf,
-  updatelist, updatedb, lclproc, subthreads, AnimatedGif, MemBitmap
+  updatelist, updatedb, lclproc, subthreads, silentthreads, AnimatedGif, MemBitmap
   {$IFDEF WINDOWS}, ActiveX{$ENDIF};
 
 type
@@ -135,6 +135,8 @@ type
     MenuItem2: TMenuItem;
     MenuItem3: TMenuItem;
     MenuItem4: TMenuItem;
+    miMangaListDownloadAll: TMenuItem;
+    miMangaListViewInfos: TMenuItem;
     mnUpdateList: TMenuItem;
     mnUpdateDownFromServer: TMenuItem;
     miDownloadHideCompleted: TMenuItem;
@@ -250,6 +252,7 @@ type
     procedure miDownloadRemuseClick(Sender: TObject);
     procedure miDownloadRemoveClick(Sender: TObject);
     procedure miDownloadStopClick(Sender: TObject);
+    procedure miMangaListDownloadAllClick(Sender: TObject);
     procedure miOpenFolder2Click(Sender: TObject);
     procedure miOpenFolderClick(Sender: TObject);
     procedure miUpClick(Sender: TObject);
@@ -260,6 +263,7 @@ type
     procedure pmDownloadPopup(Sender: TObject);
     procedure pmFavoritesPopup(Sender: TObject);
     procedure pmMangaListPopup(Sender: TObject);
+    procedure spMainSplitterMoved(Sender: TObject);
     procedure TrayIconDblClick(Sender: TObject);
     procedure vtDownloadDragAllowed(Sender: TBaseVirtualTree;
       Node: PVirtualNode; Column: TColumnIndex; var Allowed: Boolean);
@@ -298,6 +302,9 @@ type
 
     procedure tmBackupTimer(Sender: TObject);
   public
+    // silentthread counter
+    silentThreadCount: Cardinal;
+
     isExiting      : Boolean;
     // for manga website that available for visible on selection list
     websiteName    : TStringList;
@@ -659,11 +666,14 @@ begin
     begin
       if NOT isCreate then
       begin
+        // add a new download task
         DLManager.AddTask;
         pos:= DLManager.containers.Count-1;
         isCreate:= TRUE;
       end;
       DLManager.containers.Items[pos].mangaSiteID:= GetMangaSiteID(mangaInfo.website);
+
+      // generate folder name based on chapter name and numbering
       if (mangaInfo.website <> GEHENTAI_NAME) AND
          (mangaInfo.website <> MANGASTREAM_NAME) AND
          (mangaInfo.website <> FAKKU_NAME) then
@@ -1106,7 +1116,7 @@ begin
                 s,
                 dataProcess.Param[dataProcess.filterPos.Items[pos], DATA_PARAM_LINK]);
   UpdateVtFavorites;
-  pcMain.PageIndex:= 3;
+ // pcMain.PageIndex:= 3;
 end;
 
 // ----- vtFavorites popup menu -----
@@ -1403,6 +1413,37 @@ begin
   end;
 end;
 
+procedure TMainForm.miMangaListDownloadAllClick(Sender: TObject);
+var
+  i           : Cardinal;
+  xNode       : PVirtualNode;
+  silentThread: TSilentThread;
+begin
+  //if NOT Assigned(vtDownload.FocusedNode) then exit;
+  if vtMangaList.SelectedCount = 0 then exit;
+
+  xNode:= vtMangaList.GetFirst;
+  for i:= 0 to vtMangaList.RootNodeCount-1 do
+  begin
+    if vtMangaList.Selected[xNode] then
+    begin
+      // TODO
+      silentThread:= TSilentThread.Create;
+      silentThread.website:= cbSelectManga.Items[cbSelectManga.ItemIndex];
+      silentThread.URL:= DataProcess.Param[DataProcess.filterPos.Items[i], DATA_PARAM_LINK];
+      silentThread.isSuspended:= FALSE;
+      Inc(silentThreadCount);
+    end;
+    xNode:= vtMangaList.GetNext(xNode);
+  end;
+
+  // change status
+  if silentThreadCount > 0 then
+    sbMain.Panels[1].Text:= 'Loading: '+IntToStr(silentThreadCount)
+  else
+    sbMain.Panels[1].Text:= '';
+end;
+
 procedure TMainForm.miOpenFolder2Click(Sender: TObject);
 var
   Process: TProcess;
@@ -1570,6 +1611,19 @@ procedure TMainForm.pmMangaListPopup(Sender: TObject);
 var
   pos: Cardinal;
 begin
+  if vtMangaList.SelectedCount = 1 then
+  begin
+    pmMangaList.Items[0].Enabled:= TRUE;
+    pmMangaList.Items[1].Enabled:= TRUE;
+    pmMangaList.Items[2].Enabled:= TRUE;
+  end
+  else
+  begin
+    pmMangaList.Items[0].Enabled:= FALSE;
+    pmMangaList.Items[1].Enabled:= TRUE;
+    pmMangaList.Items[2].Enabled:= FALSE;
+  end;
+
   if (cbSelectManga.Items[cbSelectManga.ItemIndex] = MANGASTREAM_NAME) OR
      (cbSelectManga.Items[cbSelectManga.ItemIndex] = FAKKU_NAME){ OR
      (cbSelectManga.Items[cbSelectManga.ItemIndex] = MANGATRADERS_NAME)} then
@@ -1584,6 +1638,11 @@ begin
                               cbSelectManga.Items[cbSelectManga.ItemIndex]) then
       pmMangaList.Items[0].Enabled:= FALSE;
   end;
+end;
+
+procedure TMainForm.spMainSplitterMoved(Sender: TObject);
+begin
+  sbMain.Panels[0].Width:= spMainSplitter.Left;
 end;
 
 procedure TMainForm.TrayIconDblClick(Sender: TObject);
@@ -1898,7 +1957,7 @@ begin
     try
       if currentJDN - Cardinal(dataProcess.JDN.Items[dataProcess.filterPos.Items[Node.Index]]) < seOptionNewMangaTime.Value then
       begin
-        TargetCanvas.Brush.Color:= $ED9564;
+        TargetCanvas.Brush.Color:= $FDC594;
         TargetCanvas.FillRect(CellRect);
       end;
     finally

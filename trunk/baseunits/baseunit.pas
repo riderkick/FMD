@@ -474,6 +474,7 @@ end;
 function  CorrectFile(const APath: String): String;
 var I: Integer;
 begin
+  if APath = '' then exit('');
   Result:= APath;
   for I:=1 to Length(Result) do
     if Result[I]= '\' then

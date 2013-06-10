@@ -1,7 +1,7 @@
 object MainForm: TMainForm
-  Left = 180
+  Left = 395
   Height = 491
-  Top = 89
+  Top = 78
   Width = 792
   Align = alBottom
   Caption = 'Free Manga Downloader'
@@ -65,7 +65,7 @@ object MainForm: TMainForm
       ShowHint = True
       TabOrder = 2
       TreeOptions.PaintOptions = [toShowButtons, toShowDropmark, toShowRoot, toThemeAware, toUseBlendedImages]
-      TreeOptions.SelectionOptions = [toFullRowSelect, toRightClickSelect]
+      TreeOptions.SelectionOptions = [toFullRowSelect, toMultiSelect, toRightClickSelect]
       OnBeforeCellPaint = vtMangaListBeforeCellPaint
       OnDblClick = vtMangaListDblClick
       OnFreeNode = vtMangaListFreeNode
@@ -266,11 +266,11 @@ object MainForm: TMainForm
     Height = 439
     Top = 32
     Width = 597
-    ActivePage = tsDownload
+    ActivePage = tsInformation
     Align = alClient
     Font.Style = [fsBold]
     ParentFont = False
-    TabIndex = 0
+    TabIndex = 1
     TabOrder = 1
     OnChange = pcMainChange
     object tsDownload: TTabSheet
@@ -1696,6 +1696,7 @@ object MainForm: TMainForm
     Width = 5
     Align = alNone
     Anchors = [akTop, akLeft, akBottom]
+    OnMoved = spMainSplitterMoved
   end
   object sbMain: TStatusBar
     Left = 0
@@ -1704,7 +1705,10 @@ object MainForm: TMainForm
     Width = 792
     Panels = <    
       item
-        Width = 150
+        Width = 195
+      end    
+      item
+        Width = 50
       end>
     SimplePanel = False
   end
@@ -2129,6 +2133,14 @@ object MainForm: TMainForm
     OnPopup = pmMangaListPopup
     left = 82
     top = 408
+    object miMangaListViewInfos: TMenuItem
+      Caption = 'View manga infos'
+      OnClick = vtMangaListDblClick
+    end
+    object miMangaListDownloadAll: TMenuItem
+      Caption = 'Download all'
+      OnClick = miMangaListDownloadAllClick
+    end
     object miMangaListAddToFavorites: TMenuItem
       Caption = 'Add to Favorites'
       Bitmap.Data = {

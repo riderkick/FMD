@@ -64,6 +64,8 @@ var
   LRevision: Cardinal;
   LVersion : String;
 
+// ----- TSubThread -----
+
 constructor TSubThread.Create;
 begin
   fImportant     := '';
