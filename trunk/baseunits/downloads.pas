@@ -139,7 +139,7 @@ type
     // Active a stopped task
     procedure   ActiveTask(const taskID: Cardinal);
     // Stop a download/wait task
-    procedure   StopTask(const taskID: Cardinal);
+    procedure   StopTask(const taskID: Cardinal; const isCheckForActive: Boolean = TRUE);
     // Stop all download/wait tasks
     procedure   StopAllTasks;
     // Stop all download task inside a task before terminate the program
@@ -683,6 +683,43 @@ var
     l.Free;
   end;
 
+  function GetMangaEdenPageNumber: Boolean;
+  var
+    s   : String;
+    i, j: Cardinal;
+    l   : TStringList;
+  begin
+    l:= TStringList.Create;
+    parse:= TStringList.Create;
+    if manager.container.mangaSiteID = MANGAEDEN_ID then
+      s:= DecodeUrl(MANGAEDEN_ROOT + URL + '1/')
+    else
+      s:= DecodeUrl(PERVEDEN_ROOT + URL + '1/');
+    Result:= GetPage(TObject(l),
+                     s,
+                     manager.container.manager.retryConnect);
+    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.Exec;
+    Parser.Free;
+    if parse.Count>0 then
+    begin
+      manager.container.pageNumber:= 0;
+      for i:= 0 to parse.Count-1 do
+      begin
+        if (Pos('span class="next"', parse.Strings[i])>0) then
+        begin
+          s:= parse.Strings[i-3];
+          manager.container.pageNumber:= StrToInt(TrimLeft(TrimRight(s)));
+          break;
+        end;
+      end;
+    end;
+    parse.Free;
+    l.Free;
+  end;
+
   function GetGEHentaiPageNumber(const lURL: String; const isGetLinkPage: Boolean): Boolean;
   var
     s   : String;
@@ -752,6 +789,10 @@ begin
   else
   if manager.container.mangaSiteID = MANGASTREAM_ID then
     Result:= GetMangaStreamPageNumber
+  else
+  if (manager.container.mangaSiteID = MANGAEDEN_ID) OR
+     (manager.container.mangaSiteID = PERVEDEN_ID) then
+    Result:= GetMangaEdenPageNumber
   else
   if manager.container.mangaSiteID = GEHENTAI_ID then
   begin
@@ -1434,6 +1475,41 @@ var
     l.Free;
   end;
 
+  function GetMangaEdenLinkPage: Boolean;
+  var
+    s: String;
+    j,
+    i: Cardinal;
+    l: TStringList;
+  begin
+    l:= TStringList.Create;
+    if manager.container.mangaSiteID = MANGAEDEN_ID then
+      s:= MANGAEDEN_ROOT + URL + IntToStr(workPtr+1) + '/'
+    else
+      s:= PERVEDEN_ROOT + URL + IntToStr(workPtr+1) + '/';
+    Result:= GetPage(TObject(l),
+                     s,
+                     manager.container.manager.retryConnect);
+    parse:= TStringList.Create;
+    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.Exec;
+    Parser.Free;
+
+    if parse.Count>0 then
+    begin
+      for i:= parse.Count-1 downto 0 do
+        if (Pos('"mainImg"', parse.Strings[i])>0) then
+        begin
+          manager.container.pageLinks.Strings[workPtr]:= GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src='));
+          break;
+        end;
+    end;
+    parse.Free;
+    l.Free;
+  end;
+
   function GetGEHentaiLinkPage: Boolean;
   var
     s1,s2,
@@ -1535,6 +1611,10 @@ begin
   else
   if manager.container.mangaSiteID = MANGASTREAM_ID then
     Result:= GetMangaStreamLinkPage
+  else
+  if (manager.container.mangaSiteID = MANGAEDEN_ID) OR
+     (manager.container.mangaSiteID = PERVEDEN_ID) then
+    Result:= GetMangaEdenLinkPage
   else
   if manager.container.mangaSiteID = GEHENTAI_ID then
     Result:= GetGEHentaiLinkPage;
@@ -2599,7 +2679,7 @@ begin
   // TODO
 end;
 
-procedure   TDownloadManager.StopTask(const taskID: Cardinal);
+procedure   TDownloadManager.StopTask(const taskID: Cardinal; const isCheckForActive: Boolean = TRUE);
 var
   i: Cardinal;
 begin
@@ -2623,9 +2703,13 @@ begin
  // containers.Items[taskID].downloadInfo.Status:= Format('%s (%d/%d)', [stStop, containers.Items[taskID].currentDownloadChapterPtr, containers.Items[taskID].chapterLinks.Count]);
   containers.Items[taskID].downloadInfo.Status:= stStop;
   containers.Items[taskID].Status:= STATUS_STOP;
-  Backup;
-  Sleep(1000);
-  CheckAndActiveTask;
+
+  if isCheckForActive then
+  begin
+    Backup;
+    Sleep(1000);
+    CheckAndActiveTask;
+  end;
 end;
 
 procedure   TDownloadManager.StopAllTasks;

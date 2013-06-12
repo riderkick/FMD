@@ -107,6 +107,8 @@ const
   MANGAFOX_NAME     = 'MangaFox';     MANGAFOX_ID    = 14;
   MANGATRADERS_NAME = 'MangaTraders'; MANGATRADERS_ID= 15;
   MANGASTREAM_NAME  = 'MangaStream';  MANGASTREAM_ID = 16;
+  MANGAEDEN_NAME    = 'MangaEden';    MANGAEDEN_ID   = 17;
+  PERVEDEN_NAME     = 'PervEden';     PERVEDEN_ID    = 18;
 
 var
   // cbOptionLetFMDDoItemIndex
@@ -192,6 +194,16 @@ var
 
   MANGASTREAM_ROOT: String = 'http://mangastream.com';
   MANGASTREAM_BROWSER: String = '/manga';
+
+  MANGAEDEN_ROOT      : String = 'http://www.mangaeden.com';
+  MANGAEDEN_BROWSER   : String = '/en-directory/';
+  MANGAEDEN_EN_BROWSER: String = '/en-directory/';
+  MANGAEDEN_IT_BROWSER: String = '/it-directory/';
+
+  PERVEDEN_ROOT      : String = 'http://www.perveden.com';
+  PERVEDEN_BROWSER   : String = '/en-directory/';
+  PERVEDEN_EN_BROWSER: String = '/en-directory/';
+  PERVEDEN_IT_BROWSER: String = '/it-directory/';
 
   UPDATE_URL      : String = 'http://akarin.byethost5.com/fmd/';
 
@@ -583,7 +595,11 @@ begin
   else
   if name = MANGATRADERS_NAME then Result:= MANGATRADERS_ID
   else
-  if name = MANGASTREAM_NAME then Result:= MANGASTREAM_ID;
+  if name = MANGASTREAM_NAME then Result:= MANGASTREAM_ID
+  else
+  if name = MANGAEDEN_NAME then Result:= MANGAEDEN_ID
+  else
+  if name = PERVEDEN_NAME then Result:= PERVEDEN_ID;
 end;
 
 function  GetMangaDatabaseURL(const name: String): String;

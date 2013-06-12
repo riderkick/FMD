@@ -1248,7 +1248,7 @@ object MainForm: TMainForm
           end
           object cbOptionMinimizeToTray: TCheckBox
             Left = 20
-            Height = 17
+            Height = 19
             Top = 170
             Width = 136
             Caption = 'cbOptionMinimizeToTray'
@@ -1257,7 +1257,7 @@ object MainForm: TMainForm
           end
           object cbOptionAutoCheckUpdate: TCheckBox
             Left = 20
-            Height = 17
+            Height = 19
             Top = 194
             Width = 130
             Caption = 'Check for new version '
@@ -1288,7 +1288,7 @@ object MainForm: TMainForm
           end
           object cbOptionBatotoUseIE: TCheckBox
             Left = 20
-            Height = 17
+            Height = 19
             Top = 218
             Width = 123
             Caption = 'cbOptionBatotoUseIE'
@@ -1630,15 +1630,16 @@ object MainForm: TMainForm
         end
         object tsWebsites: TTabSheet
           Caption = 'Websites'
-          ClientHeight = 326
+          ClientHeight = 294
           ClientWidth = 562
           object clbOptionMangaSiteSelection: TCheckListBox
             Left = 0
-            Height = 326
+            Height = 294
             Top = 0
             Width = 562
             Align = alClient
             ItemHeight = 0
+            OnDrawItem = clbOptionMangaSiteSelectionDrawItem
             ParentFont = False
             TabOrder = 0
           end

@@ -947,6 +947,43 @@ var
     source.Free;
   end;
 
+  function   GetMangaEdenDirectoryPage(const root: String): Byte;
+  var
+    i: Cardinal;
+  begin
+    Result:= INFORMATION_NOT_FOUND;
+    if NOT GetPage(TObject(source), root + MANGAEDEN_BROWSER, 0) then
+    begin
+      Result:= NET_PROBLEM;
+      source.Free;
+      exit;
+    end;
+    parse.Clear;
+    Parser:= TjsFastHTMLParser.Create(PChar(source.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.Exec;
+    Parser.Free;
+    if parse.Count=0 then
+    begin
+      source.Free;
+      exit;
+    end;
+    for i:= 0 to parse.Count-1 do
+    begin
+      if (GetTagName(parse.Strings[i]) = 'span') AND
+         (GetAttributeValue(GetTagAttribute(parse.Strings[i], 'class='))='next') then
+      begin
+        s:= TrimRight(TrimLeft(parse.Strings[i-4]));
+        Page:= StrToInt(s);
+        Result:= NO_ERROR;
+        source.Free;
+        exit;
+      end;
+    end;
+    source.Free;
+  end;
+
 begin
   source:= TStringList.Create;
   if website = ANIMEA_NAME then
@@ -984,6 +1021,12 @@ begin
   else
   if website = MANGATRADERS_NAME then
     Result:= GetMangaTradersDirectoryPage
+  else
+  if website = MANGAEDEN_NAME then
+    Result:= GetMangaEdenDirectoryPage(MANGAEDEN_ROOT)
+  else
+  if website = PERVEDEN_NAME then
+    Result:= GetMangaEdenDirectoryPage(PERVEDEN_ROOT)
   else
   begin
     Result:= NO_ERROR;
@@ -1660,6 +1703,45 @@ var
     source.Free;
   end;
 
+  // get name and link of the manga from MangaEden
+  function   MangaEdenGetNameAndLink(const root: String): Byte;
+  var
+    i: Cardinal;
+    s: String;
+  begin
+    Result:= INFORMATION_NOT_FOUND;
+    if NOT GetPage(TObject(source), root + MANGAEDEN_BROWSER + '?page=' + IntToStr(StrToInt(URL)+1), 0) then
+    begin
+      Result:= NET_PROBLEM;
+      source.Free;
+      exit;
+    end;
+
+    parse.Clear;
+    Parser:= TjsFastHTMLParser.Create(PChar(source.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.Exec;
+    Parser.Free;
+    if parse.Count=0 then
+    begin
+      source.Free;
+      exit;
+    end;
+    for i:= 0 to parse.Count-1 do
+    begin
+      if ((Pos('class="openManga"', parse.Strings[i])>0) OR
+          (Pos('class="closedManga"', parse.Strings[i])>0)) then
+      begin
+        Result:= NO_ERROR;
+        s:= TrimLeft(TrimRight(StringFilter(parse.Strings[i+1])));
+        names.Add(s);
+        links.Add(StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href=')), root, '', []));
+      end;
+    end;
+    source.Free;
+  end;
+
   // get name and link of the manga from g.e-hentai
   function   GEHentaiGetNameAndLink: Byte;
   var
@@ -1755,6 +1837,12 @@ begin
   else
   if website = MANGASTREAM_NAME then
     Result:= MangaStreamGetNameAndLink
+  else
+  if website = MANGAEDEN_NAME then
+    Result:= MangaEdenGetNameAndLink(MANGAEDEN_ROOT)
+  else
+  if website = PERVEDEN_NAME then
+    Result:= MangaEdenGetNameAndLink(PERVEDEN_ROOT)
   else
   if website = GEHENTAI_NAME then
     Result:= GEHentaiGetNameAndLink;
@@ -3894,6 +3982,132 @@ begin
   Result:= NO_ERROR;
 end;
 
+// get manga infos from mangaeden site
+function   GetMangaEdenInfoFromURL(const root: String): Byte;
+var
+  s: String;
+  isExtractSummary: Boolean = TRUE;
+  isExtractGenres : Boolean = FALSE;
+  i, j: Cardinal;
+begin
+  mangaInfo.url:= root + URL;// + '&confirm=yes';
+  if Pos('/en-manga/', URL)>0 then
+    mangaInfo.genres:= 'English, '
+  else
+    mangaInfo.genres:= 'Italian, ';
+  if NOT GetPage(TObject(source), mangaInfo.url, Reconnect) then
+  begin
+    Result:= NET_PROBLEM;
+    source.Free;
+    exit;
+  end;
+
+  // parsing the HTML source
+  parse.Clear;
+  Parser:= TjsFastHTMLParser.Create(PChar(source.Text));
+  Parser.OnFoundTag := OnTag;
+  Parser.OnFoundText:= OnText;
+  Parser.Exec;
+
+  Parser.Free;
+  source.Free;
+  if root = MANGAEDEN_ROOT then
+    mangaInfo.website:= MANGAEDEN_NAME
+  else
+    mangaInfo.website:= PERVEDEN_NAME;
+  // using parser (cover link, summary, chapter name and link)
+  if parse.Count=0 then exit;
+  for i:= 0 to parse.Count-1 do
+  begin
+    // get cover
+    if (GetTagName(parse.Strings[i]) = 'div') AND
+       (Pos('class="mangaImage2"', parse.Strings[i])>0) then
+      mangaInfo.coverLink:= CorrectURL(GetAttributeValue(GetTagAttribute(parse.Strings[i+1], 'src=')));
+
+    // get summary
+    if (Pos('hr style="margin-top:0;', parse.Strings[i]) <> 0) AND
+       (isExtractSummary) then
+    begin
+      j:= i+2;
+      while (j<parse.Count) AND (Pos('</p>', parse.Strings[j])=0) do
+      begin
+        s:= parse.Strings[j];
+        if s[1] <> '<' then
+        begin
+          parse.Strings[j]:= HTMLEntitiesFilter(StringFilter(parse.Strings[j]));
+          parse.Strings[j]:= StringReplace(parse.Strings[j], #10, '\n', [rfReplaceAll]);
+          parse.Strings[j]:= StringReplace(parse.Strings[j], #13, '\r', [rfReplaceAll]);
+          mangaInfo.summary:= mangaInfo.summary + parse.Strings[j];
+        end;
+        Inc(j);
+      end;
+      isExtractSummary:= FALSE;
+    end;
+
+    // get title
+    if ((Pos('enIcon', parse.Strings[i])<>0) OR (Pos('itIcon', parse.Strings[i])<>0)) AND
+       (mangaInfo.title = '') then
+    begin
+      mangaInfo.title:= TrimRight(TrimLeft(StringFilter(parse.Strings[i+1])));
+      mangaInfo.title:= GetString('~!@'+mangaInfo.title, '~!@', ' Manga');
+    end;
+
+    // get chapter name and links
+    if (i+7<parse.Count) AND (Pos('class="chapterLink"', parse.Strings[i])>0) then
+    begin
+      Inc(mangaInfo.numChapter);
+      s:= GetString(parse.Strings[i], 'href="', '1/"');
+      mangaInfo.chapterLinks.Add(s);
+      s:= RemoveSymbols(TrimLeft(TrimRight(parse.Strings[i+3]))) + ' ' + RemoveSymbols(TrimLeft(TrimRight(parse.Strings[i+7])));
+      mangaInfo.chapterName.Add(StringFilter(StringFilter(HTMLEntitiesFilter(s))));
+    end;
+
+    // get authors
+    if (i+1<parse.Count) AND (Pos('/?author', parse.Strings[i])<>0) then
+      mangaInfo.authors:= TrimLeft(parse.Strings[i+1]);
+
+    // get artists
+    if (i+1<parse.Count) AND (Pos('/?artist', parse.Strings[i])<>0) then
+      mangaInfo.artists:= TrimLeft(parse.Strings[i+1]);
+
+    // get genres
+    if (Pos('Genres', parse.Strings[i])<>0) then
+    begin
+      isExtractGenres:= TRUE;
+    end;
+
+    if isExtractGenres then
+    begin
+      if Pos('/?categories', parse.Strings[i]) <> 0 then
+        mangaInfo.genres:= mangaInfo.genres + TrimLeft(TrimRight(parse.Strings[i+1])) + ', ';
+      if Pos('<br />', parse.Strings[i]) <> 0 then
+        isExtractGenres:= FALSE;
+    end;
+
+    // get status
+    if parse.Strings[i] = 'Status' then
+    begin
+      if Pos('Ongoing', parse.Strings[i+2])<>0 then
+        mangaInfo.status:= '1'   // ongoing
+      else
+        mangaInfo.status:= '0';  // completed
+    end;
+  end;
+
+  // Since chapter name and link are inverted, we need to invert them
+  if mangainfo.ChapterLinks.Count > 1 then
+  begin
+    i:= 0; j:= mangainfo.ChapterLinks.Count - 1;
+    while (i<j) do
+    begin
+      mangainfo.ChapterName.Exchange(i, j);
+      mangainfo.chapterLinks.Exchange(i, j);
+      Inc(i); Dec(j);
+    end;
+  end;
+  Result:= NO_ERROR;
+end;
+
 // get manga infos from g.e-hentai site (dummy)
 function   GetGEHentaiInfoFromURL_Dummy: Byte;
 begin
@@ -4023,6 +4237,12 @@ begin
   else
   if website = MANGASTREAM_NAME then
     Result:= GetMangaStreamInfoFromURL
+  else
+  if website = MANGAEDEN_NAME then
+    Result:= GetMangaEdenInfoFromURL(MANGAEDEN_ROOT)
+  else
+  if website = PERVEDEN_NAME then
+    Result:= GetMangaEdenInfoFromURL(PERVEDEN_ROOT)
   else
   if website = GEHENTAI_NAME then
   begin

@@ -212,6 +212,8 @@ type
     procedure btUpdateListClick(Sender: TObject);
     procedure btURLClick(Sender: TObject);
     procedure cbSelectMangaChange(Sender: TObject);
+    procedure clbOptionMangaSiteSelectionDrawItem(Control: TWinControl;
+      Index: Integer; ARect: TRect; State: TOwnerDrawState);
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCreate(Sender: TObject);
 
@@ -995,6 +997,22 @@ begin
   end;
 end;
 
+procedure TMainForm.clbOptionMangaSiteSelectionDrawItem(Control: TWinControl;
+  Index: Integer; ARect: TRect; State: TOwnerDrawState);
+var
+  AExRect: TRect;
+begin
+  if clbOptionMangaSiteSelection.Items[Index] = '  -----' then
+  begin
+    AExRect.Left  := ARect.Left-50;
+    AExRect.Top   := ARect.Top;
+    AExRect.Right := ARect.Right;
+    AExRect.Bottom:= ARect.Bottom;
+    clbOptionMangaSiteSelection.Canvas.Brush.Color:= $FFFFFF;
+    clbOptionMangaSiteSelection.Canvas.FillRect(ARect);
+  end;
+end;
+
 // -----
 
 procedure TMainForm.btSearchClick(Sender: TObject);
@@ -1434,9 +1452,12 @@ begin
     for i:= 0 to vtDownload.RootNodeCount-1 do
     begin
       if vtDownload.Selected[xNode] then
-        DLManager.StopTask(xNode.Index);
+        DLManager.StopTask(xNode.Index, FALSE);
       xNode:= vtDownload.GetNext(xNode);
     end;
+    DLManager.Backup;
+    Sleep(1000);
+    DLManager.CheckAndActiveTask;
     vtDownload.Repaint;
   end;
 end;
@@ -1888,7 +1909,8 @@ begin
   cbSelectManga.Clear;
   for i:= 0 to clbOptionMangaSiteSelection.Items.Count-1 do
   begin
-    if clbOptionMangaSiteSelection.Checked[i] then
+    if (clbOptionMangaSiteSelection.Checked[i]) AND
+       (websiteName.Strings[i] <> '') then
     begin
       cbSelectManga.Items.Add(websiteName.Strings[i]);
     end;
@@ -2285,7 +2307,12 @@ begin
 
   clbOptionMangaSiteSelection.Clear;
   for i:= 0 to websiteName.Count-1 do
-    clbOptionMangaSiteSelection.Items.Add('[ '+websiteLanguage.Strings[i]+' ]  '+websiteName.Strings[i]);
+  begin
+    if websiteLanguage.Strings[i] <> '' then
+      clbOptionMangaSiteSelection.Items.Add('[ '+websiteLanguage.Strings[i]+' ]  '+websiteName.Strings[i])
+    else
+      clbOptionMangaSiteSelection.Items.Add('  -----');
+  end;
 
   for i:= 0 to l.Count-1 do
   begin
@@ -2508,6 +2535,8 @@ begin
   miFavoritesRemove.Caption:= language.ReadString(lang, 'miFavoritesRemoveCaption', '');
   miFavoritesChangeCurrentChapter.Caption:= language.ReadString(lang, 'miFavoritesChangeCurrentChapterCaption', '');
   miFavoritesChangeSaveTo.Caption:= language.ReadString(lang, 'miFavoritesChangeSaveToCaption', '');
+  miMangaListViewInfos.Caption:= language.ReadString(lang, 'miMangaListViewInfosCaption', '');
+  miMangaListDownloadAll.Caption:= language.ReadString(lang, 'miMangaListDownloadAllCaption', '');
   miMangaListAddToFavorites.Caption:= language.ReadString(lang, 'miMangaListAddToFavoritesCaption', '');
   miHighlightNewManga.Caption:= language.ReadString(lang, 'miHighlightNewMangaCaption', '');
   miOpenFolder2.Caption  := miOpenFolder.Caption;

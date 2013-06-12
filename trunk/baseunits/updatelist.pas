@@ -130,6 +130,22 @@ begin
           info.GetDirectoryPage(manager.directoryCount2, manager.website);
         end
         else
+        if manager.website = MANGAEDEN_NAME then
+        begin
+          MANGAEDEN_BROWSER:= MANGAEDEN_EN_BROWSER;
+          info.GetDirectoryPage(manager.directoryCount , manager.website);
+          MANGAEDEN_BROWSER:= MANGAEDEN_IT_BROWSER;
+          info.GetDirectoryPage(manager.directoryCount2, manager.website);
+        end
+        else
+        if manager.website = PERVEDEN_NAME then
+        begin
+          PERVEDEN_BROWSER:= PERVEDEN_EN_BROWSER;
+          info.GetDirectoryPage(manager.directoryCount , manager.website);
+          PERVEDEN_BROWSER:= PERVEDEN_IT_BROWSER;
+          info.GetDirectoryPage(manager.directoryCount2, manager.website);
+        end
+        else
           info.GetDirectoryPage(manager.directoryCount , manager.website);
         {$IFDEF DOWNLOADER}
         if manager.website = BATOTO_NAME then
@@ -148,6 +164,34 @@ begin
           else
           begin
             FAKKU_BROWSER:= FAKKU_MANGA_BROWSER;
+            Info.GetNameAndLink(names, links, manager.website, IntToStr(workPtr));
+          end;
+        end
+        else
+        if manager.website = MANGAEDEN_NAME then
+        begin
+          if Integer(workPtr-manager.directoryCount) >= 0 then
+          begin
+            MANGAEDEN_BROWSER:= MANGAEDEN_IT_BROWSER;
+            Info.GetNameAndLink(names, links, manager.website, IntToStr(workPtr-manager.directoryCount));
+          end
+          else
+          begin
+            MANGAEDEN_BROWSER:= MANGAEDEN_EN_BROWSER;
+            Info.GetNameAndLink(names, links, manager.website, IntToStr(workPtr));
+          end;
+        end
+        else
+        if manager.website = PERVEDEN_NAME then
+        begin
+          if Integer(workPtr-manager.directoryCount) >= 0 then
+          begin
+            MANGAEDEN_BROWSER:= PERVEDEN_IT_BROWSER;
+            Info.GetNameAndLink(names, links, manager.website, IntToStr(workPtr-manager.directoryCount));
+          end
+          else
+          begin
+            MANGAEDEN_BROWSER:= PERVEDEN_EN_BROWSER;
             Info.GetNameAndLink(names, links, manager.website, IntToStr(workPtr));
           end;
         end
@@ -287,20 +331,22 @@ begin
       names.Clear;
       links.Clear;
 
-      workPtr:= 0;
+    {  workPtr:= 0;
       getInfo(1, CS_DIRECTORY_COUNT);
       while threadCount > 0 do Sleep(100);
 
       workPtr:= 0;
-      if website = FAKKU_NAME then
+      if (website = FAKKU_NAME) OR
+         (website = MANGAEDEN_NAME) OR
+         (website = PERVEDEN_NAME) then
         getInfo(directoryCount+directoryCount2, CS_DIRECTORY_PAGE)
       else
         getInfo(directoryCount, CS_DIRECTORY_PAGE);
-      while threadCount > 0 do Sleep(100);
+      while threadCount > 0 do Sleep(100);  }
 
       {$IFNDEF DOWNLOADER}
-      names.SaveToFile(website+'_names.txt');
-      links.SaveToFile(website+'_links.txt');
+    {  names.SaveToFile(website+'_names.txt');
+      links.SaveToFile(website+'_links.txt'); }
 
       names.Clear;
       links.Clear;
