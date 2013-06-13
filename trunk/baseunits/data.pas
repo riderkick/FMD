@@ -1926,6 +1926,7 @@ begin
         mangaInfo.summary:= mangaInfo.summary+parse.Strings[j];
         Inc(j);
       end;
+      mangaInfo.summary:= StringFilter(mangaInfo.summary);
     end;
 
     // get status
@@ -3103,7 +3104,7 @@ begin
     // get cover
     if GetTagName(parse.Strings[i]) = 'img' then
       if (GetAttributeValue(GetTagAttribute(parse.Strings[i], 'class='))='cover') then
-        mangaInfo.coverLink:= CorrectURL(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src=')));
+        mangaInfo.coverLink:= FAKKU_ROOT + CorrectURL(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src=')));
 
     // get summary
     if isExtractSummary then
@@ -3412,18 +3413,6 @@ begin
         mangaInfo.status:= '0';  // completed
     end;
   end;
-
-  // Since chapter name and link are inverted, we need to invert them
- { if mangainfo.ChapterLinks.Count > 1 then
-  begin
-    i:= 0; j:= mangainfo.ChapterLinks.Count - 1;
-    while (i<j) do
-    begin
-      mangainfo.ChapterName.Exchange(i, j);
-      mangainfo.chapterLinks.Exchange(i, j);
-      Inc(i); Dec(j);
-    end;
-  end; }
   Result:= NO_ERROR;
 end;
 

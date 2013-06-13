@@ -19,6 +19,7 @@ type
   TSilentThread = class(TThread)
   protected
     procedure   CallMainFormAfterChecking; virtual;
+    procedure   CallMainFormIncreaseThreadCount;
     procedure   CallMainFormDecreaseThreadCount;
     procedure   Execute; override;
   public
@@ -142,11 +143,17 @@ begin
   end;
 end;
 
+procedure   TSilentThread.CallMainFormIncreaseThreadCount;
+begin
+  Inc(MainForm.currentActiveSilentThreadCount);
+end;
+
 procedure   TSilentThread.CallMainFormDecreaseThreadCount;
 begin
   with MainForm do
   begin
     Dec(silentThreadCount);
+    Dec(currentActiveSilentThreadCount);
     // change status
     if silentThreadCount > 0 then
       sbMain.Panels[1].Text:= 'Loading: '+IntToStr(silentThreadCount)
@@ -160,6 +167,10 @@ var
   times: Cardinal;
 begin
   while isSuspended do Sleep(32);
+
+  while MainForm.currentActiveSilentThreadCount > 4 do
+    Sleep(250);
+  Synchronize(CallMainFormIncreaseThreadCount);
 
   // some of the code was taken from subthreads's GetMangaInfo
   // since it's multi-thread, we cannot call IE for fetching info from Batoto

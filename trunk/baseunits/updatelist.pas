@@ -331,7 +331,7 @@ begin
       names.Clear;
       links.Clear;
 
-    {  workPtr:= 0;
+      workPtr:= 0;
       getInfo(1, CS_DIRECTORY_COUNT);
       while threadCount > 0 do Sleep(100);
 
@@ -342,11 +342,11 @@ begin
         getInfo(directoryCount+directoryCount2, CS_DIRECTORY_PAGE)
       else
         getInfo(directoryCount, CS_DIRECTORY_PAGE);
-      while threadCount > 0 do Sleep(100);  }
+      while threadCount > 0 do Sleep(100);
 
       {$IFNDEF DOWNLOADER}
-    {  names.SaveToFile(website+'_names.txt');
-      links.SaveToFile(website+'_links.txt'); }
+      names.SaveToFile(website+'_names.txt');
+      links.SaveToFile(website+'_links.txt');
 
       names.Clear;
       links.Clear;

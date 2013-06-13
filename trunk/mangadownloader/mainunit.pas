@@ -23,6 +23,7 @@ type
   { TMainForm }
 
   TMainForm = class(TForm)
+    btOptionBrowse: TBitBtn;
     btCheckVersion: TBitBtn;
     btURL: TBitBtn;
     btFavoritesCheckNewChapter: TBitBtn;
@@ -218,6 +219,7 @@ type
     procedure FormCreate(Sender: TObject);
 
     procedure btBrowseClick(Sender: TObject);
+    procedure btOptionBrowseClick(Sender: TObject);
     procedure btDownloadClick(Sender: TObject);
     procedure btFavoritesCheckNewChapterClick(Sender: TObject);
     procedure btOptionApplyClick(Sender: TObject);
@@ -306,6 +308,8 @@ type
   public
     // silentthread counter
     silentThreadCount: Cardinal;
+    // current working silentthread counter
+    currentActiveSilentThreadCount: Cardinal;
 
     isExiting      : Boolean;
     // for manga website that available for visible on selection list
@@ -788,10 +792,16 @@ end;
 
 procedure TMainForm.btBrowseClick(Sender: TObject);
 begin
-  if edSaveTo.Text='' then exit;
   dlgSaveTo.InitialDir:= CorrectFile(edSaveTo.Text);
   if dlgSaveTo.Execute then
     edSaveTo.Text:= CorrectFile(dlgSaveTo.FileName);
+end;
+
+procedure TMainForm.btOptionBrowseClick(Sender: TObject);
+begin
+  dlgSaveTo.InitialDir:= CorrectFile(edOptionDefaultPath.Text);
+  if dlgSaveTo.Execute then
+    edOptionDefaultPath.Text:= CorrectFile(dlgSaveTo.FileName);
 end;
 
 // -----
@@ -1686,9 +1696,9 @@ begin
   if (Assigned(vtMangaList.FocusedNode)) then
   begin
     pos:= vtMangaList.FocusedNode.Index;
-    if favorites.IsMangaExist(dataProcess.Param[dataProcess.filterPos.Items[pos], DATA_PARAM_NAME],
+   { if favorites.IsMangaExist(dataProcess.Param[dataProcess.filterPos.Items[pos], DATA_PARAM_NAME],
                               cbSelectManga.Items[cbSelectManga.ItemIndex]) then
-      pmMangaList.Items[2].Enabled:= FALSE;
+      pmMangaList.Items[2].Enabled:= FALSE; }
   end;
 end;
 

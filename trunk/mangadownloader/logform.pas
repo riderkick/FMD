@@ -12,7 +12,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
-  ExtCtrls;
+  ExtCtrls, lclintf;
 
 type
 
@@ -54,7 +54,10 @@ begin
   begin
     l:= TStringList.Create;
     l.LoadFromFile(WORK_FOLDER + 'note.txt');
-    MessageDlg('', l.Text, mtInformation, [mbYes], 0);
+    if MessageDlg('', l.Text, mtInformation, [mbYes, mbNo], 0) = mrYes then
+    begin
+      OpenURL('https://akarink.wordpress.com/');
+    end;
     DeleteFile(WORK_FOLDER + 'note.txt');
     l.Free;
   end;

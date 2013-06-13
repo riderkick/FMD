@@ -1102,14 +1102,6 @@ globReturn:
     HTTP.KeepAlive:= TRUE;
     HTTP.KeepAliveTimeout:= 1000;
   end;
- {
-  if Pos(MANGA24H_ROOT, URL) <> 0 then
-  begin
-    HTTP.Headers.Add('Accept: text/xml,application/xml,application/json,application/xhtml+xml,');
-    HTTP.Headers.Add('text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5');
-    HTTP.UserAgent:= 'Mozilla/5.0 (Windows NT 5.1; rv:5.0) Gecko/20100101 Firefox/5.0 Firefox/5.0';
-    HTTP.Headers.Add('Encoding:gzip,deflate;');
-  end;}
 
   while (NOT HTTP.HTTPMethod('GET', URL)) OR
         (HTTP.ResultCode > 500) do

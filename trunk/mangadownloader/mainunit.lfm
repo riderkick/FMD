@@ -1248,7 +1248,7 @@ object MainForm: TMainForm
           end
           object cbOptionMinimizeToTray: TCheckBox
             Left = 20
-            Height = 19
+            Height = 17
             Top = 170
             Width = 136
             Caption = 'cbOptionMinimizeToTray'
@@ -1257,7 +1257,7 @@ object MainForm: TMainForm
           end
           object cbOptionAutoCheckUpdate: TCheckBox
             Left = 20
-            Height = 19
+            Height = 17
             Top = 194
             Width = 130
             Caption = 'Check for new version '
@@ -1288,7 +1288,7 @@ object MainForm: TMainForm
           end
           object cbOptionBatotoUseIE: TCheckBox
             Left = 20
-            Height = 19
+            Height = 17
             Top = 218
             Width = 123
             Caption = 'cbOptionBatotoUseIE'
@@ -1496,7 +1496,7 @@ object MainForm: TMainForm
             Left = 20
             Height = 21
             Top = 42
-            Width = 498
+            Width = 402
             Anchors = [akTop, akLeft, akRight]
             EditLabel.AnchorSideLeft.Control = edOptionDefaultPath
             EditLabel.AnchorSideRight.Control = edOptionDefaultPath
@@ -1505,7 +1505,7 @@ object MainForm: TMainForm
             EditLabel.Left = 20
             EditLabel.Height = 13
             EditLabel.Top = 26
-            EditLabel.Width = 498
+            EditLabel.Width = 402
             EditLabel.Caption = 'Choose default download path:'
             EditLabel.ParentColor = False
             EditLabel.ParentFont = False
@@ -1586,6 +1586,16 @@ object MainForm: TMainForm
               Caption = 'cbOptionAutoNumberChapter'
               TabOrder = 3
             end
+          end
+          object btOptionBrowse: TBitBtn
+            Left = 443
+            Height = 21
+            Top = 42
+            Width = 80
+            Anchors = [akTop, akRight]
+            Caption = 'Browse'
+            OnClick = btOptionBrowseClick
+            TabOrder = 3
           end
         end
         object tsDialogs: TTabSheet
@@ -2262,7 +2272,7 @@ object MainForm: TMainForm
   object tmBackup: TTimer
     Interval = 60000
     OnTimer = tmBackupTimer
-    left = 704
+    left = 688
     top = 72
   end
   object ImageList: TImageList
@@ -2335,7 +2345,7 @@ object MainForm: TMainForm
     Enabled = False
     Interval = 48
     OnTimer = itAnimateTimer
-    left = 704
-    top = 136
+    left = 744
+    top = 72
   end
 end

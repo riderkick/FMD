@@ -994,6 +994,7 @@ var
     isGoOn: Boolean = FALSE;
     i: Cardinal;
     l: TStringList;
+    s: String;
   label
     reload;
   begin
