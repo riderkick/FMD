@@ -373,10 +373,51 @@ begin
       begin
         Synchronize(DlgReport);
         continue;
-      end;  //
-      workPtr:= 0;//mainDataProcess.Data.Count;
+      end;
 
-      getInfo(links.Count, CS_INFO);
+      if (website <> TURKCRAFT_NAME) AND
+         (website <> MANGAVADISI_NAME) then
+      begin
+        workPtr:= 0;//mainDataProcess.Data.Count;
+
+        getInfo(links.Count, CS_INFO);
+      end
+      else
+      begin
+        for k:= 0 to links.Count-1 do
+        begin
+          {$IFDEF DOWNLOADER}
+            mainDataProcess.Data.Add(
+             RemoveStringBreaks(
+             SetParams(
+             [names.Strings[k],
+             links.Strings[k],
+             '',
+             '',
+             '',
+             '',
+             '',
+             '0',
+             IntToStr(GetCurrentJDN),
+             '0'])));
+          {$ELSE}
+            mainDataProcess.Data.Add(
+             RemoveStringBreaks(
+             SetParams(
+             [names.Strings[k],
+             links.Strings[k],
+             '',
+             '',
+             '',
+             '',
+             '',
+             '0',
+             '0',
+             '0'])));
+          {$ENDIF}
+        end;
+      end;
+
       Sleep(100);
       while threadCount > 0 do Sleep(100);
     end;

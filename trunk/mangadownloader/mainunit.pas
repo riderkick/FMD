@@ -308,6 +308,8 @@ type
   public
     // silentthread counter
     silentThreadCount: Cardinal;
+    // silentAddToFavThread counter
+    silentAddToFavThreadCount: Cardinal;
     // current working silentthread counter
     currentActiveSilentThreadCount: Cardinal;
 
@@ -407,6 +409,9 @@ procedure TMainForm.FormCreate(Sender: TObject);
 var
   fs: TFileStream;
 begin
+  silentThreadCount:= 0;
+  silentAddToFavThreadCount:= 0;
+
   try
     rmAbout.Clear;
     fs:= TFileStream.Create(README_FILE, fmOpenRead or fmShareDenyNone);
@@ -926,6 +931,20 @@ begin
     SubThread.website:= MANGATRADERS_NAME
   end
   else
+  if Pos(MANGAEDEN_ROOT, edURL.Text) > 0 then
+  begin
+    SubThread.link   := edURL.Text;
+    Delete(SubThread.link, 1, Length(MANGAEDEN_ROOT));
+    SubThread.website:= MANGAEDEN_NAME
+  end
+  else
+  if Pos(PERVEDEN_ROOT, edURL.Text) > 0 then
+  begin
+    SubThread.link   := edURL.Text;
+    Delete(SubThread.link, 1, Length(PERVEDEN_ROOT));
+    SubThread.website:= PERVEDEN_NAME
+  end
+  else
   if Pos(GEHENTAI_ROOT, edURL.Text) > 0 then
   begin
     SubThread.link   := edURL.Text;
@@ -1164,6 +1183,7 @@ begin
       silentThread.title:= DataProcess.Param[DataProcess.filterPos.Items[i], DATA_PARAM_NAME];
       silentThread.isSuspended:= FALSE;
       Inc(silentThreadCount);
+      Inc(silentAddToFavThreadCount);
     end;
     xNode:= vtMangaList.GetNext(xNode);
   end;

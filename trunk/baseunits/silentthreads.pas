@@ -19,8 +19,8 @@ type
   TSilentThread = class(TThread)
   protected
     procedure   CallMainFormAfterChecking; virtual;
-    procedure   CallMainFormIncreaseThreadCount;
-    procedure   CallMainFormDecreaseThreadCount;
+    procedure   CallMainFormIncreaseThreadCount; virtual;
+    procedure   CallMainFormDecreaseThreadCount; virtual;
     procedure   Execute; override;
   public
     Info        : TMangaInformation;
@@ -38,6 +38,7 @@ type
   TAddToFavSilentThread = class(TSilentThread)
   protected
     procedure   CallMainFormAfterChecking; override;
+    procedure   CallMainFormDecreaseThreadCount; override;
   public
   end;
 
@@ -235,6 +236,12 @@ begin
                   URL);
     UpdateVtFavorites;
   end;
+end;
+
+procedure   TAddToFavSilentThread.CallMainFormDecreaseThreadCount;
+begin
+  inherited;
+  Dec(MainForm.silentAddToFavThreadCount);
 end;
 
 end.

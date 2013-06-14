@@ -1665,6 +1665,123 @@ var
     source.Free;
   end;
 
+  // get name and link of the manga from TruyenTranhTuan
+  function   TruyenTranhTuanGetNameAndLink: Byte;
+  var
+    tmp: Integer;
+    i: Cardinal;
+    s: String;
+  begin
+    Result:= INFORMATION_NOT_FOUND;
+    if NOT GetPage(TObject(source), TRUYENTRANHTUAN_ROOT + TRUYENTRANHTUAN_BROWSER, 0) then
+    begin
+      Result:= NET_PROBLEM;
+      source.Free;
+      exit;
+    end;
+    parse.Clear;
+    Parser:= TjsFastHTMLParser.Create(PChar(source.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.Exec;
+    Parser.Free;
+    if parse.Count=0 then
+    begin
+      source.Free;
+      exit;
+    end;
+    for i:= parse.Count-1 downto 5 do
+    begin
+      if (Pos('class="ch-subject"', parse.Strings[i]) > 0) then
+      begin
+        Result:= NO_ERROR;
+        s:= StringFilter(TrimLeft(TrimRight(parse.Strings[i+1])));
+        names.Add(HTMLEntitiesFilter(s));
+        s:= GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href='));
+        links.Add(s);
+      end;
+    end;
+    source.Free;
+  end;
+
+  // get name and link of the manga from Turkcraft
+  function   TurkcraftGetNameAndLink: Byte;
+  var
+    tmp: Integer;
+    i: Cardinal;
+    s: String;
+  begin
+    Result:= INFORMATION_NOT_FOUND;
+    if NOT GetPage(TObject(source), TURKCRAFT_ROOT + TURKCRAFT_BROWSER, 0) then
+    begin
+      Result:= NET_PROBLEM;
+      source.Free;
+      exit;
+    end;
+    parse.Clear;
+    Parser:= TjsFastHTMLParser.Create(PChar(source.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.Exec;
+    Parser.Free;
+    if parse.Count=0 then
+    begin
+      source.Free;
+      exit;
+    end;
+    for i:= parse.Count-1 downto 5 do
+    begin
+      if (Pos('<option value="', parse.Strings[i]) > 0) then
+      begin
+        Result:= NO_ERROR;
+        s:= StringFilter(TrimLeft(TrimRight(parse.Strings[i+1])));
+        names.Add(HTMLEntitiesFilter(s));
+        s:= '/' + GetAttributeValue(GetTagAttribute(parse.Strings[i], 'value='));
+        links.Add(s);
+      end;
+    end;
+    source.Free;
+  end;
+
+  // get name and link of the manga from Turkcraft
+  function   MangaVadisiGetNameAndLink: Byte;
+  var
+    tmp: Integer;
+    i: Cardinal;
+    s: String;
+  begin
+    Result:= INFORMATION_NOT_FOUND;
+    if NOT GetPage(TObject(source), MANGAVADISI_ROOT + MANGAVADISI_BROWSER, 0) then
+    begin
+      Result:= NET_PROBLEM;
+      source.Free;
+      exit;
+    end;
+    parse.Clear;
+    Parser:= TjsFastHTMLParser.Create(PChar(source.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.Exec;
+    Parser.Free;
+    if parse.Count=0 then
+    begin
+      source.Free;
+      exit;
+    end;
+    for i:= parse.Count-1 downto 5 do
+    begin
+      if (Pos('<option value="', parse.Strings[i]) > 0) then
+      begin
+        Result:= NO_ERROR;
+        s:= StringFilter(TrimLeft(TrimRight(parse.Strings[i+1])));
+        names.Add(HTMLEntitiesFilter(s));
+        s:= GetAttributeValue(GetTagAttribute(parse.Strings[i], 'value='));
+        links.Add(s);
+      end;
+    end;
+    source.Free;
+  end;
+
   // get name and link of the manga from MangaStream
   function   MangaStreamGetNameAndLink: Byte;
   var
@@ -1843,6 +1960,15 @@ begin
   else
   if website = PERVEDEN_NAME then
     Result:= MangaEdenGetNameAndLink(PERVEDEN_ROOT)
+  else
+  if website = TRUYENTRANHTUAN_NAME then
+    Result:= TruyenTranhTuanGetNameAndLink
+  else
+  if website = TURKCRAFT_NAME then
+    Result:= TurkcraftGetNameAndLink
+  else
+  if website = MANGAVADISI_NAME then
+    Result:= MangaVadisiGetNameAndLink
   else
   if website = GEHENTAI_NAME then
     Result:= GEHentaiGetNameAndLink;
@@ -4037,7 +4163,7 @@ begin
     if ((Pos('enIcon', parse.Strings[i])<>0) OR (Pos('itIcon', parse.Strings[i])<>0)) AND
        (mangaInfo.title = '') then
     begin
-      mangaInfo.title:= TrimRight(TrimLeft(StringFilter(parse.Strings[i+1])));
+      mangaInfo.title:= StringFilter(TrimRight(TrimLeft(parse.Strings[i+1])));
       mangaInfo.title:= GetString('~!@'+mangaInfo.title, '~!@', ' Manga');
     end;
 
@@ -4094,6 +4220,248 @@ begin
       Inc(i); Dec(j);
     end;
   end;
+  Result:= NO_ERROR;
+end;
+
+// get manga infos from truyentranhtuan site
+function   GetTruyenTranhTuanInfoFromURL: Byte;
+var
+  s: String;
+  isExtractSummary: Boolean = TRUE;
+  isExtractGenres : Boolean = FALSE;
+  i, j: Cardinal;
+begin
+  mangaInfo.url:= TRUYENTRANHTUAN_ROOT + URL;// + '&confirm=yes';
+  if NOT GetPage(TObject(source), mangaInfo.url, Reconnect) then
+  begin
+    Result:= NET_PROBLEM;
+    source.Free;
+    exit;
+  end;
+
+  // parsing the HTML source
+  parse.Clear;
+  Parser:= TjsFastHTMLParser.Create(PChar(source.Text));
+  Parser.OnFoundTag := OnTag;
+  Parser.OnFoundText:= OnText;
+  Parser.Exec;
+
+  Parser.Free;
+  source.Free;
+  mangaInfo.website:= TRUYENTRANHTUAN_NAME;
+  // using parser (cover link, summary, chapter name and link)
+  if parse.Count=0 then exit;
+  for i:= 0 to parse.Count-1 do
+  begin
+    // get cover
+    if (GetTagName(parse.Strings[i]) = 'div') AND
+       (Pos('class="title-logo1"', parse.Strings[i])>0) then
+      mangaInfo.coverLink:= CorrectURL(GetAttributeValue(GetTagAttribute(parse.Strings[i+1], 'src=')));
+
+    // get summary
+    if (Pos('Tóm tắt truyện', parse.Strings[i]) <> 0) AND
+       (isExtractSummary) then
+    begin
+      j:= i+4;
+      while (j<parse.Count) AND (Pos('</p>', parse.Strings[j])=0) do
+      begin
+        s:= parse.Strings[j];
+        if s[1] <> '<' then
+        begin
+          parse.Strings[j]:= HTMLEntitiesFilter(StringFilter(parse.Strings[j]));
+          parse.Strings[j]:= StringReplace(parse.Strings[j], #10, '\n', [rfReplaceAll]);
+          parse.Strings[j]:= StringReplace(parse.Strings[j], #13, '\r', [rfReplaceAll]);
+          mangaInfo.summary:= mangaInfo.summary + parse.Strings[j];
+        end;
+        Inc(j);
+      end;
+      isExtractSummary:= FALSE;
+    end;
+
+    // get title
+    if (Pos('Tên truyện:', parse.Strings[i])<>0) AND (mangaInfo.title = '') then
+      mangaInfo.title:= TrimLeft(StringFilter(parse.Strings[i+2]));
+
+    // get chapter name and links
+    if (Pos('class="tbl_body">', parse.Strings[i])>0) then
+    begin
+      Inc(mangaInfo.numChapter);
+      s:= GetString(parse.Strings[i+1], 'href="', '"');
+      mangaInfo.chapterLinks.Add(s);
+      s:= RemoveSymbols(TrimLeft(TrimRight(parse.Strings[i+2])));
+      mangaInfo.chapterName.Add(StringFilter(StringFilter(HTMLEntitiesFilter(s))));
+    end;
+
+    // get authors
+    if  (i+1<parse.Count) AND (Pos('Tác Giả:', parse.Strings[i])<>0) then
+      mangaInfo.authors:= TrimLeft(parse.Strings[i+2]);
+
+    // get artists
+    //if (i+1<parse.Count) AND (Pos('/search/artist/', parse.Strings[i])<>0) then
+    //  mangaInfo.artists:= TrimLeft(parse.Strings[i+1]);
+
+    // get genres
+    if (Pos('Thể loại:', parse.Strings[i])<>0) then
+    begin
+      isExtractGenres:= TRUE;
+      mangaInfo.genres:= '';
+    end;
+
+    if isExtractGenres then
+    begin
+      if Pos('<a href=', parse.Strings[i]) <> 0 then
+        mangaInfo.genres:= mangaInfo.genres + TrimLeft(TrimRight(parse.Strings[i+1])) + ', ';
+      if Pos('</span>', parse.Strings[i]) <> 0 then
+        isExtractGenres:= FALSE;
+    end;
+
+    // get status
+    if (i+5<parse.Count) AND (Pos('Chương mới nhất', parse.Strings[i])<>0) then
+    begin
+      if Pos('Đang tiến hành', parse.Strings[i+2])<>0 then
+        mangaInfo.status:= '1'   // ongoing
+      else
+        mangaInfo.status:= '0';  // completed
+    end;
+  end;
+
+  // Since chapter name and link are inverted, we need to invert them
+  if mangainfo.ChapterLinks.Count > 1 then
+  begin
+    i:= 0; j:= mangainfo.ChapterLinks.Count - 1;
+    while (i<j) do
+    begin
+      mangainfo.ChapterName.Exchange(i, j);
+      mangainfo.chapterLinks.Exchange(i, j);
+      Inc(i); Dec(j);
+    end;
+  end;
+  Result:= NO_ERROR;
+end;
+
+// get manga infos from Turkcraft site
+function   GetTurkcraftInfoFromURL: Byte;
+var
+  s: String;
+  isExtractChapter: Boolean = FALSE;
+  i, j: Cardinal;
+begin
+  mangaInfo.url:= TURKCRAFT_ROOT + URL;
+  if NOT GetPage(TObject(source), mangaInfo.url, Reconnect) then
+  begin
+    Result:= NET_PROBLEM;
+    source.Free;
+    exit;
+  end;
+
+  // parsing the HTML source
+  parse.Clear;
+  Parser:= TjsFastHTMLParser.Create(PChar(source.Text));
+  Parser.OnFoundTag := OnTag;
+  Parser.OnFoundText:= OnText;
+  Parser.Exec;
+
+  Parser.Free;
+  source.Free;
+
+  mangaInfo.website:= TURKCRAFT_NAME;
+  mangaInfo.status:= '1';
+  mangaInfo.coverLink:= '';
+  mangaInfo.summary:= '';
+  mangaInfo.authors:= '';
+  mangaInfo.artists:= '';
+  mangaInfo.genres:= '';
+
+  // using parser (cover link, summary, chapter name and link)
+  if parse.Count=0 then exit;
+  for i:= 0 to parse.Count-1 do
+  begin
+    // get chapter name and links
+    if (Pos('select name="chapter"', parse.Strings[i])>0) then
+      isExtractChapter:= TRUE;
+
+    if (isExtractChapter) AND (Pos('</select>', parse.Strings[i])>0) then
+      break;
+
+    if (isExtractChapter) AND (Pos('option value=', parse.Strings[i])>0) then
+    begin
+      Inc(mangaInfo.numChapter);
+      s:= URL + '/' + GetAttributeValue(GetTagAttribute(parse.Strings[i], 'value='));
+      mangaInfo.chapterLinks.Add(s);
+      s:= RemoveSymbols(TrimLeft(TrimRight(parse.Strings[i+1])));
+      mangaInfo.chapterName.Add(StringFilter(StringFilter(HTMLEntitiesFilter(s))));
+    end;
+  end;
+
+  // Since chapter name and link are inverted, we need to invert them
+  if mangainfo.ChapterLinks.Count > 1 then
+  begin
+    i:= 0; j:= mangainfo.ChapterLinks.Count - 1;
+    while (i<j) do
+    begin
+      mangainfo.ChapterName.Exchange(i, j);
+      mangainfo.chapterLinks.Exchange(i, j);
+      Inc(i); Dec(j);
+    end;
+  end;
+  Result:= NO_ERROR;
+end;
+
+// get manga infos from MangaVadisi site
+function   GetMangaVadisiInfoFromURL: Byte;
+var
+  s: String;
+  isExtractChapter: Boolean = FALSE;
+  i, j: Cardinal;
+begin
+  mangaInfo.url:= MANGAVADISI_ROOT + MANGAVADISI_BROWSER + URL;
+  if NOT GetPage(TObject(source), mangaInfo.url, Reconnect) then
+  begin
+    Result:= NET_PROBLEM;
+    source.Free;
+    exit;
+  end;
+
+  // parsing the HTML source
+  parse.Clear;
+  Parser:= TjsFastHTMLParser.Create(PChar(source.Text));
+  Parser.OnFoundTag := OnTag;
+  Parser.OnFoundText:= OnText;
+  Parser.Exec;
+
+  Parser.Free;
+  source.Free;
+
+  mangaInfo.website:= MANGAVADISI_NAME;
+  mangaInfo.status:= '1';
+  mangaInfo.coverLink:= '';
+  mangaInfo.summary:= '';
+  mangaInfo.authors:= '';
+  mangaInfo.artists:= '';
+  mangaInfo.genres:= '';
+
+  // using parser (cover link, summary, chapter name and link)
+  if parse.Count=0 then exit;
+  for i:= 0 to parse.Count-1 do
+  begin
+    // get chapter name and links
+    if (Pos('select name="chapter"', parse.Strings[i])>0) then
+      isExtractChapter:= TRUE;
+
+    if (isExtractChapter) AND (Pos('</select>', parse.Strings[i])>0) then
+      break;
+
+    if (isExtractChapter) AND (Pos('option value=', parse.Strings[i])>0) then
+    begin
+      Inc(mangaInfo.numChapter);
+      s:= URL + '/' + GetAttributeValue(GetTagAttribute(parse.Strings[i], 'value='));
+      mangaInfo.chapterLinks.Add(s);
+      s:= RemoveSymbols(TrimLeft(TrimRight(parse.Strings[i+1])));
+      mangaInfo.chapterName.Add(StringFilter(StringFilter(HTMLEntitiesFilter(s))));
+    end;
+  end;
+
+  // Since chapter name and link are inverted, we need to invert them
   Result:= NO_ERROR;
 end;
 
@@ -4227,11 +4595,20 @@ begin
   if website = MANGASTREAM_NAME then
     Result:= GetMangaStreamInfoFromURL
   else
+  if website = TRUYENTRANHTUAN_NAME then
+    Result:= GetTruyenTranhTuanInfoFromURL
+  else
   if website = MANGAEDEN_NAME then
     Result:= GetMangaEdenInfoFromURL(MANGAEDEN_ROOT)
   else
   if website = PERVEDEN_NAME then
     Result:= GetMangaEdenInfoFromURL(PERVEDEN_ROOT)
+  else
+  if website = TURKCRAFT_NAME then
+    Result:= GetTurkcraftInfoFromURL
+  else
+  if website = MANGAVADISI_NAME then
+    Result:= GetMangaVadisiInfoFromURL
   else
   if website = GEHENTAI_NAME then
   begin

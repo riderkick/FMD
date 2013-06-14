@@ -109,6 +109,9 @@ const
   MANGASTREAM_NAME  = 'MangaStream';  MANGASTREAM_ID = 16;
   MANGAEDEN_NAME    = 'MangaEden';    MANGAEDEN_ID   = 17;
   PERVEDEN_NAME     = 'PervEden';     PERVEDEN_ID    = 18;
+  TRUYENTRANHTUAN_NAME = 'TruyenTranhTuan'; TRUYENTRANHTUAN_ID = 19;
+  TURKCRAFT_NAME    = 'Turkcraft';    TURKCRAFT_ID = 20;
+  MANGAVADISI_NAME  = 'MangaVadisi';  MANGAVADISI_ID = 21;
 
 var
   // cbOptionLetFMDDoItemIndex
@@ -189,10 +192,10 @@ var
   MANGAFOX_ROOT   : String = 'http://mangafox.me';
   MANGAFOX_BROWSER: String = '/directory/';
 
-  MANGATRADERS_ROOT: String = 'http://www.mangatraders.com';
+  MANGATRADERS_ROOT   : String = 'http://www.mangatraders.com';
   MANGATRADERS_BROWSER: String = '/manga/serieslist/';
 
-  MANGASTREAM_ROOT: String = 'http://mangastream.com';
+  MANGASTREAM_ROOT   : String = 'http://mangastream.com';
   MANGASTREAM_BROWSER: String = '/manga';
 
   MANGAEDEN_ROOT      : String = 'http://www.mangaeden.com';
@@ -204,6 +207,15 @@ var
   PERVEDEN_BROWSER   : String = '/en-directory/';
   PERVEDEN_EN_BROWSER: String = '/en-directory/';
   PERVEDEN_IT_BROWSER: String = '/it-directory/';
+
+  TRUYENTRANHTUAN_ROOT   : String = 'http://truyentranhtuan.com';
+  TRUYENTRANHTUAN_BROWSER: String = '/danh-sach-truyen/';
+
+  TURKCRAFT_ROOT   : String = 'http://turkcraft.com';
+  TURKCRAFT_BROWSER: String = '/';
+
+  MANGAVADISI_ROOT   : String = 'http://www.mangavadisi.net';
+  MANGAVADISI_BROWSER: String = '/hemenoku/';
 
   UPDATE_URL      : String = 'http://akarin.byethost5.com/fmd/';
 
@@ -599,7 +611,13 @@ begin
   else
   if name = MANGAEDEN_NAME then Result:= MANGAEDEN_ID
   else
-  if name = PERVEDEN_NAME then Result:= PERVEDEN_ID;
+  if name = PERVEDEN_NAME then Result:= PERVEDEN_ID
+  else
+  if name = TRUYENTRANHTUAN_NAME then Result:= TRUYENTRANHTUAN_ID
+  else
+  if name = TURKCRAFT_NAME then Result:= TURKCRAFT_ID
+  else
+  if name = MANGAVADISI_NAME then Result:= MANGAVADISI_ID;
 end;
 
 function  GetMangaDatabaseURL(const name: String): String;
