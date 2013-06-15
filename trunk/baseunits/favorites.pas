@@ -75,7 +75,7 @@ type
     procedure   ShowResult;
     function    IsMangaExist(const title, website: String): Boolean;
     procedure   Add(const title, currentChapter, website, saveTo, link: String);
-    procedure   Remove(const pos: Cardinal);
+    procedure   Remove(const pos: Cardinal; const isBackup: Boolean = TRUE);
     procedure   Restore;
     procedure   Backup;
   end;
@@ -420,7 +420,7 @@ begin
   Backup;
 end;
 
-procedure   TFavoriteManager.Remove(const pos: Cardinal);
+procedure   TFavoriteManager.Remove(const pos: Cardinal; const isBackup: Boolean = TRUE);
 begin
   if isRunning then exit;
   if pos >= Count then exit;
@@ -428,7 +428,8 @@ begin
   SetLength(favoriteInfo, Count-1);
   SetLength(mangaInfo   , Count-1);
   Dec(Count);
-  Backup;
+  if isBackup then
+    Backup;
 end;
 
 procedure   TFavoriteManager.Restore;

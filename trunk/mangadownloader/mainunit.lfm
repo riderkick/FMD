@@ -15,21 +15,21 @@ object MainForm: TMainForm
   object pnMainLeft: TPanel
     AnchorSideRight.Control = spMainSplitter
     Left = 0
-    Height = 439
+    Height = 435
     Top = 32
     Width = 195
     Align = alLeft
     Anchors = [akTop, akLeft, akRight, akBottom]
-    ClientHeight = 439
+    ClientHeight = 435
     ClientWidth = 195
     TabOrder = 0
     object cbSelectManga: TComboBox
       Left = 8
-      Height = 21
+      Height = 23
       Top = 8
       Width = 144
       Anchors = [akTop, akLeft, akRight]
-      ItemHeight = 13
+      ItemHeight = 15
       Items.Strings = (
         ''
       )
@@ -39,7 +39,7 @@ object MainForm: TMainForm
     end
     object edSearch: TEdit
       Left = 8
-      Height = 21
+      Height = 23
       Top = 36
       Width = 144
       Anchors = [akTop, akLeft, akRight]
@@ -49,7 +49,7 @@ object MainForm: TMainForm
     end
     object vtMangaList: TVirtualStringTree
       Left = 8
-      Height = 342
+      Height = 338
       Hint = 'test'
       Top = 88
       Width = 176
@@ -134,9 +134,9 @@ object MainForm: TMainForm
     end
     object lbMode: TLabel
       Left = 8
-      Height = 13
+      Height = 15
       Top = 64
-      Width = 125
+      Width = 124
       Caption = 'Mode: Show all manga'
       Font.Style = [fsBold]
       ParentColor = False
@@ -263,7 +263,7 @@ object MainForm: TMainForm
   end
   object pcMain: TPageControl
     Left = 195
-    Height = 439
+    Height = 435
     Top = 32
     Width = 597
     ActivePage = tsDownload
@@ -275,11 +275,11 @@ object MainForm: TMainForm
     OnChange = pcMainChange
     object tsDownload: TTabSheet
       Caption = 'Downloads'
-      ClientHeight = 413
+      ClientHeight = 407
       ClientWidth = 589
       object vtDownload: TVirtualStringTree
         Left = 0
-        Height = 413
+        Height = 407
         Top = 0
         Width = 589
         Align = alClient
@@ -505,11 +505,11 @@ object MainForm: TMainForm
         Height = 413
         Top = 0
         Width = 589
-        HorzScrollBar.Page = 569
+        HorzScrollBar.Page = 568
         VertScrollBar.Page = 409
         Align = alClient
         ClientHeight = 409
-        ClientWidth = 569
+        ClientWidth = 568
         TabOrder = 0
         object pnGenres: TPanel
           Left = 0
@@ -1037,10 +1037,10 @@ object MainForm: TMainForm
           end
           object cbFilterStatus: TComboBox
             Left = 135
-            Height = 21
+            Height = 23
             Top = 80
             Width = 146
-            ItemHeight = 13
+            ItemHeight = 15
             ItemIndex = 2
             Items.Strings = (
               'Completed'
@@ -1190,16 +1190,16 @@ object MainForm: TMainForm
     end
     object tsOption: TTabSheet
       Caption = 'Options'
-      ClientHeight = 413
+      ClientHeight = 407
       ClientWidth = 589
       object pnOptions: TPageControl
         Left = 9
-        Height = 320
+        Height = 314
         Top = 26
         Width = 570
-        ActivePage = tsGeneral
+        ActivePage = tsWebsites
         Anchors = [akTop, akLeft, akRight, akBottom]
-        TabIndex = 0
+        TabIndex = 4
         TabOrder = 0
         object tsGeneral: TTabSheet
           Caption = 'General'
@@ -1207,10 +1207,10 @@ object MainForm: TMainForm
           ClientWidth = 562
           object cbLanguages: TComboBox
             Left = 20
-            Height = 21
+            Height = 23
             Top = 34
             Width = 212
-            ItemHeight = 13
+            ItemHeight = 15
             Items.Strings = (
               'English'
             )
@@ -1266,10 +1266,10 @@ object MainForm: TMainForm
           end
           object cbOptionLetFMDDo: TComboBox
             Left = 20
-            Height = 21
+            Height = 23
             Top = 90
             Width = 212
-            ItemHeight = 13
+            ItemHeight = 15
             ItemIndex = 0
             Items.Strings = (
               ''
@@ -1640,25 +1640,33 @@ object MainForm: TMainForm
         end
         object tsWebsites: TTabSheet
           Caption = 'Websites'
-          ClientHeight = 294
+          ClientHeight = 286
           ClientWidth = 562
-          object clbOptionMangaSiteSelection: TCheckListBox
+          object vtOptionMangaSiteSelection: TVirtualStringTree
             Left = 0
-            Height = 294
+            Height = 286
             Top = 0
             Width = 562
             Align = alClient
-            ItemHeight = 0
-            OnDrawItem = clbOptionMangaSiteSelectionDrawItem
+            DefaultText = 'Node'
+            Header.AutoSizeIndex = 0
+            Header.Columns = <>
+            Header.DefaultHeight = 17
+            Header.MainColumn = -1
             ParentFont = False
             TabOrder = 0
+            TreeOptions.MiscOptions = [toAcceptOLEDrop, toCheckSupport, toFullRepaintOnResize, toInitOnSave, toToggleOnDblClick, toWheelPanning, toEditOnClick]
+            TreeOptions.SelectionOptions = [toFullRowSelect]
+            OnGetText = vtOptionMangaSiteSelectionGetText
+            OnGetNodeDataSize = vtOptionMangaSiteSelectionGetNodeDataSize
+            OnInitNode = vtOptionMangaSiteSelectionInitNode
           end
         end
       end
       object btOptionApply: TButton
         Left = 45
         Height = 33
-        Top = 362
+        Top = 356
         Width = 99
         Anchors = [akBottom]
         Caption = 'Apply'
@@ -1668,11 +1676,11 @@ object MainForm: TMainForm
     end
     object tsAbout: TTabSheet
       Caption = 'About'
-      ClientHeight = 413
+      ClientHeight = 407
       ClientWidth = 589
       object rmAbout: TRichMemo
         Left = 0
-        Height = 346
+        Height = 340
         Top = 0
         Width = 589
         Align = alTop
@@ -1687,12 +1695,22 @@ object MainForm: TMainForm
       object btCheckVersion: TBitBtn
         Left = 25
         Height = 40
-        Top = 362
-        Width = 528
-        Anchors = [akLeft, akRight, akBottom]
+        Top = 356
+        Width = 192
+        Anchors = [akLeft, akBottom]
         Caption = 'Check for new version'
         OnClick = btCheckVersionClick
         TabOrder = 1
+      end
+      object btVisitMyBlog: TBitBtn
+        Left = 233
+        Height = 40
+        Top = 356
+        Width = 192
+        Anchors = [akLeft, akBottom]
+        Caption = 'Visit my blog'
+        OnClick = btVisitMyBlogClick
+        TabOrder = 2
       end
     end
   end
@@ -1708,8 +1726,8 @@ object MainForm: TMainForm
   end
   object sbMain: TStatusBar
     Left = 0
-    Height = 20
-    Top = 471
+    Height = 24
+    Top = 467
     Width = 792
     Panels = <    
       item
@@ -1731,7 +1749,7 @@ object MainForm: TMainForm
     TabOrder = 4
     object edURL: TEdit
       Left = 8
-      Height = 21
+      Height = 23
       Top = 4
       Width = 688
       Anchors = [akTop, akLeft, akRight]

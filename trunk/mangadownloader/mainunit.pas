@@ -23,6 +23,7 @@ type
   { TMainForm }
 
   TMainForm = class(TForm)
+    btVisitMyBlog: TBitBtn;
     btOptionBrowse: TBitBtn;
     btCheckVersion: TBitBtn;
     btURL: TBitBtn;
@@ -92,7 +93,6 @@ type
     CheckBox8: TCheckBox;
     CheckBox9: TCheckBox;
     cbFilterStatus: TComboBox;
-    clbOptionMangaSiteSelection: TCheckListBox;
     clbChapterList: TCheckListBox;
     cbLanguages: TComboBox;
     cbOptionLetFMDDo: TComboBox;
@@ -204,6 +204,7 @@ type
     tsFilter: TTabSheet;
     tsInformation: TTabSheet;
     tsDownload: TTabSheet;
+    vtOptionMangaSiteSelection: TVirtualStringTree;
     vtFavorites: TVirtualStringTree;
     vtDownload: TVirtualStringTree;
     vtMangaList: TVirtualStringTree;
@@ -212,9 +213,9 @@ type
     procedure btReadOnlineClick(Sender: TObject);
     procedure btUpdateListClick(Sender: TObject);
     procedure btURLClick(Sender: TObject);
+    procedure btVisitMyBlogClick(Sender: TObject);
     procedure cbSelectMangaChange(Sender: TObject);
-    procedure clbOptionMangaSiteSelectionDrawItem(Control: TWinControl;
-      Index: Integer; ARect: TRect; State: TOwnerDrawState);
+
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCreate(Sender: TObject);
 
@@ -305,7 +306,18 @@ type
     procedure vtMangaListDblClick(Sender: TObject);
 
     procedure tmBackupTimer(Sender: TObject);
+    procedure vtOptionMangaSiteSelectionGetNodeDataSize(
+      Sender: TBaseVirtualTree; var NodeDataSize: Integer);
+    procedure vtOptionMangaSiteSelectionGetText(Sender: TBaseVirtualTree;
+      Node: PVirtualNode; Column: TColumnIndex; TextType: TVSTTextType;
+      var CellText: String);
+    procedure vtOptionMangaSiteSelectionInitNode(Sender: TBaseVirtualTree;
+      ParentNode, Node: PVirtualNode; var InitialStates: TVirtualNodeInitStates
+      );
   public
+    //
+    optionMangaSiteSelectionNodes: array of PVirtualNode;
+
     // silentthread counter
     silentThreadCount: Cardinal;
     // silentAddToFavThread counter
@@ -986,6 +998,11 @@ begin
   end;
 end;
 
+procedure TMainForm.btVisitMyBlogClick(Sender: TObject);
+begin
+  OpenURL('http://akarink.wordpress.com/');
+end;
+
 procedure TMainForm.btReadOnlineClick(Sender: TObject);
 begin
   OpenURL(mangaInfo.url);
@@ -1023,22 +1040,6 @@ begin
     currentWebsite:= cbSelectManga.Items[cbSelectManga.ItemIndex];
     dataProcess.website:= cbSelectManga.Items[cbSelectManga.ItemIndex];
     CheckForTopPanel;
-  end;
-end;
-
-procedure TMainForm.clbOptionMangaSiteSelectionDrawItem(Control: TWinControl;
-  Index: Integer; ARect: TRect; State: TOwnerDrawState);
-var
-  AExRect: TRect;
-begin
-  if clbOptionMangaSiteSelection.Items[Index] = '  -----' then
-  begin
-    AExRect.Left  := ARect.Left-50;
-    AExRect.Top   := ARect.Top;
-    AExRect.Right := ARect.Right;
-    AExRect.Bottom:= ARect.Bottom;
-    clbOptionMangaSiteSelection.Canvas.Brush.Color:= $FFFFFF;
-    clbOptionMangaSiteSelection.Canvas.FillRect(ARect);
   end;
 end;
 
@@ -1224,11 +1225,13 @@ begin
     while i < favorites.Count do
     begin
       if vtFavorites.Selected[xNode] then
-        favorites.Remove(i)
+        favorites.Remove(i, FALSE)
       else
         Inc(i);
       xNode:= vtFavorites.GetNext(xNode);
     end;
+
+    favorites.Backup;
    { for i:= 0 to vtFavorites.RootNodeCount-1 do
     begin
       if vtFavorites.Selected[xNode] then
@@ -1594,12 +1597,12 @@ procedure TMainForm.pcMainChange(Sender: TObject);
 
     cbOptionAutoCheckUpdate.Checked:= options.ReadBool('update', 'AutoCheckUpdateAtStartup', TRUE);
 
-    for i:= 0 to clbOptionMangaSiteSelection.Items.Count-1 do
-      clbOptionMangaSiteSelection.Checked[i]:= FALSE;
+    for i:= 0 to Length(optionMangaSiteSelectionNodes)-1 do
+      optionMangaSiteSelectionNodes[i].CheckState:= csUncheckedNormal;
     s:= mangalistIni.ReadString('general', 'MangaListSelect', '0'+SEPERATOR);
     GetParams(l, s);
     for i:= 0 to l.Count-1 do
-      clbOptionMangaSiteSelection.Checked[StrToInt(l.Strings[i])]:= TRUE;
+      optionMangaSiteSelectionNodes[StrToInt(l.Strings[i])].CheckState:= csCheckedNormal;
 
     l.Free;
   end;
@@ -1937,9 +1940,9 @@ begin
   mangalistIni.UpdateFile;
 
   cbSelectManga.Clear;
-  for i:= 0 to clbOptionMangaSiteSelection.Items.Count-1 do
+  for i:= 0 to Length(optionMangaSiteSelectionNodes)-1 do
   begin
-    if (clbOptionMangaSiteSelection.Checked[i]) AND
+    if (optionMangaSiteSelectionNodes[i].CheckState = csCheckedNormal) AND
        (websiteName.Strings[i] <> '') then
     begin
       cbSelectManga.Items.Add(websiteName.Strings[i]);
@@ -2318,7 +2321,12 @@ var
   i, j: Cardinal;
   languages,
   l: TStringList;
+  currentLanguage,
   s: String;
+  ANode,
+  currentRootNode: PVirtualNode;
+  data           : PMangaListItem;
+
 begin
   l:= TStringList.Create;
   websiteLanguage.Clear;
@@ -2335,21 +2343,41 @@ begin
   s:= mangalistIni.ReadString('general', 'MangaListSelect', '');
   GetParams(l, s);
 
-  clbOptionMangaSiteSelection.Clear;
+  SetLength(optionMangaSiteSelectionNodes, websiteName.Count);
+  currentLanguage:= '';
   for i:= 0 to websiteName.Count-1 do
   begin
-    if websiteLanguage.Strings[i] <> '' then
-      clbOptionMangaSiteSelection.Items.Add('[ '+websiteLanguage.Strings[i]+' ]  '+websiteName.Strings[i])
-    else
-      clbOptionMangaSiteSelection.Items.Add('  -----');
+    // if we found a new language, let's create a new root for it
+    with vtOptionMangaSiteSelection do
+    begin
+      if currentLanguage <> websiteLanguage.Strings[i] then
+      begin
+        // load manga list to virtual tree
+        currentLanguage:= websiteLanguage.Strings[i];
+        // add first root
+        currentRootNode:= AddChild(nil);
+        data           := GetNodeData(currentRootNode);
+        data^.Text     := currentLanguage;
+      end;
+
+      // let's add manga name to the root
+      ANode:= AddChild(currentRootNode);
+      ANode.CheckState:= csUncheckedNormal;
+      data := GetNodeData(ANode);
+      data^.Text:= websiteName.Strings[i];
+
+      // add node to node list
+      optionMangaSiteSelectionNodes[i]:= ANode;
+    end;
   end;
 
   for i:= 0 to l.Count-1 do
   begin
     j:= StrToInt(l.Strings[i]);
     cbSelectManga.Items.Add(websiteName.Strings[j]);
-    clbOptionMangaSiteSelection.Checked[j]:= TRUE;
+    optionMangaSiteSelectionNodes[j].CheckState:= csCheckedNormal;
   end;
+
   cbSelectManga.ItemIndex:= 0;
   dataProcess.LoadFromFile(cbSelectManga.Items.Strings[0]);
   dataProcess.website:= cbSelectManga.Items[0];
@@ -2362,9 +2390,9 @@ var
   i: Cardinal;
 begin
   Result:= '';
-  for i:= 0 to clbOptionMangaSiteSelection.Items.Count-1 do
+  for i:= 0 to Length(optionMangaSiteSelectionNodes)-1 do
   begin
-    if clbOptionMangaSiteSelection.Checked[i] then
+    if optionMangaSiteSelectionNodes[i].CheckState = csCheckedNormal then
       Result:= Result+IntToStr(i)+SEPERATOR;
   end;
 end;
@@ -2692,6 +2720,34 @@ procedure TMainForm.tmBackupTimer(Sender: TObject);
 begin
   if DLManager.isRunningBackup then exit;
   DLManager.Backup;
+end;
+
+procedure TMainForm.vtOptionMangaSiteSelectionGetNodeDataSize(
+  Sender: TBaseVirtualTree; var NodeDataSize: Integer);
+begin
+  NodeDataSize:= SizeOf(TMangaListItem);
+end;
+
+procedure TMainForm.vtOptionMangaSiteSelectionGetText(Sender: TBaseVirtualTree;
+  Node: PVirtualNode; Column: TColumnIndex; TextType: TVSTTextType;
+  var CellText: String);
+var
+  data: PMangaListItem;
+begin
+  data:= vtOptionMangaSiteSelection.GetNodeData(Node);
+  if Assigned(data) then
+    CellText:= data.Text;
+end;
+
+procedure TMainForm.vtOptionMangaSiteSelectionInitNode(
+  Sender: TBaseVirtualTree; ParentNode, Node: PVirtualNode;
+  var InitialStates: TVirtualNodeInitStates);
+var
+  Level: Integer;
+begin
+  Level:= vtOptionMangaSiteSelection.GetNodeLevel(Node);
+  if Level = 1 then
+    Node.CheckType:= ctCheckBox;
 end;
 
 end.

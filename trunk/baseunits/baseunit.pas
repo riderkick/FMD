@@ -1147,7 +1147,11 @@ globReturn:
  // HTTP.Document.SaveToFile('error2.txt');
   while HTTP.ResultCode = 302 do
   begin
-    URL:= CheckRedirect(HTTP);
+    s:= CheckRedirect(HTTP);
+    if Pos('http://', s) = 0 then
+      URL:= 'http://' + GetString(URL, 'http://', '/');
+    URL:= URL + s;
+
     HTTP.Clear;
     HTTP.RangeStart:= 0;
     if Pos(HENTAI2READ_ROOT, URL) <> 0 then

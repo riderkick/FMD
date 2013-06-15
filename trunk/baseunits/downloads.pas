@@ -1837,7 +1837,8 @@ var
   begin
     if (FileExists(Path+'/'+name+'.jpg')) OR
        (FileExists(Path+'/'+name+'.png')) OR
-       (FileExists(Path+'/'+name+'.gif')) then
+       (FileExists(Path+'/'+name+'.gif')) OR
+       (Pos('http', URL) = 0) then
     begin
       Result:= TRUE;
       exit;

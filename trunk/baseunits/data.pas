@@ -2032,6 +2032,7 @@ begin
       mangaInfo.genres:= '';
       isExtractGenres:= TRUE;
     end;
+
     if isExtractGenres then
     begin
       if GetTagName(parse.Strings[i]) <> 'a' then
@@ -2043,13 +2044,13 @@ begin
     end;
 
       // get summary
-    if (parse.Strings[i]='<p>') then
+    if Pos('Upload a chapter', parse.Strings[i]) > 0 then
     begin
-      j:= i+1;
+      j:= i+8;
       mangaInfo.summary:= '';
-      while (j<parse.Count-1) AND (Pos('</p>', parse.Strings[j]) = 0) do
+      while (j<parse.Count-4) AND (Pos('</p>', parse.Strings[j]) = 0) do
       begin
-        mangaInfo.summary:= mangaInfo.summary+parse.Strings[j];
+        mangaInfo.summary:= StringFilter(mangaInfo.summary+parse.Strings[j]);
         Inc(j);
       end;
       mangaInfo.summary:= StringFilter(mangaInfo.summary);
