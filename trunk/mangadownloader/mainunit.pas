@@ -14,7 +14,7 @@ uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
   ExtCtrls, ComCtrls, Grids, ColorBox, ActnList, Buttons, CheckLst, Spin, Menus,
   customdrawncontrols, VirtualTrees, RichMemo, SHDocVw, IniFiles, Process,
-  baseunit, data, types, downloads, favorites, LConvEncoding, LCLIntf,
+  baseunit, data, types, downloads, favorites, LConvEncoding, LCLIntf, LazUTF8,
   updatelist, updatedb, lclproc, subthreads, silentthreads, AnimatedGif, MemBitmap
   {$IFDEF WINDOWS}, ActiveX{$ENDIF};
 
@@ -1537,8 +1537,8 @@ begin
   {$IFDEF WINDOWS}
   if NOT Assigned(vtFavorites.FocusedNode) then exit;
   Process:= TProcess.Create(nil);
-  Process.CommandLine:= 'explorer.exe /e, '+
-                         StringReplace(Favorites.favoriteInfo[vtFavorites.FocusedNode.Index].SaveTo, '/', '\', [rfReplaceAll]);
+  Process.CommandLine:= UTF8ToUTF16('explorer.exe /e, '+
+                                     StringReplace(Favorites.favoriteInfo[vtFavorites.FocusedNode.Index].SaveTo, '/', '\', [rfReplaceAll]));
   Process.Execute;
   Process.Free;
   {$ENDIF}
@@ -1551,8 +1551,8 @@ begin
   {$IFDEF WINDOWS}
   if NOT Assigned(vtDownload.FocusedNode) then exit;
   Process:= TProcess.Create(nil);
-  Process.CommandLine:= 'explorer.exe /e, '+
-                         StringReplace(DLManager.containers.Items[vtDownload.FocusedNode.Index].downloadInfo.SaveTo, '/', '\', [rfReplaceAll]);
+  Process.CommandLine:= UTF8ToUTF16('explorer.exe /e, '+
+                                     StringReplace(DLManager.containers.Items[vtDownload.FocusedNode.Index].downloadInfo.SaveTo, '/', '\', [rfReplaceAll]));
   Process.Execute;
   Process.Free;
   {$ENDIF}

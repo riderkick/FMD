@@ -1211,7 +1211,7 @@ begin
       end;
       Inc(counter);
     end;
-    HTTP.RangeStart:= HTTP.DownloadSize - HTTP.Document.Size;
+    HTTP.RangeStart:= HTTP.Document.Size;
    // HTTP.Clear;
     Sleep(500);
   end;
@@ -1235,7 +1235,7 @@ begin
         end;
         Inc(counter);
       end;
-      HTTP.RangeStart:= HTTP.DownloadSize - HTTP.Document.Size;
+      HTTP.RangeStart:= HTTP.Document.Size;
      // HTTP.Clear;
       Sleep(500);
     end;
