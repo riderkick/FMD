@@ -106,6 +106,7 @@ begin
 
       if s='' then
         s:= Format('%.4d', [i+1]);
+      s:= TrimLeft(TrimRight(s));
       DLManager.containers.Items[pos].chapterName .Add(s);
       DLManager.containers.Items[pos].chapterLinks.Add(Info.mangaInfo.chapterLinks.Strings[i]);
     end;

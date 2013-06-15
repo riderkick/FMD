@@ -57,7 +57,7 @@
         <PackageName Value="LCL"/>
       </Item6>
     </RequiredPackages>
-    <Units Count="13">
+    <Units Count="14">
       <Unit0>
         <Filename Value="md.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -132,6 +132,11 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="silentthreads"/>
       </Unit12>
+      <Unit13>
+        <Filename Value="..\baseunits\buffer.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="buffer"/>
+      </Unit13>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

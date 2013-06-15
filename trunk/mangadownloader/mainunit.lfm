@@ -1,7 +1,7 @@
 object MainForm: TMainForm
-  Left = 395
+  Left = 424
   Height = 491
-  Top = 78
+  Top = 59
   Width = 792
   Align = alBottom
   Caption = 'Free Manga Downloader'
@@ -266,11 +266,11 @@ object MainForm: TMainForm
     Height = 435
     Top = 32
     Width = 597
-    ActivePage = tsDownload
+    ActivePage = tsOption
     Align = alClient
     Font.Style = [fsBold]
     ParentFont = False
-    TabIndex = 0
+    TabIndex = 4
     TabOrder = 1
     OnChange = pcMainChange
     object tsDownload: TTabSheet
@@ -339,17 +339,17 @@ object MainForm: TMainForm
     end
     object tsInformation: TTabSheet
       Caption = 'Manga Infos'
-      ClientHeight = 413
+      ClientHeight = 407
       ClientWidth = 589
       object sbInformation: TScrollBox
         Left = 0
-        Height = 413
+        Height = 407
         Top = 0
         Width = 589
         HorzScrollBar.Page = 585
-        VertScrollBar.Page = 409
+        VertScrollBar.Page = 403
         Align = alClient
-        ClientHeight = 409
+        ClientHeight = 403
         ClientWidth = 585
         TabOrder = 0
         object pnInfomation: TPanel
@@ -401,17 +401,17 @@ object MainForm: TMainForm
         end
         object pnChapterList: TPanel
           Left = 0
-          Height = 170
+          Height = 164
           Top = 239
           Width = 585
           Align = alClient
-          ClientHeight = 170
+          ClientHeight = 164
           ClientWidth = 585
           TabOrder = 2
           object clbChapterList: TCheckListBox
             AnchorSideTop.Side = asrBottom
             Left = 8
-            Height = 77
+            Height = 71
             Top = 9
             Width = 569
             Anchors = [akTop, akLeft, akRight, akBottom]
@@ -424,8 +424,8 @@ object MainForm: TMainForm
           end
           object edSaveTo: TLabeledEdit
             Left = 8
-            Height = 21
-            Top = 110
+            Height = 23
+            Top = 102
             Width = 287
             Anchors = [akLeft, akBottom]
             EditLabel.AnchorSideLeft.Control = edSaveTo
@@ -433,8 +433,8 @@ object MainForm: TMainForm
             EditLabel.AnchorSideRight.Side = asrBottom
             EditLabel.AnchorSideBottom.Control = edSaveTo
             EditLabel.Left = 8
-            EditLabel.Height = 13
-            EditLabel.Top = 94
+            EditLabel.Height = 15
+            EditLabel.Top = 84
             EditLabel.Width = 287
             EditLabel.Caption = 'Save to'
             EditLabel.ParentColor = False
@@ -445,7 +445,7 @@ object MainForm: TMainForm
           object btDownload: TBitBtn
             Left = 399
             Height = 30
-            Top = 101
+            Top = 95
             Width = 80
             Anchors = [akLeft, akBottom]
             Caption = 'Download'
@@ -455,7 +455,7 @@ object MainForm: TMainForm
           object btBrowse: TBitBtn
             Left = 303
             Height = 30
-            Top = 101
+            Top = 95
             Width = 80
             Anchors = [akLeft, akBottom]
             Caption = 'Browse'
@@ -464,9 +464,9 @@ object MainForm: TMainForm
           end
           object cbAddAsStopped: TCheckBox
             Left = 8
-            Height = 17
-            Top = 138
-            Width = 196
+            Height = 19
+            Top = 130
+            Width = 214
             Anchors = [akLeft, akBottom]
             Caption = 'Add to download list as stopped task'
             OnChange = cbAddAsStoppedChange
@@ -475,9 +475,9 @@ object MainForm: TMainForm
           end
           object cbAddToFavorites: TCheckBox
             Left = 311
-            Height = 17
-            Top = 138
-            Width = 100
+            Height = 19
+            Top = 130
+            Width = 106
             Anchors = [akLeft, akBottom]
             Caption = 'Add to Favorites'
             ParentFont = False
@@ -486,7 +486,7 @@ object MainForm: TMainForm
           object btReadOnline: TButton
             Left = 487
             Height = 30
-            Top = 101
+            Top = 95
             Width = 90
             Anchors = [akLeft, akBottom]
             Caption = 'Read online'
@@ -1197,13 +1197,13 @@ object MainForm: TMainForm
         Height = 314
         Top = 26
         Width = 570
-        ActivePage = tsWebsites
+        ActivePage = tsGeneral
         Anchors = [akTop, akLeft, akRight, akBottom]
-        TabIndex = 4
+        TabIndex = 0
         TabOrder = 0
         object tsGeneral: TTabSheet
           Caption = 'General'
-          ClientHeight = 294
+          ClientHeight = 286
           ClientWidth = 562
           object cbLanguages: TComboBox
             Left = 20
@@ -1220,15 +1220,15 @@ object MainForm: TMainForm
           end
           object lbOptionLanguage: TLabel
             Left = 20
-            Height = 13
+            Height = 15
             Top = 18
-            Width = 102
+            Width = 101
             Caption = 'lbOptionLanguage'
             ParentColor = False
           end
           object seOptionNewMangaTime: TSpinEdit
             Left = 20
-            Height = 21
+            Height = 23
             Top = 138
             Width = 58
             MaxValue = 365
@@ -1239,27 +1239,27 @@ object MainForm: TMainForm
           end
           object lbOptionNewMangaTime: TLabel
             Left = 92
-            Height = 13
+            Height = 15
             Top = 138
-            Width = 115
+            Width = 135
             Caption = 'lbOptionNewMangaTime'
             ParentColor = False
             ParentFont = False
           end
           object cbOptionMinimizeToTray: TCheckBox
             Left = 20
-            Height = 17
+            Height = 19
             Top = 170
-            Width = 136
+            Width = 156
             Caption = 'cbOptionMinimizeToTray'
             ParentFont = False
             TabOrder = 2
           end
           object cbOptionAutoCheckUpdate: TCheckBox
             Left = 20
-            Height = 17
+            Height = 19
             Top = 194
-            Width = 130
+            Width = 140
             Caption = 'Check for new version '
             ParentFont = False
             TabOrder = 3
@@ -1280,17 +1280,17 @@ object MainForm: TMainForm
           end
           object lbOptionLetFMDDo: TLabel
             Left = 20
-            Height = 13
+            Height = 15
             Top = 74
-            Width = 104
+            Width = 108
             Caption = 'lbOptionLetFMDDo'
             ParentColor = False
           end
           object cbOptionBatotoUseIE: TCheckBox
             Left = 20
-            Height = 17
+            Height = 19
             Top = 218
-            Width = 123
+            Width = 133
             Caption = 'cbOptionBatotoUseIE'
             ParentFont = False
             TabOrder = 5

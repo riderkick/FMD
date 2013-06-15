@@ -268,6 +268,8 @@ var
   OptionAutoNumberChapterChecked: Boolean = TRUE;
 
 type
+  TMemory = Pointer;
+
   PMangaListItem = ^TMangaListItem;
   TMangaListItem = record
     Text: String;
@@ -1186,6 +1188,7 @@ var
   header  : array [0..3] of Byte;
   ext     : String;
   HTTP    : THTTPSend;
+ // Memory  : TMemoryStream;
   counter : Cardinal = 0;
 begin
   Result:= FALSE;
@@ -1208,7 +1211,8 @@ begin
       end;
       Inc(counter);
     end;
-    HTTP.Clear;
+    HTTP.RangeStart:= HTTP.DownloadSize - HTTP.Document.Size;
+   // HTTP.Clear;
     Sleep(500);
   end;
 
@@ -1231,7 +1235,8 @@ begin
         end;
         Inc(counter);
       end;
-      HTTP.Clear;
+      HTTP.RangeStart:= HTTP.DownloadSize - HTTP.Document.Size;
+     // HTTP.Clear;
       Sleep(500);
     end;
   end;

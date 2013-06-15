@@ -743,6 +743,8 @@ begin
 
       if s='' then
         s:= Format('%.4d', [i+1]);
+
+      s:= TrimLeft(TrimRight(s));
       DLManager.containers.Items[pos].chapterName .Add(s);
       DLManager.containers.Items[pos].chapterLinks.Add(mangaInfo.chapterLinks.Strings[i]);
     end;
@@ -1568,9 +1570,10 @@ procedure TMainForm.pcMainChange(Sender: TObject);
     cbOptionMinimizeToTray.Checked:= options.ReadBool('general', 'MinimizeToTray', FALSE);
     seOptionNewMangaTime.Value:= options.ReadInteger('general', 'NewMangaTime', 3);
     cbOptionLetFMDDo.ItemIndex:= options.ReadInteger('general', 'LetFMDDo', 0);
-    cbOptionLetFMDDoItemIndex:= cbOptionLetFMDDo.ItemIndex;
+   // cbOptionLetFMDDoItemIndex:= cbOptionLetFMDDo.ItemIndex;
+    cbOptionLetFMDDoItemIndex  := cbOptionLetFMDDo.ItemIndex;
     cbOptionBatotoUseIE.Checked:= options.ReadBool('general', 'BatotoUseIE', TRUE);
-    OptionBatotoUseIEChecked      := cbOptionBatotoUseIE.Checked;
+    OptionBatotoUseIEChecked   := cbOptionBatotoUseIE.Checked;
 
 
     seOptionMaxParallel.Value:= options.ReadInteger('connections', 'NumberOfTasks', 1);
@@ -2026,6 +2029,8 @@ begin
   end;
 
   LoadLanguage(cbLanguages.ItemIndex);
+
+  cbOptionLetFMDDo.ItemIndex:= cbOptionLetFMDDoItemIndex;
 
   DLManager.maxDLTasks         := seOptionMaxParallel.Value;
   DLManager.maxDLThreadsPerTask:= seOptionMaxThread.Value;

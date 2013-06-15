@@ -2073,7 +2073,7 @@ begin
     begin
       Inc(mangaInfo.numChapter);
       mangaInfo.chapterLinks.Add(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href')));
-      mangaInfo.chapterName.Add(StringFilter(TrimRight(RemoveSymbols(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'title'))+' '+parse.Strings[i+3]))));
+      mangaInfo.chapterName.Add(StringFilter(TrimRight(TrimLeft(RemoveSymbols(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'title'))+' '+parse.Strings[i+3])))));
     end;
   end;
 
@@ -4618,6 +4618,21 @@ begin
       FALSE: Result:= GetGEHentaiInfoFromURL;
     end;
   end;
+
+  s:= mangaInfo.artists;
+  if (s <> '') AND (s[1] = '<') then
+    mangaInfo.artists:= '';
+  s:= mangaInfo.authors;
+  if (s <> '') AND (s[1] = '<') then
+    mangaInfo.authors:= '';
+
+  // check everything one more
+  mangaInfo.authors:= StringReplace(mangaInfo.authors, #10, '', [rfReplaceAll]);
+  mangaInfo.authors:= StringReplace(mangaInfo.authors, #13, '', [rfReplaceAll]);
+  mangaInfo.artists:= StringReplace(mangaInfo.artists, #10, '', [rfReplaceAll]);
+  mangaInfo.artists:= StringReplace(mangaInfo.artists, #13, '', [rfReplaceAll]);
+  mangaInfo.genres := StringReplace(mangaInfo.genres , #10, '', [rfReplaceAll]);
+  mangaInfo.genres := StringReplace(mangaInfo.genres , #13, '', [rfReplaceAll]);
 end;
 
 procedure   TMangaInformation.SyncInfoToData(const DataProcess: TDataProcess; const index: Cardinal);
