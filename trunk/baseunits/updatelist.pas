@@ -11,7 +11,7 @@ unit updatelist;
 interface
 
 uses
-  Classes, SysUtils, data, baseunit;
+  Classes, SysUtils, data, baseunit, Process;
 
 type
   TUpdateMangaManagerThread = class;
@@ -313,6 +313,7 @@ end;
 procedure   TUpdateMangaManagerThread.Execute;
 var
   i, j, k: Cardinal;
+  Process: TProcess;
 begin
  // while NOT Terminated do
   begin
@@ -326,6 +327,15 @@ begin
       website:= websites.Strings[i];
       if website = GEHENTAI_NAME then
         numberOfThreads:= 1;
+
+      while NOT FileExists(DATA_FOLDER+website+DATA_EXT) do
+      begin
+        Process:= TProcess.Create(nil);
+        Process.CommandLine:= 'updater 1 '+GetMangaDatabaseURL(website);
+        Process.Options:= Process.Options + [poWaitOnExit];
+        Process.Execute;
+        Process.Free;
+      end;
 
       dataProcess.LoadFromFile(website);
       names.Clear;
@@ -371,7 +381,7 @@ begin
 
       if links.Count = 0 then
       begin
-        Synchronize(DlgReport);
+       // Synchronize(DlgReport);
         continue;
       end;
 
@@ -420,15 +430,17 @@ begin
 
       Sleep(100);
       while threadCount > 0 do Sleep(100);
+      mainDataProcess.SaveToFile(website);
+      {$IFDEF DOWNLOADER}
+      Synchronize(RefreshList);
+      {$ENDIF}
     end;
-    mainDataProcess.SaveToFile(website);
   {$IFNDEF DOWNLOADER}
     S:= 'Saving to '+website+'.dat ...';
     Synchronize(ConsoleReport);
     S:= 'Done.';
     Synchronize(ConsoleReport);
   {$ELSE}
-    Synchronize(RefreshList);
    // Synchronize(DlgReport);
     MainForm.sbMain.Panels[0].Text:= '';
   {$ENDIF}

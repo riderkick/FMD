@@ -266,11 +266,11 @@ object MainForm: TMainForm
     Height = 435
     Top = 32
     Width = 597
-    ActivePage = tsOption
+    ActivePage = tsDownload
     Align = alClient
     Font.Style = [fsBold]
     ParentFont = False
-    TabIndex = 4
+    TabIndex = 0
     TabOrder = 1
     OnChange = pcMainChange
     object tsDownload: TTabSheet
@@ -2357,6 +2357,13 @@ object MainForm: TMainForm
     object mnUpdateDownFromServer: TMenuItem
       Caption = 'Download manga list from server'
       OnClick = mnUpdateDownFromServerClick
+    end
+    object MenuItem5: TMenuItem
+      Caption = '-'
+    end
+    object mnUpdate1Click: TMenuItem
+      Caption = 'Update all lists at once'
+      OnClick = mnUpdate1ClickClick
     end
   end
   object itAnimate: TIdleTimer

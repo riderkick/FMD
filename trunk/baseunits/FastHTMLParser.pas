@@ -109,14 +109,14 @@ end;
 
 constructor TjsFastHTMLParser.Create(sRaw:String);
 begin
-  Raw := Pchar(sRaw);
   inherited Create;
+  Raw := Pchar(sRaw);
 end;
 
 constructor TjsFastHTMLParser.Create(pRaw:Pchar);
 begin
-  Raw := pRaw;
   inherited Create;
+  Raw := pRaw;
 end;
 
 destructor  TjsFastHTMLParser.Destroy;

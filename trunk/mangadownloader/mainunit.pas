@@ -136,6 +136,8 @@ type
     MenuItem2: TMenuItem;
     MenuItem3: TMenuItem;
     MenuItem4: TMenuItem;
+    MenuItem5: TMenuItem;
+    mnUpdate1Click: TMenuItem;
     miMangaListDownloadAll: TMenuItem;
     miMangaListViewInfos: TMenuItem;
     mnUpdateList: TMenuItem;
@@ -261,6 +263,7 @@ type
     procedure miOpenFolder2Click(Sender: TObject);
     procedure miOpenFolderClick(Sender: TObject);
     procedure miUpClick(Sender: TObject);
+    procedure mnUpdate1ClickClick(Sender: TObject);
     procedure mnUpdateDownFromServerClick(Sender: TObject);
     procedure mnUpdateListClick(Sender: TObject);
 
@@ -959,6 +962,13 @@ begin
     SubThread.website:= PERVEDEN_NAME
   end
   else
+  if Pos(TRUYENTRANHTUAN_ROOT, edURL.Text) > 0 then
+  begin
+    SubThread.link   := edURL.Text;
+    Delete(SubThread.link, 1, Length(TRUYENTRANHTUAN_ROOT));
+    SubThread.website:= TRUYENTRANHTUAN_NAME
+  end
+  else
   if Pos(GEHENTAI_ROOT, edURL.Text) > 0 then
   begin
     SubThread.link   := edURL.Text;
@@ -1336,6 +1346,26 @@ begin
   begin
     vtDownload.Repaint;
   end;
+end;
+
+procedure TMainForm.mnUpdate1ClickClick(Sender: TObject);
+var
+  i: Cardinal;
+begin
+  if (NOT isUpdating) then
+  begin
+   // if dataProcess.Title.Count > 1 then
+    begin
+      isUpdating:= TRUE;
+      updateList:= TUpdateMangaManagerThread.Create;
+      updateList.numberOfThreads:= 4;
+      for i:= 0 to cbSelectManga.Items.Count-1 do
+        updateList.websites.Add(cbSelectManga.Items[i]);
+      updateList.isSuspended:= FALSE;
+    end;
+  end
+  else
+    MessageDlg('', stDlgUpdateAlreadyRunning, mtInformation, [mbYes], 0);
 end;
 
 procedure TMainForm.mnUpdateDownFromServerClick(Sender: TObject);

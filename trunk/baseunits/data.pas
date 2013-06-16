@@ -467,6 +467,13 @@ end;
 
 destructor  TMangaInformation.Destroy;
 begin
+  mangaInfo.artists:= '';
+  mangaInfo.authors:= '';
+  mangaInfo.genres := '';
+  mangaInfo.summary:= '';
+  mangaInfo.title  := '';
+  mangaInfo.url    := '';
+  mangaInfo.website:= '';
   mangaInfo.chapterLinks.Free;
   mangaInfo.chapterName .Free;
   parse.Free;
@@ -4284,7 +4291,8 @@ begin
       mangaInfo.title:= TrimLeft(StringFilter(parse.Strings[i+2]));
 
     // get chapter name and links
-    if (Pos('class="tbl_body">', parse.Strings[i])>0) then
+    if (Pos('class="tbl_body">', parse.Strings[i])>0) OR
+       (Pos('class="tbl_body2">', parse.Strings[i])>0) then
     begin
       Inc(mangaInfo.numChapter);
       s:= GetString(parse.Strings[i+1], 'href="', '"');

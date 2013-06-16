@@ -26,6 +26,9 @@
     </MacroValues>
     <BuildModes Count="1">
       <Item1 Name="Default" Default="True"/>
+      <SharedMatrixOptions Count="1">
+        <Item1 ID="004106748078" Modes="Default" Type="IDEMacro" MacroName="LCLWidgetType" Value="win32"/>
+      </SharedMatrixOptions>
     </BuildModes>
     <PublishOptions>
       <Version Value="2"/>
@@ -57,7 +60,7 @@
         <PackageName Value="LCL"/>
       </Item6>
     </RequiredPackages>
-    <Units Count="14">
+    <Units Count="15">
       <Unit0>
         <Filename Value="md.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -137,6 +140,11 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="buffer"/>
       </Unit13>
+      <Unit14>
+        <Filename Value="..\baseunits\curlcore.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="curlcore"/>
+      </Unit14>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
@@ -175,7 +183,6 @@
       </CompilerMessages>
       <CompilerPath Value="$(CompPath)"/>
     </Other>
-    <LCLWidgetType Value="win32"/>
   </CompilerOptions>
   <Debugging>
     <Exceptions Count="3">
