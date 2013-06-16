@@ -23,9 +23,11 @@ type
     links             : TStringList;
     isTerminated,
     isSuspended       : Boolean;
+    threadCount,
     workPtr           : Cardinal;
     manager           : TUpdateMangaManagerThread;
     Info              : TMangaInformation;
+
     procedure   Execute; override;
     procedure   DecThreadCount;
     procedure   UpdateNamesAndLinks;
@@ -41,10 +43,12 @@ type
     procedure   ConsoleReport;
     procedure   SaveCurrentDatabase;
     {$ENDIF}
+    procedure   CallMainFormShowGetting;
     procedure   RefreshList;
     procedure   DlgReport;
     procedure   getInfo(const limit, cs: Cardinal);
   public
+    isDownloadFromServer,
     isTerminated,
     isSuspended,
     isDoneUpdateNecessary : Boolean;
@@ -61,7 +65,10 @@ type
     directoryCount2,
     threadCount,
     numberOfThreads       : Cardinal;
+
+    Infos                 : array of TMangaInformation;
     threads               : array of TUpdateMangaThread;
+    threadStates          : array of Boolean;
     constructor Create;
     destructor  Destroy; override;
   end;
@@ -79,18 +86,16 @@ begin
   names:= TStringList.Create;
   links:= TStringList.Create;
   isSuspended:= TRUE;
-  Info:= TMangaInformation.Create;
-  Info.isGetByUpdater:= TRUE;
   isTerminated   := FALSE;
   FreeOnTerminate:= TRUE;
 end;
 
 destructor  TUpdateMangaThread.Destroy;
 begin
-  Info.Free;
   links.Free;
   names.Free;
   isTerminated:= TRUE;
+  manager.threadStates[threadCount]:= FALSE;
   inherited Destroy;
 end;
 
@@ -216,12 +221,16 @@ end;
 
 // ----- TUpdateMangaManagerThread -----
 
+procedure   TUpdateMangaManagerThread.CallMainFormShowGetting;
+begin
+  MainForm.sbMain.Panels[0].Text:= 'Getting list for ' + website + ' ...';
+end;
+
 constructor TUpdateMangaManagerThread.Create;
 begin
   inherited Create(FALSE);
   websites   := TStringList.Create;
   isSuspended:= TRUE;
-  dataProcess:= TDataProcess.Create;
   names  := TStringList.Create;
   links  := TStringList.Create;
   isTerminated:= FALSE;
@@ -229,11 +238,17 @@ begin
 end;
 
 destructor  TUpdateMangaManagerThread.Destroy;
+var
+  i: Cardinal;
 begin
   websites.Free;
   names.Free;
   links.Free;
+  for i:= 0 to numberOfThreads-1 do
+    Infos[i].Free;
+  SetLength(Infos, 0);
   SetLength(threads, 0);
+  SetLength(threadStates, 0);
   {$IFDEF DOWNLOADER}
   MainForm.isUpdating:= FALSE;
   {$ENDIF}
@@ -285,13 +300,18 @@ begin
   begin
     if (threadCount < numberOfThreads) then
       for j:= 0 to numberOfThreads-1 do
-        if (NOT Assigned(threads[j])) OR (threads[j].isTerminated) then
+        if (NOT Assigned(threads[j])) OR (threadStates[j] = FALSE) then
         begin
+          threadStates[j]:= TRUE;
+          Sleep(32);
           Inc(threadCount);
           threads[j]:= TUpdateMangaThread.Create;
           threads[j].checkStyle:= cs;
           threads[j].manager:= self;
           threads[j].workPtr:= workPtr;
+          threads[j].threadCount:= j;
+          threads[j].Info:= Infos[j];
+          Infos  [j].ClearInfo;
           threads[j].isSuspended:= FALSE;
           Inc(workPtr);
           S:= 'Updating list: '+website+'[T.'+IntToStr(j)+'; CS.'+IntToStr(cs)+'] '+IntToStr(workPtr)+' / '+IntToStr(limit);
@@ -321,22 +341,51 @@ begin
     if websites.Count = 0 then
       Terminate;
     SetLength(threads, numberOfThreads);
+    SetLength(Infos, numberOfThreads);
+    SetLength(threadStates, numberOfThreads);
+    for i:= 0 to numberOfThreads-1 do
+    begin
+      Infos[i]:= TMangaInformation.Create;
+      Infos[i].isGetByUpdater:= TRUE;
+      threadStates[i]:= FALSE;
+    end;
 
+    {$IFDEF DOWNLOADER}
+    if isDownloadFromServer then
+    begin
+      for i:= 0 to websites.Count-1 do
+      begin
+        website:= websites.Strings[i];
+        Synchronize(CallMainFormShowGetting);
+        Process:= TProcess.Create(nil);
+        Process.CommandLine:= 'updater 1 '+GetMangaDatabaseURL(website);
+        Process.Options:= Process.Options + [poWaitOnExit];
+        Process.Execute;
+        Process.Free;
+        Synchronize(RefreshList);
+      end;
+    end
+    else
+    {$ENDIF}
     for i:= 0 to websites.Count-1 do
     begin
       website:= websites.Strings[i];
       if website = GEHENTAI_NAME then
         numberOfThreads:= 1;
 
+      {$IFDEF DOWNLOADER}
       while NOT FileExists(DATA_FOLDER+website+DATA_EXT) do
       begin
+        Synchronize(CallMainFormShowGetting);
         Process:= TProcess.Create(nil);
         Process.CommandLine:= 'updater 1 '+GetMangaDatabaseURL(website);
         Process.Options:= Process.Options + [poWaitOnExit];
         Process.Execute;
         Process.Free;
       end;
+      {$ENDIF}
 
+      dataProcess:= TDataProcess.Create;
       dataProcess.LoadFromFile(website);
       names.Clear;
       links.Clear;
@@ -431,6 +480,9 @@ begin
       Sleep(100);
       while threadCount > 0 do Sleep(100);
       mainDataProcess.SaveToFile(website);
+      mainDataProcess.Free;
+
+      dataProcess.Free;
       {$IFDEF DOWNLOADER}
       Synchronize(RefreshList);
       {$ENDIF}
@@ -444,7 +496,6 @@ begin
    // Synchronize(DlgReport);
     MainForm.sbMain.Panels[0].Text:= '';
   {$ENDIF}
-    mainDataProcess.Free;
    // Synchronize(DlgReport);
   end;
 end;

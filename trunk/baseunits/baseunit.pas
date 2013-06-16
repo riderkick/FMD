@@ -219,6 +219,7 @@ var
 
   UPDATE_URL      : String = 'http://akarin.byethost5.com/fmd/';
 
+  OptionAutoCheckMinutes,
   // en: dialog messages
   // vi: nội dung hộp thoại
   infoCustomGenres,
@@ -264,8 +265,11 @@ var
   stDlgUpdaterWantToUpdateDB,
   stDlgUpdaterCannotConnectToServer: String;
 
+  OptionCheckMinutes: Cardinal = 0;
+
   OptionBatotoUseIEChecked: Boolean = TRUE;
   OptionAutoNumberChapterChecked: Boolean = TRUE;
+  OptionAutoCheckFavStartup: Boolean = FALSE;
 
 type
   TMemory = Pointer;

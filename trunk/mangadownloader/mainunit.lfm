@@ -1133,11 +1133,11 @@ object MainForm: TMainForm
     end
     object tsFavorites: TTabSheet
       Caption = 'Favorites'
-      ClientHeight = 413
+      ClientHeight = 407
       ClientWidth = 589
       object vtFavorites: TVirtualStringTree
         Left = 0
-        Height = 345
+        Height = 339
         Top = 0
         Width = 589
         Align = alTop
@@ -1180,7 +1180,7 @@ object MainForm: TMainForm
       object btFavoritesCheckNewChapter: TBitBtn
         Left = 33
         Height = 40
-        Top = 363
+        Top = 357
         Width = 528
         Anchors = [akLeft, akRight, akBottom]
         Caption = 'Check for new chapter'
@@ -1255,15 +1255,6 @@ object MainForm: TMainForm
             ParentFont = False
             TabOrder = 2
           end
-          object cbOptionAutoCheckUpdate: TCheckBox
-            Left = 20
-            Height = 19
-            Top = 194
-            Width = 140
-            Caption = 'Check for new version '
-            ParentFont = False
-            TabOrder = 3
-          end
           object cbOptionLetFMDDo: TComboBox
             Left = 20
             Height = 23
@@ -1276,7 +1267,7 @@ object MainForm: TMainForm
             )
             ParentFont = False
             Style = csDropDownList
-            TabOrder = 4
+            TabOrder = 3
           end
           object lbOptionLetFMDDo: TLabel
             Left = 20
@@ -1289,11 +1280,11 @@ object MainForm: TMainForm
           object cbOptionBatotoUseIE: TCheckBox
             Left = 20
             Height = 19
-            Top = 218
+            Top = 198
             Width = 133
             Caption = 'cbOptionBatotoUseIE'
             ParentFont = False
-            TabOrder = 5
+            TabOrder = 4
           end
         end
         object tsConnections: TTabSheet
@@ -1488,13 +1479,65 @@ object MainForm: TMainForm
             end
           end
         end
+        object tsUpdate: TTabSheet
+          Caption = 'Updates'
+          ClientHeight = 286
+          ClientWidth = 562
+          object cbOptionAutoCheckUpdate: TCheckBox
+            Left = 28
+            Height = 19
+            Top = 30
+            Width = 140
+            Caption = 'Check for new version '
+            ParentFont = False
+            TabOrder = 0
+          end
+          object gbOptionFavorites: TGroupBox
+            Left = 29
+            Height = 112
+            Top = 62
+            Width = 503
+            Anchors = [akTop, akLeft, akRight]
+            Caption = 'Favorites'
+            ClientHeight = 92
+            ClientWidth = 499
+            ParentFont = False
+            TabOrder = 1
+            object cbOptionAutoCheckFavStartup: TCheckBox
+              Left = 21
+              Height = 19
+              Top = 14
+              Width = 196
+              Caption = 'Automatic check for new chapter'
+              ParentFont = False
+              TabOrder = 0
+            end
+            object seOptionCheckMinutes: TSpinEdit
+              Left = 21
+              Height = 23
+              Top = 45
+              Width = 58
+              MaxValue = 1440
+              OnChange = seOptionCheckMinutesChange
+              TabOrder = 1
+            end
+            object lbOptionAutoCheckMinutes: TLabel
+              Left = 93
+              Height = 15
+              Top = 45
+              Width = 231
+              Caption = 'Auto check for new chapter every ? minutes'
+              ParentColor = False
+            end
+          end
+        end
         object tsSaveTo: TTabSheet
           Caption = 'Save to'
-          ClientHeight = 294
+          ClientHeight = 286
           ClientWidth = 562
           object edOptionDefaultPath: TLabeledEdit
             Left = 20
-            Height = 21
+            Height = 23
             Top = 42
             Width = 402
             Anchors = [akTop, akLeft, akRight]
@@ -1503,8 +1546,8 @@ object MainForm: TMainForm
             EditLabel.AnchorSideRight.Side = asrBottom
             EditLabel.AnchorSideBottom.Control = edOptionDefaultPath
             EditLabel.Left = 20
-            EditLabel.Height = 13
-            EditLabel.Top = 26
+            EditLabel.Height = 15
+            EditLabel.Top = 24
             EditLabel.Width = 402
             EditLabel.Caption = 'Choose default download path:'
             EditLabel.ParentColor = False
@@ -1553,36 +1596,36 @@ object MainForm: TMainForm
             TabOrder = 2
             object cbOptionGenerateMangaFolderName: TCheckBox
               Left = 22
-              Height = 17
+              Height = 19
               Top = 62
-              Width = 239
+              Width = 261
               Caption = 'Auto generate folder based on manga''s name'
               ParentFont = False
               TabOrder = 0
             end
             object cbOptionGenerateChapterName: TCheckBox
               Left = 22
-              Height = 17
+              Height = 19
               Top = 38
-              Width = 228
+              Width = 246
               Caption = 'Generate chapter folder with chapter name'
               ParentFont = False
               TabOrder = 1
             end
             object cbOptionPathConvert: TCheckBox
               Left = 22
-              Height = 17
+              Height = 19
               Top = 14
-              Width = 465
+              Width = 517
               Caption = 'Change all all unicode symbols to "_" (choose this when you have problem with unicode path)'
               ParentFont = False
               TabOrder = 2
             end
             object cbOptionAutoNumberChapter: TCheckBox
               Left = 22
-              Height = 17
+              Height = 19
               Top = 86
-              Width = 162
+              Width = 182
               Caption = 'cbOptionAutoNumberChapter'
               TabOrder = 3
             end
@@ -2365,6 +2408,10 @@ object MainForm: TMainForm
       Caption = 'Update all lists at once'
       OnClick = mnUpdate1ClickClick
     end
+    object mnDownload1Click: TMenuItem
+      Caption = 'Download all lists from server at once'
+      OnClick = mnDownload1ClickClick
+    end
   end
   object itAnimate: TIdleTimer
     Enabled = False
@@ -2372,5 +2419,18 @@ object MainForm: TMainForm
     OnTimer = itAnimateTimer
     left = 744
     top = 72
+  end
+  object itCheckForChapters: TIdleTimer
+    Enabled = False
+    OnTimer = itCheckForChaptersTimer
+    left = 688
+    top = 128
+  end
+  object PopupMenu1: TPopupMenu
+    left = 747
+    top = 240
+    object MenuItem7: TMenuItem
+      Caption = 'New Item1'
+    end
   end
 end

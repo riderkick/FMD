@@ -265,6 +265,9 @@ begin
     Synchronize(CallMainFormShowLog);
   if FileExists(oldDir + 'old_updater.exe') then
     DeleteFile(oldDir + 'old_updater.exe');
+  Sleep(1000);
+  if OptionAutoCheckFavStartup then
+    MainForm.favorites.Run;
   while NOT Terminated do
   begin
     if isCheckForLatestVer then

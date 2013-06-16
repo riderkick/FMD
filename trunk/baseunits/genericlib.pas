@@ -36,10 +36,10 @@ implementation
 
 constructor TGenericList.Create;
 begin
+  inherited Create;
   SetLength(Items, 0);
   Count:= 0;
   FindPos:= -1;
-  inherited Create;
 end;
 
 destructor  TGenericList.Destroy;

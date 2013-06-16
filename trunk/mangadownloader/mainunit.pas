@@ -87,6 +87,7 @@ type
     cbOptionMinimizeToTray: TCheckBox;
     cbOptionShowFavoriteDialog: TCheckBox;
     cbOptionAutoNumberChapter: TCheckBox;
+    cbOptionAutoCheckFavStartup: TCheckBox;
     CheckBox5: TCheckBox;
     CheckBox6: TCheckBox;
     CheckBox7: TCheckBox;
@@ -110,10 +111,13 @@ type
     edSearch: TEdit;
     gbOptionProxy: TGroupBox;
     gbOptionRenaming: TGroupBox;
+    gbOptionFavorites: TGroupBox;
+    itCheckForChapters: TIdleTimer;
     itAnimate: TIdleTimer;
     ImageList: TImageList;
     imCover: TImage;
     edOptionDefaultPath: TLabeledEdit;
+    lbOptionAutoCheckMinutes: TLabel;
     lbOptionLetFMDDo: TLabel;
     lbOptionNewMangaTime: TLabel;
     lbOptionLanguage: TLabel;
@@ -137,6 +141,8 @@ type
     MenuItem3: TMenuItem;
     MenuItem4: TMenuItem;
     MenuItem5: TMenuItem;
+    mnDownload1Click: TMenuItem;
+    MenuItem7: TMenuItem;
     mnUpdate1Click: TMenuItem;
     miMangaListDownloadAll: TMenuItem;
     miMangaListViewInfos: TMenuItem;
@@ -177,6 +183,7 @@ type
     pmFavorites: TPopupMenu;
     pmMangaList: TPopupMenu;
     pmUpdate: TPopupMenu;
+    PopupMenu1: TPopupMenu;
     rbOne: TRadioButton;
     rbAll: TRadioButton;
     rgOptionCompress: TRadioGroup;
@@ -190,9 +197,11 @@ type
     seOptionMaxRetry: TSpinEdit;
     seOptionMaxThread: TSpinEdit;
     seOptionNewMangaTime: TSpinEdit;
+    seOptionCheckMinutes: TSpinEdit;
     spInfos: TSplitter;
     spMainSplitter: TSplitter;
     sbMain: TStatusBar;
+    tsUpdate: TTabSheet;
     tsAbout: TTabSheet;
     tsWebsites: TTabSheet;
     tsDialogs: TTabSheet;
@@ -240,6 +249,7 @@ type
     procedure FormDestroy(Sender: TObject);
     procedure FormWindowStateChange(Sender: TObject);
     procedure itAnimateTimer(Sender: TObject);
+    procedure itCheckForChaptersTimer(Sender: TObject);
     procedure miDownloadHideCompletedClick(Sender: TObject);
     procedure miDownloadMergeClick(Sender: TObject);
     procedure miHighlightNewMangaClick(Sender: TObject);
@@ -263,6 +273,7 @@ type
     procedure miOpenFolder2Click(Sender: TObject);
     procedure miOpenFolderClick(Sender: TObject);
     procedure miUpClick(Sender: TObject);
+    procedure mnDownload1ClickClick(Sender: TObject);
     procedure mnUpdate1ClickClick(Sender: TObject);
     procedure mnUpdateDownFromServerClick(Sender: TObject);
     procedure mnUpdateListClick(Sender: TObject);
@@ -271,6 +282,7 @@ type
     procedure pmDownloadPopup(Sender: TObject);
     procedure pmFavoritesPopup(Sender: TObject);
     procedure pmMangaListPopup(Sender: TObject);
+    procedure seOptionCheckMinutesChange(Sender: TObject);
     procedure spMainSplitterMoved(Sender: TObject);
     procedure TrayIconDblClick(Sender: TObject);
     procedure vtDownloadDragAllowed(Sender: TBaseVirtualTree;
@@ -587,6 +599,13 @@ begin
   gifWaiting.Update(pbWait.Canvas, r);
 end;
 
+procedure TMainForm.itCheckForChaptersTimer(Sender: TObject);
+begin
+  favorites.isAuto:= TRUE;
+  favorites.isShowDialog:= cbOptionShowFavoriteDialog.Checked;
+  favorites.Run;
+end;
+
 procedure TMainForm.miDownloadHideCompletedClick(Sender: TObject);
 var
   i: Cardinal;
@@ -806,6 +825,7 @@ end;
 
 procedure TMainForm.btFavoritesCheckNewChapterClick(Sender: TObject);
 begin
+  favorites.isAuto:= FALSE;
   favorites.isShowDialog:= cbOptionShowFavoriteDialog.Checked;
   favorites.Run;
 end;
@@ -967,6 +987,20 @@ begin
     SubThread.link   := edURL.Text;
     Delete(SubThread.link, 1, Length(TRUYENTRANHTUAN_ROOT));
     SubThread.website:= TRUYENTRANHTUAN_NAME
+  end
+  else
+  if Pos(MANGAVADISI_ROOT, edURL.Text) > 0 then
+  begin
+    SubThread.link   := edURL.Text;
+    Delete(SubThread.link, 1, Length(MANGAVADISI_ROOT + MANGAVADISI_BROWSER));
+    SubThread.website:= MANGAVADISI_NAME
+  end
+  else
+  if Pos(TURKCRAFT_ROOT, edURL.Text) > 0 then
+  begin
+    SubThread.link   := edURL.Text;
+    Delete(SubThread.link, 1, Length(TURKCRAFT_ROOT));
+    SubThread.website:= TURKCRAFT_NAME
   end
   else
   if Pos(GEHENTAI_ROOT, edURL.Text) > 0 then
@@ -1348,6 +1382,28 @@ begin
   end;
 end;
 
+procedure TMainForm.mnDownload1ClickClick(Sender: TObject);
+var
+  i: Cardinal;
+begin
+  if (MessageDlg('', stDlgUpdaterWantToUpdateDB, mtInformation, [mbYes, mbNo], 0)=mrYes) AND
+     (NOT isUpdating) then
+  begin
+   // if dataProcess.Title.Count > 1 then
+    begin
+      isUpdating:= TRUE;
+      updateList:= TUpdateMangaManagerThread.Create;
+      updateList.numberOfThreads:= 4;
+      for i:= 0 to cbSelectManga.Items.Count-1 do
+        updateList.websites.Add(cbSelectManga.Items[i]);
+      updateList.isDownloadFromServer:= TRUE;
+      updateList.isSuspended:= FALSE;
+    end;
+  end
+  else
+    MessageDlg('', stDlgUpdateAlreadyRunning, mtInformation, [mbYes], 0);
+end;
+
 procedure TMainForm.mnUpdate1ClickClick(Sender: TObject);
 var
   i: Cardinal;
@@ -1361,6 +1417,7 @@ begin
       updateList.numberOfThreads:= 4;
       for i:= 0 to cbSelectManga.Items.Count-1 do
         updateList.websites.Add(cbSelectManga.Items[i]);
+      updateList.isDownloadFromServer:= FALSE;
       updateList.isSuspended:= FALSE;
     end;
   end
@@ -1388,6 +1445,7 @@ begin
       updateList:= TUpdateMangaManagerThread.Create;
       updateList.numberOfThreads:= 4;
       updateList.websites.Add(cbSelectManga.Items[cbSelectManga.ItemIndex]);
+      updateList.isDownloadFromServer:= FALSE;
       updateList.isSuspended:= FALSE;
     end;
   end
@@ -1628,7 +1686,8 @@ procedure TMainForm.pcMainChange(Sender: TObject);
     cbOptionAutoNumberChapter.Checked:= options.ReadBool('saveto', 'AutoNumberChapter', TRUE);
     OptionAutoNumberChapterChecked:= cbOptionAutoNumberChapter.Checked;
 
-    cbOptionAutoCheckUpdate.Checked:= options.ReadBool('update', 'AutoCheckUpdateAtStartup', TRUE);
+    cbOptionAutoCheckFavStartup.Checked:= options.ReadBool('update', 'AutoCheckFavStartup', FALSE);
+    seOptionCheckMinutes.Value:= options.ReadInteger('update', 'AutoCheckMinutes', 0);
 
     for i:= 0 to Length(optionMangaSiteSelectionNodes)-1 do
       optionMangaSiteSelectionNodes[i].CheckState:= csUncheckedNormal;
@@ -1756,6 +1815,11 @@ begin
                               cbSelectManga.Items[cbSelectManga.ItemIndex]) then
       pmMangaList.Items[2].Enabled:= FALSE; }
   end;
+end;
+
+procedure TMainForm.seOptionCheckMinutesChange(Sender: TObject);
+begin
+  lbOptionAutoCheckMinutes.Caption:= Format(OptionAutoCheckMinutes, [seOptionCheckMinutes.Value]);
 end;
 
 procedure TMainForm.spMainSplitterMoved(Sender: TObject);
@@ -2032,6 +2096,10 @@ begin
   OptionAutoNumberChapterChecked:= cbOptionAutoNumberChapter.Checked;
 
   options.WriteBool   ('update', 'AutoCheckUpdateAtStartup', cbOptionAutoCheckUpdate.Checked);
+  options.WriteBool   ('update', 'AutoCheckFavStartup', cbOptionAutoCheckFavStartup.Checked);
+  OptionAutoCheckFavStartup:= cbOptionAutoCheckFavStartup.Checked;
+  options.WriteInteger('update', 'AutoCheckMinutes', seOptionCheckMinutes.Value);
+  OptionCheckMinutes:= seOptionCheckMinutes.Value;
 
   DLManager.compress:= rgOptionCompress.ItemIndex;
 
@@ -2042,6 +2110,14 @@ begin
   options.WriteBool   ('dialogs', 'ShowFavoritesDialog', cbOptionShowFavoriteDialog.Checked);
 
   options.UpdateFile;
+
+  if OptionCheckMinutes = 0 then
+    itCheckForChapters.Enabled:= FALSE
+  else
+  begin
+    itCheckForChapters.Interval:= OptionCheckMinutes*60000;
+    itCheckForChapters.Enabled:= TRUE;
+  end;
 
   if cbOptionUseProxy.Checked then
   begin
@@ -2340,6 +2416,7 @@ begin
   DLManager.maxDLTasks         := options.ReadInteger('connections', 'NumberOfTasks', 1);
   DLManager.maxDLThreadsPerTask:= options.ReadInteger('connections', 'NumberOfThreadsPerTask', 1);
   DLManager.retryConnect       := options.ReadInteger('connections', 'Retry', 0);
+
   DLManager.compress           := options.ReadInteger('saveto', 'Compress', 0);
 
   cbOptionPathConvert.Checked  := options.ReadBool   ('saveto', 'PathConv', FALSE);
@@ -2349,6 +2426,19 @@ begin
   cbOptionAutoNumberChapter.Checked:= options.ReadBool('saveto', 'AutoNumberChapter', TRUE);
 
   cbOptionAutoCheckUpdate.Checked:= options.ReadBool('update', 'AutoCheckUpdateAtStartup', TRUE);
+
+  cbOptionAutoCheckFavStartup.Checked:= options.ReadBool('update', 'AutoCheckFavStartup', FALSE);
+  OptionAutoCheckFavStartup:= cbOptionAutoCheckFavStartup.Checked;
+  seOptionCheckMinutes.Value:= options.ReadInteger('update', 'AutoCheckMinutes', 0);
+  OptionCheckMinutes:= seOptionCheckMinutes.Value;
+
+  if OptionCheckMinutes = 0 then
+    itCheckForChapters.Enabled:= FALSE
+  else
+  begin
+    itCheckForChapters.Interval:= OptionCheckMinutes*60000;
+    itCheckForChapters.Enabled:= TRUE;
+  end;
 end;
 
 procedure TMainForm.LoadMangaOptions;
@@ -2575,8 +2665,10 @@ begin
   stWait                := language.ReadString(lang, 'stWait', '');
   btUpdateList  .Hint   := language.ReadString(lang, 'btUpdateListHint', '');
 
-  mnUpdateList.Caption  := language.ReadString(lang, 'mnUpdateListCaption', '');
+  mnUpdateList.Caption          := language.ReadString(lang, 'mnUpdateListCaption', '');
   mnUpdateDownFromServer.Caption:= language.ReadString(lang, 'mnUpdateDownFromServerCaption', '');
+  mnUpdate1Click.Caption  := language.ReadString(lang, 'mnUpdate1ClickCaption', '');
+  mnDownload1Click.Caption:= language.ReadString(lang, 'mnDownload1ClickCaption', '');
 
   btSearch      .Hint   := language.ReadString(lang, 'btSearchHint', '');
   btRemoveFilter.Hint   := language.ReadString(lang, 'btRemoveFilterHint', '');
@@ -2599,11 +2691,14 @@ begin
   btOptionApply.Caption   := language.ReadString(lang, 'btOptionApplyCaption', '');
   tsGeneral.Caption       := language.ReadString(lang, 'tsGeneralCaption', '');
   tsConnections.Caption   := language.ReadString(lang, 'tsConnectionsCaption', '');
+  tsUpdate.Caption        := language.ReadString(lang, 'tsUpdateCaption', '');
   tsSaveTo.Caption        := language.ReadString(lang, 'tsSaveToCaption', '');
   tsDialogs.Caption       := language.ReadString(lang, 'tsDialogsCaption', '');
   tsWebsites.Caption      := language.ReadString(lang, 'tsWebsitesCaption', '');
   gbOptionProxy.Caption   := language.ReadString(lang, 'gbOptionProxyCaption', '');
+  gbOptionFavorites.Caption:= language.ReadString(lang, 'gbOptionFavoritesCaption', '');
   cbOptionUseProxy.Caption:= language.ReadString(lang, 'cbOptionUseProxyCaption', '');
+  cbOptionAutoCheckFavStartup.Caption:= language.ReadString(lang, 'cbOptionAutoCheckFavStartupCaption', '');
   edOptionDefaultPath.EditLabel.Caption:= language.ReadString(lang, 'edOptionDefaultPathEditLabelCaption', '');
   rgOptionCompress.Caption:= language.ReadString(lang, 'rgOptionCompressCaption', '');         ;
   gbOptionRenaming.Caption:= language.ReadString(lang, 'gbOptionRenamingCaption', '');         ;
@@ -2650,6 +2745,8 @@ begin
   lbFilterStatus.Caption := infoStatus;
   lbFilterSummary.Caption:= infoSummary;
 
+  lbOptionAutoCheckMinutes.Caption:= Format(language.ReadString(lang, 'lbOptionAutoCheckMinutesCaption', ''), [seOptionCheckMinutes.Value]);
+  OptionAutoCheckMinutes      := lbOptionAutoCheckMinutes.Caption;
   lbOptionLanguage.Caption    := language.ReadString(lang, 'lbOptionLanguageCaption', '');
   lbOptionNewMangaTime.Caption:= language.ReadString(lang, 'lbOptionNewMangaTimeCaption', '');
   lbOptionMaxParallel.Caption := Format(language.ReadString(lang, 'lbOptionMaxParallelCaption', ''), [seOptionMaxParallel.MaxValue]);
@@ -2667,6 +2764,7 @@ begin
   cbOptionShowFavoriteDialog.Caption:= language.ReadString(lang, 'cbOptionShowFavoriteDialogCaption', '');
   cbOptionBatotoUseIE.Caption:= language.ReadString(lang, 'cbOptionBatotoUseIECaption', '');
   cbOptionAutoNumberChapter.Caption:= language.ReadString(lang, 'cbOptionAutoNumberChapterCaption', '');
+  cbOptionAutoCheckFavStartup.Caption:= language.ReadString(lang, 'cbOptionAutoCheckFavStartupCaption', '');
 
   stDownloadManga          := language.ReadString(lang, 'stDownloadManga', '');
   stDownloadStatus         := language.ReadString(lang, 'stDownloadStatus', '');

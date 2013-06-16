@@ -80,6 +80,7 @@ type
     procedure   OnText(text: String);
     constructor Create;
     destructor  Destroy; override;
+    procedure   ClearInfo;
     function    GetDirectoryPage(var Page: Cardinal;
                                  const website: String): Byte;
     function    GetNameAndLink(const names, links: TStringList;
@@ -467,17 +468,25 @@ end;
 
 destructor  TMangaInformation.Destroy;
 begin
-  mangaInfo.artists:= '';
-  mangaInfo.authors:= '';
-  mangaInfo.genres := '';
-  mangaInfo.summary:= '';
-  mangaInfo.title  := '';
-  mangaInfo.url    := '';
-  mangaInfo.website:= '';
+  ClearInfo;
   mangaInfo.chapterLinks.Free;
   mangaInfo.chapterName .Free;
   parse.Free;
   inherited Destroy;
+end;
+
+procedure   TMangaInformation.ClearInfo;
+begin
+  mangaInfo.artists:= '';
+  mangaInfo.authors:= '';
+  mangaInfo.genres := '';
+  mangaInfo.summary:= '';
+  mangaInfo.coverLink:= '';
+  mangaInfo.numChapter:= 0;
+  mangaInfo.status := '';
+  mangaInfo.title  := '';
+  mangaInfo.url    := '';
+  mangaInfo.website:= '';
 end;
 
 procedure   TMangaInformation.OnTag(tag: String);

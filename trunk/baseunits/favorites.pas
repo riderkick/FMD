@@ -51,6 +51,7 @@ type
   public
     // store manga name that has new chapter after checking
     newMangaStr    : String;
+    isAuto,
     isShowDialog,
     isRunning      : Boolean;
     Count          : Cardinal;
@@ -217,12 +218,15 @@ var
   i          : Cardinal;
   newMangaStr: String;
 begin
-  if (isRunning) OR (MainForm.silentThreadCount > 0) then
+  if (NOT isAuto) AND ((isRunning) OR (MainForm.silentThreadCount > 0)) then
   begin
     MessageDlg('', stDlgFavoritesIsRunning,
                 mtInformation, [mbYes, mbNo], 0);
     exit;
-  end;
+  end
+  else
+  if (isAuto) AND ((isRunning) OR (MainForm.silentThreadCount > 0)) then
+    exit;
   if Count = 0 then exit;
   if threads.Count > 0 then exit;
   MainForm.btFavoritesCheckNewChapter.Caption:= stFavoritesChecking;
