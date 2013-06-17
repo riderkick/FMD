@@ -105,7 +105,17 @@ begin
       end;
 
       if s='' then
-        s:= Format('%.4d', [i+1]);
+      begin
+        if (website <> MANGASTREAM_NAME) then
+          s:= Format('%.4d', [i+1])
+        else
+        begin
+          if cbOptionPathConvert.Checked then
+            s:= Format('%s', [UnicodeRemove(Info.mangaInfo.chapterName.Strings[i])])
+          else
+            s:= Format('%s', [Info.mangaInfo.chapterName.Strings[i]]);
+        end;
+      end;
       s:= TrimLeft(TrimRight(s));
       DLManager.containers.Items[pos].chapterName .Add(s);
       DLManager.containers.Items[pos].chapterLinks.Add(Info.mangaInfo.chapterLinks.Strings[i]);
@@ -212,7 +222,8 @@ end;
 
 procedure   TAddToFavSilentThread.CallMainFormAfterChecking;
 var
-  s: String;
+  s, s2: String;
+  i    : Cardinal;
 begin
   with MainForm do
   begin
@@ -230,8 +241,16 @@ begin
         s:= s + '/' + RemoveSymbols(UnicodeRemove(title));
     end;
 
+    s2:= '';
+    if (Info.mangaInfo.numChapter > 0) AND (website = MANGASTREAM_NAME) then
+    begin
+      for i:= 0 to Info.mangaInfo.numChapter-1 do
+        s2:= s2 + Info.mangaInfo.chapterLinks.Strings[i] + SEPERATOR;
+    end;
+
     favorites.Add(title,
                   IntToStr(Info.mangaInfo.numChapter),
+                  s2,
                   website,
                   s,
                   URL);

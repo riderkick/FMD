@@ -310,6 +310,7 @@ type
   PFavoriteInfo = ^TFavoriteInfo;
   TFavoriteInfo = record
     title,
+    downloadedChapterList,
     currentChapter,
     Website,
     SaveTo,

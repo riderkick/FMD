@@ -75,7 +75,7 @@ type
     procedure   Run;
     procedure   ShowResult;
     function    IsMangaExist(const title, website: String): Boolean;
-    procedure   Add(const title, currentChapter, website, saveTo, link: String);
+    procedure   Add(const title, currentChapter, downloadedChapterList, website, saveTo, link: String);
     procedure   Remove(const pos: Cardinal; const isBackup: Boolean = TRUE);
     procedure   Restore;
     procedure   Backup;
@@ -134,6 +134,8 @@ begin
     if (manager.favoriteInfo[workPtr].website <> BATOTO_NAME) OR
        (NOT OptionBatotoUseIEChecked) then
     begin
+      if manager.favoriteInfo[workPtr].website = MANGASTREAM_NAME then
+        getInfo.mangaInfo.title:= manager.favoriteInfo[workPtr].title;
       if getInfo.GetInfoFromURL(manager.favoriteInfo[workPtr].website,
                                 manager.favoriteInfo[workPtr].link, 5) = NET_PROBLEM then
         break;
@@ -242,6 +244,8 @@ end;
 
 procedure   TFavoriteManager.ShowResult;
 var
+  isNewChapters   : array of Boolean;
+  l               : TStringList;
   isHasNewChapter : Boolean = FALSE;
   s, s1           : String;
   removeListStr   : String = '';
@@ -249,15 +253,59 @@ var
   currentChapter,
   newChapter,
   pos,
-  i, j : Cardinal;
-  newC : Cardinal = 0;
-  isNow: Boolean;
+  i, j, k: Cardinal;
+  newC   : Cardinal = 0;
+  isNow  : Boolean;
+
+  function  Check(const list: TStringList; const s: String): Boolean;
+  var
+    i: Cardinal;
+  begin
+    Result:= FALSE;
+    for i:= 0 to list.Count-1 do
+      if CompareStr(list.Strings[i], s)=0 then
+        exit(TRUE);
+  end;
+
 begin
   MainForm.btFavoritesCheckNewChapter.Caption:= stFavoritesCheck;
+  l:= TStringList.Create;
+  SetLength(isNewChapters, Count);
+  // check the result to see if theres any new chapter
   for i:= 0 to Count-1 do
   begin
-    if mangaInfo[i].numChapter > StrToInt(favoriteInfo[i].currentChapter) then
+    isNewChapters[i]:= FALSE;
+    if (mangaInfo[i].website <> MANGASTREAM_NAME) AND
+       (mangaInfo[i].numChapter > StrToInt(favoriteInfo[i].currentChapter)) then
+    begin
+      isNewChapters[i]:= TRUE;
       Inc(newC);
+    end
+    else
+    if (mangaInfo[i].website = MANGASTREAM_NAME) then
+    begin
+      l.Clear;
+      GetParams(l, favoriteInfo[i].downloadedChapterList);
+      if l.Count = 0 then
+      begin
+        isNewChapters[i]:= TRUE;
+        Inc(newC);
+      end
+      else
+      if mangaInfo[i].chapterLinks.Count <> 0 then
+      begin
+        for j:= 0 to mangaInfo[i].chapterLinks.Count-1 do
+        begin
+          if NOT Check(l, mangaInfo[i].chapterLinks.Strings[j]) then
+          begin
+            isNewChapters[i]:= TRUE;
+            Inc(newC);
+            break;
+          end;
+        end;
+      end;
+    end;
+
     if mangaInfo[i].status = '0' then
     begin
       if removeListStr = '' then
@@ -272,13 +320,21 @@ begin
   else
   begin
     newMangaStr:= '';
+
+    // generate string for new chapter notification
     for i:= 0 to Count-1 do
     begin
       currentChapter:= StrToInt(favoriteInfo[i].currentChapter);
       newChapter    := mangaInfo[i].numChapter;
-      if newChapter > currentChapter then
-        newMangaStr:= newMangaStr + #10#13+ ' - '+favoriteInfo[i].title + ' <'+ favoriteInfo[i].Website +'> ' + favoriteInfo[i].currentChapter+' -> '+IntToStr(newChapter);
+      if isNewChapters[i] then
+      begin
+        if favoriteInfo[i].Website <> MANGASTREAM_NAME then
+          newMangaStr:= newMangaStr + #10#13+ ' - '+favoriteInfo[i].title + ' <'+ favoriteInfo[i].Website +'> ' + favoriteInfo[i].currentChapter+' -> '+IntToStr(newChapter)
+        else
+          newMangaStr:= newMangaStr + #10#13+ ' - '+favoriteInfo[i].title + ' <'+ favoriteInfo[i].Website +'>';
+      end;
     end;
+
     if isShowDialog then
     begin
       if MessageDlg('',
@@ -296,19 +352,42 @@ begin
       isNow:= TRUE;
     for i:= 0 to Count-1 do
     begin
-      currentChapter:= StrToInt(favoriteInfo[i].currentChapter);
-      newChapter    := mangaInfo[i].numChapter;
-      if newChapter > currentChapter then
+      newChapter:= mangaInfo[i].numChapter;
+      if favoriteInfo[i].Website <> MANGASTREAM_NAME then
+      begin
+        currentChapter:= StrToInt(favoriteInfo[i].currentChapter);
+      end
+      else
+      begin
+        l.Clear;
+        GetParams(l, favoriteInfo[i].downloadedChapterList);
+        if l.Count <> 0 then
+        begin
+          currentChapter:= newChapter;
+          for j:= 0 to mangaInfo[i].chapterLinks.Count-1 do
+          begin
+            if NOT Check(l, mangaInfo[i].chapterLinks.Strings[j]) then
+            begin
+              currentChapter:= j;
+              break;
+            end;
+          end;
+        end
+        else
+          currentChapter:= 0;
+      end;
+
+      if isNewChapters[i] then
       begin
         isHasNewChapter:= TRUE;
         newMangaStr:= newMangaStr + #10#13+ ' - '+favoriteInfo[i].title;
         DLManager.AddTask;
         pos:= DLManager.containers.Count-1;
         DLManager.containers.Items[pos].mangaSiteID:= GetMangaSiteID(mangaInfo[i].website);
+
+        // generate download link
         for j:= currentChapter to newChapter-1 do
         begin
-         // TODO: Fix for mangastream
-         // DLManager.containers.Items[pos].chapterName.Add(Format('%.4d - %s', [j+1, mangaInfo[i].chapterName.Strings[j]]));
           s:= '';
           if MainForm.cbOptionAutoNumberChapter.Checked then
             s:= Format('%.4d', [j+1]);
@@ -330,6 +409,7 @@ begin
           DLManager.containers.Items[pos].chapterName .Add(s);
           DLManager.containers.Items[pos].chapterLinks.Add(mangaInfo[i].chapterLinks.Strings[j]);
         end;
+
         if NOT isNow then
         begin
           DLManager.containers.Items[pos].downloadInfo.Status:= stStop;
@@ -350,8 +430,6 @@ begin
 
         // bad coding - update favorites's current chapter, and free pointers
         favoriteInfo[i].currentChapter:= IntToStr(mangaInfo[i].numChapter);
-        mangaInfo[i].chapterName .Free;
-        mangaInfo[i].chapterLinks.Free;
       end;
     end;
     if Assigned(OnUpdateDownload) then
@@ -365,7 +443,17 @@ begin
   for i:= 0 to Count-1 do
   begin
     if mangaInfo[i].numChapter>0 then
+    begin
       favoriteInfo[i].currentChapter:= IntToStr(mangaInfo[i].numChapter);
+      if (mangaInfo[i].website = MANGASTREAM_NAME) then
+      begin
+        favoriteInfo[i].downloadedChapterList:= '';
+        for j:= 0 to mangaInfo[i].numChapter-1 do
+          favoriteInfo[i].downloadedChapterList:= favoriteInfo[i].downloadedChapterList+mangaInfo[i].chapterLinks.Strings[j]+SEPERATOR;
+      end;
+    end;
+    mangaInfo[i].chapterName .Free;
+    mangaInfo[i].chapterLinks.Free;
   end;
 
   while threads.Count > 0 do
@@ -390,6 +478,8 @@ begin
   if Assigned(OnUpdateFavorite) then
     OnUpdateFavorite;
 
+  SetLength(isNewChapters, 0);
+  l.Free;
   Backup;
 end;
 
@@ -405,7 +495,7 @@ begin
   Result:= FALSE;
 end;
 
-procedure   TFavoriteManager.Add(const title, currentChapter, website,
+procedure   TFavoriteManager.Add(const title, currentChapter, downloadedChapterList, website,
                                        saveTo, link: String);
 var
   i: Cardinal;
@@ -421,6 +511,10 @@ begin
   favoriteInfo[Count-1].website       := website;
   favoriteInfo[Count-1].saveTo        := saveTo;
   favoriteInfo[Count-1].Link          := Link;
+  if website = MANGASTREAM_NAME then
+    favoriteInfo[Count-1].downloadedChapterList:= downloadedChapterList
+  else
+    favoriteInfo[Count-1].downloadedChapterList:= '';
   Backup;
 end;
 
@@ -448,6 +542,7 @@ begin
   begin
     favoriteInfo[i].title         := favorites.ReadString(IntToStr(i), 'Title', '');
     favoriteInfo[i].currentChapter:= favorites.ReadString(IntToStr(i), 'CurrentChapter', '0');
+    favoriteInfo[i].downloadedChapterList:= favorites.ReadString(IntToStr(i), 'DownloadedChapterList', '');
     favoriteInfo[i].website       := favorites.ReadString(IntToStr(i), 'Website', '');
     favoriteInfo[i].SaveTo        := favorites.ReadString(IntToStr(i), 'SaveTo', '');
     favoriteInfo[i].link          := favorites.ReadString(IntToStr(i), 'Link', '');
@@ -469,6 +564,7 @@ begin
   begin
     favorites.WriteString(IntToStr(i), 'Title',          favoriteInfo[i].title);
     favorites.WriteString(IntToStr(i), 'CurrentChapter', favoriteInfo[i].currentChapter);
+    favorites.WriteString(IntToStr(i), 'DownloadedChapterList', favoriteInfo[i].downloadedChapterList);
     favorites.WriteString(IntToStr(i), 'Website',        favoriteInfo[i].Website);
     favorites.WriteString(IntToStr(i), 'SaveTo',         favoriteInfo[i].SaveTo);
     favorites.WriteString(IntToStr(i), 'Link',           favoriteInfo[i].link);

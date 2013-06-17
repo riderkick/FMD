@@ -21,7 +21,7 @@ object Log: TLog
   end
   object mmLog: TMemo
     Left = 0
-    Height = 365
+    Height = 337
     Top = 0
     Width = 436
     Align = alClient
@@ -34,5 +34,15 @@ object Log: TLog
     ReadOnly = True
     ScrollBars = ssVertical
     TabOrder = 1
+  end
+  object btVisit: TButton
+    Left = 0
+    Height = 28
+    Top = 337
+    Width = 436
+    Align = alBottom
+    Caption = 'Visit FMD website for more information'
+    OnClick = btVisitClick
+    TabOrder = 2
   end
 end

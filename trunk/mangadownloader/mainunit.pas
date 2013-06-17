@@ -142,7 +142,6 @@ type
     MenuItem4: TMenuItem;
     MenuItem5: TMenuItem;
     mnDownload1Click: TMenuItem;
-    MenuItem7: TMenuItem;
     mnUpdate1Click: TMenuItem;
     miMangaListDownloadAll: TMenuItem;
     miMangaListViewInfos: TMenuItem;
@@ -183,7 +182,6 @@ type
     pmFavorites: TPopupMenu;
     pmMangaList: TPopupMenu;
     pmUpdate: TPopupMenu;
-    PopupMenu1: TPopupMenu;
     rbOne: TRadioButton;
     rbAll: TRadioButton;
     rgOptionCompress: TRadioGroup;
@@ -699,7 +697,7 @@ end;
 
 procedure TMainForm.btDownloadClick(Sender: TObject);
 var
-  s, s1: String;
+  s, s1, s2: String;
   hh, mm, ss, ms,
   day, month, year: Word;
   i, pos  : Cardinal;
@@ -726,14 +724,6 @@ begin
         s:= '';
         if cbOptionAutoNumberChapter.Checked then
           s:= Format('%.4d', [i+1]);
-       { if NOT cbOptionGenerateChapterName.Checked then
-        else
-        begin
-          if NOT cbOptionPathConvert.Checked then
-            s:= s + ' - ' + mangaInfo.chapterName.Strings[i]
-          else
-            s:= s + ' - ' + UnicodeRemove(mangaInfo.chapterName.Strings[i]);
-        end; }
         if cbOptionGenerateChapterName.Checked then
         begin
           if cbOptionPathConvert.Checked then
@@ -763,8 +753,15 @@ begin
           s:= UnicodeRemove(RemoveSymbols(TrimLeft(TrimRight(mangaInfo.title))));
       end;
 
-      if s='' then
-        s:= Format('%.4d', [i+1]);
+      if (mangaInfo.website <> MANGASTREAM_NAME) then
+        s:= Format('%.4d', [i+1])
+      else
+      begin
+        if cbOptionPathConvert.Checked then
+          s:= Format('%s', [UnicodeRemove(mangaInfo.chapterName.Strings[i])])
+        else
+          s:= Format('%s', [mangaInfo.chapterName.Strings[i]]);
+      end;
 
       s:= TrimLeft(TrimRight(s));
       DLManager.containers.Items[pos].chapterName .Add(s);
@@ -805,9 +802,17 @@ begin
   DLManager.containers.Items[pos].downloadInfo.dateTime:= IntToStr(Month)+'/'+IntToStr(Day)+'/'+IntToStr(Year)+' '+IntToStr(hh)+':'+IntToStr(mm)+':'+IntToStr(ss);
 
   // Add to favorites
+
+  s2:= '';
+  if (mangaInfo.numChapter > 0) AND (mangaInfo.website = MANGASTREAM_NAME) then
+  begin
+    for i:= 0 to mangaInfo.numChapter-1 do
+      s2:= s2 + mangaInfo.chapterLinks.Strings[i] + SEPERATOR;
+  end;
+
   if cbAddToFavorites.Checked then
   begin
-    favorites.Add(mangaInfo.title, IntToStr(mangaInfo.numChapter),
+    favorites.Add(mangaInfo.title, IntToStr(mangaInfo.numChapter), s2,
                   mangaInfo.website, s, mangaInfo.link);
     vtFavorites.NodeDataSize := SizeOf(TFavoriteInfo);
     vtFavorites.RootNodeCount:= favorites.Count;
@@ -1625,8 +1630,8 @@ begin
   {$IFDEF WINDOWS}
   if NOT Assigned(vtFavorites.FocusedNode) then exit;
   Process:= TProcess.Create(nil);
-  Process.CommandLine:= UTF8ToUTF16('explorer.exe /e, '+
-                                     StringReplace(Favorites.favoriteInfo[vtFavorites.FocusedNode.Index].SaveTo, '/', '\', [rfReplaceAll]));
+  Process.CommandLine:= UTF8ToUTF16('explorer.exe /e, "'+
+                                     StringReplace(Favorites.favoriteInfo[vtFavorites.FocusedNode.Index].SaveTo, '/', '\', [rfReplaceAll])+'"');
   Process.Execute;
   Process.Free;
   {$ENDIF}
@@ -1639,8 +1644,8 @@ begin
   {$IFDEF WINDOWS}
   if NOT Assigned(vtDownload.FocusedNode) then exit;
   Process:= TProcess.Create(nil);
-  Process.CommandLine:= UTF8ToUTF16('explorer.exe /e, '+
-                                     StringReplace(DLManager.containers.Items[vtDownload.FocusedNode.Index].downloadInfo.SaveTo, '/', '\', [rfReplaceAll]));
+  Process.CommandLine:= UTF8ToUTF16('explorer.exe /e, "'+
+                                     StringReplace(DLManager.containers.Items[vtDownload.FocusedNode.Index].downloadInfo.SaveTo, '/', '\', [rfReplaceAll])+'"');
   Process.Execute;
   Process.Free;
   {$ENDIF}
@@ -1649,9 +1654,10 @@ end;
 procedure TMainForm.pcMainChange(Sender: TObject);
   procedure UpdateOptions;
   var
-    l: TStringList;
-    s: String;
-    i: Cardinal;
+    l   : TStringList;
+    s   : String;
+    i, j: Cardinal;
+    data: PMangaListItem;
   begin
     l:= TStringList.Create;
 
@@ -1689,12 +1695,33 @@ procedure TMainForm.pcMainChange(Sender: TObject);
     cbOptionAutoCheckFavStartup.Checked:= options.ReadBool('update', 'AutoCheckFavStartup', FALSE);
     seOptionCheckMinutes.Value:= options.ReadInteger('update', 'AutoCheckMinutes', 0);
 
-    for i:= 0 to Length(optionMangaSiteSelectionNodes)-1 do
+   { for i:= 0 to Length(optionMangaSiteSelectionNodes)-1 do
       optionMangaSiteSelectionNodes[i].CheckState:= csUncheckedNormal;
     s:= mangalistIni.ReadString('general', 'MangaListSelect', '0'+SEPERATOR);
+
     GetParams(l, s);
     for i:= 0 to l.Count-1 do
       optionMangaSiteSelectionNodes[StrToInt(l.Strings[i])].CheckState:= csCheckedNormal;
+       }
+
+    for i:= 0 to Length(optionMangaSiteSelectionNodes)-1 do
+      optionMangaSiteSelectionNodes[i].CheckState:= csUncheckedNormal;
+
+    s:= options.ReadString('general', 'MangaListSelect', ANIMEA_NAME+SEPERATOR+MANGAFOX_NAME+SEPERATOR+MANGAHERE_NAME+SEPERATOR+MANGAINN_NAME+SEPERATOR+MANGAPARK_NAME+SEPERATOR);
+    GetParams(l, s);
+
+    for i:= 0 to l.Count-1 do
+    begin
+      for j:= 0 to Length(optionMangaSiteSelectionNodes)-1 do
+      begin
+        data:= vtOptionMangaSiteSelection.GetNodeData(optionMangaSiteSelectionNodes[j]);
+        if data^.text = l.Strings[i] then
+        begin
+          optionMangaSiteSelectionNodes[j].CheckState:= csCheckedNormal;
+          break;
+        end;
+      end;
+    end;
 
     l.Free;
   end;
@@ -1801,8 +1828,7 @@ begin
     pmMangaList.Items[2].Enabled:= FALSE;
   end;
 
-  if (cbSelectManga.Items[cbSelectManga.ItemIndex] = MANGASTREAM_NAME) OR
-     (cbSelectManga.Items[cbSelectManga.ItemIndex] = FAKKU_NAME){ OR
+  if (cbSelectManga.Items[cbSelectManga.ItemIndex] = FAKKU_NAME){ OR
      (cbSelectManga.Items[cbSelectManga.ItemIndex] = MANGATRADERS_NAME)} then
     pmMangaList.Items[2].Enabled:= FALSE
   else
@@ -2033,7 +2059,7 @@ begin
                mtConfirmation, [mbYes], 0);
     exit;
   end;
-  mangalistIni.WriteString('general', 'MangaListSelect', s);
+  options.WriteString('general', 'MangaListSelect', s);
   mangalistIni.UpdateFile;
 
   cbSelectManga.Clear;
@@ -2216,8 +2242,7 @@ end;
 
 procedure TMainForm.vtMangaListDblClick(Sender: TObject);
 begin
-  if (cbSelectManga.Items[cbSelectManga.ItemIndex] = MANGASTREAM_NAME) OR
-     (cbSelectManga.Items[cbSelectManga.ItemIndex] = FAKKU_NAME){ OR
+  if (cbSelectManga.Items[cbSelectManga.ItemIndex] = FAKKU_NAME){ OR
      (cbSelectManga.Items[cbSelectManga.ItemIndex] = MANGATRADERS_NAME)} then
   begin
     cbAddToFavorites.Checked:= FALSE;
@@ -2443,6 +2468,7 @@ end;
 
 procedure TMainForm.LoadMangaOptions;
 var
+  isDeleteUnusedManga: Boolean;
   i, j: Cardinal;
   languages,
   l: TStringList;
@@ -2465,7 +2491,7 @@ begin
   GetParams(websiteLanguage, s);
 
   cbSelectManga.Items.Clear;
-  s:= mangalistIni.ReadString('general', 'MangaListSelect', '');
+  s:= options.ReadString('general', 'MangaListSelect', ANIMEA_NAME+SEPERATOR+MANGAFOX_NAME+SEPERATOR+MANGAHERE_NAME+SEPERATOR+MANGAINN_NAME+SEPERATOR+MANGAPARK_NAME+SEPERATOR);
   GetParams(l, s);
 
   SetLength(optionMangaSiteSelectionNodes, websiteName.Count);
@@ -2496,11 +2522,38 @@ begin
     end;
   end;
 
+  // remove deleted manga name
+  i:= 0;
+  while i < l.Count do
+  begin
+    isDeleteUnusedManga:= TRUE;
+    for j:= 0 to Length(optionMangaSiteSelectionNodes)-1 do
+    begin
+      data:= vtOptionMangaSiteSelection.GetNodeData(optionMangaSiteSelectionNodes[j]);
+      if data^.text = l.Strings[i] then
+      begin
+        isDeleteUnusedManga:= FALSE;
+        break;
+      end;
+    end;
+    if isDeleteUnusedManga then
+      l.Delete(i)
+    else
+      Inc(i);
+  end;
+
   for i:= 0 to l.Count-1 do
   begin
-    j:= StrToInt(l.Strings[i]);
-    cbSelectManga.Items.Add(websiteName.Strings[j]);
-    optionMangaSiteSelectionNodes[j].CheckState:= csCheckedNormal;
+    cbSelectManga.Items.Add(l.Strings[i]);
+    for j:= 0 to Length(optionMangaSiteSelectionNodes)-1 do
+    begin
+      data:= vtOptionMangaSiteSelection.GetNodeData(optionMangaSiteSelectionNodes[j]);
+      if data^.text = l.Strings[i] then
+      begin
+        optionMangaSiteSelectionNodes[j].CheckState:= csCheckedNormal;
+        break;
+      end;
+    end;
   end;
 
   cbSelectManga.ItemIndex:= 0;
@@ -2512,13 +2565,17 @@ end;
 
 function  TMainForm.SaveMangaOptions: String;
 var
-  i: Cardinal;
+  i   : Cardinal;
+  data: PMangaListItem;
 begin
   Result:= '';
   for i:= 0 to Length(optionMangaSiteSelectionNodes)-1 do
   begin
     if optionMangaSiteSelectionNodes[i].CheckState = csCheckedNormal then
-      Result:= Result+IntToStr(i)+SEPERATOR;
+    begin
+      data:= vtOptionMangaSiteSelection.GetNodeData(optionMangaSiteSelectionNodes[i]);
+      Result:= Result+data^.text+SEPERATOR;
+    end;
   end;
 end;
 

@@ -1,3 +1,9 @@
+{
+        File: buffer.pas
+        License: GPLv2
+        This unit is part of Free Manga Downloader
+}
+
 unit buffer;
 
 {$mode delphi}

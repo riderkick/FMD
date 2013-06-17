@@ -26,6 +26,7 @@ object MainForm: TMainForm
     object cbSelectManga: TComboBox
       Left = 8
       Height = 23
+      Hint = 'For more manga sites, please go to Options->Manga sites'
       Top = 8
       Width = 144
       Anchors = [akTop, akLeft, akRight]
@@ -34,6 +35,8 @@ object MainForm: TMainForm
         ''
       )
       OnChange = cbSelectMangaChange
+      ParentShowHint = False
+      ShowHint = True
       Style = csDropDownList
       TabOrder = 0
     end
@@ -2422,15 +2425,9 @@ object MainForm: TMainForm
   end
   object itCheckForChapters: TIdleTimer
     Enabled = False
+    Interval = 600000
     OnTimer = itCheckForChaptersTimer
     left = 688
     top = 128
-  end
-  object PopupMenu1: TPopupMenu
-    left = 747
-    top = 240
-    object MenuItem7: TMenuItem
-      Caption = 'New Item1'
-    end
   end
 end

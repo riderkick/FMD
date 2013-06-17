@@ -19,8 +19,10 @@ type
   { TLog }
 
   TLog = class(TForm)
+    btVisit: TButton;
     mmLog: TMemo;
     pnIE: TPanel;
+    procedure btVisitClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
   private
     { private declarations }
@@ -44,6 +46,11 @@ uses
 procedure TLog.FormCreate(Sender: TObject);
 begin
   Visible:= FALSE;
+end;
+
+procedure TLog.btVisitClick(Sender: TObject);
+begin
+  OpenURL('http://akarink.wordpress.com/');
 end;
 
 procedure TLog.ShowLog;
