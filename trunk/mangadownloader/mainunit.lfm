@@ -1482,58 +1482,6 @@ object MainForm: TMainForm
             end
           end
         end
-        object tsUpdate: TTabSheet
-          Caption = 'Updates'
-          ClientHeight = 286
-          ClientWidth = 562
-          object cbOptionAutoCheckUpdate: TCheckBox
-            Left = 28
-            Height = 19
-            Top = 30
-            Width = 140
-            Caption = 'Check for new version '
-            ParentFont = False
-            TabOrder = 0
-          end
-          object gbOptionFavorites: TGroupBox
-            Left = 29
-            Height = 112
-            Top = 62
-            Width = 503
-            Anchors = [akTop, akLeft, akRight]
-            Caption = 'Favorites'
-            ClientHeight = 92
-            ClientWidth = 499
-            ParentFont = False
-            TabOrder = 1
-            object cbOptionAutoCheckFavStartup: TCheckBox
-              Left = 21
-              Height = 19
-              Top = 14
-              Width = 196
-              Caption = 'Automatic check for new chapter'
-              ParentFont = False
-              TabOrder = 0
-            end
-            object seOptionCheckMinutes: TSpinEdit
-              Left = 21
-              Height = 23
-              Top = 45
-              Width = 58
-              MaxValue = 1440
-              OnChange = seOptionCheckMinutesChange
-              TabOrder = 1
-            end
-            object lbOptionAutoCheckMinutes: TLabel
-              Left = 93
-              Height = 15
-              Top = 45
-              Width = 231
-              Caption = 'Auto check for new chapter every ? minutes'
-              ParentColor = False
-            end
-          end
-        end
         object tsSaveTo: TTabSheet
           Caption = 'Save to'
           ClientHeight = 286
@@ -1644,6 +1592,58 @@ object MainForm: TMainForm
             TabOrder = 3
           end
         end
+        object tsUpdate: TTabSheet
+          Caption = 'Updates'
+          ClientHeight = 286
+          ClientWidth = 562
+          object cbOptionAutoCheckUpdate: TCheckBox
+            Left = 28
+            Height = 19
+            Top = 30
+            Width = 140
+            Caption = 'Check for new version '
+            ParentFont = False
+            TabOrder = 0
+          end
+          object gbOptionFavorites: TGroupBox
+            Left = 29
+            Height = 112
+            Top = 62
+            Width = 503
+            Anchors = [akTop, akLeft, akRight]
+            Caption = 'Favorites'
+            ClientHeight = 92
+            ClientWidth = 499
+            ParentFont = False
+            TabOrder = 1
+            object cbOptionAutoCheckFavStartup: TCheckBox
+              Left = 21
+              Height = 19
+              Top = 14
+              Width = 196
+              Caption = 'Automatic check for new chapter'
+              ParentFont = False
+              TabOrder = 0
+            end
+            object seOptionCheckMinutes: TSpinEdit
+              Left = 21
+              Height = 23
+              Top = 45
+              Width = 58
+              MaxValue = 1440
+              OnChange = seOptionCheckMinutesChange
+              TabOrder = 1
+            end
+            object lbOptionAutoCheckMinutes: TLabel
+              Left = 93
+              Height = 15
+              Top = 45
+              Width = 231
+              Caption = 'Auto check for new chapter every ? minutes'
+              ParentColor = False
+            end
+          end
+        end
         object tsDialogs: TTabSheet
           Caption = 'Dialogs'
           ClientHeight = 294
@@ -1742,19 +1742,19 @@ object MainForm: TMainForm
         Left = 25
         Height = 40
         Top = 356
-        Width = 192
+        Width = 208
         Anchors = [akLeft, akBottom]
         Caption = 'Check for new version'
         OnClick = btCheckVersionClick
         TabOrder = 1
       end
       object btVisitMyBlog: TBitBtn
-        Left = 233
+        Left = 249
         Height = 40
         Top = 356
-        Width = 192
+        Width = 208
         Anchors = [akLeft, akBottom]
-        Caption = 'Visit my blog'
+        Caption = 'Request features / Visit blog'
         OnClick = btVisitMyBlogClick
         TabOrder = 2
       end

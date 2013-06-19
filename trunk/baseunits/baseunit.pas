@@ -113,6 +113,8 @@ const
   TURKCRAFT_NAME    = 'Turkcraft';    TURKCRAFT_ID = 20;
   MANGAVADISI_NAME  = 'MangaVadisi';  MANGAVADISI_ID = 21;
 
+  DEFAULT_LIST = ANIMEA_NAME+'!%~'+MANGAFOX_NAME+'!%~'+MANGAHERE_NAME+'!%~'+MANGAINN_NAME+'!%~'+MANGAREADER_NAME+'!%~';
+
 var
   // cbOptionLetFMDDoItemIndex
   cbOptionLetFMDDoItemIndex: Cardinal = 0;

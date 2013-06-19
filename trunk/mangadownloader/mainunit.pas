@@ -753,14 +753,17 @@ begin
           s:= UnicodeRemove(RemoveSymbols(TrimLeft(TrimRight(mangaInfo.title))));
       end;
 
-      if (mangaInfo.website <> MANGASTREAM_NAME) then
-        s:= Format('%.4d', [i+1])
-      else
+      if s = '' then
       begin
-        if cbOptionPathConvert.Checked then
-          s:= Format('%s', [UnicodeRemove(mangaInfo.chapterName.Strings[i])])
+        if (mangaInfo.website <> MANGASTREAM_NAME) then
+          s:= Format('%.4d', [i+1])
         else
-          s:= Format('%s', [mangaInfo.chapterName.Strings[i]]);
+        begin
+          if cbOptionPathConvert.Checked then
+            s:= Format('%s', [UnicodeRemove(mangaInfo.chapterName.Strings[i])])
+          else
+            s:= Format('%s', [mangaInfo.chapterName.Strings[i]]);
+        end;
       end;
 
       s:= TrimLeft(TrimRight(s));
@@ -1707,7 +1710,7 @@ procedure TMainForm.pcMainChange(Sender: TObject);
     for i:= 0 to Length(optionMangaSiteSelectionNodes)-1 do
       optionMangaSiteSelectionNodes[i].CheckState:= csUncheckedNormal;
 
-    s:= options.ReadString('general', 'MangaListSelect', ANIMEA_NAME+SEPERATOR+MANGAFOX_NAME+SEPERATOR+MANGAHERE_NAME+SEPERATOR+MANGAINN_NAME+SEPERATOR+MANGAPARK_NAME+SEPERATOR);
+    s:= options.ReadString('general', 'MangaListSelect', DEFAULT_LIST);
     GetParams(l, s);
 
     for i:= 0 to l.Count-1 do
@@ -2491,7 +2494,7 @@ begin
   GetParams(websiteLanguage, s);
 
   cbSelectManga.Items.Clear;
-  s:= options.ReadString('general', 'MangaListSelect', ANIMEA_NAME+SEPERATOR+MANGAFOX_NAME+SEPERATOR+MANGAHERE_NAME+SEPERATOR+MANGAINN_NAME+SEPERATOR+MANGAPARK_NAME+SEPERATOR);
+  s:= options.ReadString('general', 'MangaListSelect', DEFAULT_LIST);
   GetParams(l, s);
 
   SetLength(optionMangaSiteSelectionNodes, websiteName.Count);
@@ -2727,15 +2730,17 @@ begin
   mnUpdate1Click.Caption  := language.ReadString(lang, 'mnUpdate1ClickCaption', '');
   mnDownload1Click.Caption:= language.ReadString(lang, 'mnDownload1ClickCaption', '');
 
-  btSearch      .Hint   := language.ReadString(lang, 'btSearchHint', '');
-  btRemoveFilter.Hint   := language.ReadString(lang, 'btRemoveFilterHint', '');
+  btSearch      .Hint     := language.ReadString(lang, 'btSearchHint', '');
+  btRemoveFilter.Hint     := language.ReadString(lang, 'btRemoveFilterHint', '');
   btRemoveFilterLarge.Hint:= btRemoveFilter.Hint;
+  cbSelectManga.Hint      := language.ReadString(lang, 'cbSelectMangaHint', '');
 
   edSaveTo.EditLabel.Caption:= language.ReadString(lang, 'edSaveToEditLabelCaption', '');
   btDownload    .Caption  := language.ReadString(lang, 'btDownloadCaption', '');
   btReadOnline  .Caption  := language.ReadString(lang, 'btReadOnlineCaption', '');
   cbAddAsStopped.Caption  := language.ReadString(lang, 'cbAddAsStoppedCaption', '');
   cbAddToFavorites.Caption:= language.ReadString(lang, 'cbAddToFavoritesCaption', '');
+
 
   cbFilterStatus.Items.Strings[0]:= language.ReadString(lang, 'lbFilterStatus0', '');
   cbFilterStatus.Items.Strings[1]:= language.ReadString(lang, 'lbFilterStatus1', '');

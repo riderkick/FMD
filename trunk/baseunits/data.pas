@@ -1017,9 +1017,6 @@ begin
   if website = VNSHARING_NAME then
     Result:= GetVnSharingDirectoryPage
   else
-  if website = TRUYEN18_NAME then
-    Result:= GetTruyen18DirectoryPage
-  else
   if website = HENTAI2READ_NAME then
     Result:= GetHentai2ReadDirectoryPage
   else
@@ -1043,6 +1040,9 @@ begin
   else
   if website = PERVEDEN_NAME then
     Result:= GetMangaEdenDirectoryPage(PERVEDEN_ROOT)
+  else
+  if website = TRUYEN18_NAME then
+    Result:= GetTruyen18DirectoryPage
   else
   begin
     Result:= NO_ERROR;
@@ -1953,9 +1953,6 @@ begin
   if website = FAKKU_NAME then
     Result:= FakkuGetNameAndLink
   else
-  if website = TRUYEN18_NAME then
-    Result:= Truyen18GetNameAndLink
-  else
   if website = MANGAREADER_NAME then
     Result:= MangaReaderGetNameAndLink
   else
@@ -1987,7 +1984,10 @@ begin
     Result:= MangaVadisiGetNameAndLink
   else
   if website = GEHENTAI_NAME then
-    Result:= GEHentaiGetNameAndLink;
+    Result:= GEHentaiGetNameAndLink
+  else
+  if website = TRUYEN18_NAME then
+    Result:= Truyen18GetNameAndLink  ;
 end;
 
 function    TMangaInformation.GetInfoFromURL(const website, URL: String; const Reconnect: Cardinal): Byte;
@@ -4595,9 +4595,6 @@ begin
   if website = FAKKU_NAME then
     Result:= GetFakkuInfoFromURL
   else
-  if website = TRUYEN18_NAME then
-    Result:= GetTruyen18InfoFromURL
-  else
   if website = MANGAREADER_NAME then
     Result:= GetMangaReaderInfoFromURL
   else
@@ -4634,7 +4631,10 @@ begin
       TRUE:  Result:= GetGEHentaiInfoFromURL_Dummy;
       FALSE: Result:= GetGEHentaiInfoFromURL;
     end;
-  end;
+  end
+  else
+  if website = TRUYEN18_NAME then
+    Result:= GetTruyen18InfoFromURL;
 
   s:= mangaInfo.artists;
   if (s <> '') AND (s[1] = '<') then

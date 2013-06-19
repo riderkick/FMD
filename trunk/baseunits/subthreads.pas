@@ -229,7 +229,7 @@ procedure   TSubThread.CallMainFormUpdateRequire;
 begin
   if MessageDlg('', Format(stDlgUpdaterVersionRequire, [LRequireRevision]), mtInformation, [mbYes, mbNo], 0)=mrYes then
   begin
-    OpenURL('https://sourceforge.net/projects/fmd/');
+    OpenURL('http://akarink.wordpress.com/');
   end;
 end;
 
