@@ -110,8 +110,9 @@ const
   MANGAEDEN_NAME    = 'MangaEden';    MANGAEDEN_ID   = 17;
   PERVEDEN_NAME     = 'PervEden';     PERVEDEN_ID    = 18;
   TRUYENTRANHTUAN_NAME = 'TruyenTranhTuan'; TRUYENTRANHTUAN_ID = 19;
-  TURKCRAFT_NAME    = 'Turkcraft';    TURKCRAFT_ID = 20;
+  TURKCRAFT_NAME    = 'Turkcraft';    TURKCRAFT_ID   = 20;
   MANGAVADISI_NAME  = 'MangaVadisi';  MANGAVADISI_ID = 21;
+  EATMANGA_NAME     = 'EatManga';     EATMANGA_ID    = 22;
 
   DEFAULT_LIST = ANIMEA_NAME+'!%~'+MANGAFOX_NAME+'!%~'+MANGAHERE_NAME+'!%~'+MANGAINN_NAME+'!%~'+MANGAREADER_NAME+'!%~';
 
@@ -218,6 +219,9 @@ var
 
   MANGAVADISI_ROOT   : String = 'http://www.mangavadisi.net';
   MANGAVADISI_BROWSER: String = '/hemenoku/';
+
+  EATMANGA_ROOT   : String = 'http://eatmanga.com';
+  EATMANGA_BROWSER: String = '/Manga-Scan/';
 
   UPDATE_URL      : String = 'http://akarin.byethost5.com/fmd/';
 
@@ -626,7 +630,9 @@ begin
   else
   if name = TURKCRAFT_NAME then Result:= TURKCRAFT_ID
   else
-  if name = MANGAVADISI_NAME then Result:= MANGAVADISI_ID;
+  if name = MANGAVADISI_NAME then Result:= MANGAVADISI_ID
+  else
+  if name = EATMANGA_NAME then Result:= EATMANGA_ID;
 end;
 
 function  GetMangaDatabaseURL(const name: String): String;

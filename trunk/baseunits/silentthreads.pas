@@ -180,7 +180,7 @@ var
 begin
   while isSuspended do Sleep(32);
 
-  while MainForm.currentActiveSilentThreadCount > 4 do
+  while MainForm.currentActiveSilentThreadCount > 2 do
     Sleep(250);
   Synchronize(CallMainFormIncreaseThreadCount);
 

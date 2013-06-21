@@ -223,7 +223,9 @@ end;
 
 procedure   TUpdateMangaManagerThread.CallMainFormShowGetting;
 begin
+  {$IFDEF DOWNLOADER}
   MainForm.sbMain.Panels[0].Text:= 'Getting list for ' + website + ' ...';
+  {$ENDIF}
 end;
 
 constructor TUpdateMangaManagerThread.Create;
@@ -371,6 +373,9 @@ begin
     begin
       website:= websites.Strings[i];
       if website = GEHENTAI_NAME then
+        numberOfThreads:= 1
+      else
+      if website = EATMANGA_NAME then
         numberOfThreads:= 1;
 
       {$IFDEF DOWNLOADER}

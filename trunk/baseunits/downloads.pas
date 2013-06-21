@@ -612,6 +612,44 @@ var
     l.Free;
   end;
 
+  function GetEatMangaPageNumber: Boolean;
+  var
+    s    : String;
+    count: Cardinal = 0;
+    i, j : Cardinal;
+    l    : TStringList;
+  begin
+    l:= TStringList.Create;
+    parse:= TStringList.Create;
+    s:= DecodeUrl(EATMANGA_ROOT + URL);
+    Result:= GetPage(TObject(l),
+                     s,
+                     manager.container.manager.retryConnect);
+    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.Exec;
+    Parser.Free;
+    if parse.Count>0 then
+    begin
+      manager.container.pageNumber:= 0;
+      for i:= 0 to parse.Count-1 do
+      begin
+        if (Pos('</select>', parse.Strings[i])>0) then
+          if count > 0 then
+          begin
+            s:= parse.Strings[i-2];
+            manager.container.pageNumber:= StrToInt(TrimLeft(TrimRight(s)));
+            break;
+          end
+          else
+            Inc(count);
+      end;
+    end;
+    parse.Free;
+    l.Free;
+  end;
+
   function GetMangaTradersPageNumber: Boolean;
   var
     isStartGetPageNumber: Boolean = FALSE;
@@ -854,6 +892,9 @@ begin
   else
   if manager.container.mangaSiteID = MANGATRADERS_ID then
     Result:= GetMangaTradersPageNumber
+  else
+  if manager.container.mangaSiteID = EATMANGA_ID then
+    Result:= GetEatMangaPageNumber
   else
   if manager.container.mangaSiteID = MANGASTREAM_ID then
     Result:= GetMangaStreamPageNumber
@@ -1483,6 +1524,38 @@ var
     l.Free;
   end;
 
+  function GetEatMangaLinkPage: Boolean;
+  var
+    s: String;
+    j,
+    i: Cardinal;
+    l: TStringList;
+  begin
+    l:= TStringList.Create;
+    s:= DecodeUrl(EATMANGA_ROOT + URL + 'page-' + IntToStr(workPtr+1));
+    Result:= GetPage(TObject(l),
+                     s,
+                     manager.container.manager.retryConnect);
+    parse:= TStringList.Create;
+    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.Exec;
+    Parser.Free;
+
+    if parse.Count>0 then
+    begin
+      for i:= 0 to parse.Count-1 do
+        if (Pos('<div id="prefetchimg"', parse.Strings[i])>0) then
+        begin
+          manager.container.pageLinks.Strings[workPtr]:= GetAttributeValue(GetTagAttribute(parse.Strings[i-1], 'src='));
+          break;
+        end;
+    end;
+    parse.Free;
+    l.Free;
+  end;
+
   function GetMangaStreamLinkPage: Boolean;
   var
     s: String;
@@ -1788,6 +1861,9 @@ begin
   if manager.container.mangaSiteID = MANGAFOX_ID then
     Result:= GetMangaFoxLinkPage
   else
+  if manager.container.mangaSiteID = EATMANGA_ID then
+    Result:= GetEatMangaLinkPage
+  else
   if manager.container.mangaSiteID = MANGASTREAM_ID then
     Result:= GetMangaStreamLinkPage
   else
@@ -2086,6 +2162,9 @@ begin
   //    currentMaxThread:= 1;
     currentMaxThread:= container.manager.maxDLThreadsPerTask;
   end
+  else
+  if (container.mangaSiteID = EATMANGA_ID) then
+    currentMaxThread:= 1
   else
     currentMaxThread:= container.manager.maxDLThreadsPerTask;
 
@@ -2724,6 +2803,7 @@ end;
 
 procedure   TDownloadManager.CheckAndActiveTask(const isCheckForFMDDo: Boolean = FALSE);
 var
+  eatMangaCount: Cardinal = 0;
   batotoCount: Cardinal = 0;
   geCount    : Cardinal = 0;
   i          : Cardinal;
@@ -2738,7 +2818,10 @@ begin
         Inc(geCount)
       else
       if (containers.Items[i].mangaSiteID = BATOTO_ID) then
-        Inc(batotoCount);
+        Inc(batotoCount)
+      else
+      if (containers.Items[i].mangaSiteID = EATMANGA_ID) then
+        Inc(eatMangaCount);
     end;
   end;
 
@@ -2770,6 +2853,16 @@ begin
           Inc(count);
         end;
       end }
+      else
+      if containers.Items[i].mangaSiteID = EATMANGA_ID then
+      begin
+        if eatMangaCount = 0 then
+        begin
+          ActiveTask(i);
+          Inc(eatMangaCount);
+          Inc(count);
+        end;
+      end
       else
       begin
         ActiveTask(i);
