@@ -135,7 +135,7 @@ type
     // Check and active waiting tasks
     procedure   CheckAndActiveTask(const isCheckForFMDDo: Boolean = FALSE);
     // Check if we can active another wating task or not
-    function    CanActiveTask: Boolean;
+    function    CanActiveTask(const pos: Cardinal): Boolean;
     // Active a stopped task
     procedure   ActiveTask(const taskID: Cardinal);
     // Stop a download/wait task
@@ -2893,12 +2893,43 @@ begin
   end;
 end;
 
-function    TDownloadManager.CanActiveTask: Boolean;
+function    TDownloadManager.CanActiveTask(const pos: Cardinal): Boolean;
 var
+  eatMangaCount: Cardinal = 0;
+  batotoCount: Cardinal = 0;
+  geCount    : Cardinal = 0;
   i    : Cardinal;
   count: Cardinal = 0;
 begin
   Result:= FALSE;
+
+  if containers.Count = 0 then exit;
+  if pos >= containers.Count then exit;
+
+  for i:= 0 to containers.Count-1 do
+  begin
+    if (containers.Items[i].Status = STATUS_DOWNLOAD) AND (i<>pos) then
+    begin
+      if (containers.Items[i].mangaSiteID = GEHENTAI_ID) then
+        Inc(geCount)
+     { else
+      if (containers.Items[i].mangaSiteID = BATOTO_ID) then
+        Inc(batotoCount) }
+      else
+      if (containers.Items[i].mangaSiteID = EATMANGA_ID) then
+        Inc(eatMangaCount);
+    end;
+  end;
+
+  if (containers.Items[pos].mangaSiteID = GEHENTAI_ID) AND (geCount > 0) then
+    exit
+ { else
+  if (containers.Items[pos].mangaSiteID = BATOTO_ID) AND (batotoCount > 0) then
+    exit }
+  else
+  if (containers.Items[pos].mangaSiteID = EATMANGA_ID) AND (eatMangaCount > 0) then
+    exit;
+
   for i:= 0 to containers.Count-1 do
   begin
     if containers.Items[i].Status = STATUS_DOWNLOAD then

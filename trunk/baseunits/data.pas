@@ -4346,7 +4346,7 @@ begin
 
     // get chapter name and links
     if (Pos('<th class="title">', parse.Strings[i])>0) AND
-       (Pos('/upcoming/', parse.Strings[i-1])=0) then
+       (Pos('/upcoming/', parse.Strings[i+1])=0) then
     begin
       Inc(mangaInfo.numChapter);
       s:= GetString(parse.Strings[i+1], 'href="', '"');

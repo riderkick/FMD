@@ -1,12 +1,12 @@
 object Log: TLog
-  Left = 555
+  Left = 443
   Height = 365
   Top = 137
-  Width = 436
+  Width = 548
   BorderIcons = [biSystemMenu, biMinimize]
   Caption = 'Changelog'
   ClientHeight = 365
-  ClientWidth = 436
+  ClientWidth = 548
   OnCreate = FormCreate
   Position = poDesktopCenter
   LCLVersion = '1.1'
@@ -21,9 +21,9 @@ object Log: TLog
   end
   object mmLog: TMemo
     Left = 0
-    Height = 337
+    Height = 341
     Top = 0
-    Width = 436
+    Width = 548
     Align = alClient
     Font.CharSet = ANSI_CHARSET
     Font.Height = -13
@@ -37,9 +37,9 @@ object Log: TLog
   end
   object btVisit: TButton
     Left = 0
-    Height = 28
-    Top = 337
-    Width = 436
+    Height = 24
+    Top = 341
+    Width = 548
     Align = alBottom
     Caption = 'Visit FMD website for more information'
     OnClick = btVisitClick

@@ -15,12 +15,12 @@ object MainForm: TMainForm
   object pnMainLeft: TPanel
     AnchorSideRight.Control = spMainSplitter
     Left = 0
-    Height = 435
+    Height = 436
     Top = 32
     Width = 195
     Align = alLeft
     Anchors = [akTop, akLeft, akRight, akBottom]
-    ClientHeight = 435
+    ClientHeight = 436
     ClientWidth = 195
     TabOrder = 0
     object cbSelectManga: TComboBox
@@ -52,7 +52,7 @@ object MainForm: TMainForm
     end
     object vtMangaList: TVirtualStringTree
       Left = 8
-      Height = 338
+      Height = 339
       Hint = 'test'
       Top = 88
       Width = 176
@@ -266,7 +266,7 @@ object MainForm: TMainForm
   end
   object pcMain: TPageControl
     Left = 195
-    Height = 435
+    Height = 436
     Top = 32
     Width = 597
     ActivePage = tsDownload
@@ -278,11 +278,11 @@ object MainForm: TMainForm
     OnChange = pcMainChange
     object tsDownload: TTabSheet
       Caption = 'Downloads'
-      ClientHeight = 407
+      ClientHeight = 408
       ClientWidth = 589
       object vtDownload: TVirtualStringTree
         Left = 0
-        Height = 407
+        Height = 408
         Top = 0
         Width = 589
         Align = alClient
@@ -1322,7 +1322,7 @@ object MainForm: TMainForm
               Width = 540
               Anchors = [akTop, akLeft, akRight]
               Caption = 'Proxy config'
-              ClientHeight = 84
+              ClientHeight = 86
               ClientWidth = 536
               Enabled = False
               ParentFont = False
@@ -1522,7 +1522,7 @@ object MainForm: TMainForm
             ChildSizing.ShrinkVertical = crsScaleChilds
             ChildSizing.Layout = cclLeftToRightThenTopToBottom
             ChildSizing.ControlsPerLine = 3
-            ClientHeight = 40
+            ClientHeight = 42
             ClientWidth = 499
             Columns = 3
             ItemIndex = 0
@@ -1541,7 +1541,7 @@ object MainForm: TMainForm
             Width = 503
             Anchors = [akTop, akLeft, akRight]
             Caption = 'Renaming'
-            ClientHeight = 117
+            ClientHeight = 119
             ClientWidth = 499
             ParentFont = False
             TabOrder = 2
@@ -1612,7 +1612,7 @@ object MainForm: TMainForm
             Width = 503
             Anchors = [akTop, akLeft, akRight]
             Caption = 'Favorites'
-            ClientHeight = 92
+            ClientHeight = 94
             ClientWidth = 499
             ParentFont = False
             TabOrder = 1
@@ -1722,11 +1722,11 @@ object MainForm: TMainForm
     end
     object tsAbout: TTabSheet
       Caption = 'About'
-      ClientHeight = 407
+      ClientHeight = 413
       ClientWidth = 589
       object rmAbout: TRichMemo
         Left = 0
-        Height = 340
+        Height = 346
         Top = 0
         Width = 589
         Align = alTop
@@ -1741,7 +1741,7 @@ object MainForm: TMainForm
       object btCheckVersion: TBitBtn
         Left = 25
         Height = 40
-        Top = 356
+        Top = 362
         Width = 192
         Anchors = [akLeft, akBottom]
         Caption = 'Check for new version'
@@ -1751,7 +1751,7 @@ object MainForm: TMainForm
       object btVisitMyBlog: TBitBtn
         Left = 233
         Height = 40
-        Top = 356
+        Top = 362
         Width = 192
         Anchors = [akLeft, akBottom]
         Caption = 'Visit my blog'
@@ -1772,8 +1772,8 @@ object MainForm: TMainForm
   end
   object sbMain: TStatusBar
     Left = 0
-    Height = 24
-    Top = 467
+    Height = 23
+    Top = 468
     Width = 792
     Panels = <    
       item

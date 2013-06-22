@@ -997,6 +997,13 @@ begin
     SubThread.website:= TRUYENTRANHTUAN_NAME
   end
   else
+  if Pos(EATMANGA_ROOT, edURL.Text) > 0 then
+  begin
+    SubThread.link   := edURL.Text;
+    Delete(SubThread.link, 1, Length(EATMANGA_ROOT));
+    SubThread.website:= EATMANGA_NAME
+  end
+  else
   if Pos(MANGAVADISI_ROOT, edURL.Text) > 0 then
   begin
     SubThread.link   := edURL.Text;
@@ -1494,7 +1501,7 @@ begin
     begin
       DLManager.containers.Items[vtDownload.FocusedNode.Index].Status:= STATUS_WAIT;
       DLManager.containers.Items[vtDownload.FocusedNode.Index].downloadInfo.Status:= stWait;
-      if DLManager.CanActiveTask then
+      if DLManager.CanActiveTask(vtDownload.FocusedNode.Index) then
         DLManager.ActiveTask(vtDownload.FocusedNode.Index);
       vtDownload.Repaint;
       DLManager.Backup;
@@ -1512,7 +1519,7 @@ begin
         begin
           DLManager.containers.Items[i].Status:= STATUS_WAIT;
           DLManager.containers.Items[i].downloadInfo.Status:= stWait;
-          if DLManager.CanActiveTask then
+          if DLManager.CanActiveTask(i) then
             DLManager.ActiveTask(i);
         end;
       end;
