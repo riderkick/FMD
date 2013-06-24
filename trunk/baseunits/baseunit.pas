@@ -346,6 +346,7 @@ function  CorrectURL(const URL: String): String;
 procedure CheckPath(const S: String);
 
 function  GetMangaSiteID(const name: String): Cardinal;
+function  GetMangaSiteName(const ID: Cardinal): String;
 function  GetMangaDatabaseURL(const name: String): String;
 
 function  RemoveSymbols(const input: String): String;
@@ -633,6 +634,53 @@ begin
   if name = MANGAVADISI_NAME then Result:= MANGAVADISI_ID
   else
   if name = EATMANGA_NAME then Result:= EATMANGA_ID;
+end;
+
+function  GetMangaSiteName(const ID: Cardinal): String;
+begin
+  if ID = ANIMEA_ID then Result:= ANIMEA_NAME
+  else
+  if ID = MANGAHERE_ID then Result:= MANGAHERE_NAME
+  else
+  if ID = MANGAINN_ID then Result:= MANGAINN_NAME
+  else
+  if ID = OURMANGA_ID then Result:= OURMANGA_NAME
+  else
+  if ID = KISSMANGA_ID then Result:= KISSMANGA_NAME
+  else
+  if ID = BATOTO_ID then Result:= BATOTO_NAME
+  else
+  if ID = MANGA24H_ID then Result:= MANGA24H_NAME
+  else
+  if ID = VNSHARING_ID then Result:= VNSHARING_NAME
+  else
+  if ID = HENTAI2READ_ID then Result:= HENTAI2READ_NAME
+  else
+  if ID = FAKKU_ID then Result:= FAKKU_NAME
+  else
+  if ID = MANGAREADER_ID then Result:= MANGAREADER_NAME
+  else
+  if ID = MANGAPARK_ID then Result:= MANGAPARK_NAME
+  else
+  if ID = GEHENTAI_ID then Result:= GEHENTAI_NAME
+  else
+  if ID = MANGAFOX_ID then Result:= MANGAFOX_NAME
+  else
+  if ID = MANGATRADERS_ID then Result:= MANGATRADERS_NAME
+  else
+  if ID = MANGASTREAM_ID then Result:= MANGASTREAM_NAME
+  else
+  if ID = MANGAEDEN_ID then Result:= MANGAEDEN_NAME
+  else
+  if ID = PERVEDEN_ID then Result:= PERVEDEN_NAME
+  else
+  if ID = TRUYENTRANHTUAN_ID then Result:= TRUYENTRANHTUAN_NAME
+  else
+  if ID = TURKCRAFT_ID then Result:= TURKCRAFT_NAME
+  else
+  if ID = MANGAVADISI_ID then Result:= MANGAVADISI_NAME
+  else
+  if ID = EATMANGA_ID then Result:= EATMANGA_NAME;
 end;
 
 function  GetMangaDatabaseURL(const name: String): String;

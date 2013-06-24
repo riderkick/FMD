@@ -1,12 +1,12 @@
 object MainForm: TMainForm
   Left = 424
-  Height = 491
+  Height = 513
   Top = 59
-  Width = 792
+  Width = 815
   Align = alBottom
   Caption = 'Free Manga Downloader'
-  ClientHeight = 491
-  ClientWidth = 792
+  ClientHeight = 513
+  ClientWidth = 815
   OnClose = FormClose
   OnCreate = FormCreate
   OnDestroy = FormDestroy
@@ -15,12 +15,12 @@ object MainForm: TMainForm
   object pnMainLeft: TPanel
     AnchorSideRight.Control = spMainSplitter
     Left = 0
-    Height = 436
+    Height = 458
     Top = 32
     Width = 195
     Align = alLeft
     Anchors = [akTop, akLeft, akRight, akBottom]
-    ClientHeight = 436
+    ClientHeight = 458
     ClientWidth = 195
     TabOrder = 0
     object cbSelectManga: TComboBox
@@ -52,7 +52,7 @@ object MainForm: TMainForm
     end
     object vtMangaList: TVirtualStringTree
       Left = 8
-      Height = 339
+      Height = 361
       Hint = 'test'
       Top = 88
       Width = 176
@@ -266,9 +266,9 @@ object MainForm: TMainForm
   end
   object pcMain: TPageControl
     Left = 195
-    Height = 436
+    Height = 458
     Top = 32
-    Width = 597
+    Width = 620
     ActivePage = tsDownload
     Align = alClient
     Font.Style = [fsBold]
@@ -278,13 +278,13 @@ object MainForm: TMainForm
     OnChange = pcMainChange
     object tsDownload: TTabSheet
       Caption = 'Downloads'
-      ClientHeight = 408
-      ClientWidth = 589
+      ClientHeight = 430
+      ClientWidth = 612
       object vtDownload: TVirtualStringTree
         Left = 0
-        Height = 408
+        Height = 430
         Top = 0
-        Width = 589
+        Width = 612
         Align = alClient
         DefaultText = 'Node'
         Header.AutoSizeIndex = 0
@@ -501,33 +501,33 @@ object MainForm: TMainForm
     end
     object tsFilter: TTabSheet
       Caption = 'Filter'
-      ClientHeight = 413
-      ClientWidth = 589
+      ClientHeight = 430
+      ClientWidth = 612
       object sbFilter: TScrollBox
         Left = 0
-        Height = 413
+        Height = 430
         Top = 0
-        Width = 589
-        HorzScrollBar.Page = 568
-        VertScrollBar.Page = 409
+        Width = 612
+        HorzScrollBar.Page = 591
+        VertScrollBar.Page = 426
         Align = alClient
-        ClientHeight = 409
-        ClientWidth = 568
+        ClientHeight = 426
+        ClientWidth = 591
         TabOrder = 0
         object pnGenres: TPanel
           Left = 0
           Height = 248
           Top = 0
-          Width = 569
+          Width = 591
           Align = alTop
           ClientHeight = 248
-          ClientWidth = 569
+          ClientWidth = 591
           TabOrder = 0
           object CheckBox1: TCheckBox
             Left = 23
-            Height = 17
+            Height = 19
             Top = 16
-            Width = 50
+            Width = 55
             AllowGrayed = True
             Caption = 'Action'
             ParentFont = False
@@ -535,9 +535,9 @@ object MainForm: TMainForm
           end
           object CheckBox2: TCheckBox
             Left = 23
-            Height = 17
+            Height = 19
             Top = 40
-            Width = 50
+            Width = 55
             AllowGrayed = True
             Caption = 'Action'
             ParentFont = False
@@ -545,9 +545,9 @@ object MainForm: TMainForm
           end
           object CheckBox3: TCheckBox
             Left = 23
-            Height = 17
+            Height = 19
             Top = 64
-            Width = 50
+            Width = 55
             AllowGrayed = True
             Caption = 'Action'
             ParentFont = False
@@ -555,9 +555,9 @@ object MainForm: TMainForm
           end
           object CheckBox4: TCheckBox
             Left = 23
-            Height = 17
+            Height = 19
             Top = 88
-            Width = 50
+            Width = 55
             AllowGrayed = True
             Caption = 'Action'
             ParentFont = False
@@ -565,9 +565,9 @@ object MainForm: TMainForm
           end
           object CheckBox5: TCheckBox
             Left = 23
-            Height = 17
+            Height = 19
             Top = 112
-            Width = 50
+            Width = 55
             AllowGrayed = True
             Caption = 'Action'
             ParentFont = False
@@ -575,9 +575,9 @@ object MainForm: TMainForm
           end
           object CheckBox6: TCheckBox
             Left = 23
-            Height = 17
+            Height = 19
             Top = 136
-            Width = 50
+            Width = 55
             AllowGrayed = True
             Caption = 'Action'
             ParentFont = False
@@ -585,9 +585,9 @@ object MainForm: TMainForm
           end
           object CheckBox7: TCheckBox
             Left = 23
-            Height = 17
+            Height = 19
             Top = 160
-            Width = 50
+            Width = 55
             AllowGrayed = True
             Caption = 'Action'
             ParentFont = False
@@ -595,9 +595,9 @@ object MainForm: TMainForm
           end
           object CheckBox8: TCheckBox
             Left = 23
-            Height = 17
+            Height = 19
             Top = 184
-            Width = 50
+            Width = 55
             AllowGrayed = True
             Caption = 'Action'
             ParentFont = False
@@ -605,9 +605,9 @@ object MainForm: TMainForm
           end
           object CheckBox9: TCheckBox
             Left = 135
-            Height = 17
+            Height = 19
             Top = 16
-            Width = 50
+            Width = 55
             AllowGrayed = True
             Caption = 'Action'
             ParentFont = False
@@ -615,9 +615,9 @@ object MainForm: TMainForm
           end
           object CheckBox10: TCheckBox
             Left = 135
-            Height = 17
+            Height = 19
             Top = 40
-            Width = 50
+            Width = 55
             AllowGrayed = True
             Caption = 'Action'
             ParentFont = False
@@ -625,9 +625,9 @@ object MainForm: TMainForm
           end
           object CheckBox11: TCheckBox
             Left = 135
-            Height = 17
+            Height = 19
             Top = 64
-            Width = 50
+            Width = 55
             AllowGrayed = True
             Caption = 'Action'
             ParentFont = False
@@ -635,9 +635,9 @@ object MainForm: TMainForm
           end
           object CheckBox12: TCheckBox
             Left = 135
-            Height = 17
+            Height = 19
             Top = 88
-            Width = 50
+            Width = 55
             AllowGrayed = True
             Caption = 'Action'
             ParentFont = False
@@ -645,9 +645,9 @@ object MainForm: TMainForm
           end
           object CheckBox13: TCheckBox
             Left = 135
-            Height = 17
+            Height = 19
             Top = 112
-            Width = 50
+            Width = 55
             AllowGrayed = True
             Caption = 'Action'
             ParentFont = False
@@ -655,9 +655,9 @@ object MainForm: TMainForm
           end
           object CheckBox14: TCheckBox
             Left = 135
-            Height = 17
+            Height = 19
             Top = 136
-            Width = 50
+            Width = 55
             AllowGrayed = True
             Caption = 'Action'
             ParentFont = False
@@ -665,9 +665,9 @@ object MainForm: TMainForm
           end
           object CheckBox15: TCheckBox
             Left = 135
-            Height = 17
+            Height = 19
             Top = 160
-            Width = 50
+            Width = 55
             AllowGrayed = True
             Caption = 'Action'
             ParentFont = False
@@ -675,9 +675,9 @@ object MainForm: TMainForm
           end
           object CheckBox16: TCheckBox
             Left = 135
-            Height = 17
+            Height = 19
             Top = 184
-            Width = 50
+            Width = 55
             AllowGrayed = True
             Caption = 'Action'
             ParentFont = False
@@ -685,9 +685,9 @@ object MainForm: TMainForm
           end
           object CheckBox17: TCheckBox
             Left = 251
-            Height = 17
+            Height = 19
             Top = 16
-            Width = 50
+            Width = 55
             AllowGrayed = True
             Caption = 'Action'
             ParentFont = False
@@ -695,9 +695,9 @@ object MainForm: TMainForm
           end
           object CheckBox18: TCheckBox
             Left = 251
-            Height = 17
+            Height = 19
             Top = 40
-            Width = 50
+            Width = 55
             AllowGrayed = True
             Caption = 'Action'
             ParentFont = False
@@ -705,9 +705,9 @@ object MainForm: TMainForm
           end
           object CheckBox19: TCheckBox
             Left = 251
-            Height = 17
+            Height = 19
             Top = 64
-            Width = 50
+            Width = 55
             AllowGrayed = True
             Caption = 'Action'
             ParentFont = False
@@ -715,9 +715,9 @@ object MainForm: TMainForm
           end
           object CheckBox20: TCheckBox
             Left = 251
-            Height = 17
+            Height = 19
             Top = 88
-            Width = 50
+            Width = 55
             AllowGrayed = True
             Caption = 'Action'
             ParentFont = False
@@ -725,9 +725,9 @@ object MainForm: TMainForm
           end
           object CheckBox21: TCheckBox
             Left = 251
-            Height = 17
+            Height = 19
             Top = 112
-            Width = 50
+            Width = 55
             AllowGrayed = True
             Caption = 'Action'
             ParentFont = False
@@ -735,9 +735,9 @@ object MainForm: TMainForm
           end
           object CheckBox22: TCheckBox
             Left = 251
-            Height = 17
+            Height = 19
             Top = 136
-            Width = 50
+            Width = 55
             AllowGrayed = True
             Caption = 'Action'
             ParentFont = False
@@ -745,9 +745,9 @@ object MainForm: TMainForm
           end
           object CheckBox23: TCheckBox
             Left = 251
-            Height = 17
+            Height = 19
             Top = 160
-            Width = 50
+            Width = 55
             AllowGrayed = True
             Caption = 'Action'
             ParentFont = False
@@ -755,9 +755,9 @@ object MainForm: TMainForm
           end
           object CheckBox24: TCheckBox
             Left = 251
-            Height = 17
+            Height = 19
             Top = 184
-            Width = 50
+            Width = 55
             AllowGrayed = True
             Caption = 'Action'
             ParentFont = False
@@ -765,9 +765,9 @@ object MainForm: TMainForm
           end
           object CheckBox25: TCheckBox
             Left = 363
-            Height = 17
+            Height = 19
             Top = 16
-            Width = 50
+            Width = 55
             AllowGrayed = True
             Caption = 'Action'
             ParentFont = False
@@ -775,9 +775,9 @@ object MainForm: TMainForm
           end
           object CheckBox26: TCheckBox
             Left = 363
-            Height = 17
+            Height = 19
             Top = 40
-            Width = 50
+            Width = 55
             AllowGrayed = True
             Caption = 'Action'
             ParentFont = False
@@ -785,9 +785,9 @@ object MainForm: TMainForm
           end
           object CheckBox27: TCheckBox
             Left = 363
-            Height = 17
+            Height = 19
             Top = 64
-            Width = 50
+            Width = 55
             AllowGrayed = True
             Caption = 'Action'
             ParentFont = False
@@ -795,9 +795,9 @@ object MainForm: TMainForm
           end
           object CheckBox28: TCheckBox
             Left = 363
-            Height = 17
+            Height = 19
             Top = 88
-            Width = 50
+            Width = 55
             AllowGrayed = True
             Caption = 'Action'
             ParentFont = False
@@ -805,9 +805,9 @@ object MainForm: TMainForm
           end
           object CheckBox29: TCheckBox
             Left = 363
-            Height = 17
+            Height = 19
             Top = 112
-            Width = 50
+            Width = 55
             AllowGrayed = True
             Caption = 'Action'
             ParentFont = False
@@ -815,9 +815,9 @@ object MainForm: TMainForm
           end
           object CheckBox30: TCheckBox
             Left = 363
-            Height = 17
+            Height = 19
             Top = 136
-            Width = 50
+            Width = 55
             AllowGrayed = True
             Caption = 'Action'
             ParentFont = False
@@ -825,9 +825,9 @@ object MainForm: TMainForm
           end
           object CheckBox31: TCheckBox
             Left = 363
-            Height = 17
+            Height = 19
             Top = 160
-            Width = 50
+            Width = 55
             AllowGrayed = True
             Caption = 'Action'
             ParentFont = False
@@ -835,9 +835,9 @@ object MainForm: TMainForm
           end
           object CheckBox32: TCheckBox
             Left = 363
-            Height = 17
+            Height = 19
             Top = 184
-            Width = 50
+            Width = 55
             AllowGrayed = True
             Caption = 'Action'
             ParentFont = False
@@ -845,9 +845,9 @@ object MainForm: TMainForm
           end
           object CheckBox33: TCheckBox
             Left = 471
-            Height = 17
+            Height = 19
             Top = 16
-            Width = 50
+            Width = 55
             AllowGrayed = True
             Caption = 'Action'
             ParentFont = False
@@ -855,9 +855,9 @@ object MainForm: TMainForm
           end
           object CheckBox34: TCheckBox
             Left = 471
-            Height = 17
+            Height = 19
             Top = 40
-            Width = 50
+            Width = 55
             AllowGrayed = True
             Caption = 'Action'
             ParentFont = False
@@ -865,9 +865,9 @@ object MainForm: TMainForm
           end
           object CheckBox35: TCheckBox
             Left = 471
-            Height = 17
+            Height = 19
             Top = 64
-            Width = 50
+            Width = 55
             AllowGrayed = True
             Caption = 'Action'
             ParentFont = False
@@ -875,9 +875,9 @@ object MainForm: TMainForm
           end
           object CheckBox36: TCheckBox
             Left = 471
-            Height = 17
+            Height = 19
             Top = 88
-            Width = 50
+            Width = 55
             AllowGrayed = True
             Caption = 'Action'
             ParentFont = False
@@ -885,9 +885,9 @@ object MainForm: TMainForm
           end
           object CheckBox37: TCheckBox
             Left = 471
-            Height = 17
+            Height = 19
             Top = 112
-            Width = 50
+            Width = 55
             AllowGrayed = True
             Caption = 'Action'
             ParentFont = False
@@ -895,9 +895,9 @@ object MainForm: TMainForm
           end
           object CheckBox38: TCheckBox
             Left = 471
-            Height = 17
+            Height = 19
             Top = 136
-            Width = 50
+            Width = 55
             AllowGrayed = True
             Caption = 'Action'
             ParentFont = False
@@ -905,9 +905,9 @@ object MainForm: TMainForm
           end
           object CheckBox39: TCheckBox
             Left = 471
-            Height = 17
+            Height = 19
             Top = 160
-            Width = 50
+            Width = 55
             AllowGrayed = True
             Caption = 'Action'
             ParentFont = False
@@ -915,9 +915,9 @@ object MainForm: TMainForm
           end
           object lbFilterCustomGenres: TLabel
             Left = 23
-            Height = 16
+            Height = 17
             Top = 218
-            Width = 97
+            Width = 93
             Alignment = taRightJustify
             BidiMode = bdRightToLeft
             Caption = 'Custom Genres'
@@ -929,7 +929,7 @@ object MainForm: TMainForm
           end
           object edCustomGenres: TEdit
             Left = 135
-            Height = 21
+            Height = 23
             Top = 216
             Width = 338
             ParentFont = False
@@ -940,26 +940,26 @@ object MainForm: TMainForm
           Left = 0
           Height = 192
           Top = 248
-          Width = 569
+          Width = 591
           Align = alTop
           ClientHeight = 192
-          ClientWidth = 569
+          ClientWidth = 591
           ParentFont = False
           TabOrder = 1
           object rbOne: TRadioButton
             Left = 323
-            Height = 17
+            Height = 19
             Top = 32
-            Width = 157
+            Width = 169
             Caption = 'Have one of genres checked'
             ParentFont = False
             TabOrder = 1
           end
           object rbAll: TRadioButton
             Left = 323
-            Height = 17
+            Height = 19
             Top = 8
-            Width = 131
+            Width = 142
             Caption = 'Have all genre checked'
             Checked = True
             ParentFont = False
@@ -968,39 +968,39 @@ object MainForm: TMainForm
           end
           object cbOnlyNew: TCheckBox
             Left = 323
-            Height = 17
+            Height = 19
             Top = 56
-            Width = 134
+            Width = 146
             Caption = 'Search only new manga'
             ParentFont = False
             TabOrder = 2
           end
           object edFilterTitle: TEdit
             Left = 135
-            Height = 21
+            Height = 23
             Top = 8
             Width = 146
             TabOrder = 3
           end
           object edFilterArtists: TEdit
             Left = 135
-            Height = 21
+            Height = 23
             Top = 56
             Width = 146
             TabOrder = 4
           end
           object edFilterAuthors: TEdit
             Left = 135
-            Height = 21
+            Height = 23
             Top = 32
             Width = 146
             TabOrder = 5
           end
           object lbFilterTitle: TLabel
             Left = 23
-            Height = 16
+            Height = 17
             Top = 8
-            Width = 27
+            Width = 28
             Alignment = taRightJustify
             BidiMode = bdRightToLeft
             Caption = 'Title'
@@ -1012,9 +1012,9 @@ object MainForm: TMainForm
           end
           object lbFilterAuthors: TLabel
             Left = 23
-            Height = 16
+            Height = 17
             Top = 32
-            Width = 53
+            Width = 49
             Alignment = taRightJustify
             BidiMode = bdRightToLeft
             Caption = 'Authors'
@@ -1026,9 +1026,9 @@ object MainForm: TMainForm
           end
           object lbFilterArtists: TLabel
             Left = 23
-            Height = 16
+            Height = 17
             Top = 56
-            Width = 45
+            Width = 40
             Alignment = taRightJustify
             BidiMode = bdRightToLeft
             Caption = 'Artists'
@@ -1056,9 +1056,9 @@ object MainForm: TMainForm
           end
           object lbFilterStatus: TLabel
             Left = 23
-            Height = 16
+            Height = 17
             Top = 80
-            Width = 43
+            Width = 38
             Alignment = taRightJustify
             BidiMode = bdRightToLeft
             Caption = 'Status'
@@ -1070,9 +1070,9 @@ object MainForm: TMainForm
           end
           object lbFilterSummary: TLabel
             Left = 23
-            Height = 16
+            Height = 17
             Top = 104
-            Width = 60
+            Width = 58
             Alignment = taRightJustify
             BidiMode = bdRightToLeft
             Caption = 'Summary'
@@ -1084,7 +1084,7 @@ object MainForm: TMainForm
           end
           object edFilterSummary: TEdit
             Left = 135
-            Height = 21
+            Height = 23
             Top = 104
             Width = 338
             TabOrder = 7
@@ -1130,6 +1130,14 @@ object MainForm: TMainForm
             ParentShowHint = False
             ShowHint = True
             TabOrder = 10
+          end
+          object cbSearchFromAllSites: TCheckBox
+            Left = 323
+            Height = 19
+            Top = 80
+            Width = 165
+            Caption = 'Search from all manga sites'
+            TabOrder = 11
           end
         end
       end
@@ -1193,21 +1201,21 @@ object MainForm: TMainForm
     end
     object tsOption: TTabSheet
       Caption = 'Options'
-      ClientHeight = 407
-      ClientWidth = 589
+      ClientHeight = 430
+      ClientWidth = 612
       object pnOptions: TPageControl
         Left = 9
-        Height = 314
+        Height = 337
         Top = 26
-        Width = 570
+        Width = 593
         ActivePage = tsGeneral
         Anchors = [akTop, akLeft, akRight, akBottom]
         TabIndex = 0
         TabOrder = 0
         object tsGeneral: TTabSheet
           Caption = 'General'
-          ClientHeight = 286
-          ClientWidth = 562
+          ClientHeight = 309
+          ClientWidth = 585
           object cbLanguages: TComboBox
             Left = 20
             Height = 23
@@ -1710,9 +1718,9 @@ object MainForm: TMainForm
         end
       end
       object btOptionApply: TButton
-        Left = 45
+        Left = 49
         Height = 33
-        Top = 356
+        Top = 379
         Width = 99
         Anchors = [akBottom]
         Caption = 'Apply'
@@ -1763,7 +1771,7 @@ object MainForm: TMainForm
   object spMainSplitter: TSplitter
     AnchorSideRight.Control = pcMain
     Left = 195
-    Height = 491
+    Height = 513
     Top = 8
     Width = 5
     Align = alNone
@@ -1773,8 +1781,8 @@ object MainForm: TMainForm
   object sbMain: TStatusBar
     Left = 0
     Height = 23
-    Top = 468
-    Width = 792
+    Top = 490
+    Width = 815
     Panels = <    
       item
         Width = 195
@@ -1788,21 +1796,21 @@ object MainForm: TMainForm
     Left = 0
     Height = 32
     Top = 0
-    Width = 792
+    Width = 815
     Align = alTop
     ClientHeight = 32
-    ClientWidth = 792
+    ClientWidth = 815
     TabOrder = 4
     object edURL: TEdit
       Left = 8
       Height = 23
       Top = 4
-      Width = 688
+      Width = 711
       Anchors = [akTop, akLeft, akRight]
       TabOrder = 0
     end
     object btURL: TBitBtn
-      Left = 712
+      Left = 735
       Height = 21
       Top = 4
       Width = 75

@@ -88,6 +88,7 @@ type
     cbOptionShowFavoriteDialog: TCheckBox;
     cbOptionAutoNumberChapter: TCheckBox;
     cbOptionAutoCheckFavStartup: TCheckBox;
+    cbSearchFromAllSites: TCheckBox;
     CheckBox5: TCheckBox;
     CheckBox6: TCheckBox;
     CheckBox7: TCheckBox;
@@ -1081,13 +1082,17 @@ begin
 end;
 
 procedure TMainForm.cbSelectMangaChange(Sender: TObject);
+var
+  isFilterAllSites: Boolean;
 begin
   if currentWebsite <> cbSelectManga.Items.Strings[cbSelectManga.ItemIndex] then
   begin
     if dataProcess.Title.Count > 0 then
     begin
+      isFilterAllSites:= dataProcess.isFilterAllSites;
       dataProcess.RemoveFilter;
-      dataProcess.SaveToFile;
+      if NOT isFilterAllSites then
+        dataProcess.SaveToFile;
     end;
     dataProcess.Free;
     dataProcess:= TDataProcess.Create;
@@ -1118,6 +1123,12 @@ begin
   if dataProcess.isFiltered then
   begin
     dataProcess.RemoveFilter;
+    if dataProcess.isFilterAllSites then
+    begin
+      dataProcess.Free;
+      dataProcess:= TDataProcess.Create;
+      dataProcess.LoadFromFile(cbSelectManga.Items[cbSelectManga.ItemIndex]);
+    end;
     vtMangaList.Clear;
     vtMangaList.RootNodeCount:= dataProcess.filterPos.Count;
     lbMode.Caption:= Format(stModeAll, [dataProcess.filterPos.Count]);
@@ -1240,7 +1251,7 @@ begin
     begin
       // TODO
       silentThread:= TAddToFavSilentThread.Create;
-      silentThread.website:= cbSelectManga.Items[cbSelectManga.ItemIndex];
+      silentThread.website:= GetMangaSiteName(DataProcess.site.Items[DataProcess.filterPos.Items[i]]);//cbSelectManga.Items[cbSelectManga.ItemIndex];
       silentThread.URL:= DataProcess.Param[DataProcess.filterPos.Items[i], DATA_PARAM_LINK];
       silentThread.title:= DataProcess.Param[DataProcess.filterPos.Items[i], DATA_PARAM_NAME];
       silentThread.isSuspended:= FALSE;
@@ -1617,7 +1628,7 @@ begin
     begin
       // TODO
       silentThread:= TSilentThread.Create;
-      silentThread.website:= cbSelectManga.Items[cbSelectManga.ItemIndex];
+      silentThread.website:= GetMangaSiteName(DataProcess.site.Items[DataProcess.filterPos.Items[i]]);//cbSelectManga.Items[cbSelectManga.ItemIndex];
       silentThread.URL:= DataProcess.Param[DataProcess.filterPos.Items[i], DATA_PARAM_LINK];
       silentThread.title:= DataProcess.Param[DataProcess.filterPos.Items[i], DATA_PARAM_NAME];
       silentThread.isSuspended:= FALSE;
@@ -1838,11 +1849,11 @@ begin
     pmMangaList.Items[2].Enabled:= FALSE;
   end;
 
-  if (cbSelectManga.Items[cbSelectManga.ItemIndex] = FAKKU_NAME){ OR
-     (cbSelectManga.Items[cbSelectManga.ItemIndex] = MANGATRADERS_NAME)} then
+ { if (cbSelectManga.Items[cbSelectManga.ItemIndex] = FAKKU_NAME) OR
+     (cbSelectManga.Items[cbSelectManga.ItemIndex] = MANGATRADERS_NAME) then
     pmMangaList.Items[2].Enabled:= FALSE
   else
-    pmMangaList.Items[2].Enabled:= TRUE;
+    pmMangaList.Items[2].Enabled:= TRUE;}
 
   if (Assigned(vtMangaList.FocusedNode)) then
   begin
@@ -2252,14 +2263,15 @@ end;
 
 procedure TMainForm.vtMangaListDblClick(Sender: TObject);
 begin
-  if (cbSelectManga.Items[cbSelectManga.ItemIndex] = FAKKU_NAME){ OR
-     (cbSelectManga.Items[cbSelectManga.ItemIndex] = MANGATRADERS_NAME)} then
+ { if (cbSelectManga.Items[cbSelectManga.ItemIndex] = FAKKU_NAME) OR
+     (cbSelectManga.Items[cbSelectManga.ItemIndex] = MANGATRADERS_NAME) then
   begin
     cbAddToFavorites.Checked:= FALSE;
     cbAddToFavorites.Enabled:= FALSE;
   end
   else
-    cbAddToFavorites.Enabled:= TRUE;
+    cbAddToFavorites.Enabled:= TRUE; }
+
   if (SubThread.isGetInfos) OR (NOT vtMangaList.Focused) then exit;
 
   pcMain.TabIndex:= 1;
@@ -2270,7 +2282,7 @@ begin
   clbChapterList.Clear;
 
   SubThread.mangaListPos:= vtMangaList.FocusedNode.Index;
-  SubThread.website:= cbSelectManga.Items[cbSelectManga.ItemIndex];
+  SubThread.website:= GetMangaSiteName(DataProcess.site.Items[DataProcess.filterPos.Items[SubThread.mangaListPos]]);//cbSelectManga.Items[cbSelectManga.ItemIndex];
   SubThread.link:= DataProcess.Param[DataProcess.filterPos.Items[SubThread.mangaListPos], DATA_PARAM_LINK];
   SubThread.isGetInfos:= TRUE;
   //ShowInformation;

@@ -25,7 +25,10 @@ type
   public
     website,
     Filename  : String;
+    isFilterAllSites,
     isFiltered: Boolean;
+
+    site,
     filterMark: TByteList;
     filterPos : TCardinalList;
     Data,
@@ -108,6 +111,7 @@ uses
 constructor TDataProcess.Create;
 begin
   inherited Create;
+  isFilterAllSites:= FALSE;
   isFiltered:= FALSE;
   Data      := TStringList.Create;
 
@@ -120,6 +124,7 @@ begin
   Summary   := TStringList.Create;
   JDN       := TList.Create;
 
+  site:= TByteList.Create;
   filterMark:= TByteList.Create;
   filterPos := TCardinalList.Create;
 end;
@@ -128,6 +133,7 @@ destructor  TDataProcess.Destroy;
 begin
   filterMark.Free;
   filterPos.Free;
+  site.Free;
 
   Title.Free;
   Link.Free;
@@ -189,8 +195,9 @@ end;
 
 function   TDataProcess.LoadFromFile(const website: String): Boolean;
 var
-  i: Cardinal;
-  l: TStringList;
+  id,
+  i : Cardinal;
+  l : TStringList;
   Filename: String;
 begin
   Filename:= DATA_FOLDER+website;
@@ -198,6 +205,7 @@ begin
   data.Clear;
   filterMark.Clear;
   filterPos .Clear;
+  site.Clear;
 
   title.Clear;
   authors.Clear;
@@ -213,6 +221,7 @@ begin
   self.Filename:= Filename;
 
   data.LoadFromFile(Filename+DATA_EXT);
+  id:= GetMangaSiteID(website);
 
   if data.Count > 0 then
   begin
@@ -226,6 +235,7 @@ begin
 
       filterMark.Add(FILTER_SHOW);
       filterPos.Add(i);
+      site.Add(id);
 
       l.Clear;
       GetParams(l, data.Strings[i]);
