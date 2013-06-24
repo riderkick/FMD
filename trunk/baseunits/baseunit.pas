@@ -385,6 +385,7 @@ function  GetPage(var output: TObject; URL: String; const Reconnect: Cardinal): 
 function  SavePage(URL: String;  const Path, name: String; const Reconnect: Cardinal): Boolean;
 
 procedure QuickSortData(var merge: TStringList);
+procedure QuickSortDataWithWebID(var merge: TStringList; const webIDList: TByteList);
 
 function  GetCurrentJDN: LongInt;
 
@@ -1345,6 +1346,51 @@ var
       begin
         names.Exchange(i, j);
         merge.Exchange(i, j);
+        Inc(i);
+        Dec(j);
+      end;
+    until i>j;
+    if L < j then QSort(L, j);
+    if i < R then QSort(i, R);
+  end;
+
+var
+  i: Cardinal;
+
+begin
+  names := TStringList.Create;
+  output:= TStringList.Create;
+  for i:= 0 to merge.Count-1 do
+  begin
+    output.Clear;
+    GetParams(output, merge.Strings[i]);
+    names.Add(output.Strings[DATA_PARAM_NAME]);
+  end;
+  QSort(1, names.Count-1);
+  output.Free;
+  names.Free;
+end;
+
+// this procedure is similar to QuickSortData except it sort the siteID as well
+procedure QuickSortDataWithWebID(var merge: TStringList; const webIDList: TByteList);
+var
+  names, output: TStringList;
+
+  procedure QSort(L, R: Cardinal);
+  var i, j: Cardinal;
+         X: String;
+  begin
+    X:= names.Strings[(L+R) div 2];
+    i:= L;
+    j:= R;
+    repeat
+      while StrComp(PChar(names.Strings[i]), PChar(X))<0 do Inc(i);
+      while StrComp(PChar(names.Strings[j]), PChar(X))>0 do Dec(j);
+      if i<=j then
+      begin
+        names.Exchange(i, j);
+        merge.Exchange(i, j);
+        webIDList.Exchange(i, j);
         Inc(i);
         Dec(j);
       end;

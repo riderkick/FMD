@@ -676,7 +676,8 @@ begin
   mangalistIni.WriteInteger('general', 'batotoLastDirectoryPage', batotoLastDirectoryPage);
   SaveFormInformation;
   DLManager.StopAllDownloadTasksForExit;
-  dataProcess.SaveToFile;
+  if NOT dataProcess.isFilterAllSites then
+    dataProcess.SaveToFile;
   dataProcess.Destroy;
  // Halt;
 end;
@@ -1125,6 +1126,7 @@ begin
     dataProcess.RemoveFilter;
     if dataProcess.isFilterAllSites then
     begin
+      dataProcess.isFilterAllSites:= FALSE;
       dataProcess.Free;
       dataProcess:= TDataProcess.Create;
       dataProcess.LoadFromFile(cbSelectManga.Items[cbSelectManga.ItemIndex]);
@@ -1139,7 +1141,7 @@ end;
 
 procedure TMainForm.btFilterClick(Sender: TObject);
 var
-  checkGenres, uncheckGenres: TStringList;
+  l, checkGenres, uncheckGenres: TStringList;
   i: Cardinal;
   s: String;
 begin
@@ -1170,6 +1172,31 @@ begin
     if TCheckBox(pnGenres.Controls[i]).State = cbUnchecked then
       uncheckGenres.Add(TCheckBox(pnGenres.Controls[i]).Caption);
   end;
+
+  // we will reload the lists if search from all websites is enabled
+  if (cbSearchFromAllSites.Checked) AND (NOT dataProcess.isFilterAllSites) then
+  begin
+    if NOT dataProcess.CanFilter(checkGenres, uncheckGenres,
+                             edFilterTitle.Text, edFilterAuthors.Text,
+                             edFilterArtists.Text, IntToStr(cbFilterStatus.ItemIndex),
+                             edFilterSummary.Text,
+                             seOptionNewMangaTime.Value,
+                             rbAll.Checked, cbOnlyNew.Checked) then
+    begin
+      uncheckGenres.Free;
+      checkGenres  .Free;
+      exit;
+    end;
+    l:= TStringList.Create;
+    for i:= 0 to cbSelectManga.Items.Count-1 do
+      l.Add(cbSelectManga.Items[i]);
+    dataProcess.Free;
+    dataProcess:= TDataProcess.Create;
+    dataProcess.LoadFromAllFiles(l);
+    dataProcess.isFilterAllSites:= TRUE;
+    l.Free;
+  end;
+
   if dataProcess.Filter(checkGenres, uncheckGenres,
                         edFilterTitle.Text, edFilterAuthors.Text,
                         edFilterArtists.Text, IntToStr(cbFilterStatus.ItemIndex),
@@ -2108,7 +2135,8 @@ begin
   begin
     cbSelectManga.ItemIndex:= 0;
     dataProcess.RemoveFilter;
-    dataProcess.SaveToFile;
+    if NOT dataProcess.isFilterAllSites then
+      dataProcess.SaveToFile;
     dataProcess.Free;
     dataProcess:= TDataProcess.Create;
     dataProcess.LoadFromFile(cbSelectManga.Items.Strings[0]);
@@ -2228,8 +2256,14 @@ end;
 procedure TMainForm.vtMangaListGetHint(Sender: TBaseVirtualTree;
   Node: PVirtualNode; Column: TColumnIndex;
   var LineBreakStyle: TVTTooltipLineBreakStyle; var HintText: String);
+var
+  s: String;
 begin
-  HintText:=
+  if dataProcess.isFilterAllSites then
+    s:= 'Manga site: '+GetMangaSiteName(dataProcess.site.Items[dataProcess.filterPos.Items[Node.Index]])+#10#10#13
+  else
+    s:= '';
+  HintText:= s+
     infoGenres+': '+dataProcess.Param[dataProcess.filterPos.Items[Node.Index], DATA_PARAM_GENRES]+#10#10#13+
     infoSummary+': '+#10#13+
     PrepareSummaryForHint(dataProcess.Param[dataProcess.filterPos.Items[Node.Index], DATA_PARAM_SUMMARY]);

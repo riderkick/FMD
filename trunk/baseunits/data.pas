@@ -53,8 +53,14 @@ type
     procedure   BreakDataToParts(const i: Cardinal);
 
     function    LoadFromFile(const website: String): Boolean;
+    function    LoadFromAllFiles(const websiteList: TStringList): Boolean;
     procedure   SaveToFile(const website: String); overload;
     procedure   SaveToFile; overload;
+
+    function    CanFilter(const checkedGenres, uncheckedGenres: TStringList;
+                          const stTitle, stAuthors, stArtists, stStatus, stSummary: String;
+                          const minusDay: Cardinal;
+                          const haveAllChecked, searchNewManga: Boolean): Boolean;
 
     // en: Filter by genres, title, authors, ...
     // vi: Filter theo genre, tên, tác giả, ...
@@ -254,6 +260,75 @@ begin
   Result:= TRUE;
 end;
 
+// TODO: load from all files - this function is for "Filter all sites"
+function   TDataProcess.LoadFromAllFiles(const websiteList: TStringList): Boolean;
+var
+  id,
+  j,
+  i : Cardinal;
+  l : TStringList;
+  Filename: String;
+begin
+  if websiteList.Count = 0 then
+    exit(FALSE);
+  data.Clear;
+  filterMark.Clear;
+  filterPos .Clear;
+  site.Clear;
+
+  title.Clear;
+  authors.Clear;
+  artists.Clear;
+  genres.Clear;
+  status.Clear;
+  summary.Clear;
+  jdn.Clear;
+
+  l:= TStringList.Create;
+
+  for i:= 0 to websiteList.Count-1 do
+  begin
+    Filename:= DATA_FOLDER+websiteList.Strings[i];
+    id:= GetMangaSiteID(websiteList.Strings[i]);
+    if NOT FileExists(Filename+DATA_EXT) then continue;
+    l.Clear;
+    l.LoadFromFile(Filename+DATA_EXT);
+
+    if l.Count <> 0 then
+    begin
+      for j:= 0 to l.Count-1 do
+      begin
+        site.Add(id);
+      end;
+      data.Text:= data.Text + l.Text;
+    end;
+  end;
+
+  if data.Count > 0 then
+  begin
+    QuickSortDataWithWebID(data, site);
+    for i:= 0 to data.Count-1 do
+    begin
+      filterMark.Add(FILTER_SHOW);
+      filterPos.Add(i);
+
+      l.Clear;
+      GetParams(l, data.Strings[i]);
+
+      title.Add  (l.Strings[DATA_PARAM_NAME]);
+      link.Add   (l.Strings[DATA_PARAM_LINK]);
+      authors.Add(l.Strings[DATA_PARAM_AUTHORS]);
+      artists.Add(l.Strings[DATA_PARAM_ARTISTS]);
+      genres.Add (l.Strings[DATA_PARAM_GENRES]);
+      status.Add (l.Strings[DATA_PARAM_STATUS]);
+      summary.Add(l.Strings[DATA_PARAM_SUMMARY]);
+      jdn.Add    (Pointer(StrToInt(l.Strings[DATA_PARAM_JDN])));
+    end;
+  end;
+  l.Free;
+  Result:= TRUE;
+end;
+
 procedure   TDataProcess.SaveToFile(const website: String);
 begin
   if data.Count = 0 then exit;
@@ -266,6 +341,27 @@ begin
   if data.Count = 0 then exit;
   QuickSortData(data);
   data.SaveToFile(Filename+DATA_EXT);
+end;
+
+// check if we need to filter or not
+function    TDataProcess.CanFilter(const checkedGenres, uncheckedGenres: TStringList;
+                                   const stTitle, stAuthors, stArtists, stStatus, stSummary: String;
+                                   const minusDay: Cardinal;
+                                   const haveAllChecked, searchNewManga: Boolean): Boolean;
+begin
+  if (filterPos.Count = 0) OR
+     (data.Count = 0) OR
+     ((stTitle = '') AND
+      (stAuthors = '') AND
+      (stArtists = '') AND
+      (stSummary = '') AND
+      (stStatus = '2') AND
+      (checkedGenres.Count = 0) AND
+      (uncheckedGenres.Count = 0)) AND
+      (NOT searchNewManga) then
+    Result:= FALSE
+  else
+    Result:= TRUE;
 end;
 
 function    TDataProcess.Filter(const checkedGenres, uncheckedGenres: TStringList;
@@ -4824,17 +4920,22 @@ end;
 procedure   TMangaInformation.SyncInfoToData(const DataProcess: TDataProcess; const index: Cardinal);
 begin
   // sync info to data
-  DataProcess.Data.Strings[index]:= SetParams(
-            [DataProcess.Param[index, DATA_PARAM_NAME],
-             DataProcess.Param[index, DATA_PARAM_LINK],
-             mangaInfo.authors,
-             mangaInfo.artists,
-             mangaInfo.genres,
-             mangaInfo.status,
-             StringFilter(mangaInfo.summary),
-             IntToStr(mangaInfo.numChapter),
-             DataProcess.Param[index, DATA_PARAM_JDN],
-            '0']);
+  {$IFDEF DOWNLOADER}
+  if NOT dataProcess.isFilterAllSites then
+  {$ENDIF}
+  begin
+    DataProcess.Data.Strings[index]:= SetParams(
+              [DataProcess.Param[index, DATA_PARAM_NAME],
+               DataProcess.Param[index, DATA_PARAM_LINK],
+               mangaInfo.authors,
+               mangaInfo.artists,
+               mangaInfo.genres,
+               mangaInfo.status,
+               StringFilter(mangaInfo.summary),
+               IntToStr(mangaInfo.numChapter),
+               DataProcess.Param[index, DATA_PARAM_JDN],
+              '0']);
+  end;
   // then break it into parts
   dataProcess.BreakDataToParts(index);
 end;
