@@ -13,7 +13,7 @@ interface
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
   ExtCtrls, ComCtrls, Grids, ColorBox, ActnList, Buttons, CheckLst, Spin, Menus,
-  customdrawncontrols, VirtualTrees, RichMemo, SHDocVw, IniFiles, Process,
+  customdrawncontrols, VirtualTrees, RichMemo, SHDocVw, IniFiles, Process, UTF8Process,
   baseunit, data, types, downloads, favorites, LConvEncoding, LCLIntf, LazUTF8,
   updatelist, updatedb, lclproc, subthreads, silentthreads, AnimatedGif, MemBitmap
   {$IFDEF WINDOWS}, ActiveX{$ENDIF};
@@ -113,6 +113,7 @@ type
     gbOptionProxy: TGroupBox;
     gbOptionRenaming: TGroupBox;
     gbOptionFavorites: TGroupBox;
+    itRefreshForm: TIdleTimer;
     itCheckForChapters: TIdleTimer;
     itAnimate: TIdleTimer;
     ImageList: TImageList;
@@ -225,6 +226,7 @@ type
     procedure btURLClick(Sender: TObject);
     procedure btVisitMyBlogClick(Sender: TObject);
     procedure cbSelectMangaChange(Sender: TObject);
+    procedure edSearchClick(Sender: TObject);
 
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCreate(Sender: TObject);
@@ -249,6 +251,7 @@ type
     procedure FormWindowStateChange(Sender: TObject);
     procedure itAnimateTimer(Sender: TObject);
     procedure itCheckForChaptersTimer(Sender: TObject);
+    procedure itRefreshFormTimer(Sender: TObject);
     procedure miDownloadHideCompletedClick(Sender: TObject);
     procedure miDownloadMergeClick(Sender: TObject);
     procedure miHighlightNewMangaClick(Sender: TObject);
@@ -345,6 +348,7 @@ type
     websiteLanguage: TStringList;
     websiteSelect  : TList;
 
+    isCanRefreshForm,
     isUpdating  : Boolean;
     updates,
     mangalistIni,
@@ -435,6 +439,7 @@ procedure TMainForm.FormCreate(Sender: TObject);
 var
   fs: TFileStream;
 begin
+  isCanRefreshForm:= TRUE;
   silentThreadCount:= 0;
   silentAddToFavThreadCount:= 0;
 
@@ -603,6 +608,11 @@ begin
   favorites.isAuto:= TRUE;
   favorites.isShowDialog:= cbOptionShowFavoriteDialog.Checked;
   favorites.Run;
+end;
+
+procedure TMainForm.itRefreshFormTimer(Sender: TObject);
+begin
+  isCanRefreshForm:= TRUE;
 end;
 
 procedure TMainForm.miDownloadHideCompletedClick(Sender: TObject);
@@ -1110,6 +1120,12 @@ begin
   end;
 end;
 
+procedure TMainForm.edSearchClick(Sender: TObject);
+begin
+  if edSearch.Text = stSearch then
+    edSearch.Text:= '';
+end;
+
 // -----
 
 procedure TMainForm.btSearchClick(Sender: TObject);
@@ -1174,7 +1190,7 @@ begin
   end;
 
   // we will reload the lists if search from all websites is enabled
-  if (cbSearchFromAllSites.Checked) AND (NOT dataProcess.isFilterAllSites) then
+  if (cbSearchFromAllSites.Checked) AND (NOT dataProcess.isFilterAllSites) AND (NOT dataProcess.isFiltered) then
   begin
     if NOT dataProcess.CanFilter(checkGenres, uncheckGenres,
                              edFilterTitle.Text, edFilterAuthors.Text,
@@ -1673,13 +1689,13 @@ end;
 
 procedure TMainForm.miOpenFolder2Click(Sender: TObject);
 var
-  Process: TProcess;
+  Process: TProcessUTF8;
 begin
   {$IFDEF WINDOWS}
   if NOT Assigned(vtFavorites.FocusedNode) then exit;
-  Process:= TProcess.Create(nil);
-  Process.CommandLine:= UTF8ToUTF16('explorer.exe /e, "'+
-                                     StringReplace(Favorites.favoriteInfo[vtFavorites.FocusedNode.Index].SaveTo, '/', '\', [rfReplaceAll])+'"');
+  Process:= TProcessUTF8.Create(nil);
+  Process.CommandLine:= 'explorer.exe /e, "'+
+                        StringReplace(Favorites.favoriteInfo[vtFavorites.FocusedNode.Index].SaveTo, '/', '\', [rfReplaceAll])+'"';
   Process.Execute;
   Process.Free;
   {$ENDIF}
@@ -1687,13 +1703,13 @@ end;
 
 procedure TMainForm.miOpenFolderClick(Sender: TObject);
 var
-  Process: TProcess;
+  Process: TProcessUTF8;
 begin
   {$IFDEF WINDOWS}
   if NOT Assigned(vtDownload.FocusedNode) then exit;
-  Process:= TProcess.Create(nil);
-  Process.CommandLine:= UTF8ToUTF16('explorer.exe /e, "'+
-                                     StringReplace(DLManager.containers.Items[vtDownload.FocusedNode.Index].downloadInfo.SaveTo, '/', '\', [rfReplaceAll])+'"');
+  Process:= TProcessUTF8.Create(nil);
+  Process.CommandLine:= 'explorer.exe /e, "'+
+                         StringReplace(DLManager.containers.Items[vtDownload.FocusedNode.Index].downloadInfo.SaveTo, '/', '\', [rfReplaceAll])+'"';
   Process.Execute;
   Process.Free;
   {$ENDIF}
@@ -2768,6 +2784,7 @@ begin
   tsFavorites   .Caption:= language.ReadString(lang, 'tsFavoritesCaption', '');
   tsOption      .Caption:= language.ReadString(lang, 'tsOptionCaption', '');
   edSearch      .Text   := language.ReadString(lang, 'edSearchText', '');
+  stSearch:= edSearch.Text;
   stModeAll             := language.ReadString(lang, 'stModeAll', '');
   stModeFilter          := language.ReadString(lang, 'stModeFilter', '');
 
@@ -2793,7 +2810,7 @@ begin
   btReadOnline  .Caption  := language.ReadString(lang, 'btReadOnlineCaption', '');
   cbAddAsStopped.Caption  := language.ReadString(lang, 'cbAddAsStoppedCaption', '');
   cbAddToFavorites.Caption:= language.ReadString(lang, 'cbAddToFavoritesCaption', '');
-
+  cbSearchFromAllSites.Caption:= language.ReadString(lang, 'cbSearchFromAllSitesCaption', '');
 
   cbFilterStatus.Items.Strings[0]:= language.ReadString(lang, 'lbFilterStatus0', '');
   cbFilterStatus.Items.Strings[1]:= language.ReadString(lang, 'lbFilterStatus1', '');

@@ -237,6 +237,9 @@ var
   infoSummary,
   infoLink ,
 
+  // this is for erasing the "Search..." message
+  stSearch,
+
   stDownloadManga,
   stDownloadStatus,
   stDownloadProgress,
@@ -369,6 +372,7 @@ function  SetParams(const input: array of String): String; overload;
 procedure CustomGenres(var output: TStringList; input: String);
 
 function  FixPath(const path: String): String;
+function  GetLastDir(const path: String): String;
 function  FixLastDir(const path: String): String;
 function  StringFilter(const source: String): String;
 function  HTMLEntitiesFilter(const source: String): String;
@@ -821,6 +825,21 @@ begin
       Result:= Result+'_'
     else
       Result:= Result+path[i];
+  end;
+end;
+
+function  GetLastDir(const path: String): String;
+var
+  i, p: Cardinal;
+begin
+  Result:= '';
+  if Length(path)=0 then exit;
+  i:= Length(path);
+  for i:= 1 to Length(path) do
+  begin
+    Result:= Result+path[i];
+    if path[i] = '/' then
+      p:= i;
   end;
 end;
 

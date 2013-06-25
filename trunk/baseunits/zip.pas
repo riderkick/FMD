@@ -11,7 +11,7 @@ unit zip;
 interface
 
 uses
-  Classes, FileUtil, Zipper, baseunit, SysUtils;
+  Classes, FileUtil, Zipper, baseunit, SysUtils, img2pdf;
 
 type
   TCompress = class
@@ -21,6 +21,8 @@ type
   public
     ext,
     Path: String;
+    procedure   DoZipCbz;
+    procedure   DoPdf;
     procedure   Execute;
   end;
 
@@ -34,7 +36,7 @@ begin
   list.Add(FileIterator.Filename);
 end;
 
-procedure   TCompress.Execute;
+procedure   TCompress.DoZipCbz;
 var
   s,
   fPath   : String;
@@ -67,7 +69,7 @@ begin
         {$ELSE}
         s:= list.Strings[i];
         {$ENDIF}
-        Zip.Entries.AddFileEntry(s, Format('%.3d%s', [i, ExtractFileExt(list.Strings[i])]));
+        Zip.Entries.AddFileEntry(s, Format('%.3d%s', [i+1, ExtractFileExt(list.Strings[i])]));
       end;
 
       fstream:= TFileStreamUTF8.Create(fPath+ext, fmCreate);
@@ -87,6 +89,70 @@ begin
     searcher.Free;
     list.Free;
   end;
+end;
+
+procedure   TCompress.DoPdf;
+var
+  s,
+  fPath   : String;
+  searcher: TFileSearcher;
+  pdf     : TImg2Pdf;
+  i       : Cardinal;
+  fstream : TFileStreamUTF8;
+begin
+  try
+   // Path:= FixPath(Path);
+    fPath:= FixLastDir(Path);
+    RenameFileUTF8(Path, fPath);
+    list:= TStringList.Create;
+    searcher:= TFileSearcher.Create;
+    searcher.OnFileFound:= OnFileFound;
+    searcher.Search(fPath, '*.jpg;*.jpeg;*.png;*.gif', FALSE, FALSE);
+
+    if list.Count <> 0 then
+    begin
+      pdf:= TImg2Pdf.Create;
+      pdf.Title:= GetLastDir(Path);
+     // pdf.FileName:= fPath+ext;
+      for i:= 0 to list.Count-1 do
+      begin
+        {$IFDEF WINDOWS}
+        s:= StringReplace(list.Strings[i], '/', '\', [rfReplaceAll]);
+        {$ELSE}
+        s:= list.Strings[i];
+        {$ENDIF}
+
+        // add image to PDF
+        pdf.AddImage(s);
+       // pdf.Image(s, 100, 100, 200, 200);
+       // pdf.Entries.AddFileEntry(s, Format('%.3d%s', [i+1, ExtractFileExt(list.Strings[i])]));
+      end;
+
+      fstream:= TFileStreamUTF8.Create(fPath+ext, fmCreate);
+      pdf.SaveToStream(fstream);
+      fstream.Free;
+      pdf.Free;
+      for i:= 0 to list.Count-1 do
+        DeleteFileUTF8(list.Strings[i]);
+      RemoveDirUTF8(fPath);
+      if fPath[Length(fPath)] = '/' then
+        Delete(fPath, Length(fPath), 1);
+      RenameFileUTF8(fPath+ext, Path+ext);
+    end;
+  finally
+    searcher.Free;
+    list.Free;
+  end;
+end;
+
+procedure   TCompress.Execute;
+begin
+  if (ext='.zip') OR (ext='.cbz') then
+  begin
+    DoZipCbz;
+  end
+  else
+    DoPdf;
 end;
 
 end.

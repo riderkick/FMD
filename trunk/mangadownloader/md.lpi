@@ -156,7 +156,7 @@
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)"/>
-      <OtherUnitFiles Value="E:\FreeSpace\FMD\trunk\baseunits\;E:\sdks\lazcomp\synapse\source\"/>
+      <OtherUnitFiles Value="E:\sdks\lazcomp\synapse\source\;..\..\trunk\baseunits;..\..\trunk\baseunits\animatedgifs;..\..\trunk\baseunits\fasthtmlparser;..\..\trunk\baseunits\fpdf"/>
       <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
     <CodeGeneration>
@@ -168,6 +168,9 @@
       </Optimizations>
     </CodeGeneration>
     <Linking>
+      <Debugging>
+        <GenerateDebugInfo Value="False"/>
+      </Debugging>
       <LinkSmart Value="True"/>
       <Options>
         <Win32>

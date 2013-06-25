@@ -52,7 +52,8 @@ type
   TTaskThread = class(TThread)
   protected
     procedure   CheckOut;
-    procedure   Repaint;
+    procedure   CallMainFormRepaint;
+    procedure   CallMainFormRepaintImm;
     procedure   Execute; override;
     procedure   Compress;
     // show notification when download completed
@@ -161,7 +162,8 @@ type
 implementation
 
 uses
-  lazutf8classes, mainunit, HTMLParser, FastHTMLParser, HTMLUtil, SynaCode, FileUtil, HTTPSend;
+  lazutf8classes, mainunit, HTMLParser, FastHTMLParser, HTMLUtil, SynaCode,
+  FileUtil, HTTPSend, VirtualTrees;
 
 // utility
 
@@ -2107,9 +2109,19 @@ begin
   inherited Destroy;
 end;
 
-procedure   TTaskThread.Repaint;
+procedure   TTaskThread.CallMainFormRepaint;
+begin
+  if MainForm.isCanRefreshForm then
+  begin
+    MainForm.vtDownload.Repaint;
+    MainForm.isCanRefreshForm:= FALSE;
+  end;
+end;
+
+procedure   TTaskThread.CallMainFormRepaintImm;
 begin
   MainForm.vtDownload.Repaint;
+  MainForm.isCanRefreshForm:= FALSE;
 end;
 
 procedure   TTaskThread.Compress;
@@ -2123,6 +2135,7 @@ begin
     case container.manager.compress of
       1: Compresser.ext:= '.zip';
       2: Compresser.ext:= '.cbz';
+      3: Compresser.ext:= '.pdf';
     end;
     Compresser.Path:= container.downloadInfo.SaveTo+'/'+
                       container.chapterName.Strings[container.currentDownloadChapterPtr];
@@ -2295,7 +2308,7 @@ begin
         {$IFDEF WIN32}
         MainForm.vtDownload.Repaint;
         {$ELSE}
-        Synchronize(Repaint);
+        Synchronize(CallMainFormRepaint);
         {$ENDIF}
       end;
       WaitFor;
@@ -2320,7 +2333,7 @@ begin
         {$IFDEF WIN32}
         MainForm.vtDownload.Repaint;
         {$ELSE}
-        Synchronize(Repaint);
+        Synchronize(CallMainFormRepaint);
         {$ENDIF}
       end;
       WaitFor;
@@ -2353,7 +2366,7 @@ begin
       {$IFDEF WIN32}
       MainForm.vtDownload.Repaint;
       {$ELSE}
-      Synchronize(Repaint);
+      Synchronize(CallMainFormRepaintImm);
       {$ENDIF}
     end
     else
@@ -2364,7 +2377,7 @@ begin
       {$IFDEF WIN32}
       MainForm.vtDownload.Repaint;
       {$ELSE}
-      Synchronize(Repaint);
+      Synchronize(CallMainFormRepaintImm);
       {$ENDIF}
     end;
   end;
