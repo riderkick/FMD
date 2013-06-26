@@ -2137,6 +2137,7 @@ begin
       2: Compresser.ext:= '.cbz';
       3: Compresser.ext:= '.pdf';
     end;
+    Compresser.CompressionQuality:= OptionPDFQuality;
     Compresser.Path:= container.downloadInfo.SaveTo+'/'+
                       container.chapterName.Strings[container.currentDownloadChapterPtr];
     Compresser.Execute;

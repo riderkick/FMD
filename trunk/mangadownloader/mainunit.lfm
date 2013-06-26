@@ -1301,18 +1301,18 @@ object MainForm: TMainForm
         end
         object tsConnections: TTabSheet
           Caption = 'Connections'
-          ClientHeight = 294
-          ClientWidth = 562
+          ClientHeight = 316
+          ClientWidth = 585
           object sbDownloadConnections: TScrollBox
             Left = 0
-            Height = 294
+            Height = 316
             Top = 0
-            Width = 562
-            HorzScrollBar.Page = 558
-            VertScrollBar.Page = 290
+            Width = 585
+            HorzScrollBar.Page = 581
+            VertScrollBar.Page = 312
             Align = alClient
-            ClientHeight = 290
-            ClientWidth = 558
+            ClientHeight = 312
+            ClientWidth = 581
             TabOrder = 0
             object cbOptionUseProxy: TCheckBox
               Left = 32
@@ -1328,11 +1328,11 @@ object MainForm: TMainForm
               Left = 12
               Height = 104
               Top = 178
-              Width = 540
+              Width = 563
               Anchors = [akTop, akLeft, akRight]
               Caption = 'Proxy config'
               ClientHeight = 86
-              ClientWidth = 536
+              ClientWidth = 559
               Enabled = False
               ParentFont = False
               TabOrder = 1
@@ -1378,7 +1378,7 @@ object MainForm: TMainForm
               object lbOptionUser: TLabel
                 AnchorSideLeft.Side = asrBottom
                 AnchorSideTop.Side = asrBottom
-                Left = 284
+                Left = 307
                 Height = 13
                 Top = 14
                 Width = 48
@@ -1389,7 +1389,7 @@ object MainForm: TMainForm
               object lbOptionPass: TLabel
                 AnchorSideLeft.Side = asrBottom
                 AnchorSideTop.Side = asrBottom
-                Left = 284
+                Left = 307
                 Height = 13
                 Top = 46
                 Width = 46
@@ -1400,7 +1400,7 @@ object MainForm: TMainForm
               object edOptionUser: TEdit
                 AnchorSideLeft.Side = asrBottom
                 AnchorSideTop.Side = asrBottom
-                Left = 344
+                Left = 367
                 Height = 23
                 Top = 7
                 Width = 154
@@ -1414,7 +1414,7 @@ object MainForm: TMainForm
               object edOptionPass: TEdit
                 AnchorSideLeft.Side = asrBottom
                 AnchorSideTop.Side = asrBottom
-                Left = 344
+                Left = 367
                 Height = 23
                 Top = 39
                 Width = 154
@@ -1498,7 +1498,7 @@ object MainForm: TMainForm
           object edOptionDefaultPath: TLabeledEdit
             Left = 20
             Height = 21
-            Top = 42
+            Top = 34
             Width = 425
             Anchors = [akTop, akLeft, akRight]
             EditLabel.AnchorSideLeft.Control = edOptionDefaultPath
@@ -1507,7 +1507,7 @@ object MainForm: TMainForm
             EditLabel.AnchorSideBottom.Control = edOptionDefaultPath
             EditLabel.Left = 20
             EditLabel.Height = 13
-            EditLabel.Top = 26
+            EditLabel.Top = 18
             EditLabel.Width = 425
             EditLabel.Caption = 'Choose default download path:'
             EditLabel.ParentColor = False
@@ -1518,7 +1518,7 @@ object MainForm: TMainForm
           object rgOptionCompress: TRadioGroup
             Left = 20
             Height = 60
-            Top = 74
+            Top = 66
             Width = 526
             Anchors = [akTop, akLeft, akRight]
             AutoFill = True
@@ -1547,7 +1547,7 @@ object MainForm: TMainForm
           object gbOptionRenaming: TGroupBox
             Left = 20
             Height = 137
-            Top = 146
+            Top = 170
             Width = 526
             Anchors = [akTop, akLeft, akRight]
             Caption = 'Renaming'
@@ -1601,16 +1601,41 @@ object MainForm: TMainForm
             OnClick = btOptionBrowseClick
             TabOrder = 3
           end
+          object seOptionPDFQuality: TSpinEdit
+            Left = 44
+            Height = 21
+            Hint = '100 = FlateEncode (lossless), lower = DCTEncode (lossy)'
+            Top = 132
+            Width = 50
+            MinValue = 50
+            ParentFont = False
+            ParentShowHint = False
+            ShowHint = True
+            TabOrder = 4
+            Value = 100
+          end
+          object lbOptionPDFQuality: TLabel
+            Left = 108
+            Height = 13
+            Hint = '100 = FlateEncode (lossless), lower = DCTEncode (lossy)'
+            Top = 134
+            Width = 106
+            Caption = 'PDF compression level'
+            ParentColor = False
+            ParentFont = False
+            ParentShowHint = False
+            ShowHint = True
+          end
         end
         object tsUpdate: TTabSheet
           Caption = 'Updates'
-          ClientHeight = 286
-          ClientWidth = 562
+          ClientHeight = 316
+          ClientWidth = 585
           object cbOptionAutoCheckUpdate: TCheckBox
             Left = 28
-            Height = 19
+            Height = 17
             Top = 30
-            Width = 140
+            Width = 130
             Caption = 'Check for new version '
             ParentFont = False
             TabOrder = 0
@@ -1619,25 +1644,25 @@ object MainForm: TMainForm
             Left = 29
             Height = 112
             Top = 62
-            Width = 503
+            Width = 526
             Anchors = [akTop, akLeft, akRight]
             Caption = 'Favorites'
             ClientHeight = 94
-            ClientWidth = 499
+            ClientWidth = 522
             ParentFont = False
             TabOrder = 1
             object cbOptionAutoCheckFavStartup: TCheckBox
               Left = 21
-              Height = 19
+              Height = 17
               Top = 14
-              Width = 196
+              Width = 178
               Caption = 'Automatic check for new chapter'
               ParentFont = False
               TabOrder = 0
             end
             object seOptionCheckMinutes: TSpinEdit
               Left = 21
-              Height = 23
+              Height = 21
               Top = 45
               Width = 58
               MaxValue = 1440
@@ -1646,9 +1671,9 @@ object MainForm: TMainForm
             end
             object lbOptionAutoCheckMinutes: TLabel
               Left = 93
-              Height = 15
+              Height = 13
               Top = 45
-              Width = 231
+              Width = 212
               Caption = 'Auto check for new chapter every ? minutes'
               ParentColor = False
             end
@@ -1656,8 +1681,8 @@ object MainForm: TMainForm
         end
         object tsDialogs: TTabSheet
           Caption = 'Dialogs'
-          ClientHeight = 294
-          ClientWidth = 562
+          ClientHeight = 316
+          ClientWidth = 585
           object cbOptionShowQuitDialog: TCheckBox
             Left = 60
             Height = 17
@@ -1696,13 +1721,13 @@ object MainForm: TMainForm
         end
         object tsWebsites: TTabSheet
           Caption = 'Websites'
-          ClientHeight = 286
-          ClientWidth = 562
+          ClientHeight = 316
+          ClientWidth = 585
           object vtOptionMangaSiteSelection: TVirtualStringTree
             Left = 0
-            Height = 286
+            Height = 316
             Top = 0
-            Width = 562
+            Width = 585
             Align = alClient
             DefaultText = 'Node'
             Header.AutoSizeIndex = 0

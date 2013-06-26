@@ -11,8 +11,7 @@ unit img2pdf;
 interface
 
 uses
-  Classes, SysUtils, FPimage, FPReadPNG, FPReadBMP, FPReadGif,
-  FPWriteJPEG, FPReadJPEG, lazutf8classes;
+  Classes, SysUtils, ZStream, FPImage, FPWriteJPEG, Graphics, GraphType, lazutf8classes;
 
 const
   TPDFFormatSetings: TFormatSettings = (
@@ -53,6 +52,7 @@ type
   private
     FBuffer     : TMemoryStream;
     FState      : Integer;
+    FCompressionQuality,
     FObjCount,
     FCurrentPage: Cardinal;
     FTitle      : String;
@@ -68,6 +68,8 @@ type
     procedure   PDFWrite(AText: String);
     function    PDFString(const AText: String): String;
     procedure   Error(AMsg: String);
+    procedure   AddFlateImage(const AName: String);
+    procedure   AddDCTImage(const AName: String);
   public
     constructor Create;
     destructor  Destroy; override;
@@ -76,6 +78,7 @@ type
     procedure   SaveToFile(const AFile: String);
 
     property    Title: String read FTitle write FTitle;
+    property    CompressionQuality: Cardinal read FCompressionQuality write FCompressionQuality;
   end;
 
 implementation
@@ -258,6 +261,7 @@ begin
   FState      := 0;
   FObjCount   := 2;
   FCurrentPage:= 0;
+  FCompressionQuality:= 100;
   SetLength(FPages, 0);
   SetLength(FOffsets, 3);
   SetLength(FPageInfos, 0);
@@ -280,10 +284,65 @@ begin
   inherited;
 end;
 
-procedure   TImg2Pdf.AddImage(const AName: String);
+procedure   TImg2Pdf.AddFlateImage(const AName: String);
 var
   stream: TFileStreamUTF8;
-  ir    : TFPCustomImageReader;
+  cs    : TCompressionStream;
+  ss    : TMemoryStream;
+  ext   : String;
+  pt    : TPicture;
+  ri    : TRawImage;
+  i     : Cardinal;
+  tmp   : Byte;
+  p     : Pointer;
+
+begin
+  ext:= StringReplace(UpperCase(ExtractFileExt(AName)), '.', '', [rfReplaceAll]);
+  if (ext = '') then
+    Error('File without an extension!');
+  try
+    stream:= TFileStreamUTF8.Create(AName, fmOpenRead);
+
+    ss:= TMemoryStream.Create;
+    pt:= TPicture.Create;
+    pt.LoadFromStream(stream);
+    BeginPDFPage(pt.Width, pt.Height);
+    ri:= pt.Bitmap.RawImage;
+
+    cs:= TCompressionStream.Create(Tcompressionlevel.clMax, ss);
+    for i:= 0 to (ri.DataSize div 4)-1 do
+    begin
+      p:= ri.Data+i*4;
+      tmp:= Byte(p^);
+      Byte(p^):= Byte((p+2)^);
+      Byte((p+2)^):= tmp;
+      cs.Write(p^, 3);
+    end;
+    cs.Free;
+
+    FPageInfos[FCurrentPage].imgStream:= TMemoryStream.Create;
+    ss.SaveToStream(FPageInfos[FCurrentPage].imgStream);
+
+    FPageInfos[FCurrentPage].cs     := 'DeviceRGB';
+    FPageInfos[FCurrentPage].fWidth := pt.Width;
+    FPageInfos[FCurrentPage].fHeight:= pt.Height;
+    FPageInfos[FCurrentPage].bpc    := 8;
+    FPageInfos[FCurrentPage].f      := 'FlateDecode';
+
+    PDFWrite('q ' + FloatToStr(pt.Width) + ' 0 0 ' + FloatToStr(pt.Height) +
+      ' 0 -' + FloatToStr(pt.Height) + ' cm /I' +
+      IntToStr(FCurrentPage) + ' Do Q');
+  finally
+    stream.Free;
+    pt.Free;
+    ss.Free;
+    EndPDFPage;
+  end;
+end;
+
+procedure   TImg2Pdf.AddDCTImage(const AName: String);
+var
+  stream: TFileStreamUTF8;
   jw    : TFPWriterJPEG;
   im    : TFPMemoryImage;
   ext   : string;
@@ -292,28 +351,16 @@ begin
   if (ext = '') then
     Error('File without an extension!');
   try
-    if ext = 'PNG' then
-      ir:= TFPReaderPNG.Create
-    else
-    if (ext = 'JPG') OR (ext = 'JPEG') then
-      ir:= TFPReaderJPEG.Create
-    else
-    if ext = 'BMP' then
-      ir:= TFPReaderBMP.Create
-    else
-    if ext = 'GIF' then
-      ir:= TFPReaderGif.Create
-    else
-      Error('Invalid extension from image: ' + ext);
-
     im:= TFPMemoryImage.Create(1, 1);
     jw:= TFPWriterJPEG.Create;
+    jw.CompressionQuality:= FCompressionQuality;
     stream:= TFileStreamUTF8.Create(AName, fmOpenRead);
     im.LoadFromStream(stream);
 
     BeginPDFPage(im.Width, im.Height);
 
     FPageInfos[FCurrentPage].imgStream:= TMemoryStream.Create;
+
     im.SaveToStream(FPageInfos[FCurrentPage].imgStream, jw);
 
     if (jw.GrayScale) then
@@ -330,11 +377,18 @@ begin
       IntToStr(FCurrentPage) + ' Do Q');
   finally
     stream.Free;
-    ir.Free;
     im.Free;
     jw.Free;
     EndPDFPage;
   end;
+end;
+
+procedure   TImg2Pdf.AddImage(const AName: String);
+begin
+  if FCompressionQuality = 100 then
+    AddFlateImage(AName)
+  else
+    AddDCTImage(AName);
 end;
 
 procedure   TImg2Pdf.SaveToStream(const AStream: TStream);

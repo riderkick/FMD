@@ -275,6 +275,7 @@ var
   stDlgUpdaterCannotConnectToServer: String;
 
   OptionCheckMinutes: Cardinal = 0;
+  OptionPDFQuality  : Cardinal = 100;
 
   OptionBatotoUseIEChecked: Boolean = TRUE;
   OptionAutoNumberChapterChecked: Boolean = TRUE;

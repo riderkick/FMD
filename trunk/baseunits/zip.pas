@@ -20,7 +20,8 @@ type
     procedure   OnFileFound(FileIterator: TFileIterator);
   public
     ext,
-    Path: String;
+    Path              : String;
+    CompressionQuality: Cardinal;
     procedure   DoZipCbz;
     procedure   DoPdf;
     procedure   Execute;
@@ -112,6 +113,7 @@ begin
     if list.Count <> 0 then
     begin
       pdf:= TImg2Pdf.Create;
+      pdf.CompressionQuality:= CompressionQuality;
       pdf.Title:= GetLastDir(Path);
      // pdf.FileName:= fPath+ext;
       for i:= 0 to list.Count-1 do

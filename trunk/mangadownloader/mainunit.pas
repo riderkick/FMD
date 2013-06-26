@@ -119,6 +119,7 @@ type
     ImageList: TImageList;
     imCover: TImage;
     edOptionDefaultPath: TLabeledEdit;
+    lbOptionPDFQuality: TLabel;
     lbOptionAutoCheckMinutes: TLabel;
     lbOptionLetFMDDo: TLabel;
     lbOptionNewMangaTime: TLabel;
@@ -198,6 +199,7 @@ type
     seOptionMaxThread: TSpinEdit;
     seOptionNewMangaTime: TSpinEdit;
     seOptionCheckMinutes: TSpinEdit;
+    seOptionPDFQuality: TSpinEdit;
     spInfos: TSplitter;
     spMainSplitter: TSplitter;
     sbMain: TStatusBar;
@@ -1755,6 +1757,7 @@ procedure TMainForm.pcMainChange(Sender: TObject);
     cbOptionGenerateMangaFolderName.Checked:= options.ReadBool('saveto', 'GenMangaName', TRUE);
     cbOptionAutoNumberChapter.Checked:= options.ReadBool('saveto', 'AutoNumberChapter', TRUE);
     OptionAutoNumberChapterChecked:= cbOptionAutoNumberChapter.Checked;
+    seOptionPDFQuality.Value:= options.ReadInteger('saveto', 'PDFQuality', 100);
 
     cbOptionAutoCheckFavStartup.Checked:= options.ReadBool('update', 'AutoCheckFavStartup', FALSE);
     seOptionCheckMinutes.Value:= options.ReadInteger('update', 'AutoCheckMinutes', 0);
@@ -2185,6 +2188,8 @@ begin
   options.WriteInteger('saveto', 'Compress', rgOptionCompress.ItemIndex);
   options.WriteBool   ('saveto', 'AutoNumberChapter', cbOptionAutoNumberChapter.Checked);
   OptionAutoNumberChapterChecked:= cbOptionAutoNumberChapter.Checked;
+  options.WriteInteger('saveto', 'PDFQuality', seOptionPDFQuality.Value);
+  OptionPDFQuality:= seOptionPDFQuality.Value;
 
   options.WriteBool   ('update', 'AutoCheckUpdateAtStartup', cbOptionAutoCheckUpdate.Checked);
   options.WriteBool   ('update', 'AutoCheckFavStartup', cbOptionAutoCheckFavStartup.Checked);
@@ -2521,6 +2526,8 @@ begin
   cbOptionGenerateChapterName.Checked:= options.ReadBool('saveto', 'GenChapName', FALSE);
   cbOptionGenerateMangaFolderName.Checked:= options.ReadBool('saveto', 'GenMangaName', TRUE);
   cbOptionAutoNumberChapter.Checked:= options.ReadBool('saveto', 'AutoNumberChapter', TRUE);
+  seOptionPDFQuality.Value     := options.ReadInteger('saveto', 'PDFQuality', 100);
+  OptionPDFQuality:= seOptionPDFQuality.Value;
 
   cbOptionAutoCheckUpdate.Checked:= options.ReadBool('update', 'AutoCheckUpdateAtStartup', TRUE);
 
