@@ -11,7 +11,7 @@ unit img2pdf;
 interface
 
 uses
-  Classes, SysUtils, ZStream, FPImage, FPWriteJPEG, Graphics, GraphType,
+  Classes, SysUtils, ZStream, FPImage, FPReadJPEG, FPWriteJPEG, Graphics, GraphType,
   ImagingTypes, Imaging, ImagingUtility, lazutf8classes;
 
 const
@@ -292,8 +292,6 @@ var
   ss    : TMemoryStream;
   ext   : String;
   im    : TImageData;
-  i     : Cardinal;
-  tmp   : Byte;
   p     : Pointer;
 
   procedure Swap(buf: Pointer; size: Cardinal);
@@ -317,19 +315,12 @@ begin
   try
     stream:= TFileStreamUTF8.Create(AName, fmOpenRead);
     LoadImageFromStream(stream, im);
-    ConvertImage(im, ifR8G8B8);
+    if (ext <> 'JPG') AND (ext <> 'JPEG') then
+      ConvertImage(im, ifR8G8B8);
     ss:= TMemoryStream.Create;
     BeginPDFPage(im.Width, im.Height);
 
     Swap(im.Bits, im.Width*im.Height);
-
-   { for i:= 0 to im.Width*im.Height-1 do
-    begin
-      p:= im.Bits+i*3;
-      tmp:= Byte(p^);
-      Byte(p^):= Byte((p+2)^);
-      Byte((p+2)^):= tmp;
-    end; }
 
     cs:= TCompressionStream.Create(TCompressionLevel.clMax, ss);
     cs.Write(im.Bits^, im.Width*im.Height*3);
@@ -357,6 +348,7 @@ end;
 
 procedure   TImg2Pdf.AddDCTImage(const AName: String);
 var
+  cr    : TFPCustomImageReader;
   stream: TFileStreamUTF8;
   jw    : TFPWriterJPEG;
   im    : TFPMemoryImage;
@@ -373,22 +365,15 @@ begin
     jw.CompressionQuality:= FCompressionQuality;
     stream:= TFileStreamUTF8.Create(AName, fmOpenRead);
 
-
-    if (ext = 'JPG') OR (ext = 'JPEG') then
-    begin
-      ms:= TMemoryStream.Create;
-      LoadImageFromStream(stream, imd);
-      ConvertImage(imd, ifR8G8B8);
-      SaveImageToStream('jpg', ms, imd);
-      FreeImage(imd);
-      im.LoadFromStream(ms);
-      ms.Free;
-    end
-    else
-      im.LoadFromStream(stream);
+    LoadImageFromStream(stream, imd);
+    ConvertImage(imd, ifR8G8B8);
+    ms:= TMemoryStream.Create;
+    SaveImageToStream('jpg', ms, imd);
+    FreeImage(imd);
+    cr:= TFPReaderJPEG.Create;
+    cr.ImageRead(ms, im);
 
     BeginPDFPage(im.Width, im.Height);
-
     FPageInfos[FCurrentPage].imgStream:= TMemoryStream.Create;
 
     im.SaveToStream(FPageInfos[FCurrentPage].imgStream, jw);
@@ -406,6 +391,8 @@ begin
       ' 0 -' + FloatToStr(im.Height) + ' cm /I' +
       IntToStr(FCurrentPage) + ' Do Q');
   finally
+    ms.Free;
+    cr.Free;
     stream.Free;
     im.Free;
     jw.Free;

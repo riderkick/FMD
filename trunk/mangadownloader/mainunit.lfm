@@ -1594,7 +1594,7 @@ object MainForm: TMainForm
           object btOptionBrowse: TBitBtn
             Left = 466
             Height = 21
-            Top = 42
+            Top = 34
             Width = 80
             Anchors = [akTop, akRight]
             Caption = 'Browse'

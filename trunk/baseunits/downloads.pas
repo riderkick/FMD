@@ -2131,6 +2131,8 @@ begin
   if (container.manager.compress >= 1) then
   begin
     Sleep(100);
+    container.downloadInfo.Status:= Format('%s (%d/%d)', ['Compressing...', container.currentDownloadChapterPtr, container.chapterLinks.Count]);
+    MainForm.vtDownload.Repaint;
     Compresser:= TCompress.Create;
     case container.manager.compress of
       1: Compresser.ext:= '.zip';
