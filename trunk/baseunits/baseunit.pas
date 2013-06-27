@@ -1,7 +1,7 @@
 {
         File: baseunit.pas
         License: GPLv2
-        This unit is part of Free Manga Downloader
+        This unit is a part of Free Manga Downloader
 }
 
 unit baseunit;
@@ -275,7 +275,7 @@ var
   stDlgUpdaterCannotConnectToServer: String;
 
   OptionCheckMinutes: Cardinal = 0;
-  OptionPDFQuality  : Cardinal = 100;
+  OptionPDFQuality  : Cardinal = 95;
 
   OptionBatotoUseIEChecked: Boolean = TRUE;
   OptionAutoNumberChapterChecked: Boolean = TRUE;

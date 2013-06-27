@@ -1,7 +1,7 @@
 {
         File: img2pdf.pas
         License: GPLv2
-        This unit is part of Free Manga Downloader
+        This unit is a part of Free Manga Downloader
 }
 
 unit img2pdf;
@@ -11,7 +11,8 @@ unit img2pdf;
 interface
 
 uses
-  Classes, SysUtils, ZStream, FPImage, FPWriteJPEG, Graphics, GraphType, lazutf8classes;
+  Classes, SysUtils, ZStream, FPImage, FPWriteJPEG, Graphics, GraphType,
+  ImagingTypes, Imaging, ImagingUtility, lazutf8classes;
 
 const
   TPDFFormatSetings: TFormatSettings = (
@@ -290,11 +291,24 @@ var
   cs    : TCompressionStream;
   ss    : TMemoryStream;
   ext   : String;
-  pt    : TPicture;
-  ri    : TRawImage;
+  im    : TImageData;
   i     : Cardinal;
   tmp   : Byte;
   p     : Pointer;
+
+  procedure Swap(buf: Pointer; size: Cardinal);
+  begin
+    asm
+      mov  esi,buf
+      mov  ecx,size
+    @loop:
+      mov  al,[esi]
+      xchg al,[esi+2]
+      mov  [esi],al
+      add  esi,3
+      loop @loop
+    end;
+  end;
 
 begin
   ext:= StringReplace(UpperCase(ExtractFileExt(AName)), '.', '', [rfReplaceAll]);
@@ -302,40 +316,41 @@ begin
     Error('File without an extension!');
   try
     stream:= TFileStreamUTF8.Create(AName, fmOpenRead);
-
+    LoadImageFromStream(stream, im);
+    ConvertImage(im, ifR8G8B8);
     ss:= TMemoryStream.Create;
-    pt:= TPicture.Create;
-    pt.LoadFromStream(stream);
-    BeginPDFPage(pt.Width, pt.Height);
-    ri:= pt.Bitmap.RawImage;
+    BeginPDFPage(im.Width, im.Height);
 
-    cs:= TCompressionStream.Create(Tcompressionlevel.clMax, ss);
-    for i:= 0 to (ri.DataSize div 4)-1 do
+    Swap(im.Bits, im.Width*im.Height);
+
+   { for i:= 0 to im.Width*im.Height-1 do
     begin
-      p:= ri.Data+i*4;
+      p:= im.Bits+i*3;
       tmp:= Byte(p^);
       Byte(p^):= Byte((p+2)^);
       Byte((p+2)^):= tmp;
-      cs.Write(p^, 3);
-    end;
+    end; }
+
+    cs:= TCompressionStream.Create(TCompressionLevel.clMax, ss);
+    cs.Write(im.Bits^, im.Width*im.Height*3);
     cs.Free;
 
     FPageInfos[FCurrentPage].imgStream:= TMemoryStream.Create;
     ss.SaveToStream(FPageInfos[FCurrentPage].imgStream);
 
     FPageInfos[FCurrentPage].cs     := 'DeviceRGB';
-    FPageInfos[FCurrentPage].fWidth := pt.Width;
-    FPageInfos[FCurrentPage].fHeight:= pt.Height;
+    FPageInfos[FCurrentPage].fWidth := im.Width;
+    FPageInfos[FCurrentPage].fHeight:= im.Height;
     FPageInfos[FCurrentPage].bpc    := 8;
     FPageInfos[FCurrentPage].f      := 'FlateDecode';
 
-    PDFWrite('q ' + FloatToStr(pt.Width) + ' 0 0 ' + FloatToStr(pt.Height) +
-      ' 0 -' + FloatToStr(pt.Height) + ' cm /I' +
+    PDFWrite('q ' + FloatToStr(im.Width) + ' 0 0 ' + FloatToStr(im.Height) +
+      ' 0 -' + FloatToStr(im.Height) + ' cm /I' +
       IntToStr(FCurrentPage) + ' Do Q');
   finally
     stream.Free;
-    pt.Free;
     ss.Free;
+    FreeImage(im);
     EndPDFPage;
   end;
 end;
@@ -345,6 +360,8 @@ var
   stream: TFileStreamUTF8;
   jw    : TFPWriterJPEG;
   im    : TFPMemoryImage;
+  ms    : TMemoryStream;
+  imd   : TImageData;
   ext   : string;
 begin
   ext:= StringReplace(UpperCase(ExtractFileExt(AName)), '.', '', [rfReplaceAll]);
@@ -355,7 +372,20 @@ begin
     jw:= TFPWriterJPEG.Create;
     jw.CompressionQuality:= FCompressionQuality;
     stream:= TFileStreamUTF8.Create(AName, fmOpenRead);
-    im.LoadFromStream(stream);
+
+
+    if (ext = 'JPG') OR (ext = 'JPEG') then
+    begin
+      ms:= TMemoryStream.Create;
+      LoadImageFromStream(stream, imd);
+      ConvertImage(imd, ifR8G8B8);
+      SaveImageToStream('jpg', ms, imd);
+      FreeImage(imd);
+      im.LoadFromStream(ms);
+      ms.Free;
+    end
+    else
+      im.LoadFromStream(stream);
 
     BeginPDFPage(im.Width, im.Height);
 

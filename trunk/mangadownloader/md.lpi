@@ -155,8 +155,9 @@
       <Filename Value="fmd"/>
     </Target>
     <SearchPaths>
-      <IncludeFiles Value="$(ProjOutDir)"/>
-      <OtherUnitFiles Value="E:\sdks\lazcomp\synapse\source\;..\..\trunk\baseunits;..\..\trunk\baseunits\animatedgifs;..\..\trunk\baseunits\fasthtmlparser;..\..\trunk\baseunits\fpdf"/>
+      <IncludeFiles Value="$(ProjOutDir);..\..\trunk\3rd\Imaging\Source;..\..\trunk\3rd\Imaging\Source\ZLib;..\..\trunk\3rd\Imaging\Source\JpegLib"/>
+      <Libraries Value="..\..\trunk\3rd\Imaging\Extras\Extensions\J2KObjects"/>
+      <OtherUnitFiles Value="E:\sdks\lazcomp\synapse\source\;..\..\trunk\baseunits;..\..\trunk\baseunits\animatedgifs;..\..\trunk\baseunits\fasthtmlparser;..\..\trunk\3rd\Imaging\Source;..\..\trunk\3rd\Imaging\Source\ZLib;..\..\trunk\3rd\Imaging\Source\JpegLib;..\..\trunk\3rd\Imaging\Extras\Extensions"/>
       <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
     <CodeGeneration>

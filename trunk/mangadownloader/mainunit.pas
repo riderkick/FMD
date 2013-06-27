@@ -1,7 +1,7 @@
 {
         File: mainunit.pas
         License: GPLv2
-        This unit is part of Free Manga Downloader
+        This unit is a part of Free Manga Downloader
 }
 
 unit mainunit;
@@ -1757,7 +1757,7 @@ procedure TMainForm.pcMainChange(Sender: TObject);
     cbOptionGenerateMangaFolderName.Checked:= options.ReadBool('saveto', 'GenMangaName', TRUE);
     cbOptionAutoNumberChapter.Checked:= options.ReadBool('saveto', 'AutoNumberChapter', TRUE);
     OptionAutoNumberChapterChecked:= cbOptionAutoNumberChapter.Checked;
-    seOptionPDFQuality.Value:= options.ReadInteger('saveto', 'PDFQuality', 100);
+    seOptionPDFQuality.Value:= options.ReadInteger('saveto', 'PDFQuality', 95);
 
     cbOptionAutoCheckFavStartup.Checked:= options.ReadBool('update', 'AutoCheckFavStartup', FALSE);
     seOptionCheckMinutes.Value:= options.ReadInteger('update', 'AutoCheckMinutes', 0);
@@ -2526,7 +2526,7 @@ begin
   cbOptionGenerateChapterName.Checked:= options.ReadBool('saveto', 'GenChapName', FALSE);
   cbOptionGenerateMangaFolderName.Checked:= options.ReadBool('saveto', 'GenMangaName', TRUE);
   cbOptionAutoNumberChapter.Checked:= options.ReadBool('saveto', 'AutoNumberChapter', TRUE);
-  seOptionPDFQuality.Value     := options.ReadInteger('saveto', 'PDFQuality', 100);
+  seOptionPDFQuality.Value     := options.ReadInteger('saveto', 'PDFQuality', 95);
   OptionPDFQuality:= seOptionPDFQuality.Value;
 
   cbOptionAutoCheckUpdate.Checked:= options.ReadBool('update', 'AutoCheckUpdateAtStartup', TRUE);

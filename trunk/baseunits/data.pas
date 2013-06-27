@@ -1,7 +1,7 @@
 {
         File: data.pas
         License: GPLv2
-        This unit is part of Free Manga Downloader
+        This unit is a part of Free Manga Downloader
 }
 
 unit data;
