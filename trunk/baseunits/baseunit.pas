@@ -52,7 +52,8 @@ const
   GenreMeaning: array [0..37] of String =
     ('A work typically depicting fighting, violence, chaos, and fast paced motion.',
      'Contains content that is suitable only for adults. Titles in this category may include prolonged scenes of intense violence and/or graphic sexual content and nudity.',
-     'If a character in the story goes on a trip or along that line, your best bet is that it is an adventure manga. Otherwise, it''s up to your personal prejudice on this case.', 'Comedy',
+     'If a character in the story goes on a trip or along that line, your best bet is that it is an adventure manga. Otherwise, it''s up to your personal prejudice on this case.',
+     'A dramatic work that is light and often humorous or satirical in tone and that usually contains a happy resolution of the thematic conflict.',
      'Fan based work inpspired by official manga/anime.',
      'A work meant to bring on an emotional response, such as instilling sadness or tension.',
      'Possibly the line between hentai and non-hentai, ecchi usually refers to fanservice put in to attract a certain group of fans.',
