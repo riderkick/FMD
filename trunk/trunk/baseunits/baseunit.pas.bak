@@ -37,7 +37,7 @@ const
   FILTER_HIDE           = 0;
   FILTER_SHOW           = 1;
 
-  Genre: array [0..38] of String =
+  Genre: array [0..37] of String =
     ('Action'       , 'Adult'        , 'Adventure'    , 'Comedy',
      'Doujinshi'    , 'Drama'        , 'Ecchi'        , 'Fantasy',
      'Gender Bender', 'Harem'        , 'Hentai'       , 'Historical',
@@ -46,10 +46,10 @@ const
      'Psychological', 'Romance'      , 'School Life'  , 'Sci-fi',
      'Seinen'       , 'Shotacon'     , 'Shoujo'       , 'Shoujo Ai',
      'Shounen'      , 'Shounen Ai'   , 'Slice of Life', 'Smut',
-     'Sports'       , 'Supernatural' , 'Taboo'        , 'Traged',
-     'Yaoi'         , 'Yuri'         , 'Webtoons');
+     'Sports'       , 'Supernatural' , 'Traged'       , 'Yaoi',
+     'Yuri'         , 'Webtoons');
 
-  GenreMeaning: array [0..38] of String =
+  GenreMeaning: array [0..37] of String =
     ('A work typically depicting fighting, violence, chaos, and fast paced motion.',
      'Contains content that is suitable only for adults. Titles in this category may include prolonged scenes of intense violence and/or graphic sexual content and nudity.',
      'If a character in the story goes on a trip or along that line, your best bet is that it is an adventure manga. Otherwise, it''s up to your personal prejudice on this case.', 'Comedy',
@@ -83,7 +83,6 @@ const
      'Deals with series that are considered profane or offensive, particularly with regards to sexual content.',
      'As the name suggests, anything sports related. Baseball, basketball, hockey, soccer, golf, and racing just to name a few.',
      'Usually entails amazing and unexplained powers or events which defy the laws of physics.',
-     '',
      'Contains events resulting in great loss and misfortune.',
      'This work usually involves intimate relationships between men.',
      'This work usually involves intimate relationships between women.',
