@@ -23,10 +23,9 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="mainunit"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="0"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="2353"/>
+        <TopLine Value="2356"/>
         <CursorPos X="29" Y="2362"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
@@ -181,10 +180,11 @@
       <Unit15>
         <Filename Value="..\baseunits\baseunit.pas"/>
         <UnitName Value="baseunit"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="18"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="35"/>
-        <CursorPos X="79" Y="38"/>
+        <TopLine Value="29"/>
+        <CursorPos X="4" Y="45"/>
         <UsageCount Value="106"/>
         <Loaded Value="True"/>
       </Unit15>
