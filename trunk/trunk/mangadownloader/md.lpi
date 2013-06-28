@@ -1,0 +1,196 @@
+<?xml version="1.0"?>
+<CONFIG>
+  <ProjectOptions>
+    <Version Value="9"/>
+    <PathDelim Value="\"/>
+    <General>
+      <SessionStorage Value="InProjectDir"/>
+      <MainUnit Value="0"/>
+      <Title Value="md"/>
+      <ResourceType Value="res"/>
+      <UseXPManifest Value="True"/>
+      <XPManifest>
+        <DpiAware Value="True"/>
+        <ExecutionLevel Value="2"/>
+        <UIAccess Value="True"/>
+      </XPManifest>
+      <Icon Value="0"/>
+    </General>
+    <i18n>
+      <EnableI18N LFM="False"/>
+    </i18n>
+    <VersionInfo>
+      <StringTable ProductVersion=""/>
+    </VersionInfo>
+    <MacroValues Count="1">
+      <Macro1 Name="LCLWidgetType" Value="win32"/>
+    </MacroValues>
+    <BuildModes Count="1">
+      <Item1 Name="Default" Default="True"/>
+      <SharedMatrixOptions Count="1">
+        <Item1 ID="004106748078" Modes="Default" Type="IDEMacro" MacroName="LCLWidgetType" Value="win32"/>
+      </SharedMatrixOptions>
+    </BuildModes>
+    <PublishOptions>
+      <Version Value="2"/>
+      <IncludeFileFilter Value="*.(pas|pp|inc|lfm|lpr|lrs|lpi|lpk|sh|xml)"/>
+      <ExcludeFileFilter Value="*.(bak|ppu|o|so);*~;backup"/>
+    </PublishOptions>
+    <RunParams>
+      <local>
+        <FormatVersion Value="1"/>
+      </local>
+    </RunParams>
+    <RequiredPackages Count="5">
+      <Item1>
+        <PackageName Value="LazActiveX"/>
+      </Item1>
+      <Item2>
+        <PackageName Value="SHDocVwP"/>
+      </Item2>
+      <Item3>
+        <PackageName Value="richmemopackage"/>
+      </Item3>
+      <Item4>
+        <PackageName Value="virtualtreeview_package"/>
+      </Item4>
+      <Item5>
+        <PackageName Value="LCL"/>
+      </Item5>
+    </RequiredPackages>
+    <Units Count="15">
+      <Unit0>
+        <Filename Value="md.lpr"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="md"/>
+      </Unit0>
+      <Unit1>
+        <Filename Value="mainunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="MainForm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="mainunit"/>
+      </Unit1>
+      <Unit2>
+        <Filename Value="data.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="data"/>
+      </Unit2>
+      <Unit3>
+        <Filename Value="..\baseunits\genericlib.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="genericlib"/>
+      </Unit3>
+      <Unit4>
+        <Filename Value="..\baseunits\downloads.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="downloads"/>
+      </Unit4>
+      <Unit5>
+        <Filename Value="..\baseunits\favorites.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="favorites"/>
+      </Unit5>
+      <Unit6>
+        <Filename Value="..\baseunits\zip.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="zip"/>
+      </Unit6>
+      <Unit7>
+        <Filename Value="..\baseunits\updatelist.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="updatelist"/>
+      </Unit7>
+      <Unit8>
+        <Filename Value="unit1.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="Form1"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="Unit1"/>
+      </Unit8>
+      <Unit9>
+        <Filename Value="..\baseunits\subthreads.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="subthreads"/>
+      </Unit9>
+      <Unit10>
+        <Filename Value="logform.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="Log"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="logform"/>
+      </Unit10>
+      <Unit11>
+        <Filename Value="..\baseunits\updatedb.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="updatedb"/>
+      </Unit11>
+      <Unit12>
+        <Filename Value="..\baseunits\silentthreads.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="silentthreads"/>
+      </Unit12>
+      <Unit13>
+        <Filename Value="..\baseunits\buffer.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="buffer"/>
+      </Unit13>
+      <Unit14>
+        <Filename Value="..\baseunits\curlcore.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="curlcore"/>
+      </Unit14>
+    </Units>
+  </ProjectOptions>
+  <CompilerOptions>
+    <Version Value="11"/>
+    <PathDelim Value="\"/>
+    <Target>
+      <Filename Value="fmd"/>
+    </Target>
+    <SearchPaths>
+      <IncludeFiles Value="$(ProjOutDir);..\..\trunk\3rd\Imaging\Source;..\..\trunk\3rd\Imaging\Source\ZLib;..\..\trunk\3rd\Imaging\Source\JpegLib"/>
+      <Libraries Value="..\..\trunk\3rd\Imaging\Extras\Extensions\J2KObjects"/>
+      <OtherUnitFiles Value="E:\sdks\lazcomp\synapse\source\;..\..\trunk\baseunits;..\..\trunk\baseunits\animatedgifs;..\..\trunk\baseunits\fasthtmlparser;..\..\trunk\3rd\Imaging\Source;..\..\trunk\3rd\Imaging\Source\ZLib;..\..\trunk\3rd\Imaging\Source\JpegLib;..\..\trunk\3rd\Imaging\Extras\Extensions"/>
+      <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
+    </SearchPaths>
+    <CodeGeneration>
+      <SmartLinkUnit Value="True"/>
+      <TargetOS Value="win32"/>
+      <Optimizations>
+        <VariablesInRegisters Value="True"/>
+        <OptimizationLevel Value="3"/>
+      </Optimizations>
+    </CodeGeneration>
+    <Linking>
+      <LinkSmart Value="True"/>
+      <Options>
+        <Win32>
+          <GraphicApplication Value="True"/>
+        </Win32>
+      </Options>
+    </Linking>
+    <Other>
+      <CompilerMessages>
+        <MsgFileName Value=""/>
+      </CompilerMessages>
+      <CompilerPath Value="$(CompPath)"/>
+    </Other>
+  </CompilerOptions>
+  <Debugging>
+    <Exceptions Count="3">
+      <Item1>
+        <Name Value="EAbort"/>
+      </Item1>
+      <Item2>
+        <Name Value="ECodetoolError"/>
+      </Item2>
+      <Item3>
+        <Name Value="EFOpenError"/>
+      </Item3>
+    </Exceptions>
+  </Debugging>
+</CONFIG>
