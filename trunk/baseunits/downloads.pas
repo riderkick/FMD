@@ -921,6 +921,7 @@ begin
   end
   else
   if (manager.container.mangaSiteID = KISSMANGA_ID) OR
+     (manager.container.mangaSiteID = BLOGTRUYEN_ID) OR
      (manager.container.mangaSiteID = MANGAPARK_ID) OR
      (manager.container.mangaSiteID = MANGA24H_ID) OR
      (manager.container.mangaSiteID = VNSHARING_ID) OR
@@ -1629,6 +1630,42 @@ var
     l.Free;
   end;
 
+  function GetBlogTruyenLinkPage: Boolean;
+  var
+    isExtrackLink: Boolean = FALSE;
+    s: String;
+    j,
+    i: Cardinal;
+    l: TStringList;
+  begin
+    l:= TStringList.Create;
+    Result:= GetPage(TObject(l),
+                     BLOGTRUYEN_ROOT + URL,
+                     manager.container.manager.retryConnect);
+    parse:= TStringList.Create;
+    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.Exec;
+    Parser.Free;
+    if parse.Count>0 then
+    begin
+      manager.container.pageLinks.Clear;
+      for i:= 0 to parse.Count-1 do
+      begin
+        if NOT (isExtrackLink) AND (Pos('<div id="noidungchuong">', parse.Strings[i]) > 0) then
+          isExtrackLink:= TRUE;
+        if (isExtrackLink) AND (GetTagName(parse.Strings[i]) = 'img') then
+          manager.container.pageLinks.Add(EncodeUrl(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src='))))
+        else
+        if (isExtrackLink) AND (Pos('</div>', parse.Strings[i])>0) then
+          break;
+      end;
+    end;
+    parse.Free;
+    l.Free;
+  end;
+
   function GetTurkcraftLinkPage: Boolean;
   var
     s: String;
@@ -1877,6 +1914,9 @@ begin
   else
   if manager.container.mangaSiteID = TRUYENTRANHTUAN_ID then
     Result:= GetTruyenTranhTuanLinkPage
+  else
+  if manager.container.mangaSiteID = BLOGTRUYEN_ID then
+    Result:= GetBlogTruyenLinkPage
   else
   if (manager.container.mangaSiteID = MANGAEDEN_ID) OR
      (manager.container.mangaSiteID = PERVEDEN_ID) then
