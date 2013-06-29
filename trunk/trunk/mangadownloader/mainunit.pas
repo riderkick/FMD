@@ -1031,6 +1031,13 @@ begin
     SubThread.website:= TURKCRAFT_NAME
   end
   else
+  if Pos(BLOGTRUYEN_ROOT, edURL.Text) > 0 then
+  begin
+    SubThread.link   := edURL.Text;
+    Delete(SubThread.link, 1, Length(BLOGTRUYEN_ROOT));
+    SubThread.website:= BLOGTRUYEN_NAME
+  end
+  else
   if Pos(GEHENTAI_ROOT, edURL.Text) > 0 then
   begin
     SubThread.link   := edURL.Text;
@@ -1408,6 +1415,7 @@ procedure TMainForm.miChapterListCheckSelectedClick(Sender: TObject);
 var
   i: Cardinal;
 begin
+  if clbChapterList.Count = 0 then exit;
   if clbChapterList.MultiSelect then
     for i:= 0 to clbChapterList.Count-1 do
       if clbChapterList.Selected[i] then
@@ -1418,6 +1426,7 @@ procedure TMainForm.miChapterListUncheckSelectedClick(Sender: TObject);
 var
   i: Cardinal;
 begin
+  if clbChapterList.Count = 0 then exit;
   if clbChapterList.MultiSelect then
     for i:= 0 to clbChapterList.Count-1 do
       if clbChapterList.Selected[i] then

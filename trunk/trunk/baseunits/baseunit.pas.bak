@@ -52,7 +52,8 @@ const
   GenreMeaning: array [0..37] of String =
     ('A work typically depicting fighting, violence, chaos, and fast paced motion.',
      'Contains content that is suitable only for adults. Titles in this category may include prolonged scenes of intense violence and/or graphic sexual content and nudity.',
-     'If a character in the story goes on a trip or along that line, your best bet is that it is an adventure manga. Otherwise, it''s up to your personal prejudice on this case.', 'Comedy',
+     'If a character in the story goes on a trip or along that line, your best bet is that it is an adventure manga. Otherwise, it''s up to your personal prejudice on this case.',
+     'A dramatic work that is light and often humorous or satirical in tone and that usually contains a happy resolution of the thematic conflict.',
      'Fan based work inpspired by official manga/anime.',
      'A work meant to bring on an emotional response, such as instilling sadness or tension.',
      'Possibly the line between hentai and non-hentai, ecchi usually refers to fanservice put in to attract a certain group of fans.',
@@ -152,6 +153,7 @@ const
   TURKCRAFT_NAME    = 'Turkcraft';    TURKCRAFT_ID   = 20;
   MANGAVADISI_NAME  = 'MangaVadisi';  MANGAVADISI_ID = 21;
   EATMANGA_NAME     = 'EatManga';     EATMANGA_ID    = 22;
+  BLOGTRUYEN_NAME   = 'BlogTruyen';   BLOGTRUYEN_ID  = 23;
 
   DEFAULT_LIST = ANIMEA_NAME+'!%~'+MANGAFOX_NAME+'!%~'+MANGAHERE_NAME+'!%~'+MANGAINN_NAME+'!%~'+MANGAREADER_NAME+'!%~';
 
@@ -261,6 +263,11 @@ var
 
   EATMANGA_ROOT   : String = 'http://eatmanga.com';
   EATMANGA_BROWSER: String = '/Manga-Scan/';
+
+  BLOGTRUYEN_ROOT      : String = 'http://blogtruyen.com';
+  BLOGTRUYEN_BROWSER   : String = '/danhsach/tatca';
+  BLOGTRUYEN_JS_BROWSER: String = '/partialDanhSach/listtruyen/';
+  BLOGTRUYEN_POST_FORM : String = 'listOrCate=list&orderBy=title&key=tatca&page=';
 
   UPDATE_URL      : String = 'http://akarin.byethost5.com/fmd/';
 
@@ -425,7 +432,7 @@ function  PrepareSummaryForHint(const source: String):  String;
 // VI: Lấy webcode từ 1 URL
 function  gehGetPage(var output: TObject; URL: String; const Reconnect: Cardinal; const lURL: String = ''): Boolean;
 function  bttGetPage(var output: TObject; URL: String; const Reconnect: Cardinal): Boolean;
-function  GetPage(var output: TObject; URL: String; const Reconnect: Cardinal): Boolean;
+function  GetPage(var output: TObject; URL: String; const Reconnect: Cardinal; const isByPassHTTP: Boolean = FALSE): Boolean;
 function  SavePage(URL: String;  const Path, name: String; const Reconnect: Cardinal): Boolean;
 
 procedure QuickSortData(var merge: TStringList);
@@ -678,7 +685,9 @@ begin
   else
   if name = MANGAVADISI_NAME then Result:= MANGAVADISI_ID
   else
-  if name = EATMANGA_NAME then Result:= EATMANGA_ID;
+  if name = EATMANGA_NAME then Result:= EATMANGA_ID
+  else
+  if name = BLOGTRUYEN_NAME then Result:= BLOGTRUYEN_ID;
 end;
 
 function  GetMangaSiteName(const ID: Cardinal): String;
@@ -725,7 +734,9 @@ begin
   else
   if ID = MANGAVADISI_ID then Result:= MANGAVADISI_NAME
   else
-  if ID = EATMANGA_ID then Result:= EATMANGA_NAME;
+  if ID = EATMANGA_ID then Result:= EATMANGA_NAME
+  else
+  if ID = BLOGTRUYEN_ID then Result:= BLOGTRUYEN_NAME;
 end;
 
 function  GetMangaDatabaseURL(const name: String): String;
@@ -937,7 +948,9 @@ begin
 
   Result:= StringReplace(source, '&Agrave;', 'À', [rfReplaceAll]);
   Result:= StringReplace(Result, '&Aacute;', 'Á', [rfReplaceAll]);
+  Result:= StringReplace(Result, '&#193;', 'Á', [rfReplaceAll]);
   Result:= StringReplace(Result, '&Acirc;' , 'Â', [rfReplaceAll]);
+  Result:= StringReplace(Result, '&#194;' , 'Â', [rfReplaceAll]);
   Result:= StringReplace(Result, '&Atilde;', 'Ã', [rfReplaceAll]);
 
   Result:= StringReplace(Result, '&Egrave;', 'È', [rfReplaceAll]);
@@ -954,6 +967,7 @@ begin
   Result:= StringReplace(Result, '&Ograve;', 'Ò', [rfReplaceAll]);
   Result:= StringReplace(Result, '&Oacute;', 'Ó', [rfReplaceAll]);
   Result:= StringReplace(Result, '&Ocirc;' , 'Ô', [rfReplaceAll]);
+  Result:= StringReplace(Result, '&#212;' , 'Ô', [rfReplaceAll]);
   Result:= StringReplace(Result, '&Otilde;', 'Õ', [rfReplaceAll]);
 
   Result:= StringReplace(Result, '&Ugrave;', 'Ù', [rfReplaceAll]);
@@ -964,17 +978,24 @@ begin
   // lowercase
 
   Result:= StringReplace(Result, '&agrave;', 'à', [rfReplaceAll]);
+  Result:= StringReplace(Result, '&#224;', 'à', [rfReplaceAll]);
   Result:= StringReplace(Result, '&aacute;', 'á', [rfReplaceAll]);
+  Result:= StringReplace(Result, '&#225;', 'á', [rfReplaceAll]);
   Result:= StringReplace(Result, '&acirc;' , 'â', [rfReplaceAll]);
+  Result:= StringReplace(Result, '&#226;' , 'â', [rfReplaceAll]);
   Result:= StringReplace(Result, '&atilde;', 'ã', [rfReplaceAll]);
+  Result:= StringReplace(Result, '&#227;', 'ã', [rfReplaceAll]);
 
   Result:= StringReplace(Result, '&egrave;', 'è', [rfReplaceAll]);
   Result:= StringReplace(Result, '&eacute;', 'é', [rfReplaceAll]);
   Result:= StringReplace(Result, '&etilde;', 'ẽ', [rfReplaceAll]);
   Result:= StringReplace(Result, '&ecirc;' , 'ê', [rfReplaceAll]);
+  Result:= StringReplace(Result, '&#234;' , 'ê', [rfReplaceAll]);
 
   Result:= StringReplace(Result, '&igrave;', 'ì', [rfReplaceAll]);
+  Result:= StringReplace(Result, '&#236;', 'ì', [rfReplaceAll]);
   Result:= StringReplace(Result, '&iacute;', 'í', [rfReplaceAll]);
+  Result:= StringReplace(Result, '&#237;', 'í', [rfReplaceAll]);
   Result:= StringReplace(Result, '&itilde;', 'ĩ', [rfReplaceAll]);
 
   Result:= StringReplace(Result, '&eth;'   , 'đ', [rfReplaceAll]);
@@ -982,12 +1003,16 @@ begin
   Result:= StringReplace(Result, '&ograve;', 'ò', [rfReplaceAll]);
   Result:= StringReplace(Result, '&oacute;', 'ó', [rfReplaceAll]);
   Result:= StringReplace(Result, '&ocirc;' , 'ô', [rfReplaceAll]);
+  Result:= StringReplace(Result, '&#244;' , 'ô', [rfReplaceAll]);
   Result:= StringReplace(Result, '&otilde;', 'õ', [rfReplaceAll]);
 
   Result:= StringReplace(Result, '&ugrave;', 'ù', [rfReplaceAll]);
+  Result:= StringReplace(Result, '#249;', 'ù', [rfReplaceAll]);
   Result:= StringReplace(Result, '&uacute;', 'ú', [rfReplaceAll]);
+  Result:= StringReplace(Result, '&#250;', 'ú', [rfReplaceAll]);
 
   Result:= StringReplace(Result, '&yacute;', 'ý', [rfReplaceAll]);
+  Result:= StringReplace(Result, '&#253;', 'ý', [rfReplaceAll]);
 end;
 
 procedure  CustomGenres(var output: TStringList; input: String);
@@ -1211,7 +1236,7 @@ begin
   bttHTTP.Clear;
 end;
 
-function  GetPage(var output: TObject; URL: String; const Reconnect: Cardinal): Boolean;
+function  GetPage(var output: TObject; URL: String; const Reconnect: Cardinal; const isByPassHTTP: Boolean = FALSE): Boolean;
 var
   HTTP   : THTTPSend;
   code   : Cardinal;
@@ -1227,6 +1252,8 @@ begin
   end; }
 
   Result:= FALSE;
+  if (isByPassHTTP) AND (Pos('HTTP://', UpCase(URL)) = 0) then
+    exit;
   HTTP:= THTTPSend.Create;
 globReturn:
   HTTP.ProxyHost:= Host;

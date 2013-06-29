@@ -376,7 +376,9 @@ begin
         numberOfThreads:= 1
       else
       if website = EATMANGA_NAME then
-        numberOfThreads:= 1;
+        numberOfThreads:= 1
+      else
+        numberOfThreads:= 4;
 
       {$IFDEF DOWNLOADER}
       while NOT FileExists(DATA_FOLDER+website+DATA_EXT) do

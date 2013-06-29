@@ -11,8 +11,7 @@
       <UseXPManifest Value="True"/>
       <XPManifest>
         <DpiAware Value="True"/>
-        <ExecutionLevel Value="2"/>
-        <UIAccess Value="True"/>
+        <ExecutionLevel Value="1"/>
       </XPManifest>
       <Icon Value="0"/>
     </General>
@@ -166,9 +165,6 @@
       </Optimizations>
     </CodeGeneration>
     <Linking>
-      <Debugging>
-        <GenerateDebugInfo Value="False"/>
-      </Debugging>
       <LinkSmart Value="True"/>
       <Options>
         <Win32>

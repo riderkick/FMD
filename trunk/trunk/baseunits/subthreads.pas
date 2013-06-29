@@ -172,7 +172,7 @@ begin
   end;
 
   cover.Clear;
-  boolResult:= GetPage(TObject(cover), Info.mangaInfo.coverLink, 1);
+  boolResult:= GetPage(TObject(cover), Info.mangaInfo.coverLink, 1, TRUE);
   Synchronize(CallMainFormGetInfos);
   isGetInfos:= FALSE;
 end;
