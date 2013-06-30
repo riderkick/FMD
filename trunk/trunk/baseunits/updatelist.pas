@@ -442,6 +442,7 @@ begin
       end;
 
       if (website <> TURKCRAFT_NAME) AND
+         (website <> MANGAFRAME_NAME) AND
          (website <> MANGAVADISI_NAME) then
       begin
         workPtr:= 0;//mainDataProcess.Data.Count;

@@ -791,6 +791,39 @@ var
     l.Free;
   end;
 
+  function GetMangaFramePageNumber: Boolean;
+  var
+    s   : String;
+    i, j: Cardinal;
+    l   : TStringList;
+  begin
+    l:= TStringList.Create;
+    parse:= TStringList.Create;
+    s:= DecodeUrl(MANGAFRAME_ROOT + URL + '1');
+    Result:= GetPage(TObject(l),
+                     s,
+                     manager.container.manager.retryConnect);
+    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.Exec;
+    Parser.Free;
+    if parse.Count>0 then
+    begin
+      manager.container.pageNumber:= 0;
+      for i:= 0 to parse.Count-1 do
+      begin
+        if (Pos('class="divider"', parse.Strings[i])>0) then
+        begin
+          s:= parse.Strings[i-8];
+          manager.container.pageNumber:= StrToInt(GetString(s, '/page/', '"'));
+        end;
+      end;
+    end;
+    parse.Free;
+    l.Free;
+  end;
+
   function GetMangaEdenPageNumber: Boolean;
   var
     s   : String;
@@ -906,6 +939,9 @@ begin
   else
   if manager.container.mangaSiteID = MANGAVADISI_ID then
     Result:= GetMangaVadisiPageNumber
+  else
+  if manager.container.mangaSiteID = MANGAFRAME_ID then
+    Result:= GetMangaFramePageNumber
   else
   if (manager.container.mangaSiteID = MANGAEDEN_ID) OR
      (manager.container.mangaSiteID = PERVEDEN_ID) then
@@ -1730,6 +1766,38 @@ var
     l.Free;
   end;
 
+  function GetMangaFrameLinkPage: Boolean;
+  var
+    s: String;
+    j,
+    i: Cardinal;
+    l: TStringList;
+  begin
+    l:= TStringList.Create;
+    s:= DecodeUrl(MANGAFRAME_ROOT + URL + IntToStr(workPtr+1));
+    Result:= GetPage(TObject(l),
+                     s,
+                     manager.container.manager.retryConnect);
+    parse:= TStringList.Create;
+    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.Exec;
+    Parser.Free;
+
+    if parse.Count>0 then
+    begin
+      for i:= 0 to parse.Count-1 do
+        if (Pos('class="open"', parse.Strings[i])>0) then
+        begin
+          manager.container.pageLinks.Strings[workPtr]:= EncodeURL(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src=')));
+          break;
+        end;
+    end;
+    parse.Free;
+    l.Free;
+  end;
+
   function GetMangaTradersLinkPage: Boolean;
   var
     s: String;
@@ -1911,6 +1979,9 @@ begin
   else
   if manager.container.mangaSiteID = MANGAVADISI_ID then
     Result:= GetMangaVadisiLinkPage
+  else
+  if manager.container.mangaSiteID = MANGAFRAME_ID then
+    Result:= GetMangaFrameLinkPage
   else
   if manager.container.mangaSiteID = TRUYENTRANHTUAN_ID then
     Result:= GetTruyenTranhTuanLinkPage

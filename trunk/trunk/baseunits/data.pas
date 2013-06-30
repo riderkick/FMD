@@ -1910,7 +1910,7 @@ var
     source.Free;
   end;
 
-  // get name and link of the manga from Turkcraft
+  // get name and link of the manga from MangaVadisi
   function   MangaVadisiGetNameAndLink: Byte;
   var
     tmp: Integer;
@@ -1943,6 +1943,46 @@ var
         s:= StringFilter(TrimLeft(TrimRight(parse.Strings[i+1])));
         names.Add(HTMLEntitiesFilter(s));
         s:= GetAttributeValue(GetTagAttribute(parse.Strings[i], 'value='));
+        links.Add(s);
+      end;
+    end;
+    source.Free;
+  end;
+
+  // get name and link of the manga from Mangaframe
+  function   MangaframeGetNameAndLink: Byte;
+  var
+    tmp: Integer;
+    i: Cardinal;
+    s: String;
+  begin
+    Result:= INFORMATION_NOT_FOUND;
+    if NOT GetPage(TObject(source), MANGAFRAME_ROOT + MANGAFRAME_BROWSER, 0) then
+    begin
+      Result:= NET_PROBLEM;
+      source.Free;
+      exit;
+    end;
+    parse.Clear;
+    Parser:= TjsFastHTMLParser.Create(PChar(source.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.Exec;
+    Parser.Free;
+    if parse.Count=0 then
+    begin
+      source.Free;
+      exit;
+    end;
+    for i:= 0 to parse.Count-1 do
+    begin
+      if (Pos('class="title"', parse.Strings[i]) > 0) AND
+         (Pos('class="group"', parse.Strings[i-1]) > 0) then
+      begin
+        Result:= NO_ERROR;
+        s:= StringFilter(GetAttributeValue(GetTagAttribute(parse.Strings[i+1], 'title=')));
+        names.Add(HTMLEntitiesFilter(s));
+        s:= StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i+1], 'href=')), MANGAFRAME_ROOT, '', []);
         links.Add(s);
       end;
     end;
@@ -2219,11 +2259,14 @@ begin
   if website = MANGAVADISI_NAME then
     Result:= MangaVadisiGetNameAndLink
   else
+  if website = Mangaframe_NAME then
+    Result:= MangaframeGetNameAndLink
+  else
   if website = GEHENTAI_NAME then
     Result:= GEHentaiGetNameAndLink
   else
   if website = TRUYEN18_NAME then
-    Result:= Truyen18GetNameAndLink  ;
+    Result:= Truyen18GetNameAndLink;
 end;
 
 function    TMangaInformation.GetInfoFromURL(const website, URL: String; const Reconnect: Cardinal): Byte;
@@ -4828,6 +4871,76 @@ begin
   Result:= NO_ERROR;
 end;
 
+// get manga infos from Mangaframe site
+function   GetMangaframeInfoFromURL: Byte;
+var
+  s: String;
+  isExtractChapter: Boolean = FALSE;
+  i, j: Cardinal;
+begin
+  mangaInfo.url:= MANGAFRAME_ROOT + URL;
+  if NOT GetPage(TObject(source), mangaInfo.url, Reconnect) then
+  begin
+    Result:= NET_PROBLEM;
+    source.Free;
+    exit;
+  end;
+
+  // parsing the HTML source
+  parse.Clear;
+  Parser:= TjsFastHTMLParser.Create(PChar(source.Text));
+  Parser.OnFoundTag := OnTag;
+  Parser.OnFoundText:= OnText;
+  Parser.Exec;
+
+  Parser.Free;
+  source.Free;
+
+  mangaInfo.website:= MANGAFRAME_NAME;
+  mangaInfo.status:= '1';
+  mangaInfo.coverLink:= '';
+  mangaInfo.summary:= '';
+  mangaInfo.authors:= '';
+  mangaInfo.artists:= '';
+  mangaInfo.genres:= '';
+
+  // using parser (cover link, summary, chapter name and link)
+  if parse.Count=0 then exit;
+  for i:= 0 to parse.Count-1 do
+  begin
+    // get chapter name and links
+    if (Pos('<div class="list">', parse.Strings[i])>0) then
+      isExtractChapter:= TRUE;
+
+   { if (isExtractChapter) AND (Pos('</select>', parse.Strings[i])>0) then
+      break; }
+
+    if (isExtractChapter) AND
+       (Pos('<div class="title">', parse.Strings[i])>0) AND
+       (Pos('</div>', parse.Strings[i+2])=0) then
+    begin
+      Inc(mangaInfo.numChapter);
+      s:= StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i+1], 'href=')), MANGAFRAME_ROOT, '', []) + 'page/';
+      mangaInfo.chapterLinks.Add(s);
+      s:= RemoveSymbols(TrimLeft(TrimRight(parse.Strings[i+2])));
+      mangaInfo.chapterName.Add(StringFilter(StringFilter(HTMLEntitiesFilter(s))));
+    end;
+  end;
+
+  // Since chapter name and link are inverted, we need to invert them
+  if mangainfo.ChapterLinks.Count > 1 then
+  begin
+    i:= 0; j:= mangainfo.ChapterLinks.Count - 1;
+    while (i<j) do
+    begin
+      mangainfo.ChapterName.Exchange(i, j);
+      mangainfo.chapterLinks.Exchange(i, j);
+      Inc(i); Dec(j);
+    end;
+  end;
+  Result:= NO_ERROR;
+end;
+
 // get manga infos from blogtruyen site
 function   GetBlogTruyenInfoFromURL: Byte;
 var
@@ -5098,6 +5211,9 @@ begin
   else
   if website = TURKCRAFT_NAME then
     Result:= GetTurkcraftInfoFromURL
+  else
+  if website = MANGAFRAME_NAME then
+    Result:= GetMangaframeInfoFromURL
   else
   if website = MANGAVADISI_NAME then
     Result:= GetMangaVadisiInfoFromURL

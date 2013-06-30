@@ -154,6 +154,7 @@ const
   MANGAVADISI_NAME  = 'MangaVadisi';  MANGAVADISI_ID = 21;
   EATMANGA_NAME     = 'EatManga';     EATMANGA_ID    = 22;
   BLOGTRUYEN_NAME   = 'BlogTruyen';   BLOGTRUYEN_ID  = 23;
+  MANGAFRAME_NAME   = 'MangaFrame';   MANGAFRAME_ID  = 24;
 
   DEFAULT_LIST = ANIMEA_NAME+'!%~'+MANGAFOX_NAME+'!%~'+MANGAHERE_NAME+'!%~'+MANGAINN_NAME+'!%~'+MANGAREADER_NAME+'!%~';
 
@@ -261,6 +262,9 @@ var
   MANGAVADISI_ROOT   : String = 'http://www.mangavadisi.net';
   MANGAVADISI_BROWSER: String = '/hemenoku/';
 
+  MANGAFRAME_ROOT   : String = 'http://www.mngfrm.com';
+  MANGAFRAME_BROWSER: String = '/Okuyucu/reader/list/';
+
   EATMANGA_ROOT   : String = 'http://eatmanga.com';
   EATMANGA_BROWSER: String = '/Manga-Scan/';
 
@@ -322,6 +326,7 @@ var
 
   OptionCheckMinutes: Cardinal = 0;
   OptionPDFQuality  : Cardinal = 95;
+  OptionMaxRetry    : Cardinal = 0;
 
   OptionBatotoUseIEChecked: Boolean = TRUE;
   OptionAutoNumberChapterChecked: Boolean = TRUE;
@@ -687,7 +692,9 @@ begin
   else
   if name = EATMANGA_NAME then Result:= EATMANGA_ID
   else
-  if name = BLOGTRUYEN_NAME then Result:= BLOGTRUYEN_ID;
+  if name = BLOGTRUYEN_NAME then Result:= BLOGTRUYEN_ID
+  else
+  if name = MANGAFRAME_NAME then Result:= MANGAFRAME_ID;
 end;
 
 function  GetMangaSiteName(const ID: Cardinal): String;
@@ -736,7 +743,9 @@ begin
   else
   if ID = EATMANGA_ID then Result:= EATMANGA_NAME
   else
-  if ID = BLOGTRUYEN_ID then Result:= BLOGTRUYEN_NAME;
+  if ID = BLOGTRUYEN_ID then Result:= BLOGTRUYEN_NAME
+  else
+  if ID = MANGAFRAME_ID then Result:= MANGAFRAME_NAME;
 end;
 
 function  GetMangaDatabaseURL(const name: String): String;
@@ -947,6 +956,7 @@ begin
   // uppercase
 
   Result:= StringReplace(source, '&Agrave;', 'À', [rfReplaceAll]);
+  Result:= StringReplace(Result, '&#192;', 'À', [rfReplaceAll]);
   Result:= StringReplace(Result, '&Aacute;', 'Á', [rfReplaceAll]);
   Result:= StringReplace(Result, '&#193;', 'Á', [rfReplaceAll]);
   Result:= StringReplace(Result, '&Acirc;' , 'Â', [rfReplaceAll]);
@@ -956,6 +966,7 @@ begin
   Result:= StringReplace(Result, '&Egrave;', 'È', [rfReplaceAll]);
   Result:= StringReplace(Result, '&Eacute;', 'É', [rfReplaceAll]);
   Result:= StringReplace(Result, '&Ecirc;' , 'Ê', [rfReplaceAll]);
+  Result:= StringReplace(Result, '&#202;' , 'Ê', [rfReplaceAll]);
   Result:= StringReplace(Result, '&Etilde;', 'Ẽ', [rfReplaceAll]);
 
   Result:= StringReplace(Result, '&Igrave;', 'Ì', [rfReplaceAll]);
@@ -974,6 +985,7 @@ begin
   Result:= StringReplace(Result, '&Uacute;', 'Ú', [rfReplaceAll]);
 
   Result:= StringReplace(Result, '&Yacute;', 'Ý', [rfReplaceAll]);
+  Result:= StringReplace(Result, '&#221;', 'Ý', [rfReplaceAll]);
 
   // lowercase
 
@@ -987,7 +999,9 @@ begin
   Result:= StringReplace(Result, '&#227;', 'ã', [rfReplaceAll]);
 
   Result:= StringReplace(Result, '&egrave;', 'è', [rfReplaceAll]);
+  Result:= StringReplace(Result, '&#232;', 'è', [rfReplaceAll]);
   Result:= StringReplace(Result, '&eacute;', 'é', [rfReplaceAll]);
+  Result:= StringReplace(Result, '&#233;', 'é', [rfReplaceAll]);
   Result:= StringReplace(Result, '&etilde;', 'ẽ', [rfReplaceAll]);
   Result:= StringReplace(Result, '&ecirc;' , 'ê', [rfReplaceAll]);
   Result:= StringReplace(Result, '&#234;' , 'ê', [rfReplaceAll]);
@@ -1001,10 +1015,13 @@ begin
   Result:= StringReplace(Result, '&eth;'   , 'đ', [rfReplaceAll]);
 
   Result:= StringReplace(Result, '&ograve;', 'ò', [rfReplaceAll]);
+  Result:= StringReplace(Result, '&#242;', 'ò', [rfReplaceAll]);
   Result:= StringReplace(Result, '&oacute;', 'ó', [rfReplaceAll]);
+  Result:= StringReplace(Result, '&#243;', 'ó', [rfReplaceAll]);
   Result:= StringReplace(Result, '&ocirc;' , 'ô', [rfReplaceAll]);
   Result:= StringReplace(Result, '&#244;' , 'ô', [rfReplaceAll]);
   Result:= StringReplace(Result, '&otilde;', 'õ', [rfReplaceAll]);
+  Result:= StringReplace(Result, '&#245;', 'õ', [rfReplaceAll]);
 
   Result:= StringReplace(Result, '&ugrave;', 'ù', [rfReplaceAll]);
   Result:= StringReplace(Result, '&#249;', 'ù', [rfReplaceAll]);
