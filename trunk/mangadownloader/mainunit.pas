@@ -2183,6 +2183,7 @@ begin
   options.WriteInteger('connections', 'NumberOfTasks', seOptionMaxParallel.Value);
   options.WriteInteger('connections', 'NumberOfThreadsPerTask', seOptionMaxThread.Value);
   options.WriteInteger('connections', 'Retry', seOptionMaxRetry.Value);
+  DLManager.retryConnect:= seOptionMaxRetry.Value;
   options.WriteBool   ('connections', 'UseProxy', cbOptionUseProxy.Checked);
   options.WriteString ('connections', 'Host', edOptionHost.Text);
   options.WriteString ('connections', 'Pass', edOptionPass.Text);
