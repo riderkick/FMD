@@ -161,7 +161,6 @@
       <TargetOS Value="win32"/>
       <Optimizations>
         <VariablesInRegisters Value="True"/>
-        <OptimizationLevel Value="3"/>
       </Optimizations>
     </CodeGeneration>
     <Linking>

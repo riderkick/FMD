@@ -155,6 +155,7 @@ const
   EATMANGA_NAME     = 'EatManga';     EATMANGA_ID    = 22;
   BLOGTRUYEN_NAME   = 'BlogTruyen';   BLOGTRUYEN_ID  = 23;
   MANGAFRAME_NAME   = 'MangaFrame';   MANGAFRAME_ID  = 24;
+  STARNAKA_NAME     = 'Starnaka';     STARNAKA_ID    = 25;
 
   DEFAULT_LIST = ANIMEA_NAME+'!%~'+MANGAFOX_NAME+'!%~'+MANGAHERE_NAME+'!%~'+MANGAINN_NAME+'!%~'+MANGAREADER_NAME+'!%~';
 
@@ -267,6 +268,9 @@ var
 
   EATMANGA_ROOT   : String = 'http://eatmanga.com';
   EATMANGA_BROWSER: String = '/Manga-Scan/';
+
+  STARNAKA_ROOT   : String = 'http://starkana.com';
+  STARNAKA_BROWSER: String = '/manga/list';
 
   BLOGTRUYEN_ROOT      : String = 'http://blogtruyen.com';
   BLOGTRUYEN_BROWSER   : String = '/danhsach/tatca';
@@ -694,7 +698,9 @@ begin
   else
   if name = BLOGTRUYEN_NAME then Result:= BLOGTRUYEN_ID
   else
-  if name = MANGAFRAME_NAME then Result:= MANGAFRAME_ID;
+  if name = MANGAFRAME_NAME then Result:= MANGAFRAME_ID
+  else
+  if name = STARNAKA_NAME then Result:= STARNAKA_ID;
 end;
 
 function  GetMangaSiteName(const ID: Cardinal): String;
@@ -745,7 +751,9 @@ begin
   else
   if ID = BLOGTRUYEN_ID then Result:= BLOGTRUYEN_NAME
   else
-  if ID = MANGAFRAME_ID then Result:= MANGAFRAME_NAME;
+  if ID = MANGAFRAME_ID then Result:= MANGAFRAME_NAME
+  else
+  if ID = STARNAKA_ID then Result:= STARNAKA_NAME;
 end;
 
 function  GetMangaDatabaseURL(const name: String): String;

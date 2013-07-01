@@ -614,6 +614,40 @@ var
     l.Free;
   end;
 
+  function GetStarnakaPageNumber: Boolean;
+  var
+    s    : String;
+    i, j : Cardinal;
+    l    : TStringList;
+  begin
+    l:= TStringList.Create;
+    parse:= TStringList.Create;
+    s:= DecodeUrl(STARNAKA_ROOT + URL);
+    Result:= GetPage(TObject(l),
+                     s,
+                     manager.container.manager.retryConnect);
+    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.Exec;
+    Parser.Free;
+    if parse.Count>0 then
+    begin
+      manager.container.pageNumber:= 0;
+      for i:= parse.Count-1 downto 5 do
+      begin
+        if (Pos('</option>', parse.Strings[i])>0) then
+        begin
+          s:= TrimLeft(TrimRight(parse.Strings[i-1]));
+          manager.container.pageNumber:= StrToInt(s);
+          break;
+        end;
+      end;
+    end;
+    parse.Free;
+    l.Free;
+  end;
+
   function GetEatMangaPageNumber: Boolean;
   var
     s    : String;
@@ -927,6 +961,9 @@ begin
   else
   if manager.container.mangaSiteID = MANGATRADERS_ID then
     Result:= GetMangaTradersPageNumber
+  else
+  if manager.container.mangaSiteID = STARNAKA_ID then
+    Result:= GetStarnakaPageNumber
   else
   if manager.container.mangaSiteID = EATMANGA_ID then
     Result:= GetEatMangaPageNumber
@@ -1563,6 +1600,38 @@ var
     l.Free;
   end;
 
+  function GetStarnakaLinkPage: Boolean;
+  var
+    s: String;
+    j,
+    i: Cardinal;
+    l: TStringList;
+  begin
+    l:= TStringList.Create;
+    s:= DecodeUrl(STARNAKA_ROOT + URL + '/' + IntToStr(workPtr+1));
+    Result:= GetPage(TObject(l),
+                     s,
+                     manager.container.manager.retryConnect);
+    parse:= TStringList.Create;
+    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.Exec;
+    Parser.Free;
+
+    if parse.Count>0 then
+    begin
+      for i:= parse.Count-1 downto 5 do
+        if (Pos('style="cursor: pointer;"', parse.Strings[i])>0) then
+        begin
+          manager.container.pageLinks.Strings[workPtr]:= GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src='));
+          break;
+        end;
+    end;
+    parse.Free;
+    l.Free;
+  end;
+
   function GetEatMangaLinkPage: Boolean;
   var
     s: String;
@@ -1967,6 +2036,9 @@ begin
   else
   if manager.container.mangaSiteID = MANGAFOX_ID then
     Result:= GetMangaFoxLinkPage
+  else
+  if manager.container.mangaSiteID = STARNAKA_ID then
+    Result:= GetStarnakaLinkPage
   else
   if manager.container.mangaSiteID = EATMANGA_ID then
     Result:= GetEatMangaLinkPage
