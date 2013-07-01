@@ -761,9 +761,9 @@ begin
       else
       begin
         if NOT cbOptionPathConvert.Checked then
-          s:= RemoveSymbols(TrimLeft(TrimRight(mangaInfo.title)))
+          s:= TrimLeft(TrimRight(mangaInfo.title))
         else
-          s:= UnicodeRemove(RemoveSymbols(TrimLeft(TrimRight(mangaInfo.title))));
+          s:= UnicodeRemove(TrimLeft(TrimRight(mangaInfo.title)));
       end;
 
       if s = '' then
@@ -779,7 +779,7 @@ begin
         end;
       end;
 
-      s:= TrimLeft(TrimRight(s));
+      s:= RemoveSymbols(TrimLeft(TrimRight(s)));
       DLManager.containers.Items[pos].chapterName .Add(s);
       DLManager.containers.Items[pos].chapterLinks.Add(mangaInfo.chapterLinks.Strings[i]);
     end;
@@ -1029,6 +1029,13 @@ begin
     SubThread.link   := edURL.Text;
     Delete(SubThread.link, 1, Length(TURKCRAFT_ROOT));
     SubThread.website:= TURKCRAFT_NAME
+  end
+  else
+  if Pos(MANGAFRAME_ROOT, edURL.Text) > 0 then
+  begin
+    SubThread.link   := edURL.Text;
+    Delete(SubThread.link, 1, Length(MANGAFRAME_ROOT));
+    SubThread.website:= MANGAFRAME_NAME
   end
   else
   if Pos(BLOGTRUYEN_ROOT, edURL.Text) > 0 then
