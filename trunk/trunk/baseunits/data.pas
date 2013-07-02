@@ -2241,9 +2241,9 @@ begin
   if website = MANGAINN_NAME then
     Result:= MangaInnGetNameAndLink
   else
-  if website = OURMANGA_NAME then
+ { if website = OURMANGA_NAME then
     Result:= OurMangaGetNameAndLink
-  else
+  else }
   if website = KISSMANGA_NAME then
     Result:= KissMangaGetNameAndLink
   else
@@ -4571,7 +4571,7 @@ var
   s: String;
   i, j: Cardinal;
 begin
-  mangaInfo.url:= STARNAKA_ROOT + URL;// + '&confirm=yes';
+  mangaInfo.url:= STARNAKA_ROOT + URL + '?mature_confirm=1';
   if NOT GetPage(TObject(source), mangaInfo.url, Reconnect) then
   begin
     Result:= NET_PROBLEM;
@@ -5332,9 +5332,9 @@ begin
   if website = MANGAINN_NAME then
     Result:= GetMangaInnInfoFromURL
   else
-  if website = OURMANGA_NAME then
+ { if website = OURMANGA_NAME then
     Result:= GetOurMangaInfoFromURL
-  else
+  else }
   if website = KISSMANGA_NAME then
     Result:= GetKissMangaInfoFromURL
   else
