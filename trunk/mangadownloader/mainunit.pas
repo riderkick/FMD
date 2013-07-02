@@ -939,13 +939,13 @@ begin
     Delete(SubThread.link, 1, Length(MANGAPARK_ROOT));
     SubThread.website:= MANGAPARK_NAME
   end
-  else
+ { else
   if Pos(OURMANGA_ROOT, edURL.Text) > 0 then
   begin
     SubThread.link   := edURL.Text;
     Delete(SubThread.link, 1, Length(OURMANGA_ROOT));
     SubThread.website:= OURMANGA_NAME
-  end
+  end }
   else
   if Pos(KISSMANGA_ROOT, edURL.Text) > 0 then
   begin
@@ -1008,6 +1008,13 @@ begin
     SubThread.link   := edURL.Text;
     Delete(SubThread.link, 1, Length(TRUYENTRANHTUAN_ROOT));
     SubThread.website:= TRUYENTRANHTUAN_NAME
+  end
+  else
+  if Pos(STARNAKA_ROOT, edURL.Text) > 0 then
+  begin
+    SubThread.link   := edURL.Text;
+    Delete(SubThread.link, 1, Length(STARNAKA_ROOT));
+    SubThread.website:= STARNAKA_NAME
   end
   else
   if Pos(EATMANGA_ROOT, edURL.Text) > 0 then

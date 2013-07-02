@@ -947,9 +947,9 @@ begin
   if manager.container.mangaSiteID = MANGAINN_ID then
     Result:= GetMangaInnPageNumber
   else
-  if manager.container.mangaSiteID = OURMANGA_ID then
+ { if manager.container.mangaSiteID = OURMANGA_ID then
     Result:= GetOurMangaPageNumber
-  else
+  else }
   if manager.container.mangaSiteID = BATOTO_ID then
     Result:= GetBatotoPageNumber
   else
