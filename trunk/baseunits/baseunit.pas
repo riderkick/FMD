@@ -757,9 +757,18 @@ begin
 end;
 
 function  GetMangaDatabaseURL(const name: String): String;
+var
+  i: Byte;
 begin
  // result:= 'http://aarnet.dl.sourceforge.net/project/fmd/FMD/lists/'+name+'.zip';
-  result:= 'http://tenet.dl.sourceforge.net/project/fmd/FMD/lists/'+name+'.zip';
+ // result:= 'http://tenet.dl.sourceforge.net/project/fmd/FMD/lists/'+name+'.zip';
+  i:= Random(2);
+  case i of
+    0: result:= 'http://ufpr.dl.sourceforge.net/project/fmd/FMD/lists/'+name+'.zip';
+    1: result:= 'http://freefr.dl.sourceforge.net/project/fmd/FMD/lists/'+name+'.zip';
+ //   0: result:= 'http://heanet.dl.sourceforge.net/project/fmd/FMD/lists/'+name+'.zip';
+ //   1: result:= 'http://hivelocity.dl.sourceforge.net/project/fmd/FMD/lists/'+name+'.zip';
+  end;
 end;
 
 function  RemoveSymbols(const input: String): String;
