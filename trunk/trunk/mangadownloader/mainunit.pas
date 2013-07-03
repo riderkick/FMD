@@ -440,6 +440,7 @@ procedure TMainForm.FormCreate(Sender: TObject);
 var
   fs: TFileStream;
 begin
+  Randomize;
   isCanRefreshForm:= TRUE;
   silentThreadCount:= 0;
   silentAddToFavThreadCount:= 0;
