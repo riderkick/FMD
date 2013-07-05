@@ -1989,15 +1989,15 @@ var
     source.Free;
   end;
 
-  // get name and link of the manga from Starnaka
-  function   StarnakaGetNameAndLink: Byte;
+  // get name and link of the manga from Starkana
+  function   StarkanaGetNameAndLink: Byte;
   var
     tmp: Integer;
     i: Cardinal;
     s: String;
   begin
     Result:= INFORMATION_NOT_FOUND;
-    if NOT GetPage(TObject(source), STARNAKA_ROOT + STARNAKA_BROWSER, 0) then
+    if NOT GetPage(TObject(source), STARKANA_ROOT + STARKANA_BROWSER, 0) then
     begin
       Result:= NET_PROBLEM;
       source.Free;
@@ -2093,14 +2093,15 @@ var
       source.Free;
       exit;
     end;
-    for i:= parse.Count-1 downto 5 do
+    for i:= 0 to parse.Count-1 do
     begin
-      if (Pos('strong style="font-size:14px;', parse.Strings[i]) > 0) then
+      if (Pos('/manga/', parse.Strings[i]) > 0) then
       begin
         Result:= NO_ERROR;
         s:= StringFilter(TrimLeft(TrimRight(parse.Strings[i+1])));
         names.Add(HTMLEntitiesFilter(s));
-        links.Add('');
+        s:= GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href="'));
+        links.Add(s);
       end;
     end;
     source.Free;
@@ -2274,8 +2275,8 @@ begin
   if website = MANGATRADERS_NAME then
     Result:= MangaTradersGetNameAndLink
   else
-  if website = STARNAKA_NAME then
-    Result:= StarnakaGetNameAndLink
+  if website = STARKANA_NAME then
+    Result:= StarkanaGetNameAndLink
   else
   if website = EATMANGA_NAME then
     Result:= EatMangaGetNameAndLink
@@ -4363,12 +4364,12 @@ end;
 function   GetMangaStreamInfoFromURL: Byte;
 var
   s: String;
-  isExtractChapter: Boolean = FALSE;
+  isExtractChapter: Boolean = TRUE;
   isExtractSummary: Boolean = TRUE;
   isExtractGenres : Boolean = FALSE;
   i, j: Cardinal;
 begin
-  mangaInfo.url:= MANGASTREAM_ROOT + MANGASTREAM_BROWSER;
+  mangaInfo.url:= MANGASTREAM_ROOT + URL;
   if NOT GetPage(TObject(source), mangaInfo.url, Reconnect) then
   begin
     Result:= NET_PROBLEM;
@@ -4398,27 +4399,21 @@ begin
   if parse.Count=0 then exit;
   for i:= 0 to parse.Count-1 do
   begin
-    // allow to get chapter name and links
-    if (NOT isExtractChapter) AND
-       (Pos(mangaInfo.title, parse.Strings[i])>0) AND
-       (Pos('strong style="font-size:14px;', parse.Strings[i-1])>0) then
-      isExtractChapter:= TRUE;
-
-    // doo not allow to get chapter name and links
+    // do not allow to get chapter name and links
     if (isExtractChapter) AND
-       (Pos('strong style="font-size:14px;', parse.Strings[i])>0) AND
-       (Pos(mangaInfo.title, parse.Strings[i+1])=0) then
+       (Pos('</table>', parse.Strings[i])>0) then
       isExtractChapter:= FALSE;
 
     // get chapter name and links
     if (isExtractChapter) AND
-       (Pos('/read/', parse.Strings[i])>0) then
+       (Pos('<td>', parse.Strings[i])>0) AND
+       (Pos('</td>', parse.Strings[i+4])>0) then
     begin
       Inc(mangaInfo.numChapter);
-      s:= GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href='));
+      s:= StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i+1], 'href=')), MANGASTREAM_ROOT, '', []);
       Delete(s, Length(s)-1, 2);
       mangaInfo.chapterLinks.Add(s);
-      s:= RemoveSymbols(TrimLeft(TrimRight(parse.Strings[i+1])));
+      s:= RemoveSymbols(TrimLeft(TrimRight(parse.Strings[i+2])));
       mangaInfo.chapterName.Add(StringFilter(StringFilter(HTMLEntitiesFilter(s))));
     end;
   end;
@@ -4563,15 +4558,15 @@ begin
   Result:= NO_ERROR;
 end;
 
-// get manga infos from starnaka site
-function   GetStarnakaInfoFromURL: Byte;
+// get manga infos from Starkana site
+function   GetStarkanaInfoFromURL: Byte;
 var
   isExtractGenres : Boolean = FALSE;
   isExtractChapter: Boolean = FALSE;
   s: String;
   i, j: Cardinal;
 begin
-  mangaInfo.url:= STARNAKA_ROOT + URL + '?mature_confirm=1';
+  mangaInfo.url:= STARKANA_ROOT + URL + '?mature_confirm=1';
   if NOT GetPage(TObject(source), mangaInfo.url, Reconnect) then
   begin
     Result:= NET_PROBLEM;
@@ -4588,7 +4583,7 @@ begin
 
   Parser.Free;
   source.Free;
-  mangaInfo.website:= STARNAKA_NAME;
+  mangaInfo.website:= STARKANA_NAME;
   // using parser (cover link, summary, chapter name and link)
   if parse.Count=0 then exit;
   for i:= 0 to parse.Count-1 do
@@ -5365,8 +5360,8 @@ begin
   if website = MANGATRADERS_NAME then
     Result:= GetMangaTradersInfoFromURL
   else
-  if website = STARNAKA_NAME then
-    Result:= GetStarnakaInfoFromURL
+  if website = STARKANA_NAME then
+    Result:= GetStarkanaInfoFromURL
   else
   if website = EATMANGA_NAME then
     Result:= GetEatMangaInfoFromURL
