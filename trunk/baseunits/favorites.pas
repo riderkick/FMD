@@ -388,7 +388,7 @@ begin
         // generate download link
         for j:= currentChapter to newChapter-1 do
         begin
-          s:= '';
+         { s:= '';
           if MainForm.cbOptionAutoNumberChapter.Checked then
             s:= Format('%.4d', [j+1]);
           if MainForm.cbOptionGenerateChapterName.Checked then
@@ -403,9 +403,59 @@ begin
             else
               s:= s + ' - ' + s1;
           end;
+          if s='' then
+            s:= Format('%.4d', [j+1]);}
+
+          if (mangaInfo[i].website <> GEHENTAI_NAME) AND
+             (mangaInfo[i].website <> MANGASTREAM_NAME) AND
+             (mangaInfo[i].website <> FAKKU_NAME) then
+          begin
+            s:= '';
+            if MainForm.cbOptionAutoNumberChapter.Checked then
+              s:= Format('%.4d', [j+1]);
+
+            if MainForm.cbOptionGenerateChapterName.Checked then
+            begin
+              if MainForm.cbOptionPathConvert.Checked then
+                s1:= Format('%s', [UnicodeRemove(mangaInfo[i].chapterName.Strings[j])])
+              else
+                s1:= Format('%s', [mangaInfo[i].chapterName.Strings[j]]);
+
+              if s = '' then
+                s:= s1
+              else
+                s:= s + ' - ' + s1;
+            end;
+          end
+          else
+          if (mangaInfo[i].website = MANGASTREAM_NAME) then
+          begin
+            if MainForm.cbOptionPathConvert.Checked then
+              s:= Format('%s', [UnicodeRemove(mangaInfo[i].chapterName.Strings[j])])
+            else
+              s:= Format('%s', [mangaInfo[i].chapterName.Strings[j]]);
+          end
+          else
+          begin
+            if NOT MainForm.cbOptionPathConvert.Checked then
+              s:= TrimLeft(TrimRight(mangaInfo[i].title))
+            else
+              s:= UnicodeRemove(TrimLeft(TrimRight(mangaInfo[i].title)));
+          end;
 
           if s='' then
-            s:= Format('%.4d', [j+1]);
+          begin
+            if (mangaInfo[i].website <> MANGASTREAM_NAME) then
+              s:= Format('%.4d', [j+1])
+            else
+            begin
+              if MainForm.cbOptionPathConvert.Checked then
+                s:= Format('%s', [UnicodeRemove(mangaInfo[i].chapterName.Strings[j])])
+              else
+                s:= Format('%s', [mangaInfo[i].chapterName.Strings[j]]);
+            end;
+          end;
+
           DLManager.containers.Items[pos].chapterName .Add(s);
           DLManager.containers.Items[pos].chapterLinks.Add(mangaInfo[i].chapterLinks.Strings[j]);
         end;
