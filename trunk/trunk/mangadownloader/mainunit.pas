@@ -1011,11 +1011,11 @@ begin
     SubThread.website:= TRUYENTRANHTUAN_NAME
   end
   else
-  if Pos(STARNAKA_ROOT, edURL.Text) > 0 then
+  if Pos(STARKANA_ROOT, edURL.Text) > 0 then
   begin
     SubThread.link   := edURL.Text;
-    Delete(SubThread.link, 1, Length(STARNAKA_ROOT));
-    SubThread.website:= STARNAKA_NAME
+    Delete(SubThread.link, 1, Length(STARKANA_ROOT));
+    SubThread.website:= STARKANA_NAME
   end
   else
   if Pos(EATMANGA_ROOT, edURL.Text) > 0 then
