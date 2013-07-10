@@ -756,19 +756,27 @@ begin
   if ID = STARKANA_ID then Result:= STARKANA_NAME;
 end;
 
+// bad coding.. but this is how FMD works
 function  GetMangaDatabaseURL(const name: String): String;
 var
   i: Byte;
 begin
  // result:= 'http://aarnet.dl.sourceforge.net/project/fmd/FMD/lists/'+name+'.zip';
  // result:= 'http://tenet.dl.sourceforge.net/project/fmd/FMD/lists/'+name+'.zip';
-  i:= Random(2);
-  case i of
-    0: result:= 'http://ufpr.dl.sourceforge.net/project/fmd/FMD/lists/'+name+'.zip';
-    1: result:= 'http://freefr.dl.sourceforge.net/project/fmd/FMD/lists/'+name+'.zip';
- //   0: result:= 'http://heanet.dl.sourceforge.net/project/fmd/FMD/lists/'+name+'.zip';
- //   1: result:= 'http://hivelocity.dl.sourceforge.net/project/fmd/FMD/lists/'+name+'.zip';
-  end;
+  if (Pos(BLOGTRUYEN_NAME, Name) > 0) AND
+     (Pos(MANGAFRAME_NAME, Name) > 0) then
+  begin
+    i:= Random(2);
+    case i of
+      0: result:= 'http://ufpr.dl.sourceforge.net/project/fmd/FMD/lists/'+name+'.zip';
+      1: result:= 'http://freefr.dl.sourceforge.net/project/fmd/FMD/lists/'+name+'.zip';
+    end;
+  end
+  else
+  if (Pos(STARKANA_NAME, Name) > 0) then
+    result:= 'http://ufpr.dl.sourceforge.net/project/fmd/FMD/lists/'+name+'.zip'
+  else
+    result:= 'http://tenet.dl.sourceforge.net/project/fmd/FMD/lists/'+name+'.zip';
 end;
 
 function  RemoveSymbols(const input: String): String;
@@ -1302,7 +1310,7 @@ globReturn:
   begin
     HTTP.MimeType:= 'Content-Type: application/x-www-form-urlencoded';
     HTTP.KeepAlive:= TRUE;
-    HTTP.KeepAliveTimeout:= 1000;
+    HTTP.KeepAliveTimeout:= 100000;
   end;
 
   while (NOT HTTP.HTTPMethod('GET', URL)) OR
