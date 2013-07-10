@@ -1465,7 +1465,7 @@ var
            (Pos('dragon-and-weed-origins-the-fallen-r8180', parse.Strings[i]) = 0) then
         begin
           names.Add(s);
-          s:= GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href='))+'/';
+          s:= GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href='));
           links.Add(StringReplace(s, BATOTO_ROOT, '', []));
         end;
       end;
@@ -3063,7 +3063,7 @@ reload:
     begin
       j:= i+3;
       mangaInfo.summary:= '';
-      while (Pos(IEUp('</tr>'), parse.Strings[j])=0) AND (j < parse.Count-1) do
+      while (Pos(IEUp('</td>'), parse.Strings[j])=0) AND (j < parse.Count-1) do
       begin
         s:= parse.Strings[j];
         if s[1] <> '<' then
@@ -3126,7 +3126,8 @@ reload:
     if isExtractGenres then
     begin
       s:= parse.Strings[i];
-      if s[1] <> '<' then
+      if (s <> '') AND
+         (s[1] <> '<') then
         for j:= 0 to 37 do
           if Pos(LowerCase(Genre[j]), LowerCase(parse.Strings[i]))<>0 then
             mangaInfo.genres:= mangaInfo.genres+(Genre[j]+', ');

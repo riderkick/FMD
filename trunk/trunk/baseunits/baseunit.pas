@@ -332,7 +332,8 @@ var
   OptionPDFQuality  : Cardinal = 95;
   OptionMaxRetry    : Cardinal = 0;
 
-  OptionBatotoUseIEChecked: Boolean = TRUE;
+  OptionBatotoUseIEChecked: Boolean = FALSE;
+  OptionEnableLoadCover: Boolean = FALSE;
   OptionAutoNumberChapterChecked: Boolean = TRUE;
   OptionAutoCheckFavStartup: Boolean = FALSE;
 

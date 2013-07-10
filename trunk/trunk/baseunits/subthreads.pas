@@ -172,7 +172,10 @@ begin
   end;
 
   cover.Clear;
-  boolResult:= GetPage(TObject(cover), Info.mangaInfo.coverLink, 1, TRUE);
+  if OptionEnableLoadCover then
+    boolResult:= GetPage(TObject(cover), Info.mangaInfo.coverLink, 1, TRUE)
+  else
+    boolResult:= FALSE;
   Synchronize(CallMainFormGetInfos);
   isGetInfos:= FALSE;
 end;

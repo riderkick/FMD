@@ -75,6 +75,7 @@ type
     CheckBox36: TCheckBox;
     CheckBox37: TCheckBox;
     CheckBox38: TCheckBox;
+    cbOptionEnableLoadCover: TCheckBox;
     CheckBox4: TCheckBox;
     cbOnlyNew: TCheckBox;
     cbAddAsStopped: TCheckBox;
@@ -1753,6 +1754,7 @@ procedure TMainForm.pcMainChange(Sender: TObject);
     cbOptionMinimizeToTray.Checked:= options.ReadBool('general', 'MinimizeToTray', FALSE);
     seOptionNewMangaTime.Value:= options.ReadInteger('general', 'NewMangaTime', 3);
     cbOptionLetFMDDo.ItemIndex:= options.ReadInteger('general', 'LetFMDDo', 0);
+    cbOptionEnableLoadCover.Checked:= mangalistIni.ReadBool('general', 'LoadMangaCover', TRUE);
    // cbOptionLetFMDDoItemIndex:= cbOptionLetFMDDo.ItemIndex;
     cbOptionLetFMDDoItemIndex  := cbOptionLetFMDDo.ItemIndex;
     cbOptionBatotoUseIE.Checked:= options.ReadBool('general', 'BatotoUseIE', TRUE);
@@ -2194,6 +2196,8 @@ begin
   cbOptionLetFMDDoItemIndex:= cbOptionLetFMDDo.ItemIndex;
   options.WriteBool   ('general', 'BatotoUseIE', cbOptionBatotoUseIE.Checked);
   OptionBatotoUseIEChecked:= cbOptionBatotoUseIE.Checked;
+  mangalistIni.WriteBool('general', 'LoadMangaCover', cbOptionEnableLoadCover.Checked);
+  OptionEnableLoadCover:= cbOptionEnableLoadCover.Checked;
 
   options.WriteInteger('connections', 'NumberOfTasks', seOptionMaxParallel.Value);
   options.WriteInteger('connections', 'NumberOfThreadsPerTask', seOptionMaxThread.Value);
@@ -2532,10 +2536,12 @@ begin
   cbOptionMinimizeToTray.Checked := options.ReadBool('general', 'MinimizeToTray', FALSE);
   miDownloadHideCompleted.Checked:= options.ReadBool('general', 'HideCompleted', FALSE);
   batotoLastDirectoryPage:= mangalistIni.ReadInteger('general', 'batotoLastDirectoryPage', 244);
+  OptionEnableLoadCover:= mangalistIni.ReadBool('general', 'LoadMangaCover', TRUE);
+  cbOptionEnableLoadCover.Checked:= OptionEnableLoadCover;
   cbOptionLetFMDDo.ItemIndex:= options.ReadInteger('general', 'LetFMDDo', 0);
   cbOptionLetFMDDoItemIndex := cbOptionLetFMDDo.ItemIndex;
 
-  cbOptionBatotoUseIE.Checked:= options.ReadBool('general', 'BatotoUseIE', TRUE);
+  cbOptionBatotoUseIE.Checked:= FALSE;//options.ReadBool('general', 'BatotoUseIE', TRUE);
   cbOptionAutoNumberChapter.Checked:= options.ReadBool('general', 'AutoNumberChapter', TRUE);
 
   OptionBatotoUseIEChecked      := cbOptionBatotoUseIE.Checked;
