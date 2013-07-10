@@ -698,11 +698,11 @@ var
     s: String;
   begin
    // Page:= batotoLastDirectoryPage;
-    while NOT isFoundPage do
+   { while NOT isFoundPage do
     begin
       Inc(Page);
       Result:= INFORMATION_NOT_FOUND;
-      if NOT GetPage(TObject(source), BATOTO_ROOT + BATOTO_BROWSER + '?&p=' + IntToStr(Page), 0) then
+      if NOT GetPage(TObject(source), BATOTO_ROOT + BATOTO_BROWSER + 'http://www.batoto.net/comic/_/comics/?per_page=750&st=%0' + IntToStr(Page*750), 0) then
       begin
         Result:= NET_PROBLEM;
         source.Free;
@@ -731,6 +731,37 @@ var
       end;
     end;
     Dec(Page);
+    source.Free; }
+
+    Result:= INFORMATION_NOT_FOUND;
+    if NOT GetPage(TObject(source), BATOTO_ROOT + '/comic/_/comics/?per_page=750&st=0', 0) then
+    begin
+      Result:= NET_PROBLEM;
+      source.Free;
+      exit;
+    end;
+    parse.Clear;
+    myParser:= THTMLParser.Create(PChar(source.Text));
+    myParser.OnFoundTag := OnTag;
+    myParser.OnFoundText:= OnText;
+    myParser.Exec;
+    myParser.Free;
+    if parse.Count=0 then
+    begin
+      source.Free;
+      exit;
+    end;
+    for i:= 0 to parse.Count-1 do
+    begin
+      if (Pos('Page 1 of ', parse.Strings[i]) > 0) then
+      begin
+        s:= GetString(parse.Strings[i]+'~!@', 'Page 1 of ', '~!@');
+        Page:= StrToInt(TrimLeft(TrimRight(s)));
+        Result:= NO_ERROR;
+        source.Free;
+        exit;
+      end;
+    end;
     source.Free;
   end;
 
@@ -1402,7 +1433,7 @@ var
     s: String;
   begin
     Result:= INFORMATION_NOT_FOUND;
-    if NOT GetPage(TObject(source), BATOTO_ROOT + BATOTO_BROWSER + '?&p=' + URL, 0) then
+    if NOT GetPage(TObject(source), BATOTO_ROOT + '/comic/_/comics/?per_page=750&st=%' + IntToStr(StrToInt(URL)*750), 0) then
     begin
       Result:= NET_PROBLEM;
       source.Free;
@@ -1422,16 +1453,20 @@ var
     for i:= 0 to parse.Count-1 do
     begin
       if (GetTagName(parse.Strings[i]) = 'a') AND
-         (Pos('/comic/', parse.Strings[i])>0) then
+         (Pos('/comic/', parse.Strings[i])>0) AND
+         (Pos('/comics/''', parse.Strings[i])=0) AND
+         (Pos('/comics/"', parse.Strings[i])=0) AND
+         (Pos('/comics/?', parse.Strings[i])=0) then
       begin
         Result:= NO_ERROR;
-        s:= StringFilter(TrimLeft(TrimRight(parse.Strings[i+2])));
+        s:= StringFilter(TrimLeft(TrimRight(parse.Strings[i+1])));
         if (Pos('bloody-rose-r8162', parse.Strings[i]) = 0) AND
            (Pos('dragon-and-weed-origins-outbreak-r6901', parse.Strings[i]) = 0) AND
            (Pos('dragon-and-weed-origins-the-fallen-r8180', parse.Strings[i]) = 0) then
         begin
           names.Add(s);
-          links.Add(StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href=')), BATOTO_ROOT, '', []));
+          s:= GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href='))+'/';
+          links.Add(StringReplace(s, BATOTO_ROOT, '', []));
         end;
       end;
     end;
@@ -2918,7 +2953,7 @@ label
 begin
  // patchURL:= UTF8ToANSI(URL);
   patchURL:= URL;
-  Insert('comics/', patchURL, 10);
+ // Insert('comics/', patchURL, 10);
   mangaInfo.url:= BATOTO_ROOT + patchURL;
 
 reload:
