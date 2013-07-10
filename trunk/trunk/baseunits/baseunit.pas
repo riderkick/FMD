@@ -277,7 +277,7 @@ var
   BLOGTRUYEN_JS_BROWSER: String = '/partialDanhSach/listtruyen/';
   BLOGTRUYEN_POST_FORM : String = 'listOrCate=list&orderBy=title&key=tatca&page=';
 
-  UPDATE_URL      : String = 'http://akarin.byethost5.com/fmd/';
+  UPDATE_URL      : String = 'http://tenet.dl.sourceforge.net/project/fmd/FMD/updates/';
 
   OptionAutoCheckMinutes,
   // en: dialog messages

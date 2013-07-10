@@ -279,7 +279,7 @@ begin
       l:= TStringList.Create;
 
       l.NameValueSeparator:= '=';
-      if (GetPage(TObject(l), UPDATE_URL + 'version.txt', 0)) AND (l.Count > 0) then
+      if (GetPage(TObject(l), UPDATE_URL + 'updates.i', 0)) AND (l.Count > 0) then
       begin
         fNote:= '';
         fNoteForThisRevision:= '';

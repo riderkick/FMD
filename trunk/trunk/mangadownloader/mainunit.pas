@@ -1758,8 +1758,8 @@ procedure TMainForm.pcMainChange(Sender: TObject);
    // cbOptionLetFMDDoItemIndex:= cbOptionLetFMDDo.ItemIndex;
     cbOptionLetFMDDoItemIndex  := cbOptionLetFMDDo.ItemIndex;
     cbOptionBatotoUseIE.Checked:= options.ReadBool('general', 'BatotoUseIE', TRUE);
+    cbOptionBatotoUseIE.Checked:= FALSE;
     OptionBatotoUseIEChecked   := cbOptionBatotoUseIE.Checked;
-
 
     seOptionMaxParallel.Value:= options.ReadInteger('connections', 'NumberOfTasks', 1);
     seOptionMaxThread.Value:= options.ReadInteger('connections', 'NumberOfThreadsPerTask', 1);
@@ -2194,6 +2194,7 @@ begin
   options.WriteInteger('general', 'NewMangaTime', seOptionNewMangaTime.Value);
   options.WriteInteger('general', 'LetFMDDo', cbOptionLetFMDDo.ItemIndex);
   cbOptionLetFMDDoItemIndex:= cbOptionLetFMDDo.ItemIndex;
+  cbOptionBatotoUseIE.Checked:= FALSE;
   options.WriteBool   ('general', 'BatotoUseIE', cbOptionBatotoUseIE.Checked);
   OptionBatotoUseIEChecked:= cbOptionBatotoUseIE.Checked;
   mangalistIni.WriteBool('general', 'LoadMangaCover', cbOptionEnableLoadCover.Checked);

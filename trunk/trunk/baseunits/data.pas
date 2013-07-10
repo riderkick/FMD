@@ -1433,7 +1433,7 @@ var
     s: String;
   begin
     Result:= INFORMATION_NOT_FOUND;
-    if NOT GetPage(TObject(source), BATOTO_ROOT + '/comic/_/comics/?per_page=750&st=%' + IntToStr(StrToInt(URL)*750), 0) then
+    if NOT GetPage(TObject(source), BATOTO_ROOT + '/comic/_/comics/?per_page=750&st=' + IntToStr(StrToInt(URL)*750), 0) then
     begin
       Result:= NET_PROBLEM;
       source.Free;
@@ -2953,7 +2953,8 @@ label
 begin
  // patchURL:= UTF8ToANSI(URL);
   patchURL:= URL;
- // Insert('comics/', patchURL, 10);
+  if Pos('comic/_/comics', patchURL) = 0 then
+    Insert('comics/', patchURL, 10);
   mangaInfo.url:= BATOTO_ROOT + patchURL;
 
 reload:
