@@ -15,12 +15,12 @@ object MainForm: TMainForm
   object pnMainLeft: TPanel
     AnchorSideRight.Control = spMainSplitter
     Left = 0
-    Height = 457
+    Height = 458
     Top = 32
     Width = 195
     Align = alLeft
     Anchors = [akTop, akLeft, akRight, akBottom]
-    ClientHeight = 457
+    ClientHeight = 458
     ClientWidth = 195
     TabOrder = 0
     object cbSelectManga: TComboBox
@@ -53,7 +53,7 @@ object MainForm: TMainForm
     end
     object vtMangaList: TVirtualStringTree
       Left = 8
-      Height = 360
+      Height = 361
       Hint = 'test'
       Top = 88
       Width = 176
@@ -267,23 +267,23 @@ object MainForm: TMainForm
   end
   object pcMain: TPageControl
     Left = 195
-    Height = 457
+    Height = 458
     Top = 32
     Width = 620
-    ActivePage = tsDownload
+    ActivePage = tsOption
     Align = alClient
     Font.Style = [fsBold]
     ParentFont = False
-    TabIndex = 0
+    TabIndex = 4
     TabOrder = 1
     OnChange = pcMainChange
     object tsDownload: TTabSheet
       Caption = 'Downloads'
-      ClientHeight = 429
+      ClientHeight = 430
       ClientWidth = 612
       object vtDownload: TVirtualStringTree
         Left = 0
-        Height = 429
+        Height = 430
         Top = 0
         Width = 612
         Align = alClient
@@ -1282,11 +1282,21 @@ object MainForm: TMainForm
           object cbOptionBatotoUseIE: TCheckBox
             Left = 20
             Height = 19
-            Top = 198
+            Top = 225
             Width = 133
             Caption = 'cbOptionBatotoUseIE'
+            Enabled = False
             ParentFont = False
             TabOrder = 4
+          end
+          object cbOptionEnableLoadCover: TCheckBox
+            Left = 20
+            Height = 19
+            Top = 198
+            Width = 153
+            Caption = 'Enable load manga cover'
+            ParentFont = False
+            TabOrder = 5
           end
         end
         object tsConnections: TTabSheet
@@ -1321,7 +1331,7 @@ object MainForm: TMainForm
               Width = 563
               Anchors = [akTop, akLeft, akRight]
               Caption = 'Proxy config'
-              ClientHeight = 84
+              ClientHeight = 86
               ClientWidth = 559
               Enabled = False
               ParentFont = False
@@ -1518,7 +1528,7 @@ object MainForm: TMainForm
             ChildSizing.ShrinkVertical = crsScaleChilds
             ChildSizing.Layout = cclLeftToRightThenTopToBottom
             ChildSizing.ControlsPerLine = 4
-            ClientHeight = 40
+            ClientHeight = 42
             ClientWidth = 522
             Columns = 4
             ItemIndex = 0
@@ -1538,7 +1548,7 @@ object MainForm: TMainForm
             Width = 526
             Anchors = [akTop, akLeft, akRight]
             Caption = 'Renaming'
-            ClientHeight = 117
+            ClientHeight = 119
             ClientWidth = 522
             ParentFont = False
             TabOrder = 2
@@ -1634,7 +1644,7 @@ object MainForm: TMainForm
             Width = 526
             Anchors = [akTop, akLeft, akRight]
             Caption = 'Favorites'
-            ClientHeight = 92
+            ClientHeight = 94
             ClientWidth = 522
             ParentFont = False
             TabOrder = 1
@@ -1794,8 +1804,8 @@ object MainForm: TMainForm
   end
   object sbMain: TStatusBar
     Left = 0
-    Height = 24
-    Top = 489
+    Height = 23
+    Top = 490
     Width = 815
     Panels = <    
       item
