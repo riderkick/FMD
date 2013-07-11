@@ -156,6 +156,8 @@ const
   BLOGTRUYEN_NAME   = 'BlogTruyen';   BLOGTRUYEN_ID  = 23;
   MANGAFRAME_NAME   = 'MangaFrame';   MANGAFRAME_ID  = 24;
   STARKANA_NAME     = 'Starkana';     STARKANA_ID    = 25;
+  MANGAPANDA_NAME   = 'MangaPanda';   MANGAPANDA_ID  = 26;
+  REDHAWKSCANS_NAME = 'RedHawkScans'; REDHAWKSCANS_ID= 27;
 
   DEFAULT_LIST = ANIMEA_NAME+'!%~'+MANGAFOX_NAME+'!%~'+MANGAHERE_NAME+'!%~'+MANGAINN_NAME+'!%~'+MANGAREADER_NAME+'!%~';
 
@@ -272,6 +274,12 @@ var
 
   STARKANA_ROOT   : String = 'http://starkana.com';
   STARKANA_BROWSER: String = '/manga/list';
+
+  MANGAPANDA_ROOT   : String = 'http://www.mangapanda.com';
+  MANGAPANDA_BROWSER: String = '/alphabetical';
+
+  REDHAWKSCANS_ROOT   : String = 'http://manga.redhawkscans.com';
+  REDHAWKSCANS_BROWSER: String = '/reader/list/';
 
   BLOGTRUYEN_ROOT      : String = 'http://blogtruyen.com';
   BLOGTRUYEN_BROWSER   : String = '/danhsach/tatca';
@@ -702,7 +710,11 @@ begin
   else
   if name = MANGAFRAME_NAME then Result:= MANGAFRAME_ID
   else
-  if name = STARKANA_NAME then Result:= STARKANA_ID;
+  if name = STARKANA_NAME then Result:= STARKANA_ID
+  else
+  if name = MANGAPANDA_NAME then Result:= MANGAPANDA_ID
+  else
+  if name = REDHAWKSCANS_NAME then Result:= REDHAWKSCANS_ID;
 end;
 
 function  GetMangaSiteName(const ID: Cardinal): String;
@@ -755,7 +767,11 @@ begin
   else
   if ID = MANGAFRAME_ID then Result:= MANGAFRAME_NAME
   else
-  if ID = STARKANA_ID then Result:= STARKANA_NAME;
+  if ID = STARKANA_ID then Result:= STARKANA_NAME
+  else
+  if ID = MANGAPANDA_ID then Result:= MANGAPANDA_NAME
+  else
+  if ID = REDHAWKSCANS_ID then Result:= REDHAWKSCANS_NAME;
 end;
 
 // bad coding.. but this is how FMD works
