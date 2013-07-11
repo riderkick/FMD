@@ -731,7 +731,7 @@ var
   begin
     l:= TStringList.Create;
     parse:= TStringList.Create;
-    s:= DecodeUrl(MANGASTREAM_ROOT + URL + '/1');
+    s:= DecodeUrl(MANGASTREAM_ROOT2 + URL + '/1');
     Result:= GetPage(TObject(l),
                      s,
                      manager.container.manager.retryConnect);
@@ -1671,7 +1671,7 @@ var
     l: TStringList;
   begin
     l:= TStringList.Create;
-    s:= DecodeUrl(MANGASTREAM_ROOT + URL + '/' + IntToStr(workPtr+1));
+    s:= DecodeUrl(MANGASTREAM_ROOT2 + URL + '/' + IntToStr(workPtr+1));
     Result:= GetPage(TObject(l),
                      s,
                      manager.container.manager.retryConnect);

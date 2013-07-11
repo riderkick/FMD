@@ -242,6 +242,7 @@ var
   MANGATRADERS_BROWSER: String = '/manga/serieslist/';
 
   MANGASTREAM_ROOT   : String = 'http://mangastream.com';
+  MANGASTREAM_ROOT2  : String = 'http://readms.com';
   MANGASTREAM_BROWSER: String = '/manga';
 
   MANGAEDEN_ROOT      : String = 'http://www.mangaeden.com';

@@ -4447,7 +4447,7 @@ begin
        (Pos('</td>', parse.Strings[i+4])>0) then
     begin
       Inc(mangaInfo.numChapter);
-      s:= StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i+1], 'href=')), MANGASTREAM_ROOT, '', []);
+      s:= StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i+1], 'href=')), MANGASTREAM_ROOT2, '', []);
       Delete(s, Length(s)-1, 2);
       mangaInfo.chapterLinks.Add(s);
       s:= RemoveSymbols(TrimLeft(TrimRight(parse.Strings[i+2])));
