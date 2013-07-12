@@ -109,6 +109,7 @@ const
   DATA_EXT          = '.dat';
   CONFIG_FOLDER     = 'config/';
   CONFIG_FILE       = 'config.ini';
+  REVISION_FILE     = 'revision.ini';
   UPDATE_FILE       = 'updates.ini';
   MANGALISTINI_FILE = 'mangalist.ini';
   LANGUAGE_FILE     = 'languages.ini';
