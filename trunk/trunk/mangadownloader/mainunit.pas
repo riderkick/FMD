@@ -352,6 +352,7 @@ type
 
     isCanRefreshForm,
     isUpdating  : Boolean;
+    revisionIni,
     updates,
     mangalistIni,
     options     : TIniFile;
@@ -472,6 +473,9 @@ begin
   options     := TIniFile.Create(oldDir + CONFIG_FOLDER + CONFIG_FILE);
   options.CacheUpdates:= FALSE;
 
+  revisionIni  := TIniFile.Create(oldDir + CONFIG_FOLDER + REVISION_FILE);
+  options.CacheUpdates:= FALSE;
+
   updates     := TIniFile.Create(oldDir + CONFIG_FOLDER + UPDATE_FILE);
   updates.CacheUpdates:= FALSE;
 
@@ -516,7 +520,9 @@ begin
   TrayIcon.Show;
 
   // load some necessary options at startup
-  Revision                            := options.ReadInteger('general', 'Revision', 0);
+  Revision                            := revisionIni.ReadInteger('general', 'Revision', 0);
+  revisionIni.Free;
+
   seOptionNewMangaTime.Value          := options.ReadInteger('general', 'NewMangaTime', 3);
   miHighLightNewManga.Checked         := options.ReadBool('general', 'HighLightNewManga', FALSE);
   cbOptionShowQuitDialog.Checked      := options.ReadBool('dialogs', 'ShowQuitDialog', TRUE);

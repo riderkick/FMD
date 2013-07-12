@@ -31,12 +31,14 @@ object MainForm: TMainForm
       Width = 144
       Anchors = [akTop, akLeft, akRight]
       ItemHeight = 15
+      ItemIndex = 0
       Items.Strings = (
         ''
       )
       OnChange = cbSelectMangaChange
       ParentShowHint = False
       ShowHint = True
+      Sorted = True
       Style = csDropDownList
       TabOrder = 0
     end
