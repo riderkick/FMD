@@ -96,6 +96,8 @@ type
                                const website, URL: String): Byte;
     function    GetInfoFromURL(const website, URL: String; const Reconnect: Cardinal): Byte;
     procedure   SyncInfoToData(const DataProcess: TDataProcess; const index: Cardinal);
+    procedure   SyncMinorInfoToData(const DataProcess: TDataProcess; const index: Cardinal);
+
     // Only use this function for getting manga infos for the first time
     procedure   AddInfoToDataWithoutBreak(const name, link : String;
                                           const DataProcess: TDataProcess);
@@ -1336,6 +1338,41 @@ var
     source.Free;
   end;
 
+  // get name and link of the manga from Es.MangaHere
+  function   EsMangaHereGetNameAndLink: Byte;
+  var
+    i: Cardinal;
+  begin
+    Result:= INFORMATION_NOT_FOUND;
+    if NOT GetPage(TObject(source), ESMANGAHERE_ROOT + ESMANGAHERE_BROWSER, 0) then
+    begin
+      Result:= NET_PROBLEM;
+      source.Free;
+      exit;
+    end;
+    parse.Clear;
+    Parser:= TjsFastHTMLParser.Create(PChar(source.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.Exec;
+    Parser.Free;
+    if parse.Count=0 then
+    begin
+      source.Free;
+      exit;
+    end;
+    for i:= 0 to parse.Count-1 do
+    begin
+      if Pos('manga_info', parse.Strings[i]) <> 0 then
+      begin
+        Result:= NO_ERROR;
+        names.Add(StringFilter(GetString(parse.Strings[i], 'rel="', '" href')));
+        links.Add(StringReplace(GetString(parse.Strings[i], 'href="', '">'), ESMANGAHERE_ROOT, '', []));
+      end;
+    end;
+    source.Free;
+  end;
+
   // get name and link of the manga from MangaInn
   function   MangaInnGetNameAndLink: Byte;
   var
@@ -1945,6 +1982,84 @@ var
     source.Free;
   end;
 
+  // get name and link of the manga from SubManga
+  function   SubMangaGetNameAndLink: Byte;
+  var
+    tmp: Integer;
+    i: Cardinal;
+    s: String;
+  begin
+    Result:= INFORMATION_NOT_FOUND;
+    if NOT GetPage(TObject(source), SUBMANGA_ROOT + SUBMANGA_BROWSER, 0) then
+    begin
+      Result:= NET_PROBLEM;
+      source.Free;
+      exit;
+    end;
+    parse.Clear;
+    Parser:= TjsFastHTMLParser.Create(PChar(source.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.Exec;
+    Parser.Free;
+    if parse.Count=0 then
+    begin
+      source.Free;
+      exit;
+    end;
+    for i:= 0 to parse.Count-1 do
+    begin
+      if (Pos('class="xs"', parse.Strings[i]) > 0) then
+      begin
+        Result:= NO_ERROR;
+        s:= StringFilter(TrimLeft(TrimRight(parse.Strings[i+3])));
+        names.Add(HTMLEntitiesFilter(s));
+        s:= GetAttributeValue(GetTagAttribute(parse.Strings[i-1], 'href='));
+        links.Add(StringReplace(s, SUBMANGA_ROOT, '', []));
+      end;
+    end;
+    source.Free;
+  end;
+
+  // get name and link of the manga from Komikid
+  function   KomikidGetNameAndLink: Byte;
+  var
+    tmp: Integer;
+    i: Cardinal;
+    s: String;
+  begin
+    Result:= INFORMATION_NOT_FOUND;
+    if NOT GetPage(TObject(source), KOMIKID_ROOT, 0) then
+    begin
+      Result:= NET_PROBLEM;
+      source.Free;
+      exit;
+    end;
+    parse.Clear;
+    Parser:= TjsFastHTMLParser.Create(PChar(source.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.Exec;
+    Parser.Free;
+    if parse.Count=0 then
+    begin
+      source.Free;
+      exit;
+    end;
+    for i:= parse.Count-1 downto 5 do
+    begin
+      if (Pos('<option value="', parse.Strings[i]) > 0) then
+      begin
+        Result:= NO_ERROR;
+        s:= StringFilter(TrimLeft(TrimRight(parse.Strings[i+1])));
+        names.Add(HTMLEntitiesFilter(s));
+        s:= '/' + GetAttributeValue(GetTagAttribute(parse.Strings[i], 'value='));
+        links.Add(s);
+      end;
+    end;
+    source.Free;
+  end;
+
   // get name and link of the manga from Turkcraft
   function   TurkcraftGetNameAndLink: Byte;
   var
@@ -2223,7 +2338,7 @@ var
         s:= StringFilter(TrimLeft(TrimRight(parse.Strings[i+1])));
         names.Add(HTMLEntitiesFilter(s));
         s:= GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href="'));
-        links.Add(s);
+        links.Add(StringReplace(s, MANGASTREAM_ROOT, '', []));
       end;
     end;
     source.Free;
@@ -2463,6 +2578,15 @@ begin
   else
   if website = TRUYENTRANHTUAN_NAME then
     Result:= TruyenTranhTuanGetNameAndLink
+  else
+  if website = SUBMANGA_NAME then
+    Result:= SubMangaGetNameAndLink
+  else
+  if website = ESMANGAHERE_NAME then
+    Result:= EsMangaHereGetNameAndLink
+  else
+  if website = KOMIKID_NAME then
+    Result:= KomikidGetNameAndLink
   else
   if website = TURKCRAFT_NAME then
     Result:= TurkcraftGetNameAndLink
@@ -2704,6 +2828,246 @@ begin
     mangainfo.ChapterName.Delete(mangainfo.ChapterName.Count-1);
     mangainfo.chapterLinks.Delete(mangainfo.chapterLinks.Count-1);
   end;
+  Result:= NO_ERROR;
+end;
+
+// get manga infos from SubManga site
+// due to its weird designs, this will take a lot of work (and time) for it to
+// work property
+function   GetSubMangaInfoFromURL: Byte;
+var
+  isExtractGenres : Boolean = FALSE;
+  s: String;
+  i, j  : Cardinal;
+begin
+  mangaInfo.url:= SUBMANGA_ROOT + URL;
+  if NOT GetPage(TObject(source), mangaInfo.url, Reconnect) then
+  begin
+    Result:= NET_PROBLEM;
+    source.Free;
+    exit;
+  end;
+
+  // parsing the HTML source
+  parse.Clear;
+  Parser:= TjsFastHTMLParser.Create(PChar(source.Text));
+  Parser.OnFoundTag := OnTag;
+  Parser.OnFoundText:= OnText;
+  Parser.Exec;
+
+  Parser.Free;
+  mangaInfo.website:= SUBMANGA_NAME;
+
+  mangaInfo.genres:= '';
+  mangaInfo.status:= '1';
+
+  // using 1st parser (cover link, summary)
+  if parse.Count=0 then exit;
+  for i:= 0 to parse.Count-1 do
+  begin
+    // get manga title
+    if (mangaInfo.title = '') AND
+       (Pos('content="Leer ', parse.Strings[i]) > 0) then
+      mangaInfo.title:= GetString(parse.Strings[i], 'content="Leer ', ' manga online');
+
+    if Pos('class="suscripcion', parse.Strings[i]) > 0 then
+    begin
+      // get cover link
+      if Pos('<img', parse.Strings[i+5]) > 0 then
+        mangaInfo.coverLink:= GetAttributeValue(GetTagAttribute(parse.Strings[i+5], 'src'));
+      // get summary
+      j:= i+8;
+      while (j < parse.Count-1) AND (Pos('</p>', parse.Strings[j]) = 0) do
+      begin
+        Inc(j);
+        s:= parse.Strings[j];
+        if (s <> '') AND
+           (s[1] <> '<') then
+        begin
+          parse.Strings[j]:= StringFilter(parse.Strings[j]);
+          parse.Strings[j]:= StringReplace(parse.Strings[j], #10, '\n', [rfReplaceAll]);
+          parse.Strings[j]:= StringReplace(parse.Strings[j], #13, '\r', [rfReplaceAll]);
+          mangaInfo.summary:= mangaInfo.summary + parse.Strings[j];
+        end;
+      end;
+    end;
+
+    // get authors/artists
+    if (Pos('Creado por', parse.Strings[i])<>0) then
+    begin
+      if Pos('/autor/', parse.Strings[i+1]) > 0 then
+        mangaInfo.authors:= parse.Strings[i+2];
+      if Pos('/mangaka/', parse.Strings[i+5]) > 0 then
+        mangaInfo.authors:= parse.Strings[i+6];
+    end;
+
+    // get genres
+    if (Pos('submanga.com/genero/', parse.Strings[i])<>0) then
+      mangaInfo.genres:= mangaInfo.genres + parse.Strings[i+1] + ', ';
+  end;
+
+  source.Clear;
+  if NOT GetPage(TObject(source), mangaInfo.url + '/completa', Reconnect) then
+  begin
+    Result:= NET_PROBLEM;
+    source.Free;
+    exit;
+  end;
+
+  // parsing the HTML source
+  parse.Clear;
+  Parser:= TjsFastHTMLParser.Create(PChar(source.Text));
+  Parser.OnFoundTag := OnTag;
+  Parser.OnFoundText:= OnText;
+  Parser.Exec;
+
+  Parser.Free;
+  source.Free;
+
+  // using 2nd parser (chapter name and link)
+  if parse.Count=0 then exit;
+  for i:= 0 to parse.Count-1 do
+  begin
+    if (Pos('class="s"', parse.Strings[i])>0) AND
+       (Pos('</tr>', parse.Strings[i-2])>0) AND
+      ((Pos('<tr class="u">', parse.Strings[i-1])>0) OR (Pos('<tr>', parse.Strings[i-1])>0)) AND
+      ((Pos('</td>', parse.Strings[i-3])>0) OR (Pos('</th>', parse.Strings[i-3])>0)) then
+    begin
+      Inc(mangaInfo.numChapter);
+      s:= StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i+1], 'href')), SUBMANGA_ROOT, '', []);
+      for j:= Length(s) downto 1 do
+      begin
+        if s[j] = '/' then
+          break;
+      end;
+      s:= '/c' + Copy(s, j, Length(s)-j+1);
+      mangaInfo.chapterLinks.Add(s);
+      s:= RemoveSymbols(TrimLeft(TrimRight(parse.Strings[i+2]))) + ' ' + RemoveSymbols(TrimLeft(TrimRight(parse.Strings[i+4])));
+      mangaInfo.chapterName.Add(StringFilter(StringFilter(HTMLEntitiesFilter(s))));
+    end;
+  end;
+
+  // Since chapter name and link are inverted, we need to invert them
+  if mangainfo.ChapterLinks.Count > 1 then
+  begin
+    i:= 0; j:= mangainfo.ChapterLinks.Count - 1;
+    while (i<j) do
+    begin
+      mangainfo.ChapterName.Exchange(i, j);
+      mangainfo.chapterLinks.Exchange(i, j);
+      Inc(i); Dec(j);
+    end;
+  end;
+  Result:= NO_ERROR;
+end;
+
+function   GetEsMangaHereInfoFromURL: Byte;
+var
+  i, j: Cardinal;
+begin
+  mangaInfo.url:= ESMANGAHERE_ROOT + URL;
+  if NOT GetPage(TObject(source), mangaInfo.url, Reconnect) then
+  begin
+    Result:= NET_PROBLEM;
+    source.Free;
+    exit;
+  end;
+
+  // parsing the HTML source
+  parse.Clear;
+  Parser:= TjsFastHTMLParser.Create(PChar(source.Text));
+  Parser.OnFoundTag := OnTag;
+  Parser.OnFoundText:= OnText;
+  Parser.Exec;
+
+  Parser.Free;
+  source.Free;
+  mangaInfo.website:= ESMANGAHERE_NAME;
+  mangaInfo.status:= '1';
+
+  // using parser (cover link, summary, chapter name and link)
+  if parse.Count=0 then exit;
+  for i:= 0 to parse.Count-1 do
+  begin
+    // get manga title
+    if (mangaInfo.title = '') AND
+       (Pos('<title>', parse.Strings[i]) > 0) then
+      mangaInfo.title:= GetString(parse.Strings[i+1], 'Manga - Leer ', ' manga en Español');
+
+    // get cover link
+    if GetTagName(parse.Strings[i]) = 'img' then
+      if (GetAttributeValue(GetTagAttribute(parse.Strings[i], 'class='))='img') then
+        mangaInfo.coverLink:= GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src'));
+
+      // get summary
+    if (Pos('id="show"', parse.Strings[i])) <> 0 then
+    begin
+      parse.Strings[i+1]:= StringFilter(parse.Strings[i+1]);
+      parse.Strings[i+1]:= StringReplace(parse.Strings[i+1], #10, '\n', [rfReplaceAll]);
+      parse.Strings[i+1]:= StringReplace(parse.Strings[i+1], #13, '\r', [rfReplaceAll]);
+      mangaInfo.summary:= parse.Strings[i+1];
+    end;
+
+      // get chapter name and links
+    if (GetTagName(parse.Strings[i]) = 'a') AND
+       (GetAttributeValue(GetTagAttribute(parse.Strings[i], 'class='))='color_0077') AND
+       (Pos('/manga/', GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href=')))<>0) then
+    begin
+      Inc(mangaInfo.numChapter);
+      mangaInfo.chapterLinks.Add(StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href=')), MANGAHERE_ROOT, '', [rfReplaceAll]));
+      parse.Strings[i+1]:= StringReplace(parse.Strings[i+1], #10, '', [rfReplaceAll]);
+      parse.Strings[i+1]:= StringReplace(parse.Strings[i+1], #13, '', [rfReplaceAll]);
+      parse.Strings[i+1]:= TrimLeft(parse.Strings[i+1]);
+      parse.Strings[i+1]:= TrimRight(parse.Strings[i+1]);
+      mangaInfo.chapterName.Add(StringFilter(TrimRight(RemoveSymbols(parse.Strings[i+1]))));
+    end;
+
+    // get authors
+    if (Pos('Autor(s):', parse.Strings[i])<>0) then
+      mangaInfo.authors:= parse.Strings[i+3];
+
+    // get artists
+    if (Pos('Artist(s):', parse.Strings[i])<>0) then
+      mangaInfo.artists:= parse.Strings[i+3];
+
+    // get genres
+    if (Pos('Género(s):', parse.Strings[i])<>0) then
+    begin
+      mangaInfo.genres:= '';
+      for j:= 0 to 37 do
+        if Pos(LowerCase(Genre[j]), LowerCase(parse.Strings[i+2]))<>0 then
+          mangaInfo.genres:= mangaInfo.genres+(Genre[j]+', ');
+    end;
+
+   { // get status
+    if (Pos('Status:', parse.Strings[i])<>0) then
+    begin
+      if Pos('Ongoing', parse.Strings[i+2])<>0 then
+        mangaInfo.status:= '1'   // ongoing
+      else
+        mangaInfo.status:= '0';  // completed
+    end; }
+  end;
+
+  // Since chapter name and link are inverted, we need to invert them
+  if mangainfo.ChapterName.Count > 1 then
+  begin
+    i:= 0; j:= mangainfo.ChapterName.Count - 1;
+    while (i<j) do
+    begin
+      mangainfo.ChapterName.Exchange(i, j);
+      mangainfo.chapterLinks.Exchange(i, j);
+      Inc(i); Dec(j);
+    end;
+  end;
+
+  // Delete 'latest' chapter because it isnt exist
+ { if (mangaInfo.status = '1') AND (mangainfo.ChapterName.Count > 0) then
+  begin
+    Dec(mangaInfo.numChapter);
+    mangainfo.ChapterName.Delete(mangainfo.ChapterName.Count-1);
+    mangainfo.chapterLinks.Delete(mangainfo.chapterLinks.Count-1);
+  end; }
   Result:= NO_ERROR;
 end;
 
@@ -5292,6 +5656,78 @@ begin
   Result:= NO_ERROR;
 end;
 
+// get manga infos from Komikid site
+function   GetKomikidInfoFromURL: Byte;
+var
+  s: String;
+  isExtractChapter: Boolean = FALSE;
+  i, j: Cardinal;
+begin
+  mangaInfo.url:= KOMIKID_ROOT + URL;
+  if NOT GetPage(TObject(source), mangaInfo.url, Reconnect) then
+  begin
+    Result:= NET_PROBLEM;
+    source.Free;
+    exit;
+  end;
+
+  // parsing the HTML source
+  parse.Clear;
+  Parser:= TjsFastHTMLParser.Create(PChar(source.Text));
+  Parser.OnFoundTag := OnTag;
+  Parser.OnFoundText:= OnText;
+  Parser.Exec;
+
+  Parser.Free;
+  source.Free;
+
+  mangaInfo.website:= KOMIKID_NAME;
+  mangaInfo.status:= '1';
+  mangaInfo.coverLink:= '';
+  mangaInfo.summary:= '';
+  mangaInfo.authors:= '';
+  mangaInfo.artists:= '';
+  mangaInfo.genres:= '';
+
+  // using parser (cover link, summary, chapter name and link)
+  if parse.Count=0 then exit;
+  for i:= 0 to parse.Count-1 do
+  begin
+    // get chapter name and links
+    if (Pos('select name="chapter"', parse.Strings[i])>0) then
+      isExtractChapter:= TRUE;
+
+    // get manga name
+    if (mangaInfo.title = '') AND (Pos('<title>', parse.Strings[i])>0) then
+      mangaInfo.title:= GetString(parse.Strings[i-2], 'content="', ' Chapter');
+
+    if (isExtractChapter) AND (Pos('</select>', parse.Strings[i])>0) then
+      break;
+
+    if (isExtractChapter) AND (Pos('option value=', parse.Strings[i])>0) then
+    begin
+      Inc(mangaInfo.numChapter);
+      s:= URL + '/' + GetAttributeValue(GetTagAttribute(parse.Strings[i], 'value='));
+      mangaInfo.chapterLinks.Add(s);
+      s:= RemoveSymbols(TrimLeft(TrimRight(parse.Strings[i+1])));
+      mangaInfo.chapterName.Add(StringFilter(StringFilter(HTMLEntitiesFilter(s))));
+    end;
+  end;
+
+  // Since chapter name and link are inverted, we need to invert them
+  if mangainfo.ChapterLinks.Count > 1 then
+  begin
+    i:= 0; j:= mangainfo.ChapterLinks.Count - 1;
+    while (i<j) do
+    begin
+      mangainfo.ChapterName.Exchange(i, j);
+      mangainfo.chapterLinks.Exchange(i, j);
+      Inc(i); Dec(j);
+    end;
+  end;
+  Result:= NO_ERROR;
+end;
+
 // get manga infos from Turkcraft site
 function   GetTurkcraftInfoFromURL: Byte;
 var
@@ -5778,6 +6214,15 @@ begin
   if website = PERVEDEN_NAME then
     Result:= GetMangaEdenInfoFromURL(PERVEDEN_ROOT)
   else
+  if website = SUBMANGA_NAME then
+    Result:= GetSubMangaInfoFromURL
+  else
+  if website = ESMANGAHERE_NAME then
+    Result:= GetEsMangaHereInfoFromURL
+  else
+  if website = KOMIKID_NAME then
+    Result:= GetKomikidInfoFromURL
+  else
   if website = TURKCRAFT_NAME then
     Result:= GetTurkcraftInfoFromURL
   else
@@ -5817,6 +6262,33 @@ begin
   mangaInfo.genres := StringReplace(mangaInfo.genres , #13, '', [rfReplaceAll]);
 end;
 
+procedure   TMangaInformation.SyncMinorInfoToData(const DataProcess: TDataProcess; const index: Cardinal);
+begin
+  // sync info to data
+  {$IFDEF DOWNLOADER}
+  if NOT dataProcess.isFilterAllSites then
+  {$ENDIF}
+  begin
+    DataProcess.Data.Strings[index]:= SetParams(
+              [DataProcess.Param[index, DATA_PARAM_NAME],
+               DataProcess.Param[index, DATA_PARAM_LINK],
+               DataProcess.Param[index, DATA_PARAM_AUTHORS],
+               DataProcess.Param[index, DATA_PARAM_ARTISTS],
+               DataProcess.Param[index, DATA_PARAM_GENRES],
+               mangaInfo.status,
+               DataProcess.Param[index, DATA_PARAM_SUMMARY],
+               IntToStr(mangaInfo.numChapter),
+               {$IFDEF DOWNLOADER}
+               DataProcess.Param[index, DATA_PARAM_JDN]
+               {$ELSE}
+               '0'
+               {$ENDIF},
+              '0']);
+  end;
+  // then break it into parts
+  dataProcess.BreakDataToParts(index);
+end;
+
 procedure   TMangaInformation.SyncInfoToData(const DataProcess: TDataProcess; const index: Cardinal);
 begin
   // sync info to data
@@ -5833,7 +6305,11 @@ begin
                mangaInfo.status,
                StringFilter(mangaInfo.summary),
                IntToStr(mangaInfo.numChapter),
-               DataProcess.Param[index, DATA_PARAM_JDN],
+               {$IFDEF DOWNLOADER}
+               DataProcess.Param[index, DATA_PARAM_JDN]
+               {$ELSE}
+               '0'
+               {$ENDIF},
               '0']);
   end;
   // then break it into parts
@@ -5865,7 +6341,11 @@ begin
              mangaInfo.status,
              StringFilter(mangaInfo.summary),
              IntToStr(mangaInfo.numChapter),
-             IntToStr(GetCurrentJDN),
+             {$IFDEF DOWNLOADER}
+             IntToStr(GetCurrentJDN)
+             {$ELSE}
+             '0'
+             {$ENDIF},
             '0'])));
 end;
 
@@ -5896,7 +6376,12 @@ begin
   DataProcess.genres.Add (l.Strings[DATA_PARAM_GENRES]);
   DataProcess.status.Add (l.Strings[DATA_PARAM_STATUS]);
   DataProcess.summary.Add(l.Strings[DATA_PARAM_SUMMARY]);
-  DataProcess.jdn.Add    (Pointer(StrToInt(l.Strings[DATA_PARAM_JDN])));
+  {$IFDEF DOWNLOADER}
+  DataProcess.jdn.Add    (Pointer(StrToInt(l.Strings[DATA_PARAM_JDN])))
+  {$ELSE}
+  DataProcess.jdn.Add    (Pointer(StrToInt('0')))
+  {$ENDIF}
+  ;
   l.Free;
 end;
 

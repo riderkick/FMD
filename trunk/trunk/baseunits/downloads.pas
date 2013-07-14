@@ -296,6 +296,68 @@ var
     l.Free;
   end;
 
+  function GetEsMangaHerePageNumber: Boolean;
+  var
+    i, j: Cardinal;
+    l   : TStringList;
+  begin
+    l:= TStringList.Create;
+    parse:= TStringList.Create;
+    Result:= GetPage(TObject(l),
+                     ESMANGAHERE_ROOT + URL,
+                     manager.container.manager.retryConnect);
+    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.Exec;
+    Parser.Free;
+    if parse.Count>0 then
+    begin
+      manager.container.pageNumber:= 0;
+      for i:= parse.Count-1 downto 4 do
+      begin
+        if Pos('</select>', parse.Strings[i]) > 0 then
+        begin
+          manager.container.pageNumber:= StrToInt(TrimLeft(TrimRight(parse.Strings[i-3])));
+          break;
+        end;
+      end;
+    end;
+    parse.Free;
+    l.Free;
+  end;
+
+  function GetSubMangaPageNumber: Boolean;
+  var
+    i, j: Cardinal;
+    l   : TStringList;
+  begin
+    l:= TStringList.Create;
+    parse:= TStringList.Create;
+    Result:= GetPage(TObject(l),
+                     SUBMANGA_ROOT + URL,
+                     manager.container.manager.retryConnect);
+    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.Exec;
+    Parser.Free;
+    if parse.Count>0 then
+    begin
+      manager.container.pageNumber:= 0;
+      for i:= parse.Count-1 downto 3 do
+      begin
+        if Pos('</select>', parse.Strings[i]) > 0 then
+        begin
+          manager.container.pageNumber:= StrToInt(TrimLeft(TrimRight(parse.Strings[i-2])));
+          break;
+        end;
+      end;
+    end;
+    parse.Free;
+    l.Free;
+  end;
+
   function GetMangaInnPageNumber: Boolean;
   var
     s   : String;
@@ -827,6 +889,40 @@ var
     l.Free;
   end;
 
+  function GetKomikidPageNumber: Boolean;
+  var
+    s   : String;
+    i, j: Cardinal;
+    l   : TStringList;
+  begin
+    l:= TStringList.Create;
+    parse:= TStringList.Create;
+    s:= DecodeUrl(KOMIKID_ROOT + URL + '/1');
+    Result:= GetPage(TObject(l),
+                     s,
+                     manager.container.manager.retryConnect);
+    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.Exec;
+    Parser.Free;
+    if parse.Count>0 then
+    begin
+      manager.container.pageNumber:= 0;
+      for i:= 0 to parse.Count-1 do
+      begin
+        if (Pos('title="Next Page"', parse.Strings[i])>0) then
+        begin
+          s:= parse.Strings[i-6];
+          manager.container.pageNumber:= StrToInt(TrimLeft(TrimRight(s)));
+          break;
+        end;
+      end;
+    end;
+    parse.Free;
+    l.Free;
+  end;
+
   function GetTurkcraftPageNumber: Boolean;
   var
     s   : String;
@@ -1047,6 +1143,15 @@ begin
   if manager.container.mangaSiteID = REDHAWKSCANS_ID then
     Result:= GetRedHawkScansPageNumber
   else
+  if manager.container.mangaSiteID = ESMANGAHERE_ID then
+    Result:= GetEsMangaHerePageNumber
+  else
+  if manager.container.mangaSiteID = SUBMANGA_ID then
+    Result:= GetSubMangaPageNumber
+  else
+  if manager.container.mangaSiteID = KOMIKID_ID then
+    Result:= GetKomikidPageNumber
+  else
   if manager.container.mangaSiteID = TURKCRAFT_ID then
     Result:= GetTurkcraftPageNumber
   else
@@ -1145,6 +1250,42 @@ var
             l.Free;
             exit;
           end;
+    end;
+    parse.Free;
+    l.Free;
+  end;
+
+  function GetEsMangaHereLinkPage: Boolean;
+  var
+    i: Cardinal;
+    l: TStringList;
+  begin
+    l:= TStringList.Create;
+    if workPtr > 0 then
+      Result:= GetPage(TObject(l),
+                       ESMANGAHERE_ROOT + URL + IntToStr(workPtr+1)+'.html',
+                       manager.container.manager.retryConnect)
+    else
+      Result:= GetPage(TObject(l),
+                       ESMANGAHERE_ROOT + URL,
+                       manager.container.manager.retryConnect);
+    parse:= TStringList.Create;
+
+    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.Exec;
+    Parser.Free;
+    if parse.Count>0 then
+    begin
+      for i:= 0 to parse.Count-1 do
+        if (Pos('class="read_img"', parse.Strings[i])<>0) then
+        begin
+          manager.container.pageLinks.Strings[workPtr]:= GetAttributeValue(GetTagAttribute(parse.Strings[i+6], 'src='));
+          parse.Free;
+          l.Free;
+          exit;
+        end;
     end;
     parse.Free;
     l.Free;
@@ -1740,6 +1881,38 @@ var
     l.Free;
   end;
 
+  function GetSubMangaLinkPage: Boolean;
+  var
+    s: String;
+    j,
+    i: Cardinal;
+    l: TStringList;
+  begin
+    l:= TStringList.Create;
+    s:= DecodeUrl(SUBMANGA_ROOT + URL + '/' + IntToStr(workPtr+1));
+    Result:= GetPage(TObject(l),
+                     s,
+                     manager.container.manager.retryConnect);
+    parse:= TStringList.Create;
+    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.Exec;
+    Parser.Free;
+
+    if parse.Count>0 then
+    begin
+      for i:= 0 to parse.Count-1 do
+        if (Pos('type="text/javascript"', parse.Strings[i])>0) then
+        begin
+          manager.container.pageLinks.Strings[workPtr]:= GetAttributeValue(GetTagAttribute(parse.Strings[i-3], 'src='));
+          break;
+        end;
+    end;
+    parse.Free;
+    l.Free;
+  end;
+
   function GetMangaPandaLinkPage: Boolean;
   var
     s: String;
@@ -1914,6 +2087,41 @@ var
         if (isExtrackLink) AND (Pos('</div>', parse.Strings[i])>0) then
           break;
       end;
+    end;
+    parse.Free;
+    l.Free;
+  end;
+
+  function GetKomikidLinkPage: Boolean;
+  var
+    s: String;
+    j,
+    i: Cardinal;
+    l: TStringList;
+  begin
+    l:= TStringList.Create;
+    s:= DecodeUrl(KOMIKID_ROOT + URL + '/' + IntToStr(workPtr+1));
+    Result:= GetPage(TObject(l),
+                     s,
+                     manager.container.manager.retryConnect);
+    parse:= TStringList.Create;
+    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.Exec;
+    Parser.Free;
+
+    if parse.Count>0 then
+    begin
+      for i:= 0 to parse.Count-1 do
+        if (Pos('class="lazyload_ad"', parse.Strings[i])>0) then
+        begin
+          s:= GetAttributeValue(GetTagAttribute(parse.Strings[i-8], 'src='));
+          if Pos('http://', s) = 0 then
+            s:= KOMIKID_ROOT + KOMIKID_BROWSER + s;
+          manager.container.pageLinks.Strings[workPtr]:= EncodeURL(s);
+          break;
+        end;
     end;
     parse.Free;
     l.Free;
@@ -2199,6 +2407,15 @@ begin
   else
   if manager.container.mangaSiteID = REDHAWKSCANS_ID then
     Result:= GetRedHawkScansLinkPage
+  else
+  if manager.container.mangaSiteID = ESMANGAHERE_ID then
+    Result:= GetEsMangaHereLinkPage
+  else
+  if manager.container.mangaSiteID = SUBMANGA_ID then
+    Result:= GetSubMangaLinkPage
+  else
+  if manager.container.mangaSiteID = KOMIKID_ID then
+    Result:= GetKomikidLinkPage
   else
   if manager.container.mangaSiteID = TURKCRAFT_ID then
     Result:= GetTurkcraftLinkPage

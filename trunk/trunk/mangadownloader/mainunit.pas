@@ -2715,6 +2715,7 @@ begin
                mtInformation, [mbYes], 0);
     exit;
   end;
+  vtMangaList.TreeOptions.SelectionOptions:= vtMangaList.TreeOptions.SelectionOptions - [toMultiSelect];
   if NOT Assigned(vtMangaList.FocusedNode) then
   begin
     xNode:= vtMangaList.GetFirst;
@@ -2748,6 +2749,7 @@ begin
       MessageDlg('Info', '"'+name+'" not found!',
                  mtInformation, [mbYes], 0);
   until xNode.Index = endSearch;
+  vtMangaList.TreeOptions.SelectionOptions:= vtMangaList.TreeOptions.SelectionOptions + [toMultiSelect];
 end;
 
 procedure TMainForm.UpdateVtDownload;
@@ -2831,7 +2833,9 @@ begin
   tsInformation .Caption:= language.ReadString(lang, 'tsInformationCaption', '');
   tsFilter      .Caption:= language.ReadString(lang, 'tsFilterCaption', '');
   tsFavorites   .Caption:= language.ReadString(lang, 'tsFavoritesCaption', '');
+  gbOptionFavorites.Caption:= tsFavorites.Caption;
   tsOption      .Caption:= language.ReadString(lang, 'tsOptionCaption', '');
+  tsAbout       .Caption:= language.ReadString(lang, 'tsAboutCaption', '');
   edSearch      .Text   := language.ReadString(lang, 'edSearchText', '');
   stSearch:= edSearch.Text;
   stModeAll             := language.ReadString(lang, 'stModeAll', '');
@@ -2934,6 +2938,9 @@ begin
   lbOptionMaxThread.Caption   := Format(language.ReadString(lang, 'lbOptionMaxThreadCaption', ''), [seOptionMaxThread.MaxValue]);
   lbOptionMaxRetry.Caption    := language.ReadString(lang, 'lbOptionMaxRetryCaption', '');
   lbOptionDialogs.Caption     := language.ReadString(lang, 'lbOptionDialogsCaption', '');
+  lbOptionPDFQuality.Caption  := language.ReadString(lang, 'lbOptionPDFQualityCaption', '');
+  lbOptionPDFQuality.Hint     := language.ReadString(lang, 'lbOptionPDFQualityHint', '');
+  seOptionPDFQuality.Hint     := lbOptionPDFQuality.Hint;
 
   cbOptionMinimizeToTray.Caption:= language.ReadString(lang, 'cbOptionMinimizeToTrayCaption', '');
   cbOptionAutoCheckUpdate.Caption:= language.ReadString(lang, 'cbOptionAutoCheckUpdateCaption', '');
@@ -2946,6 +2953,9 @@ begin
   cbOptionBatotoUseIE.Caption:= language.ReadString(lang, 'cbOptionBatotoUseIECaption', '');
   cbOptionAutoNumberChapter.Caption:= language.ReadString(lang, 'cbOptionAutoNumberChapterCaption', '');
   cbOptionAutoCheckFavStartup.Caption:= language.ReadString(lang, 'cbOptionAutoCheckFavStartupCaption', '');
+  cbOptionEnableLoadCover.Caption:= language.ReadString(lang, 'cbOptionEnableLoadCoverCaption', '');
+  cbOptionAutoCheckFavStartup.Caption:= language.ReadString(lang, 'cbOptionAutoCheckFavStartupCaption', '');
+  cbSelectManga.Hint:= language.ReadString(lang, 'cbSelectMangaHint', '');
 
   stDownloadManga          := language.ReadString(lang, 'stDownloadManga', '');
   stDownloadStatus         := language.ReadString(lang, 'stDownloadStatus', '');
@@ -2961,6 +2971,7 @@ begin
   stUpdaterCheck           := language.ReadString(lang, 'stUpdaterCheck', '');
   btCheckVersion.Caption   := stUpdaterCheck;
 
+  stOptionAutoCheckMinutesCaption:= language.ReadString(lang, 'OptionAutoCheckMinutesCaption', '');
   stDlgUpdaterVersionRequire:= language.ReadString(lang, 'stDlgUpdaterVersionRequire', '');
   stDlgUpdaterIsRunning    := language.ReadString(lang, 'stDlgUpdaterIsRunning', '');
   stDlgLatestVersion       := language.ReadString(lang, 'stDlgLatestVersion', '');
