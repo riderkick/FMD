@@ -10,7 +10,7 @@ unit baseunit;
 
 interface
 
-uses SysUtils, Classes, HTTPSend, graphics, genericlib, IniFiles;
+uses SysUtils, Classes, HTTPSend, graphics, genericlib, IniFiles, strutils;
 
 const
   JPG_HEADER: array[0..2] of Byte = ($FF, $D8, $FF);
@@ -159,6 +159,9 @@ const
   STARKANA_NAME     = 'Starkana';     STARKANA_ID    = 25;
   MANGAPANDA_NAME   = 'MangaPanda';   MANGAPANDA_ID  = 26;
   REDHAWKSCANS_NAME = 'RedHawkScans'; REDHAWKSCANS_ID= 27;
+  KOMIKID_NAME      = 'Komikid';      KOMIKID_ID     = 28;
+  SUBMANGA_NAME     = 'SubManga';     SUBMANGA_ID    = 29;
+  ESMANGAHERE_NAME  = 'ESMangaHere';  ESMANGAHERE_ID = 30;
 
   DEFAULT_LIST = ANIMEA_NAME+'!%~'+MANGAFOX_NAME+'!%~'+MANGAHERE_NAME+'!%~'+MANGAINN_NAME+'!%~'+MANGAREADER_NAME+'!%~';
 
@@ -287,6 +290,15 @@ var
   BLOGTRUYEN_JS_BROWSER: String = '/partialDanhSach/listtruyen/';
   BLOGTRUYEN_POST_FORM : String = 'listOrCate=list&orderBy=title&key=tatca&page=';
 
+  KOMIKID_ROOT   : String = 'http://komikid.com';
+  KOMIKID_BROWSER: String = '/';
+
+  SUBMANGA_ROOT   : String = 'http://submanga.com';
+  SUBMANGA_BROWSER: String = '/series/n';
+
+  ESMANGAHERE_ROOT   : String = 'http://es.mangahere.com';
+  ESMANGAHERE_BROWSER: String = '/mangalist/';
+
   UPDATE_URL      : String = 'http://tenet.dl.sourceforge.net/project/fmd/FMD/updates/';
 
   OptionAutoCheckMinutes,
@@ -317,6 +329,7 @@ var
 
   stUpdaterCheck,
 
+  stOptionAutoCheckMinutesCaption,
   stDlgUpdaterVersionRequire,
   stDlgUpdaterIsRunning,
   stDlgLatestVersion,
@@ -448,6 +461,8 @@ function  RemoveStringBreaks(const source: String): String;
 
 function  PrepareSummaryForHint(const source: String):  String;
 
+// deal with sourceforge URL
+function  SourceForgeURL(URL: string): string;
 // EN: Get HTML source code from a URL
 // VI: Lấy webcode từ 1 URL
 function  gehGetPage(var output: TObject; URL: String; const Reconnect: Cardinal; const lURL: String = ''): Boolean;
@@ -455,8 +470,10 @@ function  bttGetPage(var output: TObject; URL: String; const Reconnect: Cardinal
 function  GetPage(var output: TObject; URL: String; const Reconnect: Cardinal; const isByPassHTTP: Boolean = FALSE): Boolean;
 function  SavePage(URL: String;  const Path, name: String; const Reconnect: Cardinal): Boolean;
 
+procedure QuickSortChapters(var chapterList, linkList: TStringList);
 procedure QuickSortData(var merge: TStringList);
 procedure QuickSortDataWithWebID(var merge: TStringList; const webIDList: TByteList);
+
 
 function  GetCurrentJDN: LongInt;
 
@@ -715,7 +732,13 @@ begin
   else
   if name = MANGAPANDA_NAME then Result:= MANGAPANDA_ID
   else
-  if name = REDHAWKSCANS_NAME then Result:= REDHAWKSCANS_ID;
+  if name = REDHAWKSCANS_NAME then Result:= REDHAWKSCANS_ID
+  else
+  if name = KOMIKID_NAME then Result:= KOMIKID_ID
+  else
+  if name = SUBMANGA_NAME then Result:= SUBMANGA_ID
+  else
+  if name = ESMANGAHERE_NAME then Result:= ESMANGAHERE_ID;
 end;
 
 function  GetMangaSiteName(const ID: Cardinal): String;
@@ -772,7 +795,13 @@ begin
   else
   if ID = MANGAPANDA_ID then Result:= MANGAPANDA_NAME
   else
-  if ID = REDHAWKSCANS_ID then Result:= REDHAWKSCANS_NAME;
+  if ID = REDHAWKSCANS_ID then Result:= REDHAWKSCANS_NAME
+  else
+  if ID = KOMIKID_ID then Result:= KOMIKID_NAME
+  else
+  if ID = SUBMANGA_ID then Result:= SUBMANGA_NAME
+  else
+  if ID = ESMANGAHERE_ID then Result:= ESMANGAHERE_NAME;
 end;
 
 // bad coding.. but this is how FMD works
@@ -1134,6 +1163,7 @@ begin
   until i >= Length(Result);
   Result:= StringReplace(Result, '\n', #10,  [rfReplaceAll]);
   Result:= StringReplace(Result, '\r', #13,  [rfReplaceAll]);
+  Result:= TrimLeft(TrimRight(Result));
 end;
 
 function  CheckRedirect(const HTTP: THTTPSend): String;
@@ -1150,6 +1180,164 @@ begin
       Result:= Copy(lineHeader, 11, Length(lineHeader));
     Inc(i);
   end;
+end;
+
+function SFDirectLinkURL(URL: string; Document: TMemoryStream): string;
+{
+Transform this part of the body:
+<noscript>
+<meta http-equiv="refresh" content="5; url=http://downloads.sourceforge.net/project/base64decoder/base64decoder/version%202.0/b64util.zip?r=&amp;ts=1329648745&amp;use_mirror=kent">
+</noscript>
+into a valid URL:
+http://downloads.sourceforge.net/project/base64decoder/base64decoder/version%202.0/b64util.zip?r=&amp;ts=1329648745&amp;use_mirror=kent
+}
+const
+  Refresh='<meta http-equiv="refresh"';
+  URLMarker='url=';
+var
+  Counter: integer;
+  HTMLBody: TStringList;
+  RefreshStart: integer;
+  URLStart: integer;
+begin
+  HTMLBody:=TStringList.Create;
+  try
+    HTMLBody.LoadFromStream(Document);
+    for Counter:=0 to HTMLBody.Count-1 do
+    begin
+      // This line should be between noscript tags and give the direct download locations:
+      RefreshStart:=Ansipos(Refresh, HTMLBody[Counter]);
+      if RefreshStart>0 then
+      begin
+        URLStart:=AnsiPos(URLMarker, HTMLBody[Counter])+Length(URLMarker);
+        if URLStart>RefreshStart then
+        begin
+          // Look for closing "
+          URL:=Copy(HTMLBody[Counter],
+            URLStart,
+            PosEx('"',HTMLBody[Counter],URLStart+1)-URLStart);
+          break;
+        end;
+      end;
+    end;
+  finally
+    HTMLBody.Free;
+  end;
+  result:=URL;
+end;
+
+function SourceForgeURL(URL: string): string;
+// Detects sourceforge download and tries to deal with
+// redirection, and extracting direct download link.
+// Thanks to
+// Ocye: http://lazarus.freepascal.org/index.php/topic,13425.msg70575.html#msg70575
+const
+  SFProjectPart = '//sourceforge.net/projects/';
+  SFFilesPart = '/files/';
+  SFDownloadPart ='/download';
+var
+  HTTPSender: THTTPSend;
+  i, j: integer;
+  FoundCorrectURL: boolean;
+  SFDirectory: string; //Sourceforge directory
+  SFDirectoryBegin: integer;
+  SFFileBegin: integer;
+  SFFilename: string; //Sourceforge name of file
+  SFProject: string;
+  SFProjectBegin: integer;
+label
+  loop;
+begin
+  // Detect SourceForge download; e.g. from URL
+  //          1         2         3         4         5         6         7         8         9
+  // 1234557890123456789012345578901234567890123455789012345678901234557890123456789012345578901234567890
+  // http://sourceforge.net/projects/base64decoder/files/base64decoder/version%202.0/b64util.zip/download
+  //                                 ^^^project^^^       ^^^directory............^^^ ^^^file^^^
+  FoundCorrectURL:=true; //Assume not a SF download
+  i:=Pos(SFProjectPart, URL);
+  if i>0 then
+  begin
+    // Possibly found project; now extract project, directory and filename parts.
+    SFProjectBegin:=i+Length(SFProjectPart);
+    j := PosEx(SFFilesPart, URL, SFProjectBegin);
+    if (j>0) then
+    begin
+      SFProject:=Copy(URL, SFProjectBegin, j-SFProjectBegin);
+      SFDirectoryBegin:=PosEx(SFFilesPart, URL, SFProjectBegin)+Length(SFFilesPart);
+      if SFDirectoryBegin>0 then
+      begin
+        // Find file
+        // URL might have trailing arguments... so: search for first
+        // /download coming up from the right, but it should be after
+        // /files/
+        i:=RPos(SFDownloadPart, URL);
+        // Now look for previous / so we can make out the file
+        // This might perhaps be the trailing / in /files/
+        SFFileBegin:=RPosEx('/',URL,i-1)+1;
+
+        if SFFileBegin>0 then
+        begin
+          SFFilename:=Copy(URL,SFFileBegin, i-SFFileBegin);
+          //Include trailing /
+          SFDirectory:=Copy(URL, SFDirectoryBegin, SFFileBegin-SFDirectoryBegin);
+          FoundCorrectURL:=false;
+        end;
+      end;
+    end;
+  end;
+
+  if not FoundCorrectURL then
+  begin
+    try
+      // Rewrite URL if needed for Sourceforge download redirection
+      // Detect direct link in HTML body and get URL from that
+    loop:
+      HTTPSender := THTTPSend.Create;
+      //Who knows, this might help:
+      HTTPSender.UserAgent:='curl/7.21.0 (i686-pc-linux-gnu) libcurl/7.21.0 OpenSSL/0.9.8o zlib/1.2.3.4 libidn/1.18';
+      while not FoundCorrectURL do
+      begin
+        HTTPSender.HTTPMethod('GET', URL);
+        case HTTPSender.Resultcode of
+          301, 302, 307:
+            begin
+              for i := 0 to HTTPSender.Headers.Count - 1 do
+                if (Pos('Location: ', HTTPSender.Headers.Strings[i]) > 0) or
+                  (Pos('location: ', HTTPSender.Headers.Strings[i]) > 0) then
+                begin
+                  j := Pos('use_mirror=', HTTPSender.Headers.Strings[i]);
+                  if j > 0 then
+                    URL :=
+                      'http://' + RightStr(HTTPSender.Headers.Strings[i],
+                      length(HTTPSender.Headers.Strings[i]) - j - 10) +
+                      '.dl.sourceforge.net/project/' +
+                      SFProject + '/' + SFDirectory + SFFilename
+                  else
+                    URL:=StringReplace(
+                      HTTPSender.Headers.Strings[i], 'Location: ', '', []);
+                  HTTPSender.Clear;//httpsend
+                  FoundCorrectURL:=true;
+                  break; //out of rewriting loop
+              end;
+            end;
+          100..200:
+            begin
+              //Assume a sourceforge timer/direct link page
+              URL:=SFDirectLinkURL(URL, HTTPSender.Document); //Find out
+              FoundCorrectURL:=true; //We're done by now
+            end;
+          else
+            begin
+              HTTPSender.Free;
+              goto loop;
+            end;
+        end;//case
+      end;//while
+    finally
+      HTTPSender.Free;
+    end;
+  end;
+  result:=URL;
 end;
 
 var
@@ -1383,13 +1571,18 @@ globReturn:
       Sleep(500);
     end;
   end;
-  if output is TStringList then
-    TStringList(output).LoadFromStream(HTTP.Document)
+  if HTTP.ResultCode <> 404 then
+  begin
+    if output is TStringList then
+      TStringList(output).LoadFromStream(HTTP.Document)
+    else
+    if output is TPicture then
+      TPicture(output).LoadFromStream(HTTP.Document);
+    Result:= TRUE;
+  end
   else
-  if output is TPicture then
-    TPicture(output).LoadFromStream(HTTP.Document);
+    Result:= FALSE;
   HTTP.Free;
-  Result:= TRUE;
 end;
 
 function  SavePage(URL: String; const Path, name: String; const Reconnect: Cardinal): Boolean;
@@ -1473,6 +1666,38 @@ begin
   HTTP.Document.SaveToFile(Path+name+ext);
   HTTP.Free;
   Result:= TRUE;
+end;
+
+procedure QuickSortChapters(var chapterList, linkList: TStringList);
+  procedure QSort(L, R: Cardinal);
+  var i, j: Cardinal;
+         X: String;
+  begin
+    X:= chapterList.Strings[(L+R) div 2];
+    i:= L;
+    j:= R;
+    repeat
+      while StrComp(PChar(chapterList.Strings[i]), PChar(X))<0 do Inc(i);
+      while StrComp(PChar(chapterList.Strings[j]), PChar(X))>0 do Dec(j);
+      if i<=j then
+      begin
+        chapterList.Exchange(i, j);
+        linkList   .Exchange(i, j);
+        Inc(i);
+        Dec(j);
+      end;
+    until i>j;
+    if L < j then QSort(L, j);
+    if i < R then QSort(i, R);
+  end;
+
+var
+  i: Cardinal;
+
+begin
+  if chapterList.Count <= 2 then
+    exit;
+  QSort(1, chapterList.Count-1);
 end;
 
 procedure QuickSortData(var merge: TStringList);

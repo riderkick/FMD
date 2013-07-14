@@ -334,8 +334,10 @@ end;
 
 procedure   TUpdateMangaManagerThread.Execute;
 var
+  s      : String;
   i, j, k: Cardinal;
   Process: TProcess;
+  syncProcess: TDataProcess;
 begin
  // while NOT Terminated do
   begin
@@ -443,7 +445,8 @@ begin
 
       if (website <> TURKCRAFT_NAME) AND
          (website <> MANGAFRAME_NAME) AND
-         (website <> MANGAVADISI_NAME) then
+         (website <> MANGAVADISI_NAME) AND
+         (website <> KOMIKID_NAME) then
       begin
         workPtr:= 0;//mainDataProcess.Data.Count;
 
@@ -487,6 +490,53 @@ begin
 
       Sleep(100);
       while threadCount > 0 do Sleep(100);
+
+      // sync data based on existing sites
+      if  (mainDataProcess.Data.Count > 0) AND
+         ((website = MANGASTREAM_NAME) OR
+          (website = MANGAVADISI_NAME) OR
+          (website = MANGAFRAME_NAME) OR
+          (website = TURKCRAFT_NAME) OR
+          (website = KOMIKID_NAME)) AND
+         ((FileExists(DATA_FOLDER + ANIMEA_NAME + DATA_EXT)) OR
+          (FileExists(DATA_FOLDER + MANGAPARK_NAME + DATA_EXT))) then
+      begin
+        syncProcess:= TDataProcess.Create;
+        if FileExists(DATA_FOLDER + MANGAPARK_NAME + DATA_EXT) then
+          syncProcess.LoadFromFile(MANGAPARK_NAME)
+        else
+        if FileExists(DATA_FOLDER + ANIMEA_NAME + DATA_EXT) then
+          syncProcess.LoadFromFile(ANIMEA_NAME);
+
+        // brute force ...
+        for k:= 0 to mainDataProcess.Data.Count-1 do
+        begin
+          for j:= 0 to syncProcess.Data.Count-1 do
+            if SameText(mainDataProcess.Param[k, DATA_PARAM_NAME], syncProcess.Param[j, DATA_PARAM_NAME]) then
+            begin
+              if website = MANGASTREAM_NAME then
+                s:= syncProcess.Param[j, DATA_PARAM_SUMMARY]
+              else
+                s:= mainDataProcess.Param[k, DATA_PARAM_SUMMARY];
+              mainDataProcess.Data.Strings[k]:=
+                RemoveStringBreaks(
+                  mainDataProcess.Param[k, DATA_PARAM_NAME]      +SEPERATOR+
+                  mainDataProcess.Param[k, DATA_PARAM_LINK]      +SEPERATOR+
+                  syncProcess    .Param[j, DATA_PARAM_AUTHORS]   +SEPERATOR+
+                  syncProcess    .Param[j, DATA_PARAM_ARTISTS]   +SEPERATOR+
+                  syncProcess    .Param[j, DATA_PARAM_GENRES]    +SEPERATOR+
+                  mainDataProcess.Param[k, DATA_PARAM_STATUS]    +SEPERATOR+
+                  s+SEPERATOR+
+                  mainDataProcess.Param[k, DATA_PARAM_NUMCHAPTER]+SEPERATOR+
+                  mainDataProcess.Param[k, DATA_PARAM_JDN]       +SEPERATOR+
+                  mainDataProcess.Param[k, DATA_PARAM_READ]      +SEPERATOR);
+              break;
+            end;
+        end;
+
+        syncProcess.Free;
+      end;
+
       mainDataProcess.SaveToFile(website);
       mainDataProcess.Free;
 

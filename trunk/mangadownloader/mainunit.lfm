@@ -272,11 +272,11 @@ object MainForm: TMainForm
     Height = 458
     Top = 32
     Width = 620
-    ActivePage = tsOption
+    ActivePage = tsInformation
     Align = alClient
     Font.Style = [fsBold]
     ParentFont = False
-    TabIndex = 4
+    TabIndex = 1
     TabOrder = 1
     OnChange = pcMainChange
     object tsDownload: TTabSheet
@@ -345,27 +345,27 @@ object MainForm: TMainForm
     end
     object tsInformation: TTabSheet
       Caption = 'Manga Infos'
-      ClientHeight = 407
-      ClientWidth = 589
+      ClientHeight = 430
+      ClientWidth = 612
       object sbInformation: TScrollBox
         Left = 0
-        Height = 407
+        Height = 430
         Top = 0
-        Width = 589
-        HorzScrollBar.Page = 585
-        VertScrollBar.Page = 403
+        Width = 612
+        HorzScrollBar.Page = 608
+        VertScrollBar.Page = 426
         Align = alClient
-        ClientHeight = 403
-        ClientWidth = 585
+        ClientHeight = 426
+        ClientWidth = 608
         TabOrder = 0
         object pnInfomation: TPanel
           Left = 0
           Height = 234
           Top = 0
-          Width = 585
+          Width = 608
           Align = alTop
           ClientHeight = 234
-          ClientWidth = 585
+          ClientWidth = 608
           ParentFont = False
           TabOrder = 0
           object imCover: TImage
@@ -381,7 +381,7 @@ object MainForm: TMainForm
             Left = 175
             Height = 216
             Top = 8
-            Width = 405
+            Width = 428
             Anchors = [akTop, akLeft, akRight, akBottom]
             HideSelection = False
             ParentFont = False
@@ -401,25 +401,25 @@ object MainForm: TMainForm
           Left = 0
           Height = 5
           Top = 234
-          Width = 585
+          Width = 608
           Align = alTop
           ResizeAnchor = akTop
         end
         object pnChapterList: TPanel
           Left = 0
-          Height = 164
+          Height = 187
           Top = 239
-          Width = 585
+          Width = 608
           Align = alClient
-          ClientHeight = 164
-          ClientWidth = 585
+          ClientHeight = 187
+          ClientWidth = 608
           TabOrder = 2
           object clbChapterList: TCheckListBox
             AnchorSideTop.Side = asrBottom
             Left = 8
-            Height = 71
+            Height = 94
             Top = 9
-            Width = 569
+            Width = 592
             Anchors = [akTop, akLeft, akRight, akBottom]
             ItemHeight = 0
             MultiSelect = True
@@ -431,7 +431,7 @@ object MainForm: TMainForm
           object edSaveTo: TLabeledEdit
             Left = 8
             Height = 23
-            Top = 102
+            Top = 125
             Width = 287
             Anchors = [akLeft, akBottom]
             EditLabel.AnchorSideLeft.Control = edSaveTo
@@ -440,7 +440,7 @@ object MainForm: TMainForm
             EditLabel.AnchorSideBottom.Control = edSaveTo
             EditLabel.Left = 8
             EditLabel.Height = 15
-            EditLabel.Top = 84
+            EditLabel.Top = 107
             EditLabel.Width = 287
             EditLabel.Caption = 'Save to'
             EditLabel.ParentColor = False
@@ -451,7 +451,7 @@ object MainForm: TMainForm
           object btDownload: TBitBtn
             Left = 399
             Height = 30
-            Top = 95
+            Top = 118
             Width = 80
             Anchors = [akLeft, akBottom]
             Caption = 'Download'
@@ -461,7 +461,7 @@ object MainForm: TMainForm
           object btBrowse: TBitBtn
             Left = 303
             Height = 30
-            Top = 95
+            Top = 118
             Width = 80
             Anchors = [akLeft, akBottom]
             Caption = 'Browse'
@@ -471,7 +471,7 @@ object MainForm: TMainForm
           object cbAddAsStopped: TCheckBox
             Left = 8
             Height = 19
-            Top = 130
+            Top = 153
             Width = 214
             Anchors = [akLeft, akBottom]
             Caption = 'Add to download list as stopped task'
@@ -482,7 +482,7 @@ object MainForm: TMainForm
           object cbAddToFavorites: TCheckBox
             Left = 311
             Height = 19
-            Top = 130
+            Top = 153
             Width = 106
             Anchors = [akLeft, akBottom]
             Caption = 'Add to Favorites'
@@ -492,7 +492,7 @@ object MainForm: TMainForm
           object btReadOnline: TButton
             Left = 487
             Height = 30
-            Top = 95
+            Top = 118
             Width = 90
             Anchors = [akLeft, akBottom]
             Caption = 'Read online'
@@ -1137,13 +1137,13 @@ object MainForm: TMainForm
     end
     object tsFavorites: TTabSheet
       Caption = 'Favorites'
-      ClientHeight = 407
-      ClientWidth = 589
+      ClientHeight = 430
+      ClientWidth = 612
       object vtFavorites: TVirtualStringTree
         Left = 0
-        Height = 339
+        Height = 362
         Top = 0
-        Width = 589
+        Width = 612
         Align = alTop
         Anchors = [akTop, akLeft, akRight, akBottom]
         DefaultText = 'Node'
@@ -1184,8 +1184,8 @@ object MainForm: TMainForm
       object btFavoritesCheckNewChapter: TBitBtn
         Left = 33
         Height = 40
-        Top = 357
-        Width = 528
+        Top = 380
+        Width = 551
         Anchors = [akLeft, akRight, akBottom]
         Caption = 'Check for new chapter'
         OnClick = btFavoritesCheckNewChapterClick
@@ -1745,9 +1745,9 @@ object MainForm: TMainForm
       end
       object btOptionApply: TButton
         Left = 49
-        Height = 33
-        Top = 379
-        Width = 99
+        Height = 41
+        Top = 376
+        Width = 128
         Anchors = [akBottom]
         Caption = 'Apply'
         OnClick = btOptionApplyClick
@@ -1756,13 +1756,13 @@ object MainForm: TMainForm
     end
     object tsAbout: TTabSheet
       Caption = 'About'
-      ClientHeight = 413
-      ClientWidth = 589
+      ClientHeight = 430
+      ClientWidth = 612
       object rmAbout: TRichMemo
         Left = 0
-        Height = 346
+        Height = 363
         Top = 0
-        Width = 589
+        Width = 612
         Align = alTop
         Anchors = [akTop, akLeft, akRight, akBottom]
         Font.Style = [fsBold]
@@ -1775,18 +1775,18 @@ object MainForm: TMainForm
       object btCheckVersion: TBitBtn
         Left = 25
         Height = 40
-        Top = 362
-        Width = 192
+        Top = 379
+        Width = 208
         Anchors = [akLeft, akBottom]
         Caption = 'Check for new version'
         OnClick = btCheckVersionClick
         TabOrder = 1
       end
       object btVisitMyBlog: TBitBtn
-        Left = 233
+        Left = 249
         Height = 40
-        Top = 362
-        Width = 192
+        Top = 379
+        Width = 208
         Anchors = [akLeft, akBottom]
         Caption = 'Visit my blog'
         OnClick = btVisitMyBlogClick
