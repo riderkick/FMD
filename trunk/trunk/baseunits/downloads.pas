@@ -358,6 +358,39 @@ var
     l.Free;
   end;
 
+  function GetAnimeExtremistPageNumber: Boolean;
+  var
+    i, j: Cardinal;
+    l   : TStringList;
+    s   : String;
+  begin
+    l:= TStringList.Create;
+    parse:= TStringList.Create;
+    s:= StringReplace(ANIMEEXTREMIST_ROOT + URL, '.html', '', []) + '-1.html';
+    Result:= GetPage(TObject(l),
+                     StringReplace(ANIMEEXTREMIST_ROOT + URL, '.html', '', []) + '-1.html',
+                     manager.container.manager.retryConnect);
+    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.Exec;
+    Parser.Free;
+    if parse.Count>0 then
+    begin
+      manager.container.pageNumber:= 0;
+      for i:= 0 to parse.Count-1 do
+      begin
+        if Pos('</select>', parse.Strings[i]) > 0 then
+        begin
+          manager.container.pageNumber:= StrToInt(GetString(TrimLeft(TrimRight(parse.Strings[i-3]+'~!@')), 'Pagina ', '~!@'));
+          break;
+        end;
+      end;
+    end;
+    parse.Free;
+    l.Free;
+  end;
+
   function GetMangaInnPageNumber: Boolean;
   var
     s   : String;
@@ -1149,6 +1182,9 @@ begin
   if manager.container.mangaSiteID = SUBMANGA_ID then
     Result:= GetSubMangaPageNumber
   else
+  if manager.container.mangaSiteID = ANIMEEXTREMIST_ID then
+    Result:= GetAnimeExtremistPageNumber
+  else
   if manager.container.mangaSiteID = KOMIKID_ID then
     Result:= GetKomikidPageNumber
   else
@@ -1913,6 +1949,39 @@ var
     l.Free;
   end;
 
+  function GetAnimeExtremistLinkPage: Boolean;
+  var
+    s: String;
+    j,
+    i: Cardinal;
+    l: TStringList;
+  begin
+    l:= TStringList.Create;
+    s:= DecodeUrl(StringReplace(ANIMEEXTREMIST_ROOT + URL, '.html', '', []) + '-' + IntToStr(workPtr+1) + '.html');
+    Result:= GetPage(TObject(l),
+                     s,
+                     manager.container.manager.retryConnect);
+    parse:= TStringList.Create;
+    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.Exec;
+    Parser.Free;
+
+    if parse.Count>0 then
+    begin
+      for i:= 0 to parse.Count-1 do
+        if (Pos('id="photo"', parse.Strings[i])>0) then
+        begin
+          s:= GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src='));
+          manager.container.pageLinks.Strings[workPtr]:= GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src='));
+          break;
+        end;
+    end;
+    parse.Free;
+    l.Free;
+  end;
+
   function GetMangaPandaLinkPage: Boolean;
   var
     s: String;
@@ -2414,6 +2483,9 @@ begin
   if manager.container.mangaSiteID = SUBMANGA_ID then
     Result:= GetSubMangaLinkPage
   else
+  if manager.container.mangaSiteID = ANIMEEXTREMIST_ID then
+    Result:= GetAnimeExtremistLinkPage
+  else
   if manager.container.mangaSiteID = KOMIKID_ID then
     Result:= GetKomikidLinkPage
   else
@@ -2477,12 +2549,18 @@ var
     end;
     Result:= FALSE;
     HTTP:= THTTPSend.Create;
+    HTTP.UserAgent:='curl/7.21.0 (i686-pc-linux-gnu) libcurl/7.21.0 OpenSSL/0.9.8o zlib/1.2.3.4 libidn/1.18';
     HTTP.ProxyHost:= Host;
     HTTP.ProxyPort:= Port;
     HTTP.ProxyUser:= User;
     HTTP.ProxyPass:= Pass;
     if manager.container.mangaSiteID = HENTAI2READ_ID then
       HTTP.Headers.Insert(0, 'Referer:'+HENTAI2READ_ROOT+'/')
+    else
+    if manager.container.mangaSiteID = ANIMEEXTREMIST_ID then
+    begin
+      HTTP.Headers.Insert(0, 'Referer:'+ANIMEEXTREMIST_ROOT+'/');
+    end
     else
     if manager.container.mangaSiteID = KISSMANGA_ID then
       HTTP.Headers.Insert(0, 'Referer:'+KISSMANGA_ROOT+'/')
@@ -2496,6 +2574,7 @@ var
           (HTTP.ResultCode >= 500) OR
           (HTTP.ResultCode = 403) do
     begin
+      HTTP.Document.SaveToFile('E:\FreeSpace\FMD\trunk\mangadownloader\test.txt');
       if Reconnect <> 0 then
       begin
         if Reconnect <= counter then
@@ -2685,7 +2764,7 @@ begin
   if (container.manager.compress >= 1) then
   begin
     Sleep(100);
-    container.downloadInfo.Status:= Format('%s (%d/%d)', ['Compressing...', container.currentDownloadChapterPtr, container.chapterLinks.Count]);
+    container.downloadInfo.Status:= Format('%s (%d/%d)', [stIsCompressing, container.currentDownloadChapterPtr, container.chapterLinks.Count]);
     MainForm.vtDownload.Repaint;
     Compresser:= TCompress.Create;
     case container.manager.compress of

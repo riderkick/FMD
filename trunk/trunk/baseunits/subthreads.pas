@@ -231,6 +231,8 @@ begin
                     mtInformation, [mbYes, mbNo], 0) = mrYes then
   begin
     CopyFile(oldDir + 'updater.exe', oldDir + 'old_updater.exe');
+    CopyFile(oldDir + CONFIG_FOLDER + CONFIG_FILE,
+             oldDir + CONFIG_FOLDER + CONFIG_FILE + '.tmp');
     Process:= TProcess.Create(nil);
     Process.CommandLine:= oldDir + 'old_updater.exe 1';
     Process.Execute;

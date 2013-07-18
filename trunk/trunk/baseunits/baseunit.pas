@@ -37,7 +37,7 @@ const
   FILTER_HIDE           = 0;
   FILTER_SHOW           = 1;
 
-  Genre: array [0..37] of String =
+  defaultGenre: array [0..37] of String =
     ('Action'       , 'Adult'        , 'Adventure'    , 'Comedy',
      'Doujinshi'    , 'Drama'        , 'Ecchi'        , 'Fantasy',
      'Gender Bender', 'Harem'        , 'Hentai'       , 'Historical',
@@ -48,7 +48,7 @@ const
      'Shounen'      , 'Shounen Ai'   , 'Slice of Life', 'Smut',
      'Sports'       , 'Supernatural' , 'Traged'       , 'Yaoi',
      'Yuri'         , 'Webtoons');
-
+  {
   GenreMeaning: array [0..37] of String =
     ('A work typically depicting fighting, violence, chaos, and fast paced motion.',
      'Contains content that is suitable only for adults. Titles in this category may include prolonged scenes of intense violence and/or graphic sexual content and nudity.',
@@ -87,7 +87,7 @@ const
      'Contains events resulting in great loss and misfortune.',
      'This work usually involves intimate relationships between men.',
      'This work usually involves intimate relationships between women.',
-     '');
+     '');       }
 
   Symbols: array [0..8] of Char =
     ('\', '/', ':', '*', '?', '"', '<', '>', '|');
@@ -162,10 +162,13 @@ const
   KOMIKID_NAME      = 'Komikid';      KOMIKID_ID     = 28;
   SUBMANGA_NAME     = 'SubManga';     SUBMANGA_ID    = 29;
   ESMANGAHERE_NAME  = 'ESMangaHere';  ESMANGAHERE_ID = 30;
+  ANIMEEXTREMIST_NAME  = 'AnimExtremist';  ANIMEEXTREMIST_ID = 31;
 
   DEFAULT_LIST = ANIMEA_NAME+'!%~'+MANGAFOX_NAME+'!%~'+MANGAHERE_NAME+'!%~'+MANGAINN_NAME+'!%~'+MANGAREADER_NAME+'!%~';
 
 var
+  Genre: array [0..37] of String;
+
   // cbOptionLetFMDDoItemIndex
   cbOptionLetFMDDoItemIndex: Cardinal = 0;
 
@@ -299,6 +302,9 @@ var
   ESMANGAHERE_ROOT   : String = 'http://es.mangahere.com';
   ESMANGAHERE_BROWSER: String = '/mangalist/';
 
+  ANIMEEXTREMIST_ROOT   : String = 'http://www.animextremist.com';
+  ANIMEEXTREMIST_BROWSER: String = '/mangas.htm?ord=todos';
+
   UPDATE_URL      : String = 'http://tenet.dl.sourceforge.net/project/fmd/FMD/updates/';
 
   OptionAutoCheckMinutes,
@@ -330,6 +336,7 @@ var
   stUpdaterCheck,
 
   stOptionAutoCheckMinutesCaption,
+  stIsCompressing,
   stDlgUpdaterVersionRequire,
   stDlgUpdaterIsRunning,
   stDlgLatestVersion,
@@ -738,7 +745,9 @@ begin
   else
   if name = SUBMANGA_NAME then Result:= SUBMANGA_ID
   else
-  if name = ESMANGAHERE_NAME then Result:= ESMANGAHERE_ID;
+  if name = ESMANGAHERE_NAME then Result:= ESMANGAHERE_ID
+  else
+  if name = ANIMEEXTREMIST_NAME then Result:= ANIMEEXTREMIST_ID;
 end;
 
 function  GetMangaSiteName(const ID: Cardinal): String;
@@ -801,7 +810,9 @@ begin
   else
   if ID = SUBMANGA_ID then Result:= SUBMANGA_NAME
   else
-  if ID = ESMANGAHERE_ID then Result:= ESMANGAHERE_NAME;
+  if ID = ESMANGAHERE_ID then Result:= ESMANGAHERE_NAME
+  else
+  if ID = ANIMEEXTREMIST_ID then Result:= ANIMEEXTREMIST_NAME;
 end;
 
 // bad coding.. but this is how FMD works
@@ -1438,6 +1449,7 @@ begin
   bttHTTP.MimeType:= 'Content-Type: application/x-www-form-urlencoded';
   bttHTTP.KeepAlive:= TRUE;
   bttHTTP.KeepAliveTimeout:= 1000;
+  bttHTTP.UserAgent:='curl/7.21.0 (i686-pc-linux-gnu) libcurl/7.21.0 OpenSSL/0.9.8o zlib/1.2.3.4 libidn/1.18';
 
   while (NOT bttHTTP.HTTPMethod('GET', URL)) OR
         (bttHTTP.ResultCode > 500) do
@@ -1504,6 +1516,7 @@ begin
   if (isByPassHTTP) AND (Pos('HTTP://', UpCase(URL)) = 0) then
     exit;
   HTTP:= THTTPSend.Create;
+  HTTP.UserAgent:='curl/7.21.0 (i686-pc-linux-gnu) libcurl/7.21.0 OpenSSL/0.9.8o zlib/1.2.3.4 libidn/1.18';
 globReturn:
   HTTP.ProxyHost:= Host;
   HTTP.ProxyPort:= Port;
@@ -1599,8 +1612,9 @@ begin
   HTTP.ProxyPort:= Port;
   HTTP.ProxyUser:= User;
   HTTP.ProxyPass:= Pass;
+  HTTP.UserAgent:='curl/7.21.0 (i686-pc-linux-gnu) libcurl/7.21.0 OpenSSL/0.9.8o zlib/1.2.3.4 libidn/1.18';
   if Pos(HENTAI2READ_ROOT, URL) <> 0 then
-    HTTP.Headers.Insert(0, 'Referer:'+HENTAI2READ_ROOT+'/');
+    HTTP.Headers.Insert(0, 'Referer:'+HENTAI2READ_ROOT+'/')  ;
   while (NOT HTTP.HTTPMethod('GET', URL)) OR
         (HTTP.ResultCode >= 500) do
   begin
