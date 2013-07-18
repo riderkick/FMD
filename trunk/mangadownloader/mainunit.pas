@@ -1060,6 +1060,30 @@ begin
     SubThread.website:= BLOGTRUYEN_NAME
   end
   else
+  if Pos(MANGAPANDA_ROOT, edURL.Text) > 0 then
+  begin
+    SubThread.link   := edURL.Text;
+    SubThread.website:= MANGAPANDA_NAME
+  end
+  else
+  if Pos(SUBMANGA_ROOT, edURL.Text) > 0 then
+  begin
+    SubThread.link   := edURL.Text;
+    SubThread.website:= SUBMANGA_NAME
+  end
+  else
+  if Pos(ESMANGAHERE_ROOT, edURL.Text) > 0 then
+  begin
+    SubThread.link   := edURL.Text;
+    SubThread.website:= ESMANGAHERE_NAME
+  end
+  else
+  if Pos(ANIMEEXTREMIST_ROOT, edURL.Text) > 0 then
+  begin
+    SubThread.link   := edURL.Text;
+    SubThread.website:= ANIMEEXTREMIST_NAME
+  end
+  else
   if Pos(GEHENTAI_ROOT, edURL.Text) > 0 then
   begin
     SubThread.link   := edURL.Text;
@@ -2398,13 +2422,13 @@ var
 begin
   for i:= 0 to 37 do
   begin
-    TCheckBox(pnGenres.Controls[i]).Caption:= Genre[i];
+   // TCheckBox(pnGenres.Controls[i]).Caption:= Genre[i];
     TCheckBox(pnGenres.Controls[i]).State:= cbGrayed;
-    if GenreMeaning[i] <> '' then
+   { if GenreMeaning[i] <> '' then
     begin
       TCheckBox(pnGenres.Controls[i]).Hint:= GenreMeaning[i];
       TCheckBox(pnGenres.Controls[i]).ShowHint:= TRUE;
-    end;
+    end; }
   end;
 end;
 
@@ -2972,6 +2996,7 @@ begin
   btCheckVersion.Caption   := stUpdaterCheck;
 
   stOptionAutoCheckMinutesCaption:= language.ReadString(lang, 'OptionAutoCheckMinutesCaption', '');
+  stIsCompressing          := language.ReadString(lang, 'stIsCompressing', '');
   stDlgUpdaterVersionRequire:= language.ReadString(lang, 'stDlgUpdaterVersionRequire', '');
   stDlgUpdaterIsRunning    := language.ReadString(lang, 'stDlgUpdaterIsRunning', '');
   stDlgLatestVersion       := language.ReadString(lang, 'stDlgLatestVersion', '');
@@ -2995,6 +3020,15 @@ begin
 
   lbOptionLetFMDDo.Caption := language.ReadString(lang, 'lbOptionLetFMDDoCaption', '');
   s:= language.ReadString(lang, 'cbOptionLetFMDDo', '');
+
+  // apply genres & descriptions
+  for i:= 0 to 37 do
+  begin
+    Genre[i]:= defaultGenre[i];//language.ReadString(lang, StringReplace(StringReplace(defaultGenre[i], ' ', '', [rfReplaceAll]), '-', '', [rfReplaceAll])+'G', '')
+    TCheckBox(pnGenres.Controls[i]).Caption:= Genre[i];
+    TCheckBox(pnGenres.Controls[i]).Hint:= language.ReadString(lang, StringReplace(StringReplace(defaultGenre[i], ' ', '', [rfReplaceAll]), '-', '', [rfReplaceAll])+'M', '');
+    TCheckBox(pnGenres.Controls[i]).ShowHint:= TRUE;
+  end;
 
   // add information to cbOptionLetFMDDo
   cbOptionLetFMDDo.Items.Clear;
