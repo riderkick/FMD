@@ -1516,12 +1516,12 @@ begin
   if (isByPassHTTP) AND (Pos('HTTP://', UpCase(URL)) = 0) then
     exit;
   HTTP:= THTTPSend.Create;
-  HTTP.UserAgent:='curl/7.21.0 (i686-pc-linux-gnu) libcurl/7.21.0 OpenSSL/0.9.8o zlib/1.2.3.4 libidn/1.18';
 globReturn:
   HTTP.ProxyHost:= Host;
   HTTP.ProxyPort:= Port;
   HTTP.ProxyUser:= User;
   HTTP.ProxyPass:= Pass;
+  HTTP.UserAgent:='curl/7.21.0 (i686-pc-linux-gnu) libcurl/7.21.0 OpenSSL/0.9.8o zlib/1.2.3.4 libidn/1.18';
 
   if Pos(GEHENTAI_ROOT, URL) <> 0 then
     HTTP.Headers.Insert(0, 'Referer:'+URL)
@@ -1532,8 +1532,7 @@ globReturn:
     HTTP.KeepAlive:= TRUE;
     HTTP.KeepAliveTimeout:= 100000;
   end;
-
-  while (NOT HTTP.HTTPMethod('GET', URL)) OR
+  while (NOT HTTP.HTTPMethod('GET', 'http://hentai2read.com/hentai-list/all/any/name-az/1/')) OR
         (HTTP.ResultCode > 500) do
   begin
     code:= HTTP.ResultCode;

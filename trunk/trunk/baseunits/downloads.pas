@@ -2574,7 +2574,6 @@ var
           (HTTP.ResultCode >= 500) OR
           (HTTP.ResultCode = 403) do
     begin
-      HTTP.Document.SaveToFile('E:\FreeSpace\FMD\trunk\mangadownloader\test.txt');
       if Reconnect <> 0 then
       begin
         if Reconnect <= counter then

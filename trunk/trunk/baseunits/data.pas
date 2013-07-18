@@ -1680,7 +1680,7 @@ var
     s: String;
   begin
     Result:= INFORMATION_NOT_FOUND;
-    if NOT GetPage(TObject(source), HENTAI2READ_ROOT + HENTAI2READ_BROWSER + URL, 0) then
+    if NOT GetPage(TObject(source), HENTAI2READ_ROOT + HENTAI2READ_BROWSER + IntToStr(StrToInt(URL)+1) + '/', 0) then
     begin
       Result:= NET_PROBLEM;
       source.Free;
@@ -1699,18 +1699,13 @@ var
     end;
     for i:= 0 to parse.Count-1 do
     begin
-      if (GetTagName(parse.Strings[i]) = 'td') AND
-         ((GetAttributeValue(GetTagAttribute(parse.Strings[i], 'class='))='name Completed') OR
-          (GetAttributeValue(GetTagAttribute(parse.Strings[i], 'class='))='name Ongoing')) then
+      if Pos('class="lst-anm-ifo"', parse.Strings[i])>0 then
       begin
         begin
           Result:= NO_ERROR;
-          s:= TrimLeft(TrimRight(StringFilter(GetAttributeValue(GetTagAttribute(parse.Strings[i+1], 'title=')))));
-        //  if s <> 'Hajimete no Aku' then
-          begin
-            names.Add(s);
-            links.Add(StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i+1], 'href=')), HENTAI2READ_ROOT, '', []));
-          end;
+          s:= TrimLeft(TrimRight(StringFilter(GetAttributeValue(GetTagAttribute(parse.Strings[i+3], 'title=')))));
+          names.Add(s);
+          links.Add(StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i+3], 'href=')), HENTAI2READ_ROOT, '', []));
         end;
       end;
     end;

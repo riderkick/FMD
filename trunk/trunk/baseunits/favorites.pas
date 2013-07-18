@@ -242,6 +242,7 @@ begin
   end;
 end;
 
+// SubManga & MangaStream use a different checking method
 procedure   TFavoriteManager.ShowResult;
 var
   isNewChapters   : array of Boolean;
@@ -276,13 +277,15 @@ begin
   begin
     isNewChapters[i]:= FALSE;
     if (mangaInfo[i].website <> MANGASTREAM_NAME) AND
+       (mangaInfo[i].website <> SUBMANGA_NAME) AND
        (mangaInfo[i].numChapter > StrToInt(favoriteInfo[i].currentChapter)) then
     begin
       isNewChapters[i]:= TRUE;
       Inc(newC);
     end
     else
-    if (mangaInfo[i].website = MANGASTREAM_NAME) then
+    if (mangaInfo[i].website = MANGASTREAM_NAME) OR
+       (mangaInfo[i].website = SUBMANGA_NAME) then
     begin
       l.Clear;
       GetParams(l, favoriteInfo[i].downloadedChapterList);
@@ -353,7 +356,8 @@ begin
     for i:= 0 to Count-1 do
     begin
       newChapter:= mangaInfo[i].numChapter;
-      if favoriteInfo[i].Website <> MANGASTREAM_NAME then
+      if (favoriteInfo[i].Website <> MANGASTREAM_NAME) AND
+         (favoriteInfo[i].website <> SUBMANGA_NAME) then
       begin
         currentChapter:= StrToInt(favoriteInfo[i].currentChapter);
       end
@@ -495,7 +499,8 @@ begin
     if mangaInfo[i].numChapter>0 then
     begin
       favoriteInfo[i].currentChapter:= IntToStr(mangaInfo[i].numChapter);
-      if (mangaInfo[i].website = MANGASTREAM_NAME) then
+      if (mangaInfo[i].website = MANGASTREAM_NAME) OR
+         (mangaInfo[i].website = SUBMANGA_NAME) then
       begin
         favoriteInfo[i].downloadedChapterList:= '';
         for j:= 0 to mangaInfo[i].numChapter-1 do
