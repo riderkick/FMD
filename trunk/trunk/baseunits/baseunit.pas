@@ -163,6 +163,7 @@ const
   SUBMANGA_NAME     = 'SubManga';     SUBMANGA_ID    = 29;
   ESMANGAHERE_NAME  = 'ESMangaHere';  ESMANGAHERE_ID = 30;
   ANIMEEXTREMIST_NAME  = 'AnimExtremist';  ANIMEEXTREMIST_ID = 31;
+  MANGAKU_NAME      = 'Mangaku';      MANGAKU_ID     = 32;
 
   DEFAULT_LIST = ANIMEA_NAME+'!%~'+MANGAFOX_NAME+'!%~'+MANGAHERE_NAME+'!%~'+MANGAINN_NAME+'!%~'+MANGAREADER_NAME+'!%~';
 
@@ -304,6 +305,9 @@ var
 
   ANIMEEXTREMIST_ROOT   : String = 'http://www.animextremist.com';
   ANIMEEXTREMIST_BROWSER: String = '/mangas.htm?ord=todos';
+
+  MANGAKU_ROOT   : String = 'http://www.mangaku.web.id';
+  MANGAKU_BROWSER: String = '/2009/06/daftar-isi.html';
 
   UPDATE_URL      : String = 'http://tenet.dl.sourceforge.net/project/fmd/FMD/updates/';
 
@@ -475,6 +479,7 @@ function  SourceForgeURL(URL: string): string;
 function  gehGetPage(var output: TObject; URL: String; const Reconnect: Cardinal; const lURL: String = ''): Boolean;
 function  bttGetPage(var output: TObject; URL: String; const Reconnect: Cardinal): Boolean;
 function  GetPage(var output: TObject; URL: String; const Reconnect: Cardinal; const isByPassHTTP: Boolean = FALSE): Boolean;
+function  GetBitlyPage(var output: TObject; URL: String; const Reconnect: Cardinal; const isByPassHTTP: Boolean = FALSE): Boolean;
 function  SavePage(URL: String;  const Path, name: String; const Reconnect: Cardinal): Boolean;
 
 procedure QuickSortChapters(var chapterList, linkList: TStringList);
@@ -747,7 +752,9 @@ begin
   else
   if name = ESMANGAHERE_NAME then Result:= ESMANGAHERE_ID
   else
-  if name = ANIMEEXTREMIST_NAME then Result:= ANIMEEXTREMIST_ID;
+  if name = ANIMEEXTREMIST_NAME then Result:= ANIMEEXTREMIST_ID
+  else
+  if name = MANGAKU_NAME then Result:= MANGAKU_ID;
 end;
 
 function  GetMangaSiteName(const ID: Cardinal): String;
@@ -812,7 +819,9 @@ begin
   else
   if ID = ESMANGAHERE_ID then Result:= ESMANGAHERE_NAME
   else
-  if ID = ANIMEEXTREMIST_ID then Result:= ANIMEEXTREMIST_NAME;
+  if ID = ANIMEEXTREMIST_ID then Result:= ANIMEEXTREMIST_NAME
+  else
+  if ID = MANGAKU_ID then Result:= MANGAKU_NAME;
 end;
 
 // bad coding.. but this is how FMD works
@@ -1532,7 +1541,7 @@ globReturn:
     HTTP.KeepAlive:= TRUE;
     HTTP.KeepAliveTimeout:= 100000;
   end;
-  while (NOT HTTP.HTTPMethod('GET', 'http://hentai2read.com/hentai-list/all/any/name-az/1/')) OR
+  while (NOT HTTP.HTTPMethod('GET', URL)) OR
         (HTTP.ResultCode > 500) do
   begin
     code:= HTTP.ResultCode;
@@ -1595,6 +1604,22 @@ globReturn:
   else
     Result:= FALSE;
   HTTP.Free;
+end;
+
+function  GetBitlyPage(var output: TObject; URL: String; const Reconnect: Cardinal; const isByPassHTTP: Boolean = FALSE): Boolean;
+var
+  i: Cardinal;
+begin
+  Result:= GetPage(output, URL, Reconnect, isByPassHTTP);
+  if TStringList(output).Count > 0 then
+    for i:= 0 to TStringList(output).Count do
+      if Pos(';url=', TStringList(output).Strings[i])>0 then
+      begin
+        URL:= GetString(TStringList(output).Strings[i], ';url=', '&amp;');
+        break;
+      end;
+  TStringList(output).Clear;
+  Result:= GetPage(output, URL, Reconnect, isByPassHTTP);
 end;
 
 function  SavePage(URL: String; const Path, name: String; const Reconnect: Cardinal): Boolean;

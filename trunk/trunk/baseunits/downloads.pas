@@ -1217,7 +1217,8 @@ begin
      (manager.container.mangaSiteID = VNSHARING_ID) OR
      (manager.container.mangaSiteID = TRUYEN18_ID) OR
      (manager.container.mangaSiteID = TRUYENTRANHTUAN_ID) OR
-     (manager.container.mangaSiteID = FAKKU_ID) then
+     (manager.container.mangaSiteID = FAKKU_ID) OR
+     (manager.container.mangaSiteID = MANGAKU_ID) then
   begin
     // all of the page links are in a html page
     Result:= TRUE;
@@ -2196,6 +2197,39 @@ var
     l.Free;
   end;
 
+  function GetMangakuLinkPage: Boolean;
+  var
+    s: String;
+    j,
+    i: Cardinal;
+    l: TStringList;
+  begin
+    l:= TStringList.Create;
+    Result:= GetPage(TObject(l),
+                     MANGAKU_ROOT + URL,
+                     manager.container.manager.retryConnect);
+    parse:= TStringList.Create;
+    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.Exec;
+    Parser.Free;
+    if parse.Count>0 then
+    begin
+      manager.container.pageLinks.Clear;
+      for i:= 0 to parse.Count-1 do
+      begin
+        if Pos('class="separator"', parse.Strings[i]) > 0 then
+        begin
+          s:= GetAttributeValue(GetTagAttribute(parse.Strings[i+2], 'src='));
+          manager.container.pageLinks.Add(EncodeUrl(s));
+        end;
+      end;
+    end;
+    parse.Free;
+    l.Free;
+  end;
+
   function GetTurkcraftLinkPage: Boolean;
   var
     s: String;
@@ -2488,6 +2522,9 @@ begin
   else
   if manager.container.mangaSiteID = KOMIKID_ID then
     Result:= GetKomikidLinkPage
+  else
+  if manager.container.mangaSiteID = MANGAKU_ID then
+    Result:= GetMangakuLinkPage
   else
   if manager.container.mangaSiteID = TURKCRAFT_ID then
     Result:= GetTurkcraftLinkPage
