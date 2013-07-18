@@ -58,7 +58,7 @@
         <EditorIndex Value="13"/>
         <WindowIndex Value="0"/>
         <TopLine Value="2541"/>
-        <CursorPos X="5" Y="2553"/>
+        <CursorPos X="48" Y="2546"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
       </Unit4>
@@ -66,10 +66,11 @@
         <Filename Value="..\baseunits\favorites.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="favorites"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="11"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="17"/>
-        <CursorPos X="81" Y="19"/>
+        <TopLine Value="239"/>
+        <CursorPos X="42" Y="245"/>
         <UsageCount Value="201"/>
         <Loaded Value="True"/>
       </Unit5>
@@ -180,11 +181,10 @@
       <Unit15>
         <Filename Value="..\baseunits\baseunit.pas"/>
         <UnitName Value="baseunit"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="18"/>
         <WindowIndex Value="0"/>
         <TopLine Value="1351"/>
-        <CursorPos X="4" Y="1453"/>
+        <CursorPos X="37" Y="1363"/>
         <UsageCount Value="106"/>
         <Loaded Value="True"/>
       </Unit15>
