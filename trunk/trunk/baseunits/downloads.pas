@@ -956,6 +956,40 @@ var
     l.Free;
   end;
 
+  function GetPecintaKomikPageNumber: Boolean;
+  var
+    s   : String;
+    i, j: Cardinal;
+    l   : TStringList;
+  begin
+    l:= TStringList.Create;
+    parse:= TStringList.Create;
+    s:= DecodeUrl(PECINTAKOMIK_ROOT + URL + '/1');
+    Result:= GetPage(TObject(l),
+                     s,
+                     manager.container.manager.retryConnect);
+    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.Exec;
+    Parser.Free;
+    if parse.Count>0 then
+    begin
+      manager.container.pageNumber:= 0;
+      for i:= parse.Count-1 downto 5 do
+      begin
+        if (Pos('</option>', parse.Strings[i])>0) then
+        begin
+          s:= parse.Strings[i-1];
+          manager.container.pageNumber:= StrToInt(TrimLeft(TrimRight(s)));
+          break;
+        end;
+      end;
+    end;
+    parse.Free;
+    l.Free;
+  end;
+
   function GetTurkcraftPageNumber: Boolean;
   var
     s   : String;
@@ -1187,6 +1221,9 @@ begin
   else
   if manager.container.mangaSiteID = KOMIKID_ID then
     Result:= GetKomikidPageNumber
+  else
+  if manager.container.mangaSiteID = PECINTAKOMIK_ID then
+    Result:= GetPecintaKomikPageNumber
   else
   if manager.container.mangaSiteID = TURKCRAFT_ID then
     Result:= GetTurkcraftPageNumber
@@ -2197,6 +2234,43 @@ var
     l.Free;
   end;
 
+  function GetPecintaKomikLinkPage: Boolean;
+  var
+    s: String;
+    j,
+    i: Cardinal;
+    l: TStringList;
+  begin
+    l:= TStringList.Create;
+    s:= DecodeUrl(PECINTAKOMIK_ROOT + URL + '/' + IntToStr(workPtr+1));
+    Result:= GetPage(TObject(l),
+                     s,
+                     manager.container.manager.retryConnect);
+    parse:= TStringList.Create;
+    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.Exec;
+    Parser.Free;
+
+    if parse.Count>0 then
+    begin
+      for i:= 0 to parse.Count-1 do
+        if (Pos('mangas/', parse.Strings[i])>0) then
+        begin
+          s:= GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src='));
+          if Pos('/manga/', s) = 0 then
+            s:= PECINTAKOMIK_ROOT + '/manga/' + s
+          else
+            s:= PECINTAKOMIK_ROOT + PECINTAKOMIK_BROWSER + s;
+          manager.container.pageLinks.Strings[workPtr]:= EncodeURL(s);
+          break;
+        end;
+    end;
+    parse.Free;
+    l.Free;
+  end;
+
   function GetMangakuLinkPage: Boolean;
   var
     s: String;
@@ -2522,6 +2596,9 @@ begin
   else
   if manager.container.mangaSiteID = KOMIKID_ID then
     Result:= GetKomikidLinkPage
+  else
+  if manager.container.mangaSiteID = PECINTAKOMIK_ID then
+    Result:= GetPecintaKomikLinkPage
   else
   if manager.container.mangaSiteID = MANGAKU_ID then
     Result:= GetMangakuLinkPage
