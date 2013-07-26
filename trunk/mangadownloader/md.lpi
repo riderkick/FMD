@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <CONFIG>
   <ProjectOptions>
     <Version Value="9"/>
@@ -164,6 +164,9 @@
       </Optimizations>
     </CodeGeneration>
     <Linking>
+      <Debugging>
+        <GenerateDebugInfo Value="False"/>
+      </Debugging>
       <LinkSmart Value="True"/>
       <Options>
         <Win32>

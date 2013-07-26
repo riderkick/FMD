@@ -164,6 +164,7 @@ const
   ESMANGAHERE_NAME  = 'ESMangaHere';  ESMANGAHERE_ID = 30;
   ANIMEEXTREMIST_NAME  = 'AnimExtremist';  ANIMEEXTREMIST_ID = 31;
   MANGAKU_NAME      = 'Mangaku';      MANGAKU_ID     = 32;
+  PECINTAKOMIK_NAME = 'PecintaKomik'; PECINTAKOMIK_ID= 33;
 
   DEFAULT_LIST = ANIMEA_NAME+'!%~'+MANGAFOX_NAME+'!%~'+MANGAHERE_NAME+'!%~'+MANGAINN_NAME+'!%~'+MANGAREADER_NAME+'!%~';
 
@@ -308,6 +309,9 @@ var
 
   MANGAKU_ROOT   : String = 'http://www.mangaku.web.id';
   MANGAKU_BROWSER: String = '/2009/06/daftar-isi.html';
+
+  PECINTAKOMIK_ROOT   : String = 'http://www.pecintakomik.com';
+  PECINTAKOMIK_BROWSER: String = '/directory/';
 
   UPDATE_URL      : String = 'http://tenet.dl.sourceforge.net/project/fmd/FMD/updates/';
 
@@ -754,7 +758,9 @@ begin
   else
   if name = ANIMEEXTREMIST_NAME then Result:= ANIMEEXTREMIST_ID
   else
-  if name = MANGAKU_NAME then Result:= MANGAKU_ID;
+  if name = MANGAKU_NAME then Result:= MANGAKU_ID
+  else
+  if name = PECINTAKOMIK_NAME then Result:= PECINTAKOMIK_ID;
 end;
 
 function  GetMangaSiteName(const ID: Cardinal): String;
@@ -821,7 +827,9 @@ begin
   else
   if ID = ANIMEEXTREMIST_ID then Result:= ANIMEEXTREMIST_NAME
   else
-  if ID = MANGAKU_ID then Result:= MANGAKU_NAME;
+  if ID = MANGAKU_ID then Result:= MANGAKU_NAME
+  else
+  if ID = PECINTAKOMIK_ID then Result:= PECINTAKOMIK_NAME;
 end;
 
 // bad coding.. but this is how FMD works

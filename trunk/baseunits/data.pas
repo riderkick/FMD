@@ -2090,6 +2090,58 @@ var
     source.Free;
   end;
 
+  // get name and link of the manga from PecintaKomik
+  function   PecintaKomikGetNameAndLink: Byte;
+  var
+    tmp: Integer;
+    i: Cardinal;
+    s: String;
+  begin
+    Result:= INFORMATION_NOT_FOUND;
+    if NOT GetPage(TObject(source), PECINTAKOMIK_ROOT + PECINTAKOMIK_BROWSER, 0) then
+    begin
+      Result:= NET_PROBLEM;
+      source.Free;
+      exit;
+    end;
+    parse.Clear;
+    Parser:= TjsFastHTMLParser.Create(PChar(source.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.Exec;
+    Parser.Free;
+    if parse.Count=0 then
+    begin
+      source.Free;
+      exit;
+    end;
+    for i:= 0 to parse.Count-1 do
+    begin
+      if (Pos('class=''screenshot''', parse.Strings[i]) > 0) OR
+         (Pos('class="screenshot"', parse.Strings[i]) > 0) then
+      begin
+        Result:= NO_ERROR;
+        s:= StringFilter(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'title=')));
+        names.Add(HTMLEntitiesFilter(s));
+        s:= GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href='));
+        if s[Length(s)] <> '/' then
+          s:= s+ '/';
+        links.Add(s);
+      end;
+      if (Pos('/manga/', parse.Strings[i]) > 0) then
+      begin
+        Result:= NO_ERROR;
+        s:= StringFilter(TrimLeft(TrimRight(parse.Strings[i+1])));
+        names.Add(HTMLEntitiesFilter(s));
+        s:= GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href='));
+        if s[Length(s)] <> '/' then
+          s:= s+ '/';
+        links.Add(s);
+      end;
+    end;
+    source.Free;
+  end;
+
   // get name and link of the manga from Mangaku
   function   MangakuGetNameAndLink: Byte;
   var
@@ -2666,6 +2718,9 @@ begin
   else
   if website = KOMIKID_NAME then
     Result:= KomikidGetNameAndLink
+  else
+  if website = PECINTAKOMIK_NAME then
+    Result:= PecintaKomikGetNameAndLink
   else
   if website = MANGAKU_NAME then
     Result:= MangakuGetNameAndLink
@@ -6037,6 +6092,136 @@ begin
   Result:= NO_ERROR;
 end;
 
+// get manga infos from PecintaKomik site
+// this site have 2 kind of cover page
+function   GetPecintaKomikInfoFromURL: Byte;
+var
+  isExtractGenres : Boolean = FALSE;
+  isExtractChapter: Boolean = FALSE;
+  s: String;
+  i, j: Cardinal;
+  k   : Integer;
+begin
+  mangaInfo.url:= PECINTAKOMIK_ROOT + URL;
+  if NOT GetPage(TObject(source), mangaInfo.url, Reconnect) then
+  begin
+    Result:= NET_PROBLEM;
+    source.Free;
+    exit;
+  end;
+
+  // parsing the HTML source
+  parse.Clear;
+  Parser:= TjsFastHTMLParser.Create(PChar(source.Text));
+  Parser.OnFoundTag := OnTag;
+  Parser.OnFoundText:= OnText;
+  Parser.Exec;
+
+  Parser.Free;
+  source.Free;
+  mangaInfo.website:= PECINTAKOMIK_NAME;
+  mangaInfo.status:= '1';
+  // using parser (cover link, summary, chapter name and link)
+  if parse.Count=0 then exit;
+  if Pos('/manga/', URL) = 0 then
+  for i:= 0 to parse.Count-1 do
+  begin
+    // get cover
+    if (mangaInfo.coverLink = '') AND
+       (Pos('id="mangaimg"', parse.Strings[i])>0) then
+      mangaInfo.coverLink:= PECINTAKOMIK_ROOT + CorrectURL(GetAttributeValue(GetTagAttribute(parse.Strings[i+1], 'src=')));
+
+    // get summary
+    if (Pos('Himbauan:', parse.Strings[i]) <> 0) then
+    begin
+      j:= i+4;
+      while (j<parse.Count) AND (Pos('</tr>', parse.Strings[j])=0) do
+      begin
+        s:= parse.Strings[j];
+        if s[1] <> '<' then
+        begin
+          parse.Strings[j]:= HTMLEntitiesFilter(StringFilter(parse.Strings[j]));
+          parse.Strings[j]:= StringReplace(parse.Strings[j], #10, '\n', [rfReplaceAll]);
+          parse.Strings[j]:= StringReplace(parse.Strings[j], #13, '\r', [rfReplaceAll]);
+          mangaInfo.summary:= mangaInfo.summary + parse.Strings[j];
+        end;
+        Inc(j);
+      end;
+    end;
+
+    // get title
+    if (Pos('Nama:', parse.Strings[i])<>0) AND (mangaInfo.title = '') then
+      mangaInfo.title:= StringFilter(TrimRight(TrimLeft(parse.Strings[i+6])));
+
+    // get chapter name and links
+    if (NOT isExtractChapter) AND
+       (Pos('id="chapterlist"', parse.Strings[i])>0) then
+      isExtractChapter:= TRUE;
+
+    if (isExtractChapter) AND
+       (Pos('/manga/', parse.Strings[i])>0) then
+    begin
+      Inc(mangaInfo.numChapter);
+      s:= GetString(parse.Strings[i], 'href="', '"');
+      mangaInfo.chapterLinks.Add(s);
+      s:= RemoveSymbols(TrimLeft(TrimRight(parse.Strings[i+1])));
+      mangaInfo.chapterName.Add(StringFilter(StringFilter(HTMLEntitiesFilter(s))));
+    end;
+
+    // get authors
+    if  (i+4<parse.Count) AND (Pos('Autor:', parse.Strings[i])<>0) then
+      mangaInfo.authors:= TrimRight(TrimLeft(parse.Strings[i+4]));
+
+    // get artists
+    if  (i+4<parse.Count) AND (Pos('Artist:', parse.Strings[i])<>0) then
+      mangaInfo.artists:= TrimRight(TrimLeft(parse.Strings[i+4]));
+
+    // get genres
+    if (Pos('Genre:', parse.Strings[i])<>0) then
+    begin
+      isExtractGenres:= TRUE;
+    end;
+
+    if isExtractGenres then
+    begin
+      if Pos('class="genretags"', parse.Strings[i]) <> 0 then
+        mangaInfo.genres:= mangaInfo.genres + TrimLeft(TrimRight(parse.Strings[i+1])) + ', ';
+      if Pos('</tr>', parse.Strings[i]) <> 0 then
+        isExtractGenres:= FALSE;
+    end;
+  end
+  else
+  for i:= 0 to parse.Count-1 do
+  begin
+    if Pos('name="chapter"', parse.Strings[i]) > 0 then
+    begin
+      if TryStrToInt(TrimRight(TrimLeft(parse.Strings[i+2])), k) then
+        for j:= k downto 1 do
+        begin
+          Inc(mangaInfo.numChapter);
+          s:= URL + IntToStr(j);
+          mangaInfo.chapterLinks.Add(s);
+          s:= 'Chapter ' + IntToStr(j);
+          mangaInfo.chapterName.Add(StringFilter(StringFilter(HTMLEntitiesFilter(s))));
+        end;
+      break;
+    end;
+  end;
+
+  // Since chapter name and link are inverted, we need to invert them
+  if mangainfo.ChapterLinks.Count > 1 then
+  begin
+    i:= 0; j:= mangainfo.ChapterLinks.Count - 1;
+    while (i<j) do
+    begin
+      mangainfo.ChapterName.Exchange(i, j);
+      mangainfo.chapterLinks.Exchange(i, j);
+      Inc(i); Dec(j);
+    end;
+  end;
+  Result:= NO_ERROR;
+end;
+
 // get manga infos from Turkcraft site
 function   GetTurkcraftInfoFromURL: Byte;
 var
@@ -6534,6 +6719,9 @@ begin
   else
   if website = KOMIKID_NAME then
     Result:= GetKomikidInfoFromURL
+  else
+  if website = PECINTAKOMIK_NAME then
+    Result:= GetPecintaKomikInfoFromURL
   else
   if website = MANGAKU_NAME then
     Result:= GetMangakuInfoFromURL
