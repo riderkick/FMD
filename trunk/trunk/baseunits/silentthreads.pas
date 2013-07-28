@@ -66,57 +66,13 @@ begin
 
     for i:= 0 to Info.mangaInfo.numChapter-1 do
     begin
-      // generate folder name based on chapter name and numbering
-      if (website <> GEHENTAI_NAME) AND
-         (website <> MANGASTREAM_NAME) AND
-         (website <> FAKKU_NAME) then
-      begin
-        s:= '';
-        if cbOptionAutoNumberChapter.Checked then
-          s:= Format('%.4d', [i+1]);
-
-        if cbOptionGenerateChapterName.Checked then
-        begin
-          if cbOptionPathConvert.Checked then
-            s1:= Format('%s', [UnicodeRemove(Info.mangaInfo.chapterName.Strings[i])])
-          else
-            s1:= Format('%s', [Info.mangaInfo.chapterName.Strings[i]]);
-
-          if s = '' then
-            s:= s1
-          else
-            s:= s + ' - ' + s1;
-        end;
-      end
-      else
-      if (website = MANGASTREAM_NAME) then
-      begin
-        if cbOptionPathConvert.Checked then
-          s:= Format('%s', [UnicodeRemove(Info.mangaInfo.chapterName.Strings[i])])
-        else
-          s:= Format('%s', [Info.mangaInfo.chapterName.Strings[i]]);
-      end
-      else
-      begin
-        if NOT cbOptionPathConvert.Checked then
-          s:= TrimLeft(TrimRight(Info.mangaInfo.title))
-        else
-          s:= UnicodeRemove(TrimLeft(TrimRight(Info.mangaInfo.title)));
-      end;
-
-      if s='' then
-      begin
-        if (website <> MANGASTREAM_NAME) then
-          s:= Format('%.4d', [i+1])
-        else
-        begin
-          if cbOptionPathConvert.Checked then
-            s:= Format('%s', [UnicodeRemove(Info.mangaInfo.chapterName.Strings[i])])
-          else
-            s:= Format('%s', [Info.mangaInfo.chapterName.Strings[i]]);
-        end;
-      end;
-      s:= RemoveSymbols(TrimLeft(TrimRight(s)));
+      // generate folder name
+       s:= CustomRename(OptionCustomRename,
+                       Info.mangaInfo.website,
+                       Info.mangaInfo.title,
+                       Info.mangaInfo.chapterName.Strings[i],
+                       Format('%.4d', [i+1]),
+                       cbOptionPathConvert.Checked);
       DLManager.containers.Items[pos].chapterName .Add(s);
       DLManager.containers.Items[pos].chapterLinks.Add(Info.mangaInfo.chapterLinks.Strings[i]);
     end;

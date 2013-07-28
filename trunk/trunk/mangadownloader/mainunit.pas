@@ -103,6 +103,7 @@ type
     edFilterAuthors: TEdit;
     edFilterArtists: TEdit;
     edCustomGenres: TEdit;
+    edOptionCustomRename: TEdit;
     edURL: TEdit;
     edOptionHost: TEdit;
     edOptionPass: TEdit;
@@ -113,12 +114,13 @@ type
     gbOptionProxy: TGroupBox;
     gbOptionRenaming: TGroupBox;
     gbOptionFavorites: TGroupBox;
+    imgOptionCustomRename: TImage;
     itRefreshForm: TIdleTimer;
     itCheckForChapters: TIdleTimer;
     itAnimate: TIdleTimer;
-    ImageList: TImageList;
     imCover: TImage;
     edOptionDefaultPath: TLabeledEdit;
+    lbOptionCustomRename: TLabel;
     lbOptionPDFQuality: TLabel;
     lbOptionAutoCheckMinutes: TLabel;
     lbOptionLetFMDDo: TLabel;
@@ -228,6 +230,7 @@ type
     procedure btURLClick(Sender: TObject);
     procedure btVisitMyBlogClick(Sender: TObject);
     procedure cbSelectMangaChange(Sender: TObject);
+    procedure edSearchChange(Sender: TObject);
     procedure edSearchClick(Sender: TObject);
 
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
@@ -308,7 +311,11 @@ type
       Node: PVirtualNode; var InitialStates: TVirtualNodeInitStates);
     procedure vtFavoritesGetText(Sender: TBaseVirtualTree; Node: PVirtualNode;
       Column: TColumnIndex; TextType: TVSTTextType; var CellText: String);
+
     procedure vtFavoritesInitNode(Sender: TBaseVirtualTree; ParentNode,
+      Node: PVirtualNode; var InitialStates: TVirtualNodeInitStates);
+    // for search feature
+    procedure vtMangaListInitSearchNode(Sender: TBaseVirtualTree; ParentNode,
       Node: PVirtualNode; var InitialStates: TVirtualNodeInitStates);
     procedure vtMangaListBeforeCellPaint(Sender: TBaseVirtualTree;
       TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
@@ -737,57 +744,13 @@ begin
       end;
       DLManager.containers.Items[pos].mangaSiteID:= GetMangaSiteID(mangaInfo.website);
 
-      // generate folder name based on chapter name and numbering
-      if (mangaInfo.website <> GEHENTAI_NAME) AND
-         (mangaInfo.website <> MANGASTREAM_NAME) AND
-         (mangaInfo.website <> FAKKU_NAME) then
-      begin
-        s:= '';
-        if cbOptionAutoNumberChapter.Checked then
-          s:= Format('%.4d', [i+1]);
-        if cbOptionGenerateChapterName.Checked then
-        begin
-          if cbOptionPathConvert.Checked then
-            s1:= Format('%s', [UnicodeRemove(mangaInfo.chapterName.Strings[i])])
-          else
-            s1:= Format('%s', [mangaInfo.chapterName.Strings[i]]);
-
-          if s = '' then
-            s:= s1
-          else
-            s:= s + ' - ' + s1;
-        end;
-      end
-      else
-      if (mangaInfo.website = MANGASTREAM_NAME) then
-      begin
-        if cbOptionPathConvert.Checked then
-          s:= Format('%s', [UnicodeRemove(mangaInfo.chapterName.Strings[i])])
-        else
-          s:= Format('%s', [mangaInfo.chapterName.Strings[i]]);
-      end
-      else
-      begin
-        if NOT cbOptionPathConvert.Checked then
-          s:= TrimLeft(TrimRight(mangaInfo.title))
-        else
-          s:= UnicodeRemove(TrimLeft(TrimRight(mangaInfo.title)));
-      end;
-
-      if s = '' then
-      begin
-        if (mangaInfo.website <> MANGASTREAM_NAME) then
-          s:= Format('%.4d', [i+1])
-        else
-        begin
-          if cbOptionPathConvert.Checked then
-            s:= Format('%s', [UnicodeRemove(mangaInfo.chapterName.Strings[i])])
-          else
-            s:= Format('%s', [mangaInfo.chapterName.Strings[i]]);
-        end;
-      end;
-
-      s:= RemoveSymbols(TrimLeft(TrimRight(s)));
+      // generate folder name
+      s:= CustomRename(OptionCustomRename,
+                       mangaInfo.website,
+                       mangaInfo.title,
+                       mangaInfo.chapterName.Strings[i],
+                       Format('%.4d', [i+1]),
+                       cbOptionPathConvert.Checked);
       DLManager.containers.Items[pos].chapterName .Add(s);
       DLManager.containers.Items[pos].chapterLinks.Add(mangaInfo.chapterLinks.Strings[i]);
     end;
@@ -1348,9 +1311,9 @@ begin
     begin
       // TODO
       silentThread:= TAddToFavSilentThread.Create;
-      silentThread.website:= GetMangaSiteName(DataProcess.site.Items[DataProcess.filterPos.Items[i]]);//cbSelectManga.Items[cbSelectManga.ItemIndex];
-      silentThread.URL:= DataProcess.Param[DataProcess.filterPos.Items[i], DATA_PARAM_LINK];
-      silentThread.title:= DataProcess.Param[DataProcess.filterPos.Items[i], DATA_PARAM_NAME];
+      silentThread.website:= GetMangaSiteName(DataProcess.site.Items[DataProcess.GetPos(i)]);//cbSelectManga.Items[cbSelectManga.ItemIndex];
+      silentThread.URL:= DataProcess.Param[DataProcess.GetPos(i), DATA_PARAM_LINK];
+      silentThread.title:= DataProcess.Param[DataProcess.GetPos(i), DATA_PARAM_NAME];
       silentThread.isSuspended:= FALSE;
       Inc(silentThreadCount);
       Inc(silentAddToFavThreadCount);
@@ -1727,9 +1690,9 @@ begin
     begin
       // TODO
       silentThread:= TSilentThread.Create;
-      silentThread.website:= GetMangaSiteName(DataProcess.site.Items[DataProcess.filterPos.Items[i]]);//cbSelectManga.Items[cbSelectManga.ItemIndex];
-      silentThread.URL:= DataProcess.Param[DataProcess.filterPos.Items[i], DATA_PARAM_LINK];
-      silentThread.title:= DataProcess.Param[DataProcess.filterPos.Items[i], DATA_PARAM_NAME];
+      silentThread.website:= GetMangaSiteName(DataProcess.site.Items[DataProcess.GetPos(i)]);//cbSelectManga.Items[cbSelectManga.ItemIndex];
+      silentThread.URL:= DataProcess.Param[DataProcess.GetPos(i), DATA_PARAM_LINK];
+      silentThread.title:= DataProcess.Param[DataProcess.GetPos(i), DATA_PARAM_NAME];
       silentThread.isSuspended:= FALSE;
       Inc(silentThreadCount);
     end;
@@ -1802,6 +1765,8 @@ procedure TMainForm.pcMainChange(Sender: TObject);
 
     edOptionDefaultPath.Text  := options.ReadString('saveto', 'SaveTo', DEFAULT_PATH);
     rgOptionCompress.ItemIndex:= options.ReadInteger('saveto', 'Compress', 0);
+
+    edOptionCustomRename.Text := options.ReadString('saveto', 'CustomRename', DEFAULT_CUSTOM_RENAME);
 
     cbOptionShowQuitDialog.Checked      := options.ReadBool('dialogs', 'ShowQuitDialog', TRUE);
     cbOptionShowDeleteTaskDialog.Checked:= options.ReadBool('dialogs', 'ShowDeleteDldTaskDialog', TRUE);
@@ -2249,6 +2214,8 @@ begin
   OptionAutoNumberChapterChecked:= cbOptionAutoNumberChapter.Checked;
   options.WriteInteger('saveto', 'PDFQuality', seOptionPDFQuality.Value);
   OptionPDFQuality:= seOptionPDFQuality.Value;
+  options.WriteString ('saveto', 'CustomRename', edOptionCustomRename.Text);
+  OptionCustomRename:= edOptionCustomRename.Text;
 
   options.WriteBool   ('update', 'AutoCheckUpdateAtStartup', cbOptionAutoCheckUpdate.Checked);
   options.WriteBool   ('update', 'AutoCheckFavStartup', cbOptionAutoCheckFavStartup.Checked);
@@ -2314,7 +2281,7 @@ begin
   if miHighlightNewManga.Checked then
   begin
     try
-      if currentJDN - Cardinal(dataProcess.JDN.Items[dataProcess.filterPos.Items[Node.Index]]) < seOptionNewMangaTime.Value then
+      if currentJDN - Cardinal(dataProcess.JDN.Items[dataProcess.GetPos(Node.Index)]) < seOptionNewMangaTime.Value then
       begin
         TargetCanvas.Brush.Color:= $FDC594;
         TargetCanvas.FillRect(CellRect);
@@ -2337,16 +2304,18 @@ procedure TMainForm.vtMangaListGetHint(Sender: TBaseVirtualTree;
   Node: PVirtualNode; Column: TColumnIndex;
   var LineBreakStyle: TVTTooltipLineBreakStyle; var HintText: String);
 var
-  s: String;
+  LPos: Integer;
+  s   : String;
 begin
+  LPos:= dataProcess.GetPos(Node.Index);
   if dataProcess.isFilterAllSites then
-    s:= 'Manga site: '+GetMangaSiteName(dataProcess.site.Items[dataProcess.filterPos.Items[Node.Index]])+#10#10#13
+    s:= 'Manga site: '+GetMangaSiteName(dataProcess.site.Items[LPos])+#10#10#13
   else
     s:= '';
   HintText:= s+
-    infoGenres+': '+dataProcess.Param[dataProcess.filterPos.Items[Node.Index], DATA_PARAM_GENRES]+#10#10#13+
+    infoGenres+': '+dataProcess.Param[LPos, DATA_PARAM_GENRES]+#10#10#13+
     infoSummary+': '+#10#13+
-    PrepareSummaryForHint(dataProcess.Param[dataProcess.filterPos.Items[Node.Index], DATA_PARAM_SUMMARY]);
+    PrepareSummaryForHint(dataProcess.Param[LPos, DATA_PARAM_SUMMARY]);
 end;
 
 procedure TMainForm.vtMangaListGetText(Sender: TBaseVirtualTree;
@@ -2375,6 +2344,22 @@ begin
   end;
 end;
 
+procedure TMainForm.vtMangaListInitSearchNode(Sender: TBaseVirtualTree; ParentNode,
+  Node: PVirtualNode; var InitialStates: TVirtualNodeInitStates);
+var
+  data: PMangaListItem;
+  pos : Cardinal;
+begin
+  with Sender do
+  begin
+    pos:= dataProcess.searchPos.Items[Node.Index];
+    data:= GetNodeData(Node);
+    data.text:= dataProcess.Param[pos, DATA_PARAM_NAME]+
+                ' ('+
+                dataProcess.Param[pos, DATA_PARAM_NUMCHAPTER]+')';
+  end;
+end;
+
 procedure TMainForm.vtMangaListDblClick(Sender: TObject);
 begin
  { if (cbSelectManga.Items[cbSelectManga.ItemIndex] = FAKKU_NAME) OR
@@ -2396,8 +2381,16 @@ begin
   clbChapterList.Clear;
 
   SubThread.mangaListPos:= vtMangaList.FocusedNode.Index;
-  SubThread.website:= GetMangaSiteName(DataProcess.site.Items[DataProcess.filterPos.Items[SubThread.mangaListPos]]);//cbSelectManga.Items[cbSelectManga.ItemIndex];
-  SubThread.link:= DataProcess.Param[DataProcess.filterPos.Items[SubThread.mangaListPos], DATA_PARAM_LINK];
+  if DataProcess.searchPos.Count = 0 then
+  begin
+    SubThread.website:= GetMangaSiteName(DataProcess.site.Items[DataProcess.GetPos(SubThread.mangaListPos)]);//cbSelectManga.Items[cbSelectManga.ItemIndex];
+    SubThread.link:= DataProcess.Param[DataProcess.GetPos(SubThread.mangaListPos), DATA_PARAM_LINK];
+  end
+  else
+  begin
+    SubThread.website:= GetMangaSiteName(DataProcess.site.Items[DataProcess.searchPos.Items[SubThread.mangaListPos]]);//cbSelectManga.Items[cbSelectManga.ItemIndex];
+    SubThread.link:= DataProcess.Param[DataProcess.searchPos.Items[SubThread.mangaListPos], DATA_PARAM_LINK];
+  end;
   SubThread.isGetInfos:= TRUE;
   //ShowInformation;
 
@@ -2518,8 +2511,8 @@ begin
 
     if SubThread.mangaListPos <> -1 then
     begin
-      mangaInfo.title:= dataProcess.Param[dataProcess.filterPos.Items[SubThread.mangaListPos], DATA_PARAM_NAME];
-      mangaInfo.link := dataProcess.Param[dataProcess.filterPos.Items[SubThread.mangaListPos], DATA_PARAM_LINK];
+      mangaInfo.title:= dataProcess.Param[dataProcess.GetPos(SubThread.mangaListPos), DATA_PARAM_NAME];
+      mangaInfo.link := dataProcess.Param[dataProcess.GetPos(SubThread.mangaListPos), DATA_PARAM_LINK];
     end
     else
       mangaInfo.link:= edURL.Text;
@@ -2594,6 +2587,8 @@ begin
   cbOptionAutoNumberChapter.Checked:= options.ReadBool('saveto', 'AutoNumberChapter', TRUE);
   seOptionPDFQuality.Value     := options.ReadInteger('saveto', 'PDFQuality', 95);
   OptionPDFQuality:= seOptionPDFQuality.Value;
+  edOptionCustomRename.Text    := options.ReadString('saveto', 'CustomRename', DEFAULT_CUSTOM_RENAME);
+  OptionCustomRename           := edOptionCustomRename.Text;
 
   cbOptionAutoCheckUpdate.Checked:= options.ReadBool('update', 'AutoCheckUpdateAtStartup', TRUE);
 
@@ -2776,6 +2771,24 @@ begin
   vtMangaList.TreeOptions.SelectionOptions:= vtMangaList.TreeOptions.SelectionOptions + [toMultiSelect];
 end;
 
+procedure TMainForm.edSearchChange(Sender: TObject);
+begin
+ // if vtMangaList.RootNodeCount = 0 then exit;
+  if edSearch.Text = '' then
+  begin
+    DataProcess.searchPos.Clear;
+    vtMangaList.Clear;
+    vtMangaList.RootNodeCount:= dataProcess.filterPos.Count;
+    exit;
+  end;
+  DataProcess.Search(edSearch.Text);
+  // reconstruct the list
+  vtMangaList.OnInitNode:= vtMangaListInitSearchNode;
+  vtMangaList.Clear;
+  vtMangaList.RootNodeCount:= dataProcess.searchPos.Count;
+  vtMangaList.OnInitNode:= vtMangaListInitNode;
+end;
+
 procedure TMainForm.UpdateVtDownload;
 begin
   vtDownload.Clear;
@@ -2860,7 +2873,7 @@ begin
   gbOptionFavorites.Caption:= tsFavorites.Caption;
   tsOption      .Caption:= language.ReadString(lang, 'tsOptionCaption', '');
   tsAbout       .Caption:= language.ReadString(lang, 'tsAboutCaption', '');
-  edSearch      .Text   := language.ReadString(lang, 'edSearchText', '');
+ // edSearch      .Text   := language.ReadString(lang, 'edSearchText', '');
   stSearch:= edSearch.Text;
   stModeAll             := language.ReadString(lang, 'stModeAll', '');
   stModeFilter          := language.ReadString(lang, 'stModeFilter', '');
@@ -2965,6 +2978,10 @@ begin
   lbOptionPDFQuality.Caption  := language.ReadString(lang, 'lbOptionPDFQualityCaption', '');
   lbOptionPDFQuality.Hint     := language.ReadString(lang, 'lbOptionPDFQualityHint', '');
   seOptionPDFQuality.Hint     := lbOptionPDFQuality.Hint;
+  imgOptionCustomRename.Hint  := language.ReadString(lang, 'edOptionCustomRenameHint', '');
+  imgOptionCustomRename.Hint  := StringReplace(imgOptionCustomRename.Hint, '\n', #10, [rfReplaceAll]);
+  imgOptionCustomRename.Hint  := StringReplace(imgOptionCustomRename.Hint, '\r', #13, [rfReplaceAll]);
+  lbOptionCustomRename.Hint   := language.ReadString(lang, 'lbOptionCustomRenameHint', '');
 
   cbOptionMinimizeToTray.Caption:= language.ReadString(lang, 'cbOptionMinimizeToTrayCaption', '');
   cbOptionAutoCheckUpdate.Caption:= language.ReadString(lang, 'cbOptionAutoCheckUpdateCaption', '');

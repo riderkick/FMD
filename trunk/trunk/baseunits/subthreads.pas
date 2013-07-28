@@ -108,7 +108,7 @@ procedure   TSubThread.DoGetInfos;
 
     if mangaListPos <> -1 then
     begin
-      filterPos:= MainForm.dataProcess.filterPos.Items[mangaListPos];
+      filterPos:= MainForm.dataProcess.GetPos(mangaListPos);
       Info.mangaInfo.title:= MainForm.dataProcess.Title.Strings[filterPos];
     end;
 
