@@ -167,6 +167,7 @@ const
   PECINTAKOMIK_NAME = 'PecintaKomik'; PECINTAKOMIK_ID= 33;
 
   DEFAULT_LIST = ANIMEA_NAME+'!%~'+MANGAFOX_NAME+'!%~'+MANGAHERE_NAME+'!%~'+MANGAINN_NAME+'!%~'+MANGAREADER_NAME+'!%~';
+  DEFAULT_CUSTOM_RENAME = '%NUMBERING% - %CHAPTER%';
 
 var
   Genre: array [0..37] of String;
@@ -316,6 +317,7 @@ var
   UPDATE_URL      : String = 'http://tenet.dl.sourceforge.net/project/fmd/FMD/updates/';
 
   OptionAutoCheckMinutes,
+  OptionCustomRename,
   // en: dialog messages
   // vi: nội dung hộp thoại
   infoCustomGenres,
@@ -448,6 +450,9 @@ function  GetMangaSiteName(const ID: Cardinal): String;
 function  GetMangaDatabaseURL(const name: String): String;
 
 function  RemoveSymbols(const input: String): String;
+
+// custom rename feature
+function  CustomRename(const AString, AWebsite, AMangaName, AChapter, ANumbering: String; const AIsUnicodeRemove: Boolean): String;
 
 // EN: Get substring from source
 // VI: Lấy chuỗi con từ chuỗi mẹ
@@ -875,6 +880,37 @@ begin
   begin
     Result[Length(Result)]:= '-';
   end;
+end;
+
+function  CustomRename(const AString, AWebsite, AMangaName, AChapter, ANumbering: String; const AIsUnicodeRemove: Boolean): String;
+begin
+  if (Pos('%NUMBERING%', AString) = 0) AND (Pos('%CHAPTER%', AString) = 0) then
+    Result:= ANumbering + AString
+  else
+    Result:= AString;
+  Result:= TrimLeft(TrimRight(Result));
+  Result:= StringReplace(Result, '%WEBSITE%', AWebsite, [rfReplaceAll]);
+  Result:= StringReplace(Result, '%MANGA%', AMangaName, [rfReplaceAll]);
+  Result:= StringReplace(Result, '%CHAPTER%', AChapter, [rfReplaceAll]);
+  if (AWebsite = FAKKU_NAME) OR (AWebsite = MANGASTREAM_NAME) then
+    Result:= StringReplace(Result, '%NUMBERING%', '', [rfReplaceAll])
+  else
+    Result:= StringReplace(Result, '%NUMBERING%', ANumbering, [rfReplaceAll]);
+  Result:= StringReplace(Result, '/', '', [rfReplaceAll]);
+  Result:= StringReplace(Result, '\', '', [rfReplaceAll]);
+
+  if Result = '' then
+  begin
+    if (AWebsite = FAKKU_NAME) OR (AWebsite = MANGASTREAM_NAME) then
+      Result:= AChapter
+    else
+      Result:= ANumbering;
+  end;
+  if AIsUnicodeRemove then
+    Result:= UnicodeRemove(Result);
+
+  Result:= TrimLeft(TrimRight(Result));
+  Result:= RemoveSymbols(HTMLEntitiesFilter(StringFilter(Result)));
 end;
 
 function  GetString(const source, sStart, sEnd: String): String;

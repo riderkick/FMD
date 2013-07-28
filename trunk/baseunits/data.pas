@@ -30,6 +30,8 @@ type
 
     site,
     filterMark: TByteList;
+    // used by search
+    searchPos,
     filterPos : TCardinalList;
     Data,
 
@@ -68,6 +70,10 @@ type
                        const stTitle, stAuthors, stArtists, stStatus, stSummary: String;
                        const minusDay: Cardinal;
                        const haveAllChecked, searchNewManga: Boolean): Boolean;
+    // realtime search
+    function    Search(AMangaName: String): Boolean;
+    // get data position
+    function    GetPos(const ANodePos: Integer): Integer;
 
     // en: Remove filter
     // vi: Xóa bỏ filter
@@ -135,10 +141,12 @@ begin
   site:= TByteList.Create;
   filterMark:= TByteList.Create;
   filterPos := TCardinalList.Create;
+  searchPos := TCardinalList.Create;
 end;
 
 destructor  TDataProcess.Destroy;
 begin
+  searchPos.Free;
   filterMark.Free;
   filterPos.Free;
   site.Free;
@@ -211,6 +219,7 @@ begin
   Filename:= DATA_FOLDER+website;
 
   data.Clear;
+  searchPos.Clear;
   filterMark.Clear;
   filterPos .Clear;
   site.Clear;
@@ -274,6 +283,7 @@ begin
   if websiteList.Count = 0 then
     exit(FALSE);
   data.Clear;
+  searchPos.Clear;
   filterMark.Clear;
   filterPos .Clear;
   site.Clear;
@@ -377,6 +387,7 @@ var
   s, s2            : String;
 begin
   Result:= FALSE;
+  searchPos.Clear;
   if (filterPos.Count = 0) OR
      (data.Count = 0) OR
      ((stTitle = '') AND
@@ -544,10 +555,35 @@ begin
   end;
 end;
 
+function    TDataProcess.Search(AMangaName: String): Boolean;
+var
+  i: Cardinal;
+begin
+  searchPos.Clear;
+  AMangaName:= Upcase(AMangaName);
+  for i:= 0 to filterPos.Count-1 do
+  begin
+    if Pos(AMangaName, Upcase(Title.Strings[filterPos.Items[i]])) > 0 then
+    begin
+      searchPos.Add(filterPos.Items[i]);
+    end;
+  end;
+end;
+
+// get data position
+function    TDataProcess.GetPos(const ANodePos: Integer): Integer;
+begin
+  if searchPos.Count = 0 then
+    Result:= filterPos.Items[ANodePos]
+  else
+    Result:= searchPos.Items[ANodePos];
+end;
+
 procedure   TDataProcess.RemoveFilter;
 var
   i: Cardinal;
 begin
+  searchPos.Clear;
   filterMark.Clear;
   filterPos.Clear;
   for i:= 0 to data.Count-1 do
