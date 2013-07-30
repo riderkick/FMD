@@ -250,6 +250,7 @@ var
   isHasNewChapter : Boolean = FALSE;
   s, s1           : String;
   removeListStr   : String = '';
+  hh, mm, ss, ms,
   day, month, year: Word;
   currentChapter,
   newChapter,
@@ -419,7 +420,8 @@ begin
         DLManager.containers.Items[pos].downloadInfo.Website:= favoriteInfo[i].website;
         DLManager.containers.Items[pos].downloadInfo.SaveTo := favoriteInfo[i].SaveTo;
         DecodeDate(Now, year, month, day);
-        DLManager.containers.Items[pos].downloadInfo.dateTime:= IntToStr(Month)+'/'+IntToStr(Day)+'/'+IntToStr(Year);
+        DecodeTime(Time, hh, mm, ss, ms);
+        DLManager.containers.Items[pos].downloadInfo.dateTime:= IntToStr(Month)+'/'+IntToStr(Day)+'/'+IntToStr(Year)+' '+IntToStr(hh)+':'+IntToStr(mm)+':'+IntToStr(ss);
 
         // bad coding - update favorites's current chapter, and free pointers
         favoriteInfo[i].currentChapter:= IntToStr(mangaInfo[i].numChapter);
