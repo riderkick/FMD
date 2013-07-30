@@ -274,11 +274,11 @@ object MainForm: TMainForm
     Height = 458
     Top = 32
     Width = 620
-    ActivePage = tsOption
+    ActivePage = tsInformation
     Align = alClient
     Font.Style = [fsBold]
     ParentFont = False
-    TabIndex = 4
+    TabIndex = 1
     TabOrder = 1
     OnChange = pcMainChange
     object tsDownload: TTabSheet
@@ -1203,9 +1203,9 @@ object MainForm: TMainForm
         Height = 337
         Top = 26
         Width = 593
-        ActivePage = tsSaveTo
+        ActivePage = tsGeneral
         Anchors = [akTop, akLeft, akRight, akBottom]
-        TabIndex = 2
+        TabIndex = 0
         TabOrder = 0
         object tsGeneral: TTabSheet
           Caption = 'General'

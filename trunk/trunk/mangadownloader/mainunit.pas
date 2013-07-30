@@ -1261,11 +1261,11 @@ end;
 
 procedure TMainForm.edSearchKeyPress(Sender: TObject; var Key: char);
 begin
-  if key = #13 then
+ { if key = #13 then
   begin
     SearchMangaList;
     edSearch.SetFocus;
-  end;
+  end; }
 end;
 
 // ----- vtMangaList popup menu -----
