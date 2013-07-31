@@ -318,7 +318,7 @@ var
   HUGEMANGA_ROOT   : String = 'http://hugemanga.com';
   HUGEMANGA_BROWSER: String = '/';
 
-  UPDATE_URL      : String = 'http://tenet.dl.sourceforge.net/project/fmd/FMD/updates/';
+  UPDATE_URL      : String = 'http://jaist.dl.sourceforge.net/project/fmd/FMD/updates/';
 
   OptionAutoCheckMinutes,
   OptionCustomRename,
@@ -852,20 +852,31 @@ var
 begin
  // result:= 'http://aarnet.dl.sourceforge.net/project/fmd/FMD/lists/'+name+'.zip';
  // result:= 'http://tenet.dl.sourceforge.net/project/fmd/FMD/lists/'+name+'.zip';
-  if (Pos(BLOGTRUYEN_NAME, Name) > 0) AND
-     (Pos(MANGAFRAME_NAME, Name) > 0) then
-  begin
-    i:= Random(2);
-    case i of
-      0: result:= 'http://ufpr.dl.sourceforge.net/project/fmd/FMD/lists/'+name+'.zip';
-      1: result:= 'http://freefr.dl.sourceforge.net/project/fmd/FMD/lists/'+name+'.zip';
-    end;
-  end
-  else
-  if (Pos(STARKANA_NAME, Name) > 0) then
-    result:= 'http://ufpr.dl.sourceforge.net/project/fmd/FMD/lists/'+name+'.zip'
-  else
-    result:= 'http://tenet.dl.sourceforge.net/project/fmd/FMD/lists/'+name+'.zip';
+ { case Random(2) of
+    0:
+      begin
+        if (Pos(BLOGTRUYEN_NAME, Name) > 0) AND
+           (Pos(MANGAFRAME_NAME, Name) > 0) then
+        begin
+          i:= Random(2);
+          case i of
+            0: result:= 'http://ufpr.dl.sourceforge.net/project/fmd/FMD/lists/'+name+'.zip';
+            1: result:= 'http://freefr.dl.sourceforge.net/project/fmd/FMD/lists/'+name+'.zip';
+          end;
+        end
+        else
+        if (Pos(STARKANA_NAME, Name) > 0) then
+          result:= 'http://ufpr.dl.sourceforge.net/project/fmd/FMD/lists/'+name+'.zip'
+        else
+          result:= 'http://tenet.dl.sourceforge.net/project/fmd/FMD/lists/'+name+'.zip';
+      end;
+    1:
+      Result:= 'http://sourceforge.net/projects/fmd/files/FMD/lists/'+name+'.zip/download';
+  end;  }
+ // if (Pos(TURKCRAFT_NAME, Name) > 0) then
+ //   result:= 'http://netcologne.dl.sourceforge.net/project/fmd/FMD/lists/'+name+'.zip'
+ // else
+    Result:= 'http://jaist.dl.sourceforge.net/project/fmd/FMD/lists/'+name+'.zip';
 end;
 
 function  RemoveSymbols(const input: String): String;

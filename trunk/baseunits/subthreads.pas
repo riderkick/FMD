@@ -274,6 +274,7 @@ procedure   TSubThread.Execute;
 var
   l: TStringList;
   i: Cardinal;
+  s: String;
 
 begin
   LRevision:= 0;
@@ -294,7 +295,13 @@ begin
       l:= TStringList.Create;
 
       l.NameValueSeparator:= '=';
-      if (GetPage(TObject(l), UPDATE_URL + 'updates.i', 0)) AND (l.Count > 0) then
+      case Random(2) of
+        0:
+          s:= UPDATE_URL + 'updates.i';
+        1:
+          s:= SourceForgeURL('http://sourceforge.net/projects/fmd/files/FMD/updates/updates.i/download');
+      end;
+      if (GetPage(TObject(l), s, 0)) AND (l.Count > 0) then
       begin
         fNote:= '';
         fNoteForThisRevision:= '';
