@@ -852,6 +852,40 @@ var
     l.Free;
   end;
 
+  function GetS2scanPageNumber: Boolean;
+  var
+    s    : String;
+    i, j : Cardinal;
+    l    : TStringList;
+  begin
+    l:= TStringList.Create;
+    parse:= TStringList.Create;
+    s:= DecodeUrl(S2SCAN_ROOT + URL +'page/1');
+    Result:= GetPage(TObject(l),
+                     s,
+                     manager.container.manager.retryConnect);
+    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.Exec;
+    Parser.Free;
+    if parse.Count>0 then
+    begin
+      manager.container.pageNumber:= 0;
+      for i:= 1 to parse.Count-1 do
+      begin
+        if (Pos('class="topbar_right"', parse.Strings[i])>0) then
+        begin
+          s:= parse.Strings[i+4];
+          manager.container.pageNumber:= StrToInt(TrimLeft(TrimRight(GetString('~!@'+s, '~!@', ' '))));
+          break;
+        end;
+      end;
+    end;
+    parse.Free;
+    l.Free;
+  end;
+
   function GetMangaTradersPageNumber: Boolean;
   var
     isStartGetPageNumber: Boolean = FALSE;
@@ -1243,6 +1277,9 @@ begin
   else
   if manager.container.mangaSiteID = REDHAWKSCANS_ID then
     Result:= GetRedHawkScansPageNumber
+  else
+  if manager.container.mangaSiteID = S2SCAN_ID then
+    Result:= GetS2scanPageNumber
   else
   if manager.container.mangaSiteID = ESMANGAHERE_ID then
     Result:= GetEsMangaHerePageNumber
@@ -2129,6 +2166,39 @@ var
     l.Free;
   end;
 
+  function GetS2scanLinkPage: Boolean;
+  var
+    s: String;
+    j,
+    i: Cardinal;
+    l: TStringList;
+  begin
+    l:= TStringList.Create;
+
+    s:= DecodeUrl(S2SCAN_ROOT + URL + 'page/' + IntToStr(workPtr+1));
+    Result:= GetPage(TObject(l),
+                     s,
+                     manager.container.manager.retryConnect);
+    parse:= TStringList.Create;
+    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.Exec;
+    Parser.Free;
+
+    if parse.Count>0 then
+    begin
+      for i:= 0 to parse.Count-1 do
+        if (Pos('class="open"', parse.Strings[i])>0) then
+        begin
+          manager.container.pageLinks.Strings[workPtr]:= GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src='));
+          break;
+        end;
+    end;
+    parse.Free;
+    l.Free;
+  end;
+
   function GetMangaStreamLinkPage: Boolean;
   var
     s: String;
@@ -2653,6 +2723,9 @@ begin
   else
   if manager.container.mangaSiteID = REDHAWKSCANS_ID then
     Result:= GetRedHawkScansLinkPage
+  else
+  if manager.container.mangaSiteID = S2SCAN_ID then
+    Result:= GetS2scanLinkPage
   else
   if manager.container.mangaSiteID = ESMANGAHERE_ID then
     Result:= GetEsMangaHereLinkPage

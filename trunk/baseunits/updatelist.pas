@@ -496,6 +496,7 @@ begin
          ((website = MANGASTREAM_NAME) OR
           (website = MANGAVADISI_NAME) OR
           (website = MANGAFRAME_NAME) OR
+          (website = S2SCAN_NAME) OR
           (website = TURKCRAFT_NAME) OR
           (website = HUGEMANGA_NAME) OR
           (website = KOMIKID_NAME)) AND

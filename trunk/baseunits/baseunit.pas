@@ -166,6 +166,7 @@ const
   MANGAKU_NAME      = 'Mangaku';      MANGAKU_ID     = 32;
   PECINTAKOMIK_NAME = 'PecintaKomik'; PECINTAKOMIK_ID= 33;
   HUGEMANGA_NAME    = 'HugeManga';    HUGEMANGA_ID   = 34;
+  S2SCAN_NAME       = 'S2scanlations';S2SCAN_ID      = 35;
 
   DEFAULT_LIST = ANIMEA_NAME+'!%~'+MANGAFOX_NAME+'!%~'+MANGAHERE_NAME+'!%~'+MANGAINN_NAME+'!%~'+MANGAREADER_NAME+'!%~';
   DEFAULT_CUSTOM_RENAME = '%NUMBERING% - %CHAPTER%';
@@ -317,6 +318,9 @@ var
 
   HUGEMANGA_ROOT   : String = 'http://hugemanga.com';
   HUGEMANGA_BROWSER: String = '/';
+
+  S2SCAN_ROOT   : String = 'http://s2scanlations.com';
+  S2SCAN_BROWSER: String = '/online/reader/list/';
 
   UPDATE_URL      : String = 'http://jaist.dl.sourceforge.net/project/fmd/FMD/updates/';
 
@@ -771,7 +775,9 @@ begin
   else
   if name = PECINTAKOMIK_NAME then Result:= PECINTAKOMIK_ID
   else
-  if name = HUGEMANGA_NAME then Result:= HUGEMANGA_ID;
+  if name = HUGEMANGA_NAME then Result:= HUGEMANGA_ID
+  else
+  if name = S2SCAN_NAME then Result:= S2SCAN_ID;
 end;
 
 function  GetMangaSiteName(const ID: Cardinal): String;
@@ -842,7 +848,9 @@ begin
   else
   if ID = PECINTAKOMIK_ID then Result:= PECINTAKOMIK_NAME
   else
-  if ID = HUGEMANGA_ID then Result:= HUGEMANGA_NAME;
+  if ID = HUGEMANGA_ID then Result:= HUGEMANGA_NAME
+  else
+  if ID = S2SCAN_ID then Result:= S2SCAN_NAME;
 end;
 
 // bad coding.. but this is how FMD works

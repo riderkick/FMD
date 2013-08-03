@@ -25,8 +25,8 @@
         <UnitName Value="mainunit"/>
         <EditorIndex Value="0"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="441"/>
-        <CursorPos X="23" Y="444"/>
+        <TopLine Value="3033"/>
+        <CursorPos X="22" Y="3047"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -57,8 +57,8 @@
         <UnitName Value="downloads"/>
         <EditorIndex Value="13"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="2231"/>
-        <CursorPos X="57" Y="2282"/>
+        <TopLine Value="1"/>
+        <CursorPos X="57" Y="10"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
       </Unit4>
@@ -68,8 +68,8 @@
         <UnitName Value="favorites"/>
         <EditorIndex Value="11"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="243"/>
-        <CursorPos X="20" Y="253"/>
+        <TopLine Value="382"/>
+        <CursorPos X="16" Y="386"/>
         <UsageCount Value="201"/>
         <Loaded Value="True"/>
       </Unit5>
@@ -90,7 +90,7 @@
         <UnitName Value="updatelist"/>
         <EditorIndex Value="4"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="100"/>
+        <TopLine Value="1"/>
         <CursorPos X="2" Y="10"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
@@ -125,7 +125,7 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="logform"/>
-        <EditorIndex Value="15"/>
+        <EditorIndex Value="14"/>
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
         <CursorPos X="24" Y="4"/>
@@ -150,8 +150,8 @@
         <UnitName Value="silentthreads"/>
         <EditorIndex Value="3"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="203"/>
-        <CursorPos X="76" Y="9"/>
+        <TopLine Value="64"/>
+        <CursorPos X="37" Y="70"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
       </Unit12>
@@ -170,7 +170,7 @@
         <Filename Value="..\baseunits\curlcore.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="curlcore"/>
-        <EditorIndex Value="16"/>
+        <EditorIndex Value="15"/>
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
         <CursorPos X="36" Y="11"/>
@@ -180,21 +180,21 @@
       <Unit15>
         <Filename Value="..\baseunits\baseunit.pas"/>
         <UnitName Value="baseunit"/>
-        <IsVisibleTab Value="True"/>
-        <EditorIndex Value="18"/>
+        <EditorIndex Value="17"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="864"/>
-        <CursorPos X="4" Y="878"/>
+        <TopLine Value="310"/>
+        <CursorPos X="50" Y="320"/>
         <UsageCount Value="106"/>
         <Loaded Value="True"/>
       </Unit15>
       <Unit16>
         <Filename Value="..\baseunits\data.pas"/>
         <UnitName Value="data"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="9"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="1653"/>
-        <CursorPos X="25" Y="6350"/>
+        <TopLine Value="1"/>
+        <CursorPos X="2" Y="10"/>
         <ExtraEditorCount Value="1"/>
         <ExtraEditor1>
           <TopLine Value="1728"/>
@@ -222,7 +222,7 @@
       <Unit19>
         <Filename Value="..\baseunits\iecore.pas"/>
         <UnitName Value="iecore"/>
-        <EditorIndex Value="17"/>
+        <EditorIndex Value="16"/>
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
         <CursorPos X="24" Y="4"/>
@@ -232,12 +232,10 @@
       <Unit20>
         <Filename Value="E:\sdks\lazarus\components\lazutils\lazutf8classes.pas"/>
         <UnitName Value="LazUTF8Classes"/>
-        <EditorIndex Value="14"/>
         <WindowIndex Value="0"/>
         <TopLine Value="74"/>
         <CursorPos X="1" Y="99"/>
         <UsageCount Value="48"/>
-        <Loaded Value="True"/>
       </Unit20>
       <Unit21>
         <Filename Value="E:\sdks\lazcomp\glscene\Source\GLWidgetContext.pas"/>
@@ -363,7 +361,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="119"/>
         <CursorPos X="58" Y="148"/>
-        <UsageCount Value="78"/>
+        <UsageCount Value="79"/>
         <Loaded Value="True"/>
       </Unit36>
       <Unit37>
@@ -407,12 +405,10 @@
       </Unit41>
       <Unit42>
         <Filename Value="E:\sdks\lazarus\lcl\include\picture.inc"/>
-        <EditorIndex Value="19"/>
         <WindowIndex Value="0"/>
         <TopLine Value="524"/>
         <CursorPos X="1" Y="535"/>
         <UsageCount Value="13"/>
-        <Loaded Value="True"/>
       </Unit42>
       <Unit43>
         <Filename Value="E:\sdks\lazarus\fpc\2.6.2\src\packages\paszlib\src\zdeflate.pas"/>
@@ -437,7 +433,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="1502"/>
         <CursorPos X="3" Y="1444"/>
-        <UsageCount Value="43"/>
+        <UsageCount Value="44"/>
         <Loaded Value="True"/>
       </Unit45>
       <Unit46>
@@ -474,11 +470,11 @@
       <Unit50>
         <Filename Value="E:\sdks\lazcomp\synapse\source\httpsend.pas"/>
         <UnitName Value="httpsend"/>
-        <EditorIndex Value="20"/>
+        <EditorIndex Value="18"/>
         <WindowIndex Value="0"/>
         <TopLine Value="799"/>
         <CursorPos X="25" Y="807"/>
-        <UsageCount Value="65"/>
+        <UsageCount Value="66"/>
         <Loaded Value="True"/>
       </Unit50>
       <Unit51>
@@ -503,123 +499,123 @@
     <JumpHistory Count="30" HistoryIndex="29">
       <Position1>
         <Filename Value="..\baseunits\downloads.pas"/>
-        <Caret Line="289" Column="80" TopLine="286"/>
+        <Caret Line="993" Column="20" TopLine="991"/>
       </Position1>
       <Position2>
         <Filename Value="..\baseunits\downloads.pas"/>
-        <Caret Line="1030" Column="36" TopLine="1015"/>
+        <Caret Line="999" Column="28" TopLine="995"/>
       </Position2>
       <Position3>
         <Filename Value="..\baseunits\downloads.pas"/>
-        <Caret Line="1262" Column="43" TopLine="1248"/>
+        <Caret Line="1031" Column="34" TopLine="1021"/>
       </Position3>
       <Position4>
         <Filename Value="..\baseunits\downloads.pas"/>
-        <Caret Line="1263" Column="22" TopLine="1248"/>
+        <Caret Line="1262" Column="43" TopLine="1248"/>
       </Position4>
       <Position5>
         <Filename Value="..\baseunits\downloads.pas"/>
-        <Caret Line="2329" Column="39" TopLine="2319"/>
+        <Caret Line="1263" Column="22" TopLine="1248"/>
       </Position5>
       <Position6>
         <Filename Value="..\baseunits\downloads.pas"/>
-        <Caret Line="2335" Column="90" TopLine="2325"/>
+        <Caret Line="112" Column="72" TopLine="107"/>
       </Position6>
       <Position7>
         <Filename Value="..\baseunits\downloads.pas"/>
-        <Caret Line="896" Column="68" TopLine="887"/>
+        <Caret Line="993" Column="20" TopLine="988"/>
       </Position7>
       <Position8>
         <Filename Value="..\baseunits\downloads.pas"/>
-        <Caret Line="1001" Column="24" TopLine="991"/>
+        <Caret Line="1002" Column="1" TopLine="988"/>
       </Position8>
       <Position9>
-        <Filename Value="..\baseunits\downloads.pas"/>
-        <Caret Line="1262" Column="43" TopLine="1245"/>
-      </Position9>
-      <Position10>
-        <Filename Value="..\baseunits\downloads.pas"/>
-        <Caret Line="1263" Column="22" TopLine="1246"/>
-      </Position10>
-      <Position11>
-        <Filename Value="..\baseunits\downloads.pas"/>
-        <Caret Line="2311" Column="20" TopLine="2309"/>
-      </Position11>
-      <Position12>
-        <Filename Value="..\baseunits\downloads.pas"/>
-        <Caret Line="2319" Column="24" TopLine="2309"/>
-      </Position12>
-      <Position13>
-        <Filename Value="..\baseunits\downloads.pas"/>
-        <Caret Line="2335" Column="90" TopLine="2319"/>
-      </Position13>
-      <Position14>
-        <Filename Value="..\baseunits\downloads.pas"/>
-        <Caret Line="2672" Column="43" TopLine="2655"/>
-      </Position14>
-      <Position15>
-        <Filename Value="..\baseunits\downloads.pas"/>
-        <Caret Line="394" Column="79" TopLine="391"/>
-      </Position15>
-      <Position16>
-        <Filename Value="..\baseunits\downloads.pas"/>
-        <Caret Line="993" Column="20" TopLine="991"/>
-      </Position16>
-      <Position17>
-        <Filename Value="..\baseunits\downloads.pas"/>
-        <Caret Line="999" Column="28" TopLine="995"/>
-      </Position17>
-      <Position18>
-        <Filename Value="..\baseunits\downloads.pas"/>
-        <Caret Line="1031" Column="34" TopLine="1021"/>
-      </Position18>
-      <Position19>
-        <Filename Value="..\baseunits\downloads.pas"/>
-        <Caret Line="1262" Column="43" TopLine="1248"/>
-      </Position19>
-      <Position20>
-        <Filename Value="..\baseunits\downloads.pas"/>
-        <Caret Line="1263" Column="22" TopLine="1248"/>
-      </Position20>
-      <Position21>
-        <Filename Value="..\baseunits\downloads.pas"/>
-        <Caret Line="112" Column="72" TopLine="107"/>
-      </Position21>
-      <Position22>
-        <Filename Value="..\baseunits\downloads.pas"/>
-        <Caret Line="993" Column="20" TopLine="988"/>
-      </Position22>
-      <Position23>
-        <Filename Value="..\baseunits\downloads.pas"/>
-        <Caret Line="1002" Column="1" TopLine="988"/>
-      </Position23>
-      <Position24>
         <Filename Value="mainunit.pas"/>
         <Caret Line="2941" Column="43" TopLine="2871"/>
-      </Position24>
-      <Position25>
+      </Position9>
+      <Position10>
         <Filename Value="mainunit.pas"/>
         <Caret Line="724" Column="33" TopLine="719"/>
-      </Position25>
-      <Position26>
+      </Position10>
+      <Position11>
         <Filename Value="..\baseunits\subthreads.pas"/>
         <Caret Line="299" Column="102" TopLine="286"/>
-      </Position26>
-      <Position27>
+      </Position11>
+      <Position12>
         <Filename Value="..\baseunits\subthreads.pas"/>
         <Caret Line="298" Column="33" TopLine="286"/>
-      </Position27>
-      <Position28>
+      </Position12>
+      <Position13>
         <Filename Value="..\baseunits\subthreads.pas"/>
         <Caret Line="350" Column="42" TopLine="276"/>
-      </Position28>
-      <Position29>
+      </Position13>
+      <Position14>
         <Filename Value="mainunit.pas"/>
         <Caret Line="1268" Column="9" TopLine="1232"/>
-      </Position29>
-      <Position30>
+      </Position14>
+      <Position15>
         <Filename Value="md.lpr"/>
         <Caret Line="4" Column="13" TopLine="3"/>
+      </Position15>
+      <Position16>
+        <Filename Value="mainunit.pas"/>
+        <Caret Line="443" Column="4" TopLine="441"/>
+      </Position16>
+      <Position17>
+        <Filename Value="mainunit.pas"/>
+        <Caret Line="505" Column="49" TopLine="489"/>
+      </Position17>
+      <Position18>
+        <Filename Value="mainunit.pas"/>
+        <Caret Line="508" Column="57" TopLine="504"/>
+      </Position18>
+      <Position19>
+        <Filename Value="mainunit.pas"/>
+        <Caret Line="3044" Column="29" TopLine="3028"/>
+      </Position19>
+      <Position20>
+        <Filename Value="mainunit.pas"/>
+        <Caret Line="2853" Column="38" TopLine="2843"/>
+      </Position20>
+      <Position21>
+        <Filename Value="mainunit.pas"/>
+        <Caret Line="3044" Column="101" TopLine="3028"/>
+      </Position21>
+      <Position22>
+        <Filename Value="mainunit.pas"/>
+        <Caret Line="3046" Column="111" TopLine="3030"/>
+      </Position22>
+      <Position23>
+        <Filename Value="..\baseunits\data.pas"/>
+        <Caret Line="1298" Column="36" TopLine="1286"/>
+      </Position23>
+      <Position24>
+        <Filename Value="..\baseunits\data.pas"/>
+        <Caret Line="2814" Column="34" TopLine="2804"/>
+      </Position24>
+      <Position25>
+        <Filename Value="..\baseunits\data.pas"/>
+        <Caret Line="6936" Column="23" TopLine="6926"/>
+      </Position25>
+      <Position26>
+        <Filename Value="..\baseunits\downloads.pas"/>
+        <Caret Line="1248" Column="23" TopLine="1239"/>
+      </Position26>
+      <Position27>
+        <Filename Value="..\baseunits\downloads.pas"/>
+        <Caret Line="2695" Column="23" TopLine="2680"/>
+      </Position27>
+      <Position28>
+        <Filename Value="..\baseunits\downloads.pas"/>
+        <Caret Line="2188" Column="29" TopLine="2179"/>
+      </Position28>
+      <Position29>
+        <Filename Value="..\baseunits\downloads.pas"/>
+        <Caret Line="880" Column="102" TopLine="873"/>
+      </Position29>
+      <Position30>
+        <Filename Value="..\baseunits\updatelist.pas"/>
+        <Caret Line="448" Column="1" TopLine="440"/>
       </Position30>
     </JumpHistory>
   </ProjectSession>
