@@ -1247,6 +1247,42 @@ var
     source.Free;
   end;
 
+  function   GetS2scanDirectoryPage: Byte;
+  var
+    i: Cardinal;
+  begin
+    Result:= INFORMATION_NOT_FOUND;
+    if NOT GetPage(TObject(source), S2SCAN_ROOT + S2SCAN_BROWSER, 0) then
+    begin
+      Result:= NET_PROBLEM;
+      source.Free;
+      exit;
+    end;
+    parse.Clear;
+    Parser:= TjsFastHTMLParser.Create(PChar(source.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.Exec;
+    Parser.Free;
+    if parse.Count=0 then
+    begin
+      source.Free;
+      exit;
+    end;
+    for i:= 0 to parse.Count-1 do
+    begin
+      if (Pos('"gbutton fright"', parse.Strings[i]) > 0) then
+      begin
+        s:= TrimRight(TrimLeft(GetString(parse.Strings[i], '/list/', '/"')));
+        Page:= StrToInt(s);
+        Result:= NO_ERROR;
+        source.Free;
+        exit;
+      end;
+    end;
+    source.Free;
+  end;
+
 begin
   source:= TStringList.Create;
   if website = ANIMEA_NAME then
@@ -1293,6 +1329,9 @@ begin
   else
   if website = REDHAWKSCANS_NAME then
     Result:= GetRedHawkScansDirectoryPage
+  else
+  if website = S2SCAN_NAME then
+    Result:= GetS2scanDirectoryPage
   else
   if website = EATMANGA_NAME then
   begin
@@ -2588,6 +2627,46 @@ var
     source.Free;
   end;
 
+  // get name and link of the manga from S2scan
+  function   S2scanGetNameAndLink: Byte;
+  var
+    tmp: Integer;
+    i: Cardinal;
+    s: String;
+  begin
+    Result:= INFORMATION_NOT_FOUND;
+    if NOT GetPage(TObject(source), S2SCAN_ROOT + S2SCAN_BROWSER + '/' + IntToStr(StrToInt(URL)+1) + '/', 0) then
+    begin
+      Result:= NET_PROBLEM;
+      source.Free;
+      exit;
+    end;
+    parse.Clear;
+    Parser:= TjsFastHTMLParser.Create(PChar(source.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.Exec;
+    Parser.Free;
+    if parse.Count=0 then
+    begin
+      source.Free;
+      exit;
+    end;
+    for i:= 0 to parse.Count-1 do
+    begin
+      if (Pos('class="title"', parse.Strings[i]) > 0) AND
+         (Pos('<a', parse.Strings[i+1]) > 0) then
+      begin
+        Result:= NO_ERROR;
+        s:= StringFilter(TrimLeft(TrimRight(parse.Strings[i+2])));
+        names.Add(HTMLEntitiesFilter(s));
+        s:= StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i+1], 'href="')), S2SCAN_ROOT, '', []);
+        links.Add(s);
+      end;
+    end;
+    source.Free;
+  end;
+
   // get name and link of the manga from blogtruyen
   function   BlogTruyenGetNameAndLink: Byte;
   var
@@ -2770,6 +2849,9 @@ begin
   else
   if website = REDHAWKSCANS_NAME then
     Result:= RedHawkScansGetNameAndLink
+  else
+  if website = S2SCAN_NAME then
+    Result:= S2ScanGetNameAndLink
   else
   if website = MANGAEDEN_NAME then
     Result:= MangaEdenGetNameAndLink(MANGAEDEN_ROOT)
@@ -5742,6 +5824,75 @@ begin
   Result:= NO_ERROR;
 end;
 
+// get manga infos from s2scan site
+function   GetS2scanInfoFromURL: Byte;
+var
+  isExtractGenres : Boolean = FALSE;
+  isExtractChapter: Boolean = FALSE;
+  s: String;
+  i, j: Cardinal;
+begin
+  mangaInfo.url:= S2SCAN_ROOT + URL;// + '&confirm=yes';
+  if NOT GetPage(TObject(source), mangaInfo.url, Reconnect) then
+  begin
+    Result:= NET_PROBLEM;
+    source.Free;
+    exit;
+  end;
+
+  // parsing the HTML source
+  parse.Clear;
+  Parser:= TjsFastHTMLParser.Create(PChar(source.Text));
+  Parser.OnFoundTag := OnTag;
+  Parser.OnFoundText:= OnText;
+  Parser.Exec;
+
+  Parser.Free;
+  source.Free;
+  mangaInfo.website:= S2SCAN_NAME;
+  // using parser (cover link, summary, chapter name and link)
+  if parse.Count=0 then exit;
+  for i:= 0 to parse.Count-1 do
+  begin
+    // get cover
+    if (mangaInfo.coverLink = '') AND
+       (GetTagName(parse.Strings[i]) = 'img') AND
+       (Pos('class="thumbnail"', parse.Strings[i-2])>0) then
+      mangaInfo.coverLink:= CorrectURL(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src=')));
+
+    // get title
+    if (Pos('h1 class="title"', parse.Strings[i])<>0) AND
+       (mangaInfo.title = '') then
+      mangaInfo.title:= TrimLeft(TrimRight(StringFilter(parse.Strings[i+2])));
+
+    if (NOT isExtractChapter) AND
+       (Pos('All chapters available for', parse.Strings[i]) > 0) then
+      isExtractChapter:= TRUE;
+
+    if (isExtractChapter) AND
+       (Pos('class="element"', parse.Strings[i]) > 0) then
+    begin
+      Inc(mangaInfo.numChapter);
+      s:= StringReplace(GetString(parse.Strings[i+3], 'href="', '"'), S2SCAN_ROOT, '', []);
+      mangaInfo.chapterLinks.Add(s);
+      s:= RemoveSymbols(TrimLeft(TrimRight(parse.Strings[i+4])));
+      mangaInfo.chapterName.Add(StringFilter(StringFilter(HTMLEntitiesFilter(s))));
+    end;
+  end;
+  // Since chapter name and link are inverted, we need to invert them
+  if mangainfo.ChapterLinks.Count > 1 then
+  begin
+    i:= 0; j:= mangainfo.ChapterLinks.Count - 1;
+    while (i<j) do
+    begin
+      mangainfo.ChapterName.Exchange(i, j);
+      mangainfo.chapterLinks.Exchange(i, j);
+      Inc(i); Dec(j);
+    end;
+  end;
+  Result:= NO_ERROR;
+end;
+
 // get manga infos from eatmanga site
 function   GetMangaPandaInfoFromURL: Byte;
 var
@@ -6849,6 +7000,9 @@ begin
   else
   if website = REDHAWKSCANS_NAME then
     Result:= GetRedHawkScansInfoFromURL
+  else
+  if website = S2SCAN_NAME then
+    Result:= GetS2scanInfoFromURL
   else
   if website = TRUYENTRANHTUAN_NAME then
     Result:= GetTruyenTranhTuanInfoFromURL

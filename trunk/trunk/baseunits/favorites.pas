@@ -278,6 +278,7 @@ begin
   begin
     isNewChapters[i]:= FALSE;
     if (mangaInfo[i].website <> MANGASTREAM_NAME) AND
+       (mangaInfo[i].website <> S2SCAN_NAME) AND
        (mangaInfo[i].website <> SUBMANGA_NAME) AND
        (mangaInfo[i].numChapter > StrToInt(favoriteInfo[i].currentChapter)) then
     begin
@@ -286,6 +287,7 @@ begin
     end
     else
     if (mangaInfo[i].website = MANGASTREAM_NAME) OR
+       (mangaInfo[i].website = S2SCAN_NAME) OR
        (mangaInfo[i].website = SUBMANGA_NAME) then
     begin
       l.Clear;
@@ -358,6 +360,7 @@ begin
     begin
       newChapter:= mangaInfo[i].numChapter;
       if (favoriteInfo[i].Website <> MANGASTREAM_NAME) AND
+         (favoriteInfo[i].website <> S2SCAN_NAME) AND
          (favoriteInfo[i].website <> SUBMANGA_NAME) then
       begin
         currentChapter:= StrToInt(favoriteInfo[i].currentChapter);
@@ -441,6 +444,7 @@ begin
     begin
       favoriteInfo[i].currentChapter:= IntToStr(mangaInfo[i].numChapter);
       if (mangaInfo[i].website = MANGASTREAM_NAME) OR
+         (mangaInfo[i].website = S2SCAN_NAME) AND
          (mangaInfo[i].website = SUBMANGA_NAME) then
       begin
         favoriteInfo[i].downloadedChapterList:= '';
