@@ -495,6 +495,7 @@ begin
       if  (mainDataProcess.Data.Count > 0) AND
          ((website = MANGASTREAM_NAME) OR
           (website = MANGAVADISI_NAME) OR
+          (website = SENMANGA_NAME) OR
           (website = MANGAFRAME_NAME) OR
           (website = S2SCAN_NAME) OR
           (website = TURKCRAFT_NAME) OR

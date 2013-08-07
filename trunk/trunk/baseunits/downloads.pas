@@ -28,7 +28,7 @@ type
     function    GetLinkPageFromURL(const URL: String): Boolean;
     // Get number of download link from URL
     function    GetPageNumberFromURL(const URL: String): Boolean;
-    // Download page - link from link list
+    // Download page - links are from link list
     function    DownloadPage: Boolean;
     procedure   Execute; override;
     procedure   OnTag(tag: String);
@@ -1152,6 +1152,46 @@ var
         begin
           s:= parse.Strings[i-8];
           manager.container.pageNumber:= StrToInt(GetString(s, '/page/', '"'));
+          break;
+        end;
+      end;
+    end;
+    parse.Free;
+    l.Free;
+  end;
+
+  function GetSenMangaPageNumber: Boolean;
+  var
+    s   : String;
+    i, j: Cardinal;
+    l   : TStringList;
+    isStartGetPageNumber: Boolean = FALSE;
+  begin
+    l:= TStringList.Create;
+    parse:= TStringList.Create;
+    s:= DecodeUrl(SENMANGA_ROOT + URL + '1/');
+    Result:= GetPage(TObject(l),
+                     s,
+                     manager.container.manager.retryConnect);
+    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.Exec;
+    Parser.Free;
+    if parse.Count>0 then
+    begin
+      manager.container.pageNumber:= 0;
+      for i:= 0 to parse.Count-1 do
+      begin
+        if (Pos('name="page"', parse.Strings[i])>0) then
+          isStartGetPageNumber:= TRUE;
+
+        if (isStartGetPageNumber) AND
+           (Pos('</select>', parse.Strings[i])>0) then
+        begin
+          s:= parse.Strings[i-3];
+          manager.container.pageNumber:= StrToInt(GetAttributeValue(GetTagAttribute(s, 'value=')));
+          break;
         end;
       end;
     end;
@@ -1307,6 +1347,9 @@ begin
   else
   if manager.container.mangaSiteID = MANGAFRAME_ID then
     Result:= GetMangaFramePageNumber
+  else
+  if manager.container.mangaSiteID = SENMANGA_ID then
+    Result:= GetSenMangaPageNumber
   else
   if (manager.container.mangaSiteID = MANGAEDEN_ID) OR
      (manager.container.mangaSiteID = PERVEDEN_ID) then
@@ -2539,6 +2582,41 @@ var
     l.Free;
   end;
 
+  function GetSenMangaLinkPage: Boolean;
+  var
+    s: String;
+    j,
+    i: Cardinal;
+    l: TStringList;
+  begin
+    l:= TStringList.Create;
+    s:= DecodeUrl(SENMANGA_ROOT + URL + IntToStr(workPtr+1) + '/');
+    Result:= GetPage(TObject(l),
+                     s,
+                     manager.container.manager.retryConnect);
+    parse:= TStringList.Create;
+    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.Exec;
+    Parser.Free;
+
+    if parse.Count>0 then
+    begin
+      for i:= 0 to parse.Count-1 do
+        if (Pos(' onerror=', parse.Strings[i])>0) then
+        begin
+          s:= EncodeURL(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src=')));
+          if Pos('http://', s) = 0 then
+            s:= SENMANGA_ROOT + s;
+          manager.container.pageLinks.Strings[workPtr]:= s;
+          break;
+        end;
+    end;
+    parse.Free;
+    l.Free;
+  end;
+
   function GetMangaTradersLinkPage: Boolean;
   var
     s: String;
@@ -2756,6 +2834,9 @@ begin
   else
   if manager.container.mangaSiteID = MANGAFRAME_ID then
     Result:= GetMangaFrameLinkPage
+  else
+  if manager.container.mangaSiteID = SENMANGA_ID then
+    Result:= GetSenMangaLinkPage
   else
   if manager.container.mangaSiteID = TRUYENTRANHTUAN_ID then
     Result:= GetTruyenTranhTuanLinkPage

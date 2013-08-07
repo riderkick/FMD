@@ -167,6 +167,7 @@ const
   PECINTAKOMIK_NAME = 'PecintaKomik'; PECINTAKOMIK_ID= 33;
   HUGEMANGA_NAME    = 'HugeManga';    HUGEMANGA_ID   = 34;
   S2SCAN_NAME       = 'S2scanlations';S2SCAN_ID      = 35;
+  SENMANGA_NAME     = 'SenManga';     SENMANGA_ID    = 36;
 
   DEFAULT_LIST = ANIMEA_NAME+'!%~'+MANGAFOX_NAME+'!%~'+MANGAHERE_NAME+'!%~'+MANGAINN_NAME+'!%~'+MANGAREADER_NAME+'!%~';
   DEFAULT_CUSTOM_RENAME = '%NUMBERING% - %CHAPTER%';
@@ -178,7 +179,7 @@ var
   cbOptionLetFMDDoItemIndex: Cardinal = 0;
 
   Revision         : Cardinal;
-  // only for batoto: the directory page from the last time we check the site
+  // deprecated - only for batoto: the directory page from the last time we check the site
   batotoLastDirectoryPage: Cardinal = 289;
   currentJDN       : Cardinal;
   isChangeDirectory: Boolean = FALSE;
@@ -321,6 +322,9 @@ var
 
   S2SCAN_ROOT   : String = 'http://s2scanlations.com';
   S2SCAN_BROWSER: String = '/online/reader/list/';
+
+  SENMANGA_ROOT   : String = 'http://raw.senmanga.com';
+  SENMANGA_BROWSER: String = '/Manga/';
 
   UPDATE_URL      : String = 'http://jaist.dl.sourceforge.net/project/fmd/FMD/updates/';
 
@@ -777,7 +781,9 @@ begin
   else
   if name = HUGEMANGA_NAME then Result:= HUGEMANGA_ID
   else
-  if name = S2SCAN_NAME then Result:= S2SCAN_ID;
+  if name = S2SCAN_NAME then Result:= S2SCAN_ID
+  else
+  if name = SENMANGA_NAME then Result:= SENMANGA_ID;
 end;
 
 function  GetMangaSiteName(const ID: Cardinal): String;
@@ -850,7 +856,9 @@ begin
   else
   if ID = HUGEMANGA_ID then Result:= HUGEMANGA_NAME
   else
-  if ID = S2SCAN_ID then Result:= S2SCAN_NAME;
+  if ID = S2SCAN_ID then Result:= S2SCAN_NAME
+  else
+  if ID = SENMANGA_ID then Result:= SENMANGA_NAME;
 end;
 
 // bad coding.. but this is how FMD works

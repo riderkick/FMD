@@ -118,7 +118,7 @@ var
 implementation
 
 uses
-  HTMLParser, FastHTMLParser, HTMLUtil, HTTPSend, SynaCode{$IFDEF WINDOWS}{$IFDEF DOWNLOADER}, IECore{$ENDIF}{$ENDIF};
+  synautil, HTMLParser, FastHTMLParser, HTMLUtil, HTTPSend, SynaCode{$IFDEF WINDOWS}{$IFDEF DOWNLOADER}, IECore{$ENDIF}{$ENDIF};
 
 // ----- TDataProcess -----
 
@@ -2421,6 +2421,46 @@ var
     source.Free;
   end;
 
+  // get name and link of the manga from SenManga
+  function   SenMangaGetNameAndLink: Byte;
+  var
+    tmp: Integer;
+    i: Cardinal;
+    s: String;
+  begin
+    Result:= INFORMATION_NOT_FOUND;
+    if NOT GetPage(TObject(source), SENMANGA_ROOT + SENMANGA_BROWSER, 0) then
+    begin
+      Result:= NET_PROBLEM;
+      source.Free;
+      exit;
+    end;
+    parse.Clear;
+    Parser:= TjsFastHTMLParser.Create(PChar(source.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.Exec;
+    Parser.Free;
+    if parse.Count=0 then
+    begin
+      source.Free;
+      exit;
+    end;
+    for i:= 0 to parse.Count-1 do
+    begin
+      if (Pos('<br/', parse.Strings[i]) > 0) AND
+         (Pos('</a', parse.Strings[i-1]) > 0) then
+      begin
+        Result:= NO_ERROR;
+        s:= StringFilter(parse.Strings[i-2]);
+        names.Add(HTMLEntitiesFilter(s));
+        s:= StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i-3], 'href=')), SENMANGA_ROOT, '', []);
+        links.Add(s);
+      end;
+    end;
+    source.Free;
+  end;
+
   // get name and link of the manga from Starkana
   function   StarkanaGetNameAndLink: Byte;
   var
@@ -2894,6 +2934,9 @@ begin
   else
   if website = MANGAFRAME_NAME then
     Result:= MangaframeGetNameAndLink
+  else
+  if website = SENMANGA_NAME then
+    Result:= SenMangaGetNameAndLink
   else
   if website = GEHENTAI_NAME then
     Result:= GEHentaiGetNameAndLink
@@ -5831,14 +5874,32 @@ var
   isExtractChapter: Boolean = FALSE;
   s: String;
   i, j: Cardinal;
+ // stream: TStringStream;
+ // HTTP: THTTPSend;
+  R   : Boolean;
 begin
-  mangaInfo.url:= S2SCAN_ROOT + URL;// + '&confirm=yes';
+  mangaInfo.url:= S2SCAN_ROOT + URL;
   if NOT GetPage(TObject(source), mangaInfo.url, Reconnect) then
   begin
     Result:= NET_PROBLEM;
     source.Free;
     exit;
   end;
+ { stream:= TStringStream.Create('');
+  while NOT HttpPostURL(mangaInfo.url, 'name=""&value="true"', stream) do ;
+
+  HTTP := THTTPSend.Create;
+  try
+    HTTP.MimeType := 'application/x-www-form-urlencoded';
+    HTTP.Cookies.Add('ci_session=VW5QZlw1BG0AfVd%2BADwDZwUwV2kHIAApUmJTJFUnU2sCbVwyDFVRaVNtV3kOaAAgBjpXPgYyAW4HIFBgAmRdPlJmUmBVYlQ1BmQBZwZlBDZVOFBuXDkEZwBjVzUAYgNjBTFXYgdhADxSMlNvVWRTZwI0XG0MaVExUztXeQ5oACAGOlc8BjABbgcgUD0Cd11YUmZSMlUwVHcGYwFyBnMEd1U0UC9cOwRmADJXNwAkA2cFMFdrBywAa1IxU2VVelMwAjBcaQwkUThTO1d5DmgAIAY6VzwGMAFuByBQIQJ0XWJSdVIJVTVUYgZjAW8GdAR3VTRQL1w7BGAANFc3ACQDGwVvVykHawA2UmtTNlV7UzcCLFxsDCpRKFNeVzIOPQA3Bm9XegZzAXQHTFAAAiddMVIpUmRVb1QlBlEBTgZXBGNVO1BnXCEEJQBwVzcANANkBS5XYwcrAHpSQFMyVTdTaQJtXHMMOFEwUzhXaw5jAGIGMFc8BiABEgdrUCYCYl1hUmhSLlV7VDcGNAEvBjAEd1U0UC9cOwRmADVXNwAkAzoFYVcgB3YABVJmUzRVIFNrAnRcNQx%2BUXlTK1dgDjoAaQYxVz4GNwFhBzdQZwIwXT9SP1JjVW9UeA%3D%3D');
+    R:= HTTP.HTTPMethod('GET', mangaInfo.url);
+    if R then
+      stream.CopyFrom(HTTP.Document, 0);
+  finally
+    HTTP.Free;
+  end;
+  source.Text:= stream.DataString;
+  stream.Free;                     }
 
   // parsing the HTML source
   parse.Clear;
@@ -6733,6 +6794,84 @@ begin
   Result:= NO_ERROR;
 end;
 
+// get manga infos from SenManga site
+function   GetSenMangaInfoFromURL: Byte;
+var
+  s: String;
+  isExtractChapter: Boolean = FALSE;
+  i, j: Cardinal;
+begin
+  mangaInfo.url:= SENMANGA_ROOT + URL;
+  if NOT GetPage(TObject(source), mangaInfo.url, Reconnect) then
+  begin
+    Result:= NET_PROBLEM;
+    source.Free;
+    exit;
+  end;
+
+  // parsing the HTML source
+  parse.Clear;
+  Parser:= TjsFastHTMLParser.Create(PChar(source.Text));
+  Parser.OnFoundTag := OnTag;
+  Parser.OnFoundText:= OnText;
+  Parser.Exec;
+
+  Parser.Free;
+  source.Free;
+
+  mangaInfo.website:= SENMANGA_NAME;
+  mangaInfo.status:= '1';
+  mangaInfo.coverLink:= '';
+  mangaInfo.summary:= '';
+  mangaInfo.authors:= '';
+  mangaInfo.artists:= '';
+  mangaInfo.genres:= '';
+
+  // using parser (cover link, summary, chapter name and link)
+  if parse.Count=0 then exit;
+  for i:= 0 to parse.Count-1 do
+  begin
+    // get chapter name and links
+    if (Pos('name="chapter"', parse.Strings[i])>0) then
+      isExtractChapter:= TRUE;
+
+    // get manga name
+    if (mangaInfo.title = '') AND (Pos('<title>', parse.Strings[i])>0) then
+      mangaInfo.title:= TrimLeft(TrimRight(GetString(parse.Strings[i+1], 'Raw |', '|')));
+
+
+   { if (isExtractChapter) AND (Pos('</select>', parse.Strings[i])>0) then
+      break; }
+
+    if (isExtractChapter) AND
+       (Pos('<option', parse.Strings[i])>0) then
+    begin
+      Inc(mangaInfo.numChapter);
+      s:= URL + GetAttributeValue(GetTagAttribute(parse.Strings[i], 'value=')) + '/';
+      mangaInfo.chapterLinks.Add(s);
+      s:= RemoveSymbols(TrimLeft(TrimRight(parse.Strings[i+1])));
+      mangaInfo.chapterName.Add(StringFilter(StringFilter(HTMLEntitiesFilter(s))));
+    end;
+
+    if (isExtractChapter) AND
+       (Pos('</select>', parse.Strings[i])>0) then
+      isExtractChapter:= FALSE;
+  end;
+
+  // Since chapter name and link are inverted, we need to invert them
+  if mangainfo.ChapterLinks.Count > 1 then
+  begin
+    i:= 0; j:= mangainfo.ChapterLinks.Count - 1;
+    while (i<j) do
+    begin
+      mangainfo.ChapterName.Exchange(i, j);
+      mangainfo.chapterLinks.Exchange(i, j);
+      Inc(i); Dec(j);
+    end;
+  end;
+  Result:= NO_ERROR;
+end;
+
 // get manga infos from blogtruyen site
 function   GetBlogTruyenInfoFromURL: Byte;
 var
@@ -7042,6 +7181,9 @@ begin
   else
   if website = MANGAVADISI_NAME then
     Result:= GetMangaVadisiInfoFromURL
+  else
+  if website = SENMANGA_NAME then
+    Result:= GetSenMangaInfoFromURL
   else
   if website = BLOGTRUYEN_NAME then
     Result:= GetBlogTruyenInfoFromURL
