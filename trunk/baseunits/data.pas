@@ -7,7 +7,7 @@
 unit data;
 
 {$mode delphi}
-{$DEFINE DOWNLOADER}
+{.$DEFINE DOWNLOADER}
 
 // EN: This unit contains all necessary functions for data processing
 // VI: Unit chứa tất cả các hàm liên quan tới xử lý dữ liệu
@@ -2303,6 +2303,46 @@ var
     source.Free;
   end;
 
+  // get name and link of the manga from imanhua
+  function   imanhuaGetNameAndLink: Byte;
+  var
+    tmp: Integer;
+    i: Cardinal;
+    s: String;
+  begin
+    Result:= INFORMATION_NOT_FOUND;
+    if NOT GetPage(TObject(source), IMANHUA_ROOT + IMANHUA_BROWSER, 0) then
+    begin
+      Result:= NET_PROBLEM;
+      source.Free;
+      exit;
+    end;
+    parse.Clear;
+    Parser:= TjsFastHTMLParser.Create(PChar(source.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.Exec;
+    Parser.Free;
+    if parse.Count=0 then
+    begin
+      source.Free;
+      exit;
+    end;
+    for i:= 0 to parse.Count-1 do
+    begin
+      if (Pos('href="/comic/', parse.Strings[i]) > 0) AND
+         (Pos('/list_', parse.Strings[i]) = 0) then
+      begin
+        Result:= NO_ERROR;
+        s:= StringFilter(parse.Strings[i+1]);
+        names.Add(HTMLEntitiesFilter(s));
+        s:= GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href='));
+        links.Add(s);
+      end;
+    end;
+    source.Free;
+  end;
+
   // get name and link of the manga from Turkcraft
   function   TurkcraftGetNameAndLink: Byte;
   var
@@ -2922,9 +2962,12 @@ begin
   else
   if website = HUGEMANGA_NAME then
     Result:= HugeMangaGetNameAndLink
+ // else
+ // if website = MANGAKU_NAME then
+ //   Result:= MangakuGetNameAndLink
   else
-  if website = MANGAKU_NAME then
-    Result:= MangakuGetNameAndLink
+  if website = IMANHUA_NAME then
+    Result:= imanhuaGetNameAndLink
   else
   if website = TURKCRAFT_NAME then
     Result:= TurkcraftGetNameAndLink
