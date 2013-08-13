@@ -7,7 +7,7 @@
 unit data;
 
 {$mode delphi}
-{.$DEFINE DOWNLOADER}
+{$DEFINE DOWNLOADER}
 
 // EN: This unit contains all necessary functions for data processing
 // VI: Unit chứa tất cả các hàm liên quan tới xử lý dữ liệu

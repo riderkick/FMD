@@ -311,6 +311,8 @@ type
       Node: PVirtualNode; var InitialStates: TVirtualNodeInitStates);
     procedure vtFavoritesGetText(Sender: TBaseVirtualTree; Node: PVirtualNode;
       Column: TColumnIndex; TextType: TVSTTextType; var CellText: String);
+    procedure vtFavoritesHeaderClick(Sender: TVTHeader; Column: TColumnIndex;
+      Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 
     procedure vtFavoritesInitNode(Sender: TBaseVirtualTree; ParentNode,
       Node: PVirtualNode; var InitialStates: TVirtualNodeInitStates);
@@ -699,6 +701,7 @@ end;
 procedure TMainForm.CloseNow;
 begin
   isExiting:= TRUE;
+  favorites.Backup;
   mangalistIni.WriteInteger('general', 'batotoLastDirectoryPage', batotoLastDirectoryPage);
   SaveFormInformation;
   DLManager.StopAllDownloadTasksForExit;
@@ -2114,6 +2117,29 @@ begin
     end;
 end;
 
+procedure TMainForm.vtFavoritesHeaderClick(Sender: TVTHeader;
+  Column: TColumnIndex; Button: TMouseButton; Shift: TShiftState; X, Y: Integer
+  );
+begin
+  if favorites.isRunning then
+    exit;
+  case Column of
+    0: ;
+    1: ;
+    2: ;
+    else
+      exit;
+  end;
+  favorites.Sort(Column);
+  vtFavorites.Header.SortColumn:= Column;
+  favorites.sortDirection:= NOT favorites.sortDirection;
+  vtFavorites.Header.SortDirection:= TSortDirection(favorites.sortDirection);
+  UpdateVtFavorites;
+
+  options.WriteInteger('misc', 'SortColumn', vtFavorites.Header.SortColumn);
+  options.WriteBool('misc', 'SortDirection', favorites.sortDirection);
+end;
+
 procedure TMainForm.vtFavoritesInitNode(Sender: TBaseVirtualTree; ParentNode,
   Node: PVirtualNode; var InitialStates: TVirtualNodeInitStates);
 var
@@ -2596,6 +2622,10 @@ begin
   OptionAutoCheckFavStartup:= cbOptionAutoCheckFavStartup.Checked;
   seOptionCheckMinutes.Value:= options.ReadInteger('update', 'AutoCheckMinutes', 0);
   OptionCheckMinutes:= seOptionCheckMinutes.Value;
+
+  // misc
+  vtFavorites.Header.SortColumn:= options.ReadInteger('misc', 'SortColumn', 0);
+  favorites.sortDirection:= options.ReadBool('misc', 'SortDirection', FALSE);
 
   if OptionCheckMinutes = 0 then
     itCheckForChapters.Enabled:= FALSE

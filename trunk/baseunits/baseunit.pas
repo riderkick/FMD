@@ -1801,7 +1801,8 @@ procedure QuickSortChapters(var chapterList, linkList: TStringList);
     X:= chapterList.Strings[(L+R) div 2];
     i:= L;
     j:= R;
-    repeat
+    while i<=j do
+    begin
       while StrComp(PChar(chapterList.Strings[i]), PChar(X))<0 do Inc(i);
       while StrComp(PChar(chapterList.Strings[j]), PChar(X))>0 do Dec(j);
       if i<=j then
@@ -1809,9 +1810,10 @@ procedure QuickSortChapters(var chapterList, linkList: TStringList);
         chapterList.Exchange(i, j);
         linkList   .Exchange(i, j);
         Inc(i);
-        Dec(j);
+        if j > 0 then
+          Dec(j);
       end;
-    until i>j;
+    end;
     if L < j then QSort(L, j);
     if i < R then QSort(i, R);
   end;
@@ -1822,7 +1824,7 @@ var
 begin
   if chapterList.Count <= 2 then
     exit;
-  QSort(1, chapterList.Count-1);
+  QSort(0, chapterList.Count-1);
 end;
 
 procedure QuickSortData(var merge: TStringList);
@@ -1836,7 +1838,8 @@ var
     X:= names.Strings[(L+R) div 2];
     i:= L;
     j:= R;
-    repeat
+    while i<=j do
+    begin
       while StrComp(PChar(names.Strings[i]), PChar(X))<0 do Inc(i);
       while StrComp(PChar(names.Strings[j]), PChar(X))>0 do Dec(j);
       if i<=j then
@@ -1844,9 +1847,10 @@ var
         names.Exchange(i, j);
         merge.Exchange(i, j);
         Inc(i);
-        Dec(j);
+        if j > 0 then
+          Dec(j);
       end;
-    until i>j;
+    end;
     if L < j then QSort(L, j);
     if i < R then QSort(i, R);
   end;
@@ -1863,7 +1867,7 @@ begin
     GetParams(output, merge.Strings[i]);
     names.Add(output.Strings[DATA_PARAM_NAME]);
   end;
-  QSort(1, names.Count-1);
+  QSort(0, names.Count-1);
   output.Free;
   names.Free;
 end;
@@ -1880,7 +1884,8 @@ var
     X:= names.Strings[(L+R) div 2];
     i:= L;
     j:= R;
-    repeat
+    while i<=j do
+    begin
       while StrComp(PChar(names.Strings[i]), PChar(X))<0 do Inc(i);
       while StrComp(PChar(names.Strings[j]), PChar(X))>0 do Dec(j);
       if i<=j then
@@ -1889,9 +1894,10 @@ var
         merge.Exchange(i, j);
         webIDList.Exchange(i, j);
         Inc(i);
-        Dec(j);
+        if j > 0 then
+          Dec(j);
       end;
-    until i>j;
+    end;
     if L < j then QSort(L, j);
     if i < R then QSort(i, R);
   end;
@@ -1908,7 +1914,7 @@ begin
     GetParams(output, merge.Strings[i]);
     names.Add(output.Strings[DATA_PARAM_NAME]);
   end;
-  QSort(1, names.Count-1);
+  QSort(0, names.Count-1);
   output.Free;
   names.Free;
 end;
