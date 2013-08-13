@@ -7,7 +7,7 @@
 unit updatelist;
 
 {$mode delphi}
-{.$DEFINE DOWNLOADER}
+{$DEFINE DOWNLOADER}
 interface
 
 uses
@@ -439,11 +439,11 @@ begin
 
       if links.Count > 0 then
       begin
-        i:= 0;
+        k:= 0;
         repeat
           j:= 0;
           repeat
-            if (i<>j) AND (Find(links.Strings[i], links.Strings[j], Integer(workPtr))) then
+            if (k<>j) AND (CompareStr(links.Strings[k], links.Strings[j]) = 0) then
             begin
               links.Delete(j);
               names.Delete(j);
@@ -451,8 +451,8 @@ begin
             else
               Inc(j);
           until j = links.Count;
-          Inc(i);
-        until i = links.Count;
+          Inc(k);
+        until k = links.Count;
       end;
 
       if links.Count = 0 then

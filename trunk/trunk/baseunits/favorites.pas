@@ -51,9 +51,11 @@ type
   public
     // store manga name that has new chapter after checking
     newMangaStr    : String;
+    sortDirection,
     isAuto,
     isShowDialog,
     isRunning      : Boolean;
+    sortColumn,
     Count          : Cardinal;
     favorites      : TIniFile;
     favoriteInfo   : array of TFavoriteInfo;
@@ -79,6 +81,9 @@ type
     procedure   Remove(const pos: Cardinal; const isBackup: Boolean = TRUE);
     procedure   Restore;
     procedure   Backup;
+
+    // sorting
+    procedure   Sort(const AColumn: Cardinal);
   end;
 
 implementation
@@ -192,6 +197,8 @@ begin
       mangaInfo   [i]:= mangaInfo   [i-1];
     end;
 end;
+
+// ----- public methods -----
 
 constructor TFavoriteManager.Create;
 begin
@@ -515,6 +522,7 @@ begin
     favoriteInfo[Count-1].downloadedChapterList:= downloadedChapterList
   else
     favoriteInfo[Count-1].downloadedChapterList:= '';
+  Sort(sortColumn);
   Backup;
 end;
 
@@ -568,6 +576,80 @@ begin
     favorites.WriteString(IntToStr(i), 'Website',        favoriteInfo[i].Website);
     favorites.WriteString(IntToStr(i), 'SaveTo',         favoriteInfo[i].SaveTo);
     favorites.WriteString(IntToStr(i), 'Link',           favoriteInfo[i].link);
+  end;
+end;
+
+procedure   TFavoriteManager.Sort(const AColumn: Cardinal);
+
+  function  GetStr(const ARow: Cardinal): String;
+  begin
+    case AColumn of
+      0: Result:= favoriteInfo[ARow].title;
+      1: Result:= favoriteInfo[ARow].currentChapter;
+      2: Result:= favoriteInfo[ARow].website;
+    end;
+  end;
+
+  procedure Ascending(L, R: Cardinal);
+  var i, j: Cardinal;
+         X: String;
+       tmp: TFavoriteInfo;
+  begin
+    X:= GetStr((L+R) div 2);
+    i:= L;
+    j:= R;
+    while i<=j do
+    begin
+      while StrComp(PChar(GetStr(i)), PChar(X))<0 do Inc(i);
+      while StrComp(PChar(GetStr(j)), PChar(X))>0 do Dec(j);
+      if i<=j then
+      begin
+        tmp:= favoriteInfo[i];
+        favoriteInfo[i]:= favoriteInfo[j];
+        favoriteInfo[j]:= tmp;
+        Inc(i);
+        if j > 0 then
+          Dec(j);
+      end;
+    end;
+    if L < j then Ascending(L, j);
+    if i < R then Ascending(i, R);
+  end;
+
+  procedure Descending(L, R: Cardinal);
+  var i, j: Cardinal;
+         X: String;
+       tmp: TFavoriteInfo;
+  begin
+    X:= GetStr((L+R) div 2);
+    i:= L;
+    j:= R;
+    while i<=j do
+    begin
+      while StrComp(PChar(GetStr(i)), PChar(X))>0 do Inc(i);
+      while StrComp(PChar(GetStr(j)), PChar(X))<0 do Dec(j);
+      if i<=j then
+      begin
+        tmp:= favoriteInfo[i];
+        favoriteInfo[i]:= favoriteInfo[j];
+        favoriteInfo[j]:= tmp;
+        Inc(i);
+        if j > 0 then
+          Dec(j);
+      end;
+    end;
+    if L < j then Descending(L, j);
+    if i < R then Descending(i, R);
+  end;
+
+var
+  i: Cardinal;
+
+begin
+  sortColumn:= AColumn;
+  case sortDirection of
+    TRUE : Ascending(0, Length(favoriteInfo)-1);
+    FALSE: Descending(0, Length(favoriteInfo)-1);
   end;
 end;
 

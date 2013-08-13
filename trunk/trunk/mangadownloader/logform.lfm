@@ -1,7 +1,7 @@
 object Log: TLog
-  Left = 443
+  Left = 756
   Height = 365
-  Top = 137
+  Top = 175
   Width = 548
   BorderIcons = [biSystemMenu, biMinimize]
   Caption = 'Changelog'
