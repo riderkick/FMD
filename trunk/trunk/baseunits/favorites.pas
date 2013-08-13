@@ -590,56 +590,65 @@ procedure   TFavoriteManager.Sort(const AColumn: Cardinal);
     end;
   end;
 
-  procedure Ascending(L, R: Cardinal);
+  procedure QSort(L, R: Cardinal);
   var i, j: Cardinal;
          X: String;
        tmp: TFavoriteInfo;
+      tmp2: TMangaInfo;
   begin
     X:= GetStr((L+R) div 2);
     i:= L;
     j:= R;
     while i<=j do
     begin
-      while StrComp(PChar(GetStr(i)), PChar(X))<0 do Inc(i);
-      while StrComp(PChar(GetStr(j)), PChar(X))>0 do Dec(j);
+      case sortDirection of
+        TRUE:
+          begin
+            case AColumn of
+              1:
+                begin
+                  while StrToInt(GetStr(i)) < StrToInt(X) do Inc(i);
+                  while StrToInt(GetStr(j)) > StrToInt(X) do Dec(j);
+                end
+              else
+                begin
+                  while StrComp(PChar(GetStr(i)), PChar(X))<0 do Inc(i);
+                  while StrComp(PChar(GetStr(j)), PChar(X))>0 do Dec(j);
+                end;
+            end;
+          end;
+        FALSE:
+          begin
+            case AColumn of
+              1:
+                begin
+                  while StrToInt(GetStr(i)) > StrToInt(X) do Inc(i);
+                  while StrToInt(GetStr(j)) < StrToInt(X) do Dec(j);
+                end
+              else
+                begin
+                  while StrComp(PChar(GetStr(i)), PChar(X))>0 do Inc(i);
+                  while StrComp(PChar(GetStr(j)), PChar(X))<0 do Dec(j);
+                end;
+            end;
+          end;
+      end;
       if i<=j then
       begin
         tmp:= favoriteInfo[i];
         favoriteInfo[i]:= favoriteInfo[j];
         favoriteInfo[j]:= tmp;
-        Inc(i);
-        if j > 0 then
-          Dec(j);
-      end;
-    end;
-    if L < j then Ascending(L, j);
-    if i < R then Ascending(i, R);
-  end;
 
-  procedure Descending(L, R: Cardinal);
-  var i, j: Cardinal;
-         X: String;
-       tmp: TFavoriteInfo;
-  begin
-    X:= GetStr((L+R) div 2);
-    i:= L;
-    j:= R;
-    while i<=j do
-    begin
-      while StrComp(PChar(GetStr(i)), PChar(X))>0 do Inc(i);
-      while StrComp(PChar(GetStr(j)), PChar(X))<0 do Dec(j);
-      if i<=j then
-      begin
-        tmp:= favoriteInfo[i];
-        favoriteInfo[i]:= favoriteInfo[j];
-        favoriteInfo[j]:= tmp;
+        tmp2:= mangaInfo[i];
+        mangaInfo[i]:= mangaInfo[j];
+        mangaInfo[j]:= tmp2;
         Inc(i);
         if j > 0 then
           Dec(j);
       end;
     end;
-    if L < j then Descending(L, j);
-    if i < R then Descending(i, R);
+    if L < j then QSort(L, j);
+    if i < R then QSort(i, R);
   end;
 
 var
@@ -647,10 +656,7 @@ var
 
 begin
   sortColumn:= AColumn;
-  case sortDirection of
-    TRUE : Ascending(0, Length(favoriteInfo)-1);
-    FALSE: Descending(0, Length(favoriteInfo)-1);
-  end;
+  QSort(0, Length(favoriteInfo)-1);
 end;
 
 end.
