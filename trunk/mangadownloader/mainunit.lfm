@@ -52,7 +52,6 @@ object MainForm: TMainForm
       OnClick = edSearchClick
       OnKeyPress = edSearchKeyPress
       TabOrder = 1
-      Text = 'Search...'
     end
     object vtMangaList: TVirtualStringTree
       Left = 8
