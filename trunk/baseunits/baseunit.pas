@@ -169,6 +169,7 @@ const
   S2SCAN_NAME       = 'S2scanlations';S2SCAN_ID      = 35;
   SENMANGA_NAME     = 'SenManga';     SENMANGA_ID    = 36;
   IMANHUA_NAME      = 'imanhua';      IMANHUA_ID     = 37;
+  MABUNS_NAME       = 'Mabuns';       MABUNS_ID      = 38;
 
   DEFAULT_LIST = ANIMEA_NAME+'!%~'+MANGAFOX_NAME+'!%~'+MANGAHERE_NAME+'!%~'+MANGAINN_NAME+'!%~'+MANGAREADER_NAME+'!%~';
   DEFAULT_CUSTOM_RENAME = '%NUMBERING% - %CHAPTER%';
@@ -329,6 +330,9 @@ var
 
   IMANHUA_ROOT   : String = 'http://www.imanhua.com';
   IMANHUA_BROWSER: String = '/all.html';
+
+  MABUNS_ROOT   : String = 'http://www.mabuns.web.id';
+  MABUNS_BROWSER: String = '/p/mabuns-manga-list.html';
 
   UPDATE_URL      : String = 'http://jaist.dl.sourceforge.net/project/fmd/FMD/updates/';
 
@@ -789,7 +793,9 @@ begin
   else
   if name = SENMANGA_NAME then Result:= SENMANGA_ID
   else
-  if name = IMANHUA_NAME then Result:= IMANHUA_ID;
+  if name = IMANHUA_NAME then Result:= IMANHUA_ID
+  else
+  if name = MABUNS_NAME then Result:= MABUNS_ID;
 end;
 
 function  GetMangaSiteName(const ID: Cardinal): String;
@@ -866,7 +872,9 @@ begin
   else
   if ID = SENMANGA_ID then Result:= SENMANGA_NAME
   else
-  if ID = IMANHUA_ID then Result:= IMANHUA_NAME;
+  if ID = IMANHUA_ID then Result:= IMANHUA_NAME
+  else
+  if ID = MABUNS_ID then Result:= MABUNS_NAME;
 end;
 
 // bad coding.. but this is how FMD works
