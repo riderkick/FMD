@@ -1137,6 +1137,7 @@ begin
     currentWebsite:= cbSelectManga.Items[cbSelectManga.ItemIndex];
     dataProcess.website:= cbSelectManga.Items[cbSelectManga.ItemIndex];
     CheckForTopPanel;
+    edSearch.Text:= '';
   end;
 end;
 
@@ -2123,6 +2124,7 @@ procedure TMainForm.vtFavoritesHeaderClick(Sender: TVTHeader;
 begin
   if favorites.isRunning then
     exit;
+  favorites.isRunning:= TRUE;
   case Column of
     0: ;
     1: ;
@@ -2138,6 +2140,7 @@ begin
 
   options.WriteInteger('misc', 'SortColumn', vtFavorites.Header.SortColumn);
   options.WriteBool('misc', 'SortDirection', favorites.sortDirection);
+  favorites.isRunning:= FALSE;
 end;
 
 procedure TMainForm.vtFavoritesInitNode(Sender: TBaseVirtualTree; ParentNode,
@@ -2626,6 +2629,7 @@ begin
   // misc
   vtFavorites.Header.SortColumn:= options.ReadInteger('misc', 'SortColumn', 0);
   favorites.sortDirection:= options.ReadBool('misc', 'SortDirection', FALSE);
+  vtFavorites.Header.SortDirection:= TSortDirection(favorites.sortDirection);
 
   if OptionCheckMinutes = 0 then
     itCheckForChapters.Enabled:= FALSE
@@ -2904,7 +2908,7 @@ begin
   tsOption      .Caption:= language.ReadString(lang, 'tsOptionCaption', '');
   tsAbout       .Caption:= language.ReadString(lang, 'tsAboutCaption', '');
  // edSearch      .Text   := language.ReadString(lang, 'edSearchText', '');
-  stSearch:= edSearch.Text;
+  stSearch:= language.ReadString(lang, 'edSearchText', '');
   stModeAll             := language.ReadString(lang, 'stModeAll', '');
   stModeFilter          := language.ReadString(lang, 'stModeFilter', '');
 
