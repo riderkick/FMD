@@ -413,6 +413,15 @@ begin
           DLManager.containers.Items[pos].chapterName .Add(s);
           DLManager.containers.Items[pos].chapterLinks.Add(mangaInfo[i].chapterLinks.Strings[j]);
         end;
+        // mark downloaded chapters
+        s:= '';
+        if mangaInfo[i].chapterLinks.Count = 0 then exit;
+        for k:= currentChapter to newChapter-1 do
+        begin
+          s:= s+IntToStr(k) + SEPERATOR;
+        end;
+        if s <> '' then
+          DLManager.AddToDownloadedChaptersList(favoriteInfo[i].link, s);
 
         if NOT isNow then
         begin

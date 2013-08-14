@@ -120,7 +120,11 @@ type
     // current chapterLinks which thread is processing
     containers          : TTaskThreadContainerList;
 
+    downloadedChaptersList: TStringList;
     ini                 : TIniFile;
+
+    // for highlight downloaded chapters
+    DownloadedChapterList: TList;
 
    // downloadInfo        : array of TDownloadInfo;
     constructor Create;
@@ -128,6 +132,10 @@ type
 
     procedure   Restore;
     procedure   Backup;
+
+    procedure   AddToDownloadedChaptersList(const ALink: String); overload;
+    procedure   AddToDownloadedChaptersList(const ALink, AValue: String); overload;
+    procedure   ReturnDownloadedChapters(const ALink: String);
 
     // Add new task to the list
     procedure   AddTask;
@@ -3715,9 +3723,16 @@ begin
   // Create INI file
   ini:= TIniFile.Create(WORK_FOLDER + WORK_FILE);
   ini.CacheUpdates:= FALSE;
+
+  downloadedChaptersList:= TStringList.Create;
+  if FileExists(WORK_FOLDER + DOWNLOADEDCHAPTERS_FILE) then
+    downloadedChaptersList.LoadFromFile(WORK_FOLDER + DOWNLOADEDCHAPTERS_FILE);
+
   containers:= TTaskThreadContainerList.Create;
   isFinishTaskAccessed:= FALSE;
   isRunningBackup     := FALSE;
+
+  DownloadedChapterList := TList.Create;
 
   // Restore old INI file
   Restore;
@@ -3731,6 +3746,12 @@ begin
       if NOT containers.Items[i].thread.isTerminated then
         containers.Items[i].thread.Terminate;
   ini.Free;
+
+  downloadedChaptersList.SaveToFile(WORK_FOLDER + DOWNLOADEDCHAPTERS_FILE);
+  downloadedChaptersList.Free;
+
+  DownloadedChapterList.Free;
+
   inherited Destroy;
 end;
 
@@ -3831,6 +3852,98 @@ begin
   end;
   ini.UpdateFile;
   isRunningBackup:= FALSE;
+end;
+
+procedure   TDownloadManager.AddToDownloadedChaptersList(const ALink: String);
+var
+  i: Cardinal;
+  LValue: String;
+  Node  : PVirtualNode;
+begin
+  // generate LValue string
+  LValue:= '';
+  if MainUnit.MainForm.clbChapterList.RootNodeCount = 0 then exit;
+  Node:= MainUnit.MainForm.clbChapterList.GetFirst;
+  for i:= 0 to MainUnit.MainForm.clbChapterList.RootNodeCount-1 do
+  begin
+    if Node.CheckState = csCheckedNormal then
+      LValue:= LValue+IntToStr(i) + SEPERATOR;
+    Node:= MainUnit.MainForm.clbChapterList.GetNext(Node);
+  end;
+  if LValue = '' then exit;
+
+  if DownloadedChaptersList.Count > 0 then
+  begin
+    i:= 0;
+    while i < DownloadedChaptersList.Count do
+    begin
+      if CompareStr(ALink, DownloadedChaptersList.Strings[i]) = 0 then
+      begin
+        DownloadedChaptersList.Strings[i  ]:= ALink;
+        DownloadedChaptersList.Strings[i+1]:=
+          RemoveDuplicateNumbersInString(DownloadedChaptersList.Strings[i+1] + LValue);
+        exit;
+      end;
+      Inc(i, 2);
+    end;
+  end;
+  if DownloadedChaptersList.Count > 4000 then
+  begin
+    DownloadedChaptersList.Delete(0);
+    DownloadedChaptersList.Delete(0);
+  end;
+  DownloadedChaptersList.Add(ALink);
+  DownloadedChaptersList.Add(LValue);
+end;
+
+procedure   TDownloadManager.AddToDownloadedChaptersList(const ALink, AValue: String);
+var
+  i: Cardinal;
+begin
+  if DownloadedChaptersList.Count > 0 then
+  begin
+    i:= 0;
+    while i < DownloadedChaptersList.Count do
+    begin
+      if CompareStr(ALink, DownloadedChaptersList.Strings[i]) = 0 then
+      begin
+        DownloadedChaptersList.Strings[i  ]:= ALink;
+        DownloadedChaptersList.Strings[i+1]:=
+          RemoveDuplicateNumbersInString(DownloadedChaptersList.Strings[i+1] + AValue);
+        exit;
+      end;
+      Inc(i, 2);
+    end;
+  end;
+  if DownloadedChaptersList.Count > 4000 then
+  begin
+    DownloadedChaptersList.Delete(0);
+    DownloadedChaptersList.Delete(0);
+  end;
+  DownloadedChaptersList.Add(ALink);
+  DownloadedChaptersList.Add(AValue);
+end;
+
+procedure   TDownloadManager.ReturnDownloadedChapters(const ALink: String);
+var
+  i: Cardinal;
+begin
+  // clear the list
+  DownloadedChapterList.Clear;
+
+  if DownloadedChaptersList.Count > 0 then
+  begin
+    i:= 0;
+    while i < DownloadedChaptersList.Count do
+    begin
+      if CompareStr(ALink, DownloadedChaptersList.Strings[i]) = 0 then
+      begin
+        GetParams(DownloadedChapterList, DownloadedChaptersList.Strings[i+1]);
+        exit;
+      end;
+      Inc(i, 2);
+    end;
+  end;
 end;
 
 procedure   TDownloadManager.AddTask;

@@ -440,9 +440,11 @@ begin
       if links.Count > 0 then
       begin
         k:= 0;
-        repeat
-          j:= 0;
-          repeat
+        while k < links.Count do
+        begin
+          j:= k;
+          while j < links.Count do
+          begin
             if (k<>j) AND (CompareStr(links.Strings[k], links.Strings[j]) = 0) then
             begin
               links.Delete(j);
@@ -450,9 +452,30 @@ begin
             end
             else
               Inc(j);
-          until j = links.Count;
+          end;
           Inc(k);
-        until k = links.Count;
+        end;
+      end;
+
+      if mainDataProcess.Link.Count > 0 then
+      begin
+        k:= 0;
+        while k < mainDataProcess.Link.Count do
+        begin
+          j:= k;
+          while j < mainDataProcess.Link.Count do
+          begin
+            if (k<>j) AND (CompareStr(mainDataProcess.Link.Strings[k], mainDataProcess.Link.Strings[j]) = 0) then
+            begin
+              mainDataProcess.Link.Delete(j);
+              mainDataProcess.Title.Delete(j);
+              mainDataProcess.Data.Delete(j);
+            end
+            else
+              Inc(j);
+          end;
+          Inc(k);
+        end;
       end;
 
       if links.Count = 0 then

@@ -273,20 +273,20 @@ object MainForm: TMainForm
     Height = 459
     Top = 32
     Width = 620
-    ActivePage = tsFavorites
+    ActivePage = tsDownload
     Align = alClient
     Font.Style = [fsBold]
     ParentFont = False
-    TabIndex = 3
+    TabIndex = 0
     TabOrder = 1
     OnChange = pcMainChange
     object tsDownload: TTabSheet
       Caption = 'Downloads'
-      ClientHeight = 430
+      ClientHeight = 431
       ClientWidth = 612
       object vtDownload: TVirtualStringTree
         Left = 0
-        Height = 430
+        Height = 431
         Top = 0
         Width = 612
         Align = alClient
@@ -415,20 +415,6 @@ object MainForm: TMainForm
           ClientHeight = 188
           ClientWidth = 608
           TabOrder = 2
-          object clbChapterList: TCheckListBox
-            AnchorSideTop.Side = asrBottom
-            Left = 8
-            Height = 95
-            Top = 9
-            Width = 592
-            Anchors = [akTop, akLeft, akRight, akBottom]
-            ItemHeight = 0
-            MultiSelect = True
-            OnKeyPress = clbChapterListKeyPress
-            ParentFont = False
-            PopupMenu = pmChapterList
-            TabOrder = 0
-          end
           object edSaveTo: TLabeledEdit
             Left = 8
             Height = 23
@@ -447,7 +433,7 @@ object MainForm: TMainForm
             EditLabel.ParentColor = False
             EditLabel.ParentFont = False
             ParentFont = False
-            TabOrder = 1
+            TabOrder = 0
           end
           object btDownload: TBitBtn
             Left = 399
@@ -457,7 +443,7 @@ object MainForm: TMainForm
             Anchors = [akLeft, akBottom]
             Caption = 'Download'
             OnClick = btDownloadClick
-            TabOrder = 2
+            TabOrder = 1
           end
           object btBrowse: TBitBtn
             Left = 303
@@ -467,7 +453,7 @@ object MainForm: TMainForm
             Anchors = [akLeft, akBottom]
             Caption = 'Browse'
             OnClick = btBrowseClick
-            TabOrder = 3
+            TabOrder = 2
           end
           object cbAddAsStopped: TCheckBox
             Left = 8
@@ -478,7 +464,7 @@ object MainForm: TMainForm
             Caption = 'Add to download list as stopped task'
             OnChange = cbAddAsStoppedChange
             ParentFont = False
-            TabOrder = 4
+            TabOrder = 3
           end
           object cbAddToFavorites: TCheckBox
             Left = 311
@@ -488,7 +474,7 @@ object MainForm: TMainForm
             Anchors = [akLeft, akBottom]
             Caption = 'Add to Favorites'
             ParentFont = False
-            TabOrder = 5
+            TabOrder = 4
           end
           object btReadOnline: TButton
             Left = 487
@@ -498,7 +484,29 @@ object MainForm: TMainForm
             Anchors = [akLeft, akBottom]
             Caption = 'Read online'
             OnClick = btReadOnlineClick
+            TabOrder = 5
+          end
+          object clbChapterList: TVirtualStringTree
+            Left = 8
+            Height = 100
+            Top = 7
+            Width = 596
+            Anchors = [akTop, akLeft, akRight, akBottom]
+            DefaultText = 'Node'
+            Header.AutoSizeIndex = 0
+            Header.Columns = <>
+            Header.DefaultHeight = 17
+            Header.MainColumn = -1
+            ParentFont = False
+            PopupMenu = pmChapterList
             TabOrder = 6
+            TreeOptions.MiscOptions = [toAcceptOLEDrop, toCheckSupport, toFullRepaintOnResize, toInitOnSave, toToggleOnDblClick, toWheelPanning, toEditOnClick]
+            TreeOptions.PaintOptions = [toShowButtons, toShowDropmark, toShowRoot, toThemeAware, toUseBlendedImages]
+            TreeOptions.SelectionOptions = [toFullRowSelect, toMultiSelect]
+            OnBeforeCellPaint = clbChapterListBeforeCellPaint
+            OnGetText = clbChapterListGetText
+            OnGetNodeDataSize = clbChapterListGetNodeDataSize
+            OnInitNode = clbChapterListInitNode
           end
         end
       end
@@ -1197,11 +1205,11 @@ object MainForm: TMainForm
     end
     object tsOption: TTabSheet
       Caption = 'Options'
-      ClientHeight = 430
+      ClientHeight = 431
       ClientWidth = 612
       object pnOptions: TPageControl
         Left = 9
-        Height = 337
+        Height = 338
         Top = 26
         Width = 593
         ActivePage = tsGeneral
@@ -1210,7 +1218,7 @@ object MainForm: TMainForm
         TabOrder = 0
         object tsGeneral: TTabSheet
           Caption = 'General'
-          ClientHeight = 309
+          ClientHeight = 310
           ClientWidth = 585
           object cbLanguages: TComboBox
             Left = 20
@@ -1775,11 +1783,11 @@ object MainForm: TMainForm
         end
         object tsWebsites: TTabSheet
           Caption = 'Websites'
-          ClientHeight = 309
+          ClientHeight = 310
           ClientWidth = 585
           object vtOptionMangaSiteSelection: TVirtualStringTree
             Left = 0
-            Height = 309
+            Height = 310
             Top = 0
             Width = 585
             Align = alClient
@@ -1801,7 +1809,7 @@ object MainForm: TMainForm
       object btOptionApply: TButton
         Left = 49
         Height = 41
-        Top = 376
+        Top = 377
         Width = 128
         Anchors = [akBottom]
         Caption = 'Apply'
@@ -2192,6 +2200,13 @@ object MainForm: TMainForm
     object miChapterListUncheckAll: TMenuItem
       Caption = 'Uncheck all'
       OnClick = miChapterListUncheckAllClick
+    end
+    object MenuItem6: TMenuItem
+      Caption = '-'
+    end
+    object miChapterListHighlight: TMenuItem
+      Caption = 'Highlight download chapters'
+      OnClick = miChapterListHighlightClick
     end
   end
   object pmFavorites: TPopupMenu
