@@ -102,6 +102,7 @@ const
 
   WORK_FOLDER       = 'works/';
   WORK_FILE         = 'works.ini';
+  DOWNLOADEDCHAPTERS_FILE = 'downloadedchapters.ini';
 
   FAVORITES_FILE    = 'favorites.ini';
   IMAGE_FOLDER      = 'images/';
@@ -405,6 +406,11 @@ type
     Text: String;
   end;
 
+  PSingleItem = ^TSingleItem;
+  TSingleItem = record
+    Text: String;
+  end;
+
   PMangaInfo = ^TMangaInfo;
   TMangaInfo = record
     url,
@@ -484,6 +490,9 @@ function  Find(const S: String; var List: TStringList; out index: Integer): Bool
 // VI: Lấy param từ input
 procedure GetParams(const output: TStringList; input: String); overload;
 procedure GetParams(var output: TCardinalList; input: String); overload;
+procedure GetParams(var output: TList; input: String); overload;
+
+function  RemoveDuplicateNumbersInString(const AString: String): String;
 // EN: Set param from input
 // VI: Cài param từ input
 function  SetParams(input: TObject): String; overload;
@@ -1022,6 +1031,46 @@ begin
       input:= RightStr(input, Length(input)-l-Length(SEPERATOR)+1);
     end;
   until l = 0;
+end;
+
+procedure GetParams(var output: TList; input: String);
+var l: Word;
+begin
+  repeat
+    l:= Pos(SEPERATOR, input);
+    if l<>0 then
+    begin
+      output.Add(Pointer(StrToInt(LeftStr(input, l-1))));
+      input:= RightStr(input, Length(input)-l-Length(SEPERATOR)+1);
+    end;
+  until l = 0;
+end;
+
+function  RemoveDuplicateNumbersInString(const AString: String): String;
+var
+  i, j: Integer;
+  list: TList;
+begin
+  if AString = '' then exit;
+  list:= TList.Create;
+  GetParams(list, AString);
+  i:= 0;
+  while i < list.Count do
+  begin
+    j:= i;
+    while j < list.Count do
+    begin
+      if (i<>j) AND (list.Items[i] = list.Items[j]) then
+        list.Delete(j)
+      else
+        Inc(j);
+    end;
+    Inc(i);
+  end;
+  Result:= '';
+  for i:= 0 to list.Count-1 do
+    Result:= Result + IntToStr(Integer(list.Items[i])) + SEPERATOR;
+  list.Free;
 end;
 
 function  SetParams(input: TObject): String;

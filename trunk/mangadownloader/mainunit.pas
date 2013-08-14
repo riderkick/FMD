@@ -11,7 +11,7 @@ unit mainunit;
 interface
 
 uses
-  Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
+  Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls, LCLType,
   ExtCtrls, ComCtrls, Grids, ColorBox, ActnList, Buttons, CheckLst, Spin, Menus,
   customdrawncontrols, VirtualTrees, RichMemo, SHDocVw, IniFiles, Process, UTF8Process,
   baseunit, data, types, downloads, favorites, LConvEncoding, LCLIntf, LazUTF8,
@@ -95,7 +95,6 @@ type
     CheckBox8: TCheckBox;
     CheckBox9: TCheckBox;
     cbFilterStatus: TComboBox;
-    clbChapterList: TCheckListBox;
     cbLanguages: TComboBox;
     cbOptionLetFMDDo: TComboBox;
     edFilterSummary: TEdit;
@@ -146,6 +145,8 @@ type
     MenuItem3: TMenuItem;
     MenuItem4: TMenuItem;
     MenuItem5: TMenuItem;
+    MenuItem6: TMenuItem;
+    miChapterListHighlight: TMenuItem;
     mnDownload1Click: TMenuItem;
     mnUpdate1Click: TMenuItem;
     miMangaListDownloadAll: TMenuItem;
@@ -219,6 +220,7 @@ type
     tsFilter: TTabSheet;
     tsInformation: TTabSheet;
     tsDownload: TTabSheet;
+    clbChapterList: TVirtualStringTree;
     vtOptionMangaSiteSelection: TVirtualStringTree;
     vtFavorites: TVirtualStringTree;
     vtDownload: TVirtualStringTree;
@@ -230,6 +232,16 @@ type
     procedure btURLClick(Sender: TObject);
     procedure btVisitMyBlogClick(Sender: TObject);
     procedure cbSelectMangaChange(Sender: TObject);
+    procedure clbChapterListBeforeCellPaint(Sender: TBaseVirtualTree;
+      TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
+      CellPaintMode: TVTCellPaintMode; CellRect: TRect; var ContentRect: TRect);
+    procedure clbChapterListGetNodeDataSize(Sender: TBaseVirtualTree;
+      var NodeDataSize: Integer);
+    procedure clbChapterListGetText(Sender: TBaseVirtualTree;
+      Node: PVirtualNode; Column: TColumnIndex; TextType: TVSTTextType;
+      var CellText: String);
+    procedure clbChapterListInitNode(Sender: TBaseVirtualTree; ParentNode,
+      Node: PVirtualNode; var InitialStates: TVirtualNodeInitStates);
     procedure edSearchChange(Sender: TObject);
     procedure edSearchClick(Sender: TObject);
 
@@ -257,6 +269,7 @@ type
     procedure itAnimateTimer(Sender: TObject);
     procedure itCheckForChaptersTimer(Sender: TObject);
     procedure itRefreshFormTimer(Sender: TObject);
+    procedure miChapterListHighlightClick(Sender: TObject);
     procedure miDownloadHideCompletedClick(Sender: TObject);
     procedure miDownloadMergeClick(Sender: TObject);
     procedure miHighlightNewMangaClick(Sender: TObject);
@@ -420,6 +433,7 @@ type
     procedure SearchMangaList;
 
     //
+    procedure UpdateVtChapter;
     procedure UpdateVtDownload;
     procedure UpdateVtFavorites;
 
@@ -533,7 +547,8 @@ begin
   revisionIni.Free;
 
   seOptionNewMangaTime.Value          := options.ReadInteger('general', 'NewMangaTime', 3);
-  miHighLightNewManga.Checked         := options.ReadBool('general', 'HighLightNewManga', FALSE);
+  miHighLightNewManga.Checked         := options.ReadBool('general', 'HighlightNewManga', TRUE);
+  miChapterListHighlight.Checked      := options.ReadBool('general', 'HighlightDownloadedChapters', TRUE);
   cbOptionShowQuitDialog.Checked      := options.ReadBool('dialogs', 'ShowQuitDialog', TRUE);
   cbOptionShowDeleteTaskDialog.Checked:= options.ReadBool('dialogs', 'ShowDeleteDldTaskDialog', TRUE);
   cbOptionShowFavoriteDialog.Checked  := options.ReadBool('dialogs', 'ShowFavoritesDialog', TRUE);
@@ -578,7 +593,7 @@ procedure TMainForm.clbChapterListKeyPress(Sender: TObject; var Key: char);
 var
   i: Cardinal;
 begin
-  if (key = #13) OR (key = #32) then
+ { if (key = #13) OR (key = #32) then
   begin
     if clbChapterList.MultiSelect then
     begin
@@ -586,7 +601,7 @@ begin
         if clbChapterList.Selected[i] then
           clbChapterList.Checked[i]:= NOT clbChapterList.Checked[i];
     end;
-  end;
+  end; }
 end;
 
 procedure TMainForm.FormDestroy(Sender: TObject);
@@ -631,6 +646,13 @@ end;
 procedure TMainForm.itRefreshFormTimer(Sender: TObject);
 begin
   isCanRefreshForm:= TRUE;
+end;
+
+procedure TMainForm.miChapterListHighlightClick(Sender: TObject);
+begin
+  miChapterListHighlight.Checked:= NOT miChapterListHighlight.Checked;
+  options.WriteBool('general', 'HighlightDownloadedChapters', miChapterListHighlight.Checked);
+  clbChapterList.Repaint;
 end;
 
 procedure TMainForm.miDownloadHideCompletedClick(Sender: TObject);
@@ -708,6 +730,8 @@ begin
   if NOT dataProcess.isFilterAllSites then
     dataProcess.SaveToFile;
   dataProcess.Destroy;
+  // bad coding
+  DLManager.downloadedChaptersList.SaveToFile(WORK_FOLDER + DOWNLOADEDCHAPTERS_FILE);
  // Halt;
 end;
 
@@ -733,10 +757,14 @@ var
   day, month, year: Word;
   i, pos  : Cardinal;
   isCreate: Boolean = FALSE;
+  Node    : PVirtualNode;
 begin
   if mangaInfo.chapterName.Count = 0 then exit;
+  Node:= clbChapterList.GetFirst;
   for i:= 0 to mangaInfo.chapterName.Count - 1 do
-    if clbChapterList.Checked[i] then
+  begin
+   // if clbChapterList.Checked[i] then
+    if Node.CheckState = csCheckedNormal then
     begin
       if NOT isCreate then
       begin
@@ -757,6 +785,8 @@ begin
       DLManager.containers.Items[pos].chapterName .Add(s);
       DLManager.containers.Items[pos].chapterLinks.Add(mangaInfo.chapterLinks.Strings[i]);
     end;
+    Node:= clbChapterList.GetNext(Node);
+  end;
   if NOT isCreate then exit;
 
   if cbAddAsStopped.Checked then
@@ -812,6 +842,9 @@ begin
 
   DLManager.Backup;
   DLManager.CheckAndActiveTask;
+
+  DLManager.AddToDownloadedChaptersList(mangaInfo.link);
+
  // DLManager.containers.Items[pos].thread.isSuspended:= FALSE;
   pcMain.PageIndex:= 0;
 end;
@@ -1141,6 +1174,67 @@ begin
   end;
 end;
 
+procedure TMainForm.clbChapterListBeforeCellPaint(Sender: TBaseVirtualTree;
+  TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
+  CellPaintMode: TVTCellPaintMode; CellRect: TRect; var ContentRect: TRect);
+var
+  i: Cardinal;
+  isDownloaded: Boolean = FALSE;
+begin
+  if NOT miChapterListHighlight.Checked then exit;
+  // check the list to see if the chapter was downloaded or not
+  if DLManager.DownloadedChapterList.Count > 0 then
+    for i:= 0 to DLManager.DownloadedChapterList.Count - 1 do
+    begin
+      if Node.Index = Integer(DLManager.DownloadedChapterList.Items[i]) then
+      begin
+        isDownloaded:= TRUE;
+        break;
+      end;
+    end;
+
+  if isDownloaded then
+  begin
+    TargetCanvas.Brush.Color:= $B8FFB8;
+    TargetCanvas.FillRect(CellRect);
+  end;
+end;
+
+procedure TMainForm.clbChapterListGetNodeDataSize(Sender: TBaseVirtualTree;
+  var NodeDataSize: Integer);
+begin
+  NodeDataSize:= SizeOf(TSingleItem);
+end;
+
+procedure TMainForm.clbChapterListGetText(Sender: TBaseVirtualTree;
+  Node: PVirtualNode; Column: TColumnIndex; TextType: TVSTTextType;
+  var CellText: String);
+var
+  data: PSingleItem;
+begin
+  data:= clbChapterList.GetNodeData(Node);
+  if Assigned(data) then
+    CellText:= data.Text;
+end;
+
+procedure TMainForm.clbChapterListInitNode(
+  Sender: TBaseVirtualTree; ParentNode, Node: PVirtualNode;
+  var InitialStates: TVirtualNodeInitStates);
+var
+  data: PSingleItem;
+begin
+  with Sender do
+  begin
+    data:= GetNodeData(Node);
+    if (mangaInfo.website <> GEHENTAI_NAME) AND
+       (mangaInfo.website <> FAKKU_NAME) then
+      data.text:= Format('%.4d - %s', [Node.Index+1, mangaInfo.chapterName.Strings[Node.Index]])
+    else
+      data.text:= mangaInfo.chapterName.Strings[Node.Index];
+    Node.CheckType:= ctCheckBox;
+  end;
+end;
+
 procedure TMainForm.edSearchClick(Sender: TObject);
 begin
   if edSearch.Text = stSearch then
@@ -1427,41 +1521,87 @@ end;
 procedure TMainForm.miChapterListCheckSelectedClick(Sender: TObject);
 var
   i: Cardinal;
+  Node: PVirtualNode;
 begin
-  if clbChapterList.Count = 0 then exit;
+ { if clbChapterList.Count = 0 then exit;
   if clbChapterList.MultiSelect then
     for i:= 0 to clbChapterList.Count-1 do
       if clbChapterList.Selected[i] then
-        clbChapterList.Checked[i]:= TRUE;
+        clbChapterList.Checked[i]:= TRUE; }
+  if clbChapterList.RootNodeCount > 0 then
+  begin
+    Node:= clbChapterList.GetFirst;
+    for i:= 0 to clbChapterList.RootNodeCount-1 do
+    begin
+      if clbChapterList.Selected[Node] then
+        Node.CheckState:= csCheckedNormal;
+      clbChapterList.InvalidateNode(Node);
+      Node:= clbChapterList.GetNext(Node);
+    end;
+  end;
 end;
 
 procedure TMainForm.miChapterListUncheckSelectedClick(Sender: TObject);
 var
   i: Cardinal;
+  Node: PVirtualNode;
 begin
-  if clbChapterList.Count = 0 then exit;
+ { if clbChapterList.Count = 0 then exit;
   if clbChapterList.MultiSelect then
     for i:= 0 to clbChapterList.Count-1 do
       if clbChapterList.Selected[i] then
-        clbChapterList.Checked[i]:= FALSE;
+        clbChapterList.Checked[i]:= FALSE; }
+  if clbChapterList.RootNodeCount > 0 then
+  begin
+    Node:= clbChapterList.GetFirst;
+    for i:= 0 to clbChapterList.RootNodeCount-1 do
+    begin
+      if clbChapterList.Selected[Node] then
+        Node.CheckState:= csUncheckedNormal;
+      clbChapterList.InvalidateNode(Node);
+      Node:= clbChapterList.GetNext(Node);
+    end;
+  end;
 end;
 
 procedure TMainForm.miChapterListCheckAllClick(Sender: TObject);
 var
   i: Cardinal;
+  Node: PVirtualNode;
 begin
-  if clbChapterList.Count > 0 then
+ { if clbChapterList.Count > 0 then
     for i:= 0 to clbChapterList.Count-1 do
-      clbChapterList.Checked[i]:= TRUE;
+      clbChapterList.Checked[i]:= TRUE;  }
+  if clbChapterList.RootNodeCount > 0 then
+  begin
+    Node:= clbChapterList.GetFirst;
+    for i:= 0 to clbChapterList.RootNodeCount-1 do
+    begin
+      Node.CheckState:= csCheckedNormal;
+      clbChapterList.InvalidateNode(Node);
+      Node:= clbChapterList.GetNext(Node);
+    end;
+  end;
 end;
 
 procedure TMainForm.miChapterListUncheckAllClick(Sender: TObject);
 var
-  i: Cardinal;
+  i   : Cardinal;
+  Node: PVirtualNode;
 begin
-  if clbChapterList.Count > 0 then
+ { if clbChapterList.Count > 0 then
     for i:= 0 to clbChapterList.Count-1 do
-      clbChapterList.Checked[i]:= FALSE;
+      clbChapterList.Checked[i]:= FALSE; }
+  if clbChapterList.RootNodeCount > 0 then
+  begin
+    Node:= clbChapterList.GetFirst;
+    for i:= 0 to clbChapterList.RootNodeCount-1 do
+    begin
+      Node.CheckState:= csUncheckedNormal;
+      clbChapterList.InvalidateNode(Node);
+      Node:= clbChapterList.GetNext(Node);
+    end;
+  end;
 end;
 
 // ----- vtDownload popup menu -----
@@ -1692,7 +1832,6 @@ begin
   begin
     if vtMangaList.Selected[xNode] then
     begin
-      // TODO
       silentThread:= TSilentThread.Create;
       silentThread.website:= GetMangaSiteName(DataProcess.site.Items[DataProcess.GetPos(i)]);//cbSelectManga.Items[cbSelectManga.ItemIndex];
       silentThread.URL:= DataProcess.Param[DataProcess.GetPos(i), DATA_PARAM_LINK];
@@ -2483,7 +2622,7 @@ var
   i: Cardinal;
   s: String;
 begin
-  clbChapterList.Clear;
+ { clbChapterList.Clear;
   if mangaInfo.chapterName.Count <> 0 then
   begin
     s:= mangaInfo.website;
@@ -2494,7 +2633,8 @@ begin
     else
       for i:= 0 to mangaInfo.chapterName.Count - 1 do
         clbChapterList.Items.Add(mangaInfo.chapterName.Strings[i]);
-  end;
+  end; }
+  UpdateVtChapter;
 end;
 
 procedure TMainForm.AddTextToInfo(title, infoText: String);
@@ -2558,6 +2698,7 @@ begin
     AddTextToInfo(infoSummary, StringBreaks(mangaInfo.summary));
     cp.X:= 0; cp.Y:= 0; CaretPos:= cp;
   end;
+  DLManager.ReturnDownloadedChapters(mangaInfo.link);
   AddChapterNameToList;
   if mangaInfo.link <> '' then
     btReadOnline.Enabled:= TRUE;
@@ -2823,6 +2964,12 @@ begin
   vtMangaList.OnInitNode:= vtMangaListInitNode;
 end;
 
+procedure TMainForm.UpdateVtChapter;
+begin
+  clbChapterList.Clear;
+  clbChapterList.RootNodeCount:= mangaInfo.chapterLinks.Count;
+end;
+
 procedure TMainForm.UpdateVtDownload;
 begin
   vtDownload.Clear;
@@ -2983,6 +3130,7 @@ begin
   miMangaListDownloadAll.Caption:= language.ReadString(lang, 'miMangaListDownloadAllCaption', '');
   miMangaListAddToFavorites.Caption:= language.ReadString(lang, 'miMangaListAddToFavoritesCaption', '');
   miHighlightNewManga.Caption:= language.ReadString(lang, 'miHighlightNewMangaCaption', '');
+  miChapterListHighlight.Caption:= language.ReadString(lang, 'miChapterListHighlightCaption', '');
   miOpenFolder2.Caption  := miOpenFolder.Caption;
 
   infoCustomGenres       := language.ReadString(lang, 'infoCustomGenres', '');
