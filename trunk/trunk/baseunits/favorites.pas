@@ -327,9 +327,12 @@ begin
     end;
   end;
 
-  if (isShowDialog) AND (newC = 0) then
-    MessageDlg('', Format(stDlgNoNewChapter + '%s', [removeListStr]),
-               mtInformation, [mbOk], 0)
+  if {(isShowDialog) AND }(newC = 0) then
+   // MessageDlg('', Format(stDlgNoNewChapter + '%s', [removeListStr]),
+   //            mtInformation, [mbOk], 0)
+  begin
+
+  end
   else
   begin
     newMangaStr:= '';

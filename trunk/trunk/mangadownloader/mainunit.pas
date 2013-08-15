@@ -3224,8 +3224,6 @@ begin
   for i:= 0 to 37 do
   begin
     Genre[i]:= defaultGenre[i];//language.ReadString(lang, StringReplace(StringReplace(defaultGenre[i], ' ', '', [rfReplaceAll]), '-', '', [rfReplaceAll])+'G', '')
-    if Genre[i] = 'Traged' then
-      Genre[i]:= 'Tragedy';
     TCheckBox(pnGenres.Controls[i]).Caption:= Genre[i];
     TCheckBox(pnGenres.Controls[i]).Hint:= language.ReadString(lang, StringReplace(StringReplace(defaultGenre[i], ' ', '', [rfReplaceAll]), '-', '', [rfReplaceAll])+'M', '');
     TCheckBox(pnGenres.Controls[i]).ShowHint:= TRUE;
