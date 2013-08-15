@@ -13,7 +13,7 @@ interface
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls, LCLType,
   ExtCtrls, ComCtrls, Grids, ColorBox, ActnList, Buttons, CheckLst, Spin, Menus,
-  customdrawncontrols, VirtualTrees, RichMemo, SHDocVw, IniFiles, Process, UTF8Process,
+  VirtualTrees, RichMemo, IniFiles, Process, UTF8Process,
   baseunit, data, types, downloads, favorites, LConvEncoding, LCLIntf, LazUTF8,
   updatelist, updatedb, lclproc, subthreads, silentthreads, AnimatedGif, MemBitmap
   {$IFDEF WINDOWS}, ActiveX{$ENDIF};
