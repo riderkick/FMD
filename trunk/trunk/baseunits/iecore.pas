@@ -10,7 +10,16 @@ unit iecore;
 
 interface
 
-uses
+function  IEGetPage(var output: TObject; URL: String; const Reconnect: Cardinal): Boolean;
+
+implementation
+
+function  IEGetPage(var output: TObject; URL: String; const Reconnect: Cardinal): Boolean;
+begin
+
+end;
+
+{uses
   Classes, SysUtils, MSHTML_4_0_TLB, SHDocVw, Variants, ActiveX, activexcontainer, Forms;
 
 const
@@ -116,21 +125,6 @@ begin
     if fmdGetTickCount-baseTime > 30000 then
     begin
       break;
-      {if retry = 0 then
-      begin
-        Inc(retry);
-        Core.Browser.Stop;
-        baseTime:= fmdGetTickCount;
-        Core.Load(URL);
-      end
-      else
-      begin
-        Core.Browser.Stop;
-        Core.Free;
-        CoInternetSetFeatureEnabled(FEATURE_DISABLE_NAVIGATION_SOUNDS, SET_FEATURE_ON_PROCESS, FALSE);
-        Result:= FALSE;
-        exit;
-      end;}
     end;
   end;
   Core.Browser.Stop;
@@ -187,7 +181,7 @@ begin
     iall:= iall.parentElement;
   end;
   Result:= iall.outerHTML;
-end;
+end; }
 
 end.
 
