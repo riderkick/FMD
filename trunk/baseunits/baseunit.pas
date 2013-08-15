@@ -46,7 +46,7 @@ const
      'Psychological', 'Romance'      , 'School Life'  , 'Sci-fi',
      'Seinen'       , 'Shotacon'     , 'Shoujo'       , 'Shoujo Ai',
      'Shounen'      , 'Shounen Ai'   , 'Slice of Life', 'Smut',
-     'Sports'       , 'Supernatural' , 'Traged'       , 'Yaoi',
+     'Sports'       , 'Supernatural' , 'Tragedy'       , 'Yaoi',
      'Yuri'         , 'Webtoons');
   {
   GenreMeaning: array [0..37] of String =
