@@ -113,6 +113,7 @@ type
     gbOptionProxy: TGroupBox;
     gbOptionRenaming: TGroupBox;
     gbOptionFavorites: TGroupBox;
+    IconList: TImageList;
     imgOptionCustomRename: TImage;
     itRefreshForm: TIdleTimer;
     itCheckForChapters: TIdleTimer;
@@ -146,6 +147,8 @@ type
     MenuItem4: TMenuItem;
     MenuItem5: TMenuItem;
     MenuItem6: TMenuItem;
+    MenuItem7: TMenuItem;
+    miFavoritesViewInfos: TMenuItem;
     miChapterListHighlight: TMenuItem;
     mnDownload1Click: TMenuItem;
     mnUpdate1Click: TMenuItem;
@@ -272,6 +275,7 @@ type
     procedure miChapterListHighlightClick(Sender: TObject);
     procedure miDownloadHideCompletedClick(Sender: TObject);
     procedure miDownloadMergeClick(Sender: TObject);
+    procedure miFavoritesViewInfosClick(Sender: TObject);
     procedure miHighlightNewMangaClick(Sender: TObject);
     procedure miDownClick(Sender: TObject);
 
@@ -697,6 +701,31 @@ begin
   UpdateVtDownload;
 end;
 
+procedure TMainForm.miFavoritesViewInfosClick(Sender: TObject);
+begin
+  if (SubThread.isGetInfos) OR (NOT vtFavorites.Focused) then exit;
+
+  pcMain.TabIndex:= 1;
+
+  imCover.Picture.Assign(nil);
+  rmInformation.Clear;
+  rmInformation.Lines.Add('Loading ...');
+  clbChapterList.Clear;
+
+  SubThread.mangaListPos:= -2;
+
+  SubThread.website:= favorites.favoriteInfo[vtFavorites.FocusedNode.Index].Website;
+  SubThread.link:= favorites.favoriteInfo[vtFavorites.FocusedNode.Index].link;
+  SubThread.isGetInfos:= TRUE;
+  //ShowInformation;
+
+  if Assigned(gifWaiting) then
+  begin
+    itAnimate.Enabled:= TRUE;
+    MainForm.pbWait.Visible:= TRUE;
+  end;
+end;
+
 procedure TMainForm.miHighlightNewMangaClick(Sender: TObject);
 begin
   miHighlightNewManga.Checked:= NOT miHighlightNewManga.Checked;
@@ -844,6 +873,8 @@ begin
   DLManager.CheckAndActiveTask;
 
   DLManager.AddToDownloadedChaptersList(mangaInfo.link);
+  DLManager.ReturnDownloadedChapters(mangaInfo.link);
+  clbChapterList.Repaint;
 
  // DLManager.containers.Items[pos].thread.isSuspended:= FALSE;
   pcMain.PageIndex:= 0;
@@ -2007,36 +2038,40 @@ procedure TMainForm.pmFavoritesPopup(Sender: TObject);
 begin
   if favorites.isRunning then
   begin
-    pmFavorites.Items[0].Enabled:= FALSE;
-    pmFavorites.Items[1].Enabled:= FALSE;
+    pmFavorites.Items[2].Enabled:= TRUE;
     pmFavorites.Items[2].Enabled:= FALSE;
+    pmFavorites.Items[3].Enabled:= FALSE;
+    pmFavorites.Items[4].Enabled:= FALSE;
     exit;
   end;
   if vtFavorites.SelectedCount = 0 then
   begin
     pmFavorites.Items[0].Enabled:= FALSE;
-    pmFavorites.Items[1].Enabled:= FALSE;
     pmFavorites.Items[2].Enabled:= FALSE;
+    pmFavorites.Items[3].Enabled:= FALSE;
     pmFavorites.Items[4].Enabled:= FALSE;
+    pmFavorites.Items[6].Enabled:= FALSE;
   end
   else
   if vtFavorites.SelectedCount = 1 then
   begin
     pmFavorites.Items[0].Enabled:= TRUE;
-    pmFavorites.Items[1].Enabled:= TRUE;
     pmFavorites.Items[2].Enabled:= TRUE;
-    {$IFDEF WINDOWS}
+    pmFavorites.Items[3].Enabled:= TRUE;
     pmFavorites.Items[4].Enabled:= TRUE;
+    {$IFDEF WINDOWS}
+    pmFavorites.Items[6].Enabled:= TRUE;
     {$ELSE}
     pmFavorites.Items[4].Enabled:= FALSE;
     {$ENDIF}
   end
   else
   begin
-    pmFavorites.Items[0].Enabled:= TRUE;
-    pmFavorites.Items[1].Enabled:= FALSE;
-    pmFavorites.Items[2].Enabled:= FALSE;
+    pmFavorites.Items[0].Enabled:= FALSE;
+    pmFavorites.Items[2].Enabled:= TRUE;
+    pmFavorites.Items[3].Enabled:= FALSE;
     pmFavorites.Items[4].Enabled:= FALSE;
+    pmFavorites.Items[6].Enabled:= FALSE;
   end;
 end;
 
@@ -2678,11 +2713,14 @@ begin
 
     Clear;
 
-    if SubThread.mangaListPos <> -1 then
+    if SubThread.mangaListPos > -1 then
     begin
       mangaInfo.title:= dataProcess.Param[dataProcess.GetPos(SubThread.mangaListPos), DATA_PARAM_NAME];
       mangaInfo.link := dataProcess.Param[dataProcess.GetPos(SubThread.mangaListPos), DATA_PARAM_LINK];
     end
+    else
+    if SubThread.mangaListPos = -2 then
+      mangaInfo.link:= SubThread.link
     else
       mangaInfo.link:= edURL.Text;
 
@@ -3127,6 +3165,7 @@ begin
   miFavoritesChangeCurrentChapter.Caption:= language.ReadString(lang, 'miFavoritesChangeCurrentChapterCaption', '');
   miFavoritesChangeSaveTo.Caption:= language.ReadString(lang, 'miFavoritesChangeSaveToCaption', '');
   miMangaListViewInfos.Caption:= language.ReadString(lang, 'miMangaListViewInfosCaption', '');
+  miFavoritesViewInfos.Caption:= language.ReadString(lang, 'miMangaListViewInfosCaption', '');
   miMangaListDownloadAll.Caption:= language.ReadString(lang, 'miMangaListDownloadAllCaption', '');
   miMangaListAddToFavorites.Caption:= language.ReadString(lang, 'miMangaListAddToFavoritesCaption', '');
   miHighlightNewManga.Caption:= language.ReadString(lang, 'miHighlightNewMangaCaption', '');

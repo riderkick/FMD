@@ -106,7 +106,7 @@ procedure   TSubThread.DoGetInfos;
   begin
     Result:= FALSE;
 
-    if mangaListPos <> -1 then
+    if mangaListPos > -1 then
     begin
       filterPos:= MainForm.dataProcess.GetPos(mangaListPos);
       Info.mangaInfo.title:= MainForm.dataProcess.Title.Strings[filterPos];
@@ -151,7 +151,7 @@ procedure   TSubThread.DoGetInfos;
     {$ENDIF}
 
     // fixed
-    if mangaListPos <> -1 then
+    if mangaListPos > -1 then
     begin
       if website = MainForm.cbSelectManga.Items[MainForm.cbSelectManga.ItemIndex] then
       begin
