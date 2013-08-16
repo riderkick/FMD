@@ -4178,7 +4178,7 @@ end;
 
 procedure   TDownloadManager.StopAllTasks;
 var
-  i: Cardinal;
+  i, j: Cardinal;
 begin
   if containers.Count = 0 then exit;
   // check and stop any active thread
@@ -4187,6 +4187,15 @@ begin
     if containers.Items[i].Status = STATUS_DOWNLOAD then
     begin
       containers.Items[i].thread.Terminate;
+      Sleep(250);
+      {$IFDEF WINDOWS}
+     { containers.Items[i].thread.Suspend;
+      for j:= 0 to containers.Items[i].thread.threads.Count-1 do
+        if (containers.Items[i].thread.threads[j] <> nil) then
+          containers.Items[i].thread.threads[j].Suspend;
+      containers.Items[i].thread.threads.Clear;
+      containers.Items[i].thread.Free; }
+      {$ENDIF}
       containers.Items[i].Status:= STATUS_STOP;
     end
     else
@@ -4202,13 +4211,23 @@ end;
 
 procedure   TDownloadManager.StopAllDownloadTasksForExit;
 var
-  i: Cardinal;
+  i, j: Cardinal;
 begin
   if containers.Count = 0 then exit;
   for i:= 0 to containers.Count-1 do
   begin
     if containers.Items[i].Status = STATUS_DOWNLOAD then
+    begin
       containers.Items[i].thread.Terminate;
+      {$IFDEF WINDOWS}
+    {  containers.Items[i].thread.Suspend;
+      for j:= 0 to containers.Items[i].thread.threads.Count-1 do
+        if (containers.Items[i].thread.threads[j] <> nil) then
+          containers.Items[i].thread.threads[j].Suspend;
+      containers.Items[i].thread.threads.Clear;
+      containers.Items[i].thread.Free; }
+      {$ENDIF}
+    end;
   end;
   Backup;
   MainForm.vtDownload.Repaint;
@@ -4263,12 +4282,23 @@ begin
 end;
 
 procedure   TDownloadManager.RemoveTask(const taskID: Cardinal);
+var
+  j: Cardinal;
 begin
   if taskID >= containers.Count then exit;
   // check and stop any active thread
   if containers.Items[taskID].Status = STATUS_DOWNLOAD then
   begin
     containers.Items[taskID].thread.Terminate;
+    Sleep(250);
+    {$IFDEF WINDOWS}
+   { containers.Items[taskID].thread.Suspend;
+    for j:= 0 to containers.Items[taskID].thread.threads.Count-1 do
+      if (containers.Items[taskID].thread.threads[j] <> nil) then
+        containers.Items[taskID].thread.threads[j].Suspend;
+    containers.Items[taskID].thread.threads.Clear;
+    containers.Items[taskID].thread.Free; }
+    {$ENDIF}
     containers.Items[taskID].Status:= STATUS_STOP;
   end
   else
