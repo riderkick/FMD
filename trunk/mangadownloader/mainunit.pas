@@ -872,8 +872,8 @@ begin
   DLManager.Backup;
   DLManager.CheckAndActiveTask;
 
-  DLManager.AddToDownloadedChaptersList(mangaInfo.link);
-  DLManager.ReturnDownloadedChapters(mangaInfo.link);
+  DLManager.AddToDownloadedChaptersList(mangaInfo.website + mangaInfo.link);
+  DLManager.ReturnDownloadedChapters(mangaInfo.website + mangaInfo.link);
   clbChapterList.Repaint;
 
  // DLManager.containers.Items[pos].thread.isSuspended:= FALSE;
@@ -2736,7 +2736,7 @@ begin
     AddTextToInfo(infoSummary, StringBreaks(mangaInfo.summary));
     cp.X:= 0; cp.Y:= 0; CaretPos:= cp;
   end;
-  DLManager.ReturnDownloadedChapters(mangaInfo.link);
+  DLManager.ReturnDownloadedChapters(mangaInfo.website + mangaInfo.link);
   AddChapterNameToList;
   if mangaInfo.link <> '' then
     btReadOnline.Enabled:= TRUE;
