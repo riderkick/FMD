@@ -424,7 +424,7 @@ begin
           s:= s+IntToStr(k) + SEPERATOR;
         end;
         if s <> '' then
-          DLManager.AddToDownloadedChaptersList(favoriteInfo[i].link, s);
+          DLManager.AddToDownloadedChaptersList(favoriteInfo[i].website + favoriteInfo[i].link, s);
 
         if NOT isNow then
         begin

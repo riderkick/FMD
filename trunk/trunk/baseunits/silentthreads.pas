@@ -117,7 +117,7 @@ begin
       s:= s+IntToStr(i) + SEPERATOR;
     end;
     if s <> '' then
-      DLManager.AddToDownloadedChaptersList(URL, s);
+      DLManager.AddToDownloadedChaptersList(Info.mangaInfo.website + URL, s);
   end;
 end;
 
