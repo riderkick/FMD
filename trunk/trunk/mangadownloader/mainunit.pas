@@ -716,6 +716,7 @@ begin
 
   SubThread.website:= favorites.favoriteInfo[vtFavorites.FocusedNode.Index].Website;
   SubThread.link:= favorites.favoriteInfo[vtFavorites.FocusedNode.Index].link;
+  SubThread.title:= favorites.favoriteInfo[vtFavorites.FocusedNode.Index].title;
   SubThread.isGetInfos:= TRUE;
   //ShowInformation;
 
@@ -2720,7 +2721,10 @@ begin
     end
     else
     if SubThread.mangaListPos = -2 then
-      mangaInfo.link:= SubThread.link
+    begin
+      mangaInfo.title:= SubThread.title;
+      mangaInfo.link := SubThread.link;
+    end
     else
       mangaInfo.link:= edURL.Text;
 

@@ -286,6 +286,7 @@ begin
     isNewChapters[i]:= FALSE;
     if (mangaInfo[i].website <> MANGASTREAM_NAME) AND
        (mangaInfo[i].website <> S2SCAN_NAME) AND
+       (mangaInfo[i].website <> BATOTO_NAME) AND
        (mangaInfo[i].website <> SUBMANGA_NAME) AND
        (mangaInfo[i].numChapter > StrToInt(favoriteInfo[i].currentChapter)) then
     begin
@@ -295,6 +296,7 @@ begin
     else
     if (mangaInfo[i].website = MANGASTREAM_NAME) OR
        (mangaInfo[i].website = S2SCAN_NAME) OR
+       (mangaInfo[i].website = BATOTO_NAME) OR
        (mangaInfo[i].website = SUBMANGA_NAME) then
     begin
       l.Clear;
@@ -344,7 +346,10 @@ begin
       newChapter    := mangaInfo[i].numChapter;
       if isNewChapters[i] then
       begin
-        if favoriteInfo[i].Website <> MANGASTREAM_NAME then
+        if (favoriteInfo[i].Website <> MANGASTREAM_NAME) AND
+           (favoriteInfo[i].website <> S2SCAN_NAME) AND
+           (favoriteInfo[i].website <> BATOTO_NAME) AND
+           (favoriteInfo[i].website <> SUBMANGA_NAME) then
           newMangaStr:= newMangaStr + #10#13+ ' - '+favoriteInfo[i].title + ' <'+ favoriteInfo[i].Website +'> ' + favoriteInfo[i].currentChapter+' -> '+IntToStr(newChapter)
         else
           newMangaStr:= newMangaStr + #10#13+ ' - '+favoriteInfo[i].title + ' <'+ favoriteInfo[i].Website +'>';
@@ -371,6 +376,7 @@ begin
       newChapter:= mangaInfo[i].numChapter;
       if (favoriteInfo[i].Website <> MANGASTREAM_NAME) AND
          (favoriteInfo[i].website <> S2SCAN_NAME) AND
+         (favoriteInfo[i].website <> BATOTO_NAME) AND
          (favoriteInfo[i].website <> SUBMANGA_NAME) then
       begin
         currentChapter:= StrToInt(favoriteInfo[i].currentChapter);
@@ -463,7 +469,8 @@ begin
     begin
       favoriteInfo[i].currentChapter:= IntToStr(mangaInfo[i].numChapter);
       if (mangaInfo[i].website = MANGASTREAM_NAME) OR
-         (mangaInfo[i].website = S2SCAN_NAME) AND
+         (mangaInfo[i].website = S2SCAN_NAME) OR
+         (mangaInfo[i].website = BATOTO_NAME) OR
          (mangaInfo[i].website = SUBMANGA_NAME) then
       begin
         favoriteInfo[i].downloadedChapterList:= '';
@@ -530,7 +537,10 @@ begin
   favoriteInfo[Count-1].website       := website;
   favoriteInfo[Count-1].saveTo        := saveTo;
   favoriteInfo[Count-1].Link          := Link;
-  if website = MANGASTREAM_NAME then
+  if (website = MANGASTREAM_NAME) OR
+     (website = S2SCAN_NAME) OR
+     (website = BATOTO_NAME) OR
+     (website = SUBMANGA_NAME) then
     favoriteInfo[Count-1].downloadedChapterList:= downloadedChapterList
   else
     favoriteInfo[Count-1].downloadedChapterList:= '';
