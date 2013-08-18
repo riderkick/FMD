@@ -45,6 +45,7 @@ type
 
     fNote, fNoteForThisRevision,
     fImportant,
+    title,
     website, link: String;
     isGetInfos   : Boolean;
     Info         : TMangaInformation;
