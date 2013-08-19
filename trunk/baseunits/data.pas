@@ -4628,7 +4628,13 @@ begin
     // get cover
     if GetTagName(parse.Strings[i]) = 'img' then
       if (GetAttributeValue(GetTagAttribute(parse.Strings[i], 'class='))='cover') then
-        mangaInfo.coverLink:= FAKKU_ROOT + CorrectURL(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src=')));
+      begin
+        s:= CorrectURL(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src=')));
+        if Pos('http://', s) = 0 then
+          mangaInfo.coverLink:= FAKKU_ROOT + s
+        else
+          mangaInfo.coverLink:= s;
+      end;
 
     // get summary
     if isExtractSummary then
@@ -6972,8 +6978,11 @@ end;
 function   GetSenMangaInfoFromURL: Byte;
 var
   s: String;
+  isRepeated      : Boolean = FALSE;
   isExtractChapter: Boolean = FALSE;
   i, j: Cardinal;
+label
+  Again;
 begin
   mangaInfo.url:= SENMANGA_ROOT + URL;
   if NOT GetPage(TObject(source), mangaInfo.url, Reconnect) then
@@ -6990,6 +6999,7 @@ begin
   Parser.OnFoundText:= OnText;
   Parser.Exec;
 
+Again:
   Parser.Free;
   source.Free;
 
@@ -7000,6 +7010,7 @@ begin
   mangaInfo.authors:= '';
   mangaInfo.artists:= '';
   mangaInfo.genres:= '';
+  isExtractChapter:= FALSE;
 
   // using parser (cover link, summary, chapter name and link)
   if parse.Count=0 then exit;
@@ -7012,7 +7023,6 @@ begin
     // get manga name
     if (mangaInfo.title = '') AND (Pos('<title>', parse.Strings[i])>0) then
       mangaInfo.title:= TrimLeft(TrimRight(GetString(parse.Strings[i+1], 'Raw |', '|')));
-
 
    { if (isExtractChapter) AND (Pos('</select>', parse.Strings[i])>0) then
       break; }
@@ -7029,7 +7039,38 @@ begin
 
     if (isExtractChapter) AND
        (Pos('</select>', parse.Strings[i])>0) then
+    begin
       isExtractChapter:= FALSE;
+      break;
+    end;
+  end;
+
+  if (mangainfo.ChapterLinks.Count = 0) AND NOT (isRepeated) then
+  begin
+    isRepeated:= TRUE;
+    for i:= 0 to parse.Count-1 do
+    begin
+      if Pos('class="t-ch-list"', parse.Strings[i]) > 0 then
+      begin
+        s:= SENMANGA_ROOT + GetAttributeValue(GetTagAttribute(parse.Strings[i+5], 'href='));
+        break;
+      end;
+    end;
+    source:= TStringList.Create;
+    if NOT GetPage(TObject(source), s, Reconnect) then
+    begin
+      Result:= NET_PROBLEM;
+      source.Free;
+      exit;
+    end;
+
+    // parsing the HTML source
+    parse.Clear;
+    Parser:= TjsFastHTMLParser.Create(PChar(source.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.Exec;
+    goto Again;
   end;
 
   // Since chapter name and link are inverted, we need to invert them
