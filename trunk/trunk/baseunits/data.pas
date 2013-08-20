@@ -3959,6 +3959,9 @@ var
   isExtractGenres : Boolean = FALSE;
   i, j: Cardinal;
   myParser: THTMLParser;
+ { zstream : TDecompressionStream;
+  dstream,
+  sstream : TMemoryStream; }
 label
   reload;
 
@@ -3974,7 +3977,7 @@ begin
  // patchURL:= UTF8ToANSI(URL);
   patchURL:= URL;
   if Pos('comic/_/comics', patchURL) = 0 then
-    Insert('comics/', patchURL, 10);
+    patchURL:= StringReplace(URL, 'comic/_', 'comic/_/comics', []);
   mangaInfo.url:= BATOTO_ROOT + patchURL;
 
 reload:
@@ -3982,7 +3985,7 @@ reload:
   {$IFDEF WINDOWS}
   if isGetByUpdater then
   begin
-    if NOT GetPage(TObject(source), mangaInfo.url, Reconnect) then
+    if NOT GetPage(TObject(source), TrimLeft(TrimRight(mangaInfo.url)), Reconnect) then
     begin
       Result:= NET_PROBLEM;
       source.Free;
@@ -3992,7 +3995,7 @@ reload:
   else
   if NOT OptionBatotoUseIEChecked then
   begin
-    if NOT bttGetPage(TObject(source), mangaInfo.url, Reconnect) then
+    if NOT GetPage(TObject(source), mangaInfo.url, Reconnect) then
     begin
       Result:= NET_PROBLEM;
       source.Free;
