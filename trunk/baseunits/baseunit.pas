@@ -10,7 +10,9 @@ unit baseunit;
 
 interface
 
-uses SysUtils, Classes, HTTPSend, graphics, genericlib, IniFiles, strutils;
+uses
+  SysUtils, Classes, HTTPSend, graphics, genericlib, IniFiles, strutils,
+  zstream;
 
 const
   JPG_HEADER: array[0..2] of Byte = ($FF, $D8, $FF);
@@ -515,7 +517,6 @@ function  SourceForgeURL(URL: string): string;
 // EN: Get HTML source code from a URL
 // VI: Lấy webcode từ 1 URL
 function  gehGetPage(var output: TObject; URL: String; const Reconnect: Cardinal; const lURL: String = ''): Boolean;
-function  bttGetPage(var output: TObject; URL: String; const Reconnect: Cardinal): Boolean;
 function  GetPage(var output: TObject; URL: String; const Reconnect: Cardinal; const isByPassHTTP: Boolean = FALSE): Boolean;
 function  GetBitlyPage(var output: TObject; URL: String; const Reconnect: Cardinal; const isByPassHTTP: Boolean = FALSE): Boolean;
 function  SavePage(URL: String;  const Path, name: String; const Reconnect: Cardinal): Boolean;
@@ -1585,79 +1586,18 @@ globReturn:
   gehHTTP.Clear;
 end;
 
-// will remove this later
-function  bttGetPage(var output: TObject; URL: String; const Reconnect: Cardinal): Boolean;
-var
-  code   : Cardinal;
-  counter: Cardinal = 0;
-  s      : String;
-begin
-  Result:= FALSE;
-  bttHTTP.ProxyHost:= Host;
-  bttHTTP.ProxyPort:= Port;
-  bttHTTP.ProxyUser:= User;
-  bttHTTP.ProxyPass:= Pass;
-
-  bttHTTP.Clear;
-  bttHTTP.MimeType:= 'Content-Type: application/x-www-form-urlencoded';
-  bttHTTP.KeepAlive:= TRUE;
-  bttHTTP.KeepAliveTimeout:= 1000;
-  bttHTTP.UserAgent:='curl/7.21.0 (i686-pc-linux-gnu) libcurl/7.21.0 OpenSSL/0.9.8o zlib/1.2.3.4 libidn/1.18';
-
-  while (NOT bttHTTP.HTTPMethod('GET', URL)) OR
-        (bttHTTP.ResultCode > 500) do
-  begin
-    code:= bttHTTP.ResultCode;
-    if Reconnect <> 0 then
-    begin
-      if Reconnect <= counter then
-      begin
-        exit;
-      end;
-      Inc(counter);
-    end;
-    bttHTTP.Clear;
-    Sleep(500);
-  end;
- // bttHTTP.Document.SaveToFile('error.txt');
-  while bttHTTP.ResultCode = 302 do
-  begin
-    URL:= CheckRedirect(bttHTTP);
-    bttHTTP.Clear;
-    bttHTTP.RangeStart:= 0;
-
-    while (NOT bttHTTP.HTTPMethod('GET', URL)) OR
-        (bttHTTP.ResultCode >= 500) do
-    begin
-      if Reconnect <> 0 then
-      begin
-        if Reconnect <= counter then
-        begin
-          exit;
-        end;
-        Inc(counter);
-      end;
-      bttHTTP.Clear;
-      Sleep(500);
-    end;
-  end;
-  if output is TStringList then
-    TStringList(output).LoadFromStream(bttHTTP.Document)
-  else
-  if output is TPicture then
-    TPicture(output).LoadFromStream(bttHTTP.Document);
-  Result:= TRUE;
-  bttHTTP.Clear;
-end;
-
 function  GetPage(var output: TObject; URL: String; const Reconnect: Cardinal; const isByPassHTTP: Boolean = FALSE): Boolean;
 var
+  i      : Cardinal;
   HTTP   : THTTPSend;
   code   : Cardinal;
   counter: Cardinal = 0;
   s      : String;
+  zstream: TGZFileStream;
+  isGZip : Boolean = FALSE;
 label
   globReturn;
+
 begin
 { if (lURL <> '') AND (Pos('?nw=session', URL) > 0) then
   begin
@@ -1674,17 +1614,16 @@ globReturn:
   HTTP.ProxyPort:= Port;
   HTTP.ProxyUser:= User;
   HTTP.ProxyPass:= Pass;
-  HTTP.UserAgent:='curl/7.21.0 (i686-pc-linux-gnu) libcurl/7.21.0 OpenSSL/0.9.8o zlib/1.2.3.4 libidn/1.18';
+  if isGZip then
+  begin
+    HTTP.MimeType := 'application/x-www-form-urlencoded';
+    HTTP.Headers.Add('Accept-Encoding: gzip, deflate');
+  end
+  else
+    HTTP.UserAgent:= 'curl/7.21.0 (i686-pc-linux-gnu) libcurl/7.21.0 OpenSSL/0.9.8o zlib/1.2.3.4 libidn/1.18';
 
   if Pos(GEHENTAI_ROOT, URL) <> 0 then
-    HTTP.Headers.Insert(0, 'Referer:'+URL)
-  else
-  if Pos(BATOTO_ROOT, URL) <> 0 then
-  begin
-    HTTP.MimeType:= 'Content-Type: application/x-www-form-urlencoded';
-    HTTP.KeepAlive:= TRUE;
-    HTTP.KeepAliveTimeout:= 100000;
-  end;
+    HTTP.Headers.Insert(0, 'Referer:'+URL);
   while (NOT HTTP.HTTPMethod('GET', URL)) OR
         (HTTP.ResultCode > 500) do
   begin
@@ -1736,8 +1675,31 @@ globReturn:
       Sleep(500);
     end;
   end;
+
   if HTTP.ResultCode <> 404 then
   begin
+    if (HTTP.Headers.Count > 0) AND (output is TStringList) then
+      for i:= 0 to HTTP.Headers.Count-1 do
+        if Pos('gzip', HTTP.Headers.Strings[i]) > 0 then
+        begin
+          isGZip:= TRUE;
+          break;
+        end;
+
+    if isGZip then
+    begin
+      i:= Random(9999999);
+      HTTP.Document.Position:= 0;
+      s:= fmdGetTempPath + ' ';
+      s:= TrimLeft(TrimRight(s)) + IntToStr(i) + '.bak';
+      HTTP.Document.SaveToFile(s);
+
+      zstream:= TGZFileStream.create(s, gzopenread);
+      TStringList(output).LoadFromStream(zstream);
+
+      zstream.Free;
+    end
+    else
     if output is TStringList then
       TStringList(output).LoadFromStream(HTTP.Document)
     else
