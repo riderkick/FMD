@@ -211,6 +211,7 @@ begin
     if (Info.mangaInfo.numChapter > 0) AND
       ((website = MANGASTREAM_NAME) OR
        (website = S2SCAN_NAME) OR
+       (website = MANGATRADERS_NAME) OR
        (website = BATOTO_NAME) OR
        (website = SUBMANGA_NAME)) then
     begin
