@@ -173,6 +173,7 @@ const
   SENMANGA_NAME     = 'SenManga';     SENMANGA_ID    = 36;
   IMANHUA_NAME      = 'imanhua';      IMANHUA_ID     = 37;
   MABUNS_NAME       = 'Mabuns';       MABUNS_ID      = 38;
+  MANGAESTA_NAME    = 'MangaEsta';    MANGAESTA_ID   = 39;
 
   DEFAULT_LIST = ANIMEA_NAME+'!%~'+MANGAFOX_NAME+'!%~'+MANGAHERE_NAME+'!%~'+MANGAINN_NAME+'!%~'+MANGAREADER_NAME+'!%~';
   DEFAULT_CUSTOM_RENAME = '%NUMBERING% - %CHAPTER%';
@@ -336,6 +337,9 @@ var
 
   MABUNS_ROOT   : String = 'http://www.mabuns.web.id';
   MABUNS_BROWSER: String = '/p/mabuns-manga-list.html';
+
+  MANGAESTA_ROOT   : String = 'http://www.mangaesta.net';
+  MANGAESTA_BROWSER: String = '/p/manga-list.html';
 
   UPDATE_URL      : String = 'http://jaist.dl.sourceforge.net/project/fmd/FMD/updates/';
 
@@ -805,7 +809,9 @@ begin
   else
   if name = IMANHUA_NAME then Result:= IMANHUA_ID
   else
-  if name = MABUNS_NAME then Result:= MABUNS_ID;
+  if name = MABUNS_NAME then Result:= MABUNS_ID
+  else
+  if name = MANGAESTA_NAME then Result:= MANGAESTA_ID;
 end;
 
 function  GetMangaSiteName(const ID: Cardinal): String;
@@ -884,7 +890,9 @@ begin
   else
   if ID = IMANHUA_ID then Result:= IMANHUA_NAME
   else
-  if ID = MABUNS_ID then Result:= MABUNS_NAME;
+  if ID = MABUNS_ID then Result:= MABUNS_NAME
+  else
+  if ID = MANGAESTA_ID then Result:= MANGAESTA_NAME;
 end;
 
 // bad coding.. but this is how FMD works
@@ -1698,6 +1706,7 @@ globReturn:
       TStringList(output).LoadFromStream(zstream);
 
       zstream.Free;
+      DeleteFileUTF8(s);
     end
     else
     if output is TStringList then
