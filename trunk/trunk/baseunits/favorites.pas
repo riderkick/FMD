@@ -141,9 +141,11 @@ begin
     begin
       if manager.favoriteInfo[workPtr].website = MANGASTREAM_NAME then
         getInfo.mangaInfo.title:= manager.favoriteInfo[workPtr].title;
-      if getInfo.GetInfoFromURL(manager.favoriteInfo[workPtr].website,
+     { if getInfo.GetInfoFromURL(manager.favoriteInfo[workPtr].website,
                                 manager.favoriteInfo[workPtr].link, 5) = NET_PROBLEM then
-        break;
+        break; }
+      getInfo.GetInfoFromURL(manager.favoriteInfo[workPtr].website,
+                                manager.favoriteInfo[workPtr].link, 5);
     end
     else
     begin

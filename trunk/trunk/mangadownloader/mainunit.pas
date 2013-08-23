@@ -1885,28 +1885,37 @@ procedure TMainForm.miOpenFolder2Click(Sender: TObject);
 var
   Process: TProcessUTF8;
 begin
-  {$IFDEF WINDOWS}
+
   if NOT Assigned(vtFavorites.FocusedNode) then exit;
   Process:= TProcessUTF8.Create(nil);
+  {$IFDEF WINDOWS}
   Process.CommandLine:= 'explorer.exe /e, "'+
                         StringReplace(Favorites.favoriteInfo[vtFavorites.FocusedNode.Index].SaveTo, '/', '\', [rfReplaceAll])+'"';
+  {$ENDIF}
+  {$IFDEF UNIX}
+  Process.CommandLine:= 'xdg-open "'+
+                        StringReplace(Favorites.favoriteInfo[vtFavorites.FocusedNode.Index].SaveTo, '/', '\', [rfReplaceAll])+'"';
+  {$ENDIF}
   Process.Execute;
   Process.Free;
-  {$ENDIF}
 end;
 
 procedure TMainForm.miOpenFolderClick(Sender: TObject);
 var
   Process: TProcessUTF8;
 begin
-  {$IFDEF WINDOWS}
   if NOT Assigned(vtDownload.FocusedNode) then exit;
   Process:= TProcessUTF8.Create(nil);
+  {$IFDEF WINDOWS}
   Process.CommandLine:= 'explorer.exe /e, "'+
                          StringReplace(DLManager.containers.Items[vtDownload.FocusedNode.Index].downloadInfo.SaveTo, '/', '\', [rfReplaceAll])+'"';
+  {$ENDIF}
+  {$IFDEF UNIX}
+  Process.CommandLine:= 'xdg-open "'+
+                         StringReplace(DLManager.containers.Items[vtDownload.FocusedNode.Index].downloadInfo.SaveTo, '/', '\', [rfReplaceAll])+'"';
+  {$ENDIF}
   Process.Execute;
   Process.Free;
-  {$ENDIF}
 end;
 
 procedure TMainForm.pcMainChange(Sender: TObject);

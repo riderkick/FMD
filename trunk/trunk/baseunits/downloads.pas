@@ -3387,7 +3387,7 @@ begin
         Checkout;
         container.downloadInfo.Progress:= Format('%d/%d', [container.workPtr, container.pageNumber]);
         container.downloadInfo.Status  :=
-          Format('%s (%d/%d - %s)',
+          Format('%s (%d/%d [%s])',
             [stPreparing,
              container.currentDownloadChapterPtr,
              container.chapterLinks.Count,
@@ -3417,7 +3417,7 @@ begin
         Checkout;
         container.downloadInfo.Progress:= Format('%d/%d', [container.workPtr, container.pageLinks.Count]);
         container.downloadInfo.Status  :=
-          Format('%s (%d/%d - %s)',
+          Format('%s (%d/%d [%s])',
             [stDownloading,
              container.currentDownloadChapterPtr,
              container.chapterLinks.Count,

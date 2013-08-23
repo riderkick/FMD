@@ -544,7 +544,7 @@ procedure fmdPowerOff;
 
 implementation
 
-uses FileUtil{$IFDEF WINDOWS}, Windows{$ENDIF}, Synacode;
+uses Process, FileUtil{$IFDEF WINDOWS}, Windows{$ENDIF}, Synacode;
 
 {$IFDEF WINDOWS}
 
@@ -2038,6 +2038,8 @@ end;
 procedure fmdPowerOff;
 const
   SE_SHUTDOWN_NAME = 'SeShutdownPrivilege';
+var
+  Process: TProcess;
 begin
 {$IFDEF WINDOWS}
   if IsPwrShutdownAllowed then
@@ -2045,6 +2047,12 @@ begin
     NTSetPrivilege(SE_SHUTDOWN_NAME, True);
     ExitWindowsEx(EWX_POWEROFF OR EWX_FORCE, 0);
   end;
+{$ENDIF}
+{$IFDEF UNIX}
+  Process:= TProcessUTF8.Create(nil);
+  Process.CommandLine:= 'poweroff';
+  Process.Execute;
+  Process.Free;
 {$ENDIF}
 end;
 
