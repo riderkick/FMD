@@ -155,6 +155,7 @@
       <SmartLinkUnit Value="True"/>
       <TargetOS Value="win32"/>
       <Optimizations>
+        <OptimizationLevel Value="3"/>
         <VariablesInRegisters Value="True"/>
       </Optimizations>
     </CodeGeneration>
