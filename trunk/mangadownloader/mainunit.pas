@@ -114,6 +114,7 @@ type
     gbOptionRenaming: TGroupBox;
     gbOptionFavorites: TGroupBox;
     IconList: TImageList;
+    itSaveDownloadedList: TIdleTimer;
     imgOptionCustomRename: TImage;
     itRefreshForm: TIdleTimer;
     itCheckForChapters: TIdleTimer;
@@ -272,6 +273,7 @@ type
     procedure itAnimateTimer(Sender: TObject);
     procedure itCheckForChaptersTimer(Sender: TObject);
     procedure itRefreshFormTimer(Sender: TObject);
+    procedure itSaveDownloadedListTimer(Sender: TObject);
     procedure miChapterListHighlightClick(Sender: TObject);
     procedure miDownloadHideCompletedClick(Sender: TObject);
     procedure miDownloadMergeClick(Sender: TObject);
@@ -652,6 +654,11 @@ begin
   isCanRefreshForm:= TRUE;
 end;
 
+procedure TMainForm.itSaveDownloadedListTimer(Sender: TObject);
+begin
+  DLManager.BackupDownloadedChaptersList;
+end;
+
 procedure TMainForm.miChapterListHighlightClick(Sender: TObject);
 begin
   miChapterListHighlight.Checked:= NOT miChapterListHighlight.Checked;
@@ -761,7 +768,7 @@ begin
     dataProcess.SaveToFile;
   dataProcess.Destroy;
   // bad coding
-  DLManager.downloadedChaptersList.SaveToFile(WORK_FOLDER + DOWNLOADEDCHAPTERS_FILE);
+  DLManager.BackupDownloadedChaptersList;
  // Halt;
 end;
 

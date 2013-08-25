@@ -2759,4 +2759,10 @@ object MainForm: TMainForm
       FF00FFFFFF00FFFFFF00FFFFFF00
     }
   end
+  object itSaveDownloadedList: TIdleTimer
+    Interval = 300000
+    OnTimer = itSaveDownloadedListTimer
+    left = 688
+    top = 191
+  end
 end

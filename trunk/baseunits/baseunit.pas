@@ -174,6 +174,7 @@ const
   IMANHUA_NAME      = 'imanhua';      IMANHUA_ID     = 37;
   MABUNS_NAME       = 'Mabuns';       MABUNS_ID      = 38;
   MANGAESTA_NAME    = 'MangaEsta';    MANGAESTA_ID   = 39;
+  CENTRALDEMANGAS_NAME = 'CentralDeMangas'; CENTRALDEMANGAS_ID = 40;
 
   DEFAULT_LIST = ANIMEA_NAME+'!%~'+MANGAFOX_NAME+'!%~'+MANGAHERE_NAME+'!%~'+MANGAINN_NAME+'!%~'+MANGAREADER_NAME+'!%~';
   DEFAULT_CUSTOM_RENAME = '%NUMBERING% - %CHAPTER%';
@@ -340,6 +341,9 @@ var
 
   MANGAESTA_ROOT   : String = 'http://www.mangaesta.net';
   MANGAESTA_BROWSER: String = '/p/manga-list.html';
+
+  CENTRALDEMANGAS_ROOT   : String = 'http://centraldemangas.com.br';
+  CENTRALDEMANGAS_BROWSER: String = '/mangas';
 
   UPDATE_URL      : String = 'http://jaist.dl.sourceforge.net/project/fmd/FMD/updates/';
 
@@ -811,7 +815,9 @@ begin
   else
   if name = MABUNS_NAME then Result:= MABUNS_ID
   else
-  if name = MANGAESTA_NAME then Result:= MANGAESTA_ID;
+  if name = MANGAESTA_NAME then Result:= MANGAESTA_ID
+  else
+  if name = CENTRALDEMANGAS_NAME then Result:= CENTRALDEMANGAS_ID;
 end;
 
 function  GetMangaSiteName(const ID: Cardinal): String;
@@ -892,7 +898,9 @@ begin
   else
   if ID = MABUNS_ID then Result:= MABUNS_NAME
   else
-  if ID = MANGAESTA_ID then Result:= MANGAESTA_NAME;
+  if ID = MANGAESTA_ID then Result:= MANGAESTA_NAME
+  else
+  if ID = CENTRALDEMANGAS_ID then Result:= CENTRALDEMANGAS_NAME;
 end;
 
 // bad coding.. but this is how FMD works
@@ -1628,7 +1636,11 @@ globReturn:
     HTTP.Headers.Add('Accept-Encoding: gzip, deflate');
   end
   else
+  begin
+   // HTTP.MimeType := 'text/xml';
+    HTTP.Headers.Add('Accept-Charset: utf-8');
     HTTP.UserAgent:= 'curl/7.21.0 (i686-pc-linux-gnu) libcurl/7.21.0 OpenSSL/0.9.8o zlib/1.2.3.4 libidn/1.18';
+  end;
 
   if Pos(GEHENTAI_ROOT, URL) <> 0 then
     HTTP.Headers.Insert(0, 'Referer:'+URL);
@@ -1699,7 +1711,7 @@ globReturn:
       i:= Random(9999999);
       HTTP.Document.Position:= 0;
       s:= fmdGetTempPath + ' ';
-      s:= TrimLeft(TrimRight(s)) + IntToStr(i) + '.bak';
+      s:= TrimLeft(TrimRight(s)) + IntToStr(i) + '.tmp';
       HTTP.Document.SaveToFile(s);
 
       zstream:= TGZFileStream.create(s, gzopenread);
@@ -2025,6 +2037,9 @@ begin
   SetLength(Result, 4096);
   l:= GetTempPath(4096, PChar(Result));
   SetLength(Result, l+1);
+{$ENDIF}
+{$IFDEF UNIX}
+  Result:= GetTempDir(FALSE);
 {$ENDIF}
 end;
 
