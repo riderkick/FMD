@@ -1469,8 +1469,9 @@ end;
 
 procedure TMainForm.miFavoritesRemoveClick(Sender: TObject);
 var
-  i    : Cardinal;
-  xNode: PVirtualNode;
+  i      : Cardinal;
+  xNode  : PVirtualNode;
+  delList: array of Cardinal;
 begin
   if (cbOptionShowDeleteTaskDialog.Checked) AND (vtFavorites.SelectedCount > 0) then
     if MessageDlg('', stDlgRemoveTask,
@@ -1494,11 +1495,17 @@ begin
     while i < favorites.Count do
     begin
       if vtFavorites.Selected[xNode] then
-        favorites.Remove(i, FALSE)
-      else
-        Inc(i);
+      begin
+        SetLength(delList, Length(delList)+1);
+        delList[Length(delList)-1]:= i;
+      end;
+      Inc(i);
       xNode:= vtFavorites.GetNext(xNode);
     end;
+
+    if Length(delList) > 0 then
+      for i:= Length(delList) downto 0 do
+        favorites.Remove(delList[i], FALSE);
 
     favorites.Backup;
    { for i:= 0 to vtFavorites.RootNodeCount-1 do
@@ -1509,6 +1516,7 @@ begin
     end; }
   end;
   UpdateVtFavorites;
+  SetLength(delList, 0);
 end;
 
 procedure TMainForm.miFavoritesChangeCurrentChapterClick(Sender: TObject);
