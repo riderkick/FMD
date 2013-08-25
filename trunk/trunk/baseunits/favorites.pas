@@ -474,11 +474,11 @@ begin
     if mangaInfo[i].numChapter>0 then
     begin
       favoriteInfo[i].currentChapter:= IntToStr(mangaInfo[i].numChapter);
-      if (mangaInfo[i].website = MANGASTREAM_NAME) OR
+     { if (mangaInfo[i].website = MANGASTREAM_NAME) OR
          (mangaInfo[i].website = S2SCAN_NAME) OR
          (mangaInfo[i].website = BATOTO_NAME) OR
          (mangaInfo[i].website = MANGATRADERS_NAME) OR
-         (mangaInfo[i].website = SUBMANGA_NAME) then
+         (mangaInfo[i].website = SUBMANGA_NAME) then }
       begin
         favoriteInfo[i].downloadedChapterList:= '';
         for j:= 0 to mangaInfo[i].numChapter-1 do

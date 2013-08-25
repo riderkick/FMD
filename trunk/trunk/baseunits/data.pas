@@ -2335,6 +2335,47 @@ var
     source.Free;
   end;
 
+  // get name and link of the manga from CentralDeMangas
+  function   CentralDeMangasGetNameAndLink: Byte;
+  var
+    tmp: Integer;
+    i: Cardinal;
+    s: String;
+  begin
+    Result:= INFORMATION_NOT_FOUND;
+    if NOT GetPage(TObject(source), CENTRALDEMANGAS_ROOT + CENTRALDEMANGAS_BROWSER, 0) then
+    begin
+      Result:= NET_PROBLEM;
+      source.Free;
+      exit;
+    end;
+    parse.Clear;
+    Parser:= TjsFastHTMLParser.Create(PChar(source.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.Exec;
+    Parser.Free;
+    if parse.Count=0 then
+    begin
+      source.Free;
+      exit;
+    end;
+    for i:= 0 to parse.Count-1 do
+    begin
+      if (Pos('/online/', parse.Strings[i]) > 0) AND
+         (Pos('title="', parse.Strings[i]) > 0) AND
+         (Pos('<td>', parse.Strings[i-1]) > 0) then
+      begin
+        Result:= NO_ERROR;
+        s:= StringFilter(parse.Strings[i+1]);
+        names.Add(HTMLEntitiesFilter(s));
+        s:= StringReplace(GetString(parse.Strings[i], 'href="', '"'), CENTRALDEMANGAS_ROOT, '', []);
+        links.Add(s);
+      end;
+    end;
+    source.Free;
+  end;
+
   // get name and link of the manga from Mangaku
   function   MangakuGetNameAndLink: Byte;
   var
@@ -3046,6 +3087,9 @@ begin
   else
   if website = HUGEMANGA_NAME then
     Result:= HugeMangaGetNameAndLink
+  else
+  if website = CENTRALDEMANGAS_NAME then
+    Result:= CentralDeMangasGetNameAndLink
  // else
  // if website = MANGAKU_NAME then
  //   Result:= MangakuGetNameAndLink
@@ -7136,6 +7180,137 @@ begin
   Result:= NO_ERROR;
 end;
 
+// get manga infos from centraldemangas site
+function   GetCentralDeMangasInfoFromURL: Byte;
+var
+  s: String;
+  isExtractSummary: Boolean = TRUE;
+  isExtractGenres : Boolean = FALSE;
+  isExtractChapter: Boolean = FALSE;
+  i, j: Cardinal;
+begin
+  mangaInfo.url:= CENTRALDEMANGAS_ROOT + URL;
+  if NOT GetPage(TObject(source), EncodeURL(mangaInfo.url), Reconnect) then
+  begin
+    Result:= NET_PROBLEM;
+    source.Free;
+    exit;
+  end;
+
+  // parsing the HTML source
+  parse.Clear;
+  Parser:= TjsFastHTMLParser.Create(PChar(source.Text));
+  Parser.OnFoundTag := OnTag;
+  Parser.OnFoundText:= OnText;
+  Parser.Exec;
+
+  Parser.Free;
+  source.Free;
+  mangaInfo.website:= CENTRALDEMANGAS_NAME;
+  // using parser (cover link, summary, chapter name and link)
+  if parse.Count=0 then exit;
+  for i:= 0 to parse.Count-1 do
+  begin
+    // get cover
+    if (mangaInfo.coverLink = '') AND
+       (Pos('class="capa_sinopse"', parse.Strings[i])>0) then
+      mangaInfo.coverLink:= CorrectURL(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src=')));
+
+    // get summary
+    if (Pos('Sinopse', parse.Strings[i]) <> 0) AND
+       (Pos('<h2>', parse.Strings[i-1])<>0)  AND
+       (isExtractSummary) then
+    begin
+      j:= i+2;
+      while (j<parse.Count) AND (Pos('</div>', parse.Strings[j])=0) do
+      begin
+        s:= parse.Strings[j];
+        if s[1] <> '<' then
+        begin
+          parse.Strings[j]:= HTMLEntitiesFilter(StringFilter(TrimLeft(parse.Strings[j])));
+          parse.Strings[j]:= StringReplace(parse.Strings[j], #10, '\n', [rfReplaceAll]);
+          parse.Strings[j]:= StringReplace(parse.Strings[j], #13, '\r', [rfReplaceAll]);
+          mangaInfo.summary:= mangaInfo.summary + parse.Strings[j];
+          break;
+        end;
+        Inc(j);
+      end;
+      isExtractSummary:= FALSE;
+    end;
+
+    // get title
+    if (mangaInfo.title = '') AND
+       (Pos('/online/', parse.Strings[i])<>0) AND
+       (Pos('<td>', parse.Strings[i-1])<>0) then
+      mangaInfo.title:= TrimLeft(HTMLEntitiesFilter(StringFilter(GetString(parse.Strings[i], 'title=', '">'))));
+
+    if (NOT isExtractChapter) AND
+       (Pos('Cap', parse.Strings[i]) > 0) AND
+       (Pos('ulos', parse.Strings[i]) > 0) then
+      isExtractChapter:= TRUE;
+
+    // get chapter name and links
+    if (isExtractChapter) AND
+       (Pos('/online/', parse.Strings[i])>0) AND
+       (Pos('<span>', parse.Strings[i-1])>0) then
+    begin
+      Inc(mangaInfo.numChapter);
+      s:= StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href=')), CENTRALDEMANGAS_ROOT, '', []);
+      mangaInfo.chapterLinks.Add(s);
+      s:= RemoveSymbols(TrimLeft(TrimRight(parse.Strings[i+1])));
+      mangaInfo.chapterName.Add(StringFilter(HTMLEntitiesFilter(s)));
+    end;
+
+    if (isExtractChapter) AND
+       (Pos('</div>', parse.Strings[i])>0) then
+      isExtractChapter:= FALSE;
+
+    // get authors
+    if (i+6<parse.Count) AND
+       (Pos('Autor', parse.Strings[i])<>0) AND
+       (Pos('<h2>', parse.Strings[i-1])<>0) then
+      mangaInfo.authors:= TrimLeft(TrimRight(parse.Strings[i+6]));
+
+    // get artists
+    if (i+6<parse.Count) AND
+       (Pos('Arte', parse.Strings[i])<>0) AND
+       (Pos('<h2>', parse.Strings[i-1])<>0) then
+      mangaInfo.artists:= TrimLeft(TrimRight(parse.Strings[i+6]));
+
+    // get genres
+    if (i+6<parse.Count) AND
+       (Pos('Gen', parse.Strings[i])<>0) AND
+       (Pos('</h2>', parse.Strings[i+1])<>0) AND
+       (Pos('<h2>', parse.Strings[i-1])<>0) then
+    begin
+      isExtractGenres:= TRUE;
+      mangaInfo.genres:= '';
+    end;
+
+    if isExtractGenres then
+    begin
+      s:= TrimLeft(TrimRight(parse.Strings[i]));
+      if Pos('</div>', s) <> 0 then
+        isExtractGenres:= FALSE
+      else
+      if (Pos('class="rotulo"', s)<>0) then
+        mangaInfo.genres:= mangaInfo.genres + TrimLeft(TrimRight(parse.Strings[i+1])) + ', ';
+    end;
+
+    // get status
+    if (i+6<parse.Count) AND
+       (Pos('Status', parse.Strings[i])<>0) AND
+       (Pos('<h2>', parse.Strings[i-1])<>0) then
+    begin
+      if (Pos('Completo', parse.Strings[i+6])<>0) then
+        mangaInfo.status:= '0'   // completed
+      else
+        mangaInfo.status:= '1';  // ongoing
+    end;
+  end;
+  Result:= NO_ERROR;
+end;
+
 // get manga infos from SenManga site
 function   GetSenMangaInfoFromURL: Byte;
 var
@@ -7564,6 +7739,9 @@ begin
   else
   if website = MANGAVADISI_NAME then
     Result:= GetMangaVadisiInfoFromURL
+  else
+  if website = CENTRALDEMANGAS_NAME then
+    Result:= GetCentralDeMangasInfoFromURL
   else
   if website = SENMANGA_NAME then
     Result:= GetSenMangaInfoFromURL
