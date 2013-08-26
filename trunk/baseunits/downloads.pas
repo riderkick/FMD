@@ -37,6 +37,7 @@ type
     anotherURL    : String;
     checkStyle    : Cardinal;
 
+    Terminated2,
     isTerminated,
     isSuspended   : Boolean;
     // ID of the site
@@ -203,6 +204,7 @@ end;
 
 constructor TDownloadThread.Create;
 begin
+  Terminated2 := FALSE;
   isTerminated:= FALSE;
   isSuspended := TRUE;
   FreeOnTerminate:= TRUE;
@@ -211,7 +213,12 @@ end;
 
 destructor  TDownloadThread.Destroy;
 begin
-  Dec(manager.container.activeThreadCount);
+  // TODO: Need recheck
+  try
+    if NOT Terminated2 then
+      Dec(manager.container.activeThreadCount);
+  except
+  end;
   isTerminated:= TRUE;
   inherited Destroy;
 end;
@@ -4108,6 +4115,7 @@ procedure   TDownloadManager.AddTask;
 begin
   containers.Add(TTaskThreadContainer.Create);
   containers.Items[containers.Count-1].manager:= self;
+  MainForm.vtDownloadFilters;
 end;
 
 procedure   TDownloadManager.CheckAndActiveTask(const isCheckForFMDDo: Boolean = FALSE);
@@ -4200,6 +4208,7 @@ begin
         end;
     end;
   end;
+  MainForm.vtDownloadFilters;
 end;
 
 function    TDownloadManager.CanActiveTask(const pos: Cardinal): Boolean;
@@ -4280,6 +4289,7 @@ begin
       Inc(count);
     end;
   end;
+  MainForm.vtDownloadFilters;
 end;
 
 procedure   TDownloadManager.ActiveTask(const taskID: Cardinal);
@@ -4299,6 +4309,7 @@ begin
   containers.Items[taskID].thread.container:= containers.Items[taskID];
   containers.Items[taskID].thread.isSuspended:= FALSE;
   // TODO
+  MainForm.vtDownloadFilters;
 end;
 
 procedure   TDownloadManager.StopTask(const taskID: Cardinal; const isCheckForActive: Boolean = TRUE);
@@ -4314,7 +4325,10 @@ begin
   begin
     for i:= 0 to containers.Items[taskID].thread.threads.Count-1 do
       if Assigned(containers.Items[taskID].thread.threads[i]) then
+      begin
+        containers.Items[taskID].thread.threads[i].Terminated2:= TRUE;
         containers.Items[taskID].thread.threads[i].Terminate;
+      end;
     containers.Items[taskID].thread.Terminate;
     Sleep(250);
  {   containers.Items[taskID].downloadInfo.Status:= stStop;
@@ -4336,6 +4350,7 @@ begin
     Sleep(1000);
     CheckAndActiveTask;
   end;
+  MainForm.vtDownloadFilters;
 end;
 
 procedure   TDownloadManager.StopAllTasks;
@@ -4350,7 +4365,10 @@ begin
     begin
       for j:= 0 to containers.Items[i].thread.threads.Count-1 do
         if Assigned(containers.Items[i].thread.threads[j]) then
+        begin
+          containers.Items[i].thread.threads[j].Terminated2:= TRUE;
           containers.Items[i].thread.threads[j].Terminate;
+        end;
       containers.Items[i].thread.Terminate;
       Sleep(250);
       {$IFDEF WINDOWS}
@@ -4372,6 +4390,7 @@ begin
   end;
   Backup;
   MainForm.vtDownload.Repaint;
+  MainForm.vtDownloadFilters;
 end;
 
 procedure   TDownloadManager.StopAllDownloadTasksForExit;
@@ -4385,7 +4404,10 @@ begin
     begin
       for j:= 0 to containers.Items[i].thread.threads.Count-1 do
         if Assigned(containers.Items[i].thread.threads[j]) then
+        begin
+          containers.Items[i].thread.threads[j].Terminated2:= TRUE;
           containers.Items[i].thread.threads[j].Terminate;
+        end;
       containers.Items[i].thread.Terminate;
       {$IFDEF WINDOWS}
     {  containers.Items[i].thread.Suspend;
@@ -4415,6 +4437,7 @@ begin
   containers.Items[id1]:= containers.Items[id2];
   containers.Items[id2]:= tmp;
   Result:= TRUE;
+  MainForm.vtDownloadFilters;
 end;
 
 // move a task down
@@ -4431,6 +4454,7 @@ begin
   end
   else
     Result:= FALSE;
+  MainForm.vtDownloadFilters;
 end;
 
 // move a task up
@@ -4447,6 +4471,7 @@ begin
   end
   else
     Result:= FALSE;
+  MainForm.vtDownloadFilters;
 end;
 
 procedure   TDownloadManager.RemoveTask(const taskID: Cardinal);
@@ -4459,7 +4484,10 @@ begin
   begin
     for i:= 0 to containers.Items[taskID].thread.threads.Count-1 do
       if Assigned(containers.Items[taskID].thread.threads[i]) then
+      begin
+        containers.Items[taskID].thread.threads[i].Terminated2:= TRUE;
         containers.Items[taskID].thread.threads[i].Terminate;
+      end;
     containers.Items[taskID].thread.Terminate;
     Sleep(250);
     {$IFDEF WINDOWS}
