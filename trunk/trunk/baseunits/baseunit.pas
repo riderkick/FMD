@@ -197,6 +197,10 @@ var
 
   stCompressing,
   stPreparing,
+  stDownload,
+  stCancel,
+  stAddToQueue,
+  stNewChapterNotification,
   stDownloading,
   stWait,
   stStop,

@@ -45,7 +45,7 @@ uses
 
 procedure TLog.FormCreate(Sender: TObject);
 begin
-  Visible:= FALSE;
+  ShowLog;
 end;
 
 procedure TLog.btVisitClick(Sender: TObject);
@@ -70,7 +70,6 @@ begin
   end;
   mmLog.Lines.Create;
   mmLog.Lines.LoadFromFile(WORK_FOLDER + LOG_FILE);
-  Visible:= TRUE;
   DeleteFile(WORK_FOLDER + LOG_FILE);
 end;
 
