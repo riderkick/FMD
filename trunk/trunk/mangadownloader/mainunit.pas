@@ -311,6 +311,7 @@ type
     procedure seOptionCheckMinutesChange(Sender: TObject);
     procedure spMainSplitterMoved(Sender: TObject);
     procedure TrayIconDblClick(Sender: TObject);
+    procedure vtDownloadDblClick(Sender: TObject);
     procedure vtDownloadDragAllowed(Sender: TBaseVirtualTree;
       Node: PVirtualNode; Column: TColumnIndex; var Allowed: Boolean);
     procedure vtDownloadDragDrop(Sender: TBaseVirtualTree; Source: TObject;
@@ -328,6 +329,7 @@ type
       Column: TColumnIndex; TextType: TVSTTextType; var CellText: String);
     procedure vtDownloadInitNode(Sender: TBaseVirtualTree; ParentNode,
       Node: PVirtualNode; var InitialStates: TVirtualNodeInitStates);
+    procedure vtFavoritesDblClick(Sender: TObject);
     procedure vtFavoritesGetText(Sender: TBaseVirtualTree; Node: PVirtualNode;
       Column: TColumnIndex; TextType: TVSTTextType; var CellText: String);
     procedure vtFavoritesHeaderClick(Sender: TVTHeader; Column: TColumnIndex;
@@ -1203,6 +1205,7 @@ begin
     begin
       RunGetList;
     end;
+    vtMangaList.OnInitNode:= vtMangaListInitNode;
     vtMangaList.Clear;
     vtMangaList.RootNodeCount:= dataProcess.filterPos.Count;
     lbMode.Caption:= Format(stModeAll, [dataProcess.filterPos.Count]);
@@ -1301,6 +1304,8 @@ begin
       dataProcess:= TDataProcess.Create;
       dataProcess.LoadFromFile(cbSelectManga.Items[cbSelectManga.ItemIndex]);
     end;
+    edSearch.Text:= '';
+    vtMangaList.OnInitNode:= vtMangaListInitNode;
     vtMangaList.Clear;
     vtMangaList.RootNodeCount:= dataProcess.filterPos.Count;
     lbMode.Caption:= Format(stModeAll, [dataProcess.filterPos.Count]);
@@ -1375,6 +1380,7 @@ begin
                         rbAll.Checked, cbOnlyNew.Checked) then
   begin
     lbMode.Caption:=  Format(stModeFilter, [dataProcess.filterPos.Count]);
+    vtMangaList.OnInitNode:= vtMangaListInitNode;
     vtMangaList.Clear;
     vtMangaList.RootNodeCount:= dataProcess.filterPos.Count;
   end;
@@ -2151,6 +2157,11 @@ begin
   TrayIcon.Show;
 end;
 
+procedure TMainForm.vtDownloadDblClick(Sender: TObject);
+begin
+  miOpenFolderClick(Sender);
+end;
+
 procedure TMainForm.vtDownloadDragAllowed(Sender: TBaseVirtualTree;
   Node: PVirtualNode; Column: TColumnIndex; var Allowed: Boolean);
 begin
@@ -2298,6 +2309,11 @@ begin
   end;
 end;
 
+procedure TMainForm.vtFavoritesDblClick(Sender: TObject);
+begin
+
+end;
+
 // vtFavorites
 
 procedure TMainForm.vtFavoritesGetText(Sender: TBaseVirtualTree;
@@ -2407,6 +2423,7 @@ begin
     dataProcess.Free;
     dataProcess:= TDataProcess.Create;
     dataProcess.LoadFromFile(cbSelectManga.Items.Strings[0]);
+    vtMangaList.OnInitNode:= vtMangaListInitNode;
     vtMangaList.Clear;
     vtMangaList.RootNodeCount:= dataProcess.filterPos.Count;
     lbMode.Caption:= Format(stModeAll, [dataProcess.filterPos.Count]);
@@ -2580,7 +2597,7 @@ var
 begin
   with Sender do
   begin
-    pos:= dataProcess.searchPos.Items[Node.Index];
+    pos:= dataProcess.searchPos.Items[Node^.Index];
     data:= GetNodeData(Node);
     data.text:= dataProcess.Param[pos, DATA_PARAM_NAME]+
                 ' ('+
@@ -2608,15 +2625,18 @@ begin
   rmInformation.Lines.Add('Loading ...');
   clbChapterList.Clear;
 
+  // TODO: need improvement
   SubThread.mangaListPos:= vtMangaList.FocusedNode.Index;
   if DataProcess.searchPos.Count = 0 then
   begin
     SubThread.website:= GetMangaSiteName(DataProcess.site.Items[DataProcess.GetPos(SubThread.mangaListPos)]);//cbSelectManga.Items[cbSelectManga.ItemIndex];
+    SubThread.title:= DataProcess.Param[DataProcess.GetPos(SubThread.mangaListPos), DATA_PARAM_NAME];
     SubThread.link:= DataProcess.Param[DataProcess.GetPos(SubThread.mangaListPos), DATA_PARAM_LINK];
   end
   else
   begin
     SubThread.website:= GetMangaSiteName(DataProcess.site.Items[DataProcess.searchPos.Items[SubThread.mangaListPos]]);//cbSelectManga.Items[cbSelectManga.ItemIndex];
+    SubThread.title:= DataProcess.Param[DataProcess.searchPos.Items[SubThread.mangaListPos], DATA_PARAM_NAME];
     SubThread.link:= DataProcess.Param[DataProcess.searchPos.Items[SubThread.mangaListPos], DATA_PARAM_LINK];
   end;
   SubThread.isGetInfos:= TRUE;
@@ -2740,8 +2760,10 @@ begin
 
     if SubThread.mangaListPos > -1 then
     begin
-      mangaInfo.title:= dataProcess.Param[dataProcess.GetPos(SubThread.mangaListPos), DATA_PARAM_NAME];
-      mangaInfo.link := dataProcess.Param[dataProcess.GetPos(SubThread.mangaListPos), DATA_PARAM_LINK];
+     // mangaInfo.title:= dataProcess.Param[dataProcess.GetPos(SubThread.mangaListPos), DATA_PARAM_NAME];
+     // mangaInfo.link := dataProcess.Param[dataProcess.GetPos(SubThread.mangaListPos), DATA_PARAM_LINK];
+      mangaInfo.title:= SubThread.title;
+      mangaInfo.link := SubThread.link;
     end
     else
     if SubThread.mangaListPos = -2 then
@@ -3018,6 +3040,7 @@ begin
   if edSearch.Text = '' then
   begin
     DataProcess.searchPos.Clear;
+    vtMangaList.OnInitNode:= vtMangaListInitNode;
     vtMangaList.Clear;
     vtMangaList.RootNodeCount:= dataProcess.filterPos.Count;
     exit;
@@ -3027,7 +3050,6 @@ begin
   vtMangaList.OnInitNode:= vtMangaListInitSearchNode;
   vtMangaList.Clear;
   vtMangaList.RootNodeCount:= dataProcess.searchPos.Count;
-  vtMangaList.OnInitNode:= vtMangaListInitNode;
 end;
 
 procedure TMainForm.UpdateVtChapter;

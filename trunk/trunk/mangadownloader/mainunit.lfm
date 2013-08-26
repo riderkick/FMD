@@ -273,20 +273,20 @@ object MainForm: TMainForm
     Height = 457
     Top = 32
     Width = 620
-    ActivePage = tsFavorites
+    ActivePage = tsOption
     Align = alClient
     Font.Style = [fsBold]
     ParentFont = False
-    TabIndex = 3
+    TabIndex = 4
     TabOrder = 1
     OnChange = pcMainChange
     object tsDownload: TTabSheet
       Caption = 'Downloads'
-      ClientHeight = 431
+      ClientHeight = 429
       ClientWidth = 612
       object vtDownload: TVirtualStringTree
         Left = 0
-        Height = 431
+        Height = 429
         Top = 0
         Width = 612
         Align = alClient
@@ -335,6 +335,7 @@ object MainForm: TMainForm
         TabOrder = 0
         TreeOptions.PaintOptions = [toShowButtons, toShowDropmark, toShowRoot, toThemeAware, toUseBlendedImages]
         TreeOptions.SelectionOptions = [toFullRowSelect, toMultiSelect]
+        OnDblClick = vtDownloadDblClick
         OnDragAllowed = vtDownloadDragAllowed
         OnDragOver = vtDownloadDragOver
         OnDragDrop = vtDownloadDragDrop
@@ -1188,6 +1189,7 @@ object MainForm: TMainForm
         TabOrder = 0
         TreeOptions.PaintOptions = [toShowButtons, toShowDropmark, toShowRoot, toThemeAware, toUseBlendedImages]
         TreeOptions.SelectionOptions = [toFullRowSelect, toMultiSelect]
+        OnDblClick = vtFavoritesDblClick
         OnGetText = vtFavoritesGetText
         OnHeaderClick = vtFavoritesHeaderClick
         OnInitNode = vtFavoritesInitNode
@@ -1205,11 +1207,11 @@ object MainForm: TMainForm
     end
     object tsOption: TTabSheet
       Caption = 'Options'
-      ClientHeight = 431
+      ClientHeight = 429
       ClientWidth = 612
       object pnOptions: TPageControl
         Left = 9
-        Height = 338
+        Height = 336
         Top = 26
         Width = 593
         ActivePage = tsGeneral
@@ -1218,7 +1220,7 @@ object MainForm: TMainForm
         TabOrder = 0
         object tsGeneral: TTabSheet
           Caption = 'General'
-          ClientHeight = 310
+          ClientHeight = 308
           ClientWidth = 585
           object cbLanguages: TComboBox
             Left = 20
@@ -1301,6 +1303,7 @@ object MainForm: TMainForm
             Enabled = False
             ParentFont = False
             TabOrder = 4
+            Visible = False
           end
           object cbOptionEnableLoadCover: TCheckBox
             Left = 20
@@ -1809,7 +1812,7 @@ object MainForm: TMainForm
       object btOptionApply: TButton
         Left = 49
         Height = 41
-        Top = 377
+        Top = 375
         Width = 128
         Anchors = [akBottom]
         Caption = 'Apply'
