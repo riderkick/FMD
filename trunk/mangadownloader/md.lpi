@@ -141,6 +141,7 @@
         <Filename Value="NewChapterForm.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="NewChapter"/>
+        <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="NewChapterForm"/>
       </Unit15>

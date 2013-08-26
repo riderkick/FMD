@@ -4197,7 +4197,10 @@ reload:
       parse.Strings[i+2]:= StringReplace(parse.Strings[i+2], #10, '', [rfReplaceAll]);
       parse.Strings[i+2]:= StringReplace(parse.Strings[i+2], #13, '', [rfReplaceAll]);
       parse.Strings[i+2]:= StringFilter(TrimLeft(parse.Strings[i+2]));
-      mangaInfo.chapterName.Add(StringFilter(TrimRight(RemoveSymbols(parse.Strings[i+2]))));
+      s:= StringFilter(TrimRight(RemoveSymbols(parse.Strings[i+2])));
+      if OptionShowBatotoSG then
+        s:= s + ' [by ' + StringFilter(TrimRight(RemoveSymbols(parse.Strings[i+15]))) + ']';
+      mangaInfo.chapterName.Add(s);
     end
     else
     if (OptionBatotoUseIEChecked) AND

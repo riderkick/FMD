@@ -41,6 +41,7 @@ type
     cbOptionAutoCheckUpdate: TCheckBox;
     cbOptionBatotoUseIE: TCheckBox;
     cbOptionShowDeleteTaskDialog: TCheckBox;
+    cbOptionShowBatotoSG: TCheckBox;
     cbOptionUseProxy: TCheckBox;
     cbSelectManga: TComboBox;
     CheckBox1: TCheckBox;
@@ -110,9 +111,11 @@ type
     edOptionUser: TEdit;
     edSaveTo: TLabeledEdit;
     edSearch: TEdit;
+    gbDialogs: TGroupBox;
     gbOptionProxy: TGroupBox;
     gbOptionRenaming: TGroupBox;
     gbOptionFavorites: TGroupBox;
+    gbMisc: TGroupBox;
     IconList: TImageList;
     itSaveDownloadedList: TIdleTimer;
     imgOptionCustomRename: TImage;
@@ -210,6 +213,7 @@ type
     spInfos: TSplitter;
     spMainSplitter: TSplitter;
     sbMain: TStatusBar;
+    tsMisc: TTabSheet;
     tsUpdate: TTabSheet;
     tsAbout: TTabSheet;
     tsWebsites: TTabSheet;
@@ -1987,6 +1991,8 @@ procedure TMainForm.pcMainChange(Sender: TObject);
     cbOptionAutoCheckFavStartup.Checked:= options.ReadBool('update', 'AutoCheckFavStartup', FALSE);
     seOptionCheckMinutes.Value:= options.ReadInteger('update', 'AutoCheckMinutes', 0);
 
+    cbOptionShowBatotoSG.Checked:= OptionShowBatotoSG;
+
    { for i:= 0 to Length(optionMangaSiteSelectionNodes)-1 do
       optionMangaSiteSelectionNodes[i].CheckState:= csUncheckedNormal;
     s:= mangalistIni.ReadString('general', 'MangaListSelect', '0'+SEPERATOR);
@@ -2475,6 +2481,9 @@ begin
   options.WriteBool   ('dialogs', 'ShowDeleteDldTaskDialog', cbOptionShowDeleteTaskDialog.Checked);
   options.WriteBool   ('dialogs', 'ShowFavoritesDialog', cbOptionShowFavoriteDialog.Checked);
 
+  options.WriteBool   ('misc', 'ShowBatotoSG', cbOptionShowBatotoSG.Checked);
+  OptionShowBatotoSG:= cbOptionShowBatotoSG.Checked;
+
   options.UpdateFile;
 
   if OptionCheckMinutes = 0 then
@@ -2855,6 +2864,9 @@ begin
   OptionCheckMinutes:= seOptionCheckMinutes.Value;
 
   // misc
+  cbOptionShowBatotoSG.Checked:= options.ReadBool('misc', 'ShowBatotoSG', TRUE);
+  OptionShowBatotoSG:= cbOptionShowBatotoSG.Checked;
+
   vtFavorites.Header.SortColumn:= options.ReadInteger('misc', 'SortColumn', 0);
   favorites.sortDirection:= options.ReadBool('misc', 'SortDirection', FALSE);
   vtFavorites.Header.SortDirection:= TSortDirection(favorites.sortDirection);
@@ -3190,6 +3202,7 @@ begin
   tsSaveTo.Caption        := language.ReadString(lang, 'tsSaveToCaption', '');
   tsDialogs.Caption       := language.ReadString(lang, 'tsDialogsCaption', '');
   tsWebsites.Caption      := language.ReadString(lang, 'tsWebsitesCaption', '');
+  tsMisc.Caption          := language.ReadString(lang, 'tsMiscCaption', '');
   gbOptionProxy.Caption   := language.ReadString(lang, 'gbOptionProxyCaption', '');
   gbOptionFavorites.Caption:= language.ReadString(lang, 'gbOptionFavoritesCaption', '');
   cbOptionUseProxy.Caption:= language.ReadString(lang, 'cbOptionUseProxyCaption', '');
