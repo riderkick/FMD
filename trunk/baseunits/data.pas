@@ -560,6 +560,7 @@ var
   i: Cardinal;
 begin
   searchPos.Clear;
+  if filterPos.Count <= 0 then exit;
   AMangaName:= Upcase(AMangaName);
   for i:= 0 to filterPos.Count-1 do
   begin
@@ -3179,8 +3180,8 @@ begin
     begin
       if GetTagName(parse.Strings[i]) <> 'a' then
         for j:= 0 to 37 do
-          if Pos(LowerCase(Genre[j]), LowerCase(parse.Strings[i]))<>0 then
-            mangaInfo.genres:= mangaInfo.genres+(Genre[j]+', ');
+          if Pos(LowerCase(defaultGenre[j]), LowerCase(parse.Strings[i]))<>0 then
+            mangaInfo.genres:= mangaInfo.genres+(defaultGenre[j]+', ');
       if Pos('</li>', parse.Strings[i]) > 0 then
         isExtractGenres:= FALSE;
     end;
@@ -3306,8 +3307,8 @@ begin
     begin
       mangaInfo.genres:= '';
       for j:= 0 to 37 do
-        if Pos(LowerCase(Genre[j]), LowerCase(parse.Strings[i+2]))<>0 then
-          mangaInfo.genres:= mangaInfo.genres+(Genre[j]+', ');
+        if Pos(LowerCase(defaultGenre[j]), LowerCase(parse.Strings[i+2]))<>0 then
+          mangaInfo.genres:= mangaInfo.genres+(defaultGenre[j]+', ');
     end;
 
     // get status
@@ -3547,8 +3548,8 @@ begin
     begin
       mangaInfo.genres:= '';
       for j:= 0 to 37 do
-        if Pos(LowerCase(Genre[j]), LowerCase(parse.Strings[i+2]))<>0 then
-          mangaInfo.genres:= mangaInfo.genres+(Genre[j]+', ');
+        if Pos(LowerCase(defaultGenre[j]), LowerCase(parse.Strings[i+2]))<>0 then
+          mangaInfo.genres:= mangaInfo.genres+(defaultGenre[j]+', ');
     end;
 
    { // get status
@@ -3764,8 +3765,8 @@ begin
     begin
       mangaInfo.genres:= '';
       for j:= 0 to 37 do
-        if Pos(LowerCase(Genre[j]), LowerCase(parse.Strings[i+4]))<>0 then
-          mangaInfo.genres:= mangaInfo.genres+(Genre[j]+', ');
+        if Pos(LowerCase(defaultGenre[j]), LowerCase(parse.Strings[i+4]))<>0 then
+          mangaInfo.genres:= mangaInfo.genres+(defaultGenre[j]+', ');
     end;
 
     // get status
@@ -3874,8 +3875,8 @@ begin
     begin
       if GetTagName(parse.Strings[i]) <> 'a' then
         for j:= 0 to 37 do
-          if Pos(LowerCase(Genre[j]), LowerCase(parse.Strings[i]))<>0 then
-            mangaInfo.genres:= mangaInfo.genres+(Genre[j]+', ');
+          if Pos(LowerCase(defaultGenre[j]), LowerCase(parse.Strings[i]))<>0 then
+            mangaInfo.genres:= mangaInfo.genres+(defaultGenre[j]+', ');
       if Pos('</h5>', parse.Strings[i]) <> 0 then
         isExtractGenres:= FALSE;
     end;
@@ -4002,11 +4003,8 @@ begin
 
     if isExtractGenres then
     begin
-      s:= parse.Strings[i];
-      if (Length(s)>0) AND (s[1]<>'<') then
-        for j:= 0 to 37 do
-          if Pos(LowerCase(Genre[j]), LowerCase(parse.Strings[i]))<>0 then
-            mangaInfo.genres:= mangaInfo.genres+(Genre[j]+', ');
+      if Pos('"/Genre/', parse.Strings[i]) > 0 then
+        mangaInfo.genres:= mangaInfo.genres+(TrimLeft(TrimRight(parse.Strings[i+1]))+', ');
       if Pos('</p>', parse.Strings[i]) <> 0 then
         isExtractGenres:= FALSE;
     end;
@@ -4235,12 +4233,8 @@ reload:
 
     if isExtractGenres then
     begin
-      s:= parse.Strings[i];
-      if (s <> '') AND
-         (s[1] <> '<') then
-        for j:= 0 to 37 do
-          if Pos(LowerCase(Genre[j]), LowerCase(parse.Strings[i]))<>0 then
-            mangaInfo.genres:= mangaInfo.genres+(Genre[j]+', ');
+      if Pos('</span>', parse.Strings[i]) > 0 then
+        mangaInfo.genres:= mangaInfo.genres+(TrimLeft(TrimRight(parse.Strings[i-1]))+', ');
       if Pos(IEUp('</tr>'), parse.Strings[i]) <> 0 then
         isExtractGenres:= FALSE;
     end;
@@ -4371,8 +4365,8 @@ begin
     begin
       mangaInfo.genres:= '';
       for j:= 0 to 37 do
-        if Pos(LowerCase(Genre[j]), LowerCase(parse.Strings[i+4]))<>0 then
-          mangaInfo.genres:= mangaInfo.genres+(Genre[j]+', ');
+        if Pos(LowerCase(defaultGenre[j]), LowerCase(parse.Strings[i+4]))<>0 then
+          mangaInfo.genres:= mangaInfo.genres+(defaultGenre[j]+', ');
     end;
 
     // get status
@@ -4488,10 +4482,8 @@ begin
 
     if isExtractGenres then
     begin
-      if GetTagName(parse.Strings[i]) <> 'a' then
-        for j:= 0 to 37 do
-          if LowerCase(Genre[j]) = LowerCase(parse.Strings[i]) then
-            mangaInfo.genres:= mangaInfo.genres+(Genre[j]+', ');
+      if (i+1<parse.Count) AND (Pos('"/TheLoai/', parse.Strings[i]) > 0) then
+        mangaInfo.genres:= mangaInfo.genres+(TrimLeft(TrimRight(parse.Strings[i+1]))+', ');
       if Pos('</p>', parse.Strings[i]) <> 0 then
         isExtractGenres:= FALSE;
     end;
@@ -4506,7 +4498,7 @@ begin
     end;
   end;
 
-  if mangaInfo.status = '1' then
+  if (mangaInfo.status = '1') AND (mangainfo.ChapterName.Count > 0) then
   begin
     Dec(mangaInfo.numChapter);
     mangainfo.ChapterName.Delete(mangainfo.ChapterName.Count-1);
