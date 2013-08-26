@@ -696,9 +696,9 @@ begin
            SameText(DLManager.containers.Items[i].downloadInfo.website, DLManager.containers.Items[j].downloadInfo.website) AND
            SameText(DLManager.containers.Items[i].downloadInfo.saveTo, DLManager.containers.Items[j].downloadInfo.saveTo) then
         begin
-          DLManager.containers.Items[i].chapterLinks.Text:= DLManager.containers.Items[i].chapterLinks.Text + DLManager.containers.Items[j].chapterLinks.Text;
-          DLManager.containers.Items[i].chapterName .Text:= DLManager.containers.Items[i].chapterName .Text + DLManager.containers.Items[j].chapterName .Text;
-          DLManager.containers.Items[i].downloadInfo.dateTime:= DLManager.containers.Items[j].downloadInfo.dateTime;
+          DLManager.containers.Items[i].chapterLinks.Text:= DLManager.containers.Items[j].chapterLinks.Text + DLManager.containers.Items[i].chapterLinks.Text;
+          DLManager.containers.Items[i].chapterName .Text:= DLManager.containers.Items[j].chapterName .Text + DLManager.containers.Items[i].chapterName .Text;
+          DLManager.containers.Items[i].downloadInfo.dateTime:= DLManager.containers.Items[i].downloadInfo.dateTime;
           DLManager.RemoveTask(j);
           Dec(i);
         end;
@@ -2178,8 +2178,8 @@ begin
   pSource:= TVirtualStringTree(Source).FocusedNode;
   pTarget:= Sender.DropTargetNode;
   case Mode of
-    dmNowhere        : attMode:= amNoWhere;
-    dmAbove          :
+    dmNowhere: attMode:= amNoWhere;
+    dmAbove:
       begin
         attMode:= amInsertBefore;
         DLManager.Swap(pSource^.Index, pTarget^.Index);
@@ -2191,7 +2191,6 @@ begin
       end;
   end;
   Sender.MoveTo(pSource, pTarget, attMode, False);
-
 end;
 
 procedure TMainForm.vtDownloadDragOver(Sender: TBaseVirtualTree;
@@ -2236,20 +2235,20 @@ begin
     begin
       for i:= 0 to l-1 do
       HintText:= HintText + #10#13 +
-        DLManager.containers.Items[Node.Index].chapterName.Strings[i] + ' : ' +
-        DLManager.containers.Items[Node.Index].chapterLinks.Strings[i];
+        DLManager.containers.Items[Node.Index].chapterName.Strings[i]{ + ' : ' +
+        DLManager.containers.Items[Node.Index].chapterLinks.Strings[i]};
     end
     else
     begin
       for i:= 0 to 1 do
       HintText:= HintText + #10#13 +
-        DLManager.containers.Items[Node.Index].chapterName.Strings[i] + ' : ' +
-        DLManager.containers.Items[Node.Index].chapterLinks.Strings[i];
+        DLManager.containers.Items[Node.Index].chapterName.Strings[i]{ + ' : ' +
+        DLManager.containers.Items[Node.Index].chapterLinks.Strings[i]};
       HintText:= HintText + #10#13 + '...';
       for i:= l-2 to l-1 do
       HintText:= HintText + #10#13 +
-        DLManager.containers.Items[Node.Index].chapterName.Strings[i] + ' : ' +
-        DLManager.containers.Items[Node.Index].chapterLinks.Strings[i];
+        DLManager.containers.Items[Node.Index].chapterName.Strings[i]{ + ' : ' +
+        DLManager.containers.Items[Node.Index].chapterLinks.Strings[i]};
     end;
   end;
 end;
@@ -2721,7 +2720,7 @@ procedure TMainForm.AddTextToInfo(title, infoText: String);
 var
   fp: TFontParams;
 begin
-  TrimLeft(infoText);
+  infoText:= TrimLeft(infoText);
   if infoText <> '' then
     with rmInformation do
     begin
@@ -3154,6 +3153,10 @@ begin
   stWait                := language.ReadString(lang, 'stWait', '');
   btUpdateList  .Hint   := language.ReadString(lang, 'btUpdateListHint', '');
 
+  stAddToQueue          := language.ReadString(lang, 'stAddToQueue', '');
+  stCancel              := language.ReadString(lang, 'stCancel', '');
+  stNewChapterNotification:= language.ReadString(lang, 'stNewChapterNotification', '');
+
   mnUpdateList.Caption          := language.ReadString(lang, 'mnUpdateListCaption', '');
   mnUpdateDownFromServer.Caption:= language.ReadString(lang, 'mnUpdateDownFromServerCaption', '');
   mnUpdate1Click.Caption  := language.ReadString(lang, 'mnUpdate1ClickCaption', '');
@@ -3166,6 +3169,7 @@ begin
 
   edSaveTo.EditLabel.Caption:= language.ReadString(lang, 'edSaveToEditLabelCaption', '');
   btDownload    .Caption  := language.ReadString(lang, 'btDownloadCaption', '');
+  stDownload              := btDownload.Caption;
   btReadOnline  .Caption  := language.ReadString(lang, 'btReadOnlineCaption', '');
   cbAddAsStopped.Caption  := language.ReadString(lang, 'cbAddAsStoppedCaption', '');
   cbAddToFavorites.Caption:= language.ReadString(lang, 'cbAddToFavoritesCaption', '');

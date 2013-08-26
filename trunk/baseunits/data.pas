@@ -4176,7 +4176,7 @@ reload:
         s:= parse.Strings[j];
         if s[1] <> '<' then
         begin
-          parse.Strings[j]:= StringFilter(parse.Strings[j]);
+          parse.Strings[j]:= StringFilter(parse.Strings[j]+#10#13);
           parse.Strings[j]:= StringReplace(parse.Strings[j], #10, '\n', [rfReplaceAll]);
           parse.Strings[j]:= StringReplace(parse.Strings[j], #13, '\r', [rfReplaceAll]);
           mangaInfo.summary:= mangaInfo.summary + StringFilter(parse.Strings[j]);

@@ -88,7 +88,8 @@ type
 
 implementation
 
-uses mainunit;
+uses
+  mainunit, NewChapterForm;
 
 // ----- TFavoriteThread -----
 
@@ -141,11 +142,8 @@ begin
     begin
       if manager.favoriteInfo[workPtr].website = MANGASTREAM_NAME then
         getInfo.mangaInfo.title:= manager.favoriteInfo[workPtr].title;
-     { if getInfo.GetInfoFromURL(manager.favoriteInfo[workPtr].website,
-                                manager.favoriteInfo[workPtr].link, 5) = NET_PROBLEM then
-        break; }
       getInfo.GetInfoFromURL(manager.favoriteInfo[workPtr].website,
-                                manager.favoriteInfo[workPtr].link, 5);
+                                manager.favoriteInfo[workPtr].link, 4);
     end
     else
     begin
@@ -254,6 +252,8 @@ end;
 // SubManga & MangaStream use a different checking method
 procedure   TFavoriteManager.ShowResult;
 var
+  LNewChapter     : TNewChapter;
+  LNCResult       : TNewChapterResult;
   isNewChapters   : array of Boolean;
   l               : TStringList;
   isHasNewChapter : Boolean = FALSE;
@@ -328,8 +328,8 @@ begin
     if mangaInfo[i].status = '0' then
     begin
       if removeListStr = '' then
-        removeListStr:= removeListStr + #10#13#10#13 + stDlgRemoveCompletedManga;
-      removeListStr:= removeListStr + #10#13 + ' - ' + favoriteInfo[i].title + ' <'+mangaInfo[i].Website +'> ';
+        removeListStr:= removeListStr + #13#13 + stDlgRemoveCompletedManga;
+      removeListStr:= removeListStr + #13 + '- ' + favoriteInfo[i].title + ' <'+mangaInfo[i].Website +'> ';
     end;
   end;
 
@@ -355,21 +355,43 @@ begin
            (favoriteInfo[i].website <> MANGATRADERS_NAME) AND
            (favoriteInfo[i].website <> BATOTO_NAME) AND
            (favoriteInfo[i].website <> SUBMANGA_NAME) then
-          newMangaStr:= newMangaStr + #10#13+ ' - '+favoriteInfo[i].title + ' <'+ favoriteInfo[i].Website +'> ' + favoriteInfo[i].currentChapter+' -> '+IntToStr(newChapter)
+          newMangaStr:= newMangaStr + #13+ '- '+favoriteInfo[i].title + ' <'+ favoriteInfo[i].Website +'> ' + favoriteInfo[i].currentChapter+' -> '+IntToStr(newChapter)
         else
-          newMangaStr:= newMangaStr + #10#13+ ' - '+favoriteInfo[i].title + ' <'+ favoriteInfo[i].Website +'>';
+          newMangaStr:= newMangaStr + #13+ '- '+favoriteInfo[i].title + ' <'+ favoriteInfo[i].Website +'>';
       end;
     end;
 
     if isShowDialog then
     begin
-      if MessageDlg('',
-                   Format(stDlgHasNewChapter + #10#13 + newMangaStr + '%s', [newC, removeListStr]),
-                   mtInformation, [mbYes, mbNo], 0) = mrYes then
+      LNewChapter:= TNewChapter.Create(MainForm);
+      LNewChapter.lbNotification.Caption:= Format(stDlgHasNewChapter, [newC]);
+      LNewChapter.mmMemo.Lines.Add(TrimLeft(newMangaStr) + #13#13 + TrimLeft(removeListStr));
+      LNewChapter.ShowModal;
+      LNCResult:= LNewChapter.FormResult;
+      LNewChapter.Free;
+      if LNCResult = ncrDownload then
       begin
         isNow:= TRUE;
         if MainForm.pcMain.PageIndex = 3 then
           MainForm.pcMain.PageIndex:= 0;
+      end
+      else
+      if LNCResult = ncrCancel then
+      begin
+        // TODO: Bad coding - need improments
+        for i:= 0 to Count-1 do
+        begin
+          mangaInfo[i].chapterName .Free;
+          mangaInfo[i].chapterLinks.Free;
+        end;
+        while threads.Count > 0 do
+        begin
+          threads.Items[0].Terminate;
+          threads.Items[0]:= nil;
+          threads.Delete(0);
+        end;
+        isRunning:= FALSE;
+        exit;
       end
       else
         isNow:= FALSE;
@@ -457,7 +479,7 @@ begin
         DecodeTime(Time, hh, mm, ss, ms);
         DLManager.containers.Items[pos].downloadInfo.dateTime:= IntToStr(Month)+'/'+IntToStr(Day)+'/'+IntToStr(Year)+' '+IntToStr(hh)+':'+IntToStr(mm)+':'+IntToStr(ss);
 
-        // bad coding - update favorites's current chapter, and free pointers
+        // TODO: bad coding - update favorites's current chapter, and free pointers
         favoriteInfo[i].currentChapter:= IntToStr(mangaInfo[i].numChapter);
       end;
     end;
@@ -474,16 +496,9 @@ begin
     if mangaInfo[i].numChapter>0 then
     begin
       favoriteInfo[i].currentChapter:= IntToStr(mangaInfo[i].numChapter);
-     { if (mangaInfo[i].website = MANGASTREAM_NAME) OR
-         (mangaInfo[i].website = S2SCAN_NAME) OR
-         (mangaInfo[i].website = BATOTO_NAME) OR
-         (mangaInfo[i].website = MANGATRADERS_NAME) OR
-         (mangaInfo[i].website = SUBMANGA_NAME) then }
-      begin
-        favoriteInfo[i].downloadedChapterList:= '';
-        for j:= 0 to mangaInfo[i].numChapter-1 do
-          favoriteInfo[i].downloadedChapterList:= favoriteInfo[i].downloadedChapterList+mangaInfo[i].chapterLinks.Strings[j]+SEPERATOR;
-      end;
+      favoriteInfo[i].downloadedChapterList:= '';
+      for j:= 0 to mangaInfo[i].numChapter-1 do
+        favoriteInfo[i].downloadedChapterList:= favoriteInfo[i].downloadedChapterList+mangaInfo[i].chapterLinks.Strings[j]+SEPERATOR;
     end;
     mangaInfo[i].chapterName .Free;
     mangaInfo[i].chapterLinks.Free;

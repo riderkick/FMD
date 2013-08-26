@@ -4312,7 +4312,11 @@ begin
   // check and stop any active thread
   if containers.Items[taskID].Status = STATUS_DOWNLOAD then
   begin
+    for i:= 0 to containers.Items[taskID].thread.threads.Count-1 do
+      if Assigned(containers.Items[taskID].thread.threads[i]) then
+        containers.Items[taskID].thread.threads[i].Terminate;
     containers.Items[taskID].thread.Terminate;
+    Sleep(250);
  {   containers.Items[taskID].downloadInfo.Status:= stStop;
     containers.Items[taskID].Status:= STATUS_STOP;
   end
@@ -4344,6 +4348,9 @@ begin
   begin
     if containers.Items[i].Status = STATUS_DOWNLOAD then
     begin
+      for j:= 0 to containers.Items[i].thread.threads.Count-1 do
+        if Assigned(containers.Items[i].thread.threads[j]) then
+          containers.Items[i].thread.threads[j].Terminate;
       containers.Items[i].thread.Terminate;
       Sleep(250);
       {$IFDEF WINDOWS}
@@ -4376,6 +4383,9 @@ begin
   begin
     if containers.Items[i].Status = STATUS_DOWNLOAD then
     begin
+      for j:= 0 to containers.Items[i].thread.threads.Count-1 do
+        if Assigned(containers.Items[i].thread.threads[j]) then
+          containers.Items[i].thread.threads[j].Terminate;
       containers.Items[i].thread.Terminate;
       {$IFDEF WINDOWS}
     {  containers.Items[i].thread.Suspend;

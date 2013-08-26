@@ -206,7 +206,9 @@ end;
 
 procedure   TSubThread.CallMainFormShowLog;
 begin
-  Log.ShowLog;
+  Log:= TLog.Create(MainForm);
+  Log.ShowModal;
+  Log.Free;
 end;
 
 procedure   TSubThread.CallMainFormGetInfos;
