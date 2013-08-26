@@ -160,7 +160,6 @@ type
     miMangaListViewInfos: TMenuItem;
     mnUpdateList: TMenuItem;
     mnUpdateDownFromServer: TMenuItem;
-    miDownloadHideCompleted: TMenuItem;
     miDownloadMerge: TMenuItem;
     miOpenFolder2: TMenuItem;
     miHighlightNewManga: TMenuItem;
@@ -181,6 +180,7 @@ type
     miDownloadRemuse: TMenuItem;
     miDownloadRemove: TMenuItem;
     miChapterListUncheckAll: TMenuItem;
+    pcLeft: TPageControl;
     pbWait: TPaintBox;
     pnMainTop: TPanel;
     pmChapterList: TPopupMenu;
@@ -213,6 +213,9 @@ type
     spInfos: TSplitter;
     spMainSplitter: TSplitter;
     sbMain: TStatusBar;
+    tvDownloadFilter: TTreeView;
+    tsDownloadFilter: TTabSheet;
+    tsMangaList: TTabSheet;
     tsMisc: TTabSheet;
     tsUpdate: TTabSheet;
     tsAbout: TTabSheet;
@@ -279,7 +282,6 @@ type
     procedure itRefreshFormTimer(Sender: TObject);
     procedure itSaveDownloadedListTimer(Sender: TObject);
     procedure miChapterListHighlightClick(Sender: TObject);
-    procedure miDownloadHideCompletedClick(Sender: TObject);
     procedure miDownloadMergeClick(Sender: TObject);
     procedure miFavoritesViewInfosClick(Sender: TObject);
     procedure miHighlightNewMangaClick(Sender: TObject);
@@ -315,6 +317,7 @@ type
     procedure seOptionCheckMinutesChange(Sender: TObject);
     procedure spMainSplitterMoved(Sender: TObject);
     procedure TrayIconDblClick(Sender: TObject);
+    procedure tvDownloadFilterSelectionChanged(Sender: TObject);
     procedure vtDownloadDblClick(Sender: TObject);
     procedure vtDownloadDragAllowed(Sender: TBaseVirtualTree;
       Node: PVirtualNode; Column: TColumnIndex; var Allowed: Boolean);
@@ -404,6 +407,12 @@ type
     // doing stuff like get manga info, compress, ...
     SubThread   : TSubThread;
 
+    // repaint treeview
+    procedure tvDownloadFilterRepaint;
+
+    // generate >> nodes
+    procedure GenerateNodes;
+
     // load about information
     procedure LoadAbout;
 
@@ -411,11 +420,14 @@ type
 
     procedure CheckForTopPanel;
     // en: Too lazy to add it one by one
-    // vi: Lười ...
     procedure InitCheckboxes;
 
-    // en: hide all completed tasks
-    procedure HideCompletedTasks(const isHide: Boolean);
+    // download task filters
+    procedure ShowAllTasks;
+    procedure ShowCompletedTasks;
+    procedure ShowInProgressTasks;
+    procedure ShowStoppedTasks;
+    procedure vtDownloadFilters;
 
     procedure AddChapterNameToList;
 
@@ -580,9 +592,7 @@ begin
     SubThread.isCheckForLatestVer:= TRUE;
   end;
 
-  HideCompletedTasks(miDownloadHideCompleted.Checked);
-
-  // why this doesn't work ?
+  // why this doesn't work on some systems ?
   case pcMain.TabIndex of
     5: LoadAbout;
   end;
@@ -594,6 +604,10 @@ begin
     gifWaiting.EraseColor:= self.Color;
     gifWaiting.BackgroundMode:= gbmSaveBackgroundOnce;
   end;
+
+  // generate nodes
+  GenerateNodes;
+  tvDownloadFilterRepaint;
 end;
 
 procedure TMainForm.cbOptionUseProxyChange(Sender: TObject);
@@ -670,15 +684,6 @@ begin
   miChapterListHighlight.Checked:= NOT miChapterListHighlight.Checked;
   options.WriteBool('general', 'HighlightDownloadedChapters', miChapterListHighlight.Checked);
   clbChapterList.Repaint;
-end;
-
-procedure TMainForm.miDownloadHideCompletedClick(Sender: TObject);
-var
-  i: Cardinal;
-begin
-  miDownloadHideCompleted.Checked:= NOT miDownloadHideCompleted.Checked;
-  HideCompletedTasks(miDownloadHideCompleted.Checked);
-  options.WriteBool('general', 'HideCompleted', miDownloadHideCompleted.Checked);
 end;
 
 procedure TMainForm.miDownloadMergeClick(Sender: TObject);
@@ -789,6 +794,67 @@ begin
   finally
     fs.Free;
   end;
+end;
+
+procedure TMainForm.tvDownloadFilterRepaint;
+var
+  i: Cardinal;
+  LFinishedTasks  : Cardinal = 0;
+  LInProgressTasks: Cardinal = 0;
+  LStoppedTasks   : Cardinal = 0;
+begin
+  if (Assigned(DLManager)) AND (DLManager.containers.Count > 0) then
+    for i:= 0 to DLManager.containers.Count-1 do
+    begin
+      case DLManager.containers.Items[i].Status of
+        STATUS_FINISH:
+          Inc(LFinishedTasks);
+        STATUS_DOWNLOAD, STATUS_WAIT:
+          Inc(LInProgressTasks);
+        STATUS_STOP:
+          Inc(LStoppedTasks);
+      end;
+    end;
+
+  // root
+  tvDownloadFilter.Items[0].Text:= Format('%s (%d)', [stAllDownloads, vtDownload.RootNodeCount]);
+ // tvDownloadFilter.Items[1].Text:= stFilters;
+
+  // childs
+  tvDownloadFilter.Items[1].Text:= Format('%s (%d)', [stFinish, LFinishedTasks]);
+  tvDownloadFilter.Items[2].Text:= Format('%s (%d)', [stInProgress, LInProgressTasks]);
+  tvDownloadFilter.Items[3].Text:= Format('%s (%d)', [stStop, LStoppedTasks]);
+end;
+
+procedure TMainForm.GenerateNodes;
+begin
+  tvDownloadFilter.Items.Clear;
+
+  // root
+  tvDownloadFilter.Items.Add(nil, stAllDownloads);
+  tvDownloadFilter.Items[0].ImageIndex   := 4;
+  tvDownloadFilter.Items[0].SelectedIndex:= 4;
+  tvDownloadFilter.Items[0].StateIndex   := 4;
+ { tvDownloadFilter.Items.Add(nil, stFilters);
+  tvDownloadFilter.Items[1].ImageIndex   := 4;
+  tvDownloadFilter.Items[1].SelectedIndex:= 4;
+  tvDownloadFilter.Items[1].StateIndex   := 4; }
+
+  // childs
+  tvDownloadFilter.Items.AddChild(tvDownloadFilter.Items[0], stFinish);
+  tvDownloadFilter.Items[1].ImageIndex   := 5;
+  tvDownloadFilter.Items[1].SelectedIndex:= 5;
+  tvDownloadFilter.Items[1].StateIndex   := 5;
+  tvDownloadFilter.Items.AddChild(tvDownloadFilter.Items[0], stInProgress);
+  tvDownloadFilter.Items[2].ImageIndex   := 6;
+  tvDownloadFilter.Items[2].SelectedIndex:= 6;
+  tvDownloadFilter.Items[2].StateIndex   := 6;
+  tvDownloadFilter.Items.AddChild(tvDownloadFilter.Items[0], stStop);
+  tvDownloadFilter.Items[3].ImageIndex   := 7;
+  tvDownloadFilter.Items[3].SelectedIndex:= 7;
+  tvDownloadFilter.Items[3].StateIndex   := 7;
+
+  tvDownloadFilter.Items[options.ReadInteger('general', 'DownloadFilterSelect', 0)].Selected:= TRUE;
 end;
 
 // -----
@@ -1758,6 +1824,9 @@ begin
   DLManager.RemoveAllFinishedTasks;
   UpdateVtDownload;
   DLManager.Backup;
+  // the reason we put it in here instead of in DLManager because of the size of
+  // download list will change during this method
+  vtDownloadFilters;
 end;
 
 procedure TMainForm.miDownloadRemuseClick(Sender: TObject);
@@ -1842,6 +1911,10 @@ begin
     end;
     UpdateVtDownload;
     DLManager.Backup;
+
+    // the reason we put it in here instead of in DLManager because of the size of
+    // download list will change during this method
+    vtDownloadFilters;
   end;
 end;
 
@@ -1910,7 +1983,6 @@ procedure TMainForm.miOpenFolder2Click(Sender: TObject);
 var
   Process: TProcessUTF8;
 begin
-
   if NOT Assigned(vtFavorites.FocusedNode) then exit;
   Process:= TProcessUTF8.Create(nil);
   {$IFDEF WINDOWS}
@@ -2048,7 +2120,7 @@ begin
     pmDownload.Items[3].Enabled:= FALSE;
     pmDownload.Items[4].Enabled:= FALSE;
     pmDownload.Items[5].Enabled:= FALSE;
-    pmDownload.Items[11].Enabled:= FALSE;
+    pmDownload.Items[10].Enabled:= FALSE;
   end
   else
   if vtDownload.SelectedCount = 1 then
@@ -2058,7 +2130,7 @@ begin
     pmDownload.Items[3].Enabled:= TRUE;
     pmDownload.Items[4].Enabled:= TRUE;
     pmDownload.Items[5].Enabled:= TRUE;
-    pmDownload.Items[11].Enabled:= TRUE;
+    pmDownload.Items[10].Enabled:= TRUE;
   end
   else
   begin
@@ -2067,7 +2139,7 @@ begin
     pmDownload.Items[3].Enabled:= TRUE;
     pmDownload.Items[4].Enabled:= TRUE;
     pmDownload.Items[5].Enabled:= TRUE;
-    pmDownload.Items[11].Enabled:= FALSE;
+    pmDownload.Items[10].Enabled:= FALSE;
   end;
 end;
 
@@ -2161,6 +2233,12 @@ begin
   MainForm.Show;
  // TrayIcon.Hide;
   TrayIcon.Show;
+end;
+
+procedure TMainForm.tvDownloadFilterSelectionChanged(Sender: TObject);
+begin
+  vtDownloadFilters;
+  options.WriteInteger('general', 'DownloadFilterSelect', tvDownloadFilter.Selected.AbsoluteIndex);
 end;
 
 procedure TMainForm.vtDownloadDblClick(Sender: TObject);
@@ -2316,7 +2394,7 @@ end;
 
 procedure TMainForm.vtFavoritesDblClick(Sender: TObject);
 begin
-
+  miOpenFolder2Click(Sender);
 end;
 
 // vtFavorites
@@ -2517,6 +2595,7 @@ begin
   DLManager.maxDLThreadsPerTask:= seOptionMaxThread.Value;
   DLManager.retryConnect       := seOptionMaxRetry.Value;
   vtMangaList.Repaint;
+  tvDownloadFilterRepaint;
 end;
 
 procedure TMainForm.cbAddAsStoppedChange(Sender: TObject);
@@ -2681,7 +2760,7 @@ begin
   end;
 end;
 
-procedure TMainForm.HideCompletedTasks(const isHide: Boolean);
+procedure TMainForm.ShowAllTasks;
 var
   i      : Cardinal;
   xNode  : PVirtualNode;
@@ -2692,17 +2771,107 @@ begin
   for i:= vtDownload.RootNodeCount-1 downto 0 do
   begin
     vtDownload.isVisible[xNode]:= TRUE;
-    if DLManager.containers.Items[i].Status = STATUS_FINISH then
-      vtDownload.isVisible[xNode]:= NOT isHide;
+
     if canExit then
       exit;
-
     if xNode = vtDownload.GetFirst then
       canExit:= TRUE;
     xNode:= vtDownload.GetPrevious(xNode);
     if xNode = vtDownload.GetFirst then
       canExit:= TRUE;
   end;
+end;
+
+procedure TMainForm.ShowCompletedTasks;
+var
+  i      : Cardinal;
+  xNode  : PVirtualNode;
+  canExit: Boolean = FALSE;
+begin
+  if vtDownload.RootNodeCount = 0 then exit;
+  xNode:= vtDownload.GetLast;
+  for i:= vtDownload.RootNodeCount-1 downto 0 do
+  begin
+    if DLManager.containers.Items[i].Status = STATUS_FINISH then
+      vtDownload.isVisible[xNode]:= TRUE
+    else
+      vtDownload.isVisible[xNode]:= FALSE;
+
+    if canExit then
+      exit;
+    if xNode = vtDownload.GetFirst then
+      canExit:= TRUE;
+    xNode:= vtDownload.GetPrevious(xNode);
+    if xNode = vtDownload.GetFirst then
+      canExit:= TRUE;
+  end;
+end;
+
+procedure TMainForm.ShowInProgressTasks;
+var
+  i      : Cardinal;
+  xNode  : PVirtualNode;
+  canExit: Boolean = FALSE;
+begin
+  if vtDownload.RootNodeCount = 0 then exit;
+  xNode:= vtDownload.GetLast;
+  for i:= vtDownload.RootNodeCount-1 downto 0 do
+  begin
+    if (DLManager.containers.Items[i].Status = STATUS_DOWNLOAD) OR
+       (DLManager.containers.Items[i].Status = STATUS_WAIT) then
+      vtDownload.isVisible[xNode]:= TRUE
+    else
+      vtDownload.isVisible[xNode]:= FALSE;
+
+    if canExit then
+      exit;
+    if xNode = vtDownload.GetFirst then
+      canExit:= TRUE;
+    xNode:= vtDownload.GetPrevious(xNode);
+    if xNode = vtDownload.GetFirst then
+      canExit:= TRUE;
+  end;
+end;
+
+procedure TMainForm.ShowStoppedTasks;
+var
+  i      : Cardinal;
+  xNode  : PVirtualNode;
+  canExit: Boolean = FALSE;
+begin
+  if vtDownload.RootNodeCount = 0 then exit;
+  xNode:= vtDownload.GetLast;
+  for i:= vtDownload.RootNodeCount-1 downto 0 do
+  begin
+    if DLManager.containers.Items[i].Status = STATUS_STOP then
+      vtDownload.isVisible[xNode]:= TRUE
+    else
+      vtDownload.isVisible[xNode]:= FALSE;
+
+    if canExit then
+      exit;
+    if xNode = vtDownload.GetFirst then
+      canExit:= TRUE;
+    xNode:= vtDownload.GetPrevious(xNode);
+    if xNode = vtDownload.GetFirst then
+      canExit:= TRUE;
+  end;
+end;
+
+procedure TMainForm.vtDownloadFilters;
+begin
+  if NOT Assigned(tvDownloadFilter.Selected) then exit;
+  case tvDownloadFilter.Selected.AbsoluteIndex of
+    0:
+      ShowAllTasks;
+    1:
+      ShowCompletedTasks;
+    2:
+      ShowInProgressTasks;
+    3:
+      ShowStoppedTasks;
+  end;
+  tvDownloadFilterRepaint;
 end;
 
 procedure TMainForm.AddChapterNameToList;
@@ -2824,7 +2993,6 @@ begin
  // cbLanguages.ItemIndex := options.ReadInteger('languages', 'Select', 0);
 
   cbOptionMinimizeToTray.Checked := options.ReadBool('general', 'MinimizeToTray', FALSE);
-  miDownloadHideCompleted.Checked:= options.ReadBool('general', 'HideCompleted', FALSE);
   batotoLastDirectoryPage:= mangalistIni.ReadInteger('general', 'batotoLastDirectoryPage', 244);
   OptionEnableLoadCover:= options.ReadBool('general', 'LoadMangaCover', TRUE);
   cbOptionEnableLoadCover.Checked:= OptionEnableLoadCover;
@@ -3073,7 +3241,7 @@ procedure TMainForm.UpdateVtDownload;
 begin
   vtDownload.Clear;
   vtDownload.RootNodeCount:= DLManager.containers.Count;
-  HideCompletedTasks(miDownloadHideCompleted.Checked);
+  vtDownloadFilters;
 end;
 
 procedure TMainForm.UpdateVtFavorites;
@@ -3084,6 +3252,8 @@ end;
 
 procedure TMainForm.LoadFormInformation;
 begin
+  spMainSplitter.Left:= options.ReadInteger('form', 'MainSplitter', 195);
+
   pcMain.PageIndex:= options.ReadInteger('form', 'pcMainPageIndex', 0);
 
   MainForm.Left  := options.ReadInteger('form', 'MainFormLeft', 0);
@@ -3106,6 +3276,8 @@ end;
 
 procedure TMainForm.SaveFormInformation;
 begin
+  options.WriteInteger('form', 'MainSplitter', spMainSplitter.Left);
+
   options.WriteInteger('form', 'pcMainPageIndex', pcMain.PageIndex);
 
   options.WriteInteger('form', 'MainFormLeft', MainForm.Left);
@@ -3146,9 +3318,11 @@ begin
   cbLanguages.ItemIndex:= pos;
   lang:= cbLanguages.Items.Strings[cbLanguages.ItemIndex];
 
+  tsMangaList   .Caption:= language.ReadString(lang, 'tsMangaListCaption', '');
   tsDownload    .Caption:= language.ReadString(lang, 'tsDownloadCaption', '');
   tsInformation .Caption:= language.ReadString(lang, 'tsInformationCaption', '');
   tsFilter      .Caption:= language.ReadString(lang, 'tsFilterCaption', '');
+  stFilters             := tsFilter.Caption;
   tsFavorites   .Caption:= language.ReadString(lang, 'tsFavoritesCaption', '');
   gbOptionFavorites.Caption:= tsFavorites.Caption;
   tsOption      .Caption:= language.ReadString(lang, 'tsOptionCaption', '');
@@ -3158,6 +3332,9 @@ begin
   stModeAll             := language.ReadString(lang, 'stModeAll', '');
   stModeFilter          := language.ReadString(lang, 'stModeFilter', '');
 
+  stAllDownloads        := language.ReadString(lang, 'stAllDownloads', '');
+  stInProgress          := language.ReadString(lang, 'stInProgress', '');
+  stStop                := language.ReadString(lang, 'stStop', '');
   stStop                := language.ReadString(lang, 'stStop', '');
   stPreparing           := language.ReadString(lang, 'stPreparing', '');
   stDownloading         := language.ReadString(lang, 'stDownloading', '');
@@ -3219,7 +3396,6 @@ begin
   miDownloadRemuse.Caption:= language.ReadString(lang, 'miDownloadStopRemuse', '');
   miDownloadRemove.Caption:= language.ReadString(lang, 'miDownloadRemoveCaption', '');
   miDownloadRemoveFinishedTasks.Caption:= language.ReadString(lang, 'miDownloadRemoveFinishedTasksCaption', '');
-  miDownloadHideCompleted.Caption:= language.ReadString(lang, 'miDownloadHideCompletedTasksCaption', '');
   miDownloadMerge.Caption := language.ReadString(lang, 'miDownloadMergeTasksCaption', '');
   miOpenFolder.Caption    := language.ReadString(lang, 'miOpenFolder', '');
 
@@ -3284,6 +3460,7 @@ begin
   cbOptionAutoCheckFavStartup.Caption:= language.ReadString(lang, 'cbOptionAutoCheckFavStartupCaption', '');
   cbOptionEnableLoadCover.Caption:= language.ReadString(lang, 'cbOptionEnableLoadCoverCaption', '');
   cbOptionAutoCheckFavStartup.Caption:= language.ReadString(lang, 'cbOptionAutoCheckFavStartupCaption', '');
+  cbOptionShowBatotoSG.Caption:= language.ReadString(lang, 'cbOptionShowBatotoSGCaption', '');
   cbSelectManga.Hint:= language.ReadString(lang, 'cbSelectMangaHint', '');
 
   stDownloadManga          := language.ReadString(lang, 'stDownloadManga', '');

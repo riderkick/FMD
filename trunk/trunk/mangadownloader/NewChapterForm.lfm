@@ -28,7 +28,7 @@ object NewChapter: TNewChapter
     Caption = 'Download'
     Kind = bkOK
     ModalResult = 1
-    OnClick = btQueueClick
+    OnClick = btDownloadClick
     TabOrder = 1
   end
   object btCancel: TBitBtn

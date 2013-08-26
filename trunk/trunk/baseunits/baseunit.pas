@@ -366,7 +366,9 @@ var
 
   // this is for erasing the "Search..." message
   stSearch,
-
+  stInProgress,
+  stAllDownloads,
+  stFilters,
   stDownloadManga,
   stDownloadStatus,
   stDownloadProgress,

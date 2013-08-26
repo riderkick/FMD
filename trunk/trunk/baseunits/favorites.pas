@@ -394,6 +394,7 @@ begin
         exit;
       end
       else
+      if LNCResult = ncrQueue then
         isNow:= FALSE;
     end
     else
