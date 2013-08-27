@@ -215,8 +215,8 @@ destructor  TDownloadThread.Destroy;
 begin
   // TODO: Need recheck
   try
-    if NOT Terminated2 then
-      Dec(manager.container.activeThreadCount);
+   // if NOT Terminated2 then
+    Dec(manager.container.activeThreadCount);
   except
   end;
   isTerminated:= TRUE;
@@ -3599,6 +3599,10 @@ end;
 
 destructor  TTaskThreadContainer.Destroy;
 begin
+  // TODO: Need recheck
+  repeat
+    Sleep(64);
+  until activeThreadCount = 0;
   thread.Terminate;
   pageContainerLinks.Free;
   pageLinks.Free;
@@ -4115,7 +4119,7 @@ procedure   TDownloadManager.AddTask;
 begin
   containers.Add(TTaskThreadContainer.Create);
   containers.Items[containers.Count-1].manager:= self;
-  MainForm.vtDownloadFilters;
+ // MainForm.vtDownloadFilters;
 end;
 
 procedure   TDownloadManager.CheckAndActiveTask(const isCheckForFMDDo: Boolean = FALSE);

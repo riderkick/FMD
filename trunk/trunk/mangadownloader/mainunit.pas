@@ -387,6 +387,9 @@ type
     websiteLanguage: TStringList;
     websiteSelect  : TList;
 
+    // TODO:
+    isRunDownloadFilter: Boolean;
+
     isCanRefreshForm,
     isUpdating  : Boolean;
     revisionIni,
@@ -490,6 +493,7 @@ var
   fs: TFileStream;
 begin
   Randomize;
+  isRunDownloadFilter:= FALSE;
   isCanRefreshForm:= TRUE;
   silentThreadCount:= 0;
   silentAddToFavThreadCount:= 0;
@@ -2238,6 +2242,7 @@ end;
 procedure TMainForm.tvDownloadFilterSelectionChanged(Sender: TObject);
 begin
   vtDownloadFilters;
+  pcMain.PageIndex:= 0;
   options.WriteInteger('general', 'DownloadFilterSelect', tvDownloadFilter.Selected.AbsoluteIndex);
 end;
 
@@ -2420,6 +2425,8 @@ procedure TMainForm.vtFavoritesHeaderClick(Sender: TVTHeader;
   Column: TColumnIndex; Button: TMouseButton; Shift: TShiftState; X, Y: Integer
   );
 begin
+  if favorites.Count = 0 then
+    exit;
   if favorites.isRunning then
     exit;
   favorites.isRunning:= TRUE;
@@ -2860,7 +2867,9 @@ end;
 
 procedure TMainForm.vtDownloadFilters;
 begin
-  if NOT Assigned(tvDownloadFilter.Selected) then exit;
+  if (isRunDownloadFilter) OR
+     (NOT Assigned(tvDownloadFilter.Selected)) then exit;
+  isRunDownloadFilter:= TRUE;
   case tvDownloadFilter.Selected.AbsoluteIndex of
     0:
       ShowAllTasks;
@@ -2872,6 +2881,7 @@ begin
       ShowStoppedTasks;
   end;
   tvDownloadFilterRepaint;
+  isRunDownloadFilter:= FALSE;
 end;
 
 procedure TMainForm.AddChapterNameToList;
