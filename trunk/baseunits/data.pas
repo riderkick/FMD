@@ -4003,7 +4003,7 @@ begin
 
     if isExtractGenres then
     begin
-      if Pos('"/Genre/', parse.Strings[i]) > 0 then
+      if (i+1 < parse.Count) AND (Pos('"/Genre/', parse.Strings[i]) > 0) then
         mangaInfo.genres:= mangaInfo.genres+(TrimLeft(TrimRight(parse.Strings[i+1]))+', ');
       if Pos('</p>', parse.Strings[i]) <> 0 then
         isExtractGenres:= FALSE;
