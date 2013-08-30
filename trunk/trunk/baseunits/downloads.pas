@@ -1865,6 +1865,13 @@ var
           break;
         end
         else
+        if (Pos('return ''http://t.fakku.net/', parse.Strings[i])>0) then
+        begin
+        //  manager.container.pageLinks.Strings[workPtr]:=
+          imgURL:= 'http://t.fakku.net/' + GetString(parse.Strings[i], '''http://t.fakku.net/', '''');
+          break;
+        end
+        else
         if (Pos('return ''http://cdn.fakku.net/', parse.Strings[i])>0) then
         begin
         //  manager.container.pageLinks.Strings[workPtr]:=
