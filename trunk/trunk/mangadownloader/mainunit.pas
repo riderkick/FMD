@@ -3480,6 +3480,7 @@ begin
   stDownloadSaveto         := language.ReadString(lang, 'stDownloadSaveto', '');
   stDownloadAdded          := language.ReadString(lang, 'stDownloadAdded', '');
   stFavoritesCurrentChapter:= language.ReadString(lang, 'stFavoritesCurrentChapter', '');
+  stFavoritesHasNewChapter := language.ReadString(lang, 'stFavoritesHasNewChapter', '');
 
   stFavoritesCheck         := language.ReadString(lang, 'stFavoritesCheck', '');
   stFavoritesChecking      := language.ReadString(lang, 'stFavoritesChecking', '');

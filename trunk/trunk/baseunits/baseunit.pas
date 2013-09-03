@@ -376,6 +376,7 @@ var
   stDownloadSaveto,
   stDownloadAdded,
   stFavoritesCurrentChapter,
+  stFavoritesHasNewChapter,
 
   stFavoritesCheck,
   stFavoritesChecking,

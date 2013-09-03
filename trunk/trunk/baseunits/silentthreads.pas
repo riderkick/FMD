@@ -208,12 +208,7 @@ begin
     end;
 
     s2:= '';
-    if (Info.mangaInfo.numChapter > 0) AND
-      ((website = MANGASTREAM_NAME) OR
-       (website = S2SCAN_NAME) OR
-       (website = MANGATRADERS_NAME) OR
-       (website = BATOTO_NAME) OR
-       (website = SUBMANGA_NAME)) then
+    if (Info.mangaInfo.numChapter > 0) then
     begin
       for i:= 0 to Info.mangaInfo.numChapter-1 do
         s2:= s2 + Info.mangaInfo.chapterLinks.Strings[i] + SEPERATOR;

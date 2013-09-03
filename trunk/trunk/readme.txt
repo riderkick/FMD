@@ -27,7 +27,7 @@ In order to build FMD from the source code, you must install Lazarus latest vers
 
 For Synapse and Vampyre Imaging Library, you need to put them all in FMD_source_code_folder/trunk/3rd
 
-After everything is installed, open the file md.lpr by using Lazarus IDE, select Run->Build tto build the source code. If everything is ok, the binary file should be in FMD_source_code_folder/trunk/bin
+After everything is installed, open the file md.lpr by using Lazarus IDE, select Run->Build to build the source code. If everything is ok, the binary file should be in FMD_source_code_folder/trunk/bin
 
 ---------------------------------
 

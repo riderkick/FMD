@@ -2379,6 +2379,7 @@ object MainForm: TMainForm
     end
     object miFavoritesChangeCurrentChapter: TMenuItem
       Caption = 'Change "Current chapter"'
+      Visible = False
       OnClick = miFavoritesChangeCurrentChapterClick
     end
     object miFavoritesChangeSaveTo: TMenuItem
