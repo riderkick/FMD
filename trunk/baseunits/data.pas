@@ -6244,17 +6244,6 @@ begin
     end;
   end;
 
-  // Since chapter name and link are inverted, we need to invert them
-  if mangainfo.ChapterLinks.Count > 1 then
-  begin
-    i:= 0; j:= mangainfo.ChapterLinks.Count - 1;
-    while (i<j) do
-    begin
-      mangainfo.ChapterName.Exchange(i, j);
-      mangainfo.chapterLinks.Exchange(i, j);
-      Inc(i); Dec(j);
-    end;
-  end;
   Result:= NO_ERROR;
 end;
 
