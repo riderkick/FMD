@@ -937,7 +937,7 @@ begin
   // Add to favorites
 
   s2:= '';
-  if (mangaInfo.numChapter > 0) AND (mangaInfo.website = MANGASTREAM_NAME) then
+  if (mangaInfo.numChapter > 0) {AND (mangaInfo.website = MANGASTREAM_NAME)} then
   begin
     for i:= 0 to mangaInfo.numChapter-1 do
       s2:= s2 + mangaInfo.chapterLinks.Strings[i] + SEPERATOR;

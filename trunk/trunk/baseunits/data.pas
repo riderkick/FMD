@@ -6204,7 +6204,7 @@ begin
   Parser.Free;
   source.Free;
 
-  mangaInfo.website:= MANGAFRAME_NAME;
+  mangaInfo.website:= EGSCANS_NAME;
   mangaInfo.status:= '1';
   mangaInfo.coverLink:= '';
   mangaInfo.summary:= '';
@@ -6237,7 +6237,7 @@ begin
        (Pos('<option value="', parse.Strings[i])>0) then
     begin
       Inc(mangaInfo.numChapter);
-      s:= '/' + URL + '/' + StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i+1], 'value=')), EGSCANS_ROOT, '', []);
+      s:= '/' + URL + '/' + StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'value=')), EGSCANS_ROOT, '', []);
       mangaInfo.chapterLinks.Add(s);
       s:= RemoveSymbols(TrimLeft(TrimRight(parse.Strings[i+1])));
       mangaInfo.chapterName.Add(StringFilter(StringFilter(HTMLEntitiesFilter(s))));
