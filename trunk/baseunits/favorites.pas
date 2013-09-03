@@ -254,7 +254,7 @@ procedure   TFavoriteManager.ShowResult;
 var
   LNewChapter     : TNewChapter;
   LNCResult       : TNewChapterResult;
-  isNewChapters   : array of Boolean;
+  numberOfNewChapters: array of Cardinal;
   l               : TStringList;
   isHasNewChapter : Boolean = FALSE;
   s, s1           : String;
@@ -281,34 +281,18 @@ var
 begin
   MainForm.btFavoritesCheckNewChapter.Caption:= stFavoritesCheck;
   l:= TStringList.Create;
-  SetLength(isNewChapters, Count);
+  SetLength(numberOfNewChapters, Count);
   // check the result to see if theres any new chapter
   for i:= 0 to Count-1 do
   begin
-    isNewChapters[i]:= FALSE;
-    if (mangaInfo[i].website <> MANGASTREAM_NAME) AND
-       (mangaInfo[i].website <> S2SCAN_NAME) AND
-       (mangaInfo[i].website <> MANGATRADERS_NAME) AND
-       (mangaInfo[i].website <> BATOTO_NAME) AND
-       (mangaInfo[i].website <> SUBMANGA_NAME) AND
-       (mangaInfo[i].numChapter > StrToInt(favoriteInfo[i].currentChapter)) then
-    begin
-      isNewChapters[i]:= TRUE;
-      Inc(newC);
-    end
-    else
-    if (mangaInfo[i].website = MANGASTREAM_NAME) OR
-       (mangaInfo[i].website = S2SCAN_NAME) OR
-       (mangaInfo[i].website = MANGATRADERS_NAME) OR
-       (mangaInfo[i].website = BATOTO_NAME) OR
-       (mangaInfo[i].website = SUBMANGA_NAME) then
+    numberOfNewChapters[i]:= 0;
     begin
       l.Clear;
       GetParams(l, favoriteInfo[i].downloadedChapterList);
       if l.Count = 0 then
       begin
-        isNewChapters[i]:= TRUE;
-        Inc(newC);
+       // isNewChapters[i]:= TRUE;
+       // Inc(newC);
       end
       else
       if mangaInfo[i].chapterLinks.Count <> 0 then
@@ -317,8 +301,9 @@ begin
         begin
           if NOT Check(l, mangaInfo[i].chapterLinks.Strings[j]) then
           begin
-            isNewChapters[i]:= TRUE;
-            Inc(newC);
+            if numberOfNewChapters[i] = 0 then
+              Inc(newC);
+            Inc(numberOfNewChapters[i]);
             break;
           end;
         end;
@@ -348,16 +333,9 @@ begin
     begin
       currentChapter:= StrToInt(favoriteInfo[i].currentChapter);
       newChapter    := mangaInfo[i].numChapter;
-      if isNewChapters[i] then
+      if numberOfNewChapters[i] > 0 then
       begin
-        if (favoriteInfo[i].Website <> MANGASTREAM_NAME) AND
-           (favoriteInfo[i].website <> S2SCAN_NAME) AND
-           (favoriteInfo[i].website <> MANGATRADERS_NAME) AND
-           (favoriteInfo[i].website <> BATOTO_NAME) AND
-           (favoriteInfo[i].website <> SUBMANGA_NAME) then
-          newMangaStr:= newMangaStr + #13+ '- '+favoriteInfo[i].title + ' <'+ favoriteInfo[i].Website +'> ' + favoriteInfo[i].currentChapter+' -> '+IntToStr(newChapter)
-        else
-          newMangaStr:= newMangaStr + #13+ '- '+favoriteInfo[i].title + ' <'+ favoriteInfo[i].Website +'>';
+        newMangaStr:= newMangaStr + #13+ '- '+Format(stFavoritesHasNewChapter, [favoriteInfo[i].title, favoriteInfo[i].Website, numberOfNewChapters[i]]);
       end;
     end;
 
@@ -394,7 +372,9 @@ begin
           threads.Delete(0);
         end;
         isRunning:= FALSE;
+        SetLength(numberOfNewChapters, 0);
         exit;
+        // end of bad code
       end
       else
       if LNCResult = ncrQueue then
@@ -405,16 +385,9 @@ begin
     for i:= 0 to Count-1 do
     begin
       newChapter:= mangaInfo[i].numChapter;
-      if (favoriteInfo[i].Website <> MANGASTREAM_NAME) AND
-         (favoriteInfo[i].website <> S2SCAN_NAME) AND
-         (favoriteInfo[i].website <> MANGATRADERS_NAME) AND
-         (favoriteInfo[i].website <> BATOTO_NAME) AND
-         (favoriteInfo[i].website <> SUBMANGA_NAME) then
       begin
         currentChapter:= StrToInt(favoriteInfo[i].currentChapter);
-      end
-      else
-      begin
+
         l.Clear;
         GetParams(l, favoriteInfo[i].downloadedChapterList);
         if l.Count <> 0 then
@@ -433,7 +406,7 @@ begin
           currentChapter:= 0;
       end;
 
-      if isNewChapters[i] then
+      if numberOfNewChapters[i] > 0 then
       begin
         isHasNewChapter:= TRUE;
         newMangaStr:= newMangaStr + #10#13+ ' - '+favoriteInfo[i].title;
@@ -530,7 +503,7 @@ begin
   if Assigned(OnUpdateFavorite) then
     OnUpdateFavorite;
 
-  SetLength(isNewChapters, 0);
+  SetLength(numberOfNewChapters, 0);
   l.Free;
   Backup;
 end;
@@ -563,14 +536,7 @@ begin
   favoriteInfo[Count-1].website       := website;
   favoriteInfo[Count-1].saveTo        := saveTo;
   favoriteInfo[Count-1].Link          := Link;
-  if (website = MANGASTREAM_NAME) OR
-     (website = S2SCAN_NAME) OR
-     (website = MANGATRADERS_NAME) OR
-     (website = BATOTO_NAME) OR
-     (website = SUBMANGA_NAME) then
-    favoriteInfo[Count-1].downloadedChapterList:= downloadedChapterList
-  else
-    favoriteInfo[Count-1].downloadedChapterList:= '';
+  favoriteInfo[Count-1].downloadedChapterList:= downloadedChapterList;
   Sort(sortColumn);
   Backup;
 end;
