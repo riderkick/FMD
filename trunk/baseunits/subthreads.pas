@@ -158,8 +158,12 @@ procedure   TSubThread.DoGetInfos;
       begin
         if (website = MANGASTREAM_NAME) OR
            (website = MANGAVADISI_NAME) OR
+           (website = SENMANGA_NAME) OR
            (website = MANGAFRAME_NAME) OR
+           (website = S2SCAN_NAME) OR
+           (website = EGSCANS_NAME) OR
            (website = TURKCRAFT_NAME) OR
+           (website = HUGEMANGA_NAME) OR
            (website = KOMIKID_NAME) then
         begin
           Info.mangaInfo.authors:= MainForm.DataProcess.Param[filterPos, DATA_PARAM_AUTHORS];

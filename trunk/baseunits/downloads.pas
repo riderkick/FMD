@@ -2370,8 +2370,7 @@ var
       for i:= 0 to parse.Count-1 do
         if (Pos('<img ondragstart', parse.Strings[i])>0) then
         begin
-          manager.container.pageLinks.Add(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src=')));
-          break;
+          manager.container.pageLinks.Add(EGSCANS_ROOT + '/' + EncodeURL(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src='))));
         end;
     end;
     parse.Free;
