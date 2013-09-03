@@ -550,6 +550,9 @@ begin
         if FileExists(DATA_FOLDER + MANGAPARK_NAME + DATA_EXT) then
           syncProcess.LoadFromFile(MANGAPARK_NAME)
         else
+        if FileExists(DATA_FOLDER + BATOTO_NAME + DATA_EXT) then
+          syncProcess.LoadFromFile(BATOTO_NAME)
+        else
         if FileExists(DATA_FOLDER + ANIMEA_NAME + DATA_EXT) then
           syncProcess.LoadFromFile(ANIMEA_NAME);
 
@@ -559,7 +562,8 @@ begin
           for j:= 0 to syncProcess.Data.Count-1 do
             if SameText(mainDataProcess.Param[k, DATA_PARAM_NAME], syncProcess.Param[j, DATA_PARAM_NAME]) then
             begin
-              if website = MANGASTREAM_NAME then
+              if (website = MANGASTREAM_NAME) OR
+                 (website = S2SCAN_NAME) then
                 s:= syncProcess.Param[j, DATA_PARAM_SUMMARY]
               else
                 s:= mainDataProcess.Param[k, DATA_PARAM_SUMMARY];
