@@ -907,6 +907,40 @@ var
     l.Free;
   end;
 
+  function GetEGScansPageNumber: Boolean;
+  var
+    s    : String;
+    i, j : Cardinal;
+    l    : TStringList;
+  begin
+    l:= TStringList.Create;
+    parse:= TStringList.Create;
+    s:= DecodeUrl(EGSCANS_ROOT + URL +'/1');
+    Result:= GetPage(TObject(l),
+                     s,
+                     manager.container.manager.retryConnect);
+    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.Exec;
+    Parser.Free;
+    if parse.Count>0 then
+    begin
+      manager.container.pageNumber:= 0;
+      for i:= parse.Count-1 downto 2 do
+      begin
+        if (Pos('</span>', parse.Strings[i])>0) then
+        begin
+          s:= parse.Strings[i-4];
+          manager.container.pageNumber:= StrToInt(TrimLeft(TrimRight(GetString(s+' ', 'of ', ' '))));
+          break;
+        end;
+      end;
+    end;
+    parse.Free;
+    l.Free;
+  end;
+
   function GetMangaTradersPageNumber: Boolean;
   var
     isStartGetPageNumber: Boolean = FALSE;
@@ -1428,12 +1462,12 @@ begin
      (manager.container.mangaSiteID = MANGA24H_ID) OR
      (manager.container.mangaSiteID = VNSHARING_ID) OR
      (manager.container.mangaSiteID = MABUNS_ID) OR
+     (manager.container.mangaSiteID = EGSCANS_ID) OR
      (manager.container.mangaSiteID = MANGAESTA_ID) OR
      (manager.container.mangaSiteID = TRUYEN18_ID) OR
      (manager.container.mangaSiteID = TRUYENTRANHTUAN_ID) OR
      (manager.container.mangaSiteID = FAKKU_ID) OR
-     (manager.container.mangaSiteID = CENTRALDEMANGAS_ID) OR
-     (manager.container.mangaSiteID = MANGAKU_ID) then
+     (manager.container.mangaSiteID = CENTRALDEMANGAS_ID) then
   begin
     // all of the page links are in a html page
     Result:= TRUE;
@@ -2310,6 +2344,40 @@ var
     l.Free;
   end;
 
+  function GetEGScansLinkPage: Boolean;
+  var
+    s: String;
+    j,
+    i: Cardinal;
+    l: TStringList;
+  begin
+    l:= TStringList.Create;
+
+    s:= DecodeUrl(EGSCANS_ROOT + URL + '/' + IntToStr(workPtr+1));
+    Result:= GetPage(TObject(l),
+                     s,
+                     manager.container.manager.retryConnect);
+    parse:= TStringList.Create;
+    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.Exec;
+    Parser.Free;
+
+    if parse.Count>0 then
+    begin
+      manager.container.pageLinks.Clear;
+      for i:= 0 to parse.Count-1 do
+        if (Pos('<img ondragstart', parse.Strings[i])>0) then
+        begin
+          manager.container.pageLinks.Add(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src=')));
+          break;
+        end;
+    end;
+    parse.Free;
+    l.Free;
+  end;
+
   function GetMangaStreamLinkPage: Boolean;
   var
     s: String;
@@ -3007,6 +3075,9 @@ begin
   if manager.container.mangaSiteID = S2SCAN_ID then
     Result:= GetS2scanLinkPage
   else
+  if manager.container.mangaSiteID = EGSCANS_ID then
+    Result:= GetEGScansLinkPage
+  else
   if manager.container.mangaSiteID = ESMANGAHERE_ID then
     Result:= GetEsMangaHereLinkPage
   else
@@ -3030,9 +3101,6 @@ begin
   else
   if manager.container.mangaSiteID = HUGEMANGA_ID then
     Result:= GetHugeMangaLinkPage
-  else
-  if manager.container.mangaSiteID = MANGAKU_ID then
-    Result:= GetMangakuLinkPage
   else
   if manager.container.mangaSiteID = TURKCRAFT_ID then
     Result:= GetTurkcraftLinkPage

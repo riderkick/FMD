@@ -304,7 +304,7 @@ begin
             if numberOfNewChapters[i] = 0 then
               Inc(newC);
             Inc(numberOfNewChapters[i]);
-            break;
+          //  break;
           end;
         end;
       end;
