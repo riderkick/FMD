@@ -23,6 +23,7 @@ type
   { TMainForm }
 
   TMainForm = class(TForm)
+    pnLeftBtDummy: TBitBtn;
     btVisitMyBlog: TBitBtn;
     btOptionBrowse: TBitBtn;
     btCheckVersion: TBitBtn;
@@ -507,8 +508,7 @@ begin
   end;
   isUpdating := FALSE;
   isExiting  := FALSE;
- // ticks      := GetTickCount;
- // backupTicks:= GetTickCount;
+
   oldDir     := GetCurrentDirUTF8;
   oldDir     := CorrectFile(oldDir);
 
@@ -1002,7 +1002,7 @@ begin
     pmUpdate.Items[0].Enabled:= TRUE;
   if Sender is TControl then
   begin
-    button   := TControl(Sender);
+    button   := TControl(pnLeftBtDummy);//TControl(Sender);
     lowerLeft:= Point(button.Left, button.Top + button.Height*2 + (button.Height div 2));
     lowerLeft:= ClientToScreen(lowerLeft);
     pmUpdate.Popup(lowerLeft.X, lowerLeft.Y);
@@ -2220,6 +2220,7 @@ begin
       pmMangaList.Items[2].Enabled:= FALSE; }
   end;
 end;
+
 
 procedure TMainForm.seOptionCheckMinutesChange(Sender: TObject);
 begin

@@ -166,7 +166,6 @@ const
   SUBMANGA_NAME     = 'SubManga';     SUBMANGA_ID    = 29;
   ESMANGAHERE_NAME  = 'ESMangaHere';  ESMANGAHERE_ID = 30;
   ANIMEEXTREMIST_NAME  = 'AnimExtremist';  ANIMEEXTREMIST_ID = 31;
-  MANGAKU_NAME      = 'Mangaku';      MANGAKU_ID     = 32;
   PECINTAKOMIK_NAME = 'PecintaKomik'; PECINTAKOMIK_ID= 33;
   HUGEMANGA_NAME    = 'HugeManga';    HUGEMANGA_ID   = 34;
   S2SCAN_NAME       = 'S2scanlations';S2SCAN_ID      = 35;
@@ -175,6 +174,7 @@ const
   MABUNS_NAME       = 'Mabuns';       MABUNS_ID      = 38;
   MANGAESTA_NAME    = 'MangaEsta';    MANGAESTA_ID   = 39;
   CENTRALDEMANGAS_NAME = 'CentralDeMangas'; CENTRALDEMANGAS_ID = 40;
+  EGSCANS_NAME      = 'EGScans';      EGSCANS_ID     = 41;
 
   DEFAULT_LIST = ANIMEA_NAME+'!%~'+MANGAFOX_NAME+'!%~'+MANGAHERE_NAME+'!%~'+MANGAINN_NAME+'!%~'+MANGAREADER_NAME+'!%~';
   DEFAULT_CUSTOM_RENAME = '%NUMBERING% - %CHAPTER%';
@@ -348,6 +348,9 @@ var
 
   CENTRALDEMANGAS_ROOT   : String = 'http://centraldemangas.com.br';
   CENTRALDEMANGAS_BROWSER: String = '/mangas';
+
+  EGSCANS_ROOT   : String = 'http://readonline.egscans.org';
+  EGSCANS_BROWSER: String = '/';
 
   UPDATE_URL      : String = 'http://jaist.dl.sourceforge.net/project/fmd/FMD/updates/';
 
@@ -809,8 +812,6 @@ begin
   else
   if name = ANIMEEXTREMIST_NAME then Result:= ANIMEEXTREMIST_ID
   else
-  if name = MANGAKU_NAME then Result:= MANGAKU_ID
-  else
   if name = PECINTAKOMIK_NAME then Result:= PECINTAKOMIK_ID
   else
   if name = HUGEMANGA_NAME then Result:= HUGEMANGA_ID
@@ -825,7 +826,9 @@ begin
   else
   if name = MANGAESTA_NAME then Result:= MANGAESTA_ID
   else
-  if name = CENTRALDEMANGAS_NAME then Result:= CENTRALDEMANGAS_ID;
+  if name = CENTRALDEMANGAS_NAME then Result:= CENTRALDEMANGAS_ID
+  else
+  if name = EGSCANS_NAME then Result:= EGSCANS_ID;
 end;
 
 function  GetMangaSiteName(const ID: Cardinal): String;
@@ -892,8 +895,6 @@ begin
   else
   if ID = ANIMEEXTREMIST_ID then Result:= ANIMEEXTREMIST_NAME
   else
-  if ID = MANGAKU_ID then Result:= MANGAKU_NAME
-  else
   if ID = PECINTAKOMIK_ID then Result:= PECINTAKOMIK_NAME
   else
   if ID = HUGEMANGA_ID then Result:= HUGEMANGA_NAME
@@ -908,7 +909,9 @@ begin
   else
   if ID = MANGAESTA_ID then Result:= MANGAESTA_NAME
   else
-  if ID = CENTRALDEMANGAS_ID then Result:= CENTRALDEMANGAS_NAME;
+  if ID = CENTRALDEMANGAS_ID then Result:= CENTRALDEMANGAS_NAME
+  else
+  if ID = EGSCANS_ID then Result:= EGSCANS_NAME;
 end;
 
 // bad coding.. but this is how FMD works
