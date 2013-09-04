@@ -175,6 +175,8 @@ const
   MANGAESTA_NAME    = 'MangaEsta';    MANGAESTA_ID   = 39;
   CENTRALDEMANGAS_NAME = 'CentralDeMangas'; CENTRALDEMANGAS_ID = 40;
   EGSCANS_NAME      = 'EGScans';      EGSCANS_ID     = 41;
+  MANGAAR_NAME      = 'MangaAr';      MANGAAR_ID     = 42;
+  MANGAAE_NAME      = 'MangaAe';      MANGAAE_ID     = 43;
 
   DEFAULT_LIST = ANIMEA_NAME+'!%~'+MANGAFOX_NAME+'!%~'+MANGAHERE_NAME+'!%~'+MANGAINN_NAME+'!%~'+MANGAREADER_NAME+'!%~';
   DEFAULT_CUSTOM_RENAME = '%NUMBERING% - %CHAPTER%';
@@ -351,6 +353,12 @@ var
 
   EGSCANS_ROOT   : String = 'http://readonline.egscans.org';
   EGSCANS_BROWSER: String = '/';
+
+  MANGAAR_ROOT   : String = 'http://manga-ar.com';
+  MANGAAR_BROWSER: String = '/directory';
+
+  MANGAAE_ROOT   : String = 'http://www.manga.ae/';
+  MANGAAE_BROWSER: String = '/manga/all/';
 
   UPDATE_URL      : String = 'http://jaist.dl.sourceforge.net/project/fmd/FMD/updates/';
 
@@ -828,7 +836,11 @@ begin
   else
   if name = CENTRALDEMANGAS_NAME then Result:= CENTRALDEMANGAS_ID
   else
-  if name = EGSCANS_NAME then Result:= EGSCANS_ID;
+  if name = EGSCANS_NAME then Result:= EGSCANS_ID
+  else
+  if name = MANGAAR_NAME then Result:= MANGAAR_ID
+  else
+  if name = MANGAAE_NAME then Result:= MANGAAE_ID;
 end;
 
 function  GetMangaSiteName(const ID: Cardinal): String;
@@ -911,7 +923,11 @@ begin
   else
   if ID = CENTRALDEMANGAS_ID then Result:= CENTRALDEMANGAS_NAME
   else
-  if ID = EGSCANS_ID then Result:= EGSCANS_NAME;
+  if ID = EGSCANS_ID then Result:= EGSCANS_NAME
+  else
+  if ID = MANGAAR_ID then Result:= MANGAAR_NAME
+  else
+  if ID = MANGAAE_ID then Result:= MANGAAE_NAME;
 end;
 
 // bad coding.. but this is how FMD works
