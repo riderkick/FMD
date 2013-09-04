@@ -174,8 +174,8 @@ type
 implementation
 
 uses
-  lazutf8classes, mainunit, HTMLParser, FastHTMLParser, HTMLUtil, SynaCode,
-  FileUtil, HTTPSend, VirtualTrees;
+  lazutf8classes, mainunit, HTMLParser, FastHTMLParser, HTMLUtil, LConvEncoding,
+  SynaCode, FileUtil, HTTPSend, VirtualTrees;
 
 // utility
 
@@ -1215,6 +1215,78 @@ var
     l.Free;
   end;
 
+  function GetMangaArPageNumber: Boolean;
+  var
+    s   : String;
+    i, j: Cardinal;
+    l   : TStringList;
+  begin
+    l:= TStringList.Create;
+    parse:= TStringList.Create;
+    s:= MANGAAR_ROOT + URL + '/1';
+    Result:= GetPage(TObject(l),
+                     s,
+                     manager.container.manager.retryConnect);
+
+    // convert charset
+    l.Text:= CP1256ToUTF8(l.Text);
+
+    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.Exec;
+    Parser.Free;
+    if parse.Count>0 then
+    begin
+      manager.container.pageNumber:= 0;
+      for i:= 0 to parse.Count-1 do
+      begin
+        if (Pos('</select>', parse.Strings[i])>0) then
+        begin
+          s:= TrimLeft(TrimRight(parse.Strings[i-3]));
+          manager.container.pageNumber:= StrToInt(s);
+          break;
+        end;
+      end;
+    end;
+    parse.Free;
+    l.Free;
+  end;
+
+  function GetMangaAePageNumber: Boolean;
+  var
+    s   : String;
+    i, j: Cardinal;
+    l   : TStringList;
+  begin
+    l:= TStringList.Create;
+    parse:= TStringList.Create;
+    s:= DecodeUrl(MANGAAE_ROOT + URL + '/1');
+    Result:= GetPage(TObject(l),
+                     s,
+                     manager.container.manager.retryConnect);
+    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.Exec;
+    Parser.Free;
+    if parse.Count>0 then
+    begin
+      manager.container.pageNumber:= 0;
+      for i:= parse.Count-1 downto 2 do
+      begin
+        if (Pos('</select>', parse.Strings[i])>0) then
+        begin
+          s:= TrimLeft(TrimRight(parse.Strings[i-3]));
+          manager.container.pageNumber:= StrToInt(s);
+          break;
+        end;
+      end;
+    end;
+    parse.Free;
+    l.Free;
+  end;
+
   function GetCentralDeMangasPageNumber: Boolean;
   var
     s   : String;
@@ -1436,6 +1508,12 @@ begin
   else
   if manager.container.mangaSiteID = MANGAFRAME_ID then
     Result:= GetMangaFramePageNumber
+  else
+  if manager.container.mangaSiteID = MANGAAR_ID then
+    Result:= GetMangaArPageNumber
+  else
+  if manager.container.mangaSiteID = MANGAAE_ID then
+    Result:= GetMangaAePageNumber
  // else
  // if manager.container.mangaSiteID = CENTRALDEMANGAS_ID then
  //   Result:= GetCentralDeMangasPageNumber
@@ -2809,6 +2887,74 @@ var
     l.Free;
   end;
 
+  function GetMangaAeLinkPage: Boolean;
+  var
+    s: String;
+    j,
+    i: Cardinal;
+    l: TStringList;
+  begin
+    l:= TStringList.Create;
+    s:= DecodeUrl(MANGAAE_ROOT + URL + '/' + IntToStr(workPtr+1));
+    Result:= GetPage(TObject(l),
+                     s,
+                     manager.container.manager.retryConnect);
+    parse:= TStringList.Create;
+    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.Exec;
+    Parser.Free;
+
+    if parse.Count>0 then
+    begin
+      for i:= 0 to parse.Count-1 do
+        if (Pos('id="picture_url"', parse.Strings[i])>0) then
+        begin
+          manager.container.pageLinks.Strings[workPtr]:= EncodeURL(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src=')));
+          break;
+        end;
+    end;
+    parse.Free;
+    l.Free;
+  end;
+
+  function GetMangaArLinkPage: Boolean;
+  var
+    s: String;
+    j,
+    i: Cardinal;
+    l: TStringList;
+  begin
+    l:= TStringList.Create;
+    s:= MANGAAR_ROOT + URL + '/' + IntToStr(workPtr+1);
+    Result:= GetPage(TObject(l),
+                     s,
+                     manager.container.manager.retryConnect);
+
+    // convert charset
+    l.Text:= CP1256ToUTF8(l.Text);
+
+    parse:= TStringList.Create;
+    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.Exec;
+    Parser.Free;
+
+    if parse.Count>0 then
+    begin
+      for i:= 0 to parse.Count-1 do
+        if (Pos('id="PagePhoto"', parse.Strings[i])>0) then
+        begin
+          manager.container.pageLinks.Strings[workPtr]:= EncodeURL(GetAttributeValue(GetTagAttribute(parse.Strings[i+2], 'src=')));
+          break;
+        end;
+    end;
+    parse.Free;
+    l.Free;
+  end;
+
   function GetCentralDeMangasLinkPage: Boolean;
   var
     s: String;
@@ -3110,6 +3256,12 @@ begin
   if manager.container.mangaSiteID = MANGAFRAME_ID then
     Result:= GetMangaFrameLinkPage
   else
+  if manager.container.mangaSiteID = MANGAAR_ID then
+    Result:= GetMangaArLinkPage
+  else
+  if manager.container.mangaSiteID = MANGAAE_ID then
+    Result:= GetMangaAeLinkPage
+  else
   if manager.container.mangaSiteID = CENTRALDEMANGAS_ID then
     Result:= GetCentralDeMangasLinkPage
   else
@@ -3167,11 +3319,14 @@ var
     end;
     Result:= FALSE;
     HTTP:= THTTPSend.Create;
-    HTTP.UserAgent:='curl/7.21.0 (i686-pc-linux-gnu) libcurl/7.21.0 OpenSSL/0.9.8o zlib/1.2.3.4 libidn/1.18';
     HTTP.ProxyHost:= Host;
     HTTP.ProxyPort:= Port;
     HTTP.ProxyUser:= User;
     HTTP.ProxyPass:= Pass;
+
+    if manager.container.mangaSiteID <> MANGAAR_ID then
+      HTTP.UserAgent:='curl/7.21.0 (i686-pc-linux-gnu) libcurl/7.21.0 OpenSSL/0.9.8o zlib/1.2.3.4 libidn/1.18';
+
     if manager.container.mangaSiteID = HENTAI2READ_ID then
       HTTP.Headers.Insert(0, 'Referer:'+HENTAI2READ_ROOT+'/')
     else

@@ -424,6 +424,7 @@ begin
                            Format('%.4d', [j+1]),
                            MainForm.cbOptionPathConvert.Checked);
 
+          while DLManager.isRunningBackup do Sleep(32);
           DLManager.containers.Items[pos].chapterName .Add(s);
           DLManager.containers.Items[pos].chapterLinks.Add(mangaInfo[i].chapterLinks.Strings[j]);
         end;

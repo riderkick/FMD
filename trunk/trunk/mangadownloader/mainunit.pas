@@ -2931,6 +2931,7 @@ end;
 procedure TMainForm.ShowInformation;
 var
   cp: TPoint;
+  website: String;
 begin
   itAnimate.Enabled:= FALSE;
   MainForm.pbWait.Visible:= FALSE;
@@ -2952,15 +2953,24 @@ begin
      // mangaInfo.link := dataProcess.Param[dataProcess.GetPos(SubThread.mangaListPos), DATA_PARAM_LINK];
       mangaInfo.title:= SubThread.title;
       mangaInfo.link := SubThread.link;
+      website:= SubThread.Info.mangaInfo.website;
     end
     else
     if SubThread.mangaListPos = -2 then
     begin
       mangaInfo.title:= SubThread.title;
       mangaInfo.link := SubThread.link;
+      website:= SubThread.Info.mangaInfo.website;
     end
     else
       mangaInfo.link:= edURL.Text;
+
+    // TODO:
+   { if (Pos(MANGAAR_NAME, website) > 0) OR
+       (Pos(MANGAAE_NAME, website) > 0) then
+      rmInformation.BiDiMode:= bdRightToLeft
+    else
+      rmInformation.BiDiMode:= bdLeftToRight; }
 
     AddTextToInfo(infoName, mangaInfo.title+#10#13);
     AddTextToInfo(infoAuthors, mangaInfo.authors+#10#13);

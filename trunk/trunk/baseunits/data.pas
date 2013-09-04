@@ -118,7 +118,8 @@ var
 implementation
 
 uses
-  synautil, HTMLParser, FastHTMLParser, HTMLUtil, HTTPSend, SynaCode{$IFDEF WINDOWS}{$IFDEF DOWNLOADER}, IECore{$ENDIF}{$ENDIF};
+  synautil, HTMLParser, FastHTMLParser, LConvEncoding,
+  HTMLUtil, HTTPSend, SynaCode{$IFDEF WINDOWS}{$IFDEF DOWNLOADER}, IECore{$ENDIF}{$ENDIF};
 
 // ----- TDataProcess -----
 
@@ -1284,6 +1285,42 @@ var
     source.Free;
   end;
 
+  function   GetMangaAeDirectoryPage: Byte;
+  var
+    i: Cardinal;
+  begin
+    Result:= INFORMATION_NOT_FOUND;
+    if NOT GetPage(TObject(source), MANGAAE_ROOT + MANGAAE_BROWSER, 0) then
+    begin
+      Result:= NET_PROBLEM;
+      source.Free;
+      exit;
+    end;
+    parse.Clear;
+    Parser:= TjsFastHTMLParser.Create(PChar(source.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.Exec;
+    Parser.Free;
+    if parse.Count=0 then
+    begin
+      source.Free;
+      exit;
+    end;
+    for i:= parse.Count-1 downto 2 do
+    begin
+      if (Pos('<li class=''active''>', parse.Strings[i]) > 0) then
+      begin
+        s:= TrimRight(TrimLeft(parse.Strings[i+10]));
+        Page:= StrToInt(s);
+        Result:= NO_ERROR;
+        source.Free;
+        exit;
+      end;
+    end;
+    source.Free;
+  end;
+
 begin
   source:= TStringList.Create;
   if website = ANIMEA_NAME then
@@ -1333,6 +1370,9 @@ begin
   else
   if website = S2SCAN_NAME then
     Result:= GetS2scanDirectoryPage
+  else
+  if website = MANGAAE_NAME then
+    Result:= GetMangaAeDirectoryPage
   else
   if website = EATMANGA_NAME then
   begin
@@ -2336,6 +2376,90 @@ var
     source.Free;
   end;
 
+  // get name and link of the manga from MangaAr
+  function   MangaArGetNameAndLink: Byte;
+  var
+    tmp: Integer;
+    i: Cardinal;
+    s: String;
+  begin
+    Result:= INFORMATION_NOT_FOUND;
+    if NOT GetPage(TObject(source), MANGAAR_ROOT + MANGAAR_BROWSER, 0) then
+    begin
+      Result:= NET_PROBLEM;
+      source.Free;
+      exit;
+    end;
+
+    // convert charset
+    source.text:= CP1256ToUTF8(source.text);
+
+    parse.Clear;
+    Parser:= TjsFastHTMLParser.Create(PChar(source.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.Exec;
+    Parser.Free;
+    if parse.Count=0 then
+    begin
+      source.Free;
+      exit;
+    end;
+    for i:= 0 to parse.Count-1 do
+    begin
+      if (Pos('style="float', parse.Strings[i]) > 0) AND
+         (Pos('"http://manga-ar', parse.Strings[i]) > 0) then
+      begin
+        Result:= NO_ERROR;
+        s:= StringFilter(parse.Strings[i+1]);
+        names.Add(HTMLEntitiesFilter(s));
+        s:= StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href=')), MANGAAR_ROOT, '', []);
+        links.Add(s);
+      end;
+    end;
+    source.Free;
+  end;
+
+  // get name and link of the manga from MangaAe
+  function   MangaAeGetNameAndLink: Byte;
+  var
+    tmp: Integer;
+    i: Cardinal;
+    s: String;
+  begin
+    Result:= INFORMATION_NOT_FOUND;
+    if NOT GetPage(TObject(source), MANGAAE_ROOT + MANGAAE_BROWSER + IntToStr(StrToInt(URL)+1), 0) then
+    begin
+      Result:= NET_PROBLEM;
+      source.Free;
+      exit;
+    end;
+
+    parse.Clear;
+    Parser:= TjsFastHTMLParser.Create(PChar(source.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.Exec;
+    Parser.Free;
+    if parse.Count=0 then
+    begin
+      source.Free;
+      exit;
+    end;
+    for i:= 0 to parse.Count-1 do
+    begin
+      if (Pos('class="imgf"', parse.Strings[i]) > 0) then
+      begin
+        Result:= NO_ERROR;
+        s:= TrimLeft(TrimRight(StringFilter(parse.Strings[i+3])));
+        names.Add(HTMLEntitiesFilter(s));
+        s:= StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i-2], 'href=')), MANGAAE_ROOT, '', []);
+        links.Add(s);
+      end;
+    end;
+    source.Free;
+  end;
+
   // get name and link of the manga from CentralDeMangas
   function   CentralDeMangasGetNameAndLink: Byte;
   var
@@ -3133,6 +3257,12 @@ begin
   else
   if website = HUGEMANGA_NAME then
     Result:= HugeMangaGetNameAndLink
+  else
+  if website = MANGAAR_NAME then
+    Result:= MangaArGetNameAndLink
+  else
+  if website = MANGAAE_NAME then
+    Result:= MangaAeGetNameAndLink
   else
   if website = CENTRALDEMANGAS_NAME then
     Result:= CentralDeMangasGetNameAndLink
@@ -7163,6 +7293,228 @@ begin
   Result:= NO_ERROR;
 end;
 
+// get manga infos from MangaAr site
+function   GetMangaArInfoFromURL: Byte;
+var
+  s: String;
+  isExtractSummary: Boolean = TRUE;
+  i, j: Cardinal;
+begin
+  mangaInfo.url:= MANGAAR_ROOT + URL;
+  if NOT GetPage(TObject(source), EncodeURL(mangaInfo.url), Reconnect) then
+  begin
+    Result:= NET_PROBLEM;
+    source.Free;
+    exit;
+  end;
+
+  // convert charset
+  source.Text:= CP1256ToUTF8(source.Text);
+
+  // parsing the HTML source
+  parse.Clear;
+  Parser:= TjsFastHTMLParser.Create(PChar(source.Text));
+  Parser.OnFoundTag := OnTag;
+  Parser.OnFoundText:= OnText;
+  Parser.Exec;
+
+  Parser.Free;
+  source.Free;
+  mangaInfo.website:= MANGAAR_NAME;
+  // using parser (cover link, summary, chapter name and link)
+  if parse.Count=0 then exit;
+  for i:= 0 to parse.Count-1 do
+  begin
+    // get cover
+    if (mangaInfo.coverLink = '') AND
+       (Pos('class="manga-pic"', parse.Strings[i])>0) then
+      mangaInfo.coverLink:= CorrectURL(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src=')));
+
+    // get summary
+    if (Pos('القصة :', parse.Strings[i]) <> 0) AND
+       (Pos('</font>', parse.Strings[i+1])<>0)  AND
+       (isExtractSummary) then
+    begin
+      j:= i+6;
+      while (j<parse.Count) AND (Pos('</td>', parse.Strings[j])=0) do
+      begin
+        s:= parse.Strings[j];
+        if s[1] <> '<' then
+        begin
+          parse.Strings[j]:= HTMLEntitiesFilter(StringFilter(TrimLeft(parse.Strings[j])));
+          parse.Strings[j]:= StringReplace(parse.Strings[j], #10, '\n', [rfReplaceAll]);
+          parse.Strings[j]:= StringReplace(parse.Strings[j], #13, '\r', [rfReplaceAll]);
+          mangaInfo.summary:= mangaInfo.summary + parse.Strings[j];
+          break;
+        end;
+        Inc(j);
+      end;
+      isExtractSummary:= FALSE;
+    end;
+
+    // get title
+    if (mangaInfo.title = '') AND
+       (Pos(' - ARAB MANGA Online', parse.Strings[i])<>0) then
+      mangaInfo.title:= TrimLeft(HTMLEntitiesFilter(StringFilter(GetString('~!@'+parse.Strings[i], '~!@', ' - عرب مانجا أونلاين - مشاهدة مباشرة دون عناء التحميل'))));
+
+    // get chapter name and links
+    if (Pos('vertical-align: middle; margin: 5px', parse.Strings[i])>0) then
+    begin
+      Inc(mangaInfo.numChapter);
+      s:= StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i+2], 'href=')), MANGAAR_ROOT, '', []);
+      s:= EncodeURL(StringReplace(s+'~!@', '/1~!@', '', []));
+      mangaInfo.chapterLinks.Add(s);
+      s:= RemoveSymbols(TrimLeft(TrimRight(parse.Strings[i+3])));
+      mangaInfo.chapterName.Add(StringFilter(HTMLEntitiesFilter(s)));
+    end;
+
+    // get authors
+    if (i+6<parse.Count) AND
+       (Pos('المؤلف :', parse.Strings[i])<>0) AND
+       (Pos('</font>', parse.Strings[i+1])<>0) then
+      mangaInfo.authors:= TrimLeft(TrimRight(parse.Strings[i+8]));
+
+    // get artists
+    if (i+6<parse.Count) AND
+       (Pos('الرسام :', parse.Strings[i])<>0) AND
+       (Pos('</font>', parse.Strings[i+1])<>0) then
+      mangaInfo.artists:= TrimLeft(TrimRight(parse.Strings[i+8]));
+
+    // get genres
+    if (Pos('&Genres=', parse.Strings[i])<>0) then
+      mangaInfo.genres:= mangaInfo.genres + TrimLeft(TrimRight(parse.Strings[i+1])) + ', ';
+
+    // get status
+    if (i+6<parse.Count) AND
+       (Pos('الحالة :', parse.Strings[i])<>0) AND
+       (Pos('</font>', parse.Strings[i+1])<>0) then
+    begin
+      if (Pos('غير مكتمله', parse.Strings[i+5])<>0) then
+        mangaInfo.status:= '1'   // ongoing
+      else
+        mangaInfo.status:= '0';  // completed
+    end;
+  end;
+
+  // Since chapter name and link are inverted, we need to invert them
+  if mangainfo.ChapterLinks.Count > 1 then
+  begin
+    i:= 0; j:= mangainfo.ChapterLinks.Count - 1;
+    while (i<j) do
+    begin
+      mangainfo.ChapterName.Exchange(i, j);
+      mangainfo.chapterLinks.Exchange(i, j);
+      Inc(i); Dec(j);
+    end;
+  end;
+  Result:= NO_ERROR;
+end;
+
+// get manga infos from MangaAe site
+function   GetMangaAeInfoFromURL: Byte;
+var
+  s: String;
+  isExtractSummary: Boolean = TRUE;
+  isExtractChapter: Boolean = FALSE;
+  i, j: Cardinal;
+begin
+  mangaInfo.url:= MANGAAE_ROOT + URL;
+  if NOT GetPage(TObject(source), EncodeURL(mangaInfo.url), Reconnect) then
+  begin
+    Result:= NET_PROBLEM;
+    source.Free;
+    exit;
+  end;
+
+  // parsing the HTML source
+  parse.Clear;
+  Parser:= TjsFastHTMLParser.Create(PChar(source.Text));
+  Parser.OnFoundTag := OnTag;
+  Parser.OnFoundText:= OnText;
+  Parser.Exec;
+
+  Parser.Free;
+  source.Free;
+  mangaInfo.website:= MANGAAE_NAME;
+  // using parser (cover link, summary, chapter name and link)
+  if parse.Count=0 then exit;
+  for i:= 0 to parse.Count-1 do
+  begin
+    // get cover
+    if (mangaInfo.coverLink = '') AND
+       (Pos('id="photo_1"', parse.Strings[i])>0) then
+      mangaInfo.coverLink:= CorrectURL(GetAttributeValue(GetTagAttribute(parse.Strings[i+1], 'src=')));
+
+    // get summary
+    if (Pos('<p class="sumry">', parse.Strings[i]) <> 0) then
+    begin
+      j:= i+1;
+      while (j<parse.Count) AND (Pos('</p>', parse.Strings[j])=0) do
+      begin
+        s:= parse.Strings[j];
+        if s[1] <> '<' then
+        begin
+          parse.Strings[j]:= HTMLEntitiesFilter(StringFilter(TrimLeft(parse.Strings[j])));
+          parse.Strings[j]:= StringReplace(parse.Strings[j], #10, '\n', [rfReplaceAll]);
+          parse.Strings[j]:= StringReplace(parse.Strings[j], #13, '\r', [rfReplaceAll]);
+          mangaInfo.summary:= mangaInfo.summary + parse.Strings[j];
+          break;
+        end;
+        Inc(j);
+      end;
+      isExtractSummary:= FALSE;
+    end;
+
+    // get title
+    if (mangaInfo.title = '') AND
+       (Pos(' -  مانجا العرب ● Manga Al-arab', parse.Strings[i])<>0) then
+      mangaInfo.title:= TrimLeft(HTMLEntitiesFilter(StringFilter(GetString('~!@'+parse.Strings[i], '~!@', ' -  مانجا العرب ● Manga Al-arab'))));
+
+    if (NOT isExtractChapter) AND
+       (Pos('class="mangachapters"', parse.Strings[i]) > 0) then
+      isExtractChapter:= TRUE;
+
+    // get chapter name and links
+    if (isExtractChapter) AND
+       (Pos(MANGAAE_ROOT, parse.Strings[i])>0) AND
+       (Pos('<li>', parse.Strings[i-2])>0) then
+    begin
+      Inc(mangaInfo.numChapter);
+      s:= StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href=')), MANGAAE_ROOT, '', []);
+      s:= StringReplace(s+'~!@', '/1/~!@', '', []);
+      mangaInfo.chapterLinks.Add(s);
+      s:= RemoveSymbols(TrimLeft(TrimRight(parse.Strings[i+2]))) + ' ' + RemoveSymbols(TrimLeft(TrimRight(parse.Strings[i+4])));
+      mangaInfo.chapterName.Add(StringFilter(HTMLEntitiesFilter(s)));
+    end;
+
+    if (isExtractChapter) AND
+       (Pos('class="ads"', parse.Strings[i])>0) then
+      isExtractChapter:= FALSE;
+
+    // get authors
+    if (i+6<parse.Count) AND
+       (Pos('المؤلف', parse.Strings[i])<>0) AND
+       (Pos('</h2>', parse.Strings[i+1])<>0) then
+      mangaInfo.authors:= TrimLeft(TrimRight(parse.Strings[i+4]));
+
+    // get genres
+    if (Pos('/mn_name/', parse.Strings[i])<>0) then
+      mangaInfo.genres:= mangaInfo.genres + parse.Strings[i+1] + ', ';
+
+    // get status
+    if (i+3<parse.Count) AND
+       (Pos('حالة الترجمة', parse.Strings[i])<>0) AND
+       (Pos('</h2>', parse.Strings[i+1])<>0) then
+    begin
+      if (Pos('غير مكتملة', parse.Strings[i+3])<>0) then
+        mangaInfo.status:= '1'   // ongoing
+      else
+        mangaInfo.status:= '0';  // completed
+    end;
+  end;
+  Result:= NO_ERROR;
+end;
+
 // get manga infos from centraldemangas site
 function   GetCentralDeMangasInfoFromURL: Byte;
 var
@@ -7179,6 +7531,9 @@ begin
     source.Free;
     exit;
   end;
+
+  // convert charset
+  source.Text:= ISO_8859_1ToUTF8(source.Text);
 
   // parsing the HTML source
   parse.Clear;
@@ -7722,6 +8077,12 @@ begin
   else
   if website = MANGAVADISI_NAME then
     Result:= GetMangaVadisiInfoFromURL
+  else
+  if website = MANGAAR_NAME then
+    Result:= GetMangaArInfoFromURL
+  else
+  if website = MANGAAE_NAME then
+    Result:= GetMangaAeInfoFromURL
   else
   if website = CENTRALDEMANGAS_NAME then
     Result:= GetCentralDeMangasInfoFromURL
