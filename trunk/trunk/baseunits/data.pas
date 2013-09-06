@@ -2411,7 +2411,7 @@ var
          (Pos('"http://manga-ar', parse.Strings[i]) > 0) then
       begin
         Result:= NO_ERROR;
-        s:= StringFilter(parse.Strings[i+1]);
+        s:= TrimLeft(TrimRight(StringFilter(parse.Strings[i+1])));
         names.Add(HTMLEntitiesFilter(s));
         s:= StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href=')), MANGAAR_ROOT, '', []);
         links.Add(s);
@@ -7389,11 +7389,12 @@ begin
        (Pos('الحالة :', parse.Strings[i])<>0) AND
        (Pos('</font>', parse.Strings[i+1])<>0) then
     begin
-      if (Pos('غير مكتمله', parse.Strings[i+5])<>0) then
+      if (Pos('غير مكتمله', parse.Strings[i+6])<>0) then
         mangaInfo.status:= '1'   // ongoing
       else
         mangaInfo.status:= '0';  // completed
     end;
+    mangaInfo.status:= '1';
   end;
 
   // Since chapter name and link are inverted, we need to invert them
