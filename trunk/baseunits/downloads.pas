@@ -529,12 +529,10 @@ var
     s   : String;
     i, j: Cardinal;
     l   : TStringList;
-  label
-    reload;
   begin
     l:= TStringList.Create;
     parse:= TStringList.Create;
-  reload:
+
     parse.Clear;
     l.Clear;
     Result:= GetPage(TObject(l),
@@ -558,10 +556,13 @@ var
         end;
       end;
     end;
+
     if NOT isGoOn then
     begin
-      Sleep(3000);
-      goto reload;
+      manager.container.pageNumber:= 1;
+      parse.Free;
+      l.Free;
+      exit;
     end;
 
    // parse.Add(BATOTO_ROOT + URL + '/1');
@@ -1768,12 +1769,10 @@ var
     i: Cardinal;
     l: TStringList;
     s: String;
-  label
-    reload;
   begin
     l:= TStringList.Create;
     parse:= TStringList.Create;
-  reload:
+
     parse.Clear;
     l.Clear;
     Result:= GetPage(TObject(l),
@@ -1797,22 +1796,29 @@ var
         end;
       end;
     end;
-    if NOT isGoOn then
-    begin
-      Sleep(3000);
-      goto reload;
-    end;
 
-    if parse.Count>0 then
-    begin
-      for i:= 0 to parse.Count-1 do
-        if GetTagName(parse.Strings[i]) = 'img' then
-          if (Pos('batoto.net/comics', parse.Strings[i])>0) AND
-             (Pos('z-index: 1003', parse.Strings[i])>0) then
-          begin
-            manager.container.pageLinks.Strings[workPtr]:= GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src='));
-            break;
-          end;
+    case isGoOn of
+      TRUE:
+        begin
+          for i:= 0 to parse.Count-1 do
+            if GetTagName(parse.Strings[i]) = 'img' then
+              if (Pos('batoto.net/comics', parse.Strings[i])>0) AND
+                 (Pos('z-index: 1003', parse.Strings[i])>0) then
+              begin
+                manager.container.pageLinks.Strings[workPtr]:= GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src='));
+                break;
+              end;
+        end;
+      FALSE:
+        begin
+          manager.container.pageLinks.Clear;
+          for i:= 0 to parse.Count-1 do
+            if GetTagName(parse.Strings[i]) = 'img' then
+              if (Pos('<br/>', parse.Strings[i+1])>0) then
+              begin
+                manager.container.pageLinks.Add(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src=')));
+              end;
+        end;
     end;
     parse.Free;
     l.Free;
