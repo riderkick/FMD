@@ -53,6 +53,7 @@ type
   TTaskThread = class(TThread)
   protected
     procedure   CheckOut;
+    procedure   CallMainFormCompressRepaint;
     procedure   CallMainFormRepaint;
     procedure   CallMainFormRepaintImm;
     procedure   Execute; override;
@@ -3527,6 +3528,12 @@ begin
   end;
 end;
 
+procedure   TTaskThread.CallMainFormCompressRepaint;
+begin
+  container.downloadInfo.Status:= Format('%s (%d/%d)', [stIsCompressing, container.currentDownloadChapterPtr, container.chapterLinks.Count]);
+  MainForm.vtDownload.Repaint;
+end;
+
 procedure   TTaskThread.CallMainFormRepaintImm;
 begin
   MainForm.vtDownload.Repaint;
@@ -3540,8 +3547,7 @@ begin
   if (container.manager.compress >= 1) then
   begin
     Sleep(100);
-    container.downloadInfo.Status:= Format('%s (%d/%d)', [stIsCompressing, container.currentDownloadChapterPtr, container.chapterLinks.Count]);
-    MainForm.vtDownload.Repaint;
+    Synchronize(CallMainformCompressRepaint);
     Compresser:= TCompress.Create;
     case container.manager.compress of
       1: Compresser.ext:= '.zip';
