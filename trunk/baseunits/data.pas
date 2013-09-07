@@ -7394,7 +7394,6 @@ begin
       else
         mangaInfo.status:= '0';  // completed
     end;
-    mangaInfo.status:= '1';
   end;
 
   // Since chapter name and link are inverted, we need to invert them
@@ -7513,6 +7512,50 @@ begin
         mangaInfo.status:= '0';  // completed
     end;
   end;
+
+  // Since chapter name and link are inverted, we need to invert them
+  if mangainfo.ChapterLinks.Count > 1 then
+  begin
+    i:= 0; j:= mangainfo.ChapterLinks.Count - 1;
+    while (i<j) do
+    begin
+      mangainfo.ChapterName.Exchange(i, j);
+      mangainfo.chapterLinks.Exchange(i, j);
+      Inc(i); Dec(j);
+    end;
+  end;
+
+  // remove duplicate links
+  i:= 0;
+  while i < mangaInfo.chapterLinks.Count do
+  begin
+    j:= i+1;
+    while j < mangaInfo.chapterLinks.Count do
+    begin
+      if mangaInfo.chapterLinks.Strings[i] = mangaInfo.chapterLinks.Strings[j] then
+      begin
+        mangaInfo.chapterLinks.Delete(j);
+        mangaInfo.chapterName.Delete(j);
+        Dec(mangaInfo.numChapter);
+      end
+      else
+        Inc(j);
+    end;
+    Inc(i);
+  end;
+
+  // Since chapter name and link are inverted, we need to invert them
+  if mangainfo.ChapterLinks.Count > 1 then
+  begin
+    i:= 0; j:= mangainfo.ChapterLinks.Count - 1;
+    while (i<j) do
+    begin
+      mangainfo.ChapterName.Exchange(i, j);
+      mangainfo.chapterLinks.Exchange(i, j);
+      Inc(i); Dec(j);
+    end;
+  end;
+
   Result:= NO_ERROR;
 end;
 
