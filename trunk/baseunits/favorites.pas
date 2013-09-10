@@ -20,7 +20,6 @@ type
     FWebsite, FURL: String;
     procedure UpdateName;
     procedure EndPass0;
-    procedure CallMainFormGetBatotoInfo;
     procedure Execute; override;
   public
     currentManga  : String;
@@ -116,11 +115,6 @@ begin
   MainForm.btFavoritesCheckNewChapter.Caption:= stFavoritesChecking + ' '+currentManga;
 end;
 
-procedure   TFavoriteThread.CallMainFormGetBatotoInfo;
-begin
-  getInfo.GetInfoFromURL(FWebsite, FURL, 5);
-end;
-
 procedure   TFavoriteThread.EndPass0;
 begin
   if threadID = 0 then
@@ -137,20 +131,10 @@ begin
   begin
     currentManga:= manager.favoriteInfo[workPtr].title + ' <' + manager.favoriteInfo[workPtr].website + '>';
     Synchronize(UpdateName);
-    if (manager.favoriteInfo[workPtr].website <> BATOTO_NAME) OR
-       (NOT OptionBatotoUseIEChecked) then
-    begin
-      if manager.favoriteInfo[workPtr].website = MANGASTREAM_NAME then
-        getInfo.mangaInfo.title:= manager.favoriteInfo[workPtr].title;
-      getInfo.GetInfoFromURL(manager.favoriteInfo[workPtr].website,
-                                manager.favoriteInfo[workPtr].link, 4);
-    end
-    else
-    begin
-      FWebsite:= manager.favoriteInfo[workPtr].website;
-      FURL    := manager.favoriteInfo[workPtr].link;
-      Synchronize(CallMainFormGetBatotoInfo);
-    end;
+    if manager.favoriteInfo[workPtr].website = MANGASTREAM_NAME then
+      getInfo.mangaInfo.title:= manager.favoriteInfo[workPtr].title;
+    getInfo.GetInfoFromURL(manager.favoriteInfo[workPtr].website,
+                              manager.favoriteInfo[workPtr].link, 4);
     manager.mangaInfo[workPtr].chapterName := TStringList.Create;
     manager.mangaInfo[workPtr].chapterLinks:= TStringList.Create;
     TransferMangaInfo(manager.mangaInfo[workPtr], getInfo.mangaInfo);
@@ -382,6 +366,9 @@ begin
     end
     else
       isNow:= TRUE;
+
+    DLManager.isRunningBackup:= TRUE;
+
     for i:= 0 to Count-1 do
     begin
       newChapter:= mangaInfo[i].numChapter;
@@ -415,6 +402,8 @@ begin
         DLManager.containers.Items[pos].mangaSiteID:= GetMangaSiteID(mangaInfo[i].website);
 
         // generate download link
+        while DLManager.isRunningBackup do Sleep(32);
+
         for j:= currentChapter to newChapter-1 do
         begin
           s:= CustomRename(OptionCustomRename,
@@ -424,11 +413,9 @@ begin
                            Format('%.4d', [j+1]),
                            MainForm.cbOptionPathConvert.Checked);
 
-          while DLManager.isRunningBackup do Sleep(32);
           DLManager.containers.Items[pos].chapterName .Add(s);
           DLManager.containers.Items[pos].chapterLinks.Add(mangaInfo[i].chapterLinks.Strings[j]);
         end;
-
         // mark downloaded chapters
         s:= '';
         if mangaInfo[i].chapterLinks.Count = 0 then exit;
@@ -462,11 +449,15 @@ begin
         favoriteInfo[i].currentChapter:= IntToStr(mangaInfo[i].numChapter);
       end;
     end;
+    DLManager.isRunningBackup:= FALSE;
     if Assigned(OnUpdateDownload) then
       OnUpdateDownload;
-    DLManager.Backup;
     if (isHasNewChapter) AND (isNow) then
+    begin
       DLManager.CheckAndActiveTask;
+      Sleep(64);
+      DLManager.Backup;
+    end;
   end;
 
   // update favorites's current chapter, and free pointers

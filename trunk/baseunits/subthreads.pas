@@ -291,9 +291,13 @@ begin
     Synchronize(CallMainFormShowLog);
   if FileExists(oldDir + 'old_updater.exe') then
     DeleteFile(oldDir + 'old_updater.exe');
-  Sleep(1000);
+  Sleep(2000);
   if OptionAutoCheckFavStartup then
+  begin
+    MainForm.favorites.isAuto:= TRUE;
+    MainForm.favorites.isShowDialog:= MainForm.cbOptionShowFavoriteDialog.Checked;
     MainForm.favorites.Run;
+  end;
   while NOT Terminated do
   begin
     if isCheckForLatestVer then
