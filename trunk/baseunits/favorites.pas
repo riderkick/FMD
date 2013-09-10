@@ -402,8 +402,6 @@ begin
         DLManager.containers.Items[pos].mangaSiteID:= GetMangaSiteID(mangaInfo[i].website);
 
         // generate download link
-        while DLManager.isRunningBackup do Sleep(32);
-
         for j:= currentChapter to newChapter-1 do
         begin
           s:= CustomRename(OptionCustomRename,
@@ -447,6 +445,7 @@ begin
 
         // TODO: bad coding - update favorites's current chapter, and free pointers
         favoriteInfo[i].currentChapter:= IntToStr(mangaInfo[i].numChapter);
+        Sleep(16);
       end;
     end;
     DLManager.isRunningBackup:= FALSE;
