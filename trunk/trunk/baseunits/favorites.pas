@@ -239,6 +239,7 @@ var
   LNewChapter     : TNewChapter;
   LNCResult       : TNewChapterResult;
   numberOfNewChapters: array of Cardinal;
+  newChapterList  : array of TCardinalList;
   newChapterNames,
   newChapterURLs  : array of TStringList;
   l               : TStringList;
@@ -272,9 +273,11 @@ var
     for i:= 0 to Count-1 do
       if (numberOfNewChapters[i] > 0) AND (Assigned(newChapterURLs[i])) then
       begin
+        newChapterList[i].Free;
         newChapterURLs[i].Free;
         newChapterNames[i].Free;
       end;
+    SetLength(newChapterList, 0);
     SetLength(numberOfNewChapters, 0);
     SetLength(newChapterURLs, 0);
     SetLength(newChapterNames, 0);
@@ -283,6 +286,7 @@ var
 begin
   MainForm.btFavoritesCheckNewChapter.Caption:= stFavoritesCheck;
   l:= TStringList.Create;
+  SetLength(newChapterList, Count);
   SetLength(numberOfNewChapters, Count);
   SetLength(newChapterURLs, Count);
   SetLength(newChapterNames, Count);
@@ -308,8 +312,10 @@ begin
             if numberOfNewChapters[i] = 0 then
               Inc(newC);
             Inc(numberOfNewChapters[i]);
+            newChapterList[i]:= TCardinalList.Create;
             newChapterURLs[i]:= TStringList.Create;
             newChapterNames[i]:= TStringList.Create;
+            newChapterList[i].Add(j);
             newChapterURLs[i].Add(mangaInfo[i].chapterLinks.Strings[j]);
             newChapterNames[i].Add(mangaInfo[i].chapterName.Strings[j]);
           //  break;
@@ -396,27 +402,6 @@ begin
     for i:= 0 to Count-1 do
     begin
       currentChapter:= StrToInt(favoriteInfo[i].currentChapter);
-     { newChapter:= mangaInfo[i].numChapter;
-      begin
-        currentChapter:= StrToInt(favoriteInfo[i].currentChapter);
-
-        l.Clear;
-        GetParams(l, favoriteInfo[i].downloadedChapterList);
-        if l.Count <> 0 then
-        begin
-          currentChapter:= newChapter;
-          for j:= 0 to mangaInfo[i].chapterLinks.Count-1 do
-          begin
-            if NOT Check(l, mangaInfo[i].chapterLinks.Strings[j]) then
-            begin
-              currentChapter:= j;
-              break;
-            end;
-          end;
-        end
-        else
-          currentChapter:= 0;
-      end; }
 
       if numberOfNewChapters[i] > 0 then
       begin
@@ -427,21 +412,6 @@ begin
         DLManager.containers.Items[pos].mangaSiteID:= GetMangaSiteID(mangaInfo[i].website);
 
         // generate download link
-       { if mangaInfo[i].chapterLinks.Count >= newChapter-1 then
-        begin
-          for j:= currentChapter to newChapter-1 do
-          begin
-            s:= CustomRename(OptionCustomRename,
-                             mangaInfo[i].website,
-                             mangaInfo[i].title,
-                             mangaInfo[i].chapterName.Strings[j],
-                             Format('%.4d', [j+1]),
-                             MainForm.cbOptionPathConvert.Checked);
-
-            DLManager.containers.Items[pos].chapterName .Add(s);
-            DLManager.containers.Items[pos].chapterLinks.Add(mangaInfo[i].chapterLinks.Strings[j]);
-          end;
-        end; }
 
         if newChapterURLs[i].Count>0 then
           for j:= 0 to newChapterURLs[i].Count-1 do
@@ -450,7 +420,7 @@ begin
                              mangaInfo[i].website,
                              mangaInfo[i].title,
                              newChapterNames[i].Strings[j],
-                             Format('%.4d', [j+1]),
+                             Format('%.4d', [newChapterList[i].Items[j]+1]),
                              MainForm.cbOptionPathConvert.Checked);
 
             DLManager.containers.Items[pos].chapterName .Add(s);
