@@ -178,7 +178,10 @@ const
   CENTRALDEMANGAS_NAME = 'CentralDeMangas'; CENTRALDEMANGAS_ID = 39;
   EGSCANS_NAME      = 'EGScans';      EGSCANS_ID     = 40;
   MANGAAR_NAME      = 'MangaAr';      MANGAAR_ID     = 41;
-  MANGAAE_NAME      = 'MangaAe';      MANGAAE_ID     = 43;
+  MANGAAE_NAME      = 'MangaAe';      MANGAAE_ID     = 42;
+  ANIMESTORY_NAME   = 'AnimeStory';   ANIMESTORY_ID  = 43;
+  LEE_NAME          = 'LectureEnLigne'; LEE_ID       = 44;
+  SCANMANGA_NAME    = 'ScanManga';    SCANMANGA_ID   = 45;
 
   DEFAULT_LIST = ANIMEA_NAME+'!%~'+MANGAFOX_NAME+'!%~'+MANGAHERE_NAME+'!%~'+MANGAINN_NAME+'!%~'+MANGAREADER_NAME+'!%~';
   DEFAULT_CUSTOM_RENAME = '%NUMBERING% - %CHAPTER%';
@@ -222,7 +225,7 @@ var
   // VI: Ký tự dùng để chia cắt param trong dữ liệu
   SEPERATOR: String = '!%~';
 
-  WebsiteRoots  : array[0..42] of array [0..1] of String =
+  WebsiteRoots  : array[0..45] of array [0..1] of String =
     (('AnimeA', 'http://manga.animea.net'),
      ('MangaHere', 'http://www.mangahere.com'),
      ('MangaInn', 'http://www.mangainn.com'),
@@ -265,7 +268,10 @@ var
      ('CentralDeMangas', 'http://centraldemangas.com.br'),
      ('EGScans', 'http://readonline.egscans.org'),
      ('MangaAr', 'http://manga-ar.com'),
-     ('MangaAe', 'http://www.manga.ae/')
+     ('MangaAe', 'http://www.manga.ae/'),
+     ('AnimeStory', 'http://www.anime-story.com'),
+     ('LectureEnLigne', 'http://www.lecture-en-ligne.com'),
+     ('ScanManga', 'http://www.scan-manga.com')
     );
 
   ANIMEA_BROWSER: String = '/browse.html?page=';
@@ -370,6 +376,12 @@ var
   MANGAAR_BROWSER: String = '/directory';
 
   MANGAAE_BROWSER: String = '/manga/all/';
+
+  ANIMESTORY_BROWSER: String = '/mangas/';
+
+  LEE_BROWSER: String = '/index.php?page=liste&ordre=titre';
+
+  SCANMANGA_BROWSER: String = '/scanlation/liste_des_mangas.html';
 
   UPDATE_URL      : String = 'http://jaist.dl.sourceforge.net/project/fmd/FMD/updates/';
 
