@@ -658,7 +658,7 @@ var
     i: Cardinal;
   begin
     Result:= INFORMATION_NOT_FOUND;
-    if NOT GetPage(TObject(source), ANIMEA_ROOT + ANIMEA_BROWSER, 0) then
+    if NOT GetPage(TObject(source), WebsiteRoots[ANIMEA_ID,1] + ANIMEA_BROWSER, 0) then
     begin
       Result:= NET_PROBLEM;
       source.Free;
@@ -696,7 +696,7 @@ var
     i: Cardinal;
   begin
     Result:= INFORMATION_NOT_FOUND;
-    if NOT GetPage(TObject(source), KISSMANGA_ROOT + KISSMANGA_BROWSER, 0) then
+    if NOT GetPage(TObject(source), WebsiteRoots[KISSMANGA_ID,1] + KISSMANGA_BROWSER, 0) then
     begin
       Result:= NET_PROBLEM;
       source.Free;
@@ -742,7 +742,7 @@ var
     begin
       Inc(Page);
       Result:= INFORMATION_NOT_FOUND;
-      if NOT GetPage(TObject(source), BATOTO_ROOT + BATOTO_BROWSER + 'http://www.batoto.net/comic/_/comics/?per_page=750&st=%0' + IntToStr(Page*750), 0) then
+      if NOT GetPage(TObject(source), WebsiteRoots[BATOTO_ID,1] + BATOTO_BROWSER + 'http://www.batoto.net/comic/_/comics/?per_page=750&st=%0' + IntToStr(Page*750), 0) then
       begin
         Result:= NET_PROBLEM;
         source.Free;
@@ -774,7 +774,7 @@ var
     source.Free; }
 
     Result:= INFORMATION_NOT_FOUND;
-    if NOT GetPage(TObject(source), BATOTO_ROOT + '/comic/_/comics/?per_page=750&st=0', 0) then
+    if NOT GetPage(TObject(source), WebsiteRoots[BATOTO_ID,1] + '/comic/_/comics/?per_page=750&st=0', 0) then
     begin
       Result:= NET_PROBLEM;
       source.Free;
@@ -810,7 +810,7 @@ var
     i: Cardinal;
   begin
     Result:= INFORMATION_NOT_FOUND;
-    if NOT GetPage(TObject(source), MANGA24H_ROOT + MANGA24H_BROWSER, 0) then
+    if NOT GetPage(TObject(source), WebsiteRoots[MANGA24H_ID,1] + MANGA24H_BROWSER, 0) then
     begin
       Result:= NET_PROBLEM;
       source.Free;
@@ -846,7 +846,7 @@ var
     i: Cardinal;
   begin
     Result:= INFORMATION_NOT_FOUND;
-    if NOT GetPage(TObject(source), VNSHARING_ROOT + VNSHARING_BROWSER, 0) then
+    if NOT GetPage(TObject(source), WebsiteRoots[VNSHARING_ID,1] + VNSHARING_BROWSER, 0) then
     begin
       Result:= NET_PROBLEM;
       source.Free;
@@ -920,7 +920,7 @@ var
     i: Cardinal;
   begin
     Result:= INFORMATION_NOT_FOUND;
-    if NOT GetPage(TObject(source), FAKKU_ROOT + FAKKU_BROWSER, 0) then
+    if NOT GetPage(TObject(source), WebsiteRoots[FAKKU_ID,1] + FAKKU_BROWSER, 0) then
     begin
       Result:= NET_PROBLEM;
       source.Free;
@@ -994,7 +994,7 @@ var
     i: Cardinal;
   begin
     Result:= INFORMATION_NOT_FOUND;
-    if NOT GetPage(TObject(source), MANGAPARK_ROOT + MANGAPARK_BROWSER + '1?az', 0) then
+    if NOT GetPage(TObject(source), WebsiteRoots[MANGAPARK_ID,1] + MANGAPARK_BROWSER + '1?az', 0) then
     begin
       Result:= NET_PROBLEM;
       source.Free;
@@ -1033,7 +1033,7 @@ var
     i: Cardinal;
   begin
     Result:= INFORMATION_NOT_FOUND;
-    if NOT GetPage(TObject(source), GEHENTAI_ROOT + '/?page=0' + GEHENTAI_BROWSER, 0) then
+    if NOT GetPage(TObject(source), WebsiteRoots[GEHENTAI_ID,1] + '/?page=0' + GEHENTAI_BROWSER, 0) then
     begin
       Result:= NET_PROBLEM;
       source.Free;
@@ -1069,7 +1069,7 @@ var
     i: Cardinal;
   begin
     Result:= INFORMATION_NOT_FOUND;
-    if NOT GetPage(TObject(source), MANGAFOX_ROOT + MANGAFOX_BROWSER + '?az', 0) then
+    if NOT GetPage(TObject(source), WebsiteRoots[MANGAFOX_ID,1] + MANGAFOX_BROWSER + '?az', 0) then
     begin
       Result:= NET_PROBLEM;
       source.Free;
@@ -1107,7 +1107,7 @@ var
     i: Cardinal;
   begin
     Result:= INFORMATION_NOT_FOUND;
-    if NOT GetPage(TObject(source), MANGATRADERS_ROOT + MANGATRADERS_BROWSER, 0) then
+    if NOT GetPage(TObject(source), WebsiteRoots[MANGATRADERS_ID,1] + MANGATRADERS_BROWSER, 0) then
     begin
       Result:= NET_PROBLEM;
       source.Free;
@@ -1182,7 +1182,7 @@ var
     i: Cardinal;
   begin
     Result:= INFORMATION_NOT_FOUND;
-    if NOT GetPage(TObject(source), BLOGTRUYEN_ROOT + BLOGTRUYEN_BROWSER, 0) then
+    if NOT GetPage(TObject(source), WebsiteRoots[BLOGTRUYEN_ID,1] + BLOGTRUYEN_BROWSER, 0) then
     begin
       Result:= NET_PROBLEM;
       source.Free;
@@ -1218,7 +1218,7 @@ var
     i: Cardinal;
   begin
     Result:= INFORMATION_NOT_FOUND;
-    if NOT GetPage(TObject(source), REDHAWKSCANS_ROOT + REDHAWKSCANS_BROWSER, 0) then
+    if NOT GetPage(TObject(source), WebsiteRoots[REDHAWKSCANS_ID,1] + REDHAWKSCANS_BROWSER, 0) then
     begin
       Result:= NET_PROBLEM;
       source.Free;
@@ -1254,7 +1254,7 @@ var
     i: Cardinal;
   begin
     Result:= INFORMATION_NOT_FOUND;
-    if NOT GetPage(TObject(source), S2SCAN_ROOT + S2SCAN_BROWSER, 0) then
+    if NOT GetPage(TObject(source), WebsiteRoots[S2SCAN_ID,1] + S2SCAN_BROWSER, 0) then
     begin
       Result:= NET_PROBLEM;
       source.Free;
@@ -1290,7 +1290,7 @@ var
     i: Cardinal;
   begin
     Result:= INFORMATION_NOT_FOUND;
-    if NOT GetPage(TObject(source), MANGAAE_ROOT + MANGAAE_BROWSER, 0) then
+    if NOT GetPage(TObject(source), WebsiteRoots[MANGAAE_ID,1] + MANGAAE_BROWSER, 0) then
     begin
       Result:= NET_PROBLEM;
       source.Free;
@@ -1357,10 +1357,10 @@ begin
     Result:= GetMangaTradersDirectoryPage
   else
   if website = MANGAEDEN_NAME then
-    Result:= GetMangaEdenDirectoryPage(MANGAEDEN_ROOT)
+    Result:= GetMangaEdenDirectoryPage(WebsiteRoots[MANGAEDEN_ID,1])
   else
   if website = PERVEDEN_NAME then
-    Result:= GetMangaEdenDirectoryPage(PERVEDEN_ROOT)
+    Result:= GetMangaEdenDirectoryPage(WebsiteRoots[PERVEDEN_ID,1])
   else
   if website = BLOGTRUYEN_NAME then
     Result:= GetBlogTruyenDirectoryPage
@@ -1401,7 +1401,7 @@ var
     i: Cardinal;
   begin
     Result:= INFORMATION_NOT_FOUND;
-    if NOT GetPage(TObject(source), ANIMEA_ROOT + ANIMEA_BROWSER + URL, 0) then
+    if NOT GetPage(TObject(source), WebsiteRoots[ANIMEA_ID,1] + ANIMEA_BROWSER + URL, 0) then
     begin
       Result:= NET_PROBLEM;
       source.Free;
@@ -1425,7 +1425,7 @@ var
     i: Cardinal;
   begin
     Result:= INFORMATION_NOT_FOUND;
-    if NOT GetPage(TObject(source), MANGAHERE_ROOT + MANGAHERE_BROWSER, 0) then
+    if NOT GetPage(TObject(source), WebsiteRoots[MANGAHERE_ID,1] + MANGAHERE_BROWSER, 0) then
     begin
       Result:= NET_PROBLEM;
       source.Free;
@@ -1448,7 +1448,7 @@ var
       begin
         Result:= NO_ERROR;
         names.Add(StringFilter(GetString(parse.Strings[i], 'rel="', '" href')));
-        links.Add(StringReplace(GetString(parse.Strings[i], 'href="', '">'), MANGAHERE_ROOT, '', []));
+        links.Add(StringReplace(GetString(parse.Strings[i], 'href="', '">'), WebsiteRoots[MANGAHERE_ID,1], '', []));
       end;
     end;
     source.Free;
@@ -1460,7 +1460,7 @@ var
     i: Cardinal;
   begin
     Result:= INFORMATION_NOT_FOUND;
-    if NOT GetPage(TObject(source), ESMANGAHERE_ROOT + ESMANGAHERE_BROWSER, 0) then
+    if NOT GetPage(TObject(source), WebsiteRoots[ESMANGAHERE_ID,1] + ESMANGAHERE_BROWSER, 0) then
     begin
       Result:= NET_PROBLEM;
       source.Free;
@@ -1483,7 +1483,7 @@ var
       begin
         Result:= NO_ERROR;
         names.Add(StringFilter(GetString(parse.Strings[i], 'rel="', '" href')));
-        links.Add(StringReplace(GetString(parse.Strings[i], 'href="', '">'), ESMANGAHERE_ROOT, '', []));
+        links.Add(StringReplace(GetString(parse.Strings[i], 'href="', '">'), WebsiteRoots[ESMANGAHERE_ID,1], '', []));
       end;
     end;
     source.Free;
@@ -1495,7 +1495,7 @@ var
     i: Cardinal;
   begin
     Result:= INFORMATION_NOT_FOUND;
-    if NOT GetPage(TObject(source), ANIMEEXTREMIST_ROOT + ANIMEEXTREMIST_BROWSER, 0) then
+    if NOT GetPage(TObject(source), WebsiteRoots[ANIMEEXTREMIST_ID,1] + ANIMEEXTREMIST_BROWSER, 0) then
     begin
       Result:= NET_PROBLEM;
       source.Free;
@@ -1518,7 +1518,7 @@ var
       begin
         Result:= NO_ERROR;
         names.Add(TrimLeft(TrimRight(parse.Strings[i+4])));
-        links.Add(StringReplace(GetString(parse.Strings[i+3], 'href="', '">'), ANIMEEXTREMIST_ROOT, '', []));
+        links.Add(StringReplace(GetString(parse.Strings[i+3], 'href="', '">'), WebsiteRoots[ANIMEEXTREMIST_ID,1], '', []));
       end;
     end;
     source.Free;
@@ -1531,7 +1531,7 @@ var
     s: String;
   begin
     Result:= INFORMATION_NOT_FOUND;
-    if NOT GetPage(TObject(source), MANGAINN_ROOT + MANGAINN_BROWSER, 0) then
+    if NOT GetPage(TObject(source), WebsiteRoots[MANGAINN_ID,1] + MANGAINN_BROWSER, 0) then
     begin
       Result:= NET_PROBLEM;
       source.Free;
@@ -1558,7 +1558,7 @@ var
       //  if s <> 'Hajimete no Aku' then
         begin
           names.Add(s);
-          links.Add(StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i+1], 'href=')), MANGAINN_ROOT, '', []));
+          links.Add(StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i+1], 'href=')), WebsiteRoots[MANGAINN_ID,1], '', []));
         end;
       end;
     end;
@@ -1573,7 +1573,7 @@ var
     s: String;
   begin
     Result:= INFORMATION_NOT_FOUND;
-    if NOT GetPage(TObject(source), OURMANGA_ROOT + OURMANGA_BROWSER, 0) then
+    if NOT GetPage(TObject(source), WebsiteRoots[OURMANGA_ID,1] + OURMANGA_BROWSER, 0) then
     begin
       Result:= NET_PROBLEM;
       source.Free;
@@ -1604,7 +1604,7 @@ var
         //  if s <> 'Hajimete no Aku' then
           begin
             names.Add(s);
-            links.Add(StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i+1], 'href=')), OURMANGA_ROOT, '', []));
+            links.Add(StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i+1], 'href=')), WebsiteRoots[OURMANGA_ID,1], '', []));
           end;
         end;
       end;
@@ -1619,7 +1619,7 @@ var
     s: String;
   begin
     Result:= INFORMATION_NOT_FOUND;
-    if NOT GetPage(TObject(source), KISSMANGA_ROOT + KISSMANGA_BROWSER + '?page=' + IntToStr(StrToInt(URL)+1), 0) then
+    if NOT GetPage(TObject(source), WebsiteRoots[KISSMANGA_ID,1] + KISSMANGA_BROWSER + '?page=' + IntToStr(StrToInt(URL)+1), 0) then
     begin
       Result:= NET_PROBLEM;
       source.Free;
@@ -1646,7 +1646,7 @@ var
         s:= StringReplace(s, #13, '', [rfReplaceAll]);
         s:= TrimRight(TrimLeft(s));
         names.Add(s);
-        links.Add(StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href=')), KISSMANGA_ROOT, '', []));
+        links.Add(StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href=')), WebsiteRoots[KISSMANGA_ID,1], '', []));
       end;
     end;
     source.Free;
@@ -1660,7 +1660,7 @@ var
     s: String;
   begin
     Result:= INFORMATION_NOT_FOUND;
-    if NOT GetPage(TObject(source), BATOTO_ROOT + '/comic/_/comics/?per_page=750&st=' + IntToStr(StrToInt(URL)*750), 0) then
+    if NOT GetPage(TObject(source), WebsiteRoots[BATOTO_ID,1] + '/comic/_/comics/?per_page=750&st=' + IntToStr(StrToInt(URL)*750), 0) then
     begin
       Result:= NET_PROBLEM;
       source.Free;
@@ -1693,7 +1693,7 @@ var
         begin
           names.Add(s);
           s:= GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href='));
-          links.Add(StringReplace(s, BATOTO_ROOT, '', []));
+          links.Add(StringReplace(s, WebsiteRoots[BATOTO_ID,1], '', []));
         end;
       end;
     end;
@@ -1708,7 +1708,7 @@ var
     myParser: THTMLParser;
   begin
     Result:= INFORMATION_NOT_FOUND;
-    if NOT GetPage(TObject(source), MANGA24H_ROOT + MANGA24H_BROWSER + IntToStr(StrToInt(URL)+1), 0) then
+    if NOT GetPage(TObject(source), WebsiteRoots[MANGA24H_ID,1] + MANGA24H_BROWSER + IntToStr(StrToInt(URL)+1), 0) then
     begin
       Result:= NET_PROBLEM;
       source.Free;
@@ -1734,7 +1734,7 @@ var
         Result:= NO_ERROR;
         s:= StringFilter(TrimLeft(TrimRight(parse.Strings[i+1])));
         names.Add(s);
-        links.Add('/'+StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i-1], 'href=')), MANGA24H_ROOT, '', []));
+        links.Add('/'+StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i-1], 'href=')), WebsiteRoots[MANGA24H_ID,1], '', []));
       end;
     end;
     source.Free;
@@ -1749,7 +1749,7 @@ var
   begin
     Result:= INFORMATION_NOT_FOUND;
     // bad code
-    if NOT GetPage(TObject(source), VNSHARING_ROOT + VNSHARING_BROWSER + '?page='+ IntToStr(StrToInt(URL)+1), 0) then
+    if NOT GetPage(TObject(source), WebsiteRoots[VNSHARING_ID,1] + VNSHARING_BROWSER + '?page='+ IntToStr(StrToInt(URL)+1), 0) then
     begin
       Result:= NET_PROBLEM;
       source.Free;
@@ -1838,7 +1838,7 @@ var
     i:= StrToInt(URL);
     if i = 0 then
     begin
-      if NOT GetPage(TObject(source), FAKKU_ROOT + FAKKU_BROWSER, 0) then
+      if NOT GetPage(TObject(source), WebsiteRoots[FAKKU_ID,1] + FAKKU_BROWSER, 0) then
       begin
         Result:= NET_PROBLEM;
         source.Free;
@@ -1847,7 +1847,7 @@ var
     end
     else
     begin
-      if NOT GetPage(TObject(source), FAKKU_ROOT + FAKKU_BROWSER + '/page/' + IntToStr(i+1), 0) then
+      if NOT GetPage(TObject(source), WebsiteRoots[FAKKU_ID,1] + FAKKU_BROWSER + '/page/' + IntToStr(i+1), 0) then
       begin
         Result:= NET_PROBLEM;
         source.Free;
@@ -1878,7 +1878,7 @@ var
         Result:= NO_ERROR;
         s:= TrimLeft(TrimRight(StringFilter(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'title=')))));
         names.Add(s);
-        links.Add(StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href=')), FAKKU_ROOT, '', []));
+        links.Add(StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href=')), WebsiteRoots[FAKKU_ID,1], '', []));
       end;
     end;
     source.Free;
@@ -1934,7 +1934,7 @@ var
 
   begin
     Result:= INFORMATION_NOT_FOUND;
-    if NOT GetPage(TObject(source), MANGAREADER_ROOT + MANGAREADER_BROWSER, 0) then
+    if NOT GetPage(TObject(source), WebsiteRoots[MANGAREADER_ID,1] + MANGAREADER_BROWSER, 0) then
     begin
       Result:= NET_PROBLEM;
       source.Free;
@@ -1976,7 +1976,7 @@ var
     s: String;
   begin
     Result:= INFORMATION_NOT_FOUND;
-    if NOT GetPage(TObject(source), MANGAPARK_ROOT + MANGAPARK_BROWSER + URL + '?az', 0) then
+    if NOT GetPage(TObject(source), WebsiteRoots[MANGAPARK_ID,1] + MANGAPARK_BROWSER + URL + '?az', 0) then
     begin
       Result:= NET_PROBLEM;
       source.Free;
@@ -2017,7 +2017,7 @@ var
     s: String;
   begin
     Result:= INFORMATION_NOT_FOUND;
-    if NOT GetPage(TObject(source), MANGAFOX_ROOT + MANGAFOX_BROWSER + IntToStr(StrToInt(URL)+1) + '.htm?az', 0) then
+    if NOT GetPage(TObject(source), WebsiteRoots[MANGAFOX_ID,1] + MANGAFOX_BROWSER + IntToStr(StrToInt(URL)+1) + '.htm?az', 0) then
     begin
       Result:= NET_PROBLEM;
       source.Free;
@@ -2042,7 +2042,7 @@ var
         s:= GetAttributeValue(GetTagAttribute(parse.Strings[i+2], 'href='));
         links.Add(s);
         s:= StringFilter(TrimLeft(TrimRight(parse.Strings[i+3])));
-        s:= StringReplace(s, MANGAFOX_ROOT, '', []);
+        s:= StringReplace(s, WebsiteRoots[MANGAFOX_ID,1], '', []);
         names.Add(HTMLEntitiesFilter(s));
       end;
     end;
@@ -2057,7 +2057,7 @@ var
     s: String;
   begin
     Result:= INFORMATION_NOT_FOUND;
-    if NOT GetPage(TObject(source), MANGATRADERS_ROOT + MANGATRADERS_BROWSER + 'All/page/' + IntToStr(StrToInt(URL)+1) + '/', 0) then
+    if NOT GetPage(TObject(source), WebsiteRoots[MANGATRADERS_ID,1] + MANGATRADERS_BROWSER + 'All/page/' + IntToStr(StrToInt(URL)+1) + '/', 0) then
     begin
       Result:= NET_PROBLEM;
       source.Free;
@@ -2099,7 +2099,7 @@ var
     s: String;
   begin
     Result:= INFORMATION_NOT_FOUND;
-    if NOT GetPage(TObject(source), TRUYENTRANHTUAN_ROOT + TRUYENTRANHTUAN_BROWSER, 0) then
+    if NOT GetPage(TObject(source), WebsiteRoots[TRUYENTRANHTUAN_ID,1] + TRUYENTRANHTUAN_BROWSER, 0) then
     begin
       Result:= NET_PROBLEM;
       source.Free;
@@ -2138,7 +2138,7 @@ var
     s: String;
   begin
     Result:= INFORMATION_NOT_FOUND;
-    if NOT GetPage(TObject(source), SUBMANGA_ROOT + SUBMANGA_BROWSER, 0) then
+    if NOT GetPage(TObject(source), WebsiteRoots[SUBMANGA_ID,1] + SUBMANGA_BROWSER, 0) then
     begin
       Result:= NET_PROBLEM;
       source.Free;
@@ -2163,7 +2163,7 @@ var
         s:= StringFilter(TrimLeft(TrimRight(parse.Strings[i+3])));
         names.Add(HTMLEntitiesFilter(s));
         s:= GetAttributeValue(GetTagAttribute(parse.Strings[i-1], 'href='));
-        links.Add(StringReplace(s, SUBMANGA_ROOT, '', []));
+        links.Add(StringReplace(s, WebsiteRoots[SUBMANGA_ID,1], '', []));
       end;
     end;
     source.Free;
@@ -2177,7 +2177,7 @@ var
     s: String;
   begin
     Result:= INFORMATION_NOT_FOUND;
-    if NOT GetPage(TObject(source), KOMIKID_ROOT, 0) then
+    if NOT GetPage(TObject(source), WebsiteRoots[KOMIKID_ID,1], 0) then
     begin
       Result:= NET_PROBLEM;
       source.Free;
@@ -2216,7 +2216,7 @@ var
     s: String;
   begin
     Result:= INFORMATION_NOT_FOUND;
-    if NOT GetPage(TObject(source), PECINTAKOMIK_ROOT + PECINTAKOMIK_BROWSER, 0) then
+    if NOT GetPage(TObject(source), WebsiteRoots[PECINTAKOMIK_ID,1] + PECINTAKOMIK_BROWSER, 0) then
     begin
       Result:= NET_PROBLEM;
       source.Free;
@@ -2268,7 +2268,7 @@ var
     s: String;
   begin
     Result:= INFORMATION_NOT_FOUND;
-    if NOT GetPage(TObject(source), MABUNS_ROOT + MABUNS_BROWSER, 0) then
+    if NOT GetPage(TObject(source), WebsiteRoots[MABUNS_ID,1] + MABUNS_BROWSER, 0) then
     begin
       Result:= NET_PROBLEM;
       source.Free;
@@ -2292,7 +2292,7 @@ var
         Result:= NO_ERROR;
         s:= StringFilter(TrimLeft(TrimRight(parse.Strings[i+3])));
         names.Add(HTMLEntitiesFilter(s));
-        s:= StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i+6], 'href=')), MABUNS_ROOT, '', []);
+        s:= StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i+6], 'href=')), WebsiteRoots[MABUNS_ID,1], '', []);
         links.Add(s);
       end;
     end;
@@ -2307,7 +2307,7 @@ var
     s: String;
   begin
     Result:= INFORMATION_NOT_FOUND;
-    if NOT GetPage(TObject(source), MANGAESTA_ROOT + MANGAESTA_BROWSER, 0) then
+    if NOT GetPage(TObject(source), WebsiteRoots[MANGAESTA_ID,1] + MANGAESTA_BROWSER, 0) then
     begin
       Result:= NET_PROBLEM;
       source.Free;
@@ -2331,7 +2331,7 @@ var
         Result:= NO_ERROR;
         s:= StringFilter(TrimLeft(TrimRight(GetAttributeValue(GetTagAttribute(parse.Strings[i+3], 'title=')))));
         names.Add(HTMLEntitiesFilter(s));
-        s:= StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i+2], 'href=')), MANGAESTA_ROOT, '', []);
+        s:= StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i+2], 'href=')), WebsiteRoots[MANGAESTA_ID,1], '', []);
         links.Add(s);
       end;
     end;
@@ -2346,7 +2346,7 @@ var
     s: String;
   begin
     Result:= INFORMATION_NOT_FOUND;
-    if NOT GetPage(TObject(source), HUGEMANGA_ROOT + HUGEMANGA_BROWSER, 0) then
+    if NOT GetPage(TObject(source), WebsiteRoots[HUGEMANGA_ID,1] + HUGEMANGA_BROWSER, 0) then
     begin
       Result:= NET_PROBLEM;
       source.Free;
@@ -2386,7 +2386,7 @@ var
     s: String;
   begin
     Result:= INFORMATION_NOT_FOUND;
-    if NOT GetPage(TObject(source), MANGAAR_ROOT + MANGAAR_BROWSER, 0) then
+    if NOT GetPage(TObject(source), WebsiteRoots[MANGAAR_ID,1] + MANGAAR_BROWSER, 0) then
     begin
       Result:= NET_PROBLEM;
       source.Free;
@@ -2415,7 +2415,7 @@ var
         Result:= NO_ERROR;
         s:= TrimLeft(TrimRight(StringFilter(parse.Strings[i+1])));
         names.Add(HTMLEntitiesFilter(s));
-        s:= StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href=')), MANGAAR_ROOT, '', []);
+        s:= StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href=')), WebsiteRoots[MANGAAR_ID,1], '', []);
         links.Add(s);
       end;
     end;
@@ -2430,7 +2430,7 @@ var
     s: String;
   begin
     Result:= INFORMATION_NOT_FOUND;
-    if NOT GetPage(TObject(source), MANGAAE_ROOT + MANGAAE_BROWSER + IntToStr(StrToInt(URL)+1), 0) then
+    if NOT GetPage(TObject(source), WebsiteRoots[MANGAAE_ID,1] + MANGAAE_BROWSER + IntToStr(StrToInt(URL)+1), 0) then
     begin
       Result:= NET_PROBLEM;
       source.Free;
@@ -2455,7 +2455,7 @@ var
         Result:= NO_ERROR;
         s:= TrimLeft(TrimRight(StringFilter(parse.Strings[i+3])));
         names.Add(HTMLEntitiesFilter(s));
-        s:= StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i-2], 'href=')), MANGAAE_ROOT, '', []);
+        s:= StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i-2], 'href=')), WebsiteRoots[MANGAAE_ID,1], '', []);
         links.Add(s);
       end;
     end;
@@ -2470,7 +2470,7 @@ var
     s: String;
   begin
     Result:= INFORMATION_NOT_FOUND;
-    if NOT GetPage(TObject(source), CENTRALDEMANGAS_ROOT + CENTRALDEMANGAS_BROWSER, 0) then
+    if NOT GetPage(TObject(source), WebsiteRoots[CENTRALDEMANGAS_ID,1] + CENTRALDEMANGAS_BROWSER, 0) then
     begin
       Result:= NET_PROBLEM;
       source.Free;
@@ -2496,53 +2496,7 @@ var
         Result:= NO_ERROR;
         s:= StringFilter(parse.Strings[i+1]);
         names.Add(HTMLEntitiesFilter(s));
-        s:= StringReplace(GetString(parse.Strings[i], 'href="', '"'), CENTRALDEMANGAS_ROOT, '', []);
-        links.Add(s);
-      end;
-    end;
-    source.Free;
-  end;
-
-  // get name and link of the manga from Mangaku
-  function   MangakuGetNameAndLink: Byte;
-  var
-    isExtractNameAndLink: Boolean = FALSE;
-    tmp: Integer;
-    i: Cardinal;
-    s: String;
-  begin
-    Result:= INFORMATION_NOT_FOUND;
-    if NOT GetPage(TObject(source), MANGAKU_ROOT + MANGAKU_BROWSER, 0) then
-    begin
-      Result:= NET_PROBLEM;
-      source.Free;
-      exit;
-    end;
-    parse.Clear;
-    Parser:= TjsFastHTMLParser.Create(PChar(source.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
-    Parser.Exec;
-    Parser.Free;
-    if parse.Count=0 then
-    begin
-      source.Free;
-      exit;
-    end;
-    for i:= 0 to parse.Count-1 do
-    begin
-      if (NOT isExtractNameAndLink) AND
-         (Pos('id="sitemap">', parse.Strings[i])>0) then
-        isExtractNameAndLink:= TRUE;
-      if  (isExtractNameAndLink) AND
-         ((Pos('//bit.ly', parse.Strings[i]) > 0) OR
-          (Pos('//www.mangaku', parse.Strings[i]) > 0)) AND
-          (Pos('bp.blogspot', parse.Strings[i+1]) > 0) then
-      begin
-        Result:= NO_ERROR;
-        s:= StringFilter(TrimLeft(TrimRight(StringReplace(parse.Strings[i+3], 'Manga ', '', []))));
-        names.Add(HTMLEntitiesFilter(s));
-        s:= StringReplace(GetString(parse.Strings[i], 'href="', '"'), MANGAKU_ROOT, '', []);
+        s:= StringReplace(GetString(parse.Strings[i], 'href="', '"'), WebsiteRoots[CENTRALDEMANGAS_ID,1], '', []);
         links.Add(s);
       end;
     end;
@@ -2557,7 +2511,7 @@ var
     s: String;
   begin
     Result:= INFORMATION_NOT_FOUND;
-    if NOT GetPage(TObject(source), IMANHUA_ROOT + IMANHUA_BROWSER, 0) then
+    if NOT GetPage(TObject(source), WebsiteRoots[IMANHUA_ID,1] + IMANHUA_BROWSER, 0) then
     begin
       Result:= NET_PROBLEM;
       source.Free;
@@ -2597,7 +2551,7 @@ var
     s: String;
   begin
     Result:= INFORMATION_NOT_FOUND;
-    if NOT GetPage(TObject(source), TURKCRAFT_ROOT + TURKCRAFT_BROWSER, 0) then
+    if NOT GetPage(TObject(source), WebsiteRoots[TURKCRAFT_ID,1] + TURKCRAFT_BROWSER, 0) then
     begin
       Result:= NET_PROBLEM;
       source.Free;
@@ -2636,7 +2590,7 @@ var
     s: String;
   begin
     Result:= INFORMATION_NOT_FOUND;
-    if NOT GetPage(TObject(source), MANGAVADISI_ROOT + MANGAVADISI_BROWSER, 0) then
+    if NOT GetPage(TObject(source), WebsiteRoots[MANGAVADISI_ID,1] + MANGAVADISI_BROWSER, 0) then
     begin
       Result:= NET_PROBLEM;
       source.Free;
@@ -2675,7 +2629,7 @@ var
     s: String;
   begin
     Result:= INFORMATION_NOT_FOUND;
-    if NOT GetPage(TObject(source), MANGAFRAME_ROOT + MANGAFRAME_BROWSER, 0) then
+    if NOT GetPage(TObject(source), WebsiteRoots[MANGAFRAME_ID,1] + MANGAFRAME_BROWSER, 0) then
     begin
       Result:= NET_PROBLEM;
       source.Free;
@@ -2700,7 +2654,7 @@ var
         Result:= NO_ERROR;
         s:= StringFilter(GetAttributeValue(GetTagAttribute(parse.Strings[i+1], 'title=')));
         names.Add(HTMLEntitiesFilter(s));
-        s:= StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i+1], 'href=')), MANGAFRAME_ROOT, '', []);
+        s:= StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i+1], 'href=')), WebsiteRoots[MANGAFRAME_ID,1], '', []);
         links.Add(s);
       end;
     end;
@@ -2715,7 +2669,7 @@ var
     s: String;
   begin
     Result:= INFORMATION_NOT_FOUND;
-    if NOT GetPage(TObject(source), SENMANGA_ROOT + SENMANGA_BROWSER, 0) then
+    if NOT GetPage(TObject(source), WebsiteRoots[SENMANGA_ID,1] + SENMANGA_BROWSER, 0) then
     begin
       Result:= NET_PROBLEM;
       source.Free;
@@ -2740,7 +2694,7 @@ var
         Result:= NO_ERROR;
         s:= StringFilter(parse.Strings[i-2]);
         names.Add(HTMLEntitiesFilter(s));
-        s:= StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i-3], 'href=')), SENMANGA_ROOT, '', []);
+        s:= StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i-3], 'href=')), WebsiteRoots[SENMANGA_ID,1], '', []);
         links.Add(s);
       end;
     end;
@@ -2755,7 +2709,7 @@ var
     s: String;
   begin
     Result:= INFORMATION_NOT_FOUND;
-    if NOT GetPage(TObject(source), STARKANA_ROOT + STARKANA_BROWSER, 0) then
+    if NOT GetPage(TObject(source), WebsiteRoots[STARKANA_ID,1] + STARKANA_BROWSER, 0) then
     begin
       Result:= NET_PROBLEM;
       source.Free;
@@ -2794,7 +2748,7 @@ var
     s: String;
   begin
     Result:= INFORMATION_NOT_FOUND;
-    if NOT GetPage(TObject(source), EATMANGA_ROOT + EATMANGA_BROWSER, 0) then
+    if NOT GetPage(TObject(source), WebsiteRoots[EATMANGA_ID,1] + EATMANGA_BROWSER, 0) then
     begin
       Result:= NET_PROBLEM;
       source.Free;
@@ -2921,7 +2875,7 @@ var
     s: String;
   begin
     Result:= INFORMATION_NOT_FOUND;
-    if NOT GetPage(TObject(source), REDHAWKSCANS_ROOT + REDHAWKSCANS_BROWSER + '/' + IntToStr(StrToInt(URL)+1) + '/', 0) then
+    if NOT GetPage(TObject(source), WebsiteRoots[REDHAWKSCANS_ID,1] + REDHAWKSCANS_BROWSER + '/' + IntToStr(StrToInt(URL)+1) + '/', 0) then
     begin
       Result:= NET_PROBLEM;
       source.Free;
@@ -2946,7 +2900,7 @@ var
         Result:= NO_ERROR;
         s:= StringFilter(TrimLeft(TrimRight(parse.Strings[i+2])));
         names.Add(HTMLEntitiesFilter(s));
-        s:= StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i+1], 'href="')), REDHAWKSCANS_ROOT, '', []);
+        s:= StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i+1], 'href="')), WebsiteRoots[REDHAWKSCANS_ID,1], '', []);
         links.Add(s);
       end;
     end;
@@ -2961,7 +2915,7 @@ var
     s: String;
   begin
     Result:= INFORMATION_NOT_FOUND;
-    if NOT GetPage(TObject(source), S2SCAN_ROOT + S2SCAN_BROWSER + '/' + IntToStr(StrToInt(URL)+1) + '/', 0) then
+    if NOT GetPage(TObject(source), WebsiteRoots[S2SCAN_ID,1] + S2SCAN_BROWSER + '/' + IntToStr(StrToInt(URL)+1) + '/', 0) then
     begin
       Result:= NET_PROBLEM;
       source.Free;
@@ -2986,7 +2940,7 @@ var
         Result:= NO_ERROR;
         s:= StringFilter(TrimLeft(TrimRight(parse.Strings[i+2])));
         names.Add(HTMLEntitiesFilter(s));
-        s:= StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i+1], 'href="')), S2SCAN_ROOT, '', []);
+        s:= StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i+1], 'href="')), WebsiteRoots[S2SCAN_ID,1], '', []);
         links.Add(s);
       end;
     end;
@@ -3001,7 +2955,7 @@ var
     s: String;
   begin
     Result:= INFORMATION_NOT_FOUND;
-    if NOT GetPage(TObject(source), EGSCANS_ROOT + EGSCANS_BROWSER + '/' + IntToStr(StrToInt(URL)+1) + '/', 0) then
+    if NOT GetPage(TObject(source), WebsiteRoots[EGSCANS_ID,1] + EGSCANS_BROWSER + '/' + IntToStr(StrToInt(URL)+1) + '/', 0) then
     begin
       Result:= NET_PROBLEM;
       source.Free;
@@ -3026,7 +2980,7 @@ var
         Result:= NO_ERROR;
         s:= StringFilter(TrimLeft(TrimRight(parse.Strings[i+1])));
         names.Add(HTMLEntitiesFilter(s));
-        s:= StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'value="')), S2SCAN_ROOT, '', []);
+        s:= StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'value="')), WebsiteRoots[S2SCAN_ID,1], '', []);
         links.Add(s);
       end;
       if Pos('<select name="manga"', parse.Strings[i]) > 0 then
@@ -3045,9 +2999,9 @@ var
   begin
     Result:= INFORMATION_NOT_FOUND;
     stream:= TStringStream.Create('');
-    s:= BLOGTRUYEN_ROOT + BLOGTRUYEN_JS_BROWSER;
+    s:= WebsiteRoots[BLOGTRUYEN_ID,1] + BLOGTRUYEN_JS_BROWSER;
     s:= BLOGTRUYEN_POST_FORM + IntToStr(StrToInt(URL)+1);
-    while NOT HttpPostURL(BLOGTRUYEN_ROOT + BLOGTRUYEN_JS_BROWSER, BLOGTRUYEN_POST_FORM + IntToStr(StrToInt(URL)+1), stream) do ;
+    while NOT HttpPostURL(WebsiteRoots[BLOGTRUYEN_ID,1] + BLOGTRUYEN_JS_BROWSER, BLOGTRUYEN_POST_FORM + IntToStr(StrToInt(URL)+1), stream) do ;
     source.Text:= stream.DataString;
     stream.Free;
     parse.Clear;
@@ -3121,7 +3075,7 @@ var
     s  : String;
   begin
     Result:= INFORMATION_NOT_FOUND;
-    if NOT GetPage(TObject(source), GEHENTAI_ROOT + '/?page=' + URL + GEHENTAI_BROWSER, 0) then
+    if NOT GetPage(TObject(source), WebsiteRoots[GEHENTAI_ID,1] + '/?page=' + URL + GEHENTAI_BROWSER, 0) then
     begin
       Result:= NET_PROBLEM;
       source.Free;
@@ -3225,10 +3179,10 @@ begin
     Result:= EGScansGetNameAndLink
   else
   if website = MANGAEDEN_NAME then
-    Result:= MangaEdenGetNameAndLink(MANGAEDEN_ROOT)
+    Result:= MangaEdenGetNameAndLink(WebsiteRoots[MANGAEDEN_ID,1])
   else
   if website = PERVEDEN_NAME then
-    Result:= MangaEdenGetNameAndLink(PERVEDEN_ROOT)
+    Result:= MangaEdenGetNameAndLink(WebsiteRoots[PERVEDEN_ID,1])
   else
   if website = BLOGTRUYEN_NAME then
     Result:= BlogTruyenGetNameAndLink
@@ -3305,7 +3259,7 @@ var
   i, j: Cardinal;
   isExtractGenres: Boolean = FALSE;
 begin
-  mangaInfo.url:= ANIMEA_ROOT + URL + ANIMEA_SKIP;
+  mangaInfo.url:= WebsiteRoots[ANIMEA_ID,1] + URL + ANIMEA_SKIP;
   if NOT GetPage(TObject(source), mangaInfo.url, Reconnect) then
   begin
     Result:= NET_PROBLEM;
@@ -3415,7 +3369,7 @@ function   GetMangaHereInfoFromURL: Byte;
 var
   i, j: Cardinal;
 begin
-  mangaInfo.url:= MANGAHERE_ROOT + URL;
+  mangaInfo.url:= WebsiteRoots[MANGAHERE_ID,1] + URL;
   if NOT GetPage(TObject(source), mangaInfo.url, Reconnect) then
   begin
     Result:= NET_PROBLEM;
@@ -3463,7 +3417,7 @@ begin
        (Pos('http://www.mangahere.com/manga/', GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href=')))<>0) then
     begin
       Inc(mangaInfo.numChapter);
-      mangaInfo.chapterLinks.Add(StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href=')), MANGAHERE_ROOT, '', [rfReplaceAll]));
+      mangaInfo.chapterLinks.Add(StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href=')), WebsiteRoots[MANGAHERE_ID,1], '', [rfReplaceAll]));
       parse.Strings[i+1]:= StringReplace(parse.Strings[i+1], #10, '', [rfReplaceAll]);
       parse.Strings[i+1]:= StringReplace(parse.Strings[i+1], #13, '', [rfReplaceAll]);
       parse.Strings[i+1]:= TrimLeft(parse.Strings[i+1]);
@@ -3535,7 +3489,7 @@ var
   s: String;
   i, j  : Cardinal;
 begin
-  mangaInfo.url:= SUBMANGA_ROOT + URL;
+  mangaInfo.url:= WebsiteRoots[SUBMANGA_ID,1] + URL;
   if NOT GetPage(TObject(source), mangaInfo.url, Reconnect) then
   begin
     Result:= NET_PROBLEM;
@@ -3629,7 +3583,7 @@ begin
       ((Pos('</td>', parse.Strings[i-3])>0) OR (Pos('</th>', parse.Strings[i-3])>0)) then
     begin
       Inc(mangaInfo.numChapter);
-      s:= StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i+1], 'href')), SUBMANGA_ROOT, '', []);
+      s:= StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i+1], 'href')), WebsiteRoots[SUBMANGA_ID,1], '', []);
       for j:= Length(s) downto 1 do
       begin
         if s[j] = '/' then
@@ -3660,7 +3614,7 @@ function   GetEsMangaHereInfoFromURL: Byte;
 var
   i, j: Cardinal;
 begin
-  mangaInfo.url:= ESMANGAHERE_ROOT + URL;
+  mangaInfo.url:= WebsiteRoots[ESMANGAHERE_ID,1] + URL;
   if NOT GetPage(TObject(source), mangaInfo.url, Reconnect) then
   begin
     Result:= NET_PROBLEM;
@@ -3709,7 +3663,7 @@ begin
        (Pos('/manga/', GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href=')))<>0) then
     begin
       Inc(mangaInfo.numChapter);
-      mangaInfo.chapterLinks.Add(StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href=')), ESMANGAHERE_ROOT, '', [rfReplaceAll]));
+      mangaInfo.chapterLinks.Add(StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href=')), WebsiteRoots[ESMANGAHERE_ID,1], '', [rfReplaceAll]));
       parse.Strings[i+1]:= StringReplace(parse.Strings[i+1], #10, '', [rfReplaceAll]);
       parse.Strings[i+1]:= StringReplace(parse.Strings[i+1], #13, '', [rfReplaceAll]);
       parse.Strings[i+1]:= TrimLeft(parse.Strings[i+1]);
@@ -3770,7 +3724,7 @@ function   GetAnimeExtremistInfoFromURL: Byte;
 var
   i, j: Cardinal;
 begin
-  mangaInfo.url:= ANIMEEXTREMIST_ROOT + URL;
+  mangaInfo.url:= WebsiteRoots[ANIMEEXTREMIST_ID,1] + URL;
   if NOT GetPage(TObject(source), mangaInfo.url, Reconnect) then
   begin
     Result:= NET_PROBLEM;
@@ -3803,7 +3757,7 @@ begin
     if (mangaInfo.coverLink = '') AND
        (GetTagName(parse.Strings[i]) = 'img') then
       if Pos('src="../', parse.Strings[i])>0 then
-        mangaInfo.coverLink:= ANIMEEXTREMIST_ROOT + GetString(parse.Strings[i], 'src="..', '"');
+        mangaInfo.coverLink:= WebsiteRoots[ANIMEEXTREMIST_ID,1] + GetString(parse.Strings[i], 'src="..', '"');
 
       // get summary
     if (Pos('align="justify" class="style33"', parse.Strings[i])) <> 0 then
@@ -3828,7 +3782,7 @@ begin
     if (Pos('/mangas-online/', parse.Strings[i])<>0) then
     begin
       Inc(mangaInfo.numChapter);
-      mangaInfo.chapterLinks.Add(StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href=')), ANIMEEXTREMIST_ROOT, '', [rfReplaceAll]));
+      mangaInfo.chapterLinks.Add(StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href=')), WebsiteRoots[ANIMEEXTREMIST_ID,1], '', [rfReplaceAll]));
       parse.Strings[i+1]:= StringReplace(parse.Strings[i+1], #10, '', [rfReplaceAll]);
       parse.Strings[i+1]:= StringReplace(parse.Strings[i+1], #13, '', [rfReplaceAll]);
       parse.Strings[i+1]:= TrimLeft(parse.Strings[i+1]);
@@ -3868,7 +3822,7 @@ var
   i, j: Cardinal;
   isExtractChapters: Boolean = FALSE;
 begin
-  mangaInfo.url:= MANGAINN_ROOT + URL;
+  mangaInfo.url:= WebsiteRoots[MANGAINN_ID,1] + URL;
   if NOT GetPage(TObject(source), mangaInfo.url, Reconnect) then
   begin
     Result:= NET_PROBLEM;
@@ -3924,7 +3878,7 @@ begin
          (Pos('http://www.mangainn.com/manga/chapter', parse.Strings[i])<>0) then
       begin
         Inc(mangaInfo.numChapter);
-        mangaInfo.chapterLinks.Add(CorrectURL(StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href=')), MANGAINN_ROOT, '', [rfReplaceAll])));
+        mangaInfo.chapterLinks.Add(CorrectURL(StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href=')), WebsiteRoots[MANGAINN_ID,1], '', [rfReplaceAll])));
         parse.Strings[i+2]:= StringReplace(parse.Strings[i+2], #10, '', [rfReplaceAll]);
         parse.Strings[i+2]:= StringReplace(parse.Strings[i+2], #13, '', [rfReplaceAll]);
         parse.Strings[i+2]:= TrimLeft(parse.Strings[i+2]);
@@ -3975,7 +3929,7 @@ var
   isExtractGenres : Boolean = FALSE;
   i, j: Cardinal;
 begin
-  mangaInfo.url:= OURMANGA_ROOT + URL;
+  mangaInfo.url:= WebsiteRoots[OURMANGA_ID,1] + URL;
   if NOT GetPage(TObject(source), mangaInfo.url, Reconnect) then
   begin
     Result:= NET_PROBLEM;
@@ -4030,7 +3984,7 @@ begin
        (Pos(URL, parse.Strings[i])<>0) then
     begin
       Inc(mangaInfo.numChapter);
-      mangaInfo.chapterLinks.Add(StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href=')), OURMANGA_ROOT, '', [rfReplaceAll]));
+      mangaInfo.chapterLinks.Add(StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href=')), WebsiteRoots[OURMANGA_ID,1], '', [rfReplaceAll]));
       parse.Strings[i+1]:= StringReplace(parse.Strings[i+1], #10, '', [rfReplaceAll]);
       parse.Strings[i+1]:= StringReplace(parse.Strings[i+1], #13, '', [rfReplaceAll]);
       parse.Strings[i+1]:= TrimLeft(parse.Strings[i+1]);
@@ -4101,7 +4055,7 @@ var
   isExtractSummary: Boolean = TRUE;
   isExtractGenres : Boolean = FALSE;
 begin
-  mangaInfo.url:= EncodeURL(KISSMANGA_ROOT + URL + '?confirm=yes');
+  mangaInfo.url:= EncodeURL(WebsiteRoots[KISSMANGA_ID,1] + URL + '?confirm=yes');
   if NOT GetPage(TObject(source), mangaInfo.url, Reconnect) then
   begin
     Result:= NET_PROBLEM;
@@ -4160,7 +4114,7 @@ begin
        (Pos('?id=', parse.Strings[i])<>0) then
     begin
       Inc(mangaInfo.numChapter);
-      mangaInfo.chapterLinks.Add(StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href=')), KISSMANGA_ROOT, '', [rfReplaceAll]));
+      mangaInfo.chapterLinks.Add(StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href=')), WebsiteRoots[KISSMANGA_ID,1], '', [rfReplaceAll]));
       parse.Strings[i+1]:= StringReplace(parse.Strings[i+1], #10, '', [rfReplaceAll]);
       parse.Strings[i+1]:= StringReplace(parse.Strings[i+1], #13, '', [rfReplaceAll]);
       parse.Strings[i+1]:= TrimLeft(parse.Strings[i+1]);
@@ -4244,7 +4198,7 @@ begin
   patchURL:= URL;
   if Pos('comic/_/comics', patchURL) = 0 then
     patchURL:= StringReplace(URL, 'comic/_', 'comic/_/comics', []);
-  mangaInfo.url:= BATOTO_ROOT + patchURL;
+  mangaInfo.url:= WebsiteRoots[BATOTO_ID,1] + patchURL;
 
 reload:
   source.Clear;
@@ -4375,7 +4329,7 @@ reload:
        (Pos('English', parse.Strings[i+8])>0) then
     begin
       Inc(mangaInfo.numChapter);
-      mangaInfo.chapterLinks.Add((StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href=')), BATOTO_ROOT, '', [rfReplaceAll])));
+      mangaInfo.chapterLinks.Add((StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href=')), WebsiteRoots[BATOTO_ID,1], '', [rfReplaceAll])));
       parse.Strings[i+2]:= StringReplace(parse.Strings[i+2], #10, '', [rfReplaceAll]);
       parse.Strings[i+2]:= StringReplace(parse.Strings[i+2], #13, '', [rfReplaceAll]);
       parse.Strings[i+2]:= StringFilter(TrimLeft(parse.Strings[i+2]));
@@ -4392,7 +4346,7 @@ reload:
        (Pos('English', parse.Strings[i-3])>0) then
     begin
       Inc(mangaInfo.numChapter);
-      mangaInfo.chapterLinks.Add((StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href=')), BATOTO_ROOT, '', [rfReplaceAll])));
+      mangaInfo.chapterLinks.Add((StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href=')), WebsiteRoots[BATOTO_ID,1], '', [rfReplaceAll])));
       parse.Strings[i+2]:= StringReplace(parse.Strings[i+2], #10, '', [rfReplaceAll]);
       parse.Strings[i+2]:= StringReplace(parse.Strings[i+2], #13, '', [rfReplaceAll]);
       parse.Strings[i+2]:= StringFilter(TrimLeft(parse.Strings[i+2]));
@@ -4460,7 +4414,7 @@ var
 begin
  // patchURL:= UTF8ToANSI(URL);
  // Insert('comics/', patchURL, 10);
-  mangaInfo.url:= MANGA24H_ROOT + URL;
+  mangaInfo.url:= WebsiteRoots[MANGA24H_ID,1] + URL;
   if NOT GetPage(TObject(source), mangaInfo.url, Reconnect) then
   begin
     Result:= NET_PROBLEM;
@@ -4525,7 +4479,7 @@ begin
        (Pos('</a>', parse.Strings[i+3])<>0) then
     begin
       Inc(mangaInfo.numChapter);
-      mangaInfo.chapterLinks.Add(CorrectURL('/'+StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i+1], 'href=')), MANGA24H_ROOT, '', [rfReplaceAll])));
+      mangaInfo.chapterLinks.Add(CorrectURL('/'+StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i+1], 'href=')), WebsiteRoots[MANGA24H_ID,1], '', [rfReplaceAll])));
       parse.Strings[i+2]:= HTMLEntitiesFilter(parse.Strings[i+2]);
       parse.Strings[i+2]:= StringReplace(parse.Strings[i+2], #10, '', [rfReplaceAll]);
       parse.Strings[i+2]:= StringReplace(parse.Strings[i+2], #13, '', [rfReplaceAll]);
@@ -4586,7 +4540,7 @@ var
   isExtractGenres : Boolean = FALSE;
   i, j: Cardinal;
 begin
-  mangaInfo.url:= VNSHARING_ROOT + URL + '&confirm=yes';
+  mangaInfo.url:= WebsiteRoots[VNSHARING_ID,1] + URL + '&confirm=yes';
   if NOT GetPage(TObject(source), mangaInfo.url, Reconnect) then
   begin
     Result:= NET_PROBLEM;
@@ -4853,7 +4807,7 @@ var
   isExtractSummary : Boolean = FALSE;
   i, j: Cardinal;
 begin
-  mangaInfo.url:= FAKKU_ROOT + URL;
+  mangaInfo.url:= WebsiteRoots[FAKKU_ID,1] + URL;
   if NOT GetPage(TObject(source), mangaInfo.url, Reconnect) then
   begin
     Result:= NET_PROBLEM;
@@ -4897,7 +4851,7 @@ begin
       begin
         s:= CorrectURL(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src=')));
         if Pos('http://', s) = 0 then
-          mangaInfo.coverLink:= FAKKU_ROOT + s
+          mangaInfo.coverLink:= WebsiteRoots[FAKKU_ID,1] + s
         else
           mangaInfo.coverLink:= s;
       end;
@@ -4939,7 +4893,7 @@ begin
       if (Pos('/read"', parse.Strings[i])>0) then
       begin
         Inc(mangaInfo.numChapter);
-        mangaInfo.chapterLinks.Add(StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href=')), FAKKU_ROOT, '', [rfReplaceAll]));
+        mangaInfo.chapterLinks.Add(StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href=')), WebsiteRoots[FAKKU_ID,1], '', [rfReplaceAll]));
         mangaInfo.chapterName.Add(mangaInfo.title);
         isExtractChapters:= FALSE;
       end ;
@@ -5106,7 +5060,7 @@ var
   isExtractGenres : Boolean = FALSE;
   i, j: Cardinal;
 begin
-  mangaInfo.url:= MANGAREADER_ROOT + URL;// + '&confirm=yes';
+  mangaInfo.url:= WebsiteRoots[MANGAREADER_ID,1] + URL;// + '&confirm=yes';
   if NOT GetPage(TObject(source), mangaInfo.url, Reconnect) then
   begin
     Result:= NET_PROBLEM;
@@ -5222,7 +5176,7 @@ var
   i, j, volumeCount: Cardinal;
 begin
   volumeCount:= 0;
-  mangaInfo.url:= MANGAPARK_ROOT + URL;// + '&confirm=yes';
+  mangaInfo.url:= WebsiteRoots[MANGAPARK_ID,1] + URL;// + '&confirm=yes';
   if NOT GetPage(TObject(source), mangaInfo.url, Reconnect) then
   begin
     Result:= NET_PROBLEM;
@@ -5400,8 +5354,8 @@ var
   isExtractGenres : Boolean = FALSE;
   i, j: Cardinal;
 begin
-  if Pos(MANGAFOX_ROOT, URL) = 0 then
-    mangaInfo.url:= MANGAFOX_ROOT + URL
+  if Pos(WebsiteRoots[MANGAFOX_ID,1], URL) = 0 then
+    mangaInfo.url:= WebsiteRoots[MANGAFOX_ID,1] + URL
   else
     mangaInfo.url:= URL;// + '&confirm=yes';
   if NOT GetPage(TObject(source), mangaInfo.url, Reconnect) then
@@ -5463,7 +5417,7 @@ begin
        (Pos('title="Thanks for Contributing!', parse.Strings[i])>0) then
     begin
       Inc(mangaInfo.numChapter);
-      s:= StringReplace(GetString(parse.Strings[i], 'href="', '/1.html"'), MANGAFOX_ROOT, '', []);
+      s:= StringReplace(GetString(parse.Strings[i], 'href="', '/1.html"'), WebsiteRoots[MANGAFOX_ID,1], '', []);
       mangaInfo.chapterLinks.Add(s);
       s:= RemoveSymbols(TrimLeft(TrimRight(parse.Strings[i+1])));
       mangaInfo.chapterName.Add(StringFilter(StringFilter(HTMLEntitiesFilter(s))));
@@ -5541,7 +5495,7 @@ var
   end;
 
 begin
-  mangaInfo.url:= MANGATRADERS_ROOT + URL;// + '&confirm=yes';
+  mangaInfo.url:= WebsiteRoots[MANGATRADERS_ID,1] + URL;// + '&confirm=yes';
   if NOT GetPage(TObject(source), mangaInfo.url, Reconnect) then
   begin
     Result:= NET_PROBLEM;
@@ -5578,7 +5532,7 @@ begin
     // get cover
     if (GetTagName(parse.Strings[i]) = 'div') AND
        (Pos('"seriesInfo_image"', parse.Strings[i])>0) then
-      mangaInfo.coverLink:= MANGATRADERS_ROOT + CorrectURL(GetAttributeValue(GetTagAttribute(parse.Strings[i+2], 'src=')));
+      mangaInfo.coverLink:= WebsiteRoots[MANGATRADERS_ID,1] + CorrectURL(GetAttributeValue(GetTagAttribute(parse.Strings[i+2], 'src=')));
 
     // get summary
     if (Pos('id="summary"', parse.Strings[i]) <> 0) AND
@@ -5644,7 +5598,7 @@ begin
     for k:= 2 to pages do
     begin
       source.Clear;
-      if NOT GetPage(TObject(source), MANGATRADERS_ROOT + URL + '/page/' + IntToStr(k) + '/', Reconnect) then
+      if NOT GetPage(TObject(source), WebsiteRoots[MANGATRADERS_ID,1] + URL + '/page/' + IntToStr(k) + '/', Reconnect) then
       begin
         Result:= NET_PROBLEM;
         source.Free;
@@ -5793,7 +5747,7 @@ begin
 
   Parser.Free;
   source.Free;
-  if root = MANGAEDEN_ROOT then
+  if root = WebsiteRoots[MANGAEDEN_ID,1] then
     mangaInfo.website:= MANGAEDEN_NAME
   else
     mangaInfo.website:= PERVEDEN_NAME;
@@ -5898,7 +5852,7 @@ var
   s: String;
   i, j: Cardinal;
 begin
-  mangaInfo.url:= STARKANA_ROOT + URL + '?mature_confirm=1';
+  mangaInfo.url:= WebsiteRoots[STARKANA_ID,1] + URL + '?mature_confirm=1';
   if NOT GetPage(TObject(source), mangaInfo.url, Reconnect) then
   begin
     Result:= NET_PROBLEM;
@@ -6012,7 +5966,7 @@ var
   s: String;
   i, j: Cardinal;
 begin
-  mangaInfo.url:= EATMANGA_ROOT + URL;// + '&confirm=yes';
+  mangaInfo.url:= WebsiteRoots[EATMANGA_ID,1] + URL;// + '&confirm=yes';
   if NOT GetPage(TObject(source), mangaInfo.url, Reconnect) then
   begin
     Result:= NET_PROBLEM;
@@ -6121,7 +6075,7 @@ var
   s: String;
   i, j: Cardinal;
 begin
-  mangaInfo.url:= REDHAWKSCANS_ROOT + URL;// + '&confirm=yes';
+  mangaInfo.url:= WebsiteRoots[REDHAWKSCANS_ID,1] + URL;// + '&confirm=yes';
   if NOT GetPage(TObject(source), mangaInfo.url, Reconnect) then
   begin
     Result:= NET_PROBLEM;
@@ -6182,7 +6136,7 @@ begin
        (Pos('class="element"', parse.Strings[i]) > 0) then
     begin
       Inc(mangaInfo.numChapter);
-      s:= StringReplace(GetString(parse.Strings[i+3], 'href="', '"'), REDHAWKSCANS_ROOT, '', []);
+      s:= StringReplace(GetString(parse.Strings[i+3], 'href="', '"'), WebsiteRoots[REDHAWKSCANS_ID,1], '', []);
       mangaInfo.chapterLinks.Add(s);
       s:= RemoveSymbols(TrimLeft(TrimRight(parse.Strings[i+4])));
       mangaInfo.chapterName.Add(StringFilter(StringFilter(HTMLEntitiesFilter(s))));
@@ -6238,7 +6192,7 @@ var
  // HTTP: THTTPSend;
   R   : Boolean;
 begin
-  mangaInfo.url:= S2SCAN_ROOT + URL;
+  mangaInfo.url:= WebsiteRoots[S2SCAN_ID,1] + URL;
   if NOT GetPage(TObject(source), mangaInfo.url, Reconnect) then
   begin
     Result:= NET_PROBLEM;
@@ -6294,7 +6248,7 @@ begin
        (Pos('class="element"', parse.Strings[i]) > 0) then
     begin
       Inc(mangaInfo.numChapter);
-      s:= StringReplace(GetString(parse.Strings[i+3], 'href="', '"'), S2SCAN_ROOT, '', []);
+      s:= StringReplace(GetString(parse.Strings[i+3], 'href="', '"'), WebsiteRoots[S2SCAN_ID,1], '', []);
       mangaInfo.chapterLinks.Add(s);
       s:= RemoveSymbols(TrimLeft(TrimRight(parse.Strings[i+4])));
       mangaInfo.chapterName.Add(StringFilter(StringFilter(HTMLEntitiesFilter(s))));
@@ -6321,7 +6275,7 @@ var
   isExtractChapter: Boolean = FALSE;
   i, j: Cardinal;
 begin
-  mangaInfo.url:= EGSCANS_ROOT + '/' + URL;
+  mangaInfo.url:= WebsiteRoots[EGSCANS_ID,1] + '/' + URL;
   if NOT GetPage(TObject(source), mangaInfo.url, Reconnect) then
   begin
     Result:= NET_PROBLEM;
@@ -6372,7 +6326,7 @@ begin
        (Pos('<option value="', parse.Strings[i])>0) then
     begin
       Inc(mangaInfo.numChapter);
-      s:= '/' + URL + '/' + StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'value=')), EGSCANS_ROOT, '', []);
+      s:= '/' + URL + '/' + StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'value=')), WebsiteRoots[EGSCANS_ID,1], '', []);
       mangaInfo.chapterLinks.Add(s);
       s:= RemoveSymbols(TrimLeft(TrimRight(parse.Strings[i+1])));
       mangaInfo.chapterName.Add(StringFilter(StringFilter(HTMLEntitiesFilter(s))));
@@ -6500,7 +6454,7 @@ var
   isExtractGenres : Boolean = FALSE;
   i, j: Cardinal;
 begin
-  mangaInfo.url:= TRUYENTRANHTUAN_ROOT + URL;// + '&confirm=yes';
+  mangaInfo.url:= WebsiteRoots[TRUYENTRANHTUAN_ID,1] + URL;// + '&confirm=yes';
   if NOT GetPage(TObject(source), mangaInfo.url, Reconnect) then
   begin
     Result:= NET_PROBLEM;
@@ -6616,7 +6570,7 @@ var
   isExtractChapter: Boolean = FALSE;
   i, j: Cardinal;
 begin
-  mangaInfo.url:= KOMIKID_ROOT + URL;
+  mangaInfo.url:= WebsiteRoots[KOMIKID_ID,1] + URL;
   if NOT GetPage(TObject(source), mangaInfo.url, Reconnect) then
   begin
     Result:= NET_PROBLEM;
@@ -6691,7 +6645,7 @@ var
   i, j: Cardinal;
   k   : Integer;
 begin
-  mangaInfo.url:= PECINTAKOMIK_ROOT + URL;
+  mangaInfo.url:= WebsiteRoots[PECINTAKOMIK_ID,1] + URL;
   if NOT GetPage(TObject(source), mangaInfo.url, Reconnect) then
   begin
     Result:= NET_PROBLEM;
@@ -6718,7 +6672,7 @@ begin
     // get cover
     if (mangaInfo.coverLink = '') AND
        (Pos('id="mangaimg"', parse.Strings[i])>0) then
-      mangaInfo.coverLink:= PECINTAKOMIK_ROOT + CorrectURL(GetAttributeValue(GetTagAttribute(parse.Strings[i+1], 'src=')));
+      mangaInfo.coverLink:= WebsiteRoots[PECINTAKOMIK_ID,1] + CorrectURL(GetAttributeValue(GetTagAttribute(parse.Strings[i+1], 'src=')));
 
     // get summary
     if (Pos('Himbauan:', parse.Strings[i]) <> 0) then
@@ -6821,7 +6775,7 @@ var
   i, j: Cardinal;
 begin
   if Pos('http://', URL) = 0 then
-    mangaInfo.url:= MABUNS_ROOT + URL
+    mangaInfo.url:= WebsiteRoots[MABUNS_ID,1] + URL
   else
     mangaInfo.url:= URL;
   if NOT GetPage(TObject(source), mangaInfo.url, Reconnect) then
@@ -6861,7 +6815,7 @@ begin
        (Pos('<a href', parse.Strings[i])>0) then
     begin
       Inc(mangaInfo.numChapter);
-      s:= StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href=')), MABUNS_ROOT, '', []);
+      s:= StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href=')), WebsiteRoots[MABUNS_ID,1], '', []);
       mangaInfo.chapterLinks.Add(s);
       s:= RemoveSymbols(TrimLeft(TrimRight(parse.Strings[i+1])));
       mangaInfo.chapterName.Add(StringFilter(HTMLEntitiesFilter(s)));
@@ -6910,7 +6864,7 @@ var
   i, j: Cardinal;
 begin
   if Pos('http://', URL) = 0 then
-    mangaInfo.url:= MANGAESTA_ROOT + URL
+    mangaInfo.url:= WebsiteRoots[MANGAESTA_ID,1] + URL
   else
     mangaInfo.url:= URL;
   if NOT GetPage(TObject(source), mangaInfo.url, Reconnect) then
@@ -6950,7 +6904,7 @@ begin
        (Pos('href="http://www.mangaesta.net/', parse.Strings[i])>0) then
     begin
       Inc(mangaInfo.numChapter);
-      s:= StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href=')), MANGAESTA_ROOT, '', []);
+      s:= StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href=')), WebsiteRoots[MANGAESTA_ID,1], '', []);
       mangaInfo.chapterLinks.Add(s);
       s:= RemoveSymbols(TrimLeft(TrimRight(parse.Strings[i+1])));
       mangaInfo.chapterName.Add(StringFilter(HTMLEntitiesFilter(s)));
@@ -7024,7 +6978,7 @@ var
   isExtractChapter: Boolean = FALSE;
   i, j: Cardinal;
 begin
-  mangaInfo.url:= HUGEMANGA_ROOT + HUGEMANGA_BROWSER + URL;
+  mangaInfo.url:= WebsiteRoots[HUGEMANGA_ID,1] + HUGEMANGA_BROWSER + URL;
   if NOT GetPage(TObject(source), mangaInfo.url, Reconnect) then
   begin
     Result:= NET_PROBLEM;
@@ -7096,7 +7050,7 @@ var
   isExtractChapter: Boolean = FALSE;
   i, j: Cardinal;
 begin
-  mangaInfo.url:= TURKCRAFT_ROOT + URL;
+  mangaInfo.url:= WebsiteRoots[TURKCRAFT_ID,1] + URL;
   if NOT GetPage(TObject(source), mangaInfo.url, Reconnect) then
   begin
     Result:= NET_PROBLEM;
@@ -7168,7 +7122,7 @@ var
   isExtractChapter: Boolean = FALSE;
   i, j: Cardinal;
 begin
-  mangaInfo.url:= MANGAVADISI_ROOT + MANGAVADISI_BROWSER + URL;
+  mangaInfo.url:= WebsiteRoots[MANGAVADISI_ID,1] + MANGAVADISI_BROWSER + URL;
   if NOT GetPage(TObject(source), mangaInfo.url, Reconnect) then
   begin
     Result:= NET_PROBLEM;
@@ -7230,7 +7184,7 @@ var
   isExtractChapter: Boolean = FALSE;
   i, j: Cardinal;
 begin
-  mangaInfo.url:= MANGAFRAME_ROOT + URL;
+  mangaInfo.url:= WebsiteRoots[MANGAFRAME_ID,1] + URL;
   if NOT GetPage(TObject(source), mangaInfo.url, Reconnect) then
   begin
     Result:= NET_PROBLEM;
@@ -7277,7 +7231,7 @@ begin
        (Pos('</div>', parse.Strings[i+2])=0) then
     begin
       Inc(mangaInfo.numChapter);
-      s:= StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i+1], 'href=')), MANGAFRAME_ROOT, '', []) + 'page/';
+      s:= StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i+1], 'href=')), WebsiteRoots[MANGAFRAME_ID,1], '', []) + 'page/';
       mangaInfo.chapterLinks.Add(s);
       s:= RemoveSymbols(TrimLeft(TrimRight(parse.Strings[i+2])));
       mangaInfo.chapterName.Add(StringFilter(StringFilter(HTMLEntitiesFilter(s))));
@@ -7305,7 +7259,7 @@ var
   isExtractSummary: Boolean = TRUE;
   i, j: Cardinal;
 begin
-  mangaInfo.url:= MANGAAR_ROOT + URL;
+  mangaInfo.url:= WebsiteRoots[MANGAAR_ID,1] + URL;
   if NOT GetPage(TObject(source), EncodeURL(mangaInfo.url), Reconnect) then
   begin
     Result:= NET_PROBLEM;
@@ -7366,7 +7320,7 @@ begin
     if (Pos('vertical-align: middle; margin: 5px', parse.Strings[i])>0) then
     begin
       Inc(mangaInfo.numChapter);
-      s:= StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i+2], 'href=')), MANGAAR_ROOT, '', []);
+      s:= StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i+2], 'href=')), WebsiteRoots[MANGAAR_ID,1], '', []);
       s:= EncodeURL(StringReplace(s+'~!@', '/1~!@', '', []));
       mangaInfo.chapterLinks.Add(s);
       s:= RemoveSymbols(TrimLeft(TrimRight(parse.Strings[i+3])));
@@ -7423,7 +7377,7 @@ var
   isExtractChapter: Boolean = FALSE;
   i, j: Cardinal;
 begin
-  mangaInfo.url:= MANGAAE_ROOT + URL;
+  mangaInfo.url:= WebsiteRoots[MANGAAE_ID,1] + URL;
   if NOT GetPage(TObject(source), EncodeURL(mangaInfo.url), Reconnect) then
   begin
     Result:= NET_PROBLEM;
@@ -7481,11 +7435,11 @@ begin
 
     // get chapter name and links
     if (isExtractChapter) AND
-       (Pos(MANGAAE_ROOT, parse.Strings[i])>0) AND
+       (Pos(WebsiteRoots[MANGAAE_ID,1], parse.Strings[i])>0) AND
        (Pos('<li>', parse.Strings[i-2])>0) then
     begin
       Inc(mangaInfo.numChapter);
-      s:= StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href=')), MANGAAE_ROOT, '', []);
+      s:= StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href=')), WebsiteRoots[MANGAAE_ID,1], '', []);
       s:= StringReplace(s+'~!@', '/1/~!@', '', []);
       mangaInfo.chapterLinks.Add(s);
       s:= RemoveSymbols(TrimLeft(TrimRight(parse.Strings[i+2]))) + ' ' + RemoveSymbols(TrimLeft(TrimRight(parse.Strings[i+4])));
@@ -7573,7 +7527,7 @@ var
   isExtractChapter: Boolean = FALSE;
   i, j: Cardinal;
 begin
-  mangaInfo.url:= CENTRALDEMANGAS_ROOT + URL;
+  mangaInfo.url:= WebsiteRoots[CENTRALDEMANGAS_ID,1] + URL;
   if NOT GetPage(TObject(source), EncodeURL(mangaInfo.url), Reconnect) then
   begin
     Result:= NET_PROBLEM;
@@ -7642,7 +7596,7 @@ begin
        (Pos('<span>', parse.Strings[i-1])>0) then
     begin
       Inc(mangaInfo.numChapter);
-      s:= StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href=')), CENTRALDEMANGAS_ROOT, '', []);
+      s:= StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href=')), WebsiteRoots[CENTRALDEMANGAS_ID,1], '', []);
       mangaInfo.chapterLinks.Add(s);
       s:= RemoveSymbols(TrimLeft(TrimRight(parse.Strings[i+1])));
       mangaInfo.chapterName.Add(StringFilter(HTMLEntitiesFilter(s)));
@@ -7708,7 +7662,7 @@ var
 label
   Again;
 begin
-  mangaInfo.url:= SENMANGA_ROOT + URL;
+  mangaInfo.url:= WebsiteRoots[SENMANGA_ID,1] + URL;
   if NOT GetPage(TObject(source), mangaInfo.url, Reconnect) then
   begin
     Result:= NET_PROBLEM;
@@ -7776,7 +7730,7 @@ Again:
     begin
       if Pos('class="t-ch-list"', parse.Strings[i]) > 0 then
       begin
-        s:= SENMANGA_ROOT + GetAttributeValue(GetTagAttribute(parse.Strings[i+5], 'href='));
+        s:= WebsiteRoots[SENMANGA_ID,1] + GetAttributeValue(GetTagAttribute(parse.Strings[i+5], 'href='));
         break;
       end;
     end;
@@ -7820,7 +7774,7 @@ var
   isExtractChapter: Boolean = FALSE;
   i, j: Cardinal;
 begin
-  mangaInfo.url:= BLOGTRUYEN_ROOT + URL;
+  mangaInfo.url:= WebsiteRoots[BLOGTRUYEN_ID,1] + URL;
   if NOT GetPage(TObject(source), mangaInfo.url, Reconnect) then
   begin
     Result:= NET_PROBLEM;
@@ -8089,10 +8043,10 @@ begin
     Result:= GetTruyenTranhTuanInfoFromURL
   else
   if website = MANGAEDEN_NAME then
-    Result:= GetMangaEdenInfoFromURL(MANGAEDEN_ROOT)
+    Result:= GetMangaEdenInfoFromURL(WebsiteRoots[MANGAEDEN_ID,1])
   else
   if website = PERVEDEN_NAME then
-    Result:= GetMangaEdenInfoFromURL(PERVEDEN_ROOT)
+    Result:= GetMangaEdenInfoFromURL(WebsiteRoots[PERVEDEN_ID,1])
   else
   if website = SUBMANGA_NAME then
     Result:= GetSubMangaInfoFromURL

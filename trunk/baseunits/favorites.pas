@@ -297,6 +297,11 @@ begin
     begin
       l.Clear;
       GetParams(l, favoriteInfo[i].downloadedChapterList);
+      // for mangafox only
+      if (favoriteInfo[i].Website = MANGAFOX_NAME) AND (l.Count > 0) then
+        for j:= 0 to l.Count-1 do
+          l.Strings[j]:= StringReplace(l.Strings[j], WebsiteRoots[MANGAFOX_ID,1], '', []);
+
       if (l.Count = 0) AND (mangaInfo[i].chapterLinks.Count <> 0) then
       begin
        // isNewChapters[i]:= TRUE;
