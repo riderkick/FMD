@@ -32,6 +32,7 @@ type
     procedure   CallMainFormImportant;
     procedure   CallMainFormLatestVer;
     procedure   CallMainFormSetButton;
+    procedure   CallMainFormPopSilentThreadQueue;
   public
     updateCounter: Cardinal;
     isCheckForLatestVer: Boolean;
@@ -58,7 +59,7 @@ type
 implementation
 
 uses
-  mainunit, logform, fileutil;
+  mainunit, logform, fileutil, silentthreads;
 
 var
   LRequireRevision: Cardinal = 1;
@@ -277,12 +278,25 @@ begin
   MainForm.btCheckVersion.Caption:= stUpdaterCheck;
 end;
 
+procedure   TSubThread.CallMainFormPopSilentThreadQueue;
+var
+  meta: TSilentThreadMeta;
+begin
+  if silentthreads.SilentThreadQueue.Count = 0 then
+    exit;
+  meta:= TSilentThreadMeta(silentthreads.SilentThreadQueue.Pop);
+  if meta <> nil then
+  begin
+    meta.Run;
+    meta.Free;
+  end;
+end;
+
 procedure   TSubThread.Execute;
 var
   l: TStringList;
   i: Cardinal;
   s: String;
-
 begin
   LRevision:= 0;
   while isSuspended do Sleep(32);
@@ -300,6 +314,12 @@ begin
   end;
   while NOT Terminated do
   begin
+    if ((MainForm.silentThreadCount > 0)) AND
+       (MainForm.currentActiveSilentThreadCount <= 2) then
+    begin
+      Synchronize(CallMainFormPopSilentThreadQueue);
+    end;
+
     if isCheckForLatestVer then
     begin
       Sleep(2000);

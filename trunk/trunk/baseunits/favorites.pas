@@ -466,7 +466,7 @@ begin
 
         // TODO: bad coding - update favorites's current chapter, and free pointers
         favoriteInfo[i].currentChapter:= IntToStr(mangaInfo[i].numChapter);
-        Sleep(16);
+        Sleep(4);
       end;
     end;
     DLManager.isRunningBackup:= FALSE;

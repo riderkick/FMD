@@ -4422,6 +4422,12 @@ begin
           fmdPowerOff;
           Halt;
         end;
+      DO_HIBERNATE:
+        begin
+          Sleep(3000);
+          fmdHibernate;
+          Sleep(1000);
+        end;
     end;
   end;
   MainForm.vtDownloadFilters;

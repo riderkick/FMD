@@ -52,7 +52,7 @@
         <PackageName Value="LCL"/>
       </Item3>
     </RequiredPackages>
-    <Units Count="16">
+    <Units Count="17">
       <Unit0>
         <Filename Value="md.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -145,6 +145,14 @@
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="NewChapterForm"/>
       </Unit15>
+      <Unit16>
+        <Filename Value="forms\ImportFavoritesForm.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="ImportFavorites"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="ImportFavoritesForm"/>
+      </Unit16>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
@@ -156,7 +164,7 @@
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir);..\..\trunk\3rd\Imaging\Source;..\..\trunk\3rd\Imaging\Source\ZLib;..\..\trunk\3rd\Imaging\Source\JpegLib"/>
       <Libraries Value="..\..\trunk\3rd\Imaging\Extras\Extensions\J2KObjects;..\..\trunk\baseunits\zlibex\win32-zlib"/>
-      <OtherUnitFiles Value="..\..\trunk\3rd\synapse\source;..\..\trunk\baseunits;..\..\trunk\baseunits\animatedgifs;..\..\trunk\baseunits\fasthtmlparser;..\..\trunk\3rd\Imaging\Source;..\..\trunk\3rd\Imaging\Source\ZLib;..\..\trunk\3rd\Imaging\Source\JpegLib;..\..\trunk\3rd\Imaging\Extras\Extensions;..\..\trunk\baseunits\zlibex"/>
+      <OtherUnitFiles Value="..\..\trunk\3rd\synapse\source;..\..\trunk\baseunits;..\..\trunk\baseunits\animatedgifs;..\..\trunk\baseunits\fasthtmlparser;..\..\trunk\3rd\Imaging\Source;..\..\trunk\3rd\Imaging\Source\ZLib;..\..\trunk\3rd\Imaging\Source\JpegLib;..\..\trunk\3rd\Imaging\Extras\Extensions;..\..\trunk\baseunits\zlibex;forms"/>
       <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
     <CodeGeneration>

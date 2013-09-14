@@ -81,6 +81,7 @@ begin
       //SetCurrentDirUTF8(oldDir);
       for i:= 0 to list.Count-1 do
         DeleteFileUTF8(list.Strings[i]);
+      Sleep(128);
       RemoveDirUTF8(fPath);
       if fPath[Length(fPath)] = '/' then
         Delete(fPath, Length(fPath), 1);
@@ -136,6 +137,7 @@ begin
       pdf.Free;
       for i:= 0 to list.Count-1 do
         DeleteFileUTF8(list.Strings[i]);
+      Sleep(128);
       RemoveDirUTF8(fPath);
       if fPath[Length(fPath)] = '/' then
         Delete(fPath, Length(fPath), 1);
