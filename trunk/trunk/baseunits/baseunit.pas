@@ -7,6 +7,7 @@
 unit baseunit;
 
 {$MODE DELPHI}
+{$MACRO ON}
 
 interface
 
@@ -217,36 +218,74 @@ var
   // VI: Ký tự dùng để chia cắt param trong dữ liệu
   SEPERATOR: String = '!%~';
 
-  ANIMEA_ROOT   : String = 'http://manga.animea.net';
+  WebsiteRoots  : array[0..43] of array [0..1] of String =
+    (('AnimeA', 'http://manga.animea.net'),
+     ('MangaHere', 'http://www.mangahere.com'),
+     ('MangaInn', 'http://www.mangainn.com'),
+     ('OurManga', 'http://www.ourmanga.com'),
+     ('KissManga', 'http://kissmanga.com'),
+     ('Batoto', 'http://www.batoto.net'),
+     ('Manga24h', 'http://manga24h.com'),
+     ('VnSharing', 'http://truyen.vnsharing.net'),
+     ('Hentai2Read', 'http://hentai2read.com'),
+     ('Fakku', 'http://www.fakku.net'),
+     ('Truyen18', 'http://www.truyen18.org'),
+     ('MangaReader', 'http://www.mangareader.net'),
+     ('MangaPark', 'http://www.mangapark.com'),
+     ('E-Hentai', 'http://g.e-hentai.org'),
+     ('MangaFox', 'http://mangafox.me'),
+     ('MangaTraders', 'http://www.mangatraders.com'),
+     ('MangaStream', 'http://mangastream.com'),
+     ('MangaEden', 'http://www.mangaeden.com'),
+     ('PervEden', 'http://www.perveden.com'),
+     ('TruyenTranhTuan', 'http://truyentranhtuan.com'),
+     ('Turkcraft', 'http://turkcraft.com'),
+     ('MangaVadisi', 'http://www.mangavadisi.net'),
+     ('MangaFrame', 'http://www.mngfrm.com'),
+     ('EatManga', 'http://eatmanga.com'),
+     ('Starkana', 'http://starkana.com'),
+     ('MangaPanda', 'http://www.mangapanda.com'),
+     ('RedHawkScans', 'http://manga.redhawkscans.com'),
+     ('BlogTruyen', 'http://blogtruyen.com'),
+     ('Komikid', 'http://komikid.com'),
+     ('SubManga', 'http://submanga.com'),
+     ('ESMangaHere', 'http://es.mangahere.com'),
+     ('AnimExtremist', 'http://www.animextremist.com'),
+     ('MangaKu', 'http://www.mangaku.web.id'),
+     ('PecintaKomik', 'http://www.pecintakomik.com'),
+     ('HugeManga', 'http://hugemanga.com'),
+     ('S2scanlations', 'http://s2scanlations.com'),
+     ('SenManga', 'http://raw.senmanga.com'),
+     ('imanhua', 'http://www.imanhua.com'),
+     ('Mabuns', 'http://www.mabuns.web.id'),
+     ('MangaEsta', 'http://www.mangaesta.net'),
+     ('CentralDeMangas', 'http://centraldemangas.com.br'),
+     ('EGScans', 'http://readonline.egscans.org'),
+     ('MangaAr', 'http://manga-ar.com'),
+     ('MangaAe', 'http://www.manga.ae/')
+    );
+
   ANIMEA_BROWSER: String = '/browse.html?page=';
   ANIMEA_SKIP   : String = '?skip=1';
 
-  MANGAHERE_ROOT   : String = 'http://www.mangahere.com';
   MANGAHERE_BROWSER: String = '/mangalist/';
 
-  MANGAINN_ROOT   : String = 'http://www.mangainn.com';
   MANGAINN_BROWSER: String = '/mangalist/';
 
-  OURMANGA_ROOT   : String = 'http://www.ourmanga.com';
   OURMANGA_BROWSER: String = '/directory/';
 
-  KISSMANGA_ROOT   : String = 'http://kissmanga.com';
   KISSMANGA_BROWSER: String = '/MangaList';
 
-  BATOTO_ROOT      : String = 'http://www.batoto.net';
   BATOTO_BROWSER   : String = '/search';
 
-  MANGA24H_ROOT   : String = 'http://manga24h.com';
   MANGA24H_BROWSER: String = '/manga/update/page/';
 
-  VNSHARING_ROOT   : String = 'http://truyen.vnsharing.net';
   VNSHARING_BROWSER: String = '/DanhSach';
 
   HENTAI2READ_ROOT   : String = 'http://hentai2read.com';
   HENTAI2READ_MROOT  : String = 'http://m.hentai2read.com';
   HENTAI2READ_BROWSER: String = '/hentai-list/all/any/name-az/';
 
-  FAKKU_ROOT             : String = 'http://www.fakku.net';
   FAKKU_BROWSER          : String = '/manga/newest';
   FAKKU_MANGA_BROWSER    : String = '/manga/newest';
   FAKKU_DOUJINSHI_BROWSER: String = '/doujinshi/newest';
@@ -254,110 +293,79 @@ var
   TRUYEN18_ROOT   : String = 'http://www.truyen18.org';
   TRUYEN18_BROWSER: String = '/moi-dang/danhsach';
 
-  MANGAREADER_ROOT   : String = 'http://www.mangareader.net';
   MANGAREADER_BROWSER: String = '/alphabetical';
 
-  MANGAPARK_ROOT   : String = 'http://www.mangapark.com';
   MANGAPARK_BROWSER: String = '/list/';
 
-  GEHENTAI_ROOT   : String = 'http://g.e-hentai.org';
   GEHENTAI_BROWSER: String = '&f_doujinshi=on&advsearch=1&f_search=Search+Keywords&f_srdd=2&f_sname=on&f_stags=on&f_apply=Apply+Filter';
 
-  MANGAFOX_ROOT   : String = 'http://mangafox.me';
   MANGAFOX_BROWSER: String = '/directory/';
 
-  MANGATRADERS_ROOT   : String = 'http://www.mangatraders.com';
   MANGATRADERS_BROWSER: String = '/manga/serieslist/';
 
   MANGASTREAM_ROOT   : String = 'http://mangastream.com';
   MANGASTREAM_ROOT2  : String = 'http://readms.com';
   MANGASTREAM_BROWSER: String = '/manga';
 
-  MANGAEDEN_ROOT      : String = 'http://www.mangaeden.com';
   MANGAEDEN_BROWSER   : String = '/en-directory/';
   MANGAEDEN_EN_BROWSER: String = '/en-directory/';
   MANGAEDEN_IT_BROWSER: String = '/it-directory/';
 
-  PERVEDEN_ROOT      : String = 'http://www.perveden.com';
   PERVEDEN_BROWSER   : String = '/en-directory/';
   PERVEDEN_EN_BROWSER: String = '/en-directory/';
   PERVEDEN_IT_BROWSER: String = '/it-directory/';
 
-  TRUYENTRANHTUAN_ROOT   : String = 'http://truyentranhtuan.com';
   TRUYENTRANHTUAN_BROWSER: String = '/danh-sach-truyen/';
 
-  TURKCRAFT_ROOT   : String = 'http://turkcraft.com';
   TURKCRAFT_BROWSER: String = '/';
 
-  MANGAVADISI_ROOT   : String = 'http://www.mangavadisi.net';
   MANGAVADISI_BROWSER: String = '/hemenoku/';
 
-  MANGAFRAME_ROOT   : String = 'http://www.mngfrm.com';
   MANGAFRAME_BROWSER: String = '/Okuyucu/reader/list/';
 
-  EATMANGA_ROOT   : String = 'http://eatmanga.com';
   EATMANGA_BROWSER: String = '/Manga-Scan/';
 
-  STARKANA_ROOT   : String = 'http://starkana.com';
   STARKANA_BROWSER: String = '/manga/list';
 
   MANGAPANDA_ROOT   : String = 'http://www.mangapanda.com';
   MANGAPANDA_BROWSER: String = '/alphabetical';
 
-  REDHAWKSCANS_ROOT   : String = 'http://manga.redhawkscans.com';
   REDHAWKSCANS_BROWSER: String = '/reader/list/';
 
-  BLOGTRUYEN_ROOT      : String = 'http://blogtruyen.com';
   BLOGTRUYEN_BROWSER   : String = '/danhsach/tatca';
   BLOGTRUYEN_JS_BROWSER: String = '/partialDanhSach/listtruyen/';
   BLOGTRUYEN_POST_FORM : String = 'listOrCate=list&orderBy=title&key=tatca&page=';
 
-  KOMIKID_ROOT   : String = 'http://komikid.com';
   KOMIKID_BROWSER: String = '/';
 
-  SUBMANGA_ROOT   : String = 'http://submanga.com';
   SUBMANGA_BROWSER: String = '/series/n';
 
-  ESMANGAHERE_ROOT   : String = 'http://es.mangahere.com';
   ESMANGAHERE_BROWSER: String = '/mangalist/';
 
-  ANIMEEXTREMIST_ROOT   : String = 'http://www.animextremist.com';
   ANIMEEXTREMIST_BROWSER: String = '/mangas.htm?ord=todos';
 
-  MANGAKU_ROOT   : String = 'http://www.mangaku.web.id';
   MANGAKU_BROWSER: String = '/2009/06/daftar-isi.html';
 
-  PECINTAKOMIK_ROOT   : String = 'http://www.pecintakomik.com';
   PECINTAKOMIK_BROWSER: String = '/directory/';
 
-  HUGEMANGA_ROOT   : String = 'http://hugemanga.com';
   HUGEMANGA_BROWSER: String = '/';
 
-  S2SCAN_ROOT   : String = 'http://s2scanlations.com';
   S2SCAN_BROWSER: String = '/online/reader/list/';
 
-  SENMANGA_ROOT   : String = 'http://raw.senmanga.com';
   SENMANGA_BROWSER: String = '/Manga/';
 
-  IMANHUA_ROOT   : String = 'http://www.imanhua.com';
   IMANHUA_BROWSER: String = '/all.html';
 
-  MABUNS_ROOT   : String = 'http://www.mabuns.web.id';
   MABUNS_BROWSER: String = '/p/mabuns-manga-list.html';
 
-  MANGAESTA_ROOT   : String = 'http://www.mangaesta.net';
   MANGAESTA_BROWSER: String = '/p/manga-list.html';
 
-  CENTRALDEMANGAS_ROOT   : String = 'http://centraldemangas.com.br';
   CENTRALDEMANGAS_BROWSER: String = '/mangas';
 
-  EGSCANS_ROOT   : String = 'http://readonline.egscans.org';
   EGSCANS_BROWSER: String = '/';
 
-  MANGAAR_ROOT   : String = 'http://manga-ar.com';
   MANGAAR_BROWSER: String = '/directory';
 
-  MANGAAE_ROOT   : String = 'http://www.manga.ae/';
   MANGAAE_BROWSER: String = '/manga/all/';
 
   UPDATE_URL      : String = 'http://jaist.dl.sourceforge.net/project/fmd/FMD/updates/';
@@ -757,177 +765,17 @@ begin
 end;
 
 function  GetMangaSiteID(const name: String): Cardinal;
+var
+  i: Cardinal;
 begin
-  if name = ANIMEA_NAME then Result:= ANIMEA_ID
-  else
-  if name = MANGAHERE_NAME then Result:= MANGAHERE_ID
-  else
-  if name = MANGAINN_NAME then Result:= MANGAINN_ID
-  else
-  if name = OURMANGA_NAME then Result:= OURMANGA_ID
-  else
-  if name = KISSMANGA_NAME then Result:= KISSMANGA_ID
-  else
-  if name = BATOTO_NAME then Result:= BATOTO_ID
-  else
-  if name = MANGA24H_NAME then Result:= MANGA24H_ID
-  else
-  if name = VNSHARING_NAME then Result:= VNSHARING_ID
-  else
-  if name = HENTAI2READ_NAME then Result:= HENTAI2READ_ID
-  else
-  if name = FAKKU_NAME then Result:= FAKKU_ID
-  else
-  if name = MANGAREADER_NAME then Result:= MANGAREADER_ID
-  else
-  if name = MANGAPARK_NAME then Result:= MANGAPARK_ID
-  else
-  if name = GEHENTAI_NAME then Result:= GEHENTAI_ID
-  else
-  if name = MANGAFOX_NAME then Result:= MANGAFOX_ID
-  else
-  if name = MANGATRADERS_NAME then Result:= MANGATRADERS_ID
-  else
-  if name = MANGASTREAM_NAME then Result:= MANGASTREAM_ID
-  else
-  if name = MANGAEDEN_NAME then Result:= MANGAEDEN_ID
-  else
-  if name = PERVEDEN_NAME then Result:= PERVEDEN_ID
-  else
-  if name = TRUYENTRANHTUAN_NAME then Result:= TRUYENTRANHTUAN_ID
-  else
-  if name = TURKCRAFT_NAME then Result:= TURKCRAFT_ID
-  else
-  if name = MANGAVADISI_NAME then Result:= MANGAVADISI_ID
-  else
-  if name = EATMANGA_NAME then Result:= EATMANGA_ID
-  else
-  if name = BLOGTRUYEN_NAME then Result:= BLOGTRUYEN_ID
-  else
-  if name = MANGAFRAME_NAME then Result:= MANGAFRAME_ID
-  else
-  if name = STARKANA_NAME then Result:= STARKANA_ID
-  else
-  if name = MANGAPANDA_NAME then Result:= MANGAPANDA_ID
-  else
-  if name = REDHAWKSCANS_NAME then Result:= REDHAWKSCANS_ID
-  else
-  if name = KOMIKID_NAME then Result:= KOMIKID_ID
-  else
-  if name = SUBMANGA_NAME then Result:= SUBMANGA_ID
-  else
-  if name = ESMANGAHERE_NAME then Result:= ESMANGAHERE_ID
-  else
-  if name = ANIMEEXTREMIST_NAME then Result:= ANIMEEXTREMIST_ID
-  else
-  if name = PECINTAKOMIK_NAME then Result:= PECINTAKOMIK_ID
-  else
-  if name = HUGEMANGA_NAME then Result:= HUGEMANGA_ID
-  else
-  if name = S2SCAN_NAME then Result:= S2SCAN_ID
-  else
-  if name = SENMANGA_NAME then Result:= SENMANGA_ID
-  else
-  if name = IMANHUA_NAME then Result:= IMANHUA_ID
-  else
-  if name = MABUNS_NAME then Result:= MABUNS_ID
-  else
-  if name = MANGAESTA_NAME then Result:= MANGAESTA_ID
-  else
-  if name = CENTRALDEMANGAS_NAME then Result:= CENTRALDEMANGAS_ID
-  else
-  if name = EGSCANS_NAME then Result:= EGSCANS_ID
-  else
-  if name = MANGAAR_NAME then Result:= MANGAAR_ID
-  else
-  if name = MANGAAE_NAME then Result:= MANGAAE_ID;
+  for i:= 0 to High(WebsiteRoots) do
+    if Name = WebsiteRoots[i,0] then
+      exit(i);
 end;
 
 function  GetMangaSiteName(const ID: Cardinal): String;
 begin
-  if ID = ANIMEA_ID then Result:= ANIMEA_NAME
-  else
-  if ID = MANGAHERE_ID then Result:= MANGAHERE_NAME
-  else
-  if ID = MANGAINN_ID then Result:= MANGAINN_NAME
-  else
-  if ID = OURMANGA_ID then Result:= OURMANGA_NAME
-  else
-  if ID = KISSMANGA_ID then Result:= KISSMANGA_NAME
-  else
-  if ID = BATOTO_ID then Result:= BATOTO_NAME
-  else
-  if ID = MANGA24H_ID then Result:= MANGA24H_NAME
-  else
-  if ID = VNSHARING_ID then Result:= VNSHARING_NAME
-  else
-  if ID = HENTAI2READ_ID then Result:= HENTAI2READ_NAME
-  else
-  if ID = FAKKU_ID then Result:= FAKKU_NAME
-  else
-  if ID = MANGAREADER_ID then Result:= MANGAREADER_NAME
-  else
-  if ID = MANGAPARK_ID then Result:= MANGAPARK_NAME
-  else
-  if ID = GEHENTAI_ID then Result:= GEHENTAI_NAME
-  else
-  if ID = MANGAFOX_ID then Result:= MANGAFOX_NAME
-  else
-  if ID = MANGATRADERS_ID then Result:= MANGATRADERS_NAME
-  else
-  if ID = MANGASTREAM_ID then Result:= MANGASTREAM_NAME
-  else
-  if ID = MANGAEDEN_ID then Result:= MANGAEDEN_NAME
-  else
-  if ID = PERVEDEN_ID then Result:= PERVEDEN_NAME
-  else
-  if ID = TRUYENTRANHTUAN_ID then Result:= TRUYENTRANHTUAN_NAME
-  else
-  if ID = TURKCRAFT_ID then Result:= TURKCRAFT_NAME
-  else
-  if ID = MANGAVADISI_ID then Result:= MANGAVADISI_NAME
-  else
-  if ID = EATMANGA_ID then Result:= EATMANGA_NAME
-  else
-  if ID = BLOGTRUYEN_ID then Result:= BLOGTRUYEN_NAME
-  else
-  if ID = MANGAFRAME_ID then Result:= MANGAFRAME_NAME
-  else
-  if ID = STARKANA_ID then Result:= STARKANA_NAME
-  else
-  if ID = MANGAPANDA_ID then Result:= MANGAPANDA_NAME
-  else
-  if ID = REDHAWKSCANS_ID then Result:= REDHAWKSCANS_NAME
-  else
-  if ID = KOMIKID_ID then Result:= KOMIKID_NAME
-  else
-  if ID = SUBMANGA_ID then Result:= SUBMANGA_NAME
-  else
-  if ID = ESMANGAHERE_ID then Result:= ESMANGAHERE_NAME
-  else
-  if ID = ANIMEEXTREMIST_ID then Result:= ANIMEEXTREMIST_NAME
-  else
-  if ID = PECINTAKOMIK_ID then Result:= PECINTAKOMIK_NAME
-  else
-  if ID = HUGEMANGA_ID then Result:= HUGEMANGA_NAME
-  else
-  if ID = S2SCAN_ID then Result:= S2SCAN_NAME
-  else
-  if ID = SENMANGA_ID then Result:= SENMANGA_NAME
-  else
-  if ID = IMANHUA_ID then Result:= IMANHUA_NAME
-  else
-  if ID = MABUNS_ID then Result:= MABUNS_NAME
-  else
-  if ID = MANGAESTA_ID then Result:= MANGAESTA_NAME
-  else
-  if ID = CENTRALDEMANGAS_ID then Result:= CENTRALDEMANGAS_NAME
-  else
-  if ID = EGSCANS_ID then Result:= EGSCANS_NAME
-  else
-  if ID = MANGAAR_ID then Result:= MANGAAR_NAME
-  else
-  if ID = MANGAAE_ID then Result:= MANGAAE_NAME;
+  Result:= WebsiteRoots[ID,0];
 end;
 
 // bad coding.. but this is how FMD works
@@ -935,33 +783,7 @@ function  GetMangaDatabaseURL(const name: String): String;
 var
   i: Byte;
 begin
- // result:= 'http://aarnet.dl.sourceforge.net/project/fmd/FMD/lists/'+name+'.zip';
- // result:= 'http://tenet.dl.sourceforge.net/project/fmd/FMD/lists/'+name+'.zip';
- { case Random(2) of
-    0:
-      begin
-        if (Pos(BLOGTRUYEN_NAME, Name) > 0) AND
-           (Pos(MANGAFRAME_NAME, Name) > 0) then
-        begin
-          i:= Random(2);
-          case i of
-            0: result:= 'http://ufpr.dl.sourceforge.net/project/fmd/FMD/lists/'+name+'.zip';
-            1: result:= 'http://freefr.dl.sourceforge.net/project/fmd/FMD/lists/'+name+'.zip';
-          end;
-        end
-        else
-        if (Pos(STARKANA_NAME, Name) > 0) then
-          result:= 'http://ufpr.dl.sourceforge.net/project/fmd/FMD/lists/'+name+'.zip'
-        else
-          result:= 'http://tenet.dl.sourceforge.net/project/fmd/FMD/lists/'+name+'.zip';
-      end;
-    1:
-      Result:= 'http://sourceforge.net/projects/fmd/files/FMD/lists/'+name+'.zip/download';
-  end;  }
- // if (Pos(TURKCRAFT_NAME, Name) > 0) then
- //   result:= 'http://netcologne.dl.sourceforge.net/project/fmd/FMD/lists/'+name+'.zip'
- // else
-    Result:= 'http://jaist.dl.sourceforge.net/project/fmd/FMD/lists/'+name+'.zip';
+  Result:= 'http://jaist.dl.sourceforge.net/project/fmd/FMD/lists/'+name+'.zip';
 end;
 
 function  RemoveSymbols(const input: String): String;
@@ -1669,7 +1491,7 @@ globReturn:
     HTTP.UserAgent:= 'curl/7.21.0 (i686-pc-linux-gnu) libcurl/7.21.0 OpenSSL/0.9.8o zlib/1.2.3.4 libidn/1.18';
   end;
 
-  if Pos(GEHENTAI_ROOT, URL) <> 0 then
+  if Pos(WebsiteRoots[GEHENTAI_ID,1], URL) <> 0 then
     HTTP.Headers.Insert(0, 'Referer:'+URL);
   while (NOT HTTP.HTTPMethod('GET', URL)) OR
         (HTTP.ResultCode > 500) do
@@ -2101,5 +1923,5 @@ end;
 begin
   gehHTTP:= THTTPSend.Create;
   bttHTTP:= THTTPSend.Create;
- // bttHTTP.Headers.Insert(0, 'Referer:'+BATOTO_ROOT+'/');
+ // bttHTTP.Headers.Insert(0, 'Referer:'+WebsiteRoots[BATOTO_ID,1]+'/');
 end.

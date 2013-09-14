@@ -269,7 +269,7 @@ var
     l: TStringList;
   begin
     l:= TStringList.Create;
-    Result:= GetPage(TObject(l), ANIMEA_ROOT +
+    Result:= GetPage(TObject(l), WebsiteRoots[ANIMEA_ID,1] +
                                  StringReplace(URL, '.html', '', []) +
                                  '-page-1.html',
                                  manager.container.manager.retryConnect);
@@ -290,7 +290,7 @@ var
     l:= TStringList.Create;
     parse:= TStringList.Create;
     Result:= GetPage(TObject(l),
-                     MANGAHERE_ROOT + URL,
+                     WebsiteRoots[MANGAHERE_ID,1] + URL,
                      manager.container.manager.retryConnect);
     Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
     Parser.OnFoundTag := OnTag;
@@ -326,7 +326,7 @@ var
     l:= TStringList.Create;
     parse:= TStringList.Create;
     Result:= GetPage(TObject(l),
-                     ESMANGAHERE_ROOT + URL,
+                     WebsiteRoots[ESMANGAHERE_ID,1] + URL,
                      manager.container.manager.retryConnect);
     Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
     Parser.OnFoundTag := OnTag;
@@ -357,7 +357,7 @@ var
     l:= TStringList.Create;
     parse:= TStringList.Create;
     Result:= GetPage(TObject(l),
-                     SUBMANGA_ROOT + URL,
+                     WebsiteRoots[SUBMANGA_ID,1] + URL,
                      manager.container.manager.retryConnect);
     Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
     Parser.OnFoundTag := OnTag;
@@ -388,9 +388,9 @@ var
   begin
     l:= TStringList.Create;
     parse:= TStringList.Create;
-    s:= StringReplace(ANIMEEXTREMIST_ROOT + URL, '.html', '', []) + '-1.html';
+    s:= StringReplace(WebsiteRoots[ANIMEEXTREMIST_ID,1] + URL, '.html', '', []) + '-1.html';
     Result:= GetPage(TObject(l),
-                     StringReplace(ANIMEEXTREMIST_ROOT + URL, '.html', '', []) + '-1.html',
+                     StringReplace(WebsiteRoots[ANIMEEXTREMIST_ID,1] + URL, '.html', '', []) + '-1.html',
                      manager.container.manager.retryConnect);
     Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
     Parser.OnFoundTag := OnTag;
@@ -422,7 +422,7 @@ var
     l:= TStringList.Create;
     parse:= TStringList.Create;
     Result:= GetPage(TObject(l),
-                     MANGAINN_ROOT + URL,
+                     WebsiteRoots[MANGAINN_ID,1] + URL,
                      manager.container.manager.retryConnect);
     Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
     Parser.OnFoundTag := OnTag;
@@ -465,7 +465,7 @@ var
     l:= TStringList.Create;
     parse:= TStringList.Create;
     Result:= GetPage(TObject(l),
-                     OURMANGA_ROOT + URL,
+                     WebsiteRoots[OURMANGA_ID,1] + URL,
                      manager.container.manager.retryConnect);
     Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
     Parser.OnFoundTag := OnTag;
@@ -478,7 +478,7 @@ var
       for i:= 0 to parse.Count-1 do
       begin
         if (GetTagName(parse.Strings[i]) = 'a') AND
-           (Pos(OURMANGA_ROOT + URL, parse.Strings[i]) <> 0) then
+           (Pos(WebsiteRoots[OURMANGA_ID,1] + URL, parse.Strings[i]) <> 0) then
           correctURL:= GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href='));
       end;
     end;
@@ -537,7 +537,7 @@ var
     parse.Clear;
     l.Clear;
     Result:= GetPage(TObject(l),
-                     BATOTO_ROOT + URL + '/1',
+                     WebsiteRoots[BATOTO_ID,1] + URL + '/1',
                      manager.container.manager.retryConnect);
 
     Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
@@ -566,7 +566,7 @@ var
       exit;
     end;
 
-   // parse.Add(BATOTO_ROOT + URL + '/1');
+   // parse.Add(WebsiteRoots[BATOTO_ID,1] + URL + '/1');
     if parse.Count>0 then
     begin
       manager.container.pageNumber:= 0;
@@ -637,10 +637,10 @@ var
     l:= TStringList.Create;
     parse:= TStringList.Create;
     Result:= GetPage(TObject(l),
-                     MANGAREADER_ROOT + URL,
+                     WebsiteRoots[MANGAREADER_ID,1] + URL,
                      manager.container.manager.retryConnect);
     Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
-    s:= MANGAREADER_ROOT + URL;
+    s:= WebsiteRoots[MANGAREADER_ID,1] + URL;
     Parser.OnFoundTag := OnTag;
     Parser.OnFoundText:= OnText;
     Parser.Exec;
@@ -673,7 +673,7 @@ var
     l:= TStringList.Create;
     parse:= TStringList.Create;
     Result:= GetPage(TObject(l),
-                     MANGAPARK_ROOT + URL + '1',
+                     WebsiteRoots[MANGAPARK_ID,1] + URL + '1',
                      manager.container.manager.retryConnect);
     Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
     Parser.OnFoundTag := OnTag;
@@ -707,8 +707,8 @@ var
     l:= TStringList.Create;
     parse:= TStringList.Create;
     s:= DecodeUrl(URL + '/1.html');
-    if Pos(MANGAFOX_ROOT, s) = 0 then
-      s:= MANGAFOX_ROOT + s;
+    if Pos(WebsiteRoots[MANGAFOX_ID,1], s) = 0 then
+      s:= WebsiteRoots[MANGAFOX_ID,1] + s;
     Result:= GetPage(TObject(l),
                      s,
                      manager.container.manager.retryConnect);
@@ -742,7 +742,7 @@ var
   begin
     l:= TStringList.Create;
     parse:= TStringList.Create;
-    s:= DecodeUrl(STARKANA_ROOT + URL);
+    s:= DecodeUrl(WebsiteRoots[STARKANA_ID,1] + URL);
     Result:= GetPage(TObject(l),
                      s,
                      manager.container.manager.retryConnect);
@@ -777,7 +777,7 @@ var
   begin
     l:= TStringList.Create;
     parse:= TStringList.Create;
-    s:= DecodeUrl(EATMANGA_ROOT + URL);
+    s:= DecodeUrl(WebsiteRoots[EATMANGA_ID,1] + URL);
     Result:= GetPage(TObject(l),
                      s,
                      manager.container.manager.retryConnect);
@@ -851,7 +851,7 @@ var
   begin
     l:= TStringList.Create;
     parse:= TStringList.Create;
-    s:= DecodeUrl(REDHAWKSCANS_ROOT + URL +'page/1');
+    s:= DecodeUrl(WebsiteRoots[REDHAWKSCANS_ID,1] + URL +'page/1');
     Result:= GetPage(TObject(l),
                      s,
                      manager.container.manager.retryConnect);
@@ -885,7 +885,7 @@ var
   begin
     l:= TStringList.Create;
     parse:= TStringList.Create;
-    s:= DecodeUrl(S2SCAN_ROOT + URL +'page/1');
+    s:= DecodeUrl(WebsiteRoots[S2SCAN_ID,1] + URL +'page/1');
     Result:= GetPage(TObject(l),
                      s,
                      manager.container.manager.retryConnect);
@@ -919,7 +919,7 @@ var
   begin
     l:= TStringList.Create;
     parse:= TStringList.Create;
-    s:= DecodeUrl(EGSCANS_ROOT + URL +'/1');
+    s:= DecodeUrl(WebsiteRoots[EGSCANS_ID,1] + URL +'/1');
     Result:= GetPage(TObject(l),
                      s,
                      manager.container.manager.retryConnect);
@@ -955,7 +955,7 @@ var
     l:= TStringList.Create;
     parse:= TStringList.Create;
     Result:= GetPage(TObject(l),
-                     MANGATRADERS_ROOT + URL,
+                     WebsiteRoots[MANGATRADERS_ID,1] + URL,
                      manager.container.manager.retryConnect);
     Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
     Parser.OnFoundTag := OnTag;
@@ -1023,7 +1023,7 @@ var
   begin
     l:= TStringList.Create;
     parse:= TStringList.Create;
-    s:= DecodeUrl(KOMIKID_ROOT + URL + '/1');
+    s:= DecodeUrl(WebsiteRoots[KOMIKID_ID,1] + URL + '/1');
     Result:= GetPage(TObject(l),
                      s,
                      manager.container.manager.retryConnect);
@@ -1057,7 +1057,7 @@ var
   begin
     l:= TStringList.Create;
     parse:= TStringList.Create;
-    s:= DecodeUrl(PECINTAKOMIK_ROOT + URL + '/1');
+    s:= DecodeUrl(WebsiteRoots[PECINTAKOMIK_ID,1] + URL + '/1');
     Result:= GetPage(TObject(l),
                      s,
                      manager.container.manager.retryConnect);
@@ -1091,7 +1091,7 @@ var
   begin
     l:= TStringList.Create;
     parse:= TStringList.Create;
-    s:= DecodeUrl(HUGEMANGA_ROOT + URL + '/1');
+    s:= DecodeUrl(WebsiteRoots[HUGEMANGA_ID,1] + URL + '/1');
     Result:= GetPage(TObject(l),
                      s,
                      manager.container.manager.retryConnect);
@@ -1125,7 +1125,7 @@ var
   begin
     l:= TStringList.Create;
     parse:= TStringList.Create;
-    s:= DecodeUrl(TURKCRAFT_ROOT + URL + '/1');
+    s:= DecodeUrl(WebsiteRoots[TURKCRAFT_ID,1] + URL + '/1');
     Result:= GetPage(TObject(l),
                      s,
                      manager.container.manager.retryConnect);
@@ -1159,7 +1159,7 @@ var
   begin
     l:= TStringList.Create;
     parse:= TStringList.Create;
-    s:= DecodeUrl(MANGAVADISI_ROOT + MANGAVADISI_BROWSER + URL + '/1');
+    s:= DecodeUrl(WebsiteRoots[MANGAVADISI_ID,1] + MANGAVADISI_BROWSER + URL + '/1');
     Result:= GetPage(TObject(l),
                      s,
                      manager.container.manager.retryConnect);
@@ -1193,7 +1193,7 @@ var
   begin
     l:= TStringList.Create;
     parse:= TStringList.Create;
-    s:= DecodeUrl(MANGAFRAME_ROOT + URL + '1');
+    s:= DecodeUrl(WebsiteRoots[MANGAFRAME_ID,1] + URL + '1');
     Result:= GetPage(TObject(l),
                      s,
                      manager.container.manager.retryConnect);
@@ -1227,7 +1227,7 @@ var
   begin
     l:= TStringList.Create;
     parse:= TStringList.Create;
-    s:= MANGAAR_ROOT + URL + '/1';
+    s:= WebsiteRoots[MANGAAR_ID,1] + URL + '/1';
     Result:= GetPage(TObject(l),
                      s,
                      manager.container.manager.retryConnect);
@@ -1265,7 +1265,7 @@ var
   begin
     l:= TStringList.Create;
     parse:= TStringList.Create;
-    s:= DecodeUrl(MANGAAE_ROOT + URL + '/1');
+    s:= DecodeUrl(WebsiteRoots[MANGAAE_ID,1] + URL + '/1');
     Result:= GetPage(TObject(l),
                      s,
                      manager.container.manager.retryConnect);
@@ -1299,7 +1299,7 @@ var
   begin
     l:= TStringList.Create;
     parse:= TStringList.Create;
-    s:= DecodeUrl(CENTRALDEMANGAS_ROOT + URL + '#1');
+    s:= DecodeUrl(WebsiteRoots[CENTRALDEMANGAS_ID,1] + URL + '#1');
     Result:= GetPage(TObject(l),
                      s,
                      manager.container.manager.retryConnect);
@@ -1334,7 +1334,7 @@ var
   begin
     l:= TStringList.Create;
     parse:= TStringList.Create;
-    s:= DecodeUrl(SENMANGA_ROOT + URL + '1/');
+    s:= DecodeUrl(WebsiteRoots[SENMANGA_ID,1] + URL + '1/');
     Result:= GetPage(TObject(l),
                      s,
                      manager.container.manager.retryConnect);
@@ -1373,9 +1373,9 @@ var
     l:= TStringList.Create;
     parse:= TStringList.Create;
     if manager.container.mangaSiteID = MANGAEDEN_ID then
-      s:= DecodeUrl(MANGAEDEN_ROOT + URL + '1/')
+      s:= DecodeUrl(WebsiteRoots[MANGAEDEN_ID,1] + URL + '1/')
     else
-      s:= DecodeUrl(PERVEDEN_ROOT + URL + '1/');
+      s:= DecodeUrl(WebsiteRoots[PERVEDEN_ID,1] + URL + '1/');
     Result:= GetPage(TObject(l),
                      s,
                      manager.container.manager.retryConnect);
@@ -1572,7 +1572,7 @@ var
   begin
     l:= TStringList.Create;
     Result:= GetPage(TObject(l),
-                     ANIMEA_ROOT +
+                     WebsiteRoots[ANIMEA_ID,1] +
                      StringReplace(URL, '.html', '', []) +
                      '-page-'+IntToStr(workPtr+1)+'.html',
                      manager.container.manager.retryConnect);
@@ -1594,11 +1594,11 @@ var
     l:= TStringList.Create;
     if workPtr > 0 then
       Result:= GetPage(TObject(l),
-                       MANGAHERE_ROOT + URL + IntToStr(workPtr+1)+'.html',
+                       WebsiteRoots[MANGAHERE_ID,1] + URL + IntToStr(workPtr+1)+'.html',
                        manager.container.manager.retryConnect)
     else
       Result:= GetPage(TObject(l),
-                       MANGAHERE_ROOT + URL,
+                       WebsiteRoots[MANGAHERE_ID,1] + URL,
                        manager.container.manager.retryConnect);
     parse:= TStringList.Create;
 
@@ -1631,11 +1631,11 @@ var
     l:= TStringList.Create;
     if workPtr > 0 then
       Result:= GetPage(TObject(l),
-                       ESMANGAHERE_ROOT + URL + IntToStr(workPtr+1)+'.html',
+                       WebsiteRoots[ESMANGAHERE_ID,1] + URL + IntToStr(workPtr+1)+'.html',
                        manager.container.manager.retryConnect)
     else
       Result:= GetPage(TObject(l),
-                       ESMANGAHERE_ROOT + URL,
+                       WebsiteRoots[ESMANGAHERE_ID,1] + URL,
                        manager.container.manager.retryConnect);
     parse:= TStringList.Create;
 
@@ -1666,7 +1666,7 @@ var
   begin
     l:= TStringList.Create;
     Result:= GetPage(TObject(l),
-                     MANGAINN_ROOT + URL + '/page_'+IntToStr(workPtr+1),
+                     WebsiteRoots[MANGAINN_ID,1] + URL + '/page_'+IntToStr(workPtr+1),
                      manager.container.manager.retryConnect);
     parse:= TStringList.Create;
     Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
@@ -1697,7 +1697,7 @@ var
   begin
     l:= TStringList.Create;
     Result:= GetPage(TObject(l),
-                     OURMANGA_ROOT + URL + '/' + manager.container.pageContainerLinks.Strings[workPtr],
+                     WebsiteRoots[OURMANGA_ID,1] + URL + '/' + manager.container.pageContainerLinks.Strings[workPtr],
                      manager.container.manager.retryConnect);
     parse:= TStringList.Create;
     Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
@@ -1737,7 +1737,7 @@ var
   begin
     l:= TStringList.Create;
     Result:= GetPage(TObject(l),
-                     KISSMANGA_ROOT + URL,
+                     WebsiteRoots[KISSMANGA_ID,1] + URL,
                      manager.container.manager.retryConnect);
     parse:= TStringList.Create;
     Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
@@ -1779,7 +1779,7 @@ var
     parse.Clear;
     l.Clear;
     Result:= GetPage(TObject(l),
-                     BATOTO_ROOT + URL + '/'+IntToStr(workPtr+1),
+                     WebsiteRoots[BATOTO_ID,1] + URL + '/'+IntToStr(workPtr+1),
                      manager.container.manager.retryConnect);
 
     Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
@@ -1836,7 +1836,7 @@ var
   begin
     l:= TStringList.Create;
     Result:= GetPage(TObject(l),
-                     MANGA24H_ROOT + URL,
+                     WebsiteRoots[MANGA24H_ID,1] + URL,
                      manager.container.manager.retryConnect);
     parse:= TStringList.Create;
     Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
@@ -1870,7 +1870,7 @@ var
   begin
     l:= TStringList.Create;
     Result:= GetPage(TObject(l),
-                     VNSHARING_ROOT + URL,
+                     WebsiteRoots[VNSHARING_ID,1] + URL,
                      manager.container.manager.retryConnect);
     parse:= TStringList.Create;
     Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
@@ -1938,7 +1938,7 @@ var
     l:= TStringList.Create;
     // get number of pages
     Result:= GetPage(TObject(l),
-                     FAKKU_ROOT + StringReplace(URL, '/read', '', []){ + '#page' + IntToStr(workPtr+1)},
+                     WebsiteRoots[FAKKU_ID,1] + StringReplace(URL, '/read', '', []){ + '#page' + IntToStr(workPtr+1)},
                      manager.container.manager.retryConnect);
     parse:= TStringList.Create;
     Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
@@ -1965,7 +1965,7 @@ var
     // get link pages
     l.Clear;
     Result:= GetPage(TObject(l),
-                     FAKKU_ROOT + URL + '#page' + IntToStr(workPtr+1),
+                     WebsiteRoots[FAKKU_ID,1] + URL + '#page' + IntToStr(workPtr+1),
                      manager.container.manager.retryConnect);
     parse.Clear;
     Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
@@ -2104,7 +2104,7 @@ var
     l:= TStringList.Create;
     BreakURL;
     Result:= GetPage(TObject(l),
-                     MANGAREADER_ROOT + realURL,
+                     WebsiteRoots[MANGAREADER_ID,1] + realURL,
                      manager.container.manager.retryConnect);
     parse:= TStringList.Create;
     Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
@@ -2141,7 +2141,7 @@ var
   begin
     l:= TStringList.Create;
     Result:= GetPage(TObject(l),
-                     MANGAPARK_ROOT + URL + 'all',//IntToStr(workPtr+1),
+                     WebsiteRoots[MANGAPARK_ID,1] + URL + 'all',//IntToStr(workPtr+1),
                      manager.container.manager.retryConnect);
     parse:= TStringList.Create;
     Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
@@ -2174,8 +2174,8 @@ var
   begin
     l:= TStringList.Create;
     s:= DecodeUrl(URL + '/' + IntToStr(workPtr+1) + '.html');
-    if Pos(MANGAFOX_ROOT, s) = 0 then
-      s:= MANGAFOX_ROOT + s;
+    if Pos(WebsiteRoots[MANGAFOX_ID,1], s) = 0 then
+      s:= WebsiteRoots[MANGAFOX_ID,1] + s;
     Result:= GetPage(TObject(l),
                      s,
                      manager.container.manager.retryConnect);
@@ -2207,7 +2207,7 @@ var
     l: TStringList;
   begin
     l:= TStringList.Create;
-    s:= DecodeUrl(STARKANA_ROOT + URL + '/' + IntToStr(workPtr+1));
+    s:= DecodeUrl(WebsiteRoots[STARKANA_ID,1] + URL + '/' + IntToStr(workPtr+1));
     Result:= GetPage(TObject(l),
                      s,
                      manager.container.manager.retryConnect);
@@ -2239,7 +2239,7 @@ var
     l: TStringList;
   begin
     l:= TStringList.Create;
-    s:= DecodeUrl(EATMANGA_ROOT + URL + 'page-' + IntToStr(workPtr+1));
+    s:= DecodeUrl(WebsiteRoots[EATMANGA_ID,1] + URL + 'page-' + IntToStr(workPtr+1));
     Result:= GetPage(TObject(l),
                      s,
                      manager.container.manager.retryConnect);
@@ -2271,7 +2271,7 @@ var
     l: TStringList;
   begin
     l:= TStringList.Create;
-    s:= DecodeUrl(SUBMANGA_ROOT + URL + '/' + IntToStr(workPtr+1));
+    s:= DecodeUrl(WebsiteRoots[SUBMANGA_ID,1] + URL + '/' + IntToStr(workPtr+1));
     Result:= GetPage(TObject(l),
                      s,
                      manager.container.manager.retryConnect);
@@ -2303,7 +2303,7 @@ var
     l: TStringList;
   begin
     l:= TStringList.Create;
-    s:= DecodeUrl(StringReplace(ANIMEEXTREMIST_ROOT + URL, '.html', '', []) + '-' + IntToStr(workPtr+1) + '.html');
+    s:= DecodeUrl(StringReplace(WebsiteRoots[ANIMEEXTREMIST_ID,1] + URL, '.html', '', []) + '-' + IntToStr(workPtr+1) + '.html');
     Result:= GetPage(TObject(l),
                      s,
                      manager.container.manager.retryConnect);
@@ -2376,7 +2376,7 @@ var
   begin
     l:= TStringList.Create;
 
-    s:= DecodeUrl(REDHAWKSCANS_ROOT + URL + 'page/' + IntToStr(workPtr+1));
+    s:= DecodeUrl(WebsiteRoots[REDHAWKSCANS_ID,1] + URL + 'page/' + IntToStr(workPtr+1));
     Result:= GetPage(TObject(l),
                      s,
                      manager.container.manager.retryConnect);
@@ -2409,7 +2409,7 @@ var
   begin
     l:= TStringList.Create;
 
-    s:= DecodeUrl(S2SCAN_ROOT + URL + 'page/' + IntToStr(workPtr+1));
+    s:= DecodeUrl(WebsiteRoots[S2SCAN_ID,1] + URL + 'page/' + IntToStr(workPtr+1));
     Result:= GetPage(TObject(l),
                      s,
                      manager.container.manager.retryConnect);
@@ -2442,7 +2442,7 @@ var
   begin
     l:= TStringList.Create;
 
-    s:= DecodeUrl(EGSCANS_ROOT + URL + '/' + IntToStr(workPtr+1));
+    s:= DecodeUrl(WebsiteRoots[EGSCANS_ID,1] + URL + '/' + IntToStr(workPtr+1));
     Result:= GetPage(TObject(l),
                      s,
                      manager.container.manager.retryConnect);
@@ -2459,7 +2459,7 @@ var
       for i:= 0 to parse.Count-1 do
         if (Pos('<img ondragstart', parse.Strings[i])>0) then
         begin
-          manager.container.pageLinks.Add(EGSCANS_ROOT + '/' + EncodeURL(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src='))));
+          manager.container.pageLinks.Add(WebsiteRoots[EGSCANS_ID,1] + '/' + EncodeURL(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src='))));
         end;
     end;
     parse.Free;
@@ -2507,7 +2507,7 @@ var
   begin
     l:= TStringList.Create;
     Result:= GetPage(TObject(l),
-                     TRUYENTRANHTUAN_ROOT + URL + 'doc-truyen/',
+                     WebsiteRoots[TRUYENTRANHTUAN_ID,1] + URL + 'doc-truyen/',
                      manager.container.manager.retryConnect);
     parse:= TStringList.Create;
     Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
@@ -2525,7 +2525,7 @@ var
           s:= parse.Strings[i];
           repeat
             j:= Pos('"/manga/', s);
-            manager.container.pageLinks.Add(EncodeUrl(TRUYENTRANHTUAN_ROOT + '/manga/' + GetString(s, '"/manga/', '"')));
+            manager.container.pageLinks.Add(EncodeUrl(WebsiteRoots[TRUYENTRANHTUAN_ID,1] + '/manga/' + GetString(s, '"/manga/', '"')));
             Delete(s, Pos('"/manga/', s), 10);
             j:= Pos('"/manga/', s);
           until j = 0;
@@ -2547,7 +2547,7 @@ var
   begin
     l:= TStringList.Create;
     Result:= GetPage(TObject(l),
-                     BLOGTRUYEN_ROOT + URL,
+                     WebsiteRoots[BLOGTRUYEN_ID,1] + URL,
                      manager.container.manager.retryConnect);
     parse:= TStringList.Create;
     Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
@@ -2581,7 +2581,7 @@ var
     l: TStringList;
   begin
     l:= TStringList.Create;
-    s:= DecodeUrl(KOMIKID_ROOT + URL + '/' + IntToStr(workPtr+1));
+    s:= DecodeUrl(WebsiteRoots[KOMIKID_ID,1] + URL + '/' + IntToStr(workPtr+1));
     Result:= GetPage(TObject(l),
                      s,
                      manager.container.manager.retryConnect);
@@ -2599,7 +2599,7 @@ var
         begin
           s:= GetAttributeValue(GetTagAttribute(parse.Strings[i-8], 'src='));
           if Pos('http://', s) = 0 then
-            s:= KOMIKID_ROOT + KOMIKID_BROWSER + s;
+            s:= WebsiteRoots[KOMIKID_ID,1] + KOMIKID_BROWSER + s;
           manager.container.pageLinks.Strings[workPtr]:= EncodeURL(s);
           break;
         end;
@@ -2616,7 +2616,7 @@ var
     l: TStringList;
   begin
     l:= TStringList.Create;
-    s:= DecodeUrl(PECINTAKOMIK_ROOT + URL + '/' + IntToStr(workPtr+1));
+    s:= DecodeUrl(WebsiteRoots[PECINTAKOMIK_ID,1] + URL + '/' + IntToStr(workPtr+1));
     Result:= GetPage(TObject(l),
                      s,
                      manager.container.manager.retryConnect);
@@ -2634,9 +2634,9 @@ var
         begin
           s:= GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src='));
           if Pos('/manga/', s) = 0 then
-            s:= PECINTAKOMIK_ROOT + '/manga/' + s
+            s:= WebsiteRoots[PECINTAKOMIK_ID,1] + '/manga/' + s
           else
-            s:= PECINTAKOMIK_ROOT + PECINTAKOMIK_BROWSER + s;
+            s:= WebsiteRoots[PECINTAKOMIK_ID,1] + PECINTAKOMIK_BROWSER + s;
           manager.container.pageLinks.Strings[workPtr]:= EncodeURL(s);
           break;
         end;
@@ -2654,7 +2654,7 @@ var
   begin
     l:= TStringList.Create;
     if Pos('http://', URL) = 0 then
-      s:= MABUNS_ROOT + URL
+      s:= WebsiteRoots[MABUNS_ID,1] + URL
     else
       s:= URL;
     Result:= GetPage(TObject(l),
@@ -2700,7 +2700,7 @@ var
   begin
     l:= TStringList.Create;
     if Pos('http://', URL) = 0 then
-      s:= MANGAESTA_ROOT + URL
+      s:= WebsiteRoots[MANGAESTA_ID,1] + URL
     else
       s:= URL;
     Result:= GetPage(TObject(l),
@@ -2745,7 +2745,7 @@ var
     l: TStringList;
   begin
     l:= TStringList.Create;
-    s:= DecodeUrl(HUGEMANGA_ROOT + URL + '/' + IntToStr(workPtr+1));
+    s:= DecodeUrl(WebsiteRoots[HUGEMANGA_ID,1] + URL + '/' + IntToStr(workPtr+1));
     Result:= GetPage(TObject(l),
                      s,
                      manager.container.manager.retryConnect);
@@ -2761,42 +2761,9 @@ var
       for i:= 0 to parse.Count-1 do
         if (Pos('class="picture"', parse.Strings[i])>0) then
         begin
-          manager.container.pageLinks.Strings[workPtr]:= EncodeURL(HUGEMANGA_ROOT + HUGEMANGA_BROWSER + GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src=')));
+          manager.container.pageLinks.Strings[workPtr]:= EncodeURL(WebsiteRoots[HUGEMANGA_ID,1] + HUGEMANGA_BROWSER + GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src=')));
           break;
         end;
-    end;
-    parse.Free;
-    l.Free;
-  end;
-
-  function GetMangakuLinkPage: Boolean;
-  var
-    s: String;
-    j,
-    i: Cardinal;
-    l: TStringList;
-  begin
-    l:= TStringList.Create;
-    Result:= GetPage(TObject(l),
-                     MANGAKU_ROOT + URL,
-                     manager.container.manager.retryConnect);
-    parse:= TStringList.Create;
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
-    Parser.Exec;
-    Parser.Free;
-    if parse.Count>0 then
-    begin
-      manager.container.pageLinks.Clear;
-      for i:= 0 to parse.Count-1 do
-      begin
-        if Pos('class="separator"', parse.Strings[i]) > 0 then
-        begin
-          s:= GetAttributeValue(GetTagAttribute(parse.Strings[i+2], 'src='));
-          manager.container.pageLinks.Add(EncodeUrl(s));
-        end;
-      end;
     end;
     parse.Free;
     l.Free;
@@ -2810,7 +2777,7 @@ var
     l: TStringList;
   begin
     l:= TStringList.Create;
-    s:= DecodeUrl(TURKCRAFT_ROOT + URL + '/' + IntToStr(workPtr+1));
+    s:= DecodeUrl(WebsiteRoots[TURKCRAFT_ID,1] + URL + '/' + IntToStr(workPtr+1));
     Result:= GetPage(TObject(l),
                      s,
                      manager.container.manager.retryConnect);
@@ -2826,7 +2793,7 @@ var
       for i:= 0 to parse.Count-1 do
         if (Pos('class="picture"', parse.Strings[i])>0) then
         begin
-          manager.container.pageLinks.Strings[workPtr]:= EncodeURL(TURKCRAFT_ROOT + TURKCRAFT_BROWSER + GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src=')));
+          manager.container.pageLinks.Strings[workPtr]:= EncodeURL(WebsiteRoots[TURKCRAFT_ID,1] + TURKCRAFT_BROWSER + GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src=')));
           break;
         end;
     end;
@@ -2842,7 +2809,7 @@ var
     l: TStringList;
   begin
     l:= TStringList.Create;
-    s:= DecodeUrl(MANGAVADISI_ROOT + MANGAVADISI_BROWSER + URL + '/' + IntToStr(workPtr+1));
+    s:= DecodeUrl(WebsiteRoots[MANGAVADISI_ID,1] + MANGAVADISI_BROWSER + URL + '/' + IntToStr(workPtr+1));
     Result:= GetPage(TObject(l),
                      s,
                      manager.container.manager.retryConnect);
@@ -2858,7 +2825,7 @@ var
       for i:= 0 to parse.Count-1 do
         if (Pos('class="picture"', parse.Strings[i])>0) then
         begin
-          manager.container.pageLinks.Strings[workPtr]:= EncodeURL(MANGAVADISI_ROOT + MANGAVADISI_BROWSER + GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src=')));
+          manager.container.pageLinks.Strings[workPtr]:= EncodeURL(WebsiteRoots[MANGAVADISI_ID,1] + MANGAVADISI_BROWSER + GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src=')));
           break;
         end;
     end;
@@ -2874,7 +2841,7 @@ var
     l: TStringList;
   begin
     l:= TStringList.Create;
-    s:= DecodeUrl(MANGAFRAME_ROOT + URL + IntToStr(workPtr+1));
+    s:= DecodeUrl(WebsiteRoots[MANGAFRAME_ID,1] + URL + IntToStr(workPtr+1));
     Result:= GetPage(TObject(l),
                      s,
                      manager.container.manager.retryConnect);
@@ -2906,7 +2873,7 @@ var
     l: TStringList;
   begin
     l:= TStringList.Create;
-    s:= DecodeUrl(MANGAAE_ROOT + URL + '/' + IntToStr(workPtr+1));
+    s:= DecodeUrl(WebsiteRoots[MANGAAE_ID,1] + URL + '/' + IntToStr(workPtr+1));
     Result:= GetPage(TObject(l),
                      s,
                      manager.container.manager.retryConnect);
@@ -2938,7 +2905,7 @@ var
     l: TStringList;
   begin
     l:= TStringList.Create;
-    s:= MANGAAR_ROOT + URL + '/' + IntToStr(workPtr+1);
+    s:= WebsiteRoots[MANGAAR_ID,1] + URL + '/' + IntToStr(workPtr+1);
     Result:= GetPage(TObject(l),
                      s,
                      manager.container.manager.retryConnect);
@@ -2974,7 +2941,7 @@ var
     l: TStringList;
   begin
     l:= TStringList.Create;
-    s:= EncodeUrl(CENTRALDEMANGAS_ROOT + URL + '#1'); // + IntToStr(workPtr+1));
+    s:= EncodeUrl(WebsiteRoots[CENTRALDEMANGAS_ID,1] + URL + '#1'); // + IntToStr(workPtr+1));
     Result:= GetPage(TObject(l),
                      s,
                      manager.container.manager.retryConnect);
@@ -3016,7 +2983,7 @@ var
     l: TStringList;
   begin
     l:= TStringList.Create;
-    s:= DecodeUrl(SENMANGA_ROOT + URL + IntToStr(workPtr+1) + '/');
+    s:= DecodeUrl(WebsiteRoots[SENMANGA_ID,1] + URL + IntToStr(workPtr+1) + '/');
     Result:= GetPage(TObject(l),
                      s,
                      manager.container.manager.retryConnect);
@@ -3034,7 +3001,7 @@ var
         begin
           s:= EncodeURL(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src=')));
           if Pos('http://', s) = 0 then
-            s:= SENMANGA_ROOT + s;
+            s:= WebsiteRoots[SENMANGA_ID,1] + s;
           manager.container.pageLinks.Strings[workPtr]:= s;
           break;
         end;
@@ -3051,7 +3018,7 @@ var
     l: TStringList;
   begin
     l:= TStringList.Create;
-    s:= MANGATRADERS_ROOT + URL + '/page/' + IntToStr(workPtr+1);
+    s:= WebsiteRoots[MANGATRADERS_ID,1] + URL + '/page/' + IntToStr(workPtr+1);
     Result:= GetPage(TObject(l),
                      s,
                      manager.container.manager.retryConnect);
@@ -3088,9 +3055,9 @@ var
   begin
     l:= TStringList.Create;
     if manager.container.mangaSiteID = MANGAEDEN_ID then
-      s:= MANGAEDEN_ROOT + URL + IntToStr(workPtr+1) + '/'
+      s:= WebsiteRoots[MANGAEDEN_ID,1] + URL + IntToStr(workPtr+1) + '/'
     else
-      s:= PERVEDEN_ROOT + URL + IntToStr(workPtr+1) + '/';
+      s:= WebsiteRoots[PERVEDEN_ID,1] + URL + IntToStr(workPtr+1) + '/';
     Result:= GetPage(TObject(l),
                      s,
                      manager.container.manager.retryConnect);
@@ -3343,17 +3310,17 @@ var
     else
     if manager.container.mangaSiteID = ANIMEEXTREMIST_ID then
     begin
-      HTTP.Headers.Insert(0, 'Referer:'+ANIMEEXTREMIST_ROOT+'/');
+      HTTP.Headers.Insert(0, 'Referer:'+WebsiteRoots[ANIMEEXTREMIST_ID,1]+'/');
     end
     else
     if manager.container.mangaSiteID = KISSMANGA_ID then
-      HTTP.Headers.Insert(0, 'Referer:'+KISSMANGA_ROOT+'/')
+      HTTP.Headers.Insert(0, 'Referer:'+WebsiteRoots[KISSMANGA_ID,1]+'/')
     else
     if manager.container.mangaSiteID = CENTRALDEMANGAS_ID then
-      HTTP.Headers.Insert(0, 'Referer:'+CENTRALDEMANGAS_ROOT+'/')
+      HTTP.Headers.Insert(0, 'Referer:'+WebsiteRoots[CENTRALDEMANGAS_ID,1]+'/')
     else
     if manager.container.mangaSiteID = VNSHARING_ID then
-      HTTP.Headers.Insert(0, 'Referer:'+VNSHARING_ROOT+'/')
+      HTTP.Headers.Insert(0, 'Referer:'+WebsiteRoots[VNSHARING_ID,1]+'/')
     else
     if  manager.container.mangaSiteID = GEHENTAI_ID then
       HTTP.Headers.Insert(0, 'Referer:'+manager.container.pageLinks.Strings[workPtr]);
@@ -3383,10 +3350,10 @@ var
         HTTP.Headers.Insert(0, 'Referer:'+HENTAI2READ_ROOT+'/')
       else
       if Pos('bp.blogspot.com', URL) <> 0 then
-        HTTP.Headers.Insert(0, 'Referer:'+KISSMANGA_ROOT+'/')
+        HTTP.Headers.Insert(0, 'Referer:'+WebsiteRoots[KISSMANGA_ID,1]+'/')
       else
       if Pos('mangas.centraldemangas.com', URL) <> 0 then
-        HTTP.Headers.Insert(0, 'Referer:'+CENTRALDEMANGAS_ROOT+'/');
+        HTTP.Headers.Insert(0, 'Referer:'+WebsiteRoots[CENTRALDEMANGAS_ID,1]+'/');
       while (NOT HTTP.HTTPMethod('GET', URL)) OR
             (HTTP.ResultCode >= 500) do
       begin

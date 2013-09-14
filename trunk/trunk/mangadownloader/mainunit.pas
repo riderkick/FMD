@@ -23,6 +23,7 @@ type
   { TMainForm }
 
   TMainForm = class(TForm)
+    btFavoritesImport: TBitBtn;
     btChecks: TBitBtn;
     pnLeftBtDummy: TBitBtn;
     btVisitMyBlog: TBitBtn;
@@ -1012,214 +1013,45 @@ begin
 end;
 
 procedure TMainForm.btURLClick(Sender: TObject);
+var
+  i: Cardinal;
 begin
   if (SubThread.isGetInfos) then exit;
 
   if Pos('http://', edURL.Text) = 0 then
     edURL.Text:= 'http://' + edURL.Text;
 
-  if (Pos(GEHENTAI_ROOT, edURL.Text) <> 0) OR
-     (Pos(FAKKU_ROOT, edURL.Text) <> 0){ OR
-     (Pos(MANGATRADERS_ROOT, edURL.Text) <> 0)} then
+  if (Pos(WebsiteRoots[GEHENTAI_ID,1], edURL.Text) <> 0) OR
+     (Pos(WebsiteRoots[FAKKU_ID,1], edURL.Text) <> 0){ OR
+     (Pos(WebsiteRoots[MANGATRADERS_ID,1], edURL.Text) <> 0)} then
   begin
     cbAddToFavorites.Checked:= FALSE;
     cbAddToFavorites.Enabled:= FALSE;
   end;
 
-  if Pos(ANIMEA_ROOT, edURL.Text) > 0 then
-  begin
-    SubThread.link   := edURL.Text;
-    Delete(SubThread.link, 1, Length(ANIMEA_ROOT));
-    SubThread.website:= ANIMEA_NAME
-  end
-  else
-  if Pos(BATOTO_ROOT, edURL.Text) > 0 then
-  begin
-    SubThread.link   := edURL.Text;
-    Delete(SubThread.link, 1, Length(BATOTO_ROOT));
-    SubThread.website:= BATOTO_NAME
-  end
-  else
-  if Pos(MANGAFOX_ROOT, edURL.Text) > 0 then
-    SubThread.website:= MANGAFOX_NAME
-  else
-  if Pos(MANGAHERE_ROOT, edURL.Text) > 0 then
-  begin
-    SubThread.link   := edURL.Text;
-    Delete(SubThread.link, 1, Length(MANGAHERE_ROOT));
-    SubThread.website:= MANGAHERE_NAME
-  end
-  else
-  if Pos(MANGAINN_ROOT, edURL.Text) > 0 then
-  begin
-    SubThread.link   := edURL.Text;
-    Delete(SubThread.link, 1, Length(MANGAINN_ROOT));
-    SubThread.website:= MANGAINN_NAME
-  end
-  else
-  if Pos(MANGAPARK_ROOT, edURL.Text) > 0 then
-  begin
-    SubThread.link   := edURL.Text;
-    Delete(SubThread.link, 1, Length(MANGAPARK_ROOT));
-    SubThread.website:= MANGAPARK_NAME
-  end
- { else
-  if Pos(OURMANGA_ROOT, edURL.Text) > 0 then
-  begin
-    SubThread.link   := edURL.Text;
-    Delete(SubThread.link, 1, Length(OURMANGA_ROOT));
-    SubThread.website:= OURMANGA_NAME
-  end }
-  else
-  if Pos(KISSMANGA_ROOT, edURL.Text) > 0 then
-  begin
-    SubThread.link   := edURL.Text;
-    Delete(SubThread.link, 1, Length(KISSMANGA_ROOT));
-    SubThread.website:= KISSMANGA_NAME
-  end
-  else
-  if Pos(MANGA24H_ROOT, edURL.Text) > 0 then
-  begin
-    SubThread.link   := edURL.Text;
-    Delete(SubThread.link, 1, Length(MANGA24H_ROOT));
-    SubThread.website:= MANGA24H_NAME
-  end
-  else
-  if Pos(VNSHARING_ROOT, edURL.Text) > 0 then
-  begin
-    SubThread.link   := edURL.Text;
-    Delete(SubThread.link, 1, Length(VNSHARING_ROOT));
-    SubThread.website:= VNSHARING_NAME
-  end
-  else
-  if Pos(FAKKU_ROOT, edURL.Text) > 0 then
-  begin
-    SubThread.link   := edURL.Text;
-    Delete(SubThread.link, 1, Length(FAKKU_ROOT));
-    SubThread.website:= FAKKU_NAME
-  end
-  else
-  if Pos(HENTAI2READ_ROOT, edURL.Text) > 0 then
-  begin
-    SubThread.link   := edURL.Text;
-    Delete(SubThread.link, 1, Length(HENTAI2READ_ROOT));
-    SubThread.website:= HENTAI2READ_NAME
-  end
-  else
-  if Pos(MANGATRADERS_ROOT, edURL.Text) > 0 then
-  begin
-    SubThread.link   := edURL.Text;
-    Delete(SubThread.link, 1, Length(MANGATRADERS_ROOT));
-    SubThread.website:= MANGATRADERS_NAME
-  end
-  else
-  if Pos(MANGAEDEN_ROOT, edURL.Text) > 0 then
-  begin
-    SubThread.link   := edURL.Text;
-    Delete(SubThread.link, 1, Length(MANGAEDEN_ROOT));
-    SubThread.website:= MANGAEDEN_NAME
-  end
-  else
-  if Pos(PERVEDEN_ROOT, edURL.Text) > 0 then
-  begin
-    SubThread.link   := edURL.Text;
-    Delete(SubThread.link, 1, Length(PERVEDEN_ROOT));
-    SubThread.website:= PERVEDEN_NAME
-  end
-  else
-  if Pos(TRUYENTRANHTUAN_ROOT, edURL.Text) > 0 then
-  begin
-    SubThread.link   := edURL.Text;
-    Delete(SubThread.link, 1, Length(TRUYENTRANHTUAN_ROOT));
-    SubThread.website:= TRUYENTRANHTUAN_NAME
-  end
-  else
-  if Pos(STARKANA_ROOT, edURL.Text) > 0 then
-  begin
-    SubThread.link   := edURL.Text;
-    Delete(SubThread.link, 1, Length(STARKANA_ROOT));
-    SubThread.website:= STARKANA_NAME
-  end
-  else
-  if Pos(EATMANGA_ROOT, edURL.Text) > 0 then
-  begin
-    SubThread.link   := edURL.Text;
-    Delete(SubThread.link, 1, Length(EATMANGA_ROOT));
-    SubThread.website:= EATMANGA_NAME
-  end
-  else
-  if Pos(MANGAVADISI_ROOT, edURL.Text) > 0 then
-  begin
-    SubThread.link   := edURL.Text;
-    Delete(SubThread.link, 1, Length(MANGAVADISI_ROOT + MANGAVADISI_BROWSER));
-    SubThread.website:= MANGAVADISI_NAME
-  end
-  else
-  if Pos(TURKCRAFT_ROOT, edURL.Text) > 0 then
-  begin
-    SubThread.link   := edURL.Text;
-    Delete(SubThread.link, 1, Length(TURKCRAFT_ROOT));
-    SubThread.website:= TURKCRAFT_NAME
-  end
-  else
-  if Pos(MANGAFRAME_ROOT, edURL.Text) > 0 then
-  begin
-    SubThread.link   := edURL.Text;
-    Delete(SubThread.link, 1, Length(MANGAFRAME_ROOT));
-    SubThread.website:= MANGAFRAME_NAME
-  end
-  else
-  if Pos(BLOGTRUYEN_ROOT, edURL.Text) > 0 then
-  begin
-    SubThread.link   := edURL.Text;
-    Delete(SubThread.link, 1, Length(BLOGTRUYEN_ROOT));
-    SubThread.website:= BLOGTRUYEN_NAME
-  end
-  else
-  if Pos(MANGAPANDA_ROOT, edURL.Text) > 0 then
-  begin
-    SubThread.link   := edURL.Text;
-    SubThread.website:= MANGAPANDA_NAME
-  end
-  else
-  if Pos(SUBMANGA_ROOT, edURL.Text) > 0 then
-  begin
-    SubThread.link   := edURL.Text;
-    SubThread.website:= SUBMANGA_NAME
-  end
-  else
-  if Pos(ESMANGAHERE_ROOT, edURL.Text) > 0 then
-  begin
-    SubThread.link   := edURL.Text;
-    SubThread.website:= ESMANGAHERE_NAME
-  end
-  else
-  if Pos(ANIMEEXTREMIST_ROOT, edURL.Text) > 0 then
-  begin
-    SubThread.link   := edURL.Text;
-    SubThread.website:= ANIMEEXTREMIST_NAME
-  end
-  else
-  if Pos(GEHENTAI_ROOT, edURL.Text) > 0 then
-  begin
-    SubThread.link   := edURL.Text;
-    SubThread.website:= GEHENTAI_NAME
-  end
-  else
+  SubThread.link:= '';
+  for i:= 0 to High(WebsiteRoots) do
+    if Pos(WebsiteRoots[i,1], edURL.Text) > 0 then
+    begin
+      SubThread.link   := edURL.Text;
+      Delete(SubThread.link, 1, Length(WebsiteRoots[i,1]));
+      SubThread.website:= WebsiteRoots[i,0];
+    end;
+  if SubThread.link = '' then
   begin
     MessageDlg('', stDlgURLNotSupport, mtInformation, [mbYes], 0);
     exit;
   end;
 
-  if Pos(GEHENTAI_ROOT, edURL.Text) <> 0 then
+  if Pos(WebsiteRoots[GEHENTAI_ID,1], edURL.Text) <> 0 then
     SubThread.link:= SubThread.link + '?nw=session'
   else
-  if ((Pos(KISSMANGA_ROOT, edURL.Text) <> 0) OR
-     (Pos(VNSHARING_ROOT, edURL.Text) <> 0)) AND
-     (Pos('&confirm=yes', edURL.Text) <> 0) then
+  if ((Pos(WebsiteRoots[KISSMANGA_ID,1], edURL.Text) <> 0) OR
+      (Pos(WebsiteRoots[VNSHARING_ID,1], edURL.Text) <> 0)) AND
+      (Pos('&confirm=yes', edURL.Text) <> 0) then
     Delete(SubThread.link, Pos('&confirm=yes', SubThread.link), Length('&confirm=yes'))
   else
-  if (Pos(ANIMEA_ROOT, edURL.Text) <> 0) AND
+  if (Pos(WebsiteRoots[ANIMEA_ID,1], edURL.Text) <> 0) AND
      (Pos('?skip=1', edURL.Text) <> 0) then
     Delete(SubThread.link, Pos('?skip=1', SubThread.link), Length('?skip=1'));
 
