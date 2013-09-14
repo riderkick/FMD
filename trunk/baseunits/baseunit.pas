@@ -130,6 +130,7 @@ const
 
   DO_EXIT_FMD      = 1;
   DO_TURNOFF       = 2;
+  DO_HIBERNATE     = 3;
 
   NO_ERROR              = 0;
   NET_PROBLEM           = 1;
@@ -157,26 +158,26 @@ const
   TRUYENTRANHTUAN_NAME = 'TruyenTranhTuan'; TRUYENTRANHTUAN_ID = 19;
   TURKCRAFT_NAME    = 'Turkcraft';    TURKCRAFT_ID   = 20;
   MANGAVADISI_NAME  = 'MangaVadisi';  MANGAVADISI_ID = 21;
-  EATMANGA_NAME     = 'EatManga';     EATMANGA_ID    = 22;
-  BLOGTRUYEN_NAME   = 'BlogTruyen';   BLOGTRUYEN_ID  = 23;
-  MANGAFRAME_NAME   = 'MangaFrame';   MANGAFRAME_ID  = 24;
-  STARKANA_NAME     = 'Starkana';     STARKANA_ID    = 25;
-  MANGAPANDA_NAME   = 'MangaPanda';   MANGAPANDA_ID  = 26;
-  REDHAWKSCANS_NAME = 'RedHawkScans'; REDHAWKSCANS_ID= 27;
+  MANGAFRAME_NAME   = 'MangaFrame';   MANGAFRAME_ID  = 22;
+  EATMANGA_NAME     = 'EatManga';     EATMANGA_ID    = 23;
+  STARKANA_NAME     = 'Starkana';     STARKANA_ID    = 24;
+  MANGAPANDA_NAME   = 'MangaPanda';   MANGAPANDA_ID  = 25;
+  REDHAWKSCANS_NAME = 'RedHawkScans'; REDHAWKSCANS_ID= 26;
+  BLOGTRUYEN_NAME   = 'BlogTruyen';   BLOGTRUYEN_ID  = 27;
   KOMIKID_NAME      = 'Komikid';      KOMIKID_ID     = 28;
   SUBMANGA_NAME     = 'SubManga';     SUBMANGA_ID    = 29;
   ESMANGAHERE_NAME  = 'ESMangaHere';  ESMANGAHERE_ID = 30;
   ANIMEEXTREMIST_NAME  = 'AnimExtremist';  ANIMEEXTREMIST_ID = 31;
-  PECINTAKOMIK_NAME = 'PecintaKomik'; PECINTAKOMIK_ID= 33;
-  HUGEMANGA_NAME    = 'HugeManga';    HUGEMANGA_ID   = 34;
-  S2SCAN_NAME       = 'S2scanlations';S2SCAN_ID      = 35;
-  SENMANGA_NAME     = 'SenManga';     SENMANGA_ID    = 36;
-  IMANHUA_NAME      = 'imanhua';      IMANHUA_ID     = 37;
-  MABUNS_NAME       = 'Mabuns';       MABUNS_ID      = 38;
-  MANGAESTA_NAME    = 'MangaEsta';    MANGAESTA_ID   = 39;
-  CENTRALDEMANGAS_NAME = 'CentralDeMangas'; CENTRALDEMANGAS_ID = 40;
-  EGSCANS_NAME      = 'EGScans';      EGSCANS_ID     = 41;
-  MANGAAR_NAME      = 'MangaAr';      MANGAAR_ID     = 42;
+  PECINTAKOMIK_NAME = 'PecintaKomik'; PECINTAKOMIK_ID= 32;
+  HUGEMANGA_NAME    = 'HugeManga';    HUGEMANGA_ID   = 33;
+  S2SCAN_NAME       = 'S2scanlations';S2SCAN_ID      = 34;
+  SENMANGA_NAME     = 'SenManga';     SENMANGA_ID    = 35;
+  IMANHUA_NAME      = 'imanhua';      IMANHUA_ID     = 36;
+  MABUNS_NAME       = 'Mabuns';       MABUNS_ID      = 37;
+  MANGAESTA_NAME    = 'MangaEsta';    MANGAESTA_ID   = 38;
+  CENTRALDEMANGAS_NAME = 'CentralDeMangas'; CENTRALDEMANGAS_ID = 39;
+  EGSCANS_NAME      = 'EGScans';      EGSCANS_ID     = 40;
+  MANGAAR_NAME      = 'MangaAr';      MANGAAR_ID     = 41;
   MANGAAE_NAME      = 'MangaAe';      MANGAAE_ID     = 43;
 
   DEFAULT_LIST = ANIMEA_NAME+'!%~'+MANGAFOX_NAME+'!%~'+MANGAHERE_NAME+'!%~'+MANGAINN_NAME+'!%~'+MANGAREADER_NAME+'!%~';
@@ -197,6 +198,9 @@ var
   currentWebsite,
   stModeAll,
   stModeFilter,
+  stSoftware,
+  stSoftwarePath,
+  stImport,
 
   stCompressing,
   stPreparing,
@@ -218,7 +222,7 @@ var
   // VI: Ký tự dùng để chia cắt param trong dữ liệu
   SEPERATOR: String = '!%~';
 
-  WebsiteRoots  : array[0..43] of array [0..1] of String =
+  WebsiteRoots  : array[0..42] of array [0..1] of String =
     (('AnimeA', 'http://manga.animea.net'),
      ('MangaHere', 'http://www.mangahere.com'),
      ('MangaInn', 'http://www.mangainn.com'),
@@ -251,7 +255,6 @@ var
      ('SubManga', 'http://submanga.com'),
      ('ESMangaHere', 'http://es.mangahere.com'),
      ('AnimExtremist', 'http://www.animextremist.com'),
-     ('MangaKu', 'http://www.mangaku.web.id'),
      ('PecintaKomik', 'http://www.pecintakomik.com'),
      ('HugeManga', 'http://hugemanga.com'),
      ('S2scanlations', 'http://s2scanlations.com'),
@@ -572,6 +575,7 @@ procedure TransferMangaInfo(var dest: TMangaInfo; const source: TMangaInfo);
 function  fmdGetTempPath: String;
 function  fmdGetTickCount: Cardinal;
 procedure fmdPowerOff;
+procedure fmdHibernate;
 
 implementation
 
@@ -707,13 +711,14 @@ end;
 function  CorrectFilePath(const APath: String): String;
 var I: Integer;
 begin
-  Result:= APath;
+ { Result:= APath;
   for I:=1 to Length(Result) do
     if Result[I]= '\' then
       Result[I]:='/';
   if Length(Result)<>0 then
     if Result[Length(Result)]<>'/' then
-      Result:= Result+'/';
+      Result:= Result+'/';  }
+  Result:= CorrectFile(APath);
 end;
 
 // took from an old project - maybe bad code
@@ -1918,6 +1923,13 @@ begin
   Process.Execute;
   Process.Free;
 {$ENDIF}
+end;
+
+procedure fmdHibernate;
+begin
+  {$IFDEF WINDOWS}
+  SetSuspendState(TRUE, FALSE, FALSE);
+  {$ENDIF}
 end;
 
 begin

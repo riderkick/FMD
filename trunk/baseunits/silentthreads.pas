@@ -12,12 +12,27 @@ interface
 
 uses
   Classes, SysUtils, Dialogs, Controls, IniFiles, baseunit, data, fgl, downloads,
-  Graphics, Process, lclintf;
+  Graphics, Process, lclintf, contnrs;
 
 type
+  // metadata
+  TSilentThreadMeta = class
+  protected
+    FType: Integer;
+    FWebsite,
+    FManga,
+    FURL,
+    FPath: String;
+  public
+    constructor Create(const AType: Integer; const AWebsite, AManga, AURL, APath: String);
+    procedure   Run;
+  end;
+
   // for "Download all" feature
   TSilentThread = class(TThread)
   protected
+    FSavePath: String;
+
     procedure   CallMainFormAfterChecking; virtual;
     procedure   CallMainFormIncreaseThreadCount; virtual;
     procedure   CallMainFormDecreaseThreadCount; virtual;
@@ -32,6 +47,8 @@ type
 
     constructor Create;
     destructor  Destroy; override;
+
+    property    SavePath: String read FSavePath write FSavePath;
   end;
 
   // for "Add to Favorites" feature
@@ -42,10 +59,43 @@ type
   public
   end;
 
+procedure CreateSilentThread(const AWebsite, AManga, AURL: String; ASavePath: String = '');
+procedure CreateAddToFavThread(const AWebsite, AManga, AURL: String; ASavePath: String = '');
+
+var
+  SilentThreadQueue: TQueue;
+
 implementation
 
 uses
   mainunit;
+
+// ----- TSilentThreadMeta -----
+
+constructor TSilentThreadMeta.Create(const AType: Integer; const AWebsite, AManga, AURL, APath: String);
+begin
+  inherited Create;
+  FType   := AType;
+  FWebsite:= AWebsite;
+  FManga  := AManga;
+  FURL    := AURL;
+  FPath   := APath;
+end;
+
+procedure   TSilentThreadMeta.Run;
+var
+  silentThread: TSilentThread;
+begin
+  case FType of
+    0: silentThread:= TSilentThread.Create;
+    1: silentThread:= TAddToFavSilentThread.Create;
+  end;
+  silentThread.SavePath:= FPath;
+  silentThread.website:= FWebsite;
+  silentThread.URL:= FURL;
+  silentThread.title:= FManga;
+  silentThread.isSuspended:= FALSE;
+end;
 
 // ----- TSilentThread -----
 
@@ -127,6 +177,8 @@ begin
 end;
 
 procedure   TSilentThread.CallMainFormDecreaseThreadCount;
+var
+  meta: TSilentThreadMeta;
 begin
   with MainForm do
   begin
@@ -137,6 +189,16 @@ begin
       sbMain.Panels[1].Text:= 'Loading: '+IntToStr(silentThreadCount)
     else
       sbMain.Panels[1].Text:= '';
+  end;
+  // TODO
+  if SilentThreadQueue.Count > 0 then
+  begin
+    meta:= TSilentThreadMeta(SilentThreadQueue.Pop);
+    if meta <> nil then
+    begin
+      meta.Run;
+      meta.Free;
+    end;
   end;
 end;
 
@@ -173,6 +235,7 @@ begin
   isTerminated   := FALSE;
   FreeOnTerminate:= TRUE;
   Info:= TMangaInformation.Create;
+  SavePath:= '';
 
   inherited Create(FALSE);
 end;
@@ -193,9 +256,14 @@ var
 begin
   with MainForm do
   begin
-    if edSaveTo.Text = '' then
-      edSaveTo.Text:= options.ReadString('saveto', 'SaveTo', '');
-    s:= CorrectFile(edSaveTo.Text);
+    if FSavePath = '' then
+    begin
+      if edSaveTo.Text = '' then
+        edSaveTo.Text:= options.ReadString('saveto', 'SaveTo', '');
+      s:= CorrectFile(edSaveTo.Text);
+    end
+    else
+      s:= FSavePath;
     if s[Length(s)] = '/' then
       Delete(s, Length(s), 1);
 
@@ -229,6 +297,31 @@ begin
   inherited;
   Dec(MainForm.silentAddToFavThreadCount);
 end;
+
+procedure   CreateSilentThread(const AWebsite, AManga, AURL: String; ASavePath: String = '');
+var
+  meta: TSilentThreadMeta;
+begin
+  meta:= TSilentThreadMeta.Create(0, AWebsite, AManga, AURL, ASavePath);
+  SilentThreadQueue.Push(meta);
+  Inc(MainForm.silentThreadCount);
+end;
+
+procedure   CreateAddToFavThread(const AWebsite, AManga, AURL: String; ASavePath: String = '');
+var
+  meta: TSilentThreadMeta;
+begin
+  meta:= TSilentThreadMeta.Create(1, AWebsite, AManga, AURL, ASavePath);
+  SilentThreadQueue.Push(meta);
+  Inc(MainForm.silentThreadCount);
+  Inc(MainForm.silentAddToFavThreadCount);
+end;
+
+initialization
+  SilentThreadQueue:= TQueue.Create;
+
+finalization
+  SilentThreadQueue.Free;
 
 end.
 
