@@ -1870,7 +1870,8 @@ var
       if (GetTagName(parse.Strings[i]) = 'a') AND
          (GetAttributeValue(GetTagAttribute(parse.Strings[i], 'title='))<>'') AND
          ((Pos('-english', parse.Strings[i])>0) OR
-          (Pos('-japanese', parse.Strings[i])>0)) then
+          (Pos('-japanese', parse.Strings[i])>0) OR
+          (Pos('class="content-title"', parse.Strings[i])>0)) then
         // ((GetAttributeValue(GetTagAttribute(parse.Strings[i], 'class='))='name Completed') OR
         //  (GetAttributeValue(GetTagAttribute(parse.Strings[i], 'class='))='name Ongoing')) then
       begin
@@ -2041,6 +2042,7 @@ var
         s:= GetAttributeValue(GetTagAttribute(parse.Strings[i+2], 'href='));
         links.Add(s);
         s:= StringFilter(TrimLeft(TrimRight(parse.Strings[i+3])));
+        s:= StringReplace(s, MANGAFOX_ROOT, '', []);
         names.Add(HTMLEntitiesFilter(s));
       end;
     end;
@@ -5398,7 +5400,10 @@ var
   isExtractGenres : Boolean = FALSE;
   i, j: Cardinal;
 begin
-  mangaInfo.url:= URL;// + '&confirm=yes';
+  if Pos(MANGAFOX_ROOT, URL) = 0 then
+    mangaInfo.url:= MANGAFOX_ROOT + URL
+  else
+    mangaInfo.url:= URL;// + '&confirm=yes';
   if NOT GetPage(TObject(source), mangaInfo.url, Reconnect) then
   begin
     Result:= NET_PROBLEM;
@@ -5458,7 +5463,7 @@ begin
        (Pos('title="Thanks for Contributing!', parse.Strings[i])>0) then
     begin
       Inc(mangaInfo.numChapter);
-      s:= GetString(parse.Strings[i], 'href="', '/1.html"');
+      s:= StringReplace(GetString(parse.Strings[i], 'href="', '/1.html"'), MANGAFOX_ROOT, '', []);
       mangaInfo.chapterLinks.Add(s);
       s:= RemoveSymbols(TrimLeft(TrimRight(parse.Strings[i+1])));
       mangaInfo.chapterName.Add(StringFilter(StringFilter(HTMLEntitiesFilter(s))));
