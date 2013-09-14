@@ -437,6 +437,7 @@ begin
           Inc(j);
       until j = links.Count;
 
+      // remove duplicate entries
       if links.Count > 0 then
       begin
         k:= 0;
@@ -457,6 +458,7 @@ begin
         end;
       end;
 
+      // remove duplicate entries (current database)
       if mainDataProcess.Link.Count > 0 then
       begin
         k:= 0;
@@ -489,7 +491,7 @@ begin
          (website <> MANGAVADISI_NAME) AND
          (website <> KOMIKID_NAME) then
       begin
-        workPtr:= 0;//mainDataProcess.Data.Count;
+        workPtr:= 0;
 
         getInfo(links.Count, CS_INFO);
       end

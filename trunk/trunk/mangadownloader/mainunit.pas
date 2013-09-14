@@ -23,6 +23,7 @@ type
   { TMainForm }
 
   TMainForm = class(TForm)
+    btChecks: TBitBtn;
     pnLeftBtDummy: TBitBtn;
     btVisitMyBlog: TBitBtn;
     btOptionBrowse: TBitBtn;
@@ -238,6 +239,7 @@ type
     vtDownload: TVirtualStringTree;
     vtMangaList: TVirtualStringTree;
 
+    procedure btChecksClick(Sender: TObject);
     procedure btCheckVersionClick(Sender: TObject);
     procedure btReadOnlineClick(Sender: TObject);
     procedure btUpdateListClick(Sender: TObject);
@@ -1003,7 +1005,7 @@ begin
   if Sender is TControl then
   begin
     button   := TControl(pnLeftBtDummy);//TControl(Sender);
-    lowerLeft:= Point(button.Left, button.Top + button.Height*2 + (button.Height div 2));
+    lowerLeft:= Point(button.Left-4, button.Top + button.Height*2 + (button.Height div 2) - 2);
     lowerLeft:= ClientToScreen(lowerLeft);
     pmUpdate.Popup(lowerLeft.X, lowerLeft.Y);
   end;
@@ -1257,6 +1259,24 @@ begin
   begin
     subthread.isCheckForLatestVer:= TRUE;
     btCheckVersion.Caption:= stFavoritesChecking;
+  end;
+end;
+
+procedure TMainForm.btChecksClick(Sender: TObject);
+var
+  button   : TControl;
+  lowerLeft: TPoint;
+begin
+  if dataProcess.Title.Count = 0 then
+    pmUpdate.Items[0].Enabled:= FALSE
+  else
+    pmUpdate.Items[0].Enabled:= TRUE;
+  if Sender is TControl then
+  begin
+    button   := TControl(Sender);
+    lowerLeft:= Point(spMainSplitter.Left + 5 + button.Left, button.Top + button.Height + 295);
+    lowerLeft:= ClientToScreen(lowerLeft);
+    pmChapterList.Popup(lowerLeft.X, lowerLeft.Y);
   end;
 end;
 

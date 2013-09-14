@@ -707,6 +707,8 @@ var
     l:= TStringList.Create;
     parse:= TStringList.Create;
     s:= DecodeUrl(URL + '/1.html');
+    if Pos(MANGAFOX_ROOT, s) = 0 then
+      s:= MANGAFOX_ROOT + s;
     Result:= GetPage(TObject(l),
                      s,
                      manager.container.manager.retryConnect);
@@ -2172,6 +2174,8 @@ var
   begin
     l:= TStringList.Create;
     s:= DecodeUrl(URL + '/' + IntToStr(workPtr+1) + '.html');
+    if Pos(MANGAFOX_ROOT, s) = 0 then
+      s:= MANGAFOX_ROOT + s;
     Result:= GetPage(TObject(l),
                      s,
                      manager.container.manager.retryConnect);
