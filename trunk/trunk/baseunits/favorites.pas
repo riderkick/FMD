@@ -297,7 +297,7 @@ begin
     begin
       l.Clear;
       GetParams(l, favoriteInfo[i].downloadedChapterList);
-      // for mangafox only
+      // for mangafox only (necessary ?)
       if (favoriteInfo[i].Website = MANGAFOX_NAME) AND (l.Count > 0) then
         for j:= 0 to l.Count-1 do
           l.Strings[j]:= StringReplace(l.Strings[j], WebsiteRoots[MANGAFOX_ID,1], '', []);
@@ -329,7 +329,8 @@ begin
       end;
     end;
 
-    if mangaInfo[i].status = '0' then
+    // generate remove completed manga string
+    if (OptionAutoRemoveCompletedManga) AND (mangaInfo[i].status = '0') then
     begin
       if removeListStr = '' then
         removeListStr:= removeListStr + #13#13 + stDlgRemoveCompletedManga;
@@ -341,7 +342,17 @@ begin
    // MessageDlg('', Format(stDlgNoNewChapter + '%s', [removeListStr]),
    //            mtInformation, [mbOk], 0)
   begin
-
+    if (removeListStr <> '') AND (isShowDialog) then
+    begin
+      LNewChapter:= TNewChapter.Create(MainForm);
+      LNewChapter.lbNotification.Caption:= Format(stDlgHasNewChapter, [newC]);
+      LNewChapter.mmMemo.Lines.Add(TrimLeft(removeListStr));
+      LNewChapter.btDownload.Visible:= FALSE;
+      LNewChapter.btQueue.Visible:= FALSE;
+      LNewChapter.ShowModal;
+      LNCResult:= LNewChapter.FormResult;
+      LNewChapter.Free;
+    end;
   end
   else
   begin
@@ -423,7 +434,7 @@ begin
           begin
             s:= CustomRename(OptionCustomRename,
                              mangaInfo[i].website,
-                             mangaInfo[i].title,
+                             favoriteInfo[i].title,
                              newChapterNames[i].Strings[j],
                              Format('%.4d', [newChapterList[i].Items[j]+1]),
                              MainForm.cbOptionPathConvert.Checked);
@@ -503,14 +514,17 @@ begin
   isRunning:= FALSE;
 
   i:= 0;
-  while i < Count do
+  if OptionAutoRemoveCompletedManga then
   begin
-    if mangaInfo[i].status = '0' then
+    while i < Count do
     begin
-      Remove(i);
-    end
-    else
-      Inc(i);
+      if mangaInfo[i].status = '0' then
+      begin
+        Remove(i);
+      end
+      else
+        Inc(i);
+    end;
   end;
 
   if Assigned(OnUpdateFavorite) then
