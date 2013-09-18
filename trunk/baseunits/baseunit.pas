@@ -448,6 +448,7 @@ var
   OptionBatotoUseIEChecked: Boolean = FALSE;
   OptionEnableLoadCover: Boolean = FALSE;
   OptionAutoNumberChapterChecked: Boolean = TRUE;
+  OptionAutoRemoveCompletedManga: Boolean = TRUE;
   OptionAutoCheckFavStartup: Boolean = FALSE;
 
 type
