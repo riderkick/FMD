@@ -1328,7 +1328,7 @@ var
     l.Free;
   end;
 
-  function GetCentralDeMangasPageNumber: Boolean;
+ { function GetCentralDeMangasPageNumber: Boolean;
   var
     s   : String;
     i, j: Cardinal;
@@ -1336,7 +1336,7 @@ var
   begin
     l:= TStringList.Create;
     parse:= TStringList.Create;
-    s:= DecodeUrl(WebsiteRoots[CENTRALDEMANGAS_ID,1] + URL + '#1');
+    s:= EncodeUrl(WebsiteRoots[CENTRALDEMANGAS_ID,1] + URL + '#1');
     Result:= GetPage(TObject(l),
                      s,
                      manager.container.manager.retryConnect);
@@ -1360,7 +1360,7 @@ var
     end;
     parse.Free;
     l.Free;
-  end;
+  end; }
 
   function GetSenMangaPageNumber: Boolean;
   var
@@ -3017,7 +3017,7 @@ var
     l: TStringList;
   begin
     l:= TStringList.Create;
-    s:= EncodeUrl(WebsiteRoots[CENTRALDEMANGAS_ID,1] + URL + '#1'); // + IntToStr(workPtr+1));
+    s:= EncodeUrl(WebsiteRoots[CENTRALDEMANGAS_ID,1] + URL); // + IntToStr(workPtr+1));
     Result:= GetPage(TObject(l),
                      s,
                      manager.container.manager.retryConnect);
@@ -3027,13 +3027,12 @@ var
     Parser.OnFoundText:= OnText;
     Parser.Exec;
     Parser.Free;
-
     if parse.Count>0 then
     begin
       manager.container.pageLinks.Clear;
       for i:= 0 to parse.Count-1 do
       begin
-        if Pos('var pags = ', parse.Strings[i]) > 0 then
+        if Pos('var pages = ', parse.Strings[i]) > 0 then
         begin
           s:= StringReplace(parse.Strings[i], '\/', '/', [rfReplaceAll]);
           repeat

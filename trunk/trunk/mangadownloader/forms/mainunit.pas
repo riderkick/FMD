@@ -23,9 +23,11 @@ type
   { TMainForm }
 
   TMainForm = class(TForm)
+    btRemoveFilter: TBitBtn;
     btFavoritesImport: TBitBtn;
     btChecks: TBitBtn;
     cbOptionAutoRemoveCompletedManga: TCheckBox;
+    btDonate: TImage;
     pnLeftBtDummy: TBitBtn;
     btVisitMyBlog: TBitBtn;
     btOptionBrowse: TBitBtn;
@@ -213,8 +215,6 @@ type
     seOptionNewMangaTime: TSpinEdit;
     seOptionCheckMinutes: TSpinEdit;
     seOptionPDFQuality: TSpinEdit;
-    btDonate: TSpeedButton;
-    btRemoveFilter: TSpeedButton;
     spInfos: TSplitter;
     spMainSplitter: TSplitter;
     sbMain: TStatusBar;
