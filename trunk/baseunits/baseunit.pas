@@ -369,7 +369,7 @@ var
 
   MANGAESTA_BROWSER: String = '/p/manga-list.html';
 
-  CENTRALDEMANGAS_BROWSER: String = '/mangas';
+  CENTRALDEMANGAS_BROWSER: String = '/mangas/list/*';
 
   EGSCANS_BROWSER: String = '/';
 

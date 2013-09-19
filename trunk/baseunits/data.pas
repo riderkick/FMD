@@ -1357,6 +1357,41 @@ var
     source.Free;
   end;
 
+  function   GetCentralDeMangasDirectoryPage: Byte;
+  var
+    i: Cardinal;
+  begin
+    Result:= INFORMATION_NOT_FOUND;
+    if NOT GetPage(TObject(source), WebsiteRoots[CENTRALDEMANGAS_ID,1] + CENTRALDEMANGAS_BROWSER, 0) then
+    begin
+      Result:= NET_PROBLEM;
+      source.Free;
+      exit;
+    end;
+    parse.Clear;
+    Parser:= TjsFastHTMLParser.Create(PChar(source.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.Exec;
+    Parser.Free;
+    if parse.Count=0 then
+    begin
+      source.Free;
+      exit;
+    end;
+    for i:= parse.Count-1 downto 2 do
+    begin
+      if (Pos('/mangas/list/*/', parse.Strings[i]) > 0) then
+      begin
+        s:= TrimRight(TrimLeft(GetString(parse.Strings[i], '/mangas/list/*/', '">')));
+        page:= StrToInt(s);
+        Result:= NO_ERROR;
+        exit;
+      end;
+    end;
+    source.Free;
+  end;
+
 begin
   source:= TStringList.Create;
   if website = ANIMEA_NAME then
@@ -1412,6 +1447,9 @@ begin
   else
   if website = MANGAAE_NAME then
     Result:= GetMangaAeDirectoryPage
+  else
+  if website = CENTRALDEMANGAS_NAME then
+    Result:= GetCentralDeMangasDirectoryPage
   else
   if website = EATMANGA_NAME then
   begin
@@ -2626,7 +2664,7 @@ var
     s: String;
   begin
     Result:= INFORMATION_NOT_FOUND;
-    if NOT GetPage(TObject(source), WebsiteRoots[CENTRALDEMANGAS_ID,1] + CENTRALDEMANGAS_BROWSER, 0) then
+    if NOT GetPage(TObject(source), WebsiteRoots[CENTRALDEMANGAS_ID,1] + CENTRALDEMANGAS_BROWSER + '/' + IntToStr(StrToInt(URL)+1), 0) then
     begin
       Result:= NET_PROBLEM;
       source.Free;
@@ -2645,8 +2683,7 @@ var
     end;
     for i:= 0 to parse.Count-1 do
     begin
-      if (Pos('/online/', parse.Strings[i]) > 0) AND
-         (Pos('title="', parse.Strings[i]) > 0) AND
+      if (Pos('/mangas/info/', parse.Strings[i]) > 0) AND
          (Pos('<td>', parse.Strings[i-1]) > 0) then
       begin
         Result:= NO_ERROR;
@@ -8069,7 +8106,7 @@ begin
   end;
 
   // convert charset
-  source.Text:= ISO_8859_1ToUTF8(source.Text);
+  // source.Text:= ISO_8859_1ToUTF8(source.Text);
 
   // parsing the HTML source
   parse.Clear;
@@ -8087,15 +8124,14 @@ begin
   begin
     // get cover
     if (mangaInfo.coverLink = '') AND
-       (Pos('class="capa_sinopse"', parse.Strings[i])>0) then
+       (Pos('class="img-polaroid"', parse.Strings[i])>0) then
       mangaInfo.coverLink:= CorrectURL(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src=')));
 
     // get summary
-    if (Pos('Sinopse', parse.Strings[i]) <> 0) AND
-       (Pos('<h2>', parse.Strings[i-1])<>0)  AND
+    if (Pos('class="img-polaroid"', parse.Strings[i]) <> 0) AND
        (isExtractSummary) then
     begin
-      j:= i+2;
+      j:= i+6;
       while (j<parse.Count) AND (Pos('</div>', parse.Strings[j])=0) do
       begin
         s:= parse.Strings[j];
@@ -8114,19 +8150,17 @@ begin
 
     // get title
     if (mangaInfo.title = '') AND
-       (Pos('/online/', parse.Strings[i])<>0) AND
-       (Pos('<td>', parse.Strings[i-1])<>0) then
-      mangaInfo.title:= TrimLeft(HTMLEntitiesFilter(StringFilter(GetString(parse.Strings[i], 'title=', '">'))));
+       (Pos('<title>', parse.Strings[i])<>0) then
+      mangaInfo.title:= TrimLeft(HTMLEntitiesFilter(StringFilter(GetString('~!@'+parse.Strings[i+1], '~!@', ' || Central de Mangás'))));
 
     if (NOT isExtractChapter) AND
-       (Pos('Cap', parse.Strings[i]) > 0) AND
-       (Pos('ulos', parse.Strings[i]) > 0) then
+       (Pos('Capítulos', parse.Strings[i]) > 0) then
       isExtractChapter:= TRUE;
 
     // get chapter name and links
     if (isExtractChapter) AND
        (Pos('/online/', parse.Strings[i])>0) AND
-       (Pos('<span>', parse.Strings[i-1])>0) then
+       (Pos('class="span1"', parse.Strings[i])>0) then
     begin
       Inc(mangaInfo.numChapter);
       s:= StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href=')), WebsiteRoots[CENTRALDEMANGAS_ID,1], '', []);
@@ -8136,26 +8170,26 @@ begin
     end;
 
     if (isExtractChapter) AND
-       (Pos('</div>', parse.Strings[i])>0) then
+       (Pos('class="span3"', parse.Strings[i])>0) then
       isExtractChapter:= FALSE;
 
     // get authors
-    if (i+6<parse.Count) AND
+    if (i+12<parse.Count) AND
        (Pos('Autor', parse.Strings[i])<>0) AND
-       (Pos('<h2>', parse.Strings[i-1])<>0) then
-      mangaInfo.authors:= TrimLeft(TrimRight(parse.Strings[i+6]));
+       (Pos('<h4>', parse.Strings[i-1])<>0) then
+      mangaInfo.authors:= TrimLeft(TrimRight(parse.Strings[i+12]));
 
     // get artists
-    if (i+6<parse.Count) AND
+    if (i+12<parse.Count) AND
        (Pos('Arte', parse.Strings[i])<>0) AND
-       (Pos('<h2>', parse.Strings[i-1])<>0) then
-      mangaInfo.artists:= TrimLeft(TrimRight(parse.Strings[i+6]));
+       (Pos('<h4>', parse.Strings[i-1])<>0) then
+      mangaInfo.artists:= TrimLeft(TrimRight(parse.Strings[i+12]));
 
     // get genres
-    if (i+6<parse.Count) AND
-       (Pos('Gen', parse.Strings[i])<>0) AND
-       (Pos('</h2>', parse.Strings[i+1])<>0) AND
-       (Pos('<h2>', parse.Strings[i-1])<>0) then
+    if (i+1<parse.Count) AND
+       (Pos('Genêro', parse.Strings[i])<>0) AND
+       (Pos('</h4>', parse.Strings[i+1])<>0) AND
+       (Pos('<h4>', parse.Strings[i-1])<>0) then
     begin
       isExtractGenres:= TRUE;
       mangaInfo.genres:= '';
@@ -8164,19 +8198,19 @@ begin
     if isExtractGenres then
     begin
       s:= TrimLeft(TrimRight(parse.Strings[i]));
-      if Pos('</div>', s) <> 0 then
+      if Pos('<h4>', s) <> 0 then
         isExtractGenres:= FALSE
       else
-      if (Pos('class="rotulo"', s)<>0) then
+      if (Pos('class="btn btn-mini', s)<>0) then
         mangaInfo.genres:= mangaInfo.genres + TrimLeft(TrimRight(parse.Strings[i+1])) + ', ';
     end;
 
     // get status
-    if (i+6<parse.Count) AND
+    if (i+12<parse.Count) AND
        (Pos('Status', parse.Strings[i])<>0) AND
-       (Pos('<h2>', parse.Strings[i-1])<>0) then
+       (Pos('<h4>', parse.Strings[i-1])<>0) then
     begin
-      if (Pos('Completo', parse.Strings[i+6])<>0) then
+      if (Pos('Completo', parse.Strings[i+12])<>0) then
         mangaInfo.status:= '0'   // completed
       else
         mangaInfo.status:= '1';  // ongoing
