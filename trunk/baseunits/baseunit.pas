@@ -1037,8 +1037,8 @@ begin
     if path[i] = '/' then
       p:= i;
   end;
-  for i:= p to Length(Result)-1 do
-    if Byte(Result[i])>=128 then
+  for i:= p to Length(Result) do
+    if NOT (Byte(Result[i]) in [48..122]) then
     begin
       Delete(Result, i, 1);
       Insert('_', Result, i);
