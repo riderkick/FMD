@@ -380,6 +380,9 @@ begin
       if website = EATMANGA_NAME then
         numberOfThreads:= 1
       else
+      if website = SCANMANGA_NAME then
+        numberOfThreads:= 2
+      else
         numberOfThreads:= 4;
 
       {$IFDEF DOWNLOADER}

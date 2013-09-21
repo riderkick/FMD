@@ -205,7 +205,7 @@ object MainForm: TMainForm
           Left = 3
           Height = 23
           Top = 36
-          Width = 144
+          Width = 150
           Anchors = [akTop, akLeft, akRight]
           OnChange = edSearchChange
           OnClick = edSearchClick
@@ -217,7 +217,7 @@ object MainForm: TMainForm
           Height = 23
           Hint = 'For more manga sites, please go to Options->Manga sites'
           Top = 8
-          Width = 144
+          Width = 150
           Anchors = [akTop, akLeft, akRight]
           ItemHeight = 15
           ItemIndex = 0
@@ -282,6 +282,7 @@ object MainForm: TMainForm
             000000000000C75B0004C85E0018C45C0027C45A0026C45A0026C45C0027C55D
             001AC45F0007C3660000
           }
+          OnClick = btRemoveFilterClick
           ParentShowHint = False
           ShowHint = True
           TabOrder = 5
@@ -2097,14 +2098,14 @@ object MainForm: TMainForm
       Left = 8
       Height = 23
       Top = 4
-      Width = 640
+      Width = 720
       Anchors = [akTop, akLeft, akRight]
       TabOrder = 0
     end
     object btURL: TBitBtn
-      Left = 656
+      Left = 736
       Height = 21
-      Top = 4
+      Top = 6
       Width = 75
       Anchors = [akTop, akRight]
       Caption = 'URL'
@@ -2177,6 +2178,7 @@ object MainForm: TMainForm
         000BFDD5C7C1CEB87CEC5FC7292974CE8422DD0000000049454E44AE426082
       }
       Stretch = True
+      Visible = False
     end
   end
   object dlgSaveTo: TSelectDirectoryDialog
