@@ -191,7 +191,7 @@ begin
   end;
 
   cover.Clear;
-  if OptionEnableLoadCover then
+  if (OptionEnableLoadCover) AND (Pos('http://', Info.mangaInfo.coverLink) > 0) then
     boolResult:= GetPage(TObject(cover), Info.mangaInfo.coverLink, 1, TRUE)
   else
     boolResult:= FALSE;

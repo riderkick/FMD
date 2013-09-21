@@ -1076,7 +1076,10 @@ begin
 
   // uppercase
 
-  Result:= StringReplace(source, '&Agrave;', 'À', [rfReplaceAll]);
+  Result:= StringReplace(source, '&#171;', '«', [rfReplaceAll]);
+  Result:= StringReplace(Result, '&#176;', '°', [rfReplaceAll]);
+
+  Result:= StringReplace(Result, '&Agrave;', 'À', [rfReplaceAll]);
   Result:= StringReplace(Result, '&#192;', 'À', [rfReplaceAll]);
   Result:= StringReplace(Result, '&Aacute;', 'Á', [rfReplaceAll]);
   Result:= StringReplace(Result, '&#193;', 'Á', [rfReplaceAll]);
@@ -1119,6 +1122,7 @@ begin
   Result:= StringReplace(Result, '&atilde;', 'ã', [rfReplaceAll]);
   Result:= StringReplace(Result, '&#227;', 'ã', [rfReplaceAll]);
 
+  Result:= StringReplace(Result, '&#231;', 'ç', [rfReplaceAll]);
   Result:= StringReplace(Result, '&egrave;', 'è', [rfReplaceAll]);
   Result:= StringReplace(Result, '&#232;', 'è', [rfReplaceAll]);
   Result:= StringReplace(Result, '&eacute;', 'é', [rfReplaceAll]);
@@ -1132,6 +1136,8 @@ begin
   Result:= StringReplace(Result, '&iacute;', 'í', [rfReplaceAll]);
   Result:= StringReplace(Result, '&#237;', 'í', [rfReplaceAll]);
   Result:= StringReplace(Result, '&itilde;', 'ĩ', [rfReplaceAll]);
+
+  Result:= StringReplace(Result, '&#238;', 'î', [rfReplaceAll]);
 
   Result:= StringReplace(Result, '&eth;'   , 'đ', [rfReplaceAll]);
 
@@ -1151,6 +1157,8 @@ begin
 
   Result:= StringReplace(Result, '&yacute;', 'ý', [rfReplaceAll]);
   Result:= StringReplace(Result, '&#253;', 'ý', [rfReplaceAll]);
+
+  Result:= StringReplace(Result, '&#8217;', '''', [rfReplaceAll]);
 end;
 
 procedure  CustomGenres(var output: TStringList; input: String);
