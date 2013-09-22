@@ -6061,7 +6061,7 @@ end;
 function   GetStarkanaInfoFromURL: Byte;
 var
   isExtractGenres : Boolean = FALSE;
-  isExtractChapter: Boolean = FALSE;
+  isExtractChapter: Boolean = TRUE;
   s: String;
   i, j: Cardinal;
 begin
@@ -6114,20 +6114,13 @@ begin
     if (Pos('Title(s):', parse.Strings[i])<>0) AND (mangaInfo.title = '') then
       mangaInfo.title:= StringFilter(TrimRight(TrimLeft(parse.Strings[i+5])));
 
-    // get chapter name and links
-    if (NOT isExtractChapter) AND
-      ((Pos('class="zxz episode c_h2"', parse.Strings[i])>0) OR
-       (Pos('class="zxz episode c_h2b"', parse.Strings[i])>0)) then
-      isExtractChapter:= TRUE;
-
-    if (isExtractChapter) AND
-      ((Pos('class="zxz episode c_h2"', parse.Strings[i])>0) OR
-       (Pos('class="zxz episode c_h2b"', parse.Strings[i])>0)) then
+    // get chapter name and link
+    if (Pos('class="download-link"', parse.Strings[i])>0) then
     begin
       Inc(mangaInfo.numChapter);
-      s:= GetString(parse.Strings[i+3], 'href="', '"');
+      s:= GetString(parse.Strings[i], 'href="', '"');
       mangaInfo.chapterLinks.Add(s);
-      s:= RemoveSymbols(TrimLeft(TrimRight(parse.Strings[i+4]))) + ' ' + RemoveSymbols(TrimLeft(TrimRight(parse.Strings[i+6]))) + ' ' + RemoveSymbols(TrimLeft(TrimRight(parse.Strings[i+10])));
+      s:= RemoveSymbols(TrimLeft(TrimRight(parse.Strings[i+1]))) + ' ' + RemoveSymbols(TrimLeft(TrimRight(parse.Strings[i+3]))) + ' ' + RemoveSymbols(TrimLeft(TrimRight(parse.Strings[i+7])));
       mangaInfo.chapterName.Add(StringFilter(StringFilter(HTMLEntitiesFilter(s))));
     end;
 
@@ -8503,7 +8496,7 @@ var
   isExtractGenres : Boolean = FALSE;
   i, j: Cardinal;
 begin
-  mangaInfo.url:= URL;
+  mangaInfo.url:= WebsiteRoots[GEHENTAI_ID,1] + URL;
   if NOT GetPage(TObject(source), mangaInfo.url, Reconnect) then
   begin
     Result:= NET_PROBLEM;
@@ -8544,7 +8537,7 @@ begin
     end;
   end;
 
-  mangaInfo.chapterLinks.Add(URL);
+  mangaInfo.chapterLinks.Add(mangaInfo.url);
   mangaInfo.chapterName.Add(mangaInfo.title);
   Result:= NO_ERROR;
   Sleep(250);
