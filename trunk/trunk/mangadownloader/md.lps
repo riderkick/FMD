@@ -65,8 +65,8 @@
         <UnitName Value="favorites"/>
         <EditorIndex Value="5"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="420"/>
-        <CursorPos X="47" Y="437"/>
+        <TopLine Value="544"/>
+        <CursorPos X="46" Y="567"/>
         <UsageCount Value="201"/>
         <Loaded Value="True"/>
       </Unit5>
@@ -76,7 +76,7 @@
         <UnitName Value="zip"/>
         <EditorIndex Value="9"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="91"/>
+        <TopLine Value="104"/>
         <CursorPos X="77" Y="117"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
@@ -87,8 +87,8 @@
         <UnitName Value="updatelist"/>
         <EditorIndex Value="8"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="369"/>
-        <CursorPos X="11" Y="377"/>
+        <TopLine Value="387"/>
+        <CursorPos X="33" Y="399"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
       </Unit7>
@@ -110,8 +110,8 @@
         <UnitName Value="subthreads"/>
         <EditorIndex Value="4"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="267"/>
-        <CursorPos X="43" Y="186"/>
+        <TopLine Value="315"/>
+        <CursorPos X="53" Y="318"/>
         <UsageCount Value="210"/>
         <Loaded Value="True"/>
       </Unit9>
@@ -133,7 +133,7 @@
         <UnitName Value="updatedb"/>
         <EditorIndex Value="10"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="91"/>
+        <TopLine Value="18"/>
         <CursorPos X="22" Y="2"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
@@ -144,8 +144,8 @@
         <UnitName Value="silentthreads"/>
         <EditorIndex Value="7"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="192"/>
-        <CursorPos X="15" Y="193"/>
+        <TopLine Value="85"/>
+        <CursorPos X="51" Y="93"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
       </Unit12>
@@ -181,7 +181,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="49"/>
         <CursorPos X="26" Y="57"/>
-        <UsageCount Value="141"/>
+        <UsageCount Value="145"/>
       </Unit15>
       <Unit16>
         <Filename Value="forms\ImportFavoritesForm.pas"/>
@@ -190,11 +190,12 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="ImportFavoritesForm"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="2"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="70"/>
-        <CursorPos X="11" Y="76"/>
-        <UsageCount Value="69"/>
+        <TopLine Value="74"/>
+        <CursorPos X="8" Y="77"/>
+        <UsageCount Value="73"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit16>
@@ -203,8 +204,8 @@
         <UnitName Value="baseunit"/>
         <EditorIndex Value="19"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="222"/>
-        <CursorPos X="35" Y="234"/>
+        <TopLine Value="319"/>
+        <CursorPos X="28" Y="323"/>
         <ExtraEditorCount Value="1"/>
         <ExtraEditor1>
           <TopLine Value="246"/>
@@ -360,7 +361,7 @@
         <UnitName Value="img2pdf"/>
         <EditorIndex Value="11"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="371"/>
+        <TopLine Value="369"/>
         <CursorPos X="29" Y="307"/>
         <UsageCount Value="101"/>
         <Loaded Value="True"/>
@@ -592,9 +593,9 @@
         <UnitName Value="mainunit"/>
         <EditorIndex Value="1"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="1105"/>
-        <CursorPos X="27" Y="1109"/>
-        <UsageCount Value="33"/>
+        <TopLine Value="727"/>
+        <CursorPos X="55" Y="731"/>
+        <UsageCount Value="34"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit64>
@@ -622,9 +623,9 @@
         <UnitName Value="NewChapterForm"/>
         <EditorIndex Value="6"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="16"/>
-        <CursorPos X="73" Y="28"/>
-        <UsageCount Value="20"/>
+        <TopLine Value="48"/>
+        <CursorPos X="15" Y="48"/>
+        <UsageCount Value="21"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit67>
@@ -634,12 +635,11 @@
         <ComponentName Value="ImportList"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="ListForm"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="3"/>
         <WindowIndex Value="0"/>
         <TopLine Value="16"/>
-        <CursorPos X="14" Y="24"/>
-        <UsageCount Value="21"/>
+        <CursorPos X="36" Y="23"/>
+        <UsageCount Value="24"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit68>
@@ -649,124 +649,124 @@
     </General>
     <JumpHistory Count="30" HistoryIndex="29">
       <Position1>
-        <Filename Value="..\baseunits\data.pas"/>
-        <Caret Line="1726" Column="118" TopLine="1710"/>
-      </Position1>
-      <Position2>
-        <Filename Value="..\baseunits\data.pas"/>
-        <Caret Line="3324" Column="25" TopLine="3308"/>
-      </Position2>
-      <Position3>
-        <Filename Value="..\baseunits\data.pas"/>
-        <Caret Line="3325" Column="23" TopLine="3309"/>
-      </Position3>
-      <Position4>
-        <Filename Value="..\baseunits\data.pas"/>
-        <Caret Line="4255" Column="24" TopLine="4239"/>
-      </Position4>
-      <Position5>
-        <Filename Value="..\baseunits\data.pas"/>
-        <Caret Line="7500" Column="34" TopLine="1615"/>
-      </Position5>
-      <Position6>
-        <Filename Value="..\baseunits\data.pas"/>
-        <Caret Line="8483" Column="36" TopLine="8482"/>
-      </Position6>
-      <Position7>
-        <Filename Value="..\baseunits\data.pas"/>
-        <Caret Line="8505" Column="45" TopLine="8498"/>
-      </Position7>
-      <Position8>
-        <Filename Value="..\baseunits\data.pas"/>
-        <Caret Line="8511" Column="25" TopLine="8497"/>
-      </Position8>
-      <Position9>
-        <Filename Value="..\baseunits\data.pas"/>
-        <Caret Line="8840" Column="1" TopLine="8820"/>
-      </Position9>
-      <Position10>
-        <Filename Value="..\baseunits\data.pas"/>
-        <Caret Line="8507" Column="60" TopLine="8498"/>
-      </Position10>
-      <Position11>
-        <Filename Value="..\baseunits\zip.pas"/>
-        <Caret Line="82" Column="31" TopLine="47"/>
-      </Position11>
-      <Position12>
-        <Filename Value="..\baseunits\data.pas"/>
-        <Caret Line="8539" Column="32" TopLine="8537"/>
-      </Position12>
-      <Position13>
-        <Filename Value="..\baseunits\data.pas"/>
-        <Caret Line="8595" Column="29" TopLine="8584"/>
-      </Position13>
-      <Position14>
-        <Filename Value="..\baseunits\data.pas"/>
-        <Caret Line="6061" Column="12" TopLine="6050"/>
-      </Position14>
-      <Position15>
-        <Filename Value="forms\mainunit.pas"/>
-        <Caret Line="1250" Column="13" TopLine="1239"/>
-      </Position15>
-      <Position16>
-        <Filename Value="forms\mainunit.pas"/>
-        <Caret Line="63" Column="83" TopLine="62"/>
-      </Position16>
-      <Position17>
-        <Filename Value="forms\mainunit.pas"/>
-        <Caret Line="1891" Column="156" TopLine="1875"/>
-      </Position17>
-      <Position18>
-        <Filename Value="forms\mainunit.pas"/>
-        <Caret Line="19" Column="30" TopLine="1"/>
-      </Position18>
-      <Position19>
-        <Filename Value="forms\mainunit.pas"/>
-        <Caret Line="1017" Column="37" TopLine="1003"/>
-      </Position19>
-      <Position20>
-        <Filename Value="forms\mainunit.pas"/>
-        <Caret Line="1013" Column="36" TopLine="1001"/>
-      </Position20>
-      <Position21>
-        <Filename Value="forms\mainunit.pas"/>
-        <Caret Line="18" Column="83" TopLine="1"/>
-      </Position21>
-      <Position22>
-        <Filename Value="forms\mainunit.pas"/>
-        <Caret Line="14" Column="19" TopLine="3"/>
-      </Position22>
-      <Position23>
         <Filename Value="forms\mainunit.pas"/>
         <Caret Line="1871" Column="152" TopLine="1860"/>
-      </Position23>
-      <Position24>
+      </Position1>
+      <Position2>
         <Filename Value="forms\mainunit.pas"/>
         <Caret Line="1868" Column="33" TopLine="1868"/>
-      </Position24>
-      <Position25>
+      </Position2>
+      <Position3>
         <Filename Value="forms\mainunit.pas"/>
         <Caret Line="1109" Column="27" TopLine="1105"/>
-      </Position25>
-      <Position26>
+      </Position3>
+      <Position4>
         <Filename Value="forms\ImportFavoritesForm.pas"/>
         <Caret Line="87" Column="31" TopLine="80"/>
-      </Position26>
-      <Position27>
+      </Position4>
+      <Position5>
         <Filename Value="..\baseunits\baseunit.pas"/>
         <Caret Line="226" Column="43" TopLine="224"/>
-      </Position27>
-      <Position28>
+      </Position5>
+      <Position6>
         <Filename Value="forms\ListForm.pas"/>
         <Caret Line="14" Column="46" TopLine="1"/>
-      </Position28>
-      <Position29>
+      </Position6>
+      <Position7>
         <Filename Value="forms\ListForm.pas"/>
         <Caret Line="19" Column="46" TopLine="1"/>
+      </Position7>
+      <Position8>
+        <Filename Value="forms\ImportFavoritesForm.pas"/>
+        <Caret Line="112" Column="7" TopLine="95"/>
+      </Position8>
+      <Position9>
+        <Filename Value="..\baseunits\subthreads.pas"/>
+        <Caret Line="318" Column="29" TopLine="309"/>
+      </Position9>
+      <Position10>
+        <Filename Value="..\baseunits\subthreads.pas"/>
+        <Caret Line="285" Column="3" TopLine="279"/>
+      </Position10>
+      <Position11>
+        <Filename Value="..\baseunits\silentthreads.pas"/>
+        <Caret Line="89" Column="3" TopLine="85"/>
+      </Position11>
+      <Position12>
+        <Filename Value="..\baseunits\silentthreads.pas"/>
+        <Caret Line="257" Column="3" TopLine="279"/>
+      </Position12>
+      <Position13>
+        <Filename Value="forms\ImportFavoritesForm.pas"/>
+        <Caret Line="75" Column="93" TopLine="64"/>
+      </Position13>
+      <Position14>
+        <Filename Value="..\baseunits\subthreads.pas"/>
+        <Caret Line="317" Column="36" TopLine="312"/>
+      </Position14>
+      <Position15>
+        <Filename Value="..\baseunits\subthreads.pas"/>
+        <Caret Line="285" Column="3" TopLine="279"/>
+      </Position15>
+      <Position16>
+        <Filename Value="forms\ImportFavoritesForm.pas"/>
+        <Caret Line="75" Column="93" TopLine="84"/>
+      </Position16>
+      <Position17>
+        <Filename Value="..\baseunits\favorites.pas"/>
+        <Caret Line="574" Column="3" TopLine="564"/>
+      </Position17>
+      <Position18>
+        <Filename Value="..\baseunits\favorites.pas"/>
+        <Caret Line="712" Column="1" TopLine="691"/>
+      </Position18>
+      <Position19>
+        <Filename Value="..\baseunits\favorites.pas"/>
+        <Caret Line="212" Column="3" TopLine="201"/>
+      </Position19>
+      <Position20>
+        <Filename Value="..\baseunits\subthreads.pas"/>
+        <Caret Line="318" Column="53" TopLine="316"/>
+      </Position20>
+      <Position21>
+        <Filename Value="..\baseunits\subthreads.pas"/>
+        <Caret Line="285" Column="3" TopLine="279"/>
+      </Position21>
+      <Position22>
+        <Filename Value="..\baseunits\subthreads.pas"/>
+        <Caret Line="38" Column="33" TopLine="34"/>
+      </Position22>
+      <Position23>
+        <Filename Value="..\baseunits\subthreads.pas"/>
+        <Caret Line="284" Column="6" TopLine="272"/>
+      </Position23>
+      <Position24>
+        <Filename Value="..\baseunits\baseunit.pas"/>
+        <Caret Line="280" Column="47" TopLine="267"/>
+      </Position24>
+      <Position25>
+        <Filename Value="..\baseunits\baseunit.pas"/>
+        <Caret Line="177" Column="75" TopLine="174"/>
+      </Position25>
+      <Position26>
+        <Filename Value="..\baseunits\baseunit.pas"/>
+        <Caret Line="253" Column="35" TopLine="235"/>
+      </Position26>
+      <Position27>
+        <Filename Value="forms\ImportFavoritesForm.pas"/>
+        <Caret Line="82" Column="25" TopLine="70"/>
+      </Position27>
+      <Position28>
+        <Filename Value="forms\ImportFavoritesForm.pas"/>
+        <Caret Line="101" Column="24" TopLine="85"/>
+      </Position28>
+      <Position29>
+        <Filename Value="forms\ImportFavoritesForm.pas"/>
+        <Caret Line="102" Column="19" TopLine="89"/>
       </Position29>
       <Position30>
         <Filename Value="forms\ImportFavoritesForm.pas"/>
-        <Caret Line="112" Column="7" TopLine="95"/>
+        <Caret Line="101" Column="54" TopLine="84"/>
       </Position30>
     </JumpHistory>
   </ProjectSession>

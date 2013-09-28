@@ -90,11 +90,14 @@ begin
     0: silentThread:= TSilentThread.Create;
     1: silentThread:= TAddToFavSilentThread.Create;
   end;
-  silentThread.SavePath:= FPath;
-  silentThread.website:= FWebsite;
-  silentThread.URL:= FURL;
-  silentThread.title:= FManga;
-  silentThread.isSuspended:= FALSE;
+  if (FType in [0..1]) then
+  begin
+    silentThread.SavePath:= FPath;
+    silentThread.website:= FWebsite;
+    silentThread.URL:= FURL;
+    silentThread.title:= FManga;
+    silentThread.isSuspended:= FALSE;
+  end;
 end;
 
 // ----- TSilentThread -----

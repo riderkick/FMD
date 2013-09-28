@@ -182,6 +182,7 @@ const
   ANIMESTORY_NAME   = 'AnimeStory';   ANIMESTORY_ID  = 43;
   LEE_NAME          = 'LectureEnLigne'; LEE_ID       = 44;
   SCANMANGA_NAME    = 'ScanManga';    SCANMANGA_ID   = 45;
+  MANGAGO_NAME      = 'MangaGo';      MANGAGO_ID   = 46;
 
   DEFAULT_LIST = ANIMEA_NAME+'!%~'+MANGAFOX_NAME+'!%~'+MANGAHERE_NAME+'!%~'+MANGAINN_NAME+'!%~'+MANGAREADER_NAME+'!%~';
   DEFAULT_CUSTOM_RENAME = '%NUMBERING% - %CHAPTER%';
@@ -271,7 +272,8 @@ var
      ('MangaAe', 'http://www.manga.ae/'),
      ('AnimeStory', 'http://www.anime-story.com'),
      ('LectureEnLigne', 'http://www.lecture-en-ligne.com'),
-     ('ScanManga', 'http://www.scan-manga.com')
+     ('ScanManga', 'http://www.scan-manga.com'){,
+     ('MangaGo', 'http://www.mangago.com')}
     );
 
   ANIMEA_BROWSER: String = '/browse.html?page=';
@@ -382,6 +384,8 @@ var
   LEE_BROWSER: String = '/index.php?page=liste&ordre=titre';
 
   SCANMANGA_BROWSER: String = '/scanlation/liste_des_mangas.html';
+
+  MANGAGO_BROWSER: String = '/list/directory/all/';
 
   UPDATE_URL      : String = 'http://jaist.dl.sourceforge.net/project/fmd/FMD/updates/';
 
@@ -1049,7 +1053,6 @@ function  StringFilter(const source: String): String;
 begin
   if Length(source) = 0 then exit;
   Result:= StringReplace(source, '&#33;', '!', [rfReplaceAll]);
-  Result:= StringReplace(Result, '&amp;amp;quot;', '"', [rfReplaceAll]);
   Result:= StringReplace(Result, '&#36;', '$', [rfReplaceAll]);
   Result:= StringReplace(Result, '&#39;', '''', [rfReplaceAll]);
   Result:= StringReplace(Result, '&#033;', '!', [rfReplaceAll]);
