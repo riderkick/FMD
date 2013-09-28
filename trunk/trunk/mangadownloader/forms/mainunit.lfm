@@ -11,7 +11,7 @@ object MainForm: TMainForm
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   OnWindowStateChange = FormWindowStateChange
-  LCLVersion = '1.1'
+  LCLVersion = '1.3'
   object pnMainLeft: TPanel
     AnchorSideRight.Control = spMainSplitter
     Left = 0
@@ -323,11 +323,11 @@ object MainForm: TMainForm
     Height = 460
     Top = 32
     Width = 620
-    ActivePage = tsDownload
+    ActivePage = tsFavorites
     Align = alClient
     Font.Style = [fsBold]
     ParentFont = False
-    TabIndex = 0
+    TabIndex = 3
     TabOrder = 1
     OnChange = pcMainChange
     object tsDownload: TTabSheet
