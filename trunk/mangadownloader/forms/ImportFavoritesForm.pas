@@ -72,7 +72,7 @@ begin
       if Pos('<MangaLink>', list.Strings[i]) > 0 then
         urlList.Add(GetString(list.Strings[i], '<MangaLink>', '</MangaLink>'));
       if Pos('<MangaName>', list.Strings[i]) > 0 then
-        mangaList.Add(GetString(list.Strings[i], '<MangaName>', '</MangaName>'));
+        mangaList.Add(StringFilter(GetString(list.Strings[i], '<MangaName>', '</MangaName>')));
     end;
   end;
 
@@ -85,20 +85,22 @@ begin
         StringReplace(urlList.Strings[i], 'http://mangafox.com', WebsiteRoots[MANGAFOX_ID,1], []);
       urlList.Strings[i]:=
         StringReplace(urlList.Strings[i], 'http://www.mangafox.com', WebsiteRoots[MANGAFOX_ID,1], []);
-
       urlList.Strings[i]:=
         StringReplace(urlList.Strings[i], 'http://www.batoto.com', WebsiteRoots[BATOTO_ID,1], []);
       isUnimported:= TRUE;
       for j:= 0 to High(WebsiteRoots) do
       begin
-        if Pos(UpCase(WebsiteRoots[j,1]), UpCase(urlList.Strings[i])) > 0 then
+        if (Pos(UpCase(WebsiteRoots[j,1]), UpCase(urlList.Strings[i])) > 0) AND
+           (Pos('comic/_/comics/double-marriage-r3713', urlList.Strings[i]) = 0) AND
+           (Pos('comic/_/comics/kokuhaku-sakano-anri-r3870', urlList.Strings[i]) = 0) AND
+           (Pos('comic/_/comics/yamada-kun-to-7-nin-no-majo-r3770', urlList.Strings[i]) = 0) then
         begin
           CreateAddToFavThread(
             WebsiteRoots[j,0],
             mangaList.Strings[i],
             StringReplace(urlList.Strings[i], WebsiteRoots[j,1], '', []),
             path);
-          Sleep(8);
+          Sleep(2);
           isUnimported:= FALSE;
           break;
         end;

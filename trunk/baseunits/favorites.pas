@@ -552,20 +552,27 @@ procedure   TFavoriteManager.Add(const title, currentChapter, downloadedChapterL
 var
   i: Cardinal;
 begin
-  if isRunning then exit;
-  if IsMangaExist(title, website) then
-    exit;
-  Inc(Count);
-  SetLength(favoriteInfo, Count);
-  SetLength(mangaInfo, Count);
-  favoriteInfo[Count-1].title         := title;
-  favoriteInfo[Count-1].currentChapter:= currentChapter;
-  favoriteInfo[Count-1].website       := website;
-  favoriteInfo[Count-1].saveTo        := saveTo;
-  favoriteInfo[Count-1].Link          := Link;
-  favoriteInfo[Count-1].downloadedChapterList:= downloadedChapterList;
-  Sort(sortColumn);
-  Backup;
+  try
+    if isRunning then exit;
+    if IsMangaExist(title, website) then
+      exit;
+    Inc(Count);
+    SetLength(favoriteInfo, Count);
+    SetLength(mangaInfo, Count);
+    favoriteInfo[Count-1].title         := title;
+    favoriteInfo[Count-1].currentChapter:= currentChapter;
+    favoriteInfo[Count-1].website       := website;
+    favoriteInfo[Count-1].saveTo        := saveTo;
+    favoriteInfo[Count-1].Link          := Link;
+    favoriteInfo[Count-1].downloadedChapterList:= downloadedChapterList;
+  //  if (MainForm.silentAddToFavThreadCount <= 1) OR (Random(20)=0) then
+    begin
+    //  Sort(sortColumn);
+      Backup;
+    end;
+  except
+
+  end;
 end;
 
 procedure   TFavoriteManager.Remove(const pos: Cardinal; const isBackup: Boolean = TRUE);
