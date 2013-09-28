@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
-  Buttons, BaseUnit, lazutf8classes;
+  Buttons, BaseUnit, lazutf8classes, ListForm;
 
 type
 
@@ -47,11 +47,13 @@ uses
 procedure TImportFavorites.DMDHandle;
 var
   fstream  : TFileStreamUTF8;
+  unimportedMangas,
   list,
   urlList,
   mangaList: TStringList;
   path: String;
   i, j: Cardinal;
+  isUnimported: Boolean;
 begin
   if NOT FileExistsUTF8(CorrectFilePath(edPath.Text) + 'Config/Bookmarks') then
     exit;
@@ -59,6 +61,7 @@ begin
   list:= TStringList.Create;
   urlList:= TStringList.Create;
   mangaList:= TStringList.Create;
+  unimportedMangas:= TStringList.Create;
   fstream:= TFileStreamUTF8.Create(CorrectFilePath(edPath.Text) + 'Config/Bookmarks', fmOpenRead);
 
   list.LoadFromStream(fstream);
@@ -66,10 +69,9 @@ begin
   begin
     for i:= 0 to list.Count-1 do
     begin
-      if Pos('</MangaLink>', list.Strings[i]) > 0 then
-        urlList.Add(GetString(list.Strings[i], '<MangaLink>', '</MangaLink>'))
-      else
-      if Pos('</MangaName>', list.Strings[i]) > 0 then
+      if Pos('<MangaLink>', list.Strings[i]) > 0 then
+        urlList.Add(GetString(list.Strings[i], '<MangaLink>', '</MangaLink>'));
+      if Pos('<MangaName>', list.Strings[i]) > 0 then
         mangaList.Add(GetString(list.Strings[i], '<MangaName>', '</MangaName>'));
     end;
   end;
@@ -81,26 +83,42 @@ begin
     begin
       urlList.Strings[i]:=
         StringReplace(urlList.Strings[i], 'http://mangafox.com', WebsiteRoots[MANGAFOX_ID,1], []);
+      urlList.Strings[i]:=
+        StringReplace(urlList.Strings[i], 'http://www.mangafox.com', WebsiteRoots[MANGAFOX_ID,1], []);
+
+      urlList.Strings[i]:=
+        StringReplace(urlList.Strings[i], 'http://www.batoto.com', WebsiteRoots[BATOTO_ID,1], []);
+      isUnimported:= TRUE;
       for j:= 0 to High(WebsiteRoots) do
       begin
-        if Pos(WebsiteRoots[j,1], urlList.Strings[i]) > 0 then
+        if Pos(UpCase(WebsiteRoots[j,1]), UpCase(urlList.Strings[i])) > 0 then
         begin
           CreateAddToFavThread(
             WebsiteRoots[j,0],
             mangaList.Strings[i],
             StringReplace(urlList.Strings[i], WebsiteRoots[j,1], '', []),
             path);
-          Sleep(1);
+          Sleep(8);
+          isUnimported:= FALSE;
           break;
         end;
       end;
+      if isUnimported then
+        unimportedMangas.Add(mangaList.Strings[i] + ' <' + urlList.Strings[i] + '>');
     end;
+  end;
+
+  if unimportedMangas.Count > 0 then
+  begin
+    ImportList.mmList.Lines.Text:= unimportedMangas.Text;
+    ImportList.Show;
   end;
 
   fstream.Free;
   list.Free;
   urlList.Free;
   mangaList.Free;
+  unimportedMangas.Free;
 end;
 
 procedure TImportFavorites.Run;

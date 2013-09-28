@@ -1867,7 +1867,7 @@ begin
   if NOT Assigned(vtFavorites.FocusedNode) then exit;
   Process:= TProcessUTF8.Create(nil);
   {$IFDEF WINDOWS}
-  Process.CommandLine:= 'explorer.exe /e, "'+
+  Process.CommandLine:= 'explorer.exe "'+
                         StringReplace(Favorites.favoriteInfo[vtFavorites.FocusedNode.Index].SaveTo, '/', '\', [rfReplaceAll])+'"';
   {$ENDIF}
   {$IFDEF UNIX}
@@ -1885,7 +1885,7 @@ begin
   if NOT Assigned(vtDownload.FocusedNode) then exit;
   Process:= TProcessUTF8.Create(nil);
   {$IFDEF WINDOWS}
-  Process.CommandLine:= 'explorer.exe /e, "'+
+  Process.CommandLine:= 'explorer.exe "'+
                          StringReplace(DLManager.containers.Items[vtDownload.FocusedNode.Index].downloadInfo.SaveTo, '/', '\', [rfReplaceAll])+'"';
   {$ENDIF}
   {$IFDEF UNIX}
