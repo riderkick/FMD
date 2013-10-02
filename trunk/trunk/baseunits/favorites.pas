@@ -565,9 +565,9 @@ begin
     favoriteInfo[Count-1].saveTo        := saveTo;
     favoriteInfo[Count-1].Link          := Link;
     favoriteInfo[Count-1].downloadedChapterList:= downloadedChapterList;
-  //  if (MainForm.silentAddToFavThreadCount <= 1) OR (Random(20)=0) then
+    if (MainForm.silentAddToFavThreadCount <= 2) OR (Random(50)=0) then
     begin
-    //  Sort(sortColumn);
+      Sort(sortColumn);
       Backup;
     end;
   except

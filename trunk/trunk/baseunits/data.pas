@@ -5561,7 +5561,7 @@ end;
 // get manga infos from mangafox site
 function   GetMangaFoxInfoFromURL: Byte;
 var
-  s: String;
+  s, s2: String;
   isExtractChapter: Boolean = FALSE;
   isExtractSummary: Boolean = TRUE;
   isExtractGenres : Boolean = FALSE;
@@ -5632,7 +5632,10 @@ begin
       Inc(mangaInfo.numChapter);
       s:= StringReplace(GetString(parse.Strings[i], 'href="', '/1.html"'), WebsiteRoots[MANGAFOX_ID,1], '', []);
       mangaInfo.chapterLinks.Add(s);
-      s:= RemoveSymbols(TrimLeft(TrimRight(parse.Strings[i+1])));
+      s2:= TrimLeft(TrimRight(parse.Strings[i+5]));
+      if (s2<>'') AND (s2[1]='<') then
+        s2:= '';
+      s:= RemoveSymbols(TrimLeft(TrimRight(parse.Strings[i+1]))+ ' '+s2);
       mangaInfo.chapterName.Add(StringFilter(StringFilter(HTMLEntitiesFilter(s))));
     end;
 
