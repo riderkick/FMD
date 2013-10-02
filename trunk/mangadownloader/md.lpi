@@ -157,6 +157,7 @@
         <Filename Value="forms\ListForm.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="ImportList"/>
+        <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="ListForm"/>
       </Unit17>
