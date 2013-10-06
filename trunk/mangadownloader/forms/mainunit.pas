@@ -28,6 +28,16 @@ type
     btChecks: TBitBtn;
     cbOptionAutoRemoveCompletedManga: TCheckBox;
     btDonate: TImage;
+    cbOptionEnableLoadCover: TCheckBox;
+    edOptionExternal: TEdit;
+    gbOptionExternal: TGroupBox;
+    lbFilterHint: TLabel;
+    lbOptionExternal: TLabel;
+    lbOptionCustomRenameHint: TLabel;
+    lbOptionCustomRenameHint1: TLabel;
+    lbOptionExternalHint: TLabel;
+    miOpenWith: TMenuItem;
+    miOpenWith2: TMenuItem;
     pnLeftBtDummy: TBitBtn;
     btVisitMyBlog: TBitBtn;
     btOptionBrowse: TBitBtn;
@@ -81,7 +91,6 @@ type
     CheckBox36: TCheckBox;
     CheckBox37: TCheckBox;
     CheckBox38: TCheckBox;
-    cbOptionEnableLoadCover: TCheckBox;
     CheckBox4: TCheckBox;
     cbOnlyNew: TCheckBox;
     cbAddAsStopped: TCheckBox;
@@ -123,7 +132,6 @@ type
     gbMisc: TGroupBox;
     IconList: TImageList;
     itSaveDownloadedList: TIdleTimer;
-    imgOptionCustomRename: TImage;
     itRefreshForm: TIdleTimer;
     itCheckForChapters: TIdleTimer;
     itAnimate: TIdleTimer;
@@ -230,7 +238,7 @@ type
     TrayIcon: TTrayIcon;
     tsGeneral: TTabSheet;
     tsFavorites: TTabSheet;
-    tsSaveTo: TTabSheet;
+    lbOptionPDFQualityHint: TTabSheet;
     tsConnections: TTabSheet;
     tsOption: TTabSheet;
     tsFilter: TTabSheet;
@@ -312,6 +320,8 @@ type
     procedure miMangaListDownloadAllClick(Sender: TObject);
     procedure miOpenFolder2Click(Sender: TObject);
     procedure miOpenFolderClick(Sender: TObject);
+    procedure miOpenWith2Click(Sender: TObject);
+    procedure miOpenWithClick(Sender: TObject);
     procedure miUpClick(Sender: TObject);
     procedure mnDownload1ClickClick(Sender: TObject);
     procedure mnUpdate1ClickClick(Sender: TObject);
@@ -1896,6 +1906,32 @@ begin
   Process.Free;
 end;
 
+procedure TMainForm.miOpenWith2Click(Sender: TObject);
+var
+  Process: TProcessUTF8;
+  s      : String;
+begin
+  if (NOT Assigned(vtDownload.FocusedNode)) OR (edOptionExternal.Text = '') then exit;
+  Process:= TProcessUTF8.Create(nil);
+  s:= StringReplace(Favorites.favoriteInfo[vtFavorites.FocusedNode.Index].SaveTo, '/', '\', [rfReplaceAll])+'"';
+  Process.CommandLine:= StringReplace(edOptionExternal.Text, '%PATH%', s, [rfReplaceAll]);
+  Process.Execute;
+  Process.Free;
+end;
+
+procedure TMainForm.miOpenWithClick(Sender: TObject);
+var
+  Process: TProcessUTF8;
+  s      : String;
+begin
+  if (NOT Assigned(vtDownload.FocusedNode)) OR (edOptionExternal.Text = '') then exit;
+  Process:= TProcessUTF8.Create(nil);
+  s:= StringReplace(DLManager.containers.Items[vtDownload.FocusedNode.Index].downloadInfo.SaveTo, '/', '\', [rfReplaceAll])+'"';
+  Process.CommandLine:= StringReplace(edOptionExternal.Text, '%PATH%', s, [rfReplaceAll]);
+  Process.Execute;
+  Process.Free;
+end;
+
 procedure TMainForm.pcMainChange(Sender: TObject);
   procedure UpdateOptions;
   var
@@ -1913,6 +1949,7 @@ procedure TMainForm.pcMainChange(Sender: TObject);
    // cbOptionLetFMDDoItemIndex:= cbOptionLetFMDDo.ItemIndex;
     cbOptionLetFMDDoItemIndex  := cbOptionLetFMDDo.ItemIndex;
     cbOptionBatotoUseIE.Checked:= options.ReadBool('general', 'BatotoUseIE', TRUE);
+    edOptionExternal.Text:= options.ReadString('general', 'ExternalProgram', '');
     cbOptionBatotoUseIE.Checked:= FALSE;
     OptionBatotoUseIEChecked   := cbOptionBatotoUseIE.Checked;
 
@@ -2003,6 +2040,7 @@ begin
     pmDownload.Items[4].Enabled:= FALSE;
     pmDownload.Items[5].Enabled:= FALSE;
     pmDownload.Items[10].Enabled:= FALSE;
+    pmDownload.Items[11].Enabled:= FALSE;
   end
   else
   if vtDownload.SelectedCount = 1 then
@@ -2013,6 +2051,7 @@ begin
     pmDownload.Items[4].Enabled:= TRUE;
     pmDownload.Items[5].Enabled:= TRUE;
     pmDownload.Items[10].Enabled:= TRUE;
+    pmDownload.Items[11].Enabled:= TRUE;
   end
   else
   begin
@@ -2022,6 +2061,7 @@ begin
     pmDownload.Items[4].Enabled:= TRUE;
     pmDownload.Items[5].Enabled:= TRUE;
     pmDownload.Items[10].Enabled:= FALSE;
+    pmDownload.Items[11].Enabled:= FALSE;
   end;
 end;
 
@@ -2042,6 +2082,7 @@ begin
     pmFavorites.Items[3].Enabled:= FALSE;
     pmFavorites.Items[4].Enabled:= FALSE;
     pmFavorites.Items[6].Enabled:= FALSE;
+    pmFavorites.Items[7].Enabled:= FALSE;
   end
   else
   if vtFavorites.SelectedCount = 1 then
@@ -2052,6 +2093,7 @@ begin
     pmFavorites.Items[4].Enabled:= TRUE;
     {$IFDEF WINDOWS}
     pmFavorites.Items[6].Enabled:= TRUE;
+    pmFavorites.Items[7].Enabled:= TRUE;
     {$ELSE}
     pmFavorites.Items[4].Enabled:= FALSE;
     {$ENDIF}
@@ -2063,6 +2105,7 @@ begin
     pmFavorites.Items[3].Enabled:= FALSE;
     pmFavorites.Items[4].Enabled:= FALSE;
     pmFavorites.Items[6].Enabled:= FALSE;
+    pmFavorites.Items[7].Enabled:= FALSE;
   end;
 end;
 
@@ -2408,6 +2451,7 @@ begin
   OptionBatotoUseIEChecked:= cbOptionBatotoUseIE.Checked;
   options.WriteBool('general', 'LoadMangaCover', cbOptionEnableLoadCover.Checked);
   OptionEnableLoadCover:= cbOptionEnableLoadCover.Checked;
+  options.WriteString('general', 'ExternalProgram', edOptionExternal.Text);
 
   options.WriteInteger('connections', 'NumberOfTasks', seOptionMaxParallel.Value);
   options.WriteInteger('connections', 'NumberOfThreadsPerTask', seOptionMaxThread.Value);
@@ -2902,6 +2946,7 @@ begin
 
   cbOptionBatotoUseIE.Checked:= FALSE;//options.ReadBool('general', 'BatotoUseIE', TRUE);
   cbOptionAutoNumberChapter.Checked:= options.ReadBool('general', 'AutoNumberChapter', TRUE);
+  edOptionExternal.Text:= options.ReadString('general', 'ExternalProgram', '');
 
   OptionBatotoUseIEChecked      := cbOptionBatotoUseIE.Checked;
   OptionAutoNumberChapterChecked:= cbOptionAutoNumberChapter.Checked;
@@ -3279,7 +3324,7 @@ begin
   tsGeneral.Caption       := language.ReadString(lang, 'tsGeneralCaption', '');
   tsConnections.Caption   := language.ReadString(lang, 'tsConnectionsCaption', '');
   tsUpdate.Caption        := language.ReadString(lang, 'tsUpdateCaption', '');
-  tsSaveTo.Caption        := language.ReadString(lang, 'tsSaveToCaption', '');
+  lbOptionPDFQualityHint.Caption        := language.ReadString(lang, 'tsSaveToCaption', '');
   tsDialogs.Caption       := language.ReadString(lang, 'tsDialogsCaption', '');
   tsWebsites.Caption      := language.ReadString(lang, 'tsWebsitesCaption', '');
   tsMisc.Caption          := language.ReadString(lang, 'tsMiscCaption', '');
@@ -3301,6 +3346,7 @@ begin
   miDownloadRemoveFinishedTasks.Caption:= language.ReadString(lang, 'miDownloadRemoveFinishedTasksCaption', '');
   miDownloadMerge.Caption := language.ReadString(lang, 'miDownloadMergeTasksCaption', '');
   miOpenFolder.Caption    := language.ReadString(lang, 'miOpenFolder', '');
+  miOpenWith.Caption      := language.ReadString(lang, 'miOpenWith', '');
 
   miChapterListCheckSelected.Caption:= language.ReadString(lang, 'miChapterListCheckSelectedCaption', '');
   miChapterListUncheckSelected.Caption:= language.ReadString(lang, 'miChapterListUncheckSelectedCaption', '');
@@ -3317,6 +3363,7 @@ begin
   miHighlightNewManga.Caption:= language.ReadString(lang, 'miHighlightNewMangaCaption', '');
   miChapterListHighlight.Caption:= language.ReadString(lang, 'miChapterListHighlightCaption', '');
   miOpenFolder2.Caption  := miOpenFolder.Caption;
+  miOpenWith2.Caption  := miOpenWith.Caption;
 
   infoCustomGenres       := language.ReadString(lang, 'infoCustomGenres', '');
   infoName               := language.ReadString(lang, 'infoName', '');
@@ -3343,11 +3390,11 @@ begin
   lbOptionMaxRetry.Caption    := language.ReadString(lang, 'lbOptionMaxRetryCaption', '');
   lbOptionDialogs.Caption     := language.ReadString(lang, 'lbOptionDialogsCaption', '');
   lbOptionPDFQuality.Caption  := language.ReadString(lang, 'lbOptionPDFQualityCaption', '');
-  lbOptionPDFQuality.Hint     := language.ReadString(lang, 'lbOptionPDFQualityHint', '');
-  seOptionPDFQuality.Hint     := lbOptionPDFQuality.Hint;
-  imgOptionCustomRename.Hint  := language.ReadString(lang, 'edOptionCustomRenameHint', '');
-  imgOptionCustomRename.Hint  := StringReplace(imgOptionCustomRename.Hint, '\n', #10, [rfReplaceAll]);
-  imgOptionCustomRename.Hint  := StringReplace(imgOptionCustomRename.Hint, '\r', #13, [rfReplaceAll]);
+  lbOptionPDFQualityHint.Hint := language.ReadString(lang, 'lbOptionPDFQualityHint', '');
+ // seOptionPDFQuality.Hint     := lbOptionPDFQuality.Hint;
+  lbOptionCustomRenameHint.Hint:= language.ReadString(lang, 'edOptionCustomRenameHint', '');
+  lbOptionCustomRenameHint.Hint:= StringReplace(lbOptionCustomRenameHint.Hint, '\n', #10, [rfReplaceAll]);
+  lbOptionCustomRenameHint.Hint:= StringReplace(lbOptionCustomRenameHint.Hint, '\r', #13, [rfReplaceAll]);
   lbOptionCustomRename.Hint   := language.ReadString(lang, 'lbOptionCustomRenameHint', '');
 
   cbOptionMinimizeToTray.Caption:= language.ReadString(lang, 'cbOptionMinimizeToTrayCaption', '');
@@ -3366,6 +3413,13 @@ begin
   cbOptionShowBatotoSG.Caption:= language.ReadString(lang, 'cbOptionShowBatotoSGCaption', '');
   cbOptionAutoRemoveCompletedManga.Caption:= language.ReadString(lang, 'cbOptionAutoRemoveCompletedMangaCaption', '');
   cbSelectManga.Hint:= language.ReadString(lang, 'cbSelectMangaHint', '');
+
+  gbOptionExternal.Caption:= language.ReadString(lang, 'gbOptionExternalCaption', '');
+  lbOptionExternal.Caption:= language.ReadString(lang, 'lbOptionExternalCaption', '');
+  lbOptionExternalHint.Hint:= StringFilter(language.ReadString(lang, 'lbOptionExternalHint', ''));
+  lbOptionExternalHint.Hint:= StringReplace(lbOptionExternalHint.Hint, '\n', #10, [rfReplaceAll]);
+  lbOptionExternalHint.Hint:= StringReplace(lbOptionExternalHint.Hint, '\r', #13, [rfReplaceAll]);
+
 
   stDownloadManga          := language.ReadString(lang, 'stDownloadManga', '');
   stDownloadStatus         := language.ReadString(lang, 'stDownloadStatus', '');

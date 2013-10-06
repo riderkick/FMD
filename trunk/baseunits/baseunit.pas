@@ -1521,6 +1521,9 @@ globReturn:
   end;
 
   if Pos(WebsiteRoots[GEHENTAI_ID,1], URL) <> 0 then
+    HTTP.Headers.Insert(0, 'Referer:'+URL)
+  else
+  if Pos(WebsiteRoots[MANGAGO_ID,1], URL) <> 0 then
     HTTP.Headers.Insert(0, 'Referer:'+URL);
   while (NOT HTTP.HTTPMethod('GET', URL)) OR
         (HTTP.ResultCode > 500) do
