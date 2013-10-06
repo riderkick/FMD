@@ -6775,11 +6775,11 @@ begin
   for i:= 0 to parse.Count-1 do
   begin
     // get cover
-    if (mangaInfo.coverLink = '') AND
+   { if (mangaInfo.coverLink = '') AND
        (GetTagName(parse.Strings[i]) = 'meta') AND
        (Pos('property="og:image"', parse.Strings[i])>0) then
       mangaInfo.coverLink:= (GetAttributeValue(GetTagAttribute(parse.Strings[i], 'content=')));
-
+   }
     // get title
     if (Pos('name="description"', parse.Strings[i])<>0) AND (mangaInfo.title = '') then
       mangaInfo.title:= StringReplace(TrimLeft(StringFilter(parse.Strings[i+3])), ' manga - Mangago', '', []);
