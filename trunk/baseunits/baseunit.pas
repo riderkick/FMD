@@ -226,7 +226,7 @@ var
   // VI: Ký tự dùng để chia cắt param trong dữ liệu
   SEPERATOR: String = '!%~';
 
-  WebsiteRoots  : array[0..45] of array [0..1] of String =
+  WebsiteRoots  : array[0..46] of array [0..1] of String =
     (('AnimeA', 'http://manga.animea.net'),
      ('MangaHere', 'http://www.mangahere.com'),
      ('MangaInn', 'http://www.mangainn.com'),
@@ -272,8 +272,8 @@ var
      ('MangaAe', 'http://www.manga.ae/'),
      ('AnimeStory', 'http://www.anime-story.com'),
      ('LectureEnLigne', 'http://www.lecture-en-ligne.com'),
-     ('ScanManga', 'http://www.scan-manga.com'){,
-     ('MangaGo', 'http://www.mangago.com')}
+     ('ScanManga', 'http://www.scan-manga.com'),
+     ('MangaGo', 'http://www.mangago.com')
     );
 
   ANIMEA_BROWSER: String = '/browse.html?page=';
@@ -361,7 +361,7 @@ var
 
   HUGEMANGA_BROWSER: String = '/';
 
-  S2SCAN_BROWSER: String = '/online/reader/list/';
+  S2SCAN_BROWSER: String = '/online/read/denpa_kyoushi/en/0/90/page/1';
 
   SENMANGA_BROWSER: String = '/Manga/';
 
@@ -1546,7 +1546,7 @@ globReturn:
     goto globReturn;
   end;
  // HTTP.Document.SaveToFile('error2.txt');
-  while HTTP.ResultCode = 302 do
+  while (HTTP.ResultCode = 302) OR (HTTP.ResultCode = 301) do
   begin
     s:= CheckRedirect(HTTP);
     if Pos('http://', s) = 0 then
@@ -1661,7 +1661,7 @@ begin
     Sleep(500);
   end;
 
-  while HTTP.ResultCode = 302 do
+  while (HTTP.ResultCode = 302) OR (HTTP.ResultCode = 301) do
   begin
     URL:= CheckRedirect(HTTP);
     HTTP.Clear;
