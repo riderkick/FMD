@@ -814,7 +814,7 @@ var
   begin
     l:= TStringList.Create;
     parse:= TStringList.Create;
-    s:= DecodeUrl(MANGAPANDA_ROOT + URL);
+    s:= DecodeUrl(WebsiteRoots[MANGAPANDA_ID,1] + URL);
     if (Pos('.html', URL) > 0) AND (Pos(SEPERATOR, URL) > 0) then
       s:= StringReplace(s, SEPERATOR, '-1/', []);
     Result:= GetPage(TObject(l),
@@ -834,6 +834,43 @@ var
            (Pos('select', parse.Strings[i-1])>0) then
         begin
           s:= GetString(parse.Strings[i]+'~!@', ' of ', '~!@');
+          manager.container.pageNumber:= StrToInt(TrimLeft(TrimRight(s)));
+          break;
+        end;
+      end;
+    end;
+    parse.Free;
+    l.Free;
+  end;
+
+  function GetMangaGoPageNumber: Boolean;
+  var
+    s    : String;
+    i, j : Cardinal;
+    l    : TStringList;
+  begin
+    l:= TStringList.Create;
+    parse:= TStringList.Create;
+    if (Pos('http://', URL) > 0) then
+      s:= DecodeUrl(URL + '1/')
+    else
+      s:= DecodeUrl(WebsiteRoots[MANGAGO_ID,1] + URL + '1/');
+    Result:= GetPage(TObject(l),
+                     s,
+                     manager.container.manager.retryConnect);
+    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.Exec;
+    Parser.Free;
+    if parse.Count>0 then
+    begin
+      manager.container.pageNumber:= 0;
+      for i:= parse.Count-1 downto 5 do
+      begin
+        if (Pos('class="clear gap"', parse.Strings[i])>0) then
+        begin
+          s:= TrimLeft(TrimRight(parse.Strings[i-5]));
           manager.container.pageNumber:= StrToInt(TrimLeft(TrimRight(s)));
           break;
         end;
@@ -1513,6 +1550,9 @@ begin
   else
   if manager.container.mangaSiteID = MANGAPANDA_ID then
     Result:= GetMangaPandaPageNumber
+  else
+  if manager.container.mangaSiteID = MANGAGO_ID then
+    Result:= GetMangaGoPageNumber
   else
   if manager.container.mangaSiteID = MANGASTREAM_ID then
     Result:= GetMangaStreamPageNumber
@@ -2380,11 +2420,11 @@ var
 
     if (Pos('.html', URL) > 0) AND (Pos(SEPERATOR, URL) > 0) then
     begin
-      s:= DecodeUrl(MANGAPANDA_ROOT + URL);
+      s:= DecodeUrl(WebsiteRoots[MANGAPANDA_ID,1] + URL);
       s:= StringReplace(s, SEPERATOR, '-' + IntToStr(workPtr+1) + '/', [])
     end
     else
-      s:= DecodeUrl(MANGAPANDA_ROOT + URL + '/' + IntToStr(workPtr+1));
+      s:= DecodeUrl(WebsiteRoots[MANGAPANDA_ID,1] + URL + '/' + IntToStr(workPtr+1));
     Result:= GetPage(TObject(l),
                      s,
                      manager.container.manager.retryConnect);
@@ -2401,6 +2441,42 @@ var
         if (Pos('"imgholder"', parse.Strings[i])>0) then
         begin
           manager.container.pageLinks.Strings[workPtr]:= GetAttributeValue(GetTagAttribute(parse.Strings[i+2], 'src='));
+          break;
+        end;
+    end;
+    parse.Free;
+    l.Free;
+  end;
+
+  function GetMangaGoLinkPage: Boolean;
+  var
+    s: String;
+    j,
+    i: Cardinal;
+    l: TStringList;
+  begin
+    l:= TStringList.Create;
+
+    if (Pos('http://', URL) > 0) then
+      s:= DecodeUrl(URL + IntToStr(workPtr+1) + '/')
+    else
+      s:= DecodeUrl(WebsiteRoots[MANGAGO_ID,1] + URL + IntToStr(workPtr+1) + '/');
+    Result:= GetPage(TObject(l),
+                     s,
+                     manager.container.manager.retryConnect);
+    parse:= TStringList.Create;
+    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.Exec;
+    Parser.Free;
+
+    if parse.Count>0 then
+    begin
+      for i:= 0 to parse.Count-1 do
+        if (Pos('imgReady(''', parse.Strings[i])>0) then
+        begin
+          manager.container.pageLinks.Strings[workPtr]:= (GetString(parse.Strings[i], 'imgReady(''', ''','));
           break;
         end;
     end;
@@ -3323,6 +3399,9 @@ begin
   if manager.container.mangaSiteID = MANGAPANDA_ID then
     Result:= GetMangaPandaLinkPage
   else
+  if manager.container.mangaSiteID = MANGAGO_ID then
+    Result:= GetMangaGoLinkPage
+  else
   if manager.container.mangaSiteID = MANGASTREAM_ID then
     Result:= GetMangaStreamLinkPage
   else
@@ -3446,7 +3525,10 @@ var
       HTTP.UserAgent:='curl/7.21.0 (i686-pc-linux-gnu) libcurl/7.21.0 OpenSSL/0.9.8o zlib/1.2.3.4 libidn/1.18';
 
     if manager.container.mangaSiteID = HENTAI2READ_ID then
-      HTTP.Headers.Insert(0, 'Referer:'+HENTAI2READ_ROOT+'/')
+      HTTP.Headers.Insert(0, 'Referer:'+WebsiteRoots[HENTAI2READ_ID,1]+'/')
+    else
+    if manager.container.mangaSiteID = MANGAGO_ID then
+      HTTP.Headers.Insert(0, 'Referer:'+WebsiteRoots[MANGAGO_ID,1]+'/')
     else
     if manager.container.mangaSiteID = ANIMEEXTREMIST_ID then
     begin
@@ -3481,7 +3563,7 @@ var
       Sleep(500);
     end;
 
-    while HTTP.ResultCode = 302 do
+    while (HTTP.ResultCode = 302) OR (HTTP.ResultCode = 301) do
     begin
       URL:= CheckRedirect(HTTP);
       HTTP.Clear;
