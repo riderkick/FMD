@@ -1909,12 +1909,32 @@ end;
 procedure TMainForm.miOpenWith2Click(Sender: TObject);
 var
   Process: TProcessUTF8;
+  f,
   s      : String;
+  Info   : TSearchRec;
+  l      : TStringList;
 begin
   if (NOT Assigned(vtDownload.FocusedNode)) OR (edOptionExternal.Text = '') then exit;
+  l      := TStringList.Create;
   Process:= TProcessUTF8.Create(nil);
-  s:= StringReplace(Favorites.favoriteInfo[vtFavorites.FocusedNode.Index].SaveTo, '/', '\', [rfReplaceAll])+'"';
-  Process.CommandLine:= StringReplace(edOptionExternal.Text, '%PATH%', s, [rfReplaceAll]);
+  s:= StringReplace(Favorites.favoriteInfo[vtFavorites.FocusedNode.Index].SaveTo, '/', '\', [rfReplaceAll]);
+
+  if s[Length(s)] <> '\' then
+    s:= s+'\';
+  if FindFirstUTF8(s + '*', faAnyFile AND faDirectory, Info) = 0 then
+  repeat
+    l.Add(Info.Name);
+  until FindNextUTF8(Info) <> 0;
+  if l.Count >= 3 then
+    f:= l.Strings[2]
+  else
+    f:= '';
+  FindClose(Info);
+  l.Free;
+
+  s:= StringReplace(edOptionExternal.Text, '%PATH%', s, [rfReplaceAll]);
+  s:= StringReplace(s, '%FCHAPTER%', f, [rfReplaceAll]);
+  Process.CommandLine:= s;
   Process.Execute;
   Process.Free;
 end;
@@ -1922,12 +1942,32 @@ end;
 procedure TMainForm.miOpenWithClick(Sender: TObject);
 var
   Process: TProcessUTF8;
+  f,
   s      : String;
+  Info   : TSearchRec;
+  l      : TStringList;
 begin
   if (NOT Assigned(vtDownload.FocusedNode)) OR (edOptionExternal.Text = '') then exit;
+  l      := TStringList.Create;
   Process:= TProcessUTF8.Create(nil);
-  s:= StringReplace(DLManager.containers.Items[vtDownload.FocusedNode.Index].downloadInfo.SaveTo, '/', '\', [rfReplaceAll])+'"';
-  Process.CommandLine:= StringReplace(edOptionExternal.Text, '%PATH%', s, [rfReplaceAll]);
+  s:= StringReplace(DLManager.containers.Items[vtDownload.FocusedNode.Index].downloadInfo.SaveTo, '/', '\', [rfReplaceAll]);
+
+  if s[Length(s)] <> '\' then
+    s:= s+'\';
+  if FindFirstUTF8(s + '*', faAnyFile AND faDirectory, Info) = 0 then
+  repeat
+    l.Add(Info.Name);
+  until FindNextUTF8(Info) <> 0;
+  if l.Count >= 3 then
+    f:= l.Strings[2]
+  else
+    f:= '';
+  FindClose(Info);
+  l.Free;
+
+  s:= StringReplace(edOptionExternal.Text, '%PATH%', s, [rfReplaceAll]);
+  s:= StringReplace(s, '%FCHAPTER%', f, [rfReplaceAll]);
+  Process.CommandLine:= s;
   Process.Execute;
   Process.Free;
 end;
@@ -3420,6 +3460,9 @@ begin
   lbOptionExternalHint.Hint:= StringReplace(lbOptionExternalHint.Hint, '\n', #10, [rfReplaceAll]);
   lbOptionExternalHint.Hint:= StringReplace(lbOptionExternalHint.Hint, '\r', #13, [rfReplaceAll]);
 
+  lbFilterHint.Hint        := language.ReadString(lang, 'lbFilterHint', '');
+  lbFilterHint.Hint        := StringReplace(lbFilterHint.Hint, '\n', #10, [rfReplaceAll]);
+  lbFilterHint.Hint        := StringReplace(lbFilterHint.Hint, '\r', #13, [rfReplaceAll]);
 
   stDownloadManga          := language.ReadString(lang, 'stDownloadManga', '');
   stDownloadStatus         := language.ReadString(lang, 'stDownloadStatus', '');
