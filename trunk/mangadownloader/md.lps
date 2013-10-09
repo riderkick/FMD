@@ -225,10 +225,11 @@
       <Unit19>
         <Filename Value="..\baseunits\data.pas"/>
         <UnitName Value="data"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="10"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="6821"/>
-        <CursorPos X="31" Y="6830"/>
+        <TopLine Value="5702"/>
+        <CursorPos X="49" Y="5714"/>
         <ExtraEditorCount Value="1"/>
         <ExtraEditor1>
           <TopLine Value="1728"/>
@@ -521,11 +522,10 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="mainunit"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
         <WindowIndex Value="0"/>
         <TopLine Value="3450"/>
-        <CursorPos X="15" Y="3463"/>
+        <CursorPos X="31" Y="3463"/>
         <UsageCount Value="41"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -584,103 +584,103 @@
       </Position5>
       <Position6>
         <Filename Value="forms\mainunit.pas"/>
-        <Caret Line="3334" Column="42" TopLine="3340"/>
+        <Caret Line="3335" Column="42" TopLine="3335"/>
       </Position6>
       <Position7>
         <Filename Value="forms\mainunit.pas"/>
-        <Caret Line="3335" Column="42" TopLine="3335"/>
+        <Caret Line="3334" Column="42" TopLine="3334"/>
       </Position7>
       <Position8>
         <Filename Value="forms\mainunit.pas"/>
-        <Caret Line="3334" Column="42" TopLine="3334"/>
+        <Caret Line="3342" Column="42" TopLine="3342"/>
       </Position8>
       <Position9>
         <Filename Value="forms\mainunit.pas"/>
-        <Caret Line="3342" Column="42" TopLine="3342"/>
+        <Caret Line="3341" Column="42" TopLine="3341"/>
       </Position9>
       <Position10>
         <Filename Value="forms\mainunit.pas"/>
-        <Caret Line="3341" Column="42" TopLine="3341"/>
+        <Caret Line="3340" Column="42" TopLine="3340"/>
       </Position10>
       <Position11>
         <Filename Value="forms\mainunit.pas"/>
-        <Caret Line="3340" Column="42" TopLine="3340"/>
+        <Caret Line="3339" Column="42" TopLine="3339"/>
       </Position11>
       <Position12>
         <Filename Value="forms\mainunit.pas"/>
-        <Caret Line="3339" Column="42" TopLine="3339"/>
+        <Caret Line="3338" Column="42" TopLine="3338"/>
       </Position12>
       <Position13>
         <Filename Value="forms\mainunit.pas"/>
-        <Caret Line="3338" Column="42" TopLine="3338"/>
+        <Caret Line="3339" Column="42" TopLine="3339"/>
       </Position13>
       <Position14>
         <Filename Value="forms\mainunit.pas"/>
-        <Caret Line="3339" Column="42" TopLine="3339"/>
+        <Caret Line="3338" Column="42" TopLine="3338"/>
       </Position14>
       <Position15>
         <Filename Value="forms\mainunit.pas"/>
-        <Caret Line="3338" Column="42" TopLine="3338"/>
+        <Caret Line="2957" Column="80" TopLine="2942"/>
       </Position15>
       <Position16>
         <Filename Value="forms\mainunit.pas"/>
-        <Caret Line="2957" Column="80" TopLine="2942"/>
+        <Caret Line="1961" Column="34" TopLine="1953"/>
       </Position16>
       <Position17>
         <Filename Value="forms\mainunit.pas"/>
-        <Caret Line="2464" Column="78" TopLine="2963"/>
+        <Caret Line="2045" Column="3" TopLine="2014"/>
       </Position17>
       <Position18>
         <Filename Value="forms\mainunit.pas"/>
-        <Caret Line="1961" Column="34" TopLine="1953"/>
+        <Caret Line="660" Column="48" TopLine="654"/>
       </Position18>
       <Position19>
         <Filename Value="forms\mainunit.pas"/>
-        <Caret Line="2045" Column="3" TopLine="2014"/>
+        <Caret Line="1939" Column="37" TopLine="1914"/>
       </Position19>
       <Position20>
         <Filename Value="forms\mainunit.pas"/>
-        <Caret Line="660" Column="48" TopLine="654"/>
+        <Caret Line="1946" Column="17" TopLine="1932"/>
       </Position20>
       <Position21>
         <Filename Value="forms\mainunit.pas"/>
-        <Caret Line="1939" Column="37" TopLine="1914"/>
+        <Caret Line="1921" Column="50" TopLine="1912"/>
       </Position21>
       <Position22>
         <Filename Value="forms\mainunit.pas"/>
-        <Caret Line="1946" Column="17" TopLine="1932"/>
+        <Caret Line="3583" Column="1" TopLine="3562"/>
       </Position22>
       <Position23>
         <Filename Value="forms\mainunit.pas"/>
-        <Caret Line="1921" Column="50" TopLine="1912"/>
+        <Caret Line="2866" Column="30" TopLine="2855"/>
       </Position23>
       <Position24>
         <Filename Value="forms\mainunit.pas"/>
-        <Caret Line="3583" Column="1" TopLine="3562"/>
+        <Caret Line="1969" Column="37" TopLine="1952"/>
       </Position24>
       <Position25>
-        <Filename Value="forms\mainunit.pas"/>
-        <Caret Line="2866" Column="30" TopLine="2855"/>
+        <Filename Value="..\baseunits\baseunit.pas"/>
+        <Caret Line="95" Column="10" TopLine="85"/>
       </Position25>
       <Position26>
         <Filename Value="forms\mainunit.pas"/>
-        <Caret Line="1969" Column="37" TopLine="1952"/>
+        <Caret Line="1959" Column="1" TopLine="1949"/>
       </Position26>
       <Position27>
-        <Filename Value="..\baseunits\baseunit.pas"/>
-        <Caret Line="95" Column="10" TopLine="85"/>
-      </Position27>
-      <Position28>
-        <Filename Value="forms\mainunit.pas"/>
-        <Caret Line="1903" Column="46" TopLine="1948"/>
-      </Position28>
-      <Position29>
-        <Filename Value="forms\mainunit.pas"/>
-        <Caret Line="1959" Column="1" TopLine="1949"/>
-      </Position29>
-      <Position30>
         <Filename Value="forms\mainunit.pas"/>
         <Caret Line="1965" Column="1" TopLine="1955"/>
+      </Position27>
+      <Position28>
+        <Filename Value="..\baseunits\data.pas"/>
+        <Caret Line="6825" Column="42" TopLine="6821"/>
+      </Position28>
+      <Position29>
+        <Filename Value="..\baseunits\data.pas"/>
+        <Caret Line="8809" Column="36" TopLine="8791"/>
+      </Position29>
+      <Position30>
+        <Filename Value="..\baseunits\data.pas"/>
+        <Caret Line="5719" Column="48" TopLine="5708"/>
       </Position30>
     </JumpHistory>
   </ProjectSession>

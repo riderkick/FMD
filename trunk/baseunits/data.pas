@@ -5710,15 +5710,16 @@ begin
 
       // get chapter name and links
     if (isExtractChapter) AND
-       (Pos('class="title nowrap"', parse.Strings[i])>0) then
+      // ((Pos('class="title nowrap"', parse.Strings[i])>0 OR
+        (Pos('class="tips"', parse.Strings[i])>0) then
     begin
       Inc(mangaInfo.numChapter);
-      s:= StringReplace(GetString(parse.Strings[i-4], 'href="', '/1.html"'), WebsiteRoots[MANGAFOX_ID,1], '', []);
+      s:= StringReplace(GetString(parse.Strings[i], 'href="', '/1.html"'), WebsiteRoots[MANGAFOX_ID,1], '', []);
       mangaInfo.chapterLinks.Add(s);
-      s2:= TrimLeft(TrimRight(parse.Strings[i+1]));
+      s2:= TrimLeft(TrimRight(parse.Strings[i+5]));
       if (s2<>'') AND (s2[1]='<') then
         s2:= '';
-      s:= RemoveSymbols(TrimLeft(TrimRight(parse.Strings[i-3]))+ ' '+s2);
+      s:= RemoveSymbols(TrimLeft(TrimRight(parse.Strings[i+1]))+ ' '+s2);
       mangaInfo.chapterName.Add(StringFilter(StringFilter(HTMLEntitiesFilter(s))));
     end;
 
