@@ -100,7 +100,7 @@ begin
             mangaList.Strings[i],
             StringReplace(urlList.Strings[i], WebsiteRoots[j,1], '', []),
             path);
-          Sleep(2);
+          Sleep(16);
           isUnimported:= FALSE;
           break;
         end;
