@@ -315,7 +315,7 @@ begin
   while NOT Terminated do
   begin
     if ((MainForm.silentThreadCount > 0)) AND
-       (MainForm.currentActiveSilentThreadCount <= 2) then
+       (MainForm.currentActiveSilentThreadCount < 2) then
     begin
       Synchronize(CallMainFormPopSilentThreadQueue);
     end;

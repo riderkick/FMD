@@ -1553,8 +1553,9 @@ globReturn:
   begin
     s:= CheckRedirect(HTTP);
     if Pos('http://', s) = 0 then
-      URL:= 'http://' + GetString(URL, 'http://', '/');
-    URL:= URL + s;
+      URL:= 'http://' + GetString(URL, 'http://', '/')
+    else
+      URL:= s;
 
     HTTP.Clear;
     HTTP.RangeStart:= 0;

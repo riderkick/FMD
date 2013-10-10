@@ -208,6 +208,7 @@ end;
 procedure   TSilentThread.Execute;
 var
   times: Cardinal;
+  s    : String;
 begin
   while isSuspended do Sleep(32);
 
@@ -221,7 +222,8 @@ begin
     times:= 4
   else
     times:= 3;
-
+  s:= URL;
+  s:= webSite;
   Info.mangaInfo.title:= title;
   if Info.GetInfoFromURL(website, URL, times)<>NO_ERROR then
   begin
