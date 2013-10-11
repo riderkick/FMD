@@ -2714,7 +2714,10 @@ var
       for i:= 0 to parse.Count-1 do
         if (Pos('class="lazyload_ad"', parse.Strings[i])>0) then
         begin
+          s:= '';
           s:= GetAttributeValue(GetTagAttribute(parse.Strings[i-8], 'src='));
+          if s = '' then
+            s:= GetAttributeValue(GetTagAttribute(parse.Strings[i-6], 'src='));
           if Pos('http://', s) = 0 then
             s:= WebsiteRoots[KOMIKID_ID,1] + KOMIKID_BROWSER + s;
           manager.container.pageLinks.Strings[workPtr]:= EncodeURL(s);

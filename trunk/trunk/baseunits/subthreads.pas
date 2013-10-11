@@ -243,8 +243,9 @@ begin
              oldDir + CONFIG_FOLDER + CONFIG_FILE + '.tmp');
     Process:= TProcess.Create(nil);
     Process.CommandLine:= oldDir + 'old_updater.exe 1';
-    Process.Execute;
     MainForm.CloseNow;
+    Process.Execute;
+    Process.Free;
     Halt;
   end
   else

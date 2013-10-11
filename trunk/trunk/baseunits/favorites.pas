@@ -190,7 +190,7 @@ begin
   newChapter:= TCardinalList.Create;
   isRunning:= FALSE;
   favorites:= TIniFile.Create(WORK_FOLDER + FAVORITES_FILE);
-  favorites.CacheUpdates:= FALSE;
+  favorites.CacheUpdates:= TRUE;
   threads:= TFavoriteThreadList.Create;
   Restore;
   inherited Create;
@@ -626,6 +626,7 @@ begin
     favorites.WriteString(IntToStr(i), 'SaveTo',         favoriteInfo[i].SaveTo);
     favorites.WriteString(IntToStr(i), 'Link',           favoriteInfo[i].link);
   end;
+  favorites.UpdateFile;
 end;
 
 procedure   TFavoriteManager.Sort(const AColumn: Cardinal);
