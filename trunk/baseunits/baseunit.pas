@@ -16,6 +16,8 @@ uses
   zstream;
 
 const
+  MUTEX              = '_FMD_MUTEX_';
+
   JPG_HEADER: array[0..2] of Byte = ($FF, $D8, $FF);
   GIF_HEADER: array[0..2] of Byte = ($47, $49, $46);
   PNG_HEADER: array[0..2] of Byte = ($89, $50, $4E);

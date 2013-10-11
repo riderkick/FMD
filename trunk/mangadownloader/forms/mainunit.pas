@@ -798,10 +798,11 @@ begin
   DLManager.StopAllDownloadTasksForExit;
   if NOT dataProcess.isFilterAllSites then
     dataProcess.SaveToFile;
+  options.UpdateFile;
   dataProcess.Destroy;
   // bad coding
   DLManager.BackupDownloadedChaptersList;
- // Halt;
+  // Halt;
 end;
 
 procedure TMainForm.LoadAbout;
@@ -2435,6 +2436,7 @@ var
   s: String;
   isStillHaveCurrentWebsite: Boolean = FALSE;
 begin
+try
   s:= SaveMangaOptions;
   if s = '' then
   begin
@@ -2566,6 +2568,8 @@ begin
   DLManager.maxDLTasks         := seOptionMaxParallel.Value;
   DLManager.maxDLThreadsPerTask:= seOptionMaxThread.Value;
   DLManager.retryConnect       := seOptionMaxRetry.Value;
+except
+end;
   vtMangaList.Repaint;
   tvDownloadFilterRepaint;
 end;
