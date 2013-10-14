@@ -20,6 +20,7 @@ object ImportFavorites: TImportFavorites
     ItemIndex = 0
     Items.Strings = (
       'Domdomsoft Manga Downloader'
+      'Free Manga Downloader'
     )
     OnChange = cbSoftwareChange
     Style = csDropDownList

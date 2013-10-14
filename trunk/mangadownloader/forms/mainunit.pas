@@ -13,9 +13,9 @@ interface
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls, LCLType,
   ExtCtrls, ComCtrls, Grids, ColorBox, ActnList, Buttons, CheckLst, Spin, Menus,
-  VirtualTrees, RichMemo, IniFiles, Process, UTF8Process,
-  baseunit, data, types, downloads, favorites, LConvEncoding, LCLIntf, LazUTF8,
-  updatelist, updatedb, lclproc, subthreads, silentthreads, AnimatedGif, MemBitmap
+  VirtualTrees, RichMemo, IniFiles, Process, UTF8Process, dateutils,
+  baseunit, data, types, DownloadsManager, FavoritesManager, LConvEncoding, LCLIntf, LazUTF8,
+  UpdateThread, UpdateDBThread, lclproc, SubThread, SilentThread, AnimatedGif, MemBitmap
   {$IFDEF WINDOWS}, ActiveX{$ENDIF};
 
 type
@@ -352,6 +352,8 @@ type
       var HintText: String);
     procedure vtDownloadGetText(Sender: TBaseVirtualTree; Node: PVirtualNode;
       Column: TColumnIndex; TextType: TVSTTextType; var CellText: String);
+    procedure vtDownloadHeaderClick(Sender: TVTHeader; Column: TColumnIndex;
+      Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
     procedure vtDownloadInitNode(Sender: TBaseVirtualTree; ParentNode,
       Node: PVirtualNode; var InitialStates: TVirtualNodeInitStates);
     procedure vtFavoritesDblClick(Sender: TObject);
@@ -448,6 +450,12 @@ type
     procedure ShowCompletedTasks;
     procedure ShowInProgressTasks;
     procedure ShowStoppedTasks;
+
+    procedure ShowTasksOnCertainDays(const L, H: LongInt);
+    procedure ShowTodayTasks;
+    procedure ShowYesterdayTasks;
+    procedure ShowOneWeekTasks;
+    procedure ShowOneMonthTasks;
     procedure vtDownloadFilters;
 
     procedure AddChapterNameToList;
@@ -840,12 +848,20 @@ begin
 
   // root
   tvDownloadFilter.Items[0].Text:= Format('%s (%d)', [stAllDownloads, vtDownload.RootNodeCount]);
- // tvDownloadFilter.Items[1].Text:= stFilters;
 
   // childs
   tvDownloadFilter.Items[1].Text:= Format('%s (%d)', [stFinish, LFinishedTasks]);
   tvDownloadFilter.Items[2].Text:= Format('%s (%d)', [stInProgress, LInProgressTasks]);
   tvDownloadFilter.Items[3].Text:= Format('%s (%d)', [stStop, LStoppedTasks]);
+
+  // root
+  tvDownloadFilter.Items[4].Text:= stHistory;
+
+  // childs
+  tvDownloadFilter.Items[5].Text:= stToday;
+  tvDownloadFilter.Items[6].Text:= stYesterday;
+  tvDownloadFilter.Items[7].Text:= stOneWeek;
+  tvDownloadFilter.Items[8].Text:= stOneMonth;
 end;
 
 procedure TMainForm.GenerateNodes;
@@ -857,10 +873,6 @@ begin
   tvDownloadFilter.Items[0].ImageIndex   := 4;
   tvDownloadFilter.Items[0].SelectedIndex:= 4;
   tvDownloadFilter.Items[0].StateIndex   := 4;
- { tvDownloadFilter.Items.Add(nil, stFilters);
-  tvDownloadFilter.Items[1].ImageIndex   := 4;
-  tvDownloadFilter.Items[1].SelectedIndex:= 4;
-  tvDownloadFilter.Items[1].StateIndex   := 4; }
 
   // childs
   tvDownloadFilter.Items.AddChild(tvDownloadFilter.Items[0], stFinish);
@@ -875,6 +887,30 @@ begin
   tvDownloadFilter.Items[3].ImageIndex   := 7;
   tvDownloadFilter.Items[3].SelectedIndex:= 7;
   tvDownloadFilter.Items[3].StateIndex   := 7;
+
+  // root
+  tvDownloadFilter.Items.Add(nil, stHistory);
+  tvDownloadFilter.Items[4].ImageIndex   := 4;
+  tvDownloadFilter.Items[4].SelectedIndex:= 4;
+  tvDownloadFilter.Items[4].StateIndex   := 4;
+
+  // childs
+  tvDownloadFilter.Items.AddChild(tvDownloadFilter.Items[4], stToday);
+  tvDownloadFilter.Items[5].ImageIndex   := 8;
+  tvDownloadFilter.Items[5].SelectedIndex:= 8;
+  tvDownloadFilter.Items[5].StateIndex   := 8;
+  tvDownloadFilter.Items.AddChild(tvDownloadFilter.Items[4], stYesterday);
+  tvDownloadFilter.Items[6].ImageIndex   := 8;
+  tvDownloadFilter.Items[6].SelectedIndex:= 8;
+  tvDownloadFilter.Items[6].StateIndex   := 8;
+  tvDownloadFilter.Items.AddChild(tvDownloadFilter.Items[4], stOneWeek);
+  tvDownloadFilter.Items[7].ImageIndex   := 8;
+  tvDownloadFilter.Items[7].SelectedIndex:= 8;
+  tvDownloadFilter.Items[7].StateIndex   := 8;
+  tvDownloadFilter.Items.AddChild(tvDownloadFilter.Items[4], stOneMonth);
+  tvDownloadFilter.Items[8].ImageIndex   := 8;
+  tvDownloadFilter.Items[8].SelectedIndex:= 8;
+  tvDownloadFilter.Items[8].StateIndex   := 8;
 
   tvDownloadFilter.Items[options.ReadInteger('general', 'DownloadFilterSelect', 0)].Selected:= TRUE;
 end;
@@ -971,6 +1007,7 @@ begin
 
   UpdateVtDownload;
 
+  DLManager.Sort(DLManager.SortColumn);
   DLManager.Backup;
   DLManager.CheckAndActiveTask;
 
@@ -1375,7 +1412,7 @@ var
   xNode       : PVirtualNode;
   s           : String;
   pos         : Cardinal;
-  silentThread: TAddToFavSilentThread;
+  silentThread: TSilentAddToFavThread;
 begin
   {if NOT Assigned(vtMangaList.FocusedNode) then exit;
   pos:= vtMangaList.FocusedNode.Index;
@@ -1715,7 +1752,6 @@ begin
   DLManager.Backup;
   // the reason we put it in here instead of in DLManager because of the size of
   // download list will change during this method
-  vtDownloadFilters;
 end;
 
 procedure TMainForm.miDownloadRemuseClick(Sender: TObject);
@@ -1800,10 +1836,6 @@ begin
     end;
     UpdateVtDownload;
     DLManager.Backup;
-
-    // the reason we put it in here instead of in DLManager because of the size of
-    // download list will change during this method
-    vtDownloadFilters;
   end;
 end;
 
@@ -1856,7 +1888,7 @@ begin
       silentThread.URL:= DataProcess.Param[DataProcess.GetPos(i), DATA_PARAM_LINK];
       silentThread.title:= DataProcess.Param[DataProcess.GetPos(i), DATA_PARAM_NAME];
       silentThread.isSuspended:= FALSE;  }
-      CreateSilentThread(
+      CreateDownloadAllThread(
         GetMangaSiteName(DataProcess.site.Items[DataProcess.GetPos(i)]),
         DataProcess.Param[DataProcess.GetPos(i), DATA_PARAM_NAME],
         DataProcess.Param[DataProcess.GetPos(i), DATA_PARAM_LINK]);
@@ -2235,11 +2267,13 @@ begin
       begin
         attMode:= amInsertBefore;
         DLManager.Swap(pSource^.Index, pTarget^.Index);
+        vtDownloadFilters;
       end;
     dmOnNode, dmBelow:
       begin
         attMode:= amInsertAfter;
         DLManager.Swap(pSource^.Index, pTarget^.Index);
+        vtDownloadFilters;
       end;
   end;
   Sender.MoveTo(pSource, pTarget, attMode, False);
@@ -2335,6 +2369,30 @@ begin
       end;
     end;
   end;
+end;
+
+procedure TMainForm.vtDownloadHeaderClick(Sender: TVTHeader;
+  Column: TColumnIndex; Button: TMouseButton; Shift: TShiftState; X, Y: Integer
+  );
+begin
+  if DLManager.containers.Count = 0 then
+    exit;
+  case Column of
+    0: ;
+    3: ;
+    4: ;
+    5: ;
+    else
+      exit;
+  end;
+  DLManager.Sort(Column);
+  vtDownload.Header.SortColumn:= Column;
+  DLManager.sortDirection:= NOT DLManager.sortDirection;
+  vtDownload.Header.SortDirection:= TSortDirection(DLManager.sortDirection);
+  vtDownload.Repaint;
+
+  options.WriteInteger('misc', 'SortDownloadColumn', vtDownload.Header.SortColumn);
+  options.WriteBool('misc', 'SortDownloadDirection', DLManager.sortDirection);
 end;
 
 procedure TMainForm.vtDownloadInitNode(Sender: TBaseVirtualTree; ParentNode,
@@ -2834,13 +2892,69 @@ begin
   end;
 end;
 
+procedure TMainForm.ShowTasksOnCertainDays(const L, H: LongInt);
+var
+  i      : Cardinal;
+  jdn    : LongInt;
+  xNode  : PVirtualNode;
+  canExit: Boolean = FALSE;
+  dt     : TDateTime;
+  day,
+  month,
+  year   : Word;
+begin
+  if vtDownload.RootNodeCount = 0 then exit;
+  vtDownload.Clear;
+  vtDownload.RootNodeCount:= DLManager.containers.Count;
+  xNode:= vtDownload.GetLast;
+  for i:= vtDownload.RootNodeCount-1 downto 0 do
+  begin
+    TryStrToDateTime(DLManager.containers.Items[i].downloadInfo.dateTime, dt);
+    DecodeDate(dt, year, month, day);
+    jdn:= DateToJDN(year, month, day);
+
+    if (jdn >= L) AND (jdn <= H) then
+      vtDownload.isVisible[xNode]:= TRUE
+    else
+      vtDownload.isVisible[xNode]:= FALSE;
+
+    if canExit then
+      exit;
+    if xNode = vtDownload.GetFirst then
+      canExit:= TRUE;
+    xNode:= vtDownload.GetPrevious(xNode);
+    if xNode = vtDownload.GetFirst then
+      canExit:= TRUE;
+  end;
+end;
+
+procedure TMainForm.ShowTodayTasks;
+begin
+  ShowTasksOnCertainDays(GetCurrentJDN, GetCurrentJDN);
+end;
+
+procedure TMainForm.ShowYesterdayTasks;
+begin
+  ShowTasksOnCertainDays(GetCurrentJDN-1, GetCurrentJDN-1);
+end;
+
+procedure TMainForm.ShowOneWeekTasks;
+begin
+  ShowTasksOnCertainDays(GetCurrentJDN-7, GetCurrentJDN);
+end;
+
+procedure TMainForm.ShowOneMonthTasks;
+begin
+  ShowTasksOnCertainDays(GetCurrentJDN-30, GetCurrentJDN);
+end;
+
 procedure TMainForm.vtDownloadFilters;
 begin
   if (isRunDownloadFilter) OR
      (NOT Assigned(tvDownloadFilter.Selected)) then exit;
   isRunDownloadFilter:= TRUE;
   case tvDownloadFilter.Selected.AbsoluteIndex of
-    0:
+    0, 4:
       ShowAllTasks;
     1:
       ShowCompletedTasks;
@@ -2848,6 +2962,14 @@ begin
       ShowInProgressTasks;
     3:
       ShowStoppedTasks;
+    5:
+      ShowTodayTasks;
+    6:
+      ShowYesterdayTasks;
+    7:
+      ShowOneWeekTasks;
+    8:
+      ShowOneMonthTasks;
   end;
   tvDownloadFilterRepaint;
   isRunDownloadFilter:= FALSE;
@@ -3029,6 +3151,10 @@ begin
 
   vtFavorites.Header.SortColumn:= options.ReadInteger('misc', 'SortColumn', 0);
   favorites.sortDirection:= options.ReadBool('misc', 'SortDirection', FALSE);
+
+  vtDownload.Header.SortColumn:= options.ReadInteger('misc', 'SortDownloadColumn', 0);
+  DLManager.sortDirection:= options.ReadBool('misc', 'SortDownloadDirection', FALSE);
+
   vtFavorites.Header.SortDirection:= TSortDirection(favorites.sortDirection);
 
   if OptionCheckMinutes = 0 then
@@ -3233,6 +3359,8 @@ procedure TMainForm.UpdateVtDownload;
 begin
   vtDownload.Clear;
   vtDownload.RootNodeCount:= DLManager.containers.Count;
+  // the reason we put it in here instead of in DLManager because of the size of
+  // download list will change during this method
   vtDownloadFilters;
 end;
 
@@ -3323,6 +3451,12 @@ begin
   stSearch:= language.ReadString(lang, 'edSearchText', '');
   stModeAll             := language.ReadString(lang, 'stModeAll', '');
   stModeFilter          := language.ReadString(lang, 'stModeFilter', '');
+
+  stHistory             := language.ReadString(lang, 'stHistory', '');
+  stToday               := language.ReadString(lang, 'stToday', '');
+  stYesterday           := language.ReadString(lang, 'stYesterday', '');
+  stOneWeek             := language.ReadString(lang, 'stOneWeek', '');
+  stOneMonth            := language.ReadString(lang, 'stOneMonth', '');
 
   stAllDownloads        := language.ReadString(lang, 'stAllDownloads', '');
   stInProgress          := language.ReadString(lang, 'stInProgress', '');
@@ -3518,9 +3652,9 @@ begin
   // apply genres & descriptions
   for i:= 0 to 37 do
   begin
-    Genre[i]:= defaultGenre[i];//language.ReadString(lang, StringReplace(StringReplace(defaultGenre[i], ' ', '', [rfReplaceAll]), '-', '', [rfReplaceAll])+'G', '')
+    Genre[i]:= defaultGenres[i];//language.ReadString(lang, StringReplace(StringReplace(defaultGenres[i], ' ', '', [rfReplaceAll]), '-', '', [rfReplaceAll])+'G', '')
     TCheckBox(pnGenres.Controls[i]).Caption:= Genre[i];
-    TCheckBox(pnGenres.Controls[i]).Hint:= language.ReadString(lang, StringReplace(StringReplace(defaultGenre[i], ' ', '', [rfReplaceAll]), '-', '', [rfReplaceAll])+'M', '');
+    TCheckBox(pnGenres.Controls[i]).Hint:= language.ReadString(lang, StringReplace(StringReplace(defaultGenres[i], ' ', '', [rfReplaceAll]), '-', '', [rfReplaceAll])+'M', '');
     TCheckBox(pnGenres.Controls[i]).ShowHint:= TRUE;
   end;
 

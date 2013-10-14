@@ -1,18 +1,18 @@
 {
-        File: silentthreads.pas
+        File: SilentThread.pas
         License: GPLv2
         This unit is a part of Free Manga Downloader
 }
 
-unit silentthreads;
+unit SilentThread;
 
 {$mode delphi}
 
 interface
 
 uses
-  Classes, SysUtils, Dialogs, Controls, IniFiles, baseunit, data, fgl, downloads,
-  Graphics, Process, lclintf, contnrs;
+  Classes, SysUtils, Dialogs, Controls, IniFiles, baseunit, data, fgl, DownloadsManager,
+  Graphics, Process, lclintf, contnrs, FMDThread;
 
 type
   // metadata
@@ -28,8 +28,7 @@ type
     procedure   Run;
   end;
 
-  // for "Download all" feature
-  TSilentThread = class(TThread)
+  TSilentThread = class(TFMDThread)
   protected
     FSavePath: String;
 
@@ -39,8 +38,7 @@ type
     procedure   Execute; override;
   public
     Info        : TMangaInformation;
-    isTerminated,
-    isSuspended : Boolean;
+
     // manga information from main thread
     title,
     website, URL: String;
@@ -51,15 +49,20 @@ type
     property    SavePath: String read FSavePath write FSavePath;
   end;
 
+  // for "Download all" feature
+  TSilentGetInfoThread = class(TSilentThread)
+
+  end;
+
   // for "Add to Favorites" feature
-  TAddToFavSilentThread = class(TSilentThread)
+  TSilentAddToFavThread = class(TSilentThread)
   protected
     procedure   CallMainFormAfterChecking; override;
     procedure   CallMainFormDecreaseThreadCount; override;
   public
   end;
 
-procedure CreateSilentThread(const AWebsite, AManga, AURL: String; ASavePath: String = '');
+procedure CreateDownloadAllThread(const AWebsite, AManga, AURL: String; ASavePath: String = '');
 procedure CreateAddToFavThread(const AWebsite, AManga, AURL: String; ASavePath: String = '');
 
 var
@@ -88,7 +91,7 @@ var
 begin
   case FType of
     0: silentThread:= TSilentThread.Create;
-    1: silentThread:= TAddToFavSilentThread.Create;
+    1: silentThread:= TSilentAddToFavThread.Create;
   end;
   if (FType in [0..1]) then
   begin
@@ -171,6 +174,7 @@ begin
     end;
     if s <> '' then
       DLManager.AddToDownloadedChaptersList(Info.mangaInfo.website + URL, s);
+    DLManager.Sort(DLManager.SortColumn);
   end;
 end;
 
@@ -252,9 +256,9 @@ begin
   inherited Destroy;
 end;
 
-// ----- TAddToFavSilentThread -----
+// ----- TSilentAddToFavThread -----
 
-procedure   TAddToFavSilentThread.CallMainFormAfterChecking;
+procedure   TSilentAddToFavThread.CallMainFormAfterChecking;
 var
   s, s2: String;
   i    : Cardinal;
@@ -297,13 +301,13 @@ begin
   end;
 end;
 
-procedure   TAddToFavSilentThread.CallMainFormDecreaseThreadCount;
+procedure   TSilentAddToFavThread.CallMainFormDecreaseThreadCount;
 begin
   inherited;
   Dec(MainForm.silentAddToFavThreadCount);
 end;
 
-procedure   CreateSilentThread(const AWebsite, AManga, AURL: String; ASavePath: String = '');
+procedure   CreateDownloadAllThread(const AWebsite, AManga, AURL: String; ASavePath: String = '');
 var
   meta: TSilentThreadMeta;
 begin

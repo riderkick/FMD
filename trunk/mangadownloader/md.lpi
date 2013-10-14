@@ -52,7 +52,7 @@
         <PackageName Value="LCL"/>
       </Item3>
     </RequiredPackages>
-    <Units Count="18">
+    <Units Count="19">
       <Unit0>
         <Filename Value="md.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -77,14 +77,14 @@
         <UnitName Value="genericlib"/>
       </Unit3>
       <Unit4>
-        <Filename Value="..\baseunits\downloads.pas"/>
+        <Filename Value="..\baseunits\DownloadsManager.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="downloads"/>
+        <UnitName Value="DownloadsManager"/>
       </Unit4>
       <Unit5>
-        <Filename Value="..\baseunits\favorites.pas"/>
+        <Filename Value="..\baseunits\FavoritesManager.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="favorites"/>
+        <UnitName Value="FavoritesManager"/>
       </Unit5>
       <Unit6>
         <Filename Value="..\baseunits\zip.pas"/>
@@ -92,9 +92,9 @@
         <UnitName Value="zip"/>
       </Unit6>
       <Unit7>
-        <Filename Value="..\baseunits\updatelist.pas"/>
+        <Filename Value="..\baseunits\UpdateThread.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="updatelist"/>
+        <UnitName Value="UpdateThread"/>
       </Unit7>
       <Unit8>
         <Filename Value="unit1.pas"/>
@@ -105,9 +105,9 @@
         <UnitName Value="Unit1"/>
       </Unit8>
       <Unit9>
-        <Filename Value="..\baseunits\subthreads.pas"/>
+        <Filename Value="..\baseunits\SubThread.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="subthreads"/>
+        <UnitName Value="SubThread"/>
       </Unit9>
       <Unit10>
         <Filename Value="logform.pas"/>
@@ -118,14 +118,14 @@
         <UnitName Value="logform"/>
       </Unit10>
       <Unit11>
-        <Filename Value="..\baseunits\updatedb.pas"/>
+        <Filename Value="..\baseunits\UpdateDBThread.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="updatedb"/>
+        <UnitName Value="UpdateDBThread"/>
       </Unit11>
       <Unit12>
-        <Filename Value="..\baseunits\silentthreads.pas"/>
+        <Filename Value="..\baseunits\SilentThread.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="silentthreads"/>
+        <UnitName Value="SilentThread"/>
       </Unit12>
       <Unit13>
         <Filename Value="..\baseunits\buffer.pas"/>
@@ -161,6 +161,11 @@
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="ListForm"/>
       </Unit17>
+      <Unit18>
+        <Filename Value="..\baseunits\FMDThread.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="FMDThread"/>
+      </Unit18>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

@@ -6,8 +6,8 @@ uses
   cthreads,
   {$ENDIF}{$ENDIF}
   Interfaces, // this includes the LCL widgetset
-  Forms, mainunit, virtualtreeview_package, richmemopackage, zip,
-  updatelist, subthreads, updatedb, silentthreads, curlcore, ListForm;
+  Forms, mainunit, virtualtreeview_package, richmemopackage, zip, UpdateThread,
+  SubThread, UpdateDBThread, SilentThread, curlcore, ListForm, FMDThread;
 
 {$R *.res}
 

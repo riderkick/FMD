@@ -1,10 +1,10 @@
 {
-        File: updatelist.pas
+        File: UpdateThread.pas
         License: GPLv2
         This unit is a part of Free Manga Downloader
 }
 
-unit updatelist;
+unit UpdateThread;
 
 {$mode delphi}
 {$DEFINE DOWNLOADER}

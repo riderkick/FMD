@@ -42,7 +42,7 @@ const
   FILTER_HIDE           = 0;
   FILTER_SHOW           = 1;
 
-  defaultGenre: array [0..37] of String =
+  defaultGenres: array [0..37] of String =
     ('Action'       , 'Adult'        , 'Adventure'    , 'Comedy',
      'Doujinshi'    , 'Drama'        , 'Ecchi'        , 'Fantasy',
      'Gender Bender', 'Harem'        , 'Hentai'       , 'Historical',
@@ -227,6 +227,7 @@ var
   // EN: Param seperator
   // VI: Ký tự dùng để chia cắt param trong dữ liệu
   SEPERATOR: String = '!%~';
+  SEPERATOR2: String = '~%!';
 
   WebsiteRoots  : array[0..46] of array [0..1] of String =
     (('AnimeA', 'http://manga.animea.net'),
@@ -409,6 +410,13 @@ var
   stInProgress,
   stAllDownloads,
   stFilters,
+
+  stHistory,
+  stToday,
+  stYesterday,
+  stOneWeek,
+  stOneMonth,
+
   stDownloadManga,
   stDownloadStatus,
   stDownloadProgress,
@@ -584,6 +592,7 @@ procedure QuickSortDataWithWebID(var merge: TStringList; const webIDList: TByteL
 
 
 function  GetCurrentJDN: LongInt;
+function  DateToJDN(const year, month, day: Word): LongInt;
 
 {function  ConvertInt32ToStr(const aValue: Cardinal)  : String;
 function  ConvertStrToInt32(const aStr  : String): Cardinal;}
@@ -1843,16 +1852,22 @@ begin
   names.Free;
 end;
 
-function  GetCurrentJDN: LongInt;
+function  DateToJDN(const year, month, day: Word): LongInt;
 var
-  day, month, year: Word;
-  a, y, m         : Single;
+  a, y, m: Single;
 begin
-  DecodeDate(Now, year, month, day);
   a:= (14 - month) / 12;
   y:= year + 4800 - a;
   m:= month + 12*a - 3;
   Result:= Round(day + (153*m+2)/5 + 365*y + y/4 - y/100 + y/400 - 32045);
+end;
+
+function  GetCurrentJDN: LongInt;
+var
+  day, month, year: Word;
+begin
+  DecodeDate(Now, year, month, day);
+  Result:= DateToJDN(year, month, day);
 end;
 
 {function  ConvertInt32ToStr(const aValue: Cardinal)  : String;
