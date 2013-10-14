@@ -1,10 +1,10 @@
 {
-        File: updatedb.pas
+        File: UpdateDBThread.pas
         License: GPLv2
         This unit is a part of Free Manga Downloader
 }
 
-unit updatedb;
+unit UpdateDBThread;
 
 {$mode delphi}
 

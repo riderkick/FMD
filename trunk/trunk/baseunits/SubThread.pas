@@ -1,22 +1,22 @@
 {
-        File: subthreads.pas
+        File: SubThread.pas
         License: GPLv2
         This unit is a part of Free Manga Downloader
 }
 
-unit subthreads;
+unit SubThread;
 
 {$mode delphi}
 
 interface
 
 uses
-  Classes, SysUtils, Dialogs, Controls, IniFiles, baseunit, data, fgl, downloads,
-  Graphics, Process, lclintf;
+  Classes, SysUtils, Dialogs, Controls, IniFiles, baseunit, data, fgl, DownloadsManager,
+  Graphics, Process, lclintf, FMDThread;
 
 type
   // some tasks will be done by SubThread
-  TSubThread = class(TThread)
+  TSubThread = class(TFMDThread)
   protected
     FIsLoaded: Integer;
     FURL     : String;
@@ -39,9 +39,7 @@ type
     mangaListPos: Integer;
     cover       : TPicture;
     isHasCover,
-    isCanStop,
-    isTerminated,
-    isSuspended : Boolean;
+    isCanStop   : Boolean;
     OnShowInformation: procedure of object;
 
     fNote, fNoteForThisRevision,
@@ -59,7 +57,7 @@ type
 implementation
 
 uses
-  mainunit, logform, fileutil, silentthreads;
+  mainunit, logform, fileutil, SilentThread;
 
 var
   LRequireRevision: Cardinal = 1;
@@ -283,9 +281,9 @@ procedure   TSubThread.CallMainFormPopSilentThreadQueue;
 var
   meta: TSilentThreadMeta;
 begin
-  if silentthreads.SilentThreadQueue.Count = 0 then
+  if SilentThread.SilentThreadQueue.Count = 0 then
     exit;
-  meta:= TSilentThreadMeta(silentthreads.SilentThreadQueue.Pop);
+  meta:= TSilentThreadMeta(SilentThread.SilentThreadQueue.Pop);
   if meta <> nil then
   begin
     meta.Run;

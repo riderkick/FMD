@@ -290,11 +290,11 @@ object MainForm: TMainForm
       end
       object tsDownloadFilter: TTabSheet
         Caption = '>>'
-        ClientHeight = 427
+        ClientHeight = 434
         ClientWidth = 185
         object tvDownloadFilter: TTreeView
           Left = 0
-          Height = 427
+          Height = 434
           Top = 0
           Width = 185
           Align = alClient
@@ -306,13 +306,12 @@ object MainForm: TMainForm
           OnSelectionChanged = tvDownloadFilterSelectionChanged
           Options = [tvoAutoExpand, tvoAutoItemHeight, tvoHideSelection, tvoKeepCollapsedNodes, tvoReadOnly, tvoShowButtons, tvoShowLines, tvoShowRoot, tvoToolTips, tvoThemedDraw]
           Items.Data = {
-            F9FFFFFF020002000000040000000400000004000000FFFFFFFF000000000000
-            0000000D000000416C6C20646F776E6C6F616473040000000400000004000000
-            FFFFFFFF0300000000000000010700000046696C746572730500000005000000
-            05000000FFFFFFFF00000000000000000009000000436F6D706C657465640600
-            00000600000006000000FFFFFFFF0000000000000000000B000000496E207072
-            6F6772657373070000000700000007000000FFFFFFFF00000000000000000007
-            00000053746F70706564
+            F9FFFFFF020001000000040000000400000004000000FFFFFFFF030000000000
+            0000010D000000416C6C20646F776E6C6F616473050000000500000005000000
+            FFFFFFFF00000000000000000009000000436F6D706C65746564060000000600
+            000006000000FFFFFFFF0000000000000000000B000000496E2070726F677265
+            7373070000000700000007000000FFFFFFFF0000000000000000000700000053
+            746F70706564
           }
         end
       end
@@ -323,11 +322,11 @@ object MainForm: TMainForm
     Height = 464
     Top = 32
     Width = 624
-    ActivePage = tsOption
+    ActivePage = tsDownload
     Align = alClient
     Font.Style = [fsBold]
     ParentFont = False
-    TabIndex = 4
+    TabIndex = 0
     TabOrder = 1
     OnChange = pcMainChange
     object tsDownload: TTabSheet
@@ -392,32 +391,33 @@ object MainForm: TMainForm
         OnFreeNode = vtDownloadFreeNode
         OnGetText = vtDownloadGetText
         OnGetHint = vtDownloadGetHint
+        OnHeaderClick = vtDownloadHeaderClick
         OnInitNode = vtDownloadInitNode
       end
     end
     object tsInformation: TTabSheet
       Caption = 'Manga Infos'
-      ClientHeight = 432
-      ClientWidth = 612
+      ClientHeight = 436
+      ClientWidth = 616
       object sbInformation: TScrollBox
         Left = 0
-        Height = 432
+        Height = 436
         Top = 0
-        Width = 612
-        HorzScrollBar.Page = 608
-        VertScrollBar.Page = 428
+        Width = 616
+        HorzScrollBar.Page = 612
+        VertScrollBar.Page = 432
         Align = alClient
-        ClientHeight = 428
-        ClientWidth = 608
+        ClientHeight = 432
+        ClientWidth = 612
         TabOrder = 0
         object pnInfomation: TPanel
           Left = 0
           Height = 234
           Top = 0
-          Width = 608
+          Width = 612
           Align = alTop
           ClientHeight = 234
-          ClientWidth = 608
+          ClientWidth = 612
           ParentFont = False
           TabOrder = 0
           object imCover: TImage
@@ -433,7 +433,7 @@ object MainForm: TMainForm
             Left = 175
             Height = 216
             Top = 8
-            Width = 428
+            Width = 432
             Anchors = [akTop, akLeft, akRight, akBottom]
             HideSelection = False
             ParentFont = False
@@ -453,23 +453,23 @@ object MainForm: TMainForm
           Left = 0
           Height = 5
           Top = 234
-          Width = 608
+          Width = 612
           Align = alTop
           ResizeAnchor = akTop
         end
         object pnChapterList: TPanel
           Left = 0
-          Height = 189
+          Height = 193
           Top = 239
-          Width = 608
+          Width = 612
           Align = alClient
-          ClientHeight = 189
-          ClientWidth = 608
+          ClientHeight = 193
+          ClientWidth = 612
           TabOrder = 2
           object edSaveTo: TLabeledEdit
             Left = 8
             Height = 23
-            Top = 127
+            Top = 131
             Width = 311
             Anchors = [akLeft, akBottom]
             EditLabel.AnchorSideLeft.Control = edSaveTo
@@ -478,7 +478,7 @@ object MainForm: TMainForm
             EditLabel.AnchorSideBottom.Control = edSaveTo
             EditLabel.Left = 8
             EditLabel.Height = 15
-            EditLabel.Top = 109
+            EditLabel.Top = 113
             EditLabel.Width = 311
             EditLabel.Caption = 'Save to'
             EditLabel.ParentColor = False
@@ -489,7 +489,7 @@ object MainForm: TMainForm
           object btDownload: TBitBtn
             Left = 367
             Height = 30
-            Top = 120
+            Top = 124
             Width = 96
             Anchors = [akLeft, akBottom]
             Caption = 'Download'
@@ -499,7 +499,7 @@ object MainForm: TMainForm
           object btBrowse: TBitBtn
             Left = 319
             Height = 23
-            Top = 127
+            Top = 131
             Width = 27
             Anchors = [akLeft, akBottom]
             Caption = '...'
@@ -509,7 +509,7 @@ object MainForm: TMainForm
           object cbAddAsStopped: TCheckBox
             Left = 8
             Height = 19
-            Top = 155
+            Top = 159
             Width = 214
             Anchors = [akLeft, akBottom]
             Caption = 'Add to download list as stopped task'
@@ -520,7 +520,7 @@ object MainForm: TMainForm
           object cbAddToFavorites: TCheckBox
             Left = 311
             Height = 19
-            Top = 155
+            Top = 159
             Width = 106
             Anchors = [akLeft, akBottom]
             Caption = 'Add to Favorites'
@@ -530,7 +530,7 @@ object MainForm: TMainForm
           object btReadOnline: TButton
             Left = 471
             Height = 30
-            Top = 120
+            Top = 124
             Width = 96
             Anchors = [akLeft, akBottom]
             Caption = 'Read online'
@@ -539,9 +539,9 @@ object MainForm: TMainForm
           end
           object clbChapterList: TVirtualStringTree
             Left = 8
-            Height = 88
+            Height = 92
             Top = 7
-            Width = 559
+            Width = 563
             Anchors = [akTop, akLeft, akRight, akBottom]
             Colors.UnfocusedSelectionColor = clHighlight
             DefaultText = 'Node'
@@ -561,7 +561,7 @@ object MainForm: TMainForm
             OnInitNode = clbChapterListInitNode
           end
           object btChecks: TBitBtn
-            Left = 573
+            Left = 577
             Height = 30
             Top = 7
             Width = 30
@@ -2271,6 +2271,7 @@ object MainForm: TMainForm
         FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
         FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00
       }
+      Visible = False
       OnClick = miUpClick
     end
     object miDown: TMenuItem
@@ -2311,10 +2312,12 @@ object MainForm: TMainForm
         FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
         FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00
       }
+      Visible = False
       OnClick = miDownClick
     end
     object MenuItem2: TMenuItem
       Caption = '-'
+      Visible = False
     end
     object miDownloadStop: TMenuItem
       Caption = 'Stop'
@@ -2917,7 +2920,7 @@ object MainForm: TMainForm
     left = 80
     top = 144
     Bitmap = {
-      4C69080000001000000010000000000000000000000000000000000000000000
+      4C69090000001000000010000000000000000000000000000000000000000000
       000089542E004F2B15077C583E1D826046216341290CFFFFFF00090100000000
       0000000000000000000000000000000000000000000000000000704A2F00532A
       0E04A3877049C5AD99ABD5BDA8D8D6BCA4DDC7AA91B9A5856C59603C23077653
@@ -3167,6 +3170,38 @@ object MainForm: TMainForm
       CDFF0000CDFF0000CDFF0000CDFF0000CDFF0000CDFF0000CDFF0000CDFF0000
       00000000000000000000000000000000000000000000000000000000CDFF0000
       CDFF0000CDFF0000CDFF0000CDFF0000CDFF0000CDFF0000CDFF0000CDFF0000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      000000000000FF000022FF0000FFFF0000FFFF0000FFFF000022000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      000000000000FF0000FFFF0300FFFF0000FFFF0000FFFF0000FF000000000000
+      0000FF0000060000000000000000000000000000000000000000000000000000
+      0000FF00000BFF0000FFFF0100FFFF0000FFFF0200FFFF0000FF00000000FF00
+      000200000000000000000000000000000000000000000000000000000000FF00
+      000800000000FF0000FFFF0000FFFF0200FFFF0B00FEFF0000FFFF0000030000
+      000000000000000000000000000000000000000000000000000000000000FF00
+      000400000000FF000022FF0000FFFF0000FFFF0000FFFF000022000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      000000000000FF00000B00000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

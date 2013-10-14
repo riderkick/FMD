@@ -27,6 +27,7 @@ type
   private
     { private declarations }
     procedure DMDHandle;
+    procedure FMDHandle;
 
     procedure Run;
   public
@@ -36,7 +37,7 @@ type
 implementation
 
 uses
-  mainunit, silentthreads;
+  mainunit, SilentThread;
 
 {$R *.lfm}
 
@@ -123,10 +124,16 @@ begin
   unimportedMangas.Free;
 end;
 
+procedure TImportFavorites.FMDHandle;
+begin
+  MainForm.favorites.MergeWith(CorrectFilePath(edPath.Text) + 'works/favorites.ini');
+end;
+
 procedure TImportFavorites.Run;
 begin
   case cbSoftware.ItemIndex of
     0: DMDHandle;
+    1: FMDHandle;
   end;
 
   if MainForm.silentThreadCount > 0 then

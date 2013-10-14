@@ -4,14 +4,15 @@
         This unit is a part of Free Manga Downloader
 }
 
-unit downloads;
+unit DownloadsManager;
 
 {$mode delphi}
 
 interface
 
 uses
-  Classes, SysUtils, IniFiles, baseunit, data, fgl, zip, ExtCtrls, Graphics;
+  Classes, SysUtils, IniFiles, baseunit, data, fgl, zip, ExtCtrls, Graphics,
+  FMDThread, dateutils;
 
 type
   TDownloadManager = class;
@@ -19,8 +20,14 @@ type
   TTaskThread = class;
 
   // this class will replace the old TDownloadThread
-  TDownloadThread = class(TThread)
+  TDownloadThread = class(TFMDThread)
   protected
+    parse        : TStringList;
+    workPtr      : Cardinal;
+
+    FSortColumn  : Cardinal;
+    FAnotherURL  : String;
+
     // wait for changing directoet completed
     procedure   SetChangeDirectoryFalse;
     procedure   SetChangeDirectoryTrue;
@@ -34,24 +41,26 @@ type
     procedure   OnTag(tag: String);
     procedure   OnText(text: String);
   public
-    anotherURL    : String;
     checkStyle    : Cardinal;
 
-    Terminated2,
-    isTerminated,
-    isSuspended   : Boolean;
+    Terminated2   : Boolean;
+
     // ID of the site
-    workPtr       : Cardinal;
     manager       : TTaskThread;
-    parse         : TStringList;
+
     constructor Create;
     destructor  Destroy; override;
+
+    property    SortColumn: Cardinal read FSortColumn write FSortColumn;
+    property    AnotherURL: String read FAnotherURL write FAnotherURL;
   end;
 
   TDownloadThreadList = TFPGList<TDownloadThread>;
 
-  TTaskThread = class(TThread)
+  TTaskThread = class(TFMDThread)
   protected
+    FAnotherURL  : String;
+
     procedure   CheckOut;
     procedure   CallMainFormCompressRepaint;
     procedure   CallMainFormRepaint;
@@ -61,11 +70,6 @@ type
     // show notification when download completed
     procedure   ShowBaloon;
   public
-    anotherURL : String;
-
-    isTerminated,
-    isSuspended: Boolean;
-
     Flag: Cardinal;
     // container (for storing information)
     container  : TTaskThreadContainer;
@@ -75,6 +79,8 @@ type
     constructor Create;
     destructor  Destroy; override;
     procedure   Stop(const check: Boolean = TRUE);
+
+    property    AnotherURL: String read FAnotherURL write FAnotherURL;
   end;
 
   TTaskThreadContainer = class
@@ -108,6 +114,9 @@ type
 
   TDownloadManager = class(TObject)
   private
+    FSortDirection: Boolean;
+    FSortColumn   : Cardinal;
+
   public
     isRunningBackup,
     isFinishTaskAccessed,
@@ -170,6 +179,12 @@ type
     procedure   RemoveTask(const taskID: Cardinal);
     // Remove all finished tasks
     procedure   RemoveAllFinishedTasks;
+
+    // sorting
+    procedure   Sort(const AColumn: Cardinal);
+
+    property    SortDirection: Boolean read FSortDirection write FSortDirection;
+    property    SortColumn: Cardinal read FSortColumn write FSortColumn;
   end;
 
 implementation
@@ -815,8 +830,8 @@ var
     l:= TStringList.Create;
     parse:= TStringList.Create;
     s:= DecodeUrl(WebsiteRoots[MANGAPANDA_ID,1] + URL);
-    if (Pos('.html', URL) > 0) AND (Pos(SEPERATOR, URL) > 0) then
-      s:= StringReplace(s, SEPERATOR, '-1/', []);
+    if (Pos('.html', URL) > 0) AND (Pos(SEPERATOR2, URL) > 0) then
+      s:= StringReplace(s, SEPERATOR2, '-1/', []);
     Result:= GetPage(TObject(l),
                      s,
                      manager.container.manager.retryConnect);
@@ -2418,10 +2433,10 @@ var
   begin
     l:= TStringList.Create;
 
-    if (Pos('.html', URL) > 0) AND (Pos(SEPERATOR, URL) > 0) then
+    if (Pos('.html', URL) > 0) AND (Pos(SEPERATOR2, URL) > 0) then
     begin
       s:= DecodeUrl(WebsiteRoots[MANGAPANDA_ID,1] + URL);
-      s:= StringReplace(s, SEPERATOR, '-' + IntToStr(workPtr+1) + '/', [])
+      s:= StringReplace(s, SEPERATOR2, '-' + IntToStr(workPtr+1) + '/', [])
     end
     else
       s:= DecodeUrl(WebsiteRoots[MANGAPANDA_ID,1] + URL + '/' + IntToStr(workPtr+1));
@@ -4884,7 +4899,6 @@ begin
   containers.Items[id1]:= containers.Items[id2];
   containers.Items[id2]:= tmp;
   Result:= TRUE;
-  MainForm.vtDownloadFilters;
 end;
 
 // move a task down
@@ -4971,6 +4985,87 @@ begin
     else
       Inc(i);
   until i >= containers.Count;
+end;
+
+procedure   TDownloadManager.Sort(const AColumn: Cardinal);
+  function  GetStr(const ARow: Cardinal): String;
+  var
+    tmp: Int64;
+    dt : TDateTime;
+  begin
+    case AColumn of
+      0: Result:= containers.Items[ARow].downloadInfo.title;
+      3: Result:= containers.Items[ARow].downloadInfo.Website;
+      4: Result:= containers.Items[ARow].downloadInfo.SaveTo;
+      5: begin
+           Result:= containers.Items[ARow].downloadInfo.dateTime;
+           TryStrToDateTime(Result, dt);
+           tmp:= DateTimeToUnix(dt);
+           Result:= IntToStr(tmp);
+         end;
+    end;
+  end;
+
+  procedure QSort(L, R: Cardinal);
+  var i, j: Cardinal;
+         X: String;
+  begin
+    X:= GetStr((L+R) div 2);
+    i:= L;
+    j:= R;
+    while i<=j do
+    begin
+      case sortDirection of
+        TRUE:
+          begin
+            case AColumn of
+              5:
+                begin
+                  while StrToInt(GetStr(i)) < StrToInt(X) do Inc(i);
+                  while StrToInt(GetStr(j)) > StrToInt(X) do Dec(j);
+                end
+              else
+                begin
+                  while StrComp(PChar(GetStr(i)), PChar(X))<0 do Inc(i);
+                  while StrComp(PChar(GetStr(j)), PChar(X))>0 do Dec(j);
+                end;
+            end;
+          end;
+        FALSE:
+          begin
+            case AColumn of
+              5:
+                begin
+                  while StrToInt(GetStr(i)) > StrToInt(X) do Inc(i);
+                  while StrToInt(GetStr(j)) < StrToInt(X) do Dec(j);
+                end
+              else
+                begin
+                  while StrComp(PChar(GetStr(i)), PChar(X))>0 do Inc(i);
+                  while StrComp(PChar(GetStr(j)), PChar(X))<0 do Dec(j);
+                end;
+            end;
+          end;
+      end;
+      if i<=j then
+      begin
+        Swap(i, j);
+        Inc(i);
+        if j > 0 then
+          Dec(j);
+      end;
+    end;
+    if L < j then QSort(L, j);
+    if i < R then QSort(i, R);
+  end;
+
+var
+  i: Cardinal;
+
+begin
+  sortColumn:= AColumn;
+  QSort(0, containers.Count-1);
+  MainForm.vtDownloadFilters;
 end;
 
 end.
