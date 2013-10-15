@@ -1,26 +1,36 @@
 object MainForm: TMainForm
   Left = 357
-  Height = 520
+  Height = 502
   Top = 34
   Width = 819
   Align = alBottom
   Caption = 'Free Manga Downloader'
-  ClientHeight = 520
+  ClientHeight = 502
   ClientWidth = 819
   OnClose = FormClose
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   OnWindowStateChange = FormWindowStateChange
   LCLVersion = '1.3'
+  object spMainSplitter: TSplitter
+    AnchorSideRight.Control = pcMain
+    Left = 195
+    Height = 502
+    Top = 8
+    Width = 5
+    Align = alNone
+    Anchors = [akTop, akLeft, akBottom]
+    OnMoved = spMainSplitterMoved
+  end
   object pnMainLeft: TPanel
     AnchorSideRight.Control = spMainSplitter
     Left = 0
-    Height = 464
-    Top = 32
+    Height = 470
+    Top = 8
     Width = 195
     Align = alLeft
     Anchors = [akTop, akLeft, akRight, akBottom]
-    ClientHeight = 464
+    ClientHeight = 470
     ClientWidth = 195
     TabOrder = 0
     object pnLeftBtDummy: TBitBtn
@@ -35,7 +45,7 @@ object MainForm: TMainForm
     end
     object pcLeft: TPageControl
       Left = 1
-      Height = 462
+      Height = 468
       Top = 1
       Width = 193
       ActivePage = tsMangaList
@@ -44,7 +54,7 @@ object MainForm: TMainForm
       TabOrder = 0
       object tsMangaList: TTabSheet
         Caption = 'Manga List'
-        ClientHeight = 434
+        ClientHeight = 440
         ClientWidth = 185
         object lbMode: TLabel
           Left = 8
@@ -118,7 +128,7 @@ object MainForm: TMainForm
         end
         object vtMangaList: TVirtualStringTree
           Left = 3
-          Height = 336
+          Height = 342
           Hint = 'test'
           Top = 88
           Width = 176
@@ -319,8 +329,8 @@ object MainForm: TMainForm
   end
   object pcMain: TPageControl
     Left = 195
-    Height = 464
-    Top = 32
+    Height = 470
+    Top = 8
     Width = 624
     ActivePage = tsDownload
     Align = alClient
@@ -331,11 +341,11 @@ object MainForm: TMainForm
     OnChange = pcMainChange
     object tsDownload: TTabSheet
       Caption = 'Downloads'
-      ClientHeight = 436
+      ClientHeight = 442
       ClientWidth = 616
       object vtDownload: TVirtualStringTree
         Left = 0
-        Height = 436
+        Height = 442
         Top = 0
         Width = 616
         Align = alClient
@@ -397,42 +407,42 @@ object MainForm: TMainForm
     end
     object tsInformation: TTabSheet
       Caption = 'Manga Infos'
-      ClientHeight = 436
+      ClientHeight = 450
       ClientWidth = 616
       object sbInformation: TScrollBox
         Left = 0
-        Height = 436
+        Height = 450
         Top = 0
         Width = 616
         HorzScrollBar.Page = 612
-        VertScrollBar.Page = 432
+        VertScrollBar.Page = 446
         Align = alClient
-        ClientHeight = 432
+        ClientHeight = 446
         ClientWidth = 612
         TabOrder = 0
         object pnInfomation: TPanel
           Left = 0
-          Height = 234
+          Height = 262
           Top = 0
           Width = 612
           Align = alTop
-          ClientHeight = 234
+          ClientHeight = 262
           ClientWidth = 612
           ParentFont = False
           TabOrder = 0
           object imCover: TImage
             AnchorSideTop.Side = asrCenter
             AnchorSideBottom.Side = asrCenter
-            Left = 7
+            Left = 9
             Height = 216
-            Top = 8
+            Top = 38
             Width = 154
             Stretch = True
           end
           object rmInformation: TRichMemo
             Left = 175
             Height = 216
-            Top = 8
+            Top = 38
             Width = 432
             Anchors = [akTop, akLeft, akRight, akBottom]
             HideSelection = False
@@ -442,34 +452,120 @@ object MainForm: TMainForm
             TabOrder = 0
           end
           object pbWait: TPaintBox
-            Left = 8
+            Left = 9
             Height = 218
-            Top = 8
+            Top = 38
             Width = 153
+          end
+          object edURL: TEdit
+            Left = 8
+            Height = 23
+            Top = 6
+            Width = 567
+            Anchors = [akTop, akLeft, akRight]
+            TabOrder = 1
+          end
+          object btDonate: TImage
+            Cursor = crHandPoint
+            Left = 8
+            Height = 21
+            Top = 14
+            Width = 75
+            Anchors = [akTop, akRight]
+            OnClick = btDonateClick
+            Picture.Data = {
+              1754506F727461626C654E6574776F726B47726170686963C306000089504E47
+              0D0A1A0A0000000D4948445200000048000000120802000000779A0F81000006
+              8A49444154789CD55769505367147D24210B1016092221402440901D8140404B
+              425804041D704305DC10375A772C3AB6B642D5628B5371CAD2322A428B82226A
+              454541A8A82CAD0AB28A08222121812282015EE87D093A5395FC60FA873767DE
+              DC7BBF73CF77CFDB3241C6D13199B8495A9628CC0D1566FB09CFFA4E57C0F0B9
+              A1D2BB49327133984264A2C6DEA2E8C1F2CFD1CE73A8B000ED06E44FCF201F2C
+              0C96C7F516AD91891B1169E9D76FFEDC229716CB07EEC8076ECB074ADE9DA75D
+              701BB3202D7E53B1595AF60D22CCF6469F1F978BF326C39BCE733D8DBFBCC3AF
+              BDCD59C35D392AF8FF0BDEBECA9D722FDA96DC93E383F49C7146DB12E5DD1968
+              773ADA9DF1717035FB8B25219CA54A8472568673776F0DACBC9A30D695A6A26B
+              CAC150FBA9B28BF13F1F8B9EBA4E5BA2F0CC5C30E688B624A02F8E4F8694438B
+              91FF1E389C9A8B83E9CDDCCD2ABAA68C9DB17C73339A97EBECA98BB4248029A4
+              27DB116D8A439F1F40DB14F82848F92A40E92790C73A12CFF39F3F9B4C22401A
+              EACBEE7AB0030803F5F18F8A375FCE8C28485B7E376FADB07AD798A2BDA1646B
+              45FEBA47D73775546EBF7136F262FA8AA7B7B6CAE0223E3F30F8741FD4AF9F5E
+              7DFED4B2C28C88F2F3EB44B5BB475AF643D1D8900AE2B696331F14C6886B7703
+              59F268CFC3C298C2CC085028BFB0EEA562D34F8E3A1134C5812930662BAF5B2A
+              6F88421BA2E40A7C10A424B8298D1DDCEA0895BAA28576163A909AD1A9350521
+              92872B8FECF5B466E9E3716A70E850496BC2ED9E5C0907E6AA5073AA16D1718E
+              41309FA541518755CFB9F4CABC50D04C3DE4CD36D727AAE3A18B80C741D7F6B5
+              4ECF6E2DF1F130021910C7E3D5CC4DB42FA5F2FBAB576D5AE5C49845051A01AF
+              364397B2C8CFB2EDF6F24F8E3A11D42D05538828DB72BCC67DBCC663329CD8C3
+              541AFB2A9601E9702587E7A20DA926057F37D336EF285B4F9B88DD4F4FEDF58B
+              687A543C511DB76D39BDAFCC2D5C3003EAEA049C8921D1CC880803C352529CD9
+              E843776F575DAA26DE99AD71F907566CB80189A866328B949FCCDEB0D8804CC4
+              419796062EC84BE7769ACDC97D2C50D0A4E00EC6189D8C370529D0D9B6C278AC
+              6AD281C18E28DB0A11E5B0D1C7EE2A90126F3671C73619433A54CDE1B9298DE1
+              4AB36C162BA6D7D2C0BF7EE036FA1767C5027D48D94CCAA37C87305F6C09EE49
+              C74DE71B19734C8D4890EE8C321AAEE6F496BBDC3F67FB7BB2E5AE28233B1605
+              38BA5442D66116E89B33309ABBBD16C4A0F9990B552148FE7E9769EA7EA6A713
+              963A5869B45C75543133984244B9D6683D570552BE9C3D616C0B03D2862B4EF6
+              561A90320C89D5E71D045CECB134D0531F7BC245EBB81B971942CA3426D58231
+              BF19CA1BFBF66F8F7BB9F616A664CC5834BDFF212766C94C3323920E151FE4AD
+              E7E7A94B21E374B509594916A06F6E82D13860AC9E2BA9E47838624E80E96CA3
+              E9EEA8A5C4F2405AD3356715338B7EB34644793668D37C154839C0521AE37BE8
+              ECDF6CE2E7A54B26614F4B888FFECB0AF7B8286388E1E9BF936DFFACC48DEB8C
+              CD31CF55A7B5C42D2C808619D3C0CBEAE7DD3BEF646146C18CAD35AE2A702210
+              B017695B24BDBD8C737807934252183B6205DB59B3B0AB66C5A4881E7848ABB9
+              E10A1173537251BA6D6DE1DCCC24CB8C44CBD21C87C1C75E2A66065388E882AD
+              BC8DA702270E5A7EF0B95757579BE7A65B9E3757FE8C5757CC011B5081D79D48
+              C4C66532C8677FB4196DE1852D309830D6CCAB2C70B1602A8C6D30692C71D7D3
+              C1BEABA67452105FDF844E86774F5B8B90F11D1B04C3020D149F0FC49046BC70
+              CAAEAAD0D57816092A40B6636BC22F0D558B90BCDF62AC55D5CC600AE929B097
+              770854A038C7397A293D7AD90436453212F7593CBEE581BEC05647DB05357FB8
+              27C4CD5EE84B0BE4EBAF59462FCC721A6AE1C3D24FDFB281BF71350338AD155E
+              7BB730412737D55ED6E6937E74CE9260C3001E2D36929176CC66C746B3F511C6
+              574E3B8166E90597D5E146FEDEFA70AE2870059DC22CC7D8D58C20016D019F06
+              C59389D6C3AD3EAA67065388B0808B7605A0AF26C550BB9FA441F01EFFB4F88E
+              76FA7FC079D3E6F7B296D751C3933608DE175FB7FA025FDA8855463AFDFB9BB0
+              1498B09DACC35FF898FFA286D7D72418E90CE86FC69606154BA39D01E27A9F17
+              D5DE40186EF783DEB19718A153A1DFFBD467E4A3DD3F445740CFA5F948DFFDA4
+              A17A815C1C2C172F7C779ED641F0509D407A3F0991F5364BCAD60F35F88EF785
+              8CF72B307D83BE10302229DB20933423F09F6C44D2DA5F952CBA162C2EF69DD6
+              000BFDD5C7C1CEB87CEC5FC7292974CE8422DD0000000049454E44AE426082
+            }
+            Stretch = True
+            Visible = False
+          end
+          object btURL: TBitBtn
+            Left = 567
+            Height = 23
+            Top = 6
+            Width = 40
+            Anchors = [akTop, akRight]
+            Caption = '>>'
+            OnClick = btURLClick
+            TabOrder = 2
           end
         end
         object spInfos: TSplitter
           Cursor = crVSplit
           Left = 0
-          Height = 5
-          Top = 234
+          Height = 6
+          Top = 262
           Width = 612
           Align = alTop
           ResizeAnchor = akTop
         end
         object pnChapterList: TPanel
           Left = 0
-          Height = 193
-          Top = 239
+          Height = 178
+          Top = 268
           Width = 612
           Align = alClient
-          ClientHeight = 193
+          ClientHeight = 178
           ClientWidth = 612
           TabOrder = 2
           object edSaveTo: TLabeledEdit
             Left = 8
             Height = 23
-            Top = 131
+            Top = 116
             Width = 311
             Anchors = [akLeft, akBottom]
             EditLabel.AnchorSideLeft.Control = edSaveTo
@@ -478,7 +574,7 @@ object MainForm: TMainForm
             EditLabel.AnchorSideBottom.Control = edSaveTo
             EditLabel.Left = 8
             EditLabel.Height = 15
-            EditLabel.Top = 113
+            EditLabel.Top = 98
             EditLabel.Width = 311
             EditLabel.Caption = 'Save to'
             EditLabel.ParentColor = False
@@ -489,7 +585,7 @@ object MainForm: TMainForm
           object btDownload: TBitBtn
             Left = 367
             Height = 30
-            Top = 124
+            Top = 109
             Width = 96
             Anchors = [akLeft, akBottom]
             Caption = 'Download'
@@ -499,7 +595,7 @@ object MainForm: TMainForm
           object btBrowse: TBitBtn
             Left = 319
             Height = 23
-            Top = 131
+            Top = 116
             Width = 27
             Anchors = [akLeft, akBottom]
             Caption = '...'
@@ -509,7 +605,7 @@ object MainForm: TMainForm
           object cbAddAsStopped: TCheckBox
             Left = 8
             Height = 19
-            Top = 159
+            Top = 144
             Width = 214
             Anchors = [akLeft, akBottom]
             Caption = 'Add to download list as stopped task'
@@ -520,7 +616,7 @@ object MainForm: TMainForm
           object cbAddToFavorites: TCheckBox
             Left = 311
             Height = 19
-            Top = 159
+            Top = 144
             Width = 106
             Anchors = [akLeft, akBottom]
             Caption = 'Add to Favorites'
@@ -530,7 +626,7 @@ object MainForm: TMainForm
           object btReadOnline: TButton
             Left = 471
             Height = 30
-            Top = 124
+            Top = 109
             Width = 96
             Anchors = [akLeft, akBottom]
             Caption = 'Read online'
@@ -539,7 +635,7 @@ object MainForm: TMainForm
           end
           object clbChapterList: TVirtualStringTree
             Left = 8
-            Height = 92
+            Height = 77
             Top = 7
             Width = 563
             Anchors = [akTop, akLeft, akRight, akBottom]
@@ -662,27 +758,27 @@ object MainForm: TMainForm
     end
     object tsFilter: TTabSheet
       Caption = 'Filter'
-      ClientHeight = 436
+      ClientHeight = 450
       ClientWidth = 616
       object sbFilter: TScrollBox
         Left = 0
-        Height = 436
+        Height = 450
         Top = 0
         Width = 616
-        HorzScrollBar.Page = 595
-        VertScrollBar.Page = 432
+        HorzScrollBar.Page = 612
+        VertScrollBar.Page = 446
         Align = alClient
-        ClientHeight = 432
-        ClientWidth = 595
+        ClientHeight = 446
+        ClientWidth = 612
         TabOrder = 0
         object pnGenres: TPanel
           Left = 0
           Height = 248
           Top = 0
-          Width = 595
+          Width = 612
           Align = alTop
           ClientHeight = 248
-          ClientWidth = 595
+          ClientWidth = 612
           TabOrder = 0
           object CheckBox1: TCheckBox
             Left = 23
@@ -1103,10 +1199,10 @@ object MainForm: TMainForm
           Left = 0
           Height = 192
           Top = 248
-          Width = 595
+          Width = 612
           Align = alTop
           ClientHeight = 192
-          ClientWidth = 595
+          ClientWidth = 612
           ParentFont = False
           TabOrder = 1
           object rbOne: TRadioButton
@@ -1307,11 +1403,11 @@ object MainForm: TMainForm
     end
     object tsFavorites: TTabSheet
       Caption = 'Favorites'
-      ClientHeight = 436
+      ClientHeight = 450
       ClientWidth = 616
       object vtFavorites: TVirtualStringTree
         Left = 0
-        Height = 348
+        Height = 362
         Top = 0
         Width = 616
         Align = alTop
@@ -1357,7 +1453,7 @@ object MainForm: TMainForm
       object btFavoritesCheckNewChapter: TBitBtn
         Left = 33
         Height = 40
-        Top = 356
+        Top = 370
         Width = 555
         Anchors = [akLeft, akRight, akBottom]
         Caption = 'Check for new chapter'
@@ -1367,7 +1463,7 @@ object MainForm: TMainForm
       object btFavoritesImport: TBitBtn
         Left = 33
         Height = 24
-        Top = 402
+        Top = 416
         Width = 555
         Anchors = [akLeft, akRight, akBottom]
         Caption = 'Import list ...'
@@ -2105,20 +2201,10 @@ object MainForm: TMainForm
       end
     end
   end
-  object spMainSplitter: TSplitter
-    AnchorSideRight.Control = pcMain
-    Left = 195
-    Height = 520
-    Top = 8
-    Width = 5
-    Align = alNone
-    Anchors = [akTop, akLeft, akBottom]
-    OnMoved = spMainSplitterMoved
-  end
   object sbMain: TStatusBar
     Left = 0
     Height = 24
-    Top = 496
+    Top = 478
     Width = 819
     Panels = <    
       item
@@ -2131,99 +2217,12 @@ object MainForm: TMainForm
   end
   object pnMainTop: TPanel
     Left = 0
-    Height = 32
+    Height = 8
     Top = 0
     Width = 819
     Align = alTop
-    ClientHeight = 32
-    ClientWidth = 819
     TabOrder = 4
-    object edURL: TEdit
-      Left = 8
-      Height = 23
-      Top = 4
-      Width = 724
-      Anchors = [akTop, akLeft, akRight]
-      TabOrder = 0
-    end
-    object btURL: TBitBtn
-      Left = 740
-      Height = 21
-      Top = 6
-      Width = 75
-      Anchors = [akTop, akRight]
-      Caption = 'URL'
-      OnClick = btURLClick
-      TabOrder = 1
-    end
-    object btDonate: TImage
-      Cursor = crHandPoint
-      Left = 740
-      Height = 21
-      Top = 4
-      Width = 75
-      Anchors = [akTop, akRight]
-      OnClick = btDonateClick
-      Picture.Data = {
-        1754506F727461626C654E6574776F726B47726170686963C306000089504E47
-        0D0A1A0A0000000D4948445200000048000000120802000000779A0F81000006
-        8A49444154789CD55769505367147D24210B1016092221402440901D8140404B
-        425804041D704305DC10375A772C3AB6B642D5628B5371CAD2322A428B82226A
-        454541A8A82CAD0AB28A08222121812282015EE87D093A5395FC60FA873767DE
-        DC7BBF73CF77CFDB3241C6D13199B8495A9628CC0D1566FB09CFFA4E57C0F0B9
-        A1D2BB49327133984264A2C6DEA2E8C1F2CFD1CE73A8B000ED06E44FCF201F2C
-        0C96C7F516AD91891B1169E9D76FFEDC229716CB07EEC8076ECB074ADE9DA75D
-        701BB3202D7E53B1595AF60D22CCF6469F1F978BF326C39BCE733D8DBFBCC3AF
-        BDCD59C35D392AF8FF0BDEBECA9D722FDA96DC93E383F49C7146DB12E5DD1968
-        773ADA9DF1717035FB8B25219CA54A8472568673776F0DACBC9A30D695A6A26B
-        CAC150FBA9B28BF13F1F8B9EBA4E5BA2F0CC5C30E688B624A02F8E4F8694438B
-        91FF1E389C9A8B83E9CDDCCD2ABAA68C9DB17C73339A97EBECA98BB4248029A4
-        27DB116D8A439F1F40DB14F82848F92A40E92790C73A12CFF39F3F9B4C22401A
-        EACBEE7AB0030803F5F18F8A375FCE8C28485B7E376FADB07AD798A2BDA1646B
-        45FEBA47D73775546EBF7136F262FA8AA7B7B6CAE0223E3F30F8741FD4AF9F5E
-        7DFED4B2C28C88F2F3EB44B5BB475AF643D1D8900AE2B696331F14C6886B7703
-        59F268CFC3C298C2CC085028BFB0EEA562D34F8E3A1134C5812930662BAF5B2A
-        6F88421BA2E40A7C10A424B8298D1DDCEA0895BAA28576163A909AD1A9350521
-        92872B8FECF5B466E9E3716A70E850496BC2ED9E5C0907E6AA5073AA16D1718E
-        41309FA541518755CFB9F4CABC50D04C3DE4CD36D727AAE3A18B80C741D7F6B5
-        4ECF6E2DF1F130021910C7E3D5CC4DB42FA5F2FBAB576D5AE5C49845051A01AF
-        364397B2C8CFB2EDF6F24F8E3A11D42D05538828DB72BCC67DBCC663329CD8C3
-        541AFB2A9601E9702587E7A20DA926057F37D336EF285B4F9B88DD4F4FEDF58B
-        687A543C511DB76D39BDAFCC2D5C3003EAEA049C8921D1CC880803C352529CD9
-        E843776F575DAA26DE99AD71F907566CB80189A866328B949FCCDEB0D8804CC4
-        419796062EC84BE7769ACDC97D2C50D0A4E00EC6189D8C370529D0D9B6C278AC
-        6AD281C18E28DB0A11E5B0D1C7EE2A90126F3671C73619433A54CDE1B9298DE1
-        4AB36C162BA6D7D2C0BF7EE036FA1767C5027D48D94CCAA37C87305F6C09EE49
-        C74DE71B19734C8D4890EE8C321AAEE6F496BBDC3F67FB7BB2E5AE28233B1605
-        38BA5442D66116E89B33309ABBBD16C4A0F9990B552148FE7E9769EA7EA6A713
-        963A5869B45C75543133984244B9D6683D570552BE9C3D616C0B03D2862B4EF6
-        561A90320C89D5E71D045CECB134D0531F7BC245EBB81B971942CA3426D58231
-        BF19CA1BFBF66F8F7BB9F616A664CC5834BDFF212766C94C3323920E151FE4AD
-        E7E7A94B21E374B509594916A06F6E82D13860AC9E2BA9E47838624E80E96CA3
-        E9EEA8A5C4F2405AD3356715338B7EB34644793668D37C154839C0521AE37BE8
-        ECDF6CE2E7A54B26614F4B888FFECB0AF7B8286388E1E9BF936DFFACC48DEB8C
-        CD31CF55A7B5C42D2C808619D3C0CBEAE7DD3BEF646146C18CAD35AE2A702210
-        B017695B24BDBD8C737807934252183B6205DB59B3B0AB66C5A4881E7848ABB9
-        E10A1173537251BA6D6DE1DCCC24CB8C44CBD21C87C1C75E2A66065388E882AD
-        BC8DA702270E5A7EF0B95757579BE7A65B9E3757FE8C5757CC011B5081D79D48
-        C4C66532C8677FB4196DE1852D309830D6CCAB2C70B1602A8C6D30692C71D7D3
-        C1BEABA67452105FDF844E86774F5B8B90F11D1B04C3020D149F0FC49046BC70
-        CAAEAAD0D57816092A40B6636BC22F0D558B90BCDF62AC55D5CC600AE929B097
-        770854A038C7397A293D7AD90436453212F7593CBEE581BEC05647DB05357FB8
-        27C4CD5EE84B0BE4EBAF59462FCC721A6AE1C3D24FDFB281BF71350338AD155E
-        7BB730412737D55ED6E6937E74CE9260C3001E2D36929176CC66C746B3F511C6
-        574E3B8166E90597D5E146FEDEFA70AE2870059DC22CC7D8D58C20016D019F06
-        C59389D6C3AD3EAA67065388B0808B7605A0AF26C550BB9FA441F01EFFB4F88E
-        76FA7FC079D3E6F7B296D751C3933608DE175FB7FA025FDA8855463AFDFB9BB0
-        1498B09DACC35FF898FFA286D7D72418E90CE86FC69606154BA39D01E27A9F17
-        D5DE40186EF783DEB19718A153A1DFFBD467E4A3DD3F445740CFA5F948DFFDA4
-        A17A815C1C2C172F7C779ED641F0509D407A3F0991F5364BCAD60F35F88EF785
-        8CF72B307D83BE10302229DB20933423F09F6C44D2DA5F952CBA162C2EF69DD6
-        000BFDD5C7C1CEB87CEC5FC7292974CE8422DD0000000049454E44AE426082
-      }
-      Stretch = True
-      Visible = False
-    end
+    Visible = False
   end
   object dlgSaveTo: TSelectDirectoryDialog
     left = 80
@@ -2822,7 +2821,7 @@ object MainForm: TMainForm
     Interval = 60000
     OnTimer = tmBackupTimer
     left = 688
-    top = 72
+    top = 136
   end
   object TrayIcon: TTrayIcon
     BalloonFlags = bfInfo
@@ -2900,7 +2899,7 @@ object MainForm: TMainForm
     Interval = 48
     OnTimer = itAnimateTimer
     left = 744
-    top = 72
+    top = 136
   end
   object itCheckForChapters: TIdleTimer
     Enabled = False

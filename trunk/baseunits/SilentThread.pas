@@ -160,6 +160,7 @@ begin
     DecodeTime(Time, hh, mm, ss, ms);
     DLManager.containers.Items[pos].downloadInfo.dateTime:= IntToStr(Month)+'/'+IntToStr(Day)+'/'+IntToStr(Year)+' '+IntToStr(hh)+':'+IntToStr(mm)+':'+IntToStr(ss);
 
+    DLManager.Sort(DLManager.SortColumn);
     UpdateVtDownload;
 
     DLManager.Backup;
@@ -174,7 +175,6 @@ begin
     end;
     if s <> '' then
       DLManager.AddToDownloadedChaptersList(Info.mangaInfo.website + URL, s);
-    DLManager.Sort(DLManager.SortColumn);
   end;
 end;
 
