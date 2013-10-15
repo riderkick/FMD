@@ -23,13 +23,15 @@ type
   { TMainForm }
 
   TMainForm = class(TForm)
+    btDonate: TImage;
     btRemoveFilter: TBitBtn;
     btFavoritesImport: TBitBtn;
     btChecks: TBitBtn;
+    btURL: TBitBtn;
     cbOptionAutoRemoveCompletedManga: TCheckBox;
-    btDonate: TImage;
     cbOptionEnableLoadCover: TCheckBox;
     edOptionExternal: TEdit;
+    edURL: TEdit;
     gbOptionExternal: TGroupBox;
     lbFilterHint: TLabel;
     lbOptionExternal: TLabel;
@@ -38,11 +40,11 @@ type
     lbOptionExternalHint: TLabel;
     miOpenWith: TMenuItem;
     miOpenWith2: TMenuItem;
+    pnMainTop: TPanel;
     pnLeftBtDummy: TBitBtn;
     btVisitMyBlog: TBitBtn;
     btOptionBrowse: TBitBtn;
     btCheckVersion: TBitBtn;
-    btURL: TBitBtn;
     btFavoritesCheckNewChapter: TBitBtn;
     btBrowse: TBitBtn;
     btDownload: TBitBtn;
@@ -118,7 +120,6 @@ type
     edFilterArtists: TEdit;
     edCustomGenres: TEdit;
     edOptionCustomRename: TEdit;
-    edURL: TEdit;
     edOptionHost: TEdit;
     edOptionPass: TEdit;
     edOptionPort: TEdit;
@@ -195,7 +196,6 @@ type
     miChapterListUncheckAll: TMenuItem;
     pcLeft: TPageControl;
     pbWait: TPaintBox;
-    pnMainTop: TPanel;
     pmChapterList: TPopupMenu;
     pnOptions: TPageControl;
     pnChapterList: TPanel;
@@ -736,7 +736,7 @@ begin
         begin
           DLManager.containers.Items[i].chapterLinks.Text:= DLManager.containers.Items[j].chapterLinks.Text + DLManager.containers.Items[i].chapterLinks.Text;
           DLManager.containers.Items[i].chapterName .Text:= DLManager.containers.Items[j].chapterName .Text + DLManager.containers.Items[i].chapterName .Text;
-          DLManager.containers.Items[i].downloadInfo.dateTime:= DLManager.containers.Items[i].downloadInfo.dateTime;
+          DLManager.containers.Items[i].downloadInfo.dateTime:= DLManager.containers.Items[j].downloadInfo.dateTime;
           DLManager.RemoveTask(j);
           Dec(i);
         end;
@@ -1005,9 +1005,9 @@ begin
     vtFavorites.RootNodeCount:= favorites.Count;
   end;
 
+  DLManager.Sort(DLManager.SortColumn);
   UpdateVtDownload;
 
-  DLManager.Sort(DLManager.SortColumn);
   DLManager.Backup;
   DLManager.CheckAndActiveTask;
 
@@ -2904,8 +2904,6 @@ var
   year   : Word;
 begin
   if vtDownload.RootNodeCount = 0 then exit;
-  vtDownload.Clear;
-  vtDownload.RootNodeCount:= DLManager.containers.Count;
   xNode:= vtDownload.GetLast;
   for i:= vtDownload.RootNodeCount-1 downto 0 do
   begin
@@ -3070,7 +3068,8 @@ begin
       AddTextToInfo(infoStatus, cbFilterStatus.Items.Strings[0]+#10#13)
     else
       AddTextToInfo(infoStatus, cbFilterStatus.Items.Strings[1]+#10#13);
-    AddTextToInfo(infoLink, mangaInfo.url+#10#13);
+   // AddTextToInfo(infoLink, mangaInfo.url+#10#13);
+    edURL.Text:= mangaInfo.url;
     AddTextToInfo(infoSummary, StringBreaks(mangaInfo.summary));
     cp.X:= 0; cp.Y:= 0; CaretPos:= cp;
   end;
