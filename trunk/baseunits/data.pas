@@ -6813,7 +6813,8 @@ begin
       Inc(mangaInfo.numChapter);
       s:= GetString(parse.Strings[i], 'href="', '"');
       s:= StringReplace(s, WebsiteRoots[MANGAGO_ID,1], '', []);
-      s:= StringReplace(s+'~!@', '/1.html~!@', '/', []);
+      if Pos('/1.html', s) > 0 then
+        s:= StringReplace(s+'~!@', '/1.html~!@', '/', []);
       if s[Length(s)] <> '/' then
         s:= s+'/';
       mangaInfo.chapterLinks.Add(s);
