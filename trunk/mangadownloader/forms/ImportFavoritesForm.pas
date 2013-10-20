@@ -92,9 +92,7 @@ begin
       for j:= 0 to High(WebsiteRoots) do
       begin
         if (Pos(UpCase(WebsiteRoots[j,1]), UpCase(urlList.Strings[i])) > 0) AND
-           (Pos('comic/_/comics/double-marriage-r3713', urlList.Strings[i]) = 0) AND
-           (Pos('comic/_/comics/kokuhaku-sakano-anri-r3870', urlList.Strings[i]) = 0) AND
-           (Pos('comic/_/comics/yamada-kun-to-7-nin-no-majo-r3770', urlList.Strings[i]) = 0) then
+           (Pos('comic/_/comics/double-marriage-r3713', urlList.Strings[i]) = 0) then
         begin
           CreateAddToFavThread(
             WebsiteRoots[j,0],
@@ -127,6 +125,9 @@ end;
 procedure TImportFavorites.FMDHandle;
 begin
   MainForm.favorites.MergeWith(CorrectFilePath(edPath.Text) + 'works/favorites.ini');
+
+  MessageDlg('', stImportCompleted,
+                 mtConfirmation, [mbYes], 0)
 end;
 
 procedure TImportFavorites.Run;

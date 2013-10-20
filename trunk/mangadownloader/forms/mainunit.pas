@@ -38,6 +38,8 @@ type
     lbOptionCustomRenameHint: TLabel;
     lbOptionCustomRenameHint1: TLabel;
     lbOptionExternalHint: TLabel;
+    miDeleteTask: TMenuItem;
+    miDeleteTaskData: TMenuItem;
     miOpenWith: TMenuItem;
     miOpenWith2: TMenuItem;
     pnMainTop: TPanel;
@@ -298,6 +300,8 @@ type
     procedure itRefreshFormTimer(Sender: TObject);
     procedure itSaveDownloadedListTimer(Sender: TObject);
     procedure miChapterListHighlightClick(Sender: TObject);
+    procedure miDeleteTaskClick(Sender: TObject);
+    procedure miDeleteTaskDataClick(Sender: TObject);
     procedure miDownloadMergeClick(Sender: TObject);
     procedure miFavoritesViewInfosClick(Sender: TObject);
     procedure miHighlightNewMangaClick(Sender: TObject);
@@ -364,6 +368,7 @@ type
 
     procedure vtFavoritesInitNode(Sender: TBaseVirtualTree; ParentNode,
       Node: PVirtualNode; var InitialStates: TVirtualNodeInitStates);
+    procedure vtMangaListChange(Sender: TBaseVirtualTree; Node: PVirtualNode);
     // for search feature
     procedure vtMangaListInitSearchNode(Sender: TBaseVirtualTree; ParentNode,
       Node: PVirtualNode; var InitialStates: TVirtualNodeInitStates);
@@ -715,6 +720,81 @@ begin
   clbChapterList.Repaint;
 end;
 
+procedure TMainForm.miDeleteTaskClick(Sender: TObject);
+var
+  i    : Cardinal;
+  xNode: PVirtualNode;
+begin
+ // if NOT Assigned(vtDownload.FocusedNode) then exit;
+  if (cbOptionShowDeleteTaskDialog.Checked) AND
+     (vtDownload.SelectedCount > 0) then
+    if MessageDlg('', stDlgRemoveTask,
+                  mtConfirmation, [mbYes, mbNo], 0) = mrNo then exit;
+
+  if (vtDownload.SelectedCount = 1) AND (Assigned(vtDownload.FocusedNode)) then
+  begin
+    DLManager.RemoveTask(vtDownload.FocusedNode.Index);
+    UpdateVtDownload;
+    DLManager.Backup;
+  end
+  else
+  if (vtDownload.SelectedCount > 1) then
+  begin
+    xNode:= vtDownload.GetFirst;
+    i:= 0;
+    while i < DLManager.containers.Count do
+    begin
+      if vtDownload.Selected[xNode] then
+        DLManager.RemoveTask(i)
+      else
+        Inc(i);
+      xNode:= vtDownload.GetNext(xNode);
+    end;
+    UpdateVtDownload;
+    DLManager.Backup;
+  end;
+end;
+
+procedure TMainForm.miDeleteTaskDataClick(Sender: TObject);
+var
+  i    : Cardinal;
+  xNode: PVirtualNode;
+begin
+ // if NOT Assigned(vtDownload.FocusedNode) then exit;
+  if (cbOptionShowDeleteTaskDialog.Checked) AND
+     (vtDownload.SelectedCount > 0) then
+    if MessageDlg('', stDlgRemoveTask,
+                  mtConfirmation, [mbYes, mbNo], 0) = mrNo then exit;
+
+  if (vtDownload.SelectedCount = 1) AND (Assigned(vtDownload.FocusedNode)) then
+  begin
+    i:= vtDownload.FocusedNode.Index;
+    DeleteDirectory(DLManager.containers[i].downloadInfo.SaveTo, FALSE);
+    DLManager.RemoveTask(i);
+    UpdateVtDownload;
+    DLManager.Backup;
+  end
+  else
+  if (vtDownload.SelectedCount > 1) then
+  begin
+    xNode:= vtDownload.GetFirst;
+    i:= 0;
+    while i < DLManager.containers.Count do
+    begin
+      if vtDownload.Selected[xNode] then
+      begin
+        DeleteDirectory(DLManager.containers[i].downloadInfo.SaveTo, FALSE);
+        DLManager.RemoveTask(i)
+      end
+      else
+        Inc(i);
+      xNode:= vtDownload.GetNext(xNode);
+    end;
+    UpdateVtDownload;
+    DLManager.Backup;
+  end;
+end;
+
 procedure TMainForm.miDownloadMergeClick(Sender: TObject);
 var
   i, j: Cardinal;
@@ -1005,7 +1085,7 @@ begin
     vtFavorites.RootNodeCount:= favorites.Count;
   end;
 
-  DLManager.Sort(DLManager.SortColumn);
+  DLManager.Sort(vtDownload.Header.SortColumn);
   UpdateVtDownload;
 
   DLManager.Backup;
@@ -2114,6 +2194,9 @@ begin
     pmDownload.Items[5].Enabled:= FALSE;
     pmDownload.Items[10].Enabled:= FALSE;
     pmDownload.Items[11].Enabled:= FALSE;
+
+    pmDownload.Items[5].Items[0].Enabled:= FALSE;
+    pmDownload.Items[5].Items[1].Enabled:= FALSE;
   end
   else
   if vtDownload.SelectedCount = 1 then
@@ -2125,6 +2208,9 @@ begin
     pmDownload.Items[5].Enabled:= TRUE;
     pmDownload.Items[10].Enabled:= TRUE;
     pmDownload.Items[11].Enabled:= TRUE;
+
+    pmDownload.Items[5].Items[0].Enabled:= TRUE;
+    pmDownload.Items[5].Items[1].Enabled:= TRUE;
   end
   else
   begin
@@ -2135,6 +2221,9 @@ begin
     pmDownload.Items[5].Enabled:= TRUE;
     pmDownload.Items[10].Enabled:= FALSE;
     pmDownload.Items[11].Enabled:= FALSE;
+
+    pmDownload.Items[5].Items[0].Enabled:= TRUE;
+    pmDownload.Items[5].Items[1].Enabled:= TRUE;
   end;
 end;
 
@@ -2385,14 +2474,14 @@ begin
     else
       exit;
   end;
+  DLManager.SortDirection:= NOT DLManager.SortDirection;
   DLManager.Sort(Column);
   vtDownload.Header.SortColumn:= Column;
-  DLManager.sortDirection:= NOT DLManager.sortDirection;
-  vtDownload.Header.SortDirection:= TSortDirection(DLManager.sortDirection);
+  vtDownload.Header.SortDirection:= TSortDirection(DLManager.SortDirection);
   vtDownload.Repaint;
 
   options.WriteInteger('misc', 'SortDownloadColumn', vtDownload.Header.SortColumn);
-  options.WriteBool('misc', 'SortDownloadDirection', DLManager.sortDirection);
+  options.WriteBool('misc', 'SortDownloadDirection', DLManager.SortDirection);
 end;
 
 procedure TMainForm.vtDownloadInitNode(Sender: TBaseVirtualTree; ParentNode,
@@ -2458,9 +2547,9 @@ begin
     else
       exit;
   end;
+  favorites.sortDirection:= NOT favorites.sortDirection;
   favorites.Sort(Column);
   vtFavorites.Header.SortColumn:= Column;
-  favorites.sortDirection:= NOT favorites.sortDirection;
   vtFavorites.Header.SortDirection:= TSortDirection(favorites.sortDirection);
   UpdateVtFavorites;
 
@@ -2483,6 +2572,18 @@ begin
     data.currentChapter:= favorites.favoriteInfo[pos].currentChapter;
     data.website       := favorites.favoriteInfo[pos].website;
     data.saveTo        := favorites.favoriteInfo[pos].saveTo;
+  end;
+end;
+
+procedure TMainForm.vtMangaListChange(Sender: TBaseVirtualTree;
+  Node: PVirtualNode);
+begin
+  if (NOT isUpdating) then
+  begin
+    if vtMangaList.SelectedCount > 0 then
+      sbMain.Panels[0].Text:= Format(stSelected, [vtMangaList.SelectedCount])
+    else
+      sbMain.Panels[0].Text:= '';
   end;
 end;
 
@@ -3152,7 +3253,8 @@ begin
   favorites.sortDirection:= options.ReadBool('misc', 'SortDirection', FALSE);
 
   vtDownload.Header.SortColumn:= options.ReadInteger('misc', 'SortDownloadColumn', 0);
-  DLManager.sortDirection:= options.ReadBool('misc', 'SortDownloadDirection', FALSE);
+  DLManager.SortDirection:= options.ReadBool('misc', 'SortDownloadDirection', FALSE);
+  vtDownload.Header.SortDirection:= TSortDirection(DLManager.SortDirection);
 
   vtFavorites.Header.SortDirection:= TSortDirection(favorites.sortDirection);
 
@@ -3539,6 +3641,10 @@ begin
   miMangaListAddToFavorites.Caption:= language.ReadString(lang, 'miMangaListAddToFavoritesCaption', '');
   miHighlightNewManga.Caption:= language.ReadString(lang, 'miHighlightNewMangaCaption', '');
   miChapterListHighlight.Caption:= language.ReadString(lang, 'miChapterListHighlightCaption', '');
+
+  miDeleteTask.Caption:= language.ReadString(lang, 'miDeleteTaskCaption', '');
+  miDeleteTaskData.Caption:= language.ReadString(lang, 'miDeleteTaskDataCaption', '');
+
   miOpenFolder2.Caption  := miOpenFolder.Caption;
   miOpenWith2.Caption  := miOpenWith.Caption;
 
@@ -3614,10 +3720,13 @@ begin
   stFavoritesChecking      := language.ReadString(lang, 'stFavoritesChecking', '');
 
   stImport                 := language.ReadString(lang, 'stImport', '');
+  stImportList             := language.ReadString(lang, 'stImportList', '');
+  stImportCompleted        := language.ReadString(lang, 'stImportCompleted', '');
   stSoftware               := language.ReadString(lang, 'stSoftware', '');
   stSoftwarePath           := language.ReadString(lang, 'stSoftwarePath', '');
 
   stUpdaterCheck           := language.ReadString(lang, 'stUpdaterCheck', '');
+  stSelected               := language.ReadString(lang, 'stSelected', '');
   btCheckVersion.Caption   := stUpdaterCheck;
 
   btFavoritesImport.Caption:= language.ReadString(lang, 'btFavoritesImportCaption', '');

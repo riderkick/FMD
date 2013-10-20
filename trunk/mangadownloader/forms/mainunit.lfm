@@ -146,6 +146,7 @@ object MainForm: TMainForm
           TreeOptions.PaintOptions = [toShowButtons, toShowDropmark, toShowRoot, toThemeAware, toUseBlendedImages]
           TreeOptions.SelectionOptions = [toFullRowSelect, toMultiSelect, toRightClickSelect]
           OnBeforeCellPaint = vtMangaListBeforeCellPaint
+          OnChange = vtMangaListChange
           OnDblClick = vtMangaListDblClick
           OnFreeNode = vtMangaListFreeNode
           OnGetText = vtMangaListGetText
@@ -407,17 +408,17 @@ object MainForm: TMainForm
     end
     object tsInformation: TTabSheet
       Caption = 'Manga Infos'
-      ClientHeight = 450
+      ClientHeight = 442
       ClientWidth = 616
       object sbInformation: TScrollBox
         Left = 0
-        Height = 450
+        Height = 442
         Top = 0
         Width = 616
         HorzScrollBar.Page = 612
-        VertScrollBar.Page = 446
+        VertScrollBar.Page = 438
         Align = alClient
-        ClientHeight = 446
+        ClientHeight = 438
         ClientWidth = 612
         TabOrder = 0
         object pnInfomation: TPanel
@@ -555,17 +556,17 @@ object MainForm: TMainForm
         end
         object pnChapterList: TPanel
           Left = 0
-          Height = 178
+          Height = 170
           Top = 268
           Width = 612
           Align = alClient
-          ClientHeight = 178
+          ClientHeight = 170
           ClientWidth = 612
           TabOrder = 2
           object edSaveTo: TLabeledEdit
             Left = 8
             Height = 23
-            Top = 116
+            Top = 108
             Width = 311
             Anchors = [akLeft, akBottom]
             EditLabel.AnchorSideLeft.Control = edSaveTo
@@ -574,7 +575,7 @@ object MainForm: TMainForm
             EditLabel.AnchorSideBottom.Control = edSaveTo
             EditLabel.Left = 8
             EditLabel.Height = 15
-            EditLabel.Top = 98
+            EditLabel.Top = 90
             EditLabel.Width = 311
             EditLabel.Caption = 'Save to'
             EditLabel.ParentColor = False
@@ -585,7 +586,7 @@ object MainForm: TMainForm
           object btDownload: TBitBtn
             Left = 367
             Height = 30
-            Top = 109
+            Top = 101
             Width = 96
             Anchors = [akLeft, akBottom]
             Caption = 'Download'
@@ -595,7 +596,7 @@ object MainForm: TMainForm
           object btBrowse: TBitBtn
             Left = 319
             Height = 23
-            Top = 116
+            Top = 108
             Width = 27
             Anchors = [akLeft, akBottom]
             Caption = '...'
@@ -605,7 +606,7 @@ object MainForm: TMainForm
           object cbAddAsStopped: TCheckBox
             Left = 8
             Height = 19
-            Top = 144
+            Top = 136
             Width = 214
             Anchors = [akLeft, akBottom]
             Caption = 'Add to download list as stopped task'
@@ -616,7 +617,7 @@ object MainForm: TMainForm
           object cbAddToFavorites: TCheckBox
             Left = 311
             Height = 19
-            Top = 144
+            Top = 136
             Width = 106
             Anchors = [akLeft, akBottom]
             Caption = 'Add to Favorites'
@@ -626,7 +627,7 @@ object MainForm: TMainForm
           object btReadOnline: TButton
             Left = 471
             Height = 30
-            Top = 109
+            Top = 101
             Width = 96
             Anchors = [akLeft, akBottom]
             Caption = 'Read online'
@@ -635,7 +636,7 @@ object MainForm: TMainForm
           end
           object clbChapterList: TVirtualStringTree
             Left = 8
-            Height = 77
+            Height = 69
             Top = 7
             Width = 563
             Anchors = [akTop, akLeft, akRight, akBottom]
@@ -2231,7 +2232,7 @@ object MainForm: TMainForm
   object pmDownload: TPopupMenu
     OnPopup = pmDownloadPopup
     left = 80
-    top = 239
+    top = 240
     object miUp: TMenuItem
       Caption = 'Move up'
       Bitmap.Data = {
@@ -2436,7 +2437,14 @@ object MainForm: TMainForm
         FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF0099B6FFFF7DA2FFFF7A9FFFFF97B4
         FFFFFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00
       }
-      OnClick = miDownloadRemoveClick
+      object miDeleteTask: TMenuItem
+        Caption = 'Task only'
+        OnClick = miDeleteTaskClick
+      end
+      object miDeleteTaskData: TMenuItem
+        Caption = 'Task + Data'
+        OnClick = miDeleteTaskDataClick
+      end
     end
     object miDownloadRemoveFinishedTasks: TMenuItem
       Caption = 'Delete all finished tasks'

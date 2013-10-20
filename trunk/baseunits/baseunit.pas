@@ -430,6 +430,9 @@ var
   stFavoritesChecking,
 
   stUpdaterCheck,
+  stSelected,
+  stImportList,
+  stImportCompleted,
 
   stOptionAutoCheckMinutesCaption,
   stIsCompressing,
