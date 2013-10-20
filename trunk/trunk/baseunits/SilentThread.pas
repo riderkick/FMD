@@ -160,7 +160,7 @@ begin
     DecodeTime(Time, hh, mm, ss, ms);
     DLManager.containers.Items[pos].downloadInfo.dateTime:= IntToStr(Month)+'/'+IntToStr(Day)+'/'+IntToStr(Year)+' '+IntToStr(hh)+':'+IntToStr(mm)+':'+IntToStr(ss);
 
-    DLManager.Sort(DLManager.SortColumn);
+    DLManager.Sort(vtDownload.Header.SortColumn);
     UpdateVtDownload;
 
     DLManager.Backup;

@@ -116,7 +116,6 @@ type
   private
     FSortDirection: Boolean;
     FSortColumn   : Cardinal;
-
   public
     isRunningBackup,
     isFinishTaskAccessed,
@@ -5015,8 +5014,8 @@ procedure   TDownloadManager.Sort(const AColumn: Cardinal);
     j:= R;
     while i<=j do
     begin
-      case sortDirection of
-        TRUE:
+      case SortDirection of
+        FALSE:
           begin
             case AColumn of
               5:
@@ -5031,7 +5030,7 @@ procedure   TDownloadManager.Sort(const AColumn: Cardinal);
                 end;
             end;
           end;
-        FALSE:
+        TRUE:
           begin
             case AColumn of
               5:
