@@ -4578,6 +4578,7 @@ var
   eatMangaCount: Cardinal = 0;
   batotoCount: Cardinal = 0;
   geCount    : Cardinal = 0;
+  otherCount : Cardinal = 0;
   i          : Cardinal;
   count      : Cardinal = 0;
 begin
@@ -4594,8 +4595,12 @@ begin
       else
       if (containers.Items[i].mangaSiteID = EATMANGA_ID) then
         Inc(eatMangaCount);
+      Inc(otherCount);
     end;
   end;
+
+  if otherCount >= maxDLTasks then
+    exit;
 
   for i:= 0 to containers.Count-1 do
   begin
