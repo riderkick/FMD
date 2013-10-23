@@ -1430,6 +1430,41 @@ var
     source.Free;
   end;
 
+  function   GetDM5DirectoryPage: Byte;
+  var
+    i: Cardinal;
+  begin
+    Result:= INFORMATION_NOT_FOUND;
+    if NOT GetPage(TObject(source), WebsiteRoots[DM5_ID,1] + DM5_BROWSER + '/', 0) then
+    begin
+      Result:= NET_PROBLEM;
+      source.Free;
+      exit;
+    end;
+    parse.Clear;
+    Parser:= TjsFastHTMLParser.Create(PChar(source.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.Exec;
+    Parser.Free;
+    if parse.Count=0 then
+    begin
+      source.Free;
+      exit;
+    end;
+    for i:= parse.Count-1 downto 2 do
+    begin
+      if (Pos('/mangas/list/*/', parse.Strings[i]) > 0) then
+      begin
+        s:= TrimRight(TrimLeft(GetString(parse.Strings[i], '/mangas/list/*/', '">')));
+        page:= StrToInt(s);
+        Result:= NO_ERROR;
+        exit;
+      end;
+    end;
+    source.Free;
+  end;
+
 begin
   source:= TStringList.Create;
   if website = ANIMEA_NAME then
@@ -1497,6 +1532,9 @@ begin
     Result:= NO_ERROR;
     Page:= 1;
   end
+  else
+  if website = DM5_NAME then
+    Result:= GetDM5DirectoryPage
   else
   if website = TRUYEN18_NAME then
     Result:= GetTruyen18DirectoryPage

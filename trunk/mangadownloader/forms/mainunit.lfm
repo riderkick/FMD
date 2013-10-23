@@ -301,11 +301,11 @@ object MainForm: TMainForm
       end
       object tsDownloadFilter: TTabSheet
         Caption = '>>'
-        ClientHeight = 434
+        ClientHeight = 440
         ClientWidth = 185
         object tvDownloadFilter: TTreeView
           Left = 0
-          Height = 434
+          Height = 440
           Top = 0
           Width = 185
           Align = alClient

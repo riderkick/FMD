@@ -1137,8 +1137,8 @@ begin
     pmUpdate.Items[0].Enabled:= TRUE;
   if Sender is TControl then
   begin
-    button   := TControl(pnLeftBtDummy);//TControl(Sender);
-    lowerLeft:= Point(button.Left-4, button.Top + button.Height*2 + (button.Height div 2) - 2);
+    button   := {TControl(pnLeftBtDummy);//}TControl(Sender);
+    lowerLeft:= Point(button.Left, button.Top + button.Height*2 + (button.Height div 2));
     lowerLeft:= ClientToScreen(lowerLeft);
     pmUpdate.Popup(lowerLeft.X, lowerLeft.Y);
   end;
@@ -3493,6 +3493,8 @@ begin
   vtFavorites.Header.Columns.Items[1].Width:= options.ReadInteger('form', 'vtFavorites1Width', 50);
   vtFavorites.Header.Columns.Items[2].Width:= options.ReadInteger('form', 'vtFavorites2Width', 50);
   vtFavorites.Header.Columns.Items[3].Width:= options.ReadInteger('form', 'vtFavorites3Width', 50);
+
+  sbMain.Panels[0].Width:= spMainSplitter.Left;
 end;
 
 procedure TMainForm.SaveFormInformation;
