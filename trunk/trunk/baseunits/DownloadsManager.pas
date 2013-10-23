@@ -5067,6 +5067,8 @@ var
   i: Cardinal;
 
 begin
+  if containers.Count <= 2 then
+    exit;
   sortColumn:= AColumn;
   QSort(0, containers.Count-1);
   MainForm.vtDownloadFilters;

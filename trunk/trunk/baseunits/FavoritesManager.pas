@@ -387,9 +387,9 @@ begin
         isNow:= TRUE;
         if MainForm.pcMain.PageIndex <> 0 then
           MainForm.pcMain.PageIndex:= 0;
-        if (MainForm.tvDownloadFilter.Selected.AbsoluteIndex <> 0) OR
-           (MainForm.tvDownloadFilter.Selected.AbsoluteIndex <> 2) then
-          MainForm.tvDownloadFilter.Items[2].Selected:= TRUE;
+       // if (MainForm.tvDownloadFilter.Selected.AbsoluteIndex <> 0) OR
+       //    (MainForm.tvDownloadFilter.Selected.AbsoluteIndex <> 2) then
+       //   MainForm.tvDownloadFilter.Items[2].Selected:= TRUE;
       end
       else
       if LNCResult = ncrCancel then
