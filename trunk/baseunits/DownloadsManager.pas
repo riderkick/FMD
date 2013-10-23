@@ -4426,6 +4426,14 @@ begin
     containers.Items[i].downloadInfo.dateTime:= ini.ReadString('task'+IntToStr(i), 'DateTime', 'NULL');
     containers.Items[i].mangaSiteID:= GetMangaSiteID(containers.Items[i].downloadInfo.website);
   end;
+  i:= 0;
+  while i < containers.Count do
+  begin
+    if CompareStr(containers.Items[i].downloadInfo.dateTime, 'NULL') = 0 then
+      containers.Delete(i)
+    else
+      Inc(i);
+  end;
 end;
 
 procedure   TDownloadManager.Backup;
