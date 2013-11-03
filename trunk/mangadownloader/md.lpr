@@ -7,7 +7,7 @@ uses
   {$ENDIF}{$ENDIF}
   Interfaces, // this includes the LCL widgetset
   Forms, mainunit, virtualtreeview_package, richmemopackage, zip, UpdateThread,
-  SubThread, UpdateDBThread, SilentThread, curlcore, ListForm, FMDThread;
+  SubThread, UpdateDBThread, SilentThread, ListForm, FMDThread;
 
 {$R *.res}
 

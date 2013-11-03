@@ -333,11 +333,11 @@ object MainForm: TMainForm
     Height = 470
     Top = 8
     Width = 624
-    ActivePage = tsDownload
+    ActivePage = tsOption
     Align = alClient
     Font.Style = [fsBold]
     ParentFont = False
-    TabIndex = 0
+    TabIndex = 4
     TabOrder = 1
     OnChange = pcMainChange
     object tsDownload: TTabSheet
@@ -759,27 +759,27 @@ object MainForm: TMainForm
     end
     object tsFilter: TTabSheet
       Caption = 'Filter'
-      ClientHeight = 450
+      ClientHeight = 442
       ClientWidth = 616
       object sbFilter: TScrollBox
         Left = 0
-        Height = 450
+        Height = 442
         Top = 0
         Width = 616
-        HorzScrollBar.Page = 612
-        VertScrollBar.Page = 446
+        HorzScrollBar.Page = 595
+        VertScrollBar.Page = 438
         Align = alClient
-        ClientHeight = 446
-        ClientWidth = 612
+        ClientHeight = 438
+        ClientWidth = 595
         TabOrder = 0
         object pnGenres: TPanel
           Left = 0
           Height = 248
           Top = 0
-          Width = 612
+          Width = 595
           Align = alTop
           ClientHeight = 248
-          ClientWidth = 612
+          ClientWidth = 595
           TabOrder = 0
           object CheckBox1: TCheckBox
             Left = 23
@@ -1200,10 +1200,10 @@ object MainForm: TMainForm
           Left = 0
           Height = 192
           Top = 248
-          Width = 612
+          Width = 595
           Align = alTop
           ClientHeight = 192
-          ClientWidth = 612
+          ClientWidth = 595
           ParentFont = False
           TabOrder = 1
           object rbOne: TRadioButton
@@ -1404,11 +1404,11 @@ object MainForm: TMainForm
     end
     object tsFavorites: TTabSheet
       Caption = 'Favorites'
-      ClientHeight = 450
+      ClientHeight = 442
       ClientWidth = 616
       object vtFavorites: TVirtualStringTree
         Left = 0
-        Height = 362
+        Height = 354
         Top = 0
         Width = 616
         Align = alTop
@@ -1454,7 +1454,7 @@ object MainForm: TMainForm
       object btFavoritesCheckNewChapter: TBitBtn
         Left = 33
         Height = 40
-        Top = 370
+        Top = 362
         Width = 555
         Anchors = [akLeft, akRight, akBottom]
         Caption = 'Check for new chapter'
@@ -1464,7 +1464,7 @@ object MainForm: TMainForm
       object btFavoritesImport: TBitBtn
         Left = 33
         Height = 24
-        Top = 416
+        Top = 408
         Width = 555
         Anchors = [akLeft, akRight, akBottom]
         Caption = 'Import list ...'
@@ -1475,11 +1475,11 @@ object MainForm: TMainForm
     end
     object tsOption: TTabSheet
       Caption = 'Options'
-      ClientHeight = 436
+      ClientHeight = 442
       ClientWidth = 616
       object pnOptions: TPageControl
         Left = 9
-        Height = 343
+        Height = 349
         Top = 26
         Width = 597
         ActivePage = tsGeneral
@@ -1488,7 +1488,7 @@ object MainForm: TMainForm
         TabOrder = 0
         object tsGeneral: TTabSheet
           Caption = 'General'
-          ClientHeight = 315
+          ClientHeight = 321
           ClientWidth = 589
           object cbLanguages: TComboBox
             Left = 20
@@ -2154,7 +2154,7 @@ object MainForm: TMainForm
       object btOptionApply: TButton
         Left = 50
         Height = 41
-        Top = 382
+        Top = 388
         Width = 128
         Anchors = [akBottom]
         Caption = 'Apply'

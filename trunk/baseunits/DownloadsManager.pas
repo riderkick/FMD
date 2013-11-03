@@ -2941,6 +2941,7 @@ var
 
   function GetScanMangaLinkPage: Boolean;
   var
+    s2,
     stub,
     tmp,
     s: String;
@@ -2985,7 +2986,8 @@ var
             tmp:= GetString(s, ';u[', ']="');
             s:= StringReplace(s, ';u[' +tmp+ ']="', '~!@<>', []);
             tmp:= stub + GetString(s, '~!@<>', '";n[');
-            manager.container.pageLinks.Add(EncodeUrl(stub + GetString(s, '~!@<>', '";n')));
+            //s2:= EncodeUrl(stub + GetString(s, '~!@<>', '";n'));
+            manager.container.pageLinks.Add((stub + GetString(s, '~!@<>', '";n')));
             s:= StringReplace(s, '~!@<>', '', []);
             s:= StringReplace(s, '";n[', '', []);
             j:= Pos('";n[', s);
@@ -5011,8 +5013,10 @@ procedure   TDownloadManager.Sort(const AColumn: Cardinal);
       4: Result:= containers.Items[ARow].downloadInfo.SaveTo;
       5: begin
            Result:= containers.Items[ARow].downloadInfo.dateTime;
-           TryStrToDateTime(Result, dt);
-           tmp:= DateTimeToUnix(dt);
+           if TryStrToDateTime(Result, dt) then
+             tmp:= DateTimeToUnix(dt)
+           else
+             tmp:= 0;
            Result:= IntToStr(tmp);
          end;
     end;

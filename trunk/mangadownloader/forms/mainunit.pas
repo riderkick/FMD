@@ -2687,6 +2687,7 @@ try
   DLManager.compress:= rgOptionCompress.ItemIndex;
 
   options.WriteInteger('languages', 'Select', cbLanguages.ItemIndex);
+  options.WriteString ('languages', 'Language', cbLanguages.Items.Strings[cbLanguages.ItemIndex]);
 
   options.WriteBool   ('dialogs', 'ShowQuitDialog', cbOptionShowQuitDialog.Checked);
   options.WriteBool   ('dialogs', 'ShowDeleteDldTaskDialog', cbOptionShowDeleteTaskDialog.Checked);
@@ -3525,6 +3526,7 @@ procedure TMainForm.LoadLanguage(const pos: Integer);
 var
   language: TIniFile;
   s,
+  langL,
   lang    : String;
   i, p    : Cardinal;
 begin
@@ -3539,7 +3541,11 @@ begin
       cbLanguages.Items.Add(language.ReadString('select', IntToStr(i), 'English'));
   end;
   cbLanguages.ItemIndex:= pos;
-  lang:= cbLanguages.Items.Strings[cbLanguages.ItemIndex];
+
+  langL:= options.ReadString ('languages', 'Language', 'English');
+  lang := cbLanguages.Items.Strings[cbLanguages.ItemIndex];
+  if langL <> lang then
+    lang:= 'English';
 
   tsMangaList   .Caption:= language.ReadString(lang, 'tsMangaListCaption', '');
   tsDownload    .Caption:= language.ReadString(lang, 'tsDownloadCaption', '');
