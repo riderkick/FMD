@@ -301,9 +301,9 @@ begin
       l.Clear;
       GetParams(l, favoriteInfo[i].downloadedChapterList);
       // for mangafox only (necessary ?)
-      if (favoriteInfo[i].Website = MANGAFOX_NAME) AND (l.Count > 0) then
-        for j:= 0 to l.Count-1 do
-          l.Strings[j]:= StringReplace(l.Strings[j], WebsiteRoots[MANGAFOX_ID,1], '', []);
+   //   if (favoriteInfo[i].Website = MANGAFOX_NAME) AND (l.Count > 0) then
+   //     for j:= 0 to l.Count-1 do
+   //       l.Strings[j]:= StringReplace(l.Strings[j], WebsiteRoots[MANGAFOX_ID,1], '', []);
 
       if (l.Count = 0) AND (mangaInfo[i].chapterLinks.Count <> 0) then
       begin
@@ -349,6 +349,7 @@ begin
   begin
     if (removeListStr <> '') AND (isShowDialog) then
     begin
+      mainunit.MainForm.Show;
       LNewChapter:= TNewChapter.Create(MainForm);
       LNewChapter.lbNotification.Caption:= Format(stDlgHasNewChapter, [newC]);
       LNewChapter.mmMemo.Lines.Add(TrimLeft(removeListStr));
@@ -376,6 +377,7 @@ begin
 
     if isShowDialog then
     begin
+      mainunit.MainForm.Show;
       LNewChapter:= TNewChapter.Create(MainForm);
       LNewChapter.lbNotification.Caption:= Format(stDlgHasNewChapter, [newC]);
       LNewChapter.mmMemo.Lines.Add(TrimLeft(newMangaStr) + #13#13 + TrimLeft(removeListStr));
