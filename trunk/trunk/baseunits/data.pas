@@ -6516,7 +6516,7 @@ end;
 function   GetS2scanInfoFromURL: Byte;
 var
   isExtractGenres : Boolean = FALSE;
-  isExtractChapter: Boolean = FALSE;
+  isExtractChapter: Boolean = TRUE;
   s: String;
   i, j: Cardinal;
  // stream: TStringStream;
@@ -6571,9 +6571,9 @@ begin
        (mangaInfo.title = '') then
       mangaInfo.title:= TrimLeft(TrimRight(StringFilter(parse.Strings[i+2])));
 
-    if (NOT isExtractChapter) AND
-       (Pos('All chapters available for', parse.Strings[i]) > 0) then
-      isExtractChapter:= TRUE;
+    //if (NOT isExtractChapter) AND
+    //   (Pos('All chapters available for', parse.Strings[i]) > 0) then
+    //  isExtractChapter:= TRUE;
 
     if (isExtractChapter) AND
        (Pos('class="element"', parse.Strings[i]) > 0) then
