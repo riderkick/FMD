@@ -145,6 +145,7 @@ type
 
     procedure   Restore;
     procedure   Backup;
+    procedure   SaveJobList;
 
     procedure   AddToDownloadedChaptersList(const ALink: String); overload;
     procedure   AddToDownloadedChaptersList(const ALink, AValue: String); overload;
@@ -4334,7 +4335,7 @@ begin
 
   // Create INI file
   ini:= TIniFile.Create(WORK_FOLDER + WORK_FILE);
-  ini.CacheUpdates:= FALSE;
+  ini.CacheUpdates:= TRUE;
 
   downloadedChaptersList:= TStringList.Create;
   if FileExists(WORK_FOLDER + DOWNLOADEDCHAPTERS_FILE) then
@@ -4480,6 +4481,14 @@ begin
       ini.WriteString ('task'+IntToStr(i), 'DateTime', containers.Items[i].downloadInfo.dateTime);
     end;
   end;
+ // ini.UpdateFile;
+  isRunningBackup:= FALSE;
+end;
+
+procedure   TDownloadManager.SaveJobList;
+begin
+  if isRunningBackup then while TRUE do Sleep(32);
+  isRunningBackup:= TRUE;
   ini.UpdateFile;
   isRunningBackup:= FALSE;
 end;

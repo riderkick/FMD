@@ -22,7 +22,7 @@ type
     FURL     : String;
     procedure   Execute; override;
     procedure   DoGetInfos;
-    // for Batoto only - since it use IE, this must be called in main thread
+    // for Batoto only - since it uses IE, this must be called in main thread (deprecated)
     procedure   CallMainFormGetBatotoInfo;
     procedure   CallMainFormCannotGetInfo;
     procedure   CallMainFormShowLog;
@@ -123,32 +123,11 @@ procedure   TSubThread.DoGetInfos;
     else
       times:= 3;
 
-    {$IFDEF WINDOWS}
-    if ((website <> BATOTO_NAME) OR (NOT OptionBatotoUseIEChecked)) then
-    begin
-      if Info.GetInfoFromURL(website, URL, times)<>NO_ERROR then
-      begin
-        Info.Free;
-        exit;
-      end;
-    end
-    else
-    begin
-      FURL:= URL;
-      Synchronize(CallMainFormGetBatotoInfo);
-      if FIsLoaded<>NO_ERROR then
-      begin
-        Info.Free;
-        exit;
-      end;
-    end;
-    {$ELSE}
     if Info.GetInfoFromURL(website, URL, times)<>NO_ERROR then
     begin
       Info.Free;
       exit;
     end;
-    {$ENDIF}
 
     // fixed
     if mangaListPos > -1 then
