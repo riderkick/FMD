@@ -70,7 +70,9 @@ begin
         {$ELSE}
         s:= list.Strings[i];
         {$ENDIF}
-        Zip.Entries.AddFileEntry(s, Format('%.3d%s', [i+1, ExtractFileExt(list.Strings[i])]));
+       // Zip.Entries.AddFileEntry(s, Format('%.3d%s', [i+1, ExtractFileExt(list.Strings[i])]));
+        Zip.Entries.AddFileEntry(s, Format('%s',
+                                          [StringReplace(ExtractFileName(list.Strings[i]), ExtractFilePath(list.Strings[i]), '', [])]));
       end;
 
       fstream:= TFileStreamUTF8.Create(fPath+ext, fmCreate);
