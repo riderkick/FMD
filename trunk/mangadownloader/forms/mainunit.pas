@@ -33,6 +33,7 @@ type
     edOptionExternal: TEdit;
     edURL: TEdit;
     gbOptionExternal: TGroupBox;
+    itSaveJobList: TIdleTimer;
     lbFilterHint: TLabel;
     lbOptionExternal: TLabel;
     lbOptionCustomRenameHint: TLabel;
@@ -299,6 +300,7 @@ type
     procedure itCheckForChaptersTimer(Sender: TObject);
     procedure itRefreshFormTimer(Sender: TObject);
     procedure itSaveDownloadedListTimer(Sender: TObject);
+    procedure itSaveJobListTimer(Sender: TObject);
     procedure miChapterListHighlightClick(Sender: TObject);
     procedure miDeleteTaskClick(Sender: TObject);
     procedure miDeleteTaskDataClick(Sender: TObject);
@@ -552,7 +554,7 @@ begin
   favorites.DLManager       := DLManager;
 
   options     := TIniFile.Create(oldDir + CONFIG_FOLDER + CONFIG_FILE);
-  options.CacheUpdates:= FALSE;
+  options.CacheUpdates:= TRUE;
 
   revisionIni  := TIniFile.Create(oldDir + CONFIG_FOLDER + REVISION_FILE);
   options.CacheUpdates:= FALSE;
@@ -561,7 +563,7 @@ begin
   updates.CacheUpdates:= FALSE;
 
   mangalistIni:= TIniFile.Create(oldDir + CONFIG_FOLDER + MANGALISTINI_FILE);
-  mangalistIni.CacheUpdates:= FALSE;
+  mangalistIni.CacheUpdates:= TRUE;
 
   websiteName    := TStringList.Create;
   websiteLanguage:= TStringList.Create;
@@ -713,6 +715,11 @@ begin
   DLManager.BackupDownloadedChaptersList;
 end;
 
+procedure TMainForm.itSaveJobListTimer(Sender: TObject);
+begin
+  DLManager.SaveJobList;
+end;
+
 procedure TMainForm.miChapterListHighlightClick(Sender: TObject);
 begin
   miChapterListHighlight.Checked:= NOT miChapterListHighlight.Checked;
@@ -757,8 +764,9 @@ end;
 
 procedure TMainForm.miDeleteTaskDataClick(Sender: TObject);
 var
-  i    : Cardinal;
-  xNode: PVirtualNode;
+  i, j    : Cardinal;
+  xNode   : PVirtualNode;
+  path    : String;
 begin
  // if NOT Assigned(vtDownload.FocusedNode) then exit;
   if (cbOptionShowDeleteTaskDialog.Checked) AND
@@ -769,7 +777,20 @@ begin
   if (vtDownload.SelectedCount = 1) AND (Assigned(vtDownload.FocusedNode)) then
   begin
     i:= vtDownload.FocusedNode.Index;
-    DeleteDirectory(DLManager.containers[i].downloadInfo.SaveTo, FALSE);
+    if DLManager.containers[i].chapterName.Count > 0 then
+      for j:= 0 to DLManager.containers[i].chapterName.Count-1 do
+      begin
+        path:= CorrectFilePath(DLManager.containers[i].downloadInfo.SaveTo + '/' + DLManager.containers[i].chapterName[j]);
+        DeleteDirectory(path, FALSE);
+        if FileExistsUTF8(path + '.zip') then
+          DeleteFileUTF8(path + '.zip');
+        if FileExistsUTF8(path + '.cbz') then
+          DeleteFileUTF8(path + '.cbz');
+        if FileExistsUTF8(path + '.pdf') then
+          DeleteFileUTF8(path + '.pdf');
+      end;
+    if IsDirectoryEmpty(DLManager.containers[i].downloadInfo.SaveTo) then
+      DeleteDirectory(DLManager.containers[i].downloadInfo.SaveTo, FALSE);
     DLManager.RemoveTask(i);
     UpdateVtDownload;
     DLManager.Backup;
@@ -884,9 +905,16 @@ begin
   mangalistIni.WriteInteger('general', 'batotoLastDirectoryPage', batotoLastDirectoryPage);
   SaveFormInformation;
   DLManager.StopAllDownloadTasksForExit;
+
+  DLManager.Backup;
+  Sleep(50);
+  Sleep(50);
+  DLManager.SaveJobList;
+  Sleep(50);
+  options.UpdateFile;
+
   if NOT dataProcess.isFilterAllSites then
     dataProcess.SaveToFile;
-  options.UpdateFile;
   dataProcess.Destroy;
   // bad coding
   DLManager.BackupDownloadedChaptersList;
@@ -1088,7 +1116,7 @@ begin
   DLManager.Sort(vtDownload.Header.SortColumn);
   UpdateVtDownload;
 
-  DLManager.Backup;
+ // DLManager.Backup;
   DLManager.CheckAndActiveTask;
 
   DLManager.AddToDownloadedChaptersList(mangaInfo.website + mangaInfo.link);
