@@ -539,6 +539,8 @@ type
   end;
 
 function  UnicodeRemove(const S: String): String;
+// Check a directory to see if it's empty (return TRUE) or not
+function  IsDirectoryEmpty(const ADir: String): Boolean;
 function  CheckRedirect(const HTTP: THTTPSend): String;
 function  CorrectFile(const APath: String): String;
 function  CorrectFilePath(const APath: String): String;
@@ -720,6 +722,19 @@ begin
       Delete(Result, i, 1);
       Insert('_', Result, i);
     end;
+  end;
+end;
+
+function IsDirectoryEmpty(const ADir: String): Boolean;
+var
+  searchRec :TSearchRec;
+begin
+  try
+    Result:= (FindFirstUTF8(CorrectFilePath(ADir+'/*.*'), faAnyFile {$ifdef unix} OR faSymLink {$endif unix}, searchRec) = 0) AND
+             (FindNextUTF8(searchRec) = 0) AND
+             (FindNextUTF8(searchRec) <> 0);
+  finally
+    FindCloseUTF8(searchRec);
   end;
 end;
 
