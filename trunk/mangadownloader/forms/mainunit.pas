@@ -777,10 +777,12 @@ begin
   if (vtDownload.SelectedCount = 1) AND (Assigned(vtDownload.FocusedNode)) then
   begin
     i:= vtDownload.FocusedNode.Index;
-    if DLManager.containers[i].chapterName.Count > 0 then
-      for j:= 0 to DLManager.containers[i].chapterName.Count-1 do
+    if DLManager.containers.Items[i].chapterName.Count > 0 then
+      for j:= 0 to DLManager.containers.Items[i].chapterName.Count-1 do
       begin
-        path:= CorrectFilePath(DLManager.containers[i].downloadInfo.SaveTo + '/' + DLManager.containers[i].chapterName[j]);
+        path:= CorrectFilePath(DLManager.containers.Items[i].downloadInfo.SaveTo + '/' + DLManager.containers.Items[i].chapterName[j]);
+        if path[Length(path)] = '/' then
+          SetLength(path, Length(path)-1);
         DeleteDirectory(path, FALSE);
         if FileExistsUTF8(path + '.zip') then
           DeleteFileUTF8(path + '.zip');
@@ -789,8 +791,8 @@ begin
         if FileExistsUTF8(path + '.pdf') then
           DeleteFileUTF8(path + '.pdf');
       end;
-    if IsDirectoryEmpty(DLManager.containers[i].downloadInfo.SaveTo) then
-      DeleteDirectory(DLManager.containers[i].downloadInfo.SaveTo, FALSE);
+    if IsDirectoryEmpty(DLManager.containers.Items[i].downloadInfo.SaveTo) then
+      DeleteDirectory(DLManager.containers.Items[i].downloadInfo.SaveTo, FALSE);
     DLManager.RemoveTask(i);
     UpdateVtDownload;
     DLManager.Backup;
