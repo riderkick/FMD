@@ -558,6 +558,9 @@ begin
         if FileExists(DATA_FOLDER + BATOTO_NAME + DATA_EXT) then
           syncProcess.LoadFromFile(BATOTO_NAME)
         else
+        if FileExists(DATA_FOLDER + MANGAGO_NAME + DATA_EXT) then
+          syncProcess.LoadFromFile(MANGAPARK_NAME)
+        else
         if FileExists(DATA_FOLDER + ANIMEA_NAME + DATA_EXT) then
           syncProcess.LoadFromFile(ANIMEA_NAME);
 

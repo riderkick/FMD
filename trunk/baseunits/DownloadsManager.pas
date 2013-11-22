@@ -1134,6 +1134,52 @@ var
     parse.Free;
     l.Free;
   end;
+  
+   //PURURIN page number
+ function GetPururinPageNumber: Boolean;
+  var
+    s   : String;
+    i,g,j: Cardinal;
+    l   : TStringList;
+    isStartGetPageNumber: Boolean = FALSE;
+  begin
+    l:= TStringList.Create;
+    parse:= TStringList.Create;
+        s:= StringReplace(URL, '_1.html', '.html', []);
+		s:= StringReplace(s, '/view/', '/gallery/', []);
+		s:= DecodeUrl(StringReplace(s, '/00/', '/', []));
+    Result:= GetPage(TObject(l),
+                     s,
+                     manager.container.manager.retryConnect);
+    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.Exec;
+    Parser.Free;
+    if parse.Count>0 then
+    begin
+      manager.container.pageNumber:= 0;
+      for i:= 0 to parse.Count-1 do
+      begin
+        if (Pos('class="square"', parse.Strings[i])>0) then
+          isStartGetPageNumber:= TRUE;
+
+        if (isStartGetPageNumber) AND
+           (Pos('class="square"', parse.Strings[i])>0) then
+        begin
+          s:= parse.Strings[i+1];
+		  g:= length(s);
+          Delete(s,g-10,g-3);
+          Delete(s,1,9);
+		  g:= StrToInt(s);
+          manager.container.pageNumber:= g;
+          break;
+        end;
+      end;
+    end;
+    parse.Free;
+    l.Free;
+  end;
 
   function GetHugeMangaPageNumber: Boolean;
   var
@@ -1413,6 +1459,46 @@ var
     parse.Free;
     l.Free;
   end; }
+  
+     //mangacow page number
+ function GetMangaCowPageNumber: Boolean;
+  var
+    s   : String;
+    i, j: Cardinal;
+    l   : TStringList;
+    isStartGetPageNumber: Boolean = FALSE;
+  begin
+    l:= TStringList.Create;
+    parse:= TStringList.Create;
+    s:= DecodeUrl(WebsiteRoots[MANGACOW_ID,1] + URL + '1/');
+    Result:= GetPage(TObject(l),
+                     s,
+                     manager.container.manager.retryConnect);
+    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.Exec;
+    Parser.Free;
+    if parse.Count>0 then
+    begin
+      manager.container.pageNumber:= 0;
+      for i:= 0 to parse.Count-1 do
+      begin
+        if (Pos('class="cbo_wpm_pag"', parse.Strings[i])>0) then
+          isStartGetPageNumber:= TRUE;
+
+        if (isStartGetPageNumber) AND
+           (Pos('</select>', parse.Strings[i])>0) then
+        begin
+          s:= parse.Strings[i-3];
+          manager.container.pageNumber:= StrToInt(GetAttributeValue(GetTagAttribute(s, 'value=')));
+          break;
+        end;
+      end;
+    end;
+    parse.Free;
+    l.Free;
+  end;
 
   function GetSenMangaPageNumber: Boolean;
   var
@@ -1593,6 +1679,9 @@ begin
   if manager.container.mangaSiteID = PECINTAKOMIK_ID then
     Result:= GetPecintaKomikPageNumber
   else
+  if manager.container.mangaSiteID = PURURIN_ID then
+    Result:= GetPururinPageNumber
+  else
   if manager.container.mangaSiteID = HUGEMANGA_ID then
     Result:= GetHugeMangaPageNumber
   else
@@ -1617,6 +1706,9 @@ begin
  // if manager.container.mangaSiteID = CENTRALDEMANGAS_ID then
  //   Result:= GetCentralDeMangasPageNumber
   else
+  if manager.container.mangaSiteID = MANGACOW_ID then
+    Result:= GetMangaCowPageNumber
+  else
   if manager.container.mangaSiteID = SENMANGA_ID then
     Result:= GetSenMangaPageNumber
   else
@@ -1640,6 +1732,8 @@ begin
      (manager.container.mangaSiteID = VNSHARING_ID) OR
      (manager.container.mangaSiteID = MABUNS_ID) OR
      (manager.container.mangaSiteID = EGSCANS_ID) OR
+	 (manager.container.mangaSiteID = PURURIN_ID) OR
+	 (manager.container.mangaSiteID = MANGACOW_ID) OR
      (manager.container.mangaSiteID = MANGAESTA_ID) OR
      (manager.container.mangaSiteID = TRUYEN18_ID) OR
      (manager.container.mangaSiteID = TRUYENTRANHTUAN_ID) OR
@@ -2871,6 +2965,41 @@ var
     parse.Free;
     l.Free;
   end;
+  
+   //disini
+  function GetPururinLinkPage: Boolean;
+  var
+    s: String;
+    j,
+    i: Cardinal;
+    l: TStringList;
+  begin
+    l:= TStringList.Create;
+	  s:= StringReplace(URL, '_1.html', '_', []);
+      s:= DecodeUrl(StringReplace(s, '00', '0' + IntToStr(workPtr+0), []) + IntToStr(workPtr+1) + '.html');
+    Result:= GetPage(TObject(l),
+	                 s,
+                     manager.container.manager.retryConnect);
+    parse:= TStringList.Create;
+    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.Exec;
+    Parser.Free;
+
+    if parse.Count>0 then
+    begin
+      for i:= parse.Count-1 downto 4 do
+        if (Pos('class="b"', parse.Strings[i])>0) then
+        begin
+          manager.container.pageLinks.Strings[workPtr]:= EncodeURL(WebsiteRoots[PURURIN_ID,1] + GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src=')));
+          break;
+        end;
+    end;
+    parse.Free;
+    l.Free;
+  end;
+  //habis
 
   function GetHugeMangaLinkPage: Boolean;
   var
@@ -3204,8 +3333,41 @@ var
     parse.Free;
     l.Free;
   end;
+  
+    // Mangacow link page
+  function GetMangaCowLinkPage: Boolean;
+  var
+    s: String;
+    j,
+    i: Cardinal;
+    l: TStringList;
+  begin
+    l:= TStringList.Create;
+	s:= DecodeUrl(WebsiteRoots[MANGACOW_ID,1] + URL + IntToStr(workPtr+1));
+    Result:= GetPage(TObject(l),
+	                 s,
+                     manager.container.manager.retryConnect);
+    parse:= TStringList.Create;
+    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.Exec;
+    Parser.Free;
 
-  function GetSenMangaLinkPage: Boolean;
+    if parse.Count>0 then
+    begin
+      for i:= 0 to parse.Count-1 do
+        if (Pos('id="sct_img_mng_enl"', parse.Strings[i])>0) then
+        begin
+          manager.container.pageLinks.Strings[workPtr]:= EncodeURL(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src=')));
+          break;
+        end;
+    end;
+    parse.Free;
+    l.Free;
+  end;
+  
+    function GetSenMangaLinkPage: Boolean;
   var
     s: String;
     j,
@@ -3455,6 +3617,9 @@ begin
   if manager.container.mangaSiteID = MANGAESTA_ID then
     Result:= GetMangaEstaLinkPage
   else
+  if manager.container.mangaSiteID = PURURIN_ID then
+    Result:= GetPururinLinkPage
+  else
   if manager.container.mangaSiteID = HUGEMANGA_ID then
     Result:= GetHugeMangaLinkPage
   else
@@ -3481,6 +3646,9 @@ begin
   else
   if manager.container.mangaSiteID = CENTRALDEMANGAS_ID then
     Result:= GetCentralDeMangasLinkPage
+  else
+  if manager.container.mangaSiteID = MANGACOW_ID then
+    Result:= GetMangaCowLinkPage
   else
   if manager.container.mangaSiteID = SENMANGA_ID then
     Result:= GetSenMangaLinkPage

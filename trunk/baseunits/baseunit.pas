@@ -186,6 +186,8 @@ const
   SCANMANGA_NAME    = 'ScanManga';    SCANMANGA_ID   = 45;
   MANGAGO_NAME      = 'MangaGo';      MANGAGO_ID     = 46;
   DM5_NAME          = 'DM5';          DM5_ID         = 47;
+  PURURIN_NAME      = 'Pururin';      Pururin_ID     = 48;
+  MANGACOW_NAME     = 'MangaCow';     MANGACOW_ID    = 49;
 
   DEFAULT_LIST = ANIMEA_NAME+'!%~'+MANGAFOX_NAME+'!%~'+MANGAHERE_NAME+'!%~'+MANGAINN_NAME+'!%~'+MANGAREADER_NAME+'!%~';
   DEFAULT_CUSTOM_RENAME = '%NUMBERING% - %CHAPTER%';
@@ -230,7 +232,7 @@ var
   SEPERATOR: String = '!%~';
   SEPERATOR2: String = '~%!';
 
-  WebsiteRoots  : array[0..47] of array [0..1] of String =
+  WebsiteRoots  : array[0..49] of array [0..1] of String =
     (('AnimeA', 'http://manga.animea.net'),
      ('MangaHere', 'http://www.mangahere.com'),
      ('MangaInn', 'http://www.mangainn.com'),
@@ -278,7 +280,9 @@ var
      ('LectureEnLigne', 'http://www.lecture-en-ligne.com'),
      ('ScanManga', 'http://www.scan-manga.com'),
      ('MangaGo', 'http://www.mangago.com'),
-     ('DM5', 'http://www.dm5.com')
+     ('DM5', 'http://www.dm5.com'),
+	 ('Pururin', 'http://pururin.com'),
+     ('MangaCow', 'http://mngacow.com')
     );
 
   ANIMEA_BROWSER: String = '/browse.html?page=';
@@ -393,6 +397,10 @@ var
   MANGAGO_BROWSER: String = '/list/directory/all/';
 
   DM5_BROWSER: String = '/manhua-new';
+  
+  PURURIN_BROWSER: String = '/browse/';
+  
+  MANGACOW_BROWSER: String = '/manga-list/';
 
   UPDATE_URL      : String = 'http://jaist.dl.sourceforge.net/project/fmd/FMD/updates/';
 

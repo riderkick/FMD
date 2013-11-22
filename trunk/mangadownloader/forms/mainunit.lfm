@@ -333,11 +333,11 @@ object MainForm: TMainForm
     Height = 470
     Top = 8
     Width = 624
-    ActivePage = tsOption
+    ActivePage = tsInformation
     Align = alClient
     Font.Style = [fsBold]
     ParentFont = False
-    TabIndex = 4
+    TabIndex = 1
     TabOrder = 1
     OnChange = pcMainChange
     object tsDownload: TTabSheet
@@ -3222,6 +3222,12 @@ object MainForm: TMainForm
     Interval = 300000
     OnTimer = itSaveDownloadedListTimer
     left = 688
+    top = 192
+  end
+  object itSaveJobList: TIdleTimer
+    Interval = 60000
+    OnTimer = itSaveJobListTimer
+    left = 744
     top = 192
   end
 end
