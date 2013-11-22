@@ -1135,7 +1135,6 @@ var
     l.Free;
   end;
   
-   //PURURIN page number
  function GetPururinPageNumber: Boolean;
   var
     s   : String;
@@ -1460,7 +1459,6 @@ var
     l.Free;
   end; }
   
-     //mangacow page number
  function GetMangaCowPageNumber: Boolean;
   var
     s   : String;
@@ -2966,7 +2964,6 @@ var
     l.Free;
   end;
   
-   //disini
   function GetPururinLinkPage: Boolean;
   var
     s: String;
@@ -2999,7 +2996,6 @@ var
     parse.Free;
     l.Free;
   end;
-  //habis
 
   function GetHugeMangaLinkPage: Boolean;
   var
@@ -3334,7 +3330,6 @@ var
     l.Free;
   end;
   
-    // Mangacow link page
   function GetMangaCowLinkPage: Boolean;
   var
     s: String;
