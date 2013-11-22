@@ -191,6 +191,7 @@
     <Linking>
       <Debugging>
         <GenerateDebugInfo Value="False"/>
+        <UseLineInfoUnit Value="False"/>
       </Debugging>
       <LinkSmart Value="True"/>
       <Options>

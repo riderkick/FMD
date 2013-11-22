@@ -1,4 +1,4 @@
-{
+﻿{
         File: data.pas
         License: GPLv2
         This unit is a part of Free Manga Downloader
@@ -990,6 +990,47 @@ var
     end;
     source.Free;
   end;
+  
+  //get directory Pururin
+  function   GetPururinDirectoryPage: Byte;
+  var
+    i,g : Cardinal;
+  begin
+    Result:= INFORMATION_NOT_FOUND;
+    if NOT GetPage(TObject(source), WebsiteRoots[PURURIN_ID,1], 0) then
+    begin
+      Result:= NET_PROBLEM;
+      source.Free;
+      exit;
+    end;
+    parse.Clear;
+    Parser:= TjsFastHTMLParser.Create(PChar(source.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.Exec;
+    Parser.Free;
+    if parse.Count=0 then
+    begin
+      source.Free;
+      exit;
+    end;
+    for i:= parse.Count-1 downto 2 do
+    begin
+      if (Pos('/browse/0/11/2.html', parse.Strings[i]) > 0) then
+      begin
+        {s:= GetAttributeValue(GetTagAttribute(parse.Strings[i+3], 'href='));
+		g:= length(s);
+        Delete(s,g-8,g-8);
+        Delete(s,1,10);
+        Page:= StrToInt(s);}
+        Page:= StrToInt('10');
+	Result:= NO_ERROR;
+        source.Free;
+        exit;
+      end;
+    end;
+    source.Free;
+  end;
 
   function   GetMangaParkDirectoryPage: Byte;
   var
@@ -1538,6 +1579,9 @@ begin
   else
   if website = TRUYEN18_NAME then
     Result:= GetTruyen18DirectoryPage
+  else
+  if website = PURURIN_NAME then
+    Result:= GetPururinDirectoryPage
   else
   begin
     Result:= NO_ERROR;
@@ -2493,6 +2537,46 @@ var
     end;
     source.Free;
   end;
+  
+    // get name and link of the manga from Pururin
+  function   PururinGetNameAndLink: Byte;
+  var
+    tmp: Integer;
+    i: Cardinal;
+    s: String;
+  begin
+    Result:= INFORMATION_NOT_FOUND;
+    if NOT GetPage(TObject(source), WebsiteRoots[PURURIN_ID,1] + PURURIN_BROWSER + '0/' + IntToStr(StrToInt(URL)+10) + '/' + IntToStr(StrToInt(URL)+1) + '.html' , 0) then
+    begin
+      Result:= NET_PROBLEM;
+      source.Free;
+      exit;
+    end;
+    parse.Clear;
+    Parser:= TjsFastHTMLParser.Create(PChar(source.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.Exec;
+    Parser.Free;
+    if parse.Count=0 then
+    begin
+      source.Free;
+      exit;
+    end;
+
+    for i:= 0 to parse.Count-1 do
+    begin
+      if (Pos('class="overlay', parse.Strings[i]) > 0) then
+      begin
+        Result:= NO_ERROR;
+        s:= StringFilter(parse.Strings[i+7]);
+        names.Add(HTMLEntitiesFilter(s));
+        s:= StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i-2], 'href=')), WebsiteRoots[PURURIN_ID,1], '', []);
+        links.Add(s);
+      end;
+    end;
+    source.Free;
+  end;
 
   // get name and link of the manga from HugeManga
   function   HugeMangaGetNameAndLink: Byte;
@@ -2936,6 +3020,46 @@ var
         s:= StringFilter(GetAttributeValue(GetTagAttribute(parse.Strings[i+1], 'title=')));
         names.Add(HTMLEntitiesFilter(s));
         s:= StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i+1], 'href=')), WebsiteRoots[MANGAFRAME_ID,1], '', []);
+        links.Add(s);
+      end;
+    end;
+    source.Free;
+  end;
+  
+    // get name and link of the manga from Mangacow
+  function   MangaCowGetNameAndLink: Byte;
+  var
+    tmp: Integer;
+    i: Cardinal;
+    s: String;
+  begin
+    Result:= INFORMATION_NOT_FOUND;
+    if NOT GetPage(TObject(source), WebsiteRoots[MANGACOW_ID,1] + MANGACOW_BROWSER, 0) then
+    begin
+      Result:= NET_PROBLEM;
+      source.Free;
+      exit;
+    end;
+    parse.Clear;
+    Parser:= TjsFastHTMLParser.Create(PChar(source.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.Exec;
+    Parser.Free;
+    if parse.Count=0 then
+    begin
+      source.Free;
+      exit;
+    end;
+
+      for i:= 0 to parse.Count-1 do
+    begin
+      if (Pos('class="img_wrp', parse.Strings[i]) > 0) then
+      begin
+        Result:= NO_ERROR;
+        s:= StringFilter(GetAttributeValue(GetTagAttribute(parse.Strings[i+1], 'title=')));
+        names.Add(HTMLEntitiesFilter(s));
+        s:= StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i+1], 'href=')), WebsiteRoots[MANGACOW_ID,1], '', []);
         links.Add(s);
       end;
     end;
@@ -3536,6 +3660,9 @@ begin
   if website = MANGAESTA_NAME then
     Result:= MangaEstaGetNameAndLink
   else
+  if website = PURURIN_NAME then
+    Result:= PururinGetNameAndLink
+  else
   if website = HUGEMANGA_NAME then
     Result:= HugeMangaGetNameAndLink
   else
@@ -3571,6 +3698,9 @@ begin
   else
   if website = MANGAFRAME_NAME then
     Result:= MangaframeGetNameAndLink
+  else
+  if website = MANGACOW_NAME then
+    Result:= MangaCowGetNameAndLink
   else
   if website = SENMANGA_NAME then
     Result:= SenMangaGetNameAndLink
@@ -4528,7 +4658,7 @@ label
   end;
 
 begin
- // patchURL:= UTF8ToANSI(URL);
+  //patchURL:= UTF8ToANSI(URL);
   patchURL:= URL;
   if Pos('comic/_/comics', patchURL) = 0 then
     patchURL:= StringReplace(URL, 'comic/_', 'comic/_/comics', []);
@@ -7436,6 +7566,140 @@ begin
   Result:= NO_ERROR;
 end;
 
+// get manga infos from Pururin site
+function   GetPururinInfoFromURL: Byte;
+var
+  s,g: String;
+  isExtractSummary: Boolean = TRUE;
+  isExtractGenres : Boolean = FALSE;
+  isExtractChapter: Boolean = FALSE;
+  i, j: Cardinal;
+begin
+  if Pos('http://', URL) = 0 then
+    mangaInfo.url:= WebsiteRoots[PURURIN_ID,1] + URL
+  else
+    mangaInfo.url:= URL;
+  if NOT GetPage(TObject(source), mangaInfo.url, Reconnect) then
+  begin
+    Result:= NET_PROBLEM;
+    source.Free;
+    exit;
+  end;
+  // parsing the HTML source
+  parse.Clear;
+  Parser:= TjsFastHTMLParser.Create(PChar(source.Text));
+  Parser.OnFoundTag := OnTag;
+  Parser.OnFoundText:= OnText;
+  Parser.Exec;
+
+  Parser.Free;
+  source.Free;
+  mangaInfo.website:= PURURIN_NAME;
+  mangaInfo.status:= '';
+  mangaInfo.coverLink:= '';
+  mangaInfo.summary:= '';
+  mangaInfo.authors:= '';
+  mangaInfo.artists:= '';
+  mangaInfo.genres:= '';
+  
+  // using parser (cover link, summary, chapter name and link)
+  if parse.Count=0 then exit;
+  //for i:=0 to parse.Count-1 do
+  for i:=0 to parse.Count-1 do
+  begin
+    // get cover
+    if (mangaInfo.coverLink = '') AND
+       (Pos('class="gallery-cover', parse.Strings[i])>0) then
+      mangaInfo.coverLink:= CorrectURL(WebsiteRoots[PURURIN_ID,1] + GetAttributeValue(GetTagAttribute(parse.Strings[i+4], 'src=')));
+
+    // get title
+    if (Pos('<title>', parse.Strings[i])<>0) AND (mangaInfo.title = '') then
+      mangaInfo.title:= TrimLeft(TrimRight(HTMLEntitiesFilter(GetString('~!@'+parse.Strings[i+1], '~!@', ' - Original Hentai Manga by Poin - Pururin, Free Online Hentai Manga and Doujinshi Reader!'))));
+
+    if (NOT isExtractChapter) AND (Pos('loader block hidden', parse.Strings[i]) > 0) then
+      isExtractChapter:= TRUE;
+
+    if (isExtractChapter) AND
+       (Pos('class="gallery-cover', parse.Strings[i])>0) then
+    begin
+      Inc(mangaInfo.numChapter);
+	  s:= WebsiteRoots[PURURIN_ID,1] + GetAttributeValue(GetTagAttribute(parse.Strings[i+2], 'href='));
+      mangaInfo.chapterLinks.Add(s);
+      s:= RemoveSymbols(TrimLeft(TrimRight(GetAttributeValue(GetTagAttribute(parse.Strings[i+4], 'alt=')))));
+      mangaInfo.chapterName.Add(StringFilter(HTMLEntitiesFilter(s)));
+    end;
+
+    if (isExtractChapter) AND
+       (Pos('Artist', parse.Strings[i])>0) then
+      isExtractChapter:= FALSE; //bermasalah
+
+    // get summary
+    if (Pos('class="gallery-description', parse.Strings[i]) <> 0) then
+    begin
+      j:= i+1;
+      while (j<parse.Count) AND (Pos('</div>', parse.Strings[j])=0) do
+      begin
+        s:= parse.Strings[j];
+        if s[1] <> '<' then
+        begin
+          parse.Strings[j]:= HTMLEntitiesFilter(StringFilter(TrimLeft(parse.Strings[j])));
+          parse.Strings[j]:= StringReplace(parse.Strings[j], #10, '\n', [rfReplaceAll]);
+          parse.Strings[j]:= StringReplace(parse.Strings[j], #13, '\r', [rfReplaceAll]);
+          mangaInfo.summary:= mangaInfo.summary + parse.Strings[j];
+          break;
+        end;
+        Inc(j);
+      end;
+      isExtractSummary:= FALSE;
+    end;
+
+    // get authors
+    if (Pos('Circle', parse.Strings[i])<>0) then
+      mangaInfo.authors:= parse.Strings[i+1];
+
+    // get artists
+    if (Pos('Artist', parse.Strings[i])<>0) then
+      mangaInfo.artists:= parse.Strings[i+1];
+
+	// get genres
+    if (Pos('Contents', parse.Strings[i])<>0) then
+    begin
+      isExtractGenres:= TRUE;
+    end;
+
+    if isExtractGenres then
+    begin
+      if Pos('/browse/', parse.Strings[i]) <> 0 then
+	  g:= mangaInfo.genres + TrimLeft(TrimRight(parse.Strings[i+6])) + ', ';
+        mangaInfo.genres:= StringReplace(g, '</tr>', '', []); //dwi
+      if Pos('</ul>', parse.Strings[i]) <> 0 then
+        isExtractGenres:= FALSE;
+    end;
+
+    // get status
+    {if (i+2<parse.Count) AND (Pos('Status', parse.Strings[i])<>0) then
+    begin
+      if Pos('Ongoing', parse.Strings[i+3])<>0 then
+        mangaInfo.status:= '1'   // ongoing
+      else
+        mangaInfo.status:= '0';  // completed
+    end;}
+  end;
+
+  // Since chapter name and link are inverted, we need to invert them
+  if mangainfo.ChapterLinks.Count > 1 then
+  begin
+    i:= 0; j:= mangainfo.ChapterLinks.Count - 1;
+    while (i<j) do
+    begin
+      mangainfo.ChapterName.Exchange(i, j);
+      mangainfo.chapterLinks.Exchange(i, j);
+      Inc(i); Dec(j);
+    end;
+  end;
+  Result:= NO_ERROR;
+end;
+
 // get manga infos from HugeManga site
 function   GetHugeMangaInfoFromURL: Byte;
 var
@@ -8485,6 +8749,132 @@ begin
   Result:= NO_ERROR;
 end;
 
+// get manga infos from Mangacow site
+function   GetMangaCowInfoFromURL: Byte;
+var
+  s: String;
+  isExtractSummary: Boolean = TRUE;
+  isExtractGenres : Boolean = FALSE;
+  isExtractChapter: Boolean = FALSE;
+  i, j: Cardinal;
+begin
+  if Pos('http://', URL) = 0 then
+    mangaInfo.url:= WebsiteRoots[MANGACOW_ID,1] + URL
+  else
+    mangaInfo.url:= URL;
+  if NOT GetPage(TObject(source), mangaInfo.url, Reconnect) then
+  begin
+    Result:= NET_PROBLEM;
+    source.Free;
+    exit;
+  end;
+  // parsing the HTML source
+  parse.Clear;
+  Parser:= TjsFastHTMLParser.Create(PChar(source.Text));
+  Parser.OnFoundTag := OnTag;
+  Parser.OnFoundText:= OnText;
+  Parser.Exec;
+
+  Parser.Free;
+  source.Free;
+  mangaInfo.website:= MANGACOW_NAME;
+  // using parser (cover link, summary, chapter name and link)
+  if parse.Count=0 then exit;
+  for i:= 0 to parse.Count-1 do
+  begin
+    // get cover
+    if (mangaInfo.coverLink = '') AND
+       (Pos('class="cvr', parse.Strings[i])>0) then
+      mangaInfo.coverLink:= CorrectURL(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src=')));
+
+    // get title
+    if (Pos('<title>', parse.Strings[i])<>0) AND (mangaInfo.title = '') then
+      mangaInfo.title:= TrimLeft(TrimRight(HTMLEntitiesFilter(GetString('~!@'+parse.Strings[i+1], '~!@', ' - Manga Detail Manga Cow!'))));
+
+    if (NOT isExtractChapter) AND (Pos('List of published chapters for this manga', parse.Strings[i]) > 0) then
+      isExtractChapter:= TRUE;
+
+    // get chapter name and links
+    if (isExtractChapter) AND
+       (Pos('class="lng', parse.Strings[i])>0) then
+    begin
+      Inc(mangaInfo.numChapter);
+	  s:= StringReplace(GetString(parse.Strings[i+2], 'href="', '"'), WebsiteRoots[MANGACOW_ID,1], '', []);
+      mangaInfo.chapterLinks.Add(s);
+	  s:= RemoveSymbols(TrimLeft(TrimRight(parse.Strings[i+5])));
+      mangaInfo.chapterName.Add(StringFilter(HTMLEntitiesFilter(s)));
+    end;
+
+    if (isExtractChapter) AND
+       (Pos('disqus_thread', parse.Strings[i])>0) then
+      isExtractChapter:= FALSE; //bermasalah
+
+    // get summary
+    if (Pos('<div class="det">', parse.Strings[i]) <> 0) then
+    begin
+      j:= i+2;
+      while (j<parse.Count) AND (Pos('<b>', parse.Strings[j])=0) do
+      begin
+        s:= parse.Strings[j];
+        if s[1] <> '<' then
+        begin
+          parse.Strings[j]:= HTMLEntitiesFilter(StringFilter(TrimLeft(parse.Strings[j])));
+          parse.Strings[j]:= StringReplace(parse.Strings[j], #10, '\n', [rfReplaceAll]);
+          parse.Strings[j]:= StringReplace(parse.Strings[j], #13, '\r', [rfReplaceAll]);
+          mangaInfo.summary:= mangaInfo.summary + parse.Strings[j];
+          break;
+        end;
+        Inc(j);
+      end;
+      isExtractSummary:= FALSE;
+    end;
+
+    // get authors
+    if (Pos('Author', parse.Strings[i])<>0) then
+      mangaInfo.authors:= TrimLeft(StringFilter(parse.Strings[i+2]));
+
+    // get artists
+    if (Pos('Artist', parse.Strings[i])<>0) then
+      mangaInfo.artists:= TrimLeft(StringFilter(parse.Strings[i+2]));
+
+// get genres
+    if (Pos('Category', parse.Strings[i])<>0) then
+    begin
+      isExtractGenres:= TRUE;
+    end;
+
+    if isExtractGenres then
+    begin
+      if Pos('manga-list/category/', parse.Strings[i]) <> 0 then
+        mangaInfo.genres:= mangaInfo.genres + TrimLeft(TrimRight(parse.Strings[i+1])) + ', ';
+      if Pos('</p>', parse.Strings[i]) <> 0 then
+        isExtractGenres:= FALSE;
+    end;
+
+    // get status
+    if (i+2<parse.Count) AND (Pos('Status', parse.Strings[i])<>0) then
+    begin
+      if Pos('Ongoing', parse.Strings[i+3])<>0 then
+        mangaInfo.status:= '1'   // ongoing
+      else
+        mangaInfo.status:= '0';  // completed
+    end;
+  end;
+
+  // Since chapter name and link are inverted, we need to invert them
+  if mangainfo.ChapterLinks.Count > 1 then
+  begin
+    i:= 0; j:= mangainfo.ChapterLinks.Count - 1;
+    while (i<j) do
+    begin
+      mangainfo.ChapterName.Exchange(i, j);
+      mangainfo.chapterLinks.Exchange(i, j);
+      Inc(i); Dec(j);
+    end;
+  end;
+  Result:= NO_ERROR;
+end;
+
 // get manga infos from SenManga site
 function   GetSenMangaInfoFromURL: Byte;
 var
@@ -8905,6 +9295,9 @@ begin
   if website = MANGAESTA_NAME then
     Result:= GetMangaEstaInfoFromURL
   else
+  if website = PURURIN_NAME then
+    Result:= GetPururinInfoFromURL
+  else
   if website = HUGEMANGA_NAME then
     Result:= GetHugeMangaInfoFromURL
   else
@@ -8934,6 +9327,9 @@ begin
   else
   if website = CENTRALDEMANGAS_NAME then
     Result:= GetCentralDeMangasInfoFromURL
+  else
+  if website = MANGACOW_NAME then
+    Result:= GetMangaCowInfoFromURL
   else
   if website = SENMANGA_NAME then
     Result:= GetSenMangaInfoFromURL
