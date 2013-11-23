@@ -187,7 +187,7 @@ const
   MANGAGO_NAME      = 'MangaGo';      MANGAGO_ID     = 46;
   DM5_NAME          = 'DM5';          DM5_ID         = 47;
   PURURIN_NAME      = 'Pururin';      Pururin_ID     = 48;
-  MANGACOW_NAME     = 'MangaCow';     MANGACOW_ID    = 49;
+  MANGACOW_NAME     = 'Mangacow';     MANGACOW_ID    = 49;
 
   DEFAULT_LIST = ANIMEA_NAME+'!%~'+MANGAFOX_NAME+'!%~'+MANGAHERE_NAME+'!%~'+MANGAINN_NAME+'!%~'+MANGAREADER_NAME+'!%~';
   DEFAULT_CUSTOM_RENAME = '%NUMBERING% - %CHAPTER%';
@@ -281,8 +281,8 @@ var
      ('ScanManga', 'http://www.scan-manga.com'),
      ('MangaGo', 'http://www.mangago.com'),
      ('DM5', 'http://www.dm5.com'),
-	 ('Pururin', 'http://pururin.com'),
-     ('MangaCow', 'http://mngacow.com')
+     ('Pururin', 'http://pururin.com'),
+     ('Mangacow', 'http://mngacow.com')
     );
 
   ANIMEA_BROWSER: String = '/browse.html?page=';

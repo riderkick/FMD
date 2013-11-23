@@ -7661,7 +7661,7 @@ begin
     if (Pos('Artist', parse.Strings[i])<>0) then
       mangaInfo.artists:= parse.Strings[i+1];
 
-	// get genres
+    // get genres
     if (Pos('Contents', parse.Strings[i])<>0) then
     begin
       isExtractGenres:= TRUE;
