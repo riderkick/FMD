@@ -48,7 +48,7 @@ var
 begin
   try
    // Path:= FixPath(Path);
-    fPath:= FixLastDir(Path);
+    fPath:= Trim(Path);
     RenameFileUTF8(Path, fPath);
     list:= TStringList.Create;
     searcher:= TFileSearcher.Create;
@@ -106,7 +106,7 @@ var
 begin
   try
    // Path:= FixPath(Path);
-    fPath:= FixLastDir(Path);
+    fPath:= Trim(Path);
     RenameFileUTF8(Path, fPath);
     list:= TStringList.Create;
     searcher:= TFileSearcher.Create;
