@@ -406,8 +406,7 @@ var
 
   OptionAutoCheckMinutes,
   OptionCustomRename,
-  // en: dialog messages
-  // vi: nội dung hộp thoại
+  // dialog messages
   infoCustomGenres,
   infoName,
   infoAuthors,
@@ -550,7 +549,6 @@ function  UnicodeRemove(const S: String): String;
 // Check a directory to see if it's empty (return TRUE) or not
 function  IsDirectoryEmpty(const ADir: String): Boolean;
 function  CheckRedirect(const HTTP: THTTPSend): String;
-function  CorrectFile(const APath: String): String;
 function  CorrectFilePath(const APath: String): String;
 function  CorrectURL(const URL: String): String;
 procedure CheckPath(const S: String);
@@ -564,21 +562,18 @@ function  RemoveSymbols(const input: String): String;
 // custom rename feature
 function  CustomRename(const AString, AWebsite, AMangaName, AChapter, ANumbering: String; const AIsUnicodeRemove: Boolean): String;
 
-// EN: Get substring from source
-// VI: Lấy chuỗi con từ chuỗi mẹ
+// Get substring from source
 function  GetString(const source, sStart, sEnd: String): String;
 
 function  Find(const S: String; var List: TStringList; out index: Integer): Boolean;
 
-// EN: Get param from input
-// VI: Lấy param từ input
+// Get param from input
 procedure GetParams(const output: TStringList; input: String); overload;
 procedure GetParams(var output: TCardinalList; input: String); overload;
 procedure GetParams(var output: TList; input: String); overload;
 
 function  RemoveDuplicateNumbersInString(const AString: String): String;
-// EN: Set param from input
-// VI: Cài param từ input
+// Set param from input
 function  SetParams(input: TObject): String; overload;
 function  SetParams(const input: array of String): String; overload;
 
@@ -595,8 +590,7 @@ function  PrepareSummaryForHint(const source: String):  String;
 
 // deal with sourceforge URL
 function  SourceForgeURL(URL: string): string;
-// EN: Get HTML source code from a URL
-// VI: Lấy webcode từ 1 URL
+// Get HTML source code from a URL
 function  gehGetPage(var output: TObject; URL: String; const Reconnect: Cardinal; const lURL: String = ''): Boolean;
 function  GetPage(var output: TObject; URL: String; const Reconnect: Cardinal; const isByPassHTTP: Boolean = FALSE): Boolean;
 function  GetBitlyPage(var output: TObject; URL: String; const Reconnect: Cardinal; const isByPassHTTP: Boolean = FALSE): Boolean;
@@ -714,14 +708,7 @@ end;
 function  UnicodeRemove(const S: String): String;
 var i: Cardinal;
 begin
- // if doRemoveName then
-    Result:= S;
- { else
-  begin
-    result:= '';
-    exit;
-  end; }
- // if NOT doRemoveUnicode then exit;
+  Result:= S;
   for i:= 1 to Length(Result) do
   begin
     if (Byte(Result[i])<31) OR (Byte(Result[i])>127) then
@@ -737,27 +724,12 @@ var
   searchRec :TSearchRec;
 begin
   try
-    Result:= (FindFirstUTF8(CorrectFilePath(ADir+'/*.*'), faAnyFile {$ifdef unix} OR faSymLink {$endif unix}, searchRec) = 0) AND
+    Result:= (FindFirstUTF8(CorrectFilePath(ADir)+'*.*', faAnyFile {$ifdef unix} OR faSymLink {$endif unix}, searchRec) = 0) AND
              (FindNextUTF8(searchRec) = 0) AND
              (FindNextUTF8(searchRec) <> 0);
   finally
     FindCloseUTF8(searchRec);
   end;
-end;
-
-function  CorrectFile(const APath: String): String;
-var I: Integer;
-begin
-  if APath = '' then exit('');
-  Result:= APath;
-  for I:=1 to Length(Result) do
-    if Result[I]= '\' then
-      Result[I]:= '/';
-  if Result[Length(Result)]<>'/' then
-    Result:= Result + '/';
- // Result:= StringReplace(Result, '\', '/', [rfReplaceAll]);
-  while system.Pos('//', Result) > 0 do
-    Result:= StringReplace(Result, '//', '/', []);
 end;
 
 function  CorrectURL(const URL: String): String;
@@ -768,14 +740,15 @@ end;
 function  CorrectFilePath(const APath: String): String;
 var I: Integer;
 begin
- { Result:= APath;
+  if APath = '' then exit('');
+  Result:= APath;
   for I:=1 to Length(Result) do
     if Result[I]= '\' then
-      Result[I]:='/';
-  if Length(Result)<>0 then
-    if Result[Length(Result)]<>'/' then
-      Result:= Result+'/';  }
-  Result:= CorrectFile(APath);
+      Result[I]:= '/';
+  if Result[Length(Result)]<>'/' then
+    Result:= Result + '/';
+  while system.Pos('//', Result) > 0 do
+    Result:= StringReplace(Result, '//', '/', []);
 end;
 
 // took from an old project - maybe bad code
@@ -792,7 +765,7 @@ begin
   if wS[2]<>':' then
   begin
     {$IFDEF WIN32}
-    lcS2:= CorrectFile(oldDir);
+    lcS2:= CorrectFilePath(oldDir);
     {$ELSE}
     lcS2:= '';
     {$ENDIF}
@@ -821,9 +794,7 @@ begin
       end;
     end;
   end;
- // ForceDirectoriesUTF8(wS);
   SetCurrentDirUTF8(oldDir);
- // Delete(wS, 1, 1);
 end;
 
 function  GetMangaSiteID(const name: String): Cardinal;
@@ -1419,10 +1390,10 @@ begin
 end;
 
 var
-  bttHTTP,
   gehHTTP: THTTPSend;
 
-// will remove this later
+// E-Hentai needs to store cookies, so a separate THTTPSend instance and a separate
+// get function is a good way to deal with the problem
 function  gehGetPage(var output: TObject; URL: String; const Reconnect: Cardinal; const lURL: String = ''): Boolean;
 var
   code   : Cardinal;
@@ -1465,10 +1436,8 @@ globReturn:
   begin
     gehHTTP.Clear;
     Delete(URL, Length(URL)-10, 11);
-   // URL:= URL + lURL;
     goto globReturn;
   end;
- // gehHTTP.Document.SaveToFile('error.txt');
   while gehHTTP.ResultCode = 302 do
   begin
     URL:= CheckRedirect(gehHTTP);
@@ -1512,12 +1481,6 @@ label
   globReturn;
 
 begin
-{ if (lURL <> '') AND (Pos('?nw=session', URL) > 0) then
-  begin
-    Delete(URL, Length(URL)-10, 11);
-    URL:= URL + lURL;
-  end; }
-
   Result:= FALSE;
   if (isByPassHTTP) AND (Pos('HTTP://', UpCase(URL)) = 0) then
     exit;
@@ -1534,7 +1497,6 @@ globReturn:
   end
   else
   begin
-   // HTTP.MimeType := 'text/xml';
     HTTP.Headers.Add('Accept-Charset: utf-8');
     HTTP.UserAgent:= 'curl/7.21.0 (i686-pc-linux-gnu) libcurl/7.21.0 OpenSSL/0.9.8o zlib/1.2.3.4 libidn/1.18';
   end;
@@ -1564,10 +1526,9 @@ globReturn:
   begin
     HTTP.Clear;
     Delete(URL, Length(URL)-10, 11);
-   // URL:= URL + lURL;
     goto globReturn;
   end;
- // HTTP.Document.SaveToFile('error2.txt');
+
   while (HTTP.ResultCode = 302) OR (HTTP.ResultCode = 301) do
   begin
     s:= CheckRedirect(HTTP);
@@ -1607,6 +1568,7 @@ globReturn:
           break;
         end;
 
+    // Decompress the html file
     if isGZip then
     begin
       i:= Random(9999999);
@@ -1655,7 +1617,6 @@ var
   header  : array [0..3] of Byte;
   ext     : String;
   HTTP    : THTTPSend;
- // Memory  : TMemoryStream;
   counter : Cardinal = 0;
 begin
   Result:= FALSE;
@@ -1680,7 +1641,6 @@ begin
       Inc(counter);
     end;
     HTTP.RangeStart:= HTTP.Document.Size;
-   // HTTP.Clear;
     Sleep(500);
   end;
 
@@ -1704,7 +1664,6 @@ begin
         Inc(counter);
       end;
       HTTP.RangeStart:= HTTP.Document.Size;
-     // HTTP.Clear;
       Sleep(500);
     end;
   end;
@@ -1727,8 +1686,6 @@ begin
   else
     ext:= '';
 
- // SetCurrentDirUTF8();
- // HTTP.Document.SaveToFile('/home/akarin/FreeSpace/FMD/trunk/mangadownloader/downloads/' + name+ext);
   HTTP.Document.SaveToFile(Path+name+ext);
   HTTP.Free;
   Result:= TRUE;
@@ -1878,23 +1835,6 @@ begin
   Result:= DateToJDN(year, month, day);
 end;
 
-{function  ConvertInt32ToStr(const aValue: Cardinal)  : String;
-begin
-  Result:= '';
-  Result:= Result+Char(aValue);
-  Result:= Result+Char(aValue shr 8);
-  Result:= Result+Char(aValue shr 16);
-  Result:= Result+Char(aValue shr 24);
-end;
-
-function  ConvertStrToInt32(const aStr  : String): Cardinal;
-begin
-  Result:= (Byte(aStr[4]) shl 24) OR
-           (Byte(aStr[3]) shl 16) OR
-           (Byte(aStr[2]) shl 8) OR
-            Byte(aStr[1]);
-end;}
-
 procedure TransferMangaInfo(var dest: TMangaInfo; const source: TMangaInfo);
 var
   i: Cardinal;
@@ -1929,13 +1869,11 @@ end;
 
 procedure   TDownloadPageThread.Execute;
 begin
- // isSuccess:= SavePage(URL, Path, Retry);
   isDone   := TRUE;
   Suspend;
 end;
 
 // OS dependent
-
 function    fmdGetTempPath: String;
 var
   l: Cardinal;
@@ -1971,6 +1909,7 @@ begin
   end;
 {$ENDIF}
 {$IFDEF UNIX}
+  // This process require admin rights in order to execute
   Process:= TProcessUTF8.Create(nil);
   Process.CommandLine:= 'poweroff';
   Process.Execute;
@@ -1987,6 +1926,4 @@ end;
 
 begin
   gehHTTP:= THTTPSend.Create;
-  bttHTTP:= THTTPSend.Create;
- // bttHTTP.Headers.Insert(0, 'Referer:'+WebsiteRoots[BATOTO_ID,1]+'/');
 end.

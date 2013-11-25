@@ -141,7 +141,7 @@ begin
     DLManager.containers.Items[pos].downloadInfo.Website:= website;
     if edSaveTo.Text = '' then
       edSaveTo.Text:= options.ReadString('saveto', 'SaveTo', '');
-    s:= CorrectFile(edSaveTo.Text);
+    s:= CorrectFilePath(edSaveTo.Text);
     if s[Length(s)] = '/' then
       Delete(s, Length(s), 1);
 
@@ -269,7 +269,7 @@ begin
     begin
       if edSaveTo.Text = '' then
         edSaveTo.Text:= options.ReadString('saveto', 'SaveTo', '');
-      s:= CorrectFile(edSaveTo.Text);
+      s:= CorrectFilePath(edSaveTo.Text);
     end
     else
       s:= FSavePath;

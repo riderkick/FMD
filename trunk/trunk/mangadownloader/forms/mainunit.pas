@@ -542,7 +542,7 @@ begin
   isExiting  := FALSE;
 
   oldDir     := GetCurrentDirUTF8;
-  oldDir     := CorrectFile(oldDir);
+  oldDir     := CorrectFilePath(oldDir);
 
   dataProcess:= TDataProcess.Create;
 
@@ -1079,7 +1079,7 @@ begin
   DLManager.containers.Items[pos].currentDownloadChapterPtr:= 0;
   DLManager.containers.Items[pos].downloadInfo.title  := mangaInfo.title;
   DLManager.containers.Items[pos].downloadInfo.Website:= mangaInfo.website;
-  s:= CorrectFile(edSaveTo.Text);
+  s:= CorrectFilePath(edSaveTo.Text);
   if s[Length(s)] = '/' then
     Delete(s, Length(s), 1);
 
@@ -1142,16 +1142,16 @@ end;
 
 procedure TMainForm.btBrowseClick(Sender: TObject);
 begin
-  dlgSaveTo.InitialDir:= CorrectFile(edSaveTo.Text);
+  dlgSaveTo.InitialDir:= CorrectFilePath(edSaveTo.Text);
   if dlgSaveTo.Execute then
-    edSaveTo.Text:= CorrectFile(dlgSaveTo.FileName);
+    edSaveTo.Text:= CorrectFilePath(dlgSaveTo.FileName);
 end;
 
 procedure TMainForm.btOptionBrowseClick(Sender: TObject);
 begin
-  dlgSaveTo.InitialDir:= CorrectFile(edOptionDefaultPath.Text);
+  dlgSaveTo.InitialDir:= CorrectFilePath(edOptionDefaultPath.Text);
   if dlgSaveTo.Execute then
-    edOptionDefaultPath.Text:= CorrectFile(dlgSaveTo.FileName);
+    edOptionDefaultPath.Text:= CorrectFilePath(dlgSaveTo.FileName);
 end;
 
 // -----
@@ -1668,7 +1668,7 @@ begin
   if InputQuery('', stDlgTypeInNewSavePath, favorites.favoriteInfo[vtFavorites.FocusedNode.Index].SaveTo) then
   begin
     favorites.favoriteInfo[vtFavorites.FocusedNode.Index].SaveTo:=
-      CorrectFile(favorites.favoriteInfo[vtFavorites.FocusedNode.Index].SaveTo);
+      CorrectFilePath(favorites.favoriteInfo[vtFavorites.FocusedNode.Index].SaveTo);
     vtFavorites.Clear;
     vtFavorites.RootNodeCount:= favorites.Count;
     favorites.Backup;
