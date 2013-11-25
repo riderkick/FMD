@@ -23,7 +23,7 @@ type
   TDownloadThread = class(TFMDThread)
   protected
     parse        : TStringList;
-    workPtr      : Cardinal;
+    workCounter      : Cardinal;
 
     FSortColumn  : Cardinal;
     FAnotherURL  : String;
@@ -42,9 +42,6 @@ type
     procedure   OnText(text: String);
   public
     checkStyle    : Cardinal;
-
-    Terminated2   : Boolean;
-
     // ID of the site
     manager       : TTaskThread;
 
@@ -97,7 +94,7 @@ type
     currentDownloadChapterPtr,
     activeThreadCount,
     Status     : Cardinal;
-    workPtr    : Cardinal;
+    workCounter    : Cardinal;
     mangaSiteID: Cardinal;
     pageNumber : Cardinal;
 
@@ -220,7 +217,6 @@ end;
 
 constructor TDownloadThread.Create;
 begin
-  Terminated2 := FALSE;
   isTerminated:= FALSE;
   isSuspended := TRUE;
   FreeOnTerminate:= TRUE;
@@ -1135,6 +1131,7 @@ var
     l.Free;
   end;
   
+   //PURURIN page number
  function GetPururinPageNumber: Boolean;
   var
     s   : String;
@@ -1424,41 +1421,7 @@ var
     parse.Free;
     l.Free;
   end;
-
- { function GetCentralDeMangasPageNumber: Boolean;
-  var
-    s   : String;
-    i, j: Cardinal;
-    l   : TStringList;
-  begin
-    l:= TStringList.Create;
-    parse:= TStringList.Create;
-    s:= EncodeUrl(WebsiteRoots[CENTRALDEMANGAS_ID,1] + URL + '#1');
-    Result:= GetPage(TObject(l),
-                     s,
-                     manager.container.manager.retryConnect);
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
-    Parser.Exec;
-    Parser.Free;
-    if parse.Count>0 then
-    begin
-      manager.container.pageNumber:= 0;
-      for i:= parse.Count-1 downto 5 do
-      begin
-        if (Pos('</select>', parse.Strings[i])>0) then
-        begin
-          s:= TrimLeft(TrimRight(parse.Strings[i-3]));
-          manager.container.pageNumber:= StrToInt(s);
-          break;
-        end;
-      end;
-    end;
-    parse.Free;
-    l.Free;
-  end; }
-  
+     //mangacow page number
  function GetMangaCowPageNumber: Boolean;
   var
     s   : String;
@@ -1626,9 +1589,6 @@ begin
   if manager.container.mangaSiteID = MANGAINN_ID then
     Result:= GetMangaInnPageNumber
   else
- { if manager.container.mangaSiteID = OURMANGA_ID then
-    Result:= GetOurMangaPageNumber
-  else }
   if manager.container.mangaSiteID = BATOTO_ID then
     Result:= GetBatotoPageNumber
   else
@@ -1700,9 +1660,6 @@ begin
   else
   if manager.container.mangaSiteID = MANGAAE_ID then
     Result:= GetMangaAePageNumber
- // else
- // if manager.container.mangaSiteID = CENTRALDEMANGAS_ID then
- //   Result:= GetCentralDeMangasPageNumber
   else
   if manager.container.mangaSiteID = MANGACOW_ID then
     Result:= GetMangaCowPageNumber
@@ -1717,10 +1674,6 @@ begin
   if manager.container.mangaSiteID = GEHENTAI_ID then
   begin
     Result:= GetGEHentaiPageNumber('', TRUE);
-   { if manager.container.pageNumber > 20 then
-      for i:=1 to ((manager.container.pageNumber-1) div 20) do
-        Result:= GetGEHentaiPageNumber('?page=' + IntToStr(i), FALSE); }
-   // manager.container.pageLinks.SaveToFile('log.txt');
   end
   else
   if (manager.container.mangaSiteID = KISSMANGA_ID) OR
@@ -1762,12 +1715,12 @@ var
     Result:= GetPage(TObject(l),
                      WebsiteRoots[ANIMEA_ID,1] +
                      StringReplace(URL, '.html', '', []) +
-                     '-page-'+IntToStr(workPtr+1)+'.html',
+                     '-page-'+IntToStr(workCounter+1)+'.html',
                      manager.container.manager.retryConnect);
     for i:= 0 to l.Count-1 do
       if (Pos('class="mangaimg', l.Strings[i])<>0) then
       begin
-        manager.container.pageLinks.Strings[workPtr]:= GetString(l.Strings[i], '<img src="', '"');
+        manager.container.pageLinks.Strings[workCounter]:= GetString(l.Strings[i], '<img src="', '"');
         break;
       end;
     l.Free;
@@ -1780,9 +1733,9 @@ var
     l: TStringList;
   begin
     l:= TStringList.Create;
-    if workPtr > 0 then
+    if workCounter > 0 then
       Result:= GetPage(TObject(l),
-                       WebsiteRoots[MANGAHERE_ID,1] + URL + IntToStr(workPtr+1)+'.html',
+                       WebsiteRoots[MANGAHERE_ID,1] + URL + IntToStr(workCounter+1)+'.html',
                        manager.container.manager.retryConnect)
     else
       Result:= GetPage(TObject(l),
@@ -1801,7 +1754,7 @@ var
         for c:= 'a' to 'z' do
           if (Pos('http://'+c+'.mhcdn.net/store/', parse.Strings[i])<>0) then
           begin
-            manager.container.pageLinks.Strings[workPtr]:= GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src='));
+            manager.container.pageLinks.Strings[workCounter]:= GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src='));
             parse.Free;
             l.Free;
             exit;
@@ -1817,9 +1770,9 @@ var
     l: TStringList;
   begin
     l:= TStringList.Create;
-    if workPtr > 0 then
+    if workCounter > 0 then
       Result:= GetPage(TObject(l),
-                       WebsiteRoots[ESMANGAHERE_ID,1] + URL + IntToStr(workPtr+1)+'.html',
+                       WebsiteRoots[ESMANGAHERE_ID,1] + URL + IntToStr(workCounter+1)+'.html',
                        manager.container.manager.retryConnect)
     else
       Result:= GetPage(TObject(l),
@@ -1837,7 +1790,7 @@ var
       for i:= 0 to parse.Count-1 do
         if (Pos('class="read_img"', parse.Strings[i])<>0) then
         begin
-          manager.container.pageLinks.Strings[workPtr]:= GetAttributeValue(GetTagAttribute(parse.Strings[i+6], 'src='));
+          manager.container.pageLinks.Strings[workCounter]:= GetAttributeValue(GetTagAttribute(parse.Strings[i+6], 'src='));
           parse.Free;
           l.Free;
           exit;
@@ -1854,7 +1807,7 @@ var
   begin
     l:= TStringList.Create;
     Result:= GetPage(TObject(l),
-                     WebsiteRoots[MANGAINN_ID,1] + URL + '/page_'+IntToStr(workPtr+1),
+                     WebsiteRoots[MANGAINN_ID,1] + URL + '/page_'+IntToStr(workCounter+1),
                      manager.container.manager.retryConnect);
     parse:= TStringList.Create;
     Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
@@ -1869,7 +1822,7 @@ var
         if GetTagName(parse.Strings[i]) = 'img' then
           if GetAttributeValue(GetTagAttribute(parse.Strings[i], 'id='))='imgPage' then
           begin
-            manager.container.pageLinks.Strings[workPtr]:= GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src='));
+            manager.container.pageLinks.Strings[workCounter]:= GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src='));
             break;
           end;
     end;
@@ -1885,7 +1838,7 @@ var
   begin
     l:= TStringList.Create;
     Result:= GetPage(TObject(l),
-                     WebsiteRoots[OURMANGA_ID,1] + URL + '/' + manager.container.pageContainerLinks.Strings[workPtr],
+                     WebsiteRoots[OURMANGA_ID,1] + URL + '/' + manager.container.pageContainerLinks.Strings[workCounter],
                      manager.container.manager.retryConnect);
     parse:= TStringList.Create;
     Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
@@ -1904,7 +1857,7 @@ var
             Dec(j);
             if GetTagName(parse.Strings[j]) = 'img' then
             begin
-              manager.container.pageLinks.Strings[workPtr]:= GetAttributeValue(GetTagAttribute(parse.Strings[j], 'src='));
+              manager.container.pageLinks.Strings[workCounter]:= GetAttributeValue(GetTagAttribute(parse.Strings[j], 'src='));
               parse.Free;
               l.Free;
               exit;
@@ -1967,7 +1920,7 @@ var
     parse.Clear;
     l.Clear;
     Result:= GetPage(TObject(l),
-                     WebsiteRoots[BATOTO_ID,1] + URL + '/'+IntToStr(workPtr+1),
+                     WebsiteRoots[BATOTO_ID,1] + URL + '/'+IntToStr(workCounter+1),
                      manager.container.manager.retryConnect);
 
     Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
@@ -1996,7 +1949,7 @@ var
               if (Pos('batoto.net/comics', parse.Strings[i])>0) AND
                  (Pos('z-index: 1003', parse.Strings[i])>0) then
               begin
-                manager.container.pageLinks.Strings[workPtr]:= GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src='));
+                manager.container.pageLinks.Strings[workCounter]:= GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src='));
                 break;
               end;
         end;
@@ -2094,7 +2047,7 @@ var
   begin
     l:= TStringList.Create;
     Result:= GetPage(TObject(l),
-                     HENTAI2READ_ROOT + URL + IntToStr(workPtr+1)+'/',
+                     HENTAI2READ_ROOT + URL + IntToStr(workCounter+1)+'/',
                      manager.container.manager.retryConnect);
     parse:= TStringList.Create;
     Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
@@ -2109,7 +2062,7 @@ var
         if (GetTagName(parse.Strings[i]) = 'img') AND
            (GetAttributeValue(GetTagAttribute(parse.Strings[i], 'id='))='img_mng_enl') then
         begin
-          manager.container.pageLinks.Strings[workPtr]:= GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src='));
+          manager.container.pageLinks.Strings[workCounter]:= GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src='));
           break;
         end;
     end;
@@ -2126,7 +2079,7 @@ var
     l:= TStringList.Create;
     // get number of pages
     Result:= GetPage(TObject(l),
-                     WebsiteRoots[FAKKU_ID,1] + StringReplace(URL, '/read', '', []){ + '#page' + IntToStr(workPtr+1)},
+                     WebsiteRoots[FAKKU_ID,1] + StringReplace(URL, '/read', '', []){ + '#page' + IntToStr(workCounter+1)},
                      manager.container.manager.retryConnect);
     parse:= TStringList.Create;
     Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
@@ -2153,7 +2106,7 @@ var
     // get link pages
     l.Clear;
     Result:= GetPage(TObject(l),
-                     WebsiteRoots[FAKKU_ID,1] + URL + '#page' + IntToStr(workPtr+1),
+                     WebsiteRoots[FAKKU_ID,1] + URL + '#page' + IntToStr(workCounter+1),
                      manager.container.manager.retryConnect);
     parse.Clear;
     Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
@@ -2169,21 +2122,21 @@ var
       begin
         if (Pos('return ''http://c.fakku.net/', parse.Strings[i])>0) then
         begin
-        //  manager.container.pageLinks.Strings[workPtr]:=
+        //  manager.container.pageLinks.Strings[workCounter]:=
           imgURL:= 'http://c.fakku.net/' + GetString(parse.Strings[i], '''http://c.fakku.net/', '''');
           break;
         end
         else
         if (Pos('return ''http://t.fakku.net/', parse.Strings[i])>0) then
         begin
-        //  manager.container.pageLinks.Strings[workPtr]:=
+        //  manager.container.pageLinks.Strings[workCounter]:=
           imgURL:= 'http://t.fakku.net/' + GetString(parse.Strings[i], '''http://t.fakku.net/', '''');
           break;
         end
         else
         if (Pos('return ''http://cdn.fakku.net/', parse.Strings[i])>0) then
         begin
-        //  manager.container.pageLinks.Strings[workPtr]:=
+        //  manager.container.pageLinks.Strings[workCounter]:=
           imgURL:= 'http://cdn.fakku.net/' + GetString(parse.Strings[i], '''http://cdn.fakku.net/', '''');
           break;
         end;
@@ -2254,7 +2207,7 @@ var
     begin
       if Pos('.html', URL) = 0 then
       begin
-        realURL:= URL + '/' + IntToStr(workPtr+1);
+        realURL:= URL + '/' + IntToStr(workCounter+1);
         exit;
       end;
       i:= 2;
@@ -2273,7 +2226,7 @@ var
             end
             else
             begin
-              realURL:= realURL + IntToStr(workPtr+1);
+              realURL:= realURL + IntToStr(workCounter+1);
               break;
             end;
           end;
@@ -2310,7 +2263,7 @@ var
           if //(Pos(realURL, parse.Strings[i])>0) AND
              (Pos('alt=', parse.Strings[i])>0) then
           begin
-            manager.container.pageLinks.Strings[workPtr]:= GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src='));
+            manager.container.pageLinks.Strings[workCounter]:= GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src='));
             break;
           end;
         end;
@@ -2329,7 +2282,7 @@ var
   begin
     l:= TStringList.Create;
     Result:= GetPage(TObject(l),
-                     WebsiteRoots[MANGAPARK_ID,1] + URL + 'all',//IntToStr(workPtr+1),
+                     WebsiteRoots[MANGAPARK_ID,1] + URL + 'all',//IntToStr(workCounter+1),
                      manager.container.manager.retryConnect);
     parse:= TStringList.Create;
     Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
@@ -2361,7 +2314,7 @@ var
     l: TStringList;
   begin
     l:= TStringList.Create;
-    s:= DecodeUrl(URL + '/' + IntToStr(workPtr+1) + '.html');
+    s:= DecodeUrl(URL + '/' + IntToStr(workCounter+1) + '.html');
     if Pos(WebsiteRoots[MANGAFOX_ID,1], s) = 0 then
       s:= WebsiteRoots[MANGAFOX_ID,1] + s;
     Result:= GetPage(TObject(l),
@@ -2379,7 +2332,7 @@ var
       for i:= 0 to parse.Count-1 do
         if (Pos('onclick="return enlarge()"', parse.Strings[i])>0) then
         begin
-          manager.container.pageLinks.Strings[workPtr]:= GetAttributeValue(GetTagAttribute(parse.Strings[i+1], 'src='));
+          manager.container.pageLinks.Strings[workCounter]:= GetAttributeValue(GetTagAttribute(parse.Strings[i+1], 'src='));
           break;
         end;
     end;
@@ -2395,7 +2348,7 @@ var
     l: TStringList;
   begin
     l:= TStringList.Create;
-    s:= DecodeUrl(WebsiteRoots[STARKANA_ID,1] + URL + '/' + IntToStr(workPtr+1));
+    s:= DecodeUrl(WebsiteRoots[STARKANA_ID,1] + URL + '/' + IntToStr(workCounter+1));
     Result:= GetPage(TObject(l),
                      s,
                      manager.container.manager.retryConnect);
@@ -2411,7 +2364,7 @@ var
       for i:= parse.Count-1 downto 5 do
         if (Pos('style="cursor: pointer;"', parse.Strings[i])>0) then
         begin
-          manager.container.pageLinks.Strings[workPtr]:= GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src='));
+          manager.container.pageLinks.Strings[workCounter]:= GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src='));
           break;
         end;
     end;
@@ -2427,7 +2380,7 @@ var
     l: TStringList;
   begin
     l:= TStringList.Create;
-    s:= DecodeUrl(WebsiteRoots[EATMANGA_ID,1] + URL + 'page-' + IntToStr(workPtr+1));
+    s:= DecodeUrl(WebsiteRoots[EATMANGA_ID,1] + URL + 'page-' + IntToStr(workCounter+1));
     Result:= GetPage(TObject(l),
                      s,
                      manager.container.manager.retryConnect);
@@ -2443,7 +2396,7 @@ var
       for i:= 0 to parse.Count-1 do
         if (Pos('<div id="prefetchimg"', parse.Strings[i])>0) then
         begin
-          manager.container.pageLinks.Strings[workPtr]:= GetAttributeValue(GetTagAttribute(parse.Strings[i-1], 'src='));
+          manager.container.pageLinks.Strings[workCounter]:= GetAttributeValue(GetTagAttribute(parse.Strings[i-1], 'src='));
           break;
         end;
     end;
@@ -2459,7 +2412,7 @@ var
     l: TStringList;
   begin
     l:= TStringList.Create;
-    s:= DecodeUrl(WebsiteRoots[SUBMANGA_ID,1] + URL + '/' + IntToStr(workPtr+1));
+    s:= DecodeUrl(WebsiteRoots[SUBMANGA_ID,1] + URL + '/' + IntToStr(workCounter+1));
     Result:= GetPage(TObject(l),
                      s,
                      manager.container.manager.retryConnect);
@@ -2475,7 +2428,7 @@ var
       for i:= 0 to parse.Count-1 do
         if (Pos('type="text/javascript"', parse.Strings[i])>0) then
         begin
-          manager.container.pageLinks.Strings[workPtr]:= GetAttributeValue(GetTagAttribute(parse.Strings[i-3], 'src='));
+          manager.container.pageLinks.Strings[workCounter]:= GetAttributeValue(GetTagAttribute(parse.Strings[i-3], 'src='));
           break;
         end;
     end;
@@ -2491,7 +2444,7 @@ var
     l: TStringList;
   begin
     l:= TStringList.Create;
-    s:= DecodeUrl(StringReplace(WebsiteRoots[ANIMEEXTREMIST_ID,1] + URL, '.html', '', []) + '-' + IntToStr(workPtr+1) + '.html');
+    s:= DecodeUrl(StringReplace(WebsiteRoots[ANIMEEXTREMIST_ID,1] + URL, '.html', '', []) + '-' + IntToStr(workCounter+1) + '.html');
     Result:= GetPage(TObject(l),
                      s,
                      manager.container.manager.retryConnect);
@@ -2508,7 +2461,7 @@ var
         if (Pos('id="photo"', parse.Strings[i])>0) then
         begin
           s:= GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src='));
-          manager.container.pageLinks.Strings[workPtr]:= GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src='));
+          manager.container.pageLinks.Strings[workCounter]:= GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src='));
           break;
         end;
     end;
@@ -2528,10 +2481,10 @@ var
     if (Pos('.html', URL) > 0) AND (Pos(SEPERATOR2, URL) > 0) then
     begin
       s:= DecodeUrl(WebsiteRoots[MANGAPANDA_ID,1] + URL);
-      s:= StringReplace(s, SEPERATOR2, '-' + IntToStr(workPtr+1) + '/', [])
+      s:= StringReplace(s, SEPERATOR2, '-' + IntToStr(workCounter+1) + '/', [])
     end
     else
-      s:= DecodeUrl(WebsiteRoots[MANGAPANDA_ID,1] + URL + '/' + IntToStr(workPtr+1));
+      s:= DecodeUrl(WebsiteRoots[MANGAPANDA_ID,1] + URL + '/' + IntToStr(workCounter+1));
     Result:= GetPage(TObject(l),
                      s,
                      manager.container.manager.retryConnect);
@@ -2547,7 +2500,7 @@ var
       for i:= 0 to parse.Count-1 do
         if (Pos('"imgholder"', parse.Strings[i])>0) then
         begin
-          manager.container.pageLinks.Strings[workPtr]:= GetAttributeValue(GetTagAttribute(parse.Strings[i+2], 'src='));
+          manager.container.pageLinks.Strings[workCounter]:= GetAttributeValue(GetTagAttribute(parse.Strings[i+2], 'src='));
           break;
         end;
     end;
@@ -2565,9 +2518,9 @@ var
     l:= TStringList.Create;
 
     if (Pos('http://', URL) > 0) then
-      s:= DecodeUrl(URL + IntToStr(workPtr+1) + '/')
+      s:= DecodeUrl(URL + IntToStr(workCounter+1) + '/')
     else
-      s:= DecodeUrl(WebsiteRoots[MANGAGO_ID,1] + URL + IntToStr(workPtr+1) + '/');
+      s:= DecodeUrl(WebsiteRoots[MANGAGO_ID,1] + URL + IntToStr(workCounter+1) + '/');
     Result:= GetPage(TObject(l),
                      s,
                      manager.container.manager.retryConnect);
@@ -2583,7 +2536,7 @@ var
       for i:= 0 to parse.Count-1 do
         if (Pos('imgReady(''', parse.Strings[i])>0) then
         begin
-          manager.container.pageLinks.Strings[workPtr]:= (GetString(parse.Strings[i], 'imgReady(''', ''','));
+          manager.container.pageLinks.Strings[workCounter]:= (GetString(parse.Strings[i], 'imgReady(''', ''','));
           break;
         end;
     end;
@@ -2600,7 +2553,7 @@ var
   begin
     l:= TStringList.Create;
 
-    s:= DecodeUrl(WebsiteRoots[REDHAWKSCANS_ID,1] + URL + 'page/' + IntToStr(workPtr+1));
+    s:= DecodeUrl(WebsiteRoots[REDHAWKSCANS_ID,1] + URL + 'page/' + IntToStr(workCounter+1));
     Result:= GetPage(TObject(l),
                      s,
                      manager.container.manager.retryConnect);
@@ -2616,7 +2569,7 @@ var
       for i:= 0 to parse.Count-1 do
         if (Pos('class="open"', parse.Strings[i])>0) then
         begin
-          manager.container.pageLinks.Strings[workPtr]:= GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src='));
+          manager.container.pageLinks.Strings[workCounter]:= GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src='));
           break;
         end;
     end;
@@ -2633,7 +2586,7 @@ var
   begin
     l:= TStringList.Create;
 
-    s:= DecodeUrl(WebsiteRoots[S2SCAN_ID,1] + URL + 'page/' + IntToStr(workPtr+1));
+    s:= DecodeUrl(WebsiteRoots[S2SCAN_ID,1] + URL + 'page/' + IntToStr(workCounter+1));
     Result:= GetPage(TObject(l),
                      s,
                      manager.container.manager.retryConnect);
@@ -2649,7 +2602,7 @@ var
       for i:= 0 to parse.Count-1 do
         if (Pos('class="open"', parse.Strings[i])>0) then
         begin
-          manager.container.pageLinks.Strings[workPtr]:= GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src='));
+          manager.container.pageLinks.Strings[workCounter]:= GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src='));
           break;
         end;
     end;
@@ -2666,7 +2619,7 @@ var
   begin
     l:= TStringList.Create;
 
-    s:= DecodeUrl(WebsiteRoots[EGSCANS_ID,1] + URL + '/' + IntToStr(workPtr+1));
+    s:= DecodeUrl(WebsiteRoots[EGSCANS_ID,1] + URL + '/' + IntToStr(workCounter+1));
     Result:= GetPage(TObject(l),
                      s,
                      manager.container.manager.retryConnect);
@@ -2698,7 +2651,7 @@ var
     l: TStringList;
   begin
     l:= TStringList.Create;
-    s:= DecodeUrl(MANGASTREAM_ROOT2 + URL + '/' + IntToStr(workPtr+1));
+    s:= DecodeUrl(MANGASTREAM_ROOT2 + URL + '/' + IntToStr(workCounter+1));
     Result:= GetPage(TObject(l),
                      s,
                      manager.container.manager.retryConnect);
@@ -2714,7 +2667,7 @@ var
       for i:= 0 to parse.Count-1 do
         if (Pos('id="manga-page"', parse.Strings[i])>0) then
         begin
-          manager.container.pageLinks.Strings[workPtr]:= GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src='));
+          manager.container.pageLinks.Strings[workCounter]:= GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src='));
           break;
         end;
     end;
@@ -2805,7 +2758,7 @@ var
     l: TStringList;
   begin
     l:= TStringList.Create;
-    s:= DecodeUrl(WebsiteRoots[KOMIKID_ID,1] + URL + '/' + IntToStr(workPtr+1));
+    s:= DecodeUrl(WebsiteRoots[KOMIKID_ID,1] + URL + '/' + IntToStr(workCounter+1));
     Result:= GetPage(TObject(l),
                      s,
                      manager.container.manager.retryConnect);
@@ -2827,7 +2780,7 @@ var
             s:= GetAttributeValue(GetTagAttribute(parse.Strings[i-6], 'src='));
           if Pos('http://', s) = 0 then
             s:= WebsiteRoots[KOMIKID_ID,1] + KOMIKID_BROWSER + s;
-          manager.container.pageLinks.Strings[workPtr]:= EncodeURL(s);
+          manager.container.pageLinks.Strings[workCounter]:= EncodeURL(s);
           break;
         end;
     end;
@@ -2843,7 +2796,7 @@ var
     l: TStringList;
   begin
     l:= TStringList.Create;
-    s:= DecodeUrl(WebsiteRoots[PECINTAKOMIK_ID,1] + URL + '/' + IntToStr(workPtr+1));
+    s:= DecodeUrl(WebsiteRoots[PECINTAKOMIK_ID,1] + URL + '/' + IntToStr(workCounter+1));
     Result:= GetPage(TObject(l),
                      s,
                      manager.container.manager.retryConnect);
@@ -2864,7 +2817,7 @@ var
             s:= WebsiteRoots[PECINTAKOMIK_ID,1] + '/manga/' + s
           else
             s:= WebsiteRoots[PECINTAKOMIK_ID,1] + PECINTAKOMIK_BROWSER + s;
-          manager.container.pageLinks.Strings[workPtr]:= EncodeURL(s);
+          manager.container.pageLinks.Strings[workCounter]:= EncodeURL(s);
           break;
         end;
     end;
@@ -2964,6 +2917,7 @@ var
     l.Free;
   end;
   
+   //disini
   function GetPururinLinkPage: Boolean;
   var
     s: String;
@@ -2973,7 +2927,7 @@ var
   begin
     l:= TStringList.Create;
 	  s:= StringReplace(URL, '_1.html', '_', []);
-      s:= DecodeUrl(StringReplace(s, '00', '0' + IntToStr(workPtr+0), []) + IntToStr(workPtr+1) + '.html');
+      s:= DecodeUrl(StringReplace(s, '00', '0' + IntToStr(workCounter+0), []) + IntToStr(workCounter+1) + '.html');
     Result:= GetPage(TObject(l),
 	                 s,
                      manager.container.manager.retryConnect);
@@ -2989,13 +2943,14 @@ var
       for i:= parse.Count-1 downto 4 do
         if (Pos('class="b"', parse.Strings[i])>0) then
         begin
-          manager.container.pageLinks.Strings[workPtr]:= EncodeURL(WebsiteRoots[PURURIN_ID,1] + GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src=')));
+          manager.container.pageLinks.Strings[workCounter]:= EncodeURL(WebsiteRoots[PURURIN_ID,1] + GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src=')));
           break;
         end;
     end;
     parse.Free;
     l.Free;
   end;
+  //habis
 
   function GetHugeMangaLinkPage: Boolean;
   var
@@ -3005,7 +2960,7 @@ var
     l: TStringList;
   begin
     l:= TStringList.Create;
-    s:= DecodeUrl(WebsiteRoots[HUGEMANGA_ID,1] + URL + '/' + IntToStr(workPtr+1));
+    s:= DecodeUrl(WebsiteRoots[HUGEMANGA_ID,1] + URL + '/' + IntToStr(workCounter+1));
     Result:= GetPage(TObject(l),
                      s,
                      manager.container.manager.retryConnect);
@@ -3021,7 +2976,7 @@ var
       for i:= 0 to parse.Count-1 do
         if (Pos('class="picture"', parse.Strings[i])>0) then
         begin
-          manager.container.pageLinks.Strings[workPtr]:= EncodeURL(WebsiteRoots[HUGEMANGA_ID,1] + HUGEMANGA_BROWSER + GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src=')));
+          manager.container.pageLinks.Strings[workCounter]:= EncodeURL(WebsiteRoots[HUGEMANGA_ID,1] + HUGEMANGA_BROWSER + GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src=')));
           break;
         end;
     end;
@@ -3037,11 +2992,11 @@ var
     l: TStringList;
   begin
     l:= TStringList.Create;
-    s:= DecodeUrl(WebsiteRoots[ANIMESTORY_ID,1] + URL + IntToStr(workPtr+1));
+    s:= DecodeUrl(WebsiteRoots[ANIMESTORY_ID,1] + URL + IntToStr(workCounter+1));
     if Pos('http://', URL) = 0 then
-      s:= DecodeUrl(WebsiteRoots[ANIMESTORY_ID,1] + URL + IntToStr(workPtr+1))
+      s:= DecodeUrl(WebsiteRoots[ANIMESTORY_ID,1] + URL + IntToStr(workCounter+1))
     else
-      s:= DecodeUrl(URL + IntToStr(workPtr+1));
+      s:= DecodeUrl(URL + IntToStr(workCounter+1));
     Result:= GetPage(TObject(l),
                      s,
                      manager.container.manager.retryConnect);
@@ -3057,7 +3012,7 @@ var
       for i:= 0 to parse.Count-1 do
         if (Pos('id="chpimg"', parse.Strings[i])>0) then
         begin
-          manager.container.pageLinks.Strings[workPtr]:= DecodeURL(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src=')));
+          manager.container.pageLinks.Strings[workCounter]:= DecodeURL(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src=')));
           break;
         end;
     end;
@@ -3133,7 +3088,7 @@ var
     l: TStringList;
   begin
     l:= TStringList.Create;
-    s:= DecodeUrl(WebsiteRoots[TURKCRAFT_ID,1] + URL + '/' + IntToStr(workPtr+1));
+    s:= DecodeUrl(WebsiteRoots[TURKCRAFT_ID,1] + URL + '/' + IntToStr(workCounter+1));
     Result:= GetPage(TObject(l),
                      s,
                      manager.container.manager.retryConnect);
@@ -3149,7 +3104,7 @@ var
       for i:= 0 to parse.Count-1 do
         if (Pos('class="picture"', parse.Strings[i])>0) then
         begin
-          manager.container.pageLinks.Strings[workPtr]:= EncodeURL(WebsiteRoots[TURKCRAFT_ID,1] + TURKCRAFT_BROWSER + GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src=')));
+          manager.container.pageLinks.Strings[workCounter]:= EncodeURL(WebsiteRoots[TURKCRAFT_ID,1] + TURKCRAFT_BROWSER + GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src=')));
           break;
         end;
     end;
@@ -3165,7 +3120,7 @@ var
     l: TStringList;
   begin
     l:= TStringList.Create;
-    s:= DecodeUrl(WebsiteRoots[MANGAVADISI_ID,1] + MANGAVADISI_BROWSER + URL + '/' + IntToStr(workPtr+1));
+    s:= DecodeUrl(WebsiteRoots[MANGAVADISI_ID,1] + MANGAVADISI_BROWSER + URL + '/' + IntToStr(workCounter+1));
     Result:= GetPage(TObject(l),
                      s,
                      manager.container.manager.retryConnect);
@@ -3181,7 +3136,7 @@ var
       for i:= 0 to parse.Count-1 do
         if (Pos('class="picture"', parse.Strings[i])>0) then
         begin
-          manager.container.pageLinks.Strings[workPtr]:= EncodeURL(WebsiteRoots[MANGAVADISI_ID,1] + MANGAVADISI_BROWSER + GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src=')));
+          manager.container.pageLinks.Strings[workCounter]:= EncodeURL(WebsiteRoots[MANGAVADISI_ID,1] + MANGAVADISI_BROWSER + GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src=')));
           break;
         end;
     end;
@@ -3197,7 +3152,7 @@ var
     l: TStringList;
   begin
     l:= TStringList.Create;
-    s:= DecodeUrl(WebsiteRoots[MANGAFRAME_ID,1] + URL + IntToStr(workPtr+1));
+    s:= DecodeUrl(WebsiteRoots[MANGAFRAME_ID,1] + URL + IntToStr(workCounter+1));
     Result:= GetPage(TObject(l),
                      s,
                      manager.container.manager.retryConnect);
@@ -3213,7 +3168,7 @@ var
       for i:= 0 to parse.Count-1 do
         if (Pos('class="open"', parse.Strings[i])>0) then
         begin
-          manager.container.pageLinks.Strings[workPtr]:= EncodeURL(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src=')));
+          manager.container.pageLinks.Strings[workCounter]:= EncodeURL(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src=')));
           break;
         end;
     end;
@@ -3229,7 +3184,7 @@ var
     l: TStringList;
   begin
     l:= TStringList.Create;
-    s:= DecodeUrl(WebsiteRoots[MANGAAE_ID,1] + URL + '/' + IntToStr(workPtr+1));
+    s:= DecodeUrl(WebsiteRoots[MANGAAE_ID,1] + URL + '/' + IntToStr(workCounter+1));
     Result:= GetPage(TObject(l),
                      s,
                      manager.container.manager.retryConnect);
@@ -3245,7 +3200,7 @@ var
       for i:= 0 to parse.Count-1 do
         if (Pos('id="picture_url"', parse.Strings[i])>0) then
         begin
-          manager.container.pageLinks.Strings[workPtr]:= EncodeURL(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src=')));
+          manager.container.pageLinks.Strings[workCounter]:= EncodeURL(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src=')));
           break;
         end;
     end;
@@ -3261,7 +3216,7 @@ var
     l: TStringList;
   begin
     l:= TStringList.Create;
-    s:= WebsiteRoots[MANGAAR_ID,1] + URL + '/' + IntToStr(workPtr+1);
+    s:= WebsiteRoots[MANGAAR_ID,1] + URL + '/' + IntToStr(workCounter+1);
     Result:= GetPage(TObject(l),
                      s,
                      manager.container.manager.retryConnect);
@@ -3281,7 +3236,7 @@ var
       for i:= 0 to parse.Count-1 do
         if (Pos('id="PagePhoto"', parse.Strings[i])>0) then
         begin
-          manager.container.pageLinks.Strings[workPtr]:= EncodeURL(GetAttributeValue(GetTagAttribute(parse.Strings[i+2], 'src=')));
+          manager.container.pageLinks.Strings[workCounter]:= EncodeURL(GetAttributeValue(GetTagAttribute(parse.Strings[i+2], 'src=')));
           break;
         end;
     end;
@@ -3297,7 +3252,7 @@ var
     l: TStringList;
   begin
     l:= TStringList.Create;
-    s:= EncodeUrl(WebsiteRoots[CENTRALDEMANGAS_ID,1] + URL); // + IntToStr(workPtr+1));
+    s:= EncodeUrl(WebsiteRoots[CENTRALDEMANGAS_ID,1] + URL); // + IntToStr(workCounter+1));
     Result:= GetPage(TObject(l),
                      s,
                      manager.container.manager.retryConnect);
@@ -3330,6 +3285,7 @@ var
     l.Free;
   end;
   
+    // Mangacow link page
   function GetMangaCowLinkPage: Boolean;
   var
     s: String;
@@ -3338,7 +3294,7 @@ var
     l: TStringList;
   begin
     l:= TStringList.Create;
-	s:= DecodeUrl(WebsiteRoots[MANGACOW_ID,1] + URL + IntToStr(workPtr+1));
+	s:= DecodeUrl(WebsiteRoots[MANGACOW_ID,1] + URL + IntToStr(workCounter+1));
     Result:= GetPage(TObject(l),
 	                 s,
                      manager.container.manager.retryConnect);
@@ -3354,7 +3310,7 @@ var
       for i:= 0 to parse.Count-1 do
         if (Pos('id="sct_img_mng_enl"', parse.Strings[i])>0) then
         begin
-          manager.container.pageLinks.Strings[workPtr]:= EncodeURL(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src=')));
+          manager.container.pageLinks.Strings[workCounter]:= EncodeURL(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src=')));
           break;
         end;
     end;
@@ -3370,7 +3326,7 @@ var
     l: TStringList;
   begin
     l:= TStringList.Create;
-    s:= DecodeUrl(WebsiteRoots[SENMANGA_ID,1] + URL + IntToStr(workPtr+1) + '/');
+    s:= DecodeUrl(WebsiteRoots[SENMANGA_ID,1] + URL + IntToStr(workCounter+1) + '/');
     Result:= GetPage(TObject(l),
                      s,
                      manager.container.manager.retryConnect);
@@ -3389,7 +3345,7 @@ var
           s:= EncodeURL(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src=')));
           if Pos('http://', s) = 0 then
             s:= WebsiteRoots[SENMANGA_ID,1] + s;
-          manager.container.pageLinks.Strings[workPtr]:= s;
+          manager.container.pageLinks.Strings[workCounter]:= s;
           break;
         end;
     end;
@@ -3405,7 +3361,7 @@ var
     l: TStringList;
   begin
     l:= TStringList.Create;
-    s:= WebsiteRoots[MANGATRADERS_ID,1] + URL + '/page/' + IntToStr(workPtr+1);
+    s:= WebsiteRoots[MANGATRADERS_ID,1] + URL + '/page/' + IntToStr(workCounter+1);
     Result:= GetPage(TObject(l),
                      s,
                      manager.container.manager.retryConnect);
@@ -3423,9 +3379,9 @@ var
         begin
           s:= GetAttributeValue(GetTagAttribute(parse.Strings[i+4], 'src='));
           if s <> '' then
-            manager.container.pageLinks.Strings[workPtr]:= s
+            manager.container.pageLinks.Strings[workCounter]:= s
           else
-            manager.container.pageLinks.Strings[workPtr]:= GetAttributeValue(GetTagAttribute(parse.Strings[i+12], 'src='));
+            manager.container.pageLinks.Strings[workCounter]:= GetAttributeValue(GetTagAttribute(parse.Strings[i+12], 'src='));
           break;
         end;
     end;
@@ -3442,9 +3398,9 @@ var
   begin
     l:= TStringList.Create;
     if manager.container.mangaSiteID = MANGAEDEN_ID then
-      s:= WebsiteRoots[MANGAEDEN_ID,1] + URL + IntToStr(workPtr+1) + '/'
+      s:= WebsiteRoots[MANGAEDEN_ID,1] + URL + IntToStr(workCounter+1) + '/'
     else
-      s:= WebsiteRoots[PERVEDEN_ID,1] + URL + IntToStr(workPtr+1) + '/';
+      s:= WebsiteRoots[PERVEDEN_ID,1] + URL + IntToStr(workCounter+1) + '/';
     Result:= GetPage(TObject(l),
                      s,
                      manager.container.manager.retryConnect);
@@ -3460,7 +3416,7 @@ var
       for i:= parse.Count-1 downto 0 do
         if (Pos('"mainImg"', parse.Strings[i])>0) then
         begin
-          manager.container.pageLinks.Strings[workPtr]:= GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src='));
+          manager.container.pageLinks.Strings[workCounter]:= GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src='));
           break;
         end;
     end;
@@ -3478,7 +3434,7 @@ var
   begin
     l:= TStringList.Create;
     Result:= GetPage(TObject(l),
-                     URL,// + IntToStr(workPtr+1),
+                     URL,// + IntToStr(workCounter+1),
                      manager.container.manager.retryConnect);
     parse:= TStringList.Create;
     Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
@@ -3506,9 +3462,9 @@ var
         end;
         if (Pos('<div id="i3">', parse.Strings[i])>0) then
         begin
-          manager.container.pageLinks.Strings[workPtr]:= GetAttributeValue(GetTagAttribute(parse.Strings[i+2], 'src='));
-          manager.container.pageLinks.Strings[workPtr]:= StringReplace(manager.container.pageLinks.Strings[workPtr], '&amp;', '&', [rfReplaceAll]);
-          // s:= manager.container.pageLinks.Strings[workPtr];
+          manager.container.pageLinks.Strings[workCounter]:= GetAttributeValue(GetTagAttribute(parse.Strings[i+2], 'src='));
+          manager.container.pageLinks.Strings[workCounter]:= StringReplace(manager.container.pageLinks.Strings[workCounter], '&amp;', '&', [rfReplaceAll]);
+          // s:= manager.container.pageLinks.Strings[workCounter];
           break;
         end;
       end;
@@ -3521,7 +3477,7 @@ var
   s: String;
 
 begin
-  if manager.container.pageLinks.Strings[workPtr] <> 'W' then exit;
+  if manager.container.pageLinks.Strings[workCounter] <> 'W' then exit;
   if manager.container.mangaSiteID = ANIMEA_ID then
     Result:= GetAnimeALinkPage
   else
@@ -3728,7 +3684,7 @@ var
       HTTP.Headers.Insert(0, 'Referer:'+WebsiteRoots[VNSHARING_ID,1]+'/')
     else
     if  manager.container.mangaSiteID = GEHENTAI_ID then
-      HTTP.Headers.Insert(0, 'Referer:'+manager.container.pageLinks.Strings[workPtr]);
+      HTTP.Headers.Insert(0, 'Referer:'+manager.container.pageLinks.Strings[workCounter]);
     while (NOT HTTP.HTTPMethod('GET', URL)) OR
           (HTTP.ResultCode >= 500) OR
           (HTTP.ResultCode = 403) do
@@ -3793,45 +3749,6 @@ var
       ext:= '.gif'
     else
       ext:= '';
-
-   // while isChangeDirectory do
-   //   Sleep(16);
-   // Synchronize(SetChangeDirectoryTrue);
-   // SetCurrentDirUTF8(Path);
-
-   { if manager.container.mangaSiteID = GEHENTAI_ID then
-    begin
-      for i:=0 to http.Headers.Count-1 do
-      begin
-        s:= UpperCase(HTTP.Headers[i]);
-        if pos('CONTENT-LENGTH:', s)>0 then
-        begin
-          fileSize:= StrToIntDef(Copy(s,pos(':', s)+1, Length(s)),0);
-          break;
-        end;
-      end;
-      if fileSize <> 925 then
-        HTTP.Document.SaveToFile(Path+'/'+name+ext);
-    end
-    else }
-
-    {if (ext='.png') OR (ext='.jpg') then
-    begin
-      source:= TPicture.Create;
-      dest  := TPicture.Create;
-
-      source.LoadFromStream(HTTP.Document);
-      picScale(source, dest, 100, 100);
-
-      dest  .SaveToFile(Path+'/'+name+ext);
-
-      dest  .Clear;
-      dest  .Free;
-      source.Clear;
-      source.Free;
-    end
-    else}
-
     fstream:= TFileStreamUTF8.Create(Path+'/'+name+ext, fmCreate);
     HTTP.Document.SaveToStream(fstream);
     fstream.Free;
@@ -3862,17 +3779,17 @@ start:
       Sleep(300);
   end;
 
-  if (manager.container.pageLinks.Strings[workPtr] = '') OR
-     (manager.container.pageLinks.Strings[workPtr] = 'W') then exit;
-  SavePage(manager.container.pageLinks.Strings[workPtr],
+  if (manager.container.pageLinks.Strings[workCounter] = '') OR
+     (manager.container.pageLinks.Strings[workCounter] = 'W') then exit;
+  SavePage(manager.container.pageLinks.Strings[workCounter],
            manager.container.downloadInfo.SaveTo+
            '/'+manager.container.chapterName.Strings[manager.container.currentDownloadChapterPtr],
-           Format('%.3d', [workPtr+1]),
+           Format('%.3d', [workCounter+1]),
            manager.container.manager.retryConnect);
 
   SetCurrentDirUTF8(oldDir);
   if NOT Terminated then
-    manager.container.pageLinks.Strings[workPtr]:= '';
+    manager.container.pageLinks.Strings[workCounter]:= '';
 end;
 
 // ----- TTaskThread -----
@@ -3954,22 +3871,6 @@ begin
   if (container.mangaSiteID = GEHENTAI_ID) AND (container.manager.maxDLThreadsPerTask>4) then
     currentMaxThread:= 4
   else
-  if (container.mangaSiteID = BATOTO_ID) then
-  begin
-  //  Sleep(150);
-  {  if Flag = CS_GETPAGELINK then
-    begin
-      if container.manager.maxDLThreadsPerTask>2 then
-        currentMaxThread:= 2;
-    end
-    else  }
-    {if container.workPtr < 3 then
-      currentMaxThread:= 3
-    else}
-  //    currentMaxThread:= 1;
-    currentMaxThread:= container.manager.maxDLThreadsPerTask;
-  end
-  else
   if (container.mangaSiteID = EATMANGA_ID) then
     currentMaxThread:= 1
   else
@@ -3977,16 +3878,14 @@ begin
 
   if container.mangaSiteID = GEHENTAI_ID then
   begin
-    if (container.workPtr <> 0) then
+    if (container.workCounter <> 0) then
     begin
       repeat
         Sleep(32);
         s:= anotherURL;
         Delete(s, 1, 13);
-       // if container.workPtr >= (container.pageNumber-1) then
-       //   exit;
         if (s <> '') AND
-           (StrToInt(GetString(s+' ', '-', ' ')) = (container.workPtr+1)) then
+           (StrToInt(GetString(s+' ', '-', ' ')) = (container.workCounter+1)) then
           break;
       until FALSE;
     end;
@@ -3996,6 +3895,7 @@ begin
     Sleep(100);
 
   // main body of method
+  // Each thread will be assigned job based on the counter
   if container.activeThreadCount > currentMaxThread then exit;
   for i:= 0 to currentMaxThread-1 do
   begin
@@ -4007,10 +3907,10 @@ begin
       if container.mangaSiteID = GEHENTAI_ID then
         threads.Items[threads.Count-1].anotherURL:= anotherURL;
       threads.Items[threads.Count-1].manager:= self;
-      threads.Items[threads.Count-1].workPtr:= container.workPtr;
+      threads.Items[threads.Count-1].workCounter:= container.workCounter;
       threads.Items[threads.Count-1].checkStyle:= Flag;
       threads.Items[threads.Count-1].isSuspended:= FALSE;
-      Inc(container.workPtr);
+      Inc(container.workCounter);
       if Flag = CS_GETPAGELINK then
         Inc(container.currentPageNumber);
       exit;
@@ -4024,10 +3924,10 @@ begin
       if container.mangaSiteID = GEHENTAI_ID then
         threads.Items[i].anotherURL:= anotherURL;
       threads.Items[i].manager:= self;
-      threads.Items[i].workPtr:= container.workPtr;
+      threads.Items[i].workCounter:= container.workCounter;
       threads.Items[i].checkStyle:= Flag;
       threads.Items[i].isSuspended:= FALSE;
-      Inc(container.workPtr);
+      Inc(container.workCounter);
       if Flag = CS_GETPAGELINK then
         Inc(container.currentPageNumber);
       exit;
@@ -4074,7 +3974,7 @@ begin
       i:= threads.Count-1;
        // container.Status:= STATUS_PREPARE;
       threads.Items[threads.Count-1].manager:= self;
-      threads.Items[threads.Count-1].workPtr:= container.workPtr;
+      threads.Items[threads.Count-1].workCounter:= container.workCounter;
       threads.Items[threads.Count-1].checkStyle:= CS_GETPAGENUMBER;
       threads.Items[threads.Count-1].isSuspended:= FALSE;
       CheckPath(container.downloadInfo.SaveTo+
@@ -4085,19 +3985,16 @@ begin
     end;
 
     //get page links
-   // if container.currentPageNumber < container.pageNumber then
     if (container.mangaSiteID <> GEHENTAI_ID) then
     begin
-      container.workPtr:= 0;//container.currentPageNumber;
-   //   if container.workPtr > 0 then
-   //     Dec(container.workPtr);
+      container.workCounter:= 0;
       container.downloadInfo.iProgress:= 0;
-      while container.workPtr < container.pageLinks.Count{container.pageNumber} do
+      while container.workCounter < container.pageLinks.Count do
       begin
         if Terminated then exit;
         Flag:= CS_GETPAGELINK;
         Checkout;
-        container.downloadInfo.Progress:= Format('%d/%d', [container.workPtr, container.pageNumber]);
+        container.downloadInfo.Progress:= Format('%d/%d', [container.workCounter, container.pageNumber]);
         container.downloadInfo.Status  :=
           Format('%s (%d/%d [%s])',
             [stPreparing,
@@ -4115,19 +4012,19 @@ begin
     end;
 
     //download pages
-   // container.Status:= STATUS_DOWNLOAD;
-    container.workPtr:= 0;
+    container.workCounter:= 0;
     container.downloadInfo.iProgress:= 0;
 
-    // will bypass the download section if links = nil
+    // If container doesn't have any image, we will skip the loop. Otherwise
+    // download them
     if (container.pageLinks.Count > 0) then
     begin
-      while container.workPtr < container.pageLinks.Count do
+      while container.workCounter < container.pageLinks.Count do
       begin
         if Terminated then exit;
         Flag:= CS_DOWNLOAD;
         Checkout;
-        container.downloadInfo.Progress:= Format('%d/%d', [container.workPtr, container.pageLinks.Count]);
+        container.downloadInfo.Progress:= Format('%d/%d', [container.workCounter, container.pageLinks.Count]);
         container.downloadInfo.Status  :=
           Format('%s (%d/%d [%s])',
             [stDownloading,
@@ -4161,7 +4058,7 @@ var
 begin
   if check then
   begin
-    if (container.workPtr >= container.pageLinks.Count) AND
+    if (container.workCounter >= container.pageLinks.Count) AND
        (container.currentDownloadChapterPtr >= container.chapterLinks.Count) then
     begin
       container.downloadInfo.Status  := stFinish;
@@ -4186,17 +4083,6 @@ begin
       {$ENDIF}
     end;
   end;
-  {if check then
-  begin
-    if threads.Count = 0 then exit;
-    for i:= 0 to threads.Count-1 do
-      if (Assigned(threads.Items[i])) AND (NOT threads.Items[i].isTerminated) then
-      begin
-       // threads.Items[i].Suspend;
-        threads.Items[i].Terminate;
-       // threads.Items[i].Free;
-      end;
-  end;}
   threads.Clear;
 end;
 
@@ -4208,7 +4094,7 @@ begin
   chapterName      := TStringList.Create;
   pageLinks        := TStringList.Create;
   pageContainerLinks:= TStringList.Create;
-  workPtr:= 0;
+  workCounter:= 0;
   currentPageNumber:= 0;
   currentDownloadChapterPtr:= 0;
   inherited Create;
@@ -4228,268 +4114,6 @@ begin
   inherited Destroy;
 end;
 
-// ----- TDownloadThread -----
-
-{constructor TDownloadThread.Create;
-begin
-  FreeOnTerminate:= TRUE;
-  inherited Create(TRUE);
-end;
-
-procedure   TDownloadThread.Compress;
-var
-  Compresser: TCompress;
-begin
-  if (threadID = 0) AND (manager.compress = 1) then
-  begin
-    Sleep(100);
-    Compresser:= TCompress.Create;
-    Compresser.Path:= manager.downloadInfo[taskID].SaveTo+'/'+
-                      manager.chapterName[taskID].Strings[manager.chapterPtr.Items[taskID]-1];
-    Compresser.Execute;
-    Compresser.Free;
-  end;
-end;
-
-procedure   TDownloadThread.IncreasePrepareProgress;
-begin
-  manager.downloadInfo[taskID].Progress:=
-    IntToStr(manager.downloadInfo[taskID].iProgress+1)+'/'+IntToStr(pageNumber);
-  Inc(manager.downloadInfo[taskID].iProgress);
-  MainForm.vtDownload.Repaint;
-end;
-
-procedure   TDownloadThread.IncreaseDownloadProgress;
-begin
-  manager.downloadInfo[taskID].Progress:=
-    IntToStr(manager.downloadInfo[taskID].iProgress+1)+'/'+IntToStr(manager.pageLinks[taskID].Count);
-  Inc(manager.downloadInfo[taskID].iProgress);
-  MainForm.vtDownload.Repaint;
-end;
-
-procedure   TDownloadThread.Execute;
-var
-  i, count, sum: Cardinal;
-begin
-  i:= manager.activeThreadsPerTask.Count;
-  pass0:= FALSE;
-  pass1:= FALSE;
-  pass2:= FALSE;
-  lastPass:= FALSE;
-  while manager.chapterPtr.Items[taskID] < manager.chapterLinks[taskID].Count do
-  begin
-    // prepare
-    chapterPtr:= manager.chapterPtr.Items[taskID];
-    // pass 0
-    pass0:= TRUE;
-    repeat
-      Sleep(16);
-      count:= 0;
-      for i:= 0 to manager.threads.Count-1 do
-        if (manager.threads[i].taskID = taskID) AND
-           (manager.threads[i].pass0) then
-          Inc(count);
-    until count = manager.activeThreadsPerTask.Items[taskID];
-    // pass0:= FALSE;
-
-    // pass 1
-    if manager.pageLinks[taskID].Count = 0 then
-    begin
-      if threadID = 0 then
-      begin
-        CheckPath(manager.downloadInfo[taskID].SaveTo+
-                  '/'+
-                  manager.chapterName[taskID].Strings[manager.chapterPtr.Items[taskID]]);
-        GetPageNumberFromURL(manager.chapterLinks[taskID].Strings[manager.chapterPtr.Items[taskID]]);
-        for i:= 0 to pageNumber-1 do
-          manager.pageLinks[taskID].Add('');
-        // sync page number to all the thread have the same taskID
-        for i:= 0 to manager.threads.Count - 1 do
-          if taskID = manager.threads[i].taskID then
-          begin
-            manager.threads[i].pageNumber:= pageNumber;
-            manager.threads[i].pass1:= TRUE;
-          end;
-      end;
-
-      if threadID = 0 then
-      begin
-        manager.downloadInfo[taskID].iProgress:= 0;
-        manager.downloadInfo[taskID].Status:= Format('%s (%d/%d)', [stPreparing, chapterPtr+1, manager.chapterLinks[taskID].Count]);
-      end;
-      repeat
-        Sleep(16);
-        count:= 0;
-        for i:= 0 to manager.threads.Count-1 do
-          if (manager.threads[i].taskID = taskID) AND
-             (manager.threads[i].pass1) then
-            Inc(count);
-      until count = manager.activeThreadsPerTask.Items[taskID];
-
-      workPtr:= threadID;
-      while (NOT Terminated) AND (workPtr <= pageNumber-1) do
-      begin
-        GetLinkPageFromURL(manager.chapterLinks[taskID].Strings[manager.chapterPtr.Items[taskID]]);
-        Sleep(16);
-        Inc(workPtr, manager.activeThreadsPerTask.Items[taskID]);
-        Synchronize(IncreasePrepareProgress);
-      end;
-   // pass1:= FALSE;
-      pass2:= TRUE;
-
-    // pass 2
-
-      repeat
-        if threadID = 0 then
-          manager.downloadInfo[taskID].iProgress:= 0;
-        Sleep(16);
-        count:= 0;
-        for i:= 0 to manager.threads.Count-1 do
-          if (manager.threads[i].taskID = taskID) AND
-             (manager.threads[i].pass2) then
-            Inc(count);
-      until count = manager.activeThreadsPerTask.Items[taskID];
-    end
-    else
-    begin
-      pass1:= TRUE;
-      pass2:= TRUE;
-    end;
-    if threadID = 0 then
-      manager.downloadInfo[taskID].Status:= Format('%s (%d/%d)', [stDownloading, chapterPtr+1, manager.chapterLinks[taskID].Count]);
-
-    workPtr:= threadID;
-    while (NOT Terminated) AND (workPtr <= manager.pageLinks[taskID].Count-1) do
-    begin
-      DownloadPage;
-      Sleep(16);
-      Inc(workPtr, manager.activeThreadsPerTask.Items[taskID]);
-      Synchronize(IncreaseDownloadProgress);
-    end;
-
-    // prepare to download another chapter or exit
-
-    pass0:= FALSE;
-    pass1:= FALSE;
-    repeat
-      if threadID = 0 then
-        Inc(manager.chapterPtr.Items[taskID]);
-      Sleep(16);
-      count:= 0;
-      for i:= 0 to manager.threads.Count-1 do
-        if (manager.threads[i].taskID = taskID) AND
-           (manager.threads[i].workPtr > manager.pageLinks[taskID].Count-1) AND
-           (chapterPtr <> manager.chapterPtr.Items[taskID]) then
-          Inc(count);
-    until count = manager.activeThreadsPerTask.Items[taskID];
-    Compress;
-    if threadID = 0 then
-      manager.pageLinks[taskID].Clear;
-    pass2:= FALSE;
-  end;
-
-  // last pass - raise finish flag
-  lastPass:= TRUE;
-  isTerminate:= TRUE;
-  repeat
-    Sleep(16);
-    count:= 0;
-    for i:= 0 to manager.threads.Count-1 do
-      if (manager.threads[i].taskID = taskID) AND
-         (manager.threads[i].lastPass) then
-        Inc(count);
-  until count = manager.activeThreadsPerTask.Items[taskID];
-
-  // ID 0 will do the finish part
-  if threadID = 0 then
-  begin
-    Sleep(1000);
-    manager.downloadInfo[taskID].Progress:= '';
-    while manager.isFinishTaskAccessed do Sleep(100);
-    manager.isFinishTaskAccessed:= TRUE;
-    manager.FinishTask(taskID);
-    Terminate;
-  end
-  else
-    Suspend;
-end;
-
-function    TDownloadThread.GetPageNumberFromURL(const URL: String): Boolean;
-  function GetAnimeAPageNumber: Boolean;
-  var
-    i: Cardinal;
-    l: TStringList;
-  begin
-    l:= TStringList.Create;
-    Result:= GetPage(TObject(l), ANIMEA_ROOT +
-                                 StringReplace(URL, '.html', '', []) +
-                                 '-page-1.html',
-                                 manager.retryConnect);
-    for i:= 0 to l.Count-1 do
-      if (Pos('Page 1 of ', l.Strings[i])<>0) then
-      begin
-        pageNumber:= StrToInt(GetString(l.Strings[i], 'Page 1 of ', '<'));
-        break;
-      end;
-    l.Free;
-  end;
-
-begin
-  pageNumber:= 0;
-  if mangaSiteID = ANIMEA_ID then
-    Result:= GetAnimeAPageNumber;
-end;
-
-function    TDownloadThread.GetLinkPageFromURL(const URL: String): Boolean;
-  function GetAnimeALinkPage: Boolean;
-  var
-    i: Cardinal;
-    l: TStringList;
-  begin
-    l:= TStringList.Create;
-    Result:= GetPage(TObject(l),
-                     ANIMEA_ROOT +
-                     StringReplace(URL, '.html', '', []) +
-                     '-page-'+IntToStr(workPtr+1)+'.html',
-                     manager.retryConnect);
-    for i:= 0 to l.Count-1 do
-      if (Pos('class="mangaimg', l.Strings[i])<>0) then
-      begin
-        manager.pageLinks[taskID].Strings[workPtr]:= GetString(l.Strings[i], '<img src="', '"');
-        break;
-      end;
-    l.Free;
-  end;
-
-begin
-  if mangaSiteID = ANIMEA_ID then
-    Result:= GetAnimeALinkPage;
-end;
-
-function    TDownloadThread.DownloadPage: Boolean;
-var
-  s, ext: String;
-begin
-  if manager.pageLinks[taskID].Strings[workPtr] = '' then exit;
-  s:= manager.pageLinks[taskID].Strings[workPtr];
-  if (Pos('.jpeg', LowerCase(s))<>0) OR (Pos('.jpg', LowerCase(s))<>0) then
-    ext:= '.jpg'
-  else
-  if Pos('.png', LowerCase(s))<>0 then
-    ext:= '.png'
-  else
-  if Pos('.gif', LowerCase(s))<>0 then
-    ext:= '.gif';
-  SetCurrentDir(oldDir);
-  SavePage(manager.pageLinks[taskID].Strings[workPtr],
-           Format('%s/%.3d%s',
-                  [manager.downloadInfo[taskID].SaveTo+
-                  '/'+manager.chapterName[taskID].Strings[chapterPtr],
-                  workPtr+1, ext]), manager.retryConnect);
-  manager.pageLinks[taskID].Strings[workPtr]:= '';
-  SetCurrentDir(oldDir);
-end;
-    }
 // ----- TDownloadManager -----
 
 constructor TDownloadManager.Create;
@@ -4752,7 +4376,6 @@ procedure   TDownloadManager.AddTask;
 begin
   containers.Add(TTaskThreadContainer.Create);
   containers.Items[containers.Count-1].manager:= self;
- // MainForm.vtDownloadFilters;
 end;
 
 procedure   TDownloadManager.CheckAndActiveTask(const isCheckForFMDDo: Boolean = FALSE);
@@ -4801,17 +4424,7 @@ begin
           Inc(geCount);
           Inc(count);
         end;
-      end {
-      else
-      if containers.Items[i].mangaSiteID = BATOTO_ID then
-      begin
-        if batotoCount = 0 then
-        begin
-          ActiveTask(i);
-          Inc(batotoCount);
-          Inc(count);
-        end;
-      end }
+      end
       else
       if containers.Items[i].mangaSiteID = EATMANGA_ID then
       begin
@@ -4878,9 +4491,6 @@ begin
     begin
       if (containers.Items[i].mangaSiteID = GEHENTAI_ID) then
         Inc(geCount)
-     { else
-      if (containers.Items[i].mangaSiteID = BATOTO_ID) then
-        Inc(batotoCount) }
       else
       if (containers.Items[i].mangaSiteID = EATMANGA_ID) then
         Inc(eatMangaCount);
@@ -4889,9 +4499,6 @@ begin
 
   if (containers.Items[pos].mangaSiteID = GEHENTAI_ID) AND (geCount > 0) then
     exit
- { else
-  if (containers.Items[pos].mangaSiteID = BATOTO_ID) AND (batotoCount > 0) then
-    exit }
   else
   if (containers.Items[pos].mangaSiteID = EATMANGA_ID) AND (eatMangaCount > 0) then
     exit;
@@ -4973,20 +4580,9 @@ begin
   begin
     for i:= 0 to containers.Items[taskID].thread.threads.Count-1 do
       if Assigned(containers.Items[taskID].thread.threads[i]) then
-      begin
-        containers.Items[taskID].thread.threads[i].Terminated2:= TRUE;
         containers.Items[taskID].thread.threads[i].Terminate;
-      end;
     containers.Items[taskID].thread.Terminate;
     Sleep(250);
- {   containers.Items[taskID].downloadInfo.Status:= stStop;
-    containers.Items[taskID].Status:= STATUS_STOP;
-  end
-  else
-  if containers.Items[taskID].Status = STATUS_WAIT then
-  begin
-    containers.Items[taskID].downloadInfo.Status:= stStop;
-    containers.Items[taskID].Status:= STATUS_STOP; }
   end;
  // containers.Items[taskID].downloadInfo.Status:= Format('%s (%d/%d)', [stStop, containers.Items[taskID].currentDownloadChapterPtr, containers.Items[taskID].chapterLinks.Count]);
   containers.Items[taskID].downloadInfo.Status:= stStop;
@@ -5013,20 +4609,9 @@ begin
     begin
       for j:= 0 to containers.Items[i].thread.threads.Count-1 do
         if Assigned(containers.Items[i].thread.threads[j]) then
-        begin
-          containers.Items[i].thread.threads[j].Terminated2:= TRUE;
           containers.Items[i].thread.threads[j].Terminate;
-        end;
       containers.Items[i].thread.Terminate;
       Sleep(250);
-      {$IFDEF WINDOWS}
-     { containers.Items[i].thread.Suspend;
-      for j:= 0 to containers.Items[i].thread.threads.Count-1 do
-        if (containers.Items[i].thread.threads[j] <> nil) then
-          containers.Items[i].thread.threads[j].Suspend;
-      containers.Items[i].thread.threads.Clear;
-      containers.Items[i].thread.Free; }
-      {$ENDIF}
       containers.Items[i].Status:= STATUS_STOP;
     end
     else
@@ -5052,19 +4637,8 @@ begin
     begin
       for j:= 0 to containers.Items[i].thread.threads.Count-1 do
         if Assigned(containers.Items[i].thread.threads[j]) then
-        begin
-          containers.Items[i].thread.threads[j].Terminated2:= TRUE;
           containers.Items[i].thread.threads[j].Terminate;
-        end;
       containers.Items[i].thread.Terminate;
-      {$IFDEF WINDOWS}
-    {  containers.Items[i].thread.Suspend;
-      for j:= 0 to containers.Items[i].thread.threads.Count-1 do
-        if (containers.Items[i].thread.threads[j] <> nil) then
-          containers.Items[i].thread.threads[j].Suspend;
-      containers.Items[i].thread.threads.Clear;
-      containers.Items[i].thread.Free; }
-      {$ENDIF}
     end;
   end;
   Backup;
@@ -5131,20 +4705,9 @@ begin
   begin
     for i:= 0 to containers.Items[taskID].thread.threads.Count-1 do
       if Assigned(containers.Items[taskID].thread.threads[i]) then
-      begin
-        containers.Items[taskID].thread.threads[i].Terminated2:= TRUE;
         containers.Items[taskID].thread.threads[i].Terminate;
-      end;
     containers.Items[taskID].thread.Terminate;
     Sleep(250);
-    {$IFDEF WINDOWS}
-   { containers.Items[taskID].thread.Suspend;
-    for j:= 0 to containers.Items[taskID].thread.threads.Count-1 do
-      if (containers.Items[taskID].thread.threads[j] <> nil) then
-        containers.Items[taskID].thread.threads[j].Suspend;
-    containers.Items[taskID].thread.threads.Clear;
-    containers.Items[taskID].thread.Free; }
-    {$ENDIF}
     containers.Items[taskID].Status:= STATUS_STOP;
   end
   else
