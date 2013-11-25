@@ -111,7 +111,7 @@ begin
     list:= TStringList.Create;
     searcher:= TFileSearcher.Create;
     searcher.OnFileFound:= OnFileFound;
-    searcher.Search(fPath, '*.jpg;*.jpeg;*.png;*.gif;*.db', FALSE, FALSE);
+    searcher.Search(fPath, '*.jpg;*.jpeg;*.png;*.gif', FALSE, FALSE);
 
     if list.Count <> 0 then
     begin
@@ -137,6 +137,7 @@ begin
       pdf.SaveToStream(fstream);
       fstream.Free;
       pdf.Free;
+      searcher.Search(fPath, '*.db', FALSE, FALSE);
       for i:= 0 to list.Count-1 do
         DeleteFileUTF8(list.Strings[i]);
       Sleep(128);
