@@ -156,9 +156,9 @@ end;
 
 procedure TImportFavorites.btBrowseClick(Sender: TObject);
 begin
-  dlgPath.InitialDir:= CorrectFilePath(CorrectFile(edPath.Text));
+  dlgPath.InitialDir:= CorrectFilePath(edPath.Text);
   if dlgPath.Execute then
-    edPath.Text:= CorrectFilePath(CorrectFile(dlgPath.FileName));
+    edPath.Text:= CorrectFilePath(dlgPath.FileName);
 end;
 
 procedure TImportFavorites.btImportClick(Sender: TObject);
