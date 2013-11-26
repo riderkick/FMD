@@ -8,6 +8,11 @@ unit FavoritesManager;
 
 {$mode delphi}
 
+{
+  TODO:
+    Support multithread
+}
+
 interface
 
 uses
@@ -19,6 +24,7 @@ type
   TFavoriteThread = class(TFMDThread)
   protected
     FWebsite, FURL: String;
+    FPass0        : Boolean;
     procedure UpdateName;
     procedure EndPass0;
     procedure Execute; override;
@@ -27,15 +33,15 @@ type
     // ID of the thread (0 will be the leader)
     threadID      : Cardinal;
     // starting point
-    workPtr       : Cardinal;
+    workCounter   : Cardinal;
 
     getInfo       : TMangaInformation;
-
-    pass0         : Boolean;
-
+    // Owner (Manager) of this thread
     manager       : TFavoriteManager;
     constructor Create;
     destructor  Destroy; override;
+
+    property    Pass0: Boolean read FPass0 write FPass0;
   end;
 
   TFavoriteThreadList = TFPGList<TFavoriteThread>;
@@ -44,25 +50,37 @@ type
   private
     FSortDirection: Boolean;
     FSortColumn   : Cardinal;
+    FIsAuto,
+    FIsShowDialog,
+    // Return true if Favorites is checking
+    FIsRunning      : Boolean;
 
-    procedure   Left(const pos: Cardinal);
-    procedure   Right(const pos: Cardinal);
+    // Move all the task to the left, starting from pos
+    procedure   MoveLeft(const pos: Cardinal);
+    // Move all the task to the right, starting from pos
+    procedure   MoveRight(const pos: Cardinal);
   public
     // store manga name that has new chapter after checking
     newMangaStr    : String;
-    isAuto,
-    isShowDialog,
-    isRunning      : Boolean;
-    Count          : Cardinal;
+
+    // Number of mangas in Favorites
+    Count           : Cardinal;
+    // Number of mangas in Favorites - Before checking
+    CountBeforeChecking: Cardinal;
+    //
     favorites      : TIniFile;
+    // All Favorites information
     favoriteInfo   : array of TFavoriteInfo;
     // mangaInfo for generating download tasks
     mangaInfo      : array of TMangaInfo;
-    newChapter     : TCardinalList;
 
+    // Number of working thread
+    // For now we always set it to 1
     numberOfThreads: Cardinal;
+    // Working threads
     threads        : TFavoriteThreadList;
-
+    // Download Manager (passed from mainunit.pas)
+    // After favorites run completed, all download jobs will be add to DLManager
     DLManager      : TDownloadManager;
 
     OnUpdateFavorite: procedure of object;
@@ -72,13 +90,21 @@ type
     destructor  Destroy; override;
 
     procedure   Run;
+    // Show notification form after checking completed
     procedure   ShowResult;
+    // Return true if a manga exist in Favorites
     function    IsMangaExist(const title, website: String): Boolean;
+    // Add new manga to the list
     procedure   Add(const title, currentChapter, downloadedChapterList, website, saveTo, link: String);
+    // Merge manga information with a title that already exist in Favorites
     procedure   AddMerge(const title, currentChapter, downloadedChapterList, website, saveTo, link: String);
+    // Merge a favorites.ini with another favorites.ini
     procedure   MergeWith(const APath: String);
+    // Remove a manga from Favorites
     procedure   Remove(const pos: Cardinal; const isBackup: Boolean = TRUE);
+    // Restore information from favorites.ini
     procedure   Restore;
+    // Backup to favorites.ini
     procedure   Backup;
 
     // sorting
@@ -86,6 +112,9 @@ type
 
     property    SortDirection: Boolean read FSortDirection write FSortDirection;
     property    SortColumn: Cardinal read FSortColumn write FSortColumn;
+    property    isAuto: Boolean read FIsAuto write FIsAuto;
+    property    isShowDialog: Boolean read FIsShowDialog write FIsShowDialog;
+    property    isRunning: Boolean read FIsRunning write FIsRunning;
   end;
 
 implementation
@@ -129,19 +158,19 @@ var
   i, count: Cardinal;
 begin
   while isSuspended do Sleep(16);
-  workPtr:= threadID;
-  while (NOT Terminated) AND (workPtr <= manager.Count-1) do
+  workCounter:= threadID;
+  while (NOT Terminated) AND (workCounter < manager.CountBeforeChecking) do
   begin
-    currentManga:= manager.favoriteInfo[workPtr].title + ' <' + manager.favoriteInfo[workPtr].website + '>';
+    currentManga:= manager.favoriteInfo[workCounter].title + ' <' + manager.favoriteInfo[workCounter].website + '>';
     Synchronize(UpdateName);
-    if manager.favoriteInfo[workPtr].website = MANGASTREAM_NAME then
-      getInfo.mangaInfo.title:= manager.favoriteInfo[workPtr].title;
-    getInfo.GetInfoFromURL(manager.favoriteInfo[workPtr].website,
-                              manager.favoriteInfo[workPtr].link, 4);
-    manager.mangaInfo[workPtr].chapterName := TStringList.Create;
-    manager.mangaInfo[workPtr].chapterLinks:= TStringList.Create;
-    TransferMangaInfo(manager.mangaInfo[workPtr], getInfo.mangaInfo);
-    Inc(workPtr, manager.numberOfThreads);
+    if manager.favoriteInfo[workCounter].website = MANGASTREAM_NAME then
+      getInfo.mangaInfo.title:= manager.favoriteInfo[workCounter].title;
+    getInfo.GetInfoFromURL(manager.favoriteInfo[workCounter].website,
+                           manager.favoriteInfo[workCounter].link, 4);
+    manager.mangaInfo[workCounter].chapterName := TStringList.Create;
+    manager.mangaInfo[workCounter].chapterLinks:= TStringList.Create;
+    TransferMangaInfo(manager.mangaInfo[workCounter], getInfo.mangaInfo);
+    Inc(workCounter, manager.numberOfThreads);
   end;
 
   pass0:= TRUE;
@@ -161,28 +190,22 @@ end;
 
 // ----- TFavoriteManager -----
 
-procedure   TFavoriteManager.Left(const pos: Cardinal);
+procedure   TFavoriteManager.MoveLeft(const pos: Cardinal);
 var
   i: Cardinal;
 begin
   if pos < Count-1 then
     for i:= pos+1 to Count-1 do
-    begin
       favoriteInfo[i-1]:= favoriteInfo[i];
-      mangaInfo   [i-1]:= mangaInfo   [i];
-    end;
 end;
 
-procedure   TFavoriteManager.Right(const Pos: Cardinal);
+procedure   TFavoriteManager.MoveRight(const Pos: Cardinal);
 var
   i: Cardinal;
 begin
   if pos < Count-1 then
     for i:= Count-1 downto pos+1 do
-    begin
       favoriteInfo[i]:= favoriteInfo[i-1];
-      mangaInfo   [i]:= mangaInfo   [i-1];
-    end;
 end;
 
 // ----- public methods -----
@@ -190,7 +213,6 @@ end;
 constructor TFavoriteManager.Create;
 begin
   numberOfThreads:= 1;
-  newChapter:= TCardinalList.Create;
   isRunning:= FALSE;
   favorites:= TIniFile.Create(WORK_FOLDER + FAVORITES_FILE);
   favorites.CacheUpdates:= TRUE;
@@ -205,7 +227,8 @@ begin
   threads.Free;
   favorites.UpdateFile;
   favorites.Free;
-  newChapter.Free;
+  SetLength(favoriteInfo, 0);
+  SetLength(favoriteInfo, 0);
   inherited Destroy;
 end;
 
@@ -227,6 +250,9 @@ begin
   if threads.Count > 0 then exit;
   MainForm.btFavoritesCheckNewChapter.Caption:= stFavoritesChecking;
   isRunning:= TRUE;
+
+  CountBeforeChecking:= Count;
+  SetLength(mangaInfo, Count);
   for i:= 0 to numberOfThreads-1 do
   begin
     threads.Add(TFavoriteThread.Create);
@@ -236,11 +262,11 @@ begin
   end;
 end;
 
-// SubManga & MangaStream use a different checking method
 procedure   TFavoriteManager.ShowResult;
 var
   LNewChapter     : TNewChapter;
   LNCResult       : TNewChapterResult;
+  // List of new chapter number for each title
   numberOfNewChapters: array of Cardinal;
   newChapterList  : array of TCardinalList;
   newChapterNames,
@@ -258,6 +284,7 @@ var
   newC   : Cardinal = 0;
   isNow  : Boolean;
 
+  // Check if a string is exists a list
   function  Check(const list: TStringList; const s: String): Boolean;
   var
     i: Cardinal;
@@ -268,12 +295,13 @@ var
         exit(TRUE);
   end;
 
+  // Free all list, pointers when the checking is done
   procedure FreeLists;
   var
     i: Cardinal;
   begin
     if Length(newChapterURLs) = 0 then exit;
-    for i:= 0 to Count-1 do
+    for i:= 0 to CountBeforeChecking-1 do
       if (numberOfNewChapters[i] > 0) AND (Assigned(newChapterURLs[i])) then
       begin
         newChapterList[i].Free;
@@ -284,27 +312,23 @@ var
     SetLength(numberOfNewChapters, 0);
     SetLength(newChapterURLs, 0);
     SetLength(newChapterNames, 0);
+    SetLength(mangaInfo, 0);
   end;
 
 begin
   MainForm.btFavoritesCheckNewChapter.Caption:= stFavoritesCheck;
   l:= TStringList.Create;
-  SetLength(newChapterList, Count);
-  SetLength(numberOfNewChapters, Count);
-  SetLength(newChapterURLs, Count);
-  SetLength(newChapterNames, Count);
+  SetLength(newChapterList, CountBeforeChecking);
+  SetLength(numberOfNewChapters, CountBeforeChecking);
+  SetLength(newChapterURLs, CountBeforeChecking);
+  SetLength(newChapterNames, CountBeforeChecking);
   // check the result to see if theres any new chapter
-  for i:= 0 to Count-1 do
+  for i:= 0 to CountBeforeChecking-1 do
   begin
     numberOfNewChapters[i]:= 0;
     begin
       l.Clear;
       GetParams(l, favoriteInfo[i].downloadedChapterList);
-      // for mangafox only (necessary ?)
-   //   if (favoriteInfo[i].Website = MANGAFOX_NAME) AND (l.Count > 0) then
-   //     for j:= 0 to l.Count-1 do
-   //       l.Strings[j]:= StringReplace(l.Strings[j], WebsiteRoots[MANGAFOX_ID,1], '', []);
-
       if (l.Count = 0) AND (mangaInfo[i].chapterLinks.Count <> 0) then
       begin
        // isNewChapters[i]:= TRUE;
@@ -343,9 +367,7 @@ begin
     end;
   end;
 
-  if {(isShowDialog) AND }(newC = 0) then
-   // MessageDlg('', Format(stDlgNoNewChapter + '%s', [removeListStr]),
-   //            mtInformation, [mbOk], 0)
+  if (newC = 0) then
   begin
     if (removeListStr <> '') AND (isShowDialog) then
     begin
@@ -365,7 +387,7 @@ begin
     newMangaStr:= '';
 
     // generate string for new chapter notification
-    for i:= 0 to Count-1 do
+    for i:= 0 to CountBeforeChecking-1 do
     begin
       currentChapter:= StrToInt(favoriteInfo[i].currentChapter);
       newChapter    := mangaInfo[i].numChapter;
@@ -389,15 +411,12 @@ begin
         isNow:= TRUE;
         if MainForm.pcMain.PageIndex <> 0 then
           MainForm.pcMain.PageIndex:= 0;
-       // if (MainForm.tvDownloadFilter.Selected.AbsoluteIndex <> 0) OR
-       //    (MainForm.tvDownloadFilter.Selected.AbsoluteIndex <> 2) then
-       //   MainForm.tvDownloadFilter.Items[2].Selected:= TRUE;
       end
       else
       if LNCResult = ncrCancel then
       begin
         // TODO: Bad coding - need improments
-        for i:= 0 to Count-1 do
+        for i:= 0 to CountBeforeChecking-1 do
         begin
           mangaInfo[i].chapterName .Free;
           mangaInfo[i].chapterLinks.Free;
@@ -422,7 +441,7 @@ begin
 
     DLManager.isRunningBackup:= TRUE;
 
-    for i:= 0 to Count-1 do
+    for i:= 0 to CountBeforeChecking-1 do
     begin
       currentChapter:= StrToInt(favoriteInfo[i].currentChapter);
 
@@ -484,6 +503,7 @@ begin
         DLManager.containers.Items[pos].downloadInfo.dateTime:= IntToStr(Month)+'/'+IntToStr(Day)+'/'+IntToStr(Year)+' '+IntToStr(hh)+':'+IntToStr(mm)+':'+IntToStr(ss);
 
         // TODO: bad coding - update favorites's current chapter, and free pointers
+        // should in here
         favoriteInfo[i].currentChapter:= IntToStr(mangaInfo[i].numChapter);
         Sleep(4);
       end;
@@ -503,7 +523,7 @@ begin
   end;
 
   // update favorites's current chapter, and free pointers
-  for i:= 0 to Count-1 do
+  for i:= 0 to CountBeforeChecking-1 do
   begin
     if mangaInfo[i].numChapter>0 then
     begin
@@ -524,17 +544,19 @@ begin
   end;
   isRunning:= FALSE;
 
-  i:= 0;
+  i:= 0; j:= 0;
   if OptionAutoRemoveCompletedManga then
   begin
-    while i < Count do
+    while i < CountBeforeChecking do
     begin
-      if mangaInfo[i].status = '0' then
+      if mangaInfo[j].status = '0' then
       begin
         Remove(i);
+        Dec(CountBeforeChecking);
       end
       else
         Inc(i);
+      Inc(j);
     end;
   end;
 
@@ -543,6 +565,10 @@ begin
 
   FreeLists;
   l.Free;
+
+  // Sort the list before backing up
+  //Sort(self.SortColumn);
+
   Backup;
 end;
 
@@ -564,19 +590,18 @@ var
   i: Cardinal;
 begin
   try
-    if isRunning then exit;
     if IsMangaExist(title, website) then
       exit;
     Inc(Count);
     SetLength(favoriteInfo, Count);
-    SetLength(mangaInfo, Count);
     favoriteInfo[Count-1].title         := title;
     favoriteInfo[Count-1].currentChapter:= currentChapter;
     favoriteInfo[Count-1].website       := website;
     favoriteInfo[Count-1].saveTo        := saveTo;
     favoriteInfo[Count-1].Link          := Link;
     favoriteInfo[Count-1].downloadedChapterList:= downloadedChapterList;
-    if (MainForm.silentAddToFavThreadCount <= 2) OR (Random(50)=0) then
+    if ((MainForm.silentAddToFavThreadCount <= 2) OR (Random(50)=0)) AND
+       (NOT isRunning)then
     begin
       Sort(sortColumn);
       Backup;
@@ -596,7 +621,6 @@ begin
       exit;
     Inc(Count);
     SetLength(favoriteInfo, Count);
-    SetLength(mangaInfo, Count);
     favoriteInfo[Count-1].title         := title;
     favoriteInfo[Count-1].currentChapter:= currentChapter;
     favoriteInfo[Count-1].website       := website;
@@ -604,7 +628,7 @@ begin
     favoriteInfo[Count-1].Link          := Link;
     favoriteInfo[Count-1].downloadedChapterList:= downloadedChapterList;
   except
-
+    on E: Exception do ;
   end;
 end;
 
@@ -656,9 +680,8 @@ procedure   TFavoriteManager.Remove(const pos: Cardinal; const isBackup: Boolean
 begin
   if isRunning then exit;
   if pos >= Count then exit;
-  Left(pos);
+  MoveLeft(pos);
   SetLength(favoriteInfo, Count-1);
-  SetLength(mangaInfo   , Count-1);
   Dec(Count);
   if isBackup then
     Backup;
@@ -670,7 +693,6 @@ var
 begin
   Count:= favorites.ReadInteger('general', 'NumberOfFavorites', 0);
   SetLength(favoriteInfo, Count);
-  SetLength(mangaInfo   , Count);
   if Length(favoriteInfo) = 0 then exit;
   for i:= 0 to Length(favoriteInfo) - 1 do
   begin
@@ -721,7 +743,6 @@ procedure   TFavoriteManager.Sort(const AColumn: Cardinal);
   var i, j: Cardinal;
          X: String;
        tmp: TFavoriteInfo;
-      tmp2: TMangaInfo;
   begin
     X:= GetStr((L+R) div 2);
     i:= L;
@@ -765,10 +786,6 @@ procedure   TFavoriteManager.Sort(const AColumn: Cardinal);
         tmp:= favoriteInfo[i];
         favoriteInfo[i]:= favoriteInfo[j];
         favoriteInfo[j]:= tmp;
-
-        tmp2:= mangaInfo[i];
-        mangaInfo[i]:= mangaInfo[j];
-        mangaInfo[j]:= tmp2;
         Inc(i);
         if j > 0 then
           Dec(j);
