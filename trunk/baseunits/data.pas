@@ -3512,6 +3512,46 @@ var
     end;
     source.Free;
   end;
+  
+    // get name and link of the manga from Kivmanga
+  function   KivmangaGetNameAndLink: Byte;
+  var
+    tmp: Integer;
+    i: Cardinal;
+    s: String;
+  begin
+    Result:= INFORMATION_NOT_FOUND;
+    if NOT GetPage(TObject(source), WebsiteRoots[KIVMANGA_ID,1], 0) then
+    begin
+      Result:= NET_PROBLEM;
+      source.Free;
+      exit;
+    end;
+    parse.Clear;
+    Parser:= TjsFastHTMLParser.Create(PChar(source.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.Exec;
+    Parser.Free;
+    if parse.Count=0 then
+    begin
+      source.Free;
+      exit;
+    end;
+    for i:= parse.Count-1 downto 5 do
+    begin
+      if (Pos('option value="', parse.Strings[i]) > 0) AND
+         (Pos('value="0"', parse.Strings[i]) = 0) then 
+      begin
+        Result:= NO_ERROR;
+        s:= StringFilter(TrimLeft(TrimRight(parse.Strings[i+1])));
+        names.Add(HTMLEntitiesFilter(s));
+        s:= '/' + GetAttributeValue(GetTagAttribute(parse.Strings[i], 'value='));
+        links.Add(s);
+      end;
+    end;
+    source.Free;
+  end;
 
   // get name and link of the manga from g.e-hentai
   function   GEHentaiGetNameAndLink: Byte;
@@ -3709,7 +3749,10 @@ begin
     Result:= GEHentaiGetNameAndLink
   else
   if website = TRUYEN18_NAME then
-    Result:= Truyen18GetNameAndLink;
+    Result:= Truyen18GetNameAndLink
+  else
+  if website = KIVMANGA_NAME then
+    Result:= KivmangaGetNameAndLink
 end;
 
 function    TMangaInformation.GetInfoFromURL(const website, URL: String; const Reconnect: Cardinal): Byte;
@@ -9136,6 +9179,82 @@ begin
   Result:= NO_ERROR;
 end;
 
+// get manga infos from Kivmanga site
+function   GetKivmangaInfoFromURL: Byte;
+var
+  s: String;
+  isExtractChapter: Boolean = FALSE;
+  i, j: Cardinal;
+begin
+  mangaInfo.url:= WebsiteRoots[KIVMANGA_ID,1] + URL;
+  if NOT GetPage(TObject(source), mangaInfo.url, Reconnect) then
+  begin
+    Result:= NET_PROBLEM;
+    source.Free;
+    exit;
+  end;
+
+  // parsing the HTML source
+  parse.Clear;
+  Parser:= TjsFastHTMLParser.Create(PChar(source.Text));
+  Parser.OnFoundTag := OnTag;
+  Parser.OnFoundText:= OnText;
+  Parser.Exec;
+
+  Parser.Free;
+  source.Free;
+
+  mangaInfo.website:= KIVMANGA_NAME;
+  mangaInfo.status:= '1';
+  mangaInfo.coverLink:= '';
+  mangaInfo.summary:= '';
+  mangaInfo.authors:= '';
+  mangaInfo.artists:= '';
+  mangaInfo.genres:= '';
+
+  // using parser (cover link, summary, chapter name and link)
+  if parse.Count=0 then exit;
+  for i:= 0 to parse.Count-1 do
+  begin
+    // get chapter name and links
+    if (Pos('select name="chapter"', parse.Strings[i])>0) then
+      isExtractChapter:= TRUE;
+
+    // get manga name
+    if (mangaInfo.title = '') AND (Pos('<title>', parse.Strings[i])>0) then
+      mangaInfo.title:= TrimLeft(TrimRight(GetString(parse.Strings[i+1], 'Read Free Manga Online - ', '-')));
+
+    if (isExtractChapter) AND (Pos('option value=', parse.Strings[i])>0) then
+    begin
+      Inc(mangaInfo.numChapter);
+      s:= URL + '/' + GetAttributeValue(GetTagAttribute(parse.Strings[i], 'value='));
+      mangaInfo.chapterLinks.Add(s);
+      s:= RemoveSymbols(TrimLeft(TrimRight(parse.Strings[i+1])));
+      mangaInfo.chapterName.Add(StringFilter(StringFilter(HTMLEntitiesFilter(s))));
+    end;
+
+    if (isExtractChapter) AND
+       (Pos('</select>', parse.Strings[i])>0) then
+    begin
+      isExtractChapter:= FALSE;
+      break;
+    end;
+  end;
+
+  // Since chapter name and link are inverted, we need to invert them
+  if mangainfo.ChapterLinks.Count > 1 then
+  begin
+    i:= 0; j:= mangainfo.ChapterLinks.Count - 1;
+    while (i<j) do
+    begin
+      mangainfo.ChapterName.Exchange(i, j);
+      mangainfo.chapterLinks.Exchange(i, j);
+      Inc(i); Dec(j);
+    end;
+  end;
+  Result:= NO_ERROR;
+end;
+
 // get manga infos from g.e-hentai site
 function   GetGEHentaiInfoFromURL: Byte;
 var
@@ -9336,6 +9455,9 @@ begin
   else
   if website = BLOGTRUYEN_NAME then
     Result:= GetBlogTruyenInfoFromURL
+  else
+  if website = KIVMANGA_NAME then
+    Result:= GetKivmangaInfoFromURL
   else
   if website = GEHENTAI_NAME then
   begin
