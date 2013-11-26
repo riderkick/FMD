@@ -288,9 +288,6 @@ type
     procedure btFilterResetClick(Sender: TObject);
     procedure btRemoveFilterClick(Sender: TObject);
 
-    procedure btSearchClick(Sender: TObject);
-    procedure edSearchKeyPress(Sender: TObject; var Key: char);
-
     procedure cbAddAsStoppedChange(Sender: TObject);
     procedure cbOptionUseProxyChange(Sender: TObject);
     procedure clbChapterListKeyPress(Sender: TObject; var Key: char);
@@ -343,14 +340,6 @@ type
     procedure TrayIconDblClick(Sender: TObject);
     procedure tvDownloadFilterSelectionChanged(Sender: TObject);
     procedure vtDownloadDblClick(Sender: TObject);
-    procedure vtDownloadDragAllowed(Sender: TBaseVirtualTree;
-      Node: PVirtualNode; Column: TColumnIndex; var Allowed: Boolean);
-    procedure vtDownloadDragDrop(Sender: TBaseVirtualTree; Source: TObject;
-      DataObject: TObject; Formats: TFormatArray; Shift: TShiftState;
-      const Pt: TPoint; var Effect: Integer; Mode: TDropMode);
-    procedure vtDownloadDragOver(Sender: TBaseVirtualTree; Source: TObject;
-      Shift: TShiftState; State: TDragState; const Pt: TPoint; Mode: TDropMode;
-      var Effect: Integer; var Accept: Boolean);
 
     procedure vtDownloadFreeNode(Sender: TBaseVirtualTree; Node: PVirtualNode);
     procedure vtDownloadGetHint(Sender: TBaseVirtualTree; Node: PVirtualNode;
@@ -467,43 +456,33 @@ type
 
     procedure AddChapterNameToList;
 
-    // en: Add text to TRichMemo
-    // vi: Thêm văn bản vào TRichMemo
+    // Add text to TRichMemo
     procedure AddTextToInfo(title, infoText: String);
 
-    // en: Show manga information
-    // vi: Xuất thông tin về manga
+    // Show manga information
     procedure ShowInformation;
 
     // get manga list from server
     procedure RunGetList;
 
-    // en: Load config from config.ini
-    // vi: Lấy thông tin từ config.ini
+    // Load config from config.ini
     procedure LoadOptions;
 
-    // en: Load config from mangalist.ini
-    // vi: Lấy thông tin từ mangalist.ini
+    // Load config from mangalist.ini
     procedure LoadMangaOptions;
 
     function  SaveMangaOptions: String;
-
-    // en: Search manga from current manga list
-    // vi: Tìm kiếm manga từ manga list
-    procedure SearchMangaList;
 
     //
     procedure UpdateVtChapter;
     procedure UpdateVtDownload;
     procedure UpdateVtFavorites;
 
-    // en: Load form information, like previous position, size, ...
-    // vi: nạp thông tin của form
+    // Load form information, like previous position, size, ...
     procedure LoadFormInformation;
     procedure SaveFormInformation;
 
-    // en: load language file
-    // vi: nạp ngôn ngữ
+    // load language file
     procedure LoadLanguage(const pos: Integer);
 
     { public declarations }
@@ -652,26 +631,14 @@ begin
 end;
 
 procedure TMainForm.clbChapterListKeyPress(Sender: TObject; var Key: char);
-var
-  i: Cardinal;
 begin
- { if (key = #13) OR (key = #32) then
-  begin
-    if clbChapterList.MultiSelect then
-    begin
-      for i:= 0 to clbChapterList.Count-1 do
-        if clbChapterList.Selected[i] then
-          clbChapterList.Checked[i]:= NOT clbChapterList.Checked[i];
-    end;
-  end; }
+
 end;
 
 procedure TMainForm.FormDestroy(Sender: TObject);
 begin
   SubThread.Terminate;
   Sleep(200);
- // SubThread.WaitFor;
- // SubThread.Free;
 
   websiteSelect.Free;
   websiteName.Free;
@@ -921,6 +888,11 @@ begin
   // bad coding
   DLManager.BackupDownloadedChaptersList;
   // Halt;
+end;
+
+procedure TMainForm.CheckForTopPanel;
+begin
+
 end;
 
 procedure TMainForm.LoadAbout;
@@ -1220,8 +1192,6 @@ begin
   SubThread.mangaListPos:= -1;
   pcMain.TabIndex:= 1;
 
-  //cbSelectManga.Items[cbSelectManga.ItemIndex];
- // SubThread.link:= edURL.Text;
   SubThread.isGetInfos:= TRUE;
 
   imCover.Picture.Assign(nil);
@@ -1386,12 +1356,7 @@ begin
     edSearch.Text:= '';
 end;
 
-// -----
-
-procedure TMainForm.btSearchClick(Sender: TObject);
-begin
-  SearchMangaList;
-end;
+// --
 
 // -----
 
@@ -1451,7 +1416,7 @@ begin
       uncheckGenres.Add(TCheckBox(pnGenres.Controls[i]).Caption);
   end;
 
-  // we will reload the lists if search from all websites is enabled
+  // we will reload the list if search from all websites is enabled
   if (cbSearchFromAllSites.Checked) AND (NOT dataProcess.isFilterAllSites) AND (NOT dataProcess.isFiltered) then
   begin
     if NOT dataProcess.CanFilter(checkGenres, uncheckGenres,
@@ -1505,15 +1470,6 @@ begin
   edCustomGenres .Caption:= '';
 end;
 
-procedure TMainForm.edSearchKeyPress(Sender: TObject; var Key: char);
-begin
- { if key = #13 then
-  begin
-    SearchMangaList;
-    edSearch.SetFocus;
-  end; }
-end;
-
 // ----- vtMangaList popup menu -----
 
 procedure TMainForm.miMangaListAddToFavoritesClick(Sender: TObject);
@@ -1524,29 +1480,6 @@ var
   pos         : Cardinal;
   silentThread: TSilentAddToFavThread;
 begin
-  {if NOT Assigned(vtMangaList.FocusedNode) then exit;
-  pos:= vtMangaList.FocusedNode.Index;
-
-  s:= CorrectFile(options.ReadString('saveto', 'SaveTo', DEFAULT_PATH));
-  if s[Length(s)] = '/' then
-    Delete(s, Length(s), 1);
-
-  if cbOptionGenerateMangaFolderName.Checked then
-  begin
-    if NOT cbOptionPathConvert.Checked then
-      s:= s + '/' + RemoveSymbols(dataProcess.Param[dataProcess.filterPos.Items[pos], DATA_PARAM_NAME])
-    else
-      s:= s + '/' + RemoveSymbols(UnicodeRemove(dataProcess.Param[dataProcess.filterPos.Items[pos], DATA_PARAM_NAME]));
-  end;
-
-  favorites.Add(dataProcess.Param[dataProcess.filterPos.Items[pos], DATA_PARAM_NAME],
-                dataProcess.Param[dataProcess.filterPos.Items[pos], DATA_PARAM_NUMCHAPTER],
-                dataProcess.website,
-                s,
-                dataProcess.Param[dataProcess.filterPos.Items[pos], DATA_PARAM_LINK]);
-  UpdateVtFavorites; }
- // pcMain.PageIndex:= 3;
-
   if vtMangaList.SelectedCount = 0 then exit;
   if vtMangaList.SelectedCount >= 5000 then exit;
 
@@ -1555,13 +1488,6 @@ begin
   begin
     if vtMangaList.Selected[xNode] then
     begin
-     { silentThread:= TAddToFavSilentThread.Create;
-      silentThread.website:= GetMangaSiteName(DataProcess.site.Items[DataProcess.GetPos(i)]);//cbSelectManga.Items[cbSelectManga.ItemIndex];
-      silentThread.URL:= DataProcess.Param[DataProcess.GetPos(i), DATA_PARAM_LINK];
-      silentThread.title:= DataProcess.Param[DataProcess.GetPos(i), DATA_PARAM_NAME];
-      silentThread.isSuspended:= FALSE;
-      Inc(silentThreadCount);
-      Inc(silentAddToFavThreadCount); }
       CreateAddToFavThread(
         GetMangaSiteName(DataProcess.site.Items[DataProcess.GetPos(i)]),
         DataProcess.Param[DataProcess.GetPos(i), DATA_PARAM_NAME],
@@ -1620,12 +1546,6 @@ begin
         favorites.Remove(delList[i], FALSE);
 
     favorites.Backup;
-   { for i:= 0 to vtFavorites.RootNodeCount-1 do
-    begin
-      if vtFavorites.Selected[xNode] then
-        favorites.Remove(xNode.Index);
-      xNode:= vtFavorites.GetNext(xNode);
-    end; }
   end;
   UpdateVtFavorites;
   SetLength(delList, 0);
@@ -1682,11 +1602,6 @@ var
   i: Cardinal;
   Node: PVirtualNode;
 begin
- { if clbChapterList.Count = 0 then exit;
-  if clbChapterList.MultiSelect then
-    for i:= 0 to clbChapterList.Count-1 do
-      if clbChapterList.Selected[i] then
-        clbChapterList.Checked[i]:= TRUE; }
   if clbChapterList.RootNodeCount > 0 then
   begin
     Node:= clbChapterList.GetFirst;
@@ -1705,11 +1620,6 @@ var
   i: Cardinal;
   Node: PVirtualNode;
 begin
- { if clbChapterList.Count = 0 then exit;
-  if clbChapterList.MultiSelect then
-    for i:= 0 to clbChapterList.Count-1 do
-      if clbChapterList.Selected[i] then
-        clbChapterList.Checked[i]:= FALSE; }
   if clbChapterList.RootNodeCount > 0 then
   begin
     Node:= clbChapterList.GetFirst;
@@ -1728,9 +1638,6 @@ var
   i: Cardinal;
   Node: PVirtualNode;
 begin
- { if clbChapterList.Count > 0 then
-    for i:= 0 to clbChapterList.Count-1 do
-      clbChapterList.Checked[i]:= TRUE;  }
   if clbChapterList.RootNodeCount > 0 then
   begin
     Node:= clbChapterList.GetFirst;
@@ -1748,9 +1655,6 @@ var
   i   : Cardinal;
   Node: PVirtualNode;
 begin
- { if clbChapterList.Count > 0 then
-    for i:= 0 to clbChapterList.Count-1 do
-      clbChapterList.Checked[i]:= FALSE; }
   if clbChapterList.RootNodeCount > 0 then
   begin
     Node:= clbChapterList.GetFirst;
@@ -1906,12 +1810,6 @@ begin
     vtDownload.Repaint;
     DLManager.Backup;
   end;
-  //DLManager.CheckAndActiveTask;
-  //if NOT DLManager.CanActiveTask then exit;
-  //DLManager.ActiveTask(vtDownload.FocusedNode.Index);
-  // print preparing/downloading string to the screen
-  //vtDownload.Repaint;
-  //DLManager.Backup;
 end;
 
 procedure TMainForm.miDownloadRemoveClick(Sender: TObject);
@@ -1950,7 +1848,6 @@ begin
 end;
 
 // Download table's popup menu
-
 procedure TMainForm.miDownloadStopClick(Sender: TObject);
 var
   i    : Cardinal;
@@ -1984,7 +1881,6 @@ var
   xNode       : PVirtualNode;
   silentThread: TSilentThread;
 begin
-  //if NOT Assigned(vtDownload.FocusedNode) then exit;
   if vtMangaList.SelectedCount = 0 then exit;
   if vtMangaList.SelectedCount >= 50 then exit;
 
@@ -1993,11 +1889,6 @@ begin
   begin
     if vtMangaList.Selected[xNode] then
     begin
-     { silentThread:= TSilentThread.Create;
-      silentThread.website:= GetMangaSiteName(DataProcess.site.Items[DataProcess.GetPos(i)]);//cbSelectManga.Items[cbSelectManga.ItemIndex];
-      silentThread.URL:= DataProcess.Param[DataProcess.GetPos(i), DATA_PARAM_LINK];
-      silentThread.title:= DataProcess.Param[DataProcess.GetPos(i), DATA_PARAM_NAME];
-      silentThread.isSuspended:= FALSE;  }
       CreateDownloadAllThread(
         GetMangaSiteName(DataProcess.site.Items[DataProcess.GetPos(i)]),
         DataProcess.Param[DataProcess.GetPos(i), DATA_PARAM_NAME],
@@ -2167,15 +2058,6 @@ procedure TMainForm.pcMainChange(Sender: TObject);
 
     cbOptionShowBatotoSG.Checked:= OptionShowBatotoSG;
 
-   { for i:= 0 to Length(optionMangaSiteSelectionNodes)-1 do
-      optionMangaSiteSelectionNodes[i].CheckState:= csUncheckedNormal;
-    s:= mangalistIni.ReadString('general', 'MangaListSelect', '0'+SEPERATOR);
-
-    GetParams(l, s);
-    for i:= 0 to l.Count-1 do
-      optionMangaSiteSelectionNodes[StrToInt(l.Strings[i])].CheckState:= csCheckedNormal;
-       }
-
     for i:= 0 to Length(optionMangaSiteSelectionNodes)-1 do
       optionMangaSiteSelectionNodes[i].CheckState:= csUncheckedNormal;
 
@@ -2200,17 +2082,10 @@ procedure TMainForm.pcMainChange(Sender: TObject);
 
 begin
   case pcMain.TabIndex of
-    4:
-      UpdateOptions;
-    5:
-      begin
-        UpdateOptions;
-      // load rtf file
+    5: // load rtf file
         LoadAbout;
-      end;
-    else
-      UpdateOptions;
   end;
+  UpdateOptions;
 end;
 
 procedure TMainForm.pmDownloadPopup(Sender: TObject);
@@ -2318,22 +2193,9 @@ begin
     pmMangaList.Items[1].Enabled:= TRUE;
     pmMangaList.Items[2].Enabled:= TRUE;
   end;
-
- { if (cbSelectManga.Items[cbSelectManga.ItemIndex] = FAKKU_NAME) OR
-     (cbSelectManga.Items[cbSelectManga.ItemIndex] = MANGATRADERS_NAME) then
-    pmMangaList.Items[2].Enabled:= FALSE
-  else
-    pmMangaList.Items[2].Enabled:= TRUE;}
-
   if (Assigned(vtMangaList.FocusedNode)) then
-  begin
     pos:= vtMangaList.FocusedNode.Index;
-   { if favorites.IsMangaExist(dataProcess.Param[dataProcess.filterPos.Items[pos], DATA_PARAM_NAME],
-                              cbSelectManga.Items[cbSelectManga.ItemIndex]) then
-      pmMangaList.Items[2].Enabled:= FALSE; }
-  end;
 end;
-
 
 procedure TMainForm.seOptionCheckMinutesChange(Sender: TObject);
 begin
@@ -2365,46 +2227,6 @@ begin
   miOpenFolderClick(Sender);
 end;
 
-procedure TMainForm.vtDownloadDragAllowed(Sender: TBaseVirtualTree;
-  Node: PVirtualNode; Column: TColumnIndex; var Allowed: Boolean);
-begin
-  Allowed:= TRUE;
-end;
-
-procedure TMainForm.vtDownloadDragDrop(Sender: TBaseVirtualTree;
-  Source: TObject; DataObject: TObject; Formats: TFormatArray;
-  Shift: TShiftState; const Pt: TPoint; var Effect: Integer; Mode: TDropMode);
-var
-  pSource, pTarget: PVirtualNode;
-  attMode: TVTNodeAttachMode;
-begin
-  pSource:= TVirtualStringTree(Source).FocusedNode;
-  pTarget:= Sender.DropTargetNode;
-  case Mode of
-    dmNowhere: attMode:= amNoWhere;
-    dmAbove:
-      begin
-        attMode:= amInsertBefore;
-        DLManager.Swap(pSource^.Index, pTarget^.Index);
-        vtDownloadFilters;
-      end;
-    dmOnNode, dmBelow:
-      begin
-        attMode:= amInsertAfter;
-        DLManager.Swap(pSource^.Index, pTarget^.Index);
-        vtDownloadFilters;
-      end;
-  end;
-  Sender.MoveTo(pSource, pTarget, attMode, False);
-end;
-
-procedure TMainForm.vtDownloadDragOver(Sender: TBaseVirtualTree;
-  Source: TObject; Shift: TShiftState; State: TDragState; const Pt: TPoint;
-  Mode: TDropMode; var Effect: Integer; var Accept: Boolean);
-begin
-  Accept:= (Source = Sender);
-end;
-
 // Download table
 
 procedure TMainForm.vtDownloadFreeNode(Sender: TBaseVirtualTree;
@@ -2414,14 +2236,6 @@ var
 begin
   data:= Sender.GetNodeData(Node);
   if Assigned(data) then
-  {begin
-    data^.title   := '';
-    data^.status  := '';
-    data^.progress:= '';
-    data^.website := '';
-    data^.saveTo  := '';
-    data^.dateTime:= '';
-  end; }
     Finalize(data^);
 end;
 
@@ -2860,15 +2674,6 @@ end;
 
 procedure TMainForm.vtMangaListDblClick(Sender: TObject);
 begin
- { if (cbSelectManga.Items[cbSelectManga.ItemIndex] = FAKKU_NAME) OR
-     (cbSelectManga.Items[cbSelectManga.ItemIndex] = MANGATRADERS_NAME) then
-  begin
-    cbAddToFavorites.Checked:= FALSE;
-    cbAddToFavorites.Enabled:= FALSE;
-  end
-  else
-    cbAddToFavorites.Enabled:= TRUE; }
-
   if (SubThread.isGetInfos) OR (NOT vtMangaList.Focused) then exit;
 
   pcMain.TabIndex:= 1;
@@ -2902,28 +2707,12 @@ begin
   end;
 end;
 
-procedure TMainForm.CheckForTopPanel;
-begin
-  {if currentWebsite = GEHENTAI_NAME then
-    pnMainTop.Visible:= TRUE
-  else
-    pnMainTop.Visible:= FALSE;}
-end;
-
 procedure TMainForm.InitCheckboxes;
 var
   i: Cardinal;
 begin
   for i:= 0 to 37 do
-  begin
-   // TCheckBox(pnGenres.Controls[i]).Caption:= Genre[i];
     TCheckBox(pnGenres.Controls[i]).State:= cbGrayed;
-   { if GenreMeaning[i] <> '' then
-    begin
-      TCheckBox(pnGenres.Controls[i]).Hint:= GenreMeaning[i];
-      TCheckBox(pnGenres.Controls[i]).ShowHint:= TRUE;
-    end; }
-  end;
 end;
 
 procedure TMainForm.ShowAllTasks;
@@ -3110,18 +2899,6 @@ var
   i: Cardinal;
   s: String;
 begin
- { clbChapterList.Clear;
-  if mangaInfo.chapterName.Count <> 0 then
-  begin
-    s:= mangaInfo.website;
-    if (mangaInfo.website <> GEHENTAI_NAME) AND
-       (mangaInfo.website <> FAKKU_NAME) then
-      for i:= 0 to mangaInfo.chapterName.Count - 1 do
-        clbChapterList.Items.Add(Format('%.4d - %s', [i+1, mangaInfo.chapterName.Strings[i]]))
-    else
-      for i:= 0 to mangaInfo.chapterName.Count - 1 do
-        clbChapterList.Items.Add(mangaInfo.chapterName.Strings[i]);
-  end; }
   UpdateVtChapter;
 end;
 
@@ -3163,14 +2940,10 @@ begin
   with rmInformation do
   begin
     imCover.Picture.Assign(nil);
-   // cover.Clear;
-
     Clear;
 
     if SubThread.mangaListPos > -1 then
     begin
-     // mangaInfo.title:= dataProcess.Param[dataProcess.GetPos(SubThread.mangaListPos), DATA_PARAM_NAME];
-     // mangaInfo.link := dataProcess.Param[dataProcess.GetPos(SubThread.mangaListPos), DATA_PARAM_LINK];
       mangaInfo.title:= SubThread.title;
       mangaInfo.link := SubThread.link;
       website:= SubThread.Info.mangaInfo.website;
@@ -3185,13 +2958,6 @@ begin
     else
       mangaInfo.link:= edURL.Text;
 
-    // TODO:
-   { if (Pos(MANGAAR_NAME, website) > 0) OR
-       (Pos(MANGAAE_NAME, website) > 0) then
-      rmInformation.BiDiMode:= bdRightToLeft
-    else
-      rmInformation.BiDiMode:= bdLeftToRight; }
-
     AddTextToInfo(infoName, mangaInfo.title+#10#13);
     AddTextToInfo(infoAuthors, mangaInfo.authors+#10#13);
     AddTextToInfo(infoArtists, mangaInfo.artists+#10#13);
@@ -3200,7 +2966,6 @@ begin
       AddTextToInfo(infoStatus, cbFilterStatus.Items.Strings[0]+#10#13)
     else
       AddTextToInfo(infoStatus, cbFilterStatus.Items.Strings[1]+#10#13);
-   // AddTextToInfo(infoLink, mangaInfo.url+#10#13);
     edURL.Text:= mangaInfo.url;
     AddTextToInfo(infoSummary, StringBreaks(mangaInfo.summary));
     cp.X:= 0; cp.Y:= 0; CaretPos:= cp;
@@ -3232,7 +2997,6 @@ begin
     Port:= options.ReadString('connections', 'Port', '');
     User:= options.ReadString('connections', 'User', '');
   end;
- // cbLanguages.ItemIndex := options.ReadInteger('languages', 'Select', 0);
 
   cbOptionMinimizeToTray.Checked := options.ReadBool('general', 'MinimizeToTray', FALSE);
   batotoLastDirectoryPage:= mangalistIni.ReadInteger('general', 'batotoLastDirectoryPage', 244);
@@ -3411,58 +3175,6 @@ begin
   end;
 end;
 
-procedure TMainForm.SearchMangaList;
-var
-  xNode  : PVirtualNode;
-  data   : PMangaListItem;
-  name   : String;
-  endSearch,
-  current: Cardinal;
-begin
-  name:= LowerCase(edSearch.text);
-  if vtMangaList.RootNodeCount = 0 then
-  begin
-    MessageDlg('Info', '"'+name+'" not found!',
-               mtInformation, [mbYes], 0);
-    exit;
-  end;
-  vtMangaList.TreeOptions.SelectionOptions:= vtMangaList.TreeOptions.SelectionOptions - [toMultiSelect];
-  if NOT Assigned(vtMangaList.FocusedNode) then
-  begin
-    xNode:= vtMangaList.GetFirst;
-    endSearch:= vtMangaList.GetLast.index;
-  end
-  else
-  begin
-    xNode:= vtMangaList.FocusedNode;
-    current:= xNode.index;
-    if current = 0 then
-      endSearch:= vtMangaList.GetLast.index
-    else
-      endSearch:= current-1;
-  end;
-  repeat
-    if xNode = vtMangaList.GetLast then
-      xNode:= vtMangaList.GetFirst
-    else
-      xNode:= vtMangaList.GetNext(xNode);
-    data:= vtMangaList.GetNodedata(xNode);
-    if Pos(name, LowerCase(data^.text))>0 then
-    begin
-      vtMangaList.FocusedNode:= xNode;
-      vtMangaList.Selected[xNode]:= TRUE;
-      vtMangaList.Expanded[xNode]:= TRUE;
-      vtMangaList.Refresh;
-      vtMangaList.SetFocus;
-      break;
-    end;
-    if xNode.Index = endSearch then
-      MessageDlg('Info', '"'+name+'" not found!',
-                 mtInformation, [mbYes], 0);
-  until xNode.Index = endSearch;
-  vtMangaList.TreeOptions.SelectionOptions:= vtMangaList.TreeOptions.SelectionOptions + [toMultiSelect];
-end;
-
 procedure TMainForm.edSearchChange(Sender: TObject);
 begin
  // if vtMangaList.RootNodeCount = 0 then exit;
@@ -3491,8 +3203,8 @@ procedure TMainForm.UpdateVtDownload;
 begin
   vtDownload.Clear;
   vtDownload.RootNodeCount:= DLManager.containers.Count;
-  // the reason we put it in here instead of in DLManager because of the size of
-  // download list will change during this method
+  // the reason we put vtDownloadFilters in here instead of in DLManager because
+  // the size of download list can change while this method is running
   vtDownloadFilters;
 end;
 

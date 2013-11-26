@@ -121,7 +121,6 @@ object MainForm: TMainForm
             FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
             FF00FFFFFF00FFFFFF00
           }
-          OnClick = btSearchClick
           ParentShowHint = False
           ShowHint = True
           TabOrder = 0
@@ -220,7 +219,6 @@ object MainForm: TMainForm
           Anchors = [akTop, akLeft, akRight]
           OnChange = edSearchChange
           OnClick = edSearchClick
-          OnKeyPress = edSearchKeyPress
           TabOrder = 3
         end
         object cbSelectManga: TComboBox
@@ -333,11 +331,11 @@ object MainForm: TMainForm
     Height = 470
     Top = 8
     Width = 624
-    ActivePage = tsInformation
+    ActivePage = tsDownload
     Align = alClient
     Font.Style = [fsBold]
     ParentFont = False
-    TabIndex = 1
+    TabIndex = 0
     TabOrder = 1
     OnChange = pcMainChange
     object tsDownload: TTabSheet
@@ -396,9 +394,6 @@ object MainForm: TMainForm
         TreeOptions.PaintOptions = [toShowButtons, toShowDropmark, toShowRoot, toThemeAware, toUseBlendedImages]
         TreeOptions.SelectionOptions = [toFullRowSelect, toMultiSelect]
         OnDblClick = vtDownloadDblClick
-        OnDragAllowed = vtDownloadDragAllowed
-        OnDragOver = vtDownloadDragOver
-        OnDragDrop = vtDownloadDragDrop
         OnFreeNode = vtDownloadFreeNode
         OnGetText = vtDownloadGetText
         OnGetHint = vtDownloadGetHint
