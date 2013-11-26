@@ -547,7 +547,8 @@ begin
           (website = EGSCANS_NAME) OR
           (website = TURKCRAFT_NAME) OR
           (website = HUGEMANGA_NAME) OR
-          (website = KOMIKID_NAME)) AND
+          (website = KOMIKID_NAME) OR
+		  (website = KIVMANGA_NAME) AND
          ((FileExists(DATA_FOLDER + ANIMEA_NAME + DATA_EXT)) OR
           (FileExists(DATA_FOLDER + MANGAPARK_NAME + DATA_EXT))) then
       begin
