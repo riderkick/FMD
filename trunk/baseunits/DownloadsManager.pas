@@ -1131,7 +1131,6 @@ var
     l.Free;
   end;
   
-   //PURURIN page number
  function GetPururinPageNumber: Boolean;
   var
     s   : String;
@@ -1536,6 +1535,40 @@ var
     parse.Free;
     l.Free;
   end;
+  
+    function GetKivmangaPageNumber: Boolean;
+  var
+    s   : String;
+    i, j: Cardinal;
+    l   : TStringList;
+  begin
+    l:= TStringList.Create;
+    parse:= TStringList.Create;
+    s:= DecodeUrl(WebsiteRoots[KIVMANGA_ID,1] + URL + '/1');
+    Result:= GetPage(TObject(l),
+                     s,
+                     manager.container.manager.retryConnect);
+    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.Exec;
+    Parser.Free;
+    if parse.Count>0 then
+    begin
+      manager.container.pageNumber:= 0;
+      for i:= 0 to parse.Count-1 do
+      begin
+        if (Pos('title="Next Page"', parse.Strings[i])>0) then
+        begin
+          s:= parse.Strings[i-6];
+          manager.container.pageNumber:= StrToInt(GetString(s, '"', '"'));
+          break;
+        end;
+      end;
+    end;
+    parse.Free;
+    l.Free;
+  end;
 
   function GetGEHentaiPageNumber(const lURL: String; const isGetLinkPage: Boolean): Boolean;
   var
@@ -1670,6 +1703,9 @@ begin
   if (manager.container.mangaSiteID = MANGAEDEN_ID) OR
      (manager.container.mangaSiteID = PERVEDEN_ID) then
     Result:= GetMangaEdenPageNumber
+  else
+  if manager.container.mangaSiteID = KIVMANGA_ID then
+    Result:= GetKivmangaPageNumber
   else
   if manager.container.mangaSiteID = GEHENTAI_ID then
   begin
@@ -2917,7 +2953,6 @@ var
     l.Free;
   end;
   
-   //disini
   function GetPururinLinkPage: Boolean;
   var
     s: String;
@@ -2950,7 +2985,6 @@ var
     parse.Free;
     l.Free;
   end;
-  //habis
 
   function GetHugeMangaLinkPage: Boolean;
   var
@@ -3423,6 +3457,39 @@ var
     parse.Free;
     l.Free;
   end;
+  
+    function GetKivmangaLinkPage: Boolean;
+  var
+    s: String;
+    j,
+    i: Cardinal;
+    l: TStringList;
+  begin
+    l:= TStringList.Create;
+    s:= DecodeUrl(WebsiteRoots[KIVMANGA_ID,1] + URL + '/' + IntToStr(workCounter+1));
+    Result:= GetPage(TObject(l),
+                     s,
+                     manager.container.manager.retryConnect);
+    parse:= TStringList.Create;
+    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.Exec;
+    Parser.Free;
+
+    if parse.Count>0 then
+    begin
+      for i:= 0 to parse.Count-1 do
+        if (Pos('class="picture"', parse.Strings[i])>0) then
+        begin
+          s:= WebsiteRoots[KIVMANGA_ID,1] + KIVMANGA_BROWSER + GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src='));
+          manager.container.pageLinks.Strings[workCounter]:= EncodeURL(s);
+          break;
+        end;
+    end;
+    parse.Free;
+    l.Free;
+  end;
 
   function GetGEHentaiLinkPage: Boolean;
   var
@@ -3613,6 +3680,9 @@ begin
   if (manager.container.mangaSiteID = MANGAEDEN_ID) OR
      (manager.container.mangaSiteID = PERVEDEN_ID) then
     Result:= GetMangaEdenLinkPage
+  else
+  if manager.container.mangaSiteID = KIVMANGA_ID then
+    Result:= GetKivmangaLinkPage
   else
   if manager.container.mangaSiteID = GEHENTAI_ID then
     Result:= GetGEHentaiLinkPage;
