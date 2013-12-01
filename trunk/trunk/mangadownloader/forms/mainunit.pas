@@ -62,6 +62,7 @@ type
     cbOptionBatotoUseIE: TCheckBox;
     cbOptionShowDeleteTaskDialog: TCheckBox;
     cbOptionShowBatotoSG: TCheckBox;
+	cbOptionShowAllLang: TCheckBox;
     cbOptionUseProxy: TCheckBox;
     cbSelectManga: TComboBox;
     CheckBox1: TCheckBox;
@@ -2057,6 +2058,7 @@ procedure TMainForm.pcMainChange(Sender: TObject);
     seOptionCheckMinutes.Value:= options.ReadInteger('update', 'AutoCheckMinutes', 0);
 
     cbOptionShowBatotoSG.Checked:= OptionShowBatotoSG;
+	cbOptionShowAllLang.Checked:= OptionShowAllLang;
 
     for i:= 0 to Length(optionMangaSiteSelectionNodes)-1 do
       optionMangaSiteSelectionNodes[i].CheckState:= csUncheckedNormal;
@@ -2538,7 +2540,9 @@ try
   options.WriteBool   ('dialogs', 'ShowFavoritesDialog', cbOptionShowFavoriteDialog.Checked);
 
   options.WriteBool   ('misc', 'ShowBatotoSG', cbOptionShowBatotoSG.Checked);
+  options.WriteBool   ('misc', 'ShowAllLang', cbOptionShowAllLang.Checked);
   OptionShowBatotoSG:= cbOptionShowBatotoSG.Checked;
+  OptionShowAllLang:= cbOptionShowAllLang.Checked;
 
   options.UpdateFile;
 
@@ -3043,6 +3047,8 @@ begin
   // misc
   cbOptionShowBatotoSG.Checked:= options.ReadBool('misc', 'ShowBatotoSG', TRUE);
   OptionShowBatotoSG:= cbOptionShowBatotoSG.Checked;
+  cbOptionShowAllLang.Checked:= options.ReadBool('misc', 'ShowAllLang', TRUE);
+  OptionShowAllLang:= cbOptionShowAllLang.Checked;
 
   vtFavorites.Header.SortColumn:= options.ReadInteger('misc', 'SortColumn', 0);
   favorites.sortDirection:= options.ReadBool('misc', 'SortDirection', FALSE);
@@ -3444,6 +3450,7 @@ begin
   cbOptionEnableLoadCover.Caption:= language.ReadString(lang, 'cbOptionEnableLoadCoverCaption', '');
   cbOptionAutoCheckFavStartup.Caption:= language.ReadString(lang, 'cbOptionAutoCheckFavStartupCaption', '');
   cbOptionShowBatotoSG.Caption:= language.ReadString(lang, 'cbOptionShowBatotoSGCaption', '');
+  cbOptionShowAllLang.Caption:= language.ReadString(lang, 'cbOptionShowAllLangCaption', '');
   cbOptionAutoRemoveCompletedManga.Caption:= language.ReadString(lang, 'cbOptionAutoRemoveCompletedMangaCaption', '');
   cbSelectManga.Hint:= language.ReadString(lang, 'cbSelectMangaHint', '');
 
