@@ -189,6 +189,7 @@ const
   PURURIN_NAME      = 'Pururin';      Pururin_ID     = 48;
   MANGACOW_NAME     = 'Mangacow';     MANGACOW_ID    = 49;
   KIVMANGA_NAME     = 'Kivmanga';     KIVMANGA_ID    = 50;
+  MANGACAN_NAME		= 'Mangacan';	  MANGACAN_ID	 = 51;
 
   DEFAULT_LIST = ANIMEA_NAME+'!%~'+MANGAFOX_NAME+'!%~'+MANGAHERE_NAME+'!%~'+MANGAINN_NAME+'!%~'+MANGAREADER_NAME+'!%~';
   DEFAULT_CUSTOM_RENAME = '%NUMBERING% - %CHAPTER%';
@@ -233,7 +234,7 @@ var
   SEPERATOR: String = '!%~';
   SEPERATOR2: String = '~%!';
 
-  WebsiteRoots  : array[0..50] of array [0..1] of String =
+  WebsiteRoots  : array[0..51] of array [0..1] of String =
     (('AnimeA', 'http://manga.animea.net'),
      ('MangaHere', 'http://www.mangahere.com'),
      ('MangaInn', 'http://www.mangainn.com'),
@@ -284,7 +285,8 @@ var
      ('DM5', 'http://www.dm5.com'),
      ('Pururin', 'http://pururin.com'),
      ('Mangacow', 'http://mngacow.com'),
-     ('Kivmanga', 'http://www.kivmanga.com')
+     ('Kivmanga', 'http://www.kivmanga.com'),
+	 ('Mangacan', 'http://mangacanblog.com')
     );
 
   ANIMEA_BROWSER: String = '/browse.html?page=';
@@ -405,6 +407,8 @@ var
   MANGACOW_BROWSER: String = '/manga-list/';
   
   KIVMANGA_BROWSER: String = '/';
+  
+  MANGACAN_BROWSER: String = '/daftar-komik-manga-bahasa-indonesia.html';
 
   UPDATE_URL      : String = 'http://jaist.dl.sourceforge.net/project/fmd/FMD/updates/';
 
@@ -477,6 +481,7 @@ var
   OptionMaxRetry    : Cardinal = 0;
 
   OptionShowBatotoSG      : Boolean = TRUE;
+  OptionShowAllLang       : Boolean = TRUE;
   OptionBatotoUseIEChecked: Boolean = FALSE;
   OptionEnableLoadCover: Boolean = FALSE;
   OptionAutoNumberChapterChecked: Boolean = TRUE;
