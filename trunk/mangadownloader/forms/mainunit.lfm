@@ -1,7 +1,7 @@
 object MainForm: TMainForm
-  Left = 357
+  Left = 97
   Height = 502
-  Top = 34
+  Top = 30
   Width = 819
   Align = alBottom
   Caption = 'Free Manga Downloader'
@@ -11,7 +11,7 @@ object MainForm: TMainForm
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   OnWindowStateChange = FormWindowStateChange
-  LCLVersion = '1.3'
+  LCLVersion = '1.2.0.1'
   object spMainSplitter: TSplitter
     AnchorSideRight.Control = pcMain
     Left = 195
@@ -25,12 +25,12 @@ object MainForm: TMainForm
   object pnMainLeft: TPanel
     AnchorSideRight.Control = spMainSplitter
     Left = 0
-    Height = 470
+    Height = 471
     Top = 8
     Width = 195
     Align = alLeft
     Anchors = [akTop, akLeft, akRight, akBottom]
-    ClientHeight = 470
+    ClientHeight = 471
     ClientWidth = 195
     TabOrder = 0
     object pnLeftBtDummy: TBitBtn
@@ -45,7 +45,7 @@ object MainForm: TMainForm
     end
     object pcLeft: TPageControl
       Left = 1
-      Height = 468
+      Height = 469
       Top = 1
       Width = 193
       ActivePage = tsMangaList
@@ -54,13 +54,13 @@ object MainForm: TMainForm
       TabOrder = 0
       object tsMangaList: TTabSheet
         Caption = 'Manga List'
-        ClientHeight = 440
+        ClientHeight = 443
         ClientWidth = 185
         object lbMode: TLabel
           Left = 8
-          Height = 15
+          Height = 13
           Top = 64
-          Width = 124
+          Width = 125
           Caption = 'Mode: Show all manga'
           Font.Style = [fsBold]
           ParentColor = False
@@ -127,7 +127,7 @@ object MainForm: TMainForm
         end
         object vtMangaList: TVirtualStringTree
           Left = 3
-          Height = 342
+          Height = 345
           Hint = 'test'
           Top = 88
           Width = 176
@@ -213,7 +213,7 @@ object MainForm: TMainForm
         end
         object edSearch: TEdit
           Left = 3
-          Height = 23
+          Height = 21
           Top = 36
           Width = 150
           Anchors = [akTop, akLeft, akRight]
@@ -223,12 +223,12 @@ object MainForm: TMainForm
         end
         object cbSelectManga: TComboBox
           Left = 3
-          Height = 23
+          Height = 21
           Hint = 'For more manga sites, please go to Options->Manga sites'
           Top = 8
           Width = 150
           Anchors = [akTop, akLeft, akRight]
-          ItemHeight = 15
+          ItemHeight = 13
           ItemIndex = 0
           Items.Strings = (
             ''
@@ -328,23 +328,23 @@ object MainForm: TMainForm
   end
   object pcMain: TPageControl
     Left = 195
-    Height = 470
+    Height = 471
     Top = 8
     Width = 624
-    ActivePage = tsDownload
+    ActivePage = tsOption
     Align = alClient
     Font.Style = [fsBold]
     ParentFont = False
-    TabIndex = 0
+    TabIndex = 4
     TabOrder = 1
     OnChange = pcMainChange
     object tsDownload: TTabSheet
       Caption = 'Downloads'
-      ClientHeight = 442
+      ClientHeight = 445
       ClientWidth = 616
       object vtDownload: TVirtualStringTree
         Left = 0
-        Height = 442
+        Height = 445
         Top = 0
         Width = 616
         Align = alClient
@@ -1295,10 +1295,10 @@ object MainForm: TMainForm
           end
           object cbFilterStatus: TComboBox
             Left = 135
-            Height = 23
+            Height = 21
             Top = 80
             Width = 146
-            ItemHeight = 15
+            ItemHeight = 13
             ItemIndex = 2
             Items.Strings = (
               'Completed'
@@ -1470,27 +1470,27 @@ object MainForm: TMainForm
     end
     object tsOption: TTabSheet
       Caption = 'Options'
-      ClientHeight = 442
+      ClientHeight = 445
       ClientWidth = 616
       object pnOptions: TPageControl
         Left = 9
-        Height = 349
+        Height = 352
         Top = 26
         Width = 597
-        ActivePage = tsGeneral
+        ActivePage = tsMisc
         Anchors = [akTop, akLeft, akRight, akBottom]
-        TabIndex = 0
+        TabIndex = 6
         TabOrder = 0
         object tsGeneral: TTabSheet
           Caption = 'General'
-          ClientHeight = 321
+          ClientHeight = 326
           ClientWidth = 589
           object cbLanguages: TComboBox
             Left = 20
-            Height = 23
+            Height = 21
             Top = 34
             Width = 212
-            ItemHeight = 15
+            ItemHeight = 13
             Items.Strings = (
               'English'
             )
@@ -1500,15 +1500,15 @@ object MainForm: TMainForm
           end
           object lbOptionLanguage: TLabel
             Left = 20
-            Height = 15
+            Height = 13
             Top = 18
-            Width = 101
+            Width = 102
             Caption = 'lbOptionLanguage'
             ParentColor = False
           end
           object seOptionNewMangaTime: TSpinEdit
             Left = 20
-            Height = 23
+            Height = 21
             Top = 138
             Width = 58
             MaxValue = 365
@@ -1519,28 +1519,28 @@ object MainForm: TMainForm
           end
           object lbOptionNewMangaTime: TLabel
             Left = 92
-            Height = 15
+            Height = 13
             Top = 138
-            Width = 135
+            Width = 115
             Caption = 'lbOptionNewMangaTime'
             ParentColor = False
             ParentFont = False
           end
           object cbOptionMinimizeToTray: TCheckBox
             Left = 20
-            Height = 19
+            Height = 17
             Top = 170
-            Width = 156
+            Width = 134
             Caption = 'cbOptionMinimizeToTray'
             ParentFont = False
             TabOrder = 2
           end
           object cbOptionLetFMDDo: TComboBox
             Left = 20
-            Height = 23
+            Height = 21
             Top = 90
             Width = 212
-            ItemHeight = 15
+            ItemHeight = 13
             ItemIndex = 0
             Items.Strings = (
               ''
@@ -1551,17 +1551,17 @@ object MainForm: TMainForm
           end
           object lbOptionLetFMDDo: TLabel
             Left = 20
-            Height = 15
+            Height = 13
             Top = 74
-            Width = 108
+            Width = 104
             Caption = 'lbOptionLetFMDDo'
             ParentColor = False
           end
           object cbOptionBatotoUseIE: TCheckBox
             Left = 260
-            Height = 19
+            Height = 17
             Top = 30
-            Width = 133
+            Width = 121
             Caption = 'cbOptionBatotoUseIE'
             Enabled = False
             ParentFont = False
@@ -1575,13 +1575,13 @@ object MainForm: TMainForm
             Width = 530
             Anchors = [akTop, akLeft, akRight]
             Caption = 'External program'
-            ClientHeight = 69
+            ClientHeight = 71
             ClientWidth = 526
             ParentFont = False
             TabOrder = 5
             object edOptionExternal: TEdit
               Left = 22
-              Height = 23
+              Height = 21
               Top = 34
               Width = 444
               Anchors = [akTop, akLeft, akRight]
@@ -1589,15 +1589,15 @@ object MainForm: TMainForm
             end
             object lbOptionExternal: TLabel
               Left = 22
-              Height = 15
+              Height = 13
               Top = 14
-              Width = 213
+              Width = 194
               Caption = 'Open manga by using external program:'
               ParentColor = False
             end
             object lbOptionExternalHint: TLabel
               Left = 478
-              Height = 15
+              Height = 13
               Top = 36
               Width = 13
               Anchors = [akTop, akRight]
@@ -1642,7 +1642,7 @@ object MainForm: TMainForm
               Width = 567
               Anchors = [akTop, akLeft, akRight]
               Caption = 'Proxy config'
-              ClientHeight = 84
+              ClientHeight = 86
               ClientWidth = 563
               Enabled = False
               ParentFont = False
@@ -1839,7 +1839,7 @@ object MainForm: TMainForm
             ChildSizing.ShrinkVertical = crsScaleChilds
             ChildSizing.Layout = cclLeftToRightThenTopToBottom
             ChildSizing.ControlsPerLine = 4
-            ClientHeight = 40
+            ClientHeight = 42
             ClientWidth = 526
             Columns = 4
             ItemIndex = 0
@@ -1859,7 +1859,7 @@ object MainForm: TMainForm
             Width = 530
             Anchors = [akTop, akLeft, akRight]
             Caption = 'Renaming'
-            ClientHeight = 117
+            ClientHeight = 119
             ClientWidth = 526
             ParentFont = False
             TabOrder = 2
@@ -1998,7 +1998,7 @@ object MainForm: TMainForm
             Width = 530
             Anchors = [akTop, akLeft, akRight]
             Caption = 'Favorites'
-            ClientHeight = 108
+            ClientHeight = 110
             ClientWidth = 526
             ParentFont = False
             TabOrder = 1
@@ -2048,7 +2048,7 @@ object MainForm: TMainForm
             Top = 14
             Width = 566
             Anchors = [akTop, akLeft, akRight, akBottom]
-            ClientHeight = 266
+            ClientHeight = 268
             ClientWidth = 562
             TabOrder = 0
             object cbOptionShowQuitDialog: TCheckBox
@@ -2114,31 +2114,40 @@ object MainForm: TMainForm
         end
         object tsMisc: TTabSheet
           Caption = 'Misc'
-          ClientHeight = 315
+          ClientHeight = 326
           ClientWidth = 589
           object gbMisc: TGroupBox
             Left = 10
-            Height = 287
+            Height = 298
             Top = 14
             Width = 566
             Anchors = [akTop, akLeft, akRight, akBottom]
-            ClientHeight = 267
+            ClientHeight = 280
             ClientWidth = 562
             TabOrder = 0
+            object cbOptionShowAllLang: TCheckBox
+              Left = 32
+              Height = 17
+              Top = 70
+              Width = 151
+              Caption = '[Batoto] Show All Language'
+              ParentFont = False
+              TabOrder = 2
+            end
             object cbOptionShowBatotoSG: TCheckBox
               Left = 32
-              Height = 19
+              Height = 17
               Top = 46
-              Width = 190
+              Width = 172
               Caption = '[Batoto] Show scan group name'
               ParentFont = False
               TabOrder = 0
             end
             object cbOptionEnableLoadCover: TCheckBox
               Left = 32
-              Height = 19
+              Height = 17
               Top = 22
-              Width = 153
+              Width = 138
               Caption = 'Enable load manga cover'
               ParentFont = False
               TabOrder = 1
@@ -2149,7 +2158,7 @@ object MainForm: TMainForm
       object btOptionApply: TButton
         Left = 50
         Height = 41
-        Top = 388
+        Top = 391
         Width = 128
         Anchors = [akBottom]
         Caption = 'Apply'
@@ -2159,13 +2168,13 @@ object MainForm: TMainForm
     end
     object tsAbout: TTabSheet
       Caption = 'About'
-      ClientHeight = 432
-      ClientWidth = 612
+      ClientHeight = 445
+      ClientWidth = 616
       object rmAbout: TRichMemo
         Left = 0
-        Height = 365
+        Height = 378
         Top = 0
-        Width = 612
+        Width = 616
         Align = alTop
         Anchors = [akTop, akLeft, akRight, akBottom]
         Font.Style = [fsBold]
@@ -2178,7 +2187,7 @@ object MainForm: TMainForm
       object btCheckVersion: TBitBtn
         Left = 25
         Height = 40
-        Top = 381
+        Top = 394
         Width = 208
         Anchors = [akLeft, akBottom]
         Caption = 'Check for new version'
@@ -2188,7 +2197,7 @@ object MainForm: TMainForm
       object btVisitMyBlog: TBitBtn
         Left = 249
         Height = 40
-        Top = 381
+        Top = 394
         Width = 208
         Anchors = [akLeft, akBottom]
         Caption = 'Visit my blog'
@@ -2199,8 +2208,8 @@ object MainForm: TMainForm
   end
   object sbMain: TStatusBar
     Left = 0
-    Height = 24
-    Top = 478
+    Height = 23
+    Top = 479
     Width = 819
     Panels = <    
       item
