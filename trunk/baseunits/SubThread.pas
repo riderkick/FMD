@@ -140,6 +140,7 @@ procedure   TSubThread.DoGetInfos;
            (website = MANGAFRAME_NAME) OR
            (website = S2SCAN_NAME) OR
            (website = KIVMANGA_NAME) OR
+		   (website = MANGACAN_NAME) OR
            (website = EGSCANS_NAME) OR
            (website = TURKCRAFT_NAME) OR
            (website = HUGEMANGA_NAME) OR
