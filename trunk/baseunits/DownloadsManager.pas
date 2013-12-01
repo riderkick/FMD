@@ -1720,12 +1720,12 @@ begin
      (manager.container.mangaSiteID = MABUNS_ID) OR
      (manager.container.mangaSiteID = EGSCANS_ID) OR
 	 (manager.container.mangaSiteID = PURURIN_ID) OR
-	 (manager.container.mangaSiteID = MANGACOW_ID) OR
      (manager.container.mangaSiteID = MANGAESTA_ID) OR
      (manager.container.mangaSiteID = TRUYEN18_ID) OR
      (manager.container.mangaSiteID = TRUYENTRANHTUAN_ID) OR
      (manager.container.mangaSiteID = SCANMANGA_ID) OR
      (manager.container.mangaSiteID = FAKKU_ID) OR
+	 (manager.container.mangaSiteID = MANGACAN_ID) OR
      (manager.container.mangaSiteID = CENTRALDEMANGAS_ID) then
   begin
     // all of the page links are in a html page
@@ -2962,7 +2962,7 @@ var
   begin
     l:= TStringList.Create;
 	  s:= StringReplace(URL, '_1.html', '_', []);
-      s:= DecodeUrl(StringReplace(s, '00', '0' + IntToStr(workCounter+0), []) + IntToStr(workCounter+1) + '.html');
+      s:= DecodeUrl(StringReplace(s, '/00', '/0' + IntToStr(workCounter+0), []) + IntToStr(workCounter+1) + '.html');
     Result:= GetPage(TObject(l),
 	                 s,
                      manager.container.manager.retryConnect);
@@ -3490,6 +3490,42 @@ var
     parse.Free;
     l.Free;
   end;
+  
+    function GetMangacanLinkPage: Boolean;
+  var
+    s: String;
+    j,
+    i: Cardinal;
+    l: TStringList;
+  begin
+    l:= TStringList.Create;
+    if Pos('http://', URL) = 0 then
+      s:= WebsiteRoots[MANGACAN_ID,1] + '/' + URL
+    else
+      s:= URL;
+    Result:= GetPage(TObject(l),
+                     s,
+                     manager.container.manager.retryConnect);
+    parse:= TStringList.Create;
+    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.Exec;
+    Parser.Free;
+if parse.Count>0 then begin
+  manager.container.pageLinks.Clear;  
+  for i:= 0 to parse.Count-1 do
+    if (Pos('<img alt=', parse.Strings[i])>0) then
+    begin
+	s:= GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src='));
+	s:= StringReplace(s, 'https://', 'http://', [rfReplaceAll]);
+	s:= StringReplace(s, 'mangas/', WebsiteRoots[MANGACAN_ID,1] + '/mangas/', [rfReplaceAll]);
+      manager.container.pageLinks.Add(EncodeURL(s));
+    end;
+end;
+    parse.Free;
+    l.Free;
+  end;
 
   function GetGEHentaiLinkPage: Boolean;
   var
@@ -3683,6 +3719,9 @@ begin
   else
   if manager.container.mangaSiteID = KIVMANGA_ID then
     Result:= GetKivmangaLinkPage
+  else
+  if manager.container.mangaSiteID = MANGACAN_ID then
+    Result:= GetMangacanLinkPage
   else
   if manager.container.mangaSiteID = GEHENTAI_ID then
     Result:= GetGEHentaiLinkPage;
