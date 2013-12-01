@@ -25,6 +25,10 @@ type
   protected
     FWebsite, FURL: String;
     FPass0        : Boolean;
+    // Temporarily not allow other threads update information
+    procedure EnableLock;
+    // Allows other threads to do the job
+    procedure DisableLock;
     procedure UpdateName;
     procedure EndPass0;
     procedure Execute; override;
@@ -63,6 +67,7 @@ type
     // store manga name that has new chapter after checking
     newMangaStr    : String;
 
+    Lock            : Cardinal;
     // Number of mangas in Favorites
     Count           : Cardinal;
     // Number of mangas in Favorites - Before checking
@@ -142,6 +147,16 @@ begin
   inherited Destroy;
 end;
 
+procedure TFavoriteThread.EnableLock;
+begin
+  Inc(manager.Lock);
+end;
+
+procedure TFavoriteThread.DisableLock;
+begin
+  Dec(manager.Lock);
+end;
+
 procedure   TFavoriteThread.UpdateName;
 begin
   MainForm.btFavoritesCheckNewChapter.Caption:= stFavoritesChecking + ' '+currentManga;
@@ -161,12 +176,23 @@ begin
   workCounter:= threadID;
   while (NOT Terminated) AND (workCounter < manager.CountBeforeChecking) do
   begin
+    if manager.favoriteInfo[workCounter].website = WebsiteRoots[MANGASTREAM_ID, 0] then
+      getInfo.mangaInfo.title:= manager.favoriteInfo[workCounter].title;
+    // Put the title of the site that doesn't allow multi-connections in here
+    if manager.favoriteInfo[workCounter].website = WebsiteRoots[EATMANGA_ID, 0] then
+    begin
+      while manager.Lock <> 0 do Sleep(32);
+      Synchronize(EnableLock);
+    end;
     currentManga:= manager.favoriteInfo[workCounter].title + ' <' + manager.favoriteInfo[workCounter].website + '>';
     Synchronize(UpdateName);
-    if manager.favoriteInfo[workCounter].website = MANGASTREAM_NAME then
-      getInfo.mangaInfo.title:= manager.favoriteInfo[workCounter].title;
     getInfo.GetInfoFromURL(manager.favoriteInfo[workCounter].website,
-                           manager.favoriteInfo[workCounter].link, 4);
+                           manager.favoriteInfo[workCounter].link, 3);
+    // Put the title of the site that doesn't allow multi-connections in here
+    if manager.favoriteInfo[workCounter].website = WebsiteRoots[EATMANGA_ID, 0] then
+    begin
+      Synchronize(DisableLock);
+    end;
     manager.mangaInfo[workCounter].chapterName := TStringList.Create;
     manager.mangaInfo[workCounter].chapterLinks:= TStringList.Create;
     TransferMangaInfo(manager.mangaInfo[workCounter], getInfo.mangaInfo);
@@ -212,7 +238,8 @@ end;
 
 constructor TFavoriteManager.Create;
 begin
-  numberOfThreads:= 1;
+  numberOfThreads:= 4;
+  Lock:= 0;
   isRunning:= FALSE;
   favorites:= TIniFile.Create(WORK_FOLDER + FAVORITES_FILE);
   favorites.CacheUpdates:= TRUE;
