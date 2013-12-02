@@ -8814,8 +8814,7 @@ begin
       isExtractChapter:= TRUE;
 
     // get chapter name and links
-    if (isExtractChapter) AND
-       (Pos('/online/', parse.Strings[i])>0) AND
+    if (Pos('/online/', parse.Strings[i])>0) AND
        (Pos('class="span1"', parse.Strings[i])>0) then
     begin
       Inc(mangaInfo.numChapter);
@@ -8824,10 +8823,6 @@ begin
       s:= RemoveSymbols(TrimLeft(TrimRight(parse.Strings[i+1])));
       mangaInfo.chapterName.Add(StringFilter(HTMLEntitiesFilter(s)));
     end;
-
-    if (isExtractChapter) AND
-       (Pos('class="span3"', parse.Strings[i])>0) then
-      isExtractChapter:= FALSE;
 
     // get authors
     if (i+12<parse.Count) AND
