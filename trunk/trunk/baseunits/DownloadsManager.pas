@@ -2713,14 +2713,14 @@ var
 
   function GetTruyenTranhTuanLinkPage: Boolean;
   var
-    s: String;
+    s, s2: String;
     j,
     i: Cardinal;
     l: TStringList;
   begin
     l:= TStringList.Create;
     Result:= GetPage(TObject(l),
-                     WebsiteRoots[TRUYENTRANHTUAN_ID,1] + URL + 'doc-truyen/',
+                     WebsiteRoots[TRUYENTRANHTUAN_ID,1] + URL,
                      manager.container.manager.retryConnect);
     parse:= TStringList.Create;
     Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
@@ -2733,12 +2733,13 @@ var
       manager.container.pageLinks.Clear;
       for i:= 0 to parse.Count-1 do
       begin
-        if Pos('var slides2=["', parse.Strings[i]) > 0 then
+        if Pos('var slides_page = ["', parse.Strings[i]) > 0 then
         begin
           s:= parse.Strings[i];
           repeat
             j:= Pos('"/manga/', s);
-            manager.container.pageLinks.Add(EncodeUrl(WebsiteRoots[TRUYENTRANHTUAN_ID,1] + '/manga/' + GetString(s, '"/manga/', '"')));
+            s2:= EncodeUrl(WebsiteRoots[TRUYENTRANHTUAN_ID,1] + '/manga/' + GetString(s, '"/manga/', '"'));
+            manager.container.pageLinks.Add(s2);
             Delete(s, Pos('"/manga/', s), 10);
             j:= Pos('"/manga/', s);
           until j = 0;
