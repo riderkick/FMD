@@ -1,4 +1,4 @@
-﻿{
+{
         File: data.pas
         License: GPLv2
         This unit is a part of Free Manga Downloader
@@ -1925,10 +1925,10 @@ var
       source.Free;
       exit;
     end;
-    for i:= 0 to parse.Count-1 do
+    for i:= 0 to parse.Count-3 do
     begin
-      if (Pos('<strong>', parse.Strings[i])<>0) AND
-         (Pos('</strong>', parse.Strings[i+2])<>0) AND
+      if (Pos('<b>', parse.Strings[i])<>0) AND
+         (Pos('</b>', parse.Strings[i+2])<>0) AND
          (GetAttributeValue(GetTagAttribute(parse.Strings[i-1], 'href=')) <> '') then
       begin
         Result:= NO_ERROR;
@@ -2318,12 +2318,13 @@ var
     end;
     for i:= parse.Count-1 downto 5 do
     begin
-      if (Pos('class="ch-subject"', parse.Strings[i]) > 0) then
+      if (Pos('class="manga"', parse.Strings[i]) > 0) then
       begin
         Result:= NO_ERROR;
-        s:= StringFilter(TrimLeft(TrimRight(parse.Strings[i+1])));
+        s:= StringFilter(TrimLeft(TrimRight(parse.Strings[i+2])));
         names.Add(HTMLEntitiesFilter(s));
-        s:= GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href='));
+        s:= GetAttributeValue(GetTagAttribute(parse.Strings[i+1], 'href='));
+        s:= StringReplace(s, WebsiteRoots[TRUYENTRANHTUAN_ID,1], '', []);
         links.Add(s);
       end;
     end;
@@ -5029,9 +5030,9 @@ begin
   for i:= 0 to parse.Count-1 do
   begin
     // get cover link
-    if (Pos('class="img-rounded"', parse.Strings[i]) > 0) then
+    if (Pos('class="img-rounded', parse.Strings[i]) > 0) then
     begin
-      mangaInfo.coverLink:= CorrectURL(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src=')));
+      mangaInfo.coverLink:= EncodeURL(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src=')));
       s:= mangaInfo.coverLink;
     end;
 
@@ -7198,12 +7199,12 @@ begin
   for i:= 0 to parse.Count-1 do
   begin
     // get cover
-    if (GetTagName(parse.Strings[i]) = 'div') AND
-       (Pos('class="title-logo1"', parse.Strings[i])>0) then
-      mangaInfo.coverLink:= CorrectURL(GetAttributeValue(GetTagAttribute(parse.Strings[i+1], 'src=')));
+    if (GetTagName(parse.Strings[i]) = 'meta') AND
+       (Pos('property="og:image"', parse.Strings[i])>0) then
+      mangaInfo.coverLink:= CorrectURL(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'content=')));
 
     // get summary
-    if (Pos('Tóm tắt truyện', parse.Strings[i]) <> 0) AND
+    if (Pos('id="manga-summary"', parse.Strings[i]) <> 0) AND
        (isExtractSummary) then
     begin
       j:= i+4;
@@ -7223,23 +7224,23 @@ begin
     end;
 
     // get title
-    if (Pos('Tên truyện:', parse.Strings[i])<>0) AND (mangaInfo.title = '') then
-      mangaInfo.title:= TrimLeft(StringFilter(parse.Strings[i+2]));
+    if (Pos('<title>', parse.Strings[i])<>0) AND (mangaInfo.title = '') then
+      mangaInfo.title:= Trim(StringFilter(GetString('~!@'+parse.Strings[i+1], '~!@', ' - Truyện tranh online - truyentranhtuan.com')));
 
     // get chapter name and links
-    if (Pos('class="tbl_body">', parse.Strings[i])>0) OR
-       (Pos('class="tbl_body2">', parse.Strings[i])>0) then
+    if (Pos('class="chapter-name"', parse.Strings[i])>0) then
     begin
       Inc(mangaInfo.numChapter);
-      s:= GetString(parse.Strings[i+1], 'href="', '"');
+      s:= GetString(parse.Strings[i+2], 'href="', '"');
+      s:= StringReplace(s, WebsiteRoots[TRUYENTRANHTUAN_ID,1], '', []);
       mangaInfo.chapterLinks.Add(s);
-      s:= RemoveSymbols(TrimLeft(TrimRight(parse.Strings[i+2])));
+      s:= RemoveSymbols(Trim(parse.Strings[i+3]));
       mangaInfo.chapterName.Add(StringFilter(StringFilter(HTMLEntitiesFilter(s))));
     end;
 
     // get authors
-    if  (i+1<parse.Count) AND (Pos('Tác Giả:', parse.Strings[i])<>0) then
-      mangaInfo.authors:= TrimLeft(parse.Strings[i+2]);
+    if  (i+1<parse.Count) AND (Pos('Tác giả:', parse.Strings[i])<>0) then
+      mangaInfo.authors:= Trim(parse.Strings[i+2]);
 
     // get artists
     //if (i+1<parse.Count) AND (Pos('/search/artist/', parse.Strings[i])<>0) then
@@ -7263,7 +7264,7 @@ begin
     // get status
     if (i+5<parse.Count) AND (Pos('Chương mới nhất', parse.Strings[i])<>0) then
     begin
-      if Pos('Đang tiến hành', parse.Strings[i+2])<>0 then
+      if Pos('dang-tien-hanh', parse.Strings[i+1])<>0 then
         mangaInfo.status:= '1'   // ongoing
       else
         mangaInfo.status:= '0';  // completed

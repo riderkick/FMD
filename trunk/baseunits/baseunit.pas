@@ -339,7 +339,7 @@ var
   PERVEDEN_EN_BROWSER: String = '/en-directory/';
   PERVEDEN_IT_BROWSER: String = '/it-directory/';
 
-  TRUYENTRANHTUAN_BROWSER: String = '/danh-sach-truyen/';
+  TRUYENTRANHTUAN_BROWSER: String = '/danh-sach-truyen';
 
   TURKCRAFT_BROWSER: String = '/';
 
@@ -1161,6 +1161,9 @@ begin
   Result:= StringReplace(Result, '&#253;', 'ý', [rfReplaceAll]);
 
   Result:= StringReplace(Result, '&#8217;', '''', [rfReplaceAll]);
+  Result:= StringReplace(Result, '&#8220;', '"', [rfReplaceAll]);
+  Result:= StringReplace(Result, '&#8221;', '"', [rfReplaceAll]);
+  Result:= StringReplace(Result, '&#8230;', '...', [rfReplaceAll]);
 end;
 
 procedure  CustomGenres(var output: TStringList; input: String);
