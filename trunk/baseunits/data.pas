@@ -1765,53 +1765,6 @@ var
     source.Free;
   end;
 
-  // get name and link of the manga from OurManga
-  function   OurMangaGetNameAndLink: Byte;
-  var
-    isGetNameAndLink: Boolean = FALSE;
-    i: Cardinal;
-    s: String;
-  begin
-    Result:= INFORMATION_NOT_FOUND;
-    if NOT GetPage(TObject(source), WebsiteRoots[OURMANGA_ID,1] + OURMANGA_BROWSER, 0) then
-    begin
-      Result:= NET_PROBLEM;
-      source.Free;
-      exit;
-    end;
-    parse.Clear;
-    Parser:= TjsFastHTMLParser.Create(PChar(source.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
-    Parser.Exec;
-    Parser.Free;
-    if parse.Count=0 then
-    begin
-      source.Free;
-      exit;
-    end;
-    for i:= 0 to parse.Count-1 do
-    begin
-      if (GetTagName(parse.Strings[i]) = 'div') AND
-         (GetAttributeValue(GetTagAttribute(parse.Strings[i], 'class='))='m_s_title') then
-      begin
-        if NOT isGetNameAndLink then
-          isGetNameAndLink:= TRUE
-        else
-        begin
-          Result:= NO_ERROR;
-          s:= StringFilter(TrimLeft(TrimRight(parse.Strings[i+2])));
-        //  if s <> 'Hajimete no Aku' then
-          begin
-            names.Add(s);
-            links.Add(StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i+1], 'href=')), WebsiteRoots[OURMANGA_ID,1], '', []));
-          end;
-        end;
-      end;
-    end;
-    source.Free;
-  end;
-
   // get name and link of the manga from KissManga
   function   KissMangaGetNameAndLink: Byte;
   var
@@ -3652,9 +3605,6 @@ begin
   if website = MANGAINN_NAME then
     Result:= MangaInnGetNameAndLink
   else
- { if website = OURMANGA_NAME then
-    Result:= OurMangaGetNameAndLink
-  else }
   if website = KISSMANGA_NAME then
     Result:= KissMangaGetNameAndLink
   else
@@ -4470,133 +4420,6 @@ begin
     if Pos('Chapter Name', parse.Strings[i]) <> 0 then
       if GetTagAttribute(parse.Strings[i-1], 'class=') <> '' then
         isExtractChapters:= TRUE;
-  end;
-  Result:= NO_ERROR;
-end;
-
-function   GetOurMangaInfoFromURL: Byte;
-var
-  s: String;
-  isExtractSummary: Boolean = TRUE;
-  isExtractGenres : Boolean = FALSE;
-  i, j: Cardinal;
-begin
-  mangaInfo.url:= WebsiteRoots[OURMANGA_ID,1] + URL;
-  if NOT GetPage(TObject(source), mangaInfo.url, Reconnect) then
-  begin
-    Result:= NET_PROBLEM;
-    source.Free;
-    exit;
-  end;
-
-  // parsing the HTML source
-  parse.Clear;
-  Parser:= TjsFastHTMLParser.Create(PChar(source.Text));
-  Parser.OnFoundTag := OnTag;
-  Parser.OnFoundText:= OnText;
-  Parser.Exec;
-
-  Parser.Free;
-  source.Free;
-  mangaInfo.website:= OURMANGA_NAME;
-  mangaInfo.coverLink:= 'http://www.ourmanga.com/images/naruto.jpg';
-
-  // using parser (cover link, summary, chapter name and link)
-  if parse.Count=0 then exit;
-  for i:= 0 to parse.Count-1 do
-  begin
-    // get manga title
-    if (mangaInfo.title = '') AND
-       (Pos('<title>', parse.Strings[i]) > 0) then
-      mangaInfo.title:= GetString(parse.Strings[i+1], 'Read ', ' Manga Online ');
-
-    // get summary
-    if (Pos('Summary:', parse.Strings[i]) <> 0) AND
-       (isExtractSummary) then
-    begin
-      j:= i+2;
-      mangaInfo.summary:= '';
-      while Pos('</p>', parse.Strings[j])=0 do
-      begin
-        s:= parse.Strings[j];
-        if s[1] <> '<' then
-        begin
-          parse.Strings[j]:= StringFilter(parse.Strings[j]);
-          parse.Strings[j]:= StringReplace(parse.Strings[j], #10, '\n', [rfReplaceAll]);
-          parse.Strings[j]:= StringReplace(parse.Strings[j], #13, '\r', [rfReplaceAll]);
-          mangaInfo.summary:= mangaInfo.summary + parse.Strings[j];
-        end;
-        Inc(j);
-      end;
-      isExtractSummary:= FALSE;
-    end;
-
-      // get chapter name and links
-    if (GetTagName(parse.Strings[i]) = 'a') AND
-       (Pos(URL, parse.Strings[i])<>0) then
-    begin
-      Inc(mangaInfo.numChapter);
-      mangaInfo.chapterLinks.Add(StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href=')), WebsiteRoots[OURMANGA_ID,1], '', [rfReplaceAll]));
-      parse.Strings[i+1]:= StringReplace(parse.Strings[i+1], #10, '', [rfReplaceAll]);
-      parse.Strings[i+1]:= StringReplace(parse.Strings[i+1], #13, '', [rfReplaceAll]);
-      parse.Strings[i+1]:= TrimLeft(parse.Strings[i+1]);
-     // parse.Strings[i+1]:= TrimRight(parse.Strings[i+1]);
-      mangaInfo.chapterName.Add(StringFilter(TrimRight(RemoveSymbols(parse.Strings[i+1]))));
-    end;
-
-    // get authors
-    if (Pos('Author:', parse.Strings[i])<>0) then
-      mangaInfo.authors:= TrimLeft(parse.Strings[i+2]);
-
-    // get artists
-    if (Pos('Artist:', parse.Strings[i])<>0) then
-      mangaInfo.artists:= TrimLeft(parse.Strings[i+2]);
-
-    // get genres
-    if (Pos('Categories:', parse.Strings[i])<>0) then
-    begin
-      isExtractGenres:= TRUE;
-      mangaInfo.genres:= '';
-    end;
-
-    if isExtractGenres then
-    begin
-      if GetTagName(parse.Strings[i]) <> 'a' then
-        for j:= 0 to 37 do
-          if Pos(LowerCase(defaultGenres[j]), LowerCase(parse.Strings[i]))<>0 then
-            mangaInfo.genres:= mangaInfo.genres+(defaultGenres[j]+', ');
-      if Pos('</h5>', parse.Strings[i]) <> 0 then
-        isExtractGenres:= FALSE;
-    end;
-
-    // get status
-    if (Pos('Status:', parse.Strings[i])<>0) then
-    begin
-      if Pos('Completed', parse.Strings[i+2])<>0 then
-        mangaInfo.status:= '0'   // completed
-      else
-        mangaInfo.status:= '1';  // ongoing
-    end;
-  end;
-
-  // Since chapter name and link are inverted, we need to invert them
-  if mangainfo.ChapterName.Count > 1 then
-  begin
-    i:= 0; j:= mangainfo.ChapterName.Count - 1;
-    while (i<j) do
-    begin
-      mangainfo.ChapterName.Exchange(i, j);
-      mangainfo.chapterLinks.Exchange(i, j);
-      Inc(i); Dec(j);
-    end;
-  end;
-
-  // Delete 'latest' chapter because it isnt exist
-  if {(mangaInfo.status = '1') AND }(mangainfo.ChapterName.Count > 0) then
-  begin
-    Dec(mangaInfo.numChapter);
-    mangainfo.ChapterName.Delete(mangainfo.ChapterName.Count-1);
-    mangainfo.chapterLinks.Delete(mangainfo.chapterLinks.Count-1);
   end;
   Result:= NO_ERROR;
 end;
@@ -9538,9 +9361,6 @@ begin
   if website = MANGAINN_NAME then
     Result:= GetMangaInnInfoFromURL
   else
- { if website = OURMANGA_NAME then
-    Result:= GetOurMangaInfoFromURL
-  else }
   if website = KISSMANGA_NAME then
     Result:= GetKissMangaInfoFromURL
   else
