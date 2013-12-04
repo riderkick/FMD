@@ -463,78 +463,6 @@ var
     l.Free;
   end;
 
-  function GetOurMangaPageNumber: Boolean;
-  // OurManga is a lot different than other site
-  var
-    isExtractpageContainerLinks: Boolean = FALSE;
-    correctURL,
-    s   : String;
-    i, j: Cardinal;
-    l   : TStringList;
-  begin
-    // pass 1: Find correct chapter
-    l:= TStringList.Create;
-    parse:= TStringList.Create;
-    Result:= GetPage(TObject(l),
-                     WebsiteRoots[OURMANGA_ID,1] + URL,
-                     manager.container.manager.retryConnect);
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
-    Parser.Exec;
-    Parser.Free;
-    if parse.Count>0 then
-    begin
-      manager.container.pageNumber:= 1;
-      for i:= 0 to parse.Count-1 do
-      begin
-        if (GetTagName(parse.Strings[i]) = 'a') AND
-           (Pos(WebsiteRoots[OURMANGA_ID,1] + URL, parse.Strings[i]) <> 0) then
-          correctURL:= GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href='));
-      end;
-    end;
-    parse.Clear;
-    l.Clear;
-
-    // pass 2: Find number of pages
-
-    Result:= GetPage(TObject(l),
-                     correctURL,
-                     manager.container.manager.retryConnect);
-    manager.container.pageContainerLinks.Clear;
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
-    Parser.Exec;
-    Parser.Free;
-    if parse.Count>0 then
-    begin
-      manager.container.pageNumber:= 0;
-      for i:= 0 to parse.Count-1 do
-      begin
-        if NOT isExtractpageContainerLinks then
-        begin
-          if (GetTagName(parse.Strings[i]) = 'select') AND
-             (GetAttributeValue(GetTagAttribute(parse.Strings[i], 'name=')) = 'page') then
-            isExtractpageContainerLinks:= TRUE;
-        end
-        else
-        begin
-          if (GetTagName(parse.Strings[i]) = 'option') then
-          begin
-            manager.container.pageContainerLinks.Add(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'value=')));
-            Inc(manager.container.pageNumber);
-          end
-          else
-          if Pos('</select>', parse.Strings[i])<>0 then
-            break;
-        end;
-      end;
-    end;
-    parse.Free;
-    l.Free;
-  end;
-
   function GetBatotoPageNumber: Boolean;
   var
     isGoOn: Boolean = FALSE;
@@ -1861,45 +1789,6 @@ var
             manager.container.pageLinks.Strings[workCounter]:= GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src='));
             break;
           end;
-    end;
-    parse.Free;
-    l.Free;
-  end;
-
-  function GetOurMangaLinkPage: Boolean;
-  var
-    j,
-    i: Cardinal;
-    l: TStringList;
-  begin
-    l:= TStringList.Create;
-    Result:= GetPage(TObject(l),
-                     WebsiteRoots[OURMANGA_ID,1] + URL + '/' + manager.container.pageContainerLinks.Strings[workCounter],
-                     manager.container.manager.retryConnect);
-    parse:= TStringList.Create;
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
-    Parser.Exec;
-    Parser.Free;
-    if parse.Count>0 then
-    begin
-      for i:= 0 to parse.Count-1 do
-        if (GetTagName(parse.Strings[i]) = 'div') AND
-           (GetAttributeValue(GetTagAttribute(parse.Strings[i], 'class=')) = 'prev_next_top') then
-        begin
-          j:= i;
-          repeat
-            Dec(j);
-            if GetTagName(parse.Strings[j]) = 'img' then
-            begin
-              manager.container.pageLinks.Strings[workCounter]:= GetAttributeValue(GetTagAttribute(parse.Strings[j], 'src='));
-              parse.Free;
-              l.Free;
-              exit;
-            end;
-          until j = 0;
-        end;
     end;
     parse.Free;
     l.Free;
@@ -3593,9 +3482,6 @@ begin
   else
   if manager.container.mangaSiteID = MANGAINN_ID then
     Result:= GetMangaInnLinkPage
-  else
-  if manager.container.mangaSiteID = OURMANGA_ID then
-    Result:= GetOurMangaLinkPage
   else
   if manager.container.mangaSiteID = KISSMANGA_ID then
     Result:= GetKissMangaLinkPage
