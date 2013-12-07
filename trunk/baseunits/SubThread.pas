@@ -134,17 +134,7 @@ procedure   TSubThread.DoGetInfos;
     begin
       if website = MainForm.cbSelectManga.Items[MainForm.cbSelectManga.ItemIndex] then
       begin
-        if (website = MANGASTREAM_NAME) OR
-           (website = MANGAVADISI_NAME) OR
-           (website = SENMANGA_NAME) OR
-           (website = MANGAFRAME_NAME) OR
-           (website = S2SCAN_NAME) OR
-           (website = KIVMANGA_NAME) OR
-		   (website = MANGACAN_NAME) OR
-           (website = EGSCANS_NAME) OR
-           (website = TURKCRAFT_NAME) OR
-           (website = HUGEMANGA_NAME) OR
-           (website = KOMIKID_NAME) then
+        if sitesWithoutInformation(website) then
         begin
           Info.mangaInfo.authors:= MainForm.DataProcess.Param[filterPos, DATA_PARAM_AUTHORS];
           Info.mangaInfo.artists:= MainForm.DataProcess.Param[filterPos, DATA_PARAM_ARTISTS];

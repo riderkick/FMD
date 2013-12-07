@@ -190,19 +190,6 @@ uses
   lazutf8classes, mainunit, HTMLParser, FastHTMLParser, HTMLUtil, LConvEncoding,
   SynaCode, FileUtil, HTTPSend, VirtualTrees;
 
-// utility
-
-procedure picScale(P1: TPicture; var P2: TPicture; const x, y: Integer);
-var
-  ARect: TRect;
-begin
-  P2.Clear;
-  P2.BitMap.Width := X;
-  P2.BitMap.Height:= Y;
-  Arect:= Rect(0, 0, X, Y);
-  P2.BitMap.Canvas.StretchDraw(ARect, P1.BitMap);
-end;
-
 // ----- TDownloadThread -----
 
 procedure   TDownloadThread.OnTag(tag: String);
@@ -274,1229 +261,74 @@ var
   myParser: THTMLParser;
   Parser  : TjsFastHTMLParser;
 
-  function GetAnimeAPageNumber: Boolean;
-  var
-    i: Cardinal;
-    l: TStringList;
-  begin
-    l:= TStringList.Create;
-    Result:= GetPage(TObject(l), WebsiteRoots[ANIMEA_ID,1] +
-                                 StringReplace(URL, '.html', '', []) +
-                                 '-page-1.html',
-                                 manager.container.manager.retryConnect);
-    for i:= 0 to l.Count-1 do
-      if (Pos('Page 1 of ', l.Strings[i])<>0) then
-      begin
-        manager.container.pageNumber:= StrToInt(GetString(l.Strings[i], 'Page 1 of ', '<'));
-        break;
-      end;
-    l.Free;
-  end;
+  // Get chapter's number of pages
+  {$I includes/AnimeA/chapter_page_number.inc}
 
-  function GetMangaHerePageNumber: Boolean;
-  var
-    i, j: Cardinal;
-    l   : TStringList;
-  begin
-    l:= TStringList.Create;
-    parse:= TStringList.Create;
-    Result:= GetPage(TObject(l),
-                     WebsiteRoots[MANGAHERE_ID,1] + URL,
-                     manager.container.manager.retryConnect);
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
-    Parser.Exec;
-    Parser.Free;
-    if parse.Count>0 then
-    begin
-      manager.container.pageNumber:= 0;
-      for i:= 0 to parse.Count-1 do
-      begin
-        if GetTagName(parse.Strings[i]) = 'option' then
-        begin
-          j:= i;
-          while GetTagName(parse.Strings[j]) = 'option' do
-          begin
-            Inc(manager.container.pageNumber);
-            Inc(j, 4);
-          end;
-          break;
-        end;
-      end;
-    end;
-    parse.Free;
-    l.Free;
-  end;
+  {$I includes/MangaHere/chapter_page_number.inc}
 
-  function GetEsMangaHerePageNumber: Boolean;
-  var
-    i, j: Cardinal;
-    l   : TStringList;
-  begin
-    l:= TStringList.Create;
-    parse:= TStringList.Create;
-    Result:= GetPage(TObject(l),
-                     WebsiteRoots[ESMANGAHERE_ID,1] + URL,
-                     manager.container.manager.retryConnect);
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
-    Parser.Exec;
-    Parser.Free;
-    if parse.Count>0 then
-    begin
-      manager.container.pageNumber:= 0;
-      for i:= parse.Count-1 downto 4 do
-      begin
-        if Pos('</select>', parse.Strings[i]) > 0 then
-        begin
-          manager.container.pageNumber:= StrToInt(TrimLeft(TrimRight(parse.Strings[i-3])));
-          break;
-        end;
-      end;
-    end;
-    parse.Free;
-    l.Free;
-  end;
+  {$I includes/EsMangaHere/chapter_page_number.inc}
 
-  function GetSubMangaPageNumber: Boolean;
-  var
-    i, j: Cardinal;
-    l   : TStringList;
-  begin
-    l:= TStringList.Create;
-    parse:= TStringList.Create;
-    Result:= GetPage(TObject(l),
-                     WebsiteRoots[SUBMANGA_ID,1] + URL,
-                     manager.container.manager.retryConnect);
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
-    Parser.Exec;
-    Parser.Free;
-    if parse.Count>0 then
-    begin
-      manager.container.pageNumber:= 0;
-      for i:= parse.Count-1 downto 3 do
-      begin
-        if Pos('</select>', parse.Strings[i]) > 0 then
-        begin
-          manager.container.pageNumber:= StrToInt(TrimLeft(TrimRight(parse.Strings[i-2])));
-          break;
-        end;
-      end;
-    end;
-    parse.Free;
-    l.Free;
-  end;
+  {$I includes/SubManga/chapter_page_number.inc}
 
-  function GetAnimeExtremistPageNumber: Boolean;
-  var
-    i, j: Cardinal;
-    l   : TStringList;
-    s   : String;
-  begin
-    l:= TStringList.Create;
-    parse:= TStringList.Create;
-    s:= StringReplace(WebsiteRoots[ANIMEEXTREMIST_ID,1] + URL, '.html', '', []) + '-1.html';
-    Result:= GetPage(TObject(l),
-                     StringReplace(WebsiteRoots[ANIMEEXTREMIST_ID,1] + URL, '.html', '', []) + '-1.html',
-                     manager.container.manager.retryConnect);
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
-    Parser.Exec;
-    Parser.Free;
-    if parse.Count>0 then
-    begin
-      manager.container.pageNumber:= 0;
-      for i:= 0 to parse.Count-1 do
-      begin
-        if Pos('</select>', parse.Strings[i]) > 0 then
-        begin
-          manager.container.pageNumber:= StrToInt(GetString(TrimLeft(TrimRight(parse.Strings[i-3]+'~!@')), 'Pagina ', '~!@'));
-          break;
-        end;
-      end;
-    end;
-    parse.Free;
-    l.Free;
-  end;
+  {$I includes/AnimExtremist/chapter_page_number.inc}
 
-  function GetMangaInnPageNumber: Boolean;
-  var
-    s   : String;
-    i, j: Cardinal;
-    l   : TStringList;
-  begin
-    l:= TStringList.Create;
-    parse:= TStringList.Create;
-    Result:= GetPage(TObject(l),
-                     WebsiteRoots[MANGAINN_ID,1] + URL,
-                     manager.container.manager.retryConnect);
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
-    Parser.Exec;
-    Parser.Free;
-    if parse.Count>0 then
-    begin
-      manager.container.pageNumber:= 1;
-      for i:= 0 to parse.Count-1 do
-      begin
-        if Pos('Previous', parse.Strings[i]) <> 0 then
-         // if Pos('Page', parse.Strings[i+2]) <> 0 then
-        begin
-          j:= i+7;
-          s:= parse.Strings[j];
-          while GetTagName(parse.Strings[j]) = 'option' do
-          begin
-            Inc(manager.container.pageNumber);
-            Inc(j, 3);
-          end;
-          break;
-        end;
-      end;
-    end;
-    parse.Free;
-    l.Free;
-  end;
+  {$I includes/MangaInn/chapter_page_number.inc}
 
-  function GetBatotoPageNumber: Boolean;
-  var
-    isGoOn: Boolean = FALSE;
-    s   : String;
-    i, j: Cardinal;
-    l   : TStringList;
-  begin
-    l:= TStringList.Create;
-    parse:= TStringList.Create;
+  {$I includes/Batoto/chapter_page_number.inc}
 
-    parse.Clear;
-    l.Clear;
-    Result:= GetPage(TObject(l),
-                     WebsiteRoots[BATOTO_ID,1] + URL + '/1',
-                     manager.container.manager.retryConnect);
+  {$I includes/Hentai2Read/chapter_page_number.inc}
 
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
-    Parser.SlowExec;
-    Parser.Free;
+  {$I includes/MangaReader/chapter_page_number.inc}
 
-    if parse.Count > 0 then
-    begin
-      for i:= 0 to parse.Count-1 do
-      begin
-        if (Pos('page_select', parse.Strings[i])<>0) then
-        begin
-          isGoOn:= TRUE;
-          break;
-        end;
-      end;
-    end;
+  {$I includes/MangaPark/chapter_page_number.inc}
 
-    if NOT isGoOn then
-    begin
-      manager.container.pageNumber:= 1;
-      parse.Free;
-      l.Free;
-      exit;
-    end;
+  {$I includes/MangaFox/chapter_page_number.inc}
 
-   // parse.Add(WebsiteRoots[BATOTO_ID,1] + URL + '/1');
-    if parse.Count>0 then
-    begin
-      manager.container.pageNumber:= 0;
-      for i:= 0 to parse.Count-1 do
-      begin
-        if Pos('page_select', parse.Strings[i]) <> 0 then
-         // if Pos('Page', parse.Strings[i+2]) <> 0 then
-        begin
-          j:= i+2;
-          s:= parse.Strings[j];
-          while GetTagName(parse.Strings[j]) = 'option' do
-          begin
-            Inc(manager.container.pageNumber);
-            Inc(j, 3);
-          end;
-          break;
-        end;
-      end;
-    end;
-    parse.Free;
-    l.Free;
-  end;
+  {$I includes/Starkana/chapter_page_number.inc}
 
-  function GetHentai2ReadPageNumber: Boolean;
-  var
-    s   : String;
-    i, j: Cardinal;
-    l   : TStringList;
-  begin
-    l:= TStringList.Create;
-    parse:= TStringList.Create;
-    Result:= GetPage(TObject(l),
-                     HENTAI2READ_ROOT + URL,
-                     manager.container.manager.retryConnect);
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
-    Parser.Exec;
-    Parser.Free;
-    if parse.Count>0 then
-    begin
-      manager.container.pageNumber:= 0;
-      for i:= 0 to parse.Count-1 do
-      begin
-        if (GetTagName(parse.Strings[i]) = 'select') AND
-           (GetAttributeValue(GetTagAttribute(parse.Strings[i], 'class='))='cbo_wpm_pag') then
-        begin
-          j:= i+1;
-          while GetTagName(parse.Strings[j]) = 'option' do
-          begin
-            Inc(manager.container.pageNumber);
-            Inc(j, 3);
-          end;
-          break;
-        end;
-      end;
-    end;
-    parse.Free;
-    l.Free;
-  end;
+  {$I includes/EatManga/chapter_page_number.inc}
 
-  function GetMangaReaderPageNumber: Boolean;
-  var
-    s   : String;
-    i, j: Cardinal;
-    l   : TStringList;
-  begin
-    l:= TStringList.Create;
-    parse:= TStringList.Create;
-    Result:= GetPage(TObject(l),
-                     WebsiteRoots[MANGAREADER_ID,1] + URL,
-                     manager.container.manager.retryConnect);
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
-    s:= WebsiteRoots[MANGAREADER_ID,1] + URL;
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
-    Parser.Exec;
-    Parser.Free;
-    if parse.Count>0 then
-    begin
-      manager.container.pageNumber:= 0;
-      for i:= 0 to parse.Count-1 do
-      begin
-        if (Pos('</select>', parse.Strings[i])>0) AND
-           (Pos('</div>', parse.Strings[i+2])>0) then
-        begin
-          s:= parse.Strings[i+1];
-          Delete(s, Pos(' of ', s), 4);
-          manager.container.pageNumber:= StrToInt(TrimLeft(TrimRight(s)));
-          break;
-        end;
-      end;
-    end;
-    parse.Free;
-    l.Free;
-  end;
+  {$I includes/MangaPanda/chapter_page_number.inc}
 
-  function GetMangaParkPageNumber: Boolean;
-  var
-    s   : String;
-    i, j: Cardinal;
-    l   : TStringList;
-  begin
-    l:= TStringList.Create;
-    parse:= TStringList.Create;
-    Result:= GetPage(TObject(l),
-                     WebsiteRoots[MANGAPARK_ID,1] + URL + '1',
-                     manager.container.manager.retryConnect);
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
-    Parser.Exec;
-    Parser.Free;
-    if parse.Count>0 then
-    begin
-      manager.container.pageNumber:= 0;
-      for i:= 0 to parse.Count-1 do
-      begin
-        if (Pos('1 of ', parse.Strings[i])>0) then
-        begin
-          s:= parse.Strings[i];
-          Delete(s, Pos('1 of ', s), 5);
-          manager.container.pageNumber:= StrToInt(TrimLeft(TrimRight(s)));
-          break;
-        end;
-      end;
-    end;
-    parse.Free;
-    l.Free;
-  end;
+  {$I includes/MangaGo/chapter_page_number.inc}
 
-  function GetMangaFoxPageNumber: Boolean;
-  var
-    s   : String;
-    i, j: Cardinal;
-    l   : TStringList;
-  begin
-    l:= TStringList.Create;
-    parse:= TStringList.Create;
-    s:= DecodeUrl(URL + '/1.html');
-    if Pos(WebsiteRoots[MANGAFOX_ID,1], s) = 0 then
-      s:= WebsiteRoots[MANGAFOX_ID,1] + s;
-    Result:= GetPage(TObject(l),
-                     s,
-                     manager.container.manager.retryConnect);
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
-    Parser.Exec;
-    Parser.Free;
-    if parse.Count>0 then
-    begin
-      manager.container.pageNumber:= 0;
-      for i:= 0 to parse.Count-1 do
-      begin
-        if (Pos('option value="0"', parse.Strings[i])>0) then
-        begin
-          s:= parse.Strings[i-3];
-          manager.container.pageNumber:= StrToInt(TrimLeft(TrimRight(s)));
-          break;
-        end;
-      end;
-    end;
-    parse.Free;
-    l.Free;
-  end;
+  {$I includes/RedHawkScans/chapter_page_number.inc}
 
-  function GetStarkanaPageNumber: Boolean;
-  var
-    s    : String;
-    i, j : Cardinal;
-    l    : TStringList;
-  begin
-    l:= TStringList.Create;
-    parse:= TStringList.Create;
-    s:= DecodeUrl(WebsiteRoots[STARKANA_ID,1] + URL);
-    Result:= GetPage(TObject(l),
-                     s,
-                     manager.container.manager.retryConnect);
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
-    Parser.Exec;
-    Parser.Free;
-    if parse.Count>0 then
-    begin
-      manager.container.pageNumber:= 0;
-      for i:= parse.Count-1 downto 5 do
-      begin
-        if (Pos('</option>', parse.Strings[i])>0) then
-        begin
-          s:= TrimLeft(TrimRight(parse.Strings[i-1]));
-          manager.container.pageNumber:= StrToInt(s);
-          break;
-        end;
-      end;
-    end;
-    parse.Free;
-    l.Free;
-  end;
+  {$I includes/S2scans/chapter_page_number.inc}
 
-  function GetEatMangaPageNumber: Boolean;
-  var
-    s    : String;
-    count: Cardinal = 0;
-    i, j : Cardinal;
-    l    : TStringList;
-  begin
-    l:= TStringList.Create;
-    parse:= TStringList.Create;
-    s:= DecodeUrl(WebsiteRoots[EATMANGA_ID,1] + URL);
-    Result:= GetPage(TObject(l),
-                     s,
-                     manager.container.manager.retryConnect);
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
-    Parser.Exec;
-    Parser.Free;
-    if parse.Count>0 then
-    begin
-      manager.container.pageNumber:= 0;
-      for i:= 0 to parse.Count-1 do
-      begin
-        if (Pos('</select>', parse.Strings[i])>0) then
-          if count > 0 then
-          begin
-            s:= parse.Strings[i-2];
-            manager.container.pageNumber:= StrToInt(TrimLeft(TrimRight(s)));
-            break;
-          end
-          else
-            Inc(count);
-      end;
-    end;
-    parse.Free;
-    l.Free;
-  end;
+  {$I includes/EGScans/chapter_page_number.inc}
 
-  function GetMangaPandaPageNumber: Boolean;
-  var
-    s    : String;
-    i, j : Cardinal;
-    l    : TStringList;
-  begin
-    l:= TStringList.Create;
-    parse:= TStringList.Create;
-    s:= DecodeUrl(WebsiteRoots[MANGAPANDA_ID,1] + URL);
-    if (Pos('.html', URL) > 0) AND (Pos(SEPERATOR2, URL) > 0) then
-      s:= StringReplace(s, SEPERATOR2, '-1/', []);
-    Result:= GetPage(TObject(l),
-                     s,
-                     manager.container.manager.retryConnect);
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
-    Parser.Exec;
-    Parser.Free;
-    if parse.Count>0 then
-    begin
-      manager.container.pageNumber:= 0;
-      for i:= 1 to parse.Count-1 do
-      begin
-        if (Pos(' of ', parse.Strings[i])>0) AND
-           (Pos('select', parse.Strings[i-1])>0) then
-        begin
-          s:= GetString(parse.Strings[i]+'~!@', ' of ', '~!@');
-          manager.container.pageNumber:= StrToInt(TrimLeft(TrimRight(s)));
-          break;
-        end;
-      end;
-    end;
-    parse.Free;
-    l.Free;
-  end;
+  {$I includes/MangaTraders/chapter_page_number.inc}
 
-  function GetMangaGoPageNumber: Boolean;
-  var
-    s    : String;
-    i, j : Cardinal;
-    l    : TStringList;
-  begin
-    l:= TStringList.Create;
-    parse:= TStringList.Create;
-    if (Pos('http://', URL) > 0) then
-      s:= DecodeUrl(URL + '1/')
-    else
-      s:= DecodeUrl(WebsiteRoots[MANGAGO_ID,1] + URL + '1/');
-    Result:= GetPage(TObject(l),
-                     s,
-                     manager.container.manager.retryConnect);
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
-    Parser.Exec;
-    Parser.Free;
-    if parse.Count>0 then
-    begin
-      manager.container.pageNumber:= 0;
-      for i:= parse.Count-1 downto 5 do
-      begin
-        if (Pos('class="clear gap"', parse.Strings[i])>0) then
-        begin
-          s:= TrimLeft(TrimRight(parse.Strings[i-5]));
-          manager.container.pageNumber:= StrToInt(TrimLeft(TrimRight(s)));
-          break;
-        end;
-      end;
-    end;
-    parse.Free;
-    l.Free;
-  end;
+  {$I includes/MangaStream/chapter_page_number.inc}
 
-  function GetRedHawkScansPageNumber: Boolean;
-  var
-    s    : String;
-    i, j : Cardinal;
-    l    : TStringList;
-  begin
-    l:= TStringList.Create;
-    parse:= TStringList.Create;
-    s:= DecodeUrl(WebsiteRoots[REDHAWKSCANS_ID,1] + URL +'page/1');
-    Result:= GetPage(TObject(l),
-                     s,
-                     manager.container.manager.retryConnect);
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
-    Parser.Exec;
-    Parser.Free;
-    if parse.Count>0 then
-    begin
-      manager.container.pageNumber:= 0;
-      for i:= 1 to parse.Count-1 do
-      begin
-        if (Pos('class="topbar_right"', parse.Strings[i])>0) then
-        begin
-          s:= parse.Strings[i+4];
-          manager.container.pageNumber:= StrToInt(TrimLeft(TrimRight(s)));
-          break;
-        end;
-      end;
-    end;
-    parse.Free;
-    l.Free;
-  end;
+  {$I includes/Komikid/chapter_page_number.inc}
 
-  function GetS2scanPageNumber: Boolean;
-  var
-    s    : String;
-    i, j : Cardinal;
-    l    : TStringList;
-  begin
-    l:= TStringList.Create;
-    parse:= TStringList.Create;
-    s:= DecodeUrl(WebsiteRoots[S2SCAN_ID,1] + URL +'page/1');
-    Result:= GetPage(TObject(l),
-                     s,
-                     manager.container.manager.retryConnect);
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
-    Parser.Exec;
-    Parser.Free;
-    if parse.Count>0 then
-    begin
-      manager.container.pageNumber:= 0;
-      for i:= 1 to parse.Count-1 do
-      begin
-        if (Pos('class="topbar_right"', parse.Strings[i])>0) then
-        begin
-          s:= parse.Strings[i+4];
-          manager.container.pageNumber:= StrToInt(TrimLeft(TrimRight(GetString('~!@'+s, '~!@', ' '))));
-          break;
-        end;
-      end;
-    end;
-    parse.Free;
-    l.Free;
-  end;
+  {$I includes/PecintaKomik/chapter_page_number.inc}
 
-  function GetEGScansPageNumber: Boolean;
-  var
-    s    : String;
-    i, j : Cardinal;
-    l    : TStringList;
-  begin
-    l:= TStringList.Create;
-    parse:= TStringList.Create;
-    s:= DecodeUrl(WebsiteRoots[EGSCANS_ID,1] + URL +'/1');
-    Result:= GetPage(TObject(l),
-                     s,
-                     manager.container.manager.retryConnect);
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
-    Parser.Exec;
-    Parser.Free;
-    if parse.Count>0 then
-    begin
-      manager.container.pageNumber:= 0;
-      for i:= parse.Count-1 downto 2 do
-      begin
-        if (Pos('</span>', parse.Strings[i])>0) then
-        begin
-          s:= parse.Strings[i-4];
-          manager.container.pageNumber:= StrToInt(TrimLeft(TrimRight(GetString(s+' ', 'of ', ' '))));
-          break;
-        end;
-      end;
-    end;
-    parse.Free;
-    l.Free;
-  end;
+  {$I includes/Pururin/chapter_page_number.inc}
 
-  function GetMangaTradersPageNumber: Boolean;
-  var
-    isStartGetPageNumber: Boolean = FALSE;
-    s   : String;
-    i, j: Cardinal;
-    l   : TStringList;
-  begin
-    l:= TStringList.Create;
-    parse:= TStringList.Create;
-    Result:= GetPage(TObject(l),
-                     WebsiteRoots[MANGATRADERS_ID,1] + URL,
-                     manager.container.manager.retryConnect);
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
-    Parser.Exec;
-    Parser.Free;
-    if parse.Count>0 then
-    begin
-      manager.container.pageNumber:= 0;
-      for i:= 0 to parse.Count-1 do
-      begin
-        if (NOT isStartGetPageNumber) AND
-           (Pos('option value="1"  selected="selected"', parse.Strings[i]) > 0) then
-          isStartGetPageNumber:= TRUE;
-        if (isStartGetPageNumber) AND
-           (Pos('</option>', parse.Strings[i])>0) then
-          Inc(manager.container.pageNumber);
-        if (isStartGetPageNumber) AND
-           (Pos('</select>', parse.Strings[i])>0) then
-          break;
-      end;
-    end;
-    parse.Free;
-    l.Free;
-  end;
+  {$I includes/HugeManga/chapter_page_number.inc}
 
-  function GetMangaStreamPageNumber: Boolean;
-  var
-    s   : String;
-    i, j: Cardinal;
-    l   : TStringList;
-  begin
-    l:= TStringList.Create;
-    parse:= TStringList.Create;
-    s:= DecodeUrl(MANGASTREAM_ROOT2 + URL + '/1');
-    Result:= GetPage(TObject(l),
-                     s,
-                     manager.container.manager.retryConnect);
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
-    Parser.Exec;
-    Parser.Free;
-    if parse.Count>0 then
-    begin
-      manager.container.pageNumber:= 0;
-      for i:= 0 to parse.Count-1 do
-      begin
-        if (Pos('Last Page (', parse.Strings[i])>0) then
-        begin
-          manager.container.pageNumber:= StrToInt(TrimLeft(TrimRight(GetString(parse.Strings[i], 'Last Page (', ')'))));
-          break;
-        end;
-      end;
-    end;
-    parse.Free;
-    l.Free;
-  end;
+  {$I includes/AnimeStory/chapter_page_number.inc}
 
-  function GetKomikidPageNumber: Boolean;
-  var
-    s   : String;
-    i, j: Cardinal;
-    l   : TStringList;
-  begin
-    l:= TStringList.Create;
-    parse:= TStringList.Create;
-    s:= DecodeUrl(WebsiteRoots[KOMIKID_ID,1] + URL + '/1');
-    Result:= GetPage(TObject(l),
-                     s,
-                     manager.container.manager.retryConnect);
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
-    Parser.Exec;
-    Parser.Free;
-    if parse.Count>0 then
-    begin
-      manager.container.pageNumber:= 0;
-      for i:= 0 to parse.Count-1 do
-      begin
-        if (Pos('title="Next Page"', parse.Strings[i])>0) then
-        begin
-          s:= parse.Strings[i-6];
-          manager.container.pageNumber:= StrToInt(TrimLeft(TrimRight(s)));
-          break;
-        end;
-      end;
-    end;
-    parse.Free;
-    l.Free;
-  end;
+  {$I includes/Turkcraft/chapter_page_number.inc}
 
-  function GetPecintaKomikPageNumber: Boolean;
-  var
-    s   : String;
-    i, j: Cardinal;
-    l   : TStringList;
-  begin
-    l:= TStringList.Create;
-    parse:= TStringList.Create;
-    s:= DecodeUrl(WebsiteRoots[PECINTAKOMIK_ID,1] + URL + '/1');
-    Result:= GetPage(TObject(l),
-                     s,
-                     manager.container.manager.retryConnect);
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
-    Parser.Exec;
-    Parser.Free;
-    if parse.Count>0 then
-    begin
-      manager.container.pageNumber:= 0;
-      for i:= parse.Count-1 downto 5 do
-      begin
-        if (Pos('</option>', parse.Strings[i])>0) then
-        begin
-          s:= parse.Strings[i-1];
-          manager.container.pageNumber:= StrToInt(TrimLeft(TrimRight(s)));
-          break;
-        end;
-      end;
-    end;
-    parse.Free;
-    l.Free;
-  end;
-  
- function GetPururinPageNumber: Boolean;
-  var
-    s   : String;
-    i,g,j: Cardinal;
-    l   : TStringList;
-    isStartGetPageNumber: Boolean = FALSE;
-  begin
-    l:= TStringList.Create;
-    parse:= TStringList.Create;
-        s:= StringReplace(URL, '_1.html', '.html', []);
-		s:= StringReplace(s, '/view/', '/gallery/', []);
-		s:= DecodeUrl(StringReplace(s, '/00/', '/', []));
-    Result:= GetPage(TObject(l),
-                     s,
-                     manager.container.manager.retryConnect);
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
-    Parser.Exec;
-    Parser.Free;
-    if parse.Count>0 then
-    begin
-      manager.container.pageNumber:= 0;
-      for i:= 0 to parse.Count-1 do
-      begin
-        if (Pos('class="square"', parse.Strings[i])>0) then
-          isStartGetPageNumber:= TRUE;
+  {$I includes/MangaVadisi/chapter_page_number.inc}
 
-        if (isStartGetPageNumber) AND
-           (Pos('class="square"', parse.Strings[i])>0) then
-        begin
-          s:= parse.Strings[i+1];
-		  g:= length(s);
-          Delete(s,g-10,g-3);
-          Delete(s,1,9);
-		  g:= StrToInt(s);
-          manager.container.pageNumber:= g;
-          break;
-        end;
-      end;
-    end;
-    parse.Free;
-    l.Free;
-  end;
+  {$I includes/MangaFrame/chapter_page_number.inc}
 
-  function GetHugeMangaPageNumber: Boolean;
-  var
-    s   : String;
-    i, j: Cardinal;
-    l   : TStringList;
-  begin
-    l:= TStringList.Create;
-    parse:= TStringList.Create;
-    s:= DecodeUrl(WebsiteRoots[HUGEMANGA_ID,1] + URL + '/1');
-    Result:= GetPage(TObject(l),
-                     s,
-                     manager.container.manager.retryConnect);
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
-    Parser.Exec;
-    Parser.Free;
-    if parse.Count>0 then
-    begin
-      manager.container.pageNumber:= 0;
-      for i:= parse.Count-1 downto 5 do
-      begin
-        if (Pos('</option>', parse.Strings[i])>0) then
-        begin
-          s:= parse.Strings[i-2];
-          manager.container.pageNumber:= StrToInt(GetAttributeValue(GetTagAttribute(s, 'value=')));
-          break;
-        end;
-      end;
-    end;
-    parse.Free;
-    l.Free;
-  end;
+  {$I includes/MangaAr/chapter_page_number.inc}
 
-  function GetAnimeStoryPageNumber: Boolean;
-  var
-    s   : String;
-    i, j: Cardinal;
-    l   : TStringList;
-  begin
-    l:= TStringList.Create;
-    parse:= TStringList.Create;
-    if Pos('http://', URL) = 0 then
-      s:= DecodeUrl(WebsiteRoots[ANIMESTORY_ID,1] + URL + '1')
-    else
-      s:= DecodeUrl(URL + '1');
-    Result:= GetPage(TObject(l),
-                     s,
-                     manager.container.manager.retryConnect);
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
-    Parser.Exec;
-    Parser.Free;
-    if parse.Count>0 then
-    begin
-      manager.container.pageNumber:= 0;
-      for i:= parse.Count-1 downto 5 do
-      begin
-        if (Pos('data-page=', parse.Strings[i])>0) then
-        begin
-          s:= parse.Strings[i];
-          manager.container.pageNumber:= StrToInt(GetAttributeValue(GetTagAttribute(s, 'data-page=')));
-          break;
-        end;
-      end;
-    end;
-    parse.Free;
-    l.Free;
-  end;
-
-  function GetTurkcraftPageNumber: Boolean;
-  var
-    s   : String;
-    i, j: Cardinal;
-    l   : TStringList;
-  begin
-    l:= TStringList.Create;
-    parse:= TStringList.Create;
-    s:= DecodeUrl(WebsiteRoots[TURKCRAFT_ID,1] + URL + '/1');
-    Result:= GetPage(TObject(l),
-                     s,
-                     manager.container.manager.retryConnect);
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
-    Parser.Exec;
-    Parser.Free;
-    if parse.Count>0 then
-    begin
-      manager.container.pageNumber:= 0;
-      for i:= 0 to parse.Count-1 do
-      begin
-        if (Pos('title="Next Page"', parse.Strings[i])>0) then
-        begin
-          s:= parse.Strings[i-5];
-          manager.container.pageNumber:= StrToInt(TrimLeft(TrimRight(s)));
-          break;
-        end;
-      end;
-    end;
-    parse.Free;
-    l.Free;
-  end;
-
-  function GetMangaVadisiPageNumber: Boolean;
-  var
-    s   : String;
-    i, j: Cardinal;
-    l   : TStringList;
-  begin
-    l:= TStringList.Create;
-    parse:= TStringList.Create;
-    s:= DecodeUrl(WebsiteRoots[MANGAVADISI_ID,1] + MANGAVADISI_BROWSER + URL + '/1');
-    Result:= GetPage(TObject(l),
-                     s,
-                     manager.container.manager.retryConnect);
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
-    Parser.Exec;
-    Parser.Free;
-    if parse.Count>0 then
-    begin
-      manager.container.pageNumber:= 0;
-      for i:= 0 to parse.Count-1 do
-      begin
-        if (Pos('title="Sonraki Sayfa"', parse.Strings[i])>0) then
-        begin
-          s:= parse.Strings[i-6];
-          manager.container.pageNumber:= StrToInt(GetString(s, '"', '"'));
-          break;
-        end;
-      end;
-    end;
-    parse.Free;
-    l.Free;
-  end;
-
-  function GetMangaFramePageNumber: Boolean;
-  var
-    s   : String;
-    i, j: Cardinal;
-    l   : TStringList;
-  begin
-    l:= TStringList.Create;
-    parse:= TStringList.Create;
-    s:= DecodeUrl(WebsiteRoots[MANGAFRAME_ID,1] + URL + '1');
-    Result:= GetPage(TObject(l),
-                     s,
-                     manager.container.manager.retryConnect);
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
-    Parser.Exec;
-    Parser.Free;
-    if parse.Count>0 then
-    begin
-      manager.container.pageNumber:= 0;
-      for i:= 0 to parse.Count-1 do
-      begin
-        if (Pos('class="divider"', parse.Strings[i])>0) then
-        begin
-          s:= parse.Strings[i-8];
-          manager.container.pageNumber:= StrToInt(GetString(s, '/page/', '"'));
-          break;
-        end;
-      end;
-    end;
-    parse.Free;
-    l.Free;
-  end;
-
-  function GetMangaArPageNumber: Boolean;
-  var
-    s   : String;
-    i, j: Cardinal;
-    l   : TStringList;
-  begin
-    l:= TStringList.Create;
-    parse:= TStringList.Create;
-    s:= WebsiteRoots[MANGAAR_ID,1] + URL + '/1';
-    Result:= GetPage(TObject(l),
-                     s,
-                     manager.container.manager.retryConnect);
-
-    // convert charset
-    l.Text:= CP1256ToUTF8(l.Text);
-
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
-    Parser.Exec;
-    Parser.Free;
-    if parse.Count>0 then
-    begin
-      manager.container.pageNumber:= 0;
-      for i:= 0 to parse.Count-1 do
-      begin
-        if (Pos('</select>', parse.Strings[i])>0) then
-        begin
-          s:= TrimLeft(TrimRight(parse.Strings[i-3]));
-          manager.container.pageNumber:= StrToInt(s);
-          break;
-        end;
-      end;
-    end;
-    parse.Free;
-    l.Free;
-  end;
-
-  function GetMangaAePageNumber: Boolean;
-  var
-    s   : String;
-    i, j: Cardinal;
-    l   : TStringList;
-  begin
-    l:= TStringList.Create;
-    parse:= TStringList.Create;
-    s:= DecodeUrl(WebsiteRoots[MANGAAE_ID,1] + URL + '/1');
-    Result:= GetPage(TObject(l),
-                     s,
-                     manager.container.manager.retryConnect);
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
-    Parser.Exec;
-    Parser.Free;
-    if parse.Count>0 then
-    begin
-      manager.container.pageNumber:= 0;
-      for i:= parse.Count-1 downto 2 do
-      begin
-        if (Pos('</select>', parse.Strings[i])>0) then
-        begin
-          s:= TrimLeft(TrimRight(parse.Strings[i-3]));
-          manager.container.pageNumber:= StrToInt(s);
-          break;
-        end;
-      end;
-    end;
-    parse.Free;
-    l.Free;
-  end;
+  {$I includes/MangaAe/chapter_page_number.inc}
      //mangacow page number
- function GetMangaCowPageNumber: Boolean;
-  var
-    s   : String;
-    i, j: Cardinal;
-    l   : TStringList;
-    isStartGetPageNumber: Boolean = FALSE;
-  begin
-    l:= TStringList.Create;
-    parse:= TStringList.Create;
-    s:= DecodeUrl(WebsiteRoots[MANGACOW_ID,1] + URL + '1/');
-    Result:= GetPage(TObject(l),
-                     s,
-                     manager.container.manager.retryConnect);
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
-    Parser.Exec;
-    Parser.Free;
-    if parse.Count>0 then
-    begin
-      manager.container.pageNumber:= 0;
-      for i:= 0 to parse.Count-1 do
-      begin
-        if (Pos('class="cbo_wpm_pag"', parse.Strings[i])>0) then
-          isStartGetPageNumber:= TRUE;
+  {$I includes/Mangacow/chapter_page_number.inc}
 
-        if (isStartGetPageNumber) AND
-           (Pos('</select>', parse.Strings[i])>0) then
-        begin
-          s:= parse.Strings[i-3];
-          manager.container.pageNumber:= StrToInt(GetAttributeValue(GetTagAttribute(s, 'value=')));
-          break;
-        end;
-      end;
-    end;
-    parse.Free;
-    l.Free;
-  end;
+  {$I includes/SenManga/chapter_page_number.inc}
 
-  function GetSenMangaPageNumber: Boolean;
-  var
-    s   : String;
-    i, j: Cardinal;
-    l   : TStringList;
-    isStartGetPageNumber: Boolean = FALSE;
-  begin
-    l:= TStringList.Create;
-    parse:= TStringList.Create;
-    s:= DecodeUrl(WebsiteRoots[SENMANGA_ID,1] + URL + '1/');
-    Result:= GetPage(TObject(l),
-                     s,
-                     manager.container.manager.retryConnect);
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
-    Parser.Exec;
-    Parser.Free;
-    if parse.Count>0 then
-    begin
-      manager.container.pageNumber:= 0;
-      for i:= 0 to parse.Count-1 do
-      begin
-        if (Pos('name="page"', parse.Strings[i])>0) then
-          isStartGetPageNumber:= TRUE;
+  {$I includes/MangaEden/chapter_page_number.inc}
 
-        if (isStartGetPageNumber) AND
-           (Pos('</select>', parse.Strings[i])>0) then
-        begin
-          s:= parse.Strings[i-3];
-          manager.container.pageNumber:= StrToInt(GetAttributeValue(GetTagAttribute(s, 'value=')));
-          break;
-        end;
-      end;
-    end;
-    parse.Free;
-    l.Free;
-  end;
-
-  function GetMangaEdenPageNumber: Boolean;
-  var
-    s   : String;
-    i, j: Cardinal;
-    l   : TStringList;
-  begin
-    l:= TStringList.Create;
-    parse:= TStringList.Create;
-    if manager.container.mangaSiteID = MANGAEDEN_ID then
-      s:= DecodeUrl(WebsiteRoots[MANGAEDEN_ID,1] + URL + '1/')
-    else
-      s:= DecodeUrl(WebsiteRoots[PERVEDEN_ID,1] + URL + '1/');
-    Result:= GetPage(TObject(l),
-                     s,
-                     manager.container.manager.retryConnect);
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
-    Parser.Exec;
-    Parser.Free;
-    if parse.Count>0 then
-    begin
-      manager.container.pageNumber:= 0;
-      for i:= 0 to parse.Count-1 do
-      begin
-        if (Pos('span class="next"', parse.Strings[i])>0) then
-        begin
-          s:= parse.Strings[i-3];
-          manager.container.pageNumber:= StrToInt(TrimLeft(TrimRight(s)));
-          break;
-        end;
-      end;
-    end;
-    parse.Free;
-    l.Free;
-  end;
-  
-    function GetKivmangaPageNumber: Boolean;
-  var
-    s   : String;
-    i, j: Cardinal;
-    l   : TStringList;
-  begin
-    l:= TStringList.Create;
-    parse:= TStringList.Create;
-    s:= DecodeUrl(WebsiteRoots[KIVMANGA_ID,1] + URL + '/1');
-    Result:= GetPage(TObject(l),
-                     s,
-                     manager.container.manager.retryConnect);
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
-    Parser.Exec;
-    Parser.Free;
-    if parse.Count>0 then
-    begin
-      manager.container.pageNumber:= 0;
-      for i:= 0 to parse.Count-1 do
-      begin
-        if (Pos('title="Next Page"', parse.Strings[i])>0) then
-        begin
-          s:= parse.Strings[i-6];
-          manager.container.pageNumber:= StrToInt(GetString(s, '"', '"'));
-          break;
-        end;
-      end;
-    end;
-    parse.Free;
-    l.Free;
-  end;
+  {$I includes/Kivmanga/chapter_page_number.inc}
 
   function GetGEHentaiPageNumber(const lURL: String; const isGetLinkPage: Boolean): Boolean;
   var
@@ -1647,16 +479,16 @@ begin
      (manager.container.mangaSiteID = VNSHARING_ID) OR
      (manager.container.mangaSiteID = MABUNS_ID) OR
      (manager.container.mangaSiteID = EGSCANS_ID) OR
-	 (manager.container.mangaSiteID = PURURIN_ID) OR
+     (manager.container.mangaSiteID = PURURIN_ID) OR
      (manager.container.mangaSiteID = MANGAESTA_ID) OR
      (manager.container.mangaSiteID = TRUYEN18_ID) OR
      (manager.container.mangaSiteID = TRUYENTRANHTUAN_ID) OR
      (manager.container.mangaSiteID = SCANMANGA_ID) OR
      (manager.container.mangaSiteID = FAKKU_ID) OR
-	 (manager.container.mangaSiteID = MANGACAN_ID) OR
+     (manager.container.mangaSiteID = MANGACAN_ID) OR
      (manager.container.mangaSiteID = CENTRALDEMANGAS_ID) then
   begin
-    // all of the page links are in a html page
+    // all of image urls are in a html page
     Result:= TRUE;
     manager.container.pageNumber:= 1;
   end
@@ -1670,1754 +502,98 @@ var
   myParser: THTMLParser;
   Parser  : TjsFastHTMLParser;
 
-  function GetAnimeALinkPage: Boolean;
-  var
-    i: Cardinal;
-    l: TStringList;
-  begin
-    l:= TStringList.Create;
-    Result:= GetPage(TObject(l),
-                     WebsiteRoots[ANIMEA_ID,1] +
-                     StringReplace(URL, '.html', '', []) +
-                     '-page-'+IntToStr(workCounter+1)+'.html',
-                     manager.container.manager.retryConnect);
-    for i:= 0 to l.Count-1 do
-      if (Pos('class="mangaimg', l.Strings[i])<>0) then
-      begin
-        manager.container.pageLinks.Strings[workCounter]:= GetString(l.Strings[i], '<img src="', '"');
-        break;
-      end;
-    l.Free;
-  end;
-
-  function GetMangaHereLinkPage: Boolean;
-  var
-    c: Char;
-    i: Cardinal;
-    l: TStringList;
-  begin
-    l:= TStringList.Create;
-    if workCounter > 0 then
-      Result:= GetPage(TObject(l),
-                       WebsiteRoots[MANGAHERE_ID,1] + URL + IntToStr(workCounter+1)+'.html',
-                       manager.container.manager.retryConnect)
-    else
-      Result:= GetPage(TObject(l),
-                       WebsiteRoots[MANGAHERE_ID,1] + URL,
-                       manager.container.manager.retryConnect);
-    parse:= TStringList.Create;
-
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
-    Parser.Exec;
-    Parser.Free;
-    if parse.Count>0 then
-    begin
-      for i:= 0 to parse.Count-1 do
-        for c:= 'a' to 'z' do
-          if (Pos('http://'+c+'.mhcdn.net/store/', parse.Strings[i])<>0) then
-          begin
-            manager.container.pageLinks.Strings[workCounter]:= GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src='));
-            parse.Free;
-            l.Free;
-            exit;
-          end;
-    end;
-    parse.Free;
-    l.Free;
-  end;
-
-  function GetEsMangaHereLinkPage: Boolean;
-  var
-    i: Cardinal;
-    l: TStringList;
-  begin
-    l:= TStringList.Create;
-    if workCounter > 0 then
-      Result:= GetPage(TObject(l),
-                       WebsiteRoots[ESMANGAHERE_ID,1] + URL + IntToStr(workCounter+1)+'.html',
-                       manager.container.manager.retryConnect)
-    else
-      Result:= GetPage(TObject(l),
-                       WebsiteRoots[ESMANGAHERE_ID,1] + URL,
-                       manager.container.manager.retryConnect);
-    parse:= TStringList.Create;
-
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
-    Parser.Exec;
-    Parser.Free;
-    if parse.Count>0 then
-    begin
-      for i:= 0 to parse.Count-1 do
-        if (Pos('class="read_img"', parse.Strings[i])<>0) then
-        begin
-          manager.container.pageLinks.Strings[workCounter]:= GetAttributeValue(GetTagAttribute(parse.Strings[i+6], 'src='));
-          parse.Free;
-          l.Free;
-          exit;
-        end;
-    end;
-    parse.Free;
-    l.Free;
-  end;
-
-  function GetMangaInnLinkPage: Boolean;
-  var
-    i: Cardinal;
-    l: TStringList;
-  begin
-    l:= TStringList.Create;
-    Result:= GetPage(TObject(l),
-                     WebsiteRoots[MANGAINN_ID,1] + URL + '/page_'+IntToStr(workCounter+1),
-                     manager.container.manager.retryConnect);
-    parse:= TStringList.Create;
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
-    Parser.Exec;
-    Parser.Free;
-
-    if parse.Count>0 then
-    begin
-      for i:= 0 to parse.Count-1 do
-        if GetTagName(parse.Strings[i]) = 'img' then
-          if GetAttributeValue(GetTagAttribute(parse.Strings[i], 'id='))='imgPage' then
-          begin
-            manager.container.pageLinks.Strings[workCounter]:= GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src='));
-            break;
-          end;
-    end;
-    parse.Free;
-    l.Free;
-  end;
-
-  function GetKissMangaLinkPage: Boolean;
-  var
-    s: String;
-    j,
-    i: Cardinal;
-    l: TStringList;
-  begin
-    l:= TStringList.Create;
-    Result:= GetPage(TObject(l),
-                     WebsiteRoots[KISSMANGA_ID,1] + URL,
-                     manager.container.manager.retryConnect);
-    parse:= TStringList.Create;
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
-    Parser.Exec;
-    Parser.Free;
-    if parse.Count>0 then
-    begin
-      manager.container.pageLinks.Clear;
-      for i:= 0 to parse.Count-1 do
-      begin
-        if Pos('lstImages.push("', parse.Strings[i]) > 0 then
-        begin
-          s:= parse.Strings[i];
-          repeat
-            j:= Pos('lstImages.push("', s);
-            manager.container.pageLinks.Add(EncodeUrl(GetString(s, 'lstImages.push("', '");')));
-            Delete(s, Pos('lstImages.push("', s), 16);
-            j:= Pos('lstImages.push("', s);
-          until j = 0;
-        end;
-      end;
-    end;
-    parse.Free;
-    l.Free;
-  end;
-
-  function GetBatotoLinkPage: Boolean;
-  var
-    isGoOn: Boolean = FALSE;
-    i: Cardinal;
-    l: TStringList;
-    s: String;
-  begin
-    l:= TStringList.Create;
-    parse:= TStringList.Create;
-
-    parse.Clear;
-    l.Clear;
-    Result:= GetPage(TObject(l),
-                     WebsiteRoots[BATOTO_ID,1] + URL + '/'+IntToStr(workCounter+1),
-                     manager.container.manager.retryConnect);
-
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
-    Parser.SlowExec;
-    Parser.Free;
-
-    if parse.Count > 0 then
-    begin
-      for i:= 0 to parse.Count-1 do
-      begin
-        if (Pos('page_select', parse.Strings[i])<>0) then
-        begin
-          isGoOn:= TRUE;
-          break;
-        end;
-      end;
-    end;
-
-    case isGoOn of
-      TRUE:
-        begin
-          for i:= 0 to parse.Count-1 do
-            if GetTagName(parse.Strings[i]) = 'img' then
-              if (Pos('batoto.net/comics', parse.Strings[i])>0) AND
-                 (Pos('z-index: 1003', parse.Strings[i])>0) then
-              begin
-                manager.container.pageLinks.Strings[workCounter]:= GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src='));
-                break;
-              end;
-        end;
-      FALSE:
-        begin
-          manager.container.pageLinks.Clear;
-          for i:= 0 to parse.Count-1 do
-            if GetTagName(parse.Strings[i]) = 'img' then
-              if (Pos('<br/>', parse.Strings[i+1])>0) then
-              begin
-                manager.container.pageLinks.Add(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src=')));
-              end;
-        end;
-    end;
-    parse.Free;
-    l.Free;
-  end;
-
-  function GetManga24hLinkPage: Boolean;
-  var
-    s: String;
-    j,
-    i: Cardinal;
-    l: TStringList;
-  begin
-    l:= TStringList.Create;
-    Result:= GetPage(TObject(l),
-                     WebsiteRoots[MANGA24H_ID,1] + URL,
-                     manager.container.manager.retryConnect);
-    parse:= TStringList.Create;
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
-    Parser.Exec;
-    Parser.Free;
-    if parse.Count>0 then
-    begin
-      manager.container.pageLinks.Clear;
-      for i:= 0 to parse.Count-1 do
-      begin
-        if (GetTagName(parse.Strings[i]) = 'img') AND
-           (Pos('style="border:3px', parse.Strings[i])<>0) then
-          // (GetAttributeValue(GetTagAttribute(parse.Strings[i], 'class=')) = 'm_picture') then
-        begin
-          manager.container.pageLinks.Add(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src=')));
-        end;
-      end;
-    end;
-    parse.Free;
-    l.Free;
-  end;
-
-  function GetVnSharingLinkPage: Boolean;
-  var
-    s: String;
-    j,
-    i: Cardinal;
-    l: TStringList;
-  begin
-    l:= TStringList.Create;
-    Result:= GetPage(TObject(l),
-                     WebsiteRoots[VNSHARING_ID,1] + URL,
-                     manager.container.manager.retryConnect);
-    parse:= TStringList.Create;
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
-    Parser.Exec;
-    Parser.Free;
-    if parse.Count>0 then
-    begin
-      manager.container.pageLinks.Clear;
-      for i:= 0 to parse.Count-1 do
-      begin
-        if Pos('lstImages.push("', parse.Strings[i]) > 0 then
-        begin
-          s:= parse.Strings[i];
-          repeat
-            j:= Pos('lstImages.push("', s);
-            manager.container.pageLinks.Add(EncodeUrl(GetString(s, 'lstImages.push("', '");')));
-            Delete(s, Pos('lstImages.push("', s), 16);
-            j:= Pos('lstImages.push("', s);
-          until j = 0;
-        end;
-      end;
-    end;
-    parse.Free;
-    l.Free;
-  end;
-
-  function GetHentai2ReadLinkPage: Boolean;
-  var
-    i: Cardinal;
-    l: TStringList;
-  begin
-    l:= TStringList.Create;
-    Result:= GetPage(TObject(l),
-                     HENTAI2READ_ROOT + URL + IntToStr(workCounter+1)+'/',
-                     manager.container.manager.retryConnect);
-    parse:= TStringList.Create;
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
-    Parser.Exec;
-    Parser.Free;
-
-    if parse.Count>0 then
-    begin
-      for i:= 0 to parse.Count-1 do
-        if (GetTagName(parse.Strings[i]) = 'img') AND
-           (GetAttributeValue(GetTagAttribute(parse.Strings[i], 'id='))='img_mng_enl') then
-        begin
-          manager.container.pageLinks.Strings[workCounter]:= GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src='));
-          break;
-        end;
-    end;
-    parse.Free;
-    l.Free;
-  end;
-
-  function GetFakkuLinkPage: Boolean;
-  var
-    i, j  : Cardinal;
-    l     : TStringList;
-    imgURL: String;
-  begin
-    l:= TStringList.Create;
-    // get number of pages
-    Result:= GetPage(TObject(l),
-                     WebsiteRoots[FAKKU_ID,1] + StringReplace(URL, '/read', '', []){ + '#page' + IntToStr(workCounter+1)},
-                     manager.container.manager.retryConnect);
-    parse:= TStringList.Create;
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
-    Parser.Exec;
-    Parser.Free;
-    j:= 0;
-    if parse.Count>0 then
-    begin
-      i:= 0;
-      manager.container.pageLinks.Clear;
-      while i < parse.Count-1 do
-      begin
-        if (Pos('favorites', parse.Strings[i])>0) AND
-           (Pos('pages', parse.Strings[i+4])>0) then
-        begin
-          j:= StrToInt(TrimRight(TrimLeft(parse.Strings[i+2])));
-          break;
-        end;
-        Inc(i);
-      end;
-    end;
-    // get link pages
-    l.Clear;
-    Result:= GetPage(TObject(l),
-                     WebsiteRoots[FAKKU_ID,1] + URL + '#page' + IntToStr(workCounter+1),
-                     manager.container.manager.retryConnect);
-    parse.Clear;
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
-    Parser.Exec;
-    Parser.Free;
-    if parse.Count>0 then
-    begin
-      i:= 0;
-      manager.container.pageLinks.Clear;
-      while i < parse.Count-1 do
-      begin
-        if (Pos('return ''http://c.fakku.net/', parse.Strings[i])>0) then
-        begin
-        //  manager.container.pageLinks.Strings[workCounter]:=
-          imgURL:= 'http://c.fakku.net/' + GetString(parse.Strings[i], '''http://c.fakku.net/', '''');
-          break;
-        end
-        else
-        if (Pos('return ''http://t.fakku.net/', parse.Strings[i])>0) then
-        begin
-        //  manager.container.pageLinks.Strings[workCounter]:=
-          imgURL:= 'http://t.fakku.net/' + GetString(parse.Strings[i], '''http://t.fakku.net/', '''');
-          break;
-        end
-        else
-        if (Pos('return ''http://cdn.fakku.net/', parse.Strings[i])>0) then
-        begin
-        //  manager.container.pageLinks.Strings[workCounter]:=
-          imgURL:= 'http://cdn.fakku.net/' + GetString(parse.Strings[i], '''http://cdn.fakku.net/', '''');
-          break;
-        end;
-        Inc(i);
-      end;
-    end;
-    // build page files
-    for i:= 1 to j do
-    begin
-     // s:= imgURL + Format('%3.3d.jpg', [i]);
-      manager.container.pageLinks.Add(imgURL + Format('%3.3d.jpg', [i]));
-    end;
-    parse.Free;
-    l.Free;
-  end;
-
-  function GetTruyen18LinkPage: Boolean;
-  var
-    s: String;
-    j,
-    i: Cardinal;
-    l: TStringList;
-  begin
-    l:= TStringList.Create;
-    Result:= GetPage(TObject(l),
-                     TRUYEN18_ROOT + URL,
-                     manager.container.manager.retryConnect);
-    parse:= TStringList.Create;
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
-    Parser.Exec;
-    Parser.Free;
-    if parse.Count>0 then
-    begin
-      manager.container.pageLinks.Clear;
-      for i:= 0 to parse.Count-1 do
-      begin
-        if Pos('[IMG]http://', parse.Strings[i]) > 0 then
-        begin
-          s:= parse.Strings[i];
-          repeat
-            j:= Pos('[IMG]http://', s);
-            manager.container.pageLinks.Add(EncodeUrl(GetString(s, '[IMG]', '[/IMG];')));
-            Delete(s, Pos('[IMG]http://', s), 16);
-            j:= Pos('[IMG]http://', s);
-          until j = 0;
-        end;
-      end;
-    end;
-    parse.Free;
-    l.Free;
-  end;
-
-  function GetMangaReaderLinkPage: Boolean;
-  var
-    realURL,
-    s: String;
-    j,
-    i: Cardinal;
-    l: TStringList;
-
-    procedure  BreakURL;
-    var
-      isSlashed: Boolean = FALSE;
-      i,
-      oldI     : Cardinal;
-    begin
-      if Pos('.html', URL) = 0 then
-      begin
-        realURL:= URL + '/' + IntToStr(workCounter+1);
-        exit;
-      end;
-      i:= 2;
-      realURL:= '/';
-      while i <= Length(URL) do
-      begin
-        if (NOT isSlashed) AND (URL[i] = '/') then
-        begin
-          isSlashed:= TRUE;
-          oldI:= i;
-          for i:= i-1 downto 1 do
-          begin
-            if URL[i] <> '-' then
-            begin
-              SetLength(realURL, Length(realURL)-1);
-            end
-            else
-            begin
-              realURL:= realURL + IntToStr(workCounter+1);
-              break;
-            end;
-          end;
-          i:= oldI;
-         // realURL:= realURL + '/';
-        end
-        else
-        begin
-          realURL:= realURL + URL[i];
-          Inc(i);
-        end;
-      end;
-    end;
-
-  begin
-    l:= TStringList.Create;
-    BreakURL;
-    Result:= GetPage(TObject(l),
-                     WebsiteRoots[MANGAREADER_ID,1] + realURL,
-                     manager.container.manager.retryConnect);
-    parse:= TStringList.Create;
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
-    Parser.Exec;
-    Parser.Free;
-    if parse.Count>0 then
-    begin
-     // manager.container.pageLinks.Clear;
-      for i:= 0 to parse.Count-1 do
-      begin
-        if GetTagName(parse.Strings[i]) = 'img' then
-        begin
-          if //(Pos(realURL, parse.Strings[i])>0) AND
-             (Pos('alt=', parse.Strings[i])>0) then
-          begin
-            manager.container.pageLinks.Strings[workCounter]:= GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src='));
-            break;
-          end;
-        end;
-      end;
-    end;
-    parse.Free;
-    l.Free;
-  end;
-
-  function GetMangaParkLinkPage: Boolean;
-  var
-    s: String;
-    j,
-    i: Cardinal;
-    l: TStringList;
-  begin
-    l:= TStringList.Create;
-    Result:= GetPage(TObject(l),
-                     WebsiteRoots[MANGAPARK_ID,1] + URL + 'all',//IntToStr(workCounter+1),
-                     manager.container.manager.retryConnect);
-    parse:= TStringList.Create;
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
-    Parser.Exec;
-    Parser.Free;
-
-    if parse.Count>0 then
-    begin
-      manager.container.pageLinks.Clear;
-      for i:= 0 to parse.Count-1 do
-       // if GetTagName(parse.Strings[i]) = 'img' then
-        if (Pos('a target="_blank"', parse.Strings[i])>0) then
-        begin
-          manager.container.pageLinks.Add(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href=')));
-      //    break;
-        end;
-    end;
-    parse.Free;
-    l.Free;
-  end;
-
-  function GetMangaFoxLinkPage: Boolean;
-  var
-    s: String;
-    j,
-    i: Cardinal;
-    l: TStringList;
-  begin
-    l:= TStringList.Create;
-    s:= DecodeUrl(URL + '/' + IntToStr(workCounter+1) + '.html');
-    if Pos(WebsiteRoots[MANGAFOX_ID,1], s) = 0 then
-      s:= WebsiteRoots[MANGAFOX_ID,1] + s;
-    Result:= GetPage(TObject(l),
-                     s,
-                     manager.container.manager.retryConnect);
-    parse:= TStringList.Create;
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
-    Parser.Exec;
-    Parser.Free;
-
-    if parse.Count>0 then
-    begin
-      for i:= 0 to parse.Count-1 do
-        if (Pos('onclick="return enlarge()"', parse.Strings[i])>0) then
-        begin
-          manager.container.pageLinks.Strings[workCounter]:= GetAttributeValue(GetTagAttribute(parse.Strings[i+1], 'src='));
-          break;
-        end;
-    end;
-    parse.Free;
-    l.Free;
-  end;
-
-  function GetStarkanaLinkPage: Boolean;
-  var
-    s: String;
-    j,
-    i: Cardinal;
-    l: TStringList;
-  begin
-    l:= TStringList.Create;
-    s:= DecodeUrl(WebsiteRoots[STARKANA_ID,1] + URL + '/' + IntToStr(workCounter+1));
-    Result:= GetPage(TObject(l),
-                     s,
-                     manager.container.manager.retryConnect);
-    parse:= TStringList.Create;
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
-    Parser.Exec;
-    Parser.Free;
-
-    if parse.Count>0 then
-    begin
-      for i:= parse.Count-1 downto 5 do
-        if (Pos('style="cursor: pointer;"', parse.Strings[i])>0) then
-        begin
-          manager.container.pageLinks.Strings[workCounter]:= GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src='));
-          break;
-        end;
-    end;
-    parse.Free;
-    l.Free;
-  end;
-
-  function GetEatMangaLinkPage: Boolean;
-  var
-    s: String;
-    j,
-    i: Cardinal;
-    l: TStringList;
-  begin
-    l:= TStringList.Create;
-    s:= DecodeUrl(WebsiteRoots[EATMANGA_ID,1] + URL + 'page-' + IntToStr(workCounter+1));
-    Result:= GetPage(TObject(l),
-                     s,
-                     manager.container.manager.retryConnect);
-    parse:= TStringList.Create;
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
-    Parser.Exec;
-    Parser.Free;
-
-    if parse.Count>0 then
-    begin
-      for i:= 0 to parse.Count-1 do
-        if (Pos('<div id="prefetchimg"', parse.Strings[i])>0) then
-        begin
-          manager.container.pageLinks.Strings[workCounter]:= GetAttributeValue(GetTagAttribute(parse.Strings[i-1], 'src='));
-          break;
-        end;
-    end;
-    parse.Free;
-    l.Free;
-  end;
-
-  function GetSubMangaLinkPage: Boolean;
-  var
-    s: String;
-    j,
-    i: Cardinal;
-    l: TStringList;
-  begin
-    l:= TStringList.Create;
-    s:= DecodeUrl(WebsiteRoots[SUBMANGA_ID,1] + URL + '/' + IntToStr(workCounter+1));
-    Result:= GetPage(TObject(l),
-                     s,
-                     manager.container.manager.retryConnect);
-    parse:= TStringList.Create;
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
-    Parser.Exec;
-    Parser.Free;
-
-    if parse.Count>0 then
-    begin
-      for i:= 0 to parse.Count-1 do
-        if (Pos('type="text/javascript"', parse.Strings[i])>0) then
-        begin
-          manager.container.pageLinks.Strings[workCounter]:= GetAttributeValue(GetTagAttribute(parse.Strings[i-3], 'src='));
-          break;
-        end;
-    end;
-    parse.Free;
-    l.Free;
-  end;
-
-  function GetAnimeExtremistLinkPage: Boolean;
-  var
-    s: String;
-    j,
-    i: Cardinal;
-    l: TStringList;
-  begin
-    l:= TStringList.Create;
-    s:= DecodeUrl(StringReplace(WebsiteRoots[ANIMEEXTREMIST_ID,1] + URL, '.html', '', []) + '-' + IntToStr(workCounter+1) + '.html');
-    Result:= GetPage(TObject(l),
-                     s,
-                     manager.container.manager.retryConnect);
-    parse:= TStringList.Create;
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
-    Parser.Exec;
-    Parser.Free;
-
-    if parse.Count>0 then
-    begin
-      for i:= 0 to parse.Count-1 do
-        if (Pos('id="photo"', parse.Strings[i])>0) then
-        begin
-          s:= GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src='));
-          manager.container.pageLinks.Strings[workCounter]:= GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src='));
-          break;
-        end;
-    end;
-    parse.Free;
-    l.Free;
-  end;
-
-  function GetMangaPandaLinkPage: Boolean;
-  var
-    s: String;
-    j,
-    i: Cardinal;
-    l: TStringList;
-  begin
-    l:= TStringList.Create;
-
-    if (Pos('.html', URL) > 0) AND (Pos(SEPERATOR2, URL) > 0) then
-    begin
-      s:= DecodeUrl(WebsiteRoots[MANGAPANDA_ID,1] + URL);
-      s:= StringReplace(s, SEPERATOR2, '-' + IntToStr(workCounter+1) + '/', [])
-    end
-    else
-      s:= DecodeUrl(WebsiteRoots[MANGAPANDA_ID,1] + URL + '/' + IntToStr(workCounter+1));
-    Result:= GetPage(TObject(l),
-                     s,
-                     manager.container.manager.retryConnect);
-    parse:= TStringList.Create;
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
-    Parser.Exec;
-    Parser.Free;
-
-    if parse.Count>0 then
-    begin
-      for i:= 0 to parse.Count-1 do
-        if (Pos('"imgholder"', parse.Strings[i])>0) then
-        begin
-          manager.container.pageLinks.Strings[workCounter]:= GetAttributeValue(GetTagAttribute(parse.Strings[i+2], 'src='));
-          break;
-        end;
-    end;
-    parse.Free;
-    l.Free;
-  end;
-
-  function GetMangaGoLinkPage: Boolean;
-  var
-    s: String;
-    j,
-    i: Cardinal;
-    l: TStringList;
-  begin
-    l:= TStringList.Create;
-
-    if (Pos('http://', URL) > 0) then
-      s:= DecodeUrl(URL + IntToStr(workCounter+1) + '/')
-    else
-      s:= DecodeUrl(WebsiteRoots[MANGAGO_ID,1] + URL + IntToStr(workCounter+1) + '/');
-    Result:= GetPage(TObject(l),
-                     s,
-                     manager.container.manager.retryConnect);
-    parse:= TStringList.Create;
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
-    Parser.Exec;
-    Parser.Free;
-
-    if parse.Count>0 then
-    begin
-      for i:= 0 to parse.Count-1 do
-        if (Pos('imgReady(''', parse.Strings[i])>0) then
-        begin
-          manager.container.pageLinks.Strings[workCounter]:= (GetString(parse.Strings[i], 'imgReady(''', ''','));
-          break;
-        end;
-    end;
-    parse.Free;
-    l.Free;
-  end;
-
-  function GetRedHawkScansLinkPage: Boolean;
-  var
-    s: String;
-    j,
-    i: Cardinal;
-    l: TStringList;
-  begin
-    l:= TStringList.Create;
-
-    s:= DecodeUrl(WebsiteRoots[REDHAWKSCANS_ID,1] + URL + 'page/' + IntToStr(workCounter+1));
-    Result:= GetPage(TObject(l),
-                     s,
-                     manager.container.manager.retryConnect);
-    parse:= TStringList.Create;
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
-    Parser.Exec;
-    Parser.Free;
-
-    if parse.Count>0 then
-    begin
-      for i:= 0 to parse.Count-1 do
-        if (Pos('class="open"', parse.Strings[i])>0) then
-        begin
-          manager.container.pageLinks.Strings[workCounter]:= GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src='));
-          break;
-        end;
-    end;
-    parse.Free;
-    l.Free;
-  end;
-
-  function GetS2scanLinkPage: Boolean;
-  var
-    s: String;
-    j,
-    i: Cardinal;
-    l: TStringList;
-  begin
-    l:= TStringList.Create;
-
-    s:= DecodeUrl(WebsiteRoots[S2SCAN_ID,1] + URL + 'page/' + IntToStr(workCounter+1));
-    Result:= GetPage(TObject(l),
-                     s,
-                     manager.container.manager.retryConnect);
-    parse:= TStringList.Create;
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
-    Parser.Exec;
-    Parser.Free;
-
-    if parse.Count>0 then
-    begin
-      for i:= 0 to parse.Count-1 do
-        if (Pos('class="open"', parse.Strings[i])>0) then
-        begin
-          manager.container.pageLinks.Strings[workCounter]:= GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src='));
-          break;
-        end;
-    end;
-    parse.Free;
-    l.Free;
-  end;
-
-  function GetEGScansLinkPage: Boolean;
-  var
-    s: String;
-    j,
-    i: Cardinal;
-    l: TStringList;
-  begin
-    l:= TStringList.Create;
-
-    s:= DecodeUrl(WebsiteRoots[EGSCANS_ID,1] + URL + '/' + IntToStr(workCounter+1));
-    Result:= GetPage(TObject(l),
-                     s,
-                     manager.container.manager.retryConnect);
-    parse:= TStringList.Create;
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
-    Parser.Exec;
-    Parser.Free;
-
-    if parse.Count>0 then
-    begin
-      manager.container.pageLinks.Clear;
-      for i:= 0 to parse.Count-1 do
-        if (Pos('<img ondragstart', parse.Strings[i])>0) then
-        begin
-          manager.container.pageLinks.Add(WebsiteRoots[EGSCANS_ID,1] + '/' + EncodeURL(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src='))));
-        end;
-    end;
-    parse.Free;
-    l.Free;
-  end;
-
-  function GetMangaStreamLinkPage: Boolean;
-  var
-    s: String;
-    j,
-    i: Cardinal;
-    l: TStringList;
-  begin
-    l:= TStringList.Create;
-    s:= DecodeUrl(MANGASTREAM_ROOT2 + URL + '/' + IntToStr(workCounter+1));
-    Result:= GetPage(TObject(l),
-                     s,
-                     manager.container.manager.retryConnect);
-    parse:= TStringList.Create;
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
-    Parser.Exec;
-    Parser.Free;
-
-    if parse.Count>0 then
-    begin
-      for i:= 0 to parse.Count-1 do
-        if (Pos('id="manga-page"', parse.Strings[i])>0) then
-        begin
-          manager.container.pageLinks.Strings[workCounter]:= GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src='));
-          break;
-        end;
-    end;
-    parse.Free;
-    l.Free;
-  end;
-
-  function GetTruyenTranhTuanLinkPage: Boolean;
-  var
-    s, s2: String;
-    j,
-    i: Cardinal;
-    l: TStringList;
-  begin
-    l:= TStringList.Create;
-    Result:= GetPage(TObject(l),
-                     WebsiteRoots[TRUYENTRANHTUAN_ID,1] + URL,
-                     manager.container.manager.retryConnect);
-    parse:= TStringList.Create;
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
-    Parser.Exec;
-    Parser.Free;
-    if parse.Count>0 then
-    begin
-      manager.container.pageLinks.Clear;
-      for i:= 0 to parse.Count-1 do
-      begin
-        if Pos('var slides_page = ["', parse.Strings[i]) > 0 then
-        begin
-          s:= parse.Strings[i];
-          repeat
-            j:= Pos('"/manga/', s);
-            s2:= EncodeUrl(WebsiteRoots[TRUYENTRANHTUAN_ID,1] + '/manga/' + GetString(s, '"/manga/', '"'));
-            manager.container.pageLinks.Add(s2);
-            Delete(s, Pos('"/manga/', s), 10);
-            j:= Pos('"/manga/', s);
-          until j = 0;
-          break;
-        end;
-      end;
-    end;
-    parse.Free;
-    l.Free;
-  end;
-
-  function GetBlogTruyenLinkPage: Boolean;
-  var
-    isExtrackLink: Boolean = FALSE;
-    s: String;
-    j,
-    i: Cardinal;
-    l: TStringList;
-  begin
-    l:= TStringList.Create;
-    Result:= GetPage(TObject(l),
-                     WebsiteRoots[BLOGTRUYEN_ID,1] + URL,
-                     manager.container.manager.retryConnect);
-    parse:= TStringList.Create;
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
-    Parser.Exec;
-    Parser.Free;
-    if parse.Count>0 then
-    begin
-      manager.container.pageLinks.Clear;
-      for i:= 0 to parse.Count-1 do
-      begin
-        if NOT (isExtrackLink) AND (Pos('<div id="noidungchuong">', parse.Strings[i]) > 0) then
-          isExtrackLink:= TRUE;
-        if (isExtrackLink) AND (GetTagName(parse.Strings[i]) = 'img') then
-          manager.container.pageLinks.Add(EncodeUrl(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src='))))
-        else
-        if (isExtrackLink) AND (Pos('</div>', parse.Strings[i])>0) then
-          break;
-      end;
-    end;
-    parse.Free;
-    l.Free;
-  end;
-
-  function GetKomikidLinkPage: Boolean;
-  var
-    s: String;
-    j,
-    i: Cardinal;
-    l: TStringList;
-  begin
-    l:= TStringList.Create;
-    s:= DecodeUrl(WebsiteRoots[KOMIKID_ID,1] + URL + '/' + IntToStr(workCounter+1));
-    Result:= GetPage(TObject(l),
-                     s,
-                     manager.container.manager.retryConnect);
-    parse:= TStringList.Create;
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
-    Parser.Exec;
-    Parser.Free;
-
-    if parse.Count>0 then
-    begin
-      for i:= 0 to parse.Count-1 do
-        if (Pos('class="lazyload_ad"', parse.Strings[i])>0) then
-        begin
-          s:= '';
-          s:= GetAttributeValue(GetTagAttribute(parse.Strings[i-8], 'src='));
-          if s = '' then
-            s:= GetAttributeValue(GetTagAttribute(parse.Strings[i-6], 'src='));
-          if Pos('http://', s) = 0 then
-            s:= WebsiteRoots[KOMIKID_ID,1] + KOMIKID_BROWSER + s;
-          manager.container.pageLinks.Strings[workCounter]:= EncodeURL(s);
-          break;
-        end;
-    end;
-    parse.Free;
-    l.Free;
-  end;
-
-  function GetPecintaKomikLinkPage: Boolean;
-  var
-    s: String;
-    j,
-    i: Cardinal;
-    l: TStringList;
-  begin
-    l:= TStringList.Create;
-    s:= DecodeUrl(WebsiteRoots[PECINTAKOMIK_ID,1] + URL + '/' + IntToStr(workCounter+1));
-    Result:= GetPage(TObject(l),
-                     s,
-                     manager.container.manager.retryConnect);
-    parse:= TStringList.Create;
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
-    Parser.Exec;
-    Parser.Free;
-
-    if parse.Count>0 then
-    begin
-      for i:= 0 to parse.Count-1 do
-        if (Pos('mangas/', parse.Strings[i])>0) then
-        begin
-          s:= GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src='));
-          if Pos('/manga/', s) = 0 then
-            s:= WebsiteRoots[PECINTAKOMIK_ID,1] + '/manga/' + s
-          else
-            s:= WebsiteRoots[PECINTAKOMIK_ID,1] + PECINTAKOMIK_BROWSER + s;
-          manager.container.pageLinks.Strings[workCounter]:= EncodeURL(s);
-          break;
-        end;
-    end;
-    parse.Free;
-    l.Free;
-  end;
-
-  function GetMabunsLinkPage: Boolean;
-  var
-    s: String;
-    j,
-    i: Cardinal;
-    l: TStringList;
-  begin
-    l:= TStringList.Create;
-    if Pos('http://', URL) = 0 then
-      s:= WebsiteRoots[MABUNS_ID,1] + URL
-    else
-      s:= URL;
-    Result:= GetPage(TObject(l),
-                     s,
-                     manager.container.manager.retryConnect);
-    parse:= TStringList.Create;
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
-    Parser.Exec;
-    Parser.Free;
-    if parse.Count>0 then
-    begin
-      manager.container.pageLinks.Clear;
-      for i:= 0 to parse.Count-1 do
-      begin
-        if Pos('addpage(''', parse.Strings[i]) > 0 then
-        begin
-          s:= parse.Strings[i];
-          s:= StringReplace(s, 'https://', 'http://', [rfReplaceAll]);
-          repeat
-            j:= Pos('addpage(''', s);
-            if Pos('googleusercontent', s) > 0 then
-              manager.container.pageLinks.Add(EncodeUrl(GetString(s, 'addpage(''', ''',')))
-            else
-              manager.container.pageLinks.Add(EncodeUrl(GetString(s, 'addpage(''', ');')));
-            Delete(s, Pos('addpage(''', s), 16);
-            j:= Pos('addpage(''', s);
-          until j = 0;
-        end;
-      end;
-    end;
-    parse.Free;
-    l.Free;
-  end;
-
-  function GetMangaEstaLinkPage: Boolean;
-  var
-    s: String;
-    j,
-    i: Cardinal;
-    l: TStringList;
-  begin
-    l:= TStringList.Create;
-    if Pos('http://', URL) = 0 then
-      s:= WebsiteRoots[MANGAESTA_ID,1] + URL
-    else
-      s:= URL;
-    Result:= GetPage(TObject(l),
-                     s,
-                     manager.container.manager.retryConnect);
-    parse:= TStringList.Create;
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
-    Parser.Exec;
-    Parser.Free;
-    if parse.Count>0 then
-    begin
-      manager.container.pageLinks.Clear;
-      for i:= 0 to parse.Count-1 do
-      begin
-        if Pos('addpage(''', parse.Strings[i]) > 0 then
-        begin
-          s:= parse.Strings[i];
-          s:= StringReplace(s, 'https://', 'http://', [rfReplaceAll]);
-          repeat
-            j:= Pos('addpage(''', s);
-            if Pos('googleusercontent', s) > 0 then
-              manager.container.pageLinks.Add(EncodeUrl(GetString(s, 'addpage(''', ''',')))
-            else
-              manager.container.pageLinks.Add(EncodeUrl(GetString(s, 'addpage(''', ');')));
-            Delete(s, Pos('addpage(''', s), 16);
-            j:= Pos('addpage(''', s);
-          until j = 0;
-        end;
-      end;
-    end;
-    parse.Free;
-    l.Free;
-  end;
-  
-  function GetPururinLinkPage: Boolean;
-  var
-    s: String;
-    j,
-    i: Cardinal;
-    l: TStringList;
-  begin
-    l:= TStringList.Create;
-	  s:= StringReplace(URL, '_1.html', '_', []);
-      s:= DecodeUrl(StringReplace(s, '/00', '/0' + IntToStr(workCounter+0), []) + IntToStr(workCounter+1) + '.html');
-    Result:= GetPage(TObject(l),
-	                 s,
-                     manager.container.manager.retryConnect);
-    parse:= TStringList.Create;
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
-    Parser.Exec;
-    Parser.Free;
-
-    if parse.Count>0 then
-    begin
-      for i:= parse.Count-1 downto 4 do
-        if (Pos('class="b"', parse.Strings[i])>0) then
-        begin
-          manager.container.pageLinks.Strings[workCounter]:= EncodeURL(WebsiteRoots[PURURIN_ID,1] + GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src=')));
-          break;
-        end;
-    end;
-    parse.Free;
-    l.Free;
-  end;
-
-  function GetHugeMangaLinkPage: Boolean;
-  var
-    s: String;
-    j,
-    i: Cardinal;
-    l: TStringList;
-  begin
-    l:= TStringList.Create;
-    s:= DecodeUrl(WebsiteRoots[HUGEMANGA_ID,1] + URL + '/' + IntToStr(workCounter+1));
-    Result:= GetPage(TObject(l),
-                     s,
-                     manager.container.manager.retryConnect);
-    parse:= TStringList.Create;
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
-    Parser.Exec;
-    Parser.Free;
-
-    if parse.Count>0 then
-    begin
-      for i:= 0 to parse.Count-1 do
-        if (Pos('class="picture"', parse.Strings[i])>0) then
-        begin
-          manager.container.pageLinks.Strings[workCounter]:= EncodeURL(WebsiteRoots[HUGEMANGA_ID,1] + HUGEMANGA_BROWSER + GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src=')));
-          break;
-        end;
-    end;
-    parse.Free;
-    l.Free;
-  end;
-
-  function GetAnimeStoryLinkPage: Boolean;
-  var
-    s: String;
-    j,
-    i: Cardinal;
-    l: TStringList;
-  begin
-    l:= TStringList.Create;
-    s:= DecodeUrl(WebsiteRoots[ANIMESTORY_ID,1] + URL + IntToStr(workCounter+1));
-    if Pos('http://', URL) = 0 then
-      s:= DecodeUrl(WebsiteRoots[ANIMESTORY_ID,1] + URL + IntToStr(workCounter+1))
-    else
-      s:= DecodeUrl(URL + IntToStr(workCounter+1));
-    Result:= GetPage(TObject(l),
-                     s,
-                     manager.container.manager.retryConnect);
-    parse:= TStringList.Create;
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
-    Parser.Exec;
-    Parser.Free;
-
-    if parse.Count>0 then
-    begin
-      for i:= 0 to parse.Count-1 do
-        if (Pos('id="chpimg"', parse.Strings[i])>0) then
-        begin
-          manager.container.pageLinks.Strings[workCounter]:= DecodeURL(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src=')));
-          break;
-        end;
-    end;
-    parse.Free;
-    l.Free;
-  end;
-
-  function GetScanMangaLinkPage: Boolean;
-  var
-    s2,
-    stub,
-    tmp,
-    s: String;
-    j,
-    i: Cardinal;
-    l: TStringList;
-  begin
-    l:= TStringList.Create;
-    if Pos('http://', URL) = 0 then
-      s:= DecodeUrl(WebsiteRoots[SCANMANGA_ID,1] + URL)
-    else
-      s:= DecodeUrl(URL);
-    Result:= GetPage(TObject(l),
-                     s,
-                     manager.container.manager.retryConnect);
-    parse:= TStringList.Create;
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
-    Parser.Exec;
-    Parser.Free;
-
-    manager.container.pageLinks.Clear;
-
-    if parse.Count>0 then
-    begin
-      for i:= 0 to parse.Count-1 do
-        if (Pos('''+u[id_page]', parse.Strings[i])>0) then
-        begin
-          stub:= 'http' + GetString(parse.Strings[i], '$(''#image_lel'').attr(''src'',''http', '''+u[id_page]');
-          break;
-        end;
-    end;
-
-    if parse.Count>0 then
-    begin
-      for i:= 0 to parse.Count-1 do
-        if (Pos('var u = new Array', parse.Strings[i])>0) then
-        begin
-          s:= parse.Strings[i];
-          repeat
-            tmp:= GetString(s, ';u[', ']="');
-            s:= StringReplace(s, ';u[' +tmp+ ']="', '~!@<>', []);
-            tmp:= stub + GetString(s, '~!@<>', '";n[');
-            //s2:= EncodeUrl(stub + GetString(s, '~!@<>', '";n'));
-            manager.container.pageLinks.Add((stub + GetString(s, '~!@<>', '";n')));
-            s:= StringReplace(s, '~!@<>', '', []);
-            s:= StringReplace(s, '";n[', '', []);
-            j:= Pos('";n[', s);
-          until j = 0;
-          break;
-        end;
-    end;
-    parse.Free;
-    l.Free;
-  end;
-
-  function GetTurkcraftLinkPage: Boolean;
-  var
-    s: String;
-    j,
-    i: Cardinal;
-    l: TStringList;
-  begin
-    l:= TStringList.Create;
-    s:= DecodeUrl(WebsiteRoots[TURKCRAFT_ID,1] + URL + '/' + IntToStr(workCounter+1));
-    Result:= GetPage(TObject(l),
-                     s,
-                     manager.container.manager.retryConnect);
-    parse:= TStringList.Create;
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
-    Parser.Exec;
-    Parser.Free;
-
-    if parse.Count>0 then
-    begin
-      for i:= 0 to parse.Count-1 do
-        if (Pos('class="picture"', parse.Strings[i])>0) then
-        begin
-          manager.container.pageLinks.Strings[workCounter]:= EncodeURL(WebsiteRoots[TURKCRAFT_ID,1] + TURKCRAFT_BROWSER + GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src=')));
-          break;
-        end;
-    end;
-    parse.Free;
-    l.Free;
-  end;
-
-  function GetMangaVadisiLinkPage: Boolean;
-  var
-    s: String;
-    j,
-    i: Cardinal;
-    l: TStringList;
-  begin
-    l:= TStringList.Create;
-    s:= DecodeUrl(WebsiteRoots[MANGAVADISI_ID,1] + MANGAVADISI_BROWSER + URL + '/' + IntToStr(workCounter+1));
-    Result:= GetPage(TObject(l),
-                     s,
-                     manager.container.manager.retryConnect);
-    parse:= TStringList.Create;
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
-    Parser.Exec;
-    Parser.Free;
-
-    if parse.Count>0 then
-    begin
-      for i:= 0 to parse.Count-1 do
-        if (Pos('class="picture"', parse.Strings[i])>0) then
-        begin
-          manager.container.pageLinks.Strings[workCounter]:= EncodeURL(WebsiteRoots[MANGAVADISI_ID,1] + MANGAVADISI_BROWSER + GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src=')));
-          break;
-        end;
-    end;
-    parse.Free;
-    l.Free;
-  end;
-
-  function GetMangaFrameLinkPage: Boolean;
-  var
-    s: String;
-    j,
-    i: Cardinal;
-    l: TStringList;
-  begin
-    l:= TStringList.Create;
-    s:= DecodeUrl(WebsiteRoots[MANGAFRAME_ID,1] + URL + IntToStr(workCounter+1));
-    Result:= GetPage(TObject(l),
-                     s,
-                     manager.container.manager.retryConnect);
-    parse:= TStringList.Create;
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
-    Parser.Exec;
-    Parser.Free;
-
-    if parse.Count>0 then
-    begin
-      for i:= 0 to parse.Count-1 do
-        if (Pos('class="open"', parse.Strings[i])>0) then
-        begin
-          manager.container.pageLinks.Strings[workCounter]:= EncodeURL(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src=')));
-          break;
-        end;
-    end;
-    parse.Free;
-    l.Free;
-  end;
-
-  function GetMangaAeLinkPage: Boolean;
-  var
-    s: String;
-    j,
-    i: Cardinal;
-    l: TStringList;
-  begin
-    l:= TStringList.Create;
-    s:= DecodeUrl(WebsiteRoots[MANGAAE_ID,1] + URL + '/' + IntToStr(workCounter+1));
-    Result:= GetPage(TObject(l),
-                     s,
-                     manager.container.manager.retryConnect);
-    parse:= TStringList.Create;
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
-    Parser.Exec;
-    Parser.Free;
-
-    if parse.Count>0 then
-    begin
-      for i:= 0 to parse.Count-1 do
-        if (Pos('id="picture_url"', parse.Strings[i])>0) then
-        begin
-          manager.container.pageLinks.Strings[workCounter]:= EncodeURL(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src=')));
-          break;
-        end;
-    end;
-    parse.Free;
-    l.Free;
-  end;
-
-  function GetMangaArLinkPage: Boolean;
-  var
-    s: String;
-    j,
-    i: Cardinal;
-    l: TStringList;
-  begin
-    l:= TStringList.Create;
-    s:= WebsiteRoots[MANGAAR_ID,1] + URL + '/' + IntToStr(workCounter+1);
-    Result:= GetPage(TObject(l),
-                     s,
-                     manager.container.manager.retryConnect);
-
-    // convert charset
-    l.Text:= CP1256ToUTF8(l.Text);
-
-    parse:= TStringList.Create;
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
-    Parser.Exec;
-    Parser.Free;
-
-    if parse.Count>0 then
-    begin
-      for i:= 0 to parse.Count-1 do
-        if (Pos('id="PagePhoto"', parse.Strings[i])>0) then
-        begin
-          manager.container.pageLinks.Strings[workCounter]:= EncodeURL(GetAttributeValue(GetTagAttribute(parse.Strings[i+2], 'src=')));
-          break;
-        end;
-    end;
-    parse.Free;
-    l.Free;
-  end;
-
-  function GetCentralDeMangasLinkPage: Boolean;
-  var
-    s: String;
-    j,
-    i: Cardinal;
-    l: TStringList;
-  begin
-    l:= TStringList.Create;
-    s:= EncodeUrl(WebsiteRoots[CENTRALDEMANGAS_ID,1] + URL); // + IntToStr(workCounter+1));
-    Result:= GetPage(TObject(l),
-                     s,
-                     manager.container.manager.retryConnect);
-    parse:= TStringList.Create;
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
-    Parser.Exec;
-    Parser.Free;
-    if parse.Count>0 then
-    begin
-      manager.container.pageLinks.Clear;
-      for i:= 0 to parse.Count-1 do
-      begin
-        if Pos('var pages = ', parse.Strings[i]) > 0 then
-        begin
-          s:= StringReplace(parse.Strings[i], '\/', '/', [rfReplaceAll]);
-          repeat
-            j:= Pos('http://', s);
-            manager.container.pageLinks.Add(EncodeURL(GetString(s, '"', '"')));
-            s:= StringReplace(s, '"', '', []);
-            s:= StringReplace(s, '"', '', []);
-            Delete(s, j, 10);
-            j:= Pos('http://', s);
-          until j = 0;
-        end;
-      end;
-    end;
-    parse.Free;
-    l.Free;
-  end;
-  
-    // Mangacow link page
-  function GetMangaCowLinkPage: Boolean;
-  var
-    s: String;
-    j,
-    i: Cardinal;
-    l: TStringList;
-  begin
-    l:= TStringList.Create;
-	s:= DecodeUrl(WebsiteRoots[MANGACOW_ID,1] + URL + IntToStr(workCounter+1));
-    Result:= GetPage(TObject(l),
-	                 s,
-                     manager.container.manager.retryConnect);
-    parse:= TStringList.Create;
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
-    Parser.Exec;
-    Parser.Free;
-
-    if parse.Count>0 then
-    begin
-      for i:= 0 to parse.Count-1 do
-        if (Pos('id="sct_img_mng_enl"', parse.Strings[i])>0) then
-        begin
-          manager.container.pageLinks.Strings[workCounter]:= EncodeURL(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src=')));
-          break;
-        end;
-    end;
-    parse.Free;
-    l.Free;
-  end;
-  
-    function GetSenMangaLinkPage: Boolean;
-  var
-    s: String;
-    j,
-    i: Cardinal;
-    l: TStringList;
-  begin
-    l:= TStringList.Create;
-    s:= DecodeUrl(WebsiteRoots[SENMANGA_ID,1] + URL + IntToStr(workCounter+1) + '/');
-    Result:= GetPage(TObject(l),
-                     s,
-                     manager.container.manager.retryConnect);
-    parse:= TStringList.Create;
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
-    Parser.Exec;
-    Parser.Free;
-
-    if parse.Count>0 then
-    begin
-      for i:= 0 to parse.Count-1 do
-        if (Pos(' onerror=', parse.Strings[i])>0) then
-        begin
-          s:= EncodeURL(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src=')));
-          if Pos('http://', s) = 0 then
-            s:= WebsiteRoots[SENMANGA_ID,1] + s;
-          manager.container.pageLinks.Strings[workCounter]:= s;
-          break;
-        end;
-    end;
-    parse.Free;
-    l.Free;
-  end;
-
-  function GetMangaTradersLinkPage: Boolean;
-  var
-    s: String;
-    j,
-    i: Cardinal;
-    l: TStringList;
-  begin
-    l:= TStringList.Create;
-    s:= WebsiteRoots[MANGATRADERS_ID,1] + URL + '/page/' + IntToStr(workCounter+1);
-    Result:= GetPage(TObject(l),
-                     s,
-                     manager.container.manager.retryConnect);
-    parse:= TStringList.Create;
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
-    Parser.Exec;
-    Parser.Free;
-
-    if parse.Count>0 then
-    begin
-      for i:= 0 to parse.Count-1 do
-        if (Pos('"image_display"', parse.Strings[i])>0) then
-        begin
-          s:= GetAttributeValue(GetTagAttribute(parse.Strings[i+4], 'src='));
-          if s <> '' then
-            manager.container.pageLinks.Strings[workCounter]:= s
-          else
-            manager.container.pageLinks.Strings[workCounter]:= GetAttributeValue(GetTagAttribute(parse.Strings[i+12], 'src='));
-          break;
-        end;
-    end;
-    parse.Free;
-    l.Free;
-  end;
-
-  function GetMangaEdenLinkPage: Boolean;
-  var
-    s: String;
-    j,
-    i: Cardinal;
-    l: TStringList;
-  begin
-    l:= TStringList.Create;
-    if manager.container.mangaSiteID = MANGAEDEN_ID then
-      s:= WebsiteRoots[MANGAEDEN_ID,1] + URL + IntToStr(workCounter+1) + '/'
-    else
-      s:= WebsiteRoots[PERVEDEN_ID,1] + URL + IntToStr(workCounter+1) + '/';
-    Result:= GetPage(TObject(l),
-                     s,
-                     manager.container.manager.retryConnect);
-    parse:= TStringList.Create;
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
-    Parser.Exec;
-    Parser.Free;
-
-    if parse.Count>0 then
-    begin
-      for i:= parse.Count-1 downto 0 do
-        if (Pos('"mainImg"', parse.Strings[i])>0) then
-        begin
-          manager.container.pageLinks.Strings[workCounter]:= GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src='));
-          break;
-        end;
-    end;
-    parse.Free;
-    l.Free;
-  end;
-  
-    function GetKivmangaLinkPage: Boolean;
-  var
-    s: String;
-    j,
-    i: Cardinal;
-    l: TStringList;
-  begin
-    l:= TStringList.Create;
-    s:= DecodeUrl(WebsiteRoots[KIVMANGA_ID,1] + URL + '/' + IntToStr(workCounter+1));
-    Result:= GetPage(TObject(l),
-                     s,
-                     manager.container.manager.retryConnect);
-    parse:= TStringList.Create;
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
-    Parser.Exec;
-    Parser.Free;
-
-    if parse.Count>0 then
-    begin
-      for i:= 0 to parse.Count-1 do
-        if (Pos('class="picture"', parse.Strings[i])>0) then
-        begin
-          s:= WebsiteRoots[KIVMANGA_ID,1] + KIVMANGA_BROWSER + GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src='));
-          manager.container.pageLinks.Strings[workCounter]:= EncodeURL(s);
-          break;
-        end;
-    end;
-    parse.Free;
-    l.Free;
-  end;
-  
-    function GetMangacanLinkPage: Boolean;
-  var
-    s: String;
-    j,
-    i: Cardinal;
-    l: TStringList;
-  begin
-    l:= TStringList.Create;
-    if Pos('http://', URL) = 0 then
-      s:= WebsiteRoots[MANGACAN_ID,1] + '/' + URL
-    else
-      s:= URL;
-    Result:= GetPage(TObject(l),
-                     s,
-                     manager.container.manager.retryConnect);
-    parse:= TStringList.Create;
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
-    Parser.Exec;
-    Parser.Free;
-if parse.Count>0 then begin
-  manager.container.pageLinks.Clear;  
-  for i:= 0 to parse.Count-1 do
-    if (Pos('<img alt=', parse.Strings[i])>0) then
-    begin
-	s:= GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src='));
-	s:= StringReplace(s, 'https://', 'http://', [rfReplaceAll]);
-	s:= StringReplace(s, 'mangas/', WebsiteRoots[MANGACAN_ID,1] + '/mangas/', [rfReplaceAll]);
-      manager.container.pageLinks.Add(EncodeURL(s));
-    end;
-end;
-    parse.Free;
-    l.Free;
-  end;
-
-  function GetGEHentaiLinkPage: Boolean;
+  {$I includes/AnimeA/image_url.inc}
+
+  {$I includes/MangaHere/image_url.inc}
+
+  {$I includes/EsMangaHere/image_url.inc}
+
+  {$I includes/MangaInn/image_url.inc}
+
+  {$I includes/KissManga/image_url.inc}
+
+  {$I includes/Batoto/image_url.inc}
+
+  {$I includes/Manga24h/image_url.inc}
+
+  {$I includes/VnSharing/image_url.inc}
+
+  {$I includes/Hentai2Read/image_url.inc}
+
+  {$I includes/Fakku/image_url.inc}
+
+  {$I includes/MangaReader/image_url.inc}
+
+  {$I includes/MangaPark/image_url.inc}
+
+  {$I includes/MangaFox/image_url.inc}
+
+  {$I includes/Starkana/image_url.inc}
+
+  {$I includes/EatManga/image_url.inc}
+
+  {$I includes/SubManga/image_url.inc}
+
+  {$I includes/AnimExtremist/image_url.inc}
+
+  {$I includes/MangaPanda/image_url.inc}
+
+  {$I includes/MangaGo/image_url.inc}
+
+  {$I includes/RedHawkScans/image_url.inc}
+
+  {$I includes/S2scans/image_url.inc}
+
+  {$I includes/EGScans/image_url.inc}
+
+  {$I includes/MangaStream/image_url.inc}
+
+  {$I includes/TruyenTranhTuan/image_url.inc}
+
+  {$I includes/BlogTruyen/image_url.inc}
+
+  {$I includes/Komikid/image_url.inc}
+
+  {$I includes/PecintaKomik/image_url.inc}
+
+  {$I includes/Mabuns/image_url.inc}
+
+  {$I includes/MangaEsta/image_url.inc}
+
+  {$I includes/Pururin/image_url.inc}
+
+  {$I includes/HugeManga/image_url.inc}
+
+  {$I includes/AnimeStory/image_url.inc}
+
+  {$I includes/ScanManga/image_url.inc}
+
+  {$I includes/Turkcraft/image_url.inc}
+
+  {$I includes/MangaVadisi/image_url.inc}
+
+  {$I includes/MangaFrame/image_url.inc}
+
+  {$I includes/MangaAe/image_url.inc}
+
+  {$I includes/MangaAr/image_url.inc}
+
+  {$I includes/CentralDeMangas/image_url.inc}
+
+  // Mangacow link page
+  {$I includes/Mangacow/image_url.inc}
+
+  {$I includes/SenManga/image_url.inc}
+
+  {$I includes/MangaTraders/image_url.inc}
+
+  {$I includes/MangaEden/image_url.inc}
+
+  {$I includes/Kivmanga/image_url.inc}
+
+  {$I includes/Mangacan/image_url.inc}
+
+  function GetGEHentaiImageURL: Boolean;
   var
     s1,s2,
     s: String;
@@ -3472,146 +648,143 @@ var
 begin
   if manager.container.pageLinks.Strings[workCounter] <> 'W' then exit;
   if manager.container.mangaSiteID = ANIMEA_ID then
-    Result:= GetAnimeALinkPage
+    Result:= GetAnimeAImageURL
   else
   if manager.container.mangaSiteID = MANGATRADERS_ID then
-    Result:= GetMangaTradersLinkPage
+    Result:= GetMangaTradersImageURL
   else
   if manager.container.mangaSiteID = MANGAHERE_ID then
-    Result:= GetMangaHereLinkPage
+    Result:= GetMangaHereImageURL
   else
   if manager.container.mangaSiteID = MANGAINN_ID then
-    Result:= GetMangaInnLinkPage
+    Result:= GetMangaInnImageURL
   else
   if manager.container.mangaSiteID = KISSMANGA_ID then
-    Result:= GetKissMangaLinkPage
+    Result:= GetKissMangaImageURL
   else
   if manager.container.mangaSiteID = BATOTO_ID then
-    Result:= GetBatotoLinkPage
+    Result:= GetBatotoImageURL
   else
   if manager.container.mangaSiteID = MANGA24H_ID then
-    Result:= GetManga24hLinkPage
+    Result:= GetManga24hImageURL
   else
   if manager.container.mangaSiteID = VNSHARING_ID then
-    Result:= GetVnSharingLinkPage
+    Result:= GetVnSharingImageURL
   else
   if manager.container.mangaSiteID = HENTAI2READ_ID then
-    Result:= GetHentai2ReadLinkPage
+    Result:= GetHentai2ReadImageURL
   else
   if manager.container.mangaSiteID = FAKKU_ID then
-    Result:= GetFakkuLinkPage
-  else
-  if manager.container.mangaSiteID = TRUYEN18_ID then
-    Result:= GetTruyen18LinkPage
+    Result:= GetFakkuImageURL
   else
   if manager.container.mangaSiteID = MANGAREADER_ID then
-    Result:= GetMangaReaderLinkPage
+    Result:= GetMangaReaderImageURL
   else
   if manager.container.mangaSiteID = MANGAPARK_ID then
-    Result:= GetMangaParkLinkPage
+    Result:= GetMangaParkImageURL
   else
   if manager.container.mangaSiteID = MANGAFOX_ID then
-    Result:= GetMangaFoxLinkPage
+    Result:= GetMangaFoxImageURL
   else
   if manager.container.mangaSiteID = STARKANA_ID then
-    Result:= GetStarkanaLinkPage
+    Result:= GetStarkanaImageURL
   else
   if manager.container.mangaSiteID = EATMANGA_ID then
-    Result:= GetEatMangaLinkPage
+    Result:= GetEatMangaImageURL
   else
   if manager.container.mangaSiteID = MANGAPANDA_ID then
-    Result:= GetMangaPandaLinkPage
+    Result:= GetMangaPandaImageURL
   else
   if manager.container.mangaSiteID = MANGAGO_ID then
-    Result:= GetMangaGoLinkPage
+    Result:= GetMangaGoImageURL
   else
   if manager.container.mangaSiteID = MANGASTREAM_ID then
-    Result:= GetMangaStreamLinkPage
+    Result:= GetMangaStreamImageURL
   else
   if manager.container.mangaSiteID = REDHAWKSCANS_ID then
-    Result:= GetRedHawkScansLinkPage
+    Result:= GetRedHawkScansImageURL
   else
   if manager.container.mangaSiteID = S2SCAN_ID then
-    Result:= GetS2scanLinkPage
+    Result:= GetS2scanImageURL
   else
   if manager.container.mangaSiteID = EGSCANS_ID then
-    Result:= GetEGScansLinkPage
+    Result:= GetEGScansImageURL
   else
   if manager.container.mangaSiteID = ESMANGAHERE_ID then
-    Result:= GetEsMangaHereLinkPage
+    Result:= GetEsMangaHereImageURL
   else
   if manager.container.mangaSiteID = SUBMANGA_ID then
-    Result:= GetSubMangaLinkPage
+    Result:= GetSubMangaImageURL
   else
   if manager.container.mangaSiteID = ANIMEEXTREMIST_ID then
-    Result:= GetAnimeExtremistLinkPage
+    Result:= GetAnimeExtremistImageURL
   else
   if manager.container.mangaSiteID = KOMIKID_ID then
-    Result:= GetKomikidLinkPage
+    Result:= GetKomikidImageURL
   else
   if manager.container.mangaSiteID = PECINTAKOMIK_ID then
-    Result:= GetPecintaKomikLinkPage
+    Result:= GetPecintaKomikImageURL
   else
   if manager.container.mangaSiteID = MABUNS_ID then
-    Result:= GetMabunsLinkPage
+    Result:= GetMabunsImageURL
   else
   if manager.container.mangaSiteID = MANGAESTA_ID then
-    Result:= GetMangaEstaLinkPage
+    Result:= GetMangaEstaImageURL
   else
   if manager.container.mangaSiteID = PURURIN_ID then
-    Result:= GetPururinLinkPage
+    Result:= GetPururinImageURL
   else
   if manager.container.mangaSiteID = HUGEMANGA_ID then
-    Result:= GetHugeMangaLinkPage
+    Result:= GetHugeMangaImageURL
   else
   if manager.container.mangaSiteID = ANIMESTORY_ID then
-    Result:= GetAnimeStoryLinkPage
+    Result:= GetAnimeStoryImageURL
   else
   if manager.container.mangaSiteID = SCANMANGA_ID then
-    Result:= GetScanMangaLinkPage
+    Result:= GetScanMangaImageURL
   else
   if manager.container.mangaSiteID = TURKCRAFT_ID then
-    Result:= GetTurkcraftLinkPage
+    Result:= GetTurkcraftImageURL
   else
   if manager.container.mangaSiteID = MANGAVADISI_ID then
-    Result:= GetMangaVadisiLinkPage
+    Result:= GetMangaVadisiImageURL
   else
   if manager.container.mangaSiteID = MANGAFRAME_ID then
-    Result:= GetMangaFrameLinkPage
+    Result:= GetMangaFrameImageURL
   else
   if manager.container.mangaSiteID = MANGAAR_ID then
-    Result:= GetMangaArLinkPage
+    Result:= GetMangaArImageURL
   else
   if manager.container.mangaSiteID = MANGAAE_ID then
-    Result:= GetMangaAeLinkPage
+    Result:= GetMangaAeImageURL
   else
   if manager.container.mangaSiteID = CENTRALDEMANGAS_ID then
-    Result:= GetCentralDeMangasLinkPage
+    Result:= GetCentralDeMangasImageURL
   else
   if manager.container.mangaSiteID = MANGACOW_ID then
-    Result:= GetMangaCowLinkPage
+    Result:= GetMangaCowImageURL
   else
   if manager.container.mangaSiteID = SENMANGA_ID then
-    Result:= GetSenMangaLinkPage
+    Result:= GetSenMangaImageURL
   else
   if manager.container.mangaSiteID = TRUYENTRANHTUAN_ID then
-    Result:= GetTruyenTranhTuanLinkPage
+    Result:= GetTruyenTranhTuanImageURL
   else
   if manager.container.mangaSiteID = BLOGTRUYEN_ID then
-    Result:= GetBlogTruyenLinkPage
+    Result:= GetBlogTruyenImageURL
   else
   if (manager.container.mangaSiteID = MANGAEDEN_ID) OR
      (manager.container.mangaSiteID = PERVEDEN_ID) then
-    Result:= GetMangaEdenLinkPage
+    Result:= GetMangaEdenImageURL
   else
   if manager.container.mangaSiteID = KIVMANGA_ID then
-    Result:= GetKivmangaLinkPage
+    Result:= GetKivmangaImageURL
   else
   if manager.container.mangaSiteID = MANGACAN_ID then
-    Result:= GetMangacanLinkPage
+    Result:= GetMangacanImageURL
   else
   if manager.container.mangaSiteID = GEHENTAI_ID then
-    Result:= GetGEHentaiLinkPage;
+    Result:= GetGEHentaiImageURL;
 end;
 
 procedure   TDownloadThread.SetChangeDirectoryFalse;
