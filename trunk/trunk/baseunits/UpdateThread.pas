@@ -539,16 +539,7 @@ begin
 
       // sync data based on existing sites
       if  (mainDataProcess.Data.Count > 0) AND
-         ((website = MANGASTREAM_NAME) OR
-          (website = MANGAVADISI_NAME) OR
-          (website = SENMANGA_NAME) OR
-          (website = MANGAFRAME_NAME) OR
-          (website = S2SCAN_NAME) OR
-          (website = EGSCANS_NAME) OR
-          (website = TURKCRAFT_NAME) OR
-          (website = HUGEMANGA_NAME) OR
-          (website = KOMIKID_NAME) OR
-		  (website = KIVMANGA_NAME)) AND
+          (sitesWithoutInformation(website)) AND
          ((FileExists(DATA_FOLDER + ANIMEA_NAME + DATA_EXT)) OR
           (FileExists(DATA_FOLDER + MANGAPARK_NAME + DATA_EXT))) then
       begin

@@ -565,6 +565,8 @@ procedure CheckPath(const S: String);
 function  GetMangaSiteID(const name: String): Cardinal;
 function  GetMangaSiteName(const ID: Cardinal): String;
 function  GetMangaDatabaseURL(const name: String): String;
+// Return true if the website doesn't contain manga information
+function  sitesWithoutInformation(const website: String): Boolean;
 
 function  RemoveSymbols(const input: String): String;
 
@@ -826,6 +828,20 @@ var
   i: Byte;
 begin
   Result:= 'http://jaist.dl.sourceforge.net/project/fmd/FMD/lists/'+name+'.zip';
+end;
+
+function  sitesWithoutInformation(const website: String): Boolean;
+begin
+  Result:= ((website = MANGASTREAM_NAME) OR
+            (website = MANGAVADISI_NAME) OR
+            (website = SENMANGA_NAME) OR
+            (website = MANGAFRAME_NAME) OR
+            (website = S2SCAN_NAME) OR
+            (website = EGSCANS_NAME) OR
+            (website = TURKCRAFT_NAME) OR
+            (website = HUGEMANGA_NAME) OR
+            (website = KOMIKID_NAME) OR
+	    (website = KIVMANGA_NAME));
 end;
 
 function  RemoveSymbols(const input: String): String;
