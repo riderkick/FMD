@@ -117,7 +117,7 @@ uses
   synautil, HTMLParser,
   FastHTMLParser, LConvEncoding,
   HTMLUtil,
-  HTTPSend, SynaCode{$IFDEF WINDOWS}{$IFDEF DOWNLOADER}, IECore{$ENDIF}{$ENDIF};
+  HTTPSend, SynaCode;
 
 // ----- TDataProcess -----
 
