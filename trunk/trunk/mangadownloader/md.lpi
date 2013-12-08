@@ -52,7 +52,7 @@
         <PackageName Value="LCL"/>
       </Item3>
     </RequiredPackages>
-    <Units Count="19">
+    <Units Count="208">
       <Unit0>
         <Filename Value="md.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -166,6 +166,762 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="FMDThread"/>
       </Unit18>
+      <Unit19>
+        <Filename Value="..\baseunits\includes\Batoto\manga_information.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit19>
+      <Unit20>
+        <Filename Value="..\baseunits\includes\LectureEnLigne\directory_page_number.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit20>
+      <Unit21>
+        <Filename Value="..\baseunits\includes\BlogTruyen\directory_page_number.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit21>
+      <Unit22>
+        <Filename Value="..\baseunits\includes\BlogTruyen\names_and_links.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit22>
+      <Unit23>
+        <Filename Value="..\baseunits\includes\Batoto\chapter_page_number.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit23>
+      <Unit24>
+        <Filename Value="..\baseunits\includes\Batoto\image_url.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit24>
+      <Unit25>
+        <Filename Value="..\baseunits\includes\AnimeA\names_and_links.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit25>
+      <Unit26>
+        <Filename Value="..\baseunits\includes\MangaHere\names_and_links.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit26>
+      <Unit27>
+        <Filename Value="..\baseunits\includes\EsMangaHere\names_and_links.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit27>
+      <Unit28>
+        <Filename Value="..\baseunits\includes\Batoto\directory_page_number.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit28>
+      <Unit29>
+        <Filename Value="..\baseunits\includes\Batoto\names_and_links.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit29>
+      <Unit30>
+        <Filename Value="..\baseunits\includes\AnimeA\chapter_page_number.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit30>
+      <Unit31>
+        <Filename Value="..\baseunits\includes\AnimeA\directory_page_number.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit31>
+      <Unit32>
+        <Filename Value="..\baseunits\includes\AnimeA\image_url.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit32>
+      <Unit33>
+        <Filename Value="..\baseunits\includes\AnimeA\manga_information.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit33>
+      <Unit34>
+        <Filename Value="..\baseunits\includes\AnimeStory\chapter_page_number.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit34>
+      <Unit35>
+        <Filename Value="..\baseunits\includes\AnimeStory\image_url.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit35>
+      <Unit36>
+        <Filename Value="..\baseunits\includes\AnimeStory\manga_information.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit36>
+      <Unit37>
+        <Filename Value="..\baseunits\includes\AnimeStory\names_and_links.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit37>
+      <Unit38>
+        <Filename Value="..\baseunits\includes\AnimExtremist\chapter_page_number.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit38>
+      <Unit39>
+        <Filename Value="..\baseunits\includes\AnimExtremist\image_url.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit39>
+      <Unit40>
+        <Filename Value="..\baseunits\includes\AnimExtremist\manga_information.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit40>
+      <Unit41>
+        <Filename Value="..\baseunits\includes\AnimExtremist\names_and_links.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit41>
+      <Unit42>
+        <Filename Value="..\baseunits\includes\BlogTruyen\image_url.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit42>
+      <Unit43>
+        <Filename Value="..\baseunits\includes\BlogTruyen\manga_information.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit43>
+      <Unit44>
+        <Filename Value="..\baseunits\includes\CentralDeMangas\directory_page_number.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit44>
+      <Unit45>
+        <Filename Value="..\baseunits\includes\CentralDeMangas\image_url.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit45>
+      <Unit46>
+        <Filename Value="..\baseunits\includes\CentralDeMangas\manga_information.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit46>
+      <Unit47>
+        <Filename Value="..\baseunits\includes\CentralDeMangas\names_and_links.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit47>
+      <Unit48>
+        <Filename Value="..\baseunits\includes\EatManga\chapter_page_number.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit48>
+      <Unit49>
+        <Filename Value="..\baseunits\includes\EatManga\image_url.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit49>
+      <Unit50>
+        <Filename Value="..\baseunits\includes\EatManga\manga_information.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit50>
+      <Unit51>
+        <Filename Value="..\baseunits\includes\EatManga\names_and_links.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit51>
+      <Unit52>
+        <Filename Value="..\baseunits\includes\EGScans\chapter_page_number.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit52>
+      <Unit53>
+        <Filename Value="..\baseunits\includes\EGScans\image_url.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit53>
+      <Unit54>
+        <Filename Value="..\baseunits\includes\EGScans\manga_information.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit54>
+      <Unit55>
+        <Filename Value="..\baseunits\includes\EGScans\names_and_links.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit55>
+      <Unit56>
+        <Filename Value="..\baseunits\includes\EsMangaHere\chapter_page_number.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit56>
+      <Unit57>
+        <Filename Value="..\baseunits\includes\EsMangaHere\image_url.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit57>
+      <Unit58>
+        <Filename Value="..\baseunits\includes\EsMangaHere\manga_information.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit58>
+      <Unit59>
+        <Filename Value="..\baseunits\includes\Fakku\directory_page_number.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit59>
+      <Unit60>
+        <Filename Value="..\baseunits\includes\Fakku\image_url.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit60>
+      <Unit61>
+        <Filename Value="..\baseunits\includes\Fakku\manga_information.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit61>
+      <Unit62>
+        <Filename Value="..\baseunits\includes\Fakku\names_and_links.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit62>
+      <Unit63>
+        <Filename Value="..\baseunits\includes\Hentai2Read\chapter_page_number.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit63>
+      <Unit64>
+        <Filename Value="..\baseunits\includes\Hentai2Read\directory_page_number.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit64>
+      <Unit65>
+        <Filename Value="..\baseunits\includes\Hentai2Read\image_url.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit65>
+      <Unit66>
+        <Filename Value="..\baseunits\includes\Hentai2Read\manga_information.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit66>
+      <Unit67>
+        <Filename Value="..\baseunits\includes\Hentai2Read\names_and_links.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit67>
+      <Unit68>
+        <Filename Value="..\baseunits\includes\HugeManga\chapter_page_number.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit68>
+      <Unit69>
+        <Filename Value="..\baseunits\includes\HugeManga\image_url.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit69>
+      <Unit70>
+        <Filename Value="..\baseunits\includes\HugeManga\manga_information.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit70>
+      <Unit71>
+        <Filename Value="..\baseunits\includes\HugeManga\names_and_links.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit71>
+      <Unit72>
+        <Filename Value="..\baseunits\includes\KissManga\directory_page_number.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit72>
+      <Unit73>
+        <Filename Value="..\baseunits\includes\KissManga\image_url.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit73>
+      <Unit74>
+        <Filename Value="..\baseunits\includes\KissManga\manga_information.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit74>
+      <Unit75>
+        <Filename Value="..\baseunits\includes\KissManga\names_and_links.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit75>
+      <Unit76>
+        <Filename Value="..\baseunits\includes\Kivmanga\chapter_page_number.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit76>
+      <Unit77>
+        <Filename Value="..\baseunits\includes\Kivmanga\image_url.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit77>
+      <Unit78>
+        <Filename Value="..\baseunits\includes\Kivmanga\names_and_links.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit78>
+      <Unit79>
+        <Filename Value="..\baseunits\includes\Komikid\chapter_page_number.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit79>
+      <Unit80>
+        <Filename Value="..\baseunits\includes\Komikid\image_url.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit80>
+      <Unit81>
+        <Filename Value="..\baseunits\includes\Komikid\manga_information.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit81>
+      <Unit82>
+        <Filename Value="..\baseunits\includes\Komikid\names_and_links.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit82>
+      <Unit83>
+        <Filename Value="..\baseunits\includes\LectureEnLigne\manga_information.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit83>
+      <Unit84>
+        <Filename Value="..\baseunits\includes\LectureEnLigne\names_and_links.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit84>
+      <Unit85>
+        <Filename Value="..\baseunits\includes\Mabuns\image_url.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit85>
+      <Unit86>
+        <Filename Value="..\baseunits\includes\Mabuns\manga_information.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit86>
+      <Unit87>
+        <Filename Value="..\baseunits\includes\Mabuns\names_and_links.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit87>
+      <Unit88>
+        <Filename Value="..\baseunits\includes\Manga24h\directory_page_number.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit88>
+      <Unit89>
+        <Filename Value="..\baseunits\includes\Manga24h\image_url.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit89>
+      <Unit90>
+        <Filename Value="..\baseunits\includes\Manga24h\manga_information.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit90>
+      <Unit91>
+        <Filename Value="..\baseunits\includes\Manga24h\names_and_links.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit91>
+      <Unit92>
+        <Filename Value="..\baseunits\includes\MangaAe\chapter_page_number.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit92>
+      <Unit93>
+        <Filename Value="..\baseunits\includes\MangaAe\directory_page_number.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit93>
+      <Unit94>
+        <Filename Value="..\baseunits\includes\MangaAe\image_url.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit94>
+      <Unit95>
+        <Filename Value="..\baseunits\includes\MangaAe\manga_information.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit95>
+      <Unit96>
+        <Filename Value="..\baseunits\includes\MangaAe\names_and_links.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit96>
+      <Unit97>
+        <Filename Value="..\baseunits\includes\MangaAr\chapter_page_number.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit97>
+      <Unit98>
+        <Filename Value="..\baseunits\includes\MangaAr\image_url.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit98>
+      <Unit99>
+        <Filename Value="..\baseunits\includes\MangaAr\manga_information.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit99>
+      <Unit100>
+        <Filename Value="..\baseunits\includes\MangaAr\names_and_links.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit100>
+      <Unit101>
+        <Filename Value="..\baseunits\includes\Mangacan\image_url.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit101>
+      <Unit102>
+        <Filename Value="..\baseunits\includes\Mangacan\manga_information.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit102>
+      <Unit103>
+        <Filename Value="..\baseunits\includes\Mangacan\names_and_links.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit103>
+      <Unit104>
+        <Filename Value="..\baseunits\includes\Mangacow\chapter_page_number.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit104>
+      <Unit105>
+        <Filename Value="..\baseunits\includes\Mangacow\image_url.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit105>
+      <Unit106>
+        <Filename Value="..\baseunits\includes\Mangacow\manga_information.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit106>
+      <Unit107>
+        <Filename Value="..\baseunits\includes\Mangacow\names_and_links.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit107>
+      <Unit108>
+        <Filename Value="..\baseunits\includes\MangaEden\chapter_page_number.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit108>
+      <Unit109>
+        <Filename Value="..\baseunits\includes\MangaEden\directory_page_number.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit109>
+      <Unit110>
+        <Filename Value="..\baseunits\includes\MangaEden\image_url.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit110>
+      <Unit111>
+        <Filename Value="..\baseunits\includes\MangaEden\manga_information.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit111>
+      <Unit112>
+        <Filename Value="..\baseunits\includes\MangaEden\names_and_links.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit112>
+      <Unit113>
+        <Filename Value="..\baseunits\includes\MangaEsta\image_url.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit113>
+      <Unit114>
+        <Filename Value="..\baseunits\includes\MangaEsta\manga_information.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit114>
+      <Unit115>
+        <Filename Value="..\baseunits\includes\MangaEsta\names_and_links.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit115>
+      <Unit116>
+        <Filename Value="..\baseunits\includes\MangaFox\chapter_page_number.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit116>
+      <Unit117>
+        <Filename Value="..\baseunits\includes\MangaFox\directory_page_number.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit117>
+      <Unit118>
+        <Filename Value="..\baseunits\includes\MangaFox\image_url.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit118>
+      <Unit119>
+        <Filename Value="..\baseunits\includes\MangaFox\manga_information.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit119>
+      <Unit120>
+        <Filename Value="..\baseunits\includes\MangaFox\names_and_links.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit120>
+      <Unit121>
+        <Filename Value="..\baseunits\includes\MangaFrame\chapter_page_number.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit121>
+      <Unit122>
+        <Filename Value="..\baseunits\includes\MangaFrame\image_url.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit122>
+      <Unit123>
+        <Filename Value="..\baseunits\includes\MangaFrame\manga_information.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit123>
+      <Unit124>
+        <Filename Value="..\baseunits\includes\MangaFrame\names_and_links.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit124>
+      <Unit125>
+        <Filename Value="..\baseunits\includes\MangaGo\chapter_page_number.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit125>
+      <Unit126>
+        <Filename Value="..\baseunits\includes\MangaGo\directory_page_number.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit126>
+      <Unit127>
+        <Filename Value="..\baseunits\includes\MangaGo\image_url.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit127>
+      <Unit128>
+        <Filename Value="..\baseunits\includes\MangaGo\manga_information.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit128>
+      <Unit129>
+        <Filename Value="..\baseunits\includes\MangaGo\names_and_links.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit129>
+      <Unit130>
+        <Filename Value="..\baseunits\includes\MangaHere\chapter_page_number.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit130>
+      <Unit131>
+        <Filename Value="..\baseunits\includes\MangaHere\image_url.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit131>
+      <Unit132>
+        <Filename Value="..\baseunits\includes\MangaHere\manga_information.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit132>
+      <Unit133>
+        <Filename Value="..\baseunits\includes\MangaInn\chapter_page_number.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit133>
+      <Unit134>
+        <Filename Value="..\baseunits\includes\MangaInn\image_url.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit134>
+      <Unit135>
+        <Filename Value="..\baseunits\includes\MangaInn\manga_information.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit135>
+      <Unit136>
+        <Filename Value="..\baseunits\includes\MangaInn\names_and_links.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit136>
+      <Unit137>
+        <Filename Value="..\baseunits\includes\MangaPanda\chapter_page_number.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit137>
+      <Unit138>
+        <Filename Value="..\baseunits\includes\MangaPanda\image_url.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit138>
+      <Unit139>
+        <Filename Value="..\baseunits\includes\MangaPanda\manga_information.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit139>
+      <Unit140>
+        <Filename Value="..\baseunits\includes\MangaPanda\names_and_links.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit140>
+      <Unit141>
+        <Filename Value="..\baseunits\includes\MangaPark\chapter_page_number.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit141>
+      <Unit142>
+        <Filename Value="..\baseunits\includes\MangaPark\directory_page_number.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit142>
+      <Unit143>
+        <Filename Value="..\baseunits\includes\MangaPark\image_url.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit143>
+      <Unit144>
+        <Filename Value="..\baseunits\includes\MangaPark\manga_information.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit144>
+      <Unit145>
+        <Filename Value="..\baseunits\includes\MangaPark\names_and_links.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit145>
+      <Unit146>
+        <Filename Value="..\baseunits\includes\MangaReader\chapter_page_number.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit146>
+      <Unit147>
+        <Filename Value="..\baseunits\includes\MangaReader\image_url.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit147>
+      <Unit148>
+        <Filename Value="..\baseunits\includes\MangaReader\manga_information.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit148>
+      <Unit149>
+        <Filename Value="..\baseunits\includes\MangaReader\names_and_links.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit149>
+      <Unit150>
+        <Filename Value="..\baseunits\includes\MangaStream\chapter_page_number.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit150>
+      <Unit151>
+        <Filename Value="..\baseunits\includes\MangaStream\image_url.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit151>
+      <Unit152>
+        <Filename Value="..\baseunits\includes\MangaStream\manga_information.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit152>
+      <Unit153>
+        <Filename Value="..\baseunits\includes\MangaStream\names_and_links.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit153>
+      <Unit154>
+        <Filename Value="..\baseunits\includes\MangaTraders\chapter_page_number.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit154>
+      <Unit155>
+        <Filename Value="..\baseunits\includes\MangaTraders\directory_page_number.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit155>
+      <Unit156>
+        <Filename Value="..\baseunits\includes\MangaTraders\image_url.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit156>
+      <Unit157>
+        <Filename Value="..\baseunits\includes\MangaTraders\manga_information.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit157>
+      <Unit158>
+        <Filename Value="..\baseunits\includes\MangaTraders\names_and_links.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit158>
+      <Unit159>
+        <Filename Value="..\baseunits\includes\MangaVadisi\chapter_page_number.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit159>
+      <Unit160>
+        <Filename Value="..\baseunits\includes\MangaVadisi\image_url.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit160>
+      <Unit161>
+        <Filename Value="..\baseunits\includes\MangaVadisi\manga_information.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit161>
+      <Unit162>
+        <Filename Value="..\baseunits\includes\MangaVadisi\names_and_links.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit162>
+      <Unit163>
+        <Filename Value="..\baseunits\includes\PecintaKomik\chapter_page_number.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit163>
+      <Unit164>
+        <Filename Value="..\baseunits\includes\PecintaKomik\image_url.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit164>
+      <Unit165>
+        <Filename Value="..\baseunits\includes\PecintaKomik\manga_information.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit165>
+      <Unit166>
+        <Filename Value="..\baseunits\includes\PecintaKomik\names_and_links.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit166>
+      <Unit167>
+        <Filename Value="..\baseunits\includes\Pururin\chapter_page_number.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit167>
+      <Unit168>
+        <Filename Value="..\baseunits\includes\Pururin\directory_page_number.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit168>
+      <Unit169>
+        <Filename Value="..\baseunits\includes\Pururin\image_url.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit169>
+      <Unit170>
+        <Filename Value="..\baseunits\includes\Pururin\manga_information.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit170>
+      <Unit171>
+        <Filename Value="..\baseunits\includes\Pururin\names_and_links.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit171>
+      <Unit172>
+        <Filename Value="..\baseunits\includes\RedHawkScans\chapter_page_number.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit172>
+      <Unit173>
+        <Filename Value="..\baseunits\includes\RedHawkScans\directory_page_number.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit173>
+      <Unit174>
+        <Filename Value="..\baseunits\includes\RedHawkScans\image_url.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit174>
+      <Unit175>
+        <Filename Value="..\baseunits\includes\RedHawkScans\manga_information.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit175>
+      <Unit176>
+        <Filename Value="..\baseunits\includes\RedHawkScans\names_and_links.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit176>
+      <Unit177>
+        <Filename Value="..\baseunits\includes\S2scans\chapter_page_number.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit177>
+      <Unit178>
+        <Filename Value="..\baseunits\includes\S2scans\directory_page_number.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit178>
+      <Unit179>
+        <Filename Value="..\baseunits\includes\S2scans\image_url.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit179>
+      <Unit180>
+        <Filename Value="..\baseunits\includes\S2scans\manga_information.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit180>
+      <Unit181>
+        <Filename Value="..\baseunits\includes\S2scans\names_and_links.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit181>
+      <Unit182>
+        <Filename Value="..\baseunits\includes\ScanManga\image_url.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit182>
+      <Unit183>
+        <Filename Value="..\baseunits\includes\ScanManga\manga_information.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit183>
+      <Unit184>
+        <Filename Value="..\baseunits\includes\ScanManga\names_and_links.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit184>
+      <Unit185>
+        <Filename Value="..\baseunits\includes\SenManga\chapter_page_number.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit185>
+      <Unit186>
+        <Filename Value="..\baseunits\includes\SenManga\image_url.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit186>
+      <Unit187>
+        <Filename Value="..\baseunits\includes\SenManga\manga_information.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit187>
+      <Unit188>
+        <Filename Value="..\baseunits\includes\SenManga\names_and_links.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit188>
+      <Unit189>
+        <Filename Value="..\baseunits\includes\Starkana\chapter_page_number.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit189>
+      <Unit190>
+        <Filename Value="..\baseunits\includes\Starkana\image_url.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit190>
+      <Unit191>
+        <Filename Value="..\baseunits\includes\Starkana\manga_information.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit191>
+      <Unit192>
+        <Filename Value="..\baseunits\includes\Starkana\names_and_links.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit192>
+      <Unit193>
+        <Filename Value="..\baseunits\includes\SubManga\chapter_page_number.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit193>
+      <Unit194>
+        <Filename Value="..\baseunits\includes\SubManga\image_url.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit194>
+      <Unit195>
+        <Filename Value="..\baseunits\includes\SubManga\manga_information.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit195>
+      <Unit196>
+        <Filename Value="..\baseunits\includes\SubManga\names_and_links.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit196>
+      <Unit197>
+        <Filename Value="..\baseunits\includes\TruyenTranhTuan\image_url.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit197>
+      <Unit198>
+        <Filename Value="..\baseunits\includes\TruyenTranhTuan\manga_information.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit198>
+      <Unit199>
+        <Filename Value="..\baseunits\includes\TruyenTranhTuan\names_and_links.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit199>
+      <Unit200>
+        <Filename Value="..\baseunits\includes\Turkcraft\chapter_page_number.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit200>
+      <Unit201>
+        <Filename Value="..\baseunits\includes\Turkcraft\image_url.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit201>
+      <Unit202>
+        <Filename Value="..\baseunits\includes\Turkcraft\manga_information.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit202>
+      <Unit203>
+        <Filename Value="..\baseunits\includes\Turkcraft\names_and_links.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit203>
+      <Unit204>
+        <Filename Value="..\baseunits\includes\VnSharing\directory_page_number.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit204>
+      <Unit205>
+        <Filename Value="..\baseunits\includes\VnSharing\image_url.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit205>
+      <Unit206>
+        <Filename Value="..\baseunits\includes\VnSharing\manga_information.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit206>
+      <Unit207>
+        <Filename Value="..\baseunits\includes\VnSharing\names_and_links.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit207>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
@@ -175,7 +931,7 @@
       <Filename Value="..\..\trunk\bin\fmd"/>
     </Target>
     <SearchPaths>
-      <IncludeFiles Value="$(ProjOutDir);..\..\trunk\3rd\Imaging\Source;..\..\trunk\3rd\Imaging\Source\ZLib;..\..\trunk\3rd\Imaging\Source\JpegLib"/>
+      <IncludeFiles Value="$(ProjOutDir);..\..\trunk\3rd\Imaging\Source;..\..\trunk\3rd\Imaging\Source\ZLib;..\..\trunk\3rd\Imaging\Source\JpegLib;..\baseunits\includes\Batoto;..\baseunits\includes\AnimeA;..\baseunits\includes\MangaHere;..\baseunits\includes\AnimeStory;..\baseunits\includes\AnimExtremist;..\baseunits\includes\BlogTruyen;..\baseunits\includes\CentralDeMangas;..\baseunits\includes\EatManga;..\baseunits\includes\EGScans;..\baseunits\includes\EsMangaHere;..\baseunits\includes\Fakku;..\baseunits\includes\Hentai2Read;..\baseunits\includes\HugeManga;..\baseunits\includes\KissManga;..\baseunits\includes\Kivmanga;..\baseunits\includes\Komikid;..\baseunits\includes\LectureEnLigne;..\baseunits\includes\Mabuns;..\baseunits\includes\Manga24h;..\baseunits\includes\MangaAe;..\baseunits\includes\MangaAr;..\baseunits\includes\Mangacan;..\baseunits\includes\Mangacow;..\baseunits\includes\MangaEden;..\baseunits\includes\MangaEsta;..\baseunits\includes\MangaFox;..\baseunits\includes\MangaFrame;..\baseunits\includes\MangaGo;..\baseunits\includes\MangaInn;..\baseunits\includes\MangaPanda;..\baseunits\includes\MangaPark;..\baseunits\includes\MangaReader;..\baseunits\includes\MangaStream;..\baseunits\includes\MangaTraders;..\baseunits\includes\MangaVadisi;..\baseunits\includes\PecintaKomik;..\baseunits\includes\Pururin;..\baseunits\includes\RedHawkScans;..\baseunits\includes\S2scans;..\baseunits\includes\ScanManga;..\baseunits\includes\SenManga;..\baseunits\includes\Starkana;..\baseunits\includes\SubManga;..\baseunits\includes\TruyenTranhTuan;..\baseunits\includes\Turkcraft;..\baseunits\includes\VnSharing"/>
       <Libraries Value="..\..\trunk\3rd\Imaging\Extras\Extensions\J2KObjects;..\..\trunk\baseunits\zlibex\win32-zlib"/>
       <OtherUnitFiles Value="..\..\trunk\3rd\synapse\source;..\..\trunk\baseunits;..\..\trunk\baseunits\animatedgifs;..\..\trunk\baseunits\fasthtmlparser;..\..\trunk\3rd\Imaging\Source;..\..\trunk\3rd\Imaging\Source\ZLib;..\..\trunk\3rd\Imaging\Source\JpegLib;..\..\trunk\3rd\Imaging\Extras\Extensions;..\..\trunk\baseunits\zlibex;forms"/>
       <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
