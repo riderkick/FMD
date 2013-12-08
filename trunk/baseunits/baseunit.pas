@@ -12,8 +12,8 @@ unit baseunit;
 interface
 
 uses
-  SysUtils, Classes, HTTPSend, graphics, genericlib, IniFiles, strutils,
-  zstream;
+  SysUtils, Classes, HTTPSend, graphics, IniFiles, strutils,
+  zstream, fgl;
 
 const
   MUTEX              = '_FMD_MUTEX_';
@@ -539,8 +539,8 @@ type
     Link     : String;
   end;
 
-  TCardinalList = TGenericList<Cardinal>;
-  TByteList   = TGenericList<Byte>;
+  TCardinalList = TFPGList<Cardinal>;
+  TByteList   = TFPGList<Byte>;
 
   TDownloadPageThread = class(TThread)
   protected
