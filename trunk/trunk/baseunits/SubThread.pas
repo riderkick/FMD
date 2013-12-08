@@ -20,19 +20,19 @@ type
   protected
     FIsLoaded: Integer;
     FURL     : String;
+
     procedure   Execute; override;
     procedure   DoGetInfos;
-    // for Batoto only - since it uses IE, this must be called in main thread (deprecated)
-    procedure   CallMainFormGetBatotoInfo;
-    procedure   CallMainFormCannotGetInfo;
-    procedure   CallMainFormShowLog;
-    procedure   CallMainFormGetInfos;
-    procedure   CallMainFormUpdate;
-    procedure   CallMainFormUpdateRequire;
-    procedure   CallMainFormImportant;
-    procedure   CallMainFormLatestVer;
-    procedure   CallMainFormSetButton;
-    procedure   CallMainFormPopSilentThreadQueue;
+
+    procedure   MainThreadCannotGetInfo;
+    procedure   MainThreadShowLog;
+    procedure   MainThreadGetInfos;
+    procedure   MainThreadUpdate;
+    procedure   MainThreadUpdateRequire;
+    procedure   MainThreadImportant;
+    procedure   MainThreadLatestVer;
+    procedure   MainThreadSetButton;
+    procedure   MainThreadPopSilentThreadQueue;
   public
     updateCounter: Cardinal;
     isCheckForLatestVer: Boolean;
@@ -40,7 +40,6 @@ type
     cover       : TPicture;
     isHasCover,
     isCanStop   : Boolean;
-    OnShowInformation: procedure of object;
 
     fNote, fNoteForThisRevision,
     fImportant,
@@ -49,6 +48,7 @@ type
     isGetInfos   : Boolean;
     Info         : TMangaInformation;
     boolResult   : Boolean;
+    OnShowInformation: procedure of object;
 
     constructor Create;
     destructor  Destroy; override;
@@ -87,11 +87,6 @@ begin
   Cover.Free;
   isTerminated:= TRUE;
   inherited Destroy;
-end;
-
-procedure   TSubThread.CallMainFormGetBatotoInfo;
-begin
-  FIsLoaded:= Info.GetInfoFromURL(website, FURL, 0);
 end;
 
 procedure   TSubThread.DoGetInfos;
@@ -155,7 +150,7 @@ begin
 
   if NOT GetMangaInfo(link, website) then
   begin
-    Synchronize(CallMainFormCannotGetInfo);
+    Synchronize(MainThreadCannotGetInfo);
     exit;
   end;
 
@@ -164,11 +159,11 @@ begin
     boolResult:= GetPage(TObject(cover), Info.mangaInfo.coverLink, 1, TRUE)
   else
     boolResult:= FALSE;
-  Synchronize(CallMainFormGetInfos);
+  Synchronize(MainThreadGetInfos);
   isGetInfos:= FALSE;
 end;
 
-procedure   TSubThread.CallMainFormCannotGetInfo;
+procedure   TSubThread.MainThreadCannotGetInfo;
 begin
   MessageDlg('', stDlgCannotGetMangaInfo,
                mtInformation, [mbYes], 0);
@@ -178,14 +173,14 @@ begin
   isGetInfos:= FALSE;
 end;
 
-procedure   TSubThread.CallMainFormShowLog;
+procedure   TSubThread.MainThreadShowLog;
 begin
   Log:= TLog.Create(MainForm);
   Log.ShowModal;
   Log.Free;
 end;
 
-procedure   TSubThread.CallMainFormGetInfos;
+procedure   TSubThread.MainThreadGetInfos;
 begin
   TransferMangaInfo(MainForm.mangaInfo, Info.mangaInfo);
   MainForm.ShowInformation;
@@ -200,7 +195,7 @@ begin
   Info.Free;
 end;
 
-procedure   TSubThread.CallMainFormUpdate;
+procedure   TSubThread.MainThreadUpdate;
 var
   Process: TProcess;
 begin
@@ -221,7 +216,7 @@ begin
     MainForm.btCheckVersion.Caption:= stUpdaterCheck;
 end;
 
-procedure   TSubThread.CallMainFormUpdateRequire;
+procedure   TSubThread.MainThreadUpdateRequire;
 begin
   if MessageDlg('', Format(stDlgUpdaterVersionRequire, [LRequireRevision]), mtInformation, [mbYes, mbNo], 0)=mrYes then
   begin
@@ -229,7 +224,7 @@ begin
   end;
 end;
 
-procedure   TSubThread.CallMainFormImportant;
+procedure   TSubThread.MainThreadImportant;
 var
   Process: TProcess;
 begin
@@ -238,23 +233,23 @@ begin
  // Halt;
 end;
 
-procedure   TSubThread.CallMainFormLatestVer;
+procedure   TSubThread.MainThreadLatestVer;
 begin
   MessageDlg('', stDlgLatestVersion, mtInformation, [mbYes], 0);
 end;
 
-procedure   TSubThread.CallMainFormSetButton;
+procedure   TSubThread.MainThreadSetButton;
 begin
   MainForm.btCheckVersion.Caption:= stUpdaterCheck;
 end;
 
-procedure   TSubThread.CallMainFormPopSilentThreadQueue;
+procedure   TSubThread.MainThreadPopSilentThreadQueue;
 var
-  meta: TSilentThreadMeta;
+  meta: TSilentThreadMetaData;
 begin
   if SilentThread.SilentThreadQueue.Count = 0 then
     exit;
-  meta:= TSilentThreadMeta(SilentThread.SilentThreadQueue.Pop);
+  meta:= TSilentThreadMetaData(SilentThread.SilentThreadQueue.Pop);
   if meta <> nil then
   begin
     meta.Run;
@@ -272,7 +267,7 @@ begin
   while isSuspended do Sleep(32);
   Sleep(2000);
   if FileExists(WORK_FOLDER + LOG_FILE) then
-    Synchronize(CallMainFormShowLog);
+    Synchronize(MainThreadShowLog);
   if FileExists(oldDir + 'old_updater.exe') then
     DeleteFile(oldDir + 'old_updater.exe');
   Sleep(2000);
@@ -287,7 +282,7 @@ begin
     if ((MainForm.silentThreadCount > 0)) AND
        (MainForm.currentActiveSilentThreadCount < 2) then
     begin
-      Synchronize(CallMainFormPopSilentThreadQueue);
+      Synchronize(MainThreadPopSilentThreadQueue);
     end;
 
     if isCheckForLatestVer then
@@ -321,24 +316,24 @@ begin
           if l.Names[i] = 'Important' then
           begin
             fImportant:= l.ValueFromIndex[i];
-            Synchronize(CallMainFormImportant);
+            Synchronize(MainThreadImportant);
           end;
         end;
 
         if LRequireRevision > Revision then
-          Synchronize(CallMainFormUpdateRequire)
+          Synchronize(MainThreadUpdateRequire)
         else
         if LRevision > Revision then
         begin
-          Synchronize(CallMainFormUpdate);
+          Synchronize(MainThreadUpdate);
         end
         else
         begin
           if updateCounter > 0 then
           begin
-            Synchronize(CallMainFormLatestVer);
+            Synchronize(MainThreadLatestVer);
           end;
-          Synchronize(CallMainFormSetButton);
+          Synchronize(MainThreadSetButton);
         end;
       end;
       Inc(updateCounter);

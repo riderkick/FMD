@@ -2,6 +2,10 @@
         File: SilentThread.pas
         License: GPLv2
         This unit is a part of Free Manga Downloader
+        ---------------------------------------------
+        As the name "silent" suggests, the jobs of theses classes is to get
+        manga information from the site and add them to download list or
+        favorites
 }
 
 unit SilentThread;
@@ -15,9 +19,11 @@ uses
   Graphics, Process, lclintf, contnrs, FMDThread;
 
 type
-  // metadata
-  TSilentThreadMeta = class
+  // metadata - Store manga information in the queue, so that it will be
+  // processed by silent thread later
+  TSilentThreadMetaData = class
   protected
+    // to determine the job (add to download list or favorites)
     FType: Integer;
     FWebsite,
     FManga,
@@ -31,17 +37,18 @@ type
   TSilentThread = class(TFMDThread)
   protected
     FSavePath: String;
-
-    procedure   CallMainFormAfterChecking; virtual;
-    procedure   CallMainFormIncreaseThreadCount; virtual;
-    procedure   CallMainFormDecreaseThreadCount; virtual;
-    procedure   Execute; override;
-  public
-    Info        : TMangaInformation;
+    Info     : TMangaInformation;
 
     // manga information from main thread
     title,
     website, URL: String;
+
+    procedure   MainThreadAfterChecking; virtual;
+    procedure   MainThreadIncreaseThreadCount; virtual;
+    procedure   MainThreadDecreaseThreadCount; virtual;
+    procedure   Execute; override;
+  public
+
 
     constructor Create;
     destructor  Destroy; override;
@@ -57,8 +64,8 @@ type
   // for "Add to Favorites" feature
   TSilentAddToFavThread = class(TSilentThread)
   protected
-    procedure   CallMainFormAfterChecking; override;
-    procedure   CallMainFormDecreaseThreadCount; override;
+    procedure   MainThreadAfterChecking; override;
+    procedure   MainThreadDecreaseThreadCount; override;
   public
   end;
 
@@ -73,9 +80,9 @@ implementation
 uses
   mainunit;
 
-// ----- TSilentThreadMeta -----
+// ----- TSilentThreadMetaData -----
 
-constructor TSilentThreadMeta.Create(const AType: Integer; const AWebsite, AManga, AURL, APath: String);
+constructor TSilentThreadMetaData.Create(const AType: Integer; const AWebsite, AManga, AURL, APath: String);
 begin
   inherited Create;
   FType   := AType;
@@ -85,7 +92,7 @@ begin
   FPath   := APath;
 end;
 
-procedure   TSilentThreadMeta.Run;
+procedure   TSilentThreadMetaData.Run;
 var
   silentThread: TSilentThread;
 begin
@@ -105,7 +112,7 @@ end;
 
 // ----- TSilentThread -----
 
-procedure   TSilentThread.CallMainFormAfterChecking;
+procedure   TSilentThread.MainThreadAfterChecking;
 var
   hh, mm, ss, ms,
   day, month, year: Word;
@@ -178,14 +185,14 @@ begin
   end;
 end;
 
-procedure   TSilentThread.CallMainFormIncreaseThreadCount;
+procedure   TSilentThread.MainThreadIncreaseThreadCount;
 begin
   Inc(MainForm.currentActiveSilentThreadCount);
 end;
 
-procedure   TSilentThread.CallMainFormDecreaseThreadCount;
+procedure   TSilentThread.MainThreadDecreaseThreadCount;
 var
-  meta: TSilentThreadMeta;
+  meta: TSilentThreadMetaData;
 begin
   with MainForm do
   begin
@@ -200,7 +207,7 @@ begin
   // TODO
   if SilentThreadQueue.Count > 0 then
   begin
-    meta:= TSilentThreadMeta(SilentThreadQueue.Pop);
+    meta:= TSilentThreadMetaData(SilentThreadQueue.Pop);
     if meta <> nil then
     begin
       meta.Run;
@@ -218,7 +225,7 @@ begin
 
   while MainForm.currentActiveSilentThreadCount > 2 do
     Sleep(250);
-  Synchronize(CallMainFormIncreaseThreadCount);
+  Synchronize(MainThreadIncreaseThreadCount);
 
   // some of the code was taken from subthreads's GetMangaInfo
   // since it's multi-thread, we cannot call IE for fetching info from Batoto
@@ -234,8 +241,8 @@ begin
     Info.Free;
     exit;
   end;
-  Synchronize(CallMainFormAfterChecking);
-  Synchronize(CallMainFormDecreaseThreadCount);
+  Synchronize(MainThreadAfterChecking);
+  Synchronize(MainThreadDecreaseThreadCount);
 end;
 
 constructor TSilentThread.Create;
@@ -258,7 +265,7 @@ end;
 
 // ----- TSilentAddToFavThread -----
 
-procedure   TSilentAddToFavThread.CallMainFormAfterChecking;
+procedure   TSilentAddToFavThread.MainThreadAfterChecking;
 var
   s, s2: String;
   i    : Cardinal;
@@ -301,7 +308,7 @@ begin
   end;
 end;
 
-procedure   TSilentAddToFavThread.CallMainFormDecreaseThreadCount;
+procedure   TSilentAddToFavThread.MainThreadDecreaseThreadCount;
 begin
   inherited;
   Dec(MainForm.silentAddToFavThreadCount);
@@ -309,18 +316,18 @@ end;
 
 procedure   CreateDownloadAllThread(const AWebsite, AManga, AURL: String; ASavePath: String = '');
 var
-  meta: TSilentThreadMeta;
+  meta: TSilentThreadMetaData;
 begin
-  meta:= TSilentThreadMeta.Create(0, AWebsite, AManga, AURL, ASavePath);
+  meta:= TSilentThreadMetaData.Create(0, AWebsite, AManga, AURL, ASavePath);
   SilentThreadQueue.Push(meta);
   Inc(MainForm.silentThreadCount);
 end;
 
 procedure   CreateAddToFavThread(const AWebsite, AManga, AURL: String; ASavePath: String = '');
 var
-  meta: TSilentThreadMeta;
+  meta: TSilentThreadMetaData;
 begin
-  meta:= TSilentThreadMeta.Create(1, AWebsite, AManga, AURL, ASavePath);
+  meta:= TSilentThreadMetaData.Create(1, AWebsite, AManga, AURL, ASavePath);
   SilentThreadQueue.Push(meta);
   Inc(MainForm.silentThreadCount);
   Inc(MainForm.silentAddToFavThreadCount);
