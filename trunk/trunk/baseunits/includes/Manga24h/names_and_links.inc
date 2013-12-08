@@ -2,7 +2,6 @@ function   Manga24hGetNamesAndLinks: Byte;
   var
     i: Cardinal;
     s: String;
-    myParser: THTMLParser;
   begin
     Result:= INFORMATION_NOT_FOUND;
     if NOT GetPage(TObject(source), WebsiteRoots[MANGA24H_ID,1] + MANGA24H_BROWSER + IntToStr(StrToInt(URL)+1), 0) then
@@ -12,11 +11,11 @@ function   Manga24hGetNamesAndLinks: Byte;
       exit;
     end;
     parse.Clear;
-    myParser:= THTMLParser.Create(PChar(source.Text));
-    myParser.OnFoundTag := OnTag;
-    myParser.OnFoundText:= OnText;
-    myParser.Exec;
-    myParser.Free;
+    Parser:= TjsFastHTMLParser.Create(PChar(source.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.SlowExec;
+    Parser.Free;
     if parse.Count=0 then
     begin
       source.Free;

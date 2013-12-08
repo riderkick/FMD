@@ -114,7 +114,7 @@ var
 implementation
 
 uses
-  synautil, HTMLParser,
+  synautil,
   FastHTMLParser, LConvEncoding,
   HTMLUtil,
   HTTPSend, SynaCode;

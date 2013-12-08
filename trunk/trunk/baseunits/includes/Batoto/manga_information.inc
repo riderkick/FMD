@@ -5,7 +5,6 @@ var
   s: String;
   isExtractGenres : Boolean = FALSE;
   i, j: Cardinal;
-  myParser: THTMLParser;
 
 begin
   patchURL:= URL;

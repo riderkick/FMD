@@ -1,6 +1,5 @@
 function   GetBatotoDirectoryPageNumber: Byte;
   var
-    myParser: THTMLParser;
     isFoundPage: Boolean = FALSE;
     i: Cardinal;
     s: String;
@@ -13,11 +12,11 @@ function   GetBatotoDirectoryPageNumber: Byte;
       exit;
     end;
     parse.Clear;
-    myParser:= THTMLParser.Create(PChar(source.Text));
-    myParser.OnFoundTag := OnTag;
-    myParser.OnFoundText:= OnText;
-    myParser.Exec;
-    myParser.Free;
+    Parser:= TjsFastHTMLParser.Create(PChar(source.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText:= OnText;
+    Parser.SlowExec;
+    Parser.Free;
     if parse.Count=0 then
     begin
       source.Free;
