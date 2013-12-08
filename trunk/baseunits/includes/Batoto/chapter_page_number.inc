@@ -1,5 +1,6 @@
 function GetBatotoPageNumber: Boolean;
   var
+    isGoOn: Boolean = FALSE;
     s   : String;
     i, j: Cardinal;
     l   : TStringList;
@@ -18,6 +19,25 @@ function GetBatotoPageNumber: Boolean;
     Parser.OnFoundText:= OnText;
     Parser.SlowExec;
     Parser.Free;
+
+    if parse.Count > 0 then
+    begin
+      for i:= 0 to parse.Count-1 do
+      begin
+        if (Pos('page_select', parse.Strings[i])<>0) then
+        begin
+          isGoOn:= TRUE;
+          break;
+        end;
+      end;
+    end;
+    if NOT isGoOn then
+    begin
+      manager.container.pageNumber:= 1;
+      parse.Free;
+      l.Free;
+      exit;
+    end;
 
     // parse.Add(WebsiteRoots[BATOTO_ID,1] + URL + '/1');
     if parse.Count>0 then
