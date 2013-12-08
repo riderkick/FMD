@@ -15,7 +15,11 @@ uses
   Graphics, Process, lclintf, FMDThread;
 
 type
-  // some tasks will be done by SubThread
+  { Tasks will be done by this thread:
+    - Get manga information, and show it to main form
+    - Auto check for new version
+    - [SilentThread] Pop metadata from queue and execute it
+  }
   TSubThread = class(TFMDThread)
   protected
     FIsLoaded: Integer;

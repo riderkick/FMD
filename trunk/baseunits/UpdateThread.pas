@@ -43,7 +43,7 @@ type
     procedure   ConsoleReport;
     procedure   SaveCurrentDatabase;
     {$ENDIF}
-    procedure   CallMainFormShowGetting;
+    procedure   MainThreadShowGetting;
     procedure   RefreshList;
     procedure   DlgReport;
     procedure   getInfo(const limit, cs: Cardinal);
@@ -221,7 +221,7 @@ end;
 
 // ----- TUpdateMangaManagerThread -----
 
-procedure   TUpdateMangaManagerThread.CallMainFormShowGetting;
+procedure   TUpdateMangaManagerThread.MainThreadShowGetting;
 begin
   {$IFDEF DOWNLOADER}
   MainForm.sbMain.Panels[0].Text:= 'Getting list for ' + website + ' ...';
@@ -360,7 +360,7 @@ begin
       for i:= 0 to websites.Count-1 do
       begin
         website:= websites.Strings[i];
-        Synchronize(CallMainFormShowGetting);
+        Synchronize(MainThreadShowGetting);
         Process:= TProcess.Create(nil);
         Process.CommandLine:= 'updater 1 '+GetMangaDatabaseURL(website);
         Process.Options:= Process.Options + [poWaitOnExit];
@@ -388,7 +388,7 @@ begin
       {$IFDEF DOWNLOADER}
       while NOT FileExists(DATA_FOLDER+website+DATA_EXT) do
       begin
-        Synchronize(CallMainFormShowGetting);
+        Synchronize(MainThreadShowGetting);
         Process:= TProcess.Create(nil);
         Process.CommandLine:= 'updater 1 '+GetMangaDatabaseURL(website);
         Process.Options:= Process.Options + [poWaitOnExit];
