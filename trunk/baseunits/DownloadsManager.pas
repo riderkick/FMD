@@ -187,7 +187,7 @@ type
 implementation
 
 uses
-  lazutf8classes, mainunit, HTMLParser, FastHTMLParser, HTMLUtil, LConvEncoding,
+  lazutf8classes, mainunit, FastHTMLParser, HTMLUtil, LConvEncoding,
   SynaCode, FileUtil, HTTPSend, VirtualTrees;
 
 // ----- TDownloadThread -----
@@ -258,7 +258,6 @@ end;
 
 function    TDownloadThread.GetPageNumberFromURL(const URL: String): Boolean;
 var
-  myParser: THTMLParser;
   Parser  : TjsFastHTMLParser;
 
   // Get chapter's number of pages
@@ -499,7 +498,6 @@ end;
 
 function    TDownloadThread.GetLinkPageFromURL(const URL: String): Boolean;
 var
-  myParser: THTMLParser;
   Parser  : TjsFastHTMLParser;
 
   {$I includes/AnimeA/image_url.inc}
