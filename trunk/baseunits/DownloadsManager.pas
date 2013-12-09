@@ -11,7 +11,7 @@ unit DownloadsManager;
 interface
 
 uses
-  Classes, SysUtils, IniFiles, baseunit, data, fgl, zip, ExtCtrls, Graphics,
+  Classes, SysUtils, IniFiles, baseunit, data, fgl, Packer, ExtCtrls, Graphics,
   FMDThread, dateutils;
 
 type
@@ -1002,23 +1002,23 @@ end;
 
 procedure   TTaskThread.Compress;
 var
-  Compresser: TCompress;
+  packer: TPacker;
 begin
   if (container.manager.compress >= 1) then
   begin
     Sleep(100);
     Synchronize(CallMainformCompressRepaint);
-    Compresser:= TCompress.Create;
+    packer:= TPacker.Create;
     case container.manager.compress of
-      1: Compresser.ext:= '.zip';
-      2: Compresser.ext:= '.cbz';
-      3: Compresser.ext:= '.pdf';
+      1: packer.ext:= '.zip';
+      2: packer.ext:= '.cbz';
+      3: packer.ext:= '.pdf';
     end;
-    Compresser.CompressionQuality:= OptionPDFQuality;
-    Compresser.Path:= container.downloadInfo.SaveTo+'/'+
-                      container.chapterName.Strings[container.currentDownloadChapterPtr];
-    Compresser.Execute;
-    Compresser.Free;
+    packer.CompressionQuality:= OptionPDFQuality;
+    packer.Path:= container.downloadInfo.SaveTo+'/'+
+                  container.chapterName.Strings[container.currentDownloadChapterPtr];
+    packer.Execute;
+    packer.Free;
   end;
 end;
 
