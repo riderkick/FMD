@@ -1,0 +1,361 @@
+{
+        File: SubThread.pas
+        License: GPLv2
+        This unit is a part of Free Manga Downloader
+}
+
+unit uSubThread;
+
+{$mode delphi}
+
+interface
+
+uses
+  Classes, SysUtils, Dialogs, Controls, IniFiles, fgl, Graphics, Process, lclintf,
+  uBaseUnit, uData, uDownloadsManager, uFMDThread;
+
+type
+  { Tasks will be done by this thread:
+    - Get manga information, and show it to main form
+    - Auto check for new version
+    - [SilentThread] Pop metadata from queue and execute it
+  }
+  TSubThread = class(TFMDThread)
+  protected
+    FIsLoaded: Integer;
+    FURL     : String;
+
+    procedure   Execute; override;
+    procedure   DoGetInfos;
+
+    procedure   MainThreadCannotGetInfo;
+    procedure   MainThreadShowLog;
+    procedure   MainThreadGetInfos;
+    procedure   MainThreadUpdate;
+    procedure   MainThreadUpdateRequire;
+    procedure   MainThreadImportant;
+    procedure   MainThreadLatestVer;
+    procedure   MainThreadSetButton;
+    procedure   MainThreadPopSilentThreadQueue;
+  public
+    updateCounter: Cardinal;
+    isCheckForLatestVer: Boolean;
+    mangaListPos: Integer;
+    cover       : TPicture;
+    isHasCover,
+    isCanStop   : Boolean;
+
+    fNote, fNoteForThisRevision,
+    fImportant,
+    title,
+    website, link: String;
+    isGetInfos   : Boolean;
+    Info         : TMangaInformation;
+    boolResult   : Boolean;
+    OnShowInformation: procedure of object;
+
+    constructor Create;
+    destructor  Destroy; override;
+  end;
+
+implementation
+
+uses
+  frmMain, frmLog, FileUtil, uSilentThread;
+
+var
+  LRequireRevision: Cardinal = 1;
+  LRevision: Cardinal;
+  LVersion : String;
+
+// ----- TSubThread -----
+
+constructor TSubThread.Create;
+begin
+  fImportant     := '';
+  updateCounter  := 1;
+  isCheckForLatestVer:= FALSE;
+  isCanStop      := FALSE;
+  isSuspended    := TRUE;
+  isTerminated   := FALSE;
+  FreeOnTerminate:= TRUE;
+  isGetInfos     := FALSE;
+  Cover          := TPicture.Create;
+
+ // ;
+  inherited Create(FALSE);
+end;
+
+destructor  TSubThread.Destroy;
+begin
+  Cover.Free;
+  isTerminated:= TRUE;
+  inherited Destroy;
+end;
+
+procedure   TSubThread.DoGetInfos;
+{var
+  root: String;}
+
+  function  GetMangaInfo(const URL, website: String): Boolean;
+  var
+    selectedWebsite: String;
+    filterPos      : Cardinal;
+    times          : Cardinal;
+  begin
+    Result:= FALSE;
+
+    if mangaListPos > -1 then
+    begin
+      filterPos:= MainForm.dataProcess.GetPos(mangaListPos);
+      Info.mangaInfo.title:= MainForm.dataProcess.Title.Strings[filterPos];
+    end;
+
+    Info.isGenerateFolderChapterName:= MainForm.cbOptionGenerateChapterName.Checked;
+    Info.isRemoveUnicode:= MainForm.cbOptionPathConvert.Checked;
+
+    if website = BATOTO_NAME then
+      times:= 0
+    else
+    if website = GEHENTAI_NAME then
+      times:= 4
+    else
+      times:= 3;
+
+    if Info.GetInfoFromURL(website, URL, times)<>NO_ERROR then
+    begin
+      Info.Free;
+      exit;
+    end;
+
+    // fixed
+    if mangaListPos > -1 then
+    begin
+      if website = MainForm.cbSelectManga.Items[MainForm.cbSelectManga.ItemIndex] then
+      begin
+        if sitesWithoutInformation(website) then
+        begin
+          Info.mangaInfo.authors:= MainForm.DataProcess.Param[filterPos, DATA_PARAM_AUTHORS];
+          Info.mangaInfo.artists:= MainForm.DataProcess.Param[filterPos, DATA_PARAM_ARTISTS];
+          Info.mangaInfo.genres := MainForm.DataProcess.Param[filterPos, DATA_PARAM_GENRES];
+          Info.mangaInfo.summary:= MainForm.DataProcess.Param[filterPos, DATA_PARAM_SUMMARY];
+        end;
+        Info.SyncInfoToData(MainForm.DataProcess, filterPos);
+      end;
+    end;
+    Result:= TRUE;
+  end;
+
+begin
+  if MainForm.cbSelectManga.ItemIndex < 0 then exit;
+ // if NOT MainForm.vtMangaList.Focused then exit;
+
+  // ---------------------------------------------------
+
+  if NOT GetMangaInfo(link, website) then
+  begin
+    Synchronize(MainThreadCannotGetInfo);
+    exit;
+  end;
+
+  cover.Clear;
+  if (OptionEnableLoadCover) AND (Pos('http://', Info.mangaInfo.coverLink) > 0) then
+    boolResult:= GetPage(TObject(cover), Info.mangaInfo.coverLink, 1, TRUE)
+  else
+    boolResult:= FALSE;
+  Synchronize(MainThreadGetInfos);
+  isGetInfos:= FALSE;
+end;
+
+procedure   TSubThread.MainThreadCannotGetInfo;
+begin
+  MessageDlg('', stDlgCannotGetMangaInfo,
+               mtInformation, [mbYes], 0);
+  MainForm.rmInformation.Clear;
+  MainForm.itAnimate.Enabled:= FALSE;
+  MainForm.pbWait.Visible:= FALSE;
+  isGetInfos:= FALSE;
+end;
+
+procedure   TSubThread.MainThreadShowLog;
+begin
+  Log:= TfrmLog.Create(MainForm);
+  Log.ShowModal;
+  Log.Free;
+end;
+
+procedure   TSubThread.MainThreadGetInfos;
+begin
+  TransferMangaInfo(MainForm.mangaInfo, Info.mangaInfo);
+  MainForm.ShowInformation;
+  if boolResult then
+  begin
+    try
+      MainForm.imCover.Picture.Assign(cover);
+    except
+      cover.Clear;
+    end;
+  end;
+  Info.Free;
+end;
+
+procedure   TSubThread.MainThreadUpdate;
+var
+  Process: TProcess;
+begin
+  if MessageDlg('', Format(stDlgNewVersion + #10#13#10#13 + fNote, [LVersion, LRevision]),
+                    mtInformation, [mbYes, mbNo], 0) = mrYes then
+  begin
+    CopyFile(fmdDirectory + 'updater.exe', fmdDirectory + 'old_updater.exe');
+    CopyFile(fmdDirectory + CONFIG_FOLDER + CONFIG_FILE,
+             fmdDirectory + CONFIG_FOLDER + CONFIG_FILE + '.tmp');
+    Process:= TProcess.Create(nil);
+    Process.CommandLine:= fmdDirectory + 'old_updater.exe 1';
+    MainForm.CloseNow;
+    Process.Execute;
+    Process.Free;
+    Halt;
+  end
+  else
+    MainForm.btCheckVersion.Caption:= stUpdaterCheck;
+end;
+
+procedure   TSubThread.MainThreadUpdateRequire;
+begin
+  if MessageDlg('', Format(stDlgUpdaterVersionRequire, [LRequireRevision]), mtInformation, [mbYes, mbNo], 0)=mrYes then
+  begin
+    OpenURL('http://akarink.wordpress.com/');
+  end;
+end;
+
+procedure   TSubThread.MainThreadImportant;
+var
+  Process: TProcess;
+begin
+  MessageDlg('', fImportant, mtInformation, [mbYes], 0);
+ // MainForm.CloseNow;
+ // Halt;
+end;
+
+procedure   TSubThread.MainThreadLatestVer;
+begin
+  MessageDlg('', stDlgLatestVersion, mtInformation, [mbYes], 0);
+end;
+
+procedure   TSubThread.MainThreadSetButton;
+begin
+  MainForm.btCheckVersion.Caption:= stUpdaterCheck;
+end;
+
+procedure   TSubThread.MainThreadPopSilentThreadQueue;
+var
+  meta: TSilentThreadMetaData;
+begin
+  if uSilentThread.SilentThreadQueue.Count = 0 then
+    exit;
+  meta:= TSilentThreadMetaData(uSilentThread.SilentThreadQueue.Pop);
+  if meta <> nil then
+  begin
+    meta.Run;
+    meta.Free;
+  end;
+end;
+
+procedure   TSubThread.Execute;
+var
+  l: TStringList;
+  i: Cardinal;
+  s: String;
+begin
+  LRevision:= 0;
+  while isSuspended do Sleep(32);
+  Sleep(2000);
+  if FileExists(WORK_FOLDER + LOG_FILE) then
+    Synchronize(MainThreadShowLog);
+  if FileExists(fmdDirectory + 'old_updater.exe') then
+    DeleteFile(fmdDirectory + 'old_updater.exe');
+  Sleep(2000);
+  if OptionAutoCheckFavStartup then
+  begin
+    MainForm.favorites.isAuto:= TRUE;
+    MainForm.favorites.isShowDialog:= MainForm.cbOptionShowFavoriteDialog.Checked;
+    MainForm.favorites.Run;
+  end;
+  while NOT Terminated do
+  begin
+    if ((MainForm.silentThreadCount > 0)) AND
+       (MainForm.currentActiveSilentThreadCount < 2) then
+    begin
+      Synchronize(MainThreadPopSilentThreadQueue);
+    end;
+
+    if isCheckForLatestVer then
+    begin
+      Sleep(2000);
+      l:= TStringList.Create;
+
+      l.NameValueSeparator:= '=';
+      case Random(2) of
+        0:
+          s:= UPDATE_URL + 'updates.i';
+        1:
+          s:= SourceForgeURL('http://sourceforge.net/projects/fmd/files/FMD/updates/updates.i/download');
+      end;
+      if (GetPage(TObject(l), s, 0)) AND (l.Count > 0) then
+      begin
+        fNote:= '';
+        fNoteForThisRevision:= '';
+        for i:= 0 to l.Count-1 do
+        begin
+          if l.Names[i] = IntToStr(Revision) then
+            fNoteForThisRevision:= l.ValueFromIndex[i];
+          if l.Names[i] = 'Note' then
+            fNote:= l.ValueFromIndex[i];
+          if l.Names[i] = 'Revision' then
+            LRevision:= StrToInt(l.ValueFromIndex[i]);
+          if l.Names[i] = 'RequireRevision' then
+            LRequireRevision:= StrToInt(l.ValueFromIndex[i]);
+          if l.Names[i] = 'Version' then
+            LVersion:= l.ValueFromIndex[i];
+          if l.Names[i] = 'Important' then
+          begin
+            fImportant:= l.ValueFromIndex[i];
+            Synchronize(MainThreadImportant);
+          end;
+        end;
+
+        if LRequireRevision > Revision then
+          Synchronize(MainThreadUpdateRequire)
+        else
+        if LRevision > Revision then
+        begin
+          Synchronize(MainThreadUpdate);
+        end
+        else
+        begin
+          if updateCounter > 0 then
+          begin
+            Synchronize(MainThreadLatestVer);
+          end;
+          Synchronize(MainThreadSetButton);
+        end;
+      end;
+      Inc(updateCounter);
+
+      isCheckForLatestVer:= FALSE;
+      l.Free;
+    end;
+
+    isCanStop:= FALSE;
+    if isGetInfos then
+    begin
+      Info:= TMangaInformation.Create;
+      DoGetInfos;
+    end;
+    isCanStop:= TRUE;
+    Sleep(64);
+  end;
+end;
+
+end.
+

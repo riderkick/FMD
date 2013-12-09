@@ -1,0 +1,3237 @@
+object frmMain: TfrmMain
+  Left = 97
+  Height = 502
+  Top = 30
+  Width = 819
+  Align = alBottom
+  Caption = 'Free Manga Downloader'
+  ClientHeight = 502
+  ClientWidth = 819
+  OnClose = FormClose
+  OnCreate = FormCreate
+  OnDestroy = FormDestroy
+  OnWindowStateChange = FormWindowStateChange
+  LCLVersion = '1.3'
+  object spMainSplitter: TSplitter
+    AnchorSideRight.Control = pcMain
+    Left = 195
+    Height = 502
+    Top = 8
+    Width = 5
+    Align = alNone
+    Anchors = [akTop, akLeft, akBottom]
+    OnMoved = spMainSplitterMoved
+  end
+  object pnMainLeft: TPanel
+    AnchorSideRight.Control = spMainSplitter
+    Left = 0
+    Height = 470
+    Top = 8
+    Width = 195
+    Align = alLeft
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    ClientHeight = 470
+    ClientWidth = 195
+    TabOrder = 0
+    object pnLeftBtDummy: TBitBtn
+      Left = 165
+      Height = 21
+      Top = 35
+      Width = 21
+      Anchors = [akTop, akRight]
+      Caption = 'pnLeftBtDummy'
+      Layout = blGlyphRight
+      TabOrder = 1
+    end
+    object pcLeft: TPageControl
+      Left = 1
+      Height = 468
+      Top = 1
+      Width = 193
+      ActivePage = tsMangaList
+      Align = alClient
+      TabIndex = 0
+      TabOrder = 0
+      object tsMangaList: TTabSheet
+        Caption = 'Manga List'
+        ClientHeight = 440
+        ClientWidth = 185
+        object lbMode: TLabel
+          Left = 8
+          Height = 15
+          Top = 64
+          Width = 124
+          Caption = 'Mode: Show all manga'
+          Font.Style = [fsBold]
+          ParentColor = False
+          ParentFont = False
+        end
+        object btSearch: TBitBtn
+          AnchorSideLeft.Side = asrBottom
+          AnchorSideTop.Side = asrBottom
+          Left = 158
+          Height = 21
+          Hint = 'Search manga from list'
+          Top = 36
+          Width = 21
+          Anchors = [akTop, akRight]
+          Enabled = False
+          Glyph.Data = {
+            46050000424D4605000000000000360000002800000012000000120000000100
+            2000000000001005000064000000640000000000000000000000FFFFFF00FFFF
+            FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+            FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+            FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+            FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00D1B9A0FFD2BE
+            A9FFFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+            FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00DB9F
+            60FFF49730FFEF932EFFE2BC91FFFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+            FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+            FF00DF9845FFFF9C30FFF8A244FFF79D39FFEA9F49FFFFFFFF00FFFFFF00FFFF
+            FF00FFFFFF00FFFFFF00D3B490FFDEA05AFFF6A23EFFF9A43DFFFAA43CFFEDA0
+            48FFD8A66FFFE1A15BFFFD9F32FFF09F44FFF3A145FFE7902EFFEBAF6AFFFFFF
+            FF00FFFFFF00FFFFFF00FFFFFF00E2A45CFFFCA53AFFFFAD41FFFDA842FFFAA6
+            40FFFAA642FFFFAA41FFFFB143FFFFAD42FFF1A245FFF9A749FFF7A039FFED9B
+            3BFFFFFFFF00FFFFFF00FFFFFF00FFFFFF00E7AC64FFFFA736FFFDAD4AFFF49E
+            3AFFF4AB52FFF8B463FFF6B05CFFEFA244FFF6A23DFFF8A849FFFCAC4CFFF9A5
+            40FFF1A141FFFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FBA63DFFFEAE
+            4CFFF6A543FFFCD2A0FFFFFFFFFFFFFFFFFFFFFFFFFFFFF1DFFFF6BB72FFF6A3
+            3DFFFFB04EFFED9D3CFFFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00EBB5
+            6EFFFEAC45FFFAA840FFF8CB93FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+            FFFFFFFEFBFFF1AC54FFFFB54FFFF0A13AFFFFFFFF00FFFFFF00FFFFFF00FFFF
+            FF00FFFFFF00EDA74BFFFEB44DFFF2AD56FFFCF8F4FFFFFFFFFFFFFFFFFFFFFF
+            FFFFFFFFFFFFFFFFFFFFFFFFFFFFF1D7B7FFF5A338FFFAAA42FFE6B878FFFFFF
+            FF00FFFFFF00FFFFFF00FFFFFF00F4AA47FFFFB951FFF0B25FFFFCFFFFFFFFFF
+            FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEEE5D8FFF5A436FFF9B0
+            49FFECB467FFFFFFFF00FFFFFF00FFFFFF00FFFFFF00F6AE4CFFFFBD55FFE8AB
+            59FFF0F3F5FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFE4D5
+            BFFFF4A73AFFFAB24AFFF1BD72FFFFFFFF00FFFFFF00FFFFFF00FFFFFF00F9BE
+            6AFFFFBC54FFF5B24DFFE1CDA5FFF6F9FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+            FFFFE5E9EDFFECBD6DFFFFBC55FFFCB647FFFFFFFF00FFFFFF00FFFFFF00FFFF
+            FF00FFFFFF00FFFFFF00FEBC50FFFFC55CFFF2BF5EFFD5CAB1FFE3E8F4FFF1F3
+            F8FFEEF1F8FFD8DADEFFDEC58BFFFDBE54FFFFC85FFFFDBB54FFFFFFFF00FFFF
+            FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FEC159FFFFC85EFFFFCD5EFFF9CA
+            59FFDEC488FFD2C4A6FFD4C4A0FFECC469FFFECF5BFFFFCF64FFFFBF4BFFFED7
+            94FFFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFC4
+            55FFFFC85AFFFFD96CFFFFDD63FFFFD356FFFFD357FFFFE26EFFFFD467FFFFC7
+            51FFFFD78BFFFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+            FF00FFFFFF00FFFFFF00FFD780FFFFCC55FFFFCE59FFFFD460FFFFD25EFFFFCE
+            57FFFFD162FFFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+            FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+            FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+            FF00FFFFFF00FFFFFF00
+          }
+          ParentShowHint = False
+          ShowHint = True
+          TabOrder = 0
+        end
+        object vtMangaList: TVirtualStringTree
+          Left = 3
+          Height = 342
+          Hint = 'test'
+          Top = 88
+          Width = 176
+          Anchors = [akTop, akLeft, akRight, akBottom]
+          DefaultText = 'Node'
+          Header.AutoSizeIndex = 0
+          Header.Columns = <>
+          Header.DefaultHeight = 17
+          Header.MainColumn = -1
+          HintMode = hmHintAndDefault
+          ParentShowHint = False
+          PopupMenu = pmMangaList
+          ShowHint = True
+          TabOrder = 1
+          TreeOptions.PaintOptions = [toShowButtons, toShowDropmark, toShowRoot, toThemeAware, toUseBlendedImages]
+          TreeOptions.SelectionOptions = [toFullRowSelect, toMultiSelect, toRightClickSelect]
+          OnBeforeCellPaint = vtMangaListBeforeCellPaint
+          OnChange = vtMangaListChange
+          OnDblClick = vtMangaListDblClick
+          OnFreeNode = vtMangaListFreeNode
+          OnGetText = vtMangaListGetText
+          OnGetHint = vtMangaListGetHint
+          OnInitNode = vtMangaListInitNode
+        end
+        object btUpdateList: TBitBtn
+          AnchorSideLeft.Side = asrBottom
+          AnchorSideTop.Side = asrBottom
+          Left = 158
+          Height = 21
+          Hint = 'Update manga list'
+          Top = 8
+          Width = 21
+          Anchors = [akTop, akRight]
+          Glyph.Data = {
+            46050000424D4605000000000000360000002800000012000000120000000100
+            2000000000001005000064000000640000000000000000000000FFFFFF00FFFF
+            FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+            FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+            FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF0090DE8DFF7FD87CFF81D97EFF81D9
+            7EFF81D97EFF81D97EFF81D97EFF81D97EFF7FD87CFF8FDE8CFFFFFFFF00FFFF
+            FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF0084DD84FF0CBB08FF0DC708FF0BC9
+            06FF0BC907FF0BC907FF0BC907FF0BC907FF0BC907FF0BC907FF0BC906FF0DC7
+            07FF0CBB08FF84DD84FFFFFFFF00FFFFFF00FFFFFF007FDB7FFF00B200FF1CBF
+            1DFF18B819FF0FB511FF0EB710FF0EB710FF0EB710FF0EB710FF0EB710FF0EB8
+            10FF0FB311FF17B619FF1CBF1DFF00B200FF7FDB7FFFFFFFFF00FFFFFF0026C0
+            2DFF12B419FF16B61DFF37D73EFF89EF8DFF91F494FF8FF393FF8FF393FF8FF3
+            93FF8FF393FF91F494FF89EA8DFF36D13DFF16B51DFF12B419FF25C12DFFFFFF
+            FF00FFFFFF0000AF0CFF19B624FF0DB518FF8FE193FFFFFFFFFFFFFFFFFFFFFF
+            FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF8FE395FF0DB519FF19B6
+            24FF02AE0DFFFFFFFF00FFFFFF0000A70BFF1ABA2CFF12B826FF46C755FFC9EE
+            CEFFD6F2D9FFD3F1D7FFC9EECEFFC9EFCEFFD3F2D7FFD6F2D9FFC9EECEFF46C7
+            55FF12B826FF1ABA2CFF00A70BFFFFFFFF00FFFFFF0000A711FF1ABC32FF19BB
+            31FF12B92BFF05B51FFF03B31DFF00B00BFF5FD06FFF5FD06FFF00AE0BFF03B3
+            1DFF05B51FFF12B92BFF19BB31FF1ABC32FF00A711FFFFFFFF00FFFFFF0000AA
+            16FF19BE38FF18BD36FF18BD36FF17B935FF02C728FF64E07AFFFFFFFFFFFFFF
+            FFFF63DF7AFF02C728FF17B935FF18BD36FF18BD36FF19BE38FF00AA16FFFFFF
+            FF00FFFFFF0000AC1FFF19C03FFF17BE3EFF17BE3EFF03D032FF79EE93FFFFFF
+            FFFFFFFFFFFFFFFFFFFFFFFFFFFF79EE93FF03D133FF17BE3EFF17BE3EFF19C0
+            3FFF00AC1FFFFFFFFF00FFFFFF0000AE26FF18C145FF17C043FF04D03AFF64EA
+            86FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF64EB87FF03CE
+            3BFF17C043FF18C145FF00AD25FFFFFFFF00FFFFFF0000B12CFF17C34AFF0BC3
+            43FF72E595FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+            FFFFFFFFFFFF72E894FF0CC343FF17C34AFF00B02CFFFFFFFF00FFFFFF0000B2
+            33FF17C551FF09C046FF85DFA3FFFFFFFFFF93E3ADFF6CDA90FFFFFFFFFFFFFF
+            FFFF6CDA8FFF92E3ADFFFFFFFFFF8DE5A9FF08C246FF17C551FF00B233FFFFFF
+            FF00FFFFFF0000B438FF16C856FF11C552FF29CA63FF8FE3AEFF00BA34FF8AE2
+            AAFFFFFFFFFFFFFFFFFF8AE2AAFF00BA33FFA0E8BBFF3ECF72FF0FC450FF16C8
+            56FF00B438FFFFFFFF00FFFFFF0004BB4BFF12C859FF15C85AFF11C656FF08C3
+            50FF06C34FFF92E4B1FFFFFFFFFFFFFFFFFF92E4B1FF05C24FFF0BC352FF10C6
+            56FF16C95AFF12C858FF04BA4BFFFFFFFF00FFFFFF004FD085FF00C551FF17CF
+            63FF15CB60FF14C95EFF0EC65AFF41D37EFFCAF3DBFFCAF3DBFF41D37EFF0EC7
+            5AFF14C95EFF16CC60FF17D063FF00C652FF4FD085FFFFFFFF00FFFFFF00FFFF
+            FF0017C764FF00CA54FF11D264FF17D267FF17D367FF11D163FF03CE5AFF03CE
+            5AFF11D163FF17D267FF17D469FF11D264FF00CA54FF17C663FFFFFFFF00FFFF
+            FF00FFFFFF00FFFFFF00FFFFFF0063DE9AFF1AD16CFF02CC5CFF03CC5DFF03CC
+            5DFF03CC5DFF03CC5DFF03CC5DFF03CC5DFF02CD5CFF1AD16CFF63DE9BFFFFFF
+            FF00FFFFFF00FFFFFF00
+          }
+          OnClick = btUpdateListClick
+          ParentShowHint = False
+          ShowHint = True
+          TabOrder = 2
+        end
+        object edSearch: TEdit
+          Left = 3
+          Height = 23
+          Top = 36
+          Width = 150
+          Anchors = [akTop, akLeft, akRight]
+          OnChange = edSearchChange
+          OnClick = edSearchClick
+          TabOrder = 3
+        end
+        object cbSelectManga: TComboBox
+          Left = 3
+          Height = 23
+          Hint = 'For more manga sites, please go to Options->Manga sites'
+          Top = 8
+          Width = 150
+          Anchors = [akTop, akLeft, akRight]
+          ItemHeight = 15
+          ItemIndex = 0
+          Items.Strings = (
+            ''
+          )
+          OnChange = cbSelectMangaChange
+          ParentShowHint = False
+          ShowHint = True
+          Sorted = True
+          Style = csDropDownList
+          TabOrder = 4
+        end
+        object btRemoveFilter: TBitBtn
+          Left = 158
+          Height = 21
+          Top = 63
+          Width = 21
+          Anchors = [akTop, akRight]
+          Glyph.Data = {
+            46050000424D4605000000000000360000002800000012000000120000000100
+            2000000000001005000064000000640000000000000000000000000000000000
+            0000000000000000000000000000B6580003C75D000AC75E0011C95A0018C962
+            0019C6600013C95D000CBE5900057E2800000000000000000000000000000000
+            0000000000000000000000000000C86C0001CA5F000FC45F003DCE670880CF6B
+            0DB9CF6D0ED9CF6E0FDDCF6C0EC6CF690A95C6600352C1590019C15E00040000
+            000000000000000000000000000000000000C96A0002C862001ECF670676D372
+            12D5DD8527FBE2953CFFE49C45FFE59E47FFE49840FFDE8B2FFFD4771AEBCF69
+            0A9BC8610038C5610007000000000000000000000000CB650000C65E001ACE67
+            0888DA7E21EAE39A45FFE6AA5AFFE6AC5CFFE6A959FFE6A858FFE6AB5CFFE6AC
+            5CFFE5A14FFFDE872DF8D06C0DB3C8600038C35F00040000000000000000C059
+            000BCA630567D97B20E8E6A251FFE8B166FFE6AA5DFFE19746FFDA8832FBD986
+            2FF8DE913EFFE5A456FFE8B166FFE8AA5DFFDE8830F9CD670B9CBE58001B994C
+            000091480001BD5A0028D06E13C3E59B49FFEBB770FFE7AC63FFDA8732F8D26F
+            16BFCA650683CA640378CF6B10A9D77D27EAE4A154FFEBB771FFE9AA5EFFD679
+            1FECC25F0454B6560005BA520005C35E055AD57E27F5EDB570FFEDB978FFDC8D
+            3BFBCD680BA5C75B0038C3580010C45A000CC75B0025CA610778D87F2BEAEAAF
+            69FFEEBD7DFFE3933FFFCA660D97C057000DC456000BCC650D88E19240FFF2C4
+            8AFFECB06CFFD57923D3C65B0042C45900030000000000000000C95F0001C658
+            0023CF6B11A5E29C51FEF2C58BFFECAA61FFD06D14C7C4590013C559000DD06A
+            119CEBA152FFF5CC99FFEBA962FFD67319ABC55800220000000000000000C25D
+            0003C35B0021C5540020C9630374DE9244F7F4C993FFF0B878FFD17118DDC859
+            0019C657000DD0691298EBA257FFF9D4A8FFEEB170FFD6751FB3C4570028BB54
+            0000AA540000C6640377D4700EECCD6A0CD9C96305C6DF984FF7F8D1A4FFF2BC
+            80FFD07119D9C65B0017C1510009CA610D7BE09347FEFAD8AFFFF5C897FFD983
+            35E4C75D0553C0530006B4510006CC670DD5F3B87BFFECB57DFFD67B28FFE7AE
+            73FFFADCB7FFEFB172FFCF6B17BBC5580011C4550003C75D0348D67E2CEBF7CC
+            9DFFFDE2C3FFE5A15EFFCE67128EC3520013C349000BCD6910D9F7CB9EFFFBE9
+            D1FFF0C79CFFF6D4AFFFFADAB6FFE4974CFACC640D81C255000AA9510000C257
+            001BCF6B14A7E9A35DFCF9CEA2FFE59B53FACE681185C3530011B945000ACC68
+            11D7F6CA9EFFFFF0DEFFFEEAD2FFFEE7CDFFF2BF8CFFD37422E1C256013FB84C
+            000300000000BE5A0006C8610143D67419B2E08533D1D4731AACC862023BC55C
+            0004B34A000BCC6811D8F6CDA4FFFFF4E4FFFEE9D3FFFEE9D1FFF0BD8BFFD679
+            27E3C560055BBD5C00060000000000000000C95F0009CA5C002BCA5A0041C85D
+            0028C562000700000000B846000ACB6812DAF7D0AAFFFFFAF2FFFFF1E1FFFFEF
+            DCFFFBE8D1FFEDB277FDCD6C16C1C35900130000000000000000000000000000
+            000000000000000000000000000000000000B9450003C8630BB9EAA25BFFEFBF
+            90FFEFBB88FFEFB984FFEFBB87FFECA45AFFCC6C12C7C25B0013000000000000
+            000000000000000000000000000000000000000000000000000000000000C65D
+            0441D06A0FBCCF6B17DBCD6A16DACD6A16DACF6B16DBD26B10C3C9650653C161
+            0006000000000000000000000000000000000000000000000000000000000000
+            000000000000C75B0004C85E0018C45C0027C45A0026C45A0026C45C0027C55D
+            001AC45F0007C3660000
+          }
+          OnClick = btRemoveFilterClick
+          ParentShowHint = False
+          ShowHint = True
+          TabOrder = 5
+        end
+      end
+      object tsDownloadFilter: TTabSheet
+        Caption = '>>'
+        ClientHeight = 440
+        ClientWidth = 185
+        object tvDownloadFilter: TTreeView
+          Left = 0
+          Height = 440
+          Top = 0
+          Width = 185
+          Align = alClient
+          AutoExpand = True
+          DefaultItemHeight = 18
+          Images = IconList
+          ReadOnly = True
+          TabOrder = 0
+          OnSelectionChanged = tvDownloadFilterSelectionChanged
+          Options = [tvoAutoExpand, tvoAutoItemHeight, tvoHideSelection, tvoKeepCollapsedNodes, tvoReadOnly, tvoShowButtons, tvoShowLines, tvoShowRoot, tvoToolTips, tvoThemedDraw]
+          Items.Data = {
+            F9FFFFFF020001000000040000000400000004000000FFFFFFFF030000000000
+            0000010D000000416C6C20646F776E6C6F616473050000000500000005000000
+            FFFFFFFF00000000000000000009000000436F6D706C65746564060000000600
+            000006000000FFFFFFFF0000000000000000000B000000496E2070726F677265
+            7373070000000700000007000000FFFFFFFF0000000000000000000700000053
+            746F70706564
+          }
+        end
+      end
+    end
+  end
+  object pcMain: TPageControl
+    Left = 195
+    Height = 470
+    Top = 8
+    Width = 624
+    ActivePage = tsDownload
+    Align = alClient
+    Font.Style = [fsBold]
+    ParentFont = False
+    TabIndex = 0
+    TabOrder = 1
+    OnChange = pcMainChange
+    object tsDownload: TTabSheet
+      Caption = 'Downloads'
+      ClientHeight = 442
+      ClientWidth = 616
+      object vtDownload: TVirtualStringTree
+        Left = 0
+        Height = 442
+        Top = 0
+        Width = 616
+        Align = alClient
+        DefaultText = 'Node'
+        Header.AutoSizeIndex = 0
+        Header.Columns = <        
+          item
+            Position = 0
+            Text = 'Manga'
+            Width = 100
+          end        
+          item
+            Position = 1
+            Text = 'Status'
+            Width = 200
+          end        
+          item
+            Position = 2
+            Text = 'Progress'
+            Width = 55
+          end        
+          item
+            Position = 3
+            Text = 'Website'
+            Width = 65
+          end        
+          item
+            Position = 4
+            Text = 'Save to'
+            Width = 150
+          end        
+          item
+            Position = 5
+            Text = 'Added'
+            Width = 80
+          end>
+        Header.DefaultHeight = 17
+        Header.Height = 25
+        Header.Options = [hoColumnResize, hoDrag, hoShowSortGlyphs, hoVisible]
+        Header.Style = hsXPStyle
+        HintMode = hmHintAndDefault
+        ParentFont = False
+        ParentShowHint = False
+        PopupMenu = pmDownload
+        ShowHint = True
+        TabOrder = 0
+        TreeOptions.PaintOptions = [toShowButtons, toShowDropmark, toShowRoot, toThemeAware, toUseBlendedImages]
+        TreeOptions.SelectionOptions = [toFullRowSelect, toMultiSelect]
+        OnDblClick = vtDownloadDblClick
+        OnFreeNode = vtDownloadFreeNode
+        OnGetText = vtDownloadGetText
+        OnGetHint = vtDownloadGetHint
+        OnHeaderClick = vtDownloadHeaderClick
+        OnInitNode = vtDownloadInitNode
+      end
+    end
+    object tsInformation: TTabSheet
+      Caption = 'Manga Infos'
+      ClientHeight = 442
+      ClientWidth = 616
+      object sbInformation: TScrollBox
+        Left = 0
+        Height = 442
+        Top = 0
+        Width = 616
+        HorzScrollBar.Page = 612
+        VertScrollBar.Page = 438
+        Align = alClient
+        ClientHeight = 438
+        ClientWidth = 612
+        TabOrder = 0
+        object pnInfomation: TPanel
+          Left = 0
+          Height = 262
+          Top = 0
+          Width = 612
+          Align = alTop
+          ClientHeight = 262
+          ClientWidth = 612
+          ParentFont = False
+          TabOrder = 0
+          object imCover: TImage
+            AnchorSideTop.Side = asrCenter
+            AnchorSideBottom.Side = asrCenter
+            Left = 9
+            Height = 216
+            Top = 38
+            Width = 154
+            Stretch = True
+          end
+          object rmInformation: TRichMemo
+            Left = 175
+            Height = 216
+            Top = 38
+            Width = 432
+            Anchors = [akTop, akLeft, akRight, akBottom]
+            HideSelection = False
+            ParentFont = False
+            ReadOnly = True
+            ScrollBars = ssVertical
+            TabOrder = 0
+          end
+          object pbWait: TPaintBox
+            Left = 9
+            Height = 218
+            Top = 38
+            Width = 153
+          end
+          object edURL: TEdit
+            Left = 8
+            Height = 23
+            Top = 6
+            Width = 567
+            Anchors = [akTop, akLeft, akRight]
+            TabOrder = 1
+          end
+          object btDonate: TImage
+            Cursor = crHandPoint
+            Left = 8
+            Height = 21
+            Top = 14
+            Width = 75
+            Anchors = [akTop, akRight]
+            OnClick = btDonateClick
+            Picture.Data = {
+              1754506F727461626C654E6574776F726B47726170686963C306000089504E47
+              0D0A1A0A0000000D4948445200000048000000120802000000779A0F81000006
+              8A49444154789CD55769505367147D24210B1016092221402440901D8140404B
+              425804041D704305DC10375A772C3AB6B642D5628B5371CAD2322A428B82226A
+              454541A8A82CAD0AB28A08222121812282015EE87D093A5395FC60FA873767DE
+              DC7BBF73CF77CFDB3241C6D13199B8495A9628CC0D1566FB09CFFA4E57C0F0B9
+              A1D2BB49327133984264A2C6DEA2E8C1F2CFD1CE73A8B000ED06E44FCF201F2C
+              0C96C7F516AD91891B1169E9D76FFEDC229716CB07EEC8076ECB074ADE9DA75D
+              701BB3202D7E53B1595AF60D22CCF6469F1F978BF326C39BCE733D8DBFBCC3AF
+              BDCD59C35D392AF8FF0BDEBECA9D722FDA96DC93E383F49C7146DB12E5DD1968
+              773ADA9DF1717035FB8B25219CA54A8472568673776F0DACBC9A30D695A6A26B
+              CAC150FBA9B28BF13F1F8B9EBA4E5BA2F0CC5C30E688B624A02F8E4F8694438B
+              91FF1E389C9A8B83E9CDDCCD2ABAA68C9DB17C73339A97EBECA98BB4248029A4
+              27DB116D8A439F1F40DB14F82848F92A40E92790C73A12CFF39F3F9B4C22401A
+              EACBEE7AB0030803F5F18F8A375FCE8C28485B7E376FADB07AD798A2BDA1646B
+              45FEBA47D73775546EBF7136F262FA8AA7B7B6CAE0223E3F30F8741FD4AF9F5E
+              7DFED4B2C28C88F2F3EB44B5BB475AF643D1D8900AE2B696331F14C6886B7703
+              59F268CFC3C298C2CC085028BFB0EEA562D34F8E3A1134C5812930662BAF5B2A
+              6F88421BA2E40A7C10A424B8298D1DDCEA0895BAA28576163A909AD1A9350521
+              92872B8FECF5B466E9E3716A70E850496BC2ED9E5C0907E6AA5073AA16D1718E
+              41309FA541518755CFB9F4CABC50D04C3DE4CD36D727AAE3A18B80C741D7F6B5
+              4ECF6E2DF1F130021910C7E3D5CC4DB42FA5F2FBAB576D5AE5C49845051A01AF
+              364397B2C8CFB2EDF6F24F8E3A11D42D05538828DB72BCC67DBCC663329CD8C3
+              541AFB2A9601E9702587E7A20DA926057F37D336EF285B4F9B88DD4F4FEDF58B
+              687A543C511DB76D39BDAFCC2D5C3003EAEA049C8921D1CC880803C352529CD9
+              E843776F575DAA26DE99AD71F907566CB80189A866328B949FCCDEB0D8804CC4
+              419796062EC84BE7769ACDC97D2C50D0A4E00EC6189D8C370529D0D9B6C278AC
+              6AD281C18E28DB0A11E5B0D1C7EE2A90126F3671C73619433A54CDE1B9298DE1
+              4AB36C162BA6D7D2C0BF7EE036FA1767C5027D48D94CCAA37C87305F6C09EE49
+              C74DE71B19734C8D4890EE8C321AAEE6F496BBDC3F67FB7BB2E5AE28233B1605
+              38BA5442D66116E89B33309ABBBD16C4A0F9990B552148FE7E9769EA7EA6A713
+              963A5869B45C75543133984244B9D6683D570552BE9C3D616C0B03D2862B4EF6
+              561A90320C89D5E71D045CECB134D0531F7BC245EBB81B971942CA3426D58231
+              BF19CA1BFBF66F8F7BB9F616A664CC5834BDFF212766C94C3323920E151FE4AD
+              E7E7A94B21E374B509594916A06F6E82D13860AC9E2BA9E47838624E80E96CA3
+              E9EEA8A5C4F2405AD3356715338B7EB34644793668D37C154839C0521AE37BE8
+              ECDF6CE2E7A54B26614F4B888FFECB0AF7B8286388E1E9BF936DFFACC48DEB8C
+              CD31CF55A7B5C42D2C808619D3C0CBEAE7DD3BEF646146C18CAD35AE2A702210
+              B017695B24BDBD8C737807934252183B6205DB59B3B0AB66C5A4881E7848ABB9
+              E10A1173537251BA6D6DE1DCCC24CB8C44CBD21C87C1C75E2A66065388E882AD
+              BC8DA702270E5A7EF0B95757579BE7A65B9E3757FE8C5757CC011B5081D79D48
+              C4C66532C8677FB4196DE1852D309830D6CCAB2C70B1602A8C6D30692C71D7D3
+              C1BEABA67452105FDF844E86774F5B8B90F11D1B04C3020D149F0FC49046BC70
+              CAAEAAD0D57816092A40B6636BC22F0D558B90BCDF62AC55D5CC600AE929B097
+              770854A038C7397A293D7AD90436453212F7593CBEE581BEC05647DB05357FB8
+              27C4CD5EE84B0BE4EBAF59462FCC721A6AE1C3D24FDFB281BF71350338AD155E
+              7BB730412737D55ED6E6937E74CE9260C3001E2D36929176CC66C746B3F511C6
+              574E3B8166E90597D5E146FEDEFA70AE2870059DC22CC7D8D58C20016D019F06
+              C59389D6C3AD3EAA67065388B0808B7605A0AF26C550BB9FA441F01EFFB4F88E
+              76FA7FC079D3E6F7B296D751C3933608DE175FB7FA025FDA8855463AFDFB9BB0
+              1498B09DACC35FF898FFA286D7D72418E90CE86FC69606154BA39D01E27A9F17
+              D5DE40186EF783DEB19718A153A1DFFBD467E4A3DD3F445740CFA5F948DFFDA4
+              A17A815C1C2C172F7C779ED641F0509D407A3F0991F5364BCAD60F35F88EF785
+              8CF72B307D83BE10302229DB20933423F09F6C44D2DA5F952CBA162C2EF69DD6
+              000BFDD5C7C1CEB87CEC5FC7292974CE8422DD0000000049454E44AE426082
+            }
+            Stretch = True
+            Visible = False
+          end
+          object btURL: TBitBtn
+            Left = 567
+            Height = 23
+            Top = 6
+            Width = 40
+            Anchors = [akTop, akRight]
+            Caption = '>>'
+            OnClick = btURLClick
+            TabOrder = 2
+          end
+        end
+        object spInfos: TSplitter
+          Cursor = crVSplit
+          Left = 0
+          Height = 6
+          Top = 262
+          Width = 612
+          Align = alTop
+          ResizeAnchor = akTop
+        end
+        object pnChapterList: TPanel
+          Left = 0
+          Height = 170
+          Top = 268
+          Width = 612
+          Align = alClient
+          ClientHeight = 170
+          ClientWidth = 612
+          TabOrder = 2
+          object edSaveTo: TLabeledEdit
+            Left = 8
+            Height = 23
+            Top = 108
+            Width = 311
+            Anchors = [akLeft, akBottom]
+            EditLabel.AnchorSideLeft.Control = edSaveTo
+            EditLabel.AnchorSideRight.Control = edSaveTo
+            EditLabel.AnchorSideRight.Side = asrBottom
+            EditLabel.AnchorSideBottom.Control = edSaveTo
+            EditLabel.Left = 8
+            EditLabel.Height = 15
+            EditLabel.Top = 90
+            EditLabel.Width = 311
+            EditLabel.Caption = 'Save to'
+            EditLabel.ParentColor = False
+            EditLabel.ParentFont = False
+            ParentFont = False
+            TabOrder = 0
+          end
+          object btDownload: TBitBtn
+            Left = 367
+            Height = 30
+            Top = 101
+            Width = 96
+            Anchors = [akLeft, akBottom]
+            Caption = 'Download'
+            OnClick = btDownloadClick
+            TabOrder = 1
+          end
+          object btBrowse: TBitBtn
+            Left = 319
+            Height = 23
+            Top = 108
+            Width = 27
+            Anchors = [akLeft, akBottom]
+            Caption = '...'
+            OnClick = btBrowseClick
+            TabOrder = 2
+          end
+          object cbAddAsStopped: TCheckBox
+            Left = 8
+            Height = 19
+            Top = 136
+            Width = 214
+            Anchors = [akLeft, akBottom]
+            Caption = 'Add to download list as stopped task'
+            OnChange = cbAddAsStoppedChange
+            ParentFont = False
+            TabOrder = 3
+          end
+          object cbAddToFavorites: TCheckBox
+            Left = 311
+            Height = 19
+            Top = 136
+            Width = 106
+            Anchors = [akLeft, akBottom]
+            Caption = 'Add to Favorites'
+            ParentFont = False
+            TabOrder = 4
+          end
+          object btReadOnline: TButton
+            Left = 471
+            Height = 30
+            Top = 101
+            Width = 96
+            Anchors = [akLeft, akBottom]
+            Caption = 'Read online'
+            OnClick = btReadOnlineClick
+            TabOrder = 5
+          end
+          object clbChapterList: TVirtualStringTree
+            Left = 8
+            Height = 69
+            Top = 7
+            Width = 563
+            Anchors = [akTop, akLeft, akRight, akBottom]
+            Colors.UnfocusedSelectionColor = clHighlight
+            DefaultText = 'Node'
+            Header.AutoSizeIndex = 0
+            Header.Columns = <>
+            Header.DefaultHeight = 17
+            Header.MainColumn = -1
+            ParentFont = False
+            PopupMenu = pmChapterList
+            TabOrder = 6
+            TreeOptions.MiscOptions = [toAcceptOLEDrop, toCheckSupport, toFullRepaintOnResize, toInitOnSave, toToggleOnDblClick, toWheelPanning, toEditOnClick]
+            TreeOptions.PaintOptions = [toShowButtons, toShowDropmark, toShowRoot, toThemeAware, toUseBlendedImages]
+            TreeOptions.SelectionOptions = [toFullRowSelect, toMultiSelect]
+            OnBeforeCellPaint = clbChapterListBeforeCellPaint
+            OnGetText = clbChapterListGetText
+            OnGetNodeDataSize = clbChapterListGetNodeDataSize
+            OnInitNode = clbChapterListInitNode
+          end
+          object btChecks: TBitBtn
+            Left = 577
+            Height = 30
+            Top = 7
+            Width = 30
+            Anchors = [akTop, akRight]
+            Glyph.Data = {
+              B60A0000424DB60A00000000000036000000280000001C000000180000000100
+              200000000000800A000064000000640000000000000000000000000000000000
+              0000000000000000000000000000000000000000000000000000000000000000
+              0000000000000000000000000000000000000000000000000000000000000000
+              0000000000000000000000000000000000000000000000000000000000000000
+              0000000000000000000000000000000000000000000000000000000000000000
+              0000000000000000000000000000000000000000000000000000000000000000
+              0000000000000000000000000000000000000000000000000000000000000000
+              0000000000000000000000000000000000000000000000000000000000000000
+              0000000000000000000000000000000000000000000000000000000000000000
+              0000000000000000000000000000000000000000000000000000000000000000
+              0000000000000000000000000000000000000000000000000000000000000000
+              0000000000000000000000000000000000000000000000000000000000000000
+              00000000000000000000000000000000000000000000056A4616076B4778076C
+              48B9066A463F0569450300000000000000000000000000000000000000000000
+              0000000000000000000000000000000000000000000000000000000000000000
+              0000000000000000000000000000000000000000000000000000000000000000
+              0000066A4616086D48810B704BEA0C724CFB0A6E4ABD066A4641000000000000
+              0000000000000000000000000000000000000000000000000000000000000000
+              0000000000000000000000000000000000000000000000000000000000000000
+              000000000000000000000000000000000000086C48830D734DEB107650FF1076
+              50FF0F754FFB0A6F4ACB0569451D000000000000000000000000000000000000
+              0000000000000000000000000000000000000000000000000000000000000000
+              0000000000000000000000000000000000000000000000000000066B46170A6E
+              4A85137852FF167B55FF167C56FF167C55FF167C56FF157B55FF0C724CCB086D
+              4841056945030000000000000000000000000000000000000000000000000000
+              0000000000000000000000000000000000000000000000000000000000000000
+              000000000000076B47170E734E83157A54EB1A8059FF1A8059FF1A8059FF1A80
+              59FF1A8059FF1A8059FF187D57FB117650BD096D494100000000000000000000
+              0000000000000000000000000000000000000000000000000000000000000000
+              000000000000000000000000000000000000000000000D724C86197E58EC1F84
+              5EFF20855EFF20855EFF20855EFF20855EFF20855EFF20855EFF20855EFF1D82
+              5BFB107550CB0569451E00000000000000000000000000000000000000000000
+              000000000000000000000000000000000000000000000000000000000000096D
+              49171074508621855FFF278B64FF278B65FF278B65FF278B65FF278B65FF278B
+              65FF278B65FF278B65FF278B65FF278B65FF268A64FF147853CC0A6E4A410569
+              4503000000000000000000000000000000000000000000000000000000000000
+              000000000000000000000B6F4A15177B5584248861EC2C9069FF2C916AFF2D90
+              6AFF2C9069FF2D916AFF2D946CFF2B926AFF2D926BFF2D906AFF2C9069FF2C91
+              6AFF2D906AFF278B65FB1A7E58BE0C704B410000000000000000000000000000
+              000000000000000000000000000000000000000000000000000011755153268A
+              64E432966FFF33966FFF33966FFF33966FFF33966FFF349A71FF29936AFF1D86
+              5EDD30986FFF339770FF33966FFF33966FFF33966FFF33966FFF2D9069FB187C
+              57CC0569451E0000000000000000000000000000000000000000000000000000
+              00000000000000000000066A46291A835BB2339D72FA3BA076FF3A9E75FF3A9E
+              75FF3AA177FF2A936AE81076517A076C472C1C855CB6349E73FB3B9F76FF3A9E
+              75FF3A9E75FF3A9E75FF3A9E75FF399C74FF1C805ACC0E714D41056945030000
+              0000000000000000000000000000000000000000000000000000056945030C72
+              4C371C855DB03BA378FF41A67CFF41A87DFF2D966DE7177E587A076B47130569
+              45030E734E3B1F875FB63CA47AFF41A57CFF41A47AFF40A37AFF41A47AFF41A4
+              7AFF399C74FB248761BE0F734E42000000000000000000000000000000000000
+              000000000000000000000000000005694502066A4627238A63D341AC80FF37A1
+              77FF12785275076B4713000000000000000005694503086C482D268E65DA42A9
+              7FFF47AA81FF46A97FFF46A97FFF46A97FFF46A97FFF3DA178FB21845ECD0569
+              451F000000000000000000000000000000000000000000000000000000000000
+              000000000000066A4624157B5584117651630000000000000000000000000000
+              00000000000000000000086D482D268E65B745AD83FB4EB087FF4DAF86FF4DAF
+              86FF4DAF86FF4DAF86FF4BAD84FF248761CD11744F4205694503000000000000
+              00000000000000000000000000000000000000000000056945010569450A0569
+              4505000000000000000000000000000000000000000000000000056945031176
+              513C288F67B84EB48AFF53B68CFF53B48AFF52B48AFF53B48AFF53B48AFF48AB
+              82FB298D66B30B6F4A2100000000000000000000000000000000000000000000
+              0000000000000000000000000000000000000000000000000000000000000000
+              000000000000000000000000000005694503096E492E30976EDC53B98DFF58BA
+              90FF57B88EFF57B88EFF57B98FFF51B78CFF2B8F68BC0A6E4921000000000000
+              0000000000000000000000000000000000000000000000000000000000000000
+              0000000000000000000000000000000000000000000000000000000000000000
+              0000000000000A6E4A2F2E956DB955BB90FB5DBF94FF5EC095FF58BE92FF268D
+              66B3096D492D0000000000000000000000000000000000000000000000000000
+              0000000000000000000000000000000000000000000000000000000000000000
+              0000000000000000000000000000000000000000000005694503157A543E3097
+              6FBA5CC396FF58C093FB369C73CC0A6E4A2E0569450300000000000000000000
+              0000000000000000000000000000000000000000000000000000000000000000
+              0000000000000000000000000000000000000000000000000000000000000000
+              00000000000000000000056945030B6F4B30319970DE329A71CD147953460000
+              0000000000000000000000000000000000000000000000000000000000000000
+              0000000000000000000000000000000000000000000000000000000000000000
+              0000000000000000000000000000000000000000000000000000000000000000
+              0000056945090569450A00000000000000000000000000000000000000000000
+              0000000000000000000000000000000000000000000000000000000000000000
+              0000000000000000000000000000000000000000000000000000000000000000
+              0000000000000000000000000000000000000000000000000000000000000000
+              0000000000000000000000000000000000000000000000000000000000000000
+              0000000000000000000000000000000000000000000000000000000000000000
+              0000000000000000000000000000000000000000000000000000000000000000
+              0000000000000000000000000000000000000000000000000000
+            }
+            OnClick = btChecksClick
+            TabOrder = 7
+          end
+        end
+      end
+    end
+    object tsFilter: TTabSheet
+      Caption = 'Filter'
+      ClientHeight = 442
+      ClientWidth = 616
+      object sbFilter: TScrollBox
+        Left = 0
+        Height = 442
+        Top = 0
+        Width = 616
+        HorzScrollBar.Page = 595
+        VertScrollBar.Page = 438
+        Align = alClient
+        ClientHeight = 438
+        ClientWidth = 595
+        TabOrder = 0
+        object pnGenres: TPanel
+          Left = 0
+          Height = 248
+          Top = 0
+          Width = 595
+          Align = alTop
+          ClientHeight = 248
+          ClientWidth = 595
+          TabOrder = 0
+          object CheckBox1: TCheckBox
+            Left = 23
+            Height = 19
+            Top = 16
+            Width = 55
+            AllowGrayed = True
+            Caption = 'Action'
+            ParentFont = False
+            TabOrder = 0
+          end
+          object CheckBox2: TCheckBox
+            Left = 23
+            Height = 19
+            Top = 40
+            Width = 55
+            AllowGrayed = True
+            Caption = 'Action'
+            ParentFont = False
+            TabOrder = 1
+          end
+          object CheckBox3: TCheckBox
+            Left = 23
+            Height = 19
+            Top = 64
+            Width = 55
+            AllowGrayed = True
+            Caption = 'Action'
+            ParentFont = False
+            TabOrder = 2
+          end
+          object CheckBox4: TCheckBox
+            Left = 23
+            Height = 19
+            Top = 88
+            Width = 55
+            AllowGrayed = True
+            Caption = 'Action'
+            ParentFont = False
+            TabOrder = 3
+          end
+          object Checkbox5: TCheckBox
+            Left = 23
+            Height = 19
+            Top = 112
+            Width = 55
+            AllowGrayed = True
+            Caption = 'Action'
+            ParentFont = False
+            TabOrder = 4
+          end
+          object CheckBox6: TCheckBox
+            Left = 23
+            Height = 19
+            Top = 136
+            Width = 55
+            AllowGrayed = True
+            Caption = 'Action'
+            ParentFont = False
+            TabOrder = 5
+          end
+          object CheckBox7: TCheckBox
+            Left = 23
+            Height = 19
+            Top = 160
+            Width = 55
+            AllowGrayed = True
+            Caption = 'Action'
+            ParentFont = False
+            TabOrder = 6
+          end
+          object CheckBox8: TCheckBox
+            Left = 23
+            Height = 19
+            Top = 184
+            Width = 55
+            AllowGrayed = True
+            Caption = 'Action'
+            ParentFont = False
+            TabOrder = 7
+          end
+          object CheckBox9: TCheckBox
+            Left = 135
+            Height = 19
+            Top = 16
+            Width = 55
+            AllowGrayed = True
+            Caption = 'Action'
+            ParentFont = False
+            TabOrder = 8
+          end
+          object CheckBox10: TCheckBox
+            Left = 135
+            Height = 19
+            Top = 40
+            Width = 55
+            AllowGrayed = True
+            Caption = 'Action'
+            ParentFont = False
+            TabOrder = 9
+          end
+          object CheckBox11: TCheckBox
+            Left = 135
+            Height = 19
+            Top = 64
+            Width = 55
+            AllowGrayed = True
+            Caption = 'Action'
+            ParentFont = False
+            TabOrder = 10
+          end
+          object CheckBox12: TCheckBox
+            Left = 135
+            Height = 19
+            Top = 88
+            Width = 55
+            AllowGrayed = True
+            Caption = 'Action'
+            ParentFont = False
+            TabOrder = 11
+          end
+          object CheckBox13: TCheckBox
+            Left = 135
+            Height = 19
+            Top = 112
+            Width = 55
+            AllowGrayed = True
+            Caption = 'Action'
+            ParentFont = False
+            TabOrder = 12
+          end
+          object CheckBox14: TCheckBox
+            Left = 135
+            Height = 19
+            Top = 136
+            Width = 55
+            AllowGrayed = True
+            Caption = 'Action'
+            ParentFont = False
+            TabOrder = 13
+          end
+          object CheckBox15: TCheckBox
+            Left = 135
+            Height = 19
+            Top = 160
+            Width = 55
+            AllowGrayed = True
+            Caption = 'Action'
+            ParentFont = False
+            TabOrder = 14
+          end
+          object CheckBox16: TCheckBox
+            Left = 135
+            Height = 19
+            Top = 184
+            Width = 55
+            AllowGrayed = True
+            Caption = 'Action'
+            ParentFont = False
+            TabOrder = 15
+          end
+          object CheckBox17: TCheckBox
+            Left = 251
+            Height = 19
+            Top = 16
+            Width = 55
+            AllowGrayed = True
+            Caption = 'Action'
+            ParentFont = False
+            TabOrder = 16
+          end
+          object CheckBox18: TCheckBox
+            Left = 251
+            Height = 19
+            Top = 40
+            Width = 55
+            AllowGrayed = True
+            Caption = 'Action'
+            ParentFont = False
+            TabOrder = 17
+          end
+          object CheckBox19: TCheckBox
+            Left = 251
+            Height = 19
+            Top = 64
+            Width = 55
+            AllowGrayed = True
+            Caption = 'Action'
+            ParentFont = False
+            TabOrder = 18
+          end
+          object CheckBox20: TCheckBox
+            Left = 251
+            Height = 19
+            Top = 88
+            Width = 55
+            AllowGrayed = True
+            Caption = 'Action'
+            ParentFont = False
+            TabOrder = 19
+          end
+          object CheckBox21: TCheckBox
+            Left = 251
+            Height = 19
+            Top = 112
+            Width = 55
+            AllowGrayed = True
+            Caption = 'Action'
+            ParentFont = False
+            TabOrder = 20
+          end
+          object CheckBox22: TCheckBox
+            Left = 251
+            Height = 19
+            Top = 136
+            Width = 55
+            AllowGrayed = True
+            Caption = 'Action'
+            ParentFont = False
+            TabOrder = 21
+          end
+          object CheckBox23: TCheckBox
+            Left = 251
+            Height = 19
+            Top = 160
+            Width = 55
+            AllowGrayed = True
+            Caption = 'Action'
+            ParentFont = False
+            TabOrder = 22
+          end
+          object CheckBox24: TCheckBox
+            Left = 251
+            Height = 19
+            Top = 184
+            Width = 55
+            AllowGrayed = True
+            Caption = 'Action'
+            ParentFont = False
+            TabOrder = 23
+          end
+          object CheckBox25: TCheckBox
+            Left = 363
+            Height = 19
+            Top = 16
+            Width = 55
+            AllowGrayed = True
+            Caption = 'Action'
+            ParentFont = False
+            TabOrder = 24
+          end
+          object CheckBox26: TCheckBox
+            Left = 363
+            Height = 19
+            Top = 40
+            Width = 55
+            AllowGrayed = True
+            Caption = 'Action'
+            ParentFont = False
+            TabOrder = 25
+          end
+          object CheckBox27: TCheckBox
+            Left = 363
+            Height = 19
+            Top = 64
+            Width = 55
+            AllowGrayed = True
+            Caption = 'Action'
+            ParentFont = False
+            TabOrder = 26
+          end
+          object CheckBox28: TCheckBox
+            Left = 363
+            Height = 19
+            Top = 88
+            Width = 55
+            AllowGrayed = True
+            Caption = 'Action'
+            ParentFont = False
+            TabOrder = 27
+          end
+          object CheckBox29: TCheckBox
+            Left = 363
+            Height = 19
+            Top = 112
+            Width = 55
+            AllowGrayed = True
+            Caption = 'Action'
+            ParentFont = False
+            TabOrder = 28
+          end
+          object CheckBox30: TCheckBox
+            Left = 363
+            Height = 19
+            Top = 136
+            Width = 55
+            AllowGrayed = True
+            Caption = 'Action'
+            ParentFont = False
+            TabOrder = 29
+          end
+          object CheckBox31: TCheckBox
+            Left = 363
+            Height = 19
+            Top = 160
+            Width = 55
+            AllowGrayed = True
+            Caption = 'Action'
+            ParentFont = False
+            TabOrder = 30
+          end
+          object CheckBox32: TCheckBox
+            Left = 363
+            Height = 19
+            Top = 184
+            Width = 55
+            AllowGrayed = True
+            Caption = 'Action'
+            ParentFont = False
+            TabOrder = 31
+          end
+          object CheckBox33: TCheckBox
+            Left = 471
+            Height = 19
+            Top = 16
+            Width = 55
+            AllowGrayed = True
+            Caption = 'Action'
+            ParentFont = False
+            TabOrder = 32
+          end
+          object CheckBox34: TCheckBox
+            Left = 471
+            Height = 19
+            Top = 40
+            Width = 55
+            AllowGrayed = True
+            Caption = 'Action'
+            ParentFont = False
+            TabOrder = 33
+          end
+          object CheckBox35: TCheckBox
+            Left = 471
+            Height = 19
+            Top = 64
+            Width = 55
+            AllowGrayed = True
+            Caption = 'Action'
+            ParentFont = False
+            TabOrder = 34
+          end
+          object CheckBox36: TCheckBox
+            Left = 471
+            Height = 19
+            Top = 88
+            Width = 55
+            AllowGrayed = True
+            Caption = 'Action'
+            ParentFont = False
+            TabOrder = 35
+          end
+          object CheckBox37: TCheckBox
+            Left = 471
+            Height = 19
+            Top = 112
+            Width = 55
+            AllowGrayed = True
+            Caption = 'Action'
+            ParentFont = False
+            TabOrder = 36
+          end
+          object CheckBox38: TCheckBox
+            Left = 471
+            Height = 19
+            Top = 136
+            Width = 55
+            AllowGrayed = True
+            Caption = 'Action'
+            ParentFont = False
+            TabOrder = 37
+          end
+          object lbFilterCustomGenres: TLabel
+            Left = 23
+            Height = 17
+            Top = 218
+            Width = 93
+            Alignment = taRightJustify
+            BidiMode = bdRightToLeft
+            Caption = 'Custom Genres'
+            Font.Height = -13
+            Font.Style = [fsBold]
+            ParentBidiMode = False
+            ParentColor = False
+            ParentFont = False
+          end
+          object edCustomGenres: TEdit
+            Left = 135
+            Height = 23
+            Top = 216
+            Width = 338
+            ParentFont = False
+            TabOrder = 38
+          end
+          object lbFilterHint: TLabel
+            Left = 513
+            Height = 15
+            Top = 220
+            Width = 13
+            Caption = '[?]'
+            Font.Color = clBlue
+            ParentColor = False
+            ParentFont = False
+            ParentShowHint = False
+            ShowHint = True
+          end
+        end
+        object pnFilter: TPanel
+          Left = 0
+          Height = 192
+          Top = 248
+          Width = 595
+          Align = alTop
+          ClientHeight = 192
+          ClientWidth = 595
+          ParentFont = False
+          TabOrder = 1
+          object rbOne: TRadioButton
+            Left = 323
+            Height = 19
+            Top = 32
+            Width = 169
+            Caption = 'Have one of genres checked'
+            ParentFont = False
+            TabOrder = 1
+          end
+          object rbAll: TRadioButton
+            Left = 323
+            Height = 19
+            Top = 8
+            Width = 142
+            Caption = 'Have all genre checked'
+            Checked = True
+            ParentFont = False
+            TabOrder = 0
+            TabStop = True
+          end
+          object cbOnlyNew: TCheckBox
+            Left = 323
+            Height = 19
+            Top = 56
+            Width = 146
+            Caption = 'Search only new manga'
+            ParentFont = False
+            TabOrder = 2
+          end
+          object edFilterTitle: TEdit
+            Left = 135
+            Height = 23
+            Top = 8
+            Width = 146
+            TabOrder = 3
+          end
+          object edFilterArtists: TEdit
+            Left = 135
+            Height = 23
+            Top = 56
+            Width = 146
+            TabOrder = 4
+          end
+          object edFilterAuthors: TEdit
+            Left = 135
+            Height = 23
+            Top = 32
+            Width = 146
+            TabOrder = 5
+          end
+          object lbFilterTitle: TLabel
+            Left = 23
+            Height = 17
+            Top = 8
+            Width = 28
+            Alignment = taRightJustify
+            BidiMode = bdRightToLeft
+            Caption = 'Title'
+            Font.Height = -13
+            Font.Style = [fsBold]
+            ParentBidiMode = False
+            ParentColor = False
+            ParentFont = False
+          end
+          object lbFilterAuthors: TLabel
+            Left = 23
+            Height = 17
+            Top = 32
+            Width = 49
+            Alignment = taRightJustify
+            BidiMode = bdRightToLeft
+            Caption = 'Authors'
+            Font.Height = -13
+            Font.Style = [fsBold]
+            ParentBidiMode = False
+            ParentColor = False
+            ParentFont = False
+          end
+          object lbFilterArtists: TLabel
+            Left = 23
+            Height = 17
+            Top = 56
+            Width = 40
+            Alignment = taRightJustify
+            BidiMode = bdRightToLeft
+            Caption = 'Artists'
+            Font.Height = -13
+            Font.Style = [fsBold]
+            ParentBidiMode = False
+            ParentColor = False
+            ParentFont = False
+          end
+          object cbFilterStatus: TComboBox
+            Left = 135
+            Height = 23
+            Top = 80
+            Width = 146
+            ItemHeight = 15
+            ItemIndex = 2
+            Items.Strings = (
+              'Completed'
+              'Ongoing'
+              '<none>'
+            )
+            Style = csDropDownList
+            TabOrder = 6
+            Text = '<none>'
+          end
+          object lbFilterStatus: TLabel
+            Left = 23
+            Height = 17
+            Top = 80
+            Width = 38
+            Alignment = taRightJustify
+            BidiMode = bdRightToLeft
+            Caption = 'Status'
+            Font.Height = -13
+            Font.Style = [fsBold]
+            ParentBidiMode = False
+            ParentColor = False
+            ParentFont = False
+          end
+          object lbFilterSummary: TLabel
+            Left = 23
+            Height = 17
+            Top = 104
+            Width = 59
+            Alignment = taRightJustify
+            BidiMode = bdRightToLeft
+            Caption = 'Summary'
+            Font.Height = -13
+            Font.Style = [fsBold]
+            ParentBidiMode = False
+            ParentColor = False
+            ParentFont = False
+          end
+          object edFilterSummary: TEdit
+            Left = 135
+            Height = 23
+            Top = 104
+            Width = 338
+            TabOrder = 7
+          end
+          object btFilter: TButton
+            Left = 39
+            Height = 37
+            Top = 139
+            Width = 130
+            Caption = 'Filter'
+            Font.Color = clHighlight
+            Font.Height = -13
+            Font.Style = [fsBold]
+            OnClick = btFilterClick
+            ParentFont = False
+            TabOrder = 8
+          end
+          object btFilterReset: TButton
+            Left = 345
+            Height = 37
+            Top = 139
+            Width = 128
+            Caption = 'Reset value'
+            Font.Height = -13
+            Font.Style = [fsBold]
+            OnClick = btFilterResetClick
+            ParentFont = False
+            TabOrder = 9
+          end
+          object btRemoveFilterLarge: TBitBtn
+            AnchorSideLeft.Side = asrBottom
+            AnchorSideTop.Side = asrBottom
+            Left = 191
+            Height = 37
+            Hint = 'Remove filter'
+            Top = 139
+            Width = 136
+            Caption = 'Remove filter'
+            Font.Height = -13
+            Font.Style = [fsBold]
+            OnClick = btRemoveFilterClick
+            ParentFont = False
+            ParentShowHint = False
+            ShowHint = True
+            TabOrder = 10
+          end
+          object cbSearchFromAllSites: TCheckBox
+            Left = 323
+            Height = 19
+            Top = 80
+            Width = 149
+            Caption = 'Search in all manga sites'
+            TabOrder = 11
+          end
+        end
+      end
+    end
+    object tsFavorites: TTabSheet
+      Caption = 'Favorites'
+      ClientHeight = 442
+      ClientWidth = 616
+      object vtFavorites: TVirtualStringTree
+        Left = 0
+        Height = 354
+        Top = 0
+        Width = 616
+        Align = alTop
+        Anchors = [akTop, akLeft, akRight, akBottom]
+        DefaultText = 'Node'
+        Header.AutoSizeIndex = 0
+        Header.Columns = <        
+          item
+            Position = 0
+            Text = 'Title'
+            Width = 150
+          end        
+          item
+            Position = 1
+            Text = 'Current chapter'
+            Width = 100
+          end        
+          item
+            Position = 2
+            Text = 'Website'
+            Width = 65
+          end        
+          item
+            Position = 3
+            Text = 'Save to'
+            Width = 200
+          end>
+        Header.DefaultHeight = 24
+        Header.Height = 24
+        Header.Options = [hoColumnResize, hoDrag, hoShowSortGlyphs, hoVisible]
+        Header.SortColumn = 0
+        Header.Style = hsXPStyle
+        ParentFont = False
+        PopupMenu = pmFavorites
+        TabOrder = 0
+        TreeOptions.PaintOptions = [toShowButtons, toShowDropmark, toShowRoot, toThemeAware, toUseBlendedImages]
+        TreeOptions.SelectionOptions = [toFullRowSelect, toMultiSelect]
+        OnDblClick = vtFavoritesDblClick
+        OnGetText = vtFavoritesGetText
+        OnHeaderClick = vtFavoritesHeaderClick
+        OnInitNode = vtFavoritesInitNode
+      end
+      object btFavoritesCheckNewChapter: TBitBtn
+        Left = 33
+        Height = 40
+        Top = 362
+        Width = 555
+        Anchors = [akLeft, akRight, akBottom]
+        Caption = 'Check for new chapter'
+        OnClick = btFavoritesCheckNewChapterClick
+        TabOrder = 1
+      end
+      object btFavoritesImport: TBitBtn
+        Left = 33
+        Height = 24
+        Top = 408
+        Width = 555
+        Anchors = [akLeft, akRight, akBottom]
+        Caption = 'Import list ...'
+        OnClick = btFavoritesImportClick
+        ParentFont = False
+        TabOrder = 2
+      end
+    end
+    object tsOption: TTabSheet
+      Caption = 'Options'
+      ClientHeight = 442
+      ClientWidth = 616
+      object pnOptions: TPageControl
+        Left = 9
+        Height = 349
+        Top = 26
+        Width = 597
+        ActivePage = tsGeneral
+        Anchors = [akTop, akLeft, akRight, akBottom]
+        TabIndex = 0
+        TabOrder = 0
+        object tsGeneral: TTabSheet
+          Caption = 'General'
+          ClientHeight = 321
+          ClientWidth = 589
+          object cbLanguages: TComboBox
+            Left = 20
+            Height = 23
+            Top = 34
+            Width = 212
+            ItemHeight = 15
+            Items.Strings = (
+              'English'
+            )
+            ParentFont = False
+            Style = csDropDownList
+            TabOrder = 0
+          end
+          object lbOptionLanguage: TLabel
+            Left = 20
+            Height = 15
+            Top = 18
+            Width = 101
+            Caption = 'lbOptionLanguage'
+            ParentColor = False
+          end
+          object seOptionNewMangaTime: TSpinEdit
+            Left = 20
+            Height = 23
+            Top = 138
+            Width = 58
+            MaxValue = 365
+            MinValue = 1
+            ParentFont = False
+            TabOrder = 1
+            Value = 1
+          end
+          object lbOptionNewMangaTime: TLabel
+            Left = 92
+            Height = 15
+            Top = 138
+            Width = 135
+            Caption = 'lbOptionNewMangaTime'
+            ParentColor = False
+            ParentFont = False
+          end
+          object cbOptionMinimizeToTray: TCheckBox
+            Left = 20
+            Height = 19
+            Top = 170
+            Width = 156
+            Caption = 'cbOptionMinimizeToTray'
+            ParentFont = False
+            TabOrder = 2
+          end
+          object cbOptionLetFMDDo: TComboBox
+            Left = 20
+            Height = 23
+            Top = 90
+            Width = 212
+            ItemHeight = 15
+            ItemIndex = 0
+            Items.Strings = (
+              ''
+            )
+            ParentFont = False
+            Style = csDropDownList
+            TabOrder = 3
+          end
+          object lbOptionLetFMDDo: TLabel
+            Left = 20
+            Height = 15
+            Top = 74
+            Width = 108
+            Caption = 'lbOptionLetFMDDo'
+            ParentColor = False
+          end
+          object cbOptionBatotoUseIE: TCheckBox
+            Left = 260
+            Height = 19
+            Top = 30
+            Width = 133
+            Caption = 'cbOptionBatotoUseIE'
+            Enabled = False
+            ParentFont = False
+            TabOrder = 4
+            Visible = False
+          end
+          object gbOptionExternal: TGroupBox
+            Left = 20
+            Height = 89
+            Top = 206
+            Width = 530
+            Anchors = [akTop, akLeft, akRight]
+            Caption = 'External program'
+            ClientHeight = 69
+            ClientWidth = 526
+            ParentFont = False
+            TabOrder = 5
+            object edOptionExternal: TEdit
+              Left = 22
+              Height = 23
+              Top = 34
+              Width = 444
+              Anchors = [akTop, akLeft, akRight]
+              TabOrder = 0
+            end
+            object lbOptionExternal: TLabel
+              Left = 22
+              Height = 15
+              Top = 14
+              Width = 213
+              Caption = 'Open manga by using external program:'
+              ParentColor = False
+            end
+            object lbOptionExternalHint: TLabel
+              Left = 478
+              Height = 15
+              Top = 36
+              Width = 13
+              Anchors = [akTop, akRight]
+              Caption = '[?]'
+              Font.Color = clBlue
+              ParentColor = False
+              ParentFont = False
+              ParentShowHint = False
+              ShowHint = True
+            end
+          end
+        end
+        object tsConnections: TTabSheet
+          Caption = 'Connections'
+          ClientHeight = 315
+          ClientWidth = 589
+          object sbDownloadConnections: TScrollBox
+            Left = 0
+            Height = 315
+            Top = 0
+            Width = 589
+            HorzScrollBar.Page = 585
+            VertScrollBar.Page = 311
+            Align = alClient
+            ClientHeight = 311
+            ClientWidth = 585
+            TabOrder = 0
+            object cbOptionUseProxy: TCheckBox
+              Left = 32
+              Height = 19
+              Top = 154
+              Width = 71
+              Caption = 'Use proxy'
+              OnChange = cbOptionUseProxyChange
+              ParentFont = False
+              TabOrder = 0
+            end
+            object gbOptionProxy: TGroupBox
+              Left = 12
+              Height = 104
+              Top = 178
+              Width = 567
+              Anchors = [akTop, akLeft, akRight]
+              Caption = 'Proxy config'
+              ClientHeight = 84
+              ClientWidth = 563
+              Enabled = False
+              ParentFont = False
+              TabOrder = 1
+              object lbOptionHost: TLabel
+                Left = 14
+                Height = 15
+                Top = 14
+                Width = 25
+                Caption = 'Host'
+                ParentColor = False
+                ParentFont = False
+              end
+              object lbOptionPort: TLabel
+                Left = 14
+                Height = 15
+                Top = 46
+                Width = 22
+                Caption = 'Port'
+                ParentColor = False
+              end
+              object edOptionHost: TEdit
+                Left = 55
+                Height = 23
+                Top = 7
+                Width = 154
+                Font.CharSet = ANSI_CHARSET
+                Font.Height = -12
+                Font.Name = 'Default'
+                ParentFont = False
+                TabOrder = 0
+              end
+              object edOptionPort: TEdit
+                Left = 55
+                Height = 23
+                Top = 39
+                Width = 154
+                Font.CharSet = ANSI_CHARSET
+                Font.Height = -12
+                Font.Name = 'Default'
+                ParentFont = False
+                TabOrder = 1
+              end
+              object lbOptionUser: TLabel
+                AnchorSideLeft.Side = asrBottom
+                AnchorSideTop.Side = asrBottom
+                Left = 306
+                Height = 15
+                Top = 14
+                Width = 53
+                Anchors = [akTop, akRight]
+                Caption = 'Username'
+                ParentColor = False
+              end
+              object lbOptionPass: TLabel
+                AnchorSideLeft.Side = asrBottom
+                AnchorSideTop.Side = asrBottom
+                Left = 307
+                Height = 15
+                Top = 46
+                Width = 50
+                Anchors = [akTop, akRight]
+                Caption = 'Password'
+                ParentColor = False
+              end
+              object edOptionUser: TEdit
+                AnchorSideLeft.Side = asrBottom
+                AnchorSideTop.Side = asrBottom
+                Left = 371
+                Height = 23
+                Top = 7
+                Width = 154
+                Anchors = [akTop, akRight]
+                Font.CharSet = ANSI_CHARSET
+                Font.Height = -12
+                Font.Name = 'Default'
+                ParentFont = False
+                TabOrder = 2
+              end
+              object edOptionPass: TEdit
+                AnchorSideLeft.Side = asrBottom
+                AnchorSideTop.Side = asrBottom
+                Left = 371
+                Height = 23
+                Top = 39
+                Width = 154
+                Anchors = [akTop, akRight]
+                Font.CharSet = ANSI_CHARSET
+                Font.Height = -12
+                Font.Name = 'Default'
+                ParentFont = False
+                TabOrder = 3
+              end
+            end
+            object seOptionMaxParallel: TSpinEdit
+              Left = 12
+              Height = 23
+              Top = 26
+              Width = 48
+              MaxValue = 4
+              MinValue = 1
+              ParentFont = False
+              ParentShowHint = False
+              TabOrder = 2
+              Value = 1
+            end
+            object lbOptionMaxParallel: TLabel
+              Left = 76
+              Height = 15
+              Top = 26
+              Width = 292
+              Caption = 'Number of downloaded tasks at the same time (Max: 8)'
+              ParentColor = False
+              ParentFont = False
+            end
+            object lbOptionMaxThread: TLabel
+              Left = 76
+              Height = 15
+              Top = 58
+              Width = 331
+              Caption = 'Number of downloaded files per task at the same time (Max: 8)'
+              ParentColor = False
+              ParentFont = False
+            end
+            object seOptionMaxThread: TSpinEdit
+              Left = 12
+              Height = 23
+              Top = 58
+              Width = 48
+              MaxValue = 8
+              MinValue = 1
+              ParentFont = False
+              ParentShowHint = False
+              TabOrder = 3
+              Value = 1
+            end
+            object seOptionMaxRetry: TSpinEdit
+              Left = 12
+              Height = 23
+              Top = 90
+              Width = 48
+              ParentFont = False
+              ParentShowHint = False
+              TabOrder = 4
+            end
+            object lbOptionMaxRetry: TLabel
+              Left = 76
+              Height = 15
+              Top = 90
+              Width = 386
+              Caption = 'Number of retry times if tasks have download problems (0 = always retry)'
+              ParentColor = False
+              ParentFont = False
+            end
+          end
+        end
+        object lbOptionPDFQualityHint: TTabSheet
+          Caption = 'Save to'
+          ClientHeight = 315
+          ClientWidth = 589
+          object edOptionDefaultPath: TLabeledEdit
+            Left = 20
+            Height = 23
+            Top = 34
+            Width = 504
+            Anchors = [akTop, akLeft, akRight]
+            EditLabel.AnchorSideLeft.Control = edOptionDefaultPath
+            EditLabel.AnchorSideRight.Control = edOptionDefaultPath
+            EditLabel.AnchorSideRight.Side = asrBottom
+            EditLabel.AnchorSideBottom.Control = edOptionDefaultPath
+            EditLabel.Left = 20
+            EditLabel.Height = 15
+            EditLabel.Top = 16
+            EditLabel.Width = 504
+            EditLabel.Caption = 'Choose default download path:'
+            EditLabel.ParentColor = False
+            EditLabel.ParentFont = False
+            ParentFont = False
+            TabOrder = 0
+          end
+          object rgOptionCompress: TRadioGroup
+            Left = 20
+            Height = 60
+            Top = 66
+            Width = 530
+            Anchors = [akTop, akLeft, akRight]
+            AutoFill = True
+            Caption = 'Save downloaded chapters as'
+            ChildSizing.LeftRightSpacing = 6
+            ChildSizing.TopBottomSpacing = 6
+            ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+            ChildSizing.EnlargeVertical = crsHomogenousChildResize
+            ChildSizing.ShrinkHorizontal = crsScaleChilds
+            ChildSizing.ShrinkVertical = crsScaleChilds
+            ChildSizing.Layout = cclLeftToRightThenTopToBottom
+            ChildSizing.ControlsPerLine = 4
+            ClientHeight = 40
+            ClientWidth = 526
+            Columns = 4
+            ItemIndex = 0
+            Items.Strings = (
+              'None'
+              'ZIP'
+              'CBZ'
+              'PDF'
+            )
+            ParentFont = False
+            TabOrder = 1
+          end
+          object gbOptionRenaming: TGroupBox
+            Left = 20
+            Height = 137
+            Top = 170
+            Width = 530
+            Anchors = [akTop, akLeft, akRight]
+            Caption = 'Renaming'
+            ClientHeight = 117
+            ClientWidth = 526
+            ParentFont = False
+            TabOrder = 2
+            object cbOptionGenerateMangaFolderName: TCheckBox
+              Left = 22
+              Height = 19
+              Top = 36
+              Width = 261
+              Caption = 'Auto generate folder based on manga''s name'
+              ParentFont = False
+              TabOrder = 0
+            end
+            object cbOptionGenerateChapterName: TCheckBox
+              Left = 294
+              Height = 19
+              Top = 52
+              Width = 246
+              Caption = 'Generate chapter folder with chapter name'
+              ParentFont = False
+              TabOrder = 1
+              Visible = False
+            end
+            object cbOptionPathConvert: TCheckBox
+              Left = 22
+              Height = 19
+              Top = 14
+              Width = 517
+              Caption = 'Change all all unicode symbols to "_" (choose this when you have problem with unicode path)'
+              ParentFont = False
+              TabOrder = 2
+            end
+            object cbOptionAutoNumberChapter: TCheckBox
+              Left = 294
+              Height = 19
+              Top = 36
+              Width = 182
+              Caption = 'cbOptionAutoNumberChapter'
+              TabOrder = 3
+              Visible = False
+            end
+            object edOptionCustomRename: TEdit
+              Left = 22
+              Height = 23
+              Top = 84
+              Width = 444
+              Anchors = [akTop, akLeft, akRight]
+              TabOrder = 4
+            end
+            object lbOptionCustomRename: TLabel
+              Left = 22
+              Height = 15
+              Top = 68
+              Width = 112
+              Caption = 'Chapter folder name:'
+              ParentColor = False
+            end
+            object lbOptionCustomRenameHint: TLabel
+              Left = 478
+              Height = 15
+              Top = 86
+              Width = 13
+              Anchors = [akTop, akRight]
+              Caption = '[?]'
+              Font.Color = clBlue
+              ParentColor = False
+              ParentFont = False
+              ParentShowHint = False
+              ShowHint = True
+            end
+          end
+          object btOptionBrowse: TBitBtn
+            Left = 523
+            Height = 23
+            Top = 34
+            Width = 27
+            Anchors = [akTop, akRight]
+            Caption = '...'
+            OnClick = btOptionBrowseClick
+            TabOrder = 3
+          end
+          object seOptionPDFQuality: TSpinEdit
+            Left = 44
+            Height = 23
+            Hint = '100 = FlateEncode (lossless), lower = DCTEncode (lossy)'
+            Top = 132
+            Width = 50
+            MinValue = 5
+            ParentFont = False
+            ParentShowHint = False
+            ShowHint = True
+            TabOrder = 4
+            Value = 100
+          end
+          object lbOptionPDFQuality: TLabel
+            Left = 108
+            Height = 15
+            Hint = '100 = FlateEncode (lossless), lower = DCTEncode (lossy)'
+            Top = 134
+            Width = 119
+            Caption = 'PDF compression level'
+            ParentColor = False
+            ParentFont = False
+            ParentShowHint = False
+            ShowHint = True
+          end
+          object lbOptionCustomRenameHint1: TLabel
+            Left = 260
+            Height = 15
+            Top = 134
+            Width = 13
+            Caption = '[?]'
+            Font.Color = clBlue
+            ParentColor = False
+            ParentFont = False
+            ParentShowHint = False
+            ShowHint = True
+          end
+        end
+        object tsUpdate: TTabSheet
+          Caption = 'Updates'
+          ClientHeight = 315
+          ClientWidth = 589
+          object cbOptionAutoCheckUpdate: TCheckBox
+            Left = 28
+            Height = 19
+            Top = 30
+            Width = 140
+            Caption = 'Check for new version '
+            ParentFont = False
+            TabOrder = 0
+          end
+          object gbOptionFavorites: TGroupBox
+            Left = 29
+            Height = 128
+            Top = 62
+            Width = 530
+            Anchors = [akTop, akLeft, akRight]
+            Caption = 'Favorites'
+            ClientHeight = 108
+            ClientWidth = 526
+            ParentFont = False
+            TabOrder = 1
+            object cbOptionAutoCheckFavStartup: TCheckBox
+              Left = 21
+              Height = 19
+              Top = 38
+              Width = 196
+              Caption = 'Automatic check for new chapter'
+              ParentFont = False
+              TabOrder = 0
+            end
+            object seOptionCheckMinutes: TSpinEdit
+              Left = 21
+              Height = 23
+              Top = 70
+              Width = 58
+              MaxValue = 1440
+              OnChange = seOptionCheckMinutesChange
+              TabOrder = 1
+            end
+            object lbOptionAutoCheckMinutes: TLabel
+              Left = 93
+              Height = 15
+              Top = 78
+              Width = 231
+              Caption = 'Auto check for new chapter every ? minutes'
+              ParentColor = False
+            end
+            object cbOptionAutoRemoveCompletedManga: TCheckBox
+              Left = 21
+              Height = 19
+              Top = 14
+              Width = 298
+              Caption = 'Automatic remove completed manga from Favorites'
+              TabOrder = 2
+            end
+          end
+        end
+        object tsDialogs: TTabSheet
+          Caption = 'Dialogs'
+          ClientHeight = 315
+          ClientWidth = 589
+          object gbDialogs: TGroupBox
+            Left = 10
+            Height = 286
+            Top = 14
+            Width = 566
+            Anchors = [akTop, akLeft, akRight, akBottom]
+            ClientHeight = 266
+            ClientWidth = 562
+            TabOrder = 0
+            object cbOptionShowQuitDialog: TCheckBox
+              Left = 48
+              Height = 19
+              Top = 54
+              Width = 156
+              Caption = 'cbOptionShowQuitDialog'
+              ParentFont = False
+              TabOrder = 0
+            end
+            object cbOptionShowFavoriteDialog: TCheckBox
+              Left = 48
+              Height = 19
+              Top = 102
+              Width = 175
+              Caption = 'cbOptionShowFavoriteDialog'
+              ParentFont = False
+              TabOrder = 1
+            end
+            object lbOptionDialogs: TLabel
+              Left = 32
+              Height = 15
+              Top = 22
+              Width = 88
+              Caption = 'lbOptionDialogs'
+              ParentColor = False
+            end
+            object cbOptionShowDeleteTaskDialog: TCheckBox
+              Left = 48
+              Height = 19
+              Top = 78
+              Width = 190
+              Caption = 'cbOptionShowDeleteTaskDialog'
+              ParentFont = False
+              TabOrder = 2
+            end
+          end
+        end
+        object tsWebsites: TTabSheet
+          Caption = 'Websites'
+          ClientHeight = 321
+          ClientWidth = 589
+          object vtOptionMangaSiteSelection: TVirtualStringTree
+            Left = 0
+            Height = 321
+            Top = 0
+            Width = 589
+            Align = alClient
+            DefaultText = 'Node'
+            Header.AutoSizeIndex = 0
+            Header.Columns = <>
+            Header.DefaultHeight = 17
+            Header.MainColumn = -1
+            ParentFont = False
+            TabOrder = 0
+            TreeOptions.MiscOptions = [toAcceptOLEDrop, toCheckSupport, toFullRepaintOnResize, toInitOnSave, toToggleOnDblClick, toWheelPanning, toEditOnClick]
+            TreeOptions.SelectionOptions = [toFullRowSelect]
+            OnGetText = vtOptionMangaSiteSelectionGetText
+            OnGetNodeDataSize = vtOptionMangaSiteSelectionGetNodeDataSize
+            OnInitNode = vtOptionMangaSiteSelectionInitNode
+          end
+        end
+        object tsMisc: TTabSheet
+          Caption = 'Misc'
+          ClientHeight = 321
+          ClientWidth = 589
+          object gbMisc: TGroupBox
+            Left = 10
+            Height = 293
+            Top = 14
+            Width = 566
+            Anchors = [akTop, akLeft, akRight, akBottom]
+            ClientHeight = 273
+            ClientWidth = 562
+            TabOrder = 0
+            object cbOptionShowAllLang: TCheckBox
+              Left = 32
+              Height = 19
+              Top = 70
+              Width = 167
+              Caption = '[Batoto] Show All Language'
+              ParentFont = False
+              TabOrder = 2
+            end
+            object cbOptionShowBatotoSG: TCheckBox
+              Left = 32
+              Height = 19
+              Top = 46
+              Width = 190
+              Caption = '[Batoto] Show scan group name'
+              ParentFont = False
+              TabOrder = 0
+            end
+            object cbOptionEnableLoadCover: TCheckBox
+              Left = 32
+              Height = 19
+              Top = 22
+              Width = 153
+              Caption = 'Enable load manga cover'
+              ParentFont = False
+              TabOrder = 1
+            end
+          end
+        end
+      end
+      object btOptionApply: TButton
+        Left = 50
+        Height = 41
+        Top = 388
+        Width = 128
+        Anchors = [akBottom]
+        Caption = 'Apply'
+        OnClick = btOptionApplyClick
+        TabOrder = 1
+      end
+    end
+    object tsAbout: TTabSheet
+      Caption = 'About'
+      ClientHeight = 445
+      ClientWidth = 616
+      object rmAbout: TRichMemo
+        Left = 0
+        Height = 378
+        Top = 0
+        Width = 616
+        Align = alTop
+        Anchors = [akTop, akLeft, akRight, akBottom]
+        Font.Style = [fsBold]
+        HideSelection = False
+        ParentFont = False
+        ReadOnly = True
+        ScrollBars = ssVertical
+        TabOrder = 0
+      end
+      object btCheckVersion: TBitBtn
+        Left = 25
+        Height = 40
+        Top = 394
+        Width = 208
+        Anchors = [akLeft, akBottom]
+        Caption = 'Check for new version'
+        OnClick = btCheckVersionClick
+        TabOrder = 1
+      end
+      object btVisitMyBlog: TBitBtn
+        Left = 249
+        Height = 40
+        Top = 394
+        Width = 208
+        Anchors = [akLeft, akBottom]
+        Caption = 'Visit my blog'
+        OnClick = btVisitMyBlogClick
+        TabOrder = 2
+      end
+    end
+  end
+  object sbMain: TStatusBar
+    Left = 0
+    Height = 24
+    Top = 478
+    Width = 819
+    Panels = <    
+      item
+        Width = 195
+      end    
+      item
+        Width = 50
+      end>
+    SimplePanel = False
+  end
+  object pnMainTop: TPanel
+    Left = 0
+    Height = 8
+    Top = 0
+    Width = 819
+    Align = alTop
+    TabOrder = 4
+    Visible = False
+  end
+  object dlgSaveTo: TSelectDirectoryDialog
+    left = 80
+    top = 184
+  end
+  object pmDownload: TPopupMenu
+    OnPopup = pmDownloadPopup
+    left = 80
+    top = 240
+    object miUp: TMenuItem
+      Caption = 'Move up'
+      Bitmap.Data = {
+        36040000424D3604000000000000360000002800000010000000100000000100
+        2000000000000004000064000000640000000000000000000000FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF000000
+        000000000000000000000000000001B318FF01B318FF01B318FF01B318FF01B3
+        18FF01B318FF0000000000000000FFFFFF00FFFFFF00FFFFFF00FFFFFF000000
+        000000000000000000000000000001B318FF00D014FF01BF1FFF01BF1FFF00D0
+        14FF01B318FF000000000000000000000000FFFFFF00FFFFFF00FFFFFF000000
+        000000000000000000000000000001B318FF00D528FF01C62CFF01C62CFF00D5
+        28FF01B318FF000000000000000000000000FFFFFF00FFFFFF00FFFFFF000000
+        000000000000000000000000000001B318FF00D93BFF01CD3AFF01CD3AFF00D9
+        3BFF01B318FF000000000000000000000000FFFFFF00FFFFFF00FFFFFF000000
+        000000000000000000000000000001B318FF00DD4FFF00D34BFF00D34BFF00DD
+        4FFF01B318FF000000000000000000000000FFFFFF00FFFFFF00FFFFFF000000
+        000000000000000000000000000001B318FF00E163FF00D95CFF00D95CFF00E1
+        63FF01B318FF000000000000000000000000FFFFFF00FFFFFF00FFFFFF0001B3
+        18B301B318FF01B318FF01B318FF01B318FF00E676FF00E06EFF00E06EFF00E6
+        76FF01B318FF01B318FF01B318FF01B318FF01B318B3FFFFFF00FFFFFF0001B3
+        18FF00EA8AFF00EA8AFF00EA8AFF00EA8AFF00EA8AFF00E682FF00E682FF00EA
+        8AFF00EA8AFF00EA8AFF00EA8AFF00EA8AFF01B318FFFFFFFF00FFFFFF000000
+        000001B318FF00EE9DFF00EE9DFF00EE9DFF00EE9DFF00EC96FF00EC96FF00EE
+        9DFF00EE9DFF00EE9DFF00EE9DFF01B318FFFFFFFF00FFFFFF00FFFFFF000000
+        00000000000001B318FF00F2B2FF00F2B2FF00F2B2FF00F1AEFF00F1AEFF00F2
+        B2FF00F2B2FF00F2B2FF01B318FF00000000FFFFFF00FFFFFF00FFFFFF000000
+        0000000000000000000001B318FF00F7C5FF00F7C5FF00F7C5FF00F7C5FF00F7
+        C5FF00F7C5FF01B318FF0000000000000000FFFFFF00FFFFFF00FFFFFF000000
+        000000000000000000000000000001B318FF00FBD9FF00FBD9FF00FBD9FF00FB
+        D9FF01B318FF000000000000000000000000FFFFFF00FFFFFF00FFFFFF000000
+        00000000000000000000000000000000000001B318FF00FFECFF00FFECFF01B3
+        18FF00000000000000000000000000000000FFFFFF00FFFFFF00FFFFFF000000
+        0000000000000000000000000000000000000000000001B318FF01B318FF0000
+        0000000000000000000000000000FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00
+      }
+      Visible = False
+      OnClick = miUpClick
+    end
+    object miDown: TMenuItem
+      Caption = 'Move down'
+      Bitmap.Data = {
+        36040000424D3604000000000000360000002800000010000000100000000100
+        2000000000000004000064000000640000000000000000000000FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF000000
+        0000000000000000000000000000000000000000000001B318FF01B318FF0000
+        0000000000000000000000000000FFFFFF00FFFFFF00FFFFFF00FFFFFF000000
+        00000000000000000000000000000000000001B318FF01BF1FFF01BF1FFF01B3
+        18FF00000000000000000000000000000000FFFFFF00FFFFFF00FFFFFF000000
+        000000000000000000000000000001B318FF00D528FF01C62CFF01C62CFF00D5
+        28FF01B318FF000000000000000000000000FFFFFF00FFFFFF00FFFFFF000000
+        0000000000000000000001B318FF00D93BFF00D93BFF01CD3AFF01CD3AFF00D9
+        3BFF00D93BFF01B318FF0000000000000000FFFFFF00FFFFFF00FFFFFF000000
+        00000000000001B318FF00DD4FFF00DD4FFF00DD4FFF00D34BFF00D34BFF00DD
+        4FFF00DD4FFF00DD4FFF01B318FF00000000FFFFFF00FFFFFF00FFFFFF000000
+        000001B318FF00E163FF00E163FF00E163FF00E163FF00D95CFF00D95CFF00E1
+        63FF00E163FF00E163FF00E163FF01B318FFFFFFFF00FFFFFF00FFFFFF0001B3
+        18FF00E676FF00E676FF00E676FF00E676FF00E676FF00E06EFF00E06EFF00E6
+        76FF00E676FF00E676FF00E676FF00E676FF01B318FFFFFFFF00FFFFFF0001B3
+        18B301B318FF01B318FF01B318FF01B318FF00EA8AFF00E682FF00E682FF00EA
+        8AFF01B318FF01B318FF01B318FF01B318FF01B318B3FFFFFF00FFFFFF000000
+        000000000000000000000000000001B318FF00EE9DFF00EC96FF00EC96FF00EE
+        9DFF01B318FF000000000000000000000000FFFFFF00FFFFFF00FFFFFF000000
+        000000000000000000000000000001B318FF00F2B2FF00F1AEFF00F1AEFF00F2
+        B2FF01B318FF000000000000000000000000FFFFFF00FFFFFF00FFFFFF000000
+        000000000000000000000000000001B318FF00F7C5FF00F7C5FF00F7C5FF00F7
+        C5FF01B318FF000000000000000000000000FFFFFF00FFFFFF00FFFFFF000000
+        000000000000000000000000000001B318FF00FBD9FF00FBD9FF00FBD9FF00FB
+        D9FF01B318FF000000000000000000000000FFFFFF00FFFFFF00FFFFFF000000
+        000000000000000000000000000001B318FF00FFECFF00FFECFF00FFECFF00FF
+        ECFF01B318FF000000000000000000000000FFFFFF00FFFFFF00FFFFFF000000
+        000000000000000000000000000001B318FF01B318FF01B318FF01B318FF01B3
+        18FF01B318FF0000000000000000FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00
+      }
+      Visible = False
+      OnClick = miDownClick
+    end
+    object MenuItem2: TMenuItem
+      Caption = '-'
+      Visible = False
+    end
+    object miDownloadStop: TMenuItem
+      Caption = 'Stop'
+      Bitmap.Data = {
+        36040000424D3604000000000000360000002800000010000000100000000100
+        2000000000000004000064000000640000000000000000000000000000000000
+        0000000000000000000000000000000000000000000000000000000000000000
+        0000000000000000000000000000000000000000000000000000000000000000
+        0000000000000000000000000000000000000000000000000000000000000000
+        0000000000000000000000000000000000000000000000000000000000000000
+        00000000773200008C7200009873000098730000987300009873000098730000
+        9873000098730000987300008E72000079330000000000000000000000000000
+        0000000087720000B7FD0000D1FF0000D1FF0000D1FF0000D1FE0000D1FF0000
+        D1FF0000D1FF0000D1FF0000BAFE00008D720000000000000000000000000000
+        000000008E730000C5FF0000E3FF0000E2FF0000E2FF0000E2FF0000E2FF0000
+        E2FF0000E2FF0000E3FF0000C8FF000094730000000000000000000000000000
+        000000008B730000B9FF0000D1FF0000D1FF0000D1FF0000D1FF0000D1FF0000
+        D1FF0000D1FF0000D1FF0000BCFF000091730000000000000000000000000000
+        000000008B730000B7FF0000CDFF0000CCFF0000CCFF0000CCFF0000CCFF0000
+        CCFF0000CCFF0000CDFF0000B9FF000090730000000000000000000000000000
+        000000008B730000B7FF0000CDFF0000CCFF0000CCFF0000CCFF0000CCFF0000
+        CCFF0000CCFF0000CCFF0000B9FF000090730000000000000000000000000000
+        000000008B730101B7FF0101CDFF0101CCFF0101CCFF0101CCFF0101CCFF0101
+        CCFF0101CCFF0101CDFF0101B9FE000090730000000000000000000000000000
+        000002028B730A0ABAFF0F0FD1FF0F0FD1FF0F0FD1FF0F0FD1FF0F0FD1FF0F0F
+        D1FF0F0FD1FF0F0FD1FF0A0ABCFF030391730000000000000000000000000000
+        000009098D732222C2FF3434DEFF3535DEFF3535DEFF3535DEFF3535DEFF3535
+        DEFF3535DEFF3434DEFF2323C5FF0A0A93730000000000000000000000000000
+        000011118F733F3FCBFF6262EDFF6363EDFF6363EDFF6363EDFF6363EDFF6363
+        EDFF6363EDFF6262EDFF4343CEFF141496730000000000000000000000000000
+        00000E0E87723636B6FD5353D1FF5454D2FF5454D2FF5454D2FF5454D2FE5454
+        D2FF5454D2FE5353D1FE3939B9FD11118C720000000000000000000000000000
+        0000040475321010877119199173191991731919917319199173191991731919
+        9173191991731919917311118872050577320000000000000000000000000000
+        0000000000000000000000000000000000000000000000000000000000000000
+        0000000000000000000000000000000000000000000000000000000000000000
+        0000000000000000000000000000000000000000000000000000000000000000
+        0000000000000000000000000000000000000000000000000000
+      }
+      OnClick = miDownloadStopClick
+    end
+    object miDownloadRemuse: TMenuItem
+      Caption = 'Remuse'
+      Bitmap.Data = {
+        36040000424D3604000000000000360000002800000010000000100000000100
+        200000000000000400006400000064000000000000000000000000FF000000FF
+        000000FF000000FF000000FF000000FF000000FF000000FF000000FF000000FF
+        000000FF000000FF000000FF000000FF000000FF000000FF000000FF000000FF
+        000000FF000000FF000000FF000000FF000000FF000000FF000000FF000000FF
+        000000FF000000FF000000FF000000FF000000FF000000FF000000FF000000FF
+        000000FF000000FF000000E300FF00AF00FF00BB00FF00FF000000FF000000FF
+        000000FF000000FF000000FF000000FF000000FF000000FF000000FF000000FF
+        000000FF000000FF000000A100FF009B00FF008500FF00BC00FF00FF000000FF
+        000000FF000000FF000000FF000000FF000000FF000000FF000000FF000000FF
+        000000FF000000FF0000008D00FF00A200FF009A00FF008900FF00BF00FF00FF
+        000000FF000000FF000000FF000000FF000000FF000000FF000000FF000000FF
+        000000FF000000FF0000008600FF00A700FF00A600FF00A100FF009300FF00C0
+        00FF00FF000000FF000000FF000000FF000000FF000000FF000000FF000000FF
+        000000FF000000FF0000008D00FF00B000FF00B000FF00AF00FF00AA00FF009A
+        00FF00C300FF00FF000000FF000000FF000000FF000000FF000000FF000000FF
+        000000FF000000FF0000009500FF00B700FF00B800FF00B700FF00B600FF00B1
+        00FF00A500FF00C400FF00FF000000FF000000FF000000FF000000FF000000FF
+        000000FF000000FF0000009E00FF00C000FF00C100FF00C100FF00C000FF00C0
+        00FF00B600FF00A900FF00FF000000FF000000FF000000FF000000FF000000FF
+        000000FF000000FF000000A600FF00C900FF00C900FF00C900FF00CB00FF00CE
+        00FF00A600FF00CD00FF00FF000000FF000000FF000000FF000000FF000000FF
+        000000FF000000FF000000AF00FF00D200FF00D200FF00D400FF00D400FF00B5
+        00FF00D900FF00FF000000FF000000FF000000FF000000FF000000FF000000FF
+        000000FF000000FF000000B600FF00D900FF00DB00FF00E000FF00BC00FF00D4
+        00FF00FF000000FF000000FF000000FF000000FF000000FF000000FF000000FF
+        000000FF000000FF000000BF00FF00E400FF00E400FF00C500FF00E000FF00FF
+        000000FF000000FF000000FF000000FF000000FF000000FF000000FF000000FF
+        000000FF000000FF000000CC00FF00E200FF00CC00FF00DC00FF00FF000000FF
+        000000FF000000FF000000FF000000FF000000FF000000FF000000FF000000FF
+        000000FF000000FF000000F500FF00E100FF00E600FF00FF000000FF000000FF
+        000000FF000000FF000000FF000000FF000000FF000000FF000000FF000000FF
+        000000FF000000FF000000FF000000FF000000FF000000FF000000FF000000FF
+        000000FF000000FF000000FF000000FF000000FF000000FF0000
+      }
+      OnClick = miDownloadRemuseClick
+    end
+    object miDownloadRemove: TMenuItem
+      Caption = 'Delete'
+      Bitmap.Data = {
+        36040000424D3604000000000000360000002800000010000000100000000100
+        2000000000000004000064000000640000000000000000000000FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00729CFFFF4A80FFFF487EFFFF6995
+        FFFFFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF002C6AFFFF003EFFFF0A50FFFF195EFAFF195EFAFF0E54
+        FFFF003EFFFF195DFFFFFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00FFFFFF001B63FFFF0E4EFEFF1C50F4FF1947F1FF1743EDFF1743ECFF1945
+        F1FF1E4FF3FF104FFCFF0E59FFFFFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF000B55FFFF1449FDFF1D47EEFF1D4BF2FF1D4BF5FF1E4CF7FF1E4CF7FF1D4B
+        F5FF1D4AF2FF1D48EEFF1649FDFF0045FEFFFFFFFF00FFFFFF00FFFFFF009BBE
+        FFFF043FFDFF214DF2FF204DF5FF204FF7FF204FF7FF204FF7FF204FF7FF204F
+        F7FF214FF7FF1F4DF5FF204DF0FF0C42FBFFFFFFFF00FFFFFF00FFFFFF00376A
+        FDFF204CF3FF2654FAFF1A4EFCFF174DFBFF174DFBFF174DFBFF174DFBFF174D
+        FBFF174DFBFF1A4EFCFF2553F7FF224EF3FF285CFBFFFFFFFF00FFFFFF002656
+        EDFF2553F9FF1E54FEFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+        FFFFFFFFFFFFFFFFFFFF1D52FDFF2654F6FF1B4EF1FFFFFFFF00FFFFFF002252
+        F2FF2C5AFFFF144AFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+        FFFFFFFFFFFFFFFFFFFF154BFFFF2D5BFEFF194AF7FFFFFFFF00FFFFFF002A58
+        F4FF2F5FFFFF1A4EFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+        FFFFFFFFFFFFFFFFFFFF1A4EFFFF3160FFFF2051F8FFFFFFFF00FFFFFF004870
+        F7FF3364FFFF3564FFFF1F52FFFF1C50FFFF1C50FFFF1C50FFFF1C50FFFF1C50
+        FFFF1C50FFFF1F52FFFF3564FFFF3565FFFF3A65F7FFFFFFFF00FFFFFF008CA6
+        FEFF2053FFFF3B6BFFFF3866FFFF3867FFFF3867FFFF3867FFFF3867FFFF3867
+        FFFF3866FFFF3967FFFF3B6BFFFF295CFFFFFFFFFF00FFFFFF00FFFFFF00FFFF
+        FF003768FFFF3367FFFF3F6FFFFF3C6CFFFF3C6BFFFF3C6BFFFF3C6BFFFF3C6B
+        FFFF3C6CFFFF3F6FFFFF3B6FFFFF295DFFFFFFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00FFFFFF003065FFFF356AFFFF4272FFFF4070FFFF406FFFFF406FFFFF4071
+        FFFF4373FFFF3D72FFFF2961FFFFFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF005B87FFFF376DFFFF376DFFFF3A6FFFFF3C71FFFF386E
+        FFFF376FFFFF527FFFFFFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF0099B6FFFF7DA2FFFF7A9FFFFF97B4
+        FFFFFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00
+      }
+      object miDeleteTask: TMenuItem
+        Caption = 'Task only'
+        OnClick = miDeleteTaskClick
+      end
+      object miDeleteTaskData: TMenuItem
+        Caption = 'Task + Data'
+        OnClick = miDeleteTaskDataClick
+      end
+    end
+    object miDownloadRemoveFinishedTasks: TMenuItem
+      Caption = 'Delete all finished tasks'
+      OnClick = miDownloadRemoveFinishedTasksClick
+    end
+    object MenuItem4: TMenuItem
+      Caption = '-'
+    end
+    object miDownloadMerge: TMenuItem
+      Caption = 'Merge finished tasks'
+      OnClick = miDownloadMergeClick
+    end
+    object MenuItem1: TMenuItem
+      Caption = '-'
+    end
+    object miOpenFolder: TMenuItem
+      Caption = 'Open Folder'
+      Bitmap.Data = {
+        36040000424D3604000000000000360000002800000010000000100000000100
+        2000000000000004000064000000640000000000000000000000FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00478BE6FF5191E5FF5191E5FF5191E5FF5191E5FF5191E5FF5191E5FF5191
+        E5FF5191E5FF5191E5FF5191E5FF478BE6FFFFFFFF00FFFFFF00FFFFFF002784
+        F7FF429BFFFF469DFFFF469DFFFF469DFFFF469DFFFF469DFFFF469DFFFF469D
+        FFFF469DFFFF469DFFFF469DFFFF429BFFFF2784F7FFFFFFFF00FFFFFF002479
+        FFFF387AFFFF377BFFFF377BFFFF377BFFFF377BFFFF377BFFFF377BFFFF377B
+        FFFF377BFFFF377BFFFF377BFFFF387AFFFF2479FFFFFFFFFF00FFFFFF002173
+        FFFF3B87FFFF3B87FFFF3B87FFFF3B87FFFF3B87FFFF3B87FFFF3B87FFFF3B87
+        FFFF3B87FFFF3B87FFFF3B87FFFF3B87FFFF2172FFFFFFFFFF00FFFFFF002279
+        FFFF3D8DFFFF3B8CFFFF3B8CFFFF3B8CFFFF3B8CFFFF3B8CFFFF3B8CFFFF3B8C
+        FFFF3B8CFFFF3B8CFFFF3B8CFFFF3D8DFFFF2279FFFFFFFFFF00FFFFFF002482
+        FFFF3E95FFFF3D94FFFF3D94FFFF3D94FFFF3D94FFFF3D94FFFF3D94FFFF3D94
+        FFFF3D94FFFF3D94FFFF3D94FFFF3E95FFFF2482FFFFFFFFFF00FFFFFF002488
+        FFFF3E9BFFFF3D9AFFFF3D9AFFFF3D9AFFFF3D9AFFFF3D9AFFFF3D9AFFFF3D9A
+        FFFF3D9AFFFF3D9AFFFF3D9AFFFF3E9BFFFF2488FFFFFFFFFF00FFFFFF002690
+        FFFF40A2FFFF3FA1FFFF3FA1FFFF3FA1FFFF3FA1FFFF3FA1FFFF3FA1FFFF3FA1
+        FFFF3FA1FFFF3FA1FFFF3FA1FFFF40A2FFFF2690FFFFFFFFFF00FFFFFF002697
+        FFFF40A9FFFF3FA8FFFF3FA8FFFF3FA8FFFF3FA8FFFF3FA8FFFF3FA8FFFF3FA8
+        FFFF3FA8FFFF3FA8FFFF3FA7FFFF40A8FFFF2697FFFFFFFFFF00FFFFFF0029A0
+        FFFF42B0FFFF41AFFFFF41AFFFFF41AFFFFF41B0FFFF41B0FFFF41AFFFFF41B0
+        FFFF41B0FFFF41B0FFFF41B1FFFF43B2FFFF26A2FFFFFFFFFF00FFFFFF002AA6
+        FFFF42B6FFFF41B5FFFF41B5FFFF41B6FFFF41B7FFFF45BAFFFF3EBBFFFF3FBD
+        FFFF3FBEFFFF3FBEFFFF3FBEFFFF3BBEFFFF2BA8FFFFFFFFFF00FFFFFF002BAD
+        FFFF43BDFFFF43BCFFFF43BCFFFF42BCFFFF45C1FFFF2CB1FFFF73CDFFFF6DCC
+        FFFF6DCCFFFF6DCCFFFF6DCCFFFF61C9FFFFFFFFFF00FFFFFF00FFFFFF002BB4
+        FFFF44C2FFFF43BFFFFF43BFFFFF43C1FFFF46C6FFFF1CB0FFFFFFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF002ABC
+        FFFF47D0FFFF47CEFFFF47CEFFFF49CFFFFF3FCBFFFF2BB8FFFFFFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF002EC9FFFF3BCCFFFF3BCCFFFF38CCFFFF45CCFFFFFFFFFF00FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00
+      }
+      OnClick = miOpenFolderClick
+    end
+    object miOpenWith: TMenuItem
+      Caption = 'Open ...'
+      OnClick = miOpenWithClick
+    end
+  end
+  object pmChapterList: TPopupMenu
+    left = 80
+    top = 296
+    object miChapterListCheckSelected: TMenuItem
+      Caption = 'Check selected'
+      OnClick = miChapterListCheckSelectedClick
+    end
+    object miChapterListUncheckSelected: TMenuItem
+      Caption = 'Uncheck selected'
+      OnClick = miChapterListUncheckSelectedClick
+    end
+    object miI1: TMenuItem
+      Caption = '-'
+    end
+    object miChapterListCheckAll: TMenuItem
+      Caption = 'Check all'
+      OnClick = miChapterListCheckAllClick
+    end
+    object miChapterListUncheckAll: TMenuItem
+      Caption = 'Uncheck all'
+      OnClick = miChapterListUncheckAllClick
+    end
+    object MenuItem6: TMenuItem
+      Caption = '-'
+    end
+    object miChapterListHighlight: TMenuItem
+      Caption = 'Highlight download chapters'
+      OnClick = miChapterListHighlightClick
+    end
+  end
+  object pmFavorites: TPopupMenu
+    Images = IconList
+    OnPopup = pmFavoritesPopup
+    left = 82
+    top = 350
+    object miFavoritesViewInfos: TMenuItem
+      Caption = 'View manga infos'
+      Bitmap.Data = {
+        36040000424D3604000000000000360000002800000010000000100000000100
+        2000000000000004000064000000640000000000000000000000000000000000
+        0000000000000000000000000000000000000000000000000000000000000000
+        0000000000000000000000000000000000000000000000000000000000000000
+        0001000000050000000A0000000E0000001120140D214936273544312233160C
+        061E000000110000000F0000000B000000060000000200000000B87E51000503
+        02000000000200000004301C0F0C91745D62BBA087C4CFB59EE6CFB7A2E3BBA4
+        91BC9278645C321E0F0D000000040000000200000000000000007B55391F825F
+        44305E423304421A0005A9896D7CDABC9DF4F1D3B5FFF4DBC1FFEBD5C0FDE0CC
+        BAF6D2BEAEF0B0978389734B2E0B8562470000000000000000007B573C2AAD8A
+        69CAB6916D9D9E7D617DD7B696F1F0D0ADFFF0D4B6FFD5BCA4DFAB8F796E9778
+        6137AE958058B09784BB92725A760600000178523500000000001E000005B48E
+        69A8DEAF7DFFDBB58CFDECC9A3FEEFD0AEFFD6BBA1E69C7D6643FFFADF004422
+        1100A281650086654C187F5A3F88775134307852350000000000B69372009D78
+        5961D8AC7BFDEBC295FFEDCAA5FFEED1B1FFC8AE95D99E7F674E805D410DC5B0
+        9E0077513400754F3100744D3019765033407A54370178523500845F4300805C
+        4025C9A37BE2EDC69CFFEECDA9FFEFD2B3FFE8CFB6FFCAB29DE891725987693F
+        20120600000178563D1697775D3D8A674C3F5D33140277513400754E31002400
+        0005B39272AAD9B895FBCFB193DCC1A58BAFAF927A799A7B63599A7B6356AF92
+        7A71C1A58BA4CEB194D3D9B897F6B99778B34720060776503300775134000000
+        000089664A4098785D4A7F5D441E3B1B0B046339190C8F6F5679C9B19CE3E7CF
+        B7FFEFD3B5FFEFCEABFFEDC89EFFCEA880E68763462B8A66480078523500653C
+        1E0076503339744D301E754F32007751340096765D007E5A3E099E7F6745C7AD
+        95D1EED1B2FFEECCA7FFEBC498FFDBAE7EFEA27D5D66C39F7C00000000007852
+        350077503324805C40888A6A511EB3947800371A0D00EFD6BC009B7D663AD5BA
+        A1DFF0D1B0FFEDCBA5FEDEB890FDDFB17EFFB8916BAA27060005000000007852
+        3500FFFFFF0094745C67B29A87BEB39A875E9B7D6638AD927B6AD6BDA6DAF0D4
+        B8FFF1D1AEFFDBBA9AF3A5836783BA95709FB38F6ECC7E5A3F2A000000000000
+        0000815D4200663D1D07B096827CD3BFAFEEE1CDBCF7EBD5C1FDF4DBC2FFF1D4
+        B6FFDCBEA0F5AE8E72814F280E0665493905866449347C573A21000000000000
+        000000000000704A2F00532A0E04A3877049C5AD99ABD5BDA8D8D6BCA4DDC7AA
+        91B9A5856C59603C230776533900785235007852350078523500000000000000
+        000000000000000000000000000089542E004F2B15077C583E1D826046216341
+        290CFFFFFF000901000000000000000000000000000000000000
+      }
+      ImageIndex = 0
+      SubMenuImages = IconList
+      OnClick = miFavoritesViewInfosClick
+    end
+    object MenuItem7: TMenuItem
+      Caption = '-'
+    end
+    object miFavoritesRemove: TMenuItem
+      Caption = 'Remove'
+      Bitmap.Data = {
+        36040000424D3604000000000000360000002800000010000000100000000100
+        2000000000000004000064000000640000000000000000000000FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00729CFFFF4A80FFFF487EFFFF6995
+        FFFFFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF002C6AFFFF003EFFFF0A50FFFF195EFAFF195EFAFF0E54
+        FFFF003EFFFF195DFFFFFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00FFFFFF001B63FFFF0E4EFEFF1C50F4FF1947F1FF1743EDFF1743ECFF1945
+        F1FF1E4FF3FF104FFCFF0E59FFFFFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF000B55FFFF1449FDFF1D47EEFF1D4BF2FF1D4BF5FF1E4CF7FF1E4CF7FF1D4B
+        F5FF1D4AF2FF1D48EEFF1649FDFF0045FEFFFFFFFF00FFFFFF00FFFFFF009BBE
+        FFFF043FFDFF214DF2FF204DF5FF204FF7FF204FF7FF204FF7FF204FF7FF204F
+        F7FF214FF7FF1F4DF5FF204DF0FF0C42FBFFFFFFFF00FFFFFF00FFFFFF00376A
+        FDFF204CF3FF2654FAFF1A4EFCFF174DFBFF174DFBFF174DFBFF174DFBFF174D
+        FBFF174DFBFF1A4EFCFF2553F7FF224EF3FF285CFBFFFFFFFF00FFFFFF002656
+        EDFF2553F9FF1E54FEFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+        FFFFFFFFFFFFFFFFFFFF1D52FDFF2654F6FF1B4EF1FFFFFFFF00FFFFFF002252
+        F2FF2C5AFFFF144AFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+        FFFFFFFFFFFFFFFFFFFF154BFFFF2D5BFEFF194AF7FFFFFFFF00FFFFFF002A58
+        F4FF2F5FFFFF1A4EFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+        FFFFFFFFFFFFFFFFFFFF1A4EFFFF3160FFFF2051F8FFFFFFFF00FFFFFF004870
+        F7FF3364FFFF3564FFFF1F52FFFF1C50FFFF1C50FFFF1C50FFFF1C50FFFF1C50
+        FFFF1C50FFFF1F52FFFF3564FFFF3565FFFF3A65F7FFFFFFFF00FFFFFF008CA6
+        FEFF2053FFFF3B6BFFFF3866FFFF3867FFFF3867FFFF3867FFFF3867FFFF3867
+        FFFF3866FFFF3967FFFF3B6BFFFF295CFFFFFFFFFF00FFFFFF00FFFFFF00FFFF
+        FF003768FFFF3367FFFF3F6FFFFF3C6CFFFF3C6BFFFF3C6BFFFF3C6BFFFF3C6B
+        FFFF3C6CFFFF3F6FFFFF3B6FFFFF295DFFFFFFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00FFFFFF003065FFFF356AFFFF4272FFFF4070FFFF406FFFFF406FFFFF4071
+        FFFF4373FFFF3D72FFFF2961FFFFFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF005B87FFFF376DFFFF376DFFFF3A6FFFFF3C71FFFF386E
+        FFFF376FFFFF527FFFFFFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF0099B6FFFF7DA2FFFF7A9FFFFF97B4
+        FFFFFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00
+      }
+      ImageIndex = 3
+      SubMenuImages = IconList
+      OnClick = miFavoritesRemoveClick
+    end
+    object miFavoritesChangeCurrentChapter: TMenuItem
+      Caption = 'Change "Current chapter"'
+      Visible = False
+      OnClick = miFavoritesChangeCurrentChapterClick
+    end
+    object miFavoritesChangeSaveTo: TMenuItem
+      Caption = 'Change "Save to"'
+      OnClick = miFavoritesChangeSaveToClick
+    end
+    object MenuItem3: TMenuItem
+      Caption = '-'
+    end
+    object miOpenFolder2: TMenuItem
+      Caption = 'Open Folder'
+      Bitmap.Data = {
+        36040000424D3604000000000000360000002800000010000000100000000100
+        2000000000000004000064000000640000000000000000000000FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00478BE6FF5191E5FF5191E5FF5191E5FF5191E5FF5191E5FF5191E5FF5191
+        E5FF5191E5FF5191E5FF5191E5FF478BE6FFFFFFFF00FFFFFF00FFFFFF002784
+        F7FF429BFFFF469DFFFF469DFFFF469DFFFF469DFFFF469DFFFF469DFFFF469D
+        FFFF469DFFFF469DFFFF469DFFFF429BFFFF2784F7FFFFFFFF00FFFFFF002479
+        FFFF387AFFFF377BFFFF377BFFFF377BFFFF377BFFFF377BFFFF377BFFFF377B
+        FFFF377BFFFF377BFFFF377BFFFF387AFFFF2479FFFFFFFFFF00FFFFFF002173
+        FFFF3B87FFFF3B87FFFF3B87FFFF3B87FFFF3B87FFFF3B87FFFF3B87FFFF3B87
+        FFFF3B87FFFF3B87FFFF3B87FFFF3B87FFFF2172FFFFFFFFFF00FFFFFF002279
+        FFFF3D8DFFFF3B8CFFFF3B8CFFFF3B8CFFFF3B8CFFFF3B8CFFFF3B8CFFFF3B8C
+        FFFF3B8CFFFF3B8CFFFF3B8CFFFF3D8DFFFF2279FFFFFFFFFF00FFFFFF002482
+        FFFF3E95FFFF3D94FFFF3D94FFFF3D94FFFF3D94FFFF3D94FFFF3D94FFFF3D94
+        FFFF3D94FFFF3D94FFFF3D94FFFF3E95FFFF2482FFFFFFFFFF00FFFFFF002488
+        FFFF3E9BFFFF3D9AFFFF3D9AFFFF3D9AFFFF3D9AFFFF3D9AFFFF3D9AFFFF3D9A
+        FFFF3D9AFFFF3D9AFFFF3D9AFFFF3E9BFFFF2488FFFFFFFFFF00FFFFFF002690
+        FFFF40A2FFFF3FA1FFFF3FA1FFFF3FA1FFFF3FA1FFFF3FA1FFFF3FA1FFFF3FA1
+        FFFF3FA1FFFF3FA1FFFF3FA1FFFF40A2FFFF2690FFFFFFFFFF00FFFFFF002697
+        FFFF40A9FFFF3FA8FFFF3FA8FFFF3FA8FFFF3FA8FFFF3FA8FFFF3FA8FFFF3FA8
+        FFFF3FA8FFFF3FA8FFFF3FA7FFFF40A8FFFF2697FFFFFFFFFF00FFFFFF0029A0
+        FFFF42B0FFFF41AFFFFF41AFFFFF41AFFFFF41B0FFFF41B0FFFF41AFFFFF41B0
+        FFFF41B0FFFF41B0FFFF41B1FFFF43B2FFFF26A2FFFFFFFFFF00FFFFFF002AA6
+        FFFF42B6FFFF41B5FFFF41B5FFFF41B6FFFF41B7FFFF45BAFFFF3EBBFFFF3FBD
+        FFFF3FBEFFFF3FBEFFFF3FBEFFFF3BBEFFFF2BA8FFFFFFFFFF00FFFFFF002BAD
+        FFFF43BDFFFF43BCFFFF43BCFFFF42BCFFFF45C1FFFF2CB1FFFF73CDFFFF6DCC
+        FFFF6DCCFFFF6DCCFFFF6DCCFFFF61C9FFFFFFFFFF00FFFFFF00FFFFFF002BB4
+        FFFF44C2FFFF43BFFFFF43BFFFFF43C1FFFF46C6FFFF1CB0FFFFFFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF002ABC
+        FFFF47D0FFFF47CEFFFF47CEFFFF49CFFFFF3FCBFFFF2BB8FFFFFFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF002EC9FFFF3BCCFFFF3BCCFFFF38CCFFFF45CCFFFFFFFFFF00FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00
+      }
+      ImageIndex = 4
+      SubMenuImages = IconList
+      OnClick = miOpenFolder2Click
+    end
+    object miOpenWith2: TMenuItem
+      Caption = 'Open ...'
+      OnClick = miOpenWith2Click
+    end
+  end
+  object pmMangaList: TPopupMenu
+    Images = IconList
+    OnPopup = pmMangaListPopup
+    left = 82
+    top = 408
+    object miMangaListViewInfos: TMenuItem
+      Caption = 'View manga infos'
+      Bitmap.Data = {
+        36040000424D3604000000000000360000002800000010000000100000000100
+        2000000000000004000064000000640000000000000000000000000000000000
+        0000000000000000000000000000000000000000000000000000000000000000
+        0000000000000000000000000000000000000000000000000000000000000000
+        0001000000050000000A0000000E0000001120140D214936273544312233160C
+        061E000000110000000F0000000B000000060000000200000000B87E51000503
+        02000000000200000004301C0F0C91745D62BBA087C4CFB59EE6CFB7A2E3BBA4
+        91BC9278645C321E0F0D000000040000000200000000000000007B55391F825F
+        44305E423304421A0005A9896D7CDABC9DF4F1D3B5FFF4DBC1FFEBD5C0FDE0CC
+        BAF6D2BEAEF0B0978389734B2E0B8562470000000000000000007B573C2AAD8A
+        69CAB6916D9D9E7D617DD7B696F1F0D0ADFFF0D4B6FFD5BCA4DFAB8F796E9778
+        6137AE958058B09784BB92725A760600000178523500000000001E000005B48E
+        69A8DEAF7DFFDBB58CFDECC9A3FEEFD0AEFFD6BBA1E69C7D6643FFFADF004422
+        1100A281650086654C187F5A3F88775134307852350000000000B69372009D78
+        5961D8AC7BFDEBC295FFEDCAA5FFEED1B1FFC8AE95D99E7F674E805D410DC5B0
+        9E0077513400754F3100744D3019765033407A54370178523500845F4300805C
+        4025C9A37BE2EDC69CFFEECDA9FFEFD2B3FFE8CFB6FFCAB29DE891725987693F
+        20120600000178563D1697775D3D8A674C3F5D33140277513400754E31002400
+        0005B39272AAD9B895FBCFB193DCC1A58BAFAF927A799A7B63599A7B6356AF92
+        7A71C1A58BA4CEB194D3D9B897F6B99778B34720060776503300775134000000
+        000089664A4098785D4A7F5D441E3B1B0B046339190C8F6F5679C9B19CE3E7CF
+        B7FFEFD3B5FFEFCEABFFEDC89EFFCEA880E68763462B8A66480078523500653C
+        1E0076503339744D301E754F32007751340096765D007E5A3E099E7F6745C7AD
+        95D1EED1B2FFEECCA7FFEBC498FFDBAE7EFEA27D5D66C39F7C00000000007852
+        350077503324805C40888A6A511EB3947800371A0D00EFD6BC009B7D663AD5BA
+        A1DFF0D1B0FFEDCBA5FEDEB890FDDFB17EFFB8916BAA27060005000000007852
+        3500FFFFFF0094745C67B29A87BEB39A875E9B7D6638AD927B6AD6BDA6DAF0D4
+        B8FFF1D1AEFFDBBA9AF3A5836783BA95709FB38F6ECC7E5A3F2A000000000000
+        0000815D4200663D1D07B096827CD3BFAFEEE1CDBCF7EBD5C1FDF4DBC2FFF1D4
+        B6FFDCBEA0F5AE8E72814F280E0665493905866449347C573A21000000000000
+        000000000000704A2F00532A0E04A3877049C5AD99ABD5BDA8D8D6BCA4DDC7AA
+        91B9A5856C59603C230776533900785235007852350078523500000000000000
+        000000000000000000000000000089542E004F2B15077C583E1D826046216341
+        290CFFFFFF000901000000000000000000000000000000000000
+      }
+      ImageIndex = 0
+      SubMenuImages = IconList
+      OnClick = vtMangaListDblClick
+    end
+    object miMangaListDownloadAll: TMenuItem
+      Caption = 'Download all'
+      Bitmap.Data = {
+        36040000424D3604000000000000360000002800000010000000100000000100
+        2000000000000004000064000000640000000000000000000000818181007F7F
+        7FFF7C7C7CFF7A7A7AFF787878FF777777FF757575FF767676FFFFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00868686FFBFBF
+        BFFFBDBDBDFFBCBCBCFFBBBBBBFFBBBBBBFFBABABAFF81818100FFFFFF00FFFF
+        FF002A8927FFFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF008A8A8AFFC0C0
+        C0FFB0B0B0FFB0B0B0FFB0B0B0FFB1B1B1FFC0C0C0FF989898FFFFFFFF002A89
+        27FF3F993CFF2A8927FFFFFFFF00FFFFFF00FFFFFF00FFFFFF008E8E8EFFC2C2
+        C2FFD2D2D2FFD2D2D2FFD3D3D3FFD6D6D6FFCCCCCCFFD7D7D7FF2A8927FF419B
+        3DFF61B45DFF419B3DFF2A8927FFFFFFFF00FFFFFF00FFFFFF00939393FFC4C4
+        C4FFD2D2D2FFD3D3D3FFD6D6D6FFDDDDDDFFDDDDDDFF2A8927FF429C3FFF65B8
+        61FF65B861FF65B861FF429C3FFF2A8927FFFFFFFF00FFFFFF00979797FFC6C6
+        C6FFD2D2D2FFD4D4D4FFDADADAFFE6E6E6FF2A8927FF449E41FF6ABB66FF69BB
+        65FF69BB65FF69BB65FF6ABB66FF449E41FF2A8927FFFFFFFF009C9C9CFFC9C9
+        C9FFC7C7C7FFCACACAFFD4D4D4FF2A8927FF5DAA5BFFA7D9A5FFA7D9A5FF8FCE
+        8CFF6DBF69FF8FCE8CFFA7D9A5FFA7D9A5FF5DAA5BFF2A8927FFA0A0A0FFCBCB
+        CBFFC9C9C9FFCBCBCBFFD4D4D4FF2A8927FF2A8927FF2A8927FF2A8927FF5FAB
+        5CFF72C36EFF5FAB5CFF2A8927FF2A8927FF2A8927FF2A8927FFA4A4A4FFCCCC
+        CCFFCBCBCBFFCCCCCCFFD1D1D1FFD7D7D7FFDCDCDCFFC9C9C9FFFFFFFF002A89
+        27FF76C772FF2A8927FFFFFFFF00FFFFFF00FFFFFF00FFFFFF00A8A8A8FFCECE
+        CEFFB0B0B0FFB1B1B1FFB4B4B4FFB7B7B7FFCECECEFFB1B1B1FFFFFFFF002A89
+        27FF79CA75FF2A8927FFFFFFFF00FFFFFF00FFFFFF00FFFFFF00ACACACFFD0D0
+        D0FFD2D2D2FFD2D2D2FFD2D2D2FFD2D2D2FFCACACAFFA7A7A7FFFFFFFF002A89
+        27FF7CCE79FF2A8927FFFFFFFF00FFFFFF00FFFFFF00FFFFFF00AFAFAFFFD2D2
+        D2FFB0B0B0FFB0B0B0FFB0B0B0FFB0B0B0FFCCCCCCFFABABABFFFFFFFF002A89
+        27FF7FD17BFF2A8927FFFFFFFF00FFFFFF00FFFFFF00FFFFFF00B2B2B2FFD2D2
+        D2FFD2D2D2FFD2D2D2FFD2D2D2FFD2D2D2FFCDCDCDFFADADADFFFFFFFF002A89
+        27FFB3E5B1FF2A8927FFFFFFFF00FFFFFF00FFFFFF00FFFFFF00B4B4B4FFD4D4
+        D4FFD3D3D3FFD2D2D2FFD2D2D2FFD1D1D1FFD0D0D0FFAEAEAEFFFFFFFF002A89
+        27FF2A8927FF2A8927FFFFFFFF00FFFFFF00FFFFFF00FFFFFF00B4B4B4FFD4D4
+        D4FFD4D4D4FFD4D4D4FFD2D2D2FFD2D2D2FFD1D1D1FFAEAEAEFFFFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00B4B4B4FFB4B4
+        B4FFB4B4B4FFB4B4B4FFB2B2B2FFB1B1B1FFAFAFAFFFAEAEAEFFFFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00
+      }
+      ImageIndex = 1
+      SubMenuImages = IconList
+      OnClick = miMangaListDownloadAllClick
+    end
+    object miMangaListAddToFavorites: TMenuItem
+      Caption = 'Add to Favorites'
+      Bitmap.Data = {
+        36040000424D3604000000000000360000002800000010000000100000000100
+        2000000000000004000064000000640000000000000000000000FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00FFFFFF0058B754FF5AB856FFFFFFFF00FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF001DB31BFF04C302FF03C200FF1EB31EFFFFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00FFFFFF0041BB42FF08BF09FF1EB720FF1EB720FF06BE08FF42BB44FFFFFF
+        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF0020B828FF08C313FF20B929FF1EBD28FF1EBB27FF20BA29FF08C313FF21B8
+        29FFFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF0045C1
+        50FF0AC71CFF20BD2EFF1FBF2DFF1FC02FFF1FC02EFF1FBE2EFF20BE2EFF0AC6
+        1BFF43BF4FFFFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF0003BF
+        1CFF23C238FF21C337FF21C338FF21C338FF21C338FF21C437FF21C137FF23BF
+        38FF0CCA25FF23BE37FFFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF0027BF
+        42FF11C331FF24CA42FF22C63FFF21C53FFF21C63FFF21C63FFF21C63FFF21C4
+        3EFF22C33FFF0CCE2FFF43C45BFFFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF0022C547FF11C73BFF26CE4DFF24CB49FF23CA49FF23C949FF23CA49FF23CA
+        4AFF24CB4AFF26C74BFF10D23CFF22C346FFFFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00FFFFFF0023C84FFF14CD45FF27D152FF25CD50FF25CD50FF25CF51FF28D5
+        55FF14D045FF00C032FF16C644FF11D644FF4DCD6EFFFFFFFF00FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF0025CB59FF16CE4EFF29D45DFF27D15AFF29D75FFF0AC8
+        45FF79E19AFFFFFFFF006FDC90FF18C34CFF11CC4AFFFFFFFF00FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00FFFFFF0027CF60FF19D357FF2AD865FF21D35DFF2BC8
+        60FFFFFFFF00FFFFFF00FFFFFF004DD27AFF11C24DFFFFFFFF00FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF0028D168FF19D660FF20D465FF35BD
+        69FFFFFFFF00FFFFFF00FFFFFF0056C880FF14C557FFFFFFFF00FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF0029D46DFF1AD464FF11CF
+        5CFF9BCEAFFFFFFFFF0091CFAAFF1BC960FF19C75EFFFFFFFF00FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF0029D674FF15D5
+        69FF04E765FF00EC63FF07E767FF19DE6FFF1FD16BFFFFFFFF00FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF0075E7
+        A8FF5CE79AFF60ED9FFF5FE89CFF5AE598FFFFFFFF00FFFFFF00
+      }
+      ImageIndex = 2
+      SubMenuImages = IconList
+      OnClick = miMangaListAddToFavoritesClick
+    end
+    object miI2: TMenuItem
+      Caption = '-'
+    end
+    object miHighlightNewManga: TMenuItem
+      Caption = 'Highlight new manga'
+      OnClick = miHighlightNewMangaClick
+    end
+  end
+  object tmBackup: TTimer
+    Interval = 60000
+    OnTimer = tmBackupTimer
+    left = 688
+    top = 136
+  end
+  object TrayIcon: TTrayIcon
+    BalloonFlags = bfInfo
+    BalloonTimeout = 5000
+    Icon.Data = {
+      7E04000000000100010010100000010020006804000016000000280000001000
+      000020000000010020000000000000040000120B0000120B0000000000000000
+      0000FFFFFF000C583C960C583CFF0C583CD40C583CFF0C583CFF0C583CFF0C58
+      3CFF0C583CFF0C583CFF0C583CFF0C583CFF0C583CFF0C583C96FFFFFF00FFFF
+      FF00FFFFFF00115D40FF25805AFF115D40FF2D8F65FF2D8F65FF2D8F65FF2D8F
+      65FF2D8F65FF2D8F65FF2D8F65FF2D8F65FF2D8F65FF115D40FFFFFFFF00FFFF
+      FF00FFFFFF00166245FF29835FFF166245FF34946CFF34946CFF34946CFF3494
+      6CFF34946CFF34946CFF34946CFF34946CFF34946CFF166245FFD2EDE6FF0C58
+      3C96FFFFFF001C694BFF308864FF1C694BFF3E9A74FF3E9A74FF3E9A74FF3E9A
+      74FF3E9A74FF3E9A74FF3E9A74FF3E9A74FF3E9A74FF1C694BFFD2EDE6FF115D
+      40FFFFFFFF00237051FF378C6BFF237051FF48A17EFF48A17EFF48A17EFF48A1
+      7EFF48A17EFF48A17EFF48A17EFF48A17EFF48A17EFF237051FFD2EDE6FF1662
+      45FFFFFFFF002A7757FF3F9172FF2A7757FF53A888FF53A888FF53A888FF53A8
+      88FF53A888FF53A888FF53A888FF53A888FF53A888FF2A7757FFD2EDE6FF1C69
+      4BFFFFFFFF00317F5EFF479779FF317F5EFF5FB092FF5FB092FF5FB092FF5FB0
+      92FF5FB092FF5FB092FF5FB092FF5FB092FF5FB092FF317F5EFFD2EDE6FF2370
+      51FFFFFFFF00388765FF4F9D80FF388765FF6AB89CFF6AB89CFF327E62FF327E
+      62FF327E62FF327E62FF327E62FF6AB89CFF6AB89CFF388765FFD2EDE6FF2A77
+      57FFFFFFFF003F8E6BFF57A187FF3F8E6BFF75BFA6FF75BFA6FF75BFA6FF75BF
+      A6FF75BFA6FF75BFA6FF75BFA6FF75BFA6FF75BFA6FF3F8E6BFFD2EDE6FF317F
+      5EFFFFFFFF00469571FF5EA68EFF469571FF7FC6B0FF7FC6B0FF3A846AFF3A84
+      6AFF3A846AFF3A846AFF3A846AFF7FC6B0FF7FC6B0FF469571FFD2EDE6FF3887
+      65FFFFFFFF004C9C77FF65AA94FF4C9C77FF89CCB8FF89CCB8FF89CCB8FF89CC
+      B8FF89CCB8FF89CCB8FF89CCB8FF89CCB8FF89CCB8FF4C9C77FFD2EDE6FF3F8E
+      6BFFFFFFFF0051A17CFF6AAE99FF51A17CFF90D1BFFF90D1BFFF90D1BFFF90D1
+      BFFF90D1BFFF90D1BFFF90D1BFFF90D1BFFF90D1BFFF51A17CFFD2EDE6FF4695
+      71FFFFFFFF0056A680FF98C2B4FF56A680FFD2EDE6FFD2EDE6FFD2EDE6FFD2ED
+      E6FFD2EDE6FFD2EDE6FFD2EDE6FFD2EDE6FFD2EDE6FF56A680FFD2EDE6FF4C9C
+      77FFFFFFFF0058A882FF59AA83FF58A882FF59AA83FF59AA83FF59AA83FF59AA
+      83FF59AA83FF59AA83FF59AA83FF59AA83FF59AA83FF70BA9CFFD2EDE6FF51A1
+      7CFFFFFFFF009DCDB6FF51A17CFFD2EDE6FFD2EDE6FFD2EDE6FFD2EDE6FFD2ED
+      E6FFD2EDE6FFD2EDE6FFD2EDE6FFD2EDE6FFD2EDE6FFD2EDE6FFD2EDE6FF56A6
+      80FFFFFFFF00FFFFFF009DCDB6FF51A17CFF3F8E6BFF59AA83D459AA83FF59AA
+      83FF59AA83FF59AA83FF59AA83FF59AA83FF59AA83FF59AA83FF59AA83FF59AA
+      8396800300008003000080000000800000008000000080000000800000008000
+      000080000000800000008000000080000000800000008000000080000000C000
+      0000
+    }
+    Hint = 'Free Manga Downloader'
+    OnDblClick = TrayIconDblClick
+    left = 80
+    top = 72
+  end
+  object pmUpdate: TPopupMenu
+    ParentBidiMode = False
+    left = 144
+    top = 239
+    object mnUpdateList: TMenuItem
+      Caption = 'Update manga list'
+      OnClick = mnUpdateListClick
+    end
+    object mnUpdateDownFromServer: TMenuItem
+      Caption = 'Download manga list from server'
+      OnClick = mnUpdateDownFromServerClick
+    end
+    object MenuItem5: TMenuItem
+      Caption = '-'
+    end
+    object mnUpdate1Click: TMenuItem
+      Caption = 'Update all lists at once'
+      OnClick = mnUpdate1ClickClick
+    end
+    object mnDownload1Click: TMenuItem
+      Caption = 'Download all lists from server at once'
+      OnClick = mnDownload1ClickClick
+    end
+  end
+  object itAnimate: TIdleTimer
+    Enabled = False
+    Interval = 48
+    OnTimer = itAnimateTimer
+    left = 744
+    top = 136
+  end
+  object itCheckForChapters: TIdleTimer
+    Enabled = False
+    Interval = 600000
+    OnTimer = itCheckForChaptersTimer
+    left = 744
+    top = 384
+  end
+  object itRefreshForm: TIdleTimer
+    AutoEnabled = True
+    Interval = 200
+    OnTimer = itRefreshFormTimer
+    left = 688
+    top = 384
+  end
+  object IconList: TImageList
+    left = 80
+    top = 144
+    Bitmap = {
+      4C69090000001000000010000000000000000000000000000000000000000000
+      000089542E004F2B15077C583E1D826046216341290CFFFFFF00090100000000
+      0000000000000000000000000000000000000000000000000000704A2F00532A
+      0E04A3877049C5AD99ABD5BDA8D8D6BCA4DDC7AA91B9A5856C59603C23077653
+      39007852350078523500785235000000000000000000815D4200663D1D07B096
+      827CD3BFAFEEE1CDBCF7EBD5C1FDF4DBC2FFF1D4B6FFDCBEA0F5AE8E72814F28
+      0E0665493905866449347C573A210000000078523500FFFFFF0094745C67B29A
+      87BEB39A875E9B7D6638AD927B6AD6BDA6DAF0D4B8FFF1D1AEFFDBBA9AF3A583
+      6783BA95709FB38F6ECC7E5A3F2A000000007852350077503324805C40888A6A
+      511EB3947800371A0D00EFD6BC009B7D663AD5BAA1DFF0D1B0FFEDCBA5FEDEB8
+      90FDDFB17EFFB8916BAA2706000578523500653C1E0076503339744D301E754F
+      32007751340096765D007E5A3E099E7F6745C7AD95D1EED1B2FFEECCA7FFEBC4
+      98FFDBAE7EFEA27D5D66C39F7C00775134000000000089664A4098785D4A7F5D
+      441E3B1B0B046339190C8F6F5679C9B19CE3E7CFB7FFEFD3B5FFEFCEABFFEDC8
+      9EFFCEA880E68763462B8A664800754E310024000005B39272AAD9B895FBCFB1
+      93DCC1A58BAFAF927A799A7B63599A7B6356AF927A71C1A58BA4CEB194D3D9B8
+      97F6B99778B34720060776503300845F4300805C4025C9A37BE2EDC69CFFEECD
+      A9FFEFD2B3FFE8CFB6FFCAB29DE891725987693F20120600000178563D169777
+      5D3D8A674C3F5D33140277513400B69372009D785961D8AC7BFDEBC295FFEDCA
+      A5FFEED1B1FFC8AE95D99E7F674E805D410DC5B09E0077513400754F3100744D
+      3019765033407A543701785235001E000005B48E69A8DEAF7DFFDBB58CFDECC9
+      A3FEEFD0AEFFD6BBA1E69C7D6643FFFADF0044221100A281650086654C187F5A
+      3F887751343078523500000000007B573C2AAD8A69CAB6916D9D9E7D617DD7B6
+      96F1F0D0ADFFF0D4B6FFD5BCA4DFAB8F796E97786137AE958058B09784BB9272
+      5A760600000178523500000000007B55391F825F44305E423304421A0005A989
+      6D7CDABC9DF4F1D3B5FFF4DBC1FFEBD5C0FDE0CCBAF6D2BEAEF0B0978389734B
+      2E0B856247000000000000000000B87E5100050302000000000200000004301C
+      0F0C91745D62BBA087C4CFB59EE6CFB7A2E3BBA491BC9278645C321E0F0D0000
+      00040000000200000000000000000000000000000001000000050000000A0000
+      000E0000001120140D214936273544312233160C061E000000110000000F0000
+      000B000000060000000200000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000B4B4B4FFB4B4B4FFB4B4B4FFB4B4B4FFB2B2
+      B2FFB1B1B1FFAFAFAFFFAEAEAEFFFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00B4B4B4FFD4D4D4FFD4D4D4FFD4D4D4FFD2D2
+      D2FFD2D2D2FFD1D1D1FFAEAEAEFFFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00B4B4B4FFD4D4D4FFD3D3D3FFD2D2D2FFD2D2
+      D2FFD1D1D1FFD0D0D0FFAEAEAEFFFFFFFF002A8927FF2A8927FF2A8927FFFFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00B2B2B2FFD2D2D2FFD2D2D2FFD2D2D2FFD2D2
+      D2FFD2D2D2FFCDCDCDFFADADADFFFFFFFF002A8927FFB3E5B1FF2A8927FFFFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00AFAFAFFFD2D2D2FFB0B0B0FFB0B0B0FFB0B0
+      B0FFB0B0B0FFCCCCCCFFABABABFFFFFFFF002A8927FF7FD17BFF2A8927FFFFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00ACACACFFD0D0D0FFD2D2D2FFD2D2D2FFD2D2
+      D2FFD2D2D2FFCACACAFFA7A7A7FFFFFFFF002A8927FF7CCE79FF2A8927FFFFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00A8A8A8FFCECECEFFB0B0B0FFB1B1B1FFB4B4
+      B4FFB7B7B7FFCECECEFFB1B1B1FFFFFFFF002A8927FF79CA75FF2A8927FFFFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00A4A4A4FFCCCCCCFFCBCBCBFFCCCCCCFFD1D1
+      D1FFD7D7D7FFDCDCDCFFC9C9C9FFFFFFFF002A8927FF76C772FF2A8927FFFFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00A0A0A0FFCBCBCBFFC9C9C9FFCBCBCBFFD4D4
+      D4FF2A8927FF2A8927FF2A8927FF2A8927FF5FAB5CFF72C36EFF5FAB5CFF2A89
+      27FF2A8927FF2A8927FF2A8927FF9C9C9CFFC9C9C9FFC7C7C7FFCACACAFFD4D4
+      D4FF2A8927FF5DAA5BFFA7D9A5FFA7D9A5FF8FCE8CFF6DBF69FF8FCE8CFFA7D9
+      A5FFA7D9A5FF5DAA5BFF2A8927FF979797FFC6C6C6FFD2D2D2FFD4D4D4FFDADA
+      DAFFE6E6E6FF2A8927FF449E41FF6ABB66FF69BB65FF69BB65FF69BB65FF6ABB
+      66FF449E41FF2A8927FFFFFFFF00939393FFC4C4C4FFD2D2D2FFD3D3D3FFD6D6
+      D6FFDDDDDDFFDDDDDDFF2A8927FF429C3FFF65B861FF65B861FF65B861FF429C
+      3FFF2A8927FFFFFFFF00FFFFFF008E8E8EFFC2C2C2FFD2D2D2FFD2D2D2FFD3D3
+      D3FFD6D6D6FFCCCCCCFFD7D7D7FF2A8927FF419B3DFF61B45DFF419B3DFF2A89
+      27FFFFFFFF00FFFFFF00FFFFFF008A8A8AFFC0C0C0FFB0B0B0FFB0B0B0FFB0B0
+      B0FFB1B1B1FFC0C0C0FF989898FFFFFFFF002A8927FF3F993CFF2A8927FFFFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00868686FFBFBFBFFFBDBDBDFFBCBCBCFFBBBB
+      BBFFBBBBBBFFBABABAFF81818100FFFFFF00FFFFFF002A8927FFFFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00818181007F7F7FFF7C7C7CFF7A7A7AFF7878
+      78FF777777FF757575FF767676FFFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF0075E7A8FF5CE79AFF60ED9FFF5FE8
+      9CFF5AE598FFFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF0029D674FF15D569FF04E765FF00EC63FF07E7
+      67FF19DE6FFF1FD16BFFFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF0029D46DFF1AD464FF11CF5CFF9BCEAFFFFFFFFF0091CF
+      AAFF1BC960FF19C75EFFFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF0028D168FF19D660FF20D465FF35BD69FFFFFFFF00FFFFFF00FFFF
+      FF0056C880FF14C557FFFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF0027CF60FF19D357FF2AD865FF21D35DFF2BC860FFFFFFFF00FFFFFF00FFFF
+      FF004DD27AFF11C24DFFFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF0025CB
+      59FF16CE4EFF29D45DFF27D15AFF29D75FFF0AC845FF79E19AFFFFFFFF006FDC
+      90FF18C34CFF11CC4AFFFFFFFF00FFFFFF00FFFFFF00FFFFFF0023C84FFF14CD
+      45FF27D152FF25CD50FF25CD50FF25CF51FF28D555FF14D045FF00C032FF16C6
+      44FF11D644FF4DCD6EFFFFFFFF00FFFFFF00FFFFFF0022C547FF11C73BFF26CE
+      4DFF24CB49FF23CA49FF23C949FF23CA49FF23CA4AFF24CB4AFF26C74BFF10D2
+      3CFF22C346FFFFFFFF00FFFFFF00FFFFFF0027BF42FF11C331FF24CA42FF22C6
+      3FFF21C53FFF21C63FFF21C63FFF21C63FFF21C43EFF22C33FFF0CCE2FFF43C4
+      5BFFFFFFFF00FFFFFF00FFFFFF00FFFFFF0003BF1CFF23C238FF21C337FF21C3
+      38FF21C338FF21C338FF21C437FF21C137FF23BF38FF0CCA25FF23BE37FFFFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF0045C150FF0AC71CFF20BD2EFF1FBF
+      2DFF1FC02FFF1FC02EFF1FBE2EFF20BE2EFF0AC61BFF43BF4FFFFFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF0020B828FF08C313FF20B9
+      29FF1EBD28FF1EBB27FF20BA29FF08C313FF21B829FFFFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF0041BB42FF08BF
+      09FF1EB720FF1EB720FF06BE08FF42BB44FFFFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF001DB3
+      1BFF04C302FF03C200FF1EB31EFFFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF0058B754FF5AB856FFFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF0099B6FFFF7DA2FFFF7A9FFFFF97B4FFFFFFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF005B87
+      FFFF376DFFFF376DFFFF3A6FFFFF3C71FFFF386EFFFF376FFFFF527FFFFFFFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF003065FFFF356A
+      FFFF4272FFFF4070FFFF406FFFFF406FFFFF4071FFFF4373FFFF3D72FFFF2961
+      FFFFFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF003768FFFF3367FFFF3F6F
+      FFFF3C6CFFFF3C6BFFFF3C6BFFFF3C6BFFFF3C6BFFFF3C6CFFFF3F6FFFFF3B6F
+      FFFF295DFFFFFFFFFF00FFFFFF00FFFFFF008CA6FEFF2053FFFF3B6BFFFF3866
+      FFFF3867FFFF3867FFFF3867FFFF3867FFFF3867FFFF3866FFFF3967FFFF3B6B
+      FFFF295CFFFFFFFFFF00FFFFFF00FFFFFF004870F7FF3364FFFF3564FFFF1F52
+      FFFF1C50FFFF1C50FFFF1C50FFFF1C50FFFF1C50FFFF1C50FFFF1F52FFFF3564
+      FFFF3565FFFF3A65F7FFFFFFFF00FFFFFF002A58F4FF2F5FFFFF1A4EFFFFFFFF
+      FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF1A4E
+      FFFF3160FFFF2051F8FFFFFFFF00FFFFFF002252F2FF2C5AFFFF144AFFFFFFFF
+      FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF154B
+      FFFF2D5BFEFF194AF7FFFFFFFF00FFFFFF002656EDFF2553F9FF1E54FEFFFFFF
+      FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF1D52
+      FDFF2654F6FF1B4EF1FFFFFFFF00FFFFFF00376AFDFF204CF3FF2654FAFF1A4E
+      FCFF174DFBFF174DFBFF174DFBFF174DFBFF174DFBFF174DFBFF1A4EFCFF2553
+      F7FF224EF3FF285CFBFFFFFFFF00FFFFFF009BBEFFFF043FFDFF214DF2FF204D
+      F5FF204FF7FF204FF7FF204FF7FF204FF7FF204FF7FF214FF7FF1F4DF5FF204D
+      F0FF0C42FBFFFFFFFF00FFFFFF00FFFFFF00FFFFFF000B55FFFF1449FDFF1D47
+      EEFF1D4BF2FF1D4BF5FF1E4CF7FF1E4CF7FF1D4BF5FF1D4AF2FF1D48EEFF1649
+      FDFF0045FEFFFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF001B63FFFF0E4E
+      FEFF1C50F4FF1947F1FF1743EDFF1743ECFF1945F1FF1E4FF3FF104FFCFF0E59
+      FFFFFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF002C6A
+      FFFF003EFFFF0A50FFFF195EFAFF195EFAFF0E54FFFF003EFFFF195DFFFFFFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00729CFFFF4A80FFFF487EFFFF6995FFFFFFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF002EC9FFFF3BCCFFFF3BCC
+      FFFF38CCFFFF45CCFFFFFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF002ABCFFFF47D0FFFF47CEFFFF47CE
+      FFFF49CFFFFF3FCBFFFF2BB8FFFFFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF002BB4FFFF44C2FFFF43BFFFFF43BF
+      FFFF43C1FFFF46C6FFFF1CB0FFFFFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF002BADFFFF43BDFFFF43BCFFFF43BC
+      FFFF42BCFFFF45C1FFFF2CB1FFFF73CDFFFF6DCCFFFF6DCCFFFF6DCCFFFF6DCC
+      FFFF61C9FFFFFFFFFF00FFFFFF00FFFFFF002AA6FFFF42B6FFFF41B5FFFF41B5
+      FFFF41B6FFFF41B7FFFF45BAFFFF3EBBFFFF3FBDFFFF3FBEFFFF3FBEFFFF3FBE
+      FFFF3BBEFFFF2BA8FFFFFFFFFF00FFFFFF0029A0FFFF42B0FFFF41AFFFFF41AF
+      FFFF41AFFFFF41B0FFFF41B0FFFF41AFFFFF41B0FFFF41B0FFFF41B0FFFF41B1
+      FFFF43B2FFFF26A2FFFFFFFFFF00FFFFFF002697FFFF40A9FFFF3FA8FFFF3FA8
+      FFFF3FA8FFFF3FA8FFFF3FA8FFFF3FA8FFFF3FA8FFFF3FA8FFFF3FA8FFFF3FA7
+      FFFF40A8FFFF2697FFFFFFFFFF00FFFFFF002690FFFF40A2FFFF3FA1FFFF3FA1
+      FFFF3FA1FFFF3FA1FFFF3FA1FFFF3FA1FFFF3FA1FFFF3FA1FFFF3FA1FFFF3FA1
+      FFFF40A2FFFF2690FFFFFFFFFF00FFFFFF002488FFFF3E9BFFFF3D9AFFFF3D9A
+      FFFF3D9AFFFF3D9AFFFF3D9AFFFF3D9AFFFF3D9AFFFF3D9AFFFF3D9AFFFF3D9A
+      FFFF3E9BFFFF2488FFFFFFFFFF00FFFFFF002482FFFF3E95FFFF3D94FFFF3D94
+      FFFF3D94FFFF3D94FFFF3D94FFFF3D94FFFF3D94FFFF3D94FFFF3D94FFFF3D94
+      FFFF3E95FFFF2482FFFFFFFFFF00FFFFFF002279FFFF3D8DFFFF3B8CFFFF3B8C
+      FFFF3B8CFFFF3B8CFFFF3B8CFFFF3B8CFFFF3B8CFFFF3B8CFFFF3B8CFFFF3B8C
+      FFFF3D8DFFFF2279FFFFFFFFFF00FFFFFF002173FFFF3B87FFFF3B87FFFF3B87
+      FFFF3B87FFFF3B87FFFF3B87FFFF3B87FFFF3B87FFFF3B87FFFF3B87FFFF3B87
+      FFFF3B87FFFF2172FFFFFFFFFF00FFFFFF002479FFFF387AFFFF377BFFFF377B
+      FFFF377BFFFF377BFFFF377BFFFF377BFFFF377BFFFF377BFFFF377BFFFF377B
+      FFFF387AFFFF2479FFFFFFFFFF00FFFFFF002784F7FF429BFFFF469DFFFF469D
+      FFFF469DFFFF469DFFFF469DFFFF469DFFFF469DFFFF469DFFFF469DFFFF469D
+      FFFF429BFFFF2784F7FFFFFFFF00FFFFFF00FFFFFF00478BE6FF5191E5FF5191
+      E5FF5191E5FF5191E5FF5191E5FF5191E5FF5191E5FF5191E5FF5191E5FF5191
+      E5FF478BE6FFFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000FF0000FF0000
+      0000000000000000000000000000000000000000000000000000000000000000
+      00000000000000000000000000000000000000000000FF0000FFFF0000FFFF00
+      00FF000000000000000000000000000000000000000000000000000000000000
+      0000FF0000FF000000000000000000000000FF0000FFFF0000FFFF0000FFFF00
+      00FFFF0000FF000000000000000000000000000000000000000000000000FF00
+      00FFFF0000FFFF0000FF00000000FF0000FFFF0000FFFF0000FFFF0000FFFF00
+      00FF000000000000000000000000000000000000000000000000FF0000FFFF00
+      00FFFF0000FFFF0000FFFF0000FFFF0000FFFF0000FFFF0000FFFF0000FF0000
+      000000000000000000000000000000000000000000000000000000000000FF00
+      00FFFF0000FFFF0000FFFF0000FFFF0000FFFF0000FFFF0000FF000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000FF0000FFFF0000FFFF0000FFFF0000FFFF0000FF00000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      000000000000FF0000FFFF0000FFFF0000FF0000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      00000000000000000000FF0000FF000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      000000000000000000000000000000A200FF0000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      000000000000000000000000000000A200FF00A200FF00000000000000000000
+      0000000000000000000000000000000000000000000000A200FF0000000000A2
+      00FF00A200FF00A200FF00A200FF00A200FF00A200FF00A200FF000000000000
+      000000000000000000000000000000000000000000000000000000A200FF0000
+      000000A200FF00A200FF00A200FF00A200FF00A200FF00A200FF00A200FF0000
+      0000000000000000000000000000000000000000000000A200FF0000000000A2
+      00FF00A200FF00A200FF00A200FF00A200FF00A200FF00A200FF00A200FF00A2
+      00FF00000000000000000000000000000000000000000000000000A200FF0000
+      000000A200FF00A200FF00A200FF00A200FF00A200FF00A200FF00A200FF0000
+      0000000000000000000000000000000000000000000000A200FF0000000000A2
+      00FF00A200FF00A200FF00A200FF00A200FF00A200FF00A200FF000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      000000000000000000000000000000A200FF00A200FF00000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      000000000000000000000000000000A200FF0000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      00000000000000000000000000000000000000000000000000000000CDFF0000
+      CDFF0000CDFF0000CDFF0000CDFF0000CDFF0000CDFF0000CDFF0000CDFF0000
+      00000000000000000000000000000000000000000000000000000000CDFF0000
+      CDFF0000CDFF0000CDFF0000CDFF0000CDFF0000CDFF0000CDFF0000CDFF0000
+      00000000000000000000000000000000000000000000000000000000CDFF0000
+      CDFF0000CDFF0000CDFF0000CDFF0000CDFF0000CDFF0000CDFF0000CDFF0000
+      00000000000000000000000000000000000000000000000000000000CDFF0000
+      CDFF0000CDFF0000CDFF0000CDFF0000CDFF0000CDFF0000CDFF0000CDFF0000
+      00000000000000000000000000000000000000000000000000000000CDFF0000
+      CDFF0000CDFF0000CDFF0000CDFF0000CDFF0000CDFF0000CDFF0000CDFF0000
+      00000000000000000000000000000000000000000000000000000000CDFF0000
+      CDFF0000CDFF0000CDFF0000CDFF0000CDFF0000CDFF0000CDFF0000CDFF0000
+      00000000000000000000000000000000000000000000000000000000CDFF0000
+      CDFF0000CDFF0000CDFF0000CDFF0000CDFF0000CDFF0000CDFF0000CDFF0000
+      00000000000000000000000000000000000000000000000000000000CDFF0000
+      CDFF0000CDFF0000CDFF0000CDFF0000CDFF0000CDFF0000CDFF0000CDFF0000
+      00000000000000000000000000000000000000000000000000000000CDFF0000
+      CDFF0000CDFF0000CDFF0000CDFF0000CDFF0000CDFF0000CDFF0000CDFF0000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      000000000000FF000022FF0000FFFF0000FFFF0000FFFF000022000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      000000000000FF0000FFFF0300FFFF0000FFFF0000FFFF0000FF000000000000
+      0000FF0000060000000000000000000000000000000000000000000000000000
+      0000FF00000BFF0000FFFF0100FFFF0000FFFF0200FFFF0000FF00000000FF00
+      000200000000000000000000000000000000000000000000000000000000FF00
+      000800000000FF0000FFFF0000FFFF0200FFFF0B00FEFF0000FFFF0000030000
+      000000000000000000000000000000000000000000000000000000000000FF00
+      000400000000FF000022FF0000FFFF0000FFFF0000FFFF000022000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      000000000000FF00000B00000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000
+    }
+  end
+  object itSaveDownloadedList: TIdleTimer
+    Interval = 300000
+    OnTimer = itSaveDownloadedListTimer
+    left = 688
+    top = 192
+  end
+  object itSaveJobList: TIdleTimer
+    Interval = 60000
+    OnTimer = itSaveJobListTimer
+    left = 744
+    top = 192
+  end
+end
