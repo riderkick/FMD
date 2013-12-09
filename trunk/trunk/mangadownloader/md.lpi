@@ -52,7 +52,7 @@
         <PackageName Value="LCL"/>
       </Item3>
     </RequiredPackages>
-    <Units Count="201">
+    <Units Count="204">
       <Unit0>
         <Filename Value="md.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -875,6 +875,28 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="uOption"/>
       </Unit200>
+      <Unit201>
+        <Filename Value="forms\frmMain.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="MainForm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="frmMain"/>
+      </Unit201>
+      <Unit202>
+        <Filename Value="forms\frmNewChapter.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="NewChapter"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="frmNewChapter"/>
+      </Unit202>
+      <Unit203>
+        <Filename Value="forms\frmLog.pas"/>
+        <IsPartOfProject Value="True"/>
+        <HasResources Value="True"/>
+        <UnitName Value="frmLog"/>
+      </Unit203>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

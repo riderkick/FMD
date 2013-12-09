@@ -1,5 +1,5 @@
 {
-        File: logform.pas
+        File: frmLog.pas
         License: GPLv2
         This unit is a part of Free Manga Downloader
 }
@@ -16,9 +16,9 @@ uses
 
 type
 
-  { TfrmLog }
+  { TLog }
 
-  TfrmLog = class(TForm)
+  TLog = class(TForm)
     btVisit: TButton;
     mmLog: TMemo;
     pnIE: TPanel;
@@ -32,7 +32,7 @@ type
   end;
 
 var
-  Log: TfrmLog;
+  Log: TLog;
 
 implementation
 
@@ -41,19 +41,19 @@ implementation
 uses
   uBaseUnit;
 
-{ TfrmLog }
+{ TLog }
 
-procedure TfrmLog.FormCreate(Sender: TObject);
+procedure TLog.FormCreate(Sender: TObject);
 begin
   ShowLog;
 end;
 
-procedure TfrmLog.btVisitClick(Sender: TObject);
+procedure TLog.btVisitClick(Sender: TObject);
 begin
   OpenURL('http://akarink.wordpress.com/');
 end;
 
-procedure TfrmLog.ShowLog;
+procedure TLog.ShowLog;
 var
   l: TStringList;
 begin
