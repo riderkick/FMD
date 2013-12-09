@@ -1,4 +1,4 @@
-unit NewChapterForm;
+unit frmNewChapter;
 
 {$mode delphi}
 
@@ -12,9 +12,9 @@ type
 
   TNewChapterResult = (ncrDownload, ncrQueue, ncrCancel);
 
-  { TNewChapter }
+  { TfrmNewChapter }
 
-  TNewChapter = class(TForm)
+  TfrmNewChapter = class(TForm)
     btDownload: TBitBtn;
     btCancel: TBitBtn;
     btQueue: TBitBtn;
@@ -38,11 +38,11 @@ implementation
 {$R *.lfm}
 
 uses
-  BaseUnit;
+  uBaseUnit;
 
-{ TNewChapter }
+{ TfrmNewChapter }
 
-procedure TNewChapter.FormCreate(Sender: TObject);
+procedure TfrmNewChapter.FormCreate(Sender: TObject);
 begin
   btDownload.Caption:= stDownload;
   btQueue   .Caption:= stAddToQueue;
@@ -50,17 +50,17 @@ begin
   Caption           := stNewChapterNotification;
 end;
 
-procedure TNewChapter.btDownloadClick(Sender: TObject);
+procedure TfrmNewChapter.btDownloadClick(Sender: TObject);
 begin
   FFormResult:= ncrDownload;
 end;
 
-procedure TNewChapter.btQueueClick(Sender: TObject);
+procedure TfrmNewChapter.btQueueClick(Sender: TObject);
 begin
   FFormResult:= ncrQueue;
 end;
 
-procedure TNewChapter.btCancelClick(Sender: TObject);
+procedure TfrmNewChapter.btCancelClick(Sender: TObject);
 begin
   FFormResult:= ncrCancel;
 end;

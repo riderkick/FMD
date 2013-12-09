@@ -4,7 +4,7 @@
         This unit is a part of Free Manga Downloader
 }
 
-unit logform;
+unit frmLog;
 
 {$mode objfpc}{$H+}
 
@@ -16,9 +16,9 @@ uses
 
 type
 
-  { TLog }
+  { TfrmLog }
 
-  TLog = class(TForm)
+  TfrmLog = class(TForm)
     btVisit: TButton;
     mmLog: TMemo;
     pnIE: TPanel;
@@ -32,28 +32,28 @@ type
   end;
 
 var
-  Log: TLog;
+  Log: TfrmLog;
 
 implementation
 
 {$R *.lfm}
 
 uses
-  baseunit;
+  uBaseUnit;
 
-{ TLog }
+{ TfrmLog }
 
-procedure TLog.FormCreate(Sender: TObject);
+procedure TfrmLog.FormCreate(Sender: TObject);
 begin
   ShowLog;
 end;
 
-procedure TLog.btVisitClick(Sender: TObject);
+procedure TfrmLog.btVisitClick(Sender: TObject);
 begin
   OpenURL('http://akarink.wordpress.com/');
 end;
 
-procedure TLog.ShowLog;
+procedure TfrmLog.ShowLog;
 var
   l: TStringList;
 begin

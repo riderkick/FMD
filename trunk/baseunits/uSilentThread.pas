@@ -3,20 +3,20 @@
         License: GPLv2
         This unit is a part of Free Manga Downloader
         ---------------------------------------------
-        As the name "silent" suggests, the jobs of theses classes is to get
+        As the name "silent" suggests, the job of theses classes is to get
         manga information from the site and add them to download list or
-        favorites
+        favorites silently.
 }
 
-unit SilentThread;
+unit uSilentThread;
 
 {$mode delphi}
 
 interface
 
 uses
-  Classes, SysUtils, Dialogs, Controls, IniFiles, baseunit, data, fgl, DownloadsManager,
-  Graphics, Process, lclintf, contnrs, FMDThread;
+  Classes, SysUtils, Dialogs, Controls, IniFiles, fgl, Graphics, Process, lclintf,
+  contnrs, uBaseUnit, uData, uDownloadsManager, uFMDThread;
 
 type
   // metadata - Store manga information in the queue, so that it will be
@@ -78,7 +78,7 @@ var
 implementation
 
 uses
-  mainunit;
+  frmMain;
 
 // ----- TSilentThreadMetaData -----
 

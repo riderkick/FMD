@@ -4,7 +4,7 @@
         This unit is a part of Free Manga Downloader
 }
 
-unit img2pdf;
+unit uImg2Pdf;
 
 {$mode delphi}
 

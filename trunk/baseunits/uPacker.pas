@@ -4,14 +4,14 @@
         This unit is a part of Free Manga Downloader
 }
 
-unit Packer;
+unit uPacker;
 
 {$mode delphi}
 
 interface
 
 uses
-  Classes, FileUtil, Zipper, baseunit, SysUtils, img2pdf;
+  Classes, FileUtil, Zipper, SysUtils, uBaseUnit, uImg2Pdf;
 
 type
   TPacker = class
@@ -80,7 +80,7 @@ begin
       Zip.SaveToStream(fstream);
       fstream.Free;
       Zip.Free;
-      //SetCurrentDirUTF8(oldDir);
+      //SetCurrentDirUTF8(fmdDirectory);
       for i:= 0 to list.Count-1 do
         DeleteFileUTF8(list.Strings[i]);
       Sleep(128);

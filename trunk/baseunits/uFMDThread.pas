@@ -1,4 +1,4 @@
-unit FMDThread;
+unit uFMDThread;
 
 {$mode delphi}
 

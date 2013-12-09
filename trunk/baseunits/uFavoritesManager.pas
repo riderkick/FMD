@@ -4,20 +4,20 @@
         This unit is a part of Free Manga Downloader
 }
 
-unit FavoritesManager;
+unit uFavoritesManager;
 
 {$mode delphi}
 
 {
   TODO:
-    Support multithread
+    Improve multithreading feature.
 }
 
 interface
 
 uses
-  Classes, SysUtils, Dialogs, Controls, IniFiles, lazutf8classes, FileUtil,
-  baseunit, data, fgl, DownloadsManager, FMDThread;
+  Classes, SysUtils, Dialogs, Controls, IniFiles, lazutf8classes, FileUtil, fgl,
+  uBaseUnit, uData, uDownloadsManager, uFMDThread;
 
 type
   TFavoriteManager = class;
@@ -125,7 +125,7 @@ type
 implementation
 
 uses
-  mainunit, NewChapterForm;
+  frmMain, frmNewChapter;
 
 // ----- TFavoriteThread -----
 
@@ -291,7 +291,7 @@ end;
 
 procedure   TFavoriteManager.ShowResult;
 var
-  LNewChapter     : TNewChapter;
+  LNewChapter     : TfrmNewChapter;
   LNCResult       : TNewChapterResult;
   // List of new chapter number for each title
   numberOfNewChapters: array of Cardinal;
@@ -398,8 +398,8 @@ begin
   begin
     if (removeListStr <> '') AND (isShowDialog) then
     begin
-      mainunit.MainForm.Show;
-      LNewChapter:= TNewChapter.Create(MainForm);
+      frmMain.MainForm.Show;
+      LNewChapter:= TfrmNewChapter.Create(MainForm);
       LNewChapter.lbNotification.Caption:= Format(stDlgHasNewChapter, [newC]);
       LNewChapter.mmMemo.Lines.Add(TrimLeft(removeListStr));
       LNewChapter.btDownload.Visible:= FALSE;
@@ -426,8 +426,8 @@ begin
 
     if isShowDialog then
     begin
-      mainunit.MainForm.Show;
-      LNewChapter:= TNewChapter.Create(MainForm);
+      frmMain.MainForm.Show;
+      LNewChapter:= TfrmNewChapter.Create(MainForm);
       LNewChapter.lbNotification.Caption:= Format(stDlgHasNewChapter, [newC]);
       LNewChapter.mmMemo.Lines.Add(TrimLeft(newMangaStr) + #13#13 + TrimLeft(removeListStr));
       LNewChapter.ShowModal;

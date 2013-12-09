@@ -4,7 +4,7 @@
         This unit is a part of Free Manga Downloader
 }
 
-unit data;
+unit uData;
 
 {$mode delphi}
 {$DEFINE DOWNLOADER}
@@ -14,7 +14,7 @@ unit data;
 interface
 
 uses
-  Classes, SysUtils, baseunit, fgl;
+  Classes, SysUtils, fgl, uBaseUnit;
 
 type
   TDataProcess = class(TObject)

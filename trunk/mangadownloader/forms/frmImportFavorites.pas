@@ -1,4 +1,4 @@
-unit ImportFavoritesForm;
+unit frmImportFavorites;
 
 {$mode objfpc}{$H+}
 
@@ -6,13 +6,13 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
-  Buttons, BaseUnit, lazutf8classes, ListForm;
+  Buttons, lazutf8classes, frmImportList, uBaseUnit;
 
 type
 
-  { TImportFavorites }
+  { TfrmImportFavorites }
 
-  TImportFavorites = class(TForm)
+  TfrmImportFavorites = class(TForm)
     btImport: TBitBtn;
     btBrowse: TBitBtn;
     btCancel: TBitBtn;
@@ -37,15 +37,15 @@ type
 implementation
 
 uses
-  mainunit, SilentThread;
+  frmMain, uSilentThread;
 
 {$R *.lfm}
 
-{ TImportFavorites }
+{ TfrmImportFavorites }
 
 { ----- private methods ----- }
 
-procedure TImportFavorites.DMDHandle;
+procedure TfrmImportFavorites.DMDHandle;
 var
   fstream  : TFileStreamUTF8;
   unimportedMangas,
@@ -122,7 +122,7 @@ begin
   unimportedMangas.Free;
 end;
 
-procedure TImportFavorites.FMDHandle;
+procedure TfrmImportFavorites.FMDHandle;
 begin
   MainForm.favorites.MergeWith(CorrectFilePath(edPath.Text) + 'works/favorites.ini');
 
@@ -130,7 +130,7 @@ begin
                  mtConfirmation, [mbYes], 0)
 end;
 
-procedure TImportFavorites.Run;
+procedure TfrmImportFavorites.Run;
 begin
   case cbSoftware.ItemIndex of
     0: DMDHandle;
@@ -145,7 +145,7 @@ end;
 
 { ----- public methods ----- }
 
-procedure TImportFavorites.FormCreate(Sender: TObject);
+procedure TfrmImportFavorites.FormCreate(Sender: TObject);
 begin
   Caption:= MainForm.btFavoritesImport.Caption;
   btImport.Caption:= stImport;
@@ -154,19 +154,19 @@ begin
   lbSelectSoftware.Caption:= stSoftware;
 end;
 
-procedure TImportFavorites.btBrowseClick(Sender: TObject);
+procedure TfrmImportFavorites.btBrowseClick(Sender: TObject);
 begin
   dlgPath.InitialDir:= CorrectFilePath(edPath.Text);
   if dlgPath.Execute then
     edPath.Text:= CorrectFilePath(dlgPath.FileName);
 end;
 
-procedure TImportFavorites.btImportClick(Sender: TObject);
+procedure TfrmImportFavorites.btImportClick(Sender: TObject);
 begin
   Run;
 end;
 
-procedure TImportFavorites.cbSoftwareChange(Sender: TObject);
+procedure TfrmImportFavorites.cbSoftwareChange(Sender: TObject);
 begin
 end;
 
