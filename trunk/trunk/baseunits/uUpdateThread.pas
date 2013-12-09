@@ -4,14 +4,14 @@
         This unit is a part of Free Manga Downloader
 }
 
-unit UpdateThread;
+unit uUpdateThread;
 
 {$mode delphi}
 {$DEFINE DOWNLOADER}
 interface
 
 uses
-  Classes, SysUtils, data, baseunit, Process;
+  Classes, SysUtils, Process, uData, uBaseUnit;
 
 type
   TUpdateMangaManagerThread = class;
@@ -76,7 +76,7 @@ type
 implementation
 
 uses
-  mainunit, Dialogs;
+  frmMain, Dialogs;
 
 // ----- TUpdateMangaThread -----
 

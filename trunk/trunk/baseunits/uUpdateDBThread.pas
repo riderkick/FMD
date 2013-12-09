@@ -4,22 +4,22 @@
         This unit is a part of Free Manga Downloader
 }
 
-unit UpdateDBThread;
+unit uUpdateDBThread;
 
 {$mode delphi}
 
 interface
 
 uses
-  Classes, SysUtils, data, baseunit, FileUtil, Process;
+  Classes, SysUtils, FileUtil, Process, uData, uBaseUnit;
 
 type
   TUpdateDBThread = class(TThread)
   protected
-    procedure   CallMainFormShowGetting;
-    procedure   CallMainFormShowEndGetting;
-    procedure   CallMainFormCannotConnectToServer;
-    procedure   CallMainFormRefreshList;
+    procedure   MainThreadShowGetting;
+    procedure   MainThreadShowEndGetting;
+    procedure   MainThreadCannotConnectToServer;
+    procedure   MainThreadRefreshList;
     procedure   Execute; override;
   public
     websiteName  : String;
@@ -32,9 +32,9 @@ type
 implementation
 
 uses
-  mainunit, Dialogs, zipper;
+  frmMain, Dialogs, zipper;
 
-procedure   TUpdateDBThread.CallMainFormRefreshList;
+procedure   TUpdateDBThread.MainThreadRefreshList;
 begin
   if MainForm.cbSelectManga.Items[MainForm.cbSelectManga.ItemIndex] = websiteName then
   begin
@@ -46,7 +46,7 @@ begin
     MainForm.vtMangaList.RootNodeCount:= MainForm.dataProcess.filterPos.Count;
     MainForm.lbMode.Caption:= Format(stModeAll, [MainForm.dataProcess.filterPos.Count]);
   end;
-  CallMainFormShowEndGetting;
+  MainThreadShowEndGetting;
 end;
 
 constructor TUpdateDBThread.Create;
@@ -63,18 +63,18 @@ begin
   inherited Destroy;
 end;
 
-procedure   TUpdateDBThread.CallMainFormShowGetting;
+procedure   TUpdateDBThread.MainThreadShowGetting;
 begin
   MainForm.sbMain.Panels[0].Text:= 'Getting list for ' + websiteName + ' ...';
 end;
 
-procedure   TUpdateDBThread.CallMainFormShowEndGetting;
+procedure   TUpdateDBThread.MainThreadShowEndGetting;
 begin
   MainForm.sbMain.Panels[0].Text:= '';
   MainForm.isUpdating:= FALSE;
 end;
 
-procedure   TUpdateDBThread.CallMainFormCannotConnectToServer;
+procedure   TUpdateDBThread.MainThreadCannotConnectToServer;
 begin
   MessageDlg('', stDlgUpdaterCannotConnectToServer, mtInformation, [mbYes], 0);
 end;
@@ -85,7 +85,7 @@ var
   Process : TProcess;
 begin
   while isSuspended do Sleep(32);
-  Synchronize(CallMainFormShowGetting);
+  Synchronize(MainThreadShowGetting);
 
   Process:= TProcess.Create(nil);
   Process.CommandLine:= 'updater 1 '+GetMangaDatabaseURL(websiteName);
@@ -94,28 +94,28 @@ begin
   Process.Free;
 
 
- // if SavePage(GetMangaDatabaseURL(websiteName), oldDir + DATA_FOLDER, websiteName + '.zip', 10) then
-  if FileExists(oldDir + DATA_FOLDER + websiteName + '.dat') then
+ // if SavePage(GetMangaDatabaseURL(websiteName), fmdDirectory + DATA_FOLDER, websiteName + '.zip', 10) then
+  if FileExists(fmdDirectory + DATA_FOLDER + websiteName + '.dat') then
   begin
     {UnZipper:= TUnZipper.Create;
     try
       UnZipper.FileName  := websiteName + '.zip';
-      UnZipper.OutputPath:= ExtractFilePath(oldDir + DATA_FOLDER + websiteName + '.zip');
+      UnZipper.OutputPath:= ExtractFilePath(fmdDirectory + DATA_FOLDER + websiteName + '.zip');
       UnZipper.Examine;
       UnZipper.UnZipAllFiles;
     finally
       UnZipper.Free;
     end;
     Sleep(32);
-    DeleteFile(oldDir + DATA_FOLDER + websiteName + '.zip');
+    DeleteFile(fmdDirectory + DATA_FOLDER + websiteName + '.zip');
     Sleep(32);}
 
-    Synchronize(CallMainFormRefreshList);
+    Synchronize(MainThreadRefreshList);
   end
   else
   begin
-    Synchronize(CallMainFormCannotConnectToServer);
-    Synchronize(CallMainFormShowEndGetting);
+    Synchronize(MainThreadCannotConnectToServer);
+    Synchronize(MainThreadShowEndGetting);
   end;
 end;
 

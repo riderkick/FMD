@@ -4,15 +4,15 @@
         This unit is a part of Free Manga Downloader
 }
 
-unit DownloadsManager;
+unit uDownloadsManager;
 
 {$mode delphi}
 
 interface
 
 uses
-  Classes, SysUtils, IniFiles, baseunit, data, fgl, Packer, ExtCtrls, Graphics,
-  FMDThread, dateutils;
+  Classes, SysUtils, IniFiles, ExtCtrls, Graphics, dateutils,
+  uBaseUnit, uData, fgl, uPacker, uFMDThread;
 
 type
   TDownloadManager = class;
@@ -59,9 +59,9 @@ type
     FAnotherURL  : String;
 
     procedure   CheckOut;
-    procedure   CallMainFormCompressRepaint;
-    procedure   CallMainFormRepaint;
-    procedure   CallMainFormRepaintImm;
+    procedure   MainThreadCompressRepaint;
+    procedure   MainThreadRepaint;
+    procedure   MainThreadRepaintImm;
     procedure   Execute; override;
     procedure   Compress;
     // show notification when download completed
@@ -187,8 +187,8 @@ type
 implementation
 
 uses
-  lazutf8classes, mainunit, FastHTMLParser, HTMLUtil, LConvEncoding,
-  SynaCode, FileUtil, HTTPSend, VirtualTrees;
+  lazutf8classes, FastHTMLParser, HTMLUtil, LConvEncoding,
+  SynaCode, FileUtil, HTTPSend, VirtualTrees, frmMain;
 
 // ----- TDownloadThread -----
 
@@ -954,7 +954,7 @@ start:
            Format('%.3d', [workCounter+1]),
            manager.container.manager.retryConnect);
 
-  SetCurrentDirUTF8(oldDir);
+  SetCurrentDirUTF8(fmdDirectory);
   if NOT Terminated then
     manager.container.pageLinks.Strings[workCounter]:= '';
 end;
@@ -979,7 +979,7 @@ begin
   inherited Destroy;
 end;
 
-procedure   TTaskThread.CallMainFormRepaint;
+procedure   TTaskThread.MainThreadRepaint;
 begin
   if MainForm.isCanRefreshForm then
   begin
@@ -988,13 +988,13 @@ begin
   end;
 end;
 
-procedure   TTaskThread.CallMainFormCompressRepaint;
+procedure   TTaskThread.MainThreadCompressRepaint;
 begin
   container.downloadInfo.Status:= Format('%s (%d/%d)', [stIsCompressing, container.currentDownloadChapterPtr, container.chapterLinks.Count]);
   MainForm.vtDownload.Repaint;
 end;
 
-procedure   TTaskThread.CallMainFormRepaintImm;
+procedure   TTaskThread.MainThreadRepaintImm;
 begin
   MainForm.vtDownload.Repaint;
   MainForm.isCanRefreshForm:= FALSE;
@@ -1002,23 +1002,23 @@ end;
 
 procedure   TTaskThread.Compress;
 var
-  packer: TPacker;
+  uPacker: TPacker;
 begin
   if (container.manager.compress >= 1) then
   begin
     Sleep(100);
-    Synchronize(CallMainformCompressRepaint);
-    packer:= TPacker.Create;
+    Synchronize(MainThreadCompressRepaint);
+    uPacker:= TPacker.Create;
     case container.manager.compress of
-      1: packer.ext:= '.zip';
-      2: packer.ext:= '.cbz';
-      3: packer.ext:= '.pdf';
+      1: uPacker.ext:= '.zip';
+      2: uPacker.ext:= '.cbz';
+      3: uPacker.ext:= '.pdf';
     end;
-    packer.CompressionQuality:= OptionPDFQuality;
-    packer.Path:= container.downloadInfo.SaveTo+'/'+
+    uPacker.CompressionQuality:= OptionPDFQuality;
+    uPacker.Path:= container.downloadInfo.SaveTo+'/'+
                   container.chapterName.Strings[container.currentDownloadChapterPtr];
-    packer.Execute;
-    packer.Free;
+    uPacker.Execute;
+    uPacker.Free;
   end;
 end;
 
@@ -1172,7 +1172,7 @@ begin
         {$IFDEF WIN32}
         MainForm.vtDownload.Repaint;
         {$ELSE}
-        Synchronize(CallMainFormRepaint);
+        Synchronize(MainThreadRepaint);
         {$ENDIF}
       end;
       WaitFor;
@@ -1202,7 +1202,7 @@ begin
         {$IFDEF WIN32}
         MainForm.vtDownload.Repaint;
         {$ELSE}
-        Synchronize(CallMainFormRepaint);
+        Synchronize(MainThreadRepaint);
         {$ENDIF}
       end;
       WaitFor;
@@ -1235,7 +1235,7 @@ begin
       {$IFDEF WIN32}
       MainForm.vtDownload.Repaint;
       {$ELSE}
-      Synchronize(CallMainFormRepaintImm);
+      Synchronize(MainThreadRepaintImm);
       {$ENDIF}
     end
     else
@@ -1246,7 +1246,7 @@ begin
       {$IFDEF WIN32}
       MainForm.vtDownload.Repaint;
       {$ELSE}
-      Synchronize(CallMainFormRepaintImm);
+      Synchronize(MainThreadRepaintImm);
       {$ENDIF}
     end;
   end;
@@ -1455,13 +1455,13 @@ var
 begin
   // generate LValue string
   LValue:= '';
-  if MainUnit.MainForm.clbChapterList.RootNodeCount = 0 then exit;
-  Node:= MainUnit.MainForm.clbChapterList.GetFirst;
-  for i:= 0 to MainUnit.MainForm.clbChapterList.RootNodeCount-1 do
+  if frmMain.MainForm.clbChapterList.RootNodeCount = 0 then exit;
+  Node:= frmMain.MainForm.clbChapterList.GetFirst;
+  for i:= 0 to frmMain.MainForm.clbChapterList.RootNodeCount-1 do
   begin
     if Node.CheckState = csCheckedNormal then
       LValue:= LValue+IntToStr(i) + SEPERATOR;
-    Node:= MainUnit.MainForm.clbChapterList.GetNext(Node);
+    Node:= frmMain.MainForm.clbChapterList.GetNext(Node);
   end;
   if LValue = '' then exit;
 

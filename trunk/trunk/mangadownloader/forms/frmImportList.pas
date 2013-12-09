@@ -1,4 +1,4 @@
-unit ListForm;
+unit frmImportList;
 
 {$mode objfpc}{$H+}
 
@@ -9,9 +9,9 @@ uses
 
 type
 
-  { TImportList }
+  { TfrmImportList }
 
-  TImportList = class(TForm)
+  TfrmImportList = class(TForm)
     mmList: TMemo;
     procedure FormCreate(Sender: TObject);
   private
@@ -21,15 +21,15 @@ type
   end;
 
 var
-  ImportList: TImportList;
+  ImportList: TfrmImportList;
 
 implementation
 
 {$R *.lfm}
 
-{ TImportList }
+{ TfrmImportList }
 
-procedure TImportList.FormCreate(Sender: TObject);
+procedure TfrmImportList.FormCreate(Sender: TObject);
 begin
   Hide;
 end;

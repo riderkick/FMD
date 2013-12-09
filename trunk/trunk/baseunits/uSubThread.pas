@@ -4,15 +4,15 @@
         This unit is a part of Free Manga Downloader
 }
 
-unit SubThread;
+unit uSubThread;
 
 {$mode delphi}
 
 interface
 
 uses
-  Classes, SysUtils, Dialogs, Controls, IniFiles, baseunit, data, fgl, DownloadsManager,
-  Graphics, Process, lclintf, FMDThread;
+  Classes, SysUtils, Dialogs, Controls, IniFiles, fgl, Graphics, Process, lclintf,
+  uBaseUnit, uData, uDownloadsManager, uFMDThread;
 
 type
   { Tasks will be done by this thread:
@@ -61,7 +61,7 @@ type
 implementation
 
 uses
-  mainunit, logform, fileutil, SilentThread;
+  frmMain, frmLog, FileUtil, uSilentThread;
 
 var
   LRequireRevision: Cardinal = 1;
@@ -179,7 +179,7 @@ end;
 
 procedure   TSubThread.MainThreadShowLog;
 begin
-  Log:= TLog.Create(MainForm);
+  Log:= TfrmLog.Create(MainForm);
   Log.ShowModal;
   Log.Free;
 end;
@@ -206,11 +206,11 @@ begin
   if MessageDlg('', Format(stDlgNewVersion + #10#13#10#13 + fNote, [LVersion, LRevision]),
                     mtInformation, [mbYes, mbNo], 0) = mrYes then
   begin
-    CopyFile(oldDir + 'updater.exe', oldDir + 'old_updater.exe');
-    CopyFile(oldDir + CONFIG_FOLDER + CONFIG_FILE,
-             oldDir + CONFIG_FOLDER + CONFIG_FILE + '.tmp');
+    CopyFile(fmdDirectory + 'updater.exe', fmdDirectory + 'old_updater.exe');
+    CopyFile(fmdDirectory + CONFIG_FOLDER + CONFIG_FILE,
+             fmdDirectory + CONFIG_FOLDER + CONFIG_FILE + '.tmp');
     Process:= TProcess.Create(nil);
-    Process.CommandLine:= oldDir + 'old_updater.exe 1';
+    Process.CommandLine:= fmdDirectory + 'old_updater.exe 1';
     MainForm.CloseNow;
     Process.Execute;
     Process.Free;
@@ -251,9 +251,9 @@ procedure   TSubThread.MainThreadPopSilentThreadQueue;
 var
   meta: TSilentThreadMetaData;
 begin
-  if SilentThread.SilentThreadQueue.Count = 0 then
+  if uSilentThread.SilentThreadQueue.Count = 0 then
     exit;
-  meta:= TSilentThreadMetaData(SilentThread.SilentThreadQueue.Pop);
+  meta:= TSilentThreadMetaData(uSilentThread.SilentThreadQueue.Pop);
   if meta <> nil then
   begin
     meta.Run;
@@ -272,8 +272,8 @@ begin
   Sleep(2000);
   if FileExists(WORK_FOLDER + LOG_FILE) then
     Synchronize(MainThreadShowLog);
-  if FileExists(oldDir + 'old_updater.exe') then
-    DeleteFile(oldDir + 'old_updater.exe');
+  if FileExists(fmdDirectory + 'old_updater.exe') then
+    DeleteFile(fmdDirectory + 'old_updater.exe');
   Sleep(2000);
   if OptionAutoCheckFavStartup then
   begin

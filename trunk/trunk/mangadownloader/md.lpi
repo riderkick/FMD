@@ -52,62 +52,62 @@
         <PackageName Value="LCL"/>
       </Item3>
     </RequiredPackages>
-    <Units Count="200">
+    <Units Count="201">
       <Unit0>
         <Filename Value="md.lpr"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="md"/>
       </Unit0>
       <Unit1>
-        <Filename Value="..\baseunits\DownloadsManager.pas"/>
+        <Filename Value="..\baseunits\uDownloadsManager.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="DownloadsManager"/>
+        <UnitName Value="uDownloadsManager"/>
       </Unit1>
       <Unit2>
-        <Filename Value="..\baseunits\FavoritesManager.pas"/>
+        <Filename Value="..\baseunits\uFavoritesManager.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="FavoritesManager"/>
+        <UnitName Value="uFavoritesManager"/>
       </Unit2>
       <Unit3>
-        <Filename Value="..\baseunits\UpdateThread.pas"/>
+        <Filename Value="..\baseunits\uUpdateThread.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="UpdateThread"/>
+        <UnitName Value="uUpdateThread"/>
       </Unit3>
       <Unit4>
-        <Filename Value="..\baseunits\SubThread.pas"/>
+        <Filename Value="..\baseunits\uSubThread.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="SubThread"/>
+        <UnitName Value="uSubThread"/>
       </Unit4>
       <Unit5>
-        <Filename Value="..\baseunits\UpdateDBThread.pas"/>
+        <Filename Value="..\baseunits\uUpdateDBThread.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="UpdateDBThread"/>
+        <UnitName Value="uUpdateDBThread"/>
       </Unit5>
       <Unit6>
-        <Filename Value="..\baseunits\SilentThread.pas"/>
+        <Filename Value="..\baseunits\uSilentThread.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="SilentThread"/>
+        <UnitName Value="uSilentThread"/>
       </Unit6>
       <Unit7>
-        <Filename Value="forms\ImportFavoritesForm.pas"/>
+        <Filename Value="forms\frmImportFavorites.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="ImportFavorites"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <UnitName Value="ImportFavoritesForm"/>
+        <UnitName Value="frmImportFavorites"/>
       </Unit7>
       <Unit8>
-        <Filename Value="forms\ListForm.pas"/>
+        <Filename Value="forms\frmImportList.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="ImportList"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <UnitName Value="ListForm"/>
+        <UnitName Value="frmImportList"/>
       </Unit8>
       <Unit9>
-        <Filename Value="..\baseunits\FMDThread.pas"/>
+        <Filename Value="..\baseunits\uFMDThread.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="FMDThread"/>
+        <UnitName Value="uFMDThread"/>
       </Unit9>
       <Unit10>
         <Filename Value="..\baseunits\includes\Batoto\manga_information.inc"/>
@@ -866,10 +866,15 @@
         <IsPartOfProject Value="True"/>
       </Unit198>
       <Unit199>
-        <Filename Value="..\baseunits\Packer.pas"/>
+        <Filename Value="..\baseunits\uPacker.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="Packer"/>
+        <UnitName Value="uPacker"/>
       </Unit199>
+      <Unit200>
+        <Filename Value="..\baseunits\uOption.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="uOption"/>
+      </Unit200>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

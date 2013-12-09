@@ -4,7 +4,7 @@
         This unit is a part of Free Manga Downloader
 }
 
-unit baseunit;
+unit uBaseUnit;
 
 {$MODE DELPHI}
 {$MACRO ON}
@@ -117,7 +117,7 @@ const
   CONFIG_FILE       = 'config.ini';
   REVISION_FILE     = 'revision.ini';
   UPDATE_FILE       = 'updates.ini';
-  MANGALISTINI_FILE = 'mangalist.ini';
+  MANGALIST_FILE    = 'mangalist.ini';
   LANGUAGE_FILE     = 'languages.ini';
   LOG_FILE          = 'changelog.txt';
 
@@ -228,7 +228,7 @@ var
   Port  : String = '';
   User  : String = '';
   Pass  : String = '';
-  oldDir: String;
+  fmdDirectory: String;
   // EN: Param seperator
   // VI: Ký tự dùng để chia cắt param trong dữ liệu
   SEPERATOR: String = '!%~';
@@ -776,7 +776,7 @@ begin
   if wS[2]<>':' then
   begin
     {$IFDEF WIN32}
-    lcS2:= CorrectFilePath(oldDir);
+    lcS2:= CorrectFilePath(fmdDirectory);
     {$ELSE}
     lcS2:= '';
     {$ENDIF}
@@ -805,7 +805,7 @@ begin
       end;
     end;
   end;
-  SetCurrentDirUTF8(oldDir);
+  SetCurrentDirUTF8(fmdDirectory);
 end;
 
 function  GetMangaSiteID(const name: String): Cardinal;
