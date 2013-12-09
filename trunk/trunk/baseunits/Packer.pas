@@ -1,10 +1,10 @@
 {
-        File: zip.pas
+        File: Packer.pas
         License: GPLv2
         This unit is a part of Free Manga Downloader
 }
 
-unit zip;
+unit Packer;
 
 {$mode delphi}
 
@@ -14,7 +14,7 @@ uses
   Classes, FileUtil, Zipper, baseunit, SysUtils, img2pdf;
 
 type
-  TCompress = class
+  TPacker = class
   protected
     list: TStringList;
     procedure   OnFileFound(FileIterator: TFileIterator);
@@ -32,12 +32,12 @@ implementation
 uses
   lazutf8classes;
 
-procedure   TCompress.OnFileFound(FileIterator: TFileIterator);
+procedure   TPacker.OnFileFound(FileIterator: TFileIterator);
 begin
   list.Add(FileIterator.Filename);
 end;
 
-procedure   TCompress.DoZipCbz;
+procedure   TPacker.DoZipCbz;
 var
   s,
   fPath   : String;
@@ -95,7 +95,7 @@ begin
   end;
 end;
 
-procedure   TCompress.DoPdf;
+procedure   TPacker.DoPdf;
 var
   s,
   fPath   : String;
@@ -152,7 +152,7 @@ begin
   end;
 end;
 
-procedure   TCompress.Execute;
+procedure   TPacker.Execute;
 begin
   if (ext='.zip') OR (ext='.cbz') then
   begin
