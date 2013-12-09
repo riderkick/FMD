@@ -179,7 +179,7 @@ end;
 
 procedure   TSubThread.MainThreadShowLog;
 begin
-  Log:= TfrmLog.Create(MainForm);
+  Log:= TLog.Create(MainForm);
   Log.ShowModal;
   Log.Free;
 end;

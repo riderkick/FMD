@@ -1,3 +1,9 @@
+{
+        File: frmNewChapter.pas
+        License: GPLv2
+        This unit is a part of Free Manga Downloader
+}
+
 unit frmNewChapter;
 
 {$mode delphi}
@@ -12,9 +18,9 @@ type
 
   TNewChapterResult = (ncrDownload, ncrQueue, ncrCancel);
 
-  { TfrmNewChapter }
+  { TNewChapter }
 
-  TfrmNewChapter = class(TForm)
+  TNewChapter = class(TForm)
     btDownload: TBitBtn;
     btCancel: TBitBtn;
     btQueue: TBitBtn;
@@ -40,9 +46,9 @@ implementation
 uses
   uBaseUnit;
 
-{ TfrmNewChapter }
+{ TNewChapter }
 
-procedure TfrmNewChapter.FormCreate(Sender: TObject);
+procedure TNewChapter.FormCreate(Sender: TObject);
 begin
   btDownload.Caption:= stDownload;
   btQueue   .Caption:= stAddToQueue;
@@ -50,17 +56,17 @@ begin
   Caption           := stNewChapterNotification;
 end;
 
-procedure TfrmNewChapter.btDownloadClick(Sender: TObject);
+procedure TNewChapter.btDownloadClick(Sender: TObject);
 begin
   FFormResult:= ncrDownload;
 end;
 
-procedure TfrmNewChapter.btQueueClick(Sender: TObject);
+procedure TNewChapter.btQueueClick(Sender: TObject);
 begin
   FFormResult:= ncrQueue;
 end;
 
-procedure TfrmNewChapter.btCancelClick(Sender: TObject);
+procedure TNewChapter.btCancelClick(Sender: TObject);
 begin
   FFormResult:= ncrCancel;
 end;

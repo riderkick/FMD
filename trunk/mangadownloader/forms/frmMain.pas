@@ -1,5 +1,5 @@
 {
-        File: mainunit.pas
+        File: frmMain.pas
         License: GPLv2
         This unit is a part of Free Manga Downloader
 }
@@ -20,9 +20,9 @@ uses
 
 type
 
-  { TfrmMain }
+  { TMainForm }
 
-  TfrmMain = class(TForm)
+  TMainForm = class(TForm)
     btDonate: TImage;
     btRemoveFilter: TBitBtn;
     btFavoritesImport: TBitBtn;
@@ -490,7 +490,7 @@ type
   end;
 
 var
-  MainForm: TfrmMain;
+  MainForm: TMainForm;
 
 implementation
 
@@ -499,9 +499,9 @@ implementation
 uses
   frmLog, frmImportFavorites;
 
-{ TfrmMain }
+{ TMainForm }
 
-procedure TfrmMain.FormCreate(Sender: TObject);
+procedure TMainForm.FormCreate(Sender: TObject);
 var
   fs: TFileStream;
 begin
@@ -627,17 +627,17 @@ begin
   tvDownloadFilterRepaint;
 end;
 
-procedure TfrmMain.cbOptionUseProxyChange(Sender: TObject);
+procedure TMainForm.cbOptionUseProxyChange(Sender: TObject);
 begin
   gbOptionProxy.Enabled:= cbOptionUseProxy.Checked;
 end;
 
-procedure TfrmMain.clbChapterListKeyPress(Sender: TObject; var Key: char);
+procedure TMainForm.clbChapterListKeyPress(Sender: TObject; var Key: char);
 begin
 
 end;
 
-procedure TfrmMain.FormDestroy(Sender: TObject);
+procedure TMainForm.FormDestroy(Sender: TObject);
 begin
   SubThread.Terminate;
   Sleep(200);
@@ -647,7 +647,7 @@ begin
   websiteLanguage.Free;
 end;
 
-procedure TfrmMain.FormWindowStateChange(Sender: TObject);
+procedure TMainForm.FormWindowStateChange(Sender: TObject);
 begin
   case WindowState of
     wsMinimized:
@@ -659,7 +659,7 @@ begin
   end;
 end;
 
-procedure TfrmMain.itAnimateTimer(Sender: TObject);
+procedure TMainForm.itAnimateTimer(Sender: TObject);
 var
   r: TRect;
 begin
@@ -667,36 +667,36 @@ begin
   gifWaiting.Update(pbWait.Canvas, r);
 end;
 
-procedure TfrmMain.itCheckForChaptersTimer(Sender: TObject);
+procedure TMainForm.itCheckForChaptersTimer(Sender: TObject);
 begin
   favorites.isAuto:= TRUE;
   favorites.isShowDialog:= cbOptionShowFavoriteDialog.Checked;
   favorites.Run;
 end;
 
-procedure TfrmMain.itRefreshFormTimer(Sender: TObject);
+procedure TMainForm.itRefreshFormTimer(Sender: TObject);
 begin
   isCanRefreshForm:= TRUE;
 end;
 
-procedure TfrmMain.itSaveDownloadedListTimer(Sender: TObject);
+procedure TMainForm.itSaveDownloadedListTimer(Sender: TObject);
 begin
   DLManager.BackupDownloadedChaptersList;
 end;
 
-procedure TfrmMain.itSaveJobListTimer(Sender: TObject);
+procedure TMainForm.itSaveJobListTimer(Sender: TObject);
 begin
   DLManager.SaveJobList;
 end;
 
-procedure TfrmMain.miChapterListHighlightClick(Sender: TObject);
+procedure TMainForm.miChapterListHighlightClick(Sender: TObject);
 begin
   miChapterListHighlight.Checked:= NOT miChapterListHighlight.Checked;
   options.WriteBool('general', 'HighlightDownloadedChapters', miChapterListHighlight.Checked);
   clbChapterList.Repaint;
 end;
 
-procedure TfrmMain.miDeleteTaskClick(Sender: TObject);
+procedure TMainForm.miDeleteTaskClick(Sender: TObject);
 var
   i    : Cardinal;
   xNode: PVirtualNode;
@@ -731,7 +731,7 @@ begin
   end;
 end;
 
-procedure TfrmMain.miDeleteTaskDataClick(Sender: TObject);
+procedure TMainForm.miDeleteTaskDataClick(Sender: TObject);
 var
   i, j    : Cardinal;
   xNode   : PVirtualNode;
@@ -787,7 +787,7 @@ begin
   end;
 end;
 
-procedure TfrmMain.miDownloadMergeClick(Sender: TObject);
+procedure TMainForm.miDownloadMergeClick(Sender: TObject);
 var
   i, j: Cardinal;
 // merge all finished tasks that have same manga name, website and directory
@@ -820,7 +820,7 @@ begin
   UpdateVtDownload;
 end;
 
-procedure TfrmMain.miFavoritesViewInfosClick(Sender: TObject);
+procedure TMainForm.miFavoritesViewInfosClick(Sender: TObject);
 begin
   if (SubThread.isGetInfos) OR (NOT vtFavorites.Focused) then exit;
 
@@ -846,14 +846,14 @@ begin
   end;
 end;
 
-procedure TfrmMain.miHighlightNewMangaClick(Sender: TObject);
+procedure TMainForm.miHighlightNewMangaClick(Sender: TObject);
 begin
   miHighlightNewManga.Checked:= NOT miHighlightNewManga.Checked;
   options.WriteBool('general', 'HighLightNewManga', miHighlightNewManga.Checked);
   vtMangaList.Repaint;
 end;
 
-procedure TfrmMain.FormClose(Sender: TObject; var CloseAction: TCloseAction);
+procedure TMainForm.FormClose(Sender: TObject; var CloseAction: TCloseAction);
 begin
   if cbOptionShowQuitDialog.Checked then
   begin
@@ -869,7 +869,7 @@ begin
   CloseAction:= caFree;
 end;
 
-procedure TfrmMain.CloseNow;
+procedure TMainForm.CloseNow;
 begin
   isExiting:= TRUE;
   favorites.Backup;
@@ -892,12 +892,12 @@ begin
   // Halt;
 end;
 
-procedure TfrmMain.CheckForTopPanel;
+procedure TMainForm.CheckForTopPanel;
 begin
 
 end;
 
-procedure TfrmMain.LoadAbout;
+procedure TMainForm.LoadAbout;
 var
   fs: TFileStream;
 begin
@@ -910,7 +910,7 @@ begin
   end;
 end;
 
-procedure TfrmMain.tvDownloadFilterRepaint;
+procedure TMainForm.tvDownloadFilterRepaint;
 var
   i: Cardinal;
   LFinishedTasks  : Cardinal = 0;
@@ -948,7 +948,7 @@ begin
   tvDownloadFilter.Items[8].Text:= stOneMonth;
 end;
 
-procedure TfrmMain.GenerateNodes;
+procedure TMainForm.GenerateNodes;
 begin
   tvDownloadFilter.Items.Clear;
 
@@ -1001,7 +1001,7 @@ end;
 
 // -----
 
-procedure TfrmMain.btDownloadClick(Sender: TObject);
+procedure TMainForm.btDownloadClick(Sender: TObject);
 var
   s, s1, s2: String;
   hh, mm, ss, ms,
@@ -1105,7 +1105,7 @@ end;
 
 // -----
 
-procedure TfrmMain.btFavoritesCheckNewChapterClick(Sender: TObject);
+procedure TMainForm.btFavoritesCheckNewChapterClick(Sender: TObject);
 begin
   favorites.isAuto:= FALSE;
   favorites.isShowDialog:= cbOptionShowFavoriteDialog.Checked;
@@ -1114,14 +1114,14 @@ end;
 
 // -----
 
-procedure TfrmMain.btBrowseClick(Sender: TObject);
+procedure TMainForm.btBrowseClick(Sender: TObject);
 begin
   dlgSaveTo.InitialDir:= CorrectFilePath(edSaveTo.Text);
   if dlgSaveTo.Execute then
     edSaveTo.Text:= CorrectFilePath(dlgSaveTo.FileName);
 end;
 
-procedure TfrmMain.btOptionBrowseClick(Sender: TObject);
+procedure TMainForm.btOptionBrowseClick(Sender: TObject);
 begin
   dlgSaveTo.InitialDir:= CorrectFilePath(edOptionDefaultPath.Text);
   if dlgSaveTo.Execute then
@@ -1130,7 +1130,7 @@ end;
 
 // -----
 
-procedure TfrmMain.btUpdateListClick(Sender: TObject);
+procedure TMainForm.btUpdateListClick(Sender: TObject);
 var
   button   : TControl;
   lowerLeft: TPoint;
@@ -1148,7 +1148,7 @@ begin
   end;
 end;
 
-procedure TfrmMain.btURLClick(Sender: TObject);
+procedure TMainForm.btURLClick(Sender: TObject);
 var
   i: Cardinal;
 begin
@@ -1207,17 +1207,17 @@ begin
   end;
 end;
 
-procedure TfrmMain.btVisitMyBlogClick(Sender: TObject);
+procedure TMainForm.btVisitMyBlogClick(Sender: TObject);
 begin
   OpenURL('http://akarink.wordpress.com/');
 end;
 
-procedure TfrmMain.btReadOnlineClick(Sender: TObject);
+procedure TMainForm.btReadOnlineClick(Sender: TObject);
 begin
   OpenURL(mangaInfo.url);
 end;
 
-procedure TfrmMain.btCheckVersionClick(Sender: TObject);
+procedure TMainForm.btCheckVersionClick(Sender: TObject);
 begin
   if subthread.isCheckForLatestVer then
     MessageDlg('', stDlgUpdaterIsRunning, mtInformation, [mbYes], 0)
@@ -1228,21 +1228,21 @@ begin
   end;
 end;
 
-procedure TfrmMain.btDonateClick(Sender: TObject);
+procedure TMainForm.btDonateClick(Sender: TObject);
 begin
   OpenURL('https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=akarin.km@gmail.com&item_name=Donation+to+Free+Manga+Downloader');
 end;
 
-procedure TfrmMain.btFavoritesImportClick(Sender: TObject);
+procedure TMainForm.btFavoritesImportClick(Sender: TObject);
 var
-  ImportFavorites: TfrmImportFavorites;
+  ImportFavorites: TImportFavorites;
 begin
-  ImportFavorites:= TfrmImportFavorites.Create(self);
+  ImportFavorites:= TImportFavorites.Create(self);
   ImportFavorites.ShowModal;
   ImportFavorites.Free;
 end;
 
-procedure TfrmMain.btChecksClick(Sender: TObject);
+procedure TMainForm.btChecksClick(Sender: TObject);
 var
   button   : TControl;
   lowerLeft: TPoint;
@@ -1261,7 +1261,7 @@ begin
   clbChapterList.SetFocus;
 end;
 
-procedure TfrmMain.cbSelectMangaChange(Sender: TObject);
+procedure TMainForm.cbSelectMangaChange(Sender: TObject);
 var
   isFilterAllSites: Boolean;
 begin
@@ -1291,7 +1291,7 @@ begin
   end;
 end;
 
-procedure TfrmMain.clbChapterListBeforeCellPaint(Sender: TBaseVirtualTree;
+procedure TMainForm.clbChapterListBeforeCellPaint(Sender: TBaseVirtualTree;
   TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
   CellPaintMode: TVTCellPaintMode; CellRect: TRect; var ContentRect: TRect);
 var
@@ -1317,13 +1317,13 @@ begin
   end;
 end;
 
-procedure TfrmMain.clbChapterListGetNodeDataSize(Sender: TBaseVirtualTree;
+procedure TMainForm.clbChapterListGetNodeDataSize(Sender: TBaseVirtualTree;
   var NodeDataSize: Integer);
 begin
   NodeDataSize:= SizeOf(TSingleItem);
 end;
 
-procedure TfrmMain.clbChapterListGetText(Sender: TBaseVirtualTree;
+procedure TMainForm.clbChapterListGetText(Sender: TBaseVirtualTree;
   Node: PVirtualNode; Column: TColumnIndex; TextType: TVSTTextType;
   var CellText: String);
 var
@@ -1334,7 +1334,7 @@ begin
     CellText:= data.Text;
 end;
 
-procedure TfrmMain.clbChapterListInitNode(
+procedure TMainForm.clbChapterListInitNode(
   Sender: TBaseVirtualTree; ParentNode, Node: PVirtualNode;
   var InitialStates: TVirtualNodeInitStates);
 var
@@ -1352,7 +1352,7 @@ begin
   end;
 end;
 
-procedure TfrmMain.edSearchClick(Sender: TObject);
+procedure TMainForm.edSearchClick(Sender: TObject);
 begin
   if edSearch.Text = stSearch then
     edSearch.Text:= '';
@@ -1362,7 +1362,7 @@ end;
 
 // -----
 
-procedure TfrmMain.btRemoveFilterClick(Sender: TObject);
+procedure TMainForm.btRemoveFilterClick(Sender: TObject);
 begin
   if dataProcess.isFiltered then
   begin
@@ -1384,7 +1384,7 @@ end;
 
 // -----
 
-procedure TfrmMain.btFilterClick(Sender: TObject);
+procedure TMainForm.btFilterClick(Sender: TObject);
 var
   l, checkGenres, uncheckGenres: TStringList;
   i: Cardinal;
@@ -1458,7 +1458,7 @@ begin
   checkGenres  .Free;
 end;
 
-procedure TfrmMain.btFilterResetClick(Sender: TObject);
+procedure TMainForm.btFilterResetClick(Sender: TObject);
 var
   i: Cardinal;
 begin
@@ -1474,7 +1474,7 @@ end;
 
 // ----- vtMangaList popup menu -----
 
-procedure TfrmMain.miMangaListAddToFavoritesClick(Sender: TObject);
+procedure TMainForm.miMangaListAddToFavoritesClick(Sender: TObject);
 var
   i           : Cardinal;
   xNode       : PVirtualNode;
@@ -1507,7 +1507,7 @@ end;
 
 // ----- vtFavorites popup menu -----
 
-procedure TfrmMain.miFavoritesRemoveClick(Sender: TObject);
+procedure TMainForm.miFavoritesRemoveClick(Sender: TObject);
 var
   i      : Cardinal;
   xNode  : PVirtualNode;
@@ -1553,7 +1553,7 @@ begin
   SetLength(delList, 0);
 end;
 
-procedure TfrmMain.miFavoritesChangeCurrentChapterClick(Sender: TObject);
+procedure TMainForm.miFavoritesChangeCurrentChapterClick(Sender: TObject);
 var
   s: String;
   i: Integer;
@@ -1578,7 +1578,7 @@ begin
   end;
 end;
 
-procedure TfrmMain.miFavoritesChangeSaveToClick(Sender: TObject);
+procedure TMainForm.miFavoritesChangeSaveToClick(Sender: TObject);
 begin
   if favorites.isRunning then
   begin
@@ -1599,7 +1599,7 @@ end;
 
 // ----- clbChapterList popup menu -----
 
-procedure TfrmMain.miChapterListCheckSelectedClick(Sender: TObject);
+procedure TMainForm.miChapterListCheckSelectedClick(Sender: TObject);
 var
   i: Cardinal;
   Node: PVirtualNode;
@@ -1617,7 +1617,7 @@ begin
   end;
 end;
 
-procedure TfrmMain.miChapterListUncheckSelectedClick(Sender: TObject);
+procedure TMainForm.miChapterListUncheckSelectedClick(Sender: TObject);
 var
   i: Cardinal;
   Node: PVirtualNode;
@@ -1635,7 +1635,7 @@ begin
   end;
 end;
 
-procedure TfrmMain.miChapterListCheckAllClick(Sender: TObject);
+procedure TMainForm.miChapterListCheckAllClick(Sender: TObject);
 var
   i: Cardinal;
   Node: PVirtualNode;
@@ -1652,7 +1652,7 @@ begin
   end;
 end;
 
-procedure TfrmMain.miChapterListUncheckAllClick(Sender: TObject);
+procedure TMainForm.miChapterListUncheckAllClick(Sender: TObject);
 var
   i   : Cardinal;
   Node: PVirtualNode;
@@ -1671,7 +1671,7 @@ end;
 
 // ----- vtDownload popup menu -----
 
-procedure TfrmMain.miUpClick(Sender: TObject);
+procedure TMainForm.miUpClick(Sender: TObject);
 begin
   if DLManager.MoveUp(vtDownload.FocusedNode.Index) then
   begin
@@ -1679,7 +1679,7 @@ begin
   end;
 end;
 
-procedure TfrmMain.mnDownload1ClickClick(Sender: TObject);
+procedure TMainForm.mnDownload1ClickClick(Sender: TObject);
 var
   i: Cardinal;
 begin
@@ -1701,7 +1701,7 @@ begin
     MessageDlg('', stDlgUpdateAlreadyRunning, mtInformation, [mbYes], 0);
 end;
 
-procedure TfrmMain.mnUpdate1ClickClick(Sender: TObject);
+procedure TMainForm.mnUpdate1ClickClick(Sender: TObject);
 var
   i: Cardinal;
 begin
@@ -1722,7 +1722,7 @@ begin
     MessageDlg('', stDlgUpdateAlreadyRunning, mtInformation, [mbYes], 0);
 end;
 
-procedure TfrmMain.mnUpdateDownFromServerClick(Sender: TObject);
+procedure TMainForm.mnUpdateDownFromServerClick(Sender: TObject);
 begin
   if (NOT isUpdating) then
   begin
@@ -1732,7 +1732,7 @@ begin
     MessageDlg('', stDlgUpdateAlreadyRunning, mtInformation, [mbYes], 0);
 end;
 
-procedure TfrmMain.mnUpdateListClick(Sender: TObject);
+procedure TMainForm.mnUpdateListClick(Sender: TObject);
 begin
   if (NOT isUpdating) then
   begin
@@ -1750,7 +1750,7 @@ begin
     MessageDlg('', stDlgUpdateAlreadyRunning, mtInformation, [mbYes], 0);
 end;
 
-procedure TfrmMain.miDownClick(Sender: TObject);
+procedure TMainForm.miDownClick(Sender: TObject);
 begin
   if DLManager.MoveDown(vtDownload.FocusedNode.Index) then
   begin
@@ -1758,7 +1758,7 @@ begin
   end;
 end;
 
-procedure TfrmMain.miDownloadRemoveFinishedTasksClick(Sender: TObject);
+procedure TMainForm.miDownloadRemoveFinishedTasksClick(Sender: TObject);
 begin
   if cbOptionShowDeleteTaskDialog.Checked then
     if MessageDlg('', stDlgRemoveFinishTasks,
@@ -1770,7 +1770,7 @@ begin
   // download list will change during this method
 end;
 
-procedure TfrmMain.miDownloadRemuseClick(Sender: TObject);
+procedure TMainForm.miDownloadRemuseClick(Sender: TObject);
 var
   i    : Cardinal;
   xNode: PVirtualNode;
@@ -1814,7 +1814,7 @@ begin
   end;
 end;
 
-procedure TfrmMain.miDownloadRemoveClick(Sender: TObject);
+procedure TMainForm.miDownloadRemoveClick(Sender: TObject);
 var
   i    : Cardinal;
   xNode: PVirtualNode;
@@ -1850,7 +1850,7 @@ begin
 end;
 
 // Download table's popup menu
-procedure TfrmMain.miDownloadStopClick(Sender: TObject);
+procedure TMainForm.miDownloadStopClick(Sender: TObject);
 var
   i    : Cardinal;
   xNode: PVirtualNode;
@@ -1877,7 +1877,7 @@ begin
   end;
 end;
 
-procedure TfrmMain.miMangaListDownloadAllClick(Sender: TObject);
+procedure TMainForm.miMangaListDownloadAllClick(Sender: TObject);
 var
   i           : Cardinal;
   xNode       : PVirtualNode;
@@ -1906,7 +1906,7 @@ begin
     sbMain.Panels[1].Text:= '';
 end;
 
-procedure TfrmMain.miOpenFolder2Click(Sender: TObject);
+procedure TMainForm.miOpenFolder2Click(Sender: TObject);
 var
   Process: TProcessUTF8;
 begin
@@ -1924,7 +1924,7 @@ begin
   Process.Free;
 end;
 
-procedure TfrmMain.miOpenFolderClick(Sender: TObject);
+procedure TMainForm.miOpenFolderClick(Sender: TObject);
 var
   Process: TProcessUTF8;
 begin
@@ -1942,7 +1942,7 @@ begin
   Process.Free;
 end;
 
-procedure TfrmMain.miOpenWith2Click(Sender: TObject);
+procedure TMainForm.miOpenWith2Click(Sender: TObject);
 var
   Process: TProcessUTF8;
   f,
@@ -1975,7 +1975,7 @@ begin
   Process.Free;
 end;
 
-procedure TfrmMain.miOpenWithClick(Sender: TObject);
+procedure TMainForm.miOpenWithClick(Sender: TObject);
 var
   Process: TProcessUTF8;
   f,
@@ -2008,7 +2008,7 @@ begin
   Process.Free;
 end;
 
-procedure TfrmMain.pcMainChange(Sender: TObject);
+procedure TMainForm.pcMainChange(Sender: TObject);
   procedure UpdateOptions;
   var
     l   : TStringList;
@@ -2091,7 +2091,7 @@ begin
   UpdateOptions;
 end;
 
-procedure TfrmMain.pmDownloadPopup(Sender: TObject);
+procedure TMainForm.pmDownloadPopup(Sender: TObject);
 begin
   if vtDownload.SelectedCount = 0 then
   begin
@@ -2135,7 +2135,7 @@ begin
   end;
 end;
 
-procedure TfrmMain.pmFavoritesPopup(Sender: TObject);
+procedure TMainForm.pmFavoritesPopup(Sender: TObject);
 begin
   if favorites.isRunning then
   begin
@@ -2179,7 +2179,7 @@ begin
   end;
 end;
 
-procedure TfrmMain.pmMangaListPopup(Sender: TObject);
+procedure TMainForm.pmMangaListPopup(Sender: TObject);
 var
   pos: Cardinal;
 begin
@@ -2200,17 +2200,17 @@ begin
     pos:= vtMangaList.FocusedNode.Index;
 end;
 
-procedure TfrmMain.seOptionCheckMinutesChange(Sender: TObject);
+procedure TMainForm.seOptionCheckMinutesChange(Sender: TObject);
 begin
   lbOptionAutoCheckMinutes.Caption:= Format(OptionAutoCheckMinutes, [seOptionCheckMinutes.Value]);
 end;
 
-procedure TfrmMain.spMainSplitterMoved(Sender: TObject);
+procedure TMainForm.spMainSplitterMoved(Sender: TObject);
 begin
   sbMain.Panels[0].Width:= spMainSplitter.Left;
 end;
 
-procedure TfrmMain.TrayIconDblClick(Sender: TObject);
+procedure TMainForm.TrayIconDblClick(Sender: TObject);
 begin
   WindowState:= wsNormal;
   Show;
@@ -2218,21 +2218,21 @@ begin
   TrayIcon.Show;
 end;
 
-procedure TfrmMain.tvDownloadFilterSelectionChanged(Sender: TObject);
+procedure TMainForm.tvDownloadFilterSelectionChanged(Sender: TObject);
 begin
   vtDownloadFilters;
   pcMain.PageIndex:= 0;
   options.WriteInteger('general', 'DownloadFilterSelect', tvDownloadFilter.Selected.AbsoluteIndex);
 end;
 
-procedure TfrmMain.vtDownloadDblClick(Sender: TObject);
+procedure TMainForm.vtDownloadDblClick(Sender: TObject);
 begin
   miOpenFolderClick(Sender);
 end;
 
 // Download table
 
-procedure TfrmMain.vtDownloadFreeNode(Sender: TBaseVirtualTree;
+procedure TMainForm.vtDownloadFreeNode(Sender: TBaseVirtualTree;
   Node: PVirtualNode);
 var
   data: PDownloadInfo;
@@ -2242,7 +2242,7 @@ begin
     Finalize(data^);
 end;
 
-procedure TfrmMain.vtDownloadGetHint(Sender: TBaseVirtualTree;
+procedure TMainForm.vtDownloadGetHint(Sender: TBaseVirtualTree;
   Node: PVirtualNode; Column: TColumnIndex;
   var LineBreakStyle: TVTTooltipLineBreakStyle; var HintText: String);
 var
@@ -2275,7 +2275,7 @@ begin
   end;
 end;
 
-procedure TfrmMain.vtDownloadGetText(Sender: TBaseVirtualTree;
+procedure TMainForm.vtDownloadGetText(Sender: TBaseVirtualTree;
   Node: PVirtualNode; Column: TColumnIndex; TextType: TVSTTextType;
   var CellText: String);
 var
@@ -2307,7 +2307,7 @@ begin
   end;
 end;
 
-procedure TfrmMain.vtDownloadHeaderClick(Sender: TVTHeader;
+procedure TMainForm.vtDownloadHeaderClick(Sender: TVTHeader;
   Column: TColumnIndex; Button: TMouseButton; Shift: TShiftState; X, Y: Integer
   );
 begin
@@ -2331,7 +2331,7 @@ begin
   options.WriteBool('misc', 'SortDownloadDirection', DLManager.SortDirection);
 end;
 
-procedure TfrmMain.vtDownloadInitNode(Sender: TBaseVirtualTree; ParentNode,
+procedure TMainForm.vtDownloadInitNode(Sender: TBaseVirtualTree; ParentNode,
   Node: PVirtualNode; var InitialStates: TVirtualNodeInitStates);
 var
   data: PDownloadInfo;
@@ -2354,14 +2354,14 @@ begin
   end;
 end;
 
-procedure TfrmMain.vtFavoritesDblClick(Sender: TObject);
+procedure TMainForm.vtFavoritesDblClick(Sender: TObject);
 begin
   miOpenFolder2Click(Sender);
 end;
 
 // vtFavorites
 
-procedure TfrmMain.vtFavoritesGetText(Sender: TBaseVirtualTree;
+procedure TMainForm.vtFavoritesGetText(Sender: TBaseVirtualTree;
   Node: PVirtualNode; Column: TColumnIndex; TextType: TVSTTextType;
   var CellText: String);
 var
@@ -2378,7 +2378,7 @@ begin
     end;
 end;
 
-procedure TfrmMain.vtFavoritesHeaderClick(Sender: TVTHeader;
+procedure TMainForm.vtFavoritesHeaderClick(Sender: TVTHeader;
   Column: TColumnIndex; Button: TMouseButton; Shift: TShiftState; X, Y: Integer
   );
 begin
@@ -2405,7 +2405,7 @@ begin
   favorites.isRunning:= FALSE;
 end;
 
-procedure TfrmMain.vtFavoritesInitNode(Sender: TBaseVirtualTree; ParentNode,
+procedure TMainForm.vtFavoritesInitNode(Sender: TBaseVirtualTree; ParentNode,
   Node: PVirtualNode; var InitialStates: TVirtualNodeInitStates);
 var
   data: PFavoriteInfo;
@@ -2422,7 +2422,7 @@ begin
   end;
 end;
 
-procedure TfrmMain.vtMangaListChange(Sender: TBaseVirtualTree;
+procedure TMainForm.vtMangaListChange(Sender: TBaseVirtualTree;
   Node: PVirtualNode);
 begin
   if (NOT isUpdating) then
@@ -2436,7 +2436,7 @@ end;
 
 // options
 
-procedure TfrmMain.btOptionApplyClick(Sender: TObject);
+procedure TMainForm.btOptionApplyClick(Sender: TObject);
 var
   i: Cardinal;
   s: String;
@@ -2583,14 +2583,14 @@ end;
   tvDownloadFilterRepaint;
 end;
 
-procedure TfrmMain.cbAddAsStoppedChange(Sender: TObject);
+procedure TMainForm.cbAddAsStoppedChange(Sender: TObject);
 begin
   options.WriteBool('general', 'AddAsStopped', cbAddAsStopped.Checked);
 end;
 
 // vtMangaList
 
-procedure TfrmMain.vtMangaListBeforeCellPaint(Sender: TBaseVirtualTree;
+procedure TMainForm.vtMangaListBeforeCellPaint(Sender: TBaseVirtualTree;
   TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
   CellPaintMode: TVTCellPaintMode; CellRect: TRect; var ContentRect: TRect);
 begin
@@ -2608,7 +2608,7 @@ begin
   end;
 end;
 
-procedure TfrmMain.vtMangaListFreeNode(Sender: TBaseVirtualTree;
+procedure TMainForm.vtMangaListFreeNode(Sender: TBaseVirtualTree;
   Node: PVirtualNode);
 var data: PMangaListItem;
 begin
@@ -2617,7 +2617,7 @@ begin
     Finalize(data^);
 end;
 
-procedure TfrmMain.vtMangaListGetHint(Sender: TBaseVirtualTree;
+procedure TMainForm.vtMangaListGetHint(Sender: TBaseVirtualTree;
   Node: PVirtualNode; Column: TColumnIndex;
   var LineBreakStyle: TVTTooltipLineBreakStyle; var HintText: String);
 var
@@ -2635,7 +2635,7 @@ begin
     PrepareSummaryForHint(dataProcess.Param[LPos, DATA_PARAM_SUMMARY]);
 end;
 
-procedure TfrmMain.vtMangaListGetText(Sender: TBaseVirtualTree;
+procedure TMainForm.vtMangaListGetText(Sender: TBaseVirtualTree;
   Node: PVirtualNode; Column: TColumnIndex; TextType: TVSTTextType;
   var CellText: String);
 var data: PMangaListItem;
@@ -2645,7 +2645,7 @@ begin
     CellText:= data.text;
 end;
 
-procedure TfrmMain.vtMangaListInitNode(Sender: TBaseVirtualTree; ParentNode,
+procedure TMainForm.vtMangaListInitNode(Sender: TBaseVirtualTree; ParentNode,
   Node: PVirtualNode; var InitialStates: TVirtualNodeInitStates);
 var
   data: PMangaListItem;
@@ -2661,7 +2661,7 @@ begin
   end;
 end;
 
-procedure TfrmMain.vtMangaListInitSearchNode(Sender: TBaseVirtualTree; ParentNode,
+procedure TMainForm.vtMangaListInitSearchNode(Sender: TBaseVirtualTree; ParentNode,
   Node: PVirtualNode; var InitialStates: TVirtualNodeInitStates);
 var
   data: PMangaListItem;
@@ -2677,7 +2677,7 @@ begin
   end;
 end;
 
-procedure TfrmMain.vtMangaListDblClick(Sender: TObject);
+procedure TMainForm.vtMangaListDblClick(Sender: TObject);
 begin
   if (SubThread.isGetInfos) OR (NOT vtMangaList.Focused) then exit;
 
@@ -2712,7 +2712,7 @@ begin
   end;
 end;
 
-procedure TfrmMain.InitCheckboxes;
+procedure TMainForm.InitCheckboxes;
 var
   i: Cardinal;
 begin
@@ -2720,7 +2720,7 @@ begin
     TCheckBox(pnGenres.Controls[i]).State:= cbGrayed;
 end;
 
-procedure TfrmMain.ShowAllTasks;
+procedure TMainForm.ShowAllTasks;
 var
   i      : Cardinal;
   xNode  : PVirtualNode;
@@ -2742,7 +2742,7 @@ begin
   end;
 end;
 
-procedure TfrmMain.ShowCompletedTasks;
+procedure TMainForm.ShowCompletedTasks;
 var
   i      : Cardinal;
   xNode  : PVirtualNode;
@@ -2767,7 +2767,7 @@ begin
   end;
 end;
 
-procedure TfrmMain.ShowInProgressTasks;
+procedure TMainForm.ShowInProgressTasks;
 var
   i      : Cardinal;
   xNode  : PVirtualNode;
@@ -2793,7 +2793,7 @@ begin
   end;
 end;
 
-procedure TfrmMain.ShowStoppedTasks;
+procedure TMainForm.ShowStoppedTasks;
 var
   i      : Cardinal;
   xNode  : PVirtualNode;
@@ -2818,7 +2818,7 @@ begin
   end;
 end;
 
-procedure TfrmMain.ShowTasksOnCertainDays(const L, H: LongInt);
+procedure TMainForm.ShowTasksOnCertainDays(const L, H: LongInt);
 var
   i      : Cardinal;
   jdn    : LongInt;
@@ -2852,27 +2852,27 @@ begin
   end;
 end;
 
-procedure TfrmMain.ShowTodayTasks;
+procedure TMainForm.ShowTodayTasks;
 begin
   ShowTasksOnCertainDays(GetCurrentJDN, GetCurrentJDN);
 end;
 
-procedure TfrmMain.ShowYesterdayTasks;
+procedure TMainForm.ShowYesterdayTasks;
 begin
   ShowTasksOnCertainDays(GetCurrentJDN-1, GetCurrentJDN-1);
 end;
 
-procedure TfrmMain.ShowOneWeekTasks;
+procedure TMainForm.ShowOneWeekTasks;
 begin
   ShowTasksOnCertainDays(GetCurrentJDN-7, GetCurrentJDN);
 end;
 
-procedure TfrmMain.ShowOneMonthTasks;
+procedure TMainForm.ShowOneMonthTasks;
 begin
   ShowTasksOnCertainDays(GetCurrentJDN-30, GetCurrentJDN);
 end;
 
-procedure TfrmMain.vtDownloadFilters;
+procedure TMainForm.vtDownloadFilters;
 begin
   if (isRunDownloadFilter) OR
      (NOT Assigned(tvDownloadFilter.Selected)) then exit;
@@ -2899,7 +2899,7 @@ begin
   isRunDownloadFilter:= FALSE;
 end;
 
-procedure TfrmMain.AddChapterNameToList;
+procedure TMainForm.AddChapterNameToList;
 var
   i: Cardinal;
   s: String;
@@ -2907,7 +2907,7 @@ begin
   UpdateVtChapter;
 end;
 
-procedure TfrmMain.AddTextToInfo(title, infoText: String);
+procedure TMainForm.AddTextToInfo(title, infoText: String);
 var
   fp: TFontParams;
 begin
@@ -2930,7 +2930,7 @@ begin
     end;
 end;
 
-procedure TfrmMain.ShowInformation;
+procedure TMainForm.ShowInformation;
 var
   cp: TPoint;
   website: String;
@@ -2981,7 +2981,7 @@ begin
     btReadOnline.Enabled:= TRUE;
 end;
 
-procedure TfrmMain.RunGetList;
+procedure TMainForm.RunGetList;
 begin
   if (MessageDlg('', stDlgUpdaterWantToUpdateDB, mtInformation, [mbYes, mbNo], 0)=mrYes) AND
      (NOT isUpdating) then
@@ -2993,7 +2993,7 @@ begin
   end;
 end;
 
-procedure TfrmMain.LoadOptions;
+procedure TMainForm.LoadOptions;
 begin
   if options.ReadBool('connections', 'UseProxy', FALSE) then
   begin
@@ -3069,7 +3069,7 @@ begin
   end;
 end;
 
-procedure TfrmMain.LoadMangaOptions;
+procedure TMainForm.LoadMangaOptions;
 var
   isDeleteUnusedManga: Boolean;
   i, j: Cardinal;
@@ -3166,7 +3166,7 @@ begin
   l.Free;
 end;
 
-function  TfrmMain.SaveMangaOptions: String;
+function  TMainForm.SaveMangaOptions: String;
 var
   i   : Cardinal;
   data: PMangaListItem;
@@ -3182,7 +3182,7 @@ begin
   end;
 end;
 
-procedure TfrmMain.edSearchChange(Sender: TObject);
+procedure TMainForm.edSearchChange(Sender: TObject);
 begin
  // if vtMangaList.RootNodeCount = 0 then exit;
   if edSearch.Text = '' then
@@ -3200,13 +3200,13 @@ begin
   vtMangaList.RootNodeCount:= dataProcess.searchPos.Count;
 end;
 
-procedure TfrmMain.UpdateVtChapter;
+procedure TMainForm.UpdateVtChapter;
 begin
   clbChapterList.Clear;
   clbChapterList.RootNodeCount:= mangaInfo.chapterLinks.Count;
 end;
 
-procedure TfrmMain.UpdateVtDownload;
+procedure TMainForm.UpdateVtDownload;
 begin
   vtDownload.Clear;
   vtDownload.RootNodeCount:= DLManager.containers.Count;
@@ -3215,13 +3215,13 @@ begin
   vtDownloadFilters;
 end;
 
-procedure TfrmMain.UpdateVtFavorites;
+procedure TMainForm.UpdateVtFavorites;
 begin
   vtFavorites.Clear;
   vtFavorites.RootNodeCount:= favorites.Count;
 end;
 
-procedure TfrmMain.LoadFormInformation;
+procedure TMainForm.LoadFormInformation;
 begin
   spMainSplitter.Left:= options.ReadInteger('form', 'MainSplitter', 195);
 
@@ -3247,7 +3247,7 @@ begin
   sbMain.Panels[0].Width:= spMainSplitter.Left;
 end;
 
-procedure TfrmMain.SaveFormInformation;
+procedure TMainForm.SaveFormInformation;
 begin
   options.WriteInteger('form', 'MainSplitter', spMainSplitter.Left);
 
@@ -3271,7 +3271,7 @@ begin
   options.WriteInteger('form', 'vtFavorites3Width', vtFavorites.Header.Columns.Items[3].Width);
 end;
 
-procedure TfrmMain.LoadLanguage(const pos: Integer);
+procedure TMainForm.LoadLanguage(const pos: Integer);
 var
   language: TIniFile;
   s,
@@ -3569,19 +3569,19 @@ begin
   vtDownload.Repaint;
 end;
 
-procedure TfrmMain.tmBackupTimer(Sender: TObject);
+procedure TMainForm.tmBackupTimer(Sender: TObject);
 begin
   if DLManager.isRunningBackup then exit;
   DLManager.Backup;
 end;
 
-procedure TfrmMain.vtOptionMangaSiteSelectionGetNodeDataSize(
+procedure TMainForm.vtOptionMangaSiteSelectionGetNodeDataSize(
   Sender: TBaseVirtualTree; var NodeDataSize: Integer);
 begin
   NodeDataSize:= SizeOf(TMangaListItem);
 end;
 
-procedure TfrmMain.vtOptionMangaSiteSelectionGetText(Sender: TBaseVirtualTree;
+procedure TMainForm.vtOptionMangaSiteSelectionGetText(Sender: TBaseVirtualTree;
   Node: PVirtualNode; Column: TColumnIndex; TextType: TVSTTextType;
   var CellText: String);
 var
@@ -3592,7 +3592,7 @@ begin
     CellText:= data.Text;
 end;
 
-procedure TfrmMain.vtOptionMangaSiteSelectionInitNode(
+procedure TMainForm.vtOptionMangaSiteSelectionInitNode(
   Sender: TBaseVirtualTree; ParentNode, Node: PVirtualNode;
   var InitialStates: TVirtualNodeInitStates);
 var

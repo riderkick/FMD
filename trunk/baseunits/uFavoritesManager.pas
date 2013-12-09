@@ -291,7 +291,7 @@ end;
 
 procedure   TFavoriteManager.ShowResult;
 var
-  LNewChapter     : TfrmNewChapter;
+  LNewChapter     : TNewChapter;
   LNCResult       : TNewChapterResult;
   // List of new chapter number for each title
   numberOfNewChapters: array of Cardinal;
@@ -399,7 +399,7 @@ begin
     if (removeListStr <> '') AND (isShowDialog) then
     begin
       frmMain.MainForm.Show;
-      LNewChapter:= TfrmNewChapter.Create(MainForm);
+      LNewChapter:= TNewChapter.Create(MainForm);
       LNewChapter.lbNotification.Caption:= Format(stDlgHasNewChapter, [newC]);
       LNewChapter.mmMemo.Lines.Add(TrimLeft(removeListStr));
       LNewChapter.btDownload.Visible:= FALSE;
@@ -427,7 +427,7 @@ begin
     if isShowDialog then
     begin
       frmMain.MainForm.Show;
-      LNewChapter:= TfrmNewChapter.Create(MainForm);
+      LNewChapter:= TNewChapter.Create(MainForm);
       LNewChapter.lbNotification.Caption:= Format(stDlgHasNewChapter, [newC]);
       LNewChapter.mmMemo.Lines.Add(TrimLeft(newMangaStr) + #13#13 + TrimLeft(removeListStr));
       LNewChapter.ShowModal;
