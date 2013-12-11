@@ -1,4 +1,4 @@
-object frmMain: TfrmMain
+object MainForm: TMainForm
   Left = 97
   Height = 502
   Top = 30

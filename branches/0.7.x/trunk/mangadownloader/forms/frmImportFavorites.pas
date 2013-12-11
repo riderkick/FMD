@@ -1,3 +1,9 @@
+{
+        File: frmImportFavorites.pas
+        License: GPLv2
+        This unit is a part of Free Manga Downloader
+}
+
 unit frmImportFavorites;
 
 {$mode objfpc}{$H+}
@@ -10,9 +16,9 @@ uses
 
 type
 
-  { TfrmImportFavorites }
+  { TImportFavorites }
 
-  TfrmImportFavorites = class(TForm)
+  TImportFavorites = class(TForm)
     btImport: TBitBtn;
     btBrowse: TBitBtn;
     btCancel: TBitBtn;
@@ -41,11 +47,11 @@ uses
 
 {$R *.lfm}
 
-{ TfrmImportFavorites }
+{ TImportFavorites }
 
 { ----- private methods ----- }
 
-procedure TfrmImportFavorites.DMDHandle;
+procedure TImportFavorites.DMDHandle;
 var
   fstream  : TFileStreamUTF8;
   unimportedMangas,
@@ -122,7 +128,7 @@ begin
   unimportedMangas.Free;
 end;
 
-procedure TfrmImportFavorites.FMDHandle;
+procedure TImportFavorites.FMDHandle;
 begin
   MainForm.favorites.MergeWith(CorrectFilePath(edPath.Text) + 'works/favorites.ini');
 
@@ -130,7 +136,7 @@ begin
                  mtConfirmation, [mbYes], 0)
 end;
 
-procedure TfrmImportFavorites.Run;
+procedure TImportFavorites.Run;
 begin
   case cbSoftware.ItemIndex of
     0: DMDHandle;
@@ -145,7 +151,7 @@ end;
 
 { ----- public methods ----- }
 
-procedure TfrmImportFavorites.FormCreate(Sender: TObject);
+procedure TImportFavorites.FormCreate(Sender: TObject);
 begin
   Caption:= MainForm.btFavoritesImport.Caption;
   btImport.Caption:= stImport;
@@ -154,19 +160,19 @@ begin
   lbSelectSoftware.Caption:= stSoftware;
 end;
 
-procedure TfrmImportFavorites.btBrowseClick(Sender: TObject);
+procedure TImportFavorites.btBrowseClick(Sender: TObject);
 begin
   dlgPath.InitialDir:= CorrectFilePath(edPath.Text);
   if dlgPath.Execute then
     edPath.Text:= CorrectFilePath(dlgPath.FileName);
 end;
 
-procedure TfrmImportFavorites.btImportClick(Sender: TObject);
+procedure TImportFavorites.btImportClick(Sender: TObject);
 begin
   Run;
 end;
 
-procedure TfrmImportFavorites.cbSoftwareChange(Sender: TObject);
+procedure TImportFavorites.cbSoftwareChange(Sender: TObject);
 begin
 end;
 

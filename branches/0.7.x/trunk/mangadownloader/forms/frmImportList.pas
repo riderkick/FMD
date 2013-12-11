@@ -1,3 +1,9 @@
+{
+        File: frmImportList.pas
+        License: GPLv2
+        This unit is a part of Free Manga Downloader
+}
+
 unit frmImportList;
 
 {$mode objfpc}{$H+}
@@ -9,9 +15,9 @@ uses
 
 type
 
-  { TfrmImportList }
+  { TImportList }
 
-  TfrmImportList = class(TForm)
+  TImportList = class(TForm)
     mmList: TMemo;
     procedure FormCreate(Sender: TObject);
   private
@@ -21,15 +27,15 @@ type
   end;
 
 var
-  ImportList: TfrmImportList;
+  ImportList: TImportList;
 
 implementation
 
 {$R *.lfm}
 
-{ TfrmImportList }
+{ TImportList }
 
-procedure TfrmImportList.FormCreate(Sender: TObject);
+procedure TImportList.FormCreate(Sender: TObject);
 begin
   Hide;
 end;
