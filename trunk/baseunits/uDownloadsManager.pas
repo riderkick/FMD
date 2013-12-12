@@ -1915,7 +1915,7 @@ procedure   TDownloadManager.Sort(const AColumn: Cardinal);
       4: Result:= containers.Items[ARow].downloadInfo.SaveTo;
       5: begin
            Result:= containers.Items[ARow].downloadInfo.dateTime;
-           if TryStrToDateTime(Result, dt) then
+           if TryStrToDateTime(Result, dt, FMDFormatSettings) then
              tmp:= DateTimeToUnix(dt)
            else
              tmp:= 0;
