@@ -7,9 +7,9 @@
   begin
     l:= TStringList.Create;
     if Pos('http://', URL) = 0 then
-      s:= WebsiteRoots[MANGACAN_ID,1] + '/' + URL
+      s:= WebsiteRoots[MANGACAN_ID,1] + '/' + StringReplace(URL, '-1.html', '.html', [])
     else
-      s:= URL;
+      s:= StringReplace(URL, '-1.html', '.html', []);
     Result:= GetPage(TObject(l),
                      s,
                      manager.container.manager.retryConnect);
