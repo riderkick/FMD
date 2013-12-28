@@ -866,7 +866,8 @@ begin
             (website = TURKCRAFT_NAME) OR
             (website = HUGEMANGA_NAME) OR
             (website = KOMIKID_NAME) OR
-	    (website = KIVMANGA_NAME));
+			(website = KIVMANGA_NAME) OR
+	    (website = MANGACAN_NAME));
 end;
 
 function  RemoveSymbols(const input: String): String;
