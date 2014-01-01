@@ -3,6 +3,7 @@ var
   i, j: Cardinal;
   isExtractSummary: Boolean = TRUE;
   isExtractGenres : Boolean = FALSE;
+  isExtractChapter: Boolean = FALSE;
 begin
   mangaInfo.url:= EncodeURL(WebsiteRoots[KISSMANGA_ID,1] + URL + '?confirm=yes');
   if NOT GetPage(TObject(source), mangaInfo.url, Reconnect) then
@@ -57,9 +58,13 @@ begin
       end;
       isExtractSummary:= FALSE;
     end;
+	
+    if (NOT isExtractChapter) AND (Pos('Chapter Name', parse.Strings[i]) > 0) then
+      isExtractChapter:= TRUE;
 
     // get chapter name and links
-    if (GetTagName(parse.Strings[i]) = 'a') AND
+	if (isExtractChapter) AND
+	   (GetTagName(parse.Strings[i]) = 'a') AND
        (Pos('?id=', parse.Strings[i])<>0) then
     begin
       Inc(mangaInfo.numChapter);
@@ -71,6 +76,10 @@ begin
       mangaInfo.chapterName.Add(StringFilter(TrimRight(RemoveSymbols(parse.Strings[i+1]))));
     end;
 
+    if (isExtractChapter) AND
+       (Pos('fb-comments', parse.Strings[i])>0) then
+      isExtractChapter:= FALSE;
+	
     // get authors
     if (Pos('Author:', parse.Strings[i])<>0) then
       mangaInfo.authors:= parse.Strings[i+4];
