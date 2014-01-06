@@ -25,7 +25,7 @@
           s:= '';
           s:= GetAttributeValue(GetTagAttribute(parse.Strings[i-8], 'src='));
           if s = '' then
-            s:= GetAttributeValue(GetTagAttribute(parse.Strings[i-6], 'src='));
+            s:= GetAttributeValue(GetTagAttribute(parse.Strings[i-7], 'src='));
           if Pos('http://', s) = 0 then
             s:= WebsiteRoots[KOMIKID_ID,1] + KOMIKID_BROWSER + s;
           manager.container.pageLinks.Strings[workCounter]:= EncodeURL(s);
