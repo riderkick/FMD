@@ -17,8 +17,6 @@ begin
   Application.Initialize;
   Application.CreateForm(TMainForm, MainForm);
   Application.CreateForm(TImportList, ImportList);
- // Application.CreateForm(TTNewChapter, TNewChapter);
- // Application.CreateForm(TLog, Log);
   Application.Run;
 end.
 

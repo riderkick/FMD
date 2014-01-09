@@ -873,7 +873,6 @@ procedure TMainForm.CloseNow;
 begin
   isExiting:= TRUE;
   favorites.Backup;
-  mangalistIni.WriteInteger('general', 'batotoLastDirectoryPage', batotoLastDirectoryPage);
   SaveFormInformation;
   DLManager.StopAllDownloadTasksForExit;
 
@@ -3004,7 +3003,6 @@ begin
   end;
 
   cbOptionMinimizeToTray.Checked := options.ReadBool('general', 'MinimizeToTray', FALSE);
-  batotoLastDirectoryPage:= mangalistIni.ReadInteger('general', 'batotoLastDirectoryPage', 244);
   OptionEnableLoadCover:= options.ReadBool('general', 'LoadMangaCover', TRUE);
   cbOptionEnableLoadCover.Checked:= OptionEnableLoadCover;
   cbOptionLetFMDDo.ItemIndex:= options.ReadInteger('general', 'LetFMDDo', 0);

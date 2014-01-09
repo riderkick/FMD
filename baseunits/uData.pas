@@ -1042,6 +1042,9 @@ var
   // get names and links of the manga from Mangacan
   {$I includes/Mangacan/names_and_links.inc}
 
+  // get names and links of the manga from MeinManga
+  {$I includes/MeinManga/names_and_links.inc}
+
   // get names and links of the manga from g.e-hentai
   function   GEHentaiGetNamesAndLinks: Byte;
   var
@@ -1158,6 +1161,9 @@ begin
   else
   if website = PERVEDEN_NAME then
     Result:= MangaEdenGetNamesAndLinks(WebsiteRoots[PERVEDEN_ID,1])
+  else
+  if website = MEINMANGA_NAME then
+    Result:= MeinMangaGetNamesAndLinks
   else
   if website = BLOGTRUYEN_NAME then
     Result:= BlogTruyenGetNamesAndLinks
@@ -1381,6 +1387,9 @@ var
 
 // get manga infos from blogtruyen site
 {$I includes/BlogTruyen/manga_information.inc}
+
+// get manga infos from MeinManga site
+{$I includes/MeinManga/manga_information.inc}
 
 // get manga infos from g.e-hentai site (dummy)
 function   GetGEHentaiInfoFromURL_Dummy: Byte;
@@ -1614,6 +1623,9 @@ begin
   else
   if website = PERVEDEN_NAME then
     Result:= GetMangaEdenInfoFromURL(WebsiteRoots[PERVEDEN_ID,1])
+  else
+  if website = MEINMANGA_NAME then
+    Result:= GetMeinMangaInfoFromURL
   else
   if website = SUBMANGA_NAME then
     Result:= GetSubMangaInfoFromURL
