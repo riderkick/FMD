@@ -52,7 +52,7 @@
         <PackageName Value="LCL"/>
       </Item3>
     </RequiredPackages>
-    <Units Count="204">
+    <Units Count="208">
       <Unit0>
         <Filename Value="md.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -897,6 +897,22 @@
         <HasResources Value="True"/>
         <UnitName Value="frmLog"/>
       </Unit203>
+      <Unit204>
+        <Filename Value="..\baseunits\includes\MeinManga\manga_information.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit204>
+      <Unit205>
+        <Filename Value="..\baseunits\includes\MeinManga\names_and_links.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit205>
+      <Unit206>
+        <Filename Value="..\baseunits\includes\MeinManga\chapter_page_number.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit206>
+      <Unit207>
+        <Filename Value="..\baseunits\includes\MeinManga\image_url.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit207>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
@@ -906,7 +922,7 @@
       <Filename Value="..\..\trunk\bin\fmd"/>
     </Target>
     <SearchPaths>
-      <IncludeFiles Value="$(ProjOutDir);..\..\trunk\3rd\Imaging\Source;..\..\trunk\3rd\Imaging\Source\ZLib;..\..\trunk\3rd\Imaging\Source\JpegLib;..\baseunits\includes\Batoto;..\baseunits\includes\AnimeA;..\baseunits\includes\MangaHere;..\baseunits\includes\AnimeStory;..\baseunits\includes\AnimExtremist;..\baseunits\includes\BlogTruyen;..\baseunits\includes\CentralDeMangas;..\baseunits\includes\EatManga;..\baseunits\includes\EGScans;..\baseunits\includes\EsMangaHere;..\baseunits\includes\Fakku;..\baseunits\includes\Hentai2Read;..\baseunits\includes\HugeManga;..\baseunits\includes\KissManga;..\baseunits\includes\Kivmanga;..\baseunits\includes\Komikid;..\baseunits\includes\LectureEnLigne;..\baseunits\includes\Mabuns;..\baseunits\includes\Manga24h;..\baseunits\includes\MangaAe;..\baseunits\includes\MangaAr;..\baseunits\includes\Mangacan;..\baseunits\includes\Mangacow;..\baseunits\includes\MangaEden;..\baseunits\includes\MangaEsta;..\baseunits\includes\MangaFox;..\baseunits\includes\MangaFrame;..\baseunits\includes\MangaGo;..\baseunits\includes\MangaInn;..\baseunits\includes\MangaPanda;..\baseunits\includes\MangaPark;..\baseunits\includes\MangaReader;..\baseunits\includes\MangaStream;..\baseunits\includes\MangaTraders;..\baseunits\includes\MangaVadisi;..\baseunits\includes\PecintaKomik;..\baseunits\includes\Pururin;..\baseunits\includes\RedHawkScans;..\baseunits\includes\S2scans;..\baseunits\includes\ScanManga;..\baseunits\includes\SenManga;..\baseunits\includes\Starkana;..\baseunits\includes\SubManga;..\baseunits\includes\TruyenTranhTuan;..\baseunits\includes\Turkcraft;..\baseunits\includes\VnSharing"/>
+      <IncludeFiles Value="$(ProjOutDir);..\..\trunk\3rd\Imaging\Source;..\..\trunk\3rd\Imaging\Source\ZLib;..\..\trunk\3rd\Imaging\Source\JpegLib;..\baseunits\includes\Batoto;..\baseunits\includes\AnimeA;..\baseunits\includes\MangaHere;..\baseunits\includes\AnimeStory;..\baseunits\includes\AnimExtremist;..\baseunits\includes\BlogTruyen;..\baseunits\includes\CentralDeMangas;..\baseunits\includes\EatManga;..\baseunits\includes\EGScans;..\baseunits\includes\EsMangaHere;..\baseunits\includes\Fakku;..\baseunits\includes\Hentai2Read;..\baseunits\includes\HugeManga;..\baseunits\includes\KissManga;..\baseunits\includes\Kivmanga;..\baseunits\includes\Komikid;..\baseunits\includes\LectureEnLigne;..\baseunits\includes\Mabuns;..\baseunits\includes\Manga24h;..\baseunits\includes\MangaAe;..\baseunits\includes\MangaAr;..\baseunits\includes\Mangacan;..\baseunits\includes\Mangacow;..\baseunits\includes\MangaEden;..\baseunits\includes\MangaEsta;..\baseunits\includes\MangaFox;..\baseunits\includes\MangaFrame;..\baseunits\includes\MangaGo;..\baseunits\includes\MangaInn;..\baseunits\includes\MangaPanda;..\baseunits\includes\MangaPark;..\baseunits\includes\MangaReader;..\baseunits\includes\MangaStream;..\baseunits\includes\MangaTraders;..\baseunits\includes\MangaVadisi;..\baseunits\includes\PecintaKomik;..\baseunits\includes\Pururin;..\baseunits\includes\RedHawkScans;..\baseunits\includes\S2scans;..\baseunits\includes\ScanManga;..\baseunits\includes\SenManga;..\baseunits\includes\Starkana;..\baseunits\includes\SubManga;..\baseunits\includes\TruyenTranhTuan;..\baseunits\includes\Turkcraft;..\baseunits\includes\VnSharing;..\baseunits\includes\MeinManga"/>
       <Libraries Value="..\..\trunk\3rd\Imaging\Extras\Extensions\J2KObjects;..\..\trunk\baseunits\zlibex\win32-zlib"/>
       <OtherUnitFiles Value="..\..\trunk\3rd\synapse\source;..\..\trunk\baseunits;..\..\trunk\baseunits\animatedgifs;..\..\trunk\baseunits\fasthtmlparser;..\..\trunk\3rd\Imaging\Source;..\..\trunk\3rd\Imaging\Source\ZLib;..\..\trunk\3rd\Imaging\Source\JpegLib;..\..\trunk\3rd\Imaging\Extras\Extensions;..\..\trunk\baseunits\zlibex;forms"/>
       <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>

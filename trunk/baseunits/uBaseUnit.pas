@@ -53,46 +53,6 @@ const
      'Shounen'      , 'Shounen Ai'   , 'Slice of Life', 'Smut',
      'Sports'       , 'Supernatural' , 'Tragedy'       , 'Yaoi',
      'Yuri'         , 'Webtoons');
-  {
-  GenreMeaning: array [0..37] of String =
-    ('A work typically depicting fighting, violence, chaos, and fast paced motion.',
-     'Contains content that is suitable only for adults. Titles in this category may include prolonged scenes of intense violence and/or graphic sexual content and nudity.',
-     'If a character in the story goes on a trip or along that line, your best bet is that it is an adventure manga. Otherwise, it''s up to your personal prejudice on this case.',
-     'A dramatic work that is light and often humorous or satirical in tone and that usually contains a happy resolution of the thematic conflict.',
-     'Fan based work inpspired by official manga/anime.',
-     'A work meant to bring on an emotional response, such as instilling sadness or tension.',
-     'Possibly the line between hentai and non-hentai, ecchi usually refers to fanservice put in to attract a certain group of fans.',
-     'Anything that involves, but not limited to, magic, dream world, and fairy tales.',
-     'Girls dressing up as guys, guys dressing up as girls.. Guys turning into girls, girls turning into guys.. I think you get the picture.',
-     'A series involving one male character and many female characters (usually attracted to the male character). A Reverse Harem is when the genders are reversed.',
-     '',
-     'Having to do with old or ancient times.',
-     'A painful emotion of fear, dread, and abhorrence; a shuddering with terror and detestation; the feeling inspired by something frightful and shocking.',
-     'Literally "Woman". Targets women 18-30. Female equivalent to seinen. Unlike shoujo the romance is more realistic and less idealized. The storytelling is more explicit and mature.',
-     'Representing a sexual attraction to young or under-age girls.',
-     'As the name suggests, anything martial arts related. Any of several arts of combat or self-defense, such as aikido, karate, judo, or tae kwon do, kendo, fencing, and so on and so forth.',
-     'Contains subject matter which may be too extreme for people under the age of 17. Titles in this category may contain intense violence, blood and gore, sexual content and/or strong language.',
-     'A work involving and usually concentrating on all types of large robotic machines.',
-     '',
-     'Usually an unexplained event occurs, and the main protagonist attempts to find out what caused it.',
-     'Usually deals with the philosophy of a state of mind, in most cases detailing abnormal psychology.',
-     'Any love related story. We will define love as between man and woman in this case. Other than that, it is up to your own imagination of what love is.',
-     'Having a major setting of the story deal with some type of school.',
-     'Short for science fiction, these works involve twists on technology and other science related phenomena which are contrary or stretches of the modern day scientific world.',
-     'From Google: '+#10#13+'Seinen means ''young Man.'' Manga and anime that specifically targets young adult males around the ages of 18 to 25 are seinen titles. The stories in seinen works appeal to university students and those in the working world. Typically the story lines deal with the issues of adulthood.',
-     'Representing a sexual attraction to young or under-age boys.',
-     'A work intended and primarily written for females. Usually involves a lot of romance and strong character development.',
-     'Often synonymous with yuri, this can be thought of as somewhat less extreme. "Girl''s Love", so to speak.',
-     'A work intended and primarily written for males. These works usually involve fighting and/or violence.',
-     'Often synonymous with yaoi, this can be thought of as somewhat less extreme. "Boy''s Love", so to speak.',
-     'As the name suggests, this genre represents day-to-day tribulations of one/many character(s). These challenges/events could technically happen in real life and are often -if not all the time- set in the present timeline in a world that mirrors our own.',
-     'Deals with series that are considered profane or offensive, particularly with regards to sexual content.',
-     'As the name suggests, anything sports related. Baseball, basketball, hockey, soccer, golf, and racing just to name a few.',
-     'Usually entails amazing and unexplained powers or events which defy the laws of physics.',
-     'Contains events resulting in great loss and misfortune.',
-     'This work usually involves intimate relationships between men.',
-     'This work usually involves intimate relationships between women.',
-     '');       }
 
   Symbols: array [0..8] of Char =
     ('\', '/', ':', '*', '?', '"', '<', '>', '|');
@@ -189,7 +149,8 @@ const
   PURURIN_NAME      = 'Pururin';      Pururin_ID     = 48;
   MANGACOW_NAME     = 'Mangacow';     MANGACOW_ID    = 49;
   KIVMANGA_NAME     = 'Kivmanga';     KIVMANGA_ID    = 50;
-  MANGACAN_NAME		= 'Mangacan';	  MANGACAN_ID	 = 51;
+  MANGACAN_NAME	    = 'Mangacan';     MANGACAN_ID    = 51;
+  MEINMANGA_NAME    = 'MeinManga';    MEINMANGA_ID   = 52;
 
   DEFAULT_LIST = ANIMEA_NAME+'!%~'+MANGAFOX_NAME+'!%~'+MANGAHERE_NAME+'!%~'+MANGAINN_NAME+'!%~'+MANGAREADER_NAME+'!%~';
   DEFAULT_CUSTOM_RENAME = '%NUMBERING% - %CHAPTER%';
@@ -226,8 +187,6 @@ var
   cbOptionLetFMDDoItemIndex: Cardinal = 0;
 
   Revision         : Cardinal;
-  // deprecated - only for batoto: the directory page from the last time we check the site
-  batotoLastDirectoryPage: Cardinal = 289;
   currentJDN       : Cardinal;
   isChangeDirectory: Boolean = FALSE;
 
@@ -255,11 +214,10 @@ var
   Pass  : String = '';
   fmdDirectory: String;
   // EN: Param seperator
-  // VI: Ký tự dùng để chia cắt param trong dữ liệu
   SEPERATOR: String = '!%~';
   SEPERATOR2: String = '~%!';
 
-  WebsiteRoots  : array[0..51] of array [0..1] of String =
+  WebsiteRoots  : array[0..52] of array [0..1] of String =
     (('AnimeA', 'http://manga.animea.net'),
      ('MangaHere', 'http://www.mangahere.com'),
      ('MangaInn', 'http://www.mangainn.com'),
@@ -311,7 +269,8 @@ var
      ('Pururin', 'http://pururin.com'),
      ('Mangacow', 'http://mngacow.com'),
      ('Kivmanga', 'http://www.kivmanga.com'),
-	 ('Mangacan', 'http://mangacanblog.com')
+     ('Mangacan', 'http://mangacanblog.com'),
+     ('MeinManga', 'http://www.meinmanga.com/')
     );
 
   ANIMEA_BROWSER: String = '/browse.html?page=';
@@ -434,6 +393,8 @@ var
   KIVMANGA_BROWSER: String = '/';
   
   MANGACAN_BROWSER: String = '/daftar-komik-manga-bahasa-indonesia.html';
+
+  MEINMANGA_BROWSER: String = '/directory/all/';
 
   UPDATE_URL      : String = 'http://jaist.dl.sourceforge.net/project/fmd/FMD/updates/';
 
@@ -624,13 +585,19 @@ function  RemoveStringBreaks(const source: String): String;
 
 function  PrepareSummaryForHint(const source: String):  String;
 
-// deal with sourceforge URL
+// deal with sourceforge URL.
 function  SourceForgeURL(URL: string): string;
-// Get HTML source code from a URL
+// Get HTML source code from a URL.
 function  gehGetPage(var output: TObject; URL: String; const Reconnect: Cardinal; const lURL: String = ''): Boolean;
-function  GetPage(var output: TObject; URL: String; const Reconnect: Cardinal; const isByPassHTTP: Boolean = FALSE): Boolean;
-function  GetBitlyPage(var output: TObject; URL: String; const Reconnect: Cardinal; const isByPassHTTP: Boolean = FALSE): Boolean;
-function  SavePage(URL: String;  const Path, name: String; const Reconnect: Cardinal): Boolean;
+function  GetPage(const AHTTP: THTTPSend; var output: TObject; URL: String; const Reconnect: Cardinal; const isByPassHTTP: Boolean): Boolean; overload;
+function  GetPage(var output: TObject; URL: String; const Reconnect: Cardinal; const isByPassHTTP: Boolean): Boolean; overload; inline;
+function  GetPage(var output: TObject; URL: String; const Reconnect: Cardinal): Boolean; overload; inline;
+function  GetPage(const AHTTP: THTTPSend; var output: TObject; URL: String; const Reconnect: Cardinal): Boolean; overload; inline;
+// Get url from a bitly url.
+function  GetURLFromBitly(const URL: String): String;
+// Download an image from url and save it to a specific location.
+function  SaveImage(const AHTTP: THTTPSend; const mangaSiteID: Integer; URL: String; const Path, name, prefix: String; const Reconnect: Cardinal): Boolean; overload;
+function  SaveImage(const mangaSiteID: Integer; URL: String; const Path, name, prefix: String; const Reconnect: Cardinal): Boolean; overload; inline;
 
 procedure QuickSortChapters(var chapterList, linkList: TStringList);
 procedure QuickSortData(var merge: TStringList);
@@ -653,7 +620,8 @@ procedure fmdHibernate;
 
 implementation
 
-uses Process, FileUtil{$IFDEF WINDOWS}, Windows{$ENDIF}, Synacode;
+uses
+  Process, FileUtil{$IFDEF WINDOWS}, Windows{$ENDIF}, Synacode, lazutf8classes;
 
 {$IFDEF WINDOWS}
 
@@ -1206,6 +1174,15 @@ begin
   Result:= StringReplace(Result, '&#8220;', '"', [rfReplaceAll]);
   Result:= StringReplace(Result, '&#8221;', '"', [rfReplaceAll]);
   Result:= StringReplace(Result, '&#8230;', '...', [rfReplaceAll]);
+
+
+  Result:= StringReplace(Result, '&Auml;', 'Ä', [rfReplaceAll]);
+  Result:= StringReplace(Result, '&auml;', 'ä', [rfReplaceAll]);
+  Result:= StringReplace(Result, '&Ouml;', 'Ö', [rfReplaceAll]);
+  Result:= StringReplace(Result, '&ouml;', 'ö', [rfReplaceAll]);
+  Result:= StringReplace(Result, '&Uuml;', 'Ü', [rfReplaceAll]);
+  Result:= StringReplace(Result, '&uuml;', 'ü', [rfReplaceAll]);
+  Result:= StringReplace(Result, '&szlig;', 'ß', [rfReplaceAll]);
 end;
 
 procedure  CustomGenres(var output: TStringList; input: String);
@@ -1522,7 +1499,9 @@ globReturn:
   gehHTTP.Clear;
 end;
 
-function  GetPage(var output: TObject; URL: String; const Reconnect: Cardinal; const isByPassHTTP: Boolean = FALSE): Boolean;
+function  GetPage(const AHTTP: THTTPSend; var output: TObject; URL: String; const Reconnect: Cardinal; const isByPassHTTP: Boolean): Boolean;
+// If AHTTP <> nil, we will use it as http sender. Otherwise we create a new
+// instance.
 var
   i      : Cardinal;
   HTTP   : THTTPSend;
@@ -1538,7 +1517,10 @@ begin
   Result:= FALSE;
   if (isByPassHTTP) AND (Pos('HTTP://', UpCase(URL)) = 0) then
     exit;
-  HTTP:= THTTPSend.Create;
+  if AHTTP <> nil then
+    HTTP:= AHTTP
+  else
+    HTTP:= THTTPSend.Create;
 globReturn:
   HTTP.ProxyHost:= Host;
   HTTP.ProxyPort:= Port;
@@ -1568,7 +1550,8 @@ globReturn:
     begin
       if Reconnect <= counter then
       begin
-        HTTP.Free;
+        if AHTTP = nil then
+          HTTP.Free;
         exit;
       end;
       Inc(counter);
@@ -1602,7 +1585,8 @@ globReturn:
       begin
         if Reconnect <= counter then
         begin
-          HTTP.Free;
+          if AHTTP = nil then
+            HTTP.Free;
           exit;
         end;
         Inc(counter);
@@ -1647,54 +1631,104 @@ globReturn:
   end
   else
     Result:= FALSE;
-  HTTP.Free;
+  if AHTTP = nil then
+    HTTP.Free;
 end;
 
-function  GetBitlyPage(var output: TObject; URL: String; const Reconnect: Cardinal; const isByPassHTTP: Boolean = FALSE): Boolean;
-var
-  i: Cardinal;
+function  GetPage(var output: TObject; URL: String; const Reconnect: Cardinal; const isByPassHTTP: Boolean): Boolean;
 begin
-  Result:= GetPage(output, URL, Reconnect, isByPassHTTP);
-  if TStringList(output).Count > 0 then
-    for i:= 0 to TStringList(output).Count do
-      if Pos(';url=', TStringList(output).Strings[i])>0 then
+  Result:= GetPage(nil, output, URL, Reconnect, isByPassHTTP);
+end;
+
+function  GetPage(var output: TObject; URL: String; const Reconnect: Cardinal): Boolean;
+begin
+  Result:= GetPage(nil, output, URL, Reconnect, FALSE);
+end;
+
+function  GetPage(const AHTTP: THTTPSend; var output: TObject; URL: String; const Reconnect: Cardinal): Boolean;
+begin
+  Result:= GetPage(AHTTP, output, URL, Reconnect, FALSE);
+end;
+
+function  GetURLFromBitly(const URL: String): String;
+var
+  i         : Cardinal;
+  httpSource: TStringList;
+begin
+  Result:= '';
+  httpSource:= TStringList.Create;
+  GetPage(TObject(httpSource), URL, 4);
+  if httpSource.Count > 0 then
+    for i:= 0 to httpSource.Count do
+      if Pos(';url=', httpSource.Strings[i])>0 then
       begin
-        URL:= GetString(TStringList(output).Strings[i], ';url=', '&amp;');
+        Result:= GetString(httpSource.Strings[i], ';url=', '&amp;');
         break;
       end;
-  TStringList(output).Clear;
-  Result:= GetPage(output, URL, Reconnect, isByPassHTTP);
+  httpSource.Free;
 end;
 
-function  SavePage(URL: String; const Path, name: String; const Reconnect: Cardinal): Boolean;
+function  SaveImage(const AHTTP: THTTPSend; const mangaSiteID: Integer; URL: String; const Path, name, prefix: String; const Reconnect: Cardinal): Boolean;
+// prefix: For example: 000<our prefix>.jpg.
 var
-  header  : array [0..3] of Byte;
-  ext     : String;
-  HTTP    : THTTPSend;
-  counter : Cardinal = 0;
+  header    : array [0..3] of Byte;
+  ext       : String;
+  HTTPHeader: TStringList;
+  HTTP      : THTTPSend;
+  i         : Cardinal;
+  counter   : Cardinal = 0;
+  s         : String;
+  dest,
+  source    : TPicture;
+  fstream   : TFileStreamUTF8;
+
 begin
+  s:= Path+'/'+name;
+  if (FileExists(s+'.jpg')) OR
+     (FileExists(s+'.png')) OR
+     (FileExists(s+'.gif')) OR
+     (Pos('http', URL) = 0) then
+  begin
+    Result:= TRUE;
+    exit;
+  end;
   Result:= FALSE;
-  HTTP:= THTTPSend.Create;
+  if AHTTP <> nil then
+  begin
+    HTTPHeader:= TStringList.Create;
+    HTTPHeader.Text:= AHTTP.Headers.Text;
+    HTTP:= AHTTP;
+  end
+  else
+    HTTP:= THTTPSend.Create;
   HTTP.ProxyHost:= Host;
   HTTP.ProxyPort:= Port;
   HTTP.ProxyUser:= User;
   HTTP.ProxyPass:= Pass;
-  HTTP.UserAgent:='curl/7.21.0 (i686-pc-linux-gnu) libcurl/7.21.0 OpenSSL/0.9.8o zlib/1.2.3.4 libidn/1.18';
-  if Pos(HENTAI2READ_ROOT, URL) <> 0 then
-    HTTP.Headers.Insert(0, 'Referer:'+HENTAI2READ_ROOT+'/')  ;
+
+  if mangaSiteID <> MANGAAR_ID then
+    HTTP.UserAgent:='curl/7.21.0 (i686-pc-linux-gnu) libcurl/7.21.0 OpenSSL/0.9.8o zlib/1.2.3.4 libidn/1.18';
+
+  if (mangaSiteID >= 0) AND (mangaSiteID <= High(WebsiteRoots)) then
+    HTTP.Headers.Insert(0, 'Referer:'+WebsiteRoots[mangaSiteID,1]+'/');
+
   while (NOT HTTP.HTTPMethod('GET', URL)) OR
-        (HTTP.ResultCode >= 500) do
+        (HTTP.ResultCode >= 500) OR
+        (HTTP.ResultCode = 403) do
   begin
     if Reconnect <> 0 then
     begin
       if Reconnect <= counter then
       begin
-        HTTP.Free;
+        if AHTTP = nil then
+          HTTP.Free;
         exit;
       end;
       Inc(counter);
     end;
-    HTTP.RangeStart:= HTTP.Document.Size;
+    HTTP.Clear;
+    if AHTTP <> nil then
+      HTTP.Headers.Text:= HTTPHeader.Text;
     Sleep(500);
   end;
 
@@ -1702,22 +1736,27 @@ begin
   begin
     URL:= CheckRedirect(HTTP);
     HTTP.Clear;
+    if AHTTP <> nil then
+      HTTP.Headers.Text:= HTTPHeader.Text;
     HTTP.RangeStart:= 0;
-    if Pos(HENTAI2READ_ROOT, URL) <> 0 then
-      HTTP.Headers.Insert(0, 'Referer:'+HENTAI2READ_ROOT+'/');
+    if (mangaSiteID >= 0) AND (mangaSiteID <= High(WebsiteRoots)) then
+      HTTP.Headers.Insert(0, 'Referer:'+WebsiteRoots[mangaSiteID,1]+'/');
     while (NOT HTTP.HTTPMethod('GET', URL)) OR
-        (HTTP.ResultCode >= 500) do
+          (HTTP.ResultCode >= 500) do
     begin
       if Reconnect <> 0 then
       begin
         if Reconnect <= counter then
         begin
-          HTTP.Free;
+          if AHTTP = nil then
+            HTTP.Free;
           exit;
         end;
         Inc(counter);
       end;
-      HTTP.RangeStart:= HTTP.Document.Size;
+      HTTP.Clear;
+      if AHTTP <> nil then
+        HTTP.Headers.Text:= HTTPHeader.Text;
       Sleep(500);
     end;
   end;
@@ -1739,10 +1778,26 @@ begin
     ext:= '.gif'
   else
     ext:= '';
-
-  HTTP.Document.SaveToFile(Path+name+ext);
-  HTTP.Free;
+  if ext <> '' then
+  begin
+    fstream:= TFileStreamUTF8.Create(Path+'/'+name+prefix+ext, fmCreate);
+    HTTP.Document.SaveToStream(fstream);
+    fstream.Free;
+  end
+  else
+  begin
+    // TODO: A logging system should be applied in order to log this "error".
+  end;
+  if AHTTP = nil then
+    HTTP.Free
+  else
+    HTTPHeader.Free;
   Result:= TRUE;
+end;
+
+function  SaveImage(const mangaSiteID: Integer; URL: String; const Path, name, prefix: String; const Reconnect: Cardinal): Boolean;
+begin
+  Result:= SaveImage(nil, mangaSiteID, URL, Path, name, prefix, Reconnect);
 end;
 
 procedure QuickSortChapters(var chapterList, linkList: TStringList);

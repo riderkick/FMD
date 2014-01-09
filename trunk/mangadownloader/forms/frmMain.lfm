@@ -25,12 +25,12 @@ object MainForm: TMainForm
   object pnMainLeft: TPanel
     AnchorSideRight.Control = spMainSplitter
     Left = 0
-    Height = 470
+    Height = 471
     Top = 8
     Width = 195
     Align = alLeft
     Anchors = [akTop, akLeft, akRight, akBottom]
-    ClientHeight = 470
+    ClientHeight = 471
     ClientWidth = 195
     TabOrder = 0
     object pnLeftBtDummy: TBitBtn
@@ -45,7 +45,7 @@ object MainForm: TMainForm
     end
     object pcLeft: TPageControl
       Left = 1
-      Height = 468
+      Height = 469
       Top = 1
       Width = 193
       ActivePage = tsMangaList
@@ -54,7 +54,7 @@ object MainForm: TMainForm
       TabOrder = 0
       object tsMangaList: TTabSheet
         Caption = 'Manga List'
-        ClientHeight = 440
+        ClientHeight = 441
         ClientWidth = 185
         object lbMode: TLabel
           Left = 8
@@ -127,7 +127,7 @@ object MainForm: TMainForm
         end
         object vtMangaList: TVirtualStringTree
           Left = 3
-          Height = 342
+          Height = 343
           Hint = 'test'
           Top = 88
           Width = 176
@@ -328,7 +328,7 @@ object MainForm: TMainForm
   end
   object pcMain: TPageControl
     Left = 195
-    Height = 470
+    Height = 471
     Top = 8
     Width = 624
     ActivePage = tsDownload
@@ -340,11 +340,11 @@ object MainForm: TMainForm
     OnChange = pcMainChange
     object tsDownload: TTabSheet
       Caption = 'Downloads'
-      ClientHeight = 442
+      ClientHeight = 443
       ClientWidth = 616
       object vtDownload: TVirtualStringTree
         Left = 0
-        Height = 442
+        Height = 443
         Top = 0
         Width = 616
         Align = alClient
@@ -1575,7 +1575,7 @@ object MainForm: TMainForm
             Width = 530
             Anchors = [akTop, akLeft, akRight]
             Caption = 'External program'
-            ClientHeight = 69
+            ClientHeight = 71
             ClientWidth = 526
             ParentFont = False
             TabOrder = 5
@@ -1642,7 +1642,7 @@ object MainForm: TMainForm
               Width = 567
               Anchors = [akTop, akLeft, akRight]
               Caption = 'Proxy config'
-              ClientHeight = 84
+              ClientHeight = 86
               ClientWidth = 563
               Enabled = False
               ParentFont = False
@@ -1839,7 +1839,7 @@ object MainForm: TMainForm
             ChildSizing.ShrinkVertical = crsScaleChilds
             ChildSizing.Layout = cclLeftToRightThenTopToBottom
             ChildSizing.ControlsPerLine = 4
-            ClientHeight = 40
+            ClientHeight = 42
             ClientWidth = 526
             Columns = 4
             ItemIndex = 0
@@ -1859,7 +1859,7 @@ object MainForm: TMainForm
             Width = 530
             Anchors = [akTop, akLeft, akRight]
             Caption = 'Renaming'
-            ClientHeight = 117
+            ClientHeight = 119
             ClientWidth = 526
             ParentFont = False
             TabOrder = 2
@@ -1998,7 +1998,7 @@ object MainForm: TMainForm
             Width = 530
             Anchors = [akTop, akLeft, akRight]
             Caption = 'Favorites'
-            ClientHeight = 108
+            ClientHeight = 110
             ClientWidth = 526
             ParentFont = False
             TabOrder = 1
@@ -2048,7 +2048,7 @@ object MainForm: TMainForm
             Top = 14
             Width = 566
             Anchors = [akTop, akLeft, akRight, akBottom]
-            ClientHeight = 266
+            ClientHeight = 268
             ClientWidth = 562
             TabOrder = 0
             object cbOptionShowQuitDialog: TCheckBox
@@ -2122,7 +2122,7 @@ object MainForm: TMainForm
             Top = 14
             Width = 566
             Anchors = [akTop, akLeft, akRight, akBottom]
-            ClientHeight = 273
+            ClientHeight = 275
             ClientWidth = 562
             TabOrder = 0
             object cbOptionShowAllLang: TCheckBox
@@ -2208,8 +2208,8 @@ object MainForm: TMainForm
   end
   object sbMain: TStatusBar
     Left = 0
-    Height = 24
-    Top = 478
+    Height = 23
+    Top = 479
     Width = 819
     Panels = <    
       item

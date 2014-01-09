@@ -76,7 +76,7 @@ type
 implementation
 
 uses
-  frmMain, Dialogs;
+  {$IFDEF DOWNLOADER}frmMain{$ELSE}mainunit{$ENDIF}, Dialogs;
 
 // ----- TUpdateMangaThread -----
 

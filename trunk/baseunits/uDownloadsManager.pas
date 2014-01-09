@@ -11,8 +11,9 @@ unit uDownloadsManager;
 interface
 
 uses
-  Classes, SysUtils, IniFiles, ExtCtrls, Graphics, dateutils,
-  uBaseUnit, uData, fgl, uPacker, uFMDThread;
+  Classes, SysUtils, IniFiles, ExtCtrls, Graphics, dateutils, fgl,
+  HTTPSend,
+  uBaseUnit, uData, uPacker, uFMDThread;
 
 type
   TDownloadManager = class;
@@ -28,6 +29,10 @@ type
     FSortColumn  : Cardinal;
     FAnotherURL  : String;
 
+    // Helper method allows to merge 2 images into 1 image.
+    // Final image format: png.
+    procedure   Merge2Images(const path, imgName1, imgName2, finalName: String);
+
     // wait for changing directoet completed
     procedure   SetChangeDirectoryFalse;
     procedure   SetChangeDirectoryTrue;
@@ -35,8 +40,8 @@ type
     function    GetLinkPageFromURL(const URL: String): Boolean;
     // Get number of download link from URL
     function    GetPageNumberFromURL(const URL: String): Boolean;
-    // Download page - links are from link list
-    function    DownloadPage: Boolean;
+    // Download image
+    function    DownloadImage(const AHTTP: THTTPSend = nil; const prefix: String = ''): Boolean;
     procedure   Execute; override;
     procedure   OnTag(tag: String);
     procedure   OnText(text: String);
@@ -148,36 +153,36 @@ type
     procedure   AddToDownloadedChaptersList(const ALink, AValue: String); overload;
     procedure   ReturnDownloadedChapters(const ALink: String);
 
-    // Add new task to the list
+    // Add new task to the list.
     procedure   AddTask;
-    // Check and active previous work-in-progress tasks
+    // Check and active previous work-in-progress tasks.
     procedure   CheckAndActiveTaskAtStartup;
-    // Check and active waiting tasks
+    // Check and active waiting tasks.
     procedure   CheckAndActiveTask(const isCheckForFMDDo: Boolean = FALSE);
-    // Check if we can active another wating task or not
+    // Check if we can active another wating task or not.
     function    CanActiveTask(const pos: Cardinal): Boolean;
-    // Active a stopped task
+    // Active a stopped task.
     procedure   ActiveTask(const taskID: Cardinal);
-    // Stop a download/wait task
+    // Stop a download/wait task.
     procedure   StopTask(const taskID: Cardinal; const isCheckForActive: Boolean = TRUE);
-    // Stop all download/wait tasks
+    // Stop all download/wait tasks.
     procedure   StopAllTasks;
-    // Stop all download task inside a task before terminate the program
+    // Stop all download task inside a task before terminate the program.
     procedure   StopAllDownloadTasksForExit;
-    // Mark the task as "Finished"
+    // Mark the task as "Finished".
     procedure   FinishTask(const taskID: Cardinal);
-    // Swap 2 tasks
+    // Swap 2 tasks.
     function    Swap(const id1, id2: Cardinal): Boolean;
-    // move a task up
+    // move a task up.
     function    MoveUp(const taskID: Cardinal): Boolean;
-    // move a task down
+    // move a task down.
     function    MoveDown(const taskID: Cardinal): Boolean;
-    // Remove a task from list
+    // Remove a task from list.
     procedure   RemoveTask(const taskID: Cardinal);
-    // Remove all finished tasks
+    // Remove all finished tasks.
     procedure   RemoveAllFinishedTasks;
 
-    // sorting
+    // Sort.
     procedure   Sort(const AColumn: Cardinal);
 
     property    SortDirection: Boolean read FSortDirection write FSortDirection;
@@ -188,7 +193,8 @@ implementation
 
 uses
   lazutf8classes, FastHTMLParser, HTMLUtil, LConvEncoding,
-  SynaCode, FileUtil, HTTPSend, VirtualTrees, frmMain;
+  ImagingTypes, Imaging, ImagingUtility, ImagingCanvases,
+  SynaCode, FileUtil, VirtualTrees, frmMain;
 
 // ----- TDownloadThread -----
 
@@ -229,28 +235,29 @@ begin
   while isSuspended do
     Sleep(100);
   case checkStyle of
-    // get page number, and prepare number of pagelinks for save links
+    // Get number of images.
     CS_GETPAGENUMBER:
       begin
         GetPageNumberFromURL(manager.container.chapterLinks.Strings[manager.container.currentDownloadChapterPtr]);
-        // prepare 'space' for link updater
-       // if manager.container.mangaSiteID <> GEHENTAI_ID then
+        // Prepare 'space' for storing image url.
         if (NOT Terminated) AND
            (manager.container.pageNumber > 0) then
+        begin
           for i:= 0 to manager.container.pageNumber-1 do
             manager.container.pageLinks.Add('W');
+        end;
       end;
-    // get page link
+    // Get image urls.
     CS_GETPAGELINK:
       begin
         if (NOT Terminated) then
           GetLinkPageFromURL(manager.container.chapterLinks.Strings[manager.container.currentDownloadChapterPtr]);
       end;
-    // download page
+    // Download images.
     CS_DOWNLOAD:
       begin
         if (NOT Terminated) then
-          DownloadPage;
+          DownloadImage;
       end;
   end;
   Terminate;
@@ -294,6 +301,8 @@ var
   {$I includes/RedHawkScans/chapter_page_number.inc}
 
   {$I includes/S2scans/chapter_page_number.inc}
+
+  {$I includes/MeinManga/chapter_page_number.inc}
 
   {$I includes/EGScans/chapter_page_number.inc}
 
@@ -414,6 +423,9 @@ begin
   if manager.container.mangaSiteID = S2SCAN_ID then
     Result:= GetS2scanPageNumber
   else
+  if manager.container.mangaSiteID = MEINMANGA_ID then
+    Result:= GetMeinMangaPageNumber
+  else
   if manager.container.mangaSiteID = ESMANGAHERE_ID then
     Result:= GetEsMangaHerePageNumber
   else
@@ -511,6 +523,8 @@ var
   {$I includes/KissManga/image_url.inc}
 
   {$I includes/Batoto/image_url.inc}
+
+  {$I includes/MeinManga/image_url.inc}
 
   {$I includes/Manga24h/image_url.inc}
 
@@ -663,6 +677,9 @@ begin
   if manager.container.mangaSiteID = BATOTO_ID then
     Result:= GetBatotoImageURL
   else
+  if manager.container.mangaSiteID = MEINMANGA_ID then
+    Result:= GetMeinMangaImageURL
+  else
   if manager.container.mangaSiteID = MANGA24H_ID then
     Result:= GetManga24hImageURL
   else
@@ -785,6 +802,71 @@ begin
     Result:= GetGEHentaiImageURL;
 end;
 
+procedure   TDownloadThread.Merge2Images(const path, imgName1, imgName2, finalName: String);
+var
+  rect: TRect;
+  img1,
+  img2,
+  finalImg: TImageData;
+  cv1, cv2,
+  canvas: TImagingCanvas;
+  stream: TFileStreamUTF8;
+  fullImgName1,
+  fullImgName2,
+  fullFinalImgName: String;
+begin
+  fullImgName1:= Path+'/'+imgName1;
+  fullImgName2:= Path+'/'+imgName2;
+
+  if (NOT FileExistsUTF8(fullImgName1)) AND (NOT FileExistsUTF8(fullImgName2)) then
+    exit;
+
+  fullFinalImgName:= Path+'/'+finalName;
+
+  // Load first image to stream.
+  stream:= TFileStreamUTF8.Create(fullImgName1, fmOpenRead);
+  LoadImageFromStream(stream, img1);
+  stream.Free;
+  cv1:= TImagingCanvas.CreateForData(@img1);
+
+  // Load second image to stream.
+  stream:= TFileStreamUTF8.Create(fullImgName2, fmOpenRead);
+  LoadImageFromStream(stream, img2);
+  stream.Free;
+  cv2:= TImagingCanvas.CreateForData(@img2);
+
+  // Create new buffer for merging images ...
+  NewImage(img1.Width, img1.Height + img2.Height, ifR8G8B8, finalImg);
+  canvas:= TImagingCanvas.CreateForData(@finalImg);
+
+  // Construct TRect ...
+  rect.Left := 0;
+  rect.Top  := 0;
+  rect.Right:= img1.Width;
+  rect.Bottom:= img1.Height;
+
+  // Merge images.
+  cv1.DrawBlend(rect, canvas, 0, 0, bfOne, bfZero);
+  cv2.DrawBlend(rect, canvas, 0, img1.Height, bfOne, bfZero);
+
+  // Save final image.
+  stream:= TFileStreamUTF8.Create(fullFinalImgName, fmCreate);
+  SaveImageToStream('png', stream, finalImg);
+  stream.Free;
+
+  // Remove old images.
+  DeleteFileUTF8(fullImgName1);
+  DeleteFileUTF8(fullImgName2);
+
+  // Free memory.
+  cv1.Free;
+  cv2.Free;
+  canvas.Free;
+  FreeImage(img1);
+  FreeImage(img2);
+  FreeImage(finalImg);
+end;
+
 procedure   TDownloadThread.SetChangeDirectoryFalse;
 begin
   isChangeDirectory:= FALSE;
@@ -795,164 +877,34 @@ begin
   isChangeDirectory:= TRUE;
 end;
 
-function    TDownloadThread.DownloadPage: Boolean;
+function    TDownloadThread.DownloadImage(const AHTTP: THTTPSend = nil; const prefix: String = ''): Boolean;
 var
-  fileSize: Cardinal;
-
-  function  SavePage(URL: String; const Path, name: String; const Reconnect: Cardinal): Boolean;
-  var
-    header  : array [0..3] of Byte;
-    ext     : String;
-    HTTP    : THTTPSend;
-    i       : Cardinal;
-    counter : Cardinal = 0;
-    s       : String;
-    dest,
-    source  : TPicture;
-    fstream : TFileStreamUTF8;
-
-  begin
-    if (FileExists(Path+'/'+name+'.jpg')) OR
-       (FileExists(Path+'/'+name+'.png')) OR
-       (FileExists(Path+'/'+name+'.gif')) OR
-       (Pos('http', URL) = 0) then
-    begin
-      Result:= TRUE;
-      exit;
-    end;
-    Result:= FALSE;
-    HTTP:= THTTPSend.Create;
-    HTTP.ProxyHost:= Host;
-    HTTP.ProxyPort:= Port;
-    HTTP.ProxyUser:= User;
-    HTTP.ProxyPass:= Pass;
-
-    if manager.container.mangaSiteID <> MANGAAR_ID then
-      HTTP.UserAgent:='curl/7.21.0 (i686-pc-linux-gnu) libcurl/7.21.0 OpenSSL/0.9.8o zlib/1.2.3.4 libidn/1.18';
-
-    if manager.container.mangaSiteID = HENTAI2READ_ID then
-      HTTP.Headers.Insert(0, 'Referer:'+WebsiteRoots[HENTAI2READ_ID,1]+'/')
-    else
-    if manager.container.mangaSiteID = MANGAGO_ID then
-      HTTP.Headers.Insert(0, 'Referer:'+WebsiteRoots[MANGAGO_ID,1]+'/')
-    else
-    if manager.container.mangaSiteID = ANIMEEXTREMIST_ID then
-    begin
-      HTTP.Headers.Insert(0, 'Referer:'+WebsiteRoots[ANIMEEXTREMIST_ID,1]+'/');
-    end
-    else
-    if manager.container.mangaSiteID = KISSMANGA_ID then
-      HTTP.Headers.Insert(0, 'Referer:'+WebsiteRoots[KISSMANGA_ID,1]+'/')
-    else
-    if manager.container.mangaSiteID = CENTRALDEMANGAS_ID then
-      HTTP.Headers.Insert(0, 'Referer:'+WebsiteRoots[CENTRALDEMANGAS_ID,1]+'/')
-    else
-    if manager.container.mangaSiteID = VNSHARING_ID then
-      HTTP.Headers.Insert(0, 'Referer:'+WebsiteRoots[VNSHARING_ID,1]+'/')
-    else
-    if  manager.container.mangaSiteID = GEHENTAI_ID then
-      HTTP.Headers.Insert(0, 'Referer:'+manager.container.pageLinks.Strings[workCounter]);
-    while (NOT HTTP.HTTPMethod('GET', URL)) OR
-          (HTTP.ResultCode >= 500) OR
-          (HTTP.ResultCode = 403) do
-    begin
-      if Reconnect <> 0 then
-      begin
-        if Reconnect <= counter then
-        begin
-          HTTP.Free;
-          exit;
-        end;
-        Inc(counter);
-      end;
-      HTTP.Clear;
-      Sleep(500);
-    end;
-
-    while (HTTP.ResultCode = 302) OR (HTTP.ResultCode = 301) do
-    begin
-      URL:= CheckRedirect(HTTP);
-      HTTP.Clear;
-      HTTP.RangeStart:= 0;
-      if Pos(HENTAI2READ_ROOT, URL) <> 0 then
-        HTTP.Headers.Insert(0, 'Referer:'+HENTAI2READ_ROOT+'/')
-      else
-      if Pos('bp.blogspot.com', URL) <> 0 then
-        HTTP.Headers.Insert(0, 'Referer:'+WebsiteRoots[KISSMANGA_ID,1]+'/')
-      else
-      if Pos('mangas.centraldemangas.com', URL) <> 0 then
-        HTTP.Headers.Insert(0, 'Referer:'+WebsiteRoots[CENTRALDEMANGAS_ID,1]+'/');
-      while (NOT HTTP.HTTPMethod('GET', URL)) OR
-            (HTTP.ResultCode >= 500) do
-      begin
-        if Reconnect <> 0 then
-        begin
-          if Reconnect <= counter then
-          begin
-            HTTP.Free;
-            exit;
-          end;
-          Inc(counter);
-        end;
-        HTTP.Clear;
-        Sleep(500);
-      end;
-    end;
-    HTTP.Document.Seek(0, soBeginning);
-    HTTP.Document.Read(header[0], 4);
-    if (header[0] = JPG_HEADER[0]) AND
-       (header[1] = JPG_HEADER[1]) AND
-       (header[2] = JPG_HEADER[2]) then
-      ext:= '.jpg'
-    else
-    if (header[0] = PNG_HEADER[0]) AND
-       (header[1] = PNG_HEADER[1]) AND
-       (header[2] = PNG_HEADER[2]) then
-      ext:= '.png'
-    else
-    if (header[0] = GIF_HEADER[0]) AND
-       (header[1] = GIF_HEADER[1]) AND
-       (header[2] = GIF_HEADER[2]) then
-      ext:= '.gif'
-    else
-      ext:= '';
-    fstream:= TFileStreamUTF8.Create(Path+'/'+name+ext, fmCreate);
-    HTTP.Document.SaveToStream(fstream);
-    fstream.Free;
-  //    HTTP.Document.SaveToFile(Path+'/'+name+ext);
-    HTTP.Free;
-    Result:= TRUE;
-  end;
-
-var
-  lastTime, curTime  : Cardinal;
+  lastTime, curTime: Cardinal;
   s: String;
-label
-  start;
-
 begin
-start:
+  // For E-Hentai only.
   if manager.container.mangaSiteID = GEHENTAI_ID then
   begin
     Sleep(500);
     lastTime:= fmdGetTickCount;
-
-   // anotherURLBackup:= manager.anotherURL;
     GetLinkPageFromURL(anotherURL);
     curTime:= fmdGetTickCount-lastTime;
     if curTime<3000 then
       Sleep(3000-curTime)
     else
       Sleep(300);
-  end;
+  end; // E-Hentai.
 
   if (manager.container.pageLinks.Strings[workCounter] = '') OR
      (manager.container.pageLinks.Strings[workCounter] = 'W') then exit;
-  SavePage(manager.container.pageLinks.Strings[workCounter],
-           manager.container.downloadInfo.SaveTo+
-           '/'+manager.container.chapterName.Strings[manager.container.currentDownloadChapterPtr],
-           Format('%.3d', [workCounter+1]),
-           manager.container.manager.retryConnect);
+  SaveImage(AHTTP,
+            manager.container.mangaSiteID,
+            manager.container.pageLinks.Strings[workCounter],
+            manager.container.downloadInfo.SaveTo+
+            '/'+manager.container.chapterName.Strings[manager.container.currentDownloadChapterPtr],
+            Format('%.3d', [workCounter+1]),
+            prefix,
+            manager.container.manager.retryConnect);
 
   SetCurrentDirUTF8(fmdDirectory);
   if NOT Terminated then
@@ -1144,6 +1096,7 @@ begin
       threads.Items[threads.Count-1].workCounter:= container.workCounter;
       threads.Items[threads.Count-1].checkStyle:= CS_GETPAGENUMBER;
       threads.Items[threads.Count-1].isSuspended:= FALSE;
+      // Validate the path. If folder doesn't exist, a new folder will be created.
       CheckPath(container.downloadInfo.SaveTo+
                 '/'+
                 container.chapterName.Strings[container.currentDownloadChapterPtr]);
@@ -1186,26 +1139,29 @@ begin
     // download them
     if (container.pageLinks.Count > 0) then
     begin
-      while container.workCounter < container.pageLinks.Count do
+      if container.mangaSiteID <> MEINMANGA_ID then
       begin
-        if Terminated then exit;
-        Flag:= CS_DOWNLOAD;
-        Checkout;
-        container.downloadInfo.Progress:= Format('%d/%d', [container.workCounter, container.pageLinks.Count]);
-        container.downloadInfo.Status  :=
-          Format('%s (%d/%d [%s])',
-            [stDownloading,
-             container.currentDownloadChapterPtr,
-             container.chapterLinks.Count,
-             container.chapterName.Strings[container.currentDownloadChapterPtr]]);
-        Inc(container.downloadInfo.iProgress);
-        {$IFDEF WIN32}
-        MainForm.vtDownload.Repaint;
-        {$ELSE}
-        Synchronize(MainThreadRepaint);
-        {$ENDIF}
+        while container.workCounter < container.pageLinks.Count do
+        begin
+          if Terminated then exit;
+          Flag:= CS_DOWNLOAD;
+          Checkout;
+          container.downloadInfo.Progress:= Format('%d/%d', [container.workCounter, container.pageLinks.Count]);
+          container.downloadInfo.Status  :=
+            Format('%s (%d/%d [%s])',
+              [stDownloading,
+               container.currentDownloadChapterPtr,
+               container.chapterLinks.Count,
+               container.chapterName.Strings[container.currentDownloadChapterPtr]]);
+          Inc(container.downloadInfo.iProgress);
+          {$IFDEF WIN32}
+          MainForm.vtDownload.Repaint;
+          {$ELSE}
+          Synchronize(MainThreadRepaint);
+          {$ENDIF}
+        end;
+        WaitFor;
       end;
-      WaitFor;
      // Synchronize(Compress);
       Compress;
     end;
@@ -1411,10 +1367,6 @@ begin
 
     for i:= 0 to containers.Count-1 do
     begin
-     // ini.WriteInteger('task'+IntToStr(i), 'NumberOfChapterLinks', containers.Items[i].chapterLinks.Count);
-     // ini.WriteInteger('task'+IntToStr(i), 'NumberOfChapterName', containers.Items[i].chapterName.Count);
-     // ini.WriteInteger('task'+IntToStr(i), 'NumberOfPageLinks', containers.Items[i].pageLinks.Count);
-
       ini.WriteString('task'+IntToStr(i), 'ChapterLinks', SetParams(containers.Items[i].chapterLinks));
       ini.WriteString('task'+IntToStr(i), 'ChapterName', SetParams(containers.Items[i].ChapterName));
       if containers.Items[i].pageLinks.Count > 0 then
