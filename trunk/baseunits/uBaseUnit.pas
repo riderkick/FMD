@@ -1,5 +1,5 @@
 {
-        File: baseunit.pas
+        File: uBaseUnit.pas
         License: GPLv2
         This unit is a part of Free Manga Downloader
 }
@@ -1622,11 +1622,15 @@ globReturn:
       DeleteFileUTF8(s);
     end
     else
-    if output is TStringList then
-      TStringList(output).LoadFromStream(HTTP.Document)
-    else
-    if output is TPicture then
-      TPicture(output).LoadFromStream(HTTP.Document);
+    try
+      if output is TStringList then
+        TStringList(output).LoadFromStream(HTTP.Document)
+      else
+      if output is TPicture then
+        TPicture(output).LoadFromStream(HTTP.Document);
+    except
+      on E: Exception do;
+    end;
     Result:= TRUE;
   end
   else

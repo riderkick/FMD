@@ -144,8 +144,9 @@ begin
     try
       MainForm.imCover.Picture.Assign(FCover);
     except
-      FCover.Clear;
+      on E: Exception do;
     end;
+    FCover.Clear;
   end;
 end;
 
