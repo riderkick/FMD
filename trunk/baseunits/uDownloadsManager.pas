@@ -818,7 +818,7 @@ begin
   fullImgName1:= Path+'/'+imgName1;
   fullImgName2:= Path+'/'+imgName2;
 
-  if (NOT FileExistsUTF8(fullImgName1)) AND (NOT FileExistsUTF8(fullImgName2)) then
+  if (NOT FileExistsUTF8(fullImgName1)) OR (NOT FileExistsUTF8(fullImgName2)) then
     exit;
 
   fullFinalImgName:= Path+'/'+finalName;
@@ -839,14 +839,17 @@ begin
   NewImage(img1.Width, img1.Height + img2.Height, ifR8G8B8, finalImg);
   canvas:= TImagingCanvas.CreateForData(@finalImg);
 
-  // Construct TRect ...
+  // Merge images.
   rect.Left := 0;
   rect.Top  := 0;
   rect.Right:= img1.Width;
   rect.Bottom:= img1.Height;
-
-  // Merge images.
   cv1.DrawBlend(rect, canvas, 0, 0, bfOne, bfZero);
+
+  rect.Left := 0;
+  rect.Top  := 0;
+  rect.Right:= img2.Width;
+  rect.Bottom:= img2.Height;
   cv2.DrawBlend(rect, canvas, 0, img1.Height, bfOne, bfZero);
 
   // Save final image.
