@@ -253,6 +253,7 @@ type
     vtFavorites: TVirtualStringTree;
     vtDownload: TVirtualStringTree;
     vtMangaList: TVirtualStringTree;
+    mangaCover : TPicture;
 
     procedure btChecksClick(Sender: TObject);
     procedure btCheckVersionClick(Sender: TObject);
@@ -461,7 +462,7 @@ type
     procedure AddTextToInfo(title, infoText: String);
 
     // Show manga information
-    procedure ShowInformation;
+    procedure ShowInformation(const title, website, link: String);
 
     // get manga list from server
     procedure RunGetList;
@@ -600,7 +601,6 @@ begin
 
   // subthread
   SubThread:= TSubThread.Create;
-  SubThread.OnShowInformation:= nil;
   SubThread.isSuspended:= FALSE;
 
   if cbOptionAutoCheckUpdate.Checked then
@@ -621,6 +621,8 @@ begin
     gifWaiting.EraseColor:= self.Color;
     gifWaiting.BackgroundMode:= gbmSaveBackgroundOnce;
   end;
+
+  mangaCover:= TPicture.Create;
 
   // generate nodes
   GenerateNodes;
@@ -645,6 +647,7 @@ begin
   websiteSelect.Free;
   websiteName.Free;
   websiteLanguage.Free;
+  mangaCover.Free;
 end;
 
 procedure TMainForm.FormWindowStateChange(Sender: TObject);
@@ -821,8 +824,10 @@ begin
 end;
 
 procedure TMainForm.miFavoritesViewInfosClick(Sender: TObject);
+var
+  title, website, link: String;
 begin
-  if (SubThread.isGetInfos) OR (NOT vtFavorites.Focused) then exit;
+  if (NOT vtFavorites.Focused) then exit;
 
   pcMain.TabIndex:= 1;
 
@@ -833,11 +838,10 @@ begin
 
   SubThread.mangaListPos:= -2;
 
-  SubThread.website:= favorites.favoriteInfo[vtFavorites.FocusedNode.Index].Website;
-  SubThread.link:= favorites.favoriteInfo[vtFavorites.FocusedNode.Index].link;
-  SubThread.title:= favorites.favoriteInfo[vtFavorites.FocusedNode.Index].title;
-  SubThread.isGetInfos:= TRUE;
-  //ShowInformation;
+  website:= favorites.favoriteInfo[vtFavorites.FocusedNode.Index].Website;
+  link:= favorites.favoriteInfo[vtFavorites.FocusedNode.Index].link;
+  title:= favorites.favoriteInfo[vtFavorites.FocusedNode.Index].title;
+  SubThread.GetMangaInfos(title, website, link);
 
   if Assigned(gifWaiting) then
   begin
@@ -1150,9 +1154,8 @@ end;
 procedure TMainForm.btURLClick(Sender: TObject);
 var
   i: Cardinal;
+  link, website, title: String;
 begin
-  if (SubThread.isGetInfos) then exit;
-
   if Pos('http://', edURL.Text) = 0 then
     edURL.Text:= 'http://' + edURL.Text;
 
@@ -1164,36 +1167,36 @@ begin
     cbAddToFavorites.Enabled:= FALSE;
   end;
 
-  SubThread.link:= '';
+  link:= '';
   for i:= 0 to High(WebsiteRoots) do
     if Pos(WebsiteRoots[i,1], edURL.Text) > 0 then
     begin
-      SubThread.link   := edURL.Text;
-      Delete(SubThread.link, 1, Length(WebsiteRoots[i,1]));
-      SubThread.website:= WebsiteRoots[i,0];
+      link:= edURL.Text;
+      Delete(link, 1, Length(WebsiteRoots[i,1]));
+      website:= WebsiteRoots[i,0];
     end;
-  if SubThread.link = '' then
+  if link = '' then
   begin
     MessageDlg('', stDlgURLNotSupport, mtInformation, [mbYes], 0);
     exit;
   end;
 
   if Pos(WebsiteRoots[GEHENTAI_ID,1], edURL.Text) <> 0 then
-    SubThread.link:= SubThread.link + '?nw=session'
+    link:= link + '?nw=session'
   else
   if ((Pos(WebsiteRoots[KISSMANGA_ID,1], edURL.Text) <> 0) OR
       (Pos(WebsiteRoots[VNSHARING_ID,1], edURL.Text) <> 0)) AND
       (Pos('&confirm=yes', edURL.Text) <> 0) then
-    Delete(SubThread.link, Pos('&confirm=yes', SubThread.link), Length('&confirm=yes'))
+    Delete(link, Pos('&confirm=yes', link), Length('&confirm=yes'))
   else
   if (Pos(WebsiteRoots[ANIMEA_ID,1], edURL.Text) <> 0) AND
      (Pos('?skip=1', edURL.Text) <> 0) then
-    Delete(SubThread.link, Pos('?skip=1', SubThread.link), Length('?skip=1'));
+    Delete(link, Pos('?skip=1', link), Length('?skip=1'));
 
   SubThread.mangaListPos:= -1;
   pcMain.TabIndex:= 1;
 
-  SubThread.isGetInfos:= TRUE;
+  SubThread.GetMangaInfos(title, website, link);
 
   imCover.Picture.Assign(nil);
   rmInformation.Clear;
@@ -2677,8 +2680,10 @@ begin
 end;
 
 procedure TMainForm.vtMangaListDblClick(Sender: TObject);
+var
+  title, website, link: String;
 begin
-  if (SubThread.isGetInfos) OR (NOT vtMangaList.Focused) then exit;
+  if (NOT vtMangaList.Focused) then exit;
 
   pcMain.TabIndex:= 1;
 
@@ -2691,17 +2696,17 @@ begin
   SubThread.mangaListPos:= vtMangaList.FocusedNode.Index;
   if DataProcess.searchPos.Count = 0 then
   begin
-    SubThread.website:= GetMangaSiteName(DataProcess.site.Items[DataProcess.GetPos(SubThread.mangaListPos)]);//cbSelectManga.Items[cbSelectManga.ItemIndex];
-    SubThread.title:= DataProcess.Param[DataProcess.GetPos(SubThread.mangaListPos), DATA_PARAM_NAME];
-    SubThread.link:= DataProcess.Param[DataProcess.GetPos(SubThread.mangaListPos), DATA_PARAM_LINK];
+    website:= GetMangaSiteName(DataProcess.site.Items[DataProcess.GetPos(SubThread.mangaListPos)]);//cbSelectManga.Items[cbSelectManga.ItemIndex];
+    title:= DataProcess.Param[DataProcess.GetPos(SubThread.mangaListPos), DATA_PARAM_NAME];
+    link:= DataProcess.Param[DataProcess.GetPos(SubThread.mangaListPos), DATA_PARAM_LINK];
   end
   else
   begin
-    SubThread.website:= GetMangaSiteName(DataProcess.site.Items[DataProcess.searchPos.Items[SubThread.mangaListPos]]);//cbSelectManga.Items[cbSelectManga.ItemIndex];
-    SubThread.title:= DataProcess.Param[DataProcess.searchPos.Items[SubThread.mangaListPos], DATA_PARAM_NAME];
-    SubThread.link:= DataProcess.Param[DataProcess.searchPos.Items[SubThread.mangaListPos], DATA_PARAM_LINK];
+    website:= GetMangaSiteName(DataProcess.site.Items[DataProcess.searchPos.Items[SubThread.mangaListPos]]);//cbSelectManga.Items[cbSelectManga.ItemIndex];
+    title:= DataProcess.Param[DataProcess.searchPos.Items[SubThread.mangaListPos], DATA_PARAM_NAME];
+    link:= DataProcess.Param[DataProcess.searchPos.Items[SubThread.mangaListPos], DATA_PARAM_LINK];
   end;
-  SubThread.isGetInfos:= TRUE;
+  SubThread.GetMangaInfos(title, website, link);
   //ShowInformation;
 
   if Assigned(gifWaiting) then
@@ -2929,10 +2934,10 @@ begin
     end;
 end;
 
-procedure TMainForm.ShowInformation;
+procedure TMainForm.ShowInformation(const title, website, link: String);
 var
   cp: TPoint;
-  website: String;
+  LWebsite: String;
 begin
   itAnimate.Enabled:= FALSE;
   pbWait.Visible:= FALSE;
@@ -2946,18 +2951,11 @@ begin
     imCover.Picture.Assign(nil);
     Clear;
 
-    if SubThread.mangaListPos > -1 then
+    if (SubThread.mangaListPos > -1) OR (SubThread.mangaListPos = -2) then
     begin
-      mangaInfo.title:= SubThread.title;
-      mangaInfo.link := SubThread.link;
-      website:= SubThread.Info.mangaInfo.website;
-    end
-    else
-    if SubThread.mangaListPos = -2 then
-    begin
-      mangaInfo.title:= SubThread.title;
-      mangaInfo.link := SubThread.link;
-      website:= SubThread.Info.mangaInfo.website;
+      mangaInfo.title:= title;
+      mangaInfo.link := link;
+      LWebsite:= website;
     end
     else
       mangaInfo.link:= edURL.Text;
