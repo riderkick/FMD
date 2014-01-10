@@ -1,5 +1,5 @@
 {
-        File: Packer.pas
+        File: uPacker.pas
         License: GPLv2
         This unit is a part of Free Manga Downloader
 }

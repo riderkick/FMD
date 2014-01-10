@@ -4,7 +4,7 @@
     <PathDelim Value="\"/>
     <Version Value="9"/>
     <BuildModes Active="Default"/>
-    <Units Count="231">
+    <Units Count="232">
       <Unit0>
         <Filename Value="md.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -12,8 +12,8 @@
         <IsVisibleTab Value="True"/>
         <EditorIndex Value="0"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="2"/>
-        <CursorPos X="22" Y="9"/>
+        <TopLine Value="1"/>
+        <CursorPos X="4" Y="12"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
       </Unit0>
@@ -22,8 +22,8 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="uDownloadsManager"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="208"/>
-        <CursorPos X="51" Y="217"/>
+        <TopLine Value="1"/>
+        <CursorPos X="32" Y="2"/>
         <UsageCount Value="200"/>
       </Unit1>
       <Unit2>
@@ -31,8 +31,8 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="uFavoritesManager"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="421"/>
-        <CursorPos X="27" Y="430"/>
+        <TopLine Value="1"/>
+        <CursorPos X="16" Y="2"/>
         <UsageCount Value="201"/>
       </Unit2>
       <Unit3>
@@ -40,8 +40,8 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="uUpdateThread"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="70"/>
-        <CursorPos X="10" Y="79"/>
+        <TopLine Value="1"/>
+        <CursorPos X="1" Y="1"/>
         <UsageCount Value="200"/>
       </Unit3>
       <Unit4>
@@ -49,8 +49,8 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="uSubThread"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="81"/>
-        <CursorPos X="42" Y="93"/>
+        <TopLine Value="1"/>
+        <CursorPos X="1" Y="1"/>
         <UsageCount Value="210"/>
       </Unit4>
       <Unit5>
@@ -58,8 +58,8 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="uUpdateDBThread"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="103"/>
-        <CursorPos X="27" Y="118"/>
+        <TopLine Value="1"/>
+        <CursorPos X="16" Y="2"/>
         <UsageCount Value="200"/>
       </Unit5>
       <Unit6>
@@ -67,8 +67,8 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="uSilentThread"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="234"/>
-        <CursorPos X="26" Y="254"/>
+        <TopLine Value="1"/>
+        <CursorPos X="1" Y="1"/>
         <UsageCount Value="200"/>
       </Unit6>
       <Unit7>
@@ -110,7 +110,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="135"/>
         <CursorPos X="62" Y="136"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit10>
       <Unit11>
         <Filename Value="..\baseunits\includes\LectureEnLigne\directory_page_number.inc"/>
@@ -118,7 +118,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
         <CursorPos X="1" Y="1"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit11>
       <Unit12>
         <Filename Value="..\baseunits\includes\BlogTruyen\directory_page_number.inc"/>
@@ -126,7 +126,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
         <CursorPos X="54" Y="10"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit12>
       <Unit13>
         <Filename Value="..\baseunits\includes\BlogTruyen\names_and_links.inc"/>
@@ -134,7 +134,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
         <CursorPos X="1" Y="1"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit13>
       <Unit14>
         <Filename Value="..\baseunits\includes\Batoto\chapter_page_number.inc"/>
@@ -142,7 +142,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="37"/>
         <CursorPos X="20" Y="42"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit14>
       <Unit15>
         <Filename Value="..\baseunits\includes\Batoto\image_url.inc"/>
@@ -150,7 +150,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="23"/>
         <CursorPos X="23" Y="33"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit15>
       <Unit16>
         <Filename Value="..\baseunits\includes\AnimeA\names_and_links.inc"/>
@@ -158,7 +158,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
         <CursorPos X="1" Y="1"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit16>
       <Unit17>
         <Filename Value="..\baseunits\includes\MangaHere\names_and_links.inc"/>
@@ -166,7 +166,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
         <CursorPos X="1" Y="1"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit17>
       <Unit18>
         <Filename Value="..\baseunits\includes\EsMangaHere\names_and_links.inc"/>
@@ -174,7 +174,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
         <CursorPos X="1" Y="1"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit18>
       <Unit19>
         <Filename Value="..\baseunits\includes\Batoto\directory_page_number.inc"/>
@@ -182,7 +182,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="20"/>
         <CursorPos X="5" Y="19"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit19>
       <Unit20>
         <Filename Value="..\baseunits\includes\Batoto\names_and_links.inc"/>
@@ -190,217 +190,217 @@
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
         <CursorPos X="11" Y="3"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit20>
       <Unit21>
         <Filename Value="..\baseunits\includes\AnimeA\chapter_page_number.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit21>
       <Unit22>
         <Filename Value="..\baseunits\includes\AnimeA\directory_page_number.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit22>
       <Unit23>
         <Filename Value="..\baseunits\includes\AnimeA\image_url.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit23>
       <Unit24>
         <Filename Value="..\baseunits\includes\AnimeA\manga_information.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit24>
       <Unit25>
         <Filename Value="..\baseunits\includes\AnimeStory\chapter_page_number.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit25>
       <Unit26>
         <Filename Value="..\baseunits\includes\AnimeStory\image_url.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit26>
       <Unit27>
         <Filename Value="..\baseunits\includes\AnimeStory\manga_information.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit27>
       <Unit28>
         <Filename Value="..\baseunits\includes\AnimeStory\names_and_links.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit28>
       <Unit29>
         <Filename Value="..\baseunits\includes\AnimExtremist\chapter_page_number.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit29>
       <Unit30>
         <Filename Value="..\baseunits\includes\AnimExtremist\image_url.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit30>
       <Unit31>
         <Filename Value="..\baseunits\includes\AnimExtremist\manga_information.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit31>
       <Unit32>
         <Filename Value="..\baseunits\includes\AnimExtremist\names_and_links.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit32>
       <Unit33>
         <Filename Value="..\baseunits\includes\BlogTruyen\image_url.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit33>
       <Unit34>
         <Filename Value="..\baseunits\includes\BlogTruyen\manga_information.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit34>
       <Unit35>
         <Filename Value="..\baseunits\includes\CentralDeMangas\directory_page_number.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit35>
       <Unit36>
         <Filename Value="..\baseunits\includes\CentralDeMangas\image_url.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit36>
       <Unit37>
         <Filename Value="..\baseunits\includes\CentralDeMangas\manga_information.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit37>
       <Unit38>
         <Filename Value="..\baseunits\includes\CentralDeMangas\names_and_links.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit38>
       <Unit39>
         <Filename Value="..\baseunits\includes\EatManga\chapter_page_number.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit39>
       <Unit40>
         <Filename Value="..\baseunits\includes\EatManga\image_url.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit40>
       <Unit41>
         <Filename Value="..\baseunits\includes\EatManga\manga_information.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit41>
       <Unit42>
         <Filename Value="..\baseunits\includes\EatManga\names_and_links.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit42>
       <Unit43>
         <Filename Value="..\baseunits\includes\EGScans\chapter_page_number.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit43>
       <Unit44>
         <Filename Value="..\baseunits\includes\EGScans\image_url.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit44>
       <Unit45>
         <Filename Value="..\baseunits\includes\EGScans\manga_information.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit45>
       <Unit46>
         <Filename Value="..\baseunits\includes\EGScans\names_and_links.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit46>
       <Unit47>
         <Filename Value="..\baseunits\includes\EsMangaHere\chapter_page_number.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit47>
       <Unit48>
         <Filename Value="..\baseunits\includes\EsMangaHere\image_url.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit48>
       <Unit49>
         <Filename Value="..\baseunits\includes\EsMangaHere\manga_information.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit49>
       <Unit50>
         <Filename Value="..\baseunits\includes\Fakku\directory_page_number.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit50>
       <Unit51>
         <Filename Value="..\baseunits\includes\Fakku\image_url.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit51>
       <Unit52>
         <Filename Value="..\baseunits\includes\Fakku\manga_information.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit52>
       <Unit53>
         <Filename Value="..\baseunits\includes\Fakku\names_and_links.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit53>
       <Unit54>
         <Filename Value="..\baseunits\includes\Hentai2Read\chapter_page_number.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit54>
       <Unit55>
         <Filename Value="..\baseunits\includes\Hentai2Read\directory_page_number.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit55>
       <Unit56>
         <Filename Value="..\baseunits\includes\Hentai2Read\image_url.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit56>
       <Unit57>
         <Filename Value="..\baseunits\includes\Hentai2Read\manga_information.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit57>
       <Unit58>
         <Filename Value="..\baseunits\includes\Hentai2Read\names_and_links.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit58>
       <Unit59>
         <Filename Value="..\baseunits\includes\HugeManga\chapter_page_number.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit59>
       <Unit60>
         <Filename Value="..\baseunits\includes\HugeManga\image_url.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit60>
       <Unit61>
         <Filename Value="..\baseunits\includes\HugeManga\manga_information.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit61>
       <Unit62>
         <Filename Value="..\baseunits\includes\HugeManga\names_and_links.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit62>
       <Unit63>
         <Filename Value="..\baseunits\includes\KissManga\directory_page_number.inc"/>
@@ -408,17 +408,17 @@
         <WindowIndex Value="0"/>
         <TopLine Value="18"/>
         <CursorPos X="1" Y="1"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit63>
       <Unit64>
         <Filename Value="..\baseunits\includes\KissManga\image_url.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit64>
       <Unit65>
         <Filename Value="..\baseunits\includes\KissManga\manga_information.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit65>
       <Unit66>
         <Filename Value="..\baseunits\includes\KissManga\names_and_links.inc"/>
@@ -426,82 +426,82 @@
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
         <CursorPos X="1" Y="1"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit66>
       <Unit67>
         <Filename Value="..\baseunits\includes\Kivmanga\chapter_page_number.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit67>
       <Unit68>
         <Filename Value="..\baseunits\includes\Kivmanga\image_url.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit68>
       <Unit69>
         <Filename Value="..\baseunits\includes\Kivmanga\names_and_links.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit69>
       <Unit70>
         <Filename Value="..\baseunits\includes\Komikid\chapter_page_number.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit70>
       <Unit71>
         <Filename Value="..\baseunits\includes\Komikid\image_url.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit71>
       <Unit72>
         <Filename Value="..\baseunits\includes\Komikid\manga_information.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit72>
       <Unit73>
         <Filename Value="..\baseunits\includes\Komikid\names_and_links.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit73>
       <Unit74>
         <Filename Value="..\baseunits\includes\LectureEnLigne\manga_information.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit74>
       <Unit75>
         <Filename Value="..\baseunits\includes\LectureEnLigne\names_and_links.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit75>
       <Unit76>
         <Filename Value="..\baseunits\includes\Mabuns\image_url.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit76>
       <Unit77>
         <Filename Value="..\baseunits\includes\Mabuns\manga_information.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit77>
       <Unit78>
         <Filename Value="..\baseunits\includes\Mabuns\names_and_links.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit78>
       <Unit79>
         <Filename Value="..\baseunits\includes\Manga24h\directory_page_number.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit79>
       <Unit80>
         <Filename Value="..\baseunits\includes\Manga24h\image_url.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit80>
       <Unit81>
         <Filename Value="..\baseunits\includes\Manga24h\manga_information.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit81>
       <Unit82>
         <Filename Value="..\baseunits\includes\Manga24h\names_and_links.inc"/>
@@ -509,257 +509,257 @@
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
         <CursorPos X="16" Y="15"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit82>
       <Unit83>
         <Filename Value="..\baseunits\includes\MangaAe\chapter_page_number.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit83>
       <Unit84>
         <Filename Value="..\baseunits\includes\MangaAe\directory_page_number.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit84>
       <Unit85>
         <Filename Value="..\baseunits\includes\MangaAe\image_url.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit85>
       <Unit86>
         <Filename Value="..\baseunits\includes\MangaAe\manga_information.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit86>
       <Unit87>
         <Filename Value="..\baseunits\includes\MangaAe\names_and_links.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit87>
       <Unit88>
         <Filename Value="..\baseunits\includes\MangaAr\chapter_page_number.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit88>
       <Unit89>
         <Filename Value="..\baseunits\includes\MangaAr\image_url.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit89>
       <Unit90>
         <Filename Value="..\baseunits\includes\MangaAr\manga_information.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit90>
       <Unit91>
         <Filename Value="..\baseunits\includes\MangaAr\names_and_links.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit91>
       <Unit92>
         <Filename Value="..\baseunits\includes\Mangacan\image_url.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit92>
       <Unit93>
         <Filename Value="..\baseunits\includes\Mangacan\manga_information.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit93>
       <Unit94>
         <Filename Value="..\baseunits\includes\Mangacan\names_and_links.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit94>
       <Unit95>
         <Filename Value="..\baseunits\includes\Mangacow\chapter_page_number.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit95>
       <Unit96>
         <Filename Value="..\baseunits\includes\Mangacow\image_url.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit96>
       <Unit97>
         <Filename Value="..\baseunits\includes\Mangacow\manga_information.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit97>
       <Unit98>
         <Filename Value="..\baseunits\includes\Mangacow\names_and_links.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit98>
       <Unit99>
         <Filename Value="..\baseunits\includes\MangaEden\chapter_page_number.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit99>
       <Unit100>
         <Filename Value="..\baseunits\includes\MangaEden\directory_page_number.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit100>
       <Unit101>
         <Filename Value="..\baseunits\includes\MangaEden\image_url.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit101>
       <Unit102>
         <Filename Value="..\baseunits\includes\MangaEden\manga_information.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit102>
       <Unit103>
         <Filename Value="..\baseunits\includes\MangaEden\names_and_links.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit103>
       <Unit104>
         <Filename Value="..\baseunits\includes\MangaEsta\image_url.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit104>
       <Unit105>
         <Filename Value="..\baseunits\includes\MangaEsta\manga_information.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit105>
       <Unit106>
         <Filename Value="..\baseunits\includes\MangaEsta\names_and_links.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit106>
       <Unit107>
         <Filename Value="..\baseunits\includes\MangaFox\chapter_page_number.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit107>
       <Unit108>
         <Filename Value="..\baseunits\includes\MangaFox\directory_page_number.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit108>
       <Unit109>
         <Filename Value="..\baseunits\includes\MangaFox\image_url.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit109>
       <Unit110>
         <Filename Value="..\baseunits\includes\MangaFox\manga_information.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit110>
       <Unit111>
         <Filename Value="..\baseunits\includes\MangaFox\names_and_links.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit111>
       <Unit112>
         <Filename Value="..\baseunits\includes\MangaFrame\chapter_page_number.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit112>
       <Unit113>
         <Filename Value="..\baseunits\includes\MangaFrame\image_url.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit113>
       <Unit114>
         <Filename Value="..\baseunits\includes\MangaFrame\manga_information.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit114>
       <Unit115>
         <Filename Value="..\baseunits\includes\MangaFrame\names_and_links.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit115>
       <Unit116>
         <Filename Value="..\baseunits\includes\MangaGo\chapter_page_number.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit116>
       <Unit117>
         <Filename Value="..\baseunits\includes\MangaGo\directory_page_number.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit117>
       <Unit118>
         <Filename Value="..\baseunits\includes\MangaGo\image_url.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit118>
       <Unit119>
         <Filename Value="..\baseunits\includes\MangaGo\manga_information.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit119>
       <Unit120>
         <Filename Value="..\baseunits\includes\MangaGo\names_and_links.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit120>
       <Unit121>
         <Filename Value="..\baseunits\includes\MangaHere\chapter_page_number.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit121>
       <Unit122>
         <Filename Value="..\baseunits\includes\MangaHere\image_url.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit122>
       <Unit123>
         <Filename Value="..\baseunits\includes\MangaHere\manga_information.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit123>
       <Unit124>
         <Filename Value="..\baseunits\includes\MangaInn\chapter_page_number.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit124>
       <Unit125>
         <Filename Value="..\baseunits\includes\MangaInn\image_url.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit125>
       <Unit126>
         <Filename Value="..\baseunits\includes\MangaInn\manga_information.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit126>
       <Unit127>
         <Filename Value="..\baseunits\includes\MangaInn\names_and_links.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit127>
       <Unit128>
         <Filename Value="..\baseunits\includes\MangaPanda\chapter_page_number.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit128>
       <Unit129>
         <Filename Value="..\baseunits\includes\MangaPanda\image_url.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit129>
       <Unit130>
         <Filename Value="..\baseunits\includes\MangaPanda\manga_information.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit130>
       <Unit131>
         <Filename Value="..\baseunits\includes\MangaPanda\names_and_links.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit131>
       <Unit132>
         <Filename Value="..\baseunits\includes\MangaPark\chapter_page_number.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit132>
       <Unit133>
         <Filename Value="..\baseunits\includes\MangaPark\directory_page_number.inc"/>
@@ -767,172 +767,172 @@
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
         <CursorPos X="31" Y="13"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit133>
       <Unit134>
         <Filename Value="..\baseunits\includes\MangaPark\image_url.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit134>
       <Unit135>
         <Filename Value="..\baseunits\includes\MangaPark\manga_information.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit135>
       <Unit136>
         <Filename Value="..\baseunits\includes\MangaPark\names_and_links.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit136>
       <Unit137>
         <Filename Value="..\baseunits\includes\MangaReader\chapter_page_number.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit137>
       <Unit138>
         <Filename Value="..\baseunits\includes\MangaReader\image_url.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit138>
       <Unit139>
         <Filename Value="..\baseunits\includes\MangaReader\manga_information.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit139>
       <Unit140>
         <Filename Value="..\baseunits\includes\MangaReader\names_and_links.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit140>
       <Unit141>
         <Filename Value="..\baseunits\includes\MangaStream\chapter_page_number.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit141>
       <Unit142>
         <Filename Value="..\baseunits\includes\MangaStream\image_url.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit142>
       <Unit143>
         <Filename Value="..\baseunits\includes\MangaStream\manga_information.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit143>
       <Unit144>
         <Filename Value="..\baseunits\includes\MangaStream\names_and_links.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit144>
       <Unit145>
         <Filename Value="..\baseunits\includes\MangaTraders\chapter_page_number.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit145>
       <Unit146>
         <Filename Value="..\baseunits\includes\MangaTraders\directory_page_number.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit146>
       <Unit147>
         <Filename Value="..\baseunits\includes\MangaTraders\image_url.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit147>
       <Unit148>
         <Filename Value="..\baseunits\includes\MangaTraders\manga_information.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit148>
       <Unit149>
         <Filename Value="..\baseunits\includes\MangaTraders\names_and_links.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit149>
       <Unit150>
         <Filename Value="..\baseunits\includes\MangaVadisi\chapter_page_number.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit150>
       <Unit151>
         <Filename Value="..\baseunits\includes\MangaVadisi\image_url.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit151>
       <Unit152>
         <Filename Value="..\baseunits\includes\MangaVadisi\manga_information.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit152>
       <Unit153>
         <Filename Value="..\baseunits\includes\MangaVadisi\names_and_links.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit153>
       <Unit154>
         <Filename Value="..\baseunits\includes\PecintaKomik\chapter_page_number.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit154>
       <Unit155>
         <Filename Value="..\baseunits\includes\PecintaKomik\image_url.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit155>
       <Unit156>
         <Filename Value="..\baseunits\includes\PecintaKomik\manga_information.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit156>
       <Unit157>
         <Filename Value="..\baseunits\includes\PecintaKomik\names_and_links.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit157>
       <Unit158>
         <Filename Value="..\baseunits\includes\Pururin\chapter_page_number.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit158>
       <Unit159>
         <Filename Value="..\baseunits\includes\Pururin\directory_page_number.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit159>
       <Unit160>
         <Filename Value="..\baseunits\includes\Pururin\image_url.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit160>
       <Unit161>
         <Filename Value="..\baseunits\includes\Pururin\manga_information.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit161>
       <Unit162>
         <Filename Value="..\baseunits\includes\Pururin\names_and_links.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit162>
       <Unit163>
         <Filename Value="..\baseunits\includes\RedHawkScans\chapter_page_number.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit163>
       <Unit164>
         <Filename Value="..\baseunits\includes\RedHawkScans\directory_page_number.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit164>
       <Unit165>
         <Filename Value="..\baseunits\includes\RedHawkScans\image_url.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit165>
       <Unit166>
         <Filename Value="..\baseunits\includes\RedHawkScans\manga_information.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit166>
       <Unit167>
         <Filename Value="..\baseunits\includes\RedHawkScans\names_and_links.inc"/>
@@ -940,7 +940,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
         <CursorPos X="1" Y="1"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit167>
       <Unit168>
         <Filename Value="..\baseunits\includes\S2scans\chapter_page_number.inc"/>
@@ -948,166 +948,166 @@
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
         <CursorPos X="12" Y="1"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit168>
       <Unit169>
         <Filename Value="..\baseunits\includes\S2scans\directory_page_number.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit169>
       <Unit170>
         <Filename Value="..\baseunits\includes\S2scans\image_url.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit170>
       <Unit171>
         <Filename Value="..\baseunits\includes\S2scans\manga_information.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit171>
       <Unit172>
         <Filename Value="..\baseunits\includes\S2scans\names_and_links.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit172>
       <Unit173>
         <Filename Value="..\baseunits\includes\ScanManga\image_url.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit173>
       <Unit174>
         <Filename Value="..\baseunits\includes\ScanManga\manga_information.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit174>
       <Unit175>
         <Filename Value="..\baseunits\includes\ScanManga\names_and_links.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit175>
       <Unit176>
         <Filename Value="..\baseunits\includes\SenManga\chapter_page_number.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit176>
       <Unit177>
         <Filename Value="..\baseunits\includes\SenManga\image_url.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit177>
       <Unit178>
         <Filename Value="..\baseunits\includes\SenManga\manga_information.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit178>
       <Unit179>
         <Filename Value="..\baseunits\includes\SenManga\names_and_links.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit179>
       <Unit180>
         <Filename Value="..\baseunits\includes\Starkana\chapter_page_number.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit180>
       <Unit181>
         <Filename Value="..\baseunits\includes\Starkana\image_url.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit181>
       <Unit182>
         <Filename Value="..\baseunits\includes\Starkana\manga_information.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit182>
       <Unit183>
         <Filename Value="..\baseunits\includes\Starkana\names_and_links.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit183>
       <Unit184>
         <Filename Value="..\baseunits\includes\SubManga\chapter_page_number.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit184>
       <Unit185>
         <Filename Value="..\baseunits\includes\SubManga\image_url.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit185>
       <Unit186>
         <Filename Value="..\baseunits\includes\SubManga\manga_information.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit186>
       <Unit187>
         <Filename Value="..\baseunits\includes\SubManga\names_and_links.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit187>
       <Unit188>
         <Filename Value="..\baseunits\includes\TruyenTranhTuan\image_url.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit188>
       <Unit189>
         <Filename Value="..\baseunits\includes\TruyenTranhTuan\manga_information.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit189>
       <Unit190>
         <Filename Value="..\baseunits\includes\TruyenTranhTuan\names_and_links.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit190>
       <Unit191>
         <Filename Value="..\baseunits\includes\Turkcraft\chapter_page_number.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit191>
       <Unit192>
         <Filename Value="..\baseunits\includes\Turkcraft\image_url.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit192>
       <Unit193>
         <Filename Value="..\baseunits\includes\Turkcraft\manga_information.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit193>
       <Unit194>
         <Filename Value="..\baseunits\includes\Turkcraft\names_and_links.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit194>
       <Unit195>
         <Filename Value="..\baseunits\includes\VnSharing\directory_page_number.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit195>
       <Unit196>
         <Filename Value="..\baseunits\includes\VnSharing\image_url.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit196>
       <Unit197>
         <Filename Value="..\baseunits\includes\VnSharing\manga_information.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit197>
       <Unit198>
         <Filename Value="..\baseunits\includes\VnSharing\names_and_links.inc"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="168"/>
       </Unit198>
       <Unit199>
         <Filename Value="..\baseunits\uPacker.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="uPacker"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="22"/>
-        <CursorPos X="3" Y="17"/>
-        <UsageCount Value="161"/>
+        <TopLine Value="1"/>
+        <CursorPos X="16" Y="2"/>
+        <UsageCount Value="164"/>
       </Unit199>
       <Unit200>
         <Filename Value="..\baseunits\uOption.pas"/>
@@ -1115,8 +1115,8 @@
         <UnitName Value="uOption"/>
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
-        <CursorPos X="5" Y="13"/>
-        <UsageCount Value="157"/>
+        <CursorPos X="1" Y="1"/>
+        <UsageCount Value="160"/>
       </Unit200>
       <Unit201>
         <Filename Value="forms\frmMain.pas"/>
@@ -1125,13 +1125,10 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="frmMain"/>
-        <EditorIndex Value="1"/>
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
-        <CursorPos X="13" Y="625"/>
+        <CursorPos X="1" Y="1"/>
         <UsageCount Value="200"/>
-        <Loaded Value="True"/>
-        <LoadedDesigner Value="True"/>
       </Unit201>
       <Unit202>
         <Filename Value="forms\frmNewChapter.pas"/>
@@ -1143,7 +1140,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
         <CursorPos X="28" Y="2"/>
-        <UsageCount Value="154"/>
+        <UsageCount Value="157"/>
       </Unit202>
       <Unit203>
         <Filename Value="forms\frmLog.pas"/>
@@ -1153,7 +1150,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
         <CursorPos X="1" Y="1"/>
-        <UsageCount Value="154"/>
+        <UsageCount Value="157"/>
       </Unit203>
       <Unit204>
         <Filename Value="..\baseunits\includes\MeinManga\manga_information.inc"/>
@@ -1161,7 +1158,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="126"/>
         <CursorPos X="18" Y="134"/>
-        <UsageCount Value="86"/>
+        <UsageCount Value="89"/>
       </Unit204>
       <Unit205>
         <Filename Value="..\baseunits\includes\MeinManga\names_and_links.inc"/>
@@ -1169,7 +1166,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
         <CursorPos X="85" Y="7"/>
-        <UsageCount Value="86"/>
+        <UsageCount Value="89"/>
       </Unit205>
       <Unit206>
         <Filename Value="..\baseunits\includes\MeinManga\chapter_page_number.inc"/>
@@ -1177,7 +1174,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
         <CursorPos X="38" Y="23"/>
-        <UsageCount Value="40"/>
+        <UsageCount Value="43"/>
       </Unit206>
       <Unit207>
         <Filename Value="..\baseunits\includes\MeinManga\image_url.inc"/>
@@ -1185,9 +1182,18 @@
         <WindowIndex Value="0"/>
         <TopLine Value="34"/>
         <CursorPos X="5" Y="52"/>
-        <UsageCount Value="40"/>
+        <UsageCount Value="43"/>
       </Unit207>
       <Unit208>
+        <Filename Value="..\baseunits\uGetMangaInfosThread.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="uGetMangaInfosThread"/>
+        <WindowIndex Value="0"/>
+        <TopLine Value="1"/>
+        <CursorPos X="35" Y="2"/>
+        <UsageCount Value="27"/>
+      </Unit208>
+      <Unit209>
         <Filename Value="mainunit.pas"/>
         <ComponentName Value="MainForm"/>
         <HasResources Value="True"/>
@@ -1197,32 +1203,32 @@
         <TopLine Value="3344"/>
         <CursorPos X="27" Y="3346"/>
         <UsageCount Value="186"/>
-      </Unit208>
-      <Unit209>
+      </Unit209>
+      <Unit210>
         <Filename Value="data.pas"/>
         <UnitName Value="data"/>
         <WindowIndex Value="0"/>
         <TopLine Value="51"/>
         <CursorPos X="30" Y="62"/>
         <UsageCount Value="201"/>
-      </Unit209>
-      <Unit210>
+      </Unit210>
+      <Unit211>
         <Filename Value="..\baseunits\genericlib.pas"/>
         <UnitName Value="genericlib"/>
         <WindowIndex Value="0"/>
         <TopLine Value="70"/>
         <CursorPos X="49" Y="79"/>
         <UsageCount Value="198"/>
-      </Unit210>
-      <Unit211>
+      </Unit211>
+      <Unit212>
         <Filename Value="..\baseunits\zip.pas"/>
         <UnitName Value="zip"/>
         <WindowIndex Value="0"/>
         <TopLine Value="56"/>
         <CursorPos X="15" Y="57"/>
         <UsageCount Value="186"/>
-      </Unit211>
-      <Unit212>
+      </Unit212>
+      <Unit213>
         <Filename Value="unit1.pas"/>
         <ComponentName Value="Form1"/>
         <HasResources Value="True"/>
@@ -1232,8 +1238,8 @@
         <TopLine Value="1"/>
         <CursorPos X="15" Y="11"/>
         <UsageCount Value="192"/>
-      </Unit212>
-      <Unit213>
+      </Unit213>
+      <Unit214>
         <Filename Value="logform.pas"/>
         <ComponentName Value="Log"/>
         <HasResources Value="True"/>
@@ -1243,24 +1249,24 @@
         <TopLine Value="56"/>
         <CursorPos X="15" Y="65"/>
         <UsageCount Value="186"/>
-      </Unit213>
-      <Unit214>
+      </Unit214>
+      <Unit215>
         <Filename Value="..\baseunits\buffer.pas"/>
         <UnitName Value="buffer"/>
         <WindowIndex Value="0"/>
         <TopLine Value="61"/>
         <CursorPos X="12" Y="64"/>
         <UsageCount Value="186"/>
-      </Unit214>
-      <Unit215>
+      </Unit215>
+      <Unit216>
         <Filename Value="..\baseunits\curlcore.pas"/>
         <UnitName Value="curlcore"/>
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
         <CursorPos X="36" Y="11"/>
         <UsageCount Value="186"/>
-      </Unit215>
-      <Unit216>
+      </Unit216>
+      <Unit217>
         <Filename Value="NewChapterForm.pas"/>
         <ComponentName Value="NewChapter"/>
         <HasResources Value="True"/>
@@ -1270,8 +1276,8 @@
         <TopLine Value="49"/>
         <CursorPos X="26" Y="57"/>
         <UsageCount Value="188"/>
-      </Unit216>
-      <Unit217>
+      </Unit217>
+      <Unit218>
         <Filename Value="..\baseunits\uBaseUnit.pas"/>
         <UnitName Value="uBaseUnit"/>
         <WindowIndex Value="0"/>
@@ -1284,108 +1290,99 @@
           <CursorPos X="36" Y="255"/>
         </ExtraEditor1>
         <UsageCount Value="106"/>
-      </Unit217>
-      <Unit218>
+      </Unit218>
+      <Unit219>
         <Filename Value="..\baseunits\uData.pas"/>
         <UnitName Value="uData"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="944"/>
-        <CursorPos X="20" Y="964"/>
+        <TopLine Value="31"/>
+        <CursorPos X="1" Y="1"/>
         <ExtraEditorCount Value="1"/>
         <ExtraEditor1>
           <WindowIndex Value="0"/>
-          <TopLine Value="31"/>
-          <CursorPos X="1" Y="1"/>
+          <TopLine Value="1"/>
+          <CursorPos X="17" Y="2"/>
         </ExtraEditor1>
         <UsageCount Value="100"/>
-      </Unit218>
-      <Unit219>
+      </Unit219>
+      <Unit220>
         <Filename Value="E:\sdks\lazcomp\SHDocVw\SHDocVw.pas"/>
         <UnitName Value="SHDocVw"/>
         <WindowIndex Value="0"/>
         <TopLine Value="2143"/>
         <CursorPos X="26" Y="2150"/>
         <UsageCount Value="29"/>
-      </Unit219>
-      <Unit220>
+      </Unit220>
+      <Unit221>
         <Filename Value="..\baseunits\iecore.pas"/>
         <UnitName Value="iecore"/>
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
         <CursorPos X="51" Y="2"/>
         <UsageCount Value="86"/>
-      </Unit220>
-      <Unit221>
+      </Unit221>
+      <Unit222>
         <Filename Value="E:\sdks\lazarus\components\lazutils\lazutf8classes.pas"/>
         <UnitName Value="LazUTF8Classes"/>
         <WindowIndex Value="0"/>
         <TopLine Value="95"/>
         <CursorPos X="1" Y="104"/>
         <UsageCount Value="15"/>
-      </Unit221>
-      <Unit222>
+      </Unit222>
+      <Unit223>
         <Filename Value="..\baseunits\uImg2Pdf.pas"/>
         <UnitName Value="uImg2Pdf"/>
         <WindowIndex Value="0"/>
         <TopLine Value="357"/>
         <CursorPos X="40" Y="372"/>
         <UsageCount Value="93"/>
-      </Unit222>
-      <Unit223>
+      </Unit223>
+      <Unit224>
         <Filename Value="..\3rd\Imaging\Source\Imaging.pas"/>
         <UnitName Value="Imaging"/>
         <WindowIndex Value="0"/>
         <TopLine Value="50"/>
         <CursorPos X="10" Y="60"/>
         <UsageCount Value="84"/>
-      </Unit223>
-      <Unit224>
+      </Unit224>
+      <Unit225>
         <Filename Value="E:\sdks\lazcomp\synapse\source\httpsend.pas"/>
         <UnitName Value="httpsend"/>
         <WindowIndex Value="0"/>
         <TopLine Value="799"/>
         <CursorPos X="25" Y="807"/>
         <UsageCount Value="33"/>
-      </Unit224>
-      <Unit225>
+      </Unit225>
+      <Unit226>
         <Filename Value="..\3rd\synapse\source\httpsend.pas"/>
         <UnitName Value="httpsend"/>
         <WindowIndex Value="0"/>
         <TopLine Value="309"/>
         <CursorPos X="3" Y="312"/>
         <UsageCount Value="16"/>
-      </Unit225>
-      <Unit226>
+      </Unit226>
+      <Unit227>
         <Filename Value="..\3rd\Imaging\Source\ImagingCanvases.pas"/>
         <UnitName Value="ImagingCanvases"/>
         <WindowIndex Value="0"/>
         <TopLine Value="76"/>
         <CursorPos X="11" Y="86"/>
         <UsageCount Value="10"/>
-      </Unit226>
-      <Unit227>
+      </Unit227>
+      <Unit228>
         <Filename Value="..\3rd\Imaging\Source\ImagingTypes.pas"/>
         <UnitName Value="ImagingTypes"/>
         <WindowIndex Value="0"/>
         <TopLine Value="212"/>
         <CursorPos X="13" Y="221"/>
         <UsageCount Value="9"/>
-      </Unit227>
-      <Unit228>
+      </Unit228>
+      <Unit229>
         <Filename Value="E:\sdks\lazarus\fpc\2.6.2\src\rtl\inc\objpash.inc"/>
         <WindowIndex Value="0"/>
         <TopLine Value="182"/>
         <CursorPos X="22" Y="194"/>
         <UsageCount Value="10"/>
-      </Unit228>
-      <Unit229>
-        <Filename Value="..\baseunits\uGetMangaInfosThread.pas"/>
-        <IsPartOfProject Value="True"/>
-        <UnitName Value="uGetMangaInfosThread"/>
-        <WindowIndex Value="0"/>
-        <TopLine Value="136"/>
-        <CursorPos X="50" Y="148"/>
-        <UsageCount Value="24"/>
       </Unit229>
       <Unit230>
         <Filename Value="E:\sdks\lazarus\fpc\2.6.2\src\rtl\objpas\classes\classesh.inc"/>
@@ -1394,22 +1391,29 @@
         <CursorPos X="39" Y="1602"/>
         <UsageCount Value="10"/>
       </Unit230>
+      <Unit231>
+        <Filename Value="E:\sdks\lazarus\lcl\interfaces\win32\win32callback.inc"/>
+        <WindowIndex Value="0"/>
+        <TopLine Value="2477"/>
+        <CursorPos X="17" Y="2486"/>
+        <UsageCount Value="10"/>
+      </Unit231>
     </Units>
     <General>
       <ActiveWindowIndexAtStart Value="0"/>
     </General>
     <JumpHistory Count="3" HistoryIndex="2">
       <Position1>
-        <Filename Value="forms\frmMain.pas"/>
-        <Caret Line="577" Column="79" TopLine="572"/>
+        <Filename Value="md.lpr"/>
+        <Caret Line="9" Column="22" TopLine="2"/>
       </Position1>
       <Position2>
-        <Filename Value="forms\frmMain.pas"/>
-        <Caret Line="595" Column="84" TopLine="579"/>
+        <Filename Value="md.lpr"/>
+        <Caret Line="9" Column="22" TopLine="2"/>
       </Position2>
       <Position3>
-        <Filename Value="forms\frmMain.pas"/>
-        <Caret Line="625" Column="13" TopLine="1"/>
+        <Filename Value="md.lpr"/>
+        <Caret Line="11" Column="9" TopLine="1"/>
       </Position3>
     </JumpHistory>
   </ProjectSession>
