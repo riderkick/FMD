@@ -12,11 +12,11 @@ interface
 
 uses
   Classes, SysUtils, Dialogs, Controls, IniFiles, fgl, Graphics, Process, lclintf,
-  uBaseUnit, uData, uDownloadsManager, uFMDThread;
+  uBaseUnit, uData, uDownloadsManager, uFMDThread, uGetMangaInfosThread;
 
 type
   { Tasks will be done by this thread:
-    - Get manga information, and show it to main form
+    - Calls TGetMangaInfosThread for getting manga information.
     - Auto check for new version
     - [SilentThread] Pop metadata from queue and execute it
   }
@@ -24,13 +24,11 @@ type
   protected
     FIsLoaded: Integer;
     FURL     : String;
+    FGetMangaInfosThread: TGetMangaInfosThread;
 
     procedure   Execute; override;
-    procedure   DoGetInfos;
 
-    procedure   MainThreadCannotGetInfo;
     procedure   MainThreadShowLog;
-    procedure   MainThreadGetInfos;
     procedure   MainThreadUpdate;
     procedure   MainThreadUpdateRequire;
     procedure   MainThreadImportant;
@@ -41,34 +39,31 @@ type
     updateCounter: Cardinal;
     isCheckForLatestVer: Boolean;
     mangaListPos: Integer;
-    cover       : TPicture;
     isHasCover,
     isCanStop   : Boolean;
 
     fNote, fNoteForThisRevision,
-    fImportant,
-    title,
-    website, link: String;
-    isGetInfos   : Boolean;
-    Info         : TMangaInformation;
-    boolResult   : Boolean;
-    OnShowInformation: procedure of object;
+    fImportant   : String;
 
     constructor Create;
     destructor  Destroy; override;
+
+    procedure   GetMangaInfos(const title, website, link: String);
   end;
 
 implementation
 
 uses
-  frmMain, frmLog, FileUtil, uSilentThread;
+  FileUtil,
+  frmMain, frmLog,
+  uSilentThread;
 
 var
   LRequireRevision: Cardinal = 1;
   LRevision: Cardinal;
   LVersion : String;
 
-// ----- TSubThread -----
+// ----- Public methods -----
 
 constructor TSubThread.Create;
 begin
@@ -76,11 +71,8 @@ begin
   updateCounter  := 1;
   isCheckForLatestVer:= FALSE;
   isCanStop      := FALSE;
-  isSuspended    := TRUE;
-  isTerminated   := FALSE;
   FreeOnTerminate:= TRUE;
-  isGetInfos     := FALSE;
-  Cover          := TPicture.Create;
+  FGetMangaInfosThread:= nil;
 
  // ;
   inherited Create(FALSE);
@@ -88,115 +80,30 @@ end;
 
 destructor  TSubThread.Destroy;
 begin
-  Cover.Free;
-  isTerminated:= TRUE;
   inherited Destroy;
 end;
 
-procedure   TSubThread.DoGetInfos;
-{var
-  root: String;}
-
-  function  GetMangaInfo(const URL, website: String): Boolean;
-  var
-    selectedWebsite: String;
-    filterPos      : Cardinal;
-    times          : Cardinal;
-  begin
-    Result:= FALSE;
-
-    if mangaListPos > -1 then
-    begin
-      filterPos:= MainForm.dataProcess.GetPos(mangaListPos);
-      Info.mangaInfo.title:= MainForm.dataProcess.Title.Strings[filterPos];
-    end;
-
-    Info.isGenerateFolderChapterName:= MainForm.cbOptionGenerateChapterName.Checked;
-    Info.isRemoveUnicode:= MainForm.cbOptionPathConvert.Checked;
-
-    if website = BATOTO_NAME then
-      times:= 0
-    else
-    if website = GEHENTAI_NAME then
-      times:= 4
-    else
-      times:= 3;
-
-    if Info.GetInfoFromURL(website, URL, times)<>NO_ERROR then
-    begin
-      Info.Free;
-      exit;
-    end;
-
-    // fixed
-    if mangaListPos > -1 then
-    begin
-      if website = MainForm.cbSelectManga.Items[MainForm.cbSelectManga.ItemIndex] then
-      begin
-        if sitesWithoutInformation(website) then
-        begin
-          Info.mangaInfo.authors:= MainForm.DataProcess.Param[filterPos, DATA_PARAM_AUTHORS];
-          Info.mangaInfo.artists:= MainForm.DataProcess.Param[filterPos, DATA_PARAM_ARTISTS];
-          Info.mangaInfo.genres := MainForm.DataProcess.Param[filterPos, DATA_PARAM_GENRES];
-          Info.mangaInfo.summary:= MainForm.DataProcess.Param[filterPos, DATA_PARAM_SUMMARY];
-        end;
-        Info.SyncInfoToData(MainForm.DataProcess, filterPos);
-      end;
-    end;
-    Result:= TRUE;
-  end;
-
+procedure   TSubThread.GetMangaInfos(const title, website, link: String);
 begin
-  if MainForm.cbSelectManga.ItemIndex < 0 then exit;
- // if NOT MainForm.vtMangaList.Focused then exit;
+  if (FGetMangaInfosThread <> nil) AND
+     (FGetMangaInfosThread.IsTerminated = FALSE) then
+     FGetMangaInfosThread.IsFlushed:= TRUE;
+  FGetMangaInfosThread:= TGetMangaInfosThread.Create;
+  FGetMangaInfosThread.Title:= title;
+  FGetMangaInfosThread.Website:= website;
+  FGetMangaInfosThread.Link:= link;
 
-  // ---------------------------------------------------
-
-  if NOT GetMangaInfo(link, website) then
-  begin
-    Synchronize(MainThreadCannotGetInfo);
-    exit;
-  end;
-
-  cover.Clear;
-  if (OptionEnableLoadCover) AND (Pos('http://', Info.mangaInfo.coverLink) > 0) then
-    boolResult:= GetPage(TObject(cover), Info.mangaInfo.coverLink, 1, TRUE)
-  else
-    boolResult:= FALSE;
-  Synchronize(MainThreadGetInfos);
-  isGetInfos:= FALSE;
+  // Execute FGetMangaInfosThread.
+  FGetMangaInfosThread.IsSuspended:= FALSE;
 end;
 
-procedure   TSubThread.MainThreadCannotGetInfo;
-begin
-  MessageDlg('', stDlgCannotGetMangaInfo,
-               mtInformation, [mbYes], 0);
-  MainForm.rmInformation.Clear;
-  MainForm.itAnimate.Enabled:= FALSE;
-  MainForm.pbWait.Visible:= FALSE;
-  isGetInfos:= FALSE;
-end;
+// ----- Protected methods -----
 
 procedure   TSubThread.MainThreadShowLog;
 begin
   Log:= TLog.Create(MainForm);
   Log.ShowModal;
   Log.Free;
-end;
-
-procedure   TSubThread.MainThreadGetInfos;
-begin
-  TransferMangaInfo(MainForm.mangaInfo, Info.mangaInfo);
-  MainForm.ShowInformation;
-  if boolResult then
-  begin
-    try
-      MainForm.imCover.Picture.Assign(cover);
-    except
-      cover.Clear;
-    end;
-  end;
-  Info.Free;
 end;
 
 procedure   TSubThread.MainThreadUpdate;
@@ -347,11 +254,7 @@ begin
     end;
 
     isCanStop:= FALSE;
-    if isGetInfos then
-    begin
-      Info:= TMangaInformation.Create;
-      DoGetInfos;
-    end;
+
     isCanStop:= TRUE;
     Sleep(64);
   end;

@@ -52,7 +52,7 @@
         <PackageName Value="LCL"/>
       </Item3>
     </RequiredPackages>
-    <Units Count="208">
+    <Units Count="209">
       <Unit0>
         <Filename Value="md.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -913,6 +913,11 @@
         <Filename Value="..\baseunits\includes\MeinManga\image_url.inc"/>
         <IsPartOfProject Value="True"/>
       </Unit207>
+      <Unit208>
+        <Filename Value="..\baseunits\uGetMangaInfosThread.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="uGetMangaInfosThread"/>
+      </Unit208>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
