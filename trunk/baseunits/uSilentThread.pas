@@ -1,5 +1,5 @@
 {
-        File: SilentThread.pas
+        File: uSilentThread.pas
         License: GPLv2
         This unit is a part of Free Manga Downloader
         ---------------------------------------------
