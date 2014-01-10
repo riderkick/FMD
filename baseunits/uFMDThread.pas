@@ -13,7 +13,7 @@ type
     FIsTerminated,
     FIsSuspended: Boolean;
   public
-    constructor Create;
+    constructor Create(CreateSuspended: Boolean);
     destructor  Destroy; override;
 
     property    IsTerminated: Boolean read FIsTerminated write FIsTerminated;
@@ -22,11 +22,11 @@ type
 
 implementation
 
-constructor TFMDThread.Create;
+constructor TFMDThread.Create(CreateSuspended: Boolean);
 begin
-  inherited Create;
   FIsSuspended := TRUE;
   FIsTerminated:= FALSE;
+  inherited Create(FALSE);
 end;
 
 destructor  TFMDThread.Destroy;
