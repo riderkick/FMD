@@ -247,8 +247,6 @@ end;
 
 constructor TSilentThread.Create;
 begin
-  isSuspended    := TRUE;
-  isTerminated   := FALSE;
   FreeOnTerminate:= TRUE;
   Info:= TMangaInformation.Create;
   SavePath:= '';
@@ -259,7 +257,6 @@ end;
 destructor  TSilentThread.Destroy;
 begin
   Info.Free;
-  isTerminated:= TRUE;
   inherited Destroy;
 end;
 

@@ -149,6 +149,7 @@ type
     procedure   Backup;
     procedure   SaveJobList;
 
+    // These methods relate to highlight downloaded chapters.
     procedure   AddToDownloadedChaptersList(const ALink: String); overload;
     procedure   AddToDownloadedChaptersList(const ALink, AValue: String); overload;
     procedure   ReturnDownloadedChapters(const ALink: String);
@@ -210,8 +211,6 @@ end;
 
 constructor TDownloadThread.Create;
 begin
-  isTerminated:= FALSE;
-  isSuspended := TRUE;
   FreeOnTerminate:= TRUE;
   inherited Create(FALSE);
 end;
@@ -224,7 +223,6 @@ begin
     Dec(manager.container.activeThreadCount);
   except
   end;
-  isTerminated:= TRUE;
   inherited Destroy;
 end;
 
@@ -919,8 +917,6 @@ end;
 constructor TTaskThread.Create;
 begin
   anotherURL  := '';
-  isTerminated:= FALSE;
-  isSuspended := TRUE;
   FreeOnTerminate:= TRUE;
   threads     := TDownloadThreadList.Create;
   inherited Create(FALSE);
@@ -930,7 +926,6 @@ destructor  TTaskThread.Destroy;
 begin
   Stop;
   threads.Free;
-  isTerminated:= TRUE;
   inherited Destroy;
 end;
 
