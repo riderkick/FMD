@@ -88,10 +88,14 @@ procedure   TGetMangaInfosThread.DoGetInfos;
       begin
         if sitesWithoutInformation(website) then
         begin
-          FInfo.mangaInfo.authors:= MainForm.DataProcess.Param[filterPos, DATA_PARAM_AUTHORS];
-          FInfo.mangaInfo.artists:= MainForm.DataProcess.Param[filterPos, DATA_PARAM_ARTISTS];
-          FInfo.mangaInfo.genres := MainForm.DataProcess.Param[filterPos, DATA_PARAM_GENRES];
-          FInfo.mangaInfo.summary:= MainForm.DataProcess.Param[filterPos, DATA_PARAM_SUMMARY];
+          if FInfo.mangaInfo.authors = '' then
+            FInfo.mangaInfo.authors:= MainForm.DataProcess.Param[filterPos, DATA_PARAM_AUTHORS];
+          if FInfo.mangaInfo.artists = '' then
+            FInfo.mangaInfo.artists:= MainForm.DataProcess.Param[filterPos, DATA_PARAM_ARTISTS];
+          if FInfo.mangaInfo.genres = '' then
+            FInfo.mangaInfo.genres := MainForm.DataProcess.Param[filterPos, DATA_PARAM_GENRES];
+          if FInfo.mangaInfo.summary = '' then
+            FInfo.mangaInfo.summary:= MainForm.DataProcess.Param[filterPos, DATA_PARAM_SUMMARY];
         end;
         FInfo.SyncInfoToData(MainForm.DataProcess, filterPos);
       end;

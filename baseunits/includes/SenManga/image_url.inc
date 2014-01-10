@@ -14,7 +14,7 @@
     Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
     Parser.OnFoundTag := OnTag;
     Parser.OnFoundText:= OnText;
-    Parser.Exec;
+    Parser.SlowExec;
     Parser.Free;
 
     if parse.Count>0 then
