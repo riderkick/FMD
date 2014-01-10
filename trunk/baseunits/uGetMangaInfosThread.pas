@@ -29,8 +29,8 @@ type
     FLink : String;
     FInfo : TMangaInformation;
 
-    // Return TRUE if we can get manga information.
-    FGetInfosResult,
+    // Return TRUE if we can load manga cover.
+    FIsHasMangaCover,
     // Flush this thread, means that the result will not be shown.
     FIsFlushed: Boolean;
 
@@ -78,7 +78,6 @@ procedure   TGetMangaInfosThread.DoGetInfos;
 
     if FInfo.GetInfoFromURL(website, URL, 2)<>NO_ERROR then
     begin
-      FInfo.Free;
       exit;
     end;
 
@@ -106,21 +105,21 @@ begin
   if NOT GetMangaInfo(link, website) then
   begin
     Synchronize(MainThreadCannotGetInfo);
-    exit;
-  end;
-
-  FCover.Clear;
-  if (OptionEnableLoadCover) AND (Pos('http://', FInfo.mangaInfo.coverLink) > 0) then
-    FGetInfosResult:= GetPage(TObject(FCover), FInfo.mangaInfo.coverLink, 1, TRUE)
+  end
   else
-    FGetInfosResult:= FALSE;
-  Synchronize(MainThreadGetInfos);
+  begin
+    FCover.Clear;
+    if (OptionEnableLoadCover) AND (Pos('http://', FInfo.mangaInfo.coverLink) > 0) then
+      FIsHasMangaCover:= GetPage(TObject(FCover), FInfo.mangaInfo.coverLink, 1, TRUE)
+    else
+      FIsHasMangaCover:= FALSE;
+    Synchronize(MainThreadGetInfos);
+  end;
 end;
 
 procedure   TGetMangaInfosThread.Execute;
 begin
   while isSuspended do Sleep(32);
-
   DoGetInfos;
 end;
 
@@ -132,6 +131,7 @@ begin
   MainForm.rmInformation.Clear;
   MainForm.itAnimate.Enabled:= FALSE;
   MainForm.pbWait.Visible:= FALSE;
+  MainForm.imCover.Picture.Assign(nil);
 end;
 
 procedure   TGetMangaInfosThread.MainThreadGetInfos;
@@ -139,7 +139,7 @@ begin
   if IsFlushed then exit;
   TransferMangaInfo(MainForm.mangaInfo, FInfo.mangaInfo);
   MainForm.ShowInformation(FTitle, FWebsite, FLink);
-  if FGetInfosResult then
+  if FIsHasMangaCover then
   begin
     try
       MainForm.imCover.Picture.Assign(FCover);
