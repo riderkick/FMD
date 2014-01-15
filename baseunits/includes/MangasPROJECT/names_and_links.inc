@@ -37,5 +37,6 @@ begin
       MessageDlg('Exception occured: ', E.Message, mtConfirmation, [mbYes], 0);
   end;
   sstream.Free;
+  parser.Free;
   source.Free;
 end;
