@@ -114,6 +114,8 @@ var
 implementation
 
 uses
+  Dialogs,
+  fpJSON, JSONParser,
   synautil,
   FastHTMLParser, LConvEncoding,
   HTMLUtil,
