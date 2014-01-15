@@ -495,7 +495,9 @@ begin
      (manager.container.mangaSiteID = SCANMANGA_ID) OR
      (manager.container.mangaSiteID = FAKKU_ID) OR
      (manager.container.mangaSiteID = MANGACAN_ID) OR
-     (manager.container.mangaSiteID = CENTRALDEMANGAS_ID) then
+     (manager.container.mangaSiteID = CENTRALDEMANGAS_ID) OR
+	 (manager.container.mangaSiteID = MANGASPROJECT_ID) OR
+	 (manager.container.mangaSiteID = MANGAREADER_POR_ID) THEN
   begin
     // all of image urls are in a html page
     Result:= TRUE;
@@ -589,6 +591,10 @@ var
   {$I includes/MangaAr/image_url.inc}
 
   {$I includes/CentralDeMangas/image_url.inc}
+  
+  {$I includes/MangasPROJECT/image_url.inc}
+  
+  {$I includes/MangaREADER_POR/image_url.inc}
 
   // Mangacow link page
   {$I includes/Mangacow/image_url.inc}
@@ -795,6 +801,12 @@ begin
   else
   if manager.container.mangaSiteID = MANGACAN_ID then
     Result:= GetMangacanImageURL
+  else
+  if manager.container.mangaSiteID = MANGASPROJECT_ID then
+    Result:= GetMangasPROJECTImageURL
+  else
+  if manager.container.mangaSiteID = MANGAREADER_POR_ID then
+    Result:= GetMangaREADER_PORImageURL
   else
   if manager.container.mangaSiteID = GEHENTAI_ID then
     Result:= GetGEHentaiImageURL;
