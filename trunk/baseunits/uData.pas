@@ -1046,6 +1046,12 @@ var
 
   // get names and links of the manga from MeinManga
   {$I includes/MeinManga/names_and_links.inc}
+  
+  // get names and links of the manga from MangasPROJECT
+  {$I includes/MangasPROJECT/names_and_links.inc}
+  
+  // get names and links of the manga from MANGAREADER_POR
+  {$I includes/MangaREADER_POR/names_and_links.inc}
 
   // get names and links of the manga from g.e-hentai
   function   GEHentaiGetNamesAndLinks: Byte;
@@ -1247,6 +1253,12 @@ begin
   else
   if website = MANGACAN_NAME then
     Result:= MangacanGetNamesAndLinks
+  else
+  if website = MANGASPROJECT_NAME then
+    Result:= MangasPROJECTGetNamesAndLinks
+  else
+  if website = MANGAREADER_POR_NAME then
+    Result:= MangaREADER_PORGetNamesAndLinks
 end;
 
 function    TMangaInformation.GetInfoFromURL(const website, URL: String; const Reconnect: Cardinal): Byte;
@@ -1491,6 +1503,12 @@ end;
 // get manga infos from MANGACAN site
 {$I includes/Mangacan/manga_information.inc}
 
+// get manga infos from MangasPROJECT site
+{$I includes/MangasPROJECT/manga_information.inc}
+
+// get manga infos from MANGAREADER_POR site
+{$I includes/MangaREADER_POR/manga_information.inc}
+
 // get manga infos from g.e-hentai site
 function   GetGEHentaiInfoFromURL: Byte;
 var
@@ -1697,6 +1715,12 @@ begin
   else
   if website = MANGACAN_NAME then
     Result:= GetMangacanInfoFromURL
+  else
+  if website = MANGASPROJECT_NAME then
+    Result:= GetMangasPROJECTInfoFromURL
+  else
+   if website = MANGAREADER_POR_NAME then
+    Result:= GetMangaREADER_PORInfoFromURL
   else
   if website = GEHENTAI_NAME then
   begin
