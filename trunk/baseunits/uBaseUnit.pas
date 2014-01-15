@@ -151,6 +151,8 @@ const
   KIVMANGA_NAME     = 'Kivmanga';     KIVMANGA_ID    = 50;
   MANGACAN_NAME	    = 'Mangacan';     MANGACAN_ID    = 51;
   MEINMANGA_NAME    = 'MeinManga';    MEINMANGA_ID   = 52;
+  MANGASPROJECT_NAME    = 'MangasPROJECT';    MANGASPROJECT_ID   = 53;
+  MANGAREADER_POR_NAME    = 'MangaREADER_POR';    MANGAREADER_POR_ID   = 54;
 
   DEFAULT_LIST = ANIMEA_NAME+'!%~'+MANGAFOX_NAME+'!%~'+MANGAHERE_NAME+'!%~'+MANGAINN_NAME+'!%~'+MANGAREADER_NAME+'!%~';
   DEFAULT_CUSTOM_RENAME = '%NUMBERING% - %CHAPTER%';
@@ -217,7 +219,7 @@ var
   SEPERATOR: String = '!%~';
   SEPERATOR2: String = '~%!';
 
-  WebsiteRoots  : array[0..52] of array [0..1] of String =
+  WebsiteRoots  : array[0..54] of array [0..1] of String =
     (('AnimeA', 'http://manga.animea.net'),
      ('MangaHere', 'http://www.mangahere.com'),
      ('MangaInn', 'http://www.mangainn.com'),
@@ -270,7 +272,9 @@ var
      ('Mangacow', 'http://mngacow.com'),
      ('Kivmanga', 'http://www.kivmanga.com'),
      ('Mangacan', 'http://mangacanblog.com'),
-     ('MeinManga', 'http://www.meinmanga.com/')
+     ('MeinManga', 'http://www.meinmanga.com/'),
+	 ('MangasPROJECT', 'http://www.mangasproject.net'),
+	 ('MangaREADER_POR', 'http://www.mangareader.com.br')
     );
 
   ANIMEA_BROWSER: String = '/browse.html?page=';
@@ -395,6 +399,10 @@ var
   MANGACAN_BROWSER: String = '/daftar-komik-manga-bahasa-indonesia.html';
 
   MEINMANGA_BROWSER: String = '/directory/all/';
+  
+  MANGASPROJECT_BROWSER: String = '/AJAX/listaMangas/all';
+  
+  MANGAREADER_POR_BROWSER: String = '/AJAX/listaMangas/all';
 
   UPDATE_URL      : String = 'http://jaist.dl.sourceforge.net/project/fmd/FMD/updates/';
 
@@ -835,7 +843,8 @@ begin
             (website = HUGEMANGA_NAME) OR
             (website = KOMIKID_NAME) OR
 			(website = KIVMANGA_NAME) OR
-	    (website = MANGACAN_NAME));
+			(website = MANGACAN_NAME) OR
+		(website = MANGAREADER_POR_NAME));
 end;
 
 function  RemoveSymbols(const input: String): String;
