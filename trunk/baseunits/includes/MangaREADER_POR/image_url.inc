@@ -1,4 +1,4 @@
-  function GetMangasPROJECTImageURL: Boolean;
+  function GetMangaREADER_PORImageURL: Boolean;
   var
     s: String;
     j,
@@ -6,7 +6,7 @@
     l: TStringList;
   begin
     l:= TStringList.Create;
-    s:= DecodeUrl(WebsiteRoots[MANGASPROJECT_ID,1] + URL + '/#1');
+    s:= DecodeUrl(WebsiteRoots[MANGAREADER_POR_ID,1] + URL + '/#1');
     Result:= GetPage(TObject(l),
                      s,
                      manager.container.manager.retryConnect);
@@ -22,9 +22,9 @@
    manager.container.pageLinks.Clear;
     for i:= 0 to parse.Count-1 do
     begin
-      if Pos('path:', parse.Strings[i]) > 0 then
+      if Pos('function Proxima()', parse.Strings[i]) > 0 then
       begin
-        s:= GetString(parse.Strings[i], 'new Array({ path:', '});');
+        s:= GetString(parse.Strings[i], 'new Array("",', 'function Proxima');
         repeat
           j:= Pos('http://', s);
           manager.container.pageLinks.Add(EncodeURL(GetString(s, '"', '"')));
