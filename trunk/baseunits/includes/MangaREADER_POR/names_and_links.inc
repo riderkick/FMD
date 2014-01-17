@@ -27,7 +27,7 @@ begin
         for i:= 0 to data.Count-1 do
         begin
           names.Add(Data.Items[i].Items[2].AsString);
-          links.Add(Data.Items[i].Items[6].AsString);
+          links.Add(StringReplace(Data.Items[i].Items[6].AsString, WebRoots[MangaREADER_POR_ID, 1], '', []));
         end;
       end;
       data.Free;
