@@ -64,13 +64,10 @@ type
     // Move all the task to the right, starting from pos
     procedure   MoveRight(const pos: Cardinal);
   public
-    // store manga name that has new chapter after checking
-    newMangaStr    : String;
-
     Lock            : Cardinal;
     // Number of mangas in Favorites
     Count           : Cardinal;
-    // Number of mangas in Favorites - Before checking
+    // Number of mangas in Favorites before we perform checking
     CountBeforeChecking: Cardinal;
     //
     favorites      : TIniFile;
@@ -97,6 +94,8 @@ type
     procedure   Run;
     // Show notification form after checking completed
     procedure   ShowResult;
+    // Remove completed mangas
+    procedure   RemoveCompletedMangas;
     // Return true if a manga exist in Favorites
     function    IsMangaExist(const title, website: String): Boolean;
     // Add new manga to the list
@@ -291,25 +290,12 @@ end;
 
 procedure   TFavoriteManager.ShowResult;
 var
-  LNewChapter     : TNewChapter;
-  LNCResult       : TNewChapterResult;
-  // List of new chapter number for each title
-  numberOfNewChapters: array of Cardinal;
-  newChapterList  : array of TCardinalList;
-  newChapterNames,
-  newChapterURLs  : array of TStringList;
-  l               : TStringList;
-  isHasNewChapter : Boolean = FALSE;
-  s, s1           : String;
-  removeListStr   : String = '';
-  hh, mm, ss, ms,
-  day, month, year: Word;
-  currentChapter,
-  newChapter,
-  pos,
-  i, j, k: Cardinal;
-  newC   : Cardinal = 0;
-  isNow  : Boolean;
+  numberOfNewChapters: Cardinal = 0;
+  l: TStringList;
+  newChapterURLList,
+  newChapterNameList: array of TStringList;
+  // Store the element position - For chapter folder name.
+  newChapterElementPositionList: array of TCardinalList;
 
   // Check if a string is exists a list
   function  Check(const list: TStringList; const s: String): Boolean;
@@ -322,234 +308,249 @@ var
         exit(TRUE);
   end;
 
-  // Free all list, pointers when the checking is done
-  procedure FreeLists;
+  // Free all used memory when the checking is done
+  procedure FreeBuffers;
   var
     i: Cardinal;
   begin
-    if Length(newChapterURLs) = 0 then exit;
+    while threads.Count > 0 do
+    begin
+      threads.Items[0].Terminate;
+      threads.Items[0]:= nil;
+      threads.Delete(0);
+    end;
+    // Remove completed mangas.
+    RemoveCompletedMangas;
     for i:= 0 to CountBeforeChecking-1 do
-      if (numberOfNewChapters[i] > 0) AND (Assigned(newChapterURLs[i])) then
+    begin
+      mangaInfo[i].chapterName .Free;
+      mangaInfo[i].chapterLinks.Free;
+      if (newChapterURLList[i] <> nil) AND
+         (newChapterNameList[i] <> nil) then
       begin
-        newChapterList[i].Free;
-        newChapterURLs[i].Free;
-        newChapterNames[i].Free;
+        newChapterURLList[i].Free;
+        newChapterNameList[i].Free;
+        newChapterElementPositionList[i].Free;
       end;
-    SetLength(newChapterList, 0);
-    SetLength(numberOfNewChapters, 0);
-    SetLength(newChapterURLs, 0);
-    SetLength(newChapterNames, 0);
+    end;
+    SetLength(newChapterURLList, 0);
+    SetLength(newChapterNameList, 0);
+    SetLength(newChapterElementPositionList, 0);
     SetLength(mangaInfo, 0);
+    l.Free;
+    isRunning:= FALSE;
   end;
+
+var
+  s                : String;
+  hh, mm, ss, ms,
+  day, month, year : Word;
+  i, j, k, pos     : Cardinal;
+  isDownloadNow    : Boolean;
+  mangaInfoPtr     : PMangaInfo;
+  favoriteInfoPtr  : PFavoriteInfo;
+  LNCResult        : TNewChapterResult;
+  // Notification dialog.
+  notificationDlg  : TNewChapter;
+  // A string that contains the title of completed mangas, uses for notification.
+  removeListStr    : String = '';
+  // A string that contains the title of mangas that have new chapters,
+  // uses for notification.
+  newChapterListStr: String = '';
+
+  oldChapterCount,
+  newChapterCount: Integer;
 
 begin
   MainForm.btFavoritesCheckNewChapter.Caption:= stFavoritesCheck;
+
+  // Allocate necessary buffers.
   l:= TStringList.Create;
-  SetLength(newChapterList, CountBeforeChecking);
-  SetLength(numberOfNewChapters, CountBeforeChecking);
-  SetLength(newChapterURLs, CountBeforeChecking);
-  SetLength(newChapterNames, CountBeforeChecking);
-  // check the result to see if theres any new chapter
+  SetLength(newChapterURLList, CountBeforeChecking);
+  SetLength(newChapterNameList, CountBeforeChecking);
+  SetLength(newChapterElementPositionList, CountBeforeChecking);
+
+  // We must perform a scan to see if there's any new chapter.
   for i:= 0 to CountBeforeChecking-1 do
   begin
-    numberOfNewChapters[i]:= 0;
+    mangaInfoPtr:= @mangaInfo[i];
+    favoriteInfoPtr:= @favoriteInfo[i];
+
+    l.Clear;
+    // Get the curent downloaded chapter list by extracting from
+    // favorites.ini
+    GetParams(l, favoriteInfoPtr^.downloadedChapterList);
+
+    // After the checking, if this manga have any chapter url, then we will perform
+    // a comparsion between the "downloadedChapterList" and the newest chapter url list
+    // to see if there's any url that doesn't exists in the "downloadedChapterList".
+    // Those new urls are new chapters.
+    if mangaInfoPtr^.chapterLinks.Count > 0 then
     begin
-      l.Clear;
-      GetParams(l, favoriteInfo[i].downloadedChapterList);
-      if (l.Count = 0) AND (mangaInfo[i].chapterLinks.Count <> 0) then
+      for j:= 0 to mangaInfo[i].chapterLinks.Count-1 do
       begin
-       // isNewChapters[i]:= TRUE;
-       // Inc(newC);
-      end
-      else
-      if mangaInfo[i].chapterLinks.Count <> 0 then
-      begin
-        for j:= 0 to mangaInfo[i].chapterLinks.Count-1 do
+        if NOT Check(l, mangaInfo[i].chapterLinks.Strings[j]) then
         begin
-          if NOT Check(l, mangaInfo[i].chapterLinks.Strings[j]) then
+          // We've found a new chapter...
+          if (newChapterURLList[i]  = nil) OR
+             (newChapterNameList[i] = nil) then
           begin
-            if numberOfNewChapters[i] = 0 then
-            begin
-              Inc(newC);
-              newChapterList[i]:= TCardinalList.Create;
-              newChapterURLs[i]:= TStringList.Create;
-              newChapterNames[i]:= TStringList.Create;
-            end;
-            Inc(numberOfNewChapters[i]);
-            newChapterList[i].Add(j);
-            newChapterURLs[i].Add(mangaInfo[i].chapterLinks.Strings[j]);
-            newChapterNames[i].Add(mangaInfo[i].chapterName.Strings[j]);
-          //  break;
+            Inc(numberOfNewChapters);
+            newChapterElementPositionList[i]:= TCardinalList.Create;
+            newChapterURLList [i]:= TStringList.Create;
+            newChapterNameList[i]:= TStringList.Create;
           end;
+          newChapterElementPositionList[i].Add(j);
+          newChapterURLList [i].Add(mangaInfo[i].chapterLinks.Strings[j]);
+          newChapterNameList[i].Add(mangaInfo[i].chapterName.Strings[j]);
         end;
+      end;
+
+      // Here we construct notification string.
+      if (newChapterURLList[i] <> nil) AND
+         (newChapterNameList[i] <> nil) then
+      begin
+        newChapterListStr:= newChapterListStr + #13+ '- '+Format(stFavoritesHasNewChapter, [favoriteInfo[i].title, favoriteInfo[i].Website, newChapterURLList[i].Count]);
       end;
     end;
 
-    // generate remove completed manga string
+    // After each loop, we will generate the string that contains completed
+    // manga titles.
     if (OptionAutoRemoveCompletedManga) AND (mangaInfo[i].status = '0') then
     begin
       if removeListStr = '' then
-        removeListStr:= removeListStr + #13#13 + stDlgRemoveCompletedManga;
+        removeListStr:= #13#13 + stDlgRemoveCompletedManga;
       removeListStr:= removeListStr + #13 + '- ' + favoriteInfo[i].title + ' <'+mangaInfo[i].Website +'> ';
     end;
   end;
 
-  if (newC = 0) then
+  if (numberOfNewChapters = 0) then
   begin
+    // If there's no new chapter, but there're completed mangas and the user want
+    // to notify about them, then we will show the dialog contains the list of
+    // completed mangas.
     if (removeListStr <> '') AND (isShowDialog) then
     begin
-      frmMain.MainForm.Show;
-      LNewChapter:= TNewChapter.Create(MainForm);
-      LNewChapter.lbNotification.Caption:= Format(stDlgHasNewChapter, [newC]);
-      LNewChapter.mmMemo.Lines.Add(TrimLeft(removeListStr));
-      LNewChapter.btDownload.Visible:= FALSE;
-      LNewChapter.btQueue.Visible:= FALSE;
-      LNewChapter.ShowModal;
-      LNCResult:= LNewChapter.FormResult;
-      LNewChapter.Free;
+      notificationDlg:= TNewChapter.Create(MainForm);
+      notificationDlg.lbNotification.Caption:= Format(stDlgHasNewChapter, [numberOfNewChapters]);
+      notificationDlg.mmMemo.Lines.Add(TrimLeft(removeListStr));
+      notificationDlg.btDownload.Visible:= FALSE;
+      notificationDlg.btQueue.Visible:= FALSE;
+      notificationDlg.ShowModal;
+      LNCResult:= notificationDlg.FormResult;
+      notificationDlg.Free;
     end;
   end
   else
+  // There're new chapters, we need to process them ...
   begin
-    newMangaStr:= '';
-
-    // generate string for new chapter notification
-    for i:= 0 to CountBeforeChecking-1 do
-    begin
-      currentChapter:= StrToInt(favoriteInfo[i].currentChapter);
-      newChapter    := mangaInfo[i].numChapter;
-      if numberOfNewChapters[i] > 0 then
-      begin
-        newMangaStr:= newMangaStr + #13+ '- '+Format(stFavoritesHasNewChapter, [favoriteInfo[i].title, favoriteInfo[i].Website, numberOfNewChapters[i]]);
-      end;
-    end;
-
     if isShowDialog then
     begin
-      frmMain.MainForm.Show;
-      LNewChapter:= TNewChapter.Create(MainForm);
-      LNewChapter.lbNotification.Caption:= Format(stDlgHasNewChapter, [newC]);
-      LNewChapter.mmMemo.Lines.Add(TrimLeft(newMangaStr) + #13#13 + TrimLeft(removeListStr));
-      LNewChapter.ShowModal;
-      LNCResult:= LNewChapter.FormResult;
-      LNewChapter.Free;
+      notificationDlg:= TNewChapter.Create(MainForm);
+      notificationDlg.lbNotification.Caption:= Format(stDlgHasNewChapter, [numberOfNewChapters]);
+      notificationDlg.mmMemo.Lines.Add(
+        TrimLeft(newChapterListStr) + #13#13 + TrimLeft(removeListStr));
+      notificationDlg.ShowModal;
+      LNCResult:= notificationDlg.FormResult;
+      notificationDlg.Free;
+
       if LNCResult = ncrDownload then
       begin
-        isNow:= TRUE;
+        isDownloadNow:= TRUE;
         if MainForm.pcMain.PageIndex <> 0 then
           MainForm.pcMain.PageIndex:= 0;
       end
       else
-      if LNCResult = ncrCancel then
-      begin
-        // TODO: Bad coding - need improments
-        for i:= 0 to CountBeforeChecking-1 do
-        begin
-          mangaInfo[i].chapterName .Free;
-          mangaInfo[i].chapterLinks.Free;
-        end;
-        while threads.Count > 0 do
-        begin
-          threads.Items[0].Terminate;
-          threads.Items[0]:= nil;
-          threads.Delete(0);
-        end;
-        isRunning:= FALSE;
-        FreeLists;
-        exit;
-        // end of bad code
-      end
-      else
       if LNCResult = ncrQueue then
-        isNow:= FALSE;
-    end
-    else
-      isNow:= TRUE;
-
-    DLManager.isRunningBackup:= TRUE;
-
-    for i:= 0 to CountBeforeChecking-1 do
-    begin
-      currentChapter:= StrToInt(favoriteInfo[i].currentChapter);
-
-      if numberOfNewChapters[i] > 0 then
+        isDownloadNow:= FALSE
+      else
       begin
-        isHasNewChapter:= TRUE;
-        newMangaStr:= newMangaStr + #10#13+ ' - '+favoriteInfo[i].title;
-        DLManager.AddTask;
-        pos:= DLManager.containers.Count-1;
-        DLManager.containers.Items[pos].mangaSiteID:= GetMangaSiteID(mangaInfo[i].website);
-
-        // generate download link
-
-        if newChapterURLs[i].Count>0 then
-          for j:= 0 to newChapterURLs[i].Count-1 do
-          begin
-            s:= CustomRename(OptionCustomRename,
-                             mangaInfo[i].website,
-                             favoriteInfo[i].title,
-                             newChapterNames[i].Strings[j],
-                             Format('%.4d', [newChapterList[i].Items[j]+1]),
-                             MainForm.cbOptionPathConvert.Checked);
-
-            DLManager.containers.Items[pos].chapterName .Add(s);
-            DLManager.containers.Items[pos].chapterLinks.Add(newChapterURLs[i].Strings[j]);
-          end;
-
-        // mark downloaded chapters
-        s:= '';
-        if mangaInfo[i].chapterLinks.Count = 0 then exit;
-        newChapter:= mangaInfo[i].chapterLinks.Count;
-        if currentChapter < newChapter-1 then
-        begin
-          for k:= currentChapter to newChapter-1 do
-          begin
-            s:= s+IntToStr(k) + SEPERATOR;
-          end;
-          if s <> '' then
-            DLManager.AddToDownloadedChaptersList(favoriteInfo[i].website + favoriteInfo[i].link, s);
-        end;
-
-        if NOT isNow then
-        begin
-          DLManager.containers.Items[pos].downloadInfo.Status:= stStop;
-          DLManager.containers.Items[pos].Status:= STATUS_STOP;
-        end
-        else
-        begin
-          DLManager.containers.Items[pos].downloadInfo.Status:= stWait;
-          DLManager.containers.Items[pos].Status:= STATUS_WAIT;
-        end;
-        DLManager.containers.Items[pos].currentDownloadChapterPtr:= 0;
-        // DLManager.activeThreadsPerTask.Add(DLManager.maxDLThreadsPerTask);
-        DLManager.containers.Items[pos].downloadInfo.title  := favoriteInfo[i].title;
-        DLManager.containers.Items[pos].downloadInfo.Website:= favoriteInfo[i].website;
-        DLManager.containers.Items[pos].downloadInfo.SaveTo := favoriteInfo[i].SaveTo;
-        DecodeDate(Now, year, month, day);
-        DecodeTime(Time, hh, mm, ss, ms);
-        DLManager.containers.Items[pos].downloadInfo.dateTime:= IntToStr(Month)+'/'+IntToStr(Day)+'/'+IntToStr(Year)+' '+IntToStr(hh)+':'+IntToStr(mm)+':'+IntToStr(ss);
-
-        // TODO: bad coding - update favorites's current chapter, and free pointers
-        // should in here
-        favoriteInfo[i].currentChapter:= IntToStr(mangaInfo[i].numChapter);
-        Sleep(4);
+        FreeBuffers;
+        exit;
       end;
-    end;
-    DLManager.isRunningBackup:= FALSE;
-    if Assigned(OnUpdateDownload) then
-    begin
-      MainForm.DLManager.Sort(MainForm.vtDownload.Header.SortColumn);
-      OnUpdateDownload;
-    end;
-    if (isHasNewChapter) AND (isNow) then
-    begin
-      DLManager.CheckAndActiveTask;
-      Sleep(64);
-      DLManager.Backup;
     end;
   end;
 
-  // update favorites's current chapter, and free pointers
+  // Now we do the download task generator ...
+  while DLManager.isRunningBackup do
+    Sleep(64);
+  DLManager.isRunningBackup:= TRUE;
+  for i:= 0 to CountBeforeChecking-1 do
+  begin
+    if (newChapterURLList[i] <> nil) AND
+       (newChapterNameList[i] <> nil) then
+    begin
+      mangaInfoPtr   := @mangaInfo[i];
+      favoriteInfoPtr:= @favoriteInfo[i];
+      // generate a new download task.
+      DLManager.AddTask;
+      pos:= DLManager.containers.Count-1;
+      DLManager.containers.Items[pos].mangaSiteID:= GetMangaSiteID(mangaInfoPtr^.website);
+      if newChapterURLList[i].Count > 0 then
+      begin
+        for j:= 0 to newChapterURLList[i].Count-1 do
+        begin
+          s:= CustomRename(OptionCustomRename,
+            mangaInfoPtr^.website,
+            favoriteInfoPtr^.title,
+            newChapterNameList[i].Strings[j],
+            Format('%.4d', [newChapterElementPositionList[i].Items[j]+1]),
+            MainForm.cbOptionPathConvert.Checked);
+          DLManager.containers.Items[pos].chapterName .Add(s);
+          DLManager.containers.Items[pos].chapterLinks.Add(newChapterURLList[i].Strings[j]);
+        end;
+      end;
+      if NOT isDownloadNow then
+      begin
+        DLManager.containers.Items[pos].downloadInfo.Status:= stStop;
+        DLManager.containers.Items[pos].Status:= STATUS_STOP;
+      end
+      else
+      begin
+        DLManager.containers.Items[pos].downloadInfo.Status:= stWait;
+        DLManager.containers.Items[pos].Status:= STATUS_WAIT;
+      end;
+      DLManager.containers.Items[pos].currentDownloadChapterPtr:= 0;
+      DLManager.containers.Items[pos].downloadInfo.title  := favoriteInfoPtr^.title;
+      DLManager.containers.Items[pos].downloadInfo.Website:= favoriteInfoPtr^.website;
+      DLManager.containers.Items[pos].downloadInfo.SaveTo := favoriteInfoPtr^.SaveTo;
+      DecodeDate(Now, year, month, day);
+      DecodeTime(Time, hh, mm, ss, ms);
+      DLManager.containers.Items[pos].downloadInfo.dateTime:= IntToStr(Month)+'/'+IntToStr(Day)+'/'+IntToStr(Year)+' '+IntToStr(hh)+':'+IntToStr(mm)+':'+IntToStr(ss);
+
+      favoriteInfoPtr^.currentChapter:= IntToStr(mangaInfoPtr^.numChapter);
+      Sleep(4);
+      // End - generate a new download task.
+
+      // Mark these new chapters as downloaded.
+      if mangaInfo[i].chapterLinks.Count = 0 then continue;
+      oldChapterCount:= StrToInt(favoriteInfoPtr^.currentChapter);
+      newChapterCount:= mangaInfo[i].chapterLinks.Count;
+      if oldChapterCount < newChapterCount-1 then
+      begin
+        s:= '';
+        for k:= oldChapterCount to newChapterCount-1 do
+          s:= s+IntToStr(k) + SEPERATOR;
+        if s <> '' then
+        DLManager.AddToDownloadedChaptersList(favoriteInfo[i].website + favoriteInfo[i].link, s);
+      end;
+    end;
+  end;
+  DLManager.isRunningBackup:= FALSE;
+
+  if Assigned(OnUpdateDownload) then
+  begin
+    MainForm.DLManager.Sort(MainForm.vtDownload.Header.SortColumn);
+    OnUpdateDownload;
+  end;
+  if isDownloadNow then
+  begin
+    DLManager.CheckAndActiveTask;
+    Sleep(64);
+    DLManager.Backup;
+  end;
+
+  // Update favorites's downloaded chapter list.
   for i:= 0 to CountBeforeChecking-1 do
   begin
     if mangaInfo[i].numChapter>0 then
@@ -559,18 +560,21 @@ begin
       for j:= 0 to mangaInfo[i].numChapter-1 do
         favoriteInfo[i].downloadedChapterList:= favoriteInfo[i].downloadedChapterList+mangaInfo[i].chapterLinks.Strings[j]+SEPERATOR;
     end;
-    mangaInfo[i].chapterName .Free;
-    mangaInfo[i].chapterLinks.Free;
   end;
 
-  while threads.Count > 0 do
-  begin
-    threads.Items[0].Terminate;
-    threads.Items[0]:= nil;
-    threads.Delete(0);
-  end;
-  isRunning:= FALSE;
+  if Assigned(OnUpdateFavorite) then
+    OnUpdateFavorite;
 
+  FreeBuffers;
+  // Save new result to favorites.ini.
+  Backup;
+end;
+
+procedure   TFavoriteManager.RemoveCompletedMangas;
+// This method should be used in ShowResult().
+var
+  i, j: Cardinal;
+begin
   i:= 0; j:= 0;
   if OptionAutoRemoveCompletedManga then
   begin
@@ -586,17 +590,6 @@ begin
       Inc(j);
     end;
   end;
-
-  if Assigned(OnUpdateFavorite) then
-    OnUpdateFavorite;
-
-  FreeLists;
-  l.Free;
-
-  // Sort the list before backing up
-  //Sort(self.SortColumn);
-
-  Backup;
 end;
 
 function    TFavoriteManager.IsMangaExist(const title, website: String): Boolean;
@@ -634,7 +627,8 @@ begin
       Backup;
     end;
   except
-
+    on E: Exception do
+      MessageDlg('Exception occured', E.Message, mtInformation, [mbOk], '');
   end;
 end;
 
