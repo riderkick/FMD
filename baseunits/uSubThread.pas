@@ -92,6 +92,7 @@ begin
   FGetMangaInfosThread.Title:= title;
   FGetMangaInfosThread.Website:= website;
   FGetMangaInfosThread.Link:= link;
+  FGetMangaInfosThread.MangaListPos:= mangaListPos;
 
   // Execute FGetMangaInfosThread.
   FGetMangaInfosThread.IsSuspended:= FALSE;
