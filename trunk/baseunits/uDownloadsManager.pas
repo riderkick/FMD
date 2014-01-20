@@ -66,7 +66,6 @@ type
     procedure   CheckOut;
     procedure   MainThreadCompressRepaint;
     procedure   MainThreadRepaint;
-    procedure   MainThreadRepaintImm;
     procedure   Execute; override;
     procedure   Compress;
     // show notification when download completed
@@ -966,23 +965,13 @@ end;
 
 procedure   TTaskThread.MainThreadRepaint;
 begin
-  if MainForm.isCanRefreshForm then
-  begin
-    MainForm.vtDownload.Repaint;
-    MainForm.isCanRefreshForm:= FALSE;
-  end;
+  MainForm.isCanRefreshForm:= TRUE;
 end;
 
 procedure   TTaskThread.MainThreadCompressRepaint;
 begin
   container.downloadInfo.Status:= Format('%s (%d/%d)', [stIsCompressing, container.currentDownloadChapterPtr, container.chapterLinks.Count]);
   MainForm.vtDownload.Repaint;
-end;
-
-procedure   TTaskThread.MainThreadRepaintImm;
-begin
-  MainForm.vtDownload.Repaint;
-  MainForm.isCanRefreshForm:= FALSE;
 end;
 
 procedure   TTaskThread.Compress;
@@ -1156,11 +1145,7 @@ begin
              container.chapterLinks.Count,
              container.chapterName.Strings[container.currentDownloadChapterPtr]]);
         Inc(container.downloadInfo.iProgress);
-        {$IFDEF WIN32}
-        MainForm.vtDownload.Repaint;
-        {$ELSE}
         Synchronize(MainThreadRepaint);
-        {$ENDIF}
       end;
       WaitFor;
     end;
@@ -1188,11 +1173,7 @@ begin
                container.chapterLinks.Count,
                container.chapterName.Strings[container.currentDownloadChapterPtr]]);
           Inc(container.downloadInfo.iProgress);
-          {$IFDEF WIN32}
-          MainForm.vtDownload.Repaint;
-          {$ELSE}
           Synchronize(MainThreadRepaint);
-          {$ENDIF}
         end;
         WaitFor;
       end;
@@ -1221,22 +1202,14 @@ begin
       container.downloadInfo.Progress:= '';
       container.Status:= STATUS_FINISH;
       container.manager.CheckAndActiveTask(TRUE);
-      {$IFDEF WIN32}
-      MainForm.vtDownload.Repaint;
-      {$ELSE}
-      Synchronize(MainThreadRepaintImm);
-      {$ENDIF}
+      Synchronize(MainThreadRepaint);
     end
     else
     begin
       container.downloadInfo.Status  := Format('%s (%d/%d)', [stStop, container.currentDownloadChapterPtr, container.chapterLinks.Count]);
       container.Status:= STATUS_STOP;
       container.manager.CheckAndActiveTask;
-      {$IFDEF WIN32}
-      MainForm.vtDownload.Repaint;
-      {$ELSE}
-      Synchronize(MainThreadRepaintImm);
-      {$ENDIF}
+      Synchronize(MainThreadRepaint);
     end;
   end;
   threads.Clear;
@@ -1970,6 +1943,7 @@ begin
     exit;
   sortColumn:= AColumn;
   QSort(0, containers.Count-1);
+  MainForm.vtDownload.Repaint;
   MainForm.vtDownloadFilters;
 end;
 

@@ -679,7 +679,11 @@ end;
 
 procedure TMainForm.itRefreshFormTimer(Sender: TObject);
 begin
-  isCanRefreshForm:= TRUE;
+  if isCanRefreshForm then
+  begin
+    vtDownload.Repaint;
+    isCanRefreshForm:= FALSE;
+  end;
 end;
 
 procedure TMainForm.itSaveDownloadedListTimer(Sender: TObject);
