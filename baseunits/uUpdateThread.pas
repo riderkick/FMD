@@ -11,18 +11,16 @@ unit uUpdateThread;
 interface
 
 uses
-  Classes, SysUtils, Process, uData, uBaseUnit;
+  Classes, SysUtils, Process, uData, uBaseUnit, uFMDThread;
 
 type
   TUpdateMangaManagerThread = class;
 
-  TUpdateMangaThread = class(TThread)
+  TUpdateMangaThread = class(TFMDThread)
   protected
     checkStyle        : Cardinal;
     names,
     links             : TStringList;
-    isTerminated,
-    isSuspended       : Boolean;
     threadCount,
     workPtr           : Cardinal;
     manager           : TUpdateMangaManagerThread;
@@ -36,7 +34,7 @@ type
     destructor  Destroy; override;
   end;
 
-  TUpdateMangaManagerThread = class(TThread)
+  TUpdateMangaManagerThread = class(TFMDThread)
   protected
     procedure   Execute; override;
     {$IFNDEF DOWNLOADER}
@@ -49,8 +47,6 @@ type
     procedure   getInfo(const limit, cs: Cardinal);
   public
     isDownloadFromServer,
-    isTerminated,
-    isSuspended,
     isDoneUpdateNecessary : Boolean;
     mainDataProcess,
     dataProcess           : TDataProcess;
@@ -85,8 +81,6 @@ begin
   inherited Create(FALSE);
   names:= TStringList.Create;
   links:= TStringList.Create;
-  isSuspended:= TRUE;
-  isTerminated   := FALSE;
   FreeOnTerminate:= TRUE;
 end;
 
@@ -94,7 +88,6 @@ destructor  TUpdateMangaThread.Destroy;
 begin
   links.Free;
   names.Free;
-  isTerminated:= TRUE;
   manager.threadStates[threadCount]:= FALSE;
   inherited Destroy;
 end;
@@ -232,10 +225,8 @@ constructor TUpdateMangaManagerThread.Create;
 begin
   inherited Create(FALSE);
   websites   := TStringList.Create;
-  isSuspended:= TRUE;
   names  := TStringList.Create;
   links  := TStringList.Create;
-  isTerminated:= FALSE;
   FreeOnTerminate:= TRUE;
 end;
 
@@ -254,7 +245,6 @@ begin
   {$IFDEF DOWNLOADER}
   MainForm.isUpdating:= FALSE;
   {$ENDIF}
-  isTerminated:= TRUE;
   inherited Destroy;
 end;
 
