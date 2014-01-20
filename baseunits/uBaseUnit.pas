@@ -1685,6 +1685,7 @@ end;
 function  SaveImage(const AHTTP: THTTPSend; const mangaSiteID: Integer; URL: String; const Path, name, prefix: String; const Reconnect: Cardinal): Boolean;
 // prefix: For example: 000<our prefix>.jpg.
 var
+  retryToSave: Boolean = FALSE;
   header    : array [0..3] of Byte;
   ext       : String;
   HTTPHeader: TStringList;
@@ -1794,9 +1795,28 @@ begin
     ext:= '';
   if ext <> '' then
   begin
-    fstream:= TFileStreamUTF8.Create(Path+'/'+name+prefix+ext, fmCreate);
-    HTTP.Document.SaveToStream(fstream);
-    fstream.Free;
+    // If an error occured, verify the path and redo the job.
+    // If the error still persists, break the loop.
+    repeat
+      try
+        fstream:= TFileStreamUTF8.Create(Path+'/'+name+prefix+ext, fmCreate);
+        HTTP.Document.SaveToStream(fstream);
+        fstream.Free;
+        break;
+      except
+        on E: Exception do
+        begin
+          // TODO: Write this error to log.
+          if NOT retryToSave then
+          begin
+            CheckPath(Path);
+            retryToSave:= TRUE;
+          end
+          else
+            break;
+        end;
+      end;
+    until FALSE;
   end
   else
   begin
