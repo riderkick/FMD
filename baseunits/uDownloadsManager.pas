@@ -11,7 +11,7 @@ unit uDownloadsManager;
 interface
 
 uses
-  Classes, SysUtils, IniFiles, ExtCtrls, Graphics, dateutils, fgl,
+  Classes, SysUtils, Dialogs, IniFiles, ExtCtrls, Graphics, dateutils, fgl,
   HTTPSend,
   uBaseUnit, uData, uPacker, uFMDThread;
 
@@ -236,7 +236,12 @@ begin
     // Get number of images.
     CS_GETPAGENUMBER:
       begin
-        GetPageNumberFromURL(manager.container.chapterLinks.Strings[manager.container.currentDownloadChapterPtr]);
+        try
+          GetPageNumberFromURL(manager.container.chapterLinks.Strings[manager.container.currentDownloadChapterPtr]);
+        except
+          on E: Exception do
+            MessageDlg('Exception occured: ', E.Message, mtInformation, [mbOk], '');
+        end;
         // Prepare 'space' for storing image url.
         if (NOT Terminated) AND
            (manager.container.pageNumber > 0) then
@@ -248,14 +253,24 @@ begin
     // Get image urls.
     CS_GETPAGELINK:
       begin
-        if (NOT Terminated) then
-          GetLinkPageFromURL(manager.container.chapterLinks.Strings[manager.container.currentDownloadChapterPtr]);
+        try
+          if (NOT Terminated) then
+            GetLinkPageFromURL(manager.container.chapterLinks.Strings[manager.container.currentDownloadChapterPtr]);
+        except
+          on E: Exception do
+            MessageDlg('Exception occured: ', E.Message, mtInformation, [mbOk], '');
+        end;
       end;
     // Download images.
     CS_DOWNLOAD:
       begin
-        if (NOT Terminated) then
-          DownloadImage;
+        try
+          if (NOT Terminated) then
+            DownloadImage;
+        except
+          on E: Exception do
+            MessageDlg('Exception occured: ', E.Message, mtInformation, [mbOk], '');
+        end;
       end;
   end;
   Terminate;
@@ -378,134 +393,139 @@ var
   i: Cardinal;
 
 begin
-  manager.container.pageNumber:= 0;
-  if manager.container.mangaSiteID = ANIMEA_ID then
-    Result:= GetAnimeAPageNumber
-  else
-  if manager.container.mangaSiteID = MANGAHERE_ID then
-    Result:= GetMangaHerePageNumber
-  else
-  if manager.container.mangaSiteID = MANGAINN_ID then
-    Result:= GetMangaInnPageNumber
-  else
-  if manager.container.mangaSiteID = BATOTO_ID then
-    Result:= GetBatotoPageNumber
-  else
-  if manager.container.mangaSiteID = MANGAFOX_ID then
-    Result:= GetMangaFoxPageNumber
-  else
-  if manager.container.mangaSiteID = MANGAREADER_ID then
-    Result:= GetMangaReaderPageNumber
-  else
-  if manager.container.mangaSiteID = MANGATRADERS_ID then
-    Result:= GetMangaTradersPageNumber
-  else
-  if manager.container.mangaSiteID = STARKANA_ID then
-    Result:= GetStarkanaPageNumber
-  else
-  if manager.container.mangaSiteID = EATMANGA_ID then
-    Result:= GetEatMangaPageNumber
-  else
-  if manager.container.mangaSiteID = MANGAPANDA_ID then
-    Result:= GetMangaPandaPageNumber
-  else
-  if manager.container.mangaSiteID = MANGAGO_ID then
-    Result:= GetMangaGoPageNumber
-  else
-  if manager.container.mangaSiteID = MANGASTREAM_ID then
-    Result:= GetMangaStreamPageNumber
-  else
-  if manager.container.mangaSiteID = REDHAWKSCANS_ID then
-    Result:= GetRedHawkScansPageNumber
-  else
-  if manager.container.mangaSiteID = S2SCAN_ID then
-    Result:= GetS2scanPageNumber
-  else
-  if manager.container.mangaSiteID = MEINMANGA_ID then
-    Result:= GetMeinMangaPageNumber
-  else
-  if manager.container.mangaSiteID = ESMANGAHERE_ID then
-    Result:= GetEsMangaHerePageNumber
-  else
-  if manager.container.mangaSiteID = SUBMANGA_ID then
-    Result:= GetSubMangaPageNumber
-  else
-  if manager.container.mangaSiteID = ANIMEEXTREMIST_ID then
-    Result:= GetAnimeExtremistPageNumber
-  else
-  if manager.container.mangaSiteID = KOMIKID_ID then
-    Result:= GetKomikidPageNumber
-  else
-  if manager.container.mangaSiteID = PECINTAKOMIK_ID then
-    Result:= GetPecintaKomikPageNumber
-  else
-  if manager.container.mangaSiteID = PURURIN_ID then
-    Result:= GetPururinPageNumber
-  else
-  if manager.container.mangaSiteID = HUGEMANGA_ID then
-    Result:= GetHugeMangaPageNumber
-  else
-  if manager.container.mangaSiteID = ANIMESTORY_ID then
-    Result:= GetAnimeStoryPageNumber
-  else
-  if manager.container.mangaSiteID = TURKCRAFT_ID then
-    Result:= GetTurkcraftPageNumber
-  else
-  if manager.container.mangaSiteID = MANGAVADISI_ID then
-    Result:= GetMangaVadisiPageNumber
-  else
-  if manager.container.mangaSiteID = MANGAFRAME_ID then
-    Result:= GetMangaFramePageNumber
-  else
-  if manager.container.mangaSiteID = MANGAAR_ID then
-    Result:= GetMangaArPageNumber
-  else
-  if manager.container.mangaSiteID = MANGAAE_ID then
-    Result:= GetMangaAePageNumber
-  else
-  if manager.container.mangaSiteID = MANGACOW_ID then
-    Result:= GetMangaCowPageNumber
-  else
-  if manager.container.mangaSiteID = SENMANGA_ID then
-    Result:= GetSenMangaPageNumber
-  else
-  if (manager.container.mangaSiteID = MANGAEDEN_ID) OR
-     (manager.container.mangaSiteID = PERVEDEN_ID) then
-    Result:= GetMangaEdenPageNumber
-  else
-  if manager.container.mangaSiteID = KIVMANGA_ID then
-    Result:= GetKivmangaPageNumber
-  else
-  if manager.container.mangaSiteID = GEHENTAI_ID then
-  begin
-    Result:= GetGEHentaiPageNumber('', TRUE);
-  end
-  else
-  if (manager.container.mangaSiteID = KISSMANGA_ID) OR
-     (manager.container.mangaSiteID = BLOGTRUYEN_ID) OR
-     (manager.container.mangaSiteID = MANGAPARK_ID) OR
-     (manager.container.mangaSiteID = MANGA24H_ID) OR
-     (manager.container.mangaSiteID = VNSHARING_ID) OR
-     (manager.container.mangaSiteID = MABUNS_ID) OR
-     (manager.container.mangaSiteID = EGSCANS_ID) OR
-     (manager.container.mangaSiteID = PURURIN_ID) OR
-     (manager.container.mangaSiteID = MANGAESTA_ID) OR
-     (manager.container.mangaSiteID = TRUYEN18_ID) OR
-     (manager.container.mangaSiteID = TRUYENTRANHTUAN_ID) OR
-     (manager.container.mangaSiteID = SCANMANGA_ID) OR
-     (manager.container.mangaSiteID = FAKKU_ID) OR
-     (manager.container.mangaSiteID = MANGACAN_ID) OR
-     (manager.container.mangaSiteID = CENTRALDEMANGAS_ID) OR
-	 (manager.container.mangaSiteID = MANGASPROJECT_ID) OR
-	 (manager.container.mangaSiteID = MANGAREADER_POR_ID) THEN
-  begin
-    // all of image urls are in a html page
-    Result:= TRUE;
-    manager.container.pageNumber:= 1;
-  end
-  else
-  if manager.container.mangaSiteID = HENTAI2READ_ID then
-    Result:= GetHentai2ReadPageNumber;
+  try
+    manager.container.pageNumber:= 0;
+    if manager.container.mangaSiteID = ANIMEA_ID then
+      Result:= GetAnimeAPageNumber
+    else
+    if manager.container.mangaSiteID = MANGAHERE_ID then
+      Result:= GetMangaHerePageNumber
+    else
+    if manager.container.mangaSiteID = MANGAINN_ID then
+      Result:= GetMangaInnPageNumber
+    else
+    if manager.container.mangaSiteID = BATOTO_ID then
+      Result:= GetBatotoPageNumber
+    else
+    if manager.container.mangaSiteID = MANGAFOX_ID then
+      Result:= GetMangaFoxPageNumber
+    else
+    if manager.container.mangaSiteID = MANGAREADER_ID then
+      Result:= GetMangaReaderPageNumber
+    else
+    if manager.container.mangaSiteID = MANGATRADERS_ID then
+      Result:= GetMangaTradersPageNumber
+    else
+    if manager.container.mangaSiteID = STARKANA_ID then
+      Result:= GetStarkanaPageNumber
+    else
+    if manager.container.mangaSiteID = EATMANGA_ID then
+      Result:= GetEatMangaPageNumber
+    else
+    if manager.container.mangaSiteID = MANGAPANDA_ID then
+      Result:= GetMangaPandaPageNumber
+    else
+    if manager.container.mangaSiteID = MANGAGO_ID then
+      Result:= GetMangaGoPageNumber
+    else
+    if manager.container.mangaSiteID = MANGASTREAM_ID then
+      Result:= GetMangaStreamPageNumber
+    else
+    if manager.container.mangaSiteID = REDHAWKSCANS_ID then
+      Result:= GetRedHawkScansPageNumber
+    else
+    if manager.container.mangaSiteID = S2SCAN_ID then
+      Result:= GetS2scanPageNumber
+    else
+    if manager.container.mangaSiteID = MEINMANGA_ID then
+      Result:= GetMeinMangaPageNumber
+    else
+    if manager.container.mangaSiteID = ESMANGAHERE_ID then
+      Result:= GetEsMangaHerePageNumber
+    else
+    if manager.container.mangaSiteID = SUBMANGA_ID then
+      Result:= GetSubMangaPageNumber
+    else
+    if manager.container.mangaSiteID = ANIMEEXTREMIST_ID then
+      Result:= GetAnimeExtremistPageNumber
+    else
+    if manager.container.mangaSiteID = KOMIKID_ID then
+      Result:= GetKomikidPageNumber
+    else
+    if manager.container.mangaSiteID = PECINTAKOMIK_ID then
+      Result:= GetPecintaKomikPageNumber
+    else
+    if manager.container.mangaSiteID = PURURIN_ID then
+      Result:= GetPururinPageNumber
+    else
+    if manager.container.mangaSiteID = HUGEMANGA_ID then
+      Result:= GetHugeMangaPageNumber
+    else
+    if manager.container.mangaSiteID = ANIMESTORY_ID then
+      Result:= GetAnimeStoryPageNumber
+    else
+    if manager.container.mangaSiteID = TURKCRAFT_ID then
+      Result:= GetTurkcraftPageNumber
+    else
+    if manager.container.mangaSiteID = MANGAVADISI_ID then
+      Result:= GetMangaVadisiPageNumber
+    else
+    if manager.container.mangaSiteID = MANGAFRAME_ID then
+      Result:= GetMangaFramePageNumber
+    else
+    if manager.container.mangaSiteID = MANGAAR_ID then
+      Result:= GetMangaArPageNumber
+    else
+    if manager.container.mangaSiteID = MANGAAE_ID then
+      Result:= GetMangaAePageNumber
+    else
+    if manager.container.mangaSiteID = MANGACOW_ID then
+      Result:= GetMangaCowPageNumber
+    else
+    if manager.container.mangaSiteID = SENMANGA_ID then
+      Result:= GetSenMangaPageNumber
+    else
+    if (manager.container.mangaSiteID = MANGAEDEN_ID) OR
+       (manager.container.mangaSiteID = PERVEDEN_ID) then
+      Result:= GetMangaEdenPageNumber
+    else
+    if manager.container.mangaSiteID = KIVMANGA_ID then
+      Result:= GetKivmangaPageNumber
+    else
+    if manager.container.mangaSiteID = GEHENTAI_ID then
+    begin
+      Result:= GetGEHentaiPageNumber('', TRUE);
+    end
+    else
+    if (manager.container.mangaSiteID = KISSMANGA_ID) OR
+       (manager.container.mangaSiteID = BLOGTRUYEN_ID) OR
+       (manager.container.mangaSiteID = MANGAPARK_ID) OR
+       (manager.container.mangaSiteID = MANGA24H_ID) OR
+       (manager.container.mangaSiteID = VNSHARING_ID) OR
+       (manager.container.mangaSiteID = MABUNS_ID) OR
+       (manager.container.mangaSiteID = EGSCANS_ID) OR
+       (manager.container.mangaSiteID = PURURIN_ID) OR
+       (manager.container.mangaSiteID = MANGAESTA_ID) OR
+       (manager.container.mangaSiteID = TRUYEN18_ID) OR
+       (manager.container.mangaSiteID = TRUYENTRANHTUAN_ID) OR
+       (manager.container.mangaSiteID = SCANMANGA_ID) OR
+       (manager.container.mangaSiteID = FAKKU_ID) OR
+       (manager.container.mangaSiteID = MANGACAN_ID) OR
+       (manager.container.mangaSiteID = CENTRALDEMANGAS_ID) OR
+	   (manager.container.mangaSiteID = MANGASPROJECT_ID) OR
+	   (manager.container.mangaSiteID = MANGAREADER_POR_ID) THEN
+    begin
+      // all of image urls are in a html page
+      Result:= TRUE;
+      manager.container.pageNumber:= 1;
+    end
+    else
+    if manager.container.mangaSiteID = HENTAI2READ_ID then
+      Result:= GetHentai2ReadPageNumber;
+  except
+    on E: Exception do
+      raise E;
+  end;
 end;
 
 function    TDownloadThread.GetLinkPageFromURL(const URL: String): Boolean;
@@ -662,154 +682,159 @@ var
   s: String;
 
 begin
-  if manager.container.pageLinks.Strings[workCounter] <> 'W' then exit;
-  if manager.container.mangaSiteID = ANIMEA_ID then
-    Result:= GetAnimeAImageURL
-  else
-  if manager.container.mangaSiteID = MANGATRADERS_ID then
-    Result:= GetMangaTradersImageURL
-  else
-  if manager.container.mangaSiteID = MANGAHERE_ID then
-    Result:= GetMangaHereImageURL
-  else
-  if manager.container.mangaSiteID = MANGAINN_ID then
-    Result:= GetMangaInnImageURL
-  else
-  if manager.container.mangaSiteID = KISSMANGA_ID then
-    Result:= GetKissMangaImageURL
-  else
-  if manager.container.mangaSiteID = BATOTO_ID then
-    Result:= GetBatotoImageURL
-  else
-  if manager.container.mangaSiteID = MEINMANGA_ID then
-    Result:= GetMeinMangaImageURL
-  else
-  if manager.container.mangaSiteID = MANGA24H_ID then
-    Result:= GetManga24hImageURL
-  else
-  if manager.container.mangaSiteID = VNSHARING_ID then
-    Result:= GetVnSharingImageURL
-  else
-  if manager.container.mangaSiteID = HENTAI2READ_ID then
-    Result:= GetHentai2ReadImageURL
-  else
-  if manager.container.mangaSiteID = FAKKU_ID then
-    Result:= GetFakkuImageURL
-  else
-  if manager.container.mangaSiteID = MANGAREADER_ID then
-    Result:= GetMangaReaderImageURL
-  else
-  if manager.container.mangaSiteID = MANGAPARK_ID then
-    Result:= GetMangaParkImageURL
-  else
-  if manager.container.mangaSiteID = MANGAFOX_ID then
-    Result:= GetMangaFoxImageURL
-  else
-  if manager.container.mangaSiteID = STARKANA_ID then
-    Result:= GetStarkanaImageURL
-  else
-  if manager.container.mangaSiteID = EATMANGA_ID then
-    Result:= GetEatMangaImageURL
-  else
-  if manager.container.mangaSiteID = MANGAPANDA_ID then
-    Result:= GetMangaPandaImageURL
-  else
-  if manager.container.mangaSiteID = MANGAGO_ID then
-    Result:= GetMangaGoImageURL
-  else
-  if manager.container.mangaSiteID = MANGASTREAM_ID then
-    Result:= GetMangaStreamImageURL
-  else
-  if manager.container.mangaSiteID = REDHAWKSCANS_ID then
-    Result:= GetRedHawkScansImageURL
-  else
-  if manager.container.mangaSiteID = S2SCAN_ID then
-    Result:= GetS2scanImageURL
-  else
-  if manager.container.mangaSiteID = EGSCANS_ID then
-    Result:= GetEGScansImageURL
-  else
-  if manager.container.mangaSiteID = ESMANGAHERE_ID then
-    Result:= GetEsMangaHereImageURL
-  else
-  if manager.container.mangaSiteID = SUBMANGA_ID then
-    Result:= GetSubMangaImageURL
-  else
-  if manager.container.mangaSiteID = ANIMEEXTREMIST_ID then
-    Result:= GetAnimeExtremistImageURL
-  else
-  if manager.container.mangaSiteID = KOMIKID_ID then
-    Result:= GetKomikidImageURL
-  else
-  if manager.container.mangaSiteID = PECINTAKOMIK_ID then
-    Result:= GetPecintaKomikImageURL
-  else
-  if manager.container.mangaSiteID = MABUNS_ID then
-    Result:= GetMabunsImageURL
-  else
-  if manager.container.mangaSiteID = MANGAESTA_ID then
-    Result:= GetMangaEstaImageURL
-  else
-  if manager.container.mangaSiteID = PURURIN_ID then
-    Result:= GetPururinImageURL
-  else
-  if manager.container.mangaSiteID = HUGEMANGA_ID then
-    Result:= GetHugeMangaImageURL
-  else
-  if manager.container.mangaSiteID = ANIMESTORY_ID then
-    Result:= GetAnimeStoryImageURL
-  else
-  if manager.container.mangaSiteID = SCANMANGA_ID then
-    Result:= GetScanMangaImageURL
-  else
-  if manager.container.mangaSiteID = TURKCRAFT_ID then
-    Result:= GetTurkcraftImageURL
-  else
-  if manager.container.mangaSiteID = MANGAVADISI_ID then
-    Result:= GetMangaVadisiImageURL
-  else
-  if manager.container.mangaSiteID = MANGAFRAME_ID then
-    Result:= GetMangaFrameImageURL
-  else
-  if manager.container.mangaSiteID = MANGAAR_ID then
-    Result:= GetMangaArImageURL
-  else
-  if manager.container.mangaSiteID = MANGAAE_ID then
-    Result:= GetMangaAeImageURL
-  else
-  if manager.container.mangaSiteID = CENTRALDEMANGAS_ID then
-    Result:= GetCentralDeMangasImageURL
-  else
-  if manager.container.mangaSiteID = MANGACOW_ID then
-    Result:= GetMangaCowImageURL
-  else
-  if manager.container.mangaSiteID = SENMANGA_ID then
-    Result:= GetSenMangaImageURL
-  else
-  if manager.container.mangaSiteID = TRUYENTRANHTUAN_ID then
-    Result:= GetTruyenTranhTuanImageURL
-  else
-  if manager.container.mangaSiteID = BLOGTRUYEN_ID then
-    Result:= GetBlogTruyenImageURL
-  else
-  if (manager.container.mangaSiteID = MANGAEDEN_ID) OR
-     (manager.container.mangaSiteID = PERVEDEN_ID) then
-    Result:= GetMangaEdenImageURL
-  else
-  if manager.container.mangaSiteID = KIVMANGA_ID then
-    Result:= GetKivmangaImageURL
-  else
-  if manager.container.mangaSiteID = MANGACAN_ID then
-    Result:= GetMangacanImageURL
-  else
-  if manager.container.mangaSiteID = MANGASPROJECT_ID then
-    Result:= GetMangasPROJECTImageURL
-  else
-  if manager.container.mangaSiteID = MANGAREADER_POR_ID then
-    Result:= GetMangaREADER_PORImageURL
-  else
-  if manager.container.mangaSiteID = GEHENTAI_ID then
-    Result:= GetGEHentaiImageURL;
+  try
+    if manager.container.pageLinks.Strings[workCounter] <> 'W' then exit;
+    if manager.container.mangaSiteID = ANIMEA_ID then
+      Result:= GetAnimeAImageURL
+    else
+    if manager.container.mangaSiteID = MANGATRADERS_ID then
+      Result:= GetMangaTradersImageURL
+    else
+    if manager.container.mangaSiteID = MANGAHERE_ID then
+      Result:= GetMangaHereImageURL
+    else
+    if manager.container.mangaSiteID = MANGAINN_ID then
+      Result:= GetMangaInnImageURL
+    else
+    if manager.container.mangaSiteID = KISSMANGA_ID then
+      Result:= GetKissMangaImageURL
+    else
+    if manager.container.mangaSiteID = BATOTO_ID then
+      Result:= GetBatotoImageURL
+    else
+    if manager.container.mangaSiteID = MEINMANGA_ID then
+      Result:= GetMeinMangaImageURL
+    else
+    if manager.container.mangaSiteID = MANGA24H_ID then
+      Result:= GetManga24hImageURL
+    else
+    if manager.container.mangaSiteID = VNSHARING_ID then
+      Result:= GetVnSharingImageURL
+    else
+    if manager.container.mangaSiteID = HENTAI2READ_ID then
+      Result:= GetHentai2ReadImageURL
+    else
+    if manager.container.mangaSiteID = FAKKU_ID then
+      Result:= GetFakkuImageURL
+    else
+    if manager.container.mangaSiteID = MANGAREADER_ID then
+      Result:= GetMangaReaderImageURL
+    else
+    if manager.container.mangaSiteID = MANGAPARK_ID then
+      Result:= GetMangaParkImageURL
+    else
+    if manager.container.mangaSiteID = MANGAFOX_ID then
+      Result:= GetMangaFoxImageURL
+    else
+    if manager.container.mangaSiteID = STARKANA_ID then
+      Result:= GetStarkanaImageURL
+    else
+    if manager.container.mangaSiteID = EATMANGA_ID then
+      Result:= GetEatMangaImageURL
+    else
+    if manager.container.mangaSiteID = MANGAPANDA_ID then
+      Result:= GetMangaPandaImageURL
+    else
+    if manager.container.mangaSiteID = MANGAGO_ID then
+      Result:= GetMangaGoImageURL
+    else
+    if manager.container.mangaSiteID = MANGASTREAM_ID then
+      Result:= GetMangaStreamImageURL
+    else
+    if manager.container.mangaSiteID = REDHAWKSCANS_ID then
+      Result:= GetRedHawkScansImageURL
+    else
+    if manager.container.mangaSiteID = S2SCAN_ID then
+      Result:= GetS2scanImageURL
+    else
+    if manager.container.mangaSiteID = EGSCANS_ID then
+      Result:= GetEGScansImageURL
+    else
+    if manager.container.mangaSiteID = ESMANGAHERE_ID then
+      Result:= GetEsMangaHereImageURL
+    else
+    if manager.container.mangaSiteID = SUBMANGA_ID then
+      Result:= GetSubMangaImageURL
+    else
+    if manager.container.mangaSiteID = ANIMEEXTREMIST_ID then
+      Result:= GetAnimeExtremistImageURL
+    else
+    if manager.container.mangaSiteID = KOMIKID_ID then
+      Result:= GetKomikidImageURL
+    else
+    if manager.container.mangaSiteID = PECINTAKOMIK_ID then
+      Result:= GetPecintaKomikImageURL
+    else
+    if manager.container.mangaSiteID = MABUNS_ID then
+      Result:= GetMabunsImageURL
+    else
+    if manager.container.mangaSiteID = MANGAESTA_ID then
+      Result:= GetMangaEstaImageURL
+    else
+    if manager.container.mangaSiteID = PURURIN_ID then
+      Result:= GetPururinImageURL
+    else
+    if manager.container.mangaSiteID = HUGEMANGA_ID then
+      Result:= GetHugeMangaImageURL
+    else
+    if manager.container.mangaSiteID = ANIMESTORY_ID then
+      Result:= GetAnimeStoryImageURL
+    else
+    if manager.container.mangaSiteID = SCANMANGA_ID then
+      Result:= GetScanMangaImageURL
+    else
+    if manager.container.mangaSiteID = TURKCRAFT_ID then
+      Result:= GetTurkcraftImageURL
+    else
+    if manager.container.mangaSiteID = MANGAVADISI_ID then
+      Result:= GetMangaVadisiImageURL
+    else
+    if manager.container.mangaSiteID = MANGAFRAME_ID then
+      Result:= GetMangaFrameImageURL
+    else
+    if manager.container.mangaSiteID = MANGAAR_ID then
+      Result:= GetMangaArImageURL
+    else
+    if manager.container.mangaSiteID = MANGAAE_ID then
+      Result:= GetMangaAeImageURL
+    else
+    if manager.container.mangaSiteID = CENTRALDEMANGAS_ID then
+      Result:= GetCentralDeMangasImageURL
+    else
+    if manager.container.mangaSiteID = MANGACOW_ID then
+      Result:= GetMangaCowImageURL
+    else
+    if manager.container.mangaSiteID = SENMANGA_ID then
+      Result:= GetSenMangaImageURL
+    else
+    if manager.container.mangaSiteID = TRUYENTRANHTUAN_ID then
+      Result:= GetTruyenTranhTuanImageURL
+    else
+    if manager.container.mangaSiteID = BLOGTRUYEN_ID then
+      Result:= GetBlogTruyenImageURL
+    else
+    if (manager.container.mangaSiteID = MANGAEDEN_ID) OR
+       (manager.container.mangaSiteID = PERVEDEN_ID) then
+      Result:= GetMangaEdenImageURL
+    else
+    if manager.container.mangaSiteID = KIVMANGA_ID then
+      Result:= GetKivmangaImageURL
+    else
+    if manager.container.mangaSiteID = MANGACAN_ID then
+      Result:= GetMangacanImageURL
+    else
+    if manager.container.mangaSiteID = MANGASPROJECT_ID then
+      Result:= GetMangasPROJECTImageURL
+    else
+    if manager.container.mangaSiteID = MANGAREADER_POR_ID then
+      Result:= GetMangaREADER_PORImageURL
+    else
+    if manager.container.mangaSiteID = GEHENTAI_ID then
+      Result:= GetGEHentaiImageURL;
+  except
+    on E: Exception do
+      raise E;
+  end;
 end;
 
 procedure   TDownloadThread.Merge2Images(const path, imgName1, imgName2, finalName: String);
@@ -1094,10 +1119,11 @@ begin
     container.activeThreadCount:= 1;
     while isSuspended do Sleep(100);
 
-    // get page number
+    // Get page number.
     if container.currentPageNumber = 0 then
     begin
       if Terminated then exit;
+      // Clear the thread.
       Stop(FALSE);
       threads.Add(TDownloadThread.Create);
       i:= threads.Count-1;
@@ -1172,7 +1198,6 @@ begin
         end;
         WaitFor;
       end;
-     // Synchronize(Compress);
       Compress;
     end;
 
