@@ -908,8 +908,9 @@ begin
     rmAbout.Clear;
     fs:= TFileStream.Create(README_FILE, fmOpenRead or fmShareDenyNone);
     rmAbout.LoadRichText(fs);
-  finally
     fs.Free;
+  except
+    on E: Exception do;
   end;
 end;
 
@@ -2373,10 +2374,11 @@ begin
   data:= Sender.GetNodeData(Node);
   if Assigned(data) then
     case Column of
-      0: CellText:= data^.title;
-      1: CellText:= data^.currentChapter;
-      2: CellText:= data^.website;
-      3: CellText:= data^.saveTo;
+      0: CellText:= data^.numbering;
+      1: CellText:= data^.title;
+      2: CellText:= data^.currentChapter;
+      3: CellText:= data^.website;
+      4: CellText:= data^.saveTo;
     end;
 end;
 
@@ -2388,14 +2390,15 @@ begin
     exit;
   if favorites.isRunning then
     exit;
-  favorites.isRunning:= TRUE;
   case Column of
-    0: ;
     1: ;
     2: ;
+    3: ;
+    4: ;
     else
       exit;
   end;
+  favorites.isRunning:= TRUE;
   favorites.sortDirection:= NOT favorites.sortDirection;
   favorites.Sort(Column);
   vtFavorites.Header.SortColumn:= Column;
@@ -2417,6 +2420,7 @@ begin
   begin
     pos := Node.Index;
     data:= GetNodeData(Node);
+    data.numbering     := IntToStr(pos+1);
     data.title         := favorites.favoriteInfo[pos].title;
     data.currentChapter:= favorites.favoriteInfo[pos].currentChapter;
     data.website       := favorites.favoriteInfo[pos].website;
@@ -2605,7 +2609,8 @@ begin
         TargetCanvas.Brush.Color:= $FDC594;
         TargetCanvas.FillRect(CellRect);
       end;
-    finally
+    except
+      on E: Exception do;
     end;
   end;
 end;
@@ -3239,6 +3244,7 @@ begin
   vtFavorites.Header.Columns.Items[1].Width:= options.ReadInteger('form', 'vtFavorites1Width', 50);
   vtFavorites.Header.Columns.Items[2].Width:= options.ReadInteger('form', 'vtFavorites2Width', 50);
   vtFavorites.Header.Columns.Items[3].Width:= options.ReadInteger('form', 'vtFavorites3Width', 50);
+  vtFavorites.Header.Columns.Items[4].Width:= options.ReadInteger('form', 'vtFavorites4Width', 50);
 
   sbMain.Panels[0].Width:= spMainSplitter.Left;
 end;
@@ -3265,6 +3271,7 @@ begin
   options.WriteInteger('form', 'vtFavorites1Width', vtFavorites.Header.Columns.Items[1].Width);
   options.WriteInteger('form', 'vtFavorites2Width', vtFavorites.Header.Columns.Items[2].Width);
   options.WriteInteger('form', 'vtFavorites3Width', vtFavorites.Header.Columns.Items[3].Width);
+  options.WriteInteger('form', 'vtFavorites4Width', vtFavorites.Header.Columns.Items[4].Width);
 end;
 
 procedure TMainForm.LoadLanguage(const pos: Integer);
@@ -3557,10 +3564,10 @@ begin
   vtDownload.Header.Columns.Items[4].Text:= stDownloadSaveto;
   vtDownload.Header.Columns.Items[5].Text:= stDownloadAdded;
 
-  vtFavorites.Header.Columns.Items[0].Text:= stDownloadManga;
-  vtFavorites.Header.Columns.Items[1].Text:= stFavoritesCurrentChapter;
-  vtFavorites.Header.Columns.Items[2].Text:= stDownloadWebsite;
-  vtFavorites.Header.Columns.Items[3].Text:= stDownloadSaveto;
+  vtFavorites.Header.Columns.Items[1].Text:= stDownloadManga;
+  vtFavorites.Header.Columns.Items[2].Text:= stFavoritesCurrentChapter;
+  vtFavorites.Header.Columns.Items[3].Text:= stDownloadWebsite;
+  vtFavorites.Header.Columns.Items[4].Text:= stDownloadSaveto;
 
   vtDownload.Repaint;
 end;

@@ -67,15 +67,12 @@ var
 
 constructor TSubThread.Create;
 begin
+  inherited Create(FALSE);
   fImportant     := '';
   updateCounter  := 1;
   isCheckForLatestVer:= FALSE;
   isCanStop      := FALSE;
-  FreeOnTerminate:= TRUE;
   FGetMangaInfosThread:= nil;
-
- // ;
-  inherited Create(FALSE);
 end;
 
 destructor  TSubThread.Destroy;

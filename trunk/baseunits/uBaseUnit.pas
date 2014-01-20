@@ -148,7 +148,7 @@ const
   DM5_NAME          = 'DM5';          DM5_ID         = 47;
   PURURIN_NAME      = 'Pururin';      Pururin_ID     = 48;
   MANGACOW_NAME     = 'Mangacow';     MANGACOW_ID    = 49;
-  KIVMANGA_NAME     = 'Kivmanga';     KIVMANGA_ID    = 50;
+  KIVMANGA_NAME     = 'KivManga';     KIVMANGA_ID    = 50;
   MANGACAN_NAME	    = 'Mangacan';     MANGACAN_ID    = 51;
   MEINMANGA_NAME    = 'MeinManga';    MEINMANGA_ID   = 52;
   MANGASPROJECT_NAME    = 'MangasPROJECT';    MANGASPROJECT_ID   = 53;
@@ -270,7 +270,7 @@ var
      ('DM5', 'http://www.dm5.com'),
      ('Pururin', 'http://pururin.com'),
      ('Mangacow', 'http://mngacow.com'),
-     ('Kivmanga', 'http://www.kivmanga.com'),
+     ('KivManga', 'http://www.kivmanga.com'),
      ('Mangacan', 'http://mangacanblog.com'),
      ('MeinManga', 'http://www.meinmanga.com/'),
 	 ('MangasPROJECT', 'http://www.mangasproject.net'),
@@ -525,6 +525,7 @@ type
 
   PFavoriteInfo = ^TFavoriteInfo;
   TFavoriteInfo = record
+    numbering,
     title,
     downloadedChapterList,
     currentChapter,
@@ -842,7 +843,7 @@ begin
             (website = TURKCRAFT_NAME) OR
             (website = HUGEMANGA_NAME) OR
             (website = KOMIKID_NAME) OR
-			(website = KIVMANGA_NAME) OR
+	    (website = KIVMANGA_NAME) OR
 			(website = MANGACAN_NAME) OR
 		(website = MANGAREADER_POR_NAME));
 end;

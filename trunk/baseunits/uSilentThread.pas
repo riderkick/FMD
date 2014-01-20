@@ -247,11 +247,9 @@ end;
 
 constructor TSilentThread.Create;
 begin
-  FreeOnTerminate:= TRUE;
+  inherited Create(FALSE);
   Info:= TMangaInformation.Create;
   SavePath:= '';
-
-  inherited Create(FALSE);
 end;
 
 destructor  TSilentThread.Destroy;

@@ -89,9 +89,10 @@ begin
         Delete(fPath, Length(fPath), 1);
       RenameFileUTF8(fPath+ext, Path+ext);
     end;
-  finally
     searcher.Free;
     list.Free;
+  except
+    on E: Exception do;
   end;
 end;
 
@@ -146,9 +147,10 @@ begin
         Delete(fPath, Length(fPath), 1);
       RenameFileUTF8(fPath+ext, Path+ext);
     end;
-  finally
     searcher.Free;
     list.Free;
+  except
+    on E: Exception do;
   end;
 end;
 

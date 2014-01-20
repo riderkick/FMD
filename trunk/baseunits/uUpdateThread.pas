@@ -81,7 +81,6 @@ begin
   inherited Create(FALSE);
   names:= TStringList.Create;
   links:= TStringList.Create;
-  FreeOnTerminate:= TRUE;
 end;
 
 destructor  TUpdateMangaThread.Destroy;
@@ -227,7 +226,6 @@ begin
   websites   := TStringList.Create;
   names  := TStringList.Create;
   links  := TStringList.Create;
-  FreeOnTerminate:= TRUE;
 end;
 
 destructor  TUpdateMangaManagerThread.Destroy;
