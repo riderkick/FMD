@@ -20,7 +20,7 @@ type
     constructor Create(CreateSuspended: Boolean);
     destructor  Destroy; override;
 
-    property    IsTerminated: Boolean read FIsTerminated write SetIsTerminated;
+    property    IsTerminated: Boolean read FIsTerminated write FIsTerminated;
     property    IsSuspended: Boolean read FIsSuspended write FIsSuspended;
   end;
 
@@ -41,9 +41,9 @@ end;
 procedure   TFMDThread.SetIsTerminated(ABool: Boolean);
 begin
   if ABool then
-    MainThreadSetIsTerminatedTRUE
+    Synchronize(MainThreadSetIsTerminatedTRUE)
   else
-    MainThreadSetIsTerminatedFALSE;
+    Synchronize(MainThreadSetIsTerminatedFALSE);
 end;
 
 // Getters
