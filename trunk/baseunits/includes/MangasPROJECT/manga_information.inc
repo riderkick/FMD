@@ -4,7 +4,30 @@ var
   isExtractSummary: Boolean = TRUE;
   isExtractGenres : Boolean = FALSE;
   isExtractChapter: Boolean = FALSE;
-  i, j: Cardinal;
+  i,j,n: Cardinal;
+  numberOfPage: Cardinal = 1;
+  
+    procedure ExtractChapter;
+  begin
+    if (NOT isExtractChapter) AND (Pos('class="chapter_cont', parse.Strings[i]) > 0) then
+      isExtractChapter:= TRUE;
+
+    // get chapter name and links
+    if (isExtractChapter) AND
+       (Pos('class="nome', parse.Strings[i])>0) then
+    begin
+      Inc(mangaInfo.numChapter);
+	  s:= StringReplace(GetString(parse.Strings[i+22], 'href="', '"'), WebsiteRoots[MANGASPROJECT_ID,1], '', []);
+      mangaInfo.chapterLinks.Add(s);
+      s:= RemoveSymbols(TrimLeft(TrimRight(parse.Strings[i+1])));
+      mangaInfo.chapterName.Add(StringFilter(HTMLEntitiesFilter(s)));
+    end;
+
+    if (isExtractChapter) AND
+       (Pos('paginacao', parse.Strings[i])>0) then
+      isExtractChapter:= FALSE; //bermasalah
+  end;
+  
 begin
   if Pos('http://', URL) = 0 then
     mangaInfo.url:= WebsiteRoots[MANGASPROJECT_ID,1] + '/' + URL
@@ -24,9 +47,8 @@ begin
   Parser.Exec;
 
   Parser.Free;
-  source.Free;
   mangaInfo.website:= MANGASPROJECT_NAME;
-  mangaInfo.status:= '1';
+  mangaInfo.status:= '0';
   mangaInfo.coverLink:= '';
   mangaInfo.summary:= '';
   mangaInfo.authors:= '';
@@ -36,6 +58,9 @@ begin
   if parse.Count=0 then exit;
   for i:= 0 to parse.Count-1 do
   begin
+    if Pos('Última Página', parse.Strings[i])>0 then
+      numberOfPage:= StrToInt(GetString(parse.Strings[i-1], '/page/', '">'));
+	  
     // get cover
     {if (mangaInfo.coverLink = '') AND
        (Pos('class="cvr', parse.Strings[i])>0) then
@@ -45,23 +70,7 @@ begin
     if (Pos('class="text', parse.Strings[i])>0) then
 		mangaInfo.title:= parse.Strings[i+3];
 
-    if (NOT isExtractChapter) AND (Pos('class="chapter_cont', parse.Strings[i]) > 0) then
-      isExtractChapter:= TRUE;
-
-    // get chapter name and links
-    if (isExtractChapter) AND
-       (Pos('class="nome', parse.Strings[i])>0) then
-    begin
-      Inc(mangaInfo.numChapter);
-	  s:= StringReplace(GetString(parse.Strings[i+22], 'href="', '"'), WebsiteRoots[MANGASPROJECT_ID,1], '', []);
-      mangaInfo.chapterLinks.Add(s);
-      s:= RemoveSymbols(TrimLeft(TrimRight(parse.Strings[i+1])));
-      mangaInfo.chapterName.Add(StringFilter(HTMLEntitiesFilter(s)));
-    end;
-
-    if (isExtractChapter) AND
-       (Pos('paginacao', parse.Strings[i])>0) then
-      isExtractChapter:= FALSE; //bermasalah
+    ExtractChapter;
 
     // get summary
     if (Pos('class="text', parse.Strings[i]) <> 0) then
@@ -114,6 +123,33 @@ begin
         mangaInfo.status:= '0';  // completed
     end;
   end;
+
+  if numberOfPage > 1 then
+  begin
+    for n:= 2 to numberOfPage do
+    begin
+      source.Clear;
+      s:= mangaInfo.url + '/' + IntToStr(n);
+      if NOT GetPage(TObject(source), mangaInfo.url + '/page/' + IntToStr(n), Reconnect) then
+      begin
+        Result:= NET_PROBLEM;
+        source.Free;
+        exit;
+      end;
+      // parsing the HTML source
+      parse.Clear;
+      Parser:= TjsFastHTMLParser.Create(PChar(source.Text));
+      Parser.OnFoundTag := OnTag;
+      Parser.OnFoundText:= OnText;
+      Parser.Exec;
+      Parser.Free;
+      isExtractChapter:= FALSE;
+      if parse.Count=0 then exit;
+        for i:= 0 to parse.Count-1 do
+          ExtractChapter;
+    end;
+  end;
+  source.Free;
 
   // Since chapter name and link are inverted, we need to invert them
   if mangainfo.ChapterLinks.Count > 1 then
