@@ -52,9 +52,6 @@ end;
 constructor TUpdateDBThread.Create;
 begin
   inherited Create(FALSE);
-  isSuspended:= TRUE;
-  isTerminated:= FALSE;
-  FreeOnTerminate:= TRUE;
 end;
 
 destructor  TUpdateDBThread.Destroy;
@@ -93,23 +90,9 @@ begin
   Process.Execute;
   Process.Free;
 
-
  // if SavePage(GetMangaDatabaseURL(websiteName), fmdDirectory + DATA_FOLDER, websiteName + '.zip', 10) then
   if FileExists(fmdDirectory + DATA_FOLDER + websiteName + '.dat') then
   begin
-    {UnZipper:= TUnZipper.Create;
-    try
-      UnZipper.FileName  := websiteName + '.zip';
-      UnZipper.OutputPath:= ExtractFilePath(fmdDirectory + DATA_FOLDER + websiteName + '.zip');
-      UnZipper.Examine;
-      UnZipper.UnZipAllFiles;
-    finally
-      UnZipper.Free;
-    end;
-    Sleep(32);
-    DeleteFile(fmdDirectory + DATA_FOLDER + websiteName + '.zip');
-    Sleep(32);}
-
     Synchronize(MainThreadRefreshList);
   end
   else

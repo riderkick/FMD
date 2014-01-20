@@ -211,7 +211,6 @@ end;
 
 constructor TDownloadThread.Create;
 begin
-  FreeOnTerminate:= TRUE;
   inherited Create(FALSE);
 end;
 
@@ -954,7 +953,6 @@ end;
 constructor TTaskThread.Create;
 begin
   anotherURL  := '';
-  FreeOnTerminate:= TRUE;
   threads     := TDownloadThreadList.Create;
   inherited Create(FALSE);
 end;

@@ -67,10 +67,10 @@ procedure   TGetMangaInfosThread.DoGetInfos;
   begin
     Result:= FALSE;
 
-    if mangaListPos > -1 then
+    if FMangaListPos > -1 then
     begin
       filterPos:= MainForm.dataProcess.GetPos(mangaListPos);
-      FInfo.mangaInfo.title:= MainForm.dataProcess.Title.Strings[filterPos];
+      FInfo.mangaInfo.title:= MainForm.dataProcess.Title.Strings[FMangaListPos];
     end;
 
     FInfo.isGenerateFolderChapterName:= MainForm.cbOptionGenerateChapterName.Checked;
@@ -158,12 +158,10 @@ end;
 
 constructor TGetMangaInfosThread.Create;
 begin
-  FreeOnTerminate:= TRUE;
-  FIsFlushed     := FALSE;
-  FInfo          := TMangaInformation.Create;
-  FCover         := MainForm.mangaCover;
-
   inherited Create(FALSE);
+  FIsFlushed:= FALSE;
+  FInfo     := TMangaInformation.Create;
+  FCover    := MainForm.mangaCover;
 end;
 
 destructor  TGetMangaInfosThread.Destroy;
