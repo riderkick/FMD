@@ -132,7 +132,6 @@ constructor TFavoriteThread.Create;
 begin
   isTerminated:= FALSE;
   pass0:= FALSE;
-  FreeOnTerminate:= TRUE;
   getInfo := TMangaInformation.Create;
   getInfo.isGetByUpdater:= FALSE;
   isSuspended:= TRUE;
@@ -319,6 +318,7 @@ var
       threads.Items[0]:= nil;
       threads.Delete(0);
     end;
+    isRunning:= FALSE;
     // Remove completed mangas.
     RemoveCompletedMangas;
     for i:= 0 to CountBeforeChecking-1 do
@@ -338,7 +338,6 @@ var
     SetLength(newChapterElementPositionList, 0);
     SetLength(mangaInfo, 0);
     l.Free;
-    isRunning:= FALSE;
   end;
 
 var
@@ -562,10 +561,10 @@ begin
     end;
   end;
 
+  FreeBuffers;
   if Assigned(OnUpdateFavorite) then
     OnUpdateFavorite;
 
-  FreeBuffers;
   // Save new result to favorites.ini.
   Backup;
 end;
@@ -754,9 +753,9 @@ procedure   TFavoriteManager.Sort(const AColumn: Cardinal);
   function  GetStr(const ARow: Cardinal): String;
   begin
     case AColumn of
-      0: Result:= favoriteInfo[ARow].title;
-      1: Result:= favoriteInfo[ARow].currentChapter;
-      2: Result:= favoriteInfo[ARow].website;
+      1: Result:= favoriteInfo[ARow].title;
+      2: Result:= favoriteInfo[ARow].currentChapter;
+      3: Result:= favoriteInfo[ARow].website;
     end;
   end;
 
@@ -774,7 +773,7 @@ procedure   TFavoriteManager.Sort(const AColumn: Cardinal);
         FALSE:
           begin
             case AColumn of
-              1:
+              2:
                 begin
                   while StrToInt(GetStr(i)) < StrToInt(X) do Inc(i);
                   while StrToInt(GetStr(j)) > StrToInt(X) do Dec(j);
@@ -789,7 +788,7 @@ procedure   TFavoriteManager.Sort(const AColumn: Cardinal);
         TRUE:
           begin
             case AColumn of
-              1:
+              2:
                 begin
                   while StrToInt(GetStr(i)) > StrToInt(X) do Inc(i);
                   while StrToInt(GetStr(j)) < StrToInt(X) do Dec(j);
