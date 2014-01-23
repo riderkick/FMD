@@ -744,6 +744,9 @@ var
 
   // get directory page number from CentralDeMangas
   {$I includes/CentralDeMangas/directory_page_number.inc}
+  
+    // get directory page number from Manga2u
+  {$I includes/Manga2u/directory_page_number.inc}
 
   function   GetDM5DirectoryPageNumber: Byte;
   var
@@ -842,6 +845,9 @@ begin
   if website = CENTRALDEMANGAS_NAME then
     Result:= GetCentralDeMangasDirectoryPageNumber
   else
+  if website = MANGA2U_NAME then
+    Result:= GetManga2uDirectoryPageNumber
+  else
   if website = EATMANGA_NAME then
   begin
     Result:= NO_ERROR;
@@ -866,6 +872,9 @@ var
   source: TStringList;
   Parser: TjsFastHTMLParser;
 
+  // get names and links of the manga from Manga2u
+  {$I includes/Manga2u/names_and_links.inc}
+  
   // get names and links of the manga from AnimeA
   {$I includes/AnimeA/names_and_links.inc}
 
@@ -1046,7 +1055,7 @@ var
 
   // get names and links of the manga from MeinManga
   {$I includes/MeinManga/names_and_links.inc}
-  
+    
   // get names and links of the manga from MangasPROJECT
   {$I includes/MangasPROJECT/names_and_links.inc}
   
@@ -1130,9 +1139,6 @@ begin
   else
   if website = MANGAREADER_NAME then
     Result:= MangaReaderGetNamesAndLinks
-  else
-  if website = MANGAPARK_NAME then
-    Result:= MangaParkGetNamesAndLinks
   else
   if website = MANGAFOX_NAME then
     Result:= MangaFoxGetNamesAndLinks
@@ -1259,6 +1265,9 @@ begin
   else
   if website = MANGAREADER_POR_NAME then
     Result:= MangaREADER_PORGetNamesAndLinks
+  else
+  if website = MANGA2U_NAME then
+    Result:= Manga2uGetNamesAndLinks
 end;
 
 function    TMangaInformation.GetInfoFromURL(const website, URL: String; const Reconnect: Cardinal): Byte;
@@ -1404,6 +1413,9 @@ var
 
 // get manga infos from MeinManga site
 {$I includes/MeinManga/manga_information.inc}
+
+// get manga infos from Manga2u site
+{$I includes/Manga2u/manga_information.inc}
 
 // get manga infos from g.e-hentai site (dummy)
 function   GetGEHentaiInfoFromURL_Dummy: Byte;
@@ -1646,6 +1658,9 @@ begin
   else
   if website = MEINMANGA_NAME then
     Result:= GetMeinMangaInfoFromURL
+  else
+  if website = MANGA2U_NAME then
+    Result:= GetManga2uInfoFromURL
   else
   if website = SUBMANGA_NAME then
     Result:= GetSubMangaInfoFromURL
