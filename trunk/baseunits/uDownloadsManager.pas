@@ -314,6 +314,8 @@ var
   {$I includes/S2scans/chapter_page_number.inc}
 
   {$I includes/MeinManga/chapter_page_number.inc}
+  
+  {$I includes/Manga2u/chapter_page_number.inc}
 
   {$I includes/EGScans/chapter_page_number.inc}
 
@@ -438,6 +440,9 @@ begin
     if manager.container.mangaSiteID = MEINMANGA_ID then
       Result:= GetMeinMangaPageNumber
     else
+	if manager.container.mangaSiteID = MANGA2U_ID then
+      Result:= GetManga2uPageNumber
+    else
     if manager.container.mangaSiteID = ESMANGAHERE_ID then
       Result:= GetEsMangaHerePageNumber
     else
@@ -543,6 +548,8 @@ var
   {$I includes/Batoto/image_url.inc}
 
   {$I includes/MeinManga/image_url.inc}
+  
+  {$I includes/Manga2u/image_url.inc}
 
   {$I includes/Manga24h/image_url.inc}
 
@@ -702,6 +709,9 @@ begin
     else
     if manager.container.mangaSiteID = MEINMANGA_ID then
       Result:= GetMeinMangaImageURL
+    else
+	if manager.container.mangaSiteID = MANGA2U_ID then
+      Result:= GetManga2uImageURL
     else
     if manager.container.mangaSiteID = MANGA24H_ID then
       Result:= GetManga24hImageURL
