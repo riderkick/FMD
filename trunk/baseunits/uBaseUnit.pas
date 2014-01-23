@@ -153,6 +153,7 @@ const
   MEINMANGA_NAME    = 'MeinManga';    MEINMANGA_ID   = 52;
   MANGASPROJECT_NAME    = 'MangasPROJECT';    MANGASPROJECT_ID   = 53;
   MANGAREADER_POR_NAME    = 'MangaREADER_POR';    MANGAREADER_POR_ID   = 54;
+  MANGA2U_NAME    = 'Manga2u';    MANGA2U_ID   = 55;
 
   DEFAULT_LIST = ANIMEA_NAME+'!%~'+MANGAFOX_NAME+'!%~'+MANGAHERE_NAME+'!%~'+MANGAINN_NAME+'!%~'+MANGAREADER_NAME+'!%~';
   DEFAULT_CUSTOM_RENAME = '%NUMBERING% - %CHAPTER%';
@@ -219,7 +220,7 @@ var
   SEPERATOR: String = '!%~';
   SEPERATOR2: String = '~%!';
 
-  WebsiteRoots  : array[0..54] of array [0..1] of String =
+  WebsiteRoots  : array[0..55] of array [0..1] of String =
     (('AnimeA', 'http://manga.animea.net'),
      ('MangaHere', 'http://www.mangahere.com'),
      ('MangaInn', 'http://www.mangainn.com'),
@@ -274,7 +275,8 @@ var
      ('Mangacan', 'http://mangacanblog.com'),
      ('MeinManga', 'http://www.meinmanga.com/'),
 	 ('MangasPROJECT', 'http://www.mangasproject.net'),
-	 ('MangaREADER_POR', 'http://www.mangareader.com.br')
+	 ('MangaREADER_POR', 'http://www.mangareader.com.br'),
+	 ('Manga2u', 'http://www.manga2u.me')
     );
 
   ANIMEA_BROWSER: String = '/browse.html?page=';
@@ -403,6 +405,8 @@ var
   MANGASPROJECT_BROWSER: String = '/AJAX/listaMangas/all';
   
   MANGAREADER_POR_BROWSER: String = '/AJAX/listaMangas/all';
+  
+  MANGA2U_BROWSER: String = '/list/all/any/most-popular/';
 
   UPDATE_URL      : String = 'http://jaist.dl.sourceforge.net/project/fmd/FMD/updates/';
 
@@ -476,6 +480,7 @@ var
 
   OptionShowBatotoSG      : Boolean = TRUE;
   OptionShowAllLang       : Boolean = TRUE;
+  OptionAutoDlFav       : Boolean = TRUE;
   OptionBatotoUseIEChecked: Boolean = FALSE;
   OptionEnableLoadCover: Boolean = FALSE;
   OptionAutoNumberChapterChecked: Boolean = TRUE;
