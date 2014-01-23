@@ -441,6 +441,12 @@ begin
     end;
   end
   else
+  //give an option to straight download or not
+  if OptionAutoDlFav then
+	begin
+	isDownloadNow:= TRUE;
+	end
+  else
   // There're new chapters, we need to process them ...
   begin
     if isShowDialog then
