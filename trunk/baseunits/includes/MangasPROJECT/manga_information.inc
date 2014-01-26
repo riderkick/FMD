@@ -30,7 +30,7 @@ var
   
 begin
   if Pos('http://', URL) = 0 then
-    mangaInfo.url:= WebsiteRoots[MANGASPROJECT_ID,1] + '/' + URL
+    mangaInfo.url:= WebsiteRoots[MANGASPROJECT_ID,1] + URL
   else
     mangaInfo.url:= URL;
   if NOT GetPage(TObject(source), mangaInfo.url, Reconnect) then
