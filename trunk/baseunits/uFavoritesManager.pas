@@ -265,7 +265,7 @@ begin
   if (NOT isAuto) AND ((isRunning) OR (MainForm.silentThreadCount > 0)) then
   begin
     MessageDlg('', stDlgFavoritesIsRunning,
-                mtInformation, [mbYes, mbNo], 0);
+                mtInformation, [mbOk], 0);
     exit;
   end
   else
@@ -289,6 +289,7 @@ end;
 
 procedure   TFavoriteManager.ShowResult;
 var
+  s1, s2: String;
   numberOfNewChapters: Cardinal = 0;
   l: TStringList;
   newChapterURLList,
@@ -297,14 +298,16 @@ var
   newChapterElementPositionList: array of TCardinalList;
 
   // Check if a string is exists a list
-  function  Check(const list: TStringList; const s: String): Boolean;
+  function  Check(list: TStringList; s: String): Boolean;
   var
     i: Cardinal;
   begin
     Result:= FALSE;
     for i:= 0 to list.Count-1 do
-      if CompareStr(list.Strings[i], s)=0 then
+    begin
+      if (Trim(l.Strings[i]) = '') OR (CompareStr(list.Strings[i], s)=0) then
         exit(TRUE);
+    end;
   end;
 
   // Free all used memory when the checking is done
@@ -388,7 +391,8 @@ begin
     begin
       for j:= 0 to mangaInfo[i].chapterLinks.Count-1 do
       begin
-        if NOT Check(l, mangaInfo[i].chapterLinks.Strings[j]) then
+        if (mangaInfo[i].chapterLinks.Strings[j] <> '') AND
+           (NOT Check(l, mangaInfo[i].chapterLinks.Strings[j])) then
         begin
           // We've found a new chapter...
           if (newChapterURLList[i]  = nil) OR
@@ -560,6 +564,8 @@ begin
   begin
     if mangaInfo[i].numChapter>0 then
     begin
+      if Trim(mangaInfo[i].chapterLinks.Text) = '' then
+        continue;
       favoriteInfo[i].currentChapter:= IntToStr(mangaInfo[i].numChapter);
       favoriteInfo[i].downloadedChapterList:= '';
       for j:= 0 to mangaInfo[i].numChapter-1 do
@@ -762,6 +768,7 @@ procedure   TFavoriteManager.Sort(const AColumn: Cardinal);
       1: Result:= favoriteInfo[ARow].title;
       2: Result:= favoriteInfo[ARow].currentChapter;
       3: Result:= favoriteInfo[ARow].website;
+      4: Result:= favoriteInfo[ARow].SaveTo;
     end;
   end;
 
