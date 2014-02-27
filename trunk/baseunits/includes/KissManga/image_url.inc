@@ -1,6 +1,6 @@
   function GetKissMangaImageURL: Boolean;
   var
-    s: String;
+    s, imageURL: String;
     j,
     i: Cardinal;
     l: TStringList;
@@ -25,7 +25,13 @@
           s:= parse.Strings[i];
           repeat
             j:= Pos('lstImages.push("', s);
-            manager.container.pageLinks.Add(EncodeUrl(GetString(s, 'lstImages.push("', '");')));
+            imageURL:= DecodeUrl(GetString(s, 'lstImages.push("', '");'));
+            if (Pos('googleusercontent', imageURL) > 0) AND
+               (Pos('proxy?', imageURL) > 0) then
+            begin
+              imageURL:= GetString(imageURL + '<~>', '*&url=', '<~>');
+            end;
+            manager.container.pageLinks.Add(EncodeUrl(imageURL));
             Delete(s, Pos('lstImages.push("', s), 16);
             j:= Pos('lstImages.push("', s);
           until j = 0;
