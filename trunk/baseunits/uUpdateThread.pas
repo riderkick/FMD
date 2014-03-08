@@ -349,11 +349,7 @@ begin
       begin
         website:= websites.Strings[i];
         Synchronize(MainThreadShowGetting);
-        Process:= TProcess.Create(nil);
-        Process.CommandLine:= 'updater 1 '+GetMangaDatabaseURL(website);
-        Process.Options:= Process.Options + [poWaitOnExit];
-        Process.Execute;
-        Process.Free;
+        fmdRunAsAdmin('updater.exe', '1 '+GetMangaDatabaseURL(website), TRUE);
         Synchronize(RefreshList);
       end;
     end

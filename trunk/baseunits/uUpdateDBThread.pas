@@ -84,11 +84,7 @@ begin
   while isSuspended do Sleep(32);
   Synchronize(MainThreadShowGetting);
 
-  Process:= TProcess.Create(nil);
-  Process.CommandLine:= 'updater 1 '+GetMangaDatabaseURL(websiteName);
-  Process.Options:= Process.Options + [poWaitOnExit];
-  Process.Execute;
-  Process.Free;
+  fmdRunAsAdmin('updater.exe', '1 '+GetMangaDatabaseURL(websiteName), TRUE);
 
  // if SavePage(GetMangaDatabaseURL(websiteName), fmdDirectory + DATA_FOLDER, websiteName + '.zip', 10) then
   if FileExists(fmdDirectory + DATA_FOLDER + websiteName + '.dat') then
