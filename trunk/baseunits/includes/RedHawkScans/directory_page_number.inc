@@ -22,7 +22,8 @@ function   GetRedHawkScansDirectoryPageNumber: Byte;
     end;
     for i:= 0 to parse.Count-1 do
     begin
-      if (Pos('Last ', parse.Strings[i]) > 0) then
+      if (Pos('Last ', parse.Strings[i]) > 0) AND
+         (Pos('class="gbutton', parse.Strings[i-1]) > 0) then
       begin
         s:= TrimRight(TrimLeft(GetString(parse.Strings[i-1], '/list/', '/"')));
         Page:= StrToInt(s);
