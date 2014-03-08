@@ -27,7 +27,10 @@ type
     workCounter      : Cardinal;
 
     FSortColumn  : Cardinal;
+    FMessage,
     FAnotherURL  : String;
+
+    procedure   MainThreadMessageDialog;
 
     // Helper method allows to merge 2 images into 1 image.
     // Final image format: png.
@@ -61,11 +64,13 @@ type
 
   TTaskThread = class(TFMDThread)
   protected
-    FAnotherURL  : String;
+    FMessage,
+    FAnotherURL: String;
 
     procedure   CheckOut;
     procedure   MainThreadCompressRepaint;
     procedure   MainThreadRepaint;
+    procedure   MainThreadMessageDialog;
     procedure   Execute; override;
     procedure   Compress;
     // show notification when download completed
@@ -238,7 +243,10 @@ begin
           GetPageNumberFromURL(manager.container.chapterLinks.Strings[manager.container.currentDownloadChapterPtr]);
         except
           on E: Exception do
-            MessageDlg('Exception occured: ', E.Message, mtInformation, [mbOk], '');
+          begin
+            FMessage:= 'In TDownloadThread.Execute.CS_GETPAGENUMBER:' + #10#13 + E.Message;
+            Synchronize(MainThreadMessageDialog);
+          end;
         end;
         // Prepare 'space' for storing image url.
         if (NOT Terminated) AND
@@ -256,7 +264,10 @@ begin
             GetLinkPageFromURL(manager.container.chapterLinks.Strings[manager.container.currentDownloadChapterPtr]);
         except
           on E: Exception do
-            MessageDlg('Exception occured: ', E.Message, mtInformation, [mbOk], '');
+          begin
+            FMessage:= 'In TDownloadThread.Execute.CS_GETPAGELINK:' + #10#13 + E.Message;
+            Synchronize(MainThreadMessageDialog);
+          end;
         end;
       end;
     // Download images.
@@ -267,7 +278,10 @@ begin
             DownloadImage;
         except
           on E: Exception do
-            MessageDlg('Exception occured: ', E.Message, mtInformation, [mbOk], '');
+          begin
+            FMessage:= 'In TDownloadThread.Execute.CS_DOWNLOAD:' + #10#13 + E.Message;
+            Synchronize(MainThreadMessageDialog);
+          end;
         end;
       end;
   end;
@@ -845,6 +859,11 @@ begin
   end;
 end;
 
+procedure   TDownloadThread.MainThreadMessageDialog;
+begin
+  MessageDlg('TDownloadThread', FMessage, mtInformation, [mbOk], '');
+end;
+
 procedure   TDownloadThread.Merge2Images(const path, imgName1, imgName2, finalName: String);
 var
   rect: TRect;
@@ -984,6 +1003,11 @@ begin
   MainForm.vtDownload.Repaint;
 end;
 
+procedure   TTaskThread.MainThreadMessageDialog;
+begin
+  MessageDlg('TTaskThread', FMessage, mtInformation, [mbOk], '');
+end;
+
 procedure   TTaskThread.Compress;
 var
   uPacker: TPacker;
@@ -1071,7 +1095,15 @@ begin
     begin
       while isSuspended do Sleep(100);
       Inc(container.activeThreadCount);
-      threads.Items[i]:= TDownloadThread.Create;
+      try
+        threads.Items[i]:= TDownloadThread.Create;  // Sometimes we get segfault in here, why ?
+      except
+        on E: Exception do
+        begin
+          FMessage:= 'In TTaskThread.Checkout:' + #10#13 + E.Message;
+          Synchronize(MainThreadMessageDialog);
+        end;
+      end;
       if container.mangaSiteID = GEHENTAI_ID then
         threads.Items[i].anotherURL:= anotherURL;
       threads.Items[i].manager:= self;

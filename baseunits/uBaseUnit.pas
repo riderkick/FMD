@@ -17,6 +17,7 @@ uses
 
 const
   MUTEX              = '_FMD_MUTEX_';
+  FMD_REVISION       = '$WCREV$';
 
   JPG_HEADER: array[0..2] of Byte = ($FF, $D8, $FF);
   GIF_HEADER: array[0..2] of Byte = ($47, $49, $46);
@@ -631,11 +632,12 @@ function  fmdGetTempPath: String;
 function  fmdGetTickCount: Cardinal;
 procedure fmdPowerOff;
 procedure fmdHibernate;
+function  fmdRunAsAdmin(path, params: String; isPersistent: Boolean): Boolean;
 
 implementation
 
 uses
-  Process, FileUtil{$IFDEF WINDOWS}, Windows{$ENDIF}, Synacode, lazutf8classes;
+  Process, FileUtil{$IFDEF WINDOWS}, ShellApi, Windows{$ENDIF}, Synacode, lazutf8classes;
 
 {$IFDEF WINDOWS}
 
@@ -2070,6 +2072,25 @@ begin
   {$IFDEF WINDOWS}
   SetSuspendState(TRUE, FALSE, FALSE);
   {$ENDIF}
+end;
+
+function  fmdRunAsAdmin(path, params: String; isPersistent: Boolean): Boolean;
+var
+  sei: TShellExecuteInfoA;
+begin
+  FillChar(sei, SizeOf(sei), 0);
+  sei.cbSize := SizeOf(sei);
+  sei.Wnd    := 0;
+  sei.fMask  := SEE_MASK_FLAG_DDEWAIT OR SEE_MASK_FLAG_NO_UI;
+  if isPersistent then
+    sei.fMask:= sei.fMask OR SEE_MASK_NOCLOSEPROCESS;
+  sei.lpVerb := 'runas';
+  sei.lpFile := PAnsiChar(path);
+  sei.lpParameters := PAnsiChar(params);
+  sei.nShow  := SW_SHOWNORMAL;
+  Result     := ShellExecuteExA(@sei);
+  if isPersistent then
+    WaitForSingleObject(sei.hProcess, INFINITE);
 end;
 
 begin

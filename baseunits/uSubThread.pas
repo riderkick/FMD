@@ -105,8 +105,6 @@ begin
 end;
 
 procedure   TSubThread.MainThreadUpdate;
-var
-  Process: TProcess;
 begin
   if MessageDlg('', Format(stDlgNewVersion + #10#13#10#13 + fNote, [LVersion, LRevision]),
                     mtInformation, [mbYes, mbNo], 0) = mrYes then
@@ -114,11 +112,8 @@ begin
     CopyFile(fmdDirectory + 'updater.exe', fmdDirectory + 'old_updater.exe');
     CopyFile(fmdDirectory + CONFIG_FOLDER + CONFIG_FILE,
              fmdDirectory + CONFIG_FOLDER + CONFIG_FILE + '.tmp');
-    Process:= TProcess.Create(nil);
-    Process.CommandLine:= fmdDirectory + 'old_updater.exe 1';
     MainForm.CloseNow;
-    Process.Execute;
-    Process.Free;
+    fmdRunAsAdmin(fmdDirectory + 'old_updater.exe', '1', FALSE);
     Halt;
   end
   else
