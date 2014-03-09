@@ -81,7 +81,7 @@ begin
     //  mangaInfo.artists:= TrimLeft(parse.Strings[i+1]);
 
     // get genres
-    if (Pos('class="category"', parse.Strings[i])<>0) then
+    if (NOT isExtractGenres) AND (Pos('class="category"', parse.Strings[i])<>0) then
     begin
       isExtractGenres:= TRUE;
       mangaInfo.genres:= '';
