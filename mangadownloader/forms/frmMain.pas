@@ -1351,8 +1351,8 @@ begin
   with Sender do
   begin
     data:= GetNodeData(Node);
-    if (mangaInfo.website <> GEHENTAI_NAME) AND
-       (mangaInfo.website <> FAKKU_NAME) then
+    if (mangaInfo.website <> WebsiteRoots[GEHENTAI_ID,0]) AND
+       (mangaInfo.website <> WebsiteRoots[FAKKU_ID,0]) then
       data.text:= Format('%.4d - %s', [Node.Index+1, mangaInfo.chapterName.Strings[Node.Index]])
     else
       data.text:= mangaInfo.chapterName.Strings[Node.Index];
