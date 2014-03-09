@@ -348,8 +348,8 @@ var
   REDHAWKSCANS_BROWSER: String = '/reader/list/';
 
   BLOGTRUYEN_BROWSER   : String = '/danhsach/tatca';
-  BLOGTRUYEN_JS_BROWSER: String = '/partialDanhSach/listtruyen/';
-  BLOGTRUYEN_POST_FORM : String = 'listOrCate=list&orderBy=title&key=tatca&page=';
+  BLOGTRUYEN_JS_BROWSER: String = '/ListStory/GetListStory/';
+  BLOGTRUYEN_POST_FORM : String = 'Url=tatca&OrderBy=1&PageIndex=';
 
   KOMIKID_BROWSER: String = '/';
 

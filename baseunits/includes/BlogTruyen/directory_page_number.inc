@@ -24,7 +24,7 @@ function   GetBlogTruyenDirectoryPageNumber: Byte;
     begin
       if (Pos('[cuối]', parse.Strings[i]) > 0) then
       begin
-        s:= TrimRight(TrimLeft(GetString(parse.Strings[i-1], 'trang(', ')')));
+        s:= TrimRight(TrimLeft(GetString(parse.Strings[i-1], 'LoadPage(', ')')));
         Page:= StrToInt(s);
         Result:= NO_ERROR;
         source.Free;
