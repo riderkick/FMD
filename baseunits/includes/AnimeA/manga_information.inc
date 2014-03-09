@@ -20,7 +20,7 @@ begin
 
   Parser.Free;
   source.Free;
-  mangaInfo.website:= ANIMEA_NAME;
+  mangaInfo.website:= WebsiteRoots[ANIMEA_ID,0];
 
   // using parser (cover link, summary, chapter name and link)
   if parse.Count=0 then exit;

@@ -23,7 +23,7 @@ begin
 
   Parser.Free;
   source.Free;
-  mangaInfo.website:= MANGASTREAM_NAME;
+  mangaInfo.website:= WebsiteRoots[MANGASTREAM_ID,0];
 
   mangaInfo.coverLink:= '';
   mangaInfo.summary:= '';

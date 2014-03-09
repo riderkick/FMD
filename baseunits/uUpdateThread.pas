@@ -119,7 +119,7 @@ begin
        // if manager.website = BATOTO_NAME then
        //   manager.directoryCount:= batotoLastDirectoryPage;
         {$ENDIF}
-        if manager.website = FAKKU_NAME then
+        if manager.website = WebsiteRoots[FAKKU_ID,0] then
         begin
           FAKKU_BROWSER:= FAKKU_MANGA_BROWSER;
           info.GetDirectoryPage(manager.directoryCount , manager.website);
@@ -127,7 +127,7 @@ begin
           info.GetDirectoryPage(manager.directoryCount2, manager.website);
         end
         else
-        if manager.website = MANGAEDEN_NAME then
+        if manager.website = WebsiteRoots[MANGAEDEN_ID,0] then
         begin
           MANGAEDEN_BROWSER:= MANGAEDEN_EN_BROWSER;
           info.GetDirectoryPage(manager.directoryCount , manager.website);
@@ -135,7 +135,7 @@ begin
           info.GetDirectoryPage(manager.directoryCount2, manager.website);
         end
         else
-        if manager.website = PERVEDEN_NAME then
+        if manager.website = WebsiteRoots[PERVEDEN_ID,0] then
         begin
           PERVEDEN_BROWSER:= PERVEDEN_EN_BROWSER;
           info.GetDirectoryPage(manager.directoryCount , manager.website);
@@ -151,7 +151,7 @@ begin
       end;
     CS_DIRECTORY_PAGE:
       begin
-        if manager.website = FAKKU_NAME then
+        if manager.website = WebsiteRoots[FAKKU_ID,0] then
         begin
           if Integer(workPtr-manager.directoryCount) >= 0 then
           begin
@@ -165,7 +165,7 @@ begin
           end;
         end
         else
-        if manager.website = MANGAEDEN_NAME then
+        if manager.website = WebsiteRoots[MANGAEDEN_ID,0] then
         begin
           if Integer(workPtr-manager.directoryCount) >= 0 then
           begin
@@ -179,7 +179,7 @@ begin
           end;
         end
         else
-        if manager.website = PERVEDEN_NAME then
+        if manager.website = WebsiteRoots[PERVEDEN_ID,0] then
         begin
           if Integer(workPtr-manager.directoryCount) >= 0 then
           begin
@@ -358,13 +358,13 @@ begin
     for i:= 0 to websites.Count-1 do
     begin
       website:= websites.Strings[i];
-      if website = GEHENTAI_NAME then
+      if website = WebsiteRoots[GEHENTAI_ID,0] then
         numberOfThreads:= 1
       else
-      if website = EATMANGA_NAME then
+      if website = WebsiteRoots[EATMANGA_ID,0] then
         numberOfThreads:= 1
       else
-      if website = SCANMANGA_NAME then
+      if website = WebsiteRoots[SCANMANGA_ID,0] then
         numberOfThreads:= 2
       else
         numberOfThreads:= 4;
@@ -391,9 +391,9 @@ begin
       while threadCount > 0 do Sleep(100);
 
       workPtr:= 0;
-      if (website = FAKKU_NAME) OR
-         (website = MANGAEDEN_NAME) OR
-         (website = PERVEDEN_NAME) then
+      if (website = WebsiteRoots[FAKKU_ID,0]) OR
+         (website = WebsiteRoots[MANGAEDEN_ID,0]) OR
+         (website = WebsiteRoots[PERVEDEN_ID,0]) then
         getInfo(directoryCount+directoryCount2, CS_DIRECTORY_PAGE)
       else
         getInfo(directoryCount, CS_DIRECTORY_PAGE);
@@ -473,10 +473,10 @@ begin
         continue;
       end;
 
-      if (website <> TURKCRAFT_NAME) AND
-         (website <> MANGAFRAME_NAME) AND
-         (website <> MANGAVADISI_NAME) AND
-         (website <> KOMIKID_NAME) then
+      if (website <> WebsiteRoots[TURKCRAFT_ID,0]) AND
+         (website <> WebsiteRoots[MANGAFRAME_ID,0]) AND
+         (website <> WebsiteRoots[MANGAVADISI_ID,0]) AND
+         (website <> WebsiteRoots[KOMIKID_ID,0]) then
       begin
         workPtr:= 0;
 
@@ -524,21 +524,21 @@ begin
       // sync data based on existing sites
       if  (mainDataProcess.Data.Count > 0) AND
           (sitesWithoutInformation(website)) AND
-         ((FileExists(DATA_FOLDER + ANIMEA_NAME + DATA_EXT)) OR
-          (FileExists(DATA_FOLDER + MANGAPARK_NAME + DATA_EXT))) then
+         ((FileExists(DATA_FOLDER + WebsiteRoots[ANIMEA_ID,0] + DATA_EXT)) OR
+          (FileExists(DATA_FOLDER + WebsiteRoots[MANGAPARK_ID,0] + DATA_EXT))) then
       begin
         syncProcess:= TDataProcess.Create;
-        if FileExists(DATA_FOLDER + MANGAPARK_NAME + DATA_EXT) then
-          syncProcess.LoadFromFile(MANGAPARK_NAME)
+        if FileExists(DATA_FOLDER + WebsiteRoots[MANGAPARK_ID,0] + DATA_EXT) then
+          syncProcess.LoadFromFile(WebsiteRoots[MANGAPARK_ID,0])
         else
-        if FileExists(DATA_FOLDER + BATOTO_NAME + DATA_EXT) then
-          syncProcess.LoadFromFile(BATOTO_NAME)
+        if FileExists(DATA_FOLDER + WebsiteRoots[BATOTO_ID,0] + DATA_EXT) then
+          syncProcess.LoadFromFile(WebsiteRoots[BATOTO_ID,0])
         else
-        if FileExists(DATA_FOLDER + MANGAGO_NAME + DATA_EXT) then
-          syncProcess.LoadFromFile(MANGAPARK_NAME)
+        if FileExists(DATA_FOLDER + WebsiteRoots[MANGAGO_ID,0] + DATA_EXT) then
+          syncProcess.LoadFromFile(WebsiteRoots[MANGAGO_ID,0])
         else
-        if FileExists(DATA_FOLDER + ANIMEA_NAME + DATA_EXT) then
-          syncProcess.LoadFromFile(ANIMEA_NAME);
+        if FileExists(DATA_FOLDER + WebsiteRoots[ANIMEA_ID,0] + DATA_EXT) then
+          syncProcess.LoadFromFile(WebsiteRoots[ANIMEA_ID,0]);
 
         // brute force ...
         for k:= 0 to mainDataProcess.Data.Count-1 do
@@ -546,8 +546,8 @@ begin
           for j:= 0 to syncProcess.Data.Count-1 do
             if SameText(mainDataProcess.Param[k, DATA_PARAM_NAME], syncProcess.Param[j, DATA_PARAM_NAME]) then
             begin
-              if (website = MANGASTREAM_NAME) OR
-                 (website = S2SCAN_NAME) then
+              if (website = WebsiteRoots[MANGASTREAM_ID,0]) OR
+                 (website = WebsiteRoots[S2SCAN_ID,0]) then
                 s:= syncProcess.Param[j, DATA_PARAM_SUMMARY]
               else
                 s:= mainDataProcess.Param[k, DATA_PARAM_SUMMARY];

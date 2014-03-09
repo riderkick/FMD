@@ -19,7 +19,7 @@ begin
   Parser.Exec;
   Parser.Free;
   source.Free;
-  mangaInfo.website:= MANGAINN_NAME;
+  mangaInfo.website:= WebsiteRoots[MANGAINN_ID,0];
 
   // using parser
   if parse.Count=0 then exit;

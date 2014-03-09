@@ -24,7 +24,7 @@ begin
   Parser.Free;
   source.Free;
 
-  mangaInfo.website:= SENMANGA_NAME;
+  mangaInfo.website:= WebsiteRoots[SENMANGA_ID,0];
   mangaInfo.coverLink:= '';
   mangaInfo.summary:= '';
   mangaInfo.authors:= '';

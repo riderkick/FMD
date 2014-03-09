@@ -22,7 +22,7 @@ begin
   Parser.Free;
   source.Free;
 
-  mangaInfo.website:= HUGEMANGA_NAME;
+  mangaInfo.website:= WebsiteRoots[HUGEMANGA_ID,0];
   mangaInfo.status:= '1';
   mangaInfo.coverLink:= '';
   mangaInfo.summary:= '';

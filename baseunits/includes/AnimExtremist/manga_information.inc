@@ -19,7 +19,7 @@ begin
 
   Parser.Free;
   source.Free;
-  mangaInfo.website:= ANIMEEXTREMIST_NAME;
+  mangaInfo.website:= WebsiteRoots[ANIMEEXTREMIST_ID,0];
   mangaInfo.genres:= '';
 
   // using parser (cover link, summary, chapter name and link)

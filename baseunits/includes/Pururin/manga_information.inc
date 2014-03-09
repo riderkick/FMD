@@ -25,7 +25,7 @@ begin
 
   Parser.Free;
   source.Free;
-  mangaInfo.website:= PURURIN_NAME;
+  mangaInfo.website:= WebsiteRoots[PURURIN_ID,0];
   mangaInfo.status:= '';
   mangaInfo.coverLink:= '';
   mangaInfo.summary:= '';

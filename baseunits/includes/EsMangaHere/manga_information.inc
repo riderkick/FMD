@@ -19,7 +19,7 @@ begin
 
   Parser.Free;
   source.Free;
-  mangaInfo.website:= ESMANGAHERE_NAME;
+  mangaInfo.website:= WebsiteRoots[ESMANGAHERE_ID,0];  ;
   mangaInfo.status:= '1';
 
   // using parser (cover link, summary, chapter name and link)

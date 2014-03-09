@@ -22,7 +22,7 @@ begin
   Parser.Free;
   source.Free;
 
-  mangaInfo.website:= TURKCRAFT_NAME;
+  mangaInfo.website:= WebsiteRoots[TURKCRAFT_ID,0];
   mangaInfo.status:= '1';
   mangaInfo.coverLink:= '';
   mangaInfo.summary:= '';

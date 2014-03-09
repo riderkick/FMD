@@ -47,7 +47,7 @@ begin
   Parser.Exec;
 
   Parser.Free;
-  mangaInfo.website:= MANGAREADER_POR_NAME;
+  mangaInfo.website:= WebsiteRoots[MANGAREADER_POR_ID,0];
   mangaInfo.status:= '0';
   mangaInfo.coverLink:= '';
   mangaInfo.summary:= '';

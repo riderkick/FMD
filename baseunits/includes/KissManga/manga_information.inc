@@ -22,7 +22,7 @@ begin
 
   Parser.Free;
   source.Free;
-  mangaInfo.website:= KISSMANGA_NAME;
+  mangaInfo.website:= WebsiteRoots[KISSMANGA_ID,0];
 
   // using parser (cover link, summary, chapter name and link)
   if parse.Count=0 then exit;
