@@ -1549,16 +1549,18 @@ globReturn:
     HTTP.Headers.Add('Accept-Encoding: gzip, deflate');
   end
   else
+  if Pos(WebsiteRoots[MEINMANGA_ID,1], URL) = 0 then
   begin
     HTTP.Headers.Add('Accept-Charset: utf-8');
     HTTP.UserAgent:= 'curl/7.21.0 (i686-pc-linux-gnu) libcurl/7.21.0 OpenSSL/0.9.8o zlib/1.2.3.4 libidn/1.18';
   end;
 
   if Pos(WebsiteRoots[GEHENTAI_ID,1], URL) <> 0 then
-    HTTP.Headers.Insert(0, 'Referer:'+URL)
+    HTTP.Headers.Insert(0, 'Referer: '+URL)
   else
   if Pos(WebsiteRoots[MANGAGO_ID,1], URL) <> 0 then
-    HTTP.Headers.Insert(0, 'Referer:'+URL);
+    HTTP.Headers.Insert(0, 'Referer: '+URL);
+
   while (NOT HTTP.HTTPMethod('GET', URL)) OR
         (HTTP.ResultCode > 500) do
   begin
@@ -1728,11 +1730,11 @@ begin
   HTTP.ProxyUser:= User;
   HTTP.ProxyPass:= Pass;
 
-  if mangaSiteID <> MANGAAR_ID then
-    HTTP.UserAgent:='curl/7.21.0 (i686-pc-linux-gnu) libcurl/7.21.0 OpenSSL/0.9.8o zlib/1.2.3.4 libidn/1.18';
+  if (mangaSiteID <> MANGAAR_ID) AND (mangaSiteID <> MEINMANGA_ID) then
+    HTTP.UserAgent:= 'curl/7.21.0 (i686-pc-linux-gnu) libcurl/7.21.0 OpenSSL/0.9.8o zlib/1.2.3.4 libidn/1.18';
 
   if (mangaSiteID >= 0) AND (mangaSiteID <= High(WebsiteRoots)) then
-    HTTP.Headers.Insert(0, 'Referer:'+WebsiteRoots[mangaSiteID,1]+'/');
+    HTTP.Headers.Insert(0, 'Referer: '+WebsiteRoots[mangaSiteID,1]);
 
   while (NOT HTTP.HTTPMethod('GET', URL)) OR
         (HTTP.ResultCode >= 500) OR
@@ -1762,9 +1764,10 @@ begin
       HTTP.Headers.Text:= HTTPHeader.Text;
     HTTP.RangeStart:= 0;
     if (mangaSiteID >= 0) AND (mangaSiteID <= High(WebsiteRoots)) then
-      HTTP.Headers.Insert(0, 'Referer:'+WebsiteRoots[mangaSiteID,1]+'/');
+      HTTP.Headers.Insert(0, 'Referer: '+WebsiteRoots[mangaSiteID,1]);
     while (NOT HTTP.HTTPMethod('GET', URL)) OR
-          (HTTP.ResultCode >= 500) do
+          (HTTP.ResultCode >= 500) OR
+          (HTTP.ResultCode = 403) do
     begin
       if Reconnect <> 0 then
       begin
@@ -1799,7 +1802,7 @@ begin
      (header[2] = GIF_HEADER[2]) then
     ext:= '.gif'
   else
-    ext:= '';
+    ext:= '.txt';
   if ext <> '' then
   begin
     // If an error occured, verify the path and redo the job.
