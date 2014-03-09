@@ -21,12 +21,12 @@
       manager.container.pageLinks.Clear;
       for i:= 0 to parse.Count-1 do
       begin
-        if NOT (isExtrackLink) AND (Pos('<div id="noidungchuong">', parse.Strings[i]) > 0) then
+        if NOT (isExtrackLink) AND (Pos('id="content"', parse.Strings[i]) > 0) then
           isExtrackLink:= TRUE;
         if (isExtrackLink) AND (GetTagName(parse.Strings[i]) = 'img') then
           manager.container.pageLinks.Add(EncodeUrl(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src='))))
         else
-        if (isExtrackLink) AND (Pos('</div>', parse.Strings[i])>0) then
+        if (isExtrackLink) AND (Pos('</article>', parse.Strings[i])>0) then
           break;
       end;
     end;

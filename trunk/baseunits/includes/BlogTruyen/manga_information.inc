@@ -3,7 +3,7 @@ var
   s: String;
   isExtractSummary: Boolean = TRUE;
   isExtractGenres : Boolean = FALSE;
-  isExtractChapter: Boolean = FALSE;
+  isExtractChapter: Boolean = TRUE;
   i, j: Cardinal;
 begin
   mangaInfo.url:= WebsiteRoots[BLOGTRUYEN_ID,1] + URL;
@@ -29,15 +29,15 @@ begin
   begin
     // get cover
     if (mangaInfo.coverLink = '') AND
-       (Pos('img style=''max-width:500px;', parse.Strings[i])>0) then
-      mangaInfo.coverLink:= CorrectURL(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src=')));
+       (Pos('div class="thumbnail"', parse.Strings[i])>0) then
+      mangaInfo.coverLink:= CorrectURL(GetAttributeValue(GetTagAttribute(parse.Strings[i+2], 'src=')));
 
     // get summary
-    if (Pos('sơ lược', parse.Strings[i]) <> 0) AND
+    if (Pos('class="content"', parse.Strings[i]) <> 0) AND
        (isExtractSummary) then
     begin
-      j:= i+3;
-      while (j<parse.Count) AND (Pos('</p>', parse.Strings[j])=0) do
+      j:= i+1;
+      while (j<parse.Count) AND (Pos('</div>', parse.Strings[j])=0) do
       begin
         s:= parse.Strings[j];
         if s[1] <> '<' then
@@ -54,38 +54,34 @@ begin
     end;
 
     // get title
-    if (Pos(' - Blog truyện tranh online', parse.Strings[i])<>0) AND (mangaInfo.title = '') then
-      mangaInfo.title:= TrimLeft(HTMLEntitiesFilter(StringFilter(GetString('~!@'+parse.Strings[i], '~!@', ' - Blog truyện tranh online'))));
-
-    if (NOT isExtractChapter) AND (Pos('Tổng hợp (', parse.Strings[i]) > 0) then
-      isExtractChapter:= TRUE;
+    if (Pos('class="entry-title"', parse.Strings[i])<>0) AND (mangaInfo.title = '') then
+      mangaInfo.title:= Trim(HTMLEntitiesFilter(StringFilter(parse.Strings[i+3])));
 
     // get chapter name and links
     if (isExtractChapter) AND
-       (Pos('title=''Đọc truyện', parse.Strings[i])>0) AND
-       (Pos('/truyen/', parse.Strings[i])>0) then
+       (Pos('class="publishedDate"', parse.Strings[i])>0)  then
     begin
       Inc(mangaInfo.numChapter);
-      s:= GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href='));
+      s:= GetAttributeValue(GetTagAttribute(parse.Strings[i-5], 'href='));
       mangaInfo.chapterLinks.Add(s);
-      s:= RemoveSymbols(TrimLeft(TrimRight(parse.Strings[i+1])));
+      s:= RemoveSymbols(Trim(parse.Strings[i-4]));
       mangaInfo.chapterName.Add(StringFilter(HTMLEntitiesFilter(s)));
     end;
 
     if (isExtractChapter) AND
-       (Pos('để xem truyện nhanh hơn', parse.Strings[i])>0) then
+       (Pos('class="al-c social-button"', parse.Strings[i])>0) then
       isExtractChapter:= FALSE;
 
     // get authors
-    if  (i+8<parse.Count) AND (Pos('Tác giả:', parse.Strings[i])<>0) then
-      mangaInfo.authors:= TrimLeft(TrimRight(parse.Strings[i+3]));
+    if  (i+2<parse.Count) AND (Pos('Tác giả:', parse.Strings[i])<>0) then
+      mangaInfo.authors:= TrimLeft(TrimRight(parse.Strings[i+2]));
 
     // get artists
     //if (i+1<parse.Count) AND (Pos('/search/artist/', parse.Strings[i])<>0) then
     //  mangaInfo.artists:= TrimLeft(parse.Strings[i+1]);
 
     // get genres
-    if (Pos('Thể loại:', parse.Strings[i])<>0) AND (Pos('truyện tranh', parse.Strings[i])=0) then
+    if (Pos('class="category"', parse.Strings[i])<>0) then
     begin
       isExtractGenres:= TRUE;
       mangaInfo.genres:= '';
@@ -97,12 +93,12 @@ begin
       if Pos('Đăng bởi:', s) <> 0 then
         isExtractGenres:= FALSE
       else
-      if (s<>'') AND (s[1] <> '<') AND (s[1] <> ',') AND (Pos('Thể loại:', s)=0) then
+      if (s<>'') AND (s[1] <> '<') AND (Pos('class="category"', parse.Strings[i-2])<>0) then
         mangaInfo.genres:= mangaInfo.genres + s + ', ';
     end;
 
     // get status
-    if (i+12<parse.Count) AND (Pos('Trạng thái:', parse.Strings[i])<>0) then
+    if (i+2<parse.Count) AND (Pos('Trạng thái:', parse.Strings[i])<>0) then
     begin
       if (Pos('Đang tiến hành', parse.Strings[i+2])<>0) OR
          (Pos('Tạm ngưng', parse.Strings[i+2])<>0) then
