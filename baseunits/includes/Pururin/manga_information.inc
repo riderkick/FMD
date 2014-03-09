@@ -4,6 +4,7 @@ var
   isExtractSummary: Boolean = TRUE;
   isExtractGenres : Boolean = FALSE;
   isExtractChapter: Boolean = FALSE;
+  isExtractCharacters: Boolean = FALSE;
   i, j: Cardinal;
 begin
   if Pos('http://', URL) = 0 then
@@ -26,7 +27,6 @@ begin
   Parser.Free;
   source.Free;
   mangaInfo.website:= WebsiteRoots[PURURIN_ID,0];
-  mangaInfo.title:= '';
   mangaInfo.status:= '';
   mangaInfo.coverLink:= '';
   mangaInfo.summary:= '';
@@ -45,7 +45,7 @@ begin
       mangaInfo.coverLink:= CorrectURL(WebsiteRoots[PURURIN_ID,1] + GetAttributeValue(GetTagAttribute(parse.Strings[i+4], 'src=')));
 
     // get title
-    if (Pos('itemprop="title"', parse.Strings[i])<>0) AND (mangaInfo.title = '') then
+    if (Pos('class="otitle"', parse.Strings[i])<>0) AND (mangaInfo.title = '') then
       mangaInfo.title:= Trim(HTMLEntitiesFilter(parse.Strings[i+1]));
 
     if (NOT isExtractChapter) AND (Pos('loader block hidden', parse.Strings[i]) > 0) then
@@ -100,6 +100,26 @@ begin
        (Pos('</td>', parse.Strings[i+1])<>0) then
       mangaInfo.genres:= mangaInfo.genres + parse.Strings[i+6] + ', ';
 
+    // get language
+    if (Pos('Language', parse.Strings[i])<>0) AND
+       (Pos('</td>', parse.Strings[i+1])<>0) then
+      mangaInfo.genres:= mangaInfo.genres + parse.Strings[i+6] + ', ';
+
+    // get character
+    if (Pos('Character', parse.Strings[i])<>0) AND
+       (Pos('</td>', parse.Strings[i+1])<>0) then
+      isExtractCharacters:= TRUE;
+    if isExtractCharacters then
+    begin
+      if Pos('/browse/', parse.Strings[i]) <> 0 then
+        mangaInfo.genres:= mangaInfo.genres + Trim(parse.Strings[i+1]) + ', ';
+      if Pos('</ul>', parse.Strings[i]) <> 0 then
+      begin
+        mangaInfo.genres:= StringReplace(mangaInfo.genres, '</tr>, ', '', []);
+        isExtractCharacters:= FALSE;
+      end;
+    end;
+
     // get genres
     if (Pos('Contents', parse.Strings[i])<>0) then
     begin
@@ -109,7 +129,7 @@ begin
     if isExtractGenres then
     begin
       if Pos('/browse/', parse.Strings[i]) <> 0 then
-        mangaInfo.genres:= mangaInfo.genres + Trim(parse.Strings[i+6]) + ', ';
+        mangaInfo.genres:= mangaInfo.genres + Trim(parse.Strings[i+1]) + ', ';
       if Pos('</ul>', parse.Strings[i]) <> 0 then
       begin
         mangaInfo.genres:= StringReplace(mangaInfo.genres, '</tr>, ', '', []);
