@@ -1,6 +1,6 @@
 function   GetPururinInfoFromURL: Byte;
 var
-  s,g: String;
+  s: String;
   isExtractSummary: Boolean = TRUE;
   isExtractGenres : Boolean = FALSE;
   isExtractChapter: Boolean = FALSE;
@@ -26,6 +26,7 @@ begin
   Parser.Free;
   source.Free;
   mangaInfo.website:= WebsiteRoots[PURURIN_ID,0];
+  mangaInfo.title:= '';
   mangaInfo.status:= '';
   mangaInfo.coverLink:= '';
   mangaInfo.summary:= '';
@@ -44,8 +45,8 @@ begin
       mangaInfo.coverLink:= CorrectURL(WebsiteRoots[PURURIN_ID,1] + GetAttributeValue(GetTagAttribute(parse.Strings[i+4], 'src=')));
 
     // get title
-    if (Pos('<title>', parse.Strings[i])<>0) AND (mangaInfo.title = '') then
-      mangaInfo.title:= TrimLeft(TrimRight(HTMLEntitiesFilter(GetString('~!@'+parse.Strings[i+1], '~!@', ' - Original Hentai Manga by Poin - Pururin, Free Online Hentai Manga and Doujinshi Reader!'))));
+    if (Pos('itemprop="title"', parse.Strings[i])<>0) AND (mangaInfo.title = '') then
+      mangaInfo.title:= Trim(HTMLEntitiesFilter(parse.Strings[i+1]));
 
     if (NOT isExtractChapter) AND (Pos('loader block hidden', parse.Strings[i]) > 0) then
       isExtractChapter:= TRUE;
@@ -54,7 +55,7 @@ begin
        (Pos('class="gallery-cover', parse.Strings[i])>0) then
     begin
       Inc(mangaInfo.numChapter);
-	  s:= WebsiteRoots[PURURIN_ID,1] + GetAttributeValue(GetTagAttribute(parse.Strings[i+2], 'href='));
+      s:= WebsiteRoots[PURURIN_ID,1] + GetAttributeValue(GetTagAttribute(parse.Strings[i+2], 'href='));
       mangaInfo.chapterLinks.Add(s);
       s:= RemoveSymbols(TrimLeft(TrimRight(GetAttributeValue(GetTagAttribute(parse.Strings[i+4], 'alt=')))));
       mangaInfo.chapterName.Add(StringFilter(HTMLEntitiesFilter(s)));
@@ -85,12 +86,19 @@ begin
     end;
 
     // get authors
-    if (Pos('Circle', parse.Strings[i])<>0) then
-      mangaInfo.authors:= parse.Strings[i+1];
+    if (Pos('Circle', parse.Strings[i])<>0) AND
+       (Pos('</td>', parse.Strings[i+1])<>0) then
+      mangaInfo.authors:= parse.Strings[i+6];
 
     // get artists
-    if (Pos('Artist', parse.Strings[i])<>0) then
-      mangaInfo.artists:= parse.Strings[i+1];
+    if (Pos('Artist', parse.Strings[i])<>0) AND
+       (Pos('</td>', parse.Strings[i+1])<>0) then
+      mangaInfo.artists:= parse.Strings[i+6];
+
+    // get parody
+    if (Pos('Parody', parse.Strings[i])<>0) AND
+       (Pos('</td>', parse.Strings[i+1])<>0) then
+      mangaInfo.genres:= mangaInfo.genres + parse.Strings[i+6] + ', ';
 
     // get genres
     if (Pos('Contents', parse.Strings[i])<>0) then
@@ -101,31 +109,12 @@ begin
     if isExtractGenres then
     begin
       if Pos('/browse/', parse.Strings[i]) <> 0 then
-	  g:= mangaInfo.genres + TrimLeft(TrimRight(parse.Strings[i+6])) + ', ';
-        mangaInfo.genres:= StringReplace(g, '</tr>', '', []); //dwi
+        mangaInfo.genres:= mangaInfo.genres + Trim(parse.Strings[i+6]) + ', ';
       if Pos('</ul>', parse.Strings[i]) <> 0 then
+      begin
+        mangaInfo.genres:= StringReplace(mangaInfo.genres, '</tr>, ', '', []);
         isExtractGenres:= FALSE;
-    end;
-
-    // get status
-    {if (i+2<parse.Count) AND (Pos('Status', parse.Strings[i])<>0) then
-    begin
-      if Pos('Ongoing', parse.Strings[i+3])<>0 then
-        mangaInfo.status:= '1'   // ongoing
-      else
-        mangaInfo.status:= '0';  // completed
-    end;}
-  end;
-
-  // Since chapter name and link are inverted, we need to invert them
-  if mangainfo.ChapterLinks.Count > 1 then
-  begin
-    i:= 0; j:= mangainfo.ChapterLinks.Count - 1;
-    while (i<j) do
-    begin
-      mangainfo.ChapterName.Exchange(i, j);
-      mangainfo.chapterLinks.Exchange(i, j);
-      Inc(i); Dec(j);
+      end;
     end;
   end;
   Result:= NO_ERROR;
