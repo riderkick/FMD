@@ -23,7 +23,7 @@ begin
 
   Parser.Free;
   source.Free;
-  mangaInfo.website:= FAKKU_NAME;
+  mangaInfo.website:= WebsiteRoots[FAKKU_ID,0];
 
   mangaInfo.status:= '0';
   mangaInfo.genres:= '';

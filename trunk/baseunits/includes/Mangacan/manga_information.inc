@@ -25,7 +25,7 @@ begin
 
   Parser.Free;
   source.Free;
-  mangaInfo.website:= MANGACAN_NAME;
+  mangaInfo.website:= WebsiteRoots[MANGACAN_ID,0];
   mangaInfo.status:= '1';
   mangaInfo.coverLink:= '';
   mangaInfo.summary:= '';

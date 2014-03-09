@@ -23,7 +23,7 @@ begin
 
   Parser.Free;
   source.Free;
-  mangaInfo.website:= HENTAI2READ_NAME;
+  mangaInfo.website:= WebsiteRoots[HENTAI2READ_ID,0];
 
   // using parser (cover link, summary, chapter name and link)
   if parse.Count=0 then exit;

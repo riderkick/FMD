@@ -229,7 +229,7 @@ begin
 
   // some of the code was taken from subthreads's GetMangaInfo
   // since it's multi-thread, we cannot call IE for fetching info from Batoto
-  if website = GEHENTAI_NAME then
+  if website = WebsiteRoots[GEHENTAI_ID,0] then
     times:= 4
   else
     times:= 3;

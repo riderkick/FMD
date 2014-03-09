@@ -36,7 +36,7 @@ begin
   Parser.OnFoundText:= OnText;
   Parser.Exec;
 
-  mangaInfo.website:= MANGATRADERS_NAME;
+  mangaInfo.website:= WebsiteRoots[MANGATRADERS_ID,0];
   // using parser (cover link, summary, chapter name and link)
   if parse.Count=0 then
   begin

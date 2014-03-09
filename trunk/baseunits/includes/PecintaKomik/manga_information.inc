@@ -23,7 +23,7 @@ begin
 
   Parser.Free;
   source.Free;
-  mangaInfo.website:= PECINTAKOMIK_NAME;
+  mangaInfo.website:= WebsiteRoots[PECINTAKOMIK_ID,0];
   mangaInfo.status:= '1';
   // using parser (cover link, summary, chapter name and link)
   if parse.Count=0 then exit;

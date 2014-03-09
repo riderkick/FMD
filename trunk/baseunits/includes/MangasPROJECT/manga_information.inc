@@ -47,7 +47,7 @@ begin
   Parser.Exec;
 
   Parser.Free;
-  mangaInfo.website:= MANGASPROJECT_NAME;
+  mangaInfo.website:= WebsiteRoots[MANGASPROJECT_ID,0];
   mangaInfo.status:= '0';
   mangaInfo.coverLink:= '';
   mangaInfo.summary:= '';
@@ -58,7 +58,7 @@ begin
   if parse.Count=0 then exit;
   for i:= 0 to parse.Count-1 do
   begin
-    if Pos('Última Página', parse.Strings[i])>0 then
+    if Pos('tima Página', parse.Strings[i])>0 then
       numberOfPage:= StrToInt(GetString(parse.Strings[i-1], '/page/', '">'));
 	  
     // get cover

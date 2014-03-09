@@ -20,7 +20,7 @@ begin
   Parser.Exec;
 
   Parser.Free;
-  mangaInfo.website:= SUBMANGA_NAME;
+  mangaInfo.website:= WebsiteRoots[SUBMANGA_ID,0];
 
   mangaInfo.genres:= '';
   mangaInfo.status:= '1';

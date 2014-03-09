@@ -27,9 +27,9 @@ begin
   Parser.Free;
   source.Free;
   if root = WebsiteRoots[MANGAEDEN_ID,1] then
-    mangaInfo.website:= MANGAEDEN_NAME
+    mangaInfo.website:= WebsiteRoots[MANGAEDEN_ID,0]
   else
-    mangaInfo.website:= PERVEDEN_NAME;
+    mangaInfo.website:= WebsiteRoots[PERVEDEN_ID,0];
   // using parser (cover link, summary, chapter name and link)
   if parse.Count=0 then exit;
   for i:= 0 to parse.Count-1 do

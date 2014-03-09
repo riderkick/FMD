@@ -25,7 +25,7 @@ begin
 
   Parser.Free;
   source.Free;
-  mangaInfo.website:= MANGA24H_NAME;
+  mangaInfo.website:= WebsiteRoots[MANGA24H_ID,0];
   mangaInfo.summary:= '';
 
   // using parser (cover link, summary, chapter name and link)

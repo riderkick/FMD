@@ -99,64 +99,64 @@ const
   NET_PROBLEM           = 1;
   INFORMATION_NOT_FOUND = 2;
 
-  ANIMEA_NAME       = 'AnimeA';       ANIMEA_ID      = 0;
-  MANGAHERE_NAME    = 'MangaHere';    MANGAHERE_ID   = 1;
-  MANGAINN_NAME     = 'MangaInn';     MANGAINN_ID    = 2;
-  OURMANGA_NAME     = 'OurManga';     OURMANGA_ID    = 3;
-  KISSMANGA_NAME    = 'KissManga';    KISSMANGA_ID   = 4;
-  BATOTO_NAME       = 'Batoto';       BATOTO_ID      = 5;
-  MANGA24H_NAME     = 'Manga24h';     MANGA24H_ID    = 6;
-  VNSHARING_NAME    = 'VnSharing';    VNSHARING_ID   = 7;
-  HENTAI2READ_NAME  = 'Hentai2Read';  HENTAI2READ_ID = 8;
-  FAKKU_NAME        = 'Fakku';        FAKKU_ID       = 9;
-  TRUYEN18_NAME     = 'Truyen18';     TRUYEN18_ID    = 10;
-  MANGAREADER_NAME  = 'MangaReader';  MANGAREADER_ID = 11;
-  MANGAPARK_NAME    = 'MangaPark';    MANGAPARK_ID   = 12;
-  GEHENTAI_NAME     = 'E-Hentai';     GEHENTAI_ID    = 13;
-  MANGAFOX_NAME     = 'MangaFox';     MANGAFOX_ID    = 14;
-  MANGATRADERS_NAME = 'MangaTraders'; MANGATRADERS_ID= 15;
-  MANGASTREAM_NAME  = 'MangaStream';  MANGASTREAM_ID = 16;
-  MANGAEDEN_NAME    = 'MangaEden';    MANGAEDEN_ID   = 17;
-  PERVEDEN_NAME     = 'PervEden';     PERVEDEN_ID    = 18;
-  TRUYENTRANHTUAN_NAME = 'TruyenTranhTuan'; TRUYENTRANHTUAN_ID = 19;
-  TURKCRAFT_NAME    = 'Turkcraft';    TURKCRAFT_ID   = 20;
-  MANGAVADISI_NAME  = 'MangaVadisi';  MANGAVADISI_ID = 21;
-  MANGAFRAME_NAME   = 'MangaFrame';   MANGAFRAME_ID  = 22;
-  EATMANGA_NAME     = 'EatManga';     EATMANGA_ID    = 23;
-  STARKANA_NAME     = 'Starkana';     STARKANA_ID    = 24;
-  MANGAPANDA_NAME   = 'MangaPanda';   MANGAPANDA_ID  = 25;
-  REDHAWKSCANS_NAME = 'RedHawkScans'; REDHAWKSCANS_ID= 26;
-  BLOGTRUYEN_NAME   = 'BlogTruyen';   BLOGTRUYEN_ID  = 27;
-  KOMIKID_NAME      = 'Komikid';      KOMIKID_ID     = 28;
-  SUBMANGA_NAME     = 'SubManga';     SUBMANGA_ID    = 29;
-  ESMANGAHERE_NAME  = 'ESMangaHere';  ESMANGAHERE_ID = 30;
-  ANIMEEXTREMIST_NAME  = 'AnimExtremist';  ANIMEEXTREMIST_ID = 31;
-  PECINTAKOMIK_NAME = 'PecintaKomik'; PECINTAKOMIK_ID= 32;
-  HUGEMANGA_NAME    = 'HugeManga';    HUGEMANGA_ID   = 33;
-  S2SCAN_NAME       = 'S2scanlations';S2SCAN_ID      = 34;
-  SENMANGA_NAME     = 'SenManga';     SENMANGA_ID    = 35;
-  IMANHUA_NAME      = 'imanhua';      IMANHUA_ID     = 36;
-  MABUNS_NAME       = 'Mabuns';       MABUNS_ID      = 37;
-  MANGAESTA_NAME    = 'MangaEsta';    MANGAESTA_ID   = 38;
-  CENTRALDEMANGAS_NAME = 'CentralDeMangas'; CENTRALDEMANGAS_ID = 39;
-  EGSCANS_NAME      = 'EGScans';      EGSCANS_ID     = 40;
-  MANGAAR_NAME      = 'MangaAr';      MANGAAR_ID     = 41;
-  MANGAAE_NAME      = 'MangaAe';      MANGAAE_ID     = 42;
-  ANIMESTORY_NAME   = 'AnimeStory';   ANIMESTORY_ID  = 43;
-  LEE_NAME          = 'LectureEnLigne'; LEE_ID       = 44;
-  SCANMANGA_NAME    = 'ScanManga';    SCANMANGA_ID   = 45;
-  MANGAGO_NAME      = 'MangaGo';      MANGAGO_ID     = 46;
-  DM5_NAME          = 'DM5';          DM5_ID         = 47;
-  PURURIN_NAME      = 'Pururin';      Pururin_ID     = 48;
-  MANGACOW_NAME     = 'Mangacow';     MANGACOW_ID    = 49;
-  KIVMANGA_NAME     = 'KivManga';     KIVMANGA_ID    = 50;
-  MANGACAN_NAME	    = 'Mangacan';     MANGACAN_ID    = 51;
-  MEINMANGA_NAME    = 'MeinManga';    MEINMANGA_ID   = 52;
-  MANGASPROJECT_NAME    = 'MangasPROJECT';    MANGASPROJECT_ID   = 53;
-  MANGAREADER_POR_NAME    = 'MangaREADER_POR';    MANGAREADER_POR_ID   = 54;
-  MANGA2U_NAME    = 'Manga2u';    MANGA2U_ID   = 55;
+  ANIMEA_ID      = 0;
+  MANGAHERE_ID   = 1;
+  MANGAINN_ID    = 2;
+  OURMANGA_ID    = 3;
+  KISSMANGA_ID   = 4;
+  BATOTO_ID      = 5;
+  MANGA24H_ID    = 6;
+  VNSHARING_ID   = 7;
+  HENTAI2READ_ID = 8;
+  FAKKU_ID       = 9;
+  TRUYEN18_ID    = 10;
+  MANGAREADER_ID = 11;
+  MANGAPARK_ID   = 12;
+  GEHENTAI_ID    = 13;
+  MANGAFOX_ID    = 14;
+  MANGATRADERS_ID= 15;
+  MANGASTREAM_ID = 16;
+  MANGAEDEN_ID   = 17;
+  PERVEDEN_ID    = 18;
+  TRUYENTRANHTUAN_ID = 19;
+  TURKCRAFT_ID   = 20;
+  MANGAVADISI_ID = 21;
+  MANGAFRAME_ID  = 22;
+  EATMANGA_ID    = 23;
+  STARKANA_ID    = 24;
+  MANGAPANDA_ID  = 25;
+  REDHAWKSCANS_ID= 26;
+  BLOGTRUYEN_ID  = 27;
+  KOMIKID_ID     = 28;
+  SUBMANGA_ID    = 29;
+  ESMANGAHERE_ID = 30;
+  ANIMEEXTREMIST_ID = 31;
+  PECINTAKOMIK_ID= 32;
+  HUGEMANGA_ID   = 33;
+  S2SCAN_ID      = 34;
+  SENMANGA_ID    = 35;
+  IMANHUA_ID     = 36;
+  MABUNS_ID      = 37;
+  MANGAESTA_ID   = 38;
+  CENTRALDEMANGAS_ID = 39;
+  EGSCANS_ID     = 40;
+  MANGAAR_ID     = 41;
+  MANGAAE_ID     = 42;
+  ANIMESTORY_ID  = 43;
+  LEE_ID         = 44;
+  SCANMANGA_ID   = 45;
+  MANGAGO_ID     = 46;
+  DM5_ID         = 47;
+  Pururin_ID     = 48;
+  MANGACOW_ID    = 49;
+  KIVMANGA_ID    = 50;
+  MANGACAN_ID    = 51;
+  MEINMANGA_ID   = 52;
+  MANGASPROJECT_ID   = 53;
+  MANGAREADER_POR_ID = 54;
+  MANGA2U_ID     = 55;
 
-  DEFAULT_LIST = ANIMEA_NAME+'!%~'+MANGAFOX_NAME+'!%~'+MANGAHERE_NAME+'!%~'+MANGAINN_NAME+'!%~'+MANGAREADER_NAME+'!%~';
+  DEFAULT_LIST = 'AnimeA!%~MangaFox!%~MangaHere!%~MangaInn!%~MangaReader!%~';
   DEFAULT_CUSTOM_RENAME = '%NUMBERING% - %CHAPTER%';
 
   FMDFormatSettings : TFormatSettings = (
@@ -841,18 +841,18 @@ end;
 
 function  sitesWithoutInformation(const website: String): Boolean;
 begin
-  Result:= ((website = MANGASTREAM_NAME) OR
-            (website = MANGAVADISI_NAME) OR
-            (website = SENMANGA_NAME) OR
-            (website = MANGAFRAME_NAME) OR
-            (website = S2SCAN_NAME) OR
-            (website = EGSCANS_NAME) OR
-            (website = TURKCRAFT_NAME) OR
-            (website = HUGEMANGA_NAME) OR
-            (website = KOMIKID_NAME) OR
-	    (website = KIVMANGA_NAME) OR
-			(website = MANGACAN_NAME) OR
-		(website = MANGAREADER_POR_NAME));
+  Result:= ((website = WebsiteRoots[MANGASTREAM_ID,0]) OR
+            (website = WebsiteRoots[MANGAVADISI_ID,0]) OR
+            (website = WebsiteRoots[SENMANGA_ID,0]) OR
+            (website = WebsiteRoots[MANGAFRAME_ID,0]) OR
+            (website = WebsiteRoots[S2SCAN_ID,0]) OR
+            (website = WebsiteRoots[EGSCANS_ID,0]) OR
+            (website = WebsiteRoots[TURKCRAFT_ID,0]) OR
+            (website = WebsiteRoots[HUGEMANGA_ID,0]) OR
+            (website = WebsiteRoots[KOMIKID_ID,0]) OR
+	    (website = WebsiteRoots[KIVMANGA_ID,0]) OR
+	    (website = WebsiteRoots[MANGACAN_ID,0]) OR
+	    (website = WebsiteRoots[MANGAREADER_ID,0]));
 end;
 
 function  RemoveSymbols(const input: String): String;
@@ -887,7 +887,7 @@ begin
   Result:= StringReplace(Result, '%WEBSITE%', AWebsite, [rfReplaceAll]);
   Result:= StringReplace(Result, '%MANGA%', AMangaName, [rfReplaceAll]);
   Result:= StringReplace(Result, '%CHAPTER%', AChapter, [rfReplaceAll]);
-  if (AWebsite = FAKKU_NAME) OR (AWebsite = MANGASTREAM_NAME) then
+  if (AWebsite = WebsiteRoots[FAKKU_ID,0]) OR (AWebsite = WebsiteRoots[MANGASTREAM_ID,0]) then
     Result:= StringReplace(Result, '%NUMBERING%', '', [rfReplaceAll])
   else
     Result:= StringReplace(Result, '%NUMBERING%', ANumbering, [rfReplaceAll]);
@@ -896,7 +896,7 @@ begin
 
   if Result = '' then
   begin
-    if (AWebsite = FAKKU_NAME) OR (AWebsite = MANGASTREAM_NAME) then
+    if (AWebsite = WebsiteRoots[FAKKU_ID,0]) OR (AWebsite = WebsiteRoots[MANGASTREAM_ID,0]) then
       Result:= AChapter
     else
       Result:= ANumbering;
@@ -2075,6 +2075,7 @@ begin
 end;
 
 function  fmdRunAsAdmin(path, params: String; isPersistent: Boolean): Boolean;
+{$IFDEF WINDOWS}
 var
   sei: TShellExecuteInfoA;
 begin
@@ -2092,7 +2093,20 @@ begin
   if isPersistent then
     WaitForSingleObject(sei.hProcess, INFINITE);
 end;
-
+{$ELSE}
+var
+  Process: TProcess;
 begin
+  Process:= TProcessUTF8.Create(nil);
+  Process.CommandLine:= path + ' ' + params;
+  Process.Execute;
+  Process.Free;
+end;
+{$ENDIF}
+
+initialization
   gehHTTP:= THTTPSend.Create;
+finalization
+  gehHTTP.Free;
+
 end.
