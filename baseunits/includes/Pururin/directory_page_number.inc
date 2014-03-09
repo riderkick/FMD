@@ -24,7 +24,7 @@ begin
   begin
     if (Pos('/browse/0/11/2.html', parse.Strings[i]) > 0) then
     begin
-      Page:= StrToInt(Trim(parse.Strings[i-2]));
+      Page:= StrToInt(Trim(parse.Strings[i-2])) div 3;
       break;
     end;
   end;
