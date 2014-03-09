@@ -1,0 +1,130 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectGuid>{940ad730-b843-4a48-8eb1-594117a816c0}</ProjectGuid>
+    <MainSource>VampyreImagingPackage.D2007.dpkw</MainSource>
+    <Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <DCC_DCCCompiler>DCC32</DCC_DCCCompiler>
+    <DCC_DependencyCheckOutputName>..\..\Bin\VampyreImagingPackage.D2007.bpl</DCC_DependencyCheckOutputName>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <Version>7.0</Version>
+    <DCC_SymbolReferenceInfo>0</DCC_SymbolReferenceInfo>
+    <DCC_BplOutput>..\..\Bin</DCC_BplOutput>
+    <DCC_UnitSearchPath>..;..\JpegLib;..\ZLib;..\..\Extras\Extensions;..\..\Extras\Extensions\LibTiff</DCC_UnitSearchPath>
+    <DCC_ResourcePath>..;..\JpegLib;..\ZLib;..\..\Extras\Extensions;..\..\Extras\Extensions\LibTiff</DCC_ResourcePath>
+    <DCC_ObjPath>..;..\JpegLib;..\ZLib;..\..\Extras\Extensions;..\..\Extras\Extensions\LibTiff</DCC_ObjPath>
+    <DCC_IncludePath>..;..\JpegLib;..\ZLib;..\..\Extras\Extensions;..\..\Extras\Extensions\LibTiff</DCC_IncludePath>
+    <DCC_Define>RELEASE;FULL_FEATURE_SET</DCC_Define>
+    <DCC_ImageBase>7A00000</DCC_ImageBase>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <Version>7.0</Version>
+    <DCC_StrictVarStrings>False</DCC_StrictVarStrings>
+    <DCC_SymbolReferenceInfo>0</DCC_SymbolReferenceInfo>
+    <DCC_MinimumEnumSize>0</DCC_MinimumEnumSize>
+    <DCC_BplOutput>..\..\Bin</DCC_BplOutput>
+    <DCC_UnitSearchPath>..;..\JpegLib;..\ZLib;..\..\Extras\Extensions;..\..\Extras\Extensions\LibTiff</DCC_UnitSearchPath>
+    <DCC_ResourcePath>..;..\JpegLib;..\ZLib;..\..\Extras\Extensions;..\..\Extras\Extensions\LibTiff</DCC_ResourcePath>
+    <DCC_ObjPath>..;..\JpegLib;..\ZLib;..\..\Extras\Extensions;..\..\Extras\Extensions\LibTiff</DCC_ObjPath>
+    <DCC_IncludePath>..;..\JpegLib;..\ZLib;..\..\Extras\Extensions;..\..\Extras\Extensions\LibTiff</DCC_IncludePath>
+    <DCC_Optimize>False</DCC_Optimize>
+    <DCC_GenerateStackFrames>True</DCC_GenerateStackFrames>
+  </PropertyGroup>
+  <ProjectExtensions>
+    <Borland.Personality>Delphi.Personality</Borland.Personality>
+    <Borland.ProjectType>Package</Borland.ProjectType>
+    <BorlandProject>
+<BorlandProject><Delphi.Personality><Parameters><Parameters Name="UseLauncher">False</Parameters><Parameters Name="LoadAllSymbols">True</Parameters><Parameters Name="LoadUnspecifiedSymbols">False</Parameters></Parameters><Package_Options><Package_Options Name="PackageDescription">Vampyre Imaging Library Package</Package_Options><Package_Options Name="ImplicitBuild">False</Package_Options><Package_Options Name="DesigntimeOnly">False</Package_Options><Package_Options Name="RuntimeOnly">False</Package_Options></Package_Options><VersionInfo><VersionInfo Name="IncludeVerInfo">True</VersionInfo><VersionInfo Name="AutoIncBuild">False</VersionInfo><VersionInfo Name="MajorVer">0</VersionInfo><VersionInfo Name="MinorVer">26</VersionInfo><VersionInfo Name="Release">4</VersionInfo><VersionInfo Name="Build">0</VersionInfo><VersionInfo Name="Debug">False</VersionInfo><VersionInfo Name="PreRelease">False</VersionInfo><VersionInfo Name="Special">False</VersionInfo><VersionInfo Name="Private">False</VersionInfo><VersionInfo Name="DLL">True</VersionInfo><VersionInfo Name="Locale">1033</VersionInfo><VersionInfo Name="CodePage">1252</VersionInfo></VersionInfo><VersionInfoKeys><VersionInfoKeys Name="FileVersion">0.26.4.0</VersionInfoKeys><VersionInfoKeys Name="ProductVersion">1.0.0.0</VersionInfoKeys><VersionInfoKeys Name="CompanyName">http://imaginglib.sourceforge.net</VersionInfoKeys><VersionInfoKeys Name="FileDescription">Image loading, saving and manipulation library</VersionInfoKeys><VersionInfoKeys Name="InternalName"></VersionInfoKeys><VersionInfoKeys Name="LegalCopyright"></VersionInfoKeys><VersionInfoKeys Name="LegalTrademarks"></VersionInfoKeys><VersionInfoKeys Name="OriginalFilename"></VersionInfoKeys><VersionInfoKeys Name="ProductName">Vampyre Imaging Library</VersionInfoKeys></VersionInfoKeys><Source><Source Name="MainSource">VampyreImagingPackage.D2007.dpkw</Source></Source><Excluded_Packages>
+      
+      
+      <Excluded_Packages Name="D:\Projects\Libs\Imaging\Bin\VampyreImagingPackageCRS.bpl">File D:\Projects\Libs\Imaging\Bin\VampyreImagingPackageCRS.bpl not found</Excluded_Packages>
+    </Excluded_Packages></Delphi.Personality></BorlandProject></BorlandProject>
+  </ProjectExtensions>
+  <Import Project="$(MSBuildBinPath)\Borland.Delphi.Targets" />
+  <ItemGroup>
+    <DelphiCompile Include="VampyreImagingPackage.D2007.dpkw">
+      <MainSource>MainSource</MainSource>
+    </DelphiCompile>
+    <DCCReference Include="..\..\Extras\Extensions\ImagingExtras.pas" />
+    <DCCReference Include="..\Imaging.pas" />
+    <DCCReference Include="..\ImagingBitmap.pas" />
+    <DCCReference Include="..\ImagingCanvases.pas" />
+    <DCCReference Include="..\ImagingClasses.pas" />
+    <DCCReference Include="..\ImagingColors.pas" />
+    <DCCReference Include="..\ImagingComponents.pas" />
+    <DCCReference Include="..\ImagingDds.pas" />
+    <DCCReference Include="..\ImagingFormats.pas" />
+    <DCCReference Include="..\ImagingGif.pas" />
+    <DCCReference Include="..\ImagingIO.pas" />
+    <DCCReference Include="..\ImagingJpeg.pas" />
+    <DCCReference Include="..\ImagingNetworkGraphics.pas" />
+    <DCCReference Include="..\ImagingPortableMaps.pas" />
+    <DCCReference Include="..\ImagingTarga.pas" />
+    <DCCReference Include="..\ImagingTypes.pas" />
+    <DCCReference Include="..\ImagingUtility.pas" />
+    <DCCReference Include="..\JpegLib\imjcapimin.pas" />
+    <DCCReference Include="..\JpegLib\imjcapistd.pas" />
+    <DCCReference Include="..\JpegLib\imjccoefct.pas" />
+    <DCCReference Include="..\JpegLib\imjccolor.pas" />
+    <DCCReference Include="..\JpegLib\imjcdctmgr.pas" />
+    <DCCReference Include="..\JpegLib\imjchuff.pas" />
+    <DCCReference Include="..\JpegLib\imjcinit.pas" />
+    <DCCReference Include="..\JpegLib\imjcmainct.pas" />
+    <DCCReference Include="..\JpegLib\imjcmarker.pas" />
+    <DCCReference Include="..\JpegLib\imjcmaster.pas" />
+    <DCCReference Include="..\JpegLib\imjcomapi.pas" />
+    <DCCReference Include="..\JpegLib\imjcparam.pas" />
+    <DCCReference Include="..\JpegLib\imjcphuff.pas" />
+    <DCCReference Include="..\JpegLib\imjcprepct.pas" />
+    <DCCReference Include="..\JpegLib\imjcsample.pas" />
+    <DCCReference Include="..\JpegLib\imjdapimin.pas" />
+    <DCCReference Include="..\JpegLib\imjdapistd.pas" />
+    <DCCReference Include="..\JpegLib\imjdcoefct.pas" />
+    <DCCReference Include="..\JpegLib\imjdcolor.pas" />
+    <DCCReference Include="..\JpegLib\imjdct.pas" />
+    <DCCReference Include="..\JpegLib\imjddctmgr.pas" />
+    <DCCReference Include="..\JpegLib\imjdeferr.pas" />
+    <DCCReference Include="..\JpegLib\imjdhuff.pas" />
+    <DCCReference Include="..\JpegLib\imjdinput.pas" />
+    <DCCReference Include="..\JpegLib\imjdmainct.pas" />
+    <DCCReference Include="..\JpegLib\imjdmarker.pas" />
+    <DCCReference Include="..\JpegLib\imjdmaster.pas" />
+    <DCCReference Include="..\JpegLib\imjdmerge.pas" />
+    <DCCReference Include="..\JpegLib\imjdphuff.pas" />
+    <DCCReference Include="..\JpegLib\imjdpostct.pas" />
+    <DCCReference Include="..\JpegLib\imjdsample.pas" />
+    <DCCReference Include="..\JpegLib\imjerror.pas" />
+    <DCCReference Include="..\JpegLib\imjfdctflt.pas" />
+    <DCCReference Include="..\JpegLib\imjfdctfst.pas" />
+    <DCCReference Include="..\JpegLib\imjfdctint.pas" />
+    <DCCReference Include="..\JpegLib\imjidctasm.pas" />
+    <DCCReference Include="..\JpegLib\imjidctflt.pas" />
+    <DCCReference Include="..\JpegLib\imjidctfst.pas" />
+    <DCCReference Include="..\JpegLib\imjidctint.pas" />
+    <DCCReference Include="..\JpegLib\imjidctred.pas" />
+    <DCCReference Include="..\JpegLib\imjinclude.pas" />
+    <DCCReference Include="..\JpegLib\imjmemmgr.pas" />
+    <DCCReference Include="..\JpegLib\imjmemnobs.pas" />
+    <DCCReference Include="..\JpegLib\imjmorecfg.pas" />
+    <DCCReference Include="..\JpegLib\imjpeglib.pas" />
+    <DCCReference Include="..\JpegLib\imjquant1.pas" />
+    <DCCReference Include="..\JpegLib\imjquant2.pas" />
+    <DCCReference Include="..\JpegLib\imjutils.pas" />
+    <DCCReference Include="..\ZLib\dzlib.pas" />
+    <DCCReference Include="..\ZLib\imadler.pas" />
+    <DCCReference Include="..\ZLib\iminfblock.pas" />
+    <DCCReference Include="..\ZLib\iminfcodes.pas" />
+    <DCCReference Include="..\ZLib\iminffast.pas" />
+    <DCCReference Include="..\ZLib\iminftrees.pas" />
+    <DCCReference Include="..\ZLib\iminfutil.pas" />
+    <DCCReference Include="..\ZLib\impaszlib.pas" />
+    <DCCReference Include="..\ZLib\imtrees.pas" />
+    <DCCReference Include="..\ZLib\imzdeflate.pas" />
+    <DCCReference Include="..\ZLib\imzinflate.pas" />
+    <DCCReference Include="..\ZLib\imzutil.pas" />
+    <DCCReference Include="rtl.dcp" />
+    <DCCReference Include="vcl.dcp" />
+  </ItemGroup>
+</Project>

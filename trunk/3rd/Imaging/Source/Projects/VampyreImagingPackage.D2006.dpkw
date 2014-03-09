@@ -1,0 +1,111 @@
+package VampyreImagingPackage.D2006;
+
+{$R *.res}
+{$ALIGN 8}
+{$ASSERTIONS ON}
+{$BOOLEVAL OFF}
+{$DEBUGINFO ON}
+{$EXTENDEDSYNTAX ON}
+{$IMPORTEDDATA ON}
+{$IOCHECKS ON}
+{$LOCALSYMBOLS ON}
+{$LONGSTRINGS ON}
+{$OPENSTRINGS ON}
+{$OPTIMIZATION ON}
+{$OVERFLOWCHECKS OFF}
+{$RANGECHECKS OFF}
+{$REFERENCEINFO OFF}
+{$SAFEDIVIDE OFF}
+{$STACKFRAMES OFF}
+{$TYPEDADDRESS OFF}
+{$VARSTRINGCHECKS ON}
+{$WRITEABLECONST OFF}
+{$MINENUMSIZE 1}
+{$IMAGEBASE $7A00000}
+{$DESCRIPTION 'Vampyre Imaging Library Package'}
+{$IMPLICITBUILD OFF}
+
+requires
+  rtl,
+  vcl;
+
+contains
+  Imaging in '..\Imaging.pas',
+  ImagingBitmap in '..\ImagingBitmap.pas',
+  ImagingCanvases in '..\ImagingCanvases.pas',
+  ImagingClasses in '..\ImagingClasses.pas',
+  ImagingComponents in '..\ImagingComponents.pas',
+  ImagingJpeg in '..\ImagingJpeg.pas',
+  ImagingNetworkGraphics in '..\ImagingNetworkGraphics.pas',
+  ImagingTarga in '..\ImagingTarga.pas',
+  ImagingTypes in '..\ImagingTypes.pas',
+  ImagingUtility in '..\ImagingUtility.pas',
+  ImagingIO in '..\ImagingIO.pas',
+  ImagingFormats in '..\ImagingFormats.pas',
+  ImagingDds in '..\ImagingDds.pas',
+  ImagingPortableMaps in '..\ImagingPortableMaps.pas',
+  ImagingGif in '..\ImagingGif.pas',
+  ImagingColors in '..\ImagingColors.pas',
+  ImagingExtras in '..\..\Extras\Extensions\ImagingExtras.pas',
+  dzlib in '..\ZLib\dzlib.pas',
+  impaszlib in '..\ZLib\impaszlib.pas',
+  imadler in '..\ZLib\imadler.pas',
+  iminfblock in '..\ZLib\iminfblock.pas',
+  iminfcodes in '..\ZLib\iminfcodes.pas',
+  iminffast in '..\ZLib\iminffast.pas',
+  iminftrees in '..\ZLib\iminftrees.pas',
+  iminfutil in '..\ZLib\iminfutil.pas',
+  imtrees in '..\ZLib\imtrees.pas',
+  imzdeflate in '..\ZLib\imzdeflate.pas',
+  imzinflate in '..\ZLib\imzinflate.pas',
+  imzutil in '..\ZLib\imzutil.pas',
+  imjcapimin in '..\JpegLib\imjcapimin.pas',
+  imjcapistd in '..\JpegLib\imjcapistd.pas',
+  imjccoefct in '..\JpegLib\imjccoefct.pas',
+  imjccolor in '..\JpegLib\imjccolor.pas',
+  imjcdctmgr in '..\JpegLib\imjcdctmgr.pas',
+  imjcinit in '..\JpegLib\imjcinit.pas',
+  imjcmainct in '..\JpegLib\imjcmainct.pas',
+  imjcmarker in '..\JpegLib\imjcmarker.pas',
+  imjcmaster in '..\JpegLib\imjcmaster.pas',
+  imjcomapi in '..\JpegLib\imjcomapi.pas',
+  imjcparam in '..\JpegLib\imjcparam.pas',
+  imjcphuff in '..\JpegLib\imjcphuff.pas',
+  imjcprepct in '..\JpegLib\imjcprepct.pas',
+  imjcsample in '..\JpegLib\imjcsample.pas',
+  imjdapimin in '..\JpegLib\imjdapimin.pas',
+  imjdapistd in '..\JpegLib\imjdapistd.pas',
+  imjdcoefct in '..\JpegLib\imjdcoefct.pas',
+  imjdcolor in '..\JpegLib\imjdcolor.pas',
+  imjdct in '..\JpegLib\imjdct.pas',
+  imjddctmgr in '..\JpegLib\imjddctmgr.pas',
+  imjdeferr in '..\JpegLib\imjdeferr.pas',
+  imjdhuff in '..\JpegLib\imjdhuff.pas',
+  imjdinput in '..\JpegLib\imjdinput.pas',
+  imjdmainct in '..\JpegLib\imjdmainct.pas',
+  imjdmarker in '..\JpegLib\imjdmarker.pas',
+  imjdmaster in '..\JpegLib\imjdmaster.pas',
+  imjdmerge in '..\JpegLib\imjdmerge.pas',
+  imjdphuff in '..\JpegLib\imjdphuff.pas',
+  imjdpostct in '..\JpegLib\imjdpostct.pas',
+  imjdsample in '..\JpegLib\imjdsample.pas',
+  imjerror in '..\JpegLib\imjerror.pas',
+  imjfdctflt in '..\JpegLib\imjfdctflt.pas',
+  imjfdctfst in '..\JpegLib\imjfdctfst.pas',
+  imjfdctint in '..\JpegLib\imjfdctint.pas',
+  imjchuff in '..\JpegLib\imjchuff.pas',
+  imjidctasm in '..\JpegLib\imjidctasm.pas',
+  imjidctflt in '..\JpegLib\imjidctflt.pas',
+  imjidctfst in '..\JpegLib\imjidctfst.pas',
+  imjidctint in '..\JpegLib\imjidctint.pas',
+  imjidctred in '..\JpegLib\imjidctred.pas',
+  imjinclude in '..\JpegLib\imjinclude.pas',
+  imjmemmgr in '..\JpegLib\imjmemmgr.pas',
+  imjmemnobs in '..\JpegLib\imjmemnobs.pas',
+  imjmorecfg in '..\JpegLib\imjmorecfg.pas',
+  imjpeglib in '..\JpegLib\imjpeglib.pas',
+  imjquant1 in '..\JpegLib\imjquant1.pas',
+  imjquant2 in '..\JpegLib\imjquant2.pas',
+  imjutils in '..\JpegLib\imjutils.pas';
+
+end.
