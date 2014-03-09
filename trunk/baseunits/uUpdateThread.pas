@@ -27,8 +27,8 @@ type
     Info              : TMangaInformation;
 
     procedure   Execute; override;
-    procedure   DecThreadCount;
-    procedure   UpdateNamesAndLinks;
+    procedure   MainThreadDecThreadCount;
+    procedure   MainThreadUpdateNamesAndLinks;
   public
     constructor Create;
     destructor  Destroy; override;
@@ -46,6 +46,7 @@ type
     procedure   DlgReport;
     procedure   getInfo(const limit, cs: Cardinal);
   public
+    isFinishSearchingForNewManga,
     isDownloadFromServer,
     isDoneUpdateNecessary : Boolean;
     mainDataProcess,
@@ -91,12 +92,12 @@ begin
   inherited Destroy;
 end;
 
-procedure   TUpdateMangaThread.DecThreadCount;
+procedure   TUpdateMangaThread.MainThreadDecThreadCount;
 begin
   Dec(manager.threadCount);
 end;
 
-procedure   TUpdateMangaThread.UpdateNamesAndLinks;
+procedure   TUpdateMangaThread.MainThreadUpdateNamesAndLinks;
 var
   i: Cardinal;
 begin
@@ -109,6 +110,9 @@ begin
 end;
 
 procedure   TUpdateMangaThread.Execute;
+var
+  i: Integer;
+  s: String;
 begin
   if Terminated then exit;
   while isSuspended do Sleep(16);
@@ -196,10 +200,21 @@ begin
         begin
           Info.GetNameAndLink(names, links, manager.website, IntToStr(workPtr));
         end;
-        Synchronize(UpdateNamesAndLinks);
+        Synchronize(MainThreadUpdateNamesAndLinks);
+        // For Fakku and Pururin only, reduce the number of page we have to visit
+        // in order to search for new series.
+        if (manager.website = WebsiteRoots[FAKKU_ID,0]) OR
+           (manager.website = WebsiteRoots[PURURIN_ID,0]) then
+        begin
+          // TODO: Need a better method to find duplicate string
+          if (names.Count > 0) then
+            if manager.dataProcess.Title.Find(names.Strings[0], i) then
+              manager.isFinishSearchingForNewManga:= TRUE;
+        end;
       end;
     CS_INFO:
       begin
+        s:= manager.links[workPtr];
         Info.GetInfoFromURL(manager.website, manager.links[workPtr], {$IFDEF DOWNLOADER}5{$ELSE}0{$ENDIF});
      // {$IFNDEF DOWNLOADER}
         Info.AddInfoToDataWithoutBreak(manager.names[workPtr], manager.links[workPtr], manager.mainDataProcess);
@@ -208,7 +223,7 @@ begin
      // {$ENDIF}
       end;
   end;
-  Synchronize(DecThreadCount);
+  Synchronize(MainThreadDecThreadCount);
 end;
 
 // ----- TUpdateMangaManagerThread -----
@@ -288,6 +303,24 @@ var
 begin
   while (workPtr < limit) do
   begin
+    // Finish search for series (for Puririn and Fakku only)
+    if (cs = CS_DIRECTORY_PAGE) AND (isFinishSearchingForNewManga) then
+    begin
+      if (website = WebsiteRoots[FAKKU_ID,0]) then
+      begin
+        while threadCount > 0 do Sleep(96);
+        if workPtr-directoryCount < 0 then
+        begin
+          workPtr:= directoryCount;
+          isFinishSearchingForNewManga:= FALSE;
+        end
+        else
+          workPtr:= $FFFFFFFF;
+      end
+      else
+        workPtr:= $FFFFFFFF
+    end
+    else
     if (threadCount < numberOfThreads) then
       for j:= 0 to numberOfThreads-1 do
         if (NOT Assigned(threads[j])) OR (threadStates[j] = FALSE) then
@@ -316,7 +349,7 @@ begin
         {$ENDIF}
           break;
         end;
-    Sleep(100);
+    Sleep(96);
   end;
 end;
 
@@ -324,7 +357,6 @@ procedure   TUpdateMangaManagerThread.Execute;
 var
   s      : String;
   i, j, k: Cardinal;
-  Process: TProcess;
   syncProcess: TDataProcess;
 begin
  // while NOT Terminated do
@@ -357,6 +389,7 @@ begin
     {$ENDIF}
     for i:= 0 to websites.Count-1 do
     begin
+      isFinishSearchingForNewManga:= FALSE;
       website:= websites.Strings[i];
       if website = WebsiteRoots[GEHENTAI_ID,0] then
         numberOfThreads:= 1
@@ -367,17 +400,16 @@ begin
       if website = WebsiteRoots[SCANMANGA_ID,0] then
         numberOfThreads:= 2
       else
+      if website = WebsiteRoots[PURURIN_ID,0] then
+        numberOfThreads:= 3
+      else
         numberOfThreads:= 4;
 
       {$IFDEF DOWNLOADER}
       while NOT FileExists(DATA_FOLDER+website+DATA_EXT) do
       begin
         Synchronize(MainThreadShowGetting);
-        Process:= TProcess.Create(nil);
-        Process.CommandLine:= 'updater 1 '+GetMangaDatabaseURL(website);
-        Process.Options:= Process.Options + [poWaitOnExit];
-        Process.Execute;
-        Process.Free;
+        fmdRunAsAdmin('updater.exe', '1 '+GetMangaDatabaseURL(website), TRUE);
       end;
       {$ENDIF}
 
@@ -397,7 +429,7 @@ begin
         getInfo(directoryCount+directoryCount2, CS_DIRECTORY_PAGE)
       else
         getInfo(directoryCount, CS_DIRECTORY_PAGE);
-      while threadCount > 0 do Sleep(100);
+      while threadCount > 0 do Sleep(96);
 
       {$IFNDEF DOWNLOADER}
       names.SaveToFile(website+'_names.txt');
@@ -409,12 +441,14 @@ begin
       names.LoadFromFile(website+'_names.txt');
       links.LoadFromFile(website+'_links.txt');
       {$ENDIF}
+
       mainDataProcess:= TDataProcess.Create;
       mainDataProcess.LoadFromFile(website);
 
       //
       j:= 0;
-      repeat
+      while j < links.Count do
+      begin
         if Find(links.Strings[j], mainDataProcess.Link, Integer(workPtr)) then
         begin
           links.Delete(j);
@@ -422,7 +456,7 @@ begin
         end
         else
           Inc(j);
-      until j = links.Count;
+      end;
 
       // remove duplicate entries
       if links.Count > 0 then
@@ -479,7 +513,6 @@ begin
          (website <> WebsiteRoots[KOMIKID_ID,0]) then
       begin
         workPtr:= 0;
-
         getInfo(links.Count, CS_INFO);
       end
       else
