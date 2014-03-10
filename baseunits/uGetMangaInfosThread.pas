@@ -113,7 +113,10 @@ begin
   else
   begin
     FCover.Clear;
-    if (OptionEnableLoadCover) AND (Pos('http://', FInfo.mangaInfo.coverLink) > 0) then
+    // If there's cover then we will load it to the TPicture component.
+    if (OptionEnableLoadCover) AND
+       ((Pos('http://', FInfo.mangaInfo.coverLink) > 0) OR
+        (Pos('https://', FInfo.mangaInfo.coverLink) > 0)) then
       FIsHasMangaCover:= GetPage(TObject(FCover), FInfo.mangaInfo.coverLink, 1, TRUE)
     else
       FIsHasMangaCover:= FALSE;
