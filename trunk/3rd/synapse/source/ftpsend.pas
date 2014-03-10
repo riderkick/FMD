@@ -52,6 +52,9 @@ Used RFC: RFC-959, RFC-2228, RFC-2428
   {$MODE DELPHI}
 {$ENDIF}
 {$H+}
+{$TYPEINFO ON}// Borland changed defualt Visibility from Public to Published
+                // and it requires RTTI to be generated $M+
+{$M+}
 
 {$IFDEF UNICODE}
   {$WARN IMPLICIT_STRING_CAST OFF}

@@ -1,9 +1,9 @@
 {==============================================================================|
-| Project : Ararat Synapse                                       | 009.008.004 |
+| Project : Ararat Synapse                                       | 009.009.001 |
 |==============================================================================|
 | Content: Library base                                                        |
 |==============================================================================|
-| Copyright (c)1999-2011, Lukas Gebauer                                        |
+| Copyright (c)1999-2013, Lukas Gebauer                                        |
 | All rights reserved.                                                         |
 |                                                                              |
 | Redistribution and use in source and binary forms, with or without           |
@@ -33,7 +33,7 @@
 | DAMAGE.                                                                      |
 |==============================================================================|
 | The Initial Developer of the Original Code is Lukas Gebauer (Czech Republic).|
-| Portions created by Lukas Gebauer are Copyright (c)1999-2011.                |
+| Portions created by Lukas Gebauer are Copyright (c)1999-2013.                |
 | All Rights Reserved.                                                         |
 |==============================================================================|
 | Contributor(s):                                                              |
@@ -81,6 +81,8 @@ Core with implementation basic socket classes.
 {$Q-}
 {$H+}
 {$M+}
+{$TYPEDADDRESS OFF}
+
 
 //old Delphi does not have MSWINDOWS define.
 {$IFDEF WIN32}
@@ -111,7 +113,7 @@ uses
 
 const
 
-  SynapseRelease = '38';
+  SynapseRelease = '40';
 
   cLocalhost = '127.0.0.1';
   cAnyHost = '0.0.0.0';
@@ -312,6 +314,7 @@ type
     FStopFlag: Boolean;
     FNonblockSendTimeout: Integer;
     FHeartbeatRate: integer;
+    FConnectionTimeout: integer;
     {$IFNDEF ONCEWINSOCK}
     FWsaDataOnce: TWSADATA;
     {$ENDIF}
@@ -829,6 +832,10 @@ type
     {:Timeout for data sending by non-blocking socket mode.}
     property NonblockSendTimeout: Integer read FNonblockSendTimeout Write FNonblockSendTimeout;
 
+    {:Timeout for @link(Connect) call. Default value 0 means default system timeout.
+     Non-zero value means timeout in millisecond.}
+    property ConnectionTimeout: Integer read FConnectionTimeout write FConnectionTimeout;
+
     {:This event is called by various reasons. It is good for monitoring socket,
      create gauges for data transfers, etc.}
     property OnStatus: THookSocketStatus read FOnStatus write FOnStatus;
@@ -1124,10 +1131,10 @@ type
 {$IFNDEF CIL}
     {:Add this socket to given multicast group. You cannot use Multicasts in
      SOCKS mode!}
-    procedure AddMulticast(const MCastIP: string; const Intf: string = '');
+    procedure AddMulticast(MCastIP:string);
 
     {:Remove this socket from given multicast group.}
-    procedure DropMulticast(const MCastIP: string; const Intf: string = '');
+    procedure DropMulticast(MCastIP:string);
 {$ENDIF}
     {:All sended multicast datagrams is loopbacked to your interface too. (you
      can read your sended datas.) You can disable this feature by this function.
@@ -1297,12 +1304,19 @@ type
     {:Return subject of remote SSL peer.}
     function GetPeerSubject: string; virtual;
 
+    {:Return Serial number if remote X509 certificate.}
+    function GetPeerSerialNo: integer; virtual;
+
     {:Return issuer certificate of remote SSL peer.}
     function GetPeerIssuer: string; virtual;
 
     {:Return peer name from remote side certificate. This is good for verify,
      if certificate is generated for remote side IP name.}
     function GetPeerName: string; virtual;
+
+    {:Returns has of peer name from remote side certificate. This is good
+     for fast remote side authentication.}
+    function GetPeerNameHash: cardinal; virtual;
 
     {:Return fingerprint of remote SSL peer.}
     function GetPeerFingerprint: string; virtual;
@@ -1538,6 +1552,7 @@ begin
   FStopFlag := False;
   FNonblockSendTimeout := 15000;
   FHeartbeatRate := 0;
+  FConnectionTimeout := 0;
   FOwner := nil;
 {$IFNDEF ONCEWINSOCK}
   if Stub = '' then
@@ -1905,13 +1920,26 @@ end;
 procedure TBlockSocket.Connect(IP, Port: string);
 var
   Sin: TVarSin;
+  b: boolean;
 begin
   SetSin(Sin, IP, Port);
   if FLastError = 0 then
   begin
     if FSocket = INVALID_SOCKET then
       InternalCreateSocket(Sin);
-    SockCheck(synsock.Connect(FSocket, Sin));
+    if FConnectionTimeout > 0 then
+    begin
+      // connect in non-blocking mode
+      b := NonBlockMode;
+      NonBlockMode := true;
+      SockCheck(synsock.Connect(FSocket, Sin));
+      if (FLastError = WSAEINPROGRESS) OR (FLastError = WSAEWOULDBLOCK) then
+        if not CanWrite(FConnectionTimeout) then
+          FLastError := WSAETIMEDOUT;
+      NonBlockMode := b;
+    end
+    else
+      SockCheck(synsock.Connect(FSocket, Sin));
     if FLastError = 0 then
       GetSins;
     FBuffer := '';
@@ -2682,7 +2710,7 @@ end;
 
 function TBlockSocket.ResolveIPToName(IP: string): string;
 begin
-  if not IsIP(IP) or not IsIp6(IP) then
+  if not IsIP(IP) and not IsIp6(IP) then
     IP := ResolveName(IP);
   Result := synsock.ResolveIPToName(IP, FamilyToAF(FFamily), GetSocketProtocol, GetSocketType);
 end;
@@ -3603,7 +3631,7 @@ begin
 end;
 
 {$IFNDEF CIL}
-procedure TUDPBlockSocket.AddMulticast(const MCastIP: AnsiString; const Intf: AnsiString = '');
+procedure TUDPBlockSocket.AddMulticast(MCastIP: string);
 var
   Multicast: TIP_mreq;
   Multicast6: TIPv6_mreq;
@@ -3615,23 +3643,22 @@ begin
     ip6 := StrToIp6(MCastIP);
     for n := 0 to 15 do
       Multicast6.ipv6mr_multiaddr.u6_addr8[n] := Ip6[n];
-    Multicast6.ipv6mr_interface := StrToIntDef(Intf, 0);
+    Multicast6.ipv6mr_interface := 0;
     SockCheck(synsock.SetSockOpt(FSocket, IPPROTO_IPV6, IPV6_JOIN_GROUP,
       PAnsiChar(@Multicast6), SizeOf(Multicast6)));
   end
   else
   begin
-   // Multicast.imr_multiaddr.S_addr := synsock.inet_addr(PAnsiChar(MCastIP));
-    Multicast.imr_interface.S_addr := INADDR_ANY;
-   // if Intf <> '' then
-   //   Multicast.imr_interface.S_addr := synsock.inet_addr(PAnsiChar(Intf));
+    Multicast.imr_multiaddr.S_addr := swapbytes(strtoip(MCastIP));
+//    Multicast.imr_interface.S_addr := INADDR_ANY;
+    Multicast.imr_interface.S_addr := FLocalSin.sin_addr.S_addr;
     SockCheck(synsock.SetSockOpt(FSocket, IPPROTO_IP, IP_ADD_MEMBERSHIP,
       PAnsiChar(@Multicast), SizeOf(Multicast)));
   end;
   ExceptCheck;
 end;
 
-procedure TUDPBlockSocket.DropMulticast(const MCastIP: AnsiString; const Intf: AnsiString = '');
+procedure TUDPBlockSocket.DropMulticast(MCastIP: string);
 var
   Multicast: TIP_mreq;
   Multicast6: TIPv6_mreq;
@@ -3643,16 +3670,15 @@ begin
     ip6 := StrToIp6(MCastIP);
     for n := 0 to 15 do
       Multicast6.ipv6mr_multiaddr.u6_addr8[n] := Ip6[n];
-    Multicast6.ipv6mr_interface := StrToIntDef(Intf, 0);
+    Multicast6.ipv6mr_interface := 0;
     SockCheck(synsock.SetSockOpt(FSocket, IPPROTO_IPV6, IPV6_LEAVE_GROUP,
       PAnsiChar(@Multicast6), SizeOf(Multicast6)));
   end
   else
   begin
-   // Multicast.imr_multiaddr.S_addr := synsock.inet_addr(PAnsiChar(MCastIP));
-    Multicast.imr_interface.S_addr := INADDR_ANY;
-   // if Intf <> '' then
-   //   Multicast.imr_interface.S_addr := synsock.inet_addr(PAnsiChar(Intf));
+    Multicast.imr_multiaddr.S_addr := swapbytes(strtoip(MCastIP));
+//    Multicast.imr_interface.S_addr := INADDR_ANY;
+    Multicast.imr_interface.S_addr := FLocalSin.sin_addr.S_addr;
     SockCheck(synsock.SetSockOpt(FSocket, IPPROTO_IP, IP_DROP_MEMBERSHIP,
       PAnsiChar(@Multicast), SizeOf(Multicast)));
   end;
@@ -3880,7 +3906,7 @@ begin
       FHTTPTunnel := s[10] = '2';
   until (s = '') or (s = #$0d);
   if (FLasterror = 0) and not FHTTPTunnel then
-    FLastError := WSASYSNOTREADY;
+    FLastError := WSAECONNREFUSED;
   FHTTPTunnelRemoteIP := IP;
   FHTTPTunnelRemotePort := Port;
   ExceptCheck;
@@ -4228,9 +4254,19 @@ begin
   Result := '';
 end;
 
+function TCustomSSL.GetPeerSerialNo: integer;
+begin
+  Result := -1;
+end;
+
 function TCustomSSL.GetPeerName: string;
 begin
   Result := '';
+end;
+
+function TCustomSSL.GetPeerNameHash: cardinal;
+begin
+  Result := 0;
 end;
 
 function TCustomSSL.GetPeerIssuer: string;
@@ -4315,4 +4351,4 @@ begin
 {$ENDIF}
 end;
 
-end.
+end.

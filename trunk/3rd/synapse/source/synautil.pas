@@ -1,9 +1,9 @@
 {==============================================================================|
-| Project : Ararat Synapse                                       | 004.014.001 |
+| Project : Ararat Synapse                                       | 004.015.006 |
 |==============================================================================|
 | Content: support procedures and functions                                    |
 |==============================================================================|
-| Copyright (c)1999-2010, Lukas Gebauer                                        |
+| Copyright (c)1999-2013, Lukas Gebauer                                        |
 | All rights reserved.                                                         |
 |                                                                              |
 | Redistribution and use in source and binary forms, with or without           |
@@ -33,12 +33,15 @@
 | DAMAGE.                                                                      |
 |==============================================================================|
 | The Initial Developer of the Original Code is Lukas Gebauer (Czech Republic).|
-| Portions created by Lukas Gebauer are Copyright (c) 1999-2010.               |
+| Portions created by Lukas Gebauer are Copyright (c) 1999-2013.               |
 | Portions created by Hernan Sanchez are Copyright (c) 2000.                   |
+| Portions created by Petr Fejfar are Copyright (c)2011-2012.                  |
 | All Rights Reserved.                                                         |
 |==============================================================================|
 | Contributor(s):                                                              |
 |   Hernan Sanchez (hernan.sanchez@iname.com)                                  |
+|   Tomas Hajny (OS2 support)                                                  |
+|   Radek Cervinka (POSIX support)                                             |
 |==============================================================================|
 | History: see HISTORY.HTM from distribution package                           |
 |          (Found at URL: http://www.ararat.cz/synapse/)                       |
@@ -46,19 +49,11 @@
 
 {:@abstract(Support procedures and functions)}
 
-{$IFDEF FPC}
-  {$MODE DELPHI}
-{$ENDIF}
+{$I jedi.inc} // load common compiler defines
+
 {$Q-}
 {$R-}
 {$H+}
-
-//old Delphi does not have MSWINDOWS define.
-{$IFDEF WIN32}
-  {$IFNDEF MSWINDOWS}
-    {$DEFINE MSWINDOWS}
-  {$ENDIF}
-{$ENDIF}
 
 {$IFDEF UNICODE}
   {$WARN IMPLICIT_STRING_CAST OFF}
@@ -73,11 +68,19 @@ interface
 uses
 {$IFDEF MSWINDOWS}
   Windows,
-{$ELSE}
+{$ELSE MSWINDOWS}
   {$IFDEF FPC}
+    {$IFDEF OS2}
+    Dos, TZUtil,
+    {$ELSE OS2}
     UnixUtil, Unix, BaseUnix,
-  {$ELSE}
-    Libc,
+    {$ENDIF OS2}
+  {$ELSE FPC}
+    {$IFDEF POSIX}
+      Posix.Base, Posix.Time, Posix.SysTypes, Posix.SysTime, Posix.Stdio,
+    {$ELSE}
+      Libc,
+    {$ENDIF}
   {$ENDIF}
 {$ENDIF}
 {$IFDEF CIL}
@@ -89,6 +92,17 @@ uses
 type
   int64 = integer;
 {$ENDIF}
+{$IFDEF POSIX}
+type
+  TTimeVal = Posix.SysTime.timeval;
+  Ttimezone = record
+               tz_minuteswest: Integer ;     // minutes west of Greenwich
+               tz_dsttime: integer ;         // type of DST correction
+           end;
+
+  PTimeZone = ^Ttimezone;
+{$ENDIF}
+
 
 {:Return your timezone bias from UTC time in minutes.}
 function TimeZoneBias: integer;
@@ -120,6 +134,10 @@ function GetMonthNumber(Value: String): integer;
 {:Return decoded time from given string. Time must be witch separator ':'. You
  can use "hh:mm" or "hh:mm:ss".}
 function GetTimeFromStr(Value: string): TDateTime;
+
+{:Decode string representation of TimeZone (CEST, GMT, +0200, -0800, etc.)
+ to timezone offset.} 
+function DecodeTimeZone(Value: string; var Zone: integer): Boolean;
 
 {:Decode string in format "m-d-y" to TDateTime type.}
 function GetDateMDYFromStr(Value: string): TDateTime;
@@ -318,7 +336,7 @@ procedure WriteStrToStream(const Stream: TStream; Value: AnsiString);
 
 {:Return filename of new temporary file in Dir (if empty, then default temporary
  directory is used) and with optional filename prefix.}
-function GetTempFile(const Dir, prefix: AnsiString): AnsiString;
+function GetTempFile(const Dir, prefix: String): String;
 
 {:Return padded string. If length is greater, string is truncated. If length is
  smaller, string is padded by Pad character.}
@@ -330,6 +348,34 @@ function XorString(Indata1, Indata2: AnsiString): AnsiString;
 {:Read header from "Value" stringlist beginning at "Index" position. If header
  is Splitted into multiple lines, then this procedure de-split it into one line.}
 function NormalizeHeader(Value: TStrings; var Index: Integer): string;
+
+{pf}
+{:Search for one of line terminators CR, LF or NUL. Return position of the
+ line beginning and length of text.}
+procedure SearchForLineBreak(var APtr:PANSIChar; AEtx:PANSIChar; out ABol:PANSIChar; out ALength:integer);
+{:Skip both line terminators CR LF (if any). Move APtr position forward.}
+procedure SkipLineBreak(var APtr:PANSIChar; AEtx:PANSIChar);
+{:Skip all blank lines in a buffer starting at APtr and move APtr position forward.}
+procedure SkipNullLines                   (var APtr:PANSIChar; AEtx:PANSIChar);
+{:Copy all lines from a buffer starting at APtr to ALines until empty line
+ or end of the buffer is reached. Move APtr position forward).}
+procedure CopyLinesFromStreamUntilNullLine(var APtr:PANSIChar; AEtx:PANSIChar; ALines:TStrings);
+{:Copy all lines from a buffer starting at APtr to ALines until ABoundary
+ or end of the buffer is reached. Move APtr position forward).}
+procedure CopyLinesFromStreamUntilBoundary(var APtr:PANSIChar; AEtx:PANSIChar; ALines:TStrings; const ABoundary:ANSIString);
+{:Search ABoundary in a buffer starting at APtr.
+ Return beginning of the ABoundary. Move APtr forward behind a trailing CRLF if any).}
+function  SearchForBoundary               (var APtr:PANSIChar; AEtx:PANSIChar; const ABoundary:ANSIString): PANSIChar;
+{:Compare a text at position ABOL with ABoundary and return position behind the
+ match (including a trailing CRLF if any).}
+function  MatchBoundary                   (ABOL,AETX:PANSIChar; const ABoundary:ANSIString): PANSIChar;
+{:Compare a text at position ABOL with ABoundary + the last boundary suffix
+ and return position behind the match (including a trailing CRLF if any).}
+function  MatchLastBoundary               (ABOL,AETX:PANSIChar; const ABoundary:ANSIString): PANSIChar;
+{:Copy data from a buffer starting at position APtr and delimited by AEtx
+ position into ANSIString.}
+function  BuildStringFromBuffer           (AStx,AEtx:PANSIChar): ANSIString;
+{/pf}
 
 var
   {:can be used for your own months strings for @link(getmonthnumber)}
@@ -368,12 +414,23 @@ function TimeZoneBias: integer;
 {$IFNDEF MSWINDOWS}
 {$IFNDEF FPC}
 var
+{$IFDEF POSIX}
+  t: Posix.SysTypes.time_t;
+  UT: Posix.time.tm;
+{$ELSE}
   t: TTime_T;
   UT: TUnixTime;
+{$ENDIF}
 begin
-  __time(@T);
-  localtime_r(@T, UT);
-  Result := ut.__tm_gmtoff div 60;
+  {$IFDEF POSIX}
+    __time(T);
+    localtime_r(T, UT);
+    Result := UT.tm_gmtoff div 60;
+  {$ELSE}
+    __time(@T);
+    localtime_r(@T, UT);
+    Result := ut.__tm_gmtoff div 60;
+  {$ENDIF}
 {$ELSE}
 begin
   Result := TZSeconds div 60;
@@ -577,7 +634,7 @@ begin
   x := rpos(':', Value);
   if (x > 0) and ((Length(Value) - x) > 2) then
     Value := Copy(Value, 1, x + 2);
-  Value := ReplaceString(Value, ':', TimeSeparator);
+  Value := ReplaceString(Value, ':', {$IFDEF COMPILER15_UP}FormatSettings.{$ENDIF}TimeSeparator);
   Result := -1;
   try
     Result := StrToTime(Value);
@@ -738,21 +795,31 @@ begin
   st.Millisecond := stw.wMilliseconds;
   result := SystemTimeToDateTime(st);
 {$ENDIF}
-{$ELSE}
+{$ELSE MSWINDOWS}
 {$IFNDEF FPC}
 var
   TV: TTimeVal;
 begin
   gettimeofday(TV, nil);
   Result := UnixDateDelta + (TV.tv_sec + TV.tv_usec / 1000000) / 86400;
-{$ELSE}
+{$ELSE FPC}
+ {$IFDEF UNIX}
 var
   TV: TimeVal;
 begin
   fpgettimeofday(@TV, nil);
   Result := UnixDateDelta + (TV.tv_sec + TV.tv_usec / 1000000) / 86400;
-{$ENDIF}
-{$ENDIF}
+ {$ELSE UNIX}
+  {$IFDEF OS2}
+var
+  ST: TSystemTime;
+begin
+  GetLocalTime (ST);
+  Result := SystemTimeToDateTime (ST);
+  {$ENDIF OS2}
+ {$ENDIF UNIX}
+{$ENDIF FPC}
+{$ENDIF MSWINDOWS}
 end;
 
 {==============================================================================}
@@ -780,7 +847,7 @@ begin
   stw.wMilliseconds := st.Millisecond;
   Result := SetSystemTime(stw);
 {$ENDIF}
-{$ELSE}
+{$ELSE MSWINDOWS}
 {$IFNDEF FPC}
 var
   TV: TTimeVal;
@@ -795,8 +862,13 @@ begin
   d := (newdt - UnixDateDelta) * 86400;
   TV.tv_sec := trunc(d);
   TV.tv_usec := trunc(frac(d) * 1000000);
+  {$IFNDEF POSIX}
   Result := settimeofday(TV, TZ) <> -1;
-{$ELSE}
+  {$ELSE}
+  Result := False; // in POSIX settimeofday is not defined? http://www.kernel.org/doc/man-pages/online/pages/man2/gettimeofday.2.html
+  {$ENDIF}
+{$ELSE FPC}
+ {$IFDEF UNIX}
 var
   TV: TimeVal;
   d: double;
@@ -805,8 +877,18 @@ begin
   TV.tv_sec := trunc(d);
   TV.tv_usec := trunc(frac(d) * 1000000);
   Result := fpsettimeofday(@TV, nil) <> -1;
-{$ENDIF}
-{$ENDIF}
+ {$ELSE UNIX}
+  {$IFDEF OS2}
+var
+  ST: TSystemTime;
+begin
+  DateTimeToSystemTime (NewDT, ST);
+  SetTime (ST.Hour, ST.Minute, ST.Second, ST.Millisecond div 10);
+  Result := true;
+  {$ENDIF OS2}
+ {$ENDIF UNIX}
+{$ENDIF FPC}
+{$ENDIF MSWINDOWS}
 end;
 
 {==============================================================================}
@@ -1734,11 +1816,17 @@ begin
 end;
 
 {==============================================================================}
-function GetTempFile(const Dir, prefix: AnsiString): AnsiString;
+
+{$IFDEF POSIX}
+function tempnam(const Path: PAnsiChar; const Prefix: PAnsiChar): PAnsiChar; cdecl;
+  external libc name _PU + 'tempnam';
+{$ENDIF}
+
+function GetTempFile(const Dir, prefix: String): String;
 {$IFNDEF FPC}
 {$IFDEF MSWINDOWS}
 var
-  Path: AnsiString;
+  Path: String;
   x: integer;
 {$ENDIF}
 {$ENDIF}
@@ -1824,12 +1912,213 @@ begin
 end;
 
 {==============================================================================}
+
+{pf}
+procedure SearchForLineBreak(var APtr:PANSIChar; AEtx:PANSIChar; out ABol:PANSIChar; out ALength:integer);
+begin
+  ABol := APtr;
+  while (APtr<AEtx) and not (APtr^ in [#0,#10,#13]) do
+    inc(APtr);
+  ALength := APtr-ABol;
+end;
+{/pf}
+
+{pf}
+procedure SkipLineBreak(var APtr:PANSIChar; AEtx:PANSIChar);
+begin
+  if (APtr<AEtx) and (APtr^=#13) then
+    inc(APtr);
+  if (APtr<AEtx) and (APtr^=#10) then
+    inc(APtr);
+end;
+{/pf}
+
+{pf}
+procedure SkipNullLines(var APtr:PANSIChar; AEtx:PANSIChar);
+var
+  bol: PANSIChar;
+  lng: integer;
+begin
+  while (APtr<AEtx) do
+    begin
+      SearchForLineBreak(APtr,AEtx,bol,lng);
+      SkipLineBreak(APtr,AEtx);
+      if lng>0 then
+        begin
+          APtr := bol;
+          Break;
+        end;
+    end;
+end;
+{/pf}
+
+{pf}
+procedure CopyLinesFromStreamUntilNullLine(var APtr:PANSIChar; AEtx:PANSIChar; ALines:TStrings);
+var
+  bol: PANSIChar;
+  lng: integer;
+  s:   ANSIString;
+begin
+  // Copying until body separator will be reached
+  while (APtr<AEtx) and (APtr^<>#0) do
+    begin
+      SearchForLineBreak(APtr,AEtx,bol,lng);
+      SkipLineBreak(APtr,AEtx);
+      if lng=0 then
+        Break;
+      SetString(s,bol,lng);
+      ALines.Add(s);
+    end;
+end;
+{/pf}
+
+{pf}
+procedure CopyLinesFromStreamUntilBoundary(var APtr:PANSIChar; AEtx:PANSIChar; ALines:TStrings; const ABoundary:ANSIString);
+var
+  bol:      PANSIChar;
+  lng:      integer;
+  s:        ANSIString;
+  BackStop: ANSIString;
+  eob1:     PANSIChar;
+  eob2:     PANSIChar;
+begin
+  BackStop := '--'+ABoundary;
+  eob2     := nil;
+  // Copying until Boundary will be reached
+  while (APtr<AEtx) do
+    begin
+      SearchForLineBreak(APtr,AEtx,bol,lng);
+      SkipLineBreak(APtr,AEtx);
+      eob1 := MatchBoundary(bol,APtr,ABoundary);
+      if Assigned(eob1) then
+        eob2 := MatchLastBoundary(bol,AEtx,ABoundary);
+      if Assigned(eob2) then
+        begin
+          APtr := eob2;
+          Break;
+        end
+      else if Assigned(eob1) then
+        begin
+          APtr := eob1;
+          Break;
+        end
+      else
+        begin
+          SetString(s,bol,lng);
+          ALines.Add(s);
+        end;
+    end;
+end;
+{/pf}
+
+{pf}
+function SearchForBoundary(var APtr:PANSIChar; AEtx:PANSIChar; const ABoundary:ANSIString): PANSIChar;
+var
+  eob:  PANSIChar;
+  Step: integer;
+begin
+  Result := nil;
+  // Moving Aptr position forward until boundary will be reached
+  while (APtr<AEtx) do
+    begin
+      if strlcomp(APtr,#13#10'--',4)=0 then
+        begin
+          eob  := MatchBoundary(APtr,AEtx,ABoundary);
+          Step := 4;
+        end
+      else if strlcomp(APtr,'--',2)=0 then
+        begin
+          eob  := MatchBoundary(APtr,AEtx,ABoundary);
+          Step := 2;
+        end
+      else
+        begin
+          eob  := nil;
+          Step := 1;
+        end;
+      if Assigned(eob) then
+        begin
+          Result := APtr;  // boundary beginning
+          APtr   := eob;   // boundary end
+          exit;
+        end
+      else
+        inc(APtr,Step);
+    end;
+end;
+{/pf}
+
+{pf}
+function MatchBoundary(ABol,AEtx:PANSIChar; const ABoundary:ANSIString): PANSIChar;
+var
+  MatchPos:   PANSIChar;
+  Lng:        integer;
+begin
+  Result   := nil;
+  MatchPos := ABol;
+  Lng := length(ABoundary);
+  if (MatchPos+2+Lng)>AETX then
+    exit;
+  if strlcomp(MatchPos,#13#10,2)=0 then
+    inc(MatchPos,2);
+  if (MatchPos+2+Lng)>AETX then
+    exit;
+  if strlcomp(MatchPos,'--',2)<>0 then
+    exit;
+  inc(MatchPos,2);
+  if strlcomp(MatchPos,PANSIChar(ABoundary),Lng)<>0 then
+    exit;
+  inc(MatchPos,Lng);
+  if ((MatchPos+2)<=AEtx) and (strlcomp(MatchPos,#13#10,2)=0) then
+    inc(MatchPos,2);
+  Result := MatchPos;
+end;
+{/pf}
+
+{pf}
+function MatchLastBoundary(ABOL,AETX:PANSIChar; const ABoundary:ANSIString): PANSIChar;
+var
+  MatchPos: PANSIChar;
+begin
+  Result   := nil;
+  MatchPos := MatchBoundary(ABOL,AETX,ABoundary);
+  if not Assigned(MatchPos) then
+    exit;
+  if strlcomp(MatchPos,'--',2)<>0 then
+    exit;
+  inc(MatchPos,2);
+  if (MatchPos+2<=AEtx) and (strlcomp(MatchPos,#13#10,2)=0) then
+    inc(MatchPos,2);
+  Result := MatchPos;
+end;
+{/pf}
+
+{pf}
+function  BuildStringFromBuffer(AStx,AEtx:PANSIChar): ANSIString;
+var
+  lng: integer;
+begin
+  Lng := 0;
+  if Assigned(AStx) and Assigned(AEtx) then
+    begin
+      Lng := AEtx-AStx;
+      if Lng<0 then
+        Lng := 0;
+    end;
+  SetString(Result,AStx,lng);
+end;
+{/pf}
+
+
+
+
+{==============================================================================}
 var
   n: integer;
 begin
   for n :=  1 to 12 do
   begin
-    CustomMonthNames[n] := ShortMonthNames[n];
-    MyMonthNames[0, n] := ShortMonthNames[n];
+    CustomMonthNames[n] := {$IFDEF COMPILER15_UP}FormatSettings.{$ENDIF}ShortMonthNames[n];
+    MyMonthNames[0, n] := {$IFDEF COMPILER15_UP}FormatSettings.{$ENDIF}ShortMonthNames[n];
   end;
 end.
