@@ -1,9 +1,11 @@
 function   GetPururinInfoFromURL: Byte;
 var
   s: String;
-  isExtractSummary: Boolean = TRUE;
-  isExtractGenres : Boolean = FALSE;
-  isExtractChapter: Boolean = FALSE;
+  isExtractSummary : Boolean = TRUE;
+  isExtractArtists : Boolean = FALSE;
+  isExtractParodies: Boolean = FALSE;
+  isExtractGenres  : Boolean = FALSE;
+  isExtractChapter : Boolean = FALSE;
   isExtractCharacters: Boolean = FALSE;
   i, j: Cardinal;
 begin
@@ -27,7 +29,7 @@ begin
   Parser.Free;
   source.Free;
   mangaInfo.website:= WebsiteRoots[PURURIN_ID,0];
-  mangaInfo.status:= '';
+  mangaInfo.status:= '0';
   mangaInfo.coverLink:= '';
   mangaInfo.summary:= '';
   mangaInfo.authors:= '';
@@ -93,12 +95,35 @@ begin
     // get artists
     if (Pos('Artist', parse.Strings[i])<>0) AND
        (Pos('</td>', parse.Strings[i+1])<>0) then
-      mangaInfo.artists:= parse.Strings[i+6];
+      isExtractArtists:= TRUE;
+    if isExtractArtists then
+    begin
+      if Pos('/browse/', parse.Strings[i]) <> 0 then
+        mangaInfo.artists:= mangaInfo.artists + Trim(parse.Strings[i+1]) + ', ';
+      if Pos('</ul>', parse.Strings[i]) <> 0 then
+      begin
+        mangaInfo.artists:= StringReplace(mangaInfo.artists, '</tr>, ', '', []);
+        if mangaInfo.artists<>'' then
+          SetLength(mangaInfo.artists, Length(mangaInfo.artists)-1);
+        isExtractArtists:= FALSE;
+      end;
+    end;
 
     // get parody
-    if (Pos('Parody', parse.Strings[i])<>0) AND
+    if ((Pos('Parody', parse.Strings[i])<>0) OR
+        (Pos('Parodies', parse.Strings[i])<>0)) AND
        (Pos('</td>', parse.Strings[i+1])<>0) then
-      mangaInfo.genres:= mangaInfo.genres + parse.Strings[i+6] + ', ';
+      isExtractParodies:= TRUE;
+    if isExtractParodies then
+    begin
+      if Pos('/browse/', parse.Strings[i]) <> 0 then
+        mangaInfo.genres:= mangaInfo.genres + Trim(parse.Strings[i+1]) + ', ';
+      if Pos('</ul>', parse.Strings[i]) <> 0 then
+      begin
+        mangaInfo.genres:= StringReplace(mangaInfo.genres, '</tr>, ', '', []);
+        isExtractParodies:= FALSE;
+      end;
+    end;
 
     // get language
     if (Pos('Language', parse.Strings[i])<>0) AND
