@@ -611,11 +611,12 @@ function  GetPage(const AHTTP: THTTPSend; var output: TObject; URL: String; cons
 // Get url from a bitly url.
 function  GetURLFromBitly(const URL: String): String;
 // Download an image from url and save it to a specific location.
-function  SaveImage(const AHTTP: THTTPSend; const mangaSiteID: Integer; URL: String; const Path, name, prefix: String; const Reconnect: Cardinal): Boolean; overload;
+function  SaveImage(const AOwner: TObject; const AHTTP: THTTPSend; const mangaSiteID: Integer; URL: String; const Path, name, prefix: String; const Reconnect: Cardinal): Boolean; overload;
 function  SaveImage(const mangaSiteID: Integer; URL: String; const Path, name, prefix: String; const Reconnect: Cardinal): Boolean; overload; inline;
 
 procedure QuickSortChapters(var chapterList, linkList: TStringList);
 procedure QuickSortData(var merge: TStringList);
+// This method uses to sort the data. Use when we load all the lists.
 procedure QuickSortDataWithWebID(var merge: TStringList; const webIDList: TByteList);
 
 
@@ -637,7 +638,9 @@ function  fmdRunAsAdmin(path, params: String; isPersistent: Boolean): Boolean;
 implementation
 
 uses
-  Process, FileUtil{$IFDEF WINDOWS}, ShellApi, Windows{$ENDIF}, Synacode, lazutf8classes;
+  Process, FileUtil{$IFDEF WINDOWS}, ShellApi, Windows{$ENDIF}, Synacode,
+  lazutf8classes,
+  uDownloadsManager;
 
 {$IFDEF WINDOWS}
 
@@ -1691,7 +1694,7 @@ begin
   httpSource.Free;
 end;
 
-function  SaveImage(const AHTTP: THTTPSend; const mangaSiteID: Integer; URL: String; const Path, name, prefix: String; const Reconnect: Cardinal): Boolean;
+function  SaveImage(const AOwner: TObject; const AHTTP: THTTPSend; const mangaSiteID: Integer; URL: String; const Path, name, prefix: String; const Reconnect: Cardinal): Boolean;
 // prefix: For example: 000<our prefix>.jpg.
 var
   retryToSave: Boolean = FALSE;
@@ -1730,10 +1733,15 @@ begin
   HTTP.ProxyUser:= User;
   HTTP.ProxyPass:= Pass;
 
-  if (mangaSiteID <> MANGAAR_ID) AND (mangaSiteID <> MEINMANGA_ID) then
+  if (mangaSiteID <> MANGAAR_ID) AND
+     (mangaSiteID <> MEINMANGA_ID) AND
+     (mangaSiteID <> PECINTAKOMIK_ID) then
     HTTP.UserAgent:= 'curl/7.21.0 (i686-pc-linux-gnu) libcurl/7.21.0 OpenSSL/0.9.8o zlib/1.2.3.4 libidn/1.18';
 
-  if (mangaSiteID >= 0) AND (mangaSiteID <= High(WebsiteRoots)) then
+  if (mangaSiteID >= 0) AND
+     (mangaSiteID <= High(WebsiteRoots)) AND
+     (mangaSiteID <> MEINMANGA_ID) AND
+     (mangaSiteID <> PECINTAKOMIK_ID) then
     HTTP.Headers.Insert(0, 'Referer: '+WebsiteRoots[mangaSiteID,1]);
 
   while (NOT HTTP.HTTPMethod('GET', URL)) OR
@@ -1809,6 +1817,9 @@ begin
     // If the error still persists, break the loop.
     repeat
       try
+        if AOwner is TDownloadThread then
+          if TDownloadThread(AOwner).IsTerminateCalled then
+            break;
         fstream:= TFileStreamUTF8.Create(Path+'/'+name+prefix+ext, fmCreate);
         HTTP.Document.SaveToStream(fstream);
         fstream.Free;
@@ -1816,6 +1827,9 @@ begin
       except
         on E: Exception do
         begin
+          if AOwner is TDownloadThread then
+            if TDownloadThread(AOwner).IsTerminateCalled then
+              break;
           // TODO: Write this error to log.
           if NOT retryToSave then
           begin
@@ -1841,7 +1855,7 @@ end;
 
 function  SaveImage(const mangaSiteID: Integer; URL: String; const Path, name, prefix: String; const Reconnect: Cardinal): Boolean;
 begin
-  Result:= SaveImage(nil, mangaSiteID, URL, Path, name, prefix, Reconnect);
+  Result:= SaveImage(nil, nil, mangaSiteID, URL, Path, name, prefix, Reconnect);
 end;
 
 procedure QuickSortChapters(var chapterList, linkList: TStringList);

@@ -203,6 +203,7 @@ begin
         Synchronize(MainThreadUpdateNamesAndLinks);
         // For Fakku and Pururin only, reduce the number of page we have to visit
         // in order to search for new series.
+        {$IFDEF DOWNLOADER}
         if (manager.website = WebsiteRoots[FAKKU_ID,0]) OR
            (manager.website = WebsiteRoots[PURURIN_ID,0]) then
         begin
@@ -211,6 +212,7 @@ begin
             if manager.dataProcess.Title.Find(names.Strings[0], i) then
               manager.isFinishSearchingForNewManga:= TRUE;
         end;
+        {$ENDIF}
       end;
     CS_INFO:
       begin
@@ -304,6 +306,7 @@ begin
   while (workPtr < limit) do
   begin
     // Finish search for series (for Puririn and Fakku only)
+    {$IFDEF DOWNLOADER}
     if (cs = CS_DIRECTORY_PAGE) AND (isFinishSearchingForNewManga) then
     begin
       if (website = WebsiteRoots[FAKKU_ID,0]) then
@@ -321,6 +324,7 @@ begin
         workPtr:= $FFFFFFFF
     end
     else
+    {$ENDIF}
     if (threadCount < numberOfThreads) then
       for j:= 0 to numberOfThreads-1 do
         if (NOT Assigned(threads[j])) OR (threadStates[j] = FALSE) then
