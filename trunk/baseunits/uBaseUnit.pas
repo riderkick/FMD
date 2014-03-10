@@ -12,8 +12,9 @@ unit uBaseUnit;
 interface
 
 uses
-  SysUtils, Classes, HTTPSend, graphics, IniFiles, strutils,
-  zstream, fgl;
+  SysUtils, Classes, graphics, IniFiles, strutils,
+  zstream, fgl,
+  HTTPSend, ssl_openssl, Synacode, Synautil;
 
 const
   MUTEX              = '_FMD_MUTEX_';
@@ -246,7 +247,7 @@ var
      ('MangaVadisi', 'http://www.mangavadisi.net'),
      ('MangaFrame', 'http://www.mngfrm.com'),
      ('EatManga', 'http://eatmanga.com'),
-     ('Starkana', 'http://starkana.com'),
+     ('Starkana', 'https://starkana.org'),
      ('MangaPanda', 'http://www.mangapanda.com'),
      ('RedHawkScans', 'http://manga.redhawkscans.com'),
      ('BlogTruyen', 'http://blogtruyen.com'),
@@ -638,7 +639,7 @@ function  fmdRunAsAdmin(path, params: String; isPersistent: Boolean): Boolean;
 implementation
 
 uses
-  Process, FileUtil{$IFDEF WINDOWS}, ShellApi, Windows{$ENDIF}, Synacode,
+  Process, FileUtil{$IFDEF WINDOWS}, ShellApi, Windows{$ENDIF},
   lazutf8classes,
   uDownloadsManager;
 
@@ -1535,13 +1536,23 @@ label
 
 begin
   Result:= FALSE;
-  if (isByPassHTTP) AND (Pos('HTTP://', UpCase(URL)) = 0) then
+  if (isByPassHTTP) AND
+     (Pos('HTTP://', UpCase(URL)) = 0) AND
+     (Pos('HTTPS://', UpCase(URL)) = 0) then
     exit;
   if AHTTP <> nil then
     HTTP:= AHTTP
   else
     HTTP:= THTTPSend.Create;
 globReturn:
+
+  // Site that require HTTPS request should define here
+  if Pos('https://', URL) <> 0 then
+  begin
+    HTTP.Sock.CreateWithSSL(TSSLOpenSSL);
+    HTTP.Sock.SSLDoConnect;
+  end;
+
   HTTP.ProxyHost:= Host;
   HTTP.ProxyPort:= Port;
   HTTP.ProxyUser:= User;
@@ -1601,7 +1612,7 @@ globReturn:
     if Pos(HENTAI2READ_ROOT, URL) <> 0 then
       HTTP.Headers.Insert(0, 'Referer:'+HENTAI2READ_ROOT+'/');
     while (NOT HTTP.HTTPMethod('GET', URL)) OR
-        (HTTP.ResultCode >= 500) do
+          (HTTP.ResultCode >= 500) do
     begin
       if Reconnect <> 0 then
       begin
@@ -1728,6 +1739,14 @@ begin
   end
   else
     HTTP:= THTTPSend.Create;
+
+  // Site that require HTTPS request should define here
+  if Pos('https://', URL) <> 0 then
+  begin
+    HTTP.Sock.CreateWithSSL(TSSLOpenSSL);
+    HTTP.Sock.SSLDoConnect;
+  end;
+
   HTTP.ProxyHost:= Host;
   HTTP.ProxyPort:= Port;
   HTTP.ProxyUser:= User;
