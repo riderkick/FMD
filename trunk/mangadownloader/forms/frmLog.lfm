@@ -9,7 +9,7 @@ object Log: TLog
   ClientWidth = 548
   OnCreate = FormCreate
   Position = poDesktopCenter
-  LCLVersion = '1.1'
+  LCLVersion = '1.3'
   object pnIE: TPanel
     Left = 66
     Height = 50
@@ -21,7 +21,7 @@ object Log: TLog
   end
   object mmLog: TMemo
     Left = 0
-    Height = 341
+    Height = 365
     Top = 0
     Width = 548
     Align = alClient
@@ -34,15 +34,5 @@ object Log: TLog
     ReadOnly = True
     ScrollBars = ssVertical
     TabOrder = 1
-  end
-  object btVisit: TButton
-    Left = 0
-    Height = 24
-    Top = 341
-    Width = 548
-    Align = alBottom
-    Caption = 'Visit FMD website for more information'
-    OnClick = btVisitClick
-    TabOrder = 2
   end
 end

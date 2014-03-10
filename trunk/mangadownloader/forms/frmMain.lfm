@@ -2137,9 +2137,9 @@ object MainForm: TMainForm
               Width = 167
               Caption = '[Batoto] Show All Language'
               ParentFont = False
-              TabOrder = 2
+              TabOrder = 3
             end
-			object cbOptionAutoDlFav: TCheckBox
+            object cbOptionAutoDlFav: TCheckBox
               Left = 32
               Height = 19
               Top = 94
