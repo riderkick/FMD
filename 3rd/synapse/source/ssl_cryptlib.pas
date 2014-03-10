@@ -3,7 +3,7 @@
 |==============================================================================|
 | Content: SSL/SSH support by Peter Gutmann's CryptLib                         |
 |==============================================================================|
-| Copyright (c)1999-2005, Lukas Gebauer                                        |
+| Copyright (c)1999-2012, Lukas Gebauer                                        |
 | All rights reserved.                                                         |
 |                                                                              |
 | Redistribution and use in source and binary forms, with or without           |
@@ -33,7 +33,7 @@
 | DAMAGE.                                                                      |
 |==============================================================================|
 | The Initial Developer of the Original Code is Lukas Gebauer (Czech Republic).|
-| Portions created by Lukas Gebauer are Copyright (c)2005.                     |
+| Portions created by Lukas Gebauer are Copyright (c)2005-2012.                |
 | All Rights Reserved.                                                         |
 |==============================================================================|
 | Contributor(s):                                                              |
@@ -84,6 +84,7 @@ unit ssl_cryptlib;
 interface
 
 uses
+  Windows,
   SysUtils,
   blcksock, synsock, synautil, synacode,
   cryptlib;
@@ -233,7 +234,6 @@ var
   cert: CRYPT_CERTIFICATE;
   publicKey: CRYPT_CONTEXT;
 begin
-  Result := False;
   if FPrivatekeyFile = '' then
     FPrivatekeyFile := GetTempFile('', 'key');
   cryptCreateContext(privateKey, CRYPT_UNUSED, CRYPT_ALGO_RSA);
@@ -402,7 +402,7 @@ begin
   FcryptSession := CRYPT_SESSION(CRYPT_SESSION_NONE);
   FSSLEnabled := False;
   if FDelCert then
-    Deletefile(FPrivatekeyFile);
+    SysUtils.DeleteFile(FPrivatekeyFile);
 end;
 
 function TSSLCryptLib.Prepare(server:Boolean): Boolean;
@@ -459,8 +459,8 @@ end;
 
 function TSSLCryptLib.BiShutdown: boolean;
 begin
-//  if FcryptSession <> CRYPT_SESSION(CRYPT_SESSION_NONE) then
-//    cryptSetAttribute(FCryptSession, CRYPT_SESSINFO_ACTIVE, 0); //no-op
+  if FcryptSession <> CRYPT_SESSION(CRYPT_SESSION_NONE) then
+    cryptSetAttribute(FCryptSession, CRYPT_SESSINFO_ACTIVE, 0);
   DeInit;
   FReadBuffer := '';
   Result := True;
@@ -478,8 +478,6 @@ begin
 end;
 
 function TSSLCryptLib.RecvBuffer(Buffer: TMemory; Len: Integer): Integer;
-var
-  l: integer;
 begin
   FLastError := 0;
   FLastErrorDesc := '';

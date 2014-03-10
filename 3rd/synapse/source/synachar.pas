@@ -1,9 +1,9 @@
 {==============================================================================|
-| Project : Ararat Synapse                                       | 005.002.002 |
+| Project : Ararat Synapse                                       | 005.002.003 |
 |==============================================================================|
 | Content: Charset conversion support                                          |
 |==============================================================================|
-| Copyright (c)1999-2004, Lukas Gebauer                                        |
+| Copyright (c)1999-2012, Lukas Gebauer                                        |
 | All rights reserved.                                                         |
 |                                                                              |
 | Redistribution and use in source and binary forms, with or without           |
@@ -33,7 +33,7 @@
 | DAMAGE.                                                                      |
 |==============================================================================|
 | The Initial Developer of the Original Code is Lukas Gebauer (Czech Republic).|
-| Portions created by Lukas Gebauer are Copyright (c)2000-2004.                |
+| Portions created by Lukas Gebauer are Copyright (c)2000-2012.                |
 | All Rights Reserved.                                                         |
 |==============================================================================|
 | Contributor(s):                                                              |
@@ -60,6 +60,13 @@ Internal routines knows all major charsets for Europe or America. For East-Asian
 {$Q-}
 {$H+}
 
+//old Delphi does not have MSWINDOWS define.
+{$IFDEF WIN32}
+  {$IFNDEF MSWINDOWS}
+    {$DEFINE MSWINDOWS}
+  {$ENDIF}
+{$ENDIF}
+
 {$IFDEF UNICODE}
   {$WARN IMPLICIT_STRING_CAST OFF}
   {$WARN IMPLICIT_STRING_CAST_LOSS OFF}
@@ -70,13 +77,9 @@ unit synachar;
 interface
 
 uses
-{$IFNDEF WIN32}
+{$IFNDEF MSWINDOWS}
   {$IFNDEF FPC}
   Libc,
-  {$ELSE}
-    {$IFDEF FPC_USE_LIBC}
-  Libc,
-    {$ENDIF}
   {$ENDIF}
 {$ELSE}
   Windows,
@@ -219,6 +222,9 @@ function StringToWide(const Value: AnsiString): WideString;
 
 {:Convert WideString to binary string with unicode content.}
 function WideToString(const Value: WideString): AnsiString;
+
+function GetIconvIDFromCP(Value: TMimeChar): AnsiString;
+function GetCPFromIconvID(Value: AnsiString): TMimeChar;
 
 {==============================================================================}
 implementation
@@ -1490,19 +1496,16 @@ begin
 end;
 
 {==============================================================================}
-{$IFNDEF WIN32}
+{$IFNDEF MSWINDOWS}
 
 function GetCurCP: TMimeChar;
 begin
   {$IFNDEF FPC}
   Result := GetCPFromID(nl_langinfo(_NL_CTYPE_CODESET_NAME));
   {$ELSE}
-    {$IFDEF FPC_USE_LIBC}
-  Result := GetCPFromID(nl_langinfo(_NL_CTYPE_CODESET_NAME));
-    {$ELSE}
   //How to get system codepage without LIBC?
   Result := UTF_8;
-    {$ENDIF}
+{ TODO : Waiting for FPC 2.8 solution }
   {$ENDIF}
 end;
 
