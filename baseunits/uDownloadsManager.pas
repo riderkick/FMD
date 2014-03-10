@@ -221,11 +221,8 @@ end;
 destructor  TDownloadThread.Destroy;
 begin
   // TODO: Need recheck
-  try
-   // if NOT Terminated2 then
-    Dec(manager.container.activeThreadCount);
-  except
-  end;
+  // if NOT Terminated2 then
+  manager.container.activeThreadCount:= InterlockedDecrement(manager.container.activeThreadCount);
   inherited Destroy;
 end;
 
@@ -962,7 +959,8 @@ begin
 
   if (manager.container.pageLinks.Strings[workCounter] = '') OR
      (manager.container.pageLinks.Strings[workCounter] = 'W') then exit;
-  SaveImage(AHTTP,
+  SaveImage(self,
+            AHTTP,
             manager.container.mangaSiteID,
             manager.container.pageLinks.Strings[workCounter],
             manager.container.downloadInfo.SaveTo+
@@ -1049,6 +1047,9 @@ begin
   if (container.mangaSiteID = EATMANGA_ID) then
     currentMaxThread:= 1
   else
+  if (container.mangaSiteID = PECINTAKOMIK_ID) then
+    currentMaxThread:= 1
+  else
     currentMaxThread:= container.manager.maxDLThreadsPerTask;
 
   if container.mangaSiteID = GEHENTAI_ID then
@@ -1077,7 +1078,7 @@ begin
     if i >= threads.Count then
     begin
       while isSuspended do Sleep(100);
-      Inc(container.activeThreadCount);
+      container.activeThreadCount:= InterLockedIncrement(container.activeThreadCount);
       threads.Add(TDownloadThread.Create);
       if container.mangaSiteID = GEHENTAI_ID then
         threads.Items[threads.Count-1].anotherURL:= anotherURL;
@@ -1085,16 +1086,16 @@ begin
       threads.Items[threads.Count-1].workCounter:= container.workCounter;
       threads.Items[threads.Count-1].checkStyle:= Flag;
       threads.Items[threads.Count-1].isSuspended:= FALSE;
-      Inc(container.workCounter);
+      container.workCounter:= InterLockedIncrement(container.workCounter);
       if Flag = CS_GETPAGELINK then
-        Inc(container.currentPageNumber);
+        container.currentPageNumber:= InterLockedIncrement(container.currentPageNumber);
       exit;
     end
     else
     if (threads.Items[i].isTerminated) then
     begin
       while isSuspended do Sleep(100);
-      Inc(container.activeThreadCount);
+      container.activeThreadCount:= InterLockedIncrement(container.activeThreadCount);
       try
         threads.Items[i]:= TDownloadThread.Create;  // Sometimes we get segfault in here, why ?
       except
@@ -1110,9 +1111,9 @@ begin
       threads.Items[i].workCounter:= container.workCounter;
       threads.Items[i].checkStyle:= Flag;
       threads.Items[i].isSuspended:= FALSE;
-      Inc(container.workCounter);
+      container.workCounter:= InterLockedIncrement(container.workCounter);
       if Flag = CS_GETPAGELINK then
-        Inc(container.currentPageNumber);
+        container.currentPageNumber:= InterLockedIncrement(container.currentPageNumber);
       exit;
     end;
   end;
@@ -1186,7 +1187,7 @@ begin
              container.currentDownloadChapterPtr,
              container.chapterLinks.Count,
              container.chapterName.Strings[container.currentDownloadChapterPtr]]);
-        Inc(container.downloadInfo.iProgress);
+        container.downloadInfo.iProgress:= InterLockedIncrement(container.downloadInfo.iProgress);
         Synchronize(MainThreadRepaint);
       end;
       WaitFor;
@@ -1214,7 +1215,7 @@ begin
                container.currentDownloadChapterPtr,
                container.chapterLinks.Count,
                container.chapterName.Strings[container.currentDownloadChapterPtr]]);
-          Inc(container.downloadInfo.iProgress);
+          container.downloadInfo.iProgress:= InterLockedIncrement(container.downloadInfo.iProgress);
           Synchronize(MainThreadRepaint);
         end;
         WaitFor;
@@ -1225,7 +1226,7 @@ begin
     if Terminated then exit;
     container.currentPageNumber:= 0;
     container.pageLinks.Clear;
-    Inc(container.currentDownloadChapterPtr);
+    container.currentDownloadChapterPtr:= InterLockedIncrement(container.currentDownloadChapterPtr);
   end;
   Synchronize(ShowBaloon);
   Terminate;
@@ -1874,7 +1875,6 @@ begin
       if Assigned(containers.Items[taskID].thread.threads[i]) then
         containers.Items[taskID].thread.threads[i].Terminate;
     containers.Items[taskID].thread.Terminate;
-    Sleep(250);
     containers.Items[taskID].Status:= STATUS_STOP;
   end
   else

@@ -1,3 +1,9 @@
+{
+        File: uFMDThread.pas
+        License: GPLv2
+        This unit is a part of Free Manga Downloader
+}
+
 unit uFMDThread;
 
 {$mode delphi}
@@ -10,6 +16,7 @@ uses
 type
   TFMDThread = class(TThread)
   private
+    FIsTerminateCalled,
     FIsTerminated,
     FIsSuspended: Boolean;
     procedure   MainThreadSetIsTerminatedTRUE;
@@ -20,8 +27,11 @@ type
     constructor Create(CreateSuspended: Boolean);
     destructor  Destroy; override;
 
+    procedure   Terminate;
+
     property    IsTerminated: Boolean read FIsTerminated write FIsTerminated;
     property    IsSuspended: Boolean read FIsSuspended write FIsSuspended;
+    property    IsTerminateCalled: Boolean read FIsTerminateCalled write FIsTerminateCalled;
   end;
 
 implementation
@@ -56,12 +66,19 @@ begin
   FIsSuspended := TRUE;
   FIsTerminated:= FALSE;
   FreeOnTerminate:= TRUE;
+  FIsTerminateCalled:= FALSE
 end;
 
 destructor  TFMDThread.Destroy;
 begin
   FIsTerminated:= TRUE;
   inherited Destroy;
+end;
+
+procedure   TFMDThread.Terminate;
+begin
+  FIsTerminateCalled:= TRUE;
+  TThread(self).Terminate;
 end;
 
 end.

@@ -92,6 +92,11 @@ begin
        (Pos('</td>', parse.Strings[i+1])<>0) then
       mangaInfo.authors:= parse.Strings[i+6];
 
+    // get category
+    if (Pos('Category', parse.Strings[i])<>0) AND
+       (Pos('</td>', parse.Strings[i+1])<>0) then
+      mangaInfo.genres:= mangaInfo.genres + parse.Strings[i+6];
+
     // get artists
     if (Pos('Artist', parse.Strings[i])<>0) AND
        (Pos('</td>', parse.Strings[i+1])<>0) then
@@ -103,8 +108,6 @@ begin
       if Pos('</ul>', parse.Strings[i]) <> 0 then
       begin
         mangaInfo.artists:= StringReplace(mangaInfo.artists, '</tr>, ', '', []);
-        if mangaInfo.artists<>'' then
-          SetLength(mangaInfo.artists, Length(mangaInfo.artists)-1);
         isExtractArtists:= FALSE;
       end;
     end;
@@ -162,5 +165,8 @@ begin
       end;
     end;
   end;
+  mangaInfo.authors:= Trim(mangaInfo.authors);
+  mangaInfo.artists:= Trim(mangaInfo.artists);
+  mangaInfo.genres := Trim(mangaInfo.genres);
   Result:= NO_ERROR;
 end;
