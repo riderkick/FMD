@@ -8,6 +8,7 @@ unit uBaseUnit;
 
 {$MODE DELPHI}
 {$MACRO ON}
+{$DEFINE DOWNLOADER}
 
 interface
 
@@ -59,8 +60,8 @@ const
   Symbols: array [0..8] of Char =
     ('\', '/', ':', '*', '?', '"', '<', '>', '|');
 
-  {$IFDEF WIN32}
-  DEFAULT_PATH  = 'c:\downloads';
+  {$IFDEF WINDOWS}
+  DEFAULT_PATH  = 'c:/downloads';
   {$ELSE}
   DEFAULT_PATH  = '/downloads';
   {$ENDIF}
@@ -113,7 +114,7 @@ const
   TRUYEN18_ID    = 10;
   MANGAREADER_ID = 11;
   MANGAPARK_ID   = 12;
-  GEHENTAI_ID    = 13;
+ // GEHENTAI_ID    = 13;
   MANGAFOX_ID    = 14;
   MANGATRADERS_ID= 15;
   MANGASTREAM_ID = 16;
@@ -276,9 +277,9 @@ var
      ('KivManga', 'http://www.kivmanga.com'),
      ('Mangacan', 'http://mangacanblog.com'),
      ('MeinManga', 'http://www.meinmanga.com/'),
-	 ('MangasPROJECT', 'http://www.mangasproject.net'),
-	 ('MangaREADER_POR', 'http://www.mangareader.com.br'),
-	 ('Manga2u', 'http://www.manga2u.me')
+     ('MangasPROJECT', 'http://www.mangasproject.net'),
+     ('MangaREADER_POR', 'http://www.mangareader.com.br'),
+     ('Manga2u', 'http://www.manga2u.me')
     );
 
   ANIMEA_BROWSER: String = '/browse.html?page=';
@@ -313,7 +314,7 @@ var
 
   MANGAPARK_BROWSER: String = '/list/';
 
-  GEHENTAI_BROWSER: String = '&f_doujinshi=on&advsearch=1&f_search=Search+Keywords&f_srdd=2&f_sname=on&f_stags=on&f_apply=Apply+Filter';
+ // GEHENTAI_BROWSER: String = '&f_doujinshi=on&advsearch=1&f_search=Search+Keywords&f_srdd=2&f_sname=on&f_stags=on&f_apply=Apply+Filter';
 
   MANGAFOX_BROWSER: String = '/directory/';
 
@@ -604,7 +605,6 @@ function  PrepareSummaryForHint(const source: String):  String;
 // deal with sourceforge URL.
 function  SourceForgeURL(URL: string): string;
 // Get HTML source code from a URL.
-function  gehGetPage(var output: TObject; URL: String; const Reconnect: Cardinal; const lURL: String = ''): Boolean;
 function  GetPage(const AHTTP: THTTPSend; var output: TObject; URL: String; const Reconnect: Cardinal; const isByPassHTTP: Boolean): Boolean; overload;
 function  GetPage(var output: TObject; URL: String; const Reconnect: Cardinal; const isByPassHTTP: Boolean): Boolean; overload; inline;
 function  GetPage(var output: TObject; URL: String; const Reconnect: Cardinal): Boolean; overload; inline;
@@ -640,8 +640,8 @@ implementation
 
 uses
   Process, FileUtil{$IFDEF WINDOWS}, ShellApi, Windows{$ENDIF},
-  lazutf8classes,
-  uDownloadsManager;
+  lazutf8classes
+  {$IFDEF DOWNLOADER},uDownloadsManager{$ENDIF};
 
 {$IFDEF WINDOWS}
 
@@ -1441,85 +1441,6 @@ begin
   result:=URL;
 end;
 
-var
-  gehHTTP: THTTPSend;
-
-// E-Hentai needs to store cookies, so a separate THTTPSend instance and a separate
-// get function is a good way to deal with the problem
-function  gehGetPage(var output: TObject; URL: String; const Reconnect: Cardinal; const lURL: String = ''): Boolean;
-var
-  code   : Cardinal;
-  counter: Cardinal = 0;
-  s      : String;
-label
-  globReturn;
-begin
-  if (lURL <> '') AND (Pos('?nw=session', URL) > 0) then
-  begin
-    Delete(URL, Length(URL)-10, 11);
-    URL:= URL + lURL;
-  end;
-
-  Result:= FALSE;
-
-globReturn:
-  gehHTTP.ProxyHost:= Host;
-  gehHTTP.ProxyPort:= Port;
-  gehHTTP.ProxyUser:= User;
-  gehHTTP.ProxyPass:= Pass;
-  gehHTTP.Headers.Insert(0, 'Referer:'+URL);
-
-  while (NOT gehHTTP.HTTPMethod('GET', URL)) OR
-        (gehHTTP.ResultCode > 500) do
-  begin
-    code:= gehHTTP.ResultCode;
-    if Reconnect <> 0 then
-    begin
-      if Reconnect <= counter then
-      begin
-        exit;
-      end;
-      Inc(counter);
-    end;
-    gehHTTP.Clear;
-    Sleep(500);
-  end;
-  if Pos('?nw=session', URL) > 0 then
-  begin
-    gehHTTP.Clear;
-    Delete(URL, Length(URL)-10, 11);
-    goto globReturn;
-  end;
-  while gehHTTP.ResultCode = 302 do
-  begin
-    URL:= CheckRedirect(gehHTTP);
-    gehHTTP.Clear;
-    gehHTTP.RangeStart:= 0;
-
-    while (NOT gehHTTP.HTTPMethod('GET', URL)) OR
-        (gehHTTP.ResultCode >= 500) do
-    begin
-      if Reconnect <> 0 then
-      begin
-        if Reconnect <= counter then
-        begin
-          exit;
-        end;
-        Inc(counter);
-      end;
-      gehHTTP.Clear;
-      Sleep(500);
-    end;
-  end;
-  if output is TStringList then
-    TStringList(output).LoadFromStream(gehHTTP.Document)
-  else
-  if output is TPicture then
-    TPicture(output).LoadFromStream(gehHTTP.Document);
-  Result:= TRUE;
-  gehHTTP.Clear;
-end;
-
 function  GetPage(const AHTTP: THTTPSend; var output: TObject; URL: String; const Reconnect: Cardinal; const isByPassHTTP: Boolean): Boolean;
 // If AHTTP <> nil, we will use it as http sender. Otherwise we create a new
 // instance.
@@ -1568,12 +1489,6 @@ globReturn:
     HTTP.Headers.Add('Accept-Charset: utf-8');
     HTTP.UserAgent:= 'curl/7.21.0 (i686-pc-linux-gnu) libcurl/7.21.0 OpenSSL/0.9.8o zlib/1.2.3.4 libidn/1.18';
   end;
-
-  if Pos(WebsiteRoots[GEHENTAI_ID,1], URL) <> 0 then
-    HTTP.Headers.Insert(0, 'Referer: '+URL)
-  else
-  if Pos(WebsiteRoots[MANGAGO_ID,1], URL) <> 0 then
-    HTTP.Headers.Insert(0, 'Referer: '+URL);
 
   while (NOT HTTP.HTTPMethod('GET', URL)) OR
         (HTTP.ResultCode > 500) do
@@ -1720,8 +1635,14 @@ var
   source    : TPicture;
   fstream   : TFileStreamUTF8;
 
+label
+  jmpTerminate;
+
 begin
   s:= Path+'/'+name;
+
+  // Check to see if a file with similar name was already exist. If so then we
+  // skip the download process.
   if (FileExists(s+'.jpg')) OR
      (FileExists(s+'.png')) OR
      (FileExists(s+'.gif')) OR
@@ -1763,10 +1684,22 @@ begin
      (mangaSiteID <> PECINTAKOMIK_ID) then
     HTTP.Headers.Insert(0, 'Referer: '+WebsiteRoots[mangaSiteID,1]);
 
+  {$IFDEF DOWNLOADER}
+  if (AOwner <> nil) AND
+     (AOwner is TDownloadThread) then
+    if TDownloadThread(AOwner).IsTerminateCalled then
+      goto jmpTerminate;
+  {$ENDIF}
   while (NOT HTTP.HTTPMethod('GET', URL)) OR
         (HTTP.ResultCode >= 500) OR
         (HTTP.ResultCode = 403) do
   begin
+    {$IFDEF DOWNLOADER}
+    if (AOwner <> nil) AND
+       (AOwner is TDownloadThread) then
+      if TDownloadThread(AOwner).IsTerminateCalled then
+        goto jmpTerminate;
+    {$ENDIF}
     if Reconnect <> 0 then
     begin
       if Reconnect <= counter then
@@ -1785,6 +1718,12 @@ begin
 
   while (HTTP.ResultCode = 302) OR (HTTP.ResultCode = 301) do
   begin
+    {$IFDEF DOWNLOADER}
+    if (AOwner <> nil) AND
+       (AOwner is TDownloadThread) then
+      if TDownloadThread(AOwner).IsTerminateCalled then
+        goto jmpTerminate;
+    {$ENDIF}
     URL:= CheckRedirect(HTTP);
     HTTP.Clear;
     if AHTTP <> nil then
@@ -1796,6 +1735,12 @@ begin
           (HTTP.ResultCode >= 500) OR
           (HTTP.ResultCode = 403) do
     begin
+      {$IFDEF DOWNLOADER}
+      if (AOwner <> nil) AND
+         (AOwner is TDownloadThread) then
+        if TDownloadThread(AOwner).IsTerminateCalled then
+          goto jmpTerminate;
+      {$ENDIF}
       if Reconnect <> 0 then
       begin
         if Reconnect <= counter then
@@ -1829,16 +1774,19 @@ begin
      (header[2] = GIF_HEADER[2]) then
     ext:= '.gif'
   else
-    ext:= '.txt';
+    ext:= '';
   if ext <> '' then
   begin
     // If an error occured, verify the path and redo the job.
     // If the error still persists, break the loop.
     repeat
       try
-        if AOwner is TDownloadThread then
+        {$IFDEF DOWNLOADER}
+        if (AOwner <> nil) AND
+           (AOwner is TDownloadThread) then
           if TDownloadThread(AOwner).IsTerminateCalled then
             break;
+        {$ENDIF}
         fstream:= TFileStreamUTF8.Create(Path+'/'+name+prefix+ext, fmCreate);
         HTTP.Document.SaveToStream(fstream);
         fstream.Free;
@@ -1846,9 +1794,12 @@ begin
       except
         on E: Exception do
         begin
-          if AOwner is TDownloadThread then
+          {$IFDEF DOWNLOADER}
+          if (AOwner <> nil) AND
+             (AOwner is TDownloadThread) then
             if TDownloadThread(AOwner).IsTerminateCalled then
               break;
+          {$ENDIF}
           // TODO: Write this error to log.
           if NOT retryToSave then
           begin
@@ -1865,6 +1816,7 @@ begin
   begin
     // TODO: A logging system should be applied in order to log this "error".
   end;
+jmpTerminate:
   if AHTTP = nil then
     HTTP.Free
   else
@@ -2139,10 +2091,5 @@ begin
   Process.Free;
 end;
 {$ENDIF}
-
-initialization
-  gehHTTP:= THTTPSend.Create;
-finalization
-  gehHTTP.Free;
 
 end.

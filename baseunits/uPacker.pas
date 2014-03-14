@@ -47,7 +47,6 @@ var
   fstream : TFileStreamUTF8;
 begin
   try
-   // Path:= FixPath(Path);
     fPath:= Trim(Path);
     RenameFileUTF8(Path, fPath);
     list:= TStringList.Create;
@@ -57,12 +56,8 @@ begin
 
     if list.Count <> 0 then
     begin
-      // norm the list
-      //for i:= 0 to list.Count-1 do
-      //  list.Strings[i]:= ExtractFileName(list.Strings[i]);
       Zip:= TZipper.Create;
       Zip.FileName:= fPath+ext;
-      //SetCurrentDirUTF8(ExtractFileDir(Path+'.zip'));
       for i:= 0 to list.Count-1 do
       begin
         {$IFDEF WINDOWS}
@@ -70,17 +65,14 @@ begin
         {$ELSE}
         s:= list.Strings[i];
         {$ENDIF}
-       // Zip.Entries.AddFileEntry(s, Format('%.3d%s', [i+1, ExtractFileExt(list.Strings[i])]));
         Zip.Entries.AddFileEntry(s, Format('%s',
-                                          [StringReplace(ExtractFileName(list.Strings[i]), ExtractFilePath(list.Strings[i]), '', [])]));
+                                           [StringReplace(ExtractFileName(list.Strings[i]), ExtractFilePath(list.Strings[i]), '', [])]));
       end;
 
       fstream:= TFileStreamUTF8.Create(fPath+ext, fmCreate);
-     // Zip.ZipAllFiles;
       Zip.SaveToStream(fstream);
       fstream.Free;
       Zip.Free;
-      //SetCurrentDirUTF8(fmdDirectory);
       for i:= 0 to list.Count-1 do
         DeleteFileUTF8(list.Strings[i]);
       Sleep(128);
@@ -92,7 +84,8 @@ begin
     searcher.Free;
     list.Free;
   except
-    on E: Exception do;
+    on E: Exception do
+      raise E;
   end;
 end;
 
@@ -130,8 +123,6 @@ begin
 
         // add image to PDF
         pdf.AddImage(s);
-       // pdf.Image(s, 100, 100, 200, 200);
-       // pdf.Entries.AddFileEntry(s, Format('%.3d%s', [i+1, ExtractFileExt(list.Strings[i])]));
       end;
 
       fstream:= TFileStreamUTF8.Create(fPath+ext, fmCreate);
@@ -150,7 +141,8 @@ begin
     searcher.Free;
     list.Free;
   except
-    on E: Exception do;
+    on E: Exception do
+      raise E;
   end;
 end;
 
