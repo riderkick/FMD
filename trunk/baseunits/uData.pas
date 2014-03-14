@@ -679,42 +679,6 @@ var
   // get directory page number from MangaPark
   {$I includes/MangaPark/directory_page_number.inc}
 
-  function   GetGEHentaiDirectoryPageNumber: Byte;
-  var
-    i: Cardinal;
-  begin
-    Result:= INFORMATION_NOT_FOUND;
-    if NOT GetPage(TObject(source), WebsiteRoots[GEHENTAI_ID,1] + '/?page=0' + GEHENTAI_BROWSER, 0) then
-    begin
-      Result:= NET_PROBLEM;
-      source.Free;
-      exit;
-    end;
-    parse.Clear;
-    Parser:= TjsFastHTMLParser.Create(PChar(source.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
-    Parser.Exec;
-    Parser.Free;
-    if parse.Count=0 then
-    begin
-      source.Free;
-      exit;
-    end;
-    for i:= 0 to parse.Count-1 do
-    begin
-      if Pos('Jump to page: (1-', parse.Strings[i])<>0 then
-      begin
-        s:= GetString(parse.Strings[i], 'Jump to page: (1-', ')');
-        Page:= StrToInt(s);
-        Result:= NO_ERROR;
-        source.Free;
-        exit;
-      end;
-    end;
-    source.Free;
-  end;
-
   // get directory page number from MangaFox
   {$I includes/MangaFox/directory_page_number.inc}
 
@@ -808,9 +772,6 @@ begin
   else
   if website = WebsiteRoots[MANGAPARK_ID,0] then
     Result:= GetMangaParkDirectoryPageNumber
-  else
-  if website = WebsiteRoots[GEHENTAI_ID,0] then
-    Result:= GetGEHentaiDirectoryPageNumber
   else
   if website = WebsiteRoots[MANGAFOX_ID,0] then
     Result:= GetMangaFoxDirectoryPageNumber
@@ -1062,52 +1023,6 @@ var
   // get names and links of the manga from MANGAREADER_POR
   {$I includes/MangaREADER_POR/names_and_links.inc}
 
-  // get names and links of the manga from g.e-hentai
-  function   GEHentaiGetNamesAndLinks: Byte;
-  var
-    pad: Cardinal = 0;
-    i  : Cardinal;
-    s  : String;
-  begin
-    Result:= INFORMATION_NOT_FOUND;
-    if NOT GetPage(TObject(source), WebsiteRoots[GEHENTAI_ID,1] + '/?page=' + URL + GEHENTAI_BROWSER, 0) then
-    begin
-      Result:= NET_PROBLEM;
-      source.Free;
-      exit;
-    end;
-    parse.Clear;
-    Parser:= TjsFastHTMLParser.Create(PChar(source.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
-    Parser.Exec;
-    Parser.Free;
-    if parse.Count=0 then
-    begin
-      source.Free;
-      exit;
-    end;
-    for i:= 0 to parse.Count-1 do
-    begin
-      if (Pos('http://g.e-hentai.org/g/', parse.Strings[i])>0) then
-      begin
-        Inc(pad);
-        if pad mod 2 = 0 then
-        begin
-          Result:= NO_ERROR;
-          s:= GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href='));
-          links.Add(s);
-          s:= StringFilter(TrimLeft(TrimRight(parse.Strings[i+1])));
-          names.Add(HTMLEntitiesFilter(s));
-        end;
-      end;
-      if Pos('Network', parse.Strings[i])>0 then
-        break;
-    end;
-    source.Free;
-    Sleep(250);
-  end;
-
 begin
   source:= TStringList.Create;
   if website = WebsiteRoots[ANIMEA_ID,0] then
@@ -1250,9 +1165,6 @@ begin
   else
   if website = WebsiteRoots[SENMANGA_ID,0] then
     Result:= SenMangaGetNamesAndLinks
-  else
-  if website = WebsiteRoots[GEHENTAI_ID,0] then
-    Result:= GEHentaiGetNamesAndLinks
   else
   if website = WebsiteRoots[KIVMANGA_ID,0] then
     Result:= KivmangaGetNamesAndLinks
@@ -1417,25 +1329,6 @@ var
 // get manga infos from Manga2u site
 {$I includes/Manga2u/manga_information.inc}
 
-// get manga infos from g.e-hentai site (dummy)
-function   GetGEHentaiInfoFromURL_Dummy: Byte;
-begin
-  mangaInfo.url:= URL;
-  source.Free;
-  mangaInfo.website:= WebsiteRoots[GEHENTAI_ID,0];
-  mangaInfo.title:= mangaInfo.title;
-  mangaInfo.chapterLinks.Add(URL);
-  mangaInfo.chapterName.Add(mangaInfo.title);
-  mangaInfo.coverLink:= '';
-  mangaInfo.summary:= '';
-  mangaInfo.numChapter:= 0;
-  mangaInfo.authors:= '';
-  mangaInfo.artists:= '';
-  mangaInfo.genres:= '';
-  mangaInfo.status:= '0';
-  Result:= NO_ERROR;
-end;
-
 // get manga infos from Kivmanga site
 function   GetKivmangaInfoFromURL: Byte;
 var
@@ -1520,62 +1413,6 @@ end;
 
 // get manga infos from MANGAREADER_POR site
 {$I includes/MangaREADER_POR/manga_information.inc}
-
-// get manga infos from g.e-hentai site
-function   GetGEHentaiInfoFromURL: Byte;
-var
-  s: String;
-  isExtractChapter: Boolean = FALSE;
-  isExtractSummary: Boolean = TRUE;
-  isExtractGenres : Boolean = FALSE;
-  i, j: Cardinal;
-begin
-  mangaInfo.url:= WebsiteRoots[GEHENTAI_ID,1] + URL;
-  if NOT GetPage(TObject(source), mangaInfo.url, Reconnect) then
-  begin
-    Result:= NET_PROBLEM;
-    source.Free;
-    exit;
-  end;
-
-  // parsing the HTML source
-  parse.Clear;
-  Parser:= TjsFastHTMLParser.Create(PChar(source.Text));
-  Parser.OnFoundTag := OnTag;
-  Parser.OnFoundText:= OnText;
-  Parser.Exec;
-
-  Parser.Free;
-  source.Free;
-
-  mangaInfo.website:= WebsiteRoots[GEHENTAI_ID,0];
-  mangaInfo.coverLink:= '';
-  mangaInfo.summary:= '';
-  mangaInfo.numChapter:= 0;
-  mangaInfo.authors:= '';
-  mangaInfo.artists:= '';
-  mangaInfo.genres:= '';
-  mangaInfo.status:= '0';
-
-  // using parser (cover link, summary, chapter name and link)
-  if parse.Count=0 then exit;
-  for i:= 0 to parse.Count-1 do
-  begin
-    // get title and cover
-    if (GetAttributeValue(GetTagAttribute(parse.Strings[i], 'id=')) = 'gd1') then
-    begin
-      mangaInfo.coverLink:= CorrectURL(GetAttributeValue(GetTagAttribute(parse.Strings[i+1], 'src=')));
-      s:= GetString(parse.Strings[i+1], ' Gallery: ', '"');
-      if s <> '' then
-        mangaInfo.title:= StringFilter(s);
-    end;
-  end;
-
-  mangaInfo.chapterLinks.Add(mangaInfo.url);
-  mangaInfo.chapterName.Add(mangaInfo.title);
-  Result:= NO_ERROR;
-  Sleep(250);
-end;
 
 begin
   source:= TStringList.Create;
@@ -1735,15 +1572,7 @@ begin
     Result:= GetMangasPROJECTInfoFromURL
   else
    if website = WebsiteRoots[MANGAREADER_POR_ID,0] then
-    Result:= GetMangaREADER_PORInfoFromURL
-  else
-  if website = WebsiteRoots[GEHENTAI_ID,0] then
-  begin
-    case isGetByUpdater of
-      TRUE:  Result:= GetGEHentaiInfoFromURL_Dummy;
-      FALSE: Result:= GetGEHentaiInfoFromURL;
-    end;
-  end;
+    Result:= GetMangaREADER_PORInfoFromURL;
 
   s:= mangaInfo.artists;
   if (s <> '') AND (s[1] = '<') then

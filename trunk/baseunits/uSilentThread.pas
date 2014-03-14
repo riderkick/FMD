@@ -227,12 +227,7 @@ begin
     Sleep(250);
   Synchronize(MainThreadIncreaseThreadCount);
 
-  // some of the code was taken from subthreads's GetMangaInfo
-  // since it's multi-thread, we cannot call IE for fetching info from Batoto
-  if website = WebsiteRoots[GEHENTAI_ID,0] then
-    times:= 4
-  else
-    times:= 3;
+  times:= 3;
   s:= URL;
   s:= webSite;
   Info.mangaInfo.title:= title;

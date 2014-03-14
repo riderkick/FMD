@@ -27,7 +27,6 @@ type
     Info              : TMangaInformation;
 
     procedure   Execute; override;
-    procedure   MainThreadDecThreadCount;
     procedure   MainThreadUpdateNamesAndLinks;
   public
     constructor Create;
@@ -90,11 +89,6 @@ begin
   names.Free;
   manager.threadStates[threadCount]:= FALSE;
   inherited Destroy;
-end;
-
-procedure   TUpdateMangaThread.MainThreadDecThreadCount;
-begin
-  Dec(manager.threadCount);
 end;
 
 procedure   TUpdateMangaThread.MainThreadUpdateNamesAndLinks;
@@ -225,7 +219,7 @@ begin
      // {$ENDIF}
       end;
   end;
-  Synchronize(MainThreadDecThreadCount);
+  manager.threadCount:= InterlockedDecrement(manager.threadCount);
 end;
 
 // ----- TUpdateMangaManagerThread -----
@@ -395,14 +389,14 @@ begin
     begin
       isFinishSearchingForNewManga:= FALSE;
       website:= websites.Strings[i];
-      if website = WebsiteRoots[GEHENTAI_ID,0] then
-        numberOfThreads:= 1
-      else
       if website = WebsiteRoots[EATMANGA_ID,0] then
         numberOfThreads:= 1
       else
       if website = WebsiteRoots[SCANMANGA_ID,0] then
         numberOfThreads:= 2
+      else
+      if website = WebsiteRoots[FAKKU_ID,0] then
+        numberOfThreads:= 3
       else
       if website = WebsiteRoots[PURURIN_ID,0] then
         numberOfThreads:= 3
