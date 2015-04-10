@@ -1,5 +1,4 @@
 {
-  $Id: ElderImagery.pas 163 2009-07-28 21:44:10Z galfar $
   Vampyre Imaging Library
   by Marek Mauder
   http://imaginglib.sourceforge.net
@@ -58,6 +57,7 @@ type
   protected
     FPalette: TPalette24Size256;
     FARGBPalette: PPalette32;
+    procedure Define; override;
     { Decodes RLE compressed data.}
     procedure DagRLEDecode(InData: Pointer; OutSize: LongInt; out OutData: Pointer);
     function FindNoHeaderInfo(Size: LongInt; Infos: array of TNoHeaderFileInfo): LongInt;
@@ -68,7 +68,6 @@ type
       const Info: TImageFormatInfo); override;
     function IsSupported(const Image: TImageData): Boolean; override;
   public
-    constructor Create; override;
     destructor Destroy; override;
     function TestFormat(Handle: TImagingHandle): Boolean; override;
     { Current palette used when loading and saving images. Nearly all images
@@ -205,7 +204,7 @@ const
     (B:   6; G:  16; R:   3), (B: 134; G:  72; R:  57), (B: 132; G:  71; R:  47), 
     (B: 122; G:  75; R:  51), (B: 123; G:  61; R:  44), (B: 119; G:  59; R:  37), 
     (B: 103; G:  55; R:  41), (B: 104; G:  47; R:  31), (B:  98; G:  47; R:  27), 
-    (B:  91; G:  45; R:  33), (B:  83; G:  42; R:  34), (B:  75; G:  40; R:  24), 
+    (B:  91; G:  45; R:  33), (B:  83; G:  42; R:  34), (B:  75; G:  40; R:  24),
     (B:  80; G:  33; R:  22), (B:  63; G:  29; R:  24), (B:  66; G:  24; R:  16), 
     (B:  51; G:  27; R:  24), (B:  40; G:  24; R:  24), (B: 255; G: 246; R: 103), 
     (B: 241; G: 238; R:  45), (B: 235; G: 247; R:   0), (B: 228; G: 228; R:   3), 
@@ -305,7 +304,7 @@ const
     (B: 231; G: 215; R:   0), (B: 255; G: 167; R:   0), (B: 223; G: 119; R:   0), 
     (B: 231; G:  83; R:   0), (B: 139; G: 139; R: 150), (B: 111; G: 111; R: 123), 
     (B:  95; G:  95; R: 107), (B:  79; G:  79; R:  91), (B:  63; G:  63; R:  75), 
-    (B:  51; G:  51; R:  59), (B:  43; G:  43; R:  51), (B:  39; G:  39; R:  47), 
+    (B:  51; G:  51; R:  59), (B:  43; G:  43; R:  51), (B:  39; G:  39; R:  47),
     (B:  31; G:  31; R:  43), (B:  27; G:  27; R:  39), (B:  23; G:  23; R:  35), 
     (B:  19; G:  19; R:  31), (B:  15; G:  15; R:  27), (B: 255; G: 255; R: 255), 
     (B: 255; G: 255; R: 255), (B:  30; G:   9; R:   1), (B: 112; G: 112; R: 112), 
@@ -405,7 +404,7 @@ const
     (B: 131; G: 231; R: 231), (B:  95; G: 231; R: 231), (B:  51; G: 239; R: 239), 
     (B:  51; G: 235; R: 235), (B:  51; G: 219; R: 219), (B:  51; G: 199; R: 199), 
     (B:  51; G: 175; R: 179), (B:  51; G: 159; R: 163), (B:  51; G: 139; R: 143), 
-    (B:  51; G: 119; R: 123), (B:  51; G:  99; R: 107), (B:  51; G:  87; R:  91), 
+    (B:  51; G: 119; R: 123), (B:  51; G:  99; R: 107), (B:  51; G:  87; R:  91),
     (B:  51; G:  71; R:  79), (B:  51; G:  55; R:  63), (B:  51; G:  51; R:  51), 
     (B: 219; G: 219; R: 175), (B: 231; G: 231; R: 131), (B: 231; G: 231; R:  95), 
     (B: 239; G: 239; R:  51), (B: 235; G: 235; R:  51), (B: 219; G: 219; R:  51), 
@@ -462,12 +461,10 @@ uses
 
 { TDaggerfallFileFormat class implementation }
 
-constructor TElderFileFormat.Create;
+procedure TElderFileFormat.Define;
 begin
-  inherited Create;
-  FCanLoad := True;
-  FCanSave := True;
-  FIsMultiImageFormat := True;
+  inherited;
+  FFeatures := [ffLoad, ffSave, ffMultiImage];
   FSupportedFormats := [];
 
   GetMem(FARGBPalette, Length(FPalette) * SizeOf(TColor32Rec));
@@ -622,7 +619,7 @@ begin
     Result := (ReadCount > 0) and (Hdr.ImageSize <= Hdr.Width * Hdr.Height) and
       (Hdr.Width * Hdr.Height <= High(Word)) and (Hdr.ImageSize <> 0) and
       (Hdr.Width <> 0) and (Hdr.Height <> 0);
-    if FIsMultiImageFormat then
+    if IsMultiImageFormat then
       Result := Result and (GetInputSize(GetIO, Handle) > Hdr.ImageSize + SizeOf(Hdr))
     else
       Result := Result and (GetInputSize(GetIO, Handle) = Hdr.ImageSize + SizeOf(Hdr));

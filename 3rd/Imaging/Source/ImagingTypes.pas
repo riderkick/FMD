@@ -1,5 +1,4 @@
 {
-  $Id: ImagingTypes.pas 171 2009-09-02 01:34:19Z galfar $
   Vampyre Imaging Library
   by Marek Mauder 
   http://imaginglib.sourceforge.net
@@ -37,9 +36,9 @@ const
   { Current Major version of Imaging.}
   ImagingVersionMajor = 0;
   { Current Minor version of Imaging.}
-  ImagingVersionMinor = 26;
+  ImagingVersionMinor = 77;
   { Current patch of Imaging.}
-  ImagingVersionPatch = 4;
+  ImagingVersionPatch = 1;
 
   { Imaging Option Ids whose values can be set/get by SetOption/
     GetOption functions.}
@@ -96,28 +95,32 @@ const
     raw frames are loaded and sent to user (if you want to animate APNG yourself).
     Default value is 1.}
   ImagingPNGLoadAnimated       = 27;
+  { Sets ZLib compression strategy used when saving PNG files (see deflateInit2()
+    in ZLib for details). Allowed values are: 0 (default), 1 (filtered),
+    2 (huffman only). Default value is 0.}
+  ImagingPNGZLibStrategy       = 28;
 
   { Specifies whether MNG animation frames are saved with lossy or lossless
     compression. Lossless frames are saved as PNG images and lossy frames are
     saved as JNG images. Allowed values are 0 (False) and 1 (True).
     Default value is 0.}
-  ImagingMNGLossyCompression   = 28;
+  ImagingMNGLossyCompression   = 32;
   { Defines whether alpha channel of lossy compressed MNG frames
     (when ImagingMNGLossyCompression is 1) is lossy compressed too.
     Allowed values are 0 (False) and 1 (True). Default value is 0.}
-  ImagingMNGLossyAlpha         = 29;
+  ImagingMNGLossyAlpha         = 33;
   { Sets precompression filter used when saving MNG frames as PNG images.
     For details look at ImagingPNGPreFilter.}
-  ImagingMNGPreFilter          = 30;
+  ImagingMNGPreFilter          = 34;
   { Sets ZLib compression level used when saving MNG frames as PNG images.
     For details look at ImagingPNGCompressLevel.}
-  ImagingMNGCompressLevel      = 31;
+  ImagingMNGCompressLevel      = 35;
   { Specifies compression quality used when saving MNG frames as JNG images.
     For details look at ImagingJpegQuality.}
-  ImagingMNGQuality            = 32;
+  ImagingMNGQuality            = 36;
   { Specifies whether images are saved in progressive format when saving MNG
     frames as JNG images. For details look at ImagingJpegProgressive.}
-  ImagingMNGProgressive        = 33;
+  ImagingMNGProgressive        = 37;
 
   { Specifies whether alpha channels of JNG images are lossy compressed.
     Allowed values are 0 (False) and 1 (True). Default value is 0.}
@@ -134,14 +137,17 @@ const
   { Specifies whether JNG images are saved in progressive format.
     For details look at ImagingJpegProgressive.}
   ImagingJNGProgressive        = 44;
+
   { Specifies whether PGM files are stored in text or in binary format.
     Allowed values are 0 (store as text - very! large files) and 1 (save binary).
     Default value is 1.}
   ImagingPGMSaveBinary         = 50;
+
   { Specifies whether PPM files are stored in text or in binary format.
     Allowed values are 0 (store as text - very! large files) and 1 (save binary).
     Default value is 1.}
   ImagingPPMSaveBinary         = 51;
+
   { Boolean option that specifies whether GIF images with more frames
     are animated by Imaging (according to frame disposal methods) or just
     raw frames are loaded and sent to user (if you want to animate GIF yourself).
@@ -182,6 +188,10 @@ const
     <Ord(Low(ImagingFormats.TSamplingFilter)), Ord(High(ImagingFormats.TSamplingFilter))>
     and default value is 1 (linear filter).}
   ImagingMipMapFilter         = 131;
+  { Specifies treshold value used when automatically converting images to
+    ifBinary format. For adaptive tresholding see ImagingBinary.pas unit.
+    Default value is 128 and allowed range is 0..255.}
+  ImagingBinaryTreshold       = 132;
 
   { Returned by GetOption if given Option Id is invalid.}
   InvalidOption = -$7FFFFFFF;
@@ -201,16 +211,16 @@ type
   TImageFormat = (
     ifUnknown        = 0,
     ifDefault        = 1,
-    { Indexed formats using palette.}
+    { Indexed formats using palette }
     ifIndex8         = 10,
-    { Grayscale/Luminance formats.}
+    { Grayscale/Luminance formats }
     ifGray8          = 40,
     ifA8Gray8        = 41,
     ifGray16         = 42,
     ifGray32         = 43,
     ifGray64         = 44,
     ifA16Gray16      = 45,
-    { ARGB formats.}
+    { ARGB formats }
     ifX5R1G1B1       = 80,
     ifR3G3B2         = 81,
     ifR5G6B5         = 82,
@@ -225,20 +235,34 @@ type
     ifA16R16G16B16   = 91,
     ifB16G16R16      = 92,
     ifA16B16G16R16   = 93,
-    { Floating point formats.}
-    ifR32F           = 170,
-    ifA32R32G32B32F  = 171,
-    ifA32B32G32R32F  = 172,
-    ifR16F           = 173,
-    ifA16R16G16B16F  = 174,
-    ifA16B16G16R16F  = 175,
-    { Special formats.}
-    ifDXT1           = 220,
-    ifDXT3           = 221,
-    ifDXT5           = 222,
-    ifBTC            = 223,
-    ifATI1N          = 224,
-    ifATI2N          = 225);
+    { Floating point formats }
+    ifR32F           = 160,
+    ifA32R32G32B32F  = 161,
+    ifA32B32G32R32F  = 162,
+    ifR16F           = 163,
+    ifA16R16G16B16F  = 164,
+    ifA16B16G16R16F  = 165,
+    ifR32G32B32F     = 166,
+    ifB32G32R32F     = 167,
+    { Special formats }
+    ifDXT1           = 200,
+    ifDXT3           = 201,
+    ifDXT5           = 202,
+    ifBTC            = 203,
+    ifATI1N          = 204,
+    ifATI2N          = 205,
+    ifBinary         = 206,
+    { Passtrough formats }
+    ifETC1           = 220,
+    ifETC2RGB        = 221,
+    ifETC2RGBA       = 222,
+    ifETC2PA         = 223,
+    ifDXBC6          = 224,
+    ifDXBC7          = 225,
+    ifMono           = 250,
+    ifIndex2         = 251,
+    ifIndex4         = 252
+  );
 
   { Color value for 32 bit images.}
   TColor32 = LongWord;
@@ -296,12 +320,24 @@ type
   TColor64RecArray = array[0..MaxInt div SizeOf(TColor64Rec) - 1] of TColor64Rec;
   PColor64RecArray = ^TColor64RecArray;
 
+  { Color record for 96 bit floating point images, which allows access to
+    individual color channels.}
+  TColor96FPRec = packed record
+    case Integer of
+      0: (B, G, R: Single);
+      1: (Channels: array[0..2] of Single);
+  end;
+  PColor96FPRec = ^TColor96FPRec;
+  TColor96FPRecArray = array[0..MaxInt div SizeOf(TColor96FPRec) - 1] of TColor96FPRec;
+  PColor96FPRecArray = ^TColor96FPRecArray;
+
   { Color record for 128 bit floating point images, which allows access to
     individual color channels.}
   TColorFPRec = packed record
     case LongInt of
       0: (B, G, R, A: Single);
       1: (Channels: array[0..3] of Single);
+      2: (Color96Rec: TColor96FPRec);
   end;
   PColorFPRec = ^TColorFPRec;
   TColorFPRecArray = array[0..MaxInt div SizeOf(TColorFPRec) - 1] of TColorFPRec;
@@ -341,6 +377,7 @@ type
     Size: LongInt;        // Size of image bits in Bytes
     Bits: Pointer;        // Pointer to memory containing image bits
     Palette: PPalette32;  // Image palette for indexed images
+    Tag: Pointer;         // User data
   end;
   PImageData = ^TImageData;
 
@@ -376,7 +413,7 @@ type
     Palette: PPalette32;const Color: TColor32Rec);
   { Procedure for setting pixel colors. Input FP ARGB color is translated to
     native format and then written to Image.}
-  TSetPixelFPProc = procedure(Bits: Pointer; Info: PImageFormatInfo; 
+  TSetPixelFPProc = procedure(Bits: Pointer; Info: PImageFormatInfo;
     Palette: PPalette32; const Color: TColorFPRec);
 
   { Additional information for each TImageFormat value.}
@@ -400,6 +437,9 @@ type
                                       // format does not exist
     IsIndexed: Boolean;               // True if image uses palette
     IsSpecial: Boolean;               // True if image is in special format
+    IsPasstrough: Boolean;            // True if image is in passtrough program (Imaging
+                                      // iself doesn't know how to decode and encode it -
+                                      // complex texture compressions etc.)
     PixelFormat: PPixelFormatInfo;    // Pixel format structure
     GetPixelsSize: TFormatGetPixelsSizeFunc; // Returns size in bytes of
                                       // Width * Height pixels of image
@@ -427,7 +467,8 @@ type
   TResizeFilter = (
     rfNearest  = 0,
     rfBilinear = 1,
-    rfBicubic  = 2);
+    rfBicubic  = 2,
+    rfLanczos  = 3);
 
   { Seek origin mode for IO function Seek.}
   TSeekMode = (
@@ -435,9 +476,14 @@ type
    smFromCurrent   = 1,
    smFromEnd       = 2);
 
+  TOpenMode = (
+    omReadOnly  = 0, // Opens file for reading only
+    omCreate    = 1, // Creates new file (overwriting any existing) and opens it for writing
+    omReadWrite = 2  // Opens for reading and writing. Non existing file is created.
+  );
+
   { IO functions used for reading and writing images from/to input/output.}
-  TOpenReadProc = function(Source: PChar): TImagingHandle; cdecl;
-  TOpenWriteProc = function(Source: PChar): TImagingHandle; cdecl;
+  TOpenProc = function(Source: PChar; Mode: TOpenMode): TImagingHandle; cdecl;
   TCloseProc = procedure(Handle: TImagingHandle); cdecl;
   TEofProc = function(Handle: TImagingHandle): Boolean; cdecl;
   TSeekProc = function(Handle: TImagingHandle; Offset: LongInt; Mode: TSeekMode): LongInt; cdecl;
@@ -445,6 +491,15 @@ type
   TReadProc = function(Handle: TImagingHandle; Buffer: Pointer; Count: LongInt): LongInt; cdecl;
   TWriteProc = function(Handle: TImagingHandle; Buffer: Pointer; Count: LongInt): LongInt; cdecl;
        
+{$IFNDEF FPC}
+type
+{$IF CompilerVersion <= 18.5}
+  PtrUInt = LongWord;
+{$ELSE}
+  PtrUInt = NativeUInt;
+{$IFEND}
+{$ENDIF}
+
 implementation
 
 {
@@ -452,6 +507,19 @@ implementation
 
   -- TODOS ----------------------------------------------------
     - add lookup tables to pixel formats for fast conversions
+
+  -- 0.77.1 ---------------------------------------------------
+    - Added "Passtrough" image data formats.
+    - Added Tag to TImageData for storing user data.
+    - Added ImagingPNGZLibStrategy option.
+    - Changed IO functions. Merged open functions to one
+      and added third open mode R/W (for TIFF append etc.).
+    - Added new image data formats and related structures:
+      ifR32G32B32F, ifB32G32G32F.
+
+  -- 0.26.5 Changes/Bug Fixes ---------------------------------
+    - Added ifBinary image format and ImagingBinaryTreshold option.
+    - Lanczos filter added to TResizeFilter enum.
 
   -- 0.24.3 Changes/Bug Fixes ---------------------------------
     - Added ifATI1N and ifATI2N image data formats.
@@ -496,4 +564,4 @@ implementation
 
 }
 
-end. 
+end.

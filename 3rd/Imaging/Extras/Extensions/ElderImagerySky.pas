@@ -1,5 +1,4 @@
 {
-  $Id: ElderImagerySky.pas 171 2009-09-02 01:34:19Z galfar $
   Vampyre Imaging Library
   by Marek Mauder
   http://imaginglib.sourceforge.net
@@ -45,10 +44,10 @@ type
     without sun, seconf set sky with sun. }
   TSKYFileFormat = class(TElderFileFormat)
   protected
+    procedure Define; override;
     function LoadData(Handle: TImagingHandle; var Images: TDynImageDataArray;
       OnlyFirstLevel: Boolean): Boolean; override;
   public
-    constructor Create; override;
     function TestFormat(Handle: TImagingHandle): Boolean; override;
   end;
 
@@ -69,10 +68,10 @@ const
 
 { TSKYFileFormat class implementation }
 
-constructor TSKYFileFormat.Create;
+procedure TSKYFileFormat.Define;
 begin
-  inherited Create;
-  FCanSave := False;
+  inherited;
+  FFeatures := [ffLoad, ffMultiImage];
   FName := SSKYFormatName;
   AddMasks(SSKYMasks);
 end;

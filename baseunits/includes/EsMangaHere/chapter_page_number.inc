@@ -1,29 +1,28 @@
-
-
-function GetEsMangaHerePageNumber: Boolean;
+  function GetEsMangaHerePageNumber: Boolean;
   var
-    i, j: Cardinal;
-    l   : TStringList;
+    i: Cardinal;
+    l: TStringList;
   begin
-    l:= TStringList.Create;
-    parse:= TStringList.Create;
-    Result:= GetPage(TObject(l),
-                     WebsiteRoots[ESMANGAHERE_ID,1] + URL,
-                     manager.container.manager.retryConnect);
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
+    l := TStringList.Create;
+    parse := TStringList.Create;
+    Result := GetPage(TObject(l),
+      FillMangaSiteHost(ESMANGAHERE_ID, URL),
+      manager.container.Manager.retryConnect);
+    Parser := THTMLParser.Create(PChar(l.Text));
     Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
+    Parser.OnFoundText := OnText;
     Parser.Exec;
     Parser.Free;
-    if parse.Count>0 then
+    if parse.Count > 0 then
     begin
-      manager.container.pageNumber:= 0;
-      for i:= parse.Count-1 downto 4 do
+      manager.container.PageNumber := 0;
+      for i := parse.Count - 1 downto 4 do
       begin
         if Pos('</select>', parse.Strings[i]) > 0 then
         begin
-          manager.container.pageNumber:= StrToInt(TrimLeft(TrimRight(parse.Strings[i-3])));
-          break;
+          manager.container.PageNumber :=
+            StrToInt(TrimLeft(TrimRight(parse.Strings[i - 3])));
+          Break;
         end;
       end;
     end;

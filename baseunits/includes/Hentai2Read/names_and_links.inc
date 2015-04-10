@@ -1,37 +1,47 @@
-function   Hentai2ReadGetNamesAndLinks: Byte;
+  function Hentai2ReadGetNamesAndLinks: Byte;
   var
     i: Cardinal;
     s: String;
+    regx: TRegExpr;
   begin
-    Result:= INFORMATION_NOT_FOUND;
-    if NOT GetPage(TObject(source), HENTAI2READ_ROOT + HENTAI2READ_BROWSER + IntToStr(StrToInt(URL)+1) + '/', 0) then
+    Result := INFORMATION_NOT_FOUND;
+    if not GetPage(TObject(Source), HENTAI2READ_ROOT + HENTAI2READ_BROWSER +
+      IntToStr(StrToInt(URL) + 1) + '/?text-ver', 0) then
     begin
-      Result:= NET_PROBLEM;
-      source.Free;
-      exit;
+      Result := NET_PROBLEM;
+      Source.Free;
+      Exit;
     end;
     parse.Clear;
-    Parser:= TjsFastHTMLParser.Create(PChar(source.Text));
+    Parser := THTMLParser.Create(PChar(Source.Text));
     Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
+    Parser.OnFoundText := OnText;
     Parser.Exec;
     Parser.Free;
-    if parse.Count=0 then
+    if parse.Count = 0 then
     begin
-      source.Free;
-      exit;
+      Source.Free;
+      Exit;
     end;
-    for i:= 0 to parse.Count-1 do
+    regx := TRegExpr.Create;
+    regx.ModifierI := True;
+    regx.Expression := '^.+\sdj\s[-_]\s(.+)$';
+    for i := 0 to parse.Count - 1 do
     begin
-      if Pos('class="lst-anm-ifo"', parse.Strings[i])>0 then
+      //if Pos('class="lst-anm-ifo"', parse.Strings[i])>0 then
+      if Pos('class="mng_det_pop"', parse[i]) > 0 then
       begin
         begin
-          Result:= NO_ERROR;
-          s:= TrimLeft(TrimRight(StringFilter(GetAttributeValue(GetTagAttribute(parse.Strings[i+3], 'title=')))));
+          Result := NO_ERROR;
+          s := Trim(StringFilter(GetAttributeValue(
+            GetTagAttribute(parse[i], 'title='))));
+          s := regx.Replace(s, '$1', True);
           names.Add(s);
-          links.Add(StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i+3], 'href=')), HENTAI2READ_ROOT, '', []));
+          links.Add(StringReplace(GetAttributeValue(GetTagAttribute(parse[i], 'href=')),
+            HENTAI2READ_ROOT, '', []));
         end;
       end;
     end;
-    source.Free;
-  end; 
+    regx.Free;
+    Source.Free;
+  end;

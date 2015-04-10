@@ -14,72 +14,44 @@ uses
   Classes, SysUtils;
 
 type
+
+  { TFMDThread }
+
   TFMDThread = class(TThread)
-  private
-    FIsTerminateCalled,
-    FIsTerminated,
-    FIsSuspended: Boolean;
-    procedure   MainThreadSetIsTerminatedTRUE;
-    procedure   MainThreadSetIsTerminatedFALSE;
-
-    procedure   SetIsTerminated(ABool: Boolean);
+  protected
+    function GetTerminated: Boolean;
+    procedure DoTerminate; override;
   public
-    constructor Create(CreateSuspended: Boolean);
-    destructor  Destroy; override;
-
-    procedure   Terminate;
-
-    property    IsTerminated: Boolean read FIsTerminated write FIsTerminated;
-    property    IsSuspended: Boolean read FIsSuspended write FIsSuspended;
-    property    IsTerminateCalled: Boolean read FIsTerminateCalled write FIsTerminateCalled;
+    constructor Create(CreateSuspended: Boolean = False);
+    property IsTerminated: Boolean read GetTerminated;
   end;
 
 implementation
 
-procedure   TFMDThread.MainThreadSetIsTerminatedTRUE;
+uses frmMain;
+
+function TFMDThread.GetTerminated: Boolean;
 begin
-  isTerminated:= TRUE;
+  Result := Terminated;
 end;
 
-procedure   TFMDThread.MainThreadSetIsTerminatedFALSE;
+procedure TFMDThread.DoTerminate;
 begin
-  isTerminated:= FALSE;
+  if (FatalException <> nil) and (FatalException is Exception) then
+  begin
+    Exception(FatalException).Message :=
+      'FatalException, ' + Exception(FatalException).Message;
+    MainForm.ExceptionHandler(Self, Exception(FatalException));
+  end;
+  inherited DoTerminate;
 end;
-
-// Setters
-
-procedure   TFMDThread.SetIsTerminated(ABool: Boolean);
-begin
-  if ABool then
-    Synchronize(MainThreadSetIsTerminatedTRUE)
-  else
-    Synchronize(MainThreadSetIsTerminatedFALSE);
-end;
-
-// Getters
 
 // ----- Public methods -----
 
 constructor TFMDThread.Create(CreateSuspended: Boolean);
 begin
-  inherited Create(FALSE);
-  FIsSuspended := TRUE;
-  FIsTerminated:= FALSE;
-  FreeOnTerminate:= TRUE;
-  FIsTerminateCalled:= FALSE
-end;
-
-destructor  TFMDThread.Destroy;
-begin
-  FIsTerminated:= TRUE;
-  inherited Destroy;
-end;
-
-procedure   TFMDThread.Terminate;
-begin
-  FIsTerminateCalled:= TRUE;
-  TThread(self).Terminate;
+  inherited Create(CreateSuspended);
+  FreeOnTerminate := True;
 end;
 
 end.
-

@@ -1,5 +1,4 @@
 {
-  $Id: ImagingExtras.pas 171 2009-09-02 01:34:19Z galfar $
   Vampyre Imaging Library
   by Marek Mauder
   http://imaginglib.sourceforge.net
@@ -44,16 +43,17 @@ unit ImagingExtras;
   {$DEFINE DONT_LINK_ELDER}        // link support for Elder Imagery images
 {$ENDIF}
 
-{$IF not (Defined(DELPHI) or
+{$IF not (
+  (Defined(DCC) and Defined(CPUX86) and not Defined(MACOS)) or
   (Defined(FPC) and not Defined(MSDOS) and
-  ((Defined(CPU86) and (Defined(LINUX) or Defined(WIN32) or Defined(DARWIN)) or
-   (Defined(CPUX86_64) and Defined(LINUX)))))
+    ((Defined(CPUX86) and (Defined(LINUX) or Defined(WIN32) or Defined(MACOS)) or
+     (Defined(CPUX64) and Defined(LINUX)))))
   )}
   // JPEG2000 only for 32bit Windows/Linux/OSX and for 64bit Unix with FPC
   {$DEFINE DONT_LINK_JPEG2000}
 {$IFEND}
 
-{$IF not Defined(DELPHI)}
+{$IF not (Defined(DCC) and Defined(CPUX86) and not Defined(MACOS))}
   {$DEFINE DONT_LINK_TIFF} // Only for Delphi now
 {$IFEND}
 
@@ -73,11 +73,20 @@ const
     Default value is False (0).}
   ImagingJpeg2000LosslessCompression = 57;
   { Specifies compression scheme used when saving TIFF images. Supported values
-    are 0 (Uncompressed), 1 (LZW), 2 (PackBits RLE), 3 (Deflate - ZLib), 4 (JPEG).
+    are 0 (Uncompressed), 1 (LZW), 2 (PackBits RLE), 3 (Deflate - ZLib), 4 (JPEG),
+    5 (CCITT Group 4 fax encoding - for binary images only).
     Default is 1 (LZW). Note that not all images can be stored with
     JPEG compression - these images will be saved with default compression if
     JPEG is set.}
   ImagingTiffCompression             = 65;
+  { Controls compression quality when selected TIFF compression is Jpeg.
+    It is number in range 1..100. 1 means small/ugly file,
+    100 means large/nice file. Accessible trough ImagingTiffJpegQuality option.}
+  ImagingTiffJpegQuality             = 66;
+  { When activated (True = 1) existing TIFF files are not overwritten when saving but
+    new images are instead appended thus producing multipage TIFFs.
+    Default value is False (0).}
+  ImagingTiffAppendMode              = 67;
   { If enabled image data is saved as layer of PSD file. This is required
     to get proper transparency when opened in Photoshop for images with
     alpha data (will be opened with one layer, RGB color channels, and transparency).
@@ -93,7 +102,7 @@ uses
   ImagingJpeg2000,
 {$ENDIF}
 {$IFNDEF DONT_LINK_TIFF}
-  ImagingTiff,
+  ImagingLibTiffDelphi,
 {$ENDIF}
 {$IFNDEF DONT_LINK_PSD}
   ImagingPsd,
@@ -112,8 +121,15 @@ uses
 {
   File Notes:
 
- -- TODOS ----------------------------------------------------
+ -- TODOS -----------------------------------------------------
     - nothing now
+
+  -- 0.77 -----------------------------------------------------
+    - Added ImagingTiffAppendMode option.
+
+  -- 0.26.5 Changes/Bug Fixes ---------------------------------
+    - Added Group 4 Fax encoding as compression for TIFF files.
+    - Added ImagingTiffJpegQuality option.
 
   -- 0.26.3 Changes/Bug Fixes ---------------------------------
     - Allowed JPEG2000 for Mac OS X x86

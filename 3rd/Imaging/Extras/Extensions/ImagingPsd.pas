@@ -1,5 +1,4 @@
 {
-  $Id: ImagingPsd.pas 154 2008-12-27 15:41:09Z galfar $
   Vampyre Imaging Library
   by Marek Mauder
   http://imaginglib.sourceforge.net
@@ -46,8 +45,10 @@ type
     RGB images but without actual conversion to RGB color space.
     Also no layer information is loaded.}
   TPSDFileFormat = class(TImageFileFormat)
-  protected
+  private
     FSaveAsLayer: LongBool;
+  protected
+    procedure Define; override;
     function LoadData(Handle: TImagingHandle; var Images: TDynImageDataArray;
       OnlyFirstLevel: Boolean): Boolean; override;
     function SaveData(Handle: TImagingHandle; const Images: TDynImageDataArray;
@@ -55,7 +56,6 @@ type
     procedure ConvertToSupported(var Image: TImageData;
       const Info: TImageFormatInfo); override;
   public
-    constructor Create; override;
     function TestFormat(Handle: TImagingHandle): Boolean; override;
   published
     property SaveAsLayer: LongBool read FSaveAsLayer write FSaveAsLayer;
@@ -71,7 +71,7 @@ const
   SPSDMasks      = '*.psd,*.pdd';
   PSDSupportedFormats: TImageFormats = [ifIndex8, ifGray8, ifA8Gray8,
     ifR8G8B8, ifA8R8G8B8, ifGray16, ifA16Gray16, ifR16G16B16, ifA16R16G16B16,
-    ifR32F, ifA32R32G32B32F];
+    ifR32F, ifR32G32B32F, ifA32R32G32B32F];
   PSDDefaultSaveAsLayer = True;
 
 const
@@ -124,13 +124,11 @@ end;
   TPSDFileFormat class implementation
 }
 
-constructor TPSDFileFormat.Create;
+procedure TPSDFileFormat.Define;
 begin
-  inherited Create;
+  inherited;
   FName := SPSDFormatName;
-  FCanLoad := True;
-  FCanSave := True;
-  FIsMultiImageFormat := False;
+  FFeatures := [ffLoad, ffSave];
   FSupportedFormats := PSDSupportedFormats;
   AddMasks(SPSDMasks);
 
@@ -154,7 +152,6 @@ var
   Col64: TColor64Rec;
   PCol32: PColor32Rec;
   PCol64: PColor64Rec;
-  PColF: PColorFPRec;
 
   { PackBits RLE decode code from Mike Lischke's GraphicEx library.}
   procedure DecodeRLE(Source, Dest: PByte; PackedSize, UnpackedSize: LongInt);
@@ -205,7 +202,8 @@ begin
     // Read PSD header
     Read(Handle, @Header, SizeOf(Header));
     SwapHeader(Header);
-    // Determine image data format 
+
+    // Determine image data format
     Format := ifUnknown;
     case Header.Mode of
       cmGrayscale, cmDuoTone:
@@ -235,7 +233,12 @@ begin
               Format := IffFormat(Header.Depth = 8, ifA8R8G8B8, ifA16R16G16B16);
           end
           else if Header.Depth = 32 then
-            Format := ifA32R32G32B32F;
+          begin
+            if Header.Channels = 3 then
+              Format := ifR32G32B32F
+            else if Header.Channels >= 4 then
+              Format := ifA32R32G32B32F;
+          end;
         end;
       cmMono:; // Not supported
     end;
@@ -418,20 +421,6 @@ begin
         end;
       end;
 
-      if Header.Depth = 32 then
-      begin
-        if (Header.Channels = 3) and (Header.Mode = cmRGB) then
-        begin
-          // RGB images were loaded as ARGB so we must wet alpha manually to 1.0
-          PColF := Bits;
-          for X := 0 to Width * Height - 1 do
-          begin
-            PColF.A := 1.0;
-            Inc(PColF);
-          end;
-        end;
-      end;
-
       Result := True;
     finally
       FreeMem(LineBuffer);
@@ -534,7 +523,7 @@ var
     if not SeparateChannelStorage then
     begin
       // This is for storing background merged image. There's only one
-      // complession flag and one RLE lenghts table for all channels
+      // compression flag and one RLE lenghts table for all channels
       WordVal := Swap(Compression);
       GetIO.Write(Handle, @WordVal, SizeOf(WordVal));
       if Compression = CompressionRLE then
@@ -595,9 +584,6 @@ var
         begin
           // Compress and write line
           WrittenLineSize := PackLine(LineBuffer, RLEBuffer, LineSize);
-          {RLELineSize := 7;
-          RLEBuffer[0] := 129; RLEBuffer[1] := 255; RLEBuffer[2] := 131; RLEBuffer[3] := 100;
-          RLEBuffer[4] := 1; RLEBuffer[5] := 0; RLEBuffer[6] := 255;}
           RLELengths[ImageToSave.Height * I + Y] := SwapEndianWord(WrittenLineSize);
           GetIO.Write(Handle, RLEBuffer, WrittenLineSize);
         end
@@ -692,7 +678,7 @@ begin
       Write(Handle, @LongVal, SizeOf(LongVal));        // Layer section size, empty now
       Write(Handle, @LayerCount, SizeOf(LayerCount));  // Layer count
       Write(Handle, @R, SizeOf(R));                    // Bounds rect
-      Write(Handle, @WordVal, SizeOf(WordVal));        // Channeel count
+      Write(Handle, @WordVal, SizeOf(WordVal));        // Channel count
 
       ChannelInfoOffset := Tell(Handle);
       SetLength(ChannelDataSizes, Info.ChannelCount);  // Empty channel infos
@@ -753,7 +739,14 @@ var
   ConvFormat: TImageFormat;
 begin
   if Info.IsFloatingPoint then
-    ConvFormat :=  IffFormat(Info.ChannelCount = 1, ifR32F, ifA32R32G32B32F)
+  begin
+    if Info.ChannelCount = 1 then
+      ConvFormat := ifR32F
+    else if Info.HasAlphaChannel then
+      ConvFormat := ifA32R32G32B32F
+    else
+      ConvFormat := ifR32G32B32F;
+  end
   else if Info.HasGrayChannel then
     ConvFormat := IffFormat(Info.HasAlphaChannel, ifA16Gray16, ifGray16)
   else if Info.RBSwapFormat in GetSupportedFormats then
@@ -787,8 +780,9 @@ initialization
 {
   File Notes:
 
- -- TODOS ----------------------------------------------------
-    - nothing now
+  -- 0.77.1 ---------------------------------------------------
+    - 3 channel RGB float images are loaded and saved directly
+      as ifR32G32B32F.
 
   -- 0.26.1 Changes/Bug Fixes ---------------------------------
     - PSDs are now saved with RLE compression.

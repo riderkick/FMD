@@ -1,0 +1,88 @@
+object frmMain: TfrmMain
+  Left = 501
+  Height = 215
+  Top = 247
+  Width = 334
+  BorderStyle = bsDialog
+  Caption = 'Free Manga Downloader - Updater'
+  ClientHeight = 215
+  ClientWidth = 334
+  FormStyle = fsSystemStayOnTop
+  OnCreate = FormCreate
+  OnShow = FormShow
+  Position = poOwnerFormCenter
+  LCLVersion = '1.3'
+  object pbDownload: TProgressBar
+    Left = 8
+    Height = 20
+    Top = 40
+    Width = 317
+    Anchors = [akTop, akLeft, akRight]
+    Max = 1000
+    TabOrder = 0
+  end
+  object lbStatus: TLabel
+    Left = 8
+    Height = 15
+    Top = 16
+    Width = 313
+    Anchors = [akTop, akLeft, akRight]
+    AutoSize = False
+    Caption = 'lbStatus'
+    ParentColor = False
+  end
+  object btDownload: TButton
+    Left = 128
+    Height = 25
+    Top = 88
+    Width = 75
+    Caption = 'Download'
+    OnClick = btDownloadClick
+    TabOrder = 1
+  end
+  object edURL: TEdit
+    Left = 8
+    Height = 23
+    Top = 136
+    Width = 317
+    Anchors = [akTop, akLeft, akRight]
+    TabOrder = 2
+    Text = 'edURL'
+  end
+  object edFilename: TEdit
+    Left = 8
+    Height = 23
+    Top = 184
+    Width = 317
+    Anchors = [akTop, akLeft, akRight]
+    TabOrder = 3
+    Text = 'edFilename'
+  end
+  object lbProgress: TLabel
+    Left = 8
+    Height = 15
+    Top = 16
+    Width = 317
+    Alignment = taRightJustify
+    Anchors = [akTop, akLeft, akRight]
+    AutoSize = False
+    Caption = 'lbProgress'
+    ParentColor = False
+  end
+  object lbURL: TLabel
+    Left = 8
+    Height = 15
+    Top = 120
+    Width = 21
+    Caption = 'URL'
+    ParentColor = False
+  end
+  object lbFilename: TLabel
+    Left = 8
+    Height = 15
+    Top = 168
+    Width = 48
+    Caption = 'Filename'
+    ParentColor = False
+  end
+end

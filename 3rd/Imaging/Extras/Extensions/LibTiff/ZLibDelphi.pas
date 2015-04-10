@@ -1,11 +1,5 @@
 unit ZLibDelphi;
 
-(*
-{$IFOPT D+}
-{$DEFINE ZLIB_DEBUG}
-{$ENDIF}
-*)
-
 interface
 
 uses
@@ -32,7 +26,7 @@ type
     NextOut: PByte;
     AvailOut: Cardinal;
     TotalOut: Cardinal;
-    Msg: PChar;
+    Msg: PAnsiChar;
     State: Pointer;
     AllocFunc: Pointer;
     FreeFunc: Pointer;
@@ -61,88 +55,19 @@ uses
 
 function deflateInit(strm: Pointer; level: Integer): Integer;
 begin
-  Result:=deflateInit_(strm,level,PChar(ZLIB_VERSION),SizeOf(RZStream));
+  Result:=deflateInit_(strm,level,PAnsiChar(ZLIB_VERSION),SizeOf(RZStream));
 end;
 
-{inflate}
-
-{$IFDEF ZLIB_DEBUG}
-{$L ZLibDelphi\debug\inflate.obj}
-{$ELSE}
-{$L ZLibDelphi\release\inflate.obj}
-{$ENDIF}
-
-{crc32}
-
-{$IFDEF ZLIB_DEBUG}
-{$L ZLibDelphi\debug\crc32.obj}
-{$ELSE}
-{$L ZLibDelphi\release\crc32.obj}
-{$ENDIF}
-
-{adler32}
-
-{$IFDEF ZLIB_DEBUG}
-{$L ZLibDelphi\debug\adler32.obj}
-{$ELSE}
-{$L ZLibDelphi\release\adler32.obj}
-{$ENDIF}
-
-{inftrees}
-
-{$IFDEF ZLIB_DEBUG}
-{$L ZLibDelphi\debug\inftrees.obj}
-{$ELSE}
-{$L ZLibDelphi\release\inftrees.obj}
-{$ENDIF}
-
-{inffast}
-
-{$IFDEF ZLIB_DEBUG}
-{$L ZLibDelphi\debug\inffast.obj}
-{$ELSE}
-{$L ZLibDelphi\release\inffast.obj}
-{$ENDIF}
-
-{deflate}
-
-{$IFDEF ZLIB_DEBUG}
-{$L ZLibDelphi\debug\deflate.obj}
-{$ELSE}
-{$L ZLibDelphi\release\deflate.obj}
-{$ENDIF}
-
-{zutil}
-
-{$IFDEF ZLIB_DEBUG}
-{$L ZLibDelphi\debug\zutil.obj}
-{$ELSE}
-{$L ZLibDelphi\release\zutil.obj}
-{$ENDIF}
-
-{trees}
-
-{$IFDEF ZLIB_DEBUG}
-{$L ZLibDelphi\debug\trees.obj}
-{$ELSE}
-{$L ZLibDelphi\release\trees.obj}
-{$ENDIF}
-
-{compress}
-
-{$IFDEF ZLIB_DEBUG}
-{$L ZLibDelphi\debug\compress.obj}
-{$ELSE}
-{$L ZLibDelphi\release\compress.obj}
-{$ENDIF}
-
-{decompress}
-
-{$IFDEF ZLIB_DEBUG}
-{$L ZLibDelphi\debug\uncompr.obj}
-{$ELSE}
-{$L ZLibDelphi\release\uncompr.obj}
-{$ENDIF}
+{$L Compiled\inflate.obj}
+{$L Compiled\crc32.obj}
+{$L Compiled\adler32.obj}
+{$L Compiled\inftrees.obj}
+{$L Compiled\inffast.obj}
+{$L Compiled\deflate.obj}
+{$L Compiled\zutil.obj}
+{$L Compiled\trees.obj}
+{$L Compiled\compress.obj}
+{$L Compiled\uncompr.obj}
 
 end.
 

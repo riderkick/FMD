@@ -1,5 +1,4 @@
 {
-  $Id: ElderImageryBsi.pas 163 2009-07-28 21:44:10Z galfar $
   Vampyre Imaging Library
   by Marek Mauder
   http://imaginglib.sourceforge.net
@@ -53,10 +52,10 @@ type
   private
     function IsMultiBSI(Handle: TImagingHandle): Boolean;
   protected
+    procedure Define; override;
     function LoadData(Handle: TImagingHandle; var Images: TDynImageDataArray;
       OnlyFirstLevel: Boolean): Boolean; override;
   public
-    constructor Create; override;
     function TestFormat(Handle: TImagingHandle): Boolean; override;
   end;
 
@@ -109,13 +108,11 @@ const
 
 { TBSIFileFormat class implementation }
 
-constructor TBSIFileFormat.Create;
+procedure TBSIFileFormat.Define;
 begin
-  inherited Create;
+  inherited;
   FName := SBSIFormatName;
-  FCanLoad := True;
-  FCanSave := False;
-  FIsMultiImageFormat := True;
+  FFeatures := [ffLoad, ffMultiImage];
 
   AddMasks(SBSIMasks);
   SetPalette(RedguardPalette);

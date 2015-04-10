@@ -1,5 +1,4 @@
 {
-  $Id: ElderImageryImg.pas 71 2007-03-08 00:10:10Z galfar $
   Vampyre Imaging Library
   by Marek Mauder
   http://imaginglib.sourceforge.net
@@ -47,12 +46,11 @@ type
     image could be identified as CIF as they use the same header).}
   TIMGFileFormat = class(TElderFileFormat)
   protected
+    procedure Define; override;
     function LoadData(Handle: TImagingHandle; var Images: TDynImageDataArray;
       OnlyFirstLevel: Boolean): Boolean; override;
     function SaveData(Handle: TImagingHandle; const Images: TDynImageDataArray;
       Index: LongInt): Boolean; override;
-  public
-    constructor Create; override;
   end;
 
 const
@@ -89,10 +87,10 @@ resourcestring
 
 { TIMGFileFormat class implementation }
 
-constructor TIMGFileFormat.Create;
+procedure TIMGFileFormat.Define;
 begin
-  inherited Create;
-  FIsMultiImageFormat := False;
+  inherited;
+  FFeatures := [ffLoad, ffSave];
   FName := SIMGFormatName;
   AddMasks(SIMGMasks);
 end;

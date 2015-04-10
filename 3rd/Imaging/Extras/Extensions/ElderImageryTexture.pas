@@ -1,5 +1,4 @@
 {
-  $Id: ElderImageryTexture.pas 171 2009-09-02 01:34:19Z galfar $
   Vampyre Imaging Library
   by Marek Mauder
   http://imaginglib.sourceforge.net
@@ -52,14 +51,19 @@ type
     { Deletes non-valid chars from texture name.}
     function RepairName(const S: array of AnsiChar): string;
   protected
+    procedure Define; override;
     function LoadData(Handle: TImagingHandle; var Images: TDynImageDataArray;
       OnlyFirstLevel: Boolean): Boolean; override;
   public
-    constructor Create; override;
     function TestFormat(Handle: TImagingHandle): Boolean; override;
     { Internal name of the last texture loaded.}
     property LastTextureName: string read FLastTextureName;
   end;
+
+const
+  { Metadata item id for accessing name of last loaded Daggetfall texture.
+    Value type is string.}
+  SMetaDagTextureName = 'DagTexture.Name';
 
 implementation
 
@@ -112,10 +116,10 @@ type
 
 { TTextureFileFormat }
 
-constructor TTextureFileFormat.Create;
+procedure TTextureFileFormat.Define;
 begin
-  inherited Create;
-  FCanSave := False;
+  inherited;
+  FFeatures := [ffLoad, ffMultiImage];
   FName := STextureFormatName;
   AddMasks(STextureMasks);
 end;
@@ -282,6 +286,7 @@ begin
     BasePos := Tell(Handle);
     Read(Handle, @Hdr, SizeOf(Hdr));
     FLastTextureName := RepairName(Hdr.TexName);
+    FMetadata.SetMetaItem(SMetaDagTextureName, FLastTextureName);
 
     if InputSize = 2586 then
     begin
@@ -374,6 +379,9 @@ end;
 
   -- TODOS ----------------------------------------------------
     - nothing now
+
+  -- 0.26.5 Changes/Bug Fixes ---------------------------------
+    - Last texture name now accessible trough metadata interface.
 
   -- 0.21 Changes/Bug Fixes -----------------------------------
     - Initial version created based on my older code (fixed few things).

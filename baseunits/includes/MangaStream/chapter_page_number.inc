@@ -1,29 +1,30 @@
   function GetMangaStreamPageNumber: Boolean;
   var
-    s   : String;
-    i, j: Cardinal;
-    l   : TStringList;
+    s: String;
+    i: Cardinal;
+    l: TStringList;
   begin
-    l:= TStringList.Create;
-    parse:= TStringList.Create;
-    s:= DecodeUrl(MANGASTREAM_ROOT2 + URL + '/1');
-    Result:= GetPage(TObject(l),
-                     s,
-                     manager.container.manager.retryConnect);
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
+    l := TStringList.Create;
+    parse := TStringList.Create;
+    s := DecodeUrl(FillMangaSiteHost(MANGASTREAM_ID, URL) + '/1');
+    Result := GetPage(TObject(l),
+      s,
+      manager.container.manager.retryConnect);
+    Parser := THTMLParser.Create(PChar(l.Text));
     Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
+    Parser.OnFoundText := OnText;
     Parser.Exec;
     Parser.Free;
-    if parse.Count>0 then
+    if parse.Count > 0 then
     begin
-      manager.container.pageNumber:= 0;
-      for i:= 0 to parse.Count-1 do
+      manager.container.pageNumber := 0;
+      for i := 0 to parse.Count - 1 do
       begin
-        if (Pos('Last Page (', parse.Strings[i])>0) then
+        if (Pos('Last Page (', parse.Strings[i]) > 0) then
         begin
-          manager.container.pageNumber:= StrToInt(TrimLeft(TrimRight(GetString(parse.Strings[i], 'Last Page (', ')'))));
-          break;
+          manager.container.PageNumber :=
+            StrToInt(TrimLeft(TrimRight(GetString(parse.Strings[i], 'Last Page (', ')'))));
+          Break;
         end;
       end;
     end;

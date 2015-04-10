@@ -1172,7 +1172,8 @@ begin
   end;
 
   { Account for restart interval (no-op if not using restarts) }
-  Dec(entropy^.restarts_to_go);
+  if entropy^.restarts_to_go > 0 then
+    Dec(entropy^.restarts_to_go);
 
   decode_mcu := TRUE;
 end;

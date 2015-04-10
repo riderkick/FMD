@@ -1,5 +1,4 @@
 {
-  $Id: ImagingIO.pas 100 2007-06-28 21:09:52Z galfar $
   Vampyre Imaging Library
   by Marek Mauder 
   http://imaginglib.sourceforge.net
@@ -56,6 +55,12 @@ var
 function GetInputSize(IOFunctions: TIOFunctions; Handle: TImagingHandle): LongInt;
 { Helper function that initializes TMemoryIORec with given params.}
 function PrepareMemIO(Data: Pointer; Size: LongInt): TMemoryIORec;
+{ Reads one text line from input (CR+LF, CR, or LF as line delimiter).}
+function ReadLine(IOFunctions: TIOFunctions; Handle: TImagingHandle;
+  out Line: AnsiString; FailOnControlChars: Boolean = False): Boolean;
+{ Writes one text line to input with optional line delimiter.}
+procedure WriteLine(IOFunctions: TIOFunctions; Handle: TImagingHandle;
+  const Line: AnsiString; const LineEnding: AnsiString = sLineBreak);
 
 implementation
 
@@ -65,7 +70,7 @@ const
 type
   { Based on TaaBufferedStream
     Copyright (c) Julian M Bucknall 1997, 1999 }
-  TBufferedStream = class(TObject)
+  TBufferedStream = class
   private
     FBuffer: PByteArray;
     FBufSize: Integer;
@@ -338,14 +343,26 @@ end;
 
 { File IO functions }
 
-function FileOpenRead(FileName: PChar): TImagingHandle; cdecl;
+function FileOpen(FileName: PChar; Mode: TOpenMode): TImagingHandle; cdecl;
+var
+  Stream: TStream;
 begin
-  Result := TBufferedStream.Create(TFileStream.Create(FileName, fmOpenRead or fmShareDenyWrite));
-end;
+  Stream := nil;
 
-function FileOpenWrite(FileName: PChar): TImagingHandle; cdecl;
-begin
-  Result := TBufferedStream.Create(TFileStream.Create(FileName, fmCreate or fmShareDenyWrite));
+  case Mode of
+    omReadOnly:  Stream := TFileStream.Create(FileName, fmOpenRead or fmShareDenyWrite);
+    omCreate:    Stream := TFileStream.Create(FileName, fmCreate);
+    omReadWrite:
+      begin
+        if FileExists(FileName) then
+          Stream := TFileStream.Create(FileName, fmOpenReadWrite or fmShareExclusive)
+        else
+          Stream := TFileStream.Create(FileName, fmCreate);
+      end;
+  end;
+
+  Assert(Stream <> nil);
+  Result := TBufferedStream.Create(Stream);
 end;
 
 procedure FileClose(Handle: TImagingHandle); cdecl;
@@ -387,12 +404,7 @@ end;
 
 { Stream IO functions }
 
-function StreamOpenRead(FileName: PChar): TImagingHandle; cdecl;
-begin
-  Result := FileName;
-end;
-
-function StreamOpenWrite(FileName: PChar): TImagingHandle; cdecl;
+function StreamOpen(FileName: PChar; Mode: TOpenMode): TImagingHandle; cdecl;
 begin
   Result := FileName;
 end;
@@ -431,12 +443,7 @@ end;
 
 { Memory IO functions }
 
-function MemoryOpenRead(FileName: PChar): TImagingHandle; cdecl;
-begin
-  Result := FileName;
-end;
-
-function MemoryOpenWrite(FileName: PChar): TImagingHandle; cdecl;
+function MemoryOpen(FileName: PChar; Mode: TOpenMode): TImagingHandle; cdecl;
 begin
   Result := FileName;
 end;
@@ -513,9 +520,73 @@ begin
   Result.Size := Size;
 end;
 
+function ReadLine(IOFunctions: TIOFunctions; Handle: TImagingHandle;
+  out Line: AnsiString; FailOnControlChars: Boolean): Boolean;
+const
+  MaxLine = 1024;
+var
+  EolPos, Pos: Integer;
+  C: AnsiChar;
+  EolReached: Boolean;
+  Endings: set of AnsiChar;
+begin
+  Line := '';
+  Pos := 0;
+  EolPos := 0;
+  EolReached := False;
+  Endings := [#10, #13];
+  Result := True;
+
+  while not IOFunctions.Eof(Handle) do
+  begin
+    IOFunctions.Read(Handle, @C, SizeOf(C));
+
+    if FailOnControlChars and (Byte(C) < $20) then
+    begin
+      Break;
+    end;
+
+    if not (C in Endings) then
+    begin
+      if EolReached then
+      begin
+        IOFunctions.Seek(Handle, EolPos, smFromBeginning);
+        Exit;
+      end
+      else
+      begin
+        SetLength(Line, Length(Line) + 1);
+        Line[Length(Line)] := C;
+      end;
+    end
+    else if not EolReached then
+    begin
+      EolReached := True;
+      EolPos := IOFunctions.Tell(Handle);
+    end;
+
+    Inc(Pos);
+    if Pos >= MaxLine then
+    begin
+      Break;
+    end;
+  end;
+
+  Result := False;
+  IOFunctions.Seek(Handle, -Pos, smFromCurrent);
+end;
+
+procedure WriteLine(IOFunctions: TIOFunctions; Handle: TImagingHandle;
+  const Line: AnsiString; const LineEnding: AnsiString);
+var
+  ToWrite: AnsiString;
+begin
+  ToWrite := Line + LineEnding;
+  IOFunctions.Write(Handle, @ToWrite[1], Length(ToWrite));
+end;
+
 initialization
-  OriginalFileIO.OpenRead := FileOpenRead;
-  OriginalFileIO.OpenWrite := FileOpenWrite;
+  OriginalFileIO.Open := FileOpen;
   OriginalFileIO.Close := FileClose;
   OriginalFileIO.Eof := FileEof;
   OriginalFileIO.Seek := FileSeek;
@@ -523,8 +594,7 @@ initialization
   OriginalFileIO.Read := FileRead;
   OriginalFileIO.Write := FileWrite;
 
-  StreamIO.OpenRead := StreamOpenRead;
-  StreamIO.OpenWrite := StreamOpenWrite;
+  StreamIO.Open := StreamOpen;
   StreamIO.Close := StreamClose;
   StreamIO.Eof := StreamEof;
   StreamIO.Seek := StreamSeek;
@@ -532,8 +602,7 @@ initialization
   StreamIO.Read := StreamRead;
   StreamIO.Write := StreamWrite;
 
-  MemoryIO.OpenRead := MemoryOpenRead;
-  MemoryIO.OpenWrite := MemoryOpenWrite;
+  MemoryIO.Open := MemoryOpen;
   MemoryIO.Close := MemoryClose;
   MemoryIO.Eof := MemoryEof;
   MemoryIO.Seek := MemorySeek;
@@ -548,6 +617,10 @@ initialization
 
   -- TODOS ----------------------------------------------------
     - nothing now
+
+  -- 0.77.1 ---------------------------------------------------
+   - Updated IO Open functions according to changes in ImagingTypes.
+   - Added ReadLine and WriteLine functions.
 
   -- 0.23 Changes/Bug Fixes -----------------------------------
     - Added merge between buffered read-only and write-only file

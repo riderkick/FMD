@@ -1,34 +1,35 @@
-function   GetCentralDeMangasDirectoryPageNumber: Byte;
+  function GetCentralDeMangasDirectoryPageNumber: Byte;
   var
     i: Cardinal;
   begin
-    Result:= INFORMATION_NOT_FOUND;
-    if NOT GetPage(TObject(source), WebsiteRoots[CENTRALDEMANGAS_ID,1] + CENTRALDEMANGAS_BROWSER, 0) then
+    Result := INFORMATION_NOT_FOUND;
+    if not GetPage(TObject(Source), WebsiteRoots[CENTRALDEMANGAS_ID, 1] +
+      CENTRALDEMANGAS_BROWSER, 0) then
     begin
-      Result:= NET_PROBLEM;
-      source.Free;
-      exit;
+      Result := NET_PROBLEM;
+      Source.Free;
+      Exit;
     end;
     parse.Clear;
-    Parser:= TjsFastHTMLParser.Create(PChar(source.Text));
+    Parser := THTMLParser.Create(PChar(Source.Text));
     Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
+    Parser.OnFoundText := OnText;
     Parser.Exec;
     Parser.Free;
-    if parse.Count=0 then
+    if parse.Count = 0 then
     begin
-      source.Free;
-      exit;
+      Source.Free;
+      Exit;
     end;
-    for i:= parse.Count-1 downto 2 do
+    for i := parse.Count - 1 downto 2 do
     begin
       if (Pos('/mangas/list/*/', parse.Strings[i]) > 0) then
       begin
-        s:= TrimRight(TrimLeft(GetString(parse.Strings[i], '/mangas/list/*/', '">')));
-        page:= StrToInt(s);
-        Result:= NO_ERROR;
-        exit;
+        s := TrimRight(TrimLeft(GetString(parse.Strings[i], '/mangas/list/*/', '">')));
+        page := StrToInt(s);
+        Result := NO_ERROR;
+        Exit;
       end;
     end;
-    source.Free;
-  end; 
+    Source.Free;
+  end;

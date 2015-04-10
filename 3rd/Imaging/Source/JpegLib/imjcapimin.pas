@@ -279,15 +279,15 @@ begin
     begin
       if (cinfo^.progress <> NIL) then
       begin
-	cinfo^.progress^.pass_counter := long (iMCU_row);
-	cinfo^.progress^.pass_limit := long (cinfo^.total_iMCU_rows);
-	cinfo^.progress^.progress_monitor (j_common_ptr(cinfo));
+      	cinfo^.progress^.pass_counter := long (iMCU_row);
+      	cinfo^.progress^.pass_limit := long (cinfo^.total_iMCU_rows);
+      	cinfo^.progress^.progress_monitor (j_common_ptr(cinfo));
       end;
       { We bypass the main controller and invoke coef controller directly;
         all work is being done from the coefficient buffer. }
 
       if (not cinfo^.coef^.compress_data (cinfo, JSAMPIMAGE(NIL))) then
-	ERREXIT(j_common_ptr(cinfo), JERR_CANT_SUSPEND);
+      	ERREXIT(j_common_ptr(cinfo), JERR_CANT_SUSPEND);
     end;
     cinfo^.master^.finish_pass (cinfo);
   end;

@@ -1,40 +1,46 @@
-function   MangaTradersGetNamesAndLinks: Byte;
+  function MangaTradersGetNamesAndLinks: Byte;
   var
-    tmp: Integer;
-    i: Cardinal;
+    i: Integer;
     s: String;
+    regx: TRegExpr;
   begin
-    Result:= INFORMATION_NOT_FOUND;
-    if NOT GetPage(TObject(source), WebsiteRoots[MANGATRADERS_ID,1] + MANGATRADERS_BROWSER + 'All/page/' + IntToStr(StrToInt(URL)+1) + '/', 0) then
+    Result := INFORMATION_NOT_FOUND;
+    if not GetPage(TObject(Source), WebsiteRoots[MANGATRADERS_ID, 1] +
+      MANGATRADERS_BROWSER , 0) then
     begin
-      Result:= NET_PROBLEM;
-      source.Free;
-      exit;
+      Result := NET_PROBLEM;
+      Source.Free;
+      Exit;
     end;
     parse.Clear;
-    Parser:= TjsFastHTMLParser.Create(PChar(source.Text));
+    Parser := THTMLParser.Create(PChar(Source.Text));
     Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
+    Parser.OnFoundText := OnText;
     Parser.Exec;
     Parser.Free;
-    if parse.Count=0 then
+    if parse.Count = 0 then
     begin
-      source.Free;
-      exit;
+      Source.Free;
+      Exit;
     end;
-    for i:= parse.Count-1 downto 5 do
-    begin
-      if (Pos('/manga/series/', parse.Strings[i]) > 0) AND
-         (TryStrToInt(GetString(parse.Strings[i], '/manga/series/', '"'), tmp)) AND
-         (Pos('<img', parse.Strings[i+1]) = 0) AND
-         (Pos('Anything without a category', parse.Strings[i+1]) = 0) then
+
+    regx := TRegExpr.Create;
+    try
+      regx.Expression := '\/manga\/\?series\=(.*)$';
+      for i := 0 to parse.Count - 1 do
       begin
-        Result:= NO_ERROR;
-        s:= StringFilter(TrimLeft(TrimRight(parse.Strings[i+1])));
-        names.Add(HTMLEntitiesFilter(s));
-        s:= GetString(parse.Strings[i], 'href="', '"');
-        links.Add(s);
+        if Pos('class="seriesList', parse[i]) > 0 then
+        begin
+          Result := NO_ERROR;
+          names.Add(CommonStringFilter(parse[i + 3]));
+          s := TrimLeftChar(GetVal(parse[i + 2], 'href'), ['.']);
+          if regx.Exec(s) then
+            s := regx.Replace(s, '/read-online/$1', True);
+          links.Add(s);
+        end;
       end;
+    finally
+      regx.Free;
     end;
-    source.Free;
-  end; 
+    Source.Free;
+  end;

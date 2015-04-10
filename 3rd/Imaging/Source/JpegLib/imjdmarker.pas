@@ -1626,12 +1626,12 @@ end;
 
 
 {METHODDEF}
-function get_interesting_appn (cinfo : j_decompress_ptr) : boolean;  
+function get_interesting_appn (cinfo : j_decompress_ptr) : boolean;
 { Process an APP0 or APP14 marker without saving it }
 var
   length : INT32;
   b : array[0..APPN_DATA_LEN-1] of JOCTET;
-  i, numtoread : uint;
+  i, numtoread: uint;
 var
   datasrc : jpeg_source_mgr_ptr;
   next_input_byte : JOCTETptr;
@@ -1692,27 +1692,31 @@ begin
       numtoread := uint(length)
     else
       numtoread := 0;
-  for i := 0 to numtoread-1 do
-  begin
-  { Read a byte into b[i]. If must suspend, return FALSE. }
-    { make a byte available.
-      Note we do *not* do INPUT_SYNC before calling fill_input_buffer,
-      but we must reload the local copies after a successful fill. }
-    if (bytes_in_buffer = 0) then
-    begin
-      if (not datasrc^.fill_input_buffer(cinfo)) then
-      begin
-        get_interesting_appn := FALSE;
-        exit;
-      end;
-      { Reload the local copies }
-      next_input_byte := datasrc^.next_input_byte;
-      bytes_in_buffer := datasrc^.bytes_in_buffer;
-    end;
-    Dec( bytes_in_buffer );
 
-    b[i] := GETJOCTET(next_input_byte^);
-    Inc(next_input_byte);
+  if numtoread > 0 then
+  begin
+    for i := 0 to numtoread-1 do
+    begin
+    { Read a byte into b[i]. If must suspend, return FALSE. }
+      { make a byte available.
+        Note we do *not* do INPUT_SYNC before calling fill_input_buffer,
+        but we must reload the local copies after a successful fill. }
+      if (bytes_in_buffer = 0) then
+      begin
+        if (not datasrc^.fill_input_buffer(cinfo)) then
+        begin
+          get_interesting_appn := FALSE;
+          exit;
+        end;
+        { Reload the local copies }
+        next_input_byte := datasrc^.next_input_byte;
+        bytes_in_buffer := datasrc^.bytes_in_buffer;
+      end;
+      Dec( bytes_in_buffer );
+
+      b[i] := GETJOCTET(next_input_byte^);
+      Inc(next_input_byte);
+    end;
   end;
 
   Dec(length, numtoread);

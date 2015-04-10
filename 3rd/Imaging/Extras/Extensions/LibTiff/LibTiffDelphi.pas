@@ -1,11 +1,5 @@
 unit LibTiffDelphi;
 
-(*
-{$IFOPT D+}
-  {$DEFINE LIBTIFF_DEBUG}
-{$ENDIF}
-*)
-
 {$ALIGN 8}
 {$MINENUMSIZE 1}
 
@@ -16,7 +10,7 @@ uses
 
 const
   //DW
-  LibTiffDelphiVersionString = 'LibTiffDelphi 3.9.1.00'#13#10'Pre-compiled LibTiff for Delphi'#13#10'http://www.awaresystems.be/'#13#10'3.9.1 implementaion by Do-wan Kim'#13#10;
+  LibTiffDelphiVersionString = 'LibTiffDelphi 3.9.4.00'#13#10'Pre-compiled LibTiff for Delphi'#13#10'http://www.awaresystems.be/'#13#10'3.9.4 implementaion by Do-wan Kim'#13#10;
 
   TIFF_NOTYPE                           = 0;
   TIFF_BYTE                             = 1;       { 8-bit unsigned integer }
@@ -368,6 +362,64 @@ const
 
   FIELD_CUSTOM                          = 65;
 
+ {added for LibTiff 3.9.4 by Alex (leontyyy@gmail.com) Dec.2011}
+  TIFFTAG_EXIFIFD                       = 34665;   { pointer to the Exif IFD }
+  EXIFTAG_FOCALLENGTH                   = 37386;   { focal length }
+  EXIFTAG_FOCALLENGTHIN35MMFILM         = 41989;   { indicates the equivalent focal length assuming a 35mm film camera, in mm }
+  EXIFTAG_EXIFVERSION                   = 36864;   { version of exif format }
+  EXIFTAG_DATETIMEDIGITIZED             = 36868;   { date and time when the image was stored as digital data }
+  EXIFTAG_DATETIMEORIGINAL              = 36867;   { date and time when the original image data was generated }
+  EXIFTAG_EXPOSURETIME                  = 33434;   { exposure time, given in seconds }
+  EXIFTAG_FNUMBER                       = 33437;   { F number }
+  EXIFTAG_EXPOSUREPROGRAM               = 34850;   { class of the program used by the camera to set exposure }
+  EXIFTAG_SPECTRALSENSITIVITY           = 34852;   { spectral sensitivity of each channel of the camera used }
+  EXIFTAG_ISOSPEEDRATINGS               = 34855;   { ISO Speed and ISO Latitude }
+  EXIFTAG_OECF                          = 34856;   { Opto-Electric Conversion Function }
+  EXIFTAG_COMPONENTSCONFIGURATION       = 37121;   { meaning of each component }
+  EXIFTAG_COMPRESSEDBITSPERPIXEL        = 37122;   { compression mode }
+  EXIFTAG_SHUTTERSPEEDVALUE             = 37377;   { shutter speed }
+  EXIFTAG_APERTUREVALUE                 = 37378;   { lens aperture }
+  EXIFTAG_BRIGHTNESSVALUE               = 37379;   { brightness }
+  EXIFTAG_EXPOSUREBIASVALUE             = 37380;   { exposure bias }
+  EXIFTAG_MAXAPERTUREVALUE              = 37381;   { maximum lens aperture }
+  EXIFTAG_SUBJECTDISTANCE               = 37382;   { distance to the subject in meters }
+  EXIFTAG_METERINGMODE                  = 37383;   { metering mode }
+  EXIFTAG_LIGHTSOURCE                   = 37384;   { light source }
+  EXIFTAG_FLASH                         = 37385;   { flash }
+  EXIFTAG_SUBJECTAREA                   = 37396;   { subject area (in exif ver.2.2) }
+  EXIFTAG_MAKERNOTE                     = 37500;   { manufacturer notes }
+  EXIFTAG_USERCOMMENT                   = 37510;   { user comments }
+  EXIFTAG_SUBSECTIME                    = 37520;   { DateTime subseconds }
+  EXIFTAG_SUBSECTIMEORIGINAL            = 37521;   { DateTimeOriginal subseconds }
+  EXIFTAG_SUBSECTIMEDIGITIZED           = 37522;   { DateTimeDigitized subseconds }
+  EXIFTAG_FLASHPIXVERSION               = 40960;   { FlashPix format version }
+  EXIFTAG_COLORSPACE                    = 40961;   { color space information }
+  EXIFTAG_PIXELXDIMENSION               = 40962;   { valid image width }
+  EXIFTAG_PIXELYDIMENSION               = 40963;   { valid image height }
+  EXIFTAG_RELATEDSOUNDFILE              = 40964;   { related audio file }
+  EXIFTAG_FLASHENERGY                   = 41483;   { flash energy }
+  EXIFTAG_SPATIALFREQUENCYRESPONSE      = 41484;   { spatial frequency response }
+  EXIFTAG_FOCALPLANEXRESOLUTION         = 41486;   { focal plane X resolution }
+  EXIFTAG_FOCALPLANEYRESOLUTION         = 41487;   { focal plane Y resolution }
+  EXIFTAG_FOCALPLANERESOLUTIONUNIT      = 41488;   { focal plane resolution unit }
+  EXIFTAG_SUBJECTLOCATION               = 41492;   { subject location }
+  EXIFTAG_EXPOSUREINDEX                 = 41493;   { exposure index }
+  EXIFTAG_SENSINGMETHOD                 = 41495;   { sensing method }
+  EXIFTAG_FILESOURCE                    = 41728;   { file source }
+  EXIFTAG_SCENETYPE                     = 41729;   { scene type }
+  EXIFTAG_CFAPATTERN                    = 41730;   { CFA pattern }
+  EXIFTAG_CUSTOMRENDERED                = 41985;   { custom image processing (in exif ver.2.2) }
+  EXIFTAG_EXPOSUREMODE                  = 41986;   { exposure mode (in exif ver.2.2) }
+  EXIFTAG_WHITEBALANCE                  = 41987;   { white balance (in exif ver.2.2) }
+  EXIFTAG_DIGITALZOOMRATIO              = 41988;   { digital zoom ratio (in exif ver.2.2) }
+  EXIFTAG_SCENECAPTURETYPE              = 41990;   { scene capture type (in exif ver.2.2) }
+  EXIFTAG_GAINCONTROL                   = 41991;   { gain control (in exif ver.2.2) }
+  EXIFTAG_CONTRAST                      = 41992;   { contrast (in exif ver.2.2) }
+  EXIFTAG_SATURATION                    = 41993;   { saturation (in exif ver.2.2) }
+  EXIFTAG_SHARPNESS                     = 41994;   { sharpness (in exif ver.2.2) }
+  EXIFTAG_DEVICESETTINGDESCRIPTION      = 41995;   { device settings description (in exif ver.2.2) }
+  EXIFTAG_SUBJECTDISTANCERANGE          = 41996;   { subject distance range (in exif ver.2.2) }
+  EXIFTAG_IMAGEUNIQUEID                 = 42016;   { Unique image ID (in exif ver.2.2) }
 
 type
 
@@ -375,7 +427,7 @@ type
   PTIFFRGBAImage = Pointer;
 
   TIFFErrorHandler = procedure(a: Pointer; b: Pointer; c: Pointer); cdecl;
-  LibTiffDelphiErrorHandler = procedure(const a,b: String);
+  LibTiffDelphiErrorHandler = procedure(const a,b: AnsiString);
   TIFFReadWriteProc = function(Fd: Cardinal; Buffer: Pointer; Size: Integer): Integer; cdecl;
   TIFFSeekProc = function(Fd: Cardinal; Off: Cardinal; Whence: Integer): Cardinal; cdecl;
   TIFFCloseProc = function(Fd: Cardinal): Integer; cdecl;
@@ -388,7 +440,7 @@ type
 
   PTIFFCodec = ^TIFFCodec;
   TIFFCodec = record
-    Name: PChar;
+    Name: PAnsiChar;
     Scheme: Word;
     Init: TIFFInitMethod;
   end;
@@ -402,7 +454,7 @@ type
     FieldBit: Word;                  { bit in fieldsset bit vector }
     FieldOkToChange: Byte;           { if true, can change while writing }
     FieldPassCount: Byte;            { if true, pass dir count on set }
-    FieldName: PChar;                { ASCII name }
+    FieldName: PAnsiChar;                { ASCII name }
   end;
 
   PTIFFTagValue = ^TIFFTagValue;
@@ -412,17 +464,17 @@ type
     Value: Pointer;
   end;
 
-function  LibTiffDelphiVersion: String;
-function  TIFFGetVersion: PChar; cdecl; external;
+function  LibTiffDelphiVersion: AnsiString;
+function  TIFFGetVersion: PAnsiChar; cdecl; external;
 function  TIFFFindCODEC(Scheme: Word): PTIFFCodec; cdecl; external;
-function  TIFFRegisterCODEC(Scheme: Word; Name: PChar; InitMethod: TIFFInitMethod): PTIFFCodec; cdecl; external;
+function  TIFFRegisterCODEC(Scheme: Word; Name: PAnsiChar; InitMethod: TIFFInitMethod): PTIFFCodec; cdecl; external;
 procedure TIFFUnRegisterCODEC(c: PTIFFCodec); cdecl; external;
 function  TIFFIsCODECConfigured(Scheme: Word): Integer; cdecl; external;
 function  TIFFGetConfiguredCODECs: PTIFFCodec; cdecl; external;
 
-function  TIFFOpen(const Name: String; const Mode: String): PTIFF;
-function  TIFFOpenStream(const Stream: TStream; const Mode: String): PTIFF;
-function  TIFFClientOpen(Name: PChar; Mode: PChar; ClientData: Cardinal;
+function  TIFFOpen(const Name: AnsiString; const Mode: AnsiString): PTIFF;
+function  TIFFOpenStream(const Stream: TStream; const Mode: AnsiString): PTIFF;
+function  TIFFClientOpen(Name: PAnsiChar; Mode: PAnsiChar; ClientData: Cardinal;
           ReadProc: TIFFReadWriteProc;
           WriteProc: TIFFReadWriteProc;
           SeekProc: TIFFSeekProc;
@@ -439,7 +491,7 @@ function  TIFFSetClientdata(Handle: PTIFF; Newvalue: Cardinal): Cardinal; cdecl;
 function  TIFFGetMode(Handle: PTIFF): Integer; cdecl; external;
 function  TIFFSetMode(Handle: PTIFF; Mode: Integer): Integer; cdecl; external;
 function  TIFFFileName(Handle: PTIFF): Pointer; cdecl; external;
-function  TIFFSetFileName(Handle: PTIFF; Name: PChar): PChar; cdecl; external;
+function  TIFFSetFileName(Handle: PTIFF; Name: PAnsiChar): PAnsiChar; cdecl; external;
 function  TIFFGetReadProc(Handle: PTIFF): TIFFReadWriteProc; cdecl; external;
 function  TIFFGetWriteProc(Handle: PTIFF): TIFFReadWriteProc; cdecl; external;
 function  TIFFGetSeekProc(Handle: PTIFF): TIFFSeekProc; cdecl; external;
@@ -458,6 +510,9 @@ function  TIFFSetTagExtender(Extender: TIFFExtendProc): TIFFExtendProc; cdecl; e
 
 function  TIFFFlush(Handle: PTIFF): Integer; cdecl; external;
 function  TIFFFlushData(Handle: PTIFF): Integer; cdecl; external;
+
+{added for LibTiff 3.9.4 by Alex (leontyyy@gmail.com) Dec.2011}
+function  TIFFReadEXIFDirectory(Handle: PTIFF; Diroff: Cardinal): Integer; cdecl; external;
 
 function  TIFFReadDirectory(Handle: PTIFF): Integer; cdecl; external;
 function  TIFFCurrentDirectory(Handle: PTIFF): Word; cdecl; external;
@@ -486,17 +541,17 @@ function  TIFFGetTagListCount(Handle: PTIFF): Integer; cdecl; external;
 function  TIFFGetTagListEntry(Handle: PTIFF; TagIndex: Integer): Cardinal; cdecl; external;
 procedure TIFFMergeFieldInfo(Handle: PTIFF; Info: PTIFFFieldInfo; N: Integer); cdecl; external;
 function  TIFFFindFieldInfo(Handle: PTIFF; Tag: Cardinal; Dt: Integer): PTIFFFieldInfo; cdecl; external;
-function  TIFFFindFieldInfoByName(Handle: PTIFF; FIeldName: PChar; Dt: Integer): PTIFFFieldInfo; cdecl; external;
+function  TIFFFindFieldInfoByName(Handle: PTIFF; FIeldName: PAnsiChar; Dt: Integer): PTIFFFieldInfo; cdecl; external;
 function  TIFFFieldWithTag(Handle: PTIFF; Tag: Cardinal): PTIFFFieldInfo; cdecl; external;
-function  TIFFFieldWithName(Handle: PTIFF; FieldName: PChar): PTIFFFieldInfo; cdecl; external;
+function  TIFFFieldWithName(Handle: PTIFF; FieldName: PAnsiChar): PTIFFFieldInfo; cdecl; external;
 function  TIFFDataWidth(DataType: Integer): Integer; cdecl; external;
 
 function  TIFFReadRGBAImage(Handle: PTIFF; RWidth,RHeight: Cardinal; Raster: Pointer; Stop: Integer): Integer; cdecl; external;
 function  TIFFReadRGBAImageOriented(Handle: PTIFF; RWidth,RHeight: Cardinal; Raster: Pointer; Orientation: Integer; Stop: Integer): Integer; cdecl; external;
 function  TIFFReadRGBAStrip(Handle: PTIFF; Row: Cardinal; Raster: Pointer): Integer; cdecl; external;
 function  TIFFReadRGBATile(Handle: PTIFF; Col,Row: Cardinal; Raster: Pointer): Integer; cdecl; external;
-function  TIFFRGBAImageOk(Handle: PTIFF; Emsg: PChar): Integer; cdecl; external;
-function  TIFFRGBAImageBegin(Img: PTIFFRGBAImage; Handle: PTIFF; Stop: Integer; Emsg: PChar): Integer; cdecl; external;
+function  TIFFRGBAImageOk(Handle: PTIFF; Emsg: PAnsiChar): Integer; cdecl; external;
+function  TIFFRGBAImageBegin(Img: PTIFFRGBAImage; Handle: PTIFF; Stop: Integer; Emsg: PAnsiChar): Integer; cdecl; external;
 function  TIFFRGBAImageGet(Img: PTIFFRGBAImage; Raster: Pointer; W,H: Cardinal): Integer; cdecl; external;
 procedure TIFFRGBAImageEnd(Img: PTIFFRGBAImage); cdecl; external;
 
@@ -550,11 +605,10 @@ implementation
 
 uses
   Math, LibDelphi, LibJpegDelphi, ZLibDelphi;
-
+  
 type
 
-  TQsortCompare = function(a,b: Pointer): Integer; cdecl;
-  TBsearchFcmp = function(a: Pointer; b: Pointer): Integer; cdecl;
+  TCompareFunc = function(a,b: Pointer): Integer; cdecl;
 
 function  floor(x: Double): Double; cdecl; forward;
 function  pow(x: Double; y: Double): Double; cdecl; forward;
@@ -567,8 +621,8 @@ function  rand: Integer; cdecl; forward;
 function  strlen(s: Pointer): Cardinal; cdecl; forward;
 function  strcmp(a: Pointer; b: Pointer): Integer; cdecl; forward;
 function  strncmp(a: Pointer; b: Pointer; c: Longint): Integer; cdecl; forward;
-procedure qsort(base: Pointer; num: Cardinal; width: Cardinal; compare: TQSortCompare); cdecl; forward;
-//DW function  bsearch(key: Pointer; base: Pointer; nelem: Cardinal; width: Cardinal; fcmp: TBsearchFcmp): Pointer; cdecl; forward;
+procedure qsort(base: Pointer; num: Cardinal; width: Cardinal; compare: TCompareFunc); cdecl; forward;
+//DW function  bsearch(key: Pointer; base: Pointer; nelem: Cardinal; width: Cardinal; fcmp: TCompareFunc): Pointer; cdecl; forward;
 function  memmove(dest: Pointer; src: Pointer; n: Cardinal): Pointer; cdecl; forward;
 function  strchr(s: Pointer; c: Integer): Pointer; cdecl; forward;
 
@@ -674,7 +728,7 @@ begin
 end;
 *)
 
-procedure qsort(base: Pointer; num: Cardinal; width: Cardinal; compare: TQSortCompare); cdecl;
+procedure qsort(base: Pointer; num: Cardinal; width: Cardinal; compare: TCompareFunc); cdecl;
 var
   m: Pointer;
   n: Integer;
@@ -735,14 +789,11 @@ begin
 end;
 
 function _TIFFrealloc(p: Pointer; s: Longint): Pointer; cdecl;
-var
-  m: TMemoryManager;
 begin
-  GetMemoryManager(m);
   if p=nil then
-    Result:=m.GetMem(s)
+    Result:=AllocMem(s)
   else
-    Result:=m.ReallocMem(p,s);
+    Result:=ReallocMemory(p,s);
 end;
 
 function strncmp(a: Pointer; b: Pointer; c: Longint): Integer; cdecl;
@@ -816,11 +867,8 @@ begin
 end;
 
 procedure _TIFFfree(p: Pointer); cdecl;
-var
-  m: TMemoryManager;
 begin
-  GetMemoryManager(m);
-  m.FreeMem(p);
+  FreeMem(p);
 end;
 
 procedure _TIFFmemcpy(d: Pointer; s: Pointer; c: Longint); cdecl;
@@ -839,18 +887,15 @@ begin
 end;
 
 function _TIFFmalloc(s: Longint): Pointer; cdecl;
-var
-  m: TMemoryManager;
 begin
-  GetMemoryManager(m);
-  Result:=m.GetMem(s);
+  Result:=AllocMem(s);
 end;
 
 {LibTiffDelphi}
 
-function  LibTiffDelphiVersion: String;
+function  LibTiffDelphiVersion: AnsiString;
 var
-  m: String;
+  m: AnsiString;
   na,nb: Integer;
 begin
   Result:='';
@@ -875,28 +920,28 @@ end;
 procedure LibTiffDelphiWarningThrp(a: Pointer; b: Pointer; c: Pointer); cdecl;
 var
   m: Integer;
-  n: String;
+  n: AnsiString;
 begin
   if @FLibTiffDelphiWarningHandler<>nil then
   begin
     m:=sprintfsec(nil,b,@c);
     SetLength(n,m);
     sprintfsec(Pointer(n),b,@c);
-    FLibTiffDelphiWarningHandler(PChar(a),n);
+    FLibTiffDelphiWarningHandler(PAnsiChar(a),n);
   end;
 end;
 
 procedure LibTiffDelphiErrorThrp(a: Pointer; b: Pointer; c: Pointer); cdecl;
 var
   m: Integer;
-  n: String;
+  n: AnsiString;
 begin
   if @FLibTiffDelphiErrorHandler<>nil then
   begin
     m:=sprintfsec(nil,b,@c);
     SetLength(n,m);
     sprintfsec(Pointer(n),b,@c);
-    FLibTiffDelphiErrorHandler(PChar(a),n);
+    FLibTiffDelphiErrorHandler(PAnsiChar(a),n);
   end;
 end;
 
@@ -932,11 +977,7 @@ procedure _TIFFNoPostDecode(tif: Pointer; buf: Pointer; cc: Integer); cdecl; ext
 function  TIFFReadTile(tif: Pointer; buf: Pointer; x: Cardinal; y: Cardinal; z: Cardinal; s: Word): Integer; cdecl; external;
 function TIFFFillTile(tif: Pointer; tile: longword):integer; cdecl; external; //DW 3.8.2
 
-{$IFDEF LIBTIFF_DEBUG}
-{$L LibTiffDelphi\debug\tif_read.obj}
-{$ELSE}
-{$L LibTiffDelphi\release\tif_read.obj}
-{$ENDIF}
+{$L Compiled\tif_read.obj}
 
 {tif_dirinfo}
 
@@ -948,68 +989,39 @@ function _TIFFDataSize(TIFFDataType : longint):longint; cdecl; external; //DW 3.
 function _TIFFGetFieldInfo(size : plongint):pointer; cdecl; external; //DW 3.8.2
 function _TIFFMergeFieldInfo(tif: Pointer; fieldinfo : Pointer; n : Integer):Integer; cdecl; external; //DW 3.9.1
 
-
-{$IFDEF LIBTIFF_DEBUG}
-{$L LibTiffDelphi\debug\tif_dirinfo.obj}
-{$ELSE}
-{$L LibTiffDelphi\release\tif_dirinfo.obj}
-{$ENDIF}
+{$L Compiled\tif_dirinfo.obj}
 
 {tif_dirwrite}
 
-{$IFDEF LIBTIFF_DEBUG}
-{$L LibTiffDelphi\debug\tif_dirwrite.obj}
-{$ELSE}
-{$L LibTiffDelphi\release\tif_dirwrite.obj}
-{$ENDIF}
+{$L Compiled\tif_dirwrite.obj}
 
 {tif_flush}
 
-{$IFDEF LIBTIFF_DEBUG}
-{$L LibTiffDelphi\debug\tif_flush.obj}
-{$ELSE}
-{$L LibTiffDelphi\release\tif_flush.obj}
-{$ENDIF}
+{$L Compiled\tif_flush.obj}
 
 {tif_write}
 
 function  TIFFFlushData1(tif: Pointer): Integer; cdecl; external;
 function  TIFFSetupStrips(tif: Pointer): Integer; cdecl; external;
 
-{$IFDEF LIBTIFF_DEBUG}
-{$L LibTiffDelphi\debug\tif_write.obj}
-{$ELSE}
-{$L LibTiffDelphi\release\tif_write.obj}
-{$ENDIF}
+{$L Compiled\tif_write.obj}
 
 {tif_dumpmode}
 
 function  TIFFInitDumpMode(tif: Pointer; scheme: Integer): Integer; cdecl; external;
 
-{$IFDEF LIBTIFF_DEBUG}
-{$L LibTiffDelphi\debug\tif_dumpmode.obj}
-{$ELSE}
-{$L LibTiffDelphi\release\tif_dumpmode.obj}
-{$ENDIF}
+{$L Compiled\tif_dumpmode.obj}
 
 {tif_compress}
 
 function  TIFFSetCompressionScheme(tif: Pointer; scheme: Integer): Integer; cdecl; external;
 procedure _TIFFSetDefaultCompressionState(tif: Pointer); cdecl; external;
 
-{$IFDEF LIBTIFF_DEBUG}
-{$L LibTiffDelphi\debug\tif_compress.obj}
-{$ELSE}
-{$L LibTiffDelphi\release\tif_compress.obj}
-{$ENDIF}
+{$L Compiled\tif_compress.obj}
 
 {tif_dirread}
 
-{$IFDEF LIBTIFF_DEBUG}
-{$L LibTiffDelphi\debug\tif_dirread.obj}
-{$ELSE}
-{$L LibTiffDelphi\release\tif_dirread.obj}
-{$ENDIF}
+{$L Compiled\tif_dirread.obj}
 
 {tif_dir}
 
@@ -1019,21 +1031,13 @@ function  TIFFReassignTagToIgnore(task: Integer; TIFFtagID: Integer): Integer; c
 procedure _TIFFsetString(cpp: Pointer; cp: Pointer); cdecl; external;
 procedure _TIFFsetByteArray(vpp: Pointer; vp: Pointer; n: Integer); cdecl; external;
 
-{$IFDEF LIBTIFF_DEBUG}
-{$L LibTiffDelphi\debug\tif_dir.obj}
-{$ELSE}
-{$L LibTiffDelphi\release\tif_dir.obj}
-{$ENDIF}
+{$L Compiled\tif_dir.obj}
 
 {tif_aux}
 
 function  TIFFVGetFieldDefaulted(tif: Pointer; tag: Cardinal; ap: Pointer): Integer; cdecl; external;
 
-{$IFDEF LIBTIFF_DEBUG}
-{$L LibTiffDelphi\debug\tif_aux.obj}
-{$ELSE}
-{$L LibTiffDelphi\release\tif_aux.obj}
-{$ENDIF}
+{$L Compiled\tif_aux.obj}
 
 {tif_color}
 
@@ -1043,111 +1047,62 @@ procedure TIFFYCbCrtoRGB(ycbcr: Pointer; Y: Cardinal; Cb: Integer; Cr: Integer; 
 function  TIFFYCbCrToRGBInit(ycbcr: Pointer; luma: Pointer; refBlackWhite: Pointer): Integer; cdecl; external;
 function  TIFFCIELabToRGBInit(cielab: Pointer; display: Pointer; refWhite: Pointer): Integer; cdecl; external;
 
-{$IFDEF LIBTIFF_DEBUG}
-{$L LibTiffDelphi\debug\tif_color.obj}
-{$ELSE}
-{$L LibTiffDelphi\release\tif_color.obj}
-{$ENDIF}
+{$L Compiled\tif_color.obj}
 
 {tif_close}
 
-{$IFDEF LIBTIFF_DEBUG}
-{$L LibTiffDelphi\debug\tif_close.obj}
-{$ELSE}
-{$L LibTiffDelphi\release\tif_close.obj}
-{$ENDIF}
+{$L Compiled\tif_close.obj}
 
 {tif_extension}
 
-{$IFDEF LIBTIFF_DEBUG}
-{$L LibTiffDelphi\debug\tif_extension.obj}
-{$ELSE}
-{$L LibTiffDelphi\release\tif_extension.obj}
-{$ENDIF}
+{$L Compiled\tif_extension.obj}
 
 {tif_open}
 
-function  _TIFFgetMode(mode: PChar; module: PChar): Integer; cdecl; external;
+function  _TIFFgetMode(mode: PAnsiChar; module: PAnsiChar): Integer; cdecl; external;
 
-{$IFDEF LIBTIFF_DEBUG}
-{$L LibTiffDelphi\debug\tif_open.obj}
-{$ELSE}
-{$L LibTiffDelphi\release\tif_open.obj}
-{$ENDIF}
+{$L Compiled\tif_open.obj}
 
 {tif_getimage}
 
-{$IFDEF LIBTIFF_DEBUG}
-{$L LibTiffDelphi\debug\tif_getimage.obj}
-{$ELSE}
-{$L LibTiffDelphi\release\tif_getimage.obj}
-{$ENDIF}
+{$L Compiled\tif_getimage.obj}
 
 {tif_predict}
 
 function  TIFFPredictorInit(tif: PTIFF): Integer; cdecl; external;
 function  TIFFPredictorCleanup(tif: PTIFF):integer; cdecl; external; //DW 3.8.2
 
-
-{$IFDEF LIBTIFF_DEBUG}
-{$L LibTiffDelphi\debug\tif_predict.obj}
-{$ELSE}
-{$L LibTiffDelphi\release\tif_predict.obj}
-{$ENDIF}
+{$L Compiled\tif_predict.obj}
 
 {tif_print}
 
-{$IFDEF LIBTIFF_DEBUG}
-{$L LibTiffDelphi\debug\tif_print.obj}
-{$ELSE}
-{$L LibTiffDelphi\release\tif_print.obj}
-{$ENDIF}
+{$L Compiled\tif_print.obj}
 
 {tif_error}
 
-{$IFDEF LIBTIFF_DEBUG}
-{$L LibTiffDelphi\debug\tif_error.obj}
-{$ELSE}
-{$L LibTiffDelphi\release\tif_error.obj}
-{$ENDIF}
+{$L Compiled\tif_error.obj}
 
 {tif_strip}
 
 function  _TIFFDefaultStripSize(tif: Pointer; s: Cardinal): Cardinal; cdecl; external;
 function TIFFOldScanlineSize(tif: Pointer):Cardinal; cdecl; external; //DW 3.9.1
 
-{$IFDEF LIBTIFF_DEBUG}
-{$L LibTiffDelphi\debug\tif_strip.obj}
-{$ELSE}
-{$L LibTiffDelphi\release\tif_strip.obj}
-{$ENDIF}
+{$L Compiled\tif_strip.obj}
 
 {tif_swab}
 
-{$IFDEF LIBTIFF_DEBUG}
-{$L LibTiffDelphi\debug\tif_swab.obj}
-{$ELSE}
-{$L LibTiffDelphi\release\tif_swab.obj}
-{$ENDIF}
+{$L Compiled\tif_swab.obj}
 
 {tif_tile}
 
 function  TIFFCheckTile(tif: Pointer; x: Cardinal; y: Cardinal; z: Cardinal; s: Word): Integer; cdecl; external;
 procedure _TIFFDefaultTileSize(tif: Pointer; tw: Pointer; th: Pointer); cdecl; external;
 
-{$IFDEF LIBTIFF_DEBUG}
-{$L LibTiffDelphi\debug\tif_tile.obj}
-{$ELSE}
-{$L LibTiffDelphi\release\tif_tile.obj}
-{$ENDIF}
+{$L Compiled\tif_tile.obj}
 
 {tif_warning}
 
-{$IFDEF LIBTIFF_DEBUG}
-{$L LibTiffDelphi\debug\tif_warning.obj}
-{$ELSE}
-{$L LibTiffDelphi\release\tif_warning.obj}
-{$ENDIF}
+{$L Compiled\tif_warning.obj}
 
 {tif_fax3}
 
@@ -1156,19 +1111,11 @@ function  TIFFInitCCITTRLEW(tif: PTIFF; scheme: Integer): Integer; cdecl; extern
 function  TIFFInitCCITTFax3(tif: PTIFF; scheme: Integer): Integer; cdecl; external;
 function  TIFFInitCCITTFax4(tif: PTIFF; scheme: Integer): Integer; cdecl; external;
 
-{$IFDEF LIBTIFF_DEBUG}
-{$L LibTiffDelphi\debug\tif_fax3.obj}
-{$ELSE}
-{$L LibTiffDelphi\release\tif_fax3.obj}
-{$ENDIF}
+{$L Compiled\tif_fax3.obj}
 
 {tif_fax3sm}
 
-{$IFDEF LIBTIFF_DEBUG}
-{$L LibTiffDelphi\debug\tif_fax3sm.obj}
-{$ELSE}
-{$L LibTiffDelphi\release\tif_fax3sm.obj}
-{$ENDIF}
+{$L Compiled\tif_fax3sm.obj}
 
 {tif_jpeg}
 
@@ -1210,7 +1157,7 @@ end;
 function TIFFcallvjpeg_jpeg_set_colorspace(cinfo: Pointer; colorspace: Integer): Integer; cdecl;
 begin
   try
-    jpeg_set_colorspace(cinfo,colorspace);
+    jpeg_set_colorspace(cinfo, colorspace);
     Result:=1;
   except
     Result:=0;
@@ -1367,89 +1314,53 @@ end;
 function  TIFFInitJPEG(tif: PTIFF; scheme: Integer): Integer; cdecl; external;
 function  TIFFFillStrip(tif : PTIFF; Len : longword): integer; cdecl; external; //DW 3.8.2
 
-{$IFDEF LIBTIFF_DEBUG}
-{$L LibTiffDelphi\debug\tif_jpeg.obj}
-{$ELSE}
-{$L LibTiffDelphi\release\tif_jpeg.obj}
-{$ENDIF}
+{$L Compiled\tif_jpeg.obj}
 
 {tif_luv}
 
 function  TIFFInitSGILog(tif: PTIFF; scheme: Integer): Integer; cdecl; external;
 
-{$IFDEF LIBTIFF_DEBUG}
-{$L LibTiffDelphi\debug\tif_luv.obj}
-{$ELSE}
-{$L LibTiffDelphi\release\tif_luv.obj}
-{$ENDIF}
+{$L Compiled\tif_luv.obj}
 
 {tif_lzw}
 
 function  TIFFInitLZW(tif: PTIFF; scheme: Integer): Integer; cdecl; external;
 
-{$IFDEF LIBTIFF_DEBUG}
-{$L LibTiffDelphi\debug\tif_lzw.obj}
-{$ELSE}
-{$L LibTiffDelphi\release\tif_lzw.obj}
-{$ENDIF}
+{$L Compiled\tif_lzw.obj}
 
 {tif_next}
 
 function  TIFFInitNeXT(tif: PTIFF; scheme: Integer): Integer; cdecl; external;
 
-{$IFDEF LIBTIFF_DEBUG}
-{$L LibTiffDelphi\debug\tif_next.obj}
-{$ELSE}
-{$L LibTiffDelphi\release\tif_next.obj}
-{$ENDIF}
+{$L Compiled\tif_next.obj}
 
 {tif_packbits}
 
 function  TIFFInitPackBits(tif: PTIFF; scheme: Integer): Integer; cdecl; external;
 
-{$IFDEF LIBTIFF_DEBUG}
-{$L LibTiffDelphi\debug\tif_packbits.obj}
-{$ELSE}
-{$L LibTiffDelphi\release\tif_packbits.obj}
-{$ENDIF}
+{$L Compiled\tif_packbits.obj}
 
 {tif_pixarlog}
 
 function  TIFFInitPixarLog(tif: PTIFF; scheme: Integer): Integer; cdecl; external;
 
-{$IFDEF LIBTIFF_DEBUG}
-{$L LibTiffDelphi\debug\tif_pixarlog.obj}
-{$ELSE}
-{$L LibTiffDelphi\release\tif_pixarlog.obj}
-{$ENDIF}
+{$L Compiled\tif_pixarlog.obj}
 
 {tif_thunder}
 
 function  TIFFInitThunderScan(tif: PTIFF; scheme: Integer): Integer; cdecl; external;
 
-{$IFDEF LIBTIFF_DEBUG}
-{$L LibTiffDelphi\debug\tif_thunder.obj}
-{$ELSE}
-{$L LibTiffDelphi\release\tif_thunder.obj}
-{$ENDIF}
+{$L Compiled\tif_thunder.obj}
 
 {tif_version}
 
-{$IFDEF LIBTIFF_DEBUG}
-{$L LibTiffDelphi\debug\tif_version.obj}
-{$ELSE}
-{$L LibTiffDelphi\release\tif_version.obj}
-{$ENDIF}
+{$L Compiled\tif_version.obj}
 
 {tif_zip}
 
 function  TIFFInitZIP(tif: PTIFF; scheme: Integer): Integer; cdecl; external;
 
-{$IFDEF LIBTIFF_DEBUG}
-{$L LibTiffDelphi\debug\tif_zip.obj}
-{$ELSE}
-{$L LibTiffDelphi\release\tif_zip.obj}
-{$ENDIF}
+{$L Compiled\tif_zip.obj}
 
 {tif_codec}
 
@@ -1479,11 +1390,7 @@ const
        (name:nil; scheme:0; init:nil));
 }
 
-{$IFDEF LIBTIFF_DEBUG}
-{$L LibTiffDelphi\debug\tif_codec.obj}
-{$ELSE}
-{$L LibTiffDelphi\release\tif_codec.obj}
-{$ENDIF}
+{$L Compiled\tif_codec.obj}
 
 {LibTiffDelphi}
 
@@ -1626,9 +1533,9 @@ procedure TIFFNoUnmapProc(Fd: Cardinal; Base: Pointer; Size: Cardinal); cdecl;
 begin
 end;
 
-function TIFFOpen(const Name: String; const Mode: String): PTIFF;
+function TIFFOpen(const Name: AnsiString; const Mode: AnsiString): PTIFF;
 const
-  Module: String = 'TIFFOpen';
+  Module: AnsiString = 'TIFFOpen';
   O_RDONLY = 0;
   O_WRONLY = 1;
   O_RDWR = 2;
@@ -1641,7 +1548,7 @@ var
   FlagsAndAttributes: Cardinal;
   fd: THandle;
 begin
-  m:=_TIFFgetMode(PChar(Mode),PChar(Module));
+  m:=_TIFFgetMode(PAnsiChar(Mode),PAnsiChar(Module));
   if m=o_RDONLY then
     DesiredAccess:=GENERIC_READ
   else
@@ -1660,14 +1567,14 @@ begin
     FlagsAndAttributes:=FILE_ATTRIBUTE_READONLY
   else
     FlagsAndAttributes:=FILE_ATTRIBUTE_NORMAL;
-  fd:=CreateFile(PChar(Name),DesiredAccess,FILE_SHARE_READ,nil,CreateDisposition,FlagsAndAttributes,0);
+  fd:=CreateFileA(PAnsiChar(Name),DesiredAccess,FILE_SHARE_READ,nil,CreateDisposition,FlagsAndAttributes,0);
   if fd=INVALID_HANDLE_VALUE then
   begin
-    TiffError(PChar(Module),PChar('%s: Cannot open'),PChar(Name));
+    TiffError(PAnsiChar(Module),PAnsiChar('%s: Cannot open'),PAnsiChar(Name));
     Result:=nil;
     exit;
   end;
-  Result:=TIFFClientOpen(PChar(Name),PChar(Mode),fd,@TIFFFileReadProc,@TIFFFileWriteProc,@TIFFFileSeekProc,@TIFFFileCloseProc,
+  Result:=TIFFClientOpen(PAnsiChar(Name),PAnsiChar(Mode),fd,@TIFFFileReadProc,@TIFFFileWriteProc,@TIFFFileSeekProc,@TIFFFileCloseProc,
               @TIFFFileSizeProc,@TIFFNoMapProc,@TIFFNoUnmapProc);
   if Result<>nil then
     TIFFSetFileno(Result,fd)
@@ -1675,12 +1582,12 @@ begin
     CloseHandle(fd);
 end;
 
-function TIFFOpenStream(const Stream: TStream; const Mode: String): PTIFF;
+function TIFFOpenStream(const Stream: TStream; const Mode: AnsiString): PTIFF;
 var
-  m: String;
+  m: AnsiString;
 begin
   m:='Stream';
-  Result:=TIFFClientOpen(PChar(m),PChar(Mode),Cardinal(Stream),@TIFFStreamReadProc,@TIFFStreamWriteProc,@TIFFStreamSeekProc,@TIFFStreamCloseProc,
+  Result:=TIFFClientOpen(PAnsiChar(m),PAnsiChar(Mode),Cardinal(Stream),@TIFFStreamReadProc,@TIFFStreamWriteProc,@TIFFStreamSeekProc,@TIFFStreamCloseProc,
               @TIFFStreamSizeProc,@TIFFNoMapProc,@TIFFNoUnmapProc);
   if Result<>nil then TIFFSetFileno(Result,Cardinal(Stream));
 end;

@@ -1,38 +1,42 @@
-function GetSenMangaPageNumber: Boolean;
-var
-  s   : String;
-  i, j: Cardinal;
-  l   : TStringList;
-  isStartGetPageNumber: Boolean = FALSE;
-begin
-  l:= TStringList.Create;
-  parse:= TStringList.Create;
-  s:= DecodeUrl(WebsiteRoots[SENMANGA_ID,1] + URL + '1/');
-  Result:= GetPage(TObject(l),
-                   s,
-                   manager.container.manager.retryConnect);
-  Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
-  Parser.OnFoundTag := OnTag;
-  Parser.OnFoundText:= OnText;
-  Parser.SlowExec;
-  Parser.Free;
-  if parse.Count>0 then
+  function GetSenMangaPageNumber: Boolean;
+  var
+    s: String;
+    i: LongInt;
+    l: TStringList;
+    isStartGetPageNumber: Boolean = False;
   begin
-    manager.container.pageNumber:= 0;
-    for i:= 0 to parse.Count-1 do
-    begin
-      if (Pos('name="page"', parse.Strings[i])>0) then
-        isStartGetPageNumber:= TRUE;
+    l := TStringList.Create;
+    parse := TStringList.Create;
+    s := DecodeUrl(URL);
+    if RightStr(s, 2) <> '/1' then
+      s := s + '/1';
+    s := FillMangaSiteHost(SENMANGA_ID, s);
+    Result := GetPage(TObject(l),
+      s,
+      manager.container.Manager.retryConnect);
 
-      if (isStartGetPageNumber) AND
-         (Pos('</select>', parse.Strings[i])>0) then
+    Parser := THTMLParser.Create(PChar(l.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText := OnText;
+    Parser.Exec;
+    Parser.Free;
+
+    manager.container.PageNumber := 0;
+    if parse.Count > 0 then
+    begin
+      for i := 0 to parse.Count - 1 do
       begin
-        s:= parse.Strings[i-3];
-        manager.container.pageNumber:= StrToInt(GetAttributeValue(GetTagAttribute(s, 'value=')));
-        break;
+        if (Pos('<select', parse[i]) <> 0) and (Pos('name="page"', parse[i]) <> 0) then
+          isStartGetPageNumber := True;
+        if isStartGetPageNumber and (Pos('</select', parse[i]) > 0) then
+          Break;
+        if isStartGetPageNumber and (Pos('<option', parse[i]) > 0) then
+        begin
+          Inc(manager.container.PageNumber);
+          manager.container.PageLinks.Add('G');
+        end;
       end;
     end;
+    parse.Free;
+    l.Free;
   end;
-  parse.Free;
-  l.Free;
-end;

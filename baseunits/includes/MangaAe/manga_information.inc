@@ -1,147 +1,117 @@
-function   GetMangaAeInfoFromURL: Byte;
-var
-  s: String;
-  isExtractSummary: Boolean = TRUE;
-  isExtractChapter: Boolean = FALSE;
-  i, j: Cardinal;
-begin
-  mangaInfo.url:= WebsiteRoots[MANGAAE_ID,1] + URL;
-  if NOT GetPage(TObject(source), EncodeURL(mangaInfo.url), Reconnect) then
+  function GetMangaAeInfoFromURL: Byte;
+  var
+    i: LongInt;
+    regx: TRegExpr;
+    isExtractChapter: Boolean = False;
+    isExtractGenres : Boolean = False;
   begin
-    Result:= NET_PROBLEM;
-    source.Free;
-    exit;
-  end;
-
-  // parsing the HTML source
-  parse.Clear;
-  Parser:= TjsFastHTMLParser.Create(PChar(source.Text));
-  Parser.OnFoundTag := OnTag;
-  Parser.OnFoundText:= OnText;
-  Parser.Exec;
-
-  Parser.Free;
-  source.Free;
-  mangaInfo.website:= WebsiteRoots[MANGAAE_ID,0];
-  // using parser (cover link, summary, chapter name and link)
-  if parse.Count=0 then exit;
-  for i:= 0 to parse.Count-1 do
-  begin
-    // get cover
-    if (mangaInfo.coverLink = '') AND
-       (Pos('id="photo_1"', parse.Strings[i])>0) then
-      mangaInfo.coverLink:= CorrectURL(GetAttributeValue(GetTagAttribute(parse.Strings[i+1], 'src=')));
-
-    // get summary
-    if (Pos('<p class="sumry">', parse.Strings[i]) <> 0) then
+    mangaInfo.website := WebsiteRoots[MANGAAE_ID, 0];
+    mangaInfo.url := FillMangaSiteHost(MANGAAE_ID, URL);
+    if not GetPage(TObject(Source), EncodeURL(mangaInfo.url), Reconnect) then
     begin
-      j:= i+1;
-      while (j<parse.Count) AND (Pos('</p>', parse.Strings[j])=0) do
+      Result := NET_PROBLEM;
+      Source.Free;
+      Exit;
+    end;
+
+    // parsing the HTML source
+    parse.Clear;
+    Parser := THTMLParser.Create(PChar(Source.Text));
+    try
+      Parser.OnFoundTag := OnTag;
+      Parser.OnFoundText := OnText;
+      Parser.Exec;
+    finally
+      Parser.Free;
+    end;
+    Source.Free;
+
+    if parse.Count = 0 then
+      Exit;
+
+    mangaInfo.genres := '';
+
+    regx := TRegExpr.Create;
+    try
+      regx.Expression := '/1/?$';
+      for i := 0 to parse.Count - 1 do
       begin
-        s:= parse.Strings[j];
-        if s[1] <> '<' then
+        // cover
+        if (Pos('<img', parse[i]) <> 0) and (Pos('class="manga-cover', parse[i]) <> 0) then
+          mangaInfo.coverLink := GetVal(parse[i], 'src');
+
+        // title
+        if (mangaInfo.title = '') and (Pos('class="EnglishName', parse[i]) <> 0) then
         begin
-          parse.Strings[j]:= HTMLEntitiesFilter(StringFilter(TrimLeft(parse.Strings[j])));
-          parse.Strings[j]:= StringReplace(parse.Strings[j], #10, '\n', [rfReplaceAll]);
-          parse.Strings[j]:= StringReplace(parse.Strings[j], #13, '\r', [rfReplaceAll]);
-          mangaInfo.summary:= mangaInfo.summary + parse.Strings[j];
-          break;
+          parse[i] := Trim(parse[i + 1]);
+          if Length(parse[i]) > 2 then
+          begin
+            if (parse[i][1] = '(') and (parse[i][Length(parse[i])] = ')') then
+              parse[i] := Copy(parse[i], 2, Length(parse[i]) - 2);
+          end;
+          mangaInfo.title := Trim(parse[i]);
         end;
-        Inc(j);
+
+        // author
+        if (Pos('class="manga-details-author', parse[i]) <> 0) then
+          if (Pos('<', parse[i + 21]) = 0) then
+            mangaInfo.authors := Trim(parse[i + 21]);
+
+        // status
+        if (i + 4 < parse.Count) and
+          (Pos('الحالة :', parse.Strings[i]) <> 0) and
+          (Pos('</h3', parse.Strings[i + 1]) <> 0) then
+        begin
+          if (Pos('مستمرة', parse.Strings[i + 4]) <> 0) then
+            mangaInfo.status := '1'   // ongoing
+          else
+            mangaInfo.status := '0';  // completed
+        end;
+
+        // genres
+        if Pos('التصنيف:', parse[i]) <> 0 then
+          isExtractGenres := True;
+        if isExtractChapter and (Pos('</ul', parse[i]) <> 0) then
+          isExtractGenres := False;
+        if isExtractGenres and
+          (Pos('<a', parse[i]) <> 0) and (Pos('/manga/cats', parse[i]) <> 0) then
+        begin
+          if mangaInfo.genres <> '' then
+            mangaInfo.genres := mangaInfo.genres + ', ' + Trim(parse[i + 1])
+          else
+            mangaInfo.genres := Trim(parse[i + 1]);
+        end;
+
+        // summary
+        if (Pos('نبذة عن المانجا', parse[i]) <> 0) and (Pos('</h3', parse[i + 1]) <> 0) then
+          if Pos('<', parse[i + 4]) = 0 then
+            mangaInfo.summary := CommonStringFilter(parse[i + 4]);
+
+        //chapters
+        if (Pos('<ul', parse[i]) <> 0) and (Pos('class="new-manga-chapters', parse[i]) <> 0) then
+          isExtractChapter := True;
+        if isExtractChapter and (Pos('</ul', parse[i]) <> 0) then
+          isExtractChapter := False;
+        if isExtractChapter and
+          (Pos('<a', parse[i]) <> 0) and (Pos('class="chapter', parse[i]) <> 0) then
+        begin
+          parse[i] := GetVal(parse[i], 'href');
+          if regx.Exec(parse[i]) then
+            parse[i] := regx.Replace(parse[i], '', False);
+          mangaInfo.chapterLinks.Add(parse[i]);
+          mangaInfo.chapterName.Add(CommonStringFilter(parse[i + 1]));
+        end;
       end;
-      isExtractSummary:= FALSE;
+    finally
+      regx.Free;
     end;
 
-    // get title
-    if (mangaInfo.title = '') AND
-       (Pos(' -  مانجا العرب ● Manga Al-arab', parse.Strings[i])<>0) then
-      mangaInfo.title:= TrimLeft(HTMLEntitiesFilter(StringFilter(GetString('~!@'+parse.Strings[i], '~!@', ' -  مانجا العرب ● Manga Al-arab'))));
-
-    if (NOT isExtractChapter) AND
-       (Pos('class="mangachapters"', parse.Strings[i]) > 0) then
-      isExtractChapter:= TRUE;
-
-    // get chapter name and links
-    if (isExtractChapter) AND
-       (Pos(WebsiteRoots[MANGAAE_ID,1], parse.Strings[i])>0) AND
-       (Pos('<li>', parse.Strings[i-2])>0) then
+    //invert chapters
+    if mangaInfo.chapterLinks.Count > 1 then
     begin
-      Inc(mangaInfo.numChapter);
-      s:= StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href=')), WebsiteRoots[MANGAAE_ID,1], '', []);
-      s:= StringReplace(s+'~!@', '/1/~!@', '', []);
-      mangaInfo.chapterLinks.Add(s);
-      s:= RemoveSymbols(TrimLeft(TrimRight(parse.Strings[i+2]))) + ' ' + RemoveSymbols(TrimLeft(TrimRight(parse.Strings[i+4])));
-      mangaInfo.chapterName.Add(StringFilter(HTMLEntitiesFilter(s)));
+      InvertStrings(mangaInfo.chapterName);
+      InvertStrings(mangaInfo.chapterLinks);
     end;
 
-    if (isExtractChapter) AND
-       (Pos('class="ads"', parse.Strings[i])>0) then
-      isExtractChapter:= FALSE;
-
-    // get authors
-    if (i+6<parse.Count) AND
-       (Pos('المؤلف', parse.Strings[i])<>0) AND
-       (Pos('</h2>', parse.Strings[i+1])<>0) then
-      mangaInfo.authors:= TrimLeft(TrimRight(parse.Strings[i+4]));
-
-    // get genres
-    if (Pos('/mn_name/', parse.Strings[i])<>0) then
-      mangaInfo.genres:= mangaInfo.genres + parse.Strings[i+1] + ', ';
-
-    // get status
-    if (i+3<parse.Count) AND
-       (Pos('حالة الترجمة', parse.Strings[i])<>0) AND
-       (Pos('</h2>', parse.Strings[i+1])<>0) then
-    begin
-      if (Pos('غير مكتملة', parse.Strings[i+3])<>0) then
-        mangaInfo.status:= '1'   // ongoing
-      else
-        mangaInfo.status:= '0';  // completed
-    end;
+    Result := NO_ERROR;
   end;
-
-  // Since chapter name and link are inverted, we need to invert them
-  if mangainfo.ChapterLinks.Count > 1 then
-  begin
-    i:= 0; j:= mangainfo.ChapterLinks.Count - 1;
-    while (i<j) do
-    begin
-      mangainfo.ChapterName.Exchange(i, j);
-      mangainfo.chapterLinks.Exchange(i, j);
-      Inc(i); Dec(j);
-    end;
-  end;
-
-  // remove duplicate links
-  i:= 0;
-  while i < mangaInfo.chapterLinks.Count do
-  begin
-    j:= i+1;
-    while j < mangaInfo.chapterLinks.Count do
-    begin
-      if mangaInfo.chapterLinks.Strings[i] = mangaInfo.chapterLinks.Strings[j] then
-      begin
-        mangaInfo.chapterLinks.Delete(j);
-        mangaInfo.chapterName.Delete(j);
-        Dec(mangaInfo.numChapter);
-      end
-      else
-        Inc(j);
-    end;
-    Inc(i);
-  end;
-
-  // Since chapter name and link are inverted, we need to invert them
-  if mangainfo.ChapterLinks.Count > 1 then
-  begin
-    i:= 0; j:= mangainfo.ChapterLinks.Count - 1;
-    while (i<j) do
-    begin
-      mangainfo.ChapterName.Exchange(i, j);
-      mangainfo.chapterLinks.Exchange(i, j);
-      Inc(i); Dec(j);
-    end;
-  end;
-
-  Result:= NO_ERROR;
-end;

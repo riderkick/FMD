@@ -1,33 +1,31 @@
   function GetMangaTradersImageURL: Boolean;
   var
     s: String;
-    j,
     i: Cardinal;
     l: TStringList;
   begin
-    l:= TStringList.Create;
-    s:= WebsiteRoots[MANGATRADERS_ID,1] + URL + '/page/' + IntToStr(workCounter+1);
-    Result:= GetPage(TObject(l),
-                     s,
-                     manager.container.manager.retryConnect);
-    parse:= TStringList.Create;
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
+    l := TStringList.Create;
+    s := FillMangaSiteHost(MANGATRADERS_ID, URL);
+    s := s + '/page-' + IntToStr(workCounter + 1);
+    Result := GetPage(TObject(l), s, manager.container.manager.retryConnect);
+    parse := TStringList.Create;
+    Parser := THTMLParser.Create(PChar(l.Text));
     Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
+    Parser.OnFoundText := OnText;
     Parser.Exec;
     Parser.Free;
 
-    if parse.Count>0 then
+    if parse.Count > 0 then
     begin
-      for i:= 0 to parse.Count-1 do
-        if (Pos('"image_display"', parse.Strings[i])>0) then
+      for i := 0 to parse.Count - 1 do
+        if (Pos('<img', parse[i]) > 0) and (Pos('onerror=', parse[i]) > 0) then
         begin
-          s:= GetAttributeValue(GetTagAttribute(parse.Strings[i+4], 'src='));
-          if s <> '' then
-            manager.container.pageLinks.Strings[workCounter]:= s
-          else
-            manager.container.pageLinks.Strings[workCounter]:= GetAttributeValue(GetTagAttribute(parse.Strings[i+12], 'src='));
-          break;
+          //fix line
+          parse[i] := RemoveBreaks(parse[i]);
+          if Pos(#9, parse[i]) > 0 then
+            parse[i] := StringReplace(parse[i], #9, ' ', [rfReplaceAll, rfIgnoreCase]);
+          manager.container.PageLinks[workCounter] := GetVal(parse[i], 'src');
+          Break;
         end;
     end;
     parse.Free;

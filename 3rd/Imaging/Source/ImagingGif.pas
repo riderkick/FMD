@@ -1,5 +1,4 @@
 {
-  $Id: ImagingGif.pas 157 2009-02-15 14:24:58Z galfar $
   Vampyre Imaging Library
   by Marek Mauder 
   http://imaginglib.sourceforge.net
@@ -55,6 +54,7 @@ type
     procedure LZWCompress(const IO: TIOFunctions; Handle: TImagingHandle;
       Width, Height, BitCount: Integer; Interlaced: Boolean; Data: Pointer);
   protected
+    procedure Define; override;
     function LoadData(Handle: TImagingHandle; var Images: TDynImageDataArray;
       OnlyFirstLevel: Boolean): Boolean; override;
     function SaveData(Handle: TImagingHandle; const Images: TDynImageDataArray;
@@ -62,7 +62,6 @@ type
     procedure ConvertToSupported(var Image: TImageData;
       const Info: TImageFormatInfo); override;
   public
-    constructor Create; override;
     function TestFormat(Handle: TImagingHandle): Boolean; override;
   published
     property LoadAnimated: LongBool read FLoadAnimated write FLoadAnimated;
@@ -84,6 +83,7 @@ type
 const
   GIFSignature: TChar3 = 'GIF';
   GIFVersions: array[TGIFVersion] of TChar3 = ('87a', '89a');
+  GIFDefaultDelay = 65;
 
   // Masks for accessing fields in PackedFields of TGIFHeader
   GIFGlobalColorTable = $80;
@@ -110,6 +110,11 @@ const
   GIFTransparent    = $01;
   GIFUserInput      = $02;
   GIFDisposalMethod = $1C;
+
+const
+  // Netscape sub block types
+  GIFAppLoopExtension   = 1;
+  GIFAppBufferExtension = 2;
 
 type
   TGIFHeader = packed record
@@ -148,11 +153,6 @@ type
     TransparentColorIndex: Byte;
     Terminator: Byte;
   end;
-
-const
-  // Netscape sub block types
-  GIFAppLoopExtension = 1;
-  GIFAppBufferExtension = 2;
 
 type
   TGIFIdentifierCode = array[0..7] of AnsiChar;
@@ -216,13 +216,11 @@ resourcestring
   TGIFFileFormat implementation
 }
 
-constructor TGIFFileFormat.Create;
+procedure TGIFFileFormat.Define;
 begin
-  inherited Create;
+  inherited;
   FName := SGIFFormatName;
-  FCanLoad := True;
-  FCanSave := True;
-  FIsMultiImageFormat := True;
+  FFeatures := [ffLoad, ffSave, ffMultiImage];
   FSupportedFormats := GIFSupportedFormats;
   FLoadAnimated := GIFDefaultLoadAnimated;
 
@@ -304,7 +302,7 @@ var
     RawCode := Context.Buf[Word(ByteIndex)] +
       (Word(Context.Buf[Word(ByteIndex + 1)]) shl 8);
     if Context.CodeSize > 8 then
-      RawCode := RawCode + (LongInt(Context.Buf[ByteIndex + 2]) shl 16);
+      RawCode := RawCode + (Integer(Context.Buf[ByteIndex + 2]) shl 16);
     RawCode := RawCode shr (Context.Inx and 7);
     Context.Inx := Context.Inx + Byte(Context.CodeSize);
     Result := RawCode and Context.ReadMask;
@@ -735,7 +733,8 @@ var
           if BlockSize >= SizeOf(AppRec) then
           begin
             Read(Handle, @AppRec, SizeOf(AppRec));
-            if (AppRec.Identifier = 'NETSCAPE') and (AppRec.Authentication = '2.0') then
+            if ((AppRec.Identifier = 'NETSCAPE') and (AppRec.Authentication = '2.0')) or
+              ((AppRec.Identifier = 'ANIMEXTS') and (AppRec.Authentication = '1.0')) then
             begin
               Read(Handle, @BlockSize, SizeOf(BlockSize));
               while BlockSize <> 0 do
@@ -750,6 +749,9 @@ var
                       // Read loop count
                       Read(Handle, @LoopCount, SizeOf(LoopCount));
                       Dec(BlockSize, SizeOf(LoopCount));
+                      if LoopCount > 0 then
+                        Inc(LoopCount); // Netscape extension is really "repeats" not "loops"
+                      FMetadata.SetMetaItem(SMetaAnimationLoops, LoopCount);
                     end;
                   GIFAppBufferExtension:
                     begin
@@ -896,6 +898,7 @@ var
           FrameInfos[Idx].TransIndex := GraphicExt.TransparentColorIndex;
           Images[Idx].Palette[FrameInfos[Idx].TransIndex].A := 0;
         end;
+        FMetadata.SetMetaItem(SMetaFrameDelay, Integer(GraphicExt.DelayTime * 10), Idx);
       end
       else
         FrameInfos[Idx].HasTransparency := False;
@@ -1124,6 +1127,44 @@ var
     end;
   end;
 
+  procedure SetFrameDelay(Idx: Integer; var Ext: TGraphicControlExtension);
+  begin
+    if FMetadata.HasMetaItemForSaving(SMetaFrameDelay, Idx) then
+      Ext.DelayTime := FMetadata.MetaItemsForSavingMulti[SMetaFrameDelay, Idx] div 10
+    else
+      Ext.DelayTime := GIFDefaultDelay;
+  end;
+
+  procedure SaveGlobalMetadata;
+  var
+    AppExt: TGIFApplicationRec;
+    BlockSize, LoopExtId: Byte;
+    Repeats: Word;
+  begin
+    if FMetadata.HasMetaItemForSaving(SMetaAnimationLoops) then
+    with GetIO do
+    begin
+      FillChar(AppExt, SizeOf(AppExt), 0);
+      AppExt.Identifier := 'NETSCAPE';
+      AppExt.Authentication := '2.0';
+      Repeats := FMetadata.MetaItemsForSaving[SMetaAnimationLoops];
+      if Repeats > 0 then
+        Dec(Repeats);
+      LoopExtId := GIFAppLoopExtension;
+
+      Write(Handle, @GIFExtensionIntroducer, SizeOf(GIFExtensionIntroducer));
+      Write(Handle, @GIFApplicationExtension, SizeOf(GIFApplicationExtension));
+      BlockSize := 11;
+      Write(Handle, @BlockSize, SizeOf(BlockSize));
+      Write(Handle, @AppExt, SizeOf(AppExt));
+      BlockSize := 3;
+      Write(Handle, @BlockSize, SizeOf(BlockSize));
+      Write(Handle, @LoopExtId, SizeOf(LoopExtId));
+      Write(Handle, @Repeats, SizeOf(Repeats));
+      Write(Handle, @GIFBlockTerminator, SizeOf(GIFBlockTerminator));
+    end;
+  end;
+
 begin
   // Fill header with data, select size of largest image in array as
   // logical screen size
@@ -1136,8 +1177,10 @@ begin
 
   // Prepare default GC extension with delay
   FillChar(GraphicExt, Sizeof(GraphicExt), 0);
-  GraphicExt.DelayTime := 65;
+  GraphicExt.DelayTime := GIFDefaultDelay;
   GraphicExt.BlockSize := 4;
+
+  SaveGlobalMetadata;
 
   for I := FFirstIdx to FLastIdx do
   begin
@@ -1147,6 +1190,7 @@ begin
       // Write Graphic Control Extension with default delay
       Write(Handle, @GIFExtensionIntroducer, SizeOf(GIFExtensionIntroducer));
       Write(Handle, @GIFGraphicControlExtension, SizeOf(GIFGraphicControlExtension));
+      SetFrameDelay(I, GraphicExt);
       Write(Handle, @GraphicExt, SizeOf(GraphicExt));
       // Write frame marker and fill and write image descriptor for this frame
       Write(Handle, @GIFImageDescriptor, SizeOf(GIFImageDescriptor));
@@ -1164,7 +1208,7 @@ begin
         Write(Handle, @Palette[J].B, SizeOf(Palette[J].B));
       end;
 
-      // Fonally compress image data 
+      // Finally compress image data
       LZWCompress(GetIO, Handle, Width, Height, 8, False, Bits);
 
     finally
@@ -1186,7 +1230,7 @@ end;
 function TGIFFileFormat.TestFormat(Handle: TImagingHandle): Boolean;
 var
   Header: TGIFHeader;
-  ReadCount: LongInt;
+  ReadCount: Integer;
 begin
   Result := False;
   if Handle <> nil then
@@ -1207,6 +1251,14 @@ initialization
 
  -- TODOS ----------------------------------------------------
     - nothing now
+
+  -- 0.77 Changes/Bug Fixes -----------------------------------
+    - Fixed crash when resaving GIF with animation metadata.
+    - Writes frame delays of GIF animations from metadata.
+    - Reads and writes looping of GIF animations stored into/from metadata.
+
+  -- 0.26.5 Changes/Bug Fixes ---------------------------------
+    - Reads frame delays from GIF animations into metadata.
 
   -- 0.26.3 Changes/Bug Fixes ---------------------------------
     - Fixed bug - loading of GIF with NETSCAPE app extensions

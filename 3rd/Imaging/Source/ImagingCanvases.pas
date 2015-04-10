@@ -1,5 +1,4 @@
 {
-  $Id: ImagingCanvases.pas 174 2009-09-08 09:37:59Z galfar $
   Vampyre Imaging Library
   by Marek Mauder
   http://imaginglib.sourceforge.net
@@ -26,9 +25,7 @@
   For more information about the LGPL: http://www.gnu.org/copyleft/lesser.html
 }
 
-{
-  This unit contains canvas classes for drawing and applying effects.
-}
+{ This unit contains canvas classes for drawing and applying effects.}
 unit ImagingCanvases;
 
 {$I ImagingOptions.inc}
@@ -645,7 +642,10 @@ begin
   DestPix := DestInfo.GetPixelFP(DestPtr, DestInfo, nil);
   // Blend the two pixels (Src 'over' Dest alpha composition operation)
   DestPix.A := SrcPix.A + DestPix.A - SrcPix.A * DestPix.A;
-  SrcAlpha := IffFloat(DestPix.A = 0, 0, SrcPix.A / DestPix.A);
+  if DestPix.A = 0 then
+    SrcAlpha := 0
+  else
+    SrcAlpha := SrcPix.A / DestPix.A;
   DestAlpha := 1.0 - SrcAlpha;
   DestPix.R := SrcPix.R * SrcAlpha + DestPix.R * DestAlpha;
   DestPix.G := SrcPix.G * SrcAlpha + DestPix.G * DestAlpha;
@@ -1046,14 +1046,14 @@ begin
   if FPenMode = pmClear then Exit;
 
   // If line is vertical or horizontal just call appropriate method
-  if X2 - X1 = 0 then
-  begin
-    HorzLine(X1, X2, Y1);
-    Exit;
-  end;
-  if Y2 - Y1 = 0 then
+  if X2 = X1 then
   begin
     VertLine(X1, Y1, Y2);
+    Exit;
+  end;
+  if Y2 = Y1 then
+  begin
+    HorzLine(X1, X2, Y1);
     Exit;
   end;
 
@@ -1414,11 +1414,11 @@ procedure TImagingCanvas.StretchDrawInternal(const SrcRect: TRect;
   PixelWriteProc: TPixelWriteProc);
 const
   FilterMapping: array[TResizeFilter] of TSamplingFilter =
-    (sfNearest, sfLinear, DefaultCubicFilter);
+    (sfNearest, sfLinear, DefaultCubicFilter, sfLanczos);
 var
   X, Y, I, J, SrcX, SrcY, SrcWidth, SrcHeight: Integer;
   DestX, DestY, DestWidth, DestHeight, SrcBpp, DestBpp: Integer;
-  SrcPix, PDest: TColorFPRec;
+  SrcPix: TColorFPRec;
   MapX, MapY: TMappingTable;
   XMinimum, XMaximum: Integer;
   LineBuffer: array of TColorFPRec;
@@ -1900,8 +1900,8 @@ end;
 procedure TFastARGB32Canvas.StretchDrawAlpha(const SrcRect: TRect;
   DestCanvas: TImagingCanvas; const DestRect: TRect; Filter: TResizeFilter);
 var
-  X, Y, ScaleX, ScaleY, Yp, Xp, Weight1, Weight2, Weight3, Weight4,
-    FracX, FracY, InvFracY, T1, T2: Integer;
+  X, Y, ScaleX, ScaleY, Yp, Xp, Weight1, Weight2, Weight3, Weight4, InvFracY, T1, T2: Integer;
+  FracX, FracY: Cardinal;
   SrcX, SrcY, SrcWidth, SrcHeight: Integer;
   DestX, DestY, DestWidth, DestHeight: Integer;
   SrcLine, SrcLine2: PColor32RecArray;
@@ -1985,9 +1985,9 @@ begin
         end;
 
         T2 := Iff(T1 < SrcWidth - 1, T1 + 1, T1);
-        Weight2:= (Cardinal(InvFracY) * FracX) shr 16; // cast to Card, Int can overflow gere
+        Weight2:= Integer((Cardinal(InvFracY) * FracX) shr 16); // cast to Card, Int can overflow here
         Weight1:= InvFracY - Weight2;
-        Weight4:= (Cardinal(FracY) * FracX) shr 16;
+        Weight4:= Integer((Cardinal(FracY) * FracX) shr 16);
         Weight3:= FracY - Weight4;
 
         Accum.B := (SrcLine[T1].B * Weight1 + SrcLine[T2].B * Weight2 +
@@ -2007,77 +2007,6 @@ begin
       Inc(Yp, ScaleY);
      end;
   end;
-         {
-
-  // Generate mapping tables
-  MapX := BuildMappingTable(DestX, DestX + DestWidth, SrcX, SrcX + SrcWidth,
-    FPData.Width, FilterFunction, Radius, False);
-  MapY := BuildMappingTable(DestY, DestY + DestHeight, SrcY, SrcY + SrcHeight,
-    FPData.Height, FilterFunction, Radius, False);
-  FindExtremes(MapX, XMinimum, XMaximum);
-  SetLength(LineBuffer, XMaximum - XMinimum + 1);
-
-  for J := 0 to DestHeight - 1 do
-  begin
-    ClusterY := MapY[J];
-    for X := XMinimum to XMaximum do
-    begin
-      AccumA := 0;
-      AccumR := 0;
-      AccumG := 0;
-      AccumB := 0;
-      for Y := 0 to Length(ClusterY) - 1 do
-      begin
-        Weight := Round(ClusterY[Y].Weight * 256);
-        SrcColor := FScanlines[ClusterY[Y].Pos, X];
-
-        AccumB := AccumB + SrcColor.B * Weight;
-        AccumG := AccumG + SrcColor.G * Weight;
-        AccumR := AccumR + SrcColor.R * Weight;
-        AccumA := AccumA + SrcColor.A * Weight;
-      end;
-      with LineBuffer[X - XMinimum] do
-      begin
-        A := AccumA;
-        R := AccumR;
-        G := AccumG;
-        B := AccumB;
-      end;
-    end;
-
-    DestPtr := @TFastARGB32Canvas(DestCanvas).FScanlines[DestY + J, DestX];
-
-    for I := 0 to DestWidth - 1 do
-    begin
-      ClusterX := MapX[I];
-      AccumA := 0;
-      AccumR := 0;
-      AccumG := 0;
-      AccumB := 0;
-      for X := 0 to Length(ClusterX) - 1 do
-      begin
-        Weight := Round(ClusterX[X].Weight * 256);
-        with LineBuffer[ClusterX[X].Pos - XMinimum] do
-        begin
-          AccumB := AccumB + B * Weight;
-          AccumG := AccumG + G * Weight;
-          AccumR := AccumR + R * Weight;
-          AccumA := AccumA + A * Weight;
-        end;
-      end;
-
-      AccumA := ClampInt(AccumA, 0, $00FF0000);
-      AccumR := ClampInt(AccumR, 0, $00FF0000);
-      AccumG := ClampInt(AccumG, 0, $00FF0000);
-      AccumB := ClampInt(AccumB, 0, $00FF0000);
-      SrcColor.Color := (Cardinal(AccumA and $00FF0000) shl 8) or
-        (AccumR and $00FF0000) or ((AccumG and $00FF0000) shr 8) or ((AccumB and $00FF0000) shr 16);
-
-      AlphaBlendPixels(@SrcColor, DestPtr);
-
-      Inc(DestPtr);
-    end;
-  end;   }
 end;
 
 procedure TFastARGB32Canvas.UpdateCanvasState;
@@ -2133,8 +2062,13 @@ finalization
   -- TODOS ----------------------------------------------------
     - more more more ...
     - implement pen width everywhere
-    - add blending (*image and object drawing)
     - more objects (arc, polygon)
+
+  -- 0.26.5 Changes/Bug Fixes ---------------------------------
+    - Fixed bug that could raise floating point error in DrawAlpha
+      and StretchDrawAlpha.
+    - Fixed bug in TImagingCanvas.Line that caused not drawing
+      of horz or vert lines.
 
   -- 0.26.3 Changes/Bug Fixes ---------------------------------
     - Added some methods to TFastARGB32Canvas (InvertColors, DrawAlpha/StretchDrawAlpha)

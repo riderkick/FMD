@@ -1,31 +1,38 @@
   function GetMangaFrameImageURL: Boolean;
   var
-    s: String;
-    j,
-    i: Cardinal;
+    i: Integer;
     l: TStringList;
+    s: String;
   begin
-    l:= TStringList.Create;
-    s:= DecodeUrl(WebsiteRoots[MANGAFRAME_ID,1] + URL + IntToStr(workCounter+1));
-    Result:= GetPage(TObject(l),
-                     s,
-                     manager.container.manager.retryConnect);
-    parse:= TStringList.Create;
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
+    l := TStringList.Create;
+    s := FillMangaSiteHost(MANGAFRAME_ID, URL);
+    if not ExecRegExpr('/$', s) then
+       s := s + '/';
+    s := s + 'page/' + IntToStr(QWord(workCounter) + 1);
+    Result := GetPage(TObject(l), s , manager.container.Manager.retryConnect);
+
+    if Self.Terminated then
+    begin
+      l.Free;
+      parse.Free;
+      Exit;
+    end;
+
+    l.Text := FixHTMLTagQuote(l.Text);
+    parse := TStringList.Create;
+    Parser := THTMLParser.Create(PChar(l.Text));
     Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
+    Parser.OnFoundText := OnText;
     Parser.Exec;
     Parser.Free;
-
-    if parse.Count>0 then
-    begin
-      for i:= 0 to parse.Count-1 do
-        if (Pos('class="open"', parse.Strings[i])>0) then
-        begin
-          manager.container.pageLinks.Strings[workCounter]:= EncodeURL(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src=')));
-          break;
-        end;
-    end;
-    parse.Free;
     l.Free;
+    if parse.Count > 0 then
+      for i := 0 to parse.Count - 1 do
+        //if i + 2 < parse.Count - 1 then
+          if (Pos('class="open"', parse[i]) > 0) and (Pos('<img', parse[i]) > 0) then
+          begin
+            manager.container.PageLinks[workCounter] := Trim(GetVal(parse[i], 'src'));
+            Break;
+          end;
+    parse.Free;
   end;

@@ -1,123 +1,132 @@
-function   GetFakkuInfoFromURL: Byte;
-var
-  s: String;
-  isExtractChapters: Boolean = TRUE;
-  isExtractGenres  : Boolean = FALSE;
-  isExtractSummary : Boolean = FALSE;
-  i, j: Cardinal;
-begin
-  mangaInfo.url:= WebsiteRoots[FAKKU_ID,1] + URL;
-  if NOT GetPage(TObject(source), mangaInfo.url, Reconnect) then
+  function GetFakkuInfoFromURL: Byte;
+  var
+    cht: String;
+    s: String;
+    isExtractChapters: Boolean = True;
+    isExtractSummary: Boolean = False;
+    i: Cardinal;
   begin
-    Result:= NET_PROBLEM;
-    source.Free;
-    exit;
-  end;
+    mangaInfo.url := FillMangaSiteHost(FAKKU_ID, URL);
+    if not GetPage(TObject(Source), mangaInfo.url, Reconnect) then
+    begin
+      Result := NET_PROBLEM;
+      Source.Free;
+      Exit;
+    end;
 
-  // parsing the HTML source
-  parse.Clear;
-  Parser:= TjsFastHTMLParser.Create(PChar(source.Text));
-  Parser.OnFoundTag := OnTag;
-  Parser.OnFoundText:= OnText;
-  Parser.Exec;
+    // parsing the HTML source
+    parse.Clear;
+    Parser := THTMLParser.Create(PChar(Source.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText := OnText;
+    Parser.Exec;
 
-  Parser.Free;
-  source.Free;
-  mangaInfo.website:= WebsiteRoots[FAKKU_ID,0];
+    Parser.Free;
+    Source.Free;
+    mangaInfo.website := WebsiteRoots[FAKKU_ID, 0];
+    if parse.Count = 0 then
+      Exit;
 
-  mangaInfo.status:= '0';
-  mangaInfo.genres:= '';
+    mangaInfo.status := '0';
+    mangaInfo.genres := '';
+    // using parser (cover link, summary, chapter name and link)
+    for i := 0 to parse.Count - 1 do
+    begin
+      // get manga title
+      if Pos('itemprop="name"', parse[i]) > 0 then
+        mangaInfo.title := Trim(parse[i + 1]);
 
-  // using parser (cover link, summary, chapter name and link)
-  if parse.Count=0 then exit;
-  for i:= 0 to parse.Count-1 do
-  begin
-    // get manga title
-    if (mangaInfo.title = '') AND
-       (Pos(' title="">', parse.Strings[i]) > 0) then
-      mangaInfo.title:= TrimLeft(TrimRight(parse.Strings[i+5]));
-
-    // get cover
-    if GetTagName(parse.Strings[i]) = 'img' then
-      if (GetAttributeValue(GetTagAttribute(parse.Strings[i], 'class='))='cover') then
+      // get cover
+      if (Pos('<img ', parse[i]) > 0) and (Pos('class="cover"', parse[i]) > 0) then
       begin
-        s:= CorrectURL(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src=')));
-        if Pos('http://', s) = 0 then
-          mangaInfo.coverLink:= WebsiteRoots[FAKKU_ID,1] + s
+        s := GetVal(parse[i], 'src');
+        if ExecRegExpr('^//', s) then
+          mangaInfo.coverLink := 'https:' + s
         else
-          mangaInfo.coverLink:= s;
+          mangaInfo.coverLink := s
+      end;
+      //if GetTagName(parse.Strings[i]) = 'img' then
+      //  if (GetAttributeValue(GetTagAttribute(parse.Strings[i], 'class=')) = 'cover') then
+      //  begin
+      //    mangaInfo.coverLink :=
+      //      CorrectURL(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src=')));
+      //    //http seems working | not anymore?
+      //    mangaInfo.coverLink :=
+      //      StringReplace(mangaInfo.coverLink, 'https://', 'http://', [rfIgnoreCase]);
+      //  end;
+
+      // get manga chapter title, fakku only has 1 chapter
+      if (Pos('<title>', parse.Strings[i]) > 0) then
+        cht := Trim(parse.Strings[i + 1]);
+
+      //get chapter name and links, fakku only has 1 chapter
+      if isExtractChapters then
+      begin
+        if (Pos('<a ', parse[i]) > 0) and
+          (Pos('class="button green"', parse[i]) > 0) then
+        begin
+          isExtractChapters := False;
+          mangaInfo.numChapter := 1;
+          mangaInfo.chapterName.Add(cht);
+          mangaInfo.chapterLinks.Add(StringReplace(GetVal(parse[i], 'href'),
+            WebsiteRoots[FAKKU_ID, 1], '', [rfIgnoreCase]));
+        end;
+        //if (Pos('/read#', parse.Strings[i])>0) then
+        //begin
+        //  Inc(mangaInfo.numChapter);
+        //  s := GetVal(parse[i], 'href');
+        //  s := StringReplace(s, WebsiteRoots[FAKKU_ID,1], '', []);
+        //  //if Pos('#page=1', s)>0 then
+        //    //s:=StringReplace(s, '#page=1', '', []);
+        //  mangaInfo.chapterLinks.Add(s);
+        //  mangaInfo.chapterName.Add(cht);
+        //  isExtractChapters:= False;
+        //end;
       end;
 
-    // get summary
-    if isExtractSummary then
-    begin
-      s:= parse.Strings[i];
-      if (Length(s) > 0) AND (s[1] <> '<') then
+      // get series/authors
+      if (Pos('div class="left"', parse.Strings[i]) > 0) and
+        (Pos('Series', parse.Strings[i + 1]) > 0) then
       begin
-        parse.Strings[i]:= StringFilter(parse.Strings[i]);
-        parse.Strings[i]:= StringReplace(parse.Strings[i], #10, '\n', [rfReplaceAll]);
-        parse.Strings[i]:= StringReplace(parse.Strings[i], #13, '\r', [rfReplaceAll]);
-        mangaInfo.summary:= mangaInfo.summary+parse.Strings[i]+'\n\r';
-      end
-      else
-      if (GetTagName(parse.Strings[i]) = '/div') then
-        isExtractSummary:= FALSE;
-    end;
+        mangaInfo.authors := parse.Strings[i + 6];
+        mangaInfo.genres := mangaInfo.authors;
+      end;
 
-    if Pos('Language:', parse.Strings[i]) <> 0 then
-    begin
-      if Pos('english', parse.Strings[i+1]) <> 0 then
-        mangaInfo.genres:= mangaInfo.genres + 'English, '
-      else
-      if Pos('japanese', parse.Strings[i+1]) <> 0 then
-        mangaInfo.genres:= mangaInfo.genres + 'Japanese, '
-    end;
-
-    if (Pos('Description:', parse.Strings[i])) <> 0 then
-    begin
-      isExtractSummary:= TRUE;
-      mangaInfo.summary:= '';
-    end;
-
-    // get chapter name and links
-    if isExtractChapters then
-    begin
-      if (Pos('/read"', parse.Strings[i])>0) then
+      // get artists
+      if (Pos('div class="left"', parse.Strings[i]) > 0) and
+        (Pos('Artist', parse.Strings[i + 1]) > 0) then
       begin
-        Inc(mangaInfo.numChapter);
-        mangaInfo.chapterLinks.Add(StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href=')), WebsiteRoots[FAKKU_ID,1], '', [rfReplaceAll]));
-        mangaInfo.chapterName.Add(mangaInfo.title);
-        isExtractChapters:= FALSE;
-      end ;
+        mangaInfo.artists := parse.Strings[i + 6];
+        mangaInfo.genres := mangaInfo.genres + ', ' + mangaInfo.artists;
+      end;
+
+      // get language
+      if (Pos('div class="left"', parse.Strings[i]) > 0) and
+        (Pos('Language', parse.Strings[i + 1]) > 0) then
+        mangaInfo.genres := mangaInfo.genres + ', ' + Trim(parse.Strings[i + 7]);
+
+      // get descriptions
+      if (Pos('div class="left"', parse.Strings[i]) > 0) and
+        (Pos('Description', parse.Strings[i + 1]) > 0) then
+        isExtractSummary := True;
+
+      if isExtractSummary then
+      begin
+        if (Pos('</div>', parse.Strings[i + 5]) > 0) then
+          isExtractSummary := False
+        else if (not (Pos('<', parse.Strings[i + 5]) > 0)) then
+          mangaInfo.summary := Trim(mangaInfo.summary) + ' ' + Trim(parse.Strings[i + 5]);
+      end;
+
+      // get genres
+      if (Pos('"/tags/', parse.Strings[i]) > 0) then
+      begin
+        mangaInfo.genres := mangaInfo.genres + ', ' + Trim(parse.Strings[i + 1]);
+      end;
     end;
 
-    // get authors
-    if (Pos('Series:', parse.Strings[i])<>0) then
-    begin
-      mangaInfo.authors:= parse.Strings[i+2];
-      mangaInfo.genres:= mangaInfo.genres + mangaInfo.authors + ', ';
-    end;
-
-    // get artists
-    if (Pos('Artist:', parse.Strings[i])<>0) then
-      mangaInfo.artists:= parse.Strings[i+2];
-
-    // get genres
-    if (Pos('Tags:', parse.Strings[i])<>0) then
-    begin
-      isExtractGenres:= TRUE;
-    end;
-
-    if isExtractGenres then
-    begin
-      if GetTagName(parse.Strings[i]) = 'a' then
-        mangaInfo.genres:= TrimLeft(TrimRight(mangaInfo.genres+parse.Strings[i+1]))+', '
-      else
-      if (GetTagName(parse.Strings[i]) = '/div') then
-        isExtractGenres:= FALSE;
-    end;
-
-    // get status - Fakku doesnt have status, in fact, it's always 'completed'
+    //last correction
+    mangaInfo.summary := BreaksString(StringFilter(mangaInfo.summary));
+    //mangaInfo.title := 'Cholif '+IntToStr(Random(1000));
+    Result := NO_ERROR;
   end;
-  Result:= NO_ERROR;
-end;

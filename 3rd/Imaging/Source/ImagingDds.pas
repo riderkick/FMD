@@ -1,5 +1,4 @@
 {
-  $Id: ImagingDds.pas 129 2008-08-06 20:01:30Z galfar $
   Vampyre Imaging Library
   by Marek Mauder
   http://imaginglib.sourceforge.net
@@ -42,7 +41,7 @@ type
     TImageFormat. It supports plain textures, cube textures and
     volume textures, all of these can have mipmaps. It can also
     load some formats which have no exact TImageFormat, but can be easily
-    converted to one (bump map formats).
+    converted to one (bump map formats, etc.).
     You can get some information about last loaded DDS file by calling
     GetOption with ImagingDDSLoadedXXX options and you can set some
     saving options by calling SetOption with ImagingDDSSaveXXX or you can
@@ -51,7 +50,7 @@ type
     at least number of images to build cube/volume based on current
     Depth and MipMapCount settings.}
   TDDSFileFormat = class(TImageFileFormat)
-  protected
+  private
     FLoadedCubeMap: LongBool;
     FLoadedVolume: LongBool;
     FLoadedMipMapCount: LongInt;
@@ -62,6 +61,8 @@ type
     FSaveDepth: LongInt;
     procedure ComputeSubDimensions(Idx, Width, Height, MipMaps, Depth: LongInt;
       IsCubeMap, IsVolume: Boolean; var CurWidth, CurHeight: LongInt);
+  protected
+    procedure Define; override;
     function LoadData(Handle: TImagingHandle; var Images: TDynImageDataArray;
       OnlyFirstLevel: Boolean): Boolean; override;
     function SaveData(Handle: TImagingHandle; const Images: TDynImageDataArray;
@@ -69,7 +70,6 @@ type
     procedure ConvertToSupported(var Image: TImageData;
       const Info: TImageFormatInfo); override;
   public
-    constructor Create; override;
     function TestFormat(Handle: TImagingHandle): Boolean; override;
     procedure CheckOptionsValidity; override;
   published
@@ -93,6 +93,17 @@ type
       of the next saved DDS file.}
     property SaveDepth: LongInt read FSaveDepth write FSaveDepth;
   end;
+
+const
+  { DDS related metadata Ids }
+
+  { DXGI format of textures stored in DDS files with DX10 extension. Type is
+    Enum (value corresponding to DXGI_FORMAT enum from DX SDK).}
+  SMetaDdsDxgiFormat = 'DdsDxgiFormat';
+  { Number of mipmaps for each main image in DDS file.}
+  SMetaDdsMipMapCount = 'DdsMipMapCount';
+  { Texture array size stored in DDS file (DX10 extension).}
+  SMetaDdsArraySize = 'DdsArraySize';
 
 implementation
 
@@ -118,6 +129,8 @@ const
     (Byte('1') shl 24));
   FOURCC_ATI2 = LongWord(Byte('A') or (Byte('T') shl 8) or (Byte('I') shl 16) or
     (Byte('2') shl 24));
+  FOURCC_DX10 = LongWord(Byte('D') or (Byte('X') shl 8) or (Byte('1') shl 16) or
+    (Byte('0') shl 24));
 
   { Some D3DFORMAT values used in DDS files as FourCC value.}
   D3DFMT_A16B16G16R16  = 36;
@@ -206,16 +219,151 @@ type
     Desc: TDDSurfaceDesc2; // Surface description
   end;
 
+  { Resoirce types for D3D 10+ }
+  TD3D10ResourceDimension = (
+    D3D10_RESOURCE_DIMENSION_UNKNOWN   = 0,
+    D3D10_RESOURCE_DIMENSION_BUFFER    = 1,
+    D3D10_RESOURCE_DIMENSION_TEXTURE1D = 2,
+    D3D10_RESOURCE_DIMENSION_TEXTURE2D = 3,
+    D3D10_RESOURCE_DIMENSION_TEXTURE3D = 4
+  );
+
+  { Texture formats for D3D 10+ }
+  TDXGIFormat = (
+    DXGI_FORMAT_UNKNOWN                      = 0,
+    DXGI_FORMAT_R32G32B32A32_TYPELESS        = 1,
+    DXGI_FORMAT_R32G32B32A32_FLOAT           = 2,
+    DXGI_FORMAT_R32G32B32A32_UINT            = 3,
+    DXGI_FORMAT_R32G32B32A32_SINT            = 4,
+    DXGI_FORMAT_R32G32B32_TYPELESS           = 5,
+    DXGI_FORMAT_R32G32B32_FLOAT              = 6,
+    DXGI_FORMAT_R32G32B32_UINT               = 7,
+    DXGI_FORMAT_R32G32B32_SINT               = 8,
+    DXGI_FORMAT_R16G16B16A16_TYPELESS        = 9,
+    DXGI_FORMAT_R16G16B16A16_FLOAT           = 10,
+    DXGI_FORMAT_R16G16B16A16_UNORM           = 11,
+    DXGI_FORMAT_R16G16B16A16_UINT            = 12,
+    DXGI_FORMAT_R16G16B16A16_SNORM           = 13,
+    DXGI_FORMAT_R16G16B16A16_SINT            = 14,
+    DXGI_FORMAT_R32G32_TYPELESS              = 15,
+    DXGI_FORMAT_R32G32_FLOAT                 = 16,
+    DXGI_FORMAT_R32G32_UINT                  = 17,
+    DXGI_FORMAT_R32G32_SINT                  = 18,
+    DXGI_FORMAT_R32G8X24_TYPELESS            = 19,
+    DXGI_FORMAT_D32_FLOAT_S8X24_UINT         = 20,
+    DXGI_FORMAT_R32_FLOAT_X8X24_TYPELESS     = 21,
+    DXGI_FORMAT_X32_TYPELESS_G8X24_UINT      = 22,
+    DXGI_FORMAT_R10G10B10A2_TYPELESS         = 23,
+    DXGI_FORMAT_R10G10B10A2_UNORM            = 24,
+    DXGI_FORMAT_R10G10B10A2_UINT             = 25,
+    DXGI_FORMAT_R11G11B10_FLOAT              = 26,
+    DXGI_FORMAT_R8G8B8A8_TYPELESS            = 27,
+    DXGI_FORMAT_R8G8B8A8_UNORM               = 28,
+    DXGI_FORMAT_R8G8B8A8_UNORM_SRGB          = 29,
+    DXGI_FORMAT_R8G8B8A8_UINT                = 30,
+    DXGI_FORMAT_R8G8B8A8_SNORM               = 31,
+    DXGI_FORMAT_R8G8B8A8_SINT                = 32,
+    DXGI_FORMAT_R16G16_TYPELESS              = 33,
+    DXGI_FORMAT_R16G16_FLOAT                 = 34,
+    DXGI_FORMAT_R16G16_UNORM                 = 35,
+    DXGI_FORMAT_R16G16_UINT                  = 36,
+    DXGI_FORMAT_R16G16_SNORM                 = 37,
+    DXGI_FORMAT_R16G16_SINT                  = 38,
+    DXGI_FORMAT_R32_TYPELESS                 = 39,
+    DXGI_FORMAT_D32_FLOAT                    = 40,
+    DXGI_FORMAT_R32_FLOAT                    = 41,
+    DXGI_FORMAT_R32_UINT                     = 42,
+    DXGI_FORMAT_R32_SINT                     = 43,
+    DXGI_FORMAT_R24G8_TYPELESS               = 44,
+    DXGI_FORMAT_D24_UNORM_S8_UINT            = 45,
+    DXGI_FORMAT_R24_UNORM_X8_TYPELESS        = 46,
+    DXGI_FORMAT_X24_TYPELESS_G8_UINT         = 47,
+    DXGI_FORMAT_R8G8_TYPELESS                = 48,
+    DXGI_FORMAT_R8G8_UNORM                   = 49,
+    DXGI_FORMAT_R8G8_UINT                    = 50,
+    DXGI_FORMAT_R8G8_SNORM                   = 51,
+    DXGI_FORMAT_R8G8_SINT                    = 52,
+    DXGI_FORMAT_R16_TYPELESS                 = 53,
+    DXGI_FORMAT_R16_FLOAT                    = 54,
+    DXGI_FORMAT_D16_UNORM                    = 55,
+    DXGI_FORMAT_R16_UNORM                    = 56,
+    DXGI_FORMAT_R16_UINT                     = 57,
+    DXGI_FORMAT_R16_SNORM                    = 58,
+    DXGI_FORMAT_R16_SINT                     = 59,
+    DXGI_FORMAT_R8_TYPELESS                  = 60,
+    DXGI_FORMAT_R8_UNORM                     = 61,
+    DXGI_FORMAT_R8_UINT                      = 62,
+    DXGI_FORMAT_R8_SNORM                     = 63,
+    DXGI_FORMAT_R8_SINT                      = 64,
+    DXGI_FORMAT_A8_UNORM                     = 65,
+    DXGI_FORMAT_R1_UNORM                     = 66,
+    DXGI_FORMAT_R9G9B9E5_SHAREDEXP           = 67,
+    DXGI_FORMAT_R8G8_B8G8_UNORM              = 68,
+    DXGI_FORMAT_G8R8_G8B8_UNORM              = 69,
+    DXGI_FORMAT_BC1_TYPELESS                 = 70,
+    DXGI_FORMAT_BC1_UNORM                    = 71,
+    DXGI_FORMAT_BC1_UNORM_SRGB               = 72,
+    DXGI_FORMAT_BC2_TYPELESS                 = 73,
+    DXGI_FORMAT_BC2_UNORM                    = 74,
+    DXGI_FORMAT_BC2_UNORM_SRGB               = 75,
+    DXGI_FORMAT_BC3_TYPELESS                 = 76,
+    DXGI_FORMAT_BC3_UNORM                    = 77,
+    DXGI_FORMAT_BC3_UNORM_SRGB               = 78,
+    DXGI_FORMAT_BC4_TYPELESS                 = 79,
+    DXGI_FORMAT_BC4_UNORM                    = 80,
+    DXGI_FORMAT_BC4_SNORM                    = 81,
+    DXGI_FORMAT_BC5_TYPELESS                 = 82,
+    DXGI_FORMAT_BC5_UNORM                    = 83,
+    DXGI_FORMAT_BC5_SNORM                    = 84,
+    DXGI_FORMAT_B5G6R5_UNORM                 = 85,
+    DXGI_FORMAT_B5G5R5A1_UNORM               = 86,
+    DXGI_FORMAT_B8G8R8A8_UNORM               = 87,
+    DXGI_FORMAT_B8G8R8X8_UNORM               = 88,
+    DXGI_FORMAT_R10G10B10_XR_BIAS_A2_UNORM   = 89,
+    DXGI_FORMAT_B8G8R8A8_TYPELESS            = 90,
+    DXGI_FORMAT_B8G8R8A8_UNORM_SRGB          = 91,
+    DXGI_FORMAT_B8G8R8X8_TYPELESS            = 92,
+    DXGI_FORMAT_B8G8R8X8_UNORM_SRGB          = 93,
+    DXGI_FORMAT_BC6H_TYPELESS                = 94,
+    DXGI_FORMAT_BC6H_UF16                    = 95,
+    DXGI_FORMAT_BC6H_SF16                    = 96,
+    DXGI_FORMAT_BC7_TYPELESS                 = 97,
+    DXGI_FORMAT_BC7_UNORM                    = 98,
+    DXGI_FORMAT_BC7_UNORM_SRGB               = 99,
+    DXGI_FORMAT_AYUV                         = 100,
+    DXGI_FORMAT_Y410                         = 101,
+    DXGI_FORMAT_Y416                         = 102,
+    DXGI_FORMAT_NV12                         = 103,
+    DXGI_FORMAT_P010                         = 104,
+    DXGI_FORMAT_P016                         = 105,
+    DXGI_FORMAT_420_OPAQUE                   = 106,
+    DXGI_FORMAT_YUY2                         = 107,
+    DXGI_FORMAT_Y210                         = 108,
+    DXGI_FORMAT_Y216                         = 109,
+    DXGI_FORMAT_NV11                         = 110,
+    DXGI_FORMAT_AI44                         = 111,
+    DXGI_FORMAT_IA44                         = 112,
+    DXGI_FORMAT_P8                           = 113,
+    DXGI_FORMAT_A8P8                         = 114,
+    DXGI_FORMAT_B4G4R4A4_UNORM               = 115
+  );
+
+  { DX10 extension header for DDS file format }
+  TDX10Header = packed record
+    DXGIFormat: TDXGIFormat;
+    ResourceDimension: TD3D10ResourceDimension;
+    MiscFlags: LongWord;
+    ArraySize: LongWord;
+    Reserved: LongWord;
+  end;
 
 { TDDSFileFormat class implementation }
 
-constructor TDDSFileFormat.Create;
+procedure TDDSFileFormat.Define;
 begin
-  inherited Create;
+  inherited;
   FName := SDDSFormatName;
-  FCanLoad := True;
-  FCanSave := True;
-  FIsMultiImageFormat := True;
+  FFeatures := [ffLoad, ffSave, ffMultiImage];
   FSupportedFormats := DDSSupportedFormats;
 
   FSaveCubeMap := False;
@@ -307,10 +455,12 @@ function TDDSFileFormat.LoadData(Handle: TImagingHandle;
   var Images: TDynImageDataArray; OnlyFirstLevel: Boolean): Boolean;
 var
   Hdr: TDDSFileHeader;
+  HdrDX10: TDX10Header;
   SrcFormat: TImageFormat;
   FmtInfo: TImageFormatInfo;
   NeedsSwapChannels: Boolean;
-  CurrentWidth, CurrentHeight, ImageCount, LoadSize, I, PitchOrLinear: LongInt;
+  CurrentWidth, CurrentHeight, ImageCount, LoadSize, I,
+    PitchOrLinear, MainImageLinearSize: Integer;
   Data: PByte;
   UseAsPitch: Boolean;
   UseAsLinear: Boolean;
@@ -322,6 +472,128 @@ var
       (DDPF.BlueMask = PF.BBitMask);
   end;
 
+  function FindFourCCFormat(FourCC: LongWord): TImageFormat;
+  begin
+    // Handle FourCC and large ARGB formats
+    case FourCC of
+      D3DFMT_A16B16G16R16: Result := ifA16B16G16R16;
+      D3DFMT_R32F: Result := ifR32F;
+      D3DFMT_A32B32G32R32F: Result := ifA32B32G32R32F;
+      D3DFMT_R16F: Result := ifR16F;
+      D3DFMT_A16B16G16R16F: Result := ifA16B16G16R16F;
+      FOURCC_DXT1: Result := ifDXT1;
+      FOURCC_DXT3: Result := ifDXT3;
+      FOURCC_DXT5: Result := ifDXT5;
+      FOURCC_ATI1: Result := ifATI1N;
+      FOURCC_ATI2: Result := ifATI2N;
+    else
+      Result := ifUnknown;
+    end;
+  end;
+
+  function FindDX10Format(DXGIFormat: TDXGIFormat; var NeedsSwapChannels: Boolean): TImageFormat;
+  begin
+    Result := ifUnknown;
+    NeedsSwapChannels := False;
+
+    case DXGIFormat of
+      DXGI_FORMAT_UNKNOWN: ;
+      DXGI_FORMAT_R32G32B32A32_TYPELESS, DXGI_FORMAT_R32G32B32A32_FLOAT:
+        Result := ifA32B32G32R32F;
+      DXGI_FORMAT_R32G32B32A32_UINT: ;
+      DXGI_FORMAT_R32G32B32A32_SINT: ;
+      DXGI_FORMAT_R32G32B32_TYPELESS, DXGI_FORMAT_R32G32B32_FLOAT:
+        Result := ifB32G32R32F;
+      DXGI_FORMAT_R32G32B32_UINT: ;
+      DXGI_FORMAT_R32G32B32_SINT: ;
+      DXGI_FORMAT_R16G16B16A16_FLOAT:
+        Result := ifA16B16G16R16F;
+      DXGI_FORMAT_R16G16B16A16_TYPELESS, DXGI_FORMAT_R16G16B16A16_UNORM,
+      DXGI_FORMAT_R16G16B16A16_UINT, DXGI_FORMAT_R16G16B16A16_SNORM,
+      DXGI_FORMAT_R16G16B16A16_SINT:
+        Result := ifA16B16G16R16;
+      DXGI_FORMAT_R32G32_TYPELESS: ;
+      DXGI_FORMAT_R32G32_FLOAT: ;
+      DXGI_FORMAT_R32G32_UINT: ;
+      DXGI_FORMAT_R32G32_SINT: ;
+      DXGI_FORMAT_R32G8X24_TYPELESS: ;
+      DXGI_FORMAT_D32_FLOAT_S8X24_UINT: ;
+      DXGI_FORMAT_R32_FLOAT_X8X24_TYPELESS: ;
+      DXGI_FORMAT_X32_TYPELESS_G8X24_UINT: ;
+      DXGI_FORMAT_R10G10B10A2_TYPELESS: ;
+      DXGI_FORMAT_R10G10B10A2_UNORM: ;
+      DXGI_FORMAT_R10G10B10A2_UINT: ;
+      DXGI_FORMAT_R11G11B10_FLOAT: ;
+      DXGI_FORMAT_R8G8B8A8_TYPELESS, DXGI_FORMAT_R8G8B8A8_UNORM,
+      DXGI_FORMAT_R8G8B8A8_UINT, DXGI_FORMAT_R8G8B8A8_SNORM,DXGI_FORMAT_R8G8B8A8_SINT,
+      DXGI_FORMAT_R8G8B8A8_UNORM_SRGB:
+        begin
+          Result := ifA8R8G8B8;
+          NeedsSwapChannels := True;
+        end;
+      DXGI_FORMAT_R16G16_TYPELESS: ;
+      DXGI_FORMAT_R16G16_FLOAT: ;
+      DXGI_FORMAT_R16G16_UNORM: ;
+      DXGI_FORMAT_R16G16_UINT: ;
+      DXGI_FORMAT_R16G16_SNORM: ;
+      DXGI_FORMAT_R16G16_SINT: ;
+      DXGI_FORMAT_R32_TYPELESS, DXGI_FORMAT_R32_UINT, DXGI_FORMAT_R32_SINT:
+        Result := ifGray32;
+      DXGI_FORMAT_D32_FLOAT, DXGI_FORMAT_R32_FLOAT:
+        Result := ifR32F;
+      DXGI_FORMAT_R24G8_TYPELESS: ;
+      DXGI_FORMAT_D24_UNORM_S8_UINT: ;
+      DXGI_FORMAT_R24_UNORM_X8_TYPELESS: ;
+      DXGI_FORMAT_X24_TYPELESS_G8_UINT: ;
+      DXGI_FORMAT_R8G8_TYPELESS, DXGI_FORMAT_R8G8_UNORM, DXGI_FORMAT_R8G8_UINT,
+      DXGI_FORMAT_R8G8_SNORM, DXGI_FORMAT_R8G8_SINT:
+        Result := ifA8Gray8;
+      DXGI_FORMAT_R16_TYPELESS, DXGI_FORMAT_D16_UNORM, DXGI_FORMAT_R16_UNORM,
+      DXGI_FORMAT_R16_UINT, DXGI_FORMAT_R16_SNORM, DXGI_FORMAT_R16_SINT:
+        Result := ifGray16;
+      DXGI_FORMAT_R16_FLOAT:
+        Result := ifR16F;
+      DXGI_FORMAT_R8_TYPELESS, DXGI_FORMAT_R8_UNORM, DXGI_FORMAT_R8_UINT,
+      DXGI_FORMAT_R8_SNORM, DXGI_FORMAT_R8_SINT, DXGI_FORMAT_A8_UNORM:
+        Result := ifGray8;
+      DXGI_FORMAT_R1_UNORM: ;
+      DXGI_FORMAT_R9G9B9E5_SHAREDEXP: ;
+      DXGI_FORMAT_R8G8_B8G8_UNORM: ;
+      DXGI_FORMAT_G8R8_G8B8_UNORM: ;
+      DXGI_FORMAT_BC1_TYPELESS, DXGI_FORMAT_BC1_UNORM, DXGI_FORMAT_BC1_UNORM_SRGB:
+        Result := ifDXT1;
+      DXGI_FORMAT_BC2_TYPELESS, DXGI_FORMAT_BC2_UNORM, DXGI_FORMAT_BC2_UNORM_SRGB:
+        Result := ifDXT3;
+      DXGI_FORMAT_BC3_TYPELESS, DXGI_FORMAT_BC3_UNORM, DXGI_FORMAT_BC3_UNORM_SRGB:
+        Result := ifDXT5;
+      DXGI_FORMAT_BC4_TYPELESS, DXGI_FORMAT_BC4_UNORM, DXGI_FORMAT_BC4_SNORM:
+        Result := ifATI1N;
+      DXGI_FORMAT_BC5_TYPELESS, DXGI_FORMAT_BC5_UNORM, DXGI_FORMAT_BC5_SNORM:
+        Result := ifATI2N;
+      DXGI_FORMAT_B5G6R5_UNORM:
+        Result := ifR5G6B5;
+      DXGI_FORMAT_B5G5R5A1_UNORM:
+        Result := ifA1R5G5B5;
+      DXGI_FORMAT_B8G8R8A8_UNORM, DXGI_FORMAT_B8G8R8A8_TYPELESS:
+        Result := ifA8R8G8B8;
+      DXGI_FORMAT_B8G8R8X8_UNORM, DXGI_FORMAT_B8G8R8X8_TYPELESS:
+        Result := ifX8R8G8B8;
+      DXGI_FORMAT_R10G10B10_XR_BIAS_A2_UNORM: ;
+      DXGI_FORMAT_B8G8R8A8_UNORM_SRGB: ;
+      DXGI_FORMAT_B8G8R8X8_UNORM_SRGB: ;
+      DXGI_FORMAT_BC6H_TYPELESS: ;
+      DXGI_FORMAT_BC6H_UF16: ;
+      DXGI_FORMAT_BC6H_SF16: ;
+      DXGI_FORMAT_BC7_TYPELESS: ;
+      DXGI_FORMAT_BC7_UNORM: ;
+      DXGI_FORMAT_BC7_UNORM_SRGB: ;
+      DXGI_FORMAT_P8: ;
+      DXGI_FORMAT_A8P8: ;
+      DXGI_FORMAT_B4G4R4A4_UNORM:
+        Result := ifA4R4G4B4;
+    end;
+  end;
+
 begin
   Result := False;
   ImageCount := 1;
@@ -329,34 +601,27 @@ begin
   FLoadedDepth := 1;
   FLoadedVolume := False;
   FLoadedCubeMap := False;
+  ZeroMemory(@HdrDX10, SizeOf(HdrDX10));
 
   with GetIO, Hdr, Hdr.Desc.PixelFormat do
   begin
-    Read(Handle, @Hdr, SizeOF(Hdr));
-    {
-    // Set position to the end of the header (for possible future versions
-    // ith larger header)
-    Seek(Handle, Hdr.Desc.Size + SizeOf(Hdr.Magic) - SizeOf(Hdr),
-      smFromCurrent);
-    }
+    Read(Handle, @Hdr, SizeOf(Hdr));
+
     SrcFormat := ifUnknown;
     NeedsSwapChannels := False;
+
     // Get image data format
     if (Flags and DDPF_FOURCC) = DDPF_FOURCC then
     begin
-      // Handle FourCC and large ARGB formats
-      case FourCC of
-        D3DFMT_A16B16G16R16: SrcFormat := ifA16B16G16R16;
-        D3DFMT_R32F: SrcFormat := ifR32F;
-        D3DFMT_A32B32G32R32F: SrcFormat := ifA32B32G32R32F;
-        D3DFMT_R16F: SrcFormat := ifR16F;
-        D3DFMT_A16B16G16R16F: SrcFormat := ifA16B16G16R16F;
-        FOURCC_DXT1: SrcFormat := ifDXT1;
-        FOURCC_DXT3: SrcFormat := ifDXT3;
-        FOURCC_DXT5: SrcFormat := ifDXT5;
-        FOURCC_ATI1: SrcFormat := ifATI1N;
-        FOURCC_ATI2: SrcFormat := ifATI2N;
-      end;
+      if FourCC = FOURCC_DX10 then
+      begin
+        Read(Handle, @HdrDX10, SizeOf(HdrDX10));
+        SrcFormat := FindDX10Format(HdrDX10.DXGIFormat, NeedsSwapChannels);
+        FMetadata.SetMetaItem(SMetaDdsDxgiFormat, HdrDX10.DXGIFormat);
+        FMetadata.SetMetaItem(SMetaDdsArraySize, HdrDX10.ArraySize);
+      end
+      else
+        SrcFormat := FindFourCCFormat(FourCC);
     end
     else if (Flags and DDPF_RGB) = DDPF_RGB then
     begin
@@ -367,11 +632,9 @@ begin
         case BitCount of
           16:
             begin
-              if MasksEqual(Desc.PixelFormat,
-                GetFormatInfo(ifA4R4G4B4).PixelFormat) then
+              if MasksEqual(Desc.PixelFormat, GetFormatInfo(ifA4R4G4B4).PixelFormat) then
                 SrcFormat := ifA4R4G4B4;
-              if MasksEqual(Desc.PixelFormat,
-                GetFormatInfo(ifA1R5G5B5).PixelFormat) then
+              if MasksEqual(Desc.PixelFormat, GetFormatInfo(ifA1R5G5B5).PixelFormat) then
                 SrcFormat := ifA1R5G5B5;
             end;
           32:
@@ -458,7 +721,8 @@ begin
     end;
 
     // If DDS format is not supported we will exit
-    if SrcFormat = ifUnknown then Exit;
+    if SrcFormat = ifUnknown then
+      Exit;
 
     // File contains mipmaps for each subimage.
     { Some DDS writers ignore setting proper Caps and Flags so
@@ -468,6 +732,7 @@ begin
     if Desc.MipMaps > 1 then
     begin
       FLoadedMipMapCount := Desc.MipMaps;
+      FMetadata.SetMetaItem(SMetaDdsMipMapCount, Desc.MipMaps);
       ImageCount := Desc.MipMaps;
     end;
 
@@ -508,12 +773,21 @@ begin
     // Main image pitch or linear size
     PitchOrLinear := Desc.PitchOrLinearSize;
 
+    // Check: some writers just write garbage to pitch/linear size fields and flags
+    MainImageLinearSize := FmtInfo.GetPixelsSize(SrcFormat, Desc.Width, Desc.Height);
+    if UseAsLinear and ((PitchOrLinear < MainImageLinearSize) or
+      (PitchOrLinear * Integer(Desc.Height) = MainImageLinearSize)) then
+    begin
+      // Explicitly set linear size
+      PitchOrLinear := MainImageLinearSize;
+    end;
+
     for I := 0 to ImageCount - 1 do
     begin
       // Compute dimensions of surrent subimage based on texture type and
       // number of mipmaps
       ComputeSubDimensions(I, Desc.Width, Desc.Height, Desc.MipMaps, Desc.Depth,
-        FloadedCubeMap, FLoadedVolume, CurrentWidth, CurrentHeight);
+        FLoadedCubeMap, FLoadedVolume, CurrentWidth, CurrentHeight);
       NewImage(CurrentWidth, CurrentHeight, SrcFormat, Images[I]);
 
       if (I > 0) or (PitchOrLinear = 0) then
@@ -822,6 +1096,13 @@ initialization
 
   -- TODOS ----------------------------------------------------
     - nothing now
+
+  -- 0.77.1 ----------------------------------------------------
+    - Texture and D3D specific info stored in DDS is now available as metadata
+      (loading).
+    - Added support for loading DDS files with DX10 extension
+      (http://msdn.microsoft.com/en-us/library/windows/desktop/bb943991(v=vs.85).aspx)
+      and few compatibility fixes.
 
   -- 0.25.0 Changes/Bug Fixes ---------------------------------
     - Added support for 3Dc ATI1/2 formats.

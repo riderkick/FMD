@@ -1,5 +1,4 @@
 {
-  $Id: ImagingFormats.pas 174 2009-09-08 09:37:59Z galfar $
   Vampyre Imaging Library
   by Marek Mauder 
   http://imaginglib.sourceforge.net
@@ -123,6 +122,10 @@ procedure TranslatePixel(SrcPixel, DstPixel: Pointer; SrcFormat,
   DstFormat: TImageFormat; SrcPalette, DstPalette: PPalette32);
 { Clamps floating point pixel channel values to [0.0, 1.0] range.}
 procedure ClampFloatPixel(var PixF: TColorFPRec); {$IFDEF USE_INLINE}inline;{$ENDIF}
+{ Helper function that converts pixel in any format to 32bit ARGB pixel.
+  For common formats it's faster than calling GetPixel32 etc.}
+procedure ConvertToPixel32(SrcPix: PByte; DestPix: PColor32Rec;
+  const SrcInfo: TImageFormatInfo; SrcPalette: PPalette32 = nil); {$IFDEF USE_INLINE}inline;{$ENDIF}
 
 { Adds padding bytes at the ends of scanlines. Bpp is the number of bytes per
   pixel of source and WidthBytes is the number of bytes per scanlines of dest.}
@@ -134,18 +137,21 @@ procedure AddPadBytes(DataIn: Pointer; DataOut: Pointer; Width, Height,
 procedure RemovePadBytes(DataIn: Pointer; DataOut: Pointer; Width, Height,
   Bpp, WidthBytes: LongInt);
 
-{ Converts 1bit image data to 8bit (without scaling). Used by file
-  loaders for formats supporting 1bit images.}
-procedure Convert1To8(DataIn, DataOut: Pointer; Width, Height,
-  WidthBytes: LongInt);
-{ Converts 2bit image data to 8bit (without scaling). Used by file
-  loaders for formats supporting 2bit images.}
-procedure Convert2To8(DataIn, DataOut: Pointer; Width, Height,
-  WidthBytes: LongInt);
-{ Converts 4bit image data to 8bit (without scaling). Used by file
-  loaders for formats supporting 4bit images.}
-procedure Convert4To8(DataIn, DataOut: Pointer; Width, Height,
-  WidthBytes: LongInt);
+{ Converts 1bit image data to 8bit. Used mostly by file loaders for formats
+  supporting 1bit images. Scaling of pixel values to 8bits is optional
+  (indexed formats don't need this).}
+procedure Convert1To8(DataIn, DataOut: PByte; Width, Height,
+  WidthBytes: LongInt; ScaleTo8Bits: Boolean);
+{ Converts 2bit image data to 8bit. Used mostly by file loaders for formats
+  supporting 2bit images. Scaling of pixel values to 8bits is optional
+  (indexed formats don't need this).}
+procedure Convert2To8(DataIn, DataOut: PByte; Width, Height,
+  WidthBytes: LongInt; ScaleTo8Bits: Boolean);
+{ Converts 4bit image data to 8bit. Used mostly by file loaders for formats
+  supporting 4bit images. Scaling of pixel values to 8bits is optional
+  (indexed formats don't need this).}
+procedure Convert4To8(DataIn, DataOut: PByte; Width, Height,
+  WidthBytes: LongInt; ScaleTo8Bits: Boolean);
 
 { Helper function for image file loaders. Some 15 bit images (targas, bitmaps)
   may contain 1 bit alpha but there is no indication of it. This function checks
@@ -153,8 +159,12 @@ procedure Convert4To8(DataIn, DataOut: Pointer; Width, Height,
   alpha bit set it returns True, otherwise False.}
 function Has16BitImageAlpha(NumPixels: LongInt; Data: PWord): Boolean;
 { Helper function for image file loaders. This function checks is similar
-  to Has16BitImageAlpha but works with A8R8G8B8 format.}
+  to Has16BitImageAlpha but works with A8R8G8B8/X8R8G8B8 format.}
 function Has32BitImageAlpha(NumPixels: LongInt; Data: PLongWord): Boolean;
+{ Checks if there is any relevant alpha data (any entry has alpha <> 255)
+  in the given palette.}
+function PaletteHasAlpha(Palette: PPalette32; PaletteEntries: Integer): Boolean;
+
 { Provides indexed access to each line of pixels. Does not work with special
   format images.}
 function GetScanLine(ImageBits: Pointer; const FormatInfo: TImageFormatInfo;
@@ -351,6 +361,8 @@ function GetDXTPixelsSize(Format: TImageFormat; Width, Height: LongInt): LongInt
 procedure CheckDXTDimensions(Format: TImageFormat; var Width, Height: LongInt); forward;
 { Returns size in bytes of image in BTC format.}
 function GetBTCPixelsSize(Format: TImageFormat; Width, Height: LongInt): LongInt; forward;
+{ Returns size in bytes of image in binary format (1bit image).}
+function GetBinaryPixelsSize(Format: TImageFormat; Width, Height: LongInt): LongInt; forward;
 
 { Optimized pixel readers/writers for 32bit and FP colors to be stored in TImageFormatInfo }
 
@@ -761,6 +773,35 @@ var
     SetPixel32: SetPixel32Generic;
     SetPixelFP: SetPixelFPGeneric);
 
+  R32G32B32FInfo: TImageFormatInfo = (
+    Format: ifR32G32B32F;
+    Name: 'R32G32B32F';
+    BytesPerPixel: 12;
+    ChannelCount: 3;
+    IsFloatingPoint: True;
+    RBSwapFormat: ifB32G32R32F;
+    GetPixelsSize: GetStdPixelsSize;
+    CheckDimensions: CheckStdDimensions;
+    GetPixel32: GetPixel32Generic;
+    GetPixelFP: GetPixelFPFloat32;
+    SetPixel32: SetPixel32Generic;
+    SetPixelFP: SetPixelFPFloat32);
+
+  B32G32R32FInfo: TImageFormatInfo = (
+    Format: ifB32G32R32F;
+    Name: 'B32G32R32F';
+    BytesPerPixel: 12;
+    ChannelCount: 3;
+    IsFloatingPoint: True;
+    IsRBSwapped: True;
+    RBSwapFormat: ifR32G32B32F;
+    GetPixelsSize: GetStdPixelsSize;
+    CheckDimensions: CheckStdDimensions;
+    GetPixel32: GetPixel32Generic;
+    GetPixelFP: GetPixelFPFloat32;
+    SetPixel32: SetPixel32Generic;
+    SetPixelFP: SetPixelFPFloat32);
+
   // special formats
   DXT1Info: TImageFormatInfo = (
     Format: ifDXT1;
@@ -822,6 +863,16 @@ var
     CheckDimensions: CheckDXTDimensions;
     SpecialNearestFormat: ifA8R8G8B8);
 
+  BinaryInfo: TImageFormatInfo = (
+    Format: ifBinary;
+    Name: 'Binary';
+    ChannelCount: 1;
+    HasAlphaChannel: False;
+    IsSpecial: True;
+    GetPixelsSize: GetBinaryPixelsSize;
+    CheckDimensions: CheckStdDimensions;
+    SpecialNearestFormat: ifGray8);
+
 {$WARNINGS ON}
 
 function PixelFormat(ABitCount, RBitCount, GBitCount, BBitCount: Byte): TPixelFormatInfo; forward;
@@ -862,6 +913,8 @@ begin
   Infos[ifR16F] := @R16FInfo;
   Infos[ifA16R16G16B16F] := @A16R16G16B16FInfo;
   Infos[ifA16B16G16R16F] := @A16B16G16R16FInfo;
+  Infos[ifR32G32B32F] := @R32G32B32FInfo;
+  Infos[ifB32G32R32F] := @B32G32R32FInfo;
   // special formats
   Infos[ifDXT1] := @DXT1Info;
   Infos[ifDXT3] := @DXT3Info;
@@ -869,6 +922,7 @@ begin
   Infos[ifBTC] :=  @BTCInfo;
   Infos[ifATI1N] := @ATI1NInfo;
   Infos[ifATI2N] := @ATI2NInfo;
+  Infos[ifBinary] := @BinaryInfo;
 
   PFR3G3B2 := PixelFormat(0, 3, 3, 2);
   PFX5R1G1B1 := PixelFormat(0, 1, 1, 1);
@@ -940,12 +994,12 @@ procedure PFGetARGB(const PF: TPixelFormatInfo; Color: LongWord;
   var A, R, G, B: Byte); {$IFDEF USE_INLINE}inline;{$ENDIF}
 begin
   with PF do
-   begin
-     A := (Color and ABitMask shr AShift) * 255 div ARecDiv;
-     R := (Color and RBitMask shr RShift) * 255 div RRecDiv;
-     G := (Color and GBitMask shr GShift) * 255 div GRecDiv;
-     B := (Color and BBitMask shl BShift) * 255 div BRecDiv;
-    end;
+  begin
+    A := (Color and ABitMask shr AShift) * 255 div ARecDiv;
+    R := (Color and RBitMask shr RShift) * 255 div RRecDiv;
+    G := (Color and GBitMask shr GShift) * 255 div GRecDiv;
+    B := (Color and BBitMask shl BShift) * 255 div BRecDiv;
+  end;
 end;
 
 function PFSetColor(const PF: TPixelFormatInfo; ARGB: TColor32): LongWord;
@@ -963,12 +1017,12 @@ function PFGetColor(const PF: TPixelFormatInfo; Color: LongWord): TColor32;
 {$IFDEF USE_INLINE}inline;{$ENDIF}
 begin
   with PF, TColor32Rec(Result) do
-   begin
-     A := (Color and ABitMask shr AShift) * 255 div ARecDiv;
-     R := (Color and RBitMask shr RShift) * 255 div RRecDiv;
-     G := (Color and GBitMask shr GShift) * 255 div GRecDiv;
-     B := (Color and BBitMask shl BShift) * 255 div BRecDiv;
-    end;
+  begin
+    A := (Color and ABitMask shr AShift) * 255 div ARecDiv;
+    R := (Color and RBitMask shr RShift) * 255 div RRecDiv;
+    G := (Color and GBitMask shr GShift) * 255 div GRecDiv;
+    B := (Color and BBitMask shl BShift) * 255 div BRecDiv;
+  end;
 end;
 
 
@@ -1721,32 +1775,22 @@ procedure StretchResample(const SrcImage: TImageData; SrcX, SrcY, SrcWidth,
   DstHeight: LongInt; Filter: TFilterFunction; Radius: Single; WrapEdges: Boolean);
 const
   Channel8BitMax: Single = 255.0;
-type
-  TBufferItem = record
-    A, R, G, B: Integer;
-  end;
 var
   MapX, MapY: TMappingTable;
   I, J, X, Y: LongInt;
   XMinimum, XMaximum: LongInt;
   LineBufferFP: array of TColorFPRec;
-  LineBufferInt: array of TBufferItem;
   ClusterX, ClusterY: TCluster;
   Weight, AccumA, AccumR, AccumG, AccumB: Single;
-  IWeight, IAccumA, IAccumR, IAccumG, IAccumB: Integer;
   DstLine: PByte;
-  SrcColor: TColor32Rec;
   SrcFloat: TColorFPRec;
   Info: TImageFormatInfo;
   BytesPerChannel: LongInt;
-  ChannelValueMax, InvChannelValueMax: Single;
-  UseOptimizedVersion: Boolean;
 begin
   GetImageFormatInfo(SrcImage.Format, Info);
   Assert(SrcImage.Format = DstImage.Format);
   Assert(not Info.IsSpecial and not Info.IsIndexed);
   BytesPerChannel := Info.BytesPerPixel div Info.ChannelCount;
-  UseOptimizedVersion := (BytesPerChannel = 1) and not Info.UsePixelFormat;
 
   // Create horizontal and vertical mapping tables
   MapX := BuildMappingTable(DstX, DstX + DstWidth, SrcX, SrcX + SrcWidth,
@@ -1764,145 +1808,77 @@ begin
     // Find min and max X coords of pixels that will contribute to target image
     FindExtremes(MapX, XMinimum, XMaximum);
 
-    if not UseOptimizedVersion then
+    SetLength(LineBufferFP, XMaximum - XMinimum + 1);
+    // Following code works for the rest of data formats
+    for J := 0 to DstHeight - 1 do
     begin
-      SetLength(LineBufferFP, XMaximum - XMinimum + 1);
-      // Following code works for the rest of data formats
-      for J := 0 to DstHeight - 1 do
+      // First for each pixel in the current line sample vertically
+      // and store results in LineBuffer. Then sample horizontally
+      // using values in LineBuffer.
+      ClusterY := MapY[J];
+      for X := XMinimum to XMaximum do
       begin
-        // First for each pixel in the current line sample vertically
-        // and store results in LineBuffer. Then sample horizontally
-        // using values in LineBuffer.
-        ClusterY := MapY[J];
-        for X := XMinimum to XMaximum do
+        // Clear accumulators
+        AccumA := 0;
+        AccumR := 0;
+        AccumG := 0;
+        AccumB := 0;
+        // For each pixel in line compute weighted sum of pixels
+        // in source column that will contribute to this pixel
+        for Y := 0 to Length(ClusterY) - 1 do
         begin
-          // Clear accumulators
-          AccumA := 0;
-          AccumR := 0;
-          AccumG := 0;
-          AccumB := 0;
-          // For each pixel in line compute weighted sum of pixels
-          // in source column that will contribute to this pixel
-          for Y := 0 to Length(ClusterY) - 1 do
-          begin
-            // Accumulate this pixel's weighted value
-            Weight := ClusterY[Y].Weight;
-            SrcFloat := Info.GetPixelFP(@PByteArray(SrcImage.Bits)[(ClusterY[Y].Pos * SrcImage.Width + X) * Info.BytesPerPixel], @Info, nil);
-            AccumB := AccumB + SrcFloat.B * Weight;
-            AccumG := AccumG + SrcFloat.G * Weight;
-            AccumR := AccumR + SrcFloat.R * Weight;
-            AccumA := AccumA + SrcFloat.A * Weight;
-          end;
-          // Store accumulated value for this pixel in buffer
-          with LineBufferFP[X - XMinimum] do
-          begin
-            A := AccumA;
-            R := AccumR;
-            G := AccumG;
-            B := AccumB;
-          end;
+          // Accumulate this pixel's weighted value
+          Weight := ClusterY[Y].Weight;
+          SrcFloat := Info.GetPixelFP(@PByteArray(SrcImage.Bits)[(ClusterY[Y].Pos * SrcImage.Width + X) * Info.BytesPerPixel], @Info, nil);
+          AccumB := AccumB + SrcFloat.B * Weight;
+          AccumG := AccumG + SrcFloat.G * Weight;
+          AccumR := AccumR + SrcFloat.R * Weight;
+          AccumA := AccumA + SrcFloat.A * Weight;
         end;
-
-        DstLine := @PByteArray(DstImage.Bits)[((J + DstY) * DstImage.Width + DstX) * Info.BytesPerPixel];
-        // Now compute final colors for targte pixels in the current row
-        // by sampling horizontally
-        for I := 0 to DstWidth - 1 do
+        // Store accumulated value for this pixel in buffer
+        with LineBufferFP[X - XMinimum] do
         begin
-          ClusterX := MapX[I];
-          // Clear accumulator
-          AccumA := 0;
-          AccumR := 0;
-          AccumG := 0;
-          AccumB := 0;
-          // Compute weighted sum of values (which are already
-          // computed weighted sums of pixels in source columns stored in LineBuffer)
-          // that will contribute to the current target pixel
-          for X := 0 to Length(ClusterX) - 1 do
-          begin
-            Weight := ClusterX[X].Weight;
-            with LineBufferFP[ClusterX[X].Pos - XMinimum] do
-            begin
-              AccumB := AccumB + B * Weight;
-              AccumG := AccumG + G * Weight;
-              AccumR := AccumR + R * Weight;
-              AccumA := AccumA + A * Weight;
-            end;
-          end;
-
-          // Now compute final color to be written to dest image
-          SrcFloat.A := AccumA;
-          SrcFloat.R := AccumR;
-          SrcFloat.G := AccumG;
-          SrcFloat.B := AccumB;
-
-          Info.SetPixelFP(DstLine, @Info, nil, SrcFloat);
-          Inc(DstLine, Info.BytesPerPixel);
+          A := AccumA;
+          R := AccumR;
+          G := AccumG;
+          B := AccumB;
         end;
       end;
-    end
-    else
-    begin
-      SetLength(LineBufferInt, XMaximum - XMinimum + 1);
-      // Following code is optimized for images with 8 bit channels
-      for J := 0 to DstHeight - 1 do
+
+      DstLine := @PByteArray(DstImage.Bits)[((J + DstY) * DstImage.Width + DstX) * Info.BytesPerPixel];
+      // Now compute final colors for targte pixels in the current row
+      // by sampling horizontally
+      for I := 0 to DstWidth - 1 do
       begin
-        ClusterY := MapY[J];
-        for X := XMinimum to XMaximum do
+        ClusterX := MapX[I];
+        // Clear accumulator
+        AccumA := 0;
+        AccumR := 0;
+        AccumG := 0;
+        AccumB := 0;
+        // Compute weighted sum of values (which are already
+        // computed weighted sums of pixels in source columns stored in LineBuffer)
+        // that will contribute to the current target pixel
+        for X := 0 to Length(ClusterX) - 1 do
         begin
-          IAccumA := 0;
-          IAccumR := 0;
-          IAccumG := 0;
-          IAccumB := 0;
-          for Y := 0 to Length(ClusterY) - 1 do
+          Weight := ClusterX[X].Weight;
+          with LineBufferFP[ClusterX[X].Pos - XMinimum] do
           begin
-            IWeight := Round(256 * ClusterY[Y].Weight);
-            CopyPixel(
-              @PByteArray(SrcImage.Bits)[(ClusterY[Y].Pos * SrcImage.Width + X) * Info.BytesPerPixel],
-              @SrcColor, Info.BytesPerPixel);
-
-            IAccumB := IAccumB + SrcColor.B * IWeight;
-            IAccumG := IAccumG + SrcColor.G * IWeight;
-            IAccumR := IAccumR + SrcColor.R * IWeight;
-            IAccumA := IAccumA + SrcColor.A * IWeight;
-          end;
-          with LineBufferInt[X - XMinimum] do
-          begin
-            A := IAccumA;
-            R := IAccumR;
-            G := IAccumG;
-            B := IAccumB;
+            AccumB := AccumB + B * Weight;
+            AccumG := AccumG + G * Weight;
+            AccumR := AccumR + R * Weight;
+            AccumA := AccumA + A * Weight;
           end;
         end;
 
-        DstLine := @PByteArray(DstImage.Bits)[((J + DstY) * DstImage.Width + DstX)* Info.BytesPerPixel];
+        // Now compute final color to be written to dest image
+        SrcFloat.A := AccumA;
+        SrcFloat.R := AccumR;
+        SrcFloat.G := AccumG;
+        SrcFloat.B := AccumB;
 
-        for I := 0 to DstWidth - 1 do
-        begin
-          ClusterX := MapX[I];
-          IAccumA := 0;
-          IAccumR := 0;
-          IAccumG := 0;
-          IAccumB := 0;
-          for X := 0 to Length(ClusterX) - 1 do
-          begin
-            IWeight := Round(256 * ClusterX[X].Weight);
-            with LineBufferInt[ClusterX[X].Pos - XMinimum] do
-            begin
-              IAccumB := IAccumB + B * IWeight;
-              IAccumG := IAccumG + G * IWeight;
-              IAccumR := IAccumR + R * IWeight;
-              IAccumA := IAccumA + A * IWeight;
-            end;
-          end;
-
-          SrcColor.B := ClampInt(IAccumB, 0, $00FF0000) shr 16;
-          SrcColor.G := ClampInt(IAccumG, 0, $00FF0000) shr 16;
-          SrcColor.R := ClampInt(IAccumR, 0, $00FF0000) shr 16;
-          SrcColor.A := ClampInt(IAccumA, 0, $00FF0000) shr 16;
-
-          CopyPixel(@SrcColor, DstLine, Info.BytesPerPixel);
-          Inc(DstLine, Info.BytesPerPixel);
-        end;
+        Info.SetPixelFP(DstLine, @Info, nil, SrcFloat);
+        Inc(DstLine, Info.BytesPerPixel);
       end;
     end;
 
@@ -1971,6 +1947,7 @@ begin
     4: PLongWord(Dest)^ := PLongWord(Src)^;
     6: PColor48Rec(Dest)^ := PColor48Rec(Src)^;
     8: PInt64(Dest)^ := PInt64(Src)^;
+    12: PColor96FPRec(Dest)^ := PColor96FPRec(Src)^;
     16: PColorFPRec(Dest)^ := PColorFPRec(Src)^;
   end;
 end;
@@ -1980,14 +1957,14 @@ begin
   case BytesPerPixel of
     1: Result := PByte(PixelA)^ = PByte(PixelB)^;
     2: Result := PWord(PixelA)^ = PWord(PixelB)^;
-    3: Result := (PWord(PixelA)^ = PWord(PixelB)^) and
-         (PColor24Rec(PixelA).R = PColor24Rec(PixelB).R);
+    3: Result := (PWord(PixelA)^ = PWord(PixelB)^) and (PColor24Rec(PixelA).R = PColor24Rec(PixelB).R);
     4: Result := PLongWord(PixelA)^ = PLongWord(PixelB)^;
-    6: Result := (PLongWord(PixelA)^ = PLongWord(PixelB)^) and
-         (PColor48Rec(PixelA).R = PColor48Rec(PixelB).R);
+    6: Result := (PLongWord(PixelA)^ = PLongWord(PixelB)^) and (PColor48Rec(PixelA).R = PColor48Rec(PixelB).R);
     8: Result := PInt64(PixelA)^ = PInt64(PixelB)^;
-    16: Result := (PFloatHelper(PixelA).Data2 = PFloatHelper(PixelB).Data2) and
-          (PFloatHelper(PixelA).Data1 = PFloatHelper(PixelB).Data1);
+    12: Result := (PFloatHelper(PixelA).Data = PFloatHelper(PixelB).Data) and
+          (PFloatHelper(PixelA).Data32 = PFloatHelper(PixelB).Data32);
+    16: Result := (PFloatHelper(PixelA).Data = PFloatHelper(PixelB).Data) and
+          (PFloatHelper(PixelA).Data64 = PFloatHelper(PixelB).Data64);
   else
     Result := False;
   end;
@@ -2027,6 +2004,63 @@ begin
     PixF.B := 0.0;
 end;
 
+procedure ConvertToPixel32(SrcPix: PByte; DestPix: PColor32Rec;
+  const SrcInfo: TImageFormatInfo; SrcPalette: PPalette32);
+begin
+  case SrcInfo.Format of
+    ifIndex8:
+      begin
+        DestPix^ := SrcPalette[SrcPix^];
+      end;
+    ifGray8:
+      begin
+        DestPix.R := SrcPix^;
+        DestPix.G := SrcPix^;
+        DestPix.B := SrcPix^;
+        DestPix.A := 255;
+      end;
+    ifA8Gray8:
+      begin
+        DestPix.R := SrcPix^;
+        DestPix.G := SrcPix^;
+        DestPix.B := SrcPix^;
+        DestPix.A := PWordRec(SrcPix).High;
+      end;
+    ifGray16:
+      begin
+        DestPix.R := PWord(SrcPix)^ shr 8;
+        DestPix.G := DestPix.R;
+        DestPix.B := DestPix.R;
+        DestPix.A := 255;
+      end;
+    ifR8G8B8:
+      begin
+        DestPix.Color24Rec := PColor24Rec(SrcPix)^;
+        DestPix.A := 255;
+      end;
+    ifA8R8G8B8:
+      begin
+        DestPix^ := PColor32Rec(SrcPix)^;
+      end;
+    ifR16G16B16:
+      begin
+        DestPix.R := PColor48Rec(SrcPix).R shr 8;
+        DestPix.G := PColor48Rec(SrcPix).G shr 8;
+        DestPix.B := PColor48Rec(SrcPix).B shr 8;
+        DestPix.A := 255;
+      end;
+    ifA16R16G16B16:
+      begin
+        DestPix.R := PColor64Rec(SrcPix).R shr 8;
+        DestPix.G := PColor64Rec(SrcPix).G shr 8;
+        DestPix.B := PColor64Rec(SrcPix).B shr 8;
+        DestPix.A := PColor64Rec(SrcPix).A shr 8;
+      end;
+  else
+    DestPix^ := SrcInfo.GetPixel32(SrcPix, @SrcInfo, SrcPalette);
+  end;
+end;
+
 procedure AddPadBytes(DataIn: Pointer; DataOut: Pointer; Width, Height,
   Bpp, WidthBytes: LongInt);
 var
@@ -2047,49 +2081,64 @@ begin
     Move(PByteArray(DataIn)[I * WidthBytes], PByteArray(DataOut)[I * W], W);
 end;
 
-procedure Convert1To8(DataIn, DataOut: Pointer; Width, Height,
-  WidthBytes: LongInt);
+procedure Convert1To8(DataIn, DataOut: PByte; Width, Height,
+  WidthBytes: LongInt; ScaleTo8Bits: Boolean);
 const
   Mask1: array[0..7] of Byte = ($80, $40, $20, $10, $08, $04, $02, $01);
   Shift1: array[0..7] of Byte = (7, 6, 5, 4, 3, 2, 1, 0);
+  Scaling: Byte = 255;
 var
   X, Y: LongInt;
+  InArray: PByteArray absolute DataIn;
 begin
   for Y := 0 to Height - 1 do
     for X := 0 to Width - 1 do
-      PByteArray(DataOut)[Y * Width + X] :=
-        (PByteArray(DataIn)[Y * WidthBytes + X shr 3] and
-        Mask1[X and 7]) shr Shift1[X and 7];
+    begin
+      DataOut^ := (InArray[Y * WidthBytes + X shr 3] and Mask1[X and 7]) shr Shift1[X and 7];
+      if ScaleTo8Bits then
+        DataOut^ := DataOut^ * Scaling;
+      Inc(DataOut);
+    end;
 end;
 
-procedure Convert2To8(DataIn, DataOut: Pointer; Width, Height,
-  WidthBytes: LongInt);
+procedure Convert2To8(DataIn, DataOut: PByte; Width, Height,
+  WidthBytes: LongInt; ScaleTo8Bits: Boolean);
 const
   Mask2: array[0..3] of Byte = ($C0, $30, $0C, $03);
   Shift2: array[0..3] of Byte = (6, 4, 2, 0);
+  Scaling: Byte = 85;
 var
   X, Y: LongInt;
+  InArray: PByteArray absolute DataIn;
 begin
   for Y := 0 to Height - 1 do
     for X := 0 to Width - 1 do
-      PByteArray(DataOut)[Y * Width + X] :=
-        (PByteArray(DataIn)[X shr 2] and Mask2[X and 3]) shr
-        Shift2[X and 3];
+    begin
+      DataOut^ := (InArray[Y * WidthBytes + X shr 2] and Mask2[X and 3]) shr Shift2[X and 3];
+      if ScaleTo8Bits then
+        DataOut^ := DataOut^ * Scaling;
+      Inc(DataOut);
+    end;
 end;
 
-procedure Convert4To8(DataIn, DataOut: Pointer; Width, Height,
-  WidthBytes: LongInt);
+procedure Convert4To8(DataIn, DataOut: PByte; Width, Height,
+  WidthBytes: LongInt; ScaleTo8Bits: Boolean);
 const
   Mask4: array[0..1] of Byte = ($F0, $0F);
   Shift4: array[0..1] of Byte = (4, 0);
+  Scaling: Byte = 17;
 var
   X, Y: LongInt;
+  InArray: PByteArray absolute DataIn;
 begin
   for Y := 0 to Height - 1 do
     for X := 0 to Width - 1 do
-      PByteArray(DataOut)[Y * Width + X] :=
-        (PByteArray(DataIn)[Y * WidthBytes + X shr 1] and
-        Mask4[X and 1]) shr Shift4[X and 1];
+    begin
+      DataOut^ := (InArray[Y * WidthBytes + X shr 1] and  Mask4[X and 1]) shr Shift4[X and 1];
+      if ScaleTo8Bits then
+        DataOut^ := DataOut^ * Scaling;
+      Inc(DataOut);
+    end;
 end;
 
 function Has16BitImageAlpha(NumPixels: LongInt; Data: PWord): Boolean;
@@ -2124,6 +2173,21 @@ begin
   end;
 end;
 
+function PaletteHasAlpha(Palette: PPalette32; PaletteEntries: Integer): Boolean;
+var
+  I: Integer;
+begin
+  for I := 0 to PaletteEntries - 1 do
+  begin
+    if Palette[I].A <> 255 then
+    begin
+      Result := True;
+      Exit;
+    end;
+  end;
+  Result := False;
+end;
+
 function GetScanLine(ImageBits: Pointer; const FormatInfo: TImageFormatInfo;
   LineWidth, Index: LongInt): Pointer;
 var
@@ -2150,12 +2214,9 @@ const
 
 
 {
-
   Half/Float conversions inspired by half class from OpenEXR library.
 
-
   Float (Pascal Single type) is an IEEE 754 single-precision
-
   floating point number.
 
   Bit layout of Single:
@@ -2183,20 +2244,19 @@ const
   S is the sign-bit, e is the exponent and m is the significand (mantissa).
 }
 
-
 function HalfToFloat(Half: THalfFloat): Single;
 var
   Dst, Sign, Mantissa: LongWord;
   Exp: LongInt;
 begin
-  // extract sign, exponent, and mantissa from half number
+  // Extract sign, exponent, and mantissa from half number
   Sign := Half shr 15;
   Exp := (Half and $7C00) shr 10;
   Mantissa := Half and 1023;
 
   if (Exp > 0) and (Exp < 31) then
   begin
-    // common normalized number
+    // Common normalized number
     Exp := Exp + (127 - 15);
     Mantissa := Mantissa shl 13;
     Dst := (Sign shl 31) or (LongWord(Exp) shl 23) or Mantissa;
@@ -2204,12 +2264,12 @@ begin
   end
   else if (Exp = 0) and (Mantissa = 0) then
   begin
-    // zero - preserve sign
+    // Zero - preserve sign
     Dst := Sign shl 31;
   end
   else if (Exp = 0) and (Mantissa <> 0) then
   begin
-    // denormalized number - renormalize it
+    // Denormalized number - renormalize it
     while (Mantissa and $00000400) = 0 do
     begin
       Mantissa := Mantissa shl 1;
@@ -2217,7 +2277,7 @@ begin
     end;
     Inc(Exp);
     Mantissa := Mantissa and not $00000400;
-    // now assemble normalized number
+    // Now assemble normalized number
     Exp := Exp + (127 - 15);
     Mantissa := Mantissa shl 13;
     Dst := (Sign shl 31) or (LongWord(Exp) shl 23) or Mantissa;
@@ -2230,11 +2290,11 @@ begin
   end
   else //if (Exp = 31) and (Mantisa <> 0) then
   begin
-    // not a number - preserve sign and mantissa
+    // Not a number - preserve sign and mantissa
     Dst := (Sign shl 31) or $7F800000 or (Mantissa shl 13);
   end;
 
-  // reinterpret LongWord as Single
+  // Reinterpret LongWord as Single
   Result := PSingle(@Dst)^;
 end;
 
@@ -2244,29 +2304,29 @@ var
   Sign, Exp, Mantissa: LongInt;
 begin
   Src := PLongWord(@Float)^;
-  // extract sign, exponent, and mantissa from Single number
+  // Extract sign, exponent, and mantissa from Single number
   Sign := Src shr 31;
   Exp := LongInt((Src and $7F800000) shr 23) - 127 + 15;
   Mantissa := Src and $007FFFFF;
 
   if (Exp > 0) and (Exp < 30) then
   begin
-    // simple case - round the significand and combine it with the sign and exponent
+    // Simple case - round the significand and combine it with the sign and exponent
     Result := (Sign shl 15) or (Exp shl 10) or ((Mantissa + $00001000) shr 13);
   end
   else if Src = 0 then
   begin
-    // input float is zero - return zero
+    // Input float is zero - return zero
     Result := 0;
   end
   else
   begin
-    // difficult case - lengthy conversion
+    // Difficult case - lengthy conversion
     if Exp <= 0 then
     begin
       if Exp < -10 then
       begin
-        // input float's value is less than HalfMin, return zero
+        // Input float's value is less than HalfMin, return zero
         Result := 0;
       end
       else
@@ -2274,10 +2334,10 @@ begin
         // Float is a normalized Single whose magnitude is less than HalfNormMin.
         // We convert it to denormalized half.
         Mantissa := (Mantissa or $00800000) shr (1 - Exp);
-        // round to nearest
+        // Round to nearest
         if (Mantissa and $00001000) > 0 then
           Mantissa := Mantissa + $00002000;
-        // assemble Sign and Mantissa (Exp is zero to get denotmalized number)
+        // Assemble Sign and Mantissa (Exp is zero to get denormalized number)
         Result := (Sign shl 15) or (Mantissa shr 13);
       end;
     end
@@ -2285,12 +2345,12 @@ begin
     begin
       if Mantissa = 0 then
       begin
-        // input float is infinity, create infinity half with original sign
+        // Input float is infinity, create infinity half with original sign
         Result := (Sign shl 15) or $7C00;
       end
       else
       begin
-        // input float is NaN, create half NaN with original sign and mantissa
+        // Input float is NaN, create half NaN with original sign and mantissa
         Result := (Sign shl 15) or $7C00 or (Mantissa shr 13);
       end;
     end
@@ -2298,7 +2358,7 @@ begin
     begin
       // Exp is > 0 so input float is normalized Single
 
-      // round to nearest
+      // Round to nearest
       if (Mantissa and $00001000) > 0 then
       begin
         Mantissa := Mantissa + $00002000;
@@ -2311,11 +2371,11 @@ begin
 
       if Exp > 30 then
       begin
-        // exponent overflow - return infinity half
+        // Exponent overflow - return infinity half
         Result := (Sign shl 15) or $7C00;
       end
       else
-        // assemble normalized half
+        // Assemble normalized half
         Result := (Sign shl 15) or (Exp shl 10) or (Mantissa shr 13);
     end;
   end;
@@ -2528,18 +2588,21 @@ procedure FloatGetSrcPixel(Src: PByte; SrcInfo: PImageFormatInfo;
 var
   PixHF: TColorHFRec;
 begin
-  if SrcInfo.BytesPerPixel in [4, 16] then
+  Assert(SrcInfo.BytesPerPixel in [2, 4, 8, 12, 16]);
+
+  if SrcInfo.BytesPerPixel in [4, 12, 16] then
   begin
     // IEEE 754 single-precision channels
     FillChar(Pix, SizeOf(Pix), 0);
     case SrcInfo.BytesPerPixel of
       4: Pix.R := PSingle(Src)^;
+      12: Pix.Color96Rec := PColor96FPRec(Src)^;
       16: Pix := PColorFPRec(Src)^;
     end;
   end
   else
   begin
-    // half float channels
+    // Half float channels
     FillChar(PixHF, SizeOf(PixHF), 0);
     case SrcInfo.BytesPerPixel of
       2: PixHF.R := PHalfFloat(Src)^;
@@ -2547,7 +2610,8 @@ begin
     end;
     Pix := ColorHalfToFloat(PixHF);
   end;
-  // if src has no alpha, we set it to max (otherwise we would have to
+
+  // If src has no alpha, we set it to max (otherwise we would have to
   // test if dest has alpha or not in each FloatToXXX function)
   if not SrcInfo.HasAlphaChannel then
     Pix.A := 1.0;
@@ -2561,13 +2625,17 @@ var
   PixW: TColorFPRec;
   PixHF: TColorHFRec;
 begin
+  Assert(DstInfo.BytesPerPixel in [2, 4, 8, 12, 16]);
+
   PixW := Pix;
   if DstInfo.IsRBSwapped then
     SwapValues(PixW.R, PixW.B);
-  if DstInfo.BytesPerPixel in [4, 16] then
+
+  if DstInfo.BytesPerPixel in [4, 12, 16] then
   begin
     case DstInfo.BytesPerPixel of
-      4: PSingle(Dst)^ := PixW.R;
+      4:  PSingle(Dst)^ := PixW.R;
+      12: PColor96FPRec(Dst)^:= PixW.Color96Rec;
       16: PColorFPRec(Dst)^ := PixW;
     end;
   end
@@ -2891,6 +2959,7 @@ begin
       PWordArray(Dst)[I] := PByteArray(Src)[I] shl 8;
   end
   else
+  begin
     if (DstInfo.Format = ifGray8) and (SrcInfo.Format = ifGray16) then
     begin
       for I := 0 to NumPixels - 1 do
@@ -2905,6 +2974,7 @@ begin
         Inc(Src, SrcInfo.BytesPerPixel);
         Inc(Dst, DstInfo.BytesPerPixel);
       end;
+  end;
 end;
 
 procedure GrayToChannel(NumPixels: LongInt; Src, Dst: PByte; SrcInfo,
@@ -3821,6 +3891,32 @@ begin
     end;
 end;
 
+procedure EncodeBinary(SrcBits: Pointer; DestBits: PByte; Width, Height: Integer);
+var
+  Src: PByte absolute SrcBits;
+  Bitmap: PByteArray absolute DestBits;
+  X, Y, WidthBytes: Integer;
+  PixelTresholded, Treshold: Byte;
+begin
+  Treshold := ClampToByte(GetOption(ImagingBinaryTreshold));
+  WidthBytes := (Width + 7) div 8;
+
+  for Y := 0 to Height - 1 do
+    for X := 0 to Width - 1 do
+    begin
+      if Src^ > Treshold then
+        PixelTresholded := 255
+      else
+        PixelTresholded := 0;
+
+      Bitmap[Y * WidthBytes + X div 8] := Bitmap[Y * WidthBytes + X div 8] or // OR current value of byte with following:
+        (PixelTresholded and 1)  // To make 1 from 255, 0 remains 0
+        shl (7 - (X mod 8));  // Put current bit to proper place in byte
+
+      Inc(Src);
+    end;
+end;
+
 procedure DecodeBTC(SrcBits, DestBits: PByte; Width, Height: Integer);
 var
   X, Y, I, J, K: Integer;
@@ -3921,6 +4017,11 @@ begin
   end;
 end;
 
+procedure DecodeBinary(SrcBits, DestBits: PByte; Width, Height: Integer); {$IFDEF USE_INLINE}inline;{$ENDIF}
+begin
+  Convert1To8(SrcBits, DestBits, Width, Height, (Width + 7) div 8, True);
+end;
+
 procedure SpecialToUnSpecial(const SrcImage: TImageData; DestBits: Pointer;
   SpecialFormat: TImageFormat);
 begin
@@ -3931,6 +4032,7 @@ begin
     ifBTC:  DecodeBTC (SrcImage.Bits, DestBits, SrcImage.Width, SrcImage.Height);
     ifATI1N: DecodeATI1N(SrcImage.Bits, DestBits, SrcImage.Width, SrcImage.Height);
     ifATI2N: DecodeATI2N(SrcImage.Bits, DestBits, SrcImage.Width, SrcImage.Height);
+    ifBinary: DecodeBinary(SrcImage.Bits, DestBits, SrcImage.Width, SrcImage.Height);
   end;
 end;
 
@@ -3944,6 +4046,7 @@ begin
     ifBTC:  EncodeBTC (SrcBits, DestImage.Bits, DestImage.Width, DestImage.Height);
     ifATI1N: EncodeATI1N(SrcBits, DestImage.Bits, DestImage.Width, DestImage.Height);
     ifATI2N: EncodeATI2N(SrcBits, DestImage.Bits, DestImage.Width, DestImage.Height);
+    ifBinary: EncodeBinary(SrcBits, DestImage.Bits, DestImage.Width, DestImage.Height);
   end;
 end;
 
@@ -4040,6 +4143,12 @@ begin
   // multiples of four
   CheckDXTDimensions(Format, Width, Height);
   Result := Width * Height div 4; // 2bits/pixel
+end;
+
+function GetBinaryPixelsSize(Format: TImageFormat; Width, Height: LongInt): LongInt;
+begin
+  // Binary images are aligned on BYTE boundary
+  Result := ((Width + 7) div 8) * Height; // 1bit/pixel
 end;
 
 { Optimized pixel readers/writers for 32bit and FP colors to be stored in TImageFormatInfo }
@@ -4153,14 +4262,14 @@ end;
 function GetPixelFPFloat32(Bits: Pointer; Info: PImageFormatInfo; Palette: PPalette32): TColorFPRec;
 begin
   case Info.Format of
-    ifA32R32G32B32F:
+    ifA32R32G32B32F, ifA32B32G32R32F:
       begin
         Result := PColorFPRec(Bits)^;
       end;
-    ifA32B32G32R32F:
+    ifR32G32B32F, ifB32G32R32F:
       begin
-        Result := PColorFPRec(Bits)^;
-        SwapValues(Result.R, Result.B);
+        Result.A := 1.0;
+        Result.Color96Rec := PColor96FPRec(Bits)^;
       end;
     ifR32F:
       begin
@@ -4170,25 +4279,28 @@ begin
         Result.B := 0.0;
       end;
   end;
+  if Info.IsRBSwapped then
+    SwapValues(Result.R, Result.B);
 end;
 
 procedure SetPixelFPFloat32(Bits: Pointer; Info: PImageFormatInfo; Palette: PPalette32; const Color: TColorFPRec);
 begin
   case Info.Format of
-    ifA32R32G32B32F:
+    ifA32R32G32B32F, ifA32B32G32R32F:
       begin
         PColorFPRec(Bits)^ := Color;
       end;
-    ifA32B32G32R32F:
+    ifR32G32B32F, ifB32G32R32F:
       begin
-        PColorFPRec(Bits)^ := Color;
-        SwapValues(PColorFPRec(Bits).R, PColorFPRec(Bits).B);
+        PColor96FPRec(Bits)^ := Color.Color96Rec;
       end;
     ifR32F:
       begin
         PSingle(Bits)^ := Color.R;
       end;
   end;
+  if Info.IsRBSwapped then
+    SwapValues(PColor96FPRec(Bits).R, PColor96FPRec(Bits).B);
 end;
 
 initialization
@@ -4219,6 +4331,17 @@ initialization
 
   -- TODOS ----------------------------------------------------
     - nothing now
+
+  -- 0.77 Changes/Bug Fixes -------------------------------------
+    - Added ConvertToPixel32 helper function.
+
+  -- 0.26.5 Changes/Bug Fixes -----------------------------------
+    - Removed optimized codepatch for few data formats from StretchResample
+      function. It was quite buggy and not so much faster anyway.
+    - Added PaletteHasAlpha function.
+    - Added support functions for ifBinary data format.
+    - Added optional pixel scaling to Convert1To8, Convert2To8,
+      abd Convert4To8 functions.
 
   -- 0.26.3 Changes/Bug Fixes -----------------------------------
     - Filtered resampling ~10% faster now.

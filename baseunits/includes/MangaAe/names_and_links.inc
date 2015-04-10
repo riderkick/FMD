@@ -1,38 +1,50 @@
-function   MangaAeGetNamesAndLinks: Byte;
+  function MangaAeGetNamesAndLinks: Byte;
   var
-    tmp: Integer;
-    i: Cardinal;
+    i: LongInt;
     s: String;
+    regx: TRegExpr;
   begin
-    Result:= INFORMATION_NOT_FOUND;
-    if NOT GetPage(TObject(source), WebsiteRoots[MANGAAE_ID,1] + MANGAAE_BROWSER + IntToStr(StrToInt(URL)+1), 0) then
+    Result := INFORMATION_NOT_FOUND;
+    if not GetPage(TObject(Source), WebsiteRoots[MANGAAE_ID, 1] +
+      MANGAAE_BROWSER + 'page:' + IntToStr(StrToInt(URL) + 1), 0) then
     begin
-      Result:= NET_PROBLEM;
-      source.Free;
-      exit;
+      Result := NET_PROBLEM;
+      Source.Free;
+      Exit;
     end;
 
     parse.Clear;
-    Parser:= TjsFastHTMLParser.Create(PChar(source.Text));
+    Parser := THTMLParser.Create(PChar(Source.Text));
     Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
+    Parser.OnFoundText := OnText;
     Parser.Exec;
     Parser.Free;
-    if parse.Count=0 then
+    if parse.Count = 0 then
     begin
-      source.Free;
-      exit;
+      Source.Free;
+      Exit;
     end;
-    for i:= 0 to parse.Count-1 do
+    if parse.Count > 0 then
     begin
-      if (Pos('class="imgf"', parse.Strings[i]) > 0) then
-      begin
-        Result:= NO_ERROR;
-        s:= TrimLeft(TrimRight(StringFilter(parse.Strings[i+3])));
-        names.Add(HTMLEntitiesFilter(s));
-        s:= StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i-2], 'href=')), WebsiteRoots[MANGAAE_ID,1], '', []);
-        links.Add(s);
+      regx := TRegExpr.Create;
+      try
+        regx.Expression := '[^/]*\w+\.\w+(\:\d+)?/.+';
+        for i := 0 to parse.Count - 1 do
+        begin
+          if (Pos('<a', parse[i]) <> 0) and (Pos('class="manga"', parse[i]) <> 0) then
+          begin
+            s := GetVal(parse[i], 'href');
+            if regx.Exec(s) then
+            begin
+              links.Add(s);
+              names.Add(CommonStringFilter(parse[i + 1]));
+            end;
+          end;
+        end;
+      finally
+        regx.Free;
       end;
     end;
-    source.Free;
+    Result := NO_ERROR;
+    Source.Free;
   end;

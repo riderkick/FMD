@@ -316,7 +316,7 @@ LazarusResources.Add('TMainForm','FORMDATA',[
   +#9'dlgSaveTo'#4'left'#2'P'#3'top'#3#184#0#0#0#10'TPopupMenu'#10'pmDownload'#4
   +'left'#2'P'#3'top'#3#239#0#0#9'TMenuItem'#14'miDownloadStop'#7'Caption'#6#4
   +'Stop'#7'OnClick'#7#19'miDownloadStopClick'#0#0#9'TMenuItem'#16'miDownloadRe'
-  +'muse'#7'Caption'#6#6'Remuse'#7'OnClick'#7#21'miDownloadRemuseClick'#0#0#9'T'
+  +'muse'#7'Caption'#6#6'Resume'#7'OnClick'#7#21'miDownloadResumeClick'#0#0#9'T'
   +'MenuItem'#16'miDownloadRemove'#7'Caption'#6#6'Remove'#7'OnClick'#7#21'miDow'
   +'nloadRemoveClick'#0#0#9'TMenuItem'#29'miDownloadRemoveFinishedTasks'#7'Capt'
   +'ion'#6#21'Remove finished tasks'#7'OnClick'#7'"miDownloadRemoveFinishedTask'

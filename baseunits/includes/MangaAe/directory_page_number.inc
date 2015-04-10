@@ -1,35 +1,37 @@
-function   GetMangaAeDirectoryPageNumber: Byte;
+  function GetMangaAeDirectoryPageNumber: Byte;
   var
-    i: Cardinal;
+    i, p: LongInt;
+    isExtractPage: Boolean = False;
   begin
-    Result:= INFORMATION_NOT_FOUND;
-    if NOT GetPage(TObject(source), WebsiteRoots[MANGAAE_ID,1] + MANGAAE_BROWSER, 0) then
+    Result := INFORMATION_NOT_FOUND;
+    if not GetPage(TObject(Source), WebsiteRoots[MANGAAE_ID, 1] + MANGAAE_BROWSER, 0) then
     begin
-      Result:= NET_PROBLEM;
-      source.Free;
-      exit;
+      Result := NET_PROBLEM;
+      Source.Free;
+      Exit;
     end;
     parse.Clear;
-    Parser:= TjsFastHTMLParser.Create(PChar(source.Text));
+    Parser := THTMLParser.Create(PChar(Source.Text));
     Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
+    Parser.OnFoundText := OnText;
     Parser.Exec;
     Parser.Free;
-    if parse.Count=0 then
-    begin
-      source.Free;
-      exit;
-    end;
-    for i:= parse.Count-1 downto 2 do
-    begin
-      if (Pos('<li class=''active''>', parse.Strings[i]) > 0) then
+    Page := 1;
+    if parse.Count > 0 then
+      for i := 0 to parse.Count - 1 do
       begin
-        s:= TrimRight(TrimLeft(parse.Strings[i+10]));
-        Page:= StrToInt(s);
-        Result:= NO_ERROR;
-        source.Free;
-        exit;
+        if (Pos('<div', parse[i]) <> 0 ) and (Pos('class="pagination', parse[i]) <> 0) then
+          isExtractPage := True;
+        if isExtractPage and (Pos('</div', parse[i]) <> 0) then
+          Break;
+        if isExtractPage and (Pos('<a', parse[i]) <> 0) then
+        begin
+          s := ReplaceRegExpr('^.*/page\:(\d+)$', GetVal(parse[i], 'href'), '$1', True);
+          p := StrToIntDef(s, 0);
+          if p > Page then
+            Page := p;
+        end;
       end;
-    end;
-    source.Free;
+    Result := NO_ERROR;
+    Source.Free;
   end;

@@ -1,73 +1,82 @@
-function   GetMangaframeInfoFromURL: Byte;
-var
-  s: String;
-  isExtractChapter: Boolean = FALSE;
-  i, j: Cardinal;
-begin
-  mangaInfo.url:= WebsiteRoots[MANGAFRAME_ID,1] + URL;
-  if NOT GetPage(TObject(source), mangaInfo.url, Reconnect) then
+  function GetMangaFrameInfoFromURL: Byte;
+  var
+    i: Integer;
   begin
-    Result:= NET_PROBLEM;
-    source.Free;
-    exit;
-  end;
-
-  // parsing the HTML source
-  parse.Clear;
-  Parser:= TjsFastHTMLParser.Create(PChar(source.Text));
-  Parser.OnFoundTag := OnTag;
-  Parser.OnFoundText:= OnText;
-  Parser.Exec;
-
-  Parser.Free;
-  source.Free;
-
-  mangaInfo.website:= WebsiteRoots[MANGAFRAME_ID,0];
-  mangaInfo.status:= '1';
-  mangaInfo.coverLink:= '';
-  mangaInfo.summary:= '';
-  mangaInfo.authors:= '';
-  mangaInfo.artists:= '';
-  mangaInfo.genres:= '';
-
-  // using parser (cover link, summary, chapter name and link)
-  if parse.Count=0 then exit;
-  for i:= 0 to parse.Count-1 do
-  begin
-    // get chapter name and links
-    if (Pos('<div class="list">', parse.Strings[i])>0) then
-      isExtractChapter:= TRUE;
-
-    // get manga name
-    if (mangaInfo.title = '') AND (Pos(' :: Mangaoku', parse.Strings[i])>0) then
-      mangaInfo.title:= GetString('~!@'+parse.Strings[i], '~!@', ' :: Mangaoku');
-
-
-   { if (isExtractChapter) AND (Pos('</select>', parse.Strings[i])>0) then
-      break; }
-
-    if (isExtractChapter) AND
-       (Pos('<div class="title">', parse.Strings[i])>0) AND
-       (Pos('</div>', parse.Strings[i+2])=0) then
+    mangaInfo.website := WebsiteRoots[MANGAFRAME_ID, 0];
+    mangaInfo.url := FillMangaSiteHost(MANGAFRAME_ID, URL);
+    if not GetPage(TObject(Source), mangaInfo.url, Reconnect) then
     begin
-      Inc(mangaInfo.numChapter);
-      s:= StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i+1], 'href=')), WebsiteRoots[MANGAFRAME_ID,1], '', []) + 'page/';
-      mangaInfo.chapterLinks.Add(s);
-      s:= RemoveSymbols(TrimLeft(TrimRight(parse.Strings[i+2])));
-      mangaInfo.chapterName.Add(StringFilter(StringFilter(HTMLEntitiesFilter(s))));
+      Result := NET_PROBLEM;
+      Source.Free;
+      Exit;
     end;
-  end;
 
-  // Since chapter name and link are inverted, we need to invert them
-  if mangainfo.ChapterLinks.Count > 1 then
-  begin
-    i:= 0; j:= mangainfo.ChapterLinks.Count - 1;
-    while (i<j) do
+    // parsing the HTML source
+    parse.Clear;
+    Parser := THTMLParser.Create(PChar(Source.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText := OnText;
+    Parser.Exec;
+    Parser.Free;
+    Source.Free;
+
+    if parse.Count = 0 then
+      Exit(INFORMATION_NOT_FOUND);
+
+    mangaInfo.coverLink := '';
+    mangaInfo.title := '';
+    mangaInfo.authors := '';
+    mangaInfo.artists := '';
+    mangaInfo.genres := '';
+    mangaInfo.status := '1';
+
+    for i := 0 to parse.Count - 1 do
     begin
-      mangainfo.ChapterName.Exchange(i, j);
-      mangainfo.chapterLinks.Exchange(i, j);
-      Inc(i); Dec(j);
+      //cover
+      if (i + 2 < parse.Count - 1) then
+        if (Pos('class="thumbnail"', parse[i]) > 0) and (Pos('<img', parse[i + 2]) > 0) then
+          mangaInfo.coverLink := GetVal(parse[i + 2], 'src');
+
+      //title
+      if (i + 1 < parse.Count - 1) then
+        if (Pos('class="title"', parse[i]) > 0) and (Pos('<h1', parse[i]) > 0) then
+          mangaInfo.title := Trim(HTMLEntitiesFilter(StringFilter(Trim(parse[i + 1]))));
+
+      //author
+      if (i + 3 < parse.Count - 1) then
+        if (Pos('Author', parse[i]) > 0) and (Pos('</b', parse[i + 1]) > 0)
+          and (Pos('<', parse[i + 2]) = 0) then
+          mangaInfo.authors := Trim(TrimLeftChar(HTMLEntitiesFilter(StringFilter(Trim(parse[i + 2]))), [':']));
+
+      //artist
+      if (i + 3 < parse.Count - 1) then
+        if (Pos('Artist', parse[i]) > 0) and (Pos('</b', parse[i + 1]) > 0)
+          and (Pos('<', parse[i + 2]) = 0) then
+          mangaInfo.artists := Trim(TrimLeftChar(HTMLEntitiesFilter(StringFilter(Trim(parse[i + 2]))), [':']));
+
+      //synopsis
+      if (i + 3 < parse.Count - 1) then
+        if (Pos('Synopsis', parse[i]) > 0) and (Pos('</b', parse[i + 1]) > 0)
+          and (Pos('<', parse[i + 2]) = 0) then
+          mangaInfo.summary := Trim(TrimLeftChar(HTMLEntitiesFilter(StringFilter(Trim(parse[i + 2]))), [':']));
+
+      //chapters
+      if (i + 2 < parse.Count - 1) then
+        if (Pos('class="title"', parse[i]) > 0) and (Pos('<a', parse[i + 1]) > 0)
+          and (Pos('/okuyucu/read', parse[i + 1]) > 0) then
+        begin
+          Inc(mangaInfo.numChapter);
+          mangaInfo.chapterLinks.Add(Trim(StringReplace(GetVal(parse[i + 1], 'href'), WebsiteRoots[MANGAFRAME_ID, 1], '', [rfIgnoreCase])));
+          mangaInfo.chapterName.Add(Trim(HTMLEntitiesFilter(StringFilter(Trim(parse[i + 2])))));
+        end;
     end;
+
+    // invert chapters
+    if mangaInfo.chapterName.Count > 1 then
+    begin
+      InvertStrings(mangaInfo.chapterName);
+      InvertStrings(mangaInfo.chapterLinks);
+    end;
+
+    Result := NO_ERROR;
   end;
-  Result:= NO_ERROR;
-end;

@@ -457,7 +457,8 @@ begin
   end;
 
   { Account for restart interval (no-op if not using restarts) }
-  Dec(entropy^.restarts_to_go);
+  if entropy^.restarts_to_go > 0 then
+    Dec(entropy^.restarts_to_go);
 
   decode_mcu_DC_first := TRUE;
 end;
@@ -651,7 +652,8 @@ begin
   end;
 
   { Account for restart interval (no-op if not using restarts) }
-  Dec(entropy^.restarts_to_go);
+  if entropy^.restarts_to_go > 0 then
+    Dec(entropy^.restarts_to_go);
 
   decode_mcu_AC_first := TRUE;
 end;
@@ -734,7 +736,8 @@ begin
   entropy^.bitstate.bits_left := bits_left;
 
   { Account for restart interval (no-op if not using restarts) }
-  Dec(entropy^.restarts_to_go);
+  if entropy^.restarts_to_go > 0 then
+    Dec(entropy^.restarts_to_go);
 
   decode_mcu_DC_refine := TRUE;
 end;
@@ -1007,7 +1010,8 @@ begin
   end;
 
   { Account for restart interval (no-op if not using restarts) }
-  Dec(entropy^.restarts_to_go);
+  if entropy^.restarts_to_go > 0 then
+    Dec(entropy^.restarts_to_go);
 
   decode_mcu_AC_refine := TRUE;
   exit;

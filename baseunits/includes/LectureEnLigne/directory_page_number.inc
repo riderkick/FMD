@@ -1,35 +1,43 @@
-function   GetLEEDirectoryPageNumber: Byte;
+  function GetLectureEnLigneDirectoryPageNumber: Byte;
   var
-    i: Cardinal;
+    i, p: Cardinal;
+    regx: TRegExpr;
   begin
-    Result:= INFORMATION_NOT_FOUND;
-    if NOT GetPage(TObject(source), WebsiteRoots[LEE_ID,1] + LEE_BROWSER, 0) then
+    Result := INFORMATION_NOT_FOUND;
+    if not GetPage(TObject(Source), WebsiteRoots[LECTUREENLIGNE_ID, 1] +
+      LECTUREENLIGNE_BROWSER, 0) then
     begin
-      Result:= NET_PROBLEM;
-      source.Free;
-      exit;
+      Result := NET_PROBLEM;
+      Source.Free;
+      Exit;
     end;
+
     parse.Clear;
-    Parser:= TjsFastHTMLParser.Create(PChar(source.Text));
+    Parser := THTMLParser.Create(PChar(Source.Text));
     Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
+    Parser.OnFoundText := OnText;
     Parser.Exec;
     Parser.Free;
-    if parse.Count=0 then
+    if parse.Count = 0 then
     begin
-      source.Free;
-      exit;
+      Source.Free;
+      Exit;
     end;
-    for i:= parse.Count-1 downto 5 do
+
+    Page := 0;
+    regx := TRegExpr.Create;
+    regx.Expression := '^.*\?page=liste.*ordre=.*p=(\d+)\".*$';
+    for i := 0 to parse.Count - 1 do
     begin
-      if (Pos('index.php?page=liste&amp;ordre=titre&amp;p=2', parse.Strings[i]) > 0) then
+      if (Pos('href="', parse.Strings[i]) > 0) and
+        (Pos('?page=liste', parse.Strings[i]) > 0) then
       begin
-        s:= TrimRight(TrimLeft(parse.Strings[i-3]));
-        Page:= StrToInt(s);
-        Result:= NO_ERROR;
-        source.Free;
-        exit;
+        Result := NO_ERROR;
+        p := StrToIntDef(regx.Replace(parse.Strings[i], '$1', True), 0);
+        if p > Page then
+          Page := p;
       end;
     end;
-    source.Free;
-  end; 
+    regx.Free;
+    Source.Free;
+  end;

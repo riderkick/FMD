@@ -1,36 +1,44 @@
   function GetKomikidImageURL: Boolean;
   var
     s: String;
-    j,
     i: Cardinal;
     l: TStringList;
+    regx: TRegExpr;
   begin
-    l:= TStringList.Create;
-    s:= DecodeUrl(WebsiteRoots[KOMIKID_ID,1] + URL + '/' + IntToStr(workCounter+1));
-    Result:= GetPage(TObject(l),
-                     s,
-                     manager.container.manager.retryConnect);
-    parse:= TStringList.Create;
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
+    l := TStringList.Create;
+    s := EncodeURL(FillMangaSiteHost(KOMIKID_ID, URL) + '/' +
+      IntToStr(workCounter + 1) + '/');
+    Result := GetPage(TObject(l),
+      s,
+      manager.container.Manager.retryConnect);
+    parse := TStringList.Create;
+    Parser := THTMLParser.Create(PChar(l.Text));
     Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
+    Parser.OnFoundText := OnText;
     Parser.Exec;
     Parser.Free;
 
-    if parse.Count>0 then
+    if parse.Count > 0 then
     begin
-      for i:= 0 to parse.Count-1 do
-        if (Pos('class="lazyload_ad"', parse.Strings[i])>0) then
+      for i := 0 to parse.Count - 1 do
+      begin
+        if (Pos('<img', LowerCase(parse.Strings[i])) > 0) and
+          (Pos('class="picture"', LowerCase(parse.Strings[i])) > 0) then
         begin
-          s:= '';
-          s:= GetAttributeValue(GetTagAttribute(parse.Strings[i-8], 'src='));
-          if s = '' then
-            s:= GetAttributeValue(GetTagAttribute(parse.Strings[i-7], 'src='));
-          if Pos('http://', s) = 0 then
-            s:= WebsiteRoots[KOMIKID_ID,1] + KOMIKID_BROWSER + s;
-          manager.container.pageLinks.Strings[workCounter]:= EncodeURL(s);
-          break;
+          s := GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src='));
+          regx := TRegExpr.Create;
+          try
+            regx.Expression := 'https?://';
+            if not regx.Exec(s) then
+              s := WebsiteRoots[KOMIKID_ID, 1] + '/' + s;
+            s := EncodeURL(s);
+            manager.container.PageLinks.Strings[workCounter] := s;
+          finally
+            regx.Free;
+          end;
+          Break;
         end;
+      end;
     end;
     parse.Free;
     l.Free;

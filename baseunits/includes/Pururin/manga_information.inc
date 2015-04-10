@@ -1,172 +1,155 @@
-function   GetPururinInfoFromURL: Byte;
-var
-  s: String;
-  isExtractSummary : Boolean = TRUE;
-  isExtractArtists : Boolean = FALSE;
-  isExtractParodies: Boolean = FALSE;
-  isExtractGenres  : Boolean = FALSE;
-  isExtractChapter : Boolean = FALSE;
-  isExtractCharacters: Boolean = FALSE;
-  i, j: Cardinal;
-begin
-  if Pos('http://', URL) = 0 then
-    mangaInfo.url:= WebsiteRoots[PURURIN_ID,1] + URL
-  else
-    mangaInfo.url:= URL;
-  if NOT GetPage(TObject(source), mangaInfo.url, Reconnect) then
+  function GetPururinInfoFromURL: Byte;
+  var
+    s, readURL: String;
+    i, j: Integer;
+    isExtractArtists: Boolean = False;
+    isExtractParodies: Boolean = False;
+    isExtractGenres: Boolean = False;
+    isExtractCharacters: Boolean = False;
   begin
-    Result:= NET_PROBLEM;
-    source.Free;
-    exit;
-  end;
-  // parsing the HTML source
-  parse.Clear;
-  Parser:= TjsFastHTMLParser.Create(PChar(source.Text));
-  Parser.OnFoundTag := OnTag;
-  Parser.OnFoundText:= OnText;
-  Parser.Exec;
-
-  Parser.Free;
-  source.Free;
-  mangaInfo.website:= WebsiteRoots[PURURIN_ID,0];
-  mangaInfo.status:= '0';
-  mangaInfo.coverLink:= '';
-  mangaInfo.summary:= '';
-  mangaInfo.authors:= '';
-  mangaInfo.artists:= '';
-  mangaInfo.genres:= '';
-  
-  // using parser (cover link, summary, chapter name and link)
-  if parse.Count=0 then exit;
-  //for i:=0 to parse.Count-1 do
-  for i:=0 to parse.Count-1 do
-  begin
-    // get cover
-    if (mangaInfo.coverLink = '') AND
-       (Pos('class="gallery-cover', parse.Strings[i])>0) then
-      mangaInfo.coverLink:= CorrectURL(WebsiteRoots[PURURIN_ID,1] + GetAttributeValue(GetTagAttribute(parse.Strings[i+4], 'src=')));
-
-    // get title
-    if (Pos('class="otitle"', parse.Strings[i])<>0) AND (mangaInfo.title = '') then
-      mangaInfo.title:= Trim(HTMLEntitiesFilter(parse.Strings[i+1]));
-
-    if (NOT isExtractChapter) AND (Pos('loader block hidden', parse.Strings[i]) > 0) then
-      isExtractChapter:= TRUE;
-
-    if (isExtractChapter) AND
-       (Pos('class="gallery-cover', parse.Strings[i])>0) then
+    mangaInfo.website := WebsiteRoots[PURURIN_ID, 0];
+    mangaInfo.url := FillMangaSiteHost(PURURIN_ID, URL);
+    if not GetPage(TObject(Source), mangaInfo.url, Reconnect) then
     begin
-      Inc(mangaInfo.numChapter);
-      s:= WebsiteRoots[PURURIN_ID,1] + GetAttributeValue(GetTagAttribute(parse.Strings[i+2], 'href='));
-      mangaInfo.chapterLinks.Add(s);
-      s:= RemoveSymbols(TrimLeft(TrimRight(GetAttributeValue(GetTagAttribute(parse.Strings[i+4], 'alt=')))));
-      mangaInfo.chapterName.Add(StringFilter(HTMLEntitiesFilter(s)));
+      Result := NET_PROBLEM;
+      Source.Free;
+      Exit;
     end;
+    // parsing the HTML source
+    parse.Clear;
+    Parser := THTMLParser.Create(PChar(Source.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText := OnText;
+    Parser.Exec;
 
-    if (isExtractChapter) AND
-       (Pos('Artist', parse.Strings[i])>0) then
-      isExtractChapter:= FALSE; //bermasalah
+    Parser.Free;
+    Source.Free;
 
-    // get summary
-    if (Pos('class="gallery-description', parse.Strings[i]) <> 0) then
+    mangaInfo.status := '0';
+    mangaInfo.coverLink := '';
+    mangaInfo.summary := '';
+    mangaInfo.authors := '';
+    mangaInfo.artists := '';
+    mangaInfo.genres := '';
+    readURL := '';
+
+    // using parser (cover link, summary, chapter name and link)
+    if parse.Count = 0 then
+      Exit;
+    //for i:=0 to parse.Count-1 do
+    for i := 0 to parse.Count - 1 do
     begin
-      j:= i+1;
-      while (j<parse.Count) AND (Pos('</div>', parse.Strings[j])=0) do
+      // get cover
+      if (mangaInfo.coverLink = '') and (Pos('class="gallery-cover', parse[i]) > 0) then
+        mangaInfo.coverLink := CorrectURL(WebsiteRoots[PURURIN_ID, 1] +
+          GetVal(parse[i + 4], 'src'));
+
+      // get title
+      //if (Pos('class="otitle"', parse[i])<>0) AND (mangaInfo.title = '') then
+      if Pos('<title>', parse[i]) > 0 then
       begin
-        s:= parse.Strings[j];
-        if s[1] <> '<' then
+        mangaInfo.title := Trim(HTMLEntitiesFilter(StringFilter(Trim(parse[i + 1]))));
+        if Pos('- Pururin', mangaInfo.title) <> 0 then
+          mangaInfo.title := ReplaceRegExpr(
+            '^(.*)\s\-.*\s-\sPururin,\sFree\sOnline\sHentai\sManga.*$',
+            mangaInfo.title, '$1', True);
+      end;
+
+      // get summary
+      if (Pos('class="gallery-description', parse[i]) <> 0) then
+      begin
+        j := i + 1;
+        while (j < parse.Count) and (Pos('</div>', parse[j]) = 0) do
         begin
-          parse.Strings[j]:= HTMLEntitiesFilter(StringFilter(TrimLeft(parse.Strings[j])));
-          parse.Strings[j]:= StringReplace(parse.Strings[j], #10, '\n', [rfReplaceAll]);
-          parse.Strings[j]:= StringReplace(parse.Strings[j], #13, '\r', [rfReplaceAll]);
-          mangaInfo.summary:= mangaInfo.summary + parse.Strings[j];
-          break;
+          s := parse[j];
+          if s[1] <> '<' then
+          begin
+            parse[j] := HTMLEntitiesFilter(
+              StringFilter(TrimLeft(parse[j])));
+            parse[j] := StringReplace(parse[j], #10, '\n', [rfReplaceAll]);
+            parse[j] := StringReplace(parse[j], #13, '\r', [rfReplaceAll]);
+            mangaInfo.summary := mangaInfo.summary + parse[j];
+            Break;
+          end;
+          Inc(j);
         end;
-        Inc(j);
       end;
-      isExtractSummary:= FALSE;
-    end;
 
-    // get authors
-    if (Pos('Circle', parse.Strings[i])<>0) AND
-       (Pos('</td>', parse.Strings[i+1])<>0) then
-      mangaInfo.authors:= parse.Strings[i+6];
+      // get authors
+      if (Pos('Circle', parse[i]) <> 0) and
+        (Pos('</td>', parse[i + 1]) <> 0) then
+        mangaInfo.authors := parse[i + 6];
 
-    // get category
-    if (Pos('Category', parse.Strings[i])<>0) AND
-       (Pos('</td>', parse.Strings[i+1])<>0) then
-      mangaInfo.genres:= mangaInfo.genres + parse.Strings[i+6];
+      // get category
+      if (Pos('Category', parse[i]) <> 0) and
+        (Pos('</td>', parse[i + 1]) <> 0) then
+        mangaInfo.genres := mangaInfo.genres + parse[i + 6];
 
-    // get artists
-    if (Pos('Artist', parse.Strings[i])<>0) AND
-       (Pos('</td>', parse.Strings[i+1])<>0) then
-      isExtractArtists:= TRUE;
-    if isExtractArtists then
-    begin
-      if Pos('/browse/', parse.Strings[i]) <> 0 then
-        mangaInfo.artists:= mangaInfo.artists + Trim(parse.Strings[i+1]) + ', ';
-      if Pos('</ul>', parse.Strings[i]) <> 0 then
+      // get artists
+      if (Pos('Artist', parse[i]) <> 0) and
+        (Pos('</td>', parse[i + 1]) <> 0) then
+        isExtractArtists := True;
+      if isExtractArtists and (Pos('</ul', parse[i]) <> 0) then
+        isExtractArtists := False;
+      if isExtractArtists and (Pos('/browse/', parse[i]) <> 0) then
       begin
-        mangaInfo.artists:= StringReplace(mangaInfo.artists, '</tr>, ', '', []);
-        isExtractArtists:= FALSE;
+        if mangaInfo.artists = '' then
+          mangaInfo.artists := Trim(parse[i + 1])
+        else
+          mangaInfo.artists := mangaInfo.artists + ', ' + Trim(parse[i + 1]);
       end;
-    end;
 
-    // get parody
-    if ((Pos('Parody', parse.Strings[i])<>0) OR
-        (Pos('Parodies', parse.Strings[i])<>0)) AND
-       (Pos('</td>', parse.Strings[i+1])<>0) then
-      isExtractParodies:= TRUE;
-    if isExtractParodies then
+      // get parody
+      if ((Pos('Parody', parse[i]) <> 0) or
+        (Pos('Parodies', parse[i]) <> 0)) and
+        (Pos('</td>', parse[i + 1]) <> 0) then
+        isExtractParodies := True;
+      if isExtractParodies and (Pos('</ul', parse[i]) <> 0) then
+        isExtractParodies := False;
+      if isExtractParodies and (Pos('/browse/', parse[i]) <> 0) then
+        mangaInfo.genres := mangaInfo.genres + Trim(parse[i + 1]) + ', ';
+
+      // get language
+      if (Pos('Language', parse[i]) <> 0) and
+        (Pos('</td>', parse[i + 1]) <> 0) then
+        mangaInfo.genres := mangaInfo.genres + parse[i + 6] + ', ';
+
+      // get convention
+      if (Pos('Convention', parse[i]) <> 0) and
+        (Pos('</td>', parse[i + 1]) <> 0) then
+        mangaInfo.genres := mangaInfo.genres + parse[i + 6] + ', ';
+
+      // get character
+      if (Pos('Character', parse[i]) <> 0) and
+        (Pos('</td>', parse[i + 1]) <> 0) then
+        isExtractCharacters := True;
+      if isExtractCharacters and (Pos('</ul', parse[i]) <> 0) then
+        isExtractCharacters := False;
+      if isExtractCharacters and (Pos('/browse/', parse[i]) <> 0) then
+        mangaInfo.genres := mangaInfo.genres + Trim(parse[i + 1]) + ', ';
+
+      // get genres
+      if (Pos('Contents', parse[i]) <> 0) then
+        isExtractGenres := True;
+      if isExtractGenres and (Pos('</ul', parse[i]) <> 0) then
+        isExtractGenres := False;
+      if isExtractGenres and (Pos('/browse/', parse[i]) <> 0) then
+        mangaInfo.genres := mangaInfo.genres + Trim(parse[i + 1]) + ', ';
+
+      // get chapters
+      if (Pos('<a', parse[i]) <> 0) and (Pos('class="btn link-next', parse[i]) <> 0) then
+        readURL := GetVal(parse[i], 'href');
+    end;
+    mangaInfo.artists := StringReplace(mangaInfo.artists, '</tr>, ', '', []);
+    mangaInfo.genres := StringReplace(mangaInfo.genres, '</tr>, ', '', []);
+    //only 1 chapter
+    if readURL <> '' then
     begin
-      if Pos('/browse/', parse.Strings[i]) <> 0 then
-        mangaInfo.genres:= mangaInfo.genres + Trim(parse.Strings[i+1]) + ', ';
-      if Pos('</ul>', parse.Strings[i]) <> 0 then
-      begin
-        mangaInfo.genres:= StringReplace(mangaInfo.genres, '</tr>, ', '', []);
-        isExtractParodies:= FALSE;
-      end;
+      mangaInfo.numChapter := 1;
+      if not ExecRegExpr('^https?\://', readURL) then
+        readURL := WebsiteRoots[PURURIN_ID, 1] + readURL;
+      mangaInfo.chapterName.Add(mangaInfo.title);
+      mangaInfo.chapterLinks.Add(readURL);
     end;
-
-    // get language
-    if (Pos('Language', parse.Strings[i])<>0) AND
-       (Pos('</td>', parse.Strings[i+1])<>0) then
-      mangaInfo.genres:= mangaInfo.genres + parse.Strings[i+6] + ', ';
-
-    // get character
-    if (Pos('Character', parse.Strings[i])<>0) AND
-       (Pos('</td>', parse.Strings[i+1])<>0) then
-      isExtractCharacters:= TRUE;
-    if isExtractCharacters then
-    begin
-      if Pos('/browse/', parse.Strings[i]) <> 0 then
-        mangaInfo.genres:= mangaInfo.genres + Trim(parse.Strings[i+1]) + ', ';
-      if Pos('</ul>', parse.Strings[i]) <> 0 then
-      begin
-        mangaInfo.genres:= StringReplace(mangaInfo.genres, '</tr>, ', '', []);
-        isExtractCharacters:= FALSE;
-      end;
-    end;
-
-    // get genres
-    if (Pos('Contents', parse.Strings[i])<>0) then
-    begin
-      isExtractGenres:= TRUE;
-    end;
-
-    if isExtractGenres then
-    begin
-      if Pos('/browse/', parse.Strings[i]) <> 0 then
-        mangaInfo.genres:= mangaInfo.genres + Trim(parse.Strings[i+1]) + ', ';
-      if Pos('</ul>', parse.Strings[i]) <> 0 then
-      begin
-        mangaInfo.genres:= StringReplace(mangaInfo.genres, '</tr>, ', '', []);
-        isExtractGenres:= FALSE;
-      end;
-    end;
+    Result := NO_ERROR;
   end;
-  mangaInfo.authors:= Trim(mangaInfo.authors);
-  mangaInfo.artists:= Trim(mangaInfo.artists);
-  mangaInfo.genres := Trim(mangaInfo.genres);
-  Result:= NO_ERROR;
-end;

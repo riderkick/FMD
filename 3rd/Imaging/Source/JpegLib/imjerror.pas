@@ -42,7 +42,7 @@ procedure ERREXIT4(cinfo : j_common_ptr; code : J_MESSAGE_CODE;
                    p1 : int; p2 : int; p3 : int; p4 : int);
 
 procedure ERREXITS(cinfo : j_common_ptr;code : J_MESSAGE_CODE;
-                   str : string);
+                   str : AnsiString);
 { Nonfatal errors (we can keep going, but the data is probably corrupt) }
 
 procedure WARNMS(cinfo : j_common_ptr; code : J_MESSAGE_CODE);
@@ -78,7 +78,7 @@ procedure TRACEMS8(cinfo : j_common_ptr; lvl : int; code : J_MESSAGE_CODE;
                   p5 : int; p6 : int; p7 : int; p8 : int);
 
 procedure TRACEMSS(cinfo : j_common_ptr; lvl : int;
-                   code : J_MESSAGE_CODE; str : string);
+                   code : J_MESSAGE_CODE; str : AnsiString);
 
 implementation
 
@@ -179,7 +179,7 @@ begin
 end;
 
 procedure ERREXITS(cinfo : j_common_ptr;code : J_MESSAGE_CODE;
-                   str : string);
+                   str : AnsiString);
 begin
   cinfo^.err^.msg_code := ord(code);
   cinfo^.err^.msg_parm.s := str;  { string[JMSG_STR_PARM_MAX] }
@@ -286,7 +286,7 @@ begin
 end;
 
 procedure TRACEMSS(cinfo : j_common_ptr; lvl : int;
-                   code : J_MESSAGE_CODE; str : string);
+                   code : J_MESSAGE_CODE; str : AnsiString);
 begin
   cinfo^.err^.msg_code := ord(code);
   cinfo^.err^.msg_parm.s := str; { string JMSG_STR_PARM_MAX }
@@ -296,7 +296,7 @@ end;
 {METHODDEF}
 procedure output_message (cinfo : j_common_ptr);  
 var
-  buffer : string; {[JMSG_LENGTH_MAX];}
+  buffer : AnsiString; {[JMSG_LENGTH_MAX];}
 begin
   { Create the message }
   cinfo^.err^.format_message (cinfo, buffer);
@@ -350,11 +350,11 @@ end;
 
 
 {METHODDEF}
-procedure format_message (cinfo : j_common_ptr; var buffer : string);
+procedure format_message (cinfo : j_common_ptr; var buffer : AnsiString);
 var
   err : jpeg_error_mgr_ptr;
   msg_code : J_MESSAGE_CODE;
-  msgtext : string;
+  msgtext : AnsiString;
   isstring : boolean;
 begin
   err := cinfo^.err;

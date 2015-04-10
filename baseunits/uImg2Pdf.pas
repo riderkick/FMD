@@ -292,8 +292,8 @@ var
   ss    : TMemoryStream;
   ext   : String;
   im    : TImageData;
-  p     : Pointer;
 
+  {$ifdef CPU32}
   procedure Swap(buf: Pointer; size: Cardinal);
   begin
     asm
@@ -307,6 +307,7 @@ var
       loop @loop
     end;
   end;
+  {$endif}
 
 begin
   ext:= StringReplace(UpperCase(ExtractFileExt(AName)), '.', '', [rfReplaceAll]);
@@ -320,7 +321,9 @@ begin
     ss:= TMemoryStream.Create;
     BeginPDFPage(im.Width, im.Height);
 
+    {$ifdef CPU32}
     Swap(im.Bits, im.Width*im.Height);
+    {$endif}
 
     cs:= TCompressionStream.Create(TCompressionLevel.clMax, ss);
     cs.Write(im.Bits^, im.Width*im.Height*3);

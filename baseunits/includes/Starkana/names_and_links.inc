@@ -1,37 +1,34 @@
-function   StarkanaGetNamesAndLinks: Byte;
+  function StarkanaGetNamesAndLinks: Byte;
   var
-    tmp: Integer;
-    i: Cardinal;
-    s: String;
+    i: Integer;
   begin
-    Result:= INFORMATION_NOT_FOUND;
-    if NOT GetPage(TObject(source), WebsiteRoots[STARKANA_ID,1] + STARKANA_BROWSER, 0) then
+    Result := INFORMATION_NOT_FOUND;
+    if not GetPage(TObject(Source), WebsiteRoots[STARKANA_ID, 1] +
+      STARKANA_BROWSER, 0) then
     begin
-      Result:= NET_PROBLEM;
-      source.Free;
-      exit;
+      Result := NET_PROBLEM;
+      Source.Free;
+      Exit;
     end;
     parse.Clear;
-    Parser:= TjsFastHTMLParser.Create(PChar(source.Text));
+    Parser := THTMLParser.Create(PChar(Source.Text));
     Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
+    Parser.OnFoundText := OnText;
     Parser.Exec;
     Parser.Free;
-    if parse.Count=0 then
+    if parse.Count = 0 then
     begin
-      source.Free;
-      exit;
+      Source.Free;
+      Exit;
     end;
-    for i:= 0 to parse.Count-1 do
+    for i := 0 to parse.Count - 1 do
     begin
-      if (Pos('style="float:right;', parse.Strings[i]) > 0) then
+      if (Pos('style="float:right;', parse[i]) > 0) then
       begin
-        Result:= NO_ERROR;
-        s:= StringFilter(TrimLeft(TrimRight(parse.Strings[i+3])));
-        names.Add(HTMLEntitiesFilter(s));
-        s:= GetAttributeValue(GetTagAttribute(parse.Strings[i+2], 'href="'));
-        links.Add(s);
+        links.Add(GetVal(parse[i + 2], 'href'));
+        names.Add(CommonStringFilter(parse[i + 3]));
       end;
     end;
-    source.Free;
-  end;   
+    Result := NO_ERROR;
+    Source.Free;
+  end;

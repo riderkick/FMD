@@ -1,38 +1,37 @@
   function GetEatMangaPageNumber: Boolean;
   var
-    s    : String;
-    count: Cardinal = 0;
-    i, j : Cardinal;
-    l    : TStringList;
+    s: String;
+    Count: Cardinal = 0;
+    i: Cardinal;
+    l: TStringList;
   begin
-    l:= TStringList.Create;
-    parse:= TStringList.Create;
-    s:= DecodeUrl(WebsiteRoots[EATMANGA_ID,1] + URL);
-    Result:= GetPage(TObject(l),
-                     s,
-                     manager.container.manager.retryConnect);
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
+    l := TStringList.Create;
+    parse := TStringList.Create;
+    s := DecodeUrl(FillMangaSiteHost(EATMANGA_ID, URL));
+    Result := GetPage(TObject(l),
+      s,
+      manager.container.manager.retryConnect);
+    Parser := THTMLParser.Create(PChar(l.Text));
     Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
+    Parser.OnFoundText := OnText;
     Parser.Exec;
     Parser.Free;
-    if parse.Count>0 then
+    if parse.Count > 0 then
     begin
-      manager.container.pageNumber:= 0;
-      for i:= 0 to parse.Count-1 do
+      manager.container.PageNumber := 0;
+      for i := 0 to parse.Count - 1 do
       begin
-        if (Pos('</select>', parse.Strings[i])>0) then
-          if count > 0 then
+        if (Pos('</select>', parse.Strings[i]) > 0) then
+          if Count > 0 then
           begin
-            s:= parse.Strings[i-2];
-            manager.container.pageNumber:= StrToInt(TrimLeft(TrimRight(s)));
-            break;
+            s := parse.Strings[i - 2];
+            manager.container.PageNumber := StrToInt(TrimLeft(TrimRight(s)));
+            Break;
           end
           else
-            Inc(count);
+            Inc(Count);
       end;
     end;
     parse.Free;
     l.Free;
   end;
-  

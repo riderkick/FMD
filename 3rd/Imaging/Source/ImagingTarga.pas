@@ -1,5 +1,4 @@
 {
-  $Id: ImagingTarga.pas 139 2008-09-18 02:01:42Z galfar $
   Vampyre Imaging Library
   by Marek Mauder 
   http://imaginglib.sourceforge.net
@@ -43,6 +42,7 @@ type
   TTargaFileFormat = class(TImageFileFormat)
   protected
     FUseRLE: LongBool;
+    procedure Define; override;
     function LoadData(Handle: TImagingHandle; var Images: TDynImageDataArray;
       OnlyFirstLevel: Boolean): Boolean; override;
     function SaveData(Handle: TImagingHandle; const Images: TDynImageDataArray;
@@ -50,9 +50,8 @@ type
     procedure ConvertToSupported(var Image: TImageData;
       const Info: TImageFormatInfo); override;
   public
-    constructor Create; override;
     function TestFormat(Handle: TImagingHandle): Boolean; override;
-  published  
+  published
     { Controls that RLE compression is used during saving. Accessible trough
       ImagingTargaRLE option.}
     property UseRLE: LongBool read FUseRLE write FUseRLE;
@@ -99,13 +98,11 @@ type
 
 { TTargaFileFormat class implementation }
 
-constructor TTargaFileFormat.Create;
+procedure TTargaFileFormat.Define;
 begin
-  inherited Create;
+  inherited;
   FName := STargaFormatName;
-  FCanLoad := True;
-  FCanSave := True;
-  FIsMultiImageFormat := False;
+  FFeatures := [ffLoad, ffSave];
   FSupportedFormats := TargaSupportedFormats;
 
   FUseRLE := TargaDefaultRLE;

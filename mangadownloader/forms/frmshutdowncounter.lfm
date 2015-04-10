@@ -1,0 +1,91 @@
+object ShutdownCounterForm: TShutdownCounterForm
+  Left = 297
+  Height = 105
+  Top = 190
+  Width = 320
+  BorderIcons = [biSystemMenu]
+  BorderStyle = bsDialog
+  Caption = 'Free Manga Downloader'
+  ClientHeight = 105
+  ClientWidth = 320
+  Color = clWindow
+  FormStyle = fsSystemStayOnTop
+  KeyPreview = True
+  OnClose = FormClose
+  OnCreate = FormCreate
+  OnKeyDown = FormKeyDown
+  OnShow = FormShow
+  Position = poDesktopCenter
+  LCLVersion = '1.3'
+  object lblMessage: TLabel
+    Left = 0
+    Height = 15
+    Top = 24
+    Width = 320
+    Align = alTop
+    Alignment = taCenter
+    Caption = 'lblMessage'
+    ParentColor = False
+    WordWrap = True
+  end
+  object pnTop: TPanel
+    Left = 0
+    Height = 24
+    Top = 0
+    Width = 320
+    Align = alTop
+    BevelOuter = bvNone
+    TabOrder = 0
+  end
+  object pnBottom: TPanel
+    Left = 0
+    Height = 42
+    Top = 63
+    Width = 320
+    Align = alBottom
+    ClientHeight = 42
+    ClientWidth = 320
+    ParentColor = False
+    TabOrder = 1
+    object btAbort: TBitBtn
+      Left = 160
+      Height = 25
+      Top = 8
+      Width = 75
+      Anchors = [akRight, akBottom]
+      Caption = '&Abort'
+      Default = True
+      Kind = bkAbort
+      ModalResult = 3
+      OnClick = btAbortClick
+      TabOrder = 0
+    end
+    object btNow: TBitBtn
+      Left = 80
+      Height = 25
+      Top = 8
+      Width = 75
+      Anchors = [akLeft, akBottom]
+      Caption = '&Now'
+      Kind = bkYes
+      ModalResult = 6
+      OnClick = btNowClick
+      TabOrder = 1
+    end
+    object Bevel1: TBevel
+      Left = 1
+      Height = 2
+      Top = 1
+      Width = 318
+      Align = alTop
+      Shape = bsTopLine
+    end
+  end
+  object itCounter: TIdleTimer
+    Enabled = False
+    OnTimer = itCounterTimer
+    OnStartTimer = itCounterStartTimer
+    left = 247
+    top = 24
+  end
+end

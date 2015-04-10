@@ -1,35 +1,48 @@
   function GetMangaGoImageURL: Boolean;
   var
-    s: String;
-    j,
     i: Cardinal;
     l: TStringList;
+    regx: TRegExpr;
+    s: String;
   begin
-    l:= TStringList.Create;
+    l := TStringList.Create;
+    regx := TRegExpr.Create;
+    regx.Expression := '^(.*/pg-)\d+/$';
+    s := regx.Replace(URL, '$1', True);
+    //regx.Expression := '\.html?$';
+    regx.Expression := '\-$';
+    if (not regx.Exec(s)) and (s[Length(s)] <> '/') then
+      s := s + '/';
+    s := FillMangaSiteHost(MANGAGO_ID, s);
+    Result := GetPage(TObject(l), s + IntToStr(workCounter + 1) + '/',
+      manager.container.Manager.retryConnect);
 
-    if (Pos('http://', URL) > 0) then
-      s:= DecodeUrl(URL + IntToStr(workCounter+1) + '/')
-    else
-      s:= DecodeUrl(WebsiteRoots[MANGAGO_ID,1] + URL + IntToStr(workCounter+1) + '/');
-    Result:= GetPage(TObject(l),
-                     s,
-                     manager.container.manager.retryConnect);
-    parse:= TStringList.Create;
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
+    if Self.Terminated then
+    begin
+      l.Free;
+	  parse.Free;
+      regx.Free;
+      Exit;
+    end;
+
+    parse := TStringList.Create;
+    Parser := THTMLParser.Create(PChar(l.Text));
     Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
+    Parser.OnFoundText := OnText;
     Parser.Exec;
     Parser.Free;
 
-    if parse.Count>0 then
+    if parse.Count > 0 then
     begin
-      for i:= 0 to parse.Count-1 do
-        if (Pos('imgReady(''', parse.Strings[i])>0) then
+      for i := 0 to parse.Count - 1 do
+        if (Pos('imgReady(''', parse[i]) > 0) then
         begin
-          manager.container.pageLinks.Strings[workCounter]:= (GetString(parse.Strings[i], 'imgReady(''', ''','));
-          break;
+          regx.Expression := '^.*imgReady\(''([^'']*)''.*$';
+          manager.container.PageLinks[workCounter] := regx.Replace(parse[i], '$1', True);
+          Break;
         end;
     end;
+    regx.Free;
     parse.Free;
     l.Free;
   end;

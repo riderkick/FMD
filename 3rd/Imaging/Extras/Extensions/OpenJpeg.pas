@@ -44,15 +44,19 @@
   OpenJpeg Homepage: http://www.openjpeg.org
   PasOpenJpeg Homepage: http://galfar.vevb.net/openjpeg
 
-  Current Version: 1.03 (OpenJpeg 1.3.0 SVN revision 507 with my CDEF patch)
+  Current Version: 1.05 (OpenJpeg 1.3 SVN revision 611 with CDEF/PCLR patch)
 
   History:
+    v1.05 (2010-08-12):
+      - added palette support
+      - added CMYK support
+    v1.04 (2010-06-08):
+      - added few Pascal-looking type aliases
     v1.03 (2009-06-04):
       - added Mac OSX x86 support
     v1.02 (2009-01-30):
       - removed linking to stdc++ lib in LINUX/UNIX
     v1.01 (2008-12-27):
-      - removed linking to stdc++ lib in LINUX/UNIX
       - Delphi 2009 compatibility checks
     v1.00 (2008-03-01):
       - CDEF patch for OpenJpeg, added component types
@@ -62,7 +66,6 @@ unit OpenJpeg;
 
 {$IFDEF FPC}
   { Free Pascal settings }
-  {$MODE DELPHI}
   {$PACKRECORDS 8}
   {$PACKENUM 4}
 {$ELSE}
@@ -134,20 +137,27 @@ type
     CLRSPC_UNKNOWN = -1, { place-holder }
     CLRSPC_SRGB = 1,     { sRGB }
     CLRSPC_GRAY = 2,     { grayscale }
-    CLRSPC_SYCC = 3      { YUV }
+    CLRSPC_SYCC = 3,     { YUV }
+    CLRSPC_CMYK = 4      { CMYK }
   );
+  TOpjColorSpace = OPJ_COLOR_SPACE;
 
-  { Supported image component types }
+  { Supported image component types - added by patch }
   OPJ_COMPONENT_TYPE = (
     COMPTYPE_UNKNOWN = 0, { unknown component type, cdef box not present }
     COMPTYPE_R = 1,       { red component of sRGB image }
     COMPTYPE_G = 2,       { green component of sRGB image }
     COMPTYPE_B = 3,       { blue component of sRGB image }
-    COMPTYPE_Y = 4,       { luminance component of YUV and grayscale images }
+    COMPTYPE_L = 4,       { luminance component of YUV and grayscale images }
     COMPTYPE_CB = 5,      { Cb component of YUV image }
     COMPTYPE_CR = 6,      { Cr component of YUV image }
-    COMPTYPE_OPACITY = 7  { opacity/alpha channel }
+    COMPTYPE_OPACITY = 7, { opacity/alpha channel }
+    COMPTYPE_C = 8,       { C component of CMYK image }
+    COMPTYPE_M = 9,       { M component of CMYK image }
+    COMPTYPE_Y = 10,      { Y component of CMYK image }
+    COMPTYPE_K = 11       { K component of CMYK image }
   );
+  TOpjComponentType = OPJ_COMPONENT_TYPE;
 
   { Supported codec }
   OPJ_CODEC_FORMAT = (
@@ -257,6 +267,7 @@ type
   end;
   opj_cparameters_t = opj_cparameters;
   popj_cparameters_t = ^opj_cparameters_t;
+  TOpjCParameters = opj_cparameters_t;
 
   { Decompression parameters }
   opj_dparameters = record
@@ -273,6 +284,7 @@ type
   end;
   opj_dparameters_t = opj_dparameters;
   popj_dparameters_t = ^opj_dparameters_t;
+  TOpjDParameters = opj_dparameters_t;
 
   { Routines that are to be used by both halves of the library are declared
     to receive a Pointer to this structure.  There are no actual instances of
@@ -301,6 +313,8 @@ type
   end;
   opj_cinfo_t = opj_cinfo;
   popj_cinfo_t = ^opj_cinfo_t;
+  TOpjCInfo = opj_cinfo_t;
+  POpjCInfo = popj_cinfo_t;
 
   { Decompression context info }
   opj_dinfo = record
@@ -314,6 +328,8 @@ type
   end;
   opj_dinfo_t = opj_dinfo;
   popj_dinfo_t = ^opj_dinfo_t;
+  TOpjDInfo = opj_dinfo_t;
+  POpjDInfo = popj_dinfo_t;
 
 { I/O Stream Types Definitions }
 
@@ -337,6 +353,8 @@ type
   end;
   opj_cio_t = opj_cio;
   popj_cio_t = ^opj_cio_t;
+  TOpjCio = opj_cio_t;
+  POpjCio = popj_cio_t;
 
 { Image Type Definitions }
 
@@ -360,19 +378,36 @@ type
   popj_image_comp_t = ^opj_image_comp_t;
   opj_image_comp_array = array[0..255] of opj_image_comp_t;
   popj_image_comp_array = ^opj_image_comp_array;
+  TOpjImageComp = opj_image_comp_t;
+  POpjImageComp = popj_image_comp_t;
 
-  { Defines image data and Characteristics }
+  { Defines image palette - added by patch }
+  opj_image_palette = record
+    hascmap: Integer;       { set to one if the original image had a component mapping box }
+    haspalette: Integer;    { set to one if the original image had a palette color box }
+    numchans: Integer;      { number of channels the palette has }
+    numentrs: Integer;      { number of entries the palette has }
+    sizentr: Integer;       { size of one entry for one channel (in bytes) }
+    paldata: PByte;         { byte pointer to the palette data }
+  end;
+  opj_image_palette_t = opj_image_palette;
+  popj_image_palette_t = ^opj_image_palette_t;
+
+  { Defines image data and characteristics }
   opj_image = record
-    x0: Integer;                  { XOsiz: horizontal offset from the origin of the reference grid to the left side of the image area }
-    y0: Integer;                  { YOsiz: vertical offset from the origin of the reference grid to the top side of the image area }
-    x1: Integer;                  { Xsiz: width of the reference grid }
-    y1: Integer;                  { Ysiz: height of the reference grid }
-    numcomps: Integer;            { number of components in the image }
-    color_space: OPJ_COLOR_SPACE; { color space: sRGB, Greyscale or YUV }
-    comps: popj_image_comp_array; { image components }
+    x0: Integer;                   { XOsiz: horizontal offset from the origin of the reference grid to the left side of the image area }
+    y0: Integer;                   { YOsiz: vertical offset from the origin of the reference grid to the top side of the image area }
+    x1: Integer;                   { Xsiz: width of the reference grid }
+    y1: Integer;                   { Ysiz: height of the reference grid }
+    numcomps: Integer;             { number of components in the image }
+    color_space: OPJ_COLOR_SPACE;  { color space: sRGB, Greyscale or YUV }
+    comps: popj_image_comp_array;  { image components }
+    palette: popj_image_palette_t; { palette structure }
   end;
   opj_image_t = opj_image;
   popj_image_t = ^opj_image_t;
+  TOpjImage = opj_image_t;
+  POpjImage = popj_image_t;
 
   { Component parameters structure used by the opj_image_create function }
   opj_image_comptparm = record
@@ -391,6 +426,7 @@ type
   popj_image_cmptparm_t = ^opj_image_cmptparm_t;
   opj_image_cmptparm_array = array[0..255] of opj_image_cmptparm_t;
   popj_image_cmptparm_array = ^opj_image_cmptparm_array;
+  TOpjImageCompParam = opj_image_cmptparm_t;
 
 { OpenJpeg Version Functions Definitions }
 
@@ -518,8 +554,17 @@ function opj_encode(cinfo: popj_cinfo_t; cio: popj_cio_t; image: popj_image_t;
 
 implementation
 
-{$IF Defined(WIN32)}
+function pow(const Base, Exponent: Double): Double; cdecl; {$IFDEF FPC}[Public];{$ENDIF}
+begin
+  if Exponent = 0.0 then
+    Result := 1.0
+  else if (Base = 0.0) and (Exponent > 0.0) then
+    Result := 0.0
+  else
+    Result := Exp(Exponent * Ln(Base));
+end;
 
+{$IF Defined(MSWINDOWS)}
   {$IF Defined(DCC)}
     { Delphi Win32 }
     { Link object files created with C++ Builder.}
@@ -541,10 +586,11 @@ implementation
     {$L J2KObjects\dwt.obj}
     {$L J2KObjects\t2.obj}
     {$L J2KObjects\mct.obj}
-   const
-     { MS C Runtime library needed for importing std C functions.}
-     MSCRuntimeLib = 'msvcrt.dll';
-   var
+
+    const
+      { MS C Runtime library needed for importing std C functions.}
+       MSCRuntimeLib = 'msvcrt.dll';
+    var
       { Some unresolved external constants.}
       __turboFloat: LongBool = False;
       _max_dble: Double = 1.7e308;
@@ -627,27 +673,27 @@ implementation
     end;
 
     { C library imports }
-    function malloc(size: Cardinal): Pointer; cdecl; external MSCRuntimeLib;
-    function calloc(nelem, elsize: Cardinal): Pointer; cdecl; external MSCRuntimeLib;
-    procedure free(ptr: Pointer); cdecl; external MSCRuntimeLib;
-    function realloc(ptr: Pointer; size: Cardinal): Pointer; cdecl; external MSCRuntimeLib;
-    function memset(s: Pointer; c, n: Cardinal): Pointer; cdecl; external MSCRuntimeLib;
-    function memcpy(s1, s2: Pointer; n: Cardinal): Pointer; cdecl; external MSCRuntimeLib;
-    function floor(const x: Double): Double; cdecl; external MSCRuntimeLib;
-    function ceil(const num: Double): Double; cdecl; external MSCRuntimeLib;
-    function pow(const base, exponent: Double): Double; cdecl; external MSCRuntimeLib;
-    function printf(format: PAnsiChar): Integer; cdecl; varargs; external MSCRuntimeLib;
-    function fprintf(f: Pointer; format: PAnsiChar): Integer; cdecl; varargs; external MSCRuntimeLib;
-    function vsprintf(s, format: PAnsiChar): Integer; cdecl; varargs; external MSCRuntimeLib;
-    function _ftol(x: Single): LongInt; cdecl; external MSCRuntimeLib;
-    function strcpy(s1, s2: PAnsiChar): PAnsiChar; cdecl; external MSCRuntimeLib;
-    function strncpy(s1, s2: PAnsiChar; maxlen: Integer): PAnsiChar; cdecl; external MSCRuntimeLib;
-    function strlen(s: PAnsiChar): Integer; cdecl; external MSCRuntimeLib;
+    function malloc(size: Cardinal): Pointer; cdecl; external MSCRuntimeLib{$IFDEF BCB} name '_malloc'{$ENDIF};
+    function calloc(nelem, elsize: Cardinal): Pointer; cdecl; external MSCRuntimeLib{$IFDEF BCB} name '_calloc'{$ENDIF};
+    procedure free(ptr: Pointer); cdecl; external MSCRuntimeLib{$IFDEF BCB} name '_free'{$ENDIF};
+    function realloc(ptr: Pointer; size: Cardinal): Pointer; cdecl; external MSCRuntimeLib{$IFDEF BCB} name '_realloc'{$ENDIF};
+    function memset(s: Pointer; c, n: Cardinal): Pointer; cdecl; external MSCRuntimeLib{$IFDEF BCB} name '_memset'{$ENDIF};
+    function memcpy(s1, s2: Pointer; n: Cardinal): Pointer; cdecl; external MSCRuntimeLib{$IFDEF BCB} name '_memcpy'{$ENDIF};
+    function floor(const x: Double): Double; cdecl; external MSCRuntimeLib{$IFDEF BCB} name '_floor'{$ENDIF};
+    function ceil(const num: Double): Double; cdecl; external MSCRuntimeLib{$IFDEF BCB} name '_ceil'{$ENDIF};
+    function printf(format: PAnsiChar): Integer; cdecl; varargs; external MSCRuntimeLib{$IFDEF BCB} name '_printf'{$ENDIF};
+    function fprintf(f: Pointer; format: PAnsiChar): Integer; cdecl; varargs; external MSCRuntimeLib{$IFDEF BCB} name '_fprintf'{$ENDIF};
+    function vsprintf(s, format: PAnsiChar): Integer; cdecl; varargs; external MSCRuntimeLib{$IFDEF BCB} name '_vsprintf'{$ENDIF};
+    function _ftol(x: Single): LongInt; cdecl; external MSCRuntimeLib{$IFDEF BCB} name '__ftol'{$ENDIF};
+    function strcpy(s1, s2: PAnsiChar): PAnsiChar; cdecl; external MSCRuntimeLib{$IFDEF BCB} name '_strcpy'{$ENDIF};
+    function wcscpy(s1, s2: PAnsiChar): PAnsiChar; cdecl; external MSCRuntimeLib{$IFDEF BCB} name '_wstrcpy'{$ENDIF};
+    function strncpy(s1, s2: PAnsiChar; maxlen: Integer): PAnsiChar; cdecl; external MSCRuntimeLib{$IFDEF BCB} name '_strncpy'{$ENDIF};
+    function strlen(s: PAnsiChar): Integer; cdecl; external MSCRuntimeLib{$IFDEF BCB} name '_strlen'{$ENDIF};
   {$ELSEIF Defined(FPC)}
     { Free Pascal Win32 }
     { Link OpenJpeg static library and C runtime library.}
-    {$linklib libopenjpegwin32.a}
-    {$linklib libcrtdll.a}
+    {$LINKLIB libopenjpegwin32.a}
+    {$LINKLIB libcrtdll.a}
   {$IFEND}
 
 {$ELSEIF Defined(LINUX)}
@@ -656,24 +702,14 @@ implementation
     { Link C runtime library.}
     {$LINKLIB c}
 
-    function pow(const Base, Exponent: Double): Double; cdecl; [Public];
-    begin
-      if Exponent = 0.0 then
-        Result := 1.0
-      else if (Base = 0.0) and (Exponent > 0.0) then
-        Result := 0.0
-      else
-        Result := Exp(Exponent * Ln(Base));
-    end;
-
     {$IF Defined(CPU86)}
       { Free Pascal Linux x86 }
       { Link OpenJpeg static library.}
-      {$linklib libopenjpeglinx86.a}
+      {$LINKLIB libopenjpeglinx86.a}
     {$ELSEIF Defined(CPUX86_64)}
       { Free Pascal Linux x86_64 }
       { Link OpenJpeg static library.}
-      {$linklib libopenjpeglinx86_64.a}
+      {$LINKLIB libopenjpeglinx86_64.a}
     {$ELSE}
       No support for this CPU architecture.
     {$IFEND}
@@ -686,20 +722,10 @@ implementation
     { Link C runtime library.}
     {$LINKLIB c}
 
-    function pow(const Base, Exponent: Double): Double; cdecl; [Public];
-    begin
-      if Exponent = 0.0 then
-        Result := 1.0
-      else if (Base = 0.0) and (Exponent > 0.0) then
-        Result := 0.0
-      else
-        Result := Exp(Exponent * Ln(Base));
-    end;
-
     {$IF Defined(CPU86)}
       { Free Pascal MacOSX x86 }
       { Link OpenJpeg static library.}
-      {$linklib libopenjpegosxx86.a}
+      {$LINKLIB libopenjpegosxx86.a}
     {$ELSE}
       No support for this CPU architecture.
     {$IFEND}

@@ -1,0 +1,437 @@
+Unofficial build of Free Manga Downloader
+https://www.mediafire.com/folder/3ccy2c7g36hp3/Fmd
+
+Changelog:
+(! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
+
+0.9.7.1 (04-04-2015)
+[*] MyReadingMangaInfo: Add multi pages/chapter support, fix mangainfo
+
+0.9.7.0 (02-04-2015)
+[*] Manga2u: change domain to mangakaka.com
+[*] KissManga: Fix not downloading
+[*] SenManga: Fix mangainfo, updatelist and images download
+[*] Various changes
+
+0.9.6.4 (01-04-2015)
+[*] Minor bugs fixed
+
+0.9.6.3 (27-02-2015)
+[*] Minor bugs fixed
+
+0.9.6.2 (26-02-2015)
+[!*] Fixing some memory leaks
+
+0.9.6.1 (26-02-2015)
+[*] Use gzip, deflate compression when loading page for faster loading and bandwidth saving
+[*] Minor changes
+
+0.9.6.0 (25-02-2015)
+[+] Added MangaSee(EN)
+[*] MangaPark: Various changes and fixes, new mangalist
+[*] Various changes
+
+0.9.5.0 (22-02-2015)
+[*] Senmanga: Rewrite script, website changed
+[*] Minor changes to DownloadManager
+[*] Minor bugs fixed
+
+0.9.4.1 (21-02-2015)
+[*] Minor bugs fixed
+[*] Various changes
+
+0.9.4.0 (20-02-2015)
+[*+] Various changes
+
+0.9.3.1 (16-02-2015)
+[*] Minor changes
+
+0.9.3.0 (16-02-2015)
+[*] Increase max task to 8 and max thread pertask to 16
+[*] Button "Add to favorites", set enabled property by checking the existence of manga in favorite list
+[*] Various changes
+[*] Minor bugs fixed
+[+?] Added PornComix(H-Sites), not all downloadable
+[+?] Added XXComics(H-Sites), not all downloadable
+
+0.9.2.0 (14-02-2015)
+[*] Double click on empty space in download list open manga folder bug fixed
+[*] Various minor bugs fixed
+[*] MangaAe: rewrite all script, website changed, new mangalist
+
+0.9.1.3 (12-02-2015)
+[*] MangaHere: Various change and bugs fixed
+
+0.9.1.2 (11-02-2015)
+[*] Pururin: Rewrite mangainfo script
+
+0.9.1.1 (06-02-2015)
+[*] Minor bugs fixed
+
+0.9.1.0 (05-02-2015)
+[*] MangaReader_POR: update list bugs fixed
+[*] UnionMangas: rewrite all script, website changed, new mangalist
+[*] Starkana: rewrite script, website changed
+[-] Drop MangasProject support (website inaccessible)
+[+] Added MangaHost (PT)
+[*] Various changes
+
+0.9.0.0 (03-02-2015)
+[*] Various changes
+
+0.8.16.0 (02-02-2015)
+[*] Fixed ticket#160 and related windowstate and position bugs
+[*] MangaTraders: Rewrite all script (website entirely changed), new mangalist, delete data/MangaTraders.dat and rebuild mangalist to get new list
+[*] Various changes
+
+0.8.15.2 (23-01-2015)
+[*] Various changes
+
+0.8.15.1 (22-01-2015)
+[*] Mangago: Change domain and logic to not fail if domain changed again
+
+0.8.15.0 (21-01-2015)
+[+] Compiled with FPC 3.3.1 and LCL 1.5
+[+] Assigned CTRL + KEY_UP/KEY_DOWN to arrange download list item(s)
+[*] Fixed ticket#151
+[*] OneManga: Change domain and logic to not fail if domain changed again
+[*] SenManga: Fix UserAgent and logic to not fail if domain changed again
+[*] MangaStreamTo: Fix Manga Information (chapter list)  and logic to not fail if domain changed again
+
+0.8.14.0 (15-12-2014)
+[*] MangaFrame: Rewrite all script from scratch
+[*] DownloadManager: Keep record for each failed chapter download and replace current chapterlist with failedchapterlist when task finish, so we can retry this task.
+[*] Various changes and bug fixes
+
+0.8.13.1 (14-12-2014)
+[*] Manga2u: change domain and update list with sorted list for faster update (ticket#141)
+
+0.8.13.0 (13-12-2014)
+[+] Added ExtremeMangas(PT)
+[*] Minor changes
+
+0.8.12.0 (12-12-2014)
+[*] E-Hentai: Retry with new server if image failed to download 
+    (old task will not work. Remedy: Replace E-Hentai task "PageLinks=" with "PageContainerLinks=" in works\works.ini)
+[*] MangaBird: Fixed ticket#139
+[*] Various changes and bug fixes
+
+0.8.11.0 (08-12-2014)
+[+] Implement rearrange download list by drag and drop (multiselect supported)
+[*] Various changes and bug fixes
+
+0.8.10.0 (06-12-2014)
+[+] Added %AUTHOR% and %ARTIST% CustomRename field to "Save to>Chapter folder name" (need translation on hint text for non english)
+[+] Added HakiHome(H-Sites)
+[*] Various changes and bug fixes
+[-] Disable Download List auto-sort when new task added for a moment
+
+0.8.9.1 (03-12-2014)
+[*] Fix ticket#128
+
+0.8.9.0 (03-12-2014)
+[+] Added UnixManga(EN)
+
+0.8.8.0 (01-12-2014)
+[+] Added UnionMangas(BR/PT)
+[+] Added MangaBird(RAW)
+[*] Updater: Handle file not found and offer to download manually from my mediafire folder.
+[*] Minor changes
+
+0.8.7.2 (30-11-2014)
+[*] Minor bug fixes (custom genres filter)
+
+0.8.7.1 (29-11-2014)
+[*] Minor changes
+
+0.8.7.0 (29-11-2014)
+[*] Minor changes
+
+0.8.6.0 (28-11-2014)
+[+] Added I-Komik(MY-ID)
+[+] Added NHentai(H-Sites)
+[+] Added option to remove duplicate data when updating list, default false (slow and take cpu on long list!)
+[*] Debug symbol for fpc and lcl is enabled (larger debug file, you can delete *.dbg file if you don't have a plan to report any bug in the future)
+[*] Minor changes and bug fixes (DownloadManager, UpdateListManager, baseunit)
+
+0.8.5.24 (24-11-2014)
+[*] Minor changes (DownloadInfo)
+
+0.8.5.23 (23-11-2014)
+[*] Change DownloadInfo.progress value from WorkCounter to DownCounter
+[*] Minor changes
+
+0.8.5.22 (11-11-2014)
+[*] Fix AnimeA (ticket#119)
+[*] Various changes
+
+0.8.5.21 (10-11-2014)
+[+] Added MangaOku(TR)
+[+] Added MyReadingMangaInfo(H-Sites)
+[*] Various changes and bug fixes
+
+0.8.5.20 (07-11-2014)
+[+] Added confirmation dialog on "download all" if title are already in download list
+[*] Various changes and bug fixes
+
+0.8.5.19 (06-11-2014)
+[*] Minor changes (DownloadManager, UpdateListManager, frmMain)
+
+0.8.5.18 (06-11-2014)
+[+] Added ReadHentaiManga(H-Sites)
+[*] Minor changes
+
+0.8.5.17 (05-11-2014)
+[*] Fix ticket#113
+[*] Minor changes
+
+0.8.5.16 (04-11-2014)
+[+] Added MangaTown(EN), data available in Data\MangaTown.7z or build from scratch
+[*] UpdateManager, if website is not MangaSiteWithSortedList then mangainfo will be saved when aborted, regardless it's completed or not.
+[*] UpdateManager, NumberOfThreads will follow NumberOfThreadsPerTask value in "Connections" if not specified in advanced.ini (default = 1)
+[*] Fix closing 'Exit confirmation dialog' lead to exit fmd instead of cancel it (ticket#112)
+[*] Enable exit button and accept "esc" key to abort 'Exit counter dialog'
+[*] TjsFastHTMLParser changed to TFastHTMLParser which come with Lazarus
+
+0.8.5.15 (03-11-2014)
+[*] Minor bug fixes (sientthread_addtofavorites, baseunit_saveimage, downloadmanager_downloadimage)
+[*] Minor UI changes (progressbar color)
+
+0.8.5.14 (02-11-2014)
+[*] Fix ticket#107
+
+0.8.5.13 (01-11-2014)
+[*] Minor bug fixes (basenuit_StringFilter, ninemanga_mangainformation)
+
+0.8.5.12 (31-10-2014)
+[*] Fix sorting by "Added" column in download list (ticket#106)
+[*] Win32 and Win64 compiled with debug symbol active (don't ever rename *.dbg file)
+
+0.8.5.11 (27-10-2014)
+[+] Added option to skip loading manga info when updating list. For those who only need manga title and faster update. Need translation (filter will not work for manga without information)
+[*] Fix sometimes stuck when downloading/preparing
+[*] Various changes and bug fixes (filter, basunit, updatemanager)
+
+0.8.5.10 (26-10-2014)
+[*] Various changes and bug fixes
+
+0.8.5.9 (26-10-2014)
+[*] Fix searching not executed when changing website
+[*] Various changes and bug fixes
+
+0.8.5.8 (26-10-2014)
+[*] Minor bug fixes on getmangainfo
+
+0.8.5.7 (25-10-2014)
+[+] Added option to enable live search on mangalist (enabled by default. Need translation)
+
+0.8.5.6 (25-10-2014)
+[*] Minor changes
+
+0.8.5.5 (24-10-2014)
+[+] Added wait time dialog if after finish task is selected. Exit=5s, Shutdown=60s and Hibernate=30s
+[*] Various changes and bug fixes
+
+0.8.5.4 (22-10-2014)
+[+] Added OneManga(EN)
+[*] Minor bug fixes
+
+0.8.5.3 (21-10-2014)
+[*] Minor bug fixes
+[*] Source clean up
+
+0.8.5.2 (20-10-2014)
+[+] Add "Permit only one FMD running" in General Options (need translation)
+
+0.8.5.1 (19.10.2014)
+[*] Fix Mangago tickets#100
+[*] Fix deadlock upon exiting for exit/shutdown (tickets#99)
+[*] Various changes and bug fixes
+
+0.8.5.0 (17-10-2014)
+[*] Maintenance build
+
+0.8.4.0 (12-10-2014)
+[*] Separate GetMangaInfosThread from subthread
+[*] Various changes and bug fixes
+
+0.8.3.17 (11-10-2014)
+[*] Fix Fakku (forced to use SLL)
+[*] Fix Manga-Lib_PL
+[*] Various changes and bug fixes
+
+0.8.3.16 (11-10-2014)
+[+] Added Manga-Lib_PL(PL)
+[*] Fix tickets#97
+[*] Various changes and bug fixes
+
+0.8.3.15 (09-10-2014)
+[*] Download manager: Check image file on disk before running task
+[*] Fix Mangacow list and information
+[*] Various changes
+
+0.8.3.14 (7-10-2014)
+[*] Fix Mangacow
+[*] Various changes
+
+0.8.3.13 (6-10-2014)
+[*] Fix SenManga
+[*] Strip long name, workaround for tickets#85
+[*] Fix zip/cbz compression sometimes failed due to unicode handling
+[*] Various changes and bug fixes
+
+0.8.3.12 (05-10-2014)
+[+] Assign delete key on Download list to delete task
+[*] Fix filtering bugs
+[*] Fix Mangapanda
+[*] Various changes and bug fixes
+
+0.8.3.11 (04-10-2014)
+[*] Fix MangaInn(tickets#92)
+[*] Various changes and bug fixes
+
+0.8.3.10 (03-10-2014)
+-Fix tickets#91
+
+0.8.3.9 (03-10-2014)
+[*] Minor bug fixes
+
+0.8.3.8 (02-10-2014)
+[*] Minor bug fixes
+[*] Various changes
+
+0.8.3.7 (01-10-2014)
+[*] Fix "Download All" on manga list throw exception if there's connection problem.
+
+0.8.3.6 (20-09-2014)
+[*] Disable real time search manga list, use the return/enter key to trigger the search (reason: very slow on large manga list)
+[*] Minor bug fixes
+
+0.8.3.5 (25-09-2014)
+[+] Added E-Hentai
+[*] Various changes
+
+0.8.3.4 (19-09-2014)
+[*] Fix wrong title if list is filtered
+
+0.8.3.3 (19-09-2014)
+[*] Fix Batoto wrong title
+
+0.8.3.2 (18-09-2014)
+[+] Add "Self Published" title to batoto update script
+[*] Correcting update manager
+[*] Various changes
+
+0.8.3.1 (17-09-2014)
+[+] Added missing SOCKS4 support
+[*] Updater: read proxy configuration from FMD
+[*] Fix updatelist won't terminate while waiting connection
+[*] Fix url encoding (japscan)
+[*] Various changes
+
+0.8.3.0 (15-09-2014)
+[+] Added Japscan(FR)
+[+] Added support for SOCKS5 proxy
+[+] UI improvement for update list status and added abort button to abort update list proccess
+[+] Added update list queue (when update already running it's possible to add website to update list queue).
+[*] Fix Mangacow
+[*] Remove restriction to update list from scratch
+[*] Fixing updatelist thread
+[*] Fixing downloadmanager and download thread
+[*] Fixing some memory leaks
+[*] Maximum threads increased to 32(via advanced.ini)
+[*] Various changes and bug fixes
+
+0.8.2.22 (09-09-2014)
+[+] New updater(source available in source folder)
+[*] Optimizing updatelist again
+
+0.8.2.21 (08-09-2014)
+[+] Added RegExpr for customgenres, name, author, artist and summary
+[*] Fix updatelist sometimes throw exception
+[*] Optimizing updatelist script and fix some of memory leaks
+[*] Fix komikid
+[*] Fix batoto webtoon
+[*] Various changes (see source)
+
+0.8.2.20 (03-09-2014)
+[*] Fix Mangago
+[*] mangalist_update.ini changed to advanced.ini
+[*] Cleanup code
+
+0.8.2.19 (01-09-2014)
+[+] Added Lecture-En-Ligne(FR) and Japan-Shin(FR)
+[+] Added content menu on URL textbox
+[*] Fix Batoto
+[*] Various changes (see source)
+
+0.8.2.18 (30-08-2014)
+[*] Fix Batoto
+[+] Added NineManga, NineManga_ES, NineManga_CN, NineManga_DE, NineManga_IT, NineManga_RU, NineManga_BR
+[*] Replace "Add to favorites" checkbox with button.
+[+] Added progress bar on download list "Progress"
+[*] Various changes and bug fixes (see source)
+
+0.8.2.17 (25-08-2014)
+[*] various changes
+
+rev399-16 (20-08-2014)
+[*] Various changes and bug fixes (see source)
+
+rev399-15 (16-08-2014)
+[+] Added Mangastream.to (English --> MangaStreamTo), data is inside "Data\MangaStreamTo.7z"
+[*] Various changes
+
+rev399-14 (14-08-2014)
+[*] Overral UI improvement
+[*] Cleaning some code
+
+rev399-13 (12-8-2014)
+[*] Fix KissManga(en) mangalist bugs
+[*] Fix ScanManga(fr)
+[*] Small changes
+
+rev399-12 (8-8-2014)
+[*] Fix MangaAr
+
+rev399-11 (3-8-2014)
+[*] Fix Mangago
+
+rev399-10 (2-8-2014)
+[*] Small bug fixes
+
+rev399-9 (13-7-2014)
+[*] Various bug fixes (stability issue)
+[+] Implement Natural Sorting.
+
+rev399-8 (4-7-2014)
+[*] Fix Fakku
+[*] Various bug fixes
+
+rev399-7 (29-6-2014)
+[*] Fix tickets#59
+[*] Fix MangaREADER_POR, MangasPROJECT
+[+] Added missing OpenSSL lib
+
+rev339-6 (27-6-2014)
+[*] Fix Mangahere, Fakku, Perveden
+
+rev339-5
+[*] Fix ticket#56
+
+rev399-4
+[+] Added feature convert digit on chapter title, eksperimental/feedback required (need translation)
+
+rev399-3
+[*] Fix ticket#46
+[*] Fix CentralDeMangas
+
+rev399-2
+[*] Fix bad code, memory leak
+[+] UI Improvement: Added download task status icon and 
+[+] UI Improvement: Correcting list font padding(Manga list, Download list and Favorites list)
+[+] UI Improvement: Correcting Hint on download task.
+
+rev399-1
+[*] Fix Mangapanda, Batoto, Komikid
+[*] Fix batch delete favorites

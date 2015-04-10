@@ -1,7 +1,7 @@
 object Log: TLog
-  Left = 756
+  Left = 409
   Height = 365
-  Top = 175
+  Top = 201
   Width = 548
   BorderIcons = [biSystemMenu, biMinimize]
   Caption = 'Changelog'
@@ -9,7 +9,7 @@ object Log: TLog
   ClientWidth = 548
   OnCreate = FormCreate
   Position = poDesktopCenter
-  LCLVersion = '1.3'
+  LCLVersion = '1.2.4.0'
   object pnIE: TPanel
     Left = 66
     Height = 50

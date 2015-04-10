@@ -11,7 +11,7 @@ unit frmNewChapter;
 interface
 
 uses
-  Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
+  Classes, Forms, StdCtrls,
   Buttons;
 
 type

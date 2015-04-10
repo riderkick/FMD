@@ -1,29 +1,27 @@
   function GetStarkanaImageURL: Boolean;
   var
-    s: String;
-    j,
-    i: Cardinal;
+    i: Integer;
     l: TStringList;
   begin
-    l:= TStringList.Create;
-    s:= DecodeUrl(WebsiteRoots[STARKANA_ID,1] + URL + '/' + IntToStr(workCounter+1));
-    Result:= GetPage(TObject(l),
-                     s,
-                     manager.container.manager.retryConnect);
-    parse:= TStringList.Create;
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
+    l := TStringList.Create;
+    Result := GetPage(TObject(l),
+      DecodeUrl(FillMangaSiteHost(STARKANA_ID, URL) + '/' + IntToStr(workCounter + 1)),
+      manager.container.manager.retryConnect);
+    parse := TStringList.Create;
+    Parser := THTMLParser.Create(PChar(l.Text));
     Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
+    Parser.OnFoundText := OnText;
     Parser.Exec;
     Parser.Free;
 
-    if parse.Count>0 then
+    if parse.Count > 0 then
     begin
-      for i:= parse.Count-1 downto 5 do
-        if (Pos('style="cursor: pointer;"', parse.Strings[i])>0) then
+      for i := 0 to parse.Count - 1 do
+        if (Pos('<img', parse[i]) > 0) and (Pos('class="dyn', parse[i]) > 0) and
+         (Pos('style="cursor: pointer', parse[i]) > 0) then
         begin
-          manager.container.pageLinks.Strings[workCounter]:= GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src='));
-          break;
+          manager.container.PageLinks.Strings[workCounter] := GetVal(parse[i], 'src');
+          Break;
         end;
     end;
     parse.Free;

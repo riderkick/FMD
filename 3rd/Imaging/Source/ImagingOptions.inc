@@ -1,5 +1,3 @@
-{ $Id: ImagingOptions.inc 174 2009-09-08 09:37:59Z galfar $ }
-
 {
   User Options
   Following defines and options can be changed by user.
@@ -36,6 +34,7 @@
 //{$DEFINE DONT_LINK_MNG}         // link support for MNG images
 //{$DEFINE DONT_LINK_JNG}         // link support for JNG images
 //{$DEFINE DONT_LINK_PNM}         // link support for PortableMap images (PBM, PGM, PPM, PAM, PFM)
+//{$DEFINE DONT_LINK_RADHDR}      // link support for Radiance HDR/RGBE file format
 
 //{$DEFINE DONT_LINK_EXTRAS}  // link support for file formats defined in
                              // Extras package. Exactly which formats will be
@@ -67,20 +66,12 @@
 {$WRITEABLECONST OFF}     // Writeable constants: off
 
 {$IFNDEF FPC}
-  {$DEFINE DCC}           // if not using FPC then DCC compiler is used (Delphi/Kylix)
+  {$DEFINE DCC}           // if not using FPC then DCC compiler is used (Delphi/BCB)
                           // others are not supported
 {$ENDIF}
 
 {$IFDEF DCC}
-  {$IFDEF LINUX}
-    {$DEFINE KYLIX}       // using Kylix
-  {$ENDIF}
-{$ENDIF}
-
-{$IFDEF DCC}
-  {$IFNDEF KYLIX}
-    {$DEFINE DELPHI}      // using Delphi
-  {$ENDIF}
+  {$DEFINE DELPHI}
 {$ENDIF}
 
 {$IF (Defined(DCC) and (CompilerVersion >= 18.5))}
@@ -123,24 +114,53 @@
   {$ENDIF}
 {$IFEND}
 
+{$IF Defined (CPU86) and not Defined(CPUX86)}
+  {$DEFINE CPUX86} // Compatibility with Delphi
+{$IFEND}
+
+{$IF Defined (CPUX86_64) and not Defined(CPUX64)}
+  {$DEFINE CPUX64} // Compatibility with Delphi
+{$IFEND}
+
+{$IF Defined (DARWIN) and not Defined(MACOSX)}
+  {$DEFINE MACOS} // Compatibility with Delphi
+{$IFEND}
+
+{$IF Defined(DCC) and (CompilerVersion < 23)}
+  {$DEFINE CPUX86} // Compatibility with older Delphi
+{$IFEND}
 
 { Compiler capabilities }
 
 // Define if compiler supports inlining of functions and procedures
-// Note that FPC inline support crashed in older versions (1.9.8)
-{$IF (Defined(DCC) and (CompilerVersion >= 17)) or (Defined(FPC) and Defined(CPU86))}
+{$IF (Defined(DCC) and (CompilerVersion >= 17)) or Defined(FPC)}
   {$DEFINE HAS_INLINE}
 {$IFEND}
 
 // Define if compiler supports advanced records with methods
-{$IF (Defined(DCC) and (CompilerVersion >= 18)) }
+{$IF (Defined(DCC) and (CompilerVersion >= 18)) or
+  (Defined(FPC) and (FPC_FULLVERSION >= 20600))}
   {$DEFINE HAS_ADVANCED_RECORDS}
 {$IFEND}
 
 // Define if compiler supports operator overloading
-// (unfortunately Delphi and FPC operator overloaing is not compatible)
-{$IF (Defined(DCC) and (CompilerVersion >= 18)) or Defined(FPC)}
+// (unfortunately Delphi and FPC operator overloading is not compatible).
+// FPC supports Delphi compatible operator overloads since 2.6.0
+{$IF (Defined(DCC) and (CompilerVersion >= 18)) or
+  (Defined(FPC) and (FPC_FULLVERSION >= 20600))}
   {$DEFINE HAS_OPERATOR_OVERLOADING}
+{$IFEND}
+
+// Anonymous methods
+{$IF Defined(DCC) and (CompilerVersion >= 20) }
+  {$DEFINE HAS_ANON_METHODS}
+{$IFEND}
+
+// Generic types (Delphi and FPC implementations incompatible).
+// Update: FPC supports Delphi compatible generics since 2.6.0
+{$IF (Defined(DCC) and (CompilerVersion >= 20)) or
+  (Defined(FPC) and (FPC_FULLVERSION >= 20600))}
+  {$DEFINE HAS_GENERICS}
 {$IFEND}
 
 { Imaging options check}
@@ -149,11 +169,9 @@
   {$UNDEF USE_INLINE}
 {$ENDIF}
 
-{$IFDEF FPC}
-  {$IFNDEF CPU86}
-    {$UNDEF USE_ASM}
-  {$ENDIF}
-{$ENDIF}
+{$IF not Defined(CPUX86)}
+  {$UNDEF USE_ASM}
+{$IFEND}
 
 {$IFDEF FPC}
   {$DEFINE COMPONENT_SET_LCL}
@@ -167,13 +185,9 @@
 
 { Platform options }
 
-{$IFDEF WIN32}
+{$IF Defined(WIN32) or Defined(WIN64)}
   {$DEFINE MSWINDOWS}
-{$ENDIF}
-
-{$IFDEF DPMI}
-  {$DEFINE MSDOS}
-{$ENDIF}
+{$IFEND}
 
 {$IFDEF LINUX}
   {$DEFINE UNIX}
@@ -188,7 +202,6 @@
   {$GOTO ON}               // alow goto
   {$PACKRECORDS 8}         // same as ALING 8 for Delphi
   {$PACKENUM 4}            // Min enum size: 4 B
-  {$CALLING REGISTER}      // default calling convention is register
   {$IFDEF CPU86}
     {$ASMMODE INTEL}       // intel assembler mode
   {$ENDIF}

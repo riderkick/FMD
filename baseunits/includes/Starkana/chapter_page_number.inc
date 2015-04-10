@@ -1,31 +1,30 @@
   function GetStarkanaPageNumber: Boolean;
   var
-    s    : String;
-    i, j : Cardinal;
-    l    : TStringList;
+    i: Integer;
+    l: TStringList;
+    isGetPageNumber: Boolean = False;
   begin
-    l:= TStringList.Create;
-    parse:= TStringList.Create;
-    s:= DecodeUrl(WebsiteRoots[STARKANA_ID,1] + URL);
-    Result:= GetPage(TObject(l),
-                     s,
-                     manager.container.manager.retryConnect);
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
+    l := TStringList.Create;
+    parse := TStringList.Create;
+    Result := GetPage(TObject(l),
+      DecodeUrl(FillMangaSiteHost(STARKANA_ID, URL)),
+      manager.container.Manager.retryConnect);
+    Parser := THTMLParser.Create(PChar(l.Text));
     Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
+    Parser.OnFoundText := OnText;
     Parser.Exec;
     Parser.Free;
-    if parse.Count>0 then
+    if parse.Count > 0 then
     begin
-      manager.container.pageNumber:= 0;
-      for i:= parse.Count-1 downto 5 do
+      manager.container.PageNumber := 0;
+      for i := 0 to  parse.Count - 1 do
       begin
-        if (Pos('</option>', parse.Strings[i])>0) then
-        begin
-          s:= TrimLeft(TrimRight(parse.Strings[i-1]));
-          manager.container.pageNumber:= StrToInt(s);
-          break;
-        end;
+        if (Pos('<select', parse[i]) > 0) and (Pos('id="page_switch', parse[i]) > 0) then
+          isGetPageNumber := True;
+        if isGetPageNumber and (Pos('</select', parse[i]) > 0) then
+          Break;
+        if isGetPageNumber and (Pos('<option', parse[i]) > 0) then
+          Inc(manager.container.PageNumber);
       end;
     end;
     parse.Free;

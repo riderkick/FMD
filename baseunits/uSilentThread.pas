@@ -15,8 +15,8 @@ unit uSilentThread;
 interface
 
 uses
-  Classes, SysUtils, Dialogs, Controls, IniFiles, fgl, Graphics, Process, lclintf,
-  contnrs, uBaseUnit, uData, uDownloadsManager, uFMDThread;
+  SysUtils,
+  uBaseUnit, uData, uFMDThread;
 
 type
   // metadata - Store manga information in the queue, so that it will be
@@ -25,35 +25,33 @@ type
   protected
     // to determine the job (add to download list or favorites)
     FType: Integer;
-    FWebsite,
-    FManga,
-    FURL,
-    FPath: String;
+    FWebsite, FManga, FURL, FPath: String;
   public
-    constructor Create(const AType: Integer; const AWebsite, AManga, AURL, APath: String);
-    procedure   Run;
+    constructor Create(const AType: Integer;
+      const AWebsite, AManga, AURL, APath: String);
+    procedure Run;
   end;
+
+  { TSilentThread }
 
   TSilentThread = class(TFMDThread)
   protected
     FSavePath: String;
-    Info     : TMangaInformation;
+    Info: TMangaInformation;
+    Freconnect: Cardinal;
 
     // manga information from main thread
-    title,
-    website, URL: String;
+    title, website, URL: String;
 
-    procedure   MainThreadAfterChecking; virtual;
-    procedure   MainThreadIncreaseThreadCount; virtual;
-    procedure   MainThreadDecreaseThreadCount; virtual;
-    procedure   Execute; override;
+    procedure MainThreadAfterChecking; virtual;
+    procedure MainThreadIncreaseThreadCount; virtual;
+    procedure MainThreadDecreaseThreadCount; virtual;
+    procedure Execute; override;
   public
-
-
     constructor Create;
-    destructor  Destroy; override;
+    destructor Destroy; override;
 
-    property    SavePath: String read FSavePath write FSavePath;
+    property SavePath: String read FSavePath write FSavePath;
   end;
 
   // for "Download all" feature
@@ -64,16 +62,18 @@ type
   // for "Add to Favorites" feature
   TSilentAddToFavThread = class(TSilentThread)
   protected
-    procedure   MainThreadAfterChecking; override;
-    procedure   MainThreadDecreaseThreadCount; override;
+    procedure MainThreadAfterChecking; override;
+    procedure MainThreadDecreaseThreadCount; override;
   public
   end;
 
-procedure CreateDownloadAllThread(const AWebsite, AManga, AURL: String; ASavePath: String = '');
-procedure CreateAddToFavThread(const AWebsite, AManga, AURL: String; ASavePath: String = '');
+procedure CreateDownloadAllThread(const AWebsite, AManga, AURL: String;
+  ASavePath: String = '');
+procedure CreateAddToFavThread(const AWebsite, AManga, AURL: String;
+  ASavePath: String = '');
 
-var
-  SilentThreadQueue: TQueue;
+const
+  maxActiveSilentThread = 2;
 
 implementation
 
@@ -82,172 +82,194 @@ uses
 
 // ----- TSilentThreadMetaData -----
 
-constructor TSilentThreadMetaData.Create(const AType: Integer; const AWebsite, AManga, AURL, APath: String);
+constructor TSilentThreadMetaData.Create(const AType: Integer;
+  const AWebsite, AManga, AURL, APath: String);
 begin
   inherited Create;
-  FType   := AType;
-  FWebsite:= AWebsite;
-  FManga  := AManga;
-  FURL    := AURL;
-  FPath   := APath;
+  FType := AType;
+  FWebsite := AWebsite;
+  FManga := AManga;
+  FURL := AURL;
+  FPath := APath;
 end;
 
-procedure   TSilentThreadMetaData.Run;
+procedure TSilentThreadMetaData.Run;
 var
   silentThread: TSilentThread;
 begin
   case FType of
-    0: silentThread:= TSilentThread.Create;
-    1: silentThread:= TSilentAddToFavThread.Create;
+    0: silentThread := TSilentThread.Create;
+    1: silentThread := TSilentAddToFavThread.Create;
   end;
   if (FType in [0..1]) then
   begin
-    silentThread.SavePath:= FPath;
-    silentThread.website:= FWebsite;
-    silentThread.URL:= FURL;
-    silentThread.title:= FManga;
-    silentThread.isSuspended:= FALSE;
+    silentThread.SavePath := FPath;
+    silentThread.website := FWebsite;
+    silentThread.URL := FURL;
+    silentThread.title := FManga;
+    silentThread.Start;
   end;
 end;
 
 // ----- TSilentThread -----
 
-procedure   TSilentThread.MainThreadAfterChecking;
+procedure TSilentThread.MainThreadAfterChecking;
 var
-  hh, mm, ss, ms,
-  day, month, year: Word;
-  s, s1 : String;
-  i, pos: Cardinal;
+  s: String;
+  i, pos: Integer;
 begin
-  if Info.mangaInfo.numChapter = 0 then exit;
-  with MainForm do
-  begin
-    // add a new download task
-    DLManager.AddTask;
-    pos:= DLManager.containers.Count-1;
-    DLManager.containers.Items[pos].mangaSiteID:= GetMangaSiteID(website);
-
-    for i:= 0 to Info.mangaInfo.numChapter-1 do
+  if Info.mangaInfo.numChapter = 0 then
+    Exit;
+  try
+    with MainForm do
     begin
-      // generate folder name
-       s:= CustomRename(OptionCustomRename,
-                       Info.mangaInfo.website,
-                       Info.mangaInfo.title,
-                       Info.mangaInfo.chapterName.Strings[i],
-                       Format('%.4d', [i+1]),
-                       cbOptionPathConvert.Checked);
-      DLManager.containers.Items[pos].chapterName .Add(s);
-      DLManager.containers.Items[pos].chapterLinks.Add(Info.mangaInfo.chapterLinks.Strings[i]);
-    end;
+      // add a new download task
+      pos := DLManager.AddTask;
+      DLManager.containers.Items[pos].mangaSiteID := GetMangaSiteID(website);
 
-    DLManager.containers.Items[pos].downloadInfo.Status:= stWait;
-    DLManager.containers.Items[pos].Status:= STATUS_WAIT;
+      for i := 0 to Info.mangaInfo.numChapter - 1 do
+      begin
+        // generate folder name
+        s := CustomRename(OptionCustomRename,
+          Info.mangaInfo.website,
+          Info.mangaInfo.title,
+          info.mangaInfo.authors,
+          Info.mangaInfo.artists,
+          Info.mangaInfo.chapterName.Strings[i],
+          Format('%.4d', [i + 1]),
+          cbOptionPathConvert.Checked);
+        DLManager.containers.Items[pos].chapterName.Add(s);
+        DLManager.containers.Items[pos].chapterLinks.Add(
+          Info.mangaInfo.chapterLinks.Strings[i]);
+      end;
 
-    DLManager.containers.Items[pos].currentDownloadChapterPtr:= 0;
-    DLManager.containers.Items[pos].downloadInfo.title  := Info.mangaInfo.title;
-    DLManager.containers.Items[pos].downloadInfo.Website:= website;
-    if edSaveTo.Text = '' then
-      edSaveTo.Text:= options.ReadString('saveto', 'SaveTo', '');
-    s:= CorrectFilePath(edSaveTo.Text);
-    if s[Length(s)] = '/' then
-      Delete(s, Length(s), 1);
-
-    // save to
-    if cbOptionGenerateMangaFolderName.Checked then
-    begin
-      if NOT cbOptionPathConvert.Checked then
-        s:= s + '/' + RemoveSymbols(Info.mangaInfo.title)
+      if cbAddAsStopped.Checked then
+      begin
+        DLManager.containers.Items[pos].Status := STATUS_STOP;
+        DLManager.containers.Items[pos].downloadInfo.Status := stStop;
+      end
       else
-        s:= s + '/' + RemoveSymbols(UnicodeRemove(Info.mangaInfo.title));
+      begin
+        DLManager.containers.Items[pos].downloadInfo.Status := stWait;
+        DLManager.containers.Items[pos].Status := STATUS_WAIT;
+      end;
+
+      DLManager.containers.Items[pos].currentDownloadChapterPtr := 0;
+      DLManager.containers.Items[pos].downloadInfo.title := Info.mangaInfo.title;
+      DLManager.containers.Items[pos].downloadInfo.Website := website;
+	  if Trim(edSaveTo.Text) = '' then
+        edSaveTo.Text := options.ReadString('saveto', 'SaveTo', DEFAULT_PATH);
+      if Trim(edSaveTo.Text) = '' then
+        edSaveTo.Text := DEFAULT_PATH;
+      edSaveTo.Text := CorrectPathSys(edSaveTo.Text);
+      s := edSaveTo.Text;
+      // save to
+      if cbOptionGenerateMangaFolderName.Checked then
+      begin
+        if not cbOptionPathConvert.Checked then
+          s := s + RemoveSymbols(Info.mangaInfo.title)
+        else
+          s := s + RemoveSymbols(UnicodeRemove(Info.mangaInfo.title));
+      end;
+      s := CorrectPathSys(s);
+
+      DLManager.containers.Items[pos].downloadInfo.SaveTo := s;
+
+      // time
+      DLManager.containers.Items[pos].downloadInfo.dateTime := Now;
+
+      //DLManager.Sort(vtDownload.Header.SortColumn);
+      //DLManager.SortNatural(vtDownload.Header.SortColumn);
+      UpdateVtDownload;
+
+      DLManager.Backup;
+      DLManager.CheckAndActiveTask(False, Self);
+
+      // generate downloaded chapters
+      s := '';
+      if Info.mangaInfo.chapterLinks.Count = 0 then
+        Exit;
+      for i := 0 to Info.mangaInfo.chapterLinks.Count - 1 do
+      begin
+        s := s + IntToStr(i) + SEPERATOR;
+      end;
+      if s <> '' then
+        DLManager.AddToDownloadedChaptersList(Info.mangaInfo.website + URL, s);
     end;
-    DLManager.containers.Items[pos].downloadInfo.SaveTo:= s;
-
-    // time
-    DecodeDate(Now, year, month, day);
-    DecodeTime(Time, hh, mm, ss, ms);
-    DLManager.containers.Items[pos].downloadInfo.dateTime:= IntToStr(Month)+'/'+IntToStr(Day)+'/'+IntToStr(Year)+' '+IntToStr(hh)+':'+IntToStr(mm)+':'+IntToStr(ss);
-
-    DLManager.Sort(vtDownload.Header.SortColumn);
-    UpdateVtDownload;
-
-    DLManager.Backup;
-    DLManager.CheckAndActiveTask;
-
-    // generate downloaded chapters
-    s:= '';
-    if Info.mangaInfo.chapterLinks.Count = 0 then exit;
-    for i:= 0 to Info.mangaInfo.chapterLinks.Count-1 do
-    begin
-      s:= s+IntToStr(i) + SEPERATOR;
-    end;
-    if s <> '' then
-      DLManager.AddToDownloadedChaptersList(Info.mangaInfo.website + URL, s);
+  except
+    on E: Exception do
+      MainForm.ExceptionHandler(Self, E);
   end;
 end;
 
-procedure   TSilentThread.MainThreadIncreaseThreadCount;
+procedure TSilentThread.MainThreadIncreaseThreadCount;
 begin
-  Inc(MainForm.currentActiveSilentThreadCount);
+  MainForm.CS_SilentThread_ThreadCount.Acquire;
+  try
+    Inc(MainForm.currentActiveSilentThreadCount);
+  finally
+    MainForm.CS_SilentThread_ThreadCount.Release;
+  end;
 end;
 
-procedure   TSilentThread.MainThreadDecreaseThreadCount;
+procedure TSilentThread.MainThreadDecreaseThreadCount;
 var
   meta: TSilentThreadMetaData;
 begin
-  with MainForm do
-  begin
-    Dec(silentThreadCount);
-    Dec(currentActiveSilentThreadCount);
-    // change status
-    if silentThreadCount > 0 then
-      sbMain.Panels[1].Text:= 'Loading: '+IntToStr(silentThreadCount)
-    else
-      sbMain.Panels[1].Text:= '';
-  end;
-  // TODO
-  if SilentThreadQueue.Count > 0 then
-  begin
-    meta:= TSilentThreadMetaData(SilentThreadQueue.Pop);
-    if meta <> nil then
+  MainForm.CS_SilentThread_ThreadCount.Acquire;
+  try
+    with MainForm do
     begin
-      meta.Run;
-      meta.Free;
+      Dec(MainForm.silentThreadCount);
+      Dec(currentActiveSilentThreadCount);
+      // change status
+      if silentThreadCount > 0 then
+        sbMain.Panels[1].Text := 'Loading: ' + IntToStr(silentThreadCount)
+      else
+        sbMain.Panels[1].Text := '';
     end;
+    // TODO
+    if MainForm.SilentThreadQueue.Count > 0 then
+    begin
+      meta := TSilentThreadMetaData(MainForm.SilentThreadQueue.Pop);
+      if meta <> nil then
+      begin
+        meta.Run;
+        meta.Free;
+      end;
+    end;
+
+  finally
+    MainForm.CS_SilentThread_ThreadCount.Release;
   end;
 end;
 
-procedure   TSilentThread.Execute;
-var
-  times: Cardinal;
-  s    : String;
+procedure TSilentThread.Execute;
 begin
-  while isSuspended do Sleep(32);
-
-  while MainForm.currentActiveSilentThreadCount > 2 do
-    Sleep(250);
-  Synchronize(MainThreadIncreaseThreadCount);
-
-  times:= 3;
-  s:= URL;
-  s:= webSite;
-  Info.mangaInfo.title:= title;
-  if Info.GetInfoFromURL(website, URL, times)<>NO_ERROR then
-  begin
-    Info.Free;
-    exit;
+  try
+    while MainForm.currentActiveSilentThreadCount > maxActiveSilentThread do
+      Sleep(250);
+    Synchronize(MainThreadIncreaseThreadCount);
+    Info.mangaInfo.title := title;
+    if Info.GetInfoFromURL(website, URL, Freconnect) = NO_ERROR then
+      if not Self.Terminated then
+        Synchronize(MainThreadAfterChecking);
+    Synchronize(MainThreadDecreaseThreadCount);
+  except
+    on E: Exception do
+      MainForm.ExceptionHandler(Self, E);
   end;
-  Synchronize(MainThreadAfterChecking);
-  Synchronize(MainThreadDecreaseThreadCount);
 end;
 
 constructor TSilentThread.Create;
 begin
-  inherited Create(FALSE);
-  Info:= TMangaInformation.Create;
-  SavePath:= '';
+  inherited Create(True);
+  Freconnect := 3;
+  Info := TMangaInformation.Create;
+  SavePath := '';
 end;
 
-destructor  TSilentThread.Destroy;
+destructor TSilentThread.Destroy;
 begin
   Info.Free;
   inherited Destroy;
@@ -255,79 +277,81 @@ end;
 
 // ----- TSilentAddToFavThread -----
 
-procedure   TSilentAddToFavThread.MainThreadAfterChecking;
+procedure TSilentAddToFavThread.MainThreadAfterChecking;
 var
   s, s2: String;
-  i    : Cardinal;
+  i: Cardinal;
 begin
-  with MainForm do
-  begin
-    if FSavePath = '' then
+  try
+    with MainForm do
     begin
-      if edSaveTo.Text = '' then
-        edSaveTo.Text:= options.ReadString('saveto', 'SaveTo', '');
-      s:= CorrectFilePath(edSaveTo.Text);
-    end
-    else
-      s:= FSavePath;
-    if s[Length(s)] = '/' then
-      Delete(s, Length(s), 1);
-
-    if cbOptionGenerateMangaFolderName.Checked then
-    begin
-      if NOT cbOptionPathConvert.Checked then
-        s:= s + '/' + RemoveSymbols(title)
+      if FSavePath = '' then
+      begin
+	    if Trim(edSaveTo.Text) = '' then
+          edSaveTo.Text := options.ReadString('saveto', 'SaveTo', DEFAULT_PATH);
+        if Trim(edSaveTo.Text) = '' then
+          edSaveTo.Text := DEFAULT_PATH;
+        edSaveTo.Text := CorrectPathSys(edSaveTo.Text);
+        s := edSaveTo.Text;
+      end
       else
-        s:= s + '/' + RemoveSymbols(UnicodeRemove(title));
-    end;
+        s := CorrectPathSys(FSavePath);
 
-    s2:= '';
-    if (Info.mangaInfo.numChapter > 0) then
-    begin
-      for i:= 0 to Info.mangaInfo.numChapter-1 do
-        s2:= s2 + Info.mangaInfo.chapterLinks.Strings[i] + SEPERATOR;
-    end;
+      if cbOptionGenerateMangaFolderName.Checked then
+      begin
+        if not cbOptionPathConvert.Checked then
+          s := s + RemoveSymbols(title)
+        else
+          s := s + RemoveSymbols(UnicodeRemove(title));
+      end;
+      s := CorrectPathSys(s);
 
-    favorites.Add(title,
-                  IntToStr(Info.mangaInfo.numChapter),
-                  s2,
-                  website,
-                  s,
-                  URL);
-    UpdateVtFavorites;
+      s2 := '';
+      if (Info.mangaInfo.numChapter > 0) then
+      begin
+        for i := 0 to Info.mangaInfo.numChapter - 1 do
+          s2 := s2 + Info.mangaInfo.chapterLinks.Strings[i] + SEPERATOR;
+      end;
+
+      favorites.Add(title,
+        IntToStr(Info.mangaInfo.numChapter),
+        s2,
+        website,
+        s,
+        URL);
+      UpdateVtFavorites;
+    end;
+  except
+    on E: Exception do
+      MainForm.ExceptionHandler(Self, E);
   end;
 end;
 
-procedure   TSilentAddToFavThread.MainThreadDecreaseThreadCount;
+procedure TSilentAddToFavThread.MainThreadDecreaseThreadCount;
 begin
   inherited;
   Dec(MainForm.silentAddToFavThreadCount);
 end;
 
-procedure   CreateDownloadAllThread(const AWebsite, AManga, AURL: String; ASavePath: String = '');
+procedure CreateDownloadAllThread(const AWebsite, AManga, AURL: String;
+  ASavePath: String = '');
 var
   meta: TSilentThreadMetaData;
 begin
-  meta:= TSilentThreadMetaData.Create(0, AWebsite, AManga, AURL, ASavePath);
-  SilentThreadQueue.Push(meta);
+  meta := TSilentThreadMetaData.Create(0, AWebsite, AManga, AURL, ASavePath);
+  MainForm.SilentThreadQueue.Push(meta);
   Inc(MainForm.silentThreadCount);
 end;
 
-procedure   CreateAddToFavThread(const AWebsite, AManga, AURL: String; ASavePath: String = '');
+procedure CreateAddToFavThread(const AWebsite, AManga, AURL: String;
+  ASavePath: String = '');
 var
   meta: TSilentThreadMetaData;
 begin
-  meta:= TSilentThreadMetaData.Create(1, AWebsite, AManga, AURL, ASavePath);
-  SilentThreadQueue.Push(meta);
+  meta := TSilentThreadMetaData.Create(1, AWebsite, AManga, AURL, ASavePath);
+  MainForm.SilentThreadQueue.Push(meta);
   Inc(MainForm.silentThreadCount);
   Inc(MainForm.silentAddToFavThreadCount);
 end;
 
-initialization
-  SilentThreadQueue:= TQueue.Create;
-
-finalization
-  SilentThreadQueue.Free;
-
 end.
-

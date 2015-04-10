@@ -1,13 +1,13 @@
 object ImportList: TImportList
-  Left = 499
+  Left = 445
   Height = 379
-  Top = 175
+  Top = 194
   Width = 476
   Caption = 'List of unimported mangas'
   ClientHeight = 379
   ClientWidth = 476
   OnCreate = FormCreate
-  LCLVersion = '1.3'
+  LCLVersion = '1.2.4.0'
   object mmList: TMemo
     Left = 0
     Height = 379

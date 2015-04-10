@@ -1,34 +1,31 @@
   function GetMangacanImageURL: Boolean;
   var
     s: String;
-    j,
     i: Cardinal;
     l: TStringList;
   begin
-    l:= TStringList.Create;
-    if Pos('http://', URL) = 0 then
-      s:= WebsiteRoots[MANGACAN_ID,1] + '/' + StringReplace(URL, '-1.html', '.html', [])
-    else
-      s:= StringReplace(URL, '-1.html', '.html', []);
-    Result:= GetPage(TObject(l),
-                     s,
-                     manager.container.manager.retryConnect);
-    parse:= TStringList.Create;
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
+    l := TStringList.Create;
+    s := FillMangaSiteHost(MANGACAN_ID, '/' + StringReplace(URL, '-1.html', '.html', []));
+    Result := GetPage(TObject(l),
+      s,
+      manager.container.Manager.retryConnect);
+    parse := TStringList.Create;
+    Parser := THTMLParser.Create(PChar(l.Text));
     Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
+    Parser.OnFoundText := OnText;
     Parser.Exec;
     Parser.Free;
-    if parse.Count>0 then
+    if parse.Count > 0 then
     begin
-      manager.container.pageLinks.Clear;
-      for i:= 0 to parse.Count-1 do
-        if (Pos('<img alt=', parse.Strings[i])>0) then
+      manager.container.PageLinks.Clear;
+      for i := 0 to parse.Count - 1 do
+        if (Pos('<img alt=', parse.Strings[i]) > 0) then
         begin
-          s:= GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src='));
-	  s:= StringReplace(s, 'https://', 'http://', [rfReplaceAll]);
-	  s:= StringReplace(s, 'mangas/', WebsiteRoots[MANGACAN_ID,1] + '/mangas/', [rfReplaceAll]);
-          manager.container.pageLinks.Add(EncodeURL(s));
+          s := GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src='));
+          s := StringReplace(s, 'https://', 'http://', [rfReplaceAll]);
+          s := StringReplace(s, 'mangas/', WebsiteRoots[MANGACAN_ID, 1] +
+            '/mangas/', [rfReplaceAll]);
+          manager.container.PageLinks.Add(EncodeURL(s));
         end;
     end;
     parse.Free;

@@ -2,17 +2,36 @@
   var
     i: Cardinal;
     l: TStringList;
+    isPage: Boolean = False;
   begin
-    l:= TStringList.Create;
-    Result:= GetPage(TObject(l), WebsiteRoots[ANIMEA_ID,1] +
-                                 StringReplace(URL, '.html', '', []) +
-                                 '-page-1.html',
-                                 manager.container.manager.retryConnect);
-    for i:= 0 to l.Count-1 do
-      if (Pos('Page 1 of ', l.Strings[i])<>0) then
-      begin
-        manager.container.pageNumber:= StrToInt(GetString(l.Strings[i], 'Page 1 of ', '<'));
-        break;
-      end;
+    manager.container.PageNumber := 0;
+    l := TStringList.Create;
+    Result := GetPage(TObject(l), FillMangaSiteHost(ANIMEA_ID,
+      StringReplace(URL, '.html', '', [])) +
+      '.html', manager.container.Manager.retryConnect);
+
+    parse := TStringList.Create;
+    Parser := THTMLParser.Create(PChar(l.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText := OnText;
+    Parser.Exec;
+    Parser.Free;
     l.Free;
+    if parse.Count > 0 then
+    begin
+      for i := 0 to parse.Count - 1 do
+      begin
+        if (Pos('<select', parse[i]) > 0) and
+          (Pos('class="mangaselecter pageselect"', parse[i]) > 0) then
+          isPage := True;
+        if isPage and (Pos('</select', parse[i]) > 0) then
+        begin
+          isPage := False;
+          Break;
+        end;
+        if isPage and (Pos('<option', parse[i]) > 0) then
+          Inc(manager.container.PageNumber);
+      end;
+    end;
+    parse.Free;
   end;

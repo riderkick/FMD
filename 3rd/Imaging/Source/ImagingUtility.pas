@@ -1,5 +1,4 @@
 {
-  $Id: ImagingUtility.pas 175 2009-10-06 11:55:15Z galfar $
   Vampyre Imaging Library
   by Marek Mauder 
   http://imaginglib.sourceforge.net
@@ -59,6 +58,7 @@ type
   TDynByteArray = array of Byte;
   TDynIntegerArray = array of Integer;
   TDynBooleanArray = array of Boolean;
+  TDynStringArray = array of string;
   
   TWordRec = packed record
     case Integer of
@@ -94,16 +94,28 @@ type
   PInt64RecArray = ^TInt64RecArray;
 
   TFloatHelper = record
-    Data1: Int64;
-    Data2: Int64;
-   end;
+    Data: Int64;
+    case Integer of
+      0: (Data64: Int64);
+      1: (Data32: LongWord);
+  end;
   PFloatHelper = ^TFloatHelper;
+
+  TFloatRect = record
+    Left, Top, Right, Bottom: Single;
+  end;
 
   TChar2 = array[0..1] of AnsiChar;
   TChar3 = array[0..2] of AnsiChar;
   TChar4 = array[0..3] of AnsiChar;
   TChar8 = array[0..7] of AnsiChar;
   TChar16 = array[0..15] of AnsiChar;
+  TAnsiCharSet = set of AnsiChar;
+
+  ENotImplemented = class(Exception)
+  public
+    constructor Create;
+  end;
 
   { Options for BuildFileList function:
     flFullNames - file names in result will have full path names
@@ -136,10 +148,16 @@ function GetAppExe: string;
 { Returns directory where application's exceutable is located without
   path delimiter at the end.}
 function GetAppDir: string;
-{ Returns True if FileName matches given Mask with optional case sensitivity.
+{ Works like SysUtils.ExtractFileName but supports '/' and '\' dir delimiters
+  at the same time (whereas ExtractFileName supports on default delimiter on current platform).}
+function GetFileName(const FileName: string): string;
+{ Works like SysUtils.ExtractFileDir but supports '/' and '\' dir delimiters
+  at the same time (whereas ExtractFileDir supports on default delimiter on current platform).}
+function GetFileDir(const FileName: string): string;
+{ Returns True if Subject matches given Mask with optional case sensitivity.
   Mask can contain ? and * special characters: ? matches
   one character, * matches zero or more characters.}
-function MatchFileNameMask(const FileName, Mask: string; CaseSensitive: Boolean = False): Boolean;
+function StrMaskMatch(const Subject, Mask: string; CaseSensitive: Boolean = False): Boolean;
 { This function fills Files string list with names of files found
   with FindFirst/FindNext functions (See details on Path/Atrr here).
   - BuildFileList('c:\*.*', faAnyFile, List, [flRecursive]) returns
@@ -161,10 +179,20 @@ function StrTokenEnd(var S: string; Sep: Char): string;
 { Fills instance of TStrings with tokens from string S where tokens are separated by
   one of Seps characters.}
 procedure StrTokensToList(const S: string; Sep: Char; Tokens: TStrings);
-{ Returns string representation of integer number (with digit grouping).}
+{ Returns string representation of integer number (with digit grouping).
+  Uses current locale.}
 function IntToStrFmt(const I: Int64): string; {$IFDEF USE_INLINE}inline;{$ENDIF}
-{ Returns string representation of float number (with digit grouping).}
+{ Returns string representation of float number (with digit grouping).
+  Uses current locale.}
 function FloatToStrFmt(const F: Double; Precision: Integer = 2): string; {$IFDEF USE_INLINE}inline;{$ENDIF}
+{ Returns format settings for parsing floats (dot as decimal separator).
+  Useful when fomatting/parsing floats etc.}
+function GetFormatSettingsForFloats: TFormatSettings;
+{ Returns True if S contains at least one of the substrings in SubStrs array. Case sensitive.}
+function ContainsAnySubStr(const S: string; const SubStrs: array of string): Boolean;
+{ Extracts substring starting at IdxStart ending at IdxEnd.
+  S[IdxEnd] is not included in the result.}
+function SubString(const S: string; IdxStart, IdxEnd: Integer): string; {$IFDEF USE_INLINE}inline;{$ENDIF}
 
 { Clamps integer value to range <Min, Max>}
 function ClampInt(Number: LongInt; Min, Max: LongInt): LongInt; {$IFDEF USE_INLINE}inline;{$ENDIF}
@@ -187,6 +215,8 @@ function Power(const Base, Exponent: Single): Single;
 function Log2Int(X: LongInt): LongInt; {$IFDEF USE_INLINE}inline;{$ENDIF}
 { Returns log base 2 of X.}
 function Log2(X: Single): Single;
+{ Returns log base 10 of X.}
+function Log10(X: Single): Single;
 { Returns largest integer <= Val (for 5.9 returns 5).}
 function Floor(Value: Single): LongInt; {$IFDEF USE_INLINE}inline;{$ENDIF}
 { Returns smallest integer >= Val (for 5.1 returns 6).}
@@ -229,6 +259,8 @@ function Iff(Condition: Boolean; const TruePart, FalsePart: Int64): Int64; overl
 { If Condition is True then TruePart is retured, otherwise
   FalsePart is returned.}
 function IffFloat(Condition: Boolean; TruePart, FalsePart: Single): Single; {$IFDEF USE_INLINE}inline;{$ENDIF}
+{ Swaps two Boolean values}
+procedure SwapValues(var A, B: Boolean); overload;
 { Swaps two Byte values}
 procedure SwapValues(var A, B: Byte); overload;
 { Swaps two Word values}
@@ -258,6 +290,9 @@ procedure FillMemoryByte(Data: Pointer; Size: LongInt; Value: Byte);
 procedure FillMemoryWord(Data: Pointer; Size: LongInt; Value: Word);
 { Fills given memory with given LongWord value. Size is size of buffer in bytes.}
 procedure FillMemoryLongWord(Data: Pointer; Size: LongInt; Value: LongWord);
+{ Fills given memory zeroes.}
+{$EXTERNALSYM ZeroMemory} // Conflicts with WinAPI ZeroMemory in C++ Builder
+procedure ZeroMemory(Data: Pointer; Size: Integer); {$IFDEF USE_INLINE}inline;{$ENDIF}
 
 { Returns how many mipmap levels can be created for image of given size.}
 function GetNumMipMapLevels(Width, Height: LongInt): LongInt;
@@ -285,10 +320,26 @@ procedure ClipStretchBounds(var SrcX, SrcY, SrcWidth, SrcHeight, DstX, DstY,
 { Scales one rectangle to fit into another. Proportions are preserved so
   it could be used for 'Stretch To Fit Window' image drawing for instance.}
 function ScaleRectToRect(const SourceRect, TargetRect: TRect): TRect;
+{ Scales given size to fit into max size while keeping the original ascpect ration.
+  Useful for calculating thumbnail dimensions etc.}
+function ScaleSizeToFit(const CurrentSize, MaxSize: TSize): TSize;
+{ Returns width of given rect. Part of RTL in newer Delphi.}
+function RectWidth(const Rect: TRect): Integer;
+{ Returns height of given rect. Part of RTL in newer Delphi.}
+function RectHeight(const Rect: TRect): Integer;
 { Returns True if R1 fits into R2.}
 function RectInRect(const R1, R2: TRect): Boolean;
 { Returns True if R1 and R2 intersects.}
 function RectIntersects(const R1, R2: TRect): Boolean;
+
+{ Converts pixel size in micrometers to corrensponding DPI.}
+function PixelSizeToDpi(SizeInMicroMeters: Single): Single;
+{ Converts DPI to corrensponding pixel size in micrometers.}
+function DpiToPixelSize(Dpi: Single): Single;
+
+function FloatRect(ALeft, ATop, ARight, ABottom: Single): TFloatRect;
+function FloatRectWidth(const R: TFloatRect): Single;
+function FloatRectHeight(const R: TFloatRect): Single;
 
 { Formats given message for usage in Exception.Create(..). Use only
   in except block - returned message contains message of last raised exception.}
@@ -300,16 +351,21 @@ procedure DebugMsg(const Msg: string; const Args: array of const);
 implementation
 
 uses
-{$IFDEF MSWINDOWS}
+{$IF Defined(MSWINDOWS)}
   Windows;
-{$ENDIF}
-{$IFDEF UNIX}
-  {$IFDEF KYLIX}
-  Libc;
-  {$ELSE}
+{$ELSEIF Defined(FPC)}
   Dos, BaseUnix, Unix;
-  {$ENDIF}
-{$ENDIF}
+{$ELSEIF Defined(DELPHI)}
+  Posix.SysTime;
+{$IFEND}
+
+var
+  FloatFormatSettings: TFormatSettings;
+
+constructor ENotImplemented.Create;
+begin
+  inherited Create('Not implemented');
+end;
 
 procedure FreeAndNil(var Obj);
 var
@@ -337,7 +393,7 @@ begin
   Result := Exception(ExceptObject);
 end;
 
-{$IFDEF MSWINDOWS}
+{$IF Defined(MSWINDOWS)}
 var
   PerfFrequency: Int64;
   InvPerfFrequency: Single;
@@ -349,56 +405,23 @@ begin
   QueryPerformanceCounter(Time);
   Result := Round(1000000 * InvPerfFrequency * Time);
 end;
-{$ENDIF}
-
-{$IFDEF UNIX}
+{$ELSEIF Defined(DELPHI)}
+function GetTimeMicroseconds: Int64;
+var
+  Time: TimeVal;
+begin
+  Posix.SysTime.GetTimeOfDay(Time, nil);
+  Result := Int64(Time.tv_sec) * 1000000 + Time.tv_usec;
+end;
+{$ELSEIF Defined(FPC)}
 function GetTimeMicroseconds: Int64;
 var
   TimeVal: TTimeVal;
 begin
-  {$IFDEF KYLIX}
-  GetTimeOfDay(TimeVal, nil);
-  {$ELSE}
   fpGetTimeOfDay(@TimeVal, nil);
-  {$ENDIF}
   Result := Int64(TimeVal.tv_sec) * 1000000 + TimeVal.tv_usec;
 end;
-{$ENDIF}
-
-{$IFDEF MSDOS}
-function GetTimeMicroseconds: Int64;
-asm
-  XOR    EAX, EAX
-  CLI
-  OUT    $43, AL
-  MOV    EDX, FS:[$46C]
-  IN     AL, $40
-  DB     $EB, 0, $EB, 0, $EB, 0
-  MOV    AH, AL
-  IN     AL, $40
-  DB     $EB, 0, $EB, 0, $EB, 0
-  XCHG   AL, AH
-  NEG    AX
-  MOVZX  EDI, AX
-  STI
-  MOV    EBX, $10000
-  MOV    EAX, EDX
-  XOR    EDX, EDX
-  MUL    EBX
-  ADD    EAX, EDI
-  ADC    EDX, 0
-  PUSH   EDX
-  PUSH   EAX
-  MOV    ECX, $82BF1000
-  MOVZX  EAX, WORD PTR FS:[$470]
-  MUL    ECX
-  MOV    ECX, EAX
-  POP    EAX
-  POP    EDX
-  ADD    EAX, ECX
-  ADC    EDX, 0
-end;
-{$ENDIF}
+{$IFEND}
 
 function GetTimeMilliseconds: Int64;
 begin
@@ -413,29 +436,22 @@ begin
 end;
 
 function GetAppExe: string;
-{$IFDEF MSWINDOWS}
+{$IF Defined(MSWINDOWS)}
 var
   FileName: array[0..MAX_PATH] of Char;
 begin
   SetString(Result, FileName,
     Windows.GetModuleFileName(MainInstance, FileName, SizeOf(FileName)));
-{$ENDIF}
-{$IFDEF UNIX}
-  {$IFDEF KYLIX}
+{$ELSEIF Defined(DELPHI)} // Delphi non Win targets
 var
-  FileName: array[0..FILENAME_MAX] of Char;
+  FileName: array[0..1024] of Char;
 begin
   SetString(Result, FileName,
     System.GetModuleFileName(MainInstance, FileName, SizeOf(FileName)));
-  {$ELSE}
-begin
-  Result := FExpand(ParamStr(0));
-  {$ENDIF}
-{$ENDIF}
-{$IFDEF MSDOS}
+{$ELSE}
 begin
   Result := ParamStr(0);
-{$ENDIF}
+{$IFEND}
 end;
 
 function GetAppDir: string;
@@ -443,7 +459,28 @@ begin
   Result := ExtractFileDir(GetAppExe);
 end;
 
-function MatchFileNameMask(const FileName, Mask: string; CaseSensitive: Boolean): Boolean;
+function GetFileName(const FileName: string): string;
+var
+  I: Integer;
+begin
+  I := LastDelimiter('\/' + DriveDelim, FileName);
+  Result := Copy(FileName, I + 1, MaxInt);
+end;
+
+function GetFileDir(const FileName: string): string;
+const
+  Delims = '\/' + DriveDelim;
+var
+  I: Integer;
+begin
+  I := LastDelimiter(Delims, Filename);
+  if (I > 1) and
+    ((FileName[I] = Delims[1]) or (FileName[I] = Delims[2])) and
+    (not IsDelimiter(Delims, FileName, I - 1)) then Dec(I);
+  Result := Copy(FileName, 1, I);
+end;
+
+function StrMaskMatch(const Subject, Mask: string; CaseSensitive: Boolean): Boolean;
 var
   MaskLen, KeyLen : LongInt;
 
@@ -486,7 +523,7 @@ var
             Exit;
           end;
         else
-          if not CharMatch(Mask[MaskPos], FileName[KeyPos]) then
+          if not CharMatch(Mask[MaskPos], Subject[KeyPos]) then
           begin
             Result := False;
             Exit;
@@ -499,7 +536,7 @@ var
       end;
     end;  
 
-    while (MaskPos <= MaskLen) and (Mask[MaskPos] in ['?', '*']) do
+    while (MaskPos <= MaskLen) and (AnsiChar(Mask[MaskPos]) in ['?', '*']) do
       Inc(MaskPos);
     if (MaskPos <= MaskLen) or (KeyPos <= KeyLen) then
     begin
@@ -512,7 +549,7 @@ var
 
 begin
   MaskLen := Length(Mask);
-  KeyLen := Length(FileName);
+  KeyLen := Length(Subject);
   if MaskLen = 0 then
   begin
     Result := True;
@@ -707,6 +744,29 @@ begin
   Result := Format('%.' + IntToStr(Precision) + 'n', [F]);
 end;
 
+function GetFormatSettingsForFloats: TFormatSettings;
+begin
+  Result := FloatFormatSettings;
+end;
+
+function ContainsAnySubStr(const S: string; const SubStrs: array of string): Boolean;
+var
+  I: Integer;
+begin
+  Result := False;
+  for I := 0 to High(SubStrs) do
+  begin
+    Result := Pos(SubStrs[I], S) > 0;
+    if Result then
+      Exit;
+  end;
+end;
+
+function SubString(const S: string; IdxStart, IdxEnd: Integer): string;
+begin
+  Result := Copy(S, IdxStart, IdxEnd - IdxStart);
+end;
+
 function ClampInt(Number: LongInt; Min, Max: LongInt): LongInt;
 begin
   Result := Number;
@@ -810,11 +870,36 @@ begin
 end;
 
 function Log2(X: Single): Single;
+{$IFDEF USE_ASM}
+asm
+  FLD1
+  FLD     X
+  FYL2X
+  FWAIT
+end;
+{$ELSE}
 const
   Ln2: Single = 0.6931471;
 begin
   Result := Ln(X) / Ln2;
 end;
+{$ENDIF}
+
+function Log10(X: Single): Single;
+{$IFDEF USE_ASM}
+asm
+  FLDLG2
+  FLD     X
+  FYL2X
+  FWAIT
+end;
+{$ELSE}
+const
+  Ln10: Single = 2.30258509299405;
+begin
+  Result := Ln(X) / Ln10;
+end;
+{$ENDIF}
 
 function Floor(Value: Single): LongInt;
 begin
@@ -897,6 +982,15 @@ begin
     Result := TruePart
   else
     Result := FalsePart;
+end;
+
+procedure SwapValues(var A, B: Boolean);
+var
+  Tmp: Boolean;
+begin
+  Tmp := A;
+  A := B;
+  B := Tmp;
 end;
 
 procedure SwapValues(var A, B: Byte);
@@ -1236,6 +1330,11 @@ begin
 end;
 {$ENDIF}
 
+procedure ZeroMemory(Data: Pointer; Size: Integer);
+begin
+  FillMemoryByte(Data, Size, 0);
+end;
+
 function GetNumMipMapLevels(Width, Height: LongInt): LongInt;
 begin
   Result := 0;
@@ -1407,6 +1506,27 @@ begin
   end;
 end;
 
+function ScaleSizeToFit(const CurrentSize, MaxSize: Types.TSize): Types.TSize;
+var
+  SR, TR, ScaledRect: TRect;
+begin
+  SR := Types.Rect(0, 0, CurrentSize.CX, CurrentSize.CY);
+  TR := Types.Rect(0, 0, MaxSize.CX, MaxSize.CY);
+  ScaledRect := ScaleRectToRect(SR, TR);
+  Result.CX := ScaledRect.Right - ScaledRect.Left;
+  Result.CY := ScaledRect.Bottom - ScaledRect.Top;
+end;
+
+function RectWidth(const Rect: TRect): Integer;
+begin
+  Result := Rect.Right - Rect.Left;
+end;
+
+function RectHeight(const Rect: TRect): Integer;
+begin
+  Result := Rect.Bottom - Rect.Top;
+end;
+
 function RectInRect(const R1, R2: TRect): Boolean;
 begin
   Result:=
@@ -1423,6 +1543,37 @@ begin
     not (R1.Top > R2.Bottom) and
     not (R1.Right < R2.Left) and
     not (R1.Bottom < R2.Top);
+end;
+
+function PixelSizeToDpi(SizeInMicroMeters: Single): Single;
+begin
+  Result := 25400 / SizeInMicroMeters;
+end;
+
+function DpiToPixelSize(Dpi: Single): Single;
+begin
+  Result := 1e03 / (Dpi / 25.4);
+end;
+
+function FloatRect(ALeft, ATop, ARight, ABottom: Single): TFloatRect;
+begin
+  with Result do
+  begin
+    Left := ALeft;
+    Top := ATop;
+    Right := ARight;
+    Bottom := ABottom;
+  end;
+end;
+
+function FloatRectWidth(const R: TFloatRect): Single;
+begin
+  Result := R.Right - R.Left;
+end;
+
+function FloatRectHeight(const R: TFloatRect): Single;
+begin
+  Result := R.Bottom - R.Top;
 end;
 
 function FormatExceptMsg(const Msg: string; const Args: array of const): string;
@@ -1455,22 +1606,40 @@ initialization
   QueryPerformanceFrequency(PerfFrequency);
   InvPerfFrequency := 1.0 / PerfFrequency;
 {$ENDIF}
-{$IFDEF MSDOS}
-  // reset PIT
-  asm
-    MOV    EAX, $34
-    OUT    $43, AL
-    XOR    EAX, EAX
-    OUT    $40, AL
-    OUT    $40, AL
-  end;
-{$ENDIF}
+
+{$IF Defined(DELPHI)}
+  {$IF CompilerVersion >= 23}
+  FloatFormatSettings := TFormatSettings.Create('en-US');
+  {$ELSE}
+  GetLocaleFormatSettings(1033, FloatFormatSettings);
+  {$IFEND}
+{$ELSE FPC}
+  FloatFormatSettings := DefaultFormatSettings;
+  FloatFormatSettings.DecimalSeparator := '.';
+{$IFEND}
 
 {
   File Notes:
 
   -- TODOS ----------------------------------------------------
     - nothing now
+
+  -- 0.77.1 ----------------------------------------------------
+    - Added GetFileName, GetFileDir, RectWidth, RectHeight function.
+    - Added ScaleSizeToFit function.
+    - Added ZeroMemory and SwapValues for Booleans.
+    - Added Substring function.
+    - Renamed MatchFileNameMask to StrMaskMatch (it's for general use not
+      just filenames).
+    - Delphi XE2 new targets (Win64, OSX32) compatibility changes.
+    - Added GetFormatSettingsForFloats function.
+
+  -- 0.26.5 Changes/Bug Fixes -----------------------------------
+    - Added Log10 function.
+    - Added TFloatRect type and helper functions FloatRect, FloatRectWidth,
+      FloatRectHeight.
+    - Added string function ContainsAnySubStr.
+    - Added functions PixelSizeToDpi, DpiToPixelSize.
 
   -- 0.26.1 Changes/Bug Fixes -----------------------------------
     - Some formatting changes.
@@ -1520,4 +1689,5 @@ initialization
 
 }
 end.
+
 

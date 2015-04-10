@@ -1,42 +1,45 @@
-function   MangaArGetNamesAndLinks: Byte;
+  function MangaArGetNamesAndLinks: Byte;
   var
-    tmp: Integer;
     i: Cardinal;
     s: String;
+    isExtractMangaList: Boolean = False;
   begin
-    Result:= INFORMATION_NOT_FOUND;
-    if NOT GetPage(TObject(source), WebsiteRoots[MANGAAR_ID,1] + MANGAAR_BROWSER, 0) then
+    Result := INFORMATION_NOT_FOUND;
+    if not GetPage(TObject(Source), WebsiteRoots[MANGAAR_ID, 1] + MANGAAR_BROWSER, 0) then
     begin
-      Result:= NET_PROBLEM;
-      source.Free;
-      exit;
+      Result := NET_PROBLEM;
+      Source.Free;
+      Exit;
     end;
-
-    // convert charset
-    source.text:= CP1256ToUTF8(source.text);
 
     parse.Clear;
-    Parser:= TjsFastHTMLParser.Create(PChar(source.Text));
+    Parser := THTMLParser.Create(PChar(Source.Text));
     Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
+    Parser.OnFoundText := OnText;
     Parser.Exec;
     Parser.Free;
-    if parse.Count=0 then
+    if parse.Count > 0 then
     begin
-      source.Free;
-      exit;
-    end;
-    for i:= 0 to parse.Count-1 do
-    begin
-      if (Pos('style="float', parse.Strings[i]) > 0) AND
-         (Pos('"http://manga-ar', parse.Strings[i]) > 0) then
+      for i := 0 to parse.Count - 1 do
       begin
-        Result:= NO_ERROR;
-        s:= TrimLeft(TrimRight(StringFilter(parse.Strings[i+1])));
-        names.Add(HTMLEntitiesFilter(s));
-        s:= StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href=')), WebsiteRoots[MANGAAR_ID,1], '', []);
-        links.Add(s);
+        if (Pos('<tbody>', parse.Strings[i]) > 0) then
+          isExtractMangaList := True;
+        if (Pos('</tbody>', parse.Strings[i]) > 0) then
+        begin
+          isExtractMangaList := False;
+          Break;
+        end;
+
+        if isExtractMangaList and (Pos('href=', parse.Strings[i]) > 0) then
+        begin
+          s := GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href='));
+          s := StringReplace(s, WebsiteRoots[MANGAAR_ID, 1], '', []);
+          links.Add(s);
+          s := Trim(StringFilter(parse.Strings[i + 1]));
+          s := HTMLEntitiesFilter(s);
+          names.Add(s);
+        end;
       end;
     end;
-    source.Free;
-  end;   
+    Source.Free;
+  end;

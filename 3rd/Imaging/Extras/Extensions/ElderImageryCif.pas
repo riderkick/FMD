@@ -1,5 +1,4 @@
 {
-  $Id: ElderImageryCif.pas 71 2007-03-08 00:10:10Z galfar $
   Vampyre Imaging Library
   by Marek Mauder
   http://imaginglib.sourceforge.net
@@ -47,12 +46,11 @@ type
     so exact file size must be known prior to loading.}
   TCIFFileFormat = class(TElderFileFormat)
   protected
+    procedure Define; override;
     function LoadData(Handle: TImagingHandle; var Images: TDynImageDataArray;
       OnlyFirstLevel: Boolean): Boolean; override;
     function SaveData(Handle: TImagingHandle; const Images: TDynImageDataArray;
       Index: LongInt): Boolean; override;
-  public
-    constructor Create; override;
   end;
 
 const
@@ -91,9 +89,9 @@ type
 
 { TCIFFileFormat class implementation }
 
-constructor TCIFFileFormat.Create;
+procedure TCIFFileFormat.Define;
 begin
-  inherited Create;
+  inherited;
   FName := SCIFFormatName;
   AddMasks(SCIFMasks);
 end;

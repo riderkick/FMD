@@ -1,5 +1,4 @@
 {
-  $Id: Imaging.pas 173 2009-09-04 17:05:52Z galfar $
   Vampyre Imaging Library
   by Marek Mauder 
   http://imaginglib.sourceforge.net
@@ -35,13 +34,18 @@ unit Imaging;
 interface
 
 uses
-  ImagingTypes, SysUtils, Classes;
+  SysUtils, Classes, Types, ImagingTypes;
 
 type
-  { Default Imaging excepton class.}
+  { Default Imaging excepton class }
   EImagingError = class(Exception);
+  { Raised when function receives bad image (not passed TestImage).}
+  EImagingBadImage = class(Exception)
+  public
+    constructor Create;
+  end;
 
-  { Dynamic array of TImageData records.}
+  { Dynamic array of TImageData records }
   TDynImageDataArray = array of TImageData;
 
 
@@ -157,7 +161,7 @@ function SaveMultiImageToMemory(const Ext: string; Data: Pointer;
 function CloneImage(const Image: TImageData; var Clone: TImageData): Boolean;
 { Converts image to the given format.}
 function ConvertImage(var Image: TImageData; DestFormat: TImageFormat): Boolean;
-{ Flips given image. Reverses the image along its horizontal axis — the top
+{ Flips given image. Reverses the image along its horizontal axis - the top
   becomes the bottom and vice versa.}
 function FlipImage(var Image: TImageData): Boolean;
 { Mirrors given image. Reverses the image along its vertical axis — the left
@@ -189,12 +193,12 @@ function MapImageToPalette(var Image: TImageData; Pal: PPalette32;
 { Splits image into XChunks x YChunks subimages. Default size of each chunk is
   ChunkWidth x ChunkHeight. If PreserveSize si True chunks at the edges of
   the image are also ChunkWidth x ChunkHeight sized and empty space is filled
-  with Fill pixels. After calling this function XChunks contains number of
+  with optional Fill pixels. After calling this function XChunks contains number of
   chunks along x axis and YChunks along y axis. To access chunk [X, Y] use this
   index: Chunks[Y * XChunks + X].}
 function SplitImage(var Image: TImageData; var Chunks: TDynImageDataArray;
   ChunkWidth, ChunkHeight: LongInt; var XChunks, YChunks: LongInt;
-  PreserveSize: Boolean; Fill: Pointer): Boolean;
+  PreserveSize: Boolean; Fill: Pointer = nil): Boolean;
 { Creates palette with MaxColors based on the colors of images in Images array.
   Use it when you want to convert several images to indexed format using
   single palette for all of them. If ConvertImages is True images in array
@@ -204,7 +208,7 @@ function SplitImage(var Image: TImageData; var Chunks: TDynImageDataArray;
 function MakePaletteForImages(var Images: TDynImageDataArray; Pal: PPalette32;
   MaxColors: LongInt; ConvertImages: Boolean): Boolean;
 { Rotates image by Angle degrees counterclockwise. All angles are allowed.}
-function RotateImage(var Image: TImageData; Angle: Single): Boolean;
+procedure RotateImage(var Image: TImageData; Angle: Single);
 
 { Drawing/Pixel functions }
 
@@ -310,11 +314,35 @@ function GetPixelsSize(Format: TImageFormat; Width, Height: LongInt): LongInt;
 
 { User can set his own file IO functions used when loading from/saving to
   files by this function.}
-procedure SetUserFileIO(OpenReadProc: TOpenReadProc; OpenWriteProc:
-  TOpenWriteProc; CloseProc: TCloseProc; EofProc: TEofProc; SeekProc:
+procedure SetUserFileIO(OpenProc: TOpenProc; CloseProc: TCloseProc; EofProc: TEofProc; SeekProc:
   TSeekProc; TellProc: TTellProc; ReadProc: TReadProc; WriteProc: TWriteProc);
 { Sets file IO functions to Imaging default.}
 procedure ResetFileIO;
+
+{ Raw Image IO Functions }
+
+procedure ReadRawImageFromFile(const FileName: string; Width, Height: Integer;
+  Format: TImageFormat; var Image: TImageData; Offset: Integer = 0; RowLength: Integer = 0);
+procedure ReadRawImageFromStream(Stream: TStream; Width, Height: Integer;
+  Format: TImageFormat; var Image: TImageData; Offset: Integer = 0; RowLength: Integer = 0);
+procedure ReadRawImageFromMemory(Data: Pointer; DataSize: Integer; Width, Height: Integer;
+  Format: TImageFormat; var Image: TImageData; Offset: Integer = 0; RowLength: Integer = 0);
+procedure ReadRawImageRect(Data: Pointer; Left, Top, Width, Height: Integer;
+  var Image: TImageData; Offset: Integer = 0; RowLength: Integer = 0);
+
+procedure WriteRawImageToFile(const FileName: string; const Image: TImageData;
+  Offset: Integer = 0; RowLength: Integer = 0);
+procedure WriteRawImageToStream(Stream: TStream; const Image: TImageData;
+  Offset: Integer = 0; RowLength: Integer = 0);
+procedure WriteRawImageToMemory(Data: Pointer; DataSize: Integer; const Image: TImageData;
+  Offset: Integer = 0; RowLength: Integer = 0);
+procedure WriteRawImageRect(Data: Pointer; Left, Top, Width, Height: Integer;
+  const Image: TImageData; Offset: Integer = 0; RowLength: Integer = 0);
+
+{ Convenience/helper Functions }
+
+procedure ResizeImageToFit(const SrcImage: TImageData; FitWidth, FitHeight: Integer;
+  Filter: TResizeFilter; var DestImage: TImageData);
 
 
 { ------------------------------------------------------------------------
@@ -327,8 +355,7 @@ type
 
   { Record containg set of IO functions internaly used by image loaders/savers.}
   TIOFunctions = record
-    OpenRead: TOpenReadProc;
-    OpenWrite: TOpenWriteProc;
+    Open: TOpenProc;
     Close: TCloseProc;
     Eof: TEofProc;
     Seek: TSeekProc;
@@ -338,15 +365,31 @@ type
   end;
   PIOFunctions = ^TIOFunctions;
 
+type
+  TFileFormatFeature = (
+    ffLoad,
+    ffSave,
+    ffMultiImage,
+    ffReadOnSave,
+    ffProgress,
+    ffReadScanlines);
+
+  TFileFormatFeatures = set of TFileFormatFeature;
+
+  TMetadata = class;
+
   { Base class for various image file format loaders/savers which
     descend from this class. If you want to add support for new image file
     format the best way is probably to look at TImageFileFormat descendants'
     implementations that are already part of Imaging.}
-  {$TYPEINFO ON}
-  TImageFileFormat = class(TObject)
+{$TYPEINFO ON}
+  TImageFileFormat = class
   private
     FExtensions: TStringList;
     FMasks: TStringList;
+    function GetCanLoad: Boolean;
+    function GetCanSave: Boolean;
+    function GetIsMultiImageFormat: Boolean;
     { Does various checks and actions before LoadData method is called.}
     function PrepareLoad(Handle: TImagingHandle; var Images: TDynImageDataArray;
       OnlyFirstFrame: Boolean): Boolean;
@@ -356,13 +399,17 @@ type
       index and sets FFirstIdx and FLastIdx for multi-images).}
     function PrepareSave(Handle: TImagingHandle; const Images: TDynImageDataArray;
       var Index: LongInt): Boolean;
+    { Returns file open mode used for saving images. Depends on defined Features.}
+    function GetSaveOpenMode: TOpenMode;
   protected
     FName: string;
-    FCanLoad: Boolean;
-    FCanSave: Boolean;
-    FIsMultiImageFormat: Boolean;
+    FFeatures: TFileFormatFeatures;
     FSupportedFormats: TImageFormats;
     FFirstIdx, FLastIdx: LongInt;
+    FMetadata: TMetadata;
+    { Descendants must override this method and define file format name and
+      capabilities.}
+    procedure Define; virtual;
     { Defines filename masks for this image file format. AMasks should be
       in format '*.ext1,*.ext2,umajo.*'.}
     procedure AddMasks(const AMasks: string);
@@ -376,7 +423,7 @@ type
       and contains data that passed TestFormat method's check.}
     function LoadData(Handle: TImagingHandle; var Images: TDynImageDataArray;
       OnlyFirstFrame: Boolean): Boolean; virtual;
-    { Method which must be overrided in descendants if they are be capable
+    { Method which must be overriden in descendants if they are be capable
       of saving images. Images are checked to have length >0 and
       that they contain valid images. For single-image file formats
       Index contain valid index to Images array (to image which should be saved).
@@ -396,7 +443,7 @@ type
       (proper widht and height for example).}
     function IsSupported(const Image: TImageData): Boolean; virtual;
   public
-    constructor Create; virtual;
+    constructor Create(AMetadata: TMetadata = nil); virtual;
     destructor Destroy; override;
 
     { Loads images from file source.}
@@ -438,7 +485,7 @@ type
       this file format). If image is cloned MustBeFreed is set to True
       to indicated that you must free Compatible after you are done with it.}
     function MakeCompatible(const Image: TImageData; var Compatible: TImageData;
-      out MustBeFreed: Boolean): Boolean;   
+      out MustBeFreed: Boolean): Boolean;
     { Returns True if data located in source identified by Handle
       represent valid image in current format.}
     function TestFormat(Handle: TImagingHandle): Boolean; virtual;
@@ -456,14 +503,14 @@ type
     { Description of this format.}
     property Name: string read FName;
     { Indicates whether images in this format can be loaded.}
-    property CanLoad: Boolean read FCanLoad;
+    property CanLoad: Boolean read GetCanLoad;
     { Indicates whether images in this format can be saved.}
-    property CanSave: Boolean read FCanSave;
+    property CanSave: Boolean read GetCanSave;
     { Indicates whether images in this format can contain multiple image levels.}
-    property IsMultiImageFormat: Boolean read FIsMultiImageFormat;
+    property IsMultiImageFormat: Boolean read GetIsMultiImageFormat;
     { List of filename extensions for this format.}
     property Extensions: TStringList read FExtensions;
-    { List of filename mask that are used to associate filenames
+    { List of filename masks that are used to associate filenames
       with TImageFileFormat descendants. Typical mask looks like
       '*.bmp' or 'texture.*' (supports file formats which use filename instead
       of extension to identify image files).}
@@ -472,10 +519,96 @@ type
       can be saved only in one those formats.}
     property SupportedFormats: TImageFormats read GetSupportedFormats;
   end;
-  {$TYPEINFO OFF}
+{$TYPEINFO OFF}
 
   { Class reference for TImageFileFormat class}
   TImageFileFormatClass = class of TImageFileFormat;
+
+  { Physical resolution unit.}
+  TResolutionUnit = (
+    ruSizeInMicroMeters, // value is pixel size in micrometers
+    ruDpi,               // value is pixels/dots per inch
+    ruDpm,               // value is pixels/dots per meter
+    ruDpcm               // value is pixels/dots per centimeter
+  );
+
+  { Class for storage of single metadata item.}
+  TMetadataItem = class
+  public
+    Id: string;
+    ImageIndex: Integer;
+    Value: Variant;
+  end;
+
+  { Metadata manager class.}
+  TMetadata = class
+  private
+    FLoadMetaItems: TStringList;
+    FSaveMetaItems: TStringList;
+    procedure AddMetaToList(List: TStringList; const Id: string; const Value: Variant; ImageIndex: Integer);
+    procedure ClearMetaList(List: TStringList);
+    function GetMetaById(const Id: string): Variant;
+    function GetMetaByIdMulti(const Id: string; ImageIndex: Integer): Variant;
+    function GetMetaCount: Integer;
+    function GetMetaByIdx(Index: Integer): TMetadataItem;
+    function GetSaveMetaById(const Id: string): Variant;
+    function GetSaveMetaByIdMulti(const Id: string; ImageIndex: Integer): Variant;
+    procedure TranslateUnits(ResolutionUnit: TResolutionUnit; var XRes, YRes: Single);
+  public
+    constructor Create;
+    destructor Destroy; override;
+
+    procedure SetMetaItem(const Id: string; const Value: Variant; ImageIndex: Integer = 0);
+    procedure SetMetaItemForSaving(const Id: string; const Value: Variant; ImageIndex: Integer = 0);
+    function HasMetaItem(const Id: string; ImageIndex: Integer = 0): Boolean;
+    function HasMetaItemForSaving(const Id: string; ImageIndex: Integer = 0): Boolean;
+
+    procedure ClearMetaItems;
+    procedure ClearMetaItemsForSaving;
+    function GetMetaItemName(const Id: string; ImageIndex: Integer): string;
+    { Copies loaded meta items to items-for-save stack. Use this when you want to
+      save metadata that have been just loaded (e.g. resaving image in
+      different file format but keeping the metadata).}
+    procedure CopyLoadedMetaItemsForSaving;
+
+    function GetPhysicalPixelSize(ResUnit: TResolutionUnit; var XSize,
+      YSize: Single; MetaForSave: Boolean = False; ImageIndex: Integer = 0): Boolean;
+    procedure SetPhysicalPixelSize(ResUnit: TResolutionUnit; XSize, YSize: Single;
+      MetaForSave: Boolean = False; ImageIndex: Integer = 0);
+
+    property MetaItems[const Id: string]: Variant read GetMetaById;
+    property MetaItemsMulti[const Id: string; ImageIndex: Integer]: Variant read GetMetaByIdMulti;
+    { Number of loaded metadata items.}
+    property MetaItemCount: Integer read GetMetaCount;
+    property MetaItemsByIdx[Index: Integer]: TMetadataItem read GetMetaByIdx;
+    property MetaItemsForSaving[const Id: string]: Variant read GetSaveMetaById;
+    property MetaItemsForSavingMulti[const Id: string; ImageIndex: Integer]: Variant read GetSaveMetaByIdMulti;
+  end;
+
+const
+  { Metadata item id constants }
+
+  { Physical size of one pixel in micrometers. Type of value is Float.}
+  SMetaPhysicalPixelSizeX = 'PhysicalPixelSizeX';
+  SMetaPhysicalPixelSizeY = 'PhysicalPixelSizeY';
+  { Delay for frame of animation (how long it should stay visible) in milliseconds.
+    Type of value is Integer.}
+  SMetaFrameDelay = 'FrameDelay';
+  { Number of times animation should be looped (0 = infinite looping). Type is Int. }
+  SMetaAnimationLoops = 'AnimationLoops';
+  { Gamma correction value. Type is Float.}
+  SMetaGamma = 'Gamma';
+  { Exposure value for HDR etc. Type is Float.}
+  SMetaExposure = 'Exposure';
+  { EXIF image metadata raw blob.}
+  SMetaExifBlob = 'ExifBlob';
+  { XMP image metadata raw blob.}
+  SMetaXmpBlob  = 'XmpBlob';
+  { IPTC image metadata raw blob.}
+  SMetaIptcBlob = 'IptcBlob';
+
+var
+  GlobalMetadata: TMetadata;
 
 { Returns symbolic name of given format.}
 function GetFormatName(Format: TImageFormat): string;
@@ -485,13 +618,15 @@ function ImageToStr(const Image: TImageData): string;
 function GetVersionStr: string;
 { If Condition is True then TruePart is retured, otherwise FalsePart is returned.}
 function IffFormat(Condition: Boolean; const TruePart, FalsePart: TImageFormat): TImageFormat;
-{ Registers new image loader/saver so it can be used by LoadFrom/SaveTo
-  functions.}
-procedure RegisterImageFileFormat(AClass: TImageFileFormatClass);
+
 { Registers new option so it can be used by SetOption and GetOption functions.
   Returns True if registration was succesful - that is Id is valid and is
   not already taken by another option.}
 function RegisterOption(OptionId: LongInt; Variable: PLongInt): Boolean;
+
+{ Registers new image loader/saver so it can be used by LoadFrom/SaveTo
+  functions.}
+procedure RegisterImageFileFormat(AClass: TImageFileFormatClass);
 { Returns image format loader/saver according to given extension
   or nil if not found.}
 function FindImageFileFormatByExt(const Ext: string): TImageFileFormat;
@@ -525,10 +660,15 @@ function GetFilterIndexExtension(Index: LongInt; OpenFileFilter: Boolean): strin
   string is defined by GetImageFileFormatsFilter function.
   Returned index is in range 1..N (as FilterIndex property of TOpenDialog/TSaveDialog)}
 function GetFileNameFilterIndex(const FileName: string; OpenFileFilter: Boolean): LongInt;
+
 { Returns current IO functions.}
 function GetIO: TIOFunctions;
 { Raises EImagingError with given message.}
-procedure RaiseImaging(const Msg: string; const Args: array of const);
+procedure RaiseImaging(const Msg: string; const Args: array of const); overload;
+procedure RaiseImaging(const Msg: string); overload; {$IFDEF USE_INLINE}inline;{$ENDIF}
+
+const
+  SImagingLibTitle = 'Vampyre Imaging Library';
 
 implementation
 
@@ -554,16 +694,20 @@ uses
 {$IFNDEF DONT_LINK_PNM}
   ImagingPortableMaps,
 {$ENDIF}
+{$IFNDEF DONT_LINK_RADHDR}
+  ImagingRadiance,
+{$ENDIF}
 {$IFNDEF DONT_LINK_EXTRAS}
   ImagingExtras,
 {$ENDIF}
-  ImagingFormats, ImagingUtility, ImagingIO;
+  //ImagingDebug,
+  ImagingFormats, ImagingUtility, ImagingIO, Variants;
 
 resourcestring
-  SImagingTitle = 'Vampyre Imaging Library';
   SExceptMsg = 'Exception Message';
   SAllFilter = 'All Images';
   SUnknownFormat = 'Unknown and unsupported format';
+
   SErrorFreeImage = 'Error while freeing image. %s';
   SErrorCloneImage = 'Error while cloning image. %s';
   SErrorFlipImage = 'Error while flipping image. %s';
@@ -608,14 +752,19 @@ resourcestring
   SErrorRotateImage = 'Error while rotating image %s by %.2n degrees';
   SErrorStretchRect = 'Error while stretching rect from image %s to image %s.';
   SErrorEmptyStream = 'Input stream has no data. Check Position property.';
+  SErrorInvalidInputImage = 'Invalid input image.';
+
+  SErrorBadImage = 'Bad image detected.';
 
 const
-  // initial size of array with options information
+  // Initial size of array with options information
   InitialOptions = 256;
-  // max depth of the option stack
+  // Max depth of the option stack
   OptionStackDepth = 8;
-  // do not change the default format now, its too late
+  // Do not change the default format now, its too late
   DefaultImageFormat: TImageFormat = ifA8R8G8B8;
+  // Format used to create metadata IDs for frames loaded form multiimages.
+  SMetaIdForSubImage = '%s/%d';
 
 type
   TOptionArray = array of PLongInt;
@@ -633,26 +782,34 @@ type
   end;
 
 var
-  // currently set IO functions
+  // Currently set IO functions
   IO: TIOFunctions;
-  // list with all registered TImageFileFormat classes
+  // List with all registered TImageFileFormat classes
   ImageFileFormats: TList = nil;
-  // array with registered options (pointers to their values)
+  // Aarray with registered options (pointers to their values)
   Options: TOptionArray = nil;
-  // array containing addional infomation about every image format
+  // Array containing addional infomation about every image format
   ImageFormatInfos: TImageFormatInfoArray;
-  // stack used by PushOptions/PopOtions functions
+  // Stack used by PushOptions/PopOtions functions
   OptionStack: TOptionStack = nil;
 var
-  // variable for ImagingColorReduction option
+  // Variable for ImagingColorReduction option
   ColorReductionMask: LongInt = $FF;
-  // variable for ImagingLoadOverrideFormat option
+  // Variable for ImagingLoadOverrideFormat option
   LoadOverrideFormat: TImageFormat = ifUnknown;
-  // variable for ImagingSaveOverrideFormat option
+  // Variable for ImagingSaveOverrideFormat option
   SaveOverrideFormat: TImageFormat = ifUnknown;
-  // variable for ImagingSaveOverrideFormat option
+  // Variable for ImagingSaveOverrideFormat option
   MipMapFilter: TSamplingFilter = sfLinear;
+  // Variable for ImagingBinaryTreshold option
+  BinaryTreshold: Integer = 128;
 
+{ Exceptions }
+
+constructor EImagingBadImage.Create;
+begin
+  inherited Create(SErrorBadImage);
+end;
 
 { Internal unit functions }
 
@@ -674,42 +831,11 @@ procedure InitOptions; forward;
 { Frees options array and stack.}
 procedure FreeOptions; forward;
 
-{$IFDEF USE_INLINE}
-{ Those inline functions are copied here from ImagingFormats
-  because Delphi 9/10 cannot inline them if they are declared in
-  circularly dependent units.}
-
-procedure CopyPixel(Src, Dest: Pointer; BytesPerPixel: LongInt); inline;
+function UpdateExceptMessage(E: Exception; const MsgToPrepend: string; const Args: array of const): Exception;
 begin
-  case BytesPerPixel of
-    1: PByte(Dest)^ := PByte(Src)^;
-    2: PWord(Dest)^ := PWord(Src)^;
-    3: PColor24Rec(Dest)^ := PColor24Rec(Src)^;
-    4: PLongWord(Dest)^ := PLongWord(Src)^;
-    6: PColor48Rec(Dest)^ := PColor48Rec(Src)^;
-    8: PInt64(Dest)^ := PInt64(Src)^;
-    16: PColorFPRec(Dest)^ := PColorFPRec(Src)^;
-  end;
+  Result := E;
+  E.Message := Format(MsgToPrepend, Args) +  ' ' + SExceptMsg + ': ' + E.Message
 end;
-
-function ComparePixels(PixelA, PixelB: Pointer; BytesPerPixel: LongInt): Boolean; inline;
-begin
-  case BytesPerPixel of
-    1: Result := PByte(PixelA)^ = PByte(PixelB)^;
-    2: Result := PWord(PixelA)^ = PWord(PixelB)^;
-    3: Result := (PWord(PixelA)^ = PWord(PixelB)^) and
-         (PColor24Rec(PixelA).R = PColor24Rec(PixelB).R);
-    4: Result := PLongWord(PixelA)^ = PLongWord(PixelB)^;
-    6: Result := (PLongWord(PixelA)^ = PLongWord(PixelB)^) and
-         (PColor48Rec(PixelA).R = PColor48Rec(PixelB).R);
-    8: Result := PInt64(PixelA)^ = PInt64(PixelB)^;
-    16: Result := (PFloatHelper(PixelA).Data2 = PFloatHelper(PixelB).Data2) and
-          (PFloatHelper(PixelA).Data1 = PFloatHelper(PixelB).Data1);
-  else
-    Result := False;
-  end;
-end;
-{$ENDIF}
 
 { ------------------------------------------------------------------------
                        Low Level Interface Functions
@@ -765,7 +891,13 @@ begin
     end;
     Result := TestImage(Image);
   except
-    RaiseImaging(SErrorNewImage, [Width, Height, GetFormatName(Format)]);
+    on E: Exception do
+    begin
+      FreeMem(Image.Bits);
+      FreeMem(Image.Palette);
+      InitImage(Image);
+      raise UpdateExceptMessage(E, SErrorNewImage, [Width, Height, GetFormatName(Format)]);
+    end;
   end;
 end;
 
@@ -779,7 +911,7 @@ begin
       (ImageFormatInfos[Image.Format].GetPixelsSize(Image.Format,
       Image.Width, Image.Height) = Image.Size));
   except
-    // Possible int overflows or other errors 
+    // Possible int overflows or other errors
     Result := False;
   end;
 end;
@@ -794,7 +926,7 @@ begin
     end;
     InitImage(Image);
   except
-    RaiseImaging(SErrorFreeImage, [ImageToStr(Image)]);
+    raise UpdateExceptMessage(GetExceptObject, SErrorFreeImage, [ImageToStr(Image)]);
   end;
 end;
 
@@ -837,35 +969,31 @@ begin
   Assert(FileName <> '');
   Result := '';
   SetFileIO;
+  Handle := IO.Open(PChar(FileName), omReadOnly);
   try
-    Handle := IO.OpenRead(PChar(FileName));
-    try
-      // First file format according to FileName and test if the data in
-      // file is really in that format
-      for I := 0 to ImageFileFormats.Count - 1 do
+    // First file format according to FileName and test if the data in
+    // file is really in that format
+    for I := 0 to ImageFileFormats.Count - 1 do
+    begin
+      Fmt := TImageFileFormat(ImageFileFormats[I]);
+      if Fmt.TestFileName(FileName) and Fmt.TestFormat(Handle) then
       begin
-        Fmt := TImageFileFormat(ImageFileFormats[I]);
-        if Fmt.TestFileName(FileName) and Fmt.TestFormat(Handle) then
-        begin
-          Result := Fmt.Extensions[0];
-          Exit;
-        end;
+        Result := Fmt.Extensions[0];
+        Exit;
       end;
-      // No file format was found with filename search so try data-based search
-      for I := 0 to ImageFileFormats.Count - 1 do
-      begin
-        Fmt := TImageFileFormat(ImageFileFormats[I]);
-        if Fmt.TestFormat(Handle) then
-        begin
-          Result := Fmt.Extensions[0];
-          Exit;
-        end;
-      end;
-    finally
-      IO.Close(Handle);
     end;
-  except
-    Result := '';
+    // No file format was found with filename search so try data-based search
+    for I := 0 to ImageFileFormats.Count - 1 do
+    begin
+      Fmt := TImageFileFormat(ImageFileFormats[I]);
+      if Fmt.TestFormat(Handle) then
+      begin
+        Result := Fmt.Extensions[0];
+        Exit;
+      end;
+    end;
+  finally
+    IO.Close(Handle);
   end;
 end;
 
@@ -878,23 +1006,19 @@ begin
   Assert(Stream <> nil);
   Result := '';
   SetStreamIO;
+  Handle := IO.Open(Pointer(Stream), omReadOnly);
   try
-    Handle := IO.OpenRead(Pointer(Stream));
-    try
-      for I := 0 to ImageFileFormats.Count - 1 do
+    for I := 0 to ImageFileFormats.Count - 1 do
+    begin
+      Fmt := TImageFileFormat(ImageFileFormats[I]);
+      if Fmt.TestFormat(Handle) then
       begin
-        Fmt := TImageFileFormat(ImageFileFormats[I]);
-        if Fmt.TestFormat(Handle) then
-        begin
-          Result := Fmt.Extensions[0];
-          Exit;
-        end;
+        Result := Fmt.Extensions[0];
+        Exit;
       end;
-    finally
-      IO.Close(Handle);
     end;
-  except
-    Result := '';
+  finally
+    IO.Close(Handle);
   end;
 end;
 
@@ -911,23 +1035,19 @@ begin
   IORec.Data := Data;
   IORec.Position := 0;
   IORec.Size := Size;
+  Handle := IO.Open(@IORec, omReadOnly);
   try
-    Handle := IO.OpenRead(@IORec);
-    try
-      for I := 0 to ImageFileFormats.Count - 1 do
+    for I := 0 to ImageFileFormats.Count - 1 do
+    begin
+      Fmt := TImageFileFormat(ImageFileFormats[I]);
+      if Fmt.TestFormat(Handle) then
       begin
-        Fmt := TImageFileFormat(ImageFileFormats[I]);
-        if Fmt.TestFormat(Handle) then
-        begin
-          Result := Fmt.Extensions[0];
-          Exit;
-        end;
+        Result := Fmt.Extensions[0];
+        Exit;
       end;
-    finally
-      IO.Close(Handle);
     end;
-  except
-    Result := '';
+  finally
+    IO.Close(Handle);
   end;
 end;
 
@@ -1204,7 +1324,7 @@ begin
     Move(Image.Bits^, Clone.Bits^, Clone.Size);
     Result := True;
   except
-    RaiseImaging(SErrorCloneImage, [ImageToStr(Image)]);
+    raise UpdateExceptMessage(GetExceptObject, SErrorCloneImage, [ImageToStr(Image)]);
   end;
 end;
 
@@ -1315,7 +1435,7 @@ begin
 
     Result := True;
   except
-    RaiseImaging(SErrorConvertImage, [GetFormatName(DestFormat), ImageToStr(Image)]);
+    raise UpdateExceptMessage(GetExceptObject, SErrorConvertImage, [GetFormatName(DestFormat), ImageToStr(Image)]);
   end;
 end;
 
@@ -1352,7 +1472,7 @@ begin
     if OldFmt <> Format then
       ConvertImage(Image, OldFmt);
 
-    Result := True;  
+    Result := True;
   except
     RaiseImaging(SErrorFlipImage, [ImageToStr(Image)]);
   end;
@@ -1407,7 +1527,7 @@ function ResizeImage(var Image: TImageData; NewWidth, NewHeight: LongInt;
 var
   WorkImage: TImageData;
 begin
-  Assert((NewWidth > 0) and (NewHeight > 0));
+  Assert((NewWidth > 0) and (NewHeight > 0), 'New width or height is zero.');
   Result := False;
   if TestImage(Image) and ((Image.Width <> NewWidth) or (Image.Height <> NewHeight)) then
   try
@@ -1427,7 +1547,7 @@ begin
     Image := WorkImage;
     Result := True;
   except
-    RaiseImaging(SErrorResizeImage, [ImageToStr(Image)]);
+    raise UpdateExceptMessage(GetExceptObject, SErrorResizeImage, [ImageToStr(Image)]);
   end;
 end;
 
@@ -1703,7 +1823,7 @@ begin
     FreeImage(CloneARGB);
     Result := True;
   except
-    RaiseImaging(SErrorMapImage, [ImageToStr(Image)]);
+    raise UpdateExceptMessage(GetExceptObject, SErrorMapImage, [ImageToStr(Image)]);
   end;
 end;
 
@@ -1758,8 +1878,8 @@ begin
         else
         begin
           // Create smaller edge chunk
-          XTrunc := Image.Width - (Image.Width div ChunkWidth) * ChunkWidth;
-          YTrunc := Image.Height - (Image.Height div ChunkHeight) * ChunkHeight;
+          XTrunc := Image.Width - X * ChunkWidth;
+          YTrunc := Image.Height - Y * ChunkHeight;
           NewImage(XTrunc, YTrunc, Image.Format, Chunks[Y * XChunks + X]);
           CopyRect(Image, X * ChunkWidth, Y * ChunkHeight, XTrunc, YTrunc,
             Chunks[Y * XChunks + X], 0, 0);
@@ -1782,7 +1902,8 @@ begin
 
     Result := True;
   except
-    RaiseImaging(SErrorSplitImage, [ImageToStr(Image), ChunkWidth, ChunkHeight]);
+    raise UpdateExceptMessage(GetExceptObject, SErrorSplitImage,
+      [ImageToStr(Image), ChunkWidth, ChunkHeight]);
   end;
 end;
 
@@ -1861,7 +1982,7 @@ begin
   end;
 end;
 
-function RotateImage(var Image: TImageData; Angle: Single): Boolean;
+procedure RotateImage(var Image: TImageData; Angle: Single);
 var
   OldFmt: TImageFormat;
 
@@ -1886,7 +2007,7 @@ var
       if (XPos >= 0) and (XPos < Dst.Width) then
       begin
         for J := 0 to Bpp - 1 do
-          PixSrc.Channels[J] := PixSrc.Channels[J] - (PixLeft.Channels[J] - PixOldLeft.Channels[J]);
+          PixSrc.Channels[J] := ClampToByte(PixSrc.Channels[J] - (PixLeft.Channels[J] - PixOldLeft.Channels[J]));
         CopyPixel(@PixSrc, @LineDst[XPos * Bpp], Bpp);
       end;
       PixOldLeft := PixLeft;
@@ -1917,7 +2038,7 @@ var
       if (YPos >= 0) and (YPos < Dst.Height) then
       begin
         for J := 0 to Bpp - 1 do
-          PixSrc.Channels[J] := PixSrc.Channels[J] - (PixLeft.Channels[J] - PixOldLeft.Channels[J]);
+          PixSrc.Channels[J] := ClampToByte(PixSrc.Channels[J] - (PixLeft.Channels[J] - PixOldLeft.Channels[J]));
         CopyPixel(@PixSrc, @PByteArray(Dst.Bits)[(YPos * Dst.Width + Col) * Bpp], Bpp);
       end;
       PixOldLeft := PixLeft;
@@ -1955,6 +2076,7 @@ var
     // 1st shear (horizontal)
     DstWidth := Trunc(SrcWidth + SrcHeight * Abs(AngleTan) + 0.5);
     DstHeight := SrcHeight;
+    InitImage(TempImage1);
     NewImage(DstWidth, DstHeight, TempFormat, TempImage1);
 
     for I := 0 to DstHeight - 1 do
@@ -1966,9 +2088,10 @@ var
       XShear(Image, TempImage1, I, Floor(Shear), Trunc(255 * (Shear - Floor(Shear)) + 1), Bpp);
     end;
 
-    // 2nd shear  (vertical)
+    // 2nd shear (vertical)
     FreeImage(Image);
     DstHeight := Trunc(SrcWidth * Abs(AngleSin) + SrcHeight * AngleCos + 0.5) + 1;
+    InitImage(TempImage2);
     NewImage(DstWidth, DstHeight, TempFormat, TempImage2);
 
     if AngleSin >= 0 then
@@ -2065,8 +2188,6 @@ var
   end;
 
 begin
-  Result := False;
-
   if TestImage(Image) then
   try
     while Angle >= 360 do
@@ -2075,10 +2196,7 @@ begin
       Angle := Angle + 360;
 
     if (Angle = 0) or (Abs(Angle) = 360) then
-    begin
-      Result := True;
       Exit;
-    end;
 
     OldFmt := Image.Format;
     if ImageFormatInfos[Image.Format].IsSpecial then
@@ -2106,9 +2224,8 @@ begin
     if OldFmt <> Image.Format then
       ConvertImage(Image, OldFmt);
 
-    Result := True;
   except
-    RaiseImaging(SErrorRotateImage, [ImageToStr(Image), Angle]);
+    raise UpdateExceptMessage(GetExceptObject, SErrorRotateImage, [ImageToStr(Image), Angle]);
   end;
 end;
 
@@ -2285,6 +2402,7 @@ var
   Info: PImageFormatInfo;
   WorkImage: TImageData;
   OldFormat: TImageFormat;
+  Resampling: TSamplingFilter;
 begin
   Result := False;
   OldFormat := ifUnknown;
@@ -2326,13 +2444,21 @@ begin
       if Info.IsIndexed then
         Filter := rfNearest;
 
-      case Filter of
-        rfNearest: StretchNearest(WorkImage, SrcX, SrcY, SrcWidth, SrcHeight,
+      if Filter = rfNearest then
+      begin
+        StretchNearest(WorkImage, SrcX, SrcY, SrcWidth, SrcHeight,
           DstImage, DstX, DstY, DstWidth, DstHeight);
-        rfBilinear: StretchResample(WorkImage, SrcX, SrcY, SrcWidth, SrcHeight,
-          DstImage, DstX, DstY, DstWidth, DstHeight, sfLinear);
-        rfBicubic: StretchResample(WorkImage, SrcX, SrcY, SrcWidth, SrcHeight,
-          DstImage, DstX, DstY, DstWidth, DstHeight, sfCatmullRom);
+      end
+      else
+      begin
+        Resampling := sfNearest;
+        case Filter of
+          rfBilinear: Resampling := sfLinear;
+          rfBicubic:  Resampling := DefaultCubicFilter;
+          rfLanczos:  Resampling := sfLanczos;
+        end;
+        StretchResample(WorkImage, SrcX, SrcY, SrcWidth, SrcHeight,
+          DstImage, DstX, DstY, DstWidth, DstHeight, Resampling);
       end;
 
       // If dest image was in special format we convert it back
@@ -2610,13 +2736,11 @@ end;
 
 { IO Functions }
 
-procedure SetUserFileIO(OpenReadProc: TOpenReadProc; OpenWriteProc:
-  TOpenWriteProc;
+procedure SetUserFileIO(OpenProc: TOpenProc;
   CloseProc: TCloseProc; EofProc: TEofProc; SeekProc: TSeekProc; TellProc:
   TTellProc; ReadProc: TReadProc; WriteProc: TWriteProc);
 begin
-  FileIO.OpenRead := OpenReadProc;
-  FileIO.OpenWrite := OpenWriteProc;
+  FileIO.Open := OpenProc;
   FileIO.Close := CloseProc;
   FileIO.Eof := EofProc;
   FileIO.Seek := SeekProc;
@@ -2630,6 +2754,241 @@ begin
   FileIO := OriginalFileIO;
 end;
 
+{ Raw Image IO Functions }
+
+procedure ReadRawImage(Handle: TImagingHandle;  Width, Height: Integer;
+  Format: TImageFormat; out Image: TImageData; Offset, RowLength: Integer);
+var
+  WidthBytes, I: Integer;
+  Info: PImageFormatInfo;
+begin
+  Info := ImageFormatInfos[Format];
+  // Calc scanline size
+  WidthBytes := Info.GetPixelsSize(Format, Width, 1);
+  if RowLength = 0 then
+    RowLength := WidthBytes;
+  // Create new image if needed - don't need to allocate new one if there is already
+  // one with desired size and format
+  if (Image.Width <> Width) or (Image.Height <> Height) or (Image.Format <> Format) then
+    NewImage(Width, Height, Format, Image);
+  // Move past the header
+  IO.Seek(Handle, Offset, smFromCurrent);
+  // Read scanlines from input
+  for I := 0 to Height - 1 do
+  begin
+    IO.Read(Handle, @PByteArray(Image.Bits)[I * WidthBytes], WidthBytes);
+    IO.Seek(Handle, RowLength - WidthBytes, smFromCurrent);
+  end;
+end;
+
+procedure ReadRawImageFromFile(const FileName: string; Width, Height: Integer;
+  Format: TImageFormat; var Image: TImageData; Offset, RowLength: Integer);
+var
+  Handle: TImagingHandle;
+begin
+  Assert(FileName <> '');
+  // Set IO ops to file ops and open given file
+  SetFileIO;
+  Handle := IO.Open(PChar(FileName), omReadOnly);
+  try
+    ReadRawImage(Handle, Width, Height, Format, Image, Offset, RowLength);
+  finally
+    IO.Close(Handle);
+  end;
+end;
+
+procedure ReadRawImageFromStream(Stream: TStream; Width, Height: Integer;
+  Format: TImageFormat; var Image: TImageData; Offset, RowLength: Integer);
+var
+  Handle: TImagingHandle;
+begin
+  Assert(Stream <> nil);
+  if Stream.Size - Stream.Position = 0 then
+    RaiseImaging(SErrorEmptyStream, []);
+  // Set IO ops to stream ops and open given stream
+  SetStreamIO;
+  Handle := IO.Open(Pointer(Stream), omReadOnly);
+  try
+    ReadRawImage(Handle, Width, Height, Format, Image, Offset, RowLength);
+  finally
+    IO.Close(Handle);
+  end;
+end;
+
+procedure ReadRawImageFromMemory(Data: Pointer; DataSize: Integer; Width, Height: Integer;
+  Format: TImageFormat; var Image: TImageData; Offset, RowLength: Integer);
+var
+  Handle: TImagingHandle;
+  MemRec: TMemoryIORec;
+begin
+  Assert((Data <> nil) and (DataSize > 0));
+  // Set IO ops to memory ops and open given stream
+  SetMemoryIO;
+  MemRec := PrepareMemIO(Data, DataSize);
+  Handle := IO.Open(@MemRec, omReadOnly);
+  try
+    ReadRawImage(Handle, Width, Height, Format, Image, Offset, RowLength);
+  finally
+    IO.Close(Handle);
+  end;
+end;
+
+procedure ReadRawImageRect(Data: Pointer; Left, Top, Width, Height: Integer;
+  var Image: TImageData; Offset, RowLength: Integer);
+var
+  DestScanBytes, RectBytes, I: Integer;
+  Info: PImageFormatInfo;
+  Src, Dest: PByte;
+begin
+  Assert(Data <> nil);
+  Assert((Left + Width <= Image.Width) and (Top + Height <= Image.Height));
+  Info := ImageFormatInfos[Image.Format];
+
+  // Calc scanline size
+  DestScanBytes := Info.GetPixelsSize(Info.Format, Image.Width, 1);
+  RectBytes := Info.GetPixelsSize(Info.Format, Width, 1);
+  if RowLength = 0 then
+    RowLength := RectBytes;
+
+  Src := Data;
+  Dest := @PByteArray(Image.Bits)[Top * DestScanBytes + Info.GetPixelsSize(Info.Format, Left, 1)];
+  // Move past the header
+  Inc(Src, Offset);
+
+  // Read lines into rect in the existing image
+  for I := 0 to Height - 1 do
+  begin
+    Move(Src^, Dest^, RectBytes);
+    Inc(Src, RowLength);
+    Inc(Dest, DestScanBytes);
+  end;
+end;
+
+procedure WriteRawImage(Handle: TImagingHandle; const Image: TImageData;
+  Offset, RowLength: Integer);
+var
+  WidthBytes, I: Integer;
+  Info: PImageFormatInfo;
+begin
+  Info := ImageFormatInfos[Image.Format];
+  // Calc scanline size
+  WidthBytes := Info.GetPixelsSize(Image.Format, Image.Width, 1);
+  if RowLength = 0 then
+    RowLength := WidthBytes;
+  // Move past the header
+  IO.Seek(Handle, Offset, smFromCurrent);
+  // Write scanlines to output
+  for I := 0 to Image.Height - 1 do
+  begin
+    IO.Write(Handle, @PByteArray(Image.Bits)[I * WidthBytes], WidthBytes);
+    IO.Seek(Handle, RowLength - WidthBytes, smFromCurrent);
+  end;
+end;
+
+procedure WriteRawImageToFile(const FileName: string; const Image: TImageData;
+  Offset, RowLength: Integer);
+var
+  Handle: TImagingHandle;
+begin
+  Assert(FileName <> '');
+  // Set IO ops to file ops and open given file
+  SetFileIO;
+  Handle := IO.Open(PChar(FileName), omCreate);
+  try
+    WriteRawImage(Handle, Image, Offset, RowLength);
+  finally
+    IO.Close(Handle);
+  end;
+end;
+
+procedure WriteRawImageToStream(Stream: TStream; const Image: TImageData;
+  Offset, RowLength: Integer);
+var
+  Handle: TImagingHandle;
+begin
+  Assert(Stream <> nil);
+  // Set IO ops to stream ops and open given stream
+  SetStreamIO;
+  Handle := IO.Open(Pointer(Stream), omCreate);
+  try
+    WriteRawImage(Handle, Image, Offset, RowLength);
+  finally
+    IO.Close(Handle);
+  end;
+end;
+
+procedure WriteRawImageToMemory(Data: Pointer; DataSize: Integer; const Image: TImageData;
+  Offset, RowLength: Integer);
+var
+  Handle: TImagingHandle;
+  MemRec: TMemoryIORec;
+begin
+  Assert((Data <> nil) and (DataSize > 0));
+  // Set IO ops to memory ops and open given stream
+  SetMemoryIO;
+  MemRec := PrepareMemIO(Data, DataSize);
+  Handle := IO.Open(@MemRec, omCreate);
+  try
+    WriteRawImage(Handle, Image, Offset, RowLength);
+  finally
+    IO.Close(Handle);
+  end;
+end;
+
+procedure WriteRawImageRect(Data: Pointer; Left, Top, Width, Height: Integer;
+  const Image: TImageData; Offset, RowLength: Integer);
+var
+  SrcScanBytes, RectBytes, I: Integer;
+  Info: PImageFormatInfo;
+  Src, Dest: PByte;
+begin
+  Assert(Data <> nil);
+  Assert((Left + Width <= Image.Width) and (Top + Height <= Image.Height));
+  Info := ImageFormatInfos[Image.Format];
+
+  // Calc scanline size
+  SrcScanBytes := Info.GetPixelsSize(Info.Format, Image.Width, 1);
+  RectBytes := Info.GetPixelsSize(Info.Format, Width, 1);
+  if RowLength = 0 then
+    RowLength := RectBytes;
+
+  Src := @PByteArray(Image.Bits)[Top * SrcScanBytes + Info.GetPixelsSize(Info.Format, Left, 1)];
+  Dest := Data;
+  // Move past the header
+  Inc(Dest, Offset);
+
+  // Write lines from rect of the existing image
+  for I := 0 to Height - 1 do
+  begin
+    Move(Src^, Dest^, RectBytes);
+    Inc(Dest, RowLength);
+    Inc(Src, SrcScanBytes);
+  end;
+end;
+
+{ Convenience/helper Functions }
+
+procedure ResizeImageToFit(const SrcImage: TImageData; FitWidth, FitHeight: Integer;
+  Filter: TResizeFilter; var DestImage: TImageData);
+var
+  CurSize, FitSize, DestSize: TSize;
+begin
+  if not TestImage(SrcImage) then
+    raise EImagingError.Create(SErrorInvalidInputImage);
+
+  FitSize.CX := FitWidth;
+  FitSize.CY := FitHeight;
+  CurSize.CX := SrcImage.Width;
+  CurSize.CY := SrcImage.Height;
+  DestSize := ImagingUtility.ScaleSizeToFit(CurSize, FitSize);
+
+  NewImage(Max(DestSize.CX, 1), Max(DestSize.CY, 1), SrcImage.Format, DestImage);
+  if SrcImage.Palette <> nil then
+    CopyPalette(SrcImage.Palette, DestImage.Palette, 0, 0, ImageFormatInfos[SrcImage.Format].PaletteEntries);
+
+  StretchRect(SrcImage, 0, 0, CurSize.CX, CurSize.CY, DestImage, 0, 0,
+    DestSize.CX, DestSize.CY, Filter);
+end;
 
 { ------------------------------------------------------------------------
                            Other Imaging Stuff
@@ -2680,6 +3039,8 @@ begin
   Assert(AClass <> nil);
   if ImageFileFormats = nil then
     ImageFileFormats := TList.Create;
+  if GlobalMetadata = nil then
+    GlobalMetadata := TMetadata.Create;
   if ImageFileFormats <> nil then
     ImageFileFormats.Add(AClass.Create);
 end;
@@ -2867,9 +3228,16 @@ var
 begin
   WholeMsg := Msg;
   if GetExceptObject <> nil then
+  begin
     WholeMsg := WholeMsg + ' ' + SExceptMsg + ': ' +
       GetExceptObject.Message;
+  end;
   raise EImagingError.CreateFmt(WholeMsg, Args);
+end;
+
+procedure RaiseImaging(const Msg: string);
+begin
+  RaiseImaging(Msg, []);
 end;
 
 { Internal unit functions }
@@ -2935,12 +3303,17 @@ end;
   TImageFileFormat class implementation
 }
 
-constructor TImageFileFormat.Create;
+constructor TImageFileFormat.Create(AMetadata: TMetadata);
 begin
   inherited Create;
   FName := SUnknownFormat;
   FExtensions := TStringList.Create;
   FMasks := TStringList.Create;
+  if AMetadata = nil then
+    FMetadata := GlobalMetadata
+  else
+    FMetadata := AMetadata;
+  Define;
 end;
 
 destructor TImageFileFormat.Destroy;
@@ -2950,9 +3323,14 @@ begin
   inherited Destroy;
 end;
 
+procedure TImageFileFormat.Define;
+begin
+end;
+
 function TImageFileFormat.PrepareLoad(Handle: TImagingHandle;
   var Images: TDynImageDataArray; OnlyFirstFrame: Boolean): Boolean;
 begin
+  FMetadata.ClearMetaItems; // Clear old metadata
   FreeImagesInArray(Images);
   SetLength(Images, 0);
   Result := Handle <> nil;
@@ -2990,7 +3368,7 @@ var
 begin
   CheckOptionsValidity;
   Result := False;
-  if FCanSave then
+  if CanSave then
   begin
     Len := Length(Images);
     Assert(Len > 0);
@@ -2999,7 +3377,7 @@ begin
     if Len = 0 then Exit;
 
     // Check index of image to be saved (-1 as index means save all images)
-    if FIsMultiImageFormat then
+    if IsMultiImageFormat then
     begin
       if (Index >= Len) then
         Index := 0;
@@ -3017,8 +3395,10 @@ begin
       end;
 
       for I := FFirstIdx to FLastIdx - 1 do
+      begin
         if not TestImage(Images[I]) then
           Exit;
+      end;
     end
     else
     begin
@@ -3090,18 +3470,18 @@ var
   Handle: TImagingHandle;
 begin
   Result := False;
-  if FCanLoad then
+  if CanLoad then
   try
     // Set IO ops to file ops and open given file
     SetFileIO;
-    Handle := IO.OpenRead(PChar(FileName));
+    Handle := IO.Open(PChar(FileName), omReadOnly);
     try
       // Test if file contains valid image and if so then load it
       if TestFormat(Handle) then
       begin
         Result := PrepareLoad(Handle, Images, OnlyFirstLevel) and
           LoadData(Handle, Images, OnlyFirstlevel);
-        Result := Result and PostLoadCheck(Images, Result);
+        Result := PostLoadCheck(Images, Result);
       end
       else
         RaiseImaging(SFileNotValid, [FileName, Name]);
@@ -3121,18 +3501,18 @@ var
 begin
   Result := False;
   OldPosition := Stream.Position;
-  if FCanLoad then
+  if CanLoad then
   try
     // Set IO ops to stream ops and "open" given memory
     SetStreamIO;
-    Handle := IO.OpenRead(Pointer(Stream));
+    Handle := IO.Open(Pointer(Stream), omReadOnly);
     try
       // Test if stream contains valid image and if so then load it
       if TestFormat(Handle) then
       begin
         Result := PrepareLoad(Handle, Images, OnlyFirstLevel) and
           LoadData(Handle, Images, OnlyFirstlevel);
-        Result := Result and PostLoadCheck(Images, Result);
+        Result := PostLoadCheck(Images, Result);
       end
       else
         RaiseImaging(SStreamNotValid, [@Stream, Name]);
@@ -3141,6 +3521,7 @@ begin
     end;
   except
     Stream.Position := OldPosition;
+    FreeImagesInArray(Images);
     RaiseImaging(SErrorLoadingStream, [@Stream, FExtensions[0]]);
   end;
 end;
@@ -3152,19 +3533,19 @@ var
   IORec: TMemoryIORec;
 begin
   Result := False;
-  if FCanLoad then
+  if CanLoad then
   try
     // Set IO ops to memory ops and "open" given memory
     SetMemoryIO;
     IORec := PrepareMemIO(Data, Size);
-    Handle := IO.OpenRead(@IORec);
+    Handle := IO.Open(@IORec,omReadOnly);
     try
       // Test if memory contains valid image and if so then load it
       if TestFormat(Handle) then
       begin
         Result := PrepareLoad(Handle, Images, OnlyFirstLevel) and
           LoadData(Handle, Images, OnlyFirstlevel);
-        Result := Result and PostLoadCheck(Images, Result);
+        Result := PostLoadCheck(Images, Result);
       end
       else
         RaiseImaging(SMemoryNotValid, [Data, Size, Name]);
@@ -3184,14 +3565,14 @@ var
   Ext, FName: string;
 begin
   Result := False;
-  if FCanSave and TestImagesInArray(Images) then
+  if CanSave and TestImagesInArray(Images) then
   try
     SetFileIO;
     Len := Length(Images);
-    if FIsMultiImageFormat or
-      (not FIsMultiImageFormat and (OnlyFirstLevel or (Len = 1))) then
+    if IsMultiImageFormat or
+      (not IsMultiImageFormat and (OnlyFirstLevel or (Len = 1))) then
     begin
-      Handle := IO.OpenWrite(PChar(FileName));
+      Handle := IO.Open(PChar(FileName), GetSaveOpenMode);
       try
         if OnlyFirstLevel then
           Index := 0
@@ -3211,7 +3592,7 @@ begin
       Result := True;
       for I := 0 to Len - 1 do
       begin
-        Handle := IO.OpenWrite(PChar(Format(FName + '%.3d' + Ext, [I])));
+        Handle := IO.Open(PChar(Format(FName + '%.3d' + Ext, [I])), GetSaveOpenMode);
         try
           Index := I;
           Result := Result and PrepareSave(Handle, Images, Index) and
@@ -3224,7 +3605,7 @@ begin
       end;
     end;
   except
-    RaiseImaging(SErrorSavingFile, [FileName, FExtensions[0]]);
+    raise UpdateExceptMessage(GetExceptObject, SErrorSavingFile, [FileName, FExtensions[0]]);
   end;
 end;
 
@@ -3237,12 +3618,12 @@ var
 begin
   Result := False;
   OldPosition := Stream.Position;
-  if FCanSave and TestImagesInArray(Images) then
+  if CanSave and TestImagesInArray(Images) then
   try
     SetStreamIO;
-    Handle := IO.OpenWrite(PChar(Stream));
+    Handle := IO.Open(PChar(Stream), GetSaveOpenMode);
     try
-      if FIsMultiImageFormat or OnlyFirstLevel then
+      if IsMultiImageFormat or OnlyFirstLevel then
       begin
         if OnlyFirstLevel then
           Index := 0
@@ -3270,7 +3651,7 @@ begin
     end;
   except
     Stream.Position := OldPosition;
-    RaiseImaging(SErrorSavingStream, [@Stream, FExtensions[0]]);
+    raise UpdateExceptMessage(GetExceptObject, SErrorSavingStream, [@Stream, FExtensions[0]]);
   end;
 end;
 
@@ -3282,13 +3663,13 @@ var
   IORec: TMemoryIORec;
 begin
   Result := False;
-  if FCanSave and TestImagesInArray(Images) then
+  if CanSave and TestImagesInArray(Images) then
   try
     SetMemoryIO;
     IORec := PrepareMemIO(Data, Size);
-    Handle := IO.OpenWrite(PChar(@IORec));
+    Handle := IO.Open(PChar(@IORec), GetSaveOpenMode);
     try
-      if FIsMultiImageFormat or OnlyFirstLevel then
+      if IsMultiImageFormat or OnlyFirstLevel then
       begin
         if OnlyFirstLevel then
           Index := 0
@@ -3316,7 +3697,7 @@ begin
       IO.Close(Handle);
     end;
   except
-    RaiseImaging(SErrorSavingMemory, [Data, Size, FExtensions[0]]);
+    raise UpdateExceptMessage(GetExceptObject, SErrorSavingMemory, [Data, Size, FExtensions[0]]);
   end;
 end;
 
@@ -3372,7 +3753,7 @@ begin
   OnlyName := ExtractFileName(FileName);
   // For each mask test if filename matches it 
   for I := 0 to FMasks.Count - 1 do
-    if MatchFileNameMask(OnlyName, FMasks[I], False) then
+    if StrMaskMatch(OnlyName, FMasks[I], False) then
     begin
       Result := True;
       Exit;
@@ -3382,6 +3763,30 @@ end;
 
 procedure TImageFileFormat.CheckOptionsValidity;
 begin
+end;
+
+function TImageFileFormat.GetCanLoad: Boolean;
+begin
+  Result := ffLoad in FFeatures;
+end;
+
+function TImageFileFormat.GetCanSave: Boolean;
+begin
+  Result := ffSave in FFeatures;
+end;
+
+function TImageFileFormat.GetIsMultiImageFormat: Boolean;
+begin
+  Result := ffMultiImage in FFeatures;
+end;
+
+function TImageFileFormat.GetSaveOpenMode: TOpenMode;
+begin
+  // TODO: fix
+  //if ffReadOnSave in FFeatures then
+  //  Result := omReadWrite
+  //else
+    Result := omCreate;
 end;
 
 { TOptionStack  class implementation }
@@ -3433,12 +3838,232 @@ begin
   end;
 end;
 
+{ TMetadata }
+
+procedure TMetadata.SetMetaItem(const Id: string; const Value: Variant;
+  ImageIndex: Integer);
+begin
+  AddMetaToList(FLoadMetaItems, Id, Value, ImageIndex);
+end;
+
+procedure TMetadata.SetMetaItemForSaving(const Id: string; const Value: Variant;
+  ImageIndex: Integer);
+begin
+  AddMetaToList(FSaveMetaItems, Id, Value, ImageIndex);
+end;
+
+procedure TMetadata.AddMetaToList(List: TStringList; const Id: string;
+  const Value: Variant; ImageIndex: Integer);
+var
+  Item: TMetadataItem;
+  Idx: Integer;
+  FullId: string;
+begin
+  FullId := GetMetaItemName(Id, ImageIndex);
+  if List.Find(FullId, Idx) then
+    (List.Objects[Idx] as TMetadataItem).Value := Value
+  else
+  begin
+    Item := TMetadataItem.Create;
+    Item.Id := Id;
+    Item.ImageIndex := ImageIndex;
+    Item.Value := Value;
+    List.AddObject(FullId, Item);
+  end;
+end;
+
+procedure TMetadata.ClearMetaItems;
+begin
+  ClearMetaList(FLoadMetaItems);
+end;
+
+procedure TMetadata.ClearMetaItemsForSaving;
+begin
+  ClearMetaList(FSaveMetaItems);
+end;
+
+procedure TMetadata.ClearMetaList(List: TStringList);
+var
+  I: Integer;
+begin
+  for I := 0 to List.Count - 1 do
+    List.Objects[I].Free;
+  List.Clear;
+end;
+
+procedure TMetadata.CopyLoadedMetaItemsForSaving;
+var
+  I: Integer;
+  Copy, Orig: TMetadataItem;
+begin
+  ClearMetaItemsForSaving;
+  for I := 0 to FLoadMetaItems.Count - 1 do
+  begin
+    Orig := TMetadataItem(FLoadMetaItems.Objects[I]);
+    Copy := TMetadataItem.Create;
+    Copy.Id := Orig.Id;
+    Copy.ImageIndex := Orig.ImageIndex;
+    Copy.Value := Orig.Value;
+    FSaveMetaItems.AddObject(GetMetaItemName(Copy.Id, Copy.ImageIndex), Copy);
+  end;
+end;
+
+constructor TMetadata.Create;
+begin
+  inherited;
+  FLoadMetaItems := TStringList.Create;
+  FLoadMetaItems.Sorted := True;
+  FSaveMetaItems := TStringList.Create;
+  FSaveMetaItems.Sorted := True;
+end;
+
+destructor TMetadata.Destroy;
+begin
+  ClearMetaItems;
+  ClearMetaItemsForSaving;
+  FLoadMetaItems.Free;
+  FSaveMetaItems.Free;
+  inherited;
+end;
+
+function TMetadata.GetMetaById(const Id: string): Variant;
+var
+  Idx: Integer;
+begin
+  if FLoadMetaItems.Find(Id, Idx) then
+    Result := (FLoadMetaItems.Objects[Idx] as TMetadataItem).Value
+  else
+    Result := Variants.Null;
+end;
+
+function TMetadata.GetMetaByIdMulti(const Id: string; ImageIndex: Integer): Variant;
+begin
+  Result := GetMetaById(GetMetaItemName(Id, ImageIndex));
+end;
+
+function TMetadata.GetSaveMetaById(const Id: string): Variant;
+var
+  Idx: Integer;
+begin
+  if FSaveMetaItems.Find(Id, Idx) then
+    Result := (FSaveMetaItems.Objects[Idx] as TMetadataItem).Value
+  else
+    Result := Variants.Null;
+end;
+
+function TMetadata.GetSaveMetaByIdMulti(const Id: string;
+  ImageIndex: Integer): Variant;
+begin
+  Result := GetSaveMetaById(GetMetaItemName(Id, ImageIndex));
+end;
+
+function TMetadata.GetMetaByIdx(Index: Integer): TMetadataItem;
+begin
+  Result := FLoadMetaItems.Objects[Index] as TMetadataItem;
+end;
+
+function TMetadata.GetMetaCount: Integer;
+begin
+  Result := FLoadMetaItems.Count;
+end;
+
+function TMetadata.GetMetaItemName(const Id: string;
+  ImageIndex: Integer): string;
+begin
+  Result := Iff(ImageIndex = 0, Id, Format(SMetaIdForSubImage, [Id, ImageIndex]));
+end;
+
+function TMetadata.GetPhysicalPixelSize(ResUnit: TResolutionUnit; var XSize,
+  YSize: Single; MetaForSave: Boolean; ImageIndex: Integer): Boolean;
+type
+  TGetter = function(const Id: string; ImageIndex: Integer): Variant of object;
+var
+  Getter: TGetter;
+  XMeta, YMeta: Variant;
+begin
+  if MetaForSave then
+    Getter := GetSaveMetaByIdMulti
+  else
+    Getter := GetMetaByIdMulti;
+
+  XMeta := Getter(SMetaPhysicalPixelSizeX, ImageIndex);
+  YMeta := Getter(SMetaPhysicalPixelSizeY, ImageIndex);
+  XSize := -1;
+  YSize := -1;
+
+  Result := not VarIsNull(XMeta) or not VarIsNull(YMeta);
+
+  if not Result then
+    Exit;
+
+  if not VarIsNull(XMeta) then
+    XSize := XMeta;
+  if not VarIsNull(YMeta) then
+    YSize := YMeta;
+
+  if XSize < 0 then
+    XSize := YSize;
+  if YSize < 0 then
+    YSize := XSize;
+
+  TranslateUnits(ResUnit, XSize, YSize);
+end;
+
+procedure TMetadata.SetPhysicalPixelSize(ResUnit: TResolutionUnit; XSize,
+  YSize: Single; MetaForSave: Boolean; ImageIndex: Integer);
+type
+  TAdder = procedure(const Id: string; const Value: Variant; ImageIndex: Integer) of object;
+var
+  Adder: TAdder;
+begin
+  TranslateUnits(ResUnit, XSize, YSize);
+
+  if MetaForSave then
+    Adder := SetMetaItemForSaving
+  else
+    Adder := SetMetaItem;
+
+  Adder(SMetaPhysicalPixelSizeX, XSize, ImageIndex);
+  Adder(SMetaPhysicalPixelSizeY, YSize, ImageIndex);
+end;
+
+procedure TMetadata.TranslateUnits(ResolutionUnit: TResolutionUnit; var XRes,
+  YRes: Single);
+var
+  UnitSize: Single;
+begin
+  case ResolutionUnit of
+    ruDpi: UnitSize := 25400;
+    ruDpm: UnitSize := 1e06;
+    ruDpcm: UnitSize := 1e04;
+  else
+    UnitSize := 1;
+  end;
+  if ResolutionUnit <> ruSizeInMicroMeters then
+  begin
+    XRes := UnitSize / XRes;
+    YRes := UnitSize / YRes;
+  end;
+end;
+
+function TMetadata.HasMetaItem(const Id: string; ImageIndex: Integer): Boolean;
+begin
+  Result := GetMetaByIdMulti(Id, ImageIndex) <> Variants.Null;
+end;
+
+function TMetadata.HasMetaItemForSaving(const Id: string; ImageIndex: Integer): Boolean;
+begin
+  Result := GetSaveMetaByIdMulti(Id, ImageIndex) <> Variants.Null;
+end;
+
 initialization
 {$IFDEF MEMCHECK}
   {$IF CompilerVersion >= 18}
     System.ReportMemoryLeaksOnShutdown := True;
   {$IFEND}
 {$ENDIF}
+  if GlobalMetadata = nil then
+    GlobalMetadata := TMetadata.Create;
   if ImageFileFormats = nil then
     ImageFileFormats := TList.Create;
   InitImageFormats;
@@ -3446,15 +4071,34 @@ initialization
   RegisterOption(ImagingLoadOverrideFormat, @LoadOverrideFormat);
   RegisterOption(ImagingSaveOverrideFormat, @SaveOverrideFormat);
   RegisterOption(ImagingMipMapFilter, @MipMapFilter);
+  RegisterOption(ImagingBinaryTreshold, @BinaryTreshold);
 finalization
   FreeOptions;
   FreeImageFileFormats;
+  GlobalMetadata.Free;
 
 {
   File Notes:
 
   -- TODOS ----------------------------------------------------
     - nothing now
+
+  -- 0.77.1 ---------------------------------------------------
+    - Updated IO Open functions according to changes in ImagingTypes.
+    - Fixed bug in SplitImage that could cause wrong size of edge chunks.
+    - Metadata support fixes and extensions (frame delays, animation loops).
+
+  -- 0.26.5 Changes/Bug Fixes ---------------------------------
+    - Started reworking exception raising to keep the original class type
+      (e.g. in NewImage EOutOfMemory could be raised but was hidden
+      by EImagingError raised afterwards in NewImage try/except).
+    - Fixed possible AV in Rotate45 subproc of RotateImage.
+    - Added ReadRawXXX and WriteRawXXX functions for raw image bits IO.
+    - Implemented ImagingBinaryTreshold option.
+    - Added support for simple image metadata loading/saving.
+    - Moved file format definition (name, exts, caps, ...) from
+      constructor to new Define method.
+    - Fixed some memory leaks caused by failures during image loading.
 
   -- 0.26.3 Changes/Bug Fixes ---------------------------------
     - Extended RotateImage to allow arbitrary angle rotations.
@@ -3568,7 +4212,7 @@ finalization
       channel bitcounts > 8
 
   -- 0.17 Changes/Bug Fixes -----------------------------------
-    - changed order of parameters of CopyRect function  
+    - changed order of parameters of CopyRect function
     - GenerateMipMaps now filters mipmap levels
     - ResizeImage functions was extended to allow bilinear and bicubic filtering
     - added StretchRect function to low level interface

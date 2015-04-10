@@ -11,7 +11,7 @@ unit frmImportFavorites;
 interface
 
 uses
-  Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
+  Classes, SysUtils, FileUtil, Forms, Dialogs, StdCtrls,
   Buttons, lazutf8classes, frmImportList, uBaseUnit;
 
 type
@@ -19,8 +19,8 @@ type
   { TImportFavorites }
 
   TImportFavorites = class(TForm)
+    btBrowse: TSpeedButton;
     btImport: TBitBtn;
-    btBrowse: TBitBtn;
     btCancel: TBitBtn;
     cbSoftware: TComboBox;
     edPath: TEdit;
@@ -28,7 +28,6 @@ type
     lbSelectSoftware: TLabel;
     procedure btBrowseClick(Sender: TObject);
     procedure btImportClick(Sender: TObject);
-    procedure cbSoftwareChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
   private
     { private declarations }
@@ -170,10 +169,6 @@ end;
 procedure TImportFavorites.btImportClick(Sender: TObject);
 begin
   Run;
-end;
-
-procedure TImportFavorites.cbSoftwareChange(Sender: TObject);
-begin
 end;
 
 end.

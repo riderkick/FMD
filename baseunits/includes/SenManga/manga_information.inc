@@ -1,109 +1,144 @@
-function   GetSenMangaInfoFromURL: Byte;
-var
-  s: String;
-  isRepeated      : Boolean = FALSE;
-  isExtractSummary: Boolean = TRUE;
-  isExtractChapter: Boolean = FALSE;
-  i, j: Cardinal;
-begin
-  mangaInfo.url:= WebsiteRoots[SENMANGA_ID,1] + URL;
-  if NOT GetPage(TObject(source), mangaInfo.url, Reconnect) then
+  function GetSenMangaInfoFromURL: Byte;
+  var
+    i: LongInt;
+    s: String;
+    isExtractGenres  : Boolean = False;
+    isExtractGenresP : Boolean = False;
+    isExtractSummary : Boolean = False;
+    isExtractSummaryP: Boolean = False;
+    isExtractChapters: Boolean = False;
   begin
-    Result:= NET_PROBLEM;
-    source.Free;
-    exit;
-  end;
-
-  // parsing the HTML source
-  parse.Clear;
-  Parser:= TjsFastHTMLParser.Create(PChar(source.Text));
-  Parser.OnFoundTag := OnTag;
-  Parser.OnFoundText:= OnText;
-  Parser.SlowExec;
-
-  Parser.Free;
-  source.Free;
-
-  mangaInfo.website:= WebsiteRoots[SENMANGA_ID,0];
-  mangaInfo.coverLink:= '';
-  mangaInfo.summary:= '';
-  mangaInfo.authors:= '';
-  mangaInfo.artists:= '';
-  mangaInfo.genres:= '';
-  isExtractChapter:= FALSE;
-
-  // using parser (cover link, summary, chapter name and link)
-  if parse.Count=0 then exit;
-  for i:= 0 to parse.Count-1 do
-  begin
-    // get cover
-    if (mangaInfo.coverLink = '') AND
-       (Pos('Series Cover:', parse.Strings[i])>0) then
-      mangaInfo.coverLink:= WebsiteRoots[SENMANGA_ID,1] + CorrectURL(GetAttributeValue(GetTagAttribute(parse.Strings[i+3], 'src=')));
-
-    // get chapter name and links
-    if (Pos('class="chapter"', parse.Strings[i])>0) then
-      isExtractChapter:= TRUE;
-
-    // get summary
-    if (isExtractSummary) AND
-       (Pos('Summary:', parse.Strings[i]) <> 0) AND
-       (Pos('<strong>', parse.Strings[i-1]) <> 0) then
+    mangaInfo.url := FillMangaSiteHost(SENMANGA_ID, URL);
+    if not GetPage(TObject(Source), mangaInfo.url, Reconnect) then
     begin
-      j:= i+7;
-      while (j<parse.Count) AND (Pos('</table>', parse.Strings[j])=0) do
+      Result := NET_PROBLEM;
+      Source.Free;
+      Exit;
+    end;
+
+    // parsing the HTML source
+    parse.Clear;
+    Parser := THTMLParser.Create(PChar(Source.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText := OnText;
+    Parser.Exec;
+
+    Parser.Free;
+    Source.Free;
+
+    mangaInfo.website := WebsiteRoots[SENMANGA_ID, 0];
+    mangaInfo.coverLink := '';
+    mangaInfo.summary := '';
+    mangaInfo.authors := '';
+    mangaInfo.artists := '';
+    mangaInfo.genres := '';
+
+    if parse.Count = 0 then
+      Exit;
+
+    for i := 0 to parse.Count - 1 do
+    begin
+      //title 
+      if (i + 7 < parse.Count - 1) then
+        if GetVal(parse[i], 'id') = 'contentleft' then
+          mangaInfo.title := CommonStringFilter(parse[i + 6]);
+
+      //cover
+      if (Pos('<img', parse[i]) <> 0) and
+        (Pos('onerror="this.src =''/no_preview.jpg''', parse[i]) <> 0) then
       begin
-        s:= parse.Strings[j];
-        if (s[1] <> '<') then
-        begin
-          parse.Strings[j]:= HTMLEntitiesFilter(StringFilter(parse.Strings[j]));
-          parse.Strings[j]:= StringReplace(parse.Strings[j], #10, '\n', [rfReplaceAll]);
-          parse.Strings[j]:= StringReplace(parse.Strings[j], #13, '\r', [rfReplaceAll]);
-          mangaInfo.summary:= mangaInfo.summary + parse.Strings[j];
-        end;
-        Inc(j);
+        mangaInfo.coverLink := GetVal(parse[i], 'src');
+        if Pos('/', mangaInfo.coverLink) = 1 then
+          mangaInfo.coverLink := WebsiteRoots[SENMANGA_ID, 1] + mangaInfo.coverLink;
       end;
-      isExtractSummary:= FALSE;
+
+      if (i + 2 < parse.Count - 1) and
+        (Pos('<strong', parse[i]) <> 0) and (GetVal(parse[i], 'class') = 'data') then
+      begin
+        //author
+        if (Pos('Author:', parse[i + 1]) <> 0) then
+          mangaInfo.authors := CommonStringFilter(parse[i + 5]);
+
+        //artist
+        if (Pos('Artist:', parse[i + 1]) <> 0) then
+          mangaInfo.artists := CommonStringFilter(parse[i + 5]);
+
+        //status
+        if (Pos('Status:', parse[i + 1]) <> 0) then
+        begin
+          parse[i + 5] := Trim(LowerCase(parse[i + 5]));
+          if parse[i + 5] = 'ongoing' then
+            mangaInfo.status := '1'
+          else
+            mangaInfo.status := '0';
+        end;
+
+        //summary
+        if (Pos('Summary:', parse[i + 1]) <> 0) then
+          isExtractSummary := True;
+
+        //genres
+        if (Pos('Categorize in:', parse[i + 1]) <> 0) then
+          isExtractGenres := True;
+      end;
+
+      //summary
+      if isExtractSummary and (Pos('<p', parse[i]) <> 0) then
+      begin
+        isExtractSummary := False;
+        isExtractSummaryP := True;
+      end;
+      if isExtractSummaryP and (Pos('</p', parse[i]) <> 0) then
+        isExtractSummaryP := False;
+      if isExtractSummaryP and
+        (Pos('<', parse[i]) = 0) then
+      begin
+        if mangaInfo.summary <> '' then
+          mangaInfo.summary := mangaInfo.summary + '\r\n' + CommonStringFilter(parse[i])
+        else
+          mangaInfo.summary := CommonStringFilter(parse[i]);
+      end;
+
+      //genres
+      if isExtractGenres and (Pos('<p', parse[i]) <> 0) then
+      begin
+        isExtractGenres := False;
+        isExtractGenresP := True;
+      end;
+      if isExtractGenresP and (Pos('</p', parse[i]) <> 0) then
+        isExtractGenresP := False;
+      if i + 2 < parse.Count - 1 then 
+        if isExtractGenresP and
+          (Pos('<a', parse[i]) <> 0) then
+        begin
+          if mangaInfo.genres <> '' then
+            mangaInfo.genres := mangaInfo.genres + ', ' + CommonStringFilter(parse[i + 1])
+          else
+            mangaInfo.genres := CommonStringFilter(parse[i + 1]);
+        end;
+
+      //chapters
+      if (Pos('<td', parse[i]) <> 0) and (Pos('class="chapter"', parse[i]) <> 0) then
+        isExtractChapters := True;
+      if isExtractChapters and (Pos('</table', parse[i]) <> 0) then
+        isExtractChapters := False;
+      if isExtractChapters and
+        (Pos('<a', parse[i]) <> 0) and (Pos(' title="', parse[i]) <> 0) then
+      begin
+        Inc(mangaInfo.numChapter);
+        s := GetVal(parse[i], 'href');
+        if (Length(s) > 4) and (RightStr(s, 2) = '/1') then
+          SetLength(s, Length(s) - 2);
+        mangaInfo.chapterLinks.Add(s);
+        mangaInfo.chapterName.Add(CommonStringFilter(parse[i + 1]));
+      end;
     end;
 
-    // get manga name
-    if (mangaInfo.title = '') AND (Pos('<title>', parse.Strings[i])>0) then
-      mangaInfo.title:= TrimLeft(TrimRight(GetString('~!@'+parse.Strings[i+1], '~!@', ' | Raw ')));
-
-    if (isExtractChapter) AND
-       ((Pos('''even'' style=''padding', parse.Strings[i])>0) OR
-        (Pos('''odd'' style=''padding', parse.Strings[i])>0)) then
+    //invert
+    if mangainfo.ChapterLinks.Count > 1 then
     begin
-      Inc(mangaInfo.numChapter);
-      s:= StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i+5], 'href=')), WebsiteRoots[SENMANGA_ID,1], '', []);
-      SetLength(s, Length(s)-1);
-      mangaInfo.chapterLinks.Add(s);
-      s:= RemoveSymbols(TrimLeft(TrimRight(parse.Strings[i+6])));
-      mangaInfo.chapterName.Add(StringFilter(StringFilter(HTMLEntitiesFilter(s))));
+      InvertStrings(mangaInfo.chapterLinks);
+      InvertStrings(mangaInfo.chapterName);
     end;
-
-    // get status
-    if (i+4<parse.Count) AND
-       (Pos('Status:', parse.Strings[i])<>0) AND
-       (Pos('<strong>', parse.Strings[i-1])<>0) then
-    begin
-      if (Pos('Complete', parse.Strings[i+4])<>0)  then
-        mangaInfo.status:= '0'   // completed
-      else
-        mangaInfo.status:= '1';  // ongoing
-    end;
+    Result := NO_ERROR;
   end;
-
-  // Since chapter name and link are inverted, we need to invert them
-  if mangainfo.ChapterLinks.Count > 1 then
-  begin
-    i:= 0; j:= mangainfo.ChapterLinks.Count - 1;
-    while (i<j) do
-    begin
-      mangainfo.ChapterName.Exchange(i, j);
-      mangainfo.chapterLinks.Exchange(i, j);
-      Inc(i); Dec(j);
-    end;
-  end;
-  Result:= NO_ERROR;
-end;

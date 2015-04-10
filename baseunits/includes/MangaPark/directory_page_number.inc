@@ -1,38 +1,37 @@
-function   GetMangaParkDirectoryPageNumber: Byte;
+  function GetMangaParkDirectoryPageNumber: Byte;
   var
-    i: Cardinal;
+    i: LongInt;
+    isExtractPage: Boolean = False;
   begin
-    Result:= INFORMATION_NOT_FOUND;
-    if NOT GetPage(TObject(source), WebsiteRoots[MANGAPARK_ID,1] + MANGAPARK_BROWSER + '1?az', 0) then
+    Result := INFORMATION_NOT_FOUND;
+    if not GetPage(TObject(Source), WebsiteRoots[MANGAPARK_ID, 1] +
+      MANGAPARK_BROWSER, 0) then
     begin
-      Result:= NET_PROBLEM;
-      source.Free;
-      exit;
+      Result := NET_PROBLEM;
+      Source.Free;
+      Exit;
     end;
     parse.Clear;
-    Parser:= TjsFastHTMLParser.Create(PChar(source.Text));
+    Parser := THTMLParser.Create(PChar(Source.Text));
     Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
+    Parser.OnFoundText := OnText;
     Parser.Exec;
     Parser.Free;
-    if parse.Count=0 then
+    if parse.Count = 0 then
     begin
-      source.Free;
-      exit;
+      Source.Free;
+      Exit;
     end;
-    for i:= parse.Count-2 downto 0 do
+
+    for i := 0 to parse.Count - 1 do
     begin
-      if (GetTagName(parse.Strings[i]) = 'a') AND
-         (i <= parse.Count) AND
-         (Pos('...', parse.Strings[i+1])<>0) AND
-         (Pos('?az', parse.Strings[i])<>0) then
-      begin
-        s:= GetString(parse.Strings[i], '/list/', '?az');
-        Page:= StrToInt(s);
-        Result:= NO_ERROR;
-        source.Free;
-        exit;
-      end;
+      if (not isExtractPage) and (Pos('<select', parse[i]) <> 0) and
+        (Pos('this.options[this.selectedIndex].value', parse[i]) <> 0) then
+        isExtractPage := True;
+      if isExtractPage and (Pos('</select', parse[i]) <> 0 ) then
+        Break;
+      if isExtractPage and (Pos('<option', parse[i]) <> 0) then
+        Inc(Page);
     end;
-    source.Free;
+    Source.Free;
   end;

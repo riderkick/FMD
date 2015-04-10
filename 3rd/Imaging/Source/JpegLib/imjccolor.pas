@@ -24,8 +24,7 @@ implementation
 
 { Private subobject }
 type
-  jTInt32 = 0..Pred(MaxInt div SizeOf(INT32));
-  INT32_FIELD = array[jTInt32] of INT32;
+  INT32_FIELD = array[0..MaxInt div SizeOf(INT32) - 1] of INT32;
   INT32_FIELD_PTR = ^INT32_FIELD;
 
 type
@@ -94,14 +93,14 @@ const
 {METHODDEF}
 procedure rgb_ycc_start (cinfo : j_compress_ptr);  
 const
-  FIX_0_29900 = INT32(Round (0.29900 * (1 shl SCALEBITS)) );
-  FIX_0_58700 = INT32(Round (0.58700 * (1 shl SCALEBITS)) );
-  FIX_0_11400 = INT32(Round (0.11400 * (1 shl SCALEBITS)) );
-  FIX_0_16874 = INT32(Round (0.16874 * (1 shl SCALEBITS)) );
-  FIX_0_33126 = INT32(Round (0.33126 * (1 shl SCALEBITS)) );
-  FIX_0_50000 = INT32(Round (0.50000 * (1 shl SCALEBITS)) );
-  FIX_0_41869 = INT32(Round (0.41869 * (1 shl SCALEBITS)) );
-  FIX_0_08131 = INT32(Round (0.08131 * (1 shl SCALEBITS)) );
+  FIX_0_29900 = INT32(Round(0.29900 * (1 shl SCALEBITS)));
+  FIX_0_58700 = INT32(Round(0.58700 * (1 shl SCALEBITS)));
+  FIX_0_11400 = INT32(Round(0.11400 * (1 shl SCALEBITS)));
+  FIX_0_16874 = INT32(Round(0.16874 * (1 shl SCALEBITS)));
+  FIX_0_33126 = INT32(Round(0.33126 * (1 shl SCALEBITS)));
+  FIX_0_50000 = INT32(Round(0.50000 * (1 shl SCALEBITS)));
+  FIX_0_41869 = INT32(Round(0.41869 * (1 shl SCALEBITS)));
+  FIX_0_08131 = INT32(Round(0.08131 * (1 shl SCALEBITS)));
 var
   cconvert : my_cconvert_ptr;
   rgb_ycc_tab : INT32_FIELD_PTR;
@@ -232,26 +231,24 @@ begin
   while (num_rows > 0) do
   begin
     Dec(num_rows);
-    inptr := input_buf^[0];
+    inptr := input_buf[0];
     Inc(JSAMPROW_PTR(input_buf));
-    outptr := output_buf^[0]^[output_row];
+    outptr := output_buf[0][output_row];
     Inc(output_row);
-    for col := 0 to pred(num_cols) do
+    for col := 0 to num_cols - 1 do
     begin
-      r := GETJSAMPLE(inptr^[RGB_RED]);
-      g := GETJSAMPLE(inptr^[RGB_GREEN]);
-      b := GETJSAMPLE(inptr^[RGB_BLUE]);
+      r := GETJSAMPLE(inptr[RGB_RED]);
+      g := GETJSAMPLE(inptr[RGB_GREEN]);
+      b := GETJSAMPLE(inptr[RGB_BLUE]);
       Inc(JSAMPLE_PTR(inptr), RGB_PIXELSIZE);
       (* Y *)
-      //  kylix 3 compiler crashes on this
-      {$IF (not Defined(LINUX)) or Defined(FPC)}
-        outptr^[col] := JSAMPLE (
-      		((ctab^[r+R_Y_OFF] + ctab^[g+G_Y_OFF] + ctab^[b+B_Y_OFF])
-    		 shr SCALEBITS) );
+      // kylix 3 compiler crashes on this
+      // it also crashes Delphi OSX compiler 9 years later :(
+      {$IF not (Defined(DCC) and not Defined(MSWINDOWS))}
+      outptr[col] := JSAMPLE(((ctab[r+R_Y_OFF] + ctab[g+G_Y_OFF] + ctab[b+B_Y_OFF]) shr SCALEBITS));
       {$IFEND}
     end;
   end;
-
 end;
 
 

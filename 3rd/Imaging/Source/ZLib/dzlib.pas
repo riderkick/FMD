@@ -45,43 +45,43 @@ unit dzlib;
 
 interface
 
+{$DEFINE IMPASZLIB}
+{ $DEFINE ZLIBPAS}
+{ $DEFINE FPCPASZLIB}
 { $DEFINE ZLIBEX}
 { $DEFINE DELPHIZLIB}
-{ $DEFINE ZLIBPAS}
-{$DEFINE IMPASZLIB}
-{ $DEFINE FPCPASZLIB}
 
-{ Automatically use FPC's PasZLib when compiling with Lazarus.}
+{ Automatically use FPC's PasZLib when compiling with FPC.}
 
-{$IFDEF LCL}
+{$IFDEF FPC}
   {$UNDEF IMPASZLIB}
   {$DEFINE FPCPASZLIB}
 {$ENDIF}
 
 uses
-{$IF Defined(ZLIBEX)}
-  { Use ZlibEx unit.}
-  ZLibEx,
-{$ELSEIF Defined(DELPHIZLIB)}
-  { Use ZLib unit shipped with Delphi.}
-  ZLib,
-{$ELSEIF Defined(ZLIBPAS)}
-  { Pascal interface to ZLib shipped with ZLib C source.}
-  zlibpas,
-{$ELSEIF Defined(IMPASZLIB)}
-  { Use paszlib modified by me for Delphi and FPC.}
+{$IF Defined(IMPASZLIB)}
+  { Use paszlib modified by me for Delphi and FPC }
   imzdeflate, imzinflate, impaszlib,
 {$ELSEIF Defined(FPCPASZLIB)}
-  { Use FPC's paszlib.}
+  { Use FPC's paszlib }
   zbase, paszlib,
+{$ELSEIF Defined(ZLIBPAS)}
+  { Pascal interface to ZLib shipped with ZLib C source }
+  zlibpas,
+{$ELSEIF Defined(ZLIBEX)}
+  { Use ZlibEx unit }
+  ZLibEx,
+{$ELSEIF Defined(DELPHIZLIB)}
+  { Use ZLib unit shipped with Delphi }
+  ZLib,
 {$IFEND}
-  SysUtils, Classes;
+  ImagingTypes, SysUtils, Classes;
 
 {$IF Defined(IMPASZLIB) or Defined(FPCPASZLIB) or Defined(ZLIBPAS)}
 type
   TZStreamRec = z_stream;
 {$IFEND}
-{$IFDEF ZLIBEX}
+
 const
   Z_NO_FLUSH      = 0;
   Z_PARTIAL_FLUSH = 1;
@@ -114,7 +114,6 @@ const
   Z_UNKNOWN  = 2;
 
   Z_DEFLATED = 8;
-{$ENDIF}
 
 type
   { Abstract ancestor class }
@@ -207,8 +206,9 @@ type
   Out: OutBuf = ptr to newly allocated buffer containing decompressed data
        OutBytes = number of bytes in OutBuf   }
 procedure CompressBuf(const InBuf: Pointer; InBytes: Integer;
-                      var OutBuf: Pointer; var OutBytes: Integer;
-                      CompressLevel: Integer = Z_DEFAULT_COMPRESSION);
+  var OutBuf: Pointer; var OutBytes: Integer;
+  CompressLevel: Integer = Z_DEFAULT_COMPRESSION;
+  CompressStrategy: Integer = Z_DEFAULT_STRATEGY);
 
 { DecompressBuf decompresses data, buffer to buffer, in one call.
    In: InBuf = ptr to compressed data
@@ -265,8 +265,8 @@ begin
 end;
 
 procedure CompressBuf(const InBuf: Pointer; InBytes: Integer;
-                      var OutBuf: Pointer; var OutBytes: Integer;
-                      CompressLevel: Integer);
+  var OutBuf: Pointer; var OutBytes: Integer;
+  CompressLevel, CompressStrategy: Integer);
 var
   strm: TZStreamRec;
   P: Pointer;
@@ -283,14 +283,17 @@ begin
     strm.avail_in := InBytes;
     strm.next_out := OutBuf;
     strm.avail_out := OutBytes;
-    CCheck(deflateInit_(strm, CompressLevel, zlib_version, sizeof(strm)));
+
+    CCheck(deflateInit2(strm, CompressLevel, Z_DEFLATED, MAX_WBITS,
+      DEF_MEM_LEVEL, CompressStrategy));
+
     try
       while CCheck(deflate(strm, Z_FINISH)) <> Z_STREAM_END do
       begin
         P := OutBuf;
         Inc(OutBytes, 256);
         ReallocMem(OutBuf, OutBytes);
-        strm.next_out := Pointer(Integer(OutBuf) + (Integer(strm.next_out) - Integer(P)));
+        strm.next_out := Pointer(PtrUInt(OutBuf) + (PtrUInt(strm.next_out) - PtrUInt(P)));
         strm.avail_out := 256;
       end;
     finally
@@ -334,7 +337,7 @@ begin
         P := OutBuf;
         Inc(OutBytes, BufInc);
         ReallocMem(OutBuf, OutBytes);
-        strm.next_out := Pointer(Integer(OutBuf) + (Integer(strm.next_out) - Integer(P)));
+        strm.next_out := Pointer(PtrUInt(OutBuf) + (PtrUInt(strm.next_out) - PtrUInt(P)));
         strm.avail_out := BufInc;
       end;
     finally

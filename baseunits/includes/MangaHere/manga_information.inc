@@ -1,114 +1,100 @@
-function   GetMangaHereInfoFromURL: Byte;
-var
-  i, j: Cardinal;
-begin
-  mangaInfo.url:= WebsiteRoots[MANGAHERE_ID,1] + URL;
-  if NOT GetPage(TObject(source), mangaInfo.url, Reconnect) then
+  function GetMangaHereInfoFromURL: Byte;
+  var
+    i, j: LongInt;
+    isGetChapters: Boolean = False;
   begin
-    Result:= NET_PROBLEM;
-    source.Free;
-    exit;
-  end;
+    mangaInfo.url := FillMangaSiteHost(MANGAHERE_ID, URL);
+    if not GetPage(TObject(Source), mangaInfo.url, Reconnect) then
+    begin
+      Result := NET_PROBLEM;
+      Source.Free;
+      Exit;
+    end;
 
-  // parsing the HTML source
-  parse.Clear;
-  Parser:= TjsFastHTMLParser.Create(PChar(source.Text));
-  Parser.OnFoundTag := OnTag;
-  Parser.OnFoundText:= OnText;
-  Parser.Exec;
+    // parsing the HTML source
+    parse.Clear;
+    Parser := THTMLParser.Create(PChar(Source.Text));
+    Parser.OnFoundTag := OnTag;
+    Parser.OnFoundText := OnText;
+    Parser.Exec;
 
-  Parser.Free;
-  source.Free;
-  mangaInfo.website:= WebsiteRoots[MANGAHERE_ID,0];
+    Parser.Free;
+    Source.Free;
+    mangaInfo.website := WebsiteRoots[MANGAHERE_ID, 0];
 
-  // using parser (cover link, summary, chapter name and link)
-  if parse.Count=0 then exit;
-  for i:= 0 to parse.Count-1 do
-  begin
-    // get manga title
-    if (mangaInfo.title = '') AND
-       (Pos('<title>', parse.Strings[i]) > 0) then
-      mangaInfo.title:= GetString(parse.Strings[i+1], 'Manga - Read ', ' Online at ');
+    // using parser (cover link, summary, chapter name and link)
+    if parse.Count = 0 then
+      Exit;
+    for i := 0 to parse.Count - 1 do
+    begin
+      // get manga title
+      if (mangaInfo.title = '') and
+        (Pos('<title>', parse[i]) > 0) then
+        mangaInfo.title := GetString(parse[i + 1], 'Manga - Read ', ' Online at ');
 
-    // get cover link
-    if GetTagName(parse.Strings[i]) = 'img' then
-      if (GetAttributeValue(GetTagAttribute(parse.Strings[i], 'class='))='img') then
-        mangaInfo.coverLink:= GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src'));
+      // get cover link
+      if GetTagName(parse[i]) = 'img' then
+        if (GetAttributeValue(GetTagAttribute(parse[i], 'class=')) = 'img') then
+          mangaInfo.coverLink :=
+            GetAttributeValue(GetTagAttribute(parse[i], 'src'));
 
       // get summary
-    if (Pos('id="show"', parse.Strings[i])) <> 0 then
-    begin
-      parse.Strings[i+1]:= StringFilter(parse.Strings[i+1]);
-      parse.Strings[i+1]:= StringReplace(parse.Strings[i+1], #10, '\n', [rfReplaceAll]);
-      parse.Strings[i+1]:= StringReplace(parse.Strings[i+1], #13, '\r', [rfReplaceAll]);
-      mangaInfo.summary:= parse.Strings[i+1];
+      if (Pos('id="show"', parse[i])) <> 0 then
+      begin
+        parse[i + 1] := StringFilter(parse[i + 1]);
+        parse[i + 1] := StringReplace(parse[i + 1], #10, '\n', [rfReplaceAll]);
+        parse[i + 1] := StringReplace(parse[i + 1], #13, '\r', [rfReplaceAll]);
+        mangaInfo.summary := parse[i + 1];
+      end;
+
+      // get authors
+      if (Pos('Author(s):', parse[i]) <> 0) then
+        mangaInfo.authors := parse[i + 3];
+
+      // get artists
+      if (Pos('Artist(s):', parse[i]) <> 0) then
+        mangaInfo.artists := parse[i + 3];
+
+      // get genres
+      if (Pos('Genre(s):', parse[i]) <> 0) then
+        mangaInfo.genres := Trim(parse[i + 2]);
+
+      // get status
+      if (Pos('Status:', parse[i]) <> 0) then
+      begin
+        if Pos('Ongoing', parse[i + 2]) <> 0 then
+          mangaInfo.status := '1'   // ongoing
+        else
+        if Pos('Completed', parse[i + 2]) <> 0 then
+          mangaInfo.status := '0';  // completed
+      end;
+
+      // get chapters
+      if (Pos('<div', parse[i]) <> 0) and (Pos('class="detail_list', parse[i]) <> 0) then
+        isGetChapters := True;
+      if isGetChapters and (Pos('class="tab_comment clearfix', parse[i]) <> 0) then
+        isGetChapters := False;
+      if isGetChapters and 
+        (Pos('<a', parse[i]) <> 0) and (Pos('class="color_', parse[i]) <> 0) then
+      begin
+        Inc(mangaInfo.numChapter);
+        mangaInfo.chapterLinks.Add(GetVal(parse[i], 'href'));
+        for j := i + 2 to parse.Count - 1 do
+        begin
+          if (Pos('class="right', parse[j]) <> 0) or (Pos('class="new', parse[j]) <> 0) then
+            Break;
+          if Pos('<', parse[j]) = 0 then
+            parse[i + 1] := Trim(parse[i + 1]) + ' ' + Trim(parse[j]);
+        end;
+        mangaInfo.chapterName.Add(CommonStringFilter(parse[i + 1]));
+      end;
     end;
 
-      // get chapter name and links
-    if (GetTagName(parse.Strings[i]) = 'a') AND
-       (GetAttributeValue(GetTagAttribute(parse.Strings[i], 'class='))='color_0077') AND
-       (Pos('http://www.mangahere.com/manga/', GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href=')))<>0) then
+    // invert chapters
+    if mangainfo.ChapterName.Count > 1 then
     begin
-      Inc(mangaInfo.numChapter);
-      mangaInfo.chapterLinks.Add(StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href=')), WebsiteRoots[MANGAHERE_ID,1], '', [rfReplaceAll]));
-      parse.Strings[i+1]:= StringReplace(parse.Strings[i+1], #10, '', [rfReplaceAll]);
-      parse.Strings[i+1]:= StringReplace(parse.Strings[i+1], #13, '', [rfReplaceAll]);
-      parse.Strings[i+1]:= TrimLeft(parse.Strings[i+1]);
-      parse.Strings[i+1]:= TrimRight(parse.Strings[i+1]);
-      s:= StringFilter(TrimLeft(TrimRight(RemoveSymbols(parse.Strings[i+6]))));
-      if (s <> '') AND ((s[1] = '<') OR (s = 'span')) then
-        s:= ''
-      else
-        s:= ' ' + s;
-      mangaInfo.chapterName.Add(StringFilter(TrimRight(RemoveSymbols(parse.Strings[i+1]))) + s);
+      InvertStrings(mangaInfo.chapterName);
+      InvertStrings(mangaInfo.chapterLinks);
     end;
-
-    // get authors
-    if (Pos('Author(s):', parse.Strings[i])<>0) then
-      mangaInfo.authors:= parse.Strings[i+3];
-
-    // get artists
-    if (Pos('Artist(s):', parse.Strings[i])<>0) then
-      mangaInfo.artists:= parse.Strings[i+3];
-
-    // get genres
-    if (Pos('Genre(s):', parse.Strings[i])<>0) then
-    begin
-      mangaInfo.genres:= '';
-      for j:= 0 to 37 do
-        if Pos(LowerCase(defaultGenres[j]), LowerCase(parse.Strings[i+2]))<>0 then
-          mangaInfo.genres:= mangaInfo.genres+(defaultGenres[j]+', ');
-    end;
-
-    // get status
-    if (Pos('Status:', parse.Strings[i])<>0) then
-    begin
-      if Pos('Ongoing', parse.Strings[i+2])<>0 then
-        mangaInfo.status:= '1'   // ongoing
-      else
-      if Pos('Completed', parse.Strings[i+2])<>0 then
-        mangaInfo.status:= '0';  // completed
-    end;
+    Result := NO_ERROR;
   end;
-
-  // Since chapter name and link are inverted, we need to invert them
-  if mangainfo.ChapterName.Count > 1 then
-  begin
-    i:= 0; j:= mangainfo.ChapterName.Count - 1;
-    while (i<j) do
-    begin
-      mangainfo.ChapterName.Exchange(i, j);
-      mangainfo.chapterLinks.Exchange(i, j);
-      Inc(i); Dec(j);
-    end;
-  end;
-
-  // Delete 'latest' chapter because it isnt exist
-  if (mangaInfo.status = '1') AND (mangainfo.ChapterName.Count > 0) then
-  begin
-    Dec(mangaInfo.numChapter);
-    mangainfo.ChapterName.Delete(mangainfo.ChapterName.Count-1);
-    mangainfo.chapterLinks.Delete(mangainfo.chapterLinks.Count-1);
-  end;
-  Result:= NO_ERROR;
-end;

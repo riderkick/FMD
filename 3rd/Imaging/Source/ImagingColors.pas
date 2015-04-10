@@ -1,5 +1,4 @@
 {
-  $Id: ImagingColors.pas 173 2009-09-04 17:05:52Z galfar $
   Vampyre Imaging Library
   by Marek Mauder 
   http://imaginglib.sourceforge.net
@@ -73,6 +72,8 @@ procedure RGBToYCoCg(R, G, B: Byte; var Y, Co, Cg: Byte);
 { Converts YCoCg to RGB color.}
 procedure YCoCgToRGB(Y, Co, Cg: Byte; var R, G, B: Byte);
 
+//procedure RGBToHSL(R, G, B: Byte; var H, S, L: Byte);
+//procedure HSLToRGB(H, S, L: Byte; var R, G, B: Byte);
 
 implementation
 

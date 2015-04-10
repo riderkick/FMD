@@ -1,34 +1,52 @@
   function GetSenMangaImageURL: Boolean;
   var
-    s: String;
-    j,
-    i: Cardinal;
+    s, imageURL: string;
+    i: Integer;
     l: TStringList;
   begin
-    l:= TStringList.Create;
-    s:= DecodeUrl(WebsiteRoots[SENMANGA_ID,1] + URL + IntToStr(workCounter+1) + '/');
-    Result:= GetPage(TObject(l),
-                     s,
-                     manager.container.manager.retryConnect);
-    parse:= TStringList.Create;
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
-    Parser.SlowExec;
-    Parser.Free;
-
-    if parse.Count>0 then
+    //skip already exist file
+    s := lpath + '/' +  Format('%.3d', [workCounter + 1]);
+    if (FileExists(s + '.jpg')) or
+      (FileExists(s + '.png')) or
+      (FileExists(s + '.gif')) then
     begin
-      for i:= 0 to parse.Count-1 do
-        if (Pos(' onerror=', parse.Strings[i])>0) then
-        begin
-          s:= EncodeURL(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src=')));
-          if Pos('http://', s) = 0 then
-            s:= WebsiteRoots[SENMANGA_ID,1] + s;
-          manager.container.pageLinks.Strings[workCounter]:= s;
-          break;
-        end;
+      Result := True;
+      Exit;
     end;
-    parse.Free;
-    l.Free;
+
+    s := manager.container.ChapterLinks[manager.container.CurrentDownloadChapterPtr] +
+      '/' + IntToStr(workCounter + 1);
+    s := FillMangaSiteHost(SENMANGA_ID, s);
+    l := TStringList.Create;
+    try
+      if GetPage(FHTTP, TObject(l), s, manager.container.Manager.retryConnect) then
+      begin
+        if l.Count > 0 then
+          for i := 0 to l.Count - 1 do
+            if Pos('var new_image =', l[i]) <> 0 then
+            begin
+              imageURL := StringReplace(l[i], 'var new_image = ''', '', [rfIgnoreCase]);
+              imageURL := Trim(TrimChar(imageURL, ['''', ';']));
+              if (Length(imageURL) > 0) and (imageURL[1] = '/') then
+                imageURL := WebsiteRoots[SENMANGA_ID, 1] + imageURL;
+              Break;
+            end;
+      end;
+    finally
+      l.Free;
+    end;
+
+    if imageURL <> '' then
+    begin
+      FHTTP.Clear;
+      FHTTP.Headers.Add('Referer: ' + s);
+      Result := SaveImage(Self,
+        FHTTP,
+        manager.container.MangaSiteID,
+        imageURL,
+        lpath,
+        Format('%.3d', [workCounter + 1]),
+        prefix,
+        1);
+    end;
   end;

@@ -24,6 +24,7 @@ In order to build FMD from the source code, you must install Lazarus latest vers
   - Virtual TreeView.
   - Synapse.
   - Vampyre Imaging Library.
+  - ExceptionLogger
 
 For Synapse and Vampyre Imaging Library, you need to put them all in FMD_source_code_folder/trunk/3rd
 
@@ -31,7 +32,7 @@ After everything is installed, open the file md.lpr by using Lazarus IDE, select
 
 ---------------------------------
 
-Last update 09-03-2013
+Last update 08-30-2014
 
 
 

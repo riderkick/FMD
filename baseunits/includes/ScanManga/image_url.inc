@@ -1,59 +1,45 @@
   function GetScanMangaImageURL: Boolean;
   var
-    s2,
-    stub,
-    tmp,
-    s: String;
-    j,
-    i: Cardinal;
-    l: TStringList;
+    s, h: String;
+    i, j: Cardinal;
+    l, t: TStringList;
+
   begin
-    l:= TStringList.Create;
-    if Pos('http://', URL) = 0 then
-      s:= DecodeUrl(WebsiteRoots[SCANMANGA_ID,1] + URL)
-    else
-      s:= DecodeUrl(URL);
-    Result:= GetPage(TObject(l),
-                     s,
-                     manager.container.manager.retryConnect);
-    parse:= TStringList.Create;
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
-    Parser.Exec;
-    Parser.Free;
+    l := TStringList.Create;
+    t := TStringList.Create;
 
-    manager.container.pageLinks.Clear;
+    s := DecodeUrl(FillMangaSiteHost(SCANMANGA_ID, URL));
+    Result := GetPage(TObject(l),
+      s,
+      manager.container.Manager.retryConnect);
 
-    if parse.Count>0 then
+    for i := 0 to l.Count - 1 do
     begin
-      for i:= 0 to parse.Count-1 do
-        if (Pos('''+u[id_page]', parse.Strings[i])>0) then
-        begin
-          stub:= 'http' + GetString(parse.Strings[i], '$(''#image_lel'').attr(''src'',''http', '''+u[id_page]');
-          break;
-        end;
+      if (Pos('$(''#image_lel'')', l.strings[i]) > 0) and
+        (Pos('[id_page]', l.Strings[i]) > 0) then
+      begin
+        s := Trim(l.Strings[i]);
+        s := GetString(s, '''src'',''', '''+');
+        h := s;
+        Break;
+      end;
     end;
-
-    if parse.Count>0 then
+    manager.container.PageLinks.Clear;
+    for i := 0 to l.Count - 1 do
     begin
-      for i:= 0 to parse.Count-1 do
-        if (Pos('var u = new Array', parse.Strings[i])>0) then
-        begin
-          s:= parse.Strings[i];
-          repeat
-            tmp:= GetString(s, ';u[', ']="');
-            s:= StringReplace(s, ';u[' +tmp+ ']="', '~!@<>', []);
-            tmp:= stub + GetString(s, '~!@<>', '";n[');
-            //s2:= EncodeUrl(stub + GetString(s, '~!@<>', '";n'));
-            manager.container.pageLinks.Add((stub + GetString(s, '~!@<>', '";n')));
-            s:= StringReplace(s, '~!@<>', '', []);
-            s:= StringReplace(s, '";n[', '', []);
-            j:= Pos('";n[', s);
-          until j = 0;
-          break;
-        end;
+      if (Pos('var c = new Array;', l.strings[i]) > 0) and
+        (Pos(';check = false;', l.Strings[i]) > 0) then
+      begin
+        s := Trim(l.Strings[i]);
+        s := GetString(s, 'var c = new Array;', ';check = false;');
+        t.Delimiter := ';';
+        t.DelimitedText := s;
+        for j := 0 to t.Count - 1 do
+          if Pos(']="', t.Strings[j]) > 0 then
+            manager.container.PageLinks.Add(h + GetString(t.Strings[j], '="', '"'));
+        Break;
+      end;
     end;
-    parse.Free;
+    t.Free;
     l.Free;
   end;

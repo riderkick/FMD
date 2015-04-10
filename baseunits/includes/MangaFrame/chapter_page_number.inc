@@ -1,33 +1,38 @@
   function GetMangaFramePageNumber: Boolean;
   var
-    s   : String;
-    i, j: Cardinal;
-    l   : TStringList;
+    i: Integer;
+    l: TStringList;
+    s: String;
+    isExtractPageNumber: Boolean = False;
   begin
-    l:= TStringList.Create;
-    parse:= TStringList.Create;
-    s:= DecodeUrl(WebsiteRoots[MANGAFRAME_ID,1] + URL + '1');
-    Result:= GetPage(TObject(l),
-                     s,
-                     manager.container.manager.retryConnect);
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
+    manager.container.PageNumber := 0;
+    l := TStringList.Create;
+    parse := TStringList.Create;
+    s := FillMangaSiteHost(MANGAFRAME_ID, URL);
+    Result := GetPage(TObject(l), s, manager.container.Manager.retryConnect);
+
+    l.Text := FixHTMLTagQuote(l.Text);
+    Parser := THTMLParser.Create(PChar(l.Text));
     Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
+    Parser.OnFoundText := OnText;
     Parser.Exec;
     Parser.Free;
-    if parse.Count>0 then
+    l.Free;
+    if parse.Count > 0 then
     begin
-      manager.container.pageNumber:= 0;
-      for i:= 0 to parse.Count-1 do
+      manager.container.PageNumber := 0;
+      for i := 0 to parse.Count - 1 do
       begin
-        if (Pos('class="divider"', parse.Strings[i])>0) then
+        if Pos('class="tbtitle dropdown_parent dropdown_right"', parse[i]) > 0 then
+          isExtractPageNumber := True;
+        if isExtractPageNumber and (Pos('</ul', parse[i]) > 0) then
         begin
-          s:= parse.Strings[i-8];
-          manager.container.pageNumber:= StrToInt(GetString(s, '/page/', '"'));
-          break;
+          isExtractPageNumber := False;
+          Break;
         end;
+        if isExtractPageNumber and (Pos('<a', parse[i]) > 0) then
+          Inc(manager.container.PageNumber);
       end;
     end;
     parse.Free;
-    l.Free;
   end;

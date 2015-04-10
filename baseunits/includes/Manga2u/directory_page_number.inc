@@ -1,35 +1,28 @@
-function   GetManga2uDirectoryPageNumber: Byte;
+  function GetManga2uDirectoryPageNumber: Byte;
   var
-    i : Cardinal;
+    i: Integer;
   begin
-    Result:= INFORMATION_NOT_FOUND;
-    if NOT GetPage(TObject(source), WebsiteRoots[MANGA2U_ID,1] + MANGA2U_BROWSER, 0) then
+    Result := INFORMATION_NOT_FOUND;
+    if not GetPage(TObject(Source), WebsiteRoots[MANGA2U_ID, 1] + MANGA2U_BROWSER, 0) then
     begin
-      Result:= NET_PROBLEM;
-      source.Free;
-      exit;
+      Result := NET_PROBLEM;
+      Source.Free;
+      Exit;
     end;
     parse.Clear;
-    Parser:= TjsFastHTMLParser.Create(PChar(source.Text));
+    Parser := THTMLParser.Create(PChar(Source.Text));
     Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
+    Parser.OnFoundText := OnText;
     Parser.Exec;
     Parser.Free;
-    if parse.Count=0 then
-    begin
-      source.Free;
-      exit;
-    end;
-    for i:= parse.Count-1 downto 2 do
-    begin
-      if (Pos('sct_wid_bot', parse.Strings[i]) > 0) then
-      begin
-        s:= GetString(GetAttributeValue(GetTagAttribute(parse.Strings[i-18], 'href=')), '-popular/', '/');
-		Page:= StrToInt(s);
-	Result:= NO_ERROR;
-        source.Free;
-        exit;
-      end;
-    end;
-    source.Free;
-  end; 
+    Source.Free;
+    if parse.Count > 0 then
+      for i := parse.Count - 1 downto 2 do
+        if (Pos('<a', parse[i]) > 0) and (Pos(MANGA2U_BROWSER, parse[i]) > 0)
+          and (Pos('Last', parse[i + 1]) > 0) then
+        begin
+          page := StrToIntDef(ReplaceRegExpr('^.*/(\d+)/$', GetVal(parse[i], 'href'), '$1', True), 1);
+          Result := NO_ERROR;
+          Break;
+        end;
+  end;

@@ -1,37 +1,41 @@
-function   KomikidGetNamesAndLinks: Byte;
+  function KomikidGetNamesAndLinks: Byte;
   var
-    tmp: Integer;
     i: Cardinal;
-    s: String;
+    isFound: Boolean = False;
   begin
-    Result:= INFORMATION_NOT_FOUND;
-    if NOT GetPage(TObject(source), WebsiteRoots[KOMIKID_ID,1], 0) then
+    Result := INFORMATION_NOT_FOUND;
+    if not GetPage(TObject(Source), WebsiteRoots[KOMIKID_ID, 1] + KOMIKID_BROWSER, 0) then
     begin
-      Result:= NET_PROBLEM;
-      source.Free;
-      exit;
+      Result := NET_PROBLEM;
+      Source.Free;
+      Exit;
     end;
     parse.Clear;
-    Parser:= TjsFastHTMLParser.Create(PChar(source.Text));
+    Parser := THTMLParser.Create(PChar(Source.Text));
     Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
+    Parser.OnFoundText := OnText;
     Parser.Exec;
     Parser.Free;
-    if parse.Count=0 then
+    if parse.Count = 0 then
     begin
-      source.Free;
-      exit;
+      Source.Free;
+      Exit;
     end;
-    for i:= parse.Count-1 downto 5 do
+    for i := 0 to parse.Count - 1 do
     begin
-      if (Pos('<option value="', parse.Strings[i]) > 0) then
-      begin
-        Result:= NO_ERROR;
-        s:= StringFilter(TrimLeft(TrimRight(parse.Strings[i+1])));
-        names.Add(HTMLEntitiesFilter(s));
-        s:= '/' + GetAttributeValue(GetTagAttribute(parse.Strings[i], 'value='));
-        links.Add(s);
-      end;
+      if Pos('class="series_col"', LowerCase(parse.Strings[i])) > 0 then
+        isFound := True;
+      if isFound and (Pos('</html>', LowerCase(parse.Strings[i])) > 0) then
+        isFound := False;
+      if isFound and (Pos('<a ', parse.Strings[i]) > 0) then
+        if (Pos('<li>', parse.Strings[i - 1]) > 0) then
+        begin
+          Result := NO_ERROR;
+          links.Add('/' + GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href="')));
+          names.Add(Trim(RemoveStringBreaks(HTMLEntitiesFilter(
+            StringFilter(parse.Strings[i + 1])))));
+        end;
     end;
-    source.Free;
-  end;    
+    parse.Clear;
+    Source.Free;
+  end;

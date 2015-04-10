@@ -1,5 +1,4 @@
 {
-  $Id: ImagingNetworkGraphics.pas 171 2009-09-02 01:34:19Z galfar $
   Vampyre Imaging Library
   by Marek Mauder 
   http://imaginglib.sourceforge.net
@@ -34,7 +33,7 @@ interface
 
 {$I ImagingOptions.inc}
 
-{ If MN support is enabled we must make sure PNG and JNG are enabled too.}
+{ If MNG support is enabled we must make sure PNG and JNG are enabled too.}
 {$IFNDEF DONT_LINK_MNG}
   {$UNDEF DONT_LINK_PNG}
   {$UNDEF DONT_LINK_JNG}
@@ -54,14 +53,15 @@ type
     FLossyAlpha: LongBool;
     FQuality: LongInt;
     FProgressive: LongBool;
+    FZLibStategy: Integer;
     function GetSupportedFormats: TImageFormats; override;
     procedure ConvertToSupported(var Image: TImageData;
       const Info: TImageFormatInfo); override;
+    procedure Define; override;
   public
-    constructor Create; override;
     function TestFormat(Handle: TImagingHandle): Boolean; override;
     procedure CheckOptionsValidity; override;
-  published  
+  published
     { Sets precompression filter used when saving images with lossless compression.
       Allowed values are: 0 (none), 1 (sub), 2 (up), 3 (average), 4 (paeth),
       5 (use 0 for indexed/gray images and 4 for RGB/ARGB images),
@@ -105,12 +105,11 @@ type
   private
     FLoadAnimated: LongBool;
   protected
+    procedure Define; override;
     function LoadData(Handle: TImagingHandle; var Images: TDynImageDataArray;
       OnlyFirstLevel: Boolean): Boolean; override;
     function SaveData(Handle: TImagingHandle; const Images: TDynImageDataArray;
       Index: LongInt): Boolean; override;
-  public
-    constructor Create; override;
   published
     property LoadAnimated: LongBool read FLoadAnimated write FLoadAnimated;
   end;
@@ -131,12 +130,11 @@ type
     Many frame compression settings can be modified by options interface.}
   TMNGFileFormat = class(TNetworkGraphicsFileFormat)
   protected
+    procedure Define; override;
     function LoadData(Handle: TImagingHandle; var Images: TDynImageDataArray;
       OnlyFirstLevel: Boolean): Boolean; override;
     function SaveData(Handle: TImagingHandle; const Images: TDynImageDataArray;
       Index: LongInt): Boolean; override;
-  public
-    constructor Create; override;
   end;
 {$ENDIF}  
 
@@ -156,12 +154,11 @@ type
     with alpha = 0).}
   TJNGFileFormat = class(TNetworkGraphicsFileFormat)
   protected
+    procedure Define; override;
     function LoadData(Handle: TImagingHandle; var Images: TDynImageDataArray;
       OnlyFirstLevel: Boolean): Boolean; override;
     function SaveData(Handle: TImagingHandle; const Images: TDynImageDataArray;
       Index: LongInt): Boolean; override;
-  public
-    constructor Create; override;
   end;
 {$ENDIF}
 
@@ -183,9 +180,10 @@ const
   NGDefaultQuality = 90;
   NGLosslessFormats: TImageFormats = [ifIndex8, ifGray8, ifA8Gray8, ifGray16,
     ifA16Gray16, ifR8G8B8, ifA8R8G8B8, ifR16G16B16, ifA16R16G16B16, ifB16G16R16,
-    ifA16B16G16R16];
+    ifA16B16G16R16, ifBinary];
   NGLossyFormats: TImageFormats = [ifGray8, ifA8Gray8, ifR8G8B8, ifA8R8G8B8];
   PNGDefaultLoadAnimated = True;
+  NGDefaultZLibStartegy = 1; // Z_FILTERED
 
   SPNGFormatName = 'Portable Network Graphics';
   SPNGMasks      = '*.png';
@@ -267,6 +265,14 @@ type
   end;
   PfcTL = ^TfcTL;
 
+  { pHYs chunk format - encodes the absolute or relative dimensions of pixels.}
+  TpHYs = packed record
+    PixelsPerUnitX: LongWord;
+    PixelsPerUnitY: LongWord;
+    UnitSpecifier: Byte;
+  end;
+  PpHYs = ^TpHYs;
+
 const
   { PNG file identifier.}
   PNGSignature: TChar8 = #$89'PNG'#$0D#$0A#$1A#$0A;
@@ -296,6 +302,7 @@ const
   acTLChunk: TChar4 = 'acTL';
   fcTLChunk: TChar4 = 'fcTL';
   fdATChunk: TChar4 = 'fdAT';
+  pHYsChunk: TChar4 = 'pHYs';
 
   { APNG frame dispose operations.}
   DisposeOpNone       = 0;
@@ -314,13 +321,15 @@ const
 
 type
   { Helper class that holds information about MNG frame in PNG or JNG format.}
-  TFrameInfo = class(TObject)
+  TFrameInfo = class
   public
+    Index: Integer;
     FrameWidth, FrameHeight: LongInt;
     IsJpegFrame: Boolean;
     IHDR: TIHDR;
     JHDR: TJHDR;
     fcTL: TfcTL;
+    pHYs: TpHYs;
     Palette: PPalette24;
     PaletteEntries: LongInt;
     Transparency: Pointer;
@@ -330,7 +339,7 @@ type
     IDATMemory: TMemoryStream;
     JDATMemory: TMemoryStream;
     JDAAMemory: TMemoryStream;
-    constructor Create;
+    constructor Create(AIndex: Integer);
     destructor Destroy; override;
     procedure AssignSharedProps(Source: TFrameInfo);
   end;
@@ -338,8 +347,9 @@ type
   { Defines type of Network Graphics file.}
   TNGFileType = (ngPNG, ngAPNG, ngMNG, ngJNG);
 
-  TNGFileHandler = class(TObject)
+  TNGFileHandler = class
   public
+    FileFormat: TNetworkGraphicsFileFormat;
     FileType: TNGFileType;
     Frames: array of TFrameInfo;
     MHDR: TMHDR; // Main header for MNG files
@@ -348,10 +358,12 @@ type
     GlobalPaletteEntries: LongInt;
     GlobalTransparency: Pointer;
     GlobalTransparencySize: LongInt;
+    constructor Create(AFileFormat: TNetworkGraphicsFileFormat);
     destructor Destroy; override;
     procedure Clear;
     function GetLastFrame: TFrameInfo;
     function AddFrameInfo: TFrameInfo;
+    procedure LoadMetaData;
   end;
 
   { Network Graphics file parser and frame converter.}
@@ -372,13 +384,14 @@ type
     LossyAlpha: Boolean;
     Quality: LongInt;
     Progressive: Boolean;
+    ZLibStrategy: Integer;
     function SaveFile(Handle: TImagingHandle): Boolean;
     procedure AddFrame(const Image: TImageData; IsJpegFrame: Boolean);
     procedure StoreImageToPNGFrame(const IHDR: TIHDR; Bits: Pointer; FmtInfo: TImageFormatInfo; IDATStream: TMemoryStream);
 {$IFNDEF DONT_LINK_JNG}
     procedure StoreImageToJNGFrame(const JHDR: TJHDR; const Image: TImageData; IDATStream, JDATStream, JDAAStream: TMemoryStream);
 {$ENDIF}
-    procedure SetFileOptions(FileFormat: TNetworkGraphicsFileFormat);
+    procedure SetFileOptions;
   end;
 
 {$IFNDEF DONT_LINK_JNG}
@@ -441,33 +454,6 @@ begin
     end;
  end;
 
-const
-  { Helper constants for 1/2/4 bit to 8 bit conversions.}
-  Mask1: array[0..7] of Byte = ($80, $40, $20, $10, $08, $04, $02, $01);
-  Shift1: array[0..7] of Byte = (7, 6, 5, 4, 3, 2, 1, 0);
-  Mask2: array[0..3] of Byte = ($C0, $30, $0C, $03);
-  Shift2: array[0..3] of Byte = (6, 4, 2, 0);
-  Mask4: array[0..1] of Byte = ($F0, $0F);
-  Shift4: array[0..1] of Byte = (4, 0);
-
-function Get1BitPixel(Line: PByteArray; X: LongInt): Byte;
-begin
-  Result := (Line[X shr 3] and Mask1[X and 7]) shr
-    Shift1[X and 7];
-end;
-
-function Get2BitPixel(Line: PByteArray; X: LongInt): Byte;
-begin
-  Result := (Line[X shr 2] and Mask2[X and 3]) shr
-    Shift2[X and 3];
-end;
-
-function Get4BitPixel(Line: PByteArray; X: LongInt): Byte;
-begin
-  Result := (Line[X shr 1] and Mask4[X and 1]) shr
-    Shift4[X and 1];
-end;
-
 {$IFNDEF DONT_LINK_JNG}
 
 { TCustomIOJpegFileFormat class implementation }
@@ -486,8 +472,9 @@ end;
 
 { TFrameInfo class implementation }
 
-constructor TFrameInfo.Create;
+constructor TFrameInfo.Create(AIndex: Integer);
 begin
+  Index := AIndex;
   IDATMemory := TMemoryStream.Create;
   JDATMemory := TMemoryStream.Create;
   JDAAMemory := TMemoryStream.Create;
@@ -537,6 +524,11 @@ begin
   GlobalTransparencySize := 0;
 end;
 
+constructor TNGFileHandler.Create(AFileFormat: TNetworkGraphicsFileFormat);
+begin
+  FileFormat := AFileFormat;
+end;
+
 function TNGFileHandler.GetLastFrame: TFrameInfo;
 var
   Len: LongInt;
@@ -548,13 +540,44 @@ begin
     Result := nil;
 end;
 
+procedure TNGFileHandler.LoadMetaData;
+var
+  I: Integer;
+  Delay, Denom: Integer;
+begin
+  if FileType = ngAPNG then
+  begin
+    // Num plays of APNG animation
+    FileFormat.FMetadata.SetMetaItem(SMetaAnimationLoops, acTL.NumPlay);
+  end;
+
+  for I := 0 to High(Frames) do
+  begin
+    if Frames[I].pHYs.UnitSpecifier = 1 then
+    begin
+      // Store physical pixel dimensions, in PNG stored as pixels per meter DPM
+      FileFormat.FMetadata.SetPhysicalPixelSize(ruDpm, Frames[I].pHYs.PixelsPerUnitX,
+        Frames[I].pHYs.PixelsPerUnitY);
+    end;
+    if FileType = ngAPNG then
+    begin
+      // Store frame delay of APNG file frame
+      Denom := Frames[I].fcTL.DelayDenom;
+      if Denom = 0 then
+        Denom := 100;
+      Delay := Round(1000 * (Frames[I].fcTL.DelayNumer / Denom));
+      FileFormat.FMetadata.SetMetaItem(SMetaFrameDelay, Delay, I);
+    end;
+  end;
+end;
+
 function TNGFileHandler.AddFrameInfo: TFrameInfo;
 var
   Len: LongInt;
 begin
   Len := Length(Frames);
   SetLength(Frames, Len + 1);
-  Result := TFrameInfo.Create;
+  Result := TFrameInfo.Create(Len);
   Frames[Len] := Result;
 end;
 
@@ -743,6 +766,16 @@ var
     SwapEndianLongWord(@acTL, SizeOf(acTL) div SizeOf(LongWord));
   end;
 
+  procedure LoadpHYs;
+  begin
+    ReadChunkData;
+    with GetLastFrame do
+    begin
+      pHYs := PpHYs(ChunkData)^;
+      SwapEndianLongWord(@pHYs, SizeOf(pHYs) div SizeOf(LongWord));
+    end;
+  end;
+
 begin
   Result := False;
   Clear;
@@ -777,11 +810,12 @@ begin
       else if Chunk.ChunkID = tRNSChunk then LoadtRNS
       else if Chunk.ChunkID = bKGDChunk then LoadbKGD
       else if Chunk.ChunkID = acTLChunk then HandleacTL
+      else if Chunk.ChunkID = pHYsChunk then LoadpHYs
       else SkipChunkData;
     until Eof(Handle) or (Chunk.ChunkID = MENDChunk) or
       ((FileType <> ngMNG) and (Chunk.ChunkID = IENDChunk));
 
-    Result := True;  
+    Result := True;
   finally
     FreeMemNil(ChunkData);
   end;
@@ -797,6 +831,7 @@ var
   Data, TotalBuffer, ZeroLine, PrevLine: Pointer;
   BitCount, TotalSize, TotalPos, BytesPerPixel, I, Pass,
   SrcDataSize, BytesPerLine, InterlaceLineBytes, InterlaceWidth: LongInt;
+  Info: TImageFormatInfo;
 
   procedure DecodeAdam7;
   const
@@ -882,34 +917,6 @@ var
     end;
   end;
 
-  procedure Convert124To8(DataIn: Pointer; DataOut: Pointer; Width, Height,
-    WidthBytes: LongInt; Indexed: Boolean);
-  var
-    X, Y, Mul: LongInt;
-    GetPixel: TGetPixelFunc;
-  begin
-    GetPixel := Get1BitPixel;
-    Mul := 255;
-    case IHDR.BitDepth of
-      2:
-        begin
-          Mul := 85;
-          GetPixel := Get2BitPixel;
-        end;
-      4:
-        begin
-          Mul := 17;
-          GetPixel := Get4BitPixel;
-        end;
-    end;
-    if Indexed then Mul := 1;
-
-    for Y := 0 to Height - 1 do
-      for X := 0 to Width - 1 do
-        PByteArray(DataOut)[Y * Width + X] :=
-          GetPixel(@PByteArray(DataIn)[Y * WidthBytes], X) * Mul;
-  end;
-
   procedure TransformLOCOToRGB(Data: PByte; NumPixels, BytesPerPixel: LongInt);
   var
     I: LongInt;
@@ -930,6 +937,14 @@ var
     end;
   end;
 
+  function CheckBinaryPalette: Boolean;
+  begin
+    with GetLastFrame do
+      Result := (PaletteEntries = 2) and
+        (Palette[0].R = 0) and (Palette[0].G = 0) and (Palette[0].B = 0) and
+        (Palette[1].R = 255) and (Palette[1].G = 255) and (Palette[1].B = 255);
+  end;
+
 begin
   Image.Width := FrameWidth;
   Image.Height := FrameHeight;
@@ -940,8 +955,9 @@ begin
       begin
         // Gray scale image
         case IHDR.BitDepth of
-          1, 2, 4, 8: Image.Format := ifGray8;
-          16: Image.Format := ifGray16;
+          1:       Image.Format := ifBinary;
+          2, 4, 8: Image.Format := ifGray8;
+          16:      Image.Format := ifGray16;
         end;
         BitCount := IHDR.BitDepth;
       end;
@@ -957,9 +973,10 @@ begin
     3:
       begin
         // Indexed image
-        case IHDR.BitDepth of
-          1, 2, 4, 8: Image.Format := ifIndex8;
-        end;
+        if (IHDR.BitDepth = 1) and CheckBinaryPalette  then
+          Image.Format := ifBinary
+        else
+          Image.Format := ifIndex8;
         BitCount := IHDR.BitDepth;
       end;
     4:
@@ -982,13 +999,16 @@ begin
       end;
   end;
 
-  // Start decoding
+  GetImageFormatInfo(Image.Format, Info);
+  BytesPerPixel := (BitCount + 7) div 8;
+
   LineBuffer[True] := nil;
   LineBuffer[False] := nil;
   TotalBuffer := nil;
   ZeroLine := nil;
-  BytesPerPixel := (BitCount + 7) div 8;
   ActLine := True;
+
+  // Start decoding
   with Image do
   try
     BytesPerLine := (Width * BitCount + 7) div 8;
@@ -1058,16 +1078,22 @@ begin
       end;
     end;
 
-    Size := Width * Height * BytesPerPixel;
+    Size := Info.GetPixelsSize(Info.Format, Width, Height);
 
     if Size <> SrcDataSize then
     begin
       // If source data size is different from size of image in assigned
       // format we must convert it (it is in 1/2/4 bit count)
       GetMem(Bits, Size);
-      case IHDR.ColorType of
-        0: Convert124To8(Data, Bits, Width, Height, BytesPerLine, False);
-        3: Convert124To8(Data, Bits, Width, Height, BytesPerLine, True);
+      case IHDR.BitDepth of
+        1:
+          begin
+            // Convert only indexed, keep black and white in ifBinary
+            if IHDR.ColorType <> 0 then
+              Convert1To8(Data, Bits, Width, Height, BytesPerLine, False);
+          end;
+        2: Convert2To8(Data, Bits, Width, Height, BytesPerLine, IHDR.ColorType = 0);
+        4: Convert4To8(Data, Bits, Width, Height, BytesPerLine, IHDR.ColorType = 0);
       end;
       FreeMem(Data);
     end
@@ -1117,7 +1143,7 @@ var
       JpegFormat := TCustomIOJpegFileFormat.Create;
       JpegFormat.SetCustomIO(StreamIO);
       Stream.Position := 0;
-      Handle := StreamIO.OpenRead(Pointer(Stream));
+      Handle := StreamIO.Open(Pointer(Stream), omReadOnly);
       try
         JpegFormat.LoadData(Handle, DynImages, True);
         DestImage := DynImages[0];
@@ -1243,8 +1269,7 @@ var
   procedure ConvertbKGD;
   begin
     FillChar(BackGroundColor, SizeOf(BackGroundColor), 0);
-    Move(Frame.Background^, BackGroundColor, Min(Frame.BackgroundSize,
-      SizeOf(BackGroundColor)));
+    Move(Frame.Background^, BackGroundColor, Min(Frame.BackgroundSize, SizeOf(BackGroundColor)));
     if IsColorFormat then
       SwapValues(BackGroundColor.R, BackGroundColor.B);
     SwapEndianWord(@BackGroundColor, 3);
@@ -1277,14 +1302,17 @@ var
         end;
       // if palette alphas were loaded from file then use them
       if Alphas <> nil then
+      begin
         for I := 0 to Min(AlphasSize, FmtInfo.PaletteEntries) - 1 do
           Palette[I].A := Alphas[I];
+      end;
     end;
   end;
 
   procedure ApplyColorKey;
   var
     DestFmt: TImageFormat;
+    Col32, Bkg32: TColor32Rec;
     OldPixel, NewPixel: Pointer;
   begin
     case Image.Format of
@@ -1295,20 +1323,19 @@ var
     else
       DestFmt := ifUnknown;
     end;
+
     if DestFmt <> ifUnknown then
     begin
       if not IsBackGroundPresent then
         BackGroundColor := ColorKey;
       ConvertImage(Image, DestFmt);
-      OldPixel := @ColorKey;
-      NewPixel := @BackGroundColor;
+
       // Now back color and color key must be converted to image's data format, looks ugly
       case Image.Format of
         ifA8Gray8:
           begin
-            TColor32Rec(TInt64Rec(ColorKey).Low).B := Byte(ColorKey.B);
-            TColor32Rec(TInt64Rec(ColorKey).Low).G := $FF;
-            TColor32Rec(TInt64Rec(BackGroundColor).Low).B := Byte(BackGroundColor.B);
+            Col32 := Color32(0, 0, $FF, Byte(ColorKey.B));
+            Bkg32 := Color32(0, 0, 0, Byte(BackGroundColor.B));
           end;
         ifA16Gray16:
           begin
@@ -1316,19 +1343,26 @@ var
           end;
         ifA8R8G8B8:
           begin
-            TColor32Rec(TInt64Rec(ColorKey).Low).R := Byte(ColorKey.R);
-            TColor32Rec(TInt64Rec(ColorKey).Low).G := Byte(ColorKey.G);
-            TColor32Rec(TInt64Rec(ColorKey).Low).B := Byte(ColorKey.B);
-            TColor32Rec(TInt64Rec(ColorKey).Low).A := $FF;
-            TColor32Rec(TInt64Rec(BackGroundColor).Low).R := Byte(BackGroundColor.R);
-            TColor32Rec(TInt64Rec(BackGroundColor).Low).G := Byte(BackGroundColor.G);
-            TColor32Rec(TInt64Rec(BackGroundColor).Low).B := Byte(BackGroundColor.B);
+            Col32 := Color32($FF, Byte(ColorKey.R), Byte(ColorKey.G), Byte(ColorKey.B));
+            Bkg32 := Color32(0, Byte(BackGroundColor.R), Byte(BackGroundColor.G), Byte(BackGroundColor.B));
           end;
         ifA16R16G16B16:
           begin
             ColorKey.A := $FFFF;
           end;
       end;
+
+      if Image.Format in [ifA8Gray8, ifA8R8G8B8] then
+      begin
+        OldPixel := @Col32;
+        NewPixel := @Bkg32;
+      end
+      else
+      begin
+        OldPixel := @ColorKey;
+        NewPixel := @BackGroundColor;
+      end;
+
       ReplaceColor(Image, 0, 0, Image.Width, Image.Height, OldPixel, NewPixel);
     end;
   end;
@@ -1343,9 +1377,9 @@ begin
     (not Frame.IsJpegFrame and (Frame.IHDR.ColorType in [2, 6]));
 
   // Convert some chunk data to useful format
-  if Frame.Transparency <> nil then
+  if Frame.TransparencySize > 0 then
     ConverttRNS;
-  if Frame.Background <> nil then
+  if Frame.BackgroundSize > 0 then
     ConvertbKGD;
 
   // Build palette for indexed images
@@ -1442,51 +1476,65 @@ begin
   Filter := 0;
   case PreFilter of
     6:
-      if not ((IHDR.BitDepth < 8) or (IHDR.ColorType = 3))
-        then Adaptive := True;
+      if not ((IHDR.BitDepth < 8) or (IHDR.ColorType = 3)) then
+        Adaptive := True;
     0..4: Filter := PreFilter;
   else
     if IHDR.ColorType in [2, 6] then
       Filter := 4
   end;
+
   // Prepare data for compression
   CompBuffer := nil;
   FillChar(FilterLines, SizeOf(FilterLines), 0);
-  BytesPerPixel := FmtInfo.BytesPerPixel;
-  BytesPerLine := LongInt(IHDR.Width) * BytesPerPixel;
+  BytesPerPixel := Max(1, FmtInfo.BytesPerPixel);
+  BytesPerLine := FmtInfo.GetPixelsSize(FmtInfo.Format, LongInt(IHDR.Width), 1);
   TotalSize := (BytesPerLine + 1) * LongInt(IHDR.Height);
   GetMem(TotalBuffer, TotalSize);
   GetMem(ZeroLine, BytesPerLine);
   FillChar(ZeroLine^, BytesPerLine, 0);
+  PrevLine := ZeroLine;
+
   if Adaptive then
+  begin
     for I := 0 to 4 do
       GetMem(FilterLines[I], BytesPerLine);
-  PrevLine := ZeroLine;
+  end;
+
   try
     // Process next scanlines
     for I := 0 to IHDR.Height - 1 do
     begin
       // Filter scanline
       if Adaptive then
+      begin
         AdaptiveFilter(Filter, BytesPerPixel, @PByteArray(Bits)[I * BytesPerLine],
-          PrevLine, @PByteArray(TotalBuffer)[I * (BytesPerLine + 1) + 1])
+          PrevLine, @PByteArray(TotalBuffer)[I * (BytesPerLine + 1) + 1]);
+      end
       else
+      begin
         FilterScanline(Filter, BytesPerPixel, @PByteArray(Bits)[I * BytesPerLine],
           PrevLine, @PByteArray(TotalBuffer)[I * (BytesPerLine + 1) + 1]);
+      end;
       PrevLine := @PByteArray(Bits)[I * BytesPerLine];
       // Swap red and blue if necessary
       if (IHDR.ColorType in [2, 6]) and not FmtInfo.IsRBSwapped then
+      begin
         SwapRGB(@PByteArray(TotalBuffer)[I * (BytesPerLine + 1) + 1],
-          IHDR.Width, IHDR.BitDepth, FmtInfo.BytesPerPixel);
+          IHDR.Width, IHDR.BitDepth, BytesPerPixel);
+      end;
       // Images with 16 bit channels must be swapped because of PNG's big endianess
       if IHDR.BitDepth = 16 then
+      begin
         SwapEndianWord(@PByteArray(TotalBuffer)[I * (BytesPerLine + 1) + 1],
           BytesPerLine div SizeOf(Word));
+      end;
       // Set filter used for this scanline
       PByteArray(TotalBuffer)[I * (BytesPerLine + 1)] := Filter;
     end;
     // Compress IDAT data
-    CompressBuf(TotalBuffer, TotalSize, CompBuffer, CompSize, CompressLevel);
+    CompressBuf(TotalBuffer, TotalSize, CompBuffer, CompSize,
+      CompressLevel, ZLibStrategy);
     // Write IDAT data to stream
     IDATStream.WriteBuffer(CompBuffer^, CompSize);
   finally
@@ -1529,7 +1577,7 @@ var
     JpegFormat.FQuality := Quality;
     SetLength(DynImages, 1);
     DynImages[0] := Image;
-    Handle := StreamIO.OpenWrite(Pointer(Stream));
+    Handle := StreamIO.Open(Pointer(Stream), omCreate);
     try
       JpegFormat.SaveData(Handle, DynImages, 0);
     finally
@@ -1615,6 +1663,7 @@ procedure TNGFileSaver.AddFrame(const Image: TImageData; IsJpegFrame: Boolean);
 var
   Frame: TFrameInfo;
   FmtInfo: TImageFormatInfo;
+  Index: Integer;
 
   procedure StorePalette;
   var
@@ -1649,10 +1698,36 @@ var
     end;
   end;
 
+  procedure FillFrameControlChunk(const IHDR: TIHDR; var fcTL: TfcTL);
+  var
+    Delay: Integer;
+  begin
+    fcTL.SeqNumber := 0; // Decided when writing to file
+    fcTL.Width := IHDR.Width;
+    fcTL.Height := IHDR.Height;
+    fcTL.XOffset := 0;
+    fcTL.YOffset := 0;
+    fcTL.DelayNumer := 1;
+    fcTL.DelayDenom := 3;
+    if FileFormat.FMetadata.HasMetaItemForSaving(SMetaFrameDelay, Index) then
+    begin
+      // Metadata contains frame delay information in milliseconds
+      Delay := FileFormat.FMetadata.MetaItemsForSavingMulti[SMetaFrameDelay, Index];
+      fcTL.DelayNumer := Delay;
+      fcTL.DelayDenom := 1000;
+    end;
+    fcTL.DisposeOp := DisposeOpNone;
+    fcTL.BlendOp := BlendOpSource;
+    SwapEndianLongWord(@fcTL, 5);
+    fcTL.DelayNumer := SwapEndianWord(fcTL.DelayNumer);
+    fcTL.DelayDenom := SwapEndianWord(fcTL.DelayDenom);
+  end;
+
 begin
   // Add new frame
   Frame := AddFrameInfo;
   Frame.IsJpegFrame := IsJpegFrame;
+  Index := Length(Frames) - 1;
 
   with Frame do
   begin
@@ -1704,38 +1779,28 @@ begin
           IHDR.BitDepth := IHDR.BitDepth div 2;
         end;
       end
+      else if FmtInfo.Format = ifBinary then
+      begin
+        IHDR.ColorType := 0;
+        IHDR.BitDepth := 1;
+      end
+      else if FmtInfo.IsIndexed then
+        IHDR.ColorType := 3
+      else if FmtInfo.HasAlphaChannel then
+      begin
+        IHDR.ColorType := 6;
+        IHDR.BitDepth := IHDR.BitDepth div 4;
+      end
       else
       begin
-        if FmtInfo.IsIndexed then
-          IHDR.ColorType := 3
-        else
-          if FmtInfo.HasAlphaChannel then
-          begin
-            IHDR.ColorType := 6;
-            IHDR.BitDepth := IHDR.BitDepth div 4;
-          end
-          else
-          begin
-            IHDR.ColorType := 2;
-            IHDR.BitDepth := IHDR.BitDepth div 3;
-          end;
+        IHDR.ColorType := 2;
+        IHDR.BitDepth := IHDR.BitDepth div 3;
       end;
 
       if FileType = ngAPNG then
       begin
         // Fill fcTL chunk of APNG file
-        fcTL.SeqNumber := 0; // Decided when writing to file
-        fcTL.Width := IHDR.Width;
-        fcTL.Height := IHDR.Height;
-        fcTL.XOffset := 0;
-        fcTL.YOffset := 0;
-        fcTL.DelayNumer := 1;
-        fcTL.DelayDenom := 3;
-        fcTL.DisposeOp := DisposeOpNone;
-        fcTL.BlendOp := BlendOpSource;
-        SwapEndianLongWord(@fcTL, 5);
-        fcTL.DelayNumer := SwapEndianWord(fcTL.DelayNumer);
-        fcTL.DelayDenom := SwapEndianWord(fcTL.DelayDenom);
+        FillFrameControlChunk(IHDR, fcTL);
       end;
 
       // Compress PNG image and store it to stream
@@ -1811,6 +1876,25 @@ var
     GetIO.Write(Handle, @ChunkCrc, SizeOf(ChunkCrc));
   end;
 
+  procedure WriteGlobalMetaDataChunks(Frame: TFrameInfo);
+  var
+    XRes, YRes: Single;
+  begin
+    if FileFormat.FMetadata.GetPhysicalPixelSize(ruDpm, XRes, YRes, True) then
+    begin
+      // Save pHYs chunk
+      Frame.pHYs.UnitSpecifier := 1;
+      // PNG stores physical resolution as dots per meter
+      Frame.pHYs.PixelsPerUnitX := Round(XRes);
+      Frame.pHYs.PixelsPerUnitY := Round(YRes);
+
+      Chunk.DataSize := SizeOf(Frame.pHYs);
+      Chunk.ChunkID := pHYsChunk;
+      SwapEndianLongWord(@Frame.pHYs, SizeOf(Frame.pHYs) div SizeOf(LongWord));
+      WriteChunk(Chunk, @Frame.pHYs);
+    end;
+  end;
+
   procedure WritePNGMainImageChunks(Frame: TFrameInfo);
   begin
     with Frame do
@@ -1834,6 +1918,8 @@ var
         WriteChunk(Chunk, Transparency);
       end;
     end;
+    // Write metadata related chunks
+    WriteGlobalMetaDataChunks(Frame);
   end;
 
 begin
@@ -1848,10 +1934,32 @@ begin
 
   if FileType = ngMNG then
   begin
+    // MNG - main header before frames
     SwapEndianLongWord(@MHDR, SizeOf(MHDR) div SizeOf(LongWord));
     Chunk.DataSize := SizeOf(MHDR);
     Chunk.ChunkID := MHDRChunk;
     WriteChunk(Chunk, @MHDR);
+  end
+  else if FileType = ngAPNG then
+  begin
+    // APNG - IHDR and global chunks for all frames, then acTL chunk, then frames
+    // (fcTL+IDAT, fcTL+fdAT, fcTL+fdAT, fcTL+fdAT, ....)
+    WritePNGMainImageChunks(Frames[0]);
+
+    // Animation control chunk
+    acTL.NumFrames := Length(Frames);
+    if FileFormat.FMetadata.HasMetaItemForSaving(SMetaAnimationLoops) then
+    begin
+      // Number of plays of APNG animation
+      acTL.NumPlay:= FileFormat.FMetadata.MetaItemsForSaving[SMetaAnimationLoops];
+    end
+    else
+      acTL.NumPlay := 0;
+    SwapEndianLongWord(@acTL, SizeOf(acTL) div SizeOf(LongWord));
+
+    Chunk.DataSize := SizeOf(acTL);
+    Chunk.ChunkID := acTLChunk;
+    WriteChunk(Chunk, @acTL);
   end;
 
   for I := 0 to Length(Frames) - 1 do
@@ -1863,6 +1971,8 @@ begin
       Chunk.DataSize := SizeOf(JHDR);
       Chunk.ChunkID := JHDRChunk;
       WriteChunk(Chunk, @JHDR);
+      // Write metadata related chunks
+      WriteGlobalMetaDataChunks(Frames[I]);
       // Write JNG image data
       Chunk.DataSize := JDATMemory.Size;
       Chunk.ChunkID := JDATChunk;
@@ -1905,16 +2015,7 @@ begin
     end
     else if FileType = ngAPNG then
     begin
-      // APNG frame - first frame must have acTL and fcTL before IDAT,
-      // subsequent frames have fcTL and fdAT.
-      if I = 0 then
-      begin
-        WritePNGMainImageChunks(Frames[I]);
-        Chunk.DataSize := SizeOf(acTL);
-        Chunk.ChunkID := acTLChunk;
-        WriteChunk(Chunk, @acTL);
-      end;
-      // Write fcTL before frame data
+      // APNG frame - Write fcTL before frame data
       Chunk.DataSize := SizeOf(fcTL);
       Chunk.ChunkID := fcTLChunk;
       fcTl.SeqNumber := GetNextSeqNo;
@@ -1946,16 +2047,17 @@ begin
   end;
 end;
 
-procedure TNGFileSaver.SetFileOptions(FileFormat: TNetworkGraphicsFileFormat);
+procedure TNGFileSaver.SetFileOptions;
 begin
   PreFilter := FileFormat.FPreFilter;
   CompressLevel := FileFormat.FCompressLevel;
   LossyAlpha := FileFormat.FLossyAlpha;
   Quality := FileFormat.FQuality;
   Progressive := FileFormat.FProgressive;
+  ZLibStrategy := FileFormat.FZLibStategy;
 end;
 
-{ TAPNGAnimator class implemnetation }
+{ TAPNGAnimator class implementation }
 
 class procedure TAPNGAnimator.Animate(var Images: TDynImageDataArray;
   const acTL: TacTL; const SrcFrames: array of TFrameInfo);
@@ -1973,7 +2075,7 @@ var
     for I := 0 to Len - 1 do
     with SrcFrames[I] do
     begin
-      if (FrameWidth <> IHDR.Width) or (FrameHeight <> IHDR.Height) or (Len <> acTL.NumFrames) or
+      if (FrameWidth <> Integer(IHDR.Width)) or (FrameHeight <> Integer(IHDR.Height)) or (Len <> Integer(acTL.NumFrames)) or
         (not ((fcTL.DisposeOp = DisposeOpNone) and (fcTL.BlendOp = BlendOpSource)) and
         not ((fcTL.DisposeOp = DisposeOpBackground) and (fcTL.BlendOp = BlendOpSource)) and
         not ((fcTL.DisposeOp = DisposeOpBackground) and (fcTL.BlendOp = BlendOpOver))) then
@@ -1989,7 +2091,7 @@ begin
   if (Len = 0) or not AnimatingNeeded then
     Exit;
 
-  if (Len = acTL.NumFrames + 1) and (SrcFrames[0].fcTL.Width = 0) then
+  if (Len = Integer(acTL.NumFrames) + 1) and (SrcFrames[0].fcTL.Width = 0) then
   begin
     // If default image (stored in IDAT chunk) isn't part of animation we ignore it
     Offset := 1;
@@ -2074,12 +2176,10 @@ end;
 
 { TNetworkGraphicsFileFormat class implementation }
 
-constructor TNetworkGraphicsFileFormat.Create;
+procedure TNetworkGraphicsFileFormat.Define;
 begin
-  inherited Create;
-  FCanLoad := True;
-  FCanSave := True;
-  FIsMultiImageFormat := False;
+  inherited;
+  FFeatures := [ffLoad, ffSave];
 
   FPreFilter := NGDefaultPreFilter;
   FCompressLevel := NGDefaultCompressLevel;
@@ -2087,6 +2187,7 @@ begin
   FLossyCompression := NGDefaultLossyCompression;
   FQuality := NGDefaultQuality;
   FProgressive := NGDefaultProgressive;
+  FZLibStategy := NGDefaultZLibStartegy;
 end;
 
 procedure TNetworkGraphicsFileFormat.CheckOptionsValidity;
@@ -2172,11 +2273,11 @@ end;
 
 { TPNGFileFormat class implementation }
 
-constructor TPNGFileFormat.Create;
+procedure TPNGFileFormat.Define;
 begin
-  inherited Create;
+  inherited;
   FName := SPNGFormatName;
-  FIsMultiImageFormat := True;
+  FFeatures := FFeatures + [ffMultiImage];
   FLoadAnimated := PNGDefaultLoadAnimated;
   AddMasks(SPNGMasks);
 
@@ -2185,6 +2286,7 @@ begin
   RegisterOption(ImagingPNGPreFilter, @FPreFilter);
   RegisterOption(ImagingPNGCompressLevel, @FCompressLevel);
   RegisterOption(ImagingPNGLoadAnimated, @FLoadAnimated);
+  RegisterOption(ImagingPNGZLibStrategy, @FZLibStategy);
 end;
 
 function TPNGFileFormat.LoadData(Handle: TImagingHandle;
@@ -2194,7 +2296,7 @@ var
   NGFileLoader: TNGFileLoader;
 begin
   Result := False;
-  NGFileLoader := TNGFileLoader.Create;
+  NGFileLoader := TNGFileLoader.Create(Self);
   try
     // Use NG file parser to load file
     if NGFileLoader.LoadFile(Handle) and (Length(NGFileLoader.Frames) > 0) then
@@ -2208,6 +2310,7 @@ begin
         if not IsJpegFrame then
           NGFileLoader.LoadImageFromPNGFrame(FrameWidth, FrameHeight, IHDR, IDATMemory, Images[I]);
         // Build palette, aply color key or background
+
         NGFileLoader.ApplyFrameSettings(NGFileLoader.Frames[I], Images[I]);
         Result := True;
       end;
@@ -2216,6 +2319,7 @@ begin
         TAPNGAnimator.Animate(Images, NGFileLoader.acTL, NGFileLoader.Frames);
     end;
   finally
+    NGFileLoader.LoadMetaData; // Store metadata
     NGFileLoader.Free;
   end;
 end;
@@ -2235,15 +2339,12 @@ begin
   DefaultFormat := ifDefault;
   AnimWidth := 0;
   AnimHeight := 0;
-  NGFileSaver := TNGFileSaver.Create;
+  NGFileSaver := TNGFileSaver.Create(Self);
 
   // Save images with more frames as APNG format
   if Length(Images) > 1 then
   begin
     NGFileSaver.FileType := ngAPNG;
-    NGFileSaver.acTL.NumFrames := FLastIdx - FFirstIdx + 1;
-    NGFileSaver.acTL.NumPlay := 1;
-    SwapEndianLongWord(@NGFileSaver.acTL, SizeOf(NGFileSaver.acTL) div SizeOf(LongWord));
     // Get max dimensions of frames
     AnimWidth := Images[FFirstIdx].Width;
     AnimHeight := Images[FFirstIdx].Height;
@@ -2255,7 +2356,8 @@ begin
   end
   else
     NGFileSaver.FileType := ngPNG;
-  NGFileSaver.SetFileOptions(Self);
+
+  NGFileSaver.SetFileOptions;
 
   with NGFileSaver do
   try
@@ -2322,11 +2424,11 @@ end;
 
 { TMNGFileFormat class implementation }
 
-constructor TMNGFileFormat.Create;
+procedure TMNGFileFormat.Define;
 begin
-  inherited Create;
+  inherited;
   FName := SMNGFormatName;
-  FIsMultiImageFormat := True;
+  FFeatures := FFeatures + [ffMultiImage];
   AddMasks(SMNGMasks);
 
   FSignature := MNGSignature;
@@ -2346,7 +2448,7 @@ var
   I, Len: LongInt;
 begin
   Result := False;
-  NGFileLoader := TNGFileLoader.Create;
+  NGFileLoader := TNGFileLoader.Create(Self);
   try
     // Use NG file parser to load file
     if NGFileLoader.LoadFile(Handle) then
@@ -2376,6 +2478,7 @@ begin
       Result := True;
     end;
   finally
+    NGFileLoader.LoadMetaData; // Store metadata
     NGFileLoader.Free;
   end;
 end;
@@ -2392,9 +2495,9 @@ begin
   LargestWidth := 0;
   LargestHeight := 0;
 
-  NGFileSaver := TNGFileSaver.Create;
+  NGFileSaver := TNGFileSaver.Create(Self);
   NGFileSaver.FileType := ngMNG;
-  NGFileSaver.SetFileOptions(Self);
+  NGFileSaver.SetFileOptions;
 
   with NGFileSaver do
   try
@@ -2439,9 +2542,9 @@ end;
 
 { TJNGFileFormat class implementation }
 
-constructor TJNGFileFormat.Create;
+procedure TJNGFileFormat.Define;
 begin
-  inherited Create;
+  inherited;
   FName := SJNGFormatName;
   AddMasks(SJNGMasks);
 
@@ -2453,6 +2556,7 @@ begin
   RegisterOption(ImagingJNGAlphaCompressLevel, @FCompressLevel);
   RegisterOption(ImagingJNGQuality, @FQuality);
   RegisterOption(ImagingJNGProgressive, @FProgressive);
+
 end;
 
 function TJNGFileFormat.LoadData(Handle: TImagingHandle;
@@ -2461,7 +2565,7 @@ var
   NGFileLoader: TNGFileLoader;
 begin
   Result := False;
-  NGFileLoader := TNGFileLoader.Create;
+  NGFileLoader := TNGFileLoader.Create(Self);
   try
     // Use NG file parser to load file
     if NGFileLoader.LoadFile(Handle) and (Length(NGFileLoader.Frames) > 0) then
@@ -2476,6 +2580,7 @@ begin
       Result := True;
     end;
   finally
+    NGFileLoader.LoadMetaData; // Store metadata
     NGFileLoader.Free;
   end;
 end;
@@ -2491,11 +2596,11 @@ begin
   Result := MakeCompatible(Images[Index], ImageToSave, MustBeFreed);
   if Result then
   begin
-    NGFileSaver := TNGFileSaver.Create;
+    NGFileSaver := TNGFileSaver.Create(Self);
     with NGFileSaver do
     try
       FileType := ngJNG;
-      SetFileOptions(Self);
+      SetFileOptions;
       AddFrame(ImageToSave, True);
       SaveFile(Handle);
     finally
@@ -2524,6 +2629,23 @@ finalization
 
   -- TODOS ----------------------------------------------------
     - nothing now
+
+  -- 0.77 Changes/Bug Fixes -----------------------------------
+    - Reads and writes APNG animation loop count metadata.
+    - Writes frame delays of APNG from metadata.
+    - Fixed color keys in 8bit depth PNG/MNG loading.
+    - Fixed needless (and sometimes buggy) conversion to format with alpha
+      channel in FPC (GetMem(0) <> nil!).
+    - Added support for optional ZLib compression strategy.
+    - Added loading and saving of ifBinary (1bit black and white)
+      format images. During loading grayscale 1bpp and indexed 1bpp
+      (with only black and white colors in palette) are treated as ifBinary.
+      ifBinary are saved as 1bpp grayscale PNGs.
+
+  -- 0.26.5 Changes/Bug Fixes ---------------------------------
+    - Reads frame delays from APNG files into metadata.
+    - Added loading and saving of metadata from these chunks: pHYs.
+    - Simplified decoding of 1/2/4 bit images a bit (less code).
 
   -- 0.26.3 Changes/Bug Fixes ---------------------------------
     - Added APNG saving support.

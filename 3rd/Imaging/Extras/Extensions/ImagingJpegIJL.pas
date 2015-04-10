@@ -1,5 +1,4 @@
 {
-  $Id: ImagingJpegIJL.pas 169 2009-08-22 18:54:21Z galfar $
   Vampyre Imaging Library
   by Marek Mauder
   http://imaginglib.sourceforge.net
@@ -49,9 +48,10 @@ type
     alpha channels in Jpeg files.}
   TJpegFileFormatIJL = class(TImageFileFormat)
   private
+    FQuality: LongInt;
     procedure JpegError(Code: Integer);
   protected
-    FQuality: LongInt;
+    procedure Define; override;
     function LoadData(Handle: TImagingHandle; var Images: TDynImageDataArray;
       OnlyFirstLevel: Boolean): Boolean; override;
     function SaveData(Handle: TImagingHandle; const Images: TDynImageDataArray;
@@ -59,7 +59,6 @@ type
     procedure ConvertToSupported(var Image: TImageData;
       const Info: TImageFormatInfo); override;
   public
-    constructor Create; override;
     function TestFormat(Handle: TImagingHandle): Boolean; override;
     procedure CheckOptionsValidity; override;
   published
@@ -224,9 +223,9 @@ function ijlErrorStr(Code : Integer) : PAnsiChar; stdcall; external SIJLLibrary;
 
 { TJpegFileFormatIJL class implementation }
 
-constructor TJpegFileFormatIJL.Create;
+procedure TJpegFileFormatIJL.Define;
 begin
-  inherited Create;
+  inherited;
   FName := SJpegFormatName;
   FCanLoad := True;
   FCanSave := True;

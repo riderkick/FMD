@@ -1,34 +1,34 @@
   function GetMangaTradersPageNumber: Boolean;
   var
-    isStartGetPageNumber: Boolean = FALSE;
-    s   : String;
-    i, j: Cardinal;
-    l   : TStringList;
+    isGetPageNumber: Boolean = False;
+    i: Integer;
+    l: TStringList;
+    s: String;
   begin
-    l:= TStringList.Create;
-    parse:= TStringList.Create;
-    Result:= GetPage(TObject(l),
-                     WebsiteRoots[MANGATRADERS_ID,1] + URL,
-                     manager.container.manager.retryConnect);
-    Parser:= TjsFastHTMLParser.Create(PChar(l.Text));
+    l := TStringList.Create;
+    parse := TStringList.Create;
+    s := FillMangaSiteHost(MANGATRADERS_ID, URL);
+    s := s + '/page-1';
+    Result := GetPage(TObject(l), s, manager.container.Manager.retryConnect);
+    Parser := THTMLParser.Create(PChar(l.Text));
     Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText:= OnText;
+    Parser.OnFoundText := OnText;
     Parser.Exec;
     Parser.Free;
-    if parse.Count>0 then
+    if parse.Count > 0 then
     begin
-      manager.container.pageNumber:= 0;
-      for i:= 0 to parse.Count-1 do
+      manager.container.PageNumber := 0;
+      for i := 0 to parse.Count - 1 do
       begin
-        if (NOT isStartGetPageNumber) AND
-           (Pos('option value="1"  selected="selected"', parse.Strings[i]) > 0) then
-          isStartGetPageNumber:= TRUE;
-        if (isStartGetPageNumber) AND
-           (Pos('</option>', parse.Strings[i])>0) then
-          Inc(manager.container.pageNumber);
-        if (isStartGetPageNumber) AND
-           (Pos('</select>', parse.Strings[i])>0) then
-          break;
+        if Pos('<select', parse[i]) > 0 then
+          isGetPageNumber := True;
+        if isGetPageNumber and (Pos('</select', parse[i]) > 0) then
+        begin
+          isGetPageNumber := False;
+          Break;
+        end;
+        if isGetPageNumber and (Pos('<option', parse[i]) > 0) then
+          Inc(manager.container.PageNumber);
       end;
     end;
     parse.Free;

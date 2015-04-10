@@ -1,5 +1,4 @@
 {
-  $Id: ImagingXpm.pas 171 2009-09-02 01:34:19Z galfar $
   Vampyre Imaging Library
   by Marek Mauder
   http://imaginglib.sourceforge.net
@@ -43,6 +42,7 @@ type
     Loading as well as saving is supported now. }
   TXPMFileFormat = class(TImageFileFormat)
   protected
+    procedure Define; override;
     function LoadData(Handle: TImagingHandle; var Images: TDynImageDataArray;
       OnlyFirstLevel: Boolean): Boolean; override;
     function SaveData(Handle: TImagingHandle; const Images: TDynImageDataArray;
@@ -50,7 +50,6 @@ type
     procedure ConvertToSupported(var Image: TImageData;
       const Info: TImageFormatInfo); override;
   public
-    constructor Create; override;
     function TestFormat(Handle: TImagingHandle): Boolean; override;
   end;
 
@@ -121,7 +120,7 @@ var
 begin
   Result := '';
   if FindItem(AKey, Bucket, Index) then
-    Result := FBuckets[Bucket].Items[Index].Data;
+    Result := string(FBuckets[Bucket].Items[Index].Data);
 end;
 
 procedure TSimpleBucketList.SetData(AKey: TColor32; const AData: string);
@@ -129,7 +128,7 @@ var
   Bucket, Index: Integer;
 begin
   if FindItem(AKey, Bucket, Index) then
-    FBuckets[Bucket].Items[Index].Data := AData;
+    FBuckets[Bucket].Items[Index].Data := ShortString(AData);
 end;
 
 function TSimpleBucketList.EnumNext(out AData: string): TColor32;
@@ -144,7 +143,7 @@ begin
   end;
 
   Result := FBuckets[FABucket].Items[FAIndex].Key;
-  AData := FBuckets[FABucket].Items[FAIndex].Data;
+  AData := string(FBuckets[FABucket].Items[FAIndex].Data);
   Inc(FAIndex);
 end;
 
@@ -187,7 +186,7 @@ begin
     with Items[Count] do
     begin
       Key := AKey;
-      Data := AData;
+      Data := ShortString(AData);
     end;
     Inc(Count);
     Inc(FItemCount);
@@ -205,13 +204,11 @@ end;
   TXPMFileFormat implementation
 }
 
-constructor TXPMFileFormat.Create;
+procedure TXPMFileFormat.Define;
 begin
-  inherited Create;
+  inherited;
   FName := SXPMFormatName;
-  FCanLoad := True;
-  FCanSave := True;
-  FIsMultiImageFormat := False;
+  FFeatures := [ffLoad, ffSave];
   FSupportedFormats := XPMSupportedFormats;
 
   AddMasks(SXPMMasks);
@@ -226,7 +223,7 @@ var
 
   procedure SkipWhiteSpace(var Line: string);
   begin
-    while (Length(Line) > 0) and (Line[1] in WhiteSpaces) do
+    while (Length(Line) > 0) and (AnsiChar(Line[1]) in WhiteSpaces) do
       Delete(Line, 1, 1);
   end;
 
@@ -234,7 +231,7 @@ var
   begin
     Result := '';
     SkipWhiteSpace(Line);
-    while (Length(Line) > 0) and not(Line[1] in WhiteSpaces) do
+    while (Length(Line) > 0) and not (AnsiChar(Line[1]) in WhiteSpaces) do
     begin
       SetLength(Result, Length(Result) + 1);
       Result[Length(Result)] := Line[1];
@@ -390,7 +387,7 @@ begin
     Contents := TStringList.Create;
     SetLength(S, GetInputSize(GetIO, Handle));
     Read(Handle, @S[1], Length(S));
-    Contents.Text := S;
+    Contents.Text := string(S);
     // Remove quotes and other stuff
     for I := Contents.Count - 1 downto 0 do
     begin

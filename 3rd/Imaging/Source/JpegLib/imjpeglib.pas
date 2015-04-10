@@ -722,7 +722,7 @@ type
     { Routine that actually outputs a trace or error message }
     output_message : procedure (cinfo : j_common_ptr);
     { Format a message string for the most recent JPEG error or message }
-    format_message : procedure  (cinfo : j_common_ptr; var buffer : string);
+    format_message : procedure  (cinfo : j_common_ptr; var buffer : AnsiString);
 
     { Reset error state variables at start of a new image }
     reset_error_mgr : procedure (cinfo : j_common_ptr);

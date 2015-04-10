@@ -1,5 +1,4 @@
 {
-  $Id: ImagingBitmap.pas 129 2008-08-06 20:01:30Z galfar $
   Vampyre Imaging Library
   by Marek Mauder 
   http://imaginglib.sourceforge.net
@@ -26,7 +25,9 @@
   For more information about the LGPL: http://www.gnu.org/copyleft/lesser.html
 }
 
-{ This unit contains image format loader/saver for Windows Bitmap images.}
+{
+  This unit contains image format loader/saver for Windows Bitmap images.
+}
 unit ImagingBitmap;
 
 {$I ImagingOptions.inc}
@@ -44,6 +45,7 @@ type
   TBitmapFileFormat = class(TImageFileFormat)
   protected
     FUseRLE: LongBool;
+    procedure Define; override;
     function LoadData(Handle: TImagingHandle; var Images: TDynImageDataArray;
       OnlyFirstLevel: Boolean): Boolean; override;
     function SaveData(Handle: TImagingHandle; const Images: TDynImageDataArray;
@@ -51,9 +53,8 @@ type
     procedure ConvertToSupported(var Image: TImageData;
       const Info: TImageFormatInfo); override;
   public
-    constructor Create; override;
     function TestFormat(Handle: TImagingHandle): Boolean; override;
-  published  
+  published
     { Controls that RLE compression is used during saving. Accessible trough
       ImagingBitmapRLE option.}
     property UseRLE: LongBool read FUseRLE write FUseRLE;
@@ -133,13 +134,11 @@ type
 
 { TBitmapFileFormat class implementation }
 
-constructor TBitmapFileFormat.Create;
+procedure TBitmapFileFormat.Define;
 begin
-  inherited Create;
+  inherited;
   FName := SBitmapFormatName;
-  FCanLoad := True;
-  FCanSave := True;
-  FIsMultiImageFormat := False;
+  FFeatures := [ffLoad, ffSave];
   FSupportedFormats := BitmapSupportedFormats;
 
   FUseRLE := BitmapDefaultRLE;
@@ -523,12 +522,12 @@ begin
       // 1 and 4 bpp images are supported only for loading which is now
       // so we now convert them to 8bpp (and unalign scanlines).
       case BI.BitCount of
-        1: Convert1To8(Data, Bits, Width, Height, AlignedWidthBytes);
+        1: Convert1To8(Data, Bits, Width, Height, AlignedWidthBytes, False);
         4:
           begin
             // RLE4 bitmaps are translated to 8bit during RLE decoding
             if BI.Compression <> BI_RLE4 then
-               Convert4To8(Data, Bits, Width, Height, AlignedWidthBytes);
+               Convert4To8(Data, Bits, Width, Height, AlignedWidthBytes, False);
           end;
       end;
       // Enlarge palette

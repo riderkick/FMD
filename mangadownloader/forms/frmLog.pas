@@ -11,7 +11,7 @@ unit frmLog;
 interface
 
 uses
-  Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
+  Classes, SysUtils, Forms, Controls, Dialogs, StdCtrls,
   ExtCtrls, lclintf;
 
 type
@@ -61,7 +61,7 @@ begin
     DeleteFile(WORK_FOLDER + 'note.txt');
     l.Free;
   end;
-  mmLog.Lines.Create;
+  //mmLog.Lines.Create;
   mmLog.Lines.LoadFromFile(WORK_FOLDER + LOG_FILE);
   DeleteFile(WORK_FOLDER + LOG_FILE);
 end;

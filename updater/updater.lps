@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <ProjectSession>
+    <PathDelim Value="\"/>
+    <Version Value="9"/>
+    <BuildModes Active="Win32"/>
+    <Units Count="20">
+      <Unit0>
+        <Filename Value="updater.lpr"/>
+        <IsPartOfProject Value="True"/>
+        <CursorPos X="32" Y="14"/>
+        <UsageCount Value="43"/>
+      </Unit0>
+      <Unit1>
+        <Filename Value="uMain.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmMain"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="uMain"/>
+        <IsVisibleTab Value="True"/>
+        <TopLine Value="81"/>
+        <CursorPos X="27" Y="102"/>
+        <UsageCount Value="43"/>
+        <Loaded Value="True"/>
+      </Unit1>
+      <Unit2>
+        <Filename Value="uSF.pas"/>
+        <TopLine Value="21"/>
+        <CursorPos X="29" Y="36"/>
+        <UsageCount Value="32"/>
+      </Unit2>
+      <Unit3>
+        <Filename Value="..\baseunits\uBaseUnit.pas"/>
+        <CursorPos X="22" Y="1448"/>
+        <UsageCount Value="18"/>
+      </Unit3>
+      <Unit4>
+        <Filename Value="..\baseunits\uImg2Pdf.pas"/>
+        <TopLine Value="4"/>
+        <CursorPos X="3" Y="15"/>
+        <UsageCount Value="8"/>
+      </Unit4>
+      <Unit5>
+        <Filename Value="..\3rd\synapse\source\httpsend.pas"/>
+        <TopLine Value="310"/>
+        <CursorPos X="3" Y="313"/>
+        <UsageCount Value="10"/>
+      </Unit5>
+      <Unit6>
+        <Filename Value="C:\lazarus_component\lazautoupdate\packagesource\ulazautoupdate.pas"/>
+        <TopLine Value="907"/>
+        <CursorPos X="68" Y="920"/>
+        <UsageCount Value="8"/>
+      </Unit6>
+      <Unit7>
+        <Filename Value="C:\lazarus\fpc\2.6.4\source\rtl\objpas\classes\classesh.inc"/>
+        <TopLine Value="1585"/>
+        <CursorPos X="15" Y="1597"/>
+        <UsageCount Value="8"/>
+      </Unit7>
+      <Unit8>
+        <Filename Value="..\3rd\synapse\source\blcksock.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="225"/>
+        <CursorPos X="35" Y="240"/>
+        <UsageCount Value="13"/>
+      </Unit8>
+      <Unit9>
+        <Filename Value="C:\development\fpc\packages\regexpr\src\regexpr.pas"/>
+        <TopLine Value="453"/>
+        <CursorPos X="15" Y="490"/>
+        <UsageCount Value="11"/>
+      </Unit9>
+      <Unit10>
+        <Filename Value="C:\development\fpc\rtl\objpas\classes\streams.inc"/>
+        <TopLine Value="542"/>
+        <CursorPos Y="553"/>
+        <UsageCount Value="8"/>
+      </Unit10>
+      <Unit11>
+        <Filename Value="C:\development\fpc\rtl\objpas\sysutils\sysstr.inc"/>
+        <TopLine Value="892"/>
+        <CursorPos Y="903"/>
+        <UsageCount Value="9"/>
+      </Unit11>
+      <Unit12>
+        <Filename Value="C:\development\fpc\rtl\win32\system.pp"/>
+        <TopLine Value="40"/>
+        <CursorPos X="2" Y="45"/>
+        <UsageCount Value="9"/>
+      </Unit12>
+      <Unit13>
+        <Filename Value="C:\development\fpc\packages\paszlib\src\zipper.pp"/>
+        <TopLine Value="31"/>
+        <UsageCount Value="9"/>
+      </Unit13>
+      <Unit14>
+        <Filename Value="C:\development\fpc\packages\paszlib\src\paszlib.pas"/>
+        <TopLine Value="85"/>
+        <UsageCount Value="9"/>
+      </Unit14>
+      <Unit15>
+        <Filename Value="C:\development\lazarus\lcl\dbgrids.pas"/>
+        <TopLine Value="1176"/>
+        <CursorPos X="20" Y="1203"/>
+        <UsageCount Value="9"/>
+      </Unit15>
+      <Unit16>
+        <Filename Value="C:\lazarus\fpc\2.6.4\source\packages\paszlib\src\zipper.pp"/>
+        <TopLine Value="2052"/>
+        <CursorPos X="3" Y="2055"/>
+        <UsageCount Value="13"/>
+      </Unit16>
+      <Unit17>
+        <Filename Value="C:\lazarus\fpc\2.6.4\source\rtl\objpas\sysutils\sysstrh.inc"/>
+        <TopLine Value="125"/>
+        <CursorPos X="29" Y="125"/>
+        <UsageCount Value="11"/>
+      </Unit17>
+      <Unit18>
+        <Filename Value="C:\lazarus\fpc\2.6.4\source\rtl\objpas\sysutils\sysstr.inc"/>
+        <CursorPos X="30" Y="918"/>
+        <UsageCount Value="11"/>
+      </Unit18>
+      <Unit19>
+        <Filename Value="C:\lazarus\fpc\2.6.4\source\rtl\objpas\sysutils\sysformt.inc"/>
+        <TopLine Value="263"/>
+        <UsageCount Value="11"/>
+      </Unit19>
+    </Units>
+    <JumpHistory Count="30" HistoryIndex="29">
+      <Position1>
+        <Filename Value="uMain.pas"/>
+        <Caret Line="88" Column="35" TopLine="80"/>
+      </Position1>
+      <Position2>
+        <Filename Value="uMain.pas"/>
+        <Caret Line="398" Column="22" TopLine="392"/>
+      </Position2>
+      <Position3>
+        <Filename Value="uMain.pas"/>
+        <Caret Line="89" Column="20" TopLine="71"/>
+      </Position3>
+      <Position4>
+        <Filename Value="uMain.pas"/>
+        <Caret Line="404" Column="38" TopLine="392"/>
+      </Position4>
+      <Position5>
+        <Filename Value="uMain.pas"/>
+        <Caret Line="90" Column="40" TopLine="71"/>
+      </Position5>
+      <Position6>
+        <Filename Value="uMain.pas"/>
+        <Caret Line="423" Column="33" TopLine="413"/>
+      </Position6>
+      <Position7>
+        <Filename Value="uMain.pas"/>
+        <Caret Line="91" Column="40" TopLine="71"/>
+      </Position7>
+      <Position8>
+        <Filename Value="uMain.pas"/>
+        <Caret Line="418" Column="31" TopLine="411"/>
+      </Position8>
+      <Position9>
+        <Filename Value="uMain.pas"/>
+        <Caret Line="91" Column="35" TopLine="71"/>
+      </Position9>
+      <Position10>
+        <Filename Value="uMain.pas"/>
+        <Caret Line="425" Column="22" TopLine="382"/>
+      </Position10>
+      <Position11>
+        <Filename Value="uMain.pas"/>
+        <Caret Line="208" Column="3" TopLine="202"/>
+      </Position11>
+      <Position12>
+        <Filename Value="uMain.pas"/>
+        <Caret Line="42" Column="12" TopLine="36"/>
+      </Position12>
+      <Position13>
+        <Filename Value="uMain.pas"/>
+        <Caret Line="173" Column="38" TopLine="155"/>
+      </Position13>
+      <Position14>
+        <Filename Value="uMain.pas"/>
+        <Caret Line="178" Column="10" TopLine="160"/>
+      </Position14>
+      <Position15>
+        <Filename Value="uMain.pas"/>
+        <Caret Line="237" Column="29" TopLine="229"/>
+      </Position15>
+      <Position16>
+        <Filename Value="uMain.pas"/>
+        <Caret Line="93" Column="34" TopLine="391"/>
+      </Position16>
+      <Position17>
+        <Filename Value="uMain.pas"/>
+        <Caret Line="367" Column="33" TopLine="358"/>
+      </Position17>
+      <Position18>
+        <Filename Value="uMain.pas"/>
+        <Caret Line="90" Column="31" TopLine="75"/>
+      </Position18>
+      <Position19>
+        <Filename Value="uMain.pas"/>
+        <Caret Line="368" Column="38" TopLine="351"/>
+      </Position19>
+      <Position20>
+        <Filename Value="uMain.pas"/>
+        <Caret Line="90" Column="3" TopLine="79"/>
+      </Position20>
+      <Position21>
+        <Filename Value="uMain.pas"/>
+        <Caret Line="92" Column="27" TopLine="79"/>
+      </Position21>
+      <Position22>
+        <Filename Value="uMain.pas"/>
+        <Caret Line="99" Column="57" TopLine="83"/>
+      </Position22>
+      <Position23>
+        <Filename Value="uMain.pas"/>
+        <Caret Line="339" Column="82" TopLine="329"/>
+      </Position23>
+      <Position24>
+        <Filename Value="uMain.pas"/>
+        <Caret Line="345" Column="25" TopLine="329"/>
+      </Position24>
+      <Position25>
+        <Filename Value="uMain.pas"/>
+        <Caret Line="340" Column="50" TopLine="327"/>
+      </Position25>
+      <Position26>
+        <Filename Value="uMain.pas"/>
+        <Caret Line="99" Column="56" TopLine="88"/>
+      </Position26>
+      <Position27>
+        <Filename Value="uMain.pas"/>
+        <Caret Line="402" Column="48" TopLine="394"/>
+      </Position27>
+      <Position28>
+        <Filename Value="uMain.pas"/>
+        <Caret Line="248" Column="29" TopLine="245"/>
+      </Position28>
+      <Position29>
+        <Filename Value="uMain.pas"/>
+        <Caret Line="99" Column="27" TopLine="89"/>
+      </Position29>
+      <Position30>
+        <Filename Value="uMain.pas"/>
+        <Caret Line="97" Column="34" TopLine="88"/>
+      </Position30>
+    </JumpHistory>
+  </ProjectSession>
+</CONFIG>

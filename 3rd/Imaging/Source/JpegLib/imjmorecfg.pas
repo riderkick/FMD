@@ -10,40 +10,13 @@ interface
 
 {$I imjconfig.inc}
 
-{$IFDEF FPC}  { Free Pascal Compiler }
-    type
-      int = longint;
-      uInt = Cardinal; { unsigned int }
-      short = Integer;
-      ushort = Word;
-      long = longint;
-{$ELSE}
-{$IFDEF WIN32}
-  { Delphi 2.0 }
-  type
-    int = Integer;
-    uInt = Cardinal;
-    short = SmallInt;
-    ushort = Word;
-    long = longint;
-  {$ELSE}
-    {$IFDEF VIRTUALPASCAL}
-    type
-      int = longint;
-      uInt = longint; { unsigned int }
-      short = system.Integer;
-      ushort = system.Word;
-      long = longint;
-    {$ELSE}
-    type
-      int = Integer;
-      uInt = Word; { unsigned int }
-      short = Integer;
-      ushort = Word;
-      long = longint;
-    {$ENDIF}
-{$ENDIF}
-{$ENDIF}
+type
+  int = Integer;
+  uInt = Cardinal;
+  short = SmallInt;
+  ushort = Word;
+  long = LongInt;
+
 type
   voidp = pointer;
 
@@ -58,6 +31,7 @@ type
   JPEG standard, and the IJG code does not support anything else!
   We do not support run-time selection of data precision, sorry. }
 
+
 {$ifdef BITS_IN_JSAMPLE_IS_8}   { use 8 or 12 }
 const
   BITS_IN_JSAMPLE = 8;
@@ -65,8 +39,6 @@ const
 const
   BITS_IN_JSAMPLE = 12;
 {$endif}
-
-
 
 
 { Maximum number of components (color channels) allowed in JPEG image.
@@ -159,7 +131,7 @@ type
 { UINT8 must hold at least the values 0..255. }
 
 type
-  UINT8 = byte;
+  UINT8 = Byte;
 
 { UINT16 must hold at least the values 0..65535. }
 
@@ -167,11 +139,11 @@ type
 
 { INT16 must hold at least the values -32768..32767. }
 
-  INT16 = int;
+  INT16 = SmallInt;
 
 { INT32 must hold at least signed 32-bit values. }
 
-  INT32 = longint;
+  INT32 = LongInt;
 type
   INT32PTR = ^INT32;
 
