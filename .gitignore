@@ -11,3 +11,15 @@
 fp.ini
 fp.cfg
 fp.dsk
+
+# fmd binary
+mangadownloader/lib
+updater/lib
+bin/config/config.ini
+bin/config/advanced.ini
+bin/data/
+bin/works/
+bin/*.exe
+bin/*.dbg
+bin/*.dll
+bin/*.txt
