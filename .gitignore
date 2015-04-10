@@ -12,6 +12,9 @@ fp.ini
 fp.cfg
 fp.dsk
 
+# Lazarus backup
+**/backup/
+
 # fmd binary
 mangadownloader/lib
 updater/lib
