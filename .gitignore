@@ -22,7 +22,12 @@ bin/config/config.ini
 bin/config/advanced.ini
 bin/data/
 bin/works/
-bin/*.exe
+bin/fmd*.exe
+bin/updater*.exe
 bin/*.dbg
-bin/*.dll
 bin/*.txt
+Release/
+
+# build tools
+7za.*
+CleanUpCompileandZIP.bat
