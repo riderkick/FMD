@@ -5,7 +5,7 @@
 *.ppu
 *.rst
 *.cgi
-*.exe
+# *.exe
 *.log
 *.bak*
 fp.ini
@@ -29,5 +29,5 @@ bin/*.txt
 Release/
 
 # build tools
-7za.*
+/7za.*
 CleanUpCompileandZIP.bat
