@@ -105,8 +105,9 @@ end;
 
 procedure TUpdateMangaThread.SockOnHeartBeat(Sender: TObject);
 begin
-  if Self.Terminated and (TBlockSocket(Sender).StopFlag = False) then
+  if Terminated then
   begin
+    TBlockSocket(Sender).Tag := 1;
     TBlockSocket(Sender).StopFlag := True;
     TBlockSocket(Sender).AbortSocket;
   end;
@@ -557,8 +558,8 @@ begin
         Inc(websitePtr);
         FStatus := 'Getting list for ' + website + ' ...';
         Synchronize(MainThreadShowGetting);
-        fmdRunAsAdmin('updater.exe', 'data ' + GetMangaDatabaseURL(website) +
-          ' 5', True);
+        fmdRunAsAdmin(fmdDirectory + 'updater.exe', '-d ' + GetMangaDatabaseURL(website) +
+          ' -x -r 5 -q', True);
         Synchronize(RefreshList);
       end;
     end

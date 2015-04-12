@@ -13,9 +13,8 @@ unit uBaseUnit;
 interface
 
 uses
-  SysUtils, Classes, Graphics, strutils, zstream, fgl,
-  HTTPSend, Synautil, blcksock, ssl_openssl,
-  uFMDThread, GZIPUtils;
+  SysUtils, Classes, Graphics, Forms, strutils, fileinfo, fgl,
+  uFMDThread, synautil, httpsend, blcksock, ssl_openssl, GZIPUtils;
 
 const
   FMD_REVISION = '$WCREV$';
@@ -238,7 +237,7 @@ const
     TwoDigitYearCenturyWindow :50;
     );
 
-  SOCKHEARTBEATRATE = 300;
+  SOCKHEARTBEATRATE = 500;
 
   ANIMEA_ID              = 0;
   MANGAHERE_ID           = 1;
@@ -331,6 +330,8 @@ const
   MANGASEE_ID            = 88;
 
 var
+  FMD_VERSION_NUMBER: String = '';
+
   Genre: array [0..37] of String;
 
   // cbOptionLetFMDDoItemIndex
@@ -617,7 +618,7 @@ var
   MANGAHOST_BROWSER: String = '/mangas';
 
   //------------------------------------------
-  UPDATE_URL: String = 'http://jaist.dl.sourceforge.net/project/fmd/FMD/updates/';
+  UPDATE_URL: String = 'https://github.com/riderkick/FMD/raw/master/';
 
   OptionAutoCheckMinutes, OptionCustomRename,
   // dialog messages
@@ -736,6 +737,9 @@ type
     constructor Create(CreateSuspended: Boolean);
   end;
 
+// Get current binary version
+function GetCurrentBinVersion: String;
+// Remove Unicode
 function UnicodeRemove(const S: String): String;
 // Check a directory to see if it's empty (return TRUE) or not
 function IsDirectoryEmpty(const ADir: String): Boolean;
@@ -964,6 +968,43 @@ begin
 end;
 
 {$ENDIF}
+
+function GetCurrentBinVersion: String;
+var
+  AppVerInfo: TStringList;
+  i: Integer;
+begin
+  Result := '';
+  AppVerInfo := TStringList.Create;
+  with TFileVersionInfo.Create(nil) do
+    try
+      try
+        FileName := ParamStrUTF8(0);
+        if FileName = '' then
+          FileName := Application.ExeName;
+        {$IF FPC_FULLVERSION >= 20701}
+        ReadFileInfo;
+        {$ENDIF}
+        if VersionStrings.Count > 0 then
+        begin
+        {$IF FPC_FULLVERSION >= 20701}
+          AppVerInfo.Assign(VersionStrings);
+        {$ELSE}
+          for i := 0 to VersionStrings.Count - 1 do
+            AppVerInfo.Add(VersionCategories.Strings[i] + '=' +
+              VersionStrings.Strings[i]);
+        {$ENDIF}
+          for i := 0 to AppVerInfo.Count - 1 do
+            AppVerInfo.Strings[i] := LowerCase(AppVerInfo.Names[i]) + '=' + AppVerInfo.ValueFromIndex[i];
+          Result := AppVerInfo.Values['fileversion'];
+        end;
+      except
+      end;
+    finally
+      Free;
+      AppVerInfo.Free;
+    end;
+end;
 
 function UnicodeRemove(const S: String): String;
 var
@@ -2286,6 +2327,17 @@ var
       HTTP.Free;
   end;
 
+  function checkTerminate: boolean;
+  begin
+    Result := False;
+    if HTTP.Sock.Tag = 1 then // terminated via OnHeartBeat
+    begin
+      Result := True;
+      HTTP.Sock.Tag := 0;
+      preTerminate;
+    end;
+  end;
+
 label
   globReturn;
 
@@ -2305,13 +2357,6 @@ begin
   HTTP.Headers.Add('DNT: 1');
 
   globReturn:
-
-  //Site that require HTTPS request should define here
-  if Pos('https://', URL) <> 0 then
-  begin
-    HTTP.Sock.CreateWithSSL(TSSLOpenSSL);
-    HTTP.Sock.SSLDoConnect;
-  end;
 
   if ProxyType = 'HTTP' then
   begin
@@ -2400,14 +2445,7 @@ begin
     (HTTP.ResultCode >= 500) or
     (HTTP.ResultCode = 451) do
   begin
-    if (AOwner <> nil) and (AOwner is TFMDThread) then
-    begin
-      if TFMDThread(AOwner).IsTerminated then
-      begin
-        preTerminate;
-        Exit;
-      end;
-    end;
+    if checkTerminate then Exit;
     if (Reconnect <> 0) and (Reconnect <= counter) then
     begin
       preTerminate;
@@ -2427,15 +2465,7 @@ begin
   counter := 0;
   while (HTTP.ResultCode = 302) or (HTTP.ResultCode = 301) do
   begin
-    if (AOwner <> nil) and (AOwner is TFMDThread) then
-    begin
-      if TFMDThread(AOwner).IsTerminated then
-      begin
-        preTerminate;
-        Exit;
-      end;
-    end;
-
+    if checkTerminate then Exit;
     s := GetHeaderValue(HTTP.Headers, 'location');
     s := TrimLeftChar(s, ['/', ':']);
     if s <> '' then
@@ -2454,14 +2484,7 @@ begin
     while (not HTTP.HTTPMethod('GET', URL)) or
       (HTTP.ResultCode > 500) do  //500 for abort
     begin
-      if (AOwner <> nil) and (AOwner is TFMDThread) then
-      begin
-        if TFMDThread(AOwner).IsTerminated then
-        begin
-          preTerminate;
-          Exit;
-        end;
-      end;
+      if checkTerminate then Exit;
       if (Reconnect <> 0) and (Reconnect <= counter) then
       begin
         preTerminate;
@@ -2595,6 +2618,17 @@ var
       HTTPHeader.Free;
   end;
 
+  function checkTerminate: boolean;
+  begin
+    Result := False;
+    if HTTP.Sock.Tag = 1 then // terminated via OnHeartBeat
+    begin
+      Result := True;
+      HTTP.Sock.Tag := 0;
+      preTerminate;
+    end;
+  end;
+
 begin
   s := Path + '/' + Name;
   // Check to see if a file with similar name was already exist. If so then we
@@ -2622,12 +2656,6 @@ begin
   HTTP.Headers.Add('DNT: 1');
 
   URL := FixURL(URL);
-  // Site that require HTTPS request should define here
-  if Pos('https://', URL) <> 0 then
-  begin
-    HTTP.Sock.CreateWithSSL(TSSLOpenSSL);
-    HTTP.Sock.SSLDoConnect;
-  end;
 
   if ProxyType = 'HTTP' then
   begin
@@ -2678,14 +2706,7 @@ begin
   end;
 
   {$IFDEF DOWNLOADER}
-  if (AOwner <> nil) and (AOwner is TFMDThread) then
-  begin
-    if TFMDThread(AOwner).IsTerminated then
-    begin
-      preTerminate;
-      Exit;
-    end;
-  end;
+  if checkTerminate then Exit;
   {$ENDIF}
   counter := 0;
   while (not HTTP.HTTPMethod('GET', URL)) or
@@ -2693,14 +2714,7 @@ begin
     (HTTP.ResultCode = 403) do
   begin
     {$IFDEF DOWNLOADER}
-    if (AOwner <> nil) and (AOwner is TFMDThread) then
-    begin
-      if TFMDThread(AOwner).IsTerminated then
-      begin
-        preTerminate;
-        Exit;
-      end;
-    end;
+    if checkTerminate then Exit;
     {$ENDIF}
     if (Reconnect <> 0) and (Reconnect <= counter) then
     begin
@@ -2717,14 +2731,7 @@ begin
   while (HTTP.ResultCode = 302) or (HTTP.ResultCode = 301) do
   begin
     {$IFDEF DOWNLOADER}
-    if (AOwner <> nil) and (AOwner is TFMDThread) then
-    begin
-      if TFMDThread(AOwner).IsTerminated then
-      begin
-        preTerminate;
-        Exit;
-      end;
-    end;
+    if checkTerminate then Exit;
     {$ENDIF}
 
     s := GetHeaderValue(HTTP.Headers, 'location');
@@ -2750,14 +2757,7 @@ begin
       (HTTP.ResultCode = 403) do
     begin
       {$IFDEF DOWNLOADER}
-      if (AOwner <> nil) and (AOwner is TFMDThread) then
-      begin
-        if TFMDThread(AOwner).IsTerminated then
-        begin
-          preTerminate;
-          Exit;
-        end;
-      end;
+      if checkTerminate then Exit;
       {$ENDIF}
       if (Reconnect <> 0) and (Reconnect <= counter) then
       begin
@@ -2796,14 +2796,7 @@ begin
     repeat
       try
         {$IFDEF DOWNLOADER}
-        if (AOwner <> nil) and (AOwner is TFMDThread) then
-        begin
-          if TFMDThread(AOwner).IsTerminated then
-          begin
-            preTerminate;
-            Exit;
-          end;
-        end;
+        if checkTerminate then Exit;
         {$ENDIF}
         lpath := CorrectPathSys(Path);
         if not DirectoryExistsUTF8(lpath) then
@@ -2828,7 +2821,7 @@ begin
       except
         on E: Exception do
         begin
-          putLog('SaveImage: ' + E.Message + LineEnding + (CorrectPathSys(Path) +
+          WriteLog('SaveImage: ' + E.Message + LineEnding + (CorrectPathSys(Path) +
             '/' + Name + prefix + ext), LOG_error);
           {$IFDEF DOWNLOADER}
           if (AOwner <> nil) and (AOwner is TFMDThread) then
@@ -2853,7 +2846,7 @@ begin
   end
   else
   begin
-    putLog('SaveImage.ExtEmpty URL:' + URL);
+    WriteLog('SaveImage.ExtEmpty URL:' + URL);
   end;
   preTerminate;
 end;

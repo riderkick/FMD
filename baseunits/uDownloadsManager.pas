@@ -12,7 +12,7 @@ interface
 
 uses
   Classes, SysUtils, Dialogs, ExtCtrls, IniFiles, fgl, typinfo, syncobjs,
-  HTTPSend, blcksock,
+  httpsend, blcksock,
   uBaseUnit, uPacker, uFMDThread, uMisc,
   frmShutdownCounter;
 
@@ -264,8 +264,9 @@ end;
 
 procedure TDownloadThread.SockOnHeartBeat(Sender: TObject);
 begin
-  if Self.Terminated and (TBlockSocket(Sender).StopFlag = False) then
+  if Terminated then
   begin
+    TBlockSocket(Sender).Tag := 1;
     TBlockSocket(Sender).StopFlag := True;
     TBlockSocket(Sender).AbortSocket;
   end;

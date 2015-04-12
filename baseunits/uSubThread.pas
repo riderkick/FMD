@@ -6,13 +6,16 @@
 
 unit uSubThread;
 
-{$mode delphi}
+{$ifdef fpc}
+  {$mode objfpc}
+{$endif}
+{$H+}
 
 interface
 
 uses
-  Classes, SysUtils, Dialogs, Controls, lclintf,
-  uBaseUnit, uFMDThread;
+  Classes, SysUtils, Controls, Forms, uBaseUnit, uFMDThread,
+  httpsend, blcksock;
 
 type
   { Tasks will be done by this thread:
@@ -26,37 +29,27 @@ type
   TSubThread = class(TFMDThread)
   protected
     FIsLoaded: Integer;
-    FURL: String;
-
+    FBtnCheckCaption: String;
     procedure Execute; override;
-
-    procedure MainThreadShowLog;
     procedure MainThreadUpdate;
-    procedure MainThreadUpdateRequire;
-    procedure MainThreadImportant;
-    procedure MainThreadLatestVer;
     procedure MainThreadSetButton;
     procedure MainThreadPopSilentThreadQueue;
     procedure DoTerminate; override;
+    procedure SockOnHeartBeat(Sender: TObject);
   public
     updateCounter: Cardinal;
     isCheckForLatestVer: Boolean;
     isCanStop: Boolean;
     fNote, fNoteForThisRevision, fImportant: String;
+    fNewVersionNumber, fUpdateURL, fChangelog: String;
     constructor Create;
   end;
 
 implementation
 
 uses
-  FileUtil,
-  frmMain, frmLog,
+  frmMain, frmUpdateDialog,
   uSilentThread;
-
-var
-  LRequireRevision: Cardinal = 1;
-  LRevision: Cardinal;
-  LVersion: String;
 
 // ----- Public methods -----
 
@@ -71,54 +64,34 @@ end;
 
 // ----- Protected methods -----
 
-procedure TSubThread.MainThreadShowLog;
-begin
-  Log := TLog.Create(MainForm);
-  Log.ShowModal;
-  Log.Free;
-end;
-
 procedure TSubThread.MainThreadUpdate;
 begin
-  if MessageDlg('', Format(stDlgNewVersion + #10#13#10#13 + fNote,
-    [LVersion, LRevision]),
-    mtInformation, [mbYes, mbNo], 0) = mrYes then
+  UpdateDialogForm.Caption := Application.Title + ' - New version found!';
+  with UpdateDialogForm.mmLog.Lines do
   begin
-    CopyFile(fmdDirectory + 'updater.exe', fmdDirectory + 'old_updater.exe');
-    CopyFile(fmdDirectory + CONFIG_FOLDER + CONFIG_FILE,
-      fmdDirectory + CONFIG_FOLDER + CONFIG_FILE + '.tmp');
-    MainForm.CloseNow;
-    fmdRunAsAdmin(fmdDirectory + 'old_updater.exe', '1', False);
-    Halt;
+    BeginUpdate;
+    try
+      Clear;
+      Add('Current Version : ' + FMD_VERSION_NUMBER);
+      Add('New Version     : ' + fNewVersionNumber + LineEnding);
+      AddText(fChangelog);
+    finally
+      EndUpdate;
+    end;
+  end;
+  if UpdateDialogForm.ShowModal = mrYes then
+  begin
+    MainForm.DoUpdateFMD := True;
+    MainForm.FUpdateURL := fUpdateURL;
+    MainForm.itMonitor.Enabled := True;
   end
   else
     MainForm.btCheckVersion.Caption := stUpdaterCheck;
 end;
 
-procedure TSubThread.MainThreadUpdateRequire;
-begin
-  if MessageDlg('', Format(stDlgUpdaterVersionRequire, [LRequireRevision]),
-    mtInformation, [mbYes, mbNo], 0) = mrYes then
-  begin
-    OpenURL('http://akarink.wordpress.com/');
-  end;
-end;
-
-procedure TSubThread.MainThreadImportant;
-begin
-  MessageDlg('', fImportant, mtInformation, [mbYes], 0);
-  // MainForm.CloseNow;
-  // Halt;
-end;
-
-procedure TSubThread.MainThreadLatestVer;
-begin
-  MessageDlg('', stDlgLatestVersion, mtInformation, [mbYes], 0);
-end;
-
 procedure TSubThread.MainThreadSetButton;
 begin
-  MainForm.btCheckVersion.Caption := stUpdaterCheck;
+  MainForm.btCheckVersion.Caption := FBtnCheckCaption;
 end;
 
 procedure TSubThread.MainThreadPopSilentThreadQueue;
@@ -141,17 +114,24 @@ begin
   inherited DoTerminate;
 end;
 
+procedure TSubThread.SockOnHeartBeat(Sender: TObject);
+begin
+  if Terminated then
+  begin
+    TBlockSocket(Sender).Tag := 1;
+    TBlockSocket(Sender).StopFlag := True;
+    TBlockSocket(Sender).AbortSocket;
+  end;
+end;
+
 procedure TSubThread.Execute;
 var
   l: TStringList;
-  i: Cardinal;
-  s: String;
+  FHTTP: THTTPSend;
+  updateFound: Boolean = False;
 begin
   MainForm.isSubthread := True;
-  LRevision := 0;
   try
-    if FileExists(WORK_FOLDER + LOG_FILE) then
-      Synchronize(MainThreadShowLog);
     if FileExists(fmdDirectory + 'old_updater.exe') then
       DeleteFile(fmdDirectory + 'old_updater.exe');
 
@@ -167,73 +147,52 @@ begin
       if (MainForm.silentThreadCount > 0) and
         (MainForm.currentActiveSilentThreadCount < maxActiveSilentThread) then
       begin
-        Synchronize(MainThreadPopSilentThreadQueue);
+        Synchronize(@MainThreadPopSilentThreadQueue);
       end;
-
-      isCheckForLatestVer := False;
-      { TODO -oCholif : Temporary disable latest version check }
 
       if isCheckForLatestVer then
       begin
-        Sleep(2000);
+        FBtnCheckCaption := stFavoritesChecking;
+        Synchronize(@MainThreadSetButton);
         l := TStringList.Create;
-
-        l.NameValueSeparator := '=';
-        case Random(2) of
-          0:
-            s := UPDATE_URL + 'updates.i';
-          1:
-            s := SourceForgeURL(
-              'http://sourceforge.net/projects/fmd/files/FMD/updates/updates.i/download');
-        end;
-        if (GetPage(TObject(l), s, 0)) and (l.Count > 0) then
-        begin
-          fNote := '';
-          fNoteForThisRevision := '';
-          for i := 0 to l.Count - 1 do
-          begin
-            if l.Names[i] = IntToStr(Revision) then
-              fNoteForThisRevision := l.ValueFromIndex[i];
-            if l.Names[i] = 'Note' then
-              fNote := l.ValueFromIndex[i];
-            if l.Names[i] = 'Revision' then
-              LRevision := StrToInt(l.ValueFromIndex[i]);
-            if l.Names[i] = 'RequireRevision' then
-              LRequireRevision := StrToInt(l.ValueFromIndex[i]);
-            if l.Names[i] = 'Version' then
-              LVersion := l.ValueFromIndex[i];
-            if l.Names[i] = 'Important' then
+        FHTTP := THTTPSend.Create;
+        FHTTP.Sock.OnHeartbeat := @SockOnHeartBeat;
+        FHTTP.Sock.HeartbeatRate := SOCKHEARTBEATRATE;
+        try
+          if not Terminated and
+            GetPage(Self, FHTTP, TObject(l), UPDATE_URL + 'update', 3, False) then
+            if l.Count > 1 then
             begin
-              fImportant := l.ValueFromIndex[i];
-              Synchronize(MainThreadImportant);
-            end;
+              l[0] := Trim(l[0]);
+              l[1] := Trim(l[1]);
+              if l[0] <> FMD_VERSION_NUMBER then
+              begin
+                fNewVersionNumber := l[0];
+                fUpdateURL := l[1];
+                FHTTP.Clear;
+                l.Clear;
+                if not Terminated and
+                  GetPage(Self, FHTTP, TObject(l), UPDATE_URL + 'changelog.txt', 3, False) then
+                  fChangelog := l.Text;
+                updateFound := True;
+              end;
+            FBtnCheckCaption := stUpdaterCheck;
+            Synchronize(@MainThreadSetButton);
           end;
-
-          if LRequireRevision > Revision then
-            Synchronize(MainThreadUpdateRequire)
-          else
-          if LRevision > Revision then
-          begin
-            Synchronize(MainThreadUpdate);
-          end
-          else
-          begin
-            if updateCounter > 0 then
-            begin
-              Synchronize(MainThreadLatestVer);
-            end;
-            Synchronize(MainThreadSetButton);
-          end;
+        finally
+          FHTTP.Free;
+          l.Free;
         end;
+        if not Terminated and updateFound then
+          Synchronize(@MainThreadUpdate);
+
         Inc(updateCounter);
-
         isCheckForLatestVer := False;
-        l.Free;
       end;
 
       isCanStop := False;
       isCanStop := True;
-      Sleep(400);
+      Sleep(700);
     end;
   except
     on E: Exception do

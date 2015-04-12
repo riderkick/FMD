@@ -10,8 +10,8 @@ uses
   cmem,
   {$endif}
   Classes, windows, SysUtils, zipper, ShellApi, FileUtil, Forms,
-  Dialogs, ComCtrls, StdCtrls, Clipbrd, ExtCtrls, USimpleException, httpsend,
-  blcksock, ssl_openssl;
+  Dialogs, ComCtrls, StdCtrls, Clipbrd, ExtCtrls, RegExpr, IniFiles,
+  USimpleException, httpsend, blcksock, ssl_openssl;
 
 type
 
@@ -85,7 +85,6 @@ var
   _URL       :string = '';
   _MaxRetry  :cardinal = 1;
 
-
   ProxyType :string;
   ProxyHost :string;
   ProxyPort :string;
@@ -93,6 +92,9 @@ var
   ProxyPass :string;
 
 const
+  Symbols: array [0..10] of Char =
+    ('\', '/', ':', '*', '?', '"', '<', '>', '|', #9, ';');
+
   mf_data_link = 'https://www.mediafire.com/folder/fwa8eomz80uk1/Data';
 
 resourcestring
@@ -122,9 +124,27 @@ resourcestring
 
 implementation
 
-uses RegExpr, IniFiles, uMessage;
+uses uMessage;
 
 {$R *.lfm}
+
+function RemoveSymbols(const input: String): String;
+var
+  i: Integer;
+begin
+  Result := input;
+  for i := Low(Symbols) to High(Symbols) do
+  begin
+    if Pos(Symbols[i], Result) > 0 then
+      Result := StringReplace(Result, Symbols[i], '', [rfReplaceAll]);
+  end;
+
+  if (Length(Result) > 0) and
+    (Result[Length(Result)] = '.') then
+  begin
+    Result[Length(Result)] := '-';
+  end;
+end;
 
 function RunAsAdmin(path, params: String; showWindow: Integer = SW_SHOWNORMAL;
     isPersistent: Boolean = False): Boolean;
@@ -198,6 +218,9 @@ begin
   if bytes > KB then
     Result := FormatFloat('#.## KB', bytes / KB)
   else
+  if bytes = 0 then
+    Result := '0 bytes'
+  else
     Result := FormatFloat('#.## bytes', bytes);
 end;
 
@@ -209,6 +232,7 @@ begin
   isDownload := True;
   FreeOnTerminate := True;
   FHTTP := THTTPSend.Create;
+  FHTTP.Sock.OnStatus := @SockOnStatus;
   FHTTP.Sock.OnHeartbeat := @SockOnHeartBeat;
   FHTTP.Sock.HeartbeatRate := 500;
   FTotalSize := 0;
@@ -247,25 +271,37 @@ end;
 procedure TDownloadThread.SockOnHeartBeat(Sender :TObject);
 begin
   if Self.Terminated then
-    (Sender as TBlockSocket).AbortSocket;
+  begin
+    TBlockSocket(Sender).StopFlag := True;
+    TBlockSocket(Sender).AbortSocket;
+  end;
 end;
 
 procedure TDownloadThread.MainThreadUpdateProgress;
+var
+  barPos: Integer;
+  prgText: string;
 begin
-  if (FCurrentSize > 0) and (FTotalSize > 0) then
+  if FCurrentSize > 0then
   begin
-    try
-      frmMain.pbDownload.Position := Round(1000 * (FCurrentSize / FTotalSize));
-    finally
-      frmMain.lbProgress.Caption :=
-        FormatByteSize(FCurrentSize) + ' / ' + FormatByteSize(FTotalSize);
+    if FTotalSize > 0 then
+    begin
+      barPos := Round(1000 * (FCurrentSize / FTotalSize));
+      prgText := FormatByteSize(FCurrentSize) + ' / ' + FormatByteSize(FTotalSize);
+    end
+    else
+    begin
+      barPos := 0;
+      prgText := FormatByteSize(FCurrentSize);
     end;
   end
   else
   begin
-    frmMain.pbDownload.Position := 0;
-    frmMain.lbProgress.Caption := '0 / 0';
+    barPos := 0;
+    prgText := '0 / 0';
   end;
+  frmMain.pbDownload.Position := barPos;
+  frmMain.lbProgress.Caption := prgText;
 end;
 
 procedure TDownloadThread.MainThreadErrorGetting;
@@ -278,12 +314,9 @@ end;
 procedure TDownloadThread.SockOnStatus(Sender :TObject; Reason :THookSocketReason;
   const Value :string);
 begin
+  if Pos('Content-Length: ', FHTTP.Headers.Text) > 0 then
+    FTotalSize := StrToIntDef(HeaderByName(FHTTP.Headers, 'Content-Length'), 0);;
   case Reason of
-    HR_CanRead:
-    begin
-      if FHTTP.Headers.Count > 0 then
-        FTotalSize := StrToIntDef(HeaderByName(FHTTP.Headers, 'Content-Length'), 0);
-    end;
     HR_Connect :FCurrentSize := 0;
     HR_ReadCount :Inc(FCurrentSize, StrToIntDef(Value, 0));
   end;
@@ -442,7 +475,6 @@ begin
         end;
       end;
       UpdateStatus(ST_Download + ' [' + FileName + ']...');
-      FHTTP.Sock.OnStatus := @SockOnStatus;
 
       ctry := 0;
       FHTTP.Clear;
@@ -482,7 +514,13 @@ begin
       end;
     end;
 
-    fname := DirPath + DirectorySeparator + FileName;
+    fname := FileName;
+    regx.Expression := '^.*filename=(.+)$';
+    fname := regx.Replace(fname, '$1', True);
+    regx.Expression := '(\.\w+)[\?\&].*$';
+    fname := regx.Replace(fname, '$1', True);
+    fname := RemoveSymbols(fname);
+    fname := DirPath + DirectorySeparator + fname;
     if FileExistsUTF8(fname) then
       DeleteFileUTF8(fname);
 

@@ -14,7 +14,7 @@ unit uData;
 interface
 
 uses
-  Classes, SysUtils, uBaseUnit, HTTPSend;
+  Classes, SysUtils, uBaseUnit, httpsend;
 
 type
   TDataProcess = class(TObject)

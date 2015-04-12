@@ -99,16 +99,14 @@ procedure TUpdateDBThread.Execute;
 begin
   try
     Synchronize(MainThreadShowGetting);
-    fmdRunAsAdmin('updater.exe', 'data ' + GetMangaDatabaseURL(websiteName) +
-      ' 5', True);
-    // if SavePage(GetMangaDatabaseURL(websiteName), fmdDirectory + DATA_FOLDER, websiteName + '.zip', 10) then
+    fmdRunAsAdmin(fmdDirectory + 'updater.exe', '-d ' + GetMangaDatabaseURL(websiteName) +
+      ' -x -r 5', True);
     if FileExists(fmdDirectory + DATA_FOLDER + websiteName + '.dat') then
     begin
       Synchronize(MainThreadRefreshList);
     end
     else
     begin
-      Synchronize(MainThreadCannotConnectToServer);
       Synchronize(MainThreadShowEndGetting);
     end;
   except

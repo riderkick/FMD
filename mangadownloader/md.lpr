@@ -18,7 +18,7 @@ uses
   richmemopackage,
   Forms, FileUtil,
   uBaseUnit, frmMain, frmImportList,
-  simpleipc, IniFiles, frmShutdownCounter;
+  simpleipc, IniFiles, frmShutdownCounter, frmUpdateDialog;
 
 var
   CheckInstance: Boolean = True;
@@ -63,6 +63,7 @@ begin
     Application.CreateForm(TMainForm, MainForm);
     Application.CreateForm(TImportList, ImportList);
   Application.CreateForm(TShutdownCounterForm, ShutdownCounterForm);
+  Application.CreateForm(TUpdateDialogForm, UpdateDialogForm);
     Application.Run;
   end;
 end.

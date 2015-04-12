@@ -20,8 +20,7 @@
     <VersionInfo>
       <UseVersionInfo Value="True"/>
       <MinorVersionNr Value="9"/>
-      <RevisionNr Value="7"/>
-      <BuildNr Value="1"/>
+      <RevisionNr Value="8"/>
       <Attributes pvaPrivateBuild="True"/>
       <StringTable Comments="Unofficial Build" FileDescription="Free Manga Downloader" OriginalFilename="fmd.exe" ProductName="Free Manga Downloader" ProductVersion="$BuildMode()" PrivateBuild="Cholif"/>
     </VersionInfo>
@@ -35,7 +34,7 @@
           <Version Value="11"/>
           <PathDelim Value="\"/>
           <Target>
-            <Filename Value="..\bin\fmd-$(TargetOS)"/>
+            <Filename Value="..\bin\fmd_$(TargetOS)"/>
           </Target>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir);..\3rd\Imaging\Source;..\3rd\Imaging\Source\ZLib;..\3rd\Imaging\Source\JpegLib;..\baseunits\includes\Batoto;..\baseunits\includes\AnimeA;..\baseunits\includes\MangaHere;..\baseunits\includes\AnimeStory;..\baseunits\includes\AnimExtremist;..\baseunits\includes\BlogTruyen;..\baseunits\includes\CentralDeMangas;..\baseunits\includes\EatManga;..\baseunits\includes\EGScans;..\baseunits\includes\EsMangaHere;..\baseunits\includes\Fakku;..\baseunits\includes\Hentai2Read;..\baseunits\includes\HugeManga;..\baseunits\includes\KissManga;..\baseunits\includes\Kivmanga;..\baseunits\includes\Komikid;..\baseunits\includes\LectureEnLigne;..\baseunits\includes\Mabuns;..\baseunits\includes\Manga24h;..\baseunits\includes\MangaAe;..\baseunits\includes\MangaAr;..\baseunits\includes\Mangacan;..\baseunits\includes\Mangacow;..\baseunits\includes\MangaEden;..\baseunits\includes\MangaEsta;..\baseunits\includes\MangaFox;..\baseunits\includes\MangaFrame;..\baseunits\includes\MangaGo;..\baseunits\includes\MangaInn;..\baseunits\includes\MangaPanda;..\baseunits\includes\MangaPark;..\baseunits\includes\MangaReader;..\baseunits\includes\MangaStream;..\baseunits\includes\MangaTraders;..\baseunits\includes\MangaVadisi;..\baseunits\includes\PecintaKomik;..\baseunits\includes\Pururin;..\baseunits\includes\RedHawkScans;..\baseunits\includes\S2scans;..\baseunits\includes\ScanManga;..\baseunits\includes\SenManga;..\baseunits\includes\Starkana;..\baseunits\includes\SubManga;..\baseunits\includes\TruyenTranhTuan;..\baseunits\includes\Turkcraft;..\baseunits\includes\VnSharing;..\baseunits\includes\MeinManga;..\baseunits\includes\MangaREADER_POR;..\baseunits\includes\MangasPROJECT;..\baseunits\includes\MangaStreamTo;..\baseunits\includes\EHentai"/>
@@ -79,7 +78,7 @@
           <Version Value="11"/>
           <PathDelim Value="\"/>
           <Target>
-            <Filename Value="..\bin\fmd-$(TargetOS)-debug"/>
+            <Filename Value="..\bin\fmd_$(TargetOS)_debug"/>
           </Target>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir);..\3rd\Imaging\Source;..\3rd\Imaging\Source\ZLib;..\3rd\Imaging\Source\JpegLib;..\baseunits\includes\Batoto;..\baseunits\includes\AnimeA;..\baseunits\includes\MangaHere;..\baseunits\includes\AnimeStory;..\baseunits\includes\AnimExtremist;..\baseunits\includes\BlogTruyen;..\baseunits\includes\CentralDeMangas;..\baseunits\includes\EatManga;..\baseunits\includes\EGScans;..\baseunits\includes\EsMangaHere;..\baseunits\includes\Fakku;..\baseunits\includes\Hentai2Read;..\baseunits\includes\HugeManga;..\baseunits\includes\KissManga;..\baseunits\includes\Kivmanga;..\baseunits\includes\Komikid;..\baseunits\includes\LectureEnLigne;..\baseunits\includes\Mabuns;..\baseunits\includes\Manga24h;..\baseunits\includes\MangaAe;..\baseunits\includes\MangaAr;..\baseunits\includes\Mangacan;..\baseunits\includes\Mangacow;..\baseunits\includes\MangaEden;..\baseunits\includes\MangaEsta;..\baseunits\includes\MangaFox;..\baseunits\includes\MangaFrame;..\baseunits\includes\MangaGo;..\baseunits\includes\MangaInn;..\baseunits\includes\MangaPanda;..\baseunits\includes\MangaPark;..\baseunits\includes\MangaReader;..\baseunits\includes\MangaStream;..\baseunits\includes\MangaTraders;..\baseunits\includes\MangaVadisi;..\baseunits\includes\PecintaKomik;..\baseunits\includes\Pururin;..\baseunits\includes\RedHawkScans;..\baseunits\includes\S2scans;..\baseunits\includes\ScanManga;..\baseunits\includes\SenManga;..\baseunits\includes\Starkana;..\baseunits\includes\SubManga;..\baseunits\includes\TruyenTranhTuan;..\baseunits\includes\Turkcraft;..\baseunits\includes\VnSharing;..\baseunits\includes\MeinManga;..\baseunits\includes\MangaREADER_POR;..\baseunits\includes\MangasPROJECT;..\baseunits\includes\MangaStreamTo;..\baseunits\includes\EHentai"/>
@@ -126,7 +125,7 @@
           <Version Value="11"/>
           <PathDelim Value="\"/>
           <Target>
-            <Filename Value="..\bin\fmd-$(TargetOS)-debug"/>
+            <Filename Value="..\bin\fmd_$(TargetOS)_debug"/>
           </Target>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir);..\3rd\Imaging\Source;..\3rd\Imaging\Source\ZLib;..\3rd\Imaging\Source\JpegLib;..\baseunits\includes\Batoto;..\baseunits\includes\AnimeA;..\baseunits\includes\MangaHere;..\baseunits\includes\AnimeStory;..\baseunits\includes\AnimExtremist;..\baseunits\includes\BlogTruyen;..\baseunits\includes\CentralDeMangas;..\baseunits\includes\EatManga;..\baseunits\includes\EGScans;..\baseunits\includes\EsMangaHere;..\baseunits\includes\Fakku;..\baseunits\includes\Hentai2Read;..\baseunits\includes\HugeManga;..\baseunits\includes\KissManga;..\baseunits\includes\Kivmanga;..\baseunits\includes\Komikid;..\baseunits\includes\LectureEnLigne;..\baseunits\includes\Mabuns;..\baseunits\includes\Manga24h;..\baseunits\includes\MangaAe;..\baseunits\includes\MangaAr;..\baseunits\includes\Mangacan;..\baseunits\includes\Mangacow;..\baseunits\includes\MangaEden;..\baseunits\includes\MangaEsta;..\baseunits\includes\MangaFox;..\baseunits\includes\MangaFrame;..\baseunits\includes\MangaGo;..\baseunits\includes\MangaInn;..\baseunits\includes\MangaPanda;..\baseunits\includes\MangaPark;..\baseunits\includes\MangaReader;..\baseunits\includes\MangaStream;..\baseunits\includes\MangaTraders;..\baseunits\includes\MangaVadisi;..\baseunits\includes\PecintaKomik;..\baseunits\includes\Pururin;..\baseunits\includes\RedHawkScans;..\baseunits\includes\S2scans;..\baseunits\includes\ScanManga;..\baseunits\includes\SenManga;..\baseunits\includes\Starkana;..\baseunits\includes\SubManga;..\baseunits\includes\TruyenTranhTuan;..\baseunits\includes\Turkcraft;..\baseunits\includes\VnSharing;..\baseunits\includes\MeinManga;..\baseunits\includes\MangaREADER_POR;..\baseunits\includes\MangasPROJECT;..\baseunits\includes\MangaStreamTo;..\baseunits\includes\EHentai"/>
@@ -170,7 +169,7 @@
           <Version Value="11"/>
           <PathDelim Value="\"/>
           <Target>
-            <Filename Value="..\bin\fmd-$(TargetOS)-debug-leaks"/>
+            <Filename Value="..\bin\fmd_$(TargetOS)_debug_leaks"/>
           </Target>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir);..\3rd\Imaging\Source;..\3rd\Imaging\Source\ZLib;..\3rd\Imaging\Source\JpegLib;..\baseunits\includes\Batoto;..\baseunits\includes\AnimeA;..\baseunits\includes\MangaHere;..\baseunits\includes\AnimeStory;..\baseunits\includes\AnimExtremist;..\baseunits\includes\BlogTruyen;..\baseunits\includes\CentralDeMangas;..\baseunits\includes\EatManga;..\baseunits\includes\EGScans;..\baseunits\includes\EsMangaHere;..\baseunits\includes\Fakku;..\baseunits\includes\Hentai2Read;..\baseunits\includes\HugeManga;..\baseunits\includes\KissManga;..\baseunits\includes\Kivmanga;..\baseunits\includes\Komikid;..\baseunits\includes\LectureEnLigne;..\baseunits\includes\Mabuns;..\baseunits\includes\Manga24h;..\baseunits\includes\MangaAe;..\baseunits\includes\MangaAr;..\baseunits\includes\Mangacan;..\baseunits\includes\Mangacow;..\baseunits\includes\MangaEden;..\baseunits\includes\MangaEsta;..\baseunits\includes\MangaFox;..\baseunits\includes\MangaFrame;..\baseunits\includes\MangaGo;..\baseunits\includes\MangaInn;..\baseunits\includes\MangaPanda;..\baseunits\includes\MangaPark;..\baseunits\includes\MangaReader;..\baseunits\includes\MangaStream;..\baseunits\includes\MangaTraders;..\baseunits\includes\MangaVadisi;..\baseunits\includes\PecintaKomik;..\baseunits\includes\Pururin;..\baseunits\includes\RedHawkScans;..\baseunits\includes\S2scans;..\baseunits\includes\ScanManga;..\baseunits\includes\SenManga;..\baseunits\includes\Starkana;..\baseunits\includes\SubManga;..\baseunits\includes\TruyenTranhTuan;..\baseunits\includes\Turkcraft;..\baseunits\includes\VnSharing;..\baseunits\includes\MeinManga;..\baseunits\includes\MangaREADER_POR;..\baseunits\includes\MangasPROJECT;..\baseunits\includes\MangaStreamTo;..\baseunits\includes\EHentai"/>
@@ -238,7 +237,7 @@
         <PackageName Value="LCL"/>
       </Item3>
     </RequiredPackages>
-    <Units Count="20">
+    <Units Count="21">
       <Unit0>
         <Filename Value="md.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -246,6 +245,7 @@
       <Unit1>
         <Filename Value="..\baseunits\uDownloadsManager.pas"/>
         <IsPartOfProject Value="True"/>
+        <UnitName Value="uDownloadsManager"/>
       </Unit1>
       <Unit2>
         <Filename Value="..\baseunits\uFavoritesManager.pas"/>
@@ -254,10 +254,12 @@
       <Unit3>
         <Filename Value="..\baseunits\uUpdateThread.pas"/>
         <IsPartOfProject Value="True"/>
+        <UnitName Value="uUpdateThread"/>
       </Unit3>
       <Unit4>
         <Filename Value="..\baseunits\uSubThread.pas"/>
         <IsPartOfProject Value="True"/>
+        <UnitName Value="uSubThread"/>
       </Unit4>
       <Unit5>
         <Filename Value="..\baseunits\uUpdateDBThread.pas"/>
@@ -313,10 +315,12 @@
       <Unit14>
         <Filename Value="..\baseunits\uGetMangaInfosThread.pas"/>
         <IsPartOfProject Value="True"/>
+        <UnitName Value="uGetMangaInfosThread"/>
       </Unit14>
       <Unit15>
         <Filename Value="..\baseunits\uBaseUnit.pas"/>
         <IsPartOfProject Value="True"/>
+        <UnitName Value="uBaseUnit"/>
       </Unit15>
       <Unit16>
         <Filename Value="..\baseunits\uMisc.pas"/>
@@ -325,9 +329,10 @@
       <Unit17>
         <Filename Value="..\baseunits\uData.pas"/>
         <IsPartOfProject Value="True"/>
+        <UnitName Value="uData"/>
       </Unit17>
       <Unit18>
-        <Filename Value="forms\frmshutdowncounter.pas"/>
+        <Filename Value="forms\frmShutdownCounter.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="ShutdownCounterForm"/>
         <HasResources Value="True"/>
@@ -337,13 +342,20 @@
         <Filename Value="..\baseunits\includes\KissManga\chapter_page_number.inc"/>
         <IsPartOfProject Value="True"/>
       </Unit19>
+      <Unit20>
+        <Filename Value="forms\frmupdatedialog.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="UpdateDialogForm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit20>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
     <Version Value="11"/>
     <PathDelim Value="\"/>
     <Target>
-      <Filename Value="..\bin\fmd-$(TargetOS)"/>
+      <Filename Value="..\bin\fmd_$(TargetOS)"/>
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir);..\3rd\Imaging\Source;..\3rd\Imaging\Source\ZLib;..\3rd\Imaging\Source\JpegLib;..\baseunits\includes\Batoto;..\baseunits\includes\AnimeA;..\baseunits\includes\MangaHere;..\baseunits\includes\AnimeStory;..\baseunits\includes\AnimExtremist;..\baseunits\includes\BlogTruyen;..\baseunits\includes\CentralDeMangas;..\baseunits\includes\EatManga;..\baseunits\includes\EGScans;..\baseunits\includes\EsMangaHere;..\baseunits\includes\Fakku;..\baseunits\includes\Hentai2Read;..\baseunits\includes\HugeManga;..\baseunits\includes\KissManga;..\baseunits\includes\Kivmanga;..\baseunits\includes\Komikid;..\baseunits\includes\LectureEnLigne;..\baseunits\includes\Mabuns;..\baseunits\includes\Manga24h;..\baseunits\includes\MangaAe;..\baseunits\includes\MangaAr;..\baseunits\includes\Mangacan;..\baseunits\includes\Mangacow;..\baseunits\includes\MangaEden;..\baseunits\includes\MangaEsta;..\baseunits\includes\MangaFox;..\baseunits\includes\MangaFrame;..\baseunits\includes\MangaGo;..\baseunits\includes\MangaInn;..\baseunits\includes\MangaPanda;..\baseunits\includes\MangaPark;..\baseunits\includes\MangaReader;..\baseunits\includes\MangaStream;..\baseunits\includes\MangaTraders;..\baseunits\includes\MangaVadisi;..\baseunits\includes\PecintaKomik;..\baseunits\includes\Pururin;..\baseunits\includes\RedHawkScans;..\baseunits\includes\S2scans;..\baseunits\includes\ScanManga;..\baseunits\includes\SenManga;..\baseunits\includes\Starkana;..\baseunits\includes\SubManga;..\baseunits\includes\TruyenTranhTuan;..\baseunits\includes\Turkcraft;..\baseunits\includes\VnSharing;..\baseunits\includes\MeinManga;..\baseunits\includes\MangaREADER_POR;..\baseunits\includes\MangasPROJECT;..\baseunits\includes\MangaStreamTo;..\baseunits\includes\EHentai"/>

@@ -163,8 +163,9 @@ end;
 
 procedure TGetMangaInfosThread.SockOnHeartBeat(Sender: TObject);
 begin
-  if Self.Terminated and (TBlockSocket(Sender).StopFlag = False) then
+  if Terminated then
   begin
+    TBlockSocket(Sender).Tag := 1;
     TBlockSocket(Sender).StopFlag := True;
     TBlockSocket(Sender).AbortSocket;
   end;
@@ -256,6 +257,7 @@ begin
   inherited Create(True);
   FIsFlushed := False;
   FInfo := TMangaInformation.Create;
+  FInfo.FOwner := Self;
   FInfo.FHTTP.Sock.OnHeartbeat := SockOnHeartBeat;
   FInfo.FHTTP.Sock.HeartbeatRate := SOCKHEARTBEATRATE;
   FCover := MainForm.mangaCover;

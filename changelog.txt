@@ -1,8 +1,17 @@
-Unofficial build of Free Manga Downloader
-https://www.mediafire.com/folder/3ccy2c7g36hp3/Fmd
+Free Manga Downloader
+Project page: https://github.com/riderkick/FMD
+For list data check: https://www.mediafire.com/folder/3ccy2c7g36hp3/Fmd
 
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
+
+0.9.8.0 (12-04-2015)
+[+?] Updater: add support for update FMD (experimental)
+[*?] Enable FMD update (test using github release page)
+[*] Various changes
+[!] From now on only 32-bit version will be released, 
+    there is no much benefit of using 64-bit version and to save my bandwith, 
+	I will reconsider to provide it later
 
 0.9.7.1 (04-04-2015)
 [*] MyReadingMangaInfo: Add multi pages/chapter support, fix mangainfo

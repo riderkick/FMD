@@ -4,12 +4,12 @@
     <PathDelim Value="\"/>
     <Version Value="9"/>
     <BuildModes Active="Win32"/>
-    <Units Count="30">
+    <Units Count="31">
       <Unit0>
         <Filename Value="updater.lpr"/>
         <IsPartOfProject Value="True"/>
         <CursorPos X="32" Y="14"/>
-        <UsageCount Value="55"/>
+        <UsageCount Value="56"/>
       </Unit0>
       <Unit1>
         <Filename Value="uMain.pas"/>
@@ -20,9 +20,9 @@
         <UnitName Value="uMain"/>
         <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
-        <TopLine Value="202"/>
-        <CursorPos X="25" Y="213"/>
-        <UsageCount Value="55"/>
+        <TopLine Value="346"/>
+        <CursorPos X="25" Y="355"/>
+        <UsageCount Value="56"/>
       </Unit1>
       <Unit2>
         <Filename Value="uMessage.pas"/>
@@ -32,7 +32,7 @@
         <ResourceBaseClass Value="Form"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="19" Y="18"/>
-        <UsageCount Value="27"/>
+        <UsageCount Value="28"/>
       </Unit2>
       <Unit3>
         <Filename Value="uSF.pas"/>
@@ -72,8 +72,8 @@
       <Unit9>
         <Filename Value="..\3rd\synapse\source\blcksock.pas"/>
         <EditorIndex Value="-1"/>
-        <TopLine Value="225"/>
-        <CursorPos X="35" Y="240"/>
+        <TopLine Value="141"/>
+        <CursorPos X="3" Y="147"/>
         <UsageCount Value="12"/>
       </Unit9>
       <Unit10>
@@ -204,6 +204,12 @@
         <CursorPos X="10" Y="100"/>
         <UsageCount Value="11"/>
       </Unit29>
+      <Unit30>
+        <Filename Value="C:\development\fpc\rtl\objpas\typinfo.pp"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="415"/>
+        <UsageCount Value="10"/>
+      </Unit30>
     </Units>
     <JumpHistory HistoryIndex="-1"/>
   </ProjectSession>

@@ -61,8 +61,8 @@ type
     IconList2: TImageList;
     IconMed: TImageList;
     IconSmall: TImageList;
+    itMonitor: TIdleTimer;
     itStartup: TIdleTimer;
-    itSaveJobList: TIdleTimer;
     lbOptionProxyType: TLabel;
     lbOptionRenameDigits: TLabel;
     lbFilterHint: TLabel;
@@ -269,6 +269,7 @@ type
     spMainSplitter: TSplitter;
     sbMain: TStatusBar;
     sbUpdateList: TStatusBar;
+    tmBackup: TIdleTimer;
     tvDownloadFilter: TTreeView;
     tsDownloadFilter: TTabSheet;
     tsMangaList: TTabSheet;
@@ -277,7 +278,6 @@ type
     tsAbout: TTabSheet;
     tsWebsites: TTabSheet;
     tsDialogs: TTabSheet;
-    tmBackup: TTimer;
     TrayIcon: TTrayIcon;
     tsGeneral: TTabSheet;
     tsFavorites: TTabSheet;
@@ -346,6 +346,7 @@ type
     procedure FormWindowStateChange(Sender: TObject);
     procedure itAnimateTimer(Sender: TObject);
     procedure itCheckForChaptersTimer(Sender: TObject);
+    procedure itMonitorTimer(Sender: TObject);
     procedure itRefreshFormTimer(Sender: TObject);
     procedure itSaveDownloadedListTimer(Sender: TObject);
     procedure itSaveJobListTimer(Sender: TObject);
@@ -525,6 +526,10 @@ type
     GetInfosThread: TGetMangaInfosThread;
     isGetMangaInfos: Boolean;
 
+    // update fmd through main thread
+    DoUpdateFMD: Boolean;
+    FUpdateURL: String;
+
     //Instance
     FMDInstance: TSimpleIPCServer;
 
@@ -626,9 +631,11 @@ begin
   isExiting := False;
   isSubthread := False;
   isGetMangaInfos := False;
+  DoUpdateFMD := False;
   fmdDirectory := CorrectFilePath(GetCurrentDirUTF8);
   Application.HintHidePause := 10000;
   sbUpdateList.DoubleBuffered := True;
+  FMD_VERSION_NUMBER := GetCurrentBinVersion;
 
   // TrayIcon
   TrayIcon.Icon.Assign(Application.Icon);
@@ -771,11 +778,11 @@ procedure TMainForm.CloseNow;
 begin
   tmBackup.Enabled := False;
   itSaveDownloadedList.Enabled := False;
-  itSaveJobList.Enabled := False;
   itRefreshForm.Enabled := False;
   itCheckForChapters.Enabled := False;
   itAnimate.Enabled := False;
   itStartup.Enabled := False;
+  itMonitor.Enabled := False;
 
   //Terminating all threads and wait for it
   DLManager.StopAllDownloadTasksForExit;
@@ -881,6 +888,22 @@ begin
   favorites.Run;
 end;
 
+procedure TMainForm.itMonitorTimer(Sender: TObject);
+begin
+  if DoUpdateFMD then
+  begin
+    if FileExistsUTF8(fmdDirectory + 'updater.exe') then
+      CopyFile(fmdDirectory + 'updater.exe', fmdDirectory + 'old_updater.exe');
+    if FileExistsUTF8(fmdDirectory + 'old_updater.exe') then
+    begin
+      CloseNow;
+      fmdRunAsAdmin(fmdDirectory + 'old_updater.exe',
+        '-a ' + FUpdateURL + ' -x -r 5', False);
+      Application.Terminate;
+    end;
+  end;
+end;
+
 procedure TMainForm.itRefreshFormTimer(Sender: TObject);
 begin
   if isCanRefreshForm then
@@ -897,7 +920,7 @@ end;
 
 procedure TMainForm.itSaveJobListTimer(Sender: TObject);
 begin
-  DLManager.SaveJobList;
+
 end;
 
 procedure TMainForm.itStartupTimer(Sender: TObject);
@@ -1602,8 +1625,6 @@ end;
 
 procedure TMainForm.btCheckVersionClick(Sender: TObject);
 begin
-  { TODO 1 -oCholif -cG : Check update is temporary disabled }
-  Exit;
   if subthread.isCheckForLatestVer then
     MessageDlg('', stDlgUpdaterIsRunning, mtInformation, [mbYes], 0)
   else
@@ -4948,9 +4969,9 @@ end;
 
 procedure TMainForm.tmBackupTimer(Sender: TObject);
 begin
-  if DLManager.isRunningBackup then
-    Exit;
-  DLManager.Backup;
+  DLManager.SaveJobList;
+  if not DLManager.isRunningBackup then
+    DLManager.Backup;
 end;
 
 procedure TMainForm.vtOptionMangaSiteSelectionChange(Sender : TBaseVirtualTree;

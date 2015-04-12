@@ -142,8 +142,8 @@ object MainForm: TMainForm
         Height = 456
         Top = 0
         Width = 606
-        HorzScrollBar.Page = 294
-        VertScrollBar.Page = 295
+        HorzScrollBar.Page = 311
+        VertScrollBar.Page = 317
         Align = alClient
         BorderStyle = bsNone
         ClientHeight = 456
@@ -172,6 +172,7 @@ object MainForm: TMainForm
             ReadOnly = True
             ScrollBars = ssVertical
             TabOrder = 0
+            ZoomFactor = 1
           end
           object edURL: TEdit
             Left = 4
@@ -596,8 +597,8 @@ object MainForm: TMainForm
         Height = 456
         Top = 0
         Width = 606
-        HorzScrollBar.Page = 509
-        VertScrollBar.Page = 423
+        HorzScrollBar.Page = 526
+        VertScrollBar.Page = 440
         Align = alClient
         BorderStyle = bsNone
         ClientHeight = 456
@@ -1680,8 +1681,8 @@ object MainForm: TMainForm
             Height = 351
             Top = 0
             Width = 579
-            HorzScrollBar.Page = 445
-            VertScrollBar.Page = 130
+            HorzScrollBar.Page = 462
+            VertScrollBar.Page = 147
             Align = alClient
             BorderStyle = bsNone
             ClientHeight = 351
@@ -2434,6 +2435,7 @@ object MainForm: TMainForm
         ReadOnly = True
         ScrollBars = ssVertical
         TabOrder = 0
+        ZoomFactor = 1
       end
       object btCheckVersion: TBitBtn
         Left = 25
@@ -2606,7 +2608,7 @@ object MainForm: TMainForm
       end
       object edSearch: TEdit
         Left = 3
-        Height = 27
+        Height = 23
         Top = 36
         Width = 157
         Anchors = [akTop, akLeft, akRight]
@@ -3581,12 +3583,6 @@ object MainForm: TMainForm
       OnClick = miHighlightNewMangaClick
     end
   end
-  object tmBackup: TTimer
-    Interval = 60000
-    OnTimer = tmBackupTimer
-    left = 616
-    top = 200
-  end
   object TrayIcon: TTrayIcon
     BalloonFlags = bfInfo
     BalloonTimeout = 5000
@@ -3631,14 +3627,14 @@ object MainForm: TMainForm
     Enabled = False
     Interval = 600000
     OnTimer = itCheckForChaptersTimer
-    left = 672
-    top = 256
+    left = 728
+    top = 264
   end
   object itRefreshForm: TIdleTimer
     Interval = 300
     OnTimer = itRefreshFormTimer
-    left = 616
-    top = 256
+    left = 672
+    top = 264
   end
   object IconList: TImageList
     left = 24
@@ -4163,12 +4159,6 @@ object MainForm: TMainForm
     Interval = 300000
     OnTimer = itSaveDownloadedListTimer
     left = 728
-    top = 200
-  end
-  object itSaveJobList: TIdleTimer
-    Interval = 60000
-    OnTimer = itSaveJobListTimer
-    left = 672
     top = 200
   end
   object IconDL: TImageList
@@ -5383,5 +5373,17 @@ object MainForm: TMainForm
   object MainMenu1: TMainMenu
     left = 239
     top = 276
+  end
+  object tmBackup: TIdleTimer
+    Interval = 60000
+    OnTimer = tmBackupTimer
+    left = 672
+    top = 200
+  end
+  object itMonitor: TIdleTimer
+    Enabled = False
+    OnTimer = itMonitorTimer
+    left = 728
+    top = 328
   end
 end

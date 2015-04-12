@@ -94,7 +94,7 @@ begin
   except
     on E: Exception do
     begin
-      putLog('DoZipCbz.E:' + E.ClassName + '=' + E.Message, LOG_error);
+      WriteLog('DoZipCbz.E:' + E.ClassName + '=' + E.Message, LOG_error);
       //MainForm.ExceptLogMain.ExceptionHandler(Self, E);
     end;
   end;
@@ -149,7 +149,7 @@ begin
   except
     on E: Exception do
     begin
-      putLog('DoPdf.E:' + E.ClassName + '=' + E.Message, LOG_error);
+      WriteLog('DoPdf.E:' + E.ClassName + '=' + E.Message, LOG_error);
       //MainForm.ExceptLogMain.ExceptionHandler(nil, E);
     end;
   end;

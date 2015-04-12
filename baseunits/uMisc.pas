@@ -43,8 +43,8 @@ procedure QuickSortNaturalPart(var Alist: TStringList; Separator: String;
 function MangaFoxRemoveWatermarks(const Filename: String): Boolean;
 
 //Logging
-procedure putLog(msg: String; logType: TLogType = LOG_debug);
-procedure putOtherLog(msg: String);
+procedure WriteLog(msg: String; logType: TLogType = LOG_debug);
+procedure WriteOtherLog(msg: String);
 
 //Searching
 function FindStrLinear(aList: TStrings; aValue: String): Boolean;
@@ -119,7 +119,7 @@ end;
 
 { uMisc }
 
-procedure putLog(msg: String; logType: TLogType = LOG_debug);
+procedure WriteLog(msg: String; logType: TLogType = LOG_debug);
 {$IFDEF LOGACTIVE}
 var
   s: String;
@@ -143,7 +143,7 @@ begin
   {$ENDIF}
 end;
 
-procedure putOtherLog(msg: String);
+procedure WriteOtherLog(msg: String);
 {$IFDEF LOGACTIVE}
 var
   s: String;
@@ -654,11 +654,11 @@ initialization
   {$IFDEF LOGACTIVE}
   fLog := TFileStream.Create(fLogFile, fmCreate or fmShareDenyNone);
   fOtherLog := TFileStream.Create(fOtherLogFile, fmCreate or fmShareDenyNone);
-  putLog('Starting FMD', LOG_Info);
+  WriteLog('Starting FMD', LOG_Info);
   {$ENDIF}
 
 finalization
-  putLog('FMD exit normally', LOG_Info);
+  WriteLog('FMD exit normally', LOG_Info);
   {$IFDEF LOGACTIVE}
   FreeAndNil(fLog);
   FreeAndNil(fOtherLog);
