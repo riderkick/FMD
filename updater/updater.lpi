@@ -16,8 +16,7 @@
     </i18n>
     <VersionInfo>
       <UseVersionInfo Value="True"/>
-      <MajorVersionNr Value="1"/>
-      <MinorVersionNr Value="1"/>
+      <MajorVersionNr Value="2"/>
       <StringTable FileDescription="Updater for Free Manga Downloader" OriginalFilename="updater.exe" ProductVersion="" PrivateBuild="Cholif"/>
     </VersionInfo>
     <BuildModes Count="2">
@@ -27,7 +26,7 @@
           <Version Value="11"/>
           <PathDelim Value="\"/>
           <Target>
-            <Filename Value="..\bin\updater-$(TargetOS)"/>
+            <Filename Value="..\bin\updater_$(TargetOS)"/>
           </Target>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir)"/>
@@ -70,7 +69,7 @@
         <PackageName Value="LCL"/>
       </Item1>
     </RequiredPackages>
-    <Units Count="2">
+    <Units Count="3">
       <Unit0>
         <Filename Value="updater.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -83,13 +82,20 @@
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="uMain"/>
       </Unit1>
+      <Unit2>
+        <Filename Value="uMessage.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmMessage"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit2>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
     <Version Value="11"/>
     <PathDelim Value="\"/>
     <Target>
-      <Filename Value="..\bin\updater-$(TargetOS)"/>
+      <Filename Value="..\bin\updater_$(TargetOS)"/>
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)"/>

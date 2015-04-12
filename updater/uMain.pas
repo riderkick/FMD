@@ -9,8 +9,9 @@ uses
   cthreads,
   cmem,
   {$endif}
-  Classes, SysUtils, zipper, FileUtil, Forms,
-  Dialogs, ComCtrls, StdCtrls, Clipbrd, USimpleException, httpsend, blcksock;
+  Classes, windows, SysUtils, zipper, ShellApi, FileUtil, Forms,
+  Dialogs, ComCtrls, StdCtrls, Clipbrd, ExtCtrls, USimpleException, httpsend,
+  blcksock, ssl_openssl;
 
 type
 
@@ -20,20 +21,25 @@ type
     btDownload :TButton;
     edFilename :TEdit;
     edURL      :TEdit;
+    itMonitor: TIdleTimer;
     lbFilename :TLabel;
     lbURL      :TLabel;
     lbStatus   :TLabel;
     lbProgress :TLabel;
     pbDownload :TProgressBar;
     procedure btDownloadClick(Sender :TObject);
+    procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCreate(Sender :TObject);
     procedure FormShow(Sender :TObject);
+    procedure itMonitorTimer(Sender: TObject);
   private
     { private declarations }
   public
     procedure ExceptionHandler(Sender: TObject; E: Exception);
     { public declarations }
   end;
+
+  { TDownloadThread }
 
   TDownloadThread = class(TThread)
   private
@@ -53,13 +59,15 @@ type
     procedure MainThreadUpdateProgressLabel;
     procedure MainThreadErrorGetting;
     procedure UpdateStatus(AStatus :string);
+    procedure ShowErrorMessage(AMessage :string);
     procedure Execute; override;
   public
     URL      :string;
+    isSFURL  :boolean;
     FileName :string;
     DirPath  :string;
     MaxRetry :cardinal;
-    Unzip    :boolean;
+    Extract  :boolean;
     constructor Create;
     destructor Destroy; override;
   end;
@@ -71,6 +79,13 @@ var
   dl         :TDownloadThread;
   isDownload :boolean = False;
 
+  _UpdApp    :boolean = False;
+  _Extract   :boolean = False;
+  _NoError   :boolean = False;
+  _URL       :string = '';
+  _MaxRetry  :cardinal = 1;
+
+
   ProxyType :string;
   ProxyHost :string;
   ProxyPort :string;
@@ -81,6 +96,7 @@ const
   mf_data_link = 'https://www.mediafire.com/folder/fwa8eomz80uk1/Data';
 
 resourcestring
+  ST_InvalidURL = 'Invalid URL!';
   ST_AnErrorOccured = 'An error occured when trying to download file.';
   ST_FileNotFound = 'File not found!';
   ST_LoadingPage = 'Loading page...';
@@ -91,20 +107,55 @@ resourcestring
   ST_FailedDownloadPage = 'Failed downloading file!';
   ST_RetryDownload = 'Retry downloading';
   ST_SaveFile = 'Saving file... ';
+  ST_WaitMainApp = 'Waiting main app to close...';
   ST_UnpackFile = 'Unpacking file';
+  ST_Finished = 'Finished.';
+  ST_ErrorCheckAntiVirus = 'Error saving file, check your AntiVirus!';
   ST_FileNotFound_mfdatalink =
-          'File not found!' + LineEnding +
-          'This site probably have been added to unofficial build.' + LineEnding +
-          LineEnding +
-          'Remedy:' + LineEnding +
-          'Build you manga list from scratch or download manually from this link:';
+    'File not found!' + LineEnding +
+    'This site probably have been added to unofficial build.' + LineEnding +
+    LineEnding +
+    'Remedy:' + LineEnding +
+    'Build you manga list from scratch or download manually from this link:';
   ST_LinkCopiedToClipboard = 'Link copied to clipboard!';
+  ST_7zNotFound = 'Can''t extract file because 7za.exe not found!';
 
 implementation
 
-uses RegExpr, IniFiles;
+uses RegExpr, IniFiles, uMessage;
 
 {$R *.lfm}
+
+function RunAsAdmin(path, params: String; showWindow: Integer = SW_SHOWNORMAL;
+    isPersistent: Boolean = False): Boolean;
+var
+ {$IFDEF WINDOWS}
+  sei: TShellExecuteInfoA;
+ {$ELSE}
+  Process: TProcess;
+ {$ENDIF}
+begin
+  {$IFDEF WINDOWS}
+  FillChar(sei, SizeOf(sei), 0);
+  sei.cbSize := SizeOf(sei);
+  sei.Wnd := 0;
+  sei.fMask := SEE_MASK_FLAG_DDEWAIT or SEE_MASK_FLAG_NO_UI;
+  if isPersistent then
+    sei.fMask := sei.fMask or SEE_MASK_NOCLOSEPROCESS;
+  sei.lpVerb := 'runas';
+  sei.lpFile := PAnsiChar(path);
+  sei.lpParameters := PAnsiChar(params);
+  sei.nShow := showWindow;
+  Result := ShellExecuteExA(@sei);
+  if isPersistent then
+    WaitForSingleObject(sei.hProcess, INFINITE);
+  {$ELSE}
+  Process := TProcessUTF8.Create(nil);
+  Process.CommandLine := path + ' ' + params;
+  Process.Execute;
+  Process.Free;
+  {$ENDIF}
+end;
 
 function HeaderByName(const AHeaders :TStrings; const HeaderName :string) :string;
 var
@@ -154,8 +205,8 @@ end;
 
 constructor TDownloadThread.Create;
 begin
-  isDownload := True;
   inherited Create(True);
+  isDownload := True;
   FreeOnTerminate := True;
   FHTTP := THTTPSend.Create;
   FHTTP.Sock.OnHeartbeat := @SockOnHeartBeat;
@@ -166,7 +217,7 @@ begin
   FileName := '';
   DirPath := '';
   MaxRetry := 1;
-  Unzip := False;
+  Extract := False;
 end;
 
 destructor TDownloadThread.Destroy;
@@ -174,7 +225,6 @@ begin
   FHTTP.Free;
   isDownload := False;
   inherited Destroy;
-  Application.Terminate;
 end;
 
 procedure TDownloadThread.MainThreadUpdateStatus;
@@ -186,6 +236,12 @@ procedure TDownloadThread.UpdateStatus(AStatus :string);
 begin
   FStatus := AStatus;
   Synchronize(@MainThreadUpdateStatus);
+end;
+
+procedure TDownloadThread.ShowErrorMessage(AMessage: string);
+begin
+  FErrorMessage := AMessage;
+  Synchronize(@MainThreadErrorGetting);
 end;
 
 procedure TDownloadThread.SockOnHeartBeat(Sender :TObject);
@@ -214,8 +270,9 @@ end;
 
 procedure TDownloadThread.MainThreadErrorGetting;
 begin
-  MessageDlg('Error', FErrorMessage,
-    mtError, [mbOK], 0);
+  if not _NoError then
+    MessageDlg('Error', FErrorMessage,
+      mtError, [mbOK], 0);
 end;
 
 procedure TDownloadThread.SockOnStatus(Sender :TObject; Reason :THookSocketReason;
@@ -292,8 +349,7 @@ procedure TDownloadThread.Execute;
 var
   regx                  :TRegExpr;
   ctry                  :cardinal;
-  found                 :boolean = False;
-  rurl, furl            :string;
+  s, rurl, fname,
   sproject, sdir, sfile :string;
 label
   loadp;
@@ -302,54 +358,67 @@ begin
   regx := TRegExpr.Create;
   try
     regx.ModifierI := True;
-    regx.Expression := '/download$';
-    URL := Trim(regx.Replace(URL, '', False));
-
-    //parsing SF url
-    regx.Expression := '^.*sourceforge.net/projects/(.+)/files/(.+)/([^/]+)$';
-    if not regx.Exec(URL) then
+    if isSFURL then
     begin
-      regx.Free;
-      UpdateStatus('Invalid URL');
-      Exit;
+      regx.Expression := '/download$';
+      URL := Trim(regx.Replace(URL, '', False));
+      //**parsing SF url
+      regx.Expression := '^.*sourceforge.net/projects/(.+)/files/(.+)/([^/]+)$';
+      if not regx.Exec(URL) then
+      begin
+        regx.Free;
+        UpdateStatus('Invalid URL');
+        Exit;
+      end;
+      sproject := regx.Replace(URL, '$1', True);
+      sdir := regx.Replace(URL, '$2', True);
+      sfile := regx.Replace(URL, '$3', True);
+      if FileName = '' then
+        FileName := sfile;
+      rurl := 'http://sourceforge.net/projects/' + sproject + '/files/' +
+        sdir + '/' + sfile + '/download';
+    end
+    else
+    begin
+      rurl := URL;
+      regx.Expression := '^.*/([^/]*)$';
+      FileName := regx.Replace(URL, '$1', True);
+      if FileName = '' then
+        FileName := 'new_version.7z';
     end;
-    sproject := regx.Replace(URL, '$1', True);
-    sdir := regx.Replace(URL, '$2', True);
-    sfile := regx.Replace(URL, '$3', True);
-
-    if FileName = '' then
-      FileName := sfile;
-    rurl := 'http://sourceforge.net/projects/' + sproject + '/files/' +
-      sdir + '/' + sfile + '/download';
-
     PrepareHTTP(FHTTP);
     ctry := 0;
 
-    //loading page
+    //**loading page
     UpdateStatus(ST_LoadingPage);
 
     loadp:
-      //retry loading page
+      //**retry loading page
       while (not FHTTP.HTTPMethod('GET', rurl)) or
-      (FHTTP.ResultCode >= 500) or
-      (FHTTP.ResultCode >= 400) do
+        (FHTTP.ResultCode >= 500) or
+        (FHTTP.ResultCode >= 400) do
       begin
-        if FHTTP.ResultCode >= 400 then
+        if Self.Terminated then
         begin
           regx.Free;
-          UpdateStatus(ST_FileNotFound);
-          FErrorMessage := ST_FileNotFound_mfdatalink + LineEnding + mf_data_link +
-            LineEnding + ST_LinkCopiedToClipboard;
+          Exit;
+        end;
+        if FHTTP.ResultCode < 500 then
+        begin
+          regx.Free;
           Clipboard.AsText := mf_data_link;
-          Synchronize(@MainThreadErrorGetting);
+          UpdateStatus(ST_FileNotFound);
+          if not _UpdApp then
+            ShowErrorMessage(ST_FileNotFound_mfdatalink + LineEnding + mf_data_link +
+              LineEnding + ST_LinkCopiedToClipboard);
           Exit;
         end;
         if ctry >= MaxRetry then
         begin
           regx.Free;
           UpdateStatus(ST_FailedLoadPage);
-          FErrorMessage := ST_AnErrorOccured;
-          Synchronize(@MainThreadErrorGetting);
+          ShowErrorMessage(ST_AnErrorOccured + LineEnding + LineEnding +
+            IntToStr(FHTTP.ResultCode) + ' ' +FHTTP.ResultString);
           Exit;
         end;
         Inc(ctry);
@@ -362,91 +431,104 @@ begin
       (FHTTP.ResultCode = 307) do
     begin
       rurl := HeaderByName(FHTTP.Headers, 'location: ');
-      if (Pos('use_mirror=', rurl) > 0) then
+      if isSFURL then
       begin
-        found := True;
-        Break;
+        if (Pos('use_mirror=', rurl) > 0) then
+        begin
+          regx.Expression := '.*use_mirror=(.+)$';
+          rurl := regx.Replace(rurl, '$1', True);
+          rurl := 'http://' + rurl + '.dl.sourceforge.net/project/' +
+            sproject + '/' + sdir + '/' + sfile;
+        end;
+      end;
+      UpdateStatus(ST_Download + ' [' + FileName + ']...');
+      FHTTP.Sock.OnStatus := @SockOnStatus;
+
+      ctry := 0;
+      FHTTP.Clear;
+      FHTTP.Headers.Add('Accept: */*');
+      FHTTP.Headers.Add('Referer: ' + URL);
+      while (not FHTTP.HTTPMethod('GET', rurl)) or
+        (FHTTP.ResultCode >= 500) or
+        (FHTTP.ResultCode >= 400) do
+      begin
+        if Self.Terminated then
+        begin
+          regx.Free;
+          Exit;
+        end;
+        if FHTTP.ResultCode >= 400 then
+        begin
+          regx.Free;
+          Clipboard.AsText := mf_data_link;
+          UpdateStatus(ST_FileNotFound);
+          if not _UpdApp then
+            ShowErrorMessage(ST_FileNotFound_mfdatalink + LineEnding + mf_data_link +
+              LineEnding + ST_LinkCopiedToClipboard);
+          Exit;
+        end;
+        if ctry >= MaxRetry then
+        begin
+          regx.Free;
+          UpdateStatus(ST_FailedDownloadPage);
+          ShowErrorMessage(ST_AnErrorOccured + LineEnding + LineEnding +
+            IntToStr(FHTTP.ResultCode) + ' ' +FHTTP.ResultString);
+          Exit;
+        end;
+        Inc(ctry);
+        UpdateStatus(ST_RetryDownload + ' [' + FileName + ']... ' + '(' +
+          IntToStr(ctry) + ')');
+        FHTTP.Clear;
+      end;
+    end;
+
+    fname := DirPath + DirectorySeparator + FileName;
+    if FileExistsUTF8(fname) then
+      DeleteFileUTF8(fname);
+
+    if ForceDirectoriesUTF8(DirPath) then
+    begin
+      UpdateStatus(ST_SaveFile);
+      FHTTP.Document.SaveToFile(fname);
+    end;
+    if not FileExistsUTF8(fname) then
+      ShowErrorMessage(ST_ErrorCheckAntiVirus);
+
+    if Extract and FileExistsUTF8(fname) then
+    begin
+      UpdateStatus(ST_UnpackFile);
+      if Pos('.zip', LowerCase(FileName)) <> 0 then
+      begin
+        UZip := TUnZipper.Create;
+        UZip.OnStartFile := @UZipOnStartFile;
+        try
+          UZip.FileName := DirPath + DirectorySeparator + FileName;
+          UZip.OutputPath := Dirpath;
+          UZip.Examine;
+          UZip.UnZipAllFiles;
+        finally
+          UZip.Free;
+          DeleteFileUTF8(DirPath + DirectorySeparator + FileName);
+        end;
       end
       else
       begin
-        UpdateStatus(ST_Redirected);
-        FHTTP.Clear;
-        FHTTP.HTTPMethod('GET', rurl);
+        if FileExistsUTF8(GetCurrentDirUTF8 + DirectorySeparator + '7za.exe') then
+        begin
+          //if _UpdApp then s := ' -x!7za.*' else s := '';
+          RunAsAdmin(GetCurrentDirUTF8 + DirectorySeparator + '7za.exe',
+            ' x ' + fname + ' -o'+ AnsiQuotedStr(DirPath, '"') +
+            ' -aoa' + s, SW_HIDE, True);
+          Sleep(100);
+          DeleteFileUTF8(fname);
+          if _UpdApp then
+            RunAsAdmin(DirPath + DirectorySeparator + 'fmd.exe', '');
+        end
+        else
+          ShowErrorMessage(ST_7zNotFound);
       end;
     end;
-
-    if found then
-    begin
-      regx.Expression := '.*use_mirror=(.+)$';
-      furl := regx.Replace(rurl, '$1', True);
-      furl := 'http://' + furl + '.dl.sourceforge.net/project/' +
-        sproject + '/' + sdir + '/' + sfile;
-    end;
-
-    UpdateStatus(ST_Download + ' [' + FileName + ']...');
-    FHTTP.Sock.OnStatus := @SockOnStatus;
-
-    //download file
-    ctry := 0;
-    FHTTP.Clear;
-    //FHTTP.Headers.Add('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8');
-    FHTTP.Headers.Add('Accept: */*');
-    FHTTP.Headers.Add('Referer: ' + URL);
-
-    while (not FHTTP.HTTPMethod('GET', furl)) or
-      (FHTTP.ResultCode >= 500) or
-      (FHTTP.ResultCode >= 400) do
-    begin
-      if FHTTP.ResultCode >= 400 then
-      begin
-        regx.Free;
-        UpdateStatus(ST_FileNotFound);
-        FErrorMessage := ST_FileNotFound_mfdatalink + LineEnding + mf_data_link +
-          LineEnding + ST_LinkCopiedToClipboard;
-        Clipboard.AsText := mf_data_link;
-        Synchronize(@MainThreadErrorGetting);
-        Exit;
-      end;
-      if ctry >= MaxRetry then
-      begin
-        regx.Free;
-        UpdateStatus(ST_FailedDownloadPage);
-        FErrorMessage := ST_AnErrorOccured;
-        Synchronize(@MainThreadErrorGetting);
-        Exit;
-      end;
-      Inc(ctry);
-      UpdateStatus(ST_RetryDownload + ' [' + FileName + ']... ' + '(' +
-        IntToStr(ctry) + ')');
-      FHTTP.Clear;
-    end;
-
-    if FileExistsUTF8(DirPath + DirectorySeparator + FileName) then
-      DeleteFileUTF8(DirPath + DirectorySeparator + FileName);
-
-    if not DirectoryExistsUTF8(DirPath) then
-      CreateDirUTF8(DirPath);
-    if DirectoryExistsUTF8(DirPath) then
-    begin
-      UpdateStatus(ST_SaveFile);
-      FHTTP.Document.SaveToFile(DirPath + DirectorySeparator + FileName);
-    end;
-
-    if Unzip {and (Pos('.zip', LowerCase(FileName)) > 0)} then
-    begin
-      UpdateStatus(ST_UnpackFile);
-      UZip := TUnZipper.Create;
-      UZip.OnStartFile := @UZipOnStartFile;
-      try
-        UZip.FileName := DirPath + DirectorySeparator + FileName;
-        UZip.OutputPath := Dirpath;
-        UZip.Examine;
-        UZip.UnZipAllFiles;
-      finally
-        UZip.Free;
-        DeleteFileUTF8(DirPath + DirectorySeparator + FileName);
-      end;
-    end;
+    UpdateStatus(ST_Finished);
   except
     on E: Exception do
       frmMain.ExceptionHandler(Self, E);
@@ -464,10 +546,19 @@ begin
     dl.URL := edURL.Text;
     dl.FileName := edFilename.Text;
     dl.DirPath := GetCurrentDirUTF8;
-    dl.Unzip := False;
+    dl.Extract := False;
     dl.MaxRetry := 5;
     dl.Start;
     Height := 70;
+  end;
+end;
+
+procedure TfrmMain.FormClose(Sender: TObject; var CloseAction: TCloseAction);
+begin
+  if isDownload then
+  begin
+    dl.Terminate;
+    dl.WaitFor;
   end;
 end;
 
@@ -507,28 +598,82 @@ begin
 end;
 
 procedure TfrmMain.FormShow(Sender :TObject);
+var
+  s :string;
+  i :Integer;
+  sh :boolean = False;
 begin
   if Paramcount > 0 then
   begin
-    if LowerCase(ParamStrUTF8(1)) = 'data' then
+    for i := 1 to Paramcount do
     begin
-      if ParamStrUTF8(2) <> '' then
+      s := LowerCase(ParamStrUTF8(i));
+      //**Help
+      if (s = '-h') or (s = '-help') or (s = '-?') or (s = '/?') then
       begin
-        dl := TDownloadThread.Create;
-        dl.URL := ParamStrUTF8(2);
-        dl.DirPath := GetCurrentDirUTF8 + DirectorySeparator + 'data';
-        dl.Unzip := True;
-        if ParamStrUTF8(3) <> '' then
-          dl.MaxRetry := StrToIntDef(ParamStrUTF8(3), 1);
-        dl.Start;
-        Height := 70;
+        sh := True;
+        Break;
+      end
+      else if s = '-q' then
+        _NoError := True
+      else if s = '-x' then
+        _Extract := True
+      else if i + 1 <= Paramcount then
+      begin
+        //**Update Mode
+        if (s = '-a') or (s = '-d') then
+        begin
+          _UpdApp := (s = '-a');
+          _URL := ParamStrUTF8(i + 1);
+        end
+        //**Max Retry
+        else if s = '-r' then
+          _MaxRetry := StrToIntDef(ParamStrUTF8(i + 1), 1)
       end;
+    end;
+  end;
+
+  //**Show help
+  if sh then
+  begin
+    frmMessage.Caption := Application.Title + ' - Help';
+    frmMessage.ShowModal;
+    Self.Close;
+  end
+  else
+  if (_URL <> '') then
+  begin
+    if Pos('://', _URL) = 0 then
+      _URL := 'http://' + _URL;
+    if ExecRegExpr('^\w+?\://[^/]*\w+\.\w+(\:\d+)?(/|\Z).*$', _URL) then
+    begin
+      dl := TDownloadThread.Create;
+      dl.URL := _URL;
+      dl.isSFURL := (Pos('sourceforge.net/', LowerCase(dl.URL)) <> 0) or
+        (Pos('sf.net/', dl.URL) <> 0);
+      dl.MaxRetry := _MaxRetry;
+      dl.DirPath := GetCurrentDirUTF8;
+      if not _UpdApp then
+        dl.DirPath := dl.DirPath + DirectorySeparator + 'data';
+      dl.Extract := _Extract;
+      dl.Start;
+      Self.Height := 70;
+      itMonitor.Enabled := True;
     end
     else
-    if LowerCase(ParamStrUTF8(1)) = 'update' then
     begin
-      //for update
+      MessageDlg(Application.Title, ST_InvalidURL, mtError, [mbOK], 0);
+      Self.Close;
     end;
+  end;
+end;
+
+procedure TfrmMain.itMonitorTimer(Sender: TObject);
+begin
+  if not isDownload then
+  begin
+    itMonitor.Enabled := False;
+    Self.Close;
   end;
 end;
 

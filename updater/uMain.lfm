@@ -3,15 +3,17 @@ object frmMain: TfrmMain
   Height = 215
   Top = 247
   Width = 334
-  BorderStyle = bsDialog
+  BorderIcons = [biSystemMenu]
+  BorderStyle = bsSingle
   Caption = 'Free Manga Downloader - Updater'
   ClientHeight = 215
   ClientWidth = 334
   FormStyle = fsSystemStayOnTop
+  OnClose = FormClose
   OnCreate = FormCreate
   OnShow = FormShow
   Position = poOwnerFormCenter
-  LCLVersion = '1.3'
+  LCLVersion = '1.5'
   object pbDownload: TProgressBar
     Left = 8
     Height = 20
@@ -84,5 +86,11 @@ object frmMain: TfrmMain
     Width = 48
     Caption = 'Filename'
     ParentColor = False
+  end
+  object itMonitor: TIdleTimer
+    Enabled = False
+    OnTimer = itMonitorTimer
+    left = 45
+    top = 78
   end
 end

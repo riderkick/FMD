@@ -1,0 +1,45 @@
+object frmMessage: TfrmMessage
+  Left = 411
+  Height = 232
+  Top = 235
+  Width = 524
+  BorderIcons = [biSystemMenu]
+  Caption = 'frmMessage'
+  ClientHeight = 232
+  ClientWidth = 524
+  FormStyle = fsSystemStayOnTop
+  Position = poDesktopCenter
+  LCLVersion = '1.5'
+  object mmMessage: TMemo
+    Left = 0
+    Height = 232
+    Top = 0
+    Width = 524
+    Align = alClient
+    Color = clInfoBk
+    Font.CharSet = ANSI_CHARSET
+    Font.Height = -13
+    Font.Name = 'Courier New'
+    Font.Pitch = fpFixed
+    Font.Quality = fqDraft
+    Lines.Strings = (
+      ' Usage:'
+      '  updater [-a|-d] URL [-r max-retry] [-x] [-q] [-h|-help]'
+      ''
+      ' Where:'
+      '  URL           URL of file'
+      ''
+      ' Options:       '
+      '  -a            Update main app'
+      '  -d            Update data file(mangalist)'
+      '  -r max-rety   Number of max retry download if error accured'
+      '  -x            Extract file after download complete'
+      '  -q            Don''t show error message'
+      '  -h|-help      Show this help message'
+    )
+    ParentFont = False
+    ReadOnly = True
+    ScrollBars = ssAutoBoth
+    TabOrder = 0
+  end
+end
