@@ -1,9 +1,9 @@
   function GetMangaCowPageNumber: Boolean;
   var
     s: String;
-    i: Cardinal;
+    i: Integer;
     l: TStringList;
-    isStartGetPageNumber: Boolean = False;
+    regx: TRegExpr;
   begin
     l := TStringList.Create;
     parse := TStringList.Create;
@@ -18,20 +18,14 @@
     Parser.Free;
     if parse.Count > 0 then
     begin
-      manager.container.PageNumber := 0;
-      for i := 0 to parse.Count - 1 do
-      begin
-        if (Pos('class="cbo_wpm_pag"', parse.Strings[i]) > 0) then
-          isStartGetPageNumber := True;
-
-        if (isStartGetPageNumber) and
-          (Pos('</select>', parse.Strings[i]) > 0) then
-        begin
-          s := parse.Strings[i - 3];
-          manager.container.PageNumber :=
-            StrToInt(GetAttributeValue(GetTagAttribute(s, 'value=')));
-          Break;
-        end;
+      regx := TRegExpr.Create('^.*\.push\("([^"]+)"\);.*$');
+      try
+        regx.ModifierI := True;
+        for i := 0 to parse.Count - 1 do
+          if Pos('arr_img.push(', parse[i]) > 0 then
+            manager.container.PageLinks.Add(regx.Replace(parse[i], '$1', True));
+      finally
+        regx.Free
       end;
     end;
     parse.Free;
