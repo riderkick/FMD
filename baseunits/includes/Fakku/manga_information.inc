@@ -1,8 +1,6 @@
   function GetFakkuInfoFromURL: Byte;
   var
-    cht: String;
     s: String;
-    isExtractChapters: Boolean = True;
     isExtractSummary: Boolean = False;
     i: Cardinal;
   begin
@@ -33,8 +31,8 @@
     for i := 0 to parse.Count - 1 do
     begin
       // get manga title
-      if Pos('itemprop="name"', parse[i]) > 0 then
-        mangaInfo.title := Trim(parse[i + 1]);
+      if GetVal(parse[i], 'property') = 'og:title' then
+        mangaInfo.title := CommonStringFilter(GetVal(parse[i], 'content'));
 
       // get cover
       if (Pos('<img ', parse[i]) > 0) and (Pos('class="cover"', parse[i]) > 0) then
@@ -45,43 +43,15 @@
         else
           mangaInfo.coverLink := s
       end;
-      //if GetTagName(parse.Strings[i]) = 'img' then
-      //  if (GetAttributeValue(GetTagAttribute(parse.Strings[i], 'class=')) = 'cover') then
-      //  begin
-      //    mangaInfo.coverLink :=
-      //      CorrectURL(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src=')));
-      //    //http seems working | not anymore?
-      //    mangaInfo.coverLink :=
-      //      StringReplace(mangaInfo.coverLink, 'https://', 'http://', [rfIgnoreCase]);
-      //  end;
 
-      // get manga chapter title, fakku only has 1 chapter
-      if (Pos('<title>', parse.Strings[i]) > 0) then
-        cht := Trim(parse.Strings[i + 1]);
-
-      //get chapter name and links, fakku only has 1 chapter
-      if isExtractChapters then
+      // get read/chapter
+      if GetVal(parse[i], 'class') = 'button green' then
       begin
-        if (Pos('<a ', parse[i]) > 0) and
-          (Pos('class="button green"', parse[i]) > 0) then
-        begin
-          isExtractChapters := False;
-          mangaInfo.numChapter := 1;
-          mangaInfo.chapterName.Add(cht);
-          mangaInfo.chapterLinks.Add(StringReplace(GetVal(parse[i], 'href'),
-            WebsiteRoots[FAKKU_ID, 1], '', [rfIgnoreCase]));
-        end;
-        //if (Pos('/read#', parse.Strings[i])>0) then
-        //begin
-        //  Inc(mangaInfo.numChapter);
-        //  s := GetVal(parse[i], 'href');
-        //  s := StringReplace(s, WebsiteRoots[FAKKU_ID,1], '', []);
-        //  //if Pos('#page=1', s)>0 then
-        //    //s:=StringReplace(s, '#page=1', '', []);
-        //  mangaInfo.chapterLinks.Add(s);
-        //  mangaInfo.chapterName.Add(cht);
-        //  isExtractChapters:= False;
-        //end;
+        Inc(mangaInfo.numChapter);
+        if mangaInfo.title = '' then
+          mangaInfo.title := 'Unknown';
+        mangaInfo.chapterName.Add(mangaInfo.title);
+        mangaInfo.chapterLinks.Add(GetVal(parse[i], 'href'));
       end;
 
       // get series/authors
@@ -127,6 +97,5 @@
 
     //last correction
     mangaInfo.summary := BreaksString(StringFilter(mangaInfo.summary));
-    //mangaInfo.title := 'Cholif '+IntToStr(Random(1000));
     Result := NO_ERROR;
   end;

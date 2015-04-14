@@ -46,9 +46,6 @@
         end;
       end;
 
-      //http seems working | not anymore
-      //imgURL:=StringReplace(imgURL, 'https://', 'http://', [rfIgnoreCase]);
-
       //Build image links
       if imgExt = '' then
         imgExt := '.jpg';
