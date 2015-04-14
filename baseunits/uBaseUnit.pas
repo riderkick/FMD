@@ -1398,10 +1398,13 @@ end;
 function FixHTMLTagQuote(const s : String) : String;
 begin
   Result := s;
-  Result := StringReplace(Result, '=''', '="', [rfReplaceAll]);
-  Result := StringReplace(Result, ''' ', '" ', [rfReplaceAll]);
-  Result := StringReplace(Result, '''>', '">', [rfReplaceAll]);
-  Result := StringReplace(Result, '''/>', '"/>', [rfReplaceAll]);
+  if Length(Result) > 2 then
+  begin
+    Result := StringReplace(Result, '=''', '="', [rfReplaceAll]);
+    Result := StringReplace(Result, ''' ', '" ', [rfReplaceAll]);
+    Result := StringReplace(Result, '''>', '">', [rfReplaceAll]);
+    Result := StringReplace(Result, '''/>', '"/>', [rfReplaceAll]);
+  end;
 end;
 
 function URLDecode(const s: String): String;
@@ -1590,34 +1593,22 @@ begin
     end;
     Inc(i);
   end;
-
-  //while i < mangaInfo.chapterLinks.Count do
-  //begin
-  //  j := i + 1;
-  //  while j < mangaInfo.chapterLinks.Count do
-  //  begin
-  //    if mangaInfo.chapterLinks.Strings[i] = mangaInfo.chapterLinks.Strings[j] then
-  //    begin
-  //      mangaInfo.chapterLinks.Delete(j);
-  //      mangaInfo.chapterName.Delete(j);
-  //      Dec(mangaInfo.numChapter);
-  //    end
-  //    else
-  //      Inc(j);
-  //  end;
-  //  Inc(i);
-  //end;
 end;
 
 procedure CleanHTMLComments(const Str : TStringList);
 var
-  i: LongInt;
+  i: Integer;
 begin
-  for i := 0 to Str.Count - 1 do
+  if Str.Count > 0 then
   begin
-    Str[i] := TrimLeft(Str[i]);
-    if (Pos('<!', Str[i]) = 1) or (Pos('-->', Str[i]) = 1) then
-      Str[i] := '';
+    Str.BeginUpdate;
+    for i := 0 to Str.Count - 1 do
+    begin
+      Str[i] := TrimLeft(Str[i]);
+      if (Pos('<!', Str[i]) = 1) or (Pos('-->', Str[i]) = 1) then
+        Str[i] := '';
+    end;
+    Str.EndUpdate;
   end;
 end;
 
