@@ -16,7 +16,7 @@ Changelog:
 [*] Various changes
 [!] From now on only 32-bit version will be released, 
     there is no much benefit of using 64-bit version and to save my bandwith, 
-	I will reconsider to provide it later
+    I will reconsider to provide it later
 
 0.9.7.1 (04-04-2015)
 [*] MyReadingMangaInfo: Add multi pages/chapter support, fix mangainfo
