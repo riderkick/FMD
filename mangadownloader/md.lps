@@ -41,7 +41,6 @@
       <Unit3>
         <Filename Value="..\baseunits\uUpdateThread.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="uUpdateThread"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="540"/>
         <CursorPos X="20" Y="551"/>
@@ -52,14 +51,13 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="uSubThread"/>
         <EditorIndex Value="-1"/>
-        <TopLine Value="185"/>
-        <CursorPos X="36" Y="9"/>
+        <TopLine Value="73"/>
+        <CursorPos X="28" Y="47"/>
         <UsageCount Value="210"/>
       </Unit4>
       <Unit5>
         <Filename Value="..\baseunits\uUpdateDBThread.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="uUpdateDBThread"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="84"/>
         <CursorPos X="16" Y="103"/>
@@ -102,8 +100,9 @@
       <Unit10>
         <Filename Value="..\baseunits\uPacker.pas"/>
         <IsPartOfProject Value="True"/>
+        <UnitName Value="uPacker"/>
         <EditorIndex Value="-1"/>
-        <TopLine Value="92"/>
+        <TopLine Value="148"/>
         <CursorPos X="33" Y="141"/>
         <UsageCount Value="200"/>
       </Unit10>
@@ -114,10 +113,9 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="frmMain"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
-        <TopLine Value="885"/>
-        <CursorPos X="75" Y="901"/>
+        <TopLine Value="624"/>
+        <CursorPos X="39" Y="638"/>
         <UsageCount Value="200"/>
       </Unit11>
       <Unit12>
@@ -152,21 +150,25 @@
       <Unit15>
         <Filename Value="..\baseunits\uBaseUnit.pas"/>
         <IsPartOfProject Value="True"/>
+        <UnitName Value="uBaseUnit"/>
         <EditorIndex Value="-1"/>
-        <TopLine Value="382"/>
-        <CursorPos X="29" Y="400"/>
+        <TopLine Value="1113"/>
+        <CursorPos X="33" Y="1101"/>
         <ExtraEditorCount Value="1"/>
         <ExtraEditor1>
+          <IsVisibleTab Value="True"/>
           <EditorIndex Value="-1"/>
-          <TopLine Value="1113"/>
-          <CursorPos X="33" Y="1101"/>
+          <TopLine Value="2541"/>
+          <CursorPos X="8" Y="2548"/>
         </ExtraEditor1>
         <UsageCount Value="200"/>
       </Unit15>
       <Unit16>
         <Filename Value="..\baseunits\uMisc.pas"/>
         <IsPartOfProject Value="True"/>
+        <UnitName Value="uMisc"/>
         <EditorIndex Value="-1"/>
+        <TopLine Value="649"/>
         <CursorPos X="3" Y="11"/>
         <UsageCount Value="200"/>
       </Unit16>

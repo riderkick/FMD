@@ -9,9 +9,6 @@
       <Title Value="Free Manga Downloader"/>
       <ResourceType Value="res"/>
       <UseXPManifest Value="True"/>
-      <XPManifest>
-        <ExecutionLevel Value="1"/>
-      </XPManifest>
       <Icon Value="0"/>
     </General>
     <i18n>
@@ -254,7 +251,6 @@
       <Unit3>
         <Filename Value="..\baseunits\uUpdateThread.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="uUpdateThread"/>
       </Unit3>
       <Unit4>
         <Filename Value="..\baseunits\uSubThread.pas"/>
@@ -264,7 +260,6 @@
       <Unit5>
         <Filename Value="..\baseunits\uUpdateDBThread.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="uUpdateDBThread"/>
       </Unit5>
       <Unit6>
         <Filename Value="..\baseunits\uSilentThread.pas"/>
@@ -291,6 +286,7 @@
       <Unit10>
         <Filename Value="..\baseunits\uPacker.pas"/>
         <IsPartOfProject Value="True"/>
+        <UnitName Value="uPacker"/>
       </Unit10>
       <Unit11>
         <Filename Value="forms\frmMain.pas"/>
@@ -321,10 +317,12 @@
       <Unit15>
         <Filename Value="..\baseunits\uBaseUnit.pas"/>
         <IsPartOfProject Value="True"/>
+        <UnitName Value="uBaseUnit"/>
       </Unit15>
       <Unit16>
         <Filename Value="..\baseunits\uMisc.pas"/>
         <IsPartOfProject Value="True"/>
+        <UnitName Value="uMisc"/>
       </Unit16>
       <Unit17>
         <Filename Value="..\baseunits\uData.pas"/>
