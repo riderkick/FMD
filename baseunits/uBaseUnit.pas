@@ -1691,7 +1691,12 @@ begin
   Result := StringReplace(Result, '%CHAPTER%', chap, [rfReplaceAll]);
   if (AWebsite = WebsiteRoots[FAKKU_ID, 0]) or
     (AWebsite = WebsiteRoots[MANGASTREAM_ID, 0]) then
-    Result := StringReplace(Result, '%NUMBERING%', '', [rfReplaceAll])
+  begin
+    if Pos('%NUMBERING% - ', Result) > 0 then
+      Result := StringReplace(Result, '%NUMBERING% - ', '', [rfReplaceAll])
+    else
+      Result := StringReplace(Result, '%NUMBERING%', '', [rfReplaceAll])
+  end
   else
     Result := StringReplace(Result, '%NUMBERING%', ANumbering, [rfReplaceAll]);
   Result := StringReplace(Result, '/', '', [rfReplaceAll]);

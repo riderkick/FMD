@@ -256,7 +256,11 @@ object MainForm: TMainForm
               Height = 212
               Top = 0
               Width = 150
+              AntialiasingMode = amOn
               Align = alClient
+              Center = True
+              Proportional = True
+              Stretch = True
             end
             object pbWait: TPaintBox
               Left = 0

@@ -828,7 +828,8 @@ var
   {$I includes/PornComix/image_url.inc}
 
 begin
-  if (manager.container.PageLinks.Strings[workCounter] <> 'W') then
+  if (manager.container.PageLinks.Count > 0) and
+   (manager.container.PageLinks.Strings[workCounter] <> 'W') then
     Exit;
 
   if manager.container.MangaSiteID = ANIMEA_ID then
@@ -1344,6 +1345,8 @@ procedure TTaskThread.Execute;
   var
     i: Cardinal;
   begin
+    if container.PageLinks.Count = 0 then
+      Exit(True);
     Result := False;
     if container.PageLinks.Count > 0 then
       for i := 0 to container.PageLinks.Count - 1 do
@@ -1469,8 +1472,9 @@ begin
 
       //Get page links
       if container.PageLinks.Count = 0 then
-        container.PageLinks.Add('W');
-      container.PageNumber := container.PageLinks.Count;
+        container.PageNumber := 1
+      else
+        container.PageNumber := container.PageLinks.Count;
       if not SitesWithoutPageLink(WebsiteRoots[container.MangaSiteID, 0]) and
         CheckForPrepare then
       begin
