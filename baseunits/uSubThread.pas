@@ -152,6 +152,8 @@ begin
 
       if isCheckForLatestVer then
       begin
+        fNewVersionNumber := FMD_VERSION_NUMBER;
+        fUpdateURL := '';
         FBtnCheckCaption := stFavoritesChecking;
         Synchronize(@MainThreadSetButton);
         l := TStringList.Create;
@@ -163,18 +165,19 @@ begin
             GetPage(Self, FHTTP, TObject(l), UPDATE_URL + 'update', 3, False) then
             if l.Count > 1 then
             begin
-              l[0] := Trim(l[0]);
-              l[1] := Trim(l[1]);
-              if l[0] <> FMD_VERSION_NUMBER then
+              l.NameValueSeparator := '=';
+              if Trim(l.Values['VERSION']) <> FMD_VERSION_NUMBER then
               begin
-                fNewVersionNumber := l[0];
-                fUpdateURL := l[1];
+                fNewVersionNumber := Trim(l.Values['VERSION']);
+                fUpdateURL := Trim(l.Values[UpperCase(FMD_TARGETOS)]);
+                if fUpdateURL <> '' then
+                  updateFound := True;
                 FHTTP.Clear;
                 l.Clear;
                 if not Terminated and
                   GetPage(Self, FHTTP, TObject(l), UPDATE_URL + 'changelog.txt', 3, False) then
                   fChangelog := l.Text;
-                updateFound := True;
+
               end;
             FBtnCheckCaption := stUpdaterCheck;
             Synchronize(@MainThreadSetButton);

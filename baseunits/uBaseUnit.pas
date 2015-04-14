@@ -20,6 +20,9 @@ const
   FMD_REVISION = '$WCREV$';
   FMD_INSTANCE = '_FreeMangaDownloaderInstance_';
 
+  FMD_TARGETOS = {$i %FPCTARGETOS%};
+  FMD_TARGETCPU = {$i %FPCTARGETCPU%};
+
   JPG_HEADER: array[0..2] of Byte = ($FF, $D8, $FF);
   GIF_HEADER: array[0..2] of Byte = ($47, $49, $46);
   PNG_HEADER: array[0..2] of Byte = ($89, $50, $4E);
