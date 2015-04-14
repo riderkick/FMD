@@ -1278,11 +1278,15 @@ var
   regx: TRegExpr;
 begin
   Result := URL;
+  if Length(URL) < 3 then
+    Exit;
   if MangaID <= High(WebsiteRoots) then
     regx := TRegExpr.Create;
     try
       regx.ModifierI := True;
       regx.Expression := '^([a-z]+\:)?(//)?[^/]*\w+\.\w+(\:\d+)?/?';
+      if Pos('//', Result) = 1 then
+        Delete(Result, 1, 2);
       if not regx.Exec(URL) then
         Result := TrimRightChar(WebsiteRoots[MangaID, 1], ['/']) +
           '/' + TrimLeftChar(URL, ['/']);
@@ -1899,7 +1903,11 @@ end;
 
 function FixURL(const URL : String) : String;
 begin
-  result := ReplaceRegExpr('([^:])[/]{2,}(\b|\Z)', URL, '$1/', True);
+  Result := URL;
+  if Pos('//', Result) = 1 then
+    Delete(Result, 1, 2);
+  if Length(Result) > 2 then
+    result := ReplaceRegExpr('([^:])[/]{2,}(\b|\Z)', Result, '$1/', True);
 end;
 
 function FixPath(const path: String): String;
@@ -2353,10 +2361,9 @@ label
 begin
   Result := False;
   URL := FixURL(URL);
-  if (isByPassHTTP) and
-    (Pos('HTTP://', UpCase(URL)) = 0) and
-    (Pos('HTTPS://', UpCase(URL)) = 0) then
-    Exit;
+  { TODO -oriderkick : What isBypassHTTP for? }
+  //if (isByPassHTTP) then
+  //  Exit;
   if AHTTP <> nil then
     HTTP := AHTTP
   else
@@ -2639,19 +2646,18 @@ var
   end;
 
 begin
+  Result := False;
   s := Path + '/' + Name;
   // Check to see if a file with similar name was already exist. If so then we
   // skip the download process.
   if (FileExistsUTF8(s + '.jpg')) or
     (FileExistsUTF8(s + '.png')) or
     (FileExistsUTF8(s + '.gif')) or
-    (Trim(URL) = 'D') or
-    (Pos('http', URL) = 0) then
-  begin
-    Result := True;
-    Exit;
-  end;
-  Result := False;
+    (Trim(URL) = 'D') then
+    Exit(True);
+
+  URL := FixURL(URL);
+
   if AHTTP <> nil then
   begin
     HTTPHeader := TStringList.Create;
