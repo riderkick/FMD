@@ -5,7 +5,7 @@
 *.ppu
 *.rst
 *.cgi
-# *.exe
+*.exe
 *.log
 *.bak*
 fp.ini
@@ -19,16 +19,5 @@ fp.dsk
 # fmd binary
 mangadownloader/lib
 updater/lib
-bin/config/config.ini
-bin/config/advanced.ini
-bin/data/
-bin/works/
-bin/fmd*.exe
-bin/updater*.exe
-bin/*.dbg
-bin/*.txt
+bin/
 Release/
-
-# build tools
-/7za.*
-CleanUpCompileandZIP.bat
