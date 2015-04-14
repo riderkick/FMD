@@ -2,7 +2,7 @@
   var
     s: String;
     isExtractChapter: Boolean = False;
-    i, j: Cardinal;
+    i, j: Integer;
   begin
     mangaInfo.url := FillMangaSiteHost(LECTUREENLIGNE_ID, URL);
     if not GetPage(TObject(Source), mangaInfo.url, Reconnect) then
@@ -44,7 +44,8 @@
         Inc(mangaInfo.numChapter);
         s := StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href=')),
           '../..', '', []);
-        //s:= StringReplace(s, '1.html', '', []);
+        if Pos('.htm', s) > 0 then
+          s := ReplaceRegExpr('/\d+\.html?$', s, '', False);
         mangaInfo.chapterLinks.Add(s);
         j := i - 1;
         while (Pos('<', parse.Strings[j]) > 0) or (Trim(parse.Strings[j]) = '') do
@@ -103,15 +104,8 @@
     // Since chapter name and link are inverted, we need to invert them
     if mangainfo.ChapterLinks.Count > 1 then
     begin
-      i := 0;
-      j := mangainfo.ChapterLinks.Count - 1;
-      while (i < j) do
-      begin
-        mangainfo.ChapterName.Exchange(i, j);
-        mangainfo.chapterLinks.Exchange(i, j);
-        Inc(i);
-        Dec(j);
-      end;
+      InvertStrings(mangaInfo.chapterName);
+      InvertStrings(mangaInfo.chapterLinks);
     end;
     Result := NO_ERROR;
   end;

@@ -799,6 +799,8 @@ var
 
   {$I includes/NineManga/image_url.inc}
 
+  {$I includes/LectureEnLigne/image_url.inc}
+
   {$I includes/JapanShin/image_url.inc}
 
   {$I includes/CentrumMangi_PL/image_url.inc}
@@ -985,6 +987,9 @@ begin
     (manager.container.MangaSiteID = NINEMANGA_IT_ID) or
     (manager.container.MangaSiteID = NINEMANGA_BR_ID) then
     Result := GetNineMangaImageURL
+  else
+  if manager.container.MangaSiteID = LECTUREENLIGNE_ID then
+    Result := GeLectureEnligneImageURL
   else
   if manager.container.MangaSiteID = JAPANSHIN_ID then
     Result := GetJapanShinImageURL
