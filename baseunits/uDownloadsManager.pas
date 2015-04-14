@@ -1346,17 +1346,10 @@ procedure TTaskThread.Execute;
   begin
     Result := False;
     if container.PageLinks.Count > 0 then
-    begin
       for i := 0 to container.PageLinks.Count - 1 do
-      begin
         if (Trim(container.PageLinks[i]) = 'W') or
           (Trim(container.PageLinks[i]) = '') then
-        begin
-          Result := True;
-          Break;
-        end;
-      end;
-    end;
+          Exit(True);
   end;
 
   function CheckForFinish: Boolean;
@@ -1384,12 +1377,9 @@ procedure TTaskThread.Execute;
   procedure WaitForThreads;
   begin
     while threads.Count > 0 do
-      Sleep(200);
+      Sleep(250);
   end;
 
-  //terminating threads again
-  //sometimes threads created after StopTask called
-  //causing by gap in time before terminated flag detected
   procedure TerminateThreads;
   var
     i: Cardinal;
@@ -1478,6 +1468,8 @@ begin
       end;
 
       //Get page links
+      if container.PageLinks.Count = 0 then
+        container.PageLinks.Add('W');
       container.PageNumber := container.PageLinks.Count;
       if not SitesWithoutPageLink(WebsiteRoots[container.MangaSiteID, 0]) and
         CheckForPrepare then
@@ -1496,7 +1488,7 @@ begin
           container.ChapterName.Strings[container.CurrentDownloadChapterPtr]]);
         container.Status := STATUS_PREPARE;
         Synchronize(MainThreadRepaint);
-        while container.WorkCounter < container.PageLinks.Count do
+        while container.WorkCounter < container.PageNumber do
         begin
           if Terminated then
           begin
