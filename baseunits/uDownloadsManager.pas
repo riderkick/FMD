@@ -1482,9 +1482,8 @@ begin
 
       //Get page links
       if container.PageLinks.Count = 0 then
-        container.PageNumber := 1
-      else
-        container.PageNumber := container.PageLinks.Count;
+        container.PageLinks.Add('W');
+      container.PageNumber := container.PageLinks.Count;
       if not SitesWithoutPageLink(WebsiteRoots[container.MangaSiteID, 0]) and
         CheckForPrepare then
       begin
