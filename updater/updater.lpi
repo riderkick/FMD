@@ -18,7 +18,8 @@
       <UseVersionInfo Value="True"/>
       <MajorVersionNr Value="2"/>
       <MinorVersionNr Value="1"/>
-      <StringTable FileDescription="Updater for Free Manga Downloader" OriginalFilename="updater.exe" ProductVersion="" PrivateBuild="Cholif"/>
+      <Attributes pvaPrivateBuild="True"/>
+      <StringTable FileDescription="Updater for Free Manga Downloader" OriginalFilename="updater.exe" ProductVersion="$BuildMode()" PrivateBuild="Cholif"/>
     </VersionInfo>
     <BuildModes Count="2">
       <Item1 Name="Win32" Default="True"/>
@@ -81,7 +82,6 @@
         <ComponentName Value="frmMain"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <UnitName Value="uMain"/>
       </Unit1>
       <Unit2>
         <Filename Value="uMessage.pas"/>
@@ -89,7 +89,6 @@
         <ComponentName Value="frmMessage"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <UnitName Value="uMessage"/>
       </Unit2>
     </Units>
   </ProjectOptions>
