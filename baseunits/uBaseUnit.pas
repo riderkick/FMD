@@ -772,7 +772,8 @@ procedure RemoveHostFromURLsPair(Const URLs, Names : TStringList);
 
 // StringUtils
 function GetValuesFromString(Str: String; Sepr: Char): String;
-procedure InvertStrings(Const St: TStringList);
+procedure InvertStrings(Const St: TStringList); overload;
+procedure InvertStrings(const Sts: array of TStringList); overload;
 procedure TrimStrings(Const Str: TStringList);
 procedure RemoveDuplicateStrings(Strs: Array of TStringList; RemIndex: Cardinal = 0);
 procedure CleanHTMLComments(Const Str: TStringList);
@@ -1530,6 +1531,14 @@ begin
   begin
     Result[Length(Result)] := '-';
   end;
+end;
+
+procedure InvertStrings(const Sts: array of TStringList);
+var
+  i: Integer;
+begin
+  for i := Low(Sts) to High(Sts) do
+    InvertStrings(Sts[i]);
 end;
 
 procedure TrimStrings(const Str : TStringList);
