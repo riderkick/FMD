@@ -1281,7 +1281,8 @@ begin
   if MangaID <= High(WebsiteRoots) then
     regx := TRegExpr.Create;
     try
-      regx.Expression := '^(https?\://)?[^/]*\w+\.\w+(\:\d+)?/';
+      regx.ModifierI := True;
+      regx.Expression := '^([a-z]+\:)?(//)?[^/]*\w+\.\w+(\:\d+)?/?';
       if not regx.Exec(URL) then
         Result := TrimRightChar(WebsiteRoots[MangaID, 1], ['/']) +
           '/' + TrimLeftChar(URL, ['/']);
@@ -1299,7 +1300,8 @@ begin
   Result := URL;
   regx := TRegExpr.Create;
   try
-    regx.Expression := '^(https?\://)[^/]*\w+\.\w+(\:\d+)?/';
+    regx.ModifierI := True;
+    regx.Expression := '^([a-z]+\:)?(//)?[^/]*\w+\.\w+(\:\d+)?/?';
     if regx.Exec(URL) then
       Result := regx.Replace(URL, '/', False);
   finally
@@ -1309,14 +1311,15 @@ end;
 
 procedure RemoveHostFromURLs(const URLs : TStringList);
 var
- i: LongInt;
+ i: Integer;
  regx: TRegExpr;
 begin
   if URLs.Count > 0 then
   begin
     regx := TRegExpr.Create;
     try
-      regx.Expression := '^(https?\://)[^/]*\w+\.\w+(\:\d+)?/?';
+      regx.ModifierI := True;
+      regx.Expression := '^([a-z]+\:)?(//)?[^/]*\w+\.\w+(\:\d+)?/?';
       for i := 0 to URLs.Count - 1 do
       begin
         if regx.Exec(URLs[i]) then
@@ -1330,14 +1333,15 @@ end;
 
 procedure RemoveHostFromURLsPair(const URLs, Names : TStringList);
 var
- i: LongInt;
+ i: Integer;
  regx: TRegExpr;
 begin
   if URLs.Count > 0 then
   begin
     regx := TRegExpr.Create;
     try
-      regx.Expression := '^(https?\://)[^/]*\w+\.\w+(\:\d+)?/?';
+      regx.ModifierI := True;
+      regx.Expression := '^([a-z]+\:)?(//)?[^/]*\w+\.\w+(\:\d+)?/?';
       i := 0;
       while i < URLs.Count do
       begin

@@ -198,18 +198,7 @@ begin
         {$ENDIF}
 
         //**removing hostname in links
-        if links.Count > 0 then
-        begin
-          regx := TRegExpr.Create;
-          try
-            regx.Expression := '(https?\://)?[^/]*\w+\.\w+(\:\d+)?/';
-            for iPos := 0 to links.count - 1 do
-              if regx.Exec(links[iPos]) then
-                links[iPos] := regx.Replace(links[iPos], '/', False);
-          finally
-            regx.Free;
-          end;
-        end;
+        RemoveHostFromURLs(links);
 
         manager.CS_AddNamesAndLinks.Acquire;
         try
