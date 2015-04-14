@@ -433,7 +433,7 @@ var
     ('I-Komik', 'http://www.i-komik.com'),
     ('NHentai', 'http://nhentai.net'),
     ('UnionMangas', 'http://unionmangas.com.br'),
-    ('MangaBird', 'http://www.mangabird.com'),
+    ('MangaBird', 'http://www.mangamint.com'),
     ('UnixManga', 'http://unixmanga.co'),
     ('HakiHome', 'http://hakihome.com'),
     ('ExtremeMangas', 'http://www.extrememangas.com'),
