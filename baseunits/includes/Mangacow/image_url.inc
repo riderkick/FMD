@@ -19,11 +19,10 @@
     if parse.Count > 0 then
     begin
       for i := 0 to parse.Count - 1 do
-        if (Pos('<img ', parse[i]) > 0) and
-          (Pos('id="img_mng_enl"', parse[i]) > 0) then
+        if (GetTagName(parse[i]) = 'img') and
+          (GetVal(parse[i], 'style') = 'width:0px; height:0px') then
         begin
-          manager.container.PageLinks.Strings[workCounter] :=
-            EncodeURL(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src=')));
+          manager.container.PageLinks.Strings[workCounter] := GetVal(parse[i], 'src');
           Break;
         end;
     end;

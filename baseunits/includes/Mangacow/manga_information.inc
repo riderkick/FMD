@@ -41,17 +41,13 @@
     for i := 0 to parse.Count - 1 do
     begin
       // get cover
-      if (mangaInfo.coverLink = '') and
-        (Pos('class="cvr', parse.Strings[i]) > 0) then
-        mangaInfo.coverLink := CorrectURL(GetAttributeValue(
-          GetTagAttribute(parse.Strings[i], 'src=')));
+      if (GetTagName(parse[i]) = 'img') and (GetVal(parse[i], 'class') = 'cvr') then
+        mangaInfo.coverLink := GetVal(parse[i], 'src');
 
       // get title
       if (Pos('<h1 ', parse[i]) > 0) and
         (Pos('class="ttl"', parse[i]) > 0) then
         mangaInfo.title := Trim(HTMLEntitiesFilter(StringFilter(parse[i + 1])));
-      //if (Pos('<title>', parse.Strings[i])<>0) AND (mangaInfo.title = '') then
-      //  mangaInfo.title:= TrimLeft(TrimRight(HTMLEntitiesFilter(GetString('~!@'+parse.Strings[i+1], '~!@', ' - Manga Detail Manga Cow!'))));
 
       // get chapter name and links
       if Pos('class="lst"', parse[i]) > 0 then
@@ -82,23 +78,6 @@
           if (Pos('</b>', parse[i + 1]) > 0) then
             mangaInfo.summary :=
               Trim(BreaksString(HTMLEntitiesFilter(StringFilter(parse[i + 12]))));
-        //if (Pos('<div class="det">', parse.Strings[i]) <> 0) then
-        //begin
-        //  j:= i+2;
-        //  while (j<parse.Count) AND (Pos('<b>', parse.Strings[j])=0) do
-        //  begin
-        //    s:= parse.Strings[j];
-        //    if s[1] <> '<' then
-        //    begin
-        //      parse.Strings[j]:= HTMLEntitiesFilter(StringFilter(TrimLeft(parse.Strings[j])));
-        //      parse.Strings[j]:= StringReplace(parse.Strings[j], #10, '\n', [rfReplaceAll]);
-        //      parse.Strings[j]:= StringReplace(parse.Strings[j], #13, '\r', [rfReplaceAll]);
-        //      mangaInfo.summary:= mangaInfo.summary + parse.Strings[j];
-        //      break;
-        //    end;
-        //    Inc(j);
-        //  end;
-        //end;
 
         // get authors
         if (mangaInfo.authors = '') and
