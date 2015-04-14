@@ -6,9 +6,9 @@ Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
 0.9.8.1 (15-04-2015)
-[*] Fix downloadmanager
+[!*] Fix downloadmanager
 [*] Fix Fakku, Mangacow, LectureEnligne, Japscan
-[*] Various changes and bugs fixed
+[!*] Various changes and bugs fixed
 
 0.9.8.0 (12-04-2015)
 [+?] Updater: add support for update FMD (experimental)

@@ -548,7 +548,7 @@ begin
         FStatus := 'Getting list for ' + website + ' ...';
         Synchronize(MainThreadShowGetting);
         fmdRunAsAdmin(fmdDirectory + 'updater.exe', '-d ' + GetMangaDatabaseURL(website) +
-          ' -x -r 5 -q', True);
+          ' -x -r 3 -q', True);
         Synchronize(RefreshList);
       end;
     end

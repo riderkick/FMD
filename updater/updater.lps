@@ -9,7 +9,7 @@
         <Filename Value="updater.lpr"/>
         <IsPartOfProject Value="True"/>
         <CursorPos X="32" Y="14"/>
-        <UsageCount Value="56"/>
+        <UsageCount Value="58"/>
       </Unit0>
       <Unit1>
         <Filename Value="uMain.pas"/>
@@ -20,9 +20,9 @@
         <UnitName Value="uMain"/>
         <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
-        <TopLine Value="346"/>
-        <CursorPos X="25" Y="355"/>
-        <UsageCount Value="56"/>
+        <TopLine Value="515"/>
+        <CursorPos X="48" Y="518"/>
+        <UsageCount Value="58"/>
       </Unit1>
       <Unit2>
         <Filename Value="uMessage.pas"/>
@@ -30,9 +30,11 @@
         <ComponentName Value="frmMessage"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
+        <UnitName Value="uMessage"/>
         <EditorIndex Value="-1"/>
-        <CursorPos X="19" Y="18"/>
-        <UsageCount Value="28"/>
+        <TopLine Value="9"/>
+        <CursorPos X="6" Y="20"/>
+        <UsageCount Value="30"/>
       </Unit2>
       <Unit3>
         <Filename Value="uSF.pas"/>

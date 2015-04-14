@@ -15,10 +15,8 @@ uses
     {$ENDIF}
   {$ENDIF}
   Interfaces, // this includes the LCL widgetset
-  richmemopackage,
-  Forms, FileUtil,
-  uBaseUnit, frmMain, frmImportList,
-  simpleipc, IniFiles, frmShutdownCounter, frmUpdateDialog;
+  Forms, FileUtil,simpleipc, IniFiles, richmemopackage,
+  uBaseUnit, frmMain, frmImportList, frmShutdownCounter, frmUpdateDialog;
 
 var
   CheckInstance: Boolean = True;

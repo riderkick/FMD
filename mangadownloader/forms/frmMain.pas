@@ -898,7 +898,7 @@ begin
     begin
       CloseNow;
       fmdRunAsAdmin(fmdDirectory + 'old_updater.exe',
-        '-a ' + FUpdateURL + ' -x -r 5', False);
+        '-a ' + FUpdateURL + ' -x -r 3 -l ' + Application.ExeName, False);
       Application.Terminate;
     end;
   end;

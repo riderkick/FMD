@@ -100,7 +100,7 @@ begin
   try
     Synchronize(MainThreadShowGetting);
     fmdRunAsAdmin(fmdDirectory + 'updater.exe', '-d ' + GetMangaDatabaseURL(websiteName) +
-      ' -x -r 5', True);
+      ' -x -r 3', True);
     if FileExists(fmdDirectory + DATA_FOLDER + websiteName + '.dat') then
     begin
       Synchronize(MainThreadRefreshList);

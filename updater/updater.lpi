@@ -17,6 +17,7 @@
     <VersionInfo>
       <UseVersionInfo Value="True"/>
       <MajorVersionNr Value="2"/>
+      <MinorVersionNr Value="1"/>
       <StringTable FileDescription="Updater for Free Manga Downloader" OriginalFilename="updater.exe" ProductVersion="" PrivateBuild="Cholif"/>
     </VersionInfo>
     <BuildModes Count="2">
@@ -88,6 +89,7 @@
         <ComponentName Value="frmMessage"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
+        <UnitName Value="uMessage"/>
       </Unit2>
     </Units>
   </ProjectOptions>

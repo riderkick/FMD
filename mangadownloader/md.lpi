@@ -238,7 +238,7 @@
         <PackageName Value="LCL"/>
       </Item3>
     </RequiredPackages>
-    <Units Count="21">
+    <Units Count="22">
       <Unit0>
         <Filename Value="md.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -246,7 +246,6 @@
       <Unit1>
         <Filename Value="..\baseunits\uDownloadsManager.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="uDownloadsManager"/>
       </Unit1>
       <Unit2>
         <Filename Value="..\baseunits\uFavoritesManager.pas"/>
@@ -255,14 +254,17 @@
       <Unit3>
         <Filename Value="..\baseunits\uUpdateThread.pas"/>
         <IsPartOfProject Value="True"/>
+        <UnitName Value="uUpdateThread"/>
       </Unit3>
       <Unit4>
         <Filename Value="..\baseunits\uSubThread.pas"/>
         <IsPartOfProject Value="True"/>
+        <UnitName Value="uSubThread"/>
       </Unit4>
       <Unit5>
         <Filename Value="..\baseunits\uUpdateDBThread.pas"/>
         <IsPartOfProject Value="True"/>
+        <UnitName Value="uUpdateDBThread"/>
       </Unit5>
       <Unit6>
         <Filename Value="..\baseunits\uSilentThread.pas"/>
@@ -319,7 +321,6 @@
       <Unit15>
         <Filename Value="..\baseunits\uBaseUnit.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="uBaseUnit"/>
       </Unit15>
       <Unit16>
         <Filename Value="..\baseunits\uMisc.pas"/>
@@ -347,6 +348,10 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
       </Unit20>
+      <Unit21>
+        <Filename Value="..\baseunits\includes\LectureEnLigne\image_url.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit21>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

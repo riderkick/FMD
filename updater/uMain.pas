@@ -84,6 +84,7 @@ var
   _NoError   :boolean = False;
   _URL       :string = '';
   _MaxRetry  :cardinal = 1;
+  _LaunchApp :string = '';
 
   ProxyType :string;
   ProxyHost :string;
@@ -99,8 +100,10 @@ const
 
 resourcestring
   ST_InvalidURL = 'Invalid URL!';
+  ST_Response = 'Response';
   ST_AnErrorOccured = 'An error occured when trying to download file.';
   ST_FileNotFound = 'File not found!';
+  ST_ServerError = 'Server response error!';
   ST_LoadingPage = 'Loading page...';
   ST_FailedLoadPage = 'Failed loading page!';
   ST_RetryLoadPage = 'Retry loading page... ';
@@ -428,31 +431,31 @@ begin
     loadp:
       //**retry loading page
       while (not FHTTP.HTTPMethod('GET', rurl)) or
-        (FHTTP.ResultCode >= 500) or
         (FHTTP.ResultCode >= 400) do
       begin
         if Self.Terminated then
+          Break;
+        if (FHTTP.ResultCode < 500) and (not _UpdApp) then
         begin
-          regx.Free;
-          Exit;
-        end;
-        if FHTTP.ResultCode < 500 then
-        begin
-          regx.Free;
           Clipboard.AsText := mf_data_link;
           UpdateStatus(ST_FileNotFound);
-          if not _UpdApp then
-            ShowErrorMessage(ST_FileNotFound_mfdatalink + LineEnding + mf_data_link +
-              LineEnding + ST_LinkCopiedToClipboard);
-          Exit;
+          ShowErrorMessage(ST_FileNotFound_mfdatalink + LineEnding + mf_data_link +
+            LineEnding + ST_LinkCopiedToClipboard);
+          Break;
         end;
         if ctry >= MaxRetry then
         begin
-          regx.Free;
           UpdateStatus(ST_FailedLoadPage);
-          ShowErrorMessage(ST_AnErrorOccured + LineEnding + LineEnding +
-            IntToStr(FHTTP.ResultCode) + ' ' +FHTTP.ResultString);
-          Exit;
+          if FHTTP.ResultCode < 500 then
+            ShowErrorMessage(ST_FileNotFound + LineEnding + LineEnding +
+              ST_Response + ':' + LineEnding +
+              IntToStr(FHTTP.ResultCode) + ' ' + FHTTP.ResultString)
+          else
+          if FHTTP.ResultCode >= 500 then
+            ShowErrorMessage(ST_AnErrorOccured + LineEnding + LineEnding +
+              ST_Response + ':' + LineEnding +
+              IntToStr(FHTTP.ResultCode) + ' ' + FHTTP.ResultString);
+          Break;
         end;
         Inc(ctry);
         UpdateStatus(ST_RetryLoadPage + '(' + IntToStr(ctry) + ')');
@@ -481,31 +484,31 @@ begin
       FHTTP.Headers.Add('Accept: */*');
       FHTTP.Headers.Add('Referer: ' + URL);
       while (not FHTTP.HTTPMethod('GET', rurl)) or
-        (FHTTP.ResultCode >= 500) or
         (FHTTP.ResultCode >= 400) do
       begin
         if Self.Terminated then
+          Break;
+        if (FHTTP.ResultCode < 500) and (not _UpdApp) then
         begin
-          regx.Free;
-          Exit;
-        end;
-        if FHTTP.ResultCode >= 400 then
-        begin
-          regx.Free;
           Clipboard.AsText := mf_data_link;
           UpdateStatus(ST_FileNotFound);
-          if not _UpdApp then
-            ShowErrorMessage(ST_FileNotFound_mfdatalink + LineEnding + mf_data_link +
-              LineEnding + ST_LinkCopiedToClipboard);
-          Exit;
+          ShowErrorMessage(ST_FileNotFound_mfdatalink + LineEnding + mf_data_link +
+            LineEnding + ST_LinkCopiedToClipboard);
+          Break;
         end;
         if ctry >= MaxRetry then
         begin
-          regx.Free;
           UpdateStatus(ST_FailedDownloadPage);
-          ShowErrorMessage(ST_AnErrorOccured + LineEnding + LineEnding +
-            IntToStr(FHTTP.ResultCode) + ' ' +FHTTP.ResultString);
-          Exit;
+          if FHTTP.ResultCode < 500 then
+            ShowErrorMessage(ST_FileNotFound + LineEnding + LineEnding +
+              ST_Response + ':' + LineEnding +
+              IntToStr(FHTTP.ResultCode) + ' ' + FHTTP.ResultString)
+          else
+          if FHTTP.ResultCode >= 500 then
+            ShowErrorMessage(ST_AnErrorOccured + LineEnding + LineEnding +
+              ST_Response + ':' + LineEnding +
+              IntToStr(FHTTP.ResultCode) + ' ' + FHTTP.ResultString);
+          Break;
         end;
         Inc(ctry);
         UpdateStatus(ST_RetryDownload + ' [' + FileName + ']... ' + '(' +
@@ -514,59 +517,62 @@ begin
       end;
     end;
 
-    fname := FileName;
-    regx.Expression := '^.*filename=(.+)$';
-    fname := regx.Replace(fname, '$1', True);
-    regx.Expression := '(\.\w+)[\?\&].*$';
-    fname := regx.Replace(fname, '$1', True);
-    fname := RemoveSymbols(fname);
-    fname := DirPath + DirectorySeparator + fname;
-    if FileExistsUTF8(fname) then
-      DeleteFileUTF8(fname);
-
-    if ForceDirectoriesUTF8(DirPath) then
+    if (not Self.Terminated) and ( not (FHTTP.ResultCode >= 300)) then
     begin
-      UpdateStatus(ST_SaveFile);
-      FHTTP.Document.SaveToFile(fname);
-    end;
-    if not FileExistsUTF8(fname) then
-      ShowErrorMessage(ST_ErrorCheckAntiVirus);
+      fname := FileName;
+      regx.Expression := '^.*filename=(.+)$';
+      fname := regx.Replace(fname, '$1', True);
+      regx.Expression := '(\.\w+)[\?\&].*$';
+      fname := regx.Replace(fname, '$1', True);
+      fname := RemoveSymbols(fname);
+      fname := DirPath + DirectorySeparator + fname;
+      if FileExistsUTF8(fname) then
+        DeleteFileUTF8(fname);
 
-    if Extract and FileExistsUTF8(fname) then
-    begin
-      UpdateStatus(ST_UnpackFile);
-      if Pos('.zip', LowerCase(FileName)) <> 0 then
+      if ForceDirectoriesUTF8(DirPath) then
       begin
-        UZip := TUnZipper.Create;
-        UZip.OnStartFile := @UZipOnStartFile;
-        try
-          UZip.FileName := DirPath + DirectorySeparator + FileName;
-          UZip.OutputPath := Dirpath;
-          UZip.Examine;
-          UZip.UnZipAllFiles;
-        finally
-          UZip.Free;
-          DeleteFileUTF8(DirPath + DirectorySeparator + FileName);
-        end;
-      end
-      else
+        UpdateStatus(ST_SaveFile);
+        FHTTP.Document.SaveToFile(fname);
+      end;
+      if not FileExistsUTF8(fname) then
+        ShowErrorMessage(ST_ErrorCheckAntiVirus);
+
+      if Extract and FileExistsUTF8(fname) then
       begin
-        if FileExistsUTF8(GetCurrentDirUTF8 + DirectorySeparator + '7za.exe') then
+        UpdateStatus(ST_UnpackFile);
+        if Pos('.zip', LowerCase(FileName)) <> 0 then
         begin
-          //if _UpdApp then s := ' -x!7za.*' else s := '';
-          RunAsAdmin(GetCurrentDirUTF8 + DirectorySeparator + '7za.exe',
-            ' x ' + fname + ' -o'+ AnsiQuotedStr(DirPath, '"') +
-            ' -aoa' + s, SW_HIDE, True);
-          Sleep(100);
-          DeleteFileUTF8(fname);
-          if _UpdApp then
-            RunAsAdmin(DirPath + DirectorySeparator + 'fmd.exe', '');
+          UZip := TUnZipper.Create;
+          UZip.OnStartFile := @UZipOnStartFile;
+          try
+            UZip.FileName := DirPath + DirectorySeparator + FileName;
+            UZip.OutputPath := Dirpath;
+            UZip.Examine;
+            UZip.UnZipAllFiles;
+          finally
+            UZip.Free;
+            DeleteFileUTF8(DirPath + DirectorySeparator + FileName);
+          end;
         end
         else
-          ShowErrorMessage(ST_7zNotFound);
+        begin
+          if FileExistsUTF8(GetCurrentDirUTF8 + DirectorySeparator + '7za.exe') then
+          begin
+            //if _UpdApp then s := ' -x!7za.*' else s := '';
+            RunAsAdmin(GetCurrentDirUTF8 + DirectorySeparator + '7za.exe',
+              ' x ' + fname + ' -o'+ AnsiQuotedStr(DirPath, '"') +
+              ' -aoa' + s, SW_HIDE, True);
+            Sleep(100);
+            DeleteFileUTF8(fname);
+          end
+          else
+            ShowErrorMessage(ST_7zNotFound);
+        end;
       end;
     end;
     UpdateStatus(ST_Finished);
+    if (not Self.Terminated) and _UpdApp and (_LaunchApp <> '') then
+      RunAsAdmin(_LaunchApp, '');
   except
     on E: Exception do
       frmMain.ExceptionHandler(Self, E);
@@ -667,6 +673,8 @@ begin
         //**Max Retry
         else if s = '-r' then
           _MaxRetry := StrToIntDef(ParamStrUTF8(i + 1), 1)
+        else if s = '-l' then
+          _LaunchApp := ParamStrUTF8(i + 1);
       end;
     end;
   end;
