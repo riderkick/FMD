@@ -397,7 +397,7 @@ var
     ('Mabuns', 'http://www.mabuns.web.id'),
     ('MangaEsta', 'http://www.mangaesta.net'),
     ('CentralDeMangas', 'http://centraldemangas.com.br'),
-    ('EGScans', 'http://readonline.egscans.com'),
+    ('EGScans', 'http://read.egscans.com'),
     ('MangaAr', 'http://manga-ar.net'),
     ('MangaAe', 'http://www.manga.ae'),
     ('AnimeStory', 'http://www.anime-story.com'),
