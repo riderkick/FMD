@@ -1,50 +1,53 @@
   function GetJapscanPageNumber: Boolean;
   var
-    s, h: String;
-    i: Cardinal;
+    s: String;
+    i: Integer;
     l: TStringList;
     regx: TRegExpr;
+    isGetPageNumber: Boolean = False;
   begin
     l := TStringList.Create;
     parse := TStringList.Create;
     s := DecodeUrl(FillMangaSiteHost(JAPSCAN_ID, URL));
+    if Pos('.htm', s) > 0 then
+      s := ReplaceRegExpr('/\d+\.html?$', s, '', False);
     Result := GetPage(TObject(l),
       s,
       manager.container.manager.retryConnect);
+
+    CleanHTMLComments(l);
     Parser := THTMLParser.Create(PChar(l.Text));
     Parser.OnFoundTag := OnTag;
     Parser.OnFoundText := OnText;
     Parser.Exec;
     Parser.Free;
+
     manager.container.PageNumber := 0;
     if parse.Count > 0 then
     begin
-      manager.container.PageNumber := 0;
-      manager.container.PageLinks.Clear;
-      //get image-uri
-      h := '';
-      for i := 0 to parse.Count - 1 do
-        if (Pos('<img', parse[i]) > 0) and (Pos('data-uri=', parse[i]) > 0) then
+      regx := TRegExpr.Create('^.*/(\d+)\.html?.*$');
+      try
+        regx.ModifierI := True;
+        for i := 0 to parse.Count - 1 do
         begin
-          h := GetAttributeValue(GetTagAttribute(parse[i], 'data-uri='));
-          Break;
+          if (GetTagName(parse[i]) = 'nav') and
+          (GetVal(parse[i], 'id') = 'pagination') then
+            isGetPageNumber := True;
+          if isGetPageNumber and ((GetTagName(parse[i]) = '/nav') or
+            (GetVal(parse[i], 'id') = 'next_link') or
+            (GetVal(parse[i], 'id') = 'next_chapter')) then
+            Break;
+          if isGetPageNumber and (GetTagName(parse[i]) = 'a') then
+          begin
+            s := GetVal(parse[i], 'href');
+            s := regx.Replace(s, '$1', True);
+            if manager.container.PageNumber < StrToIntDef(s, 0) then
+              manager.container.PageNumber := StrToIntDef(s, 0);
+          end;
         end;
-
-      regx := TRegExpr.Create;
-      regx.Expression := '^.*data-image=''([^\'']+)''\s.*$';
-      for i := 0 to parse.Count - 1 do
-      begin
-        if Pos('data-image=', parse[i]) > 0 then
-        begin
-          Result := True;
-          s := regx.Replace(parse[i], '$1', True);
-          s := WebsiteRoots[JAPSCAN_ID, 1] + h + s;
-          manager.container.PageLinks.Add(s);
-        end;
+      finally
+        regx.Free;
       end;
-
-      manager.container.PageNumber := manager.container.PageLinks.Count;
-      regx.Free;
     end;
     parse.Free;
     l.Free;

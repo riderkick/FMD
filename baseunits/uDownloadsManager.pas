@@ -803,6 +803,8 @@ var
 
   {$I includes/JapanShin/image_url.inc}
 
+  {$I includes/Japscan/image_url.inc}
+
   {$I includes/CentrumMangi_PL/image_url.inc}
 
   {$I includes/MangaLib_PL/image_url.inc}
@@ -993,6 +995,9 @@ begin
   else
   if manager.container.MangaSiteID = JAPANSHIN_ID then
     Result := GetJapanShinImageURL
+  else
+  if manager.container.MangaSiteID = JAPSCAN_ID then
+    Result := GetJapscanImageURL
   else
   if manager.container.MangaSiteID = CENTRUMMANGI_PL_ID then
     Result := GetCentrumMangi_PLImageURL

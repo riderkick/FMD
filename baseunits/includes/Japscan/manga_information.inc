@@ -81,10 +81,12 @@
       if (isExtractChapter) and (Pos('<a href="', parse[i]) > 0) then
       begin
         Inc(mangaInfo.numChapter);
-        s := GetAttributeValue(GetTagAttribute(parse[i], 'href='));
+        s := GetVal(parse[i], 'href');
+        if Pos('.htm', s) > 0 then
+          s := ReplaceRegExpr('/\d+\.html?$', s, '', False);
         mangaInfo.chapterLinks.Add(s);
         s := RemoveSymbols(Trim(parse.Strings[i + 1]));
-        mangaInfo.chapterName.Add(StringFilter(HTMLEntitiesFilter(s)));
+        mangaInfo.chapterName.Add(CommonStringFilter(s));
       end;
     end;
 
@@ -102,16 +104,7 @@
 
     // Since chapter name and link are inverted, we need to invert them
     if mangainfo.ChapterLinks.Count > 1 then
-    begin
-      i := 0;
-      j := mangainfo.ChapterLinks.Count - 1;
-      while (i < j) do
-      begin
-        mangainfo.ChapterName.Exchange(i, j);
-        mangainfo.chapterLinks.Exchange(i, j);
-        Inc(i);
-        Dec(j);
-      end;
-    end;
+      InvertStrings([mangaInfo.chapterName, mangaInfo.chapterLinks]);
+
     Result := NO_ERROR;
   end;
