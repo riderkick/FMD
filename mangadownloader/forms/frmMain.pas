@@ -636,7 +636,6 @@ begin
   fmdDirectory := CorrectFilePath(GetCurrentDirUTF8);
   Application.HintHidePause := 10000;
   sbUpdateList.DoubleBuffered := True;
-  FMD_VERSION_NUMBER := GetCurrentBinVersion;
 
   // TrayIcon
   TrayIcon.Icon.Assign(Application.Icon);

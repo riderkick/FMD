@@ -176,12 +176,6 @@ const
     ('&#8216;', '‘')
     );
 
-  {$IFDEF WINDOWS}
-  DEFAULT_PATH = 'C:/downloads';
-  {$ELSE}
-  DEFAULT_PATH = '/downloads';
-  {$ENDIF}
-
   README_FILE             = 'readme.rtf';
   WORK_FOLDER             = 'works/';
   WORK_FILE               = 'works.ini';
@@ -334,6 +328,12 @@ const
 
 var
   FMD_VERSION_NUMBER: String = '';
+
+  {$IFDEF WINDOWS}
+  DEFAULT_PATH : string = '/downloads';
+  {$ELSE}
+  DEFAULT_PATH: string = '/downloads';
+  {$ENDIF}
 
   Genre: array [0..37] of String;
 
@@ -3186,5 +3186,13 @@ begin
     end;
   end;
 end;
+
+initialization
+  FMD_VERSION_NUMBER := GetCurrentBinVersion;
+  {$IFDEF WINDOWS}
+  DEFAULT_PATH := GetCurrentDir + DirectorySeparator + 'downloads';
+  {$ELSE}
+  DEFAULT_PATH := '/downloads';
+  {$ENDIF}
 
 end.
