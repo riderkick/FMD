@@ -5,6 +5,11 @@ For list data check: https://www.mediafire.com/folder/3ccy2c7g36hp3/Fmd
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.8.1 (15-04-2015)
+[*] Fix downloadmanager
+[*] Fix Fakku, Mangacow, LectureEnligne, Japscan
+[*] Various changes and bugs fixed
+
 0.9.8.0 (12-04-2015)
 [+?] Updater: add support for update FMD (experimental)
 [*?] Enable FMD update (test using github release page)
