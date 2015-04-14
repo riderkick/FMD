@@ -16,7 +16,6 @@
       <Unit1>
         <Filename Value="..\baseunits\uDownloadsManager.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="uDownloadsManager"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="279"/>
         <CursorPos X="49" Y="275"/>
@@ -41,7 +40,6 @@
       <Unit3>
         <Filename Value="..\baseunits\uUpdateThread.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="uUpdateThread"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="95"/>
         <CursorPos X="9" Y="113"/>
@@ -50,7 +48,6 @@
       <Unit4>
         <Filename Value="..\baseunits\uSubThread.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="uSubThread"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="110"/>
         <CursorPos X="20" Y="118"/>
@@ -111,9 +108,13 @@
         <ComponentName Value="MainForm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <EditorIndex Value="-1"/>
-        <CursorPos Y="9"/>
+        <UnitName Value="frmMain"/>
+        <IsVisibleTab Value="True"/>
+        <TopLine Value="729"/>
+        <CursorPos X="21" Y="741"/>
         <UsageCount Value="200"/>
+        <Loaded Value="True"/>
+        <LoadedDesigner Value="True"/>
       </Unit11>
       <Unit12>
         <Filename Value="forms\frmNewChapter.pas"/>
@@ -139,7 +140,6 @@
       <Unit14>
         <Filename Value="..\baseunits\uGetMangaInfosThread.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="uGetMangaInfosThread"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="155"/>
         <CursorPos X="27" Y="163"/>
@@ -148,13 +148,11 @@
       <Unit15>
         <Filename Value="..\baseunits\uBaseUnit.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="uBaseUnit"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="4"/>
         <CursorPos X="47" Y="16"/>
         <ExtraEditorCount Value="1"/>
         <ExtraEditor1>
-          <IsVisibleTab Value="True"/>
           <EditorIndex Value="-1"/>
           <TopLine Value="341"/>
           <CursorPos X="21" Y="365"/>
@@ -172,7 +170,6 @@
       <Unit17>
         <Filename Value="..\baseunits\uData.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="uData"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="2016"/>
         <CursorPos X="3" Y="2023"/>
@@ -199,7 +196,7 @@
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="6" Y="6"/>
-        <UsageCount Value="46"/>
+        <UsageCount Value="47"/>
       </Unit19>
       <Unit20>
         <Filename Value="forms\frmupdatedialog.pas"/>
@@ -210,7 +207,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="21"/>
         <CursorPos X="26" Y="24"/>
-        <UsageCount Value="29"/>
+        <UsageCount Value="30"/>
       </Unit20>
       <Unit21>
         <Filename Value="..\baseunits\uOption.pas"/>
@@ -1656,9 +1653,11 @@
       </Unit263>
       <Unit264>
         <Filename Value="..\baseunits\animatedgifs\animatedgif.pas"/>
-        <TopLine Value="246"/>
-        <CursorPos Y="257"/>
-        <UsageCount Value="8"/>
+        <UnitName Value="AnimatedGif"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="17"/>
+        <CursorPos X="19" Y="84"/>
+        <UsageCount Value="10"/>
       </Unit264>
       <Unit265>
         <Filename Value="C:\lazarus_component\ExceptionLogger\UExceptionForm.pas"/>
@@ -1830,15 +1829,17 @@
       </Unit291>
       <Unit292>
         <Filename Value="C:\development\fpc\rtl\objpas\types.pp"/>
-        <TopLine Value="88"/>
-        <CursorPos X="3" Y="98"/>
-        <UsageCount Value="1"/>
+        <UnitName Value="Types"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="70"/>
+        <CursorPos X="3" Y="79"/>
+        <UsageCount Value="10"/>
       </Unit292>
       <Unit293>
         <Filename Value="C:\development\fpc\rtl\win\wininc\struct.inc"/>
         <EditorIndex Value="-1"/>
-        <TopLine Value="284"/>
-        <CursorPos X="6" Y="290"/>
+        <TopLine Value="223"/>
+        <CursorPos X="6" Y="233"/>
         <UsageCount Value="10"/>
       </Unit293>
       <Unit294>
@@ -2899,6 +2900,59 @@
       <Define7 Value="DEBUGWIN64"/>
       <Define8 Value="DEBUGLEAKS"/>
     </CustomDefines>
-    <JumpHistory HistoryIndex="-1"/>
+    <JumpHistory Count="13" HistoryIndex="12">
+      <Position1>
+        <Filename Value="forms\frmMain.pas"/>
+        <Caret Line="9"/>
+      </Position1>
+      <Position2>
+        <Filename Value="forms\frmMain.pas"/>
+        <Caret Line="881" Column="18" TopLine="870"/>
+      </Position2>
+      <Position3>
+        <Filename Value="forms\frmMain.pas"/>
+        <Caret Line="885" Column="3" TopLine="870"/>
+      </Position3>
+      <Position4>
+        <Filename Value="forms\frmMain.pas"/>
+        <Caret Line="521" Column="5" TopLine="511"/>
+      </Position4>
+      <Position5>
+        <Filename Value="forms\frmMain.pas"/>
+        <Caret Line="882" Column="51" TopLine="868"/>
+      </Position5>
+      <Position6>
+        <Filename Value="forms\frmMain.pas"/>
+        <Caret Line="2770" Column="3" TopLine="2756"/>
+      </Position6>
+      <Position7>
+        <Filename Value="forms\frmMain.pas"/>
+        <Caret Line="624" Column="21" TopLine="751"/>
+      </Position7>
+      <Position8>
+        <Filename Value="forms\frmMain.pas"/>
+        <Caret Line="882" Column="14" TopLine="873"/>
+      </Position8>
+      <Position9>
+        <Filename Value="forms\frmMain.pas"/>
+        <Caret Line="521" Column="15" TopLine="513"/>
+      </Position9>
+      <Position10>
+        <Filename Value="forms\frmMain.pas"/>
+        <Caret Line="738" Column="5" TopLine="726"/>
+      </Position10>
+      <Position11>
+        <Filename Value="forms\frmMain.pas"/>
+        <Caret Line="522" Column="27" TopLine="512"/>
+      </Position11>
+      <Position12>
+        <Filename Value="forms\frmMain.pas"/>
+        <Caret Line="521" Column="10" TopLine="512"/>
+      </Position12>
+      <Position13>
+        <Filename Value="forms\frmMain.pas"/>
+        <Caret Line="878" Column="50" TopLine="876"/>
+      </Position13>
+    </JumpHistory>
   </ProjectSession>
 </CONFIG>

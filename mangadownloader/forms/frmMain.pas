@@ -519,6 +519,7 @@ type
     backupTicks: Cardinal;
     // animation gif
     gifWaiting: TAnimatedGif;
+    gifWaitingRect: TRect;
 
     // doing stuff like get manga info, compress, ...
     SubThread: TSubThread;
@@ -731,11 +732,16 @@ begin
   end;
   cbOptionLetFMDDo.ItemIndex := options.ReadInteger('general', 'LetFMDDo', 0);
 
+  // waiting gif
   if FileExists(IMAGE_FOLDER + 'waiting.gif') then
   begin
     gifWaiting := TAnimatedGif.Create(IMAGE_FOLDER + 'waiting.gif');
     gifWaiting.EraseColor := Self.Color;
     gifWaiting.BackgroundMode := gbmSaveBackgroundOnce;
+    gifWaitingRect.Left := 53;
+    gifWaitingRect.Top := 84;
+    gifWaitingRect.Right := 101;
+    gifWaitingRect.Bottom := 131;
   end;
 
   mangaCover := TPicture.Create;
@@ -871,14 +877,8 @@ begin
 end;
 
 procedure TMainForm.itAnimateTimer(Sender: TObject);
-var
-  r: TRect;
 begin
-  r.Left := 53;
-  r.Top := 84;
-  r.Right := 101;
-  r.Bottom := 131;
-  gifWaiting.Update(pbWait.Canvas, r);
+  gifWaiting.Update(pbWait.Canvas, gifWaitingRect);
 end;
 
 procedure TMainForm.itCheckForChaptersTimer(Sender: TObject);
