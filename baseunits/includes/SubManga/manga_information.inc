@@ -1,7 +1,8 @@
   function GetSubMangaInfoFromURL: Byte;
   var
     s: String;
-    i, j: Cardinal;
+    i, j: Integer;
+    isGetChapters: Boolean = False;
   begin
     mangaInfo.url := FillMangaSiteHost(SUBMANGA_ID, URL);
     if not GetPage(TObject(Source), mangaInfo.url, Reconnect) then
@@ -71,6 +72,7 @@
         mangaInfo.genres := mangaInfo.genres + parse.Strings[i + 1] + ', ';
     end;
 
+    // get chapters
     Source.Clear;
     if not GetPage(TObject(Source), mangaInfo.url + '/completa', Reconnect) then
     begin
@@ -79,55 +81,53 @@
       Exit;
     end;
 
-    // parsing the HTML source
     parse.Clear;
     Parser := THTMLParser.Create(PChar(Source.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText := OnText;
-    Parser.Exec;
+    try
+      Parser.OnFoundTag := OnTag;
+      Parser.OnFoundText := OnText;
+      Parser.Exec;
+    finally
+      Parser.Free;
+    end;
 
-    Parser.Free;
-    Source.Free;
-
-    // using 2nd parser (chapter name and link)
-    if parse.Count = 0 then
-      Exit;
-    for i := 0 to parse.Count - 1 do
+    if parse.Count > 0 then
     begin
-      if (Pos('class="s"', parse.Strings[i]) > 0) and
-        (Pos('</tr>', parse.Strings[i - 2]) > 0) and
-        ((Pos('<tr class="u">', parse.Strings[i - 1]) > 0) or
-        (Pos('<tr>', parse.Strings[i - 1]) > 0)) and
-        ((Pos('</td>', parse.Strings[i - 3]) > 0) or (Pos('</th>', parse.Strings[i - 3]) > 0)) then
+      for i := 0 to parse.Count - 1 do
       begin
-        Inc(mangaInfo.numChapter);
-        s := StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i + 1], 'href')),
-          WebsiteRoots[SUBMANGA_ID, 1], '', []);
-        for j := Length(s) downto 1 do
-        begin
-          if s[j] = '/' then
-            Break;
-        end;
-        s := '/c' + Copy(s, j, Length(s) - j + 1);
-        mangaInfo.chapterLinks.Add(s);
-        s := RemoveSymbols(TrimLeft(TrimRight(parse.Strings[i + 2]))) +
-          ' ' + RemoveSymbols(TrimLeft(TrimRight(parse.Strings[i + 4])));
-        mangaInfo.chapterName.Add(StringFilter(StringFilter(HTMLEntitiesFilter(s))));
+        // get chapters
+        if (GetTagName(parse[i]) = 'table') and
+          (GetVal(parse[i], 'class') = 'table table-striped table-hover') then
+          isGetChapters := True;
+        if isGetChapters and (GetTagName(parse[i]) = '/table') then
+          Break;
+        if isGetChapters and
+          ((GetTagName(parse[i]) = 'a') and (GetTagName(parse[i - 1]) = 'td') and
+          (GetTagName(parse[i - 2]) = 'tr')) then
+            if Length(GetVal(parse[i], 'href')) > 3 then
+            begin
+              Inc(mangaInfo.numChapter);
+              mangaInfo.chapterName.Add(CommonStringFilter(
+                Trim(parse[i + 1]) + ' ' + Trim(parse[i + 3])));
+              mangaInfo.chapterLinks.Add(GetVal(parse[i], 'href'));
+            end;
       end;
     end;
+    Source.Free;
 
     // Since chapter name and link are inverted, we need to invert them
     if mangainfo.ChapterLinks.Count > 1 then
     begin
-      i := 0;
-      j := mangainfo.ChapterLinks.Count - 1;
-      while (i < j) do
-      begin
-        mangainfo.ChapterName.Exchange(i, j);
-        mangainfo.chapterLinks.Exchange(i, j);
-        Inc(i);
-        Dec(j);
-      end;
+      InvertStrings([mangaInfo.chapterName, mangaInfo.chapterLinks]);
+      // replace urls
+      with TRegExpr.Create do
+        try
+          Expression := '^.*(/\d+)$';
+          for i := 0 to mangaInfo.chapterLinks.Count - 1 do
+            mangaInfo.chapterLinks[i] := Replace(mangaInfo.chapterLinks[i], '/c/$1', True);
+        finally
+          Free;
+        end;
+      Result := NO_ERROR;
     end;
-    Result := NO_ERROR;
   end;
