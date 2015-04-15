@@ -16,8 +16,8 @@ interface
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
   LCLType, ExtCtrls, ComCtrls, Buttons, Spin, Menus, VirtualTrees, RichMemo,
-  IniFiles, contnrs, syncobjs, simpleipc, UTF8Process, lclproc, types, strutils,
-  LCLIntf, LazUTF8, AnimatedGif, uBaseUnit, uData, uDownloadsManager,
+  IniFiles, contnrs, syncobjs, simpleipc, UTF8Process, lclproc, types,
+  strutils, LCLIntf, LazUTF8, AnimatedGif, uBaseUnit, uData, uDownloadsManager,
   uFavoritesManager, uUpdateThread, uUpdateDBThread, uSubThread, uSilentThread,
   uMisc, uGetMangaInfosThread, USimpleException, ActiveX;
 
@@ -607,7 +607,7 @@ implementation
 {$R *.lfm}
 
 uses
-  frmImportFavorites, RegExpr, Clipbrd, typinfo;
+  frmImportFavorites, RegExpr, Clipbrd;
 
 { TMainForm }
 
@@ -896,8 +896,13 @@ begin
     if FileExistsUTF8(fmdDirectory + 'old_updater.exe') then
     begin
       CloseNow;
+      {$IFDEF USEADMIN}
       fmdRunAsAdmin(fmdDirectory + 'old_updater.exe',
-        '-a ' + FUpdateURL + ' -x -r 3 -l ' + Application.ExeName, False);
+        '-x -r 3 -a ' + FUpdateURL + ' -l ' + Application.ExeName, False);
+      {$ELSE}
+      RunExternalProcess(fmdDirectory + 'old_updater.exe',
+        ['-x', '-r', '3', '-a', FUpdateURL], True, True);
+      {$ENDIF}
       Application.Terminate;
     end;
   end;

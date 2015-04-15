@@ -547,8 +547,13 @@ begin
         Inc(websitePtr);
         FStatus := 'Getting list for ' + website + ' ...';
         Synchronize(MainThreadShowGetting);
-        fmdRunAsAdmin(fmdDirectory + 'updater.exe', '-d ' + GetMangaDatabaseURL(website) +
-          ' -x -r 3 -q', True);
+        {$IFDEF USEADMIN}
+        fmdRunAsAdmin(fmdDirectory + 'updater.exe', '-x -r 3 -q -d ' +
+          GetMangaDatabaseURL(website), True);
+        {$ELSE}
+        RunExternalProcess(fmdDirectory + 'updater.exe', ['-x', '-r' , '3', '-d',
+          GetMangaDatabaseURL(website)]);
+        {$ENDIF}
         Synchronize(RefreshList);
       end;
     end
@@ -558,14 +563,6 @@ begin
       begin
         website := websites.Strings[websitePtr];
         Inc(websitePtr);
-      {$IFDEF DOWNLOADER}
-        //while not FileExists(DATA_FOLDER + website + DATA_EXT) do
-        //begin
-        //  FStatus := 'Getting list for ' + website + ' ...';
-        //  Synchronize(MainThreadShowGetting);
-        //  fmdRunAsAdmin('updater.exe', 'data ' + GetMangaDatabaseURL(website) + ' 5', True);
-        //end;
-      {$ENDIF}
         FStatus := 'Updating list ' + Format('[%d/%d] %s',
           [websitePtr, websites.Count, website]) + ' | Preparing...';
         Synchronize(MainThreadShowGetting);

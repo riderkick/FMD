@@ -10,7 +10,7 @@ uses
   cmem,
   {$endif}
   Classes, windows, SysUtils, zipper, ShellApi, FileUtil, Forms,
-  Dialogs, ComCtrls, StdCtrls, Clipbrd, ExtCtrls, RegExpr, IniFiles,
+  Dialogs, ComCtrls, StdCtrls, Clipbrd, ExtCtrls, RegExpr, IniFiles, process,
   USimpleException, httpsend, blcksock, ssl_openssl;
 
 type
@@ -178,6 +178,36 @@ begin
   Process.Execute;
   Process.Free;
   {$ENDIF}
+end;
+
+function RunExternalProcess(Exe: String; Params: array of String; ShowWind: Boolean = True;
+  Detached: Boolean = False): Boolean;
+var
+  Process: TProcess;
+  I: Integer;
+begin
+  Result := True;
+  Process := TProcess.Create(nil);
+  try
+    Process.InheritHandles := False;
+    Process.Executable := Exe;
+    Process.Parameters.AddStrings(Params);
+    if Detached then
+      Process.Options := []
+    else
+      Process.Options := Process.Options + [poWaitOnExit];
+    if ShowWind then
+      Process.ShowWindow := swoShow
+    else
+      Process.ShowWindow := swoHIDE;
+    // Copy default environment variables including DISPLAY variable for GUI application to work
+    for I := 0 to GetEnvironmentVariableCount - 1 do
+      Process.Environment.Add(GetEnvironmentString(I));
+    Process.Execute;
+  except
+    Result := False;
+  end;
+  Process.Free;
 end;
 
 function HeaderByName(const AHeaders :TStrings; const HeaderName :string) :string;
@@ -385,7 +415,7 @@ procedure TDownloadThread.Execute;
 var
   regx                  :TRegExpr;
   ctry                  :cardinal;
-  s, rurl, fname,
+  rurl, fname,
   sproject, sdir, sfile :string;
 label
   loadp;
@@ -558,10 +588,14 @@ begin
         begin
           if FileExistsUTF8(GetCurrentDirUTF8 + DirectorySeparator + '7za.exe') then
           begin
-            //if _UpdApp then s := ' -x!7za.*' else s := '';
+            {$IFDEF USEADMIN}
             RunAsAdmin(GetCurrentDirUTF8 + DirectorySeparator + '7za.exe',
               ' x ' + fname + ' -o'+ AnsiQuotedStr(DirPath, '"') +
-              ' -aoa' + s, SW_HIDE, True);
+              ' -aoa', SW_HIDE, True);
+            {$ELSE}
+            RunExternalProcess(GetCurrentDirUTF8 + DirectorySeparator + '7za.exe',
+              ['x', fname, '-o'+AnsiQuotedStr(DirPath, '"'), '-aoa'], False, False);
+            {$ENDIF}
             Sleep(100);
             DeleteFileUTF8(fname);
           end
@@ -572,7 +606,11 @@ begin
     end;
     UpdateStatus(ST_Finished);
     if (not Self.Terminated) and _UpdApp and (_LaunchApp <> '') then
+      {$IFDEF USEADMIN}
       RunAsAdmin(_LaunchApp, '');
+      {$ELSE}
+      RunExternalProcess(_LaunchApp, [''], True, True);
+      {$ENDIF}
   except
     on E: Exception do
       frmMain.ExceptionHandler(Self, E);

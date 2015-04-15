@@ -13,7 +13,7 @@ unit uBaseUnit;
 interface
 
 uses
-  SysUtils, Classes, Graphics, Forms, strutils, fileinfo, fgl,
+  SysUtils, Classes, Graphics, Forms, strutils, fileinfo, process, fgl,
   uFMDThread, synautil, httpsend, blcksock, ssl_openssl, GZIPUtils;
 
 const
@@ -873,6 +873,8 @@ function fmdGetTickCount: Cardinal;
 procedure fmdPowerOff;
 procedure fmdHibernate;
 function fmdRunAsAdmin(path, params: String; isPersistent: Boolean): Boolean;
+function RunExternalProcess(Exe: String; Params: array of String; ShowWind: Boolean = True;
+  Detached: Boolean = False): Boolean;
 
 implementation
 
@@ -3159,6 +3161,36 @@ begin
   Process.Execute;
   Process.Free;
   {$ENDIF}
+end;
+
+function RunExternalProcess(Exe: String; Params: array of String; ShowWind: Boolean = True;
+  Detached: Boolean = False): Boolean;
+var
+  Process: TProcess;
+  I: Integer;
+begin
+  Result := True;
+  Process := TProcess.Create(nil);
+  try
+    Process.InheritHandles := False;
+    Process.Executable := Exe;
+    Process.Parameters.AddStrings(Params);
+    if Detached then
+      Process.Options := []
+    else
+      Process.Options := Process.Options + [poWaitOnExit];
+    if ShowWind then
+      Process.ShowWindow := swoShow
+    else
+      Process.ShowWindow := swoHIDE;
+    // Copy default environment variables including DISPLAY variable for GUI application to work
+    for I := 0 to GetEnvironmentVariableCount - 1 do
+      Process.Environment.Add(GetEnvironmentString(I));
+    Process.Execute;
+  except
+    Result := False;
+  end;
+  Process.Free;
 end;
 
 function HeaderByName(const AHeaders: TStrings; const AHeaderName: String): String;
