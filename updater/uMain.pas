@@ -415,7 +415,7 @@ procedure TDownloadThread.Execute;
 var
   regx                  :TRegExpr;
   ctry                  :cardinal;
-  rurl, fname,
+  Sza, rurl, fname,
   sproject, sdir, sfile :string;
 label
   loadp;
@@ -570,10 +570,14 @@ begin
       if Extract and FileExistsUTF8(fname) then
       begin
         UpdateStatus(ST_UnpackFile);
+        Sza := GetCurrentDirUTF8 + DirectorySeparator + '7za.exe';
         if _UpdApp and
           FileExistsUTF8(GetCurrentDirUTF8 + DirectorySeparator + '7za.exe') then
+          begin
             CopyFile(GetCurrentDirUTF8 + DirectorySeparator + '7za.exe',
               GetCurrentDirUTF8 + DirectorySeparator + 'old_7za.exe');
+            Sza := GetCurrentDirUTF8 + DirectorySeparator + 'old_7za.exe';
+          end;
         if Pos('.zip', LowerCase(FileName)) <> 0 then
         begin
           UZip := TUnZipper.Create;
@@ -590,15 +594,14 @@ begin
         end
         else
         begin
-          if FileExistsUTF8(GetCurrentDirUTF8 + DirectorySeparator + 'old_7za.exe') then
+          if FileExistsUTF8(Sza) then
           begin
             {$IFDEF USEADMIN}
-            RunAsAdmin(GetCurrentDirUTF8 + DirectorySeparator + 'old_7za.exe',
-              ' x ' + fname + ' -o'+ AnsiQuotedStr(DirPath, '"') +
+            RunAsAdmin(Sza, ' x ' + fname + ' -o' + AnsiQuotedStr(DirPath, '"') +
               ' -aoa', SW_HIDE, True);
             {$ELSE}
-            RunExternalProcess(GetCurrentDirUTF8 + DirectorySeparator + 'old_7za.exe',
-              ['x', fname, '-o'+AnsiQuotedStr(DirPath, '"'), '-aoa'], False, False);
+            RunExternalProcess(Sza, ['x', fname, '-o' +
+              AnsiQuotedStr(DirPath, '"'), '-aoa'], False, False);
             {$ENDIF}
             Sleep(100);
             DeleteFileUTF8(fname);
