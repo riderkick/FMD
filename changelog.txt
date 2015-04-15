@@ -5,6 +5,11 @@ For list data check: https://www.mediafire.com/folder/3ccy2c7g36hp3/Fmd
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.8.2 (15-04-2015)
+[*?] Change execution level of FMD to asInvoker (no UAC)
+[*?] Run external process without admin
+[*] Various changes
+
 0.9.8.1 (15-04-2015)
 [!*] Fix downloadmanager
 [*] Fix Fakku, Mangacow, LectureEnligne, Japscan
