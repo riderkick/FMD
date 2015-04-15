@@ -7,7 +7,7 @@ Changelog:
 
 0.9.8.2 (15-04-2015)
 [*?] Change execution level of FMD to asInvoker (no UAC)
-[*?] Run external process without admin
+[*?] Run external process without admin privileges
 [*] Various changes
 
 0.9.8.1 (15-04-2015)
