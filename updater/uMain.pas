@@ -570,6 +570,10 @@ begin
       if Extract and FileExistsUTF8(fname) then
       begin
         UpdateStatus(ST_UnpackFile);
+        if _UpdApp and
+          FileExistsUTF8(GetCurrentDirUTF8 + DirectorySeparator + '7za.exe') then
+            CopyFile(GetCurrentDirUTF8 + DirectorySeparator + '7za.exe',
+              GetCurrentDirUTF8 + DirectorySeparator + 'old_7za.exe');
         if Pos('.zip', LowerCase(FileName)) <> 0 then
         begin
           UZip := TUnZipper.Create;
@@ -586,14 +590,14 @@ begin
         end
         else
         begin
-          if FileExistsUTF8(GetCurrentDirUTF8 + DirectorySeparator + '7za.exe') then
+          if FileExistsUTF8(GetCurrentDirUTF8 + DirectorySeparator + 'old_7za.exe') then
           begin
             {$IFDEF USEADMIN}
-            RunAsAdmin(GetCurrentDirUTF8 + DirectorySeparator + '7za.exe',
+            RunAsAdmin(GetCurrentDirUTF8 + DirectorySeparator + 'old_7za.exe',
               ' x ' + fname + ' -o'+ AnsiQuotedStr(DirPath, '"') +
               ' -aoa', SW_HIDE, True);
             {$ELSE}
-            RunExternalProcess(GetCurrentDirUTF8 + DirectorySeparator + '7za.exe',
+            RunExternalProcess(GetCurrentDirUTF8 + DirectorySeparator + 'old_7za.exe',
               ['x', fname, '-o'+AnsiQuotedStr(DirPath, '"'), '-aoa'], False, False);
             {$ENDIF}
             Sleep(100);
@@ -602,6 +606,12 @@ begin
           else
             ShowErrorMessage(ST_7zNotFound);
         end;
+        if FileExistsUTF8(GetCurrentDirUTF8 + DirectorySeparator + 'old_7za.exe') then
+          if FileExistsUTF8(GetCurrentDirUTF8 + DirectorySeparator + '7za.exe') then
+            DeleteFileUTF8(GetCurrentDirUTF8 + DirectorySeparator + 'old_7za.exe')
+          else
+            RenameFileUTF8(GetCurrentDirUTF8 + DirectorySeparator + 'old_7za.exe',
+              GetCurrentDirUTF8 + DirectorySeparator + '7za.exe');
       end;
     end;
     UpdateStatus(ST_Finished);

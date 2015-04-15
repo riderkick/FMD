@@ -18,7 +18,7 @@
       <UseVersionInfo Value="True"/>
       <MajorVersionNr Value="2"/>
       <MinorVersionNr Value="1"/>
-      <BuildNr Value="1"/>
+      <BuildNr Value="2"/>
       <Attributes pvaPrivateBuild="True"/>
       <StringTable FileDescription="Updater for Free Manga Downloader" LegalCopyright="©2015 FMD Project Team" OriginalFilename="updater.exe" ProductName="Updater" ProductVersion="$BuildMode()" PrivateBuild="Cholif"/>
     </VersionInfo>
@@ -83,6 +83,7 @@
         <ComponentName Value="frmMain"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
+        <UnitName Value="uMain"/>
       </Unit1>
       <Unit2>
         <Filename Value="uMessage.pas"/>

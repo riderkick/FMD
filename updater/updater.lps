@@ -8,7 +8,6 @@
       <Unit0>
         <Filename Value="updater.lpr"/>
         <IsPartOfProject Value="True"/>
-        <IsVisibleTab Value="True"/>
         <CursorPos X="32" Y="14"/>
         <UsageCount Value="59"/>
       </Unit0>
@@ -18,10 +17,11 @@
         <ComponentName Value="frmMain"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
+        <UnitName Value="uMain"/>
         <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="598"/>
-        <CursorPos X="15" Y="613"/>
+        <CursorPos X="67" Y="614"/>
         <UsageCount Value="59"/>
       </Unit1>
       <Unit2>
@@ -30,7 +30,6 @@
         <ComponentName Value="frmMessage"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="9"/>
         <CursorPos X="6" Y="20"/>
@@ -38,48 +37,41 @@
       </Unit2>
       <Unit3>
         <Filename Value="uSF.pas"/>
-        <IsVisibleTab Value="True"/>
         <TopLine Value="21"/>
         <CursorPos X="29" Y="36"/>
         <UsageCount Value="31"/>
       </Unit3>
       <Unit4>
         <Filename Value="..\baseunits\uBaseUnit.pas"/>
-        <IsVisibleTab Value="True"/>
         <CursorPos X="22" Y="1448"/>
         <UsageCount Value="17"/>
       </Unit4>
       <Unit5>
         <Filename Value="..\baseunits\uImg2Pdf.pas"/>
-        <IsVisibleTab Value="True"/>
         <TopLine Value="4"/>
         <CursorPos X="3" Y="15"/>
         <UsageCount Value="7"/>
       </Unit5>
       <Unit6>
         <Filename Value="..\3rd\synapse\source\httpsend.pas"/>
-        <IsVisibleTab Value="True"/>
         <TopLine Value="310"/>
         <CursorPos X="3" Y="313"/>
         <UsageCount Value="9"/>
       </Unit6>
       <Unit7>
         <Filename Value="C:\lazarus_component\lazautoupdate\packagesource\ulazautoupdate.pas"/>
-        <IsVisibleTab Value="True"/>
         <TopLine Value="907"/>
         <CursorPos X="68" Y="920"/>
         <UsageCount Value="7"/>
       </Unit7>
       <Unit8>
         <Filename Value="C:\lazarus\fpc\2.6.4\source\rtl\objpas\classes\classesh.inc"/>
-        <IsVisibleTab Value="True"/>
         <TopLine Value="1585"/>
         <CursorPos X="15" Y="1597"/>
         <UsageCount Value="7"/>
       </Unit8>
       <Unit9>
         <Filename Value="..\3rd\synapse\source\blcksock.pas"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="141"/>
         <CursorPos X="3" Y="147"/>
@@ -87,7 +79,6 @@
       </Unit9>
       <Unit10>
         <Filename Value="C:\development\fpc\packages\regexpr\src\regexpr.pas"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="148"/>
         <CursorPos X="17" Y="158"/>
@@ -95,14 +86,12 @@
       </Unit10>
       <Unit11>
         <Filename Value="C:\development\fpc\rtl\objpas\classes\streams.inc"/>
-        <IsVisibleTab Value="True"/>
         <TopLine Value="542"/>
         <CursorPos Y="553"/>
         <UsageCount Value="7"/>
       </Unit11>
       <Unit12>
         <Filename Value="C:\development\fpc\rtl\objpas\sysutils\sysstr.inc"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="559"/>
         <CursorPos X="31" Y="564"/>
@@ -110,14 +99,12 @@
       </Unit12>
       <Unit13>
         <Filename Value="C:\development\fpc\rtl\win32\system.pp"/>
-        <IsVisibleTab Value="True"/>
         <TopLine Value="40"/>
         <CursorPos X="2" Y="45"/>
         <UsageCount Value="8"/>
       </Unit13>
       <Unit14>
         <Filename Value="C:\development\fpc\packages\paszlib\src\zipper.pp"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="553"/>
         <CursorPos X="22" Y="564"/>
@@ -125,46 +112,39 @@
       </Unit14>
       <Unit15>
         <Filename Value="C:\development\fpc\packages\paszlib\src\paszlib.pas"/>
-        <IsVisibleTab Value="True"/>
         <TopLine Value="85"/>
         <UsageCount Value="8"/>
       </Unit15>
       <Unit16>
         <Filename Value="C:\development\lazarus\lcl\dbgrids.pas"/>
-        <IsVisibleTab Value="True"/>
         <TopLine Value="1176"/>
         <CursorPos X="20" Y="1203"/>
         <UsageCount Value="8"/>
       </Unit16>
       <Unit17>
         <Filename Value="C:\lazarus\fpc\2.6.4\source\packages\paszlib\src\zipper.pp"/>
-        <IsVisibleTab Value="True"/>
         <TopLine Value="2052"/>
         <CursorPos X="3" Y="2055"/>
         <UsageCount Value="12"/>
       </Unit17>
       <Unit18>
         <Filename Value="C:\lazarus\fpc\2.6.4\source\rtl\objpas\sysutils\sysstrh.inc"/>
-        <IsVisibleTab Value="True"/>
         <TopLine Value="125"/>
         <CursorPos X="29" Y="125"/>
         <UsageCount Value="10"/>
       </Unit18>
       <Unit19>
         <Filename Value="C:\lazarus\fpc\2.6.4\source\rtl\objpas\sysutils\sysstr.inc"/>
-        <IsVisibleTab Value="True"/>
         <CursorPos X="30" Y="918"/>
         <UsageCount Value="10"/>
       </Unit19>
       <Unit20>
         <Filename Value="C:\lazarus\fpc\2.6.4\source\rtl\objpas\sysutils\sysformt.inc"/>
-        <IsVisibleTab Value="True"/>
         <TopLine Value="263"/>
         <UsageCount Value="10"/>
       </Unit20>
       <Unit21>
         <Filename Value="C:\development\fpc\rtl\objpas\classes\classesh.inc"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="1790"/>
         <CursorPos X="14" Y="1795"/>
@@ -172,7 +152,6 @@
       </Unit21>
       <Unit22>
         <Filename Value="C:\development\fpc\packages\fcl-process\src\simpleipc.pp"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="442"/>
         <CursorPos X="3" Y="447"/>
@@ -180,7 +159,6 @@
       </Unit22>
       <Unit23>
         <Filename Value="C:\development\lazarus\lcl\dialogs.pp"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="20"/>
         <CursorPos X="3" Y="31"/>
@@ -188,7 +166,6 @@
       </Unit23>
       <Unit24>
         <Filename Value="C:\development\lazarus\components\lazutils\fileutil.pas"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="262"/>
         <CursorPos X="10" Y="273"/>
@@ -196,7 +173,6 @@
       </Unit24>
       <Unit25>
         <Filename Value="C:\development\lazarus\components\lazutils\fileutil.inc"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="40"/>
         <CursorPos X="3" Y="48"/>
@@ -204,7 +180,6 @@
       </Unit25>
       <Unit26>
         <Filename Value="C:\development\lazarus\components\lazutils\lazutf8.pas"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="47"/>
         <CursorPos X="10" Y="58"/>
@@ -212,14 +187,12 @@
       </Unit26>
       <Unit27>
         <Filename Value="C:\development\lazarus\components\lazutils\winlazutf8.inc"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="3" Y="5"/>
         <UsageCount Value="11"/>
       </Unit27>
       <Unit28>
         <Filename Value="C:\development\fpc\rtl\win\wininc\defines.inc"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="2673"/>
         <CursorPos X="6" Y="2692"/>
@@ -227,7 +200,6 @@
       </Unit28>
       <Unit29>
         <Filename Value="C:\development\fpc\rtl\objpas\sysutils\sysstrh.inc"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="90"/>
         <CursorPos X="10" Y="100"/>
@@ -235,14 +207,12 @@
       </Unit29>
       <Unit30>
         <Filename Value="C:\development\fpc\rtl\objpas\typinfo.pp"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="415"/>
         <UsageCount Value="10"/>
       </Unit30>
       <Unit31>
         <Filename Value="..\3rd\synapse\source\ssl_openssl.pas"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="887"/>
         <CursorPos X="32" Y="904"/>
