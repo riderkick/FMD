@@ -96,6 +96,7 @@ const
   Symbols: array [0..10] of Char =
     ('\', '/', ':', '*', '?', '"', '<', '>', '|', #9, ';');
 
+  _USERAGENT = 'Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.118 Safari/537.36';
   mf_data_link = 'https://www.mediafire.com/folder/fwa8eomz80uk1/Data';
 
 resourcestring
@@ -374,8 +375,7 @@ procedure TDownloadThread.Execute;
   begin
     if HTTP <> nil then
     begin
-      FHTTP.UserAgent :=
-        'curl/7.21.0 (i686-pc-linux-gnu) libcurl/7.21.0 OpenSSL/0.9.8o zlib/1.2.3.4 libidn/1.18';
+      FHTTP.UserAgent := _USERAGENT;
       FHTTP.Timeout := 30000;
 
       if ProxyType = 'HTTP' then

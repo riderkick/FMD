@@ -64,8 +64,8 @@ const
   fOtherLogFile = 'fmd_otherLog.txt';
 
   Curl_UA      = 'curl/7.21.0 (i686-pc-linux-gnu) libcurl/7.21.0 OpenSSL/0.9.8o zlib/1.2.3.4 libidn/1.18';
-  Firefox_UA   = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:37.0) Gecko/20100101 Firefox/37.0';
-  Chrome_UA    = 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.118 Safari/537.36';
+  Firefox_UA   = 'Mozilla/5.0 (Windows NT 6.3; WOW64; rv:37.0) Gecko/20100101 Firefox/37.0';
+  Chrome_UA    = 'Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.118 Safari/537.36';
   GoogleBot_UA = 'Mozilla/5.0 (compatible; Googlebot/2.1;  http://www.google.com/bot.html)';  
 
   RANDOM_SLEEP = 3000;
