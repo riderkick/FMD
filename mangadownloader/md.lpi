@@ -18,9 +18,9 @@
       <UseVersionInfo Value="True"/>
       <MinorVersionNr Value="9"/>
       <RevisionNr Value="8"/>
-      <BuildNr Value="1"/>
+      <BuildNr Value="2"/>
       <Attributes pvaPrivateBuild="True"/>
-      <StringTable Comments="Unofficial Build" FileDescription="Free Manga Downloader" OriginalFilename="fmd.exe" ProductName="Free Manga Downloader" ProductVersion="$BuildMode()" PrivateBuild="Cholif"/>
+      <StringTable Comments="Unofficial Build" FileDescription="Free Manga Downloader" LegalCopyright="©2015 FMD Project Team" OriginalFilename="fmd.exe" ProductName="Free Manga Downloader" ProductVersion="$BuildMode()" PrivateBuild="Cholif"/>
     </VersionInfo>
     <MacroValues Count="1">
       <Macro1 Name="LCLWidgetType" Value="win32"/>
@@ -255,7 +255,6 @@
       <Unit4>
         <Filename Value="..\baseunits\uSubThread.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="uSubThread"/>
       </Unit4>
       <Unit5>
         <Filename Value="..\baseunits\uUpdateDBThread.pas"/>
@@ -286,7 +285,6 @@
       <Unit10>
         <Filename Value="..\baseunits\uPacker.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="uPacker"/>
       </Unit10>
       <Unit11>
         <Filename Value="forms\frmMain.pas"/>
@@ -294,7 +292,6 @@
         <ComponentName Value="MainForm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <UnitName Value="frmMain"/>
       </Unit11>
       <Unit12>
         <Filename Value="forms\frmNewChapter.pas"/>
@@ -317,12 +314,10 @@
       <Unit15>
         <Filename Value="..\baseunits\uBaseUnit.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="uBaseUnit"/>
       </Unit15>
       <Unit16>
         <Filename Value="..\baseunits\uMisc.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="uMisc"/>
       </Unit16>
       <Unit17>
         <Filename Value="..\baseunits\uData.pas"/>

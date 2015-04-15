@@ -4,10 +4,11 @@
     <PathDelim Value="\"/>
     <Version Value="9"/>
     <BuildModes Active="Win32 Debug"/>
-    <Units Count="466">
+    <Units Count="467">
       <Unit0>
         <Filename Value="md.lpr"/>
         <IsPartOfProject Value="True"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="47"/>
         <CursorPos Y="67"/>
@@ -16,11 +17,13 @@
       <Unit1>
         <Filename Value="..\baseunits\uDownloadsManager.pas"/>
         <IsPartOfProject Value="True"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="979"/>
         <CursorPos X="7" Y="993"/>
         <ExtraEditorCount Value="1"/>
         <ExtraEditor1>
+          <IsVisibleTab Value="True"/>
           <EditorIndex Value="-1"/>
           <TopLine Value="1477"/>
           <CursorPos X="27" Y="1487"/>
@@ -33,6 +36,7 @@
       <Unit2>
         <Filename Value="..\baseunits\uFavoritesManager.pas"/>
         <IsPartOfProject Value="True"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="221"/>
         <CursorPos Y="232"/>
@@ -41,15 +45,16 @@
       <Unit3>
         <Filename Value="..\baseunits\uUpdateThread.pas"/>
         <IsPartOfProject Value="True"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
-        <TopLine Value="540"/>
-        <CursorPos X="20" Y="551"/>
+        <TopLine Value="542"/>
+        <CursorPos X="16" Y="553"/>
         <UsageCount Value="200"/>
       </Unit3>
       <Unit4>
         <Filename Value="..\baseunits\uSubThread.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="uSubThread"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="73"/>
         <CursorPos X="28" Y="47"/>
@@ -58,14 +63,16 @@
       <Unit5>
         <Filename Value="..\baseunits\uUpdateDBThread.pas"/>
         <IsPartOfProject Value="True"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
-        <TopLine Value="84"/>
-        <CursorPos X="16" Y="103"/>
+        <TopLine Value="97"/>
+        <CursorPos X="40" Y="107"/>
         <UsageCount Value="200"/>
       </Unit5>
       <Unit6>
         <Filename Value="..\baseunits\uSilentThread.pas"/>
         <IsPartOfProject Value="True"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="217"/>
         <CursorPos X="23" Y="231"/>
@@ -77,6 +84,7 @@
         <ComponentName Value="ImportFavorites"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
+        <IsVisibleTab Value="True"/>
         <TopLine Value="147"/>
         <CursorPos X="3" Y="155"/>
         <UsageCount Value="272"/>
@@ -87,12 +95,14 @@
         <ComponentName Value="ImportList"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
+        <IsVisibleTab Value="True"/>
         <CursorPos X="18" Y="14"/>
         <UsageCount Value="223"/>
       </Unit8>
       <Unit9>
         <Filename Value="..\baseunits\uFMDThread.pas"/>
         <IsPartOfProject Value="True"/>
+        <IsVisibleTab Value="True"/>
         <TopLine Value="35"/>
         <CursorPos X="27" Y="54"/>
         <UsageCount Value="200"/>
@@ -100,7 +110,7 @@
       <Unit10>
         <Filename Value="..\baseunits\uPacker.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="uPacker"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="148"/>
         <CursorPos X="33" Y="141"/>
@@ -112,10 +122,10 @@
         <ComponentName Value="MainForm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <UnitName Value="frmMain"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
-        <TopLine Value="624"/>
-        <CursorPos X="39" Y="638"/>
+        <TopLine Value="894"/>
+        <CursorPos X="36" Y="908"/>
         <UsageCount Value="200"/>
       </Unit11>
       <Unit12>
@@ -124,6 +134,7 @@
         <ComponentName Value="NewChapter"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="15"/>
         <CursorPos X="14" Y="23"/>
@@ -135,6 +146,7 @@
         <ComponentName Value="Log"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="9" Y="64"/>
         <UsageCount Value="200"/>
@@ -142,6 +154,7 @@
       <Unit14>
         <Filename Value="..\baseunits\uGetMangaInfosThread.pas"/>
         <IsPartOfProject Value="True"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="155"/>
         <CursorPos X="27" Y="163"/>
@@ -150,23 +163,22 @@
       <Unit15>
         <Filename Value="..\baseunits\uBaseUnit.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="uBaseUnit"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
-        <TopLine Value="1113"/>
-        <CursorPos X="33" Y="1101"/>
+        <TopLine Value="2541"/>
+        <CursorPos X="8" Y="2548"/>
         <ExtraEditorCount Value="1"/>
         <ExtraEditor1>
           <IsVisibleTab Value="True"/>
           <EditorIndex Value="-1"/>
-          <TopLine Value="2541"/>
-          <CursorPos X="8" Y="2548"/>
+          <CursorPos X="10" Y="876"/>
         </ExtraEditor1>
         <UsageCount Value="200"/>
       </Unit15>
       <Unit16>
         <Filename Value="..\baseunits\uMisc.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="uMisc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="649"/>
         <CursorPos X="3" Y="11"/>
@@ -175,11 +187,13 @@
       <Unit17>
         <Filename Value="..\baseunits\uData.pas"/>
         <IsPartOfProject Value="True"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="1876"/>
         <CursorPos X="7" Y="1891"/>
         <ExtraEditorCount Value="1"/>
         <ExtraEditor1>
+          <IsVisibleTab Value="True"/>
           <EditorIndex Value="-1"/>
           <TopLine Value="102"/>
           <CursorPos X="13" Y="111"/>
@@ -192,6 +206,7 @@
         <ComponentName Value="ShutdownCounterForm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
+        <IsVisibleTab Value="True"/>
         <TopLine Value="85"/>
         <CursorPos X="3" Y="88"/>
         <UsageCount Value="200"/>
@@ -199,9 +214,10 @@
       <Unit19>
         <Filename Value="..\baseunits\includes\KissManga\chapter_page_number.inc"/>
         <IsPartOfProject Value="True"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="6" Y="6"/>
-        <UsageCount Value="62"/>
+        <UsageCount Value="67"/>
       </Unit19>
       <Unit20>
         <Filename Value="forms\frmupdatedialog.pas"/>
@@ -209,24 +225,28 @@
         <ComponentName Value="UpdateDialogForm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="21"/>
         <CursorPos X="26" Y="24"/>
-        <UsageCount Value="45"/>
+        <UsageCount Value="50"/>
       </Unit20>
       <Unit21>
         <Filename Value="..\baseunits\includes\LectureEnLigne\image_url.pas"/>
         <IsPartOfProject Value="True"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="43" Y="13"/>
-        <UsageCount Value="31"/>
+        <UsageCount Value="36"/>
       </Unit21>
       <Unit22>
         <Filename Value="..\baseunits\uOption.pas"/>
+        <IsVisibleTab Value="True"/>
         <UsageCount Value="175"/>
       </Unit22>
       <Unit23>
         <Filename Value="..\baseunits\includes\Batoto\manga_information.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="4"/>
         <CursorPos X="70" Y="9"/>
@@ -234,29 +254,34 @@
       </Unit23>
       <Unit24>
         <Filename Value="..\baseunits\includes\LectureEnLigne\directory_page_number.inc"/>
+        <IsVisibleTab Value="True"/>
         <TopLine Value="20"/>
         <CursorPos X="31" Y="34"/>
         <UsageCount Value="142"/>
       </Unit24>
       <Unit25>
         <Filename Value="..\baseunits\includes\BlogTruyen\directory_page_number.inc"/>
+        <IsVisibleTab Value="True"/>
         <TopLine Value="9"/>
         <UsageCount Value="142"/>
       </Unit25>
       <Unit26>
         <Filename Value="..\baseunits\includes\BlogTruyen\names_and_links.inc"/>
+        <IsVisibleTab Value="True"/>
         <TopLine Value="19"/>
         <CursorPos X="3"/>
         <UsageCount Value="142"/>
       </Unit26>
       <Unit27>
         <Filename Value="..\baseunits\includes\Batoto\chapter_page_number.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="34" Y="13"/>
         <UsageCount Value="142"/>
       </Unit27>
       <Unit28>
         <Filename Value="..\baseunits\includes\Batoto\image_url.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="3"/>
         <CursorPos X="25" Y="13"/>
@@ -264,28 +289,33 @@
       </Unit28>
       <Unit29>
         <Filename Value="..\baseunits\includes\AnimeA\names_and_links.inc"/>
+        <IsVisibleTab Value="True"/>
         <TopLine Value="4"/>
         <CursorPos X="14"/>
         <UsageCount Value="142"/>
       </Unit29>
       <Unit30>
         <Filename Value="..\baseunits\includes\MangaHere\names_and_links.inc"/>
+        <IsVisibleTab Value="True"/>
         <CursorPos X="35" Y="8"/>
         <UsageCount Value="142"/>
       </Unit30>
       <Unit31>
         <Filename Value="..\baseunits\includes\EsMangaHere\names_and_links.inc"/>
+        <IsVisibleTab Value="True"/>
         <CursorPos X="14"/>
         <UsageCount Value="142"/>
       </Unit31>
       <Unit32>
         <Filename Value="..\baseunits\includes\Batoto\directory_page_number.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="55" Y="9"/>
         <UsageCount Value="143"/>
       </Unit32>
       <Unit33>
         <Filename Value="..\baseunits\includes\Batoto\names_and_links.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="4"/>
         <CursorPos X="19" Y="26"/>
@@ -293,42 +323,49 @@
       </Unit33>
       <Unit34>
         <Filename Value="..\baseunits\includes\AnimeA\chapter_page_number.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="62" Y="9"/>
         <UsageCount Value="142"/>
       </Unit34>
       <Unit35>
         <Filename Value="..\baseunits\includes\AnimeA\directory_page_number.inc"/>
+        <IsVisibleTab Value="True"/>
         <TopLine Value="3"/>
         <CursorPos X="37" Y="15"/>
         <UsageCount Value="142"/>
       </Unit35>
       <Unit36>
         <Filename Value="..\baseunits\includes\AnimeA\image_url.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="98" Y="14"/>
         <UsageCount Value="142"/>
       </Unit36>
       <Unit37>
         <Filename Value="..\baseunits\includes\AnimeA\manga_information.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="53" Y="7"/>
         <UsageCount Value="143"/>
       </Unit37>
       <Unit38>
         <Filename Value="..\baseunits\includes\AnimeStory\chapter_page_number.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="31" Y="9"/>
         <UsageCount Value="142"/>
       </Unit38>
       <Unit39>
         <Filename Value="..\baseunits\includes\AnimeStory\image_url.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="10" Y="10"/>
         <UsageCount Value="142"/>
       </Unit39>
       <Unit40>
         <Filename Value="..\baseunits\includes\AnimeStory\manga_information.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="3"/>
         <CursorPos X="24" Y="9"/>
@@ -336,55 +373,65 @@
       </Unit40>
       <Unit41>
         <Filename Value="..\baseunits\includes\AnimeStory\names_and_links.inc"/>
+        <IsVisibleTab Value="True"/>
         <CursorPos X="9" Y="2"/>
         <UsageCount Value="142"/>
       </Unit41>
       <Unit42>
         <Filename Value="..\baseunits\includes\AnimExtremist\chapter_page_number.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="9" Y="10"/>
         <UsageCount Value="142"/>
       </Unit42>
       <Unit43>
         <Filename Value="..\baseunits\includes\AnimExtremist\image_url.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="34" Y="8"/>
         <UsageCount Value="142"/>
       </Unit43>
       <Unit44>
         <Filename Value="..\baseunits\includes\AnimExtremist\manga_information.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="63" Y="5"/>
         <UsageCount Value="142"/>
       </Unit44>
       <Unit45>
         <Filename Value="..\baseunits\includes\AnimExtremist\names_and_links.inc"/>
+        <IsVisibleTab Value="True"/>
         <UsageCount Value="142"/>
       </Unit45>
       <Unit46>
         <Filename Value="..\baseunits\includes\BlogTruyen\image_url.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="7" Y="9"/>
         <UsageCount Value="142"/>
       </Unit46>
       <Unit47>
         <Filename Value="..\baseunits\includes\BlogTruyen\manga_information.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="3"/>
         <UsageCount Value="142"/>
       </Unit47>
       <Unit48>
         <Filename Value="..\baseunits\includes\CentralDeMangas\directory_page_number.inc"/>
+        <IsVisibleTab Value="True"/>
         <UsageCount Value="142"/>
       </Unit48>
       <Unit49>
         <Filename Value="..\baseunits\includes\CentralDeMangas\image_url.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="62" Y="8"/>
         <UsageCount Value="142"/>
       </Unit49>
       <Unit50>
         <Filename Value="..\baseunits\includes\CentralDeMangas\manga_information.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="2"/>
         <CursorPos X="5" Y="6"/>
@@ -392,46 +439,54 @@
       </Unit50>
       <Unit51>
         <Filename Value="..\baseunits\includes\CentralDeMangas\names_and_links.inc"/>
+        <IsVisibleTab Value="True"/>
         <CursorPos X="3"/>
         <UsageCount Value="142"/>
       </Unit51>
       <Unit52>
         <Filename Value="..\baseunits\includes\EatManga\chapter_page_number.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="55" Y="10"/>
         <UsageCount Value="142"/>
       </Unit52>
       <Unit53>
         <Filename Value="..\baseunits\includes\EatManga\image_url.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="55" Y="8"/>
         <UsageCount Value="142"/>
       </Unit53>
       <Unit54>
         <Filename Value="..\baseunits\includes\EatManga\manga_information.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="30" Y="5"/>
         <UsageCount Value="142"/>
       </Unit54>
       <Unit55>
         <Filename Value="..\baseunits\includes\EatManga\names_and_links.inc"/>
+        <IsVisibleTab Value="True"/>
         <CursorPos X="3"/>
         <UsageCount Value="142"/>
       </Unit55>
       <Unit56>
         <Filename Value="..\baseunits\includes\EGScans\chapter_page_number.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="20" Y="9"/>
         <UsageCount Value="142"/>
       </Unit56>
       <Unit57>
         <Filename Value="..\baseunits\includes\EGScans\image_url.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="54" Y="8"/>
         <UsageCount Value="142"/>
       </Unit57>
       <Unit58>
         <Filename Value="..\baseunits\includes\EGScans\manga_information.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="13"/>
         <CursorPos X="30" Y="24"/>
@@ -439,39 +494,46 @@
       </Unit58>
       <Unit59>
         <Filename Value="..\baseunits\includes\EGScans\names_and_links.inc"/>
+        <IsVisibleTab Value="True"/>
         <CursorPos X="3"/>
         <UsageCount Value="142"/>
       </Unit59>
       <Unit60>
         <Filename Value="..\baseunits\includes\EsMangaHere\chapter_page_number.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="45" Y="9"/>
         <UsageCount Value="142"/>
       </Unit60>
       <Unit61>
         <Filename Value="..\baseunits\includes\EsMangaHere\image_url.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="47" Y="9"/>
         <UsageCount Value="142"/>
       </Unit61>
       <Unit62>
         <Filename Value="..\baseunits\includes\EsMangaHere\manga_information.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="12"/>
         <UsageCount Value="142"/>
       </Unit62>
       <Unit63>
         <Filename Value="..\baseunits\includes\Fakku\directory_page_number.inc"/>
+        <IsVisibleTab Value="True"/>
         <UsageCount Value="143"/>
       </Unit63>
       <Unit64>
         <Filename Value="..\baseunits\includes\Fakku\image_url.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="15" Y="13"/>
         <UsageCount Value="143"/>
       </Unit64>
       <Unit65>
         <Filename Value="..\baseunits\includes\Fakku\manga_information.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="19"/>
         <CursorPos X="39" Y="32"/>
@@ -479,12 +541,14 @@
       </Unit65>
       <Unit66>
         <Filename Value="..\baseunits\includes\Fakku\names_and_links.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="15" Y="48"/>
         <UsageCount Value="143"/>
       </Unit66>
       <Unit67>
         <Filename Value="..\baseunits\includes\Hentai2Read\chapter_page_number.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="45" Y="9"/>
         <UsageCount Value="142"/>
@@ -497,12 +561,14 @@
       </Unit68>
       <Unit69>
         <Filename Value="..\baseunits\includes\Hentai2Read\image_url.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="45" Y="8"/>
         <UsageCount Value="142"/>
       </Unit69>
       <Unit70>
         <Filename Value="..\baseunits\includes\Hentai2Read\manga_information.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos Y="11"/>
         <UsageCount Value="142"/>
@@ -516,29 +582,34 @@
       </Unit71>
       <Unit72>
         <Filename Value="..\baseunits\includes\HugeManga\chapter_page_number.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="56" Y="9"/>
         <UsageCount Value="142"/>
       </Unit72>
       <Unit73>
         <Filename Value="..\baseunits\includes\HugeManga\image_url.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="20" Y="8"/>
         <UsageCount Value="142"/>
       </Unit73>
       <Unit74>
         <Filename Value="..\baseunits\includes\HugeManga\manga_information.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="57" Y="7"/>
         <UsageCount Value="142"/>
       </Unit74>
       <Unit75>
         <Filename Value="..\baseunits\includes\HugeManga\names_and_links.inc"/>
+        <IsVisibleTab Value="True"/>
         <CursorPos X="13" Y="2"/>
         <UsageCount Value="142"/>
       </Unit75>
       <Unit76>
         <Filename Value="..\baseunits\includes\KissManga\directory_page_number.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="15"/>
         <CursorPos X="28" Y="31"/>
@@ -546,66 +617,77 @@
       </Unit76>
       <Unit77>
         <Filename Value="..\baseunits\includes\KissManga\image_url.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="18" Y="4"/>
         <UsageCount Value="142"/>
       </Unit77>
       <Unit78>
         <Filename Value="..\baseunits\includes\KissManga\manga_information.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="12" Y="3"/>
         <UsageCount Value="142"/>
       </Unit78>
       <Unit79>
         <Filename Value="..\baseunits\includes\KissManga\names_and_links.inc"/>
+        <IsVisibleTab Value="True"/>
         <TopLine Value="13"/>
         <CursorPos X="61" Y="31"/>
         <UsageCount Value="142"/>
       </Unit79>
       <Unit80>
         <Filename Value="..\baseunits\includes\Kivmanga\chapter_page_number.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="12"/>
         <UsageCount Value="142"/>
       </Unit80>
       <Unit81>
         <Filename Value="..\baseunits\includes\Kivmanga\image_url.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="55" Y="8"/>
         <UsageCount Value="142"/>
       </Unit81>
       <Unit82>
         <Filename Value="..\baseunits\includes\Kivmanga\names_and_links.inc"/>
+        <IsVisibleTab Value="True"/>
         <TopLine Value="22"/>
         <CursorPos X="3"/>
         <UsageCount Value="142"/>
       </Unit82>
       <Unit83>
         <Filename Value="..\baseunits\includes\Komikid\chapter_page_number.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="9" Y="12"/>
         <UsageCount Value="142"/>
       </Unit83>
       <Unit84>
         <Filename Value="..\baseunits\includes\Komikid\image_url.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="20" Y="9"/>
         <UsageCount Value="143"/>
       </Unit84>
       <Unit85>
         <Filename Value="..\baseunits\includes\Komikid\manga_information.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="30" Y="24"/>
         <UsageCount Value="142"/>
       </Unit85>
       <Unit86>
         <Filename Value="..\baseunits\includes\Komikid\names_and_links.inc"/>
+        <IsVisibleTab Value="True"/>
         <TopLine Value="19"/>
         <CursorPos X="31" Y="38"/>
         <UsageCount Value="143"/>
       </Unit86>
       <Unit87>
         <Filename Value="..\baseunits\includes\LectureEnLigne\manga_information.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="40"/>
         <CursorPos X="24" Y="40"/>
@@ -613,50 +695,59 @@
       </Unit87>
       <Unit88>
         <Filename Value="..\baseunits\includes\LectureEnLigne\names_and_links.inc"/>
+        <IsVisibleTab Value="True"/>
         <TopLine Value="20"/>
         <CursorPos X="55" Y="31"/>
         <UsageCount Value="143"/>
       </Unit88>
       <Unit89>
         <Filename Value="..\baseunits\includes\Mabuns\image_url.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="5" Y="8"/>
         <UsageCount Value="142"/>
       </Unit89>
       <Unit90>
         <Filename Value="..\baseunits\includes\Mabuns\manga_information.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="5" Y="7"/>
         <UsageCount Value="142"/>
       </Unit90>
       <Unit91>
         <Filename Value="..\baseunits\includes\Mabuns\names_and_links.inc"/>
+        <IsVisibleTab Value="True"/>
         <CursorPos X="3"/>
         <UsageCount Value="142"/>
       </Unit91>
       <Unit92>
         <Filename Value="..\baseunits\includes\Manga24h\directory_page_number.inc"/>
+        <IsVisibleTab Value="True"/>
         <UsageCount Value="142"/>
       </Unit92>
       <Unit93>
         <Filename Value="..\baseunits\includes\Manga24h\image_url.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="42" Y="8"/>
         <UsageCount Value="142"/>
       </Unit93>
       <Unit94>
         <Filename Value="..\baseunits\includes\Manga24h\manga_information.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="57" Y="11"/>
         <UsageCount Value="142"/>
       </Unit94>
       <Unit95>
         <Filename Value="..\baseunits\includes\Manga24h\names_and_links.inc"/>
+        <IsVisibleTab Value="True"/>
         <CursorPos X="16" Y="15"/>
         <UsageCount Value="142"/>
       </Unit95>
       <Unit96>
         <Filename Value="..\baseunits\includes\MangaAe\chapter_page_number.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="16"/>
         <CursorPos X="59" Y="32"/>
@@ -664,12 +755,14 @@
       </Unit96>
       <Unit97>
         <Filename Value="..\baseunits\includes\MangaAe\directory_page_number.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="60" Y="12"/>
         <UsageCount Value="142"/>
       </Unit97>
       <Unit98>
         <Filename Value="..\baseunits\includes\MangaAe\image_url.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="13"/>
         <CursorPos X="67" Y="20"/>
@@ -677,66 +770,77 @@
       </Unit98>
       <Unit99>
         <Filename Value="..\baseunits\includes\MangaAe\manga_information.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="16" Y="3"/>
         <UsageCount Value="142"/>
       </Unit99>
       <Unit100>
         <Filename Value="..\baseunits\includes\MangaAe\names_and_links.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="42" Y="36"/>
         <UsageCount Value="142"/>
       </Unit100>
       <Unit101>
         <Filename Value="..\baseunits\includes\MangaAr\chapter_page_number.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="47" Y="12"/>
         <UsageCount Value="142"/>
       </Unit101>
       <Unit102>
         <Filename Value="..\baseunits\includes\MangaAr\image_url.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="44" Y="8"/>
         <UsageCount Value="142"/>
       </Unit102>
       <Unit103>
         <Filename Value="..\baseunits\includes\MangaAr\manga_information.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="56" Y="6"/>
         <UsageCount Value="142"/>
       </Unit103>
       <Unit104>
         <Filename Value="..\baseunits\includes\MangaAr\names_and_links.inc"/>
+        <IsVisibleTab Value="True"/>
         <TopLine Value="18"/>
         <CursorPos X="20" Y="31"/>
         <UsageCount Value="142"/>
       </Unit104>
       <Unit105>
         <Filename Value="..\baseunits\includes\Mangacan\image_url.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="5" Y="8"/>
         <UsageCount Value="142"/>
       </Unit105>
       <Unit106>
         <Filename Value="..\baseunits\includes\Mangacan\manga_information.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="5" Y="8"/>
         <UsageCount Value="142"/>
       </Unit106>
       <Unit107>
         <Filename Value="..\baseunits\includes\Mangacan\names_and_links.inc"/>
+        <IsVisibleTab Value="True"/>
         <TopLine Value="23"/>
         <CursorPos X="11" Y="38"/>
         <UsageCount Value="142"/>
       </Unit107>
       <Unit108>
         <Filename Value="..\baseunits\includes\Mangacow\chapter_page_number.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="60" Y="10"/>
         <UsageCount Value="142"/>
       </Unit108>
       <Unit109>
         <Filename Value="..\baseunits\includes\Mangacow\image_url.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="9"/>
         <CursorPos X="29" Y="28"/>
@@ -744,6 +848,7 @@
       </Unit109>
       <Unit110>
         <Filename Value="..\baseunits\includes\Mangacow\manga_information.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="28"/>
         <CursorPos X="54" Y="45"/>
@@ -751,83 +856,98 @@
       </Unit110>
       <Unit111>
         <Filename Value="..\baseunits\includes\Mangacow\names_and_links.inc"/>
+        <IsVisibleTab Value="True"/>
         <CursorPos X="35" Y="9"/>
         <UsageCount Value="143"/>
       </Unit111>
       <Unit112>
         <Filename Value="..\baseunits\includes\MangaEden\chapter_page_number.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="11" Y="11"/>
         <UsageCount Value="142"/>
       </Unit112>
       <Unit113>
         <Filename Value="..\baseunits\includes\MangaEden\directory_page_number.inc"/>
+        <IsVisibleTab Value="True"/>
         <UsageCount Value="142"/>
       </Unit113>
       <Unit114>
         <Filename Value="..\baseunits\includes\MangaEden\image_url.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="41" Y="11"/>
         <UsageCount Value="142"/>
       </Unit114>
       <Unit115>
         <Filename Value="..\baseunits\includes\MangaEden\manga_information.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="32" Y="19"/>
         <UsageCount Value="142"/>
       </Unit115>
       <Unit116>
         <Filename Value="..\baseunits\includes\MangaEden\names_and_links.inc"/>
+        <IsVisibleTab Value="True"/>
         <UsageCount Value="142"/>
       </Unit116>
       <Unit117>
         <Filename Value="..\baseunits\includes\MangaEsta\image_url.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="5" Y="8"/>
         <UsageCount Value="142"/>
       </Unit117>
       <Unit118>
         <Filename Value="..\baseunits\includes\MangaEsta\manga_information.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="5" Y="7"/>
         <UsageCount Value="142"/>
       </Unit118>
       <Unit119>
         <Filename Value="..\baseunits\includes\MangaEsta\names_and_links.inc"/>
+        <IsVisibleTab Value="True"/>
         <CursorPos X="11" Y="2"/>
         <UsageCount Value="142"/>
       </Unit119>
       <Unit120>
         <Filename Value="..\baseunits\includes\MangaFox\chapter_page_number.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="38" Y="11"/>
         <UsageCount Value="142"/>
       </Unit120>
       <Unit121>
         <Filename Value="..\baseunits\includes\MangaFox\directory_page_number.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="24" Y="3"/>
         <UsageCount Value="143"/>
       </Unit121>
       <Unit122>
         <Filename Value="..\baseunits\includes\MangaFox\image_url.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="37" Y="10"/>
         <UsageCount Value="142"/>
       </Unit122>
       <Unit123>
         <Filename Value="..\baseunits\includes\MangaFox\manga_information.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="58" Y="10"/>
         <UsageCount Value="143"/>
       </Unit123>
       <Unit124>
         <Filename Value="..\baseunits\includes\MangaFox\names_and_links.inc"/>
+        <IsVisibleTab Value="True"/>
         <CursorPos X="42" Y="4"/>
         <UsageCount Value="143"/>
       </Unit124>
       <Unit125>
         <Filename Value="..\baseunits\includes\MangaFrame\chapter_page_number.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="7"/>
         <CursorPos X="33" Y="10"/>
@@ -835,18 +955,21 @@
       </Unit125>
       <Unit126>
         <Filename Value="..\baseunits\includes\MangaFrame\image_url.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="32" Y="10"/>
         <UsageCount Value="142"/>
       </Unit126>
       <Unit127>
         <Filename Value="..\baseunits\includes\MangaFrame\manga_information.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos Y="6"/>
         <UsageCount Value="142"/>
       </Unit127>
       <Unit128>
         <Filename Value="..\baseunits\includes\MangaFrame\names_and_links.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="7"/>
         <CursorPos Y="31"/>
@@ -854,18 +977,21 @@
       </Unit128>
       <Unit129>
         <Filename Value="..\baseunits\includes\MangaGo\chapter_page_number.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="34" Y="10"/>
         <UsageCount Value="142"/>
       </Unit129>
       <Unit130>
         <Filename Value="..\baseunits\includes\MangaGo\directory_page_number.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos Y="25"/>
         <UsageCount Value="142"/>
       </Unit130>
       <Unit131>
         <Filename Value="..\baseunits\includes\MangaGo\image_url.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="4"/>
         <CursorPos X="28" Y="17"/>
@@ -873,30 +999,35 @@
       </Unit131>
       <Unit132>
         <Filename Value="..\baseunits\includes\MangaGo\manga_information.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="54" Y="8"/>
         <UsageCount Value="142"/>
       </Unit132>
       <Unit133>
         <Filename Value="..\baseunits\includes\MangaGo\names_and_links.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="52" Y="6"/>
         <UsageCount Value="142"/>
       </Unit133>
       <Unit134>
         <Filename Value="..\baseunits\includes\MangaHere\chapter_page_number.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="43" Y="9"/>
         <UsageCount Value="142"/>
       </Unit134>
       <Unit135>
         <Filename Value="..\baseunits\includes\MangaHere\image_url.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="45" Y="14"/>
         <UsageCount Value="142"/>
       </Unit135>
       <Unit136>
         <Filename Value="..\baseunits\includes\MangaHere\manga_information.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="75"/>
         <CursorPos X="34" Y="79"/>
@@ -904,53 +1035,62 @@
       </Unit136>
       <Unit137>
         <Filename Value="..\baseunits\includes\MangaInn\chapter_page_number.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="42" Y="9"/>
         <UsageCount Value="142"/>
       </Unit137>
       <Unit138>
         <Filename Value="..\baseunits\includes\MangaInn\image_url.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="42" Y="8"/>
         <UsageCount Value="142"/>
       </Unit138>
       <Unit139>
         <Filename Value="..\baseunits\includes\MangaInn\manga_information.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="57" Y="7"/>
         <UsageCount Value="142"/>
       </Unit139>
       <Unit140>
         <Filename Value="..\baseunits\includes\MangaInn\names_and_links.inc"/>
+        <IsVisibleTab Value="True"/>
         <TopLine Value="15"/>
         <CursorPos X="11" Y="35"/>
         <UsageCount Value="142"/>
       </Unit140>
       <Unit141>
         <Filename Value="..\baseunits\includes\MangaPanda\chapter_page_number.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="33" Y="8"/>
         <UsageCount Value="143"/>
       </Unit141>
       <Unit142>
         <Filename Value="..\baseunits\includes\MangaPanda\image_url.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="25" Y="15"/>
         <UsageCount Value="143"/>
       </Unit142>
       <Unit143>
         <Filename Value="..\baseunits\includes\MangaPanda\manga_information.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="19" Y="8"/>
         <UsageCount Value="142"/>
       </Unit143>
       <Unit144>
         <Filename Value="..\baseunits\includes\MangaPanda\names_and_links.inc"/>
+        <IsVisibleTab Value="True"/>
         <CursorPos X="3"/>
         <UsageCount Value="142"/>
       </Unit144>
       <Unit145>
         <Filename Value="..\baseunits\includes\MangaPark\chapter_page_number.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="6"/>
         <CursorPos X="16" Y="18"/>
@@ -958,6 +1098,7 @@
       </Unit145>
       <Unit146>
         <Filename Value="..\baseunits\includes\MangaPark\directory_page_number.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="13"/>
         <CursorPos X="43" Y="31"/>
@@ -965,12 +1106,14 @@
       </Unit146>
       <Unit147>
         <Filename Value="..\baseunits\includes\MangaPark\image_url.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="43" Y="8"/>
         <UsageCount Value="142"/>
       </Unit147>
       <Unit148>
         <Filename Value="..\baseunits\includes\MangaPark\manga_information.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="26"/>
         <CursorPos X="12" Y="37"/>
@@ -978,18 +1121,21 @@
       </Unit148>
       <Unit149>
         <Filename Value="..\baseunits\includes\MangaPark\names_and_links.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="32" Y="21"/>
         <UsageCount Value="142"/>
       </Unit149>
       <Unit150>
         <Filename Value="..\baseunits\includes\MangaReader\chapter_page_number.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="49" Y="11"/>
         <UsageCount Value="142"/>
       </Unit150>
       <Unit151>
         <Filename Value="..\baseunits\includes\MangaReader\image_url.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="46"/>
         <CursorPos X="50" Y="55"/>
@@ -997,39 +1143,46 @@
       </Unit151>
       <Unit152>
         <Filename Value="..\baseunits\includes\MangaReader\manga_information.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="5" Y="9"/>
         <UsageCount Value="142"/>
       </Unit152>
       <Unit153>
         <Filename Value="..\baseunits\includes\MangaReader\names_and_links.inc"/>
+        <IsVisibleTab Value="True"/>
         <UsageCount Value="142"/>
       </Unit153>
       <Unit154>
         <Filename Value="..\baseunits\includes\MangaStream\chapter_page_number.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="20" Y="9"/>
         <UsageCount Value="142"/>
       </Unit154>
       <Unit155>
         <Filename Value="..\baseunits\includes\MangaStream\image_url.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="33" Y="10"/>
         <UsageCount Value="142"/>
       </Unit155>
       <Unit156>
         <Filename Value="..\baseunits\includes\MangaStream\manga_information.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="60" Y="7"/>
         <UsageCount Value="142"/>
       </Unit156>
       <Unit157>
         <Filename Value="..\baseunits\includes\MangaStream\names_and_links.inc"/>
+        <IsVisibleTab Value="True"/>
         <CursorPos X="3"/>
         <UsageCount Value="142"/>
       </Unit157>
       <Unit158>
         <Filename Value="..\baseunits\includes\MangaTraders\chapter_page_number.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="13"/>
         <CursorPos X="43" Y="7"/>
@@ -1037,174 +1190,205 @@
       </Unit158>
       <Unit159>
         <Filename Value="..\baseunits\includes\MangaTraders\directory_page_number.inc"/>
+        <IsVisibleTab Value="True"/>
         <UsageCount Value="142"/>
       </Unit159>
       <Unit160>
         <Filename Value="..\baseunits\includes\MangaTraders\image_url.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="25" Y="29"/>
         <UsageCount Value="142"/>
       </Unit160>
       <Unit161>
         <Filename Value="..\baseunits\includes\MangaTraders\manga_information.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="63" Y="6"/>
         <UsageCount Value="143"/>
       </Unit161>
       <Unit162>
         <Filename Value="..\baseunits\includes\MangaTraders\names_and_links.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="42" Y="7"/>
         <UsageCount Value="143"/>
       </Unit162>
       <Unit163>
         <Filename Value="..\baseunits\includes\MangaVadisi\chapter_page_number.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="80" Y="9"/>
         <UsageCount Value="142"/>
       </Unit163>
       <Unit164>
         <Filename Value="..\baseunits\includes\MangaVadisi\image_url.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="7" Y="9"/>
         <UsageCount Value="142"/>
       </Unit164>
       <Unit165>
         <Filename Value="..\baseunits\includes\MangaVadisi\manga_information.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="82" Y="7"/>
         <UsageCount Value="142"/>
       </Unit165>
       <Unit166>
         <Filename Value="..\baseunits\includes\MangaVadisi\names_and_links.inc"/>
+        <IsVisibleTab Value="True"/>
         <CursorPos X="3"/>
         <UsageCount Value="142"/>
       </Unit166>
       <Unit167>
         <Filename Value="..\baseunits\includes\PecintaKomik\chapter_page_number.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="47" Y="17"/>
         <UsageCount Value="142"/>
       </Unit167>
       <Unit168>
         <Filename Value="..\baseunits\includes\PecintaKomik\image_url.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="59" Y="8"/>
         <UsageCount Value="142"/>
       </Unit168>
       <Unit169>
         <Filename Value="..\baseunits\includes\PecintaKomik\manga_information.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="61" Y="9"/>
         <UsageCount Value="142"/>
       </Unit169>
       <Unit170>
         <Filename Value="..\baseunits\includes\PecintaKomik\names_and_links.inc"/>
+        <IsVisibleTab Value="True"/>
         <CursorPos X="3"/>
         <UsageCount Value="142"/>
       </Unit170>
       <Unit171>
         <Filename Value="..\baseunits\includes\Pururin\chapter_page_number.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="25" Y="11"/>
         <UsageCount Value="142"/>
       </Unit171>
       <Unit172>
         <Filename Value="..\baseunits\includes\Pururin\directory_page_number.inc"/>
+        <IsVisibleTab Value="True"/>
         <CursorPos X="4" Y="3"/>
         <UsageCount Value="142"/>
       </Unit172>
       <Unit173>
         <Filename Value="..\baseunits\includes\Pururin\image_url.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="25" Y="9"/>
         <UsageCount Value="142"/>
       </Unit173>
       <Unit174>
         <Filename Value="..\baseunits\includes\Pururin\manga_information.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="31" Y="12"/>
         <UsageCount Value="143"/>
       </Unit174>
       <Unit175>
         <Filename Value="..\baseunits\includes\Pururin\names_and_links.inc"/>
+        <IsVisibleTab Value="True"/>
         <CursorPos X="44" Y="20"/>
         <UsageCount Value="143"/>
       </Unit175>
       <Unit176>
         <Filename Value="..\baseunits\includes\RedHawkScans\chapter_page_number.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="59" Y="9"/>
         <UsageCount Value="142"/>
       </Unit176>
       <Unit177>
         <Filename Value="..\baseunits\includes\RedHawkScans\directory_page_number.inc"/>
+        <IsVisibleTab Value="True"/>
         <CursorPos X="12"/>
         <UsageCount Value="142"/>
       </Unit177>
       <Unit178>
         <Filename Value="..\baseunits\includes\RedHawkScans\image_url.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="40" Y="7"/>
         <UsageCount Value="142"/>
       </Unit178>
       <Unit179>
         <Filename Value="..\baseunits\includes\RedHawkScans\manga_information.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="61" Y="7"/>
         <UsageCount Value="142"/>
       </Unit179>
       <Unit180>
         <Filename Value="..\baseunits\includes\RedHawkScans\names_and_links.inc"/>
+        <IsVisibleTab Value="True"/>
         <CursorPos X="3"/>
         <UsageCount Value="142"/>
       </Unit180>
       <Unit181>
         <Filename Value="..\baseunits\includes\S2scans\chapter_page_number.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="53" Y="9"/>
         <UsageCount Value="142"/>
       </Unit181>
       <Unit182>
         <Filename Value="..\baseunits\includes\S2scans\directory_page_number.inc"/>
+        <IsVisibleTab Value="True"/>
         <UsageCount Value="142"/>
       </Unit182>
       <Unit183>
         <Filename Value="..\baseunits\includes\S2scans\image_url.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="53" Y="9"/>
         <UsageCount Value="142"/>
       </Unit183>
       <Unit184>
         <Filename Value="..\baseunits\includes\S2scans\manga_information.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="55" Y="9"/>
         <UsageCount Value="142"/>
       </Unit184>
       <Unit185>
         <Filename Value="..\baseunits\includes\S2scans\names_and_links.inc"/>
+        <IsVisibleTab Value="True"/>
         <CursorPos X="3"/>
         <UsageCount Value="142"/>
       </Unit185>
       <Unit186>
         <Filename Value="..\baseunits\includes\ScanManga\image_url.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="57" Y="11"/>
         <UsageCount Value="142"/>
       </Unit186>
       <Unit187>
         <Filename Value="..\baseunits\includes\ScanManga\manga_information.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="58" Y="7"/>
         <UsageCount Value="142"/>
       </Unit187>
       <Unit188>
         <Filename Value="..\baseunits\includes\ScanManga\names_and_links.inc"/>
+        <IsVisibleTab Value="True"/>
         <CursorPos X="12" Y="2"/>
         <UsageCount Value="142"/>
       </Unit188>
       <Unit189>
         <Filename Value="..\baseunits\includes\SenManga\chapter_page_number.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="21"/>
         <CursorPos X="45" Y="35"/>
@@ -1212,12 +1396,14 @@
       </Unit189>
       <Unit190>
         <Filename Value="..\baseunits\includes\SenManga\image_url.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="30" Y="7"/>
         <UsageCount Value="144"/>
       </Unit190>
       <Unit191>
         <Filename Value="..\baseunits\includes\SenManga\manga_information.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="87"/>
         <CursorPos X="25" Y="99"/>
@@ -1225,6 +1411,7 @@
       </Unit191>
       <Unit192>
         <Filename Value="..\baseunits\includes\SenManga\names_and_links.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="14"/>
         <CursorPos X="42" Y="7"/>
@@ -1232,6 +1419,7 @@
       </Unit192>
       <Unit193>
         <Filename Value="..\baseunits\includes\Starkana\chapter_page_number.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="9"/>
         <CursorPos X="28" Y="7"/>
@@ -1239,6 +1427,7 @@
       </Unit193>
       <Unit194>
         <Filename Value="..\baseunits\includes\Starkana\image_url.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="6"/>
         <CursorPos X="9" Y="26"/>
@@ -1246,6 +1435,7 @@
       </Unit194>
       <Unit195>
         <Filename Value="..\baseunits\includes\Starkana\manga_information.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="30"/>
         <CursorPos X="32" Y="38"/>
@@ -1253,95 +1443,112 @@
       </Unit195>
       <Unit196>
         <Filename Value="..\baseunits\includes\Starkana\names_and_links.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="15" Y="3"/>
         <UsageCount Value="143"/>
       </Unit196>
       <Unit197>
         <Filename Value="..\baseunits\includes\SubManga\chapter_page_number.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="42" Y="9"/>
         <UsageCount Value="142"/>
       </Unit197>
       <Unit198>
         <Filename Value="..\baseunits\includes\SubManga\image_url.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="55" Y="8"/>
         <UsageCount Value="142"/>
       </Unit198>
       <Unit199>
         <Filename Value="..\baseunits\includes\SubManga\manga_information.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="57" Y="6"/>
         <UsageCount Value="142"/>
       </Unit199>
       <Unit200>
         <Filename Value="..\baseunits\includes\SubManga\names_and_links.inc"/>
+        <IsVisibleTab Value="True"/>
         <CursorPos X="3"/>
         <UsageCount Value="142"/>
       </Unit200>
       <Unit201>
         <Filename Value="..\baseunits\includes\TruyenTranhTuan\image_url.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="49" Y="9"/>
         <UsageCount Value="142"/>
       </Unit201>
       <Unit202>
         <Filename Value="..\baseunits\includes\TruyenTranhTuan\manga_information.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="64" Y="8"/>
         <UsageCount Value="142"/>
       </Unit202>
       <Unit203>
         <Filename Value="..\baseunits\includes\TruyenTranhTuan\names_and_links.inc"/>
+        <IsVisibleTab Value="True"/>
         <CursorPos X="3"/>
         <UsageCount Value="142"/>
       </Unit203>
       <Unit204>
         <Filename Value="..\baseunits\includes\Turkcraft\chapter_page_number.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="69" Y="11"/>
         <UsageCount Value="142"/>
       </Unit204>
       <Unit205>
         <Filename Value="..\baseunits\includes\Turkcraft\image_url.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="56" Y="8"/>
         <UsageCount Value="142"/>
       </Unit205>
       <Unit206>
         <Filename Value="..\baseunits\includes\Turkcraft\manga_information.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="58" Y="7"/>
         <UsageCount Value="142"/>
       </Unit206>
       <Unit207>
         <Filename Value="..\baseunits\includes\Turkcraft\names_and_links.inc"/>
+        <IsVisibleTab Value="True"/>
         <CursorPos X="3"/>
         <UsageCount Value="142"/>
       </Unit207>
       <Unit208>
         <Filename Value="..\baseunits\includes\VnSharing\directory_page_number.inc"/>
+        <IsVisibleTab Value="True"/>
         <UsageCount Value="142"/>
       </Unit208>
       <Unit209>
         <Filename Value="..\baseunits\includes\VnSharing\image_url.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="58" Y="11"/>
         <UsageCount Value="142"/>
       </Unit209>
       <Unit210>
         <Filename Value="..\baseunits\includes\VnSharing\manga_information.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="58" Y="8"/>
         <UsageCount Value="142"/>
       </Unit210>
       <Unit211>
         <Filename Value="..\baseunits\includes\VnSharing\names_and_links.inc"/>
+        <IsVisibleTab Value="True"/>
         <UsageCount Value="142"/>
       </Unit211>
       <Unit212>
         <Filename Value="..\baseunits\includes\MeinManga\manga_information.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="13"/>
         <CursorPos X="5" Y="22"/>
@@ -1349,23 +1556,27 @@
       </Unit212>
       <Unit213>
         <Filename Value="..\baseunits\includes\MeinManga\names_and_links.inc"/>
+        <IsVisibleTab Value="True"/>
         <CursorPos X="85" Y="7"/>
         <UsageCount Value="142"/>
       </Unit213>
       <Unit214>
         <Filename Value="..\baseunits\includes\MeinManga\chapter_page_number.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="58" Y="9"/>
         <UsageCount Value="147"/>
       </Unit214>
       <Unit215>
         <Filename Value="..\baseunits\includes\MeinManga\image_url.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="29" Y="7"/>
         <UsageCount Value="150"/>
       </Unit215>
       <Unit216>
         <Filename Value="..\baseunits\includes\MangaREADER_POR\manga_information.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="148"/>
         <CursorPos X="21" Y="162"/>
@@ -1373,12 +1584,14 @@
       </Unit216>
       <Unit217>
         <Filename Value="..\baseunits\includes\MangaREADER_POR\image_url.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="20" Y="8"/>
         <UsageCount Value="143"/>
       </Unit217>
       <Unit218>
         <Filename Value="..\baseunits\includes\MangaREADER_POR\names_and_links.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="28"/>
         <CursorPos X="28" Y="38"/>
@@ -1386,12 +1599,14 @@
       </Unit218>
       <Unit219>
         <Filename Value="..\baseunits\includes\MangasPROJECT\image_url.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="60" Y="8"/>
         <UsageCount Value="143"/>
       </Unit219>
       <Unit220>
         <Filename Value="..\baseunits\includes\MangasPROJECT\manga_information.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="55"/>
         <CursorPos X="5" Y="38"/>
@@ -1399,29 +1614,34 @@
       </Unit220>
       <Unit221>
         <Filename Value="..\baseunits\includes\MangasPROJECT\names_and_links.inc"/>
+        <IsVisibleTab Value="True"/>
         <CursorPos Y="3"/>
         <UsageCount Value="143"/>
       </Unit221>
       <Unit222>
         <Filename Value="..\baseunits\includes\MangaStreamTo\manga_information.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="11" Y="54"/>
         <UsageCount Value="19"/>
       </Unit222>
       <Unit223>
         <Filename Value="..\baseunits\includes\MangaStreamTo\chapter_page_number.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="33" Y="8"/>
         <UsageCount Value="18"/>
       </Unit223>
       <Unit224>
         <Filename Value="..\baseunits\includes\MangaStreamTo\image_url.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="26" Y="13"/>
         <UsageCount Value="18"/>
       </Unit224>
       <Unit225>
         <Filename Value="..\baseunits\includes\MangaStreamTo\names_and_links.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="16"/>
         <CursorPos X="23" Y="14"/>
@@ -1429,6 +1649,7 @@
       </Unit225>
       <Unit226>
         <Filename Value="..\baseunits\includes\EHentai\chapter_page_number.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="127"/>
         <CursorPos X="36" Y="104"/>
@@ -1436,12 +1657,14 @@
       </Unit226>
       <Unit227>
         <Filename Value="..\baseunits\includes\EHentai\directory_page_number.inc"/>
+        <IsVisibleTab Value="True"/>
         <TopLine Value="19"/>
         <CursorPos X="12"/>
         <UsageCount Value="3"/>
       </Unit227>
       <Unit228>
         <Filename Value="..\baseunits\includes\EHentai\image_url.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="19"/>
         <CursorPos X="49" Y="33"/>
@@ -1449,6 +1672,7 @@
       </Unit228>
       <Unit229>
         <Filename Value="..\baseunits\includes\EHentai\manga_information.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="106"/>
         <CursorPos X="73" Y="11"/>
@@ -1456,6 +1680,7 @@
       </Unit229>
       <Unit230>
         <Filename Value="..\baseunits\includes\EHentai\names_and_links.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="36"/>
         <CursorPos X="49" Y="55"/>
@@ -1463,36 +1688,43 @@
       </Unit230>
       <Unit231>
         <Filename Value="..\baseunits\includes\EHentai\true_image_url.inc"/>
+        <IsVisibleTab Value="True"/>
         <CursorPos X="25" Y="10"/>
         <UsageCount Value="10"/>
       </Unit231>
       <Unit232>
         <Filename Value="..\baseunits\includes\GEHentai\manga_information.inc"/>
+        <IsVisibleTab Value="True"/>
         <CursorPos X="22"/>
         <UsageCount Value="6"/>
       </Unit232>
       <Unit233>
         <Filename Value="..\baseunits\includes\GEHentai\directory_page_number.inc"/>
+        <IsVisibleTab Value="True"/>
         <CursorPos X="14" Y="6"/>
         <UsageCount Value="6"/>
       </Unit233>
       <Unit234>
         <Filename Value="..\baseunits\includes\GEHentai\chapter_page_number.inc"/>
+        <IsVisibleTab Value="True"/>
         <CursorPos X="22"/>
         <UsageCount Value="6"/>
       </Unit234>
       <Unit235>
         <Filename Value="..\baseunits\includes\GEHentai\image_url.inc"/>
+        <IsVisibleTab Value="True"/>
         <CursorPos X="38" Y="14"/>
         <UsageCount Value="6"/>
       </Unit235>
       <Unit236>
         <Filename Value="..\baseunits\includes\GEHentai\names_and_links.inc"/>
+        <IsVisibleTab Value="True"/>
         <CursorPos X="21"/>
         <UsageCount Value="6"/>
       </Unit236>
       <Unit237>
         <Filename Value="..\baseunits\naturalsort.pas"/>
+        <IsVisibleTab Value="True"/>
         <TopLine Value="143"/>
         <CursorPos X="32" Y="166"/>
         <UsageCount Value="10"/>
@@ -1502,24 +1734,28 @@
         <ComponentName Value="MainForm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
+        <IsVisibleTab Value="True"/>
         <TopLine Value="3344"/>
         <CursorPos X="27" Y="3346"/>
         <UsageCount Value="95"/>
       </Unit238>
       <Unit239>
         <Filename Value="data.pas"/>
+        <IsVisibleTab Value="True"/>
         <TopLine Value="51"/>
         <CursorPos X="30" Y="62"/>
         <UsageCount Value="110"/>
       </Unit239>
       <Unit240>
         <Filename Value="..\baseunits\genericlib.pas"/>
+        <IsVisibleTab Value="True"/>
         <TopLine Value="70"/>
         <CursorPos X="49" Y="79"/>
         <UsageCount Value="107"/>
       </Unit240>
       <Unit241>
         <Filename Value="..\baseunits\zip.pas"/>
+        <IsVisibleTab Value="True"/>
         <TopLine Value="56"/>
         <CursorPos X="15" Y="57"/>
         <UsageCount Value="95"/>
@@ -1529,6 +1765,7 @@
         <ComponentName Value="Form1"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
+        <IsVisibleTab Value="True"/>
         <CursorPos X="15" Y="11"/>
         <UsageCount Value="101"/>
       </Unit242>
@@ -1537,18 +1774,21 @@
         <ComponentName Value="Log"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
+        <IsVisibleTab Value="True"/>
         <TopLine Value="56"/>
         <CursorPos X="15" Y="65"/>
         <UsageCount Value="95"/>
       </Unit243>
       <Unit244>
         <Filename Value="..\baseunits\buffer.pas"/>
+        <IsVisibleTab Value="True"/>
         <TopLine Value="61"/>
         <CursorPos X="12" Y="64"/>
         <UsageCount Value="95"/>
       </Unit244>
       <Unit245>
         <Filename Value="..\baseunits\curlcore.pas"/>
+        <IsVisibleTab Value="True"/>
         <CursorPos X="36" Y="11"/>
         <UsageCount Value="95"/>
       </Unit245>
@@ -1557,17 +1797,20 @@
         <ComponentName Value="NewChapter"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
+        <IsVisibleTab Value="True"/>
         <TopLine Value="49"/>
         <CursorPos X="26" Y="57"/>
         <UsageCount Value="97"/>
       </Unit246>
       <Unit247>
         <Filename Value="..\baseunits\iecore.pas"/>
+        <IsVisibleTab Value="True"/>
         <CursorPos X="51" Y="2"/>
         <UsageCount Value="5"/>
       </Unit247>
       <Unit248>
         <Filename Value="..\baseunits\uImg2Pdf.pas"/>
+        <IsVisibleTab Value="True"/>
         <TopLine Value="354"/>
         <CursorPos X="3" Y="362"/>
         <UsageCount Value="4"/>
@@ -1581,6 +1824,7 @@
       </Unit249>
       <Unit250>
         <Filename Value="..\3rd\synapse\source\httpsend.pas"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="106"/>
         <CursorPos X="17" Y="117"/>
@@ -1588,42 +1832,49 @@
       </Unit250>
       <Unit251>
         <Filename Value="..\3rd\Imaging\Source\ImagingCanvases.pas"/>
+        <IsVisibleTab Value="True"/>
         <TopLine Value="125"/>
         <CursorPos X="3" Y="136"/>
         <UsageCount Value="3"/>
       </Unit251>
       <Unit252>
         <Filename Value="C:\lazarus\components\lazutils\lazutf8classes.pas"/>
+        <IsVisibleTab Value="True"/>
         <TopLine Value="3"/>
         <CursorPos X="3" Y="14"/>
         <UsageCount Value="3"/>
       </Unit252>
       <Unit253>
         <Filename Value="C:\lazarus\fpc\2.6.4\source\rtl\objpas\classes\classesh.inc"/>
+        <IsVisibleTab Value="True"/>
         <TopLine Value="1549"/>
         <CursorPos X="5" Y="1559"/>
         <UsageCount Value="8"/>
       </Unit253>
       <Unit254>
         <Filename Value="C:\lazarus\fpc\2.6.4\source\rtl\objpas\fgl.pp"/>
+        <IsVisibleTab Value="True"/>
         <TopLine Value="129"/>
         <CursorPos X="14" Y="140"/>
         <UsageCount Value="10"/>
       </Unit254>
       <Unit255>
         <Filename Value="C:\lazarus\fpc\2.6.4\source\rtl\objpas\classes\stringl.inc"/>
+        <IsVisibleTab Value="True"/>
         <TopLine Value="1280"/>
         <CursorPos X="9" Y="1282"/>
         <UsageCount Value="7"/>
       </Unit255>
       <Unit256>
         <Filename Value="C:\lazarus\fpc\2.6.4\source\rtl\inc\objpash.inc"/>
+        <IsVisibleTab Value="True"/>
         <TopLine Value="192"/>
         <CursorPos X="21" Y="201"/>
         <UsageCount Value="9"/>
       </Unit256>
       <Unit257>
         <Filename Value="C:\lazarus\fpc\2.6.4\source\rtl\objpas\sysutils\sysstrh.inc"/>
+        <IsVisibleTab Value="True"/>
         <TopLine Value="109"/>
         <CursorPos X="10" Y="124"/>
         <UsageCount Value="8"/>
@@ -1633,42 +1884,50 @@
         <ComponentName Value="ExceptionForm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
+        <IsVisibleTab Value="True"/>
         <TopLine Value="28"/>
         <CursorPos X="3" Y="42"/>
         <UsageCount Value="7"/>
       </Unit258>
       <Unit259>
         <Filename Value="C:\lazarus\fpc\2.6.4\source\rtl\objpas\sysutils\sysutilh.inc"/>
+        <IsVisibleTab Value="True"/>
         <CursorPos X="4" Y="104"/>
         <UsageCount Value="8"/>
       </Unit259>
       <Unit260>
         <Filename Value="..\baseunits\udownloadmanager.pas"/>
+        <IsVisibleTab Value="True"/>
         <CursorPos X="22" Y="11"/>
         <UsageCount Value="3"/>
       </Unit260>
       <Unit261>
         <Filename Value="..\3rd\Imaging\Source\JpegLib\imjdhuff.pas"/>
+        <IsVisibleTab Value="True"/>
         <TopLine Value="1162"/>
         <CursorPos Y="1175"/>
         <UsageCount Value="3"/>
       </Unit261>
       <Unit262>
         <Filename Value="C:\lazarus\usercomponents\imaginglib\Source\Imaging.pas"/>
+        <IsVisibleTab Value="True"/>
         <TopLine Value="719"/>
         <CursorPos X="35" Y="676"/>
         <UsageCount Value="3"/>
       </Unit262>
       <Unit263>
         <Filename Value="C:\lazarus_component\lazsolutions\3rdParty\Synapse\httpsend.pas"/>
+        <IsVisibleTab Value="True"/>
         <UsageCount Value="3"/>
       </Unit263>
       <Unit264>
         <Filename Value="C:\lazarus_component\lazsolutions\3rdParty\Synapse\ssl_openssl.pas"/>
+        <IsVisibleTab Value="True"/>
         <UsageCount Value="3"/>
       </Unit264>
       <Unit265>
         <Filename Value="..\baseunits\animatedgifs\animatedgif.pas"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="17"/>
         <CursorPos X="19" Y="84"/>
@@ -1679,28 +1938,33 @@
         <ComponentName Value="ExceptionForm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
+        <IsVisibleTab Value="True"/>
         <CursorPos X="6" Y="34"/>
         <UsageCount Value="9"/>
       </Unit266>
       <Unit267>
         <Filename Value="C:\lazarus\usercomponents\imaginglib\Extras\IdePackages\vampyreimagingpackage.pas"/>
+        <IsVisibleTab Value="True"/>
         <CursorPos X="64" Y="13"/>
         <UsageCount Value="3"/>
       </Unit267>
       <Unit268>
         <Filename Value="..\3rd\Imaging\Extras\Extensions\ImagingPcx.pas"/>
+        <IsVisibleTab Value="True"/>
         <TopLine Value="78"/>
         <CursorPos X="33" Y="94"/>
         <UsageCount Value="3"/>
       </Unit268>
       <Unit269>
         <Filename Value="..\3rd\Imaging\Source\ImagingTypes.pas"/>
+        <IsVisibleTab Value="True"/>
         <TopLine Value="246"/>
         <CursorPos X="28" Y="258"/>
         <UsageCount Value="3"/>
       </Unit269>
       <Unit270>
         <Filename Value="C:\development\fpc\rtl\objpas\classes\classesh.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="596"/>
         <CursorPos X="24" Y="607"/>
@@ -1708,24 +1972,28 @@
       </Unit270>
       <Unit271>
         <Filename Value="..\..\fmd-rev339\baseunits\uUpdateThread.pas"/>
+        <IsVisibleTab Value="True"/>
         <TopLine Value="254"/>
         <CursorPos X="11" Y="266"/>
         <UsageCount Value="3"/>
       </Unit271>
       <Unit272>
         <Filename Value="..\..\fmd-rev339\baseunits\uUpdateDBThread.pas"/>
+        <IsVisibleTab Value="True"/>
         <TopLine Value="53"/>
         <CursorPos X="44" Y="68"/>
         <UsageCount Value="3"/>
       </Unit272>
       <Unit273>
         <Filename Value="..\baseunits\includes\NineManga\manga_information.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="66" Y="9"/>
         <UsageCount Value="1"/>
       </Unit273>
       <Unit274>
         <Filename Value="..\baseunits\includes\JapanShin\manga_information.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="9"/>
         <CursorPos X="31" Y="60"/>
@@ -1733,6 +2001,7 @@
       </Unit274>
       <Unit275>
         <Filename Value="C:\development\lazarus\lcl\controls.pp"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="1573"/>
         <CursorPos X="14" Y="1584"/>
@@ -1740,24 +2009,28 @@
       </Unit275>
       <Unit276>
         <Filename Value="C:\development\lazarus\lcl\buttons.pp"/>
+        <IsVisibleTab Value="True"/>
         <TopLine Value="177"/>
         <CursorPos X="14" Y="188"/>
         <UsageCount Value="7"/>
       </Unit276>
       <Unit277>
         <Filename Value="..\baseunits\includes\JapanShin\names_and_links.inc"/>
+        <IsVisibleTab Value="True"/>
         <TopLine Value="20"/>
         <CursorPos X="36" Y="12"/>
         <UsageCount Value="10"/>
       </Unit277>
       <Unit278>
         <Filename Value="C:\development\fpc\rtl\objpas\sysutils\filutilh.inc"/>
+        <IsVisibleTab Value="True"/>
         <TopLine Value="148"/>
         <CursorPos X="10" Y="158"/>
         <UsageCount Value="7"/>
       </Unit278>
       <Unit279>
         <Filename Value="C:\development\fpc\rtl\inc\objpash.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="183"/>
         <CursorPos X="23" Y="193"/>
@@ -1765,23 +2038,27 @@
       </Unit279>
       <Unit280>
         <Filename Value="C:\development\fpc\rtl\inc\objpas.inc"/>
+        <IsVisibleTab Value="True"/>
         <TopLine Value="541"/>
         <CursorPos X="12" Y="535"/>
         <UsageCount Value="7"/>
       </Unit280>
       <Unit281>
         <Filename Value="C:\development\fpc\rtl\win\sysosh.inc"/>
+        <IsVisibleTab Value="True"/>
         <TopLine Value="12"/>
         <CursorPos X="3" Y="22"/>
         <UsageCount Value="7"/>
       </Unit281>
       <Unit282>
         <Filename Value="C:\lazarus_component\ExceptionLogger\ExceptionLogger.pas"/>
+        <IsVisibleTab Value="True"/>
         <CursorPos Y="22"/>
         <UsageCount Value="1"/>
       </Unit282>
       <Unit283>
         <Filename Value="C:\development\fpc\rtl\objpas\sysutils\sysstrh.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="68"/>
         <CursorPos X="12" Y="80"/>
@@ -1789,18 +2066,21 @@
       </Unit283>
       <Unit284>
         <Filename Value="..\baseunits\includes\NineManga\names_and_links.inc"/>
+        <IsVisibleTab Value="True"/>
         <TopLine Value="24"/>
         <CursorPos X="47" Y="43"/>
         <UsageCount Value="8"/>
       </Unit284>
       <Unit285>
         <Filename Value="C:\lazarus\fpc\2.6.4\source\rtl\win\tthread.inc"/>
+        <IsVisibleTab Value="True"/>
         <TopLine Value="93"/>
         <CursorPos X="8" Y="100"/>
         <UsageCount Value="7"/>
       </Unit285>
       <Unit286>
         <Filename Value="C:\development\lazarus\lcl\forms.pp"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="1743"/>
         <CursorPos X="3" Y="1755"/>
@@ -1808,30 +2088,35 @@
       </Unit286>
       <Unit287>
         <Filename Value="C:\lazarus_component\lazarus-ccr\richmemo\wsrichmemo.pas"/>
+        <IsVisibleTab Value="True"/>
         <TopLine Value="25"/>
         <CursorPos X="5" Y="36"/>
         <UsageCount Value="3"/>
       </Unit287>
       <Unit288>
         <Filename Value="C:\lazarus\fpc\2.6.4\source\rtl\objpas\typinfo.pp"/>
+        <IsVisibleTab Value="True"/>
         <TopLine Value="336"/>
         <CursorPos X="10" Y="249"/>
         <UsageCount Value="1"/>
       </Unit288>
       <Unit289>
         <Filename Value="..\3rd\synapse\source\sswin32.inc"/>
+        <IsVisibleTab Value="True"/>
         <TopLine Value="890"/>
         <CursorPos X="3" Y="906"/>
         <UsageCount Value="6"/>
       </Unit289>
       <Unit290>
         <Filename Value="C:\development\fpc\rtl\inc\systemh.inc"/>
+        <IsVisibleTab Value="True"/>
         <TopLine Value="97"/>
         <CursorPos X="3" Y="108"/>
         <UsageCount Value="10"/>
       </Unit290>
       <Unit291>
         <Filename Value="C:\development\fpc\rtl\objpas\fgl.pp"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="70"/>
         <CursorPos X="15" Y="77"/>
@@ -1839,12 +2124,14 @@
       </Unit291>
       <Unit292>
         <Filename Value="C:\development\lazarus\lcl\graphics.pp"/>
+        <IsVisibleTab Value="True"/>
         <TopLine Value="680"/>
         <CursorPos X="14" Y="690"/>
         <UsageCount Value="1"/>
       </Unit292>
       <Unit293>
         <Filename Value="C:\development\fpc\rtl\objpas\types.pp"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="70"/>
         <CursorPos X="3" Y="79"/>
@@ -1852,6 +2139,7 @@
       </Unit293>
       <Unit294>
         <Filename Value="C:\development\fpc\rtl\win\wininc\struct.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="223"/>
         <CursorPos X="6" Y="233"/>
@@ -1859,18 +2147,21 @@
       </Unit294>
       <Unit295>
         <Filename Value="C:\development\fpc\packages\fcl-image\src\fpcanvas.pp"/>
+        <IsVisibleTab Value="True"/>
         <TopLine Value="100"/>
         <CursorPos X="3" Y="111"/>
         <UsageCount Value="9"/>
       </Unit295>
       <Unit296>
         <Filename Value="C:\development\lazarus\lcl\comctrls.pp"/>
+        <IsVisibleTab Value="True"/>
         <TopLine Value="22"/>
         <CursorPos X="30" Y="42"/>
         <UsageCount Value="3"/>
       </Unit296>
       <Unit297>
         <Filename Value="..\baseunits\includes\Japscan\image_url.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="11"/>
         <CursorPos X="22" Y="25"/>
@@ -1878,12 +2169,14 @@
       </Unit297>
       <Unit298>
         <Filename Value="..\baseunits\includes\Japscan\names_and_links.inc"/>
+        <IsVisibleTab Value="True"/>
         <TopLine Value="13"/>
         <CursorPos X="33" Y="27"/>
         <UsageCount Value="1"/>
       </Unit298>
       <Unit299>
         <Filename Value="C:\development\lazarus\lcl\include\wincontrol.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="4320"/>
         <CursorPos X="3" Y="4304"/>
@@ -1891,80 +2184,94 @@
       </Unit299>
       <Unit300>
         <Filename Value="C:\development\fpc\rtl\win\sysutils.pp"/>
+        <IsVisibleTab Value="True"/>
         <TopLine Value="1403"/>
         <CursorPos Y="1424"/>
         <UsageCount Value="1"/>
       </Unit300>
       <Unit301>
         <Filename Value="..\baseunits\includes\NineManga\directory_page_number.inc"/>
+        <IsVisibleTab Value="True"/>
         <TopLine Value="10"/>
         <CursorPos X="39" Y="27"/>
         <UsageCount Value="8"/>
       </Unit301>
       <Unit302>
         <Filename Value="C:\lazarus\fpc\2.6.4\source\packages\regexpr\src\regexpr.pas"/>
+        <IsVisibleTab Value="True"/>
         <TopLine Value="599"/>
         <CursorPos X="10" Y="611"/>
         <UsageCount Value="9"/>
       </Unit302>
       <Unit303>
         <Filename Value="C:\lazarus\fpc\2.6.4\source\rtl\win32\system.pp"/>
+        <IsVisibleTab Value="True"/>
         <TopLine Value="36"/>
         <CursorPos X="2" Y="47"/>
         <UsageCount Value="8"/>
       </Unit303>
       <Unit304>
         <Filename Value="C:\lazarus\fpc\2.6.4\source\rtl\inc\objpas.inc"/>
+        <IsVisibleTab Value="True"/>
         <UsageCount Value="8"/>
       </Unit304>
       <Unit305>
         <Filename Value="C:\lazarus\components\lazutils\fileutil.pas"/>
+        <IsVisibleTab Value="True"/>
         <TopLine Value="103"/>
         <CursorPos X="3" Y="157"/>
         <UsageCount Value="1"/>
       </Unit305>
       <Unit306>
         <Filename Value="C:\lazarus\components\lazutils\fileutil.inc"/>
+        <IsVisibleTab Value="True"/>
         <TopLine Value="970"/>
         <CursorPos X="3" Y="975"/>
         <UsageCount Value="1"/>
       </Unit306>
       <Unit307>
         <Filename Value="C:\lazarus\fpc\2.6.4\source\packages\paszlib\src\zipper.pp"/>
+        <IsVisibleTab Value="True"/>
         <TopLine Value="2158"/>
         <CursorPos X="3" Y="2170"/>
         <UsageCount Value="1"/>
       </Unit307>
       <Unit308>
         <Filename Value="C:\lazarus_component\tpabbrevia\source\AbZipper.pas"/>
+        <IsVisibleTab Value="True"/>
         <TopLine Value="211"/>
         <CursorPos X="3" Y="217"/>
         <UsageCount Value="1"/>
       </Unit308>
       <Unit309>
         <Filename Value="C:\lazarus_component\tpabbrevia\source\AbZipTyp.pas"/>
+        <IsVisibleTab Value="True"/>
         <TopLine Value="73"/>
         <UsageCount Value="8"/>
       </Unit309>
       <Unit310>
         <Filename Value="..\3rd\Imaging\Source\JpegLib\imjdphuff.pas"/>
+        <IsVisibleTab Value="True"/>
         <TopLine Value="450"/>
         <CursorPos X="34" Y="461"/>
         <UsageCount Value="9"/>
       </Unit310>
       <Unit311>
         <Filename Value="..\baseunits\includes\CentrumMangi_PL\names_and_links.inc"/>
+        <IsVisibleTab Value="True"/>
         <CursorPos X="55" Y="6"/>
         <UsageCount Value="7"/>
       </Unit311>
       <Unit312>
         <Filename Value="..\baseunits\includes\CentrumMangi_PL\manga_information.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos Y="9"/>
         <UsageCount Value="1"/>
       </Unit312>
       <Unit313>
         <Filename Value="..\baseunits\includes\MangaLib_PL\manga_information.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="13"/>
         <CursorPos X="5" Y="10"/>
@@ -1972,18 +2279,21 @@
       </Unit313>
       <Unit314>
         <Filename Value="..\baseunits\includes\MangaLib_PL\image_url.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="53" Y="29"/>
         <UsageCount Value="1"/>
       </Unit314>
       <Unit315>
         <Filename Value="C:\lazarus2\fpc\2.6.4\source\packages\regexpr\src\regexpr.pas"/>
+        <IsVisibleTab Value="True"/>
         <TopLine Value="801"/>
         <CursorPos X="25" Y="814"/>
         <UsageCount Value="6"/>
       </Unit315>
       <Unit316>
         <Filename Value="..\3rd\synapse\source\synautil.pas"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="55"/>
         <UsageCount Value="8"/>
@@ -1997,30 +2307,35 @@
       </Unit317>
       <Unit318>
         <Filename Value="C:\lazarus2\fpc\2.6.4\source\rtl\objpas\classes\stringl.inc"/>
+        <IsVisibleTab Value="True"/>
         <TopLine Value="663"/>
         <CursorPos X="3" Y="669"/>
         <UsageCount Value="3"/>
       </Unit318>
       <Unit319>
         <Filename Value="C:\lazarus2\fpc\2.6.4\source\rtl\inc\objpash.inc"/>
+        <IsVisibleTab Value="True"/>
         <TopLine Value="192"/>
         <CursorPos X="21" Y="201"/>
         <UsageCount Value="3"/>
       </Unit319>
       <Unit320>
         <Filename Value="C:\lazarus2\components\lazutils\fileutil.pas"/>
+        <IsVisibleTab Value="True"/>
         <TopLine Value="227"/>
         <CursorPos X="10" Y="239"/>
         <UsageCount Value="6"/>
       </Unit320>
       <Unit321>
         <Filename Value="C:\development\fpc\rtl\objpas\sysutils\sysutilh.inc"/>
+        <IsVisibleTab Value="True"/>
         <TopLine Value="245"/>
         <CursorPos X="30" Y="257"/>
         <UsageCount Value="1"/>
       </Unit321>
       <Unit322>
         <Filename Value="..\baseunits\SimpleException\USimpleException.pas"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="308"/>
         <CursorPos X="77" Y="314"/>
@@ -2028,12 +2343,14 @@
       </Unit322>
       <Unit323>
         <Filename Value="..\baseunits\SimpleException\USimpleExceptionForm.pas"/>
+        <IsVisibleTab Value="True"/>
         <TopLine Value="69"/>
         <CursorPos X="16" Y="80"/>
         <UsageCount Value="9"/>
       </Unit323>
       <Unit324>
         <Filename Value="C:\lazarus_component\lazarus-ccr\virtualtreeview-new\VirtualTrees.pas"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="24360"/>
         <CursorPos X="10" Y="24365"/>
@@ -2041,6 +2358,7 @@
       </Unit324>
       <Unit325>
         <Filename Value="..\baseunits\includes\OneManga\manga_information.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="75"/>
         <CursorPos X="26" Y="13"/>
@@ -2048,6 +2366,7 @@
       </Unit325>
       <Unit326>
         <Filename Value="..\baseunits\includes\OneManga\chapter_page_number.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="4"/>
         <CursorPos X="36" Y="9"/>
@@ -2055,30 +2374,35 @@
       </Unit326>
       <Unit327>
         <Filename Value="..\baseunits\includes\OneManga\image_url.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="33" Y="7"/>
         <UsageCount Value="10"/>
       </Unit327>
       <Unit328>
         <Filename Value="..\baseunits\includes\OneManga\directory_page_number.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="12"/>
         <UsageCount Value="10"/>
       </Unit328>
       <Unit329>
         <Filename Value="..\baseunits\includes\OneManga\names_and_links.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="31" Y="32"/>
         <UsageCount Value="10"/>
       </Unit329>
       <Unit330>
         <Filename Value="..\3rd\Imaging\Source\ImagingNetworkGraphics.pas"/>
+        <IsVisibleTab Value="True"/>
         <TopLine Value="287"/>
         <CursorPos X="16" Y="304"/>
         <UsageCount Value="6"/>
       </Unit330>
       <Unit331>
         <Filename Value="C:\development\fpc\rtl\objpas\classes\classes.inc"/>
+        <IsVisibleTab Value="True"/>
         <TopLine Value="218"/>
         <CursorPos X="3" Y="220"/>
         <UsageCount Value="10"/>
@@ -2099,16 +2423,19 @@
       </Unit333>
       <Unit334>
         <Filename Value="C:\development\lazarus\packager\registration\registerfcl.pas"/>
+        <IsVisibleTab Value="True"/>
         <TopLine Value="40"/>
         <CursorPos X="31" Y="45"/>
         <UsageCount Value="7"/>
       </Unit334>
       <Unit335>
         <Filename Value="C:\development\fpc\packages\fcl-db\src\base\db.pas"/>
+        <IsVisibleTab Value="True"/>
         <UsageCount Value="7"/>
       </Unit335>
       <Unit336>
         <Filename Value="C:\development\lazarus\components\lazutils\fileutil.pas"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="239"/>
         <CursorPos X="10" Y="249"/>
@@ -2116,27 +2443,32 @@
       </Unit336>
       <Unit337>
         <Filename Value="C:\development\lazarus\components\lazutils\fileutil.inc"/>
+        <IsVisibleTab Value="True"/>
         <TopLine Value="954"/>
         <CursorPos X="3" Y="962"/>
         <UsageCount Value="8"/>
       </Unit337>
       <Unit338>
         <Filename Value="..\baseunits\includes\JapanShin\directory_page_number.inc"/>
+        <IsVisibleTab Value="True"/>
         <CursorPos X="12"/>
         <UsageCount Value="8"/>
       </Unit338>
       <Unit339>
         <Filename Value="..\baseunits\fasthtmlparser\jsFastHTMLParser.pas"/>
+        <IsVisibleTab Value="True"/>
         <TopLine Value="59"/>
         <CursorPos X="3" Y="85"/>
         <UsageCount Value="8"/>
       </Unit339>
       <Unit340>
         <Filename Value="C:\development\fpc\packages\fcl-xml\src\htmlelements.pp"/>
+        <IsVisibleTab Value="True"/>
         <UsageCount Value="8"/>
       </Unit340>
       <Unit341>
         <Filename Value="C:\development\fpc\packages\chm\src\fasthtmlparser.pas"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="305"/>
         <CursorPos X="27" Y="313"/>
@@ -2144,101 +2476,118 @@
       </Unit341>
       <Unit342>
         <Filename Value="..\baseunits\includes\MangaTown\names_and_links.inc"/>
+        <IsVisibleTab Value="True"/>
         <TopLine Value="18"/>
         <CursorPos X="83" Y="31"/>
         <UsageCount Value="1"/>
       </Unit342>
       <Unit343>
         <Filename Value="..\baseunits\includes\MangaTown\manga_information.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="5" Y="9"/>
         <UsageCount Value="1"/>
       </Unit343>
       <Unit344>
         <Filename Value="C:\development\lazarus\lcl\dialogs.pp"/>
+        <IsVisibleTab Value="True"/>
         <TopLine Value="490"/>
         <CursorPos X="10" Y="500"/>
         <UsageCount Value="1"/>
       </Unit344>
       <Unit345>
         <Filename Value="C:\development\lazarus\lcl\lcltype.pp"/>
+        <IsVisibleTab Value="True"/>
         <TopLine Value="404"/>
         <CursorPos X="3" Y="415"/>
         <UsageCount Value="8"/>
       </Unit345>
       <Unit346>
         <Filename Value="..\baseunits\includes\MangaTown\chapter_page_number.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="47" Y="11"/>
         <UsageCount Value="1"/>
       </Unit346>
       <Unit347>
         <Filename Value="..\baseunits\includes\MangaTown\image_url.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="5" Y="8"/>
         <UsageCount Value="1"/>
       </Unit347>
       <Unit348>
         <Filename Value="..\baseunits\SimpleException\dbginforeader.pas"/>
+        <IsVisibleTab Value="True"/>
         <TopLine Value="791"/>
         <CursorPos X="48" Y="739"/>
         <UsageCount Value="9"/>
       </Unit348>
       <Unit349>
         <Filename Value="..\baseunits\includes\ReadHentaiManga\manga_information.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="65" Y="7"/>
         <UsageCount Value="1"/>
       </Unit349>
       <Unit350>
         <Filename Value="..\baseunits\includes\ReadHentaiManga\chapter_page_number.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="53" Y="12"/>
         <UsageCount Value="1"/>
       </Unit350>
       <Unit351>
         <Filename Value="..\baseunits\includes\ReadHentaiManga\image_url.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="53" Y="8"/>
         <UsageCount Value="1"/>
       </Unit351>
       <Unit352>
         <Filename Value="..\3rd\Imaging\Extras\Extensions\ImagingXpm.pas"/>
+        <IsVisibleTab Value="True"/>
         <TopLine Value="315"/>
         <CursorPos X="8" Y="326"/>
         <UsageCount Value="10"/>
       </Unit352>
       <Unit353>
         <Filename Value="C:\development\fpc\rtl\win32\system.pp"/>
+        <IsVisibleTab Value="True"/>
         <TopLine Value="37"/>
         <CursorPos X="26" Y="45"/>
         <UsageCount Value="1"/>
       </Unit353>
       <Unit354>
         <Filename Value="..\baseunits\includes\MangaOku\names_and_links.inc"/>
+        <IsVisibleTab Value="True"/>
         <CursorPos X="8" Y="50"/>
         <UsageCount Value="1"/>
       </Unit354>
       <Unit355>
         <Filename Value="..\baseunits\includes\MangaOku\manga_information.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="57" Y="8"/>
         <UsageCount Value="1"/>
       </Unit355>
       <Unit356>
         <Filename Value="..\baseunits\includes\MangaOku\chapter_page_number.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="5" Y="11"/>
         <UsageCount Value="1"/>
       </Unit356>
       <Unit357>
         <Filename Value="..\baseunits\includes\MangaOku\image_url.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="5" Y="8"/>
         <UsageCount Value="1"/>
       </Unit357>
       <Unit358>
         <Filename Value="..\baseunits\includes\MyReadingMangaInfo\manga_information.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="36"/>
         <CursorPos X="69" Y="45"/>
@@ -2246,21 +2595,25 @@
       </Unit358>
       <Unit359>
         <Filename Value="..\baseunits\includes\MyReadingManga_info\manga_information.inc"/>
+        <IsVisibleTab Value="True"/>
         <CursorPos X="34"/>
         <UsageCount Value="1"/>
       </Unit359>
       <Unit360>
         <Filename Value="..\baseunits\includes\MyReadingManga_info\directory_page_number.inc"/>
+        <IsVisibleTab Value="True"/>
         <CursorPos X="31"/>
         <UsageCount Value="1"/>
       </Unit360>
       <Unit361>
         <Filename Value="..\baseunits\includes\MyReadingManga_info\names_and_links.inc"/>
+        <IsVisibleTab Value="True"/>
         <CursorPos X="28"/>
         <UsageCount Value="1"/>
       </Unit361>
       <Unit362>
         <Filename Value="..\baseunits\includes\MyReadingMangaInfo\chapter_page_number.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="2"/>
         <CursorPos X="56" Y="12"/>
@@ -2268,6 +2621,7 @@
       </Unit362>
       <Unit363>
         <Filename Value="C:\development\fpc\packages\fcl-json\src\fpjson.pp"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="23"/>
         <CursorPos X="3" Y="33"/>
@@ -2275,63 +2629,74 @@
       </Unit363>
       <Unit364>
         <Filename Value="C:\development\fpc\packages\rtl-objpas\src\inc\variants.pp"/>
+        <IsVisibleTab Value="True"/>
         <UsageCount Value="1"/>
       </Unit364>
       <Unit365>
         <Filename Value="..\baseunits\includes\IKomik\manga_information.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="5" Y="7"/>
         <UsageCount Value="1"/>
       </Unit365>
       <Unit366>
         <Filename Value="..\baseunits\includes\IKomik\chapter_page_number.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="25" Y="11"/>
         <UsageCount Value="1"/>
       </Unit366>
       <Unit367>
         <Filename Value="..\baseunits\includes\IKomik\image_url.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="5" Y="8"/>
         <UsageCount Value="1"/>
       </Unit367>
       <Unit368>
         <Filename Value="..\baseunits\includes\IKomik\directory_page_number.inc"/>
+        <IsVisibleTab Value="True"/>
         <TopLine Value="11"/>
         <CursorPos X="112" Y="30"/>
         <UsageCount Value="3"/>
       </Unit368>
       <Unit369>
         <Filename Value="..\baseunits\includes\IKomik\names_and_links.inc"/>
+        <IsVisibleTab Value="True"/>
         <CursorPos X="16" Y="3"/>
         <UsageCount Value="3"/>
       </Unit369>
       <Unit370>
         <Filename Value="..\baseunits\includes\NHentai\manga_information.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="57" Y="6"/>
         <UsageCount Value="1"/>
       </Unit370>
       <Unit371>
         <Filename Value="..\baseunits\includes\NHentai\chapter_page_number.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="45" Y="10"/>
         <UsageCount Value="1"/>
       </Unit371>
       <Unit372>
         <Filename Value="..\baseunits\includes\NHentai\image_url.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="45" Y="8"/>
         <UsageCount Value="1"/>
       </Unit372>
       <Unit373>
         <Filename Value="..\baseunits\includes\NHentai\names_and_links.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="46" Y="7"/>
         <UsageCount Value="2"/>
       </Unit373>
       <Unit374>
         <Filename Value="..\baseunits\includes\UnionMangas\names_and_links.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="12"/>
         <CursorPos X="17" Y="14"/>
@@ -2339,6 +2704,7 @@
       </Unit374>
       <Unit375>
         <Filename Value="..\baseunits\includes\UnionMangas\manga_information.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="63"/>
         <CursorPos X="16" Y="81"/>
@@ -2346,6 +2712,7 @@
       </Unit375>
       <Unit376>
         <Filename Value="..\baseunits\includes\UnionMangas\chapter_page_number.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="3"/>
         <CursorPos X="31" Y="18"/>
@@ -2353,72 +2720,85 @@
       </Unit376>
       <Unit377>
         <Filename Value="..\baseunits\includes\UnionMangas\image_url.inc"/>
+        <IsVisibleTab Value="True"/>
         <CursorPos X="25" Y="40"/>
         <UsageCount Value="3"/>
       </Unit377>
       <Unit378>
         <Filename Value="..\baseunits\includes\MangaBird\manga_information.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="5" Y="10"/>
         <UsageCount Value="1"/>
       </Unit378>
       <Unit379>
         <Filename Value="..\baseunits\includes\MangaBird\chapter_page_number.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="5" Y="10"/>
         <UsageCount Value="1"/>
       </Unit379>
       <Unit380>
         <Filename Value="..\baseunits\includes\MangaBird\image_url.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="3"/>
         <UsageCount Value="1"/>
       </Unit380>
       <Unit381>
         <Filename Value="..\baseunits\includes\MangaBird\directory_page_number.inc"/>
+        <IsVisibleTab Value="True"/>
         <CursorPos X="12"/>
         <UsageCount Value="5"/>
       </Unit381>
       <Unit382>
         <Filename Value="..\baseunits\includes\MangaBird\names_and_links.inc"/>
+        <IsVisibleTab Value="True"/>
         <UsageCount Value="5"/>
       </Unit382>
       <Unit383>
         <Filename Value="..\baseunits\includes\UnixManga\names_and_links.inc"/>
+        <IsVisibleTab Value="True"/>
         <UsageCount Value="5"/>
       </Unit383>
       <Unit384>
         <Filename Value="..\baseunits\includes\UnixManga\manga_information.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="5" Y="7"/>
         <UsageCount Value="1"/>
       </Unit384>
       <Unit385>
         <Filename Value="..\baseunits\includes\UnixManga\image_url.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="58" Y="7"/>
         <UsageCount Value="1"/>
       </Unit385>
       <Unit386>
         <Filename Value="..\baseunits\includes\UnixManga\chapter_page_number.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="5" Y="10"/>
         <UsageCount Value="1"/>
       </Unit386>
       <Unit387>
         <Filename Value="..\baseunits\includes\HakiHome\manga_information.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="22" Y="7"/>
         <UsageCount Value="1"/>
       </Unit387>
       <Unit388>
         <Filename Value="C:\development\fpc\rtl\inc\wstringh.inc"/>
+        <IsVisibleTab Value="True"/>
         <TopLine Value="21"/>
         <CursorPos X="10" Y="39"/>
         <UsageCount Value="3"/>
       </Unit388>
       <Unit389>
         <Filename Value="..\baseunits\includes\HakiHome\chapter_page_number.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="4"/>
         <CursorPos X="78" Y="12"/>
@@ -2426,24 +2806,28 @@
       </Unit389>
       <Unit390>
         <Filename Value="..\baseunits\includes\HakiHome\image_url.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="46" Y="8"/>
         <UsageCount Value="1"/>
       </Unit390>
       <Unit391>
         <Filename Value="..\baseunits\includes\HakiHome\directory_page_number.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="22" Y="10"/>
         <UsageCount Value="1"/>
       </Unit391>
       <Unit392>
         <Filename Value="..\baseunits\includes\HakiHome\names_and_links.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="41" Y="9"/>
         <UsageCount Value="1"/>
       </Unit392>
       <Unit393>
         <Filename Value="C:\development\fpc\rtl\objpas\typinfo.pp"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="411"/>
         <CursorPos X="10" Y="421"/>
@@ -2451,6 +2835,7 @@
       </Unit393>
       <Unit394>
         <Filename Value="..\baseunits\includes\ExtremeMangas\names_and_links.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="10"/>
         <CursorPos X="18" Y="15"/>
@@ -2458,12 +2843,14 @@
       </Unit394>
       <Unit395>
         <Filename Value="..\baseunits\includes\ExtremeMangas\manga_information.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="50" Y="8"/>
         <UsageCount Value="1"/>
       </Unit395>
       <Unit396>
         <Filename Value="C:\development\fpc\packages\regexpr\src\regexpr.pas"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="144"/>
         <CursorPos X="3" Y="156"/>
@@ -2471,12 +2858,14 @@
       </Unit396>
       <Unit397>
         <Filename Value="..\baseunits\includes\ExtremeMangas\chapter_page_number.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="33" Y="10"/>
         <UsageCount Value="1"/>
       </Unit397>
       <Unit398>
         <Filename Value="..\baseunits\includes\ExtremeMangas\image_url.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="23"/>
         <CursorPos X="26" Y="37"/>
@@ -2484,6 +2873,7 @@
       </Unit398>
       <Unit399>
         <Filename Value="..\baseunits\includes\Manga2u\directory_page_number.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="5"/>
         <CursorPos X="26" Y="13"/>
@@ -2491,6 +2881,7 @@
       </Unit399>
       <Unit400>
         <Filename Value="..\baseunits\includes\Manga2u\names_and_links.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="6"/>
         <CursorPos X="46" Y="19"/>
@@ -2498,6 +2889,7 @@
       </Unit400>
       <Unit401>
         <Filename Value="..\baseunits\includes\MangaFrame\directory_page_number.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="5"/>
         <CursorPos X="24" Y="13"/>
@@ -2505,6 +2897,7 @@
       </Unit401>
       <Unit402>
         <Filename Value="C:\development\lazarus\lcl\extctrls.pp"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="1083"/>
         <CursorPos X="3" Y="1093"/>
@@ -2512,6 +2905,7 @@
       </Unit402>
       <Unit403>
         <Filename Value="C:\development\lazarus\lcl\include\customform.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="932"/>
         <CursorPos Y="943"/>
@@ -2519,6 +2913,7 @@
       </Unit403>
       <Unit404>
         <Filename Value="C:\development\fpc\packages\fcl-base\src\inifiles.pp"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="221"/>
         <CursorPos X="3" Y="139"/>
@@ -2526,12 +2921,14 @@
       </Unit404>
       <Unit405>
         <Filename Value="..\baseunits\includes\Manga2u\image_url.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="38" Y="7"/>
         <UsageCount Value="1"/>
       </Unit405>
       <Unit406>
         <Filename Value="..\baseunits\includes\Manga2u\manga_information.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="21"/>
         <CursorPos X="57" Y="32"/>
@@ -2539,12 +2936,14 @@
       </Unit406>
       <Unit407>
         <Filename Value="..\baseunits\includes\Manga2u\chapter_page_number.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="20" Y="10"/>
         <UsageCount Value="1"/>
       </Unit407>
       <Unit408>
         <Filename Value="..\3rd\synapse\source\synacode.pas"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="63"/>
         <CursorPos X="3" Y="75"/>
@@ -2552,60 +2951,70 @@
       </Unit408>
       <Unit409>
         <Filename Value="..\baseunits\includes\CentrumMangi_PL\chapter_page_number.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="3"/>
         <UsageCount Value="9"/>
       </Unit409>
       <Unit410>
         <Filename Value="..\baseunits\includes\CentrumMangi_PL\image_url.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="7" Y="9"/>
         <UsageCount Value="1"/>
       </Unit410>
       <Unit411>
         <Filename Value="..\baseunits\includes\DM5\directory_page_number.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="42" Y="5"/>
         <UsageCount Value="1"/>
       </Unit411>
       <Unit412>
         <Filename Value="..\baseunits\includes\NineManga\chapter_page_number.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="60" Y="11"/>
         <UsageCount Value="1"/>
       </Unit412>
       <Unit413>
         <Filename Value="..\baseunits\includes\NineManga\image_url.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="63" Y="8"/>
         <UsageCount Value="1"/>
       </Unit413>
       <Unit414>
         <Filename Value="..\baseunits\includes\NineManga\image_url.inc.bak"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <UsageCount Value="1"/>
         <DefaultSyntaxHighlighter Value="None"/>
       </Unit414>
       <Unit415>
         <Filename Value="..\baseunits\includes\Imanhua\names_and_links.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="45" Y="6"/>
         <UsageCount Value="1"/>
       </Unit415>
       <Unit416>
         <Filename Value="..\baseunits\includes\JapanShin\chapter_page_number.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="33" Y="7"/>
         <UsageCount Value="9"/>
       </Unit416>
       <Unit417>
         <Filename Value="..\baseunits\includes\JapanShin\image_url.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="43" Y="8"/>
         <UsageCount Value="1"/>
       </Unit417>
       <Unit418>
         <Filename Value="..\baseunits\includes\Japscan\chapter_page_number.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="27"/>
         <CursorPos X="20" Y="51"/>
@@ -2613,6 +3022,7 @@
       </Unit418>
       <Unit419>
         <Filename Value="..\baseunits\includes\Japscan\manga_information.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="75"/>
         <CursorPos X="7" Y="93"/>
@@ -2620,18 +3030,21 @@
       </Unit419>
       <Unit420>
         <Filename Value="..\baseunits\includes\Kivmanga\manga_information.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="22" Y="7"/>
         <UsageCount Value="1"/>
       </Unit420>
       <Unit421>
         <Filename Value="..\baseunits\includes\LectureEnLigne\chapter_page_number.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos Y="13"/>
         <UsageCount Value="10"/>
       </Unit421>
       <Unit422>
         <Filename Value="..\baseunits\includes\MangaLib_PL\chapter_page_number.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="4"/>
         <CursorPos X="30" Y="30"/>
@@ -2639,6 +3052,7 @@
       </Unit422>
       <Unit423>
         <Filename Value="C:\development\fpc\packages\rtl-objpas\src\inc\strutils.pp"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="2132"/>
         <CursorPos X="2" Y="2138"/>
@@ -2646,6 +3060,7 @@
       </Unit423>
       <Unit424>
         <Filename Value="C:\development\fpc\packages\fcl-json\src\jsonparser.pp"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="316"/>
         <CursorPos X="24" Y="323"/>
@@ -2653,6 +3068,7 @@
       </Unit424>
       <Unit425>
         <Filename Value="C:\development\fpc\packages\fcl-json\src\jsonscanner.pp"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="114"/>
         <CursorPos X="3" Y="120"/>
@@ -2660,6 +3076,7 @@
       </Unit425>
       <Unit426>
         <Filename Value="..\baseunits\includes\UnionMangas\directory_page_number.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="7"/>
         <CursorPos X="36" Y="14"/>
@@ -2667,6 +3084,7 @@
       </Unit426>
       <Unit427>
         <Filename Value="..\baseunits\includes\MangaHost\manga_information.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="4"/>
         <CursorPos X="13" Y="11"/>
@@ -2674,12 +3092,14 @@
       </Unit427>
       <Unit428>
         <Filename Value="..\baseunits\includes\MangaHost\chapter_page_number.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="25" Y="14"/>
         <UsageCount Value="3"/>
       </Unit428>
       <Unit429>
         <Filename Value="..\baseunits\includes\MangaHost\image_url.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="5"/>
         <CursorPos X="34" Y="17"/>
@@ -2687,6 +3107,7 @@
       </Unit429>
       <Unit430>
         <Filename Value="..\baseunits\includes\MangaHost\directory_page_number.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="15"/>
         <CursorPos X="15" Y="34"/>
@@ -2694,6 +3115,7 @@
       </Unit430>
       <Unit431>
         <Filename Value="..\baseunits\includes\MangaHost\names_and_links.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="12"/>
         <CursorPos X="49" Y="31"/>
@@ -2701,6 +3123,7 @@
       </Unit431>
       <Unit432>
         <Filename Value="..\baseunits\includes\PornComix\directory_page_number.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="14"/>
         <CursorPos Y="28"/>
@@ -2708,12 +3131,14 @@
       </Unit432>
       <Unit433>
         <Filename Value="..\baseunits\includes\PornComix\names_and_links.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="33" Y="9"/>
         <UsageCount Value="9"/>
       </Unit433>
       <Unit434>
         <Filename Value="..\baseunits\includes\PornComix\manga_information.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="32"/>
         <CursorPos X="33" Y="39"/>
@@ -2721,6 +3146,7 @@
       </Unit434>
       <Unit435>
         <Filename Value="..\baseunits\includes\PornComix\chapter_page_number.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="40"/>
         <CursorPos X="35" Y="46"/>
@@ -2728,12 +3154,14 @@
       </Unit435>
       <Unit436>
         <Filename Value="..\baseunits\includes\PornComix\image_url.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="32" Y="10"/>
         <UsageCount Value="12"/>
       </Unit436>
       <Unit437>
         <Filename Value="C:\development\fpc\rtl\objpas\sysutils\sysstr.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="209"/>
         <CursorPos X="2" Y="218"/>
@@ -2741,18 +3169,21 @@
       </Unit437>
       <Unit438>
         <Filename Value="..\baseunits\includes\MangaSee\manga_information.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="53" Y="8"/>
         <UsageCount Value="9"/>
       </Unit438>
       <Unit439>
         <Filename Value="..\baseunits\includes\MangaSee\directory_page_number.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="12"/>
         <UsageCount Value="9"/>
       </Unit439>
       <Unit440>
         <Filename Value="..\baseunits\includes\PornComix\directory_page_number.inc.bak"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="18"/>
         <UsageCount Value="5"/>
@@ -2760,6 +3191,7 @@
       </Unit440>
       <Unit441>
         <Filename Value="C:\development\fpc\packages\chm\src\htmlutil.pas"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="191"/>
         <CursorPos X="3" Y="195"/>
@@ -2767,6 +3199,7 @@
       </Unit441>
       <Unit442>
         <Filename Value="..\baseunits\includes\MangaSee\names_and_links.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="13"/>
         <CursorPos X="31" Y="20"/>
@@ -2774,6 +3207,7 @@
       </Unit442>
       <Unit443>
         <Filename Value="..\baseunits\includes\MangaSee\chapter_page_number.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="3"/>
         <CursorPos X="9" Y="38"/>
@@ -2781,6 +3215,7 @@
       </Unit443>
       <Unit444>
         <Filename Value="C:\development\fpc\rtl\objpas\classes\streams.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="714"/>
         <CursorPos X="3" Y="717"/>
@@ -2788,6 +3223,7 @@
       </Unit444>
       <Unit445>
         <Filename Value="..\baseunits\gziputils.pas"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="28"/>
         <CursorPos X="10" Y="39"/>
@@ -2795,6 +3231,7 @@
       </Unit445>
       <Unit446>
         <Filename Value="C:\development\fpc\rtl\objpas\classes\stringl.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="137"/>
         <CursorPos X="3" Y="140"/>
@@ -2802,11 +3239,13 @@
       </Unit446>
       <Unit447>
         <Filename Value="C:\Users\Cholif\AppData\Local\Temp\HZ$D.188.1522\image_url.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <UsageCount Value="7"/>
       </Unit447>
       <Unit448>
         <Filename Value="..\baseunits\includes\KissManga\download_image.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="32"/>
         <CursorPos X="7" Y="53"/>
@@ -2814,6 +3253,7 @@
       </Unit448>
       <Unit449>
         <Filename Value="..\baseunits\includes\SenManga\directory_page_number.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="13"/>
         <CursorPos X="11" Y="32"/>
@@ -2821,6 +3261,7 @@
       </Unit449>
       <Unit450>
         <Filename Value="C:\development\lazarus\lcl\lresources.pp"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="167"/>
         <CursorPos X="15" Y="176"/>
@@ -2828,6 +3269,7 @@
       </Unit450>
       <Unit451>
         <Filename Value="C:\lazarus_component\fpgui-1.4\src\gui\colordialog.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="266"/>
         <CursorPos X="7" Y="272"/>
@@ -2835,6 +3277,7 @@
       </Unit451>
       <Unit452>
         <Filename Value="C:\lazarus_component\fpgui-1.4\src\corelib\fpg_base.pas"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="757"/>
         <CursorPos Y="757"/>
@@ -2842,6 +3285,7 @@
       </Unit452>
       <Unit453>
         <Filename Value="C:\lazarus_component\fpgui-1.4\src\gui\charmapdialog.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="34"/>
         <CursorPos X="50" Y="44"/>
@@ -2849,6 +3293,7 @@
       </Unit453>
       <Unit454>
         <Filename Value="C:\development\fpc\packages\fcl-process\src\simpleipc.pp"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="139"/>
         <CursorPos X="37" Y="153"/>
@@ -2856,6 +3301,7 @@
       </Unit454>
       <Unit455>
         <Filename Value="C:\development\fpc\packages\winunits-base\src\shellapi.pp"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="1388"/>
         <CursorPos X="8" Y="1398"/>
@@ -2863,6 +3309,7 @@
       </Unit455>
       <Unit456>
         <Filename Value="C:\development\fpc\rtl\win\wininc\defines.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="2676"/>
         <CursorPos X="6" Y="2692"/>
@@ -2870,6 +3317,7 @@
       </Unit456>
       <Unit457>
         <Filename Value="C:\development\fpc\packages\fcl-base\src\fileinfo.pp"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="64"/>
         <CursorPos X="14" Y="76"/>
@@ -2877,13 +3325,15 @@
       </Unit457>
       <Unit458>
         <Filename Value="C:\development\fpc\rtl\objpas\sysutils\osutilsh.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
-        <TopLine Value="42"/>
-        <CursorPos X="3" Y="54"/>
-        <UsageCount Value="8"/>
+        <TopLine Value="5"/>
+        <CursorPos X="15" Y="15"/>
+        <UsageCount Value="12"/>
       </Unit458>
       <Unit459>
         <Filename Value="C:\development\fpc\rtl\objpas\sysutils\osutil.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="107"/>
         <CursorPos X="3" Y="110"/>
@@ -2891,17 +3341,20 @@
       </Unit459>
       <Unit460>
         <Filename Value="..\3rd\synapse\source\ssl_openssl.pas"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="82"/>
         <UsageCount Value="8"/>
       </Unit460>
       <Unit461>
         <Filename Value="C:\development\fpc\packages\fcl-net\src\sslsockets.pp"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <UsageCount Value="8"/>
       </Unit461>
       <Unit462>
         <Filename Value="..\3rd\synapse\source\blcksock.pas"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="277"/>
         <CursorPos X="9" Y="289"/>
@@ -2909,6 +3362,7 @@
       </Unit462>
       <Unit463>
         <Filename Value="E:\SVN Checkout Files\Other Project\fmd\baseunits\uBaseUnit.pas"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="891"/>
         <CursorPos X="23" Y="886"/>
@@ -2916,6 +3370,7 @@
       </Unit463>
       <Unit464>
         <Filename Value="..\baseunits\includes\LectureEnLigne\image_url.inc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="11"/>
         <CursorPos X="31" Y="13"/>
@@ -2923,12 +3378,21 @@
       </Unit464>
       <Unit465>
         <Filename Value="..\baseunits\fasthtmlparser\jsHTMLUtil.pas"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="10" Y="12"/>
         <UsageCount Value="10"/>
       </Unit465>
+      <Unit466>
+        <Filename Value="C:\development\fpc\packages\fcl-process\src\process.pp"/>
+        <IsVisibleTab Value="True"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="142"/>
+        <CursorPos X="24" Y="145"/>
+        <UsageCount Value="12"/>
+      </Unit466>
     </Units>
-    <CustomDefines Count="9">
+    <CustomDefines Count="10">
       <Define0 Value="MANGADOWNLOADER"/>
       <Define1 Value="DOWNLOADER"/>
       <Define2 Value="SELFUPDATE"/>
@@ -2938,6 +3402,7 @@
       <Define6 Value="DEBUGWIN32"/>
       <Define7 Value="DEBUGWIN64"/>
       <Define8 Value="DEBUGLEAKS"/>
+      <Define9 Value="USEADMIN"/>
     </CustomDefines>
     <JumpHistory HistoryIndex="-1"/>
   </ProjectSession>

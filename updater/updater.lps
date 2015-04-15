@@ -4,13 +4,13 @@
     <PathDelim Value="\"/>
     <Version Value="9"/>
     <BuildModes Active="Win32"/>
-    <Units Count="31">
+    <Units Count="32">
       <Unit0>
         <Filename Value="updater.lpr"/>
         <IsPartOfProject Value="True"/>
         <IsVisibleTab Value="True"/>
         <CursorPos X="32" Y="14"/>
-        <UsageCount Value="58"/>
+        <UsageCount Value="59"/>
       </Unit0>
       <Unit1>
         <Filename Value="uMain.pas"/>
@@ -20,9 +20,9 @@
         <ResourceBaseClass Value="Form"/>
         <IsVisibleTab Value="True"/>
         <EditorIndex Value="-1"/>
-        <TopLine Value="515"/>
-        <CursorPos X="48" Y="518"/>
-        <UsageCount Value="58"/>
+        <TopLine Value="598"/>
+        <CursorPos X="15" Y="613"/>
+        <UsageCount Value="59"/>
       </Unit1>
       <Unit2>
         <Filename Value="uMessage.pas"/>
@@ -34,7 +34,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="9"/>
         <CursorPos X="6" Y="20"/>
-        <UsageCount Value="30"/>
+        <UsageCount Value="31"/>
       </Unit2>
       <Unit3>
         <Filename Value="uSF.pas"/>
@@ -240,7 +240,18 @@
         <TopLine Value="415"/>
         <UsageCount Value="10"/>
       </Unit30>
+      <Unit31>
+        <Filename Value="..\3rd\synapse\source\ssl_openssl.pas"/>
+        <IsVisibleTab Value="True"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="887"/>
+        <CursorPos X="32" Y="904"/>
+        <UsageCount Value="10"/>
+      </Unit31>
     </Units>
+    <CustomDefines Count="1">
+      <Define0 Value="USEADMIN"/>
+    </CustomDefines>
     <JumpHistory HistoryIndex="-1"/>
   </ProjectSession>
 </CONFIG>
