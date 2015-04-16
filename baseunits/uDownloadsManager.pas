@@ -1434,6 +1434,10 @@ begin
         end;
       end;
 
+      //if no total page number found, we reset pagelinks here
+      if container.MangaSiteID = SUBMANGA_ID then
+        container.PageLinks.Clear;
+
       // Get page number.
       if container.PageLinks.Count = 0 then
       begin
