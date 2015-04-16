@@ -19,10 +19,9 @@
     if parse.Count > 0 then
     begin
       for i := 0 to parse.Count - 1 do
-        if (Pos('type="text/javascript"', parse.Strings[i]) > 0) then
+        if GetTagName(parse[i]) = 'img' then
         begin
-          manager.container.PageLinks.Strings[workCounter] :=
-            GetAttributeValue(GetTagAttribute(parse.Strings[i - 3], 'src='));
+          manager.container.PageLinks.Strings[workCounter] := GetVal(parse[i], 'src');
           Break;
         end;
     end;
