@@ -16,10 +16,12 @@ fp.dsk
 # Lazarus backup
 **/backup/
 
-# fmd binary
+# fmd
 mangadownloader/lib
+mangadownloader/md.lps
 mangadownloader/md.res
 updater/lib
+updater/updater.lps
 updater/updater.res
 bin/
 Release/
