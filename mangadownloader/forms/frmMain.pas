@@ -901,7 +901,7 @@ begin
         '-x -r 3 -a ' + FUpdateURL + ' -l ' + Application.ExeName, False);
       {$ELSE}
       RunExternalProcess(fmdDirectory + 'old_updater.exe',
-        ['-x', '-r', '3', '-a', FUpdateURL], True, True);
+        ['-x', '-r', '3', '-a', FUpdateURL, '-l', Application.ExeName], True, True);
       {$ENDIF}
       Application.Terminate;
     end;
