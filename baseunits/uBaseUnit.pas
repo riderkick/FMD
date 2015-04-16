@@ -390,7 +390,7 @@ var
     ('BlogTruyen', 'http://blogtruyen.com'),
     ('Komikid', 'http://www.komikid.com'),
     ('SubManga', 'http://submanga.com'),
-    ('ESMangaHere', 'http://es.mangahere.com'),
+    ('ESMangaHere', 'http://es.mangahere.co'),
     ('AnimExtremist', 'http://www.animextremist.com'),
     ('PecintaKomik', 'http://www.pecintakomik.com'),
     ('HugeManga', 'http://hugemanga.com'),
