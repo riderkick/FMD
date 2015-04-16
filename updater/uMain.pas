@@ -465,26 +465,27 @@ begin
       begin
         if Self.Terminated then
           Break;
-        if (FHTTP.ResultCode < 500) and (not _UpdApp) then
+        if FHTTP.ResultCode < 500 then
         begin
-          Clipboard.AsText := mf_data_link;
           UpdateStatus(ST_FileNotFound);
-          ShowErrorMessage(ST_FileNotFound_mfdatalink + LineEnding + mf_data_link +
-            LineEnding + ST_LinkCopiedToClipboard);
+          if _UpdApp then
+            ShowErrorMessage(ST_AnErrorOccured + LineEnding + LineEnding +
+              ST_Response + ':' + LineEnding +
+              IntToStr(FHTTP.ResultCode) + ' ' + FHTTP.ResultString)
+          else
+          begin
+            Clipboard.AsText := mf_data_link;
+            ShowErrorMessage(ST_FileNotFound_mfdatalink + LineEnding + mf_data_link +
+              LineEnding + ST_LinkCopiedToClipboard);
+          end;
           Break;
         end;
         if ctry >= MaxRetry then
         begin
           UpdateStatus(ST_FailedLoadPage);
-          if FHTTP.ResultCode < 500 then
-            ShowErrorMessage(ST_FileNotFound + LineEnding + LineEnding +
-              ST_Response + ':' + LineEnding +
-              IntToStr(FHTTP.ResultCode) + ' ' + FHTTP.ResultString)
-          else
-          if FHTTP.ResultCode >= 500 then
-            ShowErrorMessage(ST_AnErrorOccured + LineEnding + LineEnding +
-              ST_Response + ':' + LineEnding +
-              IntToStr(FHTTP.ResultCode) + ' ' + FHTTP.ResultString);
+          ShowErrorMessage(ST_FailedLoadPage + LineEnding + LineEnding +
+            ST_Response + ':' + LineEnding +
+            IntToStr(FHTTP.ResultCode) + ' ' + FHTTP.ResultString);
           Break;
         end;
         Inc(ctry);
