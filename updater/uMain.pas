@@ -23,9 +23,9 @@ type
     edURL      :TEdit;
     itMonitor: TIdleTimer;
     lbFilename :TLabel;
+    lbProgress: TStaticText;
+    lbStatus: TStaticText;
     lbURL      :TLabel;
-    lbStatus   :TLabel;
-    lbProgress :TLabel;
     pbDownload :TProgressBar;
     procedure btDownloadClick(Sender :TObject);
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
@@ -96,7 +96,8 @@ const
   Symbols: array [0..10] of Char =
     ('\', '/', ':', '*', '?', '"', '<', '>', '|', #9, ';');
 
-  _USERAGENT = 'Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.118 Safari/537.36';
+  _UA_CHROME = 'Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.118 Safari/537.36';
+  _UA_CURL = 'curl/7.21.0 (i686-pc-linux-gnu) libcurl/7.21.0 OpenSSL/0.9.8o zlib/1.2.3.4 libidn/1.18';
   mf_data_link = 'https://www.mediafire.com/folder/fwa8eomz80uk1/Data';
 
 resourcestring
@@ -375,7 +376,10 @@ procedure TDownloadThread.Execute;
   begin
     if HTTP <> nil then
     begin
-      FHTTP.UserAgent := _USERAGENT;
+      FHTTP.Clear;
+      FHTTP.Cookies.Clear;
+      FHTTP.Protocol := '1.1';
+      FHTTP.UserAgent := _UA_CHROME;
       FHTTP.Timeout := 30000;
 
       if ProxyType = 'HTTP' then
@@ -417,15 +421,15 @@ var
   ctry                  :cardinal;
   Sza, rurl, fname,
   sproject, sdir, sfile :string;
-label
-  loadp;
 begin
   URL := Trim(URL);
   regx := TRegExpr.Create;
   try
+    PrepareHTTP(FHTTP);
     regx.ModifierI := True;
     if isSFURL then
     begin
+      FHTTP.UserAgent := _UA_CURL;
       regx.Expression := '/download$';
       URL := Trim(regx.Replace(URL, '', False));
       //**parsing SF url
@@ -447,55 +451,53 @@ begin
     else
     begin
       rurl := URL;
-      regx.Expression := '^.*/([^/]*)$';
-      FileName := regx.Replace(URL, '$1', True);
+      regx.ModifierG := True;
+      regx.Expression := '^.*/([^/]*filename=)?([^/]*)$';
+      FileName := regx.Replace(URL, '$2', True);
+      regx.Expression := '(\.\w+)[\?\&].*$';
+      FileName := regx.Replace(FileName, '$1', True);
+      FileName := RemoveSymbols(FileName);
       if FileName = '' then
         FileName := 'new_version.7z';
     end;
-    PrepareHTTP(FHTTP);
-    ctry := 0;
 
     //**loading page
     UpdateStatus(ST_LoadingPage);
-
-    loadp:
-      //**retry loading page
-      while (not FHTTP.HTTPMethod('GET', rurl)) or
-        (FHTTP.ResultCode >= 400) do
+    ctry := 0;
+    while (not FHTTP.HTTPMethod('HEAD', rurl)) or
+      (FHTTP.ResultCode >= 400) or (FHTTP.ResultCode < 100) do
+    begin
+      if Self.Terminated then
+        Break;
+      if (FHTTP.ResultCode >= 400) and (FHTTP.ResultCode < 500) then
       begin
-        if Self.Terminated then
-          Break;
-        if FHTTP.ResultCode < 500 then
-        begin
-          UpdateStatus(ST_FileNotFound);
-          if _UpdApp then
-            ShowErrorMessage(ST_AnErrorOccured + LineEnding + LineEnding +
-              ST_Response + ':' + LineEnding +
-              IntToStr(FHTTP.ResultCode) + ' ' + FHTTP.ResultString)
-          else
-          begin
-            Clipboard.AsText := mf_data_link;
-            ShowErrorMessage(ST_FileNotFound_mfdatalink + LineEnding + mf_data_link +
-              LineEnding + ST_LinkCopiedToClipboard);
-          end;
-          Break;
-        end;
-        if ctry >= MaxRetry then
-        begin
-          UpdateStatus(ST_FailedLoadPage);
-          ShowErrorMessage(ST_FailedLoadPage + LineEnding + LineEnding +
+        UpdateStatus(ST_FileNotFound);
+        if _UpdApp then
+          ShowErrorMessage(ST_FileNotFound + LineEnding + LineEnding +
             ST_Response + ':' + LineEnding +
-            IntToStr(FHTTP.ResultCode) + ' ' + FHTTP.ResultString);
-          Break;
+            IntToStr(FHTTP.ResultCode) + ' ' + FHTTP.ResultString)
+        else
+        begin
+          Clipboard.AsText := mf_data_link;
+          ShowErrorMessage(ST_FileNotFound_mfdatalink + LineEnding + mf_data_link +
+            LineEnding + ST_LinkCopiedToClipboard);
         end;
-        Inc(ctry);
-        UpdateStatus(ST_RetryLoadPage + '(' + IntToStr(ctry) + ')');
-        FHTTP.Clear;
+        Break;
       end;
+      if ctry >= MaxRetry then
+      begin
+        UpdateStatus(ST_FailedLoadPage);
+        ShowErrorMessage(ST_FailedLoadPage + LineEnding + LineEnding +
+          ST_Response + ':' + LineEnding +
+          IntToStr(FHTTP.ResultCode) + ' ' + FHTTP.ResultString);
+        Break;
+      end;
+      Inc(ctry);
+      UpdateStatus(ST_RetryLoadPage + '(' + IntToStr(ctry) + ')');
+      FHTTP.Clear;
+    end;
 
-    while (FHTTP.ResultCode = 301) or
-      (FHTTP.ResultCode = 302) or
-      (FHTTP.ResultCode = 307) do
+    if (FHTTP.ResultCode > 300) or isSFURL then
     begin
       rurl := HeaderByName(FHTTP.Headers, 'location: ');
       if isSFURL then
@@ -508,8 +510,12 @@ begin
             sproject + '/' + sdir + '/' + sfile;
         end;
       end;
-      UpdateStatus(ST_Download + ' [' + FileName + ']...');
+    end;
 
+    //**download file
+    UpdateStatus(ST_Download + ' [' + FileName + ']...');
+    if (FHTTP.ResultCode >= 100) and (FHTTP.ResultCode < 400) then
+    begin
       ctry := 0;
       FHTTP.Clear;
       FHTTP.Headers.Add('Accept: */*');
@@ -519,26 +525,27 @@ begin
       begin
         if Self.Terminated then
           Break;
-        if (FHTTP.ResultCode < 500) and (not _UpdApp) then
+        if (FHTTP.ResultCode >= 400) and (FHTTP.ResultCode < 500) then         
         begin
-          Clipboard.AsText := mf_data_link;
           UpdateStatus(ST_FileNotFound);
-          ShowErrorMessage(ST_FileNotFound_mfdatalink + LineEnding + mf_data_link +
-            LineEnding + ST_LinkCopiedToClipboard);
+          if _UpdApp then
+            ShowErrorMessage(ST_FileNotFound + LineEnding + LineEnding +
+              ST_Response + ':' + LineEnding +
+              IntToStr(FHTTP.ResultCode) + ' ' + FHTTP.ResultString)
+          else
+          begin
+            Clipboard.AsText := mf_data_link;
+            ShowErrorMessage(ST_FileNotFound_mfdatalink + LineEnding + mf_data_link +
+              LineEnding + ST_LinkCopiedToClipboard);
+          end;
           Break;
         end;
         if ctry >= MaxRetry then
         begin
           UpdateStatus(ST_FailedDownloadPage);
-          if FHTTP.ResultCode < 500 then
-            ShowErrorMessage(ST_FileNotFound + LineEnding + LineEnding +
-              ST_Response + ':' + LineEnding +
-              IntToStr(FHTTP.ResultCode) + ' ' + FHTTP.ResultString)
-          else
-          if FHTTP.ResultCode >= 500 then
-            ShowErrorMessage(ST_AnErrorOccured + LineEnding + LineEnding +
-              ST_Response + ':' + LineEnding +
-              IntToStr(FHTTP.ResultCode) + ' ' + FHTTP.ResultString);
+          ShowErrorMessage(ST_AnErrorOccured + LineEnding + LineEnding +
+            ST_Response + ':' + LineEnding +
+            IntToStr(FHTTP.ResultCode) + ' ' + FHTTP.ResultString);
           Break;
         end;
         Inc(ctry);
@@ -548,15 +555,12 @@ begin
       end;
     end;
 
-    if (not Self.Terminated) and ( not (FHTTP.ResultCode >= 300)) then
+    //**save and unpack file
+    if (not Self.Terminated) and 
+      (FHTTP.ResultCode >= 100) and (FHTTP.ResultCode < 300) and
+      (FCurrentSize >= FTotalSize) then      
     begin
-      fname := FileName;
-      regx.Expression := '^.*filename=(.+)$';
-      fname := regx.Replace(fname, '$1', True);
-      regx.Expression := '(\.\w+)[\?\&].*$';
-      fname := regx.Replace(fname, '$1', True);
-      fname := RemoveSymbols(fname);
-      fname := DirPath + DirectorySeparator + fname;
+      fname := DirPath + DirectorySeparator + FileName;
       if FileExistsUTF8(fname) then
         DeleteFileUTF8(fname);
 

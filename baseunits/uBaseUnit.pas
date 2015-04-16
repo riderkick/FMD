@@ -1139,8 +1139,7 @@ end;
 
 // bad coding.. but this is how FMD works
 function GetMangaDatabaseURL(const Name: String): String;
-begin
-  //Result := 'http://jaist.dl.sourceforge.net/project/fmd/FMD/lists/' + Name + '.zip';
+begin  
   Result := 'http://sourceforge.net/projects/fmd/files/FMD/lists/' +
     Name + '.zip/download';
 end;
