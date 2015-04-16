@@ -17,11 +17,9 @@ fp.dsk
 **/backup/
 
 # fmd
+*.lps
+*.res
 mangadownloader/lib
-mangadownloader/md.lps
-mangadownloader/md.res
 updater/lib
-updater/updater.lps
-updater/updater.res
 bin/
 Release/

@@ -1,0 +1,5 @@
+*.txt	eol=crlf
+*.pas	eol=lf
+*.lpr	eol=lf
+*.lpi	eol=lf
+*.po	eol=lf
