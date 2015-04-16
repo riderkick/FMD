@@ -18,6 +18,8 @@ fp.dsk
 
 # fmd binary
 mangadownloader/lib
+mangadownloader/md.res
 updater/lib
+updater/updater.res
 bin/
 Release/
