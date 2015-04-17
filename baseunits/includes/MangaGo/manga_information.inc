@@ -1,9 +1,8 @@
   function GetMangaGoInfoFromURL: Byte;
   var
+    i: Integer;
     isExtractGenres: Boolean = False;
-    isExtractChapter: Boolean = False;
-    s: String;
-    i, j: Cardinal;
+    isExtractChapters: Boolean = False;
   begin
     mangaInfo.website := WebsiteRoots[MANGAGO_ID, 0];
     mangaInfo.url := FillMangaSiteHost(MANGAGO_ID, URL);
@@ -80,41 +79,25 @@
           mangaInfo.summary := Trim(HTMLEntitiesFilter(StringFilter(parse.Strings[i + 1])));
 
       //get chapter links and names
-      if (Pos('id="chapter_table"', parse.Strings[i]) > 0) then
-        isExtractChapter := True;
-
-      if (i + 5 < parse.Count - 1) then
-        if (isExtractChapter) then
+      if (GetTagName(parse[i]) = 'table') and
+        ((GetVal(parse[i], 'id') = 'chapter_table') or (GetVal(parse[i], 'id') = 'raws_table')) then
+        isExtractChapters := True;
+      if isExtractChapters then
+      begin
+        if GetTagName(parse[i]) = '/table' then
+          isExtractChapters := False;
+        if (GetTagName(parse[i]) = 'a') and (GetVal(parse[i], 'class') = 'chico') then
         begin
-          if (Pos('</table', parse.Strings[i]) > 0) then
-            isExtractChapter := False;
-
-          if (Pos('class="chico"', parse.Strings[i]) > 0) then
-          begin
-            Inc(mangaInfo.numChapter);
-            s := GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href='));
-            s := StringReplace(s, WebsiteRoots[MANGAGO_ID, 1], '', []);
-            mangaInfo.chapterLinks.Add(s);
-            s := Trim(RemoveSymbols(parse.Strings[i + 1])) + ' ' +
-              Trim(RemoveSymbols(parse.Strings[i + 3])) + ' ' +
-              Trim(RemoveSymbols(parse.Strings[i + 5]));
-            mangaInfo.chapterName.Add(Trim(StringFilter(HTMLEntitiesFilter(s))));
-          end;
+          Inc(mangaInfo.numChapter);
+          mangaInfo.ChapterLinks.Add(GetVal(parse[i], 'href'));
+          mangaInfo.ChapterName.Add(CommonStringFilter(Trim(parse[i + 1]) + ' ' +
+            Trim(parse[i + 3]) + ' ' + Trim(parse[i + 5])));
         end;
+      end;
     end;
 
     // Since chapter name and link are inverted, we need to invert them
     if mangainfo.ChapterLinks.Count > 1 then
-    begin
-      i := 0;
-      j := mangainfo.ChapterLinks.Count - 1;
-      while (i < j) do
-      begin
-        mangainfo.ChapterName.Exchange(i, j);
-        mangainfo.chapterLinks.Exchange(i, j);
-        Inc(i);
-        Dec(j);
-      end;
-    end;
+      InvertStrings([mangaInfo.ChapterName, mangaInfo.ChapterLinks]);
     Result := NO_ERROR;
   end;
