@@ -18,7 +18,7 @@
       <UseVersionInfo Value="True"/>
       <MinorVersionNr Value="9"/>
       <RevisionNr Value="8"/>
-      <BuildNr Value="3"/>
+      <BuildNr Value="4"/>
       <Attributes pvaPrivateBuild="True"/>
       <StringTable Comments="Unofficial Build" FileDescription="Free Manga Downloader" LegalCopyright="©2015 FMD Project Team" OriginalFilename="fmd.exe" ProductName="Free Manga Downloader" ProductVersion="$BuildMode()" PrivateBuild="Cholif"/>
     </VersionInfo>
@@ -314,6 +314,7 @@
       <Unit15>
         <Filename Value="..\baseunits\uBaseUnit.pas"/>
         <IsPartOfProject Value="True"/>
+        <UnitName Value="uBaseUnit"/>
       </Unit15>
       <Unit16>
         <Filename Value="..\baseunits\uMisc.pas"/>
