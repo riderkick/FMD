@@ -2603,27 +2603,30 @@ begin
     Exit;
   l := TStringList.Create;
   Process := TProcessUTF8.Create(nil);
-  s := StringReplace(Favorites.favoriteInfo[vtFavorites.FocusedNode^.Index].SaveTo,
-    '/', '\', [rfReplaceAll]);
+  try
+    s := StringReplace(Favorites.favoriteInfo[vtFavorites.FocusedNode^.Index].SaveTo,
+      '/', '\', [rfReplaceAll]);
 
-  if s[Length(s)] <> '\' then
-    s := s + '\';
-  if FindFirstUTF8(s + '*', faAnyFile and faDirectory, Info) = 0 then
-    repeat
-      l.Add(Info.Name);
-    until FindNextUTF8(Info) <> 0;
-  if l.Count >= 3 then
-    f := l.Strings[2]
-  else
-    f := '';
-  FindClose(Info);
-  l.Free;
+    if s[Length(s)] <> '\' then
+      s := s + '\';
+    if FindFirstUTF8(s + '*', faAnyFile and faDirectory, Info) = 0 then
+      repeat
+        l.Add(Info.Name);
+      until FindNextUTF8(Info) <> 0;
+    if l.Count >= 3 then
+      f := l.Strings[2]
+    else
+      f := '';
+    FindClose(Info);
 
-  s := StringReplace(edOptionExternal.Text, '%PATH%', s, [rfReplaceAll]);
-  s := StringReplace(s, '%FCHAPTER%', f, [rfReplaceAll]);
-  Process.CommandLine := s;
-  Process.Execute;
-  Process.Free;
+    s := StringReplace(edOptionExternal.Text, '%PATH%', s, [rfReplaceAll]);
+    s := StringReplace(s, '%FCHAPTER%', f, [rfReplaceAll]);
+    Process.CommandLine := s;
+    Process.Execute;
+  finally
+    l.Free;
+    Process.Free;
+  end;
 end;
 
 procedure TMainForm.miOpenWithClick(Sender: TObject);
@@ -2635,32 +2638,32 @@ var
 begin
   if (not Assigned(vtDownload.FocusedNode)) or (edOptionExternal.Text = '') then
     Exit;
-  if (not FileExists(ExtractWord(1, edOptionExternal.Text, [' ']))) then
-    Exit;
-
   l := TStringList.Create;
   Process := TProcessUTF8.Create(nil);
-  s := StringReplace(DLManager.containers.Items[
-    vtDownload.FocusedNode^.Index].DownloadInfo.SaveTo, '/', '\', [rfReplaceAll]);
+  try
+    s := StringReplace(DLManager.containers.Items[
+      vtDownload.FocusedNode^.Index].DownloadInfo.SaveTo, '/', '\', [rfReplaceAll]);
 
-  if s[Length(s)] <> '\' then
-    s := s + '\';
-  if FindFirstUTF8(s + '*', faAnyFile and faDirectory, Info) = 0 then
-    repeat
-      l.Add(Info.Name);
-    until FindNextUTF8(Info) <> 0;
-  if l.Count >= 3 then
-    f := l.Strings[2]
-  else
-    f := '';
-  FindClose(Info);
-  l.Free;
+    if s[Length(s)] <> '\' then
+      s := s + '\';
+    if FindFirstUTF8(s + '*', faAnyFile and faDirectory, Info) = 0 then
+      repeat
+        l.Add(Info.Name);
+      until FindNextUTF8(Info) <> 0;
+    if l.Count >= 3 then
+      f := l.Strings[2]
+    else
+      f := '';
+    FindClose(Info);
 
-  s := StringReplace(edOptionExternal.Text, '%PATH%', s, [rfReplaceAll]);
-  s := StringReplace(s, '%FCHAPTER%', f, [rfReplaceAll]);
-  Process.CommandLine := s;
-  Process.Execute;
-  Process.Free;
+    s := StringReplace(edOptionExternal.Text, '%PATH%', s, [rfReplaceAll]);
+    s := StringReplace(s, '%FCHAPTER%', f, [rfReplaceAll]);
+    Process.CommandLine := s;
+    Process.Execute;
+  finally
+    l.Free;
+    Process.Free;
+  end;
 end;
 
 procedure TMainForm.pcMainChange(Sender: TObject);
