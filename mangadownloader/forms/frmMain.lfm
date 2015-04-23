@@ -7,7 +7,6 @@ object MainForm: TMainForm
   Caption = 'Free Manga Downloader'
   ClientHeight = 553
   ClientWidth = 819
-  Menu = MainMenu1
   OnClose = FormClose
   OnCreate = FormCreate
   OnDestroy = FormDestroy
@@ -43,14 +42,14 @@ object MainForm: TMainForm
     Height = 484
     Top = 12
     Width = 614
-    ActivePage = tsInformation
+    ActivePage = tsDownload
     Align = alClient
     BorderSpacing.Top = 4
     BorderSpacing.Right = 4
     BorderSpacing.Bottom = 4
     Font.Style = [fsBold]
     ParentFont = False
-    TabIndex = 1
+    TabIndex = 0
     TabOrder = 0
     OnChange = pcMainChange
     object tsDownload: TTabSheet
@@ -142,8 +141,8 @@ object MainForm: TMainForm
         Height = 456
         Top = 0
         Width = 606
-        HorzScrollBar.Page = 567
-        VertScrollBar.Page = 319
+        HorzScrollBar.Page = 311
+        VertScrollBar.Page = 317
         Align = alClient
         BorderStyle = bsNone
         ClientHeight = 456
@@ -1681,8 +1680,8 @@ object MainForm: TMainForm
             Height = 351
             Top = 0
             Width = 579
-            HorzScrollBar.Page = 467
-            VertScrollBar.Page = 272
+            HorzScrollBar.Page = 462
+            VertScrollBar.Page = 147
             Align = alClient
             BorderStyle = bsNone
             ClientHeight = 351
@@ -5369,10 +5368,6 @@ object MainForm: TMainForm
     OnTimer = itStartupTimer
     left = 672
     top = 136
-  end
-  object MainMenu1: TMainMenu
-    left = 239
-    top = 276
   end
   object tmBackup: TIdleTimer
     Interval = 60000

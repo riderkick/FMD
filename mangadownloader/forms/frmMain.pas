@@ -70,7 +70,6 @@ type
     lbOptionCustomRenameHint: TLabel;
     lbOptionCustomRenameHint1: TLabel;
     lbOptionExternalHint: TLabel;
-    MainMenu1 : TMainMenu;
     medURLCut: TMenuItem;
     medURLCopy: TMenuItem;
     medURLPaste: TMenuItem;
@@ -349,7 +348,6 @@ type
     procedure itMonitorTimer(Sender: TObject);
     procedure itRefreshFormTimer(Sender: TObject);
     procedure itSaveDownloadedListTimer(Sender: TObject);
-    procedure itSaveJobListTimer(Sender: TObject);
     procedure itStartupTimer(Sender: TObject);
     procedure medURLCutClick(Sender: TObject);
     procedure medURLCopyClick(Sender: TObject);
@@ -920,11 +918,6 @@ end;
 procedure TMainForm.itSaveDownloadedListTimer(Sender: TObject);
 begin
   DLManager.BackupDownloadedChaptersList;
-end;
-
-procedure TMainForm.itSaveJobListTimer(Sender: TObject);
-begin
-
 end;
 
 procedure TMainForm.itStartupTimer(Sender: TObject);

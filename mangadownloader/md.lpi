@@ -292,6 +292,7 @@
         <ComponentName Value="MainForm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
+        <UnitName Value="frmMain"/>
       </Unit11>
       <Unit12>
         <Filename Value="forms\frmNewChapter.pas"/>
@@ -314,7 +315,6 @@
       <Unit15>
         <Filename Value="..\baseunits\uBaseUnit.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="uBaseUnit"/>
       </Unit15>
       <Unit16>
         <Filename Value="..\baseunits\uMisc.pas"/>
