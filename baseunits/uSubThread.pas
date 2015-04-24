@@ -44,6 +44,11 @@ type
     fNewVersionNumber, fUpdateURL, fChangelog: String;
     constructor Create;
   end;
+  
+resourcestring
+  RS_NewVersionFound = 'New Version found!';
+  RS_CurrentVersion = 'Current Version';
+  RS_LatestVersion = 'Latest Version ';
 
 implementation
 
@@ -66,14 +71,14 @@ end;
 
 procedure TSubThread.MainThreadUpdate;
 begin
-  UpdateDialogForm.Caption := Application.Title + ' - New version found!';
+  UpdateDialogForm.Caption := Application.Title + ' - ' + RS_NewVersionFound;
   with UpdateDialogForm.mmLog.Lines do
   begin
     BeginUpdate;
     try
       Clear;
-      Add('Current Version : ' + FMD_VERSION_NUMBER);
-      Add('New Version     : ' + fNewVersionNumber + LineEnding);
+      Add(RS_CurrentVersion + ' : ' + FMD_VERSION_NUMBER);
+      Add(RS_LatestVersion + ' : ' + fNewVersionNumber + LineEnding);
       AddText(fChangelog);
     finally
       EndUpdate;
