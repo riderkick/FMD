@@ -2872,8 +2872,8 @@ object MainForm: TMainForm
   object pmDownload: TPopupMenu
     Images = IconList
     OnPopup = pmDownloadPopup
-    left = 280
-    top = 376
+    left = 368
+    top = 80
     object miUp: TMenuItem
       Caption = 'Move up'
       Bitmap.Data = {
@@ -3226,8 +3226,8 @@ object MainForm: TMainForm
     end
   end
   object pmChapterList: TPopupMenu
-    left = 512
-    top = 72
+    left = 368
+    top = 128
     object miChapterListCheckSelected: TMenuItem
       Caption = 'Check selected'
       OnClick = miChapterListCheckSelectedClick
@@ -3258,8 +3258,8 @@ object MainForm: TMainForm
   object pmFavorites: TPopupMenu
     Images = IconList
     OnPopup = pmFavoritesPopup
-    left = 440
-    top = 72
+    left = 368
+    top = 176
     object miFavoritesViewInfos: TMenuItem
       Caption = 'View manga infos'
       Bitmap.Data = {
@@ -3594,7 +3594,7 @@ object MainForm: TMainForm
   object pmUpdate: TPopupMenu
     ParentBidiMode = False
     left = 232
-    top = 376
+    top = 80
     object mnUpdateList: TMenuItem
       Caption = 'Update manga list'
       OnClick = mnUpdateListClick

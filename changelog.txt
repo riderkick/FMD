@@ -5,6 +5,9 @@ For list data check: https://www.mediafire.com/folder/3ccy2c7g36hp3/Fmd
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.8.5 (24-04-2015)
+[*] Various changes and minor bugs fixed
+
 0.9.8.4 (18-04-2015)
 [*] MangaGo: add raw chapters
 
