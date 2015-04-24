@@ -2606,9 +2606,9 @@ begin
   try
     s := StringReplace(Favorites.favoriteInfo[vtFavorites.FocusedNode^.Index].SaveTo,
       '/', '\', [rfReplaceAll]);
+    if s[Length(s)] <> DirectorySeparator then
+      s := s + DirectorySeparator;
 
-    if s[Length(s)] <> '\' then
-      s := s + '\';
     if FindFirstUTF8(s + '*', faAnyFile and faDirectory, Info) = 0 then
       repeat
         l.Add(Info.Name);
@@ -2623,16 +2623,16 @@ begin
     s := StringReplace(s, '%FCHAPTER%', f, [rfReplaceAll]);
     Process.CommandLine := s;
     Process.Execute;
-  finally
-    l.Free;
-    Process.Free;
+  except
   end;
+  l.Free;
+  Process.Free;
 end;
 
 procedure TMainForm.miOpenWithClick(Sender: TObject);
 var
   Process: TProcessUTF8;
-  f, s: String;
+  f, ff, s: String;
   Info: TSearchRec;
   l: TStringList;
 begin
@@ -2643,27 +2643,46 @@ begin
   try
     s := StringReplace(DLManager.containers.Items[
       vtDownload.FocusedNode^.Index].DownloadInfo.SaveTo, '/', '\', [rfReplaceAll]);
+    if s[Length(s)] <> DirectorySeparator then
+      s := s + DirectorySeparator;
 
-    if s[Length(s)] <> '\' then
-      s := s + '\';
-    if FindFirstUTF8(s + '*', faAnyFile and faDirectory, Info) = 0 then
-      repeat
-        l.Add(Info.Name);
-      until FindNextUTF8(Info) <> 0;
-    if l.Count >= 3 then
-      f := l.Strings[2]
-    else
-      f := '';
-    FindClose(Info);
+    if DLManager.containers.Items[vtDownload.FocusedNode^.Index].ChapterName.Count > 0 then
+    begin
+      ff := DLManager.containers.Items[vtDownload.FocusedNode^.Index].
+        ChapterName[0];
+      if FileExistsUTF8(s + ff + '.zip') then
+        f := ff + '.zip'
+      else if FileExistsUTF8(s + ff + '.cbz') then
+        f := ff + '.cbz'
+      else if FileExistsUTF8(s + ff + '.pdf') then
+        f := ff + '.pdf'
+      else if DirectoryExistsUTF8(s + ff) then
+        f := ff
+      else
+        f := '';
+    end;
+
+    if f = '' then
+    begin
+      if FindFirstUTF8(s + '*', faAnyFile and faDirectory, Info) = 0 then
+        repeat
+          l.Add(Info.Name);
+        until FindNextUTF8(Info) <> 0;
+      if l.Count >= 3 then
+        f := l.Strings[2]
+      else
+        f := '';
+      FindClose(Info);
+    end;
 
     s := StringReplace(edOptionExternal.Text, '%PATH%', s, [rfReplaceAll]);
     s := StringReplace(s, '%FCHAPTER%', f, [rfReplaceAll]);
     Process.CommandLine := s;
     Process.Execute;
-  finally
-    l.Free;
-    Process.Free;
+  except
   end;
+  l.Free;
+  Process.Free;
 end;
 
 procedure TMainForm.pcMainChange(Sender: TObject);
