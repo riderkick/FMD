@@ -1145,9 +1145,8 @@ end;
 
 // bad coding.. but this is how FMD works
 function GetMangaDatabaseURL(const Name: String): String;
-begin  
-  Result := 'http://sourceforge.net/projects/fmd/files/FMD/lists/' +
-    Name + '.zip/download';
+begin
+  Result := 'https://bintray.com/artifact/download/riderkick/FMD/data/' + Name + '.7z';
 end;
 
 function SitesMemberOf(const website: String; MangaSiteIDs: array of Cardinal): Boolean;
