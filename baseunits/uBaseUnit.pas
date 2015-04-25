@@ -13,8 +13,9 @@ unit uBaseUnit;
 interface
 
 uses
-  SysUtils, Classes, Graphics, Forms, strutils, fileinfo, process, fgl,
-  uFMDThread, synautil, httpsend, blcksock, ssl_openssl, GZIPUtils;
+  SysUtils, Classes, Graphics, Forms, strutils, fileinfo, process, fpjson,
+  jsonparser, fgl, uFMDThread, synautil, httpsend, blcksock, ssl_openssl,
+  GZIPUtils;
 
 const
   FMD_REVISION = '$WCREV$';
@@ -773,6 +774,9 @@ function RemoveHostFromURL(URL: String): String;
 procedure RemoveHostFromURLs(Const URLs: TStringList);
 procedure RemoveHostFromURLsPair(Const URLs, Names : TStringList);
 
+//JSON
+procedure ParseJSONArray(const S, Path: String; var OutArray: TStringList);
+
 // StringUtils
 function GetValuesFromString(Str: String; Sepr: Char): String;
 procedure InvertStrings(Const St: TStringList); overload;
@@ -1367,6 +1371,34 @@ begin
       regx.Free
     end;
   end;
+end;
+
+procedure ParseJSONArray(const S, Path: String; var OutArray: TStringList);
+var
+  P: TJSONParser;
+  D: TJSONData;
+  O: TJSONObject;
+  i: Integer;
+begin
+  OutArray.BeginUpdate;
+  P := TJSONParser.Create(Trim(S));
+  try
+    D := P.Parse;
+    try
+      If Assigned(D) then
+        if (D.JSONType = jtArray) and (D.Count > 0) then
+          for i := 0 to D.Count - 1 do
+          begin
+            O := TJSONObject(D.Items[i]);
+            OutArray.Add(O.Strings[Path]);
+          end;
+    except
+    end;
+    D.Free;
+  finally
+    P.Free;
+  end;
+  OutArray.EndUpdate;
 end;
 
 function GetValuesFromString(Str: String; Sepr: Char): String;
