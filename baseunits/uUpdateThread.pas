@@ -70,6 +70,21 @@ type
     constructor Create;
     destructor Destroy; override;
   end;
+  
+resourcestring
+  RS_UpdatingList = 'Updating list';
+  RS_GettingDirectory = 'Getting directory';
+  RS_LookingForNewTitle = 'Looking for new title(s)';
+  RS_LookingForNewTitleFromAnotherDirectory = 'Looking for new title(s) from another directory';
+  RS_GettingInfo = 'Getting info';
+  RS_GettingListFor = 'Getting list for';
+  RS_Preparing = 'Preparing';
+  RS_IndexingNewTitle = 'Indexing new title(s)';
+  RS_RemovingDuplicateFromNewTitle = 'Removing duplicate from new title(s)';
+  RS_RemovingDuplicateFromCurrentData = 'Removing duplicate from current data';
+  RS_RemovingDuplicateFromLocalData = 'Removing duplicate from local data';
+  RS_SynchronizingData = 'Synchronizing data';
+  RS_SavingData = 'Saving data';
 
 implementation
 
@@ -224,12 +239,8 @@ begin
         begin
           manager.CS_AddInfoToData.Acquire;
           try
-            // {$IFNDEF DOWNLOADER}
             Info.AddInfoToDataWithoutBreak(manager.names[workPtr],
               manager.links[workPtr], manager.mainDataProcess);
-            // {$ELSE}
-            //   Info.AddInfoToData(manager.names[workPtr], manager.links[workPtr], manager.mainDataProcess);
-            // {$ENDIF}
           finally
             manager.CS_AddInfoToData.Release;
           end;
@@ -466,23 +477,20 @@ begin
           threads.Last.workPtr := workPtr;
           threads.Last.Start;
           Inc(workPtr);
-          {S := 'Updating list: ' + website + ' [T.' + IntToStr(threads.Count) +
-            '|' + GetEnumName(TypeInfo(TCheckStyleType), integer(cs)) +
-            '] ' + Format('[%d/%d]', [workPtr, limit]);}
-          S := 'Updating list' + Format(' [%d/%d] %s | [T:%d] [%d/%d]',
+          S := RS_UpdatingList + Format(' [%d/%d] %s | [T:%d] [%d/%d]',
             [websitePtr, websites.Count, website, threads.Count, workPtr, limit]);
           if cs = CS_DIRECTORY_COUNT then
             if limit = 1 then
-              S := 'Updating list' + Format(' [%d/%d] ', [websitePtr, websites.Count]) +
-                website + ' | Getting directory...'
+              S := RS_UpdatingList + Format(' [%d/%d] ', [websitePtr, websites.Count]) +
+                website + ' | ' + RS_GettingDirectory + '...'
             else
-              S := S + ' | Getting directory...';
+              S := S + ' | ' + RS_GettingDirectory + '...';
           if cs = CS_DIRECTORY_PAGE then
-            S := S + ' | Looking for new title(s)...';
+            S := S + ' | ' + RS_LookingForNewTitle + '...';
           if cs = CS_DIRECTORY_PAGE_2 then
-            S := S + ' | Looking for new title(s) from another directory...';
+            S := S + ' | ' + RS_LookingForNewTitleFromAnotherDirectory + '...';
           if cs = CS_INFO then
-            S := S + ' | Getting info "' + names.Strings[workPtr - 1] +
+            S := S + ' | ' + RS_GettingInfo + ' "' + names.Strings[workPtr - 1] +
               '" "' + WebsiteRoots[GetMangaSiteID(website), 1] +
               links.Strings[workPtr - 1] + '"';
           {$IFNDEF DOWNLOADER}
@@ -546,7 +554,7 @@ begin
       begin
         website := websites.Strings[websitePtr];
         Inc(websitePtr);
-        FStatus := 'Getting list for ' + website + ' ...';
+        FStatus := RS_GettingListFor + ' ' + website + ' ...';
         Synchronize(MainThreadShowGetting);
         {$IFDEF USEADMIN}
         fmdRunAsAdmin(fmdDirectory + 'updater.exe', '-x -r 3 -q -d ' +
@@ -564,8 +572,8 @@ begin
       begin
         website := websites.Strings[websitePtr];
         Inc(websitePtr);
-        FStatus := 'Updating list ' + Format('[%d/%d] %s',
-          [websitePtr, websites.Count, website]) + ' | Preparing...';
+        FStatus := RS_UpdatingList + Format(' [%d/%d] %s',
+          [websitePtr, websites.Count, website]) + ' | ' + RS_Preparing + '...';
         Synchronize(MainThreadShowGetting);
 
         mainDataProcess.Clear;
@@ -654,15 +662,15 @@ begin
         links.LoadFromFile(website + '_links.txt');
         {$ENDIF}
 
-        FStatus := 'Updating list ' + Format('[%d/%d] %s',
-          [websitePtr, websites.Count, website]) + ' | Indexing new title(s)...';
+        FStatus := RS_UpdatingList + Format(' [%d/%d] %s',
+          [websitePtr, websites.Count, website]) + ' | ' + RS_IndexingNewTitle + '...';
         Synchronize(MainThreadShowGetting);
 
         // remove duplicate
         if links.Count > 0 then
         begin
-          FStatus := 'Updating list ' + Format('[%d/%d] %s',
-            [websitePtr, websites.Count, website]) + ' | Removing duplicate from new title(s)...';
+          FStatus := RS_UpdatingList + Format(' [%d/%d] %s',
+            [websitePtr, websites.Count, website]) + ' | ' + RS_RemovingDuplicateFromNewTitle + '...';
           Synchronize(MainThreadShowGetting);
           j := 0;
           while j < (links.Count - 1) do
@@ -691,8 +699,8 @@ begin
         // remove duplicate found<>current database
         if (mainDataProcess.Link.Count > 0) and (links.Count > 0) then
         begin
-          FStatus := 'Updating list ' + Format('[%d/%d] %s',
-            [websitePtr, websites.Count, website]) + ' | Removing duplicate from current data...';
+          FStatus := RS_UpdatingList + Format(' [%d/%d] %s',
+            [websitePtr, websites.Count, website]) + ' | ' + RS_RemovingDuplicateFromCurrentData + '...';
           Synchronize(MainThreadShowGetting);
           j := 0;
           while j < links.Count do
@@ -712,8 +720,8 @@ begin
 
         if OptionUpdateListRemoveDuplicateLocalData then
         begin
-          FStatus := 'Updating list ' + Format('[%d/%d] %s',
-            [websitePtr, websites.Count, website]) + ' | Removing duplicate local data...';
+          FStatus := RS_UpdatingList + Format(' [ %d/%d] %s',
+            [websitePtr, websites.Count, website]) + ' | ' + RS_RemovingDuplicateFromLocalData + '...';
           Synchronize(MainThreadShowGetting);
           if mainDataProcess.Link.Count > 0 then
           begin
@@ -801,8 +809,8 @@ begin
              FileExistsUTF8(DATA_FOLDER + WebsiteRoots[MANGAPARK_ID, 0] + DATA_EXT))
             then
           begin
-            FStatus := 'Updating list ' + Format('[%d/%d] %s',
-              [websitePtr, websites.Count, website]) + ' | Synchronizing data...';
+            FStatus := RS_UpdatingList + Format(' [%d/%d] %s',
+              [websitePtr, websites.Count, website]) + ' | ' + RS_SynchronizingData + '...';
             Synchronize(MainThreadShowGetting);
 
             syncProcess.Clear;
@@ -857,29 +865,14 @@ begin
                 for k := 0 to mainDataProcess.Data.Count - 1 do
                 begin
                   if Terminated then
-                    Break;
-                  {
-                  if odd(k) then
-                  begin
-                    FStatus := 'Updating list ' + Format('[%d/%d] %s | [%d/%d] | %s',
-                      [websitePtr, websites.Count, website,
-                      k, mainDataProcess.Data.Count
-                      , 'Synchronizing data...']);
-                    Synchronize(MainThreadShowGetting);
-                  end;
-                  }
+                    Break;   
                   for j := 0 to syncProcess.Link.Count - 1 do
                   begin
                     if Terminated then
-                      Break;
-                    //if SameText(mainDataProcess.Link[k], syncProcess.Link[j]) then
+                      Break;                    
                     if SameText(mainDataProcess.Title[k], syncProcess.Title[j]) then
-                    begin
-                      //if (website = WebsiteRoots[MANGASTREAM_ID, 0]) or
-                      //  (website = WebsiteRoots[S2SCAN_ID, 0]) then
-                        s := syncProcess.Param[j, DATA_PARAM_SUMMARY];
-                      //else
-                      //  s := mainDataProcess.Param[k, DATA_PARAM_SUMMARY];
+                    begin                      
+                      s := syncProcess.Param[j, DATA_PARAM_SUMMARY];                                           
                       mainDataProcess.Data.Strings[k] := RemoveBreaks(
                         mainDataProcess.Param[k, DATA_PARAM_NAME] + SEPERATOR +
                         mainDataProcess.Param[k, DATA_PARAM_LINK] + SEPERATOR +
@@ -911,8 +904,8 @@ begin
 
         if (not Terminated) or (not SitesWithSortedList(website)) then
         begin
-          FStatus := 'Updating list ' + Format('[%d/%d] %s',
-            [websitePtr, websites.Count, website]) + ' | Saving data...';
+          FStatus := RS_UpdatingList + Format(' [%d/%d] %s',
+            [websitePtr, websites.Count, website]) + ' | ' + RS_SavingData + '...';
           Synchronize(MainThreadShowGetting);
           mainDataProcess.SaveToFile(website);
         end;
