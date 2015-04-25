@@ -1172,6 +1172,8 @@ var
 
   {$I includes/MangaSee/names_and_links.inc}
 
+  {$I includes/MangaKu/names_and_links.inc}
+
 begin
   Source := TStringList.Create;
   if website = WebsiteRoots[ANIMEA_ID, 0] then
@@ -1408,6 +1410,9 @@ begin
   if website = WebsiteRoots[MANGASEE_ID, 0] then
     Result := MangaSeeGetNamesAndLinks
   else
+  if website = WebsiteRoots[MANGAKU_ID, 0] then
+    Result := MangaKuGetNamesAndLinks
+  else
     Result := INFORMATION_NOT_FOUND;
 
   //remove host from url
@@ -1571,6 +1576,8 @@ var
   {$I includes/PornComix/manga_information.inc}
 
   {$I includes/MangaSee/manga_information.inc}
+
+  {$I includes/MangaKu/manga_information.inc}
 
 begin
   Source := TStringList.Create;
@@ -1809,6 +1816,9 @@ begin
   else
   if website = GetMangaSiteName(MANGASEE_ID) then
     Result := GetMangaSeeInfoFromURL
+  else
+  if website = GetMangaSiteName(MANGAKU_ID) then
+    Result := GetMangaKuInfoFromURL
   else
   begin
     Source.Free;

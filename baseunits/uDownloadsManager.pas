@@ -505,6 +505,8 @@ var
 
   {$I includes/MangaSee/chapter_page_number.inc}
 
+  {$I includes/MangaKu/chapter_page_number.inc}
+
 begin
   manager.container.PageNumber := 0;
   if manager.container.MangaSiteID = ANIMEA_ID then
@@ -693,6 +695,9 @@ begin
   else
   if manager.container.MangaSiteID = MANGASEE_ID then
     Result := GetMangaSeePageNumber
+  else
+  if manager.container.MangaSiteID = MANGAKU_ID then
+    Result := GetMangaKuPageNumber
   else
     Result := False;
 end;
