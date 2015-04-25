@@ -1,7 +1,7 @@
   function GetMangaArPageNumber: Boolean;
   var
     s: String;
-    i: Cardinal;
+    i: Integer;
     l: TStringList;
   begin
     l := TStringList.Create;
@@ -11,27 +11,24 @@
       s,
       manager.container.manager.retryConnect);
 
-    // convert charset
-    l.Text := CP1256ToUTF8(l.Text);
-
-    Parser := THTMLParser.Create(PChar(l.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText := OnText;
-    Parser.Exec;
-    Parser.Free;
-    if parse.Count > 0 then
-    begin
-      manager.container.PageNumber := 0;
-      for i := 0 to parse.Count - 1 do
-      begin
-        if (Pos('</select>', parse.Strings[i]) > 0) then
-        begin
-          s := TrimLeft(TrimRight(parse.Strings[i - 3]));
-          manager.container.PageNumber := StrToInt(s);
-          Break;
-        end;
-      end;
-    end;
-    parse.Free;
-    l.Free;
+    if l.Count > 0 then
+     try
+       for i := 0 to l.Count - 1 do
+         if Pos('var pages = [', l[i]) > 0 then
+         begin
+           s := l[i];
+           s := StringReplace(s, 'var pages =', '', [rfIgnoreCase]);
+           s := Trim(TrimChar(s, [';', ' ']));
+           Break;
+         end;
+       if s <> '' then
+       begin
+         manager.container.PageLinks.Clear;
+         ParseJSONArray(s, 'url', manager.container.PageLinks);
+         manager.container.PageNumber := manager.container.PageLinks.Count;
+       end;
+     finally
+       parse.Free;
+       l.Free;
+     end;
   end;
