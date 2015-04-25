@@ -5,6 +5,9 @@ For list data check: https://www.mediafire.com/folder/3ccy2c7g36hp3/Fmd
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.8.6 (25-04-2015)
+[*] Fix MangaAr (all manga url seems changed, you have to build manga list from scratch)
+
 0.9.8.5 (24-04-2015)
 [*] Various changes and minor bugs fixed
 
