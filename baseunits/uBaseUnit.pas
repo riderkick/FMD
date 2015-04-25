@@ -326,6 +326,7 @@ const
   XXCOMICS3D_ID          = 86;
   PORNXXXCOMICS_ID       = 87;
   MANGASEE_ID            = 88;
+  MANGAKU_ID             = 89;
 
 var
   FMD_VERSION_NUMBER: String = '';
@@ -360,7 +361,7 @@ var
   SEPERATOR: String = '!%~';
   SEPERATOR2: String = '~%!';
 
-  WebsiteRoots: array [0..88] of array [0..1] of string = (
+  WebsiteRoots: array [0..89] of array [0..1] of string = (
     ('AnimeA', 'http://manga.animea.net'),
     ('MangaHere', 'http://www.mangahere.co'),
     ('MangaInn', 'http://www.mangainn.me'),
@@ -449,7 +450,8 @@ var
     ('XXComicsMT', 'http://milftoon.xxcomics.net'),
     ('XXComics3D', 'http://3dincest.xxcomics.net'),
     ('PornXXXComics', 'http://pornxxxcomics.com'),
-    ('MangaSee', 'http://mangasee.co')
+    ('MangaSee', 'http://mangasee.co'),
+    ('MangaKu', 'http://mangaku.web.id')
     );
 
   BROWSER_INVERT: Boolean = False;
@@ -2507,12 +2509,6 @@ begin
     HTTP.Clear;
     Sleep(500);
   end;
-  //if Pos('?nw=session', URL) > 0 then
-  //begin
-  //  HTTP.Clear;
-  //  Delete(URL, Length(URL) - 10, 11);
-  //  goto globReturn;
-  //end;
 
   counter := 0;
   while (HTTP.ResultCode = 302) or (HTTP.ResultCode = 301) do
@@ -2549,18 +2545,7 @@ begin
 
   if HTTP.ResultCode <> 404 then
   begin
-    {
-    if (HTTP.Headers.Count > 0) and (output is TStringList) then
-      for i := 0 to HTTP.Headers.Count - 1 do
-        if Pos('gzip', HTTP.Headers.Strings[i]) > 0 then
-        begin
-          isGZip := True;
-          Break;
-        end;
-    }
-
     // Decompress the html file
-    //if isGZip and
     HTTP.Headers.NameValueSeparator := ':';
     s := LowerCase(HTTP.Headers.Values['Content-Encoding']);
     if (Pos('gzip', s) <> 0) or (Pos('deflate', s) <> 0) then
@@ -2574,36 +2559,18 @@ begin
         mstream.Free;
       end;
     end;
-    {
-    if isGZip then
-    begin
-      i := Random(9999999);
-      HTTP.Document.Position := 0;
-      s := fmdGetTempPath + ' ';
-      s := TrimLeft(TrimRight(s)) + IntToStr(i) + '.tmp';
-      HTTP.Document.SaveToFile(s);
-
-      zstream := TGZFileStream.Create(s, gzopenread);
-      TStringList(output).LoadFromStream(zstream);
-
-      zstream.Free;
-      DeleteFileUTF8(s);
-    end
-
-    else
-    }
-      try
-        if output is TStringList then
-          TStringList(output).LoadFromStream(HTTP.Document)
-        else
-        if output is TPicture then
-          TPicture(output).LoadFromStream(HTTP.Document)
-        else
-        if output is TStream then
-          HTTP.Document.SaveToStream(TStream(output));
-      except
-        on E: Exception do ;
-      end;
+    try
+      if output is TStringList then
+        TStringList(output).LoadFromStream(HTTP.Document)
+      else
+      if output is TPicture then
+        TPicture(output).LoadFromStream(HTTP.Document)
+      else
+      if output is TStream then
+        HTTP.Document.SaveToStream(TStream(output));
+    except
+      on E: Exception do WriteLog('GetPage.WriteOutput error: ' + E.Message);
+    end;
     Result := True;
   end
   else

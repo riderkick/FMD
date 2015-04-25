@@ -150,7 +150,7 @@ begin
       if (OptionEnableLoadCover) and
         ((Pos('http://', FInfo.mangaInfo.coverLink) > 0) or
         (Pos('https://', FInfo.mangaInfo.coverLink) > 0)) then
-        FIsHasMangaCover := GetPage(nil, FInfo.FHTTP, TObject(FCover), FInfo.mangaInfo.coverLink, 1, True)
+        FIsHasMangaCover := GetPage(nil, FInfo.FHTTP, TObject(FCover), FInfo.mangaInfo.coverLink, 3, True)
       else
         FIsHasMangaCover := False;
       Synchronize(MainThreadShowCover);
