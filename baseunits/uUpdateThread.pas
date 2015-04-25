@@ -214,6 +214,7 @@ begin
 
       CS_INFO:
       begin
+        Info.mangaInfo.title := manager.names[workPtr];
         {$IFDEF DOWNLOADER}
         Info.GetInfoFromURL(manager.website, manager.links[workPtr], 5);
         {$ELSE}
@@ -468,7 +469,7 @@ begin
           {S := 'Updating list: ' + website + ' [T.' + IntToStr(threads.Count) +
             '|' + GetEnumName(TypeInfo(TCheckStyleType), integer(cs)) +
             '] ' + Format('[%d/%d]', [workPtr, limit]);}
-          S := 'Updating list ' + Format('[%d/%d] %s | [T:%d] [%d/%d]',
+          S := 'Updating list' + Format(' [%d/%d] %s | [T:%d] [%d/%d]',
             [websitePtr, websites.Count, website, threads.Count, workPtr, limit]);
           if cs = CS_DIRECTORY_COUNT then
             if limit = 1 then
