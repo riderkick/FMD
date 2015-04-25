@@ -53,11 +53,7 @@ function FindStrLinearPos(aList: TStrings; aValue: String): Integer;
 //misc
 
 var
-  fLog: TFileStream;
   CS_LOG, CS_OTHERLOG: TCriticalSection;
-
-
-  fOtherLog: TFileStream;
 
 const
   fLogFile = 'fmd_log.txt';
@@ -123,6 +119,7 @@ procedure WriteLog(msg: String; logType: TLogType = LOG_debug);
 {$IFDEF LOGACTIVE}
 var
   s: String;
+  f: TextFile;
 {$ENDIF}
 begin
   {$IFDEF LOGACTIVE}
@@ -130,13 +127,21 @@ begin
   try
     s := FormatDateTime('dd/mm/yyyy|hh:nn:ss.zzz ', Now);
     case logType of
-      LOG_debug: s := s + '[D] ';
-      LOG_info: s := s + '[I] ';
-      LOG_warning: s := s + '[W] ';
-      LOG_error: s := s + '[E] ';
+      LOG_debug: s := s + '[D]';
+      LOG_info: s := s + '[I]';
+      LOG_warning: s := s + '[W]';
+      LOG_error: s := s + '[E]';
     end;
-    s := s + StringReplace(msg, sLineBreak, '', [rfReplaceAll]) + #13#10;
-    fLog.WriteBuffer(Pointer(s)^, Length(s));
+    AssignFile(f, fLogFile);
+    try
+      if FileExists(fLogFile) then
+        Append(f)
+      else
+        Rewrite(f);
+      WriteLn(f, s + ' ' + msg);
+    finally
+      CloseFile(f);
+    end;
   finally
     CS_LOG.Release;
   end;
@@ -146,14 +151,22 @@ end;
 procedure WriteOtherLog(msg: String);
 {$IFDEF LOGACTIVE}
 var
-  s: String;
+  f: TextFile;
 {$ENDIF}
 begin
   {$IFDEF LOGACTIVE}
   CS_OTHERLOG.Acquire;
   try
-    s := msg + #13#10;
-    fOtherLog.WriteBuffer(Pointer(s)^, Length(s));
+    AssignFile(f, fOtherLogFile);
+    try
+      if FileExists(fOtherLogFile) then
+        Append(f)
+      else
+        Rewrite(f);
+      WriteLn(f, msg);
+    finally
+      CloseFile(f);
+    end;
   finally
     CS_OTHERLOG.Release;
   end;
@@ -652,16 +665,12 @@ initialization
   CS_LOG := TCriticalSection.Create;
   CS_OTHERLOG := TCriticalSection.Create;
   {$IFDEF LOGACTIVE}
-  fLog := TFileStream.Create(fLogFile, fmCreate or fmShareDenyNone);
-  fOtherLog := TFileStream.Create(fOtherLogFile, fmCreate or fmShareDenyNone);
   WriteLog('Starting FMD', LOG_Info);
   {$ENDIF}
 
 finalization
-  WriteLog('FMD exit normally', LOG_Info);
   {$IFDEF LOGACTIVE}
-  FreeAndNil(fLog);
-  FreeAndNil(fOtherLog);
+  WriteLog('FMD exit normally', LOG_Info);
   {$ENDIF}
   FreeAndNil(CS_OTHERLOG);
   FreeAndNil(CS_LOG);
