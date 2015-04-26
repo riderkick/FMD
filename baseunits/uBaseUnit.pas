@@ -793,6 +793,7 @@ procedure RemoveDuplicateStrings(Strs: Array of TStringList; RemIndex: Cardinal 
 procedure CleanHTMLComments(Const Str: TStringList);
 
 function FixHTMLTagQuote(const s: String): String;
+function FixCommonBrokenHTML(const s:String): string;
 function URLDecode(const s: String): String;
 function HTMLDecode(const AStr: String): String;
 
@@ -1451,6 +1452,14 @@ begin
     Result := StringReplace(Result, '''>', '">', [rfReplaceAll]);
     Result := StringReplace(Result, '''/>', '"/>', [rfReplaceAll]);
   end;
+end;
+
+function FixCommonBrokenHTML(const s: String): string;
+begin
+  Result := s;
+  Result := StringReplace(Result, '="width="', '="width:', [rfReplaceAll]);
+  Result := StringReplace(Result, '"target="', 'target="', [rfReplaceAll]);
+  Result := StringReplace(Result, 'rel=''''', '', [rfReplaceAll]);
 end;
 
 function URLDecode(const s: String): String;
