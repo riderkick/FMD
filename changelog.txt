@@ -1,9 +1,17 @@
 Free Manga Downloader
 Project page: https://github.com/riderkick/FMD
-For list data check: https://www.mediafire.com/folder/3ccy2c7g36hp3/Fmd
+
+For manga list data check:
+https://bintray.com/riderkick/FMD/data/all/#files
+https://www.mediafire.com/folder/3ccy2c7g36hp3/Fmd
 
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
+
+0.9.8.8 (26-04-2015)
+[+] Added AcademyVN (VN)
+[+] Added MangaAt (AR)
+[*] Various changes
 
 0.9.8.7 (25-04-2015)
 [+] Add MangaKu (ID)
