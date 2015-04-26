@@ -252,7 +252,6 @@
       <Unit3>
         <Filename Value="..\baseunits\uUpdateThread.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="uUpdateThread"/>
       </Unit3>
       <Unit4>
         <Filename Value="..\baseunits\uSubThread.pas"/>
@@ -294,7 +293,6 @@
         <ComponentName Value="MainForm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <UnitName Value="frmMain"/>
       </Unit11>
       <Unit12>
         <Filename Value="forms\frmNewChapter.pas"/>
@@ -313,7 +311,6 @@
       <Unit14>
         <Filename Value="..\baseunits\uGetMangaInfosThread.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="uGetMangaInfosThread"/>
       </Unit14>
       <Unit15>
         <Filename Value="..\baseunits\uBaseUnit.pas"/>
@@ -323,7 +320,6 @@
       <Unit16>
         <Filename Value="..\baseunits\uMisc.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="uMisc"/>
       </Unit16>
       <Unit17>
         <Filename Value="..\baseunits\uData.pas"/>

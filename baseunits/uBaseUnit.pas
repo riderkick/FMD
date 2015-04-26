@@ -94,7 +94,7 @@ const
     ('）', ')')
     );
 
-  HTMLEntitiesChar: array [0..79] of array [0..1] of string = (
+  HTMLEntitiesChar: array [0..80] of array [0..1] of string = (
     ('&#171;', '«'),
     ('&#176;', '°'),
     ('&Agrave;', 'À'),
@@ -174,7 +174,8 @@ const
     ('&#956;', 'μ'),
     ('&raquo;', '»'),
     ('&laquo;', '«'),
-    ('&#8216;', '‘')
+    ('&#8216;', '‘'),
+    ('&ndash;', '-')
     );
 
   README_FILE             = 'readme.rtf';
@@ -327,6 +328,7 @@ const
   PORNXXXCOMICS_ID       = 87;
   MANGASEE_ID            = 88;
   MANGAKU_ID             = 89;
+  ACADEMYVN_ID           = 90;
 
 var
   FMD_VERSION_NUMBER: String = '';
@@ -361,7 +363,7 @@ var
   SEPERATOR: String = '!%~';
   SEPERATOR2: String = '~%!';
 
-  WebsiteRoots: array [0..89] of array [0..1] of string = (
+  WebsiteRoots: array [0..90] of array [0..1] of string = (
     ('AnimeA', 'http://manga.animea.net'),
     ('MangaHere', 'http://www.mangahere.co'),
     ('MangaInn', 'http://www.mangainn.me'),
@@ -451,7 +453,8 @@ var
     ('XXComics3D', 'http://3dincest.xxcomics.net'),
     ('PornXXXComics', 'http://pornxxxcomics.com'),
     ('MangaSee', 'http://mangasee.co'),
-    ('MangaKu', 'http://mangaku.web.id')
+    ('MangaKu', 'http://mangaku.web.id'),
+    ('AcademyVN', 'http://truyen.academyvn.com')
     );
 
   BROWSER_INVERT: Boolean = False;

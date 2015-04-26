@@ -507,6 +507,8 @@ var
 
   {$I includes/MangaKu/chapter_page_number.inc}
 
+  {$I includes/AcademyVN/chapter_page_number.inc}
+
 begin
   manager.container.PageNumber := 0;
   if manager.container.MangaSiteID = ANIMEA_ID then
@@ -698,6 +700,9 @@ begin
   else
   if manager.container.MangaSiteID = MANGAKU_ID then
     Result := GetMangaKuPageNumber
+  else
+  if manager.container.MangaSiteID = ACADEMYVN_ID then
+    Result := GetAcademyVNPageNumber
   else
     Result := False;
 end;
