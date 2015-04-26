@@ -861,6 +861,8 @@ var
 
   {$I includes/AcademyVN/directory_page_number.inc}
 
+  {$I includes/MangaAt/directory_page_number.inc}
+
 var
   p: Integer;
 begin
@@ -1013,7 +1015,10 @@ begin
       Result := GetMangaSeeDirectoryPageNumber
     else
     if website = WebsiteRoots[ACADEMYVN_ID, 0] then
-      Result := GetAcademyVNPageNumber
+      Result := GetAcademyDirectoryVNPageNumber
+    else
+    if website = WebsiteRoots[MANGAAT_ID, 0] then
+      Result := GetMangaAtDirectoryPageNumber
     else
     begin
       Result := NO_ERROR;
@@ -1180,6 +1185,8 @@ var
   {$I includes/MangaKu/names_and_links.inc}
 
   {$I includes/AcademyVN/names_and_links.inc}
+
+  {$I includes/MangaAt/names_and_links.inc}
 
 begin
   Source := TStringList.Create;
@@ -1423,6 +1430,9 @@ begin
   if website = WebsiteRoots[ACADEMYVN_ID, 0] then
     Result := AcademyVNGetNamesAndLinks
   else
+  if website = WebsiteRoots[MANGAAT_ID, 0] then
+    Result := MangaAtGetNamesAndLinks
+  else
     Result := INFORMATION_NOT_FOUND;
 
   //remove host from url
@@ -1590,6 +1600,8 @@ var
   {$I includes/MangaKu/manga_information.inc}
 
   {$I includes/AcademyVN/manga_information.inc}
+
+  {$I includes/MangaAt/manga_information.inc}
 
 begin
   Source := TStringList.Create;
@@ -1834,6 +1846,9 @@ begin
   else
   if website = GetMangaSiteName(ACADEMYVN_ID) then
     Result := GetAcademyVNInfoFromURL
+  else
+  if website = GetMangaSiteName(MANGAAT_ID) then
+    Result := GetMangaAtInfoFromURL
   else
   begin
     Source.Free;

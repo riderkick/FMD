@@ -509,6 +509,8 @@ var
 
   {$I includes/AcademyVN/chapter_page_number.inc}
 
+  {$I includes/MangaAt/chapter_page_number.inc}
+
 begin
   manager.container.PageNumber := 0;
   if manager.container.MangaSiteID = ANIMEA_ID then
@@ -704,6 +706,9 @@ begin
   if manager.container.MangaSiteID = ACADEMYVN_ID then
     Result := GetAcademyVNPageNumber
   else
+  if manager.container.MangaSiteID = MANGAAT_ID then
+    Result := GetMangaAtPageNumber
+  else
     Result := False;
 end;
 
@@ -840,6 +845,8 @@ var
   {$I includes/MangaHost/image_url.inc}
 
   {$I includes/PornComix/image_url.inc}
+
+  {$I includes/MangaAt/image_url.inc}
 
 begin
   if (manager.container.PageLinks.Count > 0) and
@@ -1053,6 +1060,9 @@ begin
     (manager.container.MangaSiteID = PORNCOMIXIC_ID) or
     (manager.container.MangaSiteID = PORNXXXCOMICS_ID) then
     Result := GetPornComixImageURL
+  else
+  if manager.container.MangaSiteID = MANGAAT_ID then
+    Result := GetMangaAtImageURL
   else
     Result := False;
 end;

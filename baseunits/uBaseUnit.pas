@@ -329,6 +329,7 @@ const
   MANGASEE_ID            = 88;
   MANGAKU_ID             = 89;
   ACADEMYVN_ID           = 90;
+  MANGAAT_ID             = 91;
 
 var
   FMD_VERSION_NUMBER: String = '';
@@ -363,7 +364,7 @@ var
   SEPERATOR: String = '!%~';
   SEPERATOR2: String = '~%!';
 
-  WebsiteRoots: array [0..90] of array [0..1] of string = (
+  WebsiteRoots: array [0..91] of array [0..1] of string = (
     ('AnimeA', 'http://manga.animea.net'),
     ('MangaHere', 'http://www.mangahere.co'),
     ('MangaInn', 'http://www.mangainn.me'),
@@ -454,7 +455,8 @@ var
     ('PornXXXComics', 'http://pornxxxcomics.com'),
     ('MangaSee', 'http://mangasee.co'),
     ('MangaKu', 'http://mangaku.web.id'),
-    ('AcademyVN', 'http://truyen.academyvn.com')
+    ('AcademyVN', 'http://truyen.academyvn.com'),
+    ('MangaAt', 'http://www.mangaat.com')
     );
 
   BROWSER_INVERT: Boolean = False;
