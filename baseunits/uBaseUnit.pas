@@ -13,9 +13,9 @@ unit uBaseUnit;
 interface
 
 uses
-  SysUtils, Classes, Graphics, Forms, strutils, fileinfo, process, fpjson,
-  jsonparser, fgl, uFMDThread, synautil, httpsend, blcksock, ssl_openssl,
-  GZIPUtils;
+  SysUtils, Classes, Graphics, Forms, UTF8Process, strutils, fileinfo, process,
+  fpjson, jsonparser, fgl, uFMDThread, synautil, httpsend, blcksock,
+  ssl_openssl, GZIPUtils;
 
 const
   FMD_REVISION = '$WCREV$';
@@ -3109,7 +3109,7 @@ const
   SE_SHUTDOWN_NAME = 'SeShutdownPrivilege';
 {$IFDEF UNIX}
 var
-  Process: TProcess;
+  Process: TProcessUTF8;
 {$ENDIF}
 begin
 {$IFDEF WINDOWS}
@@ -3140,7 +3140,7 @@ var
  {$IFDEF WINDOWS}
   sei: TShellExecuteInfoA;
  {$ELSE}
-  Process: TProcess;
+  Process: TProcessUTF8;
  {$ENDIF}
 begin
   {$IFDEF WINDOWS}
@@ -3168,11 +3168,11 @@ end;
 function RunExternalProcess(Exe: String; Params: array of String; ShowWind: Boolean = True;
   Detached: Boolean = False): Boolean;
 var
-  Process: TProcess;
+  Process: TProcessUTF8;
   I: Integer;
 begin
   Result := True;
-  Process := TProcess.Create(nil);
+  Process := TProcessUTF8.Create(nil);
   try
     Process.InheritHandles := False;
     Process.Executable := Exe;

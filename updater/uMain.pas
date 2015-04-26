@@ -9,7 +9,7 @@ uses
   cthreads,
   cmem,
   {$endif}
-  Classes, windows, SysUtils, zipper, ShellApi, FileUtil, Forms,
+  Classes, windows, SysUtils, zipper, ShellApi, FileUtil, UTF8Process, Forms,
   Dialogs, ComCtrls, StdCtrls, Clipbrd, ExtCtrls, RegExpr, IniFiles, process,
   USimpleException, httpsend, blcksock, ssl_openssl;
 
@@ -157,7 +157,7 @@ var
  {$IFDEF WINDOWS}
   sei: TShellExecuteInfoA;
  {$ELSE}
-  Process: TProcess;
+  Process: TProcessUTF8;
  {$ENDIF}
 begin
   {$IFDEF WINDOWS}
@@ -185,11 +185,11 @@ end;
 function RunExternalProcess(Exe: String; Params: array of String; ShowWind: Boolean = True;
   Detached: Boolean = False): Boolean;
 var
-  Process: TProcess;
+  Process: TProcessUTF8;
   I: Integer;
 begin
   Result := True;
-  Process := TProcess.Create(nil);
+  Process := TProcessUTF8.Create(nil);
   try
     Process.InheritHandles := False;
     Process.Executable := Exe;
