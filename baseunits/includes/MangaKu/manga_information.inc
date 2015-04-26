@@ -16,9 +16,12 @@
       Exit;
     end;
 
+    s := FixCommonBrokenHTML(Source.Text);
+    Source.Free;
+
     // parsing the HTML source
     parse.Clear;
-    Parser := THTMLParser.Create(PChar(Source.Text));
+    Parser := THTMLParser.Create(s);
     try
       Parser.OnFoundTag := OnTag;
       Parser.OnFoundText := OnText;
@@ -26,9 +29,9 @@
     finally
       Parser.Free;
     end;
-    Source.Free;
 
     if parse.Count > 0 then
+    begin
       for i := 0 to parse.Count - 1 do
       begin
         //title
@@ -91,6 +94,7 @@
             mangaInfo.chapterName.Add(CommonStringFilter(parse[i + 1]));
           end;
       end;
+    end;
 
     //invert chapters
     if mangaInfo.chapterLinks.Count > 0 then
