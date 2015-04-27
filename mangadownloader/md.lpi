@@ -18,7 +18,7 @@
       <UseVersionInfo Value="True"/>
       <MinorVersionNr Value="9"/>
       <RevisionNr Value="8"/>
-      <BuildNr Value="8"/>
+      <BuildNr Value="9"/>
       <Attributes pvaPrivateBuild="True"/>
       <StringTable Comments="Unofficial Build" FileDescription="Free Manga Downloader" LegalCopyright="©2015 FMD Project Team" OriginalFilename="fmd.exe" ProductName="Free Manga Downloader" ProductVersion="$BuildMode()" PrivateBuild="Cholif"/>
     </VersionInfo>
@@ -292,7 +292,6 @@
         <ComponentName Value="MainForm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <UnitName Value="frmMain"/>
       </Unit11>
       <Unit12>
         <Filename Value="forms\frmNewChapter.pas"/>
@@ -311,6 +310,7 @@
       <Unit14>
         <Filename Value="..\baseunits\uGetMangaInfosThread.pas"/>
         <IsPartOfProject Value="True"/>
+        <UnitName Value="uGetMangaInfosThread"/>
       </Unit14>
       <Unit15>
         <Filename Value="..\baseunits\uBaseUnit.pas"/>
@@ -324,6 +324,7 @@
       <Unit17>
         <Filename Value="..\baseunits\uData.pas"/>
         <IsPartOfProject Value="True"/>
+        <UnitName Value="uData"/>
       </Unit17>
       <Unit18>
         <Filename Value="forms\frmShutdownCounter.pas"/>
