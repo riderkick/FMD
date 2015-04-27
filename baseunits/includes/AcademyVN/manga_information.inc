@@ -62,8 +62,8 @@
           //status
           if Pos('Tình trạng:', parse[i + 1]) > 0 then
           begin
-            s := Trim(TrimLeftChar(parse[i + 5], [':']));
-            if s = 'Đang tiến hành' then
+            s := Trim(TrimLeftChar(parse[i + 3], [':']));
+            if (s = 'Đang tiến hành') or (s = 'Ngưng') then
               mangaInfo.status := '1'
             else
               mangaInfo.status := '0';
