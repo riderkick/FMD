@@ -12,8 +12,11 @@
       Exit;
     end;
 
+    s := FixCommonBrokenHTML(Source.Text);
+    Source.Free;
+
     parse.Clear;
-    Parser := THTMLParser.Create(FixHTMLTagQuote(Source.Text));
+    Parser := THTMLParser.Create(s);
     try
       Parser.OnFoundTag := OnTag;
       Parser.OnFoundText := OnText;
@@ -27,11 +30,12 @@
       begin
         if (GetTagName(parse[i]) = 'a') and (GetVal(parse[i], 'class') = 'screenshot') then
         begin
+          writelog('names = '+parse[i]);
+          writelog('names2 = '+parse[i+1]);
           links.Add(GetVal(parse[i], 'href'));
           names.Add(CommonStringFilter(parse[i + 1]));
         end;
       end;
 
     Result := NO_ERROR;
-    Source.Free;
   end;
