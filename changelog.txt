@@ -8,6 +8,9 @@ https://www.mediafire.com/folder/3ccy2c7g36hp3/Fmd
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.8.10 (29-04-2015)
+[+-] Replace MangaBird with MangaMint
+
 0.9.8.9 (27-04-2015)
 [*] AcademyVN fix status info
 [*] Minor changes

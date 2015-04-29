@@ -3,6 +3,6 @@ https://github.com/riderkick/FMD/releases/download/0.9.8.1/fmd_0.9.8.1.7z
 
 ## update info above was deprecated
 
-VERSION=0.9.8.9
-WIN32=https://github.com/riderkick/FMD/releases/download/0.9.8.9/fmd_0.9.8.9.7z
-WIN64=https://github.com/riderkick/FMD/releases/download/0.9.8.9/fmd_0.9.8.9_win64.7z
+VERSION=0.9.8.10
+WIN32=https://github.com/riderkick/FMD/releases/download/0.9.8.10/fmd_0.9.8.10.7z
+WIN64=https://github.com/riderkick/FMD/releases/download/0.9.8.10/fmd_0.9.8.10_win64.7z
