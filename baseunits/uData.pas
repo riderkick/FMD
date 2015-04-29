@@ -847,7 +847,7 @@ var
 
   {$I includes/UnionMangas/directory_page_number.inc}
 
-  {$I includes/MangaBird/directory_page_number.inc}
+  {$I includes/MangaMint/directory_page_number.inc}
 
   {$I includes/HakiHome/directory_page_number.inc}
 
@@ -990,8 +990,8 @@ begin
     if website = GetMangaSiteName(UNIONMANGAS_ID) then
       Result := GetUnionMangasDirectoryPageNumber
     else
-    if website = WebsiteRoots[MANGABIRD_ID, 0] then
-      Result := GetMangaBirdDirectoryPageNumber
+    if website = WebsiteRoots[MANGAMINT_ID, 0] then
+      Result := GetMangaMintDirectoryPageNumber
     else
     if website = WebsiteRoots[HAKIHOME_ID, 0] then
       Result := GetHakiHomeDirectoryPageNumber
@@ -1168,7 +1168,7 @@ var
 
   {$I includes/UnionMangas/names_and_links.inc}
 
-  {$I includes/MangaBird/names_and_links.inc}
+  {$I includes/MangaMint/names_and_links.inc}
 
   {$I includes/UnixManga/names_and_links.inc}
 
@@ -1397,8 +1397,8 @@ begin
   if website = WebsiteRoots[UNIONMANGAS_ID, 0] then
     Result := UnionMangasNamesAndLinks
   else
-  if website = WebsiteRoots[MANGABIRD_ID, 0] then
-    Result := MangaBirdNamesAndLinks
+  if website = WebsiteRoots[MANGAMINT_ID, 0] then
+    Result := MangaMintGetNamesAndLinks
   else
   if website = WebsiteRoots[UNIXMANGA_ID, 0] then
     Result := UnixMangaNamesAndLinks
@@ -1583,7 +1583,7 @@ var
 
   {$I includes/UnionMangas/manga_information.inc}
 
-  {$I includes/MangaBird/manga_information.inc}
+  {$I includes/MangaMint/manga_information.inc}
 
   {$I includes/UnixManga/manga_information.inc}
 
@@ -1814,8 +1814,8 @@ begin
   if website = WebsiteRoots[UNIONMANGAS_ID, 0] then
     Result := GetUnionMangasInfoFromURL
   else
-  if website = WebsiteRoots[MANGABIRD_ID, 0] then
-    Result := GetMangaBirdInfoFromURL
+  if website = WebsiteRoots[MANGAMINT_ID, 0] then
+    Result := GetMangaMintInfoFromURL
   else
   if website = WebsiteRoots[UNIXMANGA_ID, 0] then
     Result := GetUnixMangaInfoFromURL

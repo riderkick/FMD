@@ -491,7 +491,7 @@ var
 
   {$I includes/UnionMangas/chapter_page_number.inc}
 
-  {$I includes/MangaBird/chapter_page_number.inc}
+  {$I includes/MangaMint/chapter_page_number.inc}
 
   {$I includes/UnixManga/chapter_page_number.inc}
 
@@ -673,8 +673,8 @@ begin
   if manager.container.MangaSiteID = UNIONMANGAS_ID then
     Result := GetUnionMangasPageNumber
   else
-  if manager.container.MangaSiteID = MANGABIRD_ID then
-    Result := GetMangaBirdPageNumber
+  if manager.container.MangaSiteID = MANGAMINT_ID then
+    Result := GetMangaMintPageNumber
   else
   if manager.container.MangaSiteID = UNIXMANGA_ID then
     Result := GetUnixMangaPageNumber
@@ -836,7 +836,7 @@ var
 
   {$I includes/NHentai/image_url.inc}
 
-  {$I includes/MangaBird/image_url.inc}
+  {$I includes/MangaMint/image_url.inc}
 
   {$I includes/UnixManga/image_url.inc}
 
@@ -1040,8 +1040,8 @@ begin
   if manager.container.MangaSiteID = NHENTAI_ID then
     Result := GetNHentaiImageURL
   else
-  if manager.container.MangaSiteID = MANGABIRD_ID then
-    Result := GetMangaBirdImageURL
+  if manager.container.MangaSiteID = MANGAMINT_ID then
+    Result := GetMangaMintImageURL
   else
   if manager.container.MangaSiteID = UNIXMANGA_ID then
     Result := GetUnixMangaImageURL

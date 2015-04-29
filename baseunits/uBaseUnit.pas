@@ -314,7 +314,7 @@ const
   IKOMIK_ID              = 73;
   NHENTAI_ID             = 74;
   UNIONMANGAS_ID         = 75;
-  MANGABIRD_ID           = 76;
+  MANGAMINT_ID           = 76;
   UNIXMANGA_ID           = 77;
   HAKIHOME_ID            = 78;
   EXTREMEMANGAS_ID       = 79;
@@ -441,7 +441,7 @@ var
     ('I-Komik', 'http://www.i-komik.com'),
     ('NHentai', 'http://nhentai.net'),
     ('UnionMangas', 'http://unionmangas.com.br'),
-    ('MangaBird', 'http://www.mangamint.com'),
+    ('MangaMint', 'http://www.mangamint.com'),
     ('UnixManga', 'http://unixmanga.co'),
     ('HakiHome', 'http://hakihome.com'),
     ('ExtremeMangas', 'http://www.extrememangas.com'),
@@ -617,8 +617,6 @@ var
   IKOMIK_BROWSER: String = '/manga-directory/';
 
   UNIONMANGAS_BROWSER: String = '/mangas';
-
-  MANGABIRD_BROWSER: String = '/directory';
 
   UNIXMANGA_BROWSER: String = '/onlinereading/manga-lists.html';
 
@@ -1187,7 +1185,6 @@ begin
     READHENTAIMANGA_ID,
     MYREADINGMANGAINFO_ID,
     NHENTAI_ID,
-    //MANGABIRD_ID
     MANGA2U_ID,
     PORNCOMIX_ID,
     XXCOMICS_ID,
