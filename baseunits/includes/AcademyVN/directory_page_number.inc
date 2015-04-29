@@ -1,4 +1,4 @@
-  function GetAcademyDirectoryVNPageNumber: Byte;
+  function GetAcademyVNDirectoryPageNumber: Byte;
   var
     i, p: Integer;
     s: String;

@@ -1015,7 +1015,7 @@ begin
       Result := GetMangaSeeDirectoryPageNumber
     else
     if website = WebsiteRoots[ACADEMYVN_ID, 0] then
-      Result := GetAcademyDirectoryVNPageNumber
+      Result := GetAcademyVNDirectoryPageNumber
     else
     if website = WebsiteRoots[MANGAAT_ID, 0] then
       Result := GetMangaAtDirectoryPageNumber
