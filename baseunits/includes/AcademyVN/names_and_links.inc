@@ -16,22 +16,20 @@
     try
       Parser.OnFoundTag := OnTag;
       Parser.OnFoundText := OnText;
-    finally
       Parser.Exec;
+    finally
+      Parser.Free;
     end;
-    Parser.Free;
+    Source.Free;
 
     if parse.Count > 0 then
       for i := 0 to parse.Count - 1 do
-      begin
         if (GetTagName(parse[i]) = 'a') and
           (GetVal(parse[i], 'class') = 'ajax-title text-ellipsis') then
         begin
           links.Add(GetVal(parse[i], 'href'));
           names.Add(CommonStringFilter(GetVal(parse[i], 'title')));
         end;
-      end;
 
     Result := NO_ERROR;
-    Source.Free;
   end;
