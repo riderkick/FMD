@@ -625,7 +625,7 @@ var
   MANGAHOST_BROWSER: String = '/mangas';
 
   //------------------------------------------
-  UPDATE_URL: String = 'https://github.com/riderkick/FMD/raw/master/';
+  UPDATE_URL: String = 'https://raw.githubusercontent.com/riderkick/FMD/master/';
 
   OptionAutoCheckMinutes, OptionCustomRename,
   // dialog messages
@@ -1692,7 +1692,6 @@ begin
     end;
     {$ENDIF}
   end;
-  //Result := Trim(Result);
 end;
 
 function GetHeaderValue(const AHeaders: TStrings; HName: String): String;
