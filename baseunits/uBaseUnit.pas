@@ -377,7 +377,7 @@ var
     ('Fakku', 'https://www.fakku.net'),
     ('Truyen18', 'http://www.truyen18.org'),
     ('MangaReader', 'http://www.mangareader.net'),
-    ('MangaPark', 'http://mangapark.com'),
+    ('MangaPark', 'http://mangapark.me'),
     ('E-Hentai', 'http://g.e-hentai.org'),
     ('MangaFox', 'http://mangafox.me'),
     ('MangaTraders', 'http://mangatraders.org'),
