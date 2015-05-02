@@ -5,6 +5,7 @@
     isExtractGenres: Boolean = False;
     i, j: Cardinal;
   begin
+    mangaInfo.website := WebsiteRoots[MANGAPARK_ID, 0];
     mangaInfo.url := FillMangaSiteHost(MANGAPARK_ID, URL);// + '&confirm=yes';
     if not GetPage(TObject(Source), mangaInfo.url, Reconnect) then
     begin
@@ -14,15 +15,16 @@
     end;
 
     // parsing the HTML source
-    parse.Clear;
     Parser := THTMLParser.Create(PChar(Source.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText := OnText;
-    Parser.Exec;
-
-    Parser.Free;
+    try
+      Parser.OnFoundTag := OnTag;
+      Parser.OnFoundText := OnText;
+      parse.Clear;
+      Parser.Exec;
+    finally
+      Parser.Free;
+    end;
     Source.Free;
-    mangaInfo.website := WebsiteRoots[MANGAPARK_ID, 0];
 
     // using parser (cover link, summary, chapter name and link)
     if parse.Count = 0 then

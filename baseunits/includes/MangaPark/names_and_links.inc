@@ -4,30 +4,31 @@
   begin
     Result := INFORMATION_NOT_FOUND;
     if not GetPage(TObject(Source), WebsiteRoots[MANGAPARK_ID, 1] +
-      MANGAPARK_BROWSER + URL + '&page=' + IntToStr(StrToInt(URL) + 1), 0) then
+      '/search?orderby=add&page=' + IntToStr(StrToInt(URL) + 1), 0) then
     begin
       Result := NET_PROBLEM;
       Source.Free;
       Exit;
     end;
-    parse.Clear;
+
     Parser := THTMLParser.Create(PChar(Source.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText := OnText;
-    Parser.Exec;
-    Parser.Free;
-    if parse.Count = 0 then
-    begin
-      Source.Free;
-      Exit;
+    try
+      Parser.OnFoundTag := OnTag;
+      Parser.OnFoundText := OnText;
+      parse.Clear;
+      Parser.Exec;
+    finally
+      Parser.Free;
     end;
-    for i := 0 to parse.Count - 1 do
+
+    if parse.Count > 0 then
     begin
-      if Pos('<em', parse[i]) <> 0 then
-      begin
-        links.Add(GetVal(parse[i + 3], 'href'));
-        names.Add(CommonStringFilter(parse[i + 4]));
-      end;
+      for i := 0 to parse.Count - 1 do
+        if (GetTagName(parse[i]) = 'em') and (GetVal(parse[i], 'class') = 'icon') then
+        begin
+          links.Add(GetVal(parse[i + 3], 'href'));
+          names.Add(CommonStringFilter(GetVal(parse[i + 3], 'title')));
+        end;
     end;
     Source.Free;
   end;

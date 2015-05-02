@@ -493,8 +493,6 @@ var
 
   MANGAREADER_BROWSER: String = '/alphabetical';
 
-  MANGAPARK_BROWSER: String = '/search?orderby=add';
-
   //MANGAFOX_BROWSER :string = '/directory/';
   MANGAFOX_BROWSER: String = '/manga/';
 
