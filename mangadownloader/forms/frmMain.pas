@@ -434,6 +434,7 @@ type
     procedure vtDownloadKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure vtFavoritesColumnDblClick(Sender: TBaseVirtualTree;
       Column: TColumnIndex; Shift: TShiftState);
+    procedure vtFavoritesFreeNode(Sender: TBaseVirtualTree; Node: PVirtualNode);
     procedure vtFavoritesGetText(Sender: TBaseVirtualTree; Node: PVirtualNode;
       Column: TColumnIndex; TextType: TVSTTextType; var CellText: String);
     procedure vtFavoritesHeaderClick(Sender: TVTHeader; Column: TColumnIndex;
@@ -1738,7 +1739,7 @@ procedure TMainForm.clbChapterListFreeNode(Sender : TBaseVirtualTree;
 var
   Data: PSingleItem;
 begin
-  Data := clbChapterList.GetNodeData(Node);
+  Data := Sender.GetNodeData(Node);
   if Assigned(Data) then
     Finalize(Data^);
 end;
@@ -3397,6 +3398,7 @@ begin
         Data^.dateTime := DLManager.containers.Items[pos].DownloadInfo.dateTime;
       end;
   end;
+  vtDownload.ValidateNode(Node, False);
 end;
 
 procedure TMainForm.vtDownloadKeyDown(Sender : TObject; var Key : Word;
@@ -3422,6 +3424,16 @@ procedure TMainForm.vtFavoritesColumnDblClick(Sender: TBaseVirtualTree;
   Column: TColumnIndex; Shift: TShiftState);
 begin
   miOpenFolder2Click(Sender);
+end;
+
+procedure TMainForm.vtFavoritesFreeNode(Sender: TBaseVirtualTree;
+  Node: PVirtualNode);
+var
+  Data: PFavoriteInfo;
+begin
+  Data := Sender.GetNodeData(Node);
+  if Assigned(Data) then
+    Finalize(Data^);
 end;
 
 // vtFavorites
@@ -3487,6 +3499,7 @@ begin
     Data^.website := favorites.favoriteInfo[pos].website;
     Data^.saveTo := favorites.favoriteInfo[pos].saveTo;
   end;
+  vtFavorites.ValidateNode(Node, False);
 end;
 
 procedure TMainForm.vtMangaListChange(Sender: TBaseVirtualTree; Node: PVirtualNode);
@@ -3823,6 +3836,7 @@ begin
       ' (' +
       dataProcess.Param[pos, DATA_PARAM_NUMCHAPTER] + ')';
   end;
+  vtMangaList.ValidateNode(Node, False);
 end;
 
 procedure TMainForm.vtMangaListInitSearchNode(Sender: TBaseVirtualTree;
@@ -5041,6 +5055,7 @@ begin
   Level := vtOptionMangaSiteSelection.GetNodeLevel(Node);
   if Level = 1 then
     Node^.CheckType := ctCheckBox;
+  vtOptionMangaSiteSelection.ValidateNode(Node, False);
 end;
 
 end.

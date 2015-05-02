@@ -1413,6 +1413,7 @@ object MainForm: TMainForm
         TreeOptions.PaintOptions = [toHideFocusRect, toShowButtons, toShowDropmark, toShowVertGridLines, toThemeAware, toUseBlendedImages, toFullVertGridLines]
         TreeOptions.SelectionOptions = [toFullRowSelect, toMultiSelect]
         OnColumnDblClick = vtFavoritesColumnDblClick
+        OnFreeNode = vtFavoritesFreeNode
         OnGetText = vtFavoritesGetText
         OnHeaderClick = vtFavoritesHeaderClick
         OnInitNode = vtFavoritesInitNode
