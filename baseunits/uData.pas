@@ -1023,7 +1023,12 @@ begin
     begin
       Result := NO_ERROR;
       Page := 1;
+      Source.Free;
     end;
+
+    try
+      Source.Free;
+    except end;
 
     if page < 1 then
       Page := 1;
@@ -1433,7 +1438,14 @@ begin
   if website = WebsiteRoots[MANGAAT_ID, 0] then
     Result := MangaAtGetNamesAndLinks
   else
+  begin
     Result := INFORMATION_NOT_FOUND;
+    Source.Free;
+  end;
+
+  try
+    Source.Free;
+  except end;
 
   //remove host from url
   if links.Count > 0 then
@@ -1855,6 +1867,10 @@ begin
     Result := INFORMATION_NOT_FOUND;
     Exit;
   end;
+
+  try
+    Source.Free;
+  except end;
 
   s := mangaInfo.artists;
   if (s <> '') and (s[1] = '<') then
