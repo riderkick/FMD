@@ -162,13 +162,13 @@ begin
     workCounter := 0;
     while workCounter < Length(manager.favoriteInfo) do
     begin
-      while threads.Count > manager.DLManager.maxDLTasks do
+      while threads.Count > manager.DLManager.maxDLThreadsPerTask do
       begin
         if Terminated then Break;
         Sleep(250);
       end;
       if Terminated then Break;
-      if threads.Count < manager.DLManager.maxDLTasks then
+      if threads.Count < manager.DLManager.maxDLThreadsPerTask then
       begin
         CS_Threads.Acquire;
         try
