@@ -33,11 +33,11 @@
     begin
       // get manga title
       if (mangaInfo.title = '') and
-        //(Pos('<title>', parse.Strings[i]) > 0) then
-        //mangaInfo.title := StringFilter(
-        //  TrimLeft(TrimRight(GetString(parse.Strings[i + 1], ' Manga - Read ', ' Online For '))));
         (Pos('property="og:title"', parse[i]) <> 0) then
-          mangaInfo.title := CommonStringFilter(GetVal(parse[i], 'content'));
+      begin
+        mangaInfo.title := CommonStringFilter(GetVal(parse[i], 'content'));
+        mangaInfo.title := ReplaceRegExpr('\sManga$', mangaInfo.title, '', False);
+      end;
 
       // get cover
       if (GetTagName(parse.Strings[i]) = 'meta') and
