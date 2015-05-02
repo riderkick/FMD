@@ -1026,10 +1026,6 @@ begin
       Source.Free;
     end;
 
-    try
-      Source.Free;
-    except end;
-
     if page < 1 then
       Page := 1;
   end;
@@ -1442,10 +1438,6 @@ begin
     Result := INFORMATION_NOT_FOUND;
     Source.Free;
   end;
-
-  try
-    Source.Free;
-  except end;
 
   //remove host from url
   if links.Count > 0 then
@@ -1867,10 +1859,6 @@ begin
     Result := INFORMATION_NOT_FOUND;
     Exit;
   end;
-
-  try
-    Source.Free;
-  except end;
 
   s := mangaInfo.artists;
   if (s <> '') and (s[1] = '<') then
