@@ -1844,8 +1844,8 @@ object MainForm: TMainForm
               Left = 76
               Height = 15
               Top = 58
-              Width = 331
-              Caption = 'Number of downloaded files per task at the same time (Max: 8)'
+              Width = 337
+              Caption = 'Number of downloaded files per task at the same time (Max: 32)'
               ParentColor = False
               ParentFont = False
             end
@@ -1854,7 +1854,7 @@ object MainForm: TMainForm
               Height = 23
               Top = 58
               Width = 48
-              MaxValue = 16
+              MaxValue = 32
               MinValue = 1
               ParentFont = False
               ParentShowHint = False
