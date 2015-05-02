@@ -535,10 +535,8 @@ procedure TUpdateMangaManagerThread.Execute;
 
 var
   s: String;
-  j, k: Cardinal;
-  del: Boolean;
-  iPos: Integer;
-  purg: Boolean;
+  j, k, iPos: Integer;
+  del, purg: Boolean;
 begin
   if websites.Count = 0 then
     Exit;
@@ -614,6 +612,7 @@ begin
             dataLinks.Assign(mainDataProcess.Link);
             dataLinks.Sort;
           end;
+          mainDataProcess.Clear;
         end;
 
         names.Clear;
@@ -694,7 +693,7 @@ begin
         end;
 
         // remove duplicate found<>current database
-        if (mainDataProcess.Link.Count > 0) and (links.Count > 0) then
+        if links.Count > 0 then
         begin
           FStatus := RS_UpdatingList + Format(' [%d/%d] %s',
             [websitePtr, websites.Count, website]) + ' | ' + RS_RemovingDuplicateFromCurrentData + '...';
@@ -714,6 +713,9 @@ begin
           end;
         end;
         dataLinks.Clear;
+
+        mainDataProcess.Clear;
+        mainDataProcess.LoadFromFile(website);
 
         if OptionUpdateListRemoveDuplicateLocalData then
         begin
