@@ -2371,8 +2371,8 @@ begin
       for i := containers.Count - 1 downto 0 do
         if containers.Items[i].ThreadState then
           try
-            WaitForThreadTerminate(containers.Items[i].Thread.ThreadID, 500);
-            //containers.Items[i].Thread.WaitFor;
+            //WaitForThreadTerminate(containers.Items[i].Thread.ThreadID, 500);
+            containers.Items[i].Thread.WaitFor;
           except
           end;
     except
