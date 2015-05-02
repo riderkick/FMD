@@ -139,7 +139,6 @@ end;
 procedure TUpdateMangaThread.Execute;
 var
   iPos: Integer;
-  regx: TRegExpr;
 begin
   try
     case CheckStyle of
@@ -215,15 +214,15 @@ begin
         //**removing hostname in links
         RemoveHostFromURLs(links);
 
-        manager.CS_AddNamesAndLinks.Acquire;
-        try
-          if links.Count > 0 then
-          begin
+        if links.Count > 0 then
+        begin
+          manager.CS_AddNamesAndLinks.Acquire;
+          try
             manager.links.AddStrings(links);
             manager.names.AddStrings(names);
+          finally
+            manager.CS_AddNamesAndLinks.Release;
           end;
-        finally
-          manager.CS_AddNamesAndLinks.Release;
         end;
       end;
 
@@ -430,10 +429,8 @@ begin
           EATMANGA_ID   : numberOfThreads := 1;
           SCANMANGA_ID  : numberOfThreads := 1;
           EHENTAI_ID    : numberOfThreads := 3;
-          //FAKKU_ID      : numberOfThreads := 3;
-          //PURURIN_ID    : numberOfThreads := 3;
-          else
-            numberOfThreads := mt;
+        else
+          numberOfThreads := mt;
         end;
         if numberOfThreads > mt then
           numberOfThreads := mt;
@@ -716,7 +713,7 @@ begin
               Inc(j);
           end;
         end;
-        dataLinks.Clear; //not used anymore
+        dataLinks.Clear;
 
         if OptionUpdateListRemoveDuplicateLocalData then
         begin
@@ -799,6 +796,8 @@ begin
             GetInfo(links.Count, CS_INFO);
           end;
           WaitForThreads;
+          names.Clear;
+          links.Clear;
 
           // sync data based on existing sites
           if (mainDataProcess.Data.Count > 0) and
