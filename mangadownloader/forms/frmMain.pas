@@ -818,7 +818,6 @@ begin
   if not dataProcess.isFilterAllSites then
     dataProcess.SaveToFile;
   DLManager.Backup;
-  DLManager.SaveJobList;
   DLManager.BackupDownloadedChaptersList;
   isExiting := True;
   favorites.Backup;
@@ -5003,7 +5002,6 @@ end;
 
 procedure TMainForm.tmBackupTimer(Sender: TObject);
 begin
-  DLManager.SaveJobList;
   if not DLManager.isRunningBackup then
     DLManager.Backup;
 end;

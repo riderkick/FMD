@@ -71,7 +71,6 @@ type
       const Path, Name, prefix: String; const Reconnect: Cardinal): Boolean; overload;
 
     procedure Execute; override;
-    procedure DoTerminate; override;
   public
     // ID of the site
     manager: TTaskThread;
@@ -99,7 +98,6 @@ type
     procedure Compress;
     // show notification when download completed
     procedure ShowBaloon;
-    procedure DoTerminate; override;
   public
     //additional parameter
     httpCookies: String;
@@ -117,7 +115,7 @@ type
     property AnotherURL: String read FAnotherURL write FAnotherURL;
   end;
 
-  TTaskThreadContainer = class(TObject)
+  TTaskThreadContainer = class
     // task thread of this container
     Thread: TTaskThread;
     // download manager
@@ -146,13 +144,12 @@ type
 
   { TDownloadManager }
 
-  TDownloadManager = class(TObject)
+  TDownloadManager = class
   private
     FSortDirection: Boolean;
     FSortColumn: Cardinal;
   public
-    CS_DownloadManager_Backup, CS_DownloadManager_Task,
-    CS_DownloadManager_ActiveTask, CS_DownloadManager_ActiveThread: TCriticalSection;
+    CS_DownloadManager_Task: TCriticalSection;
     isRunningBackup, isFinishTaskAccessed, isRunningBackupDownloadedChaptersList,
     isReadyForExit: Boolean;
 
@@ -182,7 +179,6 @@ type
 
     procedure Restore;
     procedure Backup;
-    procedure SaveJobList;
 
     // These methods relate to highlight downloaded chapters.
     procedure AddToDownloadedChaptersList(const ALink: String); overload;
@@ -259,6 +255,12 @@ end;
 destructor TDownloadThread.Destroy;
 begin
   FHTTP.Free;
+  manager.CS_threads.Acquire;
+  try
+    manager.threads.Remove(Self);
+  finally
+    manager.CS_threads.Release;
+  end;
   inherited Destroy;
 end;
 
@@ -368,17 +370,6 @@ begin
       MainForm.ExceptionHandler(Self, E);
     end;
   end;
-end;
-
-procedure TDownloadThread.DoTerminate;
-begin
-  manager.CS_threads.Acquire;
-  try
-    manager.threads.Remove(Self);
-  finally
-    manager.CS_threads.Release;
-  end;
-  inherited DoTerminate;
 end;
 
 function TDownloadThread.GetPageNumberFromURL(const URL: String): Boolean;
@@ -1164,8 +1155,10 @@ end;
 
 destructor TTaskThread.Destroy;
 begin
+  Stop;
   threads.Free;
   CS_threads.Free;
+  container.ThreadState := False;
   inherited Destroy;
 end;
 
@@ -1229,13 +1222,6 @@ begin
       '"' + container.DownloadInfo.title + '" - ' + stFinish;
   end;
   MainForm.TrayIcon.ShowBalloonHint;
-end;
-
-procedure TTaskThread.DoTerminate;
-begin
-  container.ThreadState := False;
-  Stop;
-  inherited DoTerminate;
 end;
 
 function TDownloadThread.DownloadImage(const AHTTP: THTTPSend = nil;
@@ -1522,7 +1508,7 @@ begin
           [stPreparing,
           container.CurrentDownloadChapterPtr + 1,
           container.ChapterLinks.Count,
-          container.ChapterName.Strings[container.CurrentDownloadChapterPtr]]);
+          container.ChapterName[container.CurrentDownloadChapterPtr]]);
         container.Status := STATUS_PREPARE;
         Synchronize(MainThreadRepaint);
         while container.WorkCounter < container.PageNumber do
@@ -1642,6 +1628,8 @@ end;
 
 procedure TTaskThread.Stop(const check: Boolean = True);
 begin
+  if container.Status = STATUS_STOP then
+    Exit;
   if check and not (container.Manager.isReadyForExit) then
   begin
     if (container.WorkCounter >= container.PageLinks.Count) and
@@ -1666,7 +1654,6 @@ begin
     end;
     Synchronize(MainThreadRepaint);
   end;
-  threads.Clear;
 end;
 
 // ----- TTaskThreadContainer -----
@@ -1688,9 +1675,6 @@ end;
 
 destructor TTaskThreadContainer.Destroy;
 begin
-  while Thread.threads.Count > 0 do
-    Sleep(200);
-  Thread.Terminate;
   PageContainerLinks.Free;
   PageLinks.Free;
   ChapterName.Free;
@@ -1705,12 +1689,8 @@ end;
 constructor TDownloadManager.Create;
 begin
   inherited Create;
-  CS_DownloadManager_Backup := TCriticalSection.Create;
   CS_DownloadManager_Task := TCriticalSection.Create;
-  CS_DownloadManager_ActiveTask := TCriticalSection.Create;
-  CS_DownloadManager_ActiveThread := TCriticalSection.Create;
 
-  // Create INI file
   ini := TIniFile.Create(WORK_FOLDER + WORK_FILE);
   ini.CacheUpdates := True;
 
@@ -1729,15 +1709,21 @@ end;
 
 destructor TDownloadManager.Destroy;
 begin
+  CS_DownloadManager_Task.Acquire;
+  try
+    while containers.Count > 0 do
+    begin
+      containers.Last.Free;
+      containers.Remove(containers.Last);
+    end;
+  finally
+    CS_DownloadManager_Task.Release;
+  end;
   FreeAndNil(containers);
   FreeAndNil(downloadedChaptersList);
   FreeAndNil(DownloadedChapterList);
   FreeAndNil(ini);
-
-  CS_DownloadManager_Backup.Free;
   CS_DownloadManager_Task.Free;
-  CS_DownloadManager_ActiveTask.Free;
-  CS_DownloadManager_ActiveThread.Free;
   inherited Destroy;
 end;
 
@@ -1746,8 +1732,11 @@ begin
   if isRunningBackupDownloadedChaptersList then
     Exit;
   isRunningBackupDownloadedChaptersList := True;
-  downloadedChaptersList.SaveToFile(WORK_FOLDER + DOWNLOADEDCHAPTERS_FILE);
-  isRunningBackupDownloadedChaptersList := False;
+  try
+    downloadedChaptersList.SaveToFile(WORK_FOLDER + DOWNLOADEDCHAPTERS_FILE);
+  finally
+    isRunningBackupDownloadedChaptersList := False;
+  end;
 end;
 
 procedure TDownloadManager.Restore;
@@ -1770,85 +1759,82 @@ begin
     begin
       containers.Add(TTaskThreadContainer.Create);
       containers.Last.Manager := Self;
-    end;
 
-    // Restore chapter links, chapter name and page links
-    for i := 0 to containers.Count - 1 do
-    begin
+      // Restore chapter links, chapter name and page links
       s := ini.ReadString('task' + IntToStr(i), 'ChapterLinks', '');
       if s <> '' then
-        GetParams(containers.Items[i].ChapterLinks, s);
+        GetParams(containers.Last.ChapterLinks, s);
       s := ini.ReadString('task' + IntToStr(i), 'ChapterName', '');
       if s <> '' then
-        GetParams(containers.Items[i].ChapterName, s);
+        GetParams(containers.Last.ChapterName, s);
       s := ini.ReadString('task' + IntToStr(i), 'FailedChapterLinks', '');
       if s <> '' then
-        GetParams(containers.Items[i].FailedChapterLinks, s);
+        GetParams(containers.Last.FailedChapterLinks, s);
       s := ini.ReadString('task' + IntToStr(i), 'FailedChapterName', '');
       if s <> '' then
-        GetParams(containers.Items[i].FailedChapterName, s);
+        GetParams(containers.Last.FailedChapterName, s);
       s := ini.ReadString('task' + IntToStr(i), 'PageLinks', '');
       if s <> '' then
-        GetParams(containers.Items[i].PageLinks, s);
+        GetParams(containers.Last.PageLinks, s);
       s := ini.ReadString('task' + IntToStr(i), 'PageContainerLinks', '');
       if s <> '' then
-        GetParams(containers.Items[i].PageContainerLinks, s);
+        GetParams(containers.Last.PageContainerLinks, s);
 
       //deprecated, for old config
       j := ini.ReadInteger('task' + IntToStr(i), 'TaskStatus', -1);
       if j >= 0 then
-        containers.Items[i].Status := TStatusType(j)
+        containers.Last.Status := TStatusType(j)
       else
       begin
         s := ini.ReadString('task' + IntToStr(i), 'TaskStatus', 'STATUS_STOP');
-        containers.Items[i].Status :=
+        containers.Last.Status :=
           TStatusType(GetEnumValue(TypeInfo(TStatusType), s));
 
-        if containers.Items[i].Status = STATUS_COMPRESS then
-          containers.Items[i].Status := STATUS_WAIT;
+        if containers.Last.Status = STATUS_COMPRESS then
+          containers.Last.Status := STATUS_WAIT;
       end;
-      containers.Items[i].CurrentDownloadChapterPtr :=
+      containers.Last.CurrentDownloadChapterPtr :=
         ini.ReadInteger('task' + IntToStr(i), 'ChapterPtr', 0);
-      containers.Items[i].PageNumber :=
+      containers.Last.PageNumber :=
         ini.ReadInteger('task' + IntToStr(i), 'NumberOfPages', 0);
-      containers.Items[i].CurrentPageNumber :=
+      containers.Last.CurrentPageNumber :=
         ini.ReadInteger('task' + IntToStr(i), 'CurrentPage', 0);
-      containers.Items[i].DownloadInfo.title :=
+      containers.Last.DownloadInfo.title :=
         ini.ReadString('task' + IntToStr(i), 'Title', 'NULL');
-      containers.Items[i].DownloadInfo.status :=
+      containers.Last.DownloadInfo.status :=
         ini.ReadString('task' + IntToStr(i), 'Status', 'NULL');
-      containers.Items[i].DownloadInfo.Progress :=
+      containers.Last.DownloadInfo.Progress :=
         ini.ReadString('task' + IntToStr(i), 'Progress', 'NULL');
-      containers.Items[i].DownloadInfo.website :=
+      containers.Last.DownloadInfo.website :=
         ini.ReadString('task' + IntToStr(i), 'Website', 'NULL');
-      containers.Items[i].DownloadInfo.saveTo :=
+      containers.Last.DownloadInfo.saveTo :=
         CorrectPathSys(ini.ReadString('task' + IntToStr(i), 'SaveTo', 'NULL'));
 
-      if containers.Items[i].Status = STATUS_COMPRESS then
-        containers.Items[i].DownloadInfo.Status := stWait;
+      if containers.Last.Status = STATUS_COMPRESS then
+        containers.Last.DownloadInfo.Status := stWait;
 
       s := ini.ReadString('task' + IntToStr(i), 'DateTime', '');
       //for old config
       if (Pos('/', s) > 0) or (Pos('\', s) > 0) then
-        containers.Items[i].DownloadInfo.dateTime := StrToDateDef(s, Now)
+        containers.Last.DownloadInfo.dateTime := StrToDateDef(s, Now)
       else
       begin
         s := StringReplace(s, ',', FMDFormatSettings.DecimalSeparator, [rfReplaceAll]);
         s := StringReplace(s, '.', FMDFormatSettings.DecimalSeparator, [rfReplaceAll]);
-        containers.Items[i].DownloadInfo.dateTime := StrToFloatDef(s, Now, FMDFormatSettings);
+        containers.Last.DownloadInfo.dateTime := StrToFloatDef(s, Now, FMDFormatSettings);
       end;
-      if containers.Items[i].DownloadInfo.dateTime > Now then
-        containers.Items[i].DownloadInfo.dateTime := Now;
+      if containers.Last.DownloadInfo.dateTime > Now then
+        containers.Last.DownloadInfo.dateTime := Now;
 
-      containers.Items[i].MangaSiteID :=
-        GetMangaSiteID(containers.Items[i].DownloadInfo.website);
-      containers.Items[i].ThreadState := False;
+      containers.Last.MangaSiteID :=
+        GetMangaSiteID(containers.Last.DownloadInfo.website);
+      containers.Last.ThreadState := False;
 
       //validating
-      if (containers.Items[i].CurrentDownloadChapterPtr > 0) and
-        (containers.Items[i].CurrentDownloadChapterPtr >=
-        containers.Items[i].ChapterLinks.Count) then
-        containers.Items[i].CurrentDownloadChapterPtr := containers.Items[i].ChapterLinks.Count - 1;
+      if (containers.Last.CurrentDownloadChapterPtr > 0) and
+        (containers.Last.CurrentDownloadChapterPtr >=
+        containers.Last.ChapterLinks.Count) then
+        containers.Last.CurrentDownloadChapterPtr := containers.Last.ChapterLinks.Count - 1;
     end;
   finally
     CS_DownloadManager_Task.Release;
@@ -1857,14 +1843,15 @@ end;
 
 procedure TDownloadManager.Backup;
 var
-  i: Cardinal;
+  i: Integer;
 begin
   if isRunningBackup then
     Exit;
 
-  CS_DownloadManager_Backup.Acquire;
+  CS_DownloadManager_Task.Acquire;
+  isRunningBackup := True;
   try
-    isRunningBackup := True;
+    ini.CacheUpdates := True;
     // Erase all sections
     for i := 0 to ini.ReadInteger('general', 'NumberOfTasks', 0) do
       ini.EraseSection('task' + IntToStr(i));
@@ -1919,23 +1906,10 @@ begin
           FloatToStr(containers.Items[i].DownloadInfo.dateTime, FMDFormatSettings));
       end;
     end;
-    //ini.UpdateFile;
-    isRunningBackup := False;
-  finally
-    CS_DownloadManager_Backup.Release;
-  end;
-
-end;
-
-procedure TDownloadManager.SaveJobList;
-begin
-  CS_DownloadManager_Backup.Acquire;
-  try
-    isRunningBackup := True;
     ini.UpdateFile;
-    isRunningBackup := False;
   finally
-    CS_DownloadManager_Backup.Release;
+    isRunningBackup := False;
+    CS_DownloadManager_Task.Release;
   end;
 end;
 
@@ -2074,7 +2048,7 @@ var
 begin
   if containers.Count = 0 then
     Exit;
-  CS_DownloadManager_ActiveTask.Acquire;
+  CS_DownloadManager_Task.Acquire;
   try
     try
       for i := 0 to containers.Count - 1 do
@@ -2159,7 +2133,7 @@ begin
         MainForm.ExceptionHandler(Self, E);
     end;
   finally
-    CS_DownloadManager_ActiveTask.Release;
+    CS_DownloadManager_Task.Release;
   end;
 end;
 
