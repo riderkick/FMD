@@ -800,6 +800,7 @@ begin
     GetInfosThread.Terminate;
     GetInfosThread.WaitFor;
   end;
+  favorites.StopAllAndWait;
   if isUpdating then
   begin
     updateList.Terminate;

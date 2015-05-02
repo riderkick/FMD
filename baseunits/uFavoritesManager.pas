@@ -8,48 +8,53 @@ unit uFavoritesManager;
 
 {$mode delphi}
 
-{
-  TODO:
-    Improve multithreading feature.
-}
-
 interface
 
 uses
-  Classes, SysUtils, Dialogs, IniFiles, lazutf8classes, FileUtil, fgl,
-  uBaseUnit, uData, uDownloadsManager, uFMDThread, uMisc;
+  Classes, SysUtils, Dialogs, IniFiles, syncobjs, lazutf8classes, FileUtil, fgl,
+  uBaseUnit, uData, uDownloadsManager, uFMDThread, uMisc, blcksock;
 
 type
   TFavoriteManager = class;
+  TFavoriteTask = class;
+
+  { TFavoriteThread }
 
   TFavoriteThread = class(TFMDThread)
   protected
     FWebsite, FURL: String;
-    FPass0: Boolean;
-    // Temporarily not allow other threads update information
-    procedure EnableLock;
-    // Allows other threads to do the job
-    procedure DisableLock;
-    procedure UpdateName;
-    procedure EndPass0;
+    procedure SockOnHeartBeat(Sender: TObject);
     procedure Execute; override;
   public
-    currentManga: String;
-    // ID of the thread (0 will be the leader)
-    threadID: Cardinal;
-    // starting point
     workCounter: Cardinal;
-
     getInfo: TMangaInformation;
-    // Owner (Manager) of this thread
+    task: TFavoriteTask;
     manager: TFavoriteManager;
     constructor Create;
     destructor Destroy; override;
-
-    property Pass0: Boolean read FPass0 write FPass0;
   end;
 
   TFavoriteThreadList = TFPGList<TFavoriteThread>;
+
+  { TFavoriteTask }
+
+  TFavoriteTask = class(TFMDThread)
+  private
+    FBtnCaption: String;
+  protected
+    procedure SyncUpdateBtnCaption;
+    procedure SyncShowResult;
+    procedure Execute; override;
+  public
+    CS_Threads: TCriticalSection;
+    manager: TFavoriteManager;
+    threads: TFavoriteThreadList;
+    workCounter: Cardinal;
+    constructor Create;
+    destructor Destroy; override;
+    procedure UpdateBtnCaption(Cap: String);
+  end;
+
 
   { TFavoriteManager }
 
@@ -76,13 +81,14 @@ type
     // All Favorites information
     favoriteInfo: array of TFavoriteInfo;
     // mangaInfo for generating download tasks
+    //mangaInfo: array of TMangaInfo;
     mangaInfo: array of TMangaInfo;
 
     // Number of working thread
     // For now we always set it to 1
     numberOfThreads: Cardinal;
     // Working threads
-    threads: TFavoriteThreadList;
+    taskthread: TFavoriteTask;
     // Download Manager (passed from mainunit.pas)
     // After favorites run completed, all download jobs will be add to DLManager
     DLManager: TDownloadManager;
@@ -117,6 +123,8 @@ type
     procedure Restore;
     // Backup to favorites.ini
     procedure Backup;
+    // Abort favorites check
+    procedure StopAllAndWait;
 
     // sorting
     procedure Sort(const AColumn: Cardinal);
@@ -134,89 +142,122 @@ implementation
 uses
   frmMain, frmNewChapter;
 
+{ TFavoriteTask }
+
+procedure TFavoriteTask.SyncUpdateBtnCaption;
+begin
+  MainForm.btFavoritesCheckNewChapter.Caption := FBtnCaption;
+end;
+
+procedure TFavoriteTask.SyncShowResult;
+begin
+  manager.ShowResult;
+end;
+
+procedure TFavoriteTask.Execute;
+var
+  workCounter: Integer;
+begin
+  try
+    workCounter := 0;
+    while workCounter < Length(manager.favoriteInfo) do
+    begin
+      while threads.Count > manager.DLManager.maxDLTasks do
+      begin
+        if Terminated then Break;
+        Sleep(250);
+      end;
+      if Terminated then Break;
+      if threads.Count < manager.DLManager.maxDLTasks then
+      begin
+        CS_Threads.Acquire;
+        try
+          threads.Add(TFavoriteThread.Create);
+          threads.Last.task := Self;
+          threads.Last.manager := Self.manager;
+          threads.Last.workCounter := workCounter;
+          threads.Last.Start;
+          UpdateBtnCaption(Format('%s <%s>',
+            [stFavoritesChecking, manager.favoriteInfo[workCounter].title]));
+        finally
+          CS_Threads.Release;
+        end;
+        Inc(workCounter);
+      end;
+    end;
+    while threads.Count > 0 do
+      Sleep(250);
+    UpdateBtnCaption(stFavoritesCheck);
+    if not Terminated then
+      Synchronize(SyncShowResult);
+  except
+    on E: Exception do
+      MainForm.ExceptionHandler(Self, E);
+  end;
+  manager.isRunning := False;
+end;
+
+constructor TFavoriteTask.Create;
+begin
+  inherited Create(True);
+  CS_Threads := TCriticalSection.Create;
+  threads := TFavoriteThreadList.Create;
+end;
+
+destructor TFavoriteTask.Destroy;
+begin
+  threads.Free;
+  CS_Threads.Free;
+  inherited Destroy;
+end;
+
+procedure TFavoriteTask.UpdateBtnCaption(Cap: String);
+begin
+  FBtnCaption := Cap;
+  Synchronize(SyncUpdateBtnCaption);
+end;
+
 // ----- TFavoriteThread -----
 
 constructor TFavoriteThread.Create;
 begin
   inherited Create(True);
-  pass0 := False;
   getInfo := TMangaInformation.Create;
+  getInfo.FHTTP.Sock.OnHeartbeat := SockOnHeartBeat;
+  getInfo.FHTTP.Sock.HeartbeatRate := SOCKHEARTBEATRATE;
   getInfo.isGetByUpdater := False;
 end;
 
 destructor TFavoriteThread.Destroy;
 begin
   getInfo.Free;
+  task.CS_Threads.Acquire;
+  try
+    task.threads.Remove(Self);
+  finally
+    task.CS_Threads.Release;
+  end;
   inherited Destroy;
 end;
 
-procedure TFavoriteThread.EnableLock;
+procedure TFavoriteThread.SockOnHeartBeat(Sender: TObject);
 begin
-  Inc(manager.Lock);
-end;
-
-procedure TFavoriteThread.DisableLock;
-begin
-  Dec(manager.Lock);
-end;
-
-procedure TFavoriteThread.UpdateName;
-begin
-  MainForm.btFavoritesCheckNewChapter.Caption :=
-    stFavoritesChecking + ' ' + currentManga;
-end;
-
-procedure TFavoriteThread.EndPass0;
-begin
-  if threadID = 0 then
-    manager.ShowResult;
+  if Terminated then
+  begin
+    TBlockSocket(Sender).Tag := 1;
+    TBlockSocket(Sender).StopFlag := True;
+    TBlockSocket(Sender).AbortSocket;
+  end;
 end;
 
 procedure TFavoriteThread.Execute;
-var
-  i, Count: Cardinal;
 begin
   try
-    workCounter := threadID;
-    while (not Terminated) and (workCounter < manager.CountBeforeChecking) do
-    begin
-      if manager.favoriteInfo[workCounter].website = WebsiteRoots[MANGASTREAM_ID, 0] then
-        getInfo.mangaInfo.title := manager.favoriteInfo[workCounter].title;
-      // Put the title of the site that doesn't allow multi-connections in here
-      if manager.favoriteInfo[workCounter].website = WebsiteRoots[EATMANGA_ID, 0] then
-      begin
-        while manager.Lock <> 0 do
-          Sleep(32);
-        Synchronize(EnableLock);
-      end;
-      currentManga := manager.favoriteInfo[workCounter].title + ' <' +
-        manager.favoriteInfo[workCounter].website + '>';
-      Synchronize(UpdateName);
-      getInfo.GetInfoFromURL(manager.favoriteInfo[workCounter].website,
-        manager.favoriteInfo[workCounter].link, 3);
-      // Put the title of the site that doesn't allow multi-connections in here
-      if manager.favoriteInfo[workCounter].website = WebsiteRoots[EATMANGA_ID, 0] then
-      begin
-        Synchronize(DisableLock);
-      end;
-      manager.mangaInfo[workCounter] := TMangaInfo.Create;
-      TransferMangaInfo(manager.mangaInfo[workCounter], getInfo.mangaInfo);
-      Inc(workCounter, manager.numberOfThreads);
-    end;
-
-    pass0 := True;
-    repeat
-      Sleep(16);
-      Count := 0;
-      for i := 0 to manager.threads.Count - 1 do
-      begin
-        if manager.threads[i] <> nil then
-          if (manager.threads[i].pass0) then
-            Inc(Count);
-      end;
-    until Count = manager.numberOfThreads;
-
-    Synchronize(EndPass0);
+    getInfo.mangaInfo.title := manager.favoriteInfo[workCounter].title;
+    getInfo.GetInfoFromURL(manager.favoriteInfo[workCounter].Website,
+      manager.favoriteInfo[workCounter].Link, manager.DLManager.retryConnect);
+    manager.mangaInfo[workCounter] := TMangaInfo.Create;
+    TransferMangaInfo(manager.mangaInfo[workCounter], getInfo.mangaInfo);
   except
     on E: Exception do
       MainForm.ExceptionHandler(Self, E);
@@ -249,18 +290,15 @@ constructor TFavoriteManager.Create;
 begin
   inherited Create;
   numberOfThreads := 4;
-  Lock := 0;
   isRunning := False;
   favorites := TIniFile.Create(WORK_FOLDER + FAVORITES_FILE);
   favorites.CacheUpdates := True;
-  threads := TFavoriteThreadList.Create;
   Restore;
 end;
 
 destructor TFavoriteManager.Destroy;
 begin
   Backup;
-  threads.Free;
   favorites.UpdateFile;
   favorites.Free;
   SetLength(favoriteInfo, 0);
@@ -269,8 +307,6 @@ begin
 end;
 
 procedure TFavoriteManager.Run;
-var
-  i: Cardinal;
 begin
   try
     if (not isAuto) and ((isRunning) or (MainForm.silentThreadCount > 0)) then
@@ -284,20 +320,15 @@ begin
       Exit;
     if Count = 0 then
       Exit;
-    if threads.Count > 0 then
-      Exit;
     MainForm.btFavoritesCheckNewChapter.Caption := stFavoritesChecking;
     isRunning := True;
 
     CountBeforeChecking := Count;
     SetLength(mangaInfo, Count);
-    for i := 0 to numberOfThreads - 1 do
-    begin
-      threads.Add(TFavoriteThread.Create);
-      threads.Items[i].threadID := i;
-      threads.Items[i].manager := self;
-      threads.Items[i].Start;
-    end;
+
+    taskthread := TFavoriteTask.Create;
+    taskthread.manager := Self;
+    taskthread.Start;
   except
     on E: Exception do
       MainForm.ExceptionHandler(Self, E);
@@ -334,12 +365,6 @@ var
   var
     i: Cardinal;
   begin
-    while threads.Count > 0 do
-    begin
-      threads.Items[0].Terminate;
-      threads.Items[0] := nil;
-      threads.Delete(0);
-    end;
     isRunning := False;
     // Remove completed mangas.
     RemoveCompletedMangas;
@@ -812,6 +837,27 @@ begin
       favorites.WriteString(IntToStr(i), 'Link', favoriteInfo[i].link);
     end;
   favorites.UpdateFile;
+end;
+
+procedure TFavoriteManager.StopAllAndWait;
+var
+  i: Integer;
+begin
+  if isRunning then
+  begin
+    taskthread.Terminate;
+    if taskthread.threads.Count > 0 then
+    begin
+      taskthread.CS_Threads.Acquire;
+      try
+        for i := 0 to taskthread.threads.Count - 1 do
+          taskthread.threads[i].Terminate;
+      finally
+        taskthread.CS_Threads.Release;
+      end;
+    end;
+    taskthread.WaitFor;
+  end;
 end;
 
 procedure TFavoriteManager.Sort(const AColumn: Cardinal);
