@@ -10,7 +10,7 @@ object ImportFavorites: TImportFavorites
   ClientWidth = 406
   OnCreate = FormCreate
   Position = poDesktopCenter
-  LCLVersion = '1.2.4.0'
+  LCLVersion = '1.5'
   object cbSoftware: TComboBox
     Left = 16
     Height = 23

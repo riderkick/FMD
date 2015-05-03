@@ -490,16 +490,6 @@ type
     optionMangaSiteSelectionNodes: array of PVirtualNode;
     LastSearchStr: String;
     LastSearchWeb: String;
-
-    CS_SilentThread_ThreadCount: TCriticalSection;
-    SilentThreadQueue: TQueue;
-    // silentthread counter
-    silentThreadCount: Cardinal;
-    // silentAddToFavThread counter
-    silentAddToFavThreadCount: Cardinal;
-    // current working silentthread counter
-    currentActiveSilentThreadCount: Cardinal;
-
     isStartup, isExiting: Boolean;
     // for manga website that available for visible on selection list
     //websiteName     :TStringList;
@@ -514,6 +504,7 @@ type
     DLManager: TDownloadManager;
     updateDB: TUpdateDBThread;
     updateList: TUpdateMangaManagerThread;
+    SilentThreadManager: TSilentThreadManager;
     ticks: Cardinal;
     backupTicks: Cardinal;
     // animation gif
@@ -580,7 +571,6 @@ type
 
     function SaveMangaOptions: String;
 
-
     procedure UpdateVtChapter;
     procedure UpdateVtDownload;
     procedure UpdateVtFavorites;
@@ -619,14 +609,11 @@ begin
   AddIgnoredException('EImagingError');
   AddIgnoredException('ERegExpr');
   SaveIgnoredExeptionToFile;
-  CS_SilentThread_ThreadCount := TCriticalSection.Create;
-  SilentThreadQueue := TQueue.Create;
+  SilentThreadManager := TSilentThreadManager.Create;
   btAbortUpdateList.Parent := sbUpdateList;
   INIAdvanced := TIniFileR.Create(fmdDirectory + CONFIG_FOLDER + CONFIG_ADVANCED);
   isRunDownloadFilter := False;
   isCanRefreshForm := True;
-  silentThreadCount := 0;
-  silentAddToFavThreadCount := 0;
   isUpdating := False;
   isExiting := False;
   isSubthread := False;
@@ -789,24 +776,25 @@ begin
   itMonitor.Enabled := False;
 
   //Terminating all threads and wait for it
-  DLManager.StopAllDownloadTasksForExit;
-  if isSubthread then
-  begin
-    SubThread.Terminate;
-    SubThread.WaitFor;
-  end;
   if isGetMangaInfos then
   begin
     GetInfosThread.IsFlushed := True;
     GetInfosThread.Terminate;
     GetInfosThread.WaitFor;
   end;
-  favorites.StopAllAndWait;
+  DLManager.StopAllDownloadTasksForExit;
+  if isSubthread then
+  begin
+    SubThread.Terminate;
+    SubThread.WaitFor;
+  end;
   if isUpdating then
   begin
     updateList.Terminate;
     updateList.WaitFor;
   end;
+  favorites.StopAllAndWait;
+  SilentThreadManager.StopAllAndWait;
 
   if FMDInstance <> nil then
   begin
@@ -832,6 +820,7 @@ begin
   FreeAndNil(mangaInfo);
 
   FreeAndNil(DLManager);
+  FreeAndNil(SilentThreadManager);
   FreeAndNil(favorites);
   FreeAndNil(dataProcess);
 
@@ -842,9 +831,6 @@ begin
   FreeAndNil(updates);
   FreeAndNil(options);
   FreeAndNil(INIAdvanced);
-
-  FreeAndNil(SilentThreadQueue);
-  FreeAndNil(CS_SilentThread_ThreadCount);
 end;
 
 procedure TMainForm.FormShow(Sender: TObject);
@@ -1943,19 +1929,13 @@ begin
   begin
     if vtMangaList.Selected[xNode] then
     begin
-      CreateAddToFavThread(
+      SilentThreadManager.Add(MD_AddToFavorites,
         GetMangaSiteName(DataProcess.site.Items[DataProcess.GetPos(i)]),
         DataProcess.Param[DataProcess.GetPos(i), DATA_PARAM_NAME],
         DataProcess.Param[DataProcess.GetPos(i), DATA_PARAM_LINK]);
     end;
     xNode := vtMangaList.GetNext(xNode);
   end;
-
-  // change status
-  if silentThreadCount > 0 then
-    sbMain.Panels[1].Text := 'Loading: ' + IntToStr(silentThreadCount)
-  else
-    sbMain.Panels[1].Text := '';
 end;
 
 // ----- vtFavorites popup menu -----
@@ -2458,19 +2438,13 @@ begin
         end;
 
         if AllowedToCreate then
-          CreateDownloadAllThread(
+          SilentThreadManager.Add(MD_DownloadAll,
             GetMangaSiteName(DataProcess.site.Items[DataProcess.GetPos(i)]),
             dataProcess.Param[DataProcess.GetPos(i), DATA_PARAM_NAME],
             dataProcess.Param[DataProcess.GetPos(i), DATA_PARAM_LINK]);
       end;
       xNode := vtMangaList.GetNext(xNode);
     end;
-
-    // change status
-    if silentThreadCount > 0 then
-      sbMain.Panels[1].Text := 'Loading: ' + IntToStr(silentThreadCount)
-    else
-      sbMain.Panels[1].Text := '';
   except
     on E: Exception do
       ExceptionHandler(Self, E);

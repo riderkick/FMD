@@ -309,14 +309,14 @@ end;
 procedure TFavoriteManager.Run;
 begin
   try
-    if (not isAuto) and ((isRunning) or (MainForm.silentThreadCount > 0)) then
+    if (not isAuto) and ((isRunning) or (MainForm.SilentThreadManager.ItemCount > 0)) then
     begin
       MessageDlg('', stDlgFavoritesIsRunning,
         mtInformation, [mbOK], 0);
       Exit;
     end
     else
-    if (isAuto) and ((isRunning) or (MainForm.silentThreadCount > 0)) then
+    if (isAuto) and ((isRunning) or (MainForm.SilentThreadManager.ItemCount > 0)) then
       Exit;
     if Count = 0 then
       Exit;
@@ -699,7 +699,7 @@ begin
     favoriteInfo[Count - 1].saveTo := saveTo;
     favoriteInfo[Count - 1].Link := Link;
     favoriteInfo[Count - 1].downloadedChapterList := downloadedChapterList;
-    if ((MainForm.silentAddToFavThreadCount <= 2) or (Random(50) = 0)) and
+    if ((MainForm.SilentThreadManager.ItemCount <= 2) or (Random(50) = 0)) and
       (not isRunning) then
     begin
       Sort(sortColumn);

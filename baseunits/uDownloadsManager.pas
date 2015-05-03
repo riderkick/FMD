@@ -228,7 +228,7 @@ type
 implementation
 
 uses
-  lazutf8classes, jsHTMLUtil, FastHTMLParser, HTMLUtil, LConvEncoding,
+  lazutf8classes, jsHTMLUtil, FastHTMLParser, HTMLUtil,
   SynaCode, FileUtil, Controls, VirtualTrees, RegExpr, frmMain,
   Imaging, ImagingTypes, ImagingCanvases;
 
@@ -1156,9 +1156,9 @@ end;
 destructor TTaskThread.Destroy;
 begin
   Stop;
+  container.ThreadState := False;
   threads.Free;
   CS_threads.Free;
-  container.ThreadState := False;
   inherited Destroy;
 end;
 
@@ -2345,7 +2345,6 @@ begin
       for i := containers.Count - 1 downto 0 do
         if containers.Items[i].ThreadState then
           try
-            //WaitForThreadTerminate(containers.Items[i].Thread.ThreadID, 500);
             containers.Items[i].Thread.WaitFor;
           except
           end;

@@ -1,8 +1,8 @@
   function GetMangaMintImageURL: Boolean;
   var
     s: String;
-    i, j: Integer;
-    l, ts: TStringList;
+    i: Integer;
+    l: TStringList;
     isExtractImage: Boolean = False;
   begin
     l := TStringList.Create;

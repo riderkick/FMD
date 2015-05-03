@@ -99,7 +99,8 @@ begin
         if (Pos(UpCase(WebsiteRoots[j,1]), UpCase(urlList.Strings[i])) > 0) AND
            (Pos('comic/_/comics/double-marriage-r3713', urlList.Strings[i]) = 0) then
         begin
-          CreateAddToFavThread(
+          MainForm.SilentThreadManager.Add(
+            MD_AddToFavorites,
             WebsiteRoots[j,0],
             mangaList.Strings[i],
             StringReplace(urlList.Strings[i], WebsiteRoots[j,1], '', []),
@@ -141,11 +142,6 @@ begin
     0: DMDHandle;
     1: FMDHandle;
   end;
-
-  if MainForm.silentThreadCount > 0 then
-    MainForm.sbMain.Panels[1].Text:= 'Loading: '+IntToStr(MainForm.silentThreadCount)
-  else
-    MainForm.sbMain.Panels[1].Text:= '';
 end;
 
 { ----- public methods ----- }

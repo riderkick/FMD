@@ -15,22 +15,25 @@ unit uSilentThread;
 interface
 
 uses
-  SysUtils,
-  uBaseUnit, uData, uFMDThread;
+  SysUtils, fgl, uBaseUnit, uData, uFMDThread, uDownloadsManager, uMisc,
+  Dialogs, blcksock, syncobjs;
 
 type
-  // metadata - Store manga information in the queue, so that it will be
-  // processed by silent thread later
+
+  TMetaDataType = (MD_DownloadAll, MD_AddToFavorites);
+
   TSilentThreadMetaData = class
-  protected
-    // to determine the job (add to download list or favorites)
-    FType: Integer;
-    FWebsite, FManga, FURL, FPath: String;
   public
-    constructor Create(const AType: Integer;
-      const AWebsite, AManga, AURL, APath: String);
+    MetaDataType: TMetaDataType;
+    Website,
+    Title,
+    URL,
+    SaveTo: String;
+    constructor Create(const AType: TMetaDataType; const AWebsite, AManga, AURL, APath: String);
     procedure Run;
   end;
+
+  TSilentThreadManager = class;
 
   { TSilentThread }
 
@@ -42,76 +45,215 @@ type
 
     // manga information from main thread
     title, website, URL: String;
-
+    procedure SockOnHeartBeat(Sender: TObject);
     procedure MainThreadAfterChecking; virtual;
-    procedure MainThreadIncreaseThreadCount; virtual;
-    procedure MainThreadDecreaseThreadCount; virtual;
+    procedure MainThreadUpdateStatus;
     procedure Execute; override;
   public
+    Manager: TSilentThreadManager;
     constructor Create;
     destructor Destroy; override;
 
     property SavePath: String read FSavePath write FSavePath;
   end;
 
-  // for "Download all" feature
-  TSilentGetInfoThread = class(TSilentThread)
-
-  end;
-
   // for "Add to Favorites" feature
   TSilentAddToFavThread = class(TSilentThread)
   protected
     procedure MainThreadAfterChecking; override;
-    procedure MainThreadDecreaseThreadCount; override;
-  public
   end;
 
-procedure CreateDownloadAllThread(const AWebsite, AManga, AURL: String;
-  ASavePath: String = '');
-procedure CreateAddToFavThread(const AWebsite, AManga, AURL: String;
-  ASavePath: String = '');
+  TMetaDataList = TFPGList<TSilentThreadMetaData>;
+  TThreadList = TFPGList<TSilentThread>;
 
-const
-  maxActiveSilentThread = 2;
+  { TSilentThreadManager }
+
+  TSilentThreadManager = class
+  protected
+    function GetItemCount: Integer;
+  public
+    CS_Threads: TCriticalSection;
+    DLManager: TDownloadManager;
+    MetaData: TMetaDataList;
+    Threads: TThreadList;
+    procedure Add(AType: TMetaDataType; AWebsite, AManga, AURL: String;
+      ASavePath: String = '');
+    procedure CheckOut;
+    procedure StopAllAndWait;
+    procedure UpdateLoadStatus;
+    property ItemCount: Integer read GetItemCount;
+
+    constructor Create;
+    destructor Destroy; override;
+  end;
+
+resourcestring
+  RS_SilentThreadLoadStatus = 'Loading: %d / %d';
 
 implementation
 
 uses
   frmMain;
 
+{ TSilentThreadManager }
+
+function TSilentThreadManager.GetItemCount: Integer;
+begin
+  CS_Threads.Acquire;
+  try
+    Result := MetaData.Count + Threads.Count;
+  finally
+    CS_Threads.Release;
+  end;
+end;
+
+procedure TSilentThreadManager.Add(AType: TMetaDataType; AWebsite, AManga,
+  AURL: String; ASavePath: String = '');
+begin
+  CS_Threads.Acquire;
+  try
+    MetaData.Add(TSilentThreadMetaData.Create(AType, AWebsite, AManga, AURL, ASavePath));
+  finally
+    CS_Threads.Release;
+  end;
+  UpdateLoadStatus;
+end;
+
+procedure TSilentThreadManager.CheckOut;
+begin
+  CS_Threads.Acquire;
+  try
+    if MetaData.Count > 0 then
+    begin
+      case MetaData.First.MetaDataType of
+        MD_DownloadAll: Threads.Add(TSilentThread.Create);
+        MD_AddToFavorites: Threads.Add(TSilentAddToFavThread.Create);
+      end;
+      Threads.Last.Manager := Self;
+      Threads.Last.website := MetaData.First.Website;
+      Threads.Last.title := MetaData.First.Title;
+      Threads.Last.URL := MetaData.First.URL;
+      Threads.Last.SavePath := MetaData.First.SaveTo;
+      Threads.Last.Start;
+      MetaData.First.Free;
+      MetaData.Remove(MetaData.First);
+    end;
+  finally
+    CS_Threads.Release;
+  end;
+end;
+
+procedure TSilentThreadManager.StopAllAndWait;
+var
+  i: Integer;
+begin
+  if MetaData.Count or Threads.Count > 0 then
+  begin
+    CS_Threads.Acquire;
+    try
+      while MetaData.Count > 0 do
+      begin
+        MetaData.Last.Free;
+        MetaData.Remove(MetaData.Last);
+      end;
+      if Threads.Count > 0 then
+        for i := 0 to Threads.Count - 1 do
+         Threads[i].Terminate;
+    finally
+      CS_Threads.Release;
+    end;
+    while ItemCount > 0 do
+      Sleep(100);
+  end;
+end;
+
+procedure TSilentThreadManager.UpdateLoadStatus;
+begin
+  if ItemCount > 0 then
+    MainForm.sbMain.Panels[1].Text :=
+      Format(RS_SilentThreadLoadStatus, [Threads.Count, ItemCount])
+  else
+    MainForm.sbMain.Panels[1].Text := '';
+end;
+
+constructor TSilentThreadManager.Create;
+begin
+  inherited Create;
+  CS_Threads := TCriticalSection.Create;
+  MetaData := TMetaDataList.Create;
+  Threads := TThreadList.Create;
+end;
+
+destructor TSilentThreadManager.Destroy;
+var
+  i: Integer;
+begin
+  if ItemCount > 0 then
+  begin
+    CS_Threads.Acquire;
+    try
+      while MetaData.Count > 0 do
+      begin
+        MetaData.Last.Free;
+        MetaData.Remove(MetaData.Last);
+      end;
+      if Threads.Count > 0 then
+        for i := 0 to Threads.Count - 1 do
+          Threads[i].Terminate;
+    finally
+      CS_Threads.Release;
+    end;
+    while ItemCount > 0 do
+      Sleep(100);
+  end;
+  MetaData.Free;
+  Threads.Free;
+  CS_Threads.Free;
+  inherited Destroy;
+end;
+
 // ----- TSilentThreadMetaData -----
 
-constructor TSilentThreadMetaData.Create(const AType: Integer;
+constructor TSilentThreadMetaData.Create(const AType: TMetaDataType;
   const AWebsite, AManga, AURL, APath: String);
 begin
   inherited Create;
-  FType := AType;
-  FWebsite := AWebsite;
-  FManga := AManga;
-  FURL := AURL;
-  FPath := APath;
+  MetaDataType := AType;
+  Website := AWebsite;
+  Title := AManga;
+  URL := AURL;
+  SaveTo := APath;
 end;
 
 procedure TSilentThreadMetaData.Run;
 var
   silentThread: TSilentThread;
 begin
-  case FType of
-    0: silentThread := TSilentThread.Create;
-    1: silentThread := TSilentAddToFavThread.Create;
+  case MetaDataType of
+    MD_DownloadAll: silentThread := TSilentThread.Create;
+    MD_AddToFavorites : silentThread := TSilentAddToFavThread.Create;
   end;
-  if (FType in [0..1]) then
+  if (MetaDataType in [MD_DownloadAll, MD_AddToFavorites]) then
   begin
-    silentThread.SavePath := FPath;
-    silentThread.website := FWebsite;
-    silentThread.URL := FURL;
-    silentThread.title := FManga;
+    silentThread.SavePath := SaveTo;
+    silentThread.website := Website;
+    silentThread.URL := URL;
+    silentThread.title := Title;
     silentThread.Start;
   end;
 end;
 
 // ----- TSilentThread -----
+
+procedure TSilentThread.SockOnHeartBeat(Sender: TObject);
+begin
+  if Terminated then
+  begin
+    TBlockSocket(Sender).Tag := 1;
+    TBlockSocket(Sender).StopFlag := True;
+    TBlockSocket(Sender).AbortSocket;
+  end;
+end;
 
 procedure TSilentThread.MainThreadAfterChecking;
 var
@@ -202,59 +344,26 @@ begin
   end;
 end;
 
-procedure TSilentThread.MainThreadIncreaseThreadCount;
+procedure TSilentThread.MainThreadUpdateStatus;
 begin
-  MainForm.CS_SilentThread_ThreadCount.Acquire;
-  try
-    Inc(MainForm.currentActiveSilentThreadCount);
-  finally
-    MainForm.CS_SilentThread_ThreadCount.Release;
-  end;
-end;
-
-procedure TSilentThread.MainThreadDecreaseThreadCount;
-var
-  meta: TSilentThreadMetaData;
-begin
-  MainForm.CS_SilentThread_ThreadCount.Acquire;
-  try
-    with MainForm do
-    begin
-      Dec(MainForm.silentThreadCount);
-      Dec(currentActiveSilentThreadCount);
-      // change status
-      if silentThreadCount > 0 then
-        sbMain.Panels[1].Text := 'Loading: ' + IntToStr(silentThreadCount)
-      else
-        sbMain.Panels[1].Text := '';
-    end;
-    // TODO
-    if MainForm.SilentThreadQueue.Count > 0 then
-    begin
-      meta := TSilentThreadMetaData(MainForm.SilentThreadQueue.Pop);
-      if meta <> nil then
-      begin
-        meta.Run;
-        meta.Free;
-      end;
-    end;
-
-  finally
-    MainForm.CS_SilentThread_ThreadCount.Release;
-  end;
+  if Manager.ItemCount > 0 then
+    MainForm.sbMain.Panels[1].Text :=
+      Format(RS_SilentThreadLoadStatus, [Manager.Threads.Count, Manager.ItemCount])
+  else
+    MainForm.sbMain.Panels[1].Text := '';
 end;
 
 procedure TSilentThread.Execute;
 begin
   try
-    while MainForm.currentActiveSilentThreadCount > maxActiveSilentThread do
-      Sleep(250);
-    Synchronize(MainThreadIncreaseThreadCount);
+    Synchronize(MainThreadUpdateStatus);
     Info.mangaInfo.title := title;
     if Info.GetInfoFromURL(website, URL, Freconnect) = NO_ERROR then
-      if not Self.Terminated then
+      if not Terminated then
+      begin
         Synchronize(MainThreadAfterChecking);
-    Synchronize(MainThreadDecreaseThreadCount);
+        Synchronize(MainThreadUpdateStatus);
+      end;
   except
     on E: Exception do
       MainForm.ExceptionHandler(Self, E);
@@ -265,13 +374,22 @@ constructor TSilentThread.Create;
 begin
   inherited Create(True);
   Freconnect := 3;
-  Info := TMangaInformation.Create;
   SavePath := '';
+  Info := TMangaInformation.Create;
+  Info.FHTTP.Sock.OnHeartbeat := SockOnHeartBeat;
+  Info.FHTTP.Sock.HeartbeatRate := SOCKHEARTBEATRATE;
 end;
 
 destructor TSilentThread.Destroy;
 begin
   Info.Free;
+  Manager.CS_Threads.Acquire;
+  try
+    Manager.Threads.Remove(Self);
+  finally
+    Manager.CS_Threads.Release;
+  end;
+  Synchronize(MainThreadUpdateStatus);
   inherited Destroy;
 end;
 
@@ -287,7 +405,7 @@ begin
     begin
       if FSavePath = '' then
       begin
-	    if Trim(edSaveTo.Text) = '' then
+	if Trim(edSaveTo.Text) = '' then
           edSaveTo.Text := options.ReadString('saveto', 'SaveTo', DEFAULT_PATH);
         if Trim(edSaveTo.Text) = '' then
           edSaveTo.Text := DEFAULT_PATH;
@@ -325,33 +443,6 @@ begin
     on E: Exception do
       MainForm.ExceptionHandler(Self, E);
   end;
-end;
-
-procedure TSilentAddToFavThread.MainThreadDecreaseThreadCount;
-begin
-  inherited;
-  Dec(MainForm.silentAddToFavThreadCount);
-end;
-
-procedure CreateDownloadAllThread(const AWebsite, AManga, AURL: String;
-  ASavePath: String = '');
-var
-  meta: TSilentThreadMetaData;
-begin
-  meta := TSilentThreadMetaData.Create(0, AWebsite, AManga, AURL, ASavePath);
-  MainForm.SilentThreadQueue.Push(meta);
-  Inc(MainForm.silentThreadCount);
-end;
-
-procedure CreateAddToFavThread(const AWebsite, AManga, AURL: String;
-  ASavePath: String = '');
-var
-  meta: TSilentThreadMetaData;
-begin
-  meta := TSilentThreadMetaData.Create(1, AWebsite, AManga, AURL, ASavePath);
-  MainForm.SilentThreadQueue.Push(meta);
-  Inc(MainForm.silentThreadCount);
-  Inc(MainForm.silentAddToFavThreadCount);
 end;
 
 end.

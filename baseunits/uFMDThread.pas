@@ -22,7 +22,7 @@ type
     function GetTerminated: Boolean;
     procedure DoTerminate; override;
   public
-    constructor Create(CreateSuspended: Boolean = False);
+    constructor Create(CreateSuspended: Boolean = True);
     property IsTerminated: Boolean read GetTerminated;
   end;
 
@@ -48,7 +48,7 @@ end;
 
 // ----- Public methods -----
 
-constructor TFMDThread.Create(CreateSuspended: Boolean);
+constructor TFMDThread.Create(CreateSuspended: Boolean = True);
 begin
   inherited Create(CreateSuspended);
   FreeOnTerminate := True;

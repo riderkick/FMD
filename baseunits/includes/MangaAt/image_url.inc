@@ -1,8 +1,8 @@
   function GetMangaAtImageURL: Boolean;
   var
     s: String;
-    i, j: Integer;
-    l, ts: TStringList;
+    i: Integer;
+    l: TStringList;
   begin
     l := TStringList.Create;
     s := FillMangaSiteHost(MANGAAT_ID, URL) +
