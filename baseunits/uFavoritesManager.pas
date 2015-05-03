@@ -206,6 +206,7 @@ end;
 
 destructor TFavoriteTask.Destroy;
 begin
+  manager.isRunning := False;
   threads.Free;
   CS_Threads.Free;
   inherited Destroy;

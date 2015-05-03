@@ -3431,29 +3431,31 @@ end;
 procedure TMainForm.vtFavoritesHeaderClick(Sender: TVTHeader;
   Column: TColumnIndex; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
-  if favorites.Count = 0 then
-    Exit;
-  if favorites.isRunning then
-    Exit;
-  case Column of
-    1: ;
-    2: ;
-    3: ;
-    4: ;
-    else
-      Exit;
-  end;
-  favorites.isRunning := True;
-  favorites.sortDirection := not favorites.sortDirection;
-  //favorites.Sort(Column);
-  favorites.SortNatural(Column);
-  vtFavorites.Header.SortColumn := Column;
-  vtFavorites.Header.SortDirection := TSortDirection(favorites.sortDirection);
-  UpdateVtFavorites;
+  if (not favorites.isRunning) and (favorites.Count > 1) then
+  begin
+    case Column of
+      1: ;
+      2: ;
+      3: ;
+      4: ;
+      else
+        Exit;
+    end;
+    favorites.isRunning := True;
+    try
+      favorites.sortDirection := not favorites.sortDirection;
+      //favorites.Sort(Column);
+      favorites.SortNatural(Column);
+      vtFavorites.Header.SortColumn := Column;
+      vtFavorites.Header.SortDirection := TSortDirection(favorites.sortDirection);
+      UpdateVtFavorites;
 
-  options.WriteInteger('misc', 'SortFavoritesColumn', vtFavorites.Header.SortColumn);
-  options.WriteBool('misc', 'SortFavoritesDirection', favorites.sortDirection);
-  favorites.isRunning := False;
+      options.WriteInteger('misc', 'SortFavoritesColumn', vtFavorites.Header.SortColumn);
+      options.WriteBool('misc', 'SortFavoritesDirection', favorites.sortDirection);
+    finally
+      favorites.isRunning := False;
+    end;
+  end;
 end;
 
 procedure TMainForm.vtFavoritesInitNode(Sender: TBaseVirtualTree;
