@@ -297,12 +297,20 @@ begin
 end;
 
 destructor TFavoriteManager.Destroy;
+var
+  i: Integer;
 begin
   Backup;
   favorites.UpdateFile;
   favorites.Free;
   SetLength(favoriteInfo, 0);
-  SetLength(favoriteInfo, 0);
+  if Length(mangaInfo) > 0 then
+    for i := Low(mangaInfo) to High(mangaInfo) do
+      try
+        mangaInfo[i].Free;
+      except
+      end;
+  SetLength(mangaInfo, 0);
   inherited Destroy;
 end;
 
