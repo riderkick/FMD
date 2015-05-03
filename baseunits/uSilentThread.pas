@@ -15,8 +15,8 @@ unit uSilentThread;
 interface
 
 uses
-  SysUtils, fgl, uBaseUnit, uData, uFMDThread, uDownloadsManager, uMisc,
-  Dialogs, blcksock, syncobjs;
+  SysUtils, fgl, uBaseUnit, uData, uFMDThread, uDownloadsManager,
+  blcksock, syncobjs;
 
 type
 

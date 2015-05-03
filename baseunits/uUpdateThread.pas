@@ -94,7 +94,7 @@ uses
   {$ELSE}
   mainunit,
   {$ENDIF}
-  Dialogs, ComCtrls, Forms, Controls, RegExpr;
+  Dialogs, ComCtrls, Forms, Controls;
 
 // ----- TUpdateMangaThread -----
 

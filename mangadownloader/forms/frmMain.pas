@@ -16,7 +16,7 @@ interface
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
   LCLType, ExtCtrls, ComCtrls, Buttons, Spin, Menus, VirtualTrees, RichMemo,
-  IniFiles, contnrs, syncobjs, simpleipc, UTF8Process, lclproc, types,
+  IniFiles, simpleipc, UTF8Process, lclproc, types,
   strutils, LCLIntf, LazUTF8, AnimatedGif, uBaseUnit, uData, uDownloadsManager,
   uFavoritesManager, uUpdateThread, uUpdateDBThread, uSubThread, uSilentThread,
   uMisc, uGetMangaInfosThread, USimpleException, ActiveX;

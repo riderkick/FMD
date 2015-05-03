@@ -14,7 +14,7 @@ unit uSubThread;
 interface
 
 uses
-  Classes, SysUtils, Controls, Forms, uBaseUnit, uFMDThread, uMisc,
+  Classes, SysUtils, Controls, Forms, uBaseUnit, uFMDThread,
   httpsend, blcksock;
 
 type
@@ -48,8 +48,7 @@ resourcestring
 implementation
 
 uses
-  frmMain, frmUpdateDialog,
-  uSilentThread;
+  frmMain, frmUpdateDialog;
 
 // ----- Public methods -----
 
