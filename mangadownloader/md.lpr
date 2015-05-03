@@ -14,8 +14,7 @@ uses
     cthreads,
     {$ENDIF}
   {$ENDIF}
-  Interfaces, // this includes the LCL widgetset
-  Forms, FileUtil,simpleipc, IniFiles, richmemopackage,
+  Forms, Interfaces, FileUtil,simpleipc, IniFiles,
   uBaseUnit, frmMain, frmImportList, frmShutdownCounter, frmUpdateDialog;
 
 var
@@ -60,9 +59,8 @@ begin
     Application.Initialize;
     Application.CreateForm(TMainForm, MainForm);
     Application.CreateForm(TImportList, ImportList);
-  Application.CreateForm(TShutdownCounterForm, ShutdownCounterForm);
-  Application.CreateForm(TUpdateDialogForm, UpdateDialogForm);
+    Application.CreateForm(TShutdownCounterForm, ShutdownCounterForm);
+    Application.CreateForm(TUpdateDialogForm, UpdateDialogForm);
     Application.Run;
   end;
 end.
-

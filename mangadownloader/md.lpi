@@ -185,6 +185,7 @@
             <TargetCPU Value="i386"/>
             <TargetOS Value="win32"/>
             <Optimizations>
+              <OptimizationLevel Value="0"/>
               <VariablesInRegisters Value="True"/>
             </Optimizations>
           </CodeGeneration>
@@ -202,6 +203,7 @@
             <CustomOptions Value="-dMANGADOWNLOADER
 -dDOWNLOADER
 -dSELFUPDATE
+-dLOGACTIVE
 -dDEBUGWIN32
 -dDEBUGLEAKS"/>
           </Other>
@@ -243,12 +245,10 @@
       <Unit1>
         <Filename Value="..\baseunits\uDownloadsManager.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="uDownloadsManager"/>
       </Unit1>
       <Unit2>
         <Filename Value="..\baseunits\uFavoritesManager.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="uFavoritesManager"/>
       </Unit2>
       <Unit3>
         <Filename Value="..\baseunits\uUpdateThread.pas"/>
@@ -316,7 +316,6 @@
       <Unit15>
         <Filename Value="..\baseunits\uBaseUnit.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="uBaseUnit"/>
       </Unit15>
       <Unit16>
         <Filename Value="..\baseunits\uMisc.pas"/>
@@ -325,7 +324,6 @@
       <Unit17>
         <Filename Value="..\baseunits\uData.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="uData"/>
       </Unit17>
       <Unit18>
         <Filename Value="forms\frmShutdownCounter.pas"/>
