@@ -1337,12 +1337,12 @@ begin
   begin
     CS_threads.Acquire;
     try
-      container.WorkCounter := InterLockedIncrement(container.WorkCounter);
       threads.Add(TDownloadThread.Create);
       threads.Last.manager := Self;
       threads.Last.workCounter := container.WorkCounter;
       threads.Last.checkStyle := Flag;
       threads.Last.Start;
+      container.WorkCounter := InterLockedIncrement(container.WorkCounter);
       if Flag = CS_GETPAGELINK then
         container.CurrentPageNumber := InterLockedIncrement(container.CurrentPageNumber);
     finally
