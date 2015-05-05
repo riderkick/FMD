@@ -923,10 +923,7 @@ begin
       Screen.Cursor := crDefault;
     end;
     if cbOptionAutoCheckUpdate.Checked then
-    begin
-      SubThread.updateCounter := 0;
-      SubThread.isCheckForLatestVer := True;
-    end;
+      SubThread.CheckUpdate := True;
     SubThread.Start;
   end;
 end;
@@ -1609,11 +1606,11 @@ end;
 
 procedure TMainForm.btCheckVersionClick(Sender: TObject);
 begin
-  if subthread.isCheckForLatestVer then
+  if subthread.CheckUpdate then
     MessageDlg('', stDlgUpdaterIsRunning, mtInformation, [mbYes], 0)
   else
   begin
-    subthread.isCheckForLatestVer := True;
+    subthread.CheckUpdate := True;
     btCheckVersion.Caption := stFavoritesChecking;
   end;
 end;

@@ -19,23 +19,31 @@ uses
 
 type
 
-  { TSubThread }
-
-  TSubThread = class(TFMDThread)
+  { TCheckUpdateThread }
+  TCheckUpdateThread = class(TFMDThread)
   protected
-    FIsLoaded: Integer;
+    fNewVersionNumber,
+    fUpdateURL,
+    fChangelog,
     FBtnCheckCaption: String;
-    procedure Execute; override;
-    procedure CheckLatestVersion;
+    procedure SockOnHeartBeat(Sender: TObject);
     procedure MainThreadUpdate;
     procedure MainThreadSetButton;
-    procedure SockOnHeartBeat(Sender: TObject);
+    procedure Execute; override;
   public
-    updateCounter: Cardinal;
-    isCheckForLatestVer: Boolean;
-    isCanStop: Boolean;
-    fNote, fNoteForThisRevision, fImportant: String;
-    fNewVersionNumber, fUpdateURL, fChangelog: String;
+    CheckStatus: ^Boolean;
+    ThreadStatus: ^Boolean;
+    destructor Destroy; override;
+  end;
+
+  { TSubThread }
+  TSubThread = class(TFMDThread)
+  protected
+    FCheckUpdateThread: TCheckUpdateThread;
+    procedure Execute; override;
+  public
+    CheckUpdate,
+    CheckUpdateRunning: Boolean;
     constructor Create;
     destructor Destroy; override;
   end;
@@ -50,55 +58,9 @@ implementation
 uses
   frmMain, frmUpdateDialog;
 
-// ----- Public methods -----
+{ TCheckUpdateThread }
 
-constructor TSubThread.Create;
-begin
-  inherited Create(True);
-  fImportant := '';
-  updateCounter := 1;
-  isCheckForLatestVer := False;
-end;
-
-destructor TSubThread.Destroy;
-begin
-  MainForm.isSubthread := False;
-  inherited Destroy;
-end;
-
-// ----- Protected methods -----
-
-procedure TSubThread.MainThreadUpdate;
-begin
-  UpdateDialogForm.Caption := Application.Title + ' - ' + RS_NewVersionFound;
-  with UpdateDialogForm.mmLog.Lines do
-  begin
-    BeginUpdate;
-    try
-      Clear;
-      Add(RS_CurrentVersion + ' : ' + FMD_VERSION_NUMBER);
-      Add(RS_LatestVersion + ' : ' + fNewVersionNumber + LineEnding);
-      AddText(fChangelog);
-    finally
-      EndUpdate;
-    end;
-  end;
-  if UpdateDialogForm.ShowModal = mrYes then
-  begin
-    MainForm.DoUpdateFMD := True;
-    MainForm.FUpdateURL := fUpdateURL;
-    MainForm.itMonitor.Enabled := True;
-  end
-  else
-    MainForm.btCheckVersion.Caption := stUpdaterCheck;
-end;
-
-procedure TSubThread.MainThreadSetButton;
-begin
-  MainForm.btCheckVersion.Caption := FBtnCheckCaption;
-end;
-
-procedure TSubThread.SockOnHeartBeat(Sender: TObject);
+procedure TCheckUpdateThread.SockOnHeartBeat(Sender: TObject);
 begin
   if Terminated then
   begin
@@ -108,52 +70,50 @@ begin
   end;
 end;
 
-procedure TSubThread.Execute;
+procedure TCheckUpdateThread.MainThreadUpdate;
 begin
-  MainForm.isSubthread := True;
-  try
-    if FileExists(fmdDirectory + 'old_updater.exe') then
-      DeleteFile(fmdDirectory + 'old_updater.exe');
-
-    if OptionAutoCheckFavStartup then
-    begin
-      MainForm.favorites.isAuto := True;
-      MainForm.favorites.isShowDialog := MainForm.cbOptionShowFavoriteDialog.Checked;
-      MainForm.favorites.Run;
-    end;
-
-    while not Terminated do
-    begin
-      if isCheckForLatestVer then
-        CheckLatestVersion;
-
-      with MainForm do
-      begin
-        while (SilentThreadManager.MetaData.Count > 0) and
-          (SilentThreadManager.Threads.Count < DLManager.maxDLThreadsPerTask) do
-          SilentThreadManager.CheckOut;
-      end;
-      Sleep(500);
-    end;
-  except
-    on E: Exception do
-      MainForm.ExceptionHandler(Self, E);
-  end;
+  UpdateDialogForm.Caption := Application.Title + ' - ' + RS_NewVersionFound;
+   with UpdateDialogForm.mmLog.Lines do
+   begin
+     BeginUpdate;
+     try
+       Clear;
+       Add(RS_CurrentVersion + ' : ' + FMD_VERSION_NUMBER);
+       Add(RS_LatestVersion + ' : ' + fNewVersionNumber + LineEnding);
+       AddText(fChangelog);
+     finally
+       EndUpdate;
+     end;
+   end;
+   if UpdateDialogForm.ShowModal = mrYes then
+   begin
+     MainForm.DoUpdateFMD := True;
+     MainForm.FUpdateURL := fUpdateURL;
+     MainForm.itMonitor.Enabled := True;
+   end
+   else
+     MainForm.btCheckVersion.Caption := stUpdaterCheck;
 end;
 
-procedure TSubThread.CheckLatestVersion;
+procedure TCheckUpdateThread.MainThreadSetButton;
+begin
+  MainForm.btCheckVersion.Caption := FBtnCheckCaption;
+end;
+
+procedure TCheckUpdateThread.Execute;
 var
   l: TStringList;
   FHTTP: THTTPSend;
   updateFound: Boolean = False;
 begin
-  fNewVersionNumber := FMD_VERSION_NUMBER;
-  fUpdateURL := '';
-  FBtnCheckCaption := stFavoritesChecking;
-  Synchronize(@MainThreadSetButton);
+  ThreadStatus^ := True;
   l := TStringList.Create;
   FHTTP := THTTPSend.Create;
   try
+    fNewVersionNumber := FMD_VERSION_NUMBER;
+    fUpdateURL := '';
+    FBtnCheckCaption := stFavoritesChecking;
+    Synchronize(@MainThreadSetButton);
     FHTTP.Sock.OnHeartbeat := @SockOnHeartBeat;
     FHTTP.Sock.HeartbeatRate := SOCKHEARTBEATRATE;
     if not Terminated and
@@ -172,7 +132,6 @@ begin
           if not Terminated and
             GetPage(Self, FHTTP, TObject(l), UPDATE_URL + 'changelog.txt', 3, False) then
             fChangelog := l.Text;
-
         end;
       FBtnCheckCaption := stUpdaterCheck;
       Synchronize(@MainThreadSetButton);
@@ -183,9 +142,71 @@ begin
   end;
   if not Terminated and updateFound then
     Synchronize(@MainThreadUpdate);
+end;
 
-  Inc(updateCounter);
-  isCheckForLatestVer := False;
+destructor TCheckUpdateThread.Destroy;
+begin
+  CheckStatus^ := False;
+  ThreadStatus^ := False;
+  inherited Destroy;
+end;
+
+{ TSubThread }
+
+procedure TSubThread.Execute;
+begin
+  MainForm.isSubthread := True;
+  try
+    if FileExists(fmdDirectory + 'old_updater.exe') then
+      DeleteFile(fmdDirectory + 'old_updater.exe');
+
+    if OptionAutoCheckFavStartup then
+    begin
+      MainForm.favorites.isAuto := True;
+      MainForm.favorites.isShowDialog := MainForm.cbOptionShowFavoriteDialog.Checked;
+      MainForm.favorites.Run;
+    end;
+
+    while not Terminated do
+    begin
+      if CheckUpdate and (not CheckUpdateRunning) then
+      begin
+        FCheckUpdateThread := TCheckUpdateThread.Create(True);
+        FCheckUpdateThread.CheckStatus := @CheckUpdate;
+        FCheckUpdateThread.ThreadStatus := @CheckUpdateRunning;
+        FCheckUpdateThread.Start;
+      end;
+
+      with MainForm do
+      begin
+        while (SilentThreadManager.MetaData.Count > 0) and
+          (SilentThreadManager.Threads.Count < DLManager.maxDLThreadsPerTask) do
+          SilentThreadManager.CheckOut;
+      end;
+      Sleep(500);
+    end;
+    if CheckUpdateRunning then
+    begin
+      FCheckUpdateThread.Terminate;
+      FCheckUpdateThread.WaitFor;
+    end;
+  except
+    on E: Exception do
+      MainForm.ExceptionHandler(Self, E);
+  end;
+end;
+
+constructor TSubThread.Create;
+begin
+  inherited Create(True);
+  CheckUpdate := False;
+  CheckUpdateRunning := CheckUpdate;
+end;
+
+destructor TSubThread.Destroy;
+begin
+  MainForm.isSubthread := False;
+  inherited Destroy;
 end;
 
 end.
