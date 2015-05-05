@@ -1931,7 +1931,7 @@ begin
     for j := 0 to mangaInfo.chapterName.Count - 1 do
     begin
       mangaInfo.chapterName.Strings[j] := Trim(RemoveStringBreaks(
-        HTMLEntitiesFilter(StringFilter(Trim(mangaInfo.chapterName.Strings[j])))));
+        CommonStringFilter(mangaInfo.chapterName[j])));
     end;
   end;
 
