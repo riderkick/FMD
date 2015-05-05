@@ -30,7 +30,6 @@ type
     URL,
     SaveTo: String;
     constructor Create(const AType: TMetaDataType; const AWebsite, AManga, AURL, APath: String);
-    procedure Run;
   end;
 
   TSilentThreadManager = class;
@@ -88,7 +87,7 @@ type
   end;
 
 resourcestring
-  RS_SilentThreadLoadStatus = 'Loading: %d / %d';
+  RS_SilentThreadLoadStatus = 'Loading: %d/%d';
 
 implementation
 
@@ -110,13 +109,18 @@ end;
 procedure TSilentThreadManager.Add(AType: TMetaDataType; AWebsite, AManga,
   AURL: String; ASavePath: String = '');
 begin
-  CS_Threads.Acquire;
-  try
-    MetaData.Add(TSilentThreadMetaData.Create(AType, AWebsite, AManga, AURL, ASavePath));
-  finally
-    CS_Threads.Release;
+  if not ((AType = MD_AddToFavorites) and
+    (MainForm.favorites.IsMangaExist(AManga, AWebsite))) then
+  begin
+    CS_Threads.Acquire;
+    try
+        MetaData.Add(TSilentThreadMetaData.Create(
+          AType, AWebsite, AManga, AURL, ASavePath));
+    finally
+      CS_Threads.Release;
+    end;
+    UpdateLoadStatus;
   end;
-  UpdateLoadStatus;
 end;
 
 procedure TSilentThreadManager.CheckOut;
@@ -212,7 +216,7 @@ begin
   inherited Destroy;
 end;
 
-// ----- TSilentThreadMetaData -----
+{ TSilentThreadMetaData }
 
 constructor TSilentThreadMetaData.Create(const AType: TMetaDataType;
   const AWebsite, AManga, AURL, APath: String);
@@ -225,25 +229,7 @@ begin
   SaveTo := APath;
 end;
 
-procedure TSilentThreadMetaData.Run;
-var
-  silentThread: TSilentThread;
-begin
-  case MetaDataType of
-    MD_DownloadAll: silentThread := TSilentThread.Create;
-    MD_AddToFavorites : silentThread := TSilentAddToFavThread.Create;
-  end;
-  if (MetaDataType in [MD_DownloadAll, MD_AddToFavorites]) then
-  begin
-    silentThread.SavePath := SaveTo;
-    silentThread.website := Website;
-    silentThread.URL := URL;
-    silentThread.title := Title;
-    silentThread.Start;
-  end;
-end;
-
-// ----- TSilentThread -----
+{ TSilentThread }
 
 procedure TSilentThread.SockOnHeartBeat(Sender: TObject);
 begin
@@ -360,14 +346,18 @@ begin
     Info.mangaInfo.title := title;
     if Info.GetInfoFromURL(website, URL, Freconnect) = NO_ERROR then
       if not Terminated then
-      begin
         Synchronize(MainThreadAfterChecking);
-        Synchronize(MainThreadUpdateStatus);
-      end;
   except
     on E: Exception do
       MainForm.ExceptionHandler(Self, E);
   end;
+  Manager.CS_Threads.Acquire;
+  try
+    Manager.Threads.Remove(Self);
+  finally
+    Manager.CS_Threads.Release;
+  end;
+  Synchronize(MainThreadUpdateStatus);
 end;
 
 constructor TSilentThread.Create;
@@ -383,22 +373,15 @@ end;
 destructor TSilentThread.Destroy;
 begin
   Info.Free;
-  Manager.CS_Threads.Acquire;
-  try
-    Manager.Threads.Remove(Self);
-  finally
-    Manager.CS_Threads.Release;
-  end;
-  Synchronize(MainThreadUpdateStatus);
   inherited Destroy;
 end;
 
-// ----- TSilentAddToFavThread -----
+{ TSilentAddToFavThread }
 
 procedure TSilentAddToFavThread.MainThreadAfterChecking;
 var
   s, s2: String;
-  i: Cardinal;
+  i: Integer;
 begin
   try
     with MainForm do
