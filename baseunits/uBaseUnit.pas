@@ -807,9 +807,9 @@ function BreaksString(const Source: String): String;
 function RemoveBreaks(const Source: String): String;
 function RemoveStringBreaks(const Source: String): String;
 function RemoveDoubleSpace(const Source: String): String;
-function TrimChar(const Source: String; Chars: TSysCharSet): String;
-function TrimLeftChar(const Source: String; Chars: TSysCharSet): String;
-function TrimRightChar(const Source: String; Chars: TSysCharSet): String;
+function TrimChar(const Source: String; const Chars: TSysCharSet): String;
+function TrimLeftChar(const Source: String; const Chars: TSysCharSet): String;
+function TrimRightChar(const Source: String; const Chars: TSysCharSet): String;
 
 function PrepareSummaryForHint(const Source: String; MaxLength: Cardinal = 80): String;
 
@@ -1950,10 +1950,8 @@ end;
 function FixURL(const URL : String) : String;
 begin
   Result := URL;
-  if Pos('//', Result) = 1 then
-    Delete(Result, 1, 2);
-  if Length(Result) > 2 then
-    result := ReplaceRegExpr('([^:])[/]{2,}(\b|\Z)', Result, '$1/', True);
+  if Pos(':', Result) or Pos('/', Result) > 0 then
+    Result := TrimLeftChar(Result, [':', '/']);
 end;
 
 function FixPath(const path: String): String;
@@ -2131,7 +2129,7 @@ begin
     Result := StringReplace(Result, '  ', ' ', [rfReplaceAll, rfIgnoreCase]);
 end;
 
-function TrimChar(const Source : String; Chars : TSysCharSet) : String;
+function TrimChar(const Source: String; const Chars: TSysCharSet): String;
 begin
   Result := Source;
   if Length(Result) > 0 then
@@ -2142,7 +2140,7 @@ begin
       Delete(Result, Length(Result), 1);
 end;
 
-function TrimLeftChar(const Source: String; Chars: TSysCharSet): String;
+function TrimLeftChar(const Source: String; const Chars: TSysCharSet): String;
 var
   i, j: LongInt;
 begin
@@ -2158,7 +2156,7 @@ begin
   end;
 end;
 
-function TrimRightChar(const Source: String; Chars: TSysCharSet): String;
+function TrimRightChar(const Source: String; const Chars: TSysCharSet): String;
 var
   i, j: LongInt;
 begin
