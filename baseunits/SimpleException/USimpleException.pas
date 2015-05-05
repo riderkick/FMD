@@ -337,18 +337,21 @@ begin
 end;
 
 procedure TSimpleException.SaveLogToFile;
+var
+  f: TextFile;
 begin
   if LogFilename <> '' then
   begin
-    with TStringList.Create do
-      try
-        if FileExistsUTF8(LogFilename) then
-          LoadFromFile(LogFilename);
-        Add(FLastReport);
-        SaveToFile(LogFilename);
-      finally
-        Free;
-      end;
+    AssignFile(f, LogFilename);
+    try
+      if FileExistsUTF8(LogFilename) then
+        Append(f)
+      else
+        Rewrite(f);
+      WriteLn(f, FLastReport);
+    finally
+      CloseFile(f);
+    end;
   end;
 end;
 
