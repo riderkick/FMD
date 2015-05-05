@@ -778,6 +778,7 @@ function TMangaInformation.GetDirectoryPage(var Page: Cardinal;
   const website: String): Byte;
 var
   s: String;
+  p: Integer;
   Source: TStringList;
   Parser: THTMLParser;
 
@@ -863,8 +864,6 @@ var
 
   {$I includes/MangaAt/directory_page_number.inc}
 
-var
-  p: Integer;
 begin
   Page := 0;
 
@@ -1447,12 +1446,12 @@ end;
 function TMangaInformation.GetInfoFromURL(const website, URL: String;
   const Reconnect: Cardinal): Byte;
 var
-  Source: TStringList;
-  Parser: THTMLParser;
   s: String;
   j, k: Integer;
   del: Boolean;
   rex: TRegExpr;
+  Source: TStringList;
+  Parser: THTMLParser;
 
   {$I includes/AnimeA/manga_information.inc}
 
@@ -1460,6 +1459,7 @@ var
 
   // due to its weird designs, this will take a lot of work (and time) for it to
   // work property
+
   {$I includes/SubManga/manga_information.inc}
 
   {$I includes/EsMangaHere/manga_information.inc}
@@ -1511,6 +1511,7 @@ var
   {$I includes/Komikid/manga_information.inc}
 
   // this site have 2 kind of cover page
+
   {$I includes/PecintaKomik/manga_information.inc}
 
   {$I includes/Mabuns/manga_information.inc}

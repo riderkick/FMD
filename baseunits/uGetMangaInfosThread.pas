@@ -90,12 +90,7 @@ procedure TGetMangaInfosThread.DoGetInfos;
       FInfo.isRemoveUnicode := MainForm.cbOptionPathConvert.Checked;
 
       infob := INFORMATION_NOT_FOUND;
-      try
-        infob := FInfo.GetInfoFromURL(website, URL, 2);
-      except
-        on E: Exception do
-          MainForm.ExceptionHandler(Self, E);
-      end;
+      infob := FInfo.GetInfoFromURL(website, URL, 2);
 
       if Self.IsTerminated then
         Exit;

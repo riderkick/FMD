@@ -249,11 +249,15 @@ begin
   except
     on E: Exception do
     begin
-      E.Message := E.Message + LineEnding +
-        '  CS      : ' + GetEnumName(TypeInfo(TCheckStyleType), Integer(checkStyle)) + LineEnding +
+      E.Message := E.Message + LineEnding + LineEnding +
+        '  Website : ' + manager.website + LineEnding +
+        '  CS      : ' + GetEnumName(TypeInfo(TCheckStyleType), Integer(checkStyle)) + LineEnding;
+      if checkStyle = CS_INFO then
+      begin
+        E.Message := E.Message +
         '  Title   : ' + manager.names[workPtr] + LineEnding +
-        '  URL     : ' + manager.links[workPtr] + LineEnding +
-        '  Website : ' + manager.website;
+        '  URL     : ' + manager.links[workPtr] + LineEnding;
+      end;
       MainForm.ExceptionHandler(Self, E);
     end;
   end;
