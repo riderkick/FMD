@@ -8,35 +8,36 @@
     l := TStringList.Create;
     parse := TStringList.Create;
     s := DecodeUrl(URL);
-    if RightStr(s, 2) <> '/1' then
-      s := s + '/1';
     s := FillMangaSiteHost(SENMANGA_ID, s);
-    Result := GetPage(TObject(l),
-      s,
-      manager.container.Manager.retryConnect);
-
-    Parser := THTMLParser.Create(PChar(l.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText := OnText;
-    Parser.Exec;
-    Parser.Free;
-
-    manager.container.PageNumber := 0;
-    if parse.Count > 0 then
+    Result := GetPage(TObject(l), s, manager.container.Manager.retryConnect);
+    if Result then
     begin
-      for i := 0 to parse.Count - 1 do
-      begin
-        if (Pos('<select', parse[i]) <> 0) and (Pos('name="page"', parse[i]) <> 0) then
-          isStartGetPageNumber := True;
-        if isStartGetPageNumber and (Pos('</select', parse[i]) > 0) then
-          Break;
-        if isStartGetPageNumber and (Pos('<option', parse[i]) > 0) then
-        begin
-          Inc(manager.container.PageNumber);
-          manager.container.PageLinks.Add('G');
-        end;
+      Parser := THTMLParser.Create(l.Text);
+      try
+        Parser.OnFoundTag := OnTag;
+        Parser.OnFoundText := OnText;
+        parse.Clear;
+        Parser.Exec;
+      finally
+        Parser.Free;
       end;
+      l.Free;
+
+      manager.container.PageNumber := 0;
+      if parse.Count > 0 then
+        for i := 0 to parse.Count - 1 do
+        begin
+          if (GetTagName(parse[i]) = 'select') and (Pos('cbo_wpm_pag', parse[i]) > 0) then
+            isStartGetPageNumber := True;
+          if isStartGetPageNumber then
+          begin
+            if GetTagName(parse[i]) = '/select' then
+              Break
+            else
+            if GetTagName(parse[i]) = 'option' then
+              Inc(manager.container.PageNumber);
+          end;
+        end;
     end;
     parse.Free;
-    l.Free;
   end;

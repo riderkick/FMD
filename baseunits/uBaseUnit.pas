@@ -1237,8 +1237,7 @@ function SitesWithoutPageLink(const website : String) : Boolean;
 begin
   Result := False;
   Result := SitesMemberOf(website, [
-    EHENTAI_ID,
-    SENMANGA_ID
+    EHENTAI_ID
     ]);
 end;
 

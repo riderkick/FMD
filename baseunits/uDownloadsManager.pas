@@ -789,7 +789,7 @@ var
 
   {$I includes/ScanManga/image_url.inc}
 
-  //{$I includes/SenManga/image_url.inc}
+  {$I includes/SenManga/image_url.inc}
 
   {$I includes/Starkana/image_url.inc}
 
@@ -960,9 +960,9 @@ begin
   else
   if manager.container.MangaSiteID = MANGACOW_ID then
     Result := GetMangaCowImageURL
-  //else
-  //if manager.container.MangaSiteID = SENMANGA_ID then
-  //  Result := GetSenMangaImageURL
+  else
+  if manager.container.MangaSiteID = SENMANGA_ID then
+    Result := GetSenMangaImageURL
   else
   if manager.container.MangaSiteID = TRUYENTRANHTUAN_ID then
     Result := GetTruyenTranhTuanImageURL
@@ -1233,8 +1233,6 @@ var
 
   {$I includes/MeinManga/image_url.inc}
 
-  {$I includes/SenManga/image_url.inc}
-
 begin
   lpath := CorrectPathSys(manager.container.DownloadInfo.SaveTo +
     manager.container.ChapterName[manager.container.CurrentDownloadChapterPtr]);
@@ -1261,9 +1259,6 @@ begin
   else
   if manager.container.MangaSiteID = MEINMANGA_ID then
     Result := GetMeinMangaImageURL
-  else
-  if manager.container.MangaSiteID = SENMANGA_ID then
-    Result := GetSenMangaImageURL
   else
     Result := SaveImage(Self,
       AHTTP,
