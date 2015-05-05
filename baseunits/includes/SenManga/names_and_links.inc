@@ -1,35 +1,35 @@
   function SenMangaGetNamesAndLinks: Byte;
   var
-    i: LongInt;
-    s: String;
+    i: Integer;
   begin
     Result := INFORMATION_NOT_FOUND;
     if not GetPage(TObject(Source), WebsiteRoots[SENMANGA_ID, 1] +
-      SENMANGA_BROWSER + '?order=title&page=' + IntToStr(StrToInt(URL) + 1) , 0) then
+      '/directory/all/any/last-added/' + IntToStr(StrToInt(URL) + 1) + '/', 3) then
     begin
       Result := NET_PROBLEM;
       Source.Free;
       Exit;
     end;
-    
-    parse.Clear;
-    Parser := THTMLParser.Create(PChar(Source.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText := OnText;
-    Parser.Exec;
-    Parser.Free;
-    
+
+    Parser := THTMLParser.Create(Source.Text);
+    try
+      Parser.OnFoundTag := OnTag;
+      Parser.OnFoundText := OnText;
+      parse.Clear;
+      Parser.Exec;
+    finally
+      Parser.Free;
+    end;
+    Source.Free;
+
     if parse.Count > 0 then
     begin
       for i := 0 to parse.Count - 1 do
-      begin
-        if (GetTagName(parse[i]) = 'span') and (GetVal(parse[i], 'class') = 'title') then
+        if (GetTagName(parse[i]) = 'a') and (GetVal(parse[i], 'class') = 'lst mng_det_pop') then
         begin
-          links.Add(RemoveHostFromURL(GetVal(parse[i - 2], 'href')));
-          names.Add(CommonStringFilter(parse[i + 1]));
+          links.Add(GetVal(parse[i], 'href'));
+          names.Add(CommonStringFilter(GetVal(parse[i], 'title')));
         end;
-      end;
       Result := NO_ERROR;
     end;
-    Source.Free;
   end;
