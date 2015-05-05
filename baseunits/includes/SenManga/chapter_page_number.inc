@@ -21,7 +21,6 @@
       finally
         Parser.Free;
       end;
-      l.Free;
 
       manager.container.PageNumber := 0;
       if parse.Count > 0 then
@@ -40,4 +39,5 @@
         end;
     end;
     parse.Free;
+    l.Free;
   end;
