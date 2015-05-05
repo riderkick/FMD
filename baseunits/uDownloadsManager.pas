@@ -71,6 +71,7 @@ type
       const Path, Name, prefix: String; const Reconnect: Cardinal): Boolean; overload;
 
     procedure Execute; override;
+    procedure DoTerminate; override;
   public
     // ID of the site
     manager: TTaskThread;
@@ -95,6 +96,7 @@ type
     procedure MainThreadRepaint;
     procedure MainThreadMessageDialog;
     procedure Execute; override;
+    procedure DoTerminate; override;
     procedure Compress;
     // show notification when download completed
     procedure ShowBaloon;
@@ -203,7 +205,6 @@ type
     procedure StopAllTasks;
     // Stop all download task inside a task before terminate the program.
     procedure StopAllDownloadTasksForExit;
-    procedure WaitForTerminated;
     // Swap 2 tasks.
     function Swap(const id1, id2 : Integer) : Boolean;
     // move a task up.
@@ -255,12 +256,6 @@ end;
 destructor TDownloadThread.Destroy;
 begin
   FHTTP.Free;
-  manager.CS_threads.Acquire;
-  try
-    manager.threads.Remove(Self);
-  finally
-    manager.CS_threads.Release;
-  end;
   inherited Destroy;
 end;
 
@@ -362,14 +357,25 @@ begin
     begin
       E.Message := E.Message + LineEnding +
         '  In TDownloadThread.Execute : ' + GetEnumName(TypeInfo(TFlagType), integer(checkStyle)) + LineEnding +
-        '  Title   : ' + manager.container.DownloadInfo.title + LineEnding +
-        '  Chapter : ' + manager.container.ChapterName[manager.container.CurrentDownloadChapterPtr] + LineEnding +
         '  Website : ' + manager.container.DownloadInfo.Website + LineEnding +
         '  URL     : ' + FillMangaSiteHost(manager.container.MangaSiteID,
-          manager.container.ChapterLinks[manager.container.CurrentDownloadChapterPtr]);
+          manager.container.ChapterLinks[manager.container.CurrentDownloadChapterPtr]) + LineEnding +
+        '  Title   : ' + manager.container.DownloadInfo.title + LineEnding +
+        '  Chapter : ' + manager.container.ChapterName[manager.container.CurrentDownloadChapterPtr] + LineEnding;
       MainForm.ExceptionHandler(Self, E);
     end;
   end;
+end;
+
+procedure TDownloadThread.DoTerminate;
+begin
+  manager.CS_threads.Acquire;
+  try
+    manager.threads.Remove(Self);
+  finally
+    manager.CS_threads.Release;
+  end;
+  inherited DoTerminate;
 end;
 
 function TDownloadThread.GetPageNumberFromURL(const URL: String): Boolean;
@@ -1155,10 +1161,9 @@ end;
 
 destructor TTaskThread.Destroy;
 begin
-  Stop;
-  container.ThreadState := False;
   threads.Free;
   CS_threads.Free;
+  container.ThreadState := False;
   inherited Destroy;
 end;
 
@@ -1283,8 +1288,7 @@ var
   s: String;
   mt: Integer;
 begin
-  if Terminated then
-    Exit;
+  if Terminated then Exit;
   // TODO: Ugly code, need to be fixed later
 
   //load advanced config if any
@@ -1312,7 +1316,7 @@ begin
 
   if container.PageLinks.Count > 0 then
   begin
-    s := Trim(container.PageLinks.Strings[container.WorkCounter]);
+    s := Trim(container.PageLinks[container.WorkCounter]);
     if ((Flag = CS_GETPAGELINK) and (s <> 'W')) or
       ((Flag = CS_DOWNLOAD) and (s = 'D')) then
     begin
@@ -1325,23 +1329,20 @@ begin
       Exit;
     end;
 
-    while threads.Count >= currentMaxThread do
-      Sleep(250); //slowing down the cicle(cpu usage)
+    while (not Terminated) and (threads.Count >= currentMaxThread) do
+      Sleep(250);
   end;
 
-  // main body of method
-  // Each thread will be assigned job based on the counter
-  if threads.Count < currentMaxThread then
+  if (not Terminated) and (threads.Count < currentMaxThread) then
   begin
     CS_threads.Acquire;
     try
+      container.WorkCounter := InterLockedIncrement(container.WorkCounter);
       threads.Add(TDownloadThread.Create);
       threads.Last.manager := Self;
       threads.Last.workCounter := container.WorkCounter;
       threads.Last.checkStyle := Flag;
       threads.Last.Start;
-
-      container.WorkCounter := InterLockedIncrement(container.WorkCounter);
       if Flag = CS_GETPAGELINK then
         container.CurrentPageNumber := InterLockedIncrement(container.CurrentPageNumber);
     finally
@@ -1354,7 +1355,7 @@ procedure TTaskThread.Execute;
 
   function CheckForPrepare: Boolean;
   var
-    i: Cardinal;
+    i: Integer;
   begin
     if container.PageLinks.Count = 0 then
       Exit(True);
@@ -1390,33 +1391,23 @@ procedure TTaskThread.Execute;
 
   procedure WaitForThreads;
   begin
-    while threads.Count > 0 do
+    while (not Terminated) and (threads.Count > 0) do
+    begin
+      WriteLog('TTaskThread WaitForThreads');
       Sleep(250);
-  end;
-
-  procedure TerminateThreads;
-  var
-    i: Cardinal;
-  begin
-    if threads.Count > 0 then
-      for i := threads.Count - 1 downto 0 do
-        threads[i].Terminate;
-    WaitForThreads;
+    end;
   end;
 
 var
-  j: Cardinal;
+  j: Integer;
   S, P: String;
 begin
   container.ThreadState := True;
   try
     while container.CurrentDownloadChapterPtr < container.ChapterLinks.Count do
     begin
-      if Terminated then
-      begin
-        TerminateThreads;
-        Exit;
-      end;
+      WaitForThreads;
+      if Terminated then Exit;
 
       //strip
       container.DownloadInfo.SaveTo := CorrectPathSys(container.DownloadInfo.SaveTo);
@@ -1430,7 +1421,6 @@ begin
           container.Status := STATUS_FAILED;
           container.DownloadInfo.Status := 'Failed to create dir! Too long?';
           Synchronize(MainThreadRepaint);
-          TerminateThreads;
           Exit;
         end;
       end;
@@ -1442,7 +1432,6 @@ begin
       // Get page number.
       if container.PageLinks.Count = 0 then
       begin
-        WaitForThreads;
         container.PageNumber := 0;
         Flag := CS_GETPAGENUMBER;
         container.WorkCounter := 0;
@@ -1458,12 +1447,8 @@ begin
         container.Status := STATUS_PREPARE;
         Synchronize(MainThreadRepaint);
         CheckOut;
-        if Terminated then
-        begin
-          TerminateThreads;
-          Exit;
-        end;
         WaitForThreads;
+        if Terminated then Exit;
       end;
 
       //Check file, if exist set mark 'D', otherwise 'W' or 'G' for dynamic image url
@@ -1508,16 +1493,14 @@ begin
         Synchronize(MainThreadRepaint);
         while container.WorkCounter < container.PageNumber do
         begin
-          if Terminated then
-          begin
-            TerminateThreads;
-            Exit;
-          end;
+          if Terminated then Exit;
           Checkout;
           container.DownloadInfo.iProgress :=
             InterLockedIncrement(container.DownloadInfo.iProgress);
         end;
         WaitForThreads;
+        if Terminated then Exit;
+
         //check if pagelink is found. Else set again to 'W'(some script return '')
         if container.PageLinks.Count > 0 then
         begin
@@ -1528,9 +1511,7 @@ begin
           end;
         end;
       end;
-
-      if Terminated then
-        Exit;
+      if Terminated then Exit;
 
       // download pages
       // If container doesn't have any image, we will skip the loop. Otherwise
@@ -1554,18 +1535,13 @@ begin
         Synchronize(MainThreadRepaint);
         while container.WorkCounter < container.PageLinks.Count do
         begin
-          if Terminated then
-          begin
-            TerminateThreads;
-            Exit;
-          end;
+          if Terminated then Exit;
           Checkout;
           container.DownloadInfo.iProgress :=
             InterLockedIncrement(container.DownloadInfo.iProgress);
         end;
         WaitForThreads;
-        if Terminated then
-          Exit;
+        if Terminated then Exit;
 
         //check if all page is downloaded
         if CheckForFinish then
@@ -1619,6 +1595,26 @@ begin
     on E: Exception do
       MainForm.ExceptionHandler(Self, E);
   end;
+end;
+
+procedure TTaskThread.DoTerminate;
+var
+  i: Integer;
+begin                      WriteLog('TTaskThread DoTerminate');
+  if threads.Count > 0 then
+  begin
+    CS_threads.Acquire;
+    try
+      for i := 0 to threads.Count - 1 do
+        threads[i].Terminate;
+    finally
+      CS_threads.Release;
+    end;
+    while threads.Count > 0 do
+      Sleep(16);
+  end;
+  Stop;
+  inherited DoTerminate;
 end;
 
 procedure TTaskThread.Stop(const check: Boolean = True);
@@ -2237,115 +2233,67 @@ end;
 
 procedure TDownloadManager.StopTask(const taskID: Integer;
   const isCheckForActive: Boolean = True);
-var
-  i: Integer;
 begin
-  try
-    // conditions
-    if taskID >= containers.Count then
-      Exit;
-
+  if taskID < containers.Count then
+  begin
     isReadyForExit := False;
-    // check and stop any active thread
+    containers.Items[taskID].Status := STATUS_STOP;
+    containers.Items[taskID].DownloadInfo.Status := stStop;
     if containers.Items[taskID].ThreadState then
     begin
-      if containers.Items[taskID].Thread.threads.Count > 0 then
-        for i := containers.Items[taskID].Thread.threads.Count - 1 downto 0 do
-          try
-            containers.Items[taskID].Thread.threads[i].Terminate;
-          except
-          end;
-      if not containers.Items[taskID].Thread.IsTerminated then
-        containers.Items[taskID].Thread.Terminate;
-    end
-    else
-    if (containers.Items[taskID].Status = STATUS_WAIT) then
-    begin
-      containers.Items[taskID].DownloadInfo.Status := stStop;
-      containers.Items[taskID].Status := STATUS_STOP;
+      containers.Items[taskID].Thread.Terminate;
+      //containers.Items[taskID].Thread.WaitFor;
     end;
-  except
-    on E: Exception do
-      MainForm.ExceptionHandler(Self, E);
+    if isCheckForActive then
+    begin
+      Backup;
+      CheckAndActiveTask;
+    end;
+    MainForm.vtDownloadFilters;
   end;
-
-  if isCheckForActive then
-  begin
-    Backup;
-    CheckAndActiveTask;
-  end;
-  MainForm.vtDownloadFilters;
 end;
 
 procedure TDownloadManager.StopAllTasks;
 var
-  i, j: Cardinal;
+  i: Integer;
 begin
-  if containers.Count = 0 then
-    Exit;
-  isReadyForExit := False;
-  // check and stop any active thread
-  for i := 0 to containers.Count - 1 do
+  if containers.Count > 0 then
   begin
-    if containers.Items[i].ThreadState then
+    isReadyForExit := False;
+    for i := 0 to containers.Count - 1 do
     begin
-      if containers.Items[i].Thread.threads.Count > 0 then
-        for j := containers.Items[i].Thread.threads.Count - 1 downto 0 do
-          containers.Items[i].Thread.threads[j].Terminate;
-      containers.Items[i].Thread.Terminate;
-    end
-    else
-    if containers.Items[i].Status = STATUS_WAIT then
-    begin
-      containers.Items[i].DownloadInfo.Status := stStop;
       containers.Items[i].Status := STATUS_STOP;
+      containers.Items[i].DownloadInfo.Status := stStop;
+      // stop any active threads
+      if containers.Items[i].ThreadState then
+        containers.Items[i].Thread.Terminate;
     end;
+    // wait for threads
+    for i := 0 to containers.Count - 1 do
+      if containers.Items[i].ThreadState then
+        containers.Items[i].Thread.WaitFor;
+    Backup;
+    MainForm.vtDownload.Repaint;
+    MainForm.vtDownloadFilters;
   end;
-  Backup;
-  MainForm.vtDownload.Repaint;
-  MainForm.vtDownloadFilters;
 end;
 
 procedure TDownloadManager.StopAllDownloadTasksForExit;
 var
-  i, j: Cardinal;
-begin
-  if containers.Count = 0 then
-    Exit;
-  try
-    isReadyForExit := True;
-    for i := 0 to containers.Count - 1 do
-    begin
-      if containers.Items[i].ThreadState then
-      begin
-        if containers.Items[i].Thread.threads.Count > 0 then
-          for j := containers.Items[i].Thread.threads.Count - 1 downto 0 do
-            containers.Items[i].Thread.threads[j].Terminate;
-        containers.Items[i].Thread.Terminate;
-      end;
-    end;
-  finally
-    Backup;
-  end;
-  WaitForTerminated;
-end;
-
-procedure TDownloadManager.WaitForTerminated;
-var
-  i: Cardinal;
+  i: Integer;
 begin
   if containers.Count > 0 then
   begin
     try
-      for i := containers.Count - 1 downto 0 do
+      isReadyForExit := True;
+      for i := 0 to containers.Count - 1 do
         if containers.Items[i].ThreadState then
-          try
-            containers.Items[i].Thread.WaitFor;
-          except
-          end;
-    except
-      on E: Exception do
-        MainForm.ExceptionHandler(Self, E);
+          containers.Items[i].Thread.Terminate;
+      for i := 0 to containers.Count - 1 do
+        if containers.Items[i].ThreadState then
+          containers.Items[i].Thread.WaitFor;
+    finally
+      Backup;
     end;
   end;
 end;
@@ -2398,34 +2346,24 @@ begin
 end;
 
 procedure TDownloadManager.RemoveTask(const taskID: Integer);
-var
-  i: Integer;
 begin
-  if taskID >= containers.Count then
-    Exit;
-  CS_DownloadManager_Task.Acquire;
-  try
-    // check and stop any active thread
-    if (containers.Items[taskID].Status = STATUS_DOWNLOAD) or
-      (containers.Items[taskID].Status = STATUS_PREPARE) then
-    begin
-      for i := 0 to containers.Items[taskID].Thread.threads.Count - 1 do
-        if Assigned(containers.Items[taskID].Thread.threads[i]) then
-          containers.Items[taskID].Thread.threads[i].Terminate;
-      containers.Items[taskID].Thread.Terminate;
-      containers.Items[taskID].Status := STATUS_STOP;
-    end
-    else
-    if containers.Items[taskID].Status = STATUS_WAIT then
-    begin
-      containers.Items[taskID].DownloadInfo.Status := stStop;
-      containers.Items[taskID].Status := STATUS_STOP;
+  if taskID < containers.Count then
+  begin
+    CS_DownloadManager_Task.Acquire;
+    try
+      if containers.Items[taskID].ThreadState then
+      begin
+        containers.Items[taskID].Status := STATUS_STOP;
+        containers.Items[taskID].Thread.Terminate;
+        containers.Items[taskID].Thread.WaitFor;
+      end;
+      containers.Items[taskID].Free;
+      containers.Delete(taskID);
+    finally
+      CS_DownloadManager_Task.Release;
     end;
-    containers.Delete(taskID);
-  finally
-    CS_DownloadManager_Task.Release;
+    CheckAndActiveTask;
   end;
-  CheckAndActiveTask;
 end;
 
 procedure TDownloadManager.RemoveAllFinishedTasks;
