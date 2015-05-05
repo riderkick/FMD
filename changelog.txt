@@ -8,6 +8,12 @@ https://www.mediafire.com/folder/3ccy2c7g36hp3/Fmd
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.8.11 (06-05-2015)
+[!*] Bug fixes and stability improvements
+[*] SenManga: rewrite all script
+[*] MangaPark: fix mangainfo
+[*] Various changes
+
 0.9.8.10 (29-04-2015)
 [+-] Replace MangaBird with MangaMint
 
