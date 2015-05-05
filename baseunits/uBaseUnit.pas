@@ -400,7 +400,7 @@ var
     ('PecintaKomik', 'http://www.pecintakomik.com'),
     ('HugeManga', 'http://hugemanga.com'),
     ('S2scanlations', 'http://s2scanlations.com'),
-    ('SenManga', 'http://raw.senmanga.com'),
+    ('SenManga', 'http://www.senmanga.com'),
     ('imanhua', 'http://www.imanhua.com'),
     ('Mabuns', 'http://www.mabuns.web.id'),
     ('MangaEsta', 'http://www.mangaesta.net'),
@@ -1191,7 +1191,8 @@ begin
     PORNCOMIXRE_ID,
     PORNCOMIXIC_ID,
     PORNXXXCOMICS_ID,
-    MANGAPARK_ID
+    MANGAPARK_ID,
+    SENMANGA_ID
     ]);
 end;
 
