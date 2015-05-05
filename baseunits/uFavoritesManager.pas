@@ -55,11 +55,11 @@ type
     procedure UpdateBtnCaption(Cap: String);
   end;
 
-
   { TFavoriteManager }
 
   TFavoriteManager = class
   private
+    CS_Favorites : TCriticalSection;
     FSortDirection: Boolean;
     FSortColumn: Cardinal;
     FIsAuto, FIsShowDialog,
@@ -81,12 +81,7 @@ type
     // All Favorites information
     favoriteInfo: array of TFavoriteInfo;
     // mangaInfo for generating download tasks
-    //mangaInfo: array of TMangaInfo;
     mangaInfo: array of TMangaInfo;
-
-    // Number of working thread
-    // For now we always set it to 1
-    numberOfThreads: Cardinal;
     // Working threads
     taskthread: TFavoriteTask;
     // Download Manager (passed from mainunit.pas)
@@ -290,7 +285,7 @@ end;
 constructor TFavoriteManager.Create;
 begin
   inherited Create;
-  numberOfThreads := 4;
+  CS_Favorites := TCriticalSection.Create;
   isRunning := False;
   favorites := TIniFile.Create(WORK_FOLDER + FAVORITES_FILE);
   favorites.CacheUpdates := True;
@@ -312,6 +307,7 @@ begin
       except
       end;
   SetLength(mangaInfo, 0);
+  CS_Favorites.Free;
   inherited Destroy;
 end;
 
@@ -697,9 +693,10 @@ end;
 procedure TFavoriteManager.Add(
   const title, currentChapter, downloadedChapterList, website, saveTo, link: String);
 begin
-  try
-    if IsMangaExist(title, website) then
+  if IsMangaExist(title, website) then
       Exit;
+  CS_Favorites.Acquire;
+  try
     Inc(Count);
     SetLength(favoriteInfo, Count);
     favoriteInfo[Count - 1].title := title;
@@ -708,24 +705,23 @@ begin
     favoriteInfo[Count - 1].saveTo := saveTo;
     favoriteInfo[Count - 1].Link := Link;
     favoriteInfo[Count - 1].downloadedChapterList := downloadedChapterList;
-    if ((MainForm.SilentThreadManager.ItemCount <= 2) or (Random(50) = 0)) and
-      (not isRunning) then
+    if not isRunning then
     begin
       Sort(sortColumn);
       Backup;
     end;
-  except
-    on E: Exception do
-      MainForm.ExceptionHandler(Self, E);
+  finally
+    CS_Favorites.Release;
   end;
 end;
 
 procedure TFavoriteManager.AddMerge(
   const title, currentChapter, downloadedChapterList, website, saveTo, link: String);
 begin
+  if IsMangaExist(title, website) then
+    Exit;
+  CS_Favorites.Acquire;
   try
-    if IsMangaExist(title, website) then
-      Exit;
     Inc(Count);
     SetLength(favoriteInfo, Count);
     favoriteInfo[Count - 1].title := title;
@@ -735,8 +731,7 @@ begin
     favoriteInfo[Count - 1].Link := Link;
     favoriteInfo[Count - 1].downloadedChapterList := downloadedChapterList;
   except
-    on E: Exception do
-      MainForm.ExceptionHandler(Self, E);
+    CS_Favorites.Release;
   end;
 end;
 
@@ -790,15 +785,19 @@ end;
 
 procedure TFavoriteManager.Remove(const pos: Cardinal; const isBackup: Boolean = True);
 begin
-  if isRunning then
-    Exit;
-  if pos >= Count then
-    Exit;
-  MoveLeft(pos);
-  SetLength(favoriteInfo, Count - 1);
-  Dec(Count);
-  if isBackup then
-    Backup;
+  if (not isRunning) and (pos < Count) then
+  begin
+    CS_Favorites.Acquire;
+    try
+      MoveLeft(pos);
+      SetLength(favoriteInfo, Count - 1);
+      Dec(Count);
+      if isBackup then
+        Backup;
+    finally
+      CS_Favorites.Release;
+    end;
+  end;
 end;
 
 procedure TFavoriteManager.Restore;
