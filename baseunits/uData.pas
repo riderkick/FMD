@@ -1869,7 +1869,7 @@ begin
     mangaInfo.authors := '';
 
   // check everything once more
-  mangaInfo.title := Trim(RemoveStringBreaks(HTMLEntitiesFilter(StringFilter(Trim(mangaInfo.title)))));
+  mangaInfo.title := Trim(RemoveStringBreaks(CommonStringFilter(mangaInfo.title)));
   mangaInfo.authors := Trim(RemoveStringBreaks(Trim(mangaInfo.authors)));
   mangaInfo.artists := Trim(RemoveStringBreaks(Trim(mangaInfo.artists)));
   mangaInfo.genres := Trim(RemoveStringBreaks(Trim(mangaInfo.genres)));
