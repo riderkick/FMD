@@ -1918,9 +1918,6 @@ var
 begin
   if vtMangaList.SelectedCount = 0 then
     Exit;
-  if vtMangaList.SelectedCount >= 5000 then
-    Exit;
-
   xNode := vtMangaList.GetFirst;
   for i := 0 to vtMangaList.RootNodeCount - 1 do
   begin
@@ -2378,8 +2375,7 @@ var
   mResult: TModalResult;
   mBtns: TMsgDlgButtons;
 begin
-  if (vtMangaList.SelectedCount = 0) or
-    (vtMangaList.SelectedCount >= 100) then
+  if vtMangaList.SelectedCount = 0 then
     Exit;
   try
     YesAll := False;
