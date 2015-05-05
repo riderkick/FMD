@@ -2560,9 +2560,9 @@ begin
         ZUncompressStream(HTTP.Document, mstream);
         HTTP.Document.Clear;
         HTTP.Document.LoadFromStream(mstream);
-      finally
-        mstream.Free;
+      except
       end;
+      mstream.Free;
     end;
     try
       if output is TStringList then
