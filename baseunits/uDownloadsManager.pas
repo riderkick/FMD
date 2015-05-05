@@ -1392,10 +1392,7 @@ procedure TTaskThread.Execute;
   procedure WaitForThreads;
   begin
     while (not Terminated) and (threads.Count > 0) do
-    begin
-      WriteLog('TTaskThread WaitForThreads');
       Sleep(250);
-    end;
   end;
 
 var
@@ -1600,7 +1597,7 @@ end;
 procedure TTaskThread.DoTerminate;
 var
   i: Integer;
-begin                      WriteLog('TTaskThread DoTerminate');
+begin
   if threads.Count > 0 then
   begin
     CS_threads.Acquire;
