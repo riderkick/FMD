@@ -425,8 +425,8 @@ type
       var Ghosted: Boolean; var ImageIndex: Integer);
     procedure vtDownloadGetText(Sender: TBaseVirtualTree; Node: PVirtualNode;
       Column: TColumnIndex; TextType: TVSTTextType; var CellText: String);
-    procedure vtDownloadHeaderClick(Sender: TVTHeader; Column: TColumnIndex;
-      Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+    procedure vtDownloadHeaderClick(Sender: TVTHeader; HitInfo: TVTHeaderHitInfo
+      );
     procedure vtDownloadInitNode(Sender: TBaseVirtualTree;
       ParentNode, Node: PVirtualNode; var InitialStates: TVirtualNodeInitStates);
     procedure vtDownloadKeyDown(Sender : TObject; var Key : Word;
@@ -437,9 +437,8 @@ type
     procedure vtFavoritesFreeNode(Sender: TBaseVirtualTree; Node: PVirtualNode);
     procedure vtFavoritesGetText(Sender: TBaseVirtualTree; Node: PVirtualNode;
       Column: TColumnIndex; TextType: TVSTTextType; var CellText: String);
-    procedure vtFavoritesHeaderClick(Sender: TVTHeader; Column: TColumnIndex;
-      Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
-
+    procedure vtFavoritesHeaderClick(Sender: TVTHeader;
+      HitInfo: TVTHeaderHitInfo);
     procedure vtFavoritesInitNode(Sender: TBaseVirtualTree;
       ParentNode, Node: PVirtualNode; var InitialStates: TVirtualNodeInitStates);
     procedure vtMangaListChange(Sender: TBaseVirtualTree; Node: PVirtualNode);
@@ -3323,23 +3322,22 @@ begin
 end;
 
 procedure TMainForm.vtDownloadHeaderClick(Sender: TVTHeader;
-  Column: TColumnIndex; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+  HitInfo: TVTHeaderHitInfo);
 begin
-  //Exit; //Disable for a while
-  if DLManager.containers.Count < 2 then
-    Exit;
-  if Column = 2 then
-    Exit;
-  DLManager.SortDirection := not DLManager.SortDirection;
-  //DLManager.Sort(Column);
-  DLManager.SortNatural(Column);    //Natural Sorting
-  vtDownload.Header.SortColumn := Column;
-
-  vtDownload.Header.SortDirection := TSortDirection(DLManager.SortDirection);
-  vtDownload.Repaint;
-
-  options.WriteInteger('misc', 'SortDownloadColumn', vtDownload.Header.SortColumn);
-  options.WriteBool('misc', 'SortDownloadDirection', DLManager.SortDirection);
+  if (not (HitInfo.Column = 2)) and (DLManager.containers.Count > 1) then
+  begin
+    with HitInfo do try
+      DLManager.SortDirection := not DLManager.SortDirection;
+      vtDownload.Header.SortDirection := TSortDirection(DLManager.SortDirection);
+      vtDownload.Header.SortColumn := Column;
+      //DLManager.Sort(Column);
+      DLManager.SortNatural(Column);    //Natural Sorting
+      options.WriteInteger('misc', 'SortDownloadColumn', vtDownload.Header.SortColumn);
+      options.WriteBool('misc', 'SortDownloadDirection', DLManager.SortDirection);
+    finally
+      vtDownload.Repaint;
+    end;
+  end;
 end;
 
 procedure TMainForm.vtDownloadInitNode(Sender: TBaseVirtualTree;
@@ -3422,30 +3420,21 @@ begin
 end;
 
 procedure TMainForm.vtFavoritesHeaderClick(Sender: TVTHeader;
-  Column: TColumnIndex; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+  HitInfo: TVTHeaderHitInfo);
 begin
-  if (not favorites.isRunning) and (favorites.Count > 1) then
+  if (not (HitInfo.Column = 0)) and (not favorites.isRunning) and (favorites.Count > 1) then
   begin
-    case Column of
-      1: ;
-      2: ;
-      3: ;
-      4: ;
-      else
-        Exit;
-    end;
     favorites.isRunning := True;
-    try
+    with HitInfo do try
       favorites.sortDirection := not favorites.sortDirection;
-      //favorites.Sort(Column);
-      favorites.SortNatural(Column);
       vtFavorites.Header.SortColumn := Column;
       vtFavorites.Header.SortDirection := TSortDirection(favorites.sortDirection);
-      UpdateVtFavorites;
-
+      //favorites.Sort(Column);
+      favorites.SortNatural(Column);
       options.WriteInteger('misc', 'SortFavoritesColumn', vtFavorites.Header.SortColumn);
       options.WriteBool('misc', 'SortFavoritesDirection', favorites.sortDirection);
     finally
+      UpdateVtFavorites;
       favorites.isRunning := False;
     end;
   end;

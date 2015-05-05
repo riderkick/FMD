@@ -1407,6 +1407,7 @@ object MainForm: TMainForm
         IncrementalSearch = isVisibleOnly
         Margin = 0
         ParentFont = False
+        ParentShowHint = False
         PopupMenu = pmFavorites
         TabOrder = 0
         TextMargin = 2
