@@ -14,7 +14,7 @@ unit uData;
 interface
 
 uses
-  Classes, SysUtils, uBaseUnit, httpsend;
+  Classes, SysUtils, uBaseUnit, FileUtil, httpsend;
 
 type
   TDataProcess = class(TObject)
@@ -392,6 +392,7 @@ begin
   if Data.Count = 0 then
     Exit;
   //QuickSortData(Data);
+  ForceDirectoriesUTF8(DATA_FOLDER);
   Data.SaveToFile(DATA_FOLDER + website + DATA_EXT);
 end;
 
@@ -399,7 +400,8 @@ procedure TDataProcess.SaveToFile;
 begin
   if Data.Count = 0 then
     Exit;
-  QuickSortData(Data);
+  //QuickSortData(Data);
+  ForceDirectoriesUTF8(DATA_FOLDER);
   Data.SaveToFile(Filename + DATA_EXT);
 end;
 
