@@ -34,6 +34,7 @@
     if parse.Count > 0 then
     begin
       mangaInfo.genres := '';
+      mangaInfo.status := '';
       p := 0;
       for i := 0 to parse.Count - 1 do
       begin
@@ -57,13 +58,14 @@
           if Trim(parse[i + 1]) = 'Artist' then
             mangaInfo.artists := parse[i + 5];
           //status
-          if Trim(parse[i + 1]) = 'Status' then
-          begin
-            mangaInfo.status := Trim(parse[i + 5]);
-            if mangaInfo.status = 'Completed' then
-              mangaInfo.status := '0'
-            else
-              mangaInfo.status := '1';
+          if mangaInfo.status = '' then
+            if Trim(parse[i + 1]) = 'Status' then
+            begin
+              mangaInfo.status := Trim(parse[i + 5]);
+              if mangaInfo.status = 'Completed' then
+                mangaInfo.status := '0'
+              else
+                mangaInfo.status := '1';
           end;
           //genres
           if Trim(parse[i + 1]) = 'Category' then
