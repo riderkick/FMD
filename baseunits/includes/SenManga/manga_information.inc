@@ -54,8 +54,8 @@
           if Trim(parse[i + 1]) = 'Author' then
             mangaInfo.authors := parse[i + 5];
           //artist
-          if Trim(parse[i + 1]) = 'Arstist' then
-            mangaInfo.authors := parse[i + 5];
+          if Trim(parse[i + 1]) = 'Artist' then
+            mangaInfo.artists := parse[i + 5];
           //status
           if Trim(parse[i + 1]) = 'Status' then
           begin
