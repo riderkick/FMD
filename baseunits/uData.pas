@@ -1609,6 +1609,8 @@ var
 
   {$I includes/MangaAt/manga_information.inc}
 
+  {$I includes/SenMangaRAW/manga_information.inc}
+
 begin
   Source := TStringList.Create;
   mangaInfo.coverLink := '';
@@ -1855,6 +1857,9 @@ begin
   else
   if website = GetMangaSiteName(MANGAAT_ID) then
     Result := GetMangaAtInfoFromURL
+  else
+  if website = GetMangaSiteName(SENMANGARAW_ID) then
+    Result := GetSenMangaRAWInfoFromURL
   else
   begin
     Source.Free;

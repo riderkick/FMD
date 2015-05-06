@@ -330,6 +330,7 @@ const
   MANGAKU_ID             = 89;
   ACADEMYVN_ID           = 90;
   MANGAAT_ID             = 91;
+  SENMANGARAW_ID         = 92;
 
 var
   FMD_VERSION_NUMBER: String = '';
@@ -364,7 +365,7 @@ var
   SEPERATOR: String = '!%~';
   SEPERATOR2: String = '~%!';
 
-  WebsiteRoots: array [0..91] of array [0..1] of string = (
+  WebsiteRoots: array [0..92] of array [0..1] of string = (
     ('AnimeA', 'http://manga.animea.net'),
     ('MangaHere', 'http://www.mangahere.co'),
     ('MangaInn', 'http://www.mangainn.me'),
@@ -456,7 +457,8 @@ var
     ('MangaSee', 'http://mangasee.co'),
     ('MangaKu', 'http://mangaku.web.id'),
     ('AcademyVN', 'http://truyen.academyvn.com'),
-    ('MangaAt', 'http://www.mangaat.com')
+    ('MangaAt', 'http://www.mangaat.com'),
+    ('SenMangaRAW', 'http://raw.senmanga.com')
     );
 
   BROWSER_INVERT: Boolean = False;
@@ -2488,6 +2490,9 @@ begin
     end;
   end
   else
+  if Pos(WebsiteRoots[SENMANGARAW_ID, 1], URL) > 0 then
+    HTTP.UserAgent := UA_GoogleBot
+  else
   if (Pos('imgmega.com/', URL) > 0) then
   begin
     s := ReplaceRegExpr('^.*\w+\.\w+/(\w+)/.*$', URL, '$1', True);
@@ -2734,6 +2739,9 @@ begin
     (mangaSiteID <> MEINMANGA_ID) and
     (mangaSiteID <> PECINTAKOMIK_ID) then
     HTTP.UserAgent := UA_Chrome;
+
+  if mangaSiteID = SENMANGARAW_ID then
+    HTTP.UserAgent := UA_GoogleBot;
 
   {$IFDEF DOWNLOADER}
   if checkTerminate then Exit;

@@ -513,6 +513,8 @@ var
 
   {$I includes/MangaAt/chapter_page_number.inc}
 
+  {$I includes/SenMangaRAW/chapter_page_number.inc}
+
 begin
   manager.container.PageNumber := 0;
   if manager.container.MangaSiteID = ANIMEA_ID then
@@ -710,6 +712,9 @@ begin
   else
   if manager.container.MangaSiteID = MANGAAT_ID then
     Result := GetMangaAtPageNumber
+  else
+  if manager.container.MangaSiteID = SENMANGARAW_ID then
+    Result := GetSenMangaRAWPageNumber
   else
     Result := False;
 end;
@@ -1243,6 +1248,8 @@ var
 
   {$I includes/MeinManga/image_url.inc}
 
+  {$I includes/SenMangaRAW/image_url.inc}
+
 begin
   lpath := CorrectPathSys(manager.container.DownloadInfo.SaveTo +
     manager.container.ChapterName[manager.container.CurrentDownloadChapterPtr]);
@@ -1261,6 +1268,10 @@ begin
   TURL := manager.container.PageLinks[workCounter];
   if (TURL = '') or (TURL = 'W') or (TURL = 'D') then
     Exit;
+
+  FHTTP.Clear;
+  if manager.container.MangaSiteID = SENMANGARAW_ID then
+    Result := GetSenMangaRAWImageURL;
 
   TURL := DecodeURL(TURL); //decode first to avoid double encoded
   TURL := EncodeTriplet(TURL, '%', URLSpecialChar + ['#']);
