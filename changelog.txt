@@ -8,6 +8,13 @@ https://www.mediafire.com/folder/3ccy2c7g36hp3/Fmd
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.9.1 (07-05-2015)
+[!*] Updater: Bug fixes
+[+] Added SenMangaRAW, no update list at the moment. 
+    You can use old SenManga data (Dwonload mangalist from server)
+[*] SenManga: fix manga info
+[*] Various changes
+
 0.9.9.0 (06-05-2015)
 [!*] Bug fixes and stability improvements
 [*] SenManga: rewrite all script
