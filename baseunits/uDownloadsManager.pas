@@ -226,6 +226,10 @@ type
     property SortColumn: Cardinal read FSortColumn write FSortColumn;
   end;
 
+resourcestring
+  RS_FailedToCreateDirTooLong = 'Failed to create dir! Too long?';
+  RS_FailedTryResumeTask = 'Failed, try resuming this task!';
+
 implementation
 
 uses
@@ -1416,7 +1420,7 @@ begin
         if not ForceDirectoriesUTF8(S) then
         begin
           container.Status := STATUS_FAILED;
-          container.DownloadInfo.Status := 'Failed to create dir! Too long?';
+          container.DownloadInfo.Status := RS_FailedToCreateDirTooLong;
           Synchronize(MainThreadRepaint);
           Exit;
         end;
@@ -1571,7 +1575,7 @@ begin
     if container.FailedChapterLinks.Count > 0 then
     begin
       container.Status := STATUS_FAILED;
-      container.DownloadInfo.Status := 'Failed, try resuming this task!';
+      container.DownloadInfo.Status := RS_FailedTryResumeTask;
       container.DownloadInfo.Progress := '';
       container.CurrentDownloadChapterPtr := 0;
 
