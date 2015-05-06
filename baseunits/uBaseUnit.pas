@@ -2764,7 +2764,7 @@ begin
     {$ENDIF}
 
     HTTPHeader.Values['Referer'] := ' ' + URL;
-    s := GetHeaderValue(HTTP.Headers, 'location');
+    s := Trim(HTTP.Headers.Values['Location']);
     s := TrimLeftChar(s, ['/', ':']);
     if s <> '' then
     begin
