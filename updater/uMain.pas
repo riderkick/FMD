@@ -9,9 +9,9 @@ uses
   cthreads,
   cmem,
   {$endif}
-  Classes, windows, SysUtils, zipper, ShellApi, FileUtil, UTF8Process, Forms,
-  Dialogs, ComCtrls, StdCtrls, Clipbrd, ExtCtrls, RegExpr, IniFiles, process,
-  USimpleException, httpsend, blcksock, ssl_openssl;
+  Classes, SysUtils, zipper, FileUtil, UTF8Process, Forms, Dialogs, ComCtrls,
+  StdCtrls, Clipbrd, ExtCtrls, DefaultTranslator, RegExpr,
+  IniFiles, process, USimpleException, httpsend, blcksock, ssl_openssl;
 
 type
 
@@ -101,31 +101,33 @@ const
   mf_data_link = 'https://www.mediafire.com/folder/fwa8eomz80uk1/Data';
 
 resourcestring
-  ST_InvalidURL = 'Invalid URL!';
-  ST_Response = 'Response';
-  ST_AnErrorOccured = 'An error occured when trying to download file.';
-  ST_FileNotFound = 'File not found!';
-  ST_ServerError = 'Server response error!';
-  ST_LoadingPage = 'Loading page...';
-  ST_FailedLoadPage = 'Failed loading page!';
-  ST_RetryLoadPage = 'Retry loading page... ';
-  ST_Redirected = 'Redirected...';
-  ST_Download = 'Downloading';
-  ST_FailedDownloadPage = 'Failed downloading file!';
-  ST_RetryDownload = 'Retry downloading';
-  ST_SaveFile = 'Saving file... ';
-  ST_WaitMainApp = 'Waiting main app to close...';
-  ST_UnpackFile = 'Unpacking file';
-  ST_Finished = 'Finished.';
-  ST_ErrorCheckAntiVirus = 'Error saving file, check your AntiVirus!';
-  ST_FileNotFound_mfdatalink =
+  RS_InvalidURL = 'Invalid URL!';
+  RS_Response = 'Response';
+  RS_AnErrorOccured = 'An error occured when trying to download file.';
+  RS_FileNotFound = 'File not found!';
+  RS_ServerError = 'Server response error!';
+  RS_LoadingPage = 'Loading page...';
+  RS_FailedLoadPage = 'Failed loading page!';
+  RS_RetryLoadPage = 'Retry loading page[%d]...';
+  RS_Redirected = 'Redirected...';
+  RS_Downloading = 'Downloading [%s]...';
+  RS_FailedDownloadPage = 'Failed downloading file!';
+  RS_RetryDownloading = 'Retry downloading[%d] [%s]...';
+  RS_SaveFile = 'Saving file... ';
+  RS_WaitMainApp = 'Waiting main app to close...';
+  RS_UnpackFile = 'Unpacking file [%s]...';
+  RS_Finished = 'Finished.';
+  RS_ErrorCheckAntiVirus = 'Error saving file, check your AntiVirus!';
+  RS_FileNotFound_mfdatalink =
     'File not found!' + LineEnding +
     'This site probably have been added to unofficial build.' + LineEnding +
     LineEnding +
     'Remedy:' + LineEnding +
-    'Build you manga list from scratch or download manually from this link:';
-  ST_LinkCopiedToClipboard = 'Link copied to clipboard!';
-  ST_7zNotFound = 'Can''t extract file because 7za.exe not found!';
+    'Build you manga list from scratch or download manually from this link:' +
+    LineEnding +
+    '%s' + LineEnding +
+    'Link copied to clipboard!';
+  RS_7zNotFound = 'Can''t extract file because 7za.exe not found!';
 
 implementation
 
@@ -149,37 +151,6 @@ begin
   begin
     Result[Length(Result)] := '-';
   end;
-end;
-
-function RunAsAdmin(path, params: String; showWindow: Integer = SW_SHOWNORMAL;
-    isPersistent: Boolean = False): Boolean;
-var
- {$IFDEF WINDOWS}
-  sei: TShellExecuteInfoA;
- {$ELSE}
-  Process: TProcessUTF8;
- {$ENDIF}
-begin
-  {$IFDEF WINDOWS}
-  FillChar(sei, SizeOf(sei), 0);
-  sei.cbSize := SizeOf(sei);
-  sei.Wnd := 0;
-  sei.fMask := SEE_MASK_FLAG_DDEWAIT or SEE_MASK_FLAG_NO_UI;
-  if isPersistent then
-    sei.fMask := sei.fMask or SEE_MASK_NOCLOSEPROCESS;
-  sei.lpVerb := 'runas';
-  sei.lpFile := PAnsiChar(path);
-  sei.lpParameters := PAnsiChar(params);
-  sei.nShow := showWindow;
-  Result := ShellExecuteExA(@sei);
-  if isPersistent then
-    WaitForSingleObject(sei.hProcess, INFINITE);
-  {$ELSE}
-  Process := TProcessUTF8.Create(nil);
-  Process.CommandLine := path + ' ' + params;
-  Process.Execute;
-  Process.Free;
-  {$ENDIF}
 end;
 
 function RunExternalProcess(Exe: String; Params: array of String; ShowWind: Boolean = True;
@@ -269,7 +240,7 @@ begin
   FHTTP := THTTPSend.Create;
   FHTTP.Sock.OnStatus := @SockOnStatus;
   FHTTP.Sock.OnHeartbeat := @SockOnHeartBeat;
-  FHTTP.Sock.HeartbeatRate := 500;
+  FHTTP.Sock.HeartbeatRate := 250;
   FTotalSize := 0;
   FCurrentSize := 0;
   URL := '';
@@ -317,6 +288,7 @@ var
   barPos: Integer;
   prgText: string;
 begin
+  if Terminated then Exit;
   if FCurrentSize > 0then
   begin
     if FTotalSize > 0 then
@@ -349,6 +321,7 @@ end;
 procedure TDownloadThread.SockOnStatus(Sender :TObject; Reason :THookSocketReason;
   const Value :string);
 begin
+  if Terminated then Exit;
   if Pos('Content-Length: ', FHTTP.Headers.Text) > 0 then
     FTotalSize := StrToIntDef(HeaderByName(FHTTP.Headers, 'Content-Length'), 0);;
   case Reason of
@@ -367,7 +340,7 @@ procedure TDownloadThread.UZipOnStartFile(Sender :TObject; const AFileName :stri
 begin
   if FileExistsUTF8(AFileName) then
     DeleteFileUTF8(AFileName);
-  UpdateStatus(ST_UnpackFile + ' [' + ExtractFileName(AFileName) + ']...');
+  UpdateStatus(Format(RS_UnpackFile, [ExtractFileName(AFileName)]));
 end;
 
 procedure TDownloadThread.Execute;
@@ -417,10 +390,15 @@ procedure TDownloadThread.Execute;
   end;
 
 var
-  regx                  :TRegExpr;
-  ctry                  :cardinal;
-  Sza, rurl, fname,
-  sproject, sdir, sfile :string;
+  regx      :TRegExpr;
+  i, ctry   :Integer;
+  Sza,
+  rurl,
+  fname,
+  sproject,
+  sdir,
+  sfile     :String;
+  st        :TStringList;
 begin
   URL := Trim(URL);
   regx := TRegExpr.Create;
@@ -437,7 +415,7 @@ begin
       if not regx.Exec(URL) then
       begin
         regx.Free;
-        UpdateStatus('Invalid URL');
+        UpdateStatus(RS_InvalidURL);
         Exit;
       end;
       sproject := regx.Replace(URL, '$1', True);
@@ -462,43 +440,53 @@ begin
     end;
 
     //**loading page
-    UpdateStatus(ST_LoadingPage);
+    UpdateStatus(RS_LoadingPage);
     ctry := 0;
     while (not FHTTP.HTTPMethod('HEAD', rurl)) or
-      (FHTTP.ResultCode >= 400) or (FHTTP.ResultCode < 100) do
+      (FHTTP.ResultCode >= 300) or (FHTTP.ResultCode < 100) do
     begin
-      if Self.Terminated then
-        Break;
+      if Self.Terminated then Break;
+      if (FHTTP.ResultCode >= 500) or (FHTTP.ResultCode < 100) then
+      begin
+        if ctry >= MaxRetry then
+        begin
+          UpdateStatus(RS_FailedLoadPage);
+          ShowErrorMessage(RS_FailedLoadPage + LineEnding + LineEnding +
+            RS_Response + ':' + LineEnding +
+            IntToStr(FHTTP.ResultCode) + ' ' + FHTTP.ResultString);
+          Break;
+        end;
+        Inc(ctry);
+        UpdateStatus(Format(RS_RetryLoadPage, [ctry]));
+      end
+      else
       if (FHTTP.ResultCode >= 400) and (FHTTP.ResultCode < 500) then
       begin
-        UpdateStatus(ST_FileNotFound);
+        UpdateStatus(RS_FileNotFound);
         if _UpdApp then
-          ShowErrorMessage(ST_FileNotFound + LineEnding + LineEnding +
-            ST_Response + ':' + LineEnding +
+          ShowErrorMessage(RS_FileNotFound + LineEnding + LineEnding +
+            RS_Response + ':' + LineEnding +
             IntToStr(FHTTP.ResultCode) + ' ' + FHTTP.ResultString)
         else
         begin
           Clipboard.AsText := mf_data_link;
-          ShowErrorMessage(ST_FileNotFound_mfdatalink + LineEnding + mf_data_link +
-            LineEnding + ST_LinkCopiedToClipboard);
+          ShowErrorMessage(Format(RS_FileNotFound_mfdatalink, [mf_data_link]));
         end;
         Break;
-      end;
-      if ctry >= MaxRetry then
+      end
+      else
+      if FHTTP.ResultCode >= 300 then
       begin
-        UpdateStatus(ST_FailedLoadPage);
-        ShowErrorMessage(ST_FailedLoadPage + LineEnding + LineEnding +
-          ST_Response + ':' + LineEnding +
-          IntToStr(FHTTP.ResultCode) + ' ' + FHTTP.ResultString);
-        Break;
+        UpdateStatus(RS_Redirected);
+        FHTTP.Headers.Add('Referer: ' + rurl);
+        rurl := HeaderByName(FHTTP.Headers, 'location: ');
       end;
-      Inc(ctry);
-      UpdateStatus(ST_RetryLoadPage + '(' + IntToStr(ctry) + ')');
       FHTTP.Clear;
     end;
 
-    if (FHTTP.ResultCode > 300) or isSFURL then
+    if (FHTTP.ResultCode >= 300) or isSFURL then
     begin
+      UpdateStatus(RS_Redirected);
       rurl := HeaderByName(FHTTP.Headers, 'location: ');
       if isSFURL then
       begin
@@ -513,7 +501,7 @@ begin
     end;
 
     //**download file
-    UpdateStatus(ST_Download + ' [' + FileName + ']...');
+    UpdateStatus(Format(RS_Downloading, [FileName]));
     if (FHTTP.ResultCode >= 100) and (FHTTP.ResultCode < 400) then
     begin
       ctry := 0;
@@ -521,44 +509,51 @@ begin
       FHTTP.Headers.Add('Accept: */*');
       FHTTP.Headers.Add('Referer: ' + URL);
       while (not FHTTP.HTTPMethod('GET', rurl)) or
-        (FHTTP.ResultCode >= 400) do
+        (FHTTP.ResultCode >= 300) do
       begin
-        if Self.Terminated then
-          Break;
-        if (FHTTP.ResultCode >= 400) and (FHTTP.ResultCode < 500) then         
+        if Self.Terminated then Break;
+        if (FHTTP.ResultCode >= 500) or (FHTTP.ResultCode < 100) then
         begin
-          UpdateStatus(ST_FileNotFound);
+          if ctry >= MaxRetry then
+          begin
+            UpdateStatus(RS_FailedDownloadPage);
+            ShowErrorMessage(RS_AnErrorOccured + LineEnding + LineEnding +
+              RS_Response + ':' + LineEnding +
+              IntToStr(FHTTP.ResultCode) + ' ' + FHTTP.ResultString);
+            Break;
+          end;
+          Inc(ctry);
+          UpdateStatus(Format(RS_RetryDownloading, [ctry, FileName]));
+        end
+        else
+        if (FHTTP.ResultCode >= 400) and (FHTTP.ResultCode < 500) then
+        begin
+          UpdateStatus(RS_FileNotFound);
           if _UpdApp then
-            ShowErrorMessage(ST_FileNotFound + LineEnding + LineEnding +
-              ST_Response + ':' + LineEnding +
+            ShowErrorMessage(RS_FileNotFound + LineEnding + LineEnding +
+              RS_Response + ':' + LineEnding +
               IntToStr(FHTTP.ResultCode) + ' ' + FHTTP.ResultString)
           else
           begin
             Clipboard.AsText := mf_data_link;
-            ShowErrorMessage(ST_FileNotFound_mfdatalink + LineEnding + mf_data_link +
-              LineEnding + ST_LinkCopiedToClipboard);
+            ShowErrorMessage(Format(RS_FileNotFound_mfdatalink, [mf_data_link]));
           end;
           Break;
-        end;
-        if ctry >= MaxRetry then
+        end
+        else
+        if FHTTP.ResultCode >= 300 then
         begin
-          UpdateStatus(ST_FailedDownloadPage);
-          ShowErrorMessage(ST_AnErrorOccured + LineEnding + LineEnding +
-            ST_Response + ':' + LineEnding +
-            IntToStr(FHTTP.ResultCode) + ' ' + FHTTP.ResultString);
-          Break;
+          FHTTP.Headers.Add('Referer: ' + rurl);
+          rurl := HeaderByName(FHTTP.Headers, 'location: ');
         end;
-        Inc(ctry);
-        UpdateStatus(ST_RetryDownload + ' [' + FileName + ']... ' + '(' +
-          IntToStr(ctry) + ')');
         FHTTP.Clear;
       end;
     end;
 
     //**save and unpack file
-    if (not Self.Terminated) and 
+    if (not Self.Terminated) and
       (FHTTP.ResultCode >= 100) and (FHTTP.ResultCode < 300) and
-      (FCurrentSize >= FTotalSize) then      
+      (FCurrentSize >= FTotalSize) then
     begin
       fname := DirPath + DirectorySeparator + FileName;
       if FileExistsUTF8(fname) then
@@ -566,19 +561,28 @@ begin
 
       if ForceDirectoriesUTF8(DirPath) then
       begin
-        UpdateStatus(ST_SaveFile);
+        UpdateStatus(RS_SaveFile);
         FHTTP.Document.SaveToFile(fname);
       end;
       if not FileExistsUTF8(fname) then
-        ShowErrorMessage(ST_ErrorCheckAntiVirus);
+        ShowErrorMessage(RS_ErrorCheckAntiVirus);
 
       if Extract and FileExistsUTF8(fname) then
       begin
-        UpdateStatus(ST_UnpackFile);
+        UpdateStatus(RS_UnpackFile);
         Sza := GetCurrentDirUTF8 + DirectorySeparator + '7za.exe';
         if _UpdApp and
           FileExistsUTF8(GetCurrentDirUTF8 + DirectorySeparator + '7za.exe') then
           begin
+            st := TStringList.Create;
+            try
+              FindAllFiles(st, GetCurrentDirUTF8, '*.dbg', False);
+              if st.Count > 0 then
+                for i := 0 to st.Count - 1 do
+                  DeleteFileUTF8(st[i]);
+            finally
+              st.Free;
+            end;
             CopyFile(GetCurrentDirUTF8 + DirectorySeparator + '7za.exe',
               GetCurrentDirUTF8 + DirectorySeparator + 'old_7za.exe');
             Sza := GetCurrentDirUTF8 + DirectorySeparator + 'old_7za.exe';
@@ -601,18 +605,13 @@ begin
         begin
           if FileExistsUTF8(Sza) then
           begin
-            {$IFDEF USEADMIN}
-            RunAsAdmin(Sza, ' x ' + fname + ' -o' + AnsiQuotedStr(DirPath, '"') +
-              ' -aoa', SW_HIDE, True);
-            {$ELSE}
             RunExternalProcess(Sza, ['x', fname, '-o' +
               AnsiQuotedStr(DirPath, '"'), '-aoa'], False, False);
-            {$ENDIF}
-            Sleep(100);
+            Sleep(250);
             DeleteFileUTF8(fname);
           end
           else
-            ShowErrorMessage(ST_7zNotFound);
+            ShowErrorMessage(RS_7zNotFound);
         end;
         if FileExistsUTF8(GetCurrentDirUTF8 + DirectorySeparator + 'old_7za.exe') then
           if FileExistsUTF8(GetCurrentDirUTF8 + DirectorySeparator + '7za.exe') then
@@ -622,13 +621,9 @@ begin
               GetCurrentDirUTF8 + DirectorySeparator + '7za.exe');
       end;
     end;
-    UpdateStatus(ST_Finished);
+    UpdateStatus(RS_Finished);
     if (not Self.Terminated) and _UpdApp and (_LaunchApp <> '') then
-      {$IFDEF USEADMIN}
-      RunAsAdmin(_LaunchApp, '');
-      {$ELSE}
       RunExternalProcess(_LaunchApp, [''], True, True);
-      {$ENDIF}
   except
     on E: Exception do
       frmMain.ExceptionHandler(Self, E);
@@ -660,6 +655,7 @@ begin
     dl.Terminate;
     dl.WaitFor;
   end;
+  CloseAction := caFree;
 end;
 
 procedure TfrmMain.FormCreate(Sender :TObject);
@@ -668,11 +664,6 @@ var
 begin
   Randomize;
   InitSimpleExceptionHandler(ChangeFileExt(Application.ExeName, '.log'));
-  lbStatus.Caption := 'Waiting...';
-  lbProgress.Caption := '';
-  edURL.Clear;
-  edFilename.Clear;
-
   //load proxy config from fmd
   config := TIniFile.Create('config/config.ini');
   try
@@ -764,7 +755,7 @@ begin
     end
     else
     begin
-      MessageDlg(Application.Title, ST_InvalidURL, mtError, [mbOK], 0);
+      MessageDlg(Application.Title, RS_InvalidURL, mtError, [mbOK], 0);
       Self.Close;
     end;
   end;

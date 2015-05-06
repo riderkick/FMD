@@ -12,13 +12,14 @@
       <Icon Value="0"/>
     </General>
     <i18n>
-      <EnableI18N LFM="False"/>
+      <EnableI18N Value="True"/>
+      <OutDir Value="languages"/>
     </i18n>
     <VersionInfo>
       <UseVersionInfo Value="True"/>
       <MajorVersionNr Value="2"/>
       <MinorVersionNr Value="1"/>
-      <RevisionNr Value="1"/>
+      <RevisionNr Value="2"/>
       <Attributes pvaPrivateBuild="True"/>
       <StringTable FileDescription="Updater for Free Manga Downloader" LegalCopyright="©2015 FMD Project Team" OriginalFilename="updater.exe" ProductName="Updater" ProductVersion="$BuildMode()" PrivateBuild="Cholif"/>
     </VersionInfo>
@@ -29,7 +30,7 @@
           <Version Value="11"/>
           <PathDelim Value="\"/>
           <Target>
-            <Filename Value="..\bin\updater_$(TargetOS)"/>
+            <Filename Value="..\bin\updater"/>
           </Target>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir)"/>
@@ -83,7 +84,6 @@
         <ComponentName Value="frmMain"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <UnitName Value="uMain"/>
       </Unit1>
       <Unit2>
         <Filename Value="uMessage.pas"/>
@@ -98,7 +98,7 @@
     <Version Value="11"/>
     <PathDelim Value="\"/>
     <Target>
-      <Filename Value="..\bin\updater_$(TargetOS)"/>
+      <Filename Value="..\bin\updater"/>
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)"/>

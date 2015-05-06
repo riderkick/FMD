@@ -20,18 +20,17 @@ object frmMain: TfrmMain
     Top = 12
     Width = 317
     Anchors = [akTop, akLeft, akRight]
-    Caption = 'lbStatus'
+    Caption = 'Waiting...'
     TabOrder = 5
   end
   object lbProgress: TStaticText
     Left = 272
-    Height = 16
+    Height = 1
     Top = 12
     Width = 55
     Alignment = taRightJustify
     Anchors = [akTop, akRight]
     AutoSize = True
-    Caption = 'lbProgress'
     TabOrder = 4
     Transparent = False
   end
@@ -60,7 +59,6 @@ object frmMain: TfrmMain
     Width = 317
     Anchors = [akTop, akLeft, akRight]
     TabOrder = 2
-    Text = 'edURL'
   end
   object edFilename: TEdit
     Left = 8
@@ -69,7 +67,6 @@ object frmMain: TfrmMain
     Width = 317
     Anchors = [akTop, akLeft, akRight]
     TabOrder = 3
-    Text = 'edFilename'
   end
   object lbURL: TLabel
     Left = 8
