@@ -2414,7 +2414,8 @@ begin
   HTTPHeader.NameValueSeparator := ':';
   if AHTTP <> nil then
   begin
-    HTTPHeader.Text := AHTTP.Headers.Text;
+    if LeftStr(AHTTP.Headers.Text, 5) <> 'HTTP/' then
+      HTTPHeader.Text := AHTTP.Headers.Text;
     HTTP := AHTTP;
     HTTP.Clear;
   end
@@ -2458,8 +2459,7 @@ begin
 
   HTTP.Protocol := '1.1';
   HTTPHeader.Values['DNT'] := ' 1';
-  if HTTP.UserAgent = '' then
-    HTTP.UserAgent := UA_Chrome;
+  HTTP.UserAgent := UA_Chrome;
 
   if isGZip then
   begin
@@ -2672,7 +2672,8 @@ begin
   HTTPHeader.NameValueSeparator := ':';
   if AHTTP <> nil then
   begin
-    HTTPHeader.Text := AHTTP.Headers.Text;
+    if LeftStr(AHTTP.Headers.Text, 5) <> 'HTTP/' then
+      HTTPHeader.Text := AHTTP.Headers.Text;
     HTTP := AHTTP;
     HTTP.Clear;
   end
