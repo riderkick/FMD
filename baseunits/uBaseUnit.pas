@@ -2320,7 +2320,7 @@ begin
       loop:
         HTTPSender := THTTPSend.Create;
       //Who knows, this might help:
-      HTTPSender.UserAgent := Chrome_UA;
+      HTTPSender.UserAgent := UA_Chrome;
       while not FoundCorrectURL do
       begin
         HTTPSender.HTTPMethod('GET', URL);
@@ -2449,7 +2449,7 @@ begin
     HTTP.ProxyPass := Pass;
   end;
 
-  HTTP.UserAgent := Chrome_UA;
+  HTTP.UserAgent := UA_Chrome;
 
   if isGZip then
   begin
@@ -2460,16 +2460,16 @@ begin
   if Pos(WebsiteRoots[MEINMANGA_ID, 1], URL) = 0 then
   begin
     HTTP.Headers.Add('Accept-Charset: utf-8');
-    HTTP.UserAgent := Chrome_UA;
-  end;
-
+    HTTP.UserAgent := UA_Chrome;
+  end
+  else
   if Pos(WebsiteRoots[EHENTAI_ID, 1], URL) > 0 then
-    HTTP.UserAgent := Chrome_UA;
-
+    HTTP.UserAgent := UA_Chrome
+  else
   if Pos(WebsiteRoots[SENMANGA_ID, 1], URL) > 0 then
-    HTTP.Headers.Add('Referer: ' + WebsiteRoots[SENMANGA_ID, 1] + SENMANGA_BROWSER);
-
-  if (Pos(WebsiteRoots[MANGALIB_PL_ID, 1], URL) > 0) then
+    HTTP.Headers.Add('Referer: ' + WebsiteRoots[SENMANGA_ID, 1] + SENMANGA_BROWSER)
+  else
+  if Pos(WebsiteRoots[MANGALIB_PL_ID, 1], URL) > 0 then
   begin
     if MANGALIB_PL_COOKIES <> '' then
       HTTP.Cookies.Text := MANGALIB_PL_COOKIES;
@@ -2715,7 +2715,7 @@ begin
   if (mangaSiteID <> MANGAAR_ID) and
     (mangaSiteID <> MEINMANGA_ID) and
     (mangaSiteID <> PECINTAKOMIK_ID) then
-    HTTP.UserAgent := Chrome_UA;
+    HTTP.UserAgent := UA_Chrome;
 
   if ((mangaSiteID >= 0) and (mangaSiteID <= High(WebsiteRoots))) then
   begin

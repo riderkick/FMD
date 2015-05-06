@@ -30,7 +30,7 @@
     FHTTP.Headers.Insert(0, 'Accept-Encoding: gzip, deflate');
     FHTTP.Headers.Insert(0, 'Accept-Language: en-US,en;q=0.5');
     FHTTP.Protocol := '1.1';
-    FHTTP.UserAgent := Firefox_UA;
+    FHTTP.UserAgent := UA_Firefox;
 
     Result := GetPage(FHTTP,
       TObject(l),
