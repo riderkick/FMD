@@ -586,6 +586,9 @@ type
     { public declarations }
   end;
 
+resourcestring
+  RS_Loading = 'Loading ...';
+
 var
   MainForm: TMainForm;
   INIAdvanced: TIniFileR;
@@ -1500,8 +1503,11 @@ end;
 
 procedure TMainForm.btURLClick(Sender: TObject);
 var
-  i: Cardinal;
-  website, webs, link: String;
+  i: Integer;
+  webid: Cardinal;
+  website,
+  webs,
+  link: String;
   regx: TRegExpr;
 begin
   website := '';
@@ -1515,21 +1521,38 @@ begin
 
     regx.Expression := '^https?\:(//[^/]*\w+\.\w+)(\:\d+)?(/|\Z)(.*)$';
     if regx.Exec(edURL.Text) then
-      link := regx.Replace(edURL.Text, '$4', True);
-    
-    if link <> '' then
     begin
-      link := '/' + link;
+      link := regx.Replace(edURL.Text, '$4', True);
+      webs := regx.Replace(edURL.Text, '$1', True);
+    end;
+
+    if (webs <> '') and (link <> '') then
+    begin
       for i := Low(WebsiteRoots) to High(WebsiteRoots) do
-      begin        
-        webs := regx.Replace(WebsiteRoots[i, 1], '$1', True);        
-        if (webs <> '') and (Pos(webs, edURL.Text) <> 0) then
+        if Pos(webs, WebsiteRoots[i, 1]) > 0 then
         begin
+          webid := i;
           website := WebsiteRoots[i, 0];
-          edURL.Text := FixURL(WebsiteRoots[i, 1] + link);
-          DisableAddToFavorites(website);
           Break;
         end;
+      if website = '' then
+      begin
+        webs := TrimLeftChar(webs, ['/']);
+        for i := Low(WebsiteRoots) to High(WebsiteRoots) do
+        begin
+          if Pos(webs, WebsiteRoots[i, 1]) > 0 then
+          begin
+            webid := i;
+            website := WebsiteRoots[i, 0];
+            Break;
+          end;
+        end;
+      end;
+      if website <> '' then
+      begin
+        link := '/' + link;
+        edURL.Text := FixURL(WebsiteRoots[webid, 1] + link);
+        DisableAddToFavorites(website);
       end;
     end;
   finally
@@ -1567,7 +1590,7 @@ begin
   pcMain.TabIndex := 1;
   imCover.Picture.Assign(nil);
   rmInformation.Clear;
-  rmInformation.Lines.Add('Loading ...');
+  rmInformation.Lines.Add(RS_Loading);
   clbChapterList.Clear;
   if Assigned(gifWaiting) then
   begin
