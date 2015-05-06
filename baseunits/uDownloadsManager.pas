@@ -1301,14 +1301,13 @@ begin
     WebsiteRoots[container.MangaSiteID, 0], -1);
   if (mt > 0) then
   begin
-    if (mt > 32) then //16 is max | be carefull, there is still memory leak problems
+    if (mt > 32) then
       mt := 32;
     currentMaxThread := mt;
   end
   else
   begin
     case container.MangaSiteID of
-      EATMANGA_ID     : currentMaxThread := 1;
       PECINTAKOMIK_ID : currentMaxThread := 1;
       EHENTAI_ID      : currentMaxThread := 2;
       else
@@ -2014,7 +2013,6 @@ end;
 procedure TDownloadManager.CheckAndActiveTask(const isCheckForFMDDo : Boolean;
   SenderThread : TThread);
 var
-  EATMANGA_Count: Cardinal = 0;
   EHENTAI_Count: Cardinal = 0;
   Count: Cardinal = 0;
   i: Integer;
@@ -2048,8 +2046,6 @@ begin
         if (containers.Items[i].Status in [STATUS_DOWNLOAD, STATUS_PREPARE, STATUS_COMPRESS]) then
         begin
           Inc(Count);
-          if containers.Items[i].MangaSiteID = EATMANGA_ID then
-            Inc(EATMANGA_Count);
           if containers.Items[i].MangaSiteID = EHENTAI_ID then
             Inc(EHENTAI_Count);
         end;
@@ -2063,14 +2059,6 @@ begin
             Break;
           if (containers.Items[i].Status = STATUS_WAIT) then
           begin
-            if (containers.Items[i].MangaSiteID = EATMANGA_ID) and
-              (EATMANGA_Count < EATMANGA_maxDLTask) then
-            begin
-              Inc(EATMANGA_Count);
-              Inc(Count);
-              ActiveTask(i);
-            end
-            else
             if (containers.Items[i].MangaSiteID = EHENTAI_ID) and
               (EHENTAI_Count < EHENTAI_maxDLTask) then
             begin
@@ -2131,7 +2119,6 @@ end;
 
 function TDownloadManager.CanActiveTask(const pos: Integer): Boolean;
 var
-  EATMANGA_Count: Integer = 0;
   EHENTAI_Count: Integer = 0;
   i: Integer;
   Count: Integer = 0;
@@ -2147,17 +2134,11 @@ begin
       (i <> pos) then
     begin
       Inc(Count);
-      if (containers.Items[i].MangaSiteID = EATMANGA_ID) then
-        Inc(EATMANGA_Count);
       if (containers.Items[i].MangaSiteID = EHENTAI_ID) then
         Inc(EHENTAI_Count);
     end;
   end;
 
-  if (containers.Items[pos].MangaSiteID = EATMANGA_ID) and
-    (EATMANGA_Count >= EATMANGA_maxDLTask) then
-    Result := False
-  else
   if (containers.Items[pos].MangaSiteID = EHENTAI_ID) and
     (EHENTAI_Count >= EHENTAI_maxDLTask) then
     Result := False
