@@ -23,3 +23,6 @@ mangadownloader/lib
 updater/lib
 bin/
 Release/
+
+# compiled languages files
+*.mo
