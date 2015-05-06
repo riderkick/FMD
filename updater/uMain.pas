@@ -569,7 +569,7 @@ begin
 
       if Extract and FileExistsUTF8(fname) then
       begin
-        UpdateStatus(RS_UnpackFile);
+        UpdateStatus(Format(RS_UnpackFile, [fname]));
         Sza := GetCurrentDirUTF8 + DirectorySeparator + '7za.exe';
         if _UpdApp and
           FileExistsUTF8(GetCurrentDirUTF8 + DirectorySeparator + '7za.exe') then
