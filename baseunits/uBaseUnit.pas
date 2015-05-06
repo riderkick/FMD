@@ -2374,6 +2374,7 @@ function GetPage(const AOwner: TObject; const AHTTP: THTTPSend;
 var
   //i: Cardinal;
   HTTP: THTTPSend;
+  HTTPHeader: TStringList;
   counter: Cardinal = 0;
   s: String;
   meth: String = 'GET';
@@ -2383,6 +2384,7 @@ var
 
   procedure preTerminate;
   begin
+    HTTPHeader.Free;
     if AHTTP = nil then
       HTTP.Free;
   end;
@@ -2407,13 +2409,18 @@ begin
   { TODO -oriderkick : What isBypassHTTP for? }
   //if (isByPassHTTP) then
   //  Exit;
+
+  HTTPHeader := TStringList.Create;
+  HTTPHeader.NameValueSeparator := ':';
   if AHTTP <> nil then
-    HTTP := AHTTP
+  begin
+    HTTPHeader.Text := AHTTP.Headers.Text;
+    HTTP := AHTTP;
+    HTTP.Clear;
+  end
   else
     HTTP := THTTPSend.Create;
-  HTTP.Clear;
-  HTTP.Protocol := '1.1';
-  HTTP.Headers.Add('DNT: 1');
+  HTTP.Headers.NameValueSeparator := ':';
 
   globReturn:
 
@@ -2449,25 +2456,19 @@ begin
     HTTP.ProxyPass := Pass;
   end;
 
-  HTTP.UserAgent := UA_Chrome;
+  HTTP.Protocol := '1.1';
+  HTTPHeader.Values['DNT'] := ' 1';
+  if HTTP.UserAgent = '' then
+    HTTP.UserAgent := UA_Chrome;
 
   if isGZip then
   begin
     HTTP.MimeType := 'application/x-www-form-urlencoded';
-    HTTP.Headers.Add('Accept-Encoding: gzip, deflate');
+    HTTPHeader.Values['Accept-Encoding'] := ' gzip, deflate';
   end;
 
-  if Pos(WebsiteRoots[MEINMANGA_ID, 1], URL) = 0 then
-  begin
-    HTTP.Headers.Add('Accept-Charset: utf-8');
-    HTTP.UserAgent := UA_Chrome;
-  end
-  else
-  if Pos(WebsiteRoots[EHENTAI_ID, 1], URL) > 0 then
-    HTTP.UserAgent := UA_Chrome
-  else
-  if Pos(WebsiteRoots[SENMANGA_ID, 1], URL) > 0 then
-    HTTP.Headers.Add('Referer: ' + WebsiteRoots[SENMANGA_ID, 1] + SENMANGA_BROWSER)
+  if Pos(WebsiteRoots[MEINMANGA_ID, 1], URL) > 0 then
+    HTTPHeader.Values['Accept-Charset'] := ' utf8'
   else
   if Pos(WebsiteRoots[MANGALIB_PL_ID, 1], URL) > 0 then
   begin
@@ -2482,12 +2483,11 @@ begin
       HTTP.Document.Write(PChar(s)^, Length(s));
       HTTP.Protocol := '1.1';
       HTTP.MimeType := 'application/x-www-form-urlencoded';
-      HTTP.Headers.Add('Referer: ' + URL);
-      HTTP.Headers.Add('Accept: text/html');
+      HTTPHeader.Values['Referer'] := ' ' + URL;
+      HTTPHeader.Values['Accept'] := ' text/html';
     end;
-  end;
-
-  //imgmega.com
+  end
+  else
   if (Pos('imgmega.com/', URL) > 0) then
   begin
     s := ReplaceRegExpr('^.*\w+\.\w+/(\w+)/.*$', URL, '$1', True);
@@ -2500,6 +2500,7 @@ begin
   end;
 
   counter := 0;
+  HTTP.Headers.Text := HTTPHeader.Text;
   while (not HTTP.HTTPMethod(meth, URL)) or
     (HTTP.ResultCode >= 500) or
     (HTTP.ResultCode = 451) do
@@ -2512,6 +2513,7 @@ begin
     end;
     Inc(Counter);
     HTTP.Clear;
+    HTTP.Headers.Text := HTTPHeader.Text;
     Sleep(500);
   end;
 
@@ -2519,6 +2521,7 @@ begin
   while (HTTP.ResultCode = 302) or (HTTP.ResultCode = 301) do
   begin
     if checkTerminate then Exit;
+    HTTPHeader.Values['Referer'] := ' ' + URL;
     s := GetHeaderValue(HTTP.Headers, 'location');
     s := TrimLeftChar(s, ['/', ':']);
     if s <> '' then
@@ -2528,12 +2531,12 @@ begin
       URL := s;
     end;
 
-    HTTP.Clear;
-    HTTP.RangeStart := 0;
     if Pos(HENTAI2READ_ROOT, URL) <> 0 then
       HTTP.Headers.Insert(0, 'Referer:' + HENTAI2READ_ROOT + '/');
 
     counter := 0;
+    HTTP.Clear;
+    HTTP.Headers.Text := HTTPHeader.Text;
     while (not HTTP.HTTPMethod('GET', URL)) or
       (HTTP.ResultCode > 500) do  //500 for abort
     begin
@@ -2545,13 +2548,13 @@ begin
       end;
       Inc(Counter);
       HTTP.Clear;
+      HTTP.Headers.Text := HTTPHeader.Text;
     end;
   end;
 
   if HTTP.ResultCode <> 404 then
   begin
     // Decompress the html file
-    HTTP.Headers.NameValueSeparator := ':';
     s := LowerCase(HTTP.Headers.Values['Content-Encoding']);
     if (Pos('gzip', s) <> 0) or (Pos('deflate', s) <> 0) then
     begin
@@ -2636,10 +2639,9 @@ var
 
   procedure preTerminate;
   begin
+    HTTPHeader.Free;
     if AHTTP = nil then
-      HTTP.Free
-    else
-      HTTPHeader.Free;
+      HTTP.Free;
   end;
 
   function checkTerminate: boolean;
@@ -2666,19 +2668,17 @@ begin
 
   URL := FixURL(URL);
 
+  HTTPHeader := TStringList.Create;
+  HTTPHeader.NameValueSeparator := ':';
   if AHTTP <> nil then
   begin
-    HTTPHeader := TStringList.Create;
     HTTPHeader.Text := AHTTP.Headers.Text;
     HTTP := AHTTP;
+    HTTP.Clear;
   end
   else
     HTTP := THTTPSend.Create;
-  HTTP.Clear;
-  HTTP.Protocol := '1.1';
-  HTTP.Headers.Add('DNT: 1');
-
-  URL := FixURL(URL);
+  HTTP.Headers.NameValueSeparator := ':';
 
   if ProxyType = 'HTTP' then
   begin
@@ -2712,26 +2712,33 @@ begin
     HTTP.ProxyPass := Pass;
   end;
 
+  HTTP.Protocol := '1.1';
+  HTTPHeader.Values['DNT'] := ' 1';
+
+  if ((mangaSiteID >= 0) and (mangaSiteID <= High(WebsiteRoots))) then
+  begin
+    if HTTPHeader.Values['Referer'] = '' then
+      if not (SitesWithoutReferer(WebsiteRoots[mangaSiteID, 0])) then
+      begin
+        if SitesRefererisURL(WebsiteRoots[mangaSiteID, 0]) then
+          HTTPHeader.Values['Referer'] := ' ' + URL
+        else
+          HTTPHeader.Values['Referer'] := ' ' + WebsiteRoots[mangaSiteID, 1];
+      end;
+  end;
+
+  HTTP.UserAgent := UA_Curl;
+
   if (mangaSiteID <> MANGAAR_ID) and
     (mangaSiteID <> MEINMANGA_ID) and
     (mangaSiteID <> PECINTAKOMIK_ID) then
     HTTP.UserAgent := UA_Chrome;
 
-  if ((mangaSiteID >= 0) and (mangaSiteID <= High(WebsiteRoots))) then
-  begin
-    if not (SitesWithoutReferer(WebsiteRoots[mangaSiteID, 0])) then
-    begin
-      if SitesRefererisURL(WebsiteRoots[mangaSiteID, 0]) then
-        HTTP.Headers.Insert(0, 'Referer: ' + URL)
-      else
-        HTTP.Headers.Insert(0, 'Referer: ' + WebsiteRoots[mangaSiteID, 1]);
-    end;
-  end;
-
   {$IFDEF DOWNLOADER}
   if checkTerminate then Exit;
   {$ENDIF}
   counter := 0;
+  HTTP.Headers.Text := HTTPHeader.Text;
   while (not HTTP.HTTPMethod('GET', URL)) or
     (HTTP.ResultCode >= 500) or   //500 for abort
     (HTTP.ResultCode = 403) do
@@ -2746,8 +2753,7 @@ begin
     end;
     Inc(Counter);
     HTTP.Clear;
-    if AHTTP <> nil then
-      HTTP.Headers.Text := HTTPHeader.Text;
+    HTTP.Headers.Text := HTTPHeader.Text;
   end;
 
   counter := 0;
@@ -2757,6 +2763,7 @@ begin
     if checkTerminate then Exit;
     {$ENDIF}
 
+    HTTPHeader.Values['Referer'] := ' ' + URL;
     s := GetHeaderValue(HTTP.Headers, 'location');
     s := TrimLeftChar(s, ['/', ':']);
     if s <> '' then
@@ -2767,14 +2774,8 @@ begin
     end;
 
     HTTP.Clear;
-    if AHTTP <> nil then
-      HTTP.Headers.Text := HTTPHeader.Text;
-    HTTP.RangeStart := 0;
-    if ((mangaSiteID >= 0) and (mangaSiteID <= High(WebsiteRoots))) and
-      not (SitesWithoutReferer(WebsiteRoots[mangaSiteID, 0])) then
-      HTTP.Headers.Insert(0, 'Referer: ' + WebsiteRoots[mangaSiteID, 1]);
-
     counter := 0;
+    HTTP.Headers.Text := HTTPHeader.Text;
     while (not HTTP.HTTPMethod('GET', URL)) or
       (HTTP.ResultCode > 500) or  //500 for abort
       (HTTP.ResultCode = 403) do
@@ -2789,8 +2790,7 @@ begin
       end;
       Inc(Counter);
       HTTP.Clear;
-      if AHTTP <> nil then
-        HTTP.Headers.Text := HTTPHeader.Text;
+      HTTP.Headers.Text := HTTPHeader.Text;
       Sleep(500);
     end;
   end;

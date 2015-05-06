@@ -253,6 +253,7 @@ constructor TDownloadThread.Create;
 begin
   inherited Create(True);
   FHTTP := THTTPSend.Create;
+  FHTTP.Headers.NameValueSeparator := ':';
   FHTTP.Sock.OnHeartbeat := SockOnHeartBeat;
   FHTTP.Sock.HeartbeatRate := SOCKHEARTBEATRATE;
 end;
@@ -1256,6 +1257,7 @@ begin
     end;
   end;
 
+  Result := True;
   TURL := manager.container.PageLinks[workCounter];
   if (TURL = '') or (TURL = 'W') or (TURL = 'D') then
     Exit;
@@ -1269,6 +1271,7 @@ begin
   if manager.container.MangaSiteID = MEINMANGA_ID then
     Result := GetMeinMangaImageURL
   else
+  if Result then
     Result := SaveImage(Self,
       AHTTP,
       manager.container.MangaSiteID,

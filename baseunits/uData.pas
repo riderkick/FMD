@@ -236,12 +236,12 @@ end;
 procedure TDataProcess.BreakDataToParts(const i: Cardinal);
 begin
   if i < Data.Count then
-  begin                                                    
+  begin
     Title.Strings[i] := GetParam(i, DATA_PARAM_NAME);
     Link.Strings[i] := GetParam(i, DATA_PARAM_LINK);
     Authors.Strings[i] := GetParam(i, DATA_PARAM_AUTHORS);
     Artists.Strings[i] := GetParam(i, DATA_PARAM_ARTISTS);
-    Genres.Strings[i] := GetParam(i, DATA_PARAM_GENRES); 
+    Genres.Strings[i] := GetParam(i, DATA_PARAM_GENRES);
     Status.Strings[i] := GetParam(i, DATA_PARAM_STATUS);
     Summary.Strings[i] := GetParam(i, DATA_PARAM_SUMMARY);
     JDN.Items[i] := Pointer(StrToIntDef(GetParam(i, DATA_PARAM_JDN),0));
@@ -281,7 +281,7 @@ begin
 
     if Data.Count > 0 then
     begin
-      //QuickSortData(data); 
+      //QuickSortData(data);
       QuickSortNaturalPart(Data, SEPERATOR, DATA_PARAM_NAME); //Natural Sorting
       for i := 0 to Data.Count - 1 do
       begin
@@ -289,7 +289,7 @@ begin
         filterPos.Add(i);
         site.Add(id);
 
-        l.Clear; 
+        l.Clear;
         try
           GetParams(l, Data.Strings[i]);
           while l.Count < 10 do
@@ -301,8 +301,8 @@ begin
           genres.Add(l.Strings[DATA_PARAM_GENRES]);
           status.Add(l.Strings[DATA_PARAM_STATUS]);
           summary.Add(l.Strings[DATA_PARAM_SUMMARY]);
-          jdn.Add(Pointer(StrToIntDef(l.Strings[DATA_PARAM_JDN], 0))); 
-        except 
+          jdn.Add(Pointer(StrToIntDef(l.Strings[DATA_PARAM_JDN], 0)));
+        except
         end;
       end;
     end;
@@ -734,6 +734,7 @@ constructor TMangaInformation.Create;
 begin
   inherited Create;
   FHTTP := THTTPSend.Create;
+  FHTTP.Headers.NameValueSeparator := ':';
   parse := TStringList.Create;
   mangaInfo := TMangaInfo.Create;
   isGetByUpdater := False;
