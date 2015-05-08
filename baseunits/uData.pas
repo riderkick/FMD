@@ -1614,6 +1614,7 @@ var
   {$I includes/SenMangaRAW/manga_information.inc}
 
 begin
+  if Trim(URL) = '' then Exit(INFORMATION_NOT_FOUND);
   Source := TStringList.Create;
   mangaInfo.coverLink := '';
   mangaInfo.numChapter := 0;
