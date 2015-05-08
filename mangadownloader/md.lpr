@@ -58,9 +58,6 @@ begin
     RequireDerivedFormResource := True;
     Application.Initialize;
     Application.CreateForm(TMainForm, MainForm);
-    Application.CreateForm(TImportList, ImportList);
-    Application.CreateForm(TShutdownCounterForm, ShutdownCounterForm);
-    Application.CreateForm(TUpdateDialogForm, UpdateDialogForm);
     Application.Run;
   end;
 end.

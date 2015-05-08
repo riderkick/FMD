@@ -72,27 +72,31 @@ end;
 
 procedure TCheckUpdateThread.MainThreadUpdate;
 begin
-  UpdateDialogForm.Caption := Application.Title + ' - ' + RS_NewVersionFound;
-   with UpdateDialogForm.mmLog.Lines do
-   begin
-     BeginUpdate;
-     try
-       Clear;
-       Add(RS_CurrentVersion + ' : ' + FMD_VERSION_NUMBER);
-       Add(RS_LatestVersion + ' : ' + fNewVersionNumber + LineEnding);
-       AddText(fChangelog);
-     finally
-       EndUpdate;
-     end;
-   end;
-   if UpdateDialogForm.ShowModal = mrYes then
-   begin
-     MainForm.DoUpdateFMD := True;
-     MainForm.FUpdateURL := fUpdateURL;
-     MainForm.itMonitor.Enabled := True;
-   end
-   else
-     MainForm.btCheckVersion.Caption := stUpdaterCheck;
+  with TUpdateDialogForm.Create(MainForm) do try
+    Caption := Application.Title + ' - ' + RS_NewVersionFound;
+    with mmLog.Lines do
+    begin
+      BeginUpdate;
+      try
+        Clear;
+        Add(RS_CurrentVersion + ' : ' + FMD_VERSION_NUMBER);
+        Add(RS_LatestVersion + ' : ' + fNewVersionNumber + LineEnding);
+        AddText(fChangelog);
+      finally
+        EndUpdate;
+      end;
+    end;
+    if ShowModal = mrYes then
+    begin
+      MainForm.DoUpdateFMD := True;
+      MainForm.FUpdateURL := fUpdateURL;
+      MainForm.itMonitor.Enabled := True;
+    end
+    else
+      MainForm.btCheckVersion.Caption := stUpdaterCheck;
+  finally
+    Free;
+  end;
 end;
 
 procedure TCheckUpdateThread.MainThreadSetButton;

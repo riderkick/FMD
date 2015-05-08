@@ -2382,15 +2382,19 @@ end;
 
 procedure TDownloadManager.doExitWaitCounter;
 begin
-  case ExitType of
-    etShutdown: ShutdownCounterForm.WaitTimeout := 60;
-    etHibernate: ShutdownCounterForm.WaitTimeout := 30;
-    etExit: ShutdownCounterForm.WaitTimeout := 5;
+  with TShutdownCounterForm.Create(MainForm) do try
+    case ExitType of
+      etShutdown: WaitTimeout := 60;
+      etHibernate: WaitTimeout := 30;
+      etExit: WaitTimeout := 5;
+    end;
+    ExitType := ExitType;
+    ExitWaitOK := False;
+    if ShowModal = mrOK then
+      ExitWaitOK := True;
+  finally
+    Free;
   end;
-  ShutdownCounterForm.ExitType := ExitType;
-  ExitWaitOK := False;
-  if ShutdownCounterForm.ShowModal = mrOK then
-    ExitWaitOK := True;
 end;
 
 procedure TDownloadManager.Sort(const AColumn: Cardinal);

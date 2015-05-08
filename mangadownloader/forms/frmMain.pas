@@ -1643,12 +1643,12 @@ begin
 end;
 
 procedure TMainForm.btFavoritesImportClick(Sender: TObject);
-var
-  ImportFavorites: TImportFavorites;
 begin
-  ImportFavorites := TImportFavorites.Create(Self);
-  ImportFavorites.ShowModal;
-  ImportFavorites.Free;
+  with TImportFavorites.Create(Self) do try
+    ShowModal;
+  finally
+    Free;
+  end;
 end;
 
 procedure TMainForm.btChecksClick(Sender: TObject);
