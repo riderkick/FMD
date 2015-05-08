@@ -42,11 +42,11 @@ type
 
 var
   ShutdownCounterForm: TShutdownCounterForm;
-  { TODO 3 -oCholif -cT : need translation }
-  SShutdown: String = 'System will shutdown in';
-  SHibernate: String = 'System will hibernate in';
-  SExit: String = 'FMD will exit in';
-  SSecond: String = 'second.';
+
+resourcestring
+  RS_LblMessageShutdown = 'System will shutdown in %d second.';
+  RS_LblMessageHibernate = 'System will hibernate in %d second.';
+  RS_LblMessageExit = 'FMD will exit in %d second.';
 
 implementation
 
@@ -93,14 +93,16 @@ begin
 end;
 
 procedure TShutdownCounterForm.FormShow(Sender: TObject);
+var
+  s: String;
 begin
   case ExitType of
-    etShutdown: lblMessage.Caption := SShutdown;
-    etHibernate: lblMessage.Caption := SHibernate;
-    etExit: lblMessage.Caption := SExit;
+    etShutdown: s := RS_LblMessageShutdown;
+    etHibernate: s := RS_LblMessageHibernate;
+    etExit: s := RS_LblMessageExit;
   end;
   WaitCounter := WaitTimeout;
-  lblMessage.Caption := lblMessage.Caption + Format(' %d ', [WaitCounter]) + SSecond;
+  lblMessage.Caption := Format(s, [WaitCounter]);
   WaitCounterOK := False;
   btAbort.SetFocus;
   itCounter.Enabled := True;
@@ -112,14 +114,16 @@ begin
 end;
 
 procedure TShutdownCounterForm.itCounterTimer(Sender: TObject);
+var
+  s: String;
 begin
   Dec(WaitCounter);
   case ExitType of
-    etShutdown: lblMessage.Caption := SShutdown;
-    etHibernate: lblMessage.Caption := SHibernate;
-    etExit: lblMessage.Caption := SExit;
+    etShutdown: s := RS_LblMessageShutdown;
+    etHibernate: s := RS_LblMessageHibernate;
+    etExit: s := RS_LblMessageExit;
   end;
-  lblMessage.Caption := lblMessage.Caption + Format(' %d ', [WaitCounter]) + SSecond;
+  lblMessage.Caption := Format(s, [WaitCounter]);
   if WaitCounter = 0 then
   begin
     itCounter.Enabled := False;
