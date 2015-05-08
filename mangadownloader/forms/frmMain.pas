@@ -3348,6 +3348,7 @@ begin
   if (not (HitInfo.Column = 2)) and (DLManager.containers.Count > 1) then
   begin
     with HitInfo do try
+      DLManager.SortColumn := Column;
       DLManager.SortDirection := not DLManager.SortDirection;
       vtDownload.Header.SortDirection := TSortDirection(DLManager.SortDirection);
       vtDownload.Header.SortColumn := Column;
@@ -3447,6 +3448,7 @@ begin
   begin
     FavoriteManager.isRunning := True;
     with HitInfo do try
+      FavoriteManager.SortColumn := Column;
       FavoriteManager.sortDirection := not FavoriteManager.sortDirection;
       vtFavorites.Header.SortColumn := Column;
       vtFavorites.Header.SortDirection := TSortDirection(FavoriteManager.sortDirection);

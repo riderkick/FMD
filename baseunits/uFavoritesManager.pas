@@ -661,7 +661,7 @@ begin
     Favorites.Last.FavoriteInfo.downloadedChapterList := downloadedChapterList;
     if not isRunning then
     begin
-      Sort(sortColumn);
+      SortNatural(SortColumn);
       Backup;
     end;
   finally
@@ -728,7 +728,7 @@ begin
         infos[i].link);
     end;
   end;
-  Sort(sortColumn);
+  SortNatural(SortColumn);
   Backup;
 
   SetLength(infos, 0);
@@ -886,7 +886,7 @@ procedure TFavoriteManager.Sort(const AColumn: Cardinal);
   end;
 
 begin
-  sortColumn := AColumn;
+  SortColumn := AColumn;
   QSort(0, Favorites.Count - 1);
 end;
 
@@ -968,7 +968,7 @@ procedure TFavoriteManager.SortNatural(const AColumn: Integer);
   end;
 
 begin
-  sortColumn := AColumn;
+  SortColumn := AColumn;
   QuickSortA(0, Favorites.Count - 1);
 end;
 
