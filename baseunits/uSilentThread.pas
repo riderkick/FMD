@@ -110,7 +110,7 @@ procedure TSilentThreadManager.Add(AType: TMetaDataType; AWebsite, AManga,
   AURL: String; ASavePath: String = '');
 begin
   if not ((AType = MD_AddToFavorites) and
-    (MainForm.favorites.IsMangaExist(AManga, AWebsite))) then
+    (MainForm.FavoriteManager.IsMangaExist(AManga, AWebsite))) then
   begin
     CS_Threads.Acquire;
     try
@@ -414,7 +414,7 @@ begin
           s2 := s2 + Info.mangaInfo.chapterLinks.Strings[i] + SEPERATOR;
       end;
 
-      favorites.Add(title,
+      FavoriteManager.Add(title,
         IntToStr(Info.mangaInfo.numChapter),
         s2,
         website,

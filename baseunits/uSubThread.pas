@@ -162,9 +162,9 @@ begin
 
     if OptionAutoCheckFavStartup then
     begin
-      MainForm.favorites.isAuto := True;
-      MainForm.favorites.isShowDialog := MainForm.cbOptionShowFavoriteDialog.Checked;
-      MainForm.favorites.Run;
+      MainForm.FavoriteManager.isAuto := True;
+      MainForm.FavoriteManager.isShowDialog := MainForm.cbOptionShowFavoriteDialog.Checked;
+      MainForm.FavoriteManager.Run;
     end;
 
     while not Terminated do

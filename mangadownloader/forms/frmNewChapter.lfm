@@ -10,7 +10,7 @@ object NewChapter: TNewChapter
   ClientWidth = 394
   OnCreate = FormCreate
   Position = poDesktopCenter
-  LCLVersion = '1.2.4.0'
+  LCLVersion = '1.5'
   object mmMemo: TMemo
     Left = 8
     Height = 192
@@ -162,7 +162,7 @@ object NewChapter: TNewChapter
   object lbNotification: TLabel
     Left = 8
     Height = 15
-    Top = 8
+    Top = 12
     Width = 9
     Caption = '...'
     Font.Style = [fsBold]

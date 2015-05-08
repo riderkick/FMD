@@ -497,7 +497,7 @@ type
     isRunDownloadFilter: Boolean;
     isCanRefreshForm, isUpdating: Boolean;
     revisionIni, updates, mangalistIni, options: TIniFile;
-    favorites: TFavoriteManager;
+    FavoriteManager: TFavoriteManager;
     dataProcess: TDataProcess;
     mangaInfo: TMangaInfo;
     DLManager: TDownloadManager;
@@ -642,10 +642,10 @@ begin
   DLManager := TDownloadManager.Create;
   DLManager.Restore;
 
-  favorites := TFavoriteManager.Create;
-  favorites.OnUpdateFavorite := @UpdateVtFavorites;
-  favorites.OnUpdateDownload := @UpdateVtDownload;
-  favorites.DLManager := DLManager;
+  FavoriteManager := TFavoriteManager.Create;
+  FavoriteManager.OnUpdateFavorite := @UpdateVtFavorites;
+  FavoriteManager.OnUpdateDownload := @UpdateVtDownload;
+  FavoriteManager.DLManager := DLManager;
 
   // Load config.ini
   options := TIniFile.Create(fmdDirectory + CONFIG_FOLDER + CONFIG_FILE);
@@ -677,7 +677,7 @@ begin
   vtDownload.RootNodeCount := DLManager.containers.Count;
 
   vtFavorites.NodeDataSize := SizeOf(TFavoriteInfo);
-  vtFavorites.RootNodeCount := favorites.Count;
+  UpdateVtFavorites;
 
   InitCheckboxes;
 
@@ -745,10 +745,11 @@ begin
     //DLManager.SortNatural(vtDownload.Header.SortColumn);    //Natural Sorting
     vtDownload.Repaint;
   end;
-  if Length(favorites.favoriteInfo) > 0 then
+  if FavoriteManager.Favorites.Count > 0 then
+  //if FavoriteManager.Favorites.Count > 0 then
   begin
-    favorites.SortDirection := Boolean(vtFavorites.Header.SortDirection);
-    favorites.SortNatural(vtFavorites.Header.SortColumn);
+    FavoriteManager.SortDirection := Boolean(vtFavorites.Header.SortDirection);
+    FavoriteManager.SortNatural(vtFavorites.Header.SortColumn);
     vtFavorites.Repaint;
   end;
 end;
@@ -795,7 +796,7 @@ begin
     updateList.Terminate;
     updateList.WaitFor;
   end;
-  favorites.StopAllAndWait;
+  FavoriteManager.StopAllAndWait;
   SilentThreadManager.StopAllAndWait;
 
   if FMDInstance <> nil then
@@ -810,7 +811,7 @@ begin
   DLManager.Backup;
   DLManager.BackupDownloadedChaptersList;
   isExiting := True;
-  favorites.Backup;
+  FavoriteManager.Backup;
   SaveFormInformation;
   options.UpdateFile;
 
@@ -823,7 +824,7 @@ begin
 
   FreeAndNil(DLManager);
   FreeAndNil(SilentThreadManager);
-  FreeAndNil(favorites);
+  FreeAndNil(FavoriteManager);
   FreeAndNil(dataProcess);
 
   FreeAndNil(gifWaiting);
@@ -869,9 +870,9 @@ end;
 
 procedure TMainForm.itCheckForChaptersTimer(Sender: TObject);
 begin
-  favorites.isAuto := True;
-  favorites.isShowDialog := cbOptionShowFavoriteDialog.Checked;
-  favorites.Run;
+  FavoriteManager.isAuto := True;
+  FavoriteManager.isShowDialog := cbOptionShowFavoriteDialog.Checked;
+  FavoriteManager.Run;
 end;
 
 procedure TMainForm.itMonitorTimer(Sender: TObject);
@@ -1124,9 +1125,9 @@ begin
   rmInformation.Lines.Add('Loading ...');
   clbChapterList.Clear;
 
-  website := favorites.favoriteInfo[vtFavorites.FocusedNode^.Index].Website;
-  link := favorites.favoriteInfo[vtFavorites.FocusedNode^.Index].link;
-  title := favorites.favoriteInfo[vtFavorites.FocusedNode^.Index].title;
+  website := FavoriteManager.Favorites[vtFavorites.FocusedNode^.Index].FavoriteInfo.Website;
+  link := FavoriteManager.Favorites[vtFavorites.FocusedNode^.Index].FavoriteInfo.link;
+  title := FavoriteManager.Favorites[vtFavorites.FocusedNode^.Index].FavoriteInfo.Title;
 
   if isGetMangaInfos then
   begin
@@ -1383,10 +1384,9 @@ begin
         s2 := s2 + mangaInfo.chapterLinks.Strings[i] + SEPERATOR;
     end;
 
-    favorites.Add(mangaInfo.title, IntToStr(mangaInfo.numChapter), s2,
+    FavoriteManager.Add(mangaInfo.title, IntToStr(mangaInfo.numChapter), s2,
       mangaInfo.website, s, mangaInfo.link);
     vtFavorites.NodeDataSize := SizeOf(TFavoriteInfo);
-    vtFavorites.RootNodeCount := favorites.Count;
     UpdateVtFavorites;
     btAddToFavorites.Enabled := False;
   end;
@@ -1414,9 +1414,9 @@ end;
 
 procedure TMainForm.btFavoritesCheckNewChapterClick(Sender: TObject);
 begin
-  favorites.isAuto := False;
-  favorites.isShowDialog := cbOptionShowFavoriteDialog.Checked;
-  favorites.Run;
+  FavoriteManager.isAuto := False;
+  FavoriteManager.isShowDialog := cbOptionShowFavoriteDialog.Checked;
+  FavoriteManager.Run;
 end;
 
 // -----
@@ -1966,7 +1966,7 @@ begin
     if MessageDlg('', stDlgRemoveTask,
       mtConfirmation, [mbYes, mbNo], 0) = mrNo then
       Exit;
-  if favorites.isRunning then
+  if FavoriteManager.isRunning then
   begin
     MessageDlg('', stDlgFavoritesIsRunning,
       mtInformation, [mbYes, mbNo], 0);
@@ -1976,14 +1976,14 @@ begin
   begin
     if not Assigned(vtFavorites.FocusedNode) then
       Exit;
-    favorites.Remove(vtFavorites.FocusedNode^.Index);
+    FavoriteManager.Remove(vtFavorites.FocusedNode^.Index);
   end
   else
   begin
     xNode := vtFavorites.GetFirst;
     SetLength(delList, 0);
     i := 0;
-    while i < favorites.Count do
+    while i < FavoriteManager.Count do
     begin
       if vtFavorites.Selected[xNode] then
       begin
@@ -1996,9 +1996,9 @@ begin
 
     if Length(delList) > 0 then
       for i := Length(delList) - 1 downto 0 do
-        favorites.Remove(delList[i], False);
+        FavoriteManager.Remove(delList[i], False);
 
-    favorites.Backup;
+    FavoriteManager.Backup;
   end;
   UpdateVtFavorites;
   SetLength(delList, 0);
@@ -2009,7 +2009,7 @@ var
   s: String;
   i: Integer;
 begin
-  if favorites.isRunning then
+  if FavoriteManager.isRunning then
   begin
     MessageDlg('', stDlgFavoritesIsRunning,
       mtInformation, [mbYes, mbNo], 0);
@@ -2017,22 +2017,21 @@ begin
   end;
   if not Assigned(vtFavorites.FocusedNode) then
     Exit;
-  s := favorites.favoriteInfo[vtFavorites.FocusedNode^.Index].currentChapter;
+  s := FavoriteManager.Favorites[vtFavorites.FocusedNode^.Index].FavoriteInfo.currentChapter;
   repeat
     if InputQuery('', stDlgTypeInNewChapter, s) then
   until TryStrToInt(s, i);
-  if s <> favorites.favoriteInfo[vtFavorites.FocusedNode^.Index].currentChapter then
+  if s <> FavoriteManager.Favorites[vtFavorites.FocusedNode^.Index].FavoriteInfo.currentChapter then
   begin
-    favorites.favoriteInfo[vtFavorites.FocusedNode^.Index].currentChapter := s;
-    vtFavorites.Clear;
-    vtFavorites.RootNodeCount := favorites.Count;
-    favorites.Backup;
+    FavoriteManager.Favorites[vtFavorites.FocusedNode^.Index].FavoriteInfo.currentChapter := s;
+    UpdateVtFavorites;
+    FavoriteManager.Backup;
   end;
 end;
 
 procedure TMainForm.miFavoritesChangeSaveToClick(Sender: TObject);
 begin
-  if favorites.isRunning then
+  if FavoriteManager.isRunning then
   begin
     MessageDlg('', stDlgFavoritesIsRunning,
       mtInformation, [mbYes, mbNo], 0);
@@ -2041,13 +2040,12 @@ begin
   if not Assigned(vtFavorites.FocusedNode) then
     Exit;
   if InputQuery('', stDlgTypeInNewSavePath,
-    favorites.favoriteInfo[vtFavorites.FocusedNode^.Index].SaveTo) then
+    FavoriteManager.Favorites[vtFavorites.FocusedNode^.Index].FavoriteInfo.SaveTo) then
   begin
-    favorites.favoriteInfo[vtFavorites.FocusedNode^.Index].SaveTo :=
-      CorrectFilePath(favorites.favoriteInfo[vtFavorites.FocusedNode^.Index].SaveTo);
-    vtFavorites.Clear;
-    vtFavorites.RootNodeCount := favorites.Count;
-    favorites.Backup;
+    FavoriteManager.Favorites[vtFavorites.FocusedNode^.Index].FavoriteInfo.SaveTo :=
+      CorrectFilePath(FavoriteManager.Favorites[vtFavorites.FocusedNode^.Index].FavoriteInfo.SaveTo);
+    UpdateVtFavorites;
+    FavoriteManager.Backup;
   end;
 end;
 
@@ -2531,10 +2529,10 @@ begin
   btReadOnline.Enabled := (link <> '');
   btAddToFavorites.Enabled := not SitesWithoutFavorites(website);
 
-  //check if manga already in favorites list
+  //check if manga already in FavoriteManager list
   if btAddToFavorites.Enabled and (Sender = vtMangaList) and
-    (Length(favorites.favoriteInfo) > 0) then
-    btAddToFavorites.Enabled := not favorites.IsMangaExist(title, website);
+    (FavoriteManager.Favorites.Count > 0) then
+    btAddToFavorites.Enabled := not FavoriteManager.IsMangaExist(title, website);
 end;
 
 procedure TMainForm.miOpenFolder2Click(Sender: TObject);
@@ -2546,12 +2544,12 @@ begin
   Process := TProcessUTF8.Create(nil);
   {$IFDEF WINDOWS}
   Process.CommandLine := 'explorer.exe "' +
-    StringReplace(Favorites.favoriteInfo[vtFavorites.FocusedNode^.Index].SaveTo,
+    StringReplace(FavoriteManager.Favorites[vtFavorites.FocusedNode^.Index].FavoriteInfo.SaveTo,
     '/', '\', [rfReplaceAll]) + '"';
   {$ENDIF}
   {$IFDEF UNIX}
   Process.CommandLine := 'xdg-open "' +
-    StringReplace(Favorites.favoriteInfo[vtFavorites.FocusedNode^.Index].SaveTo,
+    StringReplace(Favorites.Favorites[vtFavorites.FocusedNode^.Index].FavoriteInfo.SaveTo,
     '/', '\', [rfReplaceAll]) + '"';
   {$ENDIF}
   Process.Execute;
@@ -2594,7 +2592,7 @@ begin
   l := TStringList.Create;
   Process := TProcessUTF8.Create(nil);
   try
-    s := StringReplace(Favorites.favoriteInfo[vtFavorites.FocusedNode^.Index].SaveTo,
+    s := StringReplace(FavoriteManager.Favorites[vtFavorites.FocusedNode^.Index].FavoriteInfo.SaveTo,
       '/', '\', [rfReplaceAll]);
     if s[Length(s)] <> DirectorySeparator then
       s := s + DirectorySeparator;
@@ -2841,7 +2839,7 @@ end;
 
 procedure TMainForm.pmFavoritesPopup(Sender: TObject);
 begin
-  if favorites.isRunning then
+  if FavoriteManager.isRunning then
   begin
     pmFavorites.Items[2].Enabled := True;
     pmFavorites.Items[2].Enabled := False;
@@ -3435,7 +3433,7 @@ begin
   if Assigned(Data) then
     case Column of
       0: CellText := Data^.numbering;
-      1: CellText := Data^.title;
+      1: CellText := Data^.Title;
       2: CellText := Data^.currentChapter;
       3: CellText := Data^.website;
       4: CellText := Data^.saveTo;
@@ -3445,20 +3443,19 @@ end;
 procedure TMainForm.vtFavoritesHeaderClick(Sender: TVTHeader;
   HitInfo: TVTHeaderHitInfo);
 begin
-  if (not (HitInfo.Column = 0)) and (not favorites.isRunning) and (favorites.Count > 1) then
+  if (not (HitInfo.Column = 0)) and (not FavoriteManager.isRunning) and (FavoriteManager.Count > 1) then
   begin
-    favorites.isRunning := True;
+    FavoriteManager.isRunning := True;
     with HitInfo do try
-      favorites.sortDirection := not favorites.sortDirection;
+      FavoriteManager.sortDirection := not FavoriteManager.sortDirection;
       vtFavorites.Header.SortColumn := Column;
-      vtFavorites.Header.SortDirection := TSortDirection(favorites.sortDirection);
-      //favorites.Sort(Column);
-      favorites.SortNatural(Column);
+      vtFavorites.Header.SortDirection := TSortDirection(FavoriteManager.sortDirection);
+      FavoriteManager.SortNatural(Column);
       options.WriteInteger('misc', 'SortFavoritesColumn', vtFavorites.Header.SortColumn);
-      options.WriteBool('misc', 'SortFavoritesDirection', favorites.sortDirection);
+      options.WriteBool('misc', 'SortFavoritesDirection', FavoriteManager.sortDirection);
     finally
       UpdateVtFavorites;
-      favorites.isRunning := False;
+      FavoriteManager.isRunning := False;
     end;
   end;
 end;
@@ -3474,10 +3471,10 @@ begin
     pos := Node^.Index;
     Data := GetNodeData(Node);
     Data^.numbering := IntToStr(pos + 1);
-    Data^.title := favorites.favoriteInfo[pos].title;
-    Data^.currentChapter := favorites.favoriteInfo[pos].currentChapter;
-    Data^.website := favorites.favoriteInfo[pos].website;
-    Data^.saveTo := favorites.favoriteInfo[pos].saveTo;
+    Data^.Title := FavoriteManager.Favorites[pos].FavoriteInfo.Title;
+    Data^.currentChapter := FavoriteManager.Favorites[pos].FavoriteInfo.currentChapter;
+    Data^.website := FavoriteManager.Favorites[pos].FavoriteInfo.website;
+    Data^.saveTo := FavoriteManager.Favorites[pos].FavoriteInfo.saveTo;
   end;
   vtFavorites.ValidateNode(Node, False);
 end;
@@ -4106,9 +4103,9 @@ begin
   btReadOnline.Enabled := (mangaInfo.link <> '');
   btAddToFavorites.Enabled := not SitesWithoutFavorites(website);
 
-  //check if manga already in favorites list
-  if btAddToFavorites.Enabled and (Length(favorites.favoriteInfo) > 0) then
-    btAddToFavorites.Enabled := not favorites.IsMangaExist(mangaInfo.title, website);
+  //check if manga already in FavoriteManager list
+  if btAddToFavorites.Enabled and (FavoriteManager.Favorites.Count > 0) then
+    btAddToFavorites.Enabled := not FavoriteManager.IsMangaExist(mangaInfo.title, website);
 end;
 
 procedure TMainForm.RunGetList;
@@ -4225,13 +4222,13 @@ begin
   OptionAutoDlFav := cbOptionAutoDlFav.Checked;
 
   vtFavorites.Header.SortColumn := options.ReadInteger('misc', 'SortFavoritesColumn', 1);
-  favorites.sortDirection := options.ReadBool('misc', 'SortFavoritesDirection', False);
+  FavoriteManager.sortDirection := options.ReadBool('misc', 'SortFavoritesDirection', False);
 
   vtDownload.Header.SortColumn := options.ReadInteger('misc', 'SortDownloadColumn', 0);
   DLManager.SortDirection := options.ReadBool('misc', 'SortDownloadDirection', False);
   vtDownload.Header.SortDirection := TSortDirection(DLManager.SortDirection);
 
-  vtFavorites.Header.SortDirection := TSortDirection(favorites.sortDirection);
+  vtFavorites.Header.SortDirection := TSortDirection(FavoriteManager.sortDirection);
 
   if OptionCheckMinutes = 0 then
     itCheckForChapters.Enabled := False
@@ -4515,7 +4512,7 @@ end;
 procedure TMainForm.UpdateVtFavorites;
 begin
   vtFavorites.Clear;
-  vtFavorites.RootNodeCount := favorites.Count;
+  vtFavorites.RootNodeCount := FavoriteManager.Favorites.Count;
 end;
 
 procedure TMainForm.LoadFormInformation;
@@ -4957,7 +4954,7 @@ begin
     end;
   end;
 
-  if favorites.isRunning then
+  if FavoriteManager.isRunning then
     btFavoritesCheckNewChapter.Caption := stFavoritesChecking
   else
     btFavoritesCheckNewChapter.Caption := stFavoritesCheck;

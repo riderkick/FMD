@@ -54,6 +54,7 @@ begin
   btQueue   .Caption:= stAddToQueue;
   btCancel  .Caption:= stCancel;
   Caption           := stNewChapterNotification;
+  FFormResult       := ncrCancel;
 end;
 
 procedure TNewChapter.btDownloadClick(Sender: TObject);

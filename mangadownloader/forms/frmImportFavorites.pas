@@ -130,7 +130,7 @@ end;
 
 procedure TImportFavorites.FMDHandle;
 begin
-  MainForm.favorites.MergeWith(CorrectFilePath(edPath.Text) + 'works/favorites.ini');
+  MainForm.FavoriteManager.MergeWith(CorrectFilePath(edPath.Text) + 'works/favorites.ini');
 
   MessageDlg('', stImportCompleted,
                  mtConfirmation, [mbYes], 0)

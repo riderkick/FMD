@@ -66,6 +66,7 @@ object MainForm: TMainForm
         BorderSpacing.Top = 4
         BorderSpacing.Right = 4
         BorderSpacing.Bottom = 3
+        Colors.UnfocusedColor = clMedGray
         DefaultText = 'Node'
         DragOperations = [doMove]
         Header.AutoSizeIndex = 0
@@ -383,11 +384,13 @@ object MainForm: TMainForm
             Top = 2
             Width = 562
             Anchors = [akTop, akLeft, akRight, akBottom]
+            Colors.UnfocusedColor = clMedGray
             Colors.UnfocusedSelectionColor = clHighlight
             DefaultText = 'Node'
             Header.AutoSizeIndex = 0
             Header.Columns = <>
             Header.DefaultHeight = 17
+            Header.Height = 17
             Header.MainColumn = -1
             IncrementalSearch = isVisibleOnly
             Margin = 2
@@ -1372,6 +1375,7 @@ object MainForm: TMainForm
         BorderSpacing.Left = 2
         BorderSpacing.Top = 4
         BorderSpacing.Right = 4
+        Colors.UnfocusedColor = clMedGray
         DefaultText = 'Node'
         Header.AutoSizeIndex = 0
         Header.Columns = <        
@@ -2284,10 +2288,12 @@ object MainForm: TMainForm
             BorderSpacing.Right = 2
             BorderSpacing.Bottom = 2
             BorderSpacing.Around = 2
+            Colors.UnfocusedColor = clMedGray
             DefaultText = 'Node'
             Header.AutoSizeIndex = 0
             Header.Columns = <>
             Header.DefaultHeight = 17
+            Header.Height = 17
             Header.MainColumn = -1
             IncrementalSearch = isVisibleOnly
             Margin = 0
@@ -2581,10 +2587,12 @@ object MainForm: TMainForm
         Anchors = [akTop, akLeft, akRight, akBottom]
         BorderSpacing.Right = 2
         BorderSpacing.Around = 2
+        Colors.UnfocusedColor = clMedGray
         DefaultText = 'Node'
         Header.AutoSizeIndex = 0
         Header.Columns = <>
         Header.DefaultHeight = 17
+        Header.Height = 17
         Header.MainColumn = -1
         HintMode = hmHint
         IncrementalSearch = isAll

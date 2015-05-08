@@ -690,7 +690,7 @@ type
 
   { TMangaInfo }
 
-  TMangaInfo = class(TObject)
+  TMangaInfo = class
   public
     url,
     title,
@@ -724,13 +724,13 @@ type
   PFavoriteInfo = ^TFavoriteInfo;
 
   TFavoriteInfo = record
-    numbering,
-    title,
-    downloadedChapterList,
-    currentChapter,
     Website,
+    Title,
+    Link,
     SaveTo,
-    Link: String;
+    numbering,
+    downloadedChapterList,
+    currentChapter: String;
   end;
 
   TCardinalList = TFPGList<Cardinal>;
