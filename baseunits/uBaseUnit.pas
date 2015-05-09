@@ -502,7 +502,6 @@ var
 
   MANGASTREAM_ROOT: String = 'http://mangastream.com';
   MANGASTREAM_ROOT2: String = 'http://readms.com';
-  MANGASTREAM_BROWSER: String = '/manga';
 
   MANGAEDEN_BROWSER: String = '/en-directory/';
   MANGAEDEN_BROWSER_1: String = '/en-directory/';

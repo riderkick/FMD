@@ -1,9 +1,10 @@
   function GetMangaStreamInfoFromURL: Byte;
   var
+    i: Integer;
     s: String;
-    isExtractChapter: Boolean = True;
-    i, j: Cardinal;
+    isExtractChapter: Boolean = False;
   begin
+    mangaInfo.website := WebsiteRoots[MANGASTREAM_ID, 0];
     mangaInfo.url := FillMangaSiteHost(MANGASTREAM_ID, URL);
     if not GetPage(TObject(Source), mangaInfo.url, Reconnect) then
     begin
@@ -13,60 +14,50 @@
     end;
 
     // parsing the HTML source
-    parse.Clear;
+
     Parser := THTMLParser.Create(PChar(Source.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText := OnText;
-    Parser.Exec;
-
-    Parser.Free;
+    try
+      Parser.OnFoundTag := OnTag;
+      Parser.OnFoundText := OnText;
+      parse.Clear;
+      Parser.Exec;
+    finally
+      Parser.Free;
+    end;
     Source.Free;
-    mangaInfo.website := WebsiteRoots[MANGASTREAM_ID, 0];
 
-    mangaInfo.coverLink := '';
-    mangaInfo.summary := '';
-    mangaInfo.authors := '';
-    mangaInfo.artists := '';
-    mangaInfo.genres := '';
-    mangaInfo.status := '1';
-
-    // using parser (cover link, summary, chapter name and link)
     if parse.Count = 0 then
       Exit;
+
+    mangaInfo.status := '1';
     for i := 0 to parse.Count - 1 do
     begin
-      // do not allow to get chapter name and links
-      if (isExtractChapter) and
-        (Pos('</table>', parse.Strings[i]) > 0) then
-        isExtractChapter := False;
+      //title
+      if mangaInfo.title = '' then
+        if GetTagName(parse[i]) = 'h1' then
+          mangaInfo.title := CommonStringFilter(parse[i + 1]);
 
-      // get chapter name and links
-      if (isExtractChapter) and
-        (Pos('<td>', parse.Strings[i]) > 0) and
-        (Pos('</td>', parse.Strings[i + 4]) > 0) then
+      //chapters
+      if (GetTagName(parse[i]) = 'table') and (GetVal(parse[i], 'class') = 'table table-striped') then
+        isExtractChapter := True;
+      if isExtractChapter then
       begin
-        Inc(mangaInfo.numChapter);
-        s := StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i + 1], 'href=')),
-          MANGASTREAM_ROOT2, '', []);
-        Delete(s, Length(s) - 1, 2);
-        mangaInfo.chapterLinks.Add(s);
-        s := RemoveSymbols(TrimLeft(TrimRight(parse.Strings[i + 2])));
-        mangaInfo.chapterName.Add(StringFilter(StringFilter(HTMLEntitiesFilter(s))));
+        if  GetTagName(parse[i]) = '/table' then
+          Break
+        else
+        if GetTagName(parse[i]) = 'a' then
+        begin
+          Inc(mangaInfo.numChapter);
+          mangaInfo.chapterName.Add(parse[i + 1]);
+          s := GetVal(parse[i], 'href');
+          if Pos('http', LowerCase(s)) <> 1 then
+            s := MANGASTREAM_ROOT2 + s;
+          mangaInfo.chapterLinks.Add(s);
+        end;
       end;
     end;
 
-    // Since chapter name and link are inverted, we need to invert them
-    if mangainfo.ChapterLinks.Count > 1 then
-    begin
-      i := 0;
-      j := mangainfo.ChapterLinks.Count - 1;
-      while (i < j) do
-      begin
-        mangainfo.ChapterName.Exchange(i, j);
-        mangainfo.chapterLinks.Exchange(i, j);
-        Inc(i);
-        Dec(j);
-      end;
-    end;
+    // invert chapters
+    InvertStrings([mangaInfo.chapterName, mangaInfo.chapterLinks]);
     Result := NO_ERROR;
   end;

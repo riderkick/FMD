@@ -1,36 +1,43 @@
   function MangaStreamGetNamesAndLinks: Byte;
   var
-    i: Cardinal;
-    s: String;
+    i: Integer;
+    isExtractNames: Boolean = False;
   begin
     Result := INFORMATION_NOT_FOUND;
-    if not GetPage(TObject(Source), MANGASTREAM_ROOT + MANGASTREAM_BROWSER, 0) then
+    if not GetPage(TObject(Source), MANGASTREAM_ROOT + '/manga', 3) then
     begin
       Result := NET_PROBLEM;
       Source.Free;
       Exit;
     end;
-    parse.Clear;
+
     Parser := THTMLParser.Create(PChar(Source.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText := OnText;
-    Parser.Exec;
-    Parser.Free;
-    if parse.Count = 0 then
-    begin
-      Source.Free;
-      Exit;
+    try
+      Parser.OnFoundTag := OnTag;
+      Parser.OnFoundText := OnText;
+      parse.Clear;
+      Parser.Exec;
+    finally
+      Parser.Free;
     end;
-    for i := 0 to parse.Count - 1 do
-    begin
-      if (Pos('/manga/', parse.Strings[i]) > 0) then
+
+    if parse.Count > 0 then
+      for i := 0 to parse.Count - 1 do
       begin
-        Result := NO_ERROR;
-        s := StringFilter(TrimLeft(TrimRight(parse.Strings[i + 1])));
-        names.Add(HTMLEntitiesFilter(s));
-        s := GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href="'));
-        links.Add(StringReplace(s, MANGASTREAM_ROOT, '', []));
+        if (GetTagName(parse[i]) = 'table') and (GetVal(parse[i], 'class') = 'table table-striped') then
+          isExtractNames := True;
+        if isExtractNames then
+        begin
+          if  GetTagName(parse[i]) = '/table' then
+            Break
+          else
+          if GetTagName(parse[i]) = 'a' then
+            if GetVal(parse[i], 'class') <> 'chapter-link' then
+            begin
+              links.Add(GetVal(parse[i], 'href'));
+              names.Add(CommonStringFilter(parse[i + 1]));
+            end;
+        end;
       end;
-    end;
     Source.Free;
   end;
