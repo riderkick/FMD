@@ -5385,8 +5385,9 @@ object MainForm: TMainForm
     left = 672
     top = 200
   end
-  object itMonitor: TIdleTimer
+  object itMonitor: TTimer
     Enabled = False
+    Interval = 1500
     OnTimer = itMonitorTimer
     left = 728
     top = 328

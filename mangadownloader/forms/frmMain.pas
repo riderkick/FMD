@@ -62,7 +62,7 @@ type
     IconList2: TImageList;
     IconMed: TImageList;
     IconSmall: TImageList;
-    itMonitor: TIdleTimer;
+    itMonitor: TTimer;
     itStartup: TIdleTimer;
     lbOptionProxyType: TLabel;
     lbOptionRenameDigits: TLabel;
