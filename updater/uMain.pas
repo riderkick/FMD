@@ -390,20 +390,24 @@ procedure TDownloadThread.Execute;
   end;
 
 var
-  regx      :TRegExpr;
-  i, ctry   :Integer;
+  regx           : TRegExpr;
+  i, ctry        : Cardinal;
   Sza,
   rurl,
   fname,
   sproject,
   sdir,
-  sfile     :String;
-  st        :TStringList;
+  sfile          : String;
+  st, HTTPHeaders: TStringList;
+
 begin
   URL := Trim(URL);
+  HTTPHeaders := TStringList.Create;
   regx := TRegExpr.Create;
   try
     PrepareHTTP(FHTTP);
+    FHTTP.Headers.NameValueSeparator := ':';
+    HTTPHeaders.NameValueSeparator := ':';
     regx.ModifierI := True;
     if isSFURL then
     begin
@@ -439,11 +443,12 @@ begin
         FileName := 'new_version.7z';
     end;
 
+    FHTTP.Headers.Text := HTTPHeaders.Text;
     //**loading page
     UpdateStatus(RS_LoadingPage);
     ctry := 0;
     while (not FHTTP.HTTPMethod('HEAD', rurl)) or
-      (FHTTP.ResultCode >= 300) or (FHTTP.ResultCode < 100) do
+      (FHTTP.ResultCode >= 400) or (FHTTP.ResultCode < 100) do
     begin
       if Self.Terminated then Break;
       if (FHTTP.ResultCode >= 500) or (FHTTP.ResultCode < 100) then
@@ -473,21 +478,15 @@ begin
           ShowErrorMessage(Format(RS_FileNotFound_mfdatalink, [mf_data_link]));
         end;
         Break;
-      end
-      else
-      if FHTTP.ResultCode >= 300 then
-      begin
-        UpdateStatus(RS_Redirected);
-        FHTTP.Headers.Add('Referer: ' + rurl);
-        rurl := HeaderByName(FHTTP.Headers, 'location: ');
       end;
       FHTTP.Clear;
     end;
 
     if (FHTTP.ResultCode >= 300) or isSFURL then
     begin
+      HTTPHeaders.Values['Referer'] := ' ' + rurl;
       UpdateStatus(RS_Redirected);
-      rurl := HeaderByName(FHTTP.Headers, 'location: ');
+      rurl := Trim(FHTTP.Headers.Values['Location']);
       if isSFURL then
       begin
         if (Pos('use_mirror=', rurl) > 0) then
@@ -504,10 +503,10 @@ begin
     UpdateStatus(Format(RS_Downloading, [FileName]));
     if (FHTTP.ResultCode >= 100) and (FHTTP.ResultCode < 400) then
     begin
+      HTTPHeaders.Values['Accept'] := ' */*';
       ctry := 0;
       FHTTP.Clear;
-      FHTTP.Headers.Add('Accept: */*');
-      FHTTP.Headers.Add('Referer: ' + URL);
+      FHTTP.Headers.Text := HTTPHeaders.Text;
       while (not FHTTP.HTTPMethod('GET', rurl)) or
         (FHTTP.ResultCode >= 300) do
       begin
@@ -543,10 +542,11 @@ begin
         else
         if FHTTP.ResultCode >= 300 then
         begin
-          FHTTP.Headers.Add('Referer: ' + rurl);
+          HTTPHeaders.Values['Referer'] := ' ' + rurl;
           rurl := HeaderByName(FHTTP.Headers, 'location: ');
         end;
         FHTTP.Clear;
+        FHTTP.Headers.Text := HTTPHeaders.Text;
       end;
     end;
 
@@ -629,6 +629,7 @@ begin
       frmMain.ExceptionHandler(Self, E);
   end;
   regx.Free;
+  HTTPHeaders.Free;
 end;
 
 { TfrmMain }
