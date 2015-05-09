@@ -433,9 +433,18 @@ type
     procedure vtDownloadKeyDown(Sender : TObject; var Key : Word;
       Shift : TShiftState);
     procedure vtDownloadKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure vtFavoritesBeforeCellPaint(Sender: TBaseVirtualTree;
+      TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
+      CellPaintMode: TVTCellPaintMode; CellRect: TRect; var ContentRect: TRect);
     procedure vtFavoritesColumnDblClick(Sender: TBaseVirtualTree;
       Column: TColumnIndex; Shift: TShiftState);
     procedure vtFavoritesFreeNode(Sender: TBaseVirtualTree; Node: PVirtualNode);
+    procedure vtFavoritesGetHint(Sender: TBaseVirtualTree; Node: PVirtualNode;
+      Column: TColumnIndex; var LineBreakStyle: TVTTooltipLineBreakStyle;
+      var HintText: String);
+    procedure vtFavoritesGetImageIndex(Sender: TBaseVirtualTree;
+      Node: PVirtualNode; Kind: TVTImageKind; Column: TColumnIndex;
+      var Ghosted: Boolean; var ImageIndex: Integer);
     procedure vtFavoritesGetText(Sender: TBaseVirtualTree; Node: PVirtualNode;
       Column: TColumnIndex; TextType: TVSTTextType; var CellText: String);
     procedure vtFavoritesHeaderClick(Sender: TVTHeader;
@@ -594,6 +603,9 @@ var
   DoAfterFMD: TDoFMDType;
   FUpdateURL: String;
 
+resourcestring
+  RS_HintFavoriteProblem = 'There is a problem with this data!'+ LineEnding +
+                           'Removing and re-adding this data may fix the problem.';
 
 implementation
 
@@ -3420,6 +3432,23 @@ begin
     miDeleteTaskClick(miDeleteTask);
 end;
 
+procedure TMainForm.vtFavoritesBeforeCellPaint(Sender: TBaseVirtualTree;
+  TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
+  CellPaintMode: TVTCellPaintMode; CellRect: TRect; var ContentRect: TRect);
+var
+  Data: PFavoriteInfo;
+begin
+  Data := Sender.GetNodeData(Node);
+  if Assigned(Data) then
+  begin
+    if Trim(Data^.Link) = '' then
+    begin
+      TargetCanvas.Brush.Color := $008080FF;
+      TargetCanvas.FillRect(CellRect);
+    end;
+  end;
+end;
+
 procedure TMainForm.vtFavoritesColumnDblClick(Sender: TBaseVirtualTree;
   Column: TColumnIndex; Shift: TShiftState);
 begin
@@ -3434,6 +3463,42 @@ begin
   Data := Sender.GetNodeData(Node);
   if Assigned(Data) then
     Finalize(Data^);
+end;
+
+procedure TMainForm.vtFavoritesGetHint(Sender: TBaseVirtualTree;
+  Node: PVirtualNode; Column: TColumnIndex;
+  var LineBreakStyle: TVTTooltipLineBreakStyle; var HintText: String);
+var
+  Data: PFavoriteInfo;
+begin
+  Data := Sender.GetNodeData(Node);
+  if Assigned(Data) then
+    case Column of
+      1: if Trim(Data^.Link) = '' then
+           HintText := RS_HintFavoriteProblem
+         else
+           HintText := Data^.Title;
+      2: HintText := Data^.currentChapter;
+      3: HintText := Data^.website;
+      4: HintText := Data^.saveTo;
+    end;
+end;
+
+procedure TMainForm.vtFavoritesGetImageIndex(Sender: TBaseVirtualTree;
+  Node: PVirtualNode; Kind: TVTImageKind; Column: TColumnIndex;
+  var Ghosted: Boolean; var ImageIndex: Integer);
+var
+  Data: PFavoriteInfo;
+begin
+  if vtFavorites.Header.Columns[Column].Position = 1 then
+  begin
+    Data := Sender.GetNodeData(Node);
+    if Assigned(Data) then
+      if Trim(Data^.Link) = '' then
+        ImageIndex := 7
+      else
+        ImageIndex := -1;
+  end;
 end;
 
 // vtFavorites
@@ -3491,6 +3556,7 @@ begin
     Data^.currentChapter := FavoriteManager.Favorites[pos].FavoriteInfo.currentChapter;
     Data^.website := FavoriteManager.Favorites[pos].FavoriteInfo.website;
     Data^.saveTo := FavoriteManager.Favorites[pos].FavoriteInfo.saveTo;
+    Data^.Link := FavoriteManager.Favorites[pos].FavoriteInfo.Link;
   end;
   vtFavorites.ValidateNode(Node, False);
 end;
