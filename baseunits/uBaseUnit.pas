@@ -400,7 +400,7 @@ var
     ('AnimExtremist', 'http://www.animextremist.com'),
     ('PecintaKomik', 'http://www.pecintakomik.com'),
     ('HugeManga', 'http://hugemanga.com'),
-    ('S2scanlations', 'http://s2scanlations.com'),
+    ('S2Scans', 'http://reader.s2smanga.com'),
     ('SenManga', 'http://www.senmanga.com'),
     ('imanhua', 'http://www.imanhua.com'),
     ('Mabuns', 'http://www.mabuns.web.id'),
@@ -544,8 +544,6 @@ var
   PECINTAKOMIK_BROWSER: String = '/directory/';
 
   HUGEMANGA_BROWSER: String = '/';
-
-  S2SCAN_BROWSER: String = '/online/read/denpa_kyoushi/en/0/90/page/1';
 
   SENMANGA_BROWSER: String = '/Manga/';
 

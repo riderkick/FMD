@@ -817,7 +817,7 @@ var
 
   {$I includes/RedHawkScans/directory_page_number.inc}
 
-  {$I includes/S2scans/directory_page_number.inc}
+  {$I includes/S2Scans/directory_page_number.inc}
 
   {$I includes/LectureEnLigne/directory_page_number.inc}
 
@@ -928,9 +928,9 @@ begin
     else
     if website = WebsiteRoots[REDHAWKSCANS_ID, 0] then
       Result := GetRedHawkScansDirectoryPageNumber
-    // else
-    // if website = S2SCAN_ID,0] then
-    //   Result:= GetS2scanDirectoryPageNumber
+    else
+    if website = WebsiteRoots[S2SCAN_ID,0] then
+      Result:= GetS2ScanDirectoryPageNumber
     else
     if website = WebsiteRoots[SENMANGA_ID, 0] then
       Result := GetSenMangaDirectoryPageNumber
@@ -1123,7 +1123,7 @@ var
 
   {$I includes/RedHawkScans/names_and_links.inc}
 
-  {$I includes/S2scans/names_and_links.inc}
+  {$I includes/S2Scans/names_and_links.inc}
 
   {$I includes/EGScans/names_and_links.inc}
 
@@ -1506,7 +1506,7 @@ var
 
   {$I includes/RedHawkScans/manga_information.inc}
 
-  {$I includes/S2scans/manga_information.inc}
+  {$I includes/S2Scans/manga_information.inc}
 
   {$I includes/EGScans/manga_information.inc}
 

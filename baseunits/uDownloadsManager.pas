@@ -451,7 +451,7 @@ var
 
   {$I includes/RedHawkScans/chapter_page_number.inc}
 
-  {$I includes/S2scans/chapter_page_number.inc}
+  {$I includes/S2Scans/chapter_page_number.inc}
 
   {$I includes/SenManga/chapter_page_number.inc}
 
@@ -799,8 +799,6 @@ var
 
   {$I includes/RedHawkScans/image_url.inc}
 
-  {$I includes/S2scans/image_url.inc}
-
   {$I includes/ScanManga/image_url.inc}
 
   {$I includes/SenManga/image_url.inc}
@@ -914,9 +912,6 @@ begin
   else
   if manager.container.MangaSiteID = REDHAWKSCANS_ID then
     Result := GetRedHawkScansImageURL
-  else
-  if manager.container.MangaSiteID = S2SCAN_ID then
-    Result := GetS2scanImageURL
   else
   if manager.container.MangaSiteID = EGSCANS_ID then
     Result := GetEGScansImageURL
