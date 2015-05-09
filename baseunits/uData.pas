@@ -1191,6 +1191,8 @@ var
 
   {$I includes/MangaAt/names_and_links.inc}
 
+  {$I includes/SenMangaRAW/names_and_links.inc}
+
 begin
   Source := TStringList.Create;
   if website = WebsiteRoots[ANIMEA_ID, 0] then
@@ -1435,6 +1437,9 @@ begin
   else
   if website = WebsiteRoots[MANGAAT_ID, 0] then
     Result := MangaAtGetNamesAndLinks
+  else
+  if website = WebsiteRoots[SENMANGARAW_ID, 0] then
+    Result := SenMangaRAWGetNamesAndLinks
   else
   begin
     Result := INFORMATION_NOT_FOUND;
