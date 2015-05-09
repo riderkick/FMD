@@ -11,10 +11,10 @@ unit uDownloadsManager;
 interface
 
 uses
+  lazutf8classes, jsHTMLUtil, FastHTMLParser, HTMLUtil, SynaCode, FileUtil,
+  Controls, VirtualTrees, RegExpr, Imaging, ImagingTypes, ImagingCanvases,
   Classes, SysUtils, Dialogs, ExtCtrls, IniFiles, fgl, typinfo, syncobjs,
-  httpsend, blcksock,
-  uBaseUnit, uPacker, uFMDThread, uMisc,
-  frmShutdownCounter;
+  httpsend, blcksock, uBaseUnit, uPacker, uFMDThread, uMisc, frmShutdownCounter;
 
 type
   TDownloadManager = class;
@@ -233,9 +233,7 @@ resourcestring
 implementation
 
 uses
-  lazutf8classes, jsHTMLUtil, FastHTMLParser, HTMLUtil,
-  SynaCode, FileUtil, Controls, VirtualTrees, RegExpr, frmMain,
-  Imaging, ImagingTypes, ImagingCanvases;
+  frmMain;
 
 // ----- TDownloadThread -----
 
@@ -355,7 +353,7 @@ begin
       manager.container.DownCounter := InterLockedIncrement(manager.container.DownCounter);
       manager.container.DownloadInfo.Progress :=
         Format('%d/%d', [manager.container.DownCounter, manager.container.PageNumber]);
-      Synchronize( manager.container.Thread.MainThreadRepaint);
+      Synchronize(manager.container.Thread.MainThreadRepaint);
     end;
   except
     on E: Exception do
@@ -2031,9 +2029,8 @@ var
   Count: Cardinal = 0;
   i: Integer;
 
-  function ShowWaitCounter: Boolean;
+  procedure ShowExitCounter;
   begin
-    Result := False;
     if ThreadID <> MainThreadID then
     begin
       {$IF FPC_FULLVERSION >= 20701}
@@ -2045,8 +2042,6 @@ var
     end
     else
       doExitWaitCounter;
-    if ExitWaitOK then
-      Result := True;
   end;
 
 begin
@@ -2090,37 +2085,15 @@ begin
       end;
 
       if (Count = 0) and (isCheckForFMDDo) then
-      begin
-        case MainForm.cbOptionLetFMDDo.ItemIndex of
-          DO_EXIT_FMD:
-          begin
-            ExitType := etExit;
-            if ShowWaitCounter then
-            begin
-              MainForm.CloseNow;
-              Halt;
-            end;
+        if MainForm.cbOptionLetFMDDo.ItemIndex > 0 then
+        begin
+          case MainForm.cbOptionLetFMDDo.ItemIndex of
+            DO_EXIT_FMD: ExitType := etExit;
+            DO_TURNOFF: ExitType := etShutdown;
+            DO_HIBERNATE: ExitType := etHibernate;
           end;
-          DO_TURNOFF:
-          begin
-            ExitType := etShutdown;
-            if ShowWaitCounter then
-            begin
-              MainForm.CloseNow;
-              fmdPowerOff;
-              Halt;
-            end;
-          end;
-          DO_HIBERNATE:
-          begin
-            ExitType := etHibernate;
-            if ShowWaitCounter then
-            begin
-              fmdHibernate;
-            end;
-          end;
+          ShowExitCounter;
         end;
-      end;
       MainForm.vtDownloadFilters;
     except
       on E: Exception do
@@ -2383,17 +2356,27 @@ end;
 procedure TDownloadManager.doExitWaitCounter;
 begin
   with TShutdownCounterForm.Create(MainForm) do try
-    case ExitType of
+    case Self.ExitType of
       etShutdown: WaitTimeout := 60;
       etHibernate: WaitTimeout := 30;
       etExit: WaitTimeout := 5;
     end;
-    ExitType := ExitType;
+    frmExitType := Self.ExitType;
     ExitWaitOK := False;
     if ShowModal = mrOK then
       ExitWaitOK := True;
   finally
     Free;
+  end;
+
+  if ExitWaitOK then
+  begin
+    case Self.ExitType of
+      etShutdown: DoAfterFMD := DoFMDNothing;
+      etHibernate: DoAfterFMD := DoFMDHibernate;
+      etExit: DoAfterFMD := DoFMDExit;
+    end;
+    MainForm.itMonitor.Enabled := True;
   end;
 end;
 

@@ -36,7 +36,7 @@ type
     { private declarations }
   public
     WaitTimeout: Integer;
-    ExitType: TExitType;
+    frmExitType: TExitType;
     { public declarations }
   end;
 
@@ -79,7 +79,7 @@ procedure TShutdownCounterForm.FormCreate(Sender: TObject);
 begin
   WaitTimeout := 60;
   WaitCounter := WaitTimeout;
-  ExitType := etExit;
+  frmExitType := etExit;
 end;
 
 procedure TShutdownCounterForm.FormKeyDown(Sender : TObject; var Key : Word;
@@ -96,7 +96,7 @@ procedure TShutdownCounterForm.FormShow(Sender: TObject);
 var
   s: String;
 begin
-  case ExitType of
+  case frmExitType of
     etShutdown: s := RS_LblMessageShutdown;
     etHibernate: s := RS_LblMessageHibernate;
     etExit: s := RS_LblMessageExit;
@@ -118,7 +118,7 @@ var
   s: String;
 begin
   Dec(WaitCounter);
-  case ExitType of
+  case frmExitType of
     etShutdown: s := RS_LblMessageShutdown;
     etHibernate: s := RS_LblMessageHibernate;
     etExit: s := RS_LblMessageExit;

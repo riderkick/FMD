@@ -88,8 +88,8 @@ begin
     end;
     if ShowModal = mrYes then
     begin
-      MainForm.DoUpdateFMD := True;
-      MainForm.FUpdateURL := fUpdateURL;
+      frmMain.FUpdateURL := fUpdateURL;
+      DoAfterFMD := DoFMDUpdate;
       MainForm.itMonitor.Enabled := True;
     end
     else

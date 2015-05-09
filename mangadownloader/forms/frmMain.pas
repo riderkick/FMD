@@ -22,6 +22,7 @@ uses
   uMisc, uGetMangaInfosThread, USimpleException, ActiveX;
 
 type
+  TDoFMDType = (DoFMDNothing, DoFMDUpdate, DoFMDExit, DoFMDShutdown, DoFMDHibernate);
 
   { TMainForm }
 
@@ -516,13 +517,6 @@ type
     GetInfosThread: TGetMangaInfosThread;
     isGetMangaInfos: Boolean;
 
-    // update fmd through main thread
-    DoUpdateFMD: Boolean;
-    FUpdateURL: String;
-
-    //Instance
-    FMDInstance: TSimpleIPCServer;
-
     // repaint treeview
     procedure tvDownloadFilterRepaint;
 
@@ -590,8 +584,16 @@ resourcestring
   RS_Loading = 'Loading ...';
 
 var
+  //Instance
+  FMDInstance: TSimpleIPCServer;
+
   MainForm: TMainForm;
   INIAdvanced: TIniFileR;
+
+  // update fmd through main thread
+  DoAfterFMD: TDoFMDType;
+  FUpdateURL: String;
+
 
 implementation
 
@@ -620,7 +622,7 @@ begin
   isExiting := False;
   isSubthread := False;
   isGetMangaInfos := False;
-  DoUpdateFMD := False;
+  DoAfterFMD := DoFMDNothing;
   fmdDirectory := CorrectFilePath(GetCurrentDirUTF8);
   Application.HintHidePause := 10000;
   sbUpdateList.DoubleBuffered := True;
@@ -756,7 +758,7 @@ end;
 
 procedure TMainForm.FormClose(Sender: TObject; var CloseAction: TCloseAction);
 begin
-  if cbOptionShowQuitDialog.Checked then
+  if cbOptionShowQuitDialog.Checked and (DoAfterFMD = DoFMDNothing) then
   begin
     if MessageDlg('', stDlgQuit, mtConfirmation, [mbYes, mbNo], 0) <> mrYes then
     begin
@@ -877,7 +879,7 @@ end;
 
 procedure TMainForm.itMonitorTimer(Sender: TObject);
 begin
-  if DoUpdateFMD then
+  if DoAfterFMD = DoFMDUpdate then
   begin
     if FileExistsUTF8(fmdDirectory + 'updater.exe') then
       CopyFile(fmdDirectory + 'updater.exe', fmdDirectory + 'old_updater.exe');
@@ -891,9 +893,20 @@ begin
       RunExternalProcess(fmdDirectory + 'old_updater.exe',
         ['-x', '-r', '3', '-a', FUpdateURL, '-l', Application.ExeName], True, True);
       {$ENDIF}
-      Application.Terminate;
+      Self.Close;
     end;
+  end
+  else
+  if DoAfterFMD <> DoFMDNothing then
+  begin
+    case DoAfterFMD of
+      DoFMDShutdown: fmdPowerOff;
+      DoFMDHibernate: fmdHibernate;
+    end;
+    Self.Close;
   end;
+  DoAfterFMD := DoFMDNothing;
+  itMonitor.Enabled := False;
 end;
 
 procedure TMainForm.itRefreshFormTimer(Sender: TObject);
