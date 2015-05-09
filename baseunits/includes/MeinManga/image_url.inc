@@ -4,7 +4,6 @@
     prefix: Cardinal = 0;
     i: Cardinal;
     l: TStringList;
-    //HTTP        : THTTPSend;
     Parser: THTMLParser;
   begin
     s := manager.container.DownloadInfo.SaveTo +
@@ -22,15 +21,10 @@
     end;
 
     l := TStringList.Create;
-    //HTTP := THTTPSend.Create;
-    //HTTP.Sock.OnHeartbeat := SockOnHeartBeat;
-    //HTTP.Sock.HeartbeatRate := SOCKHEARTBEATRATE;
 
-    FHTTP.Headers.Insert(0, 'Accept: image/png,image/*;q=0.8,*/*;q=0.5');
-    FHTTP.Headers.Insert(0, 'Accept-Encoding: gzip, deflate');
-    FHTTP.Headers.Insert(0, 'Accept-Language: en-US,en;q=0.5');
-    FHTTP.Protocol := '1.1';
-    FHTTP.UserAgent := UA_Firefox;
+    FHTTP.Headers.Values['Accept'] := ' image/png,image/*;q=0.8,*/*;q=0.5';
+    FHTTP.Headers.Values['Accept-Encoding'] := ' gzip, deflate';
+    FHTTP.Headers.Values['Accept-Language'] := ' en-US,en;q=0.5';
 
     Result := GetPage(FHTTP,
       TObject(l),
@@ -45,11 +39,14 @@
     end;
 
     parse := TStringList.Create;
-    Parser := THTMLParser.Create(PChar(l.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText := OnText;
-    Parser.Exec;
-    Parser.Free;
+    try
+      Parser := THTMLParser.Create(PChar(l.Text));
+      Parser.OnFoundTag := OnTag;
+      Parser.OnFoundText := OnText;
+      Parser.Exec;
+    finally
+      Parser.Free;
+    end;
 
     if parse.Count > 0 then
     begin
@@ -91,7 +88,6 @@
         imageName + '_' + IntToStr(prefix - 1) + '.jpg',
         imageName + '.jpg');
     end; // Merging.
-    //HTTP.Free;
     parse.Free;
     l.Free;
   end;

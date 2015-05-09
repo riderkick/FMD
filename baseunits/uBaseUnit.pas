@@ -2321,7 +2321,7 @@ begin
       loop:
         HTTPSender := THTTPSend.Create;
       //Who knows, this might help:
-      HTTPSender.UserAgent := UA_Chrome;
+      HTTPSender.UserAgent := UA_CURL;
       while not FoundCorrectURL do
       begin
         HTTPSender.HTTPMethod('GET', URL);
@@ -2462,7 +2462,7 @@ begin
 
   HTTP.Protocol := '1.1';
   HTTPHeader.Values['DNT'] := ' 1';
-  HTTP.UserAgent := UA_Chrome;
+  HTTP.UserAgent := UA_FIREFOX;
 
   if isGZip then
   begin
@@ -2490,9 +2490,6 @@ begin
       HTTPHeader.Values['Accept'] := ' text/html';
     end;
   end
-  else
-  if Pos(WebsiteRoots[SENMANGARAW_ID, 1], URL) > 0 then
-    HTTP.UserAgent := UA_GoogleBot
   else
   if (Pos('imgmega.com/', URL) > 0) then
   begin
@@ -2721,6 +2718,7 @@ begin
     HTTP.ProxyPass := Pass;
   end;
 
+  HTTP.UserAgent := UA_FIREFOX;
   HTTP.Protocol := '1.1';
   HTTPHeader.Values['DNT'] := ' 1';
 
@@ -2735,16 +2733,6 @@ begin
           HTTPHeader.Values['Referer'] := ' ' + WebsiteRoots[mangaSiteID, 1];
       end;
   end;
-
-  HTTP.UserAgent := UA_Curl;
-
-  if (mangaSiteID <> MANGAAR_ID) and
-    (mangaSiteID <> MEINMANGA_ID) and
-    (mangaSiteID <> PECINTAKOMIK_ID) then
-    HTTP.UserAgent := UA_Chrome;
-
-  if mangaSiteID = SENMANGARAW_ID then
-    HTTP.UserAgent := UA_GoogleBot;
 
   {$IFDEF DOWNLOADER}
   if checkTerminate then Exit;

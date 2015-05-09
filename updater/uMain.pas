@@ -11,7 +11,7 @@ uses
   {$endif}
   Classes, SysUtils, zipper, FileUtil, UTF8Process, Forms, Dialogs, ComCtrls,
   StdCtrls, Clipbrd, ExtCtrls, DefaultTranslator, RegExpr,
-  IniFiles, process, USimpleException, httpsend, blcksock, ssl_openssl;
+  IniFiles, process, USimpleException, uMisc, httpsend, blcksock, ssl_openssl;
 
 type
 
@@ -96,8 +96,6 @@ const
   Symbols: array [0..10] of Char =
     ('\', '/', ':', '*', '?', '"', '<', '>', '|', #9, ';');
 
-  _UA_CHROME = 'Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.118 Safari/537.36';
-  _UA_CURL = 'curl/7.21.0 (i686-pc-linux-gnu) libcurl/7.21.0 OpenSSL/0.9.8o zlib/1.2.3.4 libidn/1.18';
   mf_data_link = 'https://www.mediafire.com/folder/fwa8eomz80uk1/Data';
 
 resourcestring
@@ -352,7 +350,7 @@ procedure TDownloadThread.Execute;
       FHTTP.Clear;
       FHTTP.Cookies.Clear;
       FHTTP.Protocol := '1.1';
-      FHTTP.UserAgent := _UA_CHROME;
+      FHTTP.UserAgent := UA_FIREFOX;
       FHTTP.Timeout := 30000;
 
       if ProxyType = 'HTTP' then
@@ -411,7 +409,7 @@ begin
     regx.ModifierI := True;
     if isSFURL then
     begin
-      FHTTP.UserAgent := _UA_CURL;
+      FHTTP.UserAgent := UA_CURL;
       regx.Expression := '/download$';
       URL := Trim(regx.Replace(URL, '', False));
       //**parsing SF url
