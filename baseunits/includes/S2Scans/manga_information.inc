@@ -1,7 +1,6 @@
   function GetS2scanInfoFromURL: Byte;
   var
     i: Integer;
-    s: String;
     isExtractChapter: Boolean = False;
   begin
     mangaInfo.website := WebsiteRoots[S2SCAN_ID, 0];

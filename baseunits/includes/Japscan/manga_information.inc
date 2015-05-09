@@ -1,7 +1,7 @@
   function GetJapscanInfoFromURL: Byte;
   var
     s: String;
-    i, j: Cardinal;
+    i: Cardinal;
     row: TStringList;
     isRow: Boolean = False;
     isExtractChapter: Boolean = False;
