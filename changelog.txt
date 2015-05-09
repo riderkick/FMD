@@ -8,6 +8,10 @@ https://www.mediafire.com/folder/3ccy2c7g36hp3/Fmd
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.9.3 (09-05-2015)
+[*] MangaStream: rewrite all script
+[*] Minor changes
+
 0.9.9.2 (09-05-2015)
 [!*] Rewrite FavoritesManager
      - Now you can add favorite while still checking the favorites,
