@@ -2407,6 +2407,8 @@ label
 
 begin
   Result := False;
+  if Trim(URL) = '' then Exit;
+
   URL := FixURL(URL);
   { TODO -oriderkick : What isBypassHTTP for? }
   //if (isByPassHTTP) then
@@ -2662,6 +2664,8 @@ var
 
 begin
   Result := False;
+  if Trim(URL) = '' then Exit;
+
   s := Path + '/' + Name;
   // Check to see if a file with similar name was already exist. If so then we
   // skip the download process.
