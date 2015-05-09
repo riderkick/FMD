@@ -53,7 +53,7 @@ begin
           if Trim(parse[i + 1]) = 'Status:' then
           begin
             mangaInfo.status := Trim(parse[i + 5]);
-            if mangaInfo.status = 'Completed' then
+            if mangaInfo.status = 'Complete' then
               mangaInfo.status := '0'
             else
               mangaInfo.status := '1';
