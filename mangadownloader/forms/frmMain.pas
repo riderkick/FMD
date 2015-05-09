@@ -426,8 +426,8 @@ type
       var Ghosted: Boolean; var ImageIndex: Integer);
     procedure vtDownloadGetText(Sender: TBaseVirtualTree; Node: PVirtualNode;
       Column: TColumnIndex; TextType: TVSTTextType; var CellText: String);
-    procedure vtDownloadHeaderClick(Sender: TVTHeader; HitInfo: TVTHeaderHitInfo
-      );
+    procedure vtDownloadHeaderClick(Sender: TVTHeader; Column: TColumnIndex;
+      Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
     procedure vtDownloadInitNode(Sender: TBaseVirtualTree;
       ParentNode, Node: PVirtualNode; var InitialStates: TVirtualNodeInitStates);
     procedure vtDownloadKeyDown(Sender : TObject; var Key : Word;
@@ -447,8 +447,8 @@ type
       var Ghosted: Boolean; var ImageIndex: Integer);
     procedure vtFavoritesGetText(Sender: TBaseVirtualTree; Node: PVirtualNode;
       Column: TColumnIndex; TextType: TVSTTextType; var CellText: String);
-    procedure vtFavoritesHeaderClick(Sender: TVTHeader;
-      HitInfo: TVTHeaderHitInfo);
+    procedure vtFavoritesHeaderClick(Sender: TVTHeader; Column: TColumnIndex;
+      Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
     procedure vtFavoritesInitNode(Sender: TBaseVirtualTree;
       ParentNode, Node: PVirtualNode; var InitialStates: TVirtualNodeInitStates);
     procedure vtMangaListChange(Sender: TBaseVirtualTree; Node: PVirtualNode);
@@ -3369,22 +3369,20 @@ begin
 end;
 
 procedure TMainForm.vtDownloadHeaderClick(Sender: TVTHeader;
-  HitInfo: TVTHeaderHitInfo);
+  Column: TColumnIndex; Button: TMouseButton; Shift: TShiftState; X, Y: Integer
+  );
 begin
-  if (not (HitInfo.Column = 2)) and (DLManager.containers.Count > 1) then
+  if (not (Column = 2)) and (DLManager.containers.Count > 1) then
   begin
-    with HitInfo do try
-      DLManager.SortColumn := Column;
-      DLManager.SortDirection := not DLManager.SortDirection;
-      vtDownload.Header.SortDirection := TSortDirection(DLManager.SortDirection);
-      vtDownload.Header.SortColumn := Column;
-      //DLManager.Sort(Column);
-      DLManager.SortNatural(Column);    //Natural Sorting
-      options.WriteInteger('misc', 'SortDownloadColumn', vtDownload.Header.SortColumn);
-      options.WriteBool('misc', 'SortDownloadDirection', DLManager.SortDirection);
-    finally
-      vtDownload.Repaint;
-    end;
+    DLManager.SortColumn := Column;
+    DLManager.SortDirection := not DLManager.SortDirection;
+    vtDownload.Header.SortDirection := TSortDirection(DLManager.SortDirection);
+    vtDownload.Header.SortColumn := Column;
+    //DLManager.Sort(Column);
+    DLManager.SortNatural(Column);    //Natural Sorting
+    options.WriteInteger('misc', 'SortDownloadColumn', vtDownload.Header.SortColumn);
+    options.WriteBool('misc', 'SortDownloadDirection', DLManager.SortDirection);
+    vtDownload.Repaint;
   end;
 end;
 
@@ -3521,12 +3519,13 @@ begin
 end;
 
 procedure TMainForm.vtFavoritesHeaderClick(Sender: TVTHeader;
-  HitInfo: TVTHeaderHitInfo);
+  Column: TColumnIndex; Button: TMouseButton; Shift: TShiftState; X, Y: Integer
+  );
 begin
-  if (not (HitInfo.Column = 0)) and (not FavoriteManager.isRunning) and (FavoriteManager.Count > 1) then
+  if (not (Column = 0)) and (not FavoriteManager.isRunning) and (FavoriteManager.Count > 1) then
   begin
     FavoriteManager.isRunning := True;
-    with HitInfo do try
+    try
       FavoriteManager.SortColumn := Column;
       FavoriteManager.sortDirection := not FavoriteManager.sortDirection;
       vtFavorites.Header.SortColumn := Column;
