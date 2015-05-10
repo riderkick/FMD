@@ -81,11 +81,11 @@ type
     medURLSelectAll: TMenuItem;
     MenuItem17: TMenuItem;
     medURLUndo: TMenuItem;
-    miDLViewMangaInfo: TMenuItem;
+    miDownloadViewMangaInfo: TMenuItem;
     MenuItem9: TMenuItem;
     miDeleteTask: TMenuItem;
     miDeleteTaskData: TMenuItem;
-    miOpenWith: TMenuItem;
+    miDownloadOpenWith: TMenuItem;
     miOpenWith2: TMenuItem;
     pnThumbContainer: TPanel;
     pnMainTop: TPanel;
@@ -201,7 +201,6 @@ type
     lbOptionPort: TLabel;
     lbOptionUser: TLabel;
     MenuItem1: TMenuItem;
-    MenuItem2: TMenuItem;
     MenuItem3: TMenuItem;
     MenuItem4: TMenuItem;
     MenuItem5: TMenuItem;
@@ -215,13 +214,11 @@ type
     miMangaListViewInfos: TMenuItem;
     mnUpdateList: TMenuItem;
     mnUpdateDownFromServer: TMenuItem;
-    miDownloadMerge: TMenuItem;
+    miDownloadMergeFinishedTask: TMenuItem;
     miOpenFolder2: TMenuItem;
     miHighlightNewManga: TMenuItem;
     miI2: TMenuItem;
-    miDown: TMenuItem;
-    miUp: TMenuItem;
-    miOpenFolder: TMenuItem;
+    miDownloadOpenFolder: TMenuItem;
     miFavoritesRemove: TMenuItem;
     miMangaListAddToFavorites: TMenuItem;
     miFavoritesChangeCurrentChapter: TMenuItem;
@@ -360,11 +357,11 @@ type
     procedure medtURLDeleteClick(Sender: TObject);
     procedure medURLSelectAllClick(Sender: TObject);
     procedure medURLUndoClick(Sender: TObject);
-    procedure miDLViewMangaInfoClick(Sender: TObject);
+    procedure miDownloadViewMangaInfoClick(Sender: TObject);
     procedure miChapterListHighlightClick(Sender: TObject);
     procedure miDeleteTaskClick(Sender: TObject);
     procedure miDeleteTaskDataClick(Sender: TObject);
-    procedure miDownloadMergeClick(Sender: TObject);
+    procedure miDownloadMergeFinishedTaskClick(Sender: TObject);
     procedure miFavoritesViewInfosClick(Sender: TObject);
     procedure miHighlightNewMangaClick(Sender: TObject);
     procedure miDownClick(Sender: TObject);
@@ -386,9 +383,9 @@ type
     procedure miMangaListDownloadAllClick(Sender: TObject);
     procedure miMangaListViewInfosClick(Sender: TObject);
     procedure miOpenFolder2Click(Sender: TObject);
-    procedure miOpenFolderClick(Sender: TObject);
+    procedure miDownloadOpenFolderClick(Sender: TObject);
     procedure miOpenWith2Click(Sender: TObject);
-    procedure miOpenWithClick(Sender: TObject);
+    procedure miDownloadOpenWithClick(Sender: TObject);
     procedure miUpClick(Sender: TObject);
     procedure mnDownload1ClickClick(Sender: TObject);
     procedure mnUpdate1ClickClick(Sender: TObject);
@@ -1003,7 +1000,7 @@ begin
   edURL.Undo;
 end;
 
-procedure TMainForm.miDLViewMangaInfoClick(Sender: TObject);
+procedure TMainForm.miDownloadViewMangaInfoClick(Sender: TObject);
 begin
   if vtDownload.Focused then
     with DLManager.containers[vtDownload.FocusedNode^.Index] do begin
@@ -1115,7 +1112,7 @@ begin
   end;
 end;
 
-procedure TMainForm.miDownloadMergeClick(Sender: TObject);
+procedure TMainForm.miDownloadMergeFinishedTaskClick(Sender: TObject);
 var
   i, j: Cardinal;
   // merge all finished tasks that have same manga name, website and directory
@@ -2591,7 +2588,7 @@ begin
   Process.Free;
 end;
 
-procedure TMainForm.miOpenFolderClick(Sender: TObject);
+procedure TMainForm.miDownloadOpenFolderClick(Sender: TObject);
 var
   Process: TProcessUTF8;
 begin
@@ -2652,7 +2649,7 @@ begin
   Process.Free;
 end;
 
-procedure TMainForm.miOpenWithClick(Sender: TObject);
+procedure TMainForm.miDownloadOpenWithClick(Sender: TObject);
 var
   Process: TProcessUTF8;
   f, ff, s: String;
@@ -2817,50 +2814,98 @@ begin
 end;
 
 procedure TMainForm.pmDownloadPopup(Sender: TObject);
+
+  function FinishedTaskPresent: Boolean;
+  var
+    i: Integer;
+  begin
+    Result := False;
+    with DLManager do begin
+      CS_DownloadManager_Task.Acquire;
+      try
+        for i := 0 to containers.Count - 1 do
+          if containers[i].Status = STATUS_FINISH then
+          begin
+            Result := True;
+            Break;
+          end;
+      finally
+        CS_DownloadManager_Task.Release;
+      end;
+    end;
+  end;
+
+  function SelectedTaskStatusPresent(Stats: TStatusTypes): Boolean;
+  var
+    i: Integer;
+    xNode: PVirtualNode;
+  begin
+    Result := False;
+    with DLManager do begin
+      CS_DownloadManager_Task.Acquire;
+      try
+        if vtDownload.SelectedCount > 1 then
+        begin
+          xNode := vtDownload.GetFirst;
+          for i := 0 to containers.Count - 1 do
+          begin
+            if vtDownload.Selected[xNode] then
+              if containers[i].Status in Stats then
+              begin
+                Result := True;
+                Break;
+              end;
+            xNode := vtDownload.GetNext(xNode);
+          end;
+        end;
+      finally
+        CS_DownloadManager_Task.Release;
+      end;
+    end;
+  end;
+
 begin
-  if vtDownload.SelectedCount = 0 then
-  begin
-    pmDownload.Items[0].Enabled := False;
-    pmDownload.Items[1].Enabled := False;
-    pmDownload.Items[3].Enabled := False;
-    pmDownload.Items[4].Enabled := False;
-    pmDownload.Items[5].Enabled := False;
-    pmDownload.Items[10].Enabled := False;
-    pmDownload.Items[11].Enabled := False;
-    miDLViewMangaInfo.Enabled := False;
-
-    pmDownload.Items[5].Items[0].Enabled := False;
-    pmDownload.Items[5].Items[1].Enabled := False;
-  end
-  else
-  if vtDownload.SelectedCount = 1 then
-  begin
-    pmDownload.Items[0].Enabled := True;
-    pmDownload.Items[1].Enabled := True;
-    pmDownload.Items[3].Enabled := True;
-    pmDownload.Items[4].Enabled := True;
-    pmDownload.Items[5].Enabled := True;
-    pmDownload.Items[10].Enabled := True;
-    pmDownload.Items[11].Enabled := True;
-    if vtDownload.Focused then
-      miDLViewMangaInfo.Enabled := DLManager.containers[vtDownload.FocusedNode^.Index].DownloadInfo.Link <> '';
-
-    pmDownload.Items[5].Items[0].Enabled := True;
-    pmDownload.Items[5].Items[1].Enabled := True;
-  end
-  else
-  begin
-    pmDownload.Items[0].Enabled := False;
-    pmDownload.Items[1].Enabled := False;
-    pmDownload.Items[3].Enabled := True;
-    pmDownload.Items[4].Enabled := True;
-    pmDownload.Items[5].Enabled := True;
-    pmDownload.Items[10].Enabled := False;
-    pmDownload.Items[11].Enabled := False;
-    miDLViewMangaInfo.Enabled := False;
-
-    pmDownload.Items[5].Items[0].Enabled := True;
-    pmDownload.Items[5].Items[1].Enabled := True;
+  with DLManager do begin
+    if vtDownload.SelectedCount = 0 then
+    begin
+      miDownloadStop.Enabled := False;
+      miDownloadResume.Enabled := False;
+      miDownloadRemove.Enabled := False;
+      miDeleteTask.Enabled := False;
+      miDeleteTaskData.Enabled := False;
+      miDownloadRemoveFinishedTasks.Enabled := FinishedTaskPresent;
+      miDownloadMergeFinishedTask.Enabled := miDownloadRemoveFinishedTasks.Enabled;
+      miDownloadViewMangaInfo.Enabled := False;
+      miDownloadOpenFolder.Enabled := False;
+      miDownloadOpenWith.Enabled := False;
+    end
+    else
+    if vtDownload.SelectedCount = 1 then
+    begin
+      miDownloadStop.Enabled := (containers[vtDownload.FocusedNode^.Index].Status in [STATUS_DOWNLOAD, STATUS_WAIT]);
+      miDownloadResume.Enabled := (containers[vtDownload.FocusedNode^.Index].Status = STATUS_STOP);
+      miDownloadRemove.Enabled := True;
+      miDeleteTask.Enabled := True;
+      miDeleteTaskData.Enabled := True;
+      miDownloadRemoveFinishedTasks.Enabled := FinishedTaskPresent;
+      miDownloadMergeFinishedTask.Enabled := miDownloadRemoveFinishedTasks.Enabled;
+      miDownloadViewMangaInfo.Enabled := (containers[vtDownload.FocusedNode^.Index].DownloadInfo.Link <> '');
+      miDownloadOpenFolder.Enabled := True;
+      miDownloadOpenWith.Enabled := True;
+    end
+    else
+    begin
+      miDownloadStop.Enabled := SelectedTaskStatusPresent([STATUS_DOWNLOAD, STATUS_WAIT]);
+      miDownloadResume.Enabled := SelectedTaskStatusPresent([STATUS_STOP]);
+      miDownloadRemove.Enabled := True;
+      miDeleteTask.Enabled := True;
+      miDeleteTaskData.Enabled := True;
+      miDownloadRemoveFinishedTasks.Enabled := FinishedTaskPresent;
+      miDownloadMergeFinishedTask.Enabled := miDownloadRemoveFinishedTasks.Enabled;
+      miDownloadViewMangaInfo.Enabled := False;
+      miDownloadOpenFolder.Enabled := False;
+      miDownloadOpenWith.Enabled := False;
+    end;
   end;
 end;
 
@@ -3164,7 +3209,7 @@ end;
 procedure TMainForm.vtDownloadColumnDblClick(Sender: TBaseVirtualTree;
   Column: TColumnIndex; Shift: TShiftState);
 begin
-  miOpenFolderClick(Sender);
+  miDownloadOpenFolderClick(Sender);
 end;
 
 procedure TMainForm.vtDownloadDragAllowed(Sender : TBaseVirtualTree;
@@ -4812,17 +4857,15 @@ begin
     gbOptionRenaming.Caption := language.ReadString(lang, 'gbOptionRenamingCaption', '');
     dlgSaveTo.Title := language.ReadString(lang, 'dlgSaveToTitle', '');
 
-    miUp.Caption := language.ReadString(lang, 'miUp', '');
-    miDown.Caption := language.ReadString(lang, 'miDown', '');
     miDownloadStop.Caption := language.ReadString(lang, 'miDownloadStopCaption', '');
     miDownloadResume.Caption := language.ReadString(lang, 'miDownloadStopResume', '');
     miDownloadRemove.Caption := language.ReadString(lang, 'miDownloadRemoveCaption', '');
     miDownloadRemoveFinishedTasks.Caption :=
       language.ReadString(lang, 'miDownloadRemoveFinishedTasksCaption', '');
-    miDownloadMerge.Caption := language.ReadString(lang,
+    miDownloadMergeFinishedTask.Caption := language.ReadString(lang,
       'miDownloadMergeTasksCaption', '');
-    miOpenFolder.Caption := language.ReadString(lang, 'miOpenFolder', '');
-    miOpenWith.Caption := language.ReadString(lang, 'miOpenWith', '');
+    miDownloadOpenFolder.Caption := language.ReadString(lang, 'miOpenFolder', '');
+    miDownloadOpenWith.Caption := language.ReadString(lang, 'miOpenWith', '');
 
     miChapterListCheckSelected.Caption :=
       language.ReadString(lang, 'miChapterListCheckSelectedCaption', '');
@@ -4855,8 +4898,8 @@ begin
     miDeleteTask.Caption := language.ReadString(lang, 'miDeleteTaskCaption', '');
     miDeleteTaskData.Caption := language.ReadString(lang, 'miDeleteTaskDataCaption', '');
 
-    miOpenFolder2.Caption := miOpenFolder.Caption;
-    miOpenWith2.Caption := miOpenWith.Caption;
+    miOpenFolder2.Caption := miDownloadOpenFolder.Caption;
+    miOpenWith2.Caption := miDownloadOpenWith.Caption;
 
     infoCustomGenres := language.ReadString(lang, 'infoCustomGenres', '');
     infoName := language.ReadString(lang, 'infoName', '');

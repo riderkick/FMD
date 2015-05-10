@@ -669,6 +669,8 @@ type
                      STATUS_DOWNLOAD, STATUS_FINISH, STATUS_COMPRESS,
                      STATUS_PROBLEM, STATUS_FAILED);
 
+  TStatusTypes = set of TStatusType;
+
   TMemory = Pointer;
 
   PMangaListItem = ^TMangaListItem;
