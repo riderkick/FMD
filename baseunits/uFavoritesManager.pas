@@ -43,6 +43,8 @@ type
     FBtnCaption: String;
   protected
     function GetThreadCount: Integer;
+    procedure SyncStartChecking;
+    procedure SyncFinishChecking;
     procedure SyncUpdateBtnCaption;
     procedure SyncShowResult;
     procedure Execute; override;
@@ -115,6 +117,7 @@ type
     // Backup to favorites.ini
     procedure Backup;
     // Abort favorites check
+    procedure StopAll;
     procedure StopAllAndWait;
 
     // sorting
@@ -227,6 +230,24 @@ begin
   end;
 end;
 
+procedure TFavoriteTask.SyncStartChecking;
+begin
+  with MainForm do begin
+    btCancelFavoritesCheck.Show;
+    btFavoritesCheckNewChapter.Width :=
+      btFavoritesCheckNewChapter.Width - btCancelFavoritesCheck.Width - 6;
+  end;
+end;
+
+procedure TFavoriteTask.SyncFinishChecking;
+begin
+  with MainForm do begin
+    btCancelFavoritesCheck.Hide;
+    btFavoritesCheckNewChapter.Width :=
+      btFavoritesCheckNewChapter.Width + btCancelFavoritesCheck.Width + 6;
+  end;
+end;
+
 procedure TFavoriteTask.SyncUpdateBtnCaption;
 begin
   MainForm.btFavoritesCheckNewChapter.Caption := FBtnCaption;
@@ -242,6 +263,8 @@ var
   workCounter: Integer;
   i: Integer;
 begin
+  manager.isRunning := True;
+  Synchronize(SyncStartChecking);
   try
     workCounter := 0;
     while workCounter < manager.Favorites.Count do
@@ -287,6 +310,7 @@ begin
     on E: Exception do
       MainForm.ExceptionHandler(Self, E);
   end;
+  Synchronize(SyncFinishChecking);
   manager.isRunning := False;
 end;
 
@@ -799,6 +823,12 @@ begin
       favoritesFile.WriteString(IntToStr(i), 'Link', Favorites[i].FavoriteInfo.link);
     end;
   favoritesFile.UpdateFile;
+end;
+
+procedure TFavoriteManager.StopAll;
+begin
+  if isRunning then
+    taskthread.Terminate;
 end;
 
 procedure TFavoriteManager.StopAllAndWait;

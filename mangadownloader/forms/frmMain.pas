@@ -31,6 +31,7 @@ type
     Bevel1: TBevel;
     btAddToFavorites: TBitBtn;
     btBrowse: TSpeedButton;
+    btCancelFavoritesCheck: TSpeedButton;
     btOptionBrowse: TSpeedButton;
     btChecks: TSpeedButton;
     btDonate: TImage;
@@ -299,6 +300,7 @@ type
       var CanShow: Boolean; var HintInfo: THintInfo);
     procedure btAddToFavoritesClick(Sender: TObject);
     procedure btAbortUpdateListClick(Sender: TObject);
+    procedure btCancelFavoritesCheckClick(Sender: TObject);
     procedure btChecksClick(Sender: TObject);
     procedure btCheckVersionClick(Sender: TObject);
     procedure btDonateClick(Sender: TObject);
@@ -1432,6 +1434,11 @@ procedure TMainForm.btAbortUpdateListClick(Sender: TObject);
 begin
   if isUpdating then
     updateList.Terminate;
+end;
+
+procedure TMainForm.btCancelFavoritesCheckClick(Sender: TObject);
+begin
+  FavoriteManager.StopAll;
 end;
 
 procedure TMainForm.appPropertiesMainShowHint(var HintStr: String;
