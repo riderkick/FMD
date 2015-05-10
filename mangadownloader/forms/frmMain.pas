@@ -2883,7 +2883,7 @@ begin
     if vtDownload.SelectedCount = 1 then
     begin
       miDownloadStop.Enabled := (containers[vtDownload.FocusedNode^.Index].Status in [STATUS_DOWNLOAD, STATUS_WAIT]);
-      miDownloadResume.Enabled := (containers[vtDownload.FocusedNode^.Index].Status = STATUS_STOP);
+      miDownloadResume.Enabled := (containers[vtDownload.FocusedNode^.Index].Status in [STATUS_STOP, STATUS_FAILED, STATUS_PROBLEM]);
       miDownloadRemove.Enabled := True;
       miDeleteTask.Enabled := True;
       miDeleteTaskData.Enabled := True;
@@ -2896,7 +2896,7 @@ begin
     else
     begin
       miDownloadStop.Enabled := SelectedTaskStatusPresent([STATUS_DOWNLOAD, STATUS_WAIT]);
-      miDownloadResume.Enabled := SelectedTaskStatusPresent([STATUS_STOP]);
+      miDownloadResume.Enabled := SelectedTaskStatusPresent([STATUS_STOP, STATUS_FAILED, STATUS_PROBLEM]);
       miDownloadRemove.Enabled := True;
       miDeleteTask.Enabled := True;
       miDeleteTaskData.Enabled := True;
