@@ -2200,20 +2200,20 @@ procedure TDownloadManager.StopTask(const taskID: Integer;
 begin
   if taskID < containers.Count then
   begin
-    isReadyForExit := False;
-    containers.Items[taskID].Status := STATUS_STOP;
-    containers.Items[taskID].DownloadInfo.Status := stStop;
-    if containers.Items[taskID].ThreadState then
+    if containers.Items[taskID].Status in [STATUS_DOWNLOAD, STATUS_WAIT] then
     begin
-      containers.Items[taskID].Thread.Terminate;
-      //containers.Items[taskID].Thread.WaitFor;
+      isReadyForExit := False;
+      containers.Items[taskID].Status := STATUS_STOP;
+      containers.Items[taskID].DownloadInfo.Status := stStop;
+      if containers.Items[taskID].ThreadState then
+        containers.Items[taskID].Thread.Terminate;
+      if isCheckForActive then
+      begin
+        Backup;
+        CheckAndActiveTask;
+      end;
+      MainForm.vtDownloadFilters;
     end;
-    if isCheckForActive then
-    begin
-      Backup;
-      CheckAndActiveTask;
-    end;
-    MainForm.vtDownloadFilters;
   end;
 end;
 
