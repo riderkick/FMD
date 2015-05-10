@@ -8,8 +8,8 @@ https://www.mediafire.com/folder/3ccy2c7g36hp3/Fmd
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
-0.9.9.5 Future
-[+] Add button to cancel favorites check.
+0.9.9.5 (10--5-2015)
+[+] Added button to cancel favorites check.
 [*] Fix favorites not auto download
 [*] Fix favorites add to download list with empty chapters link
 [*] Minor changes
