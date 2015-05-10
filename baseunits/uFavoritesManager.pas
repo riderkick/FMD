@@ -407,8 +407,7 @@ var
   LNCResult             : TNewChapterResult = ncrCancel;
   newChapterListStr     : String = '';
   removeListStr         : String = '';
-  favDelete,
-  isDownloadNow         : Boolean;
+  favDelete             : Boolean;
 begin
   try
     CS_Favorites.Acquire;
@@ -517,7 +516,12 @@ begin
       begin
         //if there's new chapters
         if OptionAutoDlFav then
-          isDownloadNow := True
+        begin
+          if MainForm.cbAddAsStopped.Checked then
+            LNCResult := ncrQueue
+          else
+            LNCResult := ncrDownload;
+        end
         else
         if isShowDialog then
         begin
@@ -536,15 +540,6 @@ begin
           finally
             Free;
           end;
-
-          if LNCResult = ncrDownload then
-          begin
-            isDownloadNow := True;
-            if MainForm.pcMain.PageIndex <> 0 then
-              MainForm.pcMain.PageIndex := 0;
-          end
-          else
-            isDownloadNow := False;
         end;
 
         if LNCResult <> ncrCancel then
@@ -583,7 +578,7 @@ begin
                           Format('%.4d', [NewMangaInfoChaptersPos[i] + 1]),
                           MainForm.cbOptionPathConvert.Checked));
                       end;
-                      if isDownloadNow then
+                      if LNCResult = ncrDownload then
                       begin
                         DownloadInfo.Status := stWait;
                         Status := STATUS_WAIT;
@@ -616,7 +611,10 @@ begin
             OnUpdateDownload;
           end;
           if LNCResult = ncrDownload then
+          begin
             DLManager.CheckAndActiveTask;
+            MainForm.pcMain.ActivePage := MainForm.tsDownload;
+          end;
           if Assigned(OnUpdateFavorite) then
             OnUpdateFavorite;
         end;
