@@ -3149,6 +3149,11 @@ object MainForm: TMainForm
     object MenuItem1: TMenuItem
       Caption = '-'
     end
+    object miDLViewMangaInfo: TMenuItem
+      Caption = 'View manga info'
+      ImageIndex = 0
+      OnClick = miDLViewMangaInfoClick
+    end
     object miOpenFolder: TMenuItem
       Caption = 'Open Folder'
       Bitmap.Data = {

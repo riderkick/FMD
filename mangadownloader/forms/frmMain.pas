@@ -80,6 +80,7 @@ type
     medURLSelectAll: TMenuItem;
     MenuItem17: TMenuItem;
     medURLUndo: TMenuItem;
+    miDLViewMangaInfo: TMenuItem;
     MenuItem9: TMenuItem;
     miDeleteTask: TMenuItem;
     miDeleteTaskData: TMenuItem;
@@ -357,6 +358,7 @@ type
     procedure medtURLDeleteClick(Sender: TObject);
     procedure medURLSelectAllClick(Sender: TObject);
     procedure medURLUndoClick(Sender: TObject);
+    procedure miDLViewMangaInfoClick(Sender: TObject);
     procedure miChapterListHighlightClick(Sender: TObject);
     procedure miDeleteTaskClick(Sender: TObject);
     procedure miDeleteTaskDataClick(Sender: TObject);
@@ -995,6 +997,16 @@ end;
 procedure TMainForm.medURLUndoClick(Sender: TObject);
 begin
   edURL.Undo;
+end;
+
+procedure TMainForm.miDLViewMangaInfoClick(Sender: TObject);
+begin
+  if vtDownload.Focused then
+    with DLManager.containers[vtDownload.FocusedNode^.Index] do begin
+      edURL.Text := FillMangaSiteHost(MangaSiteID, DownloadInfo.Link);
+      btURLClick(btURL);
+      pcMain.ActivePage := tsInformation;
+    end;
 end;
 
 procedure TMainForm.miChapterListHighlightClick(Sender: TObject);
@@ -2806,6 +2818,7 @@ begin
     pmDownload.Items[5].Enabled := False;
     pmDownload.Items[10].Enabled := False;
     pmDownload.Items[11].Enabled := False;
+    miDLViewMangaInfo.Enabled := False;
 
     pmDownload.Items[5].Items[0].Enabled := False;
     pmDownload.Items[5].Items[1].Enabled := False;
@@ -2820,6 +2833,8 @@ begin
     pmDownload.Items[5].Enabled := True;
     pmDownload.Items[10].Enabled := True;
     pmDownload.Items[11].Enabled := True;
+    if vtDownload.Focused then
+      miDLViewMangaInfo.Enabled := DLManager.containers[vtDownload.FocusedNode^.Index].DownloadInfo.Link <> '';
 
     pmDownload.Items[5].Items[0].Enabled := True;
     pmDownload.Items[5].Items[1].Enabled := True;
@@ -2833,6 +2848,7 @@ begin
     pmDownload.Items[5].Enabled := True;
     pmDownload.Items[10].Enabled := False;
     pmDownload.Items[11].Enabled := False;
+    miDLViewMangaInfo.Enabled := False;
 
     pmDownload.Items[5].Items[0].Enabled := True;
     pmDownload.Items[5].Items[1].Enabled := True;
