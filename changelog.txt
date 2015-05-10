@@ -11,7 +11,7 @@ Changelog:
 0.9.9.4 (10-05-2015)
 [!*] Store the url instead of index for dowwnloaded chapter list, for more reliable validation.
      IMPORTANT! THIS WILL MAKE YOUR OLD DOWNLOADED CHAPTER LIST UNUSABLE.
-	 RECOMMENDED TO DELETE YOUR downloadedchapters.ini BEFORE ADDING NEW TASK
+     RECOMMENDED TO DELETE YOUR downloadedchapters.ini BEFORE ADDING NEW TASK
 [!*] Merge downloaded chapter list from favorite to main downloaded chapter list.
 [+] Add menu "View manga info" in download list (only accesible if your task added from current version upward)
 [*] SenMangaRAW: added update list script
