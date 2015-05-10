@@ -531,7 +531,7 @@ begin
             mmMemo.Lines.Text := Trim(newChapterListStr);
             btDownload.Caption := RS_BtnDownload;
             btQueue.Caption := RS_BtnAddToQueue;
-            btCancel.Caption := RS_BtnAddToQueue;
+            btCancel.Caption := RS_BtnCancel;
             btDownload.Show;
             btQueue.Show;
             btCancel.Show;
