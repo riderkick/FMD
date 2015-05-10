@@ -8,6 +8,10 @@ https://www.mediafire.com/folder/3ccy2c7g36hp3/Fmd
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.9.5 Future
+[+] Add button to cancel favorites check.
+[*] Minor changes
+
 0.9.9.4 (10-05-2015)
 [!*] Store the url instead of index for dowwnloaded chapter list, for more reliable validation.
      IMPORTANT! THIS WILL MAKE YOUR OLD DOWNLOADED CHAPTER LIST UNUSABLE.
