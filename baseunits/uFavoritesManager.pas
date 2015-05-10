@@ -233,7 +233,7 @@ end;
 procedure TFavoriteTask.SyncStartChecking;
 begin
   with MainForm do begin
-    btCancelFavoritesCheck.Show;
+    btCancelFavoritesCheck.Visible := True;
     btFavoritesCheckNewChapter.Width :=
       btFavoritesCheckNewChapter.Width - btCancelFavoritesCheck.Width - 6;
   end;
@@ -242,7 +242,7 @@ end;
 procedure TFavoriteTask.SyncFinishChecking;
 begin
   with MainForm do begin
-    btCancelFavoritesCheck.Hide;
+    btCancelFavoritesCheck.Visible := False;
     btFavoritesCheckNewChapter.Width :=
       btFavoritesCheckNewChapter.Width + btCancelFavoritesCheck.Width + 6;
   end;
