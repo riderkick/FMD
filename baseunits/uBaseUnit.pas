@@ -683,6 +683,14 @@ type
     Text: String;
   end;
 
+  PChapterStateItem = ^TChapterStateItem;
+
+  TChapterStateItem = record
+    Title,
+    Link      : String;
+    Downloaded: Boolean;
+  end;
+
   PMangaInfo = ^TMangaInfo;
 
   { TMangaInfo }
@@ -823,6 +831,7 @@ function CustomRename(const AString, AWebsite, AMangaName, AAuthor, AArtist,
 function GetString(const Source, sStart, sEnd: String): String;
 
 function Find(const S: String; var List: TStringList; out index: Integer): Boolean;
+function FindStrQuick(const s: String; var AStrings: TStringList): Boolean;
 
 // Get param from input
 procedure GetParams(const output: TStrings; input: String); overload;
@@ -1804,6 +1813,20 @@ begin
       Break;
     end;
   end;
+end;
+
+function FindStrQuick(const s: String; var AStrings: TStringList): Boolean;
+var
+  p: Integer;
+begin
+  if AStrings.Count > 0 then
+  begin
+    if not AStrings.Sorted then
+      AStrings.Sort;
+    Result := AStrings.Find(s, p);
+  end
+  else
+    Result := False;
 end;
 
 procedure GetParams(const output: TStrings; input: String);

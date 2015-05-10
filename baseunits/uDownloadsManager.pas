@@ -152,6 +152,7 @@ type
     FSortColumn: Cardinal;
   public
     CS_DownloadManager_Task: TCriticalSection;
+    CS_DownloadedChapterList: TCriticalSection;
     isRunningBackup, isFinishTaskAccessed, isRunningBackupDownloadedChaptersList,
     isReadyForExit: Boolean;
 
@@ -163,11 +164,8 @@ type
     // current chapterLinks which thread is processing
     containers: TTaskThreadContainerList;
 
-    downloadedChaptersList: TStringList;
+    DownloadedChaptersListFile: TStringList;
     ini: TIniFile;
-
-    // for highlight downloaded chapters
-    DownloadedChapterList: TList;
 
     //exit counter
     ExitType: TExitType;
@@ -183,9 +181,10 @@ type
     procedure Backup;
 
     // These methods relate to highlight downloaded chapters.
-    procedure AddToDownloadedChaptersList(const ALink: String); overload;
     procedure AddToDownloadedChaptersList(const ALink, AValue: String); overload;
-    procedure ReturnDownloadedChapters(const ALink: String);
+    procedure AddToDownloadedChaptersList(const Alink: String; AValue: TStrings); overload;
+    procedure GetDownloadedChaptersState(const Alink: String;
+      var Chapters: array of TChapterStateItem);
 
     // Add new task to the list.
     function AddTask:Integer;
@@ -1688,15 +1687,15 @@ constructor TDownloadManager.Create;
 begin
   inherited Create;
   CS_DownloadManager_Task := TCriticalSection.Create;
+  CS_DownloadedChapterList := TCriticalSection.Create;
 
   ini := TIniFile.Create(WORK_FOLDER + WORK_FILE);
   ini.CacheUpdates := True;
 
-  downloadedChaptersList := TStringList.Create;
-  DownloadedChapterList := TList.Create;
+  DownloadedChaptersListFile := TStringList.Create;
 
   if FileExists(WORK_FOLDER + DOWNLOADEDCHAPTERS_FILE) then
-    downloadedChaptersList.LoadFromFile(WORK_FOLDER + DOWNLOADEDCHAPTERS_FILE);
+    DownloadedChaptersListFile.LoadFromFile(WORK_FOLDER + DOWNLOADEDCHAPTERS_FILE);
 
   containers := TTaskThreadContainerList.Create;
   isFinishTaskAccessed := False;
@@ -1718,22 +1717,23 @@ begin
     CS_DownloadManager_Task.Release;
   end;
   FreeAndNil(containers);
-  FreeAndNil(downloadedChaptersList);
-  FreeAndNil(DownloadedChapterList);
+  FreeAndNil(DownloadedChaptersListFile);
   FreeAndNil(ini);
+  CS_DownloadedChapterList.Free;
   CS_DownloadManager_Task.Free;
   inherited Destroy;
 end;
 
 procedure TDownloadManager.BackupDownloadedChaptersList;
 begin
-  if isRunningBackupDownloadedChaptersList then
-    Exit;
-  isRunningBackupDownloadedChaptersList := True;
-  try
-    downloadedChaptersList.SaveToFile(WORK_FOLDER + DOWNLOADEDCHAPTERS_FILE);
-  finally
-    isRunningBackupDownloadedChaptersList := False;
+  if CS_DownloadedChapterList.TryEnter then
+  begin
+    CS_DownloadedChapterList.Acquire;
+    try
+      DownloadedChaptersListFile.SaveToFile(WORK_FOLDER + DOWNLOADEDCHAPTERS_FILE);
+    finally
+      CS_DownloadedChapterList.Release;
+    end;
   end;
 end;
 
@@ -1911,96 +1911,128 @@ begin
   end;
 end;
 
-procedure TDownloadManager.AddToDownloadedChaptersList(const ALink: String);
-var
-  i: Cardinal;
-  LValue: String;
-  Node: PVirtualNode;
-begin
-  // generate LValue string
-  LValue := '';
-  if frmMain.MainForm.clbChapterList.RootNodeCount = 0 then
-    Exit;
-  Node := frmMain.MainForm.clbChapterList.GetFirst;
-  for i := 0 to frmMain.MainForm.clbChapterList.RootNodeCount - 1 do
-  begin
-    if Node.CheckState = csCheckedNormal then
-      LValue := LValue + IntToStr(i) + SEPERATOR;
-    Node := frmMain.MainForm.clbChapterList.GetNext(Node);
-  end;
-  if LValue = '' then
-    Exit;
-
-  if DownloadedChaptersList.Count > 0 then
-  begin
-    i := 0;
-    while i < DownloadedChaptersList.Count do
-    begin
-      if CompareText(ALink, DownloadedChaptersList.Strings[i]) = 0 then
-      begin
-        DownloadedChaptersList.Strings[i] := ALink;
-        DownloadedChaptersList.Strings[i + 1] :=
-          RemoveDuplicateNumbersInString(DownloadedChaptersList.Strings[i + 1] + LValue);
-        Exit;
-      end;
-      Inc(i, 2);
-    end;
-  end;
-  if DownloadedChaptersList.Count > 4000 then
-  begin
-    DownloadedChaptersList.Delete(0);
-    DownloadedChaptersList.Delete(0);
-  end;
-  DownloadedChaptersList.Add(ALink);
-  DownloadedChaptersList.Add(LValue);
-end;
-
 procedure TDownloadManager.AddToDownloadedChaptersList(const ALink, AValue: String);
 var
-  i: Cardinal;
+  st: TStringList;
 begin
-  if DownloadedChaptersList.Count > 0 then
+  if (ALink <> '') and (AValue <> '') then
   begin
-    i := 0;
-    while i < DownloadedChaptersList.Count do
-    begin
-      if CompareText(ALink, DownloadedChaptersList.Strings[i]) = 0 then
-      begin
-        DownloadedChaptersList.Strings[i] := ALink;
-        DownloadedChaptersList.Strings[i + 1] :=
-          RemoveDuplicateNumbersInString(DownloadedChaptersList.Strings[i + 1] + AValue);
-        Exit;
-      end;
-      Inc(i, 2);
+    st := TStringList.Create;
+    try
+      GetParams(st, AValue);
+      AddToDownloadedChaptersList(ALink, st);
+    finally
+      Free;
     end;
   end;
-  if DownloadedChaptersList.Count > 4000 then
-  begin
-    DownloadedChaptersList.Delete(0);
-    DownloadedChaptersList.Delete(0);
-  end;
-  DownloadedChaptersList.Add(ALink);
-  DownloadedChaptersList.Add(AValue);
 end;
 
-procedure TDownloadManager.ReturnDownloadedChapters(const ALink: String);
+procedure TDownloadManager.AddToDownloadedChaptersList(const Alink: String;
+  AValue: TStrings);
 var
-  i: Cardinal;
+  i, p, q: Integer;
+  Ch, dlCh: TStringList;
 begin
-  // clear the list
-  DownloadedChapterList.Clear;
-
-  if DownloadedChaptersList.Count > 0 then
+  if (Alink <> '') and  (AValue.Count > 0) then
   begin
-    i := 0;
-    while i < DownloadedChaptersList.Count do
-    begin
-      if CompareText(ALink, DownloadedChaptersList.Strings[i]) = 0 then
+    CS_DownloadedChapterList.Acquire;
+    Ch := TStringList.Create;
+    dlCh := TStringList.Create;
+    try
+      p := -1;
+      //locate the link
+      if DownloadedChaptersListFile.Count > 1 then
+        for i := 0 to DownloadedChaptersListFile.Count - 1 do
+          if SameText(Alink, DownloadedChaptersListFile[i]) then
+          begin
+            p := i;
+            if i + 1 < DownloadedChaptersListFile.Count then
+              GetParams(dlCh, DownloadedChaptersListFile[i + 1]);
+            Break;
+          end;
+
+      //remove if links found on downloadedchapterlist
+      Ch.Assign(AValue);
+      if dlCh.Count > 0 then
       begin
-        GetParams(DownloadedChapterList, DownloadedChaptersList.Strings[i + 1]);
-        Exit;
+        dlCh.Sort;
+        i := 0;
+        while i < Ch.Count do
+        begin
+          if dlCh.Find(Ch[i], q) then
+            Ch.Delete(i)
+          else
+            Inc(i);
+        end;
       end;
-      Inc(i, 2);
+
+      //merge the links
+      if p > -1 then
+      begin
+        if p + 1 < DownloadedChaptersListFile.Count then
+          DownloadedChaptersListFile[p + 1] := DownloadedChaptersListFile[p + 1] + SetParams(Ch)
+        else
+          DownloadedChaptersListFile.Add(SetParams(Ch));
+      end
+      else
+      begin
+        //if it's new data
+        DownloadedChaptersListFile.Add(Alink);
+        DownloadedChaptersListFile.Add(SetParams(Ch));
+      end;
+    finally
+      dlCh.Free;
+      Ch.Free;
+      CS_DownloadedChapterList.Release;
+    end;
+  end;
+end;
+
+procedure TDownloadManager.GetDownloadedChaptersState(const Alink: String;
+  var Chapters: array of TChapterStateItem);
+var
+  dlCh   : TStringList;
+  i, p, q: Integer;
+begin
+  if (Alink <> '') and (Length(Chapters) > 0) and
+    (DownloadedChaptersListFile.Count > 0) then
+  begin
+    CS_DownloadedChapterList.Acquire;
+    try
+      p := -1;
+      //locate the link
+      for i := 0 to DownloadedChaptersListFile.Count - 1 do
+        if SameText(Alink, DownloadedChaptersListFile[i]) then
+        begin
+          if i + 1 < DownloadedChaptersListFile.Count then
+            if DownloadedChaptersListFile[i + 1] <> '' then
+              p := i + 1;
+          Break;
+        end;
+
+      //compare the content
+      if p > -1 then
+      begin
+        dlCh := TStringList.Create;
+        try
+          GetParams(dlCh, DownloadedChaptersListFile[p]);
+          if dlCh.Count > 0 then
+          begin
+            dlCh.Sort;
+            for i := Low(Chapters) to High(Chapters) do
+              Chapters[i].Downloaded := dlCh.Find(Chapters[i].Link, q);
+          end;
+        finally
+          dlCh.Free;
+        end;
+      end
+      else
+      begin
+        for i := Low(Chapters) to High(Chapters) do
+          Chapters[i].Downloaded := False;
+      end;
+    finally
+      CS_DownloadedChapterList.Release;
     end;
   end;
 end;

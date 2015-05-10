@@ -510,6 +510,7 @@ type
     FavoriteManager: TFavoriteManager;
     dataProcess: TDataProcess;
     mangaInfo: TMangaInfo;
+    ChapterList: array of TChapterStateItem;
     DLManager: TDownloadManager;
     updateDB: TUpdateDBThread;
     updateList: TUpdateMangaManagerThread;
@@ -834,6 +835,7 @@ end;
 
 procedure TMainForm.FormDestroy(Sender: TObject);
 begin
+  SetLength(ChapterList, 0);
   FreeAndNil(mangaInfo);
 
   FreeAndNil(DLManager);
@@ -1336,6 +1338,8 @@ begin
       DLManager.containers.Items[pos].ChapterName.Add(s);
       DLManager.containers.Items[pos].ChapterLinks.Add(
         mangaInfo.chapterLinks.Strings[i]);
+      ChapterList[i].Downloaded := True;
+      clbChapterList.ReinitNode(Node, False);
     end;
     Node := clbChapterList.GetNext(Node);
   end;
@@ -1375,9 +1379,8 @@ begin
 
   // DLManager.Backup;
   DLManager.CheckAndActiveTask;
-
-  DLManager.AddToDownloadedChaptersList(mangaInfo.website + mangaInfo.link);
-  DLManager.ReturnDownloadedChapters(mangaInfo.website + mangaInfo.link);
+  DLManager.AddToDownloadedChaptersList(
+    mangaInfo.website + mangaInfo.link, DLManager.containers.Items[pos].ChapterLinks);
   clbChapterList.Repaint;
 
   // DLManager.containers.Items[pos].Thread.isSuspended:= FALSE;
@@ -1741,33 +1744,21 @@ procedure TMainForm.clbChapterListBeforeCellPaint(Sender: TBaseVirtualTree;
   TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
   CellPaintMode: TVTCellPaintMode; CellRect: TRect; var ContentRect: TRect);
 var
-  i: Cardinal;
-  isDownloaded: Boolean = False;
+  Data: PChapterStateItem;
 begin
-  if not miChapterListHighlight.Checked then
-    Exit;
-  // check the list to see if the chapter was downloaded or not
-  if DLManager.DownloadedChapterList.Count > 0 then
-    for i := 0 to DLManager.DownloadedChapterList.Count - 1 do
+  Data := Sender.GetNodeData(Node);
+  if Assigned(Data) then
+    if Data^.Downloaded then
     begin
-      if Node^.Index = PtrUInt(DLManager.DownloadedChapterList.Items[i]) then
-      begin
-        isDownloaded := True;
-        Break;
-      end;
+      TargetCanvas.Brush.Color := $B8FFB8;
+      TargetCanvas.FillRect(CellRect);
     end;
-
-  if isDownloaded then
-  begin
-    TargetCanvas.Brush.Color := $B8FFB8;
-    TargetCanvas.FillRect(CellRect);
-  end;
 end;
 
 procedure TMainForm.clbChapterListFreeNode(Sender : TBaseVirtualTree;
   Node : PVirtualNode);
 var
-  Data: PSingleItem;
+  Data: PChapterStateItem;
 begin
   Data := Sender.GetNodeData(Node);
   if Assigned(Data) then
@@ -1777,33 +1768,35 @@ end;
 procedure TMainForm.clbChapterListGetNodeDataSize(Sender: TBaseVirtualTree;
   var NodeDataSize: Integer);
 begin
-  NodeDataSize := SizeOf(TSingleItem);
+  NodeDataSize := SizeOf(TChapterStateItem);
 end;
 
 procedure TMainForm.clbChapterListGetText(Sender: TBaseVirtualTree;
   Node: PVirtualNode; Column: TColumnIndex; TextType: TVSTTextType;
   var CellText: String);
 var
-  Data: PSingleItem;
+  Data: PChapterStateItem;
 begin
   Data := clbChapterList.GetNodeData(Node);
   if Assigned(Data) then
-    CellText := Data^.Text;
+    CellText := Data^.Title;
 end;
 
 procedure TMainForm.clbChapterListInitNode(Sender: TBaseVirtualTree;
   ParentNode, Node: PVirtualNode; var InitialStates: TVirtualNodeInitStates);
 var
-  Data: PSingleItem;
+  Data: PChapterStateItem;
 begin
   with Sender do
   begin
     Data := GetNodeData(Node);
     if mangaInfo.chapterName.Count = 1 then
-      Data^.Text := mangaInfo.chapterName.Strings[Node^.Index]
+      Data^.Title := ChapterList[Node^.Index].Title
     else
-      Data^.Text := Format('%.4d - %s', [Node^.Index + 1,
-        mangaInfo.chapterName.Strings[Node^.Index]]);
+      Data^.Title := Format('%.4d - %s', [Node^.Index + 1,
+        ChapterList[Node^.Index].Title]);
+    Data^.Link := ChapterList[Node^.Index].Link;
+    Data^.Downloaded := ChapterList[Node^.Index].Downloaded;
     Node^.CheckType := ctCheckBox;
     clbChapterList.ValidateNode(Node, False);
   end;
@@ -4143,6 +4136,8 @@ begin
 end;
 
 procedure TMainForm.ShowInformation(const title, website, link: String);
+var
+  i: Integer;
 begin
   pcMain.PageIndex := 1;
   if Trim(edSaveTo.Text) = '' then
@@ -4177,8 +4172,15 @@ begin
     AddTextToInfo(infoSummary, mangaInfo.summary);
     CaretPos := Point(0, 0);
   end;
-  DLManager.ReturnDownloadedChapters(mangaInfo.website + mangaInfo.link);
-  AddChapterNameToList;
+  SetLength(ChapterList, mangaInfo.chapterName.Count);
+  for i := 0 to mangaInfo.chapterName.Count - 1 do
+  begin
+    ChapterList[i].Title := mangaInfo.chapterName[i];
+    ChapterList[i].Link := mangaInfo.chapterLinks[i];
+    ChapterList[i].Downloaded := False;
+  end;
+  DLManager.GetDownloadedChaptersState(mangaInfo.website + mangaInfo.link, ChapterList);
+  UpdateVtChapter;
 
   btDownload.Enabled := (clbChapterList.RootNodeCount > 0);
   btReadOnline.Enabled := (mangaInfo.link <> '');
@@ -4578,7 +4580,7 @@ end;
 procedure TMainForm.UpdateVtChapter;
 begin
   clbChapterList.Clear;
-  clbChapterList.RootNodeCount := mangaInfo.chapterLinks.Count;
+  clbChapterList.RootNodeCount := Length(ChapterList);
 end;
 
 procedure TMainForm.UpdateVtDownload;
