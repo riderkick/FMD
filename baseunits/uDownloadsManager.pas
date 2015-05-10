@@ -136,7 +136,12 @@ type
     Status: TStatusType;
     ThreadState: Boolean;
 
-    ChapterName, ChapterLinks, FailedChapterName, FailedChapterLinks, PageContainerLinks, PageLinks: TStringList;
+    ChapterName,
+    ChapterLinks,
+    FailedChapterName,
+    FailedChapterLinks,
+    PageContainerLinks,
+    PageLinks: TStringList;
 
     constructor Create;
     destructor Destroy; override;

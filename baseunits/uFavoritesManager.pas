@@ -563,10 +563,12 @@ begin
                       MangaSiteID := GetMangaSiteID(FavoriteInfo.Website);
                       with DownloadInfo do begin
                         Website := FavoriteInfo.Website;
-                        title := FavoriteInfo.Title;
+                        Link := FavoriteInfo.Link;
+                        Title := FavoriteInfo.Title;
                         SaveTo := FavoriteInfo.SaveTo;
                         dateTime := Now;
                       end;
+                      ChapterLinks.Assign(NewMangaInfo.chapterLinks);
                       for i := 0 to NewMangaInfo.chapterLinks.Count - 1 do begin
                         ChapterName.Add(CustomRename(
                           OptionCustomRename,
