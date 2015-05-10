@@ -8,7 +8,7 @@ https://www.mediafire.com/folder/3ccy2c7g36hp3/Fmd
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
-0.9.9.6 Future
+0.9.9.6 (10-5-2015)
 [*] Fix menu popup state
 [*] Minor changes
 
