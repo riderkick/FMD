@@ -1885,7 +1885,7 @@ begin
       GetParams(st, AValue);
       AddToDownloadedChaptersList(ALink, st);
     finally
-      Free;
+      St.Free;
     end;
   end;
 end;
