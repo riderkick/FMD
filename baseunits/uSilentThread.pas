@@ -283,9 +283,12 @@ begin
       end;
 
       DLManager.containers.Items[pos].currentDownloadChapterPtr := 0;
-      DLManager.containers.Items[pos].downloadInfo.title := Info.mangaInfo.title;
       DLManager.containers.Items[pos].downloadInfo.Website := website;
-	  if Trim(edSaveTo.Text) = '' then
+      DLManager.containers.Items[pos].downloadInfo.Link := Info.mangaInfo.link;
+      DLManager.containers.Items[pos].downloadInfo.Title := Info.mangaInfo.title;
+      DLManager.containers.Items[pos].downloadInfo.DateTime := Now;
+
+      if Trim(edSaveTo.Text) = '' then
         edSaveTo.Text := options.ReadString('saveto', 'SaveTo', DEFAULT_PATH);
       if Trim(edSaveTo.Text) = '' then
         edSaveTo.Text := DEFAULT_PATH;
@@ -304,10 +307,6 @@ begin
       DLManager.containers.Items[pos].downloadInfo.SaveTo := s;
 
       // time
-      DLManager.containers.Items[pos].downloadInfo.dateTime := Now;
-
-      //DLManager.Sort(vtDownload.Header.SortColumn);
-      //DLManager.SortNatural(vtDownload.Header.SortColumn);
       UpdateVtDownload;
 
       DLManager.Backup;

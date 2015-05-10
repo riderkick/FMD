@@ -1356,10 +1356,12 @@ begin
     DLManager.containers.Items[pos].Status := STATUS_WAIT;
   end;
   DLManager.containers.Items[pos].CurrentDownloadChapterPtr := 0;
-  DLManager.containers.Items[pos].DownloadInfo.title := mangaInfo.title;
   DLManager.containers.Items[pos].DownloadInfo.Website := mangaInfo.website;
-  s := CorrectPathSys(edSaveTo.Text);
+  DLManager.containers.Items[pos].DownloadInfo.Link := mangaInfo.url;
+  DLManager.containers.Items[pos].DownloadInfo.Title := mangaInfo.title;
+  DLManager.containers.Items[pos].DownloadInfo.DateTime := Now;
 
+  s := CorrectPathSys(edSaveTo.Text);
   // save to
   if cbOptionGenerateMangaFolderName.Checked then
   begin
@@ -1369,12 +1371,7 @@ begin
       s := s + RemoveSymbols(UnicodeRemove(mangaInfo.title));
   end;
   s := CorrectPathSys(s);
-
   DLManager.containers.Items[pos].DownloadInfo.SaveTo := s;
-  DLManager.containers.Items[pos].DownloadInfo.dateTime := Now;
-
-  //DLManager.Sort(vtDownload.Header.SortColumn);
-  //DLManager.SortNatural(vtDownload.Header.SortColumn);
   UpdateVtDownload;
 
   // DLManager.Backup;
@@ -1382,8 +1379,6 @@ begin
   DLManager.AddToDownloadedChaptersList(
     mangaInfo.website + mangaInfo.link, DLManager.containers.Items[pos].ChapterLinks);
   clbChapterList.Repaint;
-
-  // DLManager.containers.Items[pos].Thread.isSuspended:= FALSE;
   pcMain.PageIndex := 0;
 end;
 
@@ -3321,10 +3316,7 @@ procedure TMainForm.vtDownloadGetImageIndex(Sender: TBaseVirtualTree;
 begin
   if vtDownload.Header.Columns[Column].Position = 0 then
   begin
-    //if Kind=ikNormal then
     ImageIndex := integer(DLManager.containers.Items[Node^.Index].Status);
-    //else if Kind=ikSelected then
-    //ImageIndex:=DLManager.containers.Items[Node^.Index].Status+5;
   end;
 end;
 

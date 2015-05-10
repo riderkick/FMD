@@ -717,12 +717,13 @@ type
   PDownloadInfo = ^TDownloadInfo;
 
   TDownloadInfo = record
-    title,
-    Status,
-    Progress,
     Website,
-    SaveTo: String;
-    dateTime: TDateTime;
+    Link,
+    Title,
+    SaveTo,
+    Status,
+    Progress: String;
+    DateTime: TDateTime;
     iProgress: Integer;
   end;
 

@@ -1739,7 +1739,7 @@ end;
 
 procedure TDownloadManager.Restore;
 var
-  s: String;
+  tid, s: String;
   tmp, i, j: Integer;
 begin
   CS_DownloadManager_Task.Acquire;
@@ -1757,82 +1757,61 @@ begin
     begin
       containers.Add(TTaskThreadContainer.Create);
       containers.Last.Manager := Self;
-
+      tid := 'task' + IntToStr(i);
       // Restore chapter links, chapter name and page links
-      s := ini.ReadString('task' + IntToStr(i), 'ChapterLinks', '');
-      if s <> '' then
-        GetParams(containers.Last.ChapterLinks, s);
-      s := ini.ReadString('task' + IntToStr(i), 'ChapterName', '');
-      if s <> '' then
-        GetParams(containers.Last.ChapterName, s);
-      s := ini.ReadString('task' + IntToStr(i), 'FailedChapterLinks', '');
-      if s <> '' then
-        GetParams(containers.Last.FailedChapterLinks, s);
-      s := ini.ReadString('task' + IntToStr(i), 'FailedChapterName', '');
-      if s <> '' then
-        GetParams(containers.Last.FailedChapterName, s);
-      s := ini.ReadString('task' + IntToStr(i), 'PageLinks', '');
-      if s <> '' then
-        GetParams(containers.Last.PageLinks, s);
-      s := ini.ReadString('task' + IntToStr(i), 'PageContainerLinks', '');
-      if s <> '' then
-        GetParams(containers.Last.PageContainerLinks, s);
+      with ini, containers.Last do begin
+        DownloadInfo.Website := ReadString(tid, 'Website', 'NULL');
+        DownloadInfo.Link := ReadString(tid, 'Link', '');
+        DownloadInfo.Title := ReadString(tid, 'Title', 'NULL');
+        DownloadInfo.SaveTo := CorrectPathSys(ReadString(tid, 'SaveTo', 'NULL'));
+        DownloadInfo.Status := ReadString(tid, 'Status', 'NULL');
+        DownloadInfo.Progress := ReadString(tid, 'Progress', 'NULL');
+        s := ReadString(tid, 'ChapterLinks', '');
+        if s <> '' then GetParams(ChapterLinks, s);
+        s := ReadString(tid, 'ChapterName', '');
+        if s <> '' then GetParams(ChapterName, s);
+        s := ReadString(tid, 'FailedChapterLinks', '');
+        if s <> '' then GetParams(FailedChapterLinks, s);
+        s := ReadString(tid, 'FailedChapterName', '');
+        if s <> '' then GetParams(FailedChapterName, s);
+        s := ReadString(tid, 'PageLinks', '');
+        if s <> '' then GetParams(PageLinks, s);
+        s := ReadString(tid, 'PageContainerLinks', '');
+        if s <> '' then GetParams(PageContainerLinks, s);        //deprecated, for old config
+        j := ReadInteger(tid, 'TaskStatus', -1);
+        if j >= 0 then
+          Status := TStatusType(j)
+        else
+        begin
+          s := ReadString(tid, 'TaskStatus', 'STATUS_STOP');
+          Status := TStatusType(GetEnumValue(TypeInfo(TStatusType), s));
+          if Status = STATUS_COMPRESS then
+            Status := STATUS_WAIT;
+        end;
+        CurrentDownloadChapterPtr := ReadInteger(tid, 'ChapterPtr', 0);
+        PageNumber := ReadInteger(tid, 'NumberOfPages', 0);
+        CurrentPageNumber := ReadInteger(tid, 'CurrentPage', 0);
+        if Status = STATUS_COMPRESS then
+          DownloadInfo.Status := stWait;
+        s := ReadString(tid, 'DateTime', '');
+        //for old config
+        if (Pos('/', s) > 0) or (Pos('\', s) > 0) then
+          DownloadInfo.dateTime := StrToDateDef(s, Now)
+        else
+        begin
+          s := StringReplace(s, ',', FMDFormatSettings.DecimalSeparator, [rfReplaceAll]);
+          s := StringReplace(s, '.', FMDFormatSettings.DecimalSeparator, [rfReplaceAll]);
+          DownloadInfo.dateTime := StrToFloatDef(s, Now, FMDFormatSettings);
+        end;
+        if DownloadInfo.dateTime > Now then DownloadInfo.dateTime := Now;
 
-      //deprecated, for old config
-      j := ini.ReadInteger('task' + IntToStr(i), 'TaskStatus', -1);
-      if j >= 0 then
-        containers.Last.Status := TStatusType(j)
-      else
-      begin
-        s := ini.ReadString('task' + IntToStr(i), 'TaskStatus', 'STATUS_STOP');
-        containers.Last.Status :=
-          TStatusType(GetEnumValue(TypeInfo(TStatusType), s));
+        MangaSiteID := GetMangaSiteID(DownloadInfo.website);
+        ThreadState := False;
 
-        if containers.Last.Status = STATUS_COMPRESS then
-          containers.Last.Status := STATUS_WAIT;
+        //validating
+        if (CurrentDownloadChapterPtr > 0) and (CurrentDownloadChapterPtr >= ChapterLinks.Count) then
+          CurrentDownloadChapterPtr := ChapterLinks.Count - 1;
       end;
-      containers.Last.CurrentDownloadChapterPtr :=
-        ini.ReadInteger('task' + IntToStr(i), 'ChapterPtr', 0);
-      containers.Last.PageNumber :=
-        ini.ReadInteger('task' + IntToStr(i), 'NumberOfPages', 0);
-      containers.Last.CurrentPageNumber :=
-        ini.ReadInteger('task' + IntToStr(i), 'CurrentPage', 0);
-      containers.Last.DownloadInfo.title :=
-        ini.ReadString('task' + IntToStr(i), 'Title', 'NULL');
-      containers.Last.DownloadInfo.status :=
-        ini.ReadString('task' + IntToStr(i), 'Status', 'NULL');
-      containers.Last.DownloadInfo.Progress :=
-        ini.ReadString('task' + IntToStr(i), 'Progress', 'NULL');
-      containers.Last.DownloadInfo.website :=
-        ini.ReadString('task' + IntToStr(i), 'Website', 'NULL');
-      containers.Last.DownloadInfo.saveTo :=
-        CorrectPathSys(ini.ReadString('task' + IntToStr(i), 'SaveTo', 'NULL'));
-
-      if containers.Last.Status = STATUS_COMPRESS then
-        containers.Last.DownloadInfo.Status := stWait;
-
-      s := ini.ReadString('task' + IntToStr(i), 'DateTime', '');
-      //for old config
-      if (Pos('/', s) > 0) or (Pos('\', s) > 0) then
-        containers.Last.DownloadInfo.dateTime := StrToDateDef(s, Now)
-      else
-      begin
-        s := StringReplace(s, ',', FMDFormatSettings.DecimalSeparator, [rfReplaceAll]);
-        s := StringReplace(s, '.', FMDFormatSettings.DecimalSeparator, [rfReplaceAll]);
-        containers.Last.DownloadInfo.dateTime := StrToFloatDef(s, Now, FMDFormatSettings);
-      end;
-      if containers.Last.DownloadInfo.dateTime > Now then
-        containers.Last.DownloadInfo.dateTime := Now;
-
-      containers.Last.MangaSiteID :=
-        GetMangaSiteID(containers.Last.DownloadInfo.website);
-      containers.Last.ThreadState := False;
-
-      //validating
-      if (containers.Last.CurrentDownloadChapterPtr > 0) and
-        (containers.Last.CurrentDownloadChapterPtr >=
-        containers.Last.ChapterLinks.Count) then
-        containers.Last.CurrentDownloadChapterPtr := containers.Last.ChapterLinks.Count - 1;
     end;
   finally
     CS_DownloadManager_Task.Release;
@@ -1842,6 +1821,7 @@ end;
 procedure TDownloadManager.Backup;
 var
   i: Integer;
+  tid: String;
 begin
   if isRunningBackup then
     Exit;
@@ -1859,49 +1839,32 @@ begin
     if containers.Count > 0 then
     begin
       ini.WriteInteger('general', 'NumberOfTasks', containers.Count);
-
       for i := 0 to containers.Count - 1 do
       begin
-        ini.WriteString('task' + IntToStr(i), 'ChapterLinks',
-          SetParams(containers.Items[i].ChapterLinks));
-        ini.WriteString('task' + IntToStr(i), 'ChapterName',
-          SetParams(containers.Items[i].ChapterName));
-        if containers.Items[i].FailedChapterLinks.Count > 0 then
-          ini.WriteString('task' + IntToStr(i), 'FailedChapterLinks',
-            SetParams(containers.Items[i].FailedChapterLinks));
-        if containers.Items[i].FailedChapterName.Count > 0 then
-          ini.WriteString('task' + IntToStr(i), 'FailedChapterName',
-            SetParams(containers.Items[i].FailedChapterName));
-        if containers.Items[i].PageLinks.Count > 0 then
-          ini.WriteString('task' + IntToStr(i), 'PageLinks',
-            SetParams(containers.Items[i].PageLinks));
-        if containers.Items[i].PageContainerLinks.Count > 0 then
-          ini.WriteString('task' + IntToStr(i), 'PageContainerLinks',
-            SetParams(containers.Items[i].PageContainerLinks));
-
-        ini.WriteString('task' + IntToStr(i), 'TaskStatus',
-          GetEnumName(TypeInfo(TStatusType), integer(containers.Items[i].Status)));
-
-        ini.WriteInteger('task' + IntToStr(i), 'ChapterPtr',
-          containers.Items[i].CurrentDownloadChapterPtr);
-        ini.WriteInteger('task' + IntToStr(i), 'NumberOfPages',
-          containers.Items[i].PageNumber);
-        ini.WriteInteger('task' + IntToStr(i), 'CurrentPage',
-          containers.Items[i].CurrentPageNumber);
-
-        ini.WriteString('task' + IntToStr(i), 'Title',
-          containers.Items[i].DownloadInfo.title);
-        ini.WriteString('task' + IntToStr(i), 'Status',
-          containers.Items[i].DownloadInfo.status);
-        ini.WriteString('task' + IntToStr(i), 'Progress',
-          containers.Items[i].DownloadInfo.Progress);
-        ini.WriteString('task' + IntToStr(i), 'Website',
-          containers.Items[i].DownloadInfo.website);
-        ini.WriteString('task' + IntToStr(i), 'SaveTo',
-          containers.Items[i].DownloadInfo.saveTo);
-
-        ini.WriteString('task' + IntToStr(i), 'DateTime',
-          FloatToStr(containers.Items[i].DownloadInfo.dateTime, FMDFormatSettings));
+        tid := 'task' + IntToStr(i);
+        with ini, containers[i] do begin
+          WriteString(tid, 'Website', DownloadInfo.Website);
+          WriteString(tid, 'Link', DownloadInfo.Link);
+          WriteString(tid, 'Title', DownloadInfo.Title);
+          WriteString(tid, 'SaveTo', DownloadInfo.SaveTo);
+          WriteString(tid, 'Status', DownloadInfo.Status);
+          WriteString(tid, 'Progress', DownloadInfo.Progress);
+          WriteString(tid, 'DateTime', FloatToStr(DownloadInfo.dateTime, FMDFormatSettings));
+          WriteString(tid, 'ChapterLinks', SetParams(ChapterLinks));
+          WriteString(tid, 'ChapterName', SetParams(ChapterName));
+          if FailedChapterLinks.Count > 0 then
+            WriteString(tid, 'FailedChapterLinks', SetParams(FailedChapterLinks));
+          if FailedChapterName.Count > 0 then
+            WriteString(tid, 'FailedChapterName', SetParams(FailedChapterName));
+          if PageLinks.Count > 0 then
+            WriteString(tid, 'PageLinks', SetParams(PageLinks));
+          if PageContainerLinks.Count > 0 then
+            WriteString(tid, 'PageContainerLinks', SetParams(PageContainerLinks));
+          WriteString(tid, 'TaskStatus', GetEnumName(TypeInfo(TStatusType), integer(Status)));
+          WriteInteger(tid, 'ChapterPtr', CurrentDownloadChapterPtr);
+          WriteInteger(tid, 'NumberOfPages', PageNumber);
+          WriteInteger(tid, 'CurrentPage', CurrentPageNumber);
+        end;
       end;
     end;
     ini.UpdateFile;

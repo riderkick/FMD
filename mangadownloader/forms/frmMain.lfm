@@ -133,7 +133,7 @@ object MainForm: TMainForm
       end
     end
     object tsInformation: TTabSheet
-      Caption = 'Manga Infos'
+      Caption = 'Manga Info'
       ClientHeight = 456
       ClientWidth = 606
       object sbInformation: TScrollBox
@@ -3268,7 +3268,7 @@ object MainForm: TMainForm
     left = 368
     top = 176
     object miFavoritesViewInfos: TMenuItem
-      Caption = 'View manga infos'
+      Caption = 'View manga info'
       Bitmap.Data = {
         36040000424D3604000000000000360000002800000010000000100000000100
         2000000000000004000064000000640000000000000000000000000000000000
