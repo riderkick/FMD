@@ -10,6 +10,8 @@ Changelog:
 
 0.9.9.5 Future
 [+] Add button to cancel favorites check.
+[*] Fix favorites not auto download
+[*] Fix favorites add to download list with empty chapters link
 [*] Minor changes
 
 0.9.9.4 (10-05-2015)
