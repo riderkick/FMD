@@ -575,10 +575,11 @@ begin
                     DLManager.CS_DownloadManager_Task.Release;
                   end;
                   //mark downloaded
-                  dlChapters.Clear;
-                  GetParams(dlChapters, FavoriteInfo.downloadedChapterList);
-                  dlChapters.AddStrings(NewMangaInfo.chapterLinks);
-                  FavoriteInfo.downloadedChapterList := SetParams(dlChapters);
+                  FavoriteInfo.downloadedChapterList :=
+                    FavoriteInfo.downloadedChapterList + SetParams(NewMangaInfo.chapterLinks);
+                  //save to downloaded chapter list from dlmanager.
+                  DLManager.AddToDownloadedChaptersList(
+                    FavoriteInfo.Website + FavoriteInfo.Link, NewMangaInfo.chapterLinks);
                 end;
             end;
             Inc(counter);
