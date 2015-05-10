@@ -645,7 +645,6 @@ var
   stDlgCannotGetMangaInfo, stDlgFavoritesIsRunning, stDlgNoNewChapter,
   stDlgHasNewChapter, stDlgRemoveCompletedManga, stDlgUpdaterWantToUpdateDB,
   stDlgUpdaterCannotConnectToServer: String;
-  stDlgTitleExistInDLlist: String = 'This title are already in download list.' + #13#10 + 'Do you want to download it anyway?';
 
   OptionCheckMinutes: Cardinal = 0;
   OptionPDFQuality: Cardinal = 95;
@@ -664,10 +663,11 @@ var
 
 type
   TCheckStyleType = (CS_DIRECTORY_COUNT, CS_DIRECTORY_PAGE,
-    CS_DIRECTORY_PAGE_2, CS_INFO);
-  TFlagType = (CS_GETPAGENUMBER, CS_GETPAGELINK, CS_DOWNLOAD);
-  TStatusType = (STATUS_STOP, STATUS_WAIT, STATUS_PREPARE,
-    STATUS_DOWNLOAD, STATUS_FINISH, STATUS_COMPRESS, STATUS_PROBLEM, STATUS_FAILED);
+                     CS_DIRECTORY_PAGE_2, CS_INFO);
+  TFlagType       = (CS_GETPAGENUMBER, CS_GETPAGELINK, CS_DOWNLOAD);
+  TStatusType     = (STATUS_STOP, STATUS_WAIT, STATUS_PREPARE,
+                     STATUS_DOWNLOAD, STATUS_FINISH, STATUS_COMPRESS,
+                     STATUS_PROBLEM, STATUS_FAILED);
 
   TMemory = Pointer;
 

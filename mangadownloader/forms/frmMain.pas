@@ -611,6 +611,8 @@ var
 resourcestring
   RS_HintFavoriteProblem = 'There is a problem with this data!'+ LineEnding +
                            'Removing and re-adding this data may fix the problem.';
+  RS_DlgTitleExistInDLlist = 'This title are already in download list.' + LineEnding +
+                             'Do you want to download it anyway?';
 
 implementation
 
@@ -2459,7 +2461,7 @@ begin
               begin
                 pcMain.ActivePage := tsDownload;
                 mResult := MessageDlg('', DLManager.containers.Items[j].DownloadInfo.title +
-                  LineEnding + LineEnding + stDlgTitleExistInDLlist, mtConfirmation,
+                  LineEnding + LineEnding + RS_DlgTitleExistInDLlist, mtConfirmation,
                     mBtns, 0);
                 case mResult of
                   mrYes : AllowedToCreate := True;
