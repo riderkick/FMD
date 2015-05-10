@@ -312,16 +312,9 @@ begin
       DLManager.Backup;
       DLManager.CheckAndActiveTask(False, Self);
 
-      // generate downloaded chapters
-      s := '';
-      if Info.mangaInfo.chapterLinks.Count = 0 then
-        Exit;
-      for i := 0 to Info.mangaInfo.chapterLinks.Count - 1 do
-      begin
-        s := s + IntToStr(i) + SEPERATOR;
-      end;
-      if s <> '' then
-        DLManager.AddToDownloadedChaptersList(Info.mangaInfo.website + URL, s);
+      // save downloaded chapters
+      if Info.mangaInfo.chapterLinks.Count > 0 then
+        DLManager.AddToDownloadedChaptersList(Info.mangaInfo.website + URL, Info.mangaInfo.chapterLinks);
     end;
   except
     on E: Exception do
