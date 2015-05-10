@@ -284,7 +284,7 @@ begin
 
       DLManager.containers.Items[pos].currentDownloadChapterPtr := 0;
       DLManager.containers.Items[pos].downloadInfo.Website := website;
-      DLManager.containers.Items[pos].downloadInfo.Link := Info.mangaInfo.link;
+      DLManager.containers.Items[pos].downloadInfo.Link := URL;
       DLManager.containers.Items[pos].downloadInfo.Title := Info.mangaInfo.title;
       DLManager.containers.Items[pos].downloadInfo.DateTime := Now;
 
