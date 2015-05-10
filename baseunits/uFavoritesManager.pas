@@ -608,10 +608,7 @@ begin
           Backup;
           DLManager.Backup;
           if Assigned(OnUpdateDownload) then
-          begin
-            DLManager.SortNatural(DLManager.SortColumn);
             OnUpdateDownload;
-          end;
           if LNCResult = ncrDownload then
           begin
             DLManager.CheckAndActiveTask;
