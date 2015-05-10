@@ -303,12 +303,9 @@ begin
           s := s + RemoveSymbols(UnicodeRemove(Info.mangaInfo.title));
       end;
       s := CorrectPathSys(s);
-
       DLManager.containers.Items[pos].downloadInfo.SaveTo := s;
 
-      // time
       UpdateVtDownload;
-
       DLManager.Backup;
       DLManager.CheckAndActiveTask(False, Self);
 
