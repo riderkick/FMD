@@ -338,8 +338,8 @@ object MainForm: TMainForm
           object edSaveTo: TLabeledEdit
             Left = 4
             Height = 23
-            Top = 127
-            Width = 362
+            Top = 124
+            Width = 353
             Anchors = [akLeft, akRight, akBottom]
             EditLabel.AnchorSideLeft.Control = edSaveTo
             EditLabel.AnchorSideRight.Control = edSaveTo
@@ -347,8 +347,8 @@ object MainForm: TMainForm
             EditLabel.AnchorSideBottom.Control = edSaveTo
             EditLabel.Left = 4
             EditLabel.Height = 15
-            EditLabel.Top = 109
-            EditLabel.Width = 362
+            EditLabel.Top = 106
+            EditLabel.Width = 353
             EditLabel.Caption = 'Save to'
             EditLabel.ParentColor = False
             EditLabel.ParentFont = False
@@ -356,10 +356,10 @@ object MainForm: TMainForm
             TabOrder = 1
           end
           object btDownload: TBitBtn
-            Left = 402
+            Left = 394
             Height = 30
-            Top = 123
-            Width = 96
+            Top = 121
+            Width = 101
             Anchors = [akRight, akBottom]
             Caption = 'Download'
             Glyph.Data = {
@@ -404,7 +404,7 @@ object MainForm: TMainForm
           object cbAddAsStopped: TCheckBox
             Left = 4
             Height = 19
-            Top = 161
+            Top = 158
             Width = 214
             Anchors = [akLeft, akBottom]
             Caption = 'Add to download list as stopped task'
@@ -414,9 +414,9 @@ object MainForm: TMainForm
           end
           object clbChapterList: TVirtualStringTree
             Left = 4
-            Height = 102
-            Top = 2
-            Width = 562
+            Height = 101
+            Top = 0
+            Width = 563
             Anchors = [akTop, akLeft, akRight, akBottom]
             Colors.UnfocusedSelectionColor = clHighlight
             DefaultText = 'Node'
@@ -440,10 +440,10 @@ object MainForm: TMainForm
             OnInitNode = clbChapterListInitNode
           end
           object btReadOnline: TBitBtn
-            Left = 501
+            Left = 499
             Height = 30
-            Top = 123
-            Width = 100
+            Top = 121
+            Width = 102
             Anchors = [akRight, akBottom]
             Caption = 'Read online'
             Glyph.Data = {
@@ -486,9 +486,9 @@ object MainForm: TMainForm
             TabOrder = 3
           end
           object btBrowse: TSpeedButton
-            Left = 369
+            Left = 360
             Height = 23
-            Top = 127
+            Top = 124
             Width = 23
             Anchors = [akRight, akBottom]
             Glyph.Data = {
@@ -532,7 +532,7 @@ object MainForm: TMainForm
           object btChecks: TSpeedButton
             Left = 571
             Height = 30
-            Top = 2
+            Top = 0
             Width = 30
             Anchors = [akTop, akRight]
             Glyph.Data = {
@@ -574,10 +574,10 @@ object MainForm: TMainForm
             OnClick = btChecksClick
           end
           object btAddToFavorites: TBitBtn
-            Left = 402
+            Left = 394
             Height = 30
-            Top = 156
-            Width = 199
+            Top = 155
+            Width = 207
             Anchors = [akRight, akBottom]
             Caption = 'Add to favorites'
             Glyph.Data = {
@@ -3672,20 +3672,20 @@ object MainForm: TMainForm
     Interval = 48
     OnTimer = itAnimateTimer
     left = 728
-    top = 136
+    top = 104
   end
   object itCheckForChapters: TIdleTimer
     Enabled = False
     Interval = 600000
     OnTimer = itCheckForChaptersTimer
     left = 728
-    top = 264
+    top = 200
   end
   object itRefreshForm: TIdleTimer
     Interval = 300
     OnTimer = itRefreshFormTimer
     left = 672
-    top = 264
+    top = 200
   end
   object IconList: TImageList
     left = 24
@@ -4210,7 +4210,7 @@ object MainForm: TMainForm
     Interval = 300000
     OnTimer = itSaveDownloadedListTimer
     left = 728
-    top = 200
+    top = 152
   end
   object IconDL: TImageList
     left = 24
@@ -5419,19 +5419,19 @@ object MainForm: TMainForm
     Interval = 500
     OnTimer = itStartupTimer
     left = 672
-    top = 136
+    top = 104
   end
   object tmBackup: TIdleTimer
     Interval = 60000
     OnTimer = tmBackupTimer
     left = 672
-    top = 200
+    top = 152
   end
   object itMonitor: TTimer
     Enabled = False
     Interval = 1500
     OnTimer = itMonitorTimer
-    left = 728
-    top = 328
+    left = 560
+    top = 200
   end
 end
