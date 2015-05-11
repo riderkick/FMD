@@ -156,21 +156,21 @@ object MainForm: TMainForm
           OnClick = tbDownloadResumeAllClick
         end
         object tbDownloadStopAll: TToolButton
-          Left = 89
+          Left = 86
           Top = 0
           Caption = 'Stop All'
           ImageIndex = 7
           OnClick = tbDownloadStopAllClick
         end
         object ToolButton1: TToolButton
-          Left = 158
+          Left = 153
           Height = 22
           Top = 0
           Width = 5
           Style = tbsDivider
         end
         object tbDownloadDeleteCompleted: TToolButton
-          Left = 163
+          Left = 158
           Top = 0
           Caption = 'Delete all completed tasks'
           ImageIndex = 9
@@ -187,7 +187,7 @@ object MainForm: TMainForm
         Height = 456
         Top = 0
         Width = 606
-        HorzScrollBar.Page = 311
+        HorzScrollBar.Page = 214
         VertScrollBar.Page = 317
         Align = alClient
         BorderStyle = bsNone
@@ -216,7 +216,7 @@ object MainForm: TMainForm
             ParentFont = False
             ReadOnly = True
             ScrollBars = ssVertical
-            TabOrder = 0
+            TabOrder = 1
             ZoomFactor = 1
           end
           object edURL: TEdit
@@ -227,7 +227,7 @@ object MainForm: TMainForm
             Anchors = [akTop, akLeft, akRight]
             OnKeyPress = edURLKeyPress
             PopupMenu = pmEditURL
-            TabOrder = 1
+            TabOrder = 0
           end
           object btDonate: TImage
             Cursor = crHandPoint
@@ -339,8 +339,8 @@ object MainForm: TMainForm
             Left = 4
             Height = 23
             Top = 127
-            Width = 311
-            Anchors = [akLeft, akBottom]
+            Width = 362
+            Anchors = [akLeft, akRight, akBottom]
             EditLabel.AnchorSideLeft.Control = edSaveTo
             EditLabel.AnchorSideRight.Control = edSaveTo
             EditLabel.AnchorSideRight.Side = asrBottom
@@ -348,19 +348,19 @@ object MainForm: TMainForm
             EditLabel.Left = 4
             EditLabel.Height = 15
             EditLabel.Top = 109
-            EditLabel.Width = 311
+            EditLabel.Width = 362
             EditLabel.Caption = 'Save to'
             EditLabel.ParentColor = False
             EditLabel.ParentFont = False
             ParentFont = False
-            TabOrder = 0
+            TabOrder = 1
           end
           object btDownload: TBitBtn
-            Left = 367
+            Left = 402
             Height = 30
             Top = 123
             Width = 96
-            Anchors = [akLeft, akBottom]
+            Anchors = [akRight, akBottom]
             Caption = 'Download'
             Glyph.Data = {
               36040000424D3604000000000000360000002800000010000000100000000100
@@ -399,7 +399,7 @@ object MainForm: TMainForm
               3F33E99E3F00E99E3F00E99E3F00E99E3F00E99E3F00E99E3F00
             }
             OnClick = btDownloadClick
-            TabOrder = 1
+            TabOrder = 2
           end
           object cbAddAsStopped: TCheckBox
             Left = 4
@@ -410,22 +410,11 @@ object MainForm: TMainForm
             Caption = 'Add to download list as stopped task'
             OnChange = cbAddAsStoppedChange
             ParentFont = False
-            TabOrder = 2
-          end
-          object cbAddToFavorites: TCheckBox
-            Left = 319
-            Height = 19
-            Top = 161
-            Width = 106
-            Anchors = [akLeft, akBottom]
-            Caption = 'Add to Favorites'
-            ParentFont = False
-            TabOrder = 3
-            Visible = False
+            TabOrder = 4
           end
           object clbChapterList: TVirtualStringTree
             Left = 4
-            Height = 105
+            Height = 102
             Top = 2
             Width = 562
             Anchors = [akTop, akLeft, akRight, akBottom]
@@ -439,7 +428,7 @@ object MainForm: TMainForm
             Margin = 2
             ParentFont = False
             PopupMenu = pmChapterList
-            TabOrder = 4
+            TabOrder = 0
             TextMargin = 0
             TreeOptions.MiscOptions = [toAcceptOLEDrop, toCheckSupport, toFullRepaintOnResize, toInitOnSave, toToggleOnDblClick, toWheelPanning, toEditOnClick]
             TreeOptions.PaintOptions = [toHideFocusRect, toShowButtons, toShowDropmark, toThemeAware, toUseBlendedImages]
@@ -451,11 +440,11 @@ object MainForm: TMainForm
             OnInitNode = clbChapterListInitNode
           end
           object btReadOnline: TBitBtn
-            Left = 471
+            Left = 501
             Height = 30
             Top = 123
-            Width = 96
-            Anchors = [akLeft, akBottom]
+            Width = 100
+            Anchors = [akRight, akBottom]
             Caption = 'Read online'
             Glyph.Data = {
               36040000424D3604000000000000360000002800000010000000100000000100
@@ -494,14 +483,14 @@ object MainForm: TMainForm
               80668080806680808066808080668080804D7F7F7F007F7F7F00
             }
             OnClick = btReadOnlineClick
-            TabOrder = 5
+            TabOrder = 3
           end
           object btBrowse: TSpeedButton
-            Left = 317
+            Left = 369
             Height = 23
             Top = 127
             Width = 23
-            Anchors = [akLeft, akBottom]
+            Anchors = [akRight, akBottom]
             Glyph.Data = {
               36040000424D3604000000000000360000002800000010000000100000000100
               2000000000000004000064000000640000000000000000000000FFFFFF00FFFF
@@ -585,11 +574,11 @@ object MainForm: TMainForm
             OnClick = btChecksClick
           end
           object btAddToFavorites: TBitBtn
-            Left = 368
+            Left = 402
             Height = 30
             Top = 156
-            Width = 198
-            Anchors = [akLeft, akBottom]
+            Width = 199
+            Anchors = [akRight, akBottom]
             Caption = 'Add to favorites'
             Glyph.Data = {
               36040000424D3604000000000000360000002800000010000000100000000100
@@ -628,7 +617,7 @@ object MainForm: TMainForm
               E1000101E3000101E53C0101E5AB0101E53C0101E3000101E100
             }
             OnClick = btAddToFavoritesClick
-            TabOrder = 6
+            TabOrder = 5
           end
         end
       end

@@ -137,7 +137,6 @@ type
     CheckBox4: TCheckBox;
     cbOnlyNew: TCheckBox;
     cbAddAsStopped: TCheckBox;
-    cbAddToFavorites: TCheckBox;
     cbOptionShowQuitDialog: TCheckBox;
     cbOptionPathConvert: TCheckBox;
     cbOptionGenerateChapterName: TCheckBox;
@@ -4844,7 +4843,7 @@ begin
     stDownload := btDownload.Caption;
     btReadOnline.Caption := language.ReadString(lang, 'btReadOnlineCaption', '');
     cbAddAsStopped.Caption := language.ReadString(lang, 'cbAddAsStoppedCaption', '');
-    cbAddToFavorites.Caption := language.ReadString(lang, 'cbAddToFavoritesCaption', '');
+    btAddToFavorites.Caption := language.ReadString(lang, 'cbAddToFavoritesCaption', '');
     cbSearchFromAllSites.Caption :=
       language.ReadString(lang, 'cbSearchFromAllSitesCaption', '');
 
