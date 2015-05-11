@@ -8,6 +8,13 @@ https://www.mediafire.com/folder/3ccy2c7g36hp3/Fmd
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.10.0 (11-5-2015)
+[+] Add toolbar to start/stop all download task
+[*] MangaStream: fix download problem
+[*] Fix various favorites bugs
+[*] Fix can't stop download task
+[*] Various changes and bug fixes
+
 0.9.9.6 (10-5-2015)
 [*] Fix menu popup state
 [*] Minor changes
