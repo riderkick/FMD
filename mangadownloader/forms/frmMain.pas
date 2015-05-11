@@ -4318,7 +4318,6 @@ begin
   OptionAutoNumberChapterChecked := cbOptionAutoNumberChapter.Checked;
 
   cbAddAsStopped.Checked := options.ReadBool('general', 'AddAsStopped', False);
-  LoadLanguage(options.ReadInteger('languages', 'Select', 0));
 
   DLManager.maxDLTasks := options.ReadInteger('connections', 'NumberOfTasks', 1);
   DLManager.maxDLThreadsPerTask :=
@@ -4394,6 +4393,7 @@ begin
 
   cbOptionMangaFoxRemoveWatermarks.Checked :=
     options.ReadBool('misc', 'MangafoxRemoveWatermarks', False);
+  LoadLanguage(options.ReadInteger('languages', 'Select', 0));
 end;
 
 procedure TMainForm.LoadMangaOptions;
