@@ -4350,6 +4350,7 @@ begin
     options.ReadBool('update', 'AutoCheckFavStartup', False);
   OptionAutoCheckFavStartup := cbOptionAutoCheckFavStartup.Checked;
   seOptionCheckMinutes.Value := options.ReadInteger('update', 'AutoCheckMinutes', 0);
+  lbOptionAutoCheckMinutes.Caption := Format(OptionAutoCheckMinutes, [seOptionCheckMinutes.Value]);
   OptionCheckMinutes := seOptionCheckMinutes.Value;
   cbOptionUpdateListNoMangaInfo.Checked :=
     options.ReadBool('update', 'UpdateListNoMangaInfo', False);
