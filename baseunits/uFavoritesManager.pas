@@ -117,8 +117,8 @@ type
     // Backup to favorites.ini
     procedure Backup;
     // Abort favorites check
-    procedure StopAll;
-    procedure StopAllAndWait;
+    procedure StopRun;
+    procedure StopRunAndWait;
 
     // sorting
     procedure Sort(const AColumn: Cardinal);
@@ -263,7 +263,6 @@ var
   workCounter: Integer;
   i: Integer;
 begin
-  manager.isRunning := True;
   Synchronize(SyncStartChecking);
   try
     workCounter := 0;
@@ -311,7 +310,6 @@ begin
       MainForm.ExceptionHandler(Self, E);
   end;
   Synchronize(SyncFinishChecking);
-  manager.isRunning := False;
 end;
 
 procedure TFavoriteTask.UpdateBtnCaption(Cap: String);
@@ -325,10 +323,12 @@ begin
   inherited Create(True);
   CS_Threads := TCriticalSection.Create;
   threads := TFavoriteThreadList.Create;
+  manager.isRunning := True;
 end;
 
 destructor TFavoriteTask.Destroy;
 begin
+  manager.taskthread := nil;
   manager.isRunning := False;
   threads.Free;
   CS_Threads.Free;
@@ -364,7 +364,7 @@ begin
   favoritesFile.UpdateFile;
   favoritesFile.Free;
   if Favorites.Count > 0 then begin
-    StopAllAndWait;
+    StopRunAndWait;
     while Favorites.Count > 0 do begin
       Favorites.Last.Free;
       Favorites.Remove(Favorites.Last);
@@ -385,9 +385,12 @@ begin
     end
     else
     begin
-      taskthread := TFavoriteTask.Create;
-      taskthread.manager := Self;
-      taskthread.Start;
+      if taskthread = nil then
+      begin
+        taskthread := TFavoriteTask.Create;
+        taskthread.manager := Self;
+        taskthread.Start;
+      end;
     end;
   except
     on E: Exception do
@@ -820,13 +823,13 @@ begin
   favoritesFile.UpdateFile;
 end;
 
-procedure TFavoriteManager.StopAll;
+procedure TFavoriteManager.StopRun;
 begin
   if isRunning then
     taskthread.Terminate;
 end;
 
-procedure TFavoriteManager.StopAllAndWait;
+procedure TFavoriteManager.StopRunAndWait;
 begin
   if isRunning then
   begin
