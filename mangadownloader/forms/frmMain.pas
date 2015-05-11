@@ -814,7 +814,7 @@ begin
     updateList.Terminate;
     updateList.WaitFor;
   end;
-  FavoriteManager.StopAllAndWait;
+  FavoriteManager.StopRunAndWait;
   SilentThreadManager.StopAllAndWait;
 
   if FMDInstance <> nil then
@@ -1437,7 +1437,7 @@ end;
 
 procedure TMainForm.btCancelFavoritesCheckClick(Sender: TObject);
 begin
-  FavoriteManager.StopAll;
+  FavoriteManager.StopRun;
 end;
 
 procedure TMainForm.appPropertiesMainShowHint(var HintStr: String;
