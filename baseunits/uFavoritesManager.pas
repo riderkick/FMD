@@ -380,13 +380,11 @@ begin
   try
     if isRunning then
     begin
-      MessageDlg('', RS_DlgFavoritesAlreadyChecking, mtInformation, [mbOK], 0);
-      Exit;
+      if not isAuto then
+        MessageDlg('', RS_DlgFavoritesAlreadyChecking, mtInformation, [mbOK], 0);
     end
     else
     begin
-      MainForm.btFavoritesCheckNewChapter.Caption := stFavoritesChecking;
-      isRunning := True;
       taskthread := TFavoriteTask.Create;
       taskthread.manager := Self;
       taskthread.Start;
