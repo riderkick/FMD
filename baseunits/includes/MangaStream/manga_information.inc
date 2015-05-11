@@ -52,6 +52,8 @@
           s := GetVal(parse[i], 'href');
           if Pos('http', LowerCase(s)) <> 1 then
             s := MANGASTREAM_ROOT2 + s;
+          if RightStr(s, 2) = '/1' then
+            s := ReplaceRegExpr('(/\d+)/1$', s, '$1', True);
           mangaInfo.chapterLinks.Add(s);
         end;
       end;

@@ -5,10 +5,12 @@
     l: TStringList;
   begin
     l := TStringList.Create;
-    s := URL + '/' + IntToStr(workCounter + 1);
+    s := URL;
     if Pos('http', LowerCase(s)) <> 1 then
       s := MANGASTREAM_ROOT2 + s;
-
+    if RightStr(s, 2) = '/1' then
+      s := ReplaceRegExpr('(/\d+)/1$', s, '$1', True);
+    s := s + '/' + IntToStr(QWord(workCounter) + 1);
     Result := GetPage(TObject(l), s, manager.container.Manager.retryConnect);
 
     parse := TStringList.Create;

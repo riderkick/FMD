@@ -2,11 +2,15 @@
   var
     i: Integer;
     l: TStringList;
+    s: String;
   begin
     l := TStringList.Create;
     parse := TStringList.Create;
+    s := FillMangaSiteHost(MANGASTREAM_ID, URL);
+    if RightStr(s, 2) = '/1' then
+      s := ReplaceRegExpr('(/\d+)/1$', s, '$1', True);
     Result := GetPage(TObject(l),
-      FillMangaSiteHost(MANGASTREAM_ID, URL) + '/1',
+       s + '/1',
       manager.container.manager.retryConnect);
 
     Parser := THTMLParser.Create(PChar(l.Text));
