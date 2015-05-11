@@ -2200,7 +2200,7 @@ procedure TDownloadManager.StopTask(const taskID: Integer;
 begin
   if taskID < containers.Count then
   begin
-    if containers.Items[taskID].Status in [STATUS_DOWNLOAD, STATUS_WAIT] then
+    if containers.Items[taskID].Status in [STATUS_DOWNLOAD, STATUS_PREPARE, STATUS_WAIT] then
     begin
       isReadyForExit := False;
       containers.Items[taskID].Status := STATUS_STOP;
