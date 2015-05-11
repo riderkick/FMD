@@ -3075,7 +3075,8 @@ end;
 
 procedure TMainForm.tbDownloadDeleteCompletedClick(Sender: TObject);
 begin
-  miDownloadDeleteCompletedClick(miDownloadDeleteCompleted);
+  if DLManager.TaskStatusPresent([STATUS_FINISH]) then
+    miDownloadDeleteCompletedClick(miDownloadDeleteCompleted);
 end;
 
 procedure TMainForm.tbDownloadResumeAllClick(Sender: TObject);

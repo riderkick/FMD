@@ -223,6 +223,8 @@ type
     procedure RemoveAllFinishedTasks;
     // show exit counter
     procedure doExitWaitCounter;
+    // check status of task
+    function TaskStatusPresent(Stats: TStatusTypes): Boolean;
 
     // Sort.
     procedure Sort(const AColumn: Cardinal);
@@ -2399,6 +2401,29 @@ begin
       etExit: DoAfterFMD := DoFMDExit;
     end;
     MainForm.itMonitor.Enabled := True;
+  end;
+end;
+
+function TDownloadManager.TaskStatusPresent(Stats: TStatusTypes): Boolean;
+var
+  i: Integer;
+begin
+  Result := False;
+  if containers.Count > 0 then
+  begin
+    CS_DownloadManager_Task.Acquire;
+    try
+      for i := 0 to containers.Count - 1 do
+      begin
+        if containers[i].Status in Stats then
+        begin
+          Result := True;
+          Break;
+        end;
+      end;
+    finally
+      CS_DownloadManager_Task.Release;
+    end;
   end;
 end;
 
