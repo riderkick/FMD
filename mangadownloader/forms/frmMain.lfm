@@ -58,12 +58,11 @@ object MainForm: TMainForm
       ClientWidth = 606
       object vtDownload: TVirtualStringTree
         Left = 2
-        Height = 449
-        Top = 4
+        Height = 423
+        Top = 30
         Width = 600
         Align = alClient
         BorderSpacing.Left = 2
-        BorderSpacing.Top = 4
         BorderSpacing.Right = 4
         BorderSpacing.Bottom = 3
         DefaultText = 'Node'
@@ -130,6 +129,53 @@ object MainForm: TMainForm
         OnInitNode = vtDownloadInitNode
         OnKeyDown = vtDownloadKeyDown
         OnKeyUp = vtDownloadKeyUp
+      end
+      object ToolBarDownload: TToolBar
+        Left = 2
+        Height = 22
+        Top = 4
+        Width = 600
+        AutoSize = True
+        BorderSpacing.Left = 2
+        BorderSpacing.Top = 4
+        BorderSpacing.Right = 4
+        BorderSpacing.Bottom = 4
+        EdgeBorders = []
+        Images = IconList
+        List = True
+        ParentFont = False
+        ShowCaptions = True
+        TabOrder = 1
+        TabStop = True
+        Transparent = True
+        object tbDownloadResumeAll: TToolButton
+          Left = 1
+          Top = 0
+          Caption = 'Resume All'
+          ImageIndex = 12
+          OnClick = tbDownloadResumeAllClick
+        end
+        object tbDownloadStopAll: TToolButton
+          Left = 89
+          Top = 0
+          Caption = 'Stop All'
+          ImageIndex = 7
+          OnClick = tbDownloadStopAllClick
+        end
+        object ToolButton1: TToolButton
+          Left = 158
+          Height = 22
+          Top = 0
+          Width = 5
+          Style = tbsDivider
+        end
+        object tbDownloadDeleteCompleted: TToolButton
+          Left = 163
+          Top = 0
+          Caption = 'Delete all completed tasks'
+          ImageIndex = 9
+          OnClick = tbDownloadDeleteCompletedClick
+        end
       end
     end
     object tsInformation: TTabSheet
@@ -3010,7 +3056,7 @@ object MainForm: TMainForm
       ImageIndex = 12
       OnClick = miDownloadResumeClick
     end
-    object miDownloadRemove: TMenuItem
+    object miDownloadDelete: TMenuItem
       Caption = 'Delete'
       Enabled = False
       Bitmap.Data = {
@@ -3050,28 +3096,28 @@ object MainForm: TMainForm
         FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00
       }
       ImageIndex = 9
-      OnClick = miDownloadRemoveClick
-      object miDeleteTask: TMenuItem
+      OnClick = miDownloadDeleteClick
+      object miDownloadDeleteTask: TMenuItem
         Caption = 'Task only'
         Enabled = False
-        OnClick = miDeleteTaskClick
+        OnClick = miDownloadDeleteTaskClick
       end
-      object miDeleteTaskData: TMenuItem
+      object miDownloadDeleteTaskData: TMenuItem
         Caption = 'Task + Data'
         Enabled = False
-        OnClick = miDeleteTaskDataClick
+        OnClick = miDownloadDeleteTaskDataClick
       end
     end
-    object miDownloadRemoveFinishedTasks: TMenuItem
-      Caption = 'Delete all finished tasks'
+    object miDownloadDeleteCompleted: TMenuItem
+      Caption = 'Delete all completed tasks'
       Enabled = False
-      OnClick = miDownloadRemoveFinishedTasksClick
+      OnClick = miDownloadDeleteCompletedClick
     end
     object MenuItem4: TMenuItem
       Caption = '-'
     end
-    object miDownloadMergeFinishedTask: TMenuItem
-      Caption = 'Merge finished tasks'
+    object miDownloadMergeCompleted: TMenuItem
+      Caption = 'Merge completed tasks'
       Enabled = False
       Bitmap.Data = {
         36040000424D3604000000000000360000002800000010000000100000000100
@@ -3110,7 +3156,7 @@ object MainForm: TMainForm
         FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00
       }
       ImageIndex = 10
-      OnClick = miDownloadMergeFinishedTaskClick
+      OnClick = miDownloadMergeCompletedClick
     end
     object MenuItem1: TMenuItem
       Caption = '-'

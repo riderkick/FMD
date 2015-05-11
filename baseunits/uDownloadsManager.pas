@@ -205,6 +205,8 @@ type
     // Stop a download/wait task.
     procedure StopTask(const taskID : Integer; const isCheckForActive : Boolean =
       True);
+    // Start all task
+    procedure StartAllTasks;
     // Stop all download/wait tasks.
     procedure StopAllTasks;
     // Stop all download task inside a task before terminate the program.
@@ -2177,22 +2179,24 @@ end;
 
 procedure TDownloadManager.ActiveTask(const taskID: Integer);
 begin
-  // conditions
-  if taskID >= containers.Count then
-    Exit;
-  if (not Assigned(containers.Items[taskID])) then
-    Exit;
-  if (containers.Items[taskID].Status = STATUS_DOWNLOAD) or
-    (containers.Items[taskID].Status = STATUS_PREPARE) or
-    (containers.Items[taskID].Status = STATUS_FINISH) then
-    Exit;
-  containers.Items[taskID].Status := STATUS_DOWNLOAD;
-  containers.Items[taskID].DownloadInfo.Status := stDownloading;
-  containers.Items[taskID].Thread := TTaskThread.Create;
-  containers.Items[taskID].Thread.container := containers.Items[taskID];
-  containers.Items[taskID].Thread.Start;
-  // TODO
-  MainForm.vtDownloadFilters;
+  if taskID < containers.Count then
+  begin
+    if Assigned(containers.Items[taskID]) then
+    begin
+      if not((containers.Items[taskID].Status = STATUS_DOWNLOAD) or
+        (containers.Items[taskID].Status = STATUS_PREPARE) or
+        (containers.Items[taskID].Status = STATUS_FINISH)) then
+      begin
+        containers.Items[taskID].Status := STATUS_DOWNLOAD;
+        containers.Items[taskID].DownloadInfo.Status := stDownloading;
+        containers.Items[taskID].Thread := TTaskThread.Create;
+        containers.Items[taskID].Thread.container := containers.Items[taskID];
+        containers.Items[taskID].Thread.Start;
+        MainForm.vtDownload.Repaint;
+        MainForm.vtDownloadFilters;
+      end;
+    end;
+  end;
 end;
 
 procedure TDownloadManager.StopTask(const taskID: Integer;
@@ -2203,8 +2207,11 @@ begin
     if containers.Items[taskID].Status in [STATUS_DOWNLOAD, STATUS_PREPARE, STATUS_WAIT] then
     begin
       isReadyForExit := False;
-      containers.Items[taskID].Status := STATUS_STOP;
-      containers.Items[taskID].DownloadInfo.Status := stStop;
+      if containers[taskID].Status = STATUS_WAIT then
+      begin
+        containers.Items[taskID].Status := STATUS_STOP;
+        containers.Items[taskID].DownloadInfo.Status := stStop;
+      end;
       if containers.Items[taskID].ThreadState then
         containers.Items[taskID].Thread.Terminate;
       if isCheckForActive then
@@ -2212,8 +2219,30 @@ begin
         Backup;
         CheckAndActiveTask;
       end;
+      MainForm.vtDownload.Repaint;
       MainForm.vtDownloadFilters;
     end;
+  end;
+end;
+
+procedure TDownloadManager.StartAllTasks;
+var
+  i: Integer;
+begin
+  if containers.Count > 0 then
+  begin
+    for i := 0 to containers.Count - 1 do
+    begin
+      if containers[i].Status in [STATUS_STOP, STATUS_FAILED, STATUS_PROBLEM] then
+      begin
+        containers[i].Status := STATUS_WAIT;
+        containers[i].DownloadInfo.Status := stWait;
+      end;
+    end;
+    Backup;
+    CheckAndActiveTask;
+    MainForm.vtDownload.Repaint;
+    MainForm.vtDownloadFilters;
   end;
 end;
 
@@ -2226,16 +2255,14 @@ begin
     isReadyForExit := False;
     for i := 0 to containers.Count - 1 do
     begin
-      containers.Items[i].Status := STATUS_STOP;
-      containers.Items[i].DownloadInfo.Status := stStop;
-      // stop any active threads
-      if containers.Items[i].ThreadState then
-        containers.Items[i].Thread.Terminate;
+      if containers[i].Status = STATUS_WAIT then
+      begin
+        containers[i].Status := STATUS_STOP;
+        containers[i].DownloadInfo.Status := stStop;
+      end;
+      if containers[i].ThreadState then
+        containers[i].Thread.Terminate;
     end;
-    // wait for threads
-    for i := 0 to containers.Count - 1 do
-      if containers.Items[i].ThreadState then
-        containers.Items[i].Thread.WaitFor;
     Backup;
     MainForm.vtDownload.Repaint;
     MainForm.vtDownloadFilters;
@@ -2251,11 +2278,11 @@ begin
     try
       isReadyForExit := True;
       for i := 0 to containers.Count - 1 do
-        if containers.Items[i].ThreadState then
-          containers.Items[i].Thread.Terminate;
+        if containers[i].ThreadState then
+          containers[i].Thread.Terminate;
       for i := 0 to containers.Count - 1 do
-        if containers.Items[i].ThreadState then
-          containers.Items[i].Thread.WaitFor;
+        if containers[i].ThreadState then
+          containers[i].Thread.WaitFor;
     finally
       Backup;
     end;
