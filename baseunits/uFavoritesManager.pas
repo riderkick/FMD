@@ -260,9 +260,9 @@ end;
 
 procedure TFavoriteTask.Execute;
 var
-  workCounter: Integer;
-  i: Integer;
+  i, workCounter: Integer;
 begin
+  manager.isRunning := True;
   Synchronize(SyncStartChecking);
   try
     workCounter := 0;
@@ -323,7 +323,6 @@ begin
   inherited Create(True);
   CS_Threads := TCriticalSection.Create;
   threads := TFavoriteThreadList.Create;
-  manager.isRunning := True;
 end;
 
 destructor TFavoriteTask.Destroy;
