@@ -5,7 +5,7 @@ var
 begin
   mangaInfo.website := WebsiteRoots[SENMANGARAW_ID, 0];
   mangaInfo.url := FillMangaSiteHost(SENMANGARAW_ID, URL);
-  FHTTP.UserAgent := UA_MSIE;
+  FHTTP.UserAgent := RandomString(20+Random(100));
   if GetPage(TObject(Source), mangaInfo.url, Reconnect) then
   begin
     Parser := THTMLParser.Create(Source.Text);
@@ -105,6 +105,7 @@ begin
         end;
       end;
       InvertStrings([mangaInfo.chapterName, mangaInfo.chapterLinks]);
+      FHTTP.UserAgent := RandomString(20+Random(100));
       Result := NO_ERROR;
     end
     else
