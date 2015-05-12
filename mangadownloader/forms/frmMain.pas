@@ -2441,7 +2441,8 @@ begin
       mBtns := [mbYes, mbNo, mbYesToAll, mbNoToAll];
 
     xNode := vtMangaList.GetFirst;
-    for i := 0 to vtMangaList.RootNodeCount - 1 do
+    i := 0;
+    while i < vtMangaList.RootNodeCount - 1 do
     begin
       if vtMangaList.Selected[xNode] then
       begin
@@ -2492,6 +2493,7 @@ begin
             dataProcess.Param[DataProcess.GetPos(i), DATA_PARAM_LINK]);
       end;
       xNode := vtMangaList.GetNext(xNode);
+      Inc(i);
     end;
   except
     on E: Exception do
