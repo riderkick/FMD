@@ -3311,7 +3311,7 @@ object MainForm: TMainForm
     Images = IconList
     OnPopup = pmFavoritesPopup
     left = 368
-    top = 176
+    top = 184
     object miFavoritesViewInfos: TMenuItem
       Caption = 'View manga info'
       Bitmap.Data = {

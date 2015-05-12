@@ -2586,22 +2586,20 @@ end;
 
 procedure TMainForm.miFavoritesOpenWithClick(Sender: TObject);
 var
-  Process: TProcessUTF8;
-  f, s: String;
+  f, fd, s: String;
   Info: TSearchRec;
   l: TStringList;
 begin
-  if (not Assigned(vtDownload.FocusedNode)) or (edOptionExternal.Text = '') then
+  if (not Assigned(vtFavorites.FocusedNode)) then
     Exit;
   l := TStringList.Create;
-  Process := TProcessUTF8.Create(nil);
   try
-    s := StringReplace(FavoriteManager.Favorites[vtFavorites.FocusedNode^.Index].FavoriteInfo.SaveTo,
-      '/', '\', [rfReplaceAll]);
-    if s[Length(s)] <> DirectorySeparator then
-      s := s + DirectorySeparator;
+    fd := StringReplace(FavoriteManager.Favorites[
+      vtFavorites.FocusedNode^.Index].FavoriteInfo.SaveTo, '/', '\', [rfReplaceAll]);
+    if fd[Length(fd)] <> DirectorySeparator then
+      fd := fd + DirectorySeparator;
 
-    if FindFirstUTF8(s + '*', faAnyFile and faDirectory, Info) = 0 then
+    if FindFirstUTF8(fd + '*', faAnyFile and faDirectory, Info) = 0 then
       repeat
         l.Add(Info.Name);
       until FindNextUTF8(Info) <> 0;
@@ -2611,19 +2609,26 @@ begin
       f := '';
     FindClose(Info);
 
-    s := StringReplace(edOptionExternal.Text, '%PATH%', s, [rfReplaceAll]);
-    s := StringReplace(s, '%FCHAPTER%', f, [rfReplaceAll]);
-    Process.CommandLine := s;
-    Process.Execute;
+    if edOptionExternal.Text <> '' then
+    begin
+      s := StringReplace(edOptionExternal.Text, '%PATH%', fd, [rfReplaceAll]);
+      s := StringReplace(s, '%FCHAPTER%', f, [rfReplaceAll]);
+      with TProcessUTF8.Create(nil) do try
+        CommandLine := s;
+        Execute;
+      finally
+        Free;
+      end;
+    end
+    else
+      OpenDocument(fd + f);
   except
   end;
   l.Free;
-  Process.Free;
 end;
 
 procedure TMainForm.miDownloadOpenWithClick(Sender: TObject);
 var
-  Process: TProcessUTF8;
   f, fd, ff, s: String;
   Info: TSearchRec;
   l: TStringList;
@@ -2631,7 +2636,6 @@ begin
   if (not Assigned(vtDownload.FocusedNode)) then
     Exit;
   l := TStringList.Create;
-  Process := TProcessUTF8.Create(nil);
   try
     fd := StringReplace(DLManager.containers.Items[
       vtDownload.FocusedNode^.Index].DownloadInfo.SaveTo, '/', '\', [rfReplaceAll]);
@@ -2671,15 +2675,18 @@ begin
     begin
       s := StringReplace(edOptionExternal.Text, '%PATH%', fd, [rfReplaceAll]);
       s := StringReplace(s, '%FCHAPTER%', f, [rfReplaceAll]);
-      Process.CommandLine := s;
-      Process.Execute;
+      with TProcessUTF8.Create(nil) do try
+        CommandLine := s;
+        Execute;
+      finally
+        Free;
+      end;
     end
     else
-      OpenDocument(fd+f);
+      OpenDocument(fd + f);
   except
   end;
   l.Free;
-  Process.Free;
 end;
 
 procedure TMainForm.pcMainChange(Sender: TObject);
