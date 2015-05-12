@@ -29,6 +29,7 @@
         Result := (TURL <> '');
         FHTTP.Clear;
         FHTTP.Headers.Values['Referer'] := ' ' + s;
+        FHTTP.UserAgent := RandomString(20+Random(100));
       end
       else
         Result := False;
