@@ -791,7 +791,8 @@ procedure RemoveHostFromURLsPair(Const URLs, Names : TStringList);
 procedure ParseJSONArray(const S, Path: String; var OutArray: TStringList);
 
 // StringUtils
-function RandomString(Len: Integer): string;
+function RandomString(SLength: Integer; ONumber: Boolean = False;
+  OSymbol: Boolean = False; OSpace: Boolean = False): string;
 function GetValuesFromString(Str: String; Sepr: Char): String;
 procedure InvertStrings(Const St: TStringList); overload;
 procedure InvertStrings(const Sts: array of TStringList); overload;
@@ -1415,16 +1416,28 @@ begin
   OutArray.EndUpdate;
 end;
 
-function RandomString(Len: Integer): string;
+function RandomString(SLength: Integer; ONumber: Boolean; OSymbol: Boolean;
+  OSpace: Boolean): string;
+var
+  sgen: String;
 const
-  str = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  alp = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  num = '0123456789';
+  sym = '~!@#$%^&*[]{}\|;:''",.<>/?';
 begin
   Randomize;
   Result := '';
   try
+    sgen := alp;
+    if ONumber then
+      sgen := sgen + num;
+    if OSymbol then
+      sgen := sgen + sym;
+    if OSpace then
+      sgen := sgen + ' ';
     repeat
-      Result := Result + str[Random(Length(str)) + 1];
-    until (Length(Result) = Len)
+      Result := Result + sgen[Random(Length(sgen)) + 1];
+    until (Length(Result) = SLength)
   except
   end;
 end;
