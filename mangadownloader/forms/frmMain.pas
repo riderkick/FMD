@@ -2655,31 +2655,31 @@ end;
 procedure TMainForm.miDownloadOpenWithClick(Sender: TObject);
 var
   Process: TProcessUTF8;
-  f, ff, s: String;
+  f, fd, ff, s: String;
   Info: TSearchRec;
   l: TStringList;
 begin
-  if (not Assigned(vtDownload.FocusedNode)) or (edOptionExternal.Text = '') then
+  if (not Assigned(vtDownload.FocusedNode)) then
     Exit;
   l := TStringList.Create;
   Process := TProcessUTF8.Create(nil);
   try
-    s := StringReplace(DLManager.containers.Items[
+    fd := StringReplace(DLManager.containers.Items[
       vtDownload.FocusedNode^.Index].DownloadInfo.SaveTo, '/', '\', [rfReplaceAll]);
-    if s[Length(s)] <> DirectorySeparator then
-      s := s + DirectorySeparator;
+    if fd[Length(fd)] <> DirectorySeparator then
+      fd := fd + DirectorySeparator;
 
     if DLManager.containers.Items[vtDownload.FocusedNode^.Index].ChapterName.Count > 0 then
     begin
       ff := DLManager.containers.Items[vtDownload.FocusedNode^.Index].
         ChapterName[0];
-      if FileExistsUTF8(s + ff + '.zip') then
+      if FileExistsUTF8(fd + ff + '.zip') then
         f := ff + '.zip'
-      else if FileExistsUTF8(s + ff + '.cbz') then
+      else if FileExistsUTF8(fd + ff + '.cbz') then
         f := ff + '.cbz'
-      else if FileExistsUTF8(s + ff + '.pdf') then
+      else if FileExistsUTF8(fd + ff + '.pdf') then
         f := ff + '.pdf'
-      else if DirectoryExistsUTF8(s + ff) then
+      else if DirectoryExistsUTF8(fd + ff) then
         f := ff
       else
         f := '';
@@ -2687,7 +2687,7 @@ begin
 
     if f = '' then
     begin
-      if FindFirstUTF8(s + '*', faAnyFile and faDirectory, Info) = 0 then
+      if FindFirstUTF8(fd + '*', faAnyFile and faDirectory, Info) = 0 then
         repeat
           l.Add(Info.Name);
         until FindNextUTF8(Info) <> 0;
@@ -2698,10 +2698,15 @@ begin
       FindClose(Info);
     end;
 
-    s := StringReplace(edOptionExternal.Text, '%PATH%', s, [rfReplaceAll]);
-    s := StringReplace(s, '%FCHAPTER%', f, [rfReplaceAll]);
-    Process.CommandLine := s;
-    Process.Execute;
+    if edOptionExternal.Text <> '' then
+    begin
+      s := StringReplace(edOptionExternal.Text, '%PATH%', fd, [rfReplaceAll]);
+      s := StringReplace(s, '%FCHAPTER%', f, [rfReplaceAll]);
+      Process.CommandLine := s;
+      Process.Execute;
+    end
+    else
+      OpenDocument(fd+f);
   except
   end;
   l.Free;
