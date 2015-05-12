@@ -791,6 +791,7 @@ procedure RemoveHostFromURLsPair(Const URLs, Names : TStringList);
 procedure ParseJSONArray(const S, Path: String; var OutArray: TStringList);
 
 // StringUtils
+function RandomString(Len: Integer): string;
 function GetValuesFromString(Str: String; Sepr: Char): String;
 procedure InvertStrings(Const St: TStringList); overload;
 procedure InvertStrings(const Sts: array of TStringList); overload;
@@ -1412,6 +1413,20 @@ begin
     P.Free;
   end;
   OutArray.EndUpdate;
+end;
+
+function RandomString(Len: Integer): string;
+const
+  str = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+begin
+  Randomize;
+  Result := '';
+  try
+    repeat
+      Result := Result + str[Random(Length(str)) + 1];
+    until (Length(Result) = Len)
+  except
+  end;
 end;
 
 function GetValuesFromString(Str: String; Sepr: Char): String;
