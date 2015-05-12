@@ -8,10 +8,6 @@ https://www.mediafire.com/folder/3ccy2c7g36hp3/Fmd
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
-0.9.10.3 (13-5-2015)
-[*] If external program were not specified, FMD will open using registered viewer on OS
-[*] Various changes
-
 0.9.10.2 (12-5-2015)
 [*] Minor changes
 
