@@ -13,8 +13,8 @@ unit uBaseUnit;
 interface
 
 uses
-  SysUtils, Classes, Graphics, Forms, UTF8Process, strutils, fileinfo, process,
-  fpjson, jsonparser, fgl, uFMDThread, synautil, httpsend, blcksock,
+  SysUtils, Classes, Graphics, Forms, UTF8Process, strutils, fileinfo, syncobjs,
+  process, fpjson, jsonparser, fgl, uFMDThread, synautil, httpsend, blcksock,
   ssl_openssl, GZIPUtils;
 
 const
@@ -1423,23 +1423,21 @@ var
 const
   alp = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
   num = '0123456789';
-  sym = '~!@#$%^&*[]{}\|;:''",.<>/?';
+  sym = '!@#$%^&*()_+[{]}\|;:''",<.>/?';
 begin
-  Randomize;
   Result := '';
-  try
-    sgen := alp;
-    if ONumber then
-      sgen := sgen + num;
-    if OSymbol then
-      sgen := sgen + sym;
-    if OSpace then
-      sgen := sgen + ' ';
-    repeat
-      Result := Result + sgen[Random(Length(sgen)) + 1];
-    until (Length(Result) = SLength)
-  except
-  end;
+  if SLength = 0 then Exit;
+  Randomize;
+  sgen := alp;
+  if ONumber then
+    sgen := sgen + num;
+  if OSymbol then
+    sgen := sgen + sym;
+  if OSpace then
+    sgen := sgen + #32;
+  repeat
+    Result := Result + sgen[Random(Length(sgen)) + 1];
+  until (Length(Result) = SLength)
 end;
 
 function GetValuesFromString(Str: String; Sepr: Char): String;
