@@ -7,7 +7,7 @@
     l := TStringList.Create;
     parse := TStringList.Create;
     try
-      FHTTP.UserAgent := RandomString(20+Random(100));
+      FHTTP.UserAgent := RandomString(20 + Random(100), True, True, True);
       if GetPage(TObject(l),
         DecodeUrl(FillMangaSiteHost(SENMANGARAW_ID, URL + '/1')),
         manager.container.manager.retryConnect) then

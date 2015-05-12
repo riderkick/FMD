@@ -7,9 +7,9 @@
     l := TStringList.Create;
     parse := TStringList.Create;
     try
-      FHTTP.UserAgent := RandomString(20+Random(100));
+      FHTTP.UserAgent := RandomString(20 + Random(100), True, True, True);
       s := manager.container.ChapterLinks[manager.container.CurrentDownloadChapterPtr] +
-        '/' + IntToStr(workCounter + 1);
+        '/' + IntToStr(QWord(workCounter) + 1);
       s := FillMangaSiteHost(SENMANGARAW_ID, s);
       if GetPage(TObject(l), s, manager.container.Manager.retryConnect) then
       begin
@@ -29,7 +29,7 @@
         Result := (TURL <> '');
         FHTTP.Clear;
         FHTTP.Headers.Values['Referer'] := ' ' + s;
-        FHTTP.UserAgent := RandomString(20+Random(100));
+        FHTTP.UserAgent := RandomString(20 + Random(100), True, True, True);
       end
       else
         Result := False;
