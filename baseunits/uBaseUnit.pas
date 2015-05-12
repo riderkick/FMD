@@ -2486,7 +2486,24 @@ begin
 
   HTTP.Protocol := '1.1';
   HTTPHeader.Values['DNT'] := ' 1';
-  HTTP.UserAgent := UA_FIREFOX;
+  //User-Agent
+  if Trim(HTTPHeader.Values['User-Agent']) <> '' then
+  begin
+    HTTP.UserAgent := Trim(HTTPHeader.Values['User-Agent']);
+    HTTPHeader.Delete(HTTPHeader.IndexOfName('User-Agent'));
+  end
+  else
+  if Trim(HTTP.UserAgent) = '' then
+    HTTP.UserAgent := UA_FIREFOX;
+  //MimeType
+  if Trim(HTTPHeader.Values['Content-Type']) <> '' then
+  begin
+    HTTP.MimeType := Trim(HTTPHeader.Values['Content-Type']);
+    HTTPHeader.Delete(HTTPHeader.IndexOfName('Content-Type'));
+  end
+  else
+    HTTP.MimeType := '';
+  
 
   if isGZip then
   begin
@@ -2742,9 +2759,25 @@ begin
     HTTP.ProxyPass := Pass;
   end;
 
-  HTTP.UserAgent := UA_FIREFOX;
   HTTP.Protocol := '1.1';
   HTTPHeader.Values['DNT'] := ' 1';
+  //User-Agent
+  if Trim(HTTPHeader.Values['User-Agent']) <> '' then
+  begin
+    HTTP.UserAgent := Trim(HTTPHeader.Values['User-Agent']);
+    HTTPHeader.Delete(HTTPHeader.IndexOfName('User-Agent'));
+  end
+  else
+  if Trim(HTTP.UserAgent) = '' then
+    HTTP.UserAgent := UA_FIREFOX;
+  //MimeType
+  if Trim(HTTPHeader.Values['Content-Type']) <> '' then
+  begin
+    HTTP.MimeType := Trim(HTTPHeader.Values['Content-Type']);
+    HTTPHeader.Delete(HTTPHeader.IndexOfName('Content-Type'));
+  end
+  else
+    HTTP.MimeType := '';
 
   if ((mangaSiteID >= 0) and (mangaSiteID <= High(WebsiteRoots))) then
   begin
