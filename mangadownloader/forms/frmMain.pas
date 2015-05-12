@@ -81,6 +81,7 @@ type
     medURLSelectAll: TMenuItem;
     MenuItem17: TMenuItem;
     medURLUndo: TMenuItem;
+    miFavoritesDownloadAll: TMenuItem;
     miDownloadViewMangaInfo: TMenuItem;
     MenuItem9: TMenuItem;
     miDownloadDeleteTask: TMenuItem;
@@ -366,6 +367,7 @@ type
     procedure miDownloadDeleteTaskClick(Sender: TObject);
     procedure miDownloadDeleteTaskDataClick(Sender: TObject);
     procedure miDownloadMergeCompletedClick(Sender: TObject);
+    procedure miFavoritesDownloadAllClick(Sender: TObject);
     procedure miFavoritesViewInfosClick(Sender: TObject);
     procedure miHighlightNewMangaClick(Sender: TObject);
     procedure miDownClick(Sender: TObject);
@@ -1158,6 +1160,30 @@ begin
     Dec(i);
   end;
   UpdateVtDownload;
+end;
+
+procedure TMainForm.miFavoritesDownloadAllClick(Sender: TObject);
+var
+  i: Integer;
+  xNode: PVirtualNode;
+begin
+  if vtFavorites.SelectedCount = 0 then
+    Exit;
+  try
+    xNode := vtFavorites.GetFirst;
+    i := 0;
+    while i < FavoriteManager.Favorites.Count do
+    begin
+      if vtFavorites.Selected[xNode] then
+        with FavoriteManager.Favorites[i].FavoriteInfo do
+          SilentThreadManager.Add(MD_DownloadAll, Website, Title, Link);
+      xNode := vtFavorites.GetNext(xNode);
+      Inc(i);
+    end;
+  except
+    on E: Exception do
+      ExceptionHandler(Self, E);
+  end;
 end;
 
 procedure TMainForm.miFavoritesViewInfosClick(Sender: TObject);
@@ -2912,6 +2938,7 @@ begin
   if vtFavorites.SelectedCount = 0 then
   begin
     miFavoritesViewInfos.Enabled := False;
+    miFavoritesDownloadAll.Enabled := False;
     miFavoritesDelete.Enabled := False;
     miFavoritesChangeSaveTo.Enabled := False;
     miFavoritesOpenFolder.Enabled := False;
@@ -2921,6 +2948,8 @@ begin
   if vtFavorites.SelectedCount = 1 then
   begin
     miFavoritesViewInfos.Enabled := True;
+    miFavoritesDownloadAll.Enabled := (Trim(FavoriteManager.Favorites[
+        vtFavorites.FocusedNode^.Index].FavoriteInfo.Link) <> '');
     miFavoritesDelete.Enabled := True;
     miFavoritesChangeSaveTo.Enabled := True;
     miFavoritesOpenFolder.Enabled :=
@@ -2930,6 +2959,7 @@ begin
   else
   begin
     miFavoritesViewInfos.Enabled := False;
+    miFavoritesDownloadAll.Enabled := True;
     miFavoritesDelete.Enabled := True;
     miFavoritesChangeSaveTo.Enabled := False;
     miFavoritesOpenFolder.Enabled := False;

@@ -3354,6 +3354,11 @@ object MainForm: TMainForm
       SubMenuImages = IconList
       OnClick = miFavoritesViewInfosClick
     end
+    object miFavoritesDownloadAll: TMenuItem
+      Caption = 'Download all'
+      ImageIndex = 1
+      OnClick = miFavoritesDownloadAllClick
+    end
     object MenuItem7: TMenuItem
       Caption = '-'
     end
