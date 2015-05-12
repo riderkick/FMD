@@ -2945,8 +2945,9 @@ begin
     miFavoritesViewInfos.Enabled := True;
     miFavoritesDelete.Enabled := True;
     miFavoritesChangeSaveTo.Enabled := True;
-    miFavoritesOpenFolder.Enabled := True;
-    miFavoritesOpenWith.Enabled := True;
+    miFavoritesOpenFolder.Enabled :=
+      DirectoryExistsUTF8(FavoriteManager.Favorites[vtFavorites.FocusedNode^.Index].FavoriteInfo.SaveTo);
+    miFavoritesOpenWith.Enabled := miFavoritesOpenFolder.Enabled;
   end
   else
   begin
