@@ -4365,9 +4365,9 @@ begin
     options.ReadBool('update', 'AutoRemoveCompletedManga', True);
   OptionAutoRemoveCompletedManga := cbOptionAutoRemoveCompletedManga.Checked;
   cbOptionAutoCheckFavStartup.Checked :=
-    options.ReadBool('update', 'AutoCheckFavStartup', False);
+    options.ReadBool('update', 'AutoCheckFavStartup', True);
   OptionAutoCheckFavStartup := cbOptionAutoCheckFavStartup.Checked;
-  seOptionCheckMinutes.Value := options.ReadInteger('update', 'AutoCheckMinutes', 0);
+  seOptionCheckMinutes.Value := options.ReadInteger('update', 'AutoCheckMinutes', 60);
   lbOptionAutoCheckMinutes.Caption := Format(OptionAutoCheckMinutes, [seOptionCheckMinutes.Value]);
   OptionCheckMinutes := seOptionCheckMinutes.Value;
   cbOptionUpdateListNoMangaInfo.Checked :=
