@@ -5,7 +5,7 @@ var
 begin
   mangaInfo.website := WebsiteRoots[SENMANGARAW_ID, 0];
   mangaInfo.url := FillMangaSiteHost(SENMANGARAW_ID, URL);
-  FHTTP.UserAgent := RandomString(20 + Random(100), True, True, True);
+  FHTTP.UserAgent := RandomString(10, True) + RandomString(25 + Random(65), True, False, True);
   if GetPage(TObject(Source), mangaInfo.url, Reconnect) then
   begin
     Parser := THTMLParser.Create(Source.Text);
@@ -31,16 +31,18 @@ begin
             if (GetTagName(parse[i + 1]) = 'a') then
             mangaInfo.title := parse[i + 2];
         //cover
-        if (GetTagName(parse[i]) = 'img') and (Pos('/no_preview.jpg', parse[i]) > 0) then
-        begin
-          mangaInfo.coverLink := FixURL(GetVal(parse[i], 'src'));
-          if Pos('http', mangaInfo.coverLink) <> 1 then
+        if mangaInfo.coverLink = '' then
+          if (GetTagName(parse[i]) = 'img') and (Pos('this.src =''/no_preview.jpg'';', parse[i]) > 0) then
           begin
-            if LeftStr(mangaInfo.coverLink, 1) <> '/' then
-              mangaInfo.coverLink := '/' + mangaInfo.coverLink;
-            mangaInfo.coverLink := WebsiteRoots[SENMANGARAW_ID, 1] + mangaInfo.coverLink;
+            mangaInfo.coverLink := FixURL(GetVal(parse[i], 'src'));
+            if Pos('http', mangaInfo.coverLink) <> 1 then
+            begin
+              if LeftStr(mangaInfo.coverLink, 1) <> '/' then
+                mangaInfo.coverLink := '/' + mangaInfo.coverLink;
+              mangaInfo.coverLink := WebsiteRoots[SENMANGARAW_ID, 1] + mangaInfo.coverLink;
+            end;
+            FHTTP.UserAgent := RandomString(10, True) + RandomString(25 + Random(65), True, False, True);
           end;
-        end;
 
         if (GetTagName(parse[i]) = 'strong') and (GetVal(parse[i], 'class') = 'data') then
         begin
@@ -105,7 +107,6 @@ begin
         end;
       end;
       InvertStrings([mangaInfo.chapterName, mangaInfo.chapterLinks]);
-      FHTTP.UserAgent := RandomString(20 + Random(100), True, True, True);
       Result := NO_ERROR;
     end
     else
