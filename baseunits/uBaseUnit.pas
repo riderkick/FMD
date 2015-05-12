@@ -2484,8 +2484,10 @@ begin
     HTTP.ProxyPass := Pass;
   end;
 
-  HTTP.Protocol := '1.1';
   HTTPHeader.Values['DNT'] := ' 1';
+  HTTP.Protocol := '1.1';
+  HTTP.KeepAlive := False;
+
   //User-Agent
   if Trim(HTTPHeader.Values['User-Agent']) <> '' then
   begin
@@ -2502,12 +2504,12 @@ begin
     HTTPHeader.Delete(HTTPHeader.IndexOfName('Content-Type'));
   end
   else
+  if Trim(HTTP.MimeType) = '' then
     HTTP.MimeType := '';
-  
 
   if isGZip then
   begin
-    HTTP.MimeType := 'application/x-www-form-urlencoded';
+    //HTTP.MimeType := 'application/x-www-form-urlencoded';
     HTTPHeader.Values['Accept-Encoding'] := ' gzip, deflate';
   end;
 
@@ -2759,8 +2761,10 @@ begin
     HTTP.ProxyPass := Pass;
   end;
 
-  HTTP.Protocol := '1.1';
   HTTPHeader.Values['DNT'] := ' 1';
+  HTTP.Protocol := '1.1';
+  HTTP.KeepAlive := False;
+
   //User-Agent
   if Trim(HTTPHeader.Values['User-Agent']) <> '' then
   begin
@@ -2777,6 +2781,7 @@ begin
     HTTPHeader.Delete(HTTPHeader.IndexOfName('Content-Type'));
   end
   else
+  if Trim(HTTP.MimeType) = '' then
     HTTP.MimeType := '';
 
   if ((mangaSiteID >= 0) and (mangaSiteID <= High(WebsiteRoots))) then
