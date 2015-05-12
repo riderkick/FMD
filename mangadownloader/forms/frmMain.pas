@@ -2571,48 +2571,17 @@ begin
 end;
 
 procedure TMainForm.miFavoritesOpenFolderClick(Sender: TObject);
-var
-  Process: TProcessUTF8;
 begin
   if not Assigned(vtFavorites.FocusedNode) then
     Exit;
-  Process := TProcessUTF8.Create(nil);
-  {$IFDEF WINDOWS}
-  Process.CommandLine := 'explorer.exe "' +
-    StringReplace(FavoriteManager.Favorites[vtFavorites.FocusedNode^.Index].FavoriteInfo.SaveTo,
-    '/', '\', [rfReplaceAll]) + '"';
-  {$ENDIF}
-  {$IFDEF UNIX}
-  Process.CommandLine := 'xdg-open "' +
-    StringReplace(Favorites.Favorites[vtFavorites.FocusedNode^.Index].FavoriteInfo.SaveTo,
-    '/', '\', [rfReplaceAll]) + '"';
-  {$ENDIF}
-  Process.Execute;
-  Process.Free;
+  OpenDocument(FavoriteManager.Favorites[vtFavorites.FocusedNode^.Index].FavoriteInfo.SaveTo);
 end;
 
 procedure TMainForm.miDownloadOpenFolderClick(Sender: TObject);
-var
-  Process: TProcessUTF8;
 begin
   if (vtDownload.SelectedCount = 0) or (Assigned(vtDownload.FocusedNode) = False) then
     Exit;
-  Process := TProcessUTF8.Create(nil);
-  try
-    {$IFDEF WINDOWS}
-    Process.CommandLine := 'explorer.exe "' +
-      StringReplace(DLManager.containers.Items[
-      vtDownload.FocusedNode^.Index].DownloadInfo.SaveTo, '/', '\', [rfReplaceAll]) + '"';
-    {$ENDIF}
-    {$IFDEF UNIX}
-    Process.CommandLine := 'xdg-open "' +
-      StringReplace(DLManager.containers.Items[
-      vtDownload.FocusedNode^.Index].downloadInfo.SaveTo, '/', '\', [rfReplaceAll]) + '"';
-    {$ENDIF}
-    Process.Execute;
-  finally
-    Process.Free;
-  end;
+  OpenDocument(DLManager.containers[vtDownload.FocusedNode^.Index].DownloadInfo.SaveTo);
 end;
 
 procedure TMainForm.miFavoritesOpenWithClick(Sender: TObject);
