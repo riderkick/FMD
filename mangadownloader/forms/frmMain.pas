@@ -86,7 +86,7 @@ type
     miDownloadDeleteTask: TMenuItem;
     miDownloadDeleteTaskData: TMenuItem;
     miDownloadOpenWith: TMenuItem;
-    miOpenWith2: TMenuItem;
+    miFavoritesOpenWith: TMenuItem;
     pnThumbContainer: TPanel;
     pnMainTop: TPanel;
     btVisitMyBlog: TBitBtn;
@@ -214,11 +214,11 @@ type
     mnUpdateList: TMenuItem;
     mnUpdateDownFromServer: TMenuItem;
     miDownloadMergeCompleted: TMenuItem;
-    miOpenFolder2: TMenuItem;
+    miFavoritesOpenFolder: TMenuItem;
     miHighlightNewManga: TMenuItem;
     miI2: TMenuItem;
     miDownloadOpenFolder: TMenuItem;
-    miFavoritesRemove: TMenuItem;
+    miFavoritesDelete: TMenuItem;
     miMangaListAddToFavorites: TMenuItem;
     miFavoritesChangeCurrentChapter: TMenuItem;
     miFavoritesChangeSaveTo: TMenuItem;
@@ -370,7 +370,7 @@ type
     procedure miHighlightNewMangaClick(Sender: TObject);
     procedure miDownClick(Sender: TObject);
 
-    procedure miFavoritesRemoveClick(Sender: TObject);
+    procedure miFavoritesDeleteClick(Sender: TObject);
     procedure miMangaListAddToFavoritesClick(Sender: TObject);
     procedure miFavoritesChangeCurrentChapterClick(Sender: TObject);
     procedure miFavoritesChangeSaveToClick(Sender: TObject);
@@ -386,9 +386,9 @@ type
     procedure miDownloadStopClick(Sender: TObject);
     procedure miMangaListDownloadAllClick(Sender: TObject);
     procedure miMangaListViewInfosClick(Sender: TObject);
-    procedure miOpenFolder2Click(Sender: TObject);
+    procedure miFavoritesOpenFolderClick(Sender: TObject);
     procedure miDownloadOpenFolderClick(Sender: TObject);
-    procedure miOpenWith2Click(Sender: TObject);
+    procedure miFavoritesOpenWithClick(Sender: TObject);
     procedure miDownloadOpenWithClick(Sender: TObject);
     procedure miUpClick(Sender: TObject);
     procedure mnDownload1ClickClick(Sender: TObject);
@@ -1995,7 +1995,7 @@ end;
 
 // ----- vtFavorites popup menu -----
 
-procedure TMainForm.miFavoritesRemoveClick(Sender: TObject);
+procedure TMainForm.miFavoritesDeleteClick(Sender: TObject);
 var
   i: Cardinal;
   xNode: PVirtualNode;
@@ -2570,7 +2570,7 @@ begin
     btAddToFavorites.Enabled := not FavoriteManager.IsMangaExist(title, website);
 end;
 
-procedure TMainForm.miOpenFolder2Click(Sender: TObject);
+procedure TMainForm.miFavoritesOpenFolderClick(Sender: TObject);
 var
   Process: TProcessUTF8;
 begin
@@ -2615,7 +2615,7 @@ begin
   end;
 end;
 
-procedure TMainForm.miOpenWith2Click(Sender: TObject);
+procedure TMainForm.miFavoritesOpenWithClick(Sender: TObject);
 var
   Process: TProcessUTF8;
   f, s: String;
@@ -2931,45 +2931,35 @@ end;
 
 procedure TMainForm.pmFavoritesPopup(Sender: TObject);
 begin
-  if FavoriteManager.isRunning then
-  begin
-    pmFavorites.Items[2].Enabled := True;
-    pmFavorites.Items[2].Enabled := False;
-    pmFavorites.Items[3].Enabled := False;
-    pmFavorites.Items[4].Enabled := False;
-    Exit;
-  end;
   if vtFavorites.SelectedCount = 0 then
   begin
-    pmFavorites.Items[0].Enabled := False;
-    pmFavorites.Items[2].Enabled := False;
-    pmFavorites.Items[3].Enabled := False;
-    pmFavorites.Items[4].Enabled := False;
-    pmFavorites.Items[6].Enabled := False;
-    pmFavorites.Items[7].Enabled := False;
+    miFavoritesViewInfos.Enabled := False;
+    miFavoritesDelete.Enabled := False;
+    miFavoritesChangeSaveTo.Enabled := False;
+    miFavoritesOpenFolder.Enabled := False;
+    miFavoritesOpenWith.Enabled := False;
   end
   else
   if vtFavorites.SelectedCount = 1 then
   begin
-    pmFavorites.Items[0].Enabled := True;
-    pmFavorites.Items[2].Enabled := True;
-    pmFavorites.Items[3].Enabled := True;
-    pmFavorites.Items[4].Enabled := True;
-    {$IFDEF WINDOWS}
-    pmFavorites.Items[6].Enabled := True;
-    pmFavorites.Items[7].Enabled := True;
-    {$ELSE}
-    pmFavorites.Items[4].Enabled := False;
-    {$ENDIF}
+    miFavoritesViewInfos.Enabled := True;
+    miFavoritesDelete.Enabled := True;
+    miFavoritesChangeSaveTo.Enabled := True;
+    miFavoritesOpenFolder.Enabled := True;
+    miFavoritesOpenWith.Enabled := True;
   end
   else
   begin
-    pmFavorites.Items[0].Enabled := False;
-    pmFavorites.Items[2].Enabled := True;
-    pmFavorites.Items[3].Enabled := False;
-    pmFavorites.Items[4].Enabled := False;
-    pmFavorites.Items[6].Enabled := False;
-    pmFavorites.Items[7].Enabled := False;
+    miFavoritesViewInfos.Enabled := False;
+    miFavoritesDelete.Enabled := True;
+    miFavoritesChangeSaveTo.Enabled := False;
+    miFavoritesOpenFolder.Enabled := False;
+    miFavoritesOpenWith.Enabled := False;
+  end;
+  if FavoriteManager.isRunning then
+  begin
+    miFavoritesDelete.Enabled := False;
+    miFavoritesChangeSaveTo.Enabled := False;
   end;
 end;
 
@@ -3529,7 +3519,7 @@ end;
 procedure TMainForm.vtFavoritesColumnDblClick(Sender: TBaseVirtualTree;
   Column: TColumnIndex; Shift: TShiftState);
 begin
-  miOpenFolder2Click(Sender);
+  miFavoritesOpenFolderClick(Sender);
 end;
 
 procedure TMainForm.vtFavoritesFreeNode(Sender: TBaseVirtualTree;
@@ -4901,7 +4891,7 @@ begin
     miChapterListUncheckAll.Caption :=
       language.ReadString(lang, 'miChapterListUncheckAllCaption', '');
 
-    miFavoritesRemove.Caption :=
+    miFavoritesDelete.Caption :=
       language.ReadString(lang, 'miFavoritesRemoveCaption', '');
     miFavoritesChangeCurrentChapter.Caption :=
       language.ReadString(lang, 'miFavoritesChangeCurrentChapterCaption', '');
@@ -4923,8 +4913,8 @@ begin
     miDownloadDeleteTask.Caption := language.ReadString(lang, 'miDeleteTaskCaption', '');
     miDownloadDeleteTaskData.Caption := language.ReadString(lang, 'miDeleteTaskDataCaption', '');
 
-    miOpenFolder2.Caption := miDownloadOpenFolder.Caption;
-    miOpenWith2.Caption := miDownloadOpenWith.Caption;
+    miFavoritesOpenFolder.Caption := miDownloadOpenFolder.Caption;
+    miFavoritesOpenWith.Caption := miDownloadOpenWith.Caption;
 
     infoCustomGenres := language.ReadString(lang, 'infoCustomGenres', '');
     infoName := language.ReadString(lang, 'infoName', '');

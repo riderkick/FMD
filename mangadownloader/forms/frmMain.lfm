@@ -3357,8 +3357,8 @@ object MainForm: TMainForm
     object MenuItem7: TMenuItem
       Caption = '-'
     end
-    object miFavoritesRemove: TMenuItem
-      Caption = 'Remove'
+    object miFavoritesDelete: TMenuItem
+      Caption = 'Delete'
       Bitmap.Data = {
         36040000424D3604000000000000360000002800000010000000100000000100
         2000000000000004000064000000640000000000000000000000FFFFFF00FFFF
@@ -3397,7 +3397,7 @@ object MainForm: TMainForm
       }
       ImageIndex = 9
       SubMenuImages = IconList
-      OnClick = miFavoritesRemoveClick
+      OnClick = miFavoritesDeleteClick
     end
     object miFavoritesChangeCurrentChapter: TMenuItem
       Caption = 'Change "Current chapter"'
@@ -3411,7 +3411,7 @@ object MainForm: TMainForm
     object MenuItem3: TMenuItem
       Caption = '-'
     end
-    object miOpenFolder2: TMenuItem
+    object miFavoritesOpenFolder: TMenuItem
       Caption = 'Open Folder'
       Bitmap.Data = {
         36040000424D3604000000000000360000002800000010000000100000000100
@@ -3451,9 +3451,9 @@ object MainForm: TMainForm
       }
       ImageIndex = 4
       SubMenuImages = IconList
-      OnClick = miOpenFolder2Click
+      OnClick = miFavoritesOpenFolderClick
     end
-    object miOpenWith2: TMenuItem
+    object miFavoritesOpenWith: TMenuItem
       Caption = 'Open ...'
       Bitmap.Data = {
         36040000424D3604000000000000360000002800000010000000100000000100
@@ -3492,7 +3492,7 @@ object MainForm: TMainForm
         55577F7F55617F7F55667F7F55667F7F55667F7F55667F7F554D
       }
       ImageIndex = 11
-      OnClick = miOpenWith2Click
+      OnClick = miFavoritesOpenWithClick
     end
   end
   object pmMangaList: TPopupMenu
