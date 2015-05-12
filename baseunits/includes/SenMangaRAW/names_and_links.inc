@@ -4,6 +4,7 @@
     isExtractNames: Boolean = False;
   begin
     Result := INFORMATION_NOT_FOUND;
+    FHTTP.UserAgent := UA_MSIE;
     if not GetPage(TObject(Source), WebsiteRoots[SENMANGARAW_ID, 1] +
       '/Manga/?order=text-version', 3) then
     begin

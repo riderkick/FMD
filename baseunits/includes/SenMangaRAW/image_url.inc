@@ -7,6 +7,7 @@
     l := TStringList.Create;
     parse := TStringList.Create;
     try
+      FHTTP.UserAgent := UA_MSIE;
       s := manager.container.ChapterLinks[manager.container.CurrentDownloadChapterPtr] +
         '/' + IntToStr(workCounter + 1);
       s := FillMangaSiteHost(SENMANGARAW_ID, s);

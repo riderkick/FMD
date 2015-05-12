@@ -5,6 +5,7 @@ var
 begin
   mangaInfo.website := WebsiteRoots[SENMANGARAW_ID, 0];
   mangaInfo.url := FillMangaSiteHost(SENMANGARAW_ID, URL);
+  FHTTP.UserAgent := UA_MSIE;
   if GetPage(TObject(Source), mangaInfo.url, Reconnect) then
   begin
     Parser := THTMLParser.Create(Source.Text);
