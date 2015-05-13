@@ -119,6 +119,9 @@ type
     // Abort favorites check
     procedure StopRun;
     procedure StopRunAndWait;
+    // Add favorites downloadedchapterlist
+    procedure AddToDownloadedChaptersList(const AWebsite, ALink, AValue: String); overload;
+    procedure AddToDownloadedChaptersList(const AWebsite, Alink: String; AValue: TStrings); overload;
 
     // sorting
     procedure Sort(const AColumn: Cardinal);
@@ -834,6 +837,81 @@ begin
   begin
     taskthread.Terminate;
     taskthread.WaitFor;
+  end;
+end;
+
+procedure TFavoriteManager.AddToDownloadedChaptersList(const AWebsite, ALink,
+  AValue: String);
+var
+  st: TStringList;
+begin
+  if (AWebsite <> '') and (ALink <> '') and (AValue <> '') then
+  begin
+    st := TStringList.Create;
+    try
+      GetParams(st, AValue);
+      AddToDownloadedChaptersList(AWebsite, ALink, st);
+    finally
+      St.Free;
+    end;
+  end;
+end;
+
+procedure TFavoriteManager.AddToDownloadedChaptersList(const AWebsite,
+  Alink: String; AValue: TStrings);
+var
+  i, p, q: Integer;
+  Ch, dlCh: TStringList;
+begin
+  if Count = 0 then
+    Exit;
+  if (AWebsite <> '') and (Alink <> '') and  (AValue.Count > 0) then
+  begin
+    CS_Favorites.Acquire;
+    Ch := TStringList.Create;
+    dlCh := TStringList.Create;
+    try
+      p := -1;
+      //locate the link
+      if Favorites.Count > 1 then
+        for i := 0 to Favorites.Count - 1 do
+          if SameText(AWebsite, Favorites[i].FavoriteInfo.Website) and
+            SameText(Alink, Favorites[i].FavoriteInfo.Link) then
+          begin
+            p := i;
+            GetParams(dlCh, Favorites[i].FavoriteInfo.downloadedChapterList);
+            Break;
+          end;
+
+      //if found the favorite
+      if p > -1 then
+      begin
+        //remove if links found on downloadedchapterlist
+        Ch.Assign(AValue);
+        if dlCh.Count > 0 then
+        begin
+          dlCh.Sort;
+          i := 0;
+          while i < Ch.Count do
+          begin
+            if dlCh.Find(Ch[i], q) then
+              Ch.Delete(i)
+            else
+              Inc(i);
+          end;
+        end;
+
+        //merge the links
+        with Favorites[p].FavoriteInfo do begin
+          downloadedChapterList := downloadedChapterList + SetParams(ch);
+          currentChapter := IntToStr(dlCh.Count + ch.Count);
+        end;
+      end;
+    finally
+      dlCh.Free;
+      Ch.Free;
+      CS_Favorites.Release;
+    end;
   end;
 end;
 
