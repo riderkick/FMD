@@ -314,7 +314,10 @@ begin
 
       // save downloaded chapters
       if Info.mangaInfo.chapterLinks.Count > 0 then
+      begin
         DLManager.AddToDownloadedChaptersList(Info.mangaInfo.website + URL, Info.mangaInfo.chapterLinks);
+        FavoriteManager.AddToDownloadedChaptersList(Info.mangaInfo.website, URL, Info.mangaInfo.chapterLinks);
+      end;
     end;
   except
     on E: Exception do

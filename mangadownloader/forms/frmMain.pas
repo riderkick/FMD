@@ -1420,10 +1420,12 @@ begin
   DLManager.containers.Items[pos].DownloadInfo.SaveTo := s;
   UpdateVtDownload;
 
-  // DLManager.Backup;
+  DLManager.Backup;
   DLManager.CheckAndActiveTask;
   DLManager.AddToDownloadedChaptersList(
     mangaInfo.website + mangaInfo.link, DLManager.containers.Items[pos].ChapterLinks);
+  FavoriteManager.AddToDownloadedChaptersList(
+    mangaInfo.website, mangaInfo.link, DLManager.containers.Items[pos].ChapterLinks);
   clbChapterList.Repaint;
   pcMain.PageIndex := 0;
 end;
