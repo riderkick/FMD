@@ -906,6 +906,7 @@ begin
           downloadedChapterList := downloadedChapterList + SetParams(ch);
           currentChapter := IntToStr(dlCh.Count + ch.Count);
         end;
+        MainForm.UpdateVtFavorites;
       end;
     finally
       dlCh.Free;
