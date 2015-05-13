@@ -1176,7 +1176,7 @@ begin
     begin
       if vtFavorites.Selected[xNode] then
         with FavoriteManager.Favorites[i].FavoriteInfo do
-          SilentThreadManager.Add(MD_DownloadAll, Website, Title, Link);
+          SilentThreadManager.Add(MD_DownloadAll, Website, Title, Link, SaveTo);
       xNode := vtFavorites.GetNext(xNode);
       Inc(i);
     end;
