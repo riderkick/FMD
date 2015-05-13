@@ -244,7 +244,7 @@ end;
 procedure TSilentThread.MainThreadAfterChecking;
 var
   s: String;
-  i, pos: Integer;
+  i, p: Integer;
 begin
   if Info.mangaInfo.numChapter = 0 then
     Exit;
@@ -252,8 +252,8 @@ begin
     with MainForm do
     begin
       // add a new download task
-      pos := DLManager.AddTask;
-      DLManager.containers.Items[pos].mangaSiteID := GetMangaSiteID(website);
+      p := DLManager.AddTask;
+      DLManager.containers.Items[p].mangaSiteID := GetMangaSiteID(website);
 
       for i := 0 to Info.mangaInfo.numChapter - 1 do
       begin
@@ -266,44 +266,47 @@ begin
           Info.mangaInfo.chapterName.Strings[i],
           Format('%.4d', [i + 1]),
           cbOptionPathConvert.Checked);
-        DLManager.containers.Items[pos].chapterName.Add(s);
-        DLManager.containers.Items[pos].chapterLinks.Add(
+        DLManager.containers.Items[p].chapterName.Add(s);
+        DLManager.containers.Items[p].chapterLinks.Add(
           Info.mangaInfo.chapterLinks.Strings[i]);
       end;
 
       if cbAddAsStopped.Checked then
       begin
-        DLManager.containers.Items[pos].Status := STATUS_STOP;
-        DLManager.containers.Items[pos].downloadInfo.Status := stStop;
+        DLManager.containers.Items[p].Status := STATUS_STOP;
+        DLManager.containers.Items[p].downloadInfo.Status := stStop;
       end
       else
       begin
-        DLManager.containers.Items[pos].downloadInfo.Status := stWait;
-        DLManager.containers.Items[pos].Status := STATUS_WAIT;
+        DLManager.containers.Items[p].downloadInfo.Status := stWait;
+        DLManager.containers.Items[p].Status := STATUS_WAIT;
       end;
 
-      DLManager.containers.Items[pos].currentDownloadChapterPtr := 0;
-      DLManager.containers.Items[pos].downloadInfo.Website := website;
-      DLManager.containers.Items[pos].downloadInfo.Link := URL;
-      DLManager.containers.Items[pos].downloadInfo.Title := Info.mangaInfo.title;
-      DLManager.containers.Items[pos].downloadInfo.DateTime := Now;
+      DLManager.containers.Items[p].currentDownloadChapterPtr := 0;
+      DLManager.containers.Items[p].downloadInfo.Website := website;
+      DLManager.containers.Items[p].downloadInfo.Link := URL;
+      DLManager.containers.Items[p].downloadInfo.Title := Info.mangaInfo.title;
+      DLManager.containers.Items[p].downloadInfo.DateTime := Now;
 
-      if Trim(edSaveTo.Text) = '' then
-        edSaveTo.Text := options.ReadString('saveto', 'SaveTo', DEFAULT_PATH);
-      if Trim(edSaveTo.Text) = '' then
-        edSaveTo.Text := DEFAULT_PATH;
-      edSaveTo.Text := CorrectPathSys(edSaveTo.Text);
-      s := edSaveTo.Text;
-      // save to
-      if cbOptionGenerateMangaFolderName.Checked then
+      if FSavePath = '' then
       begin
-        if not cbOptionPathConvert.Checked then
-          s := s + RemoveSymbols(Info.mangaInfo.title)
-        else
-          s := s + RemoveSymbols(UnicodeRemove(Info.mangaInfo.title));
+        if Trim(edSaveTo.Text) = '' then
+          edSaveTo.Text := options.ReadString('saveto', 'SaveTo', DEFAULT_PATH);
+        if Trim(edSaveTo.Text) = '' then
+          edSaveTo.Text := DEFAULT_PATH;
+        edSaveTo.Text := CorrectPathSys(edSaveTo.Text);
+        FSavePath := edSaveTo.Text;
+        // save to
+        if cbOptionGenerateMangaFolderName.Checked then
+        begin
+          if not cbOptionPathConvert.Checked then
+            FSavePath := FSavePath + RemoveSymbols(Info.mangaInfo.title)
+          else
+            FSavePath := FSavePath + RemoveSymbols(UnicodeRemove(Info.mangaInfo.title));
+        end;
+        FSavePath := CorrectPathSys(FSavePath);
       end;
-      s := CorrectPathSys(s);
-      DLManager.containers.Items[pos].downloadInfo.SaveTo := s;
+      DLManager.containers.Items[p].downloadInfo.SaveTo := FSavePath;
 
       UpdateVtDownload;
       DLManager.Backup;
