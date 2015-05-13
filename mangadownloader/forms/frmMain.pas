@@ -2468,7 +2468,7 @@ begin
 
     xNode := vtMangaList.GetFirst;
     i := 0;
-    while i < vtMangaList.RootNodeCount - 1 do
+    while i < DLManager.containers.Count do
     begin
       if vtMangaList.Selected[xNode] then
       begin
