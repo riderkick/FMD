@@ -870,6 +870,10 @@ var
 begin
   Page := 0;
 
+  //load User-Agent from INIAdvanced
+  if website <> '' then
+    FHTTP.UserAgent := INIAdvanced.ReadString('UserAgent', website, '');
+
   //load pagenumber_config if available
   p := INIAdvanced.ReadInteger('UpdateListDirectoryPageNumber', website, -1);
 
@@ -1193,6 +1197,10 @@ var
   {$I includes/SenMangaRAW/names_and_links.inc}
 
 begin
+  //load User-Agent from INIAdvanced
+  if website <> '' then
+    FHTTP.UserAgent := INIAdvanced.ReadString('UserAgent', website, '');
+
   Source := TStringList.Create;
   if website = WebsiteRoots[ANIMEA_ID, 0] then
     Result := AnimeAGetNamesAndLinks
@@ -1619,6 +1627,11 @@ var
 
 begin
   if Trim(URL) = '' then Exit(INFORMATION_NOT_FOUND);
+
+  //load User-Agent from INIAdvanced
+  if website <> '' then
+    FHTTP.UserAgent := INIAdvanced.ReadString('UserAgent', website, '');
+
   Source := TStringList.Create;
   mangaInfo.coverLink := '';
   mangaInfo.numChapter := 0;

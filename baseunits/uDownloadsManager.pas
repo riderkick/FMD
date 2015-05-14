@@ -1358,6 +1358,10 @@ begin
       threads.Last.manager := Self;
       threads.Last.workCounter := container.WorkCounter;
       threads.Last.checkStyle := Flag;
+      //load User-Agent from INIAdvanced
+      if container.DownloadInfo.Website <> '' then
+        threads.Last.FHTTP.UserAgent := INIAdvanced.ReadString('UserAgent',
+          container.DownloadInfo.Website, '');
       threads.Last.Start;
       container.WorkCounter := InterLockedIncrement(container.WorkCounter);
       if Flag = CS_GETPAGELINK then
