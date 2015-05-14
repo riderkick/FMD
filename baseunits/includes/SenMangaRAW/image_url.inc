@@ -7,7 +7,6 @@
     l := TStringList.Create;
     parse := TStringList.Create;
     try
-      FHTTP.UserAgent := RandomString(10, True) + RandomString(25 + Random(65), True, False, True);
       s := manager.container.ChapterLinks[manager.container.CurrentDownloadChapterPtr] +
         '/' + IntToStr(QWord(workCounter) + 1);
       s := FillMangaSiteHost(SENMANGARAW_ID, s);

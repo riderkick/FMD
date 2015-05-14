@@ -5,7 +5,6 @@ var
 begin
   mangaInfo.website := WebsiteRoots[SENMANGARAW_ID, 0];
   mangaInfo.url := FillMangaSiteHost(SENMANGARAW_ID, URL);
-  FHTTP.UserAgent := RandomString(10, True) + RandomString(25 + Random(65), True, False, True);
   if GetPage(TObject(Source), mangaInfo.url, Reconnect) then
   begin
     Parser := THTMLParser.Create(Source.Text);
@@ -41,7 +40,6 @@ begin
                 mangaInfo.coverLink := '/' + mangaInfo.coverLink;
               mangaInfo.coverLink := WebsiteRoots[SENMANGARAW_ID, 1] + mangaInfo.coverLink;
             end;
-            FHTTP.UserAgent := RandomString(10, True) + RandomString(25 + Random(65), True, False, True);
           end;
 
         if (GetTagName(parse[i]) = 'strong') and (GetVal(parse[i], 'class') = 'data') then

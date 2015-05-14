@@ -3,8 +3,7 @@
     i: Integer;
     isExtractNames: Boolean = False;
   begin
-    Result := INFORMATION_NOT_FOUND;
-    FHTTP.UserAgent := RandomString(10, True) + RandomString(25 + Random(65), True, False, True);
+    Result := INFORMATION_NOT_FOUND;    
     if not GetPage(TObject(Source), WebsiteRoots[SENMANGARAW_ID, 1] +
       '/Manga/?order=text-version', 3) then
     begin
