@@ -2637,7 +2637,7 @@ begin
       f := l.Strings[2]
     else
       f := '';
-    FindClose(Info);
+    FindCloseUTF8(Info);
 
     if edOptionExternal.Text <> '' then
     begin
@@ -2698,7 +2698,7 @@ begin
         f := l.Strings[2]
       else
         f := '';
-      FindClose(Info);
+      FindCloseUTF8(Info);
     end;
 
     if edOptionExternal.Text <> '' then
