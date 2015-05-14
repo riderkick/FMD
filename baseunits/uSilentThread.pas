@@ -127,6 +127,7 @@ procedure TSilentThreadManager.CheckOut;
 begin
   CS_Threads.Acquire;
   try
+    INIAdvanced.Reload;
     if MetaData.Count > 0 then
     begin
       case MetaData.First.MetaDataType of

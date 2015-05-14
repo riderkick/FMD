@@ -132,6 +132,7 @@ begin
   if MainForm.cbSelectManga.ItemIndex < 0 then
     Exit;
   try
+    INIAdvanced.Reload;
     if not GetMangaInfo(link, website) then
     begin
       if not Self.IsTerminated then
