@@ -871,7 +871,6 @@ begin
   Page := 0;
 
   //load pagenumber_config if available
-  INIAdvanced.Reload;
   p := INIAdvanced.ReadInteger('UpdateListDirectoryPageNumber', website, -1);
 
   if p > 0 then

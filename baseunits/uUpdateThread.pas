@@ -418,7 +418,6 @@ begin
         Break;
       end;
 
-      INIAdvanced.Reload;
       mt := INIAdvanced.ReadInteger('UpdateListNumberOfThreads', website, -1);
       if mt > 0 then
       begin
@@ -623,6 +622,7 @@ begin
         links.Clear;
 
         //get directory page count
+        INIAdvanced.Reload;
         directoryCount := 0;
         directoryCount2 := 0;
         workPtr := 0;
@@ -631,6 +631,8 @@ begin
         if Terminated then
           Break;
 
+        //get names and links
+        INIAdvanced.Reload;
         workPtr := 0;
         isFinishSearchingForNewManga := False;
         if SitesMemberOf(website, [BATOTO_ID, FAKKU_ID, MANGAEDEN_ID,
@@ -756,6 +758,8 @@ begin
           end;
         end;
 
+
+        //get manga info
         if links.Count > 0 then
         begin
           if (SitesWithoutInformation(website)) or

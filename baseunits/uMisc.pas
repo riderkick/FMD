@@ -10,7 +10,6 @@ uses
 type
   TIniFileR = class(TMemIniFile)
   private
-    FReloading: Boolean;
     FCSReload: TCriticalSection;
     FFileAge: longint;
   public
@@ -77,7 +76,6 @@ begin
   inherited Create(AFileName, AEscapeLineFeeds);
   FCSReload := TCriticalSection.Create;
   FFileAge := FileAge(Self.FileName);
-  FReloading := False;
 end;
 
 destructor TIniFileR.Destroy;
@@ -90,29 +88,22 @@ procedure TIniFileR.Reload;
 var
   slLines: TStringList;
 begin
-  if FReloading then
-    Exit;
-  //if FCSReload.TryEnter then
-  //begin
-  FCSReload.Acquire;
-  try
-    FReloading := True;
-    if FileExists(FileName) and (FileAge(FileName) <> FFileAge) then
-    begin
-      slLines := TStringList.Create;
-      try
-        FFileAge := FileAge(FileName);
-        slLines.LoadFromFile(FileName);
-        SetStrings(slLines);
-      finally
-        slLines.Free;
+  if FCSReload.TryEnter then try
+    if FileExists(FileName) then
+      if FileAge(FileName) <> FFileAge then
+      begin
+        slLines := TStringList.Create;
+        try
+          FFileAge := FileAge(FileName);
+          slLines.LoadFromFile(FileName);
+          SetStrings(slLines);
+        finally
+          slLines.Free;
+        end;
       end;
-    end;
   finally
-    FReloading := False;
     FCSReload.Release;
   end;
-  //end;
 end;
 
 { uMisc }

@@ -100,6 +100,7 @@ type
     procedure Compress;
     // show notification when download completed
     procedure ShowBaloon;
+    procedure Stop(const check: Boolean = True);
   public
     //additional parameter
     httpCookies: String;
@@ -112,7 +113,6 @@ type
 
     constructor Create;
     destructor Destroy; override;
-    procedure Stop(const check: Boolean = True);
 
     property AnotherURL: String read FAnotherURL write FAnotherURL;
   end;
@@ -1311,7 +1311,6 @@ begin
   // TODO: Ugly code, need to be fixed later
 
   //load advanced config if any
-  INIAdvanced.Reload;
   mt := INIAdvanced.ReadInteger('DownloadMaxThreadsPerTask',
     WebsiteRoots[container.MangaSiteID, 0], -1);
   if (mt > 0) then
@@ -1417,6 +1416,7 @@ var
   j: Integer;
   S, P: String;
 begin
+  INIAdvanced.Reload;
   container.ThreadState := True;
   try
     while container.CurrentDownloadChapterPtr < container.ChapterLinks.Count do
