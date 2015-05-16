@@ -2504,7 +2504,6 @@ var
 begin
   if vtMangaList.SelectedCount = 0 then
     Exit;
-  WriteLog('AddItem.Main');
   try
     YesAll := False;
     NoAll := False;
@@ -2513,18 +2512,15 @@ begin
     else
       mBtns := [mbYes, mbNo, mbYesToAll, mbNoToAll];
 
-    xNode := vtMangaList.GetFirst;
-    i := 0;
-    while i < DLManager.containers.Count do
+    xNode := vtMangaList.GetFirstSelected;
+    for i := 0 to vtMangaList.SelectedCount - 1 do
     begin
       if vtMangaList.Selected[xNode] then
       begin
         AllowedToCreate := True;
         if DLManager.containers.Count > 0 then
-        begin
           for j := 0 to DLManager.containers.Count - 1 do
-          begin
-            if dataProcess.Param[dataProcess.GetPos(i), DATA_PARAM_NAME] =
+            if dataProcess.Param[dataProcess.GetPos(xNode^.Index), DATA_PARAM_NAME] =
               DLManager.containers.Items[j].DownloadInfo.title then
             begin
               if YesAll then
@@ -2552,23 +2548,18 @@ begin
                       NoAll := True;
                       AllowedToCreate := False;
                     end;
-                end
-              end;;
+                end;
+              end;
               Break;
             end;
-          end;
-        end;
-
-        WriteLog('Added items');
 
         if AllowedToCreate then
           SilentThreadManager.Add(MD_DownloadAll,
-            GetMangaSiteName(DataProcess.site.Items[DataProcess.GetPos(i)]),
-            dataProcess.Param[DataProcess.GetPos(i), DATA_PARAM_NAME],
-            dataProcess.Param[DataProcess.GetPos(i), DATA_PARAM_LINK]);
+            GetMangaSiteName(DataProcess.site.Items[DataProcess.GetPos(xNode^.Index)]),
+            dataProcess.Param[DataProcess.GetPos(xNode^.Index), DATA_PARAM_NAME],
+            dataProcess.Param[DataProcess.GetPos(xNode^.Index), DATA_PARAM_LINK]);
       end;
-      xNode := vtMangaList.GetNext(xNode);
-      Inc(i);
+      xNode := vtMangaList.GetNextSelected(xNode);
     end;
   except
     on E: Exception do
