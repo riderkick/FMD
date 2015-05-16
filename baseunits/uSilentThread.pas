@@ -15,7 +15,7 @@ unit uSilentThread;
 interface
 
 uses
-  SysUtils, fgl, uBaseUnit, uData, uFMDThread, uDownloadsManager,
+  Classes, SysUtils, uBaseUnit, uData, uFMDThread, uDownloadsManager,
   blcksock, syncobjs;
 
 type
@@ -26,7 +26,8 @@ type
   public
     MetaDataType: TMetaDataType;
     Website, Title, URL, SaveTo: String;
-    constructor Create(const AType: TMetaDataType; const AWebsite, AManga, AURL, APath: String);
+    constructor Create(const AType: TMetaDataType; const AWebsite, AManga,
+      AURL, APath: String);
   end;
 
   TSilentThreadManager = class;
@@ -38,7 +39,6 @@ type
     FSavePath: String;
     Info: TMangaInformation;
     Freconnect: Cardinal;
-
     // manga information from main thread
     title, website, URL: String;
     procedure SockOnHeartBeat(Sender: TObject);
@@ -49,18 +49,15 @@ type
     Manager: TSilentThreadManager;
     constructor Create;
     destructor Destroy; override;
-
     property SavePath: String read FSavePath write FSavePath;
   end;
 
-  // for "Add to Favorites" feature
+  { TSilentAddToFavThread }
+
   TSilentAddToFavThread = class(TSilentThread)
   protected
     procedure MainThreadAfterChecking; override;
   end;
-
-  TMetaDataList = TFPGList<TSilentThreadMetaData>;
-  TThreadList = TFPGList<TSilentThread>;
 
   { TSilentThreadManager }
 
@@ -70,15 +67,14 @@ type
   public
     CS_Threads: TCriticalSection;
     DLManager: TDownloadManager;
-    MetaData: TMetaDataList;
-    Threads: TThreadList;
+    MetaData: TFPList;
+    Threads: TFPList;
     procedure Add(AType: TMetaDataType; AWebsite, AManga, AURL: String;
       ASavePath: String = '');
     procedure CheckOut;
     procedure StopAllAndWait;
     procedure UpdateLoadStatus;
     property ItemCount: Integer read GetItemCount;
-
     constructor Create;
     destructor Destroy; override;
   end;
@@ -111,8 +107,8 @@ begin
   begin
     CS_Threads.Acquire;
     try
-        MetaData.Add(TSilentThreadMetaData.Create(
-          AType, AWebsite, AManga, AURL, ASavePath));
+      MetaData.Add(TSilentThreadMetaData.Create(
+        AType, AWebsite, AManga, AURL, ASavePath));
     finally
       CS_Threads.Release;
     end;
@@ -127,18 +123,20 @@ begin
     INIAdvanced.Reload;
     if MetaData.Count > 0 then
     begin
-      case MetaData.First.MetaDataType of
+      case TSilentThreadMetaData(MetaData.First).MetaDataType of
         MD_DownloadAll: Threads.Add(TSilentThread.Create);
         MD_AddToFavorites: Threads.Add(TSilentAddToFavThread.Create);
       end;
-      Threads.Last.Manager := Self;
-      Threads.Last.website := MetaData.First.Website;
-      Threads.Last.title := MetaData.First.Title;
-      Threads.Last.URL := MetaData.First.URL;
-      Threads.Last.SavePath := MetaData.First.SaveTo;
-      Threads.Last.Start;
-      MetaData.First.Free;
-      MetaData.Remove(MetaData.First);
+      with TSilentThread(Threads.Last) do begin
+        Manager := Self;
+        website := TSilentThreadMetaData(MetaData.First).Website;
+        title := TSilentThreadMetaData(MetaData.First).Title;
+        URL := TSilentThreadMetaData(MetaData.First).URL;
+        SavePath := TSilentThreadMetaData(MetaData.First).SaveTo;
+        Start;
+        TSilentThreadMetaData(MetaData.First).Free;
+        MetaData.Remove(MetaData.First);
+      end;
     end;
   finally
     CS_Threads.Release;
@@ -155,12 +153,12 @@ begin
     try
       while MetaData.Count > 0 do
       begin
-        MetaData.Last.Free;
+        TSilentThreadMetaData(MetaData.Last).Free;
         MetaData.Remove(MetaData.Last);
       end;
       if Threads.Count > 0 then
         for i := 0 to Threads.Count - 1 do
-         Threads[i].Terminate;
+          TSilentThread(Threads[i]).Terminate;
     finally
       CS_Threads.Release;
     end;
@@ -182,8 +180,8 @@ constructor TSilentThreadManager.Create;
 begin
   inherited Create;
   CS_Threads := TCriticalSection.Create;
-  MetaData := TMetaDataList.Create;
-  Threads := TThreadList.Create;
+  MetaData := TFPList.Create;
+  Threads := TFPList.Create;
 end;
 
 destructor TSilentThreadManager.Destroy;
@@ -196,12 +194,12 @@ begin
     try
       while MetaData.Count > 0 do
       begin
-        MetaData.Last.Free;
+        TSilentThreadMetaData(MetaData.Last).Free;
         MetaData.Remove(MetaData.Last);
       end;
       if Threads.Count > 0 then
         for i := 0 to Threads.Count - 1 do
-          Threads[i].Terminate;
+          TSilentThread(Threads[i]).Terminate;
     finally
       CS_Threads.Release;
     end;
