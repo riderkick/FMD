@@ -2410,21 +2410,19 @@ begin
   else
   if (vtDownload.SelectedCount > 1) then
   begin
-    xNode := vtDownload.GetFirst;
-    for i := 0 to vtDownload.RootNodeCount - 1 do
+    xNode := vtDownload.GetFirstSelected;
+    for i := 0 to vtDownload.SelectedCount - 1 do
     begin
-      if vtDownload.Selected[xNode] then
+      if vtDownload.Selected[xNode] and
+        (DLManager.containers.Items[xNode^.Index].Status in
+          [STATUS_STOP, STATUS_PROBLEM, STATUS_FAILED]) then
       begin
-        if DLManager.containers.Items[i].Status in
-          [STATUS_STOP, STATUS_PROBLEM, STATUS_FAILED] then
-        begin
-          DLManager.containers.Items[i].Status := STATUS_WAIT;
-          DLManager.containers.Items[i].DownloadInfo.Status := RS_Waiting;
-          if DLManager.CanActiveTask(i) then
-            DLManager.ActiveTask(i);
-        end;
+        DLManager.containers.Items[xNode^.Index].Status := STATUS_WAIT;
+        DLManager.containers.Items[xNode^.Index].DownloadInfo.Status := RS_Waiting;
+        if DLManager.CanActiveTask(xNode^.Index) then
+          DLManager.ActiveTask(xNode^.Index);
       end;
-      xNode := vtDownload.GetNext(xNode);
+      xNode := vtDownload.GetNextSelected(xNode);
     end;
     vtDownload.Repaint;
     DLManager.Backup;
