@@ -1396,23 +1396,20 @@ begin
     0)].Selected := True;
 end;
 
-// -----
-
 procedure TMainForm.btDownloadClick(Sender: TObject);
 var
-  s{, s1}: String;
+  s: String;
   i, pos: Integer;
   isCreate: Boolean = False;
-  Node: PVirtualNode;
+  xNode: PVirtualNode;
 begin
-  if mangaInfo.chapterName.Count = 0 then
+  if clbChapterList.CheckedCount = 0 then
     Exit;
-  Pos := 0;
-  Node := clbChapterList.GetFirst;
-  for i := 0 to mangaInfo.chapterName.Count - 1 do
+  Pos := -1;
+  xNode := clbChapterList.GetFirstChecked;
+  for i := 0 to clbChapterList.CheckedCount - 1 do
   begin
-    // if clbChapterList.Checked[i] then
-    if Node^.CheckState = csCheckedNormal then
+    if xNode^.CheckState = csCheckedNormal then
     begin
       if not isCreate then
       begin
@@ -1426,16 +1423,16 @@ begin
         mangaInfo.title,
         mangaInfo.authors,
         mangaInfo.artists,
-        mangaInfo.chapterName.Strings[i],
-        Format('%.4d', [i + 1]),
+        mangaInfo.chapterName.Strings[xNode^.Index],
+        Format('%.4d', [xNode^.Index + 1]),
         cbOptionPathConvert.Checked);
       DLManager.containers.Items[pos].ChapterName.Add(s);
       DLManager.containers.Items[pos].ChapterLinks.Add(
-        mangaInfo.chapterLinks.Strings[i]);
-      ChapterList[i].Downloaded := True;
-      clbChapterList.ReinitNode(Node, False);
+        mangaInfo.chapterLinks.Strings[xNode^.Index]);
+      ChapterList[xNode^.Index].Downloaded := True;
+      clbChapterList.ReinitNode(xNode, False);
     end;
-    Node := clbChapterList.GetNext(Node);
+    xNode := clbChapterList.GetNextChecked(xNode);
   end;
   if not isCreate then
     Exit;
