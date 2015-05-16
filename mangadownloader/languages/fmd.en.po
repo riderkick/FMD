@@ -57,6 +57,10 @@ msgid "Are you sure you want to delete the task(s)?"
 msgstr "Are you sure you want to delete the task(s)?"
 
 #: frmmain.rs_dlgtitleexistindllist
+#, fuzzy
+#| msgid ""
+#| "This title are already in download list.\n"
+#| "Do you want to download it anyway?\n"
 msgid ""
 "This title are already in download list.\n"
 "Do you want to download it anyway?\n"
@@ -85,6 +89,17 @@ msgid "URL not supported!"
 msgstr "URL not supported!"
 
 #: frmmain.rs_filterhint
+#, fuzzy
+#| msgid ""
+#| "Genres:\n"
+#| "- Checked: Include this genre.\n"
+#| "- Unchecked: Exclude this genre.\n"
+#| "- Grayed: Doesn't matter.\n"
+#| "\n"
+#| "Custom Genres:\n"
+#| "- Separate multiple genres with ','.\n"
+#| "- Exclude a genre by placing '!' at the beginning of a genre.\n"
+#| "- Example: Adventure,!Ecchi,Comedy.\n"
 msgid ""
 "Genres:\n"
 "- Checked: Include this genre.\n"
@@ -107,6 +122,13 @@ msgstr ""
 "- Example: Adventure,!Ecchi,Comedy.\n"
 
 #: frmmain.rs_hintexternalprogram
+#, fuzzy
+#| msgid ""
+#| "%PATH% : Path to the manga\n"
+#| "%FCHAPTER% : First downloaded chapter/first chapter in the directory\n"
+#| "\n"
+#| "\n"
+#| "Example: C:\\HoneyView\\honeyview.exe \"%PATH%%FCHAPTER%\"\n"
 msgid ""
 "%PATH% : Path to the manga\n"
 "%FCHAPTER% : First downloaded chapter/first chapter in the directory\n"
@@ -121,6 +143,10 @@ msgstr ""
 "Example: C:\\HoneyView\\honeyview.exe \"%PATH%%FCHAPTER%\"\n"
 
 #: frmmain.rs_hintfavoriteproblem
+#, fuzzy
+#| msgid ""
+#| "There is a problem with this data!\n"
+#| "Removing and re-adding this data may fix the problem.\n"
 msgid ""
 "There is a problem with this data!\n"
 "Removing and re-adding this data may fix the problem.\n"
@@ -1242,3 +1268,4 @@ msgstr "Synchronizing data"
 #: uupdatethread.rs_updatinglist
 msgid "Updating list"
 msgstr "Updating list"
+

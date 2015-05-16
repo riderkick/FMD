@@ -96,6 +96,13 @@ msgid ""
 msgstr ""
 
 #: frmmain.rs_hintexternalprogram
+#, fuzzy
+#| msgid ""
+#| "%PATH% : Path to the manga\n"
+#| "%FCHAPTER% : First downloaded chapter/first chapter in the directory\n"
+#| "\n"
+#| "\n"
+#| "Example: C:\\HoneyView\\honeyview.exe \"%PATH%%FCHAPTER%\"\n"
 msgid ""
 "%PATH% : Path to the manga\n"
 "%FCHAPTER% : First downloaded chapter/first chapter in the directory\n"
@@ -1229,3 +1236,4 @@ msgstr ""
 #: uupdatethread.rs_updatinglist
 msgid "Updating list"
 msgstr ""
+

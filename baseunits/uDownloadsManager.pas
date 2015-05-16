@@ -21,8 +21,6 @@ type
   TTaskThreadContainer = class;
   TTaskThread = class;
 
-  // this class will replace the old TDownloadThread
-
   { TDownloadThread }
 
   TDownloadThread = class(TFMDThread)

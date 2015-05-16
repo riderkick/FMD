@@ -11,7 +11,7 @@ unit uFMDThread;
 interface
 
 uses
-  Classes, SysUtils;
+  Classes, SysUtils, USimpleException;
 
 type
 
@@ -28,8 +28,6 @@ type
 
 implementation
 
-uses frmMain;
-
 function TFMDThread.GetTerminated: Boolean;
 begin
   Result := Terminated;
@@ -41,12 +39,10 @@ begin
   begin
     Exception(FatalException).Message :=
       'FatalException, ' + Exception(FatalException).Message;
-    MainForm.ExceptionHandler(Self, Exception(FatalException));
+    USimpleException.ExceptionHandle(Self, Exception(FatalException));
   end;
   inherited DoTerminate;
 end;
-
-// ----- Public methods -----
 
 constructor TFMDThread.Create(CreateSuspended: Boolean = True);
 begin
