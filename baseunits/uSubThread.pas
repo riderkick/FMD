@@ -20,6 +20,7 @@ uses
 type
 
   { TCheckUpdateThread }
+
   TCheckUpdateThread = class(TFMDThread)
   protected
     fNewVersionNumber,
