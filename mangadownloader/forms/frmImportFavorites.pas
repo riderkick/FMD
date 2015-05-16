@@ -39,6 +39,9 @@ type
     { public declarations }
   end;
 
+resourcestring
+  RS_ImportCompleted = 'Import completed.';
+
 implementation
 
 uses
@@ -132,7 +135,7 @@ procedure TImportFavorites.FMDHandle;
 begin
   MainForm.FavoriteManager.MergeWith(CorrectFilePath(edPath.Text) + 'works/favorites.ini');
 
-  MessageDlg('', stImportCompleted,
+  MessageDlg('', RS_ImportCompleted,
                  mtConfirmation, [mbYes], 0)
 end;
 
@@ -149,10 +152,10 @@ end;
 procedure TImportFavorites.FormCreate(Sender: TObject);
 begin
   Caption:= MainForm.btFavoritesImport.Caption;
-  btImport.Caption:= stImport;
-  edPath.Text:= stSoftwarePath;
-  btCancel.Caption:= stCancel;
-  lbSelectSoftware.Caption:= stSoftware;
+  btImport.Caption:= RS_Import;
+  edPath.Text:= RS_SoftwarePath;
+  btCancel.Caption:= RS_Cancel;
+  lbSelectSoftware.Caption:= RS_Software;
 end;
 
 procedure TImportFavorites.btBrowseClick(Sender: TObject);

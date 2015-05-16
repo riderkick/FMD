@@ -136,7 +136,7 @@ type
   end;
 
 resourcestring
-  RS_DlgFavoritesAlreadyChecking = 'Favorites already checking!';
+  RS_DlgFavoritesCheckIsRunning = 'Favorites check is running!';
   RS_DlgNewChapterCaption = '%d manga(s) have new chapter(s)';
   RS_LblNewChapterFound = 'Found %d new chapter from %d manga(s):';
   RS_FavoriteHasNewChapter = '%s <%s> has %d new chapter(s).';
@@ -146,6 +146,7 @@ resourcestring
   RS_DlgCompletedMangaCaption = 'Found %d completed manga';
   RS_LblMangaWillBeRemoved = 'Completed manga will be removed:';
   RS_BtnRemove = 'Remove';
+  RS_BtnCheckFavorites = 'Check for new chapter';
 
 implementation
 
@@ -293,7 +294,7 @@ begin
               end;
             end;
             UpdateBtnCaption(Format('%s <%s>',
-              [stFavoritesChecking, manager.Favorites[workCounter].FavoriteInfo.Title]));
+              [RS_Checking, manager.Favorites[workCounter].FavoriteInfo.Title]));
           finally
             CS_Threads.Release;
           end;
@@ -305,7 +306,7 @@ begin
         threads[i].Terminate;
     while threads.Count > 0 do
       Sleep(100);
-    UpdateBtnCaption(stFavoritesCheck);
+    UpdateBtnCaption(RS_BtnCheckFavorites);
     if not Terminated then
       Synchronize(SyncShowResult);
   except
@@ -383,7 +384,7 @@ begin
     if isRunning then
     begin
       if not isAuto then
-        MessageDlg('', RS_DlgFavoritesAlreadyChecking, mtInformation, [mbOK], 0);
+        MessageDlg('', RS_DlgFavoritesCheckIsRunning, mtInformation, [mbOK], 0);
     end
     else
     begin
@@ -585,12 +586,12 @@ begin
                       end;
                       if LNCResult = ncrDownload then
                       begin
-                        DownloadInfo.Status := stWait;
+                        DownloadInfo.Status := RS_Waiting;
                         Status := STATUS_WAIT;
                       end
                       else
                       begin
-                        DownloadInfo.Status := stStop;
+                        DownloadInfo.Status := RS_Stopped;
                         Status := STATUS_STOP;
                       end;
                     end;

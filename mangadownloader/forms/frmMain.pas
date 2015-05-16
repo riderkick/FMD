@@ -17,9 +17,10 @@ uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
   LCLType, ExtCtrls, ComCtrls, Buttons, Spin, Menus, VirtualTrees, RichMemo,
   IniFiles, simpleipc, UTF8Process, lclproc, types, strutils, LCLIntf,
-  LazUTF8, AnimatedGif, uBaseUnit, uData, uDownloadsManager,
-  uFavoritesManager, uUpdateThread, uUpdateDBThread, uSubThread, uSilentThread,
-  uMisc, uGetMangaInfosThread, USimpleException, ActiveX;
+  DefaultTranslator, LazUTF8, AnimatedGif, uBaseUnit, uData,
+  uDownloadsManager, uFavoritesManager, uUpdateThread, uUpdateDBThread,
+  uSubThread, uSilentThread, uMisc, uGetMangaInfosThread, uTranslation,
+  USimpleException, ActiveX;
 
 type
   TDoFMDType = (DoFMDNothing, DoFMDUpdate, DoFMDExit, DoFMDShutdown, DoFMDHibernate);
@@ -44,6 +45,8 @@ type
     btSearchClear: TSpeedButton;
     btUpdateList: TSpeedButton;
     btURL: TSpeedButton;
+    Button1: TButton;
+    cbOptionAutoDlFav: TCheckBox;
     cbOptionAutoRemoveCompletedManga: TCheckBox;
     cbOptionUpdateListNoMangaInfo: TCheckBox;
     cbOptionEnableLoadCover: TCheckBox;
@@ -100,42 +103,41 @@ type
     cbOptionShowDeleteTaskDialog: TCheckBox;
     cbOptionShowBatotoSG: TCheckBox;
     cbOptionShowAllLang: TCheckBox;
-    cbOptionAutoDlFav: TCheckBox;
     cbOptionUseProxy: TCheckBox;
     cbSelectManga: TComboBox;
-    CheckBox1: TCheckBox;
-    CheckBox10: TCheckBox;
-    CheckBox11: TCheckBox;
-    CheckBox12: TCheckBox;
-    CheckBox13: TCheckBox;
-    CheckBox14: TCheckBox;
-    CheckBox15: TCheckBox;
-    CheckBox16: TCheckBox;
-    CheckBox17: TCheckBox;
-    CheckBox18: TCheckBox;
-    CheckBox19: TCheckBox;
-    CheckBox2: TCheckBox;
-    CheckBox20: TCheckBox;
-    CheckBox21: TCheckBox;
-    CheckBox22: TCheckBox;
-    CheckBox23: TCheckBox;
-    CheckBox24: TCheckBox;
-    CheckBox25: TCheckBox;
-    CheckBox26: TCheckBox;
-    CheckBox27: TCheckBox;
-    CheckBox28: TCheckBox;
-    CheckBox29: TCheckBox;
-    CheckBox3: TCheckBox;
-    CheckBox30: TCheckBox;
-    CheckBox31: TCheckBox;
-    CheckBox32: TCheckBox;
-    CheckBox33: TCheckBox;
-    CheckBox34: TCheckBox;
-    CheckBox35: TCheckBox;
-    CheckBox36: TCheckBox;
-    CheckBox37: TCheckBox;
-    CheckBox38: TCheckBox;
-    CheckBox4: TCheckBox;
+    ckFilterAction: TCheckBox;
+    ckFilterHarem: TCheckBox;
+    ckFilterHentai: TCheckBox;
+    ckFilterHistorical: TCheckBox;
+    ckFilterHorror: TCheckBox;
+    ckFilterJosei: TCheckBox;
+    ckFilterLolicon: TCheckBox;
+    ckFilterMartialArts: TCheckBox;
+    ckFilterMature: TCheckBox;
+    ckFilterMecha: TCheckBox;
+    ckFilterMusical: TCheckBox;
+    ckFilterAdult: TCheckBox;
+    ckFilterMystery: TCheckBox;
+    ckFilterPsychological: TCheckBox;
+    ckFilterRomance: TCheckBox;
+    ckFilterSchoolLife: TCheckBox;
+    ckFilterSciFi: TCheckBox;
+    ckFilterSeinen: TCheckBox;
+    ckFilterShotacon: TCheckBox;
+    ckFilterShoujo: TCheckBox;
+    ckFilterShoujoAi: TCheckBox;
+    ckFilterShounen: TCheckBox;
+    ckFilterAdventure: TCheckBox;
+    ckFilterShounenAi: TCheckBox;
+    ckFilterSliceofLife: TCheckBox;
+    ckFilterSmut: TCheckBox;
+    ckFilterSports: TCheckBox;
+    ckFilterSupernatural: TCheckBox;
+    ckFilterTragedy: TCheckBox;
+    ckFilterYaoi: TCheckBox;
+    ckFilterYuri: TCheckBox;
+    ckFilterWeebtons: TCheckBox;
+    ckFilterComedy: TCheckBox;
     cbOnlyNew: TCheckBox;
     cbAddAsStopped: TCheckBox;
     cbOptionShowQuitDialog: TCheckBox;
@@ -147,11 +149,11 @@ type
     cbOptionAutoNumberChapter: TCheckBox;
     cbOptionAutoCheckFavStartup: TCheckBox;
     cbSearchFromAllSites: TCheckBox;
-    Checkbox5: TCheckBox;
-    CheckBox6: TCheckBox;
-    CheckBox7: TCheckBox;
-    CheckBox8: TCheckBox;
-    CheckBox9: TCheckBox;
+    ckFilterDoujinshi: TCheckBox;
+    ckFilterDrama: TCheckBox;
+    ckFilterEchi: TCheckBox;
+    ckFilterFantasy: TCheckBox;
+    ckFilterGenderBender: TCheckBox;
     cbFilterStatus: TComboBox;
     cbLanguages: TComboBox;
     cbOptionLetFMDDo: TComboBox;
@@ -328,7 +330,6 @@ type
     procedure clbChapterListInitNode(Sender: TBaseVirtualTree;
       ParentNode, Node: PVirtualNode; var InitialStates: TVirtualNodeInitStates);
     procedure edSearchChange(Sender: TObject);
-    procedure edSearchClick(Sender: TObject);
     procedure edSearchKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure edURLKeyPress(Sender: TObject; var Key: Char);
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
@@ -593,7 +594,7 @@ type
     procedure SaveFormInformation;
 
     // load language file
-    procedure LoadLanguage(const pos: Integer);
+    procedure LoadLanguage;
 
     // exception handle
     procedure ExceptionHandler(Sender: TObject; E: Exception);
@@ -615,10 +616,60 @@ var
   FUpdateURL: String;
 
 resourcestring
-  RS_HintFavoriteProblem = 'There is a problem with this data!'+ LineEnding +
-                           'Removing and re-adding this data may fix the problem.';
-  RS_DlgTitleExistInDLlist = 'This title are already in download list.' + LineEnding +
-                             'Do you want to download it anyway?';
+  RS_HintFavoriteProblem = 'There is a problem with this data!'+ LineEnding
+                         + 'Removing and re-adding this data may fix the problem.';
+  RS_HintExternalProgram = '%PATH% : Path to the manga' + LineEnding
+    + '%FCHAPTER% : First downloaded chapter/first chapter in the directory' + LineEnding + LineEnding
+    + LineEnding
+      + 'Example: C:\HoneyView\honeyview.exe "%PATH%%FCHAPTER%"';
+  RS_DlgTitleExistInDLlist = 'This title are already in download list.' + LineEnding
+                           + 'Do you want to download it anyway?';
+  RS_FilterHint = 'Genres:' + LineEnding
+    + '- Checked: Include this genre.' + LineEnding
+    + '- Unchecked: Exclude this genre.' + LineEnding
+    + '- Grayed: Doesn''t matter.' + LineEnding
+    + LineEnding
+    + 'Custom Genres:' + LineEnding
+    + '- Separate multiple genres with '',''.' + LineEnding
+    + '- Exclude a genre by placing ''!'' at the beginning of a genre.' + LineEnding
+    + '- Example: Adventure,!Ecchi,Comedy.';
+
+
+  RS_DlgQuit = 'Are you sure you want to exit?';
+  RS_DlgRemoveTask = 'Are you sure you want to delete the task(s)?';
+  RS_DlgRemoveFavorite = 'Are you sure you want to delete the favorite(s)?';
+  RS_DlgURLNotSupport = 'URL not supported!';
+  RS_DlgUpdaterIsRunning = 'Updater is running!';
+  RS_Checking = 'Checking...';
+  RS_DlgTypeInNewChapter = 'Type in new chapter:';
+  RS_DlgTypeInNewSavePath = 'Type in new save path:';
+  RS_DlgUpdaterWantToUpdateDB = 'Do you want to download manga list from the server ?';
+  RS_DlgRemoveFinishTasks = 'Are you sure you want to delete all finished tasks?';
+  RS_DlgMangaListSelect = 'You must choose at least 1 manga website!';
+  RS_DlgCannotGetMangaInfo = 'Cannot get manga info. Please check your internet connection and try it again.';
+  RS_DlgCannotConnectToServer = 'Cannot connect to the server.';
+  RS_LblAutoCheckNewChapterMinute = 'Auto check for new chapter every %d minutes';
+  RS_AllDownloads = 'All downloads';
+  RS_InProgress = 'In progress';
+  RS_History = 'History';
+  RS_Today = 'Today';
+  RS_Yesterday = 'Yesterday';
+  RS_OneWeek = 'One week';
+  RS_OneMonth = 'One month';
+  RS_Import = 'Import';
+  RS_Software = 'Software';
+  RS_SoftwarePath = 'Path to the software (e.g. C:\MangaDownloader)';
+  RS_Cancel = 'Cancel';
+  RS_ModeAll = 'Mode: Show all (%d)';
+  RS_ModeFiltered = 'Mode: Filtered (%d)';
+  RS_Selected = 'Selected: %d';
+  RS_InfoWebsite = 'Website:';
+  RS_InfoTitle = 'Title:';
+  RS_InfoAuthors = 'Author(s):';
+  RS_InfoArtists = 'Artist(s):';
+  RS_InfoGenres = 'Genre(s):';
+  RS_InfoStatus = 'Status:';
+  RS_InfoSummary = 'Summary:';
 
 implementation
 
@@ -708,7 +759,7 @@ begin
 
   InitCheckboxes;
 
-  //lbMode.Caption := Format(stModeAll, [dataProcess.filterPos.Count]);
+  //lbMode.Caption := Format(RS_ModeAll, [dataProcess.filterPos.Count]);
 
   if pcMain.PageIndex = 4 then
     pcMain.PageIndex := 0;
@@ -785,7 +836,7 @@ procedure TMainForm.FormClose(Sender: TObject; var CloseAction: TCloseAction);
 begin
   if cbOptionShowQuitDialog.Checked and (DoAfterFMD = DoFMDNothing) then
   begin
-    if MessageDlg('', stDlgQuit, mtConfirmation, [mbYes, mbNo], 0) <> mrYes then
+    if MessageDlg('', RS_DlgQuit, mtConfirmation, [mbYes, mbNo], 0) <> mrYes then
     begin
       CloseAction := caNone;
       Exit;
@@ -961,7 +1012,7 @@ begin
       //LoadMangaOptions;
       vtMangaList.NodeDataSize := SizeOf(TMangaListItem);
       vtMangaList.RootNodeCount := dataProcess.filterPos.Count;
-      lbMode.Caption := Format(stModeAll, [dataProcess.filterPos.Count]);
+      lbMode.Caption := Format(RS_ModeAll, [dataProcess.filterPos.Count]);
     finally
       Screen.Cursor := crDefault;
     end;
@@ -1035,7 +1086,7 @@ begin
   // if NOT Assigned(vtDownload.FocusedNode) then exit;
   if (cbOptionShowDeleteTaskDialog.Checked) and
     (vtDownload.SelectedCount > 0) then
-    if not (MessageDlg('', stDlgRemoveTask,
+    if not (MessageDlg('', RS_DlgRemoveTask,
       mtConfirmation, [mbYes, mbNo], 0) = mrYes) then
       Exit;
 
@@ -1072,7 +1123,7 @@ begin
   // if NOT Assigned(vtDownload.FocusedNode) then exit;
   if (cbOptionShowDeleteTaskDialog.Checked) and
     (vtDownload.SelectedCount > 0) then
-    if not (MessageDlg('', stDlgRemoveTask,
+    if not (MessageDlg('', RS_DlgRemoveTask,
       mtConfirmation, [mbYes, mbNo], 0) = mrYes) then
       Exit;
 
@@ -1279,21 +1330,21 @@ begin
 
   // root
   tvDownloadFilter.Items[0].Text :=
-    Format('%s (%d)', [stAllDownloads, vtDownload.RootNodeCount]);
+    Format('%s (%d)', [RS_AllDownloads, vtDownload.RootNodeCount]);
 
   // childs
-  tvDownloadFilter.Items[1].Text := Format('%s (%d)', [stFinish, LFinishedTasks]);
-  tvDownloadFilter.Items[2].Text := Format('%s (%d)', [stInProgress, LInProgressTasks]);
-  tvDownloadFilter.Items[3].Text := Format('%s (%d)', [stStop, LStoppedTasks]);
+  tvDownloadFilter.Items[1].Text := Format('%s (%d)', [RS_Finish, LFinishedTasks]);
+  tvDownloadFilter.Items[2].Text := Format('%s (%d)', [RS_InProgress, LInProgressTasks]);
+  tvDownloadFilter.Items[3].Text := Format('%s (%d)', [RS_Stopped, LStoppedTasks]);
 
   // root
-  tvDownloadFilter.Items[4].Text := stHistory;
+  tvDownloadFilter.Items[4].Text := RS_History;
 
   // childs
-  tvDownloadFilter.Items[5].Text := stToday;
-  tvDownloadFilter.Items[6].Text := stYesterday;
-  tvDownloadFilter.Items[7].Text := stOneWeek;
-  tvDownloadFilter.Items[8].Text := stOneMonth;
+  tvDownloadFilter.Items[5].Text := RS_Today;
+  tvDownloadFilter.Items[6].Text := RS_Yesterday;
+  tvDownloadFilter.Items[7].Text := RS_OneWeek;
+  tvDownloadFilter.Items[8].Text := RS_OneMonth;
 end;
 
 procedure TMainForm.GenerateNodes;
@@ -1301,45 +1352,45 @@ begin
   tvDownloadFilter.Items.Clear;
 
   // root
-  tvDownloadFilter.Items.Add(nil, stAllDownloads);
+  tvDownloadFilter.Items.Add(nil, RS_AllDownloads);
   tvDownloadFilter.Items[0].ImageIndex := 4;
   tvDownloadFilter.Items[0].SelectedIndex := 4;
   tvDownloadFilter.Items[0].StateIndex := 4;
 
   // childs
-  tvDownloadFilter.Items.AddChild(tvDownloadFilter.Items[0], stFinish);
+  tvDownloadFilter.Items.AddChild(tvDownloadFilter.Items[0], RS_Finish);
   tvDownloadFilter.Items[1].ImageIndex := 5;
   tvDownloadFilter.Items[1].SelectedIndex := 5;
   tvDownloadFilter.Items[1].StateIndex := 5;
-  tvDownloadFilter.Items.AddChild(tvDownloadFilter.Items[0], stInProgress);
+  tvDownloadFilter.Items.AddChild(tvDownloadFilter.Items[0], RS_InProgress);
   tvDownloadFilter.Items[2].ImageIndex := 6;
   tvDownloadFilter.Items[2].SelectedIndex := 6;
   tvDownloadFilter.Items[2].StateIndex := 6;
-  tvDownloadFilter.Items.AddChild(tvDownloadFilter.Items[0], stStop);
+  tvDownloadFilter.Items.AddChild(tvDownloadFilter.Items[0], RS_Stopped);
   tvDownloadFilter.Items[3].ImageIndex := 7;
   tvDownloadFilter.Items[3].SelectedIndex := 7;
   tvDownloadFilter.Items[3].StateIndex := 7;
 
   // root
-  tvDownloadFilter.Items.Add(nil, stHistory);
+  tvDownloadFilter.Items.Add(nil, RS_History);
   tvDownloadFilter.Items[4].ImageIndex := 4;
   tvDownloadFilter.Items[4].SelectedIndex := 4;
   tvDownloadFilter.Items[4].StateIndex := 4;
 
   // childs
-  tvDownloadFilter.Items.AddChild(tvDownloadFilter.Items[4], stToday);
+  tvDownloadFilter.Items.AddChild(tvDownloadFilter.Items[4], RS_Today);
   tvDownloadFilter.Items[5].ImageIndex := 8;
   tvDownloadFilter.Items[5].SelectedIndex := 8;
   tvDownloadFilter.Items[5].StateIndex := 8;
-  tvDownloadFilter.Items.AddChild(tvDownloadFilter.Items[4], stYesterday);
+  tvDownloadFilter.Items.AddChild(tvDownloadFilter.Items[4], RS_Yesterday);
   tvDownloadFilter.Items[6].ImageIndex := 8;
   tvDownloadFilter.Items[6].SelectedIndex := 8;
   tvDownloadFilter.Items[6].StateIndex := 8;
-  tvDownloadFilter.Items.AddChild(tvDownloadFilter.Items[4], stOneWeek);
+  tvDownloadFilter.Items.AddChild(tvDownloadFilter.Items[4], RS_OneWeek);
   tvDownloadFilter.Items[7].ImageIndex := 8;
   tvDownloadFilter.Items[7].SelectedIndex := 8;
   tvDownloadFilter.Items[7].StateIndex := 8;
-  tvDownloadFilter.Items.AddChild(tvDownloadFilter.Items[4], stOneMonth);
+  tvDownloadFilter.Items.AddChild(tvDownloadFilter.Items[4], RS_OneMonth);
   tvDownloadFilter.Items[8].ImageIndex := 8;
   tvDownloadFilter.Items[8].SelectedIndex := 8;
   tvDownloadFilter.Items[8].StateIndex := 8;
@@ -1393,12 +1444,12 @@ begin
     Exit;
   if cbAddAsStopped.Checked then
   begin
-    DLManager.containers.Items[pos].DownloadInfo.Status := stStop;
+    DLManager.containers.Items[pos].DownloadInfo.Status := RS_Stopped;
     DLManager.containers.Items[pos].Status := STATUS_STOP;
   end
   else
   begin
-    DLManager.containers.Items[pos].DownloadInfo.Status := stWait;
+    DLManager.containers.Items[pos].DownloadInfo.Status := RS_Waiting;
     DLManager.containers.Items[pos].Status := STATUS_WAIT;
   end;
   DLManager.containers.Items[pos].CurrentDownloadChapterPtr := 0;
@@ -1638,7 +1689,7 @@ begin
   
   if (website = '') or (link = '') then
   begin
-    MessageDlg('', stDlgURLNotSupport, mtInformation, [mbYes], 0);
+    MessageDlg('', RS_DlgURLNotSupport, mtInformation, [mbYes], 0);
     Exit;
   end;
 
@@ -1706,11 +1757,11 @@ end;
 procedure TMainForm.btCheckVersionClick(Sender: TObject);
 begin
   if subthread.CheckUpdate then
-    MessageDlg('', stDlgUpdaterIsRunning, mtInformation, [mbYes], 0)
+    MessageDlg('', RS_DlgUpdaterIsRunning, mtInformation, [mbYes], 0)
   else
   begin
     subthread.CheckUpdate := True;
-    btCheckVersion.Caption := stFavoritesChecking;
+    btCheckVersion.Caption := RS_Checking;
   end;
 end;
 
@@ -1776,7 +1827,7 @@ begin
     vtMangaList.OnInitNode := @vtMangaListInitNode;
     vtMangaList.Clear;
     vtMangaList.RootNodeCount := dataProcess.filterPos.Count;
-    lbMode.Caption := Format(stModeAll, [dataProcess.filterPos.Count]);
+    lbMode.Caption := Format(RS_ModeAll, [dataProcess.filterPos.Count]);
     currentWebsite := cbSelectManga.Items[cbSelectManga.ItemIndex];
     dataProcess.website := cbSelectManga.Items[cbSelectManga.ItemIndex];
     CheckForTopPanel;
@@ -1850,12 +1901,6 @@ begin
   end;
 end;
 
-procedure TMainForm.edSearchClick(Sender: TObject);
-begin
-  if edSearch.Text = stSearch then
-    edSearch.Text := '';
-end;
-
 procedure TMainForm.edURLKeyPress(Sender: TObject; var Key: Char);
 begin
   if Key = #13 then
@@ -1883,7 +1928,7 @@ begin
       vtMangaList.OnInitNode := @vtMangaListInitNode;
       vtMangaList.Clear;
       vtMangaList.RootNodeCount := dataProcess.filterPos.Count;
-      lbMode.Caption := Format(stModeAll, [dataProcess.filterPos.Count]);
+      lbMode.Caption := Format(RS_ModeAll, [dataProcess.filterPos.Count]);
       edSearch.Text := '';
     except
       on E: Exception do
@@ -1970,7 +2015,7 @@ begin
       seOptionNewMangaTime.Value,
       rbAll.Checked, cbOnlyNew.Checked, cbUseRegExpr.Checked) then
     begin
-      lbMode.Caption := Format(stModeFilter, [dataProcess.filterPos.Count]);
+      lbMode.Caption := Format(RS_ModeFiltered, [dataProcess.filterPos.Count]);
       vtMangaList.OnInitNode := @vtMangaListInitNode;
       vtMangaList.Clear;
       vtMangaList.RootNodeCount := dataProcess.filterPos.Count;
@@ -2030,12 +2075,12 @@ var
   delList: array of Cardinal;
 begin
   if (cbOptionShowDeleteTaskDialog.Checked) and (vtFavorites.SelectedCount > 0) then
-    if MessageDlg('', stDlgRemoveTask,
+    if MessageDlg('', RS_DlgRemoveFavorite,
       mtConfirmation, [mbYes, mbNo], 0) = mrNo then
       Exit;
   if FavoriteManager.isRunning then
   begin
-    MessageDlg('', stDlgFavoritesIsRunning,
+    MessageDlg('', RS_DlgFavoritesCheckIsRunning,
       mtInformation, [mbYes, mbNo], 0);
     Exit;
   end;
@@ -2078,7 +2123,7 @@ var
 begin
   if FavoriteManager.isRunning then
   begin
-    MessageDlg('', stDlgFavoritesIsRunning,
+    MessageDlg('', RS_DlgFavoritesCheckIsRunning,
       mtInformation, [mbYes, mbNo], 0);
     Exit;
   end;
@@ -2086,7 +2131,7 @@ begin
     Exit;
   s := FavoriteManager.Favorites[vtFavorites.FocusedNode^.Index].FavoriteInfo.currentChapter;
   repeat
-    if InputQuery('', stDlgTypeInNewChapter, s) then
+    if InputQuery('', RS_DlgTypeInNewChapter, s) then
   until TryStrToInt(s, i);
   if s <> FavoriteManager.Favorites[vtFavorites.FocusedNode^.Index].FavoriteInfo.currentChapter then
   begin
@@ -2100,13 +2145,13 @@ procedure TMainForm.miFavoritesChangeSaveToClick(Sender: TObject);
 begin
   if FavoriteManager.isRunning then
   begin
-    MessageDlg('', stDlgFavoritesIsRunning,
+    MessageDlg('', RS_DlgFavoritesCheckIsRunning,
       mtInformation, [mbYes, mbNo], 0);
     Exit;
   end;
   if not Assigned(vtFavorites.FocusedNode) then
     Exit;
-  if InputQuery('', stDlgTypeInNewSavePath,
+  if InputQuery('', RS_DlgTypeInNewSavePath,
     FavoriteManager.Favorites[vtFavorites.FocusedNode^.Index].FavoriteInfo.SaveTo) then
   begin
     FavoriteManager.Favorites[vtFavorites.FocusedNode^.Index].FavoriteInfo.SaveTo :=
@@ -2204,7 +2249,7 @@ var
 begin
   if not isUpdating then
   begin
-    if (MessageDlg('', stDlgUpdaterWantToUpdateDB, mtInformation, [mbYes, mbNo], 0) =
+    if (MessageDlg('', RS_DlgUpdaterWantToUpdateDB, mtInformation, [mbYes, mbNo], 0) =
       mrYes) then
     begin
       // if dataProcess.Title.Count > 1 then
@@ -2219,7 +2264,7 @@ begin
     end;
   end
   else
-    MessageDlg('', stDlgUpdateAlreadyRunning, mtInformation, [mbYes], 0);
+    MessageDlg('', RS_DlgFavoritesCheckIsRunning, mtInformation, [mbYes], 0);
 end;
 
 procedure TMainForm.mnUpdate1ClickClick(Sender: TObject);
@@ -2269,7 +2314,7 @@ begin
       st.Free;
     end;
     if (e > 0) and (e = cbSelectManga.Items.Count) then
-      MessageDlg('', stDlgUpdateAlreadyRunning, mtInformation, [mbYes], 0);
+      MessageDlg('', RS_DlgFavoritesCheckIsRunning, mtInformation, [mbYes], 0);
   end;
 end;
 
@@ -2278,7 +2323,7 @@ begin
   if (not isUpdating) then
     RunGetList
   else
-    MessageDlg('', stDlgUpdateAlreadyRunning, mtInformation, [mbYes], 0);
+    MessageDlg('', RS_DlgFavoritesCheckIsRunning, mtInformation, [mbYes], 0);
 end;
 
 procedure TMainForm.mnUpdateListClick(Sender: TObject);
@@ -2319,7 +2364,7 @@ begin
     if not e then
       updateList.websites.Add(cbSelectManga.Items[cbSelectManga.ItemIndex])
     else
-      MessageDlg('', stDlgUpdateAlreadyRunning, mtInformation, [mbYes], 0);
+      MessageDlg('', RS_DlgFavoritesCheckIsRunning, mtInformation, [mbYes], 0);
   end;
 end;
 
@@ -2334,7 +2379,7 @@ end;
 procedure TMainForm.miDownloadDeleteCompletedClick(Sender: TObject);
 begin
   if cbOptionShowDeleteTaskDialog.Checked then
-    if not (MessageDlg('', stDlgRemoveFinishTasks,
+    if not (MessageDlg('', RS_DlgRemoveFinishTasks,
       mtConfirmation, [mbYes, mbNo], 0) = mrYes) then
       Exit;
   DLManager.RemoveAllFinishedTasks;
@@ -2356,7 +2401,7 @@ begin
     begin
       DLManager.containers.Items[vtDownload.FocusedNode^.Index].Status := STATUS_WAIT;
       DLManager.containers.Items[vtDownload.FocusedNode^.Index].DownloadInfo.Status :=
-        stWait;
+        RS_Waiting;
       if DLManager.CanActiveTask(vtDownload.FocusedNode^.Index) then
         DLManager.ActiveTask(vtDownload.FocusedNode^.Index);
       vtDownload.Repaint;
@@ -2375,7 +2420,7 @@ begin
           [STATUS_STOP, STATUS_PROBLEM, STATUS_FAILED] then
         begin
           DLManager.containers.Items[i].Status := STATUS_WAIT;
-          DLManager.containers.Items[i].DownloadInfo.Status := stWait;
+          DLManager.containers.Items[i].DownloadInfo.Status := RS_Waiting;
           if DLManager.CanActiveTask(i) then
             DLManager.ActiveTask(i);
         end;
@@ -2395,7 +2440,7 @@ begin
   // if NOT Assigned(vtDownload.FocusedNode) then exit;
   if (cbOptionShowDeleteTaskDialog.Checked) and
     (vtDownload.SelectedCount > 0) then
-    if MessageDlg('', stDlgRemoveTask,
+    if MessageDlg('', RS_DlgRemoveTask,
       mtConfirmation, [mbYes, mbNo], 0) = mrNo then
       Exit;
 
@@ -3071,7 +3116,7 @@ end;
 procedure TMainForm.seOptionCheckMinutesChange(Sender: TObject);
 begin
   lbOptionAutoCheckMinutes.Caption :=
-    Format(OptionAutoCheckMinutes, [seOptionCheckMinutes.Value]);
+    Format(RS_LblAutoCheckNewChapterMinute, [seOptionCheckMinutes.Value]);
 end;
 
 procedure TMainForm.spMainSplitterMoved(Sender: TObject);
@@ -3369,7 +3414,7 @@ begin
               DLManager.containers.Items[Node^.Index].ChapterName.Strings[i]{ + ' : ' +
         DLManager.containers.Items[Node^.Index].ChapterLinks.Strings[i]}
           else
-            HintText := HintText + #10#13 +
+            HintText := HintText + LineEnding +
               DLManager.containers.Items[Node^.Index].ChapterName.Strings[i]{ + ' : ' +
         DLManager.containers.Items[Node^.Index].ChapterLinks.Strings[i]};
       end
@@ -3381,12 +3426,12 @@ begin
               DLManager.containers.Items[Node^.Index].ChapterName.Strings[i]{ + ' : ' +
         DLManager.containers.Items[Node^.Index].ChapterLinks.Strings[i]}
           else
-            HintText := HintText + #10#13 +
+            HintText := HintText + LineEnding +
               DLManager.containers.Items[Node^.Index].ChapterName.Strings[i]{ + ' : ' +
         DLManager.containers.Items[Node^.Index].ChapterLinks.Strings[i]};
-        HintText := HintText + #10#13 + '...';
+        HintText := HintText + LineEnding + '...';
         for i := l - 2 to l - 1 do
-          HintText := HintText + #10#13 +
+          HintText := HintText + LineEnding +
             DLManager.containers.Items[Node^.Index].ChapterName.Strings[i]{ + ' : ' +
         DLManager.containers.Items[Node^.Index].ChapterLinks.Strings[i]};
       end;
@@ -3645,7 +3690,7 @@ begin
   //if (NOT isUpdating) then
   //begin
   if vtMangaList.SelectedCount > 0 then
-    sbMain.Panels[0].Text := Format(stSelected, [vtMangaList.SelectedCount])
+    sbMain.Panels[0].Text := Format(RS_Selected, [vtMangaList.SelectedCount])
   else
     sbMain.Panels[0].Text := '';
   //end;
@@ -3683,10 +3728,16 @@ begin
     s := SaveMangaOptions;
     if s = '' then
     begin
-      MessageDlg('', stDldMangaListSelect,
+      MessageDlg('', RS_DlgMangaListSelect,
         mtConfirmation, [mbYes], 0);
       Exit;
     end;
+
+    //language
+    options.WriteString('languages', 'Selected', AvailableLanguages.Names[cbLanguages.ItemIndex]);
+    uTranslation.SetLangByIndex(cbLanguages.ItemIndex);
+    LoadLanguage;
+
     options.WriteString('general', 'MangaListSelect', s);
     mangalistIni.UpdateFile;
 
@@ -3724,7 +3775,7 @@ begin
       vtMangaList.OnInitNode := @vtMangaListInitNode;
       vtMangaList.Clear;
       vtMangaList.RootNodeCount := dataProcess.filterPos.Count;
-      lbMode.Caption := Format(stModeAll, [dataProcess.filterPos.Count]);
+      lbMode.Caption := Format(RS_ModeAll, [dataProcess.filterPos.Count]);
       currentWebsite := cbSelectManga.Items[0];
     end;
     options.WriteBool('general', 'LiveSearch', cbOptionLiveSearch.Checked);
@@ -3807,10 +3858,6 @@ begin
 
     DLManager.compress := rgOptionCompress.ItemIndex;
 
-    options.WriteInteger('languages', 'Select', cbLanguages.ItemIndex);
-    options.WriteString('languages', 'Language',
-      cbLanguages.Items.Strings[cbLanguages.ItemIndex]);
-
     options.WriteBool('dialogs', 'ShowQuitDialog', cbOptionShowQuitDialog.Checked);
     options.WriteBool('dialogs', 'ShowDeleteDldTaskDialog',
       cbOptionShowDeleteTaskDialog.Checked);
@@ -3858,8 +3905,6 @@ begin
       Port := '';
       User := '';
     end;
-
-    LoadLanguage(cbLanguages.ItemIndex);
 
     cbOptionLetFMDDo.ItemIndex := cbOptionLetFMDDoItemIndex;
 
@@ -3921,30 +3966,30 @@ begin
   s := '';
   LPos := dataProcess.GetPos(Node^.Index);
   if dataProcess.isFilterAllSites then
-    s := s + stDownloadWebsite + ':' + #13#10 +
-      GetMangaSiteName(dataProcess.site.Items[LPos]) + #13#10#13#10;
+    s := s + RS_InfoWebsite + LineEnding +
+      GetMangaSiteName(dataProcess.site.Items[LPos]) + LineEnding + LineEnding;
   if Trim(dataProcess.Param[LPos, DATA_PARAM_NAME]) <> '' then
-    s := s + infoName + ':' + #13#10 + dataProcess.Param[LPos, DATA_PARAM_NAME];
+    s := s + RS_InfoTitle + LineEnding + dataProcess.Param[LPos, DATA_PARAM_NAME];
   if Trim(dataProcess.Param[LPos, DATA_PARAM_AUTHORS]) <> '' then
-    s := s + #13#10#13#10 + infoAuthors + ':' + #13#10 +
+    s := s + LineEnding + LineEnding + RS_InfoAuthors + LineEnding +
       dataProcess.Param[LPos, DATA_PARAM_AUTHORS];
   if Trim(dataProcess.Param[LPos, DATA_PARAM_ARTISTS]) <> '' then
-    s := s + #13#10#13#10 + infoArtists + ':' + #13#10 +
+    s := s + LineEnding + LineEnding + RS_InfoArtists + LineEnding +
       dataProcess.Param[LPos, DATA_PARAM_ARTISTS];
   if Trim(dataProcess.Param[LPos, DATA_PARAM_GENRES]) <> '' then
-    s := s + #13#10#13#10 + infoGenres + ':' + #13#10 +
+    s := s + LineEnding + LineEnding + RS_InfoGenres + LineEnding +
       dataProcess.Param[LPos, DATA_PARAM_GENRES];
   if Trim(dataProcess.Param[LPos, DATA_PARAM_STATUS]) <> '' then
   begin
-    s := s + #13#10#13#10 + infoStatus + ':' + #13#10;
+    s := s + LineEnding + LineEnding + RS_InfoStatus + LineEnding;
     if dataProcess.Param[LPos, DATA_PARAM_STATUS] = '0' then
-      s := s + cbFilterStatus.Items.Strings[0]
+      s := s + cbFilterStatus.Items[0]
     else
-      s := s + cbFilterStatus.Items.Strings[1];
+      s := s + cbFilterStatus.Items[1];
   end;
   if Trim(dataProcess.Param[LPos, DATA_PARAM_SUMMARY]) <> '' then
-    //s := s + #13#10#13#10 + infoSummary + ':' + #13#10 + PrepareSummaryForHint(dataProcess.Param[LPos, DATA_PARAM_SUMMARY], 80);
-    s := s + #13#10#13#10 + infoSummary + ':' + #13#10 +
+    //s := s + LineEndingLineEnding + infoSummary + ':' + LineEnding + PrepareSummaryForHint(dataProcess.Param[LPos, DATA_PARAM_SUMMARY], 80);
+    s := s + LineEnding + LineEnding + RS_InfoSummary + ':' + LineEnding +
       StringBreaks(dataProcess.Param[LPos, DATA_PARAM_SUMMARY]);
   HintText := s;
 end;
@@ -4212,7 +4257,7 @@ begin
       SelStart := UTF8Length(Lines.Text);
       np := SelStart;
       SetTextAttributes(cp, np - cp, fp);
-      if title = infoSummary then
+      if title = RS_InfoSummary then
         infoText := Trim(StringBreaks(infoText));
       Lines.Add(infoText);
       fp.Style := [];
@@ -4247,16 +4292,16 @@ begin
     else
       edURL.Text := mangaInfo.url;
 
-    AddTextToInfo(infoName, mangaInfo.title + #10#13);
-    AddTextToInfo(infoAuthors, mangaInfo.authors + #10#13);
-    AddTextToInfo(infoArtists, mangaInfo.artists + #10#13);
-    AddTextToInfo(infoGenres, mangaInfo.genres + #10#13);
+    AddTextToInfo(RS_InfoTitle, mangaInfo.title + LineEnding);
+    AddTextToInfo(RS_InfoAuthors, mangaInfo.authors + LineEnding);
+    AddTextToInfo(RS_InfoArtists, mangaInfo.artists + LineEnding);
+    AddTextToInfo(RS_InfoGenres, mangaInfo.genres + LineEnding);
     if mangaInfo.status = '0' then
-      AddTextToInfo(infoStatus, cbFilterStatus.Items.Strings[0] + #10#13)
+      AddTextToInfo(RS_InfoStatus, cbFilterStatus.Items.Strings[0] + LineEnding)
     else
-      AddTextToInfo(infoStatus, cbFilterStatus.Items.Strings[1] + #10#13);
+      AddTextToInfo(RS_InfoStatus, cbFilterStatus.Items.Strings[1] + LineEnding);
     //edURL.Text:= mangaInfo.url;
-    AddTextToInfo(infoSummary, mangaInfo.summary);
+    AddTextToInfo(RS_InfoSummary, mangaInfo.summary);
     CaretPos := Point(0, 0);
   end;
   SetLength(ChapterList, mangaInfo.chapterName.Count);
@@ -4280,7 +4325,7 @@ end;
 
 procedure TMainForm.RunGetList;
 begin
-  if (MessageDlg('', stDlgUpdaterWantToUpdateDB, mtInformation, [mbYes, mbNo], 0) =
+  if (MessageDlg('', RS_DlgUpdaterWantToUpdateDB, mtInformation, [mbYes, mbNo], 0) =
     mrYes) and
     (not isUpdating) then
   begin
@@ -4292,6 +4337,8 @@ begin
 end;
 
 procedure TMainForm.LoadOptions;
+var
+  i: Integer;
 begin
   if options.ReadBool('connections', 'UseProxy', False) then
   begin
@@ -4374,7 +4421,8 @@ begin
     options.ReadBool('update', 'AutoCheckFavStartup', True);
   OptionAutoCheckFavStartup := cbOptionAutoCheckFavStartup.Checked;
   seOptionCheckMinutes.Value := options.ReadInteger('update', 'AutoCheckMinutes', 60);
-  lbOptionAutoCheckMinutes.Caption := Format(OptionAutoCheckMinutes, [seOptionCheckMinutes.Value]);
+  lbOptionAutoCheckMinutes.Caption := Format(RS_LblAutoCheckNewChapterMinute,
+    [seOptionCheckMinutes.Value]);
   OptionCheckMinutes := seOptionCheckMinutes.Value;
   cbOptionUpdateListNoMangaInfo.Checked :=
     options.ReadBool('update', 'UpdateListNoMangaInfo', False);
@@ -4418,7 +4466,17 @@ begin
 
   cbOptionMangaFoxRemoveWatermarks.Checked :=
     options.ReadBool('misc', 'MangafoxRemoveWatermarks', False);
-  LoadLanguage(options.ReadInteger('languages', 'Select', 0));
+
+  LoadLanguage;
+  cbLanguages.Items.Clear;
+  uTranslation.CollectLanguagesFiles;
+  if uTranslation.AvailableLanguages.Count > 0 then
+    for i := 0 to AvailableLanguages.Count - 1 do
+      cbLanguages.Items.Add(uTranslation.AvailableLanguages.ValueFromIndex[i]);
+
+  cbLanguages.ItemIndex := uTranslation.AvailableLanguages.IndexOfName(
+    options.ReadString('languages', 'Selected', 'en'));
+  uTranslation.SetLangByIndex(cbLanguages.ItemIndex);
 end;
 
 procedure TMainForm.LoadMangaOptions;
@@ -4768,378 +4826,382 @@ begin
   options.WriteInteger('form', 'MainFormHeight', Height);
 end;
 
-procedure TMainForm.LoadLanguage(const pos: Integer);
-var
-  language: TIniFile;
-  s, langL, lang: String;
-  i, p: Cardinal;
+procedure TMainForm.LoadLanguage;
+//var
+//  language: TIniFile;
+//  s, langL, lang: String;
+//  i, p: Cardinal;
 begin
-  if pos < 0 then
-    Exit;
+  //hint
+  lbOptionExternalHint.Hint := RS_HintExternalProgram;
+  lbFilterHint.Hint := RS_FilterHint;
 
-  language := TIniFile.Create(CONFIG_FOLDER + LANGUAGE_FILE);
-  try
-    p := language.ReadInteger('select', 'numberOfLanguages', 0);
-    if p <> 0 then
-    begin
-      cbLanguages.Items.Clear;
-      for i := 0 to p - 1 do
-        cbLanguages.Items.Add(language.ReadString('select', IntToStr(i), 'English'));
-    end;
-    cbLanguages.ItemIndex := pos;
-
-    langL := options.ReadString('languages', 'Language', 'English');
-    lang := cbLanguages.Items.Strings[cbLanguages.ItemIndex];
-    if langL <> lang then
-    begin
-      lang := 'English';
-      cbLanguages.ItemIndex := cbLanguages.Items.IndexOf(lang);
-    end;
-
-    { TODO -oCholif -cT : There is a lot of translation missing since I added more features. Need to add all of them. Check UI }
-    tsMangaList.Caption := language.ReadString(lang, 'tsMangaListCaption', '');
-    tsDownload.Caption := language.ReadString(lang, 'tsDownloadCaption', '');
-    tsInformation.Caption := language.ReadString(lang, 'tsInformationCaption', '');
-    tsFilter.Caption := language.ReadString(lang, 'tsFilterCaption', '');
-    stFilters := tsFilter.Caption;
-    tsFavorites.Caption := language.ReadString(lang, 'tsFavoritesCaption', '');
-    gbOptionFavorites.Caption := tsFavorites.Caption;
-    tsOption.Caption := language.ReadString(lang, 'tsOptionCaption', '');
-    tsAbout.Caption := language.ReadString(lang, 'tsAboutCaption', '');
-    // edSearch.Text   := language.ReadString(lang, 'edSearchText', '');
-    stSearch := language.ReadString(lang, 'edSearchText', '');
-    stModeAll := language.ReadString(lang, 'stModeAll', '');
-    stModeFilter := language.ReadString(lang, 'stModeFilter', '');
-
-    stHistory := language.ReadString(lang, 'stHistory', '');
-    stToday := language.ReadString(lang, 'stToday', '');
-    stYesterday := language.ReadString(lang, 'stYesterday', '');
-    stOneWeek := language.ReadString(lang, 'stOneWeek', '');
-    stOneMonth := language.ReadString(lang, 'stOneMonth', '');
-
-    stAllDownloads := language.ReadString(lang, 'stAllDownloads', '');
-    stInProgress := language.ReadString(lang, 'stInProgress', '');
-    stStop := language.ReadString(lang, 'stStop', '');
-    stStop := language.ReadString(lang, 'stStop', '');
-    stPreparing := language.ReadString(lang, 'stPreparing', '');
-    stDownloading := language.ReadString(lang, 'stDownloading', '');
-    stFinish := language.ReadString(lang, 'stFinish', '');
-    stFailed := language.ReadString(lang, 'stFailed', '');
-    stWait := language.ReadString(lang, 'stWait', '');
-    btUpdateList.Hint := language.ReadString(lang, 'btUpdateListHint', '');
-
-    stAddToQueue := language.ReadString(lang, 'stAddToQueue', '');
-    stCancel := language.ReadString(lang, 'stCancel', '');
-    stNewChapterNotification :=
-      language.ReadString(lang, 'stNewChapterNotification', '');
-
-    mnUpdateList.Caption := language.ReadString(lang, 'mnUpdateListCaption', '');
-    mnUpdateDownFromServer.Caption :=
-      language.ReadString(lang, 'mnUpdateDownFromServerCaption', '');
-    mnUpdate1Click.Caption := language.ReadString(lang, 'mnUpdate1ClickCaption', '');
-    mnDownload1Click.Caption := language.ReadString(lang, 'mnDownload1ClickCaption', '');
-
-    btSearchClear.Hint := language.ReadString(lang, 'btSearchHint', '');
-    btRemoveFilter.Hint := language.ReadString(lang, 'btRemoveFilterHint', '');
-    btRemoveFilterLarge.Hint := btRemoveFilter.Hint;
-    cbSelectManga.Hint := language.ReadString(lang, 'cbSelectMangaHint', '');
-
-    edSaveTo.EditLabel.Caption :=
-      language.ReadString(lang, 'edSaveToEditLabelCaption', '');
-    btDownload.Caption := language.ReadString(lang, 'btDownloadCaption', '');
-    stDownload := btDownload.Caption;
-    btReadOnline.Caption := language.ReadString(lang, 'btReadOnlineCaption', '');
-    cbAddAsStopped.Caption := language.ReadString(lang, 'cbAddAsStoppedCaption', '');
-    btAddToFavorites.Caption := language.ReadString(lang, 'cbAddToFavoritesCaption', '');
-    cbSearchFromAllSites.Caption :=
-      language.ReadString(lang, 'cbSearchFromAllSitesCaption', '');
-
-    cbFilterStatus.Items.Strings[0] := language.ReadString(lang, 'lbFilterStatus0', '');
-    cbFilterStatus.Items.Strings[1] := language.ReadString(lang, 'lbFilterStatus1', '');
-    rbAll.Caption := language.ReadString(lang, 'rbAllCaption', '');
-    rbOne.Caption := language.ReadString(lang, 'rbOneCaption', '');
-    cbOnlynew.Caption := language.ReadString(lang, 'cbOnlyNewCaption', '');
-    btFilter.Caption := language.ReadString(lang, 'btFilterCaption', '');
-    btRemoveFilterLarge.Caption :=
-      language.ReadString(lang, 'btRemoveFilterLargeCaption', '');
-
-    btOptionApply.Caption := language.ReadString(lang, 'btOptionApplyCaption', '');
-    tsGeneral.Caption := language.ReadString(lang, 'tsGeneralCaption', '');
-    tsConnections.Caption := language.ReadString(lang, 'tsConnectionsCaption', '');
-    tsUpdate.Caption := language.ReadString(lang, 'tsUpdateCaption', '');
-    lbOptionPDFQualityHint.Caption := language.ReadString(lang, 'tsSaveToCaption', '');
-    tsDialogs.Caption := language.ReadString(lang, 'tsDialogsCaption', '');
-    tsWebsites.Caption := language.ReadString(lang, 'tsWebsitesCaption', '');
-    tsMisc.Caption := language.ReadString(lang, 'tsMiscCaption', '');
-    gbOptionProxy.Caption := language.ReadString(lang, 'gbOptionProxyCaption', '');
-    gbOptionFavorites.Caption :=
-      language.ReadString(lang, 'gbOptionFavoritesCaption', '');
-    cbOptionUseProxy.Caption := language.ReadString(lang, 'cbOptionUseProxyCaption', '');
-    cbOptionAutoCheckFavStartup.Caption :=
-      language.ReadString(lang, 'cbOptionAutoCheckFavStartupCaption', '');
-    edOptionDefaultPath.EditLabel.Caption :=
-      language.ReadString(lang, 'edOptionDefaultPathEditLabelCaption', '');
-    rgOptionCompress.Caption := language.ReadString(lang, 'rgOptionCompressCaption', '');
-    gbOptionRenaming.Caption := language.ReadString(lang, 'gbOptionRenamingCaption', '');
-    dlgSaveTo.Title := language.ReadString(lang, 'dlgSaveToTitle', '');
-
-    miDownloadStop.Caption := language.ReadString(lang, 'miDownloadStopCaption', '');
-    miDownloadResume.Caption := language.ReadString(lang, 'miDownloadStopResume', '');
-    miDownloadDelete.Caption := language.ReadString(lang, 'miDownloadRemoveCaption', '');
-    miDownloadDeleteCompleted.Caption :=
-      language.ReadString(lang, 'miDownloadRemoveFinishedTasksCaption', '');
-    miDownloadMergeCompleted.Caption := language.ReadString(lang,
-      'miDownloadMergeTasksCaption', '');
-    miDownloadOpenFolder.Caption := language.ReadString(lang, 'miOpenFolder', '');
-    miDownloadOpenWith.Caption := language.ReadString(lang, 'miOpenWith', '');
-
-    miChapterListCheckSelected.Caption :=
-      language.ReadString(lang, 'miChapterListCheckSelectedCaption', '');
-    miChapterListUncheckSelected.Caption :=
-      language.ReadString(lang, 'miChapterListUncheckSelectedCaption', '');
-    miChapterListCheckAll.Caption :=
-      language.ReadString(lang, 'miChapterListCheckAllCaption', '');
-    miChapterListUncheckAll.Caption :=
-      language.ReadString(lang, 'miChapterListUncheckAllCaption', '');
-
-    miFavoritesDelete.Caption :=
-      language.ReadString(lang, 'miFavoritesRemoveCaption', '');
-    miFavoritesChangeCurrentChapter.Caption :=
-      language.ReadString(lang, 'miFavoritesChangeCurrentChapterCaption', '');
-    miFavoritesChangeSaveTo.Caption :=
-      language.ReadString(lang, 'miFavoritesChangeSaveToCaption', '');
-    miMangaListViewInfos.Caption :=
-      language.ReadString(lang, 'miMangaListViewInfosCaption', '');
-    miFavoritesViewInfos.Caption :=
-      language.ReadString(lang, 'miMangaListViewInfosCaption', '');
-    miMangaListDownloadAll.Caption :=
-      language.ReadString(lang, 'miMangaListDownloadAllCaption', '');
-    miMangaListAddToFavorites.Caption :=
-      language.ReadString(lang, 'miMangaListAddToFavoritesCaption', '');
-    miHighlightNewManga.Caption :=
-      language.ReadString(lang, 'miHighlightNewMangaCaption', '');
-    miChapterListHighlight.Caption :=
-      language.ReadString(lang, 'miChapterListHighlightCaption', '');
-
-    miDownloadDeleteTask.Caption := language.ReadString(lang, 'miDeleteTaskCaption', '');
-    miDownloadDeleteTaskData.Caption := language.ReadString(lang, 'miDeleteTaskDataCaption', '');
-
-    miFavoritesOpenFolder.Caption := miDownloadOpenFolder.Caption;
-    miFavoritesOpenWith.Caption := miDownloadOpenWith.Caption;
-
-    infoCustomGenres := language.ReadString(lang, 'infoCustomGenres', '');
-    infoName := language.ReadString(lang, 'infoName', '');
-    infoAuthors := language.ReadString(lang, 'infoAuthors', '');
-    infoArtists := language.ReadString(lang, 'infoArtists', '');
-    infoStatus := language.ReadString(lang, 'infoStatus', '');
-    infoGenres := language.ReadString(lang, 'infoGenres', '');
-    infoSummary := language.ReadString(lang, 'infoSummary', '');
-    infoLink := language.ReadString(lang, 'infoLink', '');
-
-    lbFilterCustomGenres.Caption := infoCustomGenres;
-    lbFilterTitle.Caption := infoName;
-    lbFilterAuthors.Caption := infoAuthors;
-    lbFilterArtists.Caption := infoArtists;
-    lbFilterStatus.Caption := infoStatus;
-    lbFilterSummary.Caption := infoSummary;
-
-    lbOptionAutoCheckMinutes.Caption :=
-      Format(language.ReadString(lang, 'lbOptionAutoCheckMinutesCaption', ''),
-      [seOptionCheckMinutes.Value]);
-    OptionAutoCheckMinutes := lbOptionAutoCheckMinutes.Caption;
-    lbOptionLanguage.Caption := language.ReadString(lang, 'lbOptionLanguageCaption', '');
-    lbOptionNewMangaTime.Caption :=
-      language.ReadString(lang, 'lbOptionNewMangaTimeCaption', '');
-    lbOptionMaxParallel.Caption :=
-      Format(language.ReadString(lang, 'lbOptionMaxParallelCaption', ''),
-      [seOptionMaxParallel.MaxValue]);
-    lbOptionMaxThread.Caption :=
-      Format(language.ReadString(lang, 'lbOptionMaxThreadCaption', ''),
-      [seOptionMaxThread.MaxValue]);
-    lbOptionMaxRetry.Caption := language.ReadString(lang, 'lbOptionMaxRetryCaption', '');
-    lbOptionDialogs.Caption := language.ReadString(lang, 'lbOptionDialogsCaption', '');
-    lbOptionPDFQuality.Caption :=
-      language.ReadString(lang, 'lbOptionPDFQualityCaption', '');
-    lbOptionPDFQualityHint.Hint :=
-      language.ReadString(lang, 'lbOptionPDFQualityHint', '');
-    // seOptionPDFQuality.Hint     := lbOptionPDFQuality.Hint;
-    lbOptionCustomRenameHint.Hint :=
-      language.ReadString(lang, 'edOptionCustomRenameHint', '');
-    lbOptionCustomRenameHint.Hint :=
-      StringReplace(lbOptionCustomRenameHint.Hint, '\n', #10, [rfReplaceAll]);
-    lbOptionCustomRenameHint.Hint :=
-      StringReplace(lbOptionCustomRenameHint.Hint, '\r', #13, [rfReplaceAll]);
-    lbOptionCustomRename.Hint :=
-      language.ReadString(lang, 'lbOptionCustomRenameHint', '');
-
-    cbOptionMinimizeToTray.Caption :=
-      language.ReadString(lang, 'cbOptionMinimizeToTrayCaption', '');
-    cbOptionAutoCheckUpdate.Caption :=
-      language.ReadString(lang, 'cbOptionAutoCheckUpdateCaption', '');
-    cbOptionPathConvert.Caption :=
-      language.ReadString(lang, 'cbOptionPathConvertCaption', '');
-    cbOptionGenerateChapterName.Caption :=
-      language.ReadString(lang, 'cbOptionGenerateChapterNameCaption', '');
-    cbOptionGenerateMangaFolderName.Caption :=
-      language.ReadString(lang, 'cbOptionGenerateMangaFolderNameCaption', '');
-    cbOptionShowQuitDialog.Caption :=
-      language.ReadString(lang, 'cbOptionShowQuitDialogCaption', '');
-    cbOptionShowDeleteTaskDialog.Caption :=
-      language.ReadString(lang, 'cbOptionShowDeleteTaskDialogCaption', '');
-    cbOptionShowFavoriteDialog.Caption :=
-      language.ReadString(lang, 'cbOptionShowFavoriteDialogCaption', '');
-    cbOptionBatotoUseIE.Caption :=
-      language.ReadString(lang, 'cbOptionBatotoUseIECaption', '');
-    cbOptionAutoNumberChapter.Caption :=
-      language.ReadString(lang, 'cbOptionAutoNumberChapterCaption', '');
-    cbOptionAutoCheckFavStartup.Caption :=
-      language.ReadString(lang, 'cbOptionAutoCheckFavStartupCaption', '');
-    cbOptionEnableLoadCover.Caption :=
-      language.ReadString(lang, 'cbOptionEnableLoadCoverCaption', '');
-    cbOptionAutoCheckFavStartup.Caption :=
-      language.ReadString(lang, 'cbOptionAutoCheckFavStartupCaption', '');
-    cbOptionShowBatotoSG.Caption :=
-      language.ReadString(lang, 'cbOptionShowBatotoSGCaption', '');
-    cbOptionShowAllLang.Caption :=
-      language.ReadString(lang, 'cbOptionShowAllLangCaption', '');
-    cbOptionAutoDlFav.Caption :=
-      language.ReadString(lang, 'cbOptionAutoDlFavCaption', '');
-    cbOptionAutoRemoveCompletedManga.Caption :=
-      language.ReadString(lang, 'cbOptionAutoRemoveCompletedMangaCaption', '');
-    cbSelectManga.Hint := language.ReadString(lang, 'cbSelectMangaHint', '');
-
-    gbOptionExternal.Caption := language.ReadString(lang, 'gbOptionExternalCaption', '');
-    lbOptionExternal.Caption := language.ReadString(lang, 'lbOptionExternalCaption', '');
-    lbOptionExternalHint.Hint :=
-      StringFilter(language.ReadString(lang, 'lbOptionExternalHint', ''));
-    lbOptionExternalHint.Hint :=
-      StringReplace(lbOptionExternalHint.Hint, '\n', #10, [rfReplaceAll]);
-    lbOptionExternalHint.Hint :=
-      StringReplace(lbOptionExternalHint.Hint, '\r', #13, [rfReplaceAll]);
-
-    lbFilterHint.Hint := language.ReadString(lang, 'lbFilterHint', '');
-    lbFilterHint.Hint := StringReplace(lbFilterHint.Hint, '\n', #10, [rfReplaceAll]);
-    lbFilterHint.Hint := StringReplace(lbFilterHint.Hint, '\r', #13, [rfReplaceAll]);
-
-    stDownloadManga := language.ReadString(lang, 'stDownloadManga', '');
-    stDownloadStatus := language.ReadString(lang, 'stDownloadStatus', '');
-    stDownloadProgress := language.ReadString(lang, 'stDownloadProgress', '');
-    stDownloadWebsite := language.ReadString(lang, 'stDownloadWebsite', '');
-    stDownloadSaveto := language.ReadString(lang, 'stDownloadSaveto', '');
-    stDownloadAdded := language.ReadString(lang, 'stDownloadAdded', '');
-    stFavoritesCurrentChapter :=
-      language.ReadString(lang, 'stFavoritesCurrentChapter', '');
-    stFavoritesHasNewChapter :=
-      language.ReadString(lang, 'stFavoritesHasNewChapter', '');
-
-    stFavoritesCheck := language.ReadString(lang, 'stFavoritesCheck', '');
-    stFavoritesChecking := language.ReadString(lang, 'stFavoritesChecking', '');
-
-    stImport := language.ReadString(lang, 'stImport', '');
-    stImportList := language.ReadString(lang, 'stImportList', '');
-    stImportCompleted := language.ReadString(lang, 'stImportCompleted', '');
-    stSoftware := language.ReadString(lang, 'stSoftware', '');
-    stSoftwarePath := language.ReadString(lang, 'stSoftwarePath', '');
-
-    stUpdaterCheck := language.ReadString(lang, 'stUpdaterCheck', '');
-    stSelected := language.ReadString(lang, 'stSelected', '');
-    btCheckVersion.Caption := stUpdaterCheck;
-
-    btFavoritesImport.Caption :=
-      language.ReadString(lang, 'btFavoritesImportCaption', '');
-
-    stOptionAutoCheckMinutesCaption :=
-      language.ReadString(lang, 'OptionAutoCheckMinutesCaption', '');
-    stIsCompressing := language.ReadString(lang, 'stIsCompressing', '');
-    stDlgUpdaterVersionRequire :=
-      language.ReadString(lang, 'stDlgUpdaterVersionRequire', '');
-    stDlgUpdaterIsRunning := language.ReadString(lang, 'stDlgUpdaterIsRunning', '');
-    stDlgLatestVersion := language.ReadString(lang, 'stDlgLatestVersion', '');
-    stDlgNewVersion := language.ReadString(lang, 'stDlgNewVersion', '');
-    stDlgURLNotSupport := language.ReadString(lang, 'stDlgURLNotSupport', '');
-    stDldMangaListSelect := language.ReadString(lang, 'stDldMangaListSelect', '');
-    stDlgUpdateAlreadyRunning :=
-      language.ReadString(lang, 'stDlgUpdateAlreadyRunning', '');
-    stDlgNewManga := language.ReadString(lang, 'stDlgNewManga', '');
-    stDlgQuit := language.ReadString(lang, 'stDlgQuit', '');
-    stDlgRemoveTask := language.ReadString(lang, 'stDlgRemoveTask', '');
-    stDlgRemoveFinishTasks := language.ReadString(lang, 'stDlgRemoveFinishTasks', '');
-    stDlgTypeInNewChapter := language.ReadString(lang, 'stDlgTypeInNewChapter', '');
-    stDlgTypeInNewSavePath := language.ReadString(lang, 'stDlgTypeInNewSavePath', '');
-    stDlgCannotGetMangaInfo := language.ReadString(lang, 'stDlgCannotGetMangaInfo', '');
-    stDlgFavoritesIsRunning := language.ReadString(lang, 'stDlgFavoritesIsRunning', '');
-    stDlgNoNewChapter := language.ReadString(lang, 'stDlgNoNewChapter', '');
-    stDlgHasNewChapter := language.ReadString(lang, 'stDlgHasNewChapter', '');
-    stDlgRemoveCompletedManga :=
-      language.ReadString(lang, 'stDlgRemoveCompletedManga', '');
-    stDlgUpdaterWantToUpdateDB :=
-      language.ReadString(lang, 'stDlgUpdaterWantToUpdateDB', '');
-    stDlgUpdaterCannotConnectToServer :=
-      language.ReadString(lang, 'stDlgUpdaterCannotConnectToServer', '');
-
-    lbOptionLetFMDDo.Caption := language.ReadString(lang, 'lbOptionLetFMDDoCaption', '');
-    s := language.ReadString(lang, 'cbOptionLetFMDDo', '');
-
-    // apply genres & descriptions
-    for i := 0 to 37 do
-    begin
-      Genre[i] := defaultGenres[i];
-      //language.ReadString(lang, StringReplace(StringReplace(defaultGenres[i], ' ', '', [rfReplaceAll]), '-', '', [rfReplaceAll])+'G', '')
-      TCheckBox(pnGenres.Controls[i]).Caption := Genre[i];
-      TCheckBox(pnGenres.Controls[i]).Hint :=
-        language.ReadString(lang, StringReplace(StringReplace(defaultGenres[i],
-        ' ', '', [rfReplaceAll]), '-', '', [rfReplaceAll]) + 'M', '');
-      TCheckBox(pnGenres.Controls[i]).ShowHint := True;
-    end;
-  finally
-    language.Free;
-  end;
-
-  // add information to cbOptionLetFMDDo
-  cbOptionLetFMDDo.Items.Clear;
-  GetParams(cbOptionLetFMDDo.Items, s);
-  // cbOptionLetFMDDo.ItemIndex:= 0;
-
-
-  if dataProcess.isFiltered then
-    lbMode.Caption := Format(stModeFilter, [dataProcess.filterPos.Count])
-  else
-    lbMode.Caption := Format(stModeAll, [dataProcess.filterPos.Count]);
-
-  // sync download table infos
-  if DLManager.containers.Count > 0 then
-  begin
-    for i := 0 to DLManager.containers.Count - 1 do
-    begin
-      // if (DLManager.containers.Items[pos] <> nil) OR (NOT DLManager.containers.Items[pos].Thread.isTerminated) then
-      case DLManager.containers.Items[i].Status of
-        STATUS_STOP: DLManager.containers.Items[i].DownloadInfo.Status := stStop;
-        STATUS_WAIT: DLManager.containers.Items[i].DownloadInfo.Status := stWait;
-        STATUS_PREPARE: DLManager.containers.Items[i].DownloadInfo.Status := stPreparing;
-        STATUS_DOWNLOAD: DLManager.containers.Items[i].DownloadInfo.Status :=
-            stDownloading;
-        STATUS_FINISH: DLManager.containers.Items[i].DownloadInfo.Status := stFinish;
-      end;
-    end;
-  end;
-
-  if FavoriteManager.isRunning then
-    btFavoritesCheckNewChapter.Caption := stFavoritesChecking
-  else
-    btFavoritesCheckNewChapter.Caption := stFavoritesCheck;
-  vtDownload.Header.Columns.Items[0].Text := stDownloadManga;
-  vtDownload.Header.Columns.Items[1].Text := stDownloadStatus;
-  vtDownload.Header.Columns.Items[2].Text := stDownloadProgress;
-  vtDownload.Header.Columns.Items[3].Text := stDownloadWebsite;
-  vtDownload.Header.Columns.Items[4].Text := stDownloadSaveto;
-  vtDownload.Header.Columns.Items[5].Text := stDownloadAdded;
-
-  vtFavorites.Header.Columns.Items[1].Text := stDownloadManga;
-  vtFavorites.Header.Columns.Items[2].Text := stFavoritesCurrentChapter;
-  vtFavorites.Header.Columns.Items[3].Text := stDownloadWebsite;
-  vtFavorites.Header.Columns.Items[4].Text := stDownloadSaveto;
-
-  vtDownload.Repaint;
+  //if pos < 0 then
+  //  Exit;
+  //
+  //language := TIniFile.Create(CONFIG_FOLDER + LANGUAGE_FILE);
+  //try
+  //  p := language.ReadInteger('select', 'numberOfLanguages', 0);
+  //  if p <> 0 then
+  //  begin
+  //    cbLanguages.Items.Clear;
+  //    for i := 0 to p - 1 do
+  //      cbLanguages.Items.Add(language.ReadString('select', IntToStr(i), 'English'));
+  //  end;
+  //  cbLanguages.ItemIndex := pos;
+  //
+  //  langL := options.ReadString('languages', 'Language', 'English');
+  //  lang := cbLanguages.Items.Strings[cbLanguages.ItemIndex];
+  //  if langL <> lang then
+  //  begin
+  //    lang := 'English';
+  //    cbLanguages.ItemIndex := cbLanguages.Items.IndexOf(lang);
+  //  end;
+  //
+  //  { TODO -oCholif -cT : There is a lot of translation missing since I added more features. Need to add all of them. Check UI }
+  //  tsMangaList.Caption := language.ReadString(lang, 'tsMangaListCaption', '');
+  //  tsDownload.Caption := language.ReadString(lang, 'tsDownloadCaption', '');
+  //  tsInformation.Caption := language.ReadString(lang, 'tsInformationCaption', '');
+  //  tsFilter.Caption := language.ReadString(lang, 'tsFilterCaption', '');
+  //  stFilters := tsFilter.Caption;
+  //  tsFavorites.Caption := language.ReadString(lang, 'tsFavoritesCaption', '');
+  //  gbOptionFavorites.Caption := tsFavorites.Caption;
+  //  tsOption.Caption := language.ReadString(lang, 'tsOptionCaption', '');
+  //  tsAbout.Caption := language.ReadString(lang, 'tsAboutCaption', '');
+  //  // edSearch.Text   := language.ReadString(lang, 'edSearchText', '');
+  //  stSearch := language.ReadString(lang, 'edSearchText', '');
+  //  stModeAll := language.ReadString(lang, 'stModeAll', '');
+  //  stModeFilter := language.ReadString(lang, 'stModeFilter', '');
+  //
+  //  stHistory := language.ReadString(lang, 'stHistory', '');
+  //  stToday := language.ReadString(lang, 'stToday', '');
+  //  stYesterday := language.ReadString(lang, 'stYesterday', '');
+  //  stOneWeek := language.ReadString(lang, 'stOneWeek', '');
+  //  stOneMonth := language.ReadString(lang, 'stOneMonth', '');
+  //
+  //  stAllDownloads := language.ReadString(lang, 'stAllDownloads', '');
+  //  stInProgress := language.ReadString(lang, 'stInProgress', '');
+  //  stStop := language.ReadString(lang, 'stStop', '');
+  //  stStop := language.ReadString(lang, 'stStop', '');
+  //  stPreparing := language.ReadString(lang, 'stPreparing', '');
+  //  stDownloading := language.ReadString(lang, 'stDownloading', '');
+  //  stFinish := language.ReadString(lang, 'stFinish', '');
+  //  stFailed := language.ReadString(lang, 'stFailed', '');
+  //  stWait := language.ReadString(lang, 'stWait', '');
+  //  btUpdateList.Hint := language.ReadString(lang, 'btUpdateListHint', '');
+  //
+  //  stAddToQueue := language.ReadString(lang, 'stAddToQueue', '');
+  //  stCancel := language.ReadString(lang, 'stCancel', '');
+  //  stNewChapterNotification :=
+  //    language.ReadString(lang, 'stNewChapterNotification', '');
+  //
+  //  mnUpdateList.Caption := language.ReadString(lang, 'mnUpdateListCaption', '');
+  //  mnUpdateDownFromServer.Caption :=
+  //    language.ReadString(lang, 'mnUpdateDownFromServerCaption', '');
+  //  mnUpdate1Click.Caption := language.ReadString(lang, 'mnUpdate1ClickCaption', '');
+  //  mnDownload1Click.Caption := language.ReadString(lang, 'mnDownload1ClickCaption', '');
+  //
+  //  btSearchClear.Hint := language.ReadString(lang, 'btSearchHint', '');
+  //  btRemoveFilter.Hint := language.ReadString(lang, 'btRemoveFilterHint', '');
+  //  btRemoveFilterLarge.Hint := btRemoveFilter.Hint;
+  //  cbSelectManga.Hint := language.ReadString(lang, 'cbSelectMangaHint', '');
+  //
+  //  edSaveTo.EditLabel.Caption :=
+  //    language.ReadString(lang, 'edSaveToEditLabelCaption', '');
+  //  btDownload.Caption := language.ReadString(lang, 'btDownloadCaption', '');
+  //  stDownload := btDownload.Caption;
+  //  btReadOnline.Caption := language.ReadString(lang, 'btReadOnlineCaption', '');
+  //  cbAddAsStopped.Caption := language.ReadString(lang, 'cbAddAsStoppedCaption', '');
+  //  btAddToFavorites.Caption := language.ReadString(lang, 'cbAddToFavoritesCaption', '');
+  //  cbSearchFromAllSites.Caption :=
+  //    language.ReadString(lang, 'cbSearchFromAllSitesCaption', '');
+  //
+  //  cbFilterStatus.Items.Strings[0] := language.ReadString(lang, 'lbFilterStatus0', '');
+  //  cbFilterStatus.Items.Strings[1] := language.ReadString(lang, 'lbFilterStatus1', '');
+  //  rbAll.Caption := language.ReadString(lang, 'rbAllCaption', '');
+  //  rbOne.Caption := language.ReadString(lang, 'rbOneCaption', '');
+  //  cbOnlynew.Caption := language.ReadString(lang, 'cbOnlyNewCaption', '');
+  //  btFilter.Caption := language.ReadString(lang, 'btFilterCaption', '');
+  //  btRemoveFilterLarge.Caption :=
+  //    language.ReadString(lang, 'btRemoveFilterLargeCaption', '');
+  //
+  //  btOptionApply.Caption := language.ReadString(lang, 'btOptionApplyCaption', '');
+  //  tsGeneral.Caption := language.ReadString(lang, 'tsGeneralCaption', '');
+  //  tsConnections.Caption := language.ReadString(lang, 'tsConnectionsCaption', '');
+  //  tsUpdate.Caption := language.ReadString(lang, 'tsUpdateCaption', '');
+  //  lbOptionPDFQualityHint.Caption := language.ReadString(lang, 'tsSaveToCaption', '');
+  //  tsDialogs.Caption := language.ReadString(lang, 'tsDialogsCaption', '');
+  //  tsWebsites.Caption := language.ReadString(lang, 'tsWebsitesCaption', '');
+  //  tsMisc.Caption := language.ReadString(lang, 'tsMiscCaption', '');
+  //  gbOptionProxy.Caption := language.ReadString(lang, 'gbOptionProxyCaption', '');
+  //  gbOptionFavorites.Caption :=
+  //    language.ReadString(lang, 'gbOptionFavoritesCaption', '');
+  //  cbOptionUseProxy.Caption := language.ReadString(lang, 'cbOptionUseProxyCaption', '');
+  //  cbOptionAutoCheckFavStartup.Caption :=
+  //    language.ReadString(lang, 'cbOptionAutoCheckFavStartupCaption', '');
+  //  edOptionDefaultPath.EditLabel.Caption :=
+  //    language.ReadString(lang, 'edOptionDefaultPathEditLabelCaption', '');
+  //  rgOptionCompress.Caption := language.ReadString(lang, 'rgOptionCompressCaption', '');
+  //  gbOptionRenaming.Caption := language.ReadString(lang, 'gbOptionRenamingCaption', '');
+  //  dlgSaveTo.Title := language.ReadString(lang, 'dlgSaveToTitle', '');
+  //
+  //  miDownloadStop.Caption := language.ReadString(lang, 'miDownloadStopCaption', '');
+  //  miDownloadResume.Caption := language.ReadString(lang, 'miDownloadStopResume', '');
+  //  miDownloadDelete.Caption := language.ReadString(lang, 'miDownloadRemoveCaption', '');
+  //  miDownloadDeleteCompleted.Caption :=
+  //    language.ReadString(lang, 'miDownloadRemoveFinishedTasksCaption', '');
+  //  miDownloadMergeCompleted.Caption := language.ReadString(lang,
+  //    'miDownloadMergeTasksCaption', '');
+  //  miDownloadOpenFolder.Caption := language.ReadString(lang, 'miOpenFolder', '');
+  //  miDownloadOpenWith.Caption := language.ReadString(lang, 'miOpenWith', '');
+  //
+  //  miChapterListCheckSelected.Caption :=
+  //    language.ReadString(lang, 'miChapterListCheckSelectedCaption', '');
+  //  miChapterListUncheckSelected.Caption :=
+  //    language.ReadString(lang, 'miChapterListUncheckSelectedCaption', '');
+  //  miChapterListCheckAll.Caption :=
+  //    language.ReadString(lang, 'miChapterListCheckAllCaption', '');
+  //  miChapterListUncheckAll.Caption :=
+  //    language.ReadString(lang, 'miChapterListUncheckAllCaption', '');
+  //
+  //  miFavoritesDelete.Caption :=
+  //    language.ReadString(lang, 'miFavoritesRemoveCaption', '');
+  //  miFavoritesChangeCurrentChapter.Caption :=
+  //    language.ReadString(lang, 'miFavoritesChangeCurrentChapterCaption', '');
+  //  miFavoritesChangeSaveTo.Caption :=
+  //    language.ReadString(lang, 'miFavoritesChangeSaveToCaption', '');
+  //  miMangaListViewInfos.Caption :=
+  //    language.ReadString(lang, 'miMangaListViewInfosCaption', '');
+  //  miFavoritesViewInfos.Caption :=
+  //    language.ReadString(lang, 'miMangaListViewInfosCaption', '');
+  //  miMangaListDownloadAll.Caption :=
+  //    language.ReadString(lang, 'miMangaListDownloadAllCaption', '');
+  //  miMangaListAddToFavorites.Caption :=
+  //    language.ReadString(lang, 'miMangaListAddToFavoritesCaption', '');
+  //  miHighlightNewManga.Caption :=
+  //    language.ReadString(lang, 'miHighlightNewMangaCaption', '');
+  //  miChapterListHighlight.Caption :=
+  //    language.ReadString(lang, 'miChapterListHighlightCaption', '');
+  //
+  //  miDownloadDeleteTask.Caption := language.ReadString(lang, 'miDeleteTaskCaption', '');
+  //  miDownloadDeleteTaskData.Caption := language.ReadString(lang, 'miDeleteTaskDataCaption', '');
+  //
+  //  miFavoritesOpenFolder.Caption := miDownloadOpenFolder.Caption;
+  //  miFavoritesOpenWith.Caption := miDownloadOpenWith.Caption;
+  //
+  //  infoCustomGenres := language.ReadString(lang, 'infoCustomGenres', '');
+  //  infoName := language.ReadString(lang, 'infoName', '');
+  //  infoAuthors := language.ReadString(lang, 'infoAuthors', '');
+  //  infoArtists := language.ReadString(lang, 'infoArtists', '');
+  //  infoStatus := language.ReadString(lang, 'infoStatus', '');
+  //  infoGenres := language.ReadString(lang, 'infoGenres', '');
+  //  infoSummary := language.ReadString(lang, 'infoSummary', '');
+  //  infoLink := language.ReadString(lang, 'infoLink', '');
+  //
+  //  lbFilterCustomGenres.Caption := infoCustomGenres;
+  //  lbFilterTitle.Caption := infoName;
+  //  lbFilterAuthors.Caption := infoAuthors;
+  //  lbFilterArtists.Caption := infoArtists;
+  //  lbFilterStatus.Caption := infoStatus;
+  //  lbFilterSummary.Caption := infoSummary;
+  //
+  //  lbOptionAutoCheckMinutes.Caption :=
+  //    Format(language.ReadString(lang, 'lbOptionAutoCheckMinutesCaption', ''),
+  //    [seOptionCheckMinutes.Value]);
+  //  OptionAutoCheckMinutes := lbOptionAutoCheckMinutes.Caption;
+  //  lbOptionLanguage.Caption := language.ReadString(lang, 'lbOptionLanguageCaption', '');
+  //  lbOptionNewMangaTime.Caption :=
+  //    language.ReadString(lang, 'lbOptionNewMangaTimeCaption', '');
+  //  lbOptionMaxParallel.Caption :=
+  //    Format(language.ReadString(lang, 'lbOptionMaxParallelCaption', ''),
+  //    [seOptionMaxParallel.MaxValue]);
+  //  lbOptionMaxThread.Caption :=
+  //    Format(language.ReadString(lang, 'lbOptionMaxThreadCaption', ''),
+  //    [seOptionMaxThread.MaxValue]);
+  //  lbOptionMaxRetry.Caption := language.ReadString(lang, 'lbOptionMaxRetryCaption', '');
+  //  lbOptionDialogs.Caption := language.ReadString(lang, 'lbOptionDialogsCaption', '');
+  //  lbOptionPDFQuality.Caption :=
+  //    language.ReadString(lang, 'lbOptionPDFQualityCaption', '');
+  //  lbOptionPDFQualityHint.Hint :=
+  //    language.ReadString(lang, 'lbOptionPDFQualityHint', '');
+  //  // seOptionPDFQuality.Hint     := lbOptionPDFQuality.Hint;
+  //  lbOptionCustomRenameHint.Hint :=
+  //    language.ReadString(lang, 'edOptionCustomRenameHint', '');
+  //  lbOptionCustomRenameHint.Hint :=
+  //    StringReplace(lbOptionCustomRenameHint.Hint, '\n', #10, [rfReplaceAll]);
+  //  lbOptionCustomRenameHint.Hint :=
+  //    StringReplace(lbOptionCustomRenameHint.Hint, '\r', #13, [rfReplaceAll]);
+  //  lbOptionCustomRename.Hint :=
+  //    language.ReadString(lang, 'lbOptionCustomRenameHint', '');
+  //
+  //  cbOptionMinimizeToTray.Caption :=
+  //    language.ReadString(lang, 'cbOptionMinimizeToTrayCaption', '');
+  //  cbOptionAutoCheckUpdate.Caption :=
+  //    language.ReadString(lang, 'cbOptionAutoCheckUpdateCaption', '');
+  //  cbOptionPathConvert.Caption :=
+  //    language.ReadString(lang, 'cbOptionPathConvertCaption', '');
+  //  cbOptionGenerateChapterName.Caption :=
+  //    language.ReadString(lang, 'cbOptionGenerateChapterNameCaption', '');
+  //  cbOptionGenerateMangaFolderName.Caption :=
+  //    language.ReadString(lang, 'cbOptionGenerateMangaFolderNameCaption', '');
+  //  cbOptionShowQuitDialog.Caption :=
+  //    language.ReadString(lang, 'cbOptionShowQuitDialogCaption', '');
+  //  cbOptionShowDeleteTaskDialog.Caption :=
+  //    language.ReadString(lang, 'cbOptionShowDeleteTaskDialogCaption', '');
+  //  cbOptionShowFavoriteDialog.Caption :=
+  //    language.ReadString(lang, 'cbOptionShowFavoriteDialogCaption', '');
+  //  cbOptionBatotoUseIE.Caption :=
+  //    language.ReadString(lang, 'cbOptionBatotoUseIECaption', '');
+  //  cbOptionAutoNumberChapter.Caption :=
+  //    language.ReadString(lang, 'cbOptionAutoNumberChapterCaption', '');
+  //  cbOptionAutoCheckFavStartup.Caption :=
+  //    language.ReadString(lang, 'cbOptionAutoCheckFavStartupCaption', '');
+  //  cbOptionEnableLoadCover.Caption :=
+  //    language.ReadString(lang, 'cbOptionEnableLoadCoverCaption', '');
+  //  cbOptionAutoCheckFavStartup.Caption :=
+  //    language.ReadString(lang, 'cbOptionAutoCheckFavStartupCaption', '');
+  //  cbOptionShowBatotoSG.Caption :=
+  //    language.ReadString(lang, 'cbOptionShowBatotoSGCaption', '');
+  //  cbOptionShowAllLang.Caption :=
+  //    language.ReadString(lang, 'cbOptionShowAllLangCaption', '');
+  //  cbOptionAutoDlFav.Caption :=
+  //    language.ReadString(lang, 'cbOptionAutoDlFavCaption', '');
+  //  cbOptionAutoRemoveCompletedManga.Caption :=
+  //    language.ReadString(lang, 'cbOptionAutoRemoveCompletedMangaCaption', '');
+  //  cbSelectManga.Hint := language.ReadString(lang, 'cbSelectMangaHint', '');
+  //
+  //  gbOptionExternal.Caption := language.ReadString(lang, 'gbOptionExternalCaption', '');
+  //  lbOptionExternal.Caption := language.ReadString(lang, 'lbOptionExternalCaption', '');
+  //  lbOptionExternalHint.Hint :=
+  //    StringFilter(language.ReadString(lang, 'lbOptionExternalHint', ''));
+  //  lbOptionExternalHint.Hint :=
+  //    StringReplace(lbOptionExternalHint.Hint, '\n', #10, [rfReplaceAll]);
+  //  lbOptionExternalHint.Hint :=
+  //    StringReplace(lbOptionExternalHint.Hint, '\r', #13, [rfReplaceAll]);
+  //
+  //  lbFilterHint.Hint := language.ReadString(lang, 'lbFilterHint', '');
+  //  lbFilterHint.Hint := StringReplace(lbFilterHint.Hint, '\n', #10, [rfReplaceAll]);
+  //  lbFilterHint.Hint := StringReplace(lbFilterHint.Hint, '\r', #13, [rfReplaceAll]);
+  //
+  //  stDownloadManga := language.ReadString(lang, 'stDownloadManga', '');
+  //  stDownloadStatus := language.ReadString(lang, 'stDownloadStatus', '');
+  //  stDownloadProgress := language.ReadString(lang, 'stDownloadProgress', '');
+  //  stDownloadWebsite := language.ReadString(lang, 'stDownloadWebsite', '');
+  //  stDownloadSaveto := language.ReadString(lang, 'stDownloadSaveto', '');
+  //  stDownloadAdded := language.ReadString(lang, 'stDownloadAdded', '');
+  //  stFavoritesCurrentChapter :=
+  //    language.ReadString(lang, 'stFavoritesCurrentChapter', '');
+  //  stFavoritesHasNewChapter :=
+  //    language.ReadString(lang, 'stFavoritesHasNewChapter', '');
+  //
+  //  stFavoritesCheck := language.ReadString(lang, 'stFavoritesCheck', '');
+  //  stFavoritesChecking := language.ReadString(lang, 'stFavoritesChecking', '');
+  //
+  //  stImport := language.ReadString(lang, 'stImport', '');
+  //  stImportList := language.ReadString(lang, 'stImportList', '');
+  //  stImportCompleted := language.ReadString(lang, 'stImportCompleted', '');
+  //  stSoftware := language.ReadString(lang, 'stSoftware', '');
+  //  stSoftwarePath := language.ReadString(lang, 'stSoftwarePath', '');
+  //
+  //  stUpdaterCheck := language.ReadString(lang, 'stUpdaterCheck', '');
+  //  stSelected := language.ReadString(lang, 'stSelected', '');
+  //  btCheckVersion.Caption := stUpdaterCheck;
+  //
+  //  btFavoritesImport.Caption :=
+  //    language.ReadString(lang, 'btFavoritesImportCaption', '');
+  //
+  //  stOptionAutoCheckMinutesCaption :=
+  //    language.ReadString(lang, 'OptionAutoCheckMinutesCaption', '');
+  //  stIsCompressing := language.ReadString(lang, 'stIsCompressing', '');
+  //  stDlgUpdaterVersionRequire :=
+  //    language.ReadString(lang, 'stDlgUpdaterVersionRequire', '');
+  //  stDlgUpdaterIsRunning := language.ReadString(lang, 'stDlgUpdaterIsRunning', '');
+  //  stDlgLatestVersion := language.ReadString(lang, 'stDlgLatestVersion', '');
+  //  stDlgNewVersion := language.ReadString(lang, 'stDlgNewVersion', '');
+  //  stDlgURLNotSupport := language.ReadString(lang, 'stDlgURLNotSupport', '');
+  //  stDldMangaListSelect := language.ReadString(lang, 'stDldMangaListSelect', '');
+  //  RS_DlgFavoritesCheckIsRunning :=
+  //    language.ReadString(lang, 'stDlgUpdateAlreadyRunning', '');
+  //  stDlgNewManga := language.ReadString(lang, 'stDlgNewManga', '');
+  //  stDlgQuit := language.ReadString(lang, 'stDlgQuit', '');
+  //  stDlgRemoveTask := language.ReadString(lang, 'stDlgRemoveTask', '');
+  //  stDlgRemoveFinishTasks := language.ReadString(lang, 'stDlgRemoveFinishTasks', '');
+  //  stDlgTypeInNewChapter := language.ReadString(lang, 'stDlgTypeInNewChapter', '');
+  //  stDlgTypeInNewSavePath := language.ReadString(lang, 'stDlgTypeInNewSavePath', '');
+  //  stDlgCannotGetMangaInfo := language.ReadString(lang, 'stDlgCannotGetMangaInfo', '');
+  //  stDlgFavoritesIsRunning := language.ReadString(lang, 'stDlgFavoritesIsRunning', '');
+  //  stDlgNoNewChapter := language.ReadString(lang, 'stDlgNoNewChapter', '');
+  //  stDlgHasNewChapter := language.ReadString(lang, 'stDlgHasNewChapter', '');
+  //  stDlgRemoveCompletedManga :=
+  //    language.ReadString(lang, 'stDlgRemoveCompletedManga', '');
+  //  stDlgUpdaterWantToUpdateDB :=
+  //    language.ReadString(lang, 'stDlgUpdaterWantToUpdateDB', '');
+  //  stDlgUpdaterCannotConnectToServer :=
+  //    language.ReadString(lang, 'stDlgUpdaterCannotConnectToServer', '');
+  //
+  //  lbOptionLetFMDDo.Caption := language.ReadString(lang, 'lbOptionLetFMDDoCaption', '');
+  //  s := language.ReadString(lang, 'cbOptionLetFMDDo', '');
+  //
+  //  // apply genres & descriptions
+  //  for i := 0 to 37 do
+  //  begin
+  //    Genre[i] := defaultGenres[i];
+  //    //language.ReadString(lang, StringReplace(StringReplace(defaultGenres[i], ' ', '', [rfReplaceAll]), '-', '', [rfReplaceAll])+'G', '')
+  //    TCheckBox(pnGenres.Controls[i]).Caption := Genre[i];
+  //    TCheckBox(pnGenres.Controls[i]).Hint :=
+  //      language.ReadString(lang, StringReplace(StringReplace(defaultGenres[i],
+  //      ' ', '', [rfReplaceAll]), '-', '', [rfReplaceAll]) + 'M', '');
+  //    TCheckBox(pnGenres.Controls[i]).ShowHint := True;
+  //  end;
+  //finally
+  //  language.Free;
+  //end;
+  //
+  //// add information to cbOptionLetFMDDo
+  //cbOptionLetFMDDo.Items.Clear;
+  //GetParams(cbOptionLetFMDDo.Items, s);
+  //// cbOptionLetFMDDo.ItemIndex:= 0;
+  //
+  //
+  //if dataProcess.isFiltered then
+  //  lbMode.Caption := Format(stModeFilter, [dataProcess.filterPos.Count])
+  //else
+  //  lbMode.Caption := Format(RS_ModeAll, [dataProcess.filterPos.Count]);
+  //
+  //// sync download table infos
+  //if DLManager.containers.Count > 0 then
+  //begin
+  //  for i := 0 to DLManager.containers.Count - 1 do
+  //  begin
+  //    // if (DLManager.containers.Items[pos] <> nil) OR (NOT DLManager.containers.Items[pos].Thread.isTerminated) then
+  //    case DLManager.containers.Items[i].Status of
+  //      STATUS_STOP: DLManager.containers.Items[i].DownloadInfo.Status := RS_Stopped;
+  //      STATUS_WAIT: DLManager.containers.Items[i].DownloadInfo.Status := RS_Waiting
+  //      STATUS_PREPARE: DLManager.containers.Items[i].DownloadInfo.Status := RS_Preparing;
+  //      STATUS_DOWNLOAD: DLManager.containers.Items[i].DownloadInfo.Status :=
+  //          stDownloading;
+  //      STATUS_FINISH: DLManager.containers.Items[i].DownloadInfo.Status := RS_Finish;
+  //    end;
+  //  end;
+  //end;
+  //
+  //if FavoriteManager.isRunning then
+  //  btFavoritesCheckNewChapter.Caption := stFavoritesChecking
+  //else
+  //  btFavoritesCheckNewChapter.Caption := stFavoritesCheck;
+  //vtDownload.Header.Columns.Items[0].Text := stDownloadManga;
+  //vtDownload.Header.Columns.Items[1].Text := stDownloadStatus;
+  //vtDownload.Header.Columns.Items[2].Text := stDownloadProgress;
+  //vtDownload.Header.Columns.Items[3].Text := stDownloadWebsite;
+  //vtDownload.Header.Columns.Items[4].Text := stDownloadSaveto;
+  //vtDownload.Header.Columns.Items[5].Text := stDownloadAdded;
+  //
+  //vtFavorites.Header.Columns.Items[1].Text := stDownloadManga;
+  //vtFavorites.Header.Columns.Items[2].Text := stFavoritesCurrentChapter;
+  //vtFavorites.Header.Columns.Items[3].Text := stDownloadWebsite;
+  //vtFavorites.Header.Columns.Items[4].Text := stDownloadSaveto;
+  //
+  //vtDownload.Repaint;
 end;
 
 procedure TMainForm.ExceptionHandler(Sender: TObject; E: Exception);

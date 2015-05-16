@@ -181,7 +181,7 @@ begin
   if IsFlushed then
     Exit;
   try
-    MessageDlg('', stDlgCannotGetMangaInfo,
+    MessageDlg('', RS_DlgCannotGetMangaInfo,
       mtInformation, [mbYes], 0);
     MainForm.rmInformation.Clear;
     MainForm.itAnimate.Enabled := False;

@@ -52,6 +52,7 @@ resourcestring
   RS_NewVersionFound = 'New Version found!';
   RS_CurrentVersion = 'Installed Version';
   RS_LatestVersion = 'Latest Version   ';
+  RS_BtnCheckUpdates = 'Check for new updates';
 
 implementation
 
@@ -93,7 +94,7 @@ begin
       MainForm.itMonitor.Enabled := True;
     end
     else
-      MainForm.btCheckVersion.Caption := stUpdaterCheck;
+      MainForm.btCheckVersion.Caption := RS_BtnCheckUpdates;
   finally
     Free;
   end;
@@ -116,7 +117,7 @@ begin
   try
     fNewVersionNumber := FMD_VERSION_NUMBER;
     fUpdateURL := '';
-    FBtnCheckCaption := stFavoritesChecking;
+    FBtnCheckCaption := RS_Checking;
     Synchronize(@MainThreadSetButton);
     FHTTP.Sock.OnHeartbeat := @SockOnHeartBeat;
     FHTTP.Sock.HeartbeatRate := SOCKHEARTBEATRATE;
@@ -137,7 +138,7 @@ begin
             GetPage(Self, FHTTP, TObject(l), UPDATE_URL + 'changelog.txt', 3, False) then
             fChangelog := l.Text;
         end;
-      FBtnCheckCaption := stUpdaterCheck;
+      FBtnCheckCaption := RS_BtnCheckUpdates;
       Synchronize(@MainThreadSetButton);
     end;
   finally

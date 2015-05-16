@@ -43,17 +43,10 @@ implementation
 
 {$R *.lfm}
 
-uses
-  uBaseUnit;
-
 { TNewChapter }
 
 procedure TNewChapter.FormCreate(Sender: TObject);
 begin
-  btDownload.Caption:= stDownload;
-  btQueue   .Caption:= stAddToQueue;
-  btCancel  .Caption:= stCancel;
-  Caption           := stNewChapterNotification;
   FFormResult       := ncrCancel;
 end;
 

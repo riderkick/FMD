@@ -25,10 +25,7 @@ type
   TSilentThreadMetaData = class
   public
     MetaDataType: TMetaDataType;
-    Website,
-    Title,
-    URL,
-    SaveTo: String;
+    Website, Title, URL, SaveTo: String;
     constructor Create(const AType: TMetaDataType; const AWebsite, AManga, AURL, APath: String);
   end;
 
@@ -275,11 +272,11 @@ begin
       if cbAddAsStopped.Checked then
       begin
         DLManager.containers.Items[p].Status := STATUS_STOP;
-        DLManager.containers.Items[p].downloadInfo.Status := stStop;
+        DLManager.containers.Items[p].downloadInfo.Status := RS_Stopped;
       end
       else
       begin
-        DLManager.containers.Items[p].downloadInfo.Status := stWait;
+        DLManager.containers.Items[p].downloadInfo.Status := RS_Waiting;
         DLManager.containers.Items[p].Status := STATUS_WAIT;
       end;
 

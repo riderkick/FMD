@@ -85,6 +85,7 @@ resourcestring
   RS_RemovingDuplicateFromLocalData = 'Removing duplicate from local data';
   RS_SynchronizingData = 'Synchronizing data';
   RS_SavingData = 'Saving data';
+  RS_DlgHasNewManga = '%s has %d new manga(s)';
 
 implementation
 
@@ -368,7 +369,7 @@ begin
       MainForm.vtMangaList.Clear;
       MainForm.vtMangaList.RootNodeCount := MainForm.dataProcess.filterPos.Count;
       MainForm.lbMode.Caption :=
-        Format(stModeAll, [MainForm.dataProcess.filterPos.Count]);
+        Format(RS_ModeAll, [MainForm.dataProcess.filterPos.Count]);
       Screen.Cursor := crDefault;
     end;
   except
@@ -380,7 +381,7 @@ end;
 
 procedure TUpdateMangaManagerThread.DlgReport;
 begin
-  MessageDlg('', Format(stDlgNewManga, [website, links.Count]),
+  MessageDlg('', Format(RS_DlgHasNewManga, [website, links.Count]),
     mtInformation, [mbYes], 0);
 end;
 

@@ -13,7 +13,7 @@ unit uBaseUnit;
 interface
 
 uses
-  SysUtils, Classes, Graphics, Forms, UTF8Process, strutils, fileinfo, syncobjs,
+  SysUtils, Classes, Graphics, Forms, UTF8Process, strutils, fileinfo,
   process, fpjson, jsonparser, fgl, uFMDThread, synautil, httpsend, blcksock,
   ssl_openssl, GZIPUtils;
 
@@ -350,9 +350,7 @@ var
   currentJDN: Cardinal;
   isChangeDirectory: Boolean = False;
 
-  currentWebsite, stModeAll, stModeFilter, stSoftware, stSoftwarePath,
-  stImport, stCompressing, stPreparing, stDownload, stCancel, stAddToQueue,
-  stNewChapterNotification, stDownloading, stWait, stStop, stFinish, stFailed: String;
+  currentWebsite: String;
 
   ProxyType: String = '';
   Host: String = '';
@@ -626,25 +624,7 @@ var
   //------------------------------------------
   UPDATE_URL: String = 'https://raw.githubusercontent.com/riderkick/FMD/master/';
 
-  OptionAutoCheckMinutes, OptionCustomRename,
-  // dialog messages
-  infoCustomGenres, infoName, infoAuthors, infoArtists, infoGenres,
-  infoStatus, infoSummary, infoLink,
-
-  // this is for erasing the "Search..." message
-  stSearch, stInProgress, stAllDownloads, stFilters, stHistory, stToday,
-  stYesterday, stOneWeek, stOneMonth, stDownloadManga, stDownloadStatus,
-  stDownloadProgress, stDownloadWebsite, stDownloadSaveto, stDownloadAdded,
-  stFavoritesCurrentChapter, stFavoritesHasNewChapter, stFavoritesCheck,
-  stFavoritesChecking, stUpdaterCheck, stSelected, stImportList,
-  stImportCompleted, stOptionAutoCheckMinutesCaption, stIsCompressing,
-  stDlgUpdaterVersionRequire, stDlgUpdaterIsRunning, stDlgLatestVersion,
-  stDlgNewVersion, stDlgURLNotSupport, stDldMangaListSelect,
-  stDlgUpdateAlreadyRunning, stDlgNewManga, stDlgQuit, stDlgRemoveTask,
-  stDlgRemoveFinishTasks, stDlgTypeInNewChapter, stDlgTypeInNewSavePath,
-  stDlgCannotGetMangaInfo, stDlgFavoritesIsRunning, stDlgNoNewChapter,
-  stDlgHasNewChapter, stDlgRemoveCompletedManga, stDlgUpdaterWantToUpdateDB,
-  stDlgUpdaterCannotConnectToServer: String;
+  OptionCustomRename: String;
 
   OptionCheckMinutes: Cardinal = 0;
   OptionPDFQuality: Cardinal = 95;

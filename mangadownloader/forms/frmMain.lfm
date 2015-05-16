@@ -1,7 +1,7 @@
 object MainForm: TMainForm
-  Left = 273
+  Left = 151
   Height = 553
-  Top = 107
+  Top = 105
   Width = 819
   Align = alBottom
   Caption = 'Free Manga Downloader'
@@ -31,7 +31,7 @@ object MainForm: TMainForm
     OnDrawPanel = sbUpdateListDrawPanel
   end
   object spMainSplitter: TSplitter
-    Left = 199
+    Left = 0
     Height = 492
     Top = 8
     Width = 2
@@ -177,6 +177,14 @@ object MainForm: TMainForm
           OnClick = tbDownloadDeleteCompletedClick
         end
       end
+      object Button1: TButton
+        Left = 90
+        Height = 25
+        Top = 342
+        Width = 75
+        Caption = 'Button1'
+        TabOrder = 2
+      end
     end
     object tsInformation: TTabSheet
       Caption = 'Manga Info'
@@ -228,6 +236,7 @@ object MainForm: TMainForm
             OnKeyPress = edURLKeyPress
             PopupMenu = pmEditURL
             TabOrder = 0
+            TextHint = 'Input URL here...'
           end
           object btDonate: TImage
             Cursor = crHandPoint
@@ -349,7 +358,7 @@ object MainForm: TMainForm
             EditLabel.Height = 15
             EditLabel.Top = 106
             EditLabel.Width = 353
-            EditLabel.Caption = 'Save to'
+            EditLabel.Caption = 'Save to:'
             EditLabel.ParentColor = False
             EditLabel.ParentFont = False
             ParentFont = False
@@ -631,7 +640,7 @@ object MainForm: TMainForm
         Height = 456
         Top = 0
         Width = 606
-        HorzScrollBar.Page = 526
+        HorzScrollBar.Page = 558
         VertScrollBar.Page = 440
         Align = alClient
         BorderStyle = bsNone
@@ -648,7 +657,7 @@ object MainForm: TMainForm
           ClientHeight = 248
           ClientWidth = 606
           TabOrder = 0
-          object CheckBox1: TCheckBox
+          object ckFilterAction: TCheckBox
             Left = 23
             Height = 19
             Top = 16
@@ -658,373 +667,373 @@ object MainForm: TMainForm
             ParentFont = False
             TabOrder = 0
           end
-          object CheckBox2: TCheckBox
+          object ckFilterAdult: TCheckBox
             Left = 23
             Height = 19
             Top = 40
-            Width = 55
+            Width = 49
             AllowGrayed = True
-            Caption = 'Action'
+            Caption = 'Adult'
             ParentFont = False
             TabOrder = 1
           end
-          object CheckBox3: TCheckBox
+          object ckFilterAdventure: TCheckBox
             Left = 23
             Height = 19
             Top = 64
-            Width = 55
+            Width = 75
             AllowGrayed = True
-            Caption = 'Action'
+            Caption = 'Adventure'
             ParentFont = False
             TabOrder = 2
           end
-          object CheckBox4: TCheckBox
+          object ckFilterComedy: TCheckBox
             Left = 23
             Height = 19
             Top = 88
-            Width = 55
+            Width = 65
             AllowGrayed = True
-            Caption = 'Action'
+            Caption = 'Comedy'
             ParentFont = False
             TabOrder = 3
           end
-          object Checkbox5: TCheckBox
+          object ckFilterDoujinshi: TCheckBox
             Left = 23
             Height = 19
             Top = 112
-            Width = 55
+            Width = 70
             AllowGrayed = True
-            Caption = 'Action'
+            Caption = 'Doujinshi'
             ParentFont = False
             TabOrder = 4
           end
-          object CheckBox6: TCheckBox
+          object ckFilterDrama: TCheckBox
             Left = 23
             Height = 19
             Top = 136
             Width = 55
             AllowGrayed = True
-            Caption = 'Action'
+            Caption = 'Drama'
             ParentFont = False
             TabOrder = 5
           end
-          object CheckBox7: TCheckBox
+          object ckFilterEchi: TCheckBox
             Left = 23
             Height = 19
             Top = 160
-            Width = 55
+            Width = 42
             AllowGrayed = True
-            Caption = 'Action'
+            Caption = 'Echi'
             ParentFont = False
             TabOrder = 6
           end
-          object CheckBox8: TCheckBox
+          object ckFilterFantasy: TCheckBox
             Left = 23
             Height = 19
             Top = 184
-            Width = 55
+            Width = 60
             AllowGrayed = True
-            Caption = 'Action'
+            Caption = 'Fantasy'
             ParentFont = False
             TabOrder = 7
           end
-          object CheckBox9: TCheckBox
+          object ckFilterGenderBender: TCheckBox
             Left = 135
             Height = 19
             Top = 16
-            Width = 55
+            Width = 98
             AllowGrayed = True
-            Caption = 'Action'
+            Caption = 'Gender Bender'
             ParentFont = False
             TabOrder = 8
           end
-          object CheckBox10: TCheckBox
+          object ckFilterHarem: TCheckBox
             Left = 135
             Height = 19
             Top = 40
-            Width = 55
+            Width = 56
             AllowGrayed = True
-            Caption = 'Action'
+            Caption = 'Harem'
             ParentFont = False
             TabOrder = 9
           end
-          object CheckBox11: TCheckBox
+          object ckFilterHentai: TCheckBox
             Left = 135
             Height = 19
             Top = 64
             Width = 55
             AllowGrayed = True
-            Caption = 'Action'
+            Caption = 'Hentai'
             ParentFont = False
             TabOrder = 10
           end
-          object CheckBox12: TCheckBox
+          object ckFilterHistorical: TCheckBox
             Left = 135
             Height = 19
             Top = 88
-            Width = 55
+            Width = 64
             AllowGrayed = True
-            Caption = 'Action'
+            Caption = 'Historial'
             ParentFont = False
             TabOrder = 11
           end
-          object CheckBox13: TCheckBox
+          object ckFilterHorror: TCheckBox
             Left = 135
             Height = 19
             Top = 112
             Width = 55
             AllowGrayed = True
-            Caption = 'Action'
+            Caption = 'Horror'
             ParentFont = False
             TabOrder = 12
           end
-          object CheckBox14: TCheckBox
+          object ckFilterJosei: TCheckBox
             Left = 135
             Height = 19
             Top = 136
-            Width = 55
+            Width = 45
             AllowGrayed = True
-            Caption = 'Action'
+            Caption = 'Josei'
             ParentFont = False
             TabOrder = 13
           end
-          object CheckBox15: TCheckBox
+          object ckFilterLolicon: TCheckBox
             Left = 135
             Height = 19
             Top = 160
-            Width = 55
+            Width = 59
             AllowGrayed = True
-            Caption = 'Action'
+            Caption = 'Lolicon'
             ParentFont = False
             TabOrder = 14
           end
-          object CheckBox16: TCheckBox
+          object ckFilterMartialArts: TCheckBox
             Left = 135
             Height = 19
             Top = 184
-            Width = 55
+            Width = 81
             AllowGrayed = True
-            Caption = 'Action'
+            Caption = 'Martial Arts'
             ParentFont = False
             TabOrder = 15
           end
-          object CheckBox17: TCheckBox
+          object ckFilterMature: TCheckBox
             Left = 251
             Height = 19
             Top = 16
-            Width = 55
+            Width = 58
             AllowGrayed = True
-            Caption = 'Action'
+            Caption = 'Mature'
             ParentFont = False
             TabOrder = 16
           end
-          object CheckBox18: TCheckBox
+          object ckFilterMecha: TCheckBox
             Left = 251
             Height = 19
             Top = 40
-            Width = 55
+            Width = 56
             AllowGrayed = True
-            Caption = 'Action'
+            Caption = 'Mecha'
             ParentFont = False
             TabOrder = 17
           end
-          object CheckBox19: TCheckBox
+          object ckFilterMusical: TCheckBox
             Left = 251
             Height = 19
             Top = 64
-            Width = 55
+            Width = 62
             AllowGrayed = True
-            Caption = 'Action'
+            Caption = 'Mucical'
             ParentFont = False
             TabOrder = 18
           end
-          object CheckBox20: TCheckBox
+          object ckFilterMystery: TCheckBox
             Left = 251
             Height = 19
             Top = 88
-            Width = 55
+            Width = 62
             AllowGrayed = True
-            Caption = 'Action'
+            Caption = 'Mystery'
             ParentFont = False
             TabOrder = 19
           end
-          object CheckBox21: TCheckBox
+          object ckFilterPsychological: TCheckBox
             Left = 251
             Height = 19
             Top = 112
-            Width = 55
+            Width = 93
             AllowGrayed = True
-            Caption = 'Action'
+            Caption = 'Psychological'
             ParentFont = False
             TabOrder = 20
           end
-          object CheckBox22: TCheckBox
+          object ckFilterRomance: TCheckBox
             Left = 251
             Height = 19
             Top = 136
-            Width = 55
+            Width = 70
             AllowGrayed = True
-            Caption = 'Action'
+            Caption = 'Romance'
             ParentFont = False
             TabOrder = 21
           end
-          object CheckBox23: TCheckBox
+          object ckFilterSchoolLife: TCheckBox
             Left = 251
             Height = 19
             Top = 160
-            Width = 55
+            Width = 71
             AllowGrayed = True
-            Caption = 'Action'
+            Caption = 'Scool Life'
             ParentFont = False
             TabOrder = 22
           end
-          object CheckBox24: TCheckBox
+          object ckFilterSciFi: TCheckBox
             Left = 251
             Height = 19
             Top = 184
-            Width = 55
+            Width = 49
             AllowGrayed = True
-            Caption = 'Action'
+            Caption = 'Sci-Fi'
             ParentFont = False
             TabOrder = 23
           end
-          object CheckBox25: TCheckBox
+          object ckFilterSeinen: TCheckBox
             Left = 363
             Height = 19
             Top = 16
             Width = 55
             AllowGrayed = True
-            Caption = 'Action'
+            Caption = 'Seinen'
             ParentFont = False
             TabOrder = 24
           end
-          object CheckBox26: TCheckBox
+          object ckFilterShotacon: TCheckBox
             Left = 363
             Height = 19
             Top = 40
-            Width = 55
+            Width = 70
             AllowGrayed = True
-            Caption = 'Action'
+            Caption = 'Shotacon'
             ParentFont = False
             TabOrder = 25
           end
-          object CheckBox27: TCheckBox
+          object ckFilterShoujo: TCheckBox
             Left = 363
             Height = 19
             Top = 64
-            Width = 55
+            Width = 57
             AllowGrayed = True
-            Caption = 'Action'
+            Caption = 'Shoujo'
             ParentFont = False
             TabOrder = 26
           end
-          object CheckBox28: TCheckBox
+          object ckFilterShoujoAi: TCheckBox
             Left = 363
             Height = 19
             Top = 88
-            Width = 55
+            Width = 68
             AllowGrayed = True
-            Caption = 'Action'
+            Caption = 'ShoujoAi'
             ParentFont = False
             TabOrder = 27
           end
-          object CheckBox29: TCheckBox
+          object ckFilterShounen: TCheckBox
             Left = 363
             Height = 19
             Top = 112
-            Width = 55
+            Width = 67
             AllowGrayed = True
-            Caption = 'Action'
+            Caption = 'Shounen'
             ParentFont = False
             TabOrder = 28
           end
-          object CheckBox30: TCheckBox
+          object ckFilterShounenAi: TCheckBox
             Left = 363
             Height = 19
             Top = 136
-            Width = 55
+            Width = 81
             AllowGrayed = True
-            Caption = 'Action'
+            Caption = 'Shounen Ai'
             ParentFont = False
             TabOrder = 29
           end
-          object CheckBox31: TCheckBox
+          object ckFilterSliceofLife: TCheckBox
             Left = 363
             Height = 19
             Top = 160
-            Width = 55
+            Width = 80
             AllowGrayed = True
-            Caption = 'Action'
+            Caption = 'Slice of Life'
             ParentFont = False
             TabOrder = 30
           end
-          object CheckBox32: TCheckBox
+          object ckFilterSmut: TCheckBox
             Left = 363
             Height = 19
             Top = 184
-            Width = 55
+            Width = 48
             AllowGrayed = True
-            Caption = 'Action'
+            Caption = 'Smut'
             ParentFont = False
             TabOrder = 31
           end
-          object CheckBox33: TCheckBox
+          object ckFilterSports: TCheckBox
             Left = 471
             Height = 19
             Top = 16
-            Width = 55
+            Width = 53
             AllowGrayed = True
-            Caption = 'Action'
+            Caption = 'Sports'
             ParentFont = False
             TabOrder = 32
           end
-          object CheckBox34: TCheckBox
+          object ckFilterSupernatural: TCheckBox
             Left = 471
             Height = 19
             Top = 40
-            Width = 55
+            Width = 87
             AllowGrayed = True
-            Caption = 'Action'
+            Caption = 'Supernatural'
             ParentFont = False
             TabOrder = 33
           end
-          object CheckBox35: TCheckBox
+          object ckFilterTragedy: TCheckBox
             Left = 471
             Height = 19
             Top = 64
-            Width = 55
+            Width = 63
             AllowGrayed = True
-            Caption = 'Action'
+            Caption = 'Tragedy'
             ParentFont = False
             TabOrder = 34
           end
-          object CheckBox36: TCheckBox
+          object ckFilterYaoi: TCheckBox
             Left = 471
             Height = 19
             Top = 88
-            Width = 55
+            Width = 43
             AllowGrayed = True
-            Caption = 'Action'
+            Caption = 'Yaoi'
             ParentFont = False
             TabOrder = 35
           end
-          object CheckBox37: TCheckBox
+          object ckFilterYuri: TCheckBox
             Left = 471
             Height = 19
             Top = 112
-            Width = 55
+            Width = 41
             AllowGrayed = True
-            Caption = 'Action'
+            Caption = 'Yuri'
             ParentFont = False
             TabOrder = 36
           end
-          object CheckBox38: TCheckBox
+          object ckFilterWeebtons: TCheckBox
             Left = 471
             Height = 19
             Top = 136
-            Width = 55
+            Width = 74
             AllowGrayed = True
-            Caption = 'Action'
+            Caption = 'Webtoons'
             ParentFont = False
             TabOrder = 37
           end
@@ -1053,7 +1062,7 @@ object MainForm: TMainForm
           object lbFilterHint: TLabel
             Left = 480
             Height = 15
-            Top = 220
+            Top = 219
             Width = 13
             Caption = '[?]'
             Font.Color = clBlue
@@ -1511,7 +1520,7 @@ object MainForm: TMainForm
         Top = 422
         Width = 545
         Anchors = [akLeft, akRight, akBottom]
-        Caption = 'Import list ...'
+        Caption = 'Import list'
         Glyph.Data = {
           36040000424D3604000000000000360000002800000010000000100000000100
           2000000000000004000064000000640000000000000000000000FFFFFF00FFFF
@@ -1632,8 +1641,8 @@ object MainForm: TMainForm
             Left = 20
             Height = 15
             Top = 18
-            Width = 101
-            Caption = 'lbOptionLanguage'
+            Width = 56
+            Caption = 'Language:'
             ParentColor = False
           end
           object seOptionNewMangaTime: TSpinEdit
@@ -1648,11 +1657,11 @@ object MainForm: TMainForm
             Value = 1
           end
           object lbOptionNewMangaTime: TLabel
-            Left = 92
+            Left = 86
             Height = 15
-            Top = 112
-            Width = 135
-            Caption = 'lbOptionNewMangaTime'
+            Top = 115
+            Width = 238
+            Caption = 'New manga based on  it''s update time (days)'
             ParentColor = False
             ParentFont = False
           end
@@ -1671,9 +1680,11 @@ object MainForm: TMainForm
             Top = 80
             Width = 212
             ItemHeight = 15
-            ItemIndex = 0
             Items.Strings = (
-              ''
+              'Do nothing'
+              'Exit FMD'
+              'Shutdown'
+              'Hibernate'
             )
             ParentFont = False
             Style = csDropDownList
@@ -1683,8 +1694,8 @@ object MainForm: TMainForm
             Left = 20
             Height = 15
             Top = 64
-            Width = 108
-            Caption = 'lbOptionLetFMDDo'
+            Width = 123
+            Caption = 'After download finish:'
             ParentColor = False
           end
           object cbOptionBatotoUseIE: TCheckBox
@@ -1716,6 +1727,7 @@ object MainForm: TMainForm
               Width = 434
               Anchors = [akTop, akLeft, akRight]
               TabOrder = 0
+              TextHint = 'Application path'
             end
             object lbOptionExternal: TLabel
               Left = 22
@@ -1767,7 +1779,7 @@ object MainForm: TMainForm
             Height = 351
             Top = 0
             Width = 579
-            HorzScrollBar.Page = 462
+            HorzScrollBar.Page = 455
             VertScrollBar.Page = 147
             Align = alClient
             BorderStyle = bsNone
@@ -1823,6 +1835,7 @@ object MainForm: TMainForm
                 Font.Name = 'Default'
                 ParentFont = False
                 TabOrder = 0
+                TextHint = 'Proxy host/IP'
               end
               object edOptionPort: TEdit
                 Left = 57
@@ -1834,6 +1847,7 @@ object MainForm: TMainForm
                 Font.Name = 'Default'
                 ParentFont = False
                 TabOrder = 1
+                TextHint = 'Proxy Port'
               end
               object lbOptionUser: TLabel
                 AnchorSideLeft.Side = asrBottom
@@ -1867,6 +1881,7 @@ object MainForm: TMainForm
                 Font.Name = 'Default'
                 ParentFont = False
                 TabOrder = 2
+                TextHint = 'Proxy username'
               end
               object edOptionPass: TEdit
                 AnchorSideLeft.Side = asrBottom
@@ -1880,6 +1895,7 @@ object MainForm: TMainForm
                 Font.Name = 'Default'
                 ParentFont = False
                 TabOrder = 3
+                TextHint = 'Proxy password'
               end
               object cbOptionProxyType: TComboBox
                 Left = 57
@@ -1919,18 +1935,18 @@ object MainForm: TMainForm
               Value = 1
             end
             object lbOptionMaxParallel: TLabel
-              Left = 76
+              Left = 66
               Height = 15
-              Top = 26
+              Top = 29
               Width = 292
               Caption = 'Number of downloaded tasks at the same time (Max: 8)'
               ParentColor = False
               ParentFont = False
             end
             object lbOptionMaxThread: TLabel
-              Left = 76
+              Left = 66
               Height = 15
-              Top = 58
+              Top = 61
               Width = 337
               Caption = 'Number of downloaded files per task at the same time (Max: 32)'
               ParentColor = False
@@ -1958,9 +1974,9 @@ object MainForm: TMainForm
               TabOrder = 4
             end
             object lbOptionMaxRetry: TLabel
-              Left = 76
+              Left = 66
               Height = 15
-              Top = 90
+              Top = 93
               Width = 386
               Caption = 'Number of retry times if tasks have download problems (0 = always retry)'
               ParentColor = False
@@ -2232,73 +2248,82 @@ object MainForm: TMainForm
           ClientHeight = 351
           ClientWidth = 579
           object cbOptionAutoCheckUpdate: TCheckBox
-            Left = 28
+            Left = 24
             Height = 19
-            Top = 30
+            Top = 24
             Width = 140
             Caption = 'Check for new version '
             ParentFont = False
             TabOrder = 0
           end
           object gbOptionFavorites: TGroupBox
-            Left = 29
-            Height = 128
-            Top = 62
+            Left = 25
+            Height = 138
+            Top = 56
             Width = 520
             Anchors = [akTop, akLeft, akRight]
             Caption = 'Favorites'
-            ClientHeight = 108
+            ClientHeight = 118
             ClientWidth = 516
             ParentFont = False
             TabOrder = 1
             object cbOptionAutoCheckFavStartup: TCheckBox
-              Left = 21
+              Left = 16
               Height = 19
-              Top = 38
+              Top = 32
               Width = 196
               Caption = 'Automatic check for new chapter'
               ParentFont = False
               TabOrder = 0
             end
             object seOptionCheckMinutes: TSpinEdit
-              Left = 21
+              Left = 16
               Height = 23
-              Top = 70
+              Top = 80
               Width = 58
               MaxValue = 1440
               OnChange = seOptionCheckMinutesChange
               TabOrder = 1
             end
             object lbOptionAutoCheckMinutes: TLabel
-              Left = 93
+              Left = 82
               Height = 15
-              Top = 78
-              Width = 231
-              Caption = 'Auto check for new chapter every ? minutes'
+              Top = 84
+              Width = 243
+              Caption = 'Auto check for new chapter every %d minutes'
               ParentColor = False
             end
             object cbOptionAutoRemoveCompletedManga: TCheckBox
-              Left = 21
+              Left = 16
               Height = 19
-              Top = 14
+              Top = 8
               Width = 298
               Caption = 'Automatic remove completed manga from Favorites'
               TabOrder = 2
             end
+            object cbOptionAutoDlFav: TCheckBox
+              Left = 16
+              Height = 19
+              Top = 55
+              Width = 260
+              Caption = 'Automatically download after finish checking'
+              ParentFont = False
+              TabOrder = 3
+            end
           end
           object cbOptionUpdateListNoMangaInfo: TCheckBox
-            Left = 28
+            Left = 24
             Height = 19
-            Top = 200
+            Top = 202
             Width = 407
             Caption = 'Don''t load manga information when updating list (filter will be not work!)'
             ParentFont = False
             TabOrder = 2
           end
           object cbOptionUpdateListRemoveDuplicateLocalData: TCheckBox
-            Left = 28
+            Left = 24
             Height = 19
-            Top = 224
+            Top = 226
             Width = 310
             Caption = 'Remove duplicate local data when updating manga list'
             ParentFont = False
@@ -2307,49 +2332,49 @@ object MainForm: TMainForm
         end
         object tsDialogs: TTabSheet
           Caption = 'Dialogs'
-          ClientHeight = 381
-          ClientWidth = 576
+          ClientHeight = 351
+          ClientWidth = 579
           object gbDialogs: TGroupBox
             Left = 10
-            Height = 352
+            Height = 322
             Top = 14
-            Width = 553
+            Width = 556
             Anchors = [akTop, akLeft, akRight, akBottom]
-            ClientHeight = 332
-            ClientWidth = 549
+            ClientHeight = 302
+            ClientWidth = 552
             TabOrder = 0
             object cbOptionShowQuitDialog: TCheckBox
-              Left = 48
+              Left = 24
               Height = 19
-              Top = 54
-              Width = 156
-              Caption = 'cbOptionShowQuitDialog'
+              Top = 32
+              Width = 66
+              Caption = 'Exit FMD'
               ParentFont = False
               TabOrder = 0
             end
             object cbOptionShowFavoriteDialog: TCheckBox
-              Left = 48
+              Left = 24
               Height = 19
-              Top = 102
-              Width = 175
-              Caption = 'cbOptionShowFavoriteDialog'
+              Top = 80
+              Width = 198
+              Caption = 'Favorite: After checking complete'
               ParentFont = False
               TabOrder = 1
             end
             object lbOptionDialogs: TLabel
-              Left = 32
+              Left = 16
               Height = 15
-              Top = 22
-              Width = 88
-              Caption = 'lbOptionDialogs'
+              Top = 8
+              Width = 165
+              Caption = 'Show dialog confirmation for:'
               ParentColor = False
             end
             object cbOptionShowDeleteTaskDialog: TCheckBox
-              Left = 48
+              Left = 24
               Height = 19
-              Top = 78
-              Width = 190
-              Caption = 'cbOptionShowDeleteTaskDialog'
+              Top = 56
+              Width = 122
+              Caption = 'Delete task/favorite'
               ParentFont = False
               TabOrder = 2
             end
@@ -2357,11 +2382,11 @@ object MainForm: TMainForm
         end
         object tsWebsites: TTabSheet
           Caption = 'Websites'
-          ClientHeight = 358
+          ClientHeight = 351
           ClientWidth = 579
           object vtOptionMangaSiteSelection: TVirtualStringTree
             Left = 2
-            Height = 350
+            Height = 343
             Top = 4
             Width = 573
             Align = alClient
@@ -2391,61 +2416,52 @@ object MainForm: TMainForm
         end
         object tsMisc: TTabSheet
           Caption = 'Misc'
-          ClientHeight = 358
+          ClientHeight = 351
           ClientWidth = 579
           object gbMisc: TGroupBox
             Left = 12
-            Height = 330
-            Top = 14
+            Height = 325
+            Top = 12
             Width = 556
             Anchors = [akTop, akLeft, akRight, akBottom]
-            ClientHeight = 310
+            ClientHeight = 305
             ClientWidth = 552
             TabOrder = 0
             object cbOptionShowAllLang: TCheckBox
-              Left = 32
+              Left = 16
               Height = 19
-              Top = 70
+              Top = 56
               Width = 167
               Caption = '[Batoto] Show All Language'
-              ParentFont = False
-              TabOrder = 3
-            end
-            object cbOptionAutoDlFav: TCheckBox
-              Left = 32
-              Height = 19
-              Top = 94
-              Width = 313
-              Caption = 'Favorites: Automatically download after finish checking'
               ParentFont = False
               TabOrder = 2
             end
             object cbOptionShowBatotoSG: TCheckBox
-              Left = 32
+              Left = 16
               Height = 19
-              Top = 46
+              Top = 32
               Width = 190
               Caption = '[Batoto] Show scan group name'
               ParentFont = False
               TabOrder = 0
             end
             object cbOptionEnableLoadCover: TCheckBox
-              Left = 32
+              Left = 16
               Height = 19
-              Top = 22
+              Top = 8
               Width = 153
               Caption = 'Enable load manga cover'
               ParentFont = False
               TabOrder = 1
             end
             object cbOptionMangaFoxRemoveWatermarks: TCheckBox
-              Left = 32
+              Left = 16
               Height = 19
-              Top = 136
+              Top = 80
               Width = 317
               Caption = '[Mangafox] Remove watermarks (Beware! Experimental!)'
               ParentFont = False
-              TabOrder = 4
+              TabOrder = 3
               Visible = False
             end
           end
@@ -2627,7 +2643,7 @@ object MainForm: TMainForm
     Visible = False
   end
   object pcLeft: TPageControl
-    Left = 4
+    Left = 6
     Height = 484
     Top = 12
     Width = 195
@@ -2699,9 +2715,9 @@ object MainForm: TMainForm
         Width = 157
         Anchors = [akTop, akLeft, akRight]
         OnChange = edSearchChange
-        OnClick = edSearchClick
         OnKeyUp = edSearchKeyUp
         TabOrder = 1
+        TextHint = 'Search...'
       end
       object cbSelectManga: TComboBox
         Left = 3
@@ -2959,8 +2975,8 @@ object MainForm: TMainForm
   object pmDownload: TPopupMenu
     Images = IconList
     OnPopup = pmDownloadPopup
-    left = 368
-    top = 80
+    left = 376
+    top = 344
     object miDownloadStop: TMenuItem
       Caption = 'Stop'
       Enabled = False
@@ -3278,8 +3294,8 @@ object MainForm: TMainForm
     end
   end
   object pmChapterList: TPopupMenu
-    left = 368
-    top = 128
+    left = 376
+    top = 392
     object miChapterListCheckSelected: TMenuItem
       Caption = 'Check selected'
       OnClick = miChapterListCheckSelectedClick
@@ -3310,8 +3326,8 @@ object MainForm: TMainForm
   object pmFavorites: TPopupMenu
     Images = IconList
     OnPopup = pmFavoritesPopup
-    left = 368
-    top = 184
+    left = 376
+    top = 448
     object miFavoritesViewInfos: TMenuItem
       Caption = 'View manga info'
       Bitmap.Data = {
@@ -3686,8 +3702,8 @@ object MainForm: TMainForm
   end
   object pmUpdate: TPopupMenu
     ParentBidiMode = False
-    left = 232
-    top = 80
+    left = 128
+    top = 144
     object mnUpdateList: TMenuItem
       Caption = 'Update manga list'
       OnClick = mnUpdateListClick
@@ -3712,21 +3728,21 @@ object MainForm: TMainForm
     Enabled = False
     Interval = 48
     OnTimer = itAnimateTimer
-    left = 728
-    top = 104
+    left = 752
+    top = 72
   end
   object itCheckForChapters: TIdleTimer
     Enabled = False
     Interval = 600000
     OnTimer = itCheckForChaptersTimer
-    left = 728
-    top = 200
+    left = 752
+    top = 168
   end
   object itRefreshForm: TIdleTimer
     Interval = 300
     OnTimer = itRefreshFormTimer
-    left = 672
-    top = 200
+    left = 696
+    top = 168
   end
   object IconList: TImageList
     left = 24
@@ -4250,8 +4266,8 @@ object MainForm: TMainForm
   object itSaveDownloadedList: TIdleTimer
     Interval = 300000
     OnTimer = itSaveDownloadedListTimer
-    left = 728
-    top = 152
+    left = 752
+    top = 120
   end
   object IconDL: TImageList
     left = 24
@@ -5412,8 +5428,8 @@ object MainForm: TMainForm
   end
   object pmEditURL: TPopupMenu
     OnPopup = pmEditURLPopup
-    left = 710
-    top = 52
+    left = 728
+    top = 40
     object medURLUndo: TMenuItem
       Caption = 'Undo'
       OnClick = medURLUndoClick
@@ -5459,20 +5475,20 @@ object MainForm: TMainForm
     Enabled = False
     Interval = 500
     OnTimer = itStartupTimer
-    left = 672
-    top = 104
+    left = 696
+    top = 72
   end
   object tmBackup: TIdleTimer
     Interval = 60000
     OnTimer = tmBackupTimer
-    left = 672
-    top = 152
+    left = 696
+    top = 120
   end
   object itMonitor: TTimer
     Enabled = False
     Interval = 1500
     OnTimer = itMonitorTimer
-    left = 560
-    top = 200
+    left = 752
+    top = 232
   end
 end

@@ -237,6 +237,13 @@ type
 resourcestring
   RS_FailedToCreateDirTooLong = 'Failed to create dir! Too long?';
   RS_FailedTryResumeTask = 'Failed, try resuming this task!';
+  RS_Preparing = 'Preparing';
+  RS_Downloading = 'Downloading';
+  RS_Stopped = 'Stopped';
+  RS_Finish = 'Completed';
+  RS_Waiting = 'Waiting...';
+  RS_Compressing = 'Compressing...';
+  RS_Failed = 'Failed';
 
 implementation
 
@@ -1186,7 +1193,7 @@ end;
 procedure TTaskThread.MainThreadCompressRepaint;
 begin
   container.DownloadInfo.Status :=
-    Format('%s (%d/%d)', [stIsCompressing, container.CurrentDownloadChapterPtr +
+    Format('%s (%d/%d)', [RS_Compressing, container.CurrentDownloadChapterPtr +
     1, container.ChapterLinks.Count]);
   MainForm.vtDownload.Repaint;
 end;
@@ -1228,14 +1235,14 @@ begin
   begin
     MainForm.TrayIcon.BalloonFlags := bfError;
     MainForm.TrayIcon.BalloonHint :=
-      '"' + container.DownloadInfo.title + '" - ' + stFailed;;
+      '"' + container.DownloadInfo.title + '" - ' + RS_Failed;;
   end
   else
   if container.Status = STATUS_FINISH then
   begin
     MainForm.TrayIcon.BalloonFlags := bfInfo;
     MainForm.TrayIcon.BalloonHint :=
-      '"' + container.DownloadInfo.title + '" - ' + stFinish;
+      '"' + container.DownloadInfo.title + '" - ' + RS_Finish;
   end;
   MainForm.TrayIcon.ShowBalloonHint;
 end;
@@ -1459,7 +1466,7 @@ begin
         container.DownloadInfo.Progress := '0/0';
         container.DownloadInfo.Status :=
           Format('%s (%d/%d [%s])',
-          [stPreparing,
+          [RS_Preparing,
           container.CurrentDownloadChapterPtr + 1,
           container.ChapterLinks.Count,
           container.ChapterName.Strings[container.CurrentDownloadChapterPtr]]);
@@ -1504,7 +1511,7 @@ begin
           Format('%d/%d', [container.DownCounter, container.PageNumber]);
         container.DownloadInfo.Status :=
           Format('%s (%d/%d [%s])',
-          [stPreparing,
+          [RS_Preparing,
           container.CurrentDownloadChapterPtr + 1,
           container.ChapterLinks.Count,
           container.ChapterName[container.CurrentDownloadChapterPtr]]);
@@ -1547,7 +1554,7 @@ begin
         container.Status := STATUS_DOWNLOAD;
         container.DownloadInfo.Status :=
           Format('%s (%d/%d) [%s]',
-          [stDownloading,
+          [RS_Downloading,
           container.CurrentDownloadChapterPtr + 1,
           container.ChapterLinks.Count,
           container.ChapterName.Strings[container.CurrentDownloadChapterPtr]]);
@@ -1605,7 +1612,7 @@ begin
     else
     begin
       container.Status := STATUS_FINISH;
-      container.DownloadInfo.Status := stFinish;
+      container.DownloadInfo.Status := RS_Finish;
       container.DownloadInfo.Progress := '';
     end;
     Synchronize(MainThreadRepaint);
@@ -1647,7 +1654,7 @@ begin
       and (container.FailedChapterLinks.Count = 0) then
     begin
       container.Status := STATUS_FINISH;
-      container.DownloadInfo.Status := stFinish;
+      container.DownloadInfo.Status := RS_Finish;
       container.DownloadInfo.Progress := '';
       container.Manager.CheckAndActiveTask(True, Self);
     end
@@ -1658,7 +1665,7 @@ begin
     begin
       container.Status := STATUS_STOP;
       container.DownloadInfo.Status :=
-        Format('%s (%d/%d)', [stStop, container.CurrentDownloadChapterPtr +
+        Format('%s (%d/%d)', [RS_Stopped, container.CurrentDownloadChapterPtr +
         1, container.ChapterLinks.Count]);
       container.Manager.CheckAndActiveTask(False, Self);
     end;
@@ -1805,7 +1812,7 @@ begin
         PageNumber := ReadInteger(tid, 'NumberOfPages', 0);
         CurrentPageNumber := ReadInteger(tid, 'CurrentPage', 0);
         if Status = STATUS_COMPRESS then
-          DownloadInfo.Status := stWait;
+          DownloadInfo.Status := RS_Waiting;
         s := ReadString(tid, 'DateTime', '');
         //for old config
         if (Pos('/', s) > 0) or (Pos('\', s) > 0) then
@@ -2174,7 +2181,7 @@ begin
       else
       begin
         containers.Items[i].Status := STATUS_WAIT;
-        containers.Items[i].DownloadInfo.Status := stWait;
+        containers.Items[i].DownloadInfo.Status := RS_Waiting;
       end;
     end;
   end;
@@ -2194,7 +2201,7 @@ begin
         (containers.Items[taskID].Status = STATUS_FINISH)) then
       begin
         containers.Items[taskID].Status := STATUS_DOWNLOAD;
-        containers.Items[taskID].DownloadInfo.Status := stDownloading;
+        containers.Items[taskID].DownloadInfo.Status := RS_Downloading;
         containers.Items[taskID].Thread := TTaskThread.Create;
         containers.Items[taskID].Thread.container := containers.Items[taskID];
         containers.Items[taskID].Thread.Start;
@@ -2216,7 +2223,7 @@ begin
       if containers[taskID].Status = STATUS_WAIT then
       begin
         containers.Items[taskID].Status := STATUS_STOP;
-        containers.Items[taskID].DownloadInfo.Status := stStop;
+        containers.Items[taskID].DownloadInfo.Status := RS_Stopped;
       end;
       if containers.Items[taskID].ThreadState then
         containers.Items[taskID].Thread.Terminate;
@@ -2242,7 +2249,7 @@ begin
       if containers[i].Status in [STATUS_STOP, STATUS_FAILED, STATUS_PROBLEM] then
       begin
         containers[i].Status := STATUS_WAIT;
-        containers[i].DownloadInfo.Status := stWait;
+        containers[i].DownloadInfo.Status := RS_Waiting;
       end;
     end;
     Backup;
@@ -2264,7 +2271,7 @@ begin
       if containers[i].Status = STATUS_WAIT then
       begin
         containers[i].Status := STATUS_STOP;
-        containers[i].DownloadInfo.Status := stStop;
+        containers[i].DownloadInfo.Status := RS_Stopped;
       end;
       if containers[i].ThreadState then
         containers[i].Thread.Terminate;

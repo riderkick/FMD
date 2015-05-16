@@ -46,7 +46,7 @@ begin
       MainForm.vtMangaList.Clear;
       MainForm.vtMangaList.RootNodeCount := MainForm.dataProcess.filterPos.Count;
       MainForm.lbMode.Caption :=
-        Format(stModeAll, [MainForm.dataProcess.filterPos.Count]);
+        Format(RS_ModeAll, [MainForm.dataProcess.filterPos.Count]);
     end;
   except
     on E: Exception do
@@ -92,7 +92,7 @@ end;
 
 procedure TUpdateDBThread.MainThreadCannotConnectToServer;
 begin
-  MessageDlg('', stDlgUpdaterCannotConnectToServer, mtInformation, [mbYes], 0);
+  MessageDlg('', RS_DlgCannotConnectToServer, mtInformation, [mbYes], 0);
 end;
 
 procedure TUpdateDBThread.Execute;
