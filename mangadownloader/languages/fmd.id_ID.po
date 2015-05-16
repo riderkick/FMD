@@ -285,10 +285,6 @@ msgstr ""
 msgid "Visit my blog"
 msgstr ""
 
-#: tmainform.button1.caption
-msgid "Button1"
-msgstr ""
-
 #: tmainform.caption
 msgid "Free Manga Downloader"
 msgstr ""

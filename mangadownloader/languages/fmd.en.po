@@ -317,10 +317,6 @@ msgstr "Update manga list"
 msgid "Visit my blog"
 msgstr "Visit my blog"
 
-#: tmainform.button1.caption
-msgid "Button1"
-msgstr "Button1"
-
 #: tmainform.caption
 msgid "Free Manga Downloader"
 msgstr "Free Manga Downloader"

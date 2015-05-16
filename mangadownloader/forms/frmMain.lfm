@@ -177,14 +177,6 @@ object MainForm: TMainForm
           OnClick = tbDownloadDeleteCompletedClick
         end
       end
-      object Button1: TButton
-        Left = 90
-        Height = 25
-        Top = 342
-        Width = 75
-        Caption = 'Button1'
-        TabOrder = 2
-      end
     end
     object tsInformation: TTabSheet
       Caption = 'Manga Info'

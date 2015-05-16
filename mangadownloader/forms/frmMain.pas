@@ -45,7 +45,6 @@ type
     btSearchClear: TSpeedButton;
     btUpdateList: TSpeedButton;
     btURL: TSpeedButton;
-    Button1: TButton;
     cbOptionAutoDlFav: TCheckBox;
     cbOptionAutoRemoveCompletedManga: TCheckBox;
     cbOptionUpdateListNoMangaInfo: TCheckBox;
@@ -2505,6 +2504,7 @@ var
 begin
   if vtMangaList.SelectedCount = 0 then
     Exit;
+  WriteLog('AddItem.Main');
   try
     YesAll := False;
     NoAll := False;
@@ -2558,6 +2558,8 @@ begin
             end;
           end;
         end;
+
+        WriteLog('Added items');
 
         if AllowedToCreate then
           SilentThreadManager.Add(MD_DownloadAll,
