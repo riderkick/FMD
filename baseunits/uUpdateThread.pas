@@ -12,7 +12,7 @@ unit uUpdateThread;
 interface
 
 uses
-  Classes, SysUtils, fgl, typinfo, FileUtil, syncobjs, uData, uBaseUnit,
+  Classes, SysUtils, typinfo, FileUtil, syncobjs, uData, uBaseUnit,
   uFMDThread, blcksock;
 
 type
@@ -36,8 +36,6 @@ type
     constructor Create;
     destructor Destroy; override;
   end;
-
-  TUpdateMangaThreadList = TFPGList<TUpdateMangaThread>;
 
   { TUpdateMangaManagerThread }
 
@@ -65,7 +63,7 @@ type
     workPtr, directoryCount,
     // for fakku's doujinshi only
     directoryCount2, numberOfThreads, websitePtr: Cardinal;
-    threads: TUpdateMangaThreadList;
+    threads: TFPList;
     CS_threads: TCriticalSection;
     constructor Create;
     destructor Destroy; override;
@@ -319,7 +317,7 @@ begin
   mainDataProcess := TDataProcess.Create;
   syncProcess := TDataProcess.Create;
 
-  threads := TUpdateMangaThreadList.Create;
+  threads := TFPList.Create;
 end;
 
 destructor TUpdateMangaManagerThread.Destroy;
@@ -400,7 +398,7 @@ procedure TUpdateMangaManagerThread.GetInfo(const limit: Cardinal;
   begin
     if threads.Count > 0 then
       for i := threads.Count - 1 downto 0 do
-        threads[i].Terminate;
+        TUpdateMangaThread(threads[i]).Terminate;
     WaitForThreads;
   end;
 
@@ -473,10 +471,10 @@ begin
         CS_threads.Acquire;
         try
           threads.Add(TUpdateMangaThread.Create);
-          threads.Last.checkStyle := cs;
-          threads.Last.manager := Self;
-          threads.Last.workPtr := workPtr;
-          threads.Last.Start;
+          TUpdateMangaThread(threads.Last).checkStyle := cs;
+          TUpdateMangaThread(threads.Last).manager := Self;
+          TUpdateMangaThread(threads.Last).workPtr := workPtr;
+          TUpdateMangaThread(threads.Last).Start;
           Inc(workPtr);
           S := RS_UpdatingList + Format(' [%d/%d] %s | [T:%d] [%d/%d]',
             [websitePtr, websites.Count, website, threads.Count, workPtr, limit]);
@@ -532,7 +530,7 @@ procedure TUpdateMangaManagerThread.Execute;
     begin
       if Terminated then
         for i := threads.Count - 1 downto 0 do
-          threads[i].Terminate;
+          TUpdateMangaThread(threads[i]).Terminate;
       Sleep(200);
     end;
   end;
