@@ -2481,12 +2481,12 @@ begin
   end
   else
   begin
-    xNode := vtDownload.GetFirst;
-    for i := 0 to vtDownload.RootNodeCount - 1 do
+    xNode := vtDownload.GetFirstSelected;
+    for i := 0 to vtDownload.SelectedCount - 1 do
     begin
       if vtDownload.Selected[xNode] then
         DLManager.StopTask(xNode^.Index, False);
-      xNode := vtDownload.GetNext(xNode);
+      xNode := vtDownload.GetNextSelected(xNode);
     end;
     DLManager.Backup;
     DLManager.CheckAndActiveTask;
