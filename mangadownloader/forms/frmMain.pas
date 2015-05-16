@@ -1220,15 +1220,13 @@ begin
   if vtFavorites.SelectedCount = 0 then
     Exit;
   try
-    xNode := vtFavorites.GetFirst;
-    i := 0;
-    while i < FavoriteManager.Favorites.Count do
+    xNode := vtFavorites.GetFirstSelected;
+    for i := 0 to vtFavorites.SelectedCount - 1 do
     begin
       if vtFavorites.Selected[xNode] then
-        with FavoriteManager.Favorites[i].FavoriteInfo do
+        with FavoriteManager.Favorites[xNode^.Index].FavoriteInfo do
           SilentThreadManager.Add(MD_DownloadAll, Website, Title, Link, SaveTo);
-      xNode := vtFavorites.GetNext(xNode);
-      Inc(i);
+      xNode := vtFavorites.GetNextSelected(xNode);
     end;
   except
     on E: Exception do
