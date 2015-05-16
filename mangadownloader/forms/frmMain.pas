@@ -2051,17 +2051,17 @@ var
 begin
   if vtMangaList.SelectedCount = 0 then
     Exit;
-  xNode := vtMangaList.GetFirst;
-  for i := 0 to vtMangaList.RootNodeCount - 1 do
+  xNode := vtMangaList.GetFirstSelected;
+  for i := 0 to vtMangaList.SelectedCount - 1 do
   begin
     if vtMangaList.Selected[xNode] then
     begin
       SilentThreadManager.Add(MD_AddToFavorites,
-        GetMangaSiteName(DataProcess.site.Items[DataProcess.GetPos(i)]),
-        DataProcess.Param[DataProcess.GetPos(i), DATA_PARAM_NAME],
-        DataProcess.Param[DataProcess.GetPos(i), DATA_PARAM_LINK]);
+        GetMangaSiteName(DataProcess.site.Items[DataProcess.GetPos(xNode^.Index)]),
+        DataProcess.Param[DataProcess.GetPos(xNode^.Index), DATA_PARAM_NAME],
+        DataProcess.Param[DataProcess.GetPos(xNode^.Index), DATA_PARAM_LINK]);
     end;
-    xNode := vtMangaList.GetNext(xNode);
+    xNode := vtMangaList.GetNextSelected(xNode);
   end;
 end;
 
