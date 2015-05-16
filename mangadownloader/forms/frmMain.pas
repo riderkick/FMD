@@ -2163,17 +2163,17 @@ end;
 procedure TMainForm.miChapterListCheckSelectedClick(Sender: TObject);
 var
   i: Cardinal;
-  Node: PVirtualNode;
+  xNode: PVirtualNode;
 begin
   if clbChapterList.RootNodeCount > 0 then
   begin
-    Node := clbChapterList.GetFirst;
-    for i := 0 to clbChapterList.RootNodeCount - 1 do
+    xNode := clbChapterList.GetFirstSelected;
+    for i := 0 to clbChapterList.SelectedCount - 1 do
     begin
-      if clbChapterList.Selected[Node] then
-        Node^.CheckState := csCheckedNormal;
-      clbChapterList.InvalidateNode(Node);
-      Node := clbChapterList.GetNext(Node);
+      if clbChapterList.Selected[xNode] then
+        xNode^.CheckState := csCheckedNormal;
+      clbChapterList.InvalidateNode(xNode);
+      xNode := clbChapterList.GetNextSelected(xNode);
     end;
   end;
 end;
@@ -2181,17 +2181,17 @@ end;
 procedure TMainForm.miChapterListUncheckSelectedClick(Sender: TObject);
 var
   i: Cardinal;
-  Node: PVirtualNode;
+  xNode: PVirtualNode;
 begin
   if clbChapterList.RootNodeCount > 0 then
   begin
-    Node := clbChapterList.GetFirst;
-    for i := 0 to clbChapterList.RootNodeCount - 1 do
+    xNode := clbChapterList.GetFirstSelected;
+    for i := 0 to clbChapterList.SelectedCount - 1 do
     begin
-      if clbChapterList.Selected[Node] then
-        Node^.CheckState := csUncheckedNormal;
-      clbChapterList.InvalidateNode(Node);
-      Node := clbChapterList.GetNext(Node);
+      if clbChapterList.Selected[xNode] then
+        xNode^.CheckState := csUncheckedNormal;
+      clbChapterList.InvalidateNode(xNode);
+      xNode := clbChapterList.GetNextSelected(xNode);
     end;
   end;
 end;
