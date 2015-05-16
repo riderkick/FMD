@@ -330,11 +330,12 @@
         <IsPartOfProject Value="True"/>
       </Unit17>
       <Unit18>
-        <Filename Value="forms\frmShutdownCounter.pas"/>
+        <Filename Value="forms\frmshutdowncounter.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="ShutdownCounterForm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
+        <UnitName Value="frmShutdownCounter"/>
       </Unit18>
       <Unit19>
         <Filename Value="forms\frmupdatedialog.pas"/>
