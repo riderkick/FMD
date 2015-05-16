@@ -1774,22 +1774,16 @@ begin
 end;
 
 procedure TMainForm.btChecksClick(Sender: TObject);
-var
-  button: TControl;
-  lowerLeft: TPoint;
 begin
   if dataProcess.Title.Count = 0 then
     pmUpdate.Items[0].Enabled := False
   else
     pmUpdate.Items[0].Enabled := True;
   if Sender is TControl then
-  begin
-    button := TControl(Sender);
-    lowerLeft := Point(spMainSplitter.Left + 5 + button.Left,
-      button.Top + button.Height + 295);
-    lowerLeft := ClientToScreen(lowerLeft);
-    pmChapterList.Popup(lowerLeft.X, lowerLeft.Y);
-  end;
+    with TControl(Sender) do begin
+      pmChapterList.Alignment := Menus.paRight;
+      pmChapterList.PopUp(ControlOrigin.x, ControlOrigin.y);
+    end;
   clbChapterList.SetFocus;
 end;
 
@@ -2180,7 +2174,7 @@ var
   i: Cardinal;
   xNode: PVirtualNode;
 begin
-  if clbChapterList.RootNodeCount > 0 then
+  if clbChapterList.SelectedCount > 0 then
   begin
     xNode := clbChapterList.GetFirstSelected;
     for i := 0 to clbChapterList.SelectedCount - 1 do
