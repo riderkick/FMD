@@ -9,18 +9,13 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: en\n"
-"X-Generator: Poedit 1.7.6\n"
-
-#: frmimportfavorites.rs_importcompleted
-msgid "Import completed."
-msgstr "Import completed."
+"X-Generator: Poedit 1.7.6"
 
 #: frmmain.rs_alldownloads
 msgid "All downloads"
 msgstr "All downloads"
 
 #: frmmain.rs_cancel
-msgctxt "frmmain.rs_cancel"
 msgid "Cancel"
 msgstr "Cancel"
 
@@ -57,16 +52,12 @@ msgid "Are you sure you want to delete the task(s)?"
 msgstr "Are you sure you want to delete the task(s)?"
 
 #: frmmain.rs_dlgtitleexistindllist
-#, fuzzy
-#| msgid ""
-#| "This title are already in download list.\n"
-#| "Do you want to download it anyway?\n"
 msgid ""
 "This title are already in download list.\n"
-"Do you want to download it anyway?\n"
+"Do you want to download it anyway?"
 msgstr ""
 "This title are already in download list.\n"
-"Do you want to download it anyway?\n"
+"Do you want to download it anyway?"
 
 #: frmmain.rs_dlgtypeinnewchapter
 msgid "Type in new chapter:"
@@ -88,71 +79,13 @@ msgstr "Do you want to download manga list from the server ?"
 msgid "URL not supported!"
 msgstr "URL not supported!"
 
-#: frmmain.rs_filterhint
-#, fuzzy
-#| msgid ""
-#| "Genres:\n"
-#| "- Checked: Include this genre.\n"
-#| "- Unchecked: Exclude this genre.\n"
-#| "- Grayed: Doesn't matter.\n"
-#| "\n"
-#| "Custom Genres:\n"
-#| "- Separate multiple genres with ','.\n"
-#| "- Exclude a genre by placing '!' at the beginning of a genre.\n"
-#| "- Example: Adventure,!Ecchi,Comedy.\n"
-msgid ""
-"Genres:\n"
-"- Checked: Include this genre.\n"
-"- Unchecked: Exclude this genre.\n"
-"- Grayed: Doesn't matter.\n"
-"\n"
-"Custom Genres:\n"
-"- Separate multiple genres with ','.\n"
-"- Exclude a genre by placing '!' at the beginning of a genre.\n"
-"- Example: Adventure,!Ecchi,Comedy.\n"
-msgstr ""
-"Genres:\n"
-"- Checked: Include this genre.\n"
-"- Unchecked: Exclude this genre.\n"
-"- Grayed: Doesn't matter.\n"
-"\n"
-"Custom Genres:\n"
-"- Separate multiple genres with ','.\n"
-"- Exclude a genre by placing '!' at the beginning of a genre.\n"
-"- Example: Adventure,!Ecchi,Comedy.\n"
-
-#: frmmain.rs_hintexternalprogram
-#, fuzzy
-#| msgid ""
-#| "%PATH% : Path to the manga\n"
-#| "%FCHAPTER% : First downloaded chapter/first chapter in the directory\n"
-#| "\n"
-#| "\n"
-#| "Example: C:\\HoneyView\\honeyview.exe \"%PATH%%FCHAPTER%\"\n"
-msgid ""
-"%PATH% : Path to the manga\n"
-"%FCHAPTER% : First downloaded chapter/first chapter in the directory\n"
-"\n"
-"\n"
-"Example: C:\\HoneyView\\honeyview.exe \"%PATH%%FCHAPTER%\"\n"
-msgstr ""
-"%PATH% : Path to the manga\n"
-"%FCHAPTER% : First downloaded chapter/first chapter in the directory\n"
-"\n"
-"\n"
-"Example: C:\\HoneyView\\honeyview.exe \"%PATH%%FCHAPTER%\"\n"
-
 #: frmmain.rs_hintfavoriteproblem
-#, fuzzy
-#| msgid ""
-#| "There is a problem with this data!\n"
-#| "Removing and re-adding this data may fix the problem.\n"
 msgid ""
 "There is a problem with this data!\n"
-"Removing and re-adding this data may fix the problem.\n"
+"Removing and re-adding this data may fix the problem."
 msgstr ""
 "There is a problem with this data!\n"
-"Removing and re-adding this data may fix the problem.\n"
+"Removing and re-adding this data may fix the problem."
 
 #: frmmain.rs_history
 msgid "History"
@@ -239,18 +172,6 @@ msgstr "Today"
 msgid "Yesterday"
 msgstr "Yesterday"
 
-#: frmshutdowncounter.rs_lblmessageexit
-msgid "FMD will exit in %d second."
-msgstr "FMD will exit in %d second."
-
-#: frmshutdowncounter.rs_lblmessagehibernate
-msgid "System will hibernate in %d second."
-msgstr "System will hibernate in %d second."
-
-#: frmshutdowncounter.rs_lblmessageshutdown
-msgid "System will shutdown in %d second."
-msgstr "System will shutdown in %d second."
-
 #: tmainform.btabortupdatelist.hint
 msgid "Abort update list"
 msgstr "Abort update list"
@@ -264,12 +185,10 @@ msgid "Check for new version"
 msgstr "Check for new version"
 
 #: tmainform.btdownload.caption
-msgctxt "TMAINFORM.BTDOWNLOAD.CAPTION"
 msgid "Download"
 msgstr "Download"
 
 #: tmainform.btfavoriteschecknewchapter.caption
-msgctxt "TMAINFORM.BTFAVORITESCHECKNEWCHAPTER.CAPTION"
 msgid "Check for new chapter"
 msgstr "Check for new chapter"
 
@@ -386,7 +305,9 @@ msgid "[Mangafox] Remove watermarks (Beware! Experimental!)"
 msgstr "[Mangafox] Remove watermarks (Beware! Experimental!)"
 
 #: tmainform.cboptionminimizetotray.caption
-msgid "cbOptionMinimizeToTray"
+#, fuzzy
+#| msgid "cbOptionMinimizeToTray"
+msgid "Minimize to tray"
 msgstr "cbOptionMinimizeToTray"
 
 #: tmainform.cboptiononeinstanceonly.caption
@@ -597,14 +518,6 @@ msgstr "Yaoi"
 msgid "Yuri"
 msgstr "Yuri"
 
-#: tmainform.edoptiondefaultpath.editlabel.caption
-msgid "Choose default download path:"
-msgstr "Choose default download path:"
-
-#: tmainform.edsaveto.editlabel.caption
-msgid "Save to:"
-msgstr "Save to:"
-
 #: tmainform.gboptionexternal.caption
 msgid "External program"
 msgstr "External program"
@@ -622,6 +535,10 @@ msgstr "Proxy config"
 msgid "Renaming"
 msgstr "Renaming"
 
+#: tmainform.lbdefaultdownloadpath.caption
+msgid "Choose the default download path:"
+msgstr "Choose the default download path:"
+
 #: tmainform.lbfilterartists.caption
 msgid "Artists"
 msgstr "Artists"
@@ -638,6 +555,28 @@ msgstr "Custom Genres"
 msgctxt "tmainform.lbfilterhint.caption"
 msgid "[?]"
 msgstr "[?]"
+
+#: tmainform.lbfilterhint.hint
+msgid ""
+"Genres:\n"
+"- Checked: Include this genre.'\n"
+"- Unchecked: Exclude this genre.'\n"
+"- Grayed: Doesn't matter.\n"
+"\n"
+"Custom Genres:\n"
+"- Separate multiple genres with ','.\n"
+"- Exclude a genre by placing ''!'' at the beginning of a genre.\n"
+"- Example: Adventure,!Ecchi,Comedy."
+msgstr ""
+"Genres:\n"
+"- Checked: Include this genre.'\n"
+"- Unchecked: Exclude this genre.'\n"
+"- Grayed: Doesn't matter.\n"
+"\n"
+"Custom Genres:\n"
+"- Separate multiple genres with ','.\n"
+"- Exclude a genre by placing ''!'' at the beginning of a genre.\n"
+"- Example: Adventure,!Ecchi,Comedy."
 
 #: tmainform.lbfilterstatus.caption
 msgctxt "TMAINFORM.LBFILTERSTATUS.CAPTION"
@@ -658,7 +597,7 @@ msgid "Mode: Show all manga"
 msgstr "Mode: Show all manga"
 
 #: tmainform.lboptionautocheckminutes.caption
-msgctxt "TMAINFORM.LBOPTIONAUTOCHECKMINUTES.CAPTION"
+msgctxt "tmainform.lboptionautocheckminutes.caption"
 msgid "Auto check for new chapter every %d minutes"
 msgstr "Auto check for new chapter every %d minutes"
 
@@ -671,10 +610,27 @@ msgctxt "TMAINFORM.LBOPTIONCUSTOMRENAMEHINT.CAPTION"
 msgid "[?]"
 msgstr "[?]"
 
+#: tmainform.lboptioncustomrenamehint.hint
+msgid ""
+"%WEBSITE% : Website name\n"
+"%MANGA% : Manga title\n"
+"%CHAPTER% : Chapter title\n"
+"%AUTHOR% : Author\n"
+"%ARTIST% : Artist\n"
+"%NUMBERING% : Numbering\n"
+"\n"
+"Note:\n"
+"Chapter folder name must have at least %CHAPTER% or %NUMBERING%."
+msgstr ""
+
 #: tmainform.lboptioncustomrenamehint1.caption
 msgctxt "TMAINFORM.LBOPTIONCUSTOMRENAMEHINT1.CAPTION"
 msgid "[?]"
 msgstr "[?]"
+
+#: tmainform.lboptioncustomrenamehint1.hint
+msgid "100: FlateEncode (lossless), lower: DCTEncode (lossy)"
+msgstr "100: FlateEncode (lossless), lower: DCTEncode (lossy)"
 
 #: tmainform.lboptiondialogs.caption
 msgid "Show dialog confirmation for:"
@@ -688,6 +644,18 @@ msgstr "Open manga by using external program:"
 msgctxt "TMAINFORM.LBOPTIONEXTERNALHINT.CAPTION"
 msgid "[?]"
 msgstr "[?]"
+
+#: tmainform.lboptionexternalhint.hint
+msgid ""
+"%PATH% : Path to the manga\n"
+"%FCHAPTER% : First downloaded chapter/first chapter in the directory\n"
+"\n"
+"Example: C:\\HoneyView\\honeyview.exe \"%PATH%%FCHAPTER%\""
+msgstr ""
+"%PATH% : Path to the manga\n"
+"%FCHAPTER% : First downloaded chapter/first chapter in the directory\n"
+"\n"
+"Example: C:\\HoneyView\\honeyview.exe \"%PATH%%FCHAPTER%\""
 
 #: tmainform.lboptionhost.caption
 msgid "Host"
@@ -750,6 +718,10 @@ msgstr "Rename  digits"
 #: tmainform.lboptionuser.caption
 msgid "Username"
 msgstr "Username"
+
+#: tmainform.lbsaveto.caption
+msgid "Save to:"
+msgstr "Save to:"
 
 #: tmainform.medturldelete.caption
 msgctxt "TMAINFORM.MEDTURLDELETE.CAPTION"
@@ -1099,169 +1071,4 @@ msgstr "Website"
 msgctxt "TMAINFORM.VTFAVORITES.HEADER.COLUMNS[4].TEXT"
 msgid "Save to"
 msgstr "Save to"
-
-#: tmainform.vtmangalist.hint
-msgid "test"
-msgstr "test"
-
-#: udownloadsmanager.rs_compressing
-msgid "Compressing..."
-msgstr "Compressing..."
-
-#: udownloadsmanager.rs_downloading
-msgid "Downloading"
-msgstr "Downloading"
-
-#: udownloadsmanager.rs_failed
-msgid "Failed"
-msgstr "Failed"
-
-#: udownloadsmanager.rs_failedtocreatedirtoolong
-msgid "Failed to create dir! Too long?"
-msgstr "Failed to create dir! Too long?"
-
-#: udownloadsmanager.rs_failedtryresumetask
-msgid "Failed, try resuming this task!"
-msgstr "Failed, try resuming this task!"
-
-#: udownloadsmanager.rs_finish
-msgid "Completed"
-msgstr "Completed"
-
-#: udownloadsmanager.rs_preparing
-msgctxt "udownloadsmanager.rs_preparing"
-msgid "Preparing"
-msgstr "Preparing"
-
-#: udownloadsmanager.rs_stopped
-msgid "Stopped"
-msgstr "Stopped"
-
-#: udownloadsmanager.rs_waiting
-msgid "Waiting..."
-msgstr "Waiting..."
-
-#: ufavoritesmanager.rs_btnaddtoqueue
-msgid "Add to queue"
-msgstr "Add to queue"
-
-#: ufavoritesmanager.rs_btncancel
-msgctxt "ufavoritesmanager.rs_btncancel"
-msgid "Cancel"
-msgstr "Cancel"
-
-#: ufavoritesmanager.rs_btncheckfavorites
-msgctxt "ufavoritesmanager.rs_btncheckfavorites"
-msgid "Check for new chapter"
-msgstr "Check for new chapter"
-
-#: ufavoritesmanager.rs_btndownload
-msgctxt "ufavoritesmanager.rs_btndownload"
-msgid "Download"
-msgstr "Download"
-
-#: ufavoritesmanager.rs_btnremove
-msgid "Remove"
-msgstr "Remove"
-
-#: ufavoritesmanager.rs_dlgcompletedmangacaption
-msgid "Found %d completed manga"
-msgstr "Found %d completed manga"
-
-#: ufavoritesmanager.rs_dlgfavoritescheckisrunning
-msgid "Favorites check is running!"
-msgstr "Favorites check is running!"
-
-#: ufavoritesmanager.rs_dlgnewchaptercaption
-msgid "%d manga(s) have new chapter(s)"
-msgstr "%d manga(s) have new chapter(s)"
-
-#: ufavoritesmanager.rs_favoritehasnewchapter
-msgid "%s <%s> has %d new chapter(s)."
-msgstr "%s <%s> has %d new chapter(s)."
-
-#: ufavoritesmanager.rs_lblmangawillberemoved
-msgid "Completed manga will be removed:"
-msgstr "Completed manga will be removed:"
-
-#: ufavoritesmanager.rs_lblnewchapterfound
-msgid "Found %d new chapter from %d manga(s):"
-msgstr "Found %d new chapter from %d manga(s):"
-
-#: usilentthread.rs_silentthreadloadstatus
-msgid "Loading: %d/%d"
-msgstr "Loading: %d/%d"
-
-#: usubthread.rs_btncheckupdates
-msgid "Check for new updates"
-msgstr "Check for new updates"
-
-#: usubthread.rs_currentversion
-msgid "Installed Version"
-msgstr "Installed Version"
-
-#: usubthread.rs_latestversion
-msgid "Latest Version   "
-msgstr "Latest Version   "
-
-#: usubthread.rs_newversionfound
-msgid "New Version found!"
-msgstr "New Version found!"
-
-#: uupdatethread.rs_dlghasnewmanga
-msgid "%s has %d new manga(s)"
-msgstr "%s has %d new manga(s)"
-
-#: uupdatethread.rs_gettingdirectory
-msgid "Getting directory"
-msgstr "Getting directory"
-
-#: uupdatethread.rs_gettinginfo
-msgid "Getting info"
-msgstr "Getting info"
-
-#: uupdatethread.rs_gettinglistfor
-msgid "Getting list for"
-msgstr "Getting list for"
-
-#: uupdatethread.rs_indexingnewtitle
-msgid "Indexing new title(s)"
-msgstr "Indexing new title(s)"
-
-#: uupdatethread.rs_lookingfornewtitle
-msgid "Looking for new title(s)"
-msgstr "Looking for new title(s)"
-
-#: uupdatethread.rs_lookingfornewtitlefromanotherdirectory
-msgid "Looking for new title(s) from another directory"
-msgstr "Looking for new title(s) from another directory"
-
-#: uupdatethread.rs_preparing
-msgctxt "uupdatethread.rs_preparing"
-msgid "Preparing"
-msgstr "Preparing"
-
-#: uupdatethread.rs_removingduplicatefromcurrentdata
-msgid "Removing duplicate from current data"
-msgstr "Removing duplicate from current data"
-
-#: uupdatethread.rs_removingduplicatefromlocaldata
-msgid "Removing duplicate from local data"
-msgstr "Removing duplicate from local data"
-
-#: uupdatethread.rs_removingduplicatefromnewtitle
-msgid "Removing duplicate from new title(s)"
-msgstr "Removing duplicate from new title(s)"
-
-#: uupdatethread.rs_savingdata
-msgid "Saving data"
-msgstr "Saving data"
-
-#: uupdatethread.rs_synchronizingdata
-msgid "Synchronizing data"
-msgstr "Synchronizing data"
-
-#: uupdatethread.rs_updatinglist
-msgid "Updating list"
-msgstr "Updating list"
 

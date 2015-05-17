@@ -9,215 +9,168 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: id_ID\n"
-"X-Generator: Poedit 1.7.6\n"
-
-#: frmimportfavorites.rs_importcompleted
-msgid "Import completed."
-msgstr ""
+"X-Generator: Poedit 1.7.6"
 
 #: frmmain.rs_alldownloads
 msgid "All downloads"
-msgstr ""
+msgstr "Semua unduhan"
 
 #: frmmain.rs_cancel
-msgctxt "frmmain.rs_cancel"
 msgid "Cancel"
-msgstr ""
+msgstr "Batal"
 
 #: frmmain.rs_checking
 msgid "Checking..."
-msgstr ""
+msgstr "Memeriksa..."
 
 #: frmmain.rs_dlgcannotconnecttoserver
 msgid "Cannot connect to the server."
-msgstr ""
+msgstr "Tidak dapat terhubung ke server."
 
 #: frmmain.rs_dlgcannotgetmangainfo
 msgid "Cannot get manga info. Please check your internet connection and try it again."
-msgstr ""
+msgstr "Tidak bisa mendapatkan informasi komik. Silakan periksa koneksi internet Anda dan coba lagi."
 
 #: frmmain.rs_dlgmangalistselect
 msgid "You must choose at least 1 manga website!"
-msgstr ""
+msgstr "Anda harus memilih minimal 1 situs komik!"
 
 #: frmmain.rs_dlgquit
 msgid "Are you sure you want to exit?"
-msgstr ""
+msgstr "Apakah Anda yakin Anda ingin keluar?"
 
 #: frmmain.rs_dlgremovefavorite
 msgid "Are you sure you want to delete the favorite(s)?"
-msgstr ""
+msgstr "Apakah Anda yakin Anda ingin menghapus kesukaan ini?"
 
 #: frmmain.rs_dlgremovefinishtasks
 msgid "Are you sure you want to delete all finished tasks?"
-msgstr ""
+msgstr "Apakah Anda yakin Anda ingin menghapus semua unduhan yang sudah selesai?"
 
 #: frmmain.rs_dlgremovetask
 msgid "Are you sure you want to delete the task(s)?"
-msgstr ""
+msgstr "Apakah Anda yakin ingin menghapus unduhan ini?"
 
 #: frmmain.rs_dlgtitleexistindllist
 msgid ""
 "This title are already in download list.\n"
-"Do you want to download it anyway?\n"
+"Do you want to download it anyway?"
 msgstr ""
+"Judul ini yang sudah di daftar unduhan. \n"
+"Apakah anda ingin mengunduhnya lagi?"
 
 #: frmmain.rs_dlgtypeinnewchapter
 msgid "Type in new chapter:"
-msgstr ""
+msgstr "Ketik bab baru:"
 
 #: frmmain.rs_dlgtypeinnewsavepath
 msgid "Type in new save path:"
-msgstr ""
+msgstr "Masukkan lokasi penyimpanan yang baru:"
 
 #: frmmain.rs_dlgupdaterisrunning
 msgid "Updater is running!"
-msgstr ""
+msgstr "Update sedang berjalan!"
 
 #: frmmain.rs_dlgupdaterwanttoupdatedb
 msgid "Do you want to download manga list from the server ?"
-msgstr ""
+msgstr "Apakah Anda ingin menngunduh daftar manga dari server?"
 
 #: frmmain.rs_dlgurlnotsupport
 msgid "URL not supported!"
-msgstr ""
-
-#: frmmain.rs_filterhint
-msgid ""
-"Genres:\n"
-"- Checked: Include this genre.\n"
-"- Unchecked: Exclude this genre.\n"
-"- Grayed: Doesn't matter.\n"
-"\n"
-"Custom Genres:\n"
-"- Separate multiple genres with ','.\n"
-"- Exclude a genre by placing '!' at the beginning of a genre.\n"
-"- Example: Adventure,!Ecchi,Comedy.\n"
-msgstr ""
-
-#: frmmain.rs_hintexternalprogram
-#, fuzzy
-#| msgid ""
-#| "%PATH% : Path to the manga\n"
-#| "%FCHAPTER% : First downloaded chapter/first chapter in the directory\n"
-#| "\n"
-#| "\n"
-#| "Example: C:\\HoneyView\\honeyview.exe \"%PATH%%FCHAPTER%\"\n"
-msgid ""
-"%PATH% : Path to the manga\n"
-"%FCHAPTER% : First downloaded chapter/first chapter in the directory\n"
-"\n"
-"\n"
-"Example: C:\\HoneyView\\honeyview.exe \"%PATH%%FCHAPTER%\"\n"
-msgstr ""
-"%PATH% : Tempat komik terunduh\n"
-"%FCHAPTER% : Berkas terunduh pertama\n"
-"\n"
-"\n"
-"Contoh: C:\\HoneyView\\honeyview.exe \"%PATH%%FCHAPTER%\"\n"
+msgstr "URL tidak didukung!"
 
 #: frmmain.rs_hintfavoriteproblem
 msgid ""
 "There is a problem with this data!\n"
-"Removing and re-adding this data may fix the problem.\n"
+"Removing and re-adding this data may fix the problem."
 msgstr ""
+"Ada masalah dengan data ini! \n"
+"Hapus dan tambahkan kembali mungkin dapat memperbaiki masalah ini."
 
 #: frmmain.rs_history
 msgid "History"
-msgstr ""
+msgstr "Riwayat"
 
 #: frmmain.rs_import
 msgid "Import"
-msgstr ""
+msgstr "Impor"
 
 #: frmmain.rs_infoartists
 msgid "Artist(s):"
-msgstr ""
+msgstr "Seniman:"
 
 #: frmmain.rs_infoauthors
 msgid "Author(s):"
-msgstr ""
+msgstr "Penulis:"
 
 #: frmmain.rs_infogenres
 msgid "Genre(s):"
-msgstr ""
+msgstr "Kategori:"
 
 #: frmmain.rs_infostatus
 msgid "Status:"
-msgstr ""
+msgstr "Status:"
 
 #: frmmain.rs_infosummary
 msgid "Summary:"
-msgstr ""
+msgstr "Ringkasan:"
 
 #: frmmain.rs_infotitle
 msgid "Title:"
-msgstr ""
+msgstr "Judul:"
 
 #: frmmain.rs_infowebsite
 msgid "Website:"
-msgstr ""
+msgstr "Situs web:"
 
 #: frmmain.rs_inprogress
 msgid "In progress"
-msgstr ""
+msgstr "Dalam Proses"
 
 #: frmmain.rs_lblautochecknewchapterminute
 msgctxt "frmmain.rs_lblautochecknewchapterminute"
 msgid "Auto check for new chapter every %d minutes"
-msgstr ""
+msgstr "Otomatis Periksa bab baru setiap %d menit"
 
 #: frmmain.rs_loading
 msgid "Loading ..."
-msgstr ""
+msgstr "Mebuka halaman..."
 
 #: frmmain.rs_modeall
 msgid "Mode: Show all (%d)"
-msgstr ""
+msgstr "Mode: Tampilkan semua (%d)"
 
 #: frmmain.rs_modefiltered
 msgid "Mode: Filtered (%d)"
-msgstr ""
+msgstr "Mode: Disaring (%d)"
 
 #: frmmain.rs_onemonth
 msgid "One month"
-msgstr ""
+msgstr "Satu bulan"
 
 #: frmmain.rs_oneweek
 msgid "One week"
-msgstr ""
+msgstr "Satu minggu"
 
 #: frmmain.rs_selected
 msgid "Selected: %d"
-msgstr ""
+msgstr "Dipilih: %d"
 
 #: frmmain.rs_software
 msgid "Software"
-msgstr ""
+msgstr "Perangkat lunak"
 
 #: frmmain.rs_softwarepath
 msgid "Path to the software (e.g. C:\\MangaDownloader)"
-msgstr ""
+msgstr "Path ke perangkat lunak (misalnya C:\\MangaDownloader)"
 
 #: frmmain.rs_today
 msgid "Today"
-msgstr ""
+msgstr "Hari ini"
 
 #: frmmain.rs_yesterday
 msgid "Yesterday"
-msgstr ""
-
-#: frmshutdowncounter.rs_lblmessageexit
-msgid "FMD will exit in %d second."
-msgstr ""
-
-#: frmshutdowncounter.rs_lblmessagehibernate
-msgid "System will hibernate in %d second."
-msgstr ""
-
-#: frmshutdowncounter.rs_lblmessageshutdown
-msgid "System will shutdown in %d second."
-msgstr ""
+msgstr "Kemarin"
 
 #: tmainform.btabortupdatelist.hint
 msgid "Abort update list"
@@ -232,12 +185,10 @@ msgid "Check for new version"
 msgstr ""
 
 #: tmainform.btdownload.caption
-msgctxt "TMAINFORM.BTDOWNLOAD.CAPTION"
 msgid "Download"
 msgstr ""
 
 #: tmainform.btfavoriteschecknewchapter.caption
-msgctxt "TMAINFORM.BTFAVORITESCHECKNEWCHAPTER.CAPTION"
 msgid "Check for new chapter"
 msgstr ""
 
@@ -279,39 +230,39 @@ msgstr ""
 #: tmainform.btupdatelist.hint
 msgctxt "tmainform.btupdatelist.hint"
 msgid "Update manga list"
-msgstr ""
+msgstr "Perbarui daftar komik"
 
 #: tmainform.btvisitmyblog.caption
 msgid "Visit my blog"
-msgstr ""
+msgstr "Kunjungi blog"
 
 #: tmainform.caption
 msgid "Free Manga Downloader"
-msgstr ""
+msgstr "Pengunduh Komik Gratis"
 
 #: tmainform.cbaddasstopped.caption
 msgid "Add to download list as stopped task"
-msgstr ""
+msgstr "Tambahkan ke daftar unduhan tanpa dimulai"
 
 #: tmainform.cbfilterstatus.text
 msgid "<none>"
-msgstr ""
+msgstr "<none>"
 
 #: tmainform.cbonlynew.caption
 msgid "Search only new manga"
-msgstr ""
+msgstr "Cari hanya komik baru"
 
 #: tmainform.cboptionautocheckfavstartup.caption
 msgid "Automatic check for new chapter"
-msgstr ""
+msgstr "Otomatis Periksa bab baru"
 
 #: tmainform.cboptionautocheckupdate.caption
 msgid "Check for new version "
-msgstr ""
+msgstr "Periksa versi baru"
 
 #: tmainform.cboptionautodlfav.caption
 msgid "Automatically download after finish checking"
-msgstr ""
+msgstr "Otomatis mengunduh setelah selesai memeriksa"
 
 #: tmainform.cboptionautonumberchapter.caption
 msgid "cbOptionAutoNumberChapter"
@@ -354,7 +305,7 @@ msgid "[Mangafox] Remove watermarks (Beware! Experimental!)"
 msgstr ""
 
 #: tmainform.cboptionminimizetotray.caption
-msgid "cbOptionMinimizeToTray"
+msgid "Minimize to tray"
 msgstr ""
 
 #: tmainform.cboptiononeinstanceonly.caption
@@ -387,7 +338,7 @@ msgstr ""
 
 #: tmainform.cboptionshowquitdialog.caption
 msgid "Exit FMD"
-msgstr ""
+msgstr "Tutup FMD"
 
 #: tmainform.cboptionupdatelistnomangainfo.caption
 msgid "Don't load manga information when updating list (filter will be not work!)"
@@ -399,7 +350,7 @@ msgstr ""
 
 #: tmainform.cboptionuseproxy.caption
 msgid "Use proxy"
-msgstr ""
+msgstr "Gunakan proxy"
 
 #: tmainform.cbsearchfromallsites.caption
 msgid "Search in all manga sites"
@@ -565,17 +516,9 @@ msgstr ""
 msgid "Yuri"
 msgstr ""
 
-#: tmainform.edoptiondefaultpath.editlabel.caption
-msgid "Choose default download path:"
-msgstr ""
-
-#: tmainform.edsaveto.editlabel.caption
-msgid "Save to:"
-msgstr ""
-
 #: tmainform.gboptionexternal.caption
 msgid "External program"
-msgstr ""
+msgstr "Program eksternal"
 
 #: tmainform.gboptionfavorites.caption
 msgctxt "TMAINFORM.GBOPTIONFAVORITES.CAPTION"
@@ -588,6 +531,10 @@ msgstr ""
 
 #: tmainform.gboptionrenaming.caption
 msgid "Renaming"
+msgstr ""
+
+#: tmainform.lbdefaultdownloadpath.caption
+msgid "Choose the default download path:"
 msgstr ""
 
 #: tmainform.lbfilterartists.caption
@@ -605,6 +552,19 @@ msgstr ""
 #: tmainform.lbfilterhint.caption
 msgctxt "tmainform.lbfilterhint.caption"
 msgid "[?]"
+msgstr ""
+
+#: tmainform.lbfilterhint.hint
+msgid ""
+"Genres:\n"
+"- Checked: Include this genre.'\n"
+"- Unchecked: Exclude this genre.'\n"
+"- Grayed: Doesn't matter.\n"
+"\n"
+"Custom Genres:\n"
+"- Separate multiple genres with ','.\n"
+"- Exclude a genre by placing ''!'' at the beginning of a genre.\n"
+"- Example: Adventure,!Ecchi,Comedy."
 msgstr ""
 
 #: tmainform.lbfilterstatus.caption
@@ -626,9 +586,10 @@ msgid "Mode: Show all manga"
 msgstr ""
 
 #: tmainform.lboptionautocheckminutes.caption
-msgctxt "TMAINFORM.LBOPTIONAUTOCHECKMINUTES.CAPTION"
+#, fuzzy
+msgctxt "tmainform.lboptionautocheckminutes.caption"
 msgid "Auto check for new chapter every %d minutes"
-msgstr ""
+msgstr "Otomatis Periksa bab baru setiap %d menit"
 
 #: tmainform.lboptioncustomrename.caption
 msgid "Chapter folder name:"
@@ -639,9 +600,26 @@ msgctxt "TMAINFORM.LBOPTIONCUSTOMRENAMEHINT.CAPTION"
 msgid "[?]"
 msgstr ""
 
+#: tmainform.lboptioncustomrenamehint.hint
+msgid ""
+"%WEBSITE% : Website name\n"
+"%MANGA% : Manga title\n"
+"%CHAPTER% : Chapter title\n"
+"%AUTHOR% : Author\n"
+"%ARTIST% : Artist\n"
+"%NUMBERING% : Numbering\n"
+"\n"
+"Note:\n"
+"Chapter folder name must have at least %CHAPTER% or %NUMBERING%."
+msgstr ""
+
 #: tmainform.lboptioncustomrenamehint1.caption
 msgctxt "TMAINFORM.LBOPTIONCUSTOMRENAMEHINT1.CAPTION"
 msgid "[?]"
+msgstr ""
+
+#: tmainform.lboptioncustomrenamehint1.hint
+msgid "100: FlateEncode (lossless), lower: DCTEncode (lossy)"
 msgstr ""
 
 #: tmainform.lboptiondialogs.caption
@@ -657,13 +635,26 @@ msgctxt "TMAINFORM.LBOPTIONEXTERNALHINT.CAPTION"
 msgid "[?]"
 msgstr ""
 
+#: tmainform.lboptionexternalhint.hint
+msgid ""
+"%PATH% : Path to the manga\n"
+"%FCHAPTER% : First downloaded chapter/first chapter in the directory\n"
+"\n"
+"Example: C:\\HoneyView\\honeyview.exe \"%PATH%%FCHAPTER%\""
+msgstr ""
+"%PATH% : Lokasi komik tersimpan\n"
+"%FCHAPTER% : Berkas terunduh pertama di dalam direktori\n"
+"\n"
+"\n"
+"Contoh: C:\\HoneyView\\honeyview.exe \"%PATH%%FCHAPTER%\""
+
 #: tmainform.lboptionhost.caption
 msgid "Host"
 msgstr ""
 
 #: tmainform.lboptionlanguage.caption
 msgid "Language:"
-msgstr ""
+msgstr "Bahasa:"
 
 #: tmainform.lboptionletfmddo.caption
 msgid "After download finish:"
@@ -717,6 +708,10 @@ msgstr ""
 
 #: tmainform.lboptionuser.caption
 msgid "Username"
+msgstr ""
+
+#: tmainform.lbsaveto.caption
+msgid "Save to:"
 msgstr ""
 
 #: tmainform.medturldelete.caption
@@ -926,9 +921,10 @@ msgid "Download manga list from server"
 msgstr ""
 
 #: tmainform.mnupdatelist.caption
+#, fuzzy
 msgctxt "TMAINFORM.MNUPDATELIST.CAPTION"
 msgid "Update manga list"
-msgstr ""
+msgstr "Perbarui daftar komik"
 
 #: tmainform.rball.caption
 msgid "Have all genre checked"
@@ -936,300 +932,135 @@ msgstr ""
 
 #: tmainform.rbone.caption
 msgid "Have one of genres checked"
-msgstr ""
+msgstr "Memiliki salah satu genre Diperiksa"
 
 #: tmainform.rgoptioncompress.caption
 msgid "Save downloaded chapters as"
-msgstr ""
+msgstr "Menyimpan bab terunduh sebagai"
 
 #: tmainform.seoptionpdfquality.hint
 msgctxt "tmainform.seoptionpdfquality.hint"
 msgid "100 = FlateEncode (lossless), lower = DCTEncode (lossy)"
-msgstr ""
+msgstr "100 = FlateEncode (lossless), lebih rendah = DCTEncode (lossy)"
 
 #: tmainform.tbdownloaddeletecompleted.caption
 msgctxt "tmainform.tbdownloaddeletecompleted.caption"
 msgid "Delete all completed tasks"
-msgstr ""
+msgstr "Hapus semua unduhan yang sudah selesai"
 
 #: tmainform.tbdownloadresumeall.caption
 msgid "Resume All"
-msgstr ""
+msgstr "Lanjutkan semua"
 
 #: tmainform.tbdownloadstopall.caption
 msgid "Stop All"
-msgstr ""
+msgstr "Hentikan semua"
 
 #: tmainform.tsabout.caption
 msgid "About"
-msgstr ""
+msgstr "Tentang"
 
 #: tmainform.tsconnections.caption
 msgid "Connections"
-msgstr ""
+msgstr "Koneksi"
 
 #: tmainform.tsdialogs.caption
 msgid "Dialogs"
-msgstr ""
+msgstr "Dialog"
 
 #: tmainform.tsdownload.caption
 msgid "Downloads"
-msgstr ""
+msgstr "Unduhan"
 
 #: tmainform.tsdownloadfilter.caption
 msgid ">>"
-msgstr ""
+msgstr ">>"
 
 #: tmainform.tsfavorites.caption
 msgctxt "tmainform.tsfavorites.caption"
 msgid "Favorites"
-msgstr ""
+msgstr "Kesukaan"
 
 #: tmainform.tsfilter.caption
 msgctxt "tmainform.tsfilter.caption"
 msgid "Filter"
-msgstr ""
+msgstr "Saring"
 
 #: tmainform.tsgeneral.caption
 msgid "General"
-msgstr ""
+msgstr "Umum"
 
 #: tmainform.tsinformation.caption
 msgid "Manga Info"
-msgstr ""
+msgstr "Informasi Komik"
 
 #: tmainform.tsmangalist.caption
 msgid "Manga List"
-msgstr ""
+msgstr "Daftar Komik"
 
 #: tmainform.tsmisc.caption
 msgid "Misc"
-msgstr ""
+msgstr "Lain-lain"
 
 #: tmainform.tsoption.caption
 msgid "Options"
-msgstr ""
+msgstr "Pengaturan"
 
 #: tmainform.tsupdate.caption
 msgid "Updates"
-msgstr ""
+msgstr "Pembaruan"
 
 #: tmainform.tswebsites.caption
 msgid "Websites"
-msgstr ""
+msgstr "Situs web"
 
 #: tmainform.vtdownload.header.columns[0].text
 msgid "Manga"
-msgstr ""
+msgstr "Komik"
 
 #: tmainform.vtdownload.header.columns[1].text
 msgctxt "tmainform.vtdownload.header.columns[1].text"
 msgid "Status"
-msgstr ""
+msgstr "Status"
 
 #: tmainform.vtdownload.header.columns[2].text
 msgid "Progress"
-msgstr ""
+msgstr "Kemajuan"
 
 #: tmainform.vtdownload.header.columns[3].text
 msgctxt "tmainform.vtdownload.header.columns[3].text"
 msgid "Website"
-msgstr ""
+msgstr "Situs web"
 
 #: tmainform.vtdownload.header.columns[4].text
 msgctxt "tmainform.vtdownload.header.columns[4].text"
 msgid "Save to"
-msgstr ""
+msgstr "Simpan ke"
 
 #: tmainform.vtdownload.header.columns[5].text
 msgid "Added"
-msgstr ""
+msgstr "Ditambahkan"
 
 #: tmainform.vtfavorites.header.columns[0].text
 msgid "#"
-msgstr ""
+msgstr "#"
 
 #: tmainform.vtfavorites.header.columns[1].text
 msgctxt "TMAINFORM.VTFAVORITES.HEADER.COLUMNS[1].TEXT"
 msgid "Title"
-msgstr ""
+msgstr "Judul"
 
 #: tmainform.vtfavorites.header.columns[2].text
 msgid "Current chapter"
-msgstr ""
+msgstr "Bab saat ini"
 
 #: tmainform.vtfavorites.header.columns[3].text
 msgctxt "TMAINFORM.VTFAVORITES.HEADER.COLUMNS[3].TEXT"
 msgid "Website"
-msgstr ""
+msgstr "Situs web"
 
 #: tmainform.vtfavorites.header.columns[4].text
 msgctxt "TMAINFORM.VTFAVORITES.HEADER.COLUMNS[4].TEXT"
 msgid "Save to"
-msgstr ""
-
-#: tmainform.vtmangalist.hint
-msgid "test"
-msgstr ""
-
-#: udownloadsmanager.rs_compressing
-msgid "Compressing..."
-msgstr ""
-
-#: udownloadsmanager.rs_downloading
-msgid "Downloading"
-msgstr ""
-
-#: udownloadsmanager.rs_failed
-msgid "Failed"
-msgstr ""
-
-#: udownloadsmanager.rs_failedtocreatedirtoolong
-msgid "Failed to create dir! Too long?"
-msgstr ""
-
-#: udownloadsmanager.rs_failedtryresumetask
-msgid "Failed, try resuming this task!"
-msgstr ""
-
-#: udownloadsmanager.rs_finish
-msgid "Completed"
-msgstr ""
-
-#: udownloadsmanager.rs_preparing
-msgctxt "udownloadsmanager.rs_preparing"
-msgid "Preparing"
-msgstr ""
-
-#: udownloadsmanager.rs_stopped
-msgid "Stopped"
-msgstr ""
-
-#: udownloadsmanager.rs_waiting
-msgid "Waiting..."
-msgstr ""
-
-#: ufavoritesmanager.rs_btnaddtoqueue
-msgid "Add to queue"
-msgstr ""
-
-#: ufavoritesmanager.rs_btncancel
-msgctxt "ufavoritesmanager.rs_btncancel"
-msgid "Cancel"
-msgstr ""
-
-#: ufavoritesmanager.rs_btncheckfavorites
-msgctxt "ufavoritesmanager.rs_btncheckfavorites"
-msgid "Check for new chapter"
-msgstr ""
-
-#: ufavoritesmanager.rs_btndownload
-msgctxt "ufavoritesmanager.rs_btndownload"
-msgid "Download"
-msgstr ""
-
-#: ufavoritesmanager.rs_btnremove
-msgid "Remove"
-msgstr ""
-
-#: ufavoritesmanager.rs_dlgcompletedmangacaption
-msgid "Found %d completed manga"
-msgstr ""
-
-#: ufavoritesmanager.rs_dlgfavoritescheckisrunning
-msgid "Favorites check is running!"
-msgstr ""
-
-#: ufavoritesmanager.rs_dlgnewchaptercaption
-msgid "%d manga(s) have new chapter(s)"
-msgstr ""
-
-#: ufavoritesmanager.rs_favoritehasnewchapter
-msgid "%s <%s> has %d new chapter(s)."
-msgstr ""
-
-#: ufavoritesmanager.rs_lblmangawillberemoved
-msgid "Completed manga will be removed:"
-msgstr ""
-
-#: ufavoritesmanager.rs_lblnewchapterfound
-msgid "Found %d new chapter from %d manga(s):"
-msgstr ""
-
-#: usilentthread.rs_silentthreadloadstatus
-msgid "Loading: %d/%d"
-msgstr ""
-
-#: usubthread.rs_btncheckupdates
-msgid "Check for new updates"
-msgstr ""
-
-#: usubthread.rs_currentversion
-msgid "Installed Version"
-msgstr ""
-
-#: usubthread.rs_latestversion
-msgid "Latest Version   "
-msgstr ""
-
-#: usubthread.rs_newversionfound
-msgid "New Version found!"
-msgstr ""
-
-#: uupdatethread.rs_dlghasnewmanga
-msgid "%s has %d new manga(s)"
-msgstr ""
-
-#: uupdatethread.rs_gettingdirectory
-msgid "Getting directory"
-msgstr ""
-
-#: uupdatethread.rs_gettinginfo
-msgid "Getting info"
-msgstr ""
-
-#: uupdatethread.rs_gettinglistfor
-msgid "Getting list for"
-msgstr ""
-
-#: uupdatethread.rs_indexingnewtitle
-msgid "Indexing new title(s)"
-msgstr ""
-
-#: uupdatethread.rs_lookingfornewtitle
-msgid "Looking for new title(s)"
-msgstr ""
-
-#: uupdatethread.rs_lookingfornewtitlefromanotherdirectory
-msgid "Looking for new title(s) from another directory"
-msgstr ""
-
-#: uupdatethread.rs_preparing
-msgctxt "uupdatethread.rs_preparing"
-msgid "Preparing"
-msgstr ""
-
-#: uupdatethread.rs_removingduplicatefromcurrentdata
-msgid "Removing duplicate from current data"
-msgstr ""
-
-#: uupdatethread.rs_removingduplicatefromlocaldata
-msgid "Removing duplicate from local data"
-msgstr ""
-
-#: uupdatethread.rs_removingduplicatefromnewtitle
-msgid "Removing duplicate from new title(s)"
-msgstr ""
-
-#: uupdatethread.rs_savingdata
-msgid "Saving data"
-msgstr ""
-
-#: uupdatethread.rs_synchronizingdata
-msgid "Synchronizing data"
-msgstr ""
-
-#: uupdatethread.rs_updatinglist
-msgid "Updating list"
-msgstr ""
+msgstr "Simpan ke"
 

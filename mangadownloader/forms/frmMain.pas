@@ -617,22 +617,8 @@ var
 resourcestring
   RS_HintFavoriteProblem = 'There is a problem with this data!'+ LineEnding
                          + 'Removing and re-adding this data may fix the problem.';
-  RS_HintExternalProgram = '%PATH% : Path to the manga' + LineEnding
-    + '%FCHAPTER% : First downloaded chapter/first chapter in the directory' + LineEnding + LineEnding
-    + LineEnding
-      + 'Example: C:\HoneyView\honeyview.exe "%PATH%%FCHAPTER%"';
   RS_DlgTitleExistInDLlist = 'This title are already in download list.' + LineEnding
                            + 'Do you want to download it anyway?';
-  RS_FilterHint = 'Genres:' + LineEnding
-    + '- Checked: Include this genre.' + LineEnding
-    + '- Unchecked: Exclude this genre.' + LineEnding
-    + '- Grayed: Doesn''t matter.' + LineEnding
-    + LineEnding
-    + 'Custom Genres:' + LineEnding
-    + '- Separate multiple genres with '',''.' + LineEnding
-    + '- Exclude a genre by placing ''!'' at the beginning of a genre.' + LineEnding
-    + '- Example: Adventure,!Ecchi,Comedy.';
-
 
   RS_DlgQuit = 'Are you sure you want to exit?';
   RS_DlgRemoveTask = 'Are you sure you want to delete the task(s)?';
@@ -747,8 +733,6 @@ begin
 
   // ShowInformation;
   mangaInfo := TMangaInfo.Create;
-  //mangaInfo.chapterName := TStringList.Create;
-  //mangaInfo.chapterLinks := TStringList.Create;
 
   vtDownload.NodeDataSize := SizeOf(TDownloadInfo) - 4;
   vtDownload.RootNodeCount := DLManager.Count;
@@ -4794,8 +4778,8 @@ procedure TMainForm.LoadLanguage;
 //  i, p: Cardinal;
 begin
   //hint
-  lbOptionExternalHint.Hint := RS_HintExternalProgram;
-  lbFilterHint.Hint := RS_FilterHint;
+  //lbOptionExternalHint.Hint := RS_HintExternalProgram;
+  //lbFilterHint.Hint := RS_FilterHint;
 
   //if pos < 0 then
   //  Exit;
