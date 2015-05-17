@@ -615,9 +615,9 @@ var
   FUpdateURL: String;
 
 resourcestring
-  RS_HintFavoriteProblem = 'There is a problem with this data!'+ LineEnding
+  RS_HintFavoriteProblem = 'There is a problem with this data!'#13#10
                          + 'Removing and re-adding this data may fix the problem.';
-  RS_DlgTitleExistInDLlist = 'This title are already in download list.' + LineEnding
+  RS_DlgTitleExistInDLlist = 'This title are already in download list.'#13#10
                            + 'Do you want to download it anyway?';
 
   RS_DlgQuit = 'Are you sure you want to exit?';

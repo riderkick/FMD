@@ -2922,12 +2922,12 @@ object MainForm: TMainForm
     end
     object tsDownloadFilter: TTabSheet
       Caption = '>>'
-      ClientHeight = 456
+      ClientHeight = 478
       ClientWidth = 187
       ImageIndex = 4
       object tvDownloadFilter: TTreeView
         Left = 0
-        Height = 456
+        Height = 478
         Top = 0
         Width = 187
         Align = alClient
