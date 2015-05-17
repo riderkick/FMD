@@ -57,7 +57,9 @@ type
     cbUseRegExpr: TCheckBox;
     cbOptionProxyType: TComboBox;
     cbOptionOneInstanceOnly: TCheckBox;
+    edOptionDefaultPath: TEdit;
     edOptionExternal: TEdit;
+    edSaveTo: TEdit;
     edURL: TEdit;
     gbOptionExternal: TGroupBox;
     IconDL: TImageList;
@@ -67,6 +69,8 @@ type
     IconSmall: TImageList;
     itMonitor: TTimer;
     itStartup: TIdleTimer;
+    lbDefaultDownloadPath: TLabel;
+    lbSaveTo: TLabel;
     lbOptionProxyType: TLabel;
     lbOptionRenameDigits: TLabel;
     lbFilterHint: TLabel;
@@ -166,7 +170,6 @@ type
     edOptionPass: TEdit;
     edOptionPort: TEdit;
     edOptionUser: TEdit;
-    edSaveTo: TLabeledEdit;
     edSearch: TEdit;
     gbDialogs: TGroupBox;
     gbOptionProxy: TGroupBox;
@@ -179,7 +182,6 @@ type
     itCheckForChapters: TIdleTimer;
     itAnimate: TIdleTimer;
     imCover: TImage;
-    edOptionDefaultPath: TLabeledEdit;
     lbOptionCustomRename: TLabel;
     lbOptionPDFQuality: TLabel;
     lbOptionAutoCheckMinutes: TLabel;
