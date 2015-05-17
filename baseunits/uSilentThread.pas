@@ -249,7 +249,7 @@ begin
     begin
       // add a new download task
       p := DLManager.AddTask;
-      DLManager.containers.Items[p].mangaSiteID := GetMangaSiteID(website);
+      DLManager.TaskItem(p).mangaSiteID := GetMangaSiteID(website);
 
       for i := 0 to Info.mangaInfo.numChapter - 1 do
       begin
@@ -262,27 +262,27 @@ begin
           Info.mangaInfo.chapterName.Strings[i],
           Format('%.4d', [i + 1]),
           cbOptionPathConvert.Checked);
-        DLManager.containers.Items[p].chapterName.Add(s);
-        DLManager.containers.Items[p].chapterLinks.Add(
+        DLManager.TaskItem(p).chapterName.Add(s);
+        DLManager.TaskItem(p).chapterLinks.Add(
           Info.mangaInfo.chapterLinks.Strings[i]);
       end;
 
       if cbAddAsStopped.Checked then
       begin
-        DLManager.containers.Items[p].Status := STATUS_STOP;
-        DLManager.containers.Items[p].downloadInfo.Status := RS_Stopped;
+        DLManager.TaskItem(p).Status := STATUS_STOP;
+        DLManager.TaskItem(p).downloadInfo.Status := RS_Stopped;
       end
       else
       begin
-        DLManager.containers.Items[p].downloadInfo.Status := RS_Waiting;
-        DLManager.containers.Items[p].Status := STATUS_WAIT;
+        DLManager.TaskItem(p).downloadInfo.Status := RS_Waiting;
+        DLManager.TaskItem(p).Status := STATUS_WAIT;
       end;
 
-      DLManager.containers.Items[p].currentDownloadChapterPtr := 0;
-      DLManager.containers.Items[p].downloadInfo.Website := website;
-      DLManager.containers.Items[p].downloadInfo.Link := URL;
-      DLManager.containers.Items[p].downloadInfo.Title := Info.mangaInfo.title;
-      DLManager.containers.Items[p].downloadInfo.DateTime := Now;
+      DLManager.TaskItem(p).currentDownloadChapterPtr := 0;
+      DLManager.TaskItem(p).downloadInfo.Website := website;
+      DLManager.TaskItem(p).downloadInfo.Link := URL;
+      DLManager.TaskItem(p).downloadInfo.Title := Info.mangaInfo.title;
+      DLManager.TaskItem(p).downloadInfo.DateTime := Now;
 
       if FSavePath = '' then
       begin
@@ -302,7 +302,7 @@ begin
         end;
         FSavePath := CorrectPathSys(FSavePath);
       end;
-      DLManager.containers.Items[p].downloadInfo.SaveTo := FSavePath;
+      DLManager.TaskItem(p).downloadInfo.SaveTo := FSavePath;
 
       UpdateVtDownload;
       DLManager.Backup;

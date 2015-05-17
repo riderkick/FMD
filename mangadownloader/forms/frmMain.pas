@@ -370,7 +370,6 @@ type
     procedure miFavoritesDownloadAllClick(Sender: TObject);
     procedure miFavoritesViewInfosClick(Sender: TObject);
     procedure miHighlightNewMangaClick(Sender: TObject);
-    procedure miDownClick(Sender: TObject);
 
     procedure miFavoritesDeleteClick(Sender: TObject);
     procedure miMangaListAddToFavoritesClick(Sender: TObject);
@@ -392,7 +391,6 @@ type
     procedure miDownloadOpenFolderClick(Sender: TObject);
     procedure miFavoritesOpenWithClick(Sender: TObject);
     procedure miDownloadOpenWithClick(Sender: TObject);
-    procedure miUpClick(Sender: TObject);
     procedure mnDownload1ClickClick(Sender: TObject);
     procedure mnUpdate1ClickClick(Sender: TObject);
     procedure mnUpdateDownFromServerClick(Sender: TObject);
@@ -751,7 +749,7 @@ begin
   //mangaInfo.chapterLinks := TStringList.Create;
 
   vtDownload.NodeDataSize := SizeOf(TDownloadInfo) - 4;
-  vtDownload.RootNodeCount := DLManager.containers.Count;
+  vtDownload.RootNodeCount := DLManager.Count;
 
   vtFavorites.NodeDataSize := SizeOf(TFavoriteInfo);
   UpdateVtFavorites;
@@ -815,7 +813,7 @@ begin
   tvDownloadFilterRepaint;
 
   // refresh sort
-  if DLManager.containers.Count > 1 then
+  if DLManager.Count > 1 then
   begin
     DLManager.SortDirection := Boolean(vtDownload.Header.SortDirection);
     //DLManager.Sort(Column);
@@ -1061,7 +1059,7 @@ end;
 procedure TMainForm.miDownloadViewMangaInfoClick(Sender: TObject);
 begin
   if vtDownload.Focused then
-    with DLManager.containers[vtDownload.FocusedNode^.Index] do begin
+    with DLManager.TaskItem(vtDownload.FocusedNode^.Index) do begin
       edURL.Text := FillMangaSiteHost(MangaSiteID, DownloadInfo.Link);
       btURLClick(btURL);
       pcMain.ActivePage := tsInformation;
@@ -1099,7 +1097,7 @@ begin
   begin
     xNode := vtDownload.GetFirst;
     i := 0;
-    while i < DLManager.containers.Count do
+    while i < DLManager.Count do
     begin
       if vtDownload.Selected[xNode] then
         DLManager.RemoveTask(i)
@@ -1128,11 +1126,11 @@ begin
   if (vtDownload.SelectedCount = 1) and (Assigned(vtDownload.FocusedNode)) then
   begin
     i := vtDownload.FocusedNode^.Index;
-    if DLManager.containers.Items[i].ChapterName.Count > 0 then
-      for j := 0 to DLManager.containers.Items[i].ChapterName.Count - 1 do
+    if DLManager.TaskItem(i).ChapterName.Count > 0 then
+      for j := 0 to DLManager.TaskItem(i).ChapterName.Count - 1 do
       begin
-        path := CorrectFilePath(DLManager.containers.Items[i].DownloadInfo.SaveTo +
-          '/' + DLManager.containers.Items[i].ChapterName[j]);
+        path := CorrectFilePath(DLManager.TaskItem(i).DownloadInfo.SaveTo +
+          '/' + DLManager.TaskItem(i).ChapterName[j]);
         if path[Length(path)] = '/' then
           SetLength(path, Length(path) - 1);
         DeleteDirectory(path, False);
@@ -1143,8 +1141,8 @@ begin
         if FileExistsUTF8(path + '.pdf') then
           DeleteFileUTF8(path + '.pdf');
       end;
-    if IsDirectoryEmpty(DLManager.containers.Items[i].DownloadInfo.SaveTo) then
-      DeleteDirectory(DLManager.containers.Items[i].DownloadInfo.SaveTo, False);
+    if IsDirectoryEmpty(DLManager.TaskItem(i).DownloadInfo.SaveTo) then
+      DeleteDirectory(DLManager.TaskItem(i).DownloadInfo.SaveTo, False);
     DLManager.RemoveTask(i);
     UpdateVtDownload;
     DLManager.Backup;
@@ -1154,11 +1152,11 @@ begin
   begin
     xNode := vtDownload.GetFirst;
     i := 0;
-    while i < DLManager.containers.Count do
+    while i < DLManager.Count do
     begin
       if vtDownload.Selected[xNode] then
       begin
-        DeleteDirectory(DLManager.containers[i].DownloadInfo.SaveTo, False);
+        DeleteDirectory(DLManager.TaskItem(i).DownloadInfo.SaveTo, False);
         DLManager.RemoveTask(i);
       end
       else
@@ -1175,31 +1173,31 @@ var
   i, j: Cardinal;
   // merge all finished tasks that have same manga name, website and directory
 begin
-  i := DLManager.containers.Count - 1;
+  i := DLManager.Count - 1;
   while i > 0 do
   begin
-    if DLManager.containers.Items[i].Status = STATUS_FINISH then
+    if DLManager.TaskItem(i).Status = STATUS_FINISH then
     begin
       j := i - 1;
       while j > 0 do
       begin
         if (i <> j) and
-          (DLManager.containers[j].Status = STATUS_FINISH) and
-          SameText(DLManager.containers.Items[i].DownloadInfo.title,
-          DLManager.containers.Items[j].DownloadInfo.title) and
-          SameText(DLManager.containers.Items[i].DownloadInfo.website,
-          DLManager.containers.Items[j].DownloadInfo.website) and
-          SameText(DLManager.containers.Items[i].DownloadInfo.saveTo,
-          DLManager.containers.Items[j].DownloadInfo.saveTo) then
+          (DLManager.TaskItem(j).Status = STATUS_FINISH) and
+          SameText(DLManager.TaskItem(i).DownloadInfo.title,
+          DLManager.TaskItem(j).DownloadInfo.title) and
+          SameText(DLManager.TaskItem(i).DownloadInfo.website,
+          DLManager.TaskItem(j).DownloadInfo.website) and
+          SameText(DLManager.TaskItem(i).DownloadInfo.saveTo,
+          DLManager.TaskItem(j).DownloadInfo.saveTo) then
         begin
-          DLManager.containers.Items[i].ChapterLinks.Text :=
-            DLManager.containers.Items[j].ChapterLinks.Text +
-            DLManager.containers.Items[i].ChapterLinks.Text;
-          DLManager.containers.Items[i].ChapterName.Text :=
-            DLManager.containers.Items[j].ChapterName.Text +
-            DLManager.containers.Items[i].ChapterName.Text;
-          DLManager.containers.Items[i].DownloadInfo.dateTime :=
-            DLManager.containers.Items[j].DownloadInfo.dateTime;
+          DLManager.TaskItem(i).ChapterLinks.Text :=
+            DLManager.TaskItem(j).ChapterLinks.Text +
+            DLManager.TaskItem(i).ChapterLinks.Text;
+          DLManager.TaskItem(i).ChapterName.Text :=
+            DLManager.TaskItem(j).ChapterName.Text +
+            DLManager.TaskItem(i).ChapterName.Text;
+          DLManager.TaskItem(i).DownloadInfo.dateTime :=
+            DLManager.TaskItem(j).DownloadInfo.dateTime;
           DLManager.RemoveTask(j);
           Dec(i);
         end;
@@ -1311,10 +1309,10 @@ var
   LInProgressTasks: Cardinal = 0;
   LStoppedTasks: Cardinal = 0;
 begin
-  if (Assigned(DLManager)) and (DLManager.containers.Count > 0) then
-    for i := 0 to DLManager.containers.Count - 1 do
+  if (Assigned(DLManager)) and (DLManager.Count > 0) then
+    for i := 0 to DLManager.Count - 1 do
     begin
-      case DLManager.containers.Items[i].Status of
+      case DLManager.TaskItem(i).Status of
         STATUS_FINISH:
           Inc(LFinishedTasks);
         STATUS_DOWNLOAD, STATUS_PREPARE, STATUS_WAIT:
@@ -1415,7 +1413,7 @@ begin
         pos := DLManager.AddTask;
         isCreate := True;
       end;
-      DLManager.containers.Items[pos].MangaSiteID := GetMangaSiteID(mangaInfo.website);
+      DLManager.TaskItem(pos).MangaSiteID := GetMangaSiteID(mangaInfo.website);
       // generate folder name
       s := CustomRename(OptionCustomRename,
         mangaInfo.website,
@@ -1425,8 +1423,8 @@ begin
         mangaInfo.chapterName.Strings[xNode^.Index],
         Format('%.4d', [xNode^.Index + 1]),
         cbOptionPathConvert.Checked);
-      DLManager.containers.Items[pos].ChapterName.Add(s);
-      DLManager.containers.Items[pos].ChapterLinks.Add(
+      DLManager.TaskItem(pos).ChapterName.Add(s);
+      DLManager.TaskItem(pos).ChapterLinks.Add(
         mangaInfo.chapterLinks.Strings[xNode^.Index]);
       ChapterList[xNode^.Index].Downloaded := True;
       clbChapterList.ReinitNode(xNode, False);
@@ -1437,19 +1435,19 @@ begin
     Exit;
   if cbAddAsStopped.Checked then
   begin
-    DLManager.containers.Items[pos].DownloadInfo.Status := RS_Stopped;
-    DLManager.containers.Items[pos].Status := STATUS_STOP;
+    DLManager.TaskItem(pos).DownloadInfo.Status := RS_Stopped;
+    DLManager.TaskItem(pos).Status := STATUS_STOP;
   end
   else
   begin
-    DLManager.containers.Items[pos].DownloadInfo.Status := RS_Waiting;
-    DLManager.containers.Items[pos].Status := STATUS_WAIT;
+    DLManager.TaskItem(pos).DownloadInfo.Status := RS_Waiting;
+    DLManager.TaskItem(pos).Status := STATUS_WAIT;
   end;
-  DLManager.containers.Items[pos].CurrentDownloadChapterPtr := 0;
-  DLManager.containers.Items[pos].DownloadInfo.Website := mangaInfo.website;
-  DLManager.containers.Items[pos].DownloadInfo.Link := mangaInfo.url;
-  DLManager.containers.Items[pos].DownloadInfo.Title := mangaInfo.title;
-  DLManager.containers.Items[pos].DownloadInfo.DateTime := Now;
+  DLManager.TaskItem(pos).CurrentDownloadChapterPtr := 0;
+  DLManager.TaskItem(pos).DownloadInfo.Website := mangaInfo.website;
+  DLManager.TaskItem(pos).DownloadInfo.Link := mangaInfo.url;
+  DLManager.TaskItem(pos).DownloadInfo.Title := mangaInfo.title;
+  DLManager.TaskItem(pos).DownloadInfo.DateTime := Now;
 
   s := CorrectPathSys(edSaveTo.Text);
   // save to
@@ -1461,15 +1459,15 @@ begin
       s := s + RemoveSymbols(UnicodeRemove(mangaInfo.title));
   end;
   s := CorrectPathSys(s);
-  DLManager.containers.Items[pos].DownloadInfo.SaveTo := s;
+  DLManager.TaskItem(pos).DownloadInfo.SaveTo := s;
   UpdateVtDownload;
 
   DLManager.Backup;
   DLManager.CheckAndActiveTask;
   DLManager.AddToDownloadedChaptersList(
-    mangaInfo.website + mangaInfo.link, DLManager.containers.Items[pos].ChapterLinks);
+    mangaInfo.website + mangaInfo.link, DLManager.TaskItem(pos).ChapterLinks);
   FavoriteManager.AddToDownloadedChaptersList(
-    mangaInfo.website, mangaInfo.link, DLManager.containers.Items[pos].ChapterLinks);
+    mangaInfo.website, mangaInfo.link, DLManager.TaskItem(pos).ChapterLinks);
   clbChapterList.Repaint;
   pcMain.PageIndex := 0;
 end;
@@ -2222,14 +2220,6 @@ end;
 
 // ----- vtDownload popup menu -----
 
-procedure TMainForm.miUpClick(Sender: TObject);
-begin
-  if DLManager.MoveUp(vtDownload.FocusedNode^.Index) then
-  begin
-    vtDownload.Repaint;
-  end;
-end;
-
 procedure TMainForm.mnDownload1ClickClick(Sender: TObject);
 var
   i: Integer;
@@ -2355,14 +2345,6 @@ begin
   end;
 end;
 
-procedure TMainForm.miDownClick(Sender: TObject);
-begin
-  if DLManager.MoveDown(vtDownload.FocusedNode^.Index) then
-  begin
-    vtDownload.Repaint;
-  end;
-end;
-
 procedure TMainForm.miDownloadDeleteCompletedClick(Sender: TObject);
 begin
   if cbOptionShowDeleteTaskDialog.Checked then
@@ -2383,11 +2365,11 @@ var
 begin
   if (vtDownload.SelectedCount = 1) and (Assigned(vtDownload.FocusedNode)) then
   begin
-    if DLManager.containers.Items[vtDownload.FocusedNode^.Index].Status in
+    if DLManager.TaskItem(vtDownload.FocusedNode^.Index).Status in
       [STATUS_STOP, STATUS_PROBLEM, STATUS_FAILED] then
     begin
-      DLManager.containers.Items[vtDownload.FocusedNode^.Index].Status := STATUS_WAIT;
-      DLManager.containers.Items[vtDownload.FocusedNode^.Index].DownloadInfo.Status :=
+      DLManager.TaskItem(vtDownload.FocusedNode^.Index).Status := STATUS_WAIT;
+      DLManager.TaskItem(vtDownload.FocusedNode^.Index).DownloadInfo.Status :=
         RS_Waiting;
       if DLManager.CanActiveTask(vtDownload.FocusedNode^.Index) then
         DLManager.ActiveTask(vtDownload.FocusedNode^.Index);
@@ -2402,11 +2384,11 @@ begin
     for i := 0 to vtDownload.SelectedCount - 1 do
     begin
       if vtDownload.Selected[xNode] and
-        (DLManager.containers.Items[xNode^.Index].Status in
+        (DLManager.TaskItem(xNode^.Index).Status in
           [STATUS_STOP, STATUS_PROBLEM, STATUS_FAILED]) then
       begin
-        DLManager.containers.Items[xNode^.Index].Status := STATUS_WAIT;
-        DLManager.containers.Items[xNode^.Index].DownloadInfo.Status := RS_Waiting;
+        DLManager.TaskItem(xNode^.Index).Status := STATUS_WAIT;
+        DLManager.TaskItem(xNode^.Index).DownloadInfo.Status := RS_Waiting;
         if DLManager.CanActiveTask(xNode^.Index) then
           DLManager.ActiveTask(xNode^.Index);
       end;
@@ -2440,7 +2422,7 @@ begin
   begin
     xNode := vtDownload.GetFirst;
     i := 0;
-    while i < DLManager.containers.Count do
+    while i < DLManager.Count do
     begin
       if vtDownload.Selected[xNode] then
         DLManager.RemoveTask(i)
@@ -2504,10 +2486,10 @@ begin
       if vtMangaList.Selected[xNode] then
       begin
         AllowedToCreate := True;
-        if DLManager.containers.Count > 0 then
-          for j := 0 to DLManager.containers.Count - 1 do
+        if DLManager.Count > 0 then
+          for j := 0 to DLManager.Count - 1 do
             if dataProcess.Param[dataProcess.GetPos(xNode^.Index), DATA_PARAM_NAME] =
-              DLManager.containers.Items[j].DownloadInfo.title then
+              DLManager.TaskItem(j).DownloadInfo.title then
             begin
               if YesAll then
                 AllowedToCreate := True
@@ -2516,7 +2498,7 @@ begin
               else
               begin
                 pcMain.ActivePage := tsDownload;
-                mResult := MessageDlg('', DLManager.containers.Items[j].DownloadInfo.title +
+                mResult := MessageDlg('', DLManager.TaskItem(j).DownloadInfo.title +
                   LineEnding + LineEnding + RS_DlgTitleExistInDLlist, mtConfirmation,
                     mBtns, 0);
                 case mResult of
@@ -2635,7 +2617,7 @@ procedure TMainForm.miDownloadOpenFolderClick(Sender: TObject);
 begin
   if (vtDownload.SelectedCount = 0) or (Assigned(vtDownload.FocusedNode) = False) then
     Exit;
-  OpenDocument(DLManager.containers[vtDownload.FocusedNode^.Index].DownloadInfo.SaveTo);
+  OpenDocument(DLManager.TaskItem(vtDownload.FocusedNode^.Index).DownloadInfo.SaveTo);
 end;
 
 procedure TMainForm.miFavoritesOpenWithClick(Sender: TObject);
@@ -2691,14 +2673,14 @@ begin
     Exit;
   l := TStringList.Create;
   try
-    fd := StringReplace(DLManager.containers.Items[
-      vtDownload.FocusedNode^.Index].DownloadInfo.SaveTo, '/', '\', [rfReplaceAll]);
+    fd := StringReplace(DLManager.TaskItem(
+      vtDownload.FocusedNode^.Index).DownloadInfo.SaveTo, '/', '\', [rfReplaceAll]);
     if fd[Length(fd)] <> DirectorySeparator then
       fd := fd + DirectorySeparator;
 
-    if DLManager.containers.Items[vtDownload.FocusedNode^.Index].ChapterName.Count > 0 then
+    if DLManager.TaskItem(vtDownload.FocusedNode^.Index).ChapterName.Count > 0 then
     begin
-      ff := DLManager.containers.Items[vtDownload.FocusedNode^.Index].
+      ff := DLManager.TaskItem(vtDownload.FocusedNode^.Index).
         ChapterName[0];
       if FileExistsUTF8(fd + ff + '.zip') then
         f := ff + '.zip'
@@ -2861,8 +2843,8 @@ procedure TMainForm.pmDownloadPopup(Sender: TObject);
     with DLManager do begin
       CS_DownloadManager_Task.Acquire;
       try
-        for i := 0 to containers.Count - 1 do
-          if containers[i].Status = STATUS_FINISH then
+        for i := 0 to Count - 1 do
+          if TaskItem(i).Status = STATUS_FINISH then
           begin
             Result := True;
             Break;
@@ -2885,10 +2867,10 @@ procedure TMainForm.pmDownloadPopup(Sender: TObject);
         if vtDownload.SelectedCount > 1 then
         begin
           xNode := vtDownload.GetFirst;
-          for i := 0 to containers.Count - 1 do
+          for i := 0 to Count - 1 do
           begin
             if vtDownload.Selected[xNode] then
-              if containers[i].Status in Stats then
+              if TaskItem(i).Status in Stats then
               begin
                 Result := True;
                 Break;
@@ -2920,14 +2902,14 @@ begin
     else
     if vtDownload.SelectedCount = 1 then
     begin
-      miDownloadStop.Enabled := (containers[vtDownload.FocusedNode^.Index].Status in [STATUS_DOWNLOAD, STATUS_PREPARE, STATUS_WAIT]);
-      miDownloadResume.Enabled := (containers[vtDownload.FocusedNode^.Index].Status in [STATUS_STOP, STATUS_FAILED, STATUS_PROBLEM]);
+      miDownloadStop.Enabled := (TaskItem(vtDownload.FocusedNode^.Index).Status in [STATUS_DOWNLOAD, STATUS_PREPARE, STATUS_WAIT]);
+      miDownloadResume.Enabled := (TaskItem(vtDownload.FocusedNode^.Index).Status in [STATUS_STOP, STATUS_FAILED, STATUS_PROBLEM]);
       miDownloadDelete.Enabled := True;
       miDownloadDeleteTask.Enabled := True;
       miDownloadDeleteTaskData.Enabled := True;
       miDownloadDeleteCompleted.Enabled := FinishedTaskPresent;
       miDownloadMergeCompleted.Enabled := miDownloadDeleteCompleted.Enabled;
-      miDownloadViewMangaInfo.Enabled := (containers[vtDownload.FocusedNode^.Index].DownloadInfo.Link <> '');
+      miDownloadViewMangaInfo.Enabled := (TaskItem(vtDownload.FocusedNode^.Index).DownloadInfo.Link <> '');
       miDownloadOpenFolder.Enabled := True;
       miDownloadOpenWith.Enabled := True;
     end
@@ -3163,7 +3145,7 @@ begin
   begin
     Data := vtDownload.GetNodeData(Node);
     //if Data^.Status = stFinish then
-    if DLManager.containers.Items[Node^.Index].Status in
+    if DLManager.TaskItem(Node^.Index).Status in
       [STATUS_FINISH, STATUS_COMPRESS, STATUS_FAILED] then
       Percents := 1
     else
@@ -3198,7 +3180,7 @@ begin
     begin
       //TargetCanvas.Pen.Style:= psClear;
 
-      case DLManager.containers.Items[Node^.Index].Status of
+      case DLManager.TaskItem(Node^.Index).Status of
         //(STATUS_STOP, STATUS_WAIT, STATUS_PREPARE,
         //STATUS_DOWNLOAD, STATUS_FINISH, STATUS_COMPRESS, STATUS_PROBLEM, STATUS_FAILED);
         STATUS_STOP, STATUS_FAILED:
@@ -3271,12 +3253,10 @@ procedure TMainForm.vtDownloadMoveItems(NextIndex: Cardinal; Mode: TDropMode);
 var
   i, nIndex: Integer;
   cNode: PVirtualNode;
-  ConTemp: TTaskThreadContainerList;
+  ConTemp: TFPList;
 begin
-  { TODO -oCholif -cm : Dirty method for drag and drop to rearrange list, need better approach.
-    Check memory and cpu consumption }
   vtDownload.BeginUpdate;
-  ConTemp := TTaskThreadContainerList.Create;
+  ConTemp := TFPList.Create;
   try
     nIndex := NextIndex;
 
@@ -3285,12 +3265,12 @@ begin
       cNode := vtDownload.GetFirst;
       i := 0;
       while i < vtDownload.RootNodeCount do
-               //DLManager.containers.Count do
+               //DLManager.Count do
       begin
         if vtDownload.Selected[cNode] then
         begin
           vtDownload.Selected[cNode] := False;
-          ConTemp.Add(DLManager.containers[i]);
+          ConTemp.Add(DLManager.TaskItem(i));
           DLManager.containers.Delete(i);
           if (i < nIndex) and (nIndex > 0) then
             Dec(nIndex);
@@ -3308,10 +3288,10 @@ begin
         else
         if (i > 0) then
         begin
-          if (nIndex < DLManager.containers.Count) then
+          if (nIndex < DLManager.Count) then
             Inc(nIndex);
         end;
-        if nIndex > DLManager.containers.Count then
+        if nIndex > DLManager.Count then
           Dec(nIndex);
         DLManager.containers.Insert(nIndex, ConTemp[i]);
       end;
@@ -3346,7 +3326,7 @@ procedure TMainForm.vtDownloadDragDrop(Sender : TBaseVirtualTree;
   Mode : TDropMode);
 begin
   if (Source <> vtDownload) or (Source <> Sender) or
-    (DLManager.containers.Count < 2) then
+    (DLManager.Count < 2) then
     Exit;
   if Mode = dmNowhere then
     vtDownloadMoveItems(vtDownload.GetLast^.Index, Mode)
@@ -3381,7 +3361,7 @@ var
 begin
   if Column = 0 then
   begin
-    l := DLManager.containers.Items[Node^.Index].ChapterLinks.Count;
+    l := DLManager.TaskItem(Node^.Index).ChapterLinks.Count;
     if l > 0 then
     begin
       HintText := '';
@@ -3390,29 +3370,29 @@ begin
         for i := 0 to l - 1 do
           if HintText = '' then
             HintText :=
-              DLManager.containers.Items[Node^.Index].ChapterName.Strings[i]{ + ' : ' +
-        DLManager.containers.Items[Node^.Index].ChapterLinks.Strings[i]}
+              DLManager.TaskItem(Node^.Index).ChapterName.Strings[i]{ + ' : ' +
+        DLManager.TaskItem(Node^.Index).ChapterLinks.Strings[i]}
           else
             HintText := HintText + LineEnding +
-              DLManager.containers.Items[Node^.Index].ChapterName.Strings[i]{ + ' : ' +
-        DLManager.containers.Items[Node^.Index].ChapterLinks.Strings[i]};
+              DLManager.TaskItem(Node^.Index).ChapterName.Strings[i]{ + ' : ' +
+        DLManager.TaskItem(Node^.Index).ChapterLinks.Strings[i]};
       end
       else
       begin
         for i := 0 to 1 do
           if HintText = '' then
             HintText :=
-              DLManager.containers.Items[Node^.Index].ChapterName.Strings[i]{ + ' : ' +
-        DLManager.containers.Items[Node^.Index].ChapterLinks.Strings[i]}
+              DLManager.TaskItem(Node^.Index).ChapterName.Strings[i]{ + ' : ' +
+        DLManager.TaskItem(Node^.Index).ChapterLinks.Strings[i]}
           else
             HintText := HintText + LineEnding +
-              DLManager.containers.Items[Node^.Index].ChapterName.Strings[i]{ + ' : ' +
-        DLManager.containers.Items[Node^.Index].ChapterLinks.Strings[i]};
+              DLManager.TaskItem(Node^.Index).ChapterName.Strings[i]{ + ' : ' +
+        DLManager.TaskItem(Node^.Index).ChapterLinks.Strings[i]};
         HintText := HintText + LineEnding + '...';
         for i := l - 2 to l - 1 do
           HintText := HintText + LineEnding +
-            DLManager.containers.Items[Node^.Index].ChapterName.Strings[i]{ + ' : ' +
-        DLManager.containers.Items[Node^.Index].ChapterLinks.Strings[i]};
+            DLManager.TaskItem(Node^.Index).ChapterName.Strings[i]{ + ' : ' +
+        DLManager.TaskItem(Node^.Index).ChapterLinks.Strings[i]};
       end;
     end;
   end
@@ -3435,7 +3415,7 @@ procedure TMainForm.vtDownloadGetImageIndex(Sender: TBaseVirtualTree;
 begin
   if vtDownload.Header.Columns[Column].Position = 0 then
   begin
-    ImageIndex := integer(DLManager.containers.Items[Node^.Index].Status);
+    ImageIndex := integer(DLManager.TaskItem(Node^.Index).Status);
   end;
 end;
 
@@ -3450,16 +3430,16 @@ begin
   begin
     pos := Node^.Index;
     Data := Sender.GetNodeData(Node);
-    if (DLManager.containers.Count <> 0) then
-      if (Assigned(Data)) and ((DLManager.containers.Items[pos] <> nil) or
-        (not DLManager.containers.Items[pos].Thread.isTerminated)) then
+    if (DLManager.Count <> 0) then
+      if (Assigned(Data)) and ((DLManager.TaskItem(pos) <> nil) or
+        (not DLManager.TaskItem(pos).Thread.isTerminated)) then
       begin
-        Data^.title := DLManager.containers.Items[pos].DownloadInfo.title;
-        Data^.status := DLManager.containers.Items[pos].DownloadInfo.Status;
-        Data^.progress := DLManager.containers.Items[pos].DownloadInfo.Progress;
-        Data^.website := DLManager.containers.Items[pos].DownloadInfo.Website;
-        Data^.saveTo := DLManager.containers.Items[pos].DownloadInfo.SaveTo;
-        Data^.dateTime := DLManager.containers.Items[pos].DownloadInfo.dateTime;
+        Data^.title := DLManager.TaskItem(pos).DownloadInfo.title;
+        Data^.status := DLManager.TaskItem(pos).DownloadInfo.Status;
+        Data^.progress := DLManager.TaskItem(pos).DownloadInfo.Progress;
+        Data^.website := DLManager.TaskItem(pos).DownloadInfo.Website;
+        Data^.saveTo := DLManager.TaskItem(pos).DownloadInfo.SaveTo;
+        Data^.dateTime := DLManager.TaskItem(pos).DownloadInfo.dateTime;
         case Column of
           0: CellText := Data^.title;
           1: CellText := Data^.status;
@@ -3476,7 +3456,7 @@ procedure TMainForm.vtDownloadHeaderClick(Sender: TVTHeader;
   Column: TColumnIndex; Button: TMouseButton; Shift: TShiftState; X, Y: Integer
   );
 begin
-  if (not (Column = 2)) and (DLManager.containers.Count > 1) then
+  if (not (Column = 2)) and (DLManager.Count > 1) then
   begin
     DLManager.SortColumn := Column;
     DLManager.SortDirection := not DLManager.SortDirection;
@@ -3500,16 +3480,16 @@ begin
   begin
     pos := Node^.Index;
     Data := GetNodeData(Node);
-    if (DLManager.containers.Count <> 0) then
-      if (DLManager.containers.Items[pos] <> nil) or
-        (not DLManager.containers.Items[pos].Thread.isTerminated) then
+    if (DLManager.Count <> 0) then
+      if (DLManager.TaskItem(pos) <> nil) or
+        (not DLManager.TaskItem(pos).Thread.isTerminated) then
       begin
-        Data^.title := DLManager.containers.Items[pos].DownloadInfo.title;
-        Data^.status := DLManager.containers.Items[pos].DownloadInfo.Status;
-        Data^.progress := DLManager.containers.Items[pos].DownloadInfo.Progress;
-        Data^.website := DLManager.containers.Items[pos].DownloadInfo.Website;
-        Data^.saveTo := DLManager.containers.Items[pos].DownloadInfo.SaveTo;
-        Data^.dateTime := DLManager.containers.Items[pos].DownloadInfo.dateTime;
+        Data^.title := DLManager.TaskItem(pos).DownloadInfo.title;
+        Data^.status := DLManager.TaskItem(pos).DownloadInfo.Status;
+        Data^.progress := DLManager.TaskItem(pos).DownloadInfo.Progress;
+        Data^.website := DLManager.TaskItem(pos).DownloadInfo.Website;
+        Data^.saveTo := DLManager.TaskItem(pos).DownloadInfo.SaveTo;
+        Data^.dateTime := DLManager.TaskItem(pos).DownloadInfo.dateTime;
       end;
   end;
   vtDownload.ValidateNode(Node, False);
@@ -4059,7 +4039,7 @@ begin
   xNode := vtDownload.GetLast;
   for i := vtDownload.RootNodeCount - 1 downto 0 do
   begin
-    if DLManager.containers.Items[i].Status = STATUS_FINISH then
+    if DLManager.TaskItem(i).Status = STATUS_FINISH then
       vtDownload.isVisible[xNode] := True
     else
       vtDownload.isVisible[xNode] := False;
@@ -4085,7 +4065,7 @@ begin
   xNode := vtDownload.GetLast;
   for i := vtDownload.RootNodeCount - 1 downto 0 do
   begin
-    if (DLManager.containers.Items[i].Status in
+    if (DLManager.TaskItem(i).Status in
       [STATUS_DOWNLOAD, STATUS_PREPARE, STATUS_WAIT]) then
       vtDownload.isVisible[xNode] := True
     else
@@ -4110,9 +4090,9 @@ begin
   if vtDownload.RootNodeCount = 0 then
     Exit;
   xNode := vtDownload.GetLast;
-  for i := DLManager.containers.Count - 1 downto 0 do
+  for i := DLManager.Count - 1 downto 0 do
   begin
-    if DLManager.containers.Items[i].Status = STATUS_STOP then
+    if DLManager.TaskItem(i).Status = STATUS_STOP then
       vtDownload.isVisible[xNode] := True
     else
       vtDownload.isVisible[xNode] := False;
@@ -4141,7 +4121,7 @@ begin
   xNode := vtDownload.GetLast;
   for i := vtDownload.RootNodeCount - 1 downto 0 do
   begin
-    dt := DLManager.containers.Items[i].DownloadInfo.dateTime;
+    dt := DLManager.TaskItem(i).DownloadInfo.dateTime;
     DecodeDate(dt, year, month, day);
     jdn := DateToJDN(year, month, day);
 
@@ -4711,7 +4691,7 @@ end;
 procedure TMainForm.UpdateVtDownload;
 begin
   //vtDownload.Clear;
-  vtDownload.RootNodeCount := DLManager.containers.Count;
+  vtDownload.RootNodeCount := DLManager.Count;
   // the reason we put vtDownloadFilters in here instead of in DLManager because
   // the size of download list can change while this method is running
   vtDownloadFilters;
@@ -5148,18 +5128,18 @@ begin
   //  lbMode.Caption := Format(RS_ModeAll, [dataProcess.filterPos.Count]);
   //
   //// sync download table infos
-  //if DLManager.containers.Count > 0 then
+  //if DLManager.Count > 0 then
   //begin
-  //  for i := 0 to DLManager.containers.Count - 1 do
+  //  for i := 0 to DLManager.Count - 1 do
   //  begin
-  //    // if (DLManager.containers.Items[pos] <> nil) OR (NOT DLManager.containers.Items[pos].Thread.isTerminated) then
-  //    case DLManager.containers.Items[i].Status of
-  //      STATUS_STOP: DLManager.containers.Items[i].DownloadInfo.Status := RS_Stopped;
-  //      STATUS_WAIT: DLManager.containers.Items[i].DownloadInfo.Status := RS_Waiting
-  //      STATUS_PREPARE: DLManager.containers.Items[i].DownloadInfo.Status := RS_Preparing;
-  //      STATUS_DOWNLOAD: DLManager.containers.Items[i].DownloadInfo.Status :=
+  //    // if (DLManager.TaskItem(pos) <> nil) OR (NOT DLManager.TaskItem(pos).Thread.isTerminated) then
+  //    case DLManager.TaskItem(i).Status of
+  //      STATUS_STOP: DLManager.TaskItem(i).DownloadInfo.Status := RS_Stopped;
+  //      STATUS_WAIT: DLManager.TaskItem(i).DownloadInfo.Status := RS_Waiting
+  //      STATUS_PREPARE: DLManager.TaskItem(i).DownloadInfo.Status := RS_Preparing;
+  //      STATUS_DOWNLOAD: DLManager.TaskItem(i).DownloadInfo.Status :=
   //          stDownloading;
-  //      STATUS_FINISH: DLManager.containers.Items[i].DownloadInfo.Status := RS_Finish;
+  //      STATUS_FINISH: DLManager.TaskItem(i).DownloadInfo.Status := RS_Finish;
   //    end;
   //  end;
   //end;

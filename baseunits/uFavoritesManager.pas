@@ -565,8 +565,8 @@ begin
                 begin
                   DLManager.CS_DownloadManager_Task.Acquire;
                   try
-                    DLManager.containers.Add(TTaskThreadContainer.Create);
-                    with DLManager.containers.Last do begin
+                    DLManager.containers.Add(TTaskContainer.Create);
+                    with TTaskContainer(DLManager.Containers.Last) do begin
                       Manager := DLManager;
                       CurrentDownloadChapterPtr := 0;
                       MangaSiteID := GetMangaSiteID(FavoriteInfo.Website);
