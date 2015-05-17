@@ -1,11 +1,16 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=UTF-8"
 
+#: frmimportfavorites.rs_importcompleted
+msgid "Import completed."
+msgstr ""
+
 #: frmmain.rs_alldownloads
 msgid "All downloads"
 msgstr ""
 
 #: frmmain.rs_cancel
+msgctxt "frmmain.rs_cancel"
 msgid "Cancel"
 msgstr ""
 
@@ -171,10 +176,12 @@ msgid "Check for new version"
 msgstr ""
 
 #: tmainform.btdownload.caption
+msgctxt "tmainform.btdownload.caption"
 msgid "Download"
 msgstr ""
 
 #: tmainform.btfavoriteschecknewchapter.caption
+msgctxt "tmainform.btfavoriteschecknewchapter.caption"
 msgid "Check for new chapter"
 msgstr ""
 
@@ -251,7 +258,7 @@ msgid "Automatically download after finish checking"
 msgstr ""
 
 #: tmainform.cboptionautonumberchapter.caption
-msgid "cbOptionAutoNumberChapter"
+msgid "Auto number chapter"
 msgstr ""
 
 #: tmainform.cboptionautoremovecompletedmanga.caption
@@ -259,7 +266,7 @@ msgid "Automatic remove completed manga from Favorites"
 msgstr ""
 
 #: tmainform.cboptionbatotouseie.caption
-msgid "cbOptionBatotoUseIE"
+msgid "[Batoto] Use IE"
 msgstr ""
 
 #: tmainform.cboptiondigitchapter.caption
@@ -1041,5 +1048,166 @@ msgstr ""
 #: tmainform.vtfavorites.header.columns[4].text
 msgctxt "TMAINFORM.VTFAVORITES.HEADER.COLUMNS[4].TEXT"
 msgid "Save to"
+msgstr ""
+
+#: udownloadsmanager.rs_compressing
+msgid "Compressing..."
+msgstr ""
+
+#: udownloadsmanager.rs_downloading
+msgid "Downloading"
+msgstr ""
+
+#: udownloadsmanager.rs_failed
+msgid "Failed"
+msgstr ""
+
+#: udownloadsmanager.rs_failedtocreatedirtoolong
+msgid "Failed to create dir! Too long?"
+msgstr ""
+
+#: udownloadsmanager.rs_failedtryresumetask
+msgid "Failed, try resuming this task!"
+msgstr ""
+
+#: udownloadsmanager.rs_finish
+msgid "Completed"
+msgstr ""
+
+#: udownloadsmanager.rs_preparing
+msgctxt "udownloadsmanager.rs_preparing"
+msgid "Preparing"
+msgstr ""
+
+#: udownloadsmanager.rs_stopped
+msgid "Stopped"
+msgstr ""
+
+#: udownloadsmanager.rs_waiting
+msgid "Waiting..."
+msgstr ""
+
+#: ufavoritesmanager.rs_btnaddtoqueue
+msgid "Add to queue"
+msgstr ""
+
+#: ufavoritesmanager.rs_btncancel
+msgctxt "ufavoritesmanager.rs_btncancel"
+msgid "Cancel"
+msgstr ""
+
+#: ufavoritesmanager.rs_btncheckfavorites
+msgctxt "ufavoritesmanager.rs_btncheckfavorites"
+msgid "Check for new chapter"
+msgstr ""
+
+#: ufavoritesmanager.rs_btndownload
+msgctxt "ufavoritesmanager.rs_btndownload"
+msgid "Download"
+msgstr ""
+
+#: ufavoritesmanager.rs_btnremove
+msgid "Remove"
+msgstr ""
+
+#: ufavoritesmanager.rs_dlgcompletedmangacaption
+msgid "Found %d completed manga"
+msgstr ""
+
+#: ufavoritesmanager.rs_dlgfavoritescheckisrunning
+msgid "Favorites check is running!"
+msgstr ""
+
+#: ufavoritesmanager.rs_dlgnewchaptercaption
+msgid "%d manga(s) have new chapter(s)"
+msgstr ""
+
+#: ufavoritesmanager.rs_favoritehasnewchapter
+msgid "%s <%s> has %d new chapter(s)."
+msgstr ""
+
+#: ufavoritesmanager.rs_lblmangawillberemoved
+msgid "Completed manga will be removed:"
+msgstr ""
+
+#: ufavoritesmanager.rs_lblnewchapterfound
+msgid "Found %d new chapter from %d manga(s):"
+msgstr ""
+
+#: usilentthread.rs_silentthreadloadstatus
+msgid "Loading: %d/%d"
+msgstr ""
+
+#: usubthread.rs_btncheckupdates
+msgid "Check for new updates"
+msgstr ""
+
+#: usubthread.rs_currentversion
+msgid "Installed Version"
+msgstr ""
+
+#: usubthread.rs_latestversion
+msgid "Latest Version   "
+msgstr ""
+
+#: usubthread.rs_newversionfound
+msgid "New Version found!"
+msgstr ""
+
+#: uupdatethread.rs_dlghasnewmanga
+msgid "%s has %d new manga(s)"
+msgstr ""
+
+#: uupdatethread.rs_gettingdirectory
+msgid "Getting directory"
+msgstr ""
+
+#: uupdatethread.rs_gettinginfo
+msgid "Getting info"
+msgstr ""
+
+#: uupdatethread.rs_gettinglistfor
+msgid "Getting list for"
+msgstr ""
+
+#: uupdatethread.rs_indexingnewtitle
+msgid "Indexing new title(s)"
+msgstr ""
+
+#: uupdatethread.rs_lookingfornewtitle
+msgid "Looking for new title(s)"
+msgstr ""
+
+#: uupdatethread.rs_lookingfornewtitlefromanotherdirectory
+msgid "Looking for new title(s) from another directory"
+msgstr ""
+
+#: uupdatethread.rs_preparing
+msgctxt "uupdatethread.rs_preparing"
+msgid "Preparing"
+msgstr ""
+
+#: uupdatethread.rs_removingduplicatefromcurrentdata
+msgid "Removing duplicate from current data"
+msgstr ""
+
+#: uupdatethread.rs_removingduplicatefromlocaldata
+msgid "Removing duplicate from local data"
+msgstr ""
+
+#: uupdatethread.rs_removingduplicatefromnewtitle
+msgid "Removing duplicate from new title(s)"
+msgstr ""
+
+#: uupdatethread.rs_savingdata
+msgid "Saving data"
+msgstr ""
+
+#: uupdatethread.rs_synchronizingdata
+msgid "Synchronizing data"
+msgstr ""
+
+#: uupdatethread.rs_updatinglist
+msgid "Updating list"
 msgstr ""
 

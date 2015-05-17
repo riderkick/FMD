@@ -1691,17 +1691,6 @@ object MainForm: TMainForm
             Caption = 'After download finish:'
             ParentColor = False
           end
-          object cbOptionBatotoUseIE: TCheckBox
-            Left = 260
-            Height = 19
-            Top = 30
-            Width = 133
-            Caption = 'cbOptionBatotoUseIE'
-            Enabled = False
-            ParentFont = False
-            TabOrder = 4
-            Visible = False
-          end
           object gbOptionExternal: TGroupBox
             Left = 20
             Height = 89
@@ -1712,7 +1701,7 @@ object MainForm: TMainForm
             ClientHeight = 69
             ClientWidth = 516
             ParentFont = False
-            TabOrder = 5
+            TabOrder = 4
             object edOptionExternal: TEdit
               Left = 13
               Height = 23
@@ -1752,7 +1741,7 @@ object MainForm: TMainForm
             Width = 177
             Caption = 'Permit only one FMD running'
             ParentFont = False
-            TabOrder = 6
+            TabOrder = 5
           end
           object cbOptionLiveSearch: TCheckBox
             Left = 20
@@ -1761,7 +1750,7 @@ object MainForm: TMainForm
             Width = 210
             Caption = 'Enable live search (slow on long list)'
             ParentFont = False
-            TabOrder = 7
+            TabOrder = 6
           end
         end
         object tsConnections: TTabSheet
@@ -2054,8 +2043,8 @@ object MainForm: TMainForm
               Left = 294
               Height = 19
               Top = 36
-              Width = 182
-              Caption = 'cbOptionAutoNumberChapter'
+              Width = 134
+              Caption = 'Auto number chapter'
               TabOrder = 3
               Visible = False
             end
@@ -2453,11 +2442,22 @@ object MainForm: TMainForm
             object cbOptionMangaFoxRemoveWatermarks: TCheckBox
               Left = 16
               Height = 19
-              Top = 80
+              Top = 104
               Width = 317
               Caption = '[Mangafox] Remove watermarks (Beware! Experimental!)'
               ParentFont = False
               TabOrder = 3
+              Visible = False
+            end
+            object cbOptionBatotoUseIE: TCheckBox
+              Left = 16
+              Height = 19
+              Top = 80
+              Width = 97
+              Caption = '[Batoto] Use IE'
+              Enabled = False
+              ParentFont = False
+              TabOrder = 4
               Visible = False
             end
           end

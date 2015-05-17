@@ -47,6 +47,7 @@ type
     btURL: TSpeedButton;
     cbOptionAutoDlFav: TCheckBox;
     cbOptionAutoRemoveCompletedManga: TCheckBox;
+    cbOptionBatotoUseIE: TCheckBox;
     cbOptionUpdateListNoMangaInfo: TCheckBox;
     cbOptionEnableLoadCover: TCheckBox;
     cbOptionDigitVolume: TCheckBox;
@@ -102,7 +103,6 @@ type
     btDownload: TBitBtn;
     btRemoveFilterLarge: TBitBtn;
     cbOptionAutoCheckUpdate: TCheckBox;
-    cbOptionBatotoUseIE: TCheckBox;
     cbOptionShowDeleteTaskDialog: TCheckBox;
     cbOptionShowBatotoSG: TCheckBox;
     cbOptionShowAllLang: TCheckBox;

@@ -9,13 +9,18 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: id_ID\n"
-"X-Generator: Poedit 1.7.6"
+"X-Generator: Poedit 1.7.6\n"
+
+#: frmimportfavorites.rs_importcompleted
+msgid "Import completed."
+msgstr "Selesai mengimpor."
 
 #: frmmain.rs_alldownloads
 msgid "All downloads"
 msgstr "Semua unduhan"
 
 #: frmmain.rs_cancel
+msgctxt "frmmain.rs_cancel"
 msgid "Cancel"
 msgstr "Batal"
 
@@ -105,7 +110,7 @@ msgstr "Penulis:"
 
 #: frmmain.rs_infogenres
 msgid "Genre(s):"
-msgstr "Kategori:"
+msgstr "Genre:"
 
 #: frmmain.rs_infostatus
 msgid "Status:"
@@ -174,58 +179,60 @@ msgstr "Kemarin"
 
 #: tmainform.btabortupdatelist.hint
 msgid "Abort update list"
-msgstr ""
+msgstr "Batalkan pembaruan daftar komik"
 
 #: tmainform.btaddtofavorites.caption
 msgid "Add to favorites"
-msgstr ""
+msgstr "Tambahkan ke kesukaan"
 
 #: tmainform.btcheckversion.caption
 msgid "Check for new version"
-msgstr ""
+msgstr "Periksa versi baru"
 
 #: tmainform.btdownload.caption
+msgctxt "tmainform.btdownload.caption"
 msgid "Download"
-msgstr ""
+msgstr "Unduh"
 
 #: tmainform.btfavoriteschecknewchapter.caption
+msgctxt "tmainform.btfavoriteschecknewchapter.caption"
 msgid "Check for new chapter"
-msgstr ""
+msgstr "Periksa bab baru"
 
 #: tmainform.btfavoritesimport.caption
 msgid "Import list"
-msgstr ""
+msgstr "Impor daftar"
 
 #: tmainform.btfilter.caption
 msgctxt "TMAINFORM.BTFILTER.CAPTION"
 msgid "Filter"
-msgstr ""
+msgstr "Saring"
 
 #: tmainform.btfilterreset.caption
 msgid "Reset value"
-msgstr ""
+msgstr "Atur Ulang"
 
 #: tmainform.btoptionapply.caption
 msgid "Apply"
-msgstr ""
+msgstr "Terapkan"
 
 #: tmainform.btreadonline.caption
 msgid "Read online"
-msgstr ""
+msgstr "Baca daring"
 
 #: tmainform.btremovefilterlarge.caption
 msgctxt "TMAINFORM.BTREMOVEFILTERLARGE.CAPTION"
 msgid "Remove filter"
-msgstr ""
+msgstr "SIngkirkan"
 
 #: tmainform.btremovefilterlarge.hint
 msgctxt "tmainform.btremovefilterlarge.hint"
 msgid "Remove filter"
-msgstr ""
+msgstr "SIngkirkan"
 
 #: tmainform.btsearchclear.hint
 msgid "Search manga from list"
-msgstr ""
+msgstr "Cari hanya manga baru"
 
 #: tmainform.btupdatelist.hint
 msgctxt "tmainform.btupdatelist.hint"
@@ -265,76 +272,76 @@ msgid "Automatically download after finish checking"
 msgstr "Otomatis mengunduh setelah selesai memeriksa"
 
 #: tmainform.cboptionautonumberchapter.caption
-msgid "cbOptionAutoNumberChapter"
-msgstr ""
+msgid "Auto number chapter"
+msgstr "Otomatis nomor Bab"
 
 #: tmainform.cboptionautoremovecompletedmanga.caption
 msgid "Automatic remove completed manga from Favorites"
-msgstr ""
+msgstr "Otomatis hapus komik yang sudah tamat dari daftar kesukaan"
 
 #: tmainform.cboptionbatotouseie.caption
-msgid "cbOptionBatotoUseIE"
-msgstr ""
+msgid "[Batoto] Use IE"
+msgstr "[Batoto] Gunakan IE"
 
 #: tmainform.cboptiondigitchapter.caption
 msgid "Chapter"
-msgstr ""
+msgstr "Bab"
 
 #: tmainform.cboptiondigitvolume.caption
 msgid "Volume"
-msgstr ""
+msgstr "Volume"
 
 #: tmainform.cboptionenableloadcover.caption
 msgid "Enable load manga cover"
-msgstr ""
+msgstr "Aktifkan sampul komik"
 
 #: tmainform.cboptiongeneratechaptername.caption
 msgid "Generate chapter folder with chapter name"
-msgstr ""
+msgstr "Buat bab folder dengan nama Bab"
 
 #: tmainform.cboptiongeneratemangafoldername.caption
 msgid "Auto generate folder based on manga's name"
-msgstr ""
+msgstr "Buat otomatis folder berdasarkan nama komik"
 
 #: tmainform.cboptionlivesearch.caption
 msgid "Enable live search (slow on long list)"
-msgstr ""
+msgstr "Aktifkan pencarian langsung (lambat dengan daftar yang panjang)"
 
 #: tmainform.cboptionmangafoxremovewatermarks.caption
 msgid "[Mangafox] Remove watermarks (Beware! Experimental!)"
-msgstr ""
+msgstr "[Mangafox] Menghapus Watermark (Waspadalah! Eksperimental!)"
 
 #: tmainform.cboptionminimizetotray.caption
 msgid "Minimize to tray"
-msgstr ""
+msgstr "Perkecil ke penampan"
 
 #: tmainform.cboptiononeinstanceonly.caption
 msgid "Permit only one FMD running"
-msgstr ""
+msgstr "Hanya ijinkan satu FMD berjalan"
 
 #: tmainform.cboptionpathconvert.caption
 msgid "Change all all unicode symbols to \"_\" (choose this when you have problem with unicode path)"
-msgstr ""
+msgstr "Ubah semua simbol unicode menjadi \"_\" (pilih ini ketika Anda memiliki masalah dengan lokasi unicode)"
 
 #: tmainform.cboptionproxytype.text
 msgid "HTTP"
-msgstr ""
+msgstr "HTTP"
 
 #: tmainform.cboptionshowalllang.caption
 msgid "[Batoto] Show All Language"
-msgstr ""
+msgstr "[Batoto] Tampilkan semua bahasa"
 
 #: tmainform.cboptionshowbatotosg.caption
 msgid "[Batoto] Show scan group name"
-msgstr ""
+msgstr "[Batoto] Tampilkan nama grup scan"
 
 #: tmainform.cboptionshowdeletetaskdialog.caption
 msgid "Delete task/favorite"
-msgstr ""
+msgstr "Hapus unduhan/kesukaan"
 
 #: tmainform.cboptionshowfavoritedialog.caption
 msgid "Favorite: After checking complete"
-msgstr ""
+msgstr "Kesukaan: Setelah pemeriksaan selesai"
 
 #: tmainform.cboptionshowquitdialog.caption
 msgid "Exit FMD"
@@ -342,11 +349,11 @@ msgstr "Tutup FMD"
 
 #: tmainform.cboptionupdatelistnomangainfo.caption
 msgid "Don't load manga information when updating list (filter will be not work!)"
-msgstr ""
+msgstr "Tidak memuat informasi komik ketika memperbarui daftar (saringan tidak akan bekerja!)"
 
 #: tmainform.cboptionupdatelistremoveduplicatelocaldata.caption
 msgid "Remove duplicate local data when updating manga list"
-msgstr ""
+msgstr "Menghapus duplikat data lokal saat memperbarui daftar komik"
 
 #: tmainform.cboptionuseproxy.caption
 msgid "Use proxy"
@@ -354,15 +361,15 @@ msgstr "Gunakan proxy"
 
 #: tmainform.cbsearchfromallsites.caption
 msgid "Search in all manga sites"
-msgstr ""
+msgstr "Cari di semua situs komik"
 
 #: tmainform.cbselectmanga.hint
 msgid "For more manga sites, please go to Options->Manga sites"
-msgstr ""
+msgstr "Untuk situs manga yang lain, silahkan pilih di Pengaturan->Situs komik"
 
 #: tmainform.cbuseregexpr.caption
 msgid "Regular Expression"
-msgstr ""
+msgstr "Cocok dengan regexp"
 
 #: tmainform.ckfilteraction.caption
 msgid "Action"
@@ -523,36 +530,36 @@ msgstr "Program eksternal"
 #: tmainform.gboptionfavorites.caption
 msgctxt "TMAINFORM.GBOPTIONFAVORITES.CAPTION"
 msgid "Favorites"
-msgstr ""
+msgstr "Kesukaan"
 
 #: tmainform.gboptionproxy.caption
 msgid "Proxy config"
-msgstr ""
+msgstr "Konfigurasi proxy"
 
 #: tmainform.gboptionrenaming.caption
 msgid "Renaming"
-msgstr ""
+msgstr "Mengubah nama"
 
 #: tmainform.lbdefaultdownloadpath.caption
 msgid "Choose the default download path:"
-msgstr ""
+msgstr "Pilih lokasi pengunduhan default"
 
 #: tmainform.lbfilterartists.caption
 msgid "Artists"
-msgstr ""
+msgstr "Seniman"
 
 #: tmainform.lbfilterauthors.caption
 msgid "Authors"
-msgstr ""
+msgstr "Penulis"
 
 #: tmainform.lbfiltercustomgenres.caption
 msgid "Custom Genres"
-msgstr ""
+msgstr "Genre pilihan"
 
 #: tmainform.lbfilterhint.caption
 msgctxt "tmainform.lbfilterhint.caption"
 msgid "[?]"
-msgstr ""
+msgstr "[?]"
 
 #: tmainform.lbfilterhint.hint
 msgid ""
@@ -566,6 +573,15 @@ msgid ""
 "- Exclude a genre by placing ''!'' at the beginning of a genre.\n"
 "- Example: Adventure,!Ecchi,Comedy."
 msgstr ""
+"Genre: \n"
+"- Dicek: termasuk genre ini.' \n"
+"- Dicentang: kecualikan genre ini.' \n"
+"- Grayed: tidak penting.\n"
+"\n"
+"Genre pilihan: \n"
+"- Pisahkan beberapa genre dengan ','. \n"
+"- Kecualikan genre dengan menempatkan ''!'' pada permulaan genre. \n"
+"- Contoh: petualangan,! Ecchi, komedi."
 
 #: tmainform.lbfilterstatus.caption
 msgctxt "TMAINFORM.LBFILTERSTATUS.CAPTION"
@@ -586,7 +602,6 @@ msgid "Mode: Show all manga"
 msgstr ""
 
 #: tmainform.lboptionautocheckminutes.caption
-#, fuzzy
 msgctxt "tmainform.lboptionautocheckminutes.caption"
 msgid "Auto check for new chapter every %d minutes"
 msgstr "Otomatis Periksa bab baru setiap %d menit"
@@ -921,7 +936,6 @@ msgid "Download manga list from server"
 msgstr ""
 
 #: tmainform.mnupdatelist.caption
-#, fuzzy
 msgctxt "TMAINFORM.MNUPDATELIST.CAPTION"
 msgid "Update manga list"
 msgstr "Perbarui daftar komik"
@@ -1064,3 +1078,163 @@ msgctxt "TMAINFORM.VTFAVORITES.HEADER.COLUMNS[4].TEXT"
 msgid "Save to"
 msgstr "Simpan ke"
 
+#: udownloadsmanager.rs_compressing
+msgid "Compressing..."
+msgstr ""
+
+#: udownloadsmanager.rs_downloading
+msgid "Downloading"
+msgstr ""
+
+#: udownloadsmanager.rs_failed
+msgid "Failed"
+msgstr ""
+
+#: udownloadsmanager.rs_failedtocreatedirtoolong
+msgid "Failed to create dir! Too long?"
+msgstr ""
+
+#: udownloadsmanager.rs_failedtryresumetask
+msgid "Failed, try resuming this task!"
+msgstr ""
+
+#: udownloadsmanager.rs_finish
+msgid "Completed"
+msgstr ""
+
+#: udownloadsmanager.rs_preparing
+msgctxt "udownloadsmanager.rs_preparing"
+msgid "Preparing"
+msgstr ""
+
+#: udownloadsmanager.rs_stopped
+msgid "Stopped"
+msgstr ""
+
+#: udownloadsmanager.rs_waiting
+msgid "Waiting..."
+msgstr ""
+
+#: ufavoritesmanager.rs_btnaddtoqueue
+msgid "Add to queue"
+msgstr ""
+
+#: ufavoritesmanager.rs_btncancel
+msgctxt "ufavoritesmanager.rs_btncancel"
+msgid "Cancel"
+msgstr "Batal"
+
+#: ufavoritesmanager.rs_btncheckfavorites
+msgctxt "ufavoritesmanager.rs_btncheckfavorites"
+msgid "Check for new chapter"
+msgstr "Periksa bab baru"
+
+#: ufavoritesmanager.rs_btndownload
+msgctxt "ufavoritesmanager.rs_btndownload"
+msgid "Download"
+msgstr "Unduh"
+
+#: ufavoritesmanager.rs_btnremove
+msgid "Remove"
+msgstr ""
+
+#: ufavoritesmanager.rs_dlgcompletedmangacaption
+msgid "Found %d completed manga"
+msgstr ""
+
+#: ufavoritesmanager.rs_dlgfavoritescheckisrunning
+msgid "Favorites check is running!"
+msgstr ""
+
+#: ufavoritesmanager.rs_dlgnewchaptercaption
+msgid "%d manga(s) have new chapter(s)"
+msgstr ""
+
+#: ufavoritesmanager.rs_favoritehasnewchapter
+msgid "%s <%s> has %d new chapter(s)."
+msgstr ""
+
+#: ufavoritesmanager.rs_lblmangawillberemoved
+msgid "Completed manga will be removed:"
+msgstr "Manga yang sudah tamat akan dihapus"
+
+#: ufavoritesmanager.rs_lblnewchapterfound
+msgid "Found %d new chapter from %d manga(s):"
+msgstr "Menemukan %d bab baru dari %d komik:"
+
+#: usilentthread.rs_silentthreadloadstatus
+msgid "Loading: %d/%d"
+msgstr "Memuat: %d/%d"
+
+#: usubthread.rs_btncheckupdates
+msgid "Check for new updates"
+msgstr "Periksa untuk update baru"
+
+#: usubthread.rs_currentversion
+msgid "Installed Version"
+msgstr "Versi terpasang"
+
+#: usubthread.rs_latestversion
+msgid "Latest Version   "
+msgstr "Versi terbaru  "
+
+#: usubthread.rs_newversionfound
+msgid "New Version found!"
+msgstr "Versi baru ditemukan!"
+
+#: uupdatethread.rs_dlghasnewmanga
+msgid "%s has %d new manga(s)"
+msgstr "%s memiliki %d komik baru"
+
+#: uupdatethread.rs_gettingdirectory
+msgid "Getting directory"
+msgstr "Mendapati direktori"
+
+#: uupdatethread.rs_gettinginfo
+msgid "Getting info"
+msgstr "Mendapati informasi"
+
+#: uupdatethread.rs_gettinglistfor
+msgid "Getting list for"
+msgstr "Mendapati daftar untuk"
+
+#: uupdatethread.rs_indexingnewtitle
+msgid "Indexing new title(s)"
+msgstr "Pengindeksan judul baru"
+
+#: uupdatethread.rs_lookingfornewtitle
+msgid "Looking for new title(s)"
+msgstr "Mencari judul baru"
+
+#: uupdatethread.rs_lookingfornewtitlefromanotherdirectory
+msgid "Looking for new title(s) from another directory"
+msgstr "Mencari judul baru dari direktori lain"
+
+#: uupdatethread.rs_preparing
+msgctxt "uupdatethread.rs_preparing"
+msgid "Preparing"
+msgstr "Mempersiapkan"
+
+#: uupdatethread.rs_removingduplicatefromcurrentdata
+msgid "Removing duplicate from current data"
+msgstr "Menghapus duplikat dari data saat ini"
+
+#: uupdatethread.rs_removingduplicatefromlocaldata
+msgid "Removing duplicate from local data"
+msgstr "Menghapus duplikat dari data lokal"
+
+#: uupdatethread.rs_removingduplicatefromnewtitle
+msgid "Removing duplicate from new title(s)"
+msgstr "Menghapus duplikat dari judul baru"
+
+#: uupdatethread.rs_savingdata
+msgid "Saving data"
+msgstr "Menyimpan data"
+
+#: uupdatethread.rs_synchronizingdata
+msgid "Synchronizing data"
+msgstr "Sinkronisasi data"
+
+#: uupdatethread.rs_updatinglist
+msgid "Updating list"
+msgstr "Memperbarui daftar"
