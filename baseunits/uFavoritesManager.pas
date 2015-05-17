@@ -379,7 +379,7 @@ end;
 function TFavoriteManager.FavoriteItem(const Index: Integer): TFavoriteContainer;
 begin
   if (Index < 0) or (Index >= FFavorites.Count) then
-    Result := nil;
+    Exit(nil);
   Result := TFavoriteContainer(FFavorites.Items[Index]);
 end;
 
