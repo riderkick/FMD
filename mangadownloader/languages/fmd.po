@@ -152,6 +152,7 @@ msgid "Software"
 msgstr ""
 
 #: frmmain.rs_softwarepath
+msgctxt "frmmain.rs_softwarepath"
 msgid "Path to the software (e.g. C:\\MangaDownloader)"
 msgstr ""
 
@@ -161,6 +162,45 @@ msgstr ""
 
 #: frmmain.rs_yesterday
 msgid "Yesterday"
+msgstr ""
+
+#: frmshutdowncounter.rs_lblmessageexit
+msgid "FMD will exit in %d second."
+msgstr ""
+
+#: frmshutdowncounter.rs_lblmessagehibernate
+msgid "System will hibernate in %d second."
+msgstr ""
+
+#: frmshutdowncounter.rs_lblmessageshutdown
+msgid "System will shutdown in %d second."
+msgstr ""
+
+#: timportfavorites.btcancel.caption
+msgctxt "TIMPORTFAVORITES.BTCANCEL.CAPTION"
+msgid "Cancel"
+msgstr ""
+
+#: timportfavorites.btimport.caption
+msgctxt "timportfavorites.btimport.caption"
+msgid "&OK"
+msgstr ""
+
+#: timportfavorites.caption
+msgid "Import list ..."
+msgstr ""
+
+#: timportfavorites.cbsoftware.text
+msgid "Domdomsoft Manga Downloader"
+msgstr ""
+
+#: timportfavorites.edpath.text
+msgctxt "TIMPORTFAVORITES.EDPATH.TEXT"
+msgid "Path to the software (e.g. C:\\MangaDownloader)"
+msgstr ""
+
+#: timportfavorites.lbselectsoftware.caption
+msgid "Software:"
 msgstr ""
 
 #: tmainform.btabortupdatelist.hint
@@ -230,6 +270,7 @@ msgid "Visit my blog"
 msgstr ""
 
 #: tmainform.caption
+msgctxt "tmainform.caption"
 msgid "Free Manga Downloader"
 msgstr ""
 
@@ -446,7 +487,7 @@ msgid "Romance"
 msgstr ""
 
 #: tmainform.ckfilterschoollife.caption
-msgid "Scool Life"
+msgid "School Life"
 msgstr ""
 
 #: tmainform.ckfilterscifi.caption
@@ -1050,6 +1091,56 @@ msgctxt "TMAINFORM.VTFAVORITES.HEADER.COLUMNS[4].TEXT"
 msgid "Save to"
 msgstr ""
 
+#: tnewchapter.btcancel.caption
+msgctxt "TNEWCHAPTER.BTCANCEL.CAPTION"
+msgid "Cancel"
+msgstr ""
+
+#: tnewchapter.btdownload.caption
+msgctxt "TNEWCHAPTER.BTDOWNLOAD.CAPTION"
+msgid "&OK"
+msgstr ""
+
+#: tnewchapter.btqueue.caption
+msgctxt "TNEWCHAPTER.BTQUEUE.CAPTION"
+msgid "Add to queue"
+msgstr ""
+
+#: tnewchapter.caption
+msgid "New Chapter Notification"
+msgstr ""
+
+#: tshutdowncounterform.btabort.caption
+msgid "&Abort"
+msgstr ""
+
+#: tshutdowncounterform.btnow.caption
+msgid "&Now"
+msgstr ""
+
+#: tshutdowncounterform.caption
+msgctxt "TSHUTDOWNCOUNTERFORM.CAPTION"
+msgid "Free Manga Downloader"
+msgstr ""
+
+#: tupdatedialogform.btnlater.caption
+msgid "Later"
+msgstr ""
+
+#: tupdatedialogform.btnupdate.caption
+msgid "Update"
+msgstr ""
+
+#: tupdatedialogform.caption
+msgid "New Version Found"
+msgstr ""
+
+#: tupdatedialogform.lbmessage.caption
+msgid ""
+"New version found! Do you want to update now?\n"
+"FMD will be closed to finish the update."
+msgstr ""
+
 #: udownloadsmanager.rs_compressing
 msgid "Compressing..."
 msgstr ""
@@ -1088,6 +1179,7 @@ msgid "Waiting..."
 msgstr ""
 
 #: ufavoritesmanager.rs_btnaddtoqueue
+msgctxt "ufavoritesmanager.rs_btnaddtoqueue"
 msgid "Add to queue"
 msgstr ""
 

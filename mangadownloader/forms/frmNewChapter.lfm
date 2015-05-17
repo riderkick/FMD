@@ -161,10 +161,9 @@ object NewChapter: TNewChapter
   end
   object lbNotification: TLabel
     Left = 8
-    Height = 15
+    Height = 1
     Top = 12
-    Width = 9
-    Caption = '...'
+    Width = 1
     Font.Style = [fsBold]
     ParentColor = False
     ParentFont = False

@@ -12,7 +12,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Dialogs, StdCtrls,
-  Buttons, lazutf8classes, frmImportList, uBaseUnit;
+  Buttons, DefaultTranslator, lazutf8classes, frmImportList, uBaseUnit;
 
 type
 

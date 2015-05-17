@@ -127,7 +127,7 @@ object UpdateDialogForm: TUpdateDialogForm
     Height = 30
     Top = 8
     Width = 258
-    Caption = 'New version found! Do you want to update now?'#13#10'FMD will be close to finish the update.'
+    Caption = 'New version found! Do you want to update now?'#13#10'FMD will be closed to finish the update.'
     ParentColor = False
   end
 end

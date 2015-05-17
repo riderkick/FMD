@@ -5,8 +5,8 @@ unit frmUpdateDialog;
 interface
 
 uses
-  Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
-  Buttons;
+  Forms, Controls, StdCtrls,
+  Buttons, DefaultTranslator;
 
 type
 

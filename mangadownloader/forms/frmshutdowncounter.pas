@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, StdCtrls,
-  Buttons, ExtCtrls, LCLType;
+  Buttons, ExtCtrls, LCLType, DefaultTranslator;
 
 type
   TExitType = (etExit, etShutdown, etHibernate);

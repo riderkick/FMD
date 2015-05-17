@@ -12,7 +12,7 @@ interface
 
 uses
   Classes, Forms, StdCtrls,
-  Buttons;
+  Buttons, DefaultTranslator;
 
 type
 

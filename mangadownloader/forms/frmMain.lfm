@@ -873,9 +873,9 @@ object MainForm: TMainForm
             Left = 251
             Height = 19
             Top = 160
-            Width = 71
+            Width = 78
             AllowGrayed = True
-            Caption = 'Scool Life'
+            Caption = 'School Life'
             ParentFont = False
             TabOrder = 22
           end
