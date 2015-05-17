@@ -1054,7 +1054,7 @@ object MainForm: TMainForm
           object lbFilterHint: TLabel
             Left = 480
             Height = 15
-            Hint = 'Genres:'#13#10'- Checked: Include this genre.'''#13#10'- Unchecked: Exclude this genre.'''#13#10'- Grayed: Doesn''t matter.'#13#10#13#10'Custom Genres:'#13#10'- Separate multiple genres with '',''.'#13#10'- Exclude a genre by placing ''''!'''' at the beginning of a genre.'#13#10'- Example: Adventure,!Ecchi,Comedy.'
+            Hint = 'Genres:'#13#10'- Checked: Include this genre.'#13#10'- Unchecked: Exclude this genre.'#13#10'- Grayed: Doesn''t matter.'#13#10#13#10'Custom Genres:'#13#10'- Separate multiple genres with '',''.'#13#10'- Exclude a genre by placing ''''!'''' at the beginning of a genre.'#13#10'- Example: Adventure,!Ecchi,Comedy.'
             Top = 219
             Width = 13
             Caption = '[?]'

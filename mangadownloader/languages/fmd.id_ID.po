@@ -258,17 +258,17 @@ msgstr "Terapkan"
 
 #: tmainform.btreadonline.caption
 msgid "Read online"
-msgstr "Baca daring"
+msgstr "Baca online"
 
 #: tmainform.btremovefilterlarge.caption
 msgctxt "TMAINFORM.BTREMOVEFILTERLARGE.CAPTION"
 msgid "Remove filter"
-msgstr "SIngkirkan"
+msgstr "Singkirkan"
 
 #: tmainform.btremovefilterlarge.hint
 msgctxt "tmainform.btremovefilterlarge.hint"
 msgid "Remove filter"
-msgstr "SIngkirkan"
+msgstr "Singkirkan"
 
 #: tmainform.btsearchclear.hint
 msgid "Search manga from list"
@@ -583,7 +583,7 @@ msgstr "Mengubah nama"
 
 #: tmainform.lbdefaultdownloadpath.caption
 msgid "Choose the default download path:"
-msgstr "Pilih lokasi pengunduhan default"
+msgstr "Pilih lokasi pengunduhan bawaan:"
 
 #: tmainform.lbfilterartists.caption
 msgid "Artists"
@@ -605,8 +605,8 @@ msgstr "[?]"
 #: tmainform.lbfilterhint.hint
 msgid ""
 "Genres:\n"
-"- Checked: Include this genre.'\n"
-"- Unchecked: Exclude this genre.'\n"
+"- Checked: Include this genre.\n"
+"- Unchecked: Exclude this genre.\n"
 "- Grayed: Doesn't matter.\n"
 "\n"
 "Custom Genres:\n"
@@ -615,8 +615,8 @@ msgid ""
 "- Example: Adventure,!Ecchi,Comedy."
 msgstr ""
 "Genre: \n"
-"- Dicek: termasuk genre ini.' \n"
-"- Dicentang: kecualikan genre ini.' \n"
+"- Dicentang: termasuk genre ini. \n"
+"- Dicentang: kecualikan genre ini. \n"
 "- Grayed: tidak penting.\n"
 "\n"
 "Genre pilihan: \n"
