@@ -11,7 +11,7 @@ unit uFavoritesManager;
 interface
 
 uses
-  Classes, SysUtils, Dialogs, IniFiles, syncobjs, lazutf8classes, FileUtil, fgl,
+  Classes, SysUtils, Dialogs, IniFiles, syncobjs, lazutf8classes, FileUtil,
   uBaseUnit, uData, uDownloadsManager, uFMDThread, uMisc, blcksock;
 
 type
@@ -34,8 +34,6 @@ type
     destructor Destroy; override;
   end;
 
-  TFavoriteThreadList = TFPGList<TFavoriteThread>;
-
   { TFavoriteTask }
 
   TFavoriteTask = class(TFMDThread)
@@ -51,7 +49,7 @@ type
   public
     CS_Threads: TCriticalSection;
     manager: TFavoriteManager;
-    threads: TFavoriteThreadList;
+    threads: TFPList;
     workCounter: Cardinal;
     property ThreadCount: Integer read GetThreadCount;
     procedure UpdateBtnCaption(Cap: String);
@@ -72,8 +70,6 @@ type
     destructor Destroy; override;
   end;
 
-  TFavoriteContainerList = TFPGList<TFavoriteContainer>;
-
   { TFavoriteManager }
 
   TFavoriteManager = class
@@ -83,11 +79,11 @@ type
     FSortColumn: Cardinal;
     FIsAuto, FIsShowDialog,
     FIsRunning: Boolean;
+    FFavorites: TFPList;
   protected
     function GetFavoritesCount: Integer;
   public
     favoritesFile: TIniFile;
-    Favorites: TFavoriteContainerList;
     taskthread: TFavoriteTask;
     DLManager: TDownloadManager;
     OnUpdateFavorite: procedure of object;
@@ -96,30 +92,32 @@ type
     constructor Create;
     destructor Destroy; override;
 
+    function FavoriteItem(const Index: Integer): TFavoriteContainer;
+
     procedure Run;
     // Show notification form after checking completed
     procedure ShowResult;
-    // Return true if a manga exist in Favorites
+    // Return true if a manga exist in FFavorites
     function IsMangaExist(const title, website: String): Boolean;
     function IsMangaExistURL(const website, URL: String): Boolean;
     // Add new manga to the list
     procedure Add(const title, currentChapter, downloadedChapterList,
       website, saveTo, link: String);
-    // Merge manga information with a title that already exist in Favorites
+    // Merge manga information with a title that already exist in FFavorites
     procedure AddMerge(const title, currentChapter, downloadedChapterList,
       website, saveTo, link: String);
-    // Merge a favorites.ini with another favorites.ini
+    // Merge a FFavorites.ini with another FFavorites.ini
     procedure MergeWith(const APath: String);
-    // Remove a manga from Favorites
+    // Remove a manga from FFavorites
     procedure Remove(const pos: Integer; const isBackup: Boolean = True);
-    // Restore information from favorites.ini
+    // Restore information from FFavorites.ini
     procedure Restore;
-    // Backup to favorites.ini
+    // Backup to FFavorites.ini
     procedure Backup;
-    // Abort favorites check
+    // Abort FFavorites check
     procedure StopRun;
     procedure StopRunAndWait;
-    // Add favorites downloadedchapterlist
+    // Add FFavorites downloadedchapterlist
     procedure AddToDownloadedChaptersList(const AWebsite, ALink, AValue: String); overload;
     procedure AddToDownloadedChaptersList(const AWebsite, Alink: String; AValue: TStrings); overload;
 
@@ -264,13 +262,13 @@ end;
 
 procedure TFavoriteTask.Execute;
 var
-  i, workCounter: Integer;
+  i: Integer;
 begin
   manager.isRunning := True;
   Synchronize(SyncStartChecking);
   try
     workCounter := 0;
-    while workCounter < manager.Favorites.Count do
+    while workCounter < manager.FFavorites.Count do
     begin
       while threads.Count > manager.DLManager.maxDLThreadsPerTask do
       begin
@@ -280,21 +278,21 @@ begin
       if Terminated then Break;
       if threads.Count < manager.DLManager.maxDLThreadsPerTask then
       begin
-        if Trim(manager.Favorites[workCounter].FavoriteInfo.Title) <> '' then
+        if Trim(manager.FavoriteItem(workCounter).FavoriteInfo.Title) <> '' then
           CS_Threads.Acquire;
           try
-            with manager.Favorites[workCounter] do begin
+            with manager.FavoriteItem(workCounter) do begin
               if Thread = nil then begin
                 Thread := TFavoriteThread.Create;
                 Thread.task := Self;
-                Thread.container := manager.Favorites[workCounter];
+                Thread.container := manager.FavoriteItem(workCounter);
                 Thread.workCounter := workCounter;
                 threads.Add(Thread);
                 Thread.Start;
               end;
             end;
             UpdateBtnCaption(Format('%s <%s>',
-              [RS_Checking, manager.Favorites[workCounter].FavoriteInfo.Title]));
+              [RS_Checking, manager.FavoriteItem(workCounter).FavoriteInfo.Title]));
           finally
             CS_Threads.Release;
           end;
@@ -303,7 +301,7 @@ begin
     end;
     if Terminated and (ThreadCount > 0) then
       for i := 0 to ThreadCount - 1 do
-        threads[i].Terminate;
+        TFavoriteThread(threads[i]).Terminate;
     while threads.Count > 0 do
       Sleep(100);
     UpdateBtnCaption(RS_BtnCheckFavorites);
@@ -326,7 +324,7 @@ constructor TFavoriteTask.Create;
 begin
   inherited Create(True);
   CS_Threads := TCriticalSection.Create;
-  threads := TFavoriteThreadList.Create;
+  threads := TFPList.Create;
 end;
 
 destructor TFavoriteTask.Destroy;
@@ -344,7 +342,7 @@ function TFavoriteManager.GetFavoritesCount: Integer;
 begin
   CS_Favorites.Acquire;
   try
-    Result := Favorites.Count;
+    Result := FFavorites.Count;
   finally
     CS_Favorites.Release;
   end;
@@ -357,7 +355,7 @@ begin
   isRunning := False;
   favoritesFile := TIniFile.Create(WORK_FOLDER + FAVORITES_FILE);
   favoritesFile.CacheUpdates := True;
-  Favorites := TFavoriteContainerList.Create;
+  FFavorites := TFPList.Create;
   Restore;
 end;
 
@@ -366,16 +364,23 @@ begin
   Backup;
   favoritesFile.UpdateFile;
   favoritesFile.Free;
-  if Favorites.Count > 0 then begin
+  if FFavorites.Count > 0 then begin
     StopRunAndWait;
-    while Favorites.Count > 0 do begin
-      Favorites.Last.Free;
-      Favorites.Remove(Favorites.Last);
+    while FFavorites.Count > 0 do begin
+      TFavoriteContainer(FFavorites.Last).Free;
+      FFavorites.Remove(FFavorites.Last);
     end;
   end;
-  Favorites.Free;
+  FFavorites.Free;
   CS_Favorites.Free;
   inherited Destroy;
+end;
+
+function TFavoriteManager.FavoriteItem(const Index: Integer): TFavoriteContainer;
+begin
+  if (Index < 0) or (Index >= FFavorites.Count) then
+    Result := nil;
+  Result := TFavoriteContainer(FFavorites.Items[Index]);
 end;
 
 procedure TFavoriteManager.Run;
@@ -421,10 +426,10 @@ begin
       numOfMangaNewChapters := 0;
       numOfCompleted := 0;
       counter := 0;
-      while counter < Favorites.Count do
+      while counter < FFavorites.Count do
       begin
         //compare new mangainfo's chapters with downloadedchapter from favorites
-        with Favorites[counter] do try
+        with FavoriteItem(counter) do try
           if Assigned(MangaInfo) then
           begin
             if MangaInfo.chapterLinks.Count > 0 then
@@ -451,7 +456,7 @@ begin
               begin
                 newChapterListStr := newChapterListStr + LineEnding + '- ' +
                   Format(RS_FavoriteHasNewChapter,
-                  [FavoriteInfo.Title, Favorites[counter].FavoriteInfo.Website,
+                  [FavoriteInfo.Title, FavoriteItem(counter).FavoriteInfo.Website,
                    NewMangaInfo.chapterLinks.Count]);
                 Inc(numOfMangaNewChapters);
               end;
@@ -491,19 +496,19 @@ begin
             Free;
           end;
 
-          //delete complete favorites
+          //delete complete FFavorites
           if LNCResult = ncrDownload then
           begin
             counter := 0;
-            while counter < Favorites.Count do
+            while counter < FFavorites.Count do
             begin
               favDelete := False;
-              with Favorites[counter] do begin
+              with FavoriteItem(counter) do begin
                 if Assigned(NewMangaInfo) then
                   if (NewMangaInfo.chapterLinks.Count = 0) and (NewMangaInfo.status = '0') then
                   begin
-                    Favorites[counter].Free;
-                    Favorites.Delete(counter);
+                    FavoriteItem(counter).Free;
+                    FFavorites.Delete(counter);
                     favDelete := True;
                   end;
               end;
@@ -552,9 +557,9 @@ begin
           while DLManager.isRunningBackup do
             Sleep(100);
           counter := 0;
-          while counter < Favorites.Count do
+          while counter < FFavorites.Count do
           begin
-            with Favorites[counter] do begin
+            with FavoriteItem(counter) do begin
               if Assigned(NewMangaInfo) then
                 if NewMangaInfo.chapterLinks.Count > 0 then
                 begin
@@ -625,9 +630,9 @@ begin
     finally
       //free used memory
       counter := 0;
-      while counter < Favorites.Count do
+      while counter < FFavorites.Count do
       begin
-        with Favorites[counter] do begin
+        with FavoriteItem(counter) do begin
           if Assigned(MangaInfo) then
             FreeAndNil(MangaInfo);
           if Assigned(NewMangaInfo) then
@@ -650,10 +655,10 @@ function TFavoriteManager.IsMangaExist(const title, website: String): Boolean;
 var
   i: Integer;
 begin
-  if Favorites.Count > 0 then
-    for i := 0 to Favorites.Count - 1 do
-      if (CompareText(Favorites[i].FavoriteInfo.Title, title) = 0) and
-        (CompareText(Favorites[i].FavoriteInfo.website, website) = 0) then
+  if FFavorites.Count > 0 then
+    for i := 0 to FFavorites.Count - 1 do
+      if (CompareText(FavoriteItem(i).FavoriteInfo.Title, title) = 0) and
+        (CompareText(FavoriteItem(i).FavoriteInfo.website, website) = 0) then
         Exit(True);
   Result := False;
 end;
@@ -663,10 +668,10 @@ Var
   i: Integer;
 begin
   Result := False;
-  if Favorites.Count > 0 then
-    for i := 0 to Favorites.Count - 1 do
-      if SameText(website, Favorites[i].FavoriteInfo.Website) and
-        SameText(URL, Favorites[i].FavoriteInfo.Link) then
+  if FFavorites.Count > 0 then
+    for i := 0 to FFavorites.Count - 1 do
+      if SameText(website, FavoriteItem(i).FavoriteInfo.Website) and
+        SameText(URL, FavoriteItem(i).FavoriteInfo.Link) then
         Exit(True);
   Result := False;
 end;
@@ -677,14 +682,16 @@ begin
   if IsMangaExist(title, website) then Exit;
   CS_Favorites.Acquire;
   try
-    Favorites.Add(TFavoriteContainer.Create);
-    Favorites.Last.Manager := Self;
-    Favorites.Last.FavoriteInfo.Title := title;
-    Favorites.Last.FavoriteInfo.currentChapter := currentChapter;
-    Favorites.Last.FavoriteInfo.website := website;
-    Favorites.Last.FavoriteInfo.saveTo := saveTo;
-    Favorites.Last.FavoriteInfo.Link := Link;
-    Favorites.Last.FavoriteInfo.downloadedChapterList := downloadedChapterList;
+    FFavorites.Add(TFavoriteContainer.Create);
+    with TFavoriteContainer(FFavorites.Last) do begin
+      Manager := Self;
+      FavoriteInfo.Title := title;
+      FavoriteInfo.currentChapter := currentChapter;
+      FavoriteInfo.website := website;
+      FavoriteInfo.saveTo := saveTo;
+      FavoriteInfo.Link := Link;
+      FavoriteInfo.downloadedChapterList := downloadedChapterList;
+    end;
     if not isRunning then
     begin
       SortNatural(SortColumn);
@@ -702,14 +709,16 @@ begin
     Exit;
   CS_Favorites.Acquire;
   try
-    Favorites.Add(TFavoriteContainer.Create);
-    Favorites.Last.Manager := Self;
-    Favorites.Last.FavoriteInfo.Title := title;
-    Favorites.Last.FavoriteInfo.currentChapter := currentChapter;
-    Favorites.Last.FavoriteInfo.website := website;
-    Favorites.Last.FavoriteInfo.saveTo := saveTo;
-    Favorites.Last.FavoriteInfo.Link := Link;
-    Favorites.Last.FavoriteInfo.downloadedChapterList := downloadedChapterList;
+    FFavorites.Add(TFavoriteContainer.Create);
+    with TFavoriteContainer(FFavorites.Last) do begin
+      Manager := Self;
+      FavoriteInfo.Title := title;
+      FavoriteInfo.currentChapter := currentChapter;
+      FavoriteInfo.website := website;
+      FavoriteInfo.saveTo := saveTo;
+      FavoriteInfo.Link := Link;
+      FavoriteInfo.downloadedChapterList := downloadedChapterList;
+    end;
   except
     CS_Favorites.Release;
   end;
@@ -765,12 +774,12 @@ end;
 
 procedure TFavoriteManager.Remove(const pos: Integer; const isBackup: Boolean);
 begin
-  if (not isRunning) and (pos < Favorites.Count) then
+  if (not isRunning) and (pos < FFavorites.Count) then
   begin
     CS_Favorites.Acquire;
     try
-      Favorites[pos].Free;
-      Favorites.Delete(pos);
+      FavoriteItem(pos).Free;
+      FFavorites.Delete(pos);
       if isBackup then
         Backup;
     finally
@@ -787,17 +796,19 @@ begin
   if c > 0 then
     for i := 0 to c - 1 do
     begin
-      Favorites.Add(TFavoriteContainer.Create);
-      Favorites.Last.Manager := Self;
-      Favorites.Last.FavoriteInfo.Title := favoritesFile.ReadString(IntToStr(i), 'Title', '');
-      Favorites.Last.FavoriteInfo.currentChapter :=
-        favoritesFile.ReadString(IntToStr(i), 'CurrentChapter', '0');
-      Favorites.Last.FavoriteInfo.downloadedChapterList :=
-        favoritesFile.ReadString(IntToStr(i), 'DownloadedChapterList', '');
-      Favorites.Last.FavoriteInfo.website := favoritesFile.ReadString(IntToStr(i), 'Website', '');
-      Favorites.Last.FavoriteInfo.SaveTo :=
-        CorrectPathSys(favoritesFile.ReadString(IntToStr(i), 'SaveTo', ''));
-      Favorites.Last.FavoriteInfo.link := favoritesFile.ReadString(IntToStr(i), 'Link', '');
+      FFavorites.Add(TFavoriteContainer.Create);
+      with TFavoriteContainer(FFavorites.Last) do begin
+        Manager := Self;
+        FavoriteInfo.Title := favoritesFile.ReadString(IntToStr(i), 'Title', '');
+        FavoriteInfo.currentChapter :=
+          favoritesFile.ReadString(IntToStr(i), 'CurrentChapter', '0');
+        FavoriteInfo.downloadedChapterList :=
+          favoritesFile.ReadString(IntToStr(i), 'DownloadedChapterList', '');
+        FavoriteInfo.website := favoritesFile.ReadString(IntToStr(i), 'Website', '');
+        FavoriteInfo.SaveTo :=
+          CorrectPathSys(favoritesFile.ReadString(IntToStr(i), 'SaveTo', ''));
+        FavoriteInfo.link := favoritesFile.ReadString(IntToStr(i), 'Link', '');
+      end;
     end;
 end;
 
@@ -810,18 +821,18 @@ begin
     for i := 0 to favoritesFile.ReadInteger('general', 'NumberOfFavorites', 0) - 1 do
       favoritesFile.EraseSection(IntToStr(i));
 
-  favoritesFile.WriteInteger('general', 'NumberOfFavorites', Favorites.Count);
-  if Favorites.Count > 0 then
-    for i := 0 to Favorites.Count - 1 do
+  favoritesFile.WriteInteger('general', 'NumberOfFavorites', FFavorites.Count);
+  if FFavorites.Count > 0 then
+    for i := 0 to FFavorites.Count - 1 do
     begin
-      favoritesFile.WriteString(IntToStr(i), 'Title', Favorites[i].FavoriteInfo.Title);
+      favoritesFile.WriteString(IntToStr(i), 'Title', FavoriteItem(i).FavoriteInfo.Title);
       favoritesFile.WriteString(IntToStr(i), 'CurrentChapter',
-        Favorites[i].FavoriteInfo.currentChapter);
+        FavoriteItem(i).FavoriteInfo.currentChapter);
       favoritesFile.WriteString(IntToStr(i), 'DownloadedChapterList',
-        Favorites[i].FavoriteInfo.downloadedChapterList);
-      favoritesFile.WriteString(IntToStr(i), 'Website', Favorites[i].FavoriteInfo.Website);
-      favoritesFile.WriteString(IntToStr(i), 'SaveTo', Favorites[i].FavoriteInfo.SaveTo);
-      favoritesFile.WriteString(IntToStr(i), 'Link', Favorites[i].FavoriteInfo.link);
+        FavoriteItem(i).FavoriteInfo.downloadedChapterList);
+      favoritesFile.WriteString(IntToStr(i), 'Website', FavoriteItem(i).FavoriteInfo.Website);
+      favoritesFile.WriteString(IntToStr(i), 'SaveTo', FavoriteItem(i).FavoriteInfo.SaveTo);
+      favoritesFile.WriteString(IntToStr(i), 'Link', FavoriteItem(i).FavoriteInfo.link);
     end;
   favoritesFile.UpdateFile;
 end;
@@ -874,17 +885,17 @@ begin
     try
       p := -1;
       //locate the link
-      if Favorites.Count > 1 then
-        for i := 0 to Favorites.Count - 1 do
-          if SameText(AWebsite, Favorites[i].FavoriteInfo.Website) and
-            SameText(Alink, Favorites[i].FavoriteInfo.Link) then
+      if FFavorites.Count > 1 then
+        for i := 0 to FFavorites.Count - 1 do
+          if SameText(AWebsite, FavoriteItem(i).FavoriteInfo.Website) and
+            SameText(Alink, FavoriteItem(i).FavoriteInfo.Link) then
           begin
             p := i;
-            GetParams(dlCh, Favorites[i].FavoriteInfo.downloadedChapterList);
+            GetParams(dlCh, FavoriteItem(i).FavoriteInfo.downloadedChapterList);
             Break;
           end;
 
-      //if found the favorite
+      //if found the FavoriteItem
       if p > -1 then
       begin
         //remove if links found on downloadedchapterlist
@@ -903,7 +914,7 @@ begin
         end;
 
         //merge the links
-        with Favorites[p].FavoriteInfo do begin
+        with FavoriteItem(p).FavoriteInfo do begin
           downloadedChapterList := downloadedChapterList + SetParams(ch);
           currentChapter := IntToStr(dlCh.Count + ch.Count);
         end;
@@ -922,10 +933,10 @@ procedure TFavoriteManager.Sort(const AColumn: Cardinal);
   function GetStr(const ARow: Cardinal): String;
   begin
     case AColumn of
-      1: Result := Favorites[ARow].FavoriteInfo.Title;
-      2: Result := Favorites[ARow].FavoriteInfo.currentChapter;
-      3: Result := Favorites[ARow].FavoriteInfo.website;
-      4: Result := Favorites[ARow].FavoriteInfo.SaveTo;
+      1: Result := FavoriteItem(ARow).FavoriteInfo.Title;
+      2: Result := FavoriteItem(ARow).FavoriteInfo.currentChapter;
+      3: Result := FavoriteItem(ARow).FavoriteInfo.website;
+      4: Result := FavoriteItem(ARow).FavoriteInfo.SaveTo;
     end;
   end;
 
@@ -981,7 +992,7 @@ procedure TFavoriteManager.Sort(const AColumn: Cardinal);
       end;
       if i <= j then
       begin
-        Favorites.Exchange(i,j);
+        FFavorites.Exchange(i,j);
         Inc(i);
         if j > 0 then
           Dec(j);
@@ -995,26 +1006,26 @@ procedure TFavoriteManager.Sort(const AColumn: Cardinal);
 
 begin
   SortColumn := AColumn;
-  QSort(0, Favorites.Count - 1);
+  QSort(0, FFavorites.Count - 1);
 end;
 
 procedure TFavoriteManager.SortNatural(const AColumn: Integer);
 
   function Swap(const id1, id2: Integer): Boolean;
   begin
-    if (id1 >= Favorites.Count) or (id2 >= Favorites.Count) then
+    if (id1 >= FFavorites.Count) or (id2 >= FFavorites.Count) then
       Exit(False);
-    Favorites.Exchange(id1, id2);
+    FFavorites.Exchange(id1, id2);
     Result := True;
   end;
 
   function GetStr(const ARow: Cardinal): String;
   begin
     case AColumn of
-      1: Result := Favorites[ARow].FavoriteInfo.Title;
-      2: Result := Favorites[ARow].FavoriteInfo.currentChapter;
-      3: Result := Favorites[ARow].FavoriteInfo.website;
-      4: Result := Favorites[ARow].FavoriteInfo.SaveTo;
+      1: Result := FavoriteItem(ARow).FavoriteInfo.Title;
+      2: Result := FavoriteItem(ARow).FavoriteInfo.currentChapter;
+      3: Result := FavoriteItem(ARow).FavoriteInfo.website;
+      4: Result := FavoriteItem(ARow).FavoriteInfo.SaveTo;
       else
         Result := '';
     end;
@@ -1077,7 +1088,7 @@ procedure TFavoriteManager.SortNatural(const AColumn: Integer);
 
 begin
   SortColumn := AColumn;
-  QuickSortA(0, Favorites.Count - 1);
+  QuickSortA(0, FFavorites.Count - 1);
 end;
 
 end.
