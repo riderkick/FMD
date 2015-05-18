@@ -632,8 +632,8 @@ object MainForm: TMainForm
         Height = 478
         Top = 0
         Width = 606
-        HorzScrollBar.Page = 558
-        VertScrollBar.Page = 440
+        HorzScrollBar.Page = 568
+        VertScrollBar.Page = 442
         Align = alClient
         BorderStyle = bsNone
         ClientHeight = 478
@@ -641,12 +641,12 @@ object MainForm: TMainForm
         TabOrder = 0
         object pnGenres: TPanel
           Left = 0
-          Height = 248
+          Height = 208
           Top = 0
           Width = 606
           Align = alTop
           BevelOuter = bvNone
-          ClientHeight = 248
+          ClientHeight = 208
           ClientWidth = 606
           TabOrder = 0
           object ckFilterAction: TCheckBox
@@ -1029,54 +1029,11 @@ object MainForm: TMainForm
             ParentFont = False
             TabOrder = 37
           end
-          object lbFilterCustomGenres: TLabel
-            Left = 23
-            Height = 17
-            Top = 218
-            Width = 93
-            Alignment = taRightJustify
-            BidiMode = bdRightToLeft
-            Caption = 'Custom Genres'
-            Font.Height = -13
-            Font.Style = [fsBold]
-            ParentBidiMode = False
-            ParentColor = False
-            ParentFont = False
-          end
-          object edCustomGenres: TEdit
-            Left = 135
-            Height = 23
-            Top = 216
-            Width = 338
-            ParentFont = False
-            TabOrder = 38
-          end
-          object lbFilterHint: TLabel
-            Left = 480
-            Height = 15
-            Hint = 'Genres:'#13#10'- Checked: Include this genre.'#13#10'- Unchecked: Exclude this genre.'#13#10'- Grayed: Doesn''t matter.'#13#10#13#10'Custom Genres:'#13#10'- Separate multiple genres with '',''.'#13#10'- Exclude a genre by placing ''''!'''' at the beginning of a genre.'#13#10'- Example: Adventure,!Ecchi,Comedy.'
-            Top = 219
-            Width = 13
-            Caption = '[?]'
-            Font.Color = clBlue
-            ParentColor = False
-            ParentFont = False
-            ParentShowHint = False
-            ShowHint = True
-          end
-          object Bevel1: TBevel
-            Left = 0
-            Height = 5
-            Top = 243
-            Width = 606
-            Align = alBottom
-            Shape = bsBottomLine
-          end
         end
         object pnFilter: TPanel
           Left = 0
           Height = 192
-          Top = 248
+          Top = 250
           Width = 606
           Align = alTop
           BevelOuter = bvNone
@@ -1119,6 +1076,7 @@ object MainForm: TMainForm
             Top = 8
             Width = 175
             TabOrder = 3
+            TextHint = 'Title'
           end
           object edFilterArtists: TEdit
             Left = 135
@@ -1126,6 +1084,7 @@ object MainForm: TMainForm
             Top = 56
             Width = 175
             TabOrder = 4
+            TextHint = 'Artist'
           end
           object edFilterAuthors: TEdit
             Left = 135
@@ -1133,6 +1092,7 @@ object MainForm: TMainForm
             Top = 32
             Width = 175
             TabOrder = 5
+            TextHint = 'Author'
           end
           object lbFilterTitle: TLabel
             Left = 23
@@ -1152,10 +1112,10 @@ object MainForm: TMainForm
             Left = 23
             Height = 17
             Top = 32
-            Width = 49
+            Width = 43
             Alignment = taRightJustify
             BidiMode = bdRightToLeft
-            Caption = 'Authors'
+            Caption = 'Author'
             Font.Height = -13
             Font.Style = [fsBold]
             ParentBidiMode = False
@@ -1166,10 +1126,10 @@ object MainForm: TMainForm
             Left = 23
             Height = 17
             Top = 56
-            Width = 40
+            Width = 34
             Alignment = taRightJustify
             BidiMode = bdRightToLeft
-            Caption = 'Artists'
+            Caption = 'Artist'
             Font.Height = -13
             Font.Style = [fsBold]
             ParentBidiMode = False
@@ -1226,6 +1186,7 @@ object MainForm: TMainForm
             Top = 104
             Width = 175
             TabOrder = 7
+            TextHint = 'Part of summary'
           end
           object btRemoveFilterLarge: TBitBtn
             AnchorSideLeft.Side = asrBottom
@@ -1391,6 +1352,61 @@ object MainForm: TMainForm
             Width = 118
             Caption = 'Regular Expression'
             TabOrder = 12
+          end
+        end
+        object pnCustomGenre: TPanel
+          Left = 0
+          Height = 42
+          Top = 208
+          Width = 606
+          Align = alTop
+          BevelOuter = bvNone
+          ClientHeight = 42
+          ClientWidth = 606
+          TabOrder = 2
+          object lbFilterCustomGenres: TLabel
+            Left = 23
+            Height = 17
+            Top = 10
+            Width = 93
+            Alignment = taRightJustify
+            BidiMode = bdRightToLeft
+            Caption = 'Custom Genres'
+            Font.Height = -13
+            Font.Style = [fsBold]
+            ParentBidiMode = False
+            ParentColor = False
+            ParentFont = False
+          end
+          object edCustomGenres: TEdit
+            Left = 135
+            Height = 23
+            Top = 10
+            Width = 416
+            ParentFont = False
+            TabOrder = 0
+            TextHint = 'Input custom genres, separated by comma'
+          end
+          object lbFilterHint: TLabel
+            Left = 555
+            Height = 15
+            Hint = 'Genres:'#13#10'- Checked: Include this genre.'#13#10'- Unchecked: Exclude this genre.'#13#10'- Grayed: Doesn''t matter.'#13#10#13#10'Custom Genres:'#13#10'- Separate multiple genres with '',''.'#13#10'- Exclude a genre by placing ''''!'''' at the beginning of a genre.'#13#10'- Example: Adventure,!Ecchi,Comedy.'
+            Top = 13
+            Width = 13
+            Caption = '[?]'
+            Font.Color = clBlue
+            ParentColor = False
+            ParentFont = False
+            ParentShowHint = False
+            ShowHint = True
+          end
+          object Bevel1: TBevel
+            Left = 0
+            Height = 5
+            Top = 37
+            Width = 606
+            Align = alBottom
+            Shape = bsBottomLine
           end
         end
       end
@@ -1607,7 +1623,7 @@ object MainForm: TMainForm
       object pnOptions: TPageControl
         Left = 9
         Height = 401
-        Top = 10
+        Top = 8
         Width = 587
         ActivePage = tsGeneral
         Anchors = [akTop, akLeft, akRight, akBottom]
@@ -1709,7 +1725,7 @@ object MainForm: TMainForm
               Width = 474
               Anchors = [akTop, akLeft, akRight]
               TabOrder = 0
-              TextHint = 'Application path'
+              TextHint = 'Program path and parameters'
             end
             object lbOptionExternal: TLabel
               Left = 13
@@ -1967,7 +1983,7 @@ object MainForm: TMainForm
             end
           end
         end
-        object lbOptionPDFQualityHint: TTabSheet
+        object tsSaveTo: TTabSheet
           Caption = 'Save to'
           ClientHeight = 373
           ClientWidth = 579
@@ -5483,7 +5499,7 @@ object MainForm: TMainForm
     Enabled = False
     Interval = 1500
     OnTimer = itMonitorTimer
-    left = 752
-    top = 232
+    left = 760
+    top = 296
   end
 end

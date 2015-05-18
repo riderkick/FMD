@@ -53,7 +53,7 @@ resourcestring
   RS_NewVersionFound = 'New Version found!';
   RS_CurrentVersion = 'Installed Version';
   RS_LatestVersion = 'Latest Version   ';
-  RS_BtnCheckUpdates = 'Check for new updates';
+  RS_BtnCheckUpdates = 'Check for new version';
 
 implementation
 

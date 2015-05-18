@@ -208,7 +208,7 @@
 -dDEBUGWIN32
 -dDEBUGLEAKS"/>
             <ExecuteAfter>
-              <Command Value="cmd.exe /c copy languages\* ..\bin\languages\"/>
+              <Command Value="cmd.exe /c copy /y languages\*.po ..\bin\languages\"/>
             </ExecuteAfter>
           </Other>
         </CompilerOptions>

@@ -78,11 +78,21 @@ msgstr "Update sedang berjalan!"
 
 #: frmmain.rs_dlgupdaterwanttoupdatedb
 msgid "Do you want to download manga list from the server ?"
-msgstr "Apakah Anda ingin menngunduh daftar manga dari server?"
+msgstr "Apakah Anda ingin menngunduh daftar komik dari server?"
 
 #: frmmain.rs_dlgurlnotsupport
 msgid "URL not supported!"
 msgstr "URL tidak didukung!"
+
+#: frmmain.rs_filterstatusitems
+msgid ""
+"Completed\n"
+"Ongoing\n"
+"<none>"
+msgstr ""
+"Tamat\n"
+"Berlanjut\n"
+"<tidak ada>"
 
 #: frmmain.rs_hintfavoriteproblem
 msgid ""
@@ -130,12 +140,12 @@ msgstr "Situs web:"
 
 #: frmmain.rs_inprogress
 msgid "In progress"
-msgstr "Dalam Proses"
+msgstr "Dalam proses"
 
 #: frmmain.rs_lblautochecknewchapterminute
 msgctxt "frmmain.rs_lblautochecknewchapterminute"
 msgid "Auto check for new chapter every %d minutes"
-msgstr "Otomatis Periksa bab baru setiap %d menit"
+msgstr "Otomatis periksa bab baru setiap %d menit"
 
 #: frmmain.rs_loading
 msgid "Loading ..."
@@ -156,6 +166,18 @@ msgstr "Satu bulan"
 #: frmmain.rs_oneweek
 msgid "One week"
 msgstr "Satu minggu"
+
+#: frmmain.rs_optionfmddoitems
+msgid ""
+"Do nothing\n"
+"Exit FMD\n"
+"Shutdown\n"
+"Hibernate"
+msgstr ""
+"Tidak ada\n"
+"Tutup FMD\n"
+"Matikan komputer\n"
+"Tidurkan komputer"
 
 #: frmmain.rs_selected
 msgid "Selected: %d"
@@ -226,6 +248,7 @@ msgid "Add to favorites"
 msgstr "Tambahkan ke kesukaan"
 
 #: tmainform.btcheckversion.caption
+msgctxt "tmainform.btcheckversion.caption"
 msgid "Check for new version"
 msgstr "Periksa versi baru"
 
@@ -272,7 +295,7 @@ msgstr "Singkirkan"
 
 #: tmainform.btsearchclear.hint
 msgid "Search manga from list"
-msgstr "Cari hanya manga baru"
+msgstr "Cari hanya komik baru"
 
 #: tmainform.btupdatelist.hint
 msgctxt "tmainform.btupdatelist.hint"
@@ -302,7 +325,7 @@ msgstr "Cari hanya komik baru"
 
 #: tmainform.cboptionautocheckfavstartup.caption
 msgid "Automatic check for new chapter"
-msgstr "Otomatis Periksa bab baru"
+msgstr "Otomatis periksa bab baru"
 
 #: tmainform.cboptionautocheckupdate.caption
 msgid "Check for new version "
@@ -314,7 +337,7 @@ msgstr "Otomatis mengunduh setelah selesai memeriksa"
 
 #: tmainform.cboptionautonumberchapter.caption
 msgid "Auto number chapter"
-msgstr "Otomatis nomor Bab"
+msgstr "Otomatis nomor bab"
 
 #: tmainform.cboptionautoremovecompletedmanga.caption
 msgid "Automatic remove completed manga from Favorites"
@@ -338,7 +361,7 @@ msgstr "Aktifkan sampul komik"
 
 #: tmainform.cboptiongeneratechaptername.caption
 msgid "Generate chapter folder with chapter name"
-msgstr "Buat bab folder dengan nama Bab"
+msgstr "Buat folder dengan nama bab"
 
 #: tmainform.cboptiongeneratemangafoldername.caption
 msgid "Auto generate folder based on manga's name"
@@ -406,31 +429,31 @@ msgstr "Cari di semua situs komik"
 
 #: tmainform.cbselectmanga.hint
 msgid "For more manga sites, please go to Options->Manga sites"
-msgstr "Untuk situs manga yang lain, silahkan pilih di Pengaturan->Situs komik"
+msgstr "Untuk situs komik yang lain, silahkan pilih di Pengaturan->Situs komik"
 
 #: tmainform.cbuseregexpr.caption
 msgid "Regular Expression"
-msgstr "Cocok dengan regexp"
+msgstr "Regular Expression"
 
 #: tmainform.ckfilteraction.caption
 msgid "Action"
-msgstr "Aksi"
+msgstr "Action"
 
 #: tmainform.ckfilteradult.caption
 msgid "Adult"
-msgstr "Kedewasaan"
+msgstr "Adult"
 
 #: tmainform.ckfilteradventure.caption
 msgid "Adventure"
-msgstr "Petualangan"
+msgstr "Adventure"
 
 #: tmainform.ckfiltercomedy.caption
 msgid "Comedy"
-msgstr "Komedi"
+msgstr "Comedy"
 
 #: tmainform.ckfilterdoujinshi.caption
 msgid "Doujinshi"
-msgstr "Dōjinshi"
+msgstr "Doujinshi"
 
 #: tmainform.ckfilterdrama.caption
 msgid "Drama"
@@ -442,7 +465,7 @@ msgstr "Echi"
 
 #: tmainform.ckfilterfantasy.caption
 msgid "Fantasy"
-msgstr "Fantasi"
+msgstr "Fantasy"
 
 #: tmainform.ckfiltergenderbender.caption
 msgid "Gender Bender"
@@ -454,15 +477,15 @@ msgstr "Harem"
 
 #: tmainform.ckfilterhentai.caption
 msgid "Hentai"
-msgstr "Porno"
+msgstr "Hentai"
 
 #: tmainform.ckfilterhistorical.caption
 msgid "Historial"
-msgstr "Sejarah"
+msgstr "Historial"
 
 #: tmainform.ckfilterhorror.caption
 msgid "Horror"
-msgstr "Seram"
+msgstr "Horror"
 
 #: tmainform.ckfilterjosei.caption
 msgid "Josei"
@@ -474,35 +497,35 @@ msgstr "Lolicon"
 
 #: tmainform.ckfiltermartialarts.caption
 msgid "Martial Arts"
-msgstr "Seni bela diri"
+msgstr "Martial Arts"
 
 #: tmainform.ckfiltermature.caption
 msgid "Mature"
-msgstr "Dewasa"
+msgstr "Mature"
 
 #: tmainform.ckfiltermecha.caption
 msgid "Mecha"
-msgstr "Mekanik"
+msgstr "Mecha"
 
 #: tmainform.ckfiltermusical.caption
 msgid "Mucical"
-msgstr "Musikal"
+msgstr "Mucical"
 
 #: tmainform.ckfiltermystery.caption
 msgid "Mystery"
-msgstr "Misteri"
+msgstr "Mystery"
 
 #: tmainform.ckfilterpsychological.caption
 msgid "Psychological"
-msgstr "Psikologi"
+msgstr "Psychological"
 
 #: tmainform.ckfilterromance.caption
 msgid "Romance"
-msgstr "Asmara"
+msgstr "Romance"
 
 #: tmainform.ckfilterschoollife.caption
 msgid "School Life"
-msgstr "Kehidupan sekolah"
+msgstr "School Life"
 
 #: tmainform.ckfilterscifi.caption
 msgid "Sci-Fi"
@@ -534,7 +557,7 @@ msgstr "Shounen Ai"
 
 #: tmainform.ckfiltersliceoflife.caption
 msgid "Slice of Life"
-msgstr "Iris kehidupan"
+msgstr "Slice of Life"
 
 #: tmainform.ckfiltersmut.caption
 msgid "Smut"
@@ -542,7 +565,7 @@ msgstr "Smut"
 
 #: tmainform.ckfiltersports.caption
 msgid "Sports"
-msgstr "Olahraga"
+msgstr "Sports"
 
 #: tmainform.ckfiltersupernatural.caption
 msgid "Supernatural"
@@ -550,19 +573,83 @@ msgstr "Supernatural"
 
 #: tmainform.ckfiltertragedy.caption
 msgid "Tragedy"
-msgstr "Tragedi"
+msgstr "Tragedy"
 
 #: tmainform.ckfilterweebtons.caption
 msgid "Webtoons"
-msgstr "Komik online"
+msgstr "Webtoons"
 
 #: tmainform.ckfilteryaoi.caption
 msgid "Yaoi"
-msgstr "Homreng"
+msgstr "Yaoi"
 
 #: tmainform.ckfilteryuri.caption
 msgid "Yuri"
-msgstr "Lesbong"
+msgstr "Yuri"
+
+#: tmainform.edcustomgenres.texthint
+msgid "Input custom genres, separated by comma"
+msgstr "Masukan genre pilihan, dipisahkan dengan koma"
+
+#: tmainform.edfilterartists.texthint
+msgctxt "tmainform.edfilterartists.texthint"
+msgid "Artist"
+msgstr "Seniman"
+
+#: tmainform.edfilterauthors.texthint
+msgctxt "tmainform.edfilterauthors.texthint"
+msgid "Author"
+msgstr "Penulis"
+
+#: tmainform.edfiltersummary.texthint
+msgid "Part of summary"
+msgstr "Bagian dari ringkasan"
+
+#: tmainform.edfiltertitle.texthint
+msgctxt "tmainform.edfiltertitle.texthint"
+msgid "Title"
+msgstr "Judul"
+
+#: tmainform.edoptioncustomrename.texthint
+msgid "Custom rename"
+msgstr "Ubah nama kustom"
+
+#: tmainform.edoptiondefaultpath.texthint
+msgid "Default download path"
+msgstr "Lokasi unduhan bawaan"
+
+#: tmainform.edoptionexternal.texthint
+msgid "Program path and parameters"
+msgstr "Lokasi program dan parameternya"
+
+#: tmainform.edoptionhost.texthint
+msgid "Proxy host/IP"
+msgstr "Host/IP"
+
+#: tmainform.edoptionpass.texthint
+msgid "Proxy password"
+msgstr "Kata kunci"
+
+#: tmainform.edoptionport.texthint
+msgid "Proxy Port"
+msgstr "Port"
+
+#: tmainform.edoptionuser.texthint
+msgid "Proxy username"
+msgstr "Nama user"
+
+#: tmainform.edsaveto.texthint
+msgctxt "tmainform.edsaveto.texthint"
+msgid "Save to"
+msgstr "Lokasi penyimpanan"
+
+#: tmainform.edsearch.texthint
+msgid "Search..."
+msgstr "Cari nama komik..."
+
+#: tmainform.edurl.texthint
+msgid "Input URL here"
+msgstr "Masukkan URL disini"
 
 #: tmainform.gboptionexternal.caption
 msgid "External program"
@@ -586,11 +673,13 @@ msgid "Choose the default download path:"
 msgstr "Pilih lokasi pengunduhan bawaan:"
 
 #: tmainform.lbfilterartists.caption
-msgid "Artists"
+msgctxt "tmainform.lbfilterartists.caption"
+msgid "Artist"
 msgstr "Seniman"
 
 #: tmainform.lbfilterauthors.caption
-msgid "Authors"
+msgctxt "tmainform.lbfilterauthors.caption"
+msgid "Author"
 msgstr "Penulis"
 
 #: tmainform.lbfiltercustomgenres.caption
@@ -645,11 +734,11 @@ msgstr "Mode: Tampilkan semua komik"
 #: tmainform.lboptionautocheckminutes.caption
 msgctxt "tmainform.lboptionautocheckminutes.caption"
 msgid "Auto check for new chapter every %d minutes"
-msgstr "Otomatis Periksa bab baru setiap %d menit"
+msgstr "Otomatis periksa bab baru setiap %d menit"
 
 #: tmainform.lboptioncustomrename.caption
 msgid "Chapter folder name:"
-msgstr "Nama Bab folder:"
+msgstr "Nama folder:"
 
 #: tmainform.lboptioncustomrenamehint.caption
 msgctxt "TMAINFORM.LBOPTIONCUSTOMRENAMEHINT.CAPTION"
@@ -676,7 +765,7 @@ msgstr ""
 "%NUMBERING% : Penomoran\n"
 "\n"
 "Catatan:\n"
-"Nama Bab folder harus memiliki setidaknya %CHAPTER% atau %NUMBERING%."
+"Nama folder harus memiliki setidaknya %CHAPTER% atau %NUMBERING%."
 
 #: tmainform.lboptioncustomrenamehint1.caption
 msgctxt "TMAINFORM.LBOPTIONCUSTOMRENAMEHINT1.CAPTION"
@@ -715,7 +804,7 @@ msgstr ""
 
 #: tmainform.lboptionhost.caption
 msgid "Host"
-msgstr "Nama host"
+msgstr "Host"
 
 #: tmainform.lboptionlanguage.caption
 msgid "Language:"
@@ -727,7 +816,7 @@ msgstr "Tugas setelah unduhan selesai:"
 
 #: tmainform.lboptionmaxparallel.caption
 msgid "Number of downloaded tasks at the same time (Max: 8)"
-msgstr "Jumlah file yang didownload per tugas pada waktu yang sama (Max: 32)"
+msgstr "Jumlah file yang diunduh per tugas pada waktu yang sama (Max: 32)"
 
 #: tmainform.lboptionmaxretry.caption
 msgid "Number of retry times if tasks have download problems (0 = always retry)"
@@ -735,11 +824,11 @@ msgstr "Jumlah pengulangan jika unduhan memiliki masalah (0 = selalu coba lagi)"
 
 #: tmainform.lboptionmaxthread.caption
 msgid "Number of downloaded files per task at the same time (Max: 32)"
-msgstr "Jumlah file yang didownload per tugas pada waktu yang sama (Max: 32)"
+msgstr "Jumlah file yang diunduh per tugas pada waktu yang sama (Max: 32)"
 
 #: tmainform.lboptionnewmangatime.caption
 msgid "New manga based on  it's update time (days)"
-msgstr "Manga baru berdasarkan waktu pembaruan (hari)"
+msgstr "Komik baru berdasarkan waktu pembaruan (hari)"
 
 #: tmainform.lboptionpass.caption
 msgid "Password"
@@ -754,14 +843,9 @@ msgctxt "TMAINFORM.LBOPTIONPDFQUALITY.HINT"
 msgid "100 = FlateEncode (lossless), lower = DCTEncode (lossy)"
 msgstr "100 = FlateEncode (lossless), lebih rendah = DCTEncode (lossy)"
 
-#: tmainform.lboptionpdfqualityhint.caption
-msgctxt "TMAINFORM.LBOPTIONPDFQUALITYHINT.CAPTION"
-msgid "Save to"
-msgstr "Simpan ke"
-
 #: tmainform.lboptionport.caption
 msgid "Port"
-msgstr "Nomor"
+msgstr "Port"
 
 #: tmainform.lboptionproxytype.caption
 msgid "Type"
@@ -777,7 +861,7 @@ msgstr "Nama user"
 
 #: tmainform.lbsaveto.caption
 msgid "Save to:"
-msgstr "Simpan ke:"
+msgstr "Lokasi penyimpanan:"
 
 #: tmainform.medturldelete.caption
 msgctxt "TMAINFORM.MEDTURLDELETE.CAPTION"
@@ -808,46 +892,6 @@ msgstr "Pilih semua"
 msgid "Undo"
 msgstr "Urungkan"
 
-#: tmainform.menuitem1.caption
-msgctxt "TMAINFORM.MENUITEM1.CAPTION"
-msgid "-"
-msgstr "-"
-
-#: tmainform.menuitem15.caption
-msgctxt "TMAINFORM.MENUITEM15.CAPTION"
-msgid "-"
-msgstr "-"
-
-#: tmainform.menuitem3.caption
-msgctxt "TMAINFORM.MENUITEM3.CAPTION"
-msgid "-"
-msgstr "-"
-
-#: tmainform.menuitem4.caption
-msgctxt "tmainform.menuitem4.caption"
-msgid "-"
-msgstr "-"
-
-#: tmainform.menuitem5.caption
-msgctxt "TMAINFORM.MENUITEM5.CAPTION"
-msgid "-"
-msgstr "-"
-
-#: tmainform.menuitem6.caption
-msgctxt "TMAINFORM.MENUITEM6.CAPTION"
-msgid "-"
-msgstr "-"
-
-#: tmainform.menuitem7.caption
-msgctxt "TMAINFORM.MENUITEM7.CAPTION"
-msgid "-"
-msgstr "-"
-
-#: tmainform.menuitem9.caption
-msgctxt "TMAINFORM.MENUITEM9.CAPTION"
-msgid "-"
-msgstr "-"
-
 #: tmainform.michapterlistcheckall.caption
 msgid "Check all"
 msgstr "Centang semua"
@@ -858,7 +902,7 @@ msgstr "Centang yang dipilih"
 
 #: tmainform.michapterlisthighlight.caption
 msgid "Highlight download chapters"
-msgstr "Sorot Bab terunduh"
+msgstr "Sorot bab terunduh"
 
 #: tmainform.michapterlistuncheckall.caption
 msgid "Uncheck all"
@@ -915,7 +959,7 @@ msgstr "Lihat informasi komik"
 
 #: tmainform.mifavoriteschangecurrentchapter.caption
 msgid "Change \"Current chapter\""
-msgstr "Ubah Bab saat ini"
+msgstr "Ubah status bab saat ini"
 
 #: tmainform.mifavoriteschangesaveto.caption
 msgid "Change \"Save to\""
@@ -950,16 +994,6 @@ msgstr "Lihat informasi komik"
 msgid "Highlight new manga"
 msgstr "Sorot komik baru"
 
-#: tmainform.mii1.caption
-msgctxt "TMAINFORM.MII1.CAPTION"
-msgid "-"
-msgstr "-"
-
-#: tmainform.mii2.caption
-msgctxt "TMAINFORM.MII2.CAPTION"
-msgid "-"
-msgstr "-"
-
 #: tmainform.mimangalistaddtofavorites.caption
 msgid "Add to Favorites"
 msgstr "Tambahkan ke kesukaan"
@@ -992,11 +1026,11 @@ msgstr "Perbarui daftar komik"
 
 #: tmainform.rball.caption
 msgid "Have all genre checked"
-msgstr "Memiliki salah satu genre dicentang"
+msgstr "Memiliki semua genre yang dicentang"
 
 #: tmainform.rbone.caption
 msgid "Have one of genres checked"
-msgstr "Memiliki salah satu genre Diperiksa"
+msgstr "Memiliki salah satu genre yang dicentang"
 
 #: tmainform.rgoptioncompress.caption
 msgid "Save downloaded chapters as"
@@ -1070,6 +1104,11 @@ msgstr "Lain-lain"
 msgid "Options"
 msgstr "Pengaturan"
 
+#: tmainform.tssaveto.caption
+msgctxt "tmainform.tssaveto.caption"
+msgid "Save to"
+msgstr "Penyimpanan"
+
 #: tmainform.tsupdate.caption
 msgid "Updates"
 msgstr "Pembaruan"
@@ -1099,7 +1138,7 @@ msgstr "Situs web"
 #: tmainform.vtdownload.header.columns[4].text
 msgctxt "tmainform.vtdownload.header.columns[4].text"
 msgid "Save to"
-msgstr "Simpan ke"
+msgstr "Lokasi penyimpanan"
 
 #: tmainform.vtdownload.header.columns[5].text
 msgid "Added"
@@ -1126,7 +1165,7 @@ msgstr "Situs web"
 #: tmainform.vtfavorites.header.columns[4].text
 msgctxt "TMAINFORM.VTFAVORITES.HEADER.COLUMNS[4].TEXT"
 msgid "Save to"
-msgstr "Simpan ke"
+msgstr "Lokasi penyimpanan"
 
 #: tnewchapter.btcancel.caption
 msgctxt "tnewchapter.btcancel.caption"
@@ -1170,7 +1209,7 @@ msgstr "Perbarui"
 
 #: tupdatedialogform.caption
 msgid "New Version Found"
-msgstr "Versi baru ditemukan!"
+msgstr "Versi baru ditemukan"
 
 #: tupdatedialogform.lbmessage.caption
 msgid ""
@@ -1251,15 +1290,15 @@ msgstr "Pemeriksaan kesukaan sedang berjalan!"
 
 #: ufavoritesmanager.rs_dlgnewchaptercaption
 msgid "%d manga(s) have new chapter(s)"
-msgstr "%d komik memiliki Bab baru"
+msgstr "%d komik memiliki bab baru"
 
 #: ufavoritesmanager.rs_favoritehasnewchapter
 msgid "%s <%s> has %d new chapter(s)."
-msgstr "%s <%s> memiliki %d Bab baru"
+msgstr "%s <%s> memiliki %d bab baru"
 
 #: ufavoritesmanager.rs_lblmangawillberemoved
 msgid "Completed manga will be removed:"
-msgstr "Manga yang sudah tamat akan dihapus"
+msgstr "Komik yang sudah tamat akan dihapus"
 
 #: ufavoritesmanager.rs_lblnewchapterfound
 msgid "Found %d new chapter from %d manga(s):"
@@ -1270,8 +1309,9 @@ msgid "Loading: %d/%d"
 msgstr "Memuat: %d/%d"
 
 #: usubthread.rs_btncheckupdates
-msgid "Check for new updates"
-msgstr "Periksa untuk update baru"
+msgctxt "usubthread.rs_btncheckupdates"
+msgid "Check for new version"
+msgstr "Periksa versi baru"
 
 #: usubthread.rs_currentversion
 msgid "Installed Version"

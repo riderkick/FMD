@@ -72,6 +72,13 @@ msgstr ""
 msgid "URL not supported!"
 msgstr ""
 
+#: frmmain.rs_filterstatusitems
+msgid ""
+"Completed\n"
+"Ongoing\n"
+"<none>"
+msgstr ""
+
 #: frmmain.rs_hintfavoriteproblem
 msgid ""
 "There is a problem with this data!\n"
@@ -143,6 +150,14 @@ msgstr ""
 msgid "One week"
 msgstr ""
 
+#: frmmain.rs_optionfmddoitems
+msgid ""
+"Do nothing\n"
+"Exit FMD\n"
+"Shutdown\n"
+"Hibernate"
+msgstr ""
+
 #: frmmain.rs_selected
 msgid "Selected: %d"
 msgstr ""
@@ -212,6 +227,7 @@ msgid "Add to favorites"
 msgstr ""
 
 #: tmainform.btcheckversion.caption
+msgctxt "tmainform.btcheckversion.caption"
 msgid "Check for new version"
 msgstr ""
 
@@ -550,6 +566,70 @@ msgstr ""
 msgid "Yuri"
 msgstr ""
 
+#: tmainform.edcustomgenres.texthint
+msgid "Input custom genres, separated by comma"
+msgstr ""
+
+#: tmainform.edfilterartists.texthint
+msgctxt "tmainform.edfilterartists.texthint"
+msgid "Artist"
+msgstr ""
+
+#: tmainform.edfilterauthors.texthint
+msgctxt "tmainform.edfilterauthors.texthint"
+msgid "Author"
+msgstr ""
+
+#: tmainform.edfiltersummary.texthint
+msgid "Part of summary"
+msgstr ""
+
+#: tmainform.edfiltertitle.texthint
+msgctxt "TMAINFORM.EDFILTERTITLE.TEXTHINT"
+msgid "Title"
+msgstr ""
+
+#: tmainform.edoptioncustomrename.texthint
+msgid "Custom rename"
+msgstr ""
+
+#: tmainform.edoptiondefaultpath.texthint
+msgid "Default download path"
+msgstr ""
+
+#: tmainform.edoptionexternal.texthint
+msgid "Program path and parameters"
+msgstr ""
+
+#: tmainform.edoptionhost.texthint
+msgid "Proxy host/IP"
+msgstr ""
+
+#: tmainform.edoptionpass.texthint
+msgid "Proxy password"
+msgstr ""
+
+#: tmainform.edoptionport.texthint
+msgid "Proxy Port"
+msgstr ""
+
+#: tmainform.edoptionuser.texthint
+msgid "Proxy username"
+msgstr ""
+
+#: tmainform.edsaveto.texthint
+msgctxt "TMAINFORM.EDSAVETO.TEXTHINT"
+msgid "Save to"
+msgstr ""
+
+#: tmainform.edsearch.texthint
+msgid "Search..."
+msgstr ""
+
+#: tmainform.edurl.texthint
+msgid "Input URL here"
+msgstr ""
+
 #: tmainform.gboptionexternal.caption
 msgid "External program"
 msgstr ""
@@ -572,11 +652,13 @@ msgid "Choose the default download path:"
 msgstr ""
 
 #: tmainform.lbfilterartists.caption
-msgid "Artists"
+msgctxt "tmainform.lbfilterartists.caption"
+msgid "Artist"
 msgstr ""
 
 #: tmainform.lbfilterauthors.caption
-msgid "Authors"
+msgctxt "tmainform.lbfilterauthors.caption"
+msgid "Author"
 msgstr ""
 
 #: tmainform.lbfiltercustomgenres.caption
@@ -717,11 +799,6 @@ msgctxt "TMAINFORM.LBOPTIONPDFQUALITY.HINT"
 msgid "100 = FlateEncode (lossless), lower = DCTEncode (lossy)"
 msgstr ""
 
-#: tmainform.lboptionpdfqualityhint.caption
-msgctxt "TMAINFORM.LBOPTIONPDFQUALITYHINT.CAPTION"
-msgid "Save to"
-msgstr ""
-
 #: tmainform.lboptionport.caption
 msgid "Port"
 msgstr ""
@@ -769,46 +846,6 @@ msgstr ""
 
 #: tmainform.medurlundo.caption
 msgid "Undo"
-msgstr ""
-
-#: tmainform.menuitem1.caption
-msgctxt "TMAINFORM.MENUITEM1.CAPTION"
-msgid "-"
-msgstr ""
-
-#: tmainform.menuitem15.caption
-msgctxt "TMAINFORM.MENUITEM15.CAPTION"
-msgid "-"
-msgstr ""
-
-#: tmainform.menuitem3.caption
-msgctxt "TMAINFORM.MENUITEM3.CAPTION"
-msgid "-"
-msgstr ""
-
-#: tmainform.menuitem4.caption
-msgctxt "tmainform.menuitem4.caption"
-msgid "-"
-msgstr ""
-
-#: tmainform.menuitem5.caption
-msgctxt "TMAINFORM.MENUITEM5.CAPTION"
-msgid "-"
-msgstr ""
-
-#: tmainform.menuitem6.caption
-msgctxt "TMAINFORM.MENUITEM6.CAPTION"
-msgid "-"
-msgstr ""
-
-#: tmainform.menuitem7.caption
-msgctxt "TMAINFORM.MENUITEM7.CAPTION"
-msgid "-"
-msgstr ""
-
-#: tmainform.menuitem9.caption
-msgctxt "TMAINFORM.MENUITEM9.CAPTION"
-msgid "-"
 msgstr ""
 
 #: tmainform.michapterlistcheckall.caption
@@ -911,16 +948,6 @@ msgstr ""
 
 #: tmainform.mihighlightnewmanga.caption
 msgid "Highlight new manga"
-msgstr ""
-
-#: tmainform.mii1.caption
-msgctxt "TMAINFORM.MII1.CAPTION"
-msgid "-"
-msgstr ""
-
-#: tmainform.mii2.caption
-msgctxt "TMAINFORM.MII2.CAPTION"
-msgid "-"
 msgstr ""
 
 #: tmainform.mimangalistaddtofavorites.caption
@@ -1031,6 +1058,11 @@ msgstr ""
 
 #: tmainform.tsoption.caption
 msgid "Options"
+msgstr ""
+
+#: tmainform.tssaveto.caption
+msgctxt "TMAINFORM.TSSAVETO.CAPTION"
+msgid "Save to"
 msgstr ""
 
 #: tmainform.tsupdate.caption
@@ -1231,7 +1263,8 @@ msgid "Loading: %d/%d"
 msgstr ""
 
 #: usubthread.rs_btncheckupdates
-msgid "Check for new updates"
+msgctxt "usubthread.rs_btncheckupdates"
+msgid "Check for new version"
 msgstr ""
 
 #: usubthread.rs_currentversion
