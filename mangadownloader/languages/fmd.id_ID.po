@@ -149,7 +149,7 @@ msgstr "Otomatis periksa bab baru setiap %d menit"
 
 #: frmmain.rs_loading
 msgid "Loading ..."
-msgstr "Mebuka halaman..."
+msgstr "Memuat ..."
 
 #: frmmain.rs_modeall
 msgid "Mode: Show all (%d)"

@@ -601,9 +601,6 @@ type
     { public declarations }
   end;
 
-resourcestring
-  RS_Loading = 'Loading ...';
-
 var
   //Instance
   FMDInstance: TSimpleIPCServer;
@@ -636,6 +633,7 @@ resourcestring
   RS_DlgCannotGetMangaInfo = 'Cannot get manga info. Please check your internet connection and try it again.';
   RS_DlgCannotConnectToServer = 'Cannot connect to the server.';
   RS_LblAutoCheckNewChapterMinute = 'Auto check for new chapter every %d minutes';
+  RS_Loading = 'Loading ...';
   RS_Checking = 'Checking...';
   RS_AllDownloads = 'All downloads';
   RS_InProgress = 'In progress';
@@ -1697,16 +1695,15 @@ begin
 
   pcMain.TabIndex := 1;
   imCover.Picture.Assign(nil);
-  rmInformation.Clear;
-  rmInformation.Lines.Add(RS_Loading);
   clbChapterList.Clear;
   if Assigned(gifWaiting) then
   begin
     itAnimate.Enabled := True;
     pbWait.Visible := True;
   end;
-
   btAddToFavorites.Enabled := not SitesWithoutFavorites(website);
+  rmInformation.Clear;
+  rmInformation.Lines.Add(RS_Loading);
 end;
 
 procedure TMainForm.btVisitMyBlogClick(Sender: TObject);
@@ -2535,7 +2532,7 @@ begin
   pcMain.TabIndex := 1;
   imCover.Picture.Assign(nil);
   rmInformation.Clear;
-  rmInformation.Lines.Add('Loading ...');
+  rmInformation.Lines.Add(RS_Loading);
   clbChapterList.Clear;
 
   if isGetMangaInfos then
