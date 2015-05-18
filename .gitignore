@@ -26,3 +26,6 @@ Release/
 
 # compiled languages files
 *.mo
+
+# lazarus auto generated resources
+*.lrt
