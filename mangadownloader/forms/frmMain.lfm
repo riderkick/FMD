@@ -633,46 +633,53 @@ object MainForm: TMainForm
         Top = 0
         Width = 606
         HorzScrollBar.Page = 568
-        VertScrollBar.Page = 442
+        VertScrollBar.Page = 424
         Align = alClient
         BorderStyle = bsNone
         ClientHeight = 478
         ClientWidth = 606
         TabOrder = 0
         object pnGenres: TPanel
-          Left = 0
-          Height = 208
-          Top = 0
-          Width = 606
+          Left = 24
+          Height = 180
+          Top = 10
+          Width = 582
           Align = alTop
+          AutoSize = True
+          BorderSpacing.Left = 24
+          BorderSpacing.Top = 10
           BevelOuter = bvNone
-          ClientHeight = 208
-          ClientWidth = 606
+          ChildSizing.HorizontalSpacing = 10
+          ChildSizing.VerticalSpacing = 4
+          ChildSizing.Layout = cclTopToBottomThenLeftToRight
+          ChildSizing.ControlsPerLine = 8
+          ClientHeight = 180
+          ClientWidth = 582
           TabOrder = 0
           object ckFilterAction: TCheckBox
-            Left = 23
+            Left = 0
             Height = 19
-            Top = 16
-            Width = 55
+            Top = 0
+            Width = 75
             AllowGrayed = True
             Caption = 'Action'
             ParentFont = False
             TabOrder = 0
           end
           object ckFilterAdult: TCheckBox
-            Left = 23
+            Left = 0
             Height = 19
-            Top = 40
-            Width = 49
+            Top = 23
+            Width = 75
             AllowGrayed = True
             Caption = 'Adult'
             ParentFont = False
             TabOrder = 1
           end
           object ckFilterAdventure: TCheckBox
-            Left = 23
+            Left = 0
             Height = 19
-            Top = 64
+            Top = 46
             Width = 75
             AllowGrayed = True
             Caption = 'Adventure'
@@ -680,59 +687,59 @@ object MainForm: TMainForm
             TabOrder = 2
           end
           object ckFilterComedy: TCheckBox
-            Left = 23
+            Left = 0
             Height = 19
-            Top = 88
-            Width = 65
+            Top = 69
+            Width = 75
             AllowGrayed = True
             Caption = 'Comedy'
             ParentFont = False
             TabOrder = 3
           end
           object ckFilterDoujinshi: TCheckBox
-            Left = 23
+            Left = 0
             Height = 19
-            Top = 112
-            Width = 70
+            Top = 92
+            Width = 75
             AllowGrayed = True
             Caption = 'Doujinshi'
             ParentFont = False
             TabOrder = 4
           end
           object ckFilterDrama: TCheckBox
-            Left = 23
+            Left = 0
             Height = 19
-            Top = 136
-            Width = 55
+            Top = 115
+            Width = 75
             AllowGrayed = True
             Caption = 'Drama'
             ParentFont = False
             TabOrder = 5
           end
           object ckFilterEchi: TCheckBox
-            Left = 23
+            Left = 0
             Height = 19
-            Top = 160
-            Width = 42
+            Top = 138
+            Width = 75
             AllowGrayed = True
             Caption = 'Echi'
             ParentFont = False
             TabOrder = 6
           end
           object ckFilterFantasy: TCheckBox
-            Left = 23
+            Left = 0
             Height = 19
-            Top = 184
-            Width = 60
+            Top = 161
+            Width = 75
             AllowGrayed = True
             Caption = 'Fantasy'
             ParentFont = False
             TabOrder = 7
           end
           object ckFilterGenderBender: TCheckBox
-            Left = 135
+            Left = 85
             Height = 19
-            Top = 16
+            Top = 0
             Width = 98
             AllowGrayed = True
             Caption = 'Gender Bender'
@@ -740,119 +747,119 @@ object MainForm: TMainForm
             TabOrder = 8
           end
           object ckFilterHarem: TCheckBox
-            Left = 135
+            Left = 85
             Height = 19
-            Top = 40
-            Width = 56
+            Top = 23
+            Width = 98
             AllowGrayed = True
             Caption = 'Harem'
             ParentFont = False
             TabOrder = 9
           end
           object ckFilterHentai: TCheckBox
-            Left = 135
+            Left = 85
             Height = 19
-            Top = 64
-            Width = 55
+            Top = 46
+            Width = 98
             AllowGrayed = True
             Caption = 'Hentai'
             ParentFont = False
             TabOrder = 10
           end
           object ckFilterHistorical: TCheckBox
-            Left = 135
+            Left = 85
             Height = 19
-            Top = 88
-            Width = 64
+            Top = 69
+            Width = 98
             AllowGrayed = True
             Caption = 'Historial'
             ParentFont = False
             TabOrder = 11
           end
           object ckFilterHorror: TCheckBox
-            Left = 135
+            Left = 85
             Height = 19
-            Top = 112
-            Width = 55
+            Top = 92
+            Width = 98
             AllowGrayed = True
             Caption = 'Horror'
             ParentFont = False
             TabOrder = 12
           end
           object ckFilterJosei: TCheckBox
-            Left = 135
+            Left = 85
             Height = 19
-            Top = 136
-            Width = 45
+            Top = 115
+            Width = 98
             AllowGrayed = True
             Caption = 'Josei'
             ParentFont = False
             TabOrder = 13
           end
           object ckFilterLolicon: TCheckBox
-            Left = 135
+            Left = 85
             Height = 19
-            Top = 160
-            Width = 59
+            Top = 138
+            Width = 98
             AllowGrayed = True
             Caption = 'Lolicon'
             ParentFont = False
             TabOrder = 14
           end
           object ckFilterMartialArts: TCheckBox
-            Left = 135
+            Left = 85
             Height = 19
-            Top = 184
-            Width = 81
+            Top = 161
+            Width = 98
             AllowGrayed = True
             Caption = 'Martial Arts'
             ParentFont = False
             TabOrder = 15
           end
           object ckFilterMature: TCheckBox
-            Left = 251
+            Left = 193
             Height = 19
-            Top = 16
-            Width = 58
+            Top = 0
+            Width = 93
             AllowGrayed = True
             Caption = 'Mature'
             ParentFont = False
             TabOrder = 16
           end
           object ckFilterMecha: TCheckBox
-            Left = 251
+            Left = 193
             Height = 19
-            Top = 40
-            Width = 56
+            Top = 23
+            Width = 93
             AllowGrayed = True
             Caption = 'Mecha'
             ParentFont = False
             TabOrder = 17
           end
           object ckFilterMusical: TCheckBox
-            Left = 251
+            Left = 193
             Height = 19
-            Top = 64
-            Width = 62
+            Top = 46
+            Width = 93
             AllowGrayed = True
             Caption = 'Mucical'
             ParentFont = False
             TabOrder = 18
           end
           object ckFilterMystery: TCheckBox
-            Left = 251
+            Left = 193
             Height = 19
-            Top = 88
-            Width = 62
+            Top = 69
+            Width = 93
             AllowGrayed = True
             Caption = 'Mystery'
             ParentFont = False
             TabOrder = 19
           end
           object ckFilterPsychological: TCheckBox
-            Left = 251
+            Left = 193
             Height = 19
-            Top = 112
+            Top = 92
             Width = 93
             AllowGrayed = True
             Caption = 'Psychological'
@@ -860,89 +867,89 @@ object MainForm: TMainForm
             TabOrder = 20
           end
           object ckFilterRomance: TCheckBox
-            Left = 251
+            Left = 193
             Height = 19
-            Top = 136
-            Width = 70
+            Top = 115
+            Width = 93
             AllowGrayed = True
             Caption = 'Romance'
             ParentFont = False
             TabOrder = 21
           end
           object ckFilterSchoolLife: TCheckBox
-            Left = 251
+            Left = 193
             Height = 19
-            Top = 160
-            Width = 78
+            Top = 138
+            Width = 93
             AllowGrayed = True
             Caption = 'School Life'
             ParentFont = False
             TabOrder = 22
           end
           object ckFilterSciFi: TCheckBox
-            Left = 251
+            Left = 193
             Height = 19
-            Top = 184
-            Width = 49
+            Top = 161
+            Width = 93
             AllowGrayed = True
             Caption = 'Sci-Fi'
             ParentFont = False
             TabOrder = 23
           end
           object ckFilterSeinen: TCheckBox
-            Left = 363
+            Left = 296
             Height = 19
-            Top = 16
-            Width = 55
+            Top = 0
+            Width = 81
             AllowGrayed = True
             Caption = 'Seinen'
             ParentFont = False
             TabOrder = 24
           end
           object ckFilterShotacon: TCheckBox
-            Left = 363
+            Left = 296
             Height = 19
-            Top = 40
-            Width = 70
+            Top = 23
+            Width = 81
             AllowGrayed = True
             Caption = 'Shotacon'
             ParentFont = False
             TabOrder = 25
           end
           object ckFilterShoujo: TCheckBox
-            Left = 363
+            Left = 296
             Height = 19
-            Top = 64
-            Width = 57
+            Top = 46
+            Width = 81
             AllowGrayed = True
             Caption = 'Shoujo'
             ParentFont = False
             TabOrder = 26
           end
           object ckFilterShoujoAi: TCheckBox
-            Left = 363
+            Left = 296
             Height = 19
-            Top = 88
-            Width = 68
+            Top = 69
+            Width = 81
             AllowGrayed = True
             Caption = 'ShoujoAi'
             ParentFont = False
             TabOrder = 27
           end
           object ckFilterShounen: TCheckBox
-            Left = 363
+            Left = 296
             Height = 19
-            Top = 112
-            Width = 67
+            Top = 92
+            Width = 81
             AllowGrayed = True
             Caption = 'Shounen'
             ParentFont = False
             TabOrder = 28
           end
           object ckFilterShounenAi: TCheckBox
-            Left = 363
+            Left = 296
             Height = 19
-            Top = 136
+            Top = 115
             Width = 81
             AllowGrayed = True
             Caption = 'Shounen Ai'
@@ -950,39 +957,39 @@ object MainForm: TMainForm
             TabOrder = 29
           end
           object ckFilterSliceofLife: TCheckBox
-            Left = 363
+            Left = 296
             Height = 19
-            Top = 160
-            Width = 80
+            Top = 138
+            Width = 81
             AllowGrayed = True
             Caption = 'Slice of Life'
             ParentFont = False
             TabOrder = 30
           end
           object ckFilterSmut: TCheckBox
-            Left = 363
+            Left = 296
             Height = 19
-            Top = 184
-            Width = 48
+            Top = 161
+            Width = 81
             AllowGrayed = True
             Caption = 'Smut'
             ParentFont = False
             TabOrder = 31
           end
           object ckFilterSports: TCheckBox
-            Left = 471
+            Left = 387
             Height = 19
-            Top = 16
-            Width = 53
+            Top = 0
+            Width = 87
             AllowGrayed = True
             Caption = 'Sports'
             ParentFont = False
             TabOrder = 32
           end
           object ckFilterSupernatural: TCheckBox
-            Left = 471
+            Left = 387
             Height = 19
-            Top = 40
+            Top = 23
             Width = 87
             AllowGrayed = True
             Caption = 'Supernatural'
@@ -990,40 +997,40 @@ object MainForm: TMainForm
             TabOrder = 33
           end
           object ckFilterTragedy: TCheckBox
-            Left = 471
+            Left = 387
             Height = 19
-            Top = 64
-            Width = 63
+            Top = 46
+            Width = 87
             AllowGrayed = True
             Caption = 'Tragedy'
             ParentFont = False
             TabOrder = 34
           end
           object ckFilterYaoi: TCheckBox
-            Left = 471
+            Left = 387
             Height = 19
-            Top = 88
-            Width = 43
+            Top = 69
+            Width = 87
             AllowGrayed = True
             Caption = 'Yaoi'
             ParentFont = False
             TabOrder = 35
           end
           object ckFilterYuri: TCheckBox
-            Left = 471
+            Left = 387
             Height = 19
-            Top = 112
-            Width = 41
+            Top = 92
+            Width = 87
             AllowGrayed = True
             Caption = 'Yuri'
             ParentFont = False
             TabOrder = 36
           end
           object ckFilterWeebtons: TCheckBox
-            Left = 471
+            Left = 387
             Height = 19
-            Top = 136
-            Width = 74
+            Top = 115
+            Width = 87
             AllowGrayed = True
             Caption = 'Webtoons'
             ParentFont = False
@@ -1033,7 +1040,7 @@ object MainForm: TMainForm
         object pnFilter: TPanel
           Left = 0
           Height = 192
-          Top = 250
+          Top = 232
           Width = 606
           Align = alTop
           BevelOuter = bvNone
@@ -1357,7 +1364,7 @@ object MainForm: TMainForm
         object pnCustomGenre: TPanel
           Left = 0
           Height = 42
-          Top = 208
+          Top = 190
           Width = 606
           Align = alTop
           BevelOuter = bvNone
