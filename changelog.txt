@@ -8,6 +8,9 @@ https://www.mediafire.com/folder/3ccy2c7g36hp3/Fmd
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.11.1 (21-5-2015)
+[*] Various changes and minor bug fixes
+
 0.9.11.0 (19-5-2015)
 [!*] Change translation with gettext, all previous translation will be loss, only English and Indonesian available
 [*] Various changes for stability and bug fixes
