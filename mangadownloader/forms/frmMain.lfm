@@ -30,13 +30,6 @@ object MainForm: TMainForm
     Visible = False
     OnDrawPanel = sbUpdateListDrawPanel
   end
-  object spMainSplitter: TSplitter
-    Left = 0
-    Height = 514
-    Top = 8
-    Width = 2
-    OnMoved = spMainSplitterMoved
-  end
   object pcMain: TPageControl
     Left = 201
     Height = 506
@@ -2652,6 +2645,13 @@ object MainForm: TMainForm
       end
     end
   end
+  object spMainSplitter: TSplitter
+    Left = 199
+    Height = 514
+    Top = 8
+    Width = 2
+    OnMoved = spMainSplitterMoved
+  end
   object pnMainTop: TPanel
     Left = 0
     Height = 8
@@ -2662,7 +2662,7 @@ object MainForm: TMainForm
     Visible = False
   end
   object pcLeft: TPageControl
-    Left = 6
+    Left = 4
     Height = 506
     Top = 12
     Width = 195
