@@ -731,6 +731,8 @@ begin
   isStartup := False;
   LoadMangaOptions;
   LoadFormInformation;
+  if cbFilterStatus.Items.Count > 2 then
+    cbFilterStatus.ItemIndex := 2;
 
   // ShowInformation;
   mangaInfo := TMangaInfo.Create;
