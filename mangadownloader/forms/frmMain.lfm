@@ -652,271 +652,352 @@ object MainForm: TMainForm
           object ckFilterAction: TCheckBox
             Left = 0
             Height = 19
+            Hint = 'A work typically depicting fighting, violence, chaos, and fast paced motion.'
             Top = 0
             Width = 75
             AllowGrayed = True
             Caption = 'Action'
             ParentFont = False
+            ParentShowHint = False
+            ShowHint = True
             TabOrder = 0
           end
           object ckFilterAdult: TCheckBox
             Left = 0
             Height = 19
+            Hint = 'Contains content that is suitable only for adults. Titles in this category may include prolonged scenes of intense violence and/or graphic sexual content and nudity.'
             Top = 23
             Width = 75
             AllowGrayed = True
             Caption = 'Adult'
             ParentFont = False
+            ParentShowHint = False
+            ShowHint = True
             TabOrder = 1
           end
           object ckFilterAdventure: TCheckBox
             Left = 0
             Height = 19
+            Hint = 'If a character in the story goes on a trip or along that line, your best bet is that it is an adventure manga. Otherwise, it''''s up to your personal prejudice on this case.'
             Top = 46
             Width = 75
             AllowGrayed = True
             Caption = 'Adventure'
             ParentFont = False
+            ParentShowHint = False
+            ShowHint = True
             TabOrder = 2
           end
           object ckFilterComedy: TCheckBox
             Left = 0
             Height = 19
+            Hint = 'A dramatic work that is light and often humorous or satirical in tone and that usually contains a happy resolution of the thematic conflict.'
             Top = 69
             Width = 75
             AllowGrayed = True
             Caption = 'Comedy'
             ParentFont = False
+            ParentShowHint = False
+            ShowHint = True
             TabOrder = 3
           end
           object ckFilterDoujinshi: TCheckBox
             Left = 0
             Height = 19
+            Hint = 'Fan based work inpspired by official manga/anime.'
             Top = 92
             Width = 75
             AllowGrayed = True
             Caption = 'Doujinshi'
             ParentFont = False
+            ParentShowHint = False
+            ShowHint = True
             TabOrder = 4
           end
           object ckFilterDrama: TCheckBox
             Left = 0
             Height = 19
+            Hint = 'A work meant to bring on an emotional response, such as instilling sadness or tension.'
             Top = 115
             Width = 75
             AllowGrayed = True
             Caption = 'Drama'
             ParentFont = False
+            ParentShowHint = False
+            ShowHint = True
             TabOrder = 5
           end
           object ckFilterEchi: TCheckBox
             Left = 0
             Height = 19
+            Hint = 'Possibly the line between hentai and non-hentai, ecchi usually refers to fanservice put in to attract a certain group of fans.'
             Top = 138
             Width = 75
             AllowGrayed = True
             Caption = 'Echi'
             ParentFont = False
+            ParentShowHint = False
+            ShowHint = True
             TabOrder = 6
           end
           object ckFilterFantasy: TCheckBox
             Left = 0
             Height = 19
+            Hint = 'Anything that involves, but not limited to, magic, dream world, and fairy tales.'
             Top = 161
             Width = 75
             AllowGrayed = True
             Caption = 'Fantasy'
             ParentFont = False
+            ParentShowHint = False
+            ShowHint = True
             TabOrder = 7
           end
           object ckFilterGenderBender: TCheckBox
             Left = 85
             Height = 19
+            Hint = 'Girls dressing up as guys, guys dressing up as girls... Guys turning into girls, girls turning into guys...'
             Top = 0
             Width = 98
             AllowGrayed = True
             Caption = 'Gender Bender'
             ParentFont = False
+            ParentShowHint = False
+            ShowHint = True
             TabOrder = 8
           end
           object ckFilterHarem: TCheckBox
             Left = 85
             Height = 19
+            Hint = 'A series involving one male character and many female characters (usually attracted to the male character). A Reverse Harem is when the genders are reversed.'
             Top = 23
             Width = 98
             AllowGrayed = True
             Caption = 'Harem'
             ParentFont = False
+            ParentShowHint = False
+            ShowHint = True
             TabOrder = 9
           end
           object ckFilterHentai: TCheckBox
             Left = 85
             Height = 19
+            Hint = 'Hentai'
             Top = 46
             Width = 98
             AllowGrayed = True
             Caption = 'Hentai'
             ParentFont = False
+            ParentShowHint = False
+            ShowHint = True
             TabOrder = 10
           end
           object ckFilterHistorical: TCheckBox
             Left = 85
             Height = 19
+            Hint = 'Having to do with old or ancient times.'
             Top = 69
             Width = 98
             AllowGrayed = True
             Caption = 'Historial'
             ParentFont = False
+            ParentShowHint = False
+            ShowHint = True
             TabOrder = 11
           end
           object ckFilterHorror: TCheckBox
             Left = 85
             Height = 19
+            Hint = 'A painful emotion of fear, dread, and abhorrence; a shuddering with terror and detestation; the feeling inspired by something frightful and shocking.'
             Top = 92
             Width = 98
             AllowGrayed = True
             Caption = 'Horror'
             ParentFont = False
+            ParentShowHint = False
+            ShowHint = True
             TabOrder = 12
           end
           object ckFilterJosei: TCheckBox
             Left = 85
             Height = 19
+            Hint = 'Literally "Woman". Targets women 18-30. Female equivalent to seinen. Unlike shoujo the romance is more realistic and less idealized. The storytelling is more explicit and mature.'
             Top = 115
             Width = 98
             AllowGrayed = True
             Caption = 'Josei'
             ParentFont = False
+            ParentShowHint = False
+            ShowHint = True
             TabOrder = 13
           end
           object ckFilterLolicon: TCheckBox
             Left = 85
             Height = 19
+            Hint = 'Representing a sexual attraction to young or under-age girls.'
             Top = 138
             Width = 98
             AllowGrayed = True
             Caption = 'Lolicon'
             ParentFont = False
+            ParentShowHint = False
+            ShowHint = True
             TabOrder = 14
           end
           object ckFilterMartialArts: TCheckBox
             Left = 85
             Height = 19
+            Hint = 'As the name suggests, anything martial arts related. Any of several arts of combat or self-defense, such as aikido, karate, judo, or taekwondo, kendo, fencing, and so on and so forth.'
             Top = 161
             Width = 98
             AllowGrayed = True
             Caption = 'Martial Arts'
             ParentFont = False
+            ParentShowHint = False
+            ShowHint = True
             TabOrder = 15
           end
           object ckFilterMature: TCheckBox
             Left = 193
             Height = 19
+            Hint = 'Contains subject matter which may be too extreme for people under the age of 17. Titles in this category may contain intense violence, blood and gore, sexual content and/or strong language.'
             Top = 0
             Width = 93
             AllowGrayed = True
             Caption = 'Mature'
             ParentFont = False
+            ParentShowHint = False
+            ShowHint = True
             TabOrder = 16
           end
           object ckFilterMecha: TCheckBox
             Left = 193
             Height = 19
+            Hint = 'A work involving and usually concentrating on all types of large robotic machines.'
             Top = 23
             Width = 93
             AllowGrayed = True
             Caption = 'Mecha'
             ParentFont = False
+            ParentShowHint = False
+            ShowHint = True
             TabOrder = 17
           end
           object ckFilterMusical: TCheckBox
             Left = 193
             Height = 19
+            Hint = 'Musical'
             Top = 46
             Width = 93
             AllowGrayed = True
             Caption = 'Mucical'
             ParentFont = False
+            ParentShowHint = False
+            ShowHint = True
             TabOrder = 18
           end
           object ckFilterMystery: TCheckBox
             Left = 193
             Height = 19
+            Hint = 'Usually an unexplained event occurs, and the main protagonist attempts to find out what caused it.'
             Top = 69
             Width = 93
             AllowGrayed = True
             Caption = 'Mystery'
             ParentFont = False
+            ParentShowHint = False
+            ShowHint = True
             TabOrder = 19
           end
           object ckFilterPsychological: TCheckBox
             Left = 193
             Height = 19
+            Hint = 'Usually deals with the philosophy of a state of mind, in most cases detailing abnormal psychology.'
             Top = 92
             Width = 93
             AllowGrayed = True
             Caption = 'Psychological'
             ParentFont = False
+            ParentShowHint = False
+            ShowHint = True
             TabOrder = 20
           end
           object ckFilterRomance: TCheckBox
             Left = 193
             Height = 19
+            Hint = 'Any love related story. We will define love as between man and woman in this case. Other than that, it is up to your own imagination of what love is.'
             Top = 115
             Width = 93
             AllowGrayed = True
             Caption = 'Romance'
             ParentFont = False
+            ParentShowHint = False
+            ShowHint = True
             TabOrder = 21
           end
           object ckFilterSchoolLife: TCheckBox
             Left = 193
             Height = 19
+            Hint = 'Having a major setting of the story deal with some type of school.'
             Top = 138
             Width = 93
             AllowGrayed = True
             Caption = 'School Life'
             ParentFont = False
+            ParentShowHint = False
+            ShowHint = True
             TabOrder = 22
           end
           object ckFilterSciFi: TCheckBox
             Left = 193
             Height = 19
+            Hint = 'Short for science fiction, these works involve twists on technology and other science related phenomena which are contrary or stretches of the modern day scientific world.'
             Top = 161
             Width = 93
             AllowGrayed = True
             Caption = 'Sci-Fi'
             ParentFont = False
+            ParentShowHint = False
+            ShowHint = True
             TabOrder = 23
           end
           object ckFilterSeinen: TCheckBox
             Left = 296
             Height = 19
+            Hint = 'From Google: Seinen means ''young Man''. Manga and anime that specifically targets young adult males around the ages of 18 to 25 are seinen titles. The stories in seinen works appeal to university students and those in the working world. Typically the story lines deal with the issues of adulthood.'
             Top = 0
             Width = 81
             AllowGrayed = True
             Caption = 'Seinen'
             ParentFont = False
+            ParentShowHint = False
+            ShowHint = True
             TabOrder = 24
           end
           object ckFilterShotacon: TCheckBox
             Left = 296
             Height = 19
+            Hint = 'Representing a sexual attraction to young or under-age boys.'
             Top = 23
             Width = 81
             AllowGrayed = True
             Caption = 'Shotacon'
             ParentFont = False
+            ParentShowHint = False
+            ShowHint = True
             TabOrder = 25
           end
           object ckFilterShoujo: TCheckBox
             Left = 296
             Height = 19
+            Hint = 'A work intended and primarily written for females. Usually involves a lot of romance and strong character development.'
             Top = 46
             Width = 81
             AllowGrayed = True
             Caption = 'Shoujo'
             ParentFont = False
+            ParentShowHint = False
+            ShowHint = True
             TabOrder = 26
           end
           object ckFilterShoujoAi: TCheckBox
@@ -927,106 +1008,138 @@ object MainForm: TMainForm
             AllowGrayed = True
             Caption = 'ShoujoAi'
             ParentFont = False
+            ParentShowHint = False
+            ShowHint = True
             TabOrder = 27
           end
           object ckFilterShounen: TCheckBox
             Left = 296
             Height = 19
+            Hint = 'Often synonymous with yuri, this can be thought of as somewhat less extreme. "Girl''''s Love", so to speak.'
             Top = 92
             Width = 81
             AllowGrayed = True
             Caption = 'Shounen'
             ParentFont = False
+            ParentShowHint = False
+            ShowHint = True
             TabOrder = 28
           end
           object ckFilterShounenAi: TCheckBox
             Left = 296
             Height = 19
+            Hint = 'A work intended and primarily written for males. These works usually involve fighting and/or violence.'
             Top = 115
             Width = 81
             AllowGrayed = True
             Caption = 'Shounen Ai'
             ParentFont = False
+            ParentShowHint = False
+            ShowHint = True
             TabOrder = 29
           end
           object ckFilterSliceofLife: TCheckBox
             Left = 296
             Height = 19
+            Hint = 'Often synonymous with yaoi, this can be thought of as somewhat less extreme. "Boy''''s Love", so to speak'
             Top = 138
             Width = 81
             AllowGrayed = True
             Caption = 'Slice of Life'
             ParentFont = False
+            ParentShowHint = False
+            ShowHint = True
             TabOrder = 30
           end
           object ckFilterSmut: TCheckBox
             Left = 296
             Height = 19
+            Hint = 'Deals with series that are considered profane or offensive, particularly with regards to sexual content.'
             Top = 161
             Width = 81
             AllowGrayed = True
             Caption = 'Smut'
             ParentFont = False
+            ParentShowHint = False
+            ShowHint = True
             TabOrder = 31
           end
           object ckFilterSports: TCheckBox
             Left = 387
             Height = 19
+            Hint = 'As the name suggests, anything sports related. Baseball, basketball, hockey, soccer, golf, and racing just to name a few.'
             Top = 0
             Width = 87
             AllowGrayed = True
             Caption = 'Sports'
             ParentFont = False
+            ParentShowHint = False
+            ShowHint = True
             TabOrder = 32
           end
           object ckFilterSupernatural: TCheckBox
             Left = 387
             Height = 19
+            Hint = 'Usually entails amazing and unexplained powers or events which defy the laws of physics.'
             Top = 23
             Width = 87
             AllowGrayed = True
             Caption = 'Supernatural'
             ParentFont = False
+            ParentShowHint = False
+            ShowHint = True
             TabOrder = 33
           end
           object ckFilterTragedy: TCheckBox
             Left = 387
             Height = 19
+            Hint = 'Contains events resulting in great loss and misfortune.'
             Top = 46
             Width = 87
             AllowGrayed = True
             Caption = 'Tragedy'
             ParentFont = False
+            ParentShowHint = False
+            ShowHint = True
             TabOrder = 34
           end
           object ckFilterYaoi: TCheckBox
             Left = 387
             Height = 19
+            Hint = 'This work usually involves intimate relationships between men.'
             Top = 69
             Width = 87
             AllowGrayed = True
             Caption = 'Yaoi'
             ParentFont = False
+            ParentShowHint = False
+            ShowHint = True
             TabOrder = 35
           end
           object ckFilterYuri: TCheckBox
             Left = 387
             Height = 19
+            Hint = 'This work usually involves intimate relationships between women.'
             Top = 92
             Width = 87
             AllowGrayed = True
             Caption = 'Yuri'
             ParentFont = False
+            ParentShowHint = False
+            ShowHint = True
             TabOrder = 36
           end
           object ckFilterWeebtons: TCheckBox
             Left = 387
             Height = 19
+            Hint = 'Weebtoons'
             Top = 115
             Width = 87
             AllowGrayed = True
             Caption = 'Webtoons'
             ParentFont = False
+            ParentShowHint = False
+            ShowHint = True
             TabOrder = 37
           end
         end
