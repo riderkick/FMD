@@ -418,43 +418,89 @@ msgstr ""
 msgid "Action"
 msgstr ""
 
+#: tmainform.ckfilteraction.hint
+msgid "A work typically depicting fighting, violence, chaos, and fast paced motion."
+msgstr ""
+
 #: tmainform.ckfilteradult.caption
 msgid "Adult"
+msgstr ""
+
+#: tmainform.ckfilteradult.hint
+msgid "Contains content that is suitable only for adults. Titles in this category may include prolonged scenes of intense violence and/or graphic sexual content and nudity."
 msgstr ""
 
 #: tmainform.ckfilteradventure.caption
 msgid "Adventure"
 msgstr ""
 
+#: tmainform.ckfilteradventure.hint
+msgid "If a character in the story goes on a trip or along that line, your best bet is that it is an adventure manga. Otherwise, it''s up to your personal prejudice on this case."
+msgstr ""
+
 #: tmainform.ckfiltercomedy.caption
 msgid "Comedy"
+msgstr ""
+
+#: tmainform.ckfiltercomedy.hint
+msgid "A dramatic work that is light and often humorous or satirical in tone and that usually contains a happy resolution of the thematic conflict."
 msgstr ""
 
 #: tmainform.ckfilterdoujinshi.caption
 msgid "Doujinshi"
 msgstr ""
 
+#: tmainform.ckfilterdoujinshi.hint
+msgid "Fan based work inpspired by official manga/anime."
+msgstr ""
+
 #: tmainform.ckfilterdrama.caption
 msgid "Drama"
+msgstr ""
+
+#: tmainform.ckfilterdrama.hint
+msgid "A work meant to bring on an emotional response, such as instilling sadness or tension."
 msgstr ""
 
 #: tmainform.ckfilterechi.caption
 msgid "Echi"
 msgstr ""
 
+#: tmainform.ckfilterechi.hint
+msgid "Possibly the line between hentai and non-hentai, ecchi usually refers to fanservice put in to attract a certain group of fans."
+msgstr ""
+
 #: tmainform.ckfilterfantasy.caption
 msgid "Fantasy"
+msgstr ""
+
+#: tmainform.ckfilterfantasy.hint
+msgid "Anything that involves, but not limited to, magic, dream world, and fairy tales."
 msgstr ""
 
 #: tmainform.ckfiltergenderbender.caption
 msgid "Gender Bender"
 msgstr ""
 
+#: tmainform.ckfiltergenderbender.hint
+msgid "Girls dressing up as guys, guys dressing up as girls... Guys turning into girls, girls turning into guys..."
+msgstr ""
+
 #: tmainform.ckfilterharem.caption
 msgid "Harem"
 msgstr ""
 
+#: tmainform.ckfilterharem.hint
+msgid "A series involving one male character and many female characters (usually attracted to the male character). A Reverse Harem is when the genders are reversed."
+msgstr ""
+
 #: tmainform.ckfilterhentai.caption
+msgctxt "tmainform.ckfilterhentai.caption"
+msgid "Hentai"
+msgstr ""
+
+#: tmainform.ckfilterhentai.hint
+msgctxt "TMAINFORM.CKFILTERHENTAI.HINT"
 msgid "Hentai"
 msgstr ""
 
@@ -462,64 +508,128 @@ msgstr ""
 msgid "Historial"
 msgstr ""
 
+#: tmainform.ckfilterhistorical.hint
+msgid "Having to do with old or ancient times."
+msgstr ""
+
 #: tmainform.ckfilterhorror.caption
 msgid "Horror"
+msgstr ""
+
+#: tmainform.ckfilterhorror.hint
+msgid "A painful emotion of fear, dread, and abhorrence; a shuddering with terror and detestation; the feeling inspired by something frightful and shocking."
 msgstr ""
 
 #: tmainform.ckfilterjosei.caption
 msgid "Josei"
 msgstr ""
 
+#: tmainform.ckfilterjosei.hint
+msgid "Literally \"Woman\". Targets women 18-30. Female equivalent to seinen. Unlike shoujo the romance is more realistic and less idealized. The storytelling is more explicit and mature."
+msgstr ""
+
 #: tmainform.ckfilterlolicon.caption
 msgid "Lolicon"
+msgstr ""
+
+#: tmainform.ckfilterlolicon.hint
+msgid "Representing a sexual attraction to young or under-age girls."
 msgstr ""
 
 #: tmainform.ckfiltermartialarts.caption
 msgid "Martial Arts"
 msgstr ""
 
+#: tmainform.ckfiltermartialarts.hint
+msgid "As the name suggests, anything martial arts related. Any of several arts of combat or self-defense, such as aikido, karate, judo, or taekwondo, kendo, fencing, and so on and so forth."
+msgstr ""
+
 #: tmainform.ckfiltermature.caption
 msgid "Mature"
+msgstr ""
+
+#: tmainform.ckfiltermature.hint
+msgid "Contains subject matter which may be too extreme for people under the age of 17. Titles in this category may contain intense violence, blood and gore, sexual content and/or strong language."
 msgstr ""
 
 #: tmainform.ckfiltermecha.caption
 msgid "Mecha"
 msgstr ""
 
+#: tmainform.ckfiltermecha.hint
+msgid "A work involving and usually concentrating on all types of large robotic machines."
+msgstr ""
+
 #: tmainform.ckfiltermusical.caption
 msgid "Mucical"
+msgstr ""
+
+#: tmainform.ckfiltermusical.hint
+msgid "Musical"
 msgstr ""
 
 #: tmainform.ckfiltermystery.caption
 msgid "Mystery"
 msgstr ""
 
+#: tmainform.ckfiltermystery.hint
+msgid "Usually an unexplained event occurs, and the main protagonist attempts to find out what caused it."
+msgstr ""
+
 #: tmainform.ckfilterpsychological.caption
 msgid "Psychological"
+msgstr ""
+
+#: tmainform.ckfilterpsychological.hint
+msgid "Usually deals with the philosophy of a state of mind, in most cases detailing abnormal psychology."
 msgstr ""
 
 #: tmainform.ckfilterromance.caption
 msgid "Romance"
 msgstr ""
 
+#: tmainform.ckfilterromance.hint
+msgid "Any love related story. We will define love as between man and woman in this case. Other than that, it is up to your own imagination of what love is."
+msgstr ""
+
 #: tmainform.ckfilterschoollife.caption
 msgid "School Life"
+msgstr ""
+
+#: tmainform.ckfilterschoollife.hint
+msgid "Having a major setting of the story deal with some type of school."
 msgstr ""
 
 #: tmainform.ckfilterscifi.caption
 msgid "Sci-Fi"
 msgstr ""
 
+#: tmainform.ckfilterscifi.hint
+msgid "Short for science fiction, these works involve twists on technology and other science related phenomena which are contrary or stretches of the modern day scientific world."
+msgstr ""
+
 #: tmainform.ckfilterseinen.caption
 msgid "Seinen"
+msgstr ""
+
+#: tmainform.ckfilterseinen.hint
+msgid "From Google: Seinen means 'young Man'. Manga and anime that specifically targets young adult males around the ages of 18 to 25 are seinen titles. The stories in seinen works appeal to university students and those in the working world. Typically the story lines deal with the issues of adulthood."
 msgstr ""
 
 #: tmainform.ckfiltershotacon.caption
 msgid "Shotacon"
 msgstr ""
 
+#: tmainform.ckfiltershotacon.hint
+msgid "Representing a sexual attraction to young or under-age boys."
+msgstr ""
+
 #: tmainform.ckfiltershoujo.caption
 msgid "Shoujo"
+msgstr ""
+
+#: tmainform.ckfiltershoujo.hint
+msgid "A work intended and primarily written for females. Usually involves a lot of romance and strong character development."
 msgstr ""
 
 #: tmainform.ckfiltershoujoai.caption
@@ -530,40 +640,80 @@ msgstr ""
 msgid "Shounen"
 msgstr ""
 
+#: tmainform.ckfiltershounen.hint
+msgid "Often synonymous with yuri, this can be thought of as somewhat less extreme. \"Girl''s Love\", so to speak."
+msgstr ""
+
 #: tmainform.ckfiltershounenai.caption
 msgid "Shounen Ai"
+msgstr ""
+
+#: tmainform.ckfiltershounenai.hint
+msgid "A work intended and primarily written for males. These works usually involve fighting and/or violence."
 msgstr ""
 
 #: tmainform.ckfiltersliceoflife.caption
 msgid "Slice of Life"
 msgstr ""
 
+#: tmainform.ckfiltersliceoflife.hint
+msgid "Often synonymous with yaoi, this can be thought of as somewhat less extreme. \"Boy''s Love\", so to speak"
+msgstr ""
+
 #: tmainform.ckfiltersmut.caption
 msgid "Smut"
+msgstr ""
+
+#: tmainform.ckfiltersmut.hint
+msgid "Deals with series that are considered profane or offensive, particularly with regards to sexual content."
 msgstr ""
 
 #: tmainform.ckfiltersports.caption
 msgid "Sports"
 msgstr ""
 
+#: tmainform.ckfiltersports.hint
+msgid "As the name suggests, anything sports related. Baseball, basketball, hockey, soccer, golf, and racing just to name a few."
+msgstr ""
+
 #: tmainform.ckfiltersupernatural.caption
 msgid "Supernatural"
+msgstr ""
+
+#: tmainform.ckfiltersupernatural.hint
+msgid "Usually entails amazing and unexplained powers or events which defy the laws of physics."
 msgstr ""
 
 #: tmainform.ckfiltertragedy.caption
 msgid "Tragedy"
 msgstr ""
 
+#: tmainform.ckfiltertragedy.hint
+msgid "Contains events resulting in great loss and misfortune."
+msgstr ""
+
 #: tmainform.ckfilterweebtons.caption
 msgid "Webtoons"
+msgstr ""
+
+#: tmainform.ckfilterweebtons.hint
+msgid "Weebtoons"
 msgstr ""
 
 #: tmainform.ckfilteryaoi.caption
 msgid "Yaoi"
 msgstr ""
 
+#: tmainform.ckfilteryaoi.hint
+msgid "This work usually involves intimate relationships between men."
+msgstr ""
+
 #: tmainform.ckfilteryuri.caption
 msgid "Yuri"
+msgstr ""
+
+#: tmainform.ckfilteryuri.hint
+msgid "This work usually involves intimate relationships between women."
 msgstr ""
 
 #: tmainform.edcustomgenres.texthint
