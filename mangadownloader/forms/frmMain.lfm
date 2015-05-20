@@ -2758,13 +2758,6 @@ object MainForm: TMainForm
       end
     end
   end
-  object spMainSplitter: TSplitter
-    Left = 199
-    Height = 514
-    Top = 8
-    Width = 2
-    OnMoved = spMainSplitterMoved
-  end
   object pnMainTop: TPanel
     Left = 0
     Height = 8
@@ -3098,6 +3091,13 @@ object MainForm: TMainForm
         Width = 50
       end>
     SimplePanel = False
+  end
+  object spMainSplitter: TSplitter
+    Left = 199
+    Height = 514
+    Top = 8
+    Width = 2
+    OnMoved = spMainSplitterMoved
   end
   object dlgSaveTo: TSelectDirectoryDialog
     left = 80
