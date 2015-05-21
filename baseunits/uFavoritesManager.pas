@@ -270,18 +270,15 @@ begin
     workCounter := 0;
     while workCounter < manager.FFavorites.Count do
     begin
-      while threads.Count > manager.DLManager.maxDLThreadsPerTask do
-      begin
-        if Terminated then Break;
+      while (not Terminated) and (threads.Count >= manager.DLManager.maxDLThreadsPerTask) do
         Sleep(250);
-      end;
       if Terminated then Break;
       if threads.Count < manager.DLManager.maxDLThreadsPerTask then
       begin
         if Trim(manager.FavoriteItem(workCounter).FavoriteInfo.Title) <> '' then
           CS_Threads.Acquire;
           try
-            with manager.FavoriteItem(workCounter) do begin
+            with TFavoriteContainer(manager.FFavorites[workCounter]) do begin
               if Thread = nil then begin
                 Thread := TFavoriteThread.Create;
                 Thread.task := Self;
