@@ -3232,7 +3232,6 @@ object MainForm: TMainForm
         FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00
       }
       ImageIndex = 9
-      OnClick = miDownloadDeleteClick
       object miDownloadDeleteTask: TMenuItem
         Caption = 'Task only'
         Enabled = False

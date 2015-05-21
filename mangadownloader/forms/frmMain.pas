@@ -386,7 +386,6 @@ type
 
     procedure miDownloadDeleteCompletedClick(Sender: TObject);
     procedure miDownloadResumeClick(Sender: TObject);
-    procedure miDownloadDeleteClick(Sender: TObject);
     procedure miDownloadStopClick(Sender: TObject);
     procedure miMangaListDownloadAllClick(Sender: TObject);
     procedure miMangaListViewInfosClick(Sender: TObject);
@@ -1065,38 +1064,24 @@ end;
 
 procedure TMainForm.miDownloadDeleteTaskClick(Sender: TObject);
 var
-  i: Integer;
+  i: Cardinal;
   xNode: PVirtualNode;
 begin
-  // if NOT Assigned(vtDownload.FocusedNode) then exit;
+  if not Assigned(vtDownload.FocusedNode) then exit;
   if (cbOptionShowDeleteTaskDialog.Checked) and
     (vtDownload.SelectedCount > 0) then
-    if not (MessageDlg('', RS_DlgRemoveTask,
-      mtConfirmation, [mbYes, mbNo], 0) = mrYes) then
+    if MessageDlg('', RS_DlgRemoveTask,
+      mtConfirmation, [mbYes, mbNo], 0) <> mrYes then
       Exit;
-
-  if (vtDownload.SelectedCount = 1) and (Assigned(vtDownload.FocusedNode)) then
+  xNode := vtDownload.GetFirstSelected;
+  for i := 0 to vtDownload.SelectedCount - 1 do
   begin
-    DLManager.RemoveTask(vtDownload.FocusedNode^.Index);
-    UpdateVtDownload;
-    DLManager.Backup;
-  end
-  else
-  if (vtDownload.SelectedCount > 1) then
-  begin
-    xNode := vtDownload.GetFirst;
-    i := 0;
-    while i < DLManager.Count do
-    begin
-      if vtDownload.Selected[xNode] then
-        DLManager.RemoveTask(i)
-      else
-        Inc(i);
-      xNode := vtDownload.GetNext(xNode);
-    end;
-    UpdateVtDownload;
-    DLManager.Backup;
+    if Assigned(xNode) then
+      DLManager.RemoveTask(xNode^.Index);
+    xNode := vtDownload.GetNextSelected(xNode);
   end;
+  UpdateVtDownload;
+  DLManager.Backup;
 end;
 
 procedure TMainForm.miDownloadDeleteTaskDataClick(Sender: TObject);
@@ -1105,7 +1090,7 @@ var
   xNode: PVirtualNode;
   path: String;
 begin
-  // if NOT Assigned(vtDownload.FocusedNode) then exit;
+  if not Assigned(vtDownload.FocusedNode) then exit;
   if (cbOptionShowDeleteTaskDialog.Checked) and
     (vtDownload.SelectedCount > 0) then
     if not (MessageDlg('', RS_DlgRemoveTask,
@@ -1139,18 +1124,16 @@ begin
   else
   if (vtDownload.SelectedCount > 1) then
   begin
-    xNode := vtDownload.GetFirst;
-    i := 0;
-    while i < DLManager.Count do
+    xNode := vtDownload.GetFirstSelected;
+    for i := 0 to vtDownload.SelectedCount - 1 do
     begin
-      if vtDownload.Selected[xNode] then
+      if Assigned(xNode) then
       begin
-        DeleteDirectory(DLManager.TaskItem(i).DownloadInfo.SaveTo, False);
-        DLManager.RemoveTask(i);
-      end
-      else
-        Inc(i);
-      xNode := vtDownload.GetNext(xNode);
+        DLManager.StopTask(xNode^.Index);
+        DeleteDirectory(DLManager.TaskItem(xNode^.Index).DownloadInfo.SaveTo, False);
+        DLManager.RemoveTask(xNode^.Index);
+      end;
+      xNode := vtDownload.GetNextSelected(xNode);
     end;
     UpdateVtDownload;
     DLManager.Backup;
@@ -2387,67 +2370,22 @@ begin
   end;
 end;
 
-procedure TMainForm.miDownloadDeleteClick(Sender: TObject);
-var
-  i: Cardinal;
-  xNode: PVirtualNode;
-begin
-  // if NOT Assigned(vtDownload.FocusedNode) then exit;
-  if (cbOptionShowDeleteTaskDialog.Checked) and
-    (vtDownload.SelectedCount > 0) then
-    if MessageDlg('', RS_DlgRemoveTask,
-      mtConfirmation, [mbYes, mbNo], 0) = mrNo then
-      Exit;
-
-  if (vtDownload.SelectedCount = 1) and (Assigned(vtDownload.FocusedNode)) then
-  begin
-    DLManager.RemoveTask(vtDownload.FocusedNode^.Index);
-    UpdateVtDownload;
-    DLManager.Backup;
-  end
-  else
-  if (vtDownload.SelectedCount > 1) then
-  begin
-    xNode := vtDownload.GetFirst;
-    i := 0;
-    while i < DLManager.Count do
-    begin
-      if vtDownload.Selected[xNode] then
-        DLManager.RemoveTask(i)
-      else
-        Inc(i);
-      xNode := vtDownload.GetNext(xNode);
-    end;
-    UpdateVtDownload;
-    DLManager.Backup;
-  end;
-end;
-
-// Download table's popup menu
 procedure TMainForm.miDownloadStopClick(Sender: TObject);
 var
   i: Cardinal;
   xNode: PVirtualNode;
 begin
-  //if NOT Assigned(vtDownload.FocusedNode) then exit;
-  if (vtDownload.SelectedCount = 1) and (Assigned(vtDownload.FocusedNode)) then
+  if not Assigned(vtDownload.FocusedNode) then exit;
+  xNode := vtDownload.GetFirstSelected;
+  for i := 0 to vtDownload.SelectedCount - 1 do
   begin
-    DLManager.StopTask(vtDownload.FocusedNode^.Index);
-    vtDownload.Repaint;
-  end
-  else
-  begin
-    xNode := vtDownload.GetFirstSelected;
-    for i := 0 to vtDownload.SelectedCount - 1 do
-    begin
-      if vtDownload.Selected[xNode] then
-        DLManager.StopTask(xNode^.Index, False);
-      xNode := vtDownload.GetNextSelected(xNode);
-    end;
-    DLManager.Backup;
-    DLManager.CheckAndActiveTask;
-    vtDownload.Repaint;
+    if vtDownload.Selected[xNode] then
+      DLManager.StopTask(xNode^.Index, False);
+    xNode := vtDownload.GetNextSelected(xNode);
   end;
+  DLManager.Backup;
+  DLManager.CheckAndActiveTask;
+  vtDownload.Repaint;
 end;
 
 procedure TMainForm.miMangaListDownloadAllClick(Sender: TObject);
@@ -3127,8 +3065,8 @@ var
   Percents: double;
   ww, hh: Integer;
 begin
-  if Node = nil then
-    Exit;
+  if Node = nil then Exit;
+  if Node^.Index >= DLManager.Count then Exit;
   if Column = 2 then
   begin
     Data := vtDownload.GetNodeData(Node);
@@ -3347,6 +3285,7 @@ var
   l, i: Cardinal;
   p: PDownloadInfo;
 begin
+  if Node^.Index >= DLManager.Count then Exit;
   if Column = 0 then
   begin
     l := DLManager.TaskItem(Node^.Index).ChapterLinks.Count;
@@ -3401,10 +3340,9 @@ procedure TMainForm.vtDownloadGetImageIndex(Sender: TBaseVirtualTree;
   Node: PVirtualNode; Kind: TVTImageKind; Column: TColumnIndex;
   var Ghosted: Boolean; var ImageIndex: Integer);
 begin
-  if vtDownload.Header.Columns[Column].Position = 0 then
-  begin
+  if (Node^.Index < DLManager.Count) and
+    (vtDownload.Header.Columns[Column].Position = 0) then
     ImageIndex := integer(DLManager.TaskItem(Node^.Index).Status);
-  end;
 end;
 
 procedure TMainForm.vtDownloadGetText(Sender: TBaseVirtualTree;
@@ -3414,6 +3352,7 @@ var
   Data: PDownloadInfo;
   pos: Cardinal;
 begin
+  if Node^.Index >= DLManager.Count then Exit;
   with Sender do
   begin
     pos := Node^.Index;
