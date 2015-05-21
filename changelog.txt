@@ -8,6 +8,10 @@ https://www.mediafire.com/folder/3ccy2c7g36hp3/Fmd
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.11.3 (21-5-2015)
+[!*] Fix high cpu usage when checking favorites
+[!*] Fix crash when delete running task
+
 0.9.11.2 (21-5-2015)
 [*] MangaFox: fix mangainfo, no chapters for licensed manga
 
