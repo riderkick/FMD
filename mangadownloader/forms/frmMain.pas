@@ -1023,8 +1023,7 @@ end;
 
 procedure TMainForm.medURLPasteandgoClick(Sender: TObject);
 begin
-  edURL.Clear;
-  edURL.PasteFromClipboard;
+  edURL.Text := Clipboard.AsText;
   btURLClick(edURL);
 end;
 
