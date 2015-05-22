@@ -9,27 +9,25 @@ uses
   cthreads,
   cmem,
   {$endif}
-  Classes, SysUtils, zipper, FileUtil, UTF8Process, Forms, Dialogs, ComCtrls,
-  StdCtrls, Clipbrd, ExtCtrls, DefaultTranslator, RegExpr,
-  IniFiles, process, USimpleException, uMisc, httpsend, blcksock, ssl_openssl;
+  Classes, SysUtils, zipper, FileUtil, UTF8Process, Forms, Dialogs,
+  ComCtrls, StdCtrls, Clipbrd, ExtCtrls, DefaultTranslator, RegExpr, IniFiles,
+  process, USimpleException, uMisc, httpsend, blcksock, ssl_openssl;
 
 type
 
   { TfrmMain }
 
   TfrmMain = class(TForm)
-    btDownload :TButton;
-    edFilename :TEdit;
-    edURL      :TEdit;
     itMonitor: TIdleTimer;
-    lbFilename :TLabel;
-    lbProgress: TStaticText;
-    lbStatus: TStaticText;
-    lbURL      :TLabel;
+    lbTransferRate: TLabel;
+    lbFileSize: TLabel;
+    lbFileSizeValue: TLabel;
+    lbStatus: TLabel;
+    lbTransferRateValue: TLabel;
     pbDownload :TProgressBar;
-    procedure btDownloadClick(Sender :TObject);
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCreate(Sender :TObject);
+    procedure FormDestroy(Sender: TObject);
     procedure FormShow(Sender :TObject);
     procedure itMonitorTimer(Sender: TObject);
   private
@@ -72,12 +70,15 @@ type
     destructor Destroy; override;
   end;
 
-function HeaderByName(const AHeaders :TStrings; const HeaderName :string) :string;
+procedure ChangeReadSize(const ACount: Int64);
 
 var
-  frmMain    :TfrmMain;
-  dl         :TDownloadThread;
-  isDownload :boolean = False;
+  frmMain      :TfrmMain;
+  dl           :TDownloadThread;
+  isDownload   :boolean = False;
+  CurReadSize  :Int64 = 0;
+  LastReadSize :Int64 = 0;
+  CS_ReadSize  :TRTLCriticalSection;
 
   _UpdApp    :boolean = False;
   _Extract   :boolean = False;
@@ -126,6 +127,7 @@ resourcestring
     '%s' + LineEnding +
     'Link copied to clipboard!';
   RS_7zNotFound = 'Can''t extract file because 7za.exe not found!';
+  RS_Unknown = '(unknown)';
 
 implementation
 
@@ -181,32 +183,7 @@ begin
   Process.Free;
 end;
 
-function HeaderByName(const AHeaders :TStrings; const HeaderName :string) :string;
-var
-  i, p :cardinal;
-  hn   :string;
-begin
-  Result := '';
-  if AHeaders.Count < 1 then
-    Exit;
-
-  hn := HeaderName;
-  for i := 0 to AHeaders.Count - 1 do
-  begin
-    p := Pos(LowerCase(hn), LowerCase(AHeaders.Strings[i]));
-    if p > 0 then
-    begin
-      p := Pos(':', AHeaders.Strings[i]);
-      if p > 0 then
-      begin
-        Result := Copy(AHeaders.Strings[i], p + 2, Length(AHeaders.Strings[i]) - p + 1);
-        Break;
-      end;
-    end;
-  end;
-end;
-
-function FormatByteSize(const bytes :longint) :string;
+function FormatByteSize(const bytes :longint; persecond: boolean = False) :string;
 const
   B  = 1;
   KB = 1024 * B;
@@ -223,9 +200,31 @@ begin
     Result := FormatFloat('#.## KB', bytes / KB)
   else
   if bytes = 0 then
-    Result := '0 bytes'
+  begin
+    if persecond then
+      Result := '0 B'
+    else
+      Result := '0 bytes';
+  end
   else
-    Result := FormatFloat('#.## bytes', bytes);
+  begin
+    if persecond then
+      Result := FormatFloat('#.## B', bytes)
+    else
+      Result := FormatFloat('#.## bytes', bytes);
+  end;
+  if persecond then
+    Result := Result + 'ps';
+end;
+
+procedure ChangeReadSize(const ACount: Int64);
+begin
+  EnterCriticalsection(CS_ReadSize);
+  try
+    CurReadSize := ACount;
+  finally
+    LeaveCriticalsection(CS_ReadSize);
+  end;
 end;
 
 {  TDownloadThread }
@@ -236,6 +235,7 @@ begin
   isDownload := True;
   FreeOnTerminate := True;
   FHTTP := THTTPSend.Create;
+  FHTTP.Headers.NameValueSeparator := ':';
   FHTTP.Sock.OnStatus := @SockOnStatus;
   FHTTP.Sock.OnHeartbeat := @SockOnHeartBeat;
   FHTTP.Sock.HeartbeatRate := 250;
@@ -274,6 +274,7 @@ end;
 
 procedure TDownloadThread.SockOnHeartBeat(Sender :TObject);
 begin
+  ChangeReadSize(FHTTP.Document.Size);
   if Self.Terminated then
   begin
     TBlockSocket(Sender).StopFlag := True;
@@ -303,10 +304,10 @@ begin
   else
   begin
     barPos := 0;
-    prgText := '0 / 0';
+    prgText := RS_Unknown;
   end;
   frmMain.pbDownload.Position := barPos;
-  frmMain.lbProgress.Caption := prgText;
+  frmMain.lbFileSizeValue.Caption := prgText;
 end;
 
 procedure TDownloadThread.MainThreadErrorGetting;
@@ -320,8 +321,8 @@ procedure TDownloadThread.SockOnStatus(Sender :TObject; Reason :THookSocketReaso
   const Value :string);
 begin
   if Terminated then Exit;
-  if Pos('Content-Length: ', FHTTP.Headers.Text) > 0 then
-    FTotalSize := StrToIntDef(HeaderByName(FHTTP.Headers, 'Content-Length'), 0);;
+  if FHTTP.Headers.IndexOfName('Content-Length') > -1 then
+    FTotalSize := StrToIntDef(FHTTP.Headers.Values['Content-Length'], 0);
   case Reason of
     HR_Connect :FCurrentSize := 0;
     HR_ReadCount :Inc(FCurrentSize, StrToIntDef(Value, 0));
@@ -331,7 +332,7 @@ end;
 
 procedure TDownloadThread.MainThreadUpdateProgressLabel;
 begin
-  frmMain.lbProgress.Caption := FProgress;
+  frmMain.lbFileSizeValue.Caption := FProgress;
 end;
 
 procedure TDownloadThread.UZipOnStartFile(Sender :TObject; const AFileName :string);
@@ -404,7 +405,6 @@ begin
   regx := TRegExpr.Create;
   try
     PrepareHTTP(FHTTP);
-    FHTTP.Headers.NameValueSeparator := ':';
     HTTPHeaders.NameValueSeparator := ':';
     regx.ModifierI := True;
     if isSFURL then
@@ -541,7 +541,7 @@ begin
         if FHTTP.ResultCode >= 300 then
         begin
           HTTPHeaders.Values['Referer'] := ' ' + rurl;
-          rurl := HeaderByName(FHTTP.Headers, 'location: ');
+          rurl := FHTTP.Headers.Values['location'];
         end;
         FHTTP.Clear;
         FHTTP.Headers.Text := HTTPHeaders.Text;
@@ -632,21 +632,6 @@ end;
 
 { TfrmMain }
 
-procedure TfrmMain.btDownloadClick(Sender :TObject);
-begin
-  if (not isDownload) and (edURL.Text <> '') then
-  begin
-    dl := TDownloadThread.Create;
-    dl.URL := edURL.Text;
-    dl.FileName := edFilename.Text;
-    dl.DirPath := GetCurrentDirUTF8;
-    dl.Extract := False;
-    dl.MaxRetry := 5;
-    dl.Start;
-    Height := 70;
-  end;
-end;
-
 procedure TfrmMain.FormClose(Sender: TObject; var CloseAction: TCloseAction);
 begin
   if isDownload then
@@ -663,6 +648,7 @@ var
 begin
   Randomize;
   InitSimpleExceptionHandler(ChangeFileExt(Application.ExeName, '.log'));
+  InitCriticalSection(CS_ReadSize);
   //load proxy config from fmd
   config := TIniFile.Create('config/config.ini');
   try
@@ -685,6 +671,11 @@ begin
   finally
     FreeAndNil(config);
   end;
+end;
+
+procedure TfrmMain.FormDestroy(Sender: TObject);
+begin
+  DoneCriticalsection(CS_ReadSize);
 end;
 
 procedure TfrmMain.FormShow(Sender :TObject);
@@ -749,7 +740,6 @@ begin
         dl.DirPath := dl.DirPath + DirectorySeparator + 'data';
       dl.Extract := _Extract;
       dl.Start;
-      Self.Height := 70;
       itMonitor.Enabled := True;
     end
     else
@@ -762,10 +752,20 @@ end;
 
 procedure TfrmMain.itMonitorTimer(Sender: TObject);
 begin
-  if not isDownload then
+  if isDownload then
+  begin
+    EnterCriticalsection(CS_ReadSize);
+    try
+      lbTransferRateValue.Caption := FormatByteSize(CurReadSize - LastReadSize, True);
+      LastReadSize := CurReadSize;
+    finally
+      LeaveCriticalsection(CS_ReadSize);
+    end;
+  end
+  else
   begin
     itMonitor.Enabled := False;
-    Self.Close;
+    Self.Close
   end;
 end;
 

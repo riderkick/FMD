@@ -1,93 +1,73 @@
 object frmMain: TfrmMain
   Left = 501
-  Height = 215
+  Height = 101
   Top = 247
   Width = 334
   BorderIcons = [biSystemMenu]
-  BorderStyle = bsSingle
   Caption = 'Free Manga Downloader - Updater'
-  ClientHeight = 215
+  ClientHeight = 101
   ClientWidth = 334
   FormStyle = fsSystemStayOnTop
   OnClose = FormClose
   OnCreate = FormCreate
+  OnDestroy = FormDestroy
   OnShow = FormShow
   Position = poOwnerFormCenter
   LCLVersion = '1.5'
-  object lbStatus: TStaticText
+  object pbDownload: TProgressBar
     Left = 8
-    Height = 16
+    Height = 20
+    Top = 72
+    Width = 317
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    Max = 1000
+    TabOrder = 0
+  end
+  object lbTransferRateValue: TLabel
+    Left = 96
+    Height = 1
+    Top = 52
+    Width = 229
+    Anchors = [akTop, akLeft, akRight]
+    ParentColor = False
+  end
+  object lbTransferRate: TLabel
+    Left = 8
+    Height = 15
+    Top = 52
+    Width = 66
+    Caption = 'Transfer rate'
+    ParentColor = False
+  end
+  object lbFileSizeValue: TLabel
+    Left = 96
+    Height = 1
+    Top = 34
+    Width = 229
+    Anchors = [akTop, akLeft, akRight]
+    ParentColor = False
+  end
+  object lbFileSize: TLabel
+    Left = 8
+    Height = 15
+    Top = 34
+    Width = 40
+    Caption = 'File size'
+    ParentColor = False
+  end
+  object lbStatus: TLabel
+    Left = 8
+    Height = 15
     Top = 12
     Width = 317
     Anchors = [akTop, akLeft, akRight]
     Caption = 'Waiting...'
-    TabOrder = 5
-  end
-  object lbProgress: TStaticText
-    Left = 272
-    Height = 1
-    Top = 12
-    Width = 55
-    Alignment = taRightJustify
-    Anchors = [akTop, akRight]
-    AutoSize = True
-    TabOrder = 4
-    Transparent = False
-  end
-  object pbDownload: TProgressBar
-    Left = 8
-    Height = 20
-    Top = 40
-    Width = 317
-    Anchors = [akTop, akLeft, akRight]
-    Max = 1000
-    TabOrder = 0
-  end
-  object btDownload: TButton
-    Left = 128
-    Height = 25
-    Top = 88
-    Width = 75
-    Caption = 'Download'
-    OnClick = btDownloadClick
-    TabOrder = 1
-  end
-  object edURL: TEdit
-    Left = 8
-    Height = 23
-    Top = 136
-    Width = 317
-    Anchors = [akTop, akLeft, akRight]
-    TabOrder = 2
-  end
-  object edFilename: TEdit
-    Left = 8
-    Height = 23
-    Top = 184
-    Width = 317
-    Anchors = [akTop, akLeft, akRight]
-    TabOrder = 3
-  end
-  object lbURL: TLabel
-    Left = 8
-    Height = 15
-    Top = 120
-    Width = 21
-    Caption = 'URL'
-    ParentColor = False
-  end
-  object lbFilename: TLabel
-    Left = 8
-    Height = 15
-    Top = 168
-    Width = 48
-    Caption = 'Filename'
     ParentColor = False
   end
   object itMonitor: TIdleTimer
     Enabled = False
     OnTimer = itMonitorTimer
-    left = 45
-    top = 78
+    left = 168
+    top = 8
   end
 end
