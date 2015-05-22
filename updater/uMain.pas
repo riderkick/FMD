@@ -722,12 +722,15 @@ procedure TfrmMain.itMonitorTimer(Sender: TObject);
 begin
   if isDownload then
   begin
-    EnterCriticalsection(CS_ReadCount);
-    try
-      lbTransferRateValue.Caption := FormatByteSize(ReadCount, True);
-      ReadCount := 0;
-    finally
-      LeaveCriticalsection(CS_ReadCount);
+    if ReadCount > 0 then
+    begin
+      EnterCriticalsection(CS_ReadCount);
+      try
+        lbTransferRateValue.Caption := FormatByteSize(ReadCount, True);
+        ReadCount := 0;
+      finally
+        LeaveCriticalsection(CS_ReadCount);
+      end;
     end;
   end
   else
