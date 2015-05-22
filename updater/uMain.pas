@@ -70,15 +70,14 @@ type
     destructor Destroy; override;
   end;
 
-procedure ChangeReadSize(const ACount: Int64);
+procedure IncReadCount(const ACount: Int64);
 
 var
   frmMain      :TfrmMain;
   dl           :TDownloadThread;
   isDownload   :boolean = False;
-  CurReadSize  :Int64 = 0;
-  LastReadSize :Int64 = 0;
-  CS_ReadSize  :TRTLCriticalSection;
+  ReadCount    :Integer = 0;
+  CS_ReadCount :TRTLCriticalSection;
 
   _UpdApp    :boolean = False;
   _Extract   :boolean = False;
@@ -217,13 +216,13 @@ begin
     Result := Result + 'ps';
 end;
 
-procedure ChangeReadSize(const ACount: Int64);
+procedure IncReadCount(const ACount: Int64);
 begin
-  EnterCriticalsection(CS_ReadSize);
+  EnterCriticalsection(CS_ReadCount);
   try
-    CurReadSize := ACount;
+    Inc(ReadCount, ACount);
   finally
-    LeaveCriticalsection(CS_ReadSize);
+    LeaveCriticalsection(CS_ReadCount);
   end;
 end;
 
@@ -274,7 +273,6 @@ end;
 
 procedure TDownloadThread.SockOnHeartBeat(Sender :TObject);
 begin
-  ChangeReadSize(FHTTP.Document.Size);
   if Self.Terminated then
   begin
     TBlockSocket(Sender).StopFlag := True;
@@ -325,7 +323,11 @@ begin
     FTotalSize := StrToIntDef(FHTTP.Headers.Values['Content-Length'], 0);
   case Reason of
     HR_Connect :FCurrentSize := 0;
-    HR_ReadCount :Inc(FCurrentSize, StrToIntDef(Value, 0));
+    HR_ReadCount :
+      begin
+        Inc(FCurrentSize, StrToIntDef(Value, 0));
+        IncReadCount(StrToIntDef(Value, 0));
+      end;
   end;
   Synchronize(@MainThreadUpdateProgress);
 end;
@@ -648,7 +650,7 @@ var
 begin
   Randomize;
   InitSimpleExceptionHandler(ChangeFileExt(Application.ExeName, '.log'));
-  InitCriticalSection(CS_ReadSize);
+  InitCriticalSection(CS_ReadCount);
   //load proxy config from fmd
   config := TIniFile.Create('config/config.ini');
   try
@@ -675,7 +677,7 @@ end;
 
 procedure TfrmMain.FormDestroy(Sender: TObject);
 begin
-  DoneCriticalsection(CS_ReadSize);
+  DoneCriticalsection(CS_ReadCount);
 end;
 
 procedure TfrmMain.FormShow(Sender :TObject);
@@ -754,12 +756,12 @@ procedure TfrmMain.itMonitorTimer(Sender: TObject);
 begin
   if isDownload then
   begin
-    EnterCriticalsection(CS_ReadSize);
+    EnterCriticalsection(CS_ReadCount);
     try
-      lbTransferRateValue.Caption := FormatByteSize(CurReadSize - LastReadSize, True);
-      LastReadSize := CurReadSize;
+      lbTransferRateValue.Caption := FormatByteSize(ReadCount, True);
+      ReadCount := 0;
     finally
-      LeaveCriticalsection(CS_ReadSize);
+      LeaveCriticalsection(CS_ReadCount);
     end;
   end
   else

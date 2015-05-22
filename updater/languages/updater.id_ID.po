@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: id_ID\n"
-"X-Generator: Poedit 1.7.6\n"
+"X-Generator: Poedit 1.7.6"
 
 #: tfrmmain.caption
 msgid "Free Manga Downloader - Updater"
@@ -119,3 +119,4 @@ msgstr "Membuka berkas [%s]..."
 #: umain.rs_waitmainapp
 msgid "Waiting main app to close..."
 msgstr "Menunggu aplikasi utama untuk berhenti..."
+
