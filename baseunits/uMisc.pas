@@ -49,6 +49,9 @@ procedure WriteOtherLog(msg: String);
 function FindStrLinear(aList: TStrings; aValue: String): Boolean;
 function FindStrLinearPos(aList: TStrings; aValue: String): Integer;
 
+//formatting
+function FormatByteSize(const bytes :longint; persecond: boolean = False) :string;
+
 //misc
 
 var
@@ -249,6 +252,14 @@ var
   vol: Boolean = False;
   cha: Boolean = False;
 begin
+  cstart := 0;
+  vstart := 0;
+  clength := 0;
+  vlength := 0;
+  vp := 0;
+  c := '';
+  v := '';
+
   t := S;
   i := 1;
 
@@ -652,6 +663,40 @@ begin
     Result := True
   else
     Result := False;
+end;
+
+function FormatByteSize(const bytes :longint; persecond: boolean = False) :string;
+const
+  B  = 1;
+  KB = 1024 * B;
+  MB = 1024 * KB;
+  GB = 1024 * MB;
+begin
+  if bytes > GB then
+    Result := FormatFloat('#.## GB', bytes / GB)
+  else
+  if bytes > MB then
+    Result := FormatFloat('#.## MB', bytes / MB)
+  else
+  if bytes > KB then
+    Result := FormatFloat('#.## KB', bytes / KB)
+  else
+  if bytes = 0 then
+  begin
+    if persecond then
+      Result := '0 B'
+    else
+      Result := '0 bytes';
+  end
+  else
+  begin
+    if persecond then
+      Result := FormatFloat('#.## B', bytes)
+    else
+      Result := FormatFloat('#.## bytes', bytes);
+  end;
+  if persecond then
+    Result := Result + 'ps';
 end;
 
 initialization
