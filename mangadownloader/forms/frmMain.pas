@@ -2716,6 +2716,8 @@ procedure TMainForm.pcMainChange(Sender: TObject);
     cbOptionAutoCheckFavStartup.Checked :=
       options.ReadBool('update', 'AutoCheckFavStartup', False);
     seOptionCheckMinutes.Value := options.ReadInteger('update', 'AutoCheckMinutes', 0);
+    lbOptionAutoCheckMinutes.Caption := Format(RS_LblAutoCheckNewChapterMinute,
+      [seOptionCheckMinutes.Value]);
 
     cbOptionShowBatotoSG.Checked := OptionShowBatotoSG;
     cbOptionShowAllLang.Checked := OptionShowAllLang;
@@ -3735,6 +3737,8 @@ begin
     OptionAutoCheckFavStartup := cbOptionAutoCheckFavStartup.Checked;
     options.WriteInteger('update', 'AutoCheckMinutes', seOptionCheckMinutes.Value);
     OptionCheckMinutes := seOptionCheckMinutes.Value;
+    lbOptionAutoCheckMinutes.Caption := Format(RS_LblAutoCheckNewChapterMinute,
+      [seOptionCheckMinutes.Value]);
     options.WriteBool('update', 'UpdateListNoMangaInfo',
       cbOptionUpdateListNoMangaInfo.Checked);
     OptionUpdateListNoMangaInfo := cbOptionUpdateListNoMangaInfo.Checked;
