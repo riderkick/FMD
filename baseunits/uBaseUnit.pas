@@ -720,6 +720,7 @@ type
     numbering,
     downloadedChapterList,
     currentChapter: String;
+    Checking: Boolean;
   end;
 
   TCardinalList = TFPGList<Cardinal>;

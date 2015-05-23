@@ -24,6 +24,7 @@ type
   TFavoriteThread = class(TFMDThread)
   protected
     procedure SockOnHeartBeat(Sender: TObject);
+    procedure SyncStatus;
     procedure Execute; override;
   public
     workCounter: Cardinal;
@@ -182,10 +183,17 @@ begin
   end;
 end;
 
+procedure TFavoriteThread.SyncStatus;
+begin
+  MainForm.vtFavorites.Repaint;
+end;
+
 procedure TFavoriteThread.Execute;
 begin
   if (container.FavoriteInfo.Link) = '' then Exit;
   try
+    container.FavoriteInfo.Checking := True;
+    Synchronize(SyncStatus);
     getInfo.mangaInfo.title := container.FavoriteInfo.Title;
     getInfo.GetInfoFromURL(container.FavoriteInfo.Website,
       container.FavoriteInfo.Link, container.Manager.DLManager.retryConnect);
@@ -213,6 +221,11 @@ begin
   try
     container.Thread := nil;
     task.threads.Remove(Self);
+    if container.FavoriteInfo.Checking then
+    begin
+      container.FavoriteInfo.Checking := False;
+      Synchronize(SyncStatus);
+    end;
   finally
     task.CS_Threads.Release;
   end;
@@ -238,6 +251,7 @@ begin
     btCancelFavoritesCheck.Visible := True;
     btFavoritesCheckNewChapter.Width :=
       btFavoritesCheckNewChapter.Width - btCancelFavoritesCheck.Width - 6;
+    btFavoritesCheckNewChapter.Caption := RS_Checking;
   end;
 end;
 
@@ -247,6 +261,7 @@ begin
     btCancelFavoritesCheck.Visible := False;
     btFavoritesCheckNewChapter.Width :=
       btFavoritesCheckNewChapter.Width + btCancelFavoritesCheck.Width + 6;
+    btFavoritesCheckNewChapter.Caption := RS_BtnCheckFavorites;
   end;
 end;
 
@@ -288,8 +303,6 @@ begin
                 Thread.Start;
               end;
             end;
-            UpdateBtnCaption(Format('%s <%s>',
-              [RS_Checking, manager.FavoriteItem(workCounter).FavoriteInfo.Title]));
           finally
             CS_Threads.Release;
           end;
@@ -301,7 +314,6 @@ begin
         TFavoriteThread(threads[i]).Terminate;
     while threads.Count > 0 do
       Sleep(100);
-    UpdateBtnCaption(RS_BtnCheckFavorites);
     if not Terminated then
       Synchronize(SyncShowResult);
   except

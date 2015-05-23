@@ -64,8 +64,6 @@ type
     edURL: TEdit;
     gbOptionExternal: TGroupBox;
     IconDL: TImageList;
-    IconDL2: TImageList;
-    IconList2: TImageList;
     IconMed: TImageList;
     IconSmall: TImageList;
     itMonitor: TTimer;
@@ -3517,10 +3515,16 @@ begin
   begin
     Data := Sender.GetNodeData(Node);
     if Assigned(Data) then
-      if Trim(Data^.Link) = '' then
-        ImageIndex := 7
-      else
-        ImageIndex := -1;
+      with FavoriteManager.FavoriteItem(Node^.Index).FavoriteInfo do
+      begin
+        if Trim(Link) = '' then
+          ImageIndex := 16
+        else
+        if Checking then
+          ImageIndex := 12
+        else
+          ImageIndex := -1;
+      end;
   end;
 end;
 
