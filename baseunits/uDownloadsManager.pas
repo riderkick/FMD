@@ -83,29 +83,11 @@ type
     property GetworkCounter: Cardinal read workCounter;
   end;
 
-  { TReadCountThread }
-
-  TReadCountThread = class(TThread)
-  private
-    CS_ReadCount: TCriticalSection;
-    FReadCount: Integer;
-  protected
-    procedure Execute; override;
-  public
-    OutCount: ^String;
-    procedure IncReadCount(const ACount: Integer);
-    constructor Create;
-    destructor Destroy; override;
-  end;
-
   { TTaskThread }
 
   TTaskThread = class(TFMDThread)
-  private
-    FReadCountThread: TReadCountThread;
   protected
     FMessage, FAnotherURL: String;
-
     procedure CheckOut;
     procedure MainThreadCompressRepaint;
     procedure MainThreadMessageDialog;
@@ -124,18 +106,16 @@ type
     // download threads
     threads: TFPList;
     CS_threads: TCriticalSection;
-
-    procedure IncReadCount(const ACount: Integer);
-
     constructor Create;
     destructor Destroy; override;
-
     property AnotherURL: String read FAnotherURL write FAnotherURL;
   end;
 
   { TTaskContainer }
 
   TTaskContainer = class
+  private
+    FReadCount: Integer;
   public
     // task thread of this container
     Thread: TTaskThread;
@@ -158,6 +138,7 @@ type
     FailedChapterLinks,
     PageContainerLinks,
     PageLinks: TStringList;
+    procedure IncReadCount(const ACount: Integer);
     constructor Create;
     destructor Destroy; override;
   end;
@@ -167,12 +148,13 @@ type
   TDownloadManager = class
   private
     CS_ReadCount: TCriticalSection;
-    FReadCount: Integer;
+    FTotalReadCount: Integer;
     FSortDirection: Boolean;
     FSortColumn: Cardinal;
     DownloadManagerFile: TIniFile;
   protected
     function GetTaskCount: Integer;
+    function GetTransferRate: String;
   public
     CS_DownloadManager_Task: TCriticalSection;
     CS_DownloadedChapterList: TCriticalSection;
@@ -205,8 +187,7 @@ type
     procedure Backup;
 
     // TransferRate
-    procedure IncReadCount(const ACount: Integer);
-    procedure ClearReadCount;
+    procedure ClearTransferRate;
 
     // These methods relate to highlight downloaded chapters.
     procedure AddToDownloadedChaptersList(const ALink, AValue: String); overload;
@@ -249,7 +230,7 @@ type
 
     property SortDirection: Boolean read FSortDirection write FSortDirection;
     property SortColumn: Cardinal read FSortColumn write FSortColumn;
-    property ReadCount: Integer read FReadCount;
+    property TransferRate: String read GetTransferRate;
   end;
 
 resourcestring
@@ -268,49 +249,7 @@ implementation
 uses
   frmMain;
 
-{ TReadCountThread }
-
-procedure TReadCountThread.Execute;
-begin
-  while not Terminated do
-  begin
-    CS_ReadCount.Acquire;
-    try
-      if Assigned(OutCount) then
-        OutCount^ := FormatByteSize(FReadCount, True);
-      FReadCount := 0;
-    finally
-      CS_ReadCount.Release;
-    end;
-    Sleep(1000);
-  end;
-end;
-
-procedure TReadCountThread.IncReadCount(const ACount: Integer);
-begin
-  CS_ReadCount.Acquire;
-  try
-    Inc(FReadCount, ACount);
-  finally
-    CS_ReadCount.Release;
-  end;
-end;
-
-constructor TReadCountThread.Create;
-begin
-  inherited Create(True);
-  FreeOnTerminate := True;
-  CS_ReadCount := TCriticalSection.Create;
-  FReadCount := 0;
-end;
-
-destructor TReadCountThread.Destroy;
-begin
-  CS_ReadCount.Free;
-  inherited Destroy;
-end;
-
-// ----- TDownloadThread -----
+{ TDownloadThread }
 
 procedure TDownloadThread.OnTag(NoCaseTag, ActualTag : string);
 begin
@@ -326,10 +265,7 @@ procedure TDownloadThread.SockOnStatus(Sender: TObject;
   Reason: THookSocketReason; const Value: String);
 begin
   if Reason = HR_ReadCount then
-  begin
-    manager.IncReadCount(StrToIntDef(Value, 0));
-    manager.container.Manager.IncReadCount(StrToIntDef(Value, 0));
-  end;
+    manager.container.IncReadCount(StrToIntDef(Value, 0));
 end;
 
 constructor TDownloadThread.Create;
@@ -1251,7 +1187,6 @@ destructor TTaskThread.Destroy;
 begin
   threads.Free;
   CS_threads.Free;
-  container.ThreadState := False;
   inherited Destroy;
 end;
 
@@ -1497,9 +1432,6 @@ begin
   INIAdvanced.Reload;
   container.ThreadState := True;
   container.DownloadInfo.TransferRate := '';
-  FReadCountThread := TReadCountThread.Create;
-  FReadCountThread.OutCount := @container.DownloadInfo.TransferRate;
-  FReadCountThread.Start;
   try
     while container.CurrentDownloadChapterPtr < container.ChapterLinks.Count do
     begin
@@ -1707,11 +1639,7 @@ begin
   end;
   Stop;
   container.DownloadInfo.TransferRate := '';
-  if Assigned(FReadCountThread) then
-  begin
-    FReadCountThread.Terminate;
-    FReadCountThread.WaitFor;
-  end;
+  container.ThreadState := False;
   inherited DoTerminate;
 end;
 
@@ -1744,13 +1672,17 @@ begin
   end;
 end;
 
-procedure TTaskThread.IncReadCount(const ACount: Integer);
-begin
-  if Assigned(FReadCountThread) then
-    FReadCountThread.IncReadCount(ACount);
-end;
+{ TTaskContainer }
 
-// ----- TTaskContainer -----
+procedure TTaskContainer.IncReadCount(const ACount: Integer);
+begin
+  Manager.CS_ReadCount.Acquire;
+  try
+    Inc(FReadCount, ACount);
+  finally
+    Manager.CS_ReadCount.Release;
+  end;
+end;
 
 constructor TTaskContainer.Create;
 begin
@@ -1762,6 +1694,7 @@ begin
   FailedChapterLinks := TStringList.Create;
   PageLinks := TStringList.Create;
   PageContainerLinks := TStringList.Create;
+  FReadCount := 0;
   WorkCounter := 0;
   CurrentPageNumber := 0;
   CurrentDownloadChapterPtr := 0;
@@ -1783,6 +1716,38 @@ end;
 function TDownloadManager.GetTaskCount: Integer;
 begin
   Result := Containers.Count;
+end;
+
+function TDownloadManager.GetTransferRate: String;
+var
+  i: Integer;
+begin
+  Result := '';
+  CS_ReadCount.Acquire;
+  try
+    if Containers.Count > 0 then
+    begin
+      CS_DownloadManager_Task.Acquire;
+      try
+        FTotalReadCount := 0;
+        for i := 0 to Containers.Count - 1 do
+        begin
+          with TTaskContainer(Containers[i]) do
+            if ThreadState then
+            begin
+              DownloadInfo.TransferRate := FormatByteSize(FReadCount, True);
+              Inc(FTotalReadCount, FReadCount);
+              FReadCount := 0;
+            end;
+        end;
+        Result := FormatByteSize(FTotalReadCount, True);
+      finally
+        CS_DownloadManager_Task.Release;
+      end;
+    end;
+  finally
+    CS_ReadCount.Release;
+  end;
 end;
 
 constructor TDownloadManager.Create;
@@ -1985,21 +1950,29 @@ begin
   end;
 end;
 
-procedure TDownloadManager.IncReadCount(const ACount: Integer);
+procedure TDownloadManager.ClearTransferRate;
+var
+  i: Integer;
 begin
   CS_ReadCount.Acquire;
   try
-    Inc(FReadCount, ACount);
-  finally
-    CS_ReadCount.Release;
-  end;
-end;
-
-procedure TDownloadManager.ClearReadCount;
-begin
-  CS_ReadCount.Acquire;
-  try
-    FReadCount := 0;
+    if Containers.Count > 0 then
+    begin
+      CS_DownloadManager_Task.Acquire;
+      try
+        FTotalReadCount := 0;
+        for i := 0 to Containers.Count - 1 do
+        begin
+          with TTaskContainer(Containers[i]) do
+          begin
+            FReadCount := 0;
+            DownloadInfo.TransferRate := '';
+          end;
+        end;
+      finally
+        CS_DownloadManager_Task.Release;
+      end;
+    end;
   finally
     CS_ReadCount.Release;
   end;
@@ -2207,13 +2180,13 @@ begin
 
       if Count > 0 then
       begin
-        MainForm.vtDownload.Repaint;
+        //MainForm.vtDownload.Repaint;
         if not MainForm.itRefreshDLInfo.Enabled then
           MainForm.itRefreshDLInfo.Enabled := True;
       end
       else
       begin
-        MainForm.vtDownload.Repaint;
+        //MainForm.vtDownload.Repaint;
         MainForm.itRefreshDLInfo.Enabled := False;
       end;
 
@@ -2333,6 +2306,8 @@ begin
         MainForm.vtDownloadFilters;
       end;
     end;
+    if not MainForm.itRefreshDLInfo.Enabled then
+      MainForm.itRefreshDLInfo.Enabled := True;
   end;
 end;
 

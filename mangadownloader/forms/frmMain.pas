@@ -704,6 +704,7 @@ begin
   end;
 
   dataProcess := TDataProcess.Create;
+  lbTransferRateValue.Caption := FormatByteSize(0, True);
   DLManager := TDownloadManager.Create;
   DLManager.Restore;
 
@@ -977,19 +978,17 @@ procedure TMainForm.itRefreshDLInfoStopTimer(Sender: TObject);
 begin
   if Assigned(DLManager) then
   begin
-    DLManager.ClearReadCount;
-    lbTransferRateValue.Caption := FormatByteSize(DLManager.ReadCount, True);
+    DLManager.ClearTransferRate;
+    lbTransferRateValue.Caption := FormatByteSize(0, true);
   end;
+  vtDownload.Repaint;
 end;
 
 procedure TMainForm.itRefreshDLInfoTimer(Sender: TObject);
 begin
-  vtDownload.Repaint;
   if Assigned(DLManager) then
-  begin
-    lbTransferRateValue.Caption := FormatByteSize(DLManager.ReadCount, True);
-    DLManager.ClearReadCount;
-  end;
+    lbTransferRateValue.Caption := DLManager.TransferRate;
+  vtDownload.Repaint;
 end;
 
 procedure TMainForm.itSaveDownloadedListTimer(Sender: TObject);

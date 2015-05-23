@@ -3900,7 +3900,7 @@ object MainForm: TMainForm
   object itRefreshDLInfo: TIdleTimer
     Enabled = False
     OnTimer = itRefreshDLInfoTimer
-    OnStartTimer = itRefreshDLInfoStopTimer
+    OnStartTimer = itRefreshDLInfoTimer
     OnStopTimer = itRefreshDLInfoStopTimer
     left = 696
     top = 168
