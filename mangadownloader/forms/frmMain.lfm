@@ -1760,11 +1760,11 @@ object MainForm: TMainForm
     end
     object tsOption: TTabSheet
       Caption = 'Options'
-      ClientHeight = 478
+      ClientHeight = 480
       ClientWidth = 606
       object pnOptions: TPageControl
         Left = 9
-        Height = 401
+        Height = 403
         Top = 8
         Width = 587
         ActivePage = tsGeneral
@@ -1773,7 +1773,7 @@ object MainForm: TMainForm
         TabOrder = 0
         object tsGeneral: TTabSheet
           Caption = 'General'
-          ClientHeight = 373
+          ClientHeight = 375
           ClientWidth = 579
           object cbLanguages: TComboBox
             Left = 20
@@ -1913,18 +1913,18 @@ object MainForm: TMainForm
         end
         object tsConnections: TTabSheet
           Caption = 'Connections'
-          ClientHeight = 373
+          ClientHeight = 375
           ClientWidth = 579
           object sbDownloadConnections: TScrollBox
             Left = 0
-            Height = 373
+            Height = 375
             Top = 0
             Width = 579
             HorzScrollBar.Page = 455
             VertScrollBar.Page = 147
             Align = alClient
             BorderStyle = bsNone
-            ClientHeight = 373
+            ClientHeight = 375
             ClientWidth = 579
             TabOrder = 0
             object cbOptionUseProxy: TCheckBox
@@ -2624,7 +2624,7 @@ object MainForm: TMainForm
       object btOptionApply: TBitBtn
         Left = 8
         Height = 41
-        Top = 423
+        Top = 425
         Width = 128
         Anchors = [akLeft, akBottom]
         Caption = 'Apply'

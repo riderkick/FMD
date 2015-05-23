@@ -2678,7 +2678,6 @@ procedure TMainForm.pcMainChange(Sender: TObject);
     cbOptionLetFMDDo.ItemIndex := options.ReadInteger('general', 'LetFMDDo', 0);
     cbOptionEnableLoadCover.Checked :=
       options.ReadBool('general', 'LoadMangaCover', True);
-    // cbOptionLetFMDDoItemIndex:= cbOptionLetFMDDo.ItemIndex;
     cbOptionLetFMDDoItemIndex := cbOptionLetFMDDo.ItemIndex;
     cbOptionBatotoUseIE.Checked := options.ReadBool('general', 'BatotoUseIE', True);
     edOptionExternal.Text := options.ReadString('general', 'ExternalProgram', '');
@@ -4294,10 +4293,12 @@ begin
 
   cbAddAsStopped.Checked := options.ReadBool('general', 'AddAsStopped', False);
 
-  DLManager.maxDLTasks := options.ReadInteger('connections', 'NumberOfTasks', 1);
-  DLManager.maxDLThreadsPerTask :=
-    options.ReadInteger('connections', 'NumberOfThreadsPerTask', 1);
-  DLManager.retryConnect := options.ReadInteger('connections', 'Retry', 0);
+  seOptionMaxParallel.Value := options.ReadInteger('connections', 'NumberOfTasks', 1);
+  seOptionMaxThread.Value := options.ReadInteger('connections', 'NumberOfThreadsPerTask', 1);
+  seOptionMaxRetry.Value := options.ReadInteger('connections', 'Retry', 3);;
+  DLManager.maxDLTasks := seOptionMaxParallel.Value;
+  DLManager.maxDLThreadsPerTask := seOptionMaxThread.Value;
+  DLManager.retryConnect := seOptionMaxRetry.Value;
 
   DLManager.compress := options.ReadInteger('saveto', 'Compress', 0);
 
