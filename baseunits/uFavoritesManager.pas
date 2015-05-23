@@ -308,11 +308,23 @@ begin
         Inc(workCounter);
       end;
     end;
+
+    while (not Terminated) and (threads.Count > 0) do
+      Sleep(500);
+
     if Terminated and (ThreadCount > 0) then
-      for i := 0 to ThreadCount - 1 do
-        TFavoriteThread(threads[i]).Terminate;
-    while threads.Count > 0 do
-      Sleep(100);
+    begin
+      CS_Threads.Acquire;
+      try
+        for i := 0 to ThreadCount - 1 do
+          TFavoriteThread(threads[i]).Terminate;
+      finally
+        CS_Threads.Release;
+      end;
+      while threads.Count > 0 do
+         Sleep(100);
+    end;
+
     if not Terminated then
       Synchronize(SyncShowResult);
   except
