@@ -147,7 +147,6 @@ type
     cbOptionGenerateChapterName: TCheckBox;
     cbOptionGenerateMangaFolderName: TCheckBox;
     cbOptionMinimizeToTray: TCheckBox;
-    cbOptionShowFavoriteDialog: TCheckBox;
     cbOptionAutoNumberChapter: TCheckBox;
     cbOptionAutoCheckFavStartup: TCheckBox;
     cbSearchFromAllSites: TCheckBox;
@@ -765,8 +764,6 @@ begin
   cbOptionShowQuitDialog.Checked := options.ReadBool('dialogs', 'ShowQuitDialog', True);
   cbOptionShowDeleteTaskDialog.Checked :=
     options.ReadBool('dialogs', 'ShowDeleteDldTaskDialog', True);
-  cbOptionShowFavoriteDialog.Checked :=
-    options.ReadBool('dialogs', 'ShowFavoritesDialog', True);
   currentJDN := GetCurrentJDN;
 
   // read online
@@ -936,7 +933,6 @@ end;
 procedure TMainForm.itCheckForChaptersTimer(Sender: TObject);
 begin
   FavoriteManager.isAuto := True;
-  FavoriteManager.isShowDialog := cbOptionShowFavoriteDialog.Checked;
   FavoriteManager.Run;
 end;
 
@@ -1515,7 +1511,6 @@ end;
 procedure TMainForm.btFavoritesCheckNewChapterClick(Sender: TObject);
 begin
   FavoriteManager.isAuto := False;
-  FavoriteManager.isShowDialog := cbOptionShowFavoriteDialog.Checked;
   FavoriteManager.Run;
 end;
 
@@ -2706,8 +2701,6 @@ procedure TMainForm.pcMainChange(Sender: TObject);
       options.ReadBool('dialogs', 'ShowQuitDialog', True);
     cbOptionShowDeleteTaskDialog.Checked :=
       options.ReadBool('dialogs', 'ShowDeleteDldTaskDialog', True);
-    cbOptionShowFavoriteDialog.Checked :=
-      options.ReadBool('dialogs', 'ShowFavoritesDialog', True);
 
     cbOptionPathConvert.Checked := options.ReadBool('saveto', 'PathConv', False);
     cbOptionGenerateChapterName.Checked :=
@@ -3771,8 +3764,6 @@ begin
     options.WriteBool('dialogs', 'ShowQuitDialog', cbOptionShowQuitDialog.Checked);
     options.WriteBool('dialogs', 'ShowDeleteDldTaskDialog',
       cbOptionShowDeleteTaskDialog.Checked);
-    options.WriteBool('dialogs', 'ShowFavoritesDialog',
-      cbOptionShowFavoriteDialog.Checked);
 
     options.WriteBool('misc', 'ShowBatotoSG', cbOptionShowBatotoSG.Checked);
     options.WriteBool('misc', 'ShowAllLang', cbOptionShowAllLang.Checked);

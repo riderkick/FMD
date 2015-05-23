@@ -76,9 +76,9 @@ type
   TFavoriteManager = class
   private
     CS_Favorites : TCriticalSection;
-    FSortDirection: Boolean;
     FSortColumn: Cardinal;
-    FIsAuto, FIsShowDialog,
+    FSortDirection,
+    FIsAuto,
     FIsRunning: Boolean;
     FFavorites: TFPList;
   protected
@@ -130,7 +130,6 @@ type
     property SortDirection: Boolean read FSortDirection write FSortDirection;
     property SortColumn: Cardinal read FSortColumn write FSortColumn;
     property isAuto: Boolean read FIsAuto write FIsAuto;
-    property isShowDialog: Boolean read FIsShowDialog write FIsShowDialog;
     property isRunning: Boolean read FIsRunning write FIsRunning;
   end;
 
@@ -488,7 +487,7 @@ begin
       if numOfNewChapters = 0 then
       begin
         // If there's no new chapter, but there're completed mangas, show dialog
-        if (numOfCompleted > 0) and (isShowDialog) then
+        if numOfCompleted > 0 then
         begin
           with TNewChapter.Create(MainForm) do try
             Caption := Format(RS_DlgCompletedMangaCaption, [numOfCompleted]);
@@ -541,7 +540,6 @@ begin
             LNCResult := ncrDownload;
         end
         else
-        if isShowDialog then
         begin
           with TNewChapter.Create(MainForm) do try
             Caption := Format(RS_DlgNewChapterCaption, [numOfNewChapters]);

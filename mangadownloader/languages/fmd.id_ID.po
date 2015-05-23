@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: id_ID\n"
-"X-Generator: Poedit 1.7.6\n"
+"X-Generator: Poedit 1.7.6"
 
 #: frmimportfavorites.rs_importcompleted
 msgid "Import completed."
@@ -402,10 +402,6 @@ msgstr "[Batoto] Tampilkan nama grup scan"
 #: tmainform.cboptionshowdeletetaskdialog.caption
 msgid "Delete task/favorite"
 msgstr "Hapus unduhan/kesukaan"
-
-#: tmainform.cboptionshowfavoritedialog.caption
-msgid "Favorite: After checking complete"
-msgstr "Kesukaan: Setelah pemeriksaan selesai"
 
 #: tmainform.cboptionshowquitdialog.caption
 msgid "Exit FMD"
@@ -1543,3 +1539,4 @@ msgstr "Sinkronisasi data"
 #: uupdatethread.rs_updatinglist
 msgid "Updating list"
 msgstr "Memperbarui daftar"
+

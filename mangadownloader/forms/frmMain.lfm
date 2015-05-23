@@ -2475,15 +2475,15 @@ object MainForm: TMainForm
         end
         object tsDialogs: TTabSheet
           Caption = 'Dialogs'
-          ClientHeight = 373
+          ClientHeight = 375
           ClientWidth = 579
           object gbDialogs: TGroupBox
             Left = 10
-            Height = 344
+            Height = 346
             Top = 14
             Width = 556
             Anchors = [akTop, akLeft, akRight, akBottom]
-            ClientHeight = 324
+            ClientHeight = 326
             ClientWidth = 552
             TabOrder = 0
             object cbOptionShowQuitDialog: TCheckBox
@@ -2494,15 +2494,6 @@ object MainForm: TMainForm
               Caption = 'Exit FMD'
               ParentFont = False
               TabOrder = 0
-            end
-            object cbOptionShowFavoriteDialog: TCheckBox
-              Left = 24
-              Height = 19
-              Top = 80
-              Width = 198
-              Caption = 'Favorite: After checking complete'
-              ParentFont = False
-              TabOrder = 1
             end
             object lbOptionDialogs: TLabel
               Left = 16
@@ -2519,7 +2510,7 @@ object MainForm: TMainForm
               Width = 122
               Caption = 'Delete task/favorite'
               ParentFont = False
-              TabOrder = 2
+              TabOrder = 1
             end
           end
         end
@@ -2559,15 +2550,15 @@ object MainForm: TMainForm
         end
         object tsMisc: TTabSheet
           Caption = 'Misc'
-          ClientHeight = 373
+          ClientHeight = 375
           ClientWidth = 579
           object gbMisc: TGroupBox
             Left = 12
-            Height = 347
+            Height = 349
             Top = 12
             Width = 556
             Anchors = [akTop, akLeft, akRight, akBottom]
-            ClientHeight = 327
+            ClientHeight = 329
             ClientWidth = 552
             TabOrder = 0
             object cbOptionShowAllLang: TCheckBox

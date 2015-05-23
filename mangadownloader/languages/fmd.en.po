@@ -410,10 +410,6 @@ msgstr "[Batoto] Show scan group name"
 msgid "Delete task/favorite"
 msgstr "Delete task/favorite"
 
-#: tmainform.cboptionshowfavoritedialog.caption
-msgid "Favorite: After checking complete"
-msgstr "Favorite: After checking complete"
-
 #: tmainform.cboptionshowquitdialog.caption
 msgid "Exit FMD"
 msgstr "Exit FMD"

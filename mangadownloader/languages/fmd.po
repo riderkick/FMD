@@ -382,10 +382,6 @@ msgstr ""
 msgid "Delete task/favorite"
 msgstr ""
 
-#: tmainform.cboptionshowfavoritedialog.caption
-msgid "Favorite: After checking complete"
-msgstr ""
-
 #: tmainform.cboptionshowquitdialog.caption
 msgid "Exit FMD"
 msgstr ""
