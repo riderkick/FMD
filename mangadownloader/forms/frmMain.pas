@@ -611,6 +611,11 @@ var
   DoAfterFMD: TDoFMDType;
   FUpdateURL: String;
 
+const
+  CL_HLBlueMarks = $FDC594;
+  CL_HLGreenMarks = $B8FFB8;
+  CL_HLRedMarks = $008080FF;
+
 resourcestring
   RS_FilterStatusItems = 'Completed'#13#10'Ongoing'#13#10'<none>';
   RS_OptionFMDDoItems = 'Do nothing'#13#10'Exit FMD'#13#10'Shutdown'#13#10'Hibernate';
@@ -1809,7 +1814,7 @@ begin
   if Assigned(Data) then
     if Data^.Downloaded then
     begin
-      TargetCanvas.Brush.Color := $B8FFB8;
+      TargetCanvas.Brush.Color := CL_HLGreenMarks;
       TargetCanvas.FillRect(CellRect);
     end;
 end;
@@ -3456,10 +3461,19 @@ begin
   Data := Sender.GetNodeData(Node);
   if Assigned(Data) then
   begin
-    if Trim(Data^.Link) = '' then
+    with FavoriteManager.FavoriteItem(Node^.Index).FavoriteInfo do
     begin
-      TargetCanvas.Brush.Color := $008080FF;
-      TargetCanvas.FillRect(CellRect);
+      if Trim(Link) = '' then
+      begin
+        TargetCanvas.Brush.Color := CL_HLRedMarks;
+        TargetCanvas.FillRect(CellRect);
+      end
+      else
+      if Checking then
+      begin
+        TargetCanvas.Brush.Color := CL_HLGreenMarks;
+        TargetCanvas.FillRect(CellRect);
+      end;
     end;
   end;
 end;
@@ -3839,7 +3853,7 @@ begin
       if currentJDN - cardinal(dataProcess.JDN.Items[dataProcess.GetPos(Node^.Index)]) <
         seOptionNewMangaTime.Value then
       begin
-        TargetCanvas.Brush.Color := $FDC594;
+        TargetCanvas.Brush.Color := CL_HLBlueMarks;
         TargetCanvas.FillRect(CellRect);
       end;
     except
