@@ -1286,17 +1286,17 @@ msgstr ""
 
 #: tnewchapter.btcancel.caption
 msgctxt "TNEWCHAPTER.BTCANCEL.CAPTION"
-msgid "Cancel"
+msgid "&Cancel"
 msgstr ""
 
 #: tnewchapter.btdownload.caption
 msgctxt "TNEWCHAPTER.BTDOWNLOAD.CAPTION"
-msgid "&OK"
+msgid "&Download"
 msgstr ""
 
 #: tnewchapter.btqueue.caption
 msgctxt "TNEWCHAPTER.BTQUEUE.CAPTION"
-msgid "Add to queue"
+msgid "&Add to queue"
 msgstr ""
 
 #: tnewchapter.caption
@@ -1373,12 +1373,12 @@ msgstr ""
 
 #: ufavoritesmanager.rs_btnaddtoqueue
 msgctxt "ufavoritesmanager.rs_btnaddtoqueue"
-msgid "Add to queue"
+msgid "&Add to queue"
 msgstr ""
 
 #: ufavoritesmanager.rs_btncancel
 msgctxt "ufavoritesmanager.rs_btncancel"
-msgid "Cancel"
+msgid "&Cancel"
 msgstr ""
 
 #: ufavoritesmanager.rs_btncheckfavorites
@@ -1388,11 +1388,11 @@ msgstr ""
 
 #: ufavoritesmanager.rs_btndownload
 msgctxt "ufavoritesmanager.rs_btndownload"
-msgid "Download"
+msgid "&Download"
 msgstr ""
 
 #: ufavoritesmanager.rs_btnremove
-msgid "Remove"
+msgid "&Remove"
 msgstr ""
 
 #: ufavoritesmanager.rs_dlgcompletedmangacaption

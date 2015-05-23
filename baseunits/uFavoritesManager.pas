@@ -139,12 +139,12 @@ resourcestring
   RS_DlgNewChapterCaption = '%d manga(s) have new chapter(s)';
   RS_LblNewChapterFound = 'Found %d new chapter from %d manga(s):';
   RS_FavoriteHasNewChapter = '%s <%s> has %d new chapter(s).';
-  RS_BtnDownload = 'Download';
-  RS_BtnAddToQueue = 'Add to queue';
-  RS_BtnCancel = 'Cancel';
+  RS_BtnDownload = '&Download';
+  RS_BtnAddToQueue = '&Add to queue';
+  RS_BtnCancel = '&Cancel';
   RS_DlgCompletedMangaCaption = 'Found %d completed manga';
   RS_LblMangaWillBeRemoved = 'Completed manga will be removed:';
-  RS_BtnRemove = 'Remove';
+  RS_BtnRemove = '&Remove';
   RS_BtnCheckFavorites = 'Check for new chapter';
 
 implementation

@@ -1348,19 +1348,22 @@ msgid "Save to"
 msgstr "Save to"
 
 #: tnewchapter.btcancel.caption
+#| msgid "Cancel"
 msgctxt "tnewchapter.btcancel.caption"
-msgid "Cancel"
-msgstr "Cancel"
+msgid "&Cancel"
+msgstr "&Cancel"
 
 #: tnewchapter.btdownload.caption
+#| msgid "&OK"
 msgctxt "tnewchapter.btdownload.caption"
-msgid "&OK"
-msgstr "&OK"
+msgid "&Download"
+msgstr "&Download"
 
 #: tnewchapter.btqueue.caption
+#| msgid "Add to queue"
 msgctxt "tnewchapter.btqueue.caption"
-msgid "Add to queue"
-msgstr "Add to queue"
+msgid "&Add to queue"
+msgstr "&Add to queue"
 
 #: tnewchapter.caption
 msgid "New Chapter Notification"
@@ -1437,14 +1440,16 @@ msgid "Waiting..."
 msgstr "Waiting..."
 
 #: ufavoritesmanager.rs_btnaddtoqueue
+#| msgid "Add to queue"
 msgctxt "ufavoritesmanager.rs_btnaddtoqueue"
-msgid "Add to queue"
-msgstr "Add to queue"
+msgid "&Add to queue"
+msgstr "&Add to queue"
 
 #: ufavoritesmanager.rs_btncancel
+#| msgid "Cancel"
 msgctxt "ufavoritesmanager.rs_btncancel"
-msgid "Cancel"
-msgstr "Cancel"
+msgid "&Cancel"
+msgstr "&Cancel"
 
 #: ufavoritesmanager.rs_btncheckfavorites
 msgctxt "ufavoritesmanager.rs_btncheckfavorites"
@@ -1452,13 +1457,15 @@ msgid "Check for new chapter"
 msgstr "Check for new chapter"
 
 #: ufavoritesmanager.rs_btndownload
+#| msgid "Download"
 msgctxt "ufavoritesmanager.rs_btndownload"
-msgid "Download"
-msgstr "Download"
+msgid "&Download"
+msgstr "&Download"
 
 #: ufavoritesmanager.rs_btnremove
-msgid "Remove"
-msgstr "Remove"
+#| msgid "Remove"
+msgid "&Remove"
+msgstr "&Remove"
 
 #: ufavoritesmanager.rs_dlgcompletedmangacaption
 msgid "Found %d completed manga"
