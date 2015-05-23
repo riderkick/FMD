@@ -220,7 +220,7 @@ msgstr "Batal"
 #: timportfavorites.btimport.caption
 msgctxt "timportfavorites.btimport.caption"
 msgid "&OK"
-msgstr "%OK"
+msgstr "&OK"
 
 #: timportfavorites.caption
 msgid "Import list ..."
@@ -1350,7 +1350,7 @@ msgstr "Pemberitahuan bab baru"
 
 #: tshutdowncounterform.btabort.caption
 msgid "&Abort"
-msgstr "%Batalkan"
+msgstr "&Batalkan"
 
 #: tshutdowncounterform.btnow.caption
 msgid "&Now"
@@ -1426,7 +1426,7 @@ msgstr "&Tambahkan ke antrian"
 #: ufavoritesmanager.rs_btncancel
 msgctxt "ufavoritesmanager.rs_btncancel"
 msgid "&Cancel"
-msgstr "$Batal"
+msgstr "&Batal"
 
 #: ufavoritesmanager.rs_btncheckfavorites
 msgctxt "ufavoritesmanager.rs_btncheckfavorites"
