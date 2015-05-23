@@ -116,6 +116,7 @@ type
   TTaskContainer = class
   private
     FReadCount: Integer;
+    CS_FReadCount: TCriticalSection;
   public
     // task thread of this container
     Thread: TTaskThread;
@@ -147,7 +148,6 @@ type
 
   TDownloadManager = class
   private
-    CS_ReadCount: TCriticalSection;
     FTotalReadCount: Integer;
     FSortDirection: Boolean;
     FSortColumn: Cardinal;
@@ -1676,11 +1676,11 @@ end;
 
 procedure TTaskContainer.IncReadCount(const ACount: Integer);
 begin
-  Manager.CS_ReadCount.Acquire;
+  CS_FReadCount.Acquire;
   try
     Inc(FReadCount, ACount);
   finally
-    Manager.CS_ReadCount.Release;
+    CS_FReadCount.Release;
   end;
 end;
 
@@ -1688,6 +1688,7 @@ constructor TTaskContainer.Create;
 begin
   inherited Create;
   ThreadState := False;
+  CS_FReadCount := TCriticalSection.Create;
   ChapterLinks := TStringList.Create;
   ChapterName := TStringList.Create;
   FailedChapterName := TStringList.Create;
@@ -1708,6 +1709,7 @@ begin
   ChapterLinks.Free;
   FailedChapterName.Free;
   FailedChapterLinks.Free;
+  CS_FReadCount.Free;
   inherited Destroy;
 end;
 
@@ -1722,31 +1724,29 @@ function TDownloadManager.GetTransferRate: String;
 var
   i: Integer;
 begin
-  Result := '';
-  CS_ReadCount.Acquire;
-  try
-    if Containers.Count > 0 then
-    begin
-      CS_DownloadManager_Task.Acquire;
-      try
-        FTotalReadCount := 0;
-        for i := 0 to Containers.Count - 1 do
-        begin
-          with TTaskContainer(Containers[i]) do
-            if ThreadState then
-            begin
+  Result := FormatByteSize(0, True);
+  if Containers.Count > 0 then
+  begin
+    CS_DownloadManager_Task.Acquire;
+    try
+      FTotalReadCount := 0;
+      for i := 0 to Containers.Count - 1 do
+        with TTaskContainer(Containers[i]) do
+          if ThreadState then
+          begin
+            CS_FReadCount.Acquire;
+            try
               DownloadInfo.TransferRate := FormatByteSize(FReadCount, True);
               Inc(FTotalReadCount, FReadCount);
               FReadCount := 0;
+            finally
+              CS_FReadCount.Release;
             end;
-        end;
-        Result := FormatByteSize(FTotalReadCount, True);
-      finally
-        CS_DownloadManager_Task.Release;
-      end;
+          end;
+      Result := FormatByteSize(FTotalReadCount, True);
+    finally
+      CS_DownloadManager_Task.Release;
     end;
-  finally
-    CS_ReadCount.Release;
   end;
 end;
 
@@ -1755,7 +1755,6 @@ begin
   inherited Create;
   CS_DownloadManager_Task := TCriticalSection.Create;
   CS_DownloadedChapterList := TCriticalSection.Create;
-  CS_ReadCount := TCriticalSection.Create;
 
   DownloadManagerFile := TIniFile.Create(WORK_FOLDER + WORK_FILE);
   DownloadManagerFile.CacheUpdates := True;
@@ -1787,7 +1786,6 @@ begin
   FreeAndNil(Containers);
   FreeAndNil(DownloadedChaptersListFile);
   FreeAndNil(DownloadManagerFile);
-  CS_ReadCount.Free;
   CS_DownloadedChapterList.Free;
   CS_DownloadManager_Task.Free;
   inherited Destroy;
@@ -1954,27 +1952,25 @@ procedure TDownloadManager.ClearTransferRate;
 var
   i: Integer;
 begin
-  CS_ReadCount.Acquire;
-  try
-    if Containers.Count > 0 then
-    begin
-      CS_DownloadManager_Task.Acquire;
-      try
-        FTotalReadCount := 0;
-        for i := 0 to Containers.Count - 1 do
+  if Containers.Count > 0 then
+  begin
+    CS_DownloadManager_Task.Acquire;
+    try
+      FTotalReadCount := 0;
+      for i := 0 to Containers.Count - 1 do
+        with TTaskContainer(Containers[i]) do
         begin
-          with TTaskContainer(Containers[i]) do
-          begin
+          CS_FReadCount.Acquire;
+          try
             FReadCount := 0;
             DownloadInfo.TransferRate := '';
+          finally
+            CS_FReadCount.Release;
           end;
         end;
-      finally
-        CS_DownloadManager_Task.Release;
-      end;
+    finally
+      CS_DownloadManager_Task.Release;
     end;
-  finally
-    CS_ReadCount.Release;
   end;
 end;
 
