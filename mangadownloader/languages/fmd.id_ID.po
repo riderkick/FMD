@@ -324,15 +324,15 @@ msgid "Search only new manga"
 msgstr "Cari hanya komik baru"
 
 #: tmainform.cboptionautocheckfavstartup.caption
-msgid "Automatic check for new chapter"
-msgstr "Otomatis periksa bab baru"
+msgid "Automatic check for new chapter at startup"
+msgstr "Otomatis periksa bab baru saat program dimulai"
 
 #: tmainform.cboptionautocheckupdate.caption
 msgid "Check for new version "
 msgstr "Periksa versi baru"
 
 #: tmainform.cboptionautodlfav.caption
-msgid "Automatically download after finish checking"
+msgid "Automatic download after finish checking"
 msgstr "Otomatis mengunduh setelah selesai memeriksa"
 
 #: tmainform.cboptionautonumberchapter.caption

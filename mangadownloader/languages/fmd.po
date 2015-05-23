@@ -303,7 +303,7 @@ msgid "Search only new manga"
 msgstr ""
 
 #: tmainform.cboptionautocheckfavstartup.caption
-msgid "Automatic check for new chapter"
+msgid "Automatic check for new chapter at startup"
 msgstr ""
 
 #: tmainform.cboptionautocheckupdate.caption
@@ -311,7 +311,7 @@ msgid "Check for new version "
 msgstr ""
 
 #: tmainform.cboptionautodlfav.caption
-msgid "Automatically download after finish checking"
+msgid "Automatic download after finish checking"
 msgstr ""
 
 #: tmainform.cboptionautonumberchapter.caption
