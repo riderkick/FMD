@@ -32,14 +32,14 @@ object MainForm: TMainForm
   end
   object pcMain: TPageControl
     Left = 201
-    Height = 506
-    Top = 12
+    Height = 508
+    Top = 11
     Width = 614
     ActivePage = tsDownload
     Align = alClient
-    BorderSpacing.Top = 4
+    BorderSpacing.Top = 3
     BorderSpacing.Right = 4
-    BorderSpacing.Bottom = 4
+    BorderSpacing.Bottom = 3
     Font.Style = [fsBold]
     ParentFont = False
     TabIndex = 0
@@ -47,11 +47,11 @@ object MainForm: TMainForm
     OnChange = pcMainChange
     object tsDownload: TTabSheet
       Caption = 'Downloads'
-      ClientHeight = 478
+      ClientHeight = 480
       ClientWidth = 606
       object vtDownload: TVirtualStringTree
         Left = 2
-        Height = 445
+        Height = 447
         Top = 30
         Width = 600
         Align = alClient
@@ -79,16 +79,20 @@ object MainForm: TMainForm
           end        
           item
             Position = 3
+            Text = 'Transfer rate'
+          end        
+          item
+            Position = 4
             Text = 'Website'
             Width = 65
           end        
           item
-            Position = 4
+            Position = 5
             Text = 'Save to'
             Width = 150
           end        
           item
-            Position = 5
+            Position = 6
             Text = 'Added'
             Width = 80
           end>
@@ -168,6 +172,31 @@ object MainForm: TMainForm
           Caption = 'Delete all completed tasks'
           ImageIndex = 9
           OnClick = tbDownloadDeleteCompletedClick
+        end
+        object lbTransferRate: TLabel
+          Left = 447
+          Height = 16
+          Top = 3
+          Width = 69
+          Align = alRight
+          BorderSpacing.Top = 3
+          BorderSpacing.Right = 2
+          BorderSpacing.Bottom = 3
+          Caption = 'Transfer rate:'
+          ParentColor = False
+        end
+        object lbTransferRateValue: TLabel
+          Left = 518
+          Height = 16
+          Top = 3
+          Width = 80
+          Align = alRight
+          Alignment = taRightJustify
+          AutoSize = False
+          BorderSpacing.Top = 3
+          BorderSpacing.Right = 2
+          BorderSpacing.Bottom = 3
+          ParentColor = False
         end
       end
     end
@@ -3088,7 +3117,7 @@ object MainForm: TMainForm
         Width = 195
       end    
       item
-        Width = 50
+        Width = 100
       end>
     SimplePanel = False
   end
@@ -3868,9 +3897,11 @@ object MainForm: TMainForm
     left = 752
     top = 168
   end
-  object itRefreshForm: TIdleTimer
-    Interval = 300
-    OnTimer = itRefreshFormTimer
+  object itRefreshDLInfo: TIdleTimer
+    Enabled = False
+    OnTimer = itRefreshDLInfoTimer
+    OnStartTimer = itRefreshDLInfoStopTimer
+    OnStopTimer = itRefreshDLInfoStopTimer
     left = 696
     top = 168
   end
@@ -5558,8 +5589,8 @@ object MainForm: TMainForm
   end
   object pmEditURL: TPopupMenu
     OnPopup = pmEditURLPopup
-    left = 728
-    top = 40
+    left = 592
+    top = 136
     object medURLUndo: TMenuItem
       Caption = 'Undo'
       OnClick = medURLUndoClick

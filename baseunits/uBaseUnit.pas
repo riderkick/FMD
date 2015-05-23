@@ -704,7 +704,8 @@ type
     Title,
     SaveTo,
     Status,
-    Progress: String;
+    Progress,
+    TransferRate: String;
     DateTime: TDateTime;
     iProgress: Integer;
   end;

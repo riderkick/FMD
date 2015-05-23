@@ -50,6 +50,8 @@ type
     procedure OnTag(NoCaseTag, ActualTag: string);
     procedure OnText(Text: String);
 
+    procedure SockOnStatus(Sender: TObject; Reason: THookSocketReason;
+      const Value: String);
     procedure SockOnHeartBeat(Sender: TObject);
     //Need recheck later|wrapper
     function GetPage(const AHTTP: THTTPSend; var output: TObject;
@@ -81,15 +83,31 @@ type
     property GetworkCounter: Cardinal read workCounter;
   end;
 
+  { TReadCountThread }
+
+  TReadCountThread = class(TThread)
+  private
+    CS_ReadCount: TCriticalSection;
+    FReadCount: Integer;
+  protected
+    procedure Execute; override;
+  public
+    OutCount: ^String;
+    procedure IncReadCount(const ACount: Integer);
+    constructor Create;
+    destructor Destroy; override;
+  end;
+
   { TTaskThread }
 
   TTaskThread = class(TFMDThread)
+  private
+    FReadCountThread: TReadCountThread;
   protected
     FMessage, FAnotherURL: String;
 
     procedure CheckOut;
     procedure MainThreadCompressRepaint;
-    procedure MainThreadRepaint;
     procedure MainThreadMessageDialog;
     procedure Execute; override;
     procedure DoTerminate; override;
@@ -107,20 +125,23 @@ type
     threads: TFPList;
     CS_threads: TCriticalSection;
 
+    procedure IncReadCount(const ACount: Integer);
+
     constructor Create;
     destructor Destroy; override;
 
     property AnotherURL: String read FAnotherURL write FAnotherURL;
   end;
 
+  { TTaskContainer }
+
   TTaskContainer = class
+  public
     // task thread of this container
     Thread: TTaskThread;
     // download manager
     Manager: TDownloadManager;
-
     DownloadInfo: TDownloadInfo;
-
     // current link index
     CurrentPageNumber,
     // current chapter index
@@ -131,14 +152,12 @@ type
     MangaSiteID: Cardinal;
     Status: TStatusType;
     ThreadState: Boolean;
-
     ChapterName,
     ChapterLinks,
     FailedChapterName,
     FailedChapterLinks,
     PageContainerLinks,
     PageLinks: TStringList;
-
     constructor Create;
     destructor Destroy; override;
   end;
@@ -147,6 +166,8 @@ type
 
   TDownloadManager = class
   private
+    CS_ReadCount: TCriticalSection;
+    FReadCount: Integer;
     FSortDirection: Boolean;
     FSortColumn: Cardinal;
     DownloadManagerFile: TIniFile;
@@ -172,7 +193,6 @@ type
     ExitType: TExitType;
     ExitWaitOK: Boolean;
 
-    // downloadInfo        : array of TDownloadInfo;
     constructor Create;
     destructor Destroy; override;
 
@@ -183,6 +203,10 @@ type
 
     procedure Restore;
     procedure Backup;
+
+    // TransferRate
+    procedure IncReadCount(const ACount: Integer);
+    procedure ClearReadCount;
 
     // These methods relate to highlight downloaded chapters.
     procedure AddToDownloadedChaptersList(const ALink, AValue: String); overload;
@@ -225,6 +249,7 @@ type
 
     property SortDirection: Boolean read FSortDirection write FSortDirection;
     property SortColumn: Cardinal read FSortColumn write FSortColumn;
+    property ReadCount: Integer read FReadCount;
   end;
 
 resourcestring
@@ -243,6 +268,48 @@ implementation
 uses
   frmMain;
 
+{ TReadCountThread }
+
+procedure TReadCountThread.Execute;
+begin
+  while not Terminated do
+  begin
+    CS_ReadCount.Acquire;
+    try
+      if Assigned(OutCount) then
+        OutCount^ := FormatByteSize(FReadCount, True);
+      FReadCount := 0;
+    finally
+      CS_ReadCount.Release;
+    end;
+    Sleep(1000);
+  end;
+end;
+
+procedure TReadCountThread.IncReadCount(const ACount: Integer);
+begin
+  CS_ReadCount.Acquire;
+  try
+    Inc(FReadCount, ACount);
+  finally
+    CS_ReadCount.Release;
+  end;
+end;
+
+constructor TReadCountThread.Create;
+begin
+  inherited Create(True);
+  FreeOnTerminate := True;
+  CS_ReadCount := TCriticalSection.Create;
+  FReadCount := 0;
+end;
+
+destructor TReadCountThread.Destroy;
+begin
+  CS_ReadCount.Free;
+  inherited Destroy;
+end;
+
 // ----- TDownloadThread -----
 
 procedure TDownloadThread.OnTag(NoCaseTag, ActualTag : string);
@@ -255,11 +322,22 @@ begin
   parse.Add(Text);
 end;
 
+procedure TDownloadThread.SockOnStatus(Sender: TObject;
+  Reason: THookSocketReason; const Value: String);
+begin
+  if Reason = HR_ReadCount then
+  begin
+    manager.IncReadCount(StrToIntDef(Value, 0));
+    manager.container.Manager.IncReadCount(StrToIntDef(Value, 0));
+  end;
+end;
+
 constructor TDownloadThread.Create;
 begin
   inherited Create(True);
   FHTTP := THTTPSend.Create;
   FHTTP.Headers.NameValueSeparator := ':';
+  FHTTP.Sock.OnStatus := SockOnStatus;
   FHTTP.Sock.OnHeartbeat := SockOnHeartBeat;
   FHTTP.Sock.HeartbeatRate := SOCKHEARTBEATRATE;
 end;
@@ -361,7 +439,6 @@ begin
       manager.container.DownCounter := InterLockedIncrement(manager.container.DownCounter);
       manager.container.DownloadInfo.Progress :=
         Format('%d/%d', [manager.container.DownCounter, manager.container.PageNumber]);
-      Synchronize(manager.container.Thread.MainThreadRepaint);
     end;
   except
     on E: Exception do
@@ -1178,11 +1255,6 @@ begin
   inherited Destroy;
 end;
 
-procedure TTaskThread.MainThreadRepaint;
-begin
-  MainForm.isCanRefreshForm := True;
-end;
-
 procedure TTaskThread.MainThreadCompressRepaint;
 begin
   container.DownloadInfo.Status :=
@@ -1424,6 +1496,10 @@ var
 begin
   INIAdvanced.Reload;
   container.ThreadState := True;
+  container.DownloadInfo.TransferRate := '';
+  FReadCountThread := TReadCountThread.Create;
+  FReadCountThread.OutCount := @container.DownloadInfo.TransferRate;
+  FReadCountThread.Start;
   try
     while container.CurrentDownloadChapterPtr < container.ChapterLinks.Count do
     begin
@@ -1441,7 +1517,6 @@ begin
         begin
           container.Status := STATUS_FAILED;
           container.DownloadInfo.Status := RS_FailedToCreateDirTooLong;
-          Synchronize(MainThreadRepaint);
           Exit;
         end;
       end;
@@ -1466,7 +1541,6 @@ begin
           container.ChapterLinks.Count,
           container.ChapterName.Strings[container.CurrentDownloadChapterPtr]]);
         container.Status := STATUS_PREPARE;
-        Synchronize(MainThreadRepaint);
         CheckOut;
         WaitForThreads;
         if Terminated then Exit;
@@ -1511,7 +1585,6 @@ begin
           container.ChapterLinks.Count,
           container.ChapterName[container.CurrentDownloadChapterPtr]]);
         container.Status := STATUS_PREPARE;
-        Synchronize(MainThreadRepaint);
         while container.WorkCounter < container.PageNumber do
         begin
           if Terminated then Exit;
@@ -1553,7 +1626,6 @@ begin
           container.CurrentDownloadChapterPtr + 1,
           container.ChapterLinks.Count,
           container.ChapterName.Strings[container.CurrentDownloadChapterPtr]]);
-        Synchronize(MainThreadRepaint);
         while container.WorkCounter < container.PageLinks.Count do
         begin
           if Terminated then Exit;
@@ -1610,7 +1682,6 @@ begin
       container.DownloadInfo.Status := RS_Finish;
       container.DownloadInfo.Progress := '';
     end;
-    Synchronize(MainThreadRepaint);
     Synchronize(ShowBaloon);
   except
     on E: Exception do
@@ -1635,6 +1706,12 @@ begin
       Sleep(16);
   end;
   Stop;
+  container.DownloadInfo.TransferRate := '';
+  if Assigned(FReadCountThread) then
+  begin
+    FReadCountThread.Terminate;
+    FReadCountThread.WaitFor;
+  end;
   inherited DoTerminate;
 end;
 
@@ -1664,8 +1741,13 @@ begin
         1, container.ChapterLinks.Count]);
       container.Manager.CheckAndActiveTask(False, Self);
     end;
-    Synchronize(MainThreadRepaint);
   end;
+end;
+
+procedure TTaskThread.IncReadCount(const ACount: Integer);
+begin
+  if Assigned(FReadCountThread) then
+    FReadCountThread.IncReadCount(ACount);
 end;
 
 // ----- TTaskContainer -----
@@ -1708,6 +1790,7 @@ begin
   inherited Create;
   CS_DownloadManager_Task := TCriticalSection.Create;
   CS_DownloadedChapterList := TCriticalSection.Create;
+  CS_ReadCount := TCriticalSection.Create;
 
   DownloadManagerFile := TIniFile.Create(WORK_FOLDER + WORK_FILE);
   DownloadManagerFile.CacheUpdates := True;
@@ -1739,6 +1822,7 @@ begin
   FreeAndNil(Containers);
   FreeAndNil(DownloadedChaptersListFile);
   FreeAndNil(DownloadManagerFile);
+  CS_ReadCount.Free;
   CS_DownloadedChapterList.Free;
   CS_DownloadManager_Task.Free;
   inherited Destroy;
@@ -1898,6 +1982,26 @@ begin
   finally
     isRunningBackup := False;
     CS_DownloadManager_Task.Release;
+  end;
+end;
+
+procedure TDownloadManager.IncReadCount(const ACount: Integer);
+begin
+  CS_ReadCount.Acquire;
+  try
+    Inc(FReadCount, ACount);
+  finally
+    CS_ReadCount.Release;
+  end;
+end;
+
+procedure TDownloadManager.ClearReadCount;
+begin
+  CS_ReadCount.Acquire;
+  try
+    FReadCount := 0;
+  finally
+    CS_ReadCount.Release;
   end;
 end;
 
@@ -2100,6 +2204,19 @@ begin
           end;
         end;
       end;
+
+      if Count > 0 then
+      begin
+        MainForm.vtDownload.Repaint;
+        if not MainForm.itRefreshDLInfo.Enabled then
+          MainForm.itRefreshDLInfo.Enabled := True;
+      end
+      else
+      begin
+        MainForm.vtDownload.Repaint;
+        MainForm.itRefreshDLInfo.Enabled := False;
+      end;
+
 
       if (Count = 0) and (isCheckForFMDDo) then
         if MainForm.cbOptionLetFMDDo.ItemIndex > 0 then

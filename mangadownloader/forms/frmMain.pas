@@ -179,7 +179,7 @@ type
     gbMisc: TGroupBox;
     IconList: TImageList;
     itSaveDownloadedList: TIdleTimer;
-    itRefreshForm: TIdleTimer;
+    itRefreshDLInfo: TIdleTimer;
     itCheckForChapters: TIdleTimer;
     itAnimate: TIdleTimer;
     imCover: TImage;
@@ -272,6 +272,8 @@ type
     spMainSplitter: TSplitter;
     sbMain: TStatusBar;
     sbUpdateList: TStatusBar;
+    lbTransferRate: TLabel;
+    lbTransferRateValue: TLabel;
     tmBackup: TIdleTimer;
     ToolBarDownload: TToolBar;
     tbDownloadResumeAll: TToolButton;
@@ -355,7 +357,8 @@ type
     procedure itAnimateTimer(Sender: TObject);
     procedure itCheckForChaptersTimer(Sender: TObject);
     procedure itMonitorTimer(Sender: TObject);
-    procedure itRefreshFormTimer(Sender: TObject);
+    procedure itRefreshDLInfoStopTimer(Sender: TObject);
+    procedure itRefreshDLInfoTimer(Sender: TObject);
     procedure itSaveDownloadedListTimer(Sender: TObject);
     procedure itStartupTimer(Sender: TObject);
     procedure medURLCutClick(Sender: TObject);
@@ -515,7 +518,7 @@ type
     //websiteLanguage :TStringList;
 
     isRunDownloadFilter: Boolean;
-    isCanRefreshForm, isUpdating: Boolean;
+    isUpdating: Boolean;
     revisionIni, updates, mangalistIni, options: TIniFile;
     FavoriteManager: TFavoriteManager;
     dataProcess: TDataProcess;
@@ -678,7 +681,6 @@ begin
   btAbortUpdateList.Parent := sbUpdateList;
   INIAdvanced := TIniFileR.Create(fmdDirectory + CONFIG_FOLDER + CONFIG_ADVANCED);
   isRunDownloadFilter := False;
-  isCanRefreshForm := True;
   isUpdating := False;
   isExiting := False;
   isSubthread := False;
@@ -834,7 +836,7 @@ procedure TMainForm.CloseNow;
 begin
   tmBackup.Enabled := False;
   itSaveDownloadedList.Enabled := False;
-  itRefreshForm.Enabled := False;
+  itRefreshDLInfo.Enabled := False;
   itCheckForChapters.Enabled := False;
   itAnimate.Enabled := False;
   itStartup.Enabled := False;
@@ -971,12 +973,22 @@ begin
   itMonitor.Enabled := False;
 end;
 
-procedure TMainForm.itRefreshFormTimer(Sender: TObject);
+procedure TMainForm.itRefreshDLInfoStopTimer(Sender: TObject);
 begin
-  if isCanRefreshForm then
+  if Assigned(DLManager) then
   begin
-    vtDownload.Repaint;
-    isCanRefreshForm := False;
+    DLManager.ClearReadCount;
+    lbTransferRateValue.Caption := FormatByteSize(DLManager.ReadCount, True);
+  end;
+end;
+
+procedure TMainForm.itRefreshDLInfoTimer(Sender: TObject);
+begin
+  vtDownload.Repaint;
+  if Assigned(DLManager) then
+  begin
+    lbTransferRateValue.Caption := FormatByteSize(DLManager.ReadCount, True);
+    DLManager.ClearReadCount;
   end;
 end;
 
@@ -3362,19 +3374,21 @@ begin
       if (Assigned(Data)) and ((DLManager.TaskItem(pos) <> nil) or
         (not DLManager.TaskItem(pos).Thread.isTerminated)) then
       begin
-        Data^.title := DLManager.TaskItem(pos).DownloadInfo.title;
-        Data^.status := DLManager.TaskItem(pos).DownloadInfo.Status;
-        Data^.progress := DLManager.TaskItem(pos).DownloadInfo.Progress;
-        Data^.website := DLManager.TaskItem(pos).DownloadInfo.Website;
-        Data^.saveTo := DLManager.TaskItem(pos).DownloadInfo.SaveTo;
-        Data^.dateTime := DLManager.TaskItem(pos).DownloadInfo.dateTime;
+        Data^.Title := DLManager.TaskItem(pos).DownloadInfo.Title;
+        Data^.Status := DLManager.TaskItem(pos).DownloadInfo.Status;
+        Data^.Progress := DLManager.TaskItem(pos).DownloadInfo.Progress;
+        Data^.TransferRate := DLManager.TaskItem(pos).DownloadInfo.TransferRate;
+        Data^.Website := DLManager.TaskItem(pos).DownloadInfo.Website;
+        Data^.SaveTo := DLManager.TaskItem(pos).DownloadInfo.SaveTo;
+        Data^.DateTime := DLManager.TaskItem(pos).DownloadInfo.DateTime;
         case Column of
           0: CellText := Data^.title;
           1: CellText := Data^.status;
           2: CellText := Data^.Progress;
-          3: CellText := Data^.website;
-          4: CellText := Data^.saveTo;
-          5: CellText := DateTimeToStr(Data^.dateTime);
+          3: CellText := Data^.TransferRate;
+          4: CellText := Data^.website;
+          5: CellText := Data^.saveTo;
+          6: CellText := DateTimeToStr(Data^.dateTime);
         end;
       end;
   end;
@@ -3415,6 +3429,7 @@ begin
         Data^.title := DLManager.TaskItem(pos).DownloadInfo.title;
         Data^.status := DLManager.TaskItem(pos).DownloadInfo.Status;
         Data^.progress := DLManager.TaskItem(pos).DownloadInfo.Progress;
+        Data^.TransferRate := DLManager.TaskItem(pos).DownloadInfo.TransferRate;
         Data^.website := DLManager.TaskItem(pos).DownloadInfo.Website;
         Data^.saveTo := DLManager.TaskItem(pos).DownloadInfo.SaveTo;
         Data^.dateTime := DLManager.TaskItem(pos).DownloadInfo.dateTime;

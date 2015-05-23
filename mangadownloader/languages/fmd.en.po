@@ -1028,6 +1028,11 @@ msgstr "Username"
 msgid "Save to:"
 msgstr "Save to:"
 
+#: tmainform.lbtransferrate.caption
+msgctxt "tmainform.lbtransferrate.caption"
+msgid "Transfer rate:"
+msgstr "Transfer rate:"
+
 #: tmainform.medturldelete.caption
 msgctxt "TMAINFORM.MEDTURLDELETE.CAPTION"
 msgid "Delete"
@@ -1296,16 +1301,26 @@ msgid "Progress"
 msgstr "Progress"
 
 #: tmainform.vtdownload.header.columns[3].text
+#| msgid "Website"
 msgctxt "tmainform.vtdownload.header.columns[3].text"
+msgid "Transfer rate"
+msgstr "Transfer rate"
+
+#: tmainform.vtdownload.header.columns[4].text
+#| msgid "Save to"
+msgctxt "tmainform.vtdownload.header.columns[4].text"
 msgid "Website"
 msgstr "Website"
 
-#: tmainform.vtdownload.header.columns[4].text
-msgctxt "tmainform.vtdownload.header.columns[4].text"
+#: tmainform.vtdownload.header.columns[5].text
+#| msgid "Added"
+msgctxt "tmainform.vtdownload.header.columns[5].text"
 msgid "Save to"
 msgstr "Save to"
 
-#: tmainform.vtdownload.header.columns[5].text
+#: tmainform.vtdownload.header.columns[6].text
+#| msgid "Added"
+msgctxt "tmainform.vtdownload.header.columns[6].text"
 msgid "Added"
 msgstr "Added"
 
