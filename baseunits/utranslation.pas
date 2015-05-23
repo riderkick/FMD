@@ -1,4 +1,4 @@
-{ Simple Translation Scanner
+{ Simple Translation Collector
 
   Copyright (C) 2015 Nur Cholif
 
@@ -667,7 +667,9 @@ var
 
   procedure CollectLanguagesFiles(appname: string = ''; dir: string = ''; useNativeName: Boolean = True);
   function GetLangName(lcode: string; useNativeName: Boolean = True): string;
+
   procedure SetLangByIndex(Idx: Integer);
+  function GetDefaultLang: string;
 
 implementation
 
@@ -815,6 +817,11 @@ begin
   if Idx > -1 then
     if LastSelected <> AvailableLanguages.Names[idx] then
       SetDefaultLang(AvailableLanguages.Names[Idx]);
+end;
+
+function GetDefaultLang: string;
+begin
+  Result := LCLTranslator.GetDefaultLang;
 end;
 
 initialization

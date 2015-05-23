@@ -815,6 +815,7 @@ begin
     FavoriteManager.SortNatural(vtFavorites.Header.SortColumn);
     vtFavorites.Repaint;
   end;
+  LoadLanguage;
 end;
 
 procedure TMainForm.FormClose(Sender: TObject; var CloseAction: TCloseAction);
@@ -3639,8 +3640,11 @@ begin
 
     //language
     options.WriteString('languages', 'Selected', AvailableLanguages.Names[cbLanguages.ItemIndex]);
-    uTranslation.SetLangByIndex(cbLanguages.ItemIndex);
-    LoadLanguage;
+    if not SameText(GetDefaultLang, AvailableLanguages.Names[cbLanguages.ItemIndex]) then
+    begin
+      uTranslation.SetLangByIndex(cbLanguages.ItemIndex);
+      LoadLanguage;
+    end;
 
     options.WriteString('general', 'MangaListSelect', s);
     mangalistIni.UpdateFile;
@@ -4384,7 +4388,6 @@ begin
   cbLanguages.ItemIndex := uTranslation.AvailableLanguages.IndexOfName(
     options.ReadString('languages', 'Selected', 'en'));
   uTranslation.SetLangByIndex(cbLanguages.ItemIndex);
-  LoadLanguage;
 end;
 
 procedure TMainForm.LoadMangaOptions;
@@ -4748,6 +4751,12 @@ begin
   cbOptionLetFMDDo.Items.Clear;
   cbOptionLetFMDDo.Items.AddText(RS_OptionFMDDoItems);
   cbOptionLetFMDDo.ItemIndex := idx;
+  //favorites check
+  if FavoriteManager.isRunning then
+    btFavoritesCheckNewChapter.Caption := RS_Checking;
+  //fmd check
+  if SubThread.CheckUpdateRunning then
+    btCheckVersion.Caption := RS_Checking;
 end;
 
 procedure TMainForm.ExceptionHandler(Sender: TObject; E: Exception);
