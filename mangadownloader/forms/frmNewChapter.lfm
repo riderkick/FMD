@@ -3,7 +3,6 @@ object NewChapter: TNewChapter
   Height = 290
   Top = 239
   Width = 394
-  AutoSize = True
   BorderIcons = []
   BorderStyle = bsSizeToolWin
   Caption = 'New Chapter Notification'
