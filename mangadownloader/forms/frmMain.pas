@@ -1074,22 +1074,33 @@ end;
 
 procedure TMainForm.miDownloadDeleteTaskClick(Sender: TObject);
 var
-  i: Cardinal;
+  i: Integer;
   xNode: PVirtualNode;
 begin
-  if not Assigned(vtDownload.FocusedNode) then exit;
+  if vtDownload.SelectedCount = 0 then Exit;
+  if DLManager.Count = 0 then Exit;
   if (cbOptionShowDeleteTaskDialog.Checked) and
     (vtDownload.SelectedCount > 0) then
     if MessageDlg('', RS_DlgRemoveTask,
       mtConfirmation, [mbYes, mbNo], 0) <> mrYes then
       Exit;
-  xNode := vtDownload.GetFirstSelected;
-  for i := 0 to vtDownload.SelectedCount - 1 do
-  begin
-    if Assigned(xNode) then
-      DLManager.RemoveTask(xNode^.Index);
-    xNode := vtDownload.GetNextSelected(xNode);
+  DLManager.CS_DownloadManager_Task.Acquire;
+  try
+    i:=0;
+    xNode := vtDownload.GetFirst;
+    while i < DLManager.Count do
+    begin
+      vtDownload.Selected[xNode];
+      if vtDownload.Selected[xNode] then
+        DLManager.RemoveTask(i)
+      else
+        Inc(i);
+      xNode := vtDownload.GetNext(xNode);
+    end;
+  finally
+    DLManager.CS_DownloadManager_Task.Release;
   end;
+  vtDownload.ClearSelection;
   UpdateVtDownload;
   DLManager.Backup;
 end;
