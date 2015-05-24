@@ -45,7 +45,7 @@
             <TargetCPU Value="x86_64"/>
             <TargetOS Value="win64"/>
             <Optimizations>
-              <OptimizationLevel Value="2"/>
+              <OptimizationLevel Value="3"/>
               <VariablesInRegisters Value="True"/>
             </Optimizations>
           </CodeGeneration>
@@ -185,7 +185,6 @@
             <TargetCPU Value="i386"/>
             <TargetOS Value="win32"/>
             <Optimizations>
-              <OptimizationLevel Value="0"/>
               <VariablesInRegisters Value="True"/>
             </Optimizations>
           </CodeGeneration>
@@ -240,7 +239,7 @@
         <PackageName Value="LCL"/>
       </Item3>
     </RequiredPackages>
-    <Units Count="20">
+    <Units Count="18">
       <Unit0>
         <Filename Value="md.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -277,73 +276,59 @@
         <ResourceBaseClass Value="Form"/>
       </Unit7>
       <Unit8>
-        <Filename Value="forms\frmImportList.pas"/>
+        <Filename Value="..\baseunits\uFMDThread.pas"/>
         <IsPartOfProject Value="True"/>
-        <ComponentName Value="ImportList"/>
-        <HasResources Value="True"/>
-        <ResourceBaseClass Value="Form"/>
       </Unit8>
       <Unit9>
-        <Filename Value="..\baseunits\uFMDThread.pas"/>
+        <Filename Value="..\baseunits\uPacker.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit9>
       <Unit10>
-        <Filename Value="..\baseunits\uPacker.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit10>
-      <Unit11>
         <Filename Value="forms\frmMain.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="MainForm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-      </Unit11>
-      <Unit12>
+      </Unit10>
+      <Unit11>
         <Filename Value="forms\frmNewChapter.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="NewChapter"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
+      </Unit11>
+      <Unit12>
+        <Filename Value="..\baseunits\uGetMangaInfosThread.pas"/>
+        <IsPartOfProject Value="True"/>
       </Unit12>
       <Unit13>
-        <Filename Value="forms\frmLog.pas"/>
+        <Filename Value="..\baseunits\uBaseUnit.pas"/>
         <IsPartOfProject Value="True"/>
-        <ComponentName Value="Log"/>
-        <HasResources Value="True"/>
-        <ResourceBaseClass Value="Form"/>
       </Unit13>
       <Unit14>
-        <Filename Value="..\baseunits\uGetMangaInfosThread.pas"/>
+        <Filename Value="..\baseunits\uMisc.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit14>
       <Unit15>
-        <Filename Value="..\baseunits\uBaseUnit.pas"/>
+        <Filename Value="..\baseunits\uData.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit15>
       <Unit16>
-        <Filename Value="..\baseunits\uMisc.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit16>
-      <Unit17>
-        <Filename Value="..\baseunits\uData.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit17>
-      <Unit18>
         <Filename Value="forms\frmshutdowncounter.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="ShutdownCounterForm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="frmShutdownCounter"/>
-      </Unit18>
-      <Unit19>
+      </Unit16>
+      <Unit17>
         <Filename Value="forms\frmupdatedialog.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="UpdateDialogForm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="frmUpdateDialog"/>
-      </Unit19>
+      </Unit17>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
@@ -363,7 +348,7 @@
       <TargetCPU Value="i386"/>
       <TargetOS Value="win32"/>
       <Optimizations>
-        <OptimizationLevel Value="2"/>
+        <OptimizationLevel Value="3"/>
         <VariablesInRegisters Value="True"/>
       </Optimizations>
     </CodeGeneration>

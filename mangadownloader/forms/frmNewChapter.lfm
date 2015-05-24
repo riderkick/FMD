@@ -19,6 +19,7 @@ object NewChapter: TNewChapter
     Top = 17
     Width = 382
     Align = alClient
+    BorderSpacing.Bottom = 6
     ReadOnly = True
     ScrollBars = ssAutoBoth
     TabOrder = 0
@@ -41,8 +42,8 @@ object NewChapter: TNewChapter
     Width = 382
     Align = alBottom
     AutoSize = True
-    BorderSpacing.Top = 6
     BevelOuter = bvNone
+    ChildSizing.HorizontalSpacing = 6
     ClientHeight = 26
     ClientWidth = 382
     TabOrder = 1
@@ -96,7 +97,7 @@ object NewChapter: TNewChapter
       TabOrder = 0
     end
     object btQueue: TBitBtn
-      Left = 100
+      Left = 106
       Height = 26
       Top = 0
       Width = 118

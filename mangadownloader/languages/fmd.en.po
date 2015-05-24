@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: en\n"
-"X-Generator: Poedit 1.7.6"
+"X-Generator: Poedit 1.7.6\n"
 
 #: frmimportfavorites.rs_importcompleted
 msgid "Import completed."
@@ -324,20 +324,18 @@ msgid "Search only new manga"
 msgstr "Search only new manga"
 
 #: tmainform.cboptionautocheckfavstartup.caption
-#, fuzzy
 #| msgid "Automatic check for new chapter"
 msgid "Automatic check for new chapter at startup"
-msgstr "Automatic check for new chapter"
+msgstr "Automatic check for new chapter at startup"
 
 #: tmainform.cboptionautocheckupdate.caption
 msgid "Check for new version "
 msgstr "Check for new version "
 
 #: tmainform.cboptionautodlfav.caption
-#, fuzzy
 #| msgid "Automatically download after finish checking"
 msgid "Automatic download after finish checking"
-msgstr "Automatically download after finish checking"
+msgstr "Automatic download after finish checking"
 
 #: tmainform.cboptionautonumberchapter.caption
 #| msgid "cbOptionAutoNumberChapter"
@@ -1383,12 +1381,14 @@ msgid "Free Manga Downloader"
 msgstr "Free Manga Downloader"
 
 #: tupdatedialogform.btnlater.caption
-msgid "Later"
-msgstr "Later"
+#| msgid "Later"
+msgid "&Later"
+msgstr "&Later"
 
 #: tupdatedialogform.btnupdate.caption
-msgid "Update"
-msgstr "Update"
+#| msgid "Update"
+msgid "&Update"
+msgstr "&Update"
 
 #: tupdatedialogform.caption
 msgid "New Version Found"
@@ -1569,4 +1569,3 @@ msgstr "Synchronizing data"
 #: uupdatethread.rs_updatinglist
 msgid "Updating list"
 msgstr "Updating list"
-

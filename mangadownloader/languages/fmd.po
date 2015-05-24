@@ -1313,11 +1313,11 @@ msgid "Free Manga Downloader"
 msgstr ""
 
 #: tupdatedialogform.btnlater.caption
-msgid "Later"
+msgid "&Later"
 msgstr ""
 
 #: tupdatedialogform.btnupdate.caption
-msgid "Update"
+msgid "&Update"
 msgstr ""
 
 #: tupdatedialogform.caption

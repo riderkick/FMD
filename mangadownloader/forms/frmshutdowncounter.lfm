@@ -1,13 +1,13 @@
 object ShutdownCounterForm: TShutdownCounterForm
   Left = 297
-  Height = 105
+  Height = 108
   Top = 190
-  Width = 320
+  Width = 331
   BorderIcons = [biSystemMenu]
   BorderStyle = bsDialog
   Caption = 'Free Manga Downloader'
-  ClientHeight = 105
-  ClientWidth = 320
+  ClientHeight = 108
+  ClientWidth = 331
   Color = clWindow
   FormStyle = fsSystemStayOnTop
   KeyPreview = True
@@ -17,41 +17,28 @@ object ShutdownCounterForm: TShutdownCounterForm
   OnShow = FormShow
   Position = poDesktopCenter
   LCLVersion = '1.5'
-  object lblMessage: TLabel
-    Left = 0
-    Height = 1
-    Top = 24
-    Width = 320
-    Align = alTop
-    Alignment = taCenter
-    ParentColor = False
-    WordWrap = True
-  end
-  object pnTop: TPanel
-    Left = 0
-    Height = 24
-    Top = 0
-    Width = 320
-    Align = alTop
-    BevelOuter = bvNone
-    TabOrder = 0
-  end
   object pnBottom: TPanel
     Left = 0
-    Height = 42
-    Top = 63
-    Width = 320
+    Height = 38
+    Top = 70
+    Width = 331
     Align = alBottom
-    ClientHeight = 42
-    ClientWidth = 320
+    AutoSize = True
+    BevelOuter = bvNone
+    ChildSizing.LeftRightSpacing = 6
+    ChildSizing.TopBottomSpacing = 6
+    ChildSizing.HorizontalSpacing = 6
+    ChildSizing.Layout = cclTopToBottomThenLeftToRight
+    ClientHeight = 38
+    ClientWidth = 331
     ParentColor = False
-    TabOrder = 1
+    TabOrder = 0
     object btAbort: TBitBtn
-      Left = 160
-      Height = 25
-      Top = 8
-      Width = 75
-      Anchors = [akRight, akBottom]
+      Left = 6
+      Height = 26
+      Top = 6
+      Width = 76
+      AutoSize = True
       Caption = '&Abort'
       Default = True
       Kind = bkAbort
@@ -60,25 +47,40 @@ object ShutdownCounterForm: TShutdownCounterForm
       TabOrder = 0
     end
     object btNow: TBitBtn
-      Left = 80
-      Height = 25
-      Top = 8
-      Width = 75
-      Anchors = [akLeft, akBottom]
+      Left = 88
+      Height = 26
+      Top = 6
+      Width = 71
+      AutoSize = True
       Caption = '&Now'
       Kind = bkYes
       ModalResult = 6
       OnClick = btNowClick
       TabOrder = 1
     end
-    object Bevel1: TBevel
-      Left = 1
-      Height = 2
-      Top = 1
-      Width = 318
-      Align = alTop
-      Shape = bsTopLine
-    end
+  end
+  object lblMessage: TLabel
+    Left = 6
+    Height = 28
+    Top = 20
+    Width = 319
+    Align = alClient
+    Alignment = taCenter
+    BorderSpacing.Left = 6
+    BorderSpacing.Top = 20
+    BorderSpacing.Right = 6
+    BorderSpacing.Bottom = 20
+    Color = clDefault
+    ParentColor = False
+    Transparent = False
+  end
+  object Bevel1: TBevel
+    Left = 0
+    Height = 2
+    Top = 68
+    Width = 331
+    Align = alBottom
+    Shape = bsTopLine
   end
   object itCounter: TIdleTimer
     Enabled = False

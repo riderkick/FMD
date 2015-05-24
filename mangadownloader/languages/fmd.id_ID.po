@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: id_ID\n"
-"X-Generator: Poedit 1.7.6"
+"X-Generator: Poedit 1.7.6\n"
 
 #: frmimportfavorites.rs_importcompleted
 msgid "Import completed."
@@ -1358,12 +1358,12 @@ msgid "Free Manga Downloader"
 msgstr "Pengunduh Komik Gratis"
 
 #: tupdatedialogform.btnlater.caption
-msgid "Later"
-msgstr "Nanti"
+msgid "&Later"
+msgstr "&Nanti saja"
 
 #: tupdatedialogform.btnupdate.caption
-msgid "Update"
-msgstr "Perbarui"
+msgid "&Update"
+msgstr "&Perbarui"
 
 #: tupdatedialogform.caption
 msgid "New Version Found"
@@ -1539,4 +1539,3 @@ msgstr "Sinkronisasi data"
 #: uupdatethread.rs_updatinglist
 msgid "Updating list"
 msgstr "Memperbarui daftar"
-

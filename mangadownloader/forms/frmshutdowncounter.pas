@@ -20,7 +20,6 @@ type
     itCounter: TIdleTimer;
     lblMessage: TLabel;
     pnBottom : TPanel;
-    pnTop: TPanel;
     procedure btAbortClick(Sender: TObject);
     procedure btNowClick(Sender : TObject);
     procedure FormClose(Sender : TObject; var CloseAction : TCloseAction);

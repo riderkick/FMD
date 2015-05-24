@@ -6,7 +6,7 @@ interface
 
 uses
   Forms, Controls, StdCtrls,
-  Buttons, DefaultTranslator;
+  Buttons, DefaultTranslator, ExtCtrls;
 
 type
 
@@ -17,6 +17,7 @@ type
     btnUpdate: TBitBtn;
     lbMessage: TLabel;
     mmLog: TMemo;
+    pnBottom: TPanel;
     procedure btnLaterClick(Sender: TObject);
     procedure btnUpdateClick(Sender: TObject);
   private
