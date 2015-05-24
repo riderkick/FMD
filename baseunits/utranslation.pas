@@ -797,6 +797,8 @@ begin
   if Result = '' then Exit;
   s := TrimSet(lcode,[' ','.','_','-']);
   p := Pos('_', s);
+  if p = 0 then
+    p := Pos('-', s);
   if p > 1 then
   begin
     id := Copy(s, 1, p - 1);
