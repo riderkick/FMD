@@ -12,7 +12,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Dialogs, StdCtrls,
-  Buttons, DefaultTranslator, lazutf8classes, frmImportList, uBaseUnit;
+  Buttons, DefaultTranslator, lazutf8classes, uBaseUnit, frmNewChapter;
 
 type
 
@@ -41,6 +41,7 @@ type
 
 resourcestring
   RS_ImportCompleted = 'Import completed.';
+  RS_ListUnimportedCaption = 'List of unimported mangas';
 
 implementation
 
@@ -120,8 +121,18 @@ begin
 
   if unimportedMangas.Count > 0 then
   begin
-    ImportList.mmList.Lines.Text:= unimportedMangas.Text;
-    ImportList.Show;
+    with TNewChapter.Create(Self) do try
+      Caption := RS_ListUnimportedCaption;
+      lbNotification.Caption := '';
+      btCancel.Visible := False;
+      btQueue.Visible := False;
+      btDownload.Visible := True;
+      btDownload.Caption := RS_BtnOK;
+      mmMemo.Lines.Text := unimportedMangas.Text;
+      ShowModal;
+    finally
+      Free;
+    end;
   end;
 
   fstream.Free;

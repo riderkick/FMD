@@ -637,6 +637,7 @@ resourcestring
   RS_DlgCannotGetMangaInfo = 'Cannot get manga info. Please check your internet connection and try it again.';
   RS_DlgCannotConnectToServer = 'Cannot connect to the server.';
   RS_LblAutoCheckNewChapterMinute = 'Auto check for new chapter every %d minutes';
+  RS_BtnOK = '&OK';
   RS_Loading = 'Loading ...';
   RS_Checking = 'Checking...';
   RS_AllDownloads = 'All downloads';
