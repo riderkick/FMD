@@ -309,7 +309,7 @@ msgstr "Kunjungi blog"
 #: tmainform.caption
 msgctxt "tmainform.caption"
 msgid "Free Manga Downloader"
-msgstr "Pengunduh Komik Gratis"
+msgstr "Free Manga Downloader"
 
 #: tmainform.cbaddasstopped.caption
 msgid "Add to download list as stopped task"
@@ -1355,7 +1355,7 @@ msgstr "&Sekarang"
 #: tshutdowncounterform.caption
 msgctxt "tshutdowncounterform.caption"
 msgid "Free Manga Downloader"
-msgstr "Pengunduh Komik Gratis"
+msgstr "Free Manga Downloader"
 
 #: tupdatedialogform.btnlater.caption
 msgid "&Later"
