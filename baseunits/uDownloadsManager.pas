@@ -1736,8 +1736,13 @@ begin
           begin
             CS_FReadCount.Acquire;
             try
-              DownloadInfo.TransferRate := FormatByteSize(FReadCount, True);
-              Inc(FTotalReadCount, FReadCount);
+              if Status = STATUS_COMPRESS then
+                DownloadInfo.TransferRate := ''
+              else
+              begin
+                DownloadInfo.TransferRate := FormatByteSize(FReadCount, True);
+                Inc(FTotalReadCount, FReadCount);
+              end;
               FReadCount := 0;
             finally
               CS_FReadCount.Release;
