@@ -3719,6 +3719,8 @@ begin
       end;
     end;
 
+    options.WriteString('languages', 'Selected',
+      AvailableLanguages.Names[cbLanguages.ItemIndex]);
     options.WriteBool('general', 'MinimizeToTray', cbOptionMinimizeToTray.Checked);
     options.WriteInteger('general', 'NewMangaTime', seOptionNewMangaTime.Value);
     options.WriteInteger('general', 'LetFMDDo', cbOptionLetFMDDo.ItemIndex);
