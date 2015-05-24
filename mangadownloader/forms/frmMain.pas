@@ -1774,6 +1774,7 @@ begin
     with TControl(Sender) do begin
       pmChapterList.Alignment := Menus.paRight;
       pmChapterList.PopUp(ControlOrigin.x, ControlOrigin.y);
+      pmChapterList.Alignment := Menus.paLeft;
     end;
   clbChapterList.SetFocus;
 end;
