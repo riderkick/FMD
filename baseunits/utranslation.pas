@@ -668,7 +668,7 @@ var
   procedure CollectLanguagesFiles(appname: string = ''; dir: string = ''; useNativeName: Boolean = True);
   function GetLangName(lcode: string; useNativeName: Boolean = True): string;
 
-  procedure SetLangByIndex(Idx: Integer);
+  function SetLangByIndex(Idx: Integer): Boolean;
   function GetDefaultLang: string;
 
 implementation
@@ -678,7 +678,8 @@ begin
   Result := CompareStr(List.ValueFromIndex[Index1], List.ValueFromIndex[Index2]);
 end;
 
-procedure CollectLanguagesFiles(appname, dir: string; useNativeName: Boolean);
+procedure CollectLanguagesFiles(appname: string; dir: string;
+  useNativeName: Boolean);
 
   procedure searchLangDir(adir, aname: string);
   var
@@ -812,11 +813,16 @@ begin
     Result := GetLang(s);
 end;
 
-procedure SetLangByIndex(Idx: Integer);
+function SetLangByIndex(Idx: Integer): Boolean;
 begin
-  if Idx > -1 then
-    if LastSelected <> AvailableLanguages.Names[idx] then
-      SetDefaultLang(AvailableLanguages.Names[Idx]);
+  Result := False;
+  if Idx < 0 then Exit;
+  if LastSelected <> AvailableLanguages.Names[idx] then
+  begin
+    SetDefaultLang(AvailableLanguages.Names[Idx]);
+    LastSelected := AvailableLanguages.Names[Idx];
+    Result := True;
+  end;
 end;
 
 function GetDefaultLang: string;

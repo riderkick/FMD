@@ -3656,14 +3656,6 @@ begin
       Exit;
     end;
 
-    //language
-    options.WriteString('languages', 'Selected', AvailableLanguages.Names[cbLanguages.ItemIndex]);
-    if not SameText(GetDefaultLang, AvailableLanguages.Names[cbLanguages.ItemIndex]) then
-    begin
-      uTranslation.SetLangByIndex(cbLanguages.ItemIndex);
-      LoadLanguage;
-    end;
-
     options.WriteString('general', 'MangaListSelect', s);
     mangalistIni.UpdateFile;
 
@@ -3837,6 +3829,8 @@ begin
     DLManager.maxDLTasks := seOptionMaxParallel.Value;
     DLManager.maxDLThreadsPerTask := seOptionMaxThread.Value;
     DLManager.retryConnect := seOptionMaxRetry.Value;
+
+    LoadLanguage;
   finally
     //Recheck download thread
     DLManager.CheckAndActiveTask;
@@ -4403,7 +4397,6 @@ begin
 
   cbLanguages.ItemIndex := uTranslation.AvailableLanguages.IndexOfName(
     options.ReadString('languages', 'Selected', 'en'));
-  uTranslation.SetLangByIndex(cbLanguages.ItemIndex);
 end;
 
 procedure TMainForm.LoadMangaOptions;
@@ -4755,24 +4748,28 @@ end;
 
 procedure TMainForm.LoadLanguage;
 var
-  idx: Integer;
+  idxLanguages,
+  idxFilterStatus,
+  idxOptionLetFMDDo,
+  idxOptionProxyType: Integer;
 begin
-  //filter status
-  idx := cbFilterStatus.ItemIndex;
-  cbFilterStatus.Items.Clear;
-  cbFilterStatus.Items.AddText(RS_FilterStatusItems);
-  cbFilterStatus.ItemIndex := idx;
-  //FMD completed task option
-  idx := cbOptionLetFMDDo.ItemIndex;
-  cbOptionLetFMDDo.Items.Clear;
-  cbOptionLetFMDDo.Items.AddText(RS_OptionFMDDoItems);
-  cbOptionLetFMDDo.ItemIndex := idx;
-  //favorites check
-  if FavoriteManager.isRunning then
-    btFavoritesCheckNewChapter.Caption := RS_Checking;
-  //fmd check
-  if SubThread.CheckUpdateRunning then
-    btCheckVersion.Caption := RS_Checking;
+  if uTranslation.LastSelected <> AvailableLanguages.Names[cbLanguages.ItemIndex] then
+  begin
+    idxLanguages := cbLanguages.ItemIndex;
+    idxFilterStatus := cbFilterStatus.ItemIndex;
+    idxOptionLetFMDDo := cbOptionLetFMDDo.ItemIndex;
+    idxOptionProxyType := cbOptionProxyType.ItemIndex;
+    if uTranslation.SetLangByIndex(cbLanguages.ItemIndex) then
+    begin
+      cbFilterStatus.Items.Text := RS_FilterStatusItems;
+      cbOptionLetFMDDo.Items.Text := RS_OptionFMDDoItems;
+
+      cbLanguages.ItemIndex := idxLanguages;
+      cbFilterStatus.ItemIndex := idxFilterStatus;
+      cbOptionLetFMDDo.ItemIndex := idxOptionLetFMDDo;
+      cbOptionProxyType.ItemIndex := idxOptionProxyType;
+    end;
+  end;
 end;
 
 procedure TMainForm.ExceptionHandler(Sender: TObject; E: Exception);
