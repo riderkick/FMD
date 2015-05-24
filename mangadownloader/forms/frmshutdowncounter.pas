@@ -93,7 +93,7 @@ end;
 
 procedure TShutdownCounterForm.FormShow(Sender: TObject);
 var
-  s: String;
+  s: String = '';
 begin
   case frmExitType of
     etShutdown: s := RS_LblMessageShutdown;
@@ -114,7 +114,7 @@ end;
 
 procedure TShutdownCounterForm.itCounterTimer(Sender: TObject);
 var
-  s: String;
+  s: String = '';
 begin
   Dec(WaitCounter);
   case frmExitType of

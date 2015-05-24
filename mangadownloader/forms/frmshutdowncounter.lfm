@@ -1,14 +1,17 @@
 object ShutdownCounterForm: TShutdownCounterForm
   Left = 297
-  Height = 108
+  Height = 100
   Top = 190
-  Width = 331
-  BorderIcons = [biSystemMenu]
+  Width = 330
+  AutoSize = True
+  BorderIcons = []
   BorderStyle = bsDialog
   Caption = 'Free Manga Downloader'
-  ClientHeight = 108
-  ClientWidth = 331
+  ClientHeight = 100
+  ClientWidth = 330
   Color = clWindow
+  Constraints.MinHeight = 100
+  Constraints.MinWidth = 330
   FormStyle = fsSystemStayOnTop
   KeyPreview = True
   OnClose = FormClose
@@ -20,17 +23,18 @@ object ShutdownCounterForm: TShutdownCounterForm
   object pnBottom: TPanel
     Left = 0
     Height = 38
-    Top = 70
-    Width = 331
+    Top = 62
+    Width = 330
     Align = alBottom
     AutoSize = True
     BevelOuter = bvNone
     ChildSizing.LeftRightSpacing = 6
     ChildSizing.TopBottomSpacing = 6
     ChildSizing.HorizontalSpacing = 6
-    ChildSizing.Layout = cclTopToBottomThenLeftToRight
+    ChildSizing.Layout = cclLeftToRightThenTopToBottom
+    ChildSizing.ControlsPerLine = 2
     ClientHeight = 38
-    ClientWidth = 331
+    ClientWidth = 330
     ParentColor = False
     TabOrder = 0
     object btAbort: TBitBtn
@@ -61,9 +65,9 @@ object ShutdownCounterForm: TShutdownCounterForm
   end
   object lblMessage: TLabel
     Left = 6
-    Height = 28
+    Height = 20
     Top = 20
-    Width = 319
+    Width = 318
     Align = alClient
     Alignment = taCenter
     BorderSpacing.Left = 6
@@ -77,8 +81,8 @@ object ShutdownCounterForm: TShutdownCounterForm
   object Bevel1: TBevel
     Left = 0
     Height = 2
-    Top = 68
-    Width = 331
+    Top = 60
+    Width = 330
     Align = alBottom
     Shape = bsTopLine
   end
