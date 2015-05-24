@@ -3390,7 +3390,7 @@ begin
         case Column of
           0: CellText := Data^.title;
           1: CellText := Data^.status;
-          2: CellText := Data^.Progress;
+          2: CellText := '';
           3: CellText := Data^.TransferRate;
           4: CellText := Data^.website;
           5: CellText := Data^.saveTo;
