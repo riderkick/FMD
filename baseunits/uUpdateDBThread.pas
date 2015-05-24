@@ -11,7 +11,7 @@ unit uUpdateDBThread;
 interface
 
 uses
-  Classes, SysUtils, uData, uBaseUnit;
+  Classes, SysUtils, uData, uBaseUnit, uTranslation;
 
 type
   TUpdateDBThread = class(TThread)
@@ -101,10 +101,10 @@ begin
     Synchronize(MainThreadShowGetting);
     {$IFDEF USEADMIN}
     fmdRunAsAdmin(fmdDirectory + 'updater.exe', '-x -r 3 -d ' +
-      GetMangaDatabaseURL(websiteName), True);
+      GetMangaDatabaseURL(websiteName) + ' --lang ' + uTranslation.LastSelected, True);
     {$ELSE}
     RunExternalProcess(fmdDirectory + 'updater.exe', ['-x', '-r' , '3', '-d',
-      GetMangaDatabaseURL(websiteName)]);
+      GetMangaDatabaseURL(websiteName), '--lang', uTranslation.LastSelected]);
     {$ENDIF}
     if FileExists(fmdDirectory + DATA_FOLDER + websiteName + '.dat') then
     begin

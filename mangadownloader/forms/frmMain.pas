@@ -952,10 +952,12 @@ begin
       CloseNow;
       {$IFDEF USEADMIN}
       fmdRunAsAdmin(fmdDirectory + 'old_updater.exe',
-        '-x -r 3 -a ' + FUpdateURL + ' -l ' + Application.ExeName, False);
+        '-x -r 3 -a ' + FUpdateURL + ' -l ' + Application.ExeName +
+        ' --lang ' + uTranslation.LastSelected, False);
       {$ELSE}
       RunExternalProcess(fmdDirectory + 'old_updater.exe',
-        ['-x', '-r', '3', '-a', FUpdateURL, '-l', Application.ExeName], True, True);
+        ['-x', '-r', '3', '-a', FUpdateURL, '-l', Application.ExeName,
+         '--lang', uTranslation.LastSelected], True, True);
       {$ENDIF}
       Self.Close;
     end;

@@ -13,7 +13,7 @@ interface
 
 uses
   Classes, SysUtils, typinfo, FileUtil, syncobjs, uData, uBaseUnit,
-  uFMDThread, blcksock;
+  uFMDThread, uTranslation, blcksock;
 
 type
   TUpdateMangaManagerThread = class;
@@ -555,10 +555,10 @@ begin
         Synchronize(MainThreadShowGetting);
         {$IFDEF USEADMIN}
         fmdRunAsAdmin(fmdDirectory + 'updater.exe', '-x -r 3 -q -d ' +
-          GetMangaDatabaseURL(website), True);
+          GetMangaDatabaseURL(website) + ' --lang ' + uTranslation.LastSelected, True);
         {$ELSE}
         RunExternalProcess(fmdDirectory + 'updater.exe', ['-x', '-r' , '3', '-d',
-          GetMangaDatabaseURL(website)]);
+          GetMangaDatabaseURL(website), '--lang', uTranslation.LastSelected]);
         {$ENDIF}
         Synchronize(RefreshList);
       end;
