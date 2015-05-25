@@ -815,7 +815,7 @@ begin
   if FavoriteManager.Count > 0 then
   begin
     FavoriteManager.SortDirection := Boolean(vtFavorites.Header.SortDirection);
-    FavoriteManager.SortNatural(vtFavorites.Header.SortColumn);
+    FavoriteManager.Sort(vtFavorites.Header.SortColumn);
     vtFavorites.Repaint;
   end;
   LoadLanguage;
@@ -3408,18 +3408,17 @@ procedure TMainForm.vtDownloadHeaderClick(Sender: TVTHeader;
   Column: TColumnIndex; Button: TMouseButton; Shift: TShiftState; X, Y: Integer
   );
 begin
-  if (not (Column = 2)) and (DLManager.Count > 1) then
-  begin
-    DLManager.SortColumn := Column;
+  if DLManager.Count < 2 then Exit;
+  if (Column = 2) or (Column = 3) then Exit;
+  if DLManager.SortColumn = Column then
     DLManager.SortDirection := not DLManager.SortDirection;
-    vtDownload.Header.SortDirection := TSortDirection(DLManager.SortDirection);
-    vtDownload.Header.SortColumn := Column;
-    //DLManager.Sort(Column);
-    DLManager.SortNatural(Column);    //Natural Sorting
-    options.WriteInteger('misc', 'SortDownloadColumn', vtDownload.Header.SortColumn);
-    options.WriteBool('misc', 'SortDownloadDirection', DLManager.SortDirection);
-    vtDownload.Repaint;
-  end;
+  DLManager.SortColumn := Column;
+  vtDownload.Header.SortDirection := TSortDirection(DLManager.SortDirection);
+  vtDownload.Header.SortColumn := Column;
+  DLManager.Sort(Column);
+  options.WriteInteger('misc', 'SortDownloadColumn', vtDownload.Header.SortColumn);
+  options.WriteBool('misc', 'SortDownloadDirection', DLManager.SortDirection);
+  vtDownload.Repaint;
 end;
 
 procedure TMainForm.vtDownloadInitNode(Sender: TBaseVirtualTree;
@@ -3574,21 +3573,22 @@ procedure TMainForm.vtFavoritesHeaderClick(Sender: TVTHeader;
   Column: TColumnIndex; Button: TMouseButton; Shift: TShiftState; X, Y: Integer
   );
 begin
-  if (not (Column = 0)) and (not FavoriteManager.isRunning) and (FavoriteManager.Count > 1) then
-  begin
-    FavoriteManager.isRunning := True;
-    try
-      FavoriteManager.SortColumn := Column;
+  if FavoriteManager.isRunning then Exit;
+  if FavoriteManager.Count < 2 then Exit;
+  if Column = 0 then Exit;
+  FavoriteManager.isRunning := True;
+  try
+    if FavoriteManager.SortColumn = Column then
       FavoriteManager.sortDirection := not FavoriteManager.sortDirection;
-      vtFavorites.Header.SortColumn := Column;
-      vtFavorites.Header.SortDirection := TSortDirection(FavoriteManager.sortDirection);
-      FavoriteManager.SortNatural(Column);
-      options.WriteInteger('misc', 'SortFavoritesColumn', vtFavorites.Header.SortColumn);
-      options.WriteBool('misc', 'SortFavoritesDirection', FavoriteManager.sortDirection);
-    finally
-      UpdateVtFavorites;
-      FavoriteManager.isRunning := False;
-    end;
+    FavoriteManager.SortColumn := Column;
+    vtFavorites.Header.SortColumn := Column;
+    vtFavorites.Header.SortDirection := TSortDirection(FavoriteManager.sortDirection);
+    FavoriteManager.Sort(Column);
+    options.WriteInteger('misc', 'SortFavoritesColumn', vtFavorites.Header.SortColumn);
+    options.WriteBool('misc', 'SortFavoritesDirection', FavoriteManager.sortDirection);
+  finally
+    UpdateVtFavorites;
+    FavoriteManager.isRunning := False;
   end;
 end;
 

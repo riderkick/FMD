@@ -5,7 +5,13 @@ unit  uMisc;
 interface
 
 uses
-  Classes, SysUtils, Graphics, strutils, syncobjs, IniFiles;
+  {$IFDEF WINDOWS}
+  Windows,
+  {$ENDIF}
+  {$IFDEF LINUX}
+  unixtype,
+  {$ENDIF}
+  Classes, SysUtils, math, Graphics, strutils, syncobjs, IniFiles, LCLProc;
 
 type
   TIniFileR = class(TMemIniFile)
@@ -33,8 +39,6 @@ function BrackTextQuoted(const S: Integer): String; overload;
 function StringToASCII(S: String): String;
 function StringToHex(S: String): String;
 
-function AnsiNaturalCompare(const str1, str2: String;
-  vCaseSensitive: Boolean = False): Integer;
 procedure QuickSortNaturalPart(var Alist: TStringList; Separator: String;
   PartIndex: Integer);
 
@@ -52,7 +56,18 @@ function FindStrLinearPos(aList: TStrings; aValue: String): Integer;
 //formatting
 function FormatByteSize(const bytes :longint; persecond: boolean = False) :string;
 
-//misc
+//sorting
+function NaturalCompareStr(Str1, Str2: string): integer;
+
+function NaturalCompareStr_RVK(Str1, Str2: string): integer;
+function NaturalCompareStr_Typo(Str1, Str2: string):Integer;
+{$IFDEF WINDOWS}
+function StrCmpLogicalW(psz1, psz2: PWideChar): Integer; stdcall; external 'shlwapi.dll';
+{$ELSE}
+function strcoll(s1, s2 :pchar):integer; cdecl; external 'libc';
+function wcscoll(s1, s2: pwchar_t): integer; cdecl; external 'libc' Name 'wcscoll';
+{$ENDIF}
+
 
 var
   CS_LOG, CS_OTHERLOG: TCriticalSection;
@@ -418,169 +433,311 @@ begin
   Result := Copy(txt, lpos, rpos - lpos - Length(sep));
 end;
 
-function AnsiNaturalCompare(const str1, str2: String;
-  vCaseSensitive: Boolean = False): Integer;
-  //Credits to engkin (http://forum.lazarus.freepascal.org/index.php?action=profile;u=52702)
-  //http://forum.lazarus.freepascal.org/index.php/topic,24450.45.html
-  //v3.5
-var
-  l1, l2, l: Integer;          //Str length
-  n1, n2: QWord{int64};     //numrical part
-  nl: Integer;
-  nl1, nl2: Integer;             //length of numrical part
-  d: smallint;            //PtrInt;?
-  pc: PChar;               //temp var
-  pc1, pc2: PChar;
-  pb1: PByte absolute pc1;  //to get pc1^ as a byte
-  pb2: PByte absolute pc2;  //to get pc2^ as a byte
-  pe1, pe2: PChar;               //pointer to end of str
-  sign: Integer;
-  sum1, sum2: DWord;      //sum of non-numbers. More caps gives a smaller sum
+function NaturalCompareStr(Str1, Str2: string): integer;
+begin
+  //{$IFDEF WINDOWS}
+  //Result := StrCmpLogicalW(PWideChar(UTF8Decode(Str1)), PWideChar(UTF8Decode(Str2)));
+  //{$ELSE}
+  Result := NaturalCompareStr_Typo(Str1, Str2);
+  //{$ENDIF}
+end;
 
-  function lowcase(const c: Char): Byte;
+function NaturalCompareStr_RVK(Str1, Str2: string): integer;
+var
+  Num1, Num2: double;
+  pStr1, pStr2: PChar;
+  qStr1, qStr2: PChar;
+  Len1, Len2: integer;
+  char1, char2: char;
+
+  function IsNumber(ch: char): boolean; inline;
   begin
-    if (c in ['A'..'Z']) then
-      Result := byte(c) + 32
-    else
-      Result := byte(c);
+    Result := ch in ['0'..'9'];
   end;
 
-  function CorrectedResult(vRes: Integer): Integer; inline;
+  function GetNumber(var pch: PChar; var Len: integer): double;
+  var
+    FoundPeriod: boolean;
+    Count: integer = 0;
   begin
-    //to correct the result when we switch vars due for
-    //pc1, pe1 need to point at shorter string, always
-    Result := sign * vRes;
+    FoundPeriod := False;
+    Result := 0;
+    while (pch^ <> #0) and (IsNumber(pch^) or ((not FoundPeriod) and
+        (pch^ = '.'))) do
+    begin
+      if pch^ = '.' then
+      begin
+        FoundPeriod := True;
+        Count := 0;
+      end
+      else
+      begin
+        if FoundPeriod then
+        begin
+          Inc(Count);
+          Result := Result + (Ord(pch^) - Ord('0')) * Power(10, -Count);
+        end
+        else
+          Result := Result * 10 + Ord(pch^) - Ord('0');
+      end;
+      Inc(Len);
+      Inc(pch);
+    end;
   end;
 
 begin
-  l1 := Length(str1);
-  l2 := Length(str2);
-
-  //Any empty str?
-  if (l1 = 0) and (l2 = 0) then
-    Exit(0);
-  if (l1 = 0) then
-    Exit(-1);
-  if (l2 = 0) then
-    Exit(1);
-
-  //pc1, pe1 point at the shorter string, always
-  if l1 <= l2 then
+  if (Str1 <> '') and (Str2 <> '') then
   begin
-    pc1 := @str1[1];
-    pc2 := @str2[1];
-
-    sign := 1;
-  end
-  else
-  begin
-    pc1 := @str2[1];
-    pc2 := @str1[1];
-
-    l := l1;
-    l1 := l2;
-    l2 := l;
-
-    sign := -1;
-  end;
-
-  //end of strs
-  pe1 := pc1 + l1;
-  pe2 := pc2 + l2;
-
-  sum1 := 0;
-  sum2 := 0;
-
-  nl1 := 0;
-  nl2 := 0;
-
-  while (pc1 < pe1) do
-  begin
-    if not (pc1^ in ['0'..'9']) or not (pc2^ in ['0'..'9']) then
+    pStr1 := @Str1[1];
+    pStr2 := @Str2[1];
+    Result := 0;
+    while not ((pStr1^ = #0) or (pStr2^ = #0)) do
     begin
-      //Compare non-numbers
-      if vCaseSensitive then
-        d := pb1^ - pb2^
-      else
-        d := lowcase(pc1^) - lowcase(pc2^);//}
-
-      if (d <> 0) then
-        Exit(CorrectedResult(d));
-      sum1 := sum1 + pb1^;
-      sum2 := sum2 + pb2^;
-    end
-    else
-    begin
-      //Convert a section of str1 to a number (correct for 16 digits)
-      n1 := 0;
-      nl1 := 0;
-      repeat
-        n1 := (n1 shl 4) or (pb1^ - Ord('0'));
-        Inc(pb1);
-        Inc(nl1);
-      until (pc1 >= pe1) or not (pc1^ in ['0'..'9']);
-
-      //Convert a section of str2 to a number (correct for 16 digits)
-      n2 := 0;
-      nl2 := 0;
-      repeat
-        n2 := (n2 shl 4) or (pb2^ - Ord('0'));
-        Inc(pb2);
-        Inc(nl2);
-      until (pc2 >= pe2) or not (pc2^ in ['0'..'9']);
-
-      //Compare numbers naturally
-{      d := n1 - n2;
-      if d <> 0 then
-         exit(CorrectedResult(d))//}
-      if n1 > n2 then
-        Exit(CorrectedResult(1))
-      else if n1 < n2 then
-        Exit(CorrectedResult(-1))
+      Len1 := 0;
+      Len2 := 0;
+      while (pStr1^ = ' ') do
+      begin
+        Inc(pStr1);
+        Inc(Len1);
+      end;
+      while (pStr2^ = ' ') do
+      begin
+        Inc(pStr2);
+        Inc(Len2);
+      end;
+      if IsNumber(pStr1^) and IsNumber(pStr2^) then
+      begin
+        Num1 := GetNumber(pStr1, Len1);
+        Num2 := GetNumber(pStr2, Len2);
+        if Num1 < Num2 then
+          Result := -1
+        else if Num1 > Num2 then
+          Result := 1
+        else
+        begin
+          if Len1 < Len2 then
+            Result := -1
+          else if Len1 > Len2 then
+            Result := 1;
+        end;
+        Dec(pStr1);
+        Dec(pStr2);
+      end
       else
       begin
-        //Switch to shortest string based of remaining characters
-        if (pe1 - pc1) > (pe2 - pc2) then
+        qStr1 := pStr1;
+        qStr2 := pStr2;
+        repeat
+          if qStr1^ <> qStr2^ then break; // no need to check further
+          Inc(qStr1);
+          Inc(qStr2);
+        until (qStr1^ = #0) or (qStr2^ = #0) or IsNumber(qStr1^) or IsNumber(qStr2^);
+
+        Char1 := qstr1^;
+        Char2 := qstr2^;
+        qStr1 := #0;
+        qStr2 := #0;
+
+        // SLOW SLOW SLOW SLOW SLOW SLOW SLOW
+         //Result := WideCompareText(UTF8Decode(pStr1), UTF8Decode(pStr2));
+
+        // This needs to be optimized even further
+        {$IFDEF WINDOWS}
+
+        Result := CompareStringW(LOCALE_USER_DEFAULT, 0,
+          pWideChar(UTF8Decode(pStr1)), Length(pStr1),
+          pWideChar(UTF8Decode(pStr2)), Length(pStr2)) - 2;
+
+        {$ELSE}
+        if IsAscii(pStr1) and IsAscii(pStr2) then
+          Result := strcoll(pchar(pStr1), pchar(pStr2))
+        else
+          Result := wcscoll(pWchar_t(UTF8Decode(pStr1)), pWChar_t(UTF8Decode(pStr2)));
+        {$ENDIF}
+
+
+        if Result <> 0 then // no need to set char back if result <> 0
         begin
-          pc := pc1;
-          pc1 := pc2;
-          pc2 := pc;
-
-          pc := pe1;
-          pe1 := pe2;
-          pe2 := pc;
-
-          nl := nl1;
-          nl1 := nl2;
-          nl2 := nl;
-
-          nl := sum1;
-          sum1 := sum2;
-          sum2 := nl;
-
-          sign := -sign;
+          qStr1^ := Char1;
+          qStr2^ := Char2;
+          pStr1 := qStr1 - 1;
+          pStr2 := qStr2 - 1;
         end;
-        Continue;
+
       end;
+
+      if Result <> 0 then Break;
+
+      Inc(pStr1);
+      Inc(pStr2);
+
     end;
-    Inc(pc1);
-    Inc(pc2);
   end;
-  //str with longer remaining part is bigger (abc1z>abc1)
-  //Result := CorrectedResult((pe1 - pc1) - (pe2 - pc2));
-  Result := (pe1 - pc1) - (pe2 - pc2);
-  if Result = 0 then
+  Num1 := Length(Str1);
+  Num2 := Length(Str2);
+  if (Result = 0) and (Num1 <> Num2) then
   begin
-    //if strs are naturllay identical then:
-    //consider str with longer last numerical section to be bigger (a01bc0001>a001bc1)
-    Result := CorrectedResult(nl1 - nl2);
-    if Result = 0 then
-      //if strs are naturllay identical and last numerical sections have same length then:
-      //consider str with more capital letters smaller (aBc001d>aBC001D)
-      Result := CorrectedResult(sum1 - sum2);
-  end
-  else
-    Result := CorrectedResult(Result);
+    if Num1 < Num2 then
+      Result := -1
+    else
+      Result := 1;
+  end;
+end;
+
+function NaturalCompareStr_Typo(Str1, Str2: string):Integer;
+var
+  Num1, Num2: double;
+  pStr1, pStr2: PChar;
+  Len1, Len2: integer;
+  TextLen1, TextLen2: integer;
+  TextStr1: string = '';
+  TextStr2: string = '';
+  i: integer;
+  j: integer;
+  {$IFDEF LINUX}
+  ConvertedString1 :UCS4string = nil;
+  ConvertedString2 :UCS4string = nil;
+  {$ENDIF}
+
+  function IsNumber(ch: char): boolean;
+  begin
+    Result := ch in ['0'..'9'];
+  end;
+
+  function GetNumber(var pch: PChar; var Len: integer): double;
+  var
+    FoundPeriod: boolean;
+    Count: integer;
+  begin
+    FoundPeriod := False;
+    Result := 0;
+    while (pch^ <> #0) and (IsNumber(pch^) or ((not FoundPeriod) and
+        (pch^ = '.'))) do
+    begin
+      if pch^ = '.' then
+      begin
+        FoundPeriod := True;
+        Count := 0;
+      end
+      else
+      begin
+        if FoundPeriod then
+        begin
+          Inc(Count);
+          Result := Result + (Ord(pch^) - Ord('0')) * Power(10, -Count);
+        end
+        else
+          Result := Result * 10 + Ord(pch^) - Ord('0');
+      end;
+      Inc(Len);
+      Inc(pch);
+    end;
+  end;
+
+  procedure GetChars;
+  begin
+    TextLen1 := 0;
+    while not ((pStr1 + TextLen1)^ in ['0'..'9']) and ((pStr1 + TextLen1)^ <> #0) do
+      Inc(TextLen1);
+    SetLength(TextStr1, TextLen1);
+    i := 1;
+    j := 0;
+    while i <= TextLen1 do
+    begin
+      TextStr1[i] := (pStr1 + j)^;
+      Inc(i);
+      Inc(j);
+    end;
+
+    TextLen2 := 0;
+    while not ((pStr2 + TextLen2)^ in ['0'..'9']) and ((pStr2 + TextLen2)^ <> #0) do
+      Inc(TextLen2);
+    SetLength(TextStr2, TextLen2);
+    i := 1;
+    j := 0;
+    while i <= TextLen2 do
+    begin
+      TextStr2[i] := (pStr2 + j)^;
+      Inc(i);
+      Inc(j);
+    end;
+    {$IFDEF LINUX}
+    ConvertedString1 := UnicodeStringToUCS4String(UTF8Decode(TextStr1));
+    ConvertedString2 := UnicodeStringToUCS4String(UTF8Decode(TextStr2));
+    {$ENDIF}
+  end;
+
+begin
+  if (Str1 <> '') and (Str2 <> '') then
+  begin
+    pStr1 := @Str1[1];
+    pStr2 := @Str2[1];
+    Result := 0;
+    while not ((pStr1^ = #0) or (pStr2^ = #0)) do
+    begin
+      TextLen1 := 1;
+      TextLen2 := 1;
+      Len1 := 0;
+      Len2 := 0;
+      while (pStr1^ = ' ') do
+      begin
+        Inc(pStr1);
+        Inc(Len1);
+      end;
+      while (pStr2^ = ' ') do
+      begin
+        Inc(pStr2);
+        Inc(Len2);
+      end;
+      if IsNumber(pStr1^) and IsNumber(pStr2^) then
+      begin
+        Num1 := GetNumber(pStr1, Len1);
+        Num2 := GetNumber(pStr2, Len2);
+        if Num1 < Num2 then
+          Result := -1
+        else if Num1 > Num2 then
+          Result := 1
+        else
+        begin
+          if Len1 < Len2 then
+            Result := -1
+          else if Len1 > Len2 then
+            Result := 1;
+        end;
+        Dec(pStr1);
+        Dec(pStr2);
+      end
+      else
+      begin
+        GetChars;
+
+        //Result := WideCompareText(UTF8Decode(TextStr1), UTF8Decode(TextStr2));
+        {$IFDEF WINDOWS}
+        Result := CompareStringW(LOCALE_USER_DEFAULT, 0,
+          pWideChar(UTF8Decode(TextStr1)), Length(TextStr1),
+          pWideChar(UTF8Decode(TextStr2)), Length(TextStr2)) - 2;
+        {$ELSE}
+        if IsAscii(TextStr1) and IsAscii(TextStr2) then
+          Result := strcoll(pchar(textstr1), pchar(textstr2))
+        else
+          Result := wcscoll(pWchar_t(ConvertedString1), pWChar_t(ConvertedString2));
+        {$ENDIF}
+      end;
+      if Result <> 0 then
+        Break;
+      Inc(pStr1, TextLen1);
+      Inc(pStr2, TextLen2);
+    end;
+  end;
+  Num1 := Length(Str1);
+  Num2 := Length(Str2);
+  if (Result = 0) and (Num1 <> Num2) then
+  begin
+    if Num1 < Num2 then
+      Result := -1
+    else
+      Result := 1;
+  end;
 end;
 
 procedure QuickSortNaturalPart(var Alist: TStringList; Separator: String;
@@ -594,7 +751,7 @@ procedure QuickSortNaturalPart(var Alist: TStringList; Separator: String;
     if R - L <= 1 then
     begin // a little bit of time saver
       if L < R then
-        if AnsiNaturalCompare(getStringPart(Alist.Strings[L], Separator, PartIndex),
+        if NaturalCompareStr(getStringPart(Alist.Strings[L], Separator, PartIndex),
           getStringPart(Alist.Strings[R], Separator, PartIndex)) > 0 then
           Alist.Exchange(L, R);
       Exit;
@@ -605,10 +762,10 @@ procedure QuickSortNaturalPart(var Alist: TStringList; Separator: String;
     PivotStr := getStringPart(Alist.Strings[Pivot], Separator, PartIndex);
     while vL < vR do
     begin
-      while (vL < Pivot) and (AnsiNaturalCompare(
+      while (vL < Pivot) and (NaturalCompareStr(
           getStringPart(Alist.Strings[vL], Separator, PartIndex), PivotStr) <= 0) do
         Inc(vL);
-      while (vR > Pivot) and (AnsiNaturalCompare(
+      while (vR > Pivot) and (NaturalCompareStr(
           getStringPart(Alist.Strings[vR], Separator, PartIndex), PivotStr) > 0) do
         Dec(vR);
       Alist.Exchange(vL, vR);
@@ -631,14 +788,12 @@ procedure QuickSortNaturalPart(var Alist: TStringList; Separator: String;
   end;
 
 begin
-  if (Alist.Count > 0) then
-  begin
-    try
-      Alist.BeginUpdate;
-      QuickSort(0, Alist.Count - 1);
-    finally
-      Alist.EndUpdate;
-    end;
+  if Alist.Count < 2 then Exit;
+  try
+    Alist.BeginUpdate;
+    QuickSort(0, Alist.Count - 1);
+  finally
+    Alist.EndUpdate;
   end;
 end;
 

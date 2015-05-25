@@ -76,7 +76,7 @@ type
   TFavoriteManager = class
   private
     CS_Favorites : TCriticalSection;
-    FSortColumn: Cardinal;
+    FSortColumn: Integer;
     FSortDirection,
     FIsAuto,
     FIsRunning: Boolean;
@@ -123,12 +123,11 @@ type
     procedure AddToDownloadedChaptersList(const AWebsite, Alink: String; AValue: TStrings); overload;
 
     // sorting
-    procedure Sort(const AColumn: Cardinal);
-    procedure SortNatural(const AColumn: Integer);
+    procedure Sort(const AColumn: Integer);
 
     property Count: Integer read GetFavoritesCount;
     property SortDirection: Boolean read FSortDirection write FSortDirection;
-    property SortColumn: Cardinal read FSortColumn write FSortColumn;
+    property SortColumn: Integer read FSortColumn write FSortColumn;
     property isAuto: Boolean read FIsAuto write FIsAuto;
     property isRunning: Boolean read FIsRunning write FIsRunning;
   end;
@@ -713,7 +712,7 @@ begin
     end;
     if not isRunning then
     begin
-      SortNatural(SortColumn);
+      Sort(SortColumn);
       Backup;
     end;
   finally
@@ -782,7 +781,7 @@ begin
         infos[i].link);
     end;
   end;
-  SortNatural(SortColumn);
+  Sort(SortColumn);
   Backup;
 
   SetLength(infos, 0);
@@ -947,167 +946,78 @@ begin
   end;
 end;
 
-procedure TFavoriteManager.Sort(const AColumn: Cardinal);
+procedure TFavoriteManager.Sort(const AColumn: Integer);
 
-  function GetStr(const ARow: Cardinal): String;
+  function GetStr(ARow: Pointer): String;
   begin
     case AColumn of
-      1: Result := FavoriteItem(ARow).FavoriteInfo.Title;
-      2: Result := FavoriteItem(ARow).FavoriteInfo.currentChapter;
-      3: Result := FavoriteItem(ARow).FavoriteInfo.website;
-      4: Result := FavoriteItem(ARow).FavoriteInfo.SaveTo;
+      1: Result := TFavoriteContainer(ARow).FavoriteInfo.Title;
+      2: Result := TFavoriteContainer(ARow).FavoriteInfo.currentChapter;
+      3: Result := TFavoriteContainer(ARow).FavoriteInfo.website;
+      4: Result := TFavoriteContainer(ARow).FavoriteInfo.SaveTo;
     end;
   end;
 
-  procedure QSort(L, R: Cardinal);
+  function Compare(Item1, Item2: Pointer): Integer;
   var
-    i, j: Cardinal;
-    X: String;
+    ItemT: Pointer;
   begin
-    X := GetStr((L + R) div 2);
-    i := L;
-    j := R;
-    while i <= j do
+    if SortDirection then
     begin
-      case sortDirection of
-        False:
-        begin
-          case AColumn of
-            2:
-            begin
-              while StrToInt(GetStr(i)) < StrToInt(X) do
-                Inc(i);
-              while StrToInt(GetStr(j)) > StrToInt(X) do
-                Dec(j);
-            end
-            else
-            begin
-              while StrComp(PChar(GetStr(i)), PChar(X)) < 0 do
-                Inc(i);
-              while StrComp(PChar(GetStr(j)), PChar(X)) > 0 do
-                Dec(j);
-            end;
-          end;
-        end;
-        True:
-        begin
-          case AColumn of
-            2:
-            begin
-              while StrToInt(GetStr(i)) > StrToInt(X) do
-                Inc(i);
-              while StrToInt(GetStr(j)) < StrToInt(X) do
-                Dec(j);
-            end
-            else
-            begin
-              while StrComp(PChar(GetStr(i)), PChar(X)) > 0 do
-                Inc(i);
-              while StrComp(PChar(GetStr(j)), PChar(X)) < 0 do
-                Dec(j);
-            end;
-          end;
-        end;
-      end;
-      if i <= j then
-      begin
-        FFavorites.Exchange(i,j);
-        Inc(i);
-        if j > 0 then
-          Dec(j);
-      end;
+      ItemT := Item1;
+      Item1 := Item2;
+      Item2 := ItemT;
     end;
-    if L < j then
-      QSort(L, j);
-    if i < R then
-      QSort(i, R);
+    Result := NaturalCompareStr(GetStr(Item1), GetStr(Item2));
+  end;
+
+  procedure QSort(FList: TFPList; L, R: Integer);
+  var
+    I, J : Longint;
+    P, Q : Pointer;
+  begin
+   repeat
+     I := L;
+     J := R;
+     P := FList[ (L + R) div 2 ];
+     repeat
+       while Compare(P, FList[i]) > 0 do
+         I := I + 1;
+       while Compare(P, FList[J]) < 0 do
+         J := J - 1;
+       If I <= J then
+       begin
+         Q := FList[I];
+         Flist[I] := FList[J];
+         FList[J] := Q;
+         I := I + 1;
+         J := J - 1;
+       end;
+     until I > J;
+     if J - L < R - I then
+     begin
+       if L < J then
+         QSort(FList, L, J);
+       L := I;
+     end
+     else
+     begin
+       if I < R then
+         QSort(FList, I, R);
+       R := J;
+     end;
+   until L >= R;
   end;
 
 begin
-  SortColumn := AColumn;
-  QSort(0, FFavorites.Count - 1);
-end;
-
-procedure TFavoriteManager.SortNatural(const AColumn: Integer);
-
-  function Swap(const id1, id2: Integer): Boolean;
-  begin
-    if (id1 >= FFavorites.Count) or (id2 >= FFavorites.Count) then
-      Exit(False);
-    FFavorites.Exchange(id1, id2);
-    Result := True;
+  if FFavorites.Count < 2 then Exit;
+  CS_Favorites.Acquire;
+  try
+    SortColumn := AColumn;
+    QSort(FFavorites, 0, FFavorites.Count - 1);
+  finally
+    CS_Favorites.Release;
   end;
-
-  function GetStr(const ARow: Cardinal): String;
-  begin
-    case AColumn of
-      1: Result := FavoriteItem(ARow).FavoriteInfo.Title;
-      2: Result := FavoriteItem(ARow).FavoriteInfo.currentChapter;
-      3: Result := FavoriteItem(ARow).FavoriteInfo.website;
-      4: Result := FavoriteItem(ARow).FavoriteInfo.SaveTo;
-      else
-        Result := '';
-    end;
-  end;
-
-  procedure QuickSortA(L, R: Integer);
-  var
-    Pivot, vL, vR: Integer;
-    PivotStr: String;
-  begin
-    if R - L <= 1 then
-    begin // a little bit of time saver
-      if L < R then
-        if SortDirection then
-          if AnsiNaturalCompare(GetStr(L), GetStr(R)) > 0 then
-            Swap(L, R)
-          else
-          if AnsiNaturalCompare(GetStr(L), GetStr(R)) < 0 then
-            Swap(L, R);
-      Exit;
-    end;
-    vL := L;
-    vR := R;
-    Pivot := L + Random(R - L); // they say random is best
-    PivotStr := GetStr(Pivot);
-    while vL < vR do
-    begin
-      if SortDirection then
-      begin
-        while (vL < Pivot) and (AnsiNaturalCompare(GetStr(vL), PivotStr) > 0) do
-          Inc(vL);
-        while (vR > Pivot) and (AnsiNaturalCompare(GetStr(vR), PivotStr) <= 0) do
-          Dec(vR);
-      end
-      else
-      begin
-        while (vL < Pivot) and (AnsiNaturalCompare(GetStr(vL), PivotStr) <= 0) do
-          Inc(vL);
-        while (vR > Pivot) and (AnsiNaturalCompare(GetStr(vR), PivotStr) > 0) do
-          Dec(vR);
-      end;
-      Swap(vL, vR);
-      if Pivot = vL then // swap pivot if we just hit it from one side
-      begin
-        Pivot := vR;
-        PivotStr := GetStr(Pivot);
-      end
-      else
-      if Pivot = vR then
-      begin
-        Pivot := vL;
-        PivotStr := GetStr(Pivot);
-      end;
-    end;
-    if Pivot - 1 >= L then
-      QuickSortA(L, Pivot - 1);
-    if Pivot + 1 <= R then
-      QuickSortA(Pivot + 1, R);
-  end;
-
-begin
-  SortColumn := AColumn;
-  QuickSortA(0, FFavorites.Count - 1);
 end;
 
 end.

@@ -12,9 +12,9 @@ interface
 
 uses
   lazutf8classes, jsHTMLUtil, FastHTMLParser, HTMLUtil, SynaCode, FileUtil,
-  Controls, RegExpr, Imaging, ImagingTypes, ImagingCanvases,
-  Classes, SysUtils, Dialogs, ExtCtrls, IniFiles, typinfo, syncobjs,
-  httpsend, blcksock, uBaseUnit, uPacker, uFMDThread, uMisc, frmShutdownCounter;
+  Controls, RegExpr, Imaging, ImagingTypes, ImagingCanvases, Classes, SysUtils,
+  Dialogs, ExtCtrls, IniFiles, typinfo, syncobjs, httpsend, blcksock, uBaseUnit,
+  uPacker, uFMDThread, uMisc, dateutils, frmShutdownCounter;
 
 type
   TDownloadManager = class;
@@ -150,7 +150,7 @@ type
   private
     FTotalReadCount: Integer;
     FSortDirection: Boolean;
-    FSortColumn: Cardinal;
+    FSortColumn: Integer;
     DownloadManagerFile: TIniFile;
   protected
     function GetTaskCount: Integer;
@@ -224,12 +224,11 @@ type
     // check status of task
     function TaskStatusPresent(Stats: TStatusTypes): Boolean;
 
-    // Sort.
-    procedure Sort(const AColumn: Cardinal);
-    procedure SortNatural(const AColumn: Integer);
+    // Sort
+    procedure Sort(const AColumn: Integer);
 
     property SortDirection: Boolean read FSortDirection write FSortDirection;
-    property SortColumn: Cardinal read FSortColumn write FSortColumn;
+    property SortColumn: Integer read FSortColumn write FSortColumn;
     property TransferRate: String read GetTransferRate;
   end;
 
@@ -1713,7 +1712,7 @@ begin
   inherited Destroy;
 end;
 
-// ----- TDownloadManager -----
+{ TDownloadManager }
 
 function TDownloadManager.GetTaskCount: Integer;
 begin
@@ -2491,205 +2490,92 @@ begin
   end;
 end;
 
-procedure TDownloadManager.Sort(const AColumn: Cardinal);
+procedure TDownloadManager.Sort(const AColumn: Integer);
 
-  function GetStr(const ARow: Cardinal): String;
+  function GetStr(ARow: Pointer): String;
   begin
     case AColumn of
-      0: Result := TaskItem(ARow).DownloadInfo.title;
-      3: Result := TaskItem(ARow).DownloadInfo.Website;
-      4: Result := TaskItem(ARow).DownloadInfo.SaveTo;
-      5: Result := FloatToStr(TaskItem(ARow).DownloadInfo.dateTime);
+      0: Result := TTaskContainer(ARow).DownloadInfo.title;
+      1: Result := TTaskContainer(ARow).DownloadInfo.Status;
+      2: Result := TTaskContainer(ARow).DownloadInfo.Progress;
+      3: Result := TTaskContainer(ARow).DownloadInfo.TransferRate;
+      4: Result := TTaskContainer(ARow).DownloadInfo.Website;
+      5: Result := TTaskContainer(ARow).DownloadInfo.SaveTo;
+      6: Result := FloatToStr(TTaskContainer(ARow).DownloadInfo.dateTime, FMDFormatSettings);
     end;
   end;
 
-  procedure QSort(L, R: Cardinal);
-  var
-    i, j: Cardinal;
-    X: String;
+  function GetAddedDate(ARow: Pointer): TDateTime;
   begin
-    X := GetStr((L + R) div 2);
-    i := L;
-    j := R;
-    while i <= j do
+    Result := TTaskContainer(ARow).DownloadInfo.DateTime;
+  end;
+
+  function Compare(Item1, Item2: Pointer): Integer;
+  var
+    ItemT: Pointer;
+  begin
+    if SortDirection then
     begin
-      case SortDirection of
-        False:
-        begin
-          case AColumn of
-            5:
-            begin
-              while StrToFloat(GetStr(i)) < StrToFloat(X) do
-                Inc(i);
-              while StrToFloat(GetStr(j)) > StrToFloat(X) do
-                Dec(j);
-            end
-            else
-            begin
-              while StrComp(PChar(GetStr(i)), PChar(X)) < 0 do
-                Inc(i);
-              while StrComp(PChar(GetStr(j)), PChar(X)) > 0 do
-                Dec(j);
-            end;
-          end;
-        end;
-        True:
-        begin
-          case AColumn of
-            5:
-            begin
-              while StrToFloat(GetStr(i)) > StrToFloat(X) do
-                Inc(i);
-              while StrToFloat(GetStr(j)) < StrToFloat(X) do
-                Dec(j);
-            end
-            else
-            begin
-              while StrComp(PChar(GetStr(i)), PChar(X)) > 0 do
-                Inc(i);
-              while StrComp(PChar(GetStr(j)), PChar(X)) < 0 do
-                Dec(j);
-            end;
-          end;
-        end;
-      end;
-      if i <= j then
-      begin
-        Containers.Exchange(i, j);
-        Inc(i);
-        if j > 0 then
-          Dec(j);
-      end;
+      ItemT := Item1;
+      Item1 := Item2;
+      Item2 := ItemT;
     end;
-    if L < j then
-      QSort(L, j);
-    if i < R then
-      QSort(i, R);
+    case AColumn of
+      6 : Result := CompareDateTime(GetAddedDate(Item1), GetAddedDate(Item2));
+      else
+        Result := NaturalCompareStr(GetStr(Item1), GetStr(Item2));
+    end;
+  end;
+
+  procedure QSort(FList: TFPList; L, R: Integer);
+  var
+    I, J : Longint;
+    P, Q : Pointer;
+  begin
+   repeat
+     I := L;
+     J := R;
+     P := FList[ (L + R) div 2 ];
+     repeat
+       while Compare(P, FList[i]) > 0 do
+         I := I + 1;
+       while Compare(P, FList[J]) < 0 do
+         J := J - 1;
+       If I <= J then
+       begin
+         Q := FList[I];
+         Flist[I] := FList[J];
+         FList[J] := Q;
+         I := I + 1;
+         J := J - 1;
+       end;
+     until I > J;
+     if J - L < R - I then
+     begin
+       if L < J then
+         QSort(FList, L, J);
+       L := I;
+     end
+     else
+     begin
+       if I < R then
+         QSort(FList, I, R);
+       R := J;
+     end;
+   until L >= R;
   end;
 
 begin
-  if Containers.Count <= 2 then
-    Exit;
-  sortColumn := AColumn;
-  QSort(0, Containers.Count - 1);
+  if Containers.Count < 2 then Exit;
+  CS_DownloadManager_Task.Acquire;
+  try
+    SortColumn := AColumn;
+    QSort(Containers, 0, Containers.Count - 1);
+  finally
+    CS_DownloadManager_Task.Release;
+  end;
   MainForm.vtDownload.Repaint;
   MainForm.vtDownloadFilters;
-end;
-
-procedure TDownloadManager.SortNatural(const AColumn: Integer);
-
-  function GetStr(const ARow: Integer): String;
-  begin
-    case AColumn of
-      0: Result := TaskItem(ARow).DownloadInfo.title;
-      1: Result := TaskItem(ARow).DownloadInfo.Status;
-      2: Result := TaskItem(ARow).DownloadInfo.Progress;
-      3: Result := TaskItem(ARow).DownloadInfo.Website;
-      4: Result := TaskItem(ARow).DownloadInfo.SaveTo;
-      5: Result := FloatToStr(TaskItem(ARow).DownloadInfo.dateTime, FMDFormatSettings);
-      else
-        Result := '';
-    end;
-  end;
-
-  function GetFloat(const ARow: Integer): Double;
-  begin
-    Result := TaskItem(ARow).DownloadInfo.dateTime;
-  end;
-
-  procedure QuickSortA(L, R: Integer);
-  var
-    Pivot, vL, vR: Integer;
-    PivotDbl: Double;
-    PivotStr: String;
-  begin
-    if R - L <= 1 then  // a little bit of time saver
-    begin
-      if L < R then
-        if SortDirection then
-          if AnsiNaturalCompare(GetStr(L), GetStr(R)) < 0 then
-            Containers.Exchange(L, R)
-          else
-          if AnsiNaturalCompare(GetStr(L), GetStr(R)) > 0 then
-            Containers.Exchange(L, R);
-      Exit;
-    end;
-    vL := L;
-    vR := R;
-    Pivot := L + Random(R - L); // they say random is best
-    if AColumn = 5 then
-      PivotDbl := GetFloat(Pivot)
-    else
-      PivotStr := GetStr(Pivot);
-    while vL < vR do
-    begin
-      if SortDirection then
-      begin
-        if AColumn = 5 then //sorting datetime
-        begin
-          while (vL < Pivot) and (GetFloat(vL) > PivotDbl) do
-            Inc(vL);
-          while (vR > Pivot) and (GetFloat(vR) <= PivotDbl) do
-            Dec(vR);
-        end
-        else
-        begin
-          while (vL < Pivot) and (AnsiNaturalCompare(GetStr(vL), PivotStr) > 0) do
-            Inc(vL);
-          while (vR > Pivot) and (AnsiNaturalCompare(GetStr(vR), PivotStr) <= 0) do
-            Dec(vR);
-        end;
-      end
-      else
-      begin
-        if AColumn = 5 then //sorting datetime
-        begin
-          while (vL < Pivot) and (GetFloat(vL) <= PivotDbl) do
-            Inc(vL);
-          while (vR > Pivot) and (GetFloat(vR) > PivotDbl) do
-            Dec(vR);
-        end
-        else
-        begin
-          while (vL < Pivot) and (AnsiNaturalCompare(GetStr(vL), PivotStr) <= 0) do
-            Inc(vL);
-          while (vR > Pivot) and (AnsiNaturalCompare(GetStr(vR), PivotStr) > 0) do
-            Dec(vR);
-        end;
-      end;
-      Containers.Exchange(vL, vR);
-      if Pivot = vL then // swap pivot if we just hit it from one side
-      begin
-        Pivot := vR;
-        if AColumn = 5 then
-          PivotDbl := GetFloat(Pivot)
-        else
-          PivotStr := GetStr(Pivot);
-      end
-      else
-      if Pivot = vR then
-      begin
-        Pivot := vL;
-        if AColumn = 5 then
-          PivotDbl := GetFloat(Pivot)
-        else
-          PivotStr := GetStr(Pivot);
-      end;
-    end;
-    if Pivot - 1 >= L then
-      QuickSortA(L, Pivot - 1);
-    if Pivot + 1 <= R then
-      QuickSortA(Pivot + 1, R);
-  end;
-
-begin
-  if Containers.Count > 1 then
-  begin;
-    sortColumn := AColumn;
-    QuickSortA(0, Containers.Count - 1);
-    MainForm.vtDownload.Repaint;
-    MainForm.vtDownloadFilters;
-  end;
 end;
 
 end.
