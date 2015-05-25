@@ -251,12 +251,14 @@ begin
       p := DLManager.AddTask;
       DLManager.TaskItem(p).mangaSiteID := GetMangaSiteID(website);
 
+      if Trim(title) = '' then
+        title := Info.mangaInfo.title;
       for i := 0 to Info.mangaInfo.numChapter - 1 do
       begin
         // generate folder name
         s := CustomRename(OptionCustomRename,
-          Info.mangaInfo.website,
-          Info.mangaInfo.title,
+          website,
+          title,
           info.mangaInfo.authors,
           Info.mangaInfo.artists,
           Info.mangaInfo.chapterName.Strings[i],
@@ -281,7 +283,7 @@ begin
       DLManager.TaskItem(p).currentDownloadChapterPtr := 0;
       DLManager.TaskItem(p).downloadInfo.Website := website;
       DLManager.TaskItem(p).downloadInfo.Link := URL;
-      DLManager.TaskItem(p).downloadInfo.Title := Info.mangaInfo.title;
+      DLManager.TaskItem(p).downloadInfo.Title := title;
       DLManager.TaskItem(p).downloadInfo.DateTime := Now;
 
       if FSavePath = '' then
@@ -404,7 +406,8 @@ begin
         for i := 0 to Info.mangaInfo.numChapter - 1 do
           s2 := s2 + Info.mangaInfo.chapterLinks.Strings[i] + SEPERATOR;
       end;
-
+      if Trim(title) = '' then
+        title := Info.mangaInfo.title;
       FavoriteManager.Add(title,
         IntToStr(Info.mangaInfo.numChapter),
         s2,

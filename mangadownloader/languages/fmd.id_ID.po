@@ -93,6 +93,14 @@ msgstr "Apakah Anda ingin menngunduh daftar komik dari server?"
 msgid "URL not supported!"
 msgstr "URL tidak didukung!"
 
+#: frmmain.rs_droptargetmodeitems
+msgid ""
+"Download all\n"
+"Add to favorites"
+msgstr ""
+"Unduh semua\n"
+"Tambahkan ke kesukaan"
+
 #: frmmain.rs_filterstatusitems
 msgid ""
 "Completed\n"
@@ -439,6 +447,10 @@ msgstr "Untuk situs komik yang lain, silahkan pilih di Pengaturan->Situs komik"
 #: tmainform.cbuseregexpr.caption
 msgid "Regular Expression"
 msgstr "Regular Expression"
+
+#: tmainform.ckdroptarget.caption
+msgid "Show Drop Box"
+msgstr "Tampilkan kotak unduh"
 
 #: tmainform.ckfilteraction.caption
 msgid "Action"
@@ -808,6 +820,10 @@ msgstr "Cari nama komik..."
 msgid "Input URL here"
 msgstr "Masukkan URL disini"
 
+#: tmainform.gbdroptarget.caption
+msgid "Drop Box"
+msgstr "Kotak unduh"
+
 #: tmainform.gboptionexternal.caption
 msgid "External program"
 msgstr "Program eksternal"
@@ -828,6 +844,10 @@ msgstr "Mengubah nama"
 #: tmainform.lbdefaultdownloadpath.caption
 msgid "Choose the default download path:"
 msgstr "Pilih lokasi pengunduhan bawaan:"
+
+#: tmainform.lbdroptargetopacity.caption
+msgid "Opacity"
+msgstr "Opasitas"
 
 #: tmainform.lbfilterartists.caption
 msgctxt "tmainform.lbfilterartists.caption"
@@ -1192,6 +1212,10 @@ msgstr "Memiliki semua genre yang dicentang"
 #: tmainform.rbone.caption
 msgid "Have one of genres checked"
 msgstr "Memiliki salah satu genre yang dicentang"
+
+#: tmainform.rgdroptargetmode.caption
+msgid "Mode"
+msgstr "Modus"
 
 #: tmainform.rgoptioncompress.caption
 msgid "Save downloaded chapters as"

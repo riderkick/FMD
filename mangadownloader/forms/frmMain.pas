@@ -17,10 +17,10 @@ uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
   LCLType, ExtCtrls, ComCtrls, Buttons, Spin, Menus, VirtualTrees, RichMemo,
   IniFiles, simpleipc, UTF8Process, lclproc, types, strutils, LCLIntf,
-  DefaultTranslator, LazUTF8, AnimatedGif, uBaseUnit, uData,
-  uDownloadsManager, uFavoritesManager, uUpdateThread, uUpdateDBThread,
-  uSubThread, uSilentThread, uMisc, uGetMangaInfosThread, uTranslation,
-  USimpleException, ActiveX;
+  DefaultTranslator, LazUTF8, AnimatedGif, uBaseUnit, uData, uDownloadsManager,
+  uFavoritesManager, uUpdateThread, uUpdateDBThread, uSubThread, uSilentThread,
+  uMisc, uGetMangaInfosThread, uTranslation, uFrmDropTarget, USimpleException,
+  ActiveX;
 
 type
   TDoFMDType = (DoFMDNothing, DoFMDUpdate, DoFMDExit, DoFMDShutdown, DoFMDHibernate);
@@ -58,16 +58,19 @@ type
     cbUseRegExpr: TCheckBox;
     cbOptionProxyType: TComboBox;
     cbOptionOneInstanceOnly: TCheckBox;
+    ckDropTarget: TCheckBox;
     edOptionDefaultPath: TEdit;
     edOptionExternal: TEdit;
     edSaveTo: TEdit;
     edURL: TEdit;
     gbOptionExternal: TGroupBox;
+    gbDropTarget: TGroupBox;
     IconDL: TImageList;
     IconMed: TImageList;
     IconSmall: TImageList;
     itMonitor: TTimer;
     itStartup: TIdleTimer;
+    lbDropTargetOpacity: TLabel;
     lbDefaultDownloadPath: TLabel;
     lbSaveTo: TLabel;
     lbOptionProxyType: TLabel;
@@ -247,6 +250,7 @@ type
     pmMangaList: TPopupMenu;
     pmUpdate: TPopupMenu;
     pmEditURL: TPopupMenu;
+    rgDropTargetMode: TRadioGroup;
     rbOne: TRadioButton;
     rbAll: TRadioButton;
     rgOptionCompress: TRadioGroup;
@@ -277,6 +281,7 @@ type
     tbDownloadStopAll: TToolButton;
     ToolButton1: TToolButton;
     tbDownloadDeleteCompleted: TToolButton;
+    tbDropTargetOpacity: TTrackBar;
     tvDownloadFilter: TTreeView;
     tsDownloadFilter: TTabSheet;
     tsMangaList: TTabSheet;
@@ -318,6 +323,7 @@ type
     procedure cbOptionDigitChapterChange(Sender: TObject);
     procedure cbOptionDigitVolumeChange(Sender: TObject);
     procedure cbSelectMangaChange(Sender: TObject);
+    procedure ckDropTargetChange(Sender: TObject);
     procedure clbChapterListBeforeCellPaint(Sender: TBaseVirtualTree;
       TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
       CellPaintMode: TVTCellPaintMode; CellRect: TRect; var ContentRect: TRect);
@@ -410,6 +416,7 @@ type
     procedure tbDownloadDeleteCompletedClick(Sender: TObject);
     procedure tbDownloadResumeAllClick(Sender: TObject);
     procedure tbDownloadStopAllClick(Sender: TObject);
+    procedure tbDropTargetOpacityChange(Sender: TObject);
     procedure TrayIconDblClick(Sender: TObject);
     procedure tvDownloadFilterSelectionChanged(Sender: TObject);
     procedure UniqueInstanceFMDOtherInstance(Sender: TObject;
@@ -567,6 +574,9 @@ type
 
     procedure AddChapterNameToList;
 
+    // Create silent thread
+    procedure AddSilentThread(URL: string);
+
     // Add text to TRichMemo
     procedure AddTextToInfo(title, infoText: String);
 
@@ -591,6 +601,7 @@ type
     // Load form information, like previous position, size, ...
     procedure LoadFormInformation;
     procedure SaveFormInformation;
+    procedure SaveDropTargetFormInformation;
 
     // load language file
     procedure LoadLanguage;
@@ -619,6 +630,7 @@ const
 resourcestring
   RS_FilterStatusItems = 'Completed'#13#10'Ongoing'#13#10'<none>';
   RS_OptionFMDDoItems = 'Do nothing'#13#10'Exit FMD'#13#10'Shutdown'#13#10'Hibernate';
+  RS_DropTargetModeItems = 'Download all'#13#10'Add to favorites';
 
   RS_HintFavoriteProblem = 'There is a problem with this data!'#13#10
                          + 'Removing and re-adding this data may fix the problem.';
@@ -831,12 +843,14 @@ begin
       Exit;
     end;
   end;
-  CloseAction := caFree;
   CloseNow;
+  CloseAction := caFree;
 end;
 
 procedure TMainForm.CloseNow;
 begin
+  if Assigned(FormDropTarget) then
+    FormDropTarget.Close;
   tmBackup.Enabled := False;
   itSaveDownloadedList.Enabled := False;
   itRefreshDLInfo.Enabled := False;
@@ -1594,14 +1608,7 @@ end;
 
 procedure TMainForm.DisableAddToFavorites(webs: String);
 begin
-  if (webs = WebsiteRoots[EHENTAI_ID, 0]) or
-    (webs = WebsiteRoots[FAKKU_ID, 0]) or
-    (webs = WebsiteRoots[PURURIN_ID, 0])
-  //OR (webs=WebsiteRoots[MANGATRADERS_ID, 0])
-  then
-    btAddToFavorites.Enabled := False
-  else
-    btAddToFavorites.Enabled := True;
+  btAddToFavorites.Enabled := not SitesWithoutFavorites(webs);
 end;
 
 procedure TMainForm.FMDInstanceReceiveMsg(Sender: TObject);
@@ -1816,6 +1823,23 @@ begin
     edSearchKeyUp(edSearch, K, []);
     edSearchChange(edSearch);
     Screen.Cursor := crDefault;
+  end;
+end;
+
+procedure TMainForm.ckDropTargetChange(Sender: TObject);
+begin
+  if ckDropTarget.Checked then
+  begin
+    if FormDropTarget = nil then
+      Application.CreateForm(TFormDropTarget, FormDropTarget);
+    uFrmDropTarget.OnDropChekout := @AddSilentThread;
+    uFrmDropTarget.FAlphaBlendValue := tbDropTargetOpacity.Position;
+    FormDropTarget.Show;
+  end
+  else
+  begin
+    if Assigned(FormDropTarget) then
+      FormDropTarget.Close;
   end;
 end;
 
@@ -3050,6 +3074,13 @@ begin
   DLManager.StopAllTasks;
 end;
 
+procedure TMainForm.tbDropTargetOpacityChange(Sender: TObject);
+begin
+  uFrmDropTarget.FAlphaBlendValue := tbDropTargetOpacity.Position;
+  if Assigned(FormDropTarget) then
+    FormDropTarget.AlphaBlendValue := uFrmDropTarget.FAlphaBlendValue;
+end;
+
 procedure TMainForm.TrayIconDblClick(Sender: TObject);
 begin
   if (WindowState = wsMinimized) or (Visible = False) then
@@ -3803,6 +3834,14 @@ begin
     options.WriteBool('misc', 'MangafoxRemoveWatermarks',
       cbOptionMangaFoxRemoveWatermarks.Checked);
 
+    options.WriteBool('droptarget', 'Show', ckDropTarget.Checked);
+    options.WriteInteger('droptarget', 'Mode', rgDropTargetMode.ItemIndex);
+    options.WriteInteger('droptarget', 'Opacity', tbDropTargetOpacity.Position);
+    options.WriteInteger('droptarget', 'Width', uFrmDropTarget.FWidth);
+    options.WriteInteger('droptarget', 'Heigth', uFrmDropTarget.FHeight);
+    options.WriteInteger('droptarget', 'Top', uFrmDropTarget.FTop);
+    options.WriteInteger('droptarget', 'Left', uFrmDropTarget.FLeft);
+
     options.UpdateFile;
 
     if OptionCheckMinutes = 0 then
@@ -4160,6 +4199,73 @@ begin
   UpdateVtChapter;
 end;
 
+procedure TMainForm.AddSilentThread(URL: string);
+var
+  mt: TMetaDataType;
+  i: Integer;
+  webid: Cardinal;
+  website,
+  webs,
+  link: String;
+  regx: TRegExpr;
+begin
+  website := '';
+  webs := '';
+  link := '';
+  regx := TRegExpr.Create;
+  try
+    regx.Expression := '^https?\://';
+    if not (regx.Exec(URL)) then
+      URL := 'http://' + URL;
+
+    regx.Expression := '^https?\:(//[^/]*\w+\.\w+)(\:\d+)?(/|\Z)(.*)$';
+    if regx.Exec(URL) then
+    begin
+      link := regx.Replace(URL, '$4', True);
+      webs := regx.Replace(URL, '$1', True);
+    end;
+
+    if (webs <> '') and (link <> '') then
+    begin
+      for i := Low(WebsiteRoots) to High(WebsiteRoots) do
+        if Pos(webs, WebsiteRoots[i, 1]) > 0 then
+        begin
+          webid := i;
+          website := WebsiteRoots[i, 0];
+          Break;
+        end;
+      if website = '' then
+      begin
+        webs := TrimLeftChar(webs, ['/']);
+        for i := Low(WebsiteRoots) to High(WebsiteRoots) do
+        begin
+          if Pos(webs, WebsiteRoots[i, 1]) > 0 then
+          begin
+            webid := i;
+            website := WebsiteRoots[i, 0];
+            Break;
+          end;
+        end;
+      end;
+      if website <> '' then
+      begin
+        link := '/' + link;
+        URL := FixURL(WebsiteRoots[webid, 1] + link);
+        DisableAddToFavorites(website);
+      end;
+    end;
+  finally
+    regx.Free;
+  end;
+  if (website = '') or (link = '') then Exit;
+  if rgDropTargetMode.ItemIndex = 0 then
+    mt := MD_DownloadAll
+  else
+    mt := MD_AddToFavorites;
+  if (mt = MD_AddToFavorites) and (SitesWithoutFavorites(website)) then Exit;
+  SilentThreadManager.Add(mt, website, '', link);
+end;
+
 procedure TMainForm.AddTextToInfo(title, infoText: String);
 var
   fp: TFontParams;
@@ -4395,6 +4501,18 @@ begin
   cbOptionMangaFoxRemoveWatermarks.Checked :=
     options.ReadBool('misc', 'MangafoxRemoveWatermarks', False);
 
+  uFrmDropTarget.FWidth := options.ReadInteger('droptarget', 'Width',
+    uFrmDropTarget.FWidth);
+  uFrmDropTarget.FHeight := options.ReadInteger('droptarget', 'Heigth',
+    uFrmDropTarget.FHeight);
+  uFrmDropTarget.FTop := options.ReadInteger('droptarget', 'Top',
+    uFrmDropTarget.FTop);
+  uFrmDropTarget.FLeft := options.ReadInteger('droptarget', 'Left',
+    uFrmDropTarget.FLeft);
+  rgDropTargetMode.ItemIndex := options.ReadInteger('droptarget', 'Mode', 0);
+  tbDropTargetOpacity.Position := options.ReadInteger('droptarget', 'Opacity', 255);
+  ckDropTarget.Checked := options.ReadBool('droptarget', 'Show', False);
+
   cbLanguages.Items.Clear;
   uTranslation.CollectLanguagesFiles;
   if uTranslation.AvailableLanguages.Count > 0 then
@@ -4484,72 +4602,6 @@ begin
         else
           Inc(i);
       end;
-    {
-     cbSelectManga.Items.Clear;
-     s := options.ReadString('general', 'MangaListSelect',
-       mangalistIni.ReadString('general', 'DefaultSelect', DEFAULT_LIST));
-     if Pos(SEPERATOR, s) > 0 then
-       GetParams(lang, s)  //for old config
-     else
-       lang.DelimitedText := s;
-
-     if (wName.Count > 0) and (wName.Count = wLang.Count) then
-     begin
-       SetLength(optionMangaSiteSelectionNodes, wName.Count);
-       currentLanguage := '';
-       for i := 0 to wName.Count - 1 do
-       begin
-         with vtOptionMangaSiteSelection do
-         begin
-           if currentLanguage <> wLang[i] then
-           begin
-             currentLanguage := wLang[i];
-             currentRootNode := AddChild(nil);
-             Data := GetNodeData(currentRootNode);
-             Data^.Text := currentLanguage;
-           end;
-           ANode := AddChild(currentRootNode);
-           ANode^.CheckState := csUncheckedNormal;
-           Data := GetNodeData(ANode);
-           Data^.Text := wName[i];
-
-           optionMangaSiteSelectionNodes[i] := ANode;
-         end;
-       end;
-     end;
-
-     // remove deleted manga name
-     i := 0;
-     if (lang.Count > 0) and (Length(optionMangaSiteSelectionNodes) > 0) then
-       while i < lang.Count do
-       begin
-         isDeleteUnusedManga := True;
-         for j := 0 to Length(optionMangaSiteSelectionNodes) - 1 do
-         begin
-           Data := vtOptionMangaSiteSelection.GetNodeData(
-             optionMangaSiteSelectionNodes[j]);
-           if lang[i] = Data^.Text then
-           begin
-             isDeleteUnusedManga := False;
-             Break;
-           end;
-         end;
-         if isDeleteUnusedManga then
-           lang.Delete(i)
-         else
-           Inc(i);
-       end;
-
-     cbSelectManga.Items.Assign(lang);
-     //set selected manga sites on option manga sites list
-     if (lang.Count > 0) and (Length(optionMangaSiteSelectionNodes) > 0) then
-       for i := 0 to Length(optionMangaSiteSelectionNodes) - 1 do
-       begin
-         if FindStrLinear(lang, wName[i]) then
-           if FindStrLinear(lang, Data^.Text) then
-             optionMangaSiteSelectionNodes[i]^.CheckState := csCheckedNormal;
-       end;
-     }
 
     // load last selected manga
     if cbSelectManga.Items.Count > 0 then
@@ -4752,12 +4804,26 @@ begin
   options.WriteInteger('form', 'MainFormHeight', Height);
 end;
 
+procedure TMainForm.SaveDropTargetFormInformation;
+begin
+  with options do
+  begin
+    WriteInteger('droptarget', 'Opacity', uFrmDropTarget.FAlphaBlendValue);
+    WriteInteger('droptarget', 'Width', uFrmDropTarget.FWidth);
+    WriteInteger('droptarget', 'Heigth', uFrmDropTarget.FHeight);
+    WriteInteger('droptarget', 'Top', uFrmDropTarget.FTop);
+    WriteInteger('droptarget', 'Left', uFrmDropTarget.FLeft);
+    UpdateFile;
+  end;
+end;
+
 procedure TMainForm.LoadLanguage;
 var
   idxLanguages,
   idxFilterStatus,
   idxOptionLetFMDDo,
-  idxOptionProxyType: Integer;
+  idxOptionProxyType,
+  idxDropTargetMode: Integer;
 begin
   if uTranslation.LastSelected <> AvailableLanguages.Names[cbLanguages.ItemIndex] then
   begin
@@ -4765,15 +4831,18 @@ begin
     idxFilterStatus := cbFilterStatus.ItemIndex;
     idxOptionLetFMDDo := cbOptionLetFMDDo.ItemIndex;
     idxOptionProxyType := cbOptionProxyType.ItemIndex;
+    idxDropTargetMode := rgDropTargetMode.ItemIndex;
     if uTranslation.SetLangByIndex(cbLanguages.ItemIndex) then
     begin
       cbFilterStatus.Items.Text := RS_FilterStatusItems;
       cbOptionLetFMDDo.Items.Text := RS_OptionFMDDoItems;
+      rgDropTargetMode.Items.Text := RS_DropTargetModeItems;
 
       cbLanguages.ItemIndex := idxLanguages;
       cbFilterStatus.ItemIndex := idxFilterStatus;
       cbOptionLetFMDDo.ItemIndex := idxOptionLetFMDDo;
       cbOptionProxyType.ItemIndex := idxOptionProxyType;
+      rgDropTargetMode.ItemIndex := idxDropTargetMode;
     end;
   end;
 end;

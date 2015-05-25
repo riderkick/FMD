@@ -81,6 +81,12 @@ msgstr ""
 msgid "URL not supported!"
 msgstr ""
 
+#: frmmain.rs_droptargetmodeitems
+msgid ""
+"Download all\n"
+"Add to favorites"
+msgstr ""
+
 #: frmmain.rs_filterstatusitems
 msgid ""
 "Completed\n"
@@ -417,6 +423,10 @@ msgstr ""
 
 #: tmainform.cbuseregexpr.caption
 msgid "Regular Expression"
+msgstr ""
+
+#: tmainform.ckdroptarget.caption
+msgid "Show Drop Box"
 msgstr ""
 
 #: tmainform.ckfilteraction.caption
@@ -785,6 +795,10 @@ msgstr ""
 msgid "Input URL here"
 msgstr ""
 
+#: tmainform.gbdroptarget.caption
+msgid "Drop Box"
+msgstr ""
+
 #: tmainform.gboptionexternal.caption
 msgid "External program"
 msgstr ""
@@ -804,6 +818,10 @@ msgstr ""
 
 #: tmainform.lbdefaultdownloadpath.caption
 msgid "Choose the default download path:"
+msgstr ""
+
+#: tmainform.lbdroptargetopacity.caption
+msgid "Opacity"
 msgstr ""
 
 #: tmainform.lbfilterartists.caption
@@ -1146,6 +1164,10 @@ msgstr ""
 
 #: tmainform.rbone.caption
 msgid "Have one of genres checked"
+msgstr ""
+
+#: tmainform.rgdroptargetmode.caption
+msgid "Mode"
 msgstr ""
 
 #: tmainform.rgoptioncompress.caption

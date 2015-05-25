@@ -93,6 +93,14 @@ msgstr "Do you want to download manga list from the server ?"
 msgid "URL not supported!"
 msgstr "URL not supported!"
 
+#: frmmain.rs_droptargetmodeitems
+msgid ""
+"Download all\n"
+"Add to favorites"
+msgstr ""
+"Download all\n"
+"Add to favorites"
+
 #: frmmain.rs_filterstatusitems
 msgid ""
 "Completed\n"
@@ -444,6 +452,10 @@ msgstr "For more manga sites, please go to Options->Manga sites"
 #: tmainform.cbuseregexpr.caption
 msgid "Regular Expression"
 msgstr "Regular Expression"
+
+#: tmainform.ckdroptarget.caption
+msgid "Show Drop Box"
+msgstr "Show Drop Box"
 
 #: tmainform.ckfilteraction.caption
 msgid "Action"
@@ -812,6 +824,10 @@ msgstr "Search..."
 msgid "Input URL here"
 msgstr "Input URL here"
 
+#: tmainform.gbdroptarget.caption
+msgid "Drop Box"
+msgstr "Drop Box"
+
 #: tmainform.gboptionexternal.caption
 msgid "External program"
 msgstr "External program"
@@ -832,6 +848,10 @@ msgstr "Renaming"
 #: tmainform.lbdefaultdownloadpath.caption
 msgid "Choose the default download path:"
 msgstr "Choose the default download path:"
+
+#: tmainform.lbdroptargetopacity.caption
+msgid "Opacity"
+msgstr "Opacity"
 
 #: tmainform.lbfilterartists.caption
 #| msgid "Artists"
@@ -1208,6 +1228,10 @@ msgstr "Have all genre checked"
 #: tmainform.rbone.caption
 msgid "Have one of genres checked"
 msgstr "Have one of genres checked"
+
+#: tmainform.rgdroptargetmode.caption
+msgid "Mode"
+msgstr "Mode"
 
 #: tmainform.rgoptioncompress.caption
 msgid "Save downloaded chapters as"
