@@ -36,9 +36,10 @@
             mangaInfo.title := CommonStringFilter(parse[i + 1]);
 
         //cover
-        if (GetTagName(parse[i]) = 'img') and
-          (GetVal(parse[i], 'class') = 'img-responsive') then
-          mangaInfo.coverLink := GetVal(parse[i], 'src');
+        if (GetTagName(parse[i]) = 'div') and
+          (GetVal(parse[i], 'class') = '__image') then
+          if GetTagName(parse[i + 2]) = 'img' then
+            mangaInfo.coverLink := GetVal(parse[i + 2], 'src');
 
         if GetTagName(parse[i]) = 'strong' then
         begin
