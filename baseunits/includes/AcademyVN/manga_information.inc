@@ -32,7 +32,7 @@
       begin
         //title
         if mangaInfo.title = '' then
-          if GetVal(parse[i], 'class') = 'm-name' then
+          if GetVal(parse[i], 'class') = '__name' then
             mangaInfo.title := CommonStringFilter(parse[i + 1]);
 
         //cover
