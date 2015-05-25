@@ -15,7 +15,7 @@ uses
     {$ENDIF}
   {$ENDIF}
   Forms, Interfaces, FileUtil,simpleipc, IniFiles,
-  uBaseUnit, frmMain, frmShutdownCounter, frmUpdateDialog;
+  uBaseUnit, frmMain, frmShutdownCounter, frmUpdateDialog, uFrmDropTarget;
 
 var
   CheckInstance: Boolean = True;

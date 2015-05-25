@@ -239,7 +239,7 @@
         <PackageName Value="LCL"/>
       </Item3>
     </RequiredPackages>
-    <Units Count="18">
+    <Units Count="19">
       <Unit0>
         <Filename Value="md.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -329,6 +329,14 @@
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="frmUpdateDialog"/>
       </Unit17>
+      <Unit18>
+        <Filename Value="forms\ufrmdroptarget.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="FormDropTarget"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="uFrmDropTarget"/>
+      </Unit18>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

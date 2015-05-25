@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, Windows, SysUtils, ActiveX, comobj, Forms, Controls,
-  ExtCtrls, Menus, LCLType;
+  ExtCtrls, Menus, LCLType, DefaultTranslator;
 
 type
 

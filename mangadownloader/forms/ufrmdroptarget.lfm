@@ -1,11 +1,10 @@
 object FormDropTarget: TFormDropTarget
-  Left = 319
+  Left = 611
   Height = 156
-  Top = 185
+  Top = 306
   Width = 143
   BorderIcons = []
   BorderStyle = bsNone
-  Caption = 'FormDropTarget'
   ClientHeight = 156
   ClientWidth = 143
   Color = clWhite

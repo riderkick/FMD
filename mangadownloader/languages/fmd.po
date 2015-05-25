@@ -206,6 +206,10 @@ msgstr ""
 msgid "System will shutdown in %d second."
 msgstr ""
 
+#: tformdroptarget.miclose.caption
+msgid "&Close"
+msgstr ""
+
 #: timportfavorites.btcancel.caption
 msgctxt "TIMPORTFAVORITES.BTCANCEL.CAPTION"
 msgid "Cancel"

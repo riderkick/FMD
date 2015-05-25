@@ -229,6 +229,10 @@ msgstr "Komputer akan dihibernasi dalam %d detik"
 msgid "System will shutdown in %d second."
 msgstr "Komputer akan dimatikan dalam %d detik"
 
+#: tformdroptarget.miclose.caption
+msgid "&Close"
+msgstr "&Tutup"
+
 #: timportfavorites.btcancel.caption
 msgctxt "timportfavorites.btcancel.caption"
 msgid "Cancel"

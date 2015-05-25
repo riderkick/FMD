@@ -229,6 +229,10 @@ msgstr "System will hibernate in %d second."
 msgid "System will shutdown in %d second."
 msgstr "System will shutdown in %d second."
 
+#: tformdroptarget.miclose.caption
+msgid "&Close"
+msgstr "&Close"
+
 #: timportfavorites.btcancel.caption
 msgctxt "timportfavorites.btcancel.caption"
 msgid "Cancel"
