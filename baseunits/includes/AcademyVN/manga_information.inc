@@ -70,17 +70,16 @@
             else
               mangaInfo.status := '0';
           end;
-
-          //summary
-          if Pos('Sơ lược:', parse[i + 1]) > 0 then
-            for j := i + 3 to parse.Count - 1 do
-            begin
-              if GetTagName(parse[j]) = '/div' then
-                Break;
-              if Pos('<', parse[j]) = 0 then
-                mangaInfo.summary := mangaInfo.summary + CommonStringFilter(parse[j]);
-            end;
         end;
+        //summary
+        if GetVal(parse[i], 'class') = '__description' then
+          for j := i + 3 to parse.Count - 1 do
+          begin
+            if GetTagName(parse[j]) = '/div' then
+              Break;
+            if Pos('<', parse[j]) = 0 then
+              mangaInfo.summary := mangaInfo.summary + CommonStringFilter(parse[j]);
+          end;
 
         //chapters
         if GetVal(parse[i], 'class') = 'table-scroll' then
