@@ -8,6 +8,11 @@ https://www.mediafire.com/folder/3ccy2c7g36hp3/Fmd
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.13.0 (26-5-2015)
+[+] Added Drop box for download all/add to favorites 
+    You can drag the url from browser to this box to download all the capter
+[*] Various changes
+
 0.9.12.2 (25-5-2015)
 [*] AcademyVN: fix manga info
 [*] Various changes and bug fixes
