@@ -2,6 +2,7 @@
   var
     s: String;
     i, j: Integer;
+    isExtractChapters: Boolean = False;
   begin
     mangaInfo.website := WebsiteRoots[ACADEMYVN_ID, 0];
     mangaInfo.url := FillMangaSiteHost(ACADEMYVN_ID, URL);
@@ -82,18 +83,24 @@
         end;
 
         //chapters
-        if (GetTagName(parse[i]) = 'a') and
-          (GetVal(parse[i], 'class') = 'text-ellipsis') then
+        if GetVal(parse[i], 'class') = 'table-scroll' then
+          isExtractChapters := True;
+        if isExtractChapters then
         begin
-          Inc(mangaInfo.numChapter);
-          mangaInfo.chapterLinks.Add(GetVal(parse[i], 'href'));
-          mangaInfo.chapterName.Add(GetVal(parse[i], 'title'));
+          if GetTagName(parse[i]) = '/table' then
+            isExtractChapters := False
+          else
+          if GetTagName(parse[i]) = 'a' then
+          begin
+            mangaInfo.chapterLinks.Add(GetVal(parse[i], 'href'));
+            mangaInfo.chapterName.Add(Trim(parse[i + 2]));
+          end;
         end;
       end;
       Result := NO_ERROR;
     end;
 
     //invert chapters
-    if mangaInfo.chapterLinks.Count > 0 then
+    if mangaInfo.chapterLinks.Count > 1 then
       InvertStrings([mangaInfo.chapterName, mangaInfo.chapterLinks]);
   end;
