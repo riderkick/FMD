@@ -8,6 +8,10 @@ https://www.mediafire.com/folder/3ccy2c7g36hp3/Fmd
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.12.2 (25-5-2015)
+[*] AcademyVN: fix manga info
+[*] Various changes and bug fixes
+
 0.9.12.1 (25-5-2015)
 [*] Various changes and bug fixes
 
