@@ -1018,10 +1018,9 @@ begin
   if not isStartup then
   begin
     Screen.Cursor := crHourGlass;
-    itStartup.Enabled := False;
     isStartup := True;
     try
-      //LoadMangaOptions;
+      dataProcess.LoadFromFile(cbSelectManga.Items.Strings[cbSelectManga.ItemIndex]);
       vtMangaList.NodeDataSize := SizeOf(TMangaListItem);
       vtMangaList.RootNodeCount := dataProcess.filterPos.Count;
       lbMode.Caption := Format(RS_ModeAll, [dataProcess.filterPos.Count]);
@@ -1031,6 +1030,7 @@ begin
     if cbOptionAutoCheckUpdate.Checked then
       SubThread.CheckUpdate := True;
     SubThread.Start;
+    itStartup.Enabled := False;
   end;
 end;
 
@@ -4612,7 +4612,6 @@ begin
         sel := cbSelectManga.Items.Count - 1;
       cbSelectManga.ItemIndex := sel;
       currentWebsite := cbSelectManga.Items.Strings[cbSelectManga.ItemIndex];
-      dataProcess.LoadFromFile(cbSelectManga.Items.Strings[cbSelectManga.ItemIndex]);
       dataProcess.website := cbSelectManga.Items.Strings[cbSelectManga.ItemIndex];
     end;
   finally
