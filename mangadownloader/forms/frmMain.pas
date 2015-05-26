@@ -3411,9 +3411,8 @@ begin
   begin
     pos := Node^.Index;
     Data := Sender.GetNodeData(Node);
-    if (DLManager.Count <> 0) then
-      if (Assigned(Data)) and ((DLManager.TaskItem(pos) <> nil) or
-        (not DLManager.TaskItem(pos).Thread.isTerminated)) then
+    if (DLManager.Count > 0) then
+      if Assigned(Data) and (DLManager.TaskItem(pos) <> nil) then
       begin
         Data^.Title := DLManager.TaskItem(pos).DownloadInfo.Title;
         Data^.Status := DLManager.TaskItem(pos).DownloadInfo.Status;
