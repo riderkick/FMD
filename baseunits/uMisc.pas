@@ -420,7 +420,7 @@ end;
 
 function NaturalCompareStr(Str1, Str2: string): integer;
 begin
-  Result := NaturalSortUnit.UTF8NaturalCompareText(Str1, Str2);
+  Result := NaturalSortUnit.UTF8LogicalCompareText(Str1, Str2);
 end;
 
 procedure QuickSortNaturalPart(var Alist: TStringList; Separator: String;
