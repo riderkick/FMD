@@ -1020,7 +1020,8 @@ begin
     Screen.Cursor := crHourGlass;
     isStartup := True;
     try
-      dataProcess.LoadFromFile(cbSelectManga.Items.Strings[cbSelectManga.ItemIndex]);
+      if cbSelectManga.ItemIndex > -1 then
+        dataProcess.LoadFromFile(cbSelectManga.Items[cbSelectManga.ItemIndex]);
       vtMangaList.NodeDataSize := SizeOf(TMangaListItem);
       vtMangaList.RootNodeCount := dataProcess.filterPos.Count;
       lbMode.Caption := Format(RS_ModeAll, [dataProcess.filterPos.Count]);
