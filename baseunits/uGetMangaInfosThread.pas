@@ -58,17 +58,17 @@ implementation
 uses
   frmMain;
 
-// ----- Protected methods -----
-
 procedure TGetMangaInfosThread.DoGetInfos;
 
-  function GetMangaInfo(const URL, website: String): Boolean;
+  function GetMangaInfo: Boolean;
   var
     filterPos: Cardinal;
     infob: byte;
   begin
     Result := False;
     try
+      FInfo.mangaInfo.website := Website;
+      FInfo.mangaInfo.link := Link;
       if (FMangaListPos >= 0) and
         (website = MainForm.cbSelectManga.Items[MainForm.cbSelectManga.ItemIndex]) then
       begin
@@ -90,15 +90,11 @@ procedure TGetMangaInfosThread.DoGetInfos;
       FInfo.isRemoveUnicode := MainForm.cbOptionPathConvert.Checked;
 
       infob := INFORMATION_NOT_FOUND;
-      infob := FInfo.GetInfoFromURL(website, URL, 2);
+      infob := FInfo.GetInfoFromURL(Website, Link, 2);
 
-      if Self.IsTerminated then
-        Exit;
+      if Self.Terminated then Exit;
+      if infob <> NO_ERROR then Exit;
 
-      if infob <> NO_ERROR then
-        Exit;
-
-      // fixed
       if FMangaListPos >= 0 then
       begin
         if website = MainForm.cbSelectManga.Items[MainForm.cbSelectManga.ItemIndex] then
@@ -133,9 +129,9 @@ begin
     Exit;
   try
     INIAdvanced.Reload;
-    if not GetMangaInfo(link, website) then
+    if not GetMangaInfo then
     begin
-      if not Self.IsTerminated then
+      if not Self.Terminated then
         Synchronize(MainThreadShowCannotGetInfo);
     end
     else
@@ -195,12 +191,9 @@ end;
 
 procedure TGetMangaInfosThread.MainThreadShowInfos;
 begin
-  if IsFlushed then
-    Exit;
+  if IsFlushed then Exit;
   try
     TransferMangaInfo(MainForm.mangaInfo, FInfo.mangaInfo);
-    //if title or numChapter changed refresh the list
-    //if (website = MainForm.cbSelectManga.Items[MainForm.cbSelectManga.ItemIndex]) and
     if (Website = MainForm.cbSelectManga.Text) and
       (FMangaListPos > -1) then
     begin
@@ -243,8 +236,6 @@ begin
       MainForm.ExceptionHandler(Self, E);
   end;
 end;
-
-// ----- Public methods -----
 
 constructor TGetMangaInfosThread.Create;
 begin
