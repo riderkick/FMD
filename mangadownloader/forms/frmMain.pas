@@ -1795,35 +1795,38 @@ begin
   if cbSelectManga.ItemIndex < 0 then
     Exit;
 
-  if currentWebsite <> cbSelectManga.Items.Strings[cbSelectManga.ItemIndex] then
+  if currentWebsite <> cbSelectManga.Items[cbSelectManga.ItemIndex] then
   begin
     Screen.Cursor := crHourGlass;
-    if dataProcess.Title.Count > 0 then
-    begin
-      isFilterAllSites := dataProcess.isFilterAllSites;
-      dataProcess.RemoveFilter;
-      if not isFilterAllSites then
-        dataProcess.SaveToFile;
+    try
+      if dataProcess.Title.Count > 0 then
+      begin
+        isFilterAllSites := dataProcess.isFilterAllSites;
+        dataProcess.RemoveFilter;
+        if not isFilterAllSites then
+          dataProcess.SaveToFile;
+      end;
+      dataProcess.Free;
+      dataProcess := TDataProcess.Create;
+      if not dataProcess.LoadFromFile(
+        cbSelectManga.Items.Strings[cbSelectManga.ItemIndex]) then
+      begin
+        RunGetList;
+      end;
+      vtMangaList.OnInitNode := @vtMangaListInitNode;
+      vtMangaList.Clear;
+      vtMangaList.RootNodeCount := dataProcess.filterPos.Count;
+      lbMode.Caption := Format(RS_ModeAll, [dataProcess.filterPos.Count]);
+      currentWebsite := cbSelectManga.Items[cbSelectManga.ItemIndex];
+      dataProcess.website := cbSelectManga.Items[cbSelectManga.ItemIndex];
+      CheckForTopPanel;
+      LastSearchStr := '';
+      K := VK_RETURN;
+      edSearchKeyUp(edSearch, K, []);
+      edSearchChange(edSearch);
+    finally
+      Screen.Cursor := crDefault;
     end;
-    dataProcess.Free;
-    dataProcess := TDataProcess.Create;
-    if not dataProcess.LoadFromFile(
-      cbSelectManga.Items.Strings[cbSelectManga.ItemIndex]) then
-    begin
-      RunGetList;
-    end;
-    vtMangaList.OnInitNode := @vtMangaListInitNode;
-    vtMangaList.Clear;
-    vtMangaList.RootNodeCount := dataProcess.filterPos.Count;
-    lbMode.Caption := Format(RS_ModeAll, [dataProcess.filterPos.Count]);
-    currentWebsite := cbSelectManga.Items[cbSelectManga.ItemIndex];
-    dataProcess.website := cbSelectManga.Items[cbSelectManga.ItemIndex];
-    CheckForTopPanel;
-    LastSearchStr := '';
-    K := VK_RETURN;
-    edSearchKeyUp(edSearch, K, []);
-    edSearchChange(edSearch);
-    Screen.Cursor := crDefault;
   end;
 end;
 
