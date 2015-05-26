@@ -281,9 +281,8 @@ begin
 
     if Data.Count > 0 then
     begin
-      { TODO -ocholif : Sort when saving only }
       //QuickSortData(data);
-      //QuickSortNaturalPart(Data, SEPERATOR, DATA_PARAM_NAME); //Natural Sorting
+      QuickSortNaturalPart(Data, SEPERATOR, DATA_PARAM_NAME); //Natural Sorting
       for i := 0 to Data.Count - 1 do
       begin
         filterMark.Add(FILTER_SHOW);
