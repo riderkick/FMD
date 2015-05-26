@@ -915,6 +915,8 @@ begin
           FStatus := RS_UpdatingList + Format(' [%d/%d] %s',
             [websitePtr, websites.Count, website]) + ' | ' + RS_SavingData + '...';
           Synchronize(MainThreadShowGetting);
+          { TODO -ocholif : Sort after update }
+          mainDataProcess.Sort;
           mainDataProcess.SaveToFile(website);
         end;
         {$IFDEF DOWNLOADER}

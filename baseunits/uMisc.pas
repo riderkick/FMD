@@ -426,55 +426,55 @@ end;
 procedure QuickSortNaturalPart(var Alist: TStringList; Separator: String;
   PartIndex: Integer);
 
-  procedure QuickSort(L, R: Integer);
+  function CompareFn(Index1, Index2: Integer): Integer;
+  begin
+    Result := NaturalCompareStr(getStringPart(Alist[Index1], Separator, PartIndex),
+              getStringPart(Alist[Index2], Separator, PartIndex));
+  end;
+
+  procedure QSort(L, R: Integer);
   var
     Pivot, vL, vR: Integer;
-    PivotStr: String;
   begin
-    if R - L <= 1 then
-    begin // a little bit of time saver
+    if R - L <= 1 then begin // a little bit of time saver
       if L < R then
-        if NaturalCompareStr(getStringPart(Alist.Strings[L], Separator, PartIndex),
-          getStringPart(Alist.Strings[R], Separator, PartIndex)) > 0 then
+        if CompareFn(L, R) > 0 then
           Alist.Exchange(L, R);
+
       Exit;
     end;
+
     vL := L;
     vR := R;
+
     Pivot := L + Random(R - L); // they say random is best
-    PivotStr := getStringPart(Alist.Strings[Pivot], Separator, PartIndex);
-    while vL < vR do
-    begin
-      while (vL < Pivot) and (NaturalCompareStr(
-          getStringPart(Alist.Strings[vL], Separator, PartIndex), PivotStr) <= 0) do
+
+    while vL < vR do begin
+      while (vL < Pivot) and (CompareFn(vL, Pivot) <= 0) do
         Inc(vL);
-      while (vR > Pivot) and (NaturalCompareStr(
-          getStringPart(Alist.Strings[vR], Separator, PartIndex), PivotStr) > 0) do
+
+      while (vR > Pivot) and (CompareFn(vR, Pivot) > 0) do
         Dec(vR);
+
       Alist.Exchange(vL, vR);
+
       if Pivot = vL then // swap pivot if we just hit it from one side
-      begin
-        Pivot := vR;
-        PivotStr := getStringPart(Alist.Strings[Pivot], Separator, PartIndex);
-      end
-      else
-      if Pivot = vR then
-      begin
+        Pivot := vR
+      else if Pivot = vR then
         Pivot := vL;
-        PivotStr := getStringPart(Alist.Strings[Pivot], Separator, PartIndex);
-      end;
     end;
+
     if Pivot - 1 >= L then
-      QuickSort(L, Pivot - 1);
+      QSort(L, Pivot - 1);
     if Pivot + 1 <= R then
-      QuickSort(Pivot + 1, R);
+      QSort(Pivot + 1, R);
   end;
 
 begin
   if Alist.Count < 2 then Exit;
+  Alist.BeginUpdate;
   try
-    Alist.BeginUpdate;
-    QuickSort(0, Alist.Count - 1);
+    QSort(0, Alist.Count - 1);
   finally
     Alist.EndUpdate;
   end;
