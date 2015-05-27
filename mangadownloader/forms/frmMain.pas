@@ -511,6 +511,7 @@ type
     procedure vtDownloadMoveItems(NextIndex : Cardinal; Mode : TDropMode);
   protected
     procedure FMDInstanceReceiveMsg(Sender: TObject);
+    procedure ClearChapterListState;
   public
     ulTotalPtr, ulWorkPtr: Cardinal;
     optionMangaSiteSelectionNodes: array of PVirtualNode;
@@ -1087,7 +1088,15 @@ begin
   miChapterListHighlight.Checked := not miChapterListHighlight.Checked;
   options.WriteBool('general', 'HighlightDownloadedChapters',
     miChapterListHighlight.Checked);
-  clbChapterList.Repaint;
+  if Length(ChapterList) > 0 then
+  begin
+    if miChapterListHighlight.Checked then
+      DLManager.GetDownloadedChaptersState(mangaInfo.website + mangaInfo.link,
+        ChapterList)
+    else
+      ClearChapterListState;
+    clbChapterList.Repaint;
+  end;
 end;
 
 procedure TMainForm.miDownloadDeleteTaskClick(Sender: TObject);
@@ -1623,6 +1632,15 @@ begin
   BringToFront;
 end;
 
+procedure TMainForm.ClearChapterListState;
+var
+  i: Integer;
+begin
+  if Length(ChapterList) > 0 then
+    for i := Low(ChapterList) to High(ChapterList) do
+      ChapterList[i].Downloaded := False;
+end;
+
 procedure TMainForm.btURLClick(Sender: TObject);
 var
   i: Integer;
@@ -1850,12 +1868,9 @@ end;
 procedure TMainForm.clbChapterListBeforeCellPaint(Sender: TBaseVirtualTree;
   TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
   CellPaintMode: TVTCellPaintMode; CellRect: TRect; var ContentRect: TRect);
-var
-  Data: PChapterStateItem;
 begin
-  Data := Sender.GetNodeData(Node);
-  if Assigned(Data) then
-    if Data^.Downloaded then
+  if Assigned(Node) then
+    if ChapterList[Node^.Index].Downloaded then
     begin
       TargetCanvas.Brush.Color := CL_HLGreenMarks;
       TargetCanvas.FillRect(CellRect);
@@ -4346,7 +4361,11 @@ begin
     ChapterList[i].Link := mangaInfo.chapterLinks[i];
     ChapterList[i].Downloaded := False;
   end;
-  DLManager.GetDownloadedChaptersState(mangaInfo.website + mangaInfo.link, ChapterList);
+  if miChapterListHighlight.Checked then
+    DLManager.GetDownloadedChaptersState(mangaInfo.website + mangaInfo.link,
+      ChapterList)
+  else
+    ClearChapterListState;
   UpdateVtChapter;
 
   btDownload.Enabled := (clbChapterList.RootNodeCount > 0);
