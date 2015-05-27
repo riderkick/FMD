@@ -53,7 +53,7 @@ msgid ""
 "Remedy:\n"
 "Build you manga list from scratch or download manually from this link:\n"
 "%s\n"
-"Link copied to clipboard!"
+"Link copied to clipboard!\n"
 msgstr ""
 
 #: umain.rs_finished

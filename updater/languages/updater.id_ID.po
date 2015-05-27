@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: id_ID\n"
-"X-Generator: Poedit 1.7.6"
+"X-Generator: Poedit 1.7.6\n"
 
 #: tfrmmain.caption
 msgid "Free Manga Downloader - Updater"
@@ -63,14 +63,14 @@ msgid ""
 "Remedy:\n"
 "Build you manga list from scratch or download manually from this link:\n"
 "%s\n"
-"Link copied to clipboard!"
+"Link copied to clipboard!\n"
 msgstr ""
 "Berkas tidak ditemukan\n"
 "Kemungkinan situs ini telah ditambahkan ke versi tidak resmi.\n"
 "\n"
 "Buat sendiri list kamu dari awal atau coba download dari link ini:\n"
 "%s\n"
-"Link sudah disalin ke clipboard!"
+"Link sudah disalin ke clipboard!\n"
 
 #: umain.rs_finished
 msgid "Finished."
@@ -119,4 +119,3 @@ msgstr "Membuka berkas [%s]..."
 #: umain.rs_waitmainapp
 msgid "Waiting main app to close..."
 msgstr "Menunggu aplikasi utama untuk berhenti..."
-

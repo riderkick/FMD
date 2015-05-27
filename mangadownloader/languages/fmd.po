@@ -58,7 +58,7 @@ msgstr ""
 #: frmmain.rs_dlgtitleexistindllist
 msgid ""
 "This title are already in download list.\n"
-"Do you want to download it anyway?"
+"Do you want to download it anyway?\n"
 msgstr ""
 
 #: frmmain.rs_dlgtypeinnewchapter
@@ -84,20 +84,20 @@ msgstr ""
 #: frmmain.rs_droptargetmodeitems
 msgid ""
 "Download all\n"
-"Add to favorites"
+"Add to favorites\n"
 msgstr ""
 
 #: frmmain.rs_filterstatusitems
 msgid ""
 "Completed\n"
 "Ongoing\n"
-"<none>"
+"<none>\n"
 msgstr ""
 
 #: frmmain.rs_hintfavoriteproblem
 msgid ""
 "There is a problem with this data!\n"
-"Removing and re-adding this data may fix the problem."
+"Removing and re-adding this data may fix the problem.\n"
 msgstr ""
 
 #: frmmain.rs_history
@@ -170,7 +170,7 @@ msgid ""
 "Do nothing\n"
 "Exit FMD\n"
 "Shutdown\n"
-"Hibernate"
+"Hibernate\n"
 msgstr ""
 
 #: frmmain.rs_selected
@@ -502,7 +502,9 @@ msgid "Gender Bender"
 msgstr ""
 
 #: tmainform.ckfiltergenderbender.hint
-msgid "Girls dressing up as guys, guys dressing up as girls... Guys turning into girls, girls turning into guys..."
+msgid ""
+"Girls dressing up as guys, guys dressing up as girls.\n"
+"Guys turning into girls, girls turning into guys.\n"
 msgstr ""
 
 #: tmainform.ckfilterharem.caption
@@ -857,7 +859,7 @@ msgid ""
 "Custom Genres:\n"
 "- Separate multiple genres with ','.\n"
 "- Exclude a genre by placing ''!'' at the beginning of a genre.\n"
-"- Example: Adventure,!Ecchi,Comedy."
+"- Example: Adventure,!Ecchi,Comedy.\n"
 msgstr ""
 
 #: tmainform.lbfilterstatus.caption
@@ -902,7 +904,7 @@ msgid ""
 "%NUMBERING% : Numbering\n"
 "\n"
 "Note:\n"
-"Chapter folder name must have at least %CHAPTER% or %NUMBERING%."
+"Chapter folder name must have at least %CHAPTER% or %NUMBERING%.\n"
 msgstr ""
 
 #: tmainform.lboptioncustomrenamehint1.caption
@@ -932,7 +934,7 @@ msgid ""
 "%PATH% : Path to the manga\n"
 "%FCHAPTER% : First downloaded chapter/first chapter in the directory\n"
 "\n"
-"Example: C:\\HoneyView\\honeyview.exe \"%PATH%%FCHAPTER%\""
+"Example: C:\\HoneyView\\honeyview.exe \"%PATH%%FCHAPTER%\"\n"
 msgstr ""
 
 #: tmainform.lboptionhost.caption
@@ -1362,7 +1364,7 @@ msgstr ""
 #: tupdatedialogform.lbmessage.caption
 msgid ""
 "New version found! Do you want to update now?\n"
-"FMD will be closed to finish the update."
+"FMD will be closed to finish the update.\n"
 msgstr ""
 
 #: udownloadsmanager.rs_compressing
