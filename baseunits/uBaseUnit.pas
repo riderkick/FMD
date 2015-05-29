@@ -13,9 +13,9 @@ unit uBaseUnit;
 interface
 
 uses
-  SysUtils, Classes, Graphics, Forms, UTF8Process, strutils, fileinfo,
-  process, fpjson, jsonparser, fgl, uFMDThread, synautil, httpsend, blcksock,
-  ssl_openssl, GZIPUtils;
+  SysUtils, Classes, Graphics, Forms, UTF8Process, strutils, fileinfo, process,
+  fpjson, jsonparser, FastHTMLParser, fgl, uFMDThread, synautil, httpsend,
+  blcksock, ssl_openssl, GZIPUtils;
 
 const
   FMD_REVISION = '$WCREV$';
@@ -736,6 +736,21 @@ type
     constructor Create(CreateSuspended: Boolean);
   end;
 
+  { TParseHTML }
+
+  TParseHTML = class
+  private
+    FOutput: TStringList;
+    FRaw: string;
+    procedure FoundTag(NoCaseTag, ActualTag: string);
+    procedure FoundText(Text: string);
+  public
+    constructor Create(const Raw: string = '');
+    destructor Destroy; override;
+    function Exec(const Raw: string = ''): string;
+    property Raw: string read FRaw write FRaw;
+  end;
+
 // Get current binary version
 function GetCurrentBinVersion: String;
 // Remove Unicode
@@ -771,6 +786,9 @@ procedure RemoveHostFromURLsPair(Const URLs, Names : TStringList);
 
 //JSON
 procedure ParseJSONArray(const S, Path: String; var OutArray: TStringList);
+
+//HTML
+function ParseHTML(const Raw: string): string;
 
 // StringUtils
 function RandomString(SLength: Integer; ONumber: Boolean = False;
@@ -1396,6 +1414,16 @@ begin
     P.Free;
   end;
   OutArray.EndUpdate;
+end;
+
+function ParseHTML(const Raw: string): string;
+begin
+  Result := '';
+  with TParseHTML.Create(Raw) do try
+    Result := Exec;
+  finally
+    Free;
+  end;
 end;
 
 function RandomString(SLength: Integer; ONumber: Boolean; OSymbol: Boolean;
@@ -3122,6 +3150,53 @@ begin
   dest.numChapter := Source.numChapter;
   dest.chapterName.Assign(Source.chapterName);
   dest.chapterLinks.Assign(Source.chapterLinks);
+end;
+
+{ TParseHTML }
+
+procedure TParseHTML.FoundTag(NoCaseTag, ActualTag: string);
+begin
+  FOutput.Add(ActualTag);
+end;
+
+procedure TParseHTML.FoundText(Text: string);
+begin
+  FOutput.Add(Text);
+end;
+
+constructor TParseHTML.Create(const Raw: string);
+begin
+  inherited Create;
+  FOutput := TStringList.Create;
+  if Raw <> '' then
+    FRaw := Raw
+  else
+    FRaw := '';
+end;
+
+destructor TParseHTML.Destroy;
+begin
+  FOutput.Free;
+  inherited Destroy;
+end;
+
+function TParseHTML.Exec(const Raw: string): string;
+var
+  parser: THTMLParser;
+begin
+  if Raw <> '' then
+    FRaw := Raw;
+  if FRaw = '' then
+    Exit('');
+  parser := THTMLParser.Create(PChar(FRaw));
+  try
+    parser.OnFoundTag := FoundTag;
+    parser.OnFoundText := FoundText;
+    parser.Exec;
+  finally
+    parser.Free;
+  end;
+  Result := FOutput.Text;
 end;
 
 { TMangaInfo }
