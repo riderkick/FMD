@@ -533,6 +533,8 @@ var
 
   {$I includes/SenMangaRAW/chapter_page_number.inc}
 
+  {$I includes/ReadMangaToday/chapter_page_number.inc}
+
 begin
   manager.container.PageNumber := 0;
   if manager.container.MangaSiteID = ANIMEA_ID then
@@ -733,6 +735,9 @@ begin
   else
   if manager.container.MangaSiteID = SENMANGARAW_ID then
     Result := GetSenMangaRAWPageNumber
+  else
+  if manager.container.MangaSiteID = READMANGATODAY_ID then
+    Result := GetReadMangaTodayPageNumber
   else
     Result := False;
 end;

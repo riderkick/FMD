@@ -236,6 +236,8 @@ const
     TwoDigitYearCenturyWindow :50;
     );
 
+  ALPHA_LIST = '#abcdefghijklmnopqrstuvwxyz';
+
   SOCKHEARTBEATRATE = 500;
 
   ANIMEA_ID              = 0;
@@ -331,6 +333,7 @@ const
   ACADEMYVN_ID           = 90;
   MANGAAT_ID             = 91;
   SENMANGARAW_ID         = 92;
+  READMANGATODAY_ID      = 93;
 
 var
   FMD_VERSION_NUMBER: String = '';
@@ -363,7 +366,7 @@ var
   SEPERATOR: String = '!%~';
   SEPERATOR2: String = '~%!';
 
-  WebsiteRoots: array [0..92] of array [0..1] of string = (
+  WebsiteRoots: array [0..93] of array [0..1] of string = (
     ('AnimeA', 'http://manga.animea.net'),
     ('MangaHere', 'http://www.mangahere.co'),
     ('MangaInn', 'http://www.mangainn.me'),
@@ -456,7 +459,8 @@ var
     ('MangaKu', 'http://mangaku.web.id'),
     ('AcademyVN', 'http://truyen.academyvn.com'),
     ('MangaAt', 'http://www.mangaat.com'),
-    ('SenMangaRAW', 'http://raw.senmanga.com')
+    ('SenMangaRAW', 'http://raw.senmanga.com'),
+    ('ReadMangaToday', 'http://www.readmanga.today')
     );
 
   BROWSER_INVERT: Boolean = False;
