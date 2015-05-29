@@ -5,7 +5,7 @@ msgstr ""
 "POT-Creation-Date: \n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
-"Language-Team: \n"
+"Language-Team: Cholif\n"
 "MIME-Version: 1.0\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: id_ID\n"
@@ -108,7 +108,7 @@ msgid ""
 "<none>\n"
 msgstr ""
 "Tamat\n"
-"Berlanjut\n"
+"Bersambung\n"
 "<tidak ada>\n"
 
 #: frmmain.rs_hintfavoriteproblem
@@ -430,7 +430,7 @@ msgstr "Tutup FMD"
 
 #: tmainform.cboptionupdatelistnomangainfo.caption
 msgid "Don't load manga information when updating list (filter will be not work!)"
-msgstr "Tidak memuat informasi komik ketika memperbarui daftar (saringan tidak akan bekerja!)"
+msgstr "Tidak perlu memuat informasi komik ketika memperbarui daftar (saringan tidak akan bekerja!)"
 
 #: tmainform.cboptionupdatelistremoveduplicatelocaldata.caption
 msgid "Remove duplicate local data when updating manga list"
@@ -518,7 +518,7 @@ msgstr "Fantasy"
 
 #: tmainform.ckfilterfantasy.hint
 msgid "Anything that involves, but not limited to, magic, dream world, and fairy tales."
-msgstr "Apa pun yang melibatkan, tetapi tidak terbatas pada, sihir, dunia mimpi, dan dongeng."
+msgstr "Apa pun yang melibatkan sihir, dunia mimpi, dan dongeng."
 
 #: tmainform.ckfiltergenderbender.caption
 msgid "Gender Bender"
