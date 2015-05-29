@@ -8,6 +8,10 @@ https://www.mediafire.com/folder/3ccy2c7g36hp3/Fmd
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.14.0 (30-5-2015)
+[+] Added ReadMangaToday(EN)
+[*] Various changes and bug fixes
+
 0.9.13.1 (26-5-2015)
 [*] Various changes and bug fixes
 
