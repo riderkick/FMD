@@ -2759,6 +2759,8 @@ procedure TMainForm.pcMainChange(Sender: TObject);
 
     edOptionCustomRename.Text :=
       options.ReadString('saveto', 'CustomRename', DEFAULT_CUSTOM_RENAME);
+    if Trim(edOptionCustomRename.Text) = '' then
+      edOptionCustomRename.Text := DEFAULT_CUSTOM_RENAME;
 
     cbOptionShowQuitDialog.Checked :=
       options.ReadBool('dialogs', 'ShowQuitDialog', True);
@@ -3809,6 +3811,8 @@ begin
     OptionAutoNumberChapterChecked := cbOptionAutoNumberChapter.Checked;
     options.WriteInteger('saveto', 'PDFQuality', seOptionPDFQuality.Value);
     OptionPDFQuality := seOptionPDFQuality.Value;
+    if Trim(edOptionCustomRename.Text) = '' then
+      edOptionCustomRename.Text := DEFAULT_CUSTOM_RENAME;
     options.WriteString('saveto', 'CustomRename', edOptionCustomRename.Text);
     OptionCustomRename := edOptionCustomRename.Text;
 
@@ -4465,6 +4469,8 @@ begin
   OptionPDFQuality := seOptionPDFQuality.Value;
   edOptionCustomRename.Text :=
     options.ReadString('saveto', 'CustomRename', DEFAULT_CUSTOM_RENAME);
+  if Trim(edOptionCustomRename.Text) = '' then
+    edOptionCustomRename.Text := DEFAULT_CUSTOM_RENAME;
   OptionCustomRename := edOptionCustomRename.Text;
 
   cbOptionAutoCheckUpdate.Checked :=
