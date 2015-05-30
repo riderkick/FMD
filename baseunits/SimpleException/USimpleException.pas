@@ -25,8 +25,8 @@ unit USimpleException;
 interface
 
 uses
-  Classes, SysUtils, FileUtil, Forms, Controls, USimpleExceptionForm,
-  DbgInfoReader,
+  Classes, SysUtils, FileUtil, Forms, Controls, LCLVersion, DbgInfoReader,
+  USimpleExceptionForm,
   {$IFDEF WINDOWS}
   windows, win32proc,
   {$ENDIF}
@@ -71,7 +71,6 @@ type
     procedure ExceptionHandler;
   public
     LogFilename: String;
-    ExceptionForm: TSimpleExceptionForm;
     IgnoredExceptionList: TStringlist;
     SaveIgnoredExceptionToFile: Boolean;
     property MaxStackCount: Integer read FMaxStackCount write SetMaxStackCount;
@@ -219,10 +218,14 @@ procedure TSimpleException.ExceptionHandler;
 begin
   if (IgnoredExceptionList.IndexOf(FLastException.ClassName) > -1) then
     Exit;
-  ExceptionForm.MemoExceptionLog.Lines.Text := FLastReport;
-  ExceptionForm.LabelExceptionMessage.Caption := FLastException.Message;
-  if (ExceptionForm.ShowModal = mrIgnore) then
-    AddIgnoredException(FLastException.ClassName);
+  with TSimpleExceptionForm.Create(nil) do try
+    MemoExceptionLog.Lines.Text := FLastReport;
+    LabelExceptionMessage.Caption := FLastException.Message;
+    if ShowModal = mrIgnore then
+      AddIgnoredException(FLastException.ClassName);
+  finally
+    Free;
+  end;
 end;
 
 function TSimpleException.SimpleBackTraceStr(Addr: Pointer): String;
@@ -310,7 +313,7 @@ begin
       'Version           : ' + FAppInfo_fileversion + LineEnding +
       'Product Version   : ' + FAppInfo_productversion + LineEnding +
       'FPC Version       : ' + {$i %FPCVERSION%} + LineEnding +
-      'LCL Version       : ' + ExceptionForm.LCLVersion + LineEnding +
+      'LCL Version       : ' + LCLVersion.lcl_version + LineEnding +
       'Target CPU_OS     : ' + {$i %FPCTARGETCPU%} +'_' + {$i %FPCTARGETOS%} +LineEnding +
       'Host Machine      : ' + FOSversion + LineEnding +
       'Path              : ' + ParamStrUTF8(0) + LineEnding +
@@ -392,7 +395,6 @@ var
 begin
   inherited Create;
   InitCriticalSection(FSimpleCriticalSection);
-  ExceptionForm := TSimpleExceptionForm.Create(nil);
   FHasDebugLine := OpenSymbolFile(ParamStrUTF8(0));
   LogFilename := Filename;
   SaveIgnoredExceptionToFile := False;
@@ -445,7 +447,6 @@ destructor TSimpleException.Destroy;
 begin
   Application.OnException := nil;
   Application.Flags := Application.Flags - [AppNoExceptionMessages];
-  ExceptionForm.Free;
   IgnoredExceptionList.Free;
   FAppVerInfo.Free;
   CloseSymbolFile;
