@@ -829,7 +829,11 @@ end;
 
 function GetDefaultLang: string;
 begin
+  {$IF FPC_FULLVERSION >= 20701}
   Result := LCLTranslator.GetDefaultLang;
+  {$ELSE}
+  Result := '';
+  {$ENDIF}
 end;
 
 initialization
