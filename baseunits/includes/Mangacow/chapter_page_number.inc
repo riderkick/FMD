@@ -18,8 +18,9 @@
     Parser.Free;
     if parse.Count > 0 then
     begin
-      regx := TRegExpr.Create('^.*\.push\("([^"]+)"\);.*$');
+      regx := TRegExpr.Create;
       try
+        regx.Expression := '^.*\.push\("([^"]+)"\);.*$';
         regx.ModifierI := True;
         for i := 0 to parse.Count - 1 do
           if Pos('arr_img.push(', parse[i]) > 0 then

@@ -25,8 +25,9 @@
     manager.container.PageNumber := 0;
     if parse.Count > 0 then
     begin
-      regx := TRegExpr.Create('^.*/(\d+)\.html?.*$');
+      regx := TRegExpr.Create;
       try
+        regx.Expression := '^.*/(\d+)\.html?.*$';
         regx.ModifierI := True;
         for i := 0 to parse.Count - 1 do
         begin
