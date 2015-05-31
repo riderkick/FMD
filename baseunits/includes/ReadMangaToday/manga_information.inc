@@ -12,7 +12,7 @@
       Exit;
     end;
 
-    parse.Text := ParseHTML(Source.Text);
+    ParseHTML(Source.Text, parse);
     Source.Free;
     if parse.Count > 0 then
     begin

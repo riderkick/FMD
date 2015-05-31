@@ -744,13 +744,12 @@ type
 
   TParseHTML = class
   private
-    FOutput: TStringList;
     FRaw: string;
     procedure FoundTag(NoCaseTag, ActualTag: string);
     procedure FoundText(Text: string);
   public
+    Output: TStrings;
     constructor Create(const Raw: string = '');
-    destructor Destroy; override;
     function Exec(const Raw: string = ''): string;
     property Raw: string read FRaw write FRaw;
   end;
@@ -792,7 +791,7 @@ procedure RemoveHostFromURLsPair(Const URLs, Names : TStringList);
 procedure ParseJSONArray(const S, Path: String; var OutArray: TStringList);
 
 //HTML
-function ParseHTML(const Raw: string): string;
+procedure ParseHTML(const aRaw: string; var aOutput: TStringList);
 
 // StringUtils
 function RandomString(SLength: Integer; ONumber: Boolean = False;
@@ -1420,11 +1419,11 @@ begin
   OutArray.EndUpdate;
 end;
 
-function ParseHTML(const Raw: string): string;
+procedure ParseHTML(const aRaw: string; var aOutput: TStringList);
 begin
-  Result := '';
-  with TParseHTML.Create(Raw) do try
-    Result := Exec;
+  with TParseHTML.Create(aRaw) do try
+    Output := aOutput;
+    Exec;
   finally
     Free;
   end;
@@ -2059,7 +2058,7 @@ var
   i: Integer;
 begin
   Result := Source;
-  if Length(Result) = 0 then
+  if Length(Source) = 0 then
     Exit;
 
   for i := Low(StringFilterChar) to High(StringFilterChar) do
@@ -2091,7 +2090,7 @@ var
   i: Integer;
 begin
   Result := Source;
-  if Length(Result) = 0 then
+  if Length(Source) = 0 then
     Exit;
 
   for i := Low(HTMLEntitiesChar) to High(HTMLEntitiesChar) do
@@ -2145,6 +2144,8 @@ end;
 
 function CommonStringFilter(const Source : String) : String;
 begin
+  Result := Source;
+  if Source = '' then Exit;
   Result := Trim(HTMLEntitiesFilter(StringFilter(Trim(Source))));
 end;
 
@@ -3161,38 +3162,33 @@ end;
 
 procedure TParseHTML.FoundTag(NoCaseTag, ActualTag: string);
 begin
-  FOutput.Add(ActualTag);
+  Output.Add(ActualTag);
 end;
 
 procedure TParseHTML.FoundText(Text: string);
 begin
-  FOutput.Add(Text);
+  Output.Add(Text);
 end;
 
 constructor TParseHTML.Create(const Raw: string);
 begin
   inherited Create;
-  FOutput := TStringList.Create;
   if Raw <> '' then
     FRaw := Raw
   else
     FRaw := '';
 end;
 
-destructor TParseHTML.Destroy;
-begin
-  FOutput.Free;
-  inherited Destroy;
-end;
-
 function TParseHTML.Exec(const Raw: string): string;
 var
   parser: THTMLParser;
 begin
+  if not Assigned(Output) then Exit;
   if Raw <> '' then
     FRaw := Raw;
   if FRaw = '' then
     Exit('');
+  Output.Clear;
   parser := THTMLParser.Create(PChar(FRaw));
   try
     parser.OnFoundTag := FoundTag;
@@ -3201,7 +3197,6 @@ begin
   finally
     parser.Free;
   end;
-  Result := FOutput.Text;
 end;
 
 { TMangaInfo }

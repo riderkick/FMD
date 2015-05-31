@@ -11,7 +11,7 @@
       s,
       manager.container.manager.retryConnect);
 
-    parse.Text := ParseHTML(l.Text);
+    ParseHTML(l.Text, parse);
     if parse.Count > 0 then
     begin
       manager.container.PageLinks.Clear;
