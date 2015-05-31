@@ -1659,15 +1659,6 @@ begin
     Exit;
   end;
 
-  if ((Pos(WebsiteRoots[KISSMANGA_ID, 1], edURL.Text) <> 0) or
-    (Pos(WebsiteRoots[VNSHARING_ID, 1], edURL.Text) <> 0)) and
-    (Pos('&confirm=yes', edURL.Text) <> 0) then
-    Delete(link, Pos('&confirm=yes', link), Length('&confirm=yes'))
-  else
-  if (Pos(WebsiteRoots[ANIMEA_ID, 1], edURL.Text) <> 0) and
-    (Pos('?skip=1', edURL.Text) <> 0) then
-    Delete(link, Pos('?skip=1', link), Length('?skip=1'));
-
   if isGetMangaInfos then
   begin
     GetInfosThread.IsFlushed := True;

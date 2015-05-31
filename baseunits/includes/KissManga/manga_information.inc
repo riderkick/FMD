@@ -1,10 +1,12 @@
   function GetKissMangaInfoFromURL: Byte;
   var
-    i, j: Cardinal;
+    i, j: Integer;
+    s: string;
     isExtractSummary: Boolean = True;
     isExtractGenres: Boolean = False;
     isExtractChapter: Boolean = False;
   begin
+    mangaInfo.website := WebsiteRoots[KISSMANGA_ID, 0];
     mangaInfo.url := EncodeURL(FillMangaSiteHost(KISSMANGA_ID, URL + '?confirm=yes'));
     if not GetPage(TObject(Source), mangaInfo.url, Reconnect) then
     begin
@@ -14,26 +16,24 @@
     end;
 
     // parsing the HTML source
-    parse.Clear;
-    Parser := THTMLParser.Create(PChar(Source.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText := OnText;
-    Parser.Exec;
-
-    Parser.Free;
+    ParseHTML(Source.Text, parse);
     Source.Free;
-    mangaInfo.website := WebsiteRoots[KISSMANGA_ID, 0];
 
     // using parser (cover link, summary, chapter name and link)
     if parse.Count = 0 then
       Exit;
     for i := 0 to parse.Count - 1 do
     begin
-      // get manga title
-      if (mangaInfo.title = '') and
-        (Pos('<title>', parse.Strings[i]) > 0) then
-        mangaInfo.title := TrimLeft(
-          TrimRight(GetString('~!@' + parse.Strings[i + 1], '~!@', ' manga | ')));
+      //get manga title
+      if mangaInfo.title = '' then
+        if GetTagName(parse[i]) = 'title' then
+        begin
+          s := Trim(parse[i+1]);
+          j := Pos(#13#10, s);
+          if j <> 0 then
+            Delete(s, j, Length(s));
+          mangaInfo.title := CommonStringFilter(s);
+        end;
 
       // get cover link
       if GetTagName(parse.Strings[i]) = 'img' then
