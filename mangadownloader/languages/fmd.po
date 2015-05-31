@@ -6,7 +6,7 @@ msgid "Import completed."
 msgstr ""
 
 #: frmimportfavorites.rs_listunimportedcaption
-msgid "List of unimported mangas"
+msgid "List of unimported manga"
 msgstr ""
 
 #: frmmain.rs_alldownloads
@@ -74,7 +74,7 @@ msgid "Updater is running!"
 msgstr ""
 
 #: frmmain.rs_dlgupdaterwanttoupdatedb
-msgid "Do you want to download manga list from the server ?"
+msgid "Do you want to download manga list from the server?"
 msgstr ""
 
 #: frmmain.rs_dlgurlnotsupport
@@ -454,7 +454,7 @@ msgid "Adventure"
 msgstr ""
 
 #: tmainform.ckfilteradventure.hint
-msgid "If a character in the story goes on a trip or along that line, your best bet is that it is an adventure manga. Otherwise, it''s up to your personal prejudice on this case."
+msgid "If a character in the story goes on a trip or along that line, your best bet is that it is an adventure manga. Otherwise, it's up to your personal prejudice on this case."
 msgstr ""
 
 #: tmainform.ckfiltercomedy.caption
@@ -482,7 +482,7 @@ msgid "A work meant to bring on an emotional response, such as instilling sadnes
 msgstr ""
 
 #: tmainform.ckfilterechi.caption
-msgid "Echi"
+msgid "Ecchi"
 msgstr ""
 
 #: tmainform.ckfilterechi.hint
@@ -526,7 +526,7 @@ msgid "Hentai"
 msgstr ""
 
 #: tmainform.ckfilterhistorical.caption
-msgid "Historial"
+msgid "Historical"
 msgstr ""
 
 #: tmainform.ckfilterhistorical.hint
@@ -582,10 +582,12 @@ msgid "A work involving and usually concentrating on all types of large robotic 
 msgstr ""
 
 #: tmainform.ckfiltermusical.caption
-msgid "Mucical"
+msgctxt "tmainform.ckfiltermusical.caption"
+msgid "Musical"
 msgstr ""
 
 #: tmainform.ckfiltermusical.hint
+msgctxt "tmainform.ckfiltermusical.hint"
 msgid "Musical"
 msgstr ""
 
@@ -654,7 +656,12 @@ msgid "A work intended and primarily written for females. Usually involves a lot
 msgstr ""
 
 #: tmainform.ckfiltershoujoai.caption
-msgid "ShoujoAi"
+msgid "Shoujo Ai"
+msgstr ""
+
+#: tmainform.ckfiltershoujoai.hint
+msgctxt "TMAINFORM.CKFILTERSHOUJOAI.HINT"
+msgid "Often synonymous with yuri, this can be thought of as somewhat less extreme. \"Girl''s Love\", so to speak."
 msgstr ""
 
 #: tmainform.ckfiltershounen.caption
@@ -662,7 +669,8 @@ msgid "Shounen"
 msgstr ""
 
 #: tmainform.ckfiltershounen.hint
-msgid "Often synonymous with yuri, this can be thought of as somewhat less extreme. \"Girl''s Love\", so to speak."
+msgctxt "tmainform.ckfiltershounen.hint"
+msgid "A work intended and primarily written for males. These works usually involve fighting and/or violence."
 msgstr ""
 
 #: tmainform.ckfiltershounenai.caption
@@ -670,7 +678,7 @@ msgid "Shounen Ai"
 msgstr ""
 
 #: tmainform.ckfiltershounenai.hint
-msgid "A work intended and primarily written for males. These works usually involve fighting and/or violence."
+msgid "Often synonymous with yaoi, this can be thought of as somewhat less extreme. \"Boy''s Love\", so to speak"
 msgstr ""
 
 #: tmainform.ckfiltersliceoflife.caption
@@ -678,7 +686,7 @@ msgid "Slice of Life"
 msgstr ""
 
 #: tmainform.ckfiltersliceoflife.hint
-msgid "Often synonymous with yaoi, this can be thought of as somewhat less extreme. \"Boy''s Love\", so to speak"
+msgid "As the name suggests, this genre represents day-to-day tribulations of one/many character(s). These challenges/events could technically happen in real life and are often -if not all the time- set in the present timeline in a world that mirrors our own."
 msgstr ""
 
 #: tmainform.ckfiltersmut.caption
@@ -714,10 +722,12 @@ msgid "Contains events resulting in great loss and misfortune."
 msgstr ""
 
 #: tmainform.ckfilterweebtons.caption
-msgid "Webtoons"
+msgctxt "tmainform.ckfilterweebtons.caption"
+msgid "Weebtoons"
 msgstr ""
 
 #: tmainform.ckfilterweebtons.hint
+msgctxt "tmainform.ckfilterweebtons.hint"
 msgid "Weebtoons"
 msgstr ""
 

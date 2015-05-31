@@ -16,8 +16,8 @@ msgid "Import completed."
 msgstr "Import completed."
 
 #: frmimportfavorites.rs_listunimportedcaption
-msgid "List of unimported mangas"
-msgstr "List of unimported mangas"
+msgid "List of unimported manga"
+msgstr "List of unimported manga"
 
 #: frmmain.rs_alldownloads
 msgid "All downloads"
@@ -66,9 +66,6 @@ msgid "Are you sure you want to delete the task(s)?"
 msgstr "Are you sure you want to delete the task(s)?"
 
 #: frmmain.rs_dlgtitleexistindllist
-#| msgid ""
-#| "This title are already in download list.\n"
-#| "Do you want to download it anyway?\n"
 msgid ""
 "This title are already in download list.\n"
 "Do you want to download it anyway?\n"
@@ -89,17 +86,14 @@ msgid "Updater is running!"
 msgstr "Updater is running!"
 
 #: frmmain.rs_dlgupdaterwanttoupdatedb
-msgid "Do you want to download manga list from the server ?"
-msgstr "Do you want to download manga list from the server ?"
+msgid "Do you want to download manga list from the server?"
+msgstr "Do you want to download manga list from the server?"
 
 #: frmmain.rs_dlgurlnotsupport
 msgid "URL not supported!"
 msgstr "URL not supported!"
 
 #: frmmain.rs_droptargetmodeitems
-#| msgid ""
-#| "Download all\n"
-#| "Add to favorites\n"
 msgid ""
 "Download all\n"
 "Add to favorites\n"
@@ -108,10 +102,6 @@ msgstr ""
 "Add to favorites\n"
 
 #: frmmain.rs_filterstatusitems
-#| msgid ""
-#| "Completed\n"
-#| "Ongoing\n"
-#| "<none>\n"
 msgid ""
 "Completed\n"
 "Ongoing\n"
@@ -122,9 +112,6 @@ msgstr ""
 "<none>\n"
 
 #: frmmain.rs_hintfavoriteproblem
-#| msgid ""
-#| "There is a problem with this data!\n"
-#| "Removing and re-adding this data may fix the problem.\n"
 msgid ""
 "There is a problem with this data!\n"
 "Removing and re-adding this data may fix the problem.\n"
@@ -198,11 +185,6 @@ msgid "One week"
 msgstr "One week"
 
 #: frmmain.rs_optionfmddoitems
-#| msgid ""
-#| "Do nothing\n"
-#| "Exit FMD\n"
-#| "Shutdown\n"
-#| "Hibernate\n"
 msgid ""
 "Do nothing\n"
 "Exit FMD\n"
@@ -252,7 +234,7 @@ msgid "&Close"
 msgstr "&Close"
 
 #: timportfavorites.btcancel.caption
-msgctxt "timportfavorites.btcancel.caption"
+msgctxt "TIMPORTFAVORITES.BTCANCEL.CAPTION"
 msgid "Cancel"
 msgstr "Cancel"
 
@@ -270,7 +252,7 @@ msgid "Domdomsoft Manga Downloader"
 msgstr "Domdomsoft Manga Downloader"
 
 #: timportfavorites.edpath.text
-msgctxt "timportfavorites.edpath.text"
+msgctxt "TIMPORTFAVORITES.EDPATH.TEXT"
 msgid "Path to the software (e.g. C:\\MangaDownloader)"
 msgstr "Path to the software (e.g. C:\\MangaDownloader)"
 
@@ -363,7 +345,6 @@ msgid "Search only new manga"
 msgstr "Search only new manga"
 
 #: tmainform.cboptionautocheckfavstartup.caption
-#| msgid "Automatic check for new chapter"
 msgid "Automatic check for new chapter at startup"
 msgstr "Automatic check for new chapter at startup"
 
@@ -372,12 +353,10 @@ msgid "Check for new version "
 msgstr "Check for new version "
 
 #: tmainform.cboptionautodlfav.caption
-#| msgid "Automatically download after finish checking"
 msgid "Automatic download after finish checking"
 msgstr "Automatic download after finish checking"
 
 #: tmainform.cboptionautonumberchapter.caption
-#| msgid "cbOptionAutoNumberChapter"
 msgid "Auto number chapter"
 msgstr "Auto number chapter"
 
@@ -386,7 +365,6 @@ msgid "Automatic remove completed manga from Favorites"
 msgstr "Automatic remove completed manga from Favorites"
 
 #: tmainform.cboptionbatotouseie.caption
-#| msgid "cbOptionBatotoUseIE"
 msgid "[Batoto] Use IE"
 msgstr "[Batoto] Use IE"
 
@@ -419,7 +397,6 @@ msgid "[Mangafox] Remove watermarks (Beware! Experimental!)"
 msgstr "[Mangafox] Remove watermarks (Beware! Experimental!)"
 
 #: tmainform.cboptionminimizetotray.caption
-#| msgid "cbOptionMinimizeToTray"
 msgid "Minimize to tray"
 msgstr "Minimize to tray"
 
@@ -500,8 +477,8 @@ msgid "Adventure"
 msgstr "Adventure"
 
 #: tmainform.ckfilteradventure.hint
-msgid "If a character in the story goes on a trip or along that line, your best bet is that it is an adventure manga. Otherwise, it''s up to your personal prejudice on this case."
-msgstr "If a character in the story goes on a trip or along that line, your best bet is that it is an adventure manga. Otherwise, it''s up to your personal prejudice on this case."
+msgid "If a character in the story goes on a trip or along that line, your best bet is that it is an adventure manga. Otherwise, it's up to your personal prejudice on this case."
+msgstr "If a character in the story goes on a trip or along that line, your best bet is that it is an adventure manga. Otherwise, it's up to your personal prejudice on this case."
 
 #: tmainform.ckfiltercomedy.caption
 msgid "Comedy"
@@ -528,8 +505,8 @@ msgid "A work meant to bring on an emotional response, such as instilling sadnes
 msgstr "A work meant to bring on an emotional response, such as instilling sadness or tension."
 
 #: tmainform.ckfilterechi.caption
-msgid "Echi"
-msgstr "Echi"
+msgid "Ecchi"
+msgstr "Ecchi"
 
 #: tmainform.ckfilterechi.hint
 msgid "Possibly the line between hentai and non-hentai, ecchi usually refers to fanservice put in to attract a certain group of fans."
@@ -548,7 +525,6 @@ msgid "Gender Bender"
 msgstr "Gender Bender"
 
 #: tmainform.ckfiltergenderbender.hint
-#| msgid "Girls dressing up as guys, guys dressing up as girls... Guys turning into girls, girls turning into guys..."
 msgid ""
 "Girls dressing up as guys, guys dressing up as girls.\n"
 "Guys turning into girls, girls turning into guys.\n"
@@ -570,13 +546,13 @@ msgid "Hentai"
 msgstr "Hentai"
 
 #: tmainform.ckfilterhentai.hint
-msgctxt "tmainform.ckfilterhentai.hint"
+msgctxt "TMAINFORM.CKFILTERHENTAI.HINT"
 msgid "Hentai"
 msgstr "Hentai"
 
 #: tmainform.ckfilterhistorical.caption
-msgid "Historial"
-msgstr "Historial"
+msgid "Historical"
+msgstr "Historical"
 
 #: tmainform.ckfilterhistorical.hint
 msgid "Having to do with old or ancient times."
@@ -631,10 +607,12 @@ msgid "A work involving and usually concentrating on all types of large robotic 
 msgstr "A work involving and usually concentrating on all types of large robotic machines."
 
 #: tmainform.ckfiltermusical.caption
-msgid "Mucical"
-msgstr "Mucical"
+msgctxt "tmainform.ckfiltermusical.caption"
+msgid "Musical"
+msgstr "Musical"
 
 #: tmainform.ckfiltermusical.hint
+msgctxt "tmainform.ckfiltermusical.hint"
 msgid "Musical"
 msgstr "Musical"
 
@@ -663,7 +641,6 @@ msgid "Any love related story. We will define love as between man and woman in t
 msgstr "Any love related story. We will define love as between man and woman in this case. Other than that, it is up to your own imagination of what love is."
 
 #: tmainform.ckfilterschoollife.caption
-#| msgid "Scool Life"
 msgid "School Life"
 msgstr "School Life"
 
@@ -704,32 +681,38 @@ msgid "A work intended and primarily written for females. Usually involves a lot
 msgstr "A work intended and primarily written for females. Usually involves a lot of romance and strong character development."
 
 #: tmainform.ckfiltershoujoai.caption
-msgid "ShoujoAi"
-msgstr "ShoujoAi"
+msgid "Shoujo Ai"
+msgstr "Shoujo Ai"
+
+#: tmainform.ckfiltershoujoai.hint
+msgctxt "TMAINFORM.CKFILTERSHOUJOAI.HINT"
+msgid "Often synonymous with yuri, this can be thought of as somewhat less extreme. \"Girl''s Love\", so to speak."
+msgstr "Often synonymous with yuri, this can be thought of as somewhat less extreme. \"Girl''s Love\", so to speak."
 
 #: tmainform.ckfiltershounen.caption
 msgid "Shounen"
 msgstr "Shounen"
 
 #: tmainform.ckfiltershounen.hint
-msgid "Often synonymous with yuri, this can be thought of as somewhat less extreme. \"Girl''s Love\", so to speak."
-msgstr "Often synonymous with yuri, this can be thought of as somewhat less extreme. \"Girl''s Love\", so to speak."
+msgctxt "tmainform.ckfiltershounen.hint"
+msgid "A work intended and primarily written for males. These works usually involve fighting and/or violence."
+msgstr "A work intended and primarily written for males. These works usually involve fighting and/or violence."
 
 #: tmainform.ckfiltershounenai.caption
 msgid "Shounen Ai"
 msgstr "Shounen Ai"
 
 #: tmainform.ckfiltershounenai.hint
-msgid "A work intended and primarily written for males. These works usually involve fighting and/or violence."
-msgstr "A work intended and primarily written for males. These works usually involve fighting and/or violence."
+msgid "Often synonymous with yaoi, this can be thought of as somewhat less extreme. \"Boy''s Love\", so to speak"
+msgstr "Often synonymous with yaoi, this can be thought of as somewhat less extreme. \"Boy''s Love\", so to speak"
 
 #: tmainform.ckfiltersliceoflife.caption
 msgid "Slice of Life"
 msgstr "Slice of Life"
 
 #: tmainform.ckfiltersliceoflife.hint
-msgid "Often synonymous with yaoi, this can be thought of as somewhat less extreme. \"Boy''s Love\", so to speak"
-msgstr "Often synonymous with yaoi, this can be thought of as somewhat less extreme. \"Boy''s Love\", so to speak"
+msgid "As the name suggests, this genre represents day-to-day tribulations of one/many character(s). These challenges/events could technically happen in real life and are often -if not all the time- set in the present timeline in a world that mirrors our own."
+msgstr "As the name suggests, this genre represents day-to-day tribulations of one/many character(s). These challenges/events could technically happen in real life and are often -if not all the time- set in the present timeline in a world that mirrors our own."
 
 #: tmainform.ckfiltersmut.caption
 msgid "Smut"
@@ -764,10 +747,12 @@ msgid "Contains events resulting in great loss and misfortune."
 msgstr "Contains events resulting in great loss and misfortune."
 
 #: tmainform.ckfilterweebtons.caption
-msgid "Webtoons"
-msgstr "Webtoons"
+msgctxt "tmainform.ckfilterweebtons.caption"
+msgid "Weebtoons"
+msgstr "Weebtoons"
 
 #: tmainform.ckfilterweebtons.hint
+msgctxt "tmainform.ckfilterweebtons.hint"
 msgid "Weebtoons"
 msgstr "Weebtoons"
 
@@ -806,7 +791,7 @@ msgid "Part of summary"
 msgstr "Part of summary"
 
 #: tmainform.edfiltertitle.texthint
-msgctxt "tmainform.edfiltertitle.texthint"
+msgctxt "TMAINFORM.EDFILTERTITLE.TEXTHINT"
 msgid "Title"
 msgstr "Title"
 
@@ -839,7 +824,7 @@ msgid "Proxy username"
 msgstr "Proxy username"
 
 #: tmainform.edsaveto.texthint
-msgctxt "tmainform.edsaveto.texthint"
+msgctxt "TMAINFORM.EDSAVETO.TEXTHINT"
 msgid "Save to"
 msgstr "Save to"
 
@@ -881,13 +866,11 @@ msgid "Opacity"
 msgstr "Opacity"
 
 #: tmainform.lbfilterartists.caption
-#| msgid "Artists"
 msgctxt "tmainform.lbfilterartists.caption"
 msgid "Artist"
 msgstr "Artist"
 
 #: tmainform.lbfilterauthors.caption
-#| msgid "Authors"
 msgctxt "tmainform.lbfilterauthors.caption"
 msgid "Author"
 msgstr "Author"
@@ -902,16 +885,6 @@ msgid "[?]"
 msgstr "[?]"
 
 #: tmainform.lbfilterhint.hint
-#| msgid ""
-#| "Genres:\n"
-#| "- Checked: Include this genre.\n"
-#| "- Unchecked: Exclude this genre.\n"
-#| "- Grayed: Doesn't matter.\n"
-#| "\n"
-#| "Custom Genres:\n"
-#| "- Separate multiple genres with ','.\n"
-#| "- Exclude a genre by placing ''!'' at the beginning of a genre.\n"
-#| "- Example: Adventure,!Ecchi,Comedy.\n"
 msgid ""
 "Genres:\n"
 "- Checked: Include this genre.\n"
@@ -966,16 +939,6 @@ msgid "[?]"
 msgstr "[?]"
 
 #: tmainform.lboptioncustomrenamehint.hint
-#| msgid ""
-#| "%WEBSITE% : Website name\n"
-#| "%MANGA% : Manga title\n"
-#| "%CHAPTER% : Chapter title\n"
-#| "%AUTHOR% : Author\n"
-#| "%ARTIST% : Artist\n"
-#| "%NUMBERING% : Numbering\n"
-#| "\n"
-#| "Note:\n"
-#| "Chapter folder name must have at least %CHAPTER% or %NUMBERING%.\n"
 msgid ""
 "%WEBSITE% : Website name\n"
 "%MANGA% : Manga title\n"
@@ -1020,11 +983,6 @@ msgid "[?]"
 msgstr "[?]"
 
 #: tmainform.lboptionexternalhint.hint
-#| msgid ""
-#| "%PATH% : Path to the manga\n"
-#| "%FCHAPTER% : First downloaded chapter/first chapter in the directory\n"
-#| "\n"
-#| "Example: C:\\HoneyView\\honeyview.exe \"%PATH%%FCHAPTER%\"\n"
 msgid ""
 "%PATH% : Path to the manga\n"
 "%FCHAPTER% : First downloaded chapter/first chapter in the directory\n"
@@ -1098,7 +1056,7 @@ msgid "Save to:"
 msgstr "Save to:"
 
 #: tmainform.lbtransferrate.caption
-msgctxt "tmainform.lbtransferrate.caption"
+msgctxt "TMAINFORM.LBTRANSFERRATE.CAPTION"
 msgid "Transfer rate:"
 msgstr "Transfer rate:"
 
@@ -1348,7 +1306,7 @@ msgid "Options"
 msgstr "Options"
 
 #: tmainform.tssaveto.caption
-msgctxt "tmainform.tssaveto.caption"
+msgctxt "TMAINFORM.TSSAVETO.CAPTION"
 msgid "Save to"
 msgstr "Save to"
 
@@ -1374,26 +1332,22 @@ msgid "Progress"
 msgstr "Progress"
 
 #: tmainform.vtdownload.header.columns[3].text
-#| msgid "Website"
 msgctxt "tmainform.vtdownload.header.columns[3].text"
 msgid "Transfer rate"
 msgstr "Transfer rate"
 
 #: tmainform.vtdownload.header.columns[4].text
-#| msgid "Save to"
 msgctxt "tmainform.vtdownload.header.columns[4].text"
 msgid "Website"
 msgstr "Website"
 
 #: tmainform.vtdownload.header.columns[5].text
-#| msgid "Added"
 msgctxt "tmainform.vtdownload.header.columns[5].text"
 msgid "Save to"
 msgstr "Save to"
 
 #: tmainform.vtdownload.header.columns[6].text
-#| msgid "Added"
-msgctxt "tmainform.vtdownload.header.columns[6].text"
+msgctxt "TMAINFORM.VTDOWNLOAD.HEADER.COLUMNS[6].TEXT"
 msgid "Added"
 msgstr "Added"
 
@@ -1421,20 +1375,17 @@ msgid "Save to"
 msgstr "Save to"
 
 #: tnewchapter.btcancel.caption
-#| msgid "Cancel"
-msgctxt "tnewchapter.btcancel.caption"
+msgctxt "TNEWCHAPTER.BTCANCEL.CAPTION"
 msgid "&Cancel"
 msgstr "&Cancel"
 
 #: tnewchapter.btdownload.caption
-#| msgid "&OK"
-msgctxt "tnewchapter.btdownload.caption"
+msgctxt "TNEWCHAPTER.BTDOWNLOAD.CAPTION"
 msgid "&Download"
 msgstr "&Download"
 
 #: tnewchapter.btqueue.caption
-#| msgid "Add to queue"
-msgctxt "tnewchapter.btqueue.caption"
+msgctxt "TNEWCHAPTER.BTQUEUE.CAPTION"
 msgid "&Add to queue"
 msgstr "&Add to queue"
 
@@ -1451,17 +1402,15 @@ msgid "&Now"
 msgstr "&Now"
 
 #: tshutdowncounterform.caption
-msgctxt "tshutdowncounterform.caption"
+msgctxt "TSHUTDOWNCOUNTERFORM.CAPTION"
 msgid "Free Manga Downloader"
 msgstr "Free Manga Downloader"
 
 #: tupdatedialogform.btnlater.caption
-#| msgid "Later"
 msgid "&Later"
 msgstr "&Later"
 
 #: tupdatedialogform.btnupdate.caption
-#| msgid "Update"
 msgid "&Update"
 msgstr "&Update"
 
@@ -1515,13 +1464,11 @@ msgid "Waiting..."
 msgstr "Waiting..."
 
 #: ufavoritesmanager.rs_btnaddtoqueue
-#| msgid "Add to queue"
 msgctxt "ufavoritesmanager.rs_btnaddtoqueue"
 msgid "&Add to queue"
 msgstr "&Add to queue"
 
 #: ufavoritesmanager.rs_btncancel
-#| msgid "Cancel"
 msgctxt "ufavoritesmanager.rs_btncancel"
 msgid "&Cancel"
 msgstr "&Cancel"
@@ -1532,13 +1479,11 @@ msgid "Check for new chapter"
 msgstr "Check for new chapter"
 
 #: ufavoritesmanager.rs_btndownload
-#| msgid "Download"
 msgctxt "ufavoritesmanager.rs_btndownload"
 msgid "&Download"
 msgstr "&Download"
 
 #: ufavoritesmanager.rs_btnremove
-#| msgid "Remove"
 msgid "&Remove"
 msgstr "&Remove"
 
@@ -1571,7 +1516,6 @@ msgid "Loading: %d/%d"
 msgstr "Loading: %d/%d"
 
 #: usubthread.rs_btncheckupdates
-#| msgid "Check for new updates"
 msgctxt "usubthread.rs_btncheckupdates"
 msgid "Check for new version"
 msgstr "Check for new version"

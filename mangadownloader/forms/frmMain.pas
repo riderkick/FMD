@@ -643,7 +643,7 @@ resourcestring
   RS_DlgUpdaterIsRunning = 'Updater is running!';
   RS_DlgTypeInNewChapter = 'Type in new chapter:';
   RS_DlgTypeInNewSavePath = 'Type in new save path:';
-  RS_DlgUpdaterWantToUpdateDB = 'Do you want to download manga list from the server ?';
+  RS_DlgUpdaterWantToUpdateDB = 'Do you want to download manga list from the server?';
   RS_DlgRemoveFinishTasks = 'Are you sure you want to delete all finished tasks?';
   RS_DlgMangaListSelect = 'You must choose at least 1 manga website!';
   RS_DlgCannotGetMangaInfo = 'Cannot get manga info. Please check your internet connection and try it again.';

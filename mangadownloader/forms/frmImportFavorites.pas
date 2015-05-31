@@ -41,7 +41,7 @@ type
 
 resourcestring
   RS_ImportCompleted = 'Import completed.';
-  RS_ListUnimportedCaption = 'List of unimported mangas';
+  RS_ListUnimportedCaption = 'List of unimported manga';
 
 implementation
 

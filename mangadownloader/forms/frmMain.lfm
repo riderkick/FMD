@@ -707,7 +707,7 @@ object MainForm: TMainForm
           object ckFilterAdventure: TCheckBox
             Left = 0
             Height = 19
-            Hint = 'If a character in the story goes on a trip or along that line, your best bet is that it is an adventure manga. Otherwise, it''''s up to your personal prejudice on this case.'
+            Hint = 'If a character in the story goes on a trip or along that line, your best bet is that it is an adventure manga. Otherwise, it''s up to your personal prejudice on this case.'
             Top = 46
             Width = 75
             AllowGrayed = True
@@ -763,7 +763,7 @@ object MainForm: TMainForm
             Top = 138
             Width = 75
             AllowGrayed = True
-            Caption = 'Echi'
+            Caption = 'Ecchi'
             ParentFont = False
             ParentShowHint = False
             ShowHint = True
@@ -828,7 +828,7 @@ object MainForm: TMainForm
             Top = 69
             Width = 98
             AllowGrayed = True
-            Caption = 'Historial'
+            Caption = 'Historical'
             ParentFont = False
             ParentShowHint = False
             ShowHint = True
@@ -919,7 +919,7 @@ object MainForm: TMainForm
             Top = 46
             Width = 93
             AllowGrayed = True
-            Caption = 'Mucical'
+            Caption = 'Musical'
             ParentFont = False
             ParentShowHint = False
             ShowHint = True
@@ -1032,10 +1032,11 @@ object MainForm: TMainForm
           object ckFilterShoujoAi: TCheckBox
             Left = 296
             Height = 19
+            Hint = 'Often synonymous with yuri, this can be thought of as somewhat less extreme. "Girl''''s Love", so to speak.'
             Top = 69
             Width = 81
             AllowGrayed = True
-            Caption = 'ShoujoAi'
+            Caption = 'Shoujo Ai'
             ParentFont = False
             ParentShowHint = False
             ShowHint = True
@@ -1044,7 +1045,7 @@ object MainForm: TMainForm
           object ckFilterShounen: TCheckBox
             Left = 296
             Height = 19
-            Hint = 'Often synonymous with yuri, this can be thought of as somewhat less extreme. "Girl''''s Love", so to speak.'
+            Hint = 'A work intended and primarily written for males. These works usually involve fighting and/or violence.'
             Top = 92
             Width = 81
             AllowGrayed = True
@@ -1057,7 +1058,7 @@ object MainForm: TMainForm
           object ckFilterShounenAi: TCheckBox
             Left = 296
             Height = 19
-            Hint = 'A work intended and primarily written for males. These works usually involve fighting and/or violence.'
+            Hint = 'Often synonymous with yaoi, this can be thought of as somewhat less extreme. "Boy''''s Love", so to speak'
             Top = 115
             Width = 81
             AllowGrayed = True
@@ -1070,7 +1071,7 @@ object MainForm: TMainForm
           object ckFilterSliceofLife: TCheckBox
             Left = 296
             Height = 19
-            Hint = 'Often synonymous with yaoi, this can be thought of as somewhat less extreme. "Boy''''s Love", so to speak'
+            Hint = 'As the name suggests, this genre represents day-to-day tribulations of one/many character(s). These challenges/events could technically happen in real life and are often -if not all the time- set in the present timeline in a world that mirrors our own.'
             Top = 138
             Width = 81
             AllowGrayed = True
@@ -1086,6 +1087,7 @@ object MainForm: TMainForm
             Hint = 'Deals with series that are considered profane or offensive, particularly with regards to sexual content.'
             Top = 161
             Width = 81
+            HelpType = htKeyword
             AllowGrayed = True
             Caption = 'Smut'
             ParentFont = False
@@ -1165,7 +1167,7 @@ object MainForm: TMainForm
             Top = 115
             Width = 87
             AllowGrayed = True
-            Caption = 'Webtoons'
+            Caption = 'Weebtoons'
             ParentFont = False
             ParentShowHint = False
             ShowHint = True
