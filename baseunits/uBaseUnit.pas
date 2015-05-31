@@ -2824,17 +2824,18 @@ begin
   if Trim(HTTP.MimeType) = '' then
     HTTP.MimeType := '';
 
-  if ((mangaSiteID >= 0) and (mangaSiteID <= High(WebsiteRoots))) then
-  begin
-    if HTTPHeader.Values['Referer'] = '' then
-      if not (SitesWithoutReferer(WebsiteRoots[mangaSiteID, 0])) then
-      begin
-        if SitesRefererisURL(WebsiteRoots[mangaSiteID, 0]) then
-          HTTPHeader.Values['Referer'] := ' ' + URL
-        else
-          HTTPHeader.Values['Referer'] := ' ' + WebsiteRoots[mangaSiteID, 1];
-      end;
-  end;
+  if Pos('.imgur.com/', LowerCase(URL)) = 0 then
+    if ((mangaSiteID >= 0) and (mangaSiteID <= High(WebsiteRoots))) then
+    begin
+      if HTTPHeader.Values['Referer'] = '' then
+        if not (SitesWithoutReferer(WebsiteRoots[mangaSiteID, 0])) then
+        begin
+          if SitesRefererisURL(WebsiteRoots[mangaSiteID, 0]) then
+            HTTPHeader.Values['Referer'] := ' ' + URL
+          else
+            HTTPHeader.Values['Referer'] := ' ' + WebsiteRoots[mangaSiteID, 1];
+        end;
+    end;
 
   {$IFDEF DOWNLOADER}
   if checkTerminate then Exit;
