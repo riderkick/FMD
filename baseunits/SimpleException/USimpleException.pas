@@ -62,13 +62,18 @@ type
     FLastReport: String;
     FMaxStackCount: Integer;
     FSimpleCriticalSection: TRTLCriticalSection;
+    FDefaultAppFlags: TApplicationFlags;
+    FUnhandled: Boolean;
     function OSVer: String;
     procedure SetMaxStackCount(AMaxStackCount: Integer);
   protected
     function SimpleBackTraceStr(Addr: Pointer): String;
+    function ExceptionHeaderMessage: string;
     procedure CreateExceptionReport;
-    procedure SaveLogToFile;
+    procedure SaveLogToFile(LogMsg: string);
+    procedure CallExceptionHandler;
     procedure ExceptionHandler;
+    procedure UnhandledException(Obj : TObject; Addr: CodePointer; FrameCount: Longint; Frames: PCodePointer);
   public
     LogFilename: String;
     IgnoredExceptionList: TStringlist;
@@ -78,7 +83,7 @@ type
     property LastException: Exception read FLastException;
     property LastReport: String read FLastReport;
     procedure SimpleExceptionHandler(Sender: TObject; E: Exception);
-    constructor Create(Filename: string);
+    constructor Create(Filename: string = '');
     destructor Destroy; override;
   end;
 
@@ -148,17 +153,15 @@ end;
 
 procedure ExceptionHandle(Sender: TObject; E: Exception);
 begin
-  if SimpleException <> nil then
-    SimpleException.SimpleExceptionHandler(Sender, E);
+  if not Assigned(SimpleException) then
+    InitSimpleExceptionHandler;
+  SimpleException.SimpleExceptionHandler(Sender, E);
 end;
 
 procedure InitSimpleExceptionHandler(const LogFilename : String);
 begin
   if SimpleException = nil then
-  begin
     SimpleException := TSimpleException.Create(LogFilename);
-    SimpleException.LogFilename := LogFilename;
-  end;
 end;
 
 procedure DoneSimpleExceptionHandler;
@@ -216,15 +219,62 @@ end;
 
 procedure TSimpleException.ExceptionHandler;
 begin
-  if (IgnoredExceptionList.IndexOf(FLastException.ClassName) > -1) then
-    Exit;
+  if Assigned(FLastException) then
+    if (IgnoredExceptionList.IndexOf(FLastException.ClassName) > -1) then
+      Exit;
   with TSimpleExceptionForm.Create(nil) do try
     MemoExceptionLog.Lines.Text := FLastReport;
-    LabelExceptionMessage.Caption := FLastException.Message;
+    if Assigned(FLastException) then
+      LabelExceptionMessage.Caption := FLastException.Message;
+    if FUnhandled then
+    begin
+      CheckBoxIgnoreException.Visible := False;
+      ButtonContinue.Visible := False;
+    end;
     if ShowModal = mrIgnore then
       AddIgnoredException(FLastException.ClassName);
   finally
     Free;
+  end;
+end;
+
+procedure TSimpleException.UnhandledException(Obj: TObject; Addr: CodePointer;
+  FrameCount: Longint; Frames: PCodePointer);
+var
+  i: Integer;
+begin
+  if SaveIgnoredExceptionToFile then
+  begin
+    EnterCriticalSection(FSimpleCriticalSection);
+    try
+      FUnhandled := True;
+      if Obj is Exception then
+      begin
+        if IgnoredExceptionList.IndexOf(Exception(Obj).ClassName) < 0 then
+        begin
+          FLastSender := nil;
+          FLastException := Exception(Obj);
+          CreateExceptionReport;
+          CallExceptionHandler;
+        end;
+      end
+      else
+      begin
+        FLastReport := ExceptionHeaderMessage;
+        if Obj is TObject then
+          FLastReport := FLastReport +
+          'Sender Class      : ' + Obj.ClassName + LineEnding;
+        FLastReport := FLastReport +
+          'Exception Address : $' + SimpleBackTraceStr(Addr) + LineEnding;
+        if FrameCount > 0 then
+          for i := 0 to FrameCount-1 do
+            FLastReport := FLastReport + '  ' + SimpleBackTraceStr(Frames[i]) + LineEnding;
+        SaveLogToFile(FLastReport);
+        CallExceptionHandler;
+      end;
+    finally
+      LeaveCriticalSection(FSimpleCriticalSection);
+    end;
   end;
 end;
 
@@ -238,7 +288,7 @@ begin
   if FHasDebugLine then
   begin
     try
-      GetLineInfo(PtrInt(Addr), func, Source, line);
+      GetLineInfo(PtrUInt(Addr), func, Source, line);
       if func <> '' then
         Result := Result + ' ' + func;
       if Source <> '' then
@@ -258,6 +308,29 @@ begin
   end;
 end;
 
+function TSimpleException.ExceptionHeaderMessage: string;
+begin
+  try
+    Result := 'Program exception!' + LineEnding +
+      'Application       : ' + Application.Title + LineEnding +
+      'Version           : ' + FAppInfo_fileversion + LineEnding +
+      'Product Version   : ' + FAppInfo_productversion + LineEnding +
+      'FPC Version       : ' + {$i %FPCVERSION%} + LineEnding +
+      'LCL Version       : ' + LCLVersion.lcl_version + LineEnding +
+      'Target CPU_OS     : ' + {$i %FPCTARGETCPU%} +'_' + {$i %FPCTARGETOS%} +LineEnding +
+      'Host Machine      : ' + FOSversion + LineEnding +
+      'Path              : ' + ParamStrUTF8(0) + LineEnding +
+      'Proccess Id       : ' + IntToStr(GetProcessID) + LineEnding +
+      'Thread Id         : ' + IntToStr(GetThreadID) + LineEnding +
+      'Time              : ' + DateTimeToStr(Now) + LineEnding;
+    if IgnoredExceptionList.Count > 0 then
+      Result := Result +
+        'Ignored Exception : ' + IgnoredExceptionList.DelimitedText + LineEnding;
+  except
+    Result := '';
+  end;
+end;
+
 procedure TSimpleException.CreateExceptionReport;
 var
   i, maxStack: Integer;
@@ -268,7 +341,7 @@ begin
     if ExceptFrameCount > 0 then
     begin
       StackTraceStr :=
-        'Exception Address : ' + '$' + hexStr(ExceptAddr) + LineEnding;
+        'Exception Address : $' + hexStr(ExceptAddr) + LineEnding;
       if ExceptFrameCount > FMaxStackCount then
         maxStack := FMaxStackCount - 1
       else
@@ -308,38 +381,24 @@ begin
     end;
     StackTraceStr := TrimRight(StackTraceStr) + LineEnding;
 
-    Report := 'Program exception!' + LineEnding +
-      'Application       : ' + Application.Title + LineEnding +
-      'Version           : ' + FAppInfo_fileversion + LineEnding +
-      'Product Version   : ' + FAppInfo_productversion + LineEnding +
-      'FPC Version       : ' + {$i %FPCVERSION%} + LineEnding +
-      'LCL Version       : ' + LCLVersion.lcl_version + LineEnding +
-      'Target CPU_OS     : ' + {$i %FPCTARGETCPU%} +'_' + {$i %FPCTARGETOS%} +LineEnding +
-      'Host Machine      : ' + FOSversion + LineEnding +
-      'Path              : ' + ParamStrUTF8(0) + LineEnding +
-      'Proccess Id       : ' + IntToStr(GetProcessID) + LineEnding +
-      'Thread Id         : ' + IntToStr(GetThreadID) + LineEnding +
-      'Time              : ' + DateTimeToStr(Now) + LineEnding;
-    if IgnoredExceptionList.Count > 0 then
+    Report := ExceptionHeaderMessage;
+    if Assigned(FLastSender) then
       Report := Report +
-      'Ignored Exception : ' + IgnoredExceptionList.DelimitedText + LineEnding;
-    if FLastSender <> nil then
-      Report := Report +
-      'Sender Class      : ' + FLastSender.ClassName + LineEnding;
-    if FLastException <> nil then
+        'Sender Class      : ' + FLastSender.ClassName + LineEnding;
+    if Assigned(FLastException) then
     begin
       Report := Report +
-      'Exception Class   : ' + FLastException.ClassName + LineEnding +
-      'Message           : ' + FLastException.Message + LineEnding;
+        'Exception Class   : ' + FLastException.ClassName + LineEnding +
+        'Message           : ' + FLastException.Message + LineEnding;
     end;
     FLastReport := Report + StackTraceStr;
   except
     FLastReport := 'Failed to create exception report!';
   end;
-  SaveLogToFile;
+  SaveLogToFile(FLastReport);
 end;
 
-procedure TSimpleException.SaveLogToFile;
+procedure TSimpleException.SaveLogToFile(LogMsg: string);
 var
   f: TextFile;
 begin
@@ -351,11 +410,28 @@ begin
         Append(f)
       else
         Rewrite(f);
-      WriteLn(f, FLastReport);
+      WriteLn(f, LogMsg);
     finally
       CloseFile(f);
     end;
   end;
+end;
+
+procedure TSimpleException.CallExceptionHandler;
+begin
+  if (ThreadID <> MainThreadID) then
+    try
+      {$IF FPC_FULLVERSION >= 20701}
+      TThread.Synchronize(TThread.CurrentThread, @ExceptionHandler);
+      {$ELSE}
+      if (Sender <> nil) and (Sender is TThread) then
+        TThread.Synchronize((Sender as TThread), @ExceptionHandler)
+      {$ENDIF}
+    except
+      raise Exception.Create(SCantHandleException);
+    end
+  else
+    ExceptionHandler;
 end;
 
 procedure TSimpleException.SimpleExceptionHandler(Sender: TObject; E: Exception);
@@ -367,26 +443,21 @@ begin
     if SaveIgnoredExceptionToFile or
       (IgnoredExceptionList.IndexOf(E.ClassName) < 0) then
     begin
+      FUnhandled := False;
       FLastSender := Sender;
       FLastException := E;
       CreateExceptionReport;
-      if (ThreadID <> MainThreadID) then
-        try
-          {$IF FPC_FULLVERSION >= 20701}
-          TThread.Synchronize(TThread.CurrentThread, @ExceptionHandler);
-          {$ELSE}
-          if (Sender <> nil) and (Sender is TThread) then
-            TThread.Synchronize((Sender as TThread), @ExceptionHandler)
-          {$ENDIF}
-        except
-          raise Exception.Create(SCantHandleException);
-        end
-      else
-        ExceptionHandler;
+      CallExceptionHandler;
     end;
   finally
     LeaveCriticalsection(FSimpleCriticalSection);
   end;
+end;
+
+Procedure CatchUnhandledExcept(Obj : TObject; Addr: CodePointer; FrameCount: Longint; Frames: PCodePointer);
+begin
+  if Assigned(SimpleException) then
+    SimpleException.UnhandledException(Obj, Addr, FrameCount, Frames);
 end;
 
 constructor TSimpleException.Create(Filename : string);
@@ -396,7 +467,10 @@ begin
   inherited Create;
   InitCriticalSection(FSimpleCriticalSection);
   FHasDebugLine := OpenSymbolFile(ParamStrUTF8(0));
-  LogFilename := Filename;
+  if Trim(Filename) <> '' then
+    LogFilename := Filename
+  else
+    LogFilename := ExtractFileNameOnly(Application.ExeName) + '.log';
   SaveIgnoredExceptionToFile := False;
   FMaxStackCount := 20;
   FAppVerInfo := TStringList.Create;
@@ -439,14 +513,22 @@ begin
     finally
       Free;
     end;
-  Application.Flags := Application.Flags + [AppNoExceptionMessages];
-  Application.OnException := @SimpleExceptionHandler;
+  if Assigned(Application) then
+  begin
+    FDefaultAppFlags := Application.Flags;
+    Application.Flags := Application.Flags + [AppNoExceptionMessages];
+    Application.OnException := @SimpleExceptionHandler;
+    ExceptProc := @CatchUnhandledExcept;
+  end;
 end;
 
 destructor TSimpleException.Destroy;
 begin
-  Application.OnException := nil;
-  Application.Flags := Application.Flags - [AppNoExceptionMessages];
+  if Assigned(Application) then
+  begin
+    Application.OnException := nil;
+    Application.Flags := FDefaultAppFlags;
+  end;
   IgnoredExceptionList.Free;
   FAppVerInfo.Free;
   CloseSymbolFile;

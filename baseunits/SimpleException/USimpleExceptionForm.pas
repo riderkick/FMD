@@ -78,7 +78,7 @@ end;
 procedure TSimpleExceptionForm.ButtonTerminateClick(Sender: TObject);
 begin
   //Application.Terminate;
-  halt(1);
+  halt(0);
 end;
 
 procedure TSimpleExceptionForm.FormCreate(Sender: TObject);
