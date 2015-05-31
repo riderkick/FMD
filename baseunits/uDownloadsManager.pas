@@ -208,7 +208,7 @@ type
     procedure ActiveTask(const taskID : Integer);
     // Stop a download/wait task.
     procedure StopTask(const taskID : Integer; const isCheckForActive : Boolean =
-      True);
+      True; isWaitFor: Boolean = False);
     // Start all task
     procedure StartAllTasks;
     // Stop all download/wait tasks.
@@ -2195,7 +2195,6 @@ begin
         MainForm.itRefreshDLInfo.Enabled := False;
       end;
 
-
       if (Count = 0) and (isCheckForFMDDo) then
         if MainForm.cbOptionLetFMDDo.ItemIndex > 0 then
         begin
@@ -2317,7 +2316,7 @@ begin
 end;
 
 procedure TDownloadManager.StopTask(const taskID: Integer;
-  const isCheckForActive: Boolean = True);
+  const isCheckForActive: Boolean; isWaitFor: Boolean);
 begin
   if taskID < Containers.Count then
   begin
@@ -2330,7 +2329,11 @@ begin
         TaskItem(taskID).DownloadInfo.Status := RS_Stopped;
       end;
       if TaskItem(taskID).ThreadState then
+      begin
         TaskItem(taskID).Thread.Terminate;
+        if isWaitFor then
+          TaskItem(taskID).Thread.WaitFor;
+      end;
       if isCheckForActive then
       begin
         Backup;

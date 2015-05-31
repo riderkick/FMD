@@ -374,7 +374,6 @@ type
     procedure miDownloadViewMangaInfoClick(Sender: TObject);
     procedure miChapterListHighlightClick(Sender: TObject);
     procedure miDownloadDeleteTaskClick(Sender: TObject);
-    procedure miDownloadDeleteTaskDataClick(Sender: TObject);
     procedure miDownloadMergeCompletedClick(Sender: TObject);
     procedure miFavoritesDownloadAllClick(Sender: TObject);
     procedure miFavoritesViewInfosClick(Sender: TObject);
@@ -689,7 +688,7 @@ var
   fs: TFileStream;
 begin
   Randomize;
-  InitSimpleExceptionHandler(ChangeFileExt(Application.ExeName, '.log'));
+  InitSimpleExceptionHandler;
   AddIgnoredException('EImagingError');
   AddIgnoredException('ERegExpr');
   SaveIgnoredExeptionToFile;
@@ -715,8 +714,11 @@ begin
   if FileExistsUTF8(README_FILE) then
   begin
     fs := TFileStream.Create(README_FILE, fmOpenRead or fmShareDenyNone);
-    rmAbout.LoadRichText(fs);
-    fs.Free;
+    try
+      rmAbout.LoadRichText(fs);
+    finally
+      fs.free;
+    end;
   end;
 
   dataProcess := TDataProcess.Create;
@@ -1119,7 +1121,14 @@ begin
     begin
       vtDownload.Selected[xNode];
       if vtDownload.Selected[xNode] then
-        DLManager.RemoveTask(i)
+      begin
+        if Sender = miDownloadDeleteTaskData then
+        begin
+          DLManager.StopTask(i, False, True);
+          DeleteDirectory(DLManager.TaskItem(i).DownloadInfo.SaveTo, False);
+        end;
+        DLManager.RemoveTask(i);
+      end
       else
         Inc(i);
       xNode := vtDownload.GetNext(xNode);
@@ -1128,64 +1137,9 @@ begin
     DLManager.CS_DownloadManager_Task.Release;
   end;
   vtDownload.ClearSelection;
+  DLManager.CheckAndActiveTask;
   UpdateVtDownload;
   DLManager.Backup;
-end;
-
-procedure TMainForm.miDownloadDeleteTaskDataClick(Sender: TObject);
-var
-  i, j: Cardinal;
-  xNode: PVirtualNode;
-  path: String;
-begin
-  if not Assigned(vtDownload.FocusedNode) then exit;
-  if (cbOptionShowDeleteTaskDialog.Checked) and
-    (vtDownload.SelectedCount > 0) then
-    if not (MessageDlg('', RS_DlgRemoveTask,
-      mtConfirmation, [mbYes, mbNo], 0) = mrYes) then
-      Exit;
-
-  if (vtDownload.SelectedCount = 1) and (Assigned(vtDownload.FocusedNode)) then
-  begin
-    i := vtDownload.FocusedNode^.Index;
-    if DLManager.TaskItem(i).ChapterName.Count > 0 then
-      for j := 0 to DLManager.TaskItem(i).ChapterName.Count - 1 do
-      begin
-        path := CorrectFilePath(DLManager.TaskItem(i).DownloadInfo.SaveTo +
-          '/' + DLManager.TaskItem(i).ChapterName[j]);
-        if path[Length(path)] = '/' then
-          SetLength(path, Length(path) - 1);
-        DeleteDirectory(path, False);
-        if FileExistsUTF8(path + '.zip') then
-          DeleteFileUTF8(path + '.zip');
-        if FileExistsUTF8(path + '.cbz') then
-          DeleteFileUTF8(path + '.cbz');
-        if FileExistsUTF8(path + '.pdf') then
-          DeleteFileUTF8(path + '.pdf');
-      end;
-    if IsDirectoryEmpty(DLManager.TaskItem(i).DownloadInfo.SaveTo) then
-      DeleteDirectory(DLManager.TaskItem(i).DownloadInfo.SaveTo, False);
-    DLManager.RemoveTask(i);
-    UpdateVtDownload;
-    DLManager.Backup;
-  end
-  else
-  if (vtDownload.SelectedCount > 1) then
-  begin
-    xNode := vtDownload.GetFirstSelected;
-    for i := 0 to vtDownload.SelectedCount - 1 do
-    begin
-      if Assigned(xNode) then
-      begin
-        DLManager.StopTask(xNode^.Index);
-        DeleteDirectory(DLManager.TaskItem(xNode^.Index).DownloadInfo.SaveTo, False);
-        DLManager.RemoveTask(xNode^.Index);
-      end;
-      xNode := vtDownload.GetNextSelected(xNode);
-    end;
-    UpdateVtDownload;
-    DLManager.Backup;
-  end;
 end;
 
 procedure TMainForm.miDownloadMergeCompletedClick(Sender: TObject);
