@@ -16,7 +16,7 @@ msgid "Import completed."
 msgstr "Selesai mengimpor."
 
 #: frmimportfavorites.rs_listunimportedcaption
-msgid "List of unimported mangas"
+msgid "List of unimported manga"
 msgstr "Daftar komik yang tidak bisa di-impor"
 
 #: frmmain.rs_alldownloads
@@ -86,7 +86,7 @@ msgid "Updater is running!"
 msgstr "Update sedang berjalan!"
 
 #: frmmain.rs_dlgupdaterwanttoupdatedb
-msgid "Do you want to download manga list from the server ?"
+msgid "Do you want to download manga list from the server?"
 msgstr "Apakah Anda ingin menngunduh daftar komik dari server?"
 
 #: frmmain.rs_dlgurlnotsupport
@@ -477,7 +477,7 @@ msgid "Adventure"
 msgstr "Adventure"
 
 #: tmainform.ckfilteradventure.hint
-msgid "If a character in the story goes on a trip or along that line, your best bet is that it is an adventure manga. Otherwise, it''s up to your personal prejudice on this case."
+msgid "If a character in the story goes on a trip or along that line, your best bet is that it is an adventure manga. Otherwise, it's up to your personal prejudice on this case."
 msgstr "Petualangan."
 
 #: tmainform.ckfiltercomedy.caption
@@ -505,8 +505,8 @@ msgid "A work meant to bring on an emotional response, such as instilling sadnes
 msgstr "karya yang dimaksudkan untuk membawa respons emosional, seperti menanamkan kesedihan atau ketegangan."
 
 #: tmainform.ckfilterechi.caption
-msgid "Echi"
-msgstr "Echi"
+msgid "Ecchi"
+msgstr "Ecchi"
 
 #: tmainform.ckfilterechi.hint
 msgid "Possibly the line between hentai and non-hentai, ecchi usually refers to fanservice put in to attract a certain group of fans."
@@ -551,8 +551,8 @@ msgid "Hentai"
 msgstr "Hentai"
 
 #: tmainform.ckfilterhistorical.caption
-msgid "Historial"
-msgstr "Historial"
+msgid "Historical"
+msgstr "Historical"
 
 #: tmainform.ckfilterhistorical.hint
 msgid "Having to do with old or ancient times."
@@ -607,10 +607,12 @@ msgid "A work involving and usually concentrating on all types of large robotic 
 msgstr "Sebuah karya melibatkan dan biasanya berkonsentrasi pada semua jenis mesin robot yang besar."
 
 #: tmainform.ckfiltermusical.caption
-msgid "Mucical"
-msgstr "Mucical"
+msgctxt "tmainform.ckfiltermusical.caption"
+msgid "Musical"
+msgstr "Musical"
 
 #: tmainform.ckfiltermusical.hint
+msgctxt "tmainform.ckfiltermusical.hint"
 msgid "Musical"
 msgstr "Musikal"
 
@@ -679,32 +681,38 @@ msgid "A work intended and primarily written for females. Usually involves a lot
 msgstr "Sebuah karya dimaksudkan dan terutama ditulis untuk perempuan. Biasanya melibatkan banyak romance dan pengembangan karakter yang kuat."
 
 #: tmainform.ckfiltershoujoai.caption
-msgid "ShoujoAi"
-msgstr "ShoujoAi"
+msgid "Shoujo Ai"
+msgstr "Shoujo Ai"
+
+#: tmainform.ckfiltershoujoai.hint
+msgctxt "tmainform.ckfiltershoujoai.hint"
+msgid "Often synonymous with yuri, this can be thought of as somewhat less extreme. \"Girl''s Love\", so to speak."
+msgstr "Identik dengan yuri, hanya agak kurang ekstrim (percintaan antar sesama perempuan)."
 
 #: tmainform.ckfiltershounen.caption
 msgid "Shounen"
 msgstr "Shounen"
 
 #: tmainform.ckfiltershounen.hint
-msgid "Often synonymous with yuri, this can be thought of as somewhat less extreme. \"Girl''s Love\", so to speak."
-msgstr "Identik dengan yuri, hanya agak kurang ekstrim (percintaan antar sesama perempuan)."
+msgctxt "tmainform.ckfiltershounen.hint"
+msgid "A work intended and primarily written for males. These works usually involve fighting and/or violence."
+msgstr "Ditujukan untuk laki-laki. Biasanya melibatkan perkelahian atau kekerasan."
 
 #: tmainform.ckfiltershounenai.caption
 msgid "Shounen Ai"
 msgstr "Shounen Ai"
 
 #: tmainform.ckfiltershounenai.hint
-msgid "A work intended and primarily written for males. These works usually involve fighting and/or violence."
-msgstr "Sebuah karya dimaksudkan dan terutama ditulis untuk laki-laki. Karya-karya ini biasanya melibatkan pertempuran atau kekerasan."
+msgid "Often synonymous with yaoi, this can be thought of as somewhat less extreme. \"Boy''s Love\", so to speak"
+msgstr "Identik dengan yaoi, hanya agak kurang ekstrim (percintaan antar sesama laki-laki)."
 
 #: tmainform.ckfiltersliceoflife.caption
 msgid "Slice of Life"
 msgstr "Slice of Life"
 
 #: tmainform.ckfiltersliceoflife.hint
-msgid "Often synonymous with yaoi, this can be thought of as somewhat less extreme. \"Boy''s Love\", so to speak"
-msgstr "Identik dengan yaoi, hanya agak kurang ekstrim (percintaan antar sesama laki-laki)."
+msgid "As the name suggests, this genre represents day-to-day tribulations of one/many character(s). These challenges/events could technically happen in real life and are often -if not all the time- set in the present timeline in a world that mirrors our own."
+msgstr "Sepenggal cerita dari kehidupan seseorang/banyak orang. Biasanya berhungungan dengan kejadian yang sering terjadi di kehidupan nyata."
 
 #: tmainform.ckfiltersmut.caption
 msgid "Smut"
@@ -739,10 +747,12 @@ msgid "Contains events resulting in great loss and misfortune."
 msgstr "Berisi acara yang mengakibatkan kerugian besar dan kemalangan."
 
 #: tmainform.ckfilterweebtons.caption
-msgid "Webtoons"
-msgstr "Webtoons"
+msgctxt "tmainform.ckfilterweebtons.caption"
+msgid "Weebtoons"
+msgstr "Weebtoons"
 
 #: tmainform.ckfilterweebtons.hint
+msgctxt "tmainform.ckfilterweebtons.hint"
 msgid "Weebtoons"
 msgstr "Weebtoons"
 
