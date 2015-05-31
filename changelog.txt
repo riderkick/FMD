@@ -8,6 +8,11 @@ https://www.mediafire.com/folder/3ccy2c7g36hp3/Fmd
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.14.1 (31-5-2015)
+[*] Fix can't download images from imgur(kissmanga)
+[*] Fix "delete task + data"
+[*] Various changes and bug fixes
+
 0.9.14.0 (30-5-2015)
 [+] Added ReadMangaToday(EN)
 [*] Various changes and bug fixes
