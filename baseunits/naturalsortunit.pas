@@ -27,9 +27,7 @@ If you didn't receive a copy of the file COPYING.LGPL, contact:
 }
 
 unit NaturalSortUnit;
-{NaturalSort unit makes an apparently hard choice to decide between a human,
-intuitive way of sorting strings and the "computer way". And give you a chance
-to do your choice.}
+{NaturalSort sorts string lists in a natural order.}
 
 {$mode objfpc}{$H+}
 
@@ -39,17 +37,21 @@ uses
   {$IFDEF WINDOWS}
   Windows,
   {$ENDIF}
-  Classes, SysUtils, Math, strutils, dialogs
+  Classes, SysUtils, Math
   {$IFDEF LINUX}
   , UnixType
   {$eNDIF}
   ;
 
+type
+  TSortType = (stNatural, stFloatThousand);
+
 var
   L: TStringList;
   AtLeastXP :boolean = False;
 
-procedure NaturalSort(aList: TStrings);
+procedure NaturalSort(aList: TStrings; SortType: TSortType);
+function UTF8FloatThousandCompareList(aList: TStringList;  Index1, Index2: Integer): Integer;
 function UTF8NaturalCompareList(aList: TStringList;  Index1, Index2: Integer): Integer;
 function UTF8LogicalCompareText(const S1, S2: string): Integer;
 function UTF8NaturalCompareText(const S1, S2: string): Integer;
@@ -69,11 +71,11 @@ implementation
 
 {$DEFINE NATURAL_SORT}
 {
-Human Sort:
+Natural Sort:
 01
 001
 0001
-"Computer sort":
+Logical sort:
 0001
 001
 01
@@ -89,7 +91,7 @@ begin
 end;
 {$ENDIF}
 
-function UTF8NaturalCompareBase(const Str1, Str2: string; Human: boolean; ADecSeparator, AThousandSeparator: Char): Integer;
+function UTF8NaturalCompareBase(const Str1, Str2: string; Human: boolean; SortType :TSortType; const ADecSeparator, AThousandSeparator: Char): Integer;
 {
  UTF8NaturalCompareBase compares UTF-8 strings in a collated order and
  so numbers are sorted too. If Human is set, it sorts like this:
@@ -128,17 +130,17 @@ var
 
   function IsNumber(ch: char): boolean;
   begin
-    //Result := ch in ['0'..'9'];
-    Result := ((ch >= '0') and (ch <= '9'));
+    Result := ch in ['0'..'9'];
+    //Result := ((ch >= '0') and (ch <= '9'));
   end;
 
-  function GetNumber(var pch: PChar; var Len: integer): double;
+  function GetFloatThousand(var pch: PChar; var Len: integer): double;
 
     function IsThousand(pchr: PChar): boolean;
     begin
       Result := False;
-      if IsNumber((pch + 1)^) and IsNumber((pch + 2)^) and IsNumber((pch + 3)^)
-      and (IsNumber((pch - 1)^)) then
+      if IsNumber((pchr + 1)^) and IsNumber((pchr + 2)^) and IsNumber((pchr + 3)^)
+      and (IsNumber((pchr - 1)^)) then
         Result := True;
     end;
 
@@ -150,7 +152,9 @@ var
     Result := 0;
     while (pch^ <> #0) and ( IsNumber(pch^) or
     ((not FoundDecSeparator) and((pch^= ADecSeparator)
-      or ( (pch^ = AThousandSeparator) and IsThousand(pch) )))) do
+      or ( (pch^ = AThousandSeparator) and IsThousand(pch) )
+     )))
+    do
     begin
       if (pch^ = ADecSeparator)
       then
@@ -166,7 +170,7 @@ var
           Result := Result + (Ord(pch^) - Ord('0')) * Power(10, - Count);
         end
         else
-          if pch^ <> athousandseparator then
+          if isnumber(pch^) then
             Result := Result * 10 + Ord(pch^) - Ord('0');
       end;
       Inc(Len);
@@ -174,11 +178,22 @@ var
     end;
   end;
 
+  function GetInteger(var pch: PChar; var Len: integer): double;
+  begin
+    Result := 0;
+    while (pch^ <> #0) and IsNumber(pch^) do
+    begin
+      Result := Result * 10 + Ord(pch^) - Ord('0');
+      Inc(Len);
+      Inc(pch);
+    end;
+
+  end;
+
   procedure GetChars;
   begin
     TextLen1 := 0;
-    //while not ((pStr1 + TextLen1)^ in ['0'..'9']) and ((pStr1 + TextLen1)^ <> #0) do
-    while not (( (pStr1 + TextLen1)^ >= '0') and ((pStr1 + TextLen1)^ <= '9')) and ((pStr1 + TextLen1)^ <> #0) do
+    while not ((pStr1 + TextLen1)^ in ['0'..'9']) and ((pStr1 + TextLen1)^ <> #0) do
       Inc(TextLen1);
     SetLength(TextStr1, TextLen1);
     i := 1;
@@ -191,8 +206,7 @@ var
     end;
 
     TextLen2 := 0;
-    //while not ((pStr2 + TextLen2)^ in ['0'..'9']) and ((pStr2 + TextLen2)^ <> #0) do
-    while not (((pStr2 + TextLen2)^ >= '0') and ((pStr2 + TextLen2)^ <= '9')) and ((pStr2 + TextLen2)^ <> #0) do
+    while not ((pStr2 + TextLen2)^ in ['0'..'9']) and ((pStr2 + TextLen2)^ <> #0) do
       Inc(TextLen2);
     SetLength(TextStr2, TextLen2);
     i := 1;
@@ -229,8 +243,16 @@ begin
       end;
       if IsNumber(pStr1^) and IsNumber(pStr2^) then
       begin
-        Num1 := GetNumber(pStr1, Len1);
-        Num2 := GetNumber(pStr2, Len2);
+        if SortType = stNatural then
+        begin
+          Num1 := GetInteger(pStr1, Len1);
+          Num2 := GetInteger(pStr2, Len2);
+        end
+        else
+        begin
+          Num1 := GetFloatThousand(pStr1, Len1);
+          Num2 := GetFloatThousand(pStr2, Len2);
+        end;
         if Num1 < Num2 then
           Result := -1
         else if Num1 > Num2 then
@@ -290,15 +312,29 @@ begin
     if AtLeastXP then
       Result := StrCmpLogicalW(PWideChar(UTF8Decode(S1)), PWideChar(UTF8Decode(S2)))
     else
-      Result := UTF8NaturalCompareBase(S1, S2, False, DefaultFormatSettings.DecimalSeparator, DefaultFormatSettings.ThousandSeparator);
+      Result := UTF8NaturalCompareBase(S1, S2, False, stNatural, DefaultFormatSettings.DecimalSeparator, DefaultFormatSettings.ThousandSeparator);
   {$ELSE}
-    Result := UTF8NaturalCompareBase(S1, S2, False, DefaultFormatSettings.DecimalSeparator);
+    Result := UTF8NaturalCompareBase(S1, S2, False, stNatural, DefaultFormatSettings.DecimalSeparator, DefaultFormatSettings.ThousandSeparator);
   {$ENDIF}
 end;
 
 function UTF8NaturalCompareText(const S1, S2: string): Integer;
 begin
-  Result := UTF8NaturalCompareBase(S1, S2, True, DefaultFormatSettings.DecimalSeparator, DefaultFormatSettings.ThousandSeparator);
+  Result := UTF8NaturalCompareBase(S1, S2, True, stNatural,
+                                   DefaultFormatSettings.DecimalSeparator,
+                                   DefaultFormatSettings.ThousandSeparator);
+end;
+
+function UTF8FloatThousandCompareText(const S1, S2: string): Integer;
+begin
+  Result := UTF8NaturalCompareBase(S1, S2, True, stFloatThousand,
+                                   DefaultFormatSettings.DecimalSeparator,
+                                   DefaultFormatSettings.ThousandSeparator);
+end;
+
+function UTF8FloatThousandCompareList(aList: TStringList;  Index1, Index2: Integer): Integer;
+begin
+  Result := UTF8FloatThousandCompareText(aList[Index1], aList[Index2]);
 end;
 
 function UTF8NaturalCompareList(aList: TStringList;  Index1, Index2: Integer): Integer;
@@ -337,11 +373,7 @@ function UTF8NaturalCompareList(aList: TStringList;  Index1, Index2: Integer): I
 begin
   {$IFDEF NATURAL_SORT}
     {Uncomment NATURAL_SORT define just at the beggining of implementation section
-    to use the human, intuitive sort way. Otherwise use Windows API function.
-    Who knows how to sort a list of strings, any alphabetically competent person
-    or only programmers? The choice is yours.
-    Whatever is your choice, this function will behave accordingly in Windows
-    and Linux.}
+    to use the human, intuitive sort way. Otherwise use Windows API function.}
     Result := UTF8NaturalCompareText(aList[Index1], aList[Index2]);
   {$ELSE}
     {$IFDEF WINDOWS}
@@ -352,12 +384,14 @@ begin
   {$ENDIF}
 end;
 
-procedure NaturalSort(aList: TStrings);
+procedure NaturalSort(aList: TStrings; SortType: TSortType);
 begin
   L.Assign(aList);
-  L.CustomSort(@UTF8NaturalCompareList);
+  if SortType = stNatural then
+    L.CustomSort(@UTF8NaturalCompareList)
+  else if SortType = stFloatThousand then
+    L.CustomSort(@UTF8FloatThousandCompareList);
   aList.Assign(L);
-  L.Clear;
 end;
 
 function IsAtLeastXP: boolean;
@@ -368,7 +402,6 @@ begin
      else Result := False;
   6..20: Result := True;
   end;
-  //Result := (SysUtils.Win32MajorVersion >= 5) and (SysUtils.Win32MinorVersion >= 1);
 end;
 
 initialization
