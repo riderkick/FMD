@@ -3736,7 +3736,7 @@ begin
     options.WriteInteger('droptarget', 'Heigth', uFrmDropTarget.FHeight);
     options.WriteInteger('droptarget', 'Top', uFrmDropTarget.FTop);
     options.WriteInteger('droptarget', 'Left', uFrmDropTarget.FLeft);
-    options.WriteBool('view', 'ShowDownloadToolbar', cbOptionShowDownloadToolbar.Checked);
+    options.WriteBool('view', 'ShowDownloadsToolbar', cbOptionShowDownloadToolbar.Checked);
     ToolBarDownload.Visible := cbOptionShowDownloadToolbar.Checked;
 
     // connections
