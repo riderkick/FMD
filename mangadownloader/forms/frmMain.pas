@@ -47,7 +47,6 @@ type
     btURL: TSpeedButton;
     cbOptionAutoDlFav: TCheckBox;
     cbOptionAutoRemoveCompletedManga: TCheckBox;
-    cbOptionBatotoUseIE: TCheckBox;
     cbOptionUpdateListNoMangaInfo: TCheckBox;
     cbOptionEnableLoadCover: TCheckBox;
     cbOptionDigitVolume: TCheckBox;
@@ -2681,10 +2680,7 @@ procedure TMainForm.pcMainChange(Sender: TObject);
     cbOptionEnableLoadCover.Checked :=
       options.ReadBool('general', 'LoadMangaCover', True);
     cbOptionLetFMDDoItemIndex := cbOptionLetFMDDo.ItemIndex;
-    cbOptionBatotoUseIE.Checked := options.ReadBool('general', 'BatotoUseIE', True);
     edOptionExternal.Text := options.ReadString('general', 'ExternalProgram', '');
-    cbOptionBatotoUseIE.Checked := False;
-    OptionBatotoUseIEChecked := cbOptionBatotoUseIE.Checked;
 
     seOptionMaxParallel.Value := options.ReadInteger('connections', 'NumberOfTasks', 1);
     seOptionMaxThread.Value :=
@@ -3725,9 +3721,6 @@ begin
     options.WriteInteger('general', 'NewMangaTime', seOptionNewMangaTime.Value);
     options.WriteInteger('general', 'LetFMDDo', cbOptionLetFMDDo.ItemIndex);
     cbOptionLetFMDDoItemIndex := cbOptionLetFMDDo.ItemIndex;
-    cbOptionBatotoUseIE.Checked := False;
-    options.WriteBool('general', 'BatotoUseIE', cbOptionBatotoUseIE.Checked);
-    OptionBatotoUseIEChecked := cbOptionBatotoUseIE.Checked;
     options.WriteBool('general', 'LoadMangaCover', cbOptionEnableLoadCover.Checked);
     OptionEnableLoadCover := cbOptionEnableLoadCover.Checked;
     options.WriteString('general', 'ExternalProgram', edOptionExternal.Text);
@@ -4383,13 +4376,9 @@ begin
   cbOptionLetFMDDo.ItemIndex := options.ReadInteger('general', 'LetFMDDo', 0);
   cbOptionLetFMDDoItemIndex := cbOptionLetFMDDo.ItemIndex;
 
-  cbOptionBatotoUseIE.Checked := False;
-  //options.ReadBool('general', 'BatotoUseIE', TRUE);
   cbOptionAutoNumberChapter.Checked :=
     options.ReadBool('general', 'AutoNumberChapter', True);
   edOptionExternal.Text := options.ReadString('general', 'ExternalProgram', '');
-
-  OptionBatotoUseIEChecked := cbOptionBatotoUseIE.Checked;
   OptionAutoNumberChapterChecked := cbOptionAutoNumberChapter.Checked;
 
   cbAddAsStopped.Checked := options.ReadBool('general', 'AddAsStopped', False);

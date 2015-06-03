@@ -364,10 +364,6 @@ msgstr "Auto number chapter"
 msgid "Automatic remove completed manga from Favorites"
 msgstr "Automatic remove completed manga from Favorites"
 
-#: tmainform.cboptionbatotouseie.caption
-msgid "[Batoto] Use IE"
-msgstr "[Batoto] Use IE"
-
 #: tmainform.cboptiondigitchapter.caption
 msgid "Chapter"
 msgstr "Chapter"

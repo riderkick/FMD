@@ -639,7 +639,6 @@ var
   OptionShowBatotoSG: Boolean = True;
   OptionShowAllLang: Boolean = True;
   OptionAutoDlFav: Boolean = True;
-  OptionBatotoUseIEChecked: Boolean = False;
   OptionEnableLoadCover: Boolean = False;
   OptionAutoNumberChapterChecked: Boolean = True;
   OptionAutoRemoveCompletedManga: Boolean = True;

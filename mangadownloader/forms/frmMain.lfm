@@ -35,14 +35,14 @@ object MainForm: TMainForm
     Height = 508
     Top = 11
     Width = 614
-    ActivePage = tsDownload
+    ActivePage = tsOption
     Align = alClient
     BorderSpacing.Top = 3
     BorderSpacing.Right = 4
     BorderSpacing.Bottom = 3
     Font.Style = [fsBold]
     ParentFont = False
-    TabIndex = 0
+    TabIndex = 4
     TabOrder = 0
     OnChange = pcMainChange
     object tsDownload: TTabSheet
@@ -1769,9 +1769,9 @@ object MainForm: TMainForm
         Height = 403
         Top = 8
         Width = 587
-        ActivePage = tsGeneral
+        ActivePage = tsMisc
         Anchors = [akTop, akLeft, akRight, akBottom]
-        TabIndex = 0
+        TabIndex = 6
         TabOrder = 0
         object tsGeneral: TTabSheet
           Caption = 'General'
@@ -2600,17 +2600,6 @@ object MainForm: TMainForm
               TabOrder = 3
               Visible = False
             end
-            object cbOptionBatotoUseIE: TCheckBox
-              Left = 16
-              Height = 19
-              Top = 264
-              Width = 97
-              Caption = '[Batoto] Use IE'
-              Enabled = False
-              ParentFont = False
-              TabOrder = 4
-              Visible = False
-            end
             object gbDropTarget: TGroupBox
               Left = 16
               Height = 200
@@ -2619,7 +2608,7 @@ object MainForm: TMainForm
               Caption = 'Drop Box'
               ClientHeight = 180
               ClientWidth = 308
-              TabOrder = 5
+              TabOrder = 4
               object ckDropTarget: TCheckBox
                 Left = 16
                 Height = 19
@@ -2731,11 +2720,11 @@ object MainForm: TMainForm
       Caption = 'About'
       ChildSizing.LeftRightSpacing = 2
       ChildSizing.TopBottomSpacing = 2
-      ClientHeight = 478
+      ClientHeight = 480
       ClientWidth = 606
       object rmAbout: TRichMemo
         Left = 2
-        Height = 407
+        Height = 409
         Top = 4
         Width = 600
         Align = alTop
@@ -2755,7 +2744,7 @@ object MainForm: TMainForm
       object btCheckVersion: TBitBtn
         Left = 25
         Height = 40
-        Top = 427
+        Top = 429
         Width = 208
         Anchors = [akLeft, akBottom]
         Caption = 'Check for new version'
@@ -2801,7 +2790,7 @@ object MainForm: TMainForm
       object btVisitMyBlog: TBitBtn
         Left = 249
         Height = 40
-        Top = 427
+        Top = 429
         Width = 208
         Anchors = [akLeft, akBottom]
         Caption = 'Visit my blog'
@@ -3194,8 +3183,8 @@ object MainForm: TMainForm
   object pmDownload: TPopupMenu
     Images = IconList
     OnPopup = pmDownloadPopup
-    left = 376
-    top = 344
+    left = 616
+    top = 360
     object miDownloadStop: TMenuItem
       Caption = 'Stop'
       Enabled = False
@@ -3512,7 +3501,7 @@ object MainForm: TMainForm
     end
   end
   object pmChapterList: TPopupMenu
-    left = 376
+    left = 616
     top = 392
     object miChapterListCheckSelected: TMenuItem
       Caption = 'Check selected'
@@ -3544,8 +3533,8 @@ object MainForm: TMainForm
   object pmFavorites: TPopupMenu
     Images = IconList
     OnPopup = pmFavoritesPopup
-    left = 376
-    top = 448
+    left = 616
+    top = 432
     object miFavoritesViewInfos: TMenuItem
       Caption = 'View manga info'
       Bitmap.Data = {

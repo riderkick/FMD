@@ -70,8 +70,7 @@
       //mulai
       if OptionShowAllLang then
       begin
-        if (not OptionBatotoUseIEChecked) and
-          (GetTagName(parse.Strings[i]) = 'a') and
+        if (GetTagName(parse.Strings[i]) = 'a') and
           (Pos('/read/_/', parse.Strings[i]) > 0) and
           (i + 8 < parse.Count - 1) and
           (Pos('title=', parse.Strings[i + 8]) > 0) then
@@ -93,8 +92,7 @@
           mangaInfo.chapterName.Add(s);
         end
         else
-        if (OptionBatotoUseIEChecked) and
-          (GetTagName(parse.Strings[i]) = 'a') and
+        if (GetTagName(parse.Strings[i]) = 'a') and
           (Pos('/read/_/', parse.Strings[i]) > 0) and
           (i + 2 < parse.Count - 1) and
           (Pos('title=', parse.Strings[i - 3]) > 0) then
@@ -113,9 +111,7 @@
       end
       else
       begin
-
-        if (not OptionBatotoUseIEChecked) and
-          (GetTagName(parse.Strings[i]) = 'a') and
+        if (GetTagName(parse.Strings[i]) = 'a') and
           (Pos('/read/_/', parse.Strings[i]) > 0) and
           (i + 8 < parse.Count - 1) and
           (Pos('English', parse.Strings[i + 8]) > 0) then
@@ -136,8 +132,7 @@
           mangaInfo.chapterName.Add(s);
         end
         else
-        if (OptionBatotoUseIEChecked) and
-          (GetTagName(parse.Strings[i]) = 'a') and
+        if (GetTagName(parse.Strings[i]) = 'a') and
           (Pos('/read/_/', parse.Strings[i]) > 0) and
           (i + 2 < parse.Count - 1) and
           (Pos('English', parse.Strings[i - 3]) > 0) then

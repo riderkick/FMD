@@ -364,10 +364,6 @@ msgstr "Otomatis nomor bab"
 msgid "Automatic remove completed manga from Favorites"
 msgstr "Otomatis hapus komik yang sudah tamat dari daftar kesukaan"
 
-#: tmainform.cboptionbatotouseie.caption
-msgid "[Batoto] Use IE"
-msgstr "[Batoto] Gunakan IE"
-
 #: tmainform.cboptiondigitchapter.caption
 msgid "Chapter"
 msgstr "Bab"
