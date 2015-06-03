@@ -420,6 +420,10 @@ msgstr "[Batoto] Tampilkan nama grup scan"
 msgid "Delete task/favorite"
 msgstr "Hapus unduhan/kesukaan"
 
+#: tmainform.cboptionshowdownloadtoolbar.caption
+msgid "Show downloads toolbar"
+msgstr "Tampilkan toolbar unduhan"
+
 #: tmainform.cboptionshowquitdialog.caption
 msgid "Exit FMD"
 msgstr "Tutup FMD"
@@ -1310,6 +1314,10 @@ msgstr "Penyimpanan"
 msgid "Updates"
 msgstr "Pembaruan"
 
+#: tmainform.tsview.caption
+msgid "View"
+msgstr "Tampilan"
+
 #: tmainform.tswebsites.caption
 msgid "Websites"
 msgstr "Situs web"
@@ -1584,4 +1592,3 @@ msgstr "Sinkronisasi data"
 #: uupdatethread.rs_updatinglist
 msgid "Updating list"
 msgstr "Memperbarui daftar"
-

@@ -420,6 +420,10 @@ msgstr "[Batoto] Show scan group name"
 msgid "Delete task/favorite"
 msgstr "Delete task/favorite"
 
+#: tmainform.cboptionshowdownloadtoolbar.caption
+msgid "Show downloads toolbar"
+msgstr "Show downloads toolbar"
+
 #: tmainform.cboptionshowquitdialog.caption
 msgid "Exit FMD"
 msgstr "Exit FMD"
@@ -1310,6 +1314,10 @@ msgstr "Save to"
 msgid "Updates"
 msgstr "Updates"
 
+#: tmainform.tsview.caption
+msgid "View"
+msgstr "View"
+
 #: tmainform.tswebsites.caption
 msgid "Websites"
 msgstr "Websites"
@@ -1584,4 +1592,3 @@ msgstr "Synchronizing data"
 #: uupdatethread.rs_updatinglist
 msgid "Updating list"
 msgstr "Updating list"
-

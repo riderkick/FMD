@@ -397,6 +397,10 @@ msgstr ""
 msgid "Delete task/favorite"
 msgstr ""
 
+#: tmainform.cboptionshowdownloadtoolbar.caption
+msgid "Show downloads toolbar"
+msgstr ""
+
 #: tmainform.cboptionshowquitdialog.caption
 msgid "Exit FMD"
 msgstr ""
@@ -1261,6 +1265,10 @@ msgstr ""
 
 #: tmainform.tsupdate.caption
 msgid "Updates"
+msgstr ""
+
+#: tmainform.tsview.caption
+msgid "View"
 msgstr ""
 
 #: tmainform.tswebsites.caption
