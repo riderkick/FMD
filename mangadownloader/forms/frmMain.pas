@@ -3338,9 +3338,9 @@ begin
     case Column of
       1: HintText := p^.Status;
       2: HintText := p^.Progress;
-      3: HintText := p^.Website;
-      4: HintText := p^.SaveTo;
-      5: HintText := DateTimeToStr(p^.dateTime);
+      4: HintText := p^.Website;
+      5: HintText := p^.SaveTo;
+      6: HintText := DateTimeToStr(p^.dateTime);
     end;
   end;
 end;
