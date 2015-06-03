@@ -2677,6 +2677,8 @@ procedure TMainForm.pcMainChange(Sender: TObject);
     cbOptionLetFMDDoItemIndex := cbOptionLetFMDDo.ItemIndex;
     edOptionExternal.Text := options.ReadString('general', 'ExternalProgram', '');
 
+    cbOptionShowDownloadToolbar.Checked := options.ReadBool('view', 'ShowDownloadsToolbar', True);
+
     seOptionMaxParallel.Value := options.ReadInteger('connections', 'NumberOfTasks', 1);
     seOptionMaxThread.Value :=
       options.ReadInteger('connections', 'NumberOfThreadsPerTask', 1);
