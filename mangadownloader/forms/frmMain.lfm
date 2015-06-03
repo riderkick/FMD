@@ -35,14 +35,14 @@ object MainForm: TMainForm
     Height = 508
     Top = 11
     Width = 614
-    ActivePage = tsOption
+    ActivePage = tsDownload
     Align = alClient
     BorderSpacing.Top = 3
     BorderSpacing.Right = 4
     BorderSpacing.Bottom = 3
     Font.Style = [fsBold]
     ParentFont = False
-    TabIndex = 4
+    TabIndex = 0
     TabOrder = 0
     OnChange = pcMainChange
     object tsDownload: TTabSheet
@@ -1769,9 +1769,9 @@ object MainForm: TMainForm
         Height = 403
         Top = 8
         Width = 587
-        ActivePage = tsMisc
+        ActivePage = tsGeneral
         Anchors = [akTop, akLeft, akRight, akBottom]
-        TabIndex = 6
+        TabIndex = 0
         TabOrder = 0
         object tsGeneral: TTabSheet
           Caption = 'General'
@@ -1911,6 +1911,95 @@ object MainForm: TMainForm
             Caption = 'Enable live search (slow on long list)'
             ParentFont = False
             TabOrder = 6
+          end
+        end
+        object tsView: TTabSheet
+          Caption = 'View'
+          ClientHeight = 375
+          ClientWidth = 579
+          object cbOptionShowDownloadToolbar: TCheckBox
+            Left = 16
+            Height = 19
+            Top = 232
+            Width = 151
+            Caption = 'Show downloads toolbar'
+            ParentFont = False
+            TabOrder = 0
+          end
+          object gbDropTarget: TGroupBox
+            Left = 16
+            Height = 200
+            Top = 16
+            Width = 312
+            Caption = 'Drop Box'
+            ClientHeight = 180
+            ClientWidth = 308
+            TabOrder = 1
+            object ckDropTarget: TCheckBox
+              Left = 16
+              Height = 19
+              Top = 9
+              Width = 100
+              Caption = 'Show Drop Box'
+              OnChange = ckDropTargetChange
+              ParentFont = False
+              TabOrder = 0
+            end
+            object tbDropTargetOpacity: TTrackBar
+              Left = 16
+              Height = 33
+              Top = 128
+              Width = 280
+              Frequency = 15
+              Max = 255
+              Min = 5
+              OnChange = tbDropTargetOpacityChange
+              Position = 200
+              TabOrder = 1
+            end
+            object lbDropTargetOpacity: TLabel
+              Left = 16
+              Height = 15
+              Top = 112
+              Width = 41
+              Caption = 'Opacity'
+              ParentColor = False
+              ParentFont = False
+            end
+            object rgDropTargetMode: TRadioGroup
+              Left = 16
+              Height = 58
+              Top = 40
+              Width = 120
+              AutoFill = True
+              AutoSize = True
+              Caption = 'Mode'
+              ChildSizing.LeftRightSpacing = 6
+              ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+              ChildSizing.EnlargeVertical = crsHomogenousChildResize
+              ChildSizing.ShrinkHorizontal = crsScaleChilds
+              ChildSizing.ShrinkVertical = crsScaleChilds
+              ChildSizing.Layout = cclLeftToRightThenTopToBottom
+              ChildSizing.ControlsPerLine = 1
+              ClientHeight = 38
+              ClientWidth = 116
+              ItemIndex = 0
+              Items.Strings = (
+                'Download all'
+                'Add to favorites'
+              )
+              ParentFont = False
+              TabOrder = 2
+            end
+          end
+          object cbOptionEnableLoadCover: TCheckBox
+            Left = 16
+            Height = 19
+            Top = 256
+            Width = 153
+            Caption = 'Enable load manga cover'
+            ParentFont = False
+            TabOrder = 2
           end
         end
         object tsConnections: TTabSheet
@@ -2129,7 +2218,7 @@ object MainForm: TMainForm
         end
         object tsSaveTo: TTabSheet
           Caption = 'Save to'
-          ClientHeight = 373
+          ClientHeight = 375
           ClientWidth = 579
           object rgOptionCompress: TRadioGroup
             Left = 20
@@ -2518,11 +2607,11 @@ object MainForm: TMainForm
         end
         object tsWebsites: TTabSheet
           Caption = 'Websites'
-          ClientHeight = 373
+          ClientHeight = 375
           ClientWidth = 579
           object vtOptionMangaSiteSelection: TVirtualStringTree
             Left = 2
-            Height = 365
+            Height = 367
             Top = 4
             Width = 573
             Align = alClient
@@ -2566,105 +2655,30 @@ object MainForm: TMainForm
             object cbOptionShowAllLang: TCheckBox
               Left = 16
               Height = 19
-              Top = 240
+              Top = 40
               Width = 167
               Caption = '[Batoto] Show All Language'
               ParentFont = False
-              TabOrder = 2
+              TabOrder = 1
             end
             object cbOptionShowBatotoSG: TCheckBox
               Left = 16
               Height = 19
-              Top = 216
+              Top = 16
               Width = 190
               Caption = '[Batoto] Show scan group name'
               ParentFont = False
               TabOrder = 0
             end
-            object cbOptionEnableLoadCover: TCheckBox
-              Left = 16
-              Height = 19
-              Top = 104
-              Width = 153
-              Caption = 'Enable load manga cover'
-              ParentFont = False
-              TabOrder = 1
-            end
             object cbOptionMangaFoxRemoveWatermarks: TCheckBox
               Left = 16
               Height = 19
-              Top = 288
+              Top = 88
               Width = 317
               Caption = '[Mangafox] Remove watermarks (Beware! Experimental!)'
               ParentFont = False
-              TabOrder = 3
+              TabOrder = 2
               Visible = False
-            end
-            object gbDropTarget: TGroupBox
-              Left = 16
-              Height = 200
-              Top = 8
-              Width = 312
-              Caption = 'Drop Box'
-              ClientHeight = 180
-              ClientWidth = 308
-              TabOrder = 4
-              object ckDropTarget: TCheckBox
-                Left = 16
-                Height = 19
-                Top = 9
-                Width = 100
-                Caption = 'Show Drop Box'
-                OnChange = ckDropTargetChange
-                ParentFont = False
-                TabOrder = 0
-              end
-              object tbDropTargetOpacity: TTrackBar
-                Left = 16
-                Height = 33
-                Top = 128
-                Width = 280
-                Frequency = 15
-                Max = 255
-                Min = 5
-                OnChange = tbDropTargetOpacityChange
-                Position = 200
-                TabOrder = 1
-              end
-              object lbDropTargetOpacity: TLabel
-                Left = 16
-                Height = 15
-                Top = 112
-                Width = 41
-                Caption = 'Opacity'
-                ParentColor = False
-                ParentFont = False
-              end
-              object rgDropTargetMode: TRadioGroup
-                Left = 16
-                Height = 58
-                Top = 40
-                Width = 120
-                AutoFill = True
-                AutoSize = True
-                Caption = 'Mode'
-                ChildSizing.LeftRightSpacing = 6
-                ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
-                ChildSizing.EnlargeVertical = crsHomogenousChildResize
-                ChildSizing.ShrinkHorizontal = crsScaleChilds
-                ChildSizing.ShrinkVertical = crsScaleChilds
-                ChildSizing.Layout = cclLeftToRightThenTopToBottom
-                ChildSizing.ControlsPerLine = 1
-                ClientHeight = 38
-                ClientWidth = 116
-                ItemIndex = 0
-                Items.Strings = (
-                  'Download all'
-                  'Add to favorites'
-                )
-                ParentFont = False
-                TabOrder = 2
-              end
             end
           end
         end

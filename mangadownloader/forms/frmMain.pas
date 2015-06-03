@@ -47,8 +47,9 @@ type
     btURL: TSpeedButton;
     cbOptionAutoDlFav: TCheckBox;
     cbOptionAutoRemoveCompletedManga: TCheckBox;
-    cbOptionUpdateListNoMangaInfo: TCheckBox;
     cbOptionEnableLoadCover: TCheckBox;
+    cbOptionShowDownloadToolbar: TCheckBox;
+    cbOptionUpdateListNoMangaInfo: TCheckBox;
     cbOptionDigitVolume: TCheckBox;
     cbOptionDigitChapter: TCheckBox;
     cbOptionMangaFoxRemoveWatermarks: TCheckBox;
@@ -62,15 +63,15 @@ type
     edOptionExternal: TEdit;
     edSaveTo: TEdit;
     edURL: TEdit;
-    gbOptionExternal: TGroupBox;
     gbDropTarget: TGroupBox;
+    gbOptionExternal: TGroupBox;
     IconDL: TImageList;
     IconMed: TImageList;
     IconSmall: TImageList;
     itMonitor: TTimer;
     itStartup: TIdleTimer;
-    lbDropTargetOpacity: TLabel;
     lbDefaultDownloadPath: TLabel;
+    lbDropTargetOpacity: TLabel;
     lbSaveTo: TLabel;
     lbOptionProxyType: TLabel;
     lbOptionRenameDigits: TLabel;
@@ -249,9 +250,9 @@ type
     pmMangaList: TPopupMenu;
     pmUpdate: TPopupMenu;
     pmEditURL: TPopupMenu;
-    rgDropTargetMode: TRadioGroup;
     rbOne: TRadioButton;
     rbAll: TRadioButton;
+    rgDropTargetMode: TRadioGroup;
     rgOptionCompress: TRadioGroup;
     rmAbout: TRichMemo;
     rmInformation: TRichMemo;
@@ -274,13 +275,14 @@ type
     sbUpdateList: TStatusBar;
     lbTransferRate: TLabel;
     lbTransferRateValue: TLabel;
+    tbDropTargetOpacity: TTrackBar;
+    tsView: TTabSheet;
     tmBackup: TIdleTimer;
     ToolBarDownload: TToolBar;
     tbDownloadResumeAll: TToolButton;
     tbDownloadStopAll: TToolButton;
     ToolButton1: TToolButton;
     tbDownloadDeleteCompleted: TToolButton;
-    tbDropTargetOpacity: TTrackBar;
     tvDownloadFilter: TTreeView;
     tsDownloadFilter: TTabSheet;
     tsMangaList: TTabSheet;
@@ -3652,6 +3654,7 @@ begin
       Exit;
     end;
 
+    // general
     options.WriteString('general', 'MangaListSelect', s);
     mangalistIni.UpdateFile;
 
@@ -3725,6 +3728,18 @@ begin
     OptionEnableLoadCover := cbOptionEnableLoadCover.Checked;
     options.WriteString('general', 'ExternalProgram', edOptionExternal.Text);
 
+    // view
+    options.WriteBool('droptarget', 'Show', ckDropTarget.Checked);
+    options.WriteInteger('droptarget', 'Mode', rgDropTargetMode.ItemIndex);
+    options.WriteInteger('droptarget', 'Opacity', tbDropTargetOpacity.Position);
+    options.WriteInteger('droptarget', 'Width', uFrmDropTarget.FWidth);
+    options.WriteInteger('droptarget', 'Heigth', uFrmDropTarget.FHeight);
+    options.WriteInteger('droptarget', 'Top', uFrmDropTarget.FTop);
+    options.WriteInteger('droptarget', 'Left', uFrmDropTarget.FLeft);
+    options.WriteBool('view', 'ShowDownloadToolbar', cbOptionShowDownloadToolbar.Checked);
+    ToolBarDownload.Visible := cbOptionShowDownloadToolbar.Checked;
+
+    // connections
     options.WriteInteger('connections', 'NumberOfTasks', seOptionMaxParallel.Value);
     options.WriteInteger('connections', 'NumberOfThreadsPerTask',
       seOptionMaxThread.Value);
@@ -3737,6 +3752,7 @@ begin
     options.WriteString('connections', 'Port', edOptionPort.Text);
     options.WriteString('connections', 'User', edOptionUser.Text);
 
+    // saveto
     if Trim(edOptionDefaultPath.Text) = '' then
       edOptionDefaultPath.Text := DEFAULT_PATH;
     edOptionDefaultPath.Text := CorrectPathSys(edOptionDefaultPath.Text);
@@ -3753,7 +3769,12 @@ begin
       edOptionCustomRename.Text := DEFAULT_CUSTOM_RENAME;
     options.WriteString('saveto', 'CustomRename', edOptionCustomRename.Text);
     OptionCustomRename := edOptionCustomRename.Text;
+    options.WriteBool('saveto', 'ConvertDigitVolume', cbOptionDigitVolume.Checked);
+    options.WriteBool('saveto', 'ConvertDigitChapter', cbOptionDigitChapter.Checked);
+    options.WriteInteger('saveto', 'DigitVolumeLength', seOptionDigitVolume.Value);
+    options.WriteInteger('saveto', 'DigitChapterLength', seOptionDigitChapter.Value);
 
+    // update
     options.WriteBool('update', 'AutoRemoveCompletedManga',
       cbOptionAutoRemoveCompletedManga.Checked);
     OptionAutoRemoveCompletedManga := cbOptionAutoRemoveCompletedManga.Checked;
@@ -3775,32 +3796,21 @@ begin
 
     DLManager.compress := rgOptionCompress.ItemIndex;
 
+    // dialogs
     options.WriteBool('dialogs', 'ShowQuitDialog', cbOptionShowQuitDialog.Checked);
     options.WriteBool('dialogs', 'ShowDeleteDldTaskDialog',
       cbOptionShowDeleteTaskDialog.Checked);
 
+    // misc
     options.WriteBool('misc', 'ShowBatotoSG', cbOptionShowBatotoSG.Checked);
     options.WriteBool('misc', 'ShowAllLang', cbOptionShowAllLang.Checked);
     options.WriteBool('misc', 'AutoDlFav', cbOptionAutoDlFav.Checked);
     OptionShowBatotoSG := cbOptionShowBatotoSG.Checked;
     OptionShowAllLang := cbOptionShowAllLang.Checked;
     OptionAutoDlFav := cbOptionAutoDlFav.Checked;
-
-    options.WriteBool('saveto', 'ConvertDigitVolume', cbOptionDigitVolume.Checked);
-    options.WriteBool('saveto', 'ConvertDigitChapter', cbOptionDigitChapter.Checked);
-    options.WriteInteger('saveto', 'DigitVolumeLength', seOptionDigitVolume.Value);
-    options.WriteInteger('saveto', 'DigitChapterLength', seOptionDigitChapter.Value);
-
     options.WriteBool('misc', 'MangafoxRemoveWatermarks',
       cbOptionMangaFoxRemoveWatermarks.Checked);
 
-    options.WriteBool('droptarget', 'Show', ckDropTarget.Checked);
-    options.WriteInteger('droptarget', 'Mode', rgDropTargetMode.ItemIndex);
-    options.WriteInteger('droptarget', 'Opacity', tbDropTargetOpacity.Position);
-    options.WriteInteger('droptarget', 'Width', uFrmDropTarget.FWidth);
-    options.WriteInteger('droptarget', 'Heigth', uFrmDropTarget.FHeight);
-    options.WriteInteger('droptarget', 'Top', uFrmDropTarget.FTop);
-    options.WriteInteger('droptarget', 'Left', uFrmDropTarget.FLeft);
 
     options.UpdateFile;
 
@@ -4336,19 +4346,9 @@ procedure TMainForm.LoadOptions;
 var
   i: Integer;
 begin
-  if options.ReadBool('connections', 'UseProxy', False) then
-  begin
-    ProxyType := options.ReadString('connections', 'ProxyType', 'HTTP');
-    Host := options.ReadString('connections', 'Host', '');
-    Pass := options.ReadString('connections', 'Pass', '');
-    Port := options.ReadString('connections', 'Port', '');
-    User := options.ReadString('connections', 'User', '');
-  end;
-
-  cbOptionLiveSearch.Checked := options.ReadBool('general', 'LiveSearch', True);
+  // general
   cbOptionOneInstanceOnly.Checked :=
     options.ReadBool('general', 'OneInstanceOnly', True);
-
   //FMDInstance
   if cbOptionOneInstanceOnly.Checked then
   begin
@@ -4369,20 +4369,35 @@ begin
       FreeAndNil(FMDInstance);
     end;
   end;
-
+  cbOptionLiveSearch.Checked := options.ReadBool('general', 'LiveSearch', True);
   cbOptionMinimizeToTray.Checked := options.ReadBool('general', 'MinimizeToTray', False);
   OptionEnableLoadCover := options.ReadBool('general', 'LoadMangaCover', True);
   cbOptionEnableLoadCover.Checked := OptionEnableLoadCover;
   cbOptionLetFMDDo.ItemIndex := options.ReadInteger('general', 'LetFMDDo', 0);
   cbOptionLetFMDDoItemIndex := cbOptionLetFMDDo.ItemIndex;
-
   cbOptionAutoNumberChapter.Checked :=
     options.ReadBool('general', 'AutoNumberChapter', True);
   edOptionExternal.Text := options.ReadString('general', 'ExternalProgram', '');
   OptionAutoNumberChapterChecked := cbOptionAutoNumberChapter.Checked;
-
   cbAddAsStopped.Checked := options.ReadBool('general', 'AddAsStopped', False);
 
+  // view
+  uFrmDropTarget.FWidth := options.ReadInteger('droptarget', 'Width',
+    uFrmDropTarget.FWidth);
+  uFrmDropTarget.FHeight := options.ReadInteger('droptarget', 'Heigth',
+    uFrmDropTarget.FHeight);
+  uFrmDropTarget.FTop := options.ReadInteger('droptarget', 'Top',
+    uFrmDropTarget.FTop);
+  uFrmDropTarget.FLeft := options.ReadInteger('droptarget', 'Left',
+    uFrmDropTarget.FLeft);
+  rgDropTargetMode.ItemIndex := options.ReadInteger('droptarget', 'Mode', 0);
+  tbDropTargetOpacity.Position := options.ReadInteger('droptarget', 'Opacity', 255);
+  ckDropTarget.Checked := options.ReadBool('droptarget', 'Show', False);
+  cbOptionShowDownloadToolbar.Checked := options.ReadString
+    ('view', 'ShowDownloadsToolbar', True);
+  ToolBarDownload.Visible := cbOptionShowDownloadToolbar.Checked;
+
+  // connection
   seOptionMaxParallel.Value := options.ReadInteger('connections', 'NumberOfTasks', 1);
   seOptionMaxThread.Value := options.ReadInteger('connections', 'NumberOfThreadsPerTask', 1);
   seOptionMaxRetry.Value := options.ReadInteger('connections', 'Retry', 3);;
@@ -4390,8 +4405,8 @@ begin
   DLManager.maxDLThreadsPerTask := seOptionMaxThread.Value;
   DLManager.retryConnect := seOptionMaxRetry.Value;
 
+  // saveto
   DLManager.compress := options.ReadInteger('saveto', 'Compress', 0);
-
   cbOptionPathConvert.Checked := options.ReadBool('saveto', 'PathConv', False);
   cbOptionGenerateChapterName.Checked :=
     options.ReadBool('saveto', 'GenChapName', False);
@@ -4406,10 +4421,18 @@ begin
   if Trim(edOptionCustomRename.Text) = '' then
     edOptionCustomRename.Text := DEFAULT_CUSTOM_RENAME;
   OptionCustomRename := edOptionCustomRename.Text;
+  if options.ReadBool('connections', 'UseProxy', False) then
+  begin
+    ProxyType := options.ReadString('connections', 'ProxyType', 'HTTP');
+    Host := options.ReadString('connections', 'Host', '');
+    Pass := options.ReadString('connections', 'Pass', '');
+    Port := options.ReadString('connections', 'Port', '');
+    User := options.ReadString('connections', 'User', '');
+  end;
 
+  // update
   cbOptionAutoCheckUpdate.Checked :=
     options.ReadBool('update', 'AutoCheckUpdateAtStartup', True);
-
   cbOptionAutoRemoveCompletedManga.Checked :=
     options.ReadBool('update', 'AutoRemoveCompletedManga', True);
   OptionAutoRemoveCompletedManga := cbOptionAutoRemoveCompletedManga.Checked;
@@ -4441,7 +4464,6 @@ begin
   vtDownload.Header.SortColumn := options.ReadInteger('misc', 'SortDownloadColumn', 0);
   DLManager.SortDirection := options.ReadBool('misc', 'SortDownloadDirection', False);
   vtDownload.Header.SortDirection := TSortDirection(DLManager.SortDirection);
-
   vtFavorites.Header.SortDirection := TSortDirection(FavoriteManager.sortDirection);
 
   if OptionCheckMinutes = 0 then
@@ -4462,18 +4484,6 @@ begin
 
   cbOptionMangaFoxRemoveWatermarks.Checked :=
     options.ReadBool('misc', 'MangafoxRemoveWatermarks', False);
-
-  uFrmDropTarget.FWidth := options.ReadInteger('droptarget', 'Width',
-    uFrmDropTarget.FWidth);
-  uFrmDropTarget.FHeight := options.ReadInteger('droptarget', 'Heigth',
-    uFrmDropTarget.FHeight);
-  uFrmDropTarget.FTop := options.ReadInteger('droptarget', 'Top',
-    uFrmDropTarget.FTop);
-  uFrmDropTarget.FLeft := options.ReadInteger('droptarget', 'Left',
-    uFrmDropTarget.FLeft);
-  rgDropTargetMode.ItemIndex := options.ReadInteger('droptarget', 'Mode', 0);
-  tbDropTargetOpacity.Position := options.ReadInteger('droptarget', 'Opacity', 255);
-  ckDropTarget.Checked := options.ReadBool('droptarget', 'Show', False);
 
   cbLanguages.Items.Clear;
   uTranslation.CollectLanguagesFiles;
