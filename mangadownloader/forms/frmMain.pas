@@ -4393,8 +4393,7 @@ begin
   rgDropTargetMode.ItemIndex := options.ReadInteger('droptarget', 'Mode', 0);
   tbDropTargetOpacity.Position := options.ReadInteger('droptarget', 'Opacity', 255);
   ckDropTarget.Checked := options.ReadBool('droptarget', 'Show', False);
-  cbOptionShowDownloadToolbar.Checked := options.ReadString
-    ('view', 'ShowDownloadsToolbar', True);
+  cbOptionShowDownloadToolbar.Checked := options.ReadBool('view', 'ShowDownloadsToolbar', True);
   ToolBarDownload.Visible := cbOptionShowDownloadToolbar.Checked;
 
   // connection
