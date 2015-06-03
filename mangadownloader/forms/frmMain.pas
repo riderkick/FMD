@@ -768,8 +768,7 @@ begin
 
   //lbMode.Caption := Format(RS_ModeAll, [dataProcess.filterPos.Count]);
 
-  if pcMain.PageIndex = 4 then
-    pcMain.PageIndex := 0;
+  pcMain.ActivePage := tsDownload;
 
   CheckForTopPanel;
   DLManager.CheckAndActiveTaskAtStartup;
@@ -796,10 +795,6 @@ begin
   // subthread
   SubThread := TSubThread.Create;
 
-  // why this doesn't work on some systems ?
-  case pcMain.TabIndex of
-    5: LoadAbout;
-  end;
   cbOptionLetFMDDo.ItemIndex := options.ReadInteger('general', 'LetFMDDo', 0);
 
   // waiting gif
@@ -824,8 +819,6 @@ begin
   if DLManager.Count > 1 then
   begin
     DLManager.SortDirection := Boolean(vtDownload.Header.SortDirection);
-    //DLManager.Sort(Column);
-    //DLManager.SortNatural(vtDownload.Header.SortColumn);    //Natural Sorting
     vtDownload.Repaint;
   end;
   if FavoriteManager.Count > 0 then
@@ -1213,7 +1206,7 @@ begin
   if (not vtFavorites.Focused) then
     Exit;
   btDownload.Enabled := False;
-  pcMain.TabIndex := 1;
+  pcMain.ActivePage := tsInformation;
   imCover.Picture.Assign(nil);
   rmInformation.Clear;
   rmInformation.Lines.Add('Loading ...');
@@ -1444,7 +1437,7 @@ begin
   FavoriteManager.AddToDownloadedChaptersList(
     mangaInfo.website, mangaInfo.link, DLManager.TaskItem(pos).ChapterLinks);
   clbChapterList.Repaint;
-  pcMain.PageIndex := 0;
+  pcMain.ActivePage := tsDownload;
 end;
 
 procedure TMainForm.btAddToFavoritesClick(Sender: TObject);
@@ -1673,7 +1666,7 @@ begin
   GetInfosThread.Link := link;
   GetInfosThread.Start;
 
-  pcMain.TabIndex := 1;
+  pcMain.ActivePage := tsInformation;
   imCover.Picture.Assign(nil);
   clbChapterList.Clear;
   if Assigned(gifWaiting) then
@@ -2482,7 +2475,7 @@ begin
   if (not vtMangaList.Focused) or (vtMangaList.SelectedCount = 0) then
     Exit;
   btDownload.Enabled := False;
-  pcMain.TabIndex := 1;
+  pcMain.ActivePage := tsInformation;
   imCover.Picture.Assign(nil);
   rmInformation.Clear;
   rmInformation.Lines.Add(RS_Loading);
@@ -2763,10 +2756,8 @@ procedure TMainForm.pcMainChange(Sender: TObject);
   end;
 
 begin
-  case pcMain.TabIndex of
-    5:// load rtf file
-      LoadAbout;
-  end;
+  if pcMain.ActivePage = tsAbout then
+    LoadAbout;
   UpdateOptions;
 end;
 
@@ -3060,7 +3051,7 @@ end;
 procedure TMainForm.tvDownloadFilterSelectionChanged(Sender: TObject);
 begin
   vtDownloadFilters;
-  pcMain.PageIndex := 0;
+  pcMain.ActivePage := tsDownload;
   options.WriteInteger('general', 'DownloadFilterSelect',
     tvDownloadFilter.Selected.AbsoluteIndex);
 end;
@@ -4273,7 +4264,7 @@ procedure TMainForm.ShowInformation(const title, website, link: String);
 var
   i: Integer;
 begin
-  pcMain.PageIndex := 1;
+  pcMain.ActivePage := tsInformation;
   if Trim(edSaveTo.Text) = '' then
     edSaveTo.Text := options.ReadString('saveto', 'SaveTo', DEFAULT_PATH);
   if Trim(edSaveTo.Text) = '' then
