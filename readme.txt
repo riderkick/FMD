@@ -6,7 +6,7 @@ The Free Manga Downloader.
 Content:
 	1.) About FMD
 	2.) Build instructions
-    3.) Localization
+	3.) Localization
 
 ---------------------------------
 
@@ -35,8 +35,3 @@ Translations are stored inside "languages" folder with .po extension. In order t
 ---------------------------------
 
 Last update 25-05-2015
-
-
-
-
-
