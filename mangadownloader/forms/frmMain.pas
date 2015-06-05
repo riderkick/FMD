@@ -981,7 +981,6 @@ begin
       DoFMDShutdown: fmdPowerOff;
       DoFMDHibernate: fmdHibernate;
     end;
-    Sleep(1000);
     Self.Close;
   end;
   DoAfterFMD := DoFMDNothing;

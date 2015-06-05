@@ -1778,6 +1778,7 @@ begin
   isRunningBackup := False;
   isRunningBackupDownloadedChaptersList := False;
   isReadyForExit := False;
+  ExitType := etExit;
 end;
 
 destructor TDownloadManager.Destroy;
