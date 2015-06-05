@@ -335,33 +335,6 @@ const
   SENMANGARAW_ID         = 92;
   READMANGATODAY_ID      = 93;
 
-var
-  FMD_VERSION_NUMBER: String = '';
-
-  {$IFDEF WINDOWS}
-  DEFAULT_PATH : string = '/downloads';
-  {$ELSE}
-  DEFAULT_PATH: string = '/downloads';
-  {$ENDIF}
-
-  Genre: array [0..37] of String;
-
-  // cbOptionLetFMDDoItemIndex
-  cbOptionLetFMDDoItemIndex: Cardinal = 0;
-
-  Revision: Cardinal;
-  currentJDN: Cardinal;
-  isChangeDirectory: Boolean = False;
-
-  currentWebsite: String;
-
-  ProxyType: String = '';
-  Host: String = '';
-  Port: String = '';
-  User: String = '';
-  Pass: String = '';
-
-  fmdDirectory: String;
   // EN: Param seperator
   SEPERATOR: String = '!%~';
   SEPERATOR2: String = '~%!';
@@ -463,170 +436,205 @@ var
     ('ReadMangaToday', 'http://www.readmanga.today')
     );
 
-  BROWSER_INVERT: Boolean = False;
+  ANIMEA_BROWSER = '/browse.html?page=';
+  ANIMEA_SKIP = '?skip=1';
 
-  ANIMEA_BROWSER: String = '/browse.html?page=';
-  ANIMEA_SKIP: String = '?skip=1';
+  MANGAHERE_BROWSER = '/mangalist/';
 
-  MANGAHERE_BROWSER: String = '/mangalist/';
+  MANGAINN_BROWSER = '/mangalist/';
 
-  MANGAINN_BROWSER: String = '/mangalist/';
+  OURMANGA_BROWSER = '/directory/';
 
-  OURMANGA_BROWSER: String = '/directory/';
+  KISSMANGA_BROWSER = '/MangaList';
 
-  KISSMANGA_BROWSER: String = '/MangaList';
+  BATOTO_BROWSER_1 = '/comic/_/sp/';
+  BATOTO_BROWSER_2 = '/comic/_/comics/';
 
-  BATOTO_BROWSER: String = '/search';
-  BATOTO_BROWSER_1: String = '/comic/_/sp/';
-  BATOTO_BROWSER_2: String = '/comic/_/comics/';
+  MANGA24H_BROWSER = '/manga/update/page/';
 
-  MANGA24H_BROWSER: String = '/manga/update/page/';
+  VNSHARING_BROWSER = '/DanhSach';
 
-  VNSHARING_BROWSER: String = '/DanhSach';
+  HENTAI2READ_ROOT = 'http://hentai2read.com';
+  HENTAI2READ_MROOT = 'http://m.hentai2read.com';
+  HENTAI2READ_BROWSER = '/hentai-list/all/any/name-az/';
 
-  HENTAI2READ_ROOT: String = 'http://hentai2read.com';
-  HENTAI2READ_MROOT: String = 'http://m.hentai2read.com';
-  HENTAI2READ_BROWSER: String = '/hentai-list/all/any/name-az/';
+  FAKKU_BROWSER_1 = '/manga/newest';
+  FAKKU_BROWSER_2 = '/doujinshi/newest';
 
-  FAKKU_BROWSER: String = '/manga/newest';
-  FAKKU_BROWSER_1: String = '/manga/newest';
-  FAKKU_BROWSER_2: String = '/doujinshi/newest';
+  TRUYEN18_ROOT = 'http://www.truyen18.org';
+  TRUYEN18_BROWSER = '/moi-dang/danhsach';
 
-  TRUYEN18_ROOT: String = 'http://www.truyen18.org';
-  TRUYEN18_BROWSER: String = '/moi-dang/danhsach';
-
-  MANGAREADER_BROWSER: String = '/alphabetical';
+  MANGAREADER_BROWSER = '/alphabetical';
 
   //MANGAFOX_BROWSER :string = '/directory/';
-  MANGAFOX_BROWSER: String = '/manga/';
+  MANGAFOX_BROWSER = '/manga/';
 
-  MANGATRADERS_BROWSER: String = '/directory/';
+  MANGATRADERS_BROWSER = '/directory/';
 
-  MANGASTREAM_ROOT: String = 'http://mangastream.com';
-  MANGASTREAM_ROOT2: String = 'http://readms.com';
+  MANGASTREAM_ROOT = 'http://mangastream.com';
+  MANGASTREAM_ROOT2 = 'http://readms.com';
 
-  MANGAEDEN_BROWSER: String = '/en-directory/';
-  MANGAEDEN_BROWSER_1: String = '/en-directory/';
-  MANGAEDEN_BROWSER_2: String = '/it-directory/';
+  MANGAEDEN_BROWSER_1 = '/en-directory/';
+  MANGAEDEN_BROWSER_2 = '/it-directory/';
 
-  PERVEDEN_BROWSER: String = '/en-directory/';
-  PERVEDEN_BROWSER_1: String = '/en-directory/';
-  PERVEDEN_BROWSER_2: String = '/it-directory/';
+  PERVEDEN_BROWSER_1 = '/en-directory/';
+  PERVEDEN_BROWSER_2 = '/it-directory/';
 
-  TRUYENTRANHTUAN_BROWSER: String = '/danh-sach-truyen';
+  TRUYENTRANHTUAN_BROWSER = '/danh-sach-truyen';
 
-  TURKCRAFT_BROWSER: String = '/';
+  TURKCRAFT_BROWSER = '/';
 
-  MANGAVADISI_BROWSER: String = '/hemenoku/';
+  MANGAVADISI_BROWSER = '/hemenoku/';
 
-  MANGAFRAME_BROWSER: String = '/okuyucu/directory/';
+  MANGAFRAME_BROWSER = '/okuyucu/directory/';
 
-  EATMANGA_BROWSER: String = '/Manga-Scan/';
+  EATMANGA_BROWSER = '/Manga-Scan/';
   EATMANGA_maxDLTask: Cardinal = 1;
 
-  STARKANA_BROWSER: String = '/manga/list';
+  STARKANA_BROWSER = '/manga/list';
 
-  MANGAPANDA_ROOT: String = 'http://www.mangapanda.com';
-  MANGAPANDA_BROWSER: String = '/alphabetical';
+  MANGAPANDA_ROOT = 'http://www.mangapanda.com';
+  MANGAPANDA_BROWSER = '/alphabetical';
 
-  REDHAWKSCANS_BROWSER: String = '/reader/list/';
+  REDHAWKSCANS_BROWSER = '/reader/list/';
 
-  BLOGTRUYEN_BROWSER: String = '/danhsach/tatca';
-  BLOGTRUYEN_JS_BROWSER: String = '/ListStory/GetListStory/';
-  BLOGTRUYEN_POST_FORM: String = 'Url=tatca&OrderBy=1&PageIndex=';
+  BLOGTRUYEN_BROWSER = '/danhsach/tatca';
+  BLOGTRUYEN_JS_BROWSER = '/ListStory/GetListStory/';
+  BLOGTRUYEN_POST_FORM = 'Url=tatca&OrderBy=1&PageIndex=';
 
-  KOMIKID_BROWSER: String = '/daftar.php';
+  KOMIKID_BROWSER = '/daftar.php';
 
-  SUBMANGA_BROWSER: String = '/series/n';
+  SUBMANGA_BROWSER = '/series/n';
 
-  ESMANGAHERE_BROWSER: String = '/mangalist/';
+  ESMANGAHERE_BROWSER = '/mangalist/';
 
-  ANIMEEXTREMIST_BROWSER: String = '/mangas.htm?ord=todos';
+  ANIMEEXTREMIST_BROWSER = '/mangas.htm?ord=todos';
 
-  PECINTAKOMIK_BROWSER: String = '/directory/';
+  PECINTAKOMIK_BROWSER = '/directory/';
 
-  HUGEMANGA_BROWSER: String = '/';
+  HUGEMANGA_BROWSER = '/';
 
-  SENMANGA_BROWSER: String = '/Manga/';
+  SENMANGA_BROWSER = '/Manga/';
 
-  IMANHUA_BROWSER: String = '/all.html';
+  IMANHUA_BROWSER = '/all.html';
 
-  MABUNS_BROWSER: String = '/p/mabuns-manga-list.html';
+  MABUNS_BROWSER = '/p/mabuns-manga-list.html';
 
-  MANGAESTA_BROWSER: String = '/p/manga-list.html';
+  MANGAESTA_BROWSER = '/p/manga-list.html';
 
-  CENTRALDEMANGAS_BROWSER: String = '/mangas/list/*';
+  CENTRALDEMANGAS_BROWSER = '/mangas/list/*';
 
-  EGSCANS_BROWSER: String = '/';
+  EGSCANS_BROWSER = '/';
 
-  MANGAAR_BROWSER: String = '/manga/';
+  MANGAAR_BROWSER = '/manga/';
 
-  MANGAAE_BROWSER: String = '/manga/';
+  MANGAAE_BROWSER = '/manga/';
 
-  ANIMESTORY_BROWSER: String = '/mangas/';
+  ANIMESTORY_BROWSER = '/mangas/';
 
-  LECTUREENLIGNE_BROWSER: String = '/index.php?page=liste&ordre=titre';
+  LECTUREENLIGNE_BROWSER = '/index.php?page=liste&ordre=titre';
 
-  SCANMANGA_BROWSER: String = '/scanlation/liste_des_mangas.html';
+  SCANMANGA_BROWSER = '/scanlation/liste_des_mangas.html';
 
-  MANGAGO_BROWSER: String = '/list/directory/all/';
+  MANGAGO_BROWSER = '/list/directory/all/';
 
-  DM5_BROWSER: String = '/manhua-new';
+  DM5_BROWSER = '/manhua-new';
 
-  PURURIN_BROWSER: String = '/browse/';
+  PURURIN_BROWSER = '/browse/';
 
   //MANGACOW_BROWSER :string = '/manga-list/all/any/name-az/';
-  MANGACOW_BROWSER: String = '/manga-list/all/any/last-added/';
+  MANGACOW_BROWSER = '/manga-list/all/any/last-added/';
 
-  KIVMANGA_BROWSER: String = '/';
+  KIVMANGA_BROWSER = '/';
 
-  MANGACAN_BROWSER: String = '/daftar-komik-manga-bahasa-indonesia.html';
+  MANGACAN_BROWSER = '/daftar-komik-manga-bahasa-indonesia.html';
 
-  MEINMANGA_BROWSER: String = '/directory/all/';
+  MEINMANGA_BROWSER = '/directory/all/';
 
-  MANGASPROJECT_BROWSER: String = '/AJAX/listaMangas/all';
+  MANGASPROJECT_BROWSER = '/AJAX/listaMangas/all';
 
-  MANGAREADER_POR_BROWSER: String = '/AJAX/listaMangas/all';
+  MANGAREADER_POR_BROWSER = '/AJAX/listaMangas/all';
 
-  //MANGA2U_BROWSER: String = '/list/all/any/most-popular/';
-  MANGA2U_BROWSER: String = '/manga_list/all/any/last-added/';
+  //MANGA2U_BROWSER = '/list/all/any/most-popular/';
+  MANGA2U_BROWSER = '/manga_list/all/any/last-added/';
 
-  EHENTAI_BROWSER: String = 'f_doujinshi=on&f_manga=on&f_western=on&f_apply=Apply+Filter';
+  EHENTAI_BROWSER = 'f_doujinshi=on&f_manga=on&f_western=on&f_apply=Apply+Filter';
   EHENTAI_maxDLTask: Integer = 2;
 
-  MANGASTREAMTO_BROWSER: String = '/series.html';
+  MANGASTREAMTO_BROWSER = '/series.html';
 
-  NINEMANGA_BROWSER: String =
+  NINEMANGA_BROWSER =
   '/search/?name_sel=contain&wd=&author_sel=contain&author=&artist_sel=contain&artist=&category_id=&out_category_id=&completed_series=either';
 
-  JAPANSHIN_BROWSER: String = '/lectureenligne/reader/list/';
-  JAPSCAN_BROWSER: String = '/mangas/';
+  JAPANSHIN_BROWSER = '/lectureenligne/reader/list/';
+  JAPSCAN_BROWSER = '/mangas/';
 
-  CENTRUMMANGI_PL_BROWSER: String = '/spis/';
+  CENTRUMMANGI_PL_BROWSER = '/spis/';
 
-  MANGALIB_PL_BROWSER: String = '/manga/directory';
-  MANGALIB_PL_COOKIES: String;
+  MANGALIB_PL_BROWSER = '/manga/directory';
 
-  ONEMANGA_BROWSER: String = '/manga-list/all/any/last-added/';
+  ONEMANGA_BROWSER = '/manga-list/all/any/last-added/';
 
-  MANGATOWN_BROWSER: String = '/directory/';
+  MANGATOWN_BROWSER = '/directory/';
 
-  READHENTAIMANGA_BROWSER: String = '/hentai-manga-list/all/any/last-added/';
+  READHENTAIMANGA_BROWSER = '/hentai-manga-list/all/any/last-added/';
 
-  IKOMIK_BROWSER: String = '/manga-directory/';
+  IKOMIK_BROWSER = '/manga-directory/';
 
-  UNIONMANGAS_BROWSER: String = '/mangas';
+  UNIONMANGAS_BROWSER = '/mangas';
 
-  UNIXMANGA_BROWSER: String = '/onlinereading/manga-lists.html';
+  UNIXMANGA_BROWSER = '/onlinereading/manga-lists.html';
 
-  HAKIHOME_BROWSER: String = '/ListMangaHentai.html';
+  HAKIHOME_BROWSER = '/ListMangaHentai.html';
 
-  EXTREMEMANGAS_BROWSER: String = '/2013/04/lista-de-mangas.html';
+  EXTREMEMANGAS_BROWSER = '/2013/04/lista-de-mangas.html';
 
-  MANGAHOST_BROWSER: String = '/mangas';
+  MANGAHOST_BROWSER = '/mangas';
 
   //------------------------------------------
-  UPDATE_URL: String = 'https://raw.githubusercontent.com/riderkick/FMD/master/';
+  UPDATE_URL = 'https://raw.githubusercontent.com/riderkick/FMD/master/';
+
+var
+  FMD_VERSION_NUMBER: String = '';
+
+  {$IFDEF WINDOWS}
+  DEFAULT_PATH : string = '/downloads';
+  {$ELSE}
+  DEFAULT_PATH: string = '/downloads';
+  {$ENDIF}
+
+  // Sites var
+  BROWSER_INVERT: Boolean = False;
+
+  BATOTO_BROWSER: string = '/search';
+
+  FAKKU_BROWSER: string = '/manga/newest';
+
+  MANGAEDEN_BROWSER: string = '/en-directory/';
+
+  PERVEDEN_BROWSER: string = '/en-directory/';
+
+  MANGALIB_PL_COOKIES: String;
+  //------------------------------------------
+
+  Genre: array [0..37] of String;
+
+  // cbOptionLetFMDDoItemIndex
+  cbOptionLetFMDDoItemIndex: Cardinal = 0;
+
+  Revision: Cardinal;
+  currentJDN: Cardinal;
+  isChangeDirectory: Boolean = False;
+
+  currentWebsite: String;
+
+  ProxyType: String = '';
+  Host: String = '';
+  Port: String = '';
+  User: String = '';
+  Pass: String = '';
+
+  fmdDirectory: String;
 
   OptionCustomRename: String;
 
