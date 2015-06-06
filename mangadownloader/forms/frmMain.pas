@@ -739,6 +739,7 @@ begin
   // Load revision.ini
   revisionIni := TIniFile.Create(fmdDirectory + CONFIG_FOLDER + REVISION_FILE);
   options.CacheUpdates := False;
+  options.StripQuotes := False;
 
   // Load updates.ini
   updates := TIniFile.Create(fmdDirectory + CONFIG_FOLDER + UPDATE_FILE);
