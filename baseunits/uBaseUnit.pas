@@ -653,6 +653,8 @@ var
   OptionAutoCheckFavStartup: Boolean = False;
 
 type
+  TArrayOfString = array of string;
+
   TCheckStyleType = (CS_DIRECTORY_COUNT, CS_DIRECTORY_PAGE,
                      CS_DIRECTORY_PAGE_2, CS_INFO);
   TFlagType       = (CS_GETPAGENUMBER, CS_GETPAGELINK, CS_DOWNLOAD);
@@ -801,6 +803,11 @@ procedure ParseJSONArray(const S, Path: String; var OutArray: TStringList);
 procedure ParseHTML(const aRaw: string; var aOutput: TStringList);
 
 // StringUtils
+procedure ParseCommandLine(const cmd: string; var Output: TStrings;
+  AStripQuotes: Boolean = False);
+function ParsedCommandLine(const cmd: String): TArrayOfString;
+function StringsToArray(const S: TStrings): TArrayOfString;
+procedure DeleteArrayOfString(Var TheStrings: TArrayOfString;Index: Integer);
 function RandomString(SLength: Integer; ONumber: Boolean = False;
   OSymbol: Boolean = False; OSpace: Boolean = False): string;
 function GetValuesFromString(Str: String; Sepr: Char): String;
@@ -904,8 +911,10 @@ function fmdGetTickCount: Cardinal;
 procedure fmdPowerOff;
 procedure fmdHibernate;
 function fmdRunAsAdmin(path, params: String; isPersistent: Boolean): Boolean;
-function RunExternalProcess(Exe: String; Params: array of String; ShowWind: Boolean = True;
-  Detached: Boolean = False): Boolean;
+function RunExternalProcess(Exe: String; Params: array of string; ShowWind: Boolean = True;
+  Detached: Boolean = False): Boolean; overload;
+function RunExternalProcess(CommandLine: String; ShowWind: Boolean =
+  True; Detached: Boolean = False): Boolean; overload;
 
 implementation
 
@@ -1435,6 +1444,111 @@ begin
     Free;
   end;
 end;
+
+procedure ParseCommandLine(const cmd: string; var Output: TStrings;
+  AStripQuotes: Boolean = False);
+var
+  s, cl: string;
+  cq: Integer;
+  acl, lq: Boolean;
+
+  procedure Addcl;
+  begin
+    if cl <> '' then
+    begin
+      if AStripQuotes and (Length(cl) > 1) then
+      begin
+        if cl[1] = '"' then
+          Delete(cl, 1, 1);
+        if cl[Length(cl)] = '"' then
+          Delete(cl, Length(cl), 1);
+      end;
+      Output.Add(cl);
+      cl := '';
+      acl := False;
+    end;
+  end;
+
+begin
+  if not Assigned(Output) then Exit;
+  Output.Clear;
+  Output.BeginUpdate;
+  try
+    s := cmd;
+    cl := '';
+    cq := 0;
+    lq := False;
+    while s <> '' do
+    begin
+      acl := True;
+      if s[1] = '"' then
+      begin
+        Inc(cq);
+        lq := True;
+      end
+      else
+      begin
+        if s[1] = ' ' then
+        begin
+          if cq > 0 then
+          begin
+            if (not odd(cq)) and lq then
+            begin
+              cq := 0;
+              Addcl;
+            end;
+          end
+          else
+            Addcl;
+        end;
+        lq := False;
+      end;
+      if acl then
+        cl := cl + s[1];
+      Delete(s, 1, 1);
+    end;
+    Addcl;
+  finally
+    Output.EndUpdate;
+  end;
+end;
+
+function ParsedCommandLine(const cmd: String): TArrayOfString;
+var
+  ts: TStrings;
+begin
+  if cmd = '' then Exit;
+  ts := TStringList.Create;
+  try
+    ParseCommandLine(cmd, ts, True);
+    Result := StringsToArray(ts);
+  finally
+    ts.Free;
+  end;
+end;
+
+function StringsToArray(const S: TStrings): TArrayOfString;
+var
+  i: Integer;
+begin
+  if not Assigned(S) then Exit;
+  if S.Count = 0 then Exit;
+  SetLength(Result, S.Count);
+  for i := 0 to S.Count - 1 do
+    Result[i] := S[i];
+end;
+
+procedure DeleteArrayOfString(var TheStrings: TArrayOfString;Index: Integer);
+ var
+   i: Integer;
+ begin
+   if Length(TheStrings) > 0 then
+   begin
+     for i := Low(TheStrings) to High(TheStrings) -1 do
+       TheStrings[i] := TheStrings[i + 1];
+     SetLength(TheStrings, Length(TheStrings) - 1);
+   end;
+ end;
 
 function RandomString(SLength: Integer; ONumber: Boolean; OSymbol: Boolean;
   OSpace: Boolean): string;
@@ -3318,8 +3432,8 @@ begin
   {$ENDIF}
 end;
 
-function RunExternalProcess(Exe: String; Params: array of String; ShowWind: Boolean = True;
-  Detached: Boolean = False): Boolean;
+function RunExternalProcess(Exe: String; Params: array of string; ShowWind: Boolean = True;
+  Detached: Boolean = False): Boolean; overload;
 var
   Process: TProcessUTF8;
   I: Integer;
@@ -3346,6 +3460,23 @@ begin
     Result := False;
   end;
   Process.Free;
+end;
+
+function RunExternalProcess(CommandLine: String; ShowWind: Boolean =
+  True; Detached: Boolean = False): Boolean; overload;
+var
+ s: string;
+ sa: TArrayOfString;
+begin
+  if CommandLine = '' then Exit;
+  try
+    sa := ParsedCommandLine(CommandLine);
+    s := sa[Low(sa)];
+    DeleteArrayOfString(sa, Low(sa));
+    Result := RunExternalProcess(s, sa, ShowWind, Detached);
+  finally
+    SetLength(sa, 0);
+  end;
 end;
 
 function HeaderByName(const AHeaders: TStrings; const AHeaderName: String): String;
