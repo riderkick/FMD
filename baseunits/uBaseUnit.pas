@@ -336,8 +336,8 @@ const
   READMANGATODAY_ID      = 93;
 
   // EN: Param seperator
-  SEPERATOR: String = '!%~';
-  SEPERATOR2: String = '~%!';
+  SEPERATOR  = '!%~';
+  SEPERATOR2 = '~%!';
 
   WebsiteRoots: array [0..93] of array [0..1] of string = (
     ('AnimeA', 'http://manga.animea.net'),
