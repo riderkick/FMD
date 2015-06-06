@@ -128,3 +128,4 @@ msgstr "Unpacking file [%s]..."
 #: umain.rs_waitmainapp
 msgid "Waiting main app to close..."
 msgstr "Waiting main app to close..."
+

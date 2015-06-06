@@ -119,3 +119,4 @@ msgstr "Membuka berkas [%s]..."
 #: umain.rs_waitmainapp
 msgid "Waiting main app to close..."
 msgstr "Menunggu aplikasi utama untuk berhenti..."
+

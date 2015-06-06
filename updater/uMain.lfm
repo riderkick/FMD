@@ -3,7 +3,7 @@ object frmMain: TfrmMain
   Height = 101
   Top = 247
   Width = 334
-  BorderIcons = [biSystemMenu]
+  BorderIcons = [biSystemMenu, biMinimize]
   Caption = 'Free Manga Downloader - Updater'
   ClientHeight = 101
   ClientWidth = 334
