@@ -2576,9 +2576,10 @@ begin
       f := '';
     FindCloseUTF8(Info);
 
-    if edOptionExternal.Text <> '' then
+    s := options.ReadString('general', 'ExternalProgram', '');
+    if s <> '' then
     begin
-      s := StringReplace(edOptionExternal.Text, '%PATH%', fd, [rfReplaceAll]);
+      s := StringReplace(s, '%PATH%', fd, [rfReplaceAll]);
       s := StringReplace(s, '%FCHAPTER%', f, [rfReplaceAll]);
       with TProcessUTF8.Create(nil) do try
         CommandLine := s;
@@ -2638,9 +2639,10 @@ begin
       FindCloseUTF8(Info);
     end;
 
-    if edOptionExternal.Text <> '' then
+    s := options.ReadString('general', 'ExternalProgram', '');
+    if s <> '' then
     begin
-      s := StringReplace(edOptionExternal.Text, '%PATH%', fd, [rfReplaceAll]);
+      s := StringReplace(s, '%PATH%', fd, [rfReplaceAll]);
       s := StringReplace(s, '%FCHAPTER%', f, [rfReplaceAll]);
       with TProcessUTF8.Create(nil) do try
         CommandLine := s;
