@@ -9,7 +9,6 @@ object UpdateDialogForm: TUpdateDialogForm
   ChildSizing.TopBottomSpacing = 6
   ClientHeight = 420
   ClientWidth = 488
-  FormStyle = fsStayOnTop
   Position = poOwnerFormCenter
   LCLVersion = '1.5'
   object mmLog: TMemo
