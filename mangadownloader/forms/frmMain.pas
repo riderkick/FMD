@@ -276,6 +276,9 @@ type
     lbTransferRate: TLabel;
     lbTransferRateValue: TLabel;
     tbDropTargetOpacity: TTrackBar;
+    ToolBarWebsites: TToolBar;
+    tbWebsitesExpandAll: TToolButton;
+    tbWebsitesCollapseAll: TToolButton;
     tsView: TTabSheet;
     tmBackup: TIdleTimer;
     ToolBarDownload: TToolBar;
@@ -417,6 +420,8 @@ type
     procedure tbDownloadResumeAllClick(Sender: TObject);
     procedure tbDownloadStopAllClick(Sender: TObject);
     procedure tbDropTargetOpacityChange(Sender: TObject);
+    procedure tbWebsitesCollapseAllClick(Sender: TObject);
+    procedure tbWebsitesExpandAllClick(Sender: TObject);
     procedure TrayIconDblClick(Sender: TObject);
     procedure tvDownloadFilterSelectionChanged(Sender: TObject);
     procedure UniqueInstanceFMDOtherInstance(Sender: TObject;
@@ -3028,6 +3033,16 @@ begin
   uFrmDropTarget.FAlphaBlendValue := tbDropTargetOpacity.Position;
   if Assigned(FormDropTarget) then
     FormDropTarget.AlphaBlendValue := uFrmDropTarget.FAlphaBlendValue;
+end;
+
+procedure TMainForm.tbWebsitesCollapseAllClick(Sender: TObject);
+begin
+  vtOptionMangaSiteSelection.FullCollapse;
+end;
+
+procedure TMainForm.tbWebsitesExpandAllClick(Sender: TObject);
+begin
+  vtOptionMangaSiteSelection.FullExpand;
 end;
 
 procedure TMainForm.TrayIconDblClick(Sender: TObject);

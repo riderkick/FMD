@@ -9,7 +9,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: en\n"
-"X-Generator: Poedit 1.7.6\n"
+"X-Generator: Poedit 1.8.1\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: frmimportfavorites.rs_importcompleted
 msgid "Import completed."
@@ -1255,6 +1256,14 @@ msgstr "Resume All"
 msgid "Stop All"
 msgstr "Stop All"
 
+#: tmainform.tbwebsitescollapseall.caption
+msgid "Collapse All"
+msgstr "Collapse All"
+
+#: tmainform.tbwebsitesexpandall.caption
+msgid "Expand All"
+msgstr "Expand All"
+
 #: tmainform.tsabout.caption
 msgid "About"
 msgstr "About"
@@ -1592,4 +1601,3 @@ msgstr "Synchronizing data"
 #: uupdatethread.rs_updatinglist
 msgid "Updating list"
 msgstr "Updating list"
-

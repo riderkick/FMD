@@ -1208,6 +1208,14 @@ msgstr ""
 msgid "Stop All"
 msgstr ""
 
+#: tmainform.tbwebsitescollapseall.caption
+msgid "Collapse All"
+msgstr ""
+
+#: tmainform.tbwebsitesexpandall.caption
+msgid "Expand All"
+msgstr ""
+
 #: tmainform.tsabout.caption
 msgid "About"
 msgstr ""
