@@ -2,7 +2,7 @@
   var
     i: Integer;
     l: TStringList;
-    imgs: string;
+    imgs_: string;
   begin
     l := TStringList.Create;
 
@@ -10,14 +10,15 @@
       DecodeUrl(FillMangaSiteHost(DYNASTYSCANS_ID, URL)),
       manager.container.manager.retryConnect);
 
+    imgs_ := '';
     if l.Count > 0 then
     begin
       for i := 0 to l.Count-1 do
         if Pos('var pages = [', l[i]) > 0 then
         begin
-          imgs := l[i];
-          imgs := StringReplace(imgs, 'var pages =', '', [rfIgnoreCase]);
-          imgs := Trim(TrimChar(imgs, [';', ' ']));
+          imgs_ := l[i];
+          imgs_ := StringReplace(imgs_, 'var pages =', '', [rfIgnoreCase]);
+          imgs_ := Trim(TrimChar(imgs_, [';', ' ']));
           Break;
         end;
     end;
@@ -25,10 +26,10 @@
 
     with manager.container do
     begin
-      if imgs <> '' then
+      if imgs_ <> '' then
       begin
         PageLinks.Clear;
-        ParseJSONArray(imgs, 'image', PageLinks);
+        ParseJSONArray(imgs_, 'image', PageLinks);
         PageNumber := PageLinks.Count;
       end;
 
