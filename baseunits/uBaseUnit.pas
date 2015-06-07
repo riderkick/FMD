@@ -15,7 +15,7 @@ interface
 uses
   SysUtils, Classes, Graphics, Forms, UTF8Process, strutils, fileinfo, process,
   fpjson, jsonparser, FastHTMLParser, fgl, uFMDThread, synautil, httpsend,
-  blcksock, ssl_openssl, GZIPUtils;
+  blcksock, ssl_openssl, GZIPUtils, USimpleException;
 
 const
   FMD_REVISION = '$WCREV$';
@@ -2805,7 +2805,11 @@ begin
       if output is TStream then
         HTTP.Document.SaveToStream(TStream(output));
     except
-      on E: Exception do WriteLog('GetPage.WriteOutput error: ' + E.Message);
+      on E: Exception do
+      begin
+        E.Message := 'GetPage.WriteOutput error: '#13#10 + E.Message;
+        USimpleException.ExceptionHandleSaveLogOnly(AOwner, E);
+      end;
     end;
     Result := True;
   end
@@ -3089,8 +3093,9 @@ begin
       except
         on E: Exception do
         begin
-          WriteLog('SaveImage: ' + E.Message + LineEnding + (CorrectPathSys(Path) +
-            '/' + Name + prefix + ext), LOG_error);
+          E.Message := 'SaveImage.SavetoFile'#13#10 + E.Message + #13#10 +
+            (CorrectPathSys(Path) + '/' + Name + prefix + ext);
+          USimpleException.ExceptionHandleSaveLogOnly(AOwner, E);
           {$IFDEF DOWNLOADER}
           if (AOwner <> nil) and (AOwner is TFMDThread) then
           begin
@@ -3114,7 +3119,10 @@ begin
   end
   else
   begin
-    WriteLog('SaveImage.ExtEmpty URL:' + URL);
+    s := 'SaveImage.ExtEmpty'#13#10'URL: ' + URL;
+    if Assigned(AOwner) then
+      s := s + #13#10'ClassName: ' + AOwner.ClassName;
+    USimpleException.ExceptionHandleSaveLogOnly(AOwner, Exception.Create(s));
   end;
   preTerminate;
 end;

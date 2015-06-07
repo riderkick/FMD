@@ -11,7 +11,7 @@ unit uPacker;
 interface
 
 uses
-  Classes, FileUtil, Zipper, SysUtils, uBaseUnit, uImg2Pdf;
+  Classes, FileUtil, Zipper, SysUtils, uBaseUnit, uImg2Pdf, USimpleException;
 
 type
   TPacker = class
@@ -94,8 +94,8 @@ begin
   except
     on E: Exception do
     begin
-      WriteLog('DoZipCbz.E:' + E.ClassName + '=' + E.Message, LOG_error);
-      //MainForm.ExceptLogMain.ExceptionHandler(Self, E);
+      E.Message := 'DoZipCbz.Exception'#13#10 + E.Message;
+      USimpleException.ExceptionHandleSaveLogOnly(Self, E);
     end;
   end;
 end;
@@ -149,8 +149,8 @@ begin
   except
     on E: Exception do
     begin
-      WriteLog('DoPdf.E:' + E.ClassName + '=' + E.Message, LOG_error);
-      //MainForm.ExceptLogMain.ExceptionHandler(nil, E);
+      E.Message := 'DoPdf.Exception'#13#10 + E.Message;
+      USimpleException.ExceptionHandleSaveLogOnly(Self, E);
     end;
   end;
 end;
