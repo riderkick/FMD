@@ -22,8 +22,6 @@
       manager.container.PageLinks.Clear;
       for i := 0 to parse.Count-1 do
       begin
-        if GetTagName(parse[i]) = 'img' then
-          WriteLog('Scan: '+parse[i]);
         if GetVal(parse[i], 'class') = 'imageWrapper' then
           if GetTagName(parse[i+2]) = 'img' then
             manager.container.PageLinks.Add(GetVal(parse[i+2], 'src'));
