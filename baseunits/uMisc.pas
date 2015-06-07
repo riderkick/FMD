@@ -20,8 +20,6 @@ type
     procedure Reload;
   end;
 
-  TLogType = (LOG_debug, LOG_info, LOG_warning, LOG_error);
-
 //String utils
 procedure padZero(var S: String; VolLength, ChapLength: Integer);
 function padZeros(const S: String; VolLength, ChapLength: Integer): String;
@@ -40,10 +38,6 @@ procedure QuickSortNaturalPart(var Alist: TStringList; Separator: String;
 //Images
 function MangaFoxRemoveWatermarks(const Filename: String): Boolean;
 
-//Logging
-procedure WriteLog(msg: String; logType: TLogType = LOG_debug);
-procedure WriteOtherLog(msg: String);
-
 //Searching
 function FindStrLinear(aList: TStrings; aValue: String): Boolean;
 function FindStrLinearPos(aList: TStrings; aValue: String): Integer;
@@ -54,13 +48,7 @@ function FormatByteSize(const bytes :longint; persecond: boolean = False) :strin
 //sorting
 function NaturalCompareStr(Str1, Str2: string): integer;
 
-var
-  CS_LOG, CS_OTHERLOG: TCriticalSection;
-
 const
-  fLogFile = 'fmd_log.txt';
-  fOtherLogFile = 'fmd_otherLog.txt';
-
   UA_CURL      = 'curl/7.42.1';
   UA_MSIE      = 'Mozilla/5.0 (compatible; WOW64; MSIE 10.0; Windows NT 6.2)';
   UA_FIREFOX   = 'Mozilla/5.0 (Windows NT 6.3; WOW64; rv:37.0) Gecko/20100101 Firefox/37.0';
@@ -110,64 +98,6 @@ begin
 end;
 
 { uMisc }
-
-procedure WriteLog(msg: String; logType: TLogType = LOG_debug);
-{$IFDEF LOGACTIVE}
-var
-  s: String;
-  f: TextFile;
-{$ENDIF}
-begin
-  {$IFDEF LOGACTIVE}
-  CS_LOG.Acquire;
-  try
-    s := FormatDateTime('dd/mm/yyyy|hh:nn:ss.zzz ', Now);
-    case logType of
-      LOG_debug: s := s + '[D]';
-      LOG_info: s := s + '[I]';
-      LOG_warning: s := s + '[W]';
-      LOG_error: s := s + '[E]';
-    end;
-    AssignFile(f, fLogFile);
-    try
-      if FileExists(fLogFile) then
-        Append(f)
-      else
-        Rewrite(f);
-      WriteLn(f, s + ' ' + msg);
-    finally
-      CloseFile(f);
-    end;
-  finally
-    CS_LOG.Release;
-  end;
-  {$ENDIF}
-end;
-
-procedure WriteOtherLog(msg: String);
-{$IFDEF LOGACTIVE}
-var
-  f: TextFile;
-{$ENDIF}
-begin
-  {$IFDEF LOGACTIVE}
-  CS_OTHERLOG.Acquire;
-  try
-    AssignFile(f, fOtherLogFile);
-    try
-      if FileExists(fOtherLogFile) then
-        Append(f)
-      else
-        Rewrite(f);
-      WriteLn(f, msg);
-    finally
-      CloseFile(f);
-    end;
-  finally
-    CS_OTHERLOG.Release;
-  end;
-  {$ENDIF}
-end;
 
 function BrackText(const S: String): String;
 begin
@@ -536,19 +466,5 @@ begin
   if persecond then
     Result := Result + 'ps';
 end;
-
-initialization
-  CS_LOG := TCriticalSection.Create;
-  CS_OTHERLOG := TCriticalSection.Create;
-  {$IFDEF LOGACTIVE}
-  WriteLog('Starting FMD', LOG_Info);
-  {$ENDIF}
-
-finalization
-  {$IFDEF LOGACTIVE}
-  WriteLog('FMD exit normally', LOG_Info);
-  {$ENDIF}
-  FreeAndNil(CS_OTHERLOG);
-  FreeAndNil(CS_LOG);
 
 end.

@@ -14,8 +14,8 @@ uses
     cthreads,
     {$ENDIF}
   {$ENDIF}
-  Forms, Interfaces, FileUtil,simpleipc, IniFiles,
-  uBaseUnit, frmMain, frmShutdownCounter, frmUpdateDialog, uFrmDropTarget;
+  Forms, Interfaces, FileUtil, simpleipc, IniFiles, uBaseUnit, uMisc, frmMain,
+  frmShutdownCounter, frmUpdateDialog, uFrmDropTarget;
 
 var
   CheckInstance: Boolean = True;

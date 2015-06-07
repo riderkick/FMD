@@ -20,7 +20,7 @@ uses
   DefaultTranslator, LazUTF8, AnimatedGif, uBaseUnit, uData, uDownloadsManager,
   uFavoritesManager, uUpdateThread, uUpdateDBThread, uSubThread, uSilentThread,
   uMisc, uGetMangaInfosThread, uTranslation, uFrmDropTarget, USimpleException,
-  ActiveX;
+  USimpleLogger, ActiveX;
 
 type
   TDoFMDType = (DoFMDNothing, DoFMDUpdate, DoFMDExit, DoFMDShutdown, DoFMDHibernate);
@@ -693,11 +693,11 @@ procedure TMainForm.FormCreate(Sender: TObject);
 var
   fs: TFileStream;
 begin
+  Writelog_I('Starting ' + Application.Title);
   Randomize;
   InitSimpleExceptionHandler;
   AddIgnoredException('EImagingError');
   AddIgnoredException('ERegExpr');
-  SaveIgnoredExeptionToFile;
   SilentThreadManager := TSilentThreadManager.Create;
   btAbortUpdateList.Parent := sbUpdateList;
   INIAdvanced := TIniFileR.Create(fmdDirectory + CONFIG_FOLDER + CONFIG_ADVANCED);
@@ -920,6 +920,7 @@ begin
   FreeAndNil(updates);
   FreeAndNil(options);
   FreeAndNil(INIAdvanced);
+  Writelog_I(Application.Title + ' exit normally');
 end;
 
 procedure TMainForm.FormShow(Sender: TObject);

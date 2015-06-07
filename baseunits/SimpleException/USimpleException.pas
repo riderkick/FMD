@@ -26,7 +26,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, LCLVersion, DbgInfoReader,
-  USimpleExceptionForm,
+  USimpleExceptionForm, USimpleLogger,
   {$IFDEF WINDOWS}
   windows, win32proc,
   {$ENDIF}
@@ -77,7 +77,6 @@ type
   public
     LogFilename: String;
     IgnoredExceptionList: TStringlist;
-    SaveIgnoredExceptionToFile: Boolean;
     property MaxStackCount: Integer read FMaxStackCount write SetMaxStackCount;
     property LastSender: TObject read FLastSender;
     property LastException: Exception read FLastException;
@@ -90,7 +89,6 @@ type
 
 function AddIgnoredException(const EClassName: String): Boolean;
 function RemoveIgnoredClass(const EClassName: String): Boolean;
-procedure SaveIgnoredExeptionToFile(ASave: Boolean = True);
 procedure SetMaxStackCount(const ACount: Integer);
 procedure ClearIgnoredException;
 procedure ExceptionHandle(Sender: TObject; E: Exception);
@@ -111,12 +109,6 @@ resourcestring
   SCantHandleException = 'Can''t handle exception';
 
 implementation
-
-procedure SaveIgnoredExeptionToFile(ASave: Boolean = True);
-begin
-  if SimpleException <> nil then
-    SimpleException.SaveIgnoredExceptionToFile := ASave;
-end;
 
 procedure SetMaxStackCount(const ACount : Integer);
 begin
@@ -252,38 +244,32 @@ procedure TSimpleException.UnhandledException(Obj: TObject; Addr: CodePointer;
 var
   i: Integer;
 begin
-  if SaveIgnoredExceptionToFile then
-  begin
-    EnterCriticalSection(FSimpleCriticalSection);
-    try
-      FUnhandled := True;
-      if Obj is Exception then
-      begin
-        if IgnoredExceptionList.IndexOf(Exception(Obj).ClassName) < 0 then
-        begin
-          FLastSender := nil;
-          FLastException := Exception(Obj);
-          CreateExceptionReport;
-          CallExceptionHandler;
-        end;
-      end
-      else
-      begin
-        FLastReport := ExceptionHeaderMessage;
-        if Obj is TObject then
-          FLastReport := FLastReport +
-          'Sender Class      : ' + Obj.ClassName + LineEnding;
+  EnterCriticalSection(FSimpleCriticalSection);
+  try
+    FUnhandled := True;
+    if Obj is Exception then
+    begin
+      FLastSender := nil;
+      FLastException := Exception(Obj);
+      CreateExceptionReport;
+      CallExceptionHandler;
+    end
+    else
+    begin
+      FLastReport := ExceptionHeaderMessage;
+      if Obj is TObject then
         FLastReport := FLastReport +
-          'Exception Address : $' + SimpleBackTraceStr(Addr) + LineEnding;
-        if FrameCount > 0 then
-          for i := 0 to FrameCount-1 do
-            FLastReport := FLastReport + '  ' + SimpleBackTraceStr(Frames[i]) + LineEnding;
-        SaveLogToFile(FLastReport);
-        CallExceptionHandler;
-      end;
-    finally
-      LeaveCriticalSection(FSimpleCriticalSection);
+        'Sender Class      : ' + Obj.ClassName + LineEnding;
+      FLastReport := FLastReport +
+        'Exception Address : $' + SimpleBackTraceStr(Addr) + LineEnding;
+      if FrameCount > 0 then
+        for i := 0 to FrameCount-1 do
+          FLastReport := FLastReport + '  ' + SimpleBackTraceStr(Frames[i]) + LineEnding;
+      SaveLogToFile(FLastReport);
+      CallExceptionHandler;
     end;
+  finally
+    LeaveCriticalSection(FSimpleCriticalSection);
   end;
 end;
 
@@ -424,6 +410,7 @@ begin
       CloseFile(f);
     end;
   end;
+  WriteLog_E('From ExceptionHandler:'#13#10+LogMsg);
 end;
 
 procedure TSimpleException.CallExceptionHandler;
@@ -449,15 +436,11 @@ begin
     Exit;
   EnterCriticalsection(FSimpleCriticalSection);
   try
-    if SaveIgnoredExceptionToFile or
-      (IgnoredExceptionList.IndexOf(E.ClassName) < 0) then
-    begin
-      FUnhandled := False;
-      FLastSender := Sender;
-      FLastException := E;
-      CreateExceptionReport;
-      CallExceptionHandler;
-    end;
+    FUnhandled := False;
+    FLastSender := Sender;
+    FLastException := E;
+    CreateExceptionReport;
+    CallExceptionHandler;
   finally
     LeaveCriticalsection(FSimpleCriticalSection);
   end;
@@ -496,7 +479,6 @@ begin
     LogFilename := Filename
   else
     LogFilename := ExtractFileNameOnly(Application.ExeName) + '.log';
-  SaveIgnoredExceptionToFile := False;
   FMaxStackCount := 20;
   FAppVerInfo := TStringList.Create;
   IgnoredExceptionList := TStringList.Create;
