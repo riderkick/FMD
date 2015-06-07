@@ -848,6 +848,7 @@ function TrimLeftChar(const Source: String; const Chars: TSysCharSet): String;
 function TrimRightChar(const Source: String; const Chars: TSysCharSet): String;
 
 function PrepareSummaryForHint(const Source: String; MaxLength: Cardinal = 80): String;
+procedure AddCommaString(var Dest: string; S: string);
 
 //get heaader value from THTTPSend.Headers
 function GetHeaderValue(const AHeaders: TStrings; HName: String): String;
@@ -2384,6 +2385,14 @@ begin
   Result := StringReplace(Result, '\n', #10, [rfReplaceAll, rfIgnoreCase]);
   Result := StringReplace(Result, '\r', #13, [rfReplaceAll, rfIgnoreCase]);
   Result := TrimLeft(TrimRight(Result));
+end;
+
+procedure AddCommaString(var Dest: string; S: string);
+begin
+  if Dest = '' then
+    Dest := S
+  else
+    Dest := Dest + ', ' + S;
 end;
 
 function CheckRedirect(const HTTP: THTTPSend): String;
