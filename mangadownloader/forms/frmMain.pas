@@ -833,6 +833,7 @@ begin
     FavoriteManager.Sort(vtFavorites.Header.SortColumn);
     vtFavorites.Repaint;
   end;
+  uTranslation.LangDir := GetCurrentDirUTF8 + PathDelim + 'languages';
   LoadLanguage;
 end;
 

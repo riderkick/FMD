@@ -25,7 +25,7 @@ unit uTranslation;
 interface
 
 uses
-  Classes, SysUtils, strutils, FileUtil, LCLTranslator;
+  Classes, SysUtils, strutils, FileUtil, LCLTranslator, Translations;
 
 type
   TPoLanguage = record
@@ -661,13 +661,18 @@ const
     ('ZM', 'Zambia'),
     ('ZW', 'Zimbabwe'));
 
+  ldir: array[0..3] of string =
+    ('LANG', 'languages', 'locale', 'locale' + PathDelim + 'LC_MESSAGES');
+
 var
   AvailableLanguages: TStringList;
   LastSelected: string = '';
+  LangDir: string = '';
 
   procedure CollectLanguagesFiles(appname: string = ''; dir: string = ''; useNativeName: Boolean = True);
   function GetLangName(lcode: string; useNativeName: Boolean = True): string;
 
+  function SetLang(Lang: string): Boolean;
   function SetLangByIndex(Idx: Integer): Boolean;
   function GetDefaultLang: string;
 
@@ -719,14 +724,16 @@ var
   sdir: string;
   lauto: Boolean = False;
   i: Integer;
-const
-  ldir: array[0..3] of string =
-    ('LANG', 'languages', 'locale', 'locale' + PathDelim + 'LC_MESSAGES');
 begin
   if dir = '' then
   begin
-    dir := GetCurrentDirUTF8 + PathDelim;
-    lauto := True;
+    if LangDir <> '' then
+      dir := LangDir
+    else
+    begin
+      dir := GetCurrentDirUTF8 + PathDelim;
+      lauto := True;
+    end;
   end;
   if appname = '' then
     appname := ExtractFileNameOnly(ParamStrUTF8(0));
@@ -815,6 +822,61 @@ begin
     Result := GetLang(s);
 end;
 
+function TranslateLCL(Lang: string): Boolean;
+var
+  lcllangdir, lcllangpath, fallbacklang: string;
+  lcllangfound: Boolean = False;
+  i: Integer;
+
+  procedure SearchLangPath;
+  begin
+    if FileExistsUTF8(lcllangdir + 'lclstrconsts.' + Lang + '.po') then
+    begin
+      lcllangfound := True;
+      lcllangpath := lcllangdir + 'lclstrconsts.' + Lang + '.po';
+    end;
+  end;
+
+begin
+  Result := False;
+  if LangDir <> '' then
+  begin
+    lcllangdir := LangDir;
+    if RightStr(lcllangdir, 1) <> PathDelim then
+      lcllangdir := lcllangdir + PathDelim;
+    SearchLangPath;
+  end
+  else
+  begin
+    for i := Low(ldir) to High(ldir) do
+    begin
+      lcllangdir := GetCurrentDirUTF8 + PathDelim + ldir[i];
+      SearchLangPath;
+      if lcllangfound then
+        Break;
+    end;
+  end;
+  if lcllangfound then
+  begin
+    fallbacklang := '';
+    TranslateUnitResourceStrings('LclStrConsts', lcllangpath, Lang, fallbacklang);
+    Result := True;
+  end;
+end;
+
+function SetLang(Lang: string): Boolean;
+begin
+  Result := False;
+  if (LastSelected <> Lang) and
+    (AvailableLanguages.IndexOfName(lang) > 0) then
+  begin
+    SetDefaultLang(Lang);
+    LastSelected := Lang;
+    TranslateLCL(Lang);
+    Result := True;
+  end;
+end;
+
 function SetLangByIndex(Idx: Integer): Boolean;
 begin
   Result := False;
@@ -823,6 +885,7 @@ begin
   begin
     SetDefaultLang(AvailableLanguages.Names[Idx]);
     LastSelected := AvailableLanguages.Names[Idx];
+    TranslateLCL(AvailableLanguages.Names[Idx]);
     Result := True;
   end;
 end;
