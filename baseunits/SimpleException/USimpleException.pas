@@ -83,6 +83,7 @@ type
     property LastException: Exception read FLastException;
     property LastReport: String read FLastReport;
     procedure SimpleExceptionHandler(Sender: TObject; E: Exception);
+    procedure SimpleExceptionHandlerSaveLogOnly(Sender: TObject; E: Exception);
     constructor Create(Filename: string = '');
     destructor Destroy; override;
   end;
@@ -93,6 +94,7 @@ procedure SaveIgnoredExeptionToFile(ASave: Boolean = True);
 procedure SetMaxStackCount(const ACount: Integer);
 procedure ClearIgnoredException;
 procedure ExceptionHandle(Sender: TObject; E: Exception);
+procedure ExceptionHandleSaveLogOnly(Sender: TObject; E: Exception);
 procedure InitSimpleExceptionHandler(const LogFilename: String = '');
 procedure DoneSimpleExceptionHandler;
 
@@ -156,6 +158,13 @@ begin
   if not Assigned(SimpleException) then
     InitSimpleExceptionHandler;
   SimpleException.SimpleExceptionHandler(Sender, E);
+end;
+
+procedure ExceptionHandleSaveLogOnly(Sender: TObject; E: Exception);
+begin
+  if not Assigned(SimpleException) then
+    InitSimpleExceptionHandler;
+  SimpleException.SimpleExceptionHandlerSaveLogOnly(Sender, E);
 end;
 
 procedure InitSimpleExceptionHandler(const LogFilename : String);
@@ -449,6 +458,22 @@ begin
       CreateExceptionReport;
       CallExceptionHandler;
     end;
+  finally
+    LeaveCriticalsection(FSimpleCriticalSection);
+  end;
+end;
+
+procedure TSimpleException.SimpleExceptionHandlerSaveLogOnly(Sender: TObject;
+  E: Exception);
+begin
+  if E = nil then
+    Exit;
+  EnterCriticalsection(FSimpleCriticalSection);
+  try
+    FUnhandled := False;
+    FLastSender := Sender;
+    FLastException := E;
+    CreateExceptionReport;
   finally
     LeaveCriticalsection(FSimpleCriticalSection);
   end;
