@@ -196,6 +196,8 @@ const
   LANGUAGE_FILE           = 'languages.ini';
   LOG_FILE                = 'changelog.txt';
 
+  UPDATE_URL = 'https://raw.githubusercontent.com/riderkick/FMD/master/';
+
   OPTION_MANGALIST = 0;
   OPTION_RECONNECT = 1;
 
@@ -596,11 +598,12 @@ const
 
   MANGAHOST_BROWSER = '/mangas';
 
-  DYNASTYSCANS_BROWSER: array [0..3] of string =
-    ('/anthologies', '/doujins', '/issues', '/series');
-
-  //------------------------------------------
-  UPDATE_URL = 'https://raw.githubusercontent.com/riderkick/FMD/master/';
+  DYNASTYSCANS_BROWSER: array [0..3] of string = (
+    '/anthologies',
+    '/doujins',
+    '/issues',
+    '/series'
+    );
 
 var
   FMD_VERSION_NUMBER: String = '';
