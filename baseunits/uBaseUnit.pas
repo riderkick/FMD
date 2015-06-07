@@ -207,6 +207,8 @@ const
   NET_PROBLEM           = 1;
   INFORMATION_NOT_FOUND = 2;
 
+  SOCKHEARTBEATRATE = 500;
+
   DEFAULT_LIST = 'AnimeA,MangaFox,MangaHere,MangaInn,MangaReader';
   DEFAULT_CUSTOM_RENAME = '%NUMBERING% - %CHAPTER%';
 
@@ -237,9 +239,9 @@ const
     TwoDigitYearCenturyWindow :50;
     );
 
-  ALPHA_LIST = '#abcdefghijklmnopqrstuvwxyz';
-
-  SOCKHEARTBEATRATE = 500;
+  // EN: Param seperator
+  SEPERATOR  = '!%~';
+  SEPERATOR2 = '~%!';
 
   ANIMEA_ID              = 0;
   MANGAHERE_ID           = 1;
@@ -337,10 +339,6 @@ const
   READMANGATODAY_ID      = 93;
   LONEMANGA_ID           = 94;
   DYNASTYSCANS_ID        = 95;
-
-  // EN: Param seperator
-  SEPERATOR  = '!%~';
-  SEPERATOR2 = '~%!';
 
   WebsiteRoots: array [0..95] of array [0..1] of string = (
     ('AnimeA', 'http://manga.animea.net'),
@@ -440,6 +438,8 @@ const
     ('LoneManga', 'http://lonemanga.com'),
     ('Dynasty-Scans', 'http://dynasty-scans.com')
     );
+
+  ALPHA_LIST = '#abcdefghijklmnopqrstuvwxyz';
 
   ANIMEA_BROWSER = '/browse.html?page=';
   ANIMEA_SKIP = '?skip=1';
