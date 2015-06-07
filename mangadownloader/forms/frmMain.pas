@@ -693,7 +693,9 @@ procedure TMainForm.FormCreate(Sender: TObject);
 var
   fs: TFileStream;
 begin
-  Writelog_I('Starting ' + Application.Title);
+  SetLogFile(Format('%s\%s_LOG_%s.txt', ['log', ExtractFileNameOnly(ParamStrUTF8(0)),
+    FormatDateTime('dd-mm-yyyy', Now)]));
+  Writelog_I('Starting ' + AnsiQuotedStr(Application.Title, '"'));
   Randomize;
   InitSimpleExceptionHandler;
   AddIgnoredException('EImagingError');
@@ -920,7 +922,7 @@ begin
   FreeAndNil(updates);
   FreeAndNil(options);
   FreeAndNil(INIAdvanced);
-  Writelog_I(Application.Title + ' exit normally');
+  Writelog_I(AnsiQuotedStr(Application.Title, '"') + ' exit normally');
 end;
 
 procedure TMainForm.FormShow(Sender: TObject);

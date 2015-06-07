@@ -48,12 +48,29 @@ const
 
 implementation
 
-procedure WriteLog(const msg: String; LogType: TLogType);
+procedure ForceLogFile(const logfilename: string);
+var
+  f: String;
+begin
+  f := ExtractFileDir(logfilename);
+  if f <> '' then
+  begin
+    if _LOG_ACTIVE and (not DirectoryExists(f)) then
+      ForceDirectories(f);
+    f := f + PathDelim + ExtractFileName(logfilename);
+  end
+  else
+    f := logfilename;
+  _FLOGFILE := f;
+end;
+
+procedure WriteLog(const msg: String; LogType: TLogType = DEBUG);
 var
   s: String;
   f: TextFile;
 begin
   if not _LOG_ACTIVE then Exit;
+  if _FLOGFILE = '' then Exit;
   if Integer(logType) > _LOG_LEVEL then Exit;
   EnterCriticalsection(_CS_LOG);
   try
@@ -64,7 +81,10 @@ begin
       if FileExists(_FLOGFILE) then
         Append(f)
       else
+      begin
+        ForceLogFile(_FLOGFILE);
         Rewrite(f);
+      end;
       WriteLn(f, s + ' ' + msg);
     finally
       CloseFile(f);
@@ -77,7 +97,14 @@ end;
 procedure SetLogFile(const LogFileName: String);
 begin
   if Trim(LogFileName) <> '' then
-    _FLOGFILE := LogFileName;
+  begin
+    EnterCriticalsection(_CS_LOG);
+    try
+      ForceLogFile(LogFileName);
+    finally
+      LeaveCriticalsection(_CS_LOG);
+    end;
+  end;
 end;
 
 procedure WriteLog_E(const msg: String);
@@ -111,7 +138,7 @@ var
 begin
   {$IFDEF LOGACTIVE}
   _LOG_ACTIVE := True;
-  _LOG_LEVEL := 4;
+  _LOG_LEVEL := SizeOf(TLogType);
   {$ENDIF}
   _FLOGFILE := ChangeFileExt(ExtractFileName(ParamStr(0)), '_LOG.txt');
   for i := 1 to Paramcount do
@@ -128,7 +155,6 @@ begin
         _LOG_LEVEL := SizeOf(TLogType);
     end;
   end;
-  Writelog_V('Initialize Logger');
 end;
 
 initialization
@@ -136,7 +162,6 @@ initialization
   doInitialization;
 
 finalization
-  Writelog_V('Finalize Logger');
   DoneCriticalsection(_CS_LOG);
 
 end.
