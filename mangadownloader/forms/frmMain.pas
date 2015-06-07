@@ -4299,11 +4299,9 @@ begin
     AddTextToInfo(RS_InfoAuthors, mangaInfo.authors + LineEnding);
     AddTextToInfo(RS_InfoArtists, mangaInfo.artists + LineEnding);
     AddTextToInfo(RS_InfoGenres, mangaInfo.genres + LineEnding);
-    if mangaInfo.status = '0' then
-      AddTextToInfo(RS_InfoStatus, cbFilterStatus.Items.Strings[0] + LineEnding)
-    else
-      AddTextToInfo(RS_InfoStatus, cbFilterStatus.Items.Strings[1] + LineEnding);
-    //edURL.Text:= mangaInfo.url;
+    i := StrToIntDef(mangaInfo.status, -1);
+    if (i > -1) and (i < cbFilterStatus.Items.Count) then
+      AddTextToInfo(RS_InfoStatus, cbFilterStatus.Items[i]);
     AddTextToInfo(RS_InfoSummary, mangaInfo.summary);
     CaretPos := Point(0, 0);
   end;
