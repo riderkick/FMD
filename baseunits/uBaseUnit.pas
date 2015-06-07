@@ -59,9 +59,10 @@ const
   Symbols: array [0..10] of Char =
     ('\', '/', ':', '*', '?', '"', '<', '>', '|', #9, ';');
 
-  StringFilterChar: array [0..31] of array [0..1] of string = (
+  StringFilterChar: array [0..32] of array [0..1] of string = (
     (#10, '\n'),
     (#13, '\r'),
+    ('&#x27;', ''''),
     ('&#33;', '!'),
     ('&#36;', '$'),
     ('&#37;', '%'),
