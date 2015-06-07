@@ -10,7 +10,6 @@
       DecodeUrl(FillMangaSiteHost(DYNASTYSCANS_ID, URL)),
       manager.container.manager.retryConnect);
 
-    ParseHTML(l.Text, parse);
     if l.Count > 0 then
     begin
       for i := 0 to l.Count-1 do
