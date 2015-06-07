@@ -14,7 +14,7 @@ unit uData;
 interface
 
 uses
-  Classes, SysUtils, uBaseUnit, FileUtil, httpsend;
+  Classes, SysUtils, uBaseUnit, strutils, FileUtil, httpsend;
 
 type
   TDataProcess = class(TObject)
@@ -871,6 +871,8 @@ var
 
   {$I includes/Dynasty-Scans/directory_page_number.inc}
 
+  {$I includes/Madokami/directory_page_number.inc}
+
 begin
   Page := 0;
 
@@ -1034,6 +1036,9 @@ begin
     else
     if website = WebsiteRoots[DYNASTYSCANS_ID, 0] then
       Result := GetDynastyScansDirectoryPageNumber
+    else
+    if website = WebsiteRoots[MADOKAMI_ID, 0] then
+      Result := GetMadokamiDirectoryPageNumber
     else
     begin
       Result := NO_ERROR;
@@ -1211,6 +1216,8 @@ var
   {$I includes/LoneManga/names_and_links.inc}
 
   {$I includes/Dynasty-Scans/names_and_links.inc}
+
+  {$I includes/Madokami/names_and_links.inc}
 
 begin
   //load User-Agent from INIAdvanced
@@ -1473,6 +1480,9 @@ begin
   if website = WebsiteRoots[DYNASTYSCANS_ID, 0] then
     Result := DynastyScansGetNamesAndLinks
   else
+  if website = WebsiteRoots[MADOKAMI_ID, 0] then
+    Result := MadokamiGetNamesAndLinks
+  else
   begin
     Result := INFORMATION_NOT_FOUND;
     Source.Free;
@@ -1655,6 +1665,8 @@ var
   {$I includes/LoneManga/manga_information.inc}
 
   {$I includes/Dynasty-Scans/manga_information.inc}
+
+  {$I includes/Madokami/manga_information.inc}
 
 begin
   if Trim(URL) = '' then Exit(INFORMATION_NOT_FOUND);
@@ -1920,6 +1932,9 @@ begin
   else
   if website = GetMangaSiteName(DYNASTYSCANS_ID) then
     Result := GetDynastyScansInfoFromURL
+  else
+  if website = GetMangaSiteName(MADOKAMI_ID) then
+    Result := GetMadokamiInfoFromURL
   else
   begin
     Source.Free;

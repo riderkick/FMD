@@ -59,7 +59,7 @@ const
   Symbols: array [0..10] of Char =
     ('\', '/', ':', '*', '?', '"', '<', '>', '|', #9, ';');
 
-  StringFilterChar: array [0..32] of array [0..1] of string = (
+  StringFilterChar: array [0..35] of array [0..1] of string = (
     (#10, '\n'),
     (#13, '\r'),
     ('&#x27;', ''''),
@@ -92,10 +92,13 @@ const
     ('［', '['),
     ('］', ']'),
     ('（', '('),
-    ('）', ')')
+    ('）', ')'),
+    ('&frac12;', '½'),
+    ('&deg;', '°'),
+    ('&sup2;', '²')
     );
 
-  HTMLEntitiesChar: array [0..80] of array [0..1] of string = (
+  HTMLEntitiesChar: array [0..82] of array [0..1] of string = (
     ('&#171;', '«'),
     ('&#176;', '°'),
     ('&Agrave;', 'À'),
@@ -105,6 +108,7 @@ const
     ('&Acirc;', 'Â'),
     ('&#194;', 'Â'),
     ('&Atilde;', 'Ã'),
+    ('&ccedil;', 'ç'),
     ('&Egrave;', 'È'),
     ('&Eacute;', 'É'),
     ('&Ecirc;', 'Ê'),
@@ -176,7 +180,8 @@ const
     ('&raquo;', '»'),
     ('&laquo;', '«'),
     ('&#8216;', '‘'),
-    ('&ndash;', '-')
+    ('&ndash;', '-'),
+    ('&gamma;', 'γ')
     );
 
   README_FILE             = 'readme.rtf';
@@ -341,8 +346,9 @@ const
   READMANGATODAY_ID      = 93;
   LONEMANGA_ID           = 94;
   DYNASTYSCANS_ID        = 95;
+  MADOKAMI_ID            = 96;
 
-  WebsiteRoots: array [0..95] of array [0..1] of string = (
+  WebsiteRoots: array [0..96] of array [0..1] of string = (
     ('AnimeA', 'http://manga.animea.net'),
     ('MangaHere', 'http://www.mangahere.co'),
     ('MangaInn', 'http://www.mangainn.me'),
@@ -438,7 +444,8 @@ const
     ('SenMangaRAW', 'http://raw.senmanga.com'),
     ('ReadMangaToday', 'http://www.readmanga.today'),
     ('LoneManga', 'http://lonemanga.com'),
-    ('Dynasty-Scans', 'http://dynasty-scans.com')
+    ('Dynasty-Scans', 'http://dynasty-scans.com'),
+    ('Madokami', 'https://manga.madokami.com')
     );
 
   ALPHA_LIST = '#abcdefghijklmnopqrstuvwxyz';
@@ -603,6 +610,21 @@ const
     '/doujins',
     '/issues',
     '/series'
+    );
+
+  MADOKAMI_BROWSER: array [0..11] of string = (
+    '/Manga/%23%20-%20F',
+    '/Manga/G%20-%20M',
+    '/Manga/N%20-%20Z',
+    '/Manga/_Autouploads/AutoUploaded%20from%20Assorted%20Sources',
+    '/Manga/_Autouploads/ComicWalker',
+    '/Manga/Non-English/Bahasa%20Indonesia',
+    '/Manga/Non-English/Brazilian%20Portuguese',
+    '/Manga/Non-English/Fran%C3%A7ais',
+    '/Manga/Non-English/Italian',
+    '/Manga/Non-English/Spanish',
+    '/Manga/_Doujinshi',
+    '/Raws'
     );
 
 var
@@ -1449,6 +1471,7 @@ end;
 
 procedure ParseHTML(const aRaw: string; var aOutput: TStringList);
 begin
+  if not Assigned(aOutput) then Exit;
   with TParseHTML.Create(aRaw) do try
     Output := aOutput;
     Exec;
