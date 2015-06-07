@@ -1203,6 +1203,8 @@ var
 
   {$I includes/ReadMangaToday/names_and_links.inc}
 
+  {$I includes/LoneManga/names_and_links.inc}
+
 begin
   //load User-Agent from INIAdvanced
   if website <> '' then
@@ -1458,6 +1460,9 @@ begin
   if website = WebsiteRoots[READMANGATODAY_ID, 0] then
     Result := ReadMangaTodayGetNamesAndLinks
   else
+  if website = WebsiteRoots[LONEMANGA_ID, 0] then
+    Result := LoneMangaGetNamesAndLinks
+  else
   begin
     Result := INFORMATION_NOT_FOUND;
     Source.Free;
@@ -1636,6 +1641,8 @@ var
   {$I includes/SenMangaRAW/manga_information.inc}
 
   {$I includes/ReadMangaToday/manga_information.inc}
+
+  {$I includes/LoneManga/manga_information.inc}
 
 begin
   if Trim(URL) = '' then Exit(INFORMATION_NOT_FOUND);
@@ -1895,6 +1902,9 @@ begin
   else
   if website = GetMangaSiteName(READMANGATODAY_ID) then
     Result := GetReadMangaTodayInfoFromURL
+  else
+  if website = GetMangaSiteName(LONEMANGA_ID) then
+    Result := GetLoneMangaInfoFromURL
   else
   begin
     Source.Free;
