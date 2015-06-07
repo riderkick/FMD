@@ -538,6 +538,8 @@ var
 
   {$I includes/LoneManga/chapter_page_number.inc}
 
+  {$I includes/Dynasty-Scans/chapter_page_number.inc}
+
 begin
   manager.container.PageNumber := 0;
   if manager.container.MangaSiteID = ANIMEA_ID then
@@ -744,6 +746,9 @@ begin
   else
   if manager.container.MangaSiteID = LONEMANGA_ID then
     Result := GetLoneMangaPageNumber
+  else
+  if manager.container.MangaSiteID = DYNASTYSCANS_ID then
+    Result := GetDynastyScansPageNumber
   else
     Result := False;
 end;
