@@ -1654,6 +1654,8 @@ var
 
   {$I includes/LoneManga/manga_information.inc}
 
+  {$I includes/Dynasty-Scans/manga_information.inc}
+
 begin
   if Trim(URL) = '' then Exit(INFORMATION_NOT_FOUND);
 
@@ -1915,6 +1917,9 @@ begin
   else
   if website = GetMangaSiteName(LONEMANGA_ID) then
     Result := GetLoneMangaInfoFromURL
+  else
+  if website = GetMangaSiteName(DYNASTYSCANS_ID) then
+    Result := GetDynastyScansInfoFromURL
   else
   begin
     Source.Free;
