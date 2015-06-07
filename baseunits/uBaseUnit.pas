@@ -2569,6 +2569,18 @@ var
   isGZip: Boolean = True;
   mstream: TMemoryStream;
 
+  procedure HTTPClear;
+  begin
+    if Assigned(HTTP) then
+      with HTTP do
+      begin
+        RangeStart := 0;
+        RangeEnd := 0;
+        Headers.Clear;
+        MimeType := 'text/html';
+      end;
+  end;
+
   procedure preTerminate;
   begin
     HTTPHeader.Free;
@@ -2606,7 +2618,7 @@ begin
     if LeftStr(AHTTP.Headers.Text, 5) <> 'HTTP/' then
       HTTPHeader.Text := AHTTP.Headers.Text;
     HTTP := AHTTP;
-    HTTP.Clear;
+    HTTPClear;
   end
   else
     HTTP := THTTPSend.Create;
@@ -2707,6 +2719,12 @@ begin
     HTTP.MimeType := 'application/x-www-form-urlencoded';
   end;
 
+  if HTTP.Sock.Tag = 100 then //POST
+  begin
+    meth := 'POST';
+    HTTP.MimeType := 'application/x-www-form-urlencoded';
+  end;
+
   counter := 0;
   HTTP.Headers.Text := HTTPHeader.Text;
   while (not HTTP.HTTPMethod(meth, URL)) or
@@ -2720,7 +2738,7 @@ begin
       Exit;
     end;
     Inc(Counter);
-    HTTP.Clear;
+    HTTPClear;
     HTTP.Headers.Text := HTTPHeader.Text;
     Sleep(500);
   end;

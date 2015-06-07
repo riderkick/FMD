@@ -297,7 +297,8 @@ function TDownloadThread.GetPage(const AHTTP: THTTPSend; var output: TObject;
   URL: String; const Reconnect: Cardinal; const isByPassHTTP: Boolean): Boolean;
   overload;
 begin
-  FHTTP.Clear;
+  if FHTTP.Sock.Tag <> 100 then
+    FHTTP.Clear;
   Result := uBaseUnit.GetPage(Self, FHTTP, output, URL, Reconnect, isByPassHTTP);
 end;
 
