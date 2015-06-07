@@ -335,12 +335,13 @@ const
   SENMANGARAW_ID         = 92;
   READMANGATODAY_ID      = 93;
   LONEMANGA_ID           = 94;
+  DYNASTYSCANS_ID        = 95;
 
   // EN: Param seperator
   SEPERATOR  = '!%~';
   SEPERATOR2 = '~%!';
 
-  WebsiteRoots: array [0..94] of array [0..1] of string = (
+  WebsiteRoots: array [0..95] of array [0..1] of string = (
     ('AnimeA', 'http://manga.animea.net'),
     ('MangaHere', 'http://www.mangahere.co'),
     ('MangaInn', 'http://www.mangainn.me'),
@@ -435,7 +436,8 @@ const
     ('MangaAt', 'http://www.mangaat.com'),
     ('SenMangaRAW', 'http://raw.senmanga.com'),
     ('ReadMangaToday', 'http://www.readmanga.today'),
-    ('LoneManga', 'http://lonemanga.com')
+    ('LoneManga', 'http://lonemanga.com'),
+    ('Dynasty-Scans', 'http://dynasty-scans.com')
     );
 
   ANIMEA_BROWSER = '/browse.html?page=';
@@ -592,6 +594,9 @@ const
   EXTREMEMANGAS_BROWSER = '/2013/04/lista-de-mangas.html';
 
   MANGAHOST_BROWSER = '/mangas';
+
+  DYNASTYSCANS_BROWSER: array [0..3] of string =
+    ('/anthologies', '/doujins', '/issues', '/series');
 
   //------------------------------------------
   UPDATE_URL = 'https://raw.githubusercontent.com/riderkick/FMD/master/';

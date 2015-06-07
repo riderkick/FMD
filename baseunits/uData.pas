@@ -869,6 +869,8 @@ var
 
   {$I includes/ReadMangaToday/directory_page_number.inc}
 
+  {$I includes/Dynasty-Scans/directory_page_number.inc}
+
 begin
   Page := 0;
 
@@ -1029,6 +1031,9 @@ begin
     else
     if website = WebsiteRoots[READMANGATODAY_ID, 0] then
       Result := GetReadMangaTodayDirectoryPageNumber
+    else
+    if website = WebsiteRoots[DYNASTYSCANS_ID, 0] then
+      Result := GetDynastyScansDirectoryPageNumber
     else
     begin
       Result := NO_ERROR;
@@ -1204,6 +1209,8 @@ var
   {$I includes/ReadMangaToday/names_and_links.inc}
 
   {$I includes/LoneManga/names_and_links.inc}
+
+  {$I includes/Dynasty-Scans/names_and_links.inc}
 
 begin
   //load User-Agent from INIAdvanced
@@ -1462,6 +1469,9 @@ begin
   else
   if website = WebsiteRoots[LONEMANGA_ID, 0] then
     Result := LoneMangaGetNamesAndLinks
+  else
+  if website = WebsiteRoots[DYNASTYSCANS_ID, 0] then
+    Result := DynastyScansGetNamesAndLinks
   else
   begin
     Result := INFORMATION_NOT_FOUND;
