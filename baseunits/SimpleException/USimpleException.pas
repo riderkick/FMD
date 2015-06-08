@@ -306,7 +306,11 @@ end;
 function TSimpleException.ExceptionHeaderMessage: string;
 begin
   try
-    Result := 'Program exception!' + LineEnding +
+    if FUnhandled then
+      Result := 'Unhandled exception!'
+    else
+      Result := 'Program exception!';
+    Result := Result + LineEnding +
       'Application       : ' + Application.Title + LineEnding +
       'Version           : ' + FAppInfo_fileversion + LineEnding +
       'Product Version   : ' + FAppInfo_productversion + LineEnding +
@@ -388,7 +392,14 @@ begin
     end;
     FLastReport := Report + StackTraceStr;
   except
-    FLastReport := 'Failed to create exception report!';
+    on E: Exception do
+    begin
+      FLastReport := 'Failed to create exception report!' + LineEnding +
+        FLastReport + LineEnding;
+      if Assigned(LastSender) then
+        FLastReport := FLastReport + 'Sender Class: ' + LastSender.ClassName + LineEnding;
+      FLastReport := FLastReport + E.ClassName + ': ' + E.Message;
+    end;
   end;
   SaveLogToFile(FLastReport);
 end;
@@ -424,7 +435,7 @@ begin
         TThread.Synchronize((Sender as TThread), @ExceptionHandler)
       {$ENDIF}
     except
-      raise Exception.Create(SCantHandleException);
+      SaveLogToFile(SCantHandleException);
     end
   else
     ExceptionHandler;
