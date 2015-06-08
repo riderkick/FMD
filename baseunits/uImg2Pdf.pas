@@ -11,8 +11,8 @@ unit uImg2Pdf;
 interface
 
 uses
-  Classes, SysUtils, ZStream, FPImage, FPReadJPEG, FPWriteJPEG, Graphics, GraphType,
-  ImagingTypes, Imaging, ImagingUtility, lazutf8classes;
+  Classes, SysUtils, ZStream, FPImage, FPReadJPEG, FPWriteJPEG,
+  ImagingTypes, Imaging, lazutf8classes, USimpleLogger, USimpleException;
 
 const
   TPDFFormatSetings: TFormatSettings = (
@@ -287,50 +287,41 @@ end;
 
 procedure   TImg2Pdf.AddFlateImage(const AName: String);
 var
-  stream: TFileStreamUTF8;
-  cs    : TCompressionStream;
-  ss    : TMemoryStream;
-  ext   : String;
-  im    : TImageData;
-
-  {$ifdef CPU32}
-  procedure Swap(buf: Pointer; size: Cardinal);
-  begin
-    asm
-      mov  esi,buf
-      mov  ecx,size
-    @loop:
-      mov  al,[esi]
-      xchg al,[esi+2]
-      mov  [esi],al
-      add  esi,3
-      loop @loop
-    end;
-  end;
-  {$endif}
+  fs  : TFileStreamUTF8;
+  ss  : TMemoryStream;
+  ext : String;
+  im  : TImageData;
 
 begin
   ext:= StringReplace(UpperCase(ExtractFileExt(AName)), '.', '', [rfReplaceAll]);
   if (ext = '') then
     Error('File without an extension!');
+
+  Initialize(im);
+  fs := TFileStreamUTF8.Create(AName, fmOpenRead);
   try
-    stream:= TFileStreamUTF8.Create(AName, fmOpenRead);
-    LoadImageFromStream(stream, im);
-    if (ext <> 'JPG') AND (ext <> 'JPEG') then
-      ConvertImage(im, ifR8G8B8);
-    ss:= TMemoryStream.Create;
-    BeginPDFPage(im.Width, im.Height);
+    LoadImageFromStream(fs, im);
+  finally
+    fs.Free;
+  end;
+  if not Assigned(im.Bits) then Exit;
+  //if (ext <> 'JPG') AND (ext <> 'JPEG') then
+    ConvertImage(im, ifR8G8B8)
 
-    {$ifdef CPU32}
-    Swap(im.Bits, im.Width*im.Height);
-    {$endif}
+  SwapChannels(im, ChannelRed, ChannelBlue);
 
-    cs:= TCompressionStream.Create(TCompressionLevel.clMax, ss);
-    cs.Write(im.Bits^, im.Width*im.Height*3);
-    cs.Free;
+  BeginPDFPage(im.Width, im.Height);
+  FPageInfos[FCurrentPage].imgStream:= TMemoryStream.Create;
+  ss := TMemoryStream.Create;
+  try
+    with Tcompressionstream.create(clmax, ss) do try
+      Write(im.Bits^, im.Width*im.Height*3);
+    finally
+      Free;
+    end;
 
-    FPageInfos[FCurrentPage].imgStream:= TMemoryStream.Create;
     ss.SaveToStream(FPageInfos[FCurrentPage].imgStream);
+    //FPageInfos[FCurrentPage].imgStream.CopyFrom(ss, 0);
 
     FPageInfos[FCurrentPage].cs     := 'DeviceRGB';
     FPageInfos[FCurrentPage].fWidth := im.Width;
@@ -342,64 +333,77 @@ begin
       ' 0 -' + FloatToStr(im.Height) + ' cm /I' +
       IntToStr(FCurrentPage) + ' Do Q');
   finally
-    stream.Free;
     ss.Free;
-    FreeImage(im);
-    EndPDFPage;
   end;
+  EndPDFPage;
+  FreeImage(im);
 end;
 
 procedure   TImg2Pdf.AddDCTImage(const AName: String);
 var
-  cr    : TFPCustomImageReader;
-  stream: TFileStreamUTF8;
-  jw    : TFPWriterJPEG;
-  im    : TFPMemoryImage;
-  ms    : TMemoryStream;
-  imd   : TImageData;
-  ext   : string;
+  cr  : TFPCustomImageReader;
+  fs  : TFileStreamUTF8;
+  jw  : TFPWriterJPEG;
+  im  : TFPMemoryImage;
+  ms  : TMemoryStream;
+  imd : TImageData;
+  ext : string;
 begin
   ext:= StringReplace(UpperCase(ExtractFileExt(AName)), '.', '', [rfReplaceAll]);
   if (ext = '') then
     Error('File without an extension!');
-  try
-    im:= TFPMemoryImage.Create(1, 1);
-    jw:= TFPWriterJPEG.Create;
-    jw.CompressionQuality:= FCompressionQuality;
-    stream:= TFileStreamUTF8.Create(AName, fmOpenRead);
 
-    LoadImageFromStream(stream, imd);
-    ConvertImage(imd, ifR8G8B8);
+  Initialize(imd);
+  fs:= TFileStreamUTF8.Create(AName, fmOpenRead);
+  try
+    LoadImageFromStream(fs, imd);
+  finally
+    fs.Free;
+  end;
+  if not Assigned(imd.Bits) then Exit;
+  ConvertImage(imd, ifR8G8B8);
+
+  im:= TFPMemoryImage.Create(1, 1);
+  try
     ms:= TMemoryStream.Create;
-    SaveImageToStream('jpg', ms, imd);
-    FreeImage(imd);
-    cr:= TFPReaderJPEG.Create;
-    cr.ImageRead(ms, im);
+    try
+      SaveImageToStream('jpg', ms, imd);
+      FreeImage(imd);
+      cr:= TFPReaderJPEG.Create;
+      try
+        cr.ImageRead(ms, im);
+      finally
+        cr.Free;
+      end;
+    finally
+      ms.Free;
+    end;
 
     BeginPDFPage(im.Width, im.Height);
     FPageInfos[FCurrentPage].imgStream:= TMemoryStream.Create;
+    jw:= TFPWriterJPEG.Create;
+    try
+      jw.CompressionQuality:= FCompressionQuality;
+      im.SaveToStream(FPageInfos[FCurrentPage].imgStream, jw);
 
-    im.SaveToStream(FPageInfos[FCurrentPage].imgStream, jw);
+      if (jw.GrayScale) then
+        FPageInfos[FCurrentPage].cs   := 'DeviceGray'
+      else
+        FPageInfos[FCurrentPage].cs   := 'DeviceRGB';
+      FPageInfos[FCurrentPage].fWidth := im.Width;
+      FPageInfos[FCurrentPage].fHeight:= im.Height;
+      FPageInfos[FCurrentPage].bpc    := 8;
+      FPageInfos[FCurrentPage].f      := 'DCTDecode';
 
-    if (jw.GrayScale) then
-      FPageInfos[FCurrentPage].cs   := 'DeviceGray'
-    else
-      FPageInfos[FCurrentPage].cs   := 'DeviceRGB';
-    FPageInfos[FCurrentPage].fWidth := im.Width;
-    FPageInfos[FCurrentPage].fHeight:= im.Height;
-    FPageInfos[FCurrentPage].bpc    := 8;
-    FPageInfos[FCurrentPage].f      := 'DCTDecode';
-
-    PDFWrite('q ' + FloatToStr(im.Width) + ' 0 0 ' + FloatToStr(im.Height) +
-      ' 0 -' + FloatToStr(im.Height) + ' cm /I' +
-      IntToStr(FCurrentPage) + ' Do Q');
-  finally
-    ms.Free;
-    cr.Free;
-    stream.Free;
-    im.Free;
-    jw.Free;
+      PDFWrite('q ' + FloatToStr(im.Width) + ' 0 0 ' + FloatToStr(im.Height) +
+        ' 0 -' + FloatToStr(im.Height) + ' cm /I' +
+        IntToStr(FCurrentPage) + ' Do Q');
+    finally
+      jw.Free;
+    end;
     EndPDFPage;
+  finally
+    im.Free;
   end;
 end;
 
@@ -428,7 +432,7 @@ end;
 
 procedure   TImg2Pdf.SaveToFile(const AFile: String);
 var
-  fstream: TFileStream;
+  fstream: TFileStreamUTF8;
 begin
   if FCurrentPage = 0 then exit;
   EndPDFPage;
@@ -437,7 +441,7 @@ begin
   // save to file
   try
     FBuffer.Position:= 0;
-    fstream:= TFileStream.Create(AFile, fmCreate);
+    fstream:= TFileStreamUTF8.Create(AFile, fmCreate);
     fstream.CopyFrom(FBuffer, FBuffer.Size);
   finally
     fstream.Free;

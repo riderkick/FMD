@@ -11,7 +11,8 @@ unit uPacker;
 interface
 
 uses
-  Classes, FileUtil, Zipper, SysUtils, uBaseUnit, uImg2Pdf, USimpleException;
+  Classes, FileUtil, Zipper, SysUtils, uBaseUnit, uImg2Pdf, USimpleException,
+  USimpleLogger;
 
 type
   TPacker = class
@@ -29,7 +30,7 @@ type
 implementation
 
 uses
-  lazutf8classes, uMisc;
+  lazutf8classes;
 
 procedure TPacker.OnFileFound(FileIterator: TFileIterator);
 begin
@@ -130,7 +131,10 @@ begin
         s := StringReplace(s, '/', '\', [rfReplaceAll]);
         {$ENDIF}
         // add image to PDF
-        pdf.AddImage(s);
+        try
+          pdf.AddImage(s);
+        except
+        end;
       end;
 
       fstream := TFileStreamUTF8.Create(fPath + ext, fmCreate);
