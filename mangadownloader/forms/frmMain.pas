@@ -979,7 +979,7 @@ begin
       {$ELSE}
       RunExternalProcess(fmdDirectory + 'old_updater.exe',
         ['-x', '-r', '3', '-a', FUpdateURL, '-l', Application.ExeName,
-         '--lang', uTranslation.LastSelected]);
+         '--lang', uTranslation.LastSelected], True, True);
       {$ENDIF}
       Self.Close;
     end;
