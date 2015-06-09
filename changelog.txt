@@ -8,6 +8,11 @@ https://www.mediafire.com/folder/3ccy2c7g36hp3/Fmd
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.16.0 (07-06-2015)
+[+] Added Madokami (EN)
+[*] Fix compress to pdf
+[*] Various changes and bug fixes
+
 0.9.15.0 (07-06-2015)
 [+] Added LoneManga(EN)
 [+] Added Dynasty-Scans(EN-SC)
