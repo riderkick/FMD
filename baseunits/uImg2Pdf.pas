@@ -74,6 +74,7 @@ type
     procedure   AddFlateImage(const AName: String);
     procedure   AddDCTImage(const AName: String);
     function    GetImageFormat(imData: TImageData): string;
+    procedure   SetCompressionQuality(Quality: Cardinal);
   public
     constructor Create;
     destructor  Destroy; override;
@@ -82,7 +83,7 @@ type
     procedure   SaveToFile(const AFile: String);
 
     property    Title: String read FTitle write FTitle;
-    property    CompressionQuality: Cardinal read FCompressionQuality write FCompressionQuality;
+    property    CompressionQuality: Cardinal read FCompressionQuality write SetCompressionQuality;
   end;
 
 implementation
@@ -260,7 +261,7 @@ end;
 constructor TImg2Pdf.Create;
 begin
   inherited;
-
+  Imaging.SetOption(ImagingJpegProgressive, 1);
   FTitle      := '';
   FState      := 0;
   FObjCount   := 2;
@@ -349,70 +350,44 @@ end;
 
 procedure   TImg2Pdf.AddDCTImage(const AName: String);
 var
-  cr  : TFPCustomImageReader;
   fs  : TFileStreamUTF8;
-  jw  : TFPWriterJPEG;
-  im  : TFPMemoryImage;
-  ms  : TMemoryStream;
-  imd : TImageData;
+  im  : TImageData;
   ext : string;
 begin
-  ext:= StringReplace(UpperCase(ExtractFileExt(AName)), '.', '', [rfReplaceAll]);
+  ext := StringReplace(UpperCase(ExtractFileExt(AName)), '.', '', [rfReplaceAll]);
   if (ext = '') then
     Error('File without an extension!');
 
-  Initialize(imd);
+  Initialize(im);
   fs:= TFileStreamUTF8.Create(AName, fmOpenRead);
   try
-    LoadImageFromStream(fs, imd);
+    LoadImageFromStream(fs, im);
   finally
     fs.Free;
   end;
-  if not Assigned(imd.Bits) then Exit;
-  ConvertImage(imd, ifR8G8B8);
+  if not Assigned(im.Bits) then Exit;
 
-  im:= TFPMemoryImage.Create(1, 1);
+  BeginPDFPage(im.Width, im.Height);
+  FPageInfos[FCurrentPage].imgStream := TMemoryStream.Create;
   try
-    ms:= TMemoryStream.Create;
-    try
-      SaveImageToStream('jpg', ms, imd);
-      FreeImage(imd);
-      cr:= TFPReaderJPEG.Create;
-      try
-        cr.ImageRead(ms, im);
-      finally
-        cr.Free;
-      end;
-    finally
-      ms.Free;
+    FPageInfos[FCurrentPage].cs     := GetImageFormat(im);
+    FPageInfos[FCurrentPage].fWidth := im.Width;
+    FPageInfos[FCurrentPage].fHeight:= im.Height;
+    FPageInfos[FCurrentPage].bpc    := 8;
+    FPageInfos[FCurrentPage].f      := 'DCTDecode';
+    PDFWrite('q ' + FloatToStr(im.Width) + ' 0 0 ' + FloatToStr(im.Height) +
+      ' 0 -' + FloatToStr(im.Height) + ' cm /I' +
+      IntToStr(FCurrentPage) + ' Do Q');
+
+    SaveImageToStream('jpg', FPageInfos[FCurrentPage].imgStream, im);
+  except
+    on E :Exception do begin
+      WriteLog_E('TImg2Pdf.AddCDTImage.Error, '+E.Message);
+      USimpleException.ExceptionHandleSaveLogOnly(Self, E);
     end;
-
-    BeginPDFPage(im.Width, im.Height);
-    FPageInfos[FCurrentPage].imgStream:= TMemoryStream.Create;
-    jw:= TFPWriterJPEG.Create;
-    try
-      jw.CompressionQuality:= FCompressionQuality;
-      im.SaveToStream(FPageInfos[FCurrentPage].imgStream, jw);
-
-      if (jw.GrayScale) then
-        FPageInfos[FCurrentPage].cs   := 'DeviceGray'
-      else
-        FPageInfos[FCurrentPage].cs   := 'DeviceRGB';
-      FPageInfos[FCurrentPage].fWidth := im.Width;
-      FPageInfos[FCurrentPage].fHeight:= im.Height;
-      FPageInfos[FCurrentPage].bpc    := 8;
-      FPageInfos[FCurrentPage].f      := 'DCTDecode';
-
-      PDFWrite('q ' + FloatToStr(im.Width) + ' 0 0 ' + FloatToStr(im.Height) +
-        ' 0 -' + FloatToStr(im.Height) + ' cm /I' +
-        IntToStr(FCurrentPage) + ' Do Q');
-    finally
-      jw.Free;
-    end;
-    EndPDFPage;
-  finally
-    im.Free;
   end;
+  EndPDFPage;
+  FreeImage(im);
 end;
 
 function TImg2Pdf.GetImageFormat(imData: TImageData): string;
@@ -453,6 +428,12 @@ begin
     else
       Result := 'DeviceCMYK';
   end;
+end;
+
+procedure TImg2Pdf.SetCompressionQuality(Quality: Cardinal);
+begin
+  FCompressionQuality := Quality;
+  Imaging.SetOption(ImagingJpegQuality, FCompressionQuality);
 end;
 
 procedure   TImg2Pdf.AddImage(const AName: String);
