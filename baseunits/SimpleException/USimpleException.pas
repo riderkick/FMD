@@ -83,6 +83,7 @@ type
     property LastReport: String read FLastReport;
     procedure SimpleExceptionHandler(Sender: TObject; E: Exception);
     procedure SimpleExceptionHandlerSaveLogOnly(Sender: TObject; E: Exception);
+    function GetStactTraceInfo: string;
     constructor Create(Filename: string = '');
     destructor Destroy; override;
   end;
@@ -330,71 +331,26 @@ begin
   end;
 end;
 
+
+
 procedure TSimpleException.CreateExceptionReport;
-var
-  i, maxStack: Integer;
-  Report, StackTraceStr: String;
-  cf, pcf, cAddress, cFrame: Pointer;
 begin
   try
-    if ExceptFrameCount > 0 then
-    begin
-      StackTraceStr :=
-        'Exception Address : $' + hexStr(ExceptAddr) + LineEnding;
-      if ExceptFrameCount > FMaxStackCount then
-        maxStack := FMaxStackCount - 1
-      else
-        maxStack := ExceptFrameCount - 1;
-      for i := 0 to maxStack do
-        StackTraceStr := StackTraceStr + '  ' + SimpleBackTraceStr(ExceptFrames[i]) +
-          LineEnding;
-    end
-    else
-    begin
-      //cf := get_caller_frame(get_frame);
-      cf := get_caller_frame(get_caller_frame(get_frame));
-      if cf <> nil then
-      begin
-        StackTraceStr :=
-          'Caller Address    : ' + '$' + hexStr(cf) + LineEnding;
-        try
-          i := 0;
-          pcf := cf - 1;
-          while cf > pcf do
-          begin
-            cAddress := get_caller_addr(cf);
-            cFrame := get_caller_frame(cf);
-            if cAddress = nil then
-              Break;
-            Inc(i);
-            if i > FMaxStackCount then
-              Break;
-            StackTraceStr := StackTraceStr + '  ' + SimpleBackTraceStr(cAddress) +
-              LineEnding;
-            pcf := cf;
-            cf := cFrame;
-          end;
-        finally
-        end;
-      end;
-    end;
-    StackTraceStr := TrimRight(StackTraceStr) + LineEnding;
-
-    Report := ExceptionHeaderMessage;
+    FLastReport := ExceptionHeaderMessage;
     if Assigned(FLastSender) then
-      Report := Report +
+      FLastReport := FLastReport +
         'Sender Class      : ' + FLastSender.ClassName + LineEnding;
     if Assigned(FLastException) then
     begin
-      Report := Report +
+      FLastReport := FLastReport +
         'Exception Class   : ' + FLastException.ClassName + LineEnding +
         'Message           : ' + FLastException.Message + LineEnding;
     end;
-    FLastReport := Report + StackTraceStr;
+    FLastReport := FLastReport + GetStactTraceInfo;
   except
     on E: Exception do
     begin
-      FLastReport := 'Failed to create exception report!' + LineEnding +
+      FLastReport := 'Failed to create exception FLastReport!' + LineEnding +
         FLastReport + LineEnding;
       if Assigned(LastSender) then
         FLastReport := FLastReport + 'Sender Class: ' + LastSender.ClassName + LineEnding;
@@ -471,6 +427,59 @@ begin
   finally
     LeaveCriticalsection(FSimpleCriticalSection);
   end;
+end;
+
+function TSimpleException.GetStactTraceInfo: string;
+var
+  i, maxStack: Integer;
+  cf, pcf, cAddress, cFrame: Pointer;
+begin
+  try
+    if ExceptFrameCount > 0 then
+    begin
+      Result :=
+        'Exception Address : $' + hexStr(ExceptAddr) + LineEnding;
+      if ExceptFrameCount > FMaxStackCount then
+        maxStack := FMaxStackCount - 1
+      else
+        maxStack := ExceptFrameCount - 1;
+      for i := 0 to maxStack do
+        Result := Result + '  ' + SimpleBackTraceStr(ExceptFrames[i]) +
+          LineEnding;
+    end
+    else
+    begin
+      //cf := get_caller_frame(get_frame);
+      cf := get_caller_frame(get_caller_frame(get_frame));
+      if cf <> nil then
+      begin
+        Result :=
+          'Caller Address    : ' + '$' + hexStr(cf) + LineEnding;
+        try
+          i := 0;
+          pcf := cf - 1;
+          while cf > pcf do
+          begin
+            cAddress := get_caller_addr(cf);
+            cFrame := get_caller_frame(cf);
+            if cAddress = nil then
+              Break;
+            Inc(i);
+            if i > FMaxStackCount then
+              Break;
+            Result := Result + '  ' + SimpleBackTraceStr(cAddress) +
+              LineEnding;
+            pcf := cf;
+            cf := cFrame;
+          end;
+        finally
+        end;
+      end;
+    end;
+  except
+    Result := 'Can''t get stack trace information!';
+  end;
+  Result := TrimRight(Result) + LineEnding;
 end;
 
 Procedure CatchUnhandledExcept(Obj : TObject; Addr: CodePointer; FrameCount: Longint; Frames: PCodePointer);
