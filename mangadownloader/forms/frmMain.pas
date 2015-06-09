@@ -4415,7 +4415,7 @@ begin
     options.ReadBool('saveto', 'GenMangaName', True);
   cbOptionAutoNumberChapter.Checked :=
     options.ReadBool('saveto', 'AutoNumberChapter', True);
-  seOptionPDFQuality.Value := options.ReadInteger('saveto', 'PDFQuality', 95);
+  seOptionPDFQuality.Value := options.ReadInteger('saveto', 'PDFQuality', 100);
   OptionPDFQuality := seOptionPDFQuality.Value;
   edOptionCustomRename.Text :=
     options.ReadString('saveto', 'CustomRename', DEFAULT_CUSTOM_RENAME);
@@ -4435,7 +4435,7 @@ begin
   cbOptionAutoCheckUpdate.Checked :=
     options.ReadBool('update', 'AutoCheckUpdateAtStartup', True);
   cbOptionAutoRemoveCompletedManga.Checked :=
-    options.ReadBool('update', 'AutoRemoveCompletedManga', True);
+    options.ReadBool('update', 'AutoRemoveCompletedManga', False);
   OptionAutoRemoveCompletedManga := cbOptionAutoRemoveCompletedManga.Checked;
   cbOptionAutoCheckFavStartup.Checked :=
     options.ReadBool('update', 'AutoCheckFavStartup', True);
