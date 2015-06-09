@@ -49,7 +49,9 @@ type
     cs, f          : String;
   end;
 
-  TImg2Pdf = class
+  { TImg2Pdf }
+
+  TImg2Pdf = class(TObject)
   private
     FBuffer     : TMemoryStream;
     FState      : Integer;
@@ -71,6 +73,7 @@ type
     procedure   Error(AMsg: String);
     procedure   AddFlateImage(const AName: String);
     procedure   AddDCTImage(const AName: String);
+    function    GetImageFormat(imData: TImageData): string;
   public
     constructor Create;
     destructor  Destroy; override;
@@ -106,7 +109,7 @@ procedure   TImg2Pdf.EndPDF;
 var
   vni, vo,
   vnbpal,
-  i   : Cardinal;
+  i   : Integer;
   vkids,
   data: String;
 begin
@@ -118,7 +121,7 @@ begin
     PDFWrite('/Parent 1 0 R');
     PDFWrite('/MediaBox [0 0 ' + FloatToStr(FPageInfos[i].fWidth) + ' ' + FloatToStr(FPageInfos[i].fHeight) + ']');
     PDFWrite('/Resources 2 0 R');
-    PDFWrite('/Contents ' + IntToStr(FObjCount + 1) + ' 0 R>>');
+    PDFWrite('/Contents ' + IntToStr(QWord(FObjCount) + 1) + ' 0 R>>');
     PDFWrite('endobj');
 
     data:= FPages[i];
@@ -195,12 +198,12 @@ begin
 
   vo:= FBuffer.Size;
   PDFWrite('xref');
-  PDFWrite('0 ' + IntToStr(FObjCount + 1));
+  PDFWrite('0 ' + IntToStr(QWord(FObjCount) + 1));
   PDFWrite('0000000000 65535 f ');
   for i:= 1 to FObjCount do
     PDFWrite(Format('%.10d 00000 n ', [FOffsets[i]], TPDFFormatSetings));
   PDFWrite('trailer');
-  PDFWrite('<</Size ' + IntToStr(FObjCount + 1));
+  PDFWrite('<</Size ' + IntToStr(QWord(FObjCount) + 1));
   PDFWrite('/Root ' + IntToStr(FObjCount) + ' 0 R');
   PDFWrite('/Info ' + IntToStr(FObjCount - 1) + ' 0 R>>');
   PDFWrite('startxref');
@@ -288,10 +291,8 @@ end;
 procedure   TImg2Pdf.AddFlateImage(const AName: String);
 var
   fs  : TFileStreamUTF8;
-  ss  : TMemoryStream;
   ext : String;
   im  : TImageData;
-
 begin
   ext:= StringReplace(UpperCase(ExtractFileExt(AName)), '.', '', [rfReplaceAll]);
   if (ext = '') then
@@ -301,41 +302,48 @@ begin
   fs := TFileStreamUTF8.Create(AName, fmOpenRead);
   try
     LoadImageFromStream(fs, im);
-  finally
-    fs.Free;
-  end;
-  if not Assigned(im.Bits) then Exit;
-  //if (ext <> 'JPG') AND (ext <> 'JPEG') then
-    ConvertImage(im, ifR8G8B8)
+    if not Assigned(im.Bits) then Exit;
 
-  SwapChannels(im, ChannelRed, ChannelBlue);
+    BeginPDFPage(im.Width, im.Height);
+    FPageInfos[FCurrentPage].imgStream:= TMemoryStream.Create;
+    try
+      FPageInfos[FCurrentPage].cs     := GetImageFormat(im);
+      FPageInfos[FCurrentPage].fWidth := im.Width;
+      FPageInfos[FCurrentPage].fHeight:= im.Height;
+      FPageInfos[FCurrentPage].bpc    := 8;
+      PDFWrite('q ' + FloatToStr(im.Width) + ' 0 0 ' + FloatToStr(im.Height) +
+        ' 0 -' + FloatToStr(im.Height) + ' cm /I' +
+        IntToStr(FCurrentPage) + ' Do Q');
 
-  BeginPDFPage(im.Width, im.Height);
-  FPageInfos[FCurrentPage].imgStream:= TMemoryStream.Create;
-  ss := TMemoryStream.Create;
-  try
-    with Tcompressionstream.create(clmax, ss) do try
-      Write(im.Bits^, im.Width*im.Height*3);
+      if (ext = 'JPG') or (ext = 'JPEG') then
+      begin
+        FPageInfos[FCurrentPage].f := 'DCTDecode';
+        FPageInfos[FCurrentPage].imgStream.CopyFrom(fs, 0);
+      end
+      else
+      begin
+        FPageInfos[FCurrentPage].f := 'FlateDecode';
+        if GetImageFormat(im) = 'DeviceRGB' then try
+          SwapChannels(im, ChannelRed, ChannelBlue);
+        except
+        end;
+        FPageInfos[FCurrentPage].imgStream.Position := 0;
+        with Tcompressionstream.create(clmax, FPageInfos[FCurrentPage].imgStream) do try
+          write(im.Bits^, im.Size);
+        finally
+          Free;
+        end;
+      end;
     finally
-      Free;
+      EndPDFPage;
     end;
-
-    ss.SaveToStream(FPageInfos[FCurrentPage].imgStream);
-    //FPageInfos[FCurrentPage].imgStream.CopyFrom(ss, 0);
-
-    FPageInfos[FCurrentPage].cs     := 'DeviceRGB';
-    FPageInfos[FCurrentPage].fWidth := im.Width;
-    FPageInfos[FCurrentPage].fHeight:= im.Height;
-    FPageInfos[FCurrentPage].bpc    := 8;
-    FPageInfos[FCurrentPage].f      := 'FlateDecode';
-
-    PDFWrite('q ' + FloatToStr(im.Width) + ' 0 0 ' + FloatToStr(im.Height) +
-      ' 0 -' + FloatToStr(im.Height) + ' cm /I' +
-      IntToStr(FCurrentPage) + ' Do Q');
-  finally
-    ss.Free;
+  except
+    on E :Exception do begin
+      WriteLog_E('TImg2Pdf.AddFlateImage.Error, '+E.Message);
+      USimpleException.ExceptionHandleSaveLogOnly(Self, E);
+    end;
   end;
-  EndPDFPage;
+  fs.Free;
   FreeImage(im);
 end;
 
@@ -404,6 +412,46 @@ begin
     EndPDFPage;
   finally
     im.Free;
+  end;
+end;
+
+function TImg2Pdf.GetImageFormat(imData: TImageData): string;
+begin
+  case imData.Format of
+    ifGray8,
+    ifA8Gray8,
+    ifGray16,
+    ifGray32,
+    ifGray64,
+    ifA16Gray16: Result := 'DeviceGray';
+
+    ifUnknown,
+    ifDefault,
+    ifIndex8,
+    ifX5R1G1B1,
+    ifR3G3B2,
+    ifR5G6B5,
+    ifA1R5G5B5,
+    ifA4R4G4B4,
+    ifX1R5G5B5,
+    ifX4R4G4B4,
+    ifR8G8B8,
+    ifA8R8G8B8,
+    ifX8R8G8B8,
+    ifR16G16B16,
+    ifA16R16G16B16,
+    ifB16G16R16,
+    ifA16B16G16R16,
+    ifR32F,
+    ifA32R32G32B32F,
+    ifA32B32G32R32F,
+    ifR16F,
+    ifA16R16G16B16F,
+    ifA16B16G16R16F,
+    ifR32G32B32F,
+    ifB32G32R32F: Result := 'DeviceRGB';
+    else
+      Result := 'DeviceCMYK';
   end;
 end;
 
