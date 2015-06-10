@@ -658,6 +658,7 @@ resourcestring
   RS_DlgCannotConnectToServer = 'Cannot connect to the server.';
   RS_LblOptionExternalParamsHint = '%s : Path to the manga'#13#10+
                                    '%s : Chapter filename'#13#10+
+                                   #13#10+
                                    'Example : %s%s';
   RS_LblAutoCheckNewChapterMinute = 'Auto check for new chapter every %d minutes';
   RS_BtnOK = '&OK';
@@ -4810,8 +4811,6 @@ var
 begin
   if uTranslation.LastSelected <> AvailableLanguages.Names[cbLanguages.ItemIndex] then
   begin
-    lbOptionExternalParams.Hint := Format(RS_LblOptionExternalParamsHint,
-      [EXPARAM_PATH, EXPARAM_CHAPTER, EXPARAM_PATH, EXPARAM_CHAPTER]);
     idxLanguages := cbLanguages.ItemIndex;
     idxFilterStatus := cbFilterStatus.ItemIndex;
     idxOptionLetFMDDo := cbOptionLetFMDDo.ItemIndex;
@@ -4819,6 +4818,9 @@ begin
     idxDropTargetMode := rgDropTargetMode.ItemIndex;
     if uTranslation.SetLangByIndex(cbLanguages.ItemIndex) then
     begin
+      lbOptionExternalParamsHint.Hint := Format(RS_LblOptionExternalParamsHint,
+        [EXPARAM_PATH, EXPARAM_CHAPTER, EXPARAM_PATH, EXPARAM_CHAPTER]);
+
       cbFilterStatus.Items.Text := RS_FilterStatusItems;
       cbOptionLetFMDDo.Items.Text := RS_OptionFMDDoItems;
       rgDropTargetMode.Items.Text := RS_DropTargetModeItems;
@@ -4828,6 +4830,7 @@ begin
       cbOptionLetFMDDo.ItemIndex := idxOptionLetFMDDo;
       cbOptionProxyType.ItemIndex := idxOptionProxyType;
       rgDropTargetMode.ItemIndex := idxDropTargetMode;
+      Self.Repaint;
     end;
   end;
 end;

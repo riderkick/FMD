@@ -169,11 +169,13 @@ msgstr "Otomatis periksa bab baru setiap %d menit"
 msgid ""
 "%s : Path to the manga\n"
 "%s : Chapter filename\n"
+"\n"
 "Example : %s%s\n"
 msgstr ""
 "%s : Lokasi komik tersimpan \n"
 "%s : Nama berkas komik\n"
-"Contoh: %s%s\n"
+"\n"
+"Contoh : %s%s\n"
 
 #: frmmain.rs_loading
 msgid "Loading ..."
@@ -287,7 +289,7 @@ msgstr "Periksa versi baru"
 #: tmainform.btdownload.caption
 msgctxt "tmainform.btdownload.caption"
 msgid "Download"
-msgstr "Unduh"
+msgstr "Unduh semua"
 
 #: tmainform.btfavoriteschecknewchapter.caption
 msgctxt "tmainform.btfavoriteschecknewchapter.caption"

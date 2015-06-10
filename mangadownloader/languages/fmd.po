@@ -149,6 +149,7 @@ msgstr ""
 msgid ""
 "%s : Path to the manga\n"
 "%s : Chapter filename\n"
+"\n"
 "Example : %s%s\n"
 msgstr ""
 

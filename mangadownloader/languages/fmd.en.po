@@ -166,17 +166,15 @@ msgid "Auto check for new chapter every %d minutes"
 msgstr "Auto check for new chapter every %d minutes"
 
 #: frmmain.rs_lbloptionexternalparamshint
-#| msgid ""
-#| "%s : Path to the manga\n"
-#| "%s : First downloaded/first chapter in the directory\n"
-#| "Example : %s%s\n"
 msgid ""
 "%s : Path to the manga\n"
 "%s : Chapter filename\n"
+"\n"
 "Example : %s%s\n"
 msgstr ""
 "%s : Path to the manga\n"
 "%s : Chapter filename\n"
+"\n"
 "Example : %s%s\n"
 
 #: frmmain.rs_loading
