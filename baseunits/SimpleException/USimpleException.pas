@@ -56,7 +56,6 @@ type
     FAppInfo_productversion: String;
     FAppVerInfo: TStringList;
     FOSversion: string;
-    FHasDebugLine: Boolean;
     FLastSender: TObject;
     FLastException: Exception;
     FLastReport: String;
@@ -67,7 +66,6 @@ type
     function OSVer: String;
     procedure SetMaxStackCount(AMaxStackCount: Integer);
   protected
-    function SimpleBackTraceStr(Addr: Pointer): String;
     function ExceptionHeaderMessage: string;
     procedure CreateExceptionReport;
     procedure SaveLogToFile(LogMsg: string);
@@ -83,7 +81,6 @@ type
     property LastReport: String read FLastReport;
     procedure SimpleExceptionHandler(Sender: TObject; E: Exception);
     procedure SimpleExceptionHandlerSaveLogOnly(Sender: TObject; E: Exception);
-    function GetStackTraceInfo: string;
     constructor Create(Filename: string = '');
     destructor Destroy; override;
   end;
@@ -94,7 +91,6 @@ procedure SetMaxStackCount(const ACount: Integer);
 procedure ClearIgnoredException;
 procedure ExceptionHandle(Sender: TObject; E: Exception);
 procedure ExceptionHandleSaveLogOnly(Sender: TObject; E: Exception);
-function GetStackTraceInfo: string;
 procedure InitSimpleExceptionHandler(const LogFilename: String = '');
 procedure DoneSimpleExceptionHandler;
 
@@ -159,13 +155,6 @@ begin
   if not Assigned(SimpleException) then
     InitSimpleExceptionHandler;
   SimpleException.SimpleExceptionHandlerSaveLogOnly(Sender, E);
-end;
-
-function GetStackTraceInfo: string;
-begin
-  Result := '';
-  if SimpleException <> nil then
-    Result := SimpleException.GetStackTraceInfo;
 end;
 
 procedure InitSimpleExceptionHandler(const LogFilename : String);
@@ -282,36 +271,6 @@ begin
   end;
 end;
 
-function TSimpleException.SimpleBackTraceStr(Addr: Pointer): String;
-var
-  func, Source: ShortString;
-  hs: String[32];
-  line: longint;
-begin
-  Result := '$' + hexStr(Addr);
-  if FHasDebugLine then
-  begin
-    try
-      GetLineInfo(PtrUInt(Addr), func, Source, line);
-      if func <> '' then
-        Result := Result + ' ' + func;
-      if Source <> '' then
-      begin
-        if func <> '' then
-          Result := Result + ',';
-        if line <> 0 then
-        begin
-          str(line, hs);
-          Result := Result + ' line ' + hs;
-        end;
-        Result := Result + ' of ' + Source;
-      end;
-    except
-      Result := Result + ' ??';
-    end;
-  end;
-end;
-
 function TSimpleException.ExceptionHeaderMessage: string;
 begin
   try
@@ -354,7 +313,7 @@ begin
         'Exception Class   : ' + FLastException.ClassName + LineEnding +
         'Message           : ' + FLastException.Message + LineEnding;
     end;
-    FLastReport := FLastReport + GetStackTraceInfo;
+    FLastReport := FLastReport + GetStackTraceInfo + LineEnding;
   except
     on E: Exception do
     begin
@@ -437,59 +396,6 @@ begin
   end;
 end;
 
-function TSimpleException.GetStackTraceInfo: string;
-var
-  i, maxStack: Integer;
-  cf, pcf, cAddress, cFrame: Pointer;
-begin
-  try
-    if ExceptFrameCount > 0 then
-    begin
-      Result :=
-        'Exception Address : $' + hexStr(ExceptAddr) + LineEnding;
-      if ExceptFrameCount > FMaxStackCount then
-        maxStack := FMaxStackCount - 1
-      else
-        maxStack := ExceptFrameCount - 1;
-      for i := 0 to maxStack do
-        Result := Result + '  ' + SimpleBackTraceStr(ExceptFrames[i]) +
-          LineEnding;
-    end
-    else
-    begin
-      //cf := get_caller_frame(get_frame);
-      cf := get_caller_frame(get_caller_frame(get_frame));
-      if cf <> nil then
-      begin
-        Result :=
-          'Caller Address    : ' + '$' + hexStr(cf) + LineEnding;
-        try
-          i := 0;
-          pcf := cf - 1;
-          while cf > pcf do
-          begin
-            cAddress := get_caller_addr(cf);
-            cFrame := get_caller_frame(cf);
-            if cAddress = nil then
-              Break;
-            Inc(i);
-            if i > FMaxStackCount then
-              Break;
-            Result := Result + '  ' + SimpleBackTraceStr(cAddress) +
-              LineEnding;
-            pcf := cf;
-            cf := cFrame;
-          end;
-        finally
-        end;
-      end;
-    end;
-  except
-    Result := 'Can''t get stack trace information!';
-  end;
-  Result := TrimRight(Result) + LineEnding;
-end;
-
 Procedure CatchUnhandledExcept(Obj : TObject; Addr: CodePointer; FrameCount: Longint; Frames: PCodePointer);
 begin
   if Assigned(SimpleException) then
@@ -502,7 +408,6 @@ var
 begin
   inherited Create;
   InitCriticalSection(FSimpleCriticalSection);
-  FHasDebugLine := OpenSymbolFile(ParamStrUTF8(0));
   if Trim(Filename) <> '' then
     LogFilename := Filename
   else
@@ -566,7 +471,6 @@ begin
   end;
   IgnoredExceptionList.Free;
   FAppVerInfo.Free;
-  CloseSymbolFile;
   DoneCriticalsection(FSimpleCriticalSection);
   inherited Destroy;
 end;

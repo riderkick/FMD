@@ -25,7 +25,7 @@ unit USimpleLogger;
 interface
 
 uses
-  Classes, SysUtils;
+  Classes, SysUtils, DbgInfoReader, FileUtil;
 
 type
   TLogType = (ERROR, WARNING, INFO, DEBUG, VERBOSE);
@@ -35,6 +35,7 @@ var
   _LOG_ACTIVE: Boolean = False;
   _LOG_LEVEL: Integer = 2;
   _FLOGFILE: String;
+  _HAS_DEBUG_LINE: Boolean;
 
 const
   _LOG_SYMBOL = 'EWIDV';
@@ -45,6 +46,8 @@ const
   procedure Writelog_I(const msg: String);
   procedure Writelog_D(const msg: String);
   procedure Writelog_V(const msg: String);
+  function SimpleBackTraceStr(const Addr: Pointer): String;
+  function GetStackTraceInfo(const MaxStackCount: Integer = 20): string;
 
 implementation
 
@@ -132,18 +135,103 @@ begin
   WriteLog(msg, VERBOSE);
 end;
 
+function SimpleBackTraceStr(const Addr: Pointer): String;
+var
+  func, Source: ShortString;
+  hs: String[32];
+  line: longint;
+begin
+  Result := '$' + hexStr(Addr);
+  if _HAS_DEBUG_LINE then
+  begin
+    try
+      GetLineInfo(PtrUInt(Addr), func, Source, line);
+      if func <> '' then
+        Result := Result + ' ' + func;
+      if Source <> '' then
+      begin
+        if func <> '' then
+          Result := Result + ',';
+        if line <> 0 then
+        begin
+          str(line, hs);
+          Result := Result + ' line ' + hs;
+        end;
+        Result := Result + ' of ' + Source;
+      end;
+    except
+      Result := Result + ' ??';
+    end;
+  end;
+end;
+
+function GetStackTraceInfo(const MaxStackCount: Integer): string;
+var
+  i, maxStack: Integer;
+  cf, pcf, cAddress, cFrame: Pointer;
+begin
+  try
+    if ExceptFrameCount > 0 then
+    begin
+      Result :=
+        'Exception Address : $' + hexStr(ExceptAddr) + LineEnding;
+      if ExceptFrameCount > MaxStackCount then
+        maxStack := MaxStackCount - 1
+      else
+        maxStack := ExceptFrameCount - 1;
+      for i := 0 to maxStack do
+        Result := Result + '  ' + SimpleBackTraceStr(ExceptFrames[i]) +
+          LineEnding;
+    end
+    else
+    begin
+      //cf := get_caller_frame(get_frame);
+      cf := get_caller_frame(get_caller_frame(get_frame));
+      if cf <> nil then
+      begin
+        Result :=
+          'Caller Address    : ' + '$' + hexStr(cf) + LineEnding;
+        try
+          i := 0;
+          pcf := cf - 1;
+          while cf > pcf do
+          begin
+            cAddress := get_caller_addr(cf);
+            cFrame := get_caller_frame(cf);
+            if cAddress = nil then
+              Break;
+            Inc(i);
+            if i > MaxStackCount then
+              Break;
+            Result := Result + '  ' + SimpleBackTraceStr(cAddress) +
+              LineEnding;
+            pcf := cf;
+            cf := cFrame;
+          end;
+        finally
+        end;
+      end;
+    end;
+  except
+    Result := 'Can''t get stack trace information!';
+  end;
+  Result := TrimRight(Result);
+end;
+
 procedure doInitialization;
 var
   i: Integer;
 begin
+  InitCriticalSection(_CS_LOG);
+  _HAS_DEBUG_LINE := OpenSymbolFile(ParamStrUTF8(0));
   {$IFDEF LOGACTIVE}
   _LOG_ACTIVE := True;
   _LOG_LEVEL := SizeOf(TLogType);
   {$ENDIF}
-  _FLOGFILE := ChangeFileExt(ExtractFileName(ParamStr(0)), '_LOG.txt');
+  _FLOGFILE := ChangeFileExt(ExtractFileName(ParamStrUTF8(0)), '_LOG.txt');
   for i := 1 to Paramcount do
   begin
-    if UpperCase(ParamStr(i)) = '-LOGACTIVE' then
+    if UpperCase(ParamStrUTF8(i)) = '-LOGACTIVE' then
     begin
       _LOG_ACTIVE := True;
       if i < Paramcount then
@@ -157,12 +245,17 @@ begin
   end;
 end;
 
+procedure doFinalization;
+begin
+  CloseSymbolFile;
+  DoneCriticalsection(_CS_LOG);
+end;
+
 initialization
-  InitCriticalSection(_CS_LOG);
   doInitialization;
 
 finalization
-  DoneCriticalsection(_CS_LOG);
+  doFinalization;
 
 end.
 
