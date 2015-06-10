@@ -953,8 +953,10 @@ function RunExternalProcessAsAdmin(Exe, Params: String; ShowWind: Boolean = True
   isPersistent: Boolean = True): Boolean;
 function RunExternalProcess(Exe: String; Params: array of string; ShowWind: Boolean = True;
   isPersistent: Boolean = True): Boolean; overload;
-function RunExternalProcess(CommandLine: String; ShowWind: Boolean =
-  True; isPersistent: Boolean = True): Boolean; overload;
+function RunExternalProcess(Exe, Params: String; ShowWind: Boolean =  True;
+  isPersistent: Boolean = True): Boolean; overload;
+function RunExternalProcess(CommandLine: String; ShowWind: Boolean =  True;
+  isPersistent: Boolean = True): Boolean; overload;
 
 implementation
 
@@ -3603,6 +3605,13 @@ begin
     end;
   end;
   Process.Free;
+end;
+
+function RunExternalProcess(Exe, Params: String; ShowWind: Boolean;
+  isPersistent: Boolean): Boolean;
+begin
+  if Exe = '' then Exit;
+  Result := RunExternalProcess(Exe, ParsedCommandLine(Params), ShowWind, isPersistent);
 end;
 
 function RunExternalProcess(CommandLine: String; ShowWind: Boolean;
