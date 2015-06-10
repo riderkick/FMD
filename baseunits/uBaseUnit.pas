@@ -15,7 +15,7 @@ interface
 uses
   SysUtils, Classes, Graphics, Forms, UTF8Process, strutils, fileinfo, process,
   fpjson, jsonparser, FastHTMLParser, fgl, uFMDThread, synautil, httpsend,
-  blcksock, ssl_openssl, GZIPUtils, USimpleException;
+  blcksock, ssl_openssl, GZIPUtils, USimpleException, USimpleLogger;
 
 const
   FMD_REVISION = '$WCREV$';
@@ -944,11 +944,11 @@ function fmdGetTempPath: String;
 function fmdGetTickCount: Cardinal;
 procedure fmdPowerOff;
 procedure fmdHibernate;
-function fmdRunAsAdmin(path, params: String; isPersistent: Boolean): Boolean;
+function RunExternalProcessAsAdmin(path, params: String; isPersistent: Boolean): Boolean;
 function RunExternalProcess(Exe: String; Params: array of string; ShowWind: Boolean = True;
-  Detached: Boolean = False): Boolean; overload;
+  isPersisten: Boolean = True): Boolean; overload;
 function RunExternalProcess(CommandLine: String; ShowWind: Boolean =
-  True; Detached: Boolean = False): Boolean; overload;
+  True; isPersisten: Boolean = True): Boolean; overload;
 
 implementation
 
@@ -3471,7 +3471,7 @@ begin
   {$ENDIF}
 end;
 
-function fmdRunAsAdmin(path, params: String; isPersistent: Boolean): Boolean;
+function RunExternalProcessAsAdmin(path, params: String; isPersistent: Boolean): Boolean;
 var
  {$IFDEF WINDOWS}
   sei: TShellExecuteInfoA;
@@ -3479,7 +3479,9 @@ var
   Process: TProcessUTF8;
  {$ENDIF}
 begin
+  Writelog_W('RunExternalProcessAsAdmin, '+path+' '+params);
   {$IFDEF WINDOWS}
+  Initialize(sei);
   FillChar(sei, SizeOf(sei), 0);
   sei.cbSize := SizeOf(sei);
   sei.Wnd := 0;
@@ -3487,36 +3489,40 @@ begin
   if isPersistent then
     sei.fMask := sei.fMask or SEE_MASK_NOCLOSEPROCESS;
   sei.lpVerb := 'runas';
-  sei.lpFile := PAnsiChar(path);
-  sei.lpParameters := PAnsiChar(params);
+  sei.lpFile := PChar(path);
+  sei.lpParameters := PChar(params);
   sei.nShow := SW_SHOWNORMAL;
   Result := ShellExecuteExA(@sei);
   if isPersistent then
     WaitForSingleObject(sei.hProcess, INFINITE);
   {$ELSE}
   Process := TProcessUTF8.Create(nil);
-  Process.CommandLine := path + ' ' + params;
-  Process.Execute;
-  Process.Free;
+  try
+    Process.CommandLine := path + ' ' + params;
+    Process.Execute;
+  finally
+    Process.Free;
+  end;
   {$ENDIF}
 end;
 
-function RunExternalProcess(Exe: String; Params: array of string; ShowWind: Boolean = True;
-  Detached: Boolean = False): Boolean; overload;
+function RunExternalProcess(Exe: String; Params: array of string;
+  ShowWind: Boolean; isPersisten: Boolean): Boolean;
 var
   Process: TProcessUTF8;
   I: Integer;
+  s: String;
 begin
   Result := True;
   Process := TProcessUTF8.Create(nil);
   try
-    Process.InheritHandles := False;
+    Process.InheritHandles := True;
     Process.Executable := Exe;
     Process.Parameters.AddStrings(Params);
-    if Detached then
-      Process.Options := []
+    if isPersisten then
+      Process.Options := Process.Options + [poWaitOnExit]
     else
-      Process.Options := Process.Options + [poWaitOnExit];
+      Process.Options := [];
     if ShowWind then
       Process.ShowWindow := swoShow
     else
@@ -3526,13 +3532,32 @@ begin
       Process.Environment.Add(GetEnvironmentString(I));
     Process.Execute;
   except
-    Result := False;
+    on E: Exception do
+    begin
+      WriteLog_E('RunExternalProcess.Error '+Exe);
+      ExceptionHandleSaveLogOnly(nil, E);
+      {$ifdef windows}
+      if Pos('740', E.Message) <> 0 then
+      begin
+        s := '';
+        if Process.Parameters.Count > 0 then
+          for i:=0 to Process.Parameters.Count-1 do
+          begin
+            if Pos(' ', Process.Parameters[i]) <> 0 then
+              s := s + '"' + Process.Parameters[i] + '" '
+            else
+              s := s + Process.Parameters[i] + ' ';
+          end;
+        Result := RunExternalProcessAsAdmin(Exe, Trim(s), isPersisten);
+      end;
+      {$endif}
+    end;
   end;
   Process.Free;
 end;
 
-function RunExternalProcess(CommandLine: String; ShowWind: Boolean =
-  True; Detached: Boolean = False): Boolean; overload;
+function RunExternalProcess(CommandLine: String; ShowWind: Boolean;
+  isPersisten: Boolean): Boolean;
 var
  s: string;
  sa: TArrayOfString;
@@ -3542,7 +3567,7 @@ begin
     sa := ParsedCommandLine(CommandLine);
     s := sa[Low(sa)];
     DeleteArrayOfString(sa, Low(sa));
-    Result := RunExternalProcess(s, sa, ShowWind, Detached);
+    Result := RunExternalProcess(s, sa, ShowWind, isPersisten);
   finally
     SetLength(sa, 0);
   end;

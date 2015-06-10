@@ -979,7 +979,7 @@ begin
       {$ELSE}
       RunExternalProcess(fmdDirectory + 'old_updater.exe',
         ['-x', '-r', '3', '-a', FUpdateURL, '-l', Application.ExeName,
-         '--lang', uTranslation.LastSelected], True, True);
+         '--lang', uTranslation.LastSelected], True, False);
       {$ENDIF}
       Self.Close;
     end;
@@ -2591,7 +2591,7 @@ begin
     begin
       s := StringReplace(s, '%PATH%', fd, [rfReplaceAll]);
       s := StringReplace(s, '%FCHAPTER%', f, [rfReplaceAll]);
-      RunExternalProcess(s, True, True);
+      RunExternalProcess(s, True, False);
     end
     else
       OpenDocument(fd + f);
@@ -2649,7 +2649,7 @@ begin
     begin
       s := StringReplace(s, '%PATH%', fd, [rfReplaceAll]);
       s := StringReplace(s, '%FCHAPTER%', f, [rfReplaceAll]);
-      RunExternalProcess(s, True, True);
+      RunExternalProcess(s, True, False);
     end
     else
       OpenDocument(fd + f);
