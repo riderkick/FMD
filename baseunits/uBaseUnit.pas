@@ -840,6 +840,8 @@ procedure ParseCommandLine(const cmd: string; var Output: TStrings;
   AStripQuotes: Boolean = False);
 function ParsedCommandLine(const cmd: String): TArrayOfString;
 function StringsToArray(const S: TStrings): TArrayOfString;
+function StringsToCommandLine(const S: TStrings): string; overload;
+function StringsToCommandLine(const S: array of string): string; overload;
 procedure DeleteArrayOfString(Var TheStrings: TArrayOfString;Index: Integer);
 function RandomString(SLength: Integer; ONumber: Boolean = False;
   OSymbol: Boolean = False; OSpace: Boolean = False): string;
@@ -944,11 +946,12 @@ function fmdGetTempPath: String;
 function fmdGetTickCount: Cardinal;
 procedure fmdPowerOff;
 procedure fmdHibernate;
-function RunExternalProcessAsAdmin(path, params: String; isPersistent: Boolean): Boolean;
+function RunExternalProcessAsAdmin(Exe, Params: String; ShowWind: Boolean = True;
+  isPersistent: Boolean = True): Boolean;
 function RunExternalProcess(Exe: String; Params: array of string; ShowWind: Boolean = True;
-  isPersisten: Boolean = True): Boolean; overload;
+  isPersistent: Boolean = True): Boolean; overload;
 function RunExternalProcess(CommandLine: String; ShowWind: Boolean =
-  True; isPersisten: Boolean = True): Boolean; overload;
+  True; isPersistent: Boolean = True): Boolean; overload;
 
 implementation
 
@@ -1571,6 +1574,42 @@ begin
   SetLength(Result, S.Count);
   for i := 0 to S.Count - 1 do
     Result[i] := S[i];
+end;
+
+function StringsToCommandLine(const S: TStrings): string;
+var
+  i: Integer;
+begin
+  Result := '';
+  if S.Count>0 then
+  begin
+    for i := 0 to S.Count-1 do
+    begin
+      if Pos(' ', S[i]) <> 0 then
+        Result := Result + '"' + S[i] + '" '
+      else
+        Result := Result + S[i] + ' ';
+    end;
+    Result := Trim(Result);
+  end;
+end;
+
+function StringsToCommandLine(const S: array of string): string;
+var
+  i: Integer;
+begin
+  Result := '';
+  if Length(S)>0 then
+  begin
+    for i := Low(S) to High(S) do
+    begin
+      if Pos(' ', S[i]) <> 0 then
+        Result := Result + '"' + S[i] + '" '
+      else
+        Result := Result + S[i] + ' ';
+    end;
+    Result := Trim(Result);
+  end;
 end;
 
 procedure DeleteArrayOfString(var TheStrings: TArrayOfString;Index: Integer);
@@ -3471,34 +3510,45 @@ begin
   {$ENDIF}
 end;
 
-function RunExternalProcessAsAdmin(path, params: String; isPersistent: Boolean): Boolean;
+function RunExternalProcessAsAdmin(Exe, Params: String; ShowWind: Boolean;
+  isPersistent: Boolean): Boolean;
 var
  {$IFDEF WINDOWS}
   sei: TShellExecuteInfoA;
  {$ELSE}
   Process: TProcessUTF8;
+  pr: TStringList;
  {$ENDIF}
 begin
-  Writelog_W('RunExternalProcessAsAdmin, '+path+' '+params);
   {$IFDEF WINDOWS}
   Initialize(sei);
   FillChar(sei, SizeOf(sei), 0);
   sei.cbSize := SizeOf(sei);
-  sei.Wnd := 0;
+  sei.wnd := 0;
   sei.fMask := SEE_MASK_FLAG_DDEWAIT or SEE_MASK_FLAG_NO_UI;
   if isPersistent then
     sei.fMask := sei.fMask or SEE_MASK_NOCLOSEPROCESS;
   sei.lpVerb := 'runas';
-  sei.lpFile := PChar(path);
-  sei.lpParameters := PChar(params);
-  sei.nShow := SW_SHOWNORMAL;
+  sei.lpFile := PChar(Exe);
+  sei.lpParameters := PChar(Params);
+  if ShowWind then
+    sei.nShow := SW_SHOWNORMAL
+  else
+    sei.nShow := SW_HIDE;
   Result := ShellExecuteExA(@sei);
   if isPersistent then
     WaitForSingleObject(sei.hProcess, INFINITE);
   {$ELSE}
   Process := TProcessUTF8.Create(nil);
   try
-    Process.CommandLine := path + ' ' + params;
+    Process.Executable := Exe;
+    pr := TStringList.Create;
+    try
+      ParseCommandLine(Params, TStrings(pr), True);
+      Process.Parameters.Assign(pr);
+    finally
+      pr.Free;
+    end;
     Process.Execute;
   finally
     Process.Free;
@@ -3507,11 +3557,10 @@ begin
 end;
 
 function RunExternalProcess(Exe: String; Params: array of string;
-  ShowWind: Boolean; isPersisten: Boolean): Boolean;
+  ShowWind: Boolean; isPersistent: Boolean): Boolean;
 var
   Process: TProcessUTF8;
   I: Integer;
-  s: String;
 begin
   Result := True;
   Process := TProcessUTF8.Create(nil);
@@ -3519,7 +3568,7 @@ begin
     Process.InheritHandles := True;
     Process.Executable := Exe;
     Process.Parameters.AddStrings(Params);
-    if isPersisten then
+    if isPersistent then
       Process.Options := Process.Options + [poWaitOnExit]
     else
       Process.Options := [];
@@ -3534,21 +3583,18 @@ begin
   except
     on E: Exception do
     begin
-      WriteLog_E('RunExternalProcess.Error '+Exe);
-      ExceptionHandleSaveLogOnly(nil, E);
+      WriteLog_E('RunExternalProcess.Error '#13#10+
+        'Executable: '+Exe+#13#10+
+        'Parameters: '+StringsToCommandLine(Process.Parameters)+#13#10+
+        'Message   : '+E.Message+#13#10+
+        GetStackTraceInfo);
       {$ifdef windows}
       if Pos('740', E.Message) <> 0 then
       begin
-        s := '';
-        if Process.Parameters.Count > 0 then
-          for i:=0 to Process.Parameters.Count-1 do
-          begin
-            if Pos(' ', Process.Parameters[i]) <> 0 then
-              s := s + '"' + Process.Parameters[i] + '" '
-            else
-              s := s + Process.Parameters[i] + ' ';
-          end;
-        Result := RunExternalProcessAsAdmin(Exe, Trim(s), isPersisten);
+        Writelog_W('RunExternalProcess. Trying to run with elevation, '+Exe+' '+
+          StringsToCommandLine(Process.Parameters));
+        Result := RunExternalProcessAsAdmin(Exe, StringsToCommandLine(Process.Parameters),
+          ShowWind, isPersistent);
       end;
       {$endif}
     end;
@@ -3557,7 +3603,7 @@ begin
 end;
 
 function RunExternalProcess(CommandLine: String; ShowWind: Boolean;
-  isPersisten: Boolean): Boolean;
+  isPersistent: Boolean): Boolean;
 var
  s: string;
  sa: TArrayOfString;
@@ -3567,7 +3613,7 @@ begin
     sa := ParsedCommandLine(CommandLine);
     s := sa[Low(sa)];
     DeleteArrayOfString(sa, Low(sa));
-    Result := RunExternalProcess(s, sa, ShowWind, isPersisten);
+    Result := RunExternalProcess(s, sa, ShowWind, isPersistent);
   finally
     SetLength(sa, 0);
   end;
