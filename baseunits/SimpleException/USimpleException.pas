@@ -83,7 +83,7 @@ type
     property LastReport: String read FLastReport;
     procedure SimpleExceptionHandler(Sender: TObject; E: Exception);
     procedure SimpleExceptionHandlerSaveLogOnly(Sender: TObject; E: Exception);
-    function GetStactTraceInfo: string;
+    function GetStackTraceInfo: string;
     constructor Create(Filename: string = '');
     destructor Destroy; override;
   end;
@@ -94,6 +94,7 @@ procedure SetMaxStackCount(const ACount: Integer);
 procedure ClearIgnoredException;
 procedure ExceptionHandle(Sender: TObject; E: Exception);
 procedure ExceptionHandleSaveLogOnly(Sender: TObject; E: Exception);
+function GetStackTraceInfo: string;
 procedure InitSimpleExceptionHandler(const LogFilename: String = '');
 procedure DoneSimpleExceptionHandler;
 
@@ -158,6 +159,13 @@ begin
   if not Assigned(SimpleException) then
     InitSimpleExceptionHandler;
   SimpleException.SimpleExceptionHandlerSaveLogOnly(Sender, E);
+end;
+
+function GetStackTraceInfo: string;
+begin
+  Result := '';
+  if SimpleException <> nil then
+    Result := SimpleException.GetStackTraceInfo;
 end;
 
 procedure InitSimpleExceptionHandler(const LogFilename : String);
@@ -346,7 +354,7 @@ begin
         'Exception Class   : ' + FLastException.ClassName + LineEnding +
         'Message           : ' + FLastException.Message + LineEnding;
     end;
-    FLastReport := FLastReport + GetStactTraceInfo;
+    FLastReport := FLastReport + GetStackTraceInfo;
   except
     on E: Exception do
     begin
@@ -429,7 +437,7 @@ begin
   end;
 end;
 
-function TSimpleException.GetStactTraceInfo: string;
+function TSimpleException.GetStackTraceInfo: string;
 var
   i, maxStack: Integer;
   cf, pcf, cAddress, cFrame: Pointer;
