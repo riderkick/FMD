@@ -30,6 +30,9 @@ const
 
   UTF8BOM = #$EF#$BB#$BF;
 
+  PARAM_PATH    = '%PATH%';
+  PARAM_CHAPTER = '%FCHAPTER%';
+
   DATA_PARAM_NAME       = 0;
   DATA_PARAM_LINK       = 1;
   DATA_PARAM_AUTHORS    = 2;

@@ -16,8 +16,8 @@ interface
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
   LCLType, ExtCtrls, ComCtrls, Buttons, Spin, Menus, VirtualTrees, RichMemo,
-  IniFiles, simpleipc, lclproc, types, strutils, LCLIntf,
-  DefaultTranslator, LazUTF8, AnimatedGif, uBaseUnit, uData, uDownloadsManager,
+  IniFiles, simpleipc, lclproc, types, strutils, LCLIntf, DefaultTranslator,
+  LazUTF8, AnimatedGif, uBaseUnit, uData, uDownloadsManager,
   uFavoritesManager, uUpdateThread, uUpdateDBThread, uSubThread, uSilentThread,
   uMisc, uGetMangaInfosThread, uTranslation, frmDropTarget, USimpleException,
   USimpleLogger, ActiveX;
@@ -2566,8 +2566,8 @@ begin
   try
     fd := StringReplace(FavoriteManager.FavoriteItem(
       vtFavorites.FocusedNode^.Index).FavoriteInfo.SaveTo, '/', '\', [rfReplaceAll]);
-    if fd[Length(fd)] <> DirectorySeparator then
-      fd := fd + DirectorySeparator;
+    if fd[Length(fd)] <> PathDelim then
+      fd := fd + PathDelim;
 
     if FindFirstUTF8(fd + '*', faAnyFile and faDirectory, Info) = 0 then
       repeat
@@ -2579,11 +2579,14 @@ begin
       f := '';
     FindCloseUTF8(Info);
 
+    if f = '' then
+      fd := TrimRightChar(fd, ['/', '\']);
     s := options.ReadString('general', 'ExternalProgram', '');
     if s <> '' then
     begin
-      s := StringReplace(s, '%PATH%', fd, [rfReplaceAll]);
-      s := StringReplace(s, '%FCHAPTER%', f, [rfReplaceAll]);
+      s := StringReplace(s, PARAM_CHAPTER, f, [rfReplaceAll]);
+      s := StringReplace(s, PARAM_PATH, fd, [rfReplaceAll]);
+      Writelog_V('s: '+s);
       RunExternalProcess(s, True, False);
     end
     else
@@ -2605,8 +2608,8 @@ begin
   try
     fd := StringReplace(DLManager.TaskItem(
       vtDownload.FocusedNode^.Index).DownloadInfo.SaveTo, '/', '\', [rfReplaceAll]);
-    if fd[Length(fd)] <> DirectorySeparator then
-      fd := fd + DirectorySeparator;
+    if fd[Length(fd)] <> PathDelim then
+      fd := fd + PathDelim;
 
     if DLManager.TaskItem(vtDownload.FocusedNode^.Index).ChapterName.Count > 0 then
     begin
@@ -2637,11 +2640,14 @@ begin
       FindCloseUTF8(Info);
     end;
 
+    if f = '' then
+      fd := TrimRightChar(fd, ['/', '\']);
     s := options.ReadString('general', 'ExternalProgram', '');
     if s <> '' then
     begin
-      s := StringReplace(s, '%PATH%', fd, [rfReplaceAll]);
-      s := StringReplace(s, '%FCHAPTER%', f, [rfReplaceAll]);
+      s := StringReplace(s, PARAM_CHAPTER, f, [rfReplaceAll]);
+      s := StringReplace(s, PARAM_PATH, fd, [rfReplaceAll]);
+      Writelog_V('s: '+s);
       RunExternalProcess(s, True, False);
     end
     else
