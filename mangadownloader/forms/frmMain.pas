@@ -659,7 +659,7 @@ resourcestring
   RS_LblOptionExternalParamsHint = '%s : Path to the manga'#13#10+
                                    '%s : Chapter filename'#13#10+
                                    #13#10+
-                                   'Example : %s%s';
+                                   'Example : "%s%s"';
   RS_LblAutoCheckNewChapterMinute = 'Auto check for new chapter every %d minutes';
   RS_BtnOK = '&OK';
   RS_Loading = 'Loading ...';
