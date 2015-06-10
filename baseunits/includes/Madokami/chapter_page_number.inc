@@ -30,15 +30,16 @@
     if (datapath_ <> '') and (datafiles_ <> '') then
     begin
       datafiles_ := Trim(TrimChar(datafiles_, ['[', ']']));
-      datafiles_ := StringReplace(datafiles_, '&quot;', '', [rfIgnoreCase, rfReplaceAll]);
+      datafiles_ := StringReplace(datafiles_, '&quot;', '"', [rfIgnoreCase, rfReplaceAll]);
+      datafiles_ := StringReplace(datafiles_, '\', '', [rfReplaceAll]);
       with manager.container do
       begin
         PageLinks.Delimiter := ',';
         PageLinks.DelimitedText := datafiles_;
         if PageLinks.Count > 0 then
           for i := 0 to PageLinks.Count-1 do
-            PageLinks[i] := WebsiteRoots[MADOKAMI_ID, 1] + '/reader/image?path=' +
-              datapath_ + '&file=' + PageLinks[i];
+            PageLinks[i] := EncodeURL(WebsiteRoots[MADOKAMI_ID, 1] + '/reader/image?path=' +
+              datapath_ + '&file=' + PageLinks[i]);
       end;
     end;
   end;
