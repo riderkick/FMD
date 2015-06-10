@@ -413,7 +413,7 @@ begin
     //**loading page
     UpdateStatus(RS_LoadingPage);
     ctry := 0;
-    while (not FHTTP.HTTPMethod('HEAD', rurl)) or
+    while (not FHTTP.HTTPMethod('HEAD', Trim(rurl))) or
       (FHTTP.ResultCode >= 400) or (FHTTP.ResultCode < 100) do
     begin
       if Self.Terminated then Break;
@@ -466,14 +466,14 @@ begin
     end;
 
     //**download file
-    UpdateStatus(Format(RS_Downloading, [FileName]));
     if (FHTTP.ResultCode >= 100) and (FHTTP.ResultCode < 400) then
     begin
-      HTTPHeaders.Values['Accept'] := ' */*';
+      UpdateStatus(Format(RS_Downloading, [FileName]));
       ctry := 0;
       FHTTP.Clear;
+      HTTPHeaders.Values['Accept'] := ' */*';
       FHTTP.Headers.Text := HTTPHeaders.Text;
-      while (not FHTTP.HTTPMethod('GET', rurl)) or
+      while (not FHTTP.HTTPMethod('GET', Trim(rurl))) or
         (FHTTP.ResultCode >= 300) do
       begin
         if Self.Terminated then Break;
@@ -509,7 +509,7 @@ begin
         if FHTTP.ResultCode >= 300 then
         begin
           HTTPHeaders.Values['Referer'] := ' ' + rurl;
-          rurl := FHTTP.Headers.Values['location'];
+          rurl := Trim(FHTTP.Headers.Values['location']);
         end;
         FHTTP.Clear;
         FHTTP.Headers.Text := HTTPHeaders.Text;
