@@ -1,4 +1,4 @@
-unit uFrmDropTarget;
+unit frmDropTarget;
 
 {$mode objfpc}{$H+}
 

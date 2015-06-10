@@ -16,10 +16,10 @@ interface
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
   LCLType, ExtCtrls, ComCtrls, Buttons, Spin, Menus, VirtualTrees, RichMemo,
-  IniFiles, simpleipc, UTF8Process, lclproc, types, strutils, LCLIntf,
+  IniFiles, simpleipc, lclproc, types, strutils, LCLIntf,
   DefaultTranslator, LazUTF8, AnimatedGif, uBaseUnit, uData, uDownloadsManager,
   uFavoritesManager, uUpdateThread, uUpdateDBThread, uSubThread, uSilentThread,
-  uMisc, uGetMangaInfosThread, uTranslation, uFrmDropTarget, USimpleException,
+  uMisc, uGetMangaInfosThread, uTranslation, frmDropTarget, USimpleException,
   USimpleLogger, ActiveX;
 
 type
@@ -1802,8 +1802,8 @@ begin
   begin
     if FormDropTarget = nil then
       Application.CreateForm(TFormDropTarget, FormDropTarget);
-    uFrmDropTarget.OnDropChekout := @AddSilentThread;
-    uFrmDropTarget.FAlphaBlendValue := tbDropTargetOpacity.Position;
+    frmDropTarget.OnDropChekout := @AddSilentThread;
+    frmDropTarget.FAlphaBlendValue := tbDropTargetOpacity.Position;
     FormDropTarget.Show;
   end
   else
@@ -3034,9 +3034,9 @@ end;
 
 procedure TMainForm.tbDropTargetOpacityChange(Sender: TObject);
 begin
-  uFrmDropTarget.FAlphaBlendValue := tbDropTargetOpacity.Position;
+  frmDropTarget.FAlphaBlendValue := tbDropTargetOpacity.Position;
   if Assigned(FormDropTarget) then
-    FormDropTarget.AlphaBlendValue := uFrmDropTarget.FAlphaBlendValue;
+    FormDropTarget.AlphaBlendValue := frmDropTarget.FAlphaBlendValue;
 end;
 
 procedure TMainForm.tbWebsitesCollapseAllClick(Sender: TObject);
@@ -3736,10 +3736,10 @@ begin
     options.WriteBool('droptarget', 'Show', ckDropTarget.Checked);
     options.WriteInteger('droptarget', 'Mode', rgDropTargetMode.ItemIndex);
     options.WriteInteger('droptarget', 'Opacity', tbDropTargetOpacity.Position);
-    options.WriteInteger('droptarget', 'Width', uFrmDropTarget.FWidth);
-    options.WriteInteger('droptarget', 'Heigth', uFrmDropTarget.FHeight);
-    options.WriteInteger('droptarget', 'Top', uFrmDropTarget.FTop);
-    options.WriteInteger('droptarget', 'Left', uFrmDropTarget.FLeft);
+    options.WriteInteger('droptarget', 'Width', frmDropTarget.FWidth);
+    options.WriteInteger('droptarget', 'Heigth', frmDropTarget.FHeight);
+    options.WriteInteger('droptarget', 'Top', frmDropTarget.FTop);
+    options.WriteInteger('droptarget', 'Left', frmDropTarget.FLeft);
     options.WriteBool('view', 'ShowDownloadsToolbar', cbOptionShowDownloadToolbar.Checked);
     ToolBarDownload.Visible := cbOptionShowDownloadToolbar.Checked;
 
@@ -4384,14 +4384,14 @@ begin
   cbAddAsStopped.Checked := options.ReadBool('general', 'AddAsStopped', False);
 
   // view
-  uFrmDropTarget.FWidth := options.ReadInteger('droptarget', 'Width',
-    uFrmDropTarget.FWidth);
-  uFrmDropTarget.FHeight := options.ReadInteger('droptarget', 'Heigth',
-    uFrmDropTarget.FHeight);
-  uFrmDropTarget.FTop := options.ReadInteger('droptarget', 'Top',
-    uFrmDropTarget.FTop);
-  uFrmDropTarget.FLeft := options.ReadInteger('droptarget', 'Left',
-    uFrmDropTarget.FLeft);
+  frmDropTarget.FWidth := options.ReadInteger('droptarget', 'Width',
+    frmDropTarget.FWidth);
+  frmDropTarget.FHeight := options.ReadInteger('droptarget', 'Heigth',
+    frmDropTarget.FHeight);
+  frmDropTarget.FTop := options.ReadInteger('droptarget', 'Top',
+    frmDropTarget.FTop);
+  frmDropTarget.FLeft := options.ReadInteger('droptarget', 'Left',
+    frmDropTarget.FLeft);
   rgDropTargetMode.ItemIndex := options.ReadInteger('droptarget', 'Mode', 0);
   tbDropTargetOpacity.Position := options.ReadInteger('droptarget', 'Opacity', 255);
   ckDropTarget.Checked := options.ReadBool('droptarget', 'Show', False);
@@ -4780,11 +4780,11 @@ procedure TMainForm.SaveDropTargetFormInformation;
 begin
   with options do
   begin
-    WriteInteger('droptarget', 'Opacity', uFrmDropTarget.FAlphaBlendValue);
-    WriteInteger('droptarget', 'Width', uFrmDropTarget.FWidth);
-    WriteInteger('droptarget', 'Heigth', uFrmDropTarget.FHeight);
-    WriteInteger('droptarget', 'Top', uFrmDropTarget.FTop);
-    WriteInteger('droptarget', 'Left', uFrmDropTarget.FLeft);
+    WriteInteger('droptarget', 'Opacity', frmDropTarget.FAlphaBlendValue);
+    WriteInteger('droptarget', 'Width', frmDropTarget.FWidth);
+    WriteInteger('droptarget', 'Heigth', frmDropTarget.FHeight);
+    WriteInteger('droptarget', 'Top', frmDropTarget.FTop);
+    WriteInteger('droptarget', 'Left', frmDropTarget.FLeft);
     UpdateFile;
   end;
 end;

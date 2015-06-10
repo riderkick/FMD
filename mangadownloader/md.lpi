@@ -246,97 +246,94 @@
         <IsPartOfProject Value="True"/>
       </Unit0>
       <Unit1>
-        <Filename Value="..\baseunits\uDownloadsManager.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit1>
-      <Unit2>
-        <Filename Value="..\baseunits\uFavoritesManager.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit2>
-      <Unit3>
-        <Filename Value="..\baseunits\uUpdateThread.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit3>
-      <Unit4>
-        <Filename Value="..\baseunits\uSubThread.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit4>
-      <Unit5>
-        <Filename Value="..\baseunits\uUpdateDBThread.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit5>
-      <Unit6>
-        <Filename Value="..\baseunits\uSilentThread.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit6>
-      <Unit7>
-        <Filename Value="forms\frmImportFavorites.pas"/>
-        <IsPartOfProject Value="True"/>
-        <ComponentName Value="ImportFavorites"/>
-        <HasResources Value="True"/>
-        <ResourceBaseClass Value="Form"/>
-      </Unit7>
-      <Unit8>
-        <Filename Value="..\baseunits\uFMDThread.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit8>
-      <Unit9>
-        <Filename Value="..\baseunits\uPacker.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit9>
-      <Unit10>
         <Filename Value="forms\frmMain.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="MainForm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-      </Unit10>
-      <Unit11>
+      </Unit1>
+      <Unit2>
+        <Filename Value="forms\frmImportFavorites.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="ImportFavorites"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit2>
+      <Unit3>
         <Filename Value="forms\frmNewChapter.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="NewChapter"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-      </Unit11>
-      <Unit12>
-        <Filename Value="..\baseunits\uGetMangaInfosThread.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit12>
-      <Unit13>
-        <Filename Value="..\baseunits\uBaseUnit.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit13>
-      <Unit14>
-        <Filename Value="..\baseunits\uMisc.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit14>
-      <Unit15>
-        <Filename Value="..\baseunits\uData.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit15>
-      <Unit16>
-        <Filename Value="forms\frmshutdowncounter.pas"/>
-        <IsPartOfProject Value="True"/>
-        <ComponentName Value="ShutdownCounterForm"/>
-        <HasResources Value="True"/>
-        <ResourceBaseClass Value="Form"/>
-        <UnitName Value="frmShutdownCounter"/>
-      </Unit16>
-      <Unit17>
-        <Filename Value="forms\frmupdatedialog.pas"/>
+      </Unit3>
+      <Unit4>
+        <Filename Value="forms\frmUpdateDialog.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="UpdateDialogForm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <UnitName Value="frmUpdateDialog"/>
-      </Unit17>
-      <Unit18>
-        <Filename Value="forms\ufrmdroptarget.pas"/>
+      </Unit4>
+      <Unit5>
+        <Filename Value="forms\frmShutdownCounter.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="ShutdownCounterForm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit5>
+      <Unit6>
+        <Filename Value="forms\frmDropTarget.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="FormDropTarget"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <UnitName Value="uFrmDropTarget"/>
+      </Unit6>
+      <Unit7>
+        <Filename Value="..\baseunits\uDownloadsManager.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit7>
+      <Unit8>
+        <Filename Value="..\baseunits\uFavoritesManager.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit8>
+      <Unit9>
+        <Filename Value="..\baseunits\uUpdateThread.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit9>
+      <Unit10>
+        <Filename Value="..\baseunits\uSubThread.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit10>
+      <Unit11>
+        <Filename Value="..\baseunits\uUpdateDBThread.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit11>
+      <Unit12>
+        <Filename Value="..\baseunits\uSilentThread.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit12>
+      <Unit13>
+        <Filename Value="..\baseunits\uFMDThread.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit13>
+      <Unit14>
+        <Filename Value="..\baseunits\uPacker.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit14>
+      <Unit15>
+        <Filename Value="..\baseunits\uGetMangaInfosThread.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit15>
+      <Unit16>
+        <Filename Value="..\baseunits\uBaseUnit.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit16>
+      <Unit17>
+        <Filename Value="..\baseunits\uData.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit17>
+      <Unit18>
+        <Filename Value="..\baseunits\uMisc.pas"/>
+        <IsPartOfProject Value="True"/>
       </Unit18>
     </Units>
   </ProjectOptions>
