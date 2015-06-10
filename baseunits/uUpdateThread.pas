@@ -553,13 +553,8 @@ begin
         Inc(websitePtr);
         FStatus := RS_GettingListFor + ' ' + website + ' ...';
         Synchronize(MainThreadShowGetting);
-        {$IFDEF USEADMIN}
-        fmdRunAsAdmin(fmdDirectory + 'updater.exe', '-x -r 3 -q -d ' +
-          GetMangaDatabaseURL(website) + ' --lang ' + uTranslation.LastSelected, True);
-        {$ELSE}
         RunExternalProcess(fmdDirectory + 'updater.exe', ['-x', '-r' , '3', '-d',
           GetMangaDatabaseURL(website), '--lang', uTranslation.LastSelected]);
-        {$ENDIF}
         Synchronize(RefreshList);
       end;
     end

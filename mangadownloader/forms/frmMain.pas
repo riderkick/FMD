@@ -971,16 +971,9 @@ begin
       CopyFile(fmdDirectory + 'updater.exe', fmdDirectory + 'old_updater.exe');
     if FileExistsUTF8(fmdDirectory + 'old_updater.exe') then
     begin
-      CloseNow;
-      {$IFDEF USEADMIN}
-      fmdRunAsAdmin(fmdDirectory + 'old_updater.exe',
-        '-x -r 3 -a ' + FUpdateURL + ' -l ' + Application.ExeName +
-        ' --lang ' + uTranslation.LastSelected, False);
-      {$ELSE}
       RunExternalProcess(fmdDirectory + 'old_updater.exe',
         ['-x', '-r', '3', '-a', FUpdateURL, '-l', Application.ExeName,
          '--lang', uTranslation.LastSelected], True, False);
-      {$ENDIF}
       Self.Close;
     end;
   end

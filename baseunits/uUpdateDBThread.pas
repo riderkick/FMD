@@ -99,13 +99,8 @@ procedure TUpdateDBThread.Execute;
 begin
   try
     Synchronize(MainThreadShowGetting);
-    {$IFDEF USEADMIN}
-    fmdRunAsAdmin(fmdDirectory + 'updater.exe', '-x -r 3 -d ' +
-      GetMangaDatabaseURL(websiteName) + ' --lang ' + uTranslation.LastSelected, True);
-    {$ELSE}
     RunExternalProcess(fmdDirectory + 'updater.exe', ['-x', '-r' , '3', '-d',
       GetMangaDatabaseURL(websiteName), '--lang', uTranslation.LastSelected]);
-    {$ENDIF}
     if FileExists(fmdDirectory + DATA_FOLDER + websiteName + '.dat') then
     begin
       Synchronize(MainThreadRefreshList);
