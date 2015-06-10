@@ -6,10 +6,7 @@
 
 unit frmMain;
 
-{$ifdef fpc}
-  {$mode objfpc}
-{$endif}
-{$H+}
+{$mode objfpc}{$H+}
 
 interface
 

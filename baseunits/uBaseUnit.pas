@@ -6,16 +6,17 @@
 
 unit uBaseUnit;
 
-{$MODE DELPHI}
+{$mode objfpc}{$H+}
 {$MACRO ON}
 {$DEFINE DOWNLOADER}
 
 interface
 
 uses
-  SysUtils, Classes, Graphics, Forms, UTF8Process, strutils, fileinfo, process,
-  fpjson, jsonparser, FastHTMLParser, fgl, uFMDThread, synautil, httpsend,
-  blcksock, ssl_openssl, GZIPUtils, USimpleException, USimpleLogger;
+  SysUtils, Classes, Graphics, Forms, UTF8Process, lazutf8classes,
+  LazUTF8, strutils, fileinfo, process, fpjson, jsonparser, FastHTMLParser, fgl,
+  uFMDThread, synautil, httpsend, blcksock, ssl_openssl, GZIPUtils,
+  USimpleException, USimpleLogger;
 
 const
   FMD_REVISION = '$WCREV$';
@@ -773,8 +774,8 @@ type
     Checking: Boolean;
   end;
 
-  TCardinalList = TFPGList<Cardinal>;
-  TByteList = TFPGList<Byte>;
+  TCardinalList = specialize TFPGList<Cardinal>;
+  TByteList = specialize TFPGList<Byte>;
 
   TDownloadPageThread = class(TThread)
   protected
@@ -965,7 +966,7 @@ uses
   {$ifdef UNIX}Process,{$endif UNIX}
   {$IFDEF WINDOWS}ShellApi, RegExpr, Windows,{$ENDIF}
   {$IFDEF DOWNLOADER}frmMain,{$ENDIF}
-  FileUtil, lazutf8classes, uMisc;
+  FileUtil, uMisc;
 
 {$IFDEF WINDOWS}
 // thanks Leledumbo for the code
@@ -3426,8 +3427,8 @@ begin
   Output.Clear;
   parser := THTMLParser.Create(PChar(FRaw));
   try
-    parser.OnFoundTag := FoundTag;
-    parser.OnFoundText := FoundText;
+    parser.OnFoundTag := @FoundTag;
+    parser.OnFoundText := @FoundText;
     parser.Exec;
   finally
     parser.Free;
@@ -3520,30 +3521,32 @@ function RunExternalProcessAsAdmin(Exe, Params: String; ShowWind: Boolean;
   isPersistent: Boolean): Boolean;
 var
  {$IFDEF WINDOWS}
-  sei: TShellExecuteInfoA;
+  SEInfo: TSHELLEXECUTEINFOW;
  {$ELSE}
   Process: TProcessUTF8;
   pr: TStringList;
  {$ENDIF}
 begin
   {$IFDEF WINDOWS}
-  Initialize(sei);
-  FillChar(sei, SizeOf(sei), 0);
-  sei.cbSize := SizeOf(sei);
-  sei.wnd := 0;
-  sei.fMask := SEE_MASK_FLAG_DDEWAIT or SEE_MASK_FLAG_NO_UI;
+  Initialize(SEInfo);
+  FillChar(SEInfo, SizeOf(SEInfo), 0);
+  SEInfo.cbSize := SizeOf(SEInfo);
+  with SEInfo do begin
+    wnd := 0;
+    fMask := SEE_MASK_FLAG_DDEWAIT or SEE_MASK_FLAG_NO_UI;
+    if isPersistent then
+      fMask := fMask or SEE_MASK_NOCLOSEPROCESS;
+    lpVerb := 'runas';
+    lpFile := PWideChar(WideString(UTF8ToSys(Exe)));
+    lpParameters := PWideChar(WideString(UTF8ToSys(Params)));
+    if ShowWind then
+      nShow := SW_SHOWNORMAL
+    else
+      nShow := SW_HIDE;
+  end;
+  Result := ShellExecuteExW(@SEInfo);
   if isPersistent then
-    sei.fMask := sei.fMask or SEE_MASK_NOCLOSEPROCESS;
-  sei.lpVerb := 'runas';
-  sei.lpFile := PChar(Exe);
-  sei.lpParameters := PChar(Params);
-  if ShowWind then
-    sei.nShow := SW_SHOWNORMAL
-  else
-    sei.nShow := SW_HIDE;
-  Result := ShellExecuteExA(@sei);
-  if isPersistent then
-    WaitForSingleObject(sei.hProcess, INFINITE);
+    WaitForSingleObject(SEInfo.hProcess, INFINITE);
   {$ELSE}
   Process := TProcessUTF8.Create(nil);
   try
