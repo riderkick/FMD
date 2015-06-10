@@ -2549,7 +2549,7 @@ begin
     Exit;
   OpenDocument(TrimRightChar(
     FavoriteManager.FavoriteItem(vtFavorites.FocusedNode^.Index).FavoriteInfo.SaveTo,
-    ['/', '\']));
+    [PathDelim]));
 end;
 
 procedure TMainForm.miDownloadOpenFolderClick(Sender: TObject);
@@ -2558,7 +2558,7 @@ begin
     Exit;
   OpenDocument(TrimRightChar(
     DLManager.TaskItem(vtDownload.FocusedNode^.Index).DownloadInfo.SaveTo,
-    ['/', '\']));
+    [PathDelim]));
 end;
 
 procedure TMainForm.miFavoritesOpenWithClick(Sender: TObject);
@@ -2586,18 +2586,26 @@ begin
       f := '';
     FindCloseUTF8(Info);
 
-    if f = '' then
-      fd := TrimRightChar(fd, ['/', '\']);
-    ff := options.ReadString('general', 'ExternalProgramPath', '');
-    s := options.ReadString('general', 'ExternalProgramParams', DEFAULT_EXPARAM);
+    fd := Trim(TrimRightChar(Trim(fd), [PathDelim]));
+    f := Trim(TrimChar(Trim(f), [PathDelim]));
+
+    ff := Trim(options.ReadString('general', 'ExternalProgramPath', ''));
+    s := Trim(options.ReadString('general', 'ExternalProgramParams', DEFAULT_EXPARAM));
+
     if ff <> '' then
     begin
-      s := StringReplace(s, EXPARAM_CHAPTER, f, [rfReplaceAll]);
+      if (Pos(EXPARAM_PATH + EXPARAM_CHAPTER, s) <> 0) then
+        f := PathDelim + f;
       s := StringReplace(s, EXPARAM_PATH, fd, [rfReplaceAll]);
+      s := StringReplace(s, EXPARAM_CHAPTER, f, [rfReplaceAll]);
       RunExternalProcess(ff, s, True, False);
     end
     else
-      OpenDocument(fd + f);
+    begin
+      if (fd <> '') and (f <> '') then
+        s := fd + PathDelim + f;
+      OpenDocument(s);
+    end;
   except
   end;
   l.Free;
@@ -2647,18 +2655,26 @@ begin
       FindCloseUTF8(Info);
     end;
 
-    if f = '' then
-      fd := TrimRightChar(fd, ['/', '\']);
-    ff := options.ReadString('general', 'ExternalProgramPath', '');
-    s := options.ReadString('general', 'ExternalProgramParams', DEFAULT_EXPARAM);
+    fd := Trim(TrimRightChar(Trim(fd), [PathDelim]));
+    f := Trim(TrimChar(Trim(f), [PathDelim]));
+
+    ff := Trim(options.ReadString('general', 'ExternalProgramPath', ''));
+    s := Trim(options.ReadString('general', 'ExternalProgramParams', DEFAULT_EXPARAM));
+
     if ff <> '' then
     begin
-      s := StringReplace(s, EXPARAM_CHAPTER, f, [rfReplaceAll]);
+      if (Pos(EXPARAM_PATH + EXPARAM_CHAPTER, s) <> 0) then
+        f := PathDelim + f;
       s := StringReplace(s, EXPARAM_PATH, fd, [rfReplaceAll]);
+      s := StringReplace(s, EXPARAM_CHAPTER, f, [rfReplaceAll]);
       RunExternalProcess(ff, s, True, False);
     end
     else
-      OpenDocument(fd + f);
+    begin
+      if (fd <> '') and (f <> '') then
+        s := fd + PathDelim + f;
+      OpenDocument(s);
+    end;
   except
   end;
   l.Free;
