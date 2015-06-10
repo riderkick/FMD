@@ -3565,7 +3565,7 @@ begin
   Result := True;
   Process := TProcessUTF8.Create(nil);
   try
-    Process.InheritHandles := True;
+    Process.InheritHandles := isPersistent;
     Process.Executable := Exe;
     Process.Parameters.AddStrings(Params);
     if isPersistent then
