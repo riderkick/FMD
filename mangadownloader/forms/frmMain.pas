@@ -2480,6 +2480,7 @@ begin
   if (not vtMangaList.Focused) or (vtMangaList.SelectedCount = 0) then
     Exit;
   btDownload.Enabled := False;
+  btAddToFavorites.Enabled := False;
   pcMain.ActivePage := tsInformation;
   imCover.Picture.Assign(nil);
   rmInformation.Clear;
@@ -2535,12 +2536,6 @@ begin
   end;
 
   btReadOnline.Enabled := (link <> '');
-  btAddToFavorites.Enabled := not SitesWithoutFavorites(website);
-
-  //check if manga already in FavoriteManager list
-  if btAddToFavorites.Enabled and (Sender = vtMangaList) and
-    (FavoriteManager.Count > 0) then
-    btAddToFavorites.Enabled := not FavoriteManager.IsMangaExist(title, website);
 end;
 
 procedure TMainForm.miFavoritesOpenFolderClick(Sender: TObject);
