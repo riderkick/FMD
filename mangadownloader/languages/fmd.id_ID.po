@@ -165,6 +165,16 @@ msgctxt "frmmain.rs_lblautochecknewchapterminute"
 msgid "Auto check for new chapter every %d minutes"
 msgstr "Otomatis periksa bab baru setiap %d menit"
 
+#: frmmain.rs_lbloptionexternalparamshint
+msgid ""
+"%s : Path to the manga\n"
+"%s : Chapter filename\n"
+"Example : %s%s\n"
+msgstr ""
+"%s : Lokasi komik tersimpan \n"
+"%s : Nama berkas komik\n"
+"Contoh: %s%s\n"
+
 #: frmmain.rs_loading
 msgid "Loading ..."
 msgstr "Memuat ..."
@@ -804,9 +814,15 @@ msgstr "Ubah nama kustom"
 msgid "Default download path"
 msgstr "Lokasi unduhan bawaan"
 
-#: tmainform.edoptionexternal.texthint
-msgid "Program path and parameters"
-msgstr "Lokasi program dan parameternya"
+#: tmainform.edoptionexternalparams.texthint
+msgctxt "tmainform.edoptionexternalparams.texthint"
+msgid "External program parameters"
+msgstr "Lokasi program"
+
+#: tmainform.edoptionexternalpath.texthint
+msgctxt "tmainform.edoptionexternalpath.texthint"
+msgid "External program path"
+msgstr "Parameter program"
 
 #: tmainform.edoptionhost.texthint
 msgid "Proxy host/IP"
@@ -978,23 +994,14 @@ msgstr "Tampilkan dialog konfirmasi untuk:"
 msgid "Open manga by using external program:"
 msgstr "Buka komik dengan program eksternal:"
 
-#: tmainform.lboptionexternalhint.caption
-msgctxt "TMAINFORM.LBOPTIONEXTERNALHINT.CAPTION"
+#: tmainform.lboptionexternalparams.caption
+msgid "Parameters:"
+msgstr "Parameter:"
+
+#: tmainform.lboptionexternalparamshint.caption
+msgctxt "tmainform.lboptionexternalparamshint.caption"
 msgid "[?]"
 msgstr "[?]"
-
-#: tmainform.lboptionexternalhint.hint
-msgid ""
-"%PATH% : Path to the manga\n"
-"%FCHAPTER% : First downloaded chapter/first chapter in the directory\n"
-"\n"
-"Example: C:\\HoneyView\\honeyview.exe \"%PATH%%FCHAPTER%\"\n"
-msgstr ""
-"%PATH% : Lokasi komik tersimpan\n"
-"%FCHAPTER% : Berkas terunduh pertama di dalam direktori\n"
-"\n"
-"\n"
-"Contoh: C:\\HoneyView\\honeyview.exe \"%PATH%%FCHAPTER%\"\n"
 
 #: tmainform.lboptionhost.caption
 msgid "Host"
@@ -1601,4 +1608,3 @@ msgstr "Sinkronisasi data"
 #: uupdatethread.rs_updatinglist
 msgid "Updating list"
 msgstr "Memperbarui daftar"
-

@@ -1853,37 +1853,36 @@ object MainForm: TMainForm
           end
           object gbOptionExternal: TGroupBox
             Left = 20
-            Height = 89
+            Height = 132
             Top = 228
             Width = 520
             Anchors = [akTop, akLeft, akRight]
             Caption = 'External program'
-            ClientHeight = 69
+            ClientHeight = 112
             ClientWidth = 516
             ParentFont = False
             TabOrder = 4
-            object edOptionExternal: TEdit
+            object edOptionExternalParams: TEdit
               Left = 13
               Height = 23
-              Top = 31
-              Width = 474
+              Top = 74
+              Width = 467
               Anchors = [akTop, akLeft, akRight]
               TabOrder = 0
-              TextHint = 'Program path and parameters'
+              TextHint = 'External program parameters'
             end
             object lbOptionExternal: TLabel
               Left = 13
               Height = 15
-              Top = 11
+              Top = 6
               Width = 213
               Caption = 'Open manga by using external program:'
               ParentColor = False
             end
-            object lbOptionExternalHint: TLabel
-              Left = 494
+            object lbOptionExternalParamsHint: TLabel
+              Left = 485
               Height = 15
-              Hint = '%PATH% : Path to the manga'#13#10'%FCHAPTER% : First downloaded chapter/first chapter in the directory'#13#10#13#10'Example: C:\HoneyView\honeyview.exe "%PATH%%FCHAPTER%"'
-              Top = 34
+              Top = 77
               Width = 13
               Anchors = [akTop, akRight]
               Caption = '[?]'
@@ -1892,6 +1891,28 @@ object MainForm: TMainForm
               ParentFont = False
               ParentShowHint = False
               ShowHint = True
+            end
+            object lbOptionExternalParams: TLabel
+              Left = 13
+              Height = 15
+              Top = 56
+              Width = 62
+              Caption = 'Parameters:'
+              ParentColor = False
+            end
+            object edOptionExternalPath: TFileNameEdit
+              Left = 13
+              Height = 23
+              Top = 24
+              Width = 491
+              FilterIndex = 0
+              HideDirectories = False
+              ButtonWidth = 23
+              NumGlyphs = 1
+              Anchors = [akTop, akLeft, akRight]
+              MaxLength = 0
+              TabOrder = 1
+              TextHint = 'External program path'
             end
           end
           object cbOptionOneInstanceOnly: TCheckBox

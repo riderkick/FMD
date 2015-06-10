@@ -8,7 +8,7 @@ msgstr ""
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: en\n"
+"Language: en_US\n"
 "X-Generator: Poedit 1.8.1\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
@@ -164,6 +164,20 @@ msgstr "In progress"
 msgctxt "frmmain.rs_lblautochecknewchapterminute"
 msgid "Auto check for new chapter every %d minutes"
 msgstr "Auto check for new chapter every %d minutes"
+
+#: frmmain.rs_lbloptionexternalparamshint
+#| msgid ""
+#| "%s : Path to the manga\n"
+#| "%s : First downloaded/first chapter in the directory\n"
+#| "Example : %s%s\n"
+msgid ""
+"%s : Path to the manga\n"
+"%s : Chapter filename\n"
+"Example : %s%s\n"
+msgstr ""
+"%s : Path to the manga\n"
+"%s : Chapter filename\n"
+"Example : %s%s\n"
 
 #: frmmain.rs_loading
 msgid "Loading ..."
@@ -804,9 +818,17 @@ msgstr "Custom rename"
 msgid "Default download path"
 msgstr "Default download path"
 
-#: tmainform.edoptionexternal.texthint
-msgid "Program path and parameters"
-msgstr "Program path and parameters"
+#: tmainform.edoptionexternalparams.texthint
+#| msgid "External program parameters"
+msgctxt "tmainform.edoptionexternalparams.texthint"
+msgid "External program parameters"
+msgstr "External program parameters"
+
+#: tmainform.edoptionexternalpath.texthint
+#| msgid "External program parameters"
+msgctxt "tmainform.edoptionexternalpath.texthint"
+msgid "External program path"
+msgstr "External program path"
 
 #: tmainform.edoptionhost.texthint
 msgid "Proxy host/IP"
@@ -978,22 +1000,14 @@ msgstr "Show dialog confirmation for:"
 msgid "Open manga by using external program:"
 msgstr "Open manga by using external program:"
 
-#: tmainform.lboptionexternalhint.caption
-msgctxt "TMAINFORM.LBOPTIONEXTERNALHINT.CAPTION"
+#: tmainform.lboptionexternalparams.caption
+msgid "Parameters:"
+msgstr "Parameters:"
+
+#: tmainform.lboptionexternalparamshint.caption
+msgctxt "tmainform.lboptionexternalparamshint.caption"
 msgid "[?]"
 msgstr "[?]"
-
-#: tmainform.lboptionexternalhint.hint
-msgid ""
-"%PATH% : Path to the manga\n"
-"%FCHAPTER% : First downloaded chapter/first chapter in the directory\n"
-"\n"
-"Example: C:\\HoneyView\\honeyview.exe \"%PATH%%FCHAPTER%\"\n"
-msgstr ""
-"%PATH% : Path to the manga\n"
-"%FCHAPTER% : First downloaded chapter/first chapter in the directory\n"
-"\n"
-"Example: C:\\HoneyView\\honeyview.exe \"%PATH%%FCHAPTER%\"\n"
 
 #: tmainform.lboptionhost.caption
 msgid "Host"
@@ -1601,4 +1615,3 @@ msgstr "Synchronizing data"
 #: uupdatethread.rs_updatinglist
 msgid "Updating list"
 msgstr "Updating list"
-

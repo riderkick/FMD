@@ -17,7 +17,7 @@ uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
   LCLType, ExtCtrls, ComCtrls, Buttons, Spin, Menus, VirtualTrees, RichMemo,
   IniFiles, simpleipc, lclproc, types, strutils, LCLIntf, DefaultTranslator,
-  LazUTF8, AnimatedGif, uBaseUnit, uData, uDownloadsManager,
+  EditBtn, LazUTF8, AnimatedGif, uBaseUnit, uData, uDownloadsManager,
   uFavoritesManager, uUpdateThread, uUpdateDBThread, uSubThread, uSilentThread,
   uMisc, uGetMangaInfosThread, uTranslation, frmDropTarget, USimpleException,
   USimpleLogger, ActiveX;
@@ -60,7 +60,8 @@ type
     cbOptionOneInstanceOnly: TCheckBox;
     ckDropTarget: TCheckBox;
     edOptionDefaultPath: TEdit;
-    edOptionExternal: TEdit;
+    edOptionExternalParams: TEdit;
+    edOptionExternalPath: TFileNameEdit;
     edSaveTo: TEdit;
     edURL: TEdit;
     gbDropTarget: TGroupBox;
@@ -72,6 +73,7 @@ type
     itStartup: TIdleTimer;
     lbDefaultDownloadPath: TLabel;
     lbDropTargetOpacity: TLabel;
+    lbOptionExternalParams: TLabel;
     lbSaveTo: TLabel;
     lbOptionProxyType: TLabel;
     lbOptionRenameDigits: TLabel;
@@ -79,7 +81,7 @@ type
     lbOptionExternal: TLabel;
     lbOptionCustomRenameHint: TLabel;
     lbOptionCustomRenameHint1: TLabel;
-    lbOptionExternalHint: TLabel;
+    lbOptionExternalParamsHint: TLabel;
     medURLCut: TMenuItem;
     medURLCopy: TMenuItem;
     medURLPaste: TMenuItem;
@@ -654,6 +656,9 @@ resourcestring
   RS_DlgMangaListSelect = 'You must choose at least 1 manga website!';
   RS_DlgCannotGetMangaInfo = 'Cannot get manga info. Please check your internet connection and try it again.';
   RS_DlgCannotConnectToServer = 'Cannot connect to the server.';
+  RS_LblOptionExternalParamsHint = '%s : Path to the manga'#13#10+
+                                   '%s : Chapter filename'#13#10+
+                                   'Example : %s%s';
   RS_LblAutoCheckNewChapterMinute = 'Auto check for new chapter every %d minutes';
   RS_BtnOK = '&OK';
   RS_Loading = 'Loading ...';
@@ -2544,19 +2549,23 @@ procedure TMainForm.miFavoritesOpenFolderClick(Sender: TObject);
 begin
   if not Assigned(vtFavorites.FocusedNode) then
     Exit;
-  OpenDocument(FavoriteManager.FavoriteItem(vtFavorites.FocusedNode^.Index).FavoriteInfo.SaveTo);
+  OpenDocument(TrimRightChar(
+    FavoriteManager.FavoriteItem(vtFavorites.FocusedNode^.Index).FavoriteInfo.SaveTo,
+    ['/', '\']));
 end;
 
 procedure TMainForm.miDownloadOpenFolderClick(Sender: TObject);
 begin
   if (vtDownload.SelectedCount = 0) or (Assigned(vtDownload.FocusedNode) = False) then
     Exit;
-  OpenDocument(DLManager.TaskItem(vtDownload.FocusedNode^.Index).DownloadInfo.SaveTo);
+  OpenDocument(TrimRightChar(
+    DLManager.TaskItem(vtDownload.FocusedNode^.Index).DownloadInfo.SaveTo,
+    ['/', '\']));
 end;
 
 procedure TMainForm.miFavoritesOpenWithClick(Sender: TObject);
 var
-  f, fd, s: String;
+  f, fd, ff, s: String;
   Info: TSearchRec;
   l: TStringList;
 begin
@@ -2581,13 +2590,13 @@ begin
 
     if f = '' then
       fd := TrimRightChar(fd, ['/', '\']);
-    s := options.ReadString('general', 'ExternalProgram', '');
-    if s <> '' then
+    ff := options.ReadString('general', 'ExternalProgramPath', '');
+    s := options.ReadString('general', 'ExternalProgramParams', DEFAULT_EXPARAM);
+    if ff <> '' then
     begin
-      s := StringReplace(s, PARAM_CHAPTER, f, [rfReplaceAll]);
-      s := StringReplace(s, PARAM_PATH, fd, [rfReplaceAll]);
-      Writelog_V('s: '+s);
-      RunExternalProcess(s, True, False);
+      s := StringReplace(s, EXPARAM_CHAPTER, f, [rfReplaceAll]);
+      s := StringReplace(s, EXPARAM_PATH, fd, [rfReplaceAll]);
+      RunExternalProcess(ff, s, True, False);
     end
     else
       OpenDocument(fd + f);
@@ -2642,13 +2651,13 @@ begin
 
     if f = '' then
       fd := TrimRightChar(fd, ['/', '\']);
-    s := options.ReadString('general', 'ExternalProgram', '');
-    if s <> '' then
+    ff := options.ReadString('general', 'ExternalProgramPath', '');
+    s := options.ReadString('general', 'ExternalProgramParams', DEFAULT_EXPARAM);
+    if ff <> '' then
     begin
-      s := StringReplace(s, PARAM_CHAPTER, f, [rfReplaceAll]);
-      s := StringReplace(s, PARAM_PATH, fd, [rfReplaceAll]);
-      Writelog_V('s: '+s);
-      RunExternalProcess(s, True, False);
+      s := StringReplace(s, EXPARAM_CHAPTER, f, [rfReplaceAll]);
+      s := StringReplace(s, EXPARAM_PATH, fd, [rfReplaceAll]);
+      RunExternalProcess(ff, s, True, False);
     end
     else
       OpenDocument(fd + f);
@@ -2675,7 +2684,8 @@ procedure TMainForm.pcMainChange(Sender: TObject);
     cbOptionEnableLoadCover.Checked :=
       options.ReadBool('general', 'LoadMangaCover', True);
     cbOptionLetFMDDoItemIndex := cbOptionLetFMDDo.ItemIndex;
-    edOptionExternal.Text := options.ReadString('general', 'ExternalProgram', '');
+    edOptionExternalPath.FileName := options.ReadString('general', 'ExternalProgramPath', '');
+    edOptionExternalParams.Text := options.ReadString('general', 'ExternalProgramParams', DEFAULT_EXPARAM);
 
     cbOptionShowDownloadToolbar.Checked := options.ReadBool('view', 'ShowDownloadsToolbar', True);
 
@@ -3729,7 +3739,8 @@ begin
     cbOptionLetFMDDoItemIndex := cbOptionLetFMDDo.ItemIndex;
     options.WriteBool('general', 'LoadMangaCover', cbOptionEnableLoadCover.Checked);
     OptionEnableLoadCover := cbOptionEnableLoadCover.Checked;
-    options.WriteString('general', 'ExternalProgram', edOptionExternal.Text);
+    options.WriteString('general', 'ExternalProgramPath', edOptionExternalPath.FileName);
+    options.WriteString('general', 'ExternalProgramParams', edOptionExternalParams.Text);
 
     // view
     options.WriteBool('droptarget', 'Show', ckDropTarget.Checked);
@@ -4378,7 +4389,8 @@ begin
   cbOptionLetFMDDoItemIndex := cbOptionLetFMDDo.ItemIndex;
   cbOptionAutoNumberChapter.Checked :=
     options.ReadBool('general', 'AutoNumberChapter', True);
-  edOptionExternal.Text := options.ReadString('general', 'ExternalProgram', '');
+  edOptionExternalPath.FileName := options.ReadString('general', 'ExternalProgramPath', '');
+  edOptionExternalParams.Text := options.ReadString('general', 'ExternalProgramParams', DEFAULT_EXPARAM);
   OptionAutoNumberChapterChecked := cbOptionAutoNumberChapter.Checked;
   cbAddAsStopped.Checked := options.ReadBool('general', 'AddAsStopped', False);
 
@@ -4798,6 +4810,8 @@ var
 begin
   if uTranslation.LastSelected <> AvailableLanguages.Names[cbLanguages.ItemIndex] then
   begin
+    lbOptionExternalParams.Hint := Format(RS_LblOptionExternalParamsHint,
+      [EXPARAM_PATH, EXPARAM_CHAPTER, EXPARAM_PATH, EXPARAM_CHAPTER]);
     idxLanguages := cbLanguages.ItemIndex;
     idxFilterStatus := cbFilterStatus.ItemIndex;
     idxOptionLetFMDDo := cbOptionLetFMDDo.ItemIndex;

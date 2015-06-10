@@ -145,6 +145,13 @@ msgctxt "frmmain.rs_lblautochecknewchapterminute"
 msgid "Auto check for new chapter every %d minutes"
 msgstr ""
 
+#: frmmain.rs_lbloptionexternalparamshint
+msgid ""
+"%s : Path to the manga\n"
+"%s : Chapter filename\n"
+"Example : %s%s\n"
+msgstr ""
+
 #: frmmain.rs_loading
 msgid "Loading ..."
 msgstr ""
@@ -778,8 +785,14 @@ msgstr ""
 msgid "Default download path"
 msgstr ""
 
-#: tmainform.edoptionexternal.texthint
-msgid "Program path and parameters"
+#: tmainform.edoptionexternalparams.texthint
+msgctxt "TMAINFORM.EDOPTIONEXTERNALPARAMS.TEXTHINT"
+msgid "External program parameters"
+msgstr ""
+
+#: tmainform.edoptionexternalpath.texthint
+msgctxt "TMAINFORM.EDOPTIONEXTERNALPATH.TEXTHINT"
+msgid "External program path"
 msgstr ""
 
 #: tmainform.edoptionhost.texthint
@@ -934,17 +947,13 @@ msgstr ""
 msgid "Open manga by using external program:"
 msgstr ""
 
-#: tmainform.lboptionexternalhint.caption
-msgctxt "TMAINFORM.LBOPTIONEXTERNALHINT.CAPTION"
-msgid "[?]"
+#: tmainform.lboptionexternalparams.caption
+msgid "Parameters:"
 msgstr ""
 
-#: tmainform.lboptionexternalhint.hint
-msgid ""
-"%PATH% : Path to the manga\n"
-"%FCHAPTER% : First downloaded chapter/first chapter in the directory\n"
-"\n"
-"Example: C:\\HoneyView\\honeyview.exe \"%PATH%%FCHAPTER%\"\n"
+#: tmainform.lboptionexternalparamshint.caption
+msgctxt "TMAINFORM.LBOPTIONEXTERNALPARAMSHINT.CAPTION"
+msgid "[?]"
 msgstr ""
 
 #: tmainform.lboptionhost.caption
