@@ -8,6 +8,12 @@ https://www.mediafire.com/folder/3ccy2c7g36hp3/Fmd
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.16.2 (10-06-2015)
+[*] Fix updater can't download manga list from server
+[*] Fix open with external program, program path and parameter now separated
+[*] Fix Madokami can't download images
+[*] Various changes and bug fixes
+
 0.9.16.1 (09-06-2015)
 [!] Fix FMD not closed when updating. 
     - This bug prevent updater to overwrite the existing file.
