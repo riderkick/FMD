@@ -611,6 +611,8 @@ type
     // load language file
     procedure LoadLanguage;
 
+    procedure OpenWithExternalProgram(const dirPath, Filename: String);
+
     // exception handle
     procedure ExceptionHandler(Sender: TObject; E: Exception);
     { public declarations }
@@ -2558,7 +2560,7 @@ end;
 
 procedure TMainForm.miFavoritesOpenWithClick(Sender: TObject);
 var
-  f, fd, ff, s: String;
+  f, fd: String;
   Info: TSearchRec;
   l: TStringList;
 begin
@@ -2581,26 +2583,7 @@ begin
       f := '';
     FindCloseUTF8(Info);
 
-    fd := Trim(TrimRightChar(Trim(fd), [PathDelim]));
-    f := Trim(TrimChar(Trim(f), [PathDelim]));
-
-    ff := Trim(options.ReadString('general', 'ExternalProgramPath', ''));
-    s := Trim(options.ReadString('general', 'ExternalProgramParams', DEFAULT_EXPARAM));
-
-    if ff <> '' then
-    begin
-      if (Pos(EXPARAM_PATH + EXPARAM_CHAPTER, s) <> 0) then
-        f := PathDelim + f;
-      s := StringReplace(s, EXPARAM_PATH, fd, [rfReplaceAll]);
-      s := StringReplace(s, EXPARAM_CHAPTER, f, [rfReplaceAll]);
-      RunExternalProcess(ff, s, True, False);
-    end
-    else
-    begin
-      if (fd <> '') and (f <> '') then
-        s := fd + PathDelim + f;
-      OpenDocument(s);
-    end;
+    OpenWithExternalProgram(fd, f);
   except
   end;
   l.Free;
@@ -2608,7 +2591,7 @@ end;
 
 procedure TMainForm.miDownloadOpenWithClick(Sender: TObject);
 var
-  f, fd, ff, s: String;
+  f, fd, ff: String;
   Info: TSearchRec;
   l: TStringList;
 begin
@@ -2650,26 +2633,7 @@ begin
       FindCloseUTF8(Info);
     end;
 
-    fd := Trim(TrimRightChar(Trim(fd), [PathDelim]));
-    f := Trim(TrimChar(Trim(f), [PathDelim]));
-
-    ff := Trim(options.ReadString('general', 'ExternalProgramPath', ''));
-    s := Trim(options.ReadString('general', 'ExternalProgramParams', DEFAULT_EXPARAM));
-
-    if ff <> '' then
-    begin
-      if (Pos(EXPARAM_PATH + EXPARAM_CHAPTER, s) <> 0) then
-        f := PathDelim + f;
-      s := StringReplace(s, EXPARAM_PATH, fd, [rfReplaceAll]);
-      s := StringReplace(s, EXPARAM_CHAPTER, f, [rfReplaceAll]);
-      RunExternalProcess(ff, s, True, False);
-    end
-    else
-    begin
-      if (fd <> '') and (f <> '') then
-        s := fd + PathDelim + f;
-      OpenDocument(s);
-    end;
+    OpenWithExternalProgram(fd, f);
   except
   end;
   l.Free;
@@ -4840,6 +4804,33 @@ begin
       rgDropTargetMode.ItemIndex := idxDropTargetMode;
       Self.Repaint;
     end;
+  end;
+end;
+
+procedure TMainForm.OpenWithExternalProgram(const dirPath, Filename: String);
+var
+  Exe, Params,
+  p, f: String;
+begin
+  Exe := Trim(options.ReadString('general', 'ExternalProgramPath', ''));
+  Params := Trim(options.ReadString('general', 'ExternalProgramParams', DEFAULT_EXPARAM));
+
+  p := Trim(TrimRightChar(Trim(dirPath), [PathDelim]));
+  f := Trim(TrimChar(Trim(Filename), [PathDelim]));
+
+  if Exe <> '' then
+  begin
+    if (Pos(EXPARAM_PATH + EXPARAM_CHAPTER, Params) <> 0) then
+      f := PathDelim + f;
+    Params := StringReplace(Params, EXPARAM_PATH, p, [rfIgnoreCase, rfReplaceAll]);
+    Params := StringReplace(Params, EXPARAM_CHAPTER, f, [rfIgnoreCase, rfReplaceAll]);
+    RunExternalProcess(Exe, Params, True, False);
+  end
+  else
+  begin
+    if (p <> '') and (f <> '') then
+      f := p + PathDelim + f;
+    OpenDocument(f);
   end;
 end;
 
