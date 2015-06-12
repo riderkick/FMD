@@ -806,6 +806,16 @@ type
     property Raw: string read FRaw write FRaw;
   end;
 
+  { THTTPSendThread }
+
+  THTTPSendThread = class(THTTPSend)
+    private
+      FOwner: TFMDThread;
+      procedure SockOnHeartBeat(Sender: TObject);
+    public
+      constructor Create(AOwner: TFMDThread);
+  end;
+
 // Get current binary version
 function GetCurrentBinVersion: String;
 // Remove Unicode
@@ -3395,6 +3405,31 @@ begin
   dest.numChapter := Source.numChapter;
   dest.chapterName.Assign(Source.chapterName);
   dest.chapterLinks.Assign(Source.chapterLinks);
+end;
+
+{ THTTPSendThread }
+
+procedure THTTPSendThread.SockOnHeartBeat(Sender: TObject);
+begin
+  if Assigned(FOwner) then
+    if FOwner.IsTerminated then
+      with TTCPBlockSocket(Sender) do
+      begin
+        Tag := 1;
+        StopFlag := True;
+        AbortSocket;
+      end;
+end;
+
+constructor THTTPSendThread.Create(AOwner: TFMDThread);
+begin
+  inherited Create;
+  if Assigned(AOwner) then
+  begin
+    FOwner := TFMDThread(AOwner);
+    Sock.OnHeartbeat := @SockOnHeartBeat;
+    Sock.HeartbeatRate := SOCKHEARTBEATRATE;
+  end;
 end;
 
 { TParseHTML }
