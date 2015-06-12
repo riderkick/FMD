@@ -41,7 +41,6 @@ type
     Freconnect: Cardinal;
     // manga information from main thread
     title, website, URL: String;
-    procedure SockOnHeartBeat(Sender: TObject);
     procedure MainThreadAfterChecking; virtual;
     procedure MainThreadUpdateStatus;
     procedure Execute; override;
@@ -227,16 +226,6 @@ end;
 
 { TSilentThread }
 
-procedure TSilentThread.SockOnHeartBeat(Sender: TObject);
-begin
-  if Terminated then
-  begin
-    TBlockSocket(Sender).Tag := 1;
-    TBlockSocket(Sender).StopFlag := True;
-    TBlockSocket(Sender).AbortSocket;
-  end;
-end;
-
 procedure TSilentThread.MainThreadAfterChecking;
 var
   s: String;
@@ -358,9 +347,7 @@ begin
   inherited Create(True);
   Freconnect := 3;
   SavePath := '';
-  Info := TMangaInformation.Create;
-  Info.FHTTP.Sock.OnHeartbeat := SockOnHeartBeat;
-  Info.FHTTP.Sock.HeartbeatRate := SOCKHEARTBEATRATE;
+  Info := TMangaInformation.Create(Self);
 end;
 
 destructor TSilentThread.Destroy;
