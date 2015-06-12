@@ -115,8 +115,7 @@ type
     // Backup to FFavorites.ini
     procedure Backup;
     // Abort FFavorites check
-    procedure StopRun;
-    procedure StopRunAndWait;
+    procedure StopRun(WaitFor: Boolean = True);
     // Add FFavorites downloadedchapterlist
     procedure AddToDownloadedChaptersList(const AWebsite, ALink, AValue: String); overload;
     procedure AddToDownloadedChaptersList(const AWebsite, Alink: String; AValue: TStrings); overload;
@@ -371,7 +370,7 @@ begin
   favoritesFile.UpdateFile;
   favoritesFile.Free;
   if FFavorites.Count > 0 then begin
-    StopRunAndWait;
+    StopRun;
     while FFavorites.Count > 0 do begin
       TFavoriteContainer(FFavorites.Last).Free;
       FFavorites.Remove(FFavorites.Last);
@@ -842,18 +841,13 @@ begin
   favoritesFile.UpdateFile;
 end;
 
-procedure TFavoriteManager.StopRun;
-begin
-  if isRunning then
-    taskthread.Terminate;
-end;
-
-procedure TFavoriteManager.StopRunAndWait;
+procedure TFavoriteManager.StopRun(WaitFor: Boolean);
 begin
   if isRunning then
   begin
     taskthread.Terminate;
-    taskthread.WaitFor;
+    if WaitFor then
+      taskthread.WaitFor;
   end;
 end;
 

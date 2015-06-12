@@ -71,7 +71,7 @@ type
     procedure Add(AType: TMetaDataType; AWebsite, AManga, AURL: String;
       ASavePath: String = '');
     procedure CheckOut;
-    procedure StopAllAndWait;
+    procedure StopAll(WaitFor: Boolean = True);
     procedure UpdateLoadStatus;
     property ItemCount: Integer read GetItemCount;
     constructor Create;
@@ -142,7 +142,7 @@ begin
   end;
 end;
 
-procedure TSilentThreadManager.StopAllAndWait;
+procedure TSilentThreadManager.StopAll(WaitFor: Boolean);
 var
   i: Integer;
 begin
@@ -161,8 +161,11 @@ begin
     finally
       CS_Threads.Release;
     end;
-    while ItemCount > 0 do
-      Sleep(100);
+    if WaitFor then
+    begin
+      while ItemCount > 0 do
+        Sleep(100);
+    end;
   end;
 end;
 

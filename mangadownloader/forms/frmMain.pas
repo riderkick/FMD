@@ -563,7 +563,7 @@ type
     // load about information
     procedure LoadAbout;
 
-    procedure CloseNow;
+    procedure CloseNow(WaitFor: Boolean = True);
 
     procedure CheckForTopPanel;
     // en: Too lazy to add it one by one
@@ -864,7 +864,7 @@ begin
   CloseAction := caFree;
 end;
 
-procedure TMainForm.CloseNow;
+procedure TMainForm.CloseNow(WaitFor: Boolean);
 begin
   if Assigned(FormDropTarget) then
     FormDropTarget.Close;
@@ -881,21 +881,24 @@ begin
   begin
     GetInfosThread.IsFlushed := True;
     GetInfosThread.Terminate;
-    GetInfosThread.WaitFor;
+    if WaitFor then
+      GetInfosThread.WaitFor;
   end;
-  DLManager.StopAllDownloadTasksForExit;
   if isSubthread then
   begin
     SubThread.Terminate;
-    SubThread.WaitFor;
+    if WaitFor then
+      SubThread.WaitFor;
   end;
   if isUpdating then
   begin
     updateList.Terminate;
-    updateList.WaitFor;
+    if WaitFor then
+      updateList.WaitFor;
   end;
-  FavoriteManager.StopRunAndWait;
-  SilentThreadManager.StopAllAndWait;
+  FavoriteManager.StopRun(WaitFor);
+  SilentThreadManager.StopAll(WaitFor);
+  DLManager.StopAllDownloadTasksForExit;
 
   if FMDInstance <> nil then
   begin
@@ -980,7 +983,7 @@ procedure TMainForm.itMonitorTimer(Sender: TObject);
 begin
   if DoAfterFMD <> DoFMDNothing then
   begin
-    Self.CloseNow;
+    Self.CloseNow(False);
     case DoAfterFMD of
       DoFMDShutdown: fmdPowerOff;
       DoFMDHibernate: fmdHibernate;
