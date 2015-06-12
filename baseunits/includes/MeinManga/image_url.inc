@@ -26,8 +26,7 @@
     FHTTP.Headers.Values['Accept-Encoding'] := ' gzip, deflate';
     FHTTP.Headers.Values['Accept-Language'] := ' en-US,en;q=0.5';
 
-    Result := GetPage(FHTTP,
-      TObject(l),
+    Result := GetPage(TObject(l),
       manager.container.PageLinks.Strings[workCounter],
       manager.container.Manager.retryConnect);
 
@@ -55,8 +54,7 @@
         begin
           FHTTP.Clear;
 
-          SaveImage(self,
-            FHTTP,
+          SaveImage(
             manager.container.MangaSiteID,
             GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src=')),
             CorrectPathSys(manager.container.DownloadInfo.SaveTo +

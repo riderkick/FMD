@@ -44,8 +44,7 @@ type
     // Get number of download link from URL
     function GetPageNumberFromURL(const URL: String): Boolean;
     // Download image
-    function DownloadImage(const AHTTP: THTTPSend = nil;
-      const prefix: String = ''): Boolean;
+    function DownloadImage(const prefix: String = ''): Boolean;
 
     procedure OnTag(NoCaseTag, ActualTag: string);
     procedure OnText(Text: String);
@@ -53,20 +52,9 @@ type
     procedure SockOnStatus(Sender: TObject; Reason: THookSocketReason;
       const Value: String);
     procedure SockOnHeartBeat(Sender: TObject);
-    //Need recheck later|wrapper
-    function GetPage(const AHTTP: THTTPSend; var output: TObject;
-      URL: String; const Reconnect: Cardinal; const isByPassHTTP: Boolean): Boolean;
-      overload;
-    function GetPage(const AHTTP: THTTPSend; var output: TObject;
-      URL: String; const Reconnect: Cardinal): Boolean; overload;
-    function GetPage(var output: TObject; URL: String; const Reconnect: Cardinal;
-      const isByPassHTTP: Boolean): Boolean; overload;
     function GetPage(var output: TObject; URL: String;
       const Reconnect: Cardinal): Boolean; overload;
 
-    function SaveImage(const AOwner: TObject; const AHTTP: THTTPSend;
-      const mangaSiteID: Integer; URL: String; const Path, Name, prefix: String;
-      const Reconnect: Cardinal): Boolean; overload;
     function SaveImage(const mangaSiteID: Integer; URL: String;
       const Path, Name, prefix: String; const Reconnect: Cardinal): Boolean; overload;
 
@@ -270,11 +258,9 @@ end;
 constructor TDownloadThread.Create;
 begin
   inherited Create(True);
-  FHTTP := THTTPSend.Create;
+  FHTTP := THTTPSendThread.Create(Self);
   FHTTP.Headers.NameValueSeparator := ':';
   FHTTP.Sock.OnStatus := SockOnStatus;
-  FHTTP.Sock.OnHeartbeat := SockOnHeartBeat;
-  FHTTP.Sock.HeartbeatRate := SOCKHEARTBEATRATE;
 end;
 
 destructor TDownloadThread.Destroy;
@@ -293,45 +279,18 @@ begin
   end;
 end;
 
-function TDownloadThread.GetPage(const AHTTP: THTTPSend; var output: TObject;
-  URL: String; const Reconnect: Cardinal; const isByPassHTTP: Boolean): Boolean;
-  overload;
+function TDownloadThread.GetPage(var output: TObject; URL: String;
+  const Reconnect: Cardinal): Boolean;
 begin
   if FHTTP.Sock.Tag <> 100 then
     FHTTP.Clear;
-  Result := uBaseUnit.GetPage(Self, FHTTP, output, URL, Reconnect, isByPassHTTP);
-end;
-
-function TDownloadThread.GetPage(const AHTTP: THTTPSend; var output: TObject;
-  URL: String; const Reconnect: Cardinal): Boolean;
-begin
-  Result := GetPage(AHTTP, output, URL, Reconnect, False);
-end;
-
-function TDownloadThread.GetPage(var output: TObject; URL: String;
-  const Reconnect: Cardinal; const isByPassHTTP: Boolean): Boolean;
-begin
-  Result := GetPage(nil, output, URL, Reconnect, isByPassHTTP);
-end;
-
-function TDownloadThread.GetPage(var output: TObject; URL: String;
-  const Reconnect: Cardinal): Boolean;
-begin
-  Result := GetPage(nil, output, URL, Reconnect, False);
-end;
-
-function TDownloadThread.SaveImage(const AOwner: TObject; const AHTTP: THTTPSend;
-  const mangaSiteID: Integer; URL: String; const Path, Name, prefix: String;
-  const Reconnect: Cardinal): Boolean;
-begin
-  Result := uBaseUnit.SaveImage(Self, FHTTP, mangaSiteID, URL, Path,
-    Name, prefix, Reconnect);
+  Result := uBaseUnit.GetPage(FHTTP, output, URL, Reconnect);
 end;
 
 function TDownloadThread.SaveImage(const mangaSiteID: Integer; URL: String;
   const Path, Name, prefix: String; const Reconnect: Cardinal): Boolean;
 begin
-  Result := SaveImage(nil, nil, mangaSiteID, URL, Path, Name, prefix, Reconnect);
+  Result := uBaseUnit.SaveImage(FHTTP, mangaSiteID, URL, Path, Name, prefix, Reconnect);
 end;
 
 procedure TDownloadThread.Execute;
@@ -1267,8 +1226,7 @@ begin
   MainForm.TrayIcon.ShowBalloonHint;
 end;
 
-function TDownloadThread.DownloadImage(const AHTTP: THTTPSend = nil;
-  const prefix: String = ''): Boolean;
+function TDownloadThread.DownloadImage(const prefix: String): Boolean;
 var
   TURL, lpath: String;
 
@@ -1311,8 +1269,7 @@ begin
     Result := GetMeinMangaImageURL
   else
   if Result then
-    Result := SaveImage(Self,
-      AHTTP,
+    Result := SaveImage(
       manager.container.MangaSiteID,
       TURL,
       lpath,

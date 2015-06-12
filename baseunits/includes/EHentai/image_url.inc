@@ -80,8 +80,7 @@
       prs.Free;
 
       //save image
-      Result := SaveImage(Self,
-        AHTTP,
+      Result := SaveImage(
         manager.container.MangaSiteID,
         iurl,
         lpath,
