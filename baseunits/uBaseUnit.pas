@@ -928,24 +928,17 @@ procedure CustomGenres(var output: TStringList; input: String);
 // deal with sourceforge URL.
 function SourceForgeURL(URL: String): String;
 // Get HTML source code from a URL.
-function GetPage(const AOwner: TObject; const AHTTP: THTTPSend;
-  var output: TObject; URL: String; const Reconnect: Cardinal;
-  const isByPassHTTP: Boolean): Boolean; overload;
-function GetPage(var output: TObject; URL: String; const Reconnect: Cardinal;
-  const isByPassHTTP: Boolean): Boolean; overload; inline;
+function GetPage(const AHTTP: THTTPSend; var output: TObject; URL: String;
+  const Reconnect: Cardinal): Boolean; overload;
 function GetPage(var output: TObject; URL: String; const Reconnect: Cardinal): Boolean;
   overload; inline;
-function GetPage(const AHTTP: THTTPSend; var output: TObject;
-  URL: String; const Reconnect: Cardinal): Boolean; overload; inline;
 // Get url from a bitly url.
 function GetURLFromBitly(const URL: String): String;
 // Download an image from url and save it to a specific location.
-function SaveImage(const AOwner: TObject; const AHTTP: THTTPSend;
-  const mangaSiteID: Integer; URL: String; const Path, Name, prefix: String;
-  const Reconnect: Cardinal): Boolean; overload;
+function SaveImage(const AHTTP: THTTPSend; const mangaSiteID: Integer; URL: String;
+  const Path, Name, prefix: String; const Reconnect: Cardinal): Boolean; overload;
 function SaveImage(const mangaSiteID: Integer; URL: String;
-  const Path, Name, prefix: String; const Reconnect: Cardinal): Boolean;
-  overload; inline;
+  const Path, Name, prefix: String; const Reconnect: Cardinal): Boolean; overload; inline;
 
 procedure QuickSortChapters(var chapterList, linkList: TStringList);
 procedure QuickSortData(var merge: TStringList);
@@ -2655,9 +2648,8 @@ begin
   Result := URL;
 end;
 
-function GetPage(const AOwner: TObject; const AHTTP: THTTPSend;
-  var output: TObject; URL: String; const Reconnect: Cardinal;
-  const isByPassHTTP: Boolean): Boolean;
+function GetPage(const AHTTP: THTTPSend; var output: TObject; URL: String;
+  const Reconnect: Cardinal): Boolean;
   // If AHTTP <> nil, we will use it as http sender. Otherwise we create a new
   // instance.
 var
@@ -2692,10 +2684,9 @@ var
 
   function checkTerminate: boolean;
   begin
-    Result := False;
-    if HTTP.Sock.Tag = 1 then // terminated via OnHeartBeat
+    Result := HTTP.Sock.Tag =  1; //terminated via OnHeartBeat
+    if Result then
     begin
-      Result := True;
       HTTP.Sock.Tag := 0;
       preTerminate;
     end;
@@ -2709,9 +2700,6 @@ begin
   if Trim(URL) = '' then Exit;
 
   URL := FixURL(URL);
-  { TODO -oriderkick : What isBypassHTTP for? }
-  //if (isByPassHTTP) then
-  //  Exit;
 
   HTTPHeader := TStringList.Create;
   HTTPHeader.NameValueSeparator := ':';
@@ -2908,7 +2896,7 @@ begin
       on E: Exception do
       begin
         E.Message := 'GetPage.WriteOutput error: '#13#10 + E.Message;
-        USimpleException.ExceptionHandleSaveLogOnly(AOwner, E);
+        USimpleException.ExceptionHandleSaveLogOnly(nil, E);
       end;
     end;
     Result := True;
@@ -2919,21 +2907,9 @@ begin
   preTerminate;
 end;
 
-function GetPage(var output: TObject; URL: String; const Reconnect: Cardinal;
-  const isByPassHTTP: Boolean): Boolean;
-begin
-  Result := GetPage(nil, nil, output, URL, Reconnect, isByPassHTTP);
-end;
-
 function GetPage(var output: TObject; URL: String; const Reconnect: Cardinal): Boolean;
 begin
-  Result := GetPage(nil, nil, output, URL, Reconnect, False);
-end;
-
-function GetPage(const AHTTP: THTTPSend; var output: TObject;
-  URL: String; const Reconnect: Cardinal): Boolean;
-begin
-  Result := GetPage(nil, AHTTP, output, URL, Reconnect, False);
+  Result := GetPage(nil, output, URL, Reconnect);
 end;
 
 function GetURLFromBitly(const URL: String): String;
@@ -2954,9 +2930,9 @@ begin
   httpSource.Free;
 end;
 
-function SaveImage(const AOwner: TObject; const AHTTP: THTTPSend;
-  const mangaSiteID: Integer; URL: String; const Path, Name, prefix: String;
-  const Reconnect: Cardinal): Boolean;
+function SaveImage(const AHTTP: THTTPSend; const mangaSiteID: Integer;
+  URL: String; const Path, Name, prefix: String; const Reconnect: Cardinal
+  ): Boolean;
   // prefix: For example: 000<our prefix>.jpg.
 var
   retryToSave: Boolean = False;
@@ -2978,10 +2954,9 @@ var
 
   function checkTerminate: boolean;
   begin
-    Result := False;
-    if HTTP.Sock.Tag = 1 then // terminated via OnHeartBeat
+    Result := HTTP.Sock.Tag = 1; //terminated via OnHeartBeat
+    if Result then
     begin
-      Result := True;
       HTTP.Sock.Tag := 0;
       preTerminate;
     end;
@@ -3195,16 +3170,9 @@ begin
         begin
           E.Message := 'SaveImage.SavetoFile'#13#10 + E.Message + #13#10 +
             (CorrectPathSys(Path) + '/' + Name + prefix + ext);
-          USimpleException.ExceptionHandleSaveLogOnly(AOwner, E);
+          USimpleException.ExceptionHandleSaveLogOnly(nil, E);
           {$IFDEF DOWNLOADER}
-          if (AOwner <> nil) and (AOwner is TFMDThread) then
-          begin
-            if TFMDThread(AOwner).IsTerminated then
-            begin
-              preTerminate;
-              Exit;
-            end;
-          end;
+          if checkTerminate then Exit;
           {$ENDIF}
           if not retryToSave then
           begin
@@ -3220,9 +3188,7 @@ begin
   else
   begin
     s := 'SaveImage.ExtEmpty'#13#10'URL: ' + URL;
-    if Assigned(AOwner) then
-      s := s + #13#10'ClassName: ' + AOwner.ClassName;
-    USimpleException.ExceptionHandleSaveLogOnly(AOwner, Exception.Create(s));
+    USimpleException.ExceptionHandleSaveLogOnly(nil, Exception.Create(s));
   end;
   preTerminate;
 end;
@@ -3230,7 +3196,7 @@ end;
 function SaveImage(const mangaSiteID: Integer; URL: String;
   const Path, Name, prefix: String; const Reconnect: Cardinal): Boolean;
 begin
-  Result := SaveImage(nil, nil, mangaSiteID, URL, Path, Name, prefix, Reconnect);
+  Result := SaveImage(nil, mangaSiteID, URL, Path, Name, prefix, Reconnect);
 end;
 
 procedure QuickSortChapters(var chapterList, linkList: TStringList);
