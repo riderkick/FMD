@@ -976,24 +976,23 @@ end;
 
 procedure TMainForm.itMonitorTimer(Sender: TObject);
 begin
-  if DoAfterFMD = DoFMDUpdate then
-  begin
-    if FileExistsUTF8(fmdDirectory + 'updater.exe') then
-      CopyFile(fmdDirectory + 'updater.exe', fmdDirectory + 'old_updater.exe');
-    if FileExistsUTF8(fmdDirectory + 'old_updater.exe') then
-    begin
-      RunExternalProcess(fmdDirectory + 'old_updater.exe',
-        ['-x', '-r', '3', '-a', FUpdateURL, '-l', Application.ExeName,
-         '--lang', uTranslation.LastSelected], True, False);
-      Self.Close;
-    end;
-  end
-  else
   if DoAfterFMD <> DoFMDNothing then
   begin
     case DoAfterFMD of
       DoFMDShutdown: fmdPowerOff;
       DoFMDHibernate: fmdHibernate;
+      DoFMDUpdate:
+      begin
+        if FileExistsUTF8(fmdDirectory + 'updater.exe') then
+          CopyFile(fmdDirectory + 'updater.exe', fmdDirectory + 'old_updater.exe');
+        if FileExistsUTF8(fmdDirectory + 'old_updater.exe') then
+        begin
+          RunExternalProcess(fmdDirectory + 'old_updater.exe',
+            ['-x', '-r', '3', '-a', FUpdateURL, '-l', Application.ExeName,
+             '--lang', uTranslation.LastSelected], True, False);
+          Self.Close;
+        end;
+      end;
     end;
     Self.Close;
   end;
