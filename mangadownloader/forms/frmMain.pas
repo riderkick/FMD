@@ -970,7 +970,8 @@ end;
 
 procedure TMainForm.itCheckForChaptersTimer(Sender: TObject);
 begin
-  SubThread.CheckUpdate := True;
+  if options.ReadBool('update', 'AutoCheckUpdate', True) then
+    SubThread.CheckUpdate := True;
   FavoriteManager.isAuto := True;
   FavoriteManager.Run;
 end;
@@ -3768,7 +3769,7 @@ begin
     options.WriteBool('update', 'AutoRemoveCompletedManga',
       cbOptionAutoRemoveCompletedManga.Checked);
     OptionAutoRemoveCompletedManga := cbOptionAutoRemoveCompletedManga.Checked;
-    options.WriteBool('update', 'AutoCheckUpdateAtStartup',
+    options.WriteBool('update', 'AutoCheckUpdate',
       cbOptionAutoCheckUpdate.Checked);
     options.WriteBool('update', 'AutoCheckFavStartup',
       cbOptionAutoCheckFavStartup.Checked);
@@ -4420,7 +4421,7 @@ begin
 
   // update
   cbOptionAutoCheckUpdate.Checked :=
-    options.ReadBool('update', 'AutoCheckUpdateAtStartup', True);
+    options.ReadBool('update', 'AutoCheckUpdate', True);
   cbOptionAutoRemoveCompletedManga.Checked :=
     options.ReadBool('update', 'AutoRemoveCompletedManga', False);
   OptionAutoRemoveCompletedManga := cbOptionAutoRemoveCompletedManga.Checked;
