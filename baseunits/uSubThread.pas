@@ -6,7 +6,7 @@
 
 unit uSubThread;
 
-{$mode objfpc}{$H+}
+{$mode delphi}
 
 interface
 
@@ -104,7 +104,7 @@ begin
     fNewVersionNumber := FMD_VERSION_NUMBER;
     fUpdateURL := '';
     FBtnCheckCaption := RS_Checking;
-    Synchronize(@MainThreadSetButton);
+    Synchronize(MainThreadSetButton);
     if not Terminated and
       GetPage(FHTTP, TObject(l), UPDATE_URL + 'update', 3) then
       if l.Count > 1 then
@@ -123,14 +123,14 @@ begin
             fChangelog := l.Text;
         end;
       FBtnCheckCaption := RS_BtnCheckUpdates;
-      Synchronize(@MainThreadSetButton);
+      Synchronize(MainThreadSetButton);
     end;
   finally
     FHTTP.Free;
     l.Free;
   end;
   if not Terminated and updateFound then
-    Synchronize(@MainThreadUpdate);
+    Synchronize(MainThreadUpdate);
 end;
 
 destructor TCheckUpdateThread.Destroy;
