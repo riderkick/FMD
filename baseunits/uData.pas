@@ -14,7 +14,7 @@ unit uData;
 interface
 
 uses
-  Classes, SysUtils, uBaseUnit, strutils, FileUtil, httpsend;
+  Classes, SysUtils, uBaseUnit, uFMDThread, strutils, FileUtil, httpsend;
 
 type
   TDataProcess = class(TObject)
@@ -84,7 +84,7 @@ type
 
     procedure OnTag(NoCaseTag, ActualTag: string);
     procedure OnText(Text: String);
-    constructor Create;
+    constructor Create(AOwnerThread: TFMDThread = nil);
     destructor Destroy; override;
     procedure ClearInfo;
     function GetDirectoryPage(var Page: Cardinal; const website: String): Byte;
@@ -102,15 +102,7 @@ type
     procedure AddInfoToData(const Name, link: String; const DataProcess: TDataProcess);
 
     //wrapper
-    function GetPage(const AHTTP: THTTPSend; var output: TObject;
-      URL: String; const Reconnect: Cardinal; const isByPassHTTP: Boolean): Boolean;
-      overload;
-    function GetPage(const AHTTP: THTTPSend; var output: TObject;
-      URL: String; const Reconnect: Cardinal): Boolean; overload;
-    function GetPage(var output: TObject; URL: String; const Reconnect: Cardinal;
-      const isByPassHTTP: Boolean): Boolean; overload;
-    function GetPage(var output: TObject; URL: String;
-      const Reconnect: Cardinal): Boolean; overload;
+    function GetPage(var output: TObject; URL: String; const Reconnect: Cardinal): Boolean; overload;
   end;
 
 var
@@ -730,12 +722,12 @@ begin
   uMisc.QuickSortNaturalPart(Data, SEPERATOR, DATA_PARAM_NAME);
 end;
 
-// ----- TMangaInformation -----
+{ TMangaInformation }
 
-constructor TMangaInformation.Create;
+constructor TMangaInformation.Create(AOwnerThread: TFMDThread);
 begin
   inherited Create;
-  FHTTP := THTTPSend.Create;
+  FHTTP := THTTPSendThread.Create(AOwnerThread);
   FHTTP.Headers.NameValueSeparator := ':';
   parse := TStringList.Create;
   mangaInfo := TMangaInfo.Create;
@@ -2142,29 +2134,10 @@ begin
   l.Free;
 end;
 
-function TMangaInformation.GetPage(const AHTTP: THTTPSend; var output: TObject;
-  URL: String; const Reconnect: Cardinal; const isByPassHTTP: Boolean): Boolean;
-  overload;
-begin
-  Result := uBaseUnit.GetPage(FOwner, FHTTP, output, URL, Reconnect, isByPassHTTP);
-end;
-
-function TMangaInformation.GetPage(const AHTTP: THTTPSend; var output: TObject;
-  URL: String; const Reconnect: Cardinal): Boolean;
-begin
-  Result := GetPage(AHTTP, output, URL, Reconnect, False);
-end;
-
-function TMangaInformation.GetPage(var output: TObject; URL: String;
-  const Reconnect: Cardinal; const isByPassHTTP: Boolean): Boolean;
-begin
-  Result := GetPage(nil, output, URL, Reconnect, isByPassHTTP);
-end;
-
 function TMangaInformation.GetPage(var output: TObject; URL: String;
   const Reconnect: Cardinal): Boolean;
 begin
-  Result := GetPage(nil, output, URL, Reconnect, False);
+  Result := uBaseUnit.GetPage(FHTTP, output, URL, Reconnect);
 end;
 
 end.
