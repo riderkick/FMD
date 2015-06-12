@@ -846,6 +846,7 @@ begin
     vtFavorites.Repaint;
   end;
   uTranslation.LangDir := GetCurrentDirUTF8 + PathDelim + 'languages';
+  uTranslation.LangAppName := 'fmd';
   LoadLanguage;
 end;
 
