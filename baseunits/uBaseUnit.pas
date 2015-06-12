@@ -13,10 +13,15 @@ unit uBaseUnit;
 interface
 
 uses
-  SysUtils, Classes, Graphics, Forms, UTF8Process, lazutf8classes,
-  LazUTF8, strutils, fileinfo, process, fpjson, jsonparser, FastHTMLParser, fgl,
-  uFMDThread, synautil, httpsend, blcksock, ssl_openssl, GZIPUtils,
-  USimpleException, USimpleLogger;
+  {$ifdef windows}
+  ShellApi, windows,
+  {$else}
+  UTF8Process,
+  {$endif}
+  SysUtils, Classes, Graphics, Forms, lazutf8classes,
+  LazUTF8, strutils, fileinfo, fpjson, jsonparser, FastHTMLParser, fgl, FileUtil,
+  RegExpr, synautil, httpsend, blcksock, ssl_openssl, GZIPUtils, uFMDThread,
+  uMisc, USimpleException;
 
 const
   FMD_REVISION = '$WCREV$';
@@ -963,10 +968,7 @@ function RunExternalProcess(CommandLine: String; ShowWind: Boolean =  True;
 implementation
 
 uses
-  {$ifdef UNIX}Process,{$endif UNIX}
-  {$IFDEF WINDOWS}ShellApi, RegExpr, Windows,{$ENDIF}
-  {$IFDEF DOWNLOADER}frmMain,{$ENDIF}
-  FileUtil, uMisc;
+  {$IFDEF DOWNLOADER}frmMain;{$ENDIF}
 
 {$IFDEF WINDOWS}
 // thanks Leledumbo for the code
@@ -1610,7 +1612,8 @@ begin
   begin
     for i := Low(S) to High(S) do
     begin
-      if Pos(' ', S[i]) <> 0 then
+      if (Pos(' ', S[i]) <> 0) and
+        ((LeftStr(S[i], 1) <> '"') and (RightStr(S[i], 1) <> '"')) then
         Result := Result + '"' + S[i] + '" '
       else
         Result := Result + S[i] + ' ';
@@ -3537,8 +3540,8 @@ begin
     if isPersistent then
       fMask := fMask or SEE_MASK_NOCLOSEPROCESS;
     lpVerb := 'runas';
-    lpFile := PWideChar(WideString(UTF8ToSys(Exe)));
-    lpParameters := PWideChar(WideString(UTF8ToSys(Params)));
+    lpFile := PWideChar(UTF8Decode(Exe));
+    lpParameters := PWideChar(UTF8Decode(Params));
     if ShowWind then
       nShow := SW_SHOWNORMAL
     else
@@ -3565,13 +3568,70 @@ begin
   {$ENDIF}
 end;
 
+function WinRunProcessA(Exe, Params: string; ShowWind: Boolean; isPersistent: Boolean): Boolean;
+var
+  SEInfo: TSHELLEXECUTEINFOA;
+begin
+  Initialize(SEInfo);
+  FillChar(SEInfo, SizeOf(SEInfo), 0);
+  SEInfo.cbSize := SizeOf(TSHELLEXECUTEINFOA);
+  with SEInfo do begin
+    wnd := 0;
+    fMask := SEE_MASK_FLAG_DDEWAIT or SEE_MASK_FLAG_NO_UI;
+    if isPersistent then
+      fMask := fMask or SEE_MASK_NOCLOSEPROCESS;
+    lpFile := PChar(Utf8ToAnsi(Exe));
+    lpParameters := PChar(Utf8ToAnsi(Params));
+    if ShowWind then
+      nShow := SW_SHOWNORMAL
+    else
+      nShow := SW_HIDE;
+  end;
+  Result := ShellExecuteExA(@SEInfo);
+  if isPersistent then
+    WaitForSingleObject(SEInfo.hProcess, INFINITE);
+end;
+
+function WinRunProcessW(Exe, Params: string; ShowWind: Boolean; isPersistent: Boolean): Boolean;
+var
+  SEInfo: TSHELLEXECUTEINFOW;
+begin
+  Initialize(SEInfo);
+  FillChar(SEInfo, SizeOf(SEInfo), 0);
+  SEInfo.cbSize := SizeOf(TSHELLEXECUTEINFOW);
+  with SEInfo do begin
+    wnd := 0;
+    fMask := SEE_MASK_FLAG_DDEWAIT or SEE_MASK_FLAG_NO_UI;
+    if isPersistent then
+      fMask := fMask or SEE_MASK_NOCLOSEPROCESS;
+    lpFile := PWideChar(UTF8Decode(Exe));
+    lpParameters := PWideChar(UTF8Decode(Params));
+    if ShowWind then
+      nShow := SW_SHOWNORMAL
+    else
+      nShow := SW_HIDE;
+  end;
+  Result := ShellApi.ShellExecuteExW(@SEInfo);
+  if isPersistent then
+    WaitForSingleObject(SEInfo.hProcess, INFINITE);
+end;
+
 function RunExternalProcess(Exe: String; Params: array of string;
   ShowWind: Boolean; isPersistent: Boolean): Boolean;
+{$ifndef windows}
 var
   Process: TProcessUTF8;
   I: Integer;
+{$endif}
 begin
+  if Trim(Exe) = '' then Exit(False);
   Result := True;
+  {$ifdef windows}
+  if Win32Platform = VER_PLATFORM_WIN32_NT then
+    Result := WinRunProcessW(Exe, StringsToCommandLine(Params), ShowWind, isPersistent)
+  else
+    Result := WinRunProcessA(Exe, StringsToCommandLine(Params), ShowWind, isPersistent);
+  {$else}
   Process := TProcessUTF8.Create(nil);
   try
     Process.InheritHandles := isPersistent;
@@ -3594,28 +3654,27 @@ begin
     begin
       WriteLog_E('RunExternalProcess.Error '#13#10+
         'Executable: '+Exe+#13#10+
-        'Parameters: '+StringsToCommandLine(Process.Parameters)+#13#10+
+        'Parameters: '+StringsToCommandLine(Params)+#13#10+
         'Message   : '+E.Message+#13#10+
         GetStackTraceInfo);
-      {$ifdef windows}
-      if Pos('740', E.Message) <> 0 then
-      begin
-        Writelog_W('RunExternalProcess. Trying to run with elevation, '+Exe+' '+
-          StringsToCommandLine(Process.Parameters));
-        Result := RunExternalProcessAsAdmin(Exe, StringsToCommandLine(Process.Parameters),
-          ShowWind, isPersistent);
-      end;
-      {$endif}
     end;
   end;
   Process.Free;
+ {$endif}
 end;
 
 function RunExternalProcess(Exe, Params: String; ShowWind: Boolean;
   isPersistent: Boolean): Boolean;
 begin
-  if Exe = '' then Exit;
+  if Trim(Exe) = '' then Exit(False);
+  {$ifdef windows}
+  if Win32Platform = VER_PLATFORM_WIN32_NT then
+    Result := WinRunProcessW(Exe, Params, ShowWind, isPersistent)
+  else
+    Result := WinRunProcessA(Exe, Params, ShowWind, isPersistent);
+  {$else}
   Result := RunExternalProcess(Exe, ParsedCommandLine(Params), ShowWind, isPersistent);
+  {$endif}
 end;
 
 function RunExternalProcess(CommandLine: String; ShowWind: Boolean;
@@ -3624,12 +3683,19 @@ var
  s: string;
  sa: TArrayOfString;
 begin
-  if CommandLine = '' then Exit;
+  if Trim(CommandLine) = '' then Exit(False);
   try
     sa := ParsedCommandLine(CommandLine);
     s := sa[Low(sa)];
     DeleteArrayOfString(sa, Low(sa));
+    {$ifdef windows}
+    if Win32Platform = VER_PLATFORM_WIN32_NT then
+      Result := WinRunProcessW(s, StringsToCommandLine(sa), ShowWind, isPersistent)
+    else
+      Result := WinRunProcessA(s, StringsToCommandLine(sa), ShowWind, isPersistent);
+    {$else}
     Result := RunExternalProcess(s, sa, ShowWind, isPersistent);
+    {$endif}
   finally
     SetLength(sa, 0);
   end;
