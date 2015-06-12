@@ -11,13 +11,18 @@ unit frmMain;
 interface
 
 uses
-  Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
-  LCLType, ExtCtrls, ComCtrls, Buttons, Spin, Menus, VirtualTrees, RichMemo,
-  IniFiles, simpleipc, lclproc, types, strutils, LCLIntf, DefaultTranslator,
-  EditBtn, LazUTF8, AnimatedGif, uBaseUnit, uData, uDownloadsManager,
-  uFavoritesManager, uUpdateThread, uUpdateDBThread, uSubThread, uSilentThread,
-  uMisc, uGetMangaInfosThread, uTranslation, frmDropTarget, USimpleException,
-  USimpleLogger, ActiveX;
+  {$ifdef windows}
+  ActiveX, windows,
+  {$else}
+  FakeActiveX,
+  {$endif}
+  Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs,
+  StdCtrls, LCLType, ExtCtrls, ComCtrls, Buttons, Spin, Menus, VirtualTrees,
+  RichMemo, IniFiles, simpleipc, lclproc, types, strutils, LCLIntf,
+  DefaultTranslator, EditBtn, LazUTF8, AnimatedGif, uBaseUnit, uData,
+  uDownloadsManager, uFavoritesManager, uUpdateThread, uUpdateDBThread,
+  uSubThread, uSilentThread, uMisc, uGetMangaInfosThread, uTranslation,
+  frmDropTarget, USimpleException, USimpleLogger;
 
 type
   TDoFMDType = (DoFMDNothing, DoFMDUpdate, DoFMDExit, DoFMDShutdown, DoFMDHibernate);
