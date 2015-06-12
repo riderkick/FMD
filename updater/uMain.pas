@@ -9,9 +9,9 @@ uses
   cthreads,
   cmem,
   {$endif}
-  Classes, SysUtils, zipper, FileUtil, UTF8Process, Forms, Dialogs,
-  ComCtrls, StdCtrls, Clipbrd, ExtCtrls, DefaultTranslator, RegExpr, IniFiles,
-  process, USimpleException, uMisc, httpsend, blcksock, ssl_openssl;
+  Classes, SysUtils, zipper, FileUtil, UTF8Process, Forms, Dialogs, ComCtrls,
+  StdCtrls, Clipbrd, ExtCtrls, DefaultTranslator, RegExpr, IniFiles, process,
+  USimpleException, uMisc, uTranslation, httpsend, blcksock, ssl_openssl;
 
 type
 
@@ -616,6 +616,9 @@ var
 begin
   Randomize;
   InitSimpleExceptionHandler(ChangeFileExt(Application.ExeName, '.log'));
+  uTranslation.LangDir := GetCurrentDirUTF8 + PathDelim + 'languages';
+  uTranslation.LangAppName := 'updater';
+  uTranslation.CollectLanguagesFiles;
   InitCriticalSection(CS_ReadCount);
   //load proxy config from fmd
   config := TIniFile.Create('config/config.ini');
@@ -679,7 +682,9 @@ begin
         else if s = '-r' then
           _MaxRetry := StrToIntDef(ParamStrUTF8(i + 1), 1)
         else if s = '-l' then
-          _LaunchApp := ParamStrUTF8(i + 1);
+          _LaunchApp := ParamStrUTF8(i + 1)
+        else if (LowerCase(s) = '--lang') then
+          uTranslation.SetLang(ParamStrUTF8(i + 1));
       end;
     end;
   end;
