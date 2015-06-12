@@ -12,7 +12,7 @@ interface
 
 uses
   Classes, SysUtils, Dialogs, IniFiles, syncobjs, lazutf8classes, FileUtil,
-  uBaseUnit, uData, uDownloadsManager, uFMDThread, uMisc, blcksock;
+  uBaseUnit, uData, uDownloadsManager, uFMDThread, uMisc;
 
 type
   TFavoriteManager = class;
@@ -23,7 +23,6 @@ type
 
   TFavoriteThread = class(TFMDThread)
   protected
-    procedure SockOnHeartBeat(Sender: TObject);
     procedure SyncStatus;
     procedure Execute; override;
   public
@@ -171,16 +170,6 @@ end;
 
 { TFavoriteThread }
 
-procedure TFavoriteThread.SockOnHeartBeat(Sender: TObject);
-begin
-  if Terminated then
-  begin
-    TBlockSocket(Sender).Tag := 1;
-    TBlockSocket(Sender).StopFlag := True;
-    TBlockSocket(Sender).AbortSocket;
-  end;
-end;
-
 procedure TFavoriteThread.SyncStatus;
 begin
   MainForm.vtFavorites.Repaint;
@@ -207,9 +196,7 @@ end;
 constructor TFavoriteThread.Create;
 begin
   inherited Create(True);
-  getInfo := TMangaInformation.Create;
-  getInfo.FHTTP.Sock.OnHeartbeat := SockOnHeartBeat;
-  getInfo.FHTTP.Sock.HeartbeatRate := SOCKHEARTBEATRATE;
+  getInfo := TMangaInformation.Create(Self);
   getInfo.isGetByUpdater := False;
 end;
 
