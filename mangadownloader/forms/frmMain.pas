@@ -980,6 +980,7 @@ procedure TMainForm.itMonitorTimer(Sender: TObject);
 begin
   if DoAfterFMD <> DoFMDNothing then
   begin
+    Self.CloseNow;
     case DoAfterFMD of
       DoFMDShutdown: fmdPowerOff;
       DoFMDHibernate: fmdHibernate;
