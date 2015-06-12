@@ -3486,7 +3486,7 @@ end;
 function fmdGetTickCount: Cardinal;
 begin
  {$IFDEF WINDOWS}
-  Result := GetTickCount;
+  Result := GetTickCount64;
  {$ENDIF}
 end;
 
