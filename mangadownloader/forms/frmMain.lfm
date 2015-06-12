@@ -5,8 +5,8 @@ object MainForm: TMainForm
   Width = 819
   Align = alBottom
   Caption = 'Free Manga Downloader'
-  ClientHeight = 575
-  ClientWidth = 819
+  ClientHeight = 0
+  ClientWidth = 0
   OnClose = FormClose
   OnCreate = FormCreate
   OnDestroy = FormDestroy
@@ -16,8 +16,8 @@ object MainForm: TMainForm
   object sbUpdateList: TStatusBar
     Left = 0
     Height = 30
-    Top = 545
-    Width = 819
+    Top = -30
+    Width = 0
     AutoSize = False
     Panels = <    
       item
@@ -31,10 +31,10 @@ object MainForm: TMainForm
     OnDrawPanel = sbUpdateListDrawPanel
   end
   object pcMain: TPageControl
-    Left = 201
-    Height = 508
-    Top = 11
-    Width = 614
+    Left = -2
+    Height = 0
+    Top = 0
+    Width = 0
     ActivePage = tsDownload
     Align = alClient
     BorderSpacing.Top = 3
@@ -47,13 +47,13 @@ object MainForm: TMainForm
     OnChange = pcMainChange
     object tsDownload: TTabSheet
       Caption = 'Downloads'
-      ClientHeight = 480
-      ClientWidth = 606
+      ClientHeight = 0
+      ClientWidth = 0
       object vtDownload: TVirtualStringTree
-        Left = 2
-        Height = 447
-        Top = 30
-        Width = 600
+        Left = -1
+        Height = 0
+        Top = 0
+        Width = 0
         Align = alClient
         BorderSpacing.Left = 2
         BorderSpacing.Right = 4
@@ -128,10 +128,10 @@ object MainForm: TMainForm
         OnKeyUp = vtDownloadKeyUp
       end
       object ToolBarDownload: TToolBar
-        Left = 2
-        Height = 22
-        Top = 4
-        Width = 600
+        Left = -1
+        Height = 88
+        Top = 0
+        Width = 0
         AutoSize = True
         BorderSpacing.Left = 2
         BorderSpacing.Top = 4
@@ -153,29 +153,29 @@ object MainForm: TMainForm
           OnClick = tbDownloadResumeAllClick
         end
         object tbDownloadStopAll: TToolButton
-          Left = 86
-          Top = 0
+          Left = 1
+          Top = 22
           Caption = 'Stop All'
           ImageIndex = 7
           OnClick = tbDownloadStopAllClick
         end
         object ToolButton1: TToolButton
-          Left = 153
+          Left = 1
           Height = 22
-          Top = 0
+          Top = 44
           Width = 5
           Style = tbsDivider
         end
         object tbDownloadDeleteCompleted: TToolButton
-          Left = 158
-          Top = 0
+          Left = 1
+          Top = 66
           Caption = 'Delete all completed tasks'
           ImageIndex = 9
           OnClick = tbDownloadDeleteCompletedClick
         end
         object lbTransferRate: TLabel
-          Left = 447
-          Height = 16
+          Left = -69
+          Height = 82
           Top = 3
           Width = 69
           Align = alRight
@@ -186,8 +186,8 @@ object MainForm: TMainForm
           ParentColor = False
         end
         object lbTransferRateValue: TLabel
-          Left = 518
-          Height = 16
+          Left = -80
+          Height = 82
           Top = 3
           Width = 80
           Align = alRight
@@ -2903,15 +2903,15 @@ object MainForm: TMainForm
     Left = 0
     Height = 8
     Top = 0
-    Width = 819
+    Width = 0
     Align = alTop
     TabOrder = 1
     Visible = False
   end
   object pcLeft: TPageControl
-    Left = 4
-    Height = 506
-    Top = 12
+    Left = 2
+    Height = 0
+    Top = 0
     Width = 195
     ActivePage = tsMangaList
     Align = alLeft
@@ -2925,7 +2925,7 @@ object MainForm: TMainForm
       Caption = 'Manga List'
       ChildSizing.LeftRightSpacing = 2
       ChildSizing.TopBottomSpacing = 3
-      ClientHeight = 478
+      ClientHeight = 0
       ClientWidth = 187
       object lbMode: TLabel
         Left = 3
@@ -2940,8 +2940,8 @@ object MainForm: TMainForm
       object vtMangaList: TVirtualStringTree
         Cursor = crHourGlass
         Left = 2
-        Height = 384
-        Top = 91
+        Height = 0
+        Top = 0
         Width = 181
         Align = alBottom
         Anchors = [akTop, akLeft, akRight, akBottom]
@@ -3222,8 +3222,8 @@ object MainForm: TMainForm
   object sbMain: TStatusBar
     Left = 0
     Height = 23
-    Top = 522
-    Width = 819
+    Top = -23
+    Width = 0
     Panels = <    
       item
         Width = 195
@@ -3234,9 +3234,9 @@ object MainForm: TMainForm
     SimplePanel = False
   end
   object spMainSplitter: TSplitter
-    Left = 199
-    Height = 514
-    Top = 8
+    Left = 0
+    Height = 0
+    Top = 0
     Width = 2
     OnMoved = spMainSplitterMoved
   end
@@ -4006,8 +4006,8 @@ object MainForm: TMainForm
     Enabled = False
     Interval = 600000
     OnTimer = itCheckForChaptersTimer
-    left = 752
-    top = 168
+    left = 760
+    top = 256
   end
   object itRefreshDLInfo: TIdleTimer
     Enabled = False

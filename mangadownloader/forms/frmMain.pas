@@ -970,6 +970,7 @@ end;
 
 procedure TMainForm.itCheckForChaptersTimer(Sender: TObject);
 begin
+  SubThread.CheckUpdate := True;
   FavoriteManager.isAuto := True;
   FavoriteManager.Run;
 end;
@@ -1718,13 +1719,10 @@ end;
 
 procedure TMainForm.btCheckVersionClick(Sender: TObject);
 begin
-  if subthread.CheckUpdate then
+  if SubThread.CheckUpdate then
     MessageDlg('', RS_DlgUpdaterIsRunning, mtInformation, [mbYes], 0)
   else
-  begin
-    subthread.CheckUpdate := True;
-    btCheckVersion.Caption := RS_Checking;
-  end;
+    SubThread.CheckUpdate := True;
 end;
 
 procedure TMainForm.btDonateClick(Sender: TObject);

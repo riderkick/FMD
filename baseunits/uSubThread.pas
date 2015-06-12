@@ -40,11 +40,11 @@ type
   { TSubThread }
   TSubThread = class(TFMDThread)
   protected
+    FCheckUpdateRunning: Boolean;
     FCheckUpdateThread: TCheckUpdateThread;
     procedure Execute; override;
   public
-    CheckUpdate,
-    CheckUpdateRunning: Boolean;
+    CheckUpdate: Boolean;
     constructor Create;
     destructor Destroy; override;
   end;
@@ -174,11 +174,11 @@ begin
 
     while not Terminated do
     begin
-      if CheckUpdate and (not CheckUpdateRunning) then
+      if CheckUpdate and (not FCheckUpdateRunning) then
       begin
         FCheckUpdateThread := TCheckUpdateThread.Create(True);
         FCheckUpdateThread.CheckStatus := @CheckUpdate;
-        FCheckUpdateThread.ThreadStatus := @CheckUpdateRunning;
+        FCheckUpdateThread.ThreadStatus := @FCheckUpdateRunning;
         FCheckUpdateThread.Start;
       end;
 
@@ -190,7 +190,7 @@ begin
       end;
       Sleep(500);
     end;
-    if CheckUpdateRunning then
+    if FCheckUpdateRunning then
     begin
       FCheckUpdateThread.Terminate;
       FCheckUpdateThread.WaitFor;
@@ -205,7 +205,7 @@ constructor TSubThread.Create;
 begin
   inherited Create(True);
   CheckUpdate := False;
-  CheckUpdateRunning := CheckUpdate;
+  FCheckUpdateRunning := CheckUpdate;
 end;
 
 destructor TSubThread.Destroy;
