@@ -3568,6 +3568,7 @@ begin
   {$ENDIF}
 end;
 
+{$ifdef windows}
 function WinRunProcessA(Exe, Params: string; ShowWind: Boolean; isPersistent: Boolean): Boolean;
 var
   SEInfo: TSHELLEXECUTEINFOA;
@@ -3615,6 +3616,7 @@ begin
   if isPersistent then
     WaitForSingleObject(SEInfo.hProcess, INFINITE);
 end;
+{$endif}
 
 function RunExternalProcess(Exe: String; Params: array of string;
   ShowWind: Boolean; isPersistent: Boolean): Boolean;
