@@ -6,7 +6,7 @@
 
 unit uBaseUnit;
 
-{$mode objfpc}{$H+}
+{$mode delphi}
 {$MACRO ON}
 {$DEFINE DOWNLOADER}
 
@@ -779,8 +779,8 @@ type
     Checking: Boolean;
   end;
 
-  TCardinalList = specialize TFPGList<Cardinal>;
-  TByteList = specialize TFPGList<Byte>;
+  TCardinalList = TFPGList<Cardinal>;
+  TByteList = TFPGList<Byte>;
 
   TDownloadPageThread = class(TThread)
   protected
@@ -3393,7 +3393,7 @@ begin
   if Assigned(AOwner) then
   begin
     FOwner := TFMDThread(AOwner);
-    Sock.OnHeartbeat := @SockOnHeartBeat;
+    Sock.OnHeartbeat := SockOnHeartBeat;
     Sock.HeartbeatRate := SOCKHEARTBEATRATE;
   end;
 end;
@@ -3431,8 +3431,8 @@ begin
   Output.Clear;
   parser := THTMLParser.Create(PChar(FRaw));
   try
-    parser.OnFoundTag := @FoundTag;
-    parser.OnFoundText := @FoundText;
+    parser.OnFoundTag := FoundTag;
+    parser.OnFoundText := FoundText;
     parser.Exec;
   finally
     parser.Free;
