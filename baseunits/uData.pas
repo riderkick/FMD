@@ -80,7 +80,6 @@ type
     isGenerateFolderChapterName: Boolean;
     isRemoveUnicode: Boolean;
     FHTTP: THTTPSend;
-    FOwner: TObject;
 
     procedure OnTag(NoCaseTag, ActualTag: string);
     procedure OnText(Text: String);

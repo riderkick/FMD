@@ -28,7 +28,6 @@ type
     manager: TUpdateMangaManagerThread;
     Info: TMangaInformation;
 
-    procedure SockOnHeartBeat(Sender: TObject);
     procedure MainThreadUpdateNamesAndLinks;
     procedure Execute; override;
     procedure DoTerminate; override;
@@ -59,7 +58,7 @@ type
     isFinishSearchingForNewManga, isDownloadFromServer, isDoneUpdateNecessary: Boolean;
     mainDataProcess, syncProcess: TDataProcess;
     names, links, websites, dataLinks: TStringList;
-    S, website: String;
+    website: String;
     workPtr, directoryCount,
     // for fakku's doujinshi only
     directoryCount2, numberOfThreads, websitePtr: Cardinal;
@@ -102,11 +101,8 @@ begin
   inherited Create(True);
   names := TStringList.Create;
   links := TStringList.Create;
-  Info := TMangaInformation.Create;
+  Info := TMangaInformation.Create(Self);
   info.isGetByUpdater := True;
-  info.FOwner := Self;
-  info.FHTTP.Sock.OnHeartbeat := SockOnHeartBeat;
-  info.FHTTP.Sock.HeartbeatRate := SOCKHEARTBEATRATE;
 end;
 
 destructor TUpdateMangaThread.Destroy;
@@ -115,16 +111,6 @@ begin
   names.Free;
   Info.Free;
   inherited Destroy;
-end;
-
-procedure TUpdateMangaThread.SockOnHeartBeat(Sender: TObject);
-begin
-  if Terminated then
-  begin
-    TBlockSocket(Sender).Tag := 1;
-    TBlockSocket(Sender).StopFlag := True;
-    TBlockSocket(Sender).AbortSocket;
-  end;
 end;
 
 procedure TUpdateMangaThread.MainThreadUpdateNamesAndLinks;
@@ -404,7 +390,7 @@ procedure TUpdateMangaManagerThread.GetInfo(const limit: Cardinal;
 
 var
   mt: Integer;
-
+  s: String;
 begin
   MainForm.ulTotalPtr := limit;
   try
@@ -476,20 +462,20 @@ begin
           TUpdateMangaThread(threads.Last).workPtr := workPtr;
           TUpdateMangaThread(threads.Last).Start;
           Inc(workPtr);
-          S := RS_UpdatingList + Format(' [%d/%d] %s | [T:%d] [%d/%d]',
+          s := RS_UpdatingList + Format(' [%d/%d] %s | [T:%d] [%d/%d]',
             [websitePtr, websites.Count, website, threads.Count, workPtr, limit]);
           if cs = CS_DIRECTORY_COUNT then
             if limit = 1 then
-              S := RS_UpdatingList + Format(' [%d/%d] ', [websitePtr, websites.Count]) +
+              s := RS_UpdatingList + Format(' [%d/%d] ', [websitePtr, websites.Count]) +
                 website + ' | ' + RS_GettingDirectory + '...'
             else
-              S := S + ' | ' + RS_GettingDirectory + '...';
+              s := s + ' | ' + RS_GettingDirectory + '...';
           if cs = CS_DIRECTORY_PAGE then
-            S := S + ' | ' + RS_LookingForNewTitle + '...';
+            s := s + ' | ' + RS_LookingForNewTitle + '...';
           if cs = CS_DIRECTORY_PAGE_2 then
-            S := S + ' | ' + RS_LookingForNewTitleFromAnotherDirectory + '...';
+            s := s + ' | ' + RS_LookingForNewTitleFromAnotherDirectory + '...';
           if cs = CS_INFO then
-            S := S + ' | ' + RS_GettingInfo + ' "' + names.Strings[workPtr - 1] +
+            s := s + ' | ' + RS_GettingInfo + ' "' + names.Strings[workPtr - 1] +
               '" "' + WebsiteRoots[GetMangaSiteID(website), 1] +
               links.Strings[workPtr - 1] + '"';
           {$IFNDEF DOWNLOADER}
