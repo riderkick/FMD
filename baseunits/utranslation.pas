@@ -832,46 +832,60 @@ end;
 
 function TranslateLCL(Lang: string): Boolean;
 var
-  lcllangdir, lcllangpath, s: string;
+  lcllang, lcllangdir, lcllangpath: string;
   mofile: Boolean;
-  i: Integer;
-begin
-  Result := False;
-  lcllangpath := '';
-  mofile := False;
-  if LangDir <> '' then
-  begin
-    lcllangdir := LangDir;
-    if RightStr(lcllangdir, 1) <> PathDelim then
-      lcllangdir := lcllangdir + PathDelim;
-    s := lcllangdir + 'lclstrconsts.' + Lang;
-    if FileExistsUTF8(s + '.po') then
-      lcllangpath := s + '.po'
-    else if FileExistsUTF8(s + '.mo') then
-    begin
-      lcllangpath := s + '.mo';
-      mofile := True;
-    end;
-  end;
 
-  if lcllangpath = '' then
+  procedure FindLCLFile;
+  var
+    i: Integer;
+    s: string;
   begin
-    for i := Low(ldir) to High(ldir) do
+    if LangDir <> '' then
     begin
-      lcllangdir := GetCurrentDirUTF8 + PathDelim + ldir[i];
-      s := lcllangdir + 'lclstrconsts.' + Lang;
+      lcllangdir := LangDir;
+      if RightStr(lcllangdir, 1) <> PathDelim then
+        lcllangdir := lcllangdir + PathDelim;
+      s := lcllangdir + 'lclstrconsts.' + lcllang;
       if FileExistsUTF8(s + '.po') then
-      begin
-        lcllangpath := s + '.po';
-        Break;
-      end
+        lcllangpath := s + '.po'
       else if FileExistsUTF8(s + '.mo') then
       begin
         lcllangpath := s + '.mo';
         mofile := True;
-        Break;
       end;
     end;
+    if lcllangpath = '' then
+    begin
+      for i := Low(ldir) to High(ldir) do
+      begin
+        lcllangdir := GetCurrentDirUTF8 + PathDelim + ldir[i];
+        s := lcllangdir + 'lclstrconsts.' + lcllang;
+        if FileExistsUTF8(s + '.po') then
+        begin
+          lcllangpath := s + '.po';
+          Break;
+        end
+        else if FileExistsUTF8(s + '.mo') then
+        begin
+          lcllangpath := s + '.mo';
+          mofile := True;
+          Break;
+        end;
+      end;
+    end;
+  end;
+
+begin
+  Result := False;
+  lcllangpath := '';
+  mofile := False;
+  lcllang := Lang;
+  FindLCLFile;
+  if lcllangpath = '' then
+  begin
+    if Pos('_', lcllang) <> 0 then
+      SetLength(lcllang, Pos('_', lcllang)-1);
+    FindLCLFile;
   end;
   if lcllangpath <> '' then
   begin
