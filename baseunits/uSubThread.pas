@@ -6,16 +6,12 @@
 
 unit uSubThread;
 
-{$ifdef fpc}
-  {$mode objfpc}
-{$endif}
-{$H+}
+{$mode objfpc}{$H+}
 
 interface
 
 uses
-  Classes, SysUtils, Controls, Forms, uBaseUnit, uFMDThread,
-  httpsend, blcksock;
+  Classes, SysUtils, Controls, Forms, uBaseUnit, uFMDThread;
 
 type
 
@@ -27,7 +23,6 @@ type
     fUpdateURL,
     fChangelog,
     FBtnCheckCaption: String;
-    procedure SockOnHeartBeat(Sender: TObject);
     procedure MainThreadUpdate;
     procedure MainThreadSetButton;
     procedure Execute; override;
@@ -61,16 +56,6 @@ uses
   frmMain, frmUpdateDialog;
 
 { TCheckUpdateThread }
-
-procedure TCheckUpdateThread.SockOnHeartBeat(Sender: TObject);
-begin
-  if Terminated then
-  begin
-    TBlockSocket(Sender).Tag := 1;
-    TBlockSocket(Sender).StopFlag := True;
-    TBlockSocket(Sender).AbortSocket;
-  end;
-end;
 
 procedure TCheckUpdateThread.MainThreadUpdate;
 begin
@@ -109,21 +94,19 @@ end;
 procedure TCheckUpdateThread.Execute;
 var
   l: TStringList;
-  FHTTP: THTTPSend;
+  FHTTP: THTTPSendThread;
   updateFound: Boolean = False;
 begin
   ThreadStatus^ := True;
   l := TStringList.Create;
-  FHTTP := THTTPSend.Create;
+  FHTTP := THTTPSendThread.Create(Self);
   try
     fNewVersionNumber := FMD_VERSION_NUMBER;
     fUpdateURL := '';
     FBtnCheckCaption := RS_Checking;
     Synchronize(@MainThreadSetButton);
-    FHTTP.Sock.OnHeartbeat := @SockOnHeartBeat;
-    FHTTP.Sock.HeartbeatRate := SOCKHEARTBEATRATE;
     if not Terminated and
-      GetPage(Self, FHTTP, TObject(l), UPDATE_URL + 'update', 3, False) then
+      GetPage(FHTTP, TObject(l), UPDATE_URL + 'update', 3) then
       if l.Count > 1 then
       begin
         l.NameValueSeparator := '=';
@@ -136,7 +119,7 @@ begin
           FHTTP.Clear;
           l.Clear;
           if not Terminated and
-            GetPage(Self, FHTTP, TObject(l), UPDATE_URL + 'changelog.txt', 3, False) then
+            GetPage(FHTTP, TObject(l), UPDATE_URL + 'changelog.txt', 3) then
             fChangelog := l.Text;
         end;
       FBtnCheckCaption := RS_BtnCheckUpdates;
