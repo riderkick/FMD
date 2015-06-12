@@ -25,7 +25,8 @@ unit uTranslation;
 interface
 
 uses
-  Classes, SysUtils, strutils, FileUtil, LCLTranslator, Translations;
+  Classes, SysUtils, strutils, gettext, FileUtil, LCLTranslator, Translations,
+  LResources, Forms;
 
 type
   TPoLanguage = record
@@ -668,11 +669,12 @@ var
   AvailableLanguages: TStringList;
   LastSelected: string = '';
   LangDir: string = '';
+  LangAppName: string = '';
 
   procedure CollectLanguagesFiles(appname: string = ''; dir: string = ''; useNativeName: Boolean = True);
   function GetLangName(lcode: string; useNativeName: Boolean = True): string;
 
-  function SetLang(Lang: string): Boolean;
+  function SetLang(lang: string; appname: string = ''): Boolean;
   function SetLangByIndex(Idx: Integer): Boolean;
   function GetDefaultLang: string;
 
@@ -690,17 +692,18 @@ procedure CollectLanguagesFiles(appname: string; dir: string;
   var
     SR: TSearchRec;
     p: Integer;
-    s, id: string;
+    ldir, lname, s, id: string;
   begin
-    if RightStr(adir, 1) <> PathDelim then
-      adir := adir + PathDelim;
-    if DirectoryExistsUTF8(adir) then
+    ldir := adir;
+    lname := LowerCase(aname);
+    if RightStr(ldir, 1) <> PathDelim then
+      ldir := ldir + PathDelim;
+    if DirectoryExistsUTF8(ldir) then
     begin
-      aname := LowerCase(aname);
-      if FindFirstUTF8(adir + '*', faAnyFile, SR) = 0 then
+      if FindFirstUTF8(ldir + '*', faAnyFile, SR) = 0 then
         repeat
           s := LowerCase(SR.Name);
-          if (Pos(aname + '.', s) = 1) and
+          if (Pos(lname + '.', s) = 1) and
             ((RightStr(s, 3) = '.po') or (RightStr(s, 3) = '.mo')) then
           begin
             s := SR.Name;
@@ -736,7 +739,12 @@ begin
     end;
   end;
   if appname = '' then
-    appname := ExtractFileNameOnly(ParamStrUTF8(0));
+  begin
+    if LangAppName <> '' then
+      appname := LangAppName
+    else
+      appname := ExtractFileNameOnly(ParamStrUTF8(0));
+  end;
   AvailableLanguages.Clear;
 
   if lauto then
@@ -824,55 +832,103 @@ end;
 
 function TranslateLCL(Lang: string): Boolean;
 var
-  lcllangdir, lcllangpath, fallbacklang: string;
-  lcllangfound: Boolean = False;
+  lcllangdir, lcllangpath, s: string;
+  mofile: Boolean;
   i: Integer;
-
-  procedure SearchLangPath;
-  begin
-    if FileExistsUTF8(lcllangdir + 'lclstrconsts.' + Lang + '.po') then
-    begin
-      lcllangfound := True;
-      lcllangpath := lcllangdir + 'lclstrconsts.' + Lang + '.po';
-    end;
-  end;
-
 begin
   Result := False;
+  lcllangpath := '';
+  mofile := False;
   if LangDir <> '' then
   begin
     lcllangdir := LangDir;
     if RightStr(lcllangdir, 1) <> PathDelim then
       lcllangdir := lcllangdir + PathDelim;
-    SearchLangPath;
-  end
-  else
+    s := lcllangdir + 'lclstrconsts.' + Lang;
+    if FileExistsUTF8(s + '.po') then
+      lcllangpath := s + '.po'
+    else if FileExistsUTF8(s + '.mo') then
+    begin
+      lcllangpath := s + '.mo';
+      mofile := True;
+    end;
+  end;
+
+  if lcllangpath = '' then
   begin
     for i := Low(ldir) to High(ldir) do
     begin
       lcllangdir := GetCurrentDirUTF8 + PathDelim + ldir[i];
-      SearchLangPath;
-      if lcllangfound then
+      s := lcllangdir + 'lclstrconsts.' + Lang;
+      if FileExistsUTF8(s + '.po') then
+      begin
+        lcllangpath := s + '.po';
         Break;
+      end
+      else if FileExistsUTF8(s + '.mo') then
+      begin
+        lcllangpath := s + '.mo';
+        mofile := True;
+        Break;
+      end;
     end;
   end;
-  if lcllangfound then
+  if lcllangpath <> '' then
   begin
-    fallbacklang := '';
-    TranslateUnitResourceStrings('LclStrConsts', lcllangpath, Lang, fallbacklang);
+    if mofile then
+      gettext.TranslateUnitResourceStrings('LclStrConsts', lcllangpath)
+    else
+      Translations.TranslateUnitResourceStrings('LclStrConsts', lcllangpath);
     Result := True;
   end;
 end;
 
-function SetLang(Lang: string): Boolean;
+function SetLang(lang: string; appname: string): Boolean;
+var
+  lfile: string;
+  ltrans: TUpdateTranslator;
+  i: Integer;
 begin
   Result := False;
-  if (LastSelected <> Lang) and
-    (AvailableLanguages.IndexOfName(lang) > 0) then
+  ltrans := nil;
+  if (LastSelected <> lang) then
   begin
-    SetDefaultLang(Lang);
-    LastSelected := Lang;
-    TranslateLCL(Lang);
+    LangDir := TrimRightSet(LangDir, [PathDelim]);
+    if appname = '' then
+    begin
+      if LangAppName <> '' then
+        appname := LangAppName
+      else
+        appname := ExtractFileNameOnly(ParamStrUTF8(0));
+    end;
+
+    //po file
+    lfile := LangDir + PathDelim + appname + '.' + lang;
+    if FileExistsUTF8(lfile + '.po') then
+    begin
+      lfile := lfile + '.po';
+      TranslateResourceStrings(lfile);
+      ltrans := TPOTranslator.Create(lfile);
+    end
+    //mo file
+    else if FileExistsUTF8(lfile + '.mo') then
+    begin
+      lfile := lfile + '.mo';
+      gettext.TranslateResourceStrings(lfile);
+      ltrans := TDefaultTranslator.Create(lfile);
+    end;
+
+    TranslateLCL(lang);
+
+    if ltrans <> nil then
+    begin
+      if Assigned(LRSTranslator) then
+        LRSTranslator.Free;
+      LRSTranslator := ltrans;
+      for i := 0 to Screen.CustomFormCount-1 do
+        ltrans.UpdateTranslation(Screen.CustomForms[i]);
+    end;
+    LastSelected := lang;
     Result := True;
   end;
 end;
@@ -882,12 +938,7 @@ begin
   Result := False;
   if Idx < 0 then Exit;
   if LastSelected <> AvailableLanguages.Names[idx] then
-  begin
-    SetDefaultLang(AvailableLanguages.Names[Idx]);
-    LastSelected := AvailableLanguages.Names[Idx];
-    TranslateLCL(AvailableLanguages.Names[Idx]);
-    Result := True;
-  end;
+    Result := SetLang(AvailableLanguages.Names[idx]);
 end;
 
 function GetDefaultLang: string;
