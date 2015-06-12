@@ -16,8 +16,7 @@ unit uGetMangaInfosThread;
 interface
 
 uses
-  SysUtils, Graphics, Dialogs, blcksock,
-  uBaseUnit, uData, uFMDThread;
+  SysUtils, Graphics, Dialogs, uBaseUnit, uData, uFMDThread;
 
 type
 
@@ -35,7 +34,6 @@ type
     // Flush this thread, means that the result will not be shown.
     FIsFlushed: Boolean;
 
-    procedure SockOnHeartBeat(Sender: TObject);
     procedure Execute; override;
     procedure DoGetInfos;
 
@@ -140,7 +138,7 @@ begin
       FCover.Clear;
       // If there's cover then we will load it to the TPicture component.
       if OptionEnableLoadCover and (Trim(FInfo.mangaInfo.coverLink) <> '') then
-        FIsHasMangaCover := GetPage(nil, FInfo.FHTTP, TObject(FCover), FInfo.mangaInfo.coverLink, 3, True)
+        FIsHasMangaCover := GetPage(FInfo.FHTTP, TObject(FCover), FInfo.mangaInfo.coverLink, 3)
       else
         FIsHasMangaCover := False;
       Synchronize(MainThreadShowCover);
@@ -148,16 +146,6 @@ begin
   except
     on E: Exception do
       MainForm.ExceptionHandler(Self, E);
-  end;
-end;
-
-procedure TGetMangaInfosThread.SockOnHeartBeat(Sender: TObject);
-begin
-  if Terminated then
-  begin
-    TBlockSocket(Sender).Tag := 1;
-    TBlockSocket(Sender).StopFlag := True;
-    TBlockSocket(Sender).AbortSocket;
   end;
 end;
 
@@ -241,10 +229,7 @@ constructor TGetMangaInfosThread.Create;
 begin
   inherited Create(True);
   FIsFlushed := False;
-  FInfo := TMangaInformation.Create;
-  FInfo.FOwner := Self;
-  FInfo.FHTTP.Sock.OnHeartbeat := SockOnHeartBeat;
-  FInfo.FHTTP.Sock.HeartbeatRate := SOCKHEARTBEATRATE;
+  FInfo := TMangaInformation.Create(Self);
   FCover := MainForm.mangaCover;
   FMangaListPos := -1;
 end;
