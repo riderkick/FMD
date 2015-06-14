@@ -289,7 +289,7 @@ msgstr "Periksa versi baru"
 #: tmainform.btdownload.caption
 msgctxt "tmainform.btdownload.caption"
 msgid "Download"
-msgstr "Unduh semua"
+msgstr "Unduh"
 
 #: tmainform.btfavoriteschecknewchapter.caption
 msgctxt "tmainform.btfavoriteschecknewchapter.caption"
@@ -1560,15 +1560,15 @@ msgstr "%s memiliki %d komik baru"
 
 #: uupdatethread.rs_gettingdirectory
 msgid "Getting directory"
-msgstr "Mendapati direktori"
+msgstr "Memuat direktori"
 
 #: uupdatethread.rs_gettinginfo
 msgid "Getting info"
-msgstr "Mendapati informasi"
+msgstr "Memuat informasi"
 
 #: uupdatethread.rs_gettinglistfor
 msgid "Getting list for"
-msgstr "Mendapati daftar untuk"
+msgstr "Memuat daftar untuk"
 
 #: uupdatethread.rs_indexingnewtitle
 msgid "Indexing new title(s)"
@@ -1610,4 +1610,3 @@ msgstr "Sinkronisasi data"
 #: uupdatethread.rs_updatinglist
 msgid "Updating list"
 msgstr "Memperbarui daftar"
-
