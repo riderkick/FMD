@@ -76,7 +76,7 @@ begin
     if ShowModal = mrYes then
     begin
       frmMain.FUpdateURL := fUpdateURL;
-      DoAfterFMD := DoFMDUpdate;
+      DoAfterFMD := DO_UPDATE;
       MainForm.itMonitor.Enabled := True;
     end
     else

@@ -23,6 +23,9 @@ uses
   RegExpr, synautil, httpsend, blcksock, ssl_openssl, GZIPUtils, uFMDThread,
   uMisc, USimpleException;
 
+Type
+  TFMDDo = (DO_NOTHING, DO_EXIT, DO_POWEROFF, DO_HIBERNATE, DO_UPDATE);
+
 const
   FMD_REVISION = '$WCREV$';
   FMD_INSTANCE = '_FreeMangaDownloaderInstance_';
@@ -215,10 +218,6 @@ const
 
   OPTION_MANGALIST = 0;
   OPTION_RECONNECT = 1;
-
-  DO_EXIT_FMD  = 1;
-  DO_TURNOFF   = 2;
-  DO_HIBERNATE = 3;
 
   NO_ERROR              = 0;
   NET_PROBLEM           = 1;
@@ -663,7 +662,7 @@ var
   Genre: array [0..37] of String;
 
   // cbOptionLetFMDDoItemIndex
-  cbOptionLetFMDDoItemIndex: Cardinal = 0;
+  OptionLefFMDDo: TFMDDo = DO_NOTHING;
 
   Revision: Cardinal;
   currentJDN: Cardinal;
@@ -3491,12 +3490,6 @@ begin
 end;
 
 procedure fmdPowerOff;
-const
-  SE_SHUTDOWN_NAME = 'SeShutdownPrivilege';
-{$IFDEF UNIX}
-var
-  Process: TProcessUTF8;
-{$ENDIF}
 begin
 {$IFDEF WINDOWS}
   if IsPwrShutdownAllowed then
@@ -3507,10 +3500,12 @@ begin
 {$ENDIF}
 {$IFDEF UNIX}
   // This process require admin rights in order to execute
-  Process := TProcessUTF8.Create(nil);
-  Process.CommandLine := 'poweroff';
-  Process.Execute;
-  Process.Free;
+  with TProcessUTF8.Create(nil) do try
+    CommandLine := 'poweroff';
+    Execute;
+  finally
+    Free;
+  end;
 {$ENDIF}
 end;
 

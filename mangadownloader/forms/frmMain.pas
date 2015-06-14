@@ -25,7 +25,6 @@ uses
   frmDropTarget, USimpleException, USimpleLogger;
 
 type
-  TDoFMDType = (DoFMDNothing, DoFMDUpdate, DoFMDExit, DoFMDShutdown, DoFMDHibernate);
 
   { TMainForm }
 
@@ -631,7 +630,7 @@ var
   INIAdvanced: TIniFileR;
 
   // update fmd through main thread
-  DoAfterFMD: TDoFMDType;
+  DoAfterFMD: TFMDDo;
   FUpdateURL: String;
 
 const
@@ -718,7 +717,7 @@ begin
   isExiting := False;
   isSubthread := False;
   isGetMangaInfos := False;
-  DoAfterFMD := DoFMDNothing;
+  DoAfterFMD := DO_NOTHING;
   fmdDirectory := CorrectFilePath(GetCurrentDirUTF8);
   Application.HintHidePause := 10000;
   sbUpdateList.DoubleBuffered := True;
@@ -852,7 +851,7 @@ end;
 
 procedure TMainForm.FormClose(Sender: TObject; var CloseAction: TCloseAction);
 begin
-  if cbOptionShowQuitDialog.Checked and (DoAfterFMD = DoFMDNothing) then
+  if cbOptionShowQuitDialog.Checked and (DoAfterFMD = DO_NOTHING) then
   begin
     if MessageDlg('', RS_DlgQuit, mtConfirmation, [mbYes, mbNo], 0) <> mrYes then
     begin
@@ -981,13 +980,13 @@ end;
 
 procedure TMainForm.itMonitorTimer(Sender: TObject);
 begin
-  if DoAfterFMD <> DoFMDNothing then
+  if DoAfterFMD <> DO_NOTHING then
   begin
     Self.CloseNow(False);
     case DoAfterFMD of
-      DoFMDShutdown: fmdPowerOff;
-      DoFMDHibernate: fmdHibernate;
-      DoFMDUpdate:
+      DO_POWEROFF: fmdPowerOff;
+      DO_HIBERNATE: fmdHibernate;
+      DO_UPDATE:
       begin
         if FileExistsUTF8(fmdDirectory + 'updater.exe') then
           CopyFile(fmdDirectory + 'updater.exe', fmdDirectory + 'old_updater.exe');
@@ -1002,7 +1001,7 @@ begin
     end;
     Self.Close;
   end;
-  DoAfterFMD := DoFMDNothing;
+  DoAfterFMD := DO_NOTHING;
   itMonitor.Enabled := False;
 end;
 
@@ -2664,7 +2663,7 @@ procedure TMainForm.pcMainChange(Sender: TObject);
     cbOptionLetFMDDo.ItemIndex := options.ReadInteger('general', 'LetFMDDo', 0);
     cbOptionEnableLoadCover.Checked :=
       options.ReadBool('general', 'LoadMangaCover', True);
-    cbOptionLetFMDDoItemIndex := cbOptionLetFMDDo.ItemIndex;
+    OptionLefFMDDo := TFMDDo(cbOptionLetFMDDo.ItemIndex);
     edOptionExternalPath.FileName := options.ReadString('general', 'ExternalProgramPath', '');
     edOptionExternalParams.Text := options.ReadString('general', 'ExternalProgramParams', DEFAULT_EXPARAM);
 
@@ -3717,7 +3716,7 @@ begin
     options.WriteBool('general', 'MinimizeToTray', cbOptionMinimizeToTray.Checked);
     options.WriteInteger('general', 'NewMangaTime', seOptionNewMangaTime.Value);
     options.WriteInteger('general', 'LetFMDDo', cbOptionLetFMDDo.ItemIndex);
-    cbOptionLetFMDDoItemIndex := cbOptionLetFMDDo.ItemIndex;
+    OptionLefFMDDo := TFMDDo(cbOptionLetFMDDo.ItemIndex);
     options.WriteBool('general', 'LoadMangaCover', cbOptionEnableLoadCover.Checked);
     OptionEnableLoadCover := cbOptionEnableLoadCover.Checked;
     options.WriteString('general', 'ExternalProgramPath', edOptionExternalPath.FileName);
@@ -3833,8 +3832,6 @@ begin
       Port := '';
       User := '';
     end;
-
-    cbOptionLetFMDDo.ItemIndex := cbOptionLetFMDDoItemIndex;
 
     DLManager.maxDLTasks := seOptionMaxParallel.Value;
     DLManager.maxDLThreadsPerTask := seOptionMaxThread.Value;
@@ -4367,7 +4364,7 @@ begin
   OptionEnableLoadCover := options.ReadBool('general', 'LoadMangaCover', True);
   cbOptionEnableLoadCover.Checked := OptionEnableLoadCover;
   cbOptionLetFMDDo.ItemIndex := options.ReadInteger('general', 'LetFMDDo', 0);
-  cbOptionLetFMDDoItemIndex := cbOptionLetFMDDo.ItemIndex;
+  OptionLefFMDDo := TFMDDo(cbOptionLetFMDDo.ItemIndex);
   cbOptionAutoNumberChapter.Checked :=
     options.ReadBool('general', 'AutoNumberChapter', True);
   edOptionExternalPath.FileName := options.ReadString('general', 'ExternalProgramPath', '');

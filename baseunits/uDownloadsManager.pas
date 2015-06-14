@@ -160,7 +160,6 @@ type
     DownloadedChaptersListFile: TStringList;
 
     //exit counter
-    ExitType: TExitType;
     ExitWaitOK: Boolean;
 
     constructor Create;
@@ -1751,7 +1750,6 @@ begin
   isRunningBackup := False;
   isRunningBackupDownloadedChaptersList := False;
   isReadyForExit := False;
-  ExitType := etExit;
 end;
 
 destructor TDownloadManager.Destroy;
@@ -2104,6 +2102,7 @@ var
 
   procedure ShowExitCounter;
   begin
+    if OptionLefFMDDo in [DO_NOTHING, DO_UPDATE] then Exit;
     if ThreadID <> MainThreadID then
     begin
       {$IF FPC_FULLVERSION >= 20701}
@@ -2170,15 +2169,7 @@ begin
       end;
 
       if (Count = 0) and (isCheckForFMDDo) then
-        if MainForm.cbOptionLetFMDDo.ItemIndex > 0 then
-        begin
-          case MainForm.cbOptionLetFMDDo.ItemIndex of
-            DO_EXIT_FMD: ExitType := etExit;
-            DO_TURNOFF: ExitType := etShutdown;
-            DO_HIBERNATE: ExitType := etHibernate;
-          end;
-          ShowExitCounter;
-        end;
+        ShowExitCounter;
       MainForm.vtDownloadFilters;
     except
       on E: Exception do
@@ -2425,12 +2416,12 @@ end;
 procedure TDownloadManager.doExitWaitCounter;
 begin
   with TShutdownCounterForm.Create(MainForm) do try
-    case Self.ExitType of
-      etShutdown: WaitTimeout := 60;
-      etHibernate: WaitTimeout := 30;
-      etExit: WaitTimeout := 5;
+    case OptionLefFMDDo of
+      DO_POWEROFF  : WaitTimeout := 60;
+      DO_HIBERNATE : WaitTimeout := 30;
+      DO_EXIT      : WaitTimeout := 5;
     end;
-    frmExitType := Self.ExitType;
+    frmExitType := OptionLefFMDDo;
     ExitWaitOK := False;
     if ShowModal = mrOK then
       ExitWaitOK := True;
@@ -2440,11 +2431,7 @@ begin
 
   if ExitWaitOK then
   begin
-    case Self.ExitType of
-      etShutdown: DoAfterFMD := DoFMDNothing;
-      etHibernate: DoAfterFMD := DoFMDHibernate;
-      etExit: DoAfterFMD := DoFMDExit;
-    end;
+    frmMain.DoAfterFMD := OptionLefFMDDo;
     MainForm.itMonitor.Enabled := True;
   end;
 end;

@@ -6,10 +6,9 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, StdCtrls,
-  Buttons, ExtCtrls, LCLType, DefaultTranslator;
+  Buttons, ExtCtrls, LCLType, DefaultTranslator, uBaseUnit;
 
 type
-  TExitType = (etExit, etShutdown, etHibernate);
 
   { TShutdownCounterForm }
 
@@ -35,7 +34,7 @@ type
     { private declarations }
   public
     WaitTimeout: Integer;
-    frmExitType: TExitType;
+    frmExitType: TFMDDo;
     { public declarations }
   end;
 
@@ -78,7 +77,7 @@ procedure TShutdownCounterForm.FormCreate(Sender: TObject);
 begin
   WaitTimeout := 60;
   WaitCounter := WaitTimeout;
-  frmExitType := etExit;
+  frmExitType := DO_NOTHING;
 end;
 
 procedure TShutdownCounterForm.FormKeyDown(Sender : TObject; var Key : Word;
@@ -96,9 +95,9 @@ var
   s: String = '';
 begin
   case frmExitType of
-    etShutdown: s := RS_LblMessageShutdown;
-    etHibernate: s := RS_LblMessageHibernate;
-    etExit: s := RS_LblMessageExit;
+    DO_POWEROFF  : s := RS_LblMessageShutdown;
+    DO_HIBERNATE : s := RS_LblMessageHibernate;
+    DO_EXIT      : s := RS_LblMessageExit;
   end;
   WaitCounter := WaitTimeout;
   lblMessage.Caption := Format(s, [WaitCounter]);
@@ -118,9 +117,9 @@ var
 begin
   Dec(WaitCounter);
   case frmExitType of
-    etShutdown: s := RS_LblMessageShutdown;
-    etHibernate: s := RS_LblMessageHibernate;
-    etExit: s := RS_LblMessageExit;
+    DO_POWEROFF  : s := RS_LblMessageShutdown;
+    DO_HIBERNATE : s := RS_LblMessageHibernate;
+    DO_EXIT      : s := RS_LblMessageExit;
   end;
   lblMessage.Caption := Format(s, [WaitCounter]);
   if WaitCounter = 0 then
