@@ -29,12 +29,12 @@ uses
   LResources, Forms;
 
 type
-  TPoLanguage = record
+  TLanguageItem = record
     id: String;
     name: String;
   end;
 
-  TPoLanguages = array of TPoLanguage;
+  TLanguageCollection = array of TLanguageItem;
 
 const
   Lang_english: array[0..184] of array[0..1] of string = (
@@ -915,17 +915,16 @@ begin
       else
         appname := ExtractFileNameOnly(ParamStrUTF8(0));
     end;
-
-    //po file
     lfile := LangDir + PathDelim + appname + '.' + lang;
-    if FileExistsUTF8(lfile + '.po') then
+
+    if FileExistsUTF8(lfile + '.po') then //po file
     begin
       lfile := lfile + '.po';
-      TranslateResourceStrings(lfile);
+      Translations.TranslateResourceStrings(lfile);
       ltrans := TPOTranslator.Create(lfile);
     end
-    //mo file
-    else if FileExistsUTF8(lfile + '.mo') then
+    else
+    if FileExistsUTF8(lfile + '.mo') then //mo file
     begin
       lfile := lfile + '.mo';
       gettext.TranslateResourceStrings(lfile);
@@ -941,9 +940,9 @@ begin
       LRSTranslator := ltrans;
       for i := 0 to Screen.CustomFormCount-1 do
         ltrans.UpdateTranslation(Screen.CustomForms[i]);
+      LastSelected := lang;
+      Result := True;
     end;
-    LastSelected := lang;
-    Result := True;
   end;
 end;
 
