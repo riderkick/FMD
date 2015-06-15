@@ -14,7 +14,7 @@ uses
   lazutf8classes, jsHTMLUtil, FastHTMLParser, HTMLUtil, SynaCode, FileUtil,
   Controls, RegExpr, Imaging, ImagingTypes, ImagingCanvases, Classes, SysUtils,
   Dialogs, ExtCtrls, IniFiles, typinfo, syncobjs, httpsend, blcksock, uBaseUnit,
-  uPacker, uFMDThread, uMisc, dateutils, frmShutdownCounter;
+  uPacker, uFMDThread, uMisc, USimpleLogger, dateutils, frmShutdownCounter;
 
 type
   TDownloadManager = class;
@@ -500,6 +500,8 @@ var
 
   {$I includes/Madokami/chapter_page_number.inc}
 
+  {$I includes/WPManga/chapter_page_number.inc}
+
 begin
   manager.container.PageNumber := 0;
   if manager.container.MangaSiteID = ANIMEA_ID then
@@ -713,6 +715,9 @@ begin
   if manager.container.MangaSiteID = MADOKAMI_ID then
     Result := GetMadokamiPageNumber
   else
+  if manager.container.MangaSiteID = MANGACAP_ID then
+    Result := GetWPMangaPageNumber
+  else
     Result := False;
 end;
 
@@ -849,6 +854,8 @@ var
   {$I includes/PornComix/image_url.inc}
 
   {$I includes/MangaAt/image_url.inc}
+
+  {$I includes/WPManga/image_url.inc}
 
 begin
   if (manager.container.PageLinks.Count > 0) and
@@ -1062,6 +1069,9 @@ begin
   else
   if manager.container.MangaSiteID = MANGAAT_ID then
     Result := GetMangaAtImageURL
+  else
+  if manager.container.MangaSiteID = MANGACAP_ID then
+    Result := GetWPMangaImageURL
   else
     Result := False;
 end;

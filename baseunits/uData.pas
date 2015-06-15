@@ -14,7 +14,8 @@ unit uData;
 interface
 
 uses
-  Classes, SysUtils, uBaseUnit, uFMDThread, strutils, FileUtil, httpsend;
+  Classes, SysUtils, uBaseUnit, uFMDThread, USimpleLogger, strutils, FileUtil,
+  httpsend;
 
 type
   TDataProcess = class(TObject)
@@ -775,6 +776,7 @@ var
   p: Integer;
   Source: TStringList;
   Parser: THTMLParser;
+  WebsiteID: Cardinal;
 
   {$I includes/AnimeA/directory_page_number.inc}
 
@@ -864,8 +866,11 @@ var
 
   {$I includes/Madokami/directory_page_number.inc}
 
+  {$I includes/WPManga/directory_page_number.inc}
+
 begin
   Page := 0;
+  WebsiteID := GetMangaSiteID(website);
 
   //load User-Agent from INIAdvanced
   if website <> '' then
@@ -1031,6 +1036,9 @@ begin
     if website = WebsiteRoots[MADOKAMI_ID, 0] then
       Result := GetMadokamiDirectoryPageNumber
     else
+    if WebsiteID = MANGACAP_ID then
+      Result := GetWPMangaDirectoryPageNumber
+    else
     begin
       Result := NO_ERROR;
       Page := 1;
@@ -1047,6 +1055,7 @@ function TMangaInformation.GetNameAndLink(const names, links: TStringList;
 var
   Source: TStringList;
   Parser: THTMLParser;
+  WebsiteID: Cardinal;
 
   {$I includes/Manga2u/names_and_links.inc}
 
@@ -1210,7 +1219,11 @@ var
 
   {$I includes/Madokami/names_and_links.inc}
 
+  {$I includes/WPManga/names_and_links.inc}
+
 begin
+  WebsiteID := GetMangaSiteID(website);
+
   //load User-Agent from INIAdvanced
   if website <> '' then
     FHTTP.UserAgent := INIAdvanced.ReadString('UserAgent', website, '');
@@ -1474,6 +1487,9 @@ begin
   if website = WebsiteRoots[MADOKAMI_ID, 0] then
     Result := MadokamiGetNamesAndLinks
   else
+  if WebsiteID = MANGACAP_ID then
+    Result := GetWPMangaNamesAndLinks
+  else
   begin
     Result := INFORMATION_NOT_FOUND;
     Source.Free;
@@ -1493,6 +1509,7 @@ var
   rex: TRegExpr;
   Source: TStringList;
   Parser: THTMLParser;
+  WebsiteID: Cardinal;
 
   {$I includes/AnimeA/manga_information.inc}
 
@@ -1659,8 +1676,12 @@ var
 
   {$I includes/Madokami/manga_information.inc}
 
+  {$I includes/WPManga/manga_information.inc}
+
 begin
   if Trim(URL) = '' then Exit(INFORMATION_NOT_FOUND);
+  WebsiteID := GetMangaSiteID(website);
+  if WebsiteID > High(WebsiteRoots) then Exit(INFORMATION_NOT_FOUND);
 
   //load User-Agent from INIAdvanced
   if website <> '' then
@@ -1926,6 +1947,9 @@ begin
   else
   if website = GetMangaSiteName(MADOKAMI_ID) then
     Result := GetMadokamiInfoFromURL
+  else
+  if WebsiteID = MANGACAP_ID then
+    Result := GetWPMangaInfoFromURL
   else
   begin
     Source.Free;
