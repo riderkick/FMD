@@ -4086,25 +4086,30 @@ var
 begin
   if vtDownload.RootNodeCount = 0 then
     Exit;
+  if vtDownload.RootNodeCount <> DLManager.Count then
+    vtDownload.RootNodeCount := DLManager.Count;
   xNode := vtDownload.GetLast;
-  for i := vtDownload.RootNodeCount - 1 downto 0 do
+  for i := DLManager.Count-1 downto 0 do
   begin
-    dt := DLManager.TaskItem(i).DownloadInfo.dateTime;
-    DecodeDate(dt, year, month, day);
-    jdn := DateToJDN(year, month, day);
+    if i < DLManager.Count then
+    begin
+      dt := DLManager.TaskItem(i).DownloadInfo.dateTime;
+      DecodeDate(dt, year, month, day);
+      jdn := DateToJDN(year, month, day);
 
-    if (jdn >= L) and (jdn <= H) then
-      vtDownload.isVisible[xNode] := True
-    else
-      vtDownload.isVisible[xNode] := False;
+      if (jdn >= L) and (jdn <= H) then
+        vtDownload.isVisible[xNode] := True
+      else
+        vtDownload.isVisible[xNode] := False;
 
-    if canExit then
-      Exit;
-    if xNode = vtDownload.GetFirst then
-      canExit := True;
-    xNode := vtDownload.GetPrevious(xNode);
-    if xNode = vtDownload.GetFirst then
-      canExit := True;
+      if canExit then
+        Exit;
+      if xNode = vtDownload.GetFirst then
+        canExit := True;
+      xNode := vtDownload.GetPrevious(xNode);
+      if xNode = vtDownload.GetFirst then
+        canExit := True;
+    end;
   end;
 end;
 
