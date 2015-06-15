@@ -972,10 +972,11 @@ end;
 
 procedure TMainForm.itCheckForChaptersTimer(Sender: TObject);
 begin
+  if DLManager.isDlgCounter then Exit;
   if options.ReadBool('update', 'AutoCheckUpdate', True) then
     SubThread.CheckUpdate := True;
   FavoriteManager.isAuto := True;
-  FavoriteManager.Run;
+  FavoriteManager.CheckForNewChapter;
 end;
 
 procedure TMainForm.itMonitorTimer(Sender: TObject);
@@ -1519,7 +1520,7 @@ end;
 procedure TMainForm.btFavoritesCheckNewChapterClick(Sender: TObject);
 begin
   FavoriteManager.isAuto := False;
-  FavoriteManager.Run;
+  FavoriteManager.CheckForNewChapter;
 end;
 
 // -----

@@ -94,7 +94,7 @@ type
 
     function FavoriteItem(const Index: Integer): TFavoriteContainer;
 
-    procedure Run;
+    procedure CheckForNewChapter;
     // Show notification form after checking completed
     procedure ShowResult;
     // Return true if a manga exist in FFavorites
@@ -310,7 +310,7 @@ begin
          Sleep(100);
     end;
 
-    if not Terminated then
+    if (not Terminated) and (not manager.DLManager.isDlgCounter) then
       Synchronize(SyncShowResult);
   except
     on E: Exception do
@@ -388,8 +388,9 @@ begin
   Result := TFavoriteContainer(FFavorites.Items[Index]);
 end;
 
-procedure TFavoriteManager.Run;
+procedure TFavoriteManager.CheckForNewChapter;
 begin
+  if DLManager.isDlgCounter then Exit;
   try
     if isRunning then
     begin
@@ -423,6 +424,7 @@ var
   removeListStr         : String = '';
   favDelete             : Boolean;
 begin
+  if DLManager.isDlgCounter then Exit;
   try
     CS_Favorites.Acquire;
     dlChapters := TStringList.Create;

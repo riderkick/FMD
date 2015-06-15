@@ -140,6 +140,7 @@ type
     FSortDirection: Boolean;
     FSortColumn: Integer;
     DownloadManagerFile: TIniFile;
+    FisDlgCounter: Boolean;
   protected
     function GetTaskCount: Integer;
     function GetTransferRate: String;
@@ -217,6 +218,7 @@ type
     property SortDirection: Boolean read FSortDirection write FSortDirection;
     property SortColumn: Integer read FSortColumn write FSortColumn;
     property TransferRate: String read GetTransferRate;
+    property isDlgCounter: Boolean read FisDlgCounter;
   end;
 
 resourcestring
@@ -1760,6 +1762,7 @@ begin
   isRunningBackup := False;
   isRunningBackupDownloadedChaptersList := False;
   isReadyForExit := False;
+  FisDlgCounter := False;
 end;
 
 destructor TDownloadManager.Destroy;
@@ -2426,6 +2429,7 @@ end;
 
 procedure TDownloadManager.doExitWaitCounter;
 begin
+  FisDlgCounter := True;
   with TShutdownCounterForm.Create(MainForm) do try
     case OptionLetFMDDo of
       DO_POWEROFF:
@@ -2454,6 +2458,7 @@ begin
     frmMain.DoAfterFMD := OptionLetFMDDo;
     MainForm.itMonitor.Enabled := True;
   end;
+  FisDlgCounter := False;
 end;
 
 function TDownloadManager.TaskStatusPresent(Stats: TStatusTypes): Boolean;
