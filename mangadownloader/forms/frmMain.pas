@@ -2663,7 +2663,7 @@ procedure TMainForm.pcMainChange(Sender: TObject);
     cbOptionLetFMDDo.ItemIndex := options.ReadInteger('general', 'LetFMDDo', 0);
     cbOptionEnableLoadCover.Checked :=
       options.ReadBool('general', 'LoadMangaCover', True);
-    OptionLefFMDDo := TFMDDo(cbOptionLetFMDDo.ItemIndex);
+    OptionLetFMDDo := TFMDDo(cbOptionLetFMDDo.ItemIndex);
     edOptionExternalPath.FileName := options.ReadString('general', 'ExternalProgramPath', '');
     edOptionExternalParams.Text := options.ReadString('general', 'ExternalProgramParams', DEFAULT_EXPARAM);
 
@@ -3716,7 +3716,7 @@ begin
     options.WriteBool('general', 'MinimizeToTray', cbOptionMinimizeToTray.Checked);
     options.WriteInteger('general', 'NewMangaTime', seOptionNewMangaTime.Value);
     options.WriteInteger('general', 'LetFMDDo', cbOptionLetFMDDo.ItemIndex);
-    OptionLefFMDDo := TFMDDo(cbOptionLetFMDDo.ItemIndex);
+    OptionLetFMDDo := TFMDDo(cbOptionLetFMDDo.ItemIndex);
     options.WriteBool('general', 'LoadMangaCover', cbOptionEnableLoadCover.Checked);
     OptionEnableLoadCover := cbOptionEnableLoadCover.Checked;
     options.WriteString('general', 'ExternalProgramPath', edOptionExternalPath.FileName);
@@ -4364,7 +4364,7 @@ begin
   OptionEnableLoadCover := options.ReadBool('general', 'LoadMangaCover', True);
   cbOptionEnableLoadCover.Checked := OptionEnableLoadCover;
   cbOptionLetFMDDo.ItemIndex := options.ReadInteger('general', 'LetFMDDo', 0);
-  OptionLefFMDDo := TFMDDo(cbOptionLetFMDDo.ItemIndex);
+  OptionLetFMDDo := TFMDDo(cbOptionLetFMDDo.ItemIndex);
   cbOptionAutoNumberChapter.Checked :=
     options.ReadBool('general', 'AutoNumberChapter', True);
   edOptionExternalPath.FileName := options.ReadString('general', 'ExternalProgramPath', '');

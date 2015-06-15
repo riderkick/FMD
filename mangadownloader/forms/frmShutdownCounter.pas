@@ -5,8 +5,8 @@ unit frmShutdownCounter;
 interface
 
 uses
-  Classes, SysUtils, Forms, Controls, StdCtrls,
-  Buttons, ExtCtrls, LCLType, DefaultTranslator, uBaseUnit;
+  Classes, SysUtils, Forms, Controls, StdCtrls, Buttons, ExtCtrls, LCLType,
+  DefaultTranslator;
 
 type
 
@@ -21,20 +21,17 @@ type
     pnBottom : TPanel;
     procedure btAbortClick(Sender: TObject);
     procedure btNowClick(Sender : TObject);
-    procedure FormClose(Sender : TObject; var CloseAction : TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure FormKeyDown(Sender : TObject; var Key : Word; Shift : TShiftState
       );
     procedure FormShow(Sender: TObject);
-    procedure itCounterStartTimer(Sender: TObject);
     procedure itCounterTimer(Sender: TObject);
   private
-    WaitCounter: Integer;
     WaitCounterOK: Boolean;
     { private declarations }
   public
     WaitTimeout: Integer;
-    frmExitType: TFMDDo;
+    LabelMessage: String;
     { public declarations }
   end;
 
@@ -54,80 +51,45 @@ implementation
 
 procedure TShutdownCounterForm.btAbortClick(Sender: TObject);
 begin
-  WaitCounterOK := False;
-  Close;
+  ModalResult := mrAbort;
 end;
 
 procedure TShutdownCounterForm.btNowClick(Sender : TObject);
 begin
-  WaitCounterOK := True;
-  Close;
-end;
-
-procedure TShutdownCounterForm.FormClose(Sender : TObject;
-  var CloseAction : TCloseAction);
-begin
-  if WaitCounterOK then
-    ModalResult := mrOK
-  else
-    ModalResult := mrAbort;
+  ModalResult := mrOK;
 end;
 
 procedure TShutdownCounterForm.FormCreate(Sender: TObject);
 begin
-  WaitTimeout := 60;
-  WaitCounter := WaitTimeout;
-  frmExitType := DO_NOTHING;
+  WaitTimeout  := 5;
+  LabelMessage := RS_LblMessageExit;
 end;
 
 procedure TShutdownCounterForm.FormKeyDown(Sender : TObject; var Key : Word;
   Shift : TShiftState);
 begin
   if Key = VK_ESCAPE then
-  begin
-    WaitCounterOK := False;
-    Close;
-  end;
+    ModalResult := mrAbort;
 end;
 
 procedure TShutdownCounterForm.FormShow(Sender: TObject);
-var
-  s: String = '';
 begin
-  case frmExitType of
-    DO_POWEROFF  : s := RS_LblMessageShutdown;
-    DO_HIBERNATE : s := RS_LblMessageHibernate;
-    DO_EXIT      : s := RS_LblMessageExit;
-  end;
-  WaitCounter := WaitTimeout;
-  lblMessage.Caption := Format(s, [WaitCounter]);
-  WaitCounterOK := False;
+  WaitCounterOK      := False;
+  lblMessage.Caption := Format(LabelMessage, [WaitTimeout]);
+  itCounter.Enabled  := True;
   btAbort.SetFocus;
-  itCounter.Enabled := True;
-end;
-
-procedure TShutdownCounterForm.itCounterStartTimer(Sender: TObject);
-begin
-  WaitCounter := WaitTimeout;
 end;
 
 procedure TShutdownCounterForm.itCounterTimer(Sender: TObject);
-var
-  s: String = '';
 begin
-  Dec(WaitCounter);
-  case frmExitType of
-    DO_POWEROFF  : s := RS_LblMessageShutdown;
-    DO_HIBERNATE : s := RS_LblMessageHibernate;
-    DO_EXIT      : s := RS_LblMessageExit;
-  end;
-  lblMessage.Caption := Format(s, [WaitCounter]);
-  if WaitCounter = 0 then
+  lblMessage.Caption := Format(LabelMessage, [WaitTimeout]);
+  if WaitTimeout = 0 then
   begin
     itCounter.Enabled := False;
-    WaitCounterOK := True;
-    Close;
-  end;
+    ModalResult := mrOK;
+  end
+  else
+    Dec(WaitTimeout);
 end;
 
 end.

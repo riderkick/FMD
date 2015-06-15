@@ -661,9 +661,6 @@ var
 
   Genre: array [0..37] of String;
 
-  // cbOptionLetFMDDoItemIndex
-  OptionLefFMDDo: TFMDDo = DO_NOTHING;
-
   Revision: Cardinal;
   currentJDN: Cardinal;
   isChangeDirectory: Boolean = False;
@@ -677,6 +674,8 @@ var
   Pass: String = '';
 
   fmdDirectory: String;
+
+  OptionLetFMDDo: TFMDDo = DO_NOTHING;
 
   OptionCustomRename: String;
 

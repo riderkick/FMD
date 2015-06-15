@@ -14,7 +14,6 @@ object ShutdownCounterForm: TShutdownCounterForm
   Constraints.MinWidth = 330
   FormStyle = fsSystemStayOnTop
   KeyPreview = True
-  OnClose = FormClose
   OnCreate = FormCreate
   OnKeyDown = FormKeyDown
   OnShow = FormShow
@@ -89,7 +88,6 @@ object ShutdownCounterForm: TShutdownCounterForm
   object itCounter: TIdleTimer
     Enabled = False
     OnTimer = itCounterTimer
-    OnStartTimer = itCounterStartTimer
     left = 247
     top = 24
   end

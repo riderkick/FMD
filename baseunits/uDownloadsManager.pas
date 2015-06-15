@@ -2102,7 +2102,8 @@ var
 
   procedure ShowExitCounter;
   begin
-    if OptionLefFMDDo in [DO_NOTHING, DO_UPDATE] then Exit;
+    if OptionLetFMDDo in [DO_NOTHING, DO_UPDATE] then Exit;
+    Self.Backup;
     if ThreadID <> MainThreadID then
     begin
       {$IF FPC_FULLVERSION >= 20701}
@@ -2416,22 +2417,31 @@ end;
 procedure TDownloadManager.doExitWaitCounter;
 begin
   with TShutdownCounterForm.Create(MainForm) do try
-    case OptionLefFMDDo of
-      DO_POWEROFF  : WaitTimeout := 60;
-      DO_HIBERNATE : WaitTimeout := 30;
-      DO_EXIT      : WaitTimeout := 5;
+    case OptionLetFMDDo of
+      DO_POWEROFF:
+        begin
+          WaitTimeout := 60;
+          LabelMessage := RS_LblMessageShutdown;
+        end;
+      DO_HIBERNATE:
+        begin
+          WaitTimeout := 30;
+          LabelMessage := RS_LblMessageHibernate;
+        end;
+      DO_EXIT:
+        begin
+          WaitTimeout := 5;
+          LabelMessage := RS_LblMessageExit;
+        end;
     end;
-    frmExitType := OptionLefFMDDo;
-    ExitWaitOK := False;
-    if ShowModal = mrOK then
-      ExitWaitOK := True;
+    ExitWaitOK := (ShowModal = mrOK);
   finally
     Free;
   end;
 
   if ExitWaitOK then
   begin
-    frmMain.DoAfterFMD := OptionLefFMDDo;
+    frmMain.DoAfterFMD := OptionLetFMDDo;
     MainForm.itMonitor.Enabled := True;
   end;
 end;
