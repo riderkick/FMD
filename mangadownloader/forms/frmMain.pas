@@ -2841,7 +2841,10 @@ procedure TMainForm.pcMainChange(Sender: TObject);
 
 begin
   if pcMain.ActivePage = tsAbout then
-    LoadAbout;
+    LoadAbout
+  else
+  if pcMain.ActivePage = tsFavorites then
+    vtFavorites.Repaint;
   UpdateOptions;
 end;
 

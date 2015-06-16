@@ -171,7 +171,8 @@ end;
 
 procedure TFavoriteThread.SyncStatus;
 begin
-  MainForm.vtFavorites.Repaint;
+  if MainForm.pcMain.ActivePage = MainForm.tsFavorites then
+    MainForm.vtFavorites.Repaint;
 end;
 
 procedure TFavoriteThread.Execute;
