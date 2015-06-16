@@ -359,8 +359,9 @@ const
   MANGACAP_ID            = 97;
   MANGABOOM_ID           = 98;
   AUTHRONE_ID            = 99;
+  EYEONMANGA_ID          = 100;
 
-  WebsiteRoots: array [0..99] of array [0..1] of string = (
+  WebsiteRoots: array [0..100] of array [0..1] of string = (
     ('AnimeA', 'http://manga.animea.net'),
     ('MangaHere', 'http://www.mangahere.co'),
     ('MangaInn', 'http://www.mangainn.me'),
@@ -460,7 +461,8 @@ const
     ('Madokami', 'https://manga.madokami.com'),
     ('MangaCap', 'http://www.mangacap.com'),
     ('MangaBoom', 'http://www.mangaboom.com'),
-    ('Authrone', 'http://www.authrone.com')
+    ('Authrone', 'http://www.authrone.com'),
+    ('EyeOnManga', 'http://www.eyeonmanga.com')
     );
 
   ALPHA_LIST = '#abcdefghijklmnopqrstuvwxyz';
@@ -1378,7 +1380,8 @@ begin
   Result := websiteid in [
     MANGACAP_ID,
     MANGABOOM_ID,
-    AUTHRONE_ID
+    AUTHRONE_ID,
+    EYEONMANGA_ID
     ];
 end;
 
