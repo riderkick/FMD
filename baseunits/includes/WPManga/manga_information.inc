@@ -5,32 +5,46 @@
     isSummaryDone: Boolean = False;
     isInfo: Boolean = False;
     isInvertChapters: Boolean = True;
+    pnumber: Integer = 1;
 
-    procedure FindChapters(P: Integer);
+    procedure FindChapters;
     var
       x, y: Integer;
+      StartFindPage: Boolean = False;
     begin
-      for x := p+1 to parse.Count-1 do
-      begin
-        if GetTagName(parse[x]) = '/ul' then
-          Break
-        else
-        if GetTagName(parse[x]) = 'a' then
+      if parse.Count > 0 then
+        for x := 0 to parse.Count-1 do
         begin
-          if Pos('class="c4', parse[x]) = 0 then
+          s := LowerCase(GetVal(parse[x], 'class'));
+          if (GetTagName(parse[x]) = 'ul') and
+            (AnsiIndexText(s, ['lst', 'chp_lst']) > -1) then
           begin
-            mangaInfo.chapterLinks.Add(GetVal(parse[x], 'href'));
-            s := '';
-            for y := x+1 to parse.Count-1 do
+            StartFindPage := True;
+            if s = 'chp_lst' then
+              isInvertChapters := False;
+          end;
+          if StartFindPage then
+          begin
+            if GetTagName(parse[x]) = '/ul' then
+              Break
+            else
+            if GetTagName(parse[x]) = 'a' then
             begin
-              s := Trim(parse[y]);
-              if (s <> '') and (Pos('<', s) <> 1) then
-                Break;
+              if Pos('class="c4', parse[x]) = 0 then
+              begin
+                mangaInfo.chapterLinks.Add(GetVal(parse[x], 'href'));
+                s := '';
+                for y := x+1 to parse.Count-1 do
+                begin
+                  s := Trim(parse[y]);
+                  if (s <> '') and (Pos('<', s) <> 1) then
+                    Break;
+                end;
+                mangaInfo.chapterName.Add(CommonStringFilter(s));
+              end;
             end;
-            mangaInfo.chapterName.Add(CommonStringFilter(s));
           end;
         end;
-      end;
     end;
 
   begin
@@ -161,17 +175,31 @@
       end;
 
       //chapters
-      for i := 0 to parse.Count-1 do
+      FindChapters;
+      for i := parse.Count-1 downto 0 do
       begin
-        s := LowerCase(GetVal(parse[i], 'class'));
-        if (GetTagName(parse[i]) = 'ul') and
-          (AnsiIndexText(s, ['lst', 'chp_lst']) > -1) then
+        if (Pos('<a', parse[i]) <> 0) and
+          (Pos('/chapter-list/', parse[i]) <> 0) then
         begin
-          if s = 'chp_lst' then
-            isInvertChapters := False;
-          FindChapters(i);
+          s := GetVal(parse[i], 'href');
+          pnumber := StrToIntDef(
+            ReplaceRegExpr('^.*/chapter-list/(\d+)/$', s, '$1', True), 1);
           Break;
         end;
+      end;
+      if pnumber > 1 then
+      begin
+        Source := TStringList.Create;
+        for i := 2 to pnumber do
+        begin
+          if GetPage(TObject(Source),
+            mangaInfo.url+IntToStr(i)+'/', Reconnect) then
+          begin
+            ParseHTML(Source.Text, parse);
+            FindChapters;
+          end;
+        end;
+        Source.Free;
       end;
 
       //invert chapters
