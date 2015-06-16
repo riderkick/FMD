@@ -4,6 +4,7 @@
     i, j: Integer;
     isSummaryDone: Boolean = False;
     isInfo: Boolean = False;
+    isInvertChapters: Boolean = True;
 
     procedure FindChapters(P: Integer);
     var
@@ -16,15 +17,18 @@
         else
         if GetTagName(parse[x]) = 'a' then
         begin
-          mangaInfo.chapterLinks.Add(GetVal(parse[x], 'href'));
-          s := '';
-          for y := x+1 to parse.Count-1 do
+          if Pos('class="c4', parse[x]) = 0 then
           begin
-            s := Trim(parse[y]);
-            if (s <> '') and (Pos('<', s) <> 1) then
-              Break;
+            mangaInfo.chapterLinks.Add(GetVal(parse[x], 'href'));
+            s := '';
+            for y := x+1 to parse.Count-1 do
+            begin
+              s := Trim(parse[y]);
+              if (s <> '') and (Pos('<', s) <> 1) then
+                Break;
+            end;
+            mangaInfo.chapterName.Add(CommonStringFilter(s));
           end;
-          mangaInfo.chapterName.Add(CommonStringFilter(s));
         end;
       end;
     end;
@@ -72,7 +76,7 @@
         //details
         s := GetVal(parse[i], 'class');
         if (GetTagName(parse[i]) = 'div') and
-          (AnsiIndexText(s, ['det', 'mng_ifo']) > -1) then
+          (AnsiIndexText(s, ['det', 'lts_chp fr', 'mng_ifo']) > -1) then
           isInfo := True;
         if isInfo then
         begin
@@ -159,17 +163,20 @@
       //chapters
       for i := 0 to parse.Count-1 do
       begin
-        s := GetVal(parse[i], 'class');
+        s := LowerCase(GetVal(parse[i], 'class'));
         if (GetTagName(parse[i]) = 'ul') and
           (AnsiIndexText(s, ['lst', 'chp_lst']) > -1) then
         begin
+          if s = 'chp_lst' then
+            isInvertChapters := False;
           FindChapters(i);
           Break;
         end;
       end;
 
       //invert chapters
-      InvertStrings([mangaInfo.chapterName, mangaInfo.chapterLinks]);
+      if isInvertChapters then
+        InvertStrings([mangaInfo.chapterName, mangaInfo.chapterLinks]);
       Result := NO_ERROR;
     end;
   end;
