@@ -710,10 +710,10 @@ procedure TMainForm.FormCreate(Sender: TObject);
 var
   fs: TFileStream;
 begin
+  Randomize;
   SetLogFile(Format('%s\%s_LOG_%s.txt', ['log', ExtractFileNameOnly(ParamStrUTF8(0)),
     FormatDateTime('dd-mm-yyyy', Now)]));
   Writelog_I('Starting ' + AnsiQuotedStr(Application.Title, '"'));
-  Randomize;
   InitSimpleExceptionHandler;
   AddIgnoredException('EImagingError');
   AddIgnoredException('ERegExpr');
