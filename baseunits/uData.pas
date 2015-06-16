@@ -1036,7 +1036,7 @@ begin
     if website = WebsiteRoots[MADOKAMI_ID, 0] then
       Result := GetMadokamiDirectoryPageNumber
     else
-    if WebsiteID = MANGACAP_ID then
+    if SitesIsWPManga(WebsiteID) then
       Result := GetWPMangaDirectoryPageNumber
     else
     begin
@@ -1487,7 +1487,7 @@ begin
   if website = WebsiteRoots[MADOKAMI_ID, 0] then
     Result := MadokamiGetNamesAndLinks
   else
-  if WebsiteID = MANGACAP_ID then
+  if SitesIsWPManga(WebsiteID) then
     Result := GetWPMangaNamesAndLinks
   else
   begin
@@ -1948,7 +1948,7 @@ begin
   if website = GetMangaSiteName(MADOKAMI_ID) then
     Result := GetMadokamiInfoFromURL
   else
-  if WebsiteID = MANGACAP_ID then
+  if SitesIsWPManga(WebsiteID) then
     Result := GetWPMangaInfoFromURL
   else
   begin

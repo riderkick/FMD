@@ -717,7 +717,7 @@ begin
   if manager.container.MangaSiteID = MADOKAMI_ID then
     Result := GetMadokamiPageNumber
   else
-  if manager.container.MangaSiteID = MANGACAP_ID then
+  if SitesIsWPManga(manager.container.MangaSiteID) then
     Result := GetWPMangaPageNumber
   else
     Result := False;
@@ -1072,7 +1072,7 @@ begin
   if manager.container.MangaSiteID = MANGAAT_ID then
     Result := GetMangaAtImageURL
   else
-  if manager.container.MangaSiteID = MANGACAP_ID then
+  if SitesIsWPManga(manager.container.MangaSiteID) then
     Result := GetWPMangaImageURL
   else
     Result := False;

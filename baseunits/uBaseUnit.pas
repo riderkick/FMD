@@ -357,8 +357,9 @@ const
   DYNASTYSCANS_ID        = 95;
   MADOKAMI_ID            = 96;
   MANGACAP_ID            = 97;
+  MANGABOOM_ID           = 98;
 
-  WebsiteRoots: array [0..97] of array [0..1] of string = (
+  WebsiteRoots: array [0..98] of array [0..1] of string = (
     ('AnimeA', 'http://manga.animea.net'),
     ('MangaHere', 'http://www.mangahere.co'),
     ('MangaInn', 'http://www.mangainn.me'),
@@ -456,7 +457,8 @@ const
     ('LoneManga', 'http://lonemanga.com'),
     ('Dynasty-Scans', 'http://dynasty-scans.com'),
     ('Madokami', 'https://manga.madokami.com'),
-    ('MangaCap', 'http://www.mangacap.com')
+    ('MangaCap', 'http://www.mangacap.com'),
+    ('MangaBoom', 'http://www.mangaboom.com')
     );
 
   ALPHA_LIST = '#abcdefghijklmnopqrstuvwxyz';
