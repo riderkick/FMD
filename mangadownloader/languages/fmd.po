@@ -299,10 +299,6 @@ msgctxt "tmainform.btremovefilterlarge.hint"
 msgid "Remove filter"
 msgstr ""
 
-#: tmainform.btsearchclear.hint
-msgid "Search manga from list"
-msgstr ""
-
 #: tmainform.btupdatelist.hint
 msgctxt "tmainform.btupdatelist.hint"
 msgid "Update manga list"
@@ -818,11 +814,17 @@ msgid "Save to"
 msgstr ""
 
 #: tmainform.edsearch.texthint
-msgid "Search..."
+msgctxt "tmainform.edsearch.texthint"
+msgid "Search title..."
 msgstr ""
 
 #: tmainform.edurl.texthint
 msgid "Input URL here"
+msgstr ""
+
+#: tmainform.edwebsitessearch.texthint
+msgctxt "TMAINFORM.EDWEBSITESSEARCH.TEXTHINT"
+msgid "Search website..."
 msgstr ""
 
 #: tmainform.gbdroptarget.caption

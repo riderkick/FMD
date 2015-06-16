@@ -332,10 +332,6 @@ msgctxt "tmainform.btremovefilterlarge.hint"
 msgid "Remove filter"
 msgstr "Remove filter"
 
-#: tmainform.btsearchclear.hint
-msgid "Search manga from list"
-msgstr "Search manga from list"
-
 #: tmainform.btupdatelist.hint
 msgctxt "tmainform.btupdatelist.hint"
 msgid "Update manga list"
@@ -855,12 +851,20 @@ msgid "Save to"
 msgstr "Save to"
 
 #: tmainform.edsearch.texthint
-msgid "Search..."
-msgstr "Search..."
+#| msgid "Search..."
+msgctxt "tmainform.edsearch.texthint"
+msgid "Search title..."
+msgstr "Search title..."
 
 #: tmainform.edurl.texthint
 msgid "Input URL here"
 msgstr "Input URL here"
+
+#: tmainform.edwebsitessearch.texthint
+#| msgid "Search..."
+msgctxt "tmainform.edwebsitessearch.texthint"
+msgid "Search website..."
+msgstr "Search website..."
 
 #: tmainform.gbdroptarget.caption
 msgid "Drop Box"
@@ -1618,4 +1622,3 @@ msgstr "Synchronizing data"
 #: uupdatethread.rs_updatinglist
 msgid "Updating list"
 msgstr "Updating list"
-

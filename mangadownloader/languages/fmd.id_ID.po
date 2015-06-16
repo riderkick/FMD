@@ -327,10 +327,6 @@ msgctxt "tmainform.btremovefilterlarge.hint"
 msgid "Remove filter"
 msgstr "Singkirkan"
 
-#: tmainform.btsearchclear.hint
-msgid "Search manga from list"
-msgstr "Cari hanya komik baru"
-
 #: tmainform.btupdatelist.hint
 msgctxt "tmainform.btupdatelist.hint"
 msgid "Update manga list"
@@ -848,12 +844,18 @@ msgid "Save to"
 msgstr "Lokasi penyimpanan"
 
 #: tmainform.edsearch.texthint
-msgid "Search..."
+msgctxt "tmainform.edsearch.texthint"
+msgid "Search title..."
 msgstr "Cari nama komik..."
 
 #: tmainform.edurl.texthint
 msgid "Input URL here"
 msgstr "Masukkan URL disini"
+
+#: tmainform.edwebsitessearch.texthint
+msgctxt "tmainform.edwebsitessearch.texthint"
+msgid "Search website..."
+msgstr "Cari situs web..."
 
 #: tmainform.gbdroptarget.caption
 msgid "Drop Box"
@@ -1610,4 +1612,3 @@ msgstr "Sinkronisasi data"
 #: uupdatethread.rs_updatinglist
 msgid "Updating list"
 msgstr "Memperbarui daftar"
-
