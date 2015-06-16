@@ -843,6 +843,8 @@ function SitesWithoutPageLink(const website: String): Boolean;
 function SitesWithoutReferer(const website: String): Boolean;
 function SitesRefererisURL(const website: String): Boolean;
 function SitesWithSingleChapter(const website: String): Boolean;
+function SitesIsWPManga(const websiteid: Cardinal): Boolean; overload;
+function SitesIsWPManga(const website: String): Boolean; overload;
 
 // Fill in website host if it's not present
 function FillMangaSiteHost(const MangaID: Cardinal; URL: String): String;
@@ -1248,35 +1250,36 @@ end;
 
 function SitesWithSortedList(const website : String) : Boolean;
 begin
-  Result := False;
-  Result := SitesMemberOf(website, [
-    FAKKU_ID,
-    PURURIN_ID,
-    EHENTAI_ID,
-    NINEMANGA_ID,
-    NINEMANGA_ES_ID,
-    NINEMANGA_CN_ID,
-    NINEMANGA_RU_ID,
-    NINEMANGA_DE_ID,
-    NINEMANGA_IT_ID,
-    NINEMANGA_BR_ID,
-    MANGACOW_ID,
-    ONEMANGA_ID,
-    READHENTAIMANGA_ID,
-    MYREADINGMANGAINFO_ID,
-    NHENTAI_ID,
-    MANGA2U_ID,
-    PORNCOMIX_ID,
-    XXCOMICS_ID,
-    XXCOMICSMT_ID,
-    XXCOMICS3D_ID,
-    PORNCOMIXRE_ID,
-    PORNCOMIXIC_ID,
-    PORNXXXCOMICS_ID,
-    MANGAPARK_ID,
-    SENMANGA_ID,
-    MANGACAP_ID
-    ]);
+  Result := SitesIsWPManga(website);
+  if not Result then
+    Result := SitesMemberOf(website, [
+      FAKKU_ID,
+      PURURIN_ID,
+      EHENTAI_ID,
+      NINEMANGA_ID,
+      NINEMANGA_ES_ID,
+      NINEMANGA_CN_ID,
+      NINEMANGA_RU_ID,
+      NINEMANGA_DE_ID,
+      NINEMANGA_IT_ID,
+      NINEMANGA_BR_ID,
+      MANGACOW_ID,
+      ONEMANGA_ID,
+      READHENTAIMANGA_ID,
+      MYREADINGMANGAINFO_ID,
+      NHENTAI_ID,
+      MANGA2U_ID,
+      PORNCOMIX_ID,
+      XXCOMICS_ID,
+      XXCOMICSMT_ID,
+      XXCOMICS3D_ID,
+      PORNCOMIXRE_ID,
+      PORNCOMIXIC_ID,
+      PORNXXXCOMICS_ID,
+      MANGAPARK_ID,
+      SENMANGA_ID,
+      MANGACAP_ID
+      ]);
 end;
 
 function SitesWithoutFavorites(const website : String) : Boolean;
@@ -1364,6 +1367,18 @@ begin
     XXCOMICS3D_ID,
     PORNCOMIXRE_ID
     ]);
+end;
+
+function SitesIsWPManga(const websiteid: Cardinal): Boolean;
+begin
+  Result := websiteid in [
+    MANGACAP_ID
+    ];
+end;
+
+function SitesIsWPManga(const website: String): Boolean;
+begin
+  Result := SitesIsWPManga(GetMangaSiteID(website));
 end;
 
 function FillMangaSiteHost(const MangaID : Cardinal; URL : String) : String;
