@@ -21,7 +21,7 @@ uses
   SysUtils, Classes, Graphics, Forms, lazutf8classes,
   LazUTF8, strutils, fileinfo, fpjson, jsonparser, FastHTMLParser, fgl, FileUtil,
   RegExpr, synautil, httpsend, blcksock, ssl_openssl, GZIPUtils, uFMDThread,
-  uMisc, USimpleException;
+  uMisc, USimpleException, USimpleLogger;
 
 Type
   TFMDDo = (DO_NOTHING, DO_EXIT, DO_POWEROFF, DO_HIBERNATE, DO_UPDATE);
@@ -684,6 +684,7 @@ var
   OptionCheckMinutes: Cardinal = 0;
   OptionPDFQuality: Cardinal = 95;
   OptionMaxRetry: Cardinal = 0;
+  OptionConnectionTimeout: Integer = 15000;
   OptionUpdateListNoMangaInfo: Boolean = False;
   OptionUpdateListRemoveDuplicateLocalData: Boolean = False;
 
@@ -2753,6 +2754,8 @@ begin
   HTTPHeader.Values['DNT'] := ' 1';
   HTTP.Protocol := '1.1';
   HTTP.KeepAlive := False;
+  HTTP.Timeout := OptionConnectionTimeout;
+  HTTP.Sock.SetTimeout(OptionConnectionTimeout);
 
   //User-Agent
   if Trim(HTTPHeader.Values['User-Agent']) <> '' then
@@ -3027,6 +3030,8 @@ begin
   HTTPHeader.Values['DNT'] := ' 1';
   HTTP.Protocol := '1.1';
   HTTP.KeepAlive := False;
+  HTTP.Timeout := OptionConnectionTimeout;
+  HTTP.Sock.SetTimeout(OptionConnectionTimeout);
 
   //User-Agent
   if Trim(HTTPHeader.Values['User-Agent']) <> '' then

@@ -2033,7 +2033,7 @@ object MainForm: TMainForm
             Top = 0
             Width = 579
             HorzScrollBar.Page = 455
-            VertScrollBar.Page = 147
+            VertScrollBar.Page = 179
             Align = alClient
             BorderStyle = bsNone
             ClientHeight = 375
@@ -2042,7 +2042,7 @@ object MainForm: TMainForm
             object cbOptionUseProxy: TCheckBox
               Left = 12
               Height = 19
-              Top = 128
+              Top = 160
               Width = 71
               Caption = 'Use proxy'
               OnChange = cbOptionUseProxyChange
@@ -2052,7 +2052,7 @@ object MainForm: TMainForm
             object gbOptionProxy: TGroupBox
               Left = 12
               Height = 120
-              Top = 152
+              Top = 184
               Width = 561
               Anchors = [akTop, akLeft, akRight]
               Caption = 'Proxy config'
@@ -2232,6 +2232,27 @@ object MainForm: TMainForm
               Top = 93
               Width = 386
               Caption = 'Number of retry times if tasks have download problems (0 = always retry)'
+              ParentColor = False
+              ParentFont = False
+            end
+            object seOptionConnectionTimeout: TSpinEdit
+              Left = 12
+              Height = 23
+              Top = 120
+              Width = 48
+              MaxValue = 300
+              MinValue = 3
+              ParentFont = False
+              ParentShowHint = False
+              TabOrder = 5
+              Value = 30
+            end
+            object lbOptionConnectionTimeout: TLabel
+              Left = 66
+              Height = 15
+              Top = 123
+              Width = 161
+              Caption = 'Connection timeout (seconds)'
               ParentColor = False
               ParentFont = False
             end

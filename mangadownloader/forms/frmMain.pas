@@ -77,6 +77,7 @@ type
     lbDefaultDownloadPath: TLabel;
     lbDropTargetOpacity: TLabel;
     lbOptionExternalParams: TLabel;
+    lbOptionConnectionTimeout: TLabel;
     lbSaveTo: TLabel;
     lbOptionProxyType: TLabel;
     lbOptionRenameDigits: TLabel;
@@ -269,6 +270,7 @@ type
     dlgSaveTo: TSelectDirectoryDialog;
     seOptionMaxParallel: TSpinEdit;
     seOptionMaxRetry: TSpinEdit;
+    seOptionConnectionTimeout: TSpinEdit;
     seOptionMaxThread: TSpinEdit;
     seOptionNewMangaTime: TSpinEdit;
     seOptionCheckMinutes: TSpinEdit;
@@ -2765,6 +2767,7 @@ procedure TMainForm.pcMainChange(Sender: TObject);
     seOptionMaxThread.Value :=
       options.ReadInteger('connections', 'NumberOfThreadsPerTask', 1);
     seOptionMaxRetry.Value := options.ReadInteger('connections', 'Retry', 3);
+    seOptionConnectionTimeout.Value := options.ReadInteger('connections', 'ConnectionTimeout', 15);
     cbOptionUseProxy.Checked := options.ReadBool('connections', 'UseProxy', False);
     cbOptionProxyType.Text := options.ReadString('connections', 'ProxyType', 'HTTP');
     edOptionHost.Text := options.ReadString('connections', 'Host', '');
@@ -3835,6 +3838,8 @@ begin
       seOptionMaxThread.Value);
     options.WriteInteger('connections', 'Retry', seOptionMaxRetry.Value);
     DLManager.retryConnect := seOptionMaxRetry.Value;
+    options.WriteInteger('connections', 'ConnectionTimeout', seOptionConnectionTimeout.Value);
+    OptionConnectionTimeout := seOptionConnectionTimeout.Value*1000;
     options.WriteBool('connections', 'UseProxy', cbOptionUseProxy.Checked);
     options.WriteString('connections', 'ProxyType', cbOptionProxyType.Text);
     options.WriteString('connections', 'Host', edOptionHost.Text);
@@ -4495,6 +4500,8 @@ begin
   DLManager.maxDLTasks := seOptionMaxParallel.Value;
   DLManager.maxDLThreadsPerTask := seOptionMaxThread.Value;
   DLManager.retryConnect := seOptionMaxRetry.Value;
+  seOptionConnectionTimeout.Value := options.ReadInteger('connections', 'ConnectionTimeout', 15);
+  OptionConnectionTimeout := seOptionConnectionTimeout.Value*1000;
 
   // saveto
   DLManager.compress := options.ReadInteger('saveto', 'Compress', 0);
