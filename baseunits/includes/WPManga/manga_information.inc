@@ -1,8 +1,9 @@
   function GetWPMangaInfoFromURL: Byte;
   var
     s: String;
-    i, j, k: Integer;
+    i, j: Integer;
     isSummaryDone: Boolean = False;
+    isInfo: Boolean = False;
 
     procedure FindChapters(P: Integer);
     var
@@ -53,95 +54,101 @@
       begin
         //cover
         if mangaInfo.coverLink = '' then
-          if (GetTagName(parse[i]) = 'img') and
-            (GetVal(parse[i], 'class') = 'cvr') then
+        begin
+          if (Pos('<img ', parse[i]) <> 0) and
+            (Pos('class="cvr', parse[i]) <> 0) then
             mangaInfo.coverLink := GetVal(parse[i], 'src');
+        end;
 
         //title
         if mangaInfo.title = '' then
-          if (GetTagName(parse[i]) = 'h1') and
-            (GetVal(parse[i], 'class') = 'ttl') then
-            mangaInfo.title := CommonStringFilter(parse[i+1]);
+        begin
+          if (Pos('class="ttl"', parse[i]) <> 0) or
+            (Pos('itemprop="itemreviewed"', parse[i]) <> 0)
+          then
+            mangaInfo.title := CommonStringFilter(parse[i+1])
+        end;
 
         //details
-        if (GetTagName(parse[i]) = 'div') and (GetVal(parse[i], 'class') = 'det') then
+        s := GetVal(parse[i], 'class');
+        if (GetTagName(parse[i]) = 'div') and
+          (AnsiIndexText(s, ['det', 'mng_ifo']) > -1) then
+          isInfo := True;
+        if isInfo then
         begin
-          for j := i+1 to parse.Count-1 do
+          if GetTagName(parse[i]) = 'h2' then
+            isInfo := False
+          else
           begin
-            if GetTagName(parse[j]) = 'h2' then
-              Break
+            s := Trim(parse[i]);
+            //author
+            if s = 'Author' then
+              mangaInfo.authors := CommonStringFilter(
+                TrimLeftChar(parse[i+2], [':', ' ']))
             else
+            if Pos('/author/', s) <> 0 then
+              mangaInfo.authors := CommonStringFilter(parse[i+1])
+            //artist
+            else
+            if s = 'Artist' then
+              mangaInfo.artists := CommonStringFilter(
+                TrimLeftChar(parse[i+2], [':', ' ']))
+            //status
+            else
+            if s = 'Status' then
             begin
-              if GetTagName(parse[j]) = 'b' then
+              if Pos('completed', LowerCase(parse[i+2])) <> 0 then
+                mangaInfo.status := '0'
+              else
+                mangaInfo.status := '1';
+            end
+            //genres
+            else
+            if (s = 'Category') or (s = 'Genres') then
+            begin
+              for j := i+3 to parse.Count-1 do
               begin
-                s := Trim(parse[j+1]);
-                //author
-                if s = 'Author' then
-                  mangaInfo.authors := CommonStringFilter(
-                    TrimLeftChar(parse[j+3], [':', ' ']))
-                //artist
+                if GetTagName(parse[j]) = '/p' then
+                  Break
                 else
-                if s = 'Artist' then
-                  mangaInfo.artists := CommonStringFilter(
-                    TrimLeftChar(parse[j+3], [':', ' ']))
-                //status
-                else
-                if s = 'Status' then
-                begin
-                  if Pos('completed', LowerCase(parse[j+3])) <> 0 then
-                    mangaInfo.status := '0'
-                  else
-                    mangaInfo.status := '1';
-                end
-                //genres
-                else
-                if (s = 'Category') or (s = 'Genres') then
-                begin
-                  for k := j+4 to parse.Count-1 do
-                  begin
-                    if GetTagName(parse[k]) = '/p' then
-                      Break
-                    else
-                    if Pos('<', parse[k]) = 0 then
-                      AddCommaString(mangaInfo.genres, CommonStringFilter(parse[k]));
-                  end;
-                end
-                else
-                if s = 'Type' then
-                  AddCommaString(mangaInfo.genres,
-                    CommonStringFilter(TrimLeftChar(parse[j+3], [':', ' '])))
-                else
-                //summary
-                if s = 'Summary' then
-                begin
-                  isSummaryDone := True;
-                  for k := j+3 to parse.Count-1 do
-                  begin
-                    if GetTagName(parse[k]) = '/p' then
-                      Break
-                    else
-                    if Pos('<', parse[k]) = 0 then
-                      mangaInfo.summary := Trim(mangaInfo.summary + LineEnding +
-                        CommonStringFilter(parse[k]));
-                  end;
-                end;
+                if Pos('<', parse[j]) = 0 then
+                  AddCommaString(mangaInfo.genres, CommonStringFilter(parse[j]));
               end;
-              //summary
-              if (not isSummaryDone) and (GetTagName(parse[j]) = 'p') then
+            end
+            else
+            if s = 'Type' then
+              AddCommaString(mangaInfo.genres,
+                CommonStringFilter(TrimLeftChar(parse[i+2], [':', ' '])))
+            else
+            //summary
+            if (not isSummaryDone) and (s = 'Summary') then
+            begin
+              isSummaryDone := True;
+              for j := i+2 to parse.Count-1 do
               begin
-                s := Trim(parse[j+1]);
-                if (s <> '') and (Pos('<', s) = 0) then
+                if GetTagName(parse[j]) = '/p' then
+                  Break
+                else
+                if Pos('<', parse[j]) = 0 then
+                  mangaInfo.summary := Trim(mangaInfo.summary + LineEnding +
+                    CommonStringFilter(parse[j]));
+              end;
+            end;
+            //summary
+            if (not isSummaryDone) and (GetTagName(parse[i]) = 'p') then
+            begin
+              s := Trim(parse[i+1]);
+              if (s <> '') and (Pos('<', s) = 0) then
+              begin
+                isSummaryDone := True;
+                for j := i+1 to parse.Count-1 do
                 begin
-                  isSummaryDone := True;
-                  for k := j+1 to parse.Count-1 do
-                  begin
-                    if GetTagName(parse[k]) = '/p' then
-                      Break
-                    else
-                    if Pos('<', parse[k]) = 0 then
-                      mangaInfo.summary := Trim(mangaInfo.summary + LineEnding +
-                        CommonStringFilter(parse[k]));
-                  end;
+                  if GetTagName(parse[j]) = '/p' then
+                    Break
+                  else
+                  if Pos('<', parse[j]) = 0 then
+                    mangaInfo.summary := Trim(mangaInfo.summary + LineEnding +
+                      CommonStringFilter(parse[j]));
                 end;
               end;
             end;
@@ -150,10 +157,11 @@
       end;
 
       //chapters
-      for i := 0 to parse.Count do
+      for i := 0 to parse.Count-1 do
       begin
+        s := GetVal(parse[i], 'class');
         if (GetTagName(parse[i]) = 'ul') and
-          (GetVal(parse[i],'class') = 'lst') then
+          (AnsiIndexText(s, ['lst', 'chp_lst']) > -1) then
         begin
           FindChapters(i);
           Break;
