@@ -40,7 +40,6 @@ object MainForm: TMainForm
     BorderSpacing.Top = 3
     BorderSpacing.Right = 4
     BorderSpacing.Bottom = 3
-    Font.Style = [fsBold]
     ParentFont = False
     TabIndex = 0
     TabOrder = 0
@@ -1771,6 +1770,7 @@ object MainForm: TMainForm
         Width = 587
         ActivePage = tsGeneral
         Anchors = [akTop, akLeft, akRight, akBottom]
+        ParentFont = False
         TabIndex = 0
         TabOrder = 0
         object tsGeneral: TTabSheet
@@ -1794,7 +1794,7 @@ object MainForm: TMainForm
             Left = 20
             Height = 15
             Top = 18
-            Width = 56
+            Width = 55
             Caption = 'Language:'
             ParentColor = False
           end
@@ -1847,7 +1847,7 @@ object MainForm: TMainForm
             Left = 20
             Height = 15
             Top = 64
-            Width = 123
+            Width = 117
             Caption = 'After download finish:'
             ParentColor = False
           end
@@ -2632,8 +2632,8 @@ object MainForm: TMainForm
           ClientWidth = 579
           object vtOptionMangaSiteSelection: TVirtualStringTree
             Left = 2
-            Height = 341
-            Top = 30
+            Height = 336
+            Top = 35
             Width = 573
             Align = alClient
             BorderSpacing.Top = 2
@@ -2659,33 +2659,116 @@ object MainForm: TMainForm
             OnGetNodeDataSize = vtOptionMangaSiteSelectionGetNodeDataSize
             OnInitNode = vtOptionMangaSiteSelectionInitNode
           end
-          object ToolBarWebsites: TToolBar
-            Left = 0
-            Height = 22
-            Top = 4
-            Width = 579
-            AutoSize = True
+          object pnlWebsitesTool: TPanel
+            Left = 2
+            Height = 23
+            Top = 6
+            Width = 573
+            Align = alTop
             BorderSpacing.Top = 4
-            EdgeBorders = []
-            Images = IconList
-            List = True
-            ParentFont = False
-            ShowCaptions = True
+            BorderSpacing.Right = 2
+            BorderSpacing.Bottom = 4
+            BorderSpacing.Around = 2
+            BevelOuter = bvNone
+            ClientHeight = 23
+            ClientWidth = 573
             TabOrder = 1
-            Transparent = True
-            object tbWebsitesExpandAll: TToolButton
-              Left = 1
+            object edWebsitesSearch: TEdit
+              Left = 0
+              Height = 23
               Top = 0
-              Caption = 'Expand All'
-              ImageIndex = 17
-              OnClick = tbWebsitesExpandAllClick
+              Width = 184
+              Align = alLeft
+              BorderSpacing.Right = 2
+              OnChange = edWebsitesSearchChange
+              TabOrder = 0
+              TextHint = 'Search website...'
             end
-            object tbWebsitesCollapseAll: TToolButton
-              Left = 82
+            object btWebsitesSearchClear: TSpeedButton
+              Left = 186
+              Height = 23
               Top = 0
-              Caption = 'Collapse All'
-              ImageIndex = 18
-              OnClick = tbWebsitesCollapseAllClick
+              Width = 22
+              Align = alLeft
+              Glyph.Data = {
+                36040000424D3604000000000000360000002800000010000000100000000100
+                2000000000000004000064000000640000000000000000000000000000090000
+                00160000001A0000001A0000001A0000001A0000001A0000001A0000001A0000
+                001A0000001A0000001A0000001A0000001A0000001600000009000000120000
+                0E3300004A8300005DBC00005DCC00005DCC00005DCC00005DCC00005DCC0000
+                5DCC00005DCC00005DCC00005DBC00004A8300000E330000001200001D000000
+                6D73080893DD1010CCF91111D9FF1111D9FF1111D9FF1111D9FF1111D9FF1111
+                D9FF1111D9FF1111D9FF0F0FCCF9070792DD00006D7300001D0000007D000000
+                7DBA1616CBF91111D1FF1111D1FF1111B6FF1111D1FF1111D1FF1111D1FF1111
+                D1FF1111B6FF1111D1FF1111D1FF0F0FC8F900007DBA00007D00000084000000
+                84CC1C1CCEFF1111C8FF1111B2FFDCDCDCFF1111B2FF1111C8FF1111C8FF1111
+                B2FFEEEEEEFF1111B2FF1111C8FF1111C8FF000084CC00008400000089000000
+                89CC2222C8FF1111BEFFD1D1D1FFD6D6D6FFDCDCDCFF1111ADFF1111ADFFEAEA
+                EAFFEEEEEEFFEEEEEEFF1111BEFF1212BEFF000089CC0000890000008D000000
+                8DCC3434C7FF1212B4FF1111B4FFD1D1D1FFD6D6D6FFDCDCDCFFE2E2E2FFE6E6
+                E6FFEAEAEAFF1111B4FF1111B4FF1414B6FF00008DCC00008D00000092000000
+                92CC4646CEFF2626B5FF1414ABFF1111AAFFD1D1D1FFD6D6D6FFDCDCDCFFE2E2
+                E2FF1111AAFF1111AAFF1111AAFF1818B0FF000092CC00009200000096000000
+                96CC4A4AD2FF3333BBFF2E2EB8FF13139FFFCECECEFFD1D1D1FFD6D6D6FFDCDC
+                DCFF11119EFF1111A1FF1111A1FF1D1DACFF000096CC0000960000009A000000
+                9ACC5050D8FF3737BFFF2323ABFFFFFFFFFFF7F7F7FFE8E8E8FFDEDEDEFFDBDB
+                DBFFDDDDDDFF11119BFF1616A0FF2B2BB5FF00009ACC00009A0000009E000000
+                9ECC5A5AE2FF4242CAFFFFFFFFFFFFFFFFFFFFFFFFFF4242CAFF4242CAFFFFFF
+                FFFFFFFFFFFFFFFFFFFF4242CAFF4E4ED6FF00009ECC00009E000000A2000000
+                A2CC6262EAFF4F4FD7FF4F4FD7FFFFFFFFFF4F4FD7FF4F4FD7FF4F4FD7FF4F4F
+                D7FFFFFFFFFF4F4FD7FF4F4FD7FF5A5AE2FF0000A2CC0000A2000000A5000000
+                A5BA6060ECF95B5BE3FF5B5BE3FF5B5BE3FF5B5BE3FF5B5BE3FF5B5BE3FF5B5B
+                E3FF5B5BE3FF5B5BE3FF5B5BE3FF5B5BE7F90000A5BA0000A5000000A8000000
+                A8732A2AC7DD6363EFF96D6DF5FF6D6DF5FF6D6DF5FF6D6DF5FF6D6DF5FF6D6D
+                F5FF6D6DF5FF6C6CF4FF6262EEF92929C5DD0000A8730000A8000000A8000000
+                A90C0000AA730000AABA0000AACC0000AACC0000AACC0000AACC0000AACC0000
+                AACC0000AACC0000AACC0000AABA0000AA730000A90C0000A800FFFFFF00FFFF
+                FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+                FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00
+              }
+              OnClick = btWebsitesSearchClearClick
+            end
+            object pnlWebsitesToolRight: TPanel
+              Left = 403
+              Height = 23
+              Top = 0
+              Width = 170
+              Align = alRight
+              AutoSize = True
+              BevelOuter = bvNone
+              ClientHeight = 23
+              ClientWidth = 170
+              TabOrder = 1
+              object ToolBarWebsites: TToolBar
+                Left = 0
+                Height = 23
+                Top = 0
+                Width = 170
+                AutoSize = True
+                EdgeBorders = []
+                Images = IconList
+                List = True
+                ParentFont = False
+                ShowCaptions = True
+                TabOrder = 0
+                Transparent = True
+                object tbWebsitesExpandAll: TToolButton
+                  Left = 1
+                  Top = 0
+                  AutoSize = True
+                  Caption = 'Expand All'
+                  ImageIndex = 17
+                  OnClick = tbWebsitesExpandAllClick
+                end
+                object tbWebsitesCollapseAll: TToolButton
+                  Left = 82
+                  Top = 0
+                  AutoSize = True
+                  Caption = 'Collapse All'
+                  ImageIndex = 18
+                  OnClick = tbWebsitesCollapseAllClick
+                end
+              end
             end
           end
         end
@@ -2983,7 +3066,7 @@ object MainForm: TMainForm
         OnChange = edSearchChange
         OnKeyUp = edSearchKeyUp
         TabOrder = 1
-        TextHint = 'Search...'
+        TextHint = 'Search title...'
       end
       object cbSelectManga: TComboBox
         Left = 3
@@ -3100,7 +3183,6 @@ object MainForm: TMainForm
         AnchorSideTop.Side = asrBottom
         Left = 162
         Height = 23
-        Hint = 'Search manga from list'
         Top = 36
         Width = 22
         Anchors = [akTop, akRight]

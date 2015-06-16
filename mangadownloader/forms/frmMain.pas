@@ -44,6 +44,7 @@ type
     btReadOnline: TBitBtn;
     btRemoveFilter: TSpeedButton;
     btSearchClear: TSpeedButton;
+    btWebsitesSearchClear: TSpeedButton;
     btUpdateList: TSpeedButton;
     btURL: TSpeedButton;
     cbOptionAutoDlFav: TCheckBox;
@@ -64,6 +65,7 @@ type
     edOptionExternalParams: TEdit;
     edOptionExternalPath: TFileNameEdit;
     edSaveTo: TEdit;
+    edWebsitesSearch: TEdit;
     edURL: TEdit;
     gbDropTarget: TGroupBox;
     gbOptionExternal: TGroupBox;
@@ -99,6 +101,8 @@ type
     miDownloadDeleteTaskData: TMenuItem;
     miDownloadOpenWith: TMenuItem;
     miFavoritesOpenWith: TMenuItem;
+    pnlWebsitesToolRight: TPanel;
+    pnlWebsitesTool: TPanel;
     pnCustomGenre: TPanel;
     pnThumbContainer: TPanel;
     pnMainTop: TPanel;
@@ -279,9 +283,9 @@ type
     lbTransferRate: TLabel;
     lbTransferRateValue: TLabel;
     tbDropTargetOpacity: TTrackBar;
-    ToolBarWebsites: TToolBar;
-    tbWebsitesExpandAll: TToolButton;
     tbWebsitesCollapseAll: TToolButton;
+    tbWebsitesExpandAll: TToolButton;
+    ToolBarWebsites: TToolBar;
     tsView: TTabSheet;
     tmBackup: TIdleTimer;
     ToolBarDownload: TToolBar;
@@ -327,6 +331,7 @@ type
     procedure btUpdateListClick(Sender: TObject);
     procedure btURLClick(Sender: TObject);
     procedure btVisitMyBlogClick(Sender: TObject);
+    procedure btWebsitesSearchClearClick(Sender: TObject);
     procedure cbOptionDigitChapterChange(Sender: TObject);
     procedure cbOptionDigitVolumeChange(Sender: TObject);
     procedure cbSelectMangaChange(Sender: TObject);
@@ -346,6 +351,7 @@ type
     procedure edSearchChange(Sender: TObject);
     procedure edSearchKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure edURLKeyPress(Sender: TObject; var Key: Char);
+    procedure edWebsitesSearchChange(Sender: TObject);
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCreate(Sender: TObject);
 
@@ -1702,6 +1708,11 @@ begin
   OpenURL('http://akarink.wordpress.com/');
 end;
 
+procedure TMainForm.btWebsitesSearchClearClick(Sender: TObject);
+begin
+  edWebsitesSearch.Clear;
+end;
+
 procedure TMainForm.cbOptionDigitChapterChange(Sender: TObject);
 begin
   seOptionDigitChapter.Enabled := cbOptionDigitChapter.Checked;
@@ -1884,9 +1895,88 @@ begin
     btURLClick(btURL);
 end;
 
-// --
-
-// -----
+procedure TMainForm.edWebsitesSearchChange(Sender: TObject);
+var
+  s: String;
+  lcount: Integer;
+  data: PMangaListItem;
+  xNode, lNode: PVirtualNode;
+begin
+  if Length(optionMangaSiteSelectionNodes) < 1 then Exit;
+  s := Trim(LowerCase(edWebsitesSearch.Text));
+  vtOptionMangaSiteSelection.BeginUpdate;
+  try
+    lNode := nil;
+    lcount := 0;
+    vtOptionMangaSiteSelection.RootNode^.TotalHeight := vtOptionMangaSiteSelection.DefaultNodeHeight;
+    if s = '' then
+    begin
+      xNode := vtOptionMangaSiteSelection.GetFirst;
+      while Assigned(xNode) do
+      begin
+        Include(xNode^.States, vsVisible);
+        if xNode^.ChildCount > 0 then
+        begin
+          lNode := xNode;
+          Inc(vtOptionMangaSiteSelection.RootNode^.TotalHeight, xNode^.NodeHeight);
+        end
+        else
+          if Assigned(lNode) then
+            if vsExpanded in lNode^.States then
+              Inc(vtOptionMangaSiteSelection.RootNode^.TotalHeight, xNode^.NodeHeight);
+        xNode := vtOptionMangaSiteSelection.GetNext(xNode);
+      end;
+    end
+    else
+    begin
+      xNode := vtOptionMangaSiteSelection.GetFirst;
+      while Assigned(xNode) do
+      begin
+        Include(xNode^.States, vsVisible);
+        if xNode^.ChildCount > 0 then
+        begin
+          if Assigned(lNode) then
+          begin
+            if lcount > 0 then
+              Inc(vtOptionMangaSiteSelection.RootNode^.TotalHeight, lNode^.NodeHeight)
+            else
+              Exclude(lNode^.States, vsVisible);
+          end;
+          lNode := xNode;
+          lcount := 0;
+        end
+        else
+        begin
+          data := vtOptionMangaSiteSelection.GetNodeData(xNode);
+          if Assigned(data) then
+          begin
+            if Pos(s, LowerCase(data^.Text)) <> 0 then
+            begin
+              Inc(lcount);
+              if Assigned(lNode) then
+              begin
+                if vsExpanded in lNode^.States then
+                  Inc(vtOptionMangaSiteSelection.RootNode^.TotalHeight, xNode^.NodeHeight);
+              end;
+            end
+            else
+              Exclude(xNode^.States, vsVisible);
+          end;
+        end;
+        xNode := vtOptionMangaSiteSelection.GetNext(xNode);
+      end;
+      if Assigned(lNode) then
+      begin
+        if lcount > 0 then
+          Inc(vtOptionMangaSiteSelection.RootNode^.TotalHeight, lNode^.NodeHeight)
+        else
+          Exclude(lNode^.States, vsVisible);
+      end;
+    end;
+  finally
+    vtOptionMangaSiteSelection.EndUpdate;
+  end;
+end;
 
 procedure TMainForm.btRemoveFilterClick(Sender: TObject);
 begin
