@@ -959,6 +959,10 @@ msgctxt "tmainform.lboptionautocheckminutes.caption"
 msgid "Auto check for new chapter every %d minutes"
 msgstr "Auto check for new chapter every %d minutes"
 
+#: tmainform.lboptionconnectiontimeout.caption
+msgid "Connection timeout (seconds)"
+msgstr "Connection timeout (seconds)"
+
 #: tmainform.lboptioncustomrename.caption
 msgid "Chapter folder name:"
 msgstr "Chapter folder name:"
@@ -1622,3 +1626,4 @@ msgstr "Synchronizing data"
 #: uupdatethread.rs_updatinglist
 msgid "Updating list"
 msgstr "Updating list"
+

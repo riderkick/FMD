@@ -911,6 +911,10 @@ msgctxt "tmainform.lboptionautocheckminutes.caption"
 msgid "Auto check for new chapter every %d minutes"
 msgstr ""
 
+#: tmainform.lboptionconnectiontimeout.caption
+msgid "Connection timeout (seconds)"
+msgstr ""
+
 #: tmainform.lboptioncustomrename.caption
 msgid "Chapter folder name:"
 msgstr ""
