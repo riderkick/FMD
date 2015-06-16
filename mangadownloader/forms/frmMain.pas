@@ -1789,7 +1789,8 @@ begin
         if not isFilterAllSites then
           dataProcess.SaveToFile;
       end;
-      dataProcess.Free;
+      if Assigned(dataProcess) then
+        dataProcess.Free;
       dataProcess := TDataProcess.Create;
       if not dataProcess.LoadFromFile(
         cbSelectManga.Items.Strings[cbSelectManga.ItemIndex]) then
@@ -3763,21 +3764,22 @@ begin
       end;
     end;
 
-    // TODO: optimize required
     if not isStillHaveCurrentWebsite then
     begin
-      cbSelectManga.ItemIndex := 0;
-      dataProcess.RemoveFilter;
-      if not dataProcess.isFilterAllSites then
-        dataProcess.SaveToFile;
-      dataProcess.Free;
-      dataProcess := TDataProcess.Create;
-      dataProcess.LoadFromFile(cbSelectManga.Items.Strings[0]);
-      vtMangaList.OnInitNode := @vtMangaListInitNode;
-      vtMangaList.Clear;
-      vtMangaList.RootNodeCount := dataProcess.filterPos.Count;
-      lbMode.Caption := Format(RS_ModeAll, [dataProcess.filterPos.Count]);
-      currentWebsite := cbSelectManga.Items[0];
+      if cbSelectManga.Items.Count > 0 then
+      begin
+        cbSelectManga.ItemIndex := 0;
+        cbSelectMangaChange(Sender);
+      end
+      else
+      begin
+        cbSelectManga.ItemIndex := -1;
+        cbSelectManga.Text := '';
+        currentWebsite := '';
+        FreeAndNil(dataProcess);
+        vtMangaList.Clear;
+        lbMode.Caption := Format(RS_ModeAll, [0]);
+      end;
     end;
     options.WriteBool('general', 'LiveSearch', cbOptionLiveSearch.Checked);
     options.WriteBool('general', 'OneInstanceOnly', cbOptionOneInstanceOnly.Checked);
