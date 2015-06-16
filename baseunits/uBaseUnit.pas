@@ -358,8 +358,9 @@ const
   MADOKAMI_ID            = 96;
   MANGACAP_ID            = 97;
   MANGABOOM_ID           = 98;
+  AUTHRONE_ID            = 99;
 
-  WebsiteRoots: array [0..98] of array [0..1] of string = (
+  WebsiteRoots: array [0..99] of array [0..1] of string = (
     ('AnimeA', 'http://manga.animea.net'),
     ('MangaHere', 'http://www.mangahere.co'),
     ('MangaInn', 'http://www.mangainn.me'),
@@ -458,7 +459,8 @@ const
     ('Dynasty-Scans', 'http://dynasty-scans.com'),
     ('Madokami', 'https://manga.madokami.com'),
     ('MangaCap', 'http://www.mangacap.com'),
-    ('MangaBoom', 'http://www.mangaboom.com')
+    ('MangaBoom', 'http://www.mangaboom.com'),
+    ('Authrone', 'http://www.authrone.com')
     );
 
   ALPHA_LIST = '#abcdefghijklmnopqrstuvwxyz';
@@ -1374,7 +1376,9 @@ end;
 function SitesIsWPManga(const websiteid: Cardinal): Boolean;
 begin
   Result := websiteid in [
-    MANGACAP_ID
+    MANGACAP_ID,
+    MANGABOOM_ID,
+    AUTHRONE_ID
     ];
 end;
 
