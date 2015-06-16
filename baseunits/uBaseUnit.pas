@@ -1274,7 +1274,8 @@ begin
     PORNCOMIXIC_ID,
     PORNXXXCOMICS_ID,
     MANGAPARK_ID,
-    SENMANGA_ID
+    SENMANGA_ID,
+    MANGACAP_ID
     ]);
 end;
 
