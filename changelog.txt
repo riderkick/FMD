@@ -8,6 +8,13 @@ https://www.mediafire.com/folder/3ccy2c7g36hp3/Fmd
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.17.0 (19-06-2015)
+[+] Added MangaCap, Authrone, EyeOnManga(EN)
+[+] Added MangaBoom(TH)
+[+] Added search websites on websites selection
+[+?] Added connection timeout setting
+[*] Various changes and bug fixes
+
 0.9.16.6 (13-06-2015)
 [*] Various changes and minor bug fixes
 
