@@ -2546,7 +2546,7 @@ object MainForm: TMainForm
             object cbOptionAutoCheckFavStartup: TCheckBox
               Left = 16
               Height = 19
-              Top = 32
+              Top = 40
               Width = 249
               Caption = 'Automatic check for new chapter at startup'
               ParentFont = False
@@ -2555,7 +2555,7 @@ object MainForm: TMainForm
             object seOptionCheckMinutes: TSpinEdit
               Left = 16
               Height = 23
-              Top = 80
+              Top = 8
               Width = 58
               MaxValue = 1440
               OnChange = seOptionCheckMinutesChange
@@ -2564,7 +2564,7 @@ object MainForm: TMainForm
             object lbOptionAutoCheckMinutes: TLabel
               Left = 82
               Height = 15
-              Top = 84
+              Top = 12
               Width = 243
               Caption = 'Auto check for new chapter every %d minutes'
               ParentColor = False
@@ -2572,7 +2572,7 @@ object MainForm: TMainForm
             object cbOptionAutoRemoveCompletedManga: TCheckBox
               Left = 16
               Height = 19
-              Top = 8
+              Top = 88
               Width = 298
               Caption = 'Automatic remove completed manga from Favorites'
               TabOrder = 2
@@ -2580,7 +2580,7 @@ object MainForm: TMainForm
             object cbOptionAutoDlFav: TCheckBox
               Left = 16
               Height = 19
-              Top = 55
+              Top = 64
               Width = 242
               Caption = 'Automatic download after finish checking'
               ParentFont = False
