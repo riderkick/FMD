@@ -417,7 +417,6 @@ type
     procedure mnUpdate1ClickClick(Sender: TObject);
     procedure mnUpdateDownFromServerClick(Sender: TObject);
     procedure mnUpdateListClick(Sender: TObject);
-
     procedure pcMainChange(Sender: TObject);
     procedure pmDownloadPopup(Sender: TObject);
     procedure pmEditURLPopup(Sender: TObject);
@@ -3972,8 +3971,6 @@ begin
   finally
     //Recheck download thread
     DLManager.CheckAndActiveTask;
-    vtMangaList.Repaint;
-    tvDownloadFilterRepaint;
   end;
 end;
 
@@ -4862,6 +4859,8 @@ begin
       cbOptionProxyType.ItemIndex := idxOptionProxyType;
       rgDropTargetMode.ItemIndex := idxDropTargetMode;
       Self.Repaint;
+      vtMangaList.Repaint;
+      tvDownloadFilterRepaint;
     end;
   end;
 end;
