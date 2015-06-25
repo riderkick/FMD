@@ -577,10 +577,7 @@ type
     procedure InitCheckboxes;
 
     // download task filters
-    procedure ShowAllTasks;
-    procedure ShowCompletedTasks;
-    procedure ShowInProgressTasks;
-    procedure ShowStoppedTasks;
+    procedure ShowTasks(Status: TStatusTypes = []);
 
     procedure ShowTasksOnCertainDays(const L, H: longint);
     procedure ShowTodayTasks;
@@ -1330,17 +1327,16 @@ var
   LFinishedTasks: Cardinal = 0;
   LInProgressTasks: Cardinal = 0;
   LStoppedTasks: Cardinal = 0;
+  LFailedTask: Cardinal = 0;
 begin
   if (Assigned(DLManager)) and (DLManager.Count > 0) then
     for i := 0 to DLManager.Count - 1 do
     begin
       case DLManager.TaskItem(i).Status of
-        STATUS_FINISH:
-          Inc(LFinishedTasks);
-        STATUS_DOWNLOAD, STATUS_PREPARE, STATUS_WAIT:
-          Inc(LInProgressTasks);
-        STATUS_STOP:
-          Inc(LStoppedTasks);
+        STATUS_FINISH: Inc(LFinishedTasks);
+        STATUS_DOWNLOAD, STATUS_PREPARE, STATUS_WAIT: Inc(LInProgressTasks);
+        STATUS_STOP: Inc(LStoppedTasks);
+        STATUS_PROBLEM, STATUS_FAILED: Inc(LFailedTask);
       end;
     end;
 
@@ -1352,67 +1348,73 @@ begin
   tvDownloadFilter.Items[1].Text := Format('%s (%d)', [RS_Finish, LFinishedTasks]);
   tvDownloadFilter.Items[2].Text := Format('%s (%d)', [RS_InProgress, LInProgressTasks]);
   tvDownloadFilter.Items[3].Text := Format('%s (%d)', [RS_Stopped, LStoppedTasks]);
+  tvDownloadFilter.Items[4].Text := Format('%s (%d)', [RS_Failed, LFailedTask]);
 
   // root
-  tvDownloadFilter.Items[4].Text := RS_History;
+  tvDownloadFilter.Items[5].Text := RS_History;
 
   // childs
-  tvDownloadFilter.Items[5].Text := RS_Today;
-  tvDownloadFilter.Items[6].Text := RS_Yesterday;
-  tvDownloadFilter.Items[7].Text := RS_OneWeek;
-  tvDownloadFilter.Items[8].Text := RS_OneMonth;
+  tvDownloadFilter.Items[6].Text := RS_Today;
+  tvDownloadFilter.Items[7].Text := RS_Yesterday;
+  tvDownloadFilter.Items[8].Text := RS_OneWeek;
+  tvDownloadFilter.Items[9].Text := RS_OneMonth;
 end;
 
 procedure TMainForm.GenerateNodes;
 begin
-  tvDownloadFilter.Items.Clear;
+  with tvDownloadFilter do begin
+    Items.Clear;
 
-  // root
-  tvDownloadFilter.Items.Add(nil, RS_AllDownloads);
-  tvDownloadFilter.Items[0].ImageIndex := 4;
-  tvDownloadFilter.Items[0].SelectedIndex := 4;
-  tvDownloadFilter.Items[0].StateIndex := 4;
+    // root
+    Items.Add(nil, RS_AllDownloads);
+    Items[0].ImageIndex := 4;
+    Items[0].SelectedIndex := 4;
+    Items[0].StateIndex := 4;
 
-  // childs
-  tvDownloadFilter.Items.AddChild(tvDownloadFilter.Items[0], RS_Finish);
-  tvDownloadFilter.Items[1].ImageIndex := 5;
-  tvDownloadFilter.Items[1].SelectedIndex := 5;
-  tvDownloadFilter.Items[1].StateIndex := 5;
-  tvDownloadFilter.Items.AddChild(tvDownloadFilter.Items[0], RS_InProgress);
-  tvDownloadFilter.Items[2].ImageIndex := 6;
-  tvDownloadFilter.Items[2].SelectedIndex := 6;
-  tvDownloadFilter.Items[2].StateIndex := 6;
-  tvDownloadFilter.Items.AddChild(tvDownloadFilter.Items[0], RS_Stopped);
-  tvDownloadFilter.Items[3].ImageIndex := 7;
-  tvDownloadFilter.Items[3].SelectedIndex := 7;
-  tvDownloadFilter.Items[3].StateIndex := 7;
+    // childs
+    Items.AddChild(tvDownloadFilter.Items[0], RS_Finish);
+    Items[1].ImageIndex := 5;
+    Items[1].SelectedIndex := 5;
+    Items[1].StateIndex := 5;
+    Items.AddChild(tvDownloadFilter.Items[0], RS_InProgress);
+    Items[2].ImageIndex := 6;
+    Items[2].SelectedIndex := 6;
+    Items[2].StateIndex := 6;
+    Items.AddChild(tvDownloadFilter.Items[0], RS_Stopped);
+    Items[3].ImageIndex := 7;
+    Items[3].SelectedIndex := 7;
+    Items[3].StateIndex := 7;
+    Items.AddChild(tvDownloadFilter.Items[0], RS_Failed);
+    Items[4].ImageIndex := 16;
+    Items[4].SelectedIndex := 16;
+    Items[4].StateIndex := 16;
 
-  // root
-  tvDownloadFilter.Items.Add(nil, RS_History);
-  tvDownloadFilter.Items[4].ImageIndex := 4;
-  tvDownloadFilter.Items[4].SelectedIndex := 4;
-  tvDownloadFilter.Items[4].StateIndex := 4;
+    // root
+    Items.Add(nil, RS_History);
+    Items[5].ImageIndex := 4;
+    Items[5].SelectedIndex := 4;
+    Items[5].StateIndex := 4;
 
-  // childs
-  tvDownloadFilter.Items.AddChild(tvDownloadFilter.Items[4], RS_Today);
-  tvDownloadFilter.Items[5].ImageIndex := 8;
-  tvDownloadFilter.Items[5].SelectedIndex := 8;
-  tvDownloadFilter.Items[5].StateIndex := 8;
-  tvDownloadFilter.Items.AddChild(tvDownloadFilter.Items[4], RS_Yesterday);
-  tvDownloadFilter.Items[6].ImageIndex := 8;
-  tvDownloadFilter.Items[6].SelectedIndex := 8;
-  tvDownloadFilter.Items[6].StateIndex := 8;
-  tvDownloadFilter.Items.AddChild(tvDownloadFilter.Items[4], RS_OneWeek);
-  tvDownloadFilter.Items[7].ImageIndex := 8;
-  tvDownloadFilter.Items[7].SelectedIndex := 8;
-  tvDownloadFilter.Items[7].StateIndex := 8;
-  tvDownloadFilter.Items.AddChild(tvDownloadFilter.Items[4], RS_OneMonth);
-  tvDownloadFilter.Items[8].ImageIndex := 8;
-  tvDownloadFilter.Items[8].SelectedIndex := 8;
-  tvDownloadFilter.Items[8].StateIndex := 8;
+    // childs
+    Items.AddChild(tvDownloadFilter.Items[5], RS_Today);
+    Items[6].ImageIndex := 8;
+    Items[6].SelectedIndex := 8;
+    Items[6].StateIndex := 8;
+    Items.AddChild(tvDownloadFilter.Items[5], RS_Yesterday);
+    Items[7].ImageIndex := 8;
+    Items[7].SelectedIndex := 8;
+    Items[7].StateIndex := 8;
+    Items.AddChild(tvDownloadFilter.Items[5], RS_OneWeek);
+    Items[8].ImageIndex := 8;
+    Items[8].SelectedIndex := 8;
+    Items[8].StateIndex := 8;
+    Items.AddChild(tvDownloadFilter.Items[5], RS_OneMonth);
+    Items[9].ImageIndex := 8;
+    Items[9].SelectedIndex := 8;
+    Items[9].StateIndex := 8;
 
-  tvDownloadFilter.Items[options.ReadInteger('general', 'DownloadFilterSelect',
-    0)].Selected := True;
+    Items[Self.options.ReadInteger('general', 'DownloadFilterSelect',0)].Selected := True;
+  end;
 end;
 
 procedure TMainForm.btDownloadClick(Sender: TObject);
@@ -4102,7 +4104,7 @@ begin
     TCheckBox(pnGenres.Controls[i]).State := cbGrayed;
 end;
 
-procedure TMainForm.ShowAllTasks;
+procedure TMainForm.ShowTasks(Status: TStatusTypes);
 var
   i: Cardinal;
   xNode: PVirtualNode;
@@ -4113,87 +4115,10 @@ begin
   xNode := vtDownload.GetLast;
   for i := vtDownload.RootNodeCount - 1 downto 0 do
   begin
-    vtDownload.isVisible[xNode] := True;
-
-    if canExit then
-      Exit;
-    if xNode = vtDownload.GetFirst then
-      canExit := True;
-    xNode := vtDownload.GetPrevious(xNode);
-    if xNode = vtDownload.GetFirst then
-      canExit := True;
-  end;
-end;
-
-procedure TMainForm.ShowCompletedTasks;
-var
-  i: Cardinal;
-  xNode: PVirtualNode;
-  canExit: Boolean = False;
-begin
-  if vtDownload.RootNodeCount = 0 then
-    Exit;
-  xNode := vtDownload.GetLast;
-  for i := vtDownload.RootNodeCount - 1 downto 0 do
-  begin
-    if DLManager.TaskItem(i).Status = STATUS_FINISH then
+    if Status = [] then
       vtDownload.isVisible[xNode] := True
     else
-      vtDownload.isVisible[xNode] := False;
-
-    if canExit then
-      Exit;
-    if xNode = vtDownload.GetFirst then
-      canExit := True;
-    xNode := vtDownload.GetPrevious(xNode);
-    if xNode = vtDownload.GetFirst then
-      canExit := True;
-  end;
-end;
-
-procedure TMainForm.ShowInProgressTasks;
-var
-  i: Cardinal;
-  xNode: PVirtualNode;
-  canExit: Boolean = False;
-begin
-  if vtDownload.RootNodeCount = 0 then
-    Exit;
-  xNode := vtDownload.GetLast;
-  for i := vtDownload.RootNodeCount - 1 downto 0 do
-  begin
-    if (DLManager.TaskItem(i).Status in
-      [STATUS_DOWNLOAD, STATUS_PREPARE, STATUS_WAIT]) then
-      vtDownload.isVisible[xNode] := True
-    else
-      vtDownload.isVisible[xNode] := False;
-
-    if canExit then
-      Exit;
-    if xNode = vtDownload.GetFirst then
-      canExit := True;
-    xNode := vtDownload.GetPrevious(xNode);
-    if xNode = vtDownload.GetFirst then
-      canExit := True;
-  end;
-end;
-
-procedure TMainForm.ShowStoppedTasks;
-var
-  i: Cardinal;
-  xNode: PVirtualNode;
-  canExit: Boolean = False;
-begin
-  if vtDownload.RootNodeCount = 0 then
-    Exit;
-  xNode := vtDownload.GetLast;
-  for i := DLManager.Count - 1 downto 0 do
-  begin
-    if DLManager.TaskItem(i).Status = STATUS_STOP then
-      vtDownload.isVisible[xNode] := True
-    else
-      vtDownload.isVisible[xNode] := False;
-
+      vtDownload.IsVisible[xNode] := DLManager.TaskItem(i).Status in Status;
     if canExit then
       Exit;
     if xNode = vtDownload.GetFirst then
@@ -4269,22 +4194,15 @@ begin
     Exit;
   isRunDownloadFilter := True;
   case tvDownloadFilter.Selected.AbsoluteIndex of
-    0, 4:
-      ShowAllTasks;
-    1:
-      ShowCompletedTasks;
-    2:
-      ShowInProgressTasks;
-    3:
-      ShowStoppedTasks;
-    5:
-      ShowTodayTasks;
-    6:
-      ShowYesterdayTasks;
-    7:
-      ShowOneWeekTasks;
-    8:
-      ShowOneMonthTasks;
+    0, 5: ShowTasks;
+    1: ShowTasks([STATUS_FINISH]);
+    2: ShowTasks([STATUS_PREPARE, STATUS_DOWNLOAD, STATUS_COMPRESS]);
+    3: ShowTasks([STATUS_STOP]);
+    4: ShowTasks([STATUS_PROBLEM, STATUS_FAILED]);
+    6: ShowTodayTasks;
+    7: ShowYesterdayTasks;
+    8: ShowOneWeekTasks;
+    9: ShowOneMonthTasks;
   end;
   tvDownloadFilterRepaint;
   isRunDownloadFilter := False;

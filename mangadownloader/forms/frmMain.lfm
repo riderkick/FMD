@@ -3312,14 +3312,6 @@ object MainForm: TMainForm
         TabOrder = 0
         OnSelectionChanged = tvDownloadFilterSelectionChanged
         Options = [tvoAutoExpand, tvoAutoItemHeight, tvoHideSelection, tvoKeepCollapsedNodes, tvoReadOnly, tvoShowButtons, tvoShowLines, tvoShowRoot, tvoToolTips, tvoThemedDraw]
-        Items.Data = {
-          F9FFFFFF020001000000040000000400000004000000FFFFFFFF030000000000
-          0000010D000000416C6C20646F776E6C6F616473050000000500000005000000
-          FFFFFFFF00000000000000000009000000436F6D706C65746564060000000600
-          000006000000FFFFFFFF0000000000000000000B000000496E2070726F677265
-          7373070000000700000007000000FFFFFFFF0000000000000000000700000053
-          746F70706564
-        }
       end
     end
   end
