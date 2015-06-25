@@ -991,6 +991,7 @@ procedure TMainForm.itMonitorTimer(Sender: TObject);
 begin
   if DoAfterFMD <> DO_NOTHING then
   begin
+    itMonitor.Enabled := False;
     Self.CloseNow(False);
     case DoAfterFMD of
       DO_POWEROFF: fmdPowerOff;
@@ -1010,8 +1011,6 @@ begin
     end;
     Self.Close;
   end;
-  DoAfterFMD := DO_NOTHING;
-  itMonitor.Enabled := False;
 end;
 
 procedure TMainForm.itRefreshDLInfoStopTimer(Sender: TObject);
