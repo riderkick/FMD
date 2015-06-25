@@ -8,6 +8,12 @@ https://www.mediafire.com/folder/3ccy2c7g36hp3/Fmd
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.17.1 (26-06-2015)
+[+] Added "Failed" on download filter
+[*] "Delete task + data", only remove chapters that exist in the task
+[*] Fix EyeOnManga can't get names and links on update list
+[*] Various changes and bug fixes
+
 0.9.17.0 (19-06-2015)
 [+] Added MangaCap, Authrone, EyeOnManga(EN)
 [+] Added MangaBoom(TH)
