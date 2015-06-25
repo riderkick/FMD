@@ -1154,7 +1154,7 @@ begin
               if FileExistsUTF8(f + '.zip') then
                 DeleteFileUTF8(f + '.zip')
               else if FileExistsUTF8(f + '.cbz') then
-                DeleteFileUTF8(f + '.xbz')
+                DeleteFileUTF8(f + '.cbz')
               else if FileExistsUTF8(f + '.pdf') then
                 DeleteFileUTF8(f + '.pdf')
               else if DirectoryExistsUTF8(f) then
