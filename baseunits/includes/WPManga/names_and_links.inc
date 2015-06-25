@@ -17,31 +17,44 @@
     ParseHTML(Source.Text, parse);
     Source.Free;
 
-    for i := 0 to parse.Count - 1 do
+    if WebsiteID = EYEONMANGA_ID then
     begin
-      //thumbnail mode
-      if GetVal(parse[i], 'id') = 'sct_content' then
-      begin
-        for j := i+1 to parse.Count-1 do
-        begin
-          s := GetTagName(parse[j]);
-          if (s = 'sct_sidebar') or (s = 'sct_wid_bot') then
-            Break
-          else
-          if GetVal(parse[j], 'class') = 'det' then
+      for i := 0 to parse.Count-1 do
+        if GetVal(parse[i], 'class') = 'cvr' then try
+          if GetTagName(parse[i-4]) = 'a' then
           begin
-            for k := j+1 to parse.Count-1 do
+            names.Add(CommonStringFilter(parse[i-3]));
+            links.Add(GetVal(parse[i-4], 'href'));
+          end;
+        except
+        end;
+    end
+    else
+      for i := 0 to parse.Count-1 do
+      begin
+        //thumbnail mode
+        if GetVal(parse[i], 'id') = 'sct_content' then
+        begin
+          for j := i+1 to parse.Count-1 do
+          begin
+            s := GetTagName(parse[j]);
+            if (s = 'sct_sidebar') or (s = 'sct_wid_bot') then
+              Break
+            else
+            if GetVal(parse[j], 'class') = 'det' then
             begin
-              if GetTagName(parse[k]) = 'a' then
+              for k := j+1 to parse.Count-1 do
               begin
-                links.Add(GetVal(parse[k], 'href'));
-                names.Add(CommonStringFilter(parse[k+1]));
-                Break;
+                if GetTagName(parse[k]) = 'a' then
+                begin
+                  links.Add(GetVal(parse[k], 'href'));
+                  names.Add(CommonStringFilter(parse[k+1]));
+                  Break;
+                end;
               end;
             end;
           end;
+          Break;
         end;
-        Break;
       end;
-    end;
   end;
