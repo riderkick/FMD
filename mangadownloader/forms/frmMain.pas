@@ -1122,13 +1122,15 @@ end;
 
 procedure TMainForm.miDownloadDeleteTaskClick(Sender: TObject);
 var
-  i: Integer;
+  i, j: Integer;
   xNode: PVirtualNode;
+  f: String;
+  finfo: TSearchRec;
+  fs: TStringList;
 begin
   if vtDownload.SelectedCount = 0 then Exit;
   if DLManager.Count = 0 then Exit;
-  if (cbOptionShowDeleteTaskDialog.Checked) and
-    (vtDownload.SelectedCount > 0) then
+  if (cbOptionShowDeleteTaskDialog.Checked) then
     if MessageDlg('', RS_DlgRemoveTask,
       mtConfirmation, [mbYes, mbNo], 0) <> mrYes then
       Exit;
@@ -1138,13 +1140,40 @@ begin
     xNode := vtDownload.GetFirst;
     while i < DLManager.Count do
     begin
-      vtDownload.Selected[xNode];
       if vtDownload.Selected[xNode] then
       begin
         if Sender = miDownloadDeleteTaskData then
         begin
-          DLManager.StopTask(i, False, True);
-          DeleteDirectory(DLManager.TaskItem(i).DownloadInfo.SaveTo, False);
+          DLManager.StopTask(i, True, False);
+          if DLManager.TaskItem(i).ChapterName.Count > 0 then
+          begin
+            for j := 0 to DLManager.TaskItem(i).ChapterName.Count-1 do
+            begin
+              f := CleanAndExpandDirectory(DLManager.TaskItem(i).DownloadInfo.SaveTo) +
+                DLManager.TaskItem(i).ChapterName[j];
+              if FileExistsUTF8(f + '.zip') then
+                DeleteFileUTF8(f + '.zip')
+              else if FileExistsUTF8(f + '.cbz') then
+                DeleteFileUTF8(f + '.xbz')
+              else if FileExistsUTF8(f + '.pdf') then
+                DeleteFileUTF8(f + '.pdf')
+              else if DirectoryExistsUTF8(f) then
+                DeleteDirectory(f, False);
+            end;
+          end;
+          f := CleanAndExpandDirectory(DLManager.TaskItem(i).DownloadInfo.SaveTo);
+          fs := TStringList.Create;
+          try
+            if FindFirstUTF8(f + '*', faAnyFile and faDirectory, finfo) = 0 then
+            repeat
+              fs.Add(finfo.Name);
+            until FindNextUTF8(finfo) <> 0;
+            FindCloseUTF8(finfo);
+            if fs.Count = 2 then
+              DeleteDirectory(f, False);
+          finally
+            fs.Free;
+          end;
         end;
         DLManager.RemoveTask(i);
       end
