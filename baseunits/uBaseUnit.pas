@@ -18,10 +18,10 @@ uses
   {$else}
   UTF8Process,
   {$endif}
-  SysUtils, Classes, Graphics, Forms, lazutf8classes,
-  LazUTF8, strutils, fileinfo, fpjson, jsonparser, FastHTMLParser, fgl, FileUtil,
-  RegExpr, synautil, httpsend, blcksock, ssl_openssl, GZIPUtils, uFMDThread,
-  uMisc, USimpleException, USimpleLogger;
+  SysUtils, Classes, Graphics, Forms, lazutf8classes, LazUTF8, strutils,
+  fileinfo, fpjson, jsonparser, FastHTMLParser, fgl, FileUtil, RegExpr,
+  synautil, httpsend, blcksock, ssl_openssl, GZIPUtils, uFMDThread, uMisc,
+  USimpleException, USimpleLogger;
 
 Type
   TFMDDo = (DO_NOTHING, DO_EXIT, DO_POWEROFF, DO_HIBERNATE, DO_UPDATE);
@@ -816,9 +816,13 @@ type
   { THTTPSendThread }
 
   THTTPSendThread = class(THTTPSend)
-    private
+    protected
       FOwner: TFMDThread;
+      FTimeoutCount: Integer;
+      procedure CloseConnection(SendTerminateTag: Boolean = True);
       procedure SockOnHeartBeat(Sender: TObject);
+      procedure SockOnStatus(Sender: TObject; Reason: THookSocketReason;
+        const Value: String);
     public
       constructor Create(AOwner: TFMDThread);
   end;
@@ -3407,21 +3411,43 @@ end;
 
 { THTTPSendThread }
 
+procedure THTTPSendThread.CloseConnection(SendTerminateTag: Boolean);
+begin
+  with Self.Sock do
+  begin
+    if SendTerminateTag then
+      Tag := 1;
+    StopFlag := True;
+    AbortSocket;
+  end;
+end;
+
 procedure THTTPSendThread.SockOnHeartBeat(Sender: TObject);
 begin
   if Assigned(FOwner) then
     if FOwner.IsTerminated then
-      with TTCPBlockSocket(Sender) do
-      begin
-        Tag := 1;
-        StopFlag := True;
-        AbortSocket;
-      end;
+       CloseConnection;
+  if FTimeout > 0 then
+  begin
+    if FTimeoutCount >= FTimeout then
+      CloseConnection(False)
+    else
+      Inc(FTimeoutCount, Sock.HeartbeatRate);
+  end;
+end;
+
+procedure THTTPSendThread.SockOnStatus(Sender: TObject;
+  Reason: THookSocketReason; const Value: String);
+begin
+  if (FTimeout > 0) and (Reason = HR_SocketClose) then
+    FTimeoutCount := 0;
 end;
 
 constructor THTTPSendThread.Create(AOwner: TFMDThread);
 begin
   inherited Create;
+  FTimeoutCount := 0;
+  Sock.OnStatus := SockOnStatus;
   if Assigned(AOwner) then
   begin
     FOwner := TFMDThread(AOwner);
