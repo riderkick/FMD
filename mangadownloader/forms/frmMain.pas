@@ -16,10 +16,10 @@ uses
   {$else}
   FakeActiveX,
   {$endif}
-  Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs,
-  StdCtrls, LCLType, ExtCtrls, ComCtrls, Buttons, Spin, Menus, VirtualTrees,
-  RichMemo, IniFiles, simpleipc, lclproc, types, strutils, LCLIntf,
-  DefaultTranslator, EditBtn, LazUTF8, AnimatedGif, uBaseUnit, uData,
+  Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
+  LCLType, ExtCtrls, ComCtrls, Buttons, Spin, Menus, VirtualTrees, RichMemo,
+  IniFiles, simpleipc, lclproc, types, strutils, LCLIntf, DefaultTranslator,
+  EditBtn, LazUTF8, TAGraph, TASources, TASeries, AnimatedGif, uBaseUnit, uData,
   uDownloadsManager, uFavoritesManager, uUpdateThread, uUpdateDBThread,
   uSubThread, uSilentThread, uMisc, uGetMangaInfosThread, uTranslation,
   frmDropTarget, USimpleException, USimpleLogger;
@@ -60,6 +60,8 @@ type
     cbUseRegExpr: TCheckBox;
     cbOptionProxyType: TComboBox;
     cbOptionOneInstanceOnly: TCheckBox;
+    TransferRateGraphArea: TAreaSeries;
+    TransferRateGraph: TChart;
     ckDropTarget: TCheckBox;
     edOptionDefaultPath: TEdit;
     edOptionExternalParams: TEdit;
@@ -86,6 +88,7 @@ type
     lbOptionCustomRenameHint: TLabel;
     lbOptionCustomRenameHint1: TLabel;
     lbOptionExternalParamsHint: TLabel;
+    TransferRateGraphList: TListChartSource;
     medURLCut: TMenuItem;
     medURLCopy: TMenuItem;
     medURLPaste: TMenuItem;
@@ -282,8 +285,6 @@ type
     spMainSplitter: TSplitter;
     sbMain: TStatusBar;
     sbUpdateList: TStatusBar;
-    lbTransferRate: TLabel;
-    lbTransferRateValue: TLabel;
     tbDropTargetOpacity: TTrackBar;
     tbWebsitesCollapseAll: TToolButton;
     tbWebsitesExpandAll: TToolButton;
@@ -375,6 +376,7 @@ type
     procedure itAnimateTimer(Sender: TObject);
     procedure itCheckForChaptersTimer(Sender: TObject);
     procedure itMonitorTimer(Sender: TObject);
+    procedure itRefreshDLInfoStartTimer(Sender: TObject);
     procedure itRefreshDLInfoStopTimer(Sender: TObject);
     procedure itRefreshDLInfoTimer(Sender: TObject);
     procedure itSaveDownloadedListTimer(Sender: TObject);
@@ -619,7 +621,12 @@ type
     // load language file
     procedure LoadLanguage;
 
+    // openwith
     procedure OpenWithExternalProgram(const dirPath, Filename: String);
+
+    //transfer rate graph
+    procedure TransferRateGraphInit(xCount: Integer = 10);
+    procedure TransferRateGraphAddItem(TransferRate: Integer);
 
     // exception handle
     procedure ExceptionHandler(Sender: TObject; E: Exception);
@@ -743,7 +750,6 @@ begin
   end;
 
   dataProcess := TDataProcess.Create;
-  lbTransferRateValue.Caption := FormatByteSize(0, True);
   DLManager := TDownloadManager.Create;
   DLManager.Restore;
 
@@ -1009,12 +1015,21 @@ begin
   end;
 end;
 
+procedure TMainForm.itRefreshDLInfoStartTimer(Sender: TObject);
+begin
+  if Assigned(DLManager) then
+  begin
+    TransferRateGraphInit(round(TransferRateGraph.Width/4));
+    TransferRateGraph.Visible := True;
+  end;
+end;
+
 procedure TMainForm.itRefreshDLInfoStopTimer(Sender: TObject);
 begin
   if Assigned(DLManager) then
   begin
     DLManager.ClearTransferRate;
-    lbTransferRateValue.Caption := FormatByteSize(0, true);
+    TransferRateGraph.Visible := False;
   end;
   vtDownload.Repaint;
 end;
@@ -1022,7 +1037,7 @@ end;
 procedure TMainForm.itRefreshDLInfoTimer(Sender: TObject);
 begin
   if Assigned(DLManager) then
-    lbTransferRateValue.Caption := DLManager.TransferRate;
+    TransferRateGraphAddItem(DLManager.TransferRate);
   vtDownload.Repaint;
 end;
 
@@ -4889,6 +4904,36 @@ begin
     if (p <> '') and (f <> '') then
       f := p + PathDelim + f;
     OpenDocument(f);
+  end;
+end;
+
+procedure TMainForm.TransferRateGraphInit(xCount: Integer);
+var
+  i: Integer;
+begin
+  TransferRateGraphList.Clear;
+  TransferRateGraphList.DataPoints.NameValueSeparator := '|';
+  TransferRateGraphArea.Legend.Format := FormatByteSize(0, True);
+  if xCount=0 then
+    TransferRateGraphInit
+  else
+    for i:=1 to xCount do
+      TransferRateGraphList.DataPoints.Add(IntToStr(i)+'|0|?|');
+end;
+
+procedure TMainForm.TransferRateGraphAddItem(TransferRate: Integer);
+var
+  i: Integer;
+begin
+  TransferRateGraphArea.Legend.Format := FormatByteSize(TransferRate, True);
+  with TransferRateGraphList.DataPoints do
+  begin
+    if Count=0 then
+      TransferRateGraphInit;
+    for i := 0 to Count - 1 do
+      if i < Count - 1 then
+        Strings[i] := Format('%d|%s', [i+1, ValueFromIndex[i+1]]);
+    Strings[Count-1] := Format('%d|%d|?|',[Count,TransferRate]);
   end;
 end;
 

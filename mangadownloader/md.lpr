@@ -14,7 +14,8 @@ uses
     cthreads,
     {$ENDIF}
   {$ENDIF}
-  Forms, Interfaces, FileUtil, simpleipc, IniFiles, uBaseUnit, frmMain;
+  Forms, Interfaces, FileUtil, tachartlazaruspkg, simpleipc, IniFiles,
+  uBaseUnit, frmMain;
 
 var
   CheckInstance: Boolean = True;

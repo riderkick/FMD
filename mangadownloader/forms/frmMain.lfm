@@ -50,8 +50,8 @@ object MainForm: TMainForm
       ClientWidth = 606
       object vtDownload: TVirtualStringTree
         Left = 2
-        Height = 447
-        Top = 30
+        Height = 444
+        Top = 33
         Width = 600
         Align = alClient
         BorderSpacing.Left = 2
@@ -128,7 +128,7 @@ object MainForm: TMainForm
       end
       object ToolBarDownload: TToolBar
         Left = 2
-        Height = 22
+        Height = 25
         Top = 4
         Width = 600
         AutoSize = True
@@ -136,6 +136,7 @@ object MainForm: TMainForm
         BorderSpacing.Top = 4
         BorderSpacing.Right = 4
         BorderSpacing.Bottom = 4
+        ButtonHeight = 25
         EdgeBorders = []
         Images = IconList
         List = True
@@ -160,7 +161,7 @@ object MainForm: TMainForm
         end
         object ToolButton1: TToolButton
           Left = 153
-          Height = 22
+          Height = 25
           Top = 0
           Width = 5
           Style = tbsDivider
@@ -172,30 +173,62 @@ object MainForm: TMainForm
           ImageIndex = 9
           OnClick = tbDownloadDeleteCompletedClick
         end
-        object lbTransferRate: TLabel
-          Left = 447
-          Height = 16
-          Top = 3
-          Width = 69
+        object TransferRateGraph: TChart
+          Left = 408
+          Height = 25
+          Top = 0
+          Width = 192
+          AllowZoom = False
+          AxisList = <          
+            item
+              Minors = <>
+              Title.LabelFont.Orientation = 900
+            end          
+            item
+              Alignment = calBottom
+              Minors = <>
+            end>
+          AxisVisible = False
+          BackColor = clDefault
+          Extent.UseXMin = True
+          Extent.UseYMin = True
+          Extent.XMin = 1
+          Extent.YMin = 1
+          Foot.Brush.Color = clBtnFace
+          Foot.Font.Color = clBlue
+          Frame.Color = clGreen
+          Frame.Visible = False
+          Legend.Alignment = laCenterRight
+          Legend.BackgroundBrush.Style = bsClear
+          Legend.Frame.Visible = False
+          Legend.MarginX = 0
+          Legend.MarginY = 0
+          Legend.Spacing = 0
+          Legend.SymbolWidth = 0
+          Legend.UseSidebar = False
+          Legend.Visible = True
+          Margins.Left = 0
+          Margins.Top = 0
+          Margins.Right = 0
+          Margins.Bottom = 0
+          MarginsExternal.Left = 0
+          MarginsExternal.Top = 0
+          MarginsExternal.Right = 0
+          MarginsExternal.Bottom = 0
+          Title.Brush.Color = clBtnFace
+          Title.Font.Color = clBlue
+          Title.Text.Strings = (
+            'TAChart'
+          )
           Align = alRight
-          BorderSpacing.Top = 3
-          BorderSpacing.Right = 2
-          BorderSpacing.Bottom = 3
-          Caption = 'Transfer rate:'
-          ParentColor = False
-        end
-        object lbTransferRateValue: TLabel
-          Left = 518
-          Height = 16
-          Top = 3
-          Width = 80
-          Align = alRight
-          Alignment = taRightJustify
-          AutoSize = False
-          BorderSpacing.Top = 3
-          BorderSpacing.Right = 2
-          BorderSpacing.Bottom = 3
-          ParentColor = False
+          Visible = False
+          object TransferRateGraphArea: TAreaSeries
+            Transparency = 125
+            AreaBrush.Color = 8453888
+            AreaContourPen.Color = 5481984
+            AreaLinesPen.Style = psClear
+            Source = TransferRateGraphList
+          end
         end
       end
     end
@@ -4108,7 +4141,7 @@ object MainForm: TMainForm
   object itRefreshDLInfo: TIdleTimer
     Enabled = False
     OnTimer = itRefreshDLInfoTimer
-    OnStartTimer = itRefreshDLInfoTimer
+    OnStartTimer = itRefreshDLInfoStartTimer
     OnStopTimer = itRefreshDLInfoStopTimer
     left = 696
     top = 168
@@ -5461,5 +5494,12 @@ object MainForm: TMainForm
     OnTimer = itMonitorTimer
     left = 760
     top = 296
+  end
+  object TransferRateGraphList: TListChartSource
+    DataPoints.Strings = (
+      '1|0|?|'
+    )
+    left = 648
+    top = 72
   end
 end

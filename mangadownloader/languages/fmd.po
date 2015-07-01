@@ -1024,11 +1024,6 @@ msgstr ""
 msgid "Save to:"
 msgstr ""
 
-#: tmainform.lbtransferrate.caption
-msgctxt "TMAINFORM.LBTRANSFERRATE.CAPTION"
-msgid "Transfer rate:"
-msgstr ""
-
 #: tmainform.medturldelete.caption
 msgctxt "TMAINFORM.MEDTURLDELETE.CAPTION"
 msgid "Delete"

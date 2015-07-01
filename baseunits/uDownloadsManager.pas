@@ -143,7 +143,7 @@ type
     FisDlgCounter: Boolean;
   protected
     function GetTaskCount: Integer;
-    function GetTransferRate: String;
+    function GetTransferRate: Integer;
   public
     CS_DownloadManager_Task: TCriticalSection;
     CS_DownloadedChapterList: TCriticalSection;
@@ -217,7 +217,7 @@ type
 
     property SortDirection: Boolean read FSortDirection write FSortDirection;
     property SortColumn: Integer read FSortColumn write FSortColumn;
-    property TransferRate: String read GetTransferRate;
+    property TransferRate: Integer read GetTransferRate;
     property isDlgCounter: Boolean read FisDlgCounter;
   end;
 
@@ -1708,11 +1708,11 @@ begin
   Result := Containers.Count;
 end;
 
-function TDownloadManager.GetTransferRate: String;
+function TDownloadManager.GetTransferRate: Integer;
 var
   i: Integer;
 begin
-  Result := FormatByteSize(0, True);
+  Result := 0;
   if Containers.Count > 0 then
   begin
     CS_DownloadManager_Task.Acquire;
@@ -1736,7 +1736,7 @@ begin
               CS_FReadCount.Release;
             end;
           end;
-      Result := FormatByteSize(FTotalReadCount, True);
+      Result := FTotalReadCount;
     finally
       CS_DownloadManager_Task.Release;
     end;

@@ -1081,11 +1081,6 @@ msgstr "Username"
 msgid "Save to:"
 msgstr "Save to:"
 
-#: tmainform.lbtransferrate.caption
-msgctxt "TMAINFORM.LBTRANSFERRATE.CAPTION"
-msgid "Transfer rate:"
-msgstr "Transfer rate:"
-
 #: tmainform.medturldelete.caption
 msgctxt "TMAINFORM.MEDTURLDELETE.CAPTION"
 msgid "Delete"
