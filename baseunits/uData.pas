@@ -155,7 +155,7 @@ const
                               'numchapter INTEGER,'+
                               'jdn INTEGER);';
 
-  procedure ConvertDataProccessToDB(AWebsite: String);
+  procedure ConvertDataProccessToDB(AWebsite: String; DeleteOriginal: Boolean = False);
 
 implementation
 
@@ -210,7 +210,7 @@ begin
   end;
 end;
 
-procedure ConvertDataProccessToDB(AWebsite: String);
+procedure ConvertDataProccessToDB(AWebsite: String; DeleteOriginal: Boolean);
 var
   filepath: String;
   rawdata: TDataProcess;
@@ -243,6 +243,8 @@ begin
       rawdata.Free;
       dbdata.Free;
     end;
+    if DeleteOriginal then
+      DeleteFileUTF8(filepath + DATA_EXT);
   end;
 end;
 
