@@ -14,10 +14,45 @@ unit uData;
 interface
 
 uses
-  Classes, SysUtils, uBaseUnit, uFMDThread, USimpleLogger, strutils, FileUtil,
-  httpsend;
+  Classes, SysUtils, uBaseUnit, uFMDThread, sqlite3conn, sqldb, USimpleLogger,
+  strutils, RegExpr, sqlite3, FileUtil, httpsend;
 
 type
+
+  TSQLite3Connectionx = class(TSQLite3Connection)
+  public
+    property Handle read GetHandle;
+  end;
+
+  { TDBDataProcess }
+
+  TDBDataProcess = class
+  private
+    FConn: TSQLite3Connectionx;
+    FTrans: TSQLTransaction;
+    FQuery: TSQLQuery;
+    FRegxp: TRegExpr;
+    FWebsite: String;
+    FTableName: String;
+  protected
+    function GetConnected: Boolean;
+    procedure CreateTable;
+    procedure VacuumTable;
+  public
+    constructor Create;
+    destructor Destroy; override;
+    procedure LoadFromFile(AWebsite: String = '');
+    procedure AddData(Title, Link, Authors, Artists, Genres, Status, Summary: String;
+      NumChapter, JDN: Integer);
+    procedure ApplyUpdates;
+    procedure Sort;
+    property Website: String read FWebsite write FWebsite;
+    property TableName: String read FTableName write FTableName;
+    property Connected: Boolean read GetConnected;
+  end;
+
+  { TDataProcess }
+
   TDataProcess = class(TObject)
   private
     function GetInfo(const index: Cardinal): TStringList;
@@ -108,16 +143,257 @@ type
 var
   options: TStringList;
 
+const
+  DBDataProcessParam = 'title,link,authors,artists,genres,status,summary,numchapter,jdn';
+  DBDataProccesCreateParam = '(title TEXT,'+
+                              'link TEXT NOT NULL PRIMARY KEY,'+
+                              'authors TEXT,'+
+                              'artists TEXT,'+
+                              'genres TEXT,'+
+                              'status TEXT,'+
+                              'summary TEXT,'+
+                              'numchapter INTEGER,'+
+                              'jdn INTEGER);';
+
+  procedure ConvertDataProccessToDB(AWebsite: String);
+
 implementation
 
 uses
   Dialogs,
-  fpJSON, JSONParser, RegExpr, IniFiles,
+  fpJSON, JSONParser, IniFiles,
   jsHTMLUtil,
   FastHTMLParser, HTMLUtil,
   SynaCode,
   frmMain,
   uMisc;
+
+function NaturalCompareCallback({%H-}user: pointer; len1: longint; data1: pointer;
+  len2: longint; data2: pointer): longint; cdecl;
+var
+  s1, s2: String;
+begin
+  SetString(s1, data1, len1);
+  SetString(s2, data2, len2);
+  Result := NaturalCompareStr(s1, s2);
+end;
+
+procedure RegexCallback(context: PSqlite3_Context; argc: longint;
+  argv: PPSqlite3_Value); cdecl;
+var
+  regexp, Text: PChar;
+  regex: TRegExpr;
+begin
+  if sqlite3_user_data(context) = nil then
+  begin
+    sqlite3_result_int64(context, 0);
+    Exit;
+  end;
+  if argc <> 2 then
+  begin
+    sqlite3_result_int64(context, 0);
+    Exit;
+  end;
+  regexp := sqlite3_value_text(argv[0]);
+  Text := sqlite3_value_text(argv[1]);
+  if (regexp = nil) or (Text = nil) then
+  begin
+    sqlite3_result_int64(context, 0);
+    Exit;
+  end;
+  try
+    regex := TRegExpr(sqlite3_user_data(context));
+    regex.Expression := regexp;
+    sqlite3_result_int64(context, int64(regex.Exec(Text)));
+  except
+    sqlite3_result_int64(context, 0);
+  end;
+end;
+
+procedure ConvertDataProccessToDB(AWebsite: String);
+var
+  filepath: String;
+  rawdata: TDataProcess;
+  dbdata: TDBDataProcess;
+  i: Integer;
+begin
+  filepath := fmdDirectory + DATA_FOLDER + AWebsite;
+  if FileExistsUTF8(filepath + DATA_EXT) then
+  begin
+    rawdata := TDataProcess.Create;
+    dbdata := TDBDataProcess.Create;
+    try
+      if FileExistsUTF8(filepath + DBDATA_EXT) then
+        DeleteFileUTF8(filepath + DBDATA_EXT);
+      rawdata.LoadFromFile(AWebsite);
+      dbdata.LoadFromFile(AWebsite);
+      if rawdata.Data.Count > 0 then
+      with rawdata do
+      begin
+        for i := 0 to Data.Count-1 do
+        begin
+          dbdata.AddData(Title[i], Link[i], Authors[i], Artists[i], Genres[i],
+            Status[i], StringBreaks(Summary[i]), StrToIntDef(Param[i, DATA_PARAM_NUMCHAPTER], 1),
+            {%H-}Integer(JDN[i]));
+        end;
+        dbdata.ApplyUpdates;
+      end;
+      dbdata.Sort;
+    finally
+      rawdata.Free;
+      dbdata.Free;
+    end;
+  end;
+end;
+
+{ TDBDataProcess }
+
+function TDBDataProcess.GetConnected: Boolean;
+begin
+  Result := FConn.Connected;
+end;
+
+procedure TDBDataProcess.CreateTable;
+begin
+  if FConn.Connected then
+  begin
+    FConn.ExecuteDirect('CREATE TABLE ' + QuotedStr(FTableName) +
+      DBDataProccesCreateParam);
+    FTrans.Commit;
+  end;
+end;
+
+procedure TDBDataProcess.VacuumTable;
+begin
+  if FConn.Connected then
+  with FConn do
+  begin
+    ExecuteDirect('END TRANSACTION');
+    ExecuteDirect('VACUUM');
+    ExecuteDirect('BEGIN TRANSACTION');
+  end;
+end;
+
+constructor TDBDataProcess.Create;
+begin
+  FConn := TSQLite3Connectionx.Create(nil);
+  FTrans := TSQLTransaction.Create(nil);
+  FQuery := TSQLQuery.Create(nil);
+  FRegxp := TRegExpr.Create;
+  FRegxp.ModifierI := True;
+  FConn.Transaction := FTrans;
+  FQuery.DataBase := FConn;
+  FTableName := 'masterlist';
+end;
+
+destructor TDBDataProcess.Destroy;
+begin
+  FQuery.Close;
+  if FConn.Connected then
+  begin
+    FTrans.Commit;
+    VacuumTable;
+  end;
+  FTrans.Active := False;
+  FConn.Connected := False;
+  FQuery.Free;
+  FTrans.Free;
+  FConn.Free;
+  FRegxp.Free;
+  inherited Destroy;
+end;
+
+procedure TDBDataProcess.LoadFromFile(AWebsite: String);
+var
+  ts: TStringList;
+  filepath: String;
+  i: Integer;
+begin
+  if AWebsite <> '' then FWebsite := AWebsite;
+  if FWebsite = '' then Exit;
+  try
+    filepath := fmdDirectory + DATA_FOLDER + FWebsite + DBDATA_EXT;
+    if FConn.Connected then
+    begin
+      FTrans.Commit;
+      VacuumTable;
+      FConn.Connected := False;
+    end;
+    FConn.DatabaseName := filepath;
+    FConn.Connected := True;
+    sqlite3_create_collation(FConn.Handle, PChar('NATCMP'), SQLITE_UTF8, nil,
+      NaturalCompareCallback);
+    sqlite3_create_function(FConn.Handle, PChar('REGEXP'), 2, SQLITE_UTF8, FRegxp,
+      RegexCallback, nil, nil);
+    FTrans.Active := True;
+    ts := TStringList.Create;
+    try
+      FConn.GetTableNames(ts);
+      ts.Sort;
+      if not ts.Find(FTableName, i) then
+        CreateTable;
+    finally
+      ts.Free;
+    end;
+    FQuery.SQL.Text := 'SELECT * FROM ' + FTableName;
+    FQuery.Open;
+  except
+  end;
+end;
+
+procedure TDBDataProcess.AddData(Title, Link, Authors, Artists, Genres, Status,
+  Summary: String; NumChapter, JDN: Integer);
+begin
+  if FConn.Connected then
+  try
+    FConn.ExecuteDirect('INSERT INTO ' + FTableName + '(' + DBDataProcessParam +
+      ') VALUES (' +
+      QuotedStrd(Title) + ',' +
+      QuotedStrd(Link) + ',' +
+      QuotedStrd(Authors) + ',' +
+      QuotedStrd(Artists) + ',' +
+      QuotedStrd(Genres) + ',' +
+      QuotedStrd(Status) + ',' +
+      QuotedStrd(Summary) + ',' +
+      QuotedStrd(NumChapter) + ',' +
+      QuotedStrd(JDN) + ');');
+  except
+    on E: Exception do
+      WriteLog_E('Error AddData: ' + E.Message + #13#10 + GetStackTraceInfo);
+  end;
+end;
+
+procedure TDBDataProcess.ApplyUpdates;
+begin
+  if FConn.Connected then
+  begin
+    FQuery.Close;
+    FTrans.Commit;
+    FQuery.Open;
+  end;
+end;
+
+procedure TDBDataProcess.Sort;
+begin
+  if FConn.Connected then
+  begin
+    FQuery.Close;
+    with FConn do
+    begin
+      ExecuteDirect('CREATE TABLE ' + QuotedStrd(FTableName+'_ordered') +
+        DBDataProccesCreateParam);
+      ExecuteDirect('INSERT INTO '+ QuotedStrd(FTableName+'_ordered') + ' ' +
+        BracketStr(DBDataProcessParam) + ' SELECT ' + DBDataProcessParam +
+        ' FROM '+ QuotedStrd(FTableName) + 'ORDER BY title COLLATE NATCMP');
+      ExecuteDirect('DROP TABLE ' + QuotedStrd(FTableName));
+      ExecuteDirect('ALTER TABLE '+ QuotedStrd(FTableName+'_ordered') +
+        'RENAME TO ' + QuotedStrd(FTableName));
+      FTrans.Commit;
+      VacuumTable
+    end;
+    FQuery.Open;
+  end;
+end;
 
 // ----- TDataProcess -----
 
