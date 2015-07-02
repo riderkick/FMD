@@ -714,6 +714,7 @@ var
   fs: TFileStream;
 begin
   Randomize;
+  fmdDirectory := CleanAndExpandDirectory(GetCurrentDirUTF8);
   SetLogFile(Format('%s\%s_LOG_%s.txt', ['log', ExtractFileNameOnly(ParamStrUTF8(0)),
     FormatDateTime('dd-mm-yyyy', Now)]));
   Writelog_I('Starting ' + AnsiQuotedStr(Application.Title, '"'));
@@ -729,7 +730,6 @@ begin
   isSubthread := False;
   isGetMangaInfos := False;
   DoAfterFMD := DO_NOTHING;
-  fmdDirectory := CorrectFilePath(GetCurrentDirUTF8);
   Application.HintHidePause := 10000;
   sbUpdateList.DoubleBuffered := True;
 
