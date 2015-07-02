@@ -205,6 +205,7 @@ const
   IMAGE_FOLDER            = 'images/';
   DATA_FOLDER             = 'data/';
   DATA_EXT                = '.dat';
+  DBDATA_EXT              = '.db';
   CONFIG_FOLDER           = 'config/';
   CONFIG_FILE             = 'config.ini';
   CONFIG_ADVANCED         = 'advanced.ini';
@@ -869,6 +870,9 @@ procedure ParseJSONArray(const S, Path: String; var OutArray: TStringList);
 procedure ParseHTML(const aRaw: string; var aOutput: TStringList);
 
 // StringUtils
+function QuotedStrd(const S: string): string; overload;
+function QuotedStrd(const S: Integer): string; overload;
+function BracketStr(const S: string): string;
 procedure ParseCommandLine(const cmd: string; var Output: TStrings;
   AStripQuotes: Boolean = False);
 function ParsedCommandLine(const cmd: String): TArrayOfString;
@@ -1523,6 +1527,21 @@ begin
   finally
     Free;
   end;
+end;
+
+function QuotedStrd(const S: string): string;
+begin
+  Result := AnsiQuotedStr(S, '"');
+end;
+
+function QuotedStrd(const S: Integer): string;
+begin
+  Result := QuotedStrd(IntToStr(S));
+end;
+
+function BracketStr(const S: string): string;
+begin
+  Result := '(' + S + ')';
 end;
 
 procedure ParseCommandLine(const cmd: string; var Output: TStrings;
