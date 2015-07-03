@@ -396,7 +396,9 @@ type
     procedure miChapterListHighlightClick(Sender: TObject);
     procedure miDownloadDeleteTaskClick(Sender: TObject);
     procedure miDownloadMergeCompletedClick(Sender: TObject);
+    procedure miFavoritesCheckNewChapterClick(Sender: TObject);
     procedure miFavoritesDownloadAllClick(Sender: TObject);
+    procedure miFavoritesStopCheckNewChapterClick(Sender: TObject);
     procedure miFavoritesViewInfosClick(Sender: TObject);
     procedure miHighlightNewMangaClick(Sender: TObject);
 
@@ -909,7 +911,7 @@ begin
     if WaitFor then
       updateList.WaitFor;
   end;
-  FavoriteManager.StopRun(WaitFor);
+  FavoriteManager.StopChekForNewChapter(WaitFor);
   SilentThreadManager.StopAll(WaitFor);
   DLManager.StopAllDownloadTasksForExit;
 
@@ -1246,6 +1248,24 @@ begin
   UpdateVtDownload;
 end;
 
+procedure TMainForm.miFavoritesCheckNewChapterClick(Sender: TObject);
+var
+  xNode: PVirtualNode;
+begin
+  if vtFavorites.SelectedCount > 0 then
+  begin
+    xNode := vtFavorites.GetFirstSelected;
+    repeat
+      if Assigned(xNode) then
+      begin
+        FavoriteManager.CheckForNewChapter(xNode^.Index);
+        xNode := vtFavorites.GetNextSelected(xNode);
+      end;
+    until xNode = nil;
+    vtFavorites.Repaint;
+  end;
+end;
+
 procedure TMainForm.miFavoritesDownloadAllClick(Sender: TObject);
 var
   i: Integer;
@@ -1265,6 +1285,24 @@ begin
   except
     on E: Exception do
       ExceptionHandler(Self, E);
+  end;
+end;
+
+procedure TMainForm.miFavoritesStopCheckNewChapterClick(Sender: TObject);
+var
+  xNode: PVirtualNode;
+begin
+  if vtFavorites.SelectedCount > 0 then
+  begin
+    xNode := vtFavorites.GetFirstSelected;
+    repeat
+      if Assigned(xNode) then
+      begin
+        FavoriteManager.StopChekForNewChapter(False, xNode^.Index);
+        xNode := vtFavorites.GetNextSelected(xNode);
+      end;
+    until xNode = nil;
+    vtFavorites.Repaint;
   end;
 end;
 
@@ -1556,7 +1594,7 @@ end;
 
 procedure TMainForm.btCancelFavoritesCheckClick(Sender: TObject);
 begin
-  FavoriteManager.StopRun;
+  FavoriteManager.StopChekForNewChapter(False);
 end;
 
 procedure TMainForm.appPropertiesMainShowHint(var HintStr: String;
@@ -3020,10 +3058,8 @@ procedure TMainForm.pmFavoritesPopup(Sender: TObject);
         try
           xNode := vtFavorites.GetFirstSelected;
           repeat
-            Writelog_D('xNode <> nil');
             if Assigned(xNode) then
             begin
-              Writelog_D('Status: '+FavoriteManager.FavoriteItem(xNode^.Index).FavoriteInfo.Title);
               if FavoriteManager.FavoriteItem(xNode^.Index).Status in Stats then
               begin
                 Result := True;
@@ -3037,7 +3073,6 @@ procedure TMainForm.pmFavoritesPopup(Sender: TObject);
         end;
       end;
     end;
-    Writelog_D('StatusPresent: '+BoolToStr(Result, True));
   end;
 
 begin
@@ -3054,7 +3089,8 @@ begin
   if vtFavorites.SelectedCount = 1 then
   begin
     miFavoritesCheckNewChapter.Visible := SelectedStatusPresent([STATUS_IDLE]);
-    miFavoritesStopCheckNewChapter.Visible := SelectedStatusPresent([STATUS_CHECKING]);
+    miFavoritesStopCheckNewChapter.Visible :=
+      SelectedStatusPresent([STATUS_CHECK, STATUS_CHECKING]);
     miFavoritesViewInfos.Enabled := True;
     miFavoritesDownloadAll.Enabled := (Trim(FavoriteManager.FavoriteItem(
       vtFavorites.FocusedNode^.Index).FavoriteInfo.Link) <> '');
@@ -3067,7 +3103,8 @@ begin
   else
   begin
     miFavoritesCheckNewChapter.Visible := SelectedStatusPresent([STATUS_IDLE]);
-    miFavoritesStopCheckNewChapter.Visible := SelectedStatusPresent([STATUS_CHECKING]);
+    miFavoritesStopCheckNewChapter.Visible :=
+      SelectedStatusPresent([STATUS_CHECK, STATUS_CHECKING]);
     miFavoritesViewInfos.Enabled := False;
     miFavoritesDownloadAll.Enabled := True;
     miFavoritesDelete.Enabled := True;

@@ -3757,10 +3757,12 @@ object MainForm: TMainForm
     object miFavoritesCheckNewChapter: TMenuItem
       Caption = 'Check for new chapter'
       ImageIndex = 21
+      OnClick = miFavoritesCheckNewChapterClick
     end
     object miFavoritesStopCheckNewChapter: TMenuItem
       Caption = 'Stop check for new chapter'
       ImageIndex = 7
+      OnClick = miFavoritesStopCheckNewChapterClick
     end
     object miFavoritesViewInfos: TMenuItem
       Caption = 'View manga info'
