@@ -50,7 +50,6 @@ type
     CS_Threads: TCriticalSection;
     manager: TFavoriteManager;
     threads: TFPList;
-    workCounter: Cardinal;
     property ThreadCount: Integer read GetThreadCount;
     procedure UpdateBtnCaption(Cap: String);
     constructor Create;
@@ -67,6 +66,7 @@ type
     NewMangaInfoChaptersPos: TCardinalList;
     Thread: TFavoriteThread;
     Manager: TFavoriteManager;
+    Status: TFavoriteStatusType;
     destructor Destroy; override;
   end;
 
@@ -119,9 +119,11 @@ type
     // Add FFavorites downloadedchapterlist
     procedure AddToDownloadedChaptersList(const AWebsite, ALink, AValue: String); overload;
     procedure AddToDownloadedChaptersList(const AWebsite, Alink: String; AValue: TStrings); overload;
-
     // sorting
     procedure Sort(const AColumn: Integer);
+    // critical section
+    procedure Lock;
+    procedure LockRelease;
 
     property Count: Integer read GetFavoritesCount;
     property SortDirection: Boolean read FSortDirection write FSortDirection;
@@ -179,7 +181,6 @@ procedure TFavoriteThread.Execute;
 begin
   if (container.FavoriteInfo.Link) = '' then Exit;
   try
-    container.FavoriteInfo.Checking := True;
     Synchronize(SyncStatus);
     getInfo.mangaInfo.title := container.FavoriteInfo.Title;
     getInfo.GetInfoFromURL(container.FavoriteInfo.Website,
@@ -202,15 +203,12 @@ end;
 
 destructor TFavoriteThread.Destroy;
 begin
+  container.Status := STATUS_CHECKED;
   task.CS_Threads.Acquire;
   try
     container.Thread := nil;
     task.threads.Remove(Self);
-    if container.FavoriteInfo.Checking then
-    begin
-      container.FavoriteInfo.Checking := False;
-      Synchronize(SyncStatus);
-    end;
+    Synchronize(SyncStatus);
   finally
     task.CS_Threads.Release;
   end;
@@ -247,6 +245,7 @@ begin
     btFavoritesCheckNewChapter.Width :=
       btFavoritesCheckNewChapter.Width + btCancelFavoritesCheck.Width + 6;
     btFavoritesCheckNewChapter.Caption := RS_BtnCheckFavorites;
+    vtFavorites.Repaint;
   end;
 end;
 
@@ -262,37 +261,63 @@ end;
 
 procedure TFavoriteTask.Execute;
 var
-  i: Integer;
+  i, statuscheck: Integer;
+
+  procedure CheckOut;
+  var
+    j: Integer;
+    started: Boolean;
+  begin
+    manager.CS_Favorites.Acquire;
+    try
+      statuscheck := 0;
+      started := False;
+      for j := 0 to manager.FFavorites.Count-1 do
+      begin
+        with TFavoriteContainer(manager.FFavorites[j]) do
+        begin
+          if (Status = STATUS_CHECK) and
+            (Trim(FavoriteInfo.Link) <> '') then
+          begin
+            if not started then
+            begin
+              CS_Threads.Acquire;
+              try
+                if Thread = nil then
+                begin
+                  Status := STATUS_CHECKING;
+                  Thread := TFavoriteThread.Create;
+                  Thread.task := Self;
+                  Thread.container := manager.FavoriteItem(j);
+                  Thread.workCounter := j;
+                  threads.Add(Thread);
+                  Thread.Start;
+                end;
+              finally
+                CS_Threads.Release;
+              end;
+              started := True;
+            end;
+            Inc(statuscheck);
+            Break;
+          end;
+        end;
+      end;
+    finally
+      manager.CS_Favorites.Release;
+    end;
+  end;
 begin
   manager.isRunning := True;
   Synchronize(SyncStartChecking);
   try
-    workCounter := 0;
-    while workCounter < manager.FFavorites.Count do
+    CheckOut;
+    while statuscheck > 0 do
     begin
       while (not Terminated) and (threads.Count >= manager.DLManager.maxDLThreadsPerTask) do
         Sleep(250);
       if Terminated then Break;
-      if threads.Count < manager.DLManager.maxDLThreadsPerTask then
-      begin
-        if Trim(manager.FavoriteItem(workCounter).FavoriteInfo.Title) <> '' then
-          CS_Threads.Acquire;
-          try
-            with TFavoriteContainer(manager.FFavorites[workCounter]) do begin
-              if Thread = nil then begin
-                Thread := TFavoriteThread.Create;
-                Thread.task := Self;
-                Thread.container := manager.FavoriteItem(workCounter);
-                Thread.workCounter := workCounter;
-                threads.Add(Thread);
-                Thread.Start;
-              end;
-            end;
-          finally
-            CS_Threads.Release;
-          end;
-        Inc(workCounter);
-      end;
+      CheckOut;
     end;
 
     while (not Terminated) and (threads.Count > 0) do
@@ -316,6 +341,14 @@ begin
   except
     on E: Exception do
       MainForm.ExceptionHandler(Self, E);
+  end;
+  manager.CS_Favorites.Acquire;
+  try
+    for i := 0 to manager.FFavorites.Count-1 do
+      if TFavoriteContainer(manager.FFavorites[i]).Status <> STATUS_IDLE then
+        TFavoriteContainer(manager.FFavorites[i]).Status := STATUS_IDLE;
+  finally
+    manager.CS_Favorites.Release;
   end;
   Synchronize(SyncFinishChecking);
 end;
@@ -390,6 +423,8 @@ begin
 end;
 
 procedure TFavoriteManager.CheckForNewChapter;
+var
+  i: Integer;
 begin
   if DLManager.isDlgCounter then Exit;
   try
@@ -400,6 +435,14 @@ begin
     end
     else
     begin
+      CS_Favorites.Acquire;
+      try
+        for i := 0 to FFavorites.Count-1 do
+          if TFavoriteContainer(FFavorites[i]).Status = STATUS_IDLE then
+            TFavoriteContainer(FFavorites[i]).Status := STATUS_CHECK;
+      finally
+        CS_Favorites.Release;
+      end;
       if taskthread = nil then
       begin
         taskthread := TFavoriteTask.Create;
@@ -698,6 +741,7 @@ begin
       FavoriteInfo.saveTo := saveTo;
       FavoriteInfo.Link := Link;
       FavoriteInfo.downloadedChapterList := downloadedChapterList;
+      Status := STATUS_IDLE;
     end;
     if not isRunning then
     begin
@@ -815,6 +859,7 @@ begin
         FavoriteInfo.SaveTo :=
           CorrectPathSys(favoritesFile.ReadString(IntToStr(i), 'SaveTo', ''));
         FavoriteInfo.link := favoritesFile.ReadString(IntToStr(i), 'Link', '');
+        Status := STATUS_IDLE;
       end;
     end;
 end;
@@ -1002,6 +1047,16 @@ begin
   finally
     CS_Favorites.Release;
   end;
+end;
+
+procedure TFavoriteManager.Lock;
+begin
+  CS_Favorites.Acquire;
+end;
+
+procedure TFavoriteManager.LockRelease;
+begin
+  CS_Favorites.Release;
 end;
 
 end.

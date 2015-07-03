@@ -1126,6 +1126,11 @@ msgstr ""
 msgid "Change \"Save to\""
 msgstr ""
 
+#: tmainform.mifavoriteschecknewchapter.caption
+msgctxt "TMAINFORM.MIFAVORITESCHECKNEWCHAPTER.CAPTION"
+msgid "Check for new chapter"
+msgstr ""
+
 #: tmainform.mifavoritesdelete.caption
 msgctxt "TMAINFORM.MIFAVORITESDELETE.CAPTION"
 msgid "Delete"
@@ -1144,6 +1149,10 @@ msgstr ""
 #: tmainform.mifavoritesopenwith.caption
 msgctxt "TMAINFORM.MIFAVORITESOPENWITH.CAPTION"
 msgid "Open ..."
+msgstr ""
+
+#: tmainform.mifavoritesstopchecknewchapter.caption
+msgid "Stop check for new chapter"
 msgstr ""
 
 #: tmainform.mifavoritesviewinfos.caption

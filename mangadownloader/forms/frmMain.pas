@@ -60,6 +60,10 @@ type
     cbUseRegExpr: TCheckBox;
     cbOptionProxyType: TComboBox;
     cbOptionOneInstanceOnly: TCheckBox;
+    miFavoritesStopCheckNewChapter: TMenuItem;
+    miFavoritesCheckNewChapter: TMenuItem;
+    pnDownloadToolbarLeft: TPanel;
+    pnDownloadToolbar: TPanel;
     TransferRateGraphArea: TAreaSeries;
     TransferRateGraph: TChart;
     ckDropTarget: TCheckBox;
@@ -578,7 +582,7 @@ type
     procedure InitCheckboxes;
 
     // download task filters
-    procedure ShowTasks(Status: TStatusTypes = []);
+    procedure ShowTasks(Status: TDownloadStatusTypes = []);
 
     procedure ShowTasksOnCertainDays(const L, H: longint);
     procedure ShowTodayTasks;
@@ -2917,31 +2921,29 @@ procedure TMainForm.pmDownloadPopup(Sender: TObject);
     end;
   end;
 
-  function SelectedTaskStatusPresent(Stats: TStatusTypes): Boolean;
+  function SelectedTaskStatusPresent(Stats: TDownloadStatusTypes): Boolean;
   var
-    i: Integer;
     xNode: PVirtualNode;
   begin
     Result := False;
-    with DLManager do begin
-      CS_DownloadManager_Task.Acquire;
-      try
-        if vtDownload.SelectedCount > 1 then
-        begin
-          xNode := vtDownload.GetFirst;
-          for i := 0 to Count - 1 do
-          begin
-            if vtDownload.Selected[xNode] then
-              if TaskItem(i).Status in Stats then
-              begin
-                Result := True;
-                Break;
-              end;
-            xNode := vtDownload.GetNext(xNode);
-          end;
+    if vtDownload.SelectedCount > 0 then
+    begin
+      with DLManager do
+      begin
+        CS_DownloadManager_Task.Acquire;
+        try
+          xNode := vtDownload.GetFirstSelected;
+          repeat
+            if TaskItem(xNode^.Index).Status in Stats then
+            begin
+              Result := True;
+              Break;
+            end;
+            xNode := vtDownload.GetNextSelected(xNode);
+          until xNode = nil;
+        finally
+          CS_DownloadManager_Task.Release;
         end;
-      finally
-        CS_DownloadManager_Task.Release;
       end;
     end;
   end;
@@ -3004,6 +3006,40 @@ begin
 end;
 
 procedure TMainForm.pmFavoritesPopup(Sender: TObject);
+
+  function SelectedStatusPresent(Stats: TFavoriteStatusTypes): Boolean;
+  var
+    xNode: PVirtualNode;
+  begin
+    Result := False;
+    with FavoriteManager do
+    begin
+      if vtFavorites.SelectedCount > 0 then
+      begin
+        Lock;
+        try
+          xNode := vtFavorites.GetFirstSelected;
+          repeat
+            Writelog_D('xNode <> nil');
+            if Assigned(xNode) then
+            begin
+              Writelog_D('Status: '+FavoriteManager.FavoriteItem(xNode^.Index).FavoriteInfo.Title);
+              if FavoriteManager.FavoriteItem(xNode^.Index).Status in Stats then
+              begin
+                Result := True;
+                Break;
+              end;
+              xNode := vtFavorites.GetNextSelected(xNode);
+            end;
+          until xNode = nil;
+        finally
+          LockRelease;
+        end;
+      end;
+    end;
+    Writelog_D('StatusPresent: '+BoolToStr(Result, True));
+  end;
+
 begin
   if vtFavorites.SelectedCount = 0 then
   begin
@@ -3017,6 +3053,8 @@ begin
   else
   if vtFavorites.SelectedCount = 1 then
   begin
+    miFavoritesCheckNewChapter.Visible := SelectedStatusPresent([STATUS_IDLE]);
+    miFavoritesStopCheckNewChapter.Visible := SelectedStatusPresent([STATUS_CHECKING]);
     miFavoritesViewInfos.Enabled := True;
     miFavoritesDownloadAll.Enabled := (Trim(FavoriteManager.FavoriteItem(
       vtFavorites.FocusedNode^.Index).FavoriteInfo.Link) <> '');
@@ -3028,6 +3066,8 @@ begin
   end
   else
   begin
+    miFavoritesCheckNewChapter.Visible := SelectedStatusPresent([STATUS_IDLE]);
+    miFavoritesStopCheckNewChapter.Visible := SelectedStatusPresent([STATUS_CHECKING]);
     miFavoritesViewInfos.Enabled := False;
     miFavoritesDownloadAll.Enabled := True;
     miFavoritesDelete.Enabled := True;
@@ -3604,15 +3644,15 @@ begin
   Data := Sender.GetNodeData(Node);
   if Assigned(Data) then
   begin
-    with FavoriteManager.FavoriteItem(Node^.Index).FavoriteInfo do
+    with FavoriteManager.FavoriteItem(Node^.Index) do
     begin
-      if Trim(Link) = '' then
+      if Trim(FavoriteInfo.Link) = '' then
       begin
         TargetCanvas.Brush.Color := CL_HLRedMarks;
         TargetCanvas.FillRect(CellRect);
       end
       else
-      if Checking then
+      if Status = STATUS_CHECKING then
       begin
         TargetCanvas.Brush.Color := CL_HLGreenMarks;
         TargetCanvas.FillRect(CellRect);
@@ -3666,15 +3706,18 @@ begin
   begin
     Data := Sender.GetNodeData(Node);
     if Assigned(Data) then
-      with FavoriteManager.FavoriteItem(Node^.Index).FavoriteInfo do
+      with FavoriteManager.FavoriteItem(Node^.Index) do
       begin
-        if Trim(Link) = '' then
+        if Trim(FavoriteInfo.Link) = '' then
           ImageIndex := 16
         else
-        if Checking then
-          ImageIndex := 12
-        else
-          ImageIndex := -1;
+        case Status of
+          STATUS_CHECK: ImageIndex := 19;
+          STATUS_CHECKING: ImageIndex := 12;
+          STATUS_CHECKED: ImageIndex := 20;
+          else
+            ImageIndex := -1;
+        end;
       end;
   end;
 end;
@@ -4116,7 +4159,7 @@ begin
     TCheckBox(pnGenres.Controls[i]).State := cbGrayed;
 end;
 
-procedure TMainForm.ShowTasks(Status: TStatusTypes);
+procedure TMainForm.ShowTasks(Status: TDownloadStatusTypes);
 var
   i: Cardinal;
   xNode: PVirtualNode;

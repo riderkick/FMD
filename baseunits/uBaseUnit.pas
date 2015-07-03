@@ -709,11 +709,13 @@ type
   TCheckStyleType = (CS_DIRECTORY_COUNT, CS_DIRECTORY_PAGE,
                      CS_DIRECTORY_PAGE_2, CS_INFO);
   TFlagType       = (CS_GETPAGENUMBER, CS_GETPAGELINK, CS_DOWNLOAD);
-  TStatusType     = (STATUS_STOP, STATUS_WAIT, STATUS_PREPARE,
-                     STATUS_DOWNLOAD, STATUS_FINISH, STATUS_COMPRESS,
-                     STATUS_PROBLEM, STATUS_FAILED);
+  TDownloadStatusType     = (STATUS_STOP, STATUS_WAIT, STATUS_PREPARE,
+                             STATUS_DOWNLOAD, STATUS_FINISH, STATUS_COMPRESS,
+                             STATUS_PROBLEM, STATUS_FAILED);
+  TDownloadStatusTypes = set of TDownloadStatusType;
 
-  TStatusTypes = set of TStatusType;
+  TFavoriteStatusType = (STATUS_IDLE, STATUS_CHECK, STATUS_CHECKING, STATUS_CHECKED);
+  TFavoriteStatusTypes = set of TFavoriteStatusType;
 
   TMemory = Pointer;
 
@@ -784,7 +786,6 @@ type
     numbering,
     downloadedChapterList,
     currentChapter: String;
-    Checking: Boolean;
   end;
 
   TCardinalList = TFPGList<Cardinal>;

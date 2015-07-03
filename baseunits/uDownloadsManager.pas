@@ -119,7 +119,7 @@ type
     DownCounter,
     PageNumber: Integer;
     MangaSiteID: Cardinal;
-    Status: TStatusType;
+    Status: TDownloadStatusType;
     ThreadState: Boolean;
     ChapterName,
     ChapterLinks,
@@ -210,7 +210,7 @@ type
     // show exit counter
     procedure doExitWaitCounter;
     // check status of task
-    function TaskStatusPresent(Stats: TStatusTypes): Boolean;
+    function TaskStatusPresent(Stats: TDownloadStatusTypes): Boolean;
 
     // Sort
     procedure Sort(const AColumn: Integer);
@@ -1848,11 +1848,11 @@ begin
         if s <> '' then GetParams(PageContainerLinks, s);        //deprecated, for old config
         j := ReadInteger(tid, 'TaskStatus', -1);
         if j >= 0 then
-          Status := TStatusType(j)
+          Status := TDownloadStatusType(j)
         else
         begin
           s := ReadString(tid, 'TaskStatus', 'STATUS_STOP');
-          Status := TStatusType(GetEnumValue(TypeInfo(TStatusType), s));
+          Status := TDownloadStatusType(GetEnumValue(TypeInfo(TDownloadStatusType), s));
           if Status = STATUS_COMPRESS then
             Status := STATUS_WAIT;
         end;
@@ -1928,7 +1928,7 @@ begin
             WriteString(tid, 'PageLinks', SetParams(PageLinks));
           if PageContainerLinks.Count > 0 then
             WriteString(tid, 'PageContainerLinks', SetParams(PageContainerLinks));
-          WriteString(tid, 'TaskStatus', GetEnumName(TypeInfo(TStatusType), integer(Status)));
+          WriteString(tid, 'TaskStatus', GetEnumName(TypeInfo(TDownloadStatusType), integer(Status)));
           WriteInteger(tid, 'ChapterPtr', CurrentDownloadChapterPtr);
           WriteInteger(tid, 'NumberOfPages', PageNumber);
           WriteInteger(tid, 'CurrentPage', CurrentPageNumber);
@@ -2461,7 +2461,7 @@ begin
   FisDlgCounter := False;
 end;
 
-function TDownloadManager.TaskStatusPresent(Stats: TStatusTypes): Boolean;
+function TDownloadManager.TaskStatusPresent(Stats: TDownloadStatusTypes): Boolean;
 var
   i: Integer;
 begin
