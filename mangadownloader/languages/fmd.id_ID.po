@@ -1025,7 +1025,7 @@ msgstr "Tugas setelah unduhan selesai:"
 
 #: tmainform.lboptionmaxparallel.caption
 msgid "Number of downloaded tasks at the same time (Max: 8)"
-msgstr "Jumlah file yang diunduh per tugas pada waktu yang sama (Max: 32)"
+msgstr "Jumlah unduhan aktif pada waktu yang sama (Max: 32)"
 
 #: tmainform.lboptionmaxretry.caption
 msgid "Number of retry times if tasks have download problems (0 = always retry)"
@@ -1033,7 +1033,7 @@ msgstr "Jumlah pengulangan jika unduhan memiliki masalah (0 = selalu coba lagi)"
 
 #: tmainform.lboptionmaxthread.caption
 msgid "Number of downloaded files per task at the same time (Max: 32)"
-msgstr "Jumlah file yang diunduh per tugas pada waktu yang sama (Max: 32)"
+msgstr "Jumlah koneksi per unduhan pada waktu yang sama (Max: 32)"
 
 #: tmainform.lboptionnewmangatime.caption
 msgid "New manga based on  it's update time (days)"
@@ -1612,4 +1612,3 @@ msgstr "Sinkronisasi data"
 #: uupdatethread.rs_updatinglist
 msgid "Updating list"
 msgstr "Memperbarui daftar"
-
