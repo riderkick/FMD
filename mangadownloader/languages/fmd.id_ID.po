@@ -1175,7 +1175,6 @@ msgid "Change \"Save to\""
 msgstr "Ubah lokasi penyimpanan"
 
 #: tmainform.mifavoriteschecknewchapter.caption
-#, fuzzy
 msgctxt "tmainform.mifavoriteschecknewchapter.caption"
 msgid "Check for new chapter"
 msgstr "Periksa bab baru"
@@ -1202,7 +1201,7 @@ msgstr "Buka ..."
 
 #: tmainform.mifavoritesstopchecknewchapter.caption
 msgid "Stop check for new chapter"
-msgstr ""
+msgstr "Berhenti periksa bab baru"
 
 #: tmainform.mifavoritesviewinfos.caption
 msgctxt "TMAINFORM.MIFAVORITESVIEWINFOS.CAPTION"
@@ -1622,4 +1621,3 @@ msgstr "Sinkronisasi data"
 #: uupdatethread.rs_updatinglist
 msgid "Updating list"
 msgstr "Memperbarui daftar"
-
