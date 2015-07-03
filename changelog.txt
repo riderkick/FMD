@@ -8,6 +8,11 @@ https://www.mediafire.com/folder/3ccy2c7g36hp3/Fmd
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.18.0 (04-07-2015)
+[+] Added check/stop favorite per item
+[+] Added transfer rate graph in download toolbar
+[*] Various changes and bug fixes
+
 0.9.17.1 (26-06-2015)
 [+] Added "Failed" on download filter
 [*] "Delete task + data", only remove chapters that exist in the task
