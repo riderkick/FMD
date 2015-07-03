@@ -1342,7 +1342,7 @@ begin
     end;
 
     while (not Terminated) and (threads.Count >= currentMaxThread) do
-      Sleep(250);
+      Sleep(SOCKHEARTBEATRATE);
   end;
 
   if (not Terminated) and (threads.Count < currentMaxThread) then
@@ -1410,7 +1410,7 @@ procedure TTaskThread.Execute;
   procedure WaitForThreads;
   begin
     while (not Terminated) and (threads.Count > 0) do
-      Sleep(250);
+      Sleep(SOCKHEARTBEATRATE);
   end;
 
 var
@@ -1623,7 +1623,7 @@ begin
       CS_threads.Release;
     end;
     while threads.Count > 0 do
-      Sleep(16);
+      Sleep(100);
   end;
   Stop;
   container.DownloadInfo.TransferRate := '';
