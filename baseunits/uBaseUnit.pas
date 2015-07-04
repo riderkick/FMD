@@ -820,11 +820,8 @@ type
   THTTPSendThread = class(THTTPSend)
     protected
       FOwner: TFMDThread;
-      FTimeoutCount: Integer;
       procedure CloseConnection(SendTerminateTag: Boolean = True);
       procedure SockOnHeartBeat(Sender: TObject);
-      procedure SockOnStatus(Sender: TObject; Reason: THookSocketReason;
-        const Value: String);
     public
       constructor Create(AOwner: TFMDThread);
   end;
@@ -2884,7 +2881,6 @@ begin
     Inc(Counter);
     HTTPClear;
     HTTP.Headers.Text := HTTPHeader.Text;
-    Sleep(500);
   end;
 
   counter := 0;
@@ -3447,27 +3443,11 @@ begin
   if Assigned(FOwner) then
     if FOwner.IsTerminated then
        CloseConnection;
-  if FTimeout > 0 then
-  begin
-    if FTimeoutCount >= FTimeout then
-      CloseConnection(False)
-    else
-      Inc(FTimeoutCount, Sock.HeartbeatRate);
-  end;
-end;
-
-procedure THTTPSendThread.SockOnStatus(Sender: TObject;
-  Reason: THookSocketReason; const Value: String);
-begin
-  if (FTimeout > 0) and (Reason = HR_SocketClose) then
-    FTimeoutCount := 0;
 end;
 
 constructor THTTPSendThread.Create(AOwner: TFMDThread);
 begin
   inherited Create;
-  FTimeoutCount := 0;
-  Sock.OnStatus := SockOnStatus;
   if Assigned(AOwner) then
   begin
     FOwner := TFMDThread(AOwner);
