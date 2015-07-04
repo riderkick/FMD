@@ -34,21 +34,46 @@ type
     FRegxp: TRegExpr;
     FWebsite: String;
     FTableName: String;
+    FDataCount: Integer;
+    FFiltered: Boolean;
+    FFilterAllSites: Boolean;
+    FSitesList: TStringList;
+    FSQLSelect: String;
   protected
     function GetConnected: Boolean;
     procedure CreateTable;
     procedure VacuumTable;
+    procedure GetDataCount;
+    function GetWebsiteName(RecIndex: Integer): String;
+    function GetParam(RecIndex, ParamNo: Integer): String;
   public
     constructor Create;
     destructor Destroy; override;
-    procedure LoadFromFile(AWebsite: String = '');
+    function Open(AWebsite: String = ''): Boolean;
+    procedure Save;
+    procedure Refresh;
     procedure AddData(Title, Link, Authors, Artists, Genres, Status, Summary: String;
       NumChapter, JDN: Integer);
     procedure ApplyUpdates;
+    function Search(ATitle: String): Boolean;
+    function CanFilter(const checkedGenres, uncheckedGenres: TStringList;
+      const stTitle, stAuthors, stArtists, stStatus, stSummary: String;
+      const minusDay: Cardinal; const haveAllChecked, searchNewManga: Boolean): Boolean;
+    function Filter(const checkedGenres, uncheckedGenres: TStringList;
+      const stTitle, stAuthors, stArtists, stStatus, stSummary: String;
+      const minusDay: Cardinal; const haveAllChecked, searchNewManga: Boolean;
+      useRegExpr: Boolean = False): Boolean;
+    procedure RemoveFilter;
     procedure Sort;
     property Website: String read FWebsite write FWebsite;
     property TableName: String read FTableName write FTableName;
     property Connected: Boolean read GetConnected;
+    property DataCount: Integer read FDataCount;
+    property Filtered: Boolean read FFiltered;
+    property FilterAllSites: Boolean read FFilterAllSites write FFilterAllSites;
+    property SitesList: TStringList read FSitesList write FSitesList;
+    property WebsiteName[RecIndex: Integer]: String read GetWebsiteName;
+    property Param[RecIndex, ParamNo: Integer]: String read GetParam;
   end;
 
   { TDataProcess }
@@ -145,6 +170,8 @@ var
 
 const
   DBDataProcessParam = 'title,link,authors,artists,genres,status,summary,numchapter,jdn';
+  DBDataProcessParams: array [0..8] of ShortString =
+    ('title', 'link', 'authors', 'artists', 'genres', 'status', 'summary', 'numchapter', 'jdn');
   DBDataProccesCreateParam = '(title TEXT,'+
                               'link TEXT NOT NULL PRIMARY KEY,'+
                               'authors TEXT,'+
@@ -226,7 +253,7 @@ begin
       if FileExistsUTF8(filepath + DBDATA_EXT) then
         DeleteFileUTF8(filepath + DBDATA_EXT);
       rawdata.LoadFromFile(AWebsite);
-      dbdata.LoadFromFile(AWebsite);
+      dbdata.Open(AWebsite);
       if rawdata.Data.Count > 0 then
       with rawdata do
       begin
@@ -276,20 +303,67 @@ begin
   end;
 end;
 
+procedure TDBDataProcess.GetDataCount;
+begin
+  if FQuery.Active then
+  begin
+    FQuery.Last;
+    FDataCount := FQuery.RecordCount;
+    FQuery.Refresh;
+  end
+  else
+    FDataCount := 0;
+end;
+
+function TDBDataProcess.GetWebsiteName(RecIndex: Integer): String;
+begin
+  if FConn.Connected then
+  begin
+    if FilterAllSites then
+    begin
+
+    end
+    else
+      Result := FWebsite;
+  end;
+end;
+
+function TDBDataProcess.GetParam(RecIndex, ParamNo: Integer): String;
+begin
+  Result := '';
+  if FQuery.Active and
+    (ParamNo < Length(DBDataProcessParams)) and
+    (RecIndex < FDataCount) then
+  begin
+    try
+      FQuery.RecNo := RecIndex+1;
+      Result:= FQuery.FieldByName(DBDataProcessParams[ParamNo]).AsString;
+    except
+      on E: Exception do
+        WriteLog_E('TDBDataProcess.GetParam.Error: ' + E.Message +
+          LineEnding + GetStackTraceInfo);
+    end;
+  end;
+end;
+
 constructor TDBDataProcess.Create;
 begin
   FConn := TSQLite3Connectionx.Create(nil);
   FTrans := TSQLTransaction.Create(nil);
   FQuery := TSQLQuery.Create(nil);
-  FRegxp := TRegExpr.Create;
-  FRegxp.ModifierI := True;
   FConn.Transaction := FTrans;
   FQuery.DataBase := FConn;
+  FRegxp := TRegExpr.Create;
+  FRegxp.ModifierI := True;
+  FSitesList := TStringList.Create;
   FTableName := 'masterlist';
+  FSQLSelect := 'SELECT * FROM ' + FTableName;
+  FDataCount := 0;
 end;
 
 destructor TDBDataProcess.Destroy;
 begin
+  FSitesList.Free;
   FQuery.Close;
   if FConn.Connected then
   begin
@@ -305,12 +379,13 @@ begin
   inherited Destroy;
 end;
 
-procedure TDBDataProcess.LoadFromFile(AWebsite: String);
+function TDBDataProcess.Open(AWebsite: String): Boolean;
 var
   ts: TStringList;
   filepath: String;
   i: Integer;
 begin
+  Result := False;
   if AWebsite <> '' then FWebsite := AWebsite;
   if FWebsite = '' then Exit;
   try
@@ -337,10 +412,28 @@ begin
     finally
       ts.Free;
     end;
-    FQuery.SQL.Text := 'SELECT * FROM ' + FTableName;
+    FSQLSelect := 'SELECT * FROM ' + FTableName;;
+    FQuery.SQL.Text := FSQLSelect;
     FQuery.Open;
+    GetDataCount;
+    FFiltered := False;
+    Result := FQuery.Active;
   except
+    on E: Exception do
+      WriteLog_E('TDBDataProcess.LoadFromFile.Error: ' + E.Message +
+        LineEnding + GetStackTraceInfo);
   end;
+end;
+
+procedure TDBDataProcess.Save;
+begin
+  Self.ApplyUpdates;
+end;
+
+procedure TDBDataProcess.Refresh;
+begin
+  if FQuery.Active then
+    FQuery.Refresh;
 end;
 
 procedure TDBDataProcess.AddData(Title, Link, Authors, Artists, Genres, Status,
@@ -361,7 +454,7 @@ begin
       QuotedStrd(JDN) + ');');
   except
     on E: Exception do
-      WriteLog_E('Error AddData: ' + E.Message + #13#10 + GetStackTraceInfo);
+      WriteLog_E('TDBDataProcess.AddData.Error: ' + E.Message + LineEnding + GetStackTraceInfo);
   end;
 end;
 
@@ -372,7 +465,49 @@ begin
     FQuery.Close;
     FTrans.Commit;
     FQuery.Open;
+    GetDataCount;
   end;
+end;
+
+function TDBDataProcess.Search(ATitle: String): Boolean;
+begin
+  Result := False;
+  if FConn.Connected then
+  begin
+    try
+      FQuery.Close;
+      FQuery.SQL.Text := FSQLSelect;
+      if ATitle <> '' then
+        FQuery.SQL.Add('WHERE title LIKE ' + QuotedStrd(AnsiQuotedStr(ATitle, '%')));
+      FQuery.Open;
+      GetDataCount;
+    except
+      on E: Exception do
+        WriteLog_E('TDBDataProcess.Search.Error: ' + E.Message + LineEnding + GetStackTraceInfo);
+    end;
+  end;
+end;
+
+function TDBDataProcess.CanFilter(const checkedGenres,
+  uncheckedGenres: TStringList; const stTitle, stAuthors, stArtists, stStatus,
+  stSummary: String; const minusDay: Cardinal; const haveAllChecked,
+  searchNewManga: Boolean): Boolean;
+begin
+  Result := True;
+end;
+
+function TDBDataProcess.Filter(const checkedGenres,
+  uncheckedGenres: TStringList; const stTitle, stAuthors, stArtists, stStatus,
+  stSummary: String; const minusDay: Cardinal; const haveAllChecked,
+  searchNewManga: Boolean; useRegExpr: Boolean): Boolean;
+begin
+  FFiltered := True;
+  Result := FFiltered;
+end;
+
+procedure TDBDataProcess.RemoveFilter;
+begin
+  FFiltered := False;
 end;
 
 procedure TDBDataProcess.Sort;
