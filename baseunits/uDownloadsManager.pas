@@ -1248,8 +1248,8 @@ var
   {$I includes/SenMangaRAW/image_url.inc}
 
 begin
-  lpath := CorrectPathSys(manager.container.DownloadInfo.SaveTo +
-    manager.container.ChapterName[manager.container.CurrentDownloadChapterPtr]);
+  lpath := CleanAndExpandDirectory(CorrectPathSys(manager.container.DownloadInfo.SaveTo +
+    manager.container.ChapterName[manager.container.CurrentDownloadChapterPtr]));
   if not DirectoryExistsUTF8(lpath) then
   begin
     if not ForceDirectoriesUTF8(lpath) then
@@ -1289,9 +1289,7 @@ begin
       manager.container.Manager.retryConnect);
 
   SetCurrentDirUTF8(fmdDirectory);
-  if Terminated then
-    Result := False;
-
+  if Terminated then Exit(False);
   if Result then
     manager.container.PageLinks[workCounter] := 'D';
 end;

@@ -2987,7 +2987,7 @@ function SaveImage(const AHTTP: THTTPSend; const mangaSiteID: Integer;
 var
   retryToSave: Boolean = False;
   header: array [0..3] of Byte;
-  ext, lpath: String;
+  ext, lpath, fpath: String;
   HTTPHeader: TStringList;
   HTTP: THTTPSend;
   counter: Cardinal;
@@ -3015,7 +3015,7 @@ var
 begin
   Result := False;
   if Trim(URL) = '' then Exit;
-
+  fpath := '';
   s := Path + '/' + Name;
   // Check to see if a file with similar name was already exist. If so then we
   // skip the download process.
@@ -3197,22 +3197,21 @@ begin
         {$IFDEF DOWNLOADER}
         if checkTerminate then Exit;
         {$ENDIF}
-        lpath := CorrectPathSys(Path);
+        lpath := CleanAndExpandDirectory(CorrectPathSys(Path));
         if not DirectoryExistsUTF8(lpath) then
           ForceDirectoriesUTF8(lpath);
         if DirectoryExistsUTF8(lpath) then
         begin
-          fstream := TFileStreamUTF8.Create(lpath + '/' + Name + prefix + ext,
-            fmCreate);
+          fpath := CleanAndExpandFilename(lpath + Name + prefix + ext);
+          if FileExistsUTF8(fpath) then
+            DeleteFile(fpath);
+          fstream := TFileStreamUTF8.Create(fpath, fmCreate);
           try
             HTTP.Document.SaveToStream(fstream);
           finally
             fstream.Free;
           end;
-          if FileExistsUTF8(lpath + '/' + Name + prefix + ext) then
-            Result := True
-          else
-            Result := False;
+          Result := FileExistsUTF8(fpath);
         end
         else
           Result := False;
@@ -3220,7 +3219,7 @@ begin
       except
         on E: Exception do
         begin
-          E.Message := 'SaveImage.SavetoFile'#13#10 + E.Message + #13#10 +
+          E.Message := 'SaveImage.SavetoFile.Error'#13#10 + E.Message + #13#10 +
             (CorrectPathSys(Path) + '/' + Name + prefix + ext);
           USimpleException.ExceptionHandleSaveLogOnly(nil, E);
           {$IFDEF DOWNLOADER}
@@ -3243,6 +3242,7 @@ begin
     USimpleException.ExceptionHandleSaveLogOnly(nil, Exception.Create(s));
   end;
   preTerminate;
+  Result := (fpath <> '') and FileExistsUTF8(fpath);
 end;
 
 function SaveImage(const mangaSiteID: Integer; URL: String;
