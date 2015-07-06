@@ -391,8 +391,13 @@ begin
   Result := False;
   if AWebsite <> '' then FWebsite := AWebsite;
   if FWebsite = '' then Exit;
+
+  filepath := fmdDirectory + DATA_FOLDER + FWebsite + DBDATA_EXT;
+  if not FileExistsUTF8(filepath) then
+    ConvertDataProccessToDB(AWebsite);
+  if not FileExistsUTF8(filepath) then Exit;
+
   try
-    filepath := fmdDirectory + DATA_FOLDER + FWebsite + DBDATA_EXT;
     if FConn.Connected then
     begin
       FTrans.Commit;
