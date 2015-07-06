@@ -15,7 +15,7 @@ interface
 
 uses
   Classes, SysUtils, uBaseUnit, uFMDThread, sqlite3conn, sqldb, USimpleLogger,
-  strutils, dateutils, RegExpr, sqlite3, FileUtil, httpsend;
+  strutils, dateutils, RegExpr, sqlite3, sqlite3dyn, FileUtil, httpsend;
 
 type
 
@@ -2613,5 +2613,9 @@ function TMangaInformation.GetPage(var output: TObject; URL: String;
 begin
   Result := uBaseUnit.GetPage(FHTTP, output, URL, Reconnect);
 end;
+
+initialization
+  sqlite3dyn.SQLiteDefaultLibrary :=
+    CleanAndExpandDirectory(GetCurrentDirUTF8) + 'sqlite3.dll';
 
 end.
