@@ -964,6 +964,7 @@ procedure QuickSortDataWithWebID(var merge: TStringList; const webIDList: TByteL
 function GetCurrentJDN: longint;
 function DateToJDN(const year, month, day: word): longint; overload;
 function DateToJDN(const date: TDate): longint; overload;
+function JDNToDate(const JDN: longint): TDate;
 
 {function  ConvertInt32ToStr(const aValue: Cardinal)  : String;
 function  ConvertStrToInt32(const aStr  : String): Cardinal;}
@@ -3408,6 +3409,23 @@ var
 begin
   DecodeDate(date, year, month, day);
   Result := DateToJDN(year, month, day);
+end;
+
+function JDNToDate(const JDN: longint): TDate;
+var
+  a, b, c, d, e, m: longint;
+  day, month, year: Word;
+begin
+  a := trunc(JDN + 32044.5);
+  b := (4 * a + 3) div 146097;
+  c := a - (146097 * b div 4);
+  d := (4 * c + 3) div 1461;
+  e := c - (1461 * d div 4);
+  m := (5 * e + 2) div 153;
+  day := e - ((153 * m + 2) div 5) + 1;
+  month := m + 3 - 12 * (m div 10);
+  year := (100 * b) + d - 4800 + (m div 10);
+  Result := EncodeDate(year, month, day);
 end;
 
 function GetCurrentJDN: longint;
