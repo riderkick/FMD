@@ -511,8 +511,29 @@ function TDBDataProcess.Filter(const checkedGenres,
   stSummary: String; const minusDay: Cardinal; const haveAllChecked,
   searchNewManga: Boolean; useRegExpr: Boolean): Boolean;
 begin
-  FFiltered := True;
-  Result := FFiltered;
+  Result := False;
+  with FQuery do
+  begin
+    Close;
+    try
+      SQL.Clear;
+      SQL.Add(FSQLSelect);
+      SQL.Add('WHERE');
+      if searchNewManga then
+        SQL.Add('jdn > ' + QuotedStrd(DateToJDN(IncDay(Now, (0-minusDay)))));
+      Open;
+      FFiltered := Active;
+    except
+      on E: Exception do
+        WriteLog_E('TDBDataProcess.Filter.Error: ' + E.Message +
+          LineEnding + GetStackTraceInfo);
+      Close;
+      SQL.Text := FSQLSelect;
+      Open;
+      FFiltered := False;
+    end;
+    Result := FFiltered;
+  end;
 end;
 
 procedure TDBDataProcess.RemoveFilter;
