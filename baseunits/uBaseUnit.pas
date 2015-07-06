@@ -1211,7 +1211,6 @@ begin
       end;
     end;
   end;
-  SetCurrentDirUTF8(fmdDirectory);
 end;
 
 function GetMangaSiteID(const Name: String): Cardinal;

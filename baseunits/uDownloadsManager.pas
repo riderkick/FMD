@@ -1288,7 +1288,6 @@ begin
       prefix,
       manager.container.Manager.retryConnect);
 
-  SetCurrentDirUTF8(fmdDirectory);
   if Terminated then Exit(False);
   if Result then
     manager.container.PageLinks[workCounter] := 'D';
