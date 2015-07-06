@@ -86,7 +86,7 @@ resourcestring
 implementation
 
 uses
-  frmMain, Dialogs, ComCtrls, Forms, Controls;
+  frmMain, Dialogs, ComCtrls, Forms, Controls, USimpleLogger;
 
 // ----- TUpdateMangaThread -----
 
@@ -509,8 +509,11 @@ begin
           [websitePtr, websites.Count, website]) + ' | ' + RS_Preparing + '...';
         Synchronize(MainThreadShowGetting);
 
-        mainDataProcess.Close;
-        mainDataProcess.Open(website);
+        if not mainDataProcess.Open(website) then
+        begin
+          mainDataProcess.CreateDatabase(website);
+          mainDataProcess.OpenTable;
+        end;
 
         names.Clear;
         links.Clear;
@@ -602,9 +605,6 @@ begin
           end;
         end;
 
-        mainDataProcess.Close;
-        mainDataProcess.Open(website);
-
         //get manga info
         if links.Count > 0 then
         begin
@@ -643,7 +643,7 @@ begin
           Synchronize(MainThreadShowGetting);
           { TODO -ocholif : Sort after update }
           mainDataProcess.Sort;
-          mainDataProcess.Save;
+          mainDataProcess.Close;
         end;
         Synchronize(RefreshList);
         if Terminated then
