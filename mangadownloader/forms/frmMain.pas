@@ -499,21 +499,17 @@ type
     procedure vtMangaListDragOver(Sender : TBaseVirtualTree; Source : TObject;
       Shift : TShiftState; State : TDragState; const Pt : TPoint;
       Mode : TDropMode; var Effect : LongWord; var Accept : Boolean);
-    // for search feature
-    procedure vtMangaListInitSearchNode(Sender: TBaseVirtualTree;
-      ParentNode, Node: PVirtualNode; var InitialStates: TVirtualNodeInitStates);
+    procedure vtMangaListGetNodeDataSize(Sender: TBaseVirtualTree;
+      var NodeDataSize: Integer);
     procedure vtMangaListBeforeCellPaint(Sender: TBaseVirtualTree;
       TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
       CellPaintMode: TVTCellPaintMode; CellRect: TRect; var ContentRect: TRect);
 
-    procedure vtMangaListFreeNode(Sender: TBaseVirtualTree; Node: PVirtualNode);
     procedure vtMangaListGetHint(Sender: TBaseVirtualTree; Node: PVirtualNode;
       Column: TColumnIndex; var LineBreakStyle: TVTTooltipLineBreakStyle;
       var HintText: String);
     procedure vtMangaListGetText(Sender: TBaseVirtualTree; Node: PVirtualNode;
       Column: TColumnIndex; TextType: TVSTTextType; var CellText: String);
-    procedure vtMangaListInitNode(Sender: TBaseVirtualTree;
-      ParentNode, Node: PVirtualNode; var InitialStates: TVirtualNodeInitStates);
     procedure tmBackupTimer(Sender: TObject);
     procedure vtOptionMangaSiteSelectionChange(Sender : TBaseVirtualTree;
       Node : PVirtualNode);
@@ -549,7 +545,7 @@ type
     isUpdating: Boolean;
     revisionIni, updates, mangalistIni, options: TIniFile;
     FavoriteManager: TFavoriteManager;
-    dataProcess: TDataProcess;
+    dataProcess: TDBDataProcess;
     mangaInfo: TMangaInfo;
     ChapterList: array of TChapterStateItem;
     DLManager: TDownloadManager;
@@ -755,7 +751,7 @@ begin
     end;
   end;
 
-  dataProcess := TDataProcess.Create;
+  dataProcess := TDBDataProcess.Create;
   DLManager := TDownloadManager.Create;
   DLManager.Restore;
 
@@ -798,8 +794,6 @@ begin
   UpdateVtFavorites;
 
   InitCheckboxes;
-
-  //lbMode.Caption := Format(RS_ModeAll, [dataProcess.filterPos.Count]);
 
   pcMain.ActivePage := tsDownload;
 
@@ -922,8 +916,7 @@ begin
   end;
 
   //Backup data
-  if not dataProcess.isFilterAllSites then
-    dataProcess.SaveToFile;
+  dataProcess.Save;
   DLManager.Backup;
   DLManager.BackupDownloadedChaptersList;
   isExiting := True;
@@ -1060,10 +1053,10 @@ begin
     isStartup := True;
     try
       if cbSelectManga.ItemIndex > -1 then
-        dataProcess.LoadFromFile(cbSelectManga.Items[cbSelectManga.ItemIndex]);
-      vtMangaList.NodeDataSize := SizeOf(TMangaListItem);
-      vtMangaList.RootNodeCount := dataProcess.filterPos.Count;
-      lbMode.Caption := Format(RS_ModeAll, [dataProcess.filterPos.Count]);
+        dataProcess.Open(cbSelectManga.Items[cbSelectManga.ItemIndex]);
+      vtMangaList.RootNodeCount := dataProcess.DataCount;
+      lbMode.Caption := Format(RS_ModeAll, [dataProcess.DataCount]);
+      dataProcess.Refresh;
     finally
       Screen.Cursor := crDefault;
     end;
@@ -1845,10 +1838,6 @@ end;
 
 procedure TMainForm.btChecksClick(Sender: TObject);
 begin
-  if dataProcess.Title.Count = 0 then
-    pmUpdate.Items[0].Enabled := False
-  else
-    pmUpdate.Items[0].Enabled := True;
   if Sender is TControl then
     with TControl(Sender) do begin
       pmChapterList.Alignment := Menus.paRight;
@@ -1860,7 +1849,6 @@ end;
 
 procedure TMainForm.cbSelectMangaChange(Sender: TObject);
 var
-  isFilterAllSites: Boolean;
   K: Word;
 begin
   if cbSelectManga.ItemIndex < 0 then
@@ -1870,25 +1858,15 @@ begin
   begin
     Screen.Cursor := crHourGlass;
     try
-      if dataProcess.Title.Count > 0 then
-      begin
-        isFilterAllSites := dataProcess.isFilterAllSites;
-        dataProcess.RemoveFilter;
-        if not isFilterAllSites then
-          dataProcess.SaveToFile;
-      end;
-      if Assigned(dataProcess) then
-        dataProcess.Free;
-      dataProcess := TDataProcess.Create;
-      if not dataProcess.LoadFromFile(
+      if dataProcess = nil then
+        dataProcess := TDBDataProcess.Create;
+      if not dataProcess.Open(
         cbSelectManga.Items.Strings[cbSelectManga.ItemIndex]) then
-      begin
         RunGetList;
-      end;
-      vtMangaList.OnInitNode := @vtMangaListInitNode;
       vtMangaList.Clear;
-      vtMangaList.RootNodeCount := dataProcess.filterPos.Count;
-      lbMode.Caption := Format(RS_ModeAll, [dataProcess.filterPos.Count]);
+      vtMangaList.RootNodeCount := dataProcess.DataCount;
+      dataProcess.Refresh;
+      lbMode.Caption := Format(RS_ModeAll, [dataProcess.DataCount]);
       currentWebsite := cbSelectManga.Items[cbSelectManga.ItemIndex];
       dataProcess.website := cbSelectManga.Items[cbSelectManga.ItemIndex];
       CheckForTopPanel;
@@ -2069,22 +2047,21 @@ end;
 
 procedure TMainForm.btRemoveFilterClick(Sender: TObject);
 begin
-  if dataProcess.isFiltered then
+  if dataProcess.Filtered then
   begin
     Screen.Cursor := crHourGlass;
     try
       dataProcess.RemoveFilter;
-      if dataProcess.isFilterAllSites then
+      if dataProcess.FilterAllSites then
       begin
-        dataProcess.isFilterAllSites := False;
+        dataProcess.FilterAllSites := False;
         dataProcess.Free;
-        dataProcess := TDataProcess.Create;
-        dataProcess.LoadFromFile(cbSelectManga.Items[cbSelectManga.ItemIndex]);
+        dataProcess := TDBDataProcess.Create;
+        dataProcess.Open(cbSelectManga.Items[cbSelectManga.ItemIndex]);
       end;
-      vtMangaList.OnInitNode := @vtMangaListInitNode;
       vtMangaList.Clear;
-      vtMangaList.RootNodeCount := dataProcess.filterPos.Count;
-      lbMode.Caption := Format(RS_ModeAll, [dataProcess.filterPos.Count]);
+      vtMangaList.RootNodeCount := dataProcess.DataCount;
+      lbMode.Caption := Format(RS_ModeAll, [dataProcess.DataCount]);
       edSearch.Text := '';
     except
       on E: Exception do
@@ -2098,7 +2075,7 @@ end;
 
 procedure TMainForm.btFilterClick(Sender: TObject);
 var
-  l, checkGenres, uncheckGenres: TStringList;
+  checkGenres, uncheckGenres: TStringList;
   i: Cardinal;
   s: String;
 begin
@@ -2140,8 +2117,7 @@ begin
     end;
 
     // we will reload the list if search from all websites is enabled
-    if (cbSearchFromAllSites.Checked) and (not dataProcess.isFilterAllSites) and
-      (not dataProcess.isFiltered) then
+    if cbSearchFromAllSites.Checked then
     begin
       if not dataProcess.CanFilter(checkGenres, uncheckGenres,
         edFilterTitle.Text, edFilterAuthors.Text,
@@ -2154,14 +2130,8 @@ begin
         checkGenres.Free;
         Exit;
       end;
-      l := TStringList.Create;
-      for i := 0 to cbSelectManga.Items.Count - 1 do
-        l.Add(cbSelectManga.Items[i]);
-      dataProcess.Free;
-      dataProcess := TDataProcess.Create;
-      dataProcess.LoadFromAllFiles(l);
-      dataProcess.isFilterAllSites := True;
-      l.Free;
+      dataProcess.SitesList.Assign(cbSelectManga.Items);
+      dataProcess.FilterAllSites := True;
     end;
 
     if dataProcess.Filter(checkGenres, uncheckGenres,
@@ -2171,10 +2141,9 @@ begin
       seOptionNewMangaTime.Value,
       rbAll.Checked, cbOnlyNew.Checked, cbUseRegExpr.Checked) then
     begin
-      lbMode.Caption := Format(RS_ModeFiltered, [dataProcess.filterPos.Count]);
-      vtMangaList.OnInitNode := @vtMangaListInitNode;
+      lbMode.Caption := Format(RS_ModeFiltered, [dataProcess.DataCount]);
       vtMangaList.Clear;
-      vtMangaList.RootNodeCount := dataProcess.filterPos.Count;
+      vtMangaList.RootNodeCount := dataProcess.DataCount;
     end;
   except
     on E: Exception do
@@ -2214,9 +2183,9 @@ begin
     if vtMangaList.Selected[xNode] then
     begin
       SilentThreadManager.Add(MD_AddToFavorites,
-        GetMangaSiteName(DataProcess.site.Items[DataProcess.GetPos(xNode^.Index)]),
-        DataProcess.Param[DataProcess.GetPos(xNode^.Index), DATA_PARAM_NAME],
-        DataProcess.Param[DataProcess.GetPos(xNode^.Index), DATA_PARAM_LINK]);
+        dataProcess.WebsiteName[xNode^.Index],
+        DataProcess.Param[xNode^.Index, DATA_PARAM_NAME],
+        DataProcess.Param[xNode^.Index, DATA_PARAM_LINK]);
     end;
     xNode := vtMangaList.GetNextSelected(xNode);
   end;
@@ -2614,7 +2583,7 @@ begin
         AllowedToCreate := True;
         if DLManager.Count > 0 then
           for j := 0 to DLManager.Count - 1 do
-            if dataProcess.Param[dataProcess.GetPos(xNode^.Index), DATA_PARAM_NAME] =
+            if dataProcess.Param[xNode^.Index, DATA_PARAM_NAME] =
               DLManager.TaskItem(j).DownloadInfo.title then
             begin
               if YesAll then
@@ -2649,9 +2618,9 @@ begin
 
         if AllowedToCreate then
           SilentThreadManager.Add(MD_DownloadAll,
-            GetMangaSiteName(DataProcess.site.Items[DataProcess.GetPos(xNode^.Index)]),
-            dataProcess.Param[DataProcess.GetPos(xNode^.Index), DATA_PARAM_NAME],
-            dataProcess.Param[DataProcess.GetPos(xNode^.Index), DATA_PARAM_LINK]);
+            dataProcess.WebsiteName[xNode^.Index],
+            dataProcess.Param[xNode^.Index, DATA_PARAM_NAME],
+            dataProcess.Param[xNode^.Index, DATA_PARAM_LINK]);
       end;
       xNode := vtMangaList.GetNextSelected(xNode);
     end;
@@ -2684,26 +2653,11 @@ begin
   end;
   GetInfosThread := TGetMangaInfosThread.Create;
   GetInfosThread.MangaListPos := vtMangaList.FocusedNode^.Index;
-  if DataProcess.searchPos.Count = 0 then
-  begin
-    website := GetMangaSiteName(
-      DataProcess.site.Items[DataProcess.GetPos(GetInfosThread.mangaListPos)]);
-    //cbSelectManga.Items[cbSelectManga.ItemIndex];
-    title := DataProcess.Param[DataProcess.GetPos(GetInfosThread.mangaListPos),
-      DATA_PARAM_NAME];
-    link := DataProcess.Param[DataProcess.GetPos(GetInfosThread.mangaListPos),
-      DATA_PARAM_LINK];
-  end
-  else
-  begin
-    website := GetMangaSiteName(
-      DataProcess.site.Items[DataProcess.searchPos.Items[GetInfosThread.mangaListPos]]);
-    //cbSelectManga.Items[cbSelectManga.ItemIndex];
-    title := DataProcess.Param[DataProcess.searchPos.Items[GetInfosThread.mangaListPos],
-      DATA_PARAM_NAME];
-    link := DataProcess.Param[DataProcess.searchPos.Items[GetInfosThread.mangaListPos],
-      DATA_PARAM_LINK];
-  end;
+
+  website := dataProcess.WebsiteName[GetInfosThread.MangaListPos];
+  title := DataProcess.Param[GetInfosThread.mangaListPos, DATA_PARAM_NAME];
+  link := DataProcess.Param[GetInfosThread.mangaListPos, DATA_PARAM_LINK];
+
   GetInfosThread.Title := title;
   GetInfosThread.Website := website;
   GetInfosThread.Link := link;
@@ -3851,6 +3805,13 @@ begin
   Accept := False;
 end;
 
+procedure TMainForm.vtMangaListGetNodeDataSize(Sender: TBaseVirtualTree;
+  var NodeDataSize: Integer);
+begin
+  Exit;
+  NodeDataSize := SizeOf(PMangaListItem);
+end;
+
 // options
 
 procedure TMainForm.btOptionApplyClick(Sender: TObject);
@@ -4080,30 +4041,24 @@ procedure TMainForm.vtMangaListBeforeCellPaint(Sender: TBaseVirtualTree;
   TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
   CellPaintMode: TVTCellPaintMode; CellRect: TRect; var ContentRect: TRect);
 begin
-  if (isExiting) or (dataProcess.JDN.Count = 0) or (dataProcess.filterPos.Count = 0) then
+  Exit;
+  if (isExiting) or (dataProcess.DataCount = 0) then
     Exit;
   if miHighlightNewManga.Checked then
   begin
     try
-      if currentJDN - cardinal(dataProcess.JDN.Items[dataProcess.GetPos(Node^.Index)]) <
+      if currentJDN - StrToInt(dataProcess.Param[Node^.Index, DATA_PARAM_JDN]) <
         seOptionNewMangaTime.Value then
       begin
         TargetCanvas.Brush.Color := CL_HLBlueMarks;
         TargetCanvas.FillRect(CellRect);
       end;
     except
-      on E: Exception do ;
+      on E: Exception do
+        WriteLog_E('vtMangaListBeforeCellPaint.Error: ' + E.Message +
+          LineEnding + GetStackTraceInfo);
     end;
   end;
-end;
-
-procedure TMainForm.vtMangaListFreeNode(Sender: TBaseVirtualTree; Node: PVirtualNode);
-var
-  Data: PMangaListItem;
-begin
-  Data := Sender.GetNodeData(Node);
-  if Assigned(Data) then
-    Finalize(Data^);
 end;
 
 procedure TMainForm.vtMangaListGetHint(Sender: TBaseVirtualTree;
@@ -4114,77 +4069,47 @@ var
   s: String;
 begin
   s := '';
-  LPos := dataProcess.GetPos(Node^.Index);
-  if dataProcess.isFilterAllSites then
-    s := s + RS_InfoWebsite + LineEnding +
-      GetMangaSiteName(dataProcess.site.Items[LPos]) + LineEnding + LineEnding;
-  if Trim(dataProcess.Param[LPos, DATA_PARAM_NAME]) <> '' then
-    s := s + RS_InfoTitle + LineEnding + dataProcess.Param[LPos, DATA_PARAM_NAME];
-  if Trim(dataProcess.Param[LPos, DATA_PARAM_AUTHORS]) <> '' then
-    s := s + LineEnding + LineEnding + RS_InfoAuthors + LineEnding +
-      dataProcess.Param[LPos, DATA_PARAM_AUTHORS];
-  if Trim(dataProcess.Param[LPos, DATA_PARAM_ARTISTS]) <> '' then
-    s := s + LineEnding + LineEnding + RS_InfoArtists + LineEnding +
-      dataProcess.Param[LPos, DATA_PARAM_ARTISTS];
-  if Trim(dataProcess.Param[LPos, DATA_PARAM_GENRES]) <> '' then
-    s := s + LineEnding + LineEnding + RS_InfoGenres + LineEnding +
-      dataProcess.Param[LPos, DATA_PARAM_GENRES];
-  if Trim(dataProcess.Param[LPos, DATA_PARAM_STATUS]) <> '' then
+  LPos := Node^.Index;
+  with dataProcess do
   begin
-    s := s + LineEnding + LineEnding + RS_InfoStatus + LineEnding;
-    if dataProcess.Param[LPos, DATA_PARAM_STATUS] = '0' then
-      s := s + cbFilterStatus.Items[0]
-    else
-      s := s + cbFilterStatus.Items[1];
+    if FilterAllSites then
+      s := s + RS_InfoWebsite + LineEnding +
+        dataProcess.WebsiteName[LPos] + LineEnding + LineEnding;
+    if Trim(Param[LPos, DATA_PARAM_NAME]) <> '' then
+      s := s + RS_InfoTitle + LineEnding + Param[LPos, DATA_PARAM_NAME];
+    if Trim(Param[LPos, DATA_PARAM_AUTHORS]) <> '' then
+      s := s + LineEnding + LineEnding + RS_InfoAuthors + LineEnding +
+        Param[LPos, DATA_PARAM_AUTHORS];
+    if Trim(Param[LPos, DATA_PARAM_ARTISTS]) <> '' then
+      s := s + LineEnding + LineEnding + RS_InfoArtists + LineEnding +
+        Param[LPos, DATA_PARAM_ARTISTS];
+    if Trim(Param[LPos, DATA_PARAM_GENRES]) <> '' then
+      s := s + LineEnding + LineEnding + RS_InfoGenres + LineEnding +
+        Param[LPos, DATA_PARAM_GENRES];
+    if Trim(Param[LPos, DATA_PARAM_STATUS]) <> '' then
+    begin
+      s := s + LineEnding + LineEnding + RS_InfoStatus + LineEnding;
+      if Param[LPos, DATA_PARAM_STATUS] = '0' then
+        s := s + cbFilterStatus.Items[0]
+      else
+        s := s + cbFilterStatus.Items[1];
+    end;
+    if Trim(Param[LPos, DATA_PARAM_SUMMARY]) <> '' then
+      //s := s + LineEndingLineEnding + infoSummary + ':' + LineEnding + PrepareSummaryForHint(dataProcess.Param[LPos, DATA_PARAM_SUMMARY], 80);
+      s := s + LineEnding + LineEnding + RS_InfoSummary + ':' + LineEnding +
+        StringBreaks(dataProcess.Param[LPos, DATA_PARAM_SUMMARY]);
   end;
-  if Trim(dataProcess.Param[LPos, DATA_PARAM_SUMMARY]) <> '' then
-    //s := s + LineEndingLineEnding + infoSummary + ':' + LineEnding + PrepareSummaryForHint(dataProcess.Param[LPos, DATA_PARAM_SUMMARY], 80);
-    s := s + LineEnding + LineEnding + RS_InfoSummary + ':' + LineEnding +
-      StringBreaks(dataProcess.Param[LPos, DATA_PARAM_SUMMARY]);
   HintText := s;
 end;
 
 procedure TMainForm.vtMangaListGetText(Sender: TBaseVirtualTree;
   Node: PVirtualNode; Column: TColumnIndex; TextType: TVSTTextType;
   var CellText: String);
-var
-  Data: PMangaListItem;
 begin
-  Data := Sender.GetNodeData(Node);
-  if Assigned(Data) then
-    CellText := Data^.Text;
-end;
-
-procedure TMainForm.vtMangaListInitNode(Sender: TBaseVirtualTree;
-  ParentNode, Node: PVirtualNode; var InitialStates: TVirtualNodeInitStates);
-var
-  Data: PMangaListItem;
-  pos: Cardinal;
-begin
-  with Sender do
+  if Assigned(Node) then
   begin
-    pos := dataProcess.filterPos.Items[Node^.Index];
-    Data := GetNodeData(Node);
-    Data^.Text := dataProcess.Param[pos, DATA_PARAM_NAME] +
-      ' (' +
-      dataProcess.Param[pos, DATA_PARAM_NUMCHAPTER] + ')';
-  end;
-  vtMangaList.ValidateNode(Node, False);
-end;
-
-procedure TMainForm.vtMangaListInitSearchNode(Sender: TBaseVirtualTree;
-  ParentNode, Node: PVirtualNode; var InitialStates: TVirtualNodeInitStates);
-var
-  Data: PMangaListItem;
-  pos: Cardinal;
-begin
-  with Sender do
-  begin
-    pos := dataProcess.searchPos.Items[Node^.Index];
-    Data := GetNodeData(Node);
-    Data^.Text := dataProcess.Param[pos, DATA_PARAM_NAME] +
-      ' (' +
-      dataProcess.Param[pos, DATA_PARAM_NUMCHAPTER] + ')';
+    CellText :=  dataProcess.Param[Node^.Index, DATA_PARAM_NAME] + ' ' +
+      BracketStr(dataProcess.Param[Node^.Index, DATA_PARAM_NUMCHAPTER])
   end;
 end;
 
@@ -4758,10 +4683,9 @@ begin
   begin
     LastSearchStr := '';
     //Screen.Cursor := crHourGlass;
-    DataProcess.searchPos.Clear;
-    vtMangaList.OnInitNode := @vtMangaListInitNode;
     vtMangaList.Clear;
-    vtMangaList.RootNodeCount := dataProcess.filterPos.Count;
+    dataProcess.Search(edSearch.Text);
+    vtMangaList.RootNodeCount := dataProcess.DataCount;
     //Screen.Cursor := crDefault;
     Exit;
   end
@@ -4770,10 +4694,9 @@ begin
   begin
     LastSearchWeb := currentWebsite;
     LastSearchStr := upcase(edSearch.Text);
-    DataProcess.Search(edSearch.Text);
     vtMangaList.Clear;
-    vtMangaList.OnInitNode := @vtMangaListInitSearchNode;
-    vtMangaList.RootNodeCount := dataProcess.searchPos.Count;
+    DataProcess.Search(edSearch.Text);
+    vtMangaList.RootNodeCount := dataProcess.DataCount;
   end;
 end;
 
@@ -4789,10 +4712,8 @@ begin
     if edSearch.Text = '' then
     begin
       Screen.Cursor := crHourGlass;
-      DataProcess.searchPos.Clear;
-      vtMangaList.OnInitNode := @vtMangaListInitNode;
       vtMangaList.Clear;
-      vtMangaList.RootNodeCount := dataProcess.filterPos.Count;
+      vtMangaList.RootNodeCount := dataProcess.DataCount;
       Screen.Cursor := crDefault;
     end
     else
@@ -4800,9 +4721,8 @@ begin
       Screen.Cursor := crHourGlass;
       LastSearchWeb := currentWebsite;
       DataProcess.Search(edSearch.Text);
-      vtMangaList.OnInitNode := @vtMangaListInitSearchNode;
       vtMangaList.Clear;
-      vtMangaList.RootNodeCount := dataProcess.searchPos.Count;
+      vtMangaList.RootNodeCount := dataProcess.DataCount;
       Screen.Cursor := crDefault;
     end;
   end;

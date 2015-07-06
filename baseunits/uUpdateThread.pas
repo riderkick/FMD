@@ -347,13 +347,11 @@ begin
       Screen.Cursor := crHourGlass;
       MainForm.edSearch.Clear;
       MainForm.dataProcess.RemoveFilter;
-      MainForm.dataProcess.Free;
-      MainForm.dataProcess := TDataProcess.Create;
-      MainForm.dataProcess.LoadFromFile(website);
+      MainForm.dataProcess.Refresh;
       MainForm.vtMangaList.Clear;
-      MainForm.vtMangaList.RootNodeCount := MainForm.dataProcess.filterPos.Count;
+      MainForm.vtMangaList.RootNodeCount := MainForm.dataProcess.DataCount;
       MainForm.lbMode.Caption :=
-        Format(RS_ModeAll, [MainForm.dataProcess.filterPos.Count]);
+        Format(RS_ModeAll, [MainForm.dataProcess.DataCount]);
       Screen.Cursor := crDefault;
     end;
   except
@@ -587,8 +585,7 @@ begin
                   mainDataProcess.Param[k, DATA_PARAM_STATUS] + SEPERATOR +
                   mainDataProcess.Param[k, DATA_PARAM_SUMMARY] + SEPERATOR +
                   mainDataProcess.Param[k, DATA_PARAM_NUMCHAPTER] + SEPERATOR +
-                  mainDataProcess.Param[k, DATA_PARAM_JDN] + SEPERATOR +
-                  mainDataProcess.Param[k, DATA_PARAM_READ] + SEPERATOR);
+                  mainDataProcess.Param[k, DATA_PARAM_JDN] + SEPERATOR);
               end;
             end;
             mainDataProcess.SaveToFile(website);
@@ -871,8 +868,7 @@ begin
                         mainDataProcess.Param[k, DATA_PARAM_STATUS] + SEPERATOR +
                         s + SEPERATOR +
                         mainDataProcess.Param[k, DATA_PARAM_NUMCHAPTER] + SEPERATOR +
-                        mainDataProcess.Param[k, DATA_PARAM_JDN] + SEPERATOR +
-                        mainDataProcess.Param[k, DATA_PARAM_READ] + SEPERATOR);
+                        mainDataProcess.Param[k, DATA_PARAM_JDN] + SEPERATOR);
                       Break;
                     end;
                   end;

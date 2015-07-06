@@ -70,7 +70,7 @@ procedure TGetMangaInfosThread.DoGetInfos;
       if (FMangaListPos >= 0) and
         (website = MainForm.cbSelectManga.Items[MainForm.cbSelectManga.ItemIndex]) then
       begin
-        filterPos := MainForm.dataProcess.GetPos(FMangaListPos);
+        filterPos := FMangaListPos;
         FInfo.mangaInfo.title := MainForm.dataProcess.Param[filterPos, DATA_PARAM_NAME];
         FInfo.mangaInfo.link := MainForm.dataProcess.Param[filterPos, DATA_PARAM_LINK];
         FInfo.mangaInfo.authors := MainForm.dataProcess.Param[filterPos, DATA_PARAM_AUTHORS];
@@ -112,7 +112,8 @@ procedure TGetMangaInfosThread.DoGetInfos;
               FInfo.mangaInfo.summary :=
                 MainForm.DataProcess.Param[filterPos, DATA_PARAM_SUMMARY];
           end;
-          FInfo.SyncInfoToData(MainForm.DataProcess, filterPos);
+          { TODO -ocholif : syncinfo with tdbdataprocess }
+          //FInfo.SyncInfoToData(MainForm.DataProcess, filterPos);
         end;
       end;
       Result := True;

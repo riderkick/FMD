@@ -41,12 +41,12 @@ begin
       MainForm.edSearch.Clear;
       MainForm.dataProcess.RemoveFilter;
       MainForm.dataProcess.Free;
-      MainForm.dataProcess := TDataProcess.Create;
-      MainForm.dataProcess.LoadFromFile(websiteName);
+      MainForm.dataProcess := TDBDataProcess.Create;
+      MainForm.dataProcess.Open(websiteName);
       MainForm.vtMangaList.Clear;
-      MainForm.vtMangaList.RootNodeCount := MainForm.dataProcess.filterPos.Count;
+      MainForm.vtMangaList.RootNodeCount := MainForm.dataProcess.DataCount;
       MainForm.lbMode.Caption :=
-        Format(RS_ModeAll, [MainForm.dataProcess.filterPos.Count]);
+        Format(RS_ModeAll, [MainForm.dataProcess.DataCount]);
     end;
   except
     on E: Exception do
