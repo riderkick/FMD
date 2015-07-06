@@ -55,8 +55,8 @@ type
   public
     CS_AddInfoToData, CS_AddNamesAndLinks: TCriticalSection;
     isFinishSearchingForNewManga, isDownloadFromServer, isDoneUpdateNecessary: Boolean;
-    mainDataProcess: TDataProcess;
-    names, links, websites, dataLinks: TStringList;
+    mainDataProcess: TDBDataProcess;
+    names, links, websites: TStringList;
     website: String;
     workPtr, directoryCount,
     // for fakku's doujinshi only
@@ -184,7 +184,7 @@ begin
         if SitesWithSortedList(manager.website) then
         begin
           if links.Count > 0 then
-            if manager.dataLinks.Find(links.Strings[0], iPos) then
+            if manager.mainDataProcess.Locate(DATA_PARAM_LINK, links.Strings[0]) then
               manager.isFinishSearchingForNewManga := True;
         end;
 
@@ -212,8 +212,8 @@ begin
         begin
           manager.CS_AddInfoToData.Acquire;
           try
-            Info.AddInfoToDataWithoutBreak(manager.names[workPtr],
-              manager.links[workPtr], manager.mainDataProcess);
+            Info.AddInfoToData(manager.names[workPtr], manager.links[workPtr],
+              manager.mainDataProcess);
           finally
             manager.CS_AddInfoToData.Release;
           end;
@@ -285,9 +285,8 @@ begin
   websites := TStringList.Create;
   names := TStringList.Create;
   links := TStringList.Create;
-  dataLinks := TStringList.Create;
 
-  mainDataProcess := TDataProcess.Create;
+  mainDataProcess := TDBDataProcess.Create;
 
   threads := TFPList.Create;
 end;
@@ -297,7 +296,6 @@ begin
   websites.Free;
   names.Free;
   links.Free;
-  dataLinks.Free;
   mainDataProcess.Free;
   threads.Free;
   MainForm.isUpdating := False;
@@ -511,48 +509,8 @@ begin
           [websitePtr, websites.Count, website]) + ' | ' + RS_Preparing + '...';
         Synchronize(MainThreadShowGetting);
 
-        mainDataProcess.Clear;
-        mainDataProcess.LoadFromFile(website);
-
-        //Sort first for faster searching
-        dataLinks.Assign(mainDataProcess.Link);
-        dataLinks.Sort;
-
-        // convert old data
-        if (mainDataProcess.Link.Count > 0) and
-          (website = WebsiteRoots[MANGAFOX_ID, 0]) then
-        begin
-          purg := False;
-          s := WebsiteRoots[GetMangaSiteID(website), 1];
-          if dataLinks.Find(s, iPos) then
-            purg := True;
-          if purg then
-          begin
-            for k := 0 to mainDataProcess.Link.Count - 1 do
-            begin
-              if Pos(s, mainDataProcess.Link[k]) > 0 then
-              begin
-                mainDataProcess.Link[k] :=
-                  StringReplace(mainDataProcess.Link[k], s, '', [rfIgnoreCase]);
-
-                mainDataProcess.Data[k] := RemoveStringBreaks(
-                  mainDataProcess.Param[k, DATA_PARAM_NAME] + SEPERATOR +
-                  mainDataProcess.Link[k] + SEPERATOR +
-                  mainDataProcess.Param[k, DATA_PARAM_AUTHORS] + SEPERATOR +
-                  mainDataProcess.Param[k, DATA_PARAM_ARTISTS] + SEPERATOR +
-                  mainDataProcess.Param[k, DATA_PARAM_GENRES] + SEPERATOR +
-                  mainDataProcess.Param[k, DATA_PARAM_STATUS] + SEPERATOR +
-                  mainDataProcess.Param[k, DATA_PARAM_SUMMARY] + SEPERATOR +
-                  mainDataProcess.Param[k, DATA_PARAM_NUMCHAPTER] + SEPERATOR +
-                  mainDataProcess.Param[k, DATA_PARAM_JDN] + SEPERATOR);
-              end;
-            end;
-            mainDataProcess.SaveToFile(website);
-            dataLinks.Assign(mainDataProcess.Link);
-            dataLinks.Sort;
-          end;
-          mainDataProcess.Clear;
-        end;
+        mainDataProcess.Close;
+        mainDataProcess.Open(website);
 
         names.Clear;
         links.Clear;
@@ -589,17 +547,6 @@ begin
         if Terminated then
           Break;
 
-        {$IFNDEF DOWNLOADER}
-        names.SaveToFile(website + '_names.txt');
-        links.SaveToFile(website + '_links.txt');
-
-        names.Clear;
-        links.Clear;
-
-        names.LoadFromFile(website + '_names.txt');
-        links.LoadFromFile(website + '_links.txt');
-        {$ENDIF}
-
         FStatus := RS_UpdatingList + Format(' [%d/%d] %s',
           [websitePtr, websites.Count, website]) + ' | ' + RS_IndexingNewTitle + '...';
         Synchronize(MainThreadShowGetting);
@@ -621,7 +568,7 @@ begin
               begin
                 if Terminated then
                   Break;
-                if SameText(links.Strings[j], links.Strings[k]) then
+                if SameText(links[j], links[k]) then
                 begin
                   links.Delete(j);
                   names.Delete(j);
@@ -645,7 +592,7 @@ begin
           begin
             if Terminated then
               Break;
-            if dataLinks.Find(links[j], integer(workPtr)) then
+            if mainDataProcess.Locate(DATA_PARAM_LINK, links[j]) then
             begin
               links.Delete(j);
               names.Delete(j);
@@ -654,45 +601,9 @@ begin
               Inc(j);
           end;
         end;
-        dataLinks.Clear;
 
-        mainDataProcess.Clear;
-        mainDataProcess.LoadFromFile(website);
-
-        if OptionUpdateListRemoveDuplicateLocalData then
-        begin
-          FStatus := RS_UpdatingList + Format(' [ %d/%d] %s',
-            [websitePtr, websites.Count, website]) + ' | ' + RS_RemovingDuplicateFromLocalData + '...';
-          Synchronize(MainThreadShowGetting);
-          if mainDataProcess.Link.Count > 0 then
-          begin
-            j := 0;
-            while j < (mainDataProcess.Link.Count - 1) do
-            begin
-              if Terminated then
-                Break;
-              del := False;
-              if (j + 1) < mainDataProcess.Link.Count then
-                for k := j + 1 to mainDataProcess.Link.Count - 1 do
-                begin
-                  if Terminated then
-                    Break;
-
-                  if SameText(mainDataProcess.Link.Strings[j],
-                    mainDataProcess.Link.Strings[k]) then
-                  begin
-                    mainDataProcess.Link.Delete(j);
-                    mainDataProcess.Title.Delete(j);
-                    mainDataProcess.Data.Delete(j);
-                    del := True;
-                    Break;
-                  end;
-                end;
-              if not del then
-                Inc(j);
-            end;
-          end;
-        end;
+        mainDataProcess.Close;
+        mainDataProcess.Open(website);
 
         //get manga info
         if links.Count > 0 then
@@ -700,23 +611,19 @@ begin
           if (SitesWithoutInformation(website)) or
             OptionUpdateListNoMangaInfo then
           begin
-            mainDataProcess.Title.AddStrings(names);
-            mainDataProcess.Link.AddStrings(links);
             for k := 0 to links.Count - 1 do
             begin
-              mainDataProcess.Data.Add(
-                RemoveStringBreaks(
-                SetParams(
-                [names.Strings[k],
-                links.Strings[k],
+              mainDataProcess.AddData(
+                names[k],
+                links[k],
                 '',
                 '',
                 '',
                 '',
                 '',
-                '0',
-                IntToStr(GetCurrentJDN),
-                '0'])));
+                0,
+                Now
+                );
             end;
           end
           else
@@ -736,7 +643,7 @@ begin
           Synchronize(MainThreadShowGetting);
           { TODO -ocholif : Sort after update }
           mainDataProcess.Sort;
-          mainDataProcess.SaveToFile(website);
+          mainDataProcess.Save;
         end;
         Synchronize(RefreshList);
         if Terminated then
