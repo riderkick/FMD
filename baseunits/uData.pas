@@ -165,8 +165,9 @@ type
     procedure AddInfoToDataWithoutBreak(const Name, link: String;
       const DataProcess: TDataProcess);
     // Only use this function for update manga list
-    procedure AddInfoToData(const Name, link: String; const DataProcess: TDataProcess);
-
+    procedure AddInfoToData(const Name, link: String; const DataProcess: TDataProcess); overload;
+    // to add data to TDBDataProcess
+    procedure AddInfoToData(const Title, Link: string; const DataProcess: TDBDataProcess); overload;
     //wrapper
     function GetPage(var output: TObject; URL: String; const Reconnect: Cardinal): Boolean; overload;
   end;
@@ -2681,6 +2682,21 @@ begin
   DataProcess.jdn.Add(Pointer(StrToInt('0')));
   {$ENDIF}
   l.Free;
+end;
+
+procedure TMangaInformation.AddInfoToData(const Title, Link: string;
+  const DataProcess: TDBDataProcess);
+begin
+  if Assigned(DataProcess) then
+  begin
+    if Title <> '' then
+      mangaInfo.title := Title;
+    if Link <> '' then
+      mangaInfo.link := Link;
+    with mangaInfo do
+      DataProcess.AddData(title, link, authors, artists, genres, status,
+        StringBreaks(summary), numChapter, DateToJDN(Now));
+  end;
 end;
 
 function TMangaInformation.GetPage(var output: TObject; URL: String;
