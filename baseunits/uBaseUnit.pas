@@ -52,7 +52,6 @@ const
   DATA_PARAM_SUMMARY    = 6;
   DATA_PARAM_NUMCHAPTER = 7;
   DATA_PARAM_JDN        = 8;
-  DATA_PARAM_READ       = 9;
 
   FILTER_HIDE = 0;
   FILTER_SHOW = 1;
