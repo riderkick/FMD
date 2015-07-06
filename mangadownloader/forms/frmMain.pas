@@ -2135,6 +2135,7 @@ begin
       dataProcess.FilterAllSites := True;
     end;
 
+    vtMangaList.Clear;
     if dataProcess.Filter(checkGenres, uncheckGenres,
       edFilterTitle.Text, edFilterAuthors.Text,
       edFilterArtists.Text, IntToStr(cbFilterStatus.ItemIndex),
@@ -2143,7 +2144,6 @@ begin
       rbAll.Checked, cbOnlyNew.Checked, cbUseRegExpr.Checked) then
     begin
       lbMode.Caption := Format(RS_ModeFiltered, [dataProcess.DataCount]);
-      vtMangaList.Clear;
       vtMangaList.RootNodeCount := dataProcess.DataCount;
     end;
   except
