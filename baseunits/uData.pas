@@ -14,8 +14,8 @@ unit uData;
 interface
 
 uses
-  Classes, SysUtils, uBaseUnit, uFMDThread, LazFileUtils, sqlite3conn, sqldb,
-  db, USimpleLogger, strutils, dateutils, RegExpr, sqlite3dyn, httpsend;
+  Classes, SysUtils, uBaseUnit, uFMDThread, FileUtil, LazFileUtils, sqlite3conn,
+  sqldb, db, USimpleLogger, strutils, dateutils, RegExpr, sqlite3dyn, httpsend;
 
 type
 
@@ -193,6 +193,9 @@ const
                               'jdn INTEGER);';
 
   procedure ConvertDataProccessToDB(AWebsite: String; DeleteOriginal: Boolean = False);
+  function DBDataProcessExist(const AWebsite: string): Boolean;
+  procedure CopyDBDataProcess(const AWebsite, NWebsite: string);
+  procedure OverwriteDBDataProcess(const AWebsite, NWebsite: string);
 
 implementation
 
@@ -283,6 +286,32 @@ begin
     end;
     if DeleteOriginal then
       DeleteFileUTF8(filepath + DATA_EXT);
+  end;
+end;
+
+function DBDataProcessExist(const AWebsite: string): Boolean;
+begin
+  if AWebsite = '' then Exit(False);
+  Result := FileExistsUTF8(fmdDirectory + DATA_FOLDER + AWebsite + DBDATA_EXT);
+end;
+
+procedure CopyDBDataProcess(const AWebsite, NWebsite: string);
+begin
+  if DBDataProcessExist(AWebsite) then
+  begin
+    CopyFile(fmdDirectory + DATA_FOLDER + AWebsite + DBDATA_EXT,
+      fmdDirectory + DATA_FOLDER + NWebsite + DBDATA_EXT);
+  end;
+end;
+
+procedure OverwriteDBDataProcess(const AWebsite, NWebsite: string);
+begin
+  if FileExistsUTF8(fmdDirectory + DATA_FOLDER + NWebsite + DBDATA_EXT) then
+  begin
+    if FileExistsUTF8(fmdDirectory + DATA_FOLDER + AWebsite + DBDATA_EXT) then
+      DeleteFileUTF8(fmdDirectory + DATA_FOLDER + AWebsite + DBDATA_EXT);
+    RenameFileUTF8(fmdDirectory + DATA_FOLDER + AWebsite + DBDATA_EXT,
+      fmdDirectory + DATA_FOLDER + NWebsite + DBDATA_EXT);
   end;
 end;
 
@@ -488,11 +517,11 @@ end;
 
 procedure TDBDataProcess.Close;
 begin
-  FQuery.Close;
   FFiltered := False;
   FDataCount := 0;
   if FConn.Connected then
   begin
+    FQuery.Close;
     FTrans.Commit;
     FTrans.Active := False;
     FConn.Connected := False;

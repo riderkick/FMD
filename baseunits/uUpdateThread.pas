@@ -57,7 +57,7 @@ type
     isFinishSearchingForNewManga, isDownloadFromServer, isDoneUpdateNecessary: Boolean;
     mainDataProcess: TDBDataProcess;
     names, links, websites: TStringList;
-    website: String;
+    website, twebsite: String;
     workPtr, directoryCount,
     // for fakku's doujinshi only
     directoryCount2, numberOfThreads, websitePtr: Cardinal;
@@ -316,12 +316,17 @@ begin
         edSearch.Clear;
         vtMangaList.Clear;
         if dataProcess = nil then
-          dataProcess := TDBDataProcess.Create;
+          dataProcess := TDBDataProcess.Create
+        else
+          dataProcess.Close;
+        OverwriteDBDataProcess(website, twebsite);
         dataProcess.Open(website);
         vtMangaList.RootNodeCount := dataProcess.DataCount;
         lbMode.Caption := Format(RS_ModeAll, [dataProcess.DataCount]);
         Screen.Cursor := crDefault;
-      end;
+      end
+      else
+        OverwriteDBDataProcess(website, twebsite);
     end;
   except
     on E: Exception do
@@ -509,9 +514,12 @@ begin
           [websitePtr, websites.Count, website]) + ' | ' + RS_Preparing + '...';
         Synchronize(MainThreadShowGetting);
 
-        if not mainDataProcess.Open(website) then
+        twebsite := '__' + website;
+        CopyDBDataProcess(website, twebsite);
+
+        if not mainDataProcess.Open(twebsite) then
         begin
-          mainDataProcess.CreateDatabase(website);
+          mainDataProcess.CreateDatabase(twebsite);
           mainDataProcess.OpenTable;
         end;
 
