@@ -7,7 +7,6 @@
 unit uUpdateThread;
 
 {$mode delphi}
-{$DEFINE DOWNLOADER}
 
 interface
 
@@ -87,12 +86,7 @@ resourcestring
 implementation
 
 uses
-  {$IFDEF DOWNLOADER}
-  frmMain,
-  {$ELSE}
-  mainunit,
-  {$ENDIF}
-  Dialogs, ComCtrls, Forms, Controls;
+  frmMain, Dialogs, ComCtrls, Forms, Controls;
 
 // ----- TUpdateMangaThread -----
 
@@ -187,14 +181,12 @@ begin
         //Synchronize(MainThreadUpdateNamesAndLinks);
         // For Fakku and Pururin only, reduce the number of page we have to visit
         // in order to search for new series.
-        {$IFDEF DOWNLOADER}
         if SitesWithSortedList(manager.website) then
         begin
           if links.Count > 0 then
             if manager.dataLinks.Find(links.Strings[0], iPos) then
               manager.isFinishSearchingForNewManga := True;
         end;
-        {$ENDIF}
 
         //**removing hostname in links
         RemoveHostFromURLs(links);
@@ -214,11 +206,8 @@ begin
       CS_INFO:
       begin
         Info.mangaInfo.title := manager.names[workPtr];
-        {$IFDEF DOWNLOADER}
-        Info.GetInfoFromURL(manager.website, manager.links[workPtr], 5);
-        {$ELSE}
-        Info.GetInfoFromURL(manager.website, manager.links[workPtr], 0);
-        {$ENDIF}
+        Info.GetInfoFromURL(manager.website, manager.links[workPtr],
+          MainForm.DLManager.retryConnect);
         if not Terminated then
         begin
           manager.CS_AddInfoToData.Acquire;
@@ -259,11 +248,10 @@ begin
   inherited DoTerminate;
 end;
 
-// ----- TUpdateMangaManagerThread -----
+{ TUpdateMangaManagerThread }
 
 procedure TUpdateMangaManagerThread.MainThreadShowGetting;
 begin
-  {$IFDEF DOWNLOADER}
   if MainForm.sbUpdateList.Visible = False then
   begin
     //statusbar reordering based on who's show up first?
@@ -276,7 +264,6 @@ begin
   end;
   MainForm.sbMain.SizeGrip := not MainForm.sbUpdateList.Visible;
   MainForm.sbUpdateList.Panels[0].Text := FStatus;
-  {$ENDIF}
 end;
 
 procedure TUpdateMangaManagerThread.MainThreadEndGetting;
@@ -313,32 +300,15 @@ begin
   dataLinks.Free;
   mainDataProcess.Free;
   threads.Free;
-  {$IFDEF DOWNLOADER}
   MainForm.isUpdating := False;
-  {$ENDIF}
   CS_AddInfoToData.Free;
   CS_AddNamesAndLinks.Free;
   CS_threads.Free;
   inherited Destroy;
 end;
 
-{$IFNDEF DOWNLOADER}
-procedure TUpdateMangaManagerThread.ConsoleReport;
-begin
-  MainForm.Memo1.Lines.Add(S);
-end;
-
-procedure TUpdateMangaManagerThread.SaveCurrentDatabase;
-begin
-  mainDataProcess.SaveToFile(website);
-  MainForm.Memo1.Lines.Clear;
-end;
-
-{$ENDIF}
-
 procedure TUpdateMangaManagerThread.RefreshList;
 begin
-  {$IFDEF DOWNLOADER}
   try
     with MainForm do
     begin
@@ -359,7 +329,6 @@ begin
     on E: Exception do
       MainForm.ExceptionHandler(Self, E);
   end;
-  {$ENDIF}
 end;
 
 procedure TUpdateMangaManagerThread.DlgReport;
@@ -426,7 +395,6 @@ begin
         numberOfThreads := 1;  //default
 
       // Finish searching for new series
-      {$IFDEF DOWNLOADER}
       if ((cs = CS_DIRECTORY_PAGE) or (cs = CS_DIRECTORY_PAGE_2)) and
         (isFinishSearchingForNewManga) then
       begin
@@ -434,7 +402,6 @@ begin
         workPtr := limit;
         Break;
       end;
-      {$ENDIF}
 
       while threads.Count >= numberOfThreads do
       begin
@@ -477,15 +444,8 @@ begin
             s := s + ' | ' + RS_GettingInfo + ' "' + names.Strings[workPtr - 1] +
               '" "' + WebsiteRoots[GetMangaSiteID(website), 1] +
               links.Strings[workPtr - 1] + '"';
-          {$IFNDEF DOWNLOADER}
-          Synchronize(ConsoleReport);
-          if (workPtr mod 100 = 0) and (workPtr > 50) and (cs = CS_INFO) and
-            (mainDataProcess.Data.Count > 5) then
-            Synchronize(SaveCurrentDatabase);
-          {$ELSE}
           FStatus := s;
           Synchronize(MainThreadShowGetting);
-          {$ENDIF}
         finally
           CS_threads.Release;
         end;
@@ -529,7 +489,6 @@ begin
     Exit;
   try
     websitePtr := 0;
-    {$IFDEF DOWNLOADER}
     if isDownloadFromServer then
     begin
       while websitePtr < websites.Count do
@@ -544,7 +503,6 @@ begin
       end;
     end
     else
-    {$ENDIF}
       while websitePtr < websites.Count do
       begin
         website := websites.Strings[websitePtr];
@@ -736,7 +694,6 @@ begin
           end;
         end;
 
-
         //get manga info
         if links.Count > 0 then
         begin
@@ -747,7 +704,6 @@ begin
             mainDataProcess.Link.AddStrings(links);
             for k := 0 to links.Count - 1 do
             begin
-            {$IFDEF DOWNLOADER}
               mainDataProcess.Data.Add(
                 RemoveStringBreaks(
                 SetParams(
@@ -761,21 +717,6 @@ begin
                 '0',
                 IntToStr(GetCurrentJDN),
                 '0'])));
-            {$ELSE}
-              mainDataProcess.Data.Add(
-                RemoveStringBreaks(
-                SetParams(
-                [names.Strings[k],
-                links.Strings[k],
-                '',
-                '',
-                '',
-                '',
-                '',
-                '0',
-                '0',
-                '0'])));
-            {$ENDIF}
             end;
           end
           else
@@ -797,24 +738,12 @@ begin
           mainDataProcess.Sort;
           mainDataProcess.SaveToFile(website);
         end;
-        {$IFDEF DOWNLOADER}
         Synchronize(RefreshList);
-        {$ENDIF}
         if Terminated then
           Break;
         websites[websitePtr - 1] :=
           UTF8Encode(#$2714 + WideString(websites[websitePtr - 1]));
       end;
-    {$IFNDEF DOWNLOADER}
-    S := 'Saving to ' + website + '.dat ...';
-    Synchronize(ConsoleReport);
-    S := 'Done.';
-    Synchronize(ConsoleReport);
-    {$ELSE}
-    // Synchronize(DlgReport);
-    //Synchronize(MainThreadEndGetting);
-    {$ENDIF}
-    // Synchronize(DlgReport);
   except
     on E: Exception do
       MainForm.ExceptionHandler(Self, E);
