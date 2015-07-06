@@ -15,7 +15,7 @@ interface
 
 uses
   Classes, SysUtils, uBaseUnit, uFMDThread, sqlite3conn, sqldb, USimpleLogger,
-  strutils, RegExpr, sqlite3, FileUtil, httpsend;
+  strutils, dateutils, RegExpr, sqlite3, FileUtil, httpsend;
 
 type
 
@@ -53,7 +53,9 @@ type
     procedure Save;
     procedure Refresh;
     procedure AddData(Title, Link, Authors, Artists, Genres, Status, Summary: String;
-      NumChapter, JDN: Integer);
+      NumChapter, JDN: Integer); overload;
+    procedure AddData(Title, Link, Authors, Artists, Genres, Status, Summary: String;
+      NumChapter: Integer; JDN: TDateTime); overload;
     procedure ApplyUpdates;
     function Search(ATitle: String): Boolean;
     function CanFilter(const checkedGenres, uncheckedGenres: TStringList;
@@ -351,8 +353,9 @@ begin
   FConn := TSQLite3Connectionx.Create(nil);
   FTrans := TSQLTransaction.Create(nil);
   FQuery := TSQLQuery.Create(nil);
-  FConn.Transaction := FTrans;
-  FQuery.DataBase := FConn;
+  FTrans.DataBase := FConn;
+  FQuery.Transaction := FTrans;
+  FQuery.DataBase := FTrans.DataBase;
   FRegxp := TRegExpr.Create;
   FRegxp.ModifierI := True;
   FSitesList := TStringList.Create;
@@ -456,6 +459,13 @@ begin
     on E: Exception do
       WriteLog_E('TDBDataProcess.AddData.Error: ' + E.Message + LineEnding + GetStackTraceInfo);
   end;
+end;
+
+procedure TDBDataProcess.AddData(Title, Link, Authors, Artists, Genres, Status,
+  Summary: String; NumChapter: Integer; JDN: TDateTime);
+begin
+  Self.AddData(Title, Link, Authors, Artists, Genres, Status, Summary,
+    NumChapter, DateToJDN(JDN));
 end;
 
 procedure TDBDataProcess.ApplyUpdates;
