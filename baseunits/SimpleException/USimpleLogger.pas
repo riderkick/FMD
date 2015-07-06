@@ -25,7 +25,7 @@ unit USimpleLogger;
 interface
 
 uses
-  Classes, SysUtils, DbgInfoReader, FileUtil;
+  Classes, SysUtils, DbgInfoReader, LazFileUtils, LazUTF8;
 
 type
   TLogType = (ERROR, WARNING, INFO, DEBUG, VERBOSE);

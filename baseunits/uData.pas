@@ -964,7 +964,7 @@ begin
       for i := 0 to filterPos.Count - 1 do
       begin
         fpos := filterPos.Items[i];
-        if (currentJDN - Integer(jdn.Items[fpos]) >= minusDay) and
+        if (currentJDN - {%H-}Integer(jdn.Items[fpos]) >= minusDay) and
           (filterMark.Items[fpos] = FILTER_SHOW) then
           filterMark.Items[fpos] := FILTER_HIDE;
       end;

@@ -25,8 +25,8 @@ unit uTranslation;
 interface
 
 uses
-  Classes, SysUtils, strutils, gettext, FileUtil, LCLTranslator, Translations,
-  LResources, Forms;
+  Classes, SysUtils, strutils, gettext, LazFileUtils, LazUTF8,
+  LCLTranslator, Translations, LResources, Forms;
 
 type
   TLanguageItem = record

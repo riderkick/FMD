@@ -25,8 +25,8 @@ unit USimpleException;
 interface
 
 uses
-  Classes, SysUtils, FileUtil, Forms, Controls, LCLVersion, DbgInfoReader,
-  USimpleExceptionForm, USimpleLogger,
+  Classes, SysUtils, LazFileUtils, LazUTF8, Forms, Controls, LCLVersion,
+  DbgInfoReader, USimpleExceptionForm, USimpleLogger,
   {$IFDEF WINDOWS}
   windows, win32proc,
   {$ENDIF}

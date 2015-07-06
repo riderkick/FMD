@@ -11,8 +11,8 @@ unit uPacker;
 interface
 
 uses
-  Classes, FileUtil, Zipper, SysUtils, uBaseUnit, uImg2Pdf, USimpleException,
-  USimpleLogger;
+  Classes, Zipper, SysUtils, uBaseUnit, uImg2Pdf, FileUtil,
+  USimpleException, USimpleLogger;
 
 type
   TPacker = class
@@ -30,7 +30,7 @@ type
 implementation
 
 uses
-  lazutf8classes;
+  lazutf8classes, LazFileUtils;
 
 procedure TPacker.OnFileFound(FileIterator: TFileIterator);
 begin

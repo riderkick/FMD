@@ -11,7 +11,7 @@ unit uFavoritesManager;
 interface
 
 uses
-  Classes, SysUtils, Dialogs, IniFiles, syncobjs, lazutf8classes, FileUtil,
+  Classes, SysUtils, Dialogs, IniFiles, syncobjs, lazutf8classes, LazFileUtils,
   uBaseUnit, uData, uDownloadsManager, uFMDThread, uMisc, USimpleLogger;
 
 type

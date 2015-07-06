@@ -12,8 +12,8 @@ unit uUpdateThread;
 interface
 
 uses
-  Classes, SysUtils, typinfo, FileUtil, syncobjs, uData, uBaseUnit,
-  uFMDThread, uTranslation;
+  Classes, SysUtils, typinfo, syncobjs, uData, LazFileUtils,
+  uBaseUnit, uFMDThread, uTranslation;
 
 type
   TUpdateMangaManagerThread = class;

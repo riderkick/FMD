@@ -37,7 +37,7 @@ type
     // IDropTarget
     function DragEnter(const dataObj: IDataObject; grfKeyState: DWORD;
       pt: TPoint; var dwEffect: DWORD): HResult; stdcall;
-    function DragOver(grfKeyState: DWORD; pt: TPoint;
+    function {%H-}DragOver(grfKeyState: DWORD; pt: TPoint;
       var dwEffect: DWORD): HResult; stdcall;
     function DragLeave: HResult; stdcall;
     function Drop(const dataObj: IDataObject; grfKeyState: DWORD;

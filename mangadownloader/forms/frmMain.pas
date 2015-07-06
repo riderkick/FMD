@@ -19,7 +19,7 @@ uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, LCLType,
   ExtCtrls, ComCtrls, Buttons, Spin, Menus, VirtualTrees, RichMemo, IniFiles,
   simpleipc, lclproc, types, strutils, LCLIntf, DefaultTranslator, EditBtn,
-  LazUTF8, FileUtil, TAGraph, TASources, TASeries, AnimatedGif,
+  FileUtil, TAGraph, TASources, TASeries, AnimatedGif,
   uBaseUnit, uData, uDownloadsManager, uFavoritesManager, uUpdateThread,
   uUpdateDBThread, uSubThread, uSilentThread, uMisc, uGetMangaInfosThread,
   uTranslation, frmDropTarget, USimpleException, USimpleLogger;
@@ -707,7 +707,7 @@ implementation
 {$R *.lfm}
 
 uses
-  frmImportFavorites, RegExpr, Clipbrd, LazFileUtils;
+  frmImportFavorites, RegExpr, Clipbrd, LazFileUtils, LazUTF8;
 
 { TMainForm }
 
