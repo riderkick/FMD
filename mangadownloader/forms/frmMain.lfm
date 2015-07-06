@@ -3135,7 +3135,6 @@ object MainForm: TMainForm
         OnDragOver = vtMangaListDragOver
         OnGetText = vtMangaListGetText
         OnGetHint = vtMangaListGetHint
-        OnGetNodeDataSize = vtMangaListGetNodeDataSize
       end
       object edSearch: TEdit
         Left = 3

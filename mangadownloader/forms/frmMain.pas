@@ -499,8 +499,6 @@ type
     procedure vtMangaListDragOver(Sender : TBaseVirtualTree; Source : TObject;
       Shift : TShiftState; State : TDragState; const Pt : TPoint;
       Mode : TDropMode; var Effect : LongWord; var Accept : Boolean);
-    procedure vtMangaListGetNodeDataSize(Sender: TBaseVirtualTree;
-      var NodeDataSize: Integer);
     procedure vtMangaListBeforeCellPaint(Sender: TBaseVirtualTree;
       TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
       CellPaintMode: TVTCellPaintMode; CellRect: TRect; var ContentRect: TRect);
@@ -3808,13 +3806,6 @@ begin
   Accept := False;
 end;
 
-procedure TMainForm.vtMangaListGetNodeDataSize(Sender: TBaseVirtualTree;
-  var NodeDataSize: Integer);
-begin
-  Exit;
-  NodeDataSize := SizeOf(PMangaListItem);
-end;
-
 // options
 
 procedure TMainForm.btOptionApplyClick(Sender: TObject);
@@ -4044,7 +4035,6 @@ procedure TMainForm.vtMangaListBeforeCellPaint(Sender: TBaseVirtualTree;
   TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
   CellPaintMode: TVTCellPaintMode; CellRect: TRect; var ContentRect: TRect);
 begin
-  Exit;
   if (isExiting) or (dataProcess.DataCount = 0) then
     Exit;
   if miHighlightNewManga.Checked then
