@@ -530,12 +530,14 @@ begin
       FFiltered := Active;
     except
       on E: Exception do
+      begin
         WriteLog_E('TDBDataProcess.Filter.Error: ' + E.Message +
           LineEnding + GetStackTraceInfo);
-      Close;
-      SQL.Text := FSQLSelect;
-      Open;
-      FFiltered := False;
+        Close;
+        SQL.Text := FSQLSelect;
+        Open;
+        FFiltered := False;
+      end;
     end;
     Result := FFiltered;
   end;
