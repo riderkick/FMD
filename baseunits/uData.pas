@@ -69,6 +69,7 @@ type
       const stTitle, stAuthors, stArtists, stStatus, stSummary: String;
       const minusDay: Cardinal; const haveAllChecked, searchNewManga: Boolean;
       useRegExpr: Boolean = False): Boolean;
+    function Locate(FieldIndex: Integer; Value: String): Boolean;
     procedure RemoveFilter;
     procedure Sort;
     property Website: String read FWebsite write FWebsite;
@@ -2695,7 +2696,7 @@ begin
       mangaInfo.link := Link;
     with mangaInfo do
       DataProcess.AddData(title, link, authors, artists, genres, status,
-        StringBreaks(summary), numChapter, DateToJDN(Now));
+        StringBreaks(summary), numChapter, Now);
   end;
 end;
 
