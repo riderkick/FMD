@@ -487,7 +487,6 @@ begin
   if FConn.Connected then
   begin
     FTrans.Commit;
-    VacuumTable;
     FTrans.Active := False;
     FConn.Connected := False;
   end;
