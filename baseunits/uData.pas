@@ -417,6 +417,7 @@ var
   filepath: String;
 begin
   Result := False;
+  Self.Close;
   if AWebsite <> '' then FWebsite := AWebsite;
   if FWebsite = '' then Exit;
   filepath := fmdDirectory + DATA_FOLDER + FWebsite + DBDATA_EXT;
@@ -424,7 +425,6 @@ begin
     ConvertDataProccessToDB(AWebsite, True);
   if not FileExistsUTF8(filepath) then Exit;
   try
-    Self.Close;
     if InternalOpen(filepath) then
     begin
       if not TableExist(FTableName) then
@@ -488,6 +488,8 @@ begin
     FQuery.Close;
     FTrans.Active := False;
     FConn.Connected := False;
+    FFiltered := False;
+    FDataCount := 0;
   end;
 end;
 
