@@ -54,14 +54,6 @@ type
     function Open(AWebsite: String = ''): Boolean;
     function OpenTable(const ATableName: String = ''): Boolean;
     function TableExist(const ATableName: String): Boolean;
-    procedure Close;
-    procedure Save;
-    procedure Refresh;
-    procedure AddData(Title, Link, Authors, Artists, Genres, Status, Summary: String;
-      NumChapter, JDN: Integer); overload;
-    procedure AddData(Title, Link, Authors, Artists, Genres, Status, Summary: String;
-      NumChapter: Integer; JDN: TDateTime); overload;
-    procedure ApplyUpdates;
     function Search(ATitle: String): Boolean;
     function CanFilter(const checkedGenres, uncheckedGenres: TStringList;
       const stTitle, stAuthors, stArtists, stStatus, stSummary: String;
@@ -71,6 +63,15 @@ type
       const minusDay: Cardinal; const haveAllChecked, searchNewManga: Boolean;
       useRegExpr: Boolean = False): Boolean;
     function Locate(FieldIndex: Integer; Value: String): Boolean;
+    procedure CreateDatabase(AWebsite: string = '');
+    procedure Close;
+    procedure Save;
+    procedure Refresh;
+    procedure AddData(Title, Link, Authors, Artists, Genres, Status, Summary: String;
+      NumChapter, JDN: Integer); overload;
+    procedure AddData(Title, Link, Authors, Artists, Genres, Status, Summary: String;
+      NumChapter: Integer; JDN: TDateTime); overload;
+    procedure ApplyUpdates;
     procedure RemoveFilter;
     procedure Sort;
     property Website: String read FWebsite write FWebsite;
@@ -181,13 +182,13 @@ const
   DBDataProcessParam = 'title,link,authors,artists,genres,status,summary,numchapter,jdn';
   DBDataProcessParams: array [0..8] of ShortString =
     ('title', 'link', 'authors', 'artists', 'genres', 'status', 'summary', 'numchapter', 'jdn');
-  DBDataProccesCreateParam = '(title TEXT,'+
-                              'link TEXT NOT NULL PRIMARY KEY,'+
-                              'authors TEXT,'+
-                              'artists TEXT,'+
-                              'genres TEXT,'+
-                              'status TEXT,'+
-                              'summary TEXT,'+
+  DBDataProccesCreateParam = '(title STRING,'+
+                              'link STRING NOT NULL PRIMARY KEY,'+
+                              'authors STRING,'+
+                              'artists STRING,'+
+                              'genres STRING,'+
+                              'status STRING,'+
+                              'summary STRING,'+
                               'numchapter INTEGER,'+
                               'jdn INTEGER);';
 
@@ -262,8 +263,7 @@ begin
       if FileExistsUTF8(filepath + DBDATA_EXT) then
         DeleteFileUTF8(filepath + DBDATA_EXT);
       rawdata.LoadFromFile(AWebsite);
-      dbdata.InternalOpen(filepath + DBDATA_EXT);
-      dbdata.CreateTable;
+      dbdata.CreateDatabase(AWebsite);
       if rawdata.Data.Count > 0 then
       with rawdata do
       begin
@@ -626,7 +626,7 @@ end;
 function TDBDataProcess.Locate(FieldIndex: Integer; Value: String): Boolean;
 begin
   Result := false;
-  if FQuery.Active then
+  if (FQuery.Active) and (FDataCount > 0) then
   begin
     EnterCriticalsection(FCSRecord);
     try
@@ -635,6 +635,20 @@ begin
       LeaveCriticalsection(FCSRecord);
     end;
   end;
+end;
+
+procedure TDBDataProcess.CreateDatabase(AWebsite: string);
+var
+  filepath: string;
+begin
+  if AWebsite <> '' then
+    FWebsite := AWebsite;
+  if FWebsite = '' then Exit;
+  filepath := fmdDirectory + DATA_FOLDER + FWebsite + DBDATA_EXT;
+  if FileExistsUTF8(filepath) then
+    DeleteFileUTF8(filepath);
+  InternalOpen(filepath);
+  CreateTable;
 end;
 
 procedure TDBDataProcess.RemoveFilter;
