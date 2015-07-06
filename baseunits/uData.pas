@@ -370,6 +370,7 @@ begin
     (ParamNo < Length(DBDataProcessParams)) and
     (RecIndex < FDataCount) then
   begin
+    EnterCriticalsection(FCSRecord);
     try
       FQuery.RecNo := RecIndex+1;
       Result:= FQuery.FieldByName(DBDataProcessParams[ParamNo]).AsString;
@@ -378,6 +379,7 @@ begin
         WriteLog_E('TDBDataProcess.GetParam.Error: ' + E.Message +
           LineEnding + GetStackTraceInfo);
     end;
+    LeaveCriticalsection(FCSRecord);
   end;
 end;
 
