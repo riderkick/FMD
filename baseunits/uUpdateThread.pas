@@ -56,7 +56,7 @@ type
   public
     CS_AddInfoToData, CS_AddNamesAndLinks: TCriticalSection;
     isFinishSearchingForNewManga, isDownloadFromServer, isDoneUpdateNecessary: Boolean;
-    mainDataProcess, syncProcess: TDataProcess;
+    mainDataProcess: TDataProcess;
     names, links, websites, dataLinks: TStringList;
     website: String;
     workPtr, directoryCount,
@@ -301,7 +301,6 @@ begin
   dataLinks := TStringList.Create;
 
   mainDataProcess := TDataProcess.Create;
-  syncProcess := TDataProcess.Create;
 
   threads := TFPList.Create;
 end;
@@ -313,7 +312,6 @@ begin
   links.Free;
   dataLinks.Free;
   mainDataProcess.Free;
-  syncProcess.Free;
   threads.Free;
   {$IFDEF DOWNLOADER}
   MainForm.isUpdating := False;
@@ -342,17 +340,20 @@ procedure TUpdateMangaManagerThread.RefreshList;
 begin
   {$IFDEF DOWNLOADER}
   try
-    if MainForm.cbSelectManga.Items[MainForm.cbSelectManga.ItemIndex] = website then
+    with MainForm do
     begin
-      Screen.Cursor := crHourGlass;
-      MainForm.edSearch.Clear;
-      MainForm.dataProcess.RemoveFilter;
-      MainForm.dataProcess.Refresh;
-      MainForm.vtMangaList.Clear;
-      MainForm.vtMangaList.RootNodeCount := MainForm.dataProcess.DataCount;
-      MainForm.lbMode.Caption :=
-        Format(RS_ModeAll, [MainForm.dataProcess.DataCount]);
-      Screen.Cursor := crDefault;
+      if cbSelectManga.Items[cbSelectManga.ItemIndex] = website then
+      begin
+        Screen.Cursor := crHourGlass;
+        edSearch.Clear;
+        vtMangaList.Clear;
+        if dataProcess = nil then
+          dataProcess := TDBDataProcess.Create;
+        dataProcess.Open(website);
+        vtMangaList.RootNodeCount := dataProcess.DataCount;
+        lbMode.Caption := Format(RS_ModeAll, [dataProcess.DataCount]);
+        Screen.Cursor := crDefault;
+      end;
     end;
   except
     on E: Exception do
@@ -785,106 +786,6 @@ begin
           WaitForThreads;
           names.Clear;
           links.Clear;
-
-          // sync data based on existing sites
-          if (mainDataProcess.Data.Count > 0) and
-            (SitesWithoutInformation(website)) and
-            (FileExistsUTF8(DATA_FOLDER + WebsiteRoots[BATOTO_ID, 0] + DATA_EXT) or
-             FileExistsUTF8(DATA_FOLDER + WebsiteRoots[ANIMEA_ID, 0] + DATA_EXT) or
-             FileExistsUTF8(DATA_FOLDER + WebsiteRoots[MANGAGO_ID, 0] + DATA_EXT) or
-             FileExistsUTF8(DATA_FOLDER + WebsiteRoots[MANGAPARK_ID, 0] + DATA_EXT))
-            then
-          begin
-            FStatus := RS_UpdatingList + Format(' [%d/%d] %s',
-              [websitePtr, websites.Count, website]) + ' | ' + RS_SynchronizingData + '...';
-            Synchronize(MainThreadShowGetting);
-
-            syncProcess.Clear;
-            if FileExistsUTF8(DATA_FOLDER + WebsiteRoots[GetMangaSiteID(website), 0] + DATA_EXT) then
-              syncProcess.LoadFromFile(website);
-
-            //remove existed data
-            if syncProcess.Data.Count > 0 then
-            begin
-              j := 0;
-              while j < mainDataProcess.Link.Count do
-              begin
-                if Terminated then
-                  Break;
-                del := False;
-                for k := 0 to syncProcess.Link.Count - 1 do
-                begin
-                  if Terminated then
-                    Break;
-                  if SameText(mainDataProcess.Link[j], syncProcess.Link[k]) then
-                  begin
-                    mainDataProcess.Title.Delete(j);
-                    mainDataProcess.Link.Delete(j);
-                    mainDataProcess.Data.Delete(j);
-                    del := True;
-                    Break;
-                  end;
-                end;
-                if not del then
-                  Inc(j);
-              end;
-            end;
-
-            syncProcess.Clear;
-            if mainDataProcess.Link.Count > 0 then
-            begin
-              if FileExistsUTF8(DATA_FOLDER + WebsiteRoots[BATOTO_ID, 0] + DATA_EXT) then
-                syncProcess.LoadFromFile(WebsiteRoots[BATOTO_ID, 0])
-              else
-              if FileExistsUTF8(DATA_FOLDER + WebsiteRoots[ANIMEA_ID, 0] + DATA_EXT) then
-                syncProcess.LoadFromFile(WebsiteRoots[ANIMEA_ID, 0])
-              else
-              if FileExistsUTF8(DATA_FOLDER + WebsiteRoots[MANGAGO_ID, 0] + DATA_EXT) then
-                syncProcess.LoadFromFile(WebsiteRoots[MANGAGO_ID, 0])
-              else
-              if FileExistsUTF8(DATA_FOLDER + WebsiteRoots[MANGAPARK_ID, 0] + DATA_EXT) then
-                syncProcess.LoadFromFile(WebsiteRoots[MANGAPARK_ID, 0]);
-
-              // brute force ...
-              if syncProcess.Link.Count > 0 then
-              begin
-                for k := 0 to mainDataProcess.Data.Count - 1 do
-                begin
-                  if Terminated then
-                    Break;   
-                  for j := 0 to syncProcess.Link.Count - 1 do
-                  begin
-                    if Terminated then
-                      Break;                    
-                    if SameText(mainDataProcess.Title[k], syncProcess.Title[j]) then
-                    begin                      
-                      s := syncProcess.Param[j, DATA_PARAM_SUMMARY];                                           
-                      mainDataProcess.Data.Strings[k] := RemoveBreaks(
-                        mainDataProcess.Param[k, DATA_PARAM_NAME] + SEPERATOR +
-                        mainDataProcess.Param[k, DATA_PARAM_LINK] + SEPERATOR +
-                        syncProcess.Param[j, DATA_PARAM_AUTHORS] + SEPERATOR +
-                        syncProcess.Param[j, DATA_PARAM_ARTISTS] + SEPERATOR +
-                        syncProcess.Param[j, DATA_PARAM_GENRES] + SEPERATOR +
-                        mainDataProcess.Param[k, DATA_PARAM_STATUS] + SEPERATOR +
-                        s + SEPERATOR +
-                        mainDataProcess.Param[k, DATA_PARAM_NUMCHAPTER] + SEPERATOR +
-                        mainDataProcess.Param[k, DATA_PARAM_JDN] + SEPERATOR);
-                      Break;
-                    end;
-                  end;
-                end;
-              end;
-              syncProcess.Clear;
-              // add back existing data
-              if FileExistsUTF8(DATA_FOLDER + WebsiteRoots[GetMangaSiteID(website), 0] + DATA_EXT) then
-              begin
-                syncProcess.LoadFromFile(website);
-                if syncProcess.Data.Count > 0 then
-                  mainDataProcess.Data.AddStrings(syncProcess.Data);
-                syncProcess.Clear;
-              end;
-            end;
-          end;
         end;
 
         if (not Terminated) or (not SitesWithSortedList(website)) then
