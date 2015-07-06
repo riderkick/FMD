@@ -18,8 +18,8 @@ uses
   {$else}
   UTF8Process,
   {$endif}
-  SysUtils, Classes, Graphics, Forms, lazutf8classes, LazUTF8, strutils,
-  fileinfo, fpjson, jsonparser, FastHTMLParser, fgl, FileUtil, RegExpr,
+  SysUtils, Classes, Graphics, Forms, lazutf8classes, LazUTF8, LazFileUtils,
+  strutils, fileinfo, fpjson, jsonparser, FastHTMLParser, fgl, RegExpr,
   synautil, httpsend, blcksock, ssl_openssl, GZIPUtils, uFMDThread, uMisc,
   USimpleException, USimpleLogger;
 

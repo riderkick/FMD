@@ -14,8 +14,8 @@ unit uData;
 interface
 
 uses
-  Classes, SysUtils, uBaseUnit, uFMDThread, sqlite3conn, sqldb, USimpleLogger,
-  strutils, dateutils, RegExpr, sqlite3, sqlite3dyn, FileUtil, httpsend;
+  Classes, SysUtils, uBaseUnit, uFMDThread, LazFileUtils, sqlite3conn, sqldb,
+  USimpleLogger, strutils, dateutils, RegExpr, sqlite3dyn, httpsend;
 
 type
 

@@ -14,7 +14,7 @@ uses
     cthreads,
     {$ENDIF}
   {$ENDIF}
-  Forms, Interfaces, FileUtil, tachartlazaruspkg, simpleipc, IniFiles,
+  Forms, LazFileUtils, Interfaces, simpleipc, IniFiles,
   uBaseUnit, frmMain;
 
 var

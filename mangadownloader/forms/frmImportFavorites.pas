@@ -11,8 +11,8 @@ unit frmImportFavorites;
 interface
 
 uses
-  Classes, SysUtils, FileUtil, Forms, Dialogs, StdCtrls,
-  Buttons, DefaultTranslator, lazutf8classes, uBaseUnit, frmNewChapter;
+  Classes, SysUtils, Forms, Dialogs, StdCtrls, Buttons, DefaultTranslator,
+  lazutf8classes, LazFileUtils, uBaseUnit, frmNewChapter;
 
 type
 

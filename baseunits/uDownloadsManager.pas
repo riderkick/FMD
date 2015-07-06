@@ -11,7 +11,7 @@ unit uDownloadsManager;
 interface
 
 uses
-  lazutf8classes, jsHTMLUtil, FastHTMLParser, HTMLUtil, SynaCode, FileUtil,
+  lazutf8classes, LazFileUtils, jsHTMLUtil, FastHTMLParser, HTMLUtil, SynaCode,
   Controls, RegExpr, Imaging, ImagingTypes, ImagingCanvases, Classes, SysUtils,
   Dialogs, ExtCtrls, IniFiles, typinfo, syncobjs, httpsend, blcksock, uBaseUnit,
   uPacker, uFMDThread, uMisc, USimpleLogger, dateutils, frmShutdownCounter;
