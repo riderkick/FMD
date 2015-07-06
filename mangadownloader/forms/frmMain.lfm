@@ -140,10 +140,10 @@ object MainForm: TMainForm
         ClientWidth = 600
         TabOrder = 1
         object TransferRateGraph: TChart
-          Left = 321
+          Left = 323
           Height = 26
           Top = 0
-          Width = 279
+          Width = 277
           AllowZoom = False
           AxisList = <          
             item
@@ -201,12 +201,12 @@ object MainForm: TMainForm
           Left = 0
           Height = 28
           Top = 0
-          Width = 321
+          Width = 323
           Align = alLeft
           AutoSize = True
           BevelOuter = bvNone
           ClientHeight = 28
-          ClientWidth = 321
+          ClientWidth = 323
           TabOrder = 1
           object ToolBarDownload: TToolBar
             Left = 0
@@ -214,6 +214,7 @@ object MainForm: TMainForm
             Top = 0
             Width = 321
             AutoSize = True
+            BorderSpacing.Right = 2
             ButtonHeight = 25
             EdgeBorders = []
             Images = IconList
