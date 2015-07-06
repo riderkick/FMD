@@ -40,16 +40,19 @@ type
     FSitesList: TStringList;
     FSQLSelect: String;
   protected
-    function GetConnected: Boolean;
     procedure CreateTable;
     procedure VacuumTable;
     procedure GetDataCount;
+    function GetConnected: Boolean;
+    function InternalOpen(const FilePath: String = ''): Boolean;
     function GetWebsiteName(RecIndex: Integer): String;
     function GetParam(RecIndex, ParamNo: Integer): String;
   public
     constructor Create;
     destructor Destroy; override;
     function Open(AWebsite: String = ''): Boolean;
+    function OpenTable(const ATableName: String = ''): Boolean;
+    function TableExist(const ATableName: String): Boolean;
     procedure Close;
     procedure Save;
     procedure Refresh;
@@ -256,7 +259,8 @@ begin
       if FileExistsUTF8(filepath + DBDATA_EXT) then
         DeleteFileUTF8(filepath + DBDATA_EXT);
       rawdata.LoadFromFile(AWebsite);
-      dbdata.Open(AWebsite);
+      dbdata.InternalOpen(filepath + DBDATA_EXT);
+      dbdata.CreateTable;
       if rawdata.Data.Count > 0 then
       with rawdata do
       begin
@@ -268,6 +272,7 @@ begin
         end;
         dbdata.ApplyUpdates;
       end;
+      dbdata.OpenTable;
       dbdata.Sort;
     finally
       rawdata.Free;
@@ -279,11 +284,6 @@ begin
 end;
 
 { TDBDataProcess }
-
-function TDBDataProcess.GetConnected: Boolean;
-begin
-  Result := FConn.Connected;
-end;
 
 procedure TDBDataProcess.CreateTable;
 begin
@@ -316,6 +316,35 @@ begin
   end
   else
     FDataCount := 0;
+end;
+
+function TDBDataProcess.GetConnected: Boolean;
+begin
+  Result := FConn.Connected;
+end;
+
+function TDBDataProcess.InternalOpen(const FilePath: String): Boolean;
+begin
+  Result := False;
+  if FilePath <> '' then
+    FConn.DatabaseName := FilePath;
+  if FConn.DatabaseName = '' then Exit;
+  try
+    FConn.Connected := True;
+    sqlite3_create_collation(FConn.Handle, PChar('NATCMP'), SQLITE_UTF8, nil,
+      NaturalCompareCallback);
+    sqlite3_create_function(FConn.Handle, PChar('REGEXP'), 2, SQLITE_UTF8, FRegxp,
+      RegexCallback, nil, nil);
+    FTrans.Active := True;
+    Result := FConn.Connected;
+  except
+    on E: Exception do
+    begin
+      WriteLog_E('TDBDataProcess.InternalOpen.Error: ' + E.Message +
+        LineEnding + GetStackTraceInfo);
+      Result := False;
+    end;
+  end;
 end;
 
 function TDBDataProcess.GetWebsiteName(RecIndex: Integer): String;
@@ -385,47 +414,68 @@ end;
 
 function TDBDataProcess.Open(AWebsite: String): Boolean;
 var
-  ts: TStringList;
   filepath: String;
-  i: Integer;
 begin
   Result := False;
   if AWebsite <> '' then FWebsite := AWebsite;
   if FWebsite = '' then Exit;
-
   filepath := fmdDirectory + DATA_FOLDER + FWebsite + DBDATA_EXT;
   if not FileExistsUTF8(filepath) then
-    ConvertDataProccessToDB(AWebsite);
+    ConvertDataProccessToDB(AWebsite, True);
   if not FileExistsUTF8(filepath) then Exit;
-
   try
     Self.Close;
-    FConn.DatabaseName := filepath;
-    FConn.Connected := True;
-    sqlite3_create_collation(FConn.Handle, PChar('NATCMP'), SQLITE_UTF8, nil,
-      NaturalCompareCallback);
-    sqlite3_create_function(FConn.Handle, PChar('REGEXP'), 2, SQLITE_UTF8, FRegxp,
-      RegexCallback, nil, nil);
-    FTrans.Active := True;
-    ts := TStringList.Create;
-    try
-      FConn.GetTableNames(ts);
-      ts.Sort;
-      if not ts.Find(FTableName, i) then
+    if InternalOpen(filepath) then
+    begin
+      if not TableExist(FTableName) then
         CreateTable;
-    finally
-      ts.Free;
+      OpenTable;
+      GetDataCount;
+      FFiltered := False;
     end;
-    FSQLSelect := 'SELECT * FROM ' + FTableName;;
-    FQuery.SQL.Text := FSQLSelect;
-    FQuery.Open;
-    GetDataCount;
-    FFiltered := False;
     Result := FQuery.Active;
   except
     on E: Exception do
       WriteLog_E('TDBDataProcess.LoadFromFile.Error: ' + E.Message +
         LineEnding + GetStackTraceInfo);
+  end;
+end;
+
+function TDBDataProcess.OpenTable(const ATableName: String): Boolean;
+begin
+  Result := False;
+  if FConn.Connected then
+  begin
+    if ATableName <> '' then
+      FTableName := ATableName;
+    if FTableName = '' then Exit;
+    if TableExist(FTableName) then
+    begin
+      if FQuery.Active then
+        FQuery.Close;
+      FSQLSelect := 'SELECT * FROM ' + FTableName;;
+      FQuery.SQL.Text := FSQLSelect;
+      FQuery.Open;
+    end;
+  end;
+end;
+
+function TDBDataProcess.TableExist(const ATableName: String): Boolean;
+var
+  ts: TStringList;
+  i: Integer;
+begin
+  Result := False;
+  if FConn.Connected then
+  begin
+    ts := TStringList.Create;
+    try
+      FConn.GetTableNames(ts);
+      ts.Sort;
+      Result := ts.Find(FTableName, i);
+    finally
+      ts.Free;
+    end;
   end;
 end;
 
@@ -485,10 +535,12 @@ procedure TDBDataProcess.ApplyUpdates;
 begin
   if FConn.Connected then
   begin
-    FQuery.Close;
     FTrans.Commit;
-    FQuery.Open;
-    GetDataCount;
+    if FQuery.Active then
+    begin
+      FQuery.Refresh;
+      GetDataCount;
+    end;
   end;
 end;
 
