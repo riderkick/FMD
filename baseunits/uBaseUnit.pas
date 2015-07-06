@@ -197,15 +197,15 @@ const
     );
 
   README_FILE             = 'readme.rtf';
-  WORK_FOLDER             = 'works/';
+  WORK_FOLDER             = 'works' + PathDelim;
   WORK_FILE               = 'works.ini';
   DOWNLOADEDCHAPTERS_FILE = 'downloadedchapters.ini';
   FAVORITES_FILE          = 'favorites.ini';
-  IMAGE_FOLDER            = 'images/';
-  DATA_FOLDER             = 'data/';
+  IMAGE_FOLDER            = 'images' + PathDelim;
+  DATA_FOLDER             = 'data' + PathDelim;
   DATA_EXT                = '.dat';
   DBDATA_EXT              = '.db';
-  CONFIG_FOLDER           = 'config/';
+  CONFIG_FOLDER           = 'config' + PathDelim;
   CONFIG_FILE             = 'config.ini';
   CONFIG_ADVANCED         = 'advanced.ini';
   REVISION_FILE           = 'revision.ini';
