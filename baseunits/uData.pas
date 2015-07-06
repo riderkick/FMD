@@ -481,15 +481,15 @@ end;
 
 procedure TDBDataProcess.Close;
 begin
+  FQuery.Close;
+  FFiltered := False;
+  FDataCount := 0;
   if FConn.Connected then
   begin
     FTrans.Commit;
     VacuumTable;
-    FQuery.Close;
     FTrans.Active := False;
     FConn.Connected := False;
-    FFiltered := False;
-    FDataCount := 0;
   end;
 end;
 
