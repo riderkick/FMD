@@ -2050,6 +2050,7 @@ procedure TMainForm.btRemoveFilterClick(Sender: TObject);
 begin
   if dataProcess.Filtered then
   begin
+    vtMangaList.Clear;
     Screen.Cursor := crHourGlass;
     try
       dataProcess.RemoveFilter;
@@ -2060,7 +2061,6 @@ begin
         dataProcess := TDBDataProcess.Create;
         dataProcess.Open(cbSelectManga.Items[cbSelectManga.ItemIndex]);
       end;
-      vtMangaList.Clear;
       vtMangaList.RootNodeCount := dataProcess.DataCount;
       lbMode.Caption := Format(RS_ModeAll, [dataProcess.DataCount]);
       edSearch.Text := '';
