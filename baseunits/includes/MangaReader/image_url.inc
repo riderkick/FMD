@@ -1,7 +1,7 @@
   function GetMangaReaderImageURL: Boolean;
   var
     realURL: String;
-    i: Cardinal;
+    i: Integer;
     l: TStringList;
 
     procedure BreakURL;

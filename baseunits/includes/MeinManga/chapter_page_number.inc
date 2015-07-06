@@ -1,7 +1,7 @@
   function GetMeinMangaPageNumber: Boolean;
   var
     s: String;
-    i: Cardinal;
+    i: Integer;
     l: TStringList;
   begin
     l := TStringList.Create;

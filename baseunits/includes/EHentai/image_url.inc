@@ -1,6 +1,6 @@
   function getEHentaiImageURL: Boolean;
   var
-    i, RetryCount: Cardinal;
+    i, RetryCount: Integer;
     prs: TStringList;
     hparser: THTMLParser;
     {s, }purl, iurl, base_url, startkey, gid, startpage, nl: String;

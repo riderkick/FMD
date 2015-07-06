@@ -8,6 +8,10 @@ unit uDownloadsManager;
 
 {$mode delphi}
 
+{$IF FPC_FULLVERSION >= 20701}
+  {$DEFINE FPC271}
+{$ENDIF}
+
 interface
 
 uses
@@ -46,7 +50,7 @@ type
     // Download image
     function DownloadImage(const prefix: String = ''): Boolean;
 
-    procedure OnTag(NoCaseTag, ActualTag: string);
+    procedure OnTag({%H-}NoCaseTag, ActualTag: string);
     procedure OnText(Text: String);
 
     procedure SockOnStatus(Sender: TObject; Reason: THookSocketReason;
@@ -189,7 +193,7 @@ type
     procedure CheckAndActiveTaskAtStartup;
     // Check and active waiting tasks.
     procedure CheckAndActiveTask(const isCheckForFMDDo: Boolean = False;
-      SenderThread: TThread = nil);
+      {%H-}SenderThread: TThread = nil);
     // Check if we can active another wating task or not.
     function CanActiveTask(const pos : Integer) : Boolean;
     // Active a stopped task.
@@ -236,6 +240,11 @@ implementation
 
 uses
   frmMain;
+
+function IntToStr(Value: Cardinal): string;
+begin
+  Result := SysUtils.IntToStr(QWord(Value));
+end;
 
 { TDownloadThread }
 
@@ -1099,6 +1108,9 @@ begin
   if (not FileExistsUTF8(fullImgName1)) or (not FileExistsUTF8(fullImgName2)) then
     Exit;
 
+  Initialize(img1);
+  Initialize(img2);
+  Initialize(finalImg);
   // Load first image to stream.
   stream := TFileStreamUTF8.Create(fullImgName1, fmOpenRead);
   LoadImageFromStream(stream, img1);
@@ -2116,7 +2128,7 @@ var
     Self.Backup;
     if ThreadID <> MainThreadID then
     begin
-      {$IF FPC_FULLVERSION >= 20701}
+      {$IFDEF FPC271}
       TThread.Synchronize(TThread.CurrentThread, doExitWaitCounter);
       {$ELSE}
       if SenderThread <> nil then
