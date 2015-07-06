@@ -50,6 +50,7 @@ type
     constructor Create;
     destructor Destroy; override;
     function Open(AWebsite: String = ''): Boolean;
+    procedure Close;
     procedure Save;
     procedure Refresh;
     procedure AddData(Title, Link, Authors, Artists, Genres, Status, Summary: String;
@@ -398,12 +399,7 @@ begin
   if not FileExistsUTF8(filepath) then Exit;
 
   try
-    if FConn.Connected then
-    begin
-      FTrans.Commit;
-      VacuumTable;
-      FConn.Connected := False;
-    end;
+    Self.Close;
     FConn.DatabaseName := filepath;
     FConn.Connected := True;
     sqlite3_create_collation(FConn.Handle, PChar('NATCMP'), SQLITE_UTF8, nil,
@@ -430,6 +426,18 @@ begin
     on E: Exception do
       WriteLog_E('TDBDataProcess.LoadFromFile.Error: ' + E.Message +
         LineEnding + GetStackTraceInfo);
+  end;
+end;
+
+procedure TDBDataProcess.Close;
+begin
+  if FConn.Connected then
+  begin
+    FTrans.Commit;
+    VacuumTable;
+    FQuery.Close;
+    FTrans.Active := False;
+    FConn.Connected := False;
   end;
 end;
 
