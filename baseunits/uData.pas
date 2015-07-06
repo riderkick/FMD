@@ -576,17 +576,28 @@ function TDBDataProcess.Filter(const checkedGenres,
   uncheckedGenres: TStringList; const stTitle, stAuthors, stArtists, stStatus,
   stSummary: String; const minusDay: Cardinal; const haveAllChecked,
   searchNewManga: Boolean; useRegExpr: Boolean): Boolean;
+
+  procedure AddSQL(const S: string);
+  begin
+    if FQuery.SQL.Count > 0 then
+      FQuery.SQL.Add('AND');
+    FQuery.SQL.Add(S);
+  end;
+
 begin
   Result := False;
+  if FConn.Connected = False then Exit;
   with FQuery do
   begin
+    FDataCount := 0;
     Close;
     try
       SQL.Clear;
-      SQL.Add(FSQLSelect);
-      SQL.Add('WHERE');
       if searchNewManga then
-        SQL.Add('jdn > ' + QuotedStrd(DateToJDN(IncDay(Now, (0-minusDay)))));
+        AddSQL('jdn > ' + QuotedStrd(DateToJDN(IncDay(Now, (0-minusDay)))));
+      if Trim(SQL.Text) <> '' then
+        SQL.Insert(0, 'WHERE');
+      SQL.Insert(0, FSQLSelect);
       Open;
       FFiltered := Active;
     except
@@ -600,6 +611,7 @@ begin
         FFiltered := False;
       end;
     end;
+    GetDataCount;
     Result := FFiltered;
   end;
 end;
@@ -607,6 +619,8 @@ end;
 procedure TDBDataProcess.RemoveFilter;
 begin
   FFiltered := False;
+  OpenTable;
+  GetDataCount;
 end;
 
 procedure TDBDataProcess.Sort;
