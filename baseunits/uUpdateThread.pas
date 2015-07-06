@@ -319,6 +319,7 @@ begin
           dataProcess := TDBDataProcess.Create
         else
           dataProcess.Close;
+        Sleep(500);
         OverwriteDBDataProcess(website, twebsite);
         dataProcess.Open(website);
         vtMangaList.RootNodeCount := dataProcess.DataCount;
@@ -514,15 +515,17 @@ begin
           [websitePtr, websites.Count, website]) + ' | ' + RS_Preparing + '...';
         Synchronize(MainThreadShowGetting);
 
-        if MainForm.cbSelectManga.Text = website then
+        twebsite := '__' + website;
+
+        if (MainForm.cbSelectManga.Text = website) and
+          (MainForm.dataProcess.Connected) then
         begin
           MainForm.vtMangaList.Clear;
           MainForm.dataProcess.Close;
+          Sleep(500);
         end;
 
-        twebsite := '__' + website;
         CopyDBDataProcess(website, twebsite);
-
         if not mainDataProcess.Open(twebsite) then
         begin
           mainDataProcess.CreateDatabase(twebsite);
@@ -534,7 +537,7 @@ begin
         //  MainForm.dataProcess.Open;
         //  MainForm.vtMangaList.RootNodeCount := MainForm.dataProcess.DataCount;
         //end;
-        //
+
         names.Clear;
         links.Clear;
 

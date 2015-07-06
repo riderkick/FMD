@@ -67,6 +67,7 @@ type
     procedure CreateDatabase(AWebsite: string = '');
     procedure Close;
     procedure Save;
+    procedure Backup(AWebsite: string);
     procedure Refresh;
     procedure AddData(Title, Link, Authors, Artists, Genres, Status, Summary: String;
       NumChapter, JDN: Integer); overload;
@@ -370,9 +371,15 @@ begin
   if NWebsite = '' then Exit;
   if DBDataProcessExist(AWebsite) then
   begin
+    try
     CopyFile(fmdDirectory + DATA_FOLDER + AWebsite + DBDATA_EXT,
       fmdDirectory + DATA_FOLDER + NWebsite + DBDATA_EXT,
       [cffPreserveTime, cffOverwriteFile], True);
+    except
+      on E: Exception do
+        Writelog_D('CopyDBDataProcess.Error: ' + E.Message + LineEnding +
+          GetStackTraceInfo);
+    end;
   end;
 end;
 
@@ -594,6 +601,7 @@ begin
     begin
       FTrans.Commit;
       FConn.Connected := False;
+      FConn.DatabaseName := '';
     end;
   except
     on E: Exception do
@@ -605,6 +613,16 @@ end;
 procedure TDBDataProcess.Save;
 begin
   Self.ApplyUpdates;
+end;
+
+procedure TDBDataProcess.Backup(AWebsite: string);
+begin
+  if AWebsite = '' then Exit;
+  if FConn.Connected then
+    FConn.ExecuteDirect('END TRANSACTION');
+  CopyDBDataProcess(FWebsite, AWebsite);
+  if FConn.Connected then
+    FConn.ExecuteDirect('BEGIN TRANSACTION');
 end;
 
 procedure TDBDataProcess.Refresh;
