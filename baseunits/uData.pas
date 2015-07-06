@@ -15,7 +15,7 @@ interface
 
 uses
   Classes, SysUtils, uBaseUnit, uFMDThread, LazFileUtils, sqlite3conn, sqldb,
-  USimpleLogger, strutils, dateutils, RegExpr, sqlite3dyn, httpsend;
+  db, USimpleLogger, strutils, dateutils, RegExpr, sqlite3dyn, httpsend;
 
 type
 
@@ -28,6 +28,7 @@ type
 
   TDBDataProcess = class
   private
+    FCSRecord: TRTLCriticalSection;
     FConn: TSQLite3Connectionx;
     FTrans: TSQLTransaction;
     FQuery: TSQLQuery;
@@ -382,6 +383,7 @@ end;
 
 constructor TDBDataProcess.Create;
 begin
+  InitCriticalSection(FCSRecord);
   FConn := TSQLite3Connectionx.Create(nil);
   FTrans := TSQLTransaction.Create(nil);
   FQuery := TSQLQuery.Create(nil);
@@ -411,6 +413,7 @@ begin
   FTrans.Free;
   FConn.Free;
   FRegxp.Free;
+  DoneCriticalsection(FCSRecord);
   inherited Destroy;
 end;
 
@@ -615,6 +618,20 @@ begin
     end;
     GetDataCount;
     Result := FFiltered;
+  end;
+end;
+
+function TDBDataProcess.Locate(FieldIndex: Integer; Value: String): Boolean;
+begin
+  Result := false;
+  if FQuery.Active then
+  begin
+    EnterCriticalsection(FCSRecord);
+    try
+      Result := FQuery.Locate(DBDataProcessParams[FieldIndex], Value, [loCaseInsensitive]);
+    finally
+      LeaveCriticalsection(FCSRecord);
+    end;
   end;
 end;
 
