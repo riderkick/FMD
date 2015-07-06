@@ -263,7 +263,7 @@ begin
         begin
           dbdata.AddData(Title[i], Link[i], Authors[i], Artists[i], Genres[i],
             Status[i], StringBreaks(Summary[i]), StrToIntDef(Param[i, DATA_PARAM_NUMCHAPTER], 1),
-            {%H-}Integer(JDN[i]));
+            {%H-}Integer(JDN[i])-3);
         end;
         dbdata.ApplyUpdates;
       end;
