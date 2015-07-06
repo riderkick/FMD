@@ -15,8 +15,8 @@ interface
 
 uses
   Classes, SysUtils, uBaseUnit, uFMDThread, FileUtil, LazFileUtils,
-  LazUTF8Classes, sqlite3conn, sqldb, db, USimpleLogger, strutils, dateutils,
-  RegExpr, sqlite3dyn, httpsend;
+  sqlite3conn, sqldb, db, USimpleLogger, strutils, dateutils, RegExpr,
+  sqlite3dyn, httpsend;
 
 type
 
@@ -382,8 +382,8 @@ begin
   begin
     if FileExistsUTF8(fmdDirectory + DATA_FOLDER + AWebsite + DBDATA_EXT) then
       DeleteFileUTF8(fmdDirectory + DATA_FOLDER + AWebsite + DBDATA_EXT);
-    RenameFileUTF8(fmdDirectory + DATA_FOLDER + AWebsite + DBDATA_EXT,
-      fmdDirectory + DATA_FOLDER + NWebsite + DBDATA_EXT);
+    RenameFileUTF8(fmdDirectory + DATA_FOLDER + NWebsite + DBDATA_EXT,
+      fmdDirectory + DATA_FOLDER + AWebsite + DBDATA_EXT);
   end;
 end;
 
@@ -503,15 +503,13 @@ end;
 
 destructor TDBDataProcess.Destroy;
 begin
-  FSitesList.Free;
-  FQuery.Close;
   if FConn.Connected then
   begin
     FTrans.Commit;
     VacuumTable;
+    FConn.Connected := False;
   end;
-  FTrans.Active := False;
-  FConn.Connected := False;
+  FSitesList.Free;
   FQuery.Free;
   FTrans.Free;
   FConn.Free;
@@ -591,12 +589,16 @@ procedure TDBDataProcess.Close;
 begin
   FFiltered := False;
   FDataCount := 0;
-  if FConn.Connected then
-  begin
-    FQuery.Close;
-    FTrans.Commit;
-    FTrans.Active := False;
-    FConn.Connected := False;
+  try
+    if FConn.Connected then
+    begin
+      FTrans.Commit;
+      FConn.Connected := False;
+    end;
+  except
+    on E: Exception do
+      WriteLog_E('TDBDataProcess.Close.Error: ' + E.Message + LineEnding +
+        GetStackTraceInfo);
   end;
 end;
 

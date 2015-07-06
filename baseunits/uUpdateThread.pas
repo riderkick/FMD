@@ -514,6 +514,12 @@ begin
           [websitePtr, websites.Count, website]) + ' | ' + RS_Preparing + '...';
         Synchronize(MainThreadShowGetting);
 
+        if MainForm.cbSelectManga.Text = website then
+        begin
+          MainForm.vtMangaList.Clear;
+          MainForm.dataProcess.Close;
+        end;
+
         twebsite := '__' + website;
         CopyDBDataProcess(website, twebsite);
 
@@ -523,6 +529,12 @@ begin
           mainDataProcess.OpenTable;
         end;
 
+        //if MainForm.cbSelectManga.Text = website then
+        //begin
+        //  MainForm.dataProcess.Open;
+        //  MainForm.vtMangaList.RootNodeCount := MainForm.dataProcess.DataCount;
+        //end;
+        //
         names.Clear;
         links.Clear;
 
