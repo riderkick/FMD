@@ -3392,12 +3392,13 @@ end;
 
 function DateToJDN(const year, month, day: word): longint;
 var
-  a, y, m: single;
+  a, y, m: longint;
 begin
-  a := (14 - month) / 12;
+  a := (14 - month) div 12;
   y := year + 4800 - a;
-  m := month + 12 * a - 3;
-  Result := Round(day + (153 * m + 2) / 5 + 365 * y + y / 4 - y / 100 + y / 400 - 32045);
+  m := month + (12 * a) - 3;
+  Result := Round((day + ((153 * m + 2) div 5) + (365 * y) + (y div 4) - (y div 100) +
+    (y div 400) - 32045) - 0.5);
 end;
 
 function GetCurrentJDN: longint;
