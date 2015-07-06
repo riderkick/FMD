@@ -1047,13 +1047,17 @@ end;
 
 procedure TMainForm.itStartupTimer(Sender: TObject);
 begin
+  itStartup.Enabled := False;
   if not isStartup then
   begin
     Screen.Cursor := crHourGlass;
     isStartup := True;
     try
       if cbSelectManga.ItemIndex > -1 then
+      begin
+        vtMangaList.Clear;
         dataProcess.Open(cbSelectManga.Items[cbSelectManga.ItemIndex]);
+      end;
       vtMangaList.RootNodeCount := dataProcess.DataCount;
       lbMode.Caption := Format(RS_ModeAll, [dataProcess.DataCount]);
       dataProcess.Refresh;
@@ -1063,7 +1067,6 @@ begin
     if cbOptionAutoCheckUpdate.Checked then
       SubThread.CheckUpdate := True;
     SubThread.Start;
-    itStartup.Enabled := False;
   end;
 end;
 
@@ -1860,10 +1863,10 @@ begin
     try
       if dataProcess = nil then
         dataProcess := TDBDataProcess.Create;
+      vtMangaList.Clear;
       if not dataProcess.Open(
         cbSelectManga.Items.Strings[cbSelectManga.ItemIndex]) then
         RunGetList;
-      vtMangaList.Clear;
       vtMangaList.RootNodeCount := dataProcess.DataCount;
       dataProcess.Refresh;
       lbMode.Caption := Format(RS_ModeAll, [dataProcess.DataCount]);
