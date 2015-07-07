@@ -115,7 +115,6 @@ procedure TGetMangaInfosThread.DoGetInfos;
 
           FInfo.SyncInfoToData(MainForm.DataProcess);
           MainForm.dataProcess.Commit;
-          //MainForm.dataProcess.Refresh;
         end;
       end;
       Result := True;
@@ -192,7 +191,6 @@ begin
           vtMangaList.BeginUpdate;
           dataProcess.Refresh;
           vtMangaList.EndUpdate;
-          vtMangaList.Repaint;
         end;
       ShowInformation(FTitle, FWebsite, FLink);
     end;
