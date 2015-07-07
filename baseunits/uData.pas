@@ -312,7 +312,7 @@ begin
       [cffPreserveTime, cffOverwriteFile], True);
     except
       on E: Exception do
-        Writelog_D('CopyDBDataProcess.Error: ' + E.Message + LineEnding +
+        Writelog_E('CopyDBDataProcess.Error: ' + E.Message + LineEnding +
           GetStackTraceInfo);
     end;
   end;
@@ -442,7 +442,7 @@ begin
   FRegxp.ModifierI := True;
   FSitesList := TStringList.Create;
   FTableName := 'masterlist';
-  FSQLSelect := 'SELECT * FROM ' + FTableName;
+  FSQLSelect := 'SELECT * FROM ' + QuotedStr(FTableName);
   FDataCount := 0;
 end;
 
@@ -504,7 +504,7 @@ begin
     begin
       if FQuery.Active then
         FQuery.Close;
-      FSQLSelect := 'SELECT * FROM ' + FTableName;;
+      FSQLSelect := 'SELECT * FROM ' + QuotedStr(FTableName);
       FQuery.SQL.Text := FSQLSelect;
       FQuery.Open;
     end;
@@ -582,17 +582,18 @@ procedure TDBDataProcess.AddData(Title, Link, Authors, Artists, Genres, Status,
 begin
   if FConn.Connected then
   try
-    FConn.ExecuteDirect('INSERT INTO ' + FTableName + '(' + DBDataProcessParam +
-      ') VALUES (' +
-      QuotedStrd(Title) + ',' +
-      QuotedStrd(Link) + ',' +
-      QuotedStrd(Authors) + ',' +
-      QuotedStrd(Artists) + ',' +
-      QuotedStrd(Genres) + ',' +
-      QuotedStrd(Status) + ',' +
-      QuotedStrd(Summary) + ',' +
-      QuotedStrd(NumChapter) + ',' +
-      QuotedStrd(JDN) + ');');
+    FConn.ExecuteDirect('INSERT INTO ' + QuotedStr(FTableName) +
+      #13#10'(' + DBDataProcessParam + ')'+
+      #13#10'VALUES (' +
+      QuotedStr(Title) + ',' +
+      QuotedStr(Link) + ',' +
+      QuotedStr(Authors) + ',' +
+      QuotedStr(Artists) + ',' +
+      QuotedStr(Genres) + ',' +
+      QuotedStr(Status) + ',' +
+      QuotedStr(Summary) + ',' +
+      QuotedStr(IntToStr(NumChapter)) + ',' +
+      QuotedStr(IntToStr(JDN)) + ');');
   except
     on E: Exception do
       WriteLog_E('TDBDataProcess.AddData.Error: ' + E.Message + LineEnding + GetStackTraceInfo);
@@ -615,7 +616,7 @@ var
   begin
     if sql <> '' then
       sql += ','#13#10;
-    sql += field + '=' + QuotedStrd(value);
+    sql += field + '=' + QuotedStr(value);
   end;
 
 begin
@@ -631,8 +632,8 @@ begin
       AddSQL('status', Status);
       AddSQL('summary', Summary);
       AddSQL('numchapter', IntToStr(NumChapter));
-      sql := 'UPDATE ' + QuotedStrd(FTableName) + #13#10'SET'#13#10 + sql;
-      sql += #13#10'WHERE link=' + QuotedStrd(Link) + ';';
+      sql := 'UPDATE ' + QuotedStr(FTableName) + #13#10'SET'#13#10 + sql;
+      sql += #13#10'WHERE link=' + QuotedStr(Link) + ';';
       FConn.ExecuteDirect(sql);
     except
       on E: Exception do
@@ -687,7 +688,7 @@ begin
       FQuery.Close;
       FQuery.SQL.Text := FSQLSelect;
       if ATitle <> '' then
-        FQuery.SQL.Add('WHERE title LIKE ' + QuotedStrd(AnsiQuotedStr(ATitle, '%')));
+        FQuery.SQL.Add('WHERE title LIKE ' + QuotedStr(AnsiQuotedStr(ATitle, '%')));
       FQuery.Open;
       GetDataCount;
     except
@@ -727,7 +728,7 @@ begin
     try
       SQL.Clear;
       if searchNewManga then
-        AddSQL('jdn > ' + QuotedStrd(DateToJDN(IncDay(Now, (0-minusDay)))));
+        AddSQL('jdn > ' + QuotedStr(IntToStr(DateToJDN(IncDay(Now, (0-minusDay))))));
       if Trim(SQL.Text) <> '' then
         SQL.Insert(0, 'WHERE');
       SQL.Insert(0, FSQLSelect);
@@ -791,14 +792,14 @@ begin
     FQuery.Close;
     with FConn do
     begin
-      ExecuteDirect('CREATE TABLE ' + QuotedStrd(FTableName+'_ordered') +
+      ExecuteDirect('CREATE TABLE ' + QuotedStr(FTableName+'_ordered') +
         DBDataProccesCreateParam);
-      ExecuteDirect('INSERT INTO '+ QuotedStrd(FTableName+'_ordered') + ' ' +
+      ExecuteDirect('INSERT INTO '+ QuotedStr(FTableName+'_ordered') + ' ' +
         BracketStr(DBDataProcessParam) + ' SELECT ' + DBDataProcessParam +
-        ' FROM '+ QuotedStrd(FTableName) + 'ORDER BY title COLLATE NATCMP');
-      ExecuteDirect('DROP TABLE ' + QuotedStrd(FTableName));
-      ExecuteDirect('ALTER TABLE '+ QuotedStrd(FTableName+'_ordered') +
-        'RENAME TO ' + QuotedStrd(FTableName));
+        ' FROM '+ QuotedStr(FTableName) + 'ORDER BY title COLLATE NATCMP');
+      ExecuteDirect('DROP TABLE ' + QuotedStr(FTableName));
+      ExecuteDirect('ALTER TABLE '+ QuotedStr(FTableName+'_ordered') +
+        'RENAME TO ' + QuotedStr(FTableName));
       FTrans.Commit;
       VacuumTable
     end;
