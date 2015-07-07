@@ -25,6 +25,9 @@ unit USimpleExceptionForm;
 interface
 
 uses
+  {$ifdef windows}
+  windows,
+  {$endif}
   Forms, Controls, StdCtrls, ExtCtrls, Buttons;
 
 type
@@ -77,8 +80,11 @@ end;
 
 procedure TSimpleExceptionForm.ButtonTerminateClick(Sender: TObject);
 begin
-  //Application.Terminate;
-  halt(1);
+  {$ifdef windows}
+  TerminateProcess(GetCurrentProcess, 0);
+  {$else}
+  halt;
+  {$endif}
 end;
 
 procedure TSimpleExceptionForm.FormCreate(Sender: TObject);
