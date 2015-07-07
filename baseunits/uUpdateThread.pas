@@ -519,24 +519,15 @@ begin
 
         if (MainForm.cbSelectManga.Text = website) and
           (MainForm.dataProcess.Connected) then
-        begin
-          MainForm.vtMangaList.Clear;
-          MainForm.dataProcess.Close;
-          Sleep(500);
-        end;
+          MainForm.dataProcess.Backup(twebsite)
+        else
+          CopyDBDataProcess(website, twebsite);
 
-        CopyDBDataProcess(website, twebsite);
         if not mainDataProcess.Open(twebsite) then
         begin
           mainDataProcess.CreateDatabase(twebsite);
           mainDataProcess.OpenTable;
         end;
-
-        //if MainForm.cbSelectManga.Text = website then
-        //begin
-        //  MainForm.dataProcess.Open;
-        //  MainForm.vtMangaList.RootNodeCount := MainForm.dataProcess.DataCount;
-        //end;
 
         names.Clear;
         links.Clear;
@@ -655,8 +646,6 @@ begin
             GetInfo(links.Count, CS_INFO);
           end;
           WaitForThreads;
-          names.Clear;
-          links.Clear;
         end;
 
         if (not Terminated) or (not SitesWithSortedList(website)) then
@@ -664,7 +653,6 @@ begin
           FStatus := RS_UpdatingList + Format(' [%d/%d] %s',
             [websitePtr, websites.Count, website]) + ' | ' + RS_SavingData + '...';
           Synchronize(MainThreadShowGetting);
-          { TODO -ocholif : Sort after update }
           mainDataProcess.Sort;
           mainDataProcess.Close;
         end;
