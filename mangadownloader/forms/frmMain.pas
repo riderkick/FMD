@@ -914,7 +914,6 @@ begin
   end;
 
   //Backup data
-  dataProcess.Save;
   DLManager.Backup;
   DLManager.BackupDownloadedChaptersList;
   isExiting := True;
