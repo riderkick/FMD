@@ -112,8 +112,10 @@ procedure TGetMangaInfosThread.DoGetInfos;
               FInfo.mangaInfo.summary :=
                 MainForm.DataProcess.Param[filterPos, DATA_PARAM_SUMMARY];
           end;
-          { TODO -ocholif : syncinfo with tdbdataprocess }
-          //FInfo.SyncInfoToData(MainForm.DataProcess, filterPos);
+
+          FInfo.SyncInfoToData(MainForm.DataProcess);
+          MainForm.dataProcess.Commit;
+          //MainForm.dataProcess.Refresh;
         end;
       end;
       Result := True;
@@ -183,21 +185,17 @@ begin
   if IsFlushed then Exit;
   try
     TransferMangaInfo(MainForm.mangaInfo, FInfo.mangaInfo);
-    if (Website = MainForm.cbSelectManga.Text) and
-      (FMangaListPos > -1) then
-    begin
-      if (FInfo.mangaInfo.title <> FTitle) or
-        (FInfo.mangaInfo.numChapter <> FNumChapter) then
-      begin
-        FTitle := FInfo.mangaInfo.title;
-        with MainForm.vtMangaList do
+    with MainForm do begin
+      if (FMangaListPos > -1) and
+        (Website = MainForm.cbSelectManga.Text) then
         begin
-          ReinitNode(RootNode, True);
-          Repaint;
+          vtMangaList.BeginUpdate;
+          dataProcess.Refresh;
+          vtMangaList.EndUpdate;
+          vtMangaList.Repaint;
         end;
-      end;
+      ShowInformation(FTitle, FWebsite, FLink);
     end;
-    MainForm.ShowInformation(FTitle, FWebsite, FLink);
   except
     on E: Exception do
       MainForm.ExceptionHandler(Self, E);
