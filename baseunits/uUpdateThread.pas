@@ -307,7 +307,6 @@ end;
 
 procedure TUpdateMangaManagerThread.RefreshList;
 begin
-  exit;
   try
     with MainForm do
     begin
@@ -522,7 +521,11 @@ begin
         DeleteDBDataProcess(twebsite);
         if (MainForm.cbSelectManga.Text = website) and
           (MainForm.dataProcess.Connected) then
-          MainForm.dataProcess.Backup(twebsite)
+        begin
+          MainForm.dataProcess.Backup(twebsite);
+          MainForm.vtMangaList.Clear;
+          MainForm.dataProcess.Close;
+        end
         else
           CopyDBDataProcess(website, twebsite);
 
