@@ -202,6 +202,7 @@ const
   function DBDataProcessExist(const AWebsite: string): Boolean;
   procedure CopyDBDataProcess(const AWebsite, NWebsite: string);
   procedure OverwriteDBDataProcess(const AWebsite, NWebsite: string);
+  procedure DeleteDBDataProcess(const AWebsite: string);
 
 implementation
 
@@ -333,13 +334,18 @@ begin
     begin
       Inc(tryc);
       canrename := False;
-      Writelog_W('Try delete: '+IntToStr(tryc));
       Sleep(200);
     end;
     if canrename then
       RenameFileUTF8(fmdDirectory + DATA_FOLDER + NWebsite + DBDATA_EXT,
         fmdDirectory + DATA_FOLDER + AWebsite + DBDATA_EXT);
   end;
+end;
+
+procedure DeleteDBDataProcess(const AWebsite: string);
+begin
+  if FileExistsUTF8(fmdDirectory + DATA_FOLDER + AWebsite + DBDATA_EXT) then
+    DeleteFileUTF8(fmdDirectory + DATA_FOLDER + AWebsite + DBDATA_EXT);
 end;
 
 { TDBDataProcess }
@@ -448,8 +454,7 @@ begin
   FConn := TSQLite3Connectionx.Create(nil);
   FTrans := TSQLTransaction.Create(nil);
   FQuery := TSQLQuery.Create(nil);
-  FTrans.DataBase := FConn;
-  FQuery.Transaction := FTrans;
+  FConn.Transaction := FTrans;
   FQuery.DataBase := FTrans.DataBase;
   FRegxp := TRegExpr.Create;
   FRegxp.ModifierI := True;
@@ -461,17 +466,20 @@ end;
 
 destructor TDBDataProcess.Destroy;
 begin
-  WriteLog_E('TDBDataProcess.Destroy');
   try
     if FConn.Connected then
     begin
-      FTrans.Commit;
+      try
+        FTrans.CommitRetaining;
+      except
+        FTrans.RollbackRetaining;
+      end;
       VacuumTable;
       FConn.Connected := False;
     end;
   except
     on E: Exception do
-      WriteLog_E('TDBDataProcess.Destroy.Commit,Error: '+E.Message+LineEnding+GetStackTraceInfo);
+      WriteLog_E('TDBDataProcess.Destroy,Error: '+E.Message+LineEnding+GetStackTraceInfo);
   end;
   FSitesList.Free;
   FQuery.Free;
@@ -487,7 +495,9 @@ var
   filepath: String;
 begin
   Result := False;
-  Self.Close;
+  FFiltered := False;
+  FDataCount := 0;
+  Close;
   if AWebsite <> '' then FWebsite := AWebsite;
   if FWebsite = '' then Exit;
   filepath := fmdDirectory + DATA_FOLDER + FWebsite + DBDATA_EXT;
@@ -501,12 +511,11 @@ begin
         CreateTable;
       OpenTable;
       GetDataCount;
-      FFiltered := False;
     end;
     Result := FQuery.Active;
   except
     on E: Exception do
-      WriteLog_E('TDBDataProcess.LoadFromFile.Error: ' + E.Message +
+      WriteLog_E('TDBDataProcess.Open.Error: ' + E.Message +
         LineEnding + GetStackTraceInfo);
   end;
 end;
@@ -556,7 +565,11 @@ begin
   try
     if FConn.Connected then
     begin
-      FTrans.Commit;
+      try
+        FTrans.CommitRetaining;
+      except
+        FTrans.RollbackRetaining;
+      end;
       FConn.Connected := False;
       FConn.DatabaseName := '';
     end;
@@ -569,7 +582,7 @@ end;
 
 procedure TDBDataProcess.Save;
 begin
-  Self.ApplyUpdates;
+  Commit;
 end;
 
 procedure TDBDataProcess.Backup(AWebsite: string);
@@ -622,7 +635,7 @@ end;
 procedure TDBDataProcess.AddData(Title, Link, Authors, Artists, Genres, Status,
   Summary: String; NumChapter: Integer; JDN: TDateTime);
 begin
-  Self.AddData(Title, Link, Authors, Artists, Genres, Status, Summary,
+  AddData(Title, Link, Authors, Artists, Genres, Status, Summary,
     NumChapter, DateToJDN(JDN));
 end;
 

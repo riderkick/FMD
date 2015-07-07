@@ -307,24 +307,27 @@ end;
 
 procedure TUpdateMangaManagerThread.RefreshList;
 begin
+  exit;
   try
     with MainForm do
     begin
       if cbSelectManga.Items[cbSelectManga.ItemIndex] = website then
       begin
         Screen.Cursor := crHourGlass;
-        edSearch.Clear;
-        vtMangaList.Clear;
-        if dataProcess = nil then
-          dataProcess := TDBDataProcess.Create
-        else
-          dataProcess.Close;
-        Sleep(500);
-        OverwriteDBDataProcess(website, twebsite);
-        dataProcess.Open(website);
-        vtMangaList.RootNodeCount := dataProcess.DataCount;
-        lbMode.Caption := Format(RS_ModeAll, [dataProcess.DataCount]);
-        Screen.Cursor := crDefault;
+        try
+          edSearch.Clear;
+          vtMangaList.Clear;
+          if dataProcess = nil then
+            dataProcess := TDBDataProcess.Create
+          else
+            dataProcess.Close;
+          OverwriteDBDataProcess(website, twebsite);
+          dataProcess.Open(website);
+          vtMangaList.RootNodeCount := dataProcess.DataCount;
+          lbMode.Caption := Format(RS_ModeAll, [dataProcess.DataCount]);
+        finally
+          Screen.Cursor := crDefault;
+        end;
       end
       else
         OverwriteDBDataProcess(website, twebsite);
@@ -516,7 +519,7 @@ begin
         Synchronize(MainThreadShowGetting);
 
         twebsite := '__' + website;
-
+        DeleteDBDataProcess(twebsite);
         if (MainForm.cbSelectManga.Text = website) and
           (MainForm.dataProcess.Connected) then
           MainForm.dataProcess.Backup(twebsite)
@@ -654,9 +657,10 @@ begin
             [websitePtr, websites.Count, website]) + ' | ' + RS_SavingData + '...';
           Synchronize(MainThreadShowGetting);
           mainDataProcess.Sort;
-          mainDataProcess.Close;
         end;
+        mainDataProcess.Close;
         Synchronize(RefreshList);
+        DeleteDBDataProcess(twebsite);
         if Terminated then
           Break;
         websites[websitePtr - 1] :=
