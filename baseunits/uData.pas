@@ -319,13 +319,26 @@ begin
 end;
 
 procedure OverwriteDBDataProcess(const AWebsite, NWebsite: string);
+var
+  tryc: Integer;
+  canrename: boolean;
 begin
   if FileExistsUTF8(fmdDirectory + DATA_FOLDER + NWebsite + DBDATA_EXT) then
   begin
+    canrename := True;
+    tryc := 0;
     if FileExistsUTF8(fmdDirectory + DATA_FOLDER + AWebsite + DBDATA_EXT) then
-      DeleteFileUTF8(fmdDirectory + DATA_FOLDER + AWebsite + DBDATA_EXT);
-    RenameFileUTF8(fmdDirectory + DATA_FOLDER + NWebsite + DBDATA_EXT,
-      fmdDirectory + DATA_FOLDER + AWebsite + DBDATA_EXT);
+    while not (tryc < 5) and
+      DeleteFileUTF8(fmdDirectory + DATA_FOLDER + AWebsite + DBDATA_EXT) do
+    begin
+      Inc(tryc);
+      canrename := False;
+      Writelog_W('Try delete: '+IntToStr(tryc));
+      Sleep(200);
+    end;
+    if canrename then
+      RenameFileUTF8(fmdDirectory + DATA_FOLDER + NWebsite + DBDATA_EXT,
+        fmdDirectory + DATA_FOLDER + AWebsite + DBDATA_EXT);
   end;
 end;
 
@@ -448,11 +461,17 @@ end;
 
 destructor TDBDataProcess.Destroy;
 begin
-  if FConn.Connected then
-  begin
-    FTrans.Commit;
-    VacuumTable;
-    FConn.Connected := False;
+  WriteLog_E('TDBDataProcess.Destroy');
+  try
+    if FConn.Connected then
+    begin
+      FTrans.Commit;
+      VacuumTable;
+      FConn.Connected := False;
+    end;
+  except
+    on E: Exception do
+      WriteLog_E('TDBDataProcess.Destroy.Commit,Error: '+E.Message+LineEnding+GetStackTraceInfo);
   end;
   FSitesList.Free;
   FQuery.Free;
