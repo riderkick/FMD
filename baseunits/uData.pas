@@ -647,27 +647,24 @@ end;
 procedure TDBDataProcess.Commit;
 begin
   if FConn.Connected then
-  begin
     try
-      FTrans.Commit;
+      FTrans.CommitRetaining;
     except
       on E: Exception do
       begin
         WriteLog_E('TDBDataProcess.ApplyUpdates.Error: ' + E.Message +
           LineEnding + GetStackTraceInfo);
-        FTrans.Rollback;
+        FTrans.RollbackRetaining;
       end;
     end;
-  end;
 end;
 
 procedure TDBDataProcess.ApplyUpdates(RecheckDataCount: Boolean);
 begin
   if FQuery.Active then
-  begin
     try
       FQuery.ApplyUpdates;
-      FTrans.Commit;
+      FTrans.CommitRetaining;
       if RecheckDataCount then
         GetDataCount;
     except
@@ -675,14 +672,13 @@ begin
       begin
         WriteLog_E('TDBDataProcess.ApplyUpdates.Error: ' + E.Message +
           LineEnding + GetStackTraceInfo);
-        FTrans.Rollback;
+        FTrans.RollbackRetaining;
         if FQuery.Active = False then
           FQuery.Open;
         if RecheckDataCount then
           GetDataCount;
       end;
     end;
-  end;
 end;
 
 function TDBDataProcess.Search(ATitle: String): Boolean;
