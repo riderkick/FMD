@@ -4040,8 +4040,8 @@ begin
   if miHighlightNewManga.Checked then
   begin
     try
-      if currentJDN - StrToInt(dataProcess.Param[Node^.Index, DATA_PARAM_JDN]) <
-        seOptionNewMangaTime.Value then
+      if StrToIntDef(dataProcess.Param[Node^.Index, DATA_PARAM_JDN], 0) >
+        (currentJDN - seOptionNewMangaTime.Value) then
       begin
         TargetCanvas.Brush.Color := CL_HLBlueMarks;
         TargetCanvas.FillRect(CellRect);
