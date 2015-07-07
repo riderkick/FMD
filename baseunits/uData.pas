@@ -68,12 +68,15 @@ type
     procedure Close;
     procedure Save;
     procedure Backup(AWebsite: string);
-    procedure Refresh;
+    procedure Refresh(RecheckDataCount: Boolean = False);
     procedure AddData(Title, Link, Authors, Artists, Genres, Status, Summary: String;
       NumChapter, JDN: Integer); overload;
     procedure AddData(Title, Link, Authors, Artists, Genres, Status, Summary: String;
       NumChapter: Integer; JDN: TDateTime); overload;
-    procedure ApplyUpdates;
+    procedure UpdateData(Title, Link, Authors, Artists, Genres, Status, Summary: String;
+      NumChapter: Integer);
+    procedure Commit;
+    procedure ApplyUpdates(RecheckDataCount: Boolean = False);
     procedure RemoveFilter;
     procedure Sort;
     property Website: String read FWebsite write FWebsite;
@@ -162,7 +165,8 @@ type
     function GetNameAndLink(const names, links: TStringList;
       const website, URL: String): Byte;
     function GetInfoFromURL(const website, URL: String; const Reconnect: Cardinal): Byte;
-    procedure SyncInfoToData(const DataProcess: TDataProcess; const index: Cardinal);
+    procedure SyncInfoToData(const DataProcess: TDataProcess; const index: Cardinal); overload;
+    procedure SyncInfoToData(const DataProcess: TDBDataProcess); overload;
     procedure SyncMinorInfoToData(const DataProcess: TDataProcess;
       const index: Cardinal);
 
@@ -278,7 +282,7 @@ begin
             Status[i], StringBreaks(Summary[i]), StrToIntDef(Param[i, DATA_PARAM_NUMCHAPTER], 1),
             {%H-}Integer(JDN[i])-3);
         end;
-        dbdata.ApplyUpdates;
+        dbdata.Commit;
       end;
       dbdata.OpenTable;
       dbdata.Sort;
@@ -404,7 +408,10 @@ end;
 
 function TDBDataProcess.GetParam(RecIndex, ParamNo: Integer): String;
 begin
-  Result := '';
+  if ParamNo in [DATA_PARAM_JDN, DATA_PARAM_NUMCHAPTER] then
+    Result := '0'
+  else
+    Result := '';
   if FQuery.Active and
     (ParamNo < Length(DBDataProcessParams)) and
     (RecIndex < FDataCount) then
@@ -560,10 +567,14 @@ begin
   end;
 end;
 
-procedure TDBDataProcess.Refresh;
+procedure TDBDataProcess.Refresh(RecheckDataCount: Boolean);
 begin
   if FQuery.Active then
+  begin
     FQuery.Refresh;
+    if RecheckDataCount then
+      GetDataCount;
+  end;
 end;
 
 procedure TDBDataProcess.AddData(Title, Link, Authors, Artists, Genres, Status,
@@ -595,15 +606,81 @@ begin
     NumChapter, DateToJDN(JDN));
 end;
 
-procedure TDBDataProcess.ApplyUpdates;
+procedure TDBDataProcess.UpdateData(Title, Link, Authors, Artists, Genres,
+  Status, Summary: String; NumChapter: Integer);
+var
+  sql: string;
+
+  procedure AddSQL(const field, value: string);
+  begin
+    if value <> '' then
+    begin
+      if sql <> '' then
+        sql += ','#13#10;
+      sql += field + '=' + QuotedStrd(value);
+    end;
+  end;
+
+begin
+  if Link = '' then Exit;
+  if FConn.Connected then
+  begin
+    try
+      sql := '';
+      AddSQL('title', Title);
+      AddSQL('authors', Authors);
+      AddSQL('artists', Artists);
+      AddSQL('genres', Genres);
+      AddSQL('status', Status);
+      AddSQL('summary', Summary);
+      AddSQL('numchapter', IntToStr(NumChapter));
+      sql := 'UPDATE ' + QuotedStrd(FTableName) + ' SET'#13#10 + sql;
+      sql += #13#10'WHERE link=' + QuotedStrd(Link) + ';';
+      FConn.ExecuteDirect(sql);
+    except
+      on E: Exception do
+        WriteLog_E('TDBDataProcess.AddData.Error: ' + E.Message + LineEnding + GetStackTraceInfo);
+    end;
+  end;
+end;
+
+procedure TDBDataProcess.Commit;
 begin
   if FConn.Connected then
   begin
-    FTrans.Commit;
-    if FQuery.Active then
-    begin
-      FQuery.Refresh;
-      GetDataCount;
+    try
+      FTrans.Commit;
+    except
+      on E: Exception do
+      begin
+        WriteLog_E('TDBDataProcess.ApplyUpdates.Error: ' + E.Message +
+          LineEnding + GetStackTraceInfo);
+        FTrans.Rollback;
+      end;
+    end;
+  end;
+end;
+
+procedure TDBDataProcess.ApplyUpdates(RecheckDataCount: Boolean);
+begin
+  if FQuery.Active then
+  begin
+    try
+      FQuery.ApplyUpdates;
+      FTrans.Commit;
+      if RecheckDataCount then
+        GetDataCount;
+    except
+      on E: Exception do
+      begin
+        WriteLog_E('TDBDataProcess.ApplyUpdates.Error: ' + E.Message +
+          LineEnding + GetStackTraceInfo);
+        FTrans.Rollback;
+        if FQuery.Active = False then
+          FQuery.Open;
+        if RecheckDataCount then
+          GetDataCount;
+      end;
     end;
   end;
 end;
@@ -2709,6 +2786,13 @@ begin
   end;
   // then break it into parts
   dataProcess.BreakDataToParts(index);
+end;
+
+procedure TMangaInformation.SyncInfoToData(const DataProcess: TDBDataProcess);
+begin
+  if Assigned(DataProcess) then
+    with mangaInfo do
+      DataProcess.UpdateData(title, link, authors, artists, genres, status, summary, numChapter);
 end;
 
 procedure TMangaInformation.AddInfoToDataWithoutBreak(const Name, link: String;
