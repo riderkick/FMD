@@ -613,12 +613,9 @@ var
 
   procedure AddSQL(const field, value: string);
   begin
-    if value <> '' then
-    begin
-      if sql <> '' then
-        sql += ','#13#10;
-      sql += field + '=' + QuotedStrd(value);
-    end;
+    if sql <> '' then
+      sql += ','#13#10;
+    sql += field + '=' + QuotedStrd(value);
   end;
 
 begin
@@ -634,7 +631,7 @@ begin
       AddSQL('status', Status);
       AddSQL('summary', Summary);
       AddSQL('numchapter', IntToStr(NumChapter));
-      sql := 'UPDATE ' + QuotedStrd(FTableName) + ' SET'#13#10 + sql;
+      sql := 'UPDATE ' + QuotedStrd(FTableName) + #13#10'SET'#13#10 + sql;
       sql += #13#10'WHERE link=' + QuotedStrd(Link) + ';';
       FConn.ExecuteDirect(sql);
     except
