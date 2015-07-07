@@ -14,8 +14,8 @@ unit uData;
 interface
 
 uses
-  Classes, SysUtils, uBaseUnit, uFMDThread, FileUtil, LazFileUtils,
-  sqlite3conn, sqldb, db, USimpleLogger, strutils, dateutils, RegExpr,
+  Classes, SysUtils, uBaseUnit, uFMDThread, FileUtil, LazFileUtils, sqlite3conn,
+  sqlite3backup, sqldb, db, USimpleLogger, strutils, dateutils, RegExpr,
   sqlite3dyn, httpsend;
 
 type
@@ -297,75 +297,6 @@ begin
   Result := FileExistsUTF8(fmdDirectory + DATA_FOLDER + AWebsite + DBDATA_EXT);
 end;
 
-function CopyFile(const SrcFilename, DestFilename: String;
-                  Flags: TCopyFileFlags=[cffOverwriteFile]; ExceptionOnError: Boolean=False): Boolean;
-var
-  SrcHandle: THandle;
-  DestHandle: THandle;
-  Buffer: array[1..4096] of byte;
-  ReadCount, WriteCount, TryCount: LongInt;
-begin
-  Result := False;
-  // check overwrite
-  if (not (cffOverwriteFile in Flags)) and FileExistsUTF8(DestFileName) then
-    exit;
-  // check directory
-  if (cffCreateDestDirectory in Flags)
-  and (not DirectoryExistsUTF8(ExtractFilePath(DestFileName)))
-  and (not ForceDirectoriesUTF8(ExtractFilePath(DestFileName))) then
-    exit;
-  TryCount := 0;
-  While TryCount <> 3 Do Begin
-    SrcHandle := FileOpenUTF8(SrcFilename, fmOpenRead or fmShareDenyNone);
-    if (THandle(SrcHandle)=feInvalidHandle) then Begin
-      Inc(TryCount);
-      Sleep(10);
-    End
-    Else Begin
-      TryCount := 0;
-      Break;
-    End;
-  End;
-  If TryCount > 0 Then
-  begin
-    if ExceptionOnError then
-      raise EFOpenError.CreateFmt({SFOpenError}'Unable to open file "%s"', [SrcFilename])
-    else
-      exit;
-  end;
-  try
-    DestHandle := FileCreateUTF8(DestFileName);
-    if (THandle(DestHandle)=feInvalidHandle) then
-    begin
-      if ExceptionOnError then
-        raise EFCreateError.CreateFmt({SFCreateError}'Unable to create file "%s"',[DestFileName])
-      else
-        Exit;
-    end;
-    try
-      repeat
-        ReadCount:=FileRead(SrcHandle,Buffer[1],High(Buffer));
-        if ReadCount<=0 then break;
-        WriteCount:=FileWrite(DestHandle,Buffer[1],ReadCount);
-        if WriteCount<ReadCount then
-        begin
-          if ExceptionOnError then
-            raise EWriteError.CreateFmt({SFCreateError}'Unable to write to file "%s"',[DestFileName])
-          else
-            Exit;
-        end;
-      until false;
-    finally
-      FileClose(DestHandle);
-    end;
-    if (cffPreserveTime in Flags) then
-      FileSetDateUTF8(DestFilename, FileGetDate(SrcHandle));
-    Result := True;
-  finally
-    FileClose(SrcHandle);
-  end;
-end;
-
 procedure CopyDBDataProcess(const AWebsite, NWebsite: string);
 begin
   if NWebsite = '' then Exit;
@@ -619,10 +550,14 @@ procedure TDBDataProcess.Backup(AWebsite: string);
 begin
   if AWebsite = '' then Exit;
   if FConn.Connected then
-    FConn.ExecuteDirect('END TRANSACTION');
-  CopyDBDataProcess(FWebsite, AWebsite);
-  if FConn.Connected then
-    FConn.ExecuteDirect('BEGIN TRANSACTION');
+  begin
+    with TSQLite3Backup.Create do
+    try
+      Backup(FConn, fmdDirectory + DATA_FOLDER + AWebsite + DBDATA_EXT);
+    finally
+      Free;
+    end;
+  end;
 end;
 
 procedure TDBDataProcess.Refresh;
