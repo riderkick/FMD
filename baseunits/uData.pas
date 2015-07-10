@@ -29,7 +29,6 @@ type
 
   TDBDataProcess = class
   private
-    FCSRecord: TRTLCriticalSection;
     FConn: TSQLite3Connectionx;
     FTrans: TSQLTransaction;
     FQuery: TSQLQuery;
@@ -430,7 +429,6 @@ begin
     (ParamNo < Length(DBDataProcessParams)) and
     (RecIndex < FDataCount) then
   begin
-    EnterCriticalsection(FCSRecord);
     try
       FQuery.RecNo := RecIndex+1;
       Result:= FQuery.FieldByName(DBDataProcessParams[ParamNo]).AsString;
@@ -439,13 +437,11 @@ begin
         WriteLog_E('TDBDataProcess.GetParam.Error: ' + E.Message +
           LineEnding + GetStackTraceInfo);
     end;
-    LeaveCriticalsection(FCSRecord);
   end;
 end;
 
 constructor TDBDataProcess.Create;
 begin
-  InitCriticalSection(FCSRecord);
   FConn := TSQLite3Connectionx.Create(nil);
   FTrans := TSQLTransaction.Create(nil);
   FQuery := TSQLQuery.Create(nil);
@@ -477,7 +473,6 @@ begin
   FTrans.Free;
   FConn.Free;
   FRegxp.Free;
-  DoneCriticalsection(FCSRecord);
   inherited Destroy;
 end;
 
@@ -766,14 +761,7 @@ function TDBDataProcess.Locate(FieldIndex: Integer; Value: String): Boolean;
 begin
   Result := false;
   if (FQuery.Active) and (FDataCount > 0) then
-  begin
-    EnterCriticalsection(FCSRecord);
-    try
-      Result := FQuery.Locate(DBDataProcessParams[FieldIndex], Value, [loCaseInsensitive]);
-    finally
-      LeaveCriticalsection(FCSRecord);
-    end;
-  end;
+    Result := FQuery.Locate(DBDataProcessParams[FieldIndex], Value, [loCaseInsensitive]);
 end;
 
 procedure TDBDataProcess.CreateDatabase(AWebsite: string);
