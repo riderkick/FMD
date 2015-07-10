@@ -836,7 +836,7 @@ function CorrectFilePath(const APath: String): String;
 function CorrectURL(const URL: String): String;
 procedure CheckPath(const S: String);
 
-function GetMangaSiteID(const Name: String): Cardinal;
+function GetMangaSiteID(const Name: String): Integer;
 function GetMangaSiteName(const ID: Cardinal): String;
 function GetMangaSiteRoot(const Website: String): String; overload;
 function GetMangaSiteRoot(const MangaID: Cardinal): String; overload;
@@ -1213,10 +1213,11 @@ begin
   end;
 end;
 
-function GetMangaSiteID(const Name: String): Cardinal;
+function GetMangaSiteID(const Name: String): Integer;
 var
   i: Integer;
 begin
+  Result := -1;
   for i := Low(WebsiteRoots) to High(WebsiteRoots) do
     if Name = WebsiteRoots[i, 0] then
       Exit(i);
@@ -1231,6 +1232,7 @@ function GetMangaSiteRoot(const Website : String) : String;
 var
   i: Integer;
 begin
+  Result := '';
   for i := Low(WebsiteRoots) to High(WebsiteRoots) do
     if Website = WebsiteRoots[i, 0] then
       Exit(WebsiteRoots[i, 1]);
@@ -1628,6 +1630,7 @@ function StringsToArray(const S: TStrings): TArrayOfString;
 var
   i: Integer;
 begin
+  SetLength(Result, 0);
   if not Assigned(S) then Exit;
   if S.Count = 0 then Exit;
   SetLength(Result, S.Count);
@@ -3786,10 +3789,10 @@ end;
 
 function HeaderByName(const AHeaders: TStrings; const AHeaderName: String): String;
 var
-  i, p: Cardinal;
+  i, p: Integer;
   hn: String;
-
 begin
+  Result := '';
   if AHeaders.Count < 1 then
     Exit;
   hn := AHeaderName;
