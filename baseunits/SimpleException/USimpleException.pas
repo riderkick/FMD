@@ -210,6 +210,7 @@ begin
     else
       Result := 'Windows';
   end;
+  Initialize(wdir);
   GetWindowsDirectory(PChar(wdir), MAX_PATH);
   if DirectoryExists(wdir + '\SysWOW64') then
     Result := Result + ' 64-bit';
@@ -297,8 +298,6 @@ begin
     Result := '';
   end;
 end;
-
-
 
 procedure TSimpleException.CreateExceptionReport;
 begin

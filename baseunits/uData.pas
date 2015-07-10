@@ -207,13 +207,8 @@ const
 implementation
 
 uses
-  Dialogs,
-  fpJSON, JSONParser, IniFiles,
-  jsHTMLUtil,
-  FastHTMLParser, HTMLUtil,
-  SynaCode,
-  frmMain,
-  uMisc;
+  Dialogs, fpJSON, JSONParser, IniFiles, jsHTMLUtil, FastHTMLParser, HTMLUtil,
+  SynaCode, uMisc, frmMain;
 
 function NaturalCompareCallback({%H-}user: pointer; len1: longint; data1: pointer;
   len2: longint; data2: pointer): longint; cdecl;
@@ -1386,7 +1381,7 @@ begin
     end;
   except
     on E: Exception do
-      MainForm.ExceptionHandler(Self, E);
+      WriteLog_E('TDataProcess.Filter.Error!', E, Self);
   end;
   regx.Free;
 end;

@@ -41,7 +41,8 @@ const
   _LOG_SYMBOL = 'EWIDV';
 
   procedure SetLogFile(const LogFileName: String);
-  procedure WriteLog_E(const msg: String);
+  procedure WriteLog_E(const msg: String); overload;
+  procedure WriteLog_E(const msg: String; Exc: Exception; Sender: TObject = nil); overload;
   procedure Writelog_W(const msg: String);
   procedure Writelog_I(const msg: String);
   procedure Writelog_D(const msg: String);
@@ -115,6 +116,24 @@ begin
   WriteLog(msg, ERROR);
 end;
 
+procedure WriteLog_E(const msg: String; Exc: Exception; Sender: TObject);
+var
+  s: string;
+begin
+  s := '';
+  if Assigned(Sender) then
+    s += LineEnding +
+         'Sender Class     : ' + Sender.ClassName;
+  if Assigned(Exc) then
+  begin
+    s += LineEnding +
+         'Exception Class  : ' + Exc.ClassName + LineEnding +
+         'Exception Message: ' + Exc.Message;
+  end;
+  s += GetStackTraceInfo;
+  WriteLog_E(msg + s);
+end;
+
 procedure Writelog_W(const msg: String);
 begin
   WriteLog(msg, WARNING);
@@ -145,7 +164,7 @@ begin
   if _HAS_DEBUG_LINE then
   begin
     try
-      GetLineInfo(PtrUInt(Addr), func, Source, line);
+      GetLineInfo({%H-}PtrUInt(Addr), func, Source, line);
       if func <> '' then
         Result := Result + ' ' + func;
       if Source <> '' then
