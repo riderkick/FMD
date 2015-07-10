@@ -321,8 +321,8 @@ function DeleteDBDataProcess(const AWebsite: string): Boolean;
 var
   tryc: Integer;
 begin
-  Result := True;
-  if FileExistsUTF8(fmdDirectory + DATA_FOLDER + AWebsite + DBDATA_EXT) then
+  Result := not FileExistsUTF8(fmdDirectory + DATA_FOLDER + AWebsite + DBDATA_EXT);
+  if Result = False then
   begin
     tryc := 0;
     while not DeleteFileUTF8(fmdDirectory + DATA_FOLDER + AWebsite + DBDATA_EXT) do
