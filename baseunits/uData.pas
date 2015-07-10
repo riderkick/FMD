@@ -62,7 +62,7 @@ type
       const stTitle, stAuthors, stArtists, stStatus, stSummary: String;
       const minusDay: Cardinal; const haveAllChecked, searchNewManga: Boolean;
       useRegExpr: Boolean = False): Boolean;
-    function Locate(FieldIndex: Integer; Value: String): Boolean;
+    function LocateByLink(ALink: String): Boolean;
     procedure CreateDatabase(AWebsite: string = '');
     procedure Close;
     procedure Save;
@@ -187,13 +187,13 @@ const
   DBDataProcessParam = 'title,link,authors,artists,genres,status,summary,numchapter,jdn';
   DBDataProcessParams: array [0..8] of ShortString =
     ('title', 'link', 'authors', 'artists', 'genres', 'status', 'summary', 'numchapter', 'jdn');
-  DBDataProccesCreateParam = '(title STRING,'+
+  DBDataProccesCreateParam = '(title TEXT,'+
                               'link STRING NOT NULL PRIMARY KEY,'+
-                              'authors STRING,'+
-                              'artists STRING,'+
-                              'genres STRING,'+
-                              'status STRING,'+
-                              'summary STRING,'+
+                              'authors TEXT,'+
+                              'artists TEXT,'+
+                              'genres TEXT,'+
+                              'status TEXT,'+
+                              'summary TEXT,'+
                               'numchapter INTEGER,'+
                               'jdn INTEGER);';
 
@@ -688,9 +688,7 @@ end;
 
 function TDBDataProcess.Search(ATitle: String): Boolean;
 begin
-  Result := False;
   if FConn.Connected then
-  begin
     try
       FQuery.Close;
       FQuery.SQL.Text := FSQLSelect;
@@ -702,7 +700,7 @@ begin
       on E: Exception do
         WriteLog_E('TDBDataProcess.Search.Error: ' + E.Message + LineEnding + GetStackTraceInfo);
     end;
-  end;
+  Result := FQuery.Active;
 end;
 
 function TDBDataProcess.CanFilter(const checkedGenres,
@@ -757,11 +755,16 @@ begin
   end;
 end;
 
-function TDBDataProcess.Locate(FieldIndex: Integer; Value: String): Boolean;
+function TDBDataProcess.LocateByLink(ALink: String): Boolean;
 begin
   Result := false;
-  if (FQuery.Active) and (FDataCount > 0) then
-    Result := FQuery.Locate(DBDataProcessParams[FieldIndex], Value, [loCaseInsensitive]);
+  if (FQuery.Active) and (FDataCount > 0) and (ALink <> '') then
+    try
+      Result := FQuery.Locate('link', ALink, [loCaseInsensitive]);
+    except
+      on E: Exception do
+        WriteLog_E('TDBDataProcess.LocateByLink.Error!', E, Self);
+    end;
 end;
 
 procedure TDBDataProcess.CreateDatabase(AWebsite: string);
