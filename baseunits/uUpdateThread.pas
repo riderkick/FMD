@@ -660,7 +660,8 @@ begin
             GetInfo(links.Count, CS_INFO);
           end;
           WaitForThreads;
-          mainDataProcess.Commit;
+          if FCommitCount > 0 then
+            mainDataProcess.Commit;
         end;
 
         if (not Terminated) or (not SitesWithSortedList(website)) then
