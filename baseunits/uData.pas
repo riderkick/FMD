@@ -15,8 +15,8 @@ interface
 
 uses
   Classes, SysUtils, uBaseUnit, uFMDThread, FileUtil, LazFileUtils, sqlite3conn,
-  sqlite3backup, sqldb, db, USimpleLogger, strutils, dateutils, RegExpr,
-  sqlite3dyn, httpsend;
+  sqlite3backup, sqldb, db, Sqlite3DS, USimpleLogger, strutils, dateutils,
+  RegExpr, sqlite3dyn, httpsend;
 
 type
 
@@ -27,7 +27,7 @@ type
 
   { TDBDataProcess }
 
-  TDBDataProcess = class
+  TDBDataProcess = class(TObject)
   private
     FConn: TSQLite3Connectionx;
     FTrans: TSQLTransaction;
@@ -35,7 +35,7 @@ type
     FRegxp: TRegExpr;
     FWebsite: String;
     FTableName: String;
-    FDataCount: Integer;
+    FRecordCount: Integer;
     FFiltered: Boolean;
     FFilterAllSites: Boolean;
     FSitesList: TStringList;
@@ -43,14 +43,15 @@ type
   protected
     procedure CreateTable;
     procedure VacuumTable;
-    procedure GetDataCount;
+    procedure GetRecordCount;
     function GetConnected: Boolean;
     function InternalOpen(const FilePath: String = ''): Boolean;
     function GetWebsiteName(RecIndex: Integer): String;
-    function GetParam(RecIndex, ParamNo: Integer): String;
+    function GetValue(RecIndex, FieldIndex: Integer): String;
   public
     constructor Create;
     destructor Destroy; override;
+
     function Open(AWebsite: String = ''): Boolean;
     function OpenTable(const ATableName: String = ''): Boolean;
     function TableExist(const ATableName: String): Boolean;
@@ -63,10 +64,12 @@ type
       const minusDay: Cardinal; const haveAllChecked, searchNewManga: Boolean;
       useRegExpr: Boolean = False): Boolean;
     function LocateByLink(ALink: String): Boolean;
-    procedure CreateDatabase(AWebsite: string = '');
+
+    procedure CreateDatabase(AWebsite: String = '');
+    procedure GetFieldNames(List: TStringList);
     procedure Close;
     procedure Save;
-    procedure Backup(AWebsite: string);
+    procedure Backup(AWebsite: String);
     procedure Refresh(RecheckDataCount: Boolean = False);
     procedure AddData(Title, Link, Authors, Artists, Genres, Status, Summary: String;
       NumChapter, JDN: Integer); overload;
@@ -78,15 +81,16 @@ type
     procedure ApplyUpdates(RecheckDataCount: Boolean = False);
     procedure RemoveFilter;
     procedure Sort;
+
     property Website: String read FWebsite write FWebsite;
     property TableName: String read FTableName write FTableName;
     property Connected: Boolean read GetConnected;
-    property DataCount: Integer read FDataCount;
+    property RecordCount: Integer read FRecordCount;
     property Filtered: Boolean read FFiltered;
     property FilterAllSites: Boolean read FFilterAllSites write FFilterAllSites;
     property SitesList: TStringList read FSitesList write FSitesList;
     property WebsiteName[RecIndex: Integer]: String read GetWebsiteName;
-    property Param[RecIndex, ParamNo: Integer]: String read GetParam;
+    property Value[RecIndex, ParamNo: Integer]: String read GetValue;
   end;
 
   { TDataProcess }
@@ -182,6 +186,7 @@ type
 
 var
   options: TStringList;
+  tdset: TSqlite3Dataset;
 
 const
   DBDataProcessParam = 'title,link,authors,artists,genres,status,summary,numchapter,jdn';
@@ -357,24 +362,29 @@ end;
 procedure TDBDataProcess.VacuumTable;
 begin
   if FConn.Connected then
-  with FConn do
-  begin
-    ExecuteDirect('END TRANSACTION');
-    ExecuteDirect('VACUUM');
-    ExecuteDirect('BEGIN TRANSACTION');
-  end;
+    with FConn do
+    begin
+      ExecuteDirect('END TRANSACTION');
+      try
+        ExecuteDirect('VACUUM');
+      except
+        on E: Exception do
+          WriteLog_E('TDBDataProcess.VacuumTable.Error!', E, Self);
+      end;
+      ExecuteDirect('BEGIN TRANSACTION');
+    end;
 end;
 
-procedure TDBDataProcess.GetDataCount;
+procedure TDBDataProcess.GetRecordCount;
 begin
   if FQuery.Active then
   begin
     FQuery.Last;
-    FDataCount := FQuery.RecordCount;
+    FRecordCount := FQuery.RecordCount;
     FQuery.Refresh;
   end
   else
-    FDataCount := 0;
+    FRecordCount := 0;
 end;
 
 function TDBDataProcess.GetConnected: Boolean;
@@ -387,7 +397,8 @@ begin
   Result := False;
   if FilePath <> '' then
     FConn.DatabaseName := FilePath;
-  if FConn.DatabaseName = '' then Exit;
+  if FConn.DatabaseName = '' then
+    Exit;
   try
     FConn.Connected := True;
     sqlite3_create_collation(FConn.Handle, PChar('NATCMP'), SQLITE_UTF8, nil,
@@ -395,7 +406,6 @@ begin
     sqlite3_create_function(FConn.Handle, PChar('REGEXP'), 2, SQLITE_UTF8, FRegxp,
       RegexCallback, nil, nil);
     FTrans.Active := True;
-    Result := FConn.Connected;
   except
     on E: Exception do
     begin
@@ -404,34 +414,31 @@ begin
       Result := False;
     end;
   end;
+  Result := FConn.Connected;
 end;
 
 function TDBDataProcess.GetWebsiteName(RecIndex: Integer): String;
 begin
-  if FConn.Connected then
+  Result := FWebsite;
+  if FConn.Connected and FilterAllSites and Filtered then
   begin
-    if FilterAllSites then
-    begin
 
-    end
-    else
-      Result := FWebsite;
   end;
 end;
 
-function TDBDataProcess.GetParam(RecIndex, ParamNo: Integer): String;
+function TDBDataProcess.GetValue(RecIndex, FieldIndex: Integer): String;
 begin
-  if ParamNo in [DATA_PARAM_JDN, DATA_PARAM_NUMCHAPTER] then
+  if FieldIndex in [DATA_PARAM_NUMCHAPTER, DATA_PARAM_JDN] then
     Result := '0'
   else
     Result := '';
   if FQuery.Active and
-    (ParamNo < Length(DBDataProcessParams)) and
-    (RecIndex < FDataCount) then
+    (FieldIndex < Length(DBDataProcessParams)) and
+    (RecIndex < FRecordCount) then
   begin
     try
-      FQuery.RecNo := RecIndex+1;
-      Result:= FQuery.FieldByName(DBDataProcessParams[ParamNo]).AsString;
+      FQuery.RecNo := RecIndex + 1;
+      Result := FQuery.FieldByName(DBDataProcessParams[FieldIndex]).AsString;
     except
       on E: Exception do
         WriteLog_E('TDBDataProcess.GetParam.Error: ' + E.Message +
@@ -442,17 +449,19 @@ end;
 
 constructor TDBDataProcess.Create;
 begin
+  inherited Create;
   FConn := TSQLite3Connectionx.Create(nil);
   FTrans := TSQLTransaction.Create(nil);
   FQuery := TSQLQuery.Create(nil);
   FConn.Transaction := FTrans;
   FQuery.DataBase := FTrans.DataBase;
+  FQuery.Transaction := FTrans;
   FRegxp := TRegExpr.Create;
   FRegxp.ModifierI := True;
   FSitesList := TStringList.Create;
   FTableName := 'masterlist';
   FSQLSelect := 'SELECT * FROM ' + QuotedStr(FTableName);
-  FDataCount := 0;
+  FRecordCount := 0;
 end;
 
 destructor TDBDataProcess.Destroy;
@@ -462,7 +471,9 @@ begin
     begin
       Commit;
       VacuumTable;
-      FConn.Connected := False;
+      FQuery.Close;
+      FTrans.Active := False;
+      FConn.Close(True);
     end;
   except
     on E: Exception do
@@ -482,21 +493,24 @@ var
 begin
   Result := False;
   FFiltered := False;
-  FDataCount := 0;
+  FRecordCount := 0;
   Close;
-  if AWebsite <> '' then FWebsite := AWebsite;
-  if FWebsite = '' then Exit;
+  if AWebsite <> '' then
+    FWebsite := AWebsite;
+  if FWebsite = '' then
+    Exit;
   filepath := fmdDirectory + DATA_FOLDER + FWebsite + DBDATA_EXT;
   if not FileExistsUTF8(filepath) then
     ConvertDataProccessToDB(AWebsite, True);
-  if not FileExistsUTF8(filepath) then Exit;
+  if not FileExistsUTF8(filepath) then
+    Exit;
   try
     if InternalOpen(filepath) then
     begin
       if not TableExist(FTableName) then
         CreateTable;
       OpenTable;
-      GetDataCount;
+      GetRecordCount;
     end;
     Result := FQuery.Active;
   except
@@ -514,7 +528,8 @@ begin
     try
       if ATableName <> '' then
         FTableName := ATableName;
-      if FTableName = '' then Exit;
+      if FTableName = '' then
+        Exit;
       if TableExist(FTableName) then
       begin
         if FQuery.Active then
@@ -543,7 +558,7 @@ begin
     try
       FConn.GetTableNames(ts);
       ts.Sort;
-      Result := ts.Find(FTableName, i);
+      Result := ts.Find(ATableName, i);
     finally
       ts.Free;
     end;
@@ -553,11 +568,13 @@ end;
 procedure TDBDataProcess.Close;
 begin
   FFiltered := False;
-  FDataCount := 0;
+  FRecordCount := 0;
   if FConn.Connected then
     try
       Commit;
-      FConn.Connected := False;
+      FQuery.Close;
+      FTrans.Active := False;
+      FConn.Close(True);
       FConn.DatabaseName := '';
     except
       on E: Exception do
@@ -570,74 +587,77 @@ begin
   Commit;
 end;
 
-procedure TDBDataProcess.Backup(AWebsite: string);
+procedure TDBDataProcess.Backup(AWebsite: String);
 begin
-  if AWebsite = '' then Exit;
+  if AWebsite = '' then
+    Exit;
   if FConn.Connected then
   begin
     with TSQLite3Backup.Create do
-    try
-      Backup(FConn, fmdDirectory + DATA_FOLDER + AWebsite + DBDATA_EXT);
-    finally
-      Free;
-    end;
+      try
+        Backup(FConn, fmdDirectory + DATA_FOLDER + AWebsite + DBDATA_EXT);
+      finally
+        Free;
+      end;
   end;
 end;
 
 procedure TDBDataProcess.Refresh(RecheckDataCount: Boolean);
 begin
   if FQuery.Active then
-  begin
-    FQuery.Refresh;
-    if RecheckDataCount then
-      GetDataCount;
-  end;
+    FQuery.Refresh
+  else
+    OpenTable;
+  if RecheckDataCount then
+    GetRecordCount;
 end;
 
-procedure TDBDataProcess.AddData(Title, Link, Authors, Artists, Genres, Status,
-  Summary: String; NumChapter, JDN: Integer);
+procedure TDBDataProcess.AddData(Title, Link, Authors, Artists, Genres,
+  Status, Summary: String; NumChapter, JDN: Integer);
 begin
   if FConn.Connected then
-  try
-    FConn.ExecuteDirect('INSERT INTO ' + QuotedStr(FTableName) +
-      #13#10'(' + DBDataProcessParam + ')'+
-      #13#10'VALUES (' +
-      QuotedStr(Title) + ',' +
-      QuotedStr(Link) + ',' +
-      QuotedStr(Authors) + ',' +
-      QuotedStr(Artists) + ',' +
-      QuotedStr(Genres) + ',' +
-      QuotedStr(Status) + ',' +
-      QuotedStr(Summary) + ',' +
-      QuotedStr(IntToStr(NumChapter)) + ',' +
-      QuotedStr(IntToStr(JDN)) + ');');
-  except
-    on E: Exception do
-      WriteLog_E('TDBDataProcess.AddData.Error: ' + E.Message + LineEnding + GetStackTraceInfo);
-  end;
+    try
+      FConn.ExecuteDirect('INSERT INTO ' + QuotedStr(FTableName) +
+        #13#10'(' + DBDataProcessParam + ')' +
+        #13#10'VALUES (' +
+        QuotedStr(Title) + ',' +
+        QuotedStr(Link) + ',' +
+        QuotedStr(Authors) + ',' +
+        QuotedStr(Artists) + ',' +
+        QuotedStr(Genres) + ',' +
+        QuotedStr(Status) + ',' +
+        QuotedStr(Summary) + ',' +
+        QuotedStr(IntToStr(NumChapter)) + ',' +
+        QuotedStr(IntToStr(JDN)) + ');');
+    except
+      on E: Exception do
+        WriteLog_E('TDBDataProcess.AddData.Error: ' + E.Message +
+          LineEnding + GetStackTraceInfo);
+    end;
 end;
 
-procedure TDBDataProcess.AddData(Title, Link, Authors, Artists, Genres, Status,
-  Summary: String; NumChapter: Integer; JDN: TDateTime);
+procedure TDBDataProcess.AddData(Title, Link, Authors, Artists, Genres,
+  Status, Summary: String; NumChapter: Integer; JDN: TDateTime);
 begin
   AddData(Title, Link, Authors, Artists, Genres, Status, Summary,
     NumChapter, DateToJDN(JDN));
 end;
 
-procedure TDBDataProcess.UpdateData(Title, Link, Authors, Artists, Genres,
-  Status, Summary: String; NumChapter: Integer);
+procedure TDBDataProcess.UpdateData(Title, Link, Authors, Artists,
+  Genres, Status, Summary: String; NumChapter: Integer);
 var
-  sql: string;
+  sql: String;
 
-  procedure AddSQL(const field, value: string);
+  procedure AddSQL(const field, Value: String);
   begin
     if sql <> '' then
       sql += ','#13#10;
-    sql += field + '=' + QuotedStr(value);
+    sql += field + '=' + QuotedStr(Value);
   end;
 
 begin
-  if Link = '' then Exit;
+  if Link = '' then
+    Exit;
   if FConn.Connected then
   begin
     try
@@ -654,16 +674,22 @@ begin
       FConn.ExecuteDirect(sql);
     except
       on E: Exception do
-        WriteLog_E('TDBDataProcess.AddData.Error: ' + E.Message + LineEnding + GetStackTraceInfo);
+        WriteLog_E('TDBDataProcess.AddData.Error: ' + E.Message +
+          LineEnding + GetStackTraceInfo);
     end;
   end;
 end;
 
 procedure TDBDataProcess.Commit;
+var
+  queryactive: Boolean;
 begin
   if FConn.Connected then
     try
+      queryactive := FQuery.Active;
       FTrans.Commit;
+      if FQuery.Active <> queryactive then
+        FQuery.Active := queryactive;
     except
       on E: Exception do
         WriteLog_E('TDBDataProcess.Commit.Error!', E, Self);
@@ -680,10 +706,8 @@ begin
       on E: Exception do
         WriteLog_E('TDBDataProcess.ApplyUpdates.Error!', E, Self);
     end;
-  if FQuery.Active = False then
-    FQuery.Open;
   if RecheckDataCount then
-    GetDataCount;
+    GetRecordCount;
 end;
 
 function TDBDataProcess.Search(ATitle: String): Boolean;
@@ -695,28 +719,28 @@ begin
       if ATitle <> '' then
         FQuery.SQL.Add('WHERE title LIKE ' + QuotedStr(AnsiQuotedStr(ATitle, '%')));
       FQuery.Open;
-      GetDataCount;
+      GetRecordCount;
     except
       on E: Exception do
-        WriteLog_E('TDBDataProcess.Search.Error: ' + E.Message + LineEnding + GetStackTraceInfo);
+        WriteLog_E('TDBDataProcess.Search.Error: ' + E.Message +
+          LineEnding + GetStackTraceInfo);
     end;
   Result := FQuery.Active;
 end;
 
-function TDBDataProcess.CanFilter(const checkedGenres,
-  uncheckedGenres: TStringList; const stTitle, stAuthors, stArtists, stStatus,
-  stSummary: String; const minusDay: Cardinal; const haveAllChecked,
-  searchNewManga: Boolean): Boolean;
+function TDBDataProcess.CanFilter(const checkedGenres, uncheckedGenres: TStringList;
+  const stTitle, stAuthors, stArtists, stStatus, stSummary: String;
+  const minusDay: Cardinal; const haveAllChecked, searchNewManga: Boolean): Boolean;
 begin
   Result := True;
 end;
 
-function TDBDataProcess.Filter(const checkedGenres,
-  uncheckedGenres: TStringList; const stTitle, stAuthors, stArtists, stStatus,
-  stSummary: String; const minusDay: Cardinal; const haveAllChecked,
-  searchNewManga: Boolean; useRegExpr: Boolean): Boolean;
+function TDBDataProcess.Filter(const checkedGenres, uncheckedGenres: TStringList;
+  const stTitle, stAuthors, stArtists, stStatus, stSummary: String;
+  const minusDay: Cardinal; const haveAllChecked, searchNewManga: Boolean;
+  useRegExpr: Boolean): Boolean;
 
-  procedure AddSQL(const S: string);
+  procedure AddSQL(const S: String);
   begin
     if FQuery.SQL.Count > 0 then
       FQuery.SQL.Add('AND');
@@ -725,15 +749,16 @@ function TDBDataProcess.Filter(const checkedGenres,
 
 begin
   Result := False;
-  if FConn.Connected = False then Exit;
+  if FConn.Connected = False then
+    Exit;
   with FQuery do
   begin
-    FDataCount := 0;
+    FRecordCount := 0;
     Close;
     try
       SQL.Clear;
       if searchNewManga then
-        AddSQL('jdn > ' + QuotedStr(IntToStr(DateToJDN(IncDay(Now, (0-minusDay))))));
+        AddSQL('jdn > ' + QuotedStr(IntToStr(DateToJDN(IncDay(Now, (0 - minusDay))))));
       if Trim(SQL.Text) <> '' then
         SQL.Insert(0, 'WHERE');
       SQL.Insert(0, FSQLSelect);
@@ -750,15 +775,15 @@ begin
         FFiltered := False;
       end;
     end;
-    GetDataCount;
+    GetRecordCount;
     Result := FFiltered;
   end;
 end;
 
 function TDBDataProcess.LocateByLink(ALink: String): Boolean;
 begin
-  Result := false;
-  if (FQuery.Active) and (FDataCount > 0) and (ALink <> '') then
+  Result := False;
+  if (FQuery.Active) and (FRecordCount > 0) and (ALink <> '') then
     try
       Result := FQuery.Locate('link', ALink, [loCaseInsensitive]);
     except
@@ -767,13 +792,14 @@ begin
     end;
 end;
 
-procedure TDBDataProcess.CreateDatabase(AWebsite: string);
+procedure TDBDataProcess.CreateDatabase(AWebsite: String);
 var
-  filepath: string;
+  filepath: String;
 begin
   if AWebsite <> '' then
     FWebsite := AWebsite;
-  if FWebsite = '' then Exit;
+  if FWebsite = '' then
+    Exit;
   filepath := fmdDirectory + DATA_FOLDER + FWebsite + DBDATA_EXT;
   if FileExistsUTF8(filepath) then
     DeleteFileUTF8(filepath);
@@ -781,11 +807,17 @@ begin
   CreateTable;
 end;
 
+procedure TDBDataProcess.GetFieldNames(List: TStringList);
+begin
+  if (List <> nil) and (FQuery.Active) then
+    FQuery.GetFieldNames(List);
+end;
+
 procedure TDBDataProcess.RemoveFilter;
 begin
   FFiltered := False;
   OpenTable;
-  GetDataCount;
+  GetRecordCount;
 end;
 
 procedure TDBDataProcess.Sort;
@@ -795,16 +827,16 @@ begin
     FQuery.Close;
     with FConn do
     begin
-      ExecuteDirect('CREATE TABLE ' + QuotedStr(FTableName+'_ordered') +
+      ExecuteDirect('CREATE TABLE ' + QuotedStr(FTableName + '_ordered') +
         DBDataProccesCreateParam);
-      ExecuteDirect('INSERT INTO '+ QuotedStr(FTableName+'_ordered') + ' ' +
+      ExecuteDirect('INSERT INTO ' + QuotedStr(FTableName + '_ordered') + ' ' +
         BracketStr(DBDataProcessParam) + ' SELECT ' + DBDataProcessParam +
-        ' FROM '+ QuotedStr(FTableName) + 'ORDER BY title COLLATE NATCMP');
+        ' FROM ' + QuotedStr(FTableName) + 'ORDER BY title COLLATE NATCMP');
       ExecuteDirect('DROP TABLE ' + QuotedStr(FTableName));
-      ExecuteDirect('ALTER TABLE '+ QuotedStr(FTableName+'_ordered') +
+      ExecuteDirect('ALTER TABLE ' + QuotedStr(FTableName + '_ordered') +
         'RENAME TO ' + QuotedStr(FTableName));
       FTrans.Commit;
-      VacuumTable
+      VacuumTable;
     end;
     FQuery.Open;
   end;
@@ -920,7 +952,7 @@ procedure TDataProcess.BreakDataToParts(const i: Cardinal);
 begin
   if i < Data.Count then
   begin
-    Title.Strings[i] := GetParam(i, DATA_PARAM_NAME);
+    Title.Strings[i] := GetParam(i, DATA_PARAM_TITLE);
     Link.Strings[i] := GetParam(i, DATA_PARAM_LINK);
     Authors.Strings[i] := GetParam(i, DATA_PARAM_AUTHORS);
     Artists.Strings[i] := GetParam(i, DATA_PARAM_ARTISTS);
@@ -965,7 +997,7 @@ begin
     if Data.Count > 0 then
     begin
       //QuickSortData(data);
-      QuickSortNaturalPart(Data, SEPERATOR, DATA_PARAM_NAME); //Natural Sorting
+      QuickSortNaturalPart(Data, SEPERATOR, DATA_PARAM_TITLE); //Natural Sorting
       for i := 0 to Data.Count - 1 do
       begin
         filterMark.Add(FILTER_SHOW);
@@ -977,7 +1009,7 @@ begin
           GetParams(l, Data.Strings[i]);
           while l.Count < 10 do
             l.Add('');
-          title.Add(l.Strings[DATA_PARAM_NAME]);
+          title.Add(l.Strings[DATA_PARAM_TITLE]);
           link.Add(l.Strings[DATA_PARAM_LINK]);
           authors.Add(l.Strings[DATA_PARAM_AUTHORS]);
           artists.Add(l.Strings[DATA_PARAM_ARTISTS]);
@@ -1052,7 +1084,7 @@ begin
           GetParams(l, Data.Strings[i]);
           While l.Count < 10 do
             l.Add('');
-          title.Add(l.Strings[DATA_PARAM_NAME]);
+          title.Add(l.Strings[DATA_PARAM_TITLE]);
           link.Add(l.Strings[DATA_PARAM_LINK]);
           authors.Add(l.Strings[DATA_PARAM_AUTHORS]);
           artists.Add(l.Strings[DATA_PARAM_ARTISTS]);
@@ -1410,7 +1442,7 @@ end;
 procedure TDataProcess.Sort;
 begin
   //QuickSortData(data);
-  uMisc.QuickSortNaturalPart(Data, SEPERATOR, DATA_PARAM_NAME);
+  uMisc.QuickSortNaturalPart(Data, SEPERATOR, DATA_PARAM_TITLE);
 end;
 
 { TMangaInformation }
@@ -2734,7 +2766,7 @@ begin
   {$ENDIF}
   begin
     DataProcess.Data.Strings[index] := SetParams(
-      [DataProcess.Param[index, DATA_PARAM_NAME],
+      [DataProcess.Param[index, DATA_PARAM_TITLE],
       DataProcess.Param[index, DATA_PARAM_LINK],
       DataProcess.Param[index, DATA_PARAM_AUTHORS],
       DataProcess.Param[index, DATA_PARAM_ARTISTS],
@@ -2762,9 +2794,9 @@ begin
   {$ENDIF}
   begin
     if Trim(mangaInfo.title) = '' then
-      mangaInfo.title := DataProcess.Param[index, DATA_PARAM_NAME];
+      mangaInfo.title := DataProcess.Param[index, DATA_PARAM_TITLE];
     DataProcess.Data.Strings[index] := SetParams(
-      //[DataProcess.Param[index, DATA_PARAM_NAME],
+      //[DataProcess.Param[index, DATA_PARAM_TITLE],
       //sync title as well, some site possible to change title or when mangainfo script not work
       [mangaInfo.title,
       DataProcess.Param[index, DATA_PARAM_LINK],
@@ -2840,7 +2872,7 @@ begin
     IntToStr(GetCurrentJDN),
     '0'])));
   GetParams(l, DataProcess.Data.Strings[DataProcess.Data.Count - 1]);
-  DataProcess.title.Add(l.Strings[DATA_PARAM_NAME]);
+  DataProcess.title.Add(l.Strings[DATA_PARAM_TITLE]);
   DataProcess.link.Add(l.Strings[DATA_PARAM_LINK]);
   DataProcess.authors.Add(l.Strings[DATA_PARAM_AUTHORS]);
   DataProcess.artists.Add(l.Strings[DATA_PARAM_ARTISTS]);
@@ -2879,5 +2911,10 @@ end;
 initialization
   sqlite3dyn.SQLiteDefaultLibrary :=
     CleanAndExpandDirectory(GetCurrentDirUTF8) + 'sqlite3.dll';
+  tdset := TSqlite3Dataset.Create(nil);
+
+finalization
+  if Assigned(tdset) then
+    FreeAndNil(tdset);
 
 end.

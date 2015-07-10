@@ -1060,8 +1060,8 @@ begin
         vtMangaList.Clear;
         dataProcess.Open(cbSelectManga.Items[cbSelectManga.ItemIndex]);
       end;
-      vtMangaList.RootNodeCount := dataProcess.DataCount;
-      lbMode.Caption := Format(RS_ModeAll, [dataProcess.DataCount]);
+      vtMangaList.RootNodeCount := dataProcess.RecordCount;
+      lbMode.Caption := Format(RS_ModeAll, [dataProcess.RecordCount]);
       dataProcess.Refresh;
     finally
       Screen.Cursor := crDefault;
@@ -1869,9 +1869,9 @@ begin
       if not dataProcess.Open(
         cbSelectManga.Items.Strings[cbSelectManga.ItemIndex]) then
         RunGetList;
-      vtMangaList.RootNodeCount := dataProcess.DataCount;
+      vtMangaList.RootNodeCount := dataProcess.RecordCount;
       dataProcess.Refresh;
-      lbMode.Caption := Format(RS_ModeAll, [dataProcess.DataCount]);
+      lbMode.Caption := Format(RS_ModeAll, [dataProcess.RecordCount]);
       currentWebsite := cbSelectManga.Items[cbSelectManga.ItemIndex];
       dataProcess.website := cbSelectManga.Items[cbSelectManga.ItemIndex];
       CheckForTopPanel;
@@ -2065,8 +2065,8 @@ begin
         dataProcess := TDBDataProcess.Create;
         dataProcess.Open(cbSelectManga.Items[cbSelectManga.ItemIndex]);
       end;
-      vtMangaList.RootNodeCount := dataProcess.DataCount;
-      lbMode.Caption := Format(RS_ModeAll, [dataProcess.DataCount]);
+      vtMangaList.RootNodeCount := dataProcess.RecordCount;
+      lbMode.Caption := Format(RS_ModeAll, [dataProcess.RecordCount]);
       edSearch.Text := '';
     except
       on E: Exception do
@@ -2147,8 +2147,8 @@ begin
       seOptionNewMangaTime.Value,
       rbAll.Checked, cbOnlyNew.Checked, cbUseRegExpr.Checked) then
     begin
-      lbMode.Caption := Format(RS_ModeFiltered, [dataProcess.DataCount]);
-      vtMangaList.RootNodeCount := dataProcess.DataCount;
+      lbMode.Caption := Format(RS_ModeFiltered, [dataProcess.RecordCount]);
+      vtMangaList.RootNodeCount := dataProcess.RecordCount;
     end;
   except
     on E: Exception do
@@ -2189,8 +2189,8 @@ begin
     begin
       SilentThreadManager.Add(MD_AddToFavorites,
         dataProcess.WebsiteName[xNode^.Index],
-        DataProcess.Param[xNode^.Index, DATA_PARAM_NAME],
-        DataProcess.Param[xNode^.Index, DATA_PARAM_LINK]);
+        DataProcess.Value[xNode^.Index, DATA_PARAM_TITLE],
+        DataProcess.Value[xNode^.Index, DATA_PARAM_LINK]);
     end;
     xNode := vtMangaList.GetNextSelected(xNode);
   end;
@@ -2588,7 +2588,7 @@ begin
         AllowedToCreate := True;
         if DLManager.Count > 0 then
           for j := 0 to DLManager.Count - 1 do
-            if dataProcess.Param[xNode^.Index, DATA_PARAM_NAME] =
+            if dataProcess.Value[xNode^.Index, DATA_PARAM_TITLE] =
               DLManager.TaskItem(j).DownloadInfo.title then
             begin
               if YesAll then
@@ -2624,8 +2624,8 @@ begin
         if AllowedToCreate then
           SilentThreadManager.Add(MD_DownloadAll,
             dataProcess.WebsiteName[xNode^.Index],
-            dataProcess.Param[xNode^.Index, DATA_PARAM_NAME],
-            dataProcess.Param[xNode^.Index, DATA_PARAM_LINK]);
+            dataProcess.Value[xNode^.Index, DATA_PARAM_TITLE],
+            dataProcess.Value[xNode^.Index, DATA_PARAM_LINK]);
       end;
       xNode := vtMangaList.GetNextSelected(xNode);
     end;
@@ -2660,8 +2660,8 @@ begin
   GetInfosThread.MangaListPos := vtMangaList.FocusedNode^.Index;
 
   website := dataProcess.WebsiteName[GetInfosThread.MangaListPos];
-  title := DataProcess.Param[GetInfosThread.mangaListPos, DATA_PARAM_NAME];
-  link := DataProcess.Param[GetInfosThread.mangaListPos, DATA_PARAM_LINK];
+  title := DataProcess.Value[GetInfosThread.mangaListPos, DATA_PARAM_TITLE];
+  link := DataProcess.Value[GetInfosThread.mangaListPos, DATA_PARAM_LINK];
 
   GetInfosThread.Title := title;
   GetInfosThread.Website := website;
@@ -4041,7 +4041,7 @@ procedure TMainForm.vtMangaListBeforeCellPaint(Sender: TBaseVirtualTree;
 var
   data: PMangaListItem;
 begin
-  if (isExiting) or (dataProcess.DataCount = 0) then
+  if (isExiting) or (dataProcess.RecordCount = 0) then
     Exit;
   if miHighlightNewManga.Checked then
   begin
@@ -4079,29 +4079,29 @@ begin
     if FilterAllSites then
       s := s + RS_InfoWebsite + LineEnding +
         dataProcess.WebsiteName[LPos] + LineEnding + LineEnding;
-    if Trim(Param[LPos, DATA_PARAM_NAME]) <> '' then
-      s := s + RS_InfoTitle + LineEnding + Param[LPos, DATA_PARAM_NAME];
-    if Trim(Param[LPos, DATA_PARAM_AUTHORS]) <> '' then
+    if Trim(Value[LPos, DATA_PARAM_TITLE]) <> '' then
+      s := s + RS_InfoTitle + LineEnding + Value[LPos, DATA_PARAM_TITLE];
+    if Trim(Value[LPos, DATA_PARAM_AUTHORS]) <> '' then
       s := s + LineEnding + LineEnding + RS_InfoAuthors + LineEnding +
-        Param[LPos, DATA_PARAM_AUTHORS];
-    if Trim(Param[LPos, DATA_PARAM_ARTISTS]) <> '' then
+        Value[LPos, DATA_PARAM_AUTHORS];
+    if Trim(Value[LPos, DATA_PARAM_ARTISTS]) <> '' then
       s := s + LineEnding + LineEnding + RS_InfoArtists + LineEnding +
-        Param[LPos, DATA_PARAM_ARTISTS];
-    if Trim(Param[LPos, DATA_PARAM_GENRES]) <> '' then
+        Value[LPos, DATA_PARAM_ARTISTS];
+    if Trim(Value[LPos, DATA_PARAM_GENRES]) <> '' then
       s := s + LineEnding + LineEnding + RS_InfoGenres + LineEnding +
-        Param[LPos, DATA_PARAM_GENRES];
-    if Trim(Param[LPos, DATA_PARAM_STATUS]) <> '' then
+        Value[LPos, DATA_PARAM_GENRES];
+    if Trim(Value[LPos, DATA_PARAM_STATUS]) <> '' then
     begin
       s := s + LineEnding + LineEnding + RS_InfoStatus + LineEnding;
-      if Param[LPos, DATA_PARAM_STATUS] = '0' then
+      if Value[LPos, DATA_PARAM_STATUS] = '0' then
         s := s + cbFilterStatus.Items[0]
       else
         s := s + cbFilterStatus.Items[1];
     end;
-    if Trim(Param[LPos, DATA_PARAM_SUMMARY]) <> '' then
-      //s := s + LineEndingLineEnding + infoSummary + ':' + LineEnding + PrepareSummaryForHint(dataProcess.Param[LPos, DATA_PARAM_SUMMARY], 80);
+    if Trim(Value[LPos, DATA_PARAM_SUMMARY]) <> '' then
+      //s := s + LineEndingLineEnding + infoSummary + ':' + LineEnding + PrepareSummaryForHint(dataProcess.Value[LPos, DATA_PARAM_SUMMARY], 80);
       s := s + LineEnding + LineEnding + RS_InfoSummary + ':' + LineEnding +
-        StringBreaks(dataProcess.Param[LPos, DATA_PARAM_SUMMARY]);
+        StringBreaks(dataProcess.Value[LPos, DATA_PARAM_SUMMARY]);
   end;
   HintText := s;
 end;
@@ -4695,7 +4695,7 @@ begin
     //Screen.Cursor := crHourGlass;
     vtMangaList.Clear;
     dataProcess.Search(edSearch.Text);
-    vtMangaList.RootNodeCount := dataProcess.DataCount;
+    vtMangaList.RootNodeCount := dataProcess.RecordCount;
     //Screen.Cursor := crDefault;
     Exit;
   end
@@ -4706,7 +4706,7 @@ begin
     LastSearchStr := upcase(edSearch.Text);
     vtMangaList.Clear;
     DataProcess.Search(edSearch.Text);
-    vtMangaList.RootNodeCount := dataProcess.DataCount;
+    vtMangaList.RootNodeCount := dataProcess.RecordCount;
   end;
 end;
 
@@ -4723,7 +4723,7 @@ begin
     begin
       Screen.Cursor := crHourGlass;
       vtMangaList.Clear;
-      vtMangaList.RootNodeCount := dataProcess.DataCount;
+      vtMangaList.RootNodeCount := dataProcess.RecordCount;
       Screen.Cursor := crDefault;
     end
     else
@@ -4732,7 +4732,7 @@ begin
       LastSearchWeb := currentWebsite;
       DataProcess.Search(edSearch.Text);
       vtMangaList.Clear;
-      vtMangaList.RootNodeCount := dataProcess.DataCount;
+      vtMangaList.RootNodeCount := dataProcess.RecordCount;
       Screen.Cursor := crDefault;
     end;
   end;
@@ -4966,9 +4966,9 @@ begin
   data := Sender.GetNodeData(Node);
   if Assigned(data) then
   begin
-    data^.Text := Format('%s (%s)', [dataProcess.Param[Node^.Index, DATA_PARAM_NAME],
-      dataProcess.Param[Node^.Index, DATA_PARAM_NUMCHAPTER]]);
-    data^.JDN := StrToIntDef(dataProcess.Param[Node^.Index, DATA_PARAM_JDN], 0);
+    data^.Text := Format('%s (%s)', [dataProcess.Value[Node^.Index, DATA_PARAM_TITLE],
+      dataProcess.Value[Node^.Index, DATA_PARAM_NUMCHAPTER]]);
+    data^.JDN := StrToIntDef(dataProcess.Value[Node^.Index, DATA_PARAM_JDN], 0);
     Sender.ValidateNode(Node, False);
   end;
 end;

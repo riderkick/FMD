@@ -71,17 +71,17 @@ procedure TGetMangaInfosThread.DoGetInfos;
         (website = MainForm.cbSelectManga.Items[MainForm.cbSelectManga.ItemIndex]) then
       begin
         filterPos := FMangaListPos;
-        FInfo.mangaInfo.title := MainForm.dataProcess.Param[filterPos, DATA_PARAM_NAME];
-        FInfo.mangaInfo.link := MainForm.dataProcess.Param[filterPos, DATA_PARAM_LINK];
-        FInfo.mangaInfo.authors := MainForm.dataProcess.Param[filterPos, DATA_PARAM_AUTHORS];
-        FInfo.mangaInfo.artists := MainForm.dataProcess.Param[filterPos, DATA_PARAM_ARTISTS];
-        FInfo.mangaInfo.status := MainForm.dataProcess.Param[filterPos, DATA_PARAM_STATUS];
-        FInfo.mangaInfo.summary := MainForm.dataProcess.Param[filterPos, DATA_PARAM_SUMMARY];
-        FInfo.mangaInfo.numChapter := StrToIntDef(MainForm.dataProcess.Param[filterPos, DATA_PARAM_NUMCHAPTER], 0);
-        FNumChapter := StrToIntDef(MainForm.dataProcess.Param[filterPos, DATA_PARAM_NUMCHAPTER], 0);
+        FInfo.mangaInfo.title := MainForm.dataProcess.Value[filterPos, DATA_PARAM_TITLE];
+        FInfo.mangaInfo.link := MainForm.dataProcess.Value[filterPos, DATA_PARAM_LINK];
+        FInfo.mangaInfo.authors := MainForm.dataProcess.Value[filterPos, DATA_PARAM_AUTHORS];
+        FInfo.mangaInfo.artists := MainForm.dataProcess.Value[filterPos, DATA_PARAM_ARTISTS];
+        FInfo.mangaInfo.status := MainForm.dataProcess.Value[filterPos, DATA_PARAM_STATUS];
+        FInfo.mangaInfo.summary := MainForm.dataProcess.Value[filterPos, DATA_PARAM_SUMMARY];
+        FInfo.mangaInfo.numChapter := StrToIntDef(MainForm.dataProcess.Value[filterPos, DATA_PARAM_NUMCHAPTER], 0);
+        FNumChapter := StrToIntDef(MainForm.dataProcess.Value[filterPos, DATA_PARAM_NUMCHAPTER], 0);
         if SitesWithoutInformation(website) or
           (website = WebsiteRoots[EHENTAI_ID, 0]) then
-          FInfo.mangaInfo.genres := MainForm.dataProcess.Param[filterPos, DATA_PARAM_GENRES];
+          FInfo.mangaInfo.genres := MainForm.dataProcess.Value[filterPos, DATA_PARAM_GENRES];
       end;
 
       FInfo.isGenerateFolderChapterName := MainForm.cbOptionGenerateChapterName.Checked;
@@ -101,16 +101,16 @@ procedure TGetMangaInfosThread.DoGetInfos;
           begin
             if FInfo.mangaInfo.authors = '' then
               FInfo.mangaInfo.authors :=
-                MainForm.DataProcess.Param[filterPos, DATA_PARAM_AUTHORS];
+                MainForm.DataProcess.Value[filterPos, DATA_PARAM_AUTHORS];
             if FInfo.mangaInfo.artists = '' then
               FInfo.mangaInfo.artists :=
-                MainForm.DataProcess.Param[filterPos, DATA_PARAM_ARTISTS];
+                MainForm.DataProcess.Value[filterPos, DATA_PARAM_ARTISTS];
             if FInfo.mangaInfo.genres = '' then
               FInfo.mangaInfo.genres :=
-                MainForm.DataProcess.Param[filterPos, DATA_PARAM_GENRES];
+                MainForm.DataProcess.Value[filterPos, DATA_PARAM_GENRES];
             if FInfo.mangaInfo.summary = '' then
               FInfo.mangaInfo.summary :=
-                MainForm.DataProcess.Param[filterPos, DATA_PARAM_SUMMARY];
+                MainForm.DataProcess.Value[filterPos, DATA_PARAM_SUMMARY];
           end;
 
           FInfo.SyncInfoToData(MainForm.DataProcess);

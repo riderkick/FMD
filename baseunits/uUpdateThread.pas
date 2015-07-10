@@ -186,7 +186,7 @@ begin
         if SitesWithSortedList(manager.website) then
         begin
           if links.Count > 0 then
-            if manager.mainDataProcess.Locate(DATA_PARAM_LINK, links.Strings[0]) then
+            if manager.mainDataProcess.LocateByLink(links.Strings[0]) then
               manager.isFinishSearchingForNewManga := True;
         end;
 
@@ -336,8 +336,8 @@ begin
             dataProcess.Close;
           OverwriteDBDataProcess(website, twebsite);
           dataProcess.Open(website);
-          vtMangaList.RootNodeCount := dataProcess.DataCount;
-          lbMode.Caption := Format(RS_ModeAll, [dataProcess.DataCount]);
+          vtMangaList.RootNodeCount := dataProcess.RecordCount;
+          lbMode.Caption := Format(RS_ModeAll, [dataProcess.RecordCount]);
         finally
           Screen.Cursor := crDefault;
         end;
@@ -501,9 +501,8 @@ procedure TUpdateMangaManagerThread.Execute;
   end;
 
 var
-  s: String;
-  j, k, iPos: Integer;
-  del, purg: Boolean;
+  j, k: Integer;
+  del: Boolean;
 begin
   if websites.Count = 0 then
     Exit;
@@ -535,11 +534,7 @@ begin
         DeleteDBDataProcess(twebsite);
         if (MainForm.cbSelectManga.Text = website) and
           (MainForm.dataProcess.Connected) then
-        begin
-          MainForm.dataProcess.Backup(twebsite);
-          MainForm.vtMangaList.Clear;
-          MainForm.dataProcess.Close;
-        end
+          MainForm.dataProcess.Backup(twebsite)
         else
           CopyDBDataProcess(website, twebsite);
 
@@ -548,9 +543,7 @@ begin
           mainDataProcess.CreateDatabase(twebsite);
           mainDataProcess.OpenTable;
         end;
-
-        names.Clear;
-        links.Clear;
+        mainDataProcess.Refresh(True);
 
         //get directory page count
         INIAdvanced.Reload;
@@ -629,7 +622,7 @@ begin
           begin
             if Terminated then
               Break;
-            if mainDataProcess.Locate(DATA_PARAM_LINK, links[j]) then
+            if mainDataProcess.LocateByLink(links[j]) then
             begin
               links.Delete(j);
               names.Delete(j);
@@ -675,15 +668,19 @@ begin
           FStatus := RS_UpdatingList + Format(' [%d/%d] %s',
             [websitePtr, websites.Count, website]) + ' | ' + RS_SavingData + '...';
           Synchronize(MainThreadShowGetting);
-          mainDataProcess.Sort;
+          //mainDataProcess.Sort;
         end;
+
+        names.Clear;
+        links.Clear;
         mainDataProcess.Close;
+
         Synchronize(RefreshList);
-        DeleteDBDataProcess(twebsite);
+        //DeleteDBDataProcess(twebsite);
         if Terminated then
           Break;
         websites[websitePtr - 1] :=
-          UTF8Encode(#$2714 + WideString(websites[websitePtr - 1]));
+            UTF8Encode(#$2714 + WideString(websites[websitePtr - 1]));
       end;
   except
     on E: Exception do

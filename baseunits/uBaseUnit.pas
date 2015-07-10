@@ -43,7 +43,7 @@ const
   EXPARAM_CHAPTER = '%CHAPTER%';
   DEFAULT_EXPARAM = '"' + EXPARAM_PATH + EXPARAM_CHAPTER + '"';
 
-  DATA_PARAM_NAME       = 0;
+  DATA_PARAM_TITLE      = 0;
   DATA_PARAM_LINK       = 1;
   DATA_PARAM_AUTHORS    = 2;
   DATA_PARAM_ARTISTS    = 3;
@@ -670,7 +670,7 @@ var
   Genre: array [0..37] of String;
 
   Revision: Cardinal;
-  currentJDN: Cardinal;
+  currentJDN: Integer;
   isChangeDirectory: Boolean = False;
 
   currentWebsite: String;
@@ -3335,7 +3335,7 @@ begin
   begin
     output.Clear;
     GetParams(output, merge.Strings[i]);
-    names.Add(output.Strings[DATA_PARAM_NAME]);
+    names.Add(output.Strings[DATA_PARAM_TITLE]);
   end;
   QSort(0, names.Count - 1);
   output.Free;
@@ -3387,7 +3387,7 @@ begin
   begin
     output.Clear;
     GetParams(output, merge.Strings[i]);
-    names.Add(output.Strings[DATA_PARAM_NAME]);
+    names.Add(output.Strings[DATA_PARAM_TITLE]);
   end;
   QSort(0, names.Count - 1);
   output.Free;

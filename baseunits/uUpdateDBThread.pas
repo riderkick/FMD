@@ -44,9 +44,9 @@ begin
       MainForm.dataProcess := TDBDataProcess.Create;
       MainForm.dataProcess.Open(websiteName);
       MainForm.vtMangaList.Clear;
-      MainForm.vtMangaList.RootNodeCount := MainForm.dataProcess.DataCount;
+      MainForm.vtMangaList.RootNodeCount := MainForm.dataProcess.RecordCount;
       MainForm.lbMode.Caption :=
-        Format(RS_ModeAll, [MainForm.dataProcess.DataCount]);
+        Format(RS_ModeAll, [MainForm.dataProcess.RecordCount]);
     end;
   except
     on E: Exception do
