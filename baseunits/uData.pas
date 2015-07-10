@@ -205,8 +205,8 @@ const
   procedure ConvertDataProccessToDB(AWebsite: String; DeleteOriginal: Boolean = False);
   function DBDataProcessExist(const AWebsite: string): Boolean;
   procedure CopyDBDataProcess(const AWebsite, NWebsite: string);
+  function DeleteDBDataProcess(const AWebsite: string): Boolean;
   procedure OverwriteDBDataProcess(const AWebsite, NWebsite: string);
-  procedure DeleteDBDataProcess(const AWebsite: string);
 
 implementation
 
@@ -317,33 +317,33 @@ begin
   end;
 end;
 
-procedure OverwriteDBDataProcess(const AWebsite, NWebsite: string);
+function DeleteDBDataProcess(const AWebsite: string): Boolean;
 var
   tryc: Integer;
-  canrename: boolean;
 begin
-  if FileExistsUTF8(fmdDirectory + DATA_FOLDER + NWebsite + DBDATA_EXT) then
+  Result := True;
+  if FileExistsUTF8(fmdDirectory + DATA_FOLDER + AWebsite + DBDATA_EXT) then
   begin
-    canrename := True;
     tryc := 0;
-    if FileExistsUTF8(fmdDirectory + DATA_FOLDER + AWebsite + DBDATA_EXT) then
-    while not (tryc < 5) and
-      DeleteFileUTF8(fmdDirectory + DATA_FOLDER + AWebsite + DBDATA_EXT) do
+    while not DeleteFileUTF8(fmdDirectory + DATA_FOLDER + AWebsite + DBDATA_EXT) do
     begin
+      if tryc > 3 then
+        Break;
       Inc(tryc);
-      canrename := False;
-      Sleep(200);
+      Sleep(250);
     end;
-    if canrename then
-      RenameFileUTF8(fmdDirectory + DATA_FOLDER + NWebsite + DBDATA_EXT,
-        fmdDirectory + DATA_FOLDER + AWebsite + DBDATA_EXT);
+    Result := not FileExistsUTF8(fmdDirectory + DATA_FOLDER + AWebsite + DBDATA_EXT);
   end;
 end;
 
-procedure DeleteDBDataProcess(const AWebsite: string);
+procedure OverwriteDBDataProcess(const AWebsite, NWebsite: string);
 begin
-  if FileExistsUTF8(fmdDirectory + DATA_FOLDER + AWebsite + DBDATA_EXT) then
-    DeleteFileUTF8(fmdDirectory + DATA_FOLDER + AWebsite + DBDATA_EXT);
+  if FileExistsUTF8(fmdDirectory + DATA_FOLDER + NWebsite + DBDATA_EXT) then
+  begin
+    if DeleteDBDataProcess(AWebsite) then
+      RenameFileUTF8(fmdDirectory + DATA_FOLDER + NWebsite + DBDATA_EXT,
+        fmdDirectory + DATA_FOLDER + AWebsite + DBDATA_EXT);
+  end;
 end;
 
 { TDBDataProcess }
