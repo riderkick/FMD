@@ -359,8 +359,13 @@ begin
 end;
 
 procedure TDBDataProcess.VacuumTable;
+var
+  queryactive: Boolean;
 begin
   if FConn.Connected then
+  begin
+    queryactive := FQuery.Active;
+    FQuery.Close;
     with FConn do
     begin
       ExecuteDirect('END TRANSACTION');
@@ -372,6 +377,9 @@ begin
       end;
       ExecuteDirect('BEGIN TRANSACTION');
     end;
+    if FQuery.Active <> queryactive then
+      FQuery.Active := queryactive;
+  end;
 end;
 
 procedure TDBDataProcess.GetRecordCount;
@@ -466,6 +474,7 @@ begin
   try
     if FConn.Connected then
     begin
+      FQuery.Close;
       Commit;
       VacuumTable;
       Close;
@@ -566,8 +575,7 @@ begin
   if FConn.Connected then
     try
       FQuery.Close;
-      FTrans.Active := False;
-      FConn.Close(True);
+      FConn.Close;
       FConn.DatabaseName := '';
     except
       on E: Exception do
@@ -678,6 +686,7 @@ begin
   if FConn.Connected then
     try
       queryactive := FQuery.Active;
+      FQuery.Close;
       FTrans.Commit;
       if FQuery.Active <> queryactive then
         FQuery.Active := queryactive;
