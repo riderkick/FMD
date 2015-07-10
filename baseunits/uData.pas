@@ -464,17 +464,13 @@ begin
   try
     if FConn.Connected then
     begin
-      try
-        FTrans.CommitRetaining;
-      except
-        FTrans.RollbackRetaining;
-      end;
+      Commit;
       VacuumTable;
       FConn.Connected := False;
     end;
   except
     on E: Exception do
-      WriteLog_E('TDBDataProcess.Destroy,Error: '+E.Message+LineEnding+GetStackTraceInfo);
+      WriteLog_E('TDBDataProcess.Destroy.Error!', E, Self);
   end;
   FSitesList.Free;
   FQuery.Free;
@@ -520,18 +516,24 @@ begin
   Result := False;
   if FConn.Connected then
   begin
-    if ATableName <> '' then
-      FTableName := ATableName;
-    if FTableName = '' then Exit;
-    if TableExist(FTableName) then
-    begin
-      if FQuery.Active then
-        FQuery.Close;
-      FSQLSelect := 'SELECT * FROM ' + QuotedStr(FTableName);
-      FQuery.SQL.Text := FSQLSelect;
-      FQuery.Open;
+    try
+      if ATableName <> '' then
+        FTableName := ATableName;
+      if FTableName = '' then Exit;
+      if TableExist(FTableName) then
+      begin
+        if FQuery.Active then
+          FQuery.Close;
+        FSQLSelect := 'SELECT * FROM ' + QuotedStr(FTableName);
+        FQuery.SQL.Text := FSQLSelect;
+        FQuery.Open;
+      end;
+    except
+      on E: Exception do
+        WriteLog_E('TDBDataProcess.OpenTable.Error!', E, Self);
     end;
   end;
+  Result := FQuery.Active;
 end;
 
 function TDBDataProcess.TableExist(const ATableName: String): Boolean;
@@ -557,22 +559,15 @@ procedure TDBDataProcess.Close;
 begin
   FFiltered := False;
   FDataCount := 0;
-  try
-    if FConn.Connected then
-    begin
-      try
-        FTrans.CommitRetaining;
-      except
-        FTrans.RollbackRetaining;
-      end;
+  if FConn.Connected then
+    try
+      Commit;
       FConn.Connected := False;
       FConn.DatabaseName := '';
+    except
+      on E: Exception do
+        WriteLog_E('TDBDataProcess.Close.Error!', E, Self);
     end;
-  except
-    on E: Exception do
-      WriteLog_E('TDBDataProcess.Close.Error: ' + E.Message + LineEnding +
-        GetStackTraceInfo);
-  end;
 end;
 
 procedure TDBDataProcess.Save;
@@ -673,14 +668,10 @@ procedure TDBDataProcess.Commit;
 begin
   if FConn.Connected then
     try
-      FTrans.CommitRetaining;
+      FTrans.Commit;
     except
       on E: Exception do
-      begin
-        WriteLog_E('TDBDataProcess.ApplyUpdates.Error: ' + E.Message +
-          LineEnding + GetStackTraceInfo);
-        FTrans.RollbackRetaining;
-      end;
+        WriteLog_E('TDBDataProcess.Commit.Error!', E, Self);
     end;
 end;
 
@@ -689,21 +680,15 @@ begin
   if FQuery.Active then
     try
       FQuery.ApplyUpdates;
-      FTrans.CommitRetaining;
-      if RecheckDataCount then
-        GetDataCount;
+      Commit;
     except
       on E: Exception do
-      begin
-        WriteLog_E('TDBDataProcess.ApplyUpdates.Error: ' + E.Message +
-          LineEnding + GetStackTraceInfo);
-        FTrans.RollbackRetaining;
-        if FQuery.Active = False then
-          FQuery.Open;
-        if RecheckDataCount then
-          GetDataCount;
-      end;
+        WriteLog_E('TDBDataProcess.ApplyUpdates.Error!', E, Self);
     end;
+  if FQuery.Active = False then
+    FQuery.Open;
+  if RecheckDataCount then
+    GetDataCount;
 end;
 
 function TDBDataProcess.Search(ATitle: String): Boolean;
