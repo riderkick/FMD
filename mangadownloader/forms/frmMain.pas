@@ -502,18 +502,12 @@ type
     procedure vtMangaListBeforeCellPaint(Sender: TBaseVirtualTree;
       TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
       CellPaintMode: TVTCellPaintMode; CellRect: TRect; var ContentRect: TRect);
-    procedure vtMangaListFreeNode(Sender: TBaseVirtualTree; Node: PVirtualNode);
-
     procedure vtMangaListGetHint(Sender: TBaseVirtualTree; Node: PVirtualNode;
       Column: TColumnIndex; var LineBreakStyle: TVTTooltipLineBreakStyle;
       var HintText: String);
-    procedure vtMangaListGetNodeDataSize(Sender: TBaseVirtualTree;
-      var NodeDataSize: Integer);
     procedure vtMangaListGetText(Sender: TBaseVirtualTree; Node: PVirtualNode;
       Column: TColumnIndex; TextType: TVSTTextType; var CellText: String);
     procedure tmBackupTimer(Sender: TObject);
-    procedure vtMangaListInitNode(Sender: TBaseVirtualTree; ParentNode,
-      Node: PVirtualNode; var InitialStates: TVirtualNodeInitStates);
     procedure vtOptionMangaSiteSelectionChange(Sender : TBaseVirtualTree;
       Node : PVirtualNode);
     procedure vtOptionMangaSiteSelectionFocusChanged(Sender : TBaseVirtualTree;
@@ -4045,24 +4039,13 @@ begin
     Exit;
   if miHighlightNewManga.Checked then
   begin
-    data := Sender.GetNodeData(Node);
-    if Assigned(data) then
-      if data^.JDN > (currentJDN - seOptionNewMangaTime.Value) then
+    if Assigned(Node) then
+      if StrToIntDef(dataProcess.Value[Node^.Index, DATA_PARAM_JDN], 0) > (currentJDN - seOptionNewMangaTime.Value) then
       begin
         TargetCanvas.Brush.Color := CL_HLBlueMarks;
         TargetCanvas.FillRect(CellRect);
       end;
   end;
-end;
-
-procedure TMainForm.vtMangaListFreeNode(Sender: TBaseVirtualTree;
-  Node: PVirtualNode);
-var
-  data: PMangaListItem;
-begin
-  data := Sender.GetNodeData(Node);
-  if Assigned(data) then
-    Finalize(data^);
 end;
 
 procedure TMainForm.vtMangaListGetHint(Sender: TBaseVirtualTree;
@@ -4106,21 +4089,13 @@ begin
   HintText := s;
 end;
 
-procedure TMainForm.vtMangaListGetNodeDataSize(Sender: TBaseVirtualTree;
-  var NodeDataSize: Integer);
-begin
-  NodeDataSize := SizeOf(TMangaListItem);
-end;
-
 procedure TMainForm.vtMangaListGetText(Sender: TBaseVirtualTree;
   Node: PVirtualNode; Column: TColumnIndex; TextType: TVSTTextType;
   var CellText: String);
-var
-  data: PMangaListItem;
 begin
-  data := Sender.GetNodeData(Node);
-  if Assigned(data) then
-    CellText :=  data^.Text;
+  if Assigned(Node) then
+    CellText :=  Format('%s (%s)', [dataProcess.Value[Node^.Index, DATA_PARAM_TITLE],
+      dataProcess.Value[Node^.Index, DATA_PARAM_NUMCHAPTER]]);
 end;
 
 procedure TMainForm.InitCheckboxes;
@@ -4956,21 +4931,6 @@ procedure TMainForm.tmBackupTimer(Sender: TObject);
 begin
   if not DLManager.isRunningBackup then
     DLManager.Backup;
-end;
-
-procedure TMainForm.vtMangaListInitNode(Sender: TBaseVirtualTree; ParentNode,
-  Node: PVirtualNode; var InitialStates: TVirtualNodeInitStates);
-var
-  data: PMangaListItem;
-begin
-  data := Sender.GetNodeData(Node);
-  if Assigned(data) then
-  begin
-    data^.Text := Format('%s (%s)', [dataProcess.Value[Node^.Index, DATA_PARAM_TITLE],
-      dataProcess.Value[Node^.Index, DATA_PARAM_NUMCHAPTER]]);
-    data^.JDN := StrToIntDef(dataProcess.Value[Node^.Index, DATA_PARAM_JDN], 0);
-    Sender.ValidateNode(Node, False);
-  end;
 end;
 
 procedure TMainForm.vtOptionMangaSiteSelectionChange(Sender : TBaseVirtualTree;

@@ -3134,11 +3134,8 @@ object MainForm: TMainForm
         OnColumnDblClick = vtMangaListColumnDblClick
         OnDragAllowed = vtMangaListDragAllowed
         OnDragOver = vtMangaListDragOver
-        OnFreeNode = vtMangaListFreeNode
         OnGetText = vtMangaListGetText
         OnGetHint = vtMangaListGetHint
-        OnGetNodeDataSize = vtMangaListGetNodeDataSize
-        OnInitNode = vtMangaListInitNode
       end
       object edSearch: TEdit
         Left = 3
