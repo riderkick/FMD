@@ -296,6 +296,8 @@ end;
 
 destructor TUpdateMangaManagerThread.Destroy;
 begin
+  mainDataProcess.Close;
+  DeleteDBDataProcess(twebsite);
   websites.Free;
   names.Free;
   links.Free;
