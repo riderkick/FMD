@@ -68,6 +68,7 @@ type
     procedure CreateDatabase(AWebsite: String = '');
     procedure GetFieldNames(List: TStringList);
     procedure Close;
+    procedure CloseTable;
     procedure Save;
     procedure Backup(AWebsite: String);
     procedure Refresh(RecheckDataCount: Boolean = False);
@@ -583,6 +584,16 @@ begin
     end;
 end;
 
+procedure TDBDataProcess.CloseTable;
+begin
+  if FQuery.Active then
+  begin
+    FFiltered := False;
+    FRecordCount := 0;
+    FQuery.Close;
+  end;
+end;
+
 procedure TDBDataProcess.Save;
 begin
   Commit;
@@ -819,9 +830,12 @@ begin
 end;
 
 procedure TDBDataProcess.Sort;
+var
+  queryactive: Boolean;
 begin
   if FConn.Connected then
   begin
+    queryactive := FQuery.Active;
     FQuery.Close;
     with FConn do
     begin
@@ -830,13 +844,15 @@ begin
       ExecuteDirect('INSERT INTO ' + QuotedStr(FTableName + '_ordered') + ' ' +
         BracketStr(DBDataProcessParam) + ' SELECT ' + DBDataProcessParam +
         ' FROM ' + QuotedStr(FTableName) + 'ORDER BY title COLLATE NATCMP');
+      FTrans.Commit;
       ExecuteDirect('DROP TABLE ' + QuotedStr(FTableName));
       ExecuteDirect('ALTER TABLE ' + QuotedStr(FTableName + '_ordered') +
         'RENAME TO ' + QuotedStr(FTableName));
       FTrans.Commit;
       VacuumTable;
     end;
-    FQuery.Open;
+    if FQuery.Active <> queryactive then
+      FQuery.Open;
   end;
 end;
 
