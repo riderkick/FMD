@@ -477,7 +477,6 @@ begin
     begin
       FQuery.Close;
       Commit;
-      VacuumTable;
       Close;
     end;
   except
