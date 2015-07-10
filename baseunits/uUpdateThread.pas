@@ -40,6 +40,7 @@ type
   TUpdateMangaManagerThread = class(TFMDThread)
   private
     FStatus: String;
+    FCommitCount: Integer;
   protected
     procedure Execute; override;
     {$IFNDEF DOWNLOADER}
@@ -65,6 +66,7 @@ type
     CS_threads: TCriticalSection;
     constructor Create;
     destructor Destroy; override;
+    procedure CheckCommit;
   end;
   
 resourcestring
@@ -214,6 +216,7 @@ begin
           try
             Info.AddInfoToData(manager.names[workPtr], manager.links[workPtr],
               manager.mainDataProcess);
+            manager.CheckCommit;
           finally
             manager.CS_AddInfoToData.Release;
           end;
@@ -303,6 +306,17 @@ begin
   CS_AddNamesAndLinks.Free;
   CS_threads.Free;
   inherited Destroy;
+end;
+
+procedure TUpdateMangaManagerThread.CheckCommit;
+begin
+  Inc(FCommitCount);
+  if FCommitCount > 19 then
+  begin
+    FCommitCount := 0;
+    if Assigned(mainDataProcess) then
+      mainDataProcess.Commit;
+  end;
 end;
 
 procedure TUpdateMangaManagerThread.RefreshList;
@@ -628,6 +642,7 @@ begin
         //get manga info
         if links.Count > 0 then
         begin
+          FCommitCount := 0;
           if (SitesWithoutInformation(website)) or
             OptionUpdateListNoMangaInfo then
           begin
@@ -652,6 +667,7 @@ begin
             GetInfo(links.Count, CS_INFO);
           end;
           WaitForThreads;
+          mainDataProcess.Commit;
         end;
 
         if (not Terminated) or (not SitesWithSortedList(website)) then
