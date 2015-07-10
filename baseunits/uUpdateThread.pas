@@ -665,6 +665,7 @@ begin
           if FCommitCount > 0 then
             mainDataProcess.Commit;
         end;
+        mainDataProcess.Refresh;
 
         names.Clear;
         links.Clear;
@@ -674,6 +675,7 @@ begin
           FStatus := RS_UpdatingList + Format(' [%d/%d] %s',
             [websitePtr, websites.Count, website]) + ' | ' + RS_SavingData + '...';
           Synchronize(MainThreadShowGetting);
+          mainDataProcess.CloseTable;
           mainDataProcess.Sort;
           mainDataProcess.Close;
           Synchronize(RefreshList);
