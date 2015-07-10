@@ -471,9 +471,7 @@ begin
     begin
       Commit;
       VacuumTable;
-      FQuery.Close;
-      FTrans.Active := False;
-      FConn.Close(True);
+      Close;
     end;
   except
     on E: Exception do
@@ -571,7 +569,6 @@ begin
   FRecordCount := 0;
   if FConn.Connected then
     try
-      Commit;
       FQuery.Close;
       FTrans.Active := False;
       FConn.Close(True);
