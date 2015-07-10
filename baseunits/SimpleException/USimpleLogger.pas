@@ -130,7 +130,7 @@ begin
          'Exception Class  : ' + Exc.ClassName + LineEnding +
          'Exception Message: ' + Exc.Message;
   end;
-  s += GetStackTraceInfo;
+  s += LineEnding + GetStackTraceInfo;
   WriteLog_E(msg + s);
 end;
 
