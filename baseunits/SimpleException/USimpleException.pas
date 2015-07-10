@@ -26,7 +26,7 @@ interface
 
 uses
   Classes, SysUtils, LazFileUtils, LazUTF8, Forms, Controls, LCLVersion,
-  DbgInfoReader, USimpleExceptionForm, USimpleLogger,
+  USimpleExceptionForm, USimpleLogger,
   {$IFDEF WINDOWS}
   windows, win32proc,
   {$ENDIF}
