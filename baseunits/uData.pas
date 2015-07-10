@@ -312,8 +312,7 @@ begin
       [cffPreserveTime, cffOverwriteFile], True);
     except
       on E: Exception do
-        Writelog_E('CopyDBDataProcess.Error: ' + E.Message + LineEnding +
-          GetStackTraceInfo);
+        Writelog_E('CopyDBDataProcess.Error!', E);
     end;
   end;
 end;
@@ -409,8 +408,7 @@ begin
   except
     on E: Exception do
     begin
-      WriteLog_E('TDBDataProcess.InternalOpen.Error: ' + E.Message +
-        LineEnding + GetStackTraceInfo);
+      WriteLog_E('TDBDataProcess.InternalOpen.Error!', E, Self);
       Result := False;
     end;
   end;
@@ -441,8 +439,7 @@ begin
       Result := FQuery.FieldByName(DBDataProcessParams[FieldIndex]).AsString;
     except
       on E: Exception do
-        WriteLog_E('TDBDataProcess.GetParam.Error: ' + E.Message +
-          LineEnding + GetStackTraceInfo);
+        WriteLog_E('TDBDataProcess.GetParam.Error!', E, Self);
     end;
   end;
 end;
@@ -513,8 +510,7 @@ begin
     Result := FQuery.Active;
   except
     on E: Exception do
-      WriteLog_E('TDBDataProcess.Open.Error: ' + E.Message +
-        LineEnding + GetStackTraceInfo);
+      WriteLog_E('TDBDataProcess.Open.Error!', E, Self);
   end;
 end;
 
@@ -628,8 +624,7 @@ begin
         QuotedStr(IntToStr(JDN)) + ');');
     except
       on E: Exception do
-        WriteLog_E('TDBDataProcess.AddData.Error: ' + E.Message +
-          LineEnding + GetStackTraceInfo);
+        WriteLog_E('TDBDataProcess.AddData.Error!', E, Self);
     end;
 end;
 
@@ -671,8 +666,7 @@ begin
       FConn.ExecuteDirect(sql);
     except
       on E: Exception do
-        WriteLog_E('TDBDataProcess.AddData.Error: ' + E.Message +
-          LineEnding + GetStackTraceInfo);
+        WriteLog_E('TDBDataProcess.AddData.Error!', E, Self);
     end;
   end;
 end;
@@ -719,8 +713,7 @@ begin
       GetRecordCount;
     except
       on E: Exception do
-        WriteLog_E('TDBDataProcess.Search.Error: ' + E.Message +
-          LineEnding + GetStackTraceInfo);
+        WriteLog_E('TDBDataProcess.Search.Error!', E, Self);
     end;
   Result := FQuery.Active;
 end;
@@ -764,8 +757,7 @@ begin
     except
       on E: Exception do
       begin
-        WriteLog_E('TDBDataProcess.Filter.Error: ' + E.Message +
-          LineEnding + GetStackTraceInfo);
+        WriteLog_E('TDBDataProcess.Filter.Error!', E, Self);
         Close;
         SQL.Text := FSQLSelect;
         Open;
