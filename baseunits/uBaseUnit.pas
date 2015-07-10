@@ -722,6 +722,7 @@ type
 
   TMangaListItem = record
     Text: String;
+    JDN: LongInt;
   end;
 
   PSingleItem = ^TSingleItem;

@@ -4038,23 +4038,20 @@ end;
 procedure TMainForm.vtMangaListBeforeCellPaint(Sender: TBaseVirtualTree;
   TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
   CellPaintMode: TVTCellPaintMode; CellRect: TRect; var ContentRect: TRect);
+var
+  data: PMangaListItem;
 begin
   if (isExiting) or (dataProcess.DataCount = 0) then
     Exit;
   if miHighlightNewManga.Checked then
   begin
-    try
-      if StrToIntDef(dataProcess.Param[Node^.Index, DATA_PARAM_JDN], 0) >
-        (currentJDN - seOptionNewMangaTime.Value) then
+    data := Sender.GetNodeData(Node);
+    if Assigned(data) then
+      if data^.JDN > (currentJDN - seOptionNewMangaTime.Value) then
       begin
         TargetCanvas.Brush.Color := CL_HLBlueMarks;
         TargetCanvas.FillRect(CellRect);
       end;
-    except
-      on E: Exception do
-        WriteLog_E('vtMangaListBeforeCellPaint.Error: ' + E.Message +
-          LineEnding + GetStackTraceInfo);
-    end;
   end;
 end;
 
@@ -4971,6 +4968,7 @@ begin
   begin
     data^.Text := Format('%s (%s)', [dataProcess.Param[Node^.Index, DATA_PARAM_NAME],
       dataProcess.Param[Node^.Index, DATA_PARAM_NUMCHAPTER]]);
+    data^.JDN := StrToIntDef(dataProcess.Param[Node^.Index, DATA_PARAM_JDN], 0);
     Sender.ValidateNode(Node, False);
   end;
 end;
