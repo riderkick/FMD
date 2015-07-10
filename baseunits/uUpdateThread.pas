@@ -668,7 +668,7 @@ begin
           FStatus := RS_UpdatingList + Format(' [%d/%d] %s',
             [websitePtr, websites.Count, website]) + ' | ' + RS_SavingData + '...';
           Synchronize(MainThreadShowGetting);
-          //mainDataProcess.Sort;
+          mainDataProcess.Sort;
         end;
 
         names.Clear;
@@ -676,7 +676,7 @@ begin
         mainDataProcess.Close;
 
         Synchronize(RefreshList);
-        //DeleteDBDataProcess(twebsite);
+        DeleteDBDataProcess(twebsite);
         if Terminated then
           Break;
         websites[websitePtr - 1] :=
