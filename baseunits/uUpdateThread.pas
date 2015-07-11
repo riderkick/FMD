@@ -66,7 +66,7 @@ type
     CS_threads: TCriticalSection;
     constructor Create;
     destructor Destroy; override;
-    procedure CheckCommit(const CommitCount: Integer = 20);
+    procedure CheckCommit(const CommitCount: Integer = 32);
   end;
   
 resourcestring
@@ -652,7 +652,7 @@ begin
                 0,
                 Now
                 );
-              CheckCommit(1000);
+              CheckCommit(2000);
             end;
           end
           else
