@@ -466,7 +466,7 @@ begin
   FRegxp.ModifierI := True;
   FSitesList := TStringList.Create;
   FTableName := 'masterlist';
-  FSQLSelect := 'SELECT * FROM ' + QuotedStr(FTableName);
+  FSQLSelect := 'SELECT * FROM ' + QuotedStrd(FTableName);
   FRecordCount := 0;
 end;
 
@@ -537,7 +537,7 @@ begin
       begin
         if FQuery.Active then
           FQuery.Close;
-        FSQLSelect := 'SELECT * FROM ' + QuotedStr(FTableName);
+        FSQLSelect := 'SELECT * FROM ' + QuotedStrd(FTableName);
         FQuery.SQL.Text := FSQLSelect;
         FQuery.Open;
       end;
@@ -722,12 +722,19 @@ end;
 
 function TDBDataProcess.Search(ATitle: String): Boolean;
 begin
-  if FConn.Connected then
+  if FQuery.Active then
     try
       FQuery.Close;
-      FQuery.SQL.Text := FSQLSelect;
+      FQuery.SQL.Clear;
+      FQuery.SQL.Add(FSQLSelect);
       if ATitle <> '' then
-        FQuery.SQL.Add('WHERE title LIKE ' + QuotedStr(AnsiQuotedStr(ATitle, '%')));
+      begin
+        FQuery.SQL.Add('WHERE "title" LIKE ' +
+          QuotedStr(AnsiQuotedStr(ATitle, '%')) + ';');
+        FFiltered := True;
+      end
+      else
+        FFiltered := False;
       FQuery.Open;
       GetRecordCount;
     except
@@ -735,6 +742,11 @@ begin
         WriteLog_E('TDBDataProcess.Search.Error!', E, Self);
     end;
   Result := FQuery.Active;
+  if not Result then
+  begin
+    FFiltered := False;
+    FRecordCount := 0;
+  end;
 end;
 
 function TDBDataProcess.CanFilter(const checkedGenres, uncheckedGenres: TStringList;
