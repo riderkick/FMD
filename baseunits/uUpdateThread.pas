@@ -652,7 +652,7 @@ begin
                 0,
                 Now
                 );
-              CheckCommit(500);
+              CheckCommit(1000);
             end;
           end
           else
