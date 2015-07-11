@@ -66,7 +66,7 @@ type
     CS_threads: TCriticalSection;
     constructor Create;
     destructor Destroy; override;
-    procedure CheckCommit;
+    procedure CheckCommit(const CommitCount: Integer = 20);
   end;
   
 resourcestring
@@ -310,10 +310,10 @@ begin
   inherited Destroy;
 end;
 
-procedure TUpdateMangaManagerThread.CheckCommit;
+procedure TUpdateMangaManagerThread.CheckCommit(const CommitCount: Integer);
 begin
   Inc(FCommitCount);
-  if FCommitCount > 19 then
+  if FCommitCount >= CommitCount then
   begin
     FCommitCount := 0;
     if Assigned(mainDataProcess) then
@@ -652,6 +652,7 @@ begin
                 0,
                 Now
                 );
+              CheckCommit(500);
             end;
           end
           else
@@ -660,8 +661,7 @@ begin
             GetInfo(links.Count, CS_INFO);
           end;
           WaitForThreads;
-          if FCommitCount > 0 then
-            mainDataProcess.Commit;
+          mainDataProcess.Commit;
         end;
         mainDataProcess.Refresh;
 
