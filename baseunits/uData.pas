@@ -408,7 +408,7 @@ begin
   with FQuery.SQL do
   begin
     if Count > 0 then
-      if (Strings[Count-1] <> '(') and (Strings[Count-1] <> ')') then
+      if (Strings[Count-1] <> '(') then
       begin
         if useOR then
           Add('OR')
