@@ -1811,6 +1811,7 @@ end;
 
 procedure TMainForm.btSearchClearClick(Sender: TObject);
 begin
+  edSearch.Tag := 1;
   edSearch.Clear;
 end;
 
@@ -2058,7 +2059,8 @@ begin
       end;
       vtMangaList.RootNodeCount := dataProcess.RecordCount;
       lbMode.Caption := Format(RS_ModeAll, [dataProcess.RecordCount]);
-      edSearch.Text := '';
+      edSearch.Tag := -1;
+      edSearch.Clear;
     except
       on E: Exception do
         ExceptionHandler(Self, E);
