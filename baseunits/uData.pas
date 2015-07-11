@@ -296,7 +296,6 @@ begin
         end;
         dbdata.Commit;
       end;
-      dbdata.OpenTable;
       dbdata.Sort;
     finally
       rawdata.Free;
