@@ -778,14 +778,24 @@ function TDBDataProcess.Filter(const checkedGenres, uncheckedGenres: TStringList
   const minusDay: Cardinal; const haveAllChecked, searchNewManga: Boolean;
   useRegExpr: Boolean): Boolean;
 
-  procedure AddSQL(const sqltext: string);
+  procedure AddSQL(const sqltext: string; useOR: Boolean = False);
   begin
-    if FQuery.SQL.Count > 0 then
-      FQuery.SQL.Add('AND');
-    FQuery.SQL.Add(sqltext);
+    with FQuery.SQL do
+    begin
+      if Count > 0 then
+        if (Strings[Count-1] <> '(') and (Strings[Count-1] <> ')') then
+        begin
+          if useOR then
+            Add('OR')
+          else
+            Add('AND');
+        end;
+      Add(sqltext);
+    end;
   end;
 
-  procedure AddSQLSimpleFilter(const fieldname, value: string; useNOT: Boolean = False);
+  procedure AddSQLSimpleFilter(const fieldname, value: string;
+    useNOT: Boolean = False; useOR: Boolean = False);
   var
     svalue: string;
     scond: string;
@@ -797,9 +807,9 @@ function TDBDataProcess.Filter(const checkedGenres, uncheckedGenres: TStringList
     else
       scond := '';
     if useRegExpr then
-      AddSQL(QuotedStrd(fieldname) + scond + ' REGEXP ' + QuotedStr(svalue))
+      AddSQL(QuotedStrd(fieldname) + scond + ' REGEXP ' + QuotedStr(svalue), useOR)
     else
-      AddSQL(QuotedStrd(fieldname) + scond + ' LIKE ' + QuotedLike(svalue));
+      AddSQL(QuotedStrd(fieldname) + scond + ' LIKE ' + QuotedLike(svalue), useOR);
   end;
 
   var
@@ -837,13 +847,21 @@ begin
 
       //filter checked genres
       if checkedGenres.Count > 0 then
+      begin
+        AddSQL('(');
         for i := 0 to checkedGenres.Count-1 do
-          AddSQLSimpleFilter('genres', checkedGenres[i]);
+          AddSQLSimpleFilter('genres', checkedGenres[i], False, (not haveAllChecked));
+        SQL.Add(')')
+      end;
 
       //filter unchecked genres
       if uncheckedGenres.Count > 0 then
+      begin
+        AddSQL('(');
         for i := 0 to uncheckedGenres.Count-1 do
-          AddSQLSimpleFilter('genres', uncheckedGenres[i], True);
+          AddSQLSimpleFilter('genres', uncheckedGenres[i], True, (not haveAllChecked));
+        SQL.Add(')');
+      end;
 
       if Trim(SQL.Text) <> '' then
         SQL.Insert(0, 'WHERE');
