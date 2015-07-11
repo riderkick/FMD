@@ -273,6 +273,7 @@ var
   filepath: String;
   rawdata: TDataProcess;
   dbdata: TDBDataProcess;
+  rcount: Integer;
   i: Integer;
 begin
   filepath := fmdDirectory + DATA_FOLDER + AWebsite;
@@ -288,11 +289,18 @@ begin
       if rawdata.Data.Count > 0 then
       with rawdata do
       begin
+        rcount := 0;
         for i := 0 to Data.Count-1 do
         begin
           dbdata.AddData(Title[i], Link[i], Authors[i], Artists[i], Genres[i],
             Status[i], StringBreaks(Summary[i]), StrToIntDef(Param[i, DATA_PARAM_NUMCHAPTER], 1),
             {%H-}Integer(JDN[i])-3);
+          Inc(rcount);
+          if rcount > 499 then
+          begin
+            rcount := 0;
+            dbdata.Commit;
+          end;
         end;
         dbdata.Commit;
       end;
