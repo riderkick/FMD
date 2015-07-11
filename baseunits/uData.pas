@@ -44,6 +44,9 @@ type
     procedure CreateTable;
     procedure VacuumTable;
     procedure GetRecordCount;
+    procedure AddSQLCond(const sqltext: string; useOR: Boolean = False);
+    procedure AddSQLSimpleFilter(const fieldname, value: string;
+      useNOT: Boolean = False; useOR: Boolean = False; useRegexp: Boolean = False);
     function GetConnected: Boolean;
     function InternalOpen(const FilePath: String = ''): Boolean;
     function GetWebsiteName(RecIndex: Integer): String;
@@ -398,6 +401,40 @@ begin
   end
   else
     FRecordCount := 0;
+end;
+
+procedure TDBDataProcess.AddSQLCond(const sqltext: string; useOR: Boolean);
+begin
+  with FQuery.SQL do
+  begin
+    if Count > 0 then
+      if (Strings[Count-1] <> '(') and (Strings[Count-1] <> ')') then
+      begin
+        if useOR then
+          Add('OR')
+        else
+          Add('AND');
+      end;
+    Add(sqltext);
+  end;
+end;
+
+procedure TDBDataProcess.AddSQLSimpleFilter(const fieldname, value: string;
+  useNOT: Boolean; useOR: Boolean; useRegexp: Boolean);
+var
+  svalue: string;
+  scond: string;
+begin
+  svalue := LowerCase(Trim(value));
+  if (fieldname = '') or (svalue = '') then Exit;
+  if useNOT then
+    scond := ' NOT'
+  else
+    scond := '';
+  if useRegexp then
+    AddSQLCond(QuotedStrd(fieldname) + scond + ' REGEXP ' + QuotedStr(svalue), useOR)
+  else
+    AddSQLCond(QuotedStrd(fieldname) + scond + ' LIKE ' + QuotedLike(svalue), useOR);
 end;
 
 function TDBDataProcess.GetConnected: Boolean;
@@ -777,41 +814,6 @@ function TDBDataProcess.Filter(const checkedGenres, uncheckedGenres: TStringList
   const stTitle, stAuthors, stArtists, stStatus, stSummary: String;
   const minusDay: Cardinal; const haveAllChecked, searchNewManga: Boolean;
   useRegExpr: Boolean): Boolean;
-
-  procedure AddSQL(const sqltext: string; useOR: Boolean = False);
-  begin
-    with FQuery.SQL do
-    begin
-      if Count > 0 then
-        if (Strings[Count-1] <> '(') and (Strings[Count-1] <> ')') then
-        begin
-          if useOR then
-            Add('OR')
-          else
-            Add('AND');
-        end;
-      Add(sqltext);
-    end;
-  end;
-
-  procedure AddSQLSimpleFilter(const fieldname, value: string;
-    useNOT: Boolean = False; useOR: Boolean = False);
-  var
-    svalue: string;
-    scond: string;
-  begin
-    svalue := LowerCase(Trim(value));
-    if (fieldname = '') or (svalue = '') then Exit;
-    if useNOT then
-      scond := ' NOT'
-    else
-      scond := '';
-    if useRegExpr then
-      AddSQL(QuotedStrd(fieldname) + scond + ' REGEXP ' + QuotedStr(svalue), useOR)
-    else
-      AddSQL(QuotedStrd(fieldname) + scond + ' LIKE ' + QuotedLike(svalue), useOR);
-  end;
-
   var
     tsql: string;
     i: Integer;
@@ -827,39 +829,41 @@ begin
     try
       // filter new manga based on date
       if searchNewManga then
-        AddSQL('"jdn" > ' + QuotedStr(IntToStr(DateToJDN(IncDay(Now, (0 - minusDay))))));
+        AddSQLCond('"jdn" > ' + QuotedStr(IntToStr(DateToJDN(IncDay(Now, (0 - minusDay))))));
 
       // filter title
-      AddSQLSimpleFilter('title', stTitle);
+      AddSQLSimpleFilter('title', stTitle, False, False, useRegExpr);
 
       // filter authors
-      AddSQLSimpleFilter('authors', stAuthors);
+      AddSQLSimpleFilter('authors', stAuthors, False, False, useRegExpr);
 
       // filter artists
-      AddSQLSimpleFilter('artists', stArtists);
+      AddSQLSimpleFilter('artists', stArtists, False, False, useRegExpr);
 
       // filter summary
-      AddSQLSimpleFilter('summary', stSummary);
+      AddSQLSimpleFilter('summary', stSummary, False, False, useRegExpr);
 
       // filter status
       if stStatus <> '2' then
-        AddSQL('"status"='+ QuotedStr(stStatus));
+        AddSQLCond('"status"='+ QuotedStr(stStatus));
 
       //filter checked genres
       if checkedGenres.Count > 0 then
       begin
-        AddSQL('(');
+        AddSQLCond('(');
         for i := 0 to checkedGenres.Count-1 do
-          AddSQLSimpleFilter('genres', checkedGenres[i], False, (not haveAllChecked));
+          AddSQLSimpleFilter('genres', checkedGenres[i], False,
+            (not haveAllChecked), useRegExpr);
         SQL.Add(')')
       end;
 
       //filter unchecked genres
       if uncheckedGenres.Count > 0 then
       begin
-        AddSQL('(');
+        AddSQLCond('(');
         for i := 0 to uncheckedGenres.Count-1 do
-          AddSQLSimpleFilter('genres', uncheckedGenres[i], True, (not haveAllChecked));
+          AddSQLSimpleFilter('genres', uncheckedGenres[i], True,
+            (not haveAllChecked), useRegExpr);
         SQL.Add(')');
       end;
 
