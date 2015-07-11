@@ -789,8 +789,8 @@ function TDBDataProcess.Filter(const checkedGenres, uncheckedGenres: TStringList
   var
     svalue: string;
   begin
-    svalue := LowerCase(Trim(stTitle));
-    if (fieldname = '') or (value = '') then Exit;
+    svalue := LowerCase(Trim(value));
+    if (fieldname = '') or (svalue = '') then Exit;
     if useRegExpr then
       AddSQL(QuotedStrd(fieldname) + ' REGEXP ' + QuotedStr(svalue))
     else
@@ -798,7 +798,7 @@ function TDBDataProcess.Filter(const checkedGenres, uncheckedGenres: TStringList
   end;
 
   var
-    tsql, s: string;
+    tsql: string;
 begin
   Result := False;
   if FQuery.Active = False then Exit;
