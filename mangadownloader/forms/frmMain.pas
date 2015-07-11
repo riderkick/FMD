@@ -1846,8 +1846,6 @@ begin
 end;
 
 procedure TMainForm.cbSelectMangaChange(Sender: TObject);
-var
-  K: Word;
 begin
   if cbSelectManga.ItemIndex < 0 then
     Exit;
@@ -1869,9 +1867,7 @@ begin
       dataProcess.website := cbSelectManga.Items[cbSelectManga.ItemIndex];
       CheckForTopPanel;
       LastSearchStr := '';
-      K := VK_RETURN;
-      edSearchKeyUp(edSearch, K, []);
-      edSearchChange(edSearch);
+      edSearchChange(cbSelectManga);
     finally
       Screen.Cursor := crDefault;
     end;
