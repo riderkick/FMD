@@ -785,6 +785,18 @@ function TDBDataProcess.Filter(const checkedGenres, uncheckedGenres: TStringList
     FQuery.SQL.Add(sqltext);
   end;
 
+  procedure AddSQLSimpleFilter(const fieldname, value: string);
+  var
+    svalue: string;
+  begin
+    svalue := LowerCase(Trim(stTitle));
+    if (fieldname = '') or (value = '') then Exit;
+    if useRegExpr then
+      AddSQL(QuotedStrd(fieldname) + ' REGEXP ' + QuotedStr(svalue))
+    else
+      AddSQL(QuotedStrd(fieldname) + ' LIKE ' + QuotedLike(svalue));
+  end;
+
   var
     tsql, s: string;
 begin
@@ -802,14 +814,7 @@ begin
         AddSQL('"jdn" > ' + QuotedStr(IntToStr(DateToJDN(IncDay(Now, (0 - minusDay))))));
 
       // filter title
-      s := LowerCase(Trim(stTitle));
-      if s <> '' then
-      begin
-        if useRegExpr then
-          AddSQL('"title" REGEXP ' + QuotedStr(s))
-        else
-          AddSQL('"title" like ' + QuotedLike(s));
-      end;
+      AddSQLSimpleFilter('title', stTitle);
 
       if Trim(SQL.Text) <> '' then
         SQL.Insert(0, 'WHERE');
