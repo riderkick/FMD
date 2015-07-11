@@ -356,6 +356,8 @@ type
     procedure clbChapterListInitNode(Sender: TBaseVirtualTree;
       ParentNode, Node: PVirtualNode; var InitialStates: TVirtualNodeInitStates);
     procedure edSearchChange(Sender: TObject);
+    procedure edSearchKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState
+      );
     procedure edURLKeyPress(Sender: TObject; var Key: Char);
     procedure edWebsitesSearchChange(Sender: TObject);
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
@@ -4666,7 +4668,9 @@ begin
     edSearch.Tag := 0;
     Exit;
   end;
-  if not cbOptionLiveSearch.Checked then Exit;
+  if (not cbOptionLiveSearch.Checked) and (edSearch.Tag = 0) then Exit;
+  if edSearch.Tag <> 0 then
+    edSearch.Tag := 0;
   if (upcase(edSearch.Text) = LastSearchStr) and (currentWebsite = LastSearchWeb) then
     Exit;
 
@@ -4680,6 +4684,16 @@ begin
     lbMode.Caption := Format(RS_ModeFiltered, [vtMangaList.RootNodeCount])
   else
     lbMode.Caption := Format(RS_ModeAll, [vtMangaList.RootNodeCount]);
+end;
+
+procedure TMainForm.edSearchKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  if Key = VK_RETURN then
+  begin
+    edSearch.Tag := 1;
+    edSearchChange(edSearch);
+  end;
 end;
 
 procedure TMainForm.UpdateVtChapter;
