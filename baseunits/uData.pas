@@ -40,6 +40,8 @@ type
     FFilterAllSites: Boolean;
     FSitesList: TStringList;
     FSQLSelect: String;
+    FFilterApplied: Boolean;
+    FFilterSQL: String;
   protected
     procedure CreateTable;
     procedure VacuumTable;
@@ -408,7 +410,8 @@ begin
   with FQuery.SQL do
   begin
     if Count > 0 then
-      if (Strings[Count-1] <> '(') then
+      if (Strings[Count-1] <> '(') and
+        (UpCase(Trim(Strings[Count-1])) <> 'WHERE') then
       begin
         if useOR then
           Add('OR')
@@ -510,6 +513,8 @@ begin
   FTableName := 'masterlist';
   FSQLSelect := 'SELECT * FROM ' + QuotedStrd(FTableName);
   FRecordCount := 0;
+  FFilterApplied := False;
+  FFilterSQL := '';
 end;
 
 destructor TDBDataProcess.Destroy;
@@ -768,14 +773,19 @@ begin
     try
       FQuery.Close;
       FQuery.SQL.Clear;
-      FQuery.SQL.Add(FSQLSelect);
+      if not FFilterApplied then
+        FQuery.SQL.Add(FSQLSelect)
+      else
+        FQuery.SQL.AddText(FFilterSQL);
       if ATitle <> '' then
       begin
-        FQuery.SQL.Add('WHERE "title" LIKE ' + QuotedStr(AnsiQuotedStr(ATitle, '%')));
+        if not FFilterApplied then
+          FQuery.SQL.Add('WHERE');
+        AddSQLSimpleFilter('title', ATitle);
         FFiltered := True;
       end
       else
-        FFiltered := False;
+        FFiltered := FFilterApplied;
       FQuery.Open;
       GetRecordCount;
     except
@@ -822,7 +832,7 @@ begin
   if FQuery.Active = False then Exit;
   with FQuery do
   begin
-    Close;
+    FQuery.Close;
     FRecordCount := 0;
     tsql := SQL.Text;
     SQL.Clear;
@@ -870,16 +880,23 @@ begin
       if Trim(SQL.Text) <> '' then
         SQL.Insert(0, 'WHERE');
       SQL.Insert(0, FSQLSelect);
-      Open;
+      FQuery.Open;
       FFiltered := Active;
+      FFilterApplied := FFiltered;
+      if FFilterApplied then
+        FFilterSQL := SQL.Text
+      else
+        FFilterSQL := '';
     except
       on E: Exception do
       begin
         WriteLog_E('TDBDataProcess.Filter.Error!', E, Self);
-        Close;
+        FQuery.Close;
         SQL.Text := tsql;
-        Open;
+        FQuery.Open;
         FFiltered := False;
+        FFilterApplied := False;
+        FFilterSQL := '';
       end;
     end;
     GetRecordCount;
@@ -923,6 +940,8 @@ end;
 procedure TDBDataProcess.RemoveFilter;
 begin
   FFiltered := False;
+  FFilterApplied := False;
+  FFilterSQL := '';
   OpenTable;
   GetRecordCount;
 end;
