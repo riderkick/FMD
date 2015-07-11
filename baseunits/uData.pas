@@ -790,7 +790,8 @@ begin
       GetRecordCount;
     except
       on E: Exception do
-        WriteLog_E('TDBDataProcess.Search.Error!', E, Self);
+        WriteLog_E('TDBDataProcess.Search.Error!'#13#10 +
+                   'SQL:'#13#10 + FQuery.SQL.Text, E, Self);
     end;
   Result := FQuery.Active;
   if not Result then
@@ -890,7 +891,8 @@ begin
     except
       on E: Exception do
       begin
-        WriteLog_E('TDBDataProcess.Filter.Error!', E, Self);
+        WriteLog_E('TDBDataProcess.Filter.Error!'#13#10 +
+                   'SQL:'#13#10 + FQuery.SQL.Text, E, Self);
         FQuery.Close;
         SQL.Text := tsql;
         FQuery.Open;
