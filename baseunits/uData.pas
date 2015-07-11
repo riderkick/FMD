@@ -63,7 +63,7 @@ type
     function Search(ATitle: String): Boolean;
     function CanFilter(const checkedGenres, uncheckedGenres: TStringList;
       const stTitle, stAuthors, stArtists, stStatus, stSummary: String;
-      const minusDay: Cardinal; const haveAllChecked, searchNewManga: Boolean): Boolean;
+      const {%H-}minusDay: Cardinal; const haveAllChecked, searchNewManga: Boolean): Boolean;
     function Filter(const checkedGenres, uncheckedGenres: TStringList;
       const stTitle, stAuthors, stArtists, stStatus, stSummary: String;
       const minusDay: Cardinal; const haveAllChecked, searchNewManga: Boolean;
@@ -807,15 +807,15 @@ function TDBDataProcess.CanFilter(const checkedGenres, uncheckedGenres: TStringL
 begin
   Result := False;
   if not FQuery.Active then Exit;
-  if (FRecordCount = 0) or
-    ((stTitle = '') and
+  if ((stTitle = '') and
     (stAuthors = '') and
     (stArtists = '') and
     (stSummary = '') and
     (stStatus = '2') and
     (checkedGenres.Count = 0) and
     (uncheckedGenres.Count = 0)) and
-    (not searchNewManga) then
+    (not searchNewManga) and
+    haveAllChecked then
     Result := False
   else
     Result := True;
@@ -831,6 +831,9 @@ function TDBDataProcess.Filter(const checkedGenres, uncheckedGenres: TStringList
 begin
   Result := False;
   if FQuery.Active = False then Exit;
+  if not CanFilter(checkedGenres, uncheckedGenres, stTitle, stAuthors,
+    stArtists, stStatus, stSummary, minusDay, haveAllChecked, searchNewManga) then
+    Exit;
   with FQuery do
   begin
     FQuery.Close;
@@ -941,11 +944,14 @@ end;
 
 procedure TDBDataProcess.RemoveFilter;
 begin
-  FFiltered := False;
-  FFilterApplied := False;
-  FFilterSQL := '';
-  OpenTable;
-  GetRecordCount;
+  if FFiltered then
+  begin
+    FFiltered := False;
+    FFilterApplied := False;
+    FFilterSQL := '';
+    OpenTable;
+    GetRecordCount;
+  end;
 end;
 
 procedure TDBDataProcess.Sort;
