@@ -57,6 +57,7 @@ type
     constructor Create;
     destructor Destroy; override;
 
+    function Connect(AWebsite: String): Boolean;
     function Open(AWebsite: String = ''): Boolean;
     function OpenTable(const ATableName: String = ''): Boolean;
     function TableExist(const ATableName: String): Boolean;
@@ -536,6 +537,20 @@ begin
   FConn.Free;
   FRegxp.Free;
   inherited Destroy;
+end;
+
+function TDBDataProcess.Connect(AWebsite: String): Boolean;
+var
+  filepath: string;
+begin
+  Result := False;
+  if AWebsite <> '' then
+    FWebsite := AWebsite;
+  if FWebsite = '' then
+    Exit;
+  filepath := fmdDirectory + DATA_FOLDER + FWebsite + DBDATA_EXT;
+  if not FileExistsUTF8(filepath) Then Exit;
+  Result := InternalOpen(filepath);
 end;
 
 function TDBDataProcess.Open(AWebsite: String): Boolean;
