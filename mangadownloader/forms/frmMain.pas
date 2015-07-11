@@ -1860,6 +1860,7 @@ begin
       if dataProcess = nil then
         dataProcess := TDBDataProcess.Create;
       vtMangaList.Clear;
+      lbMode.Caption := Format(RS_ModeAll, [0]);
       if not dataProcess.Open(
         cbSelectManga.Items.Strings[cbSelectManga.ItemIndex]) then
         RunGetList;
