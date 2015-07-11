@@ -3144,7 +3144,6 @@ object MainForm: TMainForm
         Width = 157
         Anchors = [akTop, akLeft, akRight]
         OnChange = edSearchChange
-        OnKeyUp = edSearchKeyUp
         TabOrder = 1
         TextHint = 'Search title...'
       end

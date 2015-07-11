@@ -356,7 +356,6 @@ type
     procedure clbChapterListInitNode(Sender: TBaseVirtualTree;
       ParentNode, Node: PVirtualNode; var InitialStates: TVirtualNodeInitStates);
     procedure edSearchChange(Sender: TObject);
-    procedure edSearchKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure edURLKeyPress(Sender: TObject; var Key: Char);
     procedure edWebsitesSearchChange(Sender: TObject);
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
@@ -4662,55 +4661,20 @@ end;
 
 procedure TMainForm.edSearchChange(Sender: TObject);
 begin
+  if (cbOptionLiveSearch.Checked = False) and (Sender = edSearch) then Exit;
   if (upcase(edSearch.Text) = LastSearchStr) and (currentWebsite = LastSearchWeb) then
     Exit;
-  if edSearch.Text = '' then
-  begin
-    LastSearchStr := '';
-    //Screen.Cursor := crHourGlass;
-    vtMangaList.Clear;
-    dataProcess.Search(edSearch.Text);
-    vtMangaList.RootNodeCount := dataProcess.RecordCount;
-    //Screen.Cursor := crDefault;
-    Exit;
-  end
+
+  LastSearchWeb := currentWebsite;
+  LastSearchStr := UpCase(edSearch.Text);
+
+  vtMangaList.Clear;
+  dataProcess.Search(edSearch.Text);
+  vtMangaList.RootNodeCount := dataProcess.RecordCount;
+  if dataProcess.Filtered then
+    lbMode.Caption := Format(RS_ModeFiltered, [vtMangaList.RootNodeCount])
   else
-  if cbOptionLiveSearch.Checked then
-  begin
-    LastSearchWeb := currentWebsite;
-    LastSearchStr := upcase(edSearch.Text);
-    vtMangaList.Clear;
-    DataProcess.Search(edSearch.Text);
-    vtMangaList.RootNodeCount := dataProcess.RecordCount;
-  end;
-end;
-
-procedure TMainForm.edSearchKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
-begin
-  if ((upcase(edSearch.Text) = LastSearchStr) and (currentWebsite = LastSearchWeb)) or
-    cbOptionLiveSearch.Checked then
-    Exit;
-
-  if Key = VK_RETURN then
-  begin
-    LastSearchStr := upcase(edSearch.Text);
-    if edSearch.Text = '' then
-    begin
-      Screen.Cursor := crHourGlass;
-      vtMangaList.Clear;
-      vtMangaList.RootNodeCount := dataProcess.RecordCount;
-      Screen.Cursor := crDefault;
-    end
-    else
-    begin
-      Screen.Cursor := crHourGlass;
-      LastSearchWeb := currentWebsite;
-      DataProcess.Search(edSearch.Text);
-      vtMangaList.Clear;
-      vtMangaList.RootNodeCount := dataProcess.RecordCount;
-      Screen.Cursor := crDefault;
-    end;
-  end;
+    lbMode.Caption := Format(RS_ModeAll, [vtMangaList.RootNodeCount]);
 end;
 
 procedure TMainForm.UpdateVtChapter;
