@@ -785,16 +785,21 @@ function TDBDataProcess.Filter(const checkedGenres, uncheckedGenres: TStringList
     FQuery.SQL.Add(sqltext);
   end;
 
-  procedure AddSQLSimpleFilter(const fieldname, value: string);
+  procedure AddSQLSimpleFilter(const fieldname, value: string; useNOT: Boolean = False);
   var
     svalue: string;
+    scond: string;
   begin
     svalue := LowerCase(Trim(value));
     if (fieldname = '') or (svalue = '') then Exit;
-    if useRegExpr then
-      AddSQL(QuotedStrd(fieldname) + ' REGEXP ' + QuotedStr(svalue))
+    if useNOT then
+      scond := ' NOT'
     else
-      AddSQL(QuotedStrd(fieldname) + ' LIKE ' + QuotedLike(svalue));
+      scond := '';
+    if useRegExpr then
+      AddSQL(QuotedStrd(fieldname) + scond + ' REGEXP ' + QuotedStr(svalue))
+    else
+      AddSQL(QuotedStrd(fieldname) + scond + ' LIKE ' + QuotedLike(svalue));
   end;
 
   var
