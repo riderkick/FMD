@@ -296,7 +296,7 @@ begin
             Status[i], StringBreaks(Summary[i]), StrToIntDef(Param[i, DATA_PARAM_NUMCHAPTER], 1),
             {%H-}Integer(JDN[i])-3);
           Inc(rcount);
-          if rcount > 499 then
+          if rcount >= 2000 then
           begin
             rcount := 0;
             dbdata.Commit;
