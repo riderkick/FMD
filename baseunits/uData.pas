@@ -59,7 +59,7 @@ type
 
     function Connect(AWebsite: String): Boolean;
     function Open(AWebsite: String = ''): Boolean;
-    function OpenTable(const ATableName: String = ''): Boolean;
+    function OpenTable(const ATableName: String = ''; CheckRecordCount: Boolean = False): Boolean;
     function TableExist(const ATableName: String): Boolean;
     function Search(ATitle: String): Boolean;
     function CanFilter(const checkedGenres, uncheckedGenres: TStringList;
@@ -574,8 +574,7 @@ begin
     begin
       if not TableExist(FTableName) then
         CreateTable;
-      OpenTable;
-      GetRecordCount;
+      OpenTable(FTableName, True);
     end;
     Result := FQuery.Active;
   except
@@ -584,7 +583,8 @@ begin
   end;
 end;
 
-function TDBDataProcess.OpenTable(const ATableName: String): Boolean;
+function TDBDataProcess.OpenTable(const ATableName: String;
+  CheckRecordCount: Boolean): Boolean;
 begin
   Result := False;
   if FConn.Connected then
@@ -601,6 +601,8 @@ begin
         FSQLSelect := 'SELECT * FROM ' + QuotedStrd(FTableName);
         FQuery.SQL.Text := FSQLSelect;
         FQuery.Open;
+        if CheckRecordCount then
+          GetRecordCount;
       end;
     except
       on E: Exception do
