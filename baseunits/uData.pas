@@ -257,6 +257,11 @@ begin
   end;
 end;
 
+function QuotedLike(const S: string): string;
+begin
+  Result := QuotedStr(AnsiQuotedStr(S, '%'));
+end;
+
 procedure ConvertDataProccessToDB(AWebsite: String; DeleteOriginal: Boolean);
 var
   filepath: String;
@@ -729,8 +734,7 @@ begin
       FQuery.SQL.Add(FSQLSelect);
       if ATitle <> '' then
       begin
-        FQuery.SQL.Add('WHERE "title" LIKE ' +
-          QuotedStr(AnsiQuotedStr(ATitle, '%')) + ';');
+        FQuery.SQL.Add('WHERE "title" LIKE ' + QuotedStr(AnsiQuotedStr(ATitle, '%')));
         FFiltered := True;
       end
       else
@@ -774,25 +778,39 @@ function TDBDataProcess.Filter(const checkedGenres, uncheckedGenres: TStringList
   const minusDay: Cardinal; const haveAllChecked, searchNewManga: Boolean;
   useRegExpr: Boolean): Boolean;
 
-  procedure AddSQL(const S: String);
+  procedure AddSQL(const sqltext: string);
   begin
     if FQuery.SQL.Count > 0 then
       FQuery.SQL.Add('AND');
-    FQuery.SQL.Add(S);
+    FQuery.SQL.Add(sqltext);
   end;
 
+  var
+    tsql, s: string;
 begin
   Result := False;
-  if FConn.Connected = False then
-    Exit;
+  if FQuery.Active = False then Exit;
   with FQuery do
   begin
-    FRecordCount := 0;
     Close;
+    FRecordCount := 0;
+    tsql := SQL.Text;
+    SQL.Clear;
     try
-      SQL.Clear;
+      // filter new manga based on date
       if searchNewManga then
-        AddSQL('jdn > ' + QuotedStr(IntToStr(DateToJDN(IncDay(Now, (0 - minusDay))))));
+        AddSQL('"jdn" > ' + QuotedStr(IntToStr(DateToJDN(IncDay(Now, (0 - minusDay))))));
+
+      // filter title
+      s := LowerCase(Trim(stTitle));
+      if s <> '' then
+      begin
+        if useRegExpr then
+          AddSQL('"title" REGEXP ' + QuotedStr(s))
+        else
+          AddSQL('"title" like ' + QuotedLike(s));
+      end;
+
       if Trim(SQL.Text) <> '' then
         SQL.Insert(0, 'WHERE');
       SQL.Insert(0, FSQLSelect);
@@ -803,7 +821,7 @@ begin
       begin
         WriteLog_E('TDBDataProcess.Filter.Error!', E, Self);
         Close;
-        SQL.Text := FSQLSelect;
+        SQL.Text := tsql;
         Open;
         FFiltered := False;
       end;
