@@ -825,6 +825,10 @@ begin
       // filter summary
       AddSQLSimpleFilter('summary', stSummary);
 
+      // filter status
+      if stStatus <> '2' then
+        AddSQL('"status"='+ QuotedStr(stStatus));
+
       if Trim(SQL.Text) <> '' then
         SQL.Insert(0, 'WHERE');
       SQL.Insert(0, FSQLSelect);
