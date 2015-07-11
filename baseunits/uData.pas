@@ -804,6 +804,7 @@ function TDBDataProcess.Filter(const checkedGenres, uncheckedGenres: TStringList
 
   var
     tsql: string;
+    i: Integer;
 begin
   Result := False;
   if FQuery.Active = False then Exit;
@@ -833,6 +834,16 @@ begin
       // filter status
       if stStatus <> '2' then
         AddSQL('"status"='+ QuotedStr(stStatus));
+
+      //filter checked genres
+      if checkedGenres.Count > 0 then
+        for i := 0 to checkedGenres.Count-1 do
+          AddSQLSimpleFilter('genres', checkedGenres[i]);
+
+      //filter unchecked genres
+      if uncheckedGenres.Count > 0 then
+        for i := 0 to uncheckedGenres.Count-1 do
+          AddSQLSimpleFilter('genres', uncheckedGenres[i], True);
 
       if Trim(SQL.Text) <> '' then
         SQL.Insert(0, 'WHERE');
