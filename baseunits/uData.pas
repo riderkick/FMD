@@ -816,6 +816,15 @@ begin
       // filter title
       AddSQLSimpleFilter('title', stTitle);
 
+      // filter authors
+      AddSQLSimpleFilter('authors', stAuthors);
+
+      // filter artists
+      AddSQLSimpleFilter('artists', stArtists);
+
+      // filter summary
+      AddSQLSimpleFilter('summary', stSummary);
+
       if Trim(SQL.Text) <> '' then
         SQL.Insert(0, 'WHERE');
       SQL.Insert(0, FSQLSelect);
