@@ -2073,8 +2073,9 @@ end;
 
 procedure TMainForm.btFilterClick(Sender: TObject);
 var
-  checkGenres, uncheckGenres: TStringList;
-  i: Cardinal;
+  checkGenres,
+  uncheckGenres: TStringList;
+  i: Integer;
   s: String;
 begin
   Screen.Cursor := crHourGlass;
@@ -2085,8 +2086,8 @@ begin
       checkGenres.Add(Trim(edCustomGenres.Text))
     else
     begin
-      //CustomGenres(checkGenres, edCustomGenres.Text);
-      ExtractStrings([',', ';'], [], PChar(edCustomGenres.Text), checkGenres);
+      checkGenres.Delimiter := ',';
+      checkGenres.DelimitedText := edCustomGenres.Text;
       TrimStrings(checkGenres);
       i := 0;
       while i < checkGenres.Count do
@@ -2114,33 +2115,41 @@ begin
         uncheckGenres.Add(TCheckBox(pnGenres.Controls[i]).Caption);
     end;
 
-    // we will reload the list if search from all websites is enabled
-    if cbSearchFromAllSites.Checked then
-    begin
-      if not dataProcess.CanFilter(checkGenres, uncheckGenres,
-        edFilterTitle.Text, edFilterAuthors.Text,
-        edFilterArtists.Text, IntToStr(cbFilterStatus.ItemIndex),
-        edFilterSummary.Text,
-        seOptionNewMangaTime.Value,
-        rbAll.Checked, cbOnlyNew.Checked) then
-      begin
-        uncheckGenres.Free;
-        checkGenres.Free;
-        Exit;
-      end;
-      dataProcess.SitesList.Assign(cbSelectManga.Items);
-      dataProcess.FilterAllSites := True;
-    end;
-
-    edSearch.Tag := -1;
-    edSearch.Clear;
-    vtMangaList.Clear;
-    dataProcess.Filter(checkGenres, uncheckGenres,
-      edFilterTitle.Text, edFilterAuthors.Text,
-      edFilterArtists.Text, IntToStr(cbFilterStatus.ItemIndex),
+    if dataProcess.CanFilter(
+      checkGenres,
+      uncheckGenres,
+      edFilterTitle.Text,
+      edFilterAuthors.Text,
+      edFilterArtists.Text,
+      IntToStr(cbFilterStatus.ItemIndex),
       edFilterSummary.Text,
       seOptionNewMangaTime.Value,
-      rbAll.Checked, cbOnlyNew.Checked, cbUseRegExpr.Checked);
+      rbAll.Checked,
+      cbOnlyNew.Checked) then
+    begin
+      if cbSearchFromAllSites.Checked then
+      begin
+        dataProcess.SitesList.Assign(cbSelectManga.Items);
+        dataProcess.FilterAllSites := True;
+      end;
+
+      edSearch.Tag := -1;
+      edSearch.Clear;
+      vtMangaList.Clear;
+
+      dataProcess.Filter(
+        checkGenres,
+        uncheckGenres,
+        edFilterTitle.Text,
+        edFilterAuthors.Text,
+        edFilterArtists.Text,
+        IntToStr(cbFilterStatus.ItemIndex),
+        edFilterSummary.Text,
+        seOptionNewMangaTime.Value,
+        rbAll.Checked,
+        cbOnlyNew.Checked,
+        cbUseRegExpr.Checked);
+    end;
   except
     on E: Exception do
       ExceptionHandler(Self, E);
@@ -4668,6 +4677,8 @@ begin
   if edSearch.Tag = -1 then
   begin
     edSearch.Tag := 0;
+    LastSearchWeb := currentWebsite;
+    LastSearchStr := UpCase(edSearch.Text);
     Exit;
   end;
   if (not cbOptionLiveSearch.Checked) and (edSearch.Tag = 0) then Exit;
@@ -4695,7 +4706,10 @@ begin
   begin
     edSearch.Tag := 1;
     edSearchChange(edSearch);
-  end;
+  end
+  else
+  if edSearch.Tag <> 0 then
+    edSearch.Tag := 0;
 end;
 
 procedure TMainForm.UpdateVtChapter;
