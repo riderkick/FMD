@@ -753,7 +753,20 @@ function TDBDataProcess.CanFilter(const checkedGenres, uncheckedGenres: TStringL
   const stTitle, stAuthors, stArtists, stStatus, stSummary: String;
   const minusDay: Cardinal; const haveAllChecked, searchNewManga: Boolean): Boolean;
 begin
-  Result := True;
+  Result := False;
+  if not FQuery.Active then Exit;
+  if (FRecordCount = 0) or
+    ((stTitle = '') and
+    (stAuthors = '') and
+    (stArtists = '') and
+    (stSummary = '') and
+    (stStatus = '2') and
+    (checkedGenres.Count = 0) and
+    (uncheckedGenres.Count = 0)) and
+    (not searchNewManga) then
+    Result := False
+  else
+    Result := True;
 end;
 
 function TDBDataProcess.Filter(const checkedGenres, uncheckedGenres: TStringList;
