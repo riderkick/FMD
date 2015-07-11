@@ -540,12 +540,8 @@ begin
         else
           CopyDBDataProcess(website, twebsite);
 
-        if not mainDataProcess.Open(twebsite) then
-        begin
+        if not mainDataProcess.Connect(twebsite) then
           mainDataProcess.CreateDatabase(twebsite);
-          mainDataProcess.OpenTable;
-        end;
-        mainDataProcess.Refresh(True);
 
         //get directory page count
         INIAdvanced.Reload;
@@ -613,6 +609,7 @@ begin
           end;
         end;
 
+        mainDataProcess.OpenTable;
         // remove duplicate found<>current database
         if links.Count > 0 then
         begin
@@ -633,6 +630,7 @@ begin
               Inc(j);
           end;
         end;
+        mainDataProcess.CloseTable;
 
         //get manga info
         if links.Count > 0 then
