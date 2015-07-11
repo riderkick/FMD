@@ -2129,16 +2129,12 @@ begin
     end;
 
     vtMangaList.Clear;
-    if dataProcess.Filter(checkGenres, uncheckGenres,
+    dataProcess.Filter(checkGenres, uncheckGenres,
       edFilterTitle.Text, edFilterAuthors.Text,
       edFilterArtists.Text, IntToStr(cbFilterStatus.ItemIndex),
       edFilterSummary.Text,
       seOptionNewMangaTime.Value,
-      rbAll.Checked, cbOnlyNew.Checked, cbUseRegExpr.Checked) then
-    begin
-      lbMode.Caption := Format(RS_ModeFiltered, [dataProcess.RecordCount]);
-      vtMangaList.RootNodeCount := dataProcess.RecordCount;
-    end;
+      rbAll.Checked, cbOnlyNew.Checked, cbUseRegExpr.Checked);
   except
     on E: Exception do
       ExceptionHandler(Self, E);
@@ -2146,6 +2142,12 @@ begin
   uncheckGenres.Free;
   checkGenres.Free;
   Screen.Cursor := crDefault;
+
+  vtMangaList.RootNodeCount := dataProcess.RecordCount;
+  if dataProcess.Filtered then
+    lbMode.Caption := Format(RS_ModeFiltered, [vtMangaList.RootNodeCount])
+  else
+    lbMode.Caption := Format(RS_ModeAll, [vtMangaList.RootNodeCount])
 end;
 
 procedure TMainForm.btFilterResetClick(Sender: TObject);
