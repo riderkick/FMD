@@ -609,7 +609,7 @@ begin
           end;
         end;
 
-        mainDataProcess.OpenTable;
+        mainDataProcess.OpenTable('', True);
         // remove duplicate found<>current database
         if links.Count > 0 then
         begin
