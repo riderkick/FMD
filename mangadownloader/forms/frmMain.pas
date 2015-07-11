@@ -2128,6 +2128,8 @@ begin
       dataProcess.FilterAllSites := True;
     end;
 
+    edSearch.Tag := -1;
+    edSearch.Clear;
     vtMangaList.Clear;
     dataProcess.Filter(checkGenres, uncheckGenres,
       edFilterTitle.Text, edFilterAuthors.Text,
@@ -4659,7 +4661,12 @@ end;
 
 procedure TMainForm.edSearchChange(Sender: TObject);
 begin
-  if (cbOptionLiveSearch.Checked = False) and (Sender = edSearch) then Exit;
+  if edSearch.Tag = -1 then
+  begin
+    edSearch.Tag := 0;
+    Exit;
+  end;
+  if not cbOptionLiveSearch.Checked then Exit;
   if (upcase(edSearch.Text) = LastSearchStr) and (currentWebsite = LastSearchWeb) then
     Exit;
 
