@@ -38,9 +38,10 @@ type
     FRecordCount: Integer;
     FFiltered: Boolean;
     FFilterAllSites: Boolean;
-    FSitesList: TStringList;
-    FSQLSelect: String;
     FFilterApplied: Boolean;
+    FSitesList: TStringList;
+    FAttachedSites: TStringList;
+    FSQLSelect: String;
     FFilterSQL: String;
   protected
     procedure CreateTable;
@@ -53,6 +54,8 @@ type
     function InternalOpen(const FilePath: String = ''): Boolean;
     function GetWebsiteName(RecIndex: Integer): String;
     function GetValue(RecIndex, FieldIndex: Integer): String;
+    procedure AttachAllSites;
+    procedure DetachAllSites;
   public
     constructor Create;
     destructor Destroy; override;
@@ -209,6 +212,7 @@ const
                               'numchapter INTEGER,'+
                               'jdn INTEGER);';
 
+  function DBDataFilePath(const AWebsite: string): string;
   procedure ConvertDataProccessToDB(AWebsite: String; DeleteOriginal: Boolean = False);
   function DBDataProcessExist(const AWebsite: string): Boolean;
   procedure CopyDBDataProcess(const AWebsite, NWebsite: string);
@@ -266,6 +270,11 @@ end;
 function QuotedLike(const S: string): string;
 begin
   Result := QuotedStr(AnsiQuotedStr(S, '%'));
+end;
+
+function DBDataFilePath(const AWebsite: string): string;
+begin
+  Result := fmdDirectory + DATA_FOLDER + AWebsite + DBDATA_EXT;
 end;
 
 procedure ConvertDataProccessToDB(AWebsite: String; DeleteOriginal: Boolean);
@@ -480,10 +489,13 @@ end;
 function TDBDataProcess.GetWebsiteName(RecIndex: Integer): String;
 begin
   Result := FWebsite;
-  if FConn.Connected and FilterAllSites and Filtered then
-  begin
-
-  end;
+  if FConn.Connected and (FAttachedSites.Count > 0) and (FQuery.Active) then
+    try
+      Result := FQuery.FieldByName('website').AsString;
+    except
+      on E: Exception do
+        WriteLog_E('TDBDataProcess.GetWebsiteName', E, Self);
+    end;
 end;
 
 function TDBDataProcess.GetValue(RecIndex, FieldIndex: Integer): String;
@@ -506,6 +518,40 @@ begin
   end;
 end;
 
+procedure TDBDataProcess.AttachAllSites;
+var
+  i: Integer;
+begin
+  DetachAllSites;
+  if FConn.Connected and (SitesList.Count > 0) then
+  begin
+    FConn.ExecuteDirect('END TRANSACTION');
+    for i := 0 to SitesList.Count-1 do
+      if FileExistsUTF8(DBDataFilePath(SitesList[i])) then
+      begin
+        FConn.ExecuteDirect('ATTACH ' + QuotedStrd(DBDataFilePath(SitesList[i]))
+          + ' AS ' + QuotedStrd(SitesList[i]));
+        FAttachedSites.Add(SitesList[i]);
+      end;
+    FConn.ExecuteDirect('BEGIN TRANSACTION');
+  end;
+end;
+
+procedure TDBDataProcess.DetachAllSites;
+var
+  i: Integer;
+begin
+  if FConn.Connected and (FAttachedSites.Count > 0) then
+  begin
+    FConn.ExecuteDirect('END TRANSACTION');
+    repeat
+      FConn.ExecuteDirect('DETACH '+ QuotedStrd(FAttachedSites[FAttachedSites.Count-1]));
+      FAttachedSites.Delete(FAttachedSites.Count-1);
+    until FAttachedSites.Count = 0;
+    FConn.ExecuteDirect('BEGIN TRANSACTION');
+  end;
+end;
+
 constructor TDBDataProcess.Create;
 begin
   inherited Create;
@@ -518,6 +564,7 @@ begin
   FRegxp := TRegExpr.Create;
   FRegxp.ModifierI := True;
   FSitesList := TStringList.Create;
+  FAttachedSites := TStringList.Create;
   FTableName := 'masterlist';
   FSQLSelect := 'SELECT * FROM ' + QuotedStrd(FTableName);
   FRecordCount := 0;
@@ -531,6 +578,7 @@ begin
     if FConn.Connected then
     begin
       FQuery.Close;
+      DetachAllSites;
       Commit;
       Close;
     end;
@@ -538,6 +586,7 @@ begin
     on E: Exception do
       WriteLog_E('TDBDataProcess.Destroy.Error!', E, Self);
   end;
+  FAttachedSites.Free;
   FSitesList.Free;
   FQuery.Free;
   FTrans.Free;
@@ -646,6 +695,7 @@ begin
   if FConn.Connected then
     try
       FQuery.Close;
+      DetachAllSites;
       FConn.Close;
       FConn.DatabaseName := '';
     except
@@ -852,20 +902,13 @@ function TDBDataProcess.Filter(const checkedGenres, uncheckedGenres: TStringList
   var
     tsql: string;
     i: Integer;
-begin
-  Result := False;
-  if FQuery.Active = False then Exit;
-  if not CanFilter(checkedGenres, uncheckedGenres, stTitle, stAuthors,
-    stArtists, stStatus, stSummary, minusDay, haveAllChecked, searchNewManga) then
-    Exit;
-  with FQuery do
+    filtersingle: Boolean = True;
+
+  procedure GenerateSQLFilter;
+  var
+    j: Integer;
   begin
-    FQuery.Close;
-    FRecordCount := 0;
-    tsql := SQL.Text;
-    SQL.Clear;
-    try
-      // filter new manga based on date
+    // filter new manga based on date
       if searchNewManga then
         AddSQLCond('"jdn" > ' + QuotedStr(IntToStr(DateToJDN(IncDay(Now, (0 - minusDay))))));
 
@@ -889,25 +932,68 @@ begin
       if checkedGenres.Count > 0 then
       begin
         AddSQLCond('(');
-        for i := 0 to checkedGenres.Count-1 do
-          AddSQLSimpleFilter('genres', checkedGenres[i], False,
+        for j := 0 to checkedGenres.Count-1 do
+          AddSQLSimpleFilter('genres', checkedGenres[j], False,
             (not haveAllChecked), useRegExpr);
-        SQL.Add(')')
+        FQuery.SQL.Add(')');
       end;
 
       //filter unchecked genres
       if uncheckedGenres.Count > 0 then
       begin
         AddSQLCond('(');
-        for i := 0 to uncheckedGenres.Count-1 do
-          AddSQLSimpleFilter('genres', uncheckedGenres[i], True,
+        for j := 0 to uncheckedGenres.Count-1 do
+          AddSQLSimpleFilter('genres', uncheckedGenres[j], True,
             (not haveAllChecked), useRegExpr);
-        SQL.Add(')');
+        FQuery.SQL.Add(')');
+      end;
+  end;
+
+begin
+  Result := False;
+  if FQuery.Active = False then Exit;
+  if not CanFilter(checkedGenres, uncheckedGenres, stTitle, stAuthors,
+    stArtists, stStatus, stSummary, minusDay, haveAllChecked, searchNewManga) then
+    Exit;
+  with FQuery do
+  begin
+    FQuery.Close;
+    FRecordCount := 0;
+    tsql := SQL.Text;
+    SQL.Clear;
+    try
+      if FFilterAllSites and (FSitesList.Count > 0) then
+      begin
+        AttachAllSites;
+        if FAttachedSites.Count > 0 then
+        begin
+          SQL.Add('SELECT * FROM');
+          SQL.Add('(');
+          SQL.Add('SELECT *, ' + QuotedStr(FWebsite) + ' AS ''website'' FROM ' +
+            QuotedStrd(FTableName));
+          SQL.Add('WHERE');
+          GenerateSQLFilter;
+          for i := 0 to FAttachedSites.Count-1 do
+          begin
+            SQL.Add('UNION ALL');
+            SQL.Add('SELECT *, ' + QuotedStr(FAttachedSites[i]) + ' AS ''website'' FROM ' +
+              FAttachedSites[i] + '.' + QuotedStrd(FTableName));
+            SQL.Add('WHERE');
+            GenerateSQLFilter;
+          end;
+          SQL.Add(')');
+          SQL.Add('ORDER BY ''title'' COLLATE NATCMP');
+          filtersingle := False;
+        end;
       end;
 
-      if Trim(SQL.Text) <> '' then
-        SQL.Insert(0, 'WHERE');
-      SQL.Insert(0, FSQLSelect);
+      if filtersingle then
+      begin
+        SQL.Add(FSQLSelect);
+        SQL.Add('WHERE');
+        GenerateSQLFilter;
+      end;
+
       FQuery.Open;
       FFiltered := Active;
       FFilterApplied := FFiltered;
@@ -973,6 +1059,7 @@ begin
     FFiltered := False;
     FFilterApplied := False;
     FFilterSQL := '';
+    DetachAllSites;
     OpenTable;
     GetRecordCount;
   end;
