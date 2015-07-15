@@ -1451,7 +1451,6 @@ object MainForm: TMainForm
             Width = 149
             Caption = 'Search in all manga sites'
             TabOrder = 9
-            Visible = False
           end
           object btFilter: TBitBtn
             Left = 39
