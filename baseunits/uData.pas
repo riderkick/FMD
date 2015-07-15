@@ -969,20 +969,20 @@ begin
         begin
           SQL.Add('SELECT * FROM');
           SQL.Add('(');
-          SQL.Add('SELECT *, ' + QuotedStr(FWebsite) + ' AS ''website'' FROM ' +
+          SQL.Add('SELECT *, ' + QuotedStrd(FWebsite) + ' AS "website" FROM ' +
             QuotedStrd(FTableName));
           SQL.Add('WHERE');
           GenerateSQLFilter;
           for i := 0 to FAttachedSites.Count-1 do
           begin
             SQL.Add('UNION ALL');
-            SQL.Add('SELECT *, ' + QuotedStr(FAttachedSites[i]) + ' AS ''website'' FROM ' +
+            SQL.Add('SELECT *, ' + QuotedStrd(FAttachedSites[i]) + ' AS "website" FROM ' +
               FAttachedSites[i] + '.' + QuotedStrd(FTableName));
             SQL.Add('WHERE');
             GenerateSQLFilter;
           end;
           SQL.Add(')');
-          SQL.Add('ORDER BY ''title'' COLLATE NATCMP');
+          SQL.Add('ORDER BY "title" COLLATE NATCMP');
           filtersingle := False;
         end;
       end;
