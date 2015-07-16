@@ -522,9 +522,10 @@ procedure TDBDataProcess.AttachAllSites;
 var
   i: Integer;
 begin
-  DetachAllSites;
   if FConn.Connected and (SitesList.Count > 0) then
   begin
+    if Trim(SitesList.Text) = Trim(FAttachedSites.Text) then Exit;
+    DetachAllSites;
     FConn.ExecuteDirect('END TRANSACTION');
     for i := 0 to SitesList.Count-1 do
       if FileExistsUTF8(DBDataFilePath(SitesList[i])) then
