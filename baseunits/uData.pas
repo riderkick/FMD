@@ -489,8 +489,9 @@ end;
 function TDBDataProcess.GetWebsiteName(RecIndex: Integer): String;
 begin
   Result := FWebsite;
-  if FConn.Connected and (FAttachedSites.Count > 0) and (FQuery.Active) then
+  if FQuery.Active and (FAttachedSites.Count > 0) then
     try
+      FQuery.RecNo := RecIndex+1;
       Result := FQuery.FieldByName('website').AsString;
     except
       on E: Exception do
