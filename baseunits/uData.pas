@@ -39,6 +39,7 @@ type
     FFiltered: Boolean;
     FFilterAllSites: Boolean;
     FFilterApplied: Boolean;
+    FAllSitesAttached: Boolean;
     FSitesList: TStringList;
     FAttachedSites: TStringList;
     FSQLSelect: String;
@@ -533,12 +534,13 @@ begin
         FAttachedSites.Add(SitesList[i]);
       end;
     FConn.ExecuteDirect('BEGIN TRANSACTION');
+    FAllSitesAttached := FAttachedSites.Count > 0;
   end;
 end;
 
 procedure TDBDataProcess.DetachAllSites;
 begin
-  if FConn.Connected and (FAttachedSites.Count > 0) then
+  if FConn.Connected and FAllSitesAttached then
   begin
     FConn.ExecuteDirect('END TRANSACTION');
     repeat
@@ -552,6 +554,7 @@ begin
       FAttachedSites.Delete(FAttachedSites.Count-1);
     until FAttachedSites.Count = 0;
     FConn.ExecuteDirect('BEGIN TRANSACTION');
+    FAllSitesAttached := False;
   end;
 end;
 
@@ -573,6 +576,7 @@ begin
   FRecordCount := 0;
   FFilterApplied := False;
   FFilterSQL := '';
+  FAllSitesAttached := False;
 end;
 
 destructor TDBDataProcess.Destroy;
