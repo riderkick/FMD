@@ -638,8 +638,6 @@ var
   filepath: String;
 begin
   Result := False;
-  FFiltered := False;
-  FRecordCount := 0;
   Self.Close;
   if AWebsite <> '' then
     FWebsite := AWebsite;
@@ -714,12 +712,11 @@ end;
 
 procedure TDBDataProcess.Close;
 begin
-  FFiltered := False;
   FRecordCount := 0;
   if FConn.Connected then
     try
       FQuery.Close;
-      DetachAllSites;
+      RemoveFilter;
       FConn.Close;
       FConn.DatabaseName := '';
     except
@@ -732,8 +729,8 @@ procedure TDBDataProcess.CloseTable;
 begin
   if FQuery.Active then
   begin
-    FFiltered := False;
     FRecordCount := 0;
+    RemoveFilter;
     FQuery.Close;
   end;
 end;
@@ -855,13 +852,14 @@ end;
 function TDBDataProcess.Search(ATitle: String): Boolean;
 begin
   if FQuery.Active then
+  begin
     try
       FQuery.Close;
       FQuery.SQL.Clear;
-      if not FFilterApplied then
-        FQuery.SQL.Add(FSQLSelect)
+      if FFilterApplied then
+        FQuery.SQL.AddText(FFilterSQL)
       else
-        FQuery.SQL.AddText(FFilterSQL);
+        FQuery.SQL.Add(FSQLSelect);
       if ATitle <> '' then
       begin
         if not FFilterApplied then
@@ -878,6 +876,7 @@ begin
         WriteLog_E('TDBDataProcess.Search.Error!'#13#10 +
                    'SQL:'#13#10 + FQuery.SQL.Text, E, Self);
     end;
+  end;
   Result := FQuery.Active;
   if not Result then
   begin
@@ -1071,8 +1070,11 @@ begin
     FFilterApplied := False;
     FFilterSQL := '';
     DetachAllSites;
-    OpenTable;
-    GetRecordCount;
+    if FQuery.Active then
+    begin
+      OpenTable;
+      GetRecordCount;
+    end;
   end;
 end;
 
