@@ -520,11 +520,26 @@ begin
 end;
 
 procedure TDBDataProcess.AttachAllSites;
+
+  procedure RemoveCurrentSite;
+  var
+    j: Integer;
+  begin
+    if SitesList.Count > 0 then
+      for j := 0 to SitesList.Count-1 do
+        if SitesList[j] = FWebsite then
+        begin
+          SitesList.Delete(j);
+          Break;
+        end;
+  end;
+
 var
   i: Integer;
 begin
   if FConn.Connected and (SitesList.Count > 0) then
   begin
+    RemoveCurrentSite;
     if Trim(SitesList.Text) = Trim(FAttachedSites.Text) then Exit;
     DetachAllSites;
     FConn.ExecuteDirect('END TRANSACTION');
