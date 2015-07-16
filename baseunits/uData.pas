@@ -88,7 +88,6 @@ type
     procedure UpdateData(Title, Link, Authors, Artists, Genres, Status, Summary: String;
       NumChapter: Integer);
     procedure Commit;
-    procedure ApplyUpdates(RecheckDataCount: Boolean = False);
     procedure RemoveFilter;
     procedure Sort;
 
@@ -538,14 +537,18 @@ begin
 end;
 
 procedure TDBDataProcess.DetachAllSites;
-var
-  i: Integer;
 begin
   if FConn.Connected and (FAttachedSites.Count > 0) then
   begin
     FConn.ExecuteDirect('END TRANSACTION');
     repeat
-      FConn.ExecuteDirect('DETACH '+ QuotedStrd(FAttachedSites[FAttachedSites.Count-1]));
+      try
+        FConn.ExecuteDirect('DETACH '+ QuotedStrd(FAttachedSites[FAttachedSites.Count-1]));
+      except
+        on E: Exception do
+          Writelog_E('TDBDataProcess.DetachAllSites:'+FAttachedSites[FAttachedSites.Count-1],
+            E, Self);
+      end;
       FAttachedSites.Delete(FAttachedSites.Count-1);
     until FAttachedSites.Count = 0;
     FConn.ExecuteDirect('BEGIN TRANSACTION');
@@ -616,7 +619,7 @@ begin
   Result := False;
   FFiltered := False;
   FRecordCount := 0;
-  Close;
+  Self.Close;
   if AWebsite <> '' then
     FWebsite := AWebsite;
   if FWebsite = '' then
@@ -739,7 +742,8 @@ begin
   if FQuery.Active then
     FQuery.Refresh
   else
-    OpenTable;
+  if Trim(FQuery.SQL.Text) <> '' then
+    FQuery.Open;
   if RecheckDataCount then
     GetRecordCount;
 end;
@@ -825,20 +829,6 @@ begin
       on E: Exception do
         WriteLog_E('TDBDataProcess.Commit.Error!', E, Self);
     end;
-end;
-
-procedure TDBDataProcess.ApplyUpdates(RecheckDataCount: Boolean);
-begin
-  if FQuery.Active then
-    try
-      FQuery.ApplyUpdates;
-      Commit;
-    except
-      on E: Exception do
-        WriteLog_E('TDBDataProcess.ApplyUpdates.Error!', E, Self);
-    end;
-  if RecheckDataCount then
-    GetRecordCount;
 end;
 
 function TDBDataProcess.Search(ATitle: String): Boolean;
