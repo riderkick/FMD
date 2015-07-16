@@ -95,7 +95,7 @@ procedure TGetMangaInfosThread.DoGetInfos;
 
       if FMangaListPos >= 0 then
       begin
-        if website = MainForm.cbSelectManga.Items[MainForm.cbSelectManga.ItemIndex] then
+        if MainForm.dataProcess.WebsiteLoaded(Website) then
         begin
           if SitesWithoutInformation(website) then
           begin
@@ -185,8 +185,7 @@ begin
   try
     TransferMangaInfo(MainForm.mangaInfo, FInfo.mangaInfo);
     with MainForm do begin
-      if (FMangaListPos > -1) and
-        (Website = MainForm.cbSelectManga.Text) then
+      if (FMangaListPos > -1) and dataProcess.WebsiteLoaded(Website) then
         begin
           vtMangaList.BeginUpdate;
           dataProcess.Refresh;

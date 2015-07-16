@@ -87,10 +87,11 @@ type
     procedure AddData(Title, Link, Authors, Artists, Genres, Status, Summary: String;
       NumChapter: Integer; JDN: TDateTime); overload;
     procedure UpdateData(Title, Link, Authors, Artists, Genres, Status, Summary: String;
-      NumChapter: Integer);
+      NumChapter: Integer; AWebsite: String = '');
     procedure Commit;
     procedure RemoveFilter;
     procedure Sort;
+    function WebsiteLoaded(const AWebsite: String): Boolean;
 
     property Website: String read FWebsite write FWebsite;
     property TableName: String read FTableName write FTableName;
@@ -796,8 +797,8 @@ begin
     NumChapter, DateToJDN(JDN));
 end;
 
-procedure TDBDataProcess.UpdateData(Title, Link, Authors, Artists,
-  Genres, Status, Summary: String; NumChapter: Integer);
+procedure TDBDataProcess.UpdateData(Title, Link, Authors, Artists, Genres,
+  Status, Summary: String; NumChapter: Integer; AWebsite: String);
 var
   sql: String;
 
@@ -809,8 +810,7 @@ var
   end;
 
 begin
-  if Link = '' then
-    Exit;
+  if Link = '' then Exit;
   if FConn.Connected then
   begin
     try
@@ -822,12 +822,16 @@ begin
       AddSQL('status', Status);
       AddSQL('summary', Summary);
       AddSQL('numchapter', IntToStr(NumChapter));
-      sql := 'UPDATE ' + QuotedStr(FTableName) + #13#10'SET'#13#10 + sql;
+      if (AWebsite <> '') and (AWebsite <> FWebsite) and FAllSitesAttached then
+        sql := 'UPDATE ' + AWebsite + '.' + QuotedStrd(FTableName) +
+          #13#10'SET'#13#10 + sql
+      else
+        sql := 'UPDATE ' + QuotedStrd(FTableName) + #13#10'SET'#13#10 + sql;
       sql += #13#10'WHERE link=' + QuotedStr(Link) + ';';
       FConn.ExecuteDirect(sql);
     except
       on E: Exception do
-        WriteLog_E('TDBDataProcess.AddData.Error!', E, Self);
+        WriteLog_E('TDBDataProcess.UpdateData.Error!', E, Self);
     end;
   end;
 end;
@@ -1127,6 +1131,21 @@ begin
     if FQuery.Active <> queryactive then
       FQuery.Open;
   end;
+end;
+
+function TDBDataProcess.WebsiteLoaded(const AWebsite: String): Boolean;
+var
+  i: Integer;
+begin
+  Result := False;
+  if FWebsite = AWebsite then Exit(True);
+  if FAllSitesAttached then
+    for i := 0 to FAttachedSites.Count-1 do
+      if FAttachedSites[i] = AWebsite then
+      begin
+        Result := True;
+        Break;
+      end;
 end;
 
 // ----- TDataProcess -----
@@ -3108,7 +3127,8 @@ procedure TMangaInformation.SyncInfoToData(const DataProcess: TDBDataProcess);
 begin
   if Assigned(DataProcess) then
     with mangaInfo do
-      DataProcess.UpdateData(title, link, authors, artists, genres, status, summary, numChapter);
+      DataProcess.UpdateData(title, link, authors, artists, genres, status, summary,
+        numChapter, website);
 end;
 
 procedure TMangaInformation.AddInfoToDataWithoutBreak(const Name, link: String;
