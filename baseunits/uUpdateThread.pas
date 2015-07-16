@@ -540,7 +540,7 @@ begin
 
         twebsite := '__' + website;
         DeleteDBDataProcess(twebsite);
-        if (MainForm.cbSelectManga.Text = website) and
+        if (MainForm.dataProcess.Website = website) and
           (MainForm.dataProcess.Connected) then
           MainForm.dataProcess.Backup(twebsite)
         else
