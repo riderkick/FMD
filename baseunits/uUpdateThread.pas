@@ -49,6 +49,7 @@ type
     {$ENDIF}
     procedure MainThreadShowGetting;
     procedure MainThreadEndGetting;
+    procedure MainThreadRemoveFilter;
     procedure RefreshList;
     procedure DlgReport;
     procedure GetInfo(const limit: Cardinal; const cs: TCheckStyleType);
@@ -277,6 +278,11 @@ begin
   MainForm.sbMain.SizeGrip := not MainForm.sbUpdateList.Visible;
 end;
 
+procedure TUpdateMangaManagerThread.MainThreadRemoveFilter;
+begin
+  MainForm.btRemoveFilterClick(MainForm.btRemoveFilter);
+end;
+
 constructor TUpdateMangaManagerThread.Create;
 begin
   inherited Create(True);
@@ -326,7 +332,7 @@ begin
   try
     with MainForm do
     begin
-      if cbSelectManga.Items[cbSelectManga.ItemIndex] = website then
+      if dataProcess.WebsiteLoaded(website) then
       begin
         Screen.Cursor := crHourGlass;
         try
@@ -538,7 +544,11 @@ begin
           (MainForm.dataProcess.Connected) then
           MainForm.dataProcess.Backup(twebsite)
         else
+        begin
+          if MainForm.dataProcess.WebsiteLoaded(website) then
+            Synchronize(MainThreadRemoveFilter);
           CopyDBDataProcess(website, twebsite);
+        end;
 
         if not mainDataProcess.Connect(twebsite) then
           mainDataProcess.CreateDatabase(twebsite);
