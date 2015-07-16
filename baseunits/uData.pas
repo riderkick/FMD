@@ -850,25 +850,49 @@ begin
 end;
 
 function TDBDataProcess.Search(ATitle: String): Boolean;
+var
+  i: Integer;
 begin
   if FQuery.Active then
   begin
     try
       FQuery.Close;
-      FQuery.SQL.Clear;
-      if FFilterApplied then
-        FQuery.SQL.AddText(FFilterSQL)
-      else
-        FQuery.SQL.Add(FSQLSelect);
-      if ATitle <> '' then
+      with FQuery do
       begin
-        if not FFilterApplied then
-          FQuery.SQL.Add('WHERE');
-        AddSQLSimpleFilter('title', ATitle);
-        FFiltered := True;
-      end
-      else
-        FFiltered := FFilterApplied;
+        SQL.Clear;
+        if FFilterApplied then
+          SQL.AddText(FFilterSQL)
+        else
+          SQL.Add(FSQLSelect);
+        if ATitle <> '' then
+        begin
+          if not FFilterApplied then
+            SQL.Add('WHERE');
+          if FAllSitesAttached then
+          begin
+            if SQL.Count > 0 then
+            begin
+              i := 0;
+              while i < SQL.Count do
+              begin
+                if (SQL[i] = 'UNION ALL') or (SQL[i] = ')') then
+                begin
+                  SQL.Insert(i, 'AND');
+                  SQL.Insert(i+1, '"title" LIKE ' + QuotedLike(ATitle));
+                  Inc(i, 3);
+                end
+                else
+                  Inc(i);
+              end;
+            end;
+          end
+          else
+            AddSQLSimpleFilter('title', ATitle);
+          FFiltered := True;
+        end
+        else
+          FFiltered := FFilterApplied;
+      end;
       FQuery.Open;
       GetRecordCount;
     except
