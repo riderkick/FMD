@@ -11,15 +11,19 @@ unit uUpdateDBThread;
 interface
 
 uses
-  Classes, SysUtils, uData, uBaseUnit, uTranslation, uMisc;
+  Classes, SysUtils, uBaseUnit, uTranslation, uMisc, LazFileUtils;
 
 type
+
+  { TUpdateDBThread }
+
   TUpdateDBThread = class(TThread)
   protected
     procedure MainThreadShowGetting;
     procedure MainThreadShowEndGetting;
     procedure MainThreadCannotConnectToServer;
     procedure MainThreadRefreshList;
+    procedure ExtractFile;
     procedure Execute; override;
   public
     websiteName: String;
@@ -40,11 +44,18 @@ begin
     begin
       MainForm.edSearch.Clear;
       MainForm.vtMangaList.Clear;
-      MainForm.dataProcess.RemoveFilter;
+      MainForm.dataProcess.Close;
+      ExtractFile;
       MainForm.dataProcess.Open(websiteName);
       MainForm.vtMangaList.RootNodeCount := MainForm.dataProcess.RecordCount;
       MainForm.lbMode.Caption :=
         Format(RS_ModeAll, [MainForm.dataProcess.RecordCount]);
+    end
+    else
+    begin
+      if MainForm.dataProcess.WebsiteLoaded(websiteName) then
+        MainForm.dataProcess.RemoveFilter;
+      ExtractFile;
     end;
   except
     on E: Exception do
@@ -52,6 +63,30 @@ begin
   end;
 
   MainThreadShowEndGetting;
+end;
+
+procedure TUpdateDBThread.ExtractFile;
+var
+  Sza, datapath, filepath: String;
+begin
+  Sza := fmdDirectory + '7za.exe';
+  if not FileExistsUTF8(Sza) then Exit;
+
+  datapath := fmdDirectory + DATA_FOLDER;
+  filepath := datapath + websiteName;
+  if FileExistsUTF8(filepath + '.7z') then
+     filepath += '.7z'
+  else
+  if FileExistsUTF8(filepath + '.zip') then
+    filepath += '.zip';
+
+  if FileExistsUTF8(filepath) then
+  begin
+    RunExternalProcess(Sza, ['x', filepath, '-o' +
+      AnsiQuotedStr(datapath, '"'), '-aoa'], False, False);
+    Sleep(250);
+    DeleteFileUTF8(filepath);
+  end
 end;
 
 constructor TUpdateDBThread.Create;
@@ -97,7 +132,7 @@ procedure TUpdateDBThread.Execute;
 begin
   try
     Synchronize(MainThreadShowGetting);
-    RunExternalProcess(fmdDirectory + 'updater.exe', ['-x', '-r' , '3', '-d',
+    RunExternalProcess(fmdDirectory + 'updater.exe', ['-r' , '3', '-d',
       GetMangaDatabaseURL(websiteName), '--lang', uTranslation.LastSelected]);
     if FileExists(fmdDirectory + DATA_FOLDER + websiteName + '.dat') then
     begin
