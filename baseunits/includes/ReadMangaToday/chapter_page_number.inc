@@ -17,7 +17,7 @@
       manager.container.PageLinks.Clear;
       for i := 0 to parse.Count-1 do
         if (GetTagName(parse[i]) = 'img') and
-          (Pos('img-responsive-2', GetVal(parse[i], 'class')) <> 0) then
+          (Pos('img-responsive-', parse[i]) <> 0) then
           manager.container.PageLinks.Add(GetVal(parse[i], 'src'));
       manager.container.PageNumber := manager.container.PageLinks.Count;
     end;
