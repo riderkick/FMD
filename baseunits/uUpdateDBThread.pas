@@ -88,8 +88,7 @@ begin
     if FileExistsUTF8(datapath + websiteName + DATA_EXT) then
       DeleteFileUTF8(datapath + websiteName + DATA_EXT);
     RunExternalProcess(Sza, ['x', filepath, '-o' +
-      AnsiQuotedStr(datapath, '"'), '-aoa'], False, False);
-    Sleep(250);
+      AnsiQuotedStr(datapath, '"'), '-aoa'], False, True);
     DeleteFileUTF8(filepath);
   end
 end;
