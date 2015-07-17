@@ -25,8 +25,8 @@ unit uTranslation;
 interface
 
 uses
-  Classes, SysUtils, strutils, gettext, LazFileUtils, LazUTF8,
-  LCLTranslator, Translations, LResources, Forms;
+  Classes, SysUtils, strutils, gettext, LazFileUtils, LazUTF8, LCLTranslator,
+  Translations, LResources, Forms;
 
 type
   TLanguageItem = record
@@ -671,11 +671,12 @@ var
   LangDir: string = '';
   LangAppName: string = '';
 
-  procedure CollectLanguagesFiles(appname: string = ''; dir: string = ''; useNativeName: Boolean = True);
-  function GetLangName(lcode: string; useNativeName: Boolean = True): string;
+  procedure CollectLanguagesFiles(const appname: string = ''; const dir: string = '';
+    useNativeName: Boolean = True);
+  function GetLangName(const lcode: string; useNativeName: Boolean = True): string;
 
-  function SetLang(lang: string; appname: string = ''): Boolean;
-  function SetLangByIndex(Idx: Integer): Boolean;
+  function SetLang(const lang: string; appname: string = ''): Boolean;
+  function SetLangByIndex(const Index: Integer): Boolean;
   function GetDefaultLang: string;
 
 implementation
@@ -685,7 +686,7 @@ begin
   Result := CompareStr(List.ValueFromIndex[Index1], List.ValueFromIndex[Index2]);
 end;
 
-procedure CollectLanguagesFiles(appname: string; dir: string;
+procedure CollectLanguagesFiles(const appname: string; const dir: string;
   useNativeName: Boolean);
 
   procedure searchLangDir(adir, aname: string);
@@ -718,46 +719,49 @@ procedure CollectLanguagesFiles(appname: string; dir: string;
           end;
           until FindNextUTF8(SR) <> 0;
         FindCloseUTF8(SR);
-        if AvailableLanguages.Count > 0 then
-          AvailableLanguages.CustomSort(@SortValue);
     end;
   end;
 
 var
-  sdir: string;
+  sdir, tdir, tappname: string;
   lauto: Boolean = False;
   i: Integer;
 begin
-  if dir = '' then
+  tdir := dir;
+  if tdir = '' then
   begin
     if LangDir <> '' then
-      dir := LangDir
+      tdir := LangDir
     else
     begin
-      dir := GetCurrentDirUTF8 + PathDelim;
+      tdir := CleanAndExpandDirectory(GetCurrentDirUTF8);
       lauto := True;
     end;
   end;
-  if appname = '' then
+  tappname := appname;
+  if tappname = '' then
   begin
     if LangAppName <> '' then
-      appname := LangAppName
+      tappname := LangAppName
     else
-      appname := ExtractFileNameOnly(ParamStrUTF8(0));
+      tappname := ExtractFileNameOnly(ParamStrUTF8(0));
   end;
   AvailableLanguages.Clear;
 
   if lauto then
     for i := Low(ldir) to High(ldir) do
     begin
-      sdir := dir + ldir[i] + PathDelim;
-      searchLangDir(sdir, appname);
+      sdir := tdir + ldir[i] + PathDelim;
+      searchLangDir(sdir, tappname);
     end
   else
-    searchLangDir(dir, appname);
+    searchLangDir(tdir, tappname);
+
+  if AvailableLanguages.Count > 0 then
+    AvailableLanguages.CustomSort(@SortValue);
 end;
 
-function GetLangName(lcode: string; useNativeName: Boolean): string;
+function GetLangName(const lcode: string; useNativeName: Boolean): string;
 
   function GetLang(const l: string): string;
   var
@@ -897,7 +901,7 @@ begin
   end;
 end;
 
-function SetLang(lang: string; appname: string): Boolean;
+function SetLang(const lang: string; appname: string): Boolean;
 var
   lfile: string;
   ltrans: TUpdateTranslator;
@@ -946,12 +950,12 @@ begin
   end;
 end;
 
-function SetLangByIndex(Idx: Integer): Boolean;
+function SetLangByIndex(const Index: Integer): Boolean;
 begin
   Result := False;
-  if Idx < 0 then Exit;
-  if LastSelected <> AvailableLanguages.Names[idx] then
-    Result := SetLang(AvailableLanguages.Names[idx]);
+  if Index < 0 then Exit;
+  if LastSelected <> AvailableLanguages.Names[Index] then
+    Result := SetLang(AvailableLanguages.Names[Index]);
 end;
 
 function GetDefaultLang: string;
