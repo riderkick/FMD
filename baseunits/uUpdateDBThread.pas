@@ -39,11 +39,9 @@ begin
     if MainForm.cbSelectManga.Items[MainForm.cbSelectManga.ItemIndex] = websiteName then
     begin
       MainForm.edSearch.Clear;
-      MainForm.dataProcess.RemoveFilter;
-      MainForm.dataProcess.Free;
-      MainForm.dataProcess := TDBDataProcess.Create;
-      MainForm.dataProcess.Open(websiteName);
       MainForm.vtMangaList.Clear;
+      MainForm.dataProcess.RemoveFilter;
+      MainForm.dataProcess.Open(websiteName);
       MainForm.vtMangaList.RootNodeCount := MainForm.dataProcess.RecordCount;
       MainForm.lbMode.Caption :=
         Format(RS_ModeAll, [MainForm.dataProcess.RecordCount]);
