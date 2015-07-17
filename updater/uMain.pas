@@ -9,9 +9,10 @@ uses
   cthreads,
   cmem,
   {$endif}
-  Classes, SysUtils, zipper, FileUtil, UTF8Process, Forms, Dialogs, ComCtrls,
-  StdCtrls, Clipbrd, ExtCtrls, DefaultTranslator, RegExpr, IniFiles, process,
-  USimpleException, uMisc, uTranslation, httpsend, blcksock, ssl_openssl;
+  Classes, SysUtils, zipper, FileUtil, UTF8Process, LazFileUtils, LazUTF8,
+  Forms, Dialogs, ComCtrls, StdCtrls, Clipbrd, ExtCtrls, DefaultTranslator,
+  RegExpr, IniFiles, process, USimpleException, uMisc, uTranslation, httpsend,
+  blcksock, ssl_openssl;
 
 type
 
@@ -616,7 +617,7 @@ var
 begin
   Randomize;
   InitSimpleExceptionHandler(ChangeFileExt(Application.ExeName, '.log'));
-  uTranslation.LangDir := GetCurrentDirUTF8 + PathDelim + 'languages';
+  uTranslation.LangDir := CleanAndExpandDirectory(GetCurrentDirUTF8) + 'languages';
   uTranslation.LangAppName := 'updater';
   uTranslation.CollectLanguagesFiles;
   InitCriticalSection(CS_ReadCount);
