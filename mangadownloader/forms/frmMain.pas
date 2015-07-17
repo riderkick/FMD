@@ -1865,7 +1865,6 @@ begin
         cbSelectManga.Items.Strings[cbSelectManga.ItemIndex]) then
         RunGetList;
       vtMangaList.RootNodeCount := dataProcess.RecordCount;
-      dataProcess.Refresh;
       lbMode.Caption := Format(RS_ModeAll, [dataProcess.RecordCount]);
       currentWebsite := cbSelectManga.Items[cbSelectManga.ItemIndex];
       dataProcess.website := cbSelectManga.Items[cbSelectManga.ItemIndex];
