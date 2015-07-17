@@ -59,7 +59,7 @@ uses
 
 procedure TCheckUpdateThread.MainThreadUpdate;
 begin
-  if MainForm.DLManager.isDlgCounter then Exit;
+  if IsDlgCounter then Exit;
   with TUpdateDialogForm.Create(MainForm) do try
     Caption := Application.Title + ' - ' + RS_NewVersionFound;
     with mmLog.Lines do
@@ -130,7 +130,7 @@ begin
     FHTTP.Free;
     l.Free;
   end;
-  if not Terminated and updateFound and (not MainForm.DLManager.isDlgCounter) then
+  if not Terminated and updateFound and (not isDlgCounter) then
     Synchronize(MainThreadUpdate);
 end;
 
@@ -159,7 +159,7 @@ begin
     while not Terminated do
     begin
       if CheckUpdate and (not FCheckUpdateRunning) and
-        (not MainForm.DLManager.isDlgCounter) then
+        (not isDlgCounter) then
       begin
         FCheckUpdateThread := TCheckUpdateThread.Create(True);
         FCheckUpdateThread.CheckStatus := @CheckUpdate;

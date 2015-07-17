@@ -624,9 +624,12 @@ type
     // openwith
     procedure OpenWithExternalProgram(const dirPath, Filename: String);
 
-    //transfer rate graph
+    // transfer rate graph
     procedure TransferRateGraphInit(xCount: Integer = 10);
     procedure TransferRateGraphAddItem(TransferRate: Integer);
+
+    // exit counter
+    function ShowExitCounter: Boolean;
 
     // exception handle
     procedure ExceptionHandler(Sender: TObject; E: Exception);
@@ -642,6 +645,7 @@ var
 
   // update fmd through main thread
   DoAfterFMD: TFMDDo;
+  IsDlgCounter: Boolean = False;
   FUpdateURL: String;
 
 const
@@ -705,7 +709,8 @@ implementation
 {$R *.lfm}
 
 uses
-  frmImportFavorites, RegExpr, Clipbrd, LazFileUtils, LazUTF8;
+  frmImportFavorites, frmShutdownCounter, RegExpr, Clipbrd, LazFileUtils,
+  LazUTF8;
 
 { TMainForm }
 
@@ -978,36 +983,74 @@ end;
 
 procedure TMainForm.itCheckForChaptersTimer(Sender: TObject);
 begin
-  if DLManager.isDlgCounter then Exit;
+  if IsDlgCounter then Exit;
   if options.ReadBool('update', 'AutoCheckUpdate', True) then
     SubThread.CheckUpdate := True;
   FavoriteManager.isAuto := True;
   FavoriteManager.CheckForNewChapter;
 end;
 
+function TMainForm.ShowExitCounter: Boolean;
+begin
+  IsDlgCounter := True;
+  with TShutdownCounterForm.Create(nil) do try
+    case DoAfterFMD of
+      DO_POWEROFF:
+        begin
+          WaitTimeout := 60;
+          LabelMessage := RS_LblMessageShutdown;
+        end;
+      DO_HIBERNATE:
+        begin
+          WaitTimeout := 30;
+          LabelMessage := RS_LblMessageHibernate;
+        end;
+      DO_EXIT:
+        begin
+          WaitTimeout := 5;
+          LabelMessage := RS_LblMessageExit;
+        end;
+    end;
+    Result := (ShowModal = mrOK);
+  finally
+    Free;
+  end;
+  IsDlgCounter := False;
+end;
+
 procedure TMainForm.itMonitorTimer(Sender: TObject);
 begin
+  itMonitor.Enabled := False;
   if DoAfterFMD <> DO_NOTHING then
   begin
-    itMonitor.Enabled := False;
-    Self.CloseNow(False);
-    case DoAfterFMD of
-      DO_POWEROFF: fmdPowerOff;
-      DO_HIBERNATE: fmdHibernate;
-      DO_UPDATE:
+    if DoAfterFMD in [DO_POWEROFF, DO_HIBERNATE, DO_EXIT] then
+    begin
+      if ShowExitCounter then
       begin
-        if FileExistsUTF8(fmdDirectory + 'updater.exe') then
-          CopyFile(fmdDirectory + 'updater.exe', fmdDirectory + 'old_updater.exe');
-        if FileExistsUTF8(fmdDirectory + 'old_updater.exe') then
-        begin
-          RunExternalProcess(fmdDirectory + 'old_updater.exe',
-            ['-x', '-r', '3', '-a', FUpdateURL, '-l', Application.ExeName,
-             '--lang', uTranslation.LastSelected], True, False);
-          Self.Close;
-        end;
+        Self.CloseNow(False);
+        if DoAfterFMD = DO_POWEROFF then
+          fmdPowerOff
+        else
+        if DoAfterFMD = DO_HIBERNATE then
+          fmdHibernate;
+        Self.Close;
+      end;
+    end
+    else
+    if DoAfterFMD = DO_UPDATE then
+    begin
+      if FileExistsUTF8(fmdDirectory + 'updater.exe') then
+        CopyFile(fmdDirectory + 'updater.exe', fmdDirectory + 'old_updater.exe');
+      if FileExistsUTF8(fmdDirectory + 'old_updater.exe') then
+      begin
+        Self.CloseNow(False);
+        RunExternalProcess(fmdDirectory + 'old_updater.exe',
+          ['-x', '-r', '3', '-a', FUpdateURL, '-l', Application.ExeName,
+           '--lang', uTranslation.LastSelected], True, False);
+        Self.Close;
       end;
     end;
-    Self.Close;
+    DoAfterFMD := DO_NOTHING;
   end;
 end;
 

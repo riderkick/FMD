@@ -16,9 +16,9 @@ interface
 
 uses
   lazutf8classes, LazFileUtils, jsHTMLUtil, FastHTMLParser, HTMLUtil, SynaCode,
-  Controls, RegExpr, Imaging, ImagingTypes, ImagingCanvases, Classes, SysUtils,
-  Dialogs, ExtCtrls, IniFiles, typinfo, syncobjs, httpsend, blcksock, uBaseUnit,
-  uPacker, uFMDThread, uMisc, USimpleLogger, dateutils, frmShutdownCounter;
+  RegExpr, Imaging, ImagingTypes, ImagingCanvases, Classes, SysUtils, Dialogs,
+  ExtCtrls, IniFiles, typinfo, syncobjs, httpsend, blcksock, uBaseUnit, uPacker,
+  uFMDThread, uMisc, USimpleLogger, dateutils;
 
 type
   TDownloadManager = class;
@@ -144,7 +144,6 @@ type
     FSortDirection: Boolean;
     FSortColumn: Integer;
     DownloadManagerFile: TIniFile;
-    FisDlgCounter: Boolean;
   protected
     function GetTaskCount: Integer;
     function GetTransferRate: Integer;
@@ -222,7 +221,6 @@ type
     property SortDirection: Boolean read FSortDirection write FSortDirection;
     property SortColumn: Integer read FSortColumn write FSortColumn;
     property TransferRate: Integer read GetTransferRate;
-    property isDlgCounter: Boolean read FisDlgCounter;
   end;
 
 resourcestring
@@ -1771,7 +1769,6 @@ begin
   isRunningBackup := False;
   isRunningBackupDownloadedChaptersList := False;
   isReadyForExit := False;
-  FisDlgCounter := False;
 end;
 
 destructor TDownloadManager.Destroy;
@@ -2125,7 +2122,6 @@ var
   procedure ShowExitCounter;
   begin
     if OptionLetFMDDo in [DO_NOTHING, DO_UPDATE] then Exit;
-    Self.Backup;
     if ThreadID <> MainThreadID then
     begin
       {$IFDEF FPC271}
@@ -2181,19 +2177,17 @@ begin
 
       if Count > 0 then
       begin
-        //MainForm.vtDownload.Repaint;
         if not MainForm.itRefreshDLInfo.Enabled then
           MainForm.itRefreshDLInfo.Enabled := True;
       end
       else
-      begin
-        //MainForm.vtDownload.Repaint;
         MainForm.itRefreshDLInfo.Enabled := False;
-      end;
+
+      Self.Backup;
+      MainForm.vtDownloadFilters;
 
       if (Count = 0) and (isCheckForFMDDo) then
         ShowExitCounter;
-      MainForm.vtDownloadFilters;
     except
       on E: Exception do
         MainForm.ExceptionHandler(Self, E);
@@ -2438,36 +2432,8 @@ end;
 
 procedure TDownloadManager.doExitWaitCounter;
 begin
-  FisDlgCounter := True;
-  with TShutdownCounterForm.Create(MainForm) do try
-    case OptionLetFMDDo of
-      DO_POWEROFF:
-        begin
-          WaitTimeout := 60;
-          LabelMessage := RS_LblMessageShutdown;
-        end;
-      DO_HIBERNATE:
-        begin
-          WaitTimeout := 30;
-          LabelMessage := RS_LblMessageHibernate;
-        end;
-      DO_EXIT:
-        begin
-          WaitTimeout := 5;
-          LabelMessage := RS_LblMessageExit;
-        end;
-    end;
-    ExitWaitOK := (ShowModal = mrOK);
-  finally
-    Free;
-  end;
-
-  if ExitWaitOK then
-  begin
-    frmMain.DoAfterFMD := OptionLetFMDDo;
-    MainForm.itMonitor.Enabled := True;
-  end;
-  FisDlgCounter := False;
+  frmMain.DoAfterFMD := OptionLetFMDDo;
+  MainForm.itMonitor.Enabled := True;
 end;
 
 function TDownloadManager.TaskStatusPresent(Stats: TDownloadStatusTypes): Boolean;

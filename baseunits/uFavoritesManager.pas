@@ -341,7 +341,7 @@ begin
          Sleep(100);
     end;
 
-    if (not Terminated) and (not manager.DLManager.isDlgCounter) then
+    if (not Terminated) and (not isDlgCounter) then
       Synchronize(SyncShowResult);
   except
     on E: Exception do
@@ -436,7 +436,7 @@ procedure TFavoriteManager.CheckForNewChapter(FavoriteIndex: Integer);
 var
   i: Integer;
 begin
-  if DLManager.isDlgCounter then Exit;
+  if isDlgCounter then Exit;
   try
     if FavoriteIndex > -1 then
       TFavoriteContainer(FFavorites[FavoriteIndex]).Status := STATUS_CHECK
@@ -510,7 +510,7 @@ var
   removeListStr         : String = '';
   favDelete             : Boolean;
 begin
-  if DLManager.isDlgCounter then Exit;
+  if isDlgCounter then Exit;
   try
     CS_Favorites.Acquire;
     dlChapters := TStringList.Create;
