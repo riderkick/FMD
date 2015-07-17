@@ -913,6 +913,8 @@ function TrimRightChar(const Source: String; const Chars: TSysCharSet): String;
 function PrepareSummaryForHint(const Source: String; MaxLength: Cardinal = 80): String;
 procedure AddCommaString(var Dest: string; S: string);
 
+function IncStr(const S: String; N: Integer = 1): String;
+
 //get heaader value from THTTPSend.Headers
 function GetHeaderValue(const AHeaders: TStrings; HName: String): String;
 
@@ -1218,7 +1220,7 @@ function GetMangaSiteID(const Name: String): Integer;
 var
   i: Integer;
 begin
-  Result := -1;
+  Result := High(WebsiteRoots) + 1;
   for i := Low(WebsiteRoots) to High(WebsiteRoots) do
     if Name = WebsiteRoots[i, 0] then
       Exit(i);
@@ -2000,6 +2002,19 @@ begin
         Result := Result + '/';
     end;
     {$ENDIF}
+  end;
+end;
+
+function IncStr(const S: String; N: Integer): String;
+var
+  i: Integer;
+begin
+  Result := S;
+  i := StrToIntDef(S, -1);
+  if i > -1 then
+  begin
+    Inc(i, N);
+    Result := IntToStr(i);
   end;
 end;
 
