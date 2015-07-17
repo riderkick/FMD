@@ -1335,7 +1335,6 @@ begin
   Result := True;
 end;
 
-// TODO: load from all files - this function is for "Filter all sites"
 function TDataProcess.LoadFromAllFiles(const websiteList: TStringList): Boolean;
 var
   id, j, i: Cardinal;

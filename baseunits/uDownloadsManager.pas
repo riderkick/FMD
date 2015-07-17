@@ -1310,7 +1310,6 @@ var
   mt: Integer;
 begin
   if Terminated then Exit;
-  // TODO: Ugly code, need to be fixed later
 
   //load advanced config if any
   mt := INIAdvanced.ReadInteger('DownloadMaxThreadsPerTask',
