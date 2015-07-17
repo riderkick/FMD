@@ -68,7 +68,8 @@
             <CustomOptions Value="-dMANGADOWNLOADER
 -dDOWNLOADER
 -dSELFUPDATE
--dRELEASEWIN64"/>
+-dRELEASEWIN64
+-FcUTF8"/>
           </Other>
         </CompilerOptions>
       </Item2>
@@ -115,7 +116,8 @@
             <CustomOptions Value="-dMANGADOWNLOADER
 -dDOWNLOADER
 -dSELFUPDATE
--dDEBUGWIN32"/>
+-dDEBUGWIN32
+-FcUTF8"/>
           </Other>
         </CompilerOptions>
       </Item3>
@@ -159,7 +161,8 @@
             <CustomOptions Value="-dMANGADOWNLOADER
 -dDOWNLOADER
 -dSELFUPDATE
--dDEBUGWIN64"/>
+-dDEBUGWIN64
+-FcUTF8"/>
           </Other>
         </CompilerOptions>
       </Item4>
@@ -205,7 +208,8 @@
 -dSELFUPDATE
 -dLOGACTIVE
 -dDEBUGWIN32
--dDEBUGLEAKS"/>
+-dDEBUGLEAKS
+-FcUTF8"/>
             <ExecuteAfter>
               <Command Value="cmd.exe /c copy /y languages\*.po ..\bin\languages\"/>
             </ExecuteAfter>
@@ -215,7 +219,7 @@
       <SharedMatrixOptions Count="3">
         <Item1 ID="004106748078" Modes="Win32" Type="IDEMacro" MacroName="LCLWidgetType" Value="win32"/>
         <Item2 ID="255873403449" Type="IDEMacro" MacroName="LCLWidgetType" Value="gtk2"/>
-        <Item3 ID="733756013539" Modes="Win32 Debug Leaks" Value="-dEnableUTF8RTL"/>
+        <Item3 ID="733756013539" Modes="Win32 Debug Leaks,Win64 Debug,Win32,Win64,Win32 Debug" Value="-dEnableUTF8RTL"/>
       </SharedMatrixOptions>
     </BuildModes>
     <PublishOptions>
@@ -383,7 +387,8 @@
       <CustomOptions Value="-dMANGADOWNLOADER
 -dDOWNLOADER
 -dSELFUPDATE
--dRELEASEWIN32"/>
+-dRELEASEWIN32
+-FcUTF8"/>
     </Other>
   </CompilerOptions>
   <Debugging>
