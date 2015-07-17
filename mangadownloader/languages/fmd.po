@@ -94,6 +94,10 @@ msgid ""
 "<none>\n"
 msgstr ""
 
+#: frmmain.rs_fmdalreadyrunning
+msgid "Free Manga Downloader already running!"
+msgstr ""
+
 #: frmmain.rs_hintfavoriteproblem
 msgid ""
 "There is a problem with this data!\n"

@@ -112,6 +112,10 @@ msgstr ""
 "Ongoing\n"
 "<none>\n"
 
+#: frmmain.rs_fmdalreadyrunning
+msgid "Free Manga Downloader already running!"
+msgstr "Free Manga Downloader already running!"
+
 #: frmmain.rs_hintfavoriteproblem
 msgid ""
 "There is a problem with this data!\n"
@@ -1184,7 +1188,6 @@ msgid "Change \"Save to\""
 msgstr "Change \"Save to\""
 
 #: tmainform.mifavoriteschecknewchapter.caption
-#, fuzzy
 msgctxt "tmainform.mifavoriteschecknewchapter.caption"
 msgid "Check for new chapter"
 msgstr "Check for new chapter"
@@ -1211,7 +1214,7 @@ msgstr "Open ..."
 
 #: tmainform.mifavoritesstopchecknewchapter.caption
 msgid "Stop check for new chapter"
-msgstr ""
+msgstr "Stop check for new chapter"
 
 #: tmainform.mifavoritesviewinfos.caption
 msgctxt "TMAINFORM.MIFAVORITESVIEWINFOS.CAPTION"
@@ -1631,4 +1634,3 @@ msgstr "Synchronizing data"
 #: uupdatethread.rs_updatinglist
 msgid "Updating list"
 msgstr "Updating list"
-
