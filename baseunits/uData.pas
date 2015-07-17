@@ -15,8 +15,8 @@ interface
 
 uses
   Classes, SysUtils, uBaseUnit, uFMDThread, FileUtil, LazFileUtils, sqlite3conn,
-  sqlite3backup, sqldb, db, Sqlite3DS, USimpleLogger, strutils, dateutils,
-  RegExpr, sqlite3dyn, httpsend;
+  sqlite3backup, sqlite3dyn, sqldb, db, USimpleLogger, strutils, dateutils,
+  RegExpr, httpsend;
 
 type
 
@@ -197,7 +197,6 @@ type
 
 var
   options: TStringList;
-  tdset: TSqlite3Dataset;
 
 const
   DBDataProcessParam = 'title,link,authors,artists,genres,status,summary,numchapter,jdn';
@@ -3218,10 +3217,5 @@ end;
 initialization
   sqlite3dyn.SQLiteDefaultLibrary :=
     CleanAndExpandDirectory(GetCurrentDirUTF8) + 'sqlite3.dll';
-  tdset := TSqlite3Dataset.Create(nil);
-
-finalization
-  if Assigned(tdset) then
-    FreeAndNil(tdset);
 
 end.
