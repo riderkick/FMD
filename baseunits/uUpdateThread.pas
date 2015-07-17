@@ -50,6 +50,7 @@ type
     procedure MainThreadShowGetting;
     procedure MainThreadEndGetting;
     procedure MainThreadRemoveFilter;
+    procedure ExtractFile;
     procedure RefreshList;
     procedure DlgReport;
     procedure GetInfo(const limit: Cardinal; const cs: TCheckStyleType);
@@ -281,6 +282,33 @@ begin
   MainForm.btRemoveFilterClick(MainForm.btRemoveFilter);
 end;
 
+procedure TUpdateMangaManagerThread.ExtractFile;
+var
+  Sza, datapath, filepath: String;
+begin
+  Sza := fmdDirectory + '7za.exe';
+  if not FileExistsUTF8(Sza) then Exit;
+
+  datapath := fmdDirectory + DATA_FOLDER;
+  filepath := datapath + website;
+  if FileExistsUTF8(filepath + '.7z') then
+     filepath += '.7z'
+  else
+  if FileExistsUTF8(filepath + '.zip') then
+    filepath += '.zip';
+
+  if FileExistsUTF8(filepath) then
+  begin
+    if FileExistsUTF8(datapath + website + DBDATA_EXT) then
+      DeleteFileUTF8(datapath + website + DBDATA_EXT);
+    if FileExistsUTF8(datapath + website + DATA_EXT) then
+      DeleteFileUTF8(datapath + website + DATA_EXT);
+    RunExternalProcess(Sza, ['x', filepath, '-o' +
+      AnsiQuotedStr(datapath, '"'), '-aoa'], False, True);
+    DeleteFileUTF8(filepath);
+  end
+end;
+
 constructor TUpdateMangaManagerThread.Create;
 begin
   inherited Create(True);
@@ -340,7 +368,10 @@ begin
             dataProcess := TDBDataProcess.Create
           else
             dataProcess.Close;
-          OverwriteDBDataProcess(website, twebsite);
+          if isDownloadFromServer then
+            ExtractFile
+          else
+            OverwriteDBDataProcess(website, twebsite);
           dataProcess.Open(website);
           vtMangaList.RootNodeCount := dataProcess.RecordCount;
           lbMode.Caption := Format(RS_ModeAll, [dataProcess.RecordCount]);
@@ -349,7 +380,14 @@ begin
         end;
       end
       else
-        OverwriteDBDataProcess(website, twebsite);
+      begin
+        if dataProcess.WebsiteLoaded(website) then
+          dataProcess.RemoveFilter;
+        if isDownloadFromServer then
+          ExtractFile
+        else
+          OverwriteDBDataProcess(website, twebsite);
+      end;
     end;
   except
     on E: Exception do
@@ -522,7 +560,7 @@ begin
         Inc(websitePtr);
         FStatus := RS_GettingListFor + ' ' + website + ' ...';
         Synchronize(MainThreadShowGetting);
-        RunExternalProcess(fmdDirectory + 'updater.exe', ['-x', '-r' , '3', '-d',
+        RunExternalProcess(fmdDirectory + 'updater.exe', ['-r' , '3', '-d',
           GetMangaDatabaseURL(website), '--lang', uTranslation.LastSelected]);
         Synchronize(RefreshList);
       end;
