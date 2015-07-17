@@ -602,7 +602,6 @@ begin
     if FConn.Connected then
     begin
       FQuery.Close;
-      DetachAllSites;
       Commit;
       Close;
     end;
@@ -774,7 +773,7 @@ procedure TDBDataProcess.AddData(Title, Link, Authors, Artists, Genres,
 begin
   if FConn.Connected then
     try
-      FConn.ExecuteDirect('INSERT INTO ' + QuotedStr(FTableName) +
+      FConn.ExecuteDirect('INSERT OR IGNORE INTO ' + QuotedStr(FTableName) +
         #13#10'(' + DBDataProcessParam + ')' +
         #13#10'VALUES (' +
         QuotedStr(Title) + ',' +
@@ -825,10 +824,10 @@ begin
       AddSQL('summary', Summary);
       AddSQL('numchapter', IntToStr(NumChapter));
       if (AWebsite <> '') and (AWebsite <> FWebsite) and FAllSitesAttached then
-        sql := 'UPDATE ' + AWebsite + '.' + QuotedStrd(FTableName) +
+        sql := 'UPDATE OR IGNORE ' + AWebsite + '.' + QuotedStrd(FTableName) +
           #13#10'SET'#13#10 + sql
       else
-        sql := 'UPDATE ' + QuotedStrd(FTableName) + #13#10'SET'#13#10 + sql;
+        sql := 'UPDATE OR IGNORE ' + QuotedStrd(FTableName) + #13#10'SET'#13#10 + sql;
       sql += #13#10'WHERE link=' + QuotedStr(Link) + ';';
       FConn.ExecuteDirect(sql);
     except
