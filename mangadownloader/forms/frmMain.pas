@@ -703,6 +703,7 @@ resourcestring
   RS_InfoGenres = 'Genre(s):';
   RS_InfoStatus = 'Status:';
   RS_InfoSummary = 'Summary:';
+  RS_FMDAlreadyRunning = 'Free Manga Downloader already running!';
 
 implementation
 
@@ -1717,9 +1718,7 @@ end;
 
 procedure TMainForm.FMDInstanceReceiveMsg(Sender: TObject);
 begin
-  { TODO 5 -oCholif : Need translation }
-  MessageDlg('Free Manga Downloader', 'Free Manga Downloader already running!',
-    mtWarning, [mbOK], 0);
+  MessageDlg(Application.Title, RS_FMDAlreadyRunning, mtWarning, [mbOK], 0);
   if WindowState = wsMinimized then
     WindowState := wsNormal;
   Show;
