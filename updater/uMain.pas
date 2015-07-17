@@ -9,10 +9,10 @@ uses
   cthreads,
   cmem,
   {$endif}
-  Classes, SysUtils, zipper, FileUtil, UTF8Process, LazFileUtils, LazUTF8,
+  Classes, SysUtils, zipper, FileUtil,LazFileUtils, LazUTF8, LazUTF8Classes,
   Forms, Dialogs, ComCtrls, StdCtrls, Clipbrd, ExtCtrls, DefaultTranslator,
-  RegExpr, IniFiles, process, USimpleException, uMisc, uTranslation, httpsend,
-  blcksock, ssl_openssl;
+  RegExpr, IniFiles, USimpleException, uMisc, uTranslation,
+  httpsend, blcksock, ssl_openssl;
 
 type
 
@@ -151,36 +151,6 @@ begin
   begin
     Result[Length(Result)] := '-';
   end;
-end;
-
-function RunExternalProcess(Exe: String; Params: array of String; ShowWind: Boolean = True;
-  Detached: Boolean = False): Boolean;
-var
-  Process: TProcessUTF8;
-  I: Integer;
-begin
-  Result := True;
-  Process := TProcessUTF8.Create(nil);
-  try
-    Process.InheritHandles := False;
-    Process.Executable := Exe;
-    Process.Parameters.AddStrings(Params);
-    if Detached then
-      Process.Options := []
-    else
-      Process.Options := Process.Options + [poWaitOnExit];
-    if ShowWind then
-      Process.ShowWindow := swoShow
-    else
-      Process.ShowWindow := swoHIDE;
-    // Copy default environment variables including DISPLAY variable for GUI application to work
-    for I := 0 to GetEnvironmentVariableCount - 1 do
-      Process.Environment.Add(GetEnvironmentString(I));
-    Process.Execute;
-  except
-    Result := False;
-  end;
-  Process.Free;
 end;
 
 procedure IncReadCount(const ACount: Int64);
@@ -367,7 +337,7 @@ var
   sdir,
   sfile          : String;
   st, HTTPHeaders: TStringList;
-
+  filestream     : TFileStreamUTF8;
 begin
   URL := Trim(URL);
   HTTPHeaders := TStringList.Create;
@@ -529,7 +499,12 @@ begin
       if ForceDirectoriesUTF8(DirPath) then
       begin
         UpdateStatus(RS_SaveFile);
-        FHTTP.Document.SaveToFile(fname);
+        filestream := TFileStreamUTF8.Create(fname, fmCreate);
+        try
+          FHTTP.Document.SaveToStream(filestream);
+        finally
+          filestream.Free;
+        end;
       end;
       if not FileExistsUTF8(fname) then
         ShowErrorMessage(RS_ErrorCheckAntiVirus);
@@ -709,9 +684,10 @@ begin
       dl.isSFURL := (Pos('sourceforge.net/', LowerCase(dl.URL)) <> 0) or
         (Pos('sf.net/', dl.URL) <> 0);
       dl.MaxRetry := _MaxRetry;
-      dl.DirPath := GetCurrentDirUTF8;
-      if not _UpdApp then
-        dl.DirPath := dl.DirPath + DirectorySeparator + 'data';
+      if _UpdApp then
+        dl.DirPath := GetCurrentDirUTF8
+      else
+        dl.DirPath := CleanAndExpandDirectory(GetCurrentDirUTF8) + 'data';
       dl.Extract := _Extract;
       dl.Start;
       itMonitor.Enabled := True;
