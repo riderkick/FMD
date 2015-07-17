@@ -548,8 +548,7 @@ begin
           if FileExistsUTF8(Sza) then
           begin
             RunExternalProcess(Sza, ['x', fname, '-o' +
-              AnsiQuotedStr(DirPath, '"'), '-aoa'], False, False);
-            Sleep(250);
+              AnsiQuotedStr(DirPath, '"'), '-aoa'], False, True);
             DeleteFileUTF8(fname);
           end
           else
