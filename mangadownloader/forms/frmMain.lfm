@@ -3097,7 +3097,7 @@ object MainForm: TMainForm
         Top = 68
         Width = 157
         Anchors = [akTop, akLeft, akRight]
-        Caption = 'Mode: Show all manga'
+        Caption = 'Mode: Show all (0)'
         Font.Style = [fsBold]
         ParentColor = False
         ParentFont = False

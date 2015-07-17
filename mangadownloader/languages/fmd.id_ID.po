@@ -946,8 +946,8 @@ msgid "Title"
 msgstr "Judul"
 
 #: tmainform.lbmode.caption
-msgid "Mode: Show all manga"
-msgstr "Mode: Tampilkan semua komik"
+msgid "Mode: Show all (0)"
+msgstr "Mode: Tampilkan semua (0)"
 
 #: tmainform.lboptionautocheckminutes.caption
 msgctxt "tmainform.lboptionautocheckminutes.caption"
