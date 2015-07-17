@@ -119,8 +119,6 @@ begin
 end;
 
 procedure TUpdateMangaThread.Execute;
-var
-  iPos: Integer;
 begin
   try
     case CheckStyle of
