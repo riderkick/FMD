@@ -757,13 +757,16 @@ end;
 
 procedure TDBDataProcess.Refresh(RecheckDataCount: Boolean);
 begin
-  if FQuery.Active then
-    FQuery.Refresh
-  else
-  if Trim(FQuery.SQL.Text) <> '' then
-    FQuery.Open;
-  if RecheckDataCount then
-    GetRecordCount;
+  if FConn.Connected then
+  begin
+    if FQuery.Active then
+      FQuery.Refresh
+    else
+    if Trim(FQuery.SQL.Text) <> '' then
+      FQuery.Open;
+    if RecheckDataCount then
+      GetRecordCount;
+  end;
 end;
 
 procedure TDBDataProcess.AddData(Title, Link, Authors, Artists, Genres,
