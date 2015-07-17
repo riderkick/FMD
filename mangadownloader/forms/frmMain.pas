@@ -857,8 +857,6 @@ begin
     FavoriteManager.Sort(vtFavorites.Header.SortColumn);
     vtFavorites.Repaint;
   end;
-  uTranslation.LangDir := GetCurrentDirUTF8 + PathDelim + 'languages';
-  uTranslation.LangAppName := 'fmd';
   LoadLanguage;
 end;
 
@@ -3942,8 +3940,9 @@ begin
       end;
     end;
 
-    options.WriteString('languages', 'Selected',
-      AvailableLanguages.Names[cbLanguages.ItemIndex]);
+    if cbLanguages.ItemIndex > -1 then
+      options.WriteString('languages', 'Selected',
+        AvailableLanguages.Names[cbLanguages.ItemIndex]);
     options.WriteBool('general', 'MinimizeToTray', cbOptionMinimizeToTray.Checked);
     options.WriteInteger('general', 'NewMangaTime', seOptionNewMangaTime.Value);
     options.WriteInteger('general', 'LetFMDDo', cbOptionLetFMDDo.ItemIndex);
@@ -4587,13 +4586,16 @@ begin
     options.ReadBool('misc', 'MangafoxRemoveWatermarks', False);
 
   cbLanguages.Items.Clear;
+  uTranslation.LangDir := CleanAndExpandDirectory(GetCurrentDirUTF8) + 'languages';
+  uTranslation.LangAppName := 'fmd';
   uTranslation.CollectLanguagesFiles;
   if uTranslation.AvailableLanguages.Count > 0 then
+  begin
     for i := 0 to AvailableLanguages.Count - 1 do
       cbLanguages.Items.Add(uTranslation.AvailableLanguages.ValueFromIndex[i]);
-
-  cbLanguages.ItemIndex := uTranslation.AvailableLanguages.IndexOfName(
+    cbLanguages.ItemIndex := uTranslation.AvailableLanguages.IndexOfName(
     options.ReadString('languages', 'Selected', 'en'));
+  end;
 end;
 
 procedure TMainForm.LoadMangaOptions;
@@ -4879,6 +4881,7 @@ var
   idxOptionProxyType,
   idxDropTargetMode: Integer;
 begin
+  if AvailableLanguages.Count = 0 then Exit;
   if uTranslation.LastSelected <> AvailableLanguages.Names[cbLanguages.ItemIndex] then
   begin
     idxLanguages := cbLanguages.ItemIndex;
