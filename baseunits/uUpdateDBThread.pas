@@ -11,7 +11,8 @@ unit uUpdateDBThread;
 interface
 
 uses
-  Classes, SysUtils, uBaseUnit, uTranslation, uMisc, LazFileUtils;
+  Classes, SysUtils, uBaseUnit, uTranslation, uMisc,
+  LazFileUtils;
 
 type
 
@@ -82,6 +83,10 @@ begin
 
   if FileExistsUTF8(filepath) then
   begin
+    if FileExistsUTF8(datapath + websiteName + DBDATA_EXT) then
+      DeleteFileUTF8(datapath + websiteName + DBDATA_EXT);
+    if FileExistsUTF8(datapath + websiteName + DATA_EXT) then
+      DeleteFileUTF8(datapath + websiteName + DATA_EXT);
     RunExternalProcess(Sza, ['x', filepath, '-o' +
       AnsiQuotedStr(datapath, '"'), '-aoa'], False, False);
     Sleep(250);
@@ -134,14 +139,11 @@ begin
     Synchronize(MainThreadShowGetting);
     RunExternalProcess(fmdDirectory + 'updater.exe', ['-r' , '3', '-d',
       GetMangaDatabaseURL(websiteName), '--lang', uTranslation.LastSelected]);
-    if FileExists(fmdDirectory + DATA_FOLDER + websiteName + '.dat') then
-    begin
-      Synchronize(MainThreadRefreshList);
-    end
+    if FileExistsUTF8(fmdDirectory + DATA_FOLDER + websiteName + '.7z') or
+      FileExistsUTF8(fmdDirectory + DATA_FOLDER + websiteName + '.zip') then
+      Synchronize(MainThreadRefreshList)
     else
-    begin
       Synchronize(MainThreadShowEndGetting);
-    end;
   except
     on E: Exception do
       MainForm.ExceptionHandler(Self, E);
