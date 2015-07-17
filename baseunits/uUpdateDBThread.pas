@@ -11,7 +11,7 @@ unit uUpdateDBThread;
 interface
 
 uses
-  Classes, SysUtils, uData, uBaseUnit, uTranslation;
+  Classes, SysUtils, uData, uBaseUnit, uTranslation, uMisc;
 
 type
   TUpdateDBThread = class(TThread)

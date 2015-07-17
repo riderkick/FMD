@@ -5,10 +5,17 @@ unit  uMisc;
 interface
 
 uses
+  {$ifdef windows}
+  ShellApi, windows,
+  {$else}
+  UTF8Process,
+  {$endif}
   Classes, SysUtils, Graphics, strutils, syncobjs, IniFiles,
   NaturalSortUnit;
 
 type
+  TArrayOfString = array of String;
+
   TIniFileR = class(TMemIniFile)
   private
     FCSReload: TCriticalSection;
@@ -47,6 +54,25 @@ function FormatByteSize(const bytes :longint; persecond: boolean = False) :strin
 
 //sorting
 function NaturalCompareStr(Str1, Str2: string): integer;
+
+//run external process
+function RunExternalProcessAsAdmin(Exe, Params: String; ShowWind: Boolean = True;
+  isPersistent: Boolean = True): Boolean;
+function RunExternalProcess(Exe: String; Params: array of string; ShowWind: Boolean = True;
+  isPersistent: Boolean = True): Boolean; overload;
+function RunExternalProcess(Exe, Params: String; ShowWind: Boolean =  True;
+  isPersistent: Boolean = True): Boolean; overload;
+function RunExternalProcess(CommandLine: String; ShowWind: Boolean =  True;
+  isPersistent: Boolean = True): Boolean; overload;
+
+//stringutils
+procedure ParseCommandLine(const cmd: string; var Output: TStrings;
+  AStripQuotes: Boolean = False);
+function ParsedCommandLine(const cmd: String): TArrayOfString;
+function StringsToArray(const S: TStrings): TArrayOfString;
+function StringsToCommandLine(const S: TStrings): string; overload;
+function StringsToCommandLine(const S: array of string): string; overload;
+procedure DeleteArrayOfString(Var TheStrings: TArrayOfString; Index: Integer);
 
 const
   UA_CURL      = 'curl/7.42.1';
@@ -465,6 +491,337 @@ begin
   end;
   if persecond then
     Result := Result + 'ps';
+end;
+
+
+function RunExternalProcessAsAdmin(Exe, Params: String; ShowWind: Boolean;
+  isPersistent: Boolean): Boolean;
+var
+ {$IFDEF WINDOWS}
+  SEInfo: TSHELLEXECUTEINFOW;
+ {$ELSE}
+  Process: TProcessUTF8;
+  pr: TStringList;
+ {$ENDIF}
+begin
+  {$IFDEF WINDOWS}
+  Initialize(SEInfo);
+  FillChar(SEInfo, SizeOf(SEInfo), 0);
+  SEInfo.cbSize := SizeOf(SEInfo);
+  with SEInfo do begin
+    wnd := 0;
+    fMask := SEE_MASK_FLAG_DDEWAIT or SEE_MASK_FLAG_NO_UI;
+    if isPersistent then
+      fMask := fMask or SEE_MASK_NOCLOSEPROCESS;
+    lpVerb := 'runas';
+    lpFile := PWideChar(UTF8Decode(Exe));
+    lpParameters := PWideChar(UTF8Decode(Params));
+    if ShowWind then
+      nShow := SW_SHOWNORMAL
+    else
+      nShow := SW_HIDE;
+  end;
+  Result := ShellExecuteExW(@SEInfo);
+  if isPersistent then
+    WaitForSingleObject(SEInfo.hProcess, INFINITE);
+  {$ELSE}
+  Process := TProcessUTF8.Create(nil);
+  try
+    Process.Executable := Exe;
+    pr := TStringList.Create;
+    try
+      ParseCommandLine(Params, TStrings(pr), True);
+      Process.Parameters.Assign(pr);
+    finally
+      pr.Free;
+    end;
+    Process.Execute;
+  finally
+    Process.Free;
+  end;
+  {$ENDIF}
+end;
+
+{$ifdef windows}
+function WinRunProcessA(Exe, Params: string; ShowWind: Boolean; isPersistent: Boolean): Boolean;
+var
+  SEInfo: TSHELLEXECUTEINFOA;
+begin
+  Initialize(SEInfo);
+  FillChar(SEInfo, SizeOf(SEInfo), 0);
+  SEInfo.cbSize := SizeOf(TSHELLEXECUTEINFOA);
+  with SEInfo do begin
+    wnd := 0;
+    fMask := SEE_MASK_FLAG_DDEWAIT or SEE_MASK_FLAG_NO_UI;
+    if isPersistent then
+      fMask := fMask or SEE_MASK_NOCLOSEPROCESS;
+    lpFile := PChar(Utf8ToAnsi(Exe));
+    lpParameters := PChar(Utf8ToAnsi(Params));
+    if ShowWind then
+      nShow := SW_SHOWNORMAL
+    else
+      nShow := SW_HIDE;
+  end;
+  Result := ShellExecuteExA(@SEInfo);
+  if isPersistent then
+    WaitForSingleObject(SEInfo.hProcess, INFINITE);
+end;
+
+function WinRunProcessW(Exe, Params: string; ShowWind: Boolean; isPersistent: Boolean): Boolean;
+var
+  SEInfo: TSHELLEXECUTEINFOW;
+begin
+  Initialize(SEInfo);
+  FillChar(SEInfo, SizeOf(SEInfo), 0);
+  SEInfo.cbSize := SizeOf(TSHELLEXECUTEINFOW);
+  with SEInfo do begin
+    wnd := 0;
+    fMask := SEE_MASK_FLAG_DDEWAIT or SEE_MASK_FLAG_NO_UI;
+    if isPersistent then
+      fMask := fMask or SEE_MASK_NOCLOSEPROCESS;
+    lpFile := PWideChar(UTF8Decode(Exe));
+    lpParameters := PWideChar(UTF8Decode(Params));
+    if ShowWind then
+      nShow := SW_SHOWNORMAL
+    else
+      nShow := SW_HIDE;
+  end;
+  Result := ShellApi.ShellExecuteExW(@SEInfo);
+  if isPersistent then
+    WaitForSingleObject(SEInfo.hProcess, INFINITE);
+end;
+{$endif}
+
+function RunExternalProcess(Exe: String; Params: array of string;
+  ShowWind: Boolean; isPersistent: Boolean): Boolean;
+{$ifndef windows}
+var
+  Process: TProcessUTF8;
+  I: Integer;
+{$endif}
+begin
+  if Trim(Exe) = '' then Exit(False);
+  Result := True;
+  {$ifdef windows}
+  if Win32Platform = VER_PLATFORM_WIN32_NT then
+    Result := WinRunProcessW(Exe, StringsToCommandLine(Params), ShowWind, isPersistent)
+  else
+    Result := WinRunProcessA(Exe, StringsToCommandLine(Params), ShowWind, isPersistent);
+  {$else}
+  Process := TProcessUTF8.Create(nil);
+  try
+    Process.InheritHandles := isPersistent;
+    Process.Executable := Exe;
+    Process.Parameters.AddStrings(Params);
+    if isPersistent then
+      Process.Options := Process.Options + [poWaitOnExit]
+    else
+      Process.Options := [];
+    if ShowWind then
+      Process.ShowWindow := swoShow
+    else
+      Process.ShowWindow := swoHIDE;
+    // Copy default environment variables including DISPLAY variable for GUI application to work
+    for I := 0 to GetEnvironmentVariableCount - 1 do
+      Process.Environment.Add(GetEnvironmentString(I));
+    Process.Execute;
+  except
+    on E: Exception do
+    begin
+      WriteLog_E('RunExternalProcess.Error '#13#10+
+        'Executable: '+Exe+#13#10+
+        'Parameters: '+StringsToCommandLine(Params)+#13#10+
+        'Message   : '+E.Message+#13#10+
+        GetStackTraceInfo);
+    end;
+  end;
+  Process.Free;
+ {$endif}
+end;
+
+function RunExternalProcess(Exe, Params: String; ShowWind: Boolean;
+  isPersistent: Boolean): Boolean;
+begin
+  if Trim(Exe) = '' then Exit(False);
+  {$ifdef windows}
+  if Win32Platform = VER_PLATFORM_WIN32_NT then
+    Result := WinRunProcessW(Exe, Params, ShowWind, isPersistent)
+  else
+    Result := WinRunProcessA(Exe, Params, ShowWind, isPersistent);
+  {$else}
+  Result := RunExternalProcess(Exe, ParsedCommandLine(Params), ShowWind, isPersistent);
+  {$endif}
+end;
+
+function RunExternalProcess(CommandLine: String; ShowWind: Boolean;
+  isPersistent: Boolean): Boolean;
+var
+ s: string;
+ sa: TArrayOfString;
+begin
+  if Trim(CommandLine) = '' then Exit(False);
+  try
+    sa := ParsedCommandLine(CommandLine);
+    s := sa[Low(sa)];
+    DeleteArrayOfString(sa, Low(sa));
+    {$ifdef windows}
+    if Win32Platform = VER_PLATFORM_WIN32_NT then
+      Result := WinRunProcessW(s, StringsToCommandLine(sa), ShowWind, isPersistent)
+    else
+      Result := WinRunProcessA(s, StringsToCommandLine(sa), ShowWind, isPersistent);
+    {$else}
+    Result := RunExternalProcess(s, sa, ShowWind, isPersistent);
+    {$endif}
+  finally
+    SetLength(sa, 0);
+  end;
+end;
+
+procedure ParseCommandLine(const cmd: string; var Output: TStrings;
+  AStripQuotes: Boolean = False);
+var
+  s, cl: string;
+  cq: Integer;
+  acl, lq: Boolean;
+
+  procedure Addcl;
+  begin
+    if cl <> '' then
+    begin
+      if AStripQuotes and (Length(cl) > 1) then
+      begin
+        if cl[1] = '"' then
+          Delete(cl, 1, 1);
+        if cl[Length(cl)] = '"' then
+          Delete(cl, Length(cl), 1);
+      end;
+      Output.Add(cl);
+      cl := '';
+      acl := False;
+    end;
+  end;
+
+begin
+  if not Assigned(Output) then Exit;
+  Output.Clear;
+  Output.BeginUpdate;
+  try
+    s := cmd;
+    cl := '';
+    cq := 0;
+    lq := False;
+    while s <> '' do
+    begin
+      acl := True;
+      if s[1] = '"' then
+      begin
+        Inc(cq);
+        lq := True;
+      end
+      else
+      begin
+        if s[1] = ' ' then
+        begin
+          if cq > 0 then
+          begin
+            if (not odd(cq)) and lq then
+            begin
+              cq := 0;
+              Addcl;
+            end;
+          end
+          else
+            Addcl;
+        end;
+        lq := False;
+      end;
+      if acl then
+        cl := cl + s[1];
+      Delete(s, 1, 1);
+    end;
+    Addcl;
+  finally
+    Output.EndUpdate;
+  end;
+end;
+
+function ParsedCommandLine(const cmd: String): TArrayOfString;
+var
+  ts: TStrings;
+begin
+  if cmd = '' then Exit;
+  ts := TStringList.Create;
+  try
+    ParseCommandLine(cmd, ts, True);
+    Result := StringsToArray(ts);
+  finally
+    ts.Free;
+  end;
+end;
+
+function StringsToArray(const S: TStrings): TArrayOfString;
+var
+  i: Integer;
+begin
+  SetLength(Result, 0);
+  if not Assigned(S) then Exit;
+  if S.Count = 0 then Exit;
+  SetLength(Result, S.Count);
+  for i := 0 to S.Count - 1 do
+    Result[i] := S[i];
+end;
+
+function StringsToCommandLine(const S: TStrings): string;
+var
+  i: Integer;
+begin
+  Result := '';
+  if S.Count>0 then
+  begin
+    for i := 0 to S.Count-1 do
+    begin
+      if Pos(' ', S[i]) <> 0 then
+        Result := Result + '"' + S[i] + '" '
+      else
+        Result := Result + S[i] + ' ';
+    end;
+    Result := Trim(Result);
+  end;
+end;
+
+function StringsToCommandLine(const S: array of string): string;
+var
+  i: Integer;
+begin
+  Result := '';
+  if Length(S)>0 then
+  begin
+    for i := Low(S) to High(S) do
+    begin
+      if (Pos(' ', S[i]) <> 0) and
+        ((LeftStr(S[i], 1) <> '"') and (RightStr(S[i], 1) <> '"')) then
+        Result := Result + '"' + S[i] + '" '
+      else
+        Result := Result + S[i] + ' ';
+    end;
+    Result := Trim(Result);
+  end;
+end;
+
+procedure DeleteArrayOfString(var TheStrings: TArrayOfString; Index: Integer);
+var
+  i: Integer;
+begin
+  if (Index < Low(TheStrings)) and (Index > High(TheStrings)) then Exit;
+  if Length(TheStrings) > 0 then
+  begin
+    if Index < High(TheStrings) then
+    begin
+      for i := Index to High(TheStrings) - 1 do
+        TheStrings[i] := TheStrings[i + 1];
+    end;
+    SetLength(TheStrings, Length(TheStrings) - 1);
+  end;
 end;
 
 end.
