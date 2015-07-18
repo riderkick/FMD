@@ -28,9 +28,10 @@ type
   { TDownloadThread }
 
   TDownloadThread = class(TFMDThread)
-  protected
+  private
     parse: TStringList;
     checkStyle: TFlagType;
+  public
     workCounter: Cardinal;
     FSortColumn: Cardinal;
     FMessage, FAnotherURL: String;
