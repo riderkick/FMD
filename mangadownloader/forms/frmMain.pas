@@ -710,8 +710,8 @@ implementation
 {$R *.lfm}
 
 uses
-  frmImportFavorites, frmShutdownCounter, RegExpr, Clipbrd, LazFileUtils,
-  LazUTF8;
+  frmImportFavorites, frmShutdownCounter, WebsiteModules, RegExpr, Clipbrd,
+  LazFileUtils, LazUTF8;
 
 { TMainForm }
 
@@ -2714,14 +2714,19 @@ begin
   GetInfosThread.Link := link;
   GetInfosThread.Start;
 
-  //ShowInformation;
-  for i := 0 to High(WebsiteRoots) do
-    if Pos(website, WebsiteRoots[i, 0]) > 0 then
-    begin
-      link := StringReplace(link, WebsiteRoots[i, 1], '', []);
-      edURL.Text := FixURL(FillMangaSiteHost(i, link));
-      Break;
-    end;
+  i := Modules.LocateModule(website);
+  if i > -1 then
+    edURL.Text := FillHost(Modules.Module(i).RootURL, link)
+  else
+  begin
+    for i := 0 to High(WebsiteRoots) do
+      if Pos(website, WebsiteRoots[i, 0]) > 0 then
+      begin
+        link := StringReplace(link, WebsiteRoots[i, 1], '', []);
+        edURL.Text := FixURL(FillMangaSiteHost(i, link));
+        Break;
+      end;
+  end;
 
   if Assigned(gifWaiting) then
   begin
