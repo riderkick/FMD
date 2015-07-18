@@ -520,7 +520,7 @@ begin
   i := -1;
   if Modules.ModuleAvailable(Self.manager.container.DownloadInfo.Website,
     MMGetPageNumber, i) then
-    Result := Modules.GetPageNumber(Self.manager.container, URL, i)
+    Result := Modules.GetPageNumber(Self, URL, i)
   else
   begin
     if manager.container.MangaSiteID = ANIMEA_ID then
@@ -885,7 +885,7 @@ begin
   i := -1;
   if Modules.ModuleAvailable(Self.manager.container.DownloadInfo.Website,
     MMGetImageURL, i) then
-    Result := Modules.GetImageURL(Self.manager.container, URL, i)
+    Result := Modules.GetImageURL(Self, URL, i)
   else
   begin
     if manager.container.MangaSiteID = ANIMEA_ID then
