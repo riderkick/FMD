@@ -1328,7 +1328,7 @@ begin
 
   //load advanced config if any
   mt := INIAdvanced.ReadInteger('DownloadMaxThreadsPerTask',
-    container.DownloadInfo.Website, 0], -1);
+    container.DownloadInfo.Website, -1);
   if (mt > 0) then
   begin
     if (mt > 32) then
