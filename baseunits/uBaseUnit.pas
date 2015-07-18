@@ -857,6 +857,7 @@ function SitesIsWPManga(const website: String): Boolean; overload;
 
 // Fill in website host if it's not present
 function FillMangaSiteHost(const MangaID: Cardinal; URL: String): String;
+function FillHost(const Host, URL: String): String;
 function RemoveHostFromURL(URL: String): String;
 procedure RemoveHostFromURLs(Const URLs: TStringList);
 procedure RemoveHostFromURLsPair(Const URLs, Names : TStringList);
@@ -1407,6 +1408,27 @@ begin
       Result := regx.Replace(Result, '$1/', True);
     finally
       regx.Free
+    end;
+end;
+
+function FillHost(const Host, URL: String): String;
+var
+  th, tu: string;
+begin
+  Result := URL;
+  if Host = '' then Exit;
+  with TRegExpr.Create do
+    try
+      ModifierI := True;
+      ModifierG := True;
+      Expression := '^((https?|ftp)://)?([^/]*\.\w+)?(/?.*)$';
+      th := Replace(Host, '$3', True);
+      tu := Replace(Host, '$4', True);
+      if (tu <> '') and (tu[1] <> '/') then
+        tu := '/' + tu;
+      Result := th + tu;
+    finally
+      Free;
     end;
 end;
 
