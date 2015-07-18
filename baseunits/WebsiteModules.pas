@@ -59,10 +59,12 @@ type
 
     function AddModule: TModuleContainer;
     function LocateModule(const Website: String): Integer;
-    function ModuleAvailable(const Website: String; ModuleMethod: TModuleMethod;
-      var OutIndex: Integer): Boolean; overload;
+    function ModuleAvailable(const ModuleIndex: Integer;
+      ModuleMethod: TModuleMethod): Boolean; overload;
     function ModuleAvailable(const Website: String;
       ModuleMethod: TModuleMethod): Boolean; overload;
+    function ModuleAvailable(const Website: String; ModuleMethod: TModuleMethod;
+      var OutIndex: Integer): Boolean; overload;
 
     function GetDirectoryPageNumber(var MangaInfo: TMangaInformation;
       var Page: Cardinal; const ModuleIndex: Integer): Integer; overload;
@@ -169,44 +171,47 @@ begin
   end;
 end;
 
-function TWebsiteModules.ModuleAvailable(const Website: String;
-  ModuleMethod: TModuleMethod; var OutIndex: Integer): Boolean;
-var
-  p: Integer;
+function TWebsiteModules.ModuleAvailable(const ModuleIndex: Integer;
+  ModuleMethod: TModuleMethod): Boolean;
 begin
   Result := False;
-  p := LocateModule(Website);
-  OutIndex := p;
-  if p >= 0 then
+  if (ModuleIndex < 0) or (FModuleList.Count = 0) or
+    (ModuleIndex >= FModuleList.Count) then
+    Exit;
+  with TModuleContainer(FModuleList[ModuleIndex]) do
   begin
-    with TModuleContainer(FModuleList[p]) do
-    begin
-      case ModuleMethod of
-        MMGetDirectoryPageNumber: Result := Assigned(OnGetDirectoryPageNumber);
-        MMGetNameAndLink: Result := Assigned(OnGetNameAndLink);
-        MMGetInfo: Result := Assigned(OnGetInfo);
-        MMGetPageNumber: Result := Assigned(OnGetPageNumber);
-        MMGetImageURL: Result := Assigned(OnGetImageURL);
-        else
-          Result := False;
-      end;
+    case ModuleMethod of
+      MMGetDirectoryPageNumber: Result := Assigned(OnGetDirectoryPageNumber);
+      MMGetNameAndLink: Result := Assigned(OnGetNameAndLink);
+      MMGetInfo: Result := Assigned(OnGetInfo);
+      MMGetPageNumber: Result := Assigned(OnGetPageNumber);
+      MMGetImageURL: Result := Assigned(OnGetImageURL);
+      else
+        Result := False;
     end;
   end;
 end;
 
 function TWebsiteModules.ModuleAvailable(const Website: String;
   ModuleMethod: TModuleMethod): Boolean;
-var
-  p: Integer;
 begin
-  Result := ModuleAvailable(Website, ModuleMethod, p);
+  Result := ModuleAvailable(LocateModule(Website), ModuleMethod);
+end;
+
+function TWebsiteModules.ModuleAvailable(const Website: String;
+  ModuleMethod: TModuleMethod; var OutIndex: Integer): Boolean;
+begin
+  Result := False;
+  OutIndex := LocateModule(Website);
+  Result := ModuleAvailable(OutIndex, ModuleMethod);
 end;
 
 function TWebsiteModules.GetDirectoryPageNumber(var MangaInfo: TMangaInformation;
   var Page: Cardinal; const ModuleIndex: Integer): Integer;
 begin
   Result := MODULE_NOT_FOUND;
-  if (ModuleIndex = -1) or (ModuleIndex >= FModuleList.Count) then
+  if (ModuleIndex < 0) or (FModuleList.Count = 0) or
+    (ModuleIndex >= FModuleList.Count) then
     Exit;
   if Assigned(TModuleContainer(FModuleList[ModuleIndex]).OnGetDirectoryPageNumber) then
     Result := TModuleContainer(FModuleList[ModuleIndex]).OnGetDirectoryPageNumber(
@@ -224,7 +229,8 @@ function TWebsiteModules.GetNameAndLink(var MangaInfo: TMangaInformation;
   const ModuleIndex: Integer): Integer;
 begin
   Result := MODULE_NOT_FOUND;
-  if (ModuleIndex = -1) or (ModuleIndex >= FModuleList.Count) then
+  if (ModuleIndex < 0) or (FModuleList.Count = 0) or
+    (ModuleIndex >= FModuleList.Count) then
     Exit;
   if Assigned(TModuleContainer(FModuleList[ModuleIndex]).OnGetNameAndLink) then
     Result := TModuleContainer(FModuleList[ModuleIndex]).OnGetNameAndLink(
@@ -241,7 +247,8 @@ function TWebsiteModules.GetInfo(var MangaInfo: TMangaInformation;
   const URL: String; const Reconnect: Cardinal; const ModuleIndex: Integer): Integer;
 begin
   Result := MODULE_NOT_FOUND;
-  if (ModuleIndex = -1) or (ModuleIndex >= FModuleList.Count) then
+  if (ModuleIndex < 0) or (FModuleList.Count = 0) or
+    (ModuleIndex >= FModuleList.Count) then
     Exit;
   if Assigned(TModuleContainer(FModuleList[ModuleIndex]).OnGetInfo) then
     Result := TModuleContainer(FModuleList[ModuleIndex]).OnGetInfo(
@@ -258,7 +265,8 @@ function TWebsiteModules.GetPageNumber(var DownloadThread: TDownloadThread;
   const URL: String; const ModuleIndex: Integer): Boolean;
 begin
   Result := False;
-  if (ModuleIndex = -1) or (ModuleIndex >= FModuleList.Count) then
+  if (ModuleIndex < 0) or (FModuleList.Count = 0) or
+    (ModuleIndex >= FModuleList.Count) then
     Exit;
   if Assigned(TModuleContainer(FModuleList[ModuleIndex]).OnGetPageNumber) then
     Result := TModuleContainer(FModuleList[ModuleIndex]).OnGetPageNumber(
@@ -275,7 +283,8 @@ function TWebsiteModules.GetImageURL(var DownloadThread: TDownloadThread;
   const URL: String; const ModuleIndex: Integer): Boolean;
 begin
   Result := False;
-  if (ModuleIndex = -1) or (ModuleIndex >= FModuleList.Count) then
+  if (ModuleIndex < 0) or (FModuleList.Count = 0) or
+    (ModuleIndex >= FModuleList.Count) then
     Exit;
   if Assigned(TModuleContainer(FModuleList[ModuleIndex]).OnGetImageURL) then
     Result := TModuleContainer(FModuleList[ModuleIndex]).OnGetImageURL(
