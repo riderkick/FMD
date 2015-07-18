@@ -65,6 +65,7 @@ type
       ModuleMethod: TModuleMethod): Boolean; overload;
     function ModuleAvailable(const Website: String; ModuleMethod: TModuleMethod;
       var OutIndex: Integer): Boolean; overload;
+    function ModuleAvailable(const Website: String): Boolean; overload;
 
     function GetDirectoryPageNumber(var MangaInfo: TMangaInformation;
       var Page: Cardinal; const ModuleIndex: Integer): Integer; overload;
@@ -96,7 +97,7 @@ type
     procedure LockModules;
     procedure UnlockModules;
 
-    function Items(const Index: Integer): TModuleContainer;
+    function Module(const Index: Integer): TModuleContainer;
   end;
 
 var
@@ -206,6 +207,11 @@ begin
   Result := ModuleAvailable(OutIndex, ModuleMethod);
 end;
 
+function TWebsiteModules.ModuleAvailable(const Website: String): Boolean;
+begin
+  Result := (LocateModule(Website) > -1);
+end;
+
 function TWebsiteModules.GetDirectoryPageNumber(var MangaInfo: TMangaInformation;
   var Page: Cardinal; const ModuleIndex: Integer): Integer;
 begin
@@ -307,7 +313,7 @@ begin
   LeaveCriticalsection(FCSModules);
 end;
 
-function TWebsiteModules.Items(const Index: Integer): TModuleContainer;
+function TWebsiteModules.Module(const Index: Integer): TModuleContainer;
 begin
   Result := TModuleContainer(FModuleList[Index]);
 end;
