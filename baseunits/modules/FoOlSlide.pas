@@ -14,7 +14,21 @@ function GetDirectoryPageNumber(var MangaInfo: TMangaInformation;
   var Page: Cardinal; Module: TModuleContainer): Integer;
 var
   Source, Parse: TStringList;
-  i: Integer;
+
+  procedure ScanParse;
+  var
+    i: Integer;
+  begin
+    for i := 0 to Parse.Count - 1 do
+      if GetVal(Parse[i], 'class') = 'next' then
+        if GetTagName(Parse[i + 2]) = 'a' then
+        begin
+          Page := StrToIntDef(ReplaceRegExpr('^.*/(\d+)/$',
+            GetVal(Parse[i + 2], 'href'), '$1', True), 1);
+          Break;
+        end;
+  end;
+
 begin
   Result := INFORMATION_NOT_FOUND;
   Page := 1;
@@ -29,18 +43,7 @@ begin
       try
         ParseHTML(Source.Text, Parse);
         if Parse.Count > 0 then
-        begin
-          for i := 0 to Parse.Count - 1 do
-          begin
-            if GetVal(Parse[i], 'class') = 'next' then
-              if GetTagName(Parse[i + 2]) = 'a' then
-              begin
-                Page := StrToIntDef(ReplaceRegExpr('^.*/(\d+)/$',
-                  GetVal(Parse[i + 2], 'href'), '$1', True), 1);
-                Break;
-              end;
-          end;
-        end;
+          ScanParse;
       finally
         Parse.Free;
       end;
@@ -54,11 +57,21 @@ function GetNameAndLink(var MangaInfo: TMangaInformation;
   const Names, Links: TStringList; const URL: String; Module: TModuleContainer): Integer;
 var
   Source, Parse: TStringList;
-  i: Integer;
+
+  procedure ScanParse;
+  var
+    i: Integer;
+  begin
+    for i := 0 to Parse.Count - 1 do
+      if (GetTagName(Parse[i]) = 'a') and (Pos('/series/', Parse[i]) > 0) then
+      begin
+        Links.Add(GetVal(Parse[i], 'href'));
+        Names.Add(CommonStringFilter(Parse[i + 1]));
+      end;
+  end;
+
 begin
   Result := INFORMATION_NOT_FOUND;
-  if MangaInfo = nil then
-    Exit;
   if MangaInfo = nil then
     Exit;
   Source := TStringList.Create;
@@ -71,16 +84,108 @@ begin
       try
         ParseHTML(Source.Text, Parse);
         if Parse.Count > 0 then
-        begin
-          for i := 0 to Parse.Count - 1 do
+          ScanParse;
+      finally
+        Parse.Free;
+      end;
+    end;
+  finally
+    Source.Free;
+  end;
+end;
+
+function GetInfo(var MangaInfo: TMangaInformation; const URL: String;
+  const Reconnect: Cardinal; Module: TModuleContainer): Integer;
+var
+  Source, Parse: TStringList;
+
+  procedure ScanChapters(const StartIndex: Integer);
+  var
+    i: Integer;
+    g: String = '';
+  begin
+    with MangaInfo.mangaInfo do
+    begin
+      for i := StartIndex to Parse.Count - 1 do
+      begin
+        if Parse[i] = '</article>' then
+          Break;
+        if GetVal(Parse[i], 'class') = 'group' then
+          if GetVal(Parse[i + 1], 'class') = 'title' then
           begin
-            if (GetTagName(Parse[i]) = 'a') and (Pos('/series/', Parse[i]) > 0) then
-            begin
-              Links.Add(GetVal(Parse[i], 'href'));
-              Names.Add(CommonStringFilter(Parse[i + 1]));
-            end;
+            g := Trim(Parse[i + 2]);
+            if g = 'Chapters' then
+              g := ''
+            else
+              g += ' ';
           end;
+        if GetTagName(Parse[i]) = 'a' then
+        begin
+          chapterLinks.Add(GetVal(Parse[i], 'href'));
+          chapterName.Add(Trim(g + Trim(Parse[i + 1])));
         end;
+      end;
+      //invert chapters
+      if MangaInfo.mangaInfo.chapterLinks.Count > 0 then
+        InvertStrings([chapterLinks, chapterName]);
+    end;
+  end;
+
+  procedure ScanParse;
+  var
+    i: Integer;
+  begin
+    for i := 0 to Parse.Count - 1 do
+      with MangaInfo.mangaInfo do
+      begin
+        //title
+        if title = '' then
+          if (GetTagName(Parse[i]) = 'h1') and (GetVal(Parse[i], 'class') = 'title') then
+            title := CommonStringFilter(Parse[i]);
+
+        //cover
+        if coverLink = '' then
+          if GetVal(Parse[i], 'class') = 'thumbnail' then
+            if GetTagName(Parse[i + 2]) = 'img' then
+              coverLink := GetVal(Parse[i + 2], 'src');
+
+        //author
+        if (Parse[i] = 'Author') and (Parse[i + 1] = '</b>') then
+          authors := Trim(TrimLeftChar(Parse[i + 2], [':']));
+
+        //artist
+        if (Parse[i] = 'Artist') and (Parse[i + 1] = '</b>') then
+          artists := Trim(TrimLeftChar(Parse[i + 2], [':']));
+
+        //summary
+        if (Parse[i] = 'Synopsis') and (Parse[i + 1] = '</b>') then
+          summary := Trim(TrimLeftChar(Parse[i + 2], [':']));
+
+        //chapters
+        if GetVal(Parse[i], 'class') = 'list' then
+        begin
+          ScanChapters(i);
+          Break;
+        end;
+      end;
+  end;
+
+begin
+  Result := INFORMATION_NOT_FOUND;
+  if MangaInfo = nil then
+    Exit;
+  MangaInfo.mangaInfo.website := Module.Website;
+  MangaInfo.mangaInfo.url := FillHost(Module.RootURL, URL);
+  Source := TStringList.Create;
+  try
+    if MangaInfo.GetPage(TObject(Source), MangaInfo.mangaInfo.url, Reconnect) then
+    begin
+      Result := NO_ERROR;
+      Parse := TStringList.Create;
+      try
+        ParseHTML(Source.Text, Parse);
+        if Parse.Count > 0 then
+          ScanParse;
       finally
         Parse.Free;
       end;
@@ -100,6 +205,7 @@ begin
     InformationAvailable := True;
     OnGetDirectoryPageNumber := @GetDirectoryPageNumber;
     OnGetNameAndLink := @GetNameAndLink;
+    OnGetInfo := @GetInfo;
   end;
 end;
 
