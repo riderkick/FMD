@@ -31,6 +31,7 @@ type
   private
     parse: TStringList;
     checkStyle: TFlagType;
+    ModuleId: Integer;
   public
     workCounter: Cardinal;
     FSortColumn: Cardinal;
@@ -79,6 +80,8 @@ type
   { TTaskThread }
 
   TTaskThread = class(TFMDThread)
+  private
+    ModuleId: Integer;
   protected
     FMessage, FAnotherURL: String;
     procedure CheckOut;
@@ -270,6 +273,7 @@ begin
   FHTTP := THTTPSendThread.Create(Self);
   FHTTP.Headers.NameValueSeparator := ':';
   FHTTP.Sock.OnStatus := SockOnStatus;
+  ModuleId := -1;
 end;
 
 destructor TDownloadThread.Destroy;
@@ -373,7 +377,6 @@ end;
 function TDownloadThread.GetPageNumberFromURL(const URL: String): Boolean;
 var
   Parser: THTMLParser;
-  i: Integer;
 
   {$I includes/AnimeStory/chapter_page_number.inc}
 
@@ -517,10 +520,8 @@ begin
   Result := False;
   manager.container.PageNumber := 0;
 
-  i := -1;
-  if Modules.ModuleAvailable(Self.manager.container.DownloadInfo.Website,
-    MMGetPageNumber, i) then
-    Result := Modules.GetPageNumber(Self, URL, i)
+  if Modules.ModuleAvailable(ModuleId, MMGetPageNumber) then
+    Result := Modules.GetPageNumber(Self, URL, ModuleId)
   else
   begin
     if manager.container.MangaSiteID = ANIMEA_ID then
@@ -742,7 +743,6 @@ end;
 function TDownloadThread.GetLinkPageFromURL(const URL: String): Boolean;
 var
   Parser: THTMLParser;
-  i: Integer;
 
   {$I includes/AnimeStory/image_url.inc}
 
@@ -882,10 +882,8 @@ begin
    (manager.container.PageLinks.Strings[workCounter] <> 'W') then
     Exit;
 
-  i := -1;
-  if Modules.ModuleAvailable(Self.manager.container.DownloadInfo.Website,
-    MMGetImageURL, i) then
-    Result := Modules.GetImageURL(Self, URL, i)
+  if Modules.ModuleAvailable(ModuleId, MMGetImageURL) then
+    Result := Modules.GetImageURL(Self, URL, ModuleId)
   else
   begin
     if manager.container.MangaSiteID = ANIMEA_ID then
@@ -1195,6 +1193,7 @@ begin
   inherited Create(True);
   CS_threads := TCriticalSection.Create;
   threads := TFPList.Create;
+  ModuleId := -1;
   anotherURL := '';
   httpCookies := '';
 end;
@@ -1374,6 +1373,7 @@ begin
       threads.Add(TDownloadThread.Create);
       with TDownloadThread(threads.Last) do begin
         manager := Self;
+        ModuleId := Self.ModuleId;
         workCounter := container.WorkCounter;
         checkStyle := Flag;
         //load User-Agent from INIAdvanced
@@ -1440,6 +1440,7 @@ var
   S, P: String;
 begin
   INIAdvanced.Reload;
+  ModuleId := Modules.LocateModule(container.DownloadInfo.Website);
   container.ThreadState := True;
   container.DownloadInfo.TransferRate := '';
   try
