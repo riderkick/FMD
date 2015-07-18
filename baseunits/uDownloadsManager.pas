@@ -1322,30 +1322,17 @@ procedure TTaskThread.CheckOut;
 var
   currentMaxThread: Integer;
   s: String;
-  mt: Integer;
 begin
   if Terminated then Exit;
 
-  //load advanced config if any
-  mt := INIAdvanced.ReadInteger('DownloadMaxThreadsPerTask',
-    WebsiteRoots[container.MangaSiteID, 0], -1);
-  if (mt > 0) then
-  begin
-    if (mt > 32) then
-      mt := 32;
-    currentMaxThread := mt;
-  end
-  else
-  begin
-    case container.MangaSiteID of
-      PECINTAKOMIK_ID : currentMaxThread := 1;
-      EHENTAI_ID      : currentMaxThread := 2;
-      else
-        currentMaxThread := container.Manager.maxDLThreadsPerTask;
-    end;
-    if currentMaxThread > container.Manager.maxDLThreadsPerTask then
+  case container.MangaSiteID of
+    PECINTAKOMIK_ID : currentMaxThread := 1;
+    EHENTAI_ID      : currentMaxThread := 2;
+    else
       currentMaxThread := container.Manager.maxDLThreadsPerTask;
   end;
+  if currentMaxThread > container.Manager.maxDLThreadsPerTask then
+    currentMaxThread := container.Manager.maxDLThreadsPerTask;
 
   if container.PageLinks.Count > 0 then
   begin
