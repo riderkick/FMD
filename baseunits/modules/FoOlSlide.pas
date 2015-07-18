@@ -120,10 +120,11 @@ var
               g += ' ';
           end;
         if GetTagName(Parse[i]) = 'a' then
-        begin
-          chapterLinks.Add(GetVal(Parse[i], 'href'));
-          chapterName.Add(g + Trim(Parse[i + 1]));
-        end;
+          if GetVal(Parse[i - 1], 'class') = 'title' then
+          begin
+            chapterLinks.Add(GetVal(Parse[i], 'href'));
+            chapterName.Add(g + Trim(Parse[i + 1]));
+          end;
       end;
       //invert chapters
       if MangaInfo.mangaInfo.chapterLinks.Count > 0 then
