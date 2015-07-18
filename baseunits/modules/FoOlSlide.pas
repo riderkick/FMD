@@ -122,7 +122,7 @@ var
         if GetTagName(Parse[i]) = 'a' then
         begin
           chapterLinks.Add(GetVal(Parse[i], 'href'));
-          chapterName.Add(Trim(g + Trim(Parse[i + 1])));
+          chapterName.Add(g + Trim(Parse[i + 1]));
         end;
       end;
       //invert chapters
