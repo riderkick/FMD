@@ -1510,7 +1510,7 @@ begin
       if container.PageLinks.Count = 0 then
         container.PageLinks.Add('W');
       container.PageNumber := container.PageLinks.Count;
-      if not SitesWithoutPageLink(WebsiteRoots[container.MangaSiteID, 0]) and
+      if not SitesWithoutPageLink(container.DownloadInfo.Website) and
         CheckForPrepare then
       begin
         Flag := CS_GETPAGELINK;
