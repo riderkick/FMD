@@ -76,8 +76,10 @@ type
     function GetNameAndLink(var MangaInfo: TMangaInformation;
       const Names, Links: TStringList; const URL, Website: String): Integer; overload;
 
-    function GetInfo(var MangaInfo: TMangaInformation;
-      const Website, URL: String; const Reconnect: Cardinal): Integer;
+    function GetInfo(var MangaInfo: TMangaInformation; const URL: String;
+      const Reconnect: Cardinal; const ModuleIndex: Integer): Integer; overload;
+    function GetInfo(var MangaInfo: TMangaInformation; const URL: String;
+      const Reconnect: Cardinal; const Website: String): Integer; overload;
 
     function GetPageNumber(var Container: TTaskContainer; const URL: String): Boolean;
     function GetImageURL(var Container: TTaskContainer; const URL: String): Boolean;
@@ -229,11 +231,20 @@ begin
 end;
 
 function TWebsiteModules.GetInfo(var MangaInfo: TMangaInformation;
-  const Website, URL: String; const Reconnect: Cardinal): Integer;
-var
-  p: Integer;
+  const URL: String; const Reconnect: Cardinal; const ModuleIndex: Integer): Integer;
 begin
   Result := MODULE_NOT_FOUND;
+  if (ModuleIndex = -1) or (ModuleIndex >= FModuleList.Count) then
+    Exit;
+  if Assigned(TModuleContainer(FModuleList[ModuleIndex]).OnGetInfo) then
+    Result := TModuleContainer(FModuleList[ModuleIndex]).OnGetInfo(
+      MangaInfo, URL, Reconnect, TModuleContainer(FModuleList[ModuleIndex]));
+end;
+
+function TWebsiteModules.GetInfo(var MangaInfo: TMangaInformation;
+  const URL: String; const Reconnect: Cardinal; const Website: String): Integer;
+begin
+  Result := GetInfo(MangaInfo, URL, Reconnect, LocateModule(Website));
 end;
 
 function TWebsiteModules.GetPageNumber(var Container: TTaskContainer;
