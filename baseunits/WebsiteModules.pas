@@ -81,8 +81,15 @@ type
     function GetInfo(var MangaInfo: TMangaInformation; const URL: String;
       const Reconnect: Cardinal; const Website: String): Integer; overload;
 
-    function GetPageNumber(var Container: TTaskContainer; const URL: String): Boolean;
-    function GetImageURL(var Container: TTaskContainer; const URL: String): Boolean;
+    function GetPageNumber(var Container: TTaskContainer; const URL: String;
+      const ModuleIndex: Integer): Boolean; overload;
+    function GetPageNumber(var Container: TTaskContainer;
+      const URL, Website: String): Boolean; overload;
+
+    function GetImageURL(var Container: TTaskContainer; const URL: String;
+      const ModuleIndex: Integer): Boolean; overload;
+    function GetImageURL(var Container: TTaskContainer;
+      const URL, Website: String): Boolean; overload;
 
     procedure LockModules;
     procedure UnlockModules;
@@ -248,15 +255,37 @@ begin
 end;
 
 function TWebsiteModules.GetPageNumber(var Container: TTaskContainer;
-  const URL: String): Boolean;
+  const URL: String; const ModuleIndex: Integer): Boolean;
 begin
   Result := False;
+  if (ModuleIndex = -1) or (ModuleIndex >= FModuleList.Count) then
+    Exit;
+  if Assigned(TModuleContainer(FModuleList[ModuleIndex]).OnGetPageNumber) then
+    Result := TModuleContainer(FModuleList[ModuleIndex]).OnGetPageNumber(
+      Container, URL, TModuleContainer(FModuleList[ModuleIndex]));
+end;
+
+function TWebsiteModules.GetPageNumber(var Container: TTaskContainer;
+  const URL, Website: String): Boolean;
+begin
+  Result := GetPageNumber(Container, URL, LocateModule(Website));
 end;
 
 function TWebsiteModules.GetImageURL(var Container: TTaskContainer;
-  const URL: String): Boolean;
+  const URL: String; const ModuleIndex: Integer): Boolean;
 begin
   Result := False;
+  if (ModuleIndex = -1) or (ModuleIndex >= FModuleList.Count) then
+    Exit;
+  if Assigned(TModuleContainer(FModuleList[ModuleIndex]).OnGetImageURL) then
+    Result := TModuleContainer(FModuleList[ModuleIndex]).OnGetImageURL(
+      Container, URL, TModuleContainer(FModuleList[ModuleIndex]));
+end;
+
+function TWebsiteModules.GetImageURL(var Container: TTaskContainer;
+  const URL, Website: String): Boolean;
+begin
+  Result := GetImageURL(Container, URL, LocateModule(Website));
 end;
 
 procedure TWebsiteModules.LockModules;
