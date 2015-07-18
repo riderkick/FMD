@@ -1422,7 +1422,7 @@ begin
       ModifierI := True;
       ModifierG := True;
       Expression := '^((https?|ftp)://)?([^/]*\.\w+)?(/?.*)$';
-      th := Replace(Host, '$3', True);
+      th := Replace(Host, '$1$3', True);
       tu := Replace(URL, '$4', True);
       if (tu <> '') and (tu[1] <> '/') then
         tu := '/' + tu;
