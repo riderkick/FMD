@@ -5,8 +5,8 @@ unit FoOlSlide;
 interface
 
 uses
-  Classes, SysUtils, WebsiteModules, uData, uBaseUnit, USimpleLogger, HTMLUtil,
-  RegExpr;
+  Classes, SysUtils, WebsiteModules, uData, uBaseUnit, uDownloadsManager,
+  HTMLUtil, RegExpr;
 
 implementation
 
@@ -195,6 +195,106 @@ begin
   end;
 end;
 
+function GetPageNumber(var DownloadThread: TDownloadThread; const URL: String;
+  Module: TModuleContainer): Boolean;
+var
+  Source, Parse: TStringList;
+  Container: TTaskContainer;
+
+  procedure ScanParse;
+  var
+    i, p: Integer;
+  begin
+    p := -1;
+    for i := 0 to Parse.Count - 1 do
+      if (GetVal(Parse[i], 'class') = 'dropdown') and (Pos('style=', Parse[i]) > 0) then
+      begin
+        p := i + 1;
+        Break;
+      end;
+    if p > -1 then
+      for i := p to Parse.Count - 1 do
+      begin
+        if Pos('</ul>', Parse[i]) <> 0 then
+          Break;
+        if GetTagName(Parse[i]) = 'a' then
+          Inc(Container.PageNumber);
+      end;
+  end;
+
+begin
+  Result := False;
+  if DownloadThread = nil then
+    Exit;
+  Container := DownloadThread.manager.container;
+  Container.PageLinks.Clear;
+  Container.PageContainerLinks.Clear;
+  Container.PageNumber := 0;
+  Source := TStringList.Create;
+  try
+    if DownloadThread.GetPage(TObject(Source), FillHost(Module.RootURL, URL),
+      Container.Manager.retryConnect) then
+    begin
+      Result := True;
+      Parse := TStringList.Create;
+      try
+        ParseHTML(Source.Text, Parse);
+        if Parse.Count > 0 then
+          ScanParse;
+      finally
+        Parse.Free;
+      end;
+    end;
+  finally
+    Source.Free;
+  end;
+end;
+
+function GetImageURL(var DownloadThread: TDownloadThread; const URL: String;
+  Module: TModuleContainer): Boolean;
+var
+  Source, Parse: TStringList;
+  Container: TTaskContainer;
+
+  procedure ScanParse;
+  var
+    i: Integer;
+  begin
+    for i := 0 to Parse.Count - 1 do
+      if (GetTagName(Parse[i]) = 'img') and (GetVal(Parse[i], 'class') = 'open') then
+      begin
+        if DownloadThread.workCounter < Container.PageLinks.Count then
+          Container.PageLinks[DownloadThread.workCounter] := GetVal(Parse[i], 'src');
+        Break;
+      end;
+  end;
+
+begin
+  Result := False;
+  if DownloadThread = nil then
+    Exit;
+  Container := DownloadThread.manager.container;
+  Source := TStringList.Create;
+  try
+    if DownloadThread.GetPage(TObject(Source), FillHost(Module.RootURL, URL) +
+      'page/' + IntToStr(DownloadThread.workCounter + 1),
+      Container.Manager.retryConnect) then
+    begin
+      Result := True;
+      Parse := TStringList.Create;
+      try
+        ParseHTML(Source.Text, Parse);
+        if Parse.Count > 0 then
+          ScanParse;
+      finally
+        Parse.Free;
+      end;
+    end;
+  finally
+    Source.Free;
+  end;
+end;
+
 procedure RegisterModule;
 begin
   with AddModule do
@@ -206,6 +306,8 @@ begin
     OnGetDirectoryPageNumber := @GetDirectoryPageNumber;
     OnGetNameAndLink := @GetNameAndLink;
     OnGetInfo := @GetInfo;
+    OnGetPageNumber := @GetPageNumber;
+    OnGetImageURL := @GetImageURL;
   end;
 end;
 
