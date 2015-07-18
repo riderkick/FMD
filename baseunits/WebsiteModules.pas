@@ -25,10 +25,10 @@ type
   TOnGetInfo = function(var MangaInfo: TMangaInformation; const URL: String;
     const Reconnect: Cardinal; Module: TModuleContainer): Integer;
 
-  TOnGetPageNumber = function(var Container: TTaskContainer;
+  TOnGetPageNumber = function(var DownloadThread: TDownloadThread;
     const URL: String; Module: TModuleContainer): Boolean;
-  TOnGetImageURL = function(var Container: TTaskContainer; const URL: String;
-    Module: TModuleContainer): Boolean;
+  TOnGetImageURL = function(var DownloadThread: TDownloadThread;
+    const URL: String; Module: TModuleContainer): Boolean;
 
   TModuleMethod = (MMGetDirectoryPageNumber, MMGetNameAndLink, MMGetInfo,
     MMGetPageNumber, MMGetImageURL);
@@ -81,14 +81,14 @@ type
     function GetInfo(var MangaInfo: TMangaInformation; const URL: String;
       const Reconnect: Cardinal; const Website: String): Integer; overload;
 
-    function GetPageNumber(var Container: TTaskContainer; const URL: String;
-      const ModuleIndex: Integer): Boolean; overload;
-    function GetPageNumber(var Container: TTaskContainer;
+    function GetPageNumber(var DownloadThread: TDownloadThread;
+      const URL: String; const ModuleIndex: Integer): Boolean; overload;
+    function GetPageNumber(var DownloadThread: TDownloadThread;
       const URL, Website: String): Boolean; overload;
 
-    function GetImageURL(var Container: TTaskContainer; const URL: String;
-      const ModuleIndex: Integer): Boolean; overload;
-    function GetImageURL(var Container: TTaskContainer;
+    function GetImageURL(var DownloadThread: TDownloadThread;
+      const URL: String; const ModuleIndex: Integer): Boolean; overload;
+    function GetImageURL(var DownloadThread: TDownloadThread;
       const URL, Website: String): Boolean; overload;
 
     procedure LockModules;
@@ -254,7 +254,7 @@ begin
   Result := GetInfo(MangaInfo, URL, Reconnect, LocateModule(Website));
 end;
 
-function TWebsiteModules.GetPageNumber(var Container: TTaskContainer;
+function TWebsiteModules.GetPageNumber(var DownloadThread: TDownloadThread;
   const URL: String; const ModuleIndex: Integer): Boolean;
 begin
   Result := False;
@@ -262,16 +262,16 @@ begin
     Exit;
   if Assigned(TModuleContainer(FModuleList[ModuleIndex]).OnGetPageNumber) then
     Result := TModuleContainer(FModuleList[ModuleIndex]).OnGetPageNumber(
-      Container, URL, TModuleContainer(FModuleList[ModuleIndex]));
+      DownloadThread, URL, TModuleContainer(FModuleList[ModuleIndex]));
 end;
 
-function TWebsiteModules.GetPageNumber(var Container: TTaskContainer;
+function TWebsiteModules.GetPageNumber(var DownloadThread: TDownloadThread;
   const URL, Website: String): Boolean;
 begin
-  Result := GetPageNumber(Container, URL, LocateModule(Website));
+  Result := GetPageNumber(DownloadThread, URL, LocateModule(Website));
 end;
 
-function TWebsiteModules.GetImageURL(var Container: TTaskContainer;
+function TWebsiteModules.GetImageURL(var DownloadThread: TDownloadThread;
   const URL: String; const ModuleIndex: Integer): Boolean;
 begin
   Result := False;
@@ -279,13 +279,13 @@ begin
     Exit;
   if Assigned(TModuleContainer(FModuleList[ModuleIndex]).OnGetImageURL) then
     Result := TModuleContainer(FModuleList[ModuleIndex]).OnGetImageURL(
-      Container, URL, TModuleContainer(FModuleList[ModuleIndex]));
+      DownloadThread, URL, TModuleContainer(FModuleList[ModuleIndex]));
 end;
 
-function TWebsiteModules.GetImageURL(var Container: TTaskContainer;
+function TWebsiteModules.GetImageURL(var DownloadThread: TDownloadThread;
   const URL, Website: String): Boolean;
 begin
-  Result := GetImageURL(Container, URL, LocateModule(Website));
+  Result := GetImageURL(DownloadThread, URL, LocateModule(Website));
 end;
 
 procedure TWebsiteModules.LockModules;
