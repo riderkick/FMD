@@ -503,6 +503,8 @@ type
     procedure vtMangaListBeforeCellPaint(Sender: TBaseVirtualTree;
       TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
       CellPaintMode: TVTCellPaintMode; CellRect: TRect; var ContentRect: TRect);
+    procedure vtMangaListGetCursor(Sender: TBaseVirtualTree;
+      var ACursor: TCursor);
     procedure vtMangaListGetHint(Sender: TBaseVirtualTree; Node: PVirtualNode;
       Column: TColumnIndex; var LineBreakStyle: TVTTooltipLineBreakStyle;
       var HintText: String);
@@ -573,7 +575,6 @@ type
 
     procedure CloseNow(WaitFor: Boolean = True);
 
-    procedure CheckForTopPanel;
     // en: Too lazy to add it one by one
     procedure InitCheckboxes;
 
@@ -631,9 +632,26 @@ type
     // exit counter
     function ShowExitCounter: Boolean;
 
+    // open db with thread
+    procedure OpenDataDB(const AWebsite: String);
+
     // exception handle
     procedure ExceptionHandler(Sender: TObject; E: Exception);
     { public declarations }
+  end;
+
+  { TOpenDBThread }
+
+  TOpenDBThread = class(TThread)
+  private
+    FWebsite: String;
+  protected
+    procedure SyncOpenStart;
+    procedure SyncOpenFinish;
+    procedure Execute; override;
+  public
+    constructor Create(const AWebsite: String);
+    destructor Destroy; override;
   end;
 
 var
@@ -712,6 +730,79 @@ implementation
 uses
   frmImportFavorites, frmShutdownCounter, WebsiteModules, RegExpr, Clipbrd,
   LazFileUtils, LazUTF8;
+
+var
+  // thread to open db
+  OpenDBThread: TOpenDBThread;
+
+procedure ChangeAllCursor(const ParentControl: TWinControl; const Cur: TCursor);
+var
+  i: Integer;
+begin
+  if ParentControl = nil then Exit;
+  ParentControl.Cursor := Cur;
+  if ParentControl.ControlCount > 0 then
+    for i := 0 to ParentControl.ControlCount - 1 do
+      ParentControl.Controls[i].Cursor := Cur;
+end;
+
+{ TOpenDBThread }
+
+procedure TOpenDBThread.SyncOpenStart;
+begin
+  with MainForm  do
+  begin
+    ChangeAllCursor(tsMangaList, crHourGlass);
+    lbMode.Caption := RS_Loading;
+    tsMangaList.Enabled := False;
+    vtMangaList.Clear;
+  end;
+end;
+
+procedure TOpenDBThread.SyncOpenFinish;
+begin
+  with MainForm do
+  begin
+    currentWebsite := cbSelectManga.Items[cbSelectManga.ItemIndex];
+    LastSearchStr := upcase(edSearch.Text);
+    LastSearchWeb := currentWebsite;
+    vtMangaList.RootNodeCount := dataProcess.RecordCount;
+    tsMangaList.Enabled := True;
+    if dataProcess.Filtered then
+      lbMode.Caption := Format(RS_ModeFiltered, [vtMangaList.RootNodeCount])
+    else
+      lbMode.Caption := Format(RS_ModeAll, [vtMangaList.RootNodeCount]);
+    ChangeAllCursor(tsMangaList, crDefault);
+  end;
+end;
+
+procedure TOpenDBThread.Execute;
+begin
+  if (FWebsite <> '') and (MainForm.dataProcess <> nil) then
+  begin
+    Synchronize(@SyncOpenStart);
+    if MainForm.dataProcess <> nil then
+    begin
+      MainForm.dataProcess.Open(FWebsite);
+      if MainForm.edSearch.Text <> '' then
+        MainForm.dataProcess.Search(MainForm.edSearch.Text);
+    end;
+    Synchronize(@SyncOpenFinish);
+  end;
+end;
+
+constructor TOpenDBThread.Create(const AWebsite: String);
+begin
+  inherited Create(False);
+  FreeOnTerminate := True;
+  FWebsite := AWebsite;
+end;
+
+destructor TOpenDBThread.Destroy;
+begin
+  OpenDBThread := nil;
+  inherited Destroy;
+end;
 
 { TMainForm }
 
@@ -801,7 +892,6 @@ begin
 
   pcMain.ActivePage := tsDownload;
 
-  CheckForTopPanel;
   DLManager.CheckAndActiveTaskAtStartup;
   TrayIcon.Show;
 
@@ -937,6 +1027,8 @@ begin
   FreeAndNil(SilentThreadManager);
   FreeAndNil(FavoriteManager);
   FreeAndNil(dataProcess);
+  if Assigned(OpenDBThread) then
+    OpenDBThread.WaitFor;
 
   FreeAndNil(gifWaiting);
   FreeAndNil(mangaCover);
@@ -1015,6 +1107,12 @@ begin
     Free;
   end;
   IsDlgCounter := False;
+end;
+
+procedure TMainForm.OpenDataDB(const AWebsite: String);
+begin
+  if OpenDBThread = nil then
+    OpenDBThread := TOpenDBThread.Create(AWebsite);
 end;
 
 procedure TMainForm.itMonitorTimer(Sender: TObject);
@@ -1405,11 +1503,6 @@ begin
   miHighlightNewManga.Checked := not miHighlightNewManga.Checked;
   options.WriteBool('general', 'HighLightNewManga', miHighlightNewManga.Checked);
   vtMangaList.Repaint;
-end;
-
-procedure TMainForm.CheckForTopPanel;
-begin
-
 end;
 
 procedure TMainForm.LoadAbout;
@@ -1901,28 +1994,16 @@ procedure TMainForm.cbSelectMangaChange(Sender: TObject);
 begin
   if cbSelectManga.ItemIndex < 0 then
     Exit;
-
   if currentWebsite <> cbSelectManga.Items[cbSelectManga.ItemIndex] then
   begin
-    Screen.Cursor := crHourGlass;
-    try
       if dataProcess = nil then
         dataProcess := TDBDataProcess.Create;
-      vtMangaList.Clear;
-      lbMode.Caption := Format(RS_ModeAll, [0]);
-      if not dataProcess.Open(
-        cbSelectManga.Items.Strings[cbSelectManga.ItemIndex]) then
+      if DataFileExist(cbSelectManga.Items[cbSelectManga.ItemIndex]) then
+      begin
+        OpenDataDB(cbSelectManga.Items[cbSelectManga.ItemIndex]);
+      end
+      else
         RunGetList;
-      vtMangaList.RootNodeCount := dataProcess.RecordCount;
-      lbMode.Caption := Format(RS_ModeAll, [dataProcess.RecordCount]);
-      currentWebsite := cbSelectManga.Items[cbSelectManga.ItemIndex];
-      dataProcess.website := cbSelectManga.Items[cbSelectManga.ItemIndex];
-      CheckForTopPanel;
-      LastSearchStr := '';
-      edSearchChange(cbSelectManga);
-    finally
-      Screen.Cursor := crDefault;
-    end;
   end;
 end;
 
@@ -4105,6 +4186,12 @@ begin
         TargetCanvas.FillRect(CellRect);
       end;
   end;
+end;
+
+procedure TMainForm.vtMangaListGetCursor(Sender: TBaseVirtualTree;
+  var ACursor: TCursor);
+begin
+  ACursor := Sender.Cursor;
 end;
 
 procedure TMainForm.vtMangaListGetHint(Sender: TBaseVirtualTree;

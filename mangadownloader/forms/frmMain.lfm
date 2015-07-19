@@ -3103,7 +3103,6 @@ object MainForm: TMainForm
         ParentFont = False
       end
       object vtMangaList: TVirtualStringTree
-        Cursor = crHourGlass
         Left = 2
         Height = 383
         Top = 92
@@ -3133,6 +3132,7 @@ object MainForm: TMainForm
         OnColumnDblClick = vtMangaListColumnDblClick
         OnDragAllowed = vtMangaListDragAllowed
         OnDragOver = vtMangaListDragOver
+        OnGetCursor = vtMangaListGetCursor
         OnGetText = vtMangaListGetText
         OnGetHint = vtMangaListGetHint
       end
