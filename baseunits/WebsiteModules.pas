@@ -67,6 +67,8 @@ type
     function ModuleAvailable(const Website: String; ModuleMethod: TModuleMethod;
       var OutIndex: Integer): Boolean; overload;
     function ModuleAvailable(const Website: String): Boolean; overload;
+    function ModuleAvailable(const Website: String; var OutIndex: Integer): Boolean;
+      overload;
 
     function GetDirectoryPageNumber(var MangaInfo: TMangaInformation;
       var Page: Integer; const ModuleIndex: Integer): Integer; overload;
@@ -218,6 +220,13 @@ end;
 function TWebsiteModules.ModuleAvailable(const Website: String): Boolean;
 begin
   Result := (LocateModule(Website) > -1);
+end;
+
+function TWebsiteModules.ModuleAvailable(const Website: String;
+  var OutIndex: Integer): Boolean;
+begin
+  OutIndex := LocateModule(Website);
+  Result := OutIndex > -1;
 end;
 
 function TWebsiteModules.GetDirectoryPageNumber(var MangaInfo: TMangaInformation;
