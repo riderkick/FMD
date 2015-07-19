@@ -805,10 +805,10 @@ begin
     while FNewSearch do
     begin
       FNewSearch := False;
-      if MainForm.dataProcess <> nil then
-        MainForm.dataProcess.Search(FSearchStr);
+      MainForm.dataProcess.Search(FSearchStr);
     end;
-    Synchronize(@SyncAfterSearch);
+    if not Terminated then
+      Synchronize(@SyncAfterSearch);
   end;
 end;
 
@@ -888,6 +888,7 @@ begin
       if MainForm.edSearch.Text <> '' then
         MainForm.dataProcess.Search(MainForm.edSearch.Text);
     end;
+    if not Terminated then
     Synchronize(@SyncOpenFinish);
   end;
 end;
@@ -1068,10 +1069,16 @@ end;
 
 procedure TMainForm.CloseNow(WaitFor: Boolean);
 begin
-  if Assigned(OpenDBThread) then
-    OpenDBThread.WaitFor;
   if Assigned(SearchDBThread) then
+  begin
+    SearchDBThread.Terminate;
     SearchDBThread.WaitFor;
+  end;
+  if Assigned(OpenDBThread) then
+  begin
+    OpenDBThread.Terminate;
+    OpenDBThread.WaitFor;
+  end;
   if Assigned(FormDropTarget) then
     FormDropTarget.Close;
   tmBackup.Enabled := False;
