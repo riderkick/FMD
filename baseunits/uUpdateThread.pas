@@ -360,24 +360,16 @@ begin
     begin
       if dataProcess.WebsiteLoaded(website) then
       begin
-        Screen.Cursor := crHourGlass;
-        try
-          edSearch.Clear;
-          vtMangaList.Clear;
-          if dataProcess = nil then
-            dataProcess := TDBDataProcess.Create
-          else
-            dataProcess.Close;
-          if isDownloadFromServer then
-            ExtractFile
-          else
-            OverwriteDBDataProcess(website, twebsite);
-          dataProcess.Open(website);
-          vtMangaList.RootNodeCount := dataProcess.RecordCount;
-          lbMode.Caption := Format(RS_ModeAll, [dataProcess.RecordCount]);
-        finally
-          Screen.Cursor := crDefault;
-        end;
+        vtMangaList.Clear;
+        if dataProcess = nil then
+          dataProcess := TDBDataProcess.Create
+        else
+          dataProcess.Close;
+        if isDownloadFromServer then
+          ExtractFile
+        else
+          OverwriteDBDataProcess(website, twebsite);
+        OpenDataDB(website);
       end
       else
       begin

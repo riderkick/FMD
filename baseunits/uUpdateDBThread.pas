@@ -47,10 +47,7 @@ begin
       MainForm.vtMangaList.Clear;
       MainForm.dataProcess.Close;
       ExtractFile;
-      MainForm.dataProcess.Open(websiteName);
-      MainForm.vtMangaList.RootNodeCount := MainForm.dataProcess.RecordCount;
-      MainForm.lbMode.Caption :=
-        Format(RS_ModeAll, [MainForm.dataProcess.RecordCount]);
+      MainForm.OpenDataDB(websiteName);
     end
     else
     begin
