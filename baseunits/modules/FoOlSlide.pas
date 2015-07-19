@@ -142,7 +142,7 @@ var
         //title
         if title = '' then
           if (GetTagName(Parse[i]) = 'h1') and (GetVal(Parse[i], 'class') = 'title') then
-            title := CommonStringFilter(Parse[i]);
+            title := CommonStringFilter(Parse[i + 1]);
 
         //cover
         if coverLink = '' then
