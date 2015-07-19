@@ -1739,12 +1739,12 @@ var
   i: Integer;
   webid: Cardinal;
   website,
-  webs,
+  host,
   link: String;
   regx: TRegExpr;
 begin
   website := '';
-  webs := '';
+  host := '';
   link := '';
   edURL.Text := FixURL(edURL.Text);
   regx := TRegExpr.Create;
@@ -1756,14 +1756,14 @@ begin
     regx.Expression := REGEX_HOST;
     if regx.Exec(edURL.Text) then
     begin
-      webs := regx.Replace(edURL.Text, '$2', True);
+      host := regx.Replace(edURL.Text, '$2', True);
       link := regx.Replace(edURL.Text, '$3', True);
     end;
 
-    if (webs <> '') and (link <> '') then
+    if (host <> '') and (link <> '') then
     begin
-      webs := LowerCase(webs);
-      i := Modules.LocateModuleByHost(webs);
+      host := LowerCase(host);
+      i := Modules.LocateModuleByHost(host);
       if i > -1 then
       begin
         website := Modules.Module(i).Website;
@@ -1772,7 +1772,7 @@ begin
       else
       begin
         for i := Low(WebsiteRoots) to High(WebsiteRoots) do
-          if Pos(webs, WebsiteRoots[i, 1]) > 0 then
+          if Pos(host, WebsiteRoots[i, 1]) > 0 then
           begin
             webid := i;
             website := WebsiteRoots[i, 0];
