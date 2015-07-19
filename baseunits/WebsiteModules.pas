@@ -59,6 +59,7 @@ type
 
     function AddModule: TModuleContainer;
     function LocateModule(const Website: String): Integer;
+    function LocateModuleByHost(const Host: String): Integer;
     function ModuleAvailable(const ModuleIndex: Integer;
       ModuleMethod: TModuleMethod): Boolean; overload;
     function ModuleAvailable(const Website: String;
@@ -155,21 +156,24 @@ var
 begin
   Result := -1;
   if FModuleList.Count > 0 then
-  begin
-    EnterCriticalsection(FCSModules);
-    try
-      for i := 0 to FModuleList.Count - 1 do
+    for i := 0 to FModuleList.Count - 1 do
+      if SameText(TModuleContainer(FModuleList[i]).Website, Website) then
       begin
-        if SameText(TModuleContainer(FModuleList[i]).Website, Website) then
-        begin
-          Result := i;
-          Break;
-        end;
+        Result := i;
+        Break;
       end;
-    finally
-      LeaveCriticalsection(FCSModules);
-    end;
-  end;
+end;
+
+function TWebsiteModules.LocateModuleByHost(const Host: String): Integer;
+begin
+  Result := -1;
+  if FModuleList.Count > 0 then
+    for i := 0 to FModuleList.Count - 1 do
+      if Pos(Host, TModuleContainer(FModuleList[i]).Website) <> 0 then
+      begin
+        Result := i;
+        Break;
+      end;
 end;
 
 function TWebsiteModules.ModuleAvailable(const ModuleIndex: Integer;
