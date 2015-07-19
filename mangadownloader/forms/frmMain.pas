@@ -646,6 +646,7 @@ type
   private
     FWebsite: String;
   protected
+    procedure SetControlEnabled(const Value: Boolean);
     procedure SyncOpenStart;
     procedure SyncOpenFinish;
     procedure Execute; override;
@@ -748,13 +749,25 @@ end;
 
 { TOpenDBThread }
 
+procedure TOpenDBThread.SetControlEnabled(const Value: Boolean);
+begin
+  with MainForm do
+  begin
+    cbSelectManga.Enabled := Value;
+    btUpdateList.Enabled := Value;
+    edSearch.Enabled := Value;
+    btSearchClear.Enabled := Value;
+    btRemoveFilter.Enabled := Value;
+  end;
+end;
+
 procedure TOpenDBThread.SyncOpenStart;
 begin
-  with MainForm  do
+  with MainForm do
   begin
     ChangeAllCursor(tsMangaList, crHourGlass);
+    SetControlEnabled(False);
     lbMode.Caption := RS_Loading;
-    tsMangaList.Enabled := False;
     vtMangaList.Clear;
   end;
 end;
@@ -767,11 +780,11 @@ begin
     LastSearchStr := upcase(edSearch.Text);
     LastSearchWeb := currentWebsite;
     vtMangaList.RootNodeCount := dataProcess.RecordCount;
-    tsMangaList.Enabled := True;
     if dataProcess.Filtered then
       lbMode.Caption := Format(RS_ModeFiltered, [vtMangaList.RootNodeCount])
     else
       lbMode.Caption := Format(RS_ModeAll, [vtMangaList.RootNodeCount]);
+    SetControlEnabled(True);
     ChangeAllCursor(tsMangaList, crDefault);
   end;
 end;
