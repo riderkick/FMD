@@ -742,7 +742,7 @@ resourcestring
   RS_InfoStatus = 'Status:';
   RS_InfoSummary = 'Summary:';
   RS_FMDAlreadyRunning = 'Free Manga Downloader already running!';
-  RS_Searching = 'Searching...';
+  RS_ModeSearching = 'Mode: Searching...';
 
 implementation
 
@@ -776,8 +776,9 @@ procedure TSearchDBThread.SyncBeforeSearch;
 begin
   with MainForm do
   begin
+    vtMangaList.Cursor := crHourGlass;
     vtMangaList.Clear;
-    lbMode.Caption := RS_Searching;
+    lbMode.Caption := RS_ModeSearching;
   end;
 end;
 
@@ -792,6 +793,7 @@ begin
       lbMode.Caption := Format(RS_ModeAll, [vtMangaList.RootNodeCount]);
     LastSearchWeb := dataProcess.Website;
     LastSearchStr := UpCase(FSearchStr);
+    vtMangaList.Cursor := crDefault;
   end;
 end;
 
