@@ -1147,10 +1147,17 @@ begin
 end;
 
 procedure TMainForm.miDownloadViewMangaInfoClick(Sender: TObject);
+var
+  i: Integer;
 begin
   if vtDownload.Focused then
-    with DLManager.TaskItem(vtDownload.FocusedNode^.Index) do begin
-      edURL.Text := FillMangaSiteHost(MangaSiteID, DownloadInfo.Link);
+    with DLManager.TaskItem(vtDownload.FocusedNode^.Index) do
+    begin
+      i := Modules.LocateModule(DownloadInfo.Website);
+      if i > -1 then
+        edURL.Text := FillHost(Modules.Module(i).RootURL, DownloadInfo.Link)
+      else
+        edURL.Text := FillMangaSiteHost(DownloadInfo.Website, DownloadInfo.Link);
       btURLClick(btURL);
       pcMain.ActivePage := tsInformation;
     end;
