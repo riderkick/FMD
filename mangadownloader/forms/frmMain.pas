@@ -789,14 +789,15 @@ procedure TSearchDBThread.SyncAfterSearch;
 begin
   with MainForm do
   begin
-    vtMangaList.RootNodeCount := dataProcess.RecordCount;
-    vtMangaList.Repaint;
     if dataProcess.Filtered then
-      lbMode.Caption := Format(RS_ModeFiltered, [vtMangaList.RootNodeCount])
+      lbMode.Caption := Format(RS_ModeFiltered, [dataProcess.RecordCount])
     else
-      lbMode.Caption := Format(RS_ModeAll, [vtMangaList.RootNodeCount]);
+      lbMode.Caption := Format(RS_ModeAll, [dataProcess.RecordCount]);
     LastSearchWeb := dataProcess.Website;
     LastSearchStr := UpCase(FSearchStr);
+    vtMangaList.BeginUpdate;
+    vtMangaList.RootNodeCount := dataProcess.RecordCount;
+    vtMangaList.EndUpdate;
     vtMangaList.Cursor := crDefault;
   end;
 end;
@@ -871,13 +872,14 @@ begin
     currentWebsite := cbSelectManga.Items[cbSelectManga.ItemIndex];
     LastSearchStr := upcase(edSearch.Text);
     LastSearchWeb := currentWebsite;
-    vtMangaList.RootNodeCount := dataProcess.RecordCount;
-    vtMangaList.Repaint;
     if dataProcess.Filtered then
-      lbMode.Caption := Format(RS_ModeFiltered, [vtMangaList.RootNodeCount])
+      lbMode.Caption := Format(RS_ModeFiltered, [dataProcess.RecordCount])
     else
-      lbMode.Caption := Format(RS_ModeAll, [vtMangaList.RootNodeCount]);
+      lbMode.Caption := Format(RS_ModeAll, [dataProcess.RecordCount]);
     SetControlEnabled(True);
+    vtMangaList.BeginUpdate;
+    vtMangaList.RootNodeCount := dataProcess.RecordCount;
+    vtMangaList.EndUpdate;
     ChangeAllCursor(tsMangaList, crDefault);
   end;
 end;
