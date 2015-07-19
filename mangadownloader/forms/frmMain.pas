@@ -2718,15 +2718,7 @@ begin
   if i > -1 then
     edURL.Text := FillHost(Modules.Module(i).RootURL, link)
   else
-  begin
-    for i := 0 to High(WebsiteRoots) do
-      if Pos(website, WebsiteRoots[i, 0]) > 0 then
-      begin
-        link := StringReplace(link, WebsiteRoots[i, 1], '', []);
-        edURL.Text := FixURL(FillMangaSiteHost(i, link));
-        Break;
-      end;
-  end;
+   edURL.Text := FillMangaSiteHost(website, link);
 
   if Assigned(gifWaiting) then
   begin
