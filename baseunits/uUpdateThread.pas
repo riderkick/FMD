@@ -691,7 +691,7 @@ begin
                 0,
                 Now
                 );
-              CheckCommit(2000);
+              CheckCommit(5000);
             end;
           end
           else
