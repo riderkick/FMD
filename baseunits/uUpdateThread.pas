@@ -505,9 +505,8 @@ begin
           if cs = CS_DIRECTORY_PAGE_2 then
             s := s + ' | ' + RS_LookingForNewTitleFromAnotherDirectory + '...';
           if cs = CS_INFO then
-            s := s + ' | ' + RS_GettingInfo + ' "' + names.Strings[workPtr - 1] +
-              '" "' + WebsiteRoots[GetMangaSiteID(website), 1] +
-              links.Strings[workPtr - 1] + '"';
+            s := Format('%s | %s "%s" "%s"', [s, RS_GettingInfo, names[workPtr - 1],
+              links[workPtr - 1]]);
           FStatus := s;
           Synchronize(MainThreadShowGetting);
         finally
