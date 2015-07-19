@@ -699,27 +699,24 @@ begin
           end;
           WaitForThreads;
           mainDataProcess.Commit;
-        end;
-        mainDataProcess.Refresh;
 
-        names.Clear;
-        links.Clear;
+          names.Clear;
+          links.Clear;
 
-        if (not Terminated) or (not SitesWithSortedList(website)) then
-        begin
-          FStatus := RS_UpdatingList + Format(' [%d/%d] %s',
-            [websitePtr, websites.Count, website]) + ' | ' + RS_SavingData + '...';
-          Synchronize(MainThreadShowGetting);
-          mainDataProcess.CloseTable;
-          mainDataProcess.Sort;
-          mainDataProcess.Close;
-          Synchronize(RefreshList);
-        end
-        else
-        begin
-          mainDataProcess.Close;
-          DeleteDBDataProcess(twebsite);
+          if (not Terminated) or (not SitesWithSortedList(website)) then
+          begin
+            FStatus := RS_UpdatingList + Format(' [%d/%d] %s',
+              [websitePtr, websites.Count, website]) + ' | ' + RS_SavingData + '...';
+            Synchronize(MainThreadShowGetting);
+            mainDataProcess.CloseTable;
+            mainDataProcess.Sort;
+            mainDataProcess.Close;
+            Synchronize(RefreshList);
+          end;
         end;
+
+        mainDataProcess.Close;
+        DeleteDBDataProcess(twebsite);
 
         if Terminated then
           Break;
