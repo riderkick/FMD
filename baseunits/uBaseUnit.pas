@@ -1455,6 +1455,7 @@ begin
   if URLs.Count > 0 then
     with TRegExpr.Create do
     try
+      Expression := REGEX_HOST;
       i := 0;
       while i < URLs.Count do
       begin
