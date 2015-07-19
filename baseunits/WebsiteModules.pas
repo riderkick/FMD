@@ -321,6 +321,8 @@ end;
 
 function TWebsiteModules.Module(const Index: Integer): TModuleContainer;
 begin
+  if (Index < 0) or (Index >= FModuleList.Count) then
+    Exit(nil);
   Result := TModuleContainer(FModuleList[Index]);
 end;
 
