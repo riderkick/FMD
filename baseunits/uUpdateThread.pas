@@ -672,10 +672,12 @@ begin
         //get manga info
         if links.Count > 0 then
         begin
+          workPtr := 0;
           FCommitCount := 0;
           if (SitesWithoutInformation(website)) or
             OptionUpdateListNoMangaInfo then
           begin
+            Inc(workPtr);
             for k := 0 to links.Count - 1 do
             begin
               mainDataProcess.AddData(
@@ -693,17 +695,14 @@ begin
             end;
           end
           else
-          begin
-            workPtr := 0;
             GetInfo(links.Count, CS_INFO);
-          end;
           WaitForThreads;
           mainDataProcess.Commit;
 
           names.Clear;
           links.Clear;
 
-          if (not Terminated) or (not SitesWithSortedList(website)) then
+          if (workPtr > 0) and ((not Terminated) or (not SitesWithSortedList(website))) then
           begin
             FStatus := RS_UpdatingList + Format(' [%d/%d] %s',
               [websitePtr, websites.Count, website]) + ' | ' + RS_SavingData + '...';
