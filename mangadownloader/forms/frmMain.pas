@@ -635,6 +635,9 @@ type
     // open db with thread
     procedure OpenDataDB(const AWebsite: String);
 
+    // search db with thread
+    procedure SearchDataDB(const ATitle: String);
+
     // exception handle
     procedure ExceptionHandler(Sender: TObject; E: Exception);
     { public declarations }
@@ -653,6 +656,22 @@ type
   public
     constructor Create(const AWebsite: String);
     destructor Destroy; override;
+  end;
+
+  { TSearchDBThread }
+
+  TSearchDBThread = class(TThread)
+  private
+    FSearchStr: String;
+    FNewSearch: Boolean;
+  protected
+    procedure SyncBeforeSearch;
+    procedure SyncAfterSearch;
+    procedure Execute; override;
+  public
+    constructor Create(const ASearchStr: String);
+    destructor Destroy; override;
+    procedure NewSearch(const ASearchStr: String);
   end;
 
 var
@@ -733,8 +752,11 @@ uses
   LazFileUtils, LazUTF8;
 
 var
-  // thread to open db
+  // thread for open db
   OpenDBThread: TOpenDBThread;
+
+  // thread for search db
+  SearchDBThread: TSearchDBThread;
 
 procedure ChangeAllCursor(const ParentControl: TWinControl; const Cur: TCursor);
 var
@@ -745,6 +767,69 @@ begin
   if ParentControl.ControlCount > 0 then
     for i := 0 to ParentControl.ControlCount - 1 do
       ParentControl.Controls[i].Cursor := Cur;
+end;
+
+{ TSearchDBThread }
+
+procedure TSearchDBThread.SyncBeforeSearch;
+begin
+  with MainForm do
+  begin
+    vtMangaList.Clear;
+    lbMode.Caption := RS_Loading;
+  end;
+end;
+
+procedure TSearchDBThread.SyncAfterSearch;
+begin
+  with MainForm do
+  begin
+    vtMangaList.RootNodeCount := dataProcess.RecordCount;
+    if dataProcess.Filtered then
+      lbMode.Caption := Format(RS_ModeFiltered, [vtMangaList.RootNodeCount])
+    else
+      lbMode.Caption := Format(RS_ModeAll, [vtMangaList.RootNodeCount]);
+    LastSearchWeb := dataProcess.Website;
+    LastSearchStr := UpCase(FSearchStr);
+  end;
+end;
+
+procedure TSearchDBThread.Execute;
+begin
+  if MainForm.dataProcess <> nil then
+  begin
+    Synchronize(@SyncBeforeSearch);
+    while FNewSearch do
+    begin
+      FNewSearch := False;
+      if MainForm.dataProcess <> nil then
+        MainForm.dataProcess.Search(FSearchStr);
+    end;
+    Synchronize(@SyncAfterSearch);
+  end;
+end;
+
+constructor TSearchDBThread.Create(const ASearchStr: String);
+begin
+  FreeOnTerminate := True;
+  FSearchStr := ASearchStr;
+  FNewSearch := True;
+  inherited Create(False);
+end;
+
+destructor TSearchDBThread.Destroy;
+begin
+  SearchDBThread := nil;
+  inherited Destroy;
+end;
+
+procedure TSearchDBThread.NewSearch(const ASearchStr: String);
+begin
+  if ASearchStr <> FSearchStr then
+  begin
+    FSearchStr := ASearchStr;
+    FNewSearch := True;
+  end;
 end;
 
 { TOpenDBThread }
@@ -980,6 +1065,10 @@ end;
 
 procedure TMainForm.CloseNow(WaitFor: Boolean);
 begin
+  if Assigned(OpenDBThread) then
+    OpenDBThread.WaitFor;
+  if Assigned(SearchDBThread) then
+    SearchDBThread.WaitFor;
   if Assigned(FormDropTarget) then
     FormDropTarget.Close;
   tmBackup.Enabled := False;
@@ -1040,8 +1129,6 @@ begin
   FreeAndNil(SilentThreadManager);
   FreeAndNil(FavoriteManager);
   FreeAndNil(dataProcess);
-  if Assigned(OpenDBThread) then
-    OpenDBThread.WaitFor;
 
   FreeAndNil(gifWaiting);
   FreeAndNil(mangaCover);
@@ -1126,6 +1213,16 @@ procedure TMainForm.OpenDataDB(const AWebsite: String);
 begin
   if OpenDBThread = nil then
     OpenDBThread := TOpenDBThread.Create(AWebsite);
+end;
+
+procedure TMainForm.SearchDataDB(const ATitle: String);
+begin
+  if SearchDBThread = nil then
+    SearchDBThread := TSearchDBThread.Create(ATitle)
+  else
+  begin
+    SearchDBThread.NewSearch(ATitle);
+  end;
 end;
 
 procedure TMainForm.itMonitorTimer(Sender: TObject);
@@ -4826,16 +4923,15 @@ begin
   if (upcase(edSearch.Text) = LastSearchStr) and (currentWebsite = LastSearchWeb) then
     Exit;
 
-  LastSearchWeb := currentWebsite;
-  LastSearchStr := UpCase(edSearch.Text);
+  SearchDataDB(edSearch.Text);
 
-  vtMangaList.Clear;
-  dataProcess.Search(edSearch.Text);
-  vtMangaList.RootNodeCount := dataProcess.RecordCount;
-  if dataProcess.Filtered then
-    lbMode.Caption := Format(RS_ModeFiltered, [vtMangaList.RootNodeCount])
-  else
-    lbMode.Caption := Format(RS_ModeAll, [vtMangaList.RootNodeCount]);
+  //vtMangaList.Clear;
+  //dataProcess.Search(edSearch.Text);
+  //vtMangaList.RootNodeCount := dataProcess.RecordCount;
+  //if dataProcess.Filtered then
+  //  lbMode.Caption := Format(RS_ModeFiltered, [vtMangaList.RootNodeCount])
+  //else
+  //  lbMode.Caption := Format(RS_ModeAll, [vtMangaList.RootNodeCount]);
 end;
 
 procedure TMainForm.edSearchKeyDown(Sender: TObject; var Key: Word;
