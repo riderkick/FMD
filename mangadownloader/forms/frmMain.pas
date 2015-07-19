@@ -2718,7 +2718,7 @@ begin
   if i > -1 then
     edURL.Text := FillHost(Modules.Module(i).RootURL, link)
   else
-   edURL.Text := FillMangaSiteHost(website, link);
+    edURL.Text := FillMangaSiteHost(website, link);
 
   if Assigned(gifWaiting) then
   begin

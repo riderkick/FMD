@@ -1448,7 +1448,6 @@ end;
 procedure RemoveHostFromURLsPair(const URLs, Names : TStringList);
 var
  i: Integer;
- regx: TRegExpr;
 begin
   if (URLs = nil) or (Names = nil) then Exit;
   if (URLs.Count <> Names.Count) then Exit;
