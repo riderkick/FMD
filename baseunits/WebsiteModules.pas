@@ -171,11 +171,13 @@ begin
   Result := -1;
   if FModuleList.Count > 0 then
     for i := 0 to FModuleList.Count - 1 do
-      if Pos(Host, TModuleContainer(FModuleList[i]).Website) <> 0 then
+    begin
+      if Pos(Host, TModuleContainer(FModuleList[i]).RootURL) <> 0 then
       begin
         Result := i;
         Break;
       end;
+    end;
 end;
 
 function TWebsiteModules.ModuleAvailable(const ModuleIndex: Integer;
