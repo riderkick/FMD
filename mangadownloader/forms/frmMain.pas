@@ -787,6 +787,7 @@ begin
   with MainForm do
   begin
     vtMangaList.RootNodeCount := dataProcess.RecordCount;
+    vtMangaList.Repaint;
     if dataProcess.Filtered then
       lbMode.Caption := Format(RS_ModeFiltered, [vtMangaList.RootNodeCount])
     else
@@ -868,6 +869,7 @@ begin
     LastSearchStr := upcase(edSearch.Text);
     LastSearchWeb := currentWebsite;
     vtMangaList.RootNodeCount := dataProcess.RecordCount;
+    vtMangaList.Repaint;
     if dataProcess.Filtered then
       lbMode.Caption := Format(RS_ModeFiltered, [vtMangaList.RootNodeCount])
     else
