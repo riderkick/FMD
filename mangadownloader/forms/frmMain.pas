@@ -532,7 +532,7 @@ type
     procedure FMDInstanceReceiveMsg(Sender: TObject);
     procedure ClearChapterListState;
   public
-    ulTotalPtr, ulWorkPtr: Cardinal;
+    ulTotalPtr, ulWorkPtr: Integer;
     optionMangaSiteSelectionNodes: array of PVirtualNode;
     LastSearchStr: String;
     LastSearchWeb: String;
@@ -758,6 +758,9 @@ var
 
   // thread for search db
   SearchDBThread: TSearchDBThread;
+
+  // ...
+  UpdateStatusTextStyle: TTextStyle;
 
 procedure ChangeAllCursor(const ParentControl: TWinControl; const Cur: TCursor);
 var
@@ -1053,6 +1056,22 @@ begin
     vtFavorites.Repaint;
   end;
   LoadLanguage;
+
+  //textstyle for updatestatusbar
+  with UpdateStatusTextStyle do
+  begin
+    Alignment := taLeftJustify;
+    Layout := tlCenter;
+    SingleLine := True;
+    Clipping := False;
+    ExpandTabs := False;
+    ShowPrefix := False;
+    Wordbreak := False;
+    Opaque := True;
+    SystemFont := False;
+    RightToLeft := False;
+    EndEllipsis := True;
+  end;
 end;
 
 procedure TMainForm.FormClose(Sender: TObject; var CloseAction: TCloseAction);
@@ -3345,7 +3364,6 @@ procedure TMainForm.sbUpdateListDrawPanel(StatusBar: TStatusBar;
 var
   ClRect, TxtRect, BarRect, ProgressBarRect: TRect;
   Percents: double;
-  tStyle: TTextStyle;
 begin
   if Panel.Index = 0 then
   begin
@@ -3395,23 +3413,8 @@ begin
         //Brush.Color := RGB(233, 112, 24);
         Rectangle(ProgressBarRect);
       end;
-      //TTextStyle get messed up if all record not assigned?
-      with tStyle do
-      begin
-        Alignment := taLeftJustify;
-        Layout := tlCenter;
-        SingleLine := True;
-        Clipping := False;
-        ExpandTabs := False;
-        ShowPrefix := False;
-        Wordbreak := False;
-        Opaque := True;
-        SystemFont := False;
-        RightToLeft := False;
-        EndEllipsis := True;
-      end;
       Brush.Style := bsClear;
-      TextRect(txtRect, 5, 0, Panel.Text, tStyle);
+      TextRect(txtRect, 5, 0, Panel.Text, UpdateStatusTextStyle);
     end;
   end;
 end;
