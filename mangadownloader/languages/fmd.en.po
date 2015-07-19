@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: en_US\n"
-"X-Generator: Poedit 1.8.1\n"
+"X-Generator: Poedit 1.8.2\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: frmimportfavorites.rs_importcompleted
@@ -198,6 +198,12 @@ msgstr "Mode: Show all (%d)"
 msgid "Mode: Filtered (%d)"
 msgstr "Mode: Filtered (%d)"
 
+#: frmmain.rs_modesearching
+#| msgid "Searching..."
+msgctxt "frmmain.rs_modesearching"
+msgid "Mode: Searching..."
+msgstr "Mode: Searching..."
+
 #: frmmain.rs_onemonth
 msgid "One month"
 msgstr "One month"
@@ -217,10 +223,6 @@ msgstr ""
 "Exit FMD\n"
 "Shutdown\n"
 "Hibernate\n"
-
-#: frmmain.rs_searching
-msgid "Searching..."
-msgstr "Searching..."
 
 #: frmmain.rs_selected
 msgid "Selected: %d"

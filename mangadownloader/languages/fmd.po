@@ -169,6 +169,11 @@ msgstr ""
 msgid "Mode: Filtered (%d)"
 msgstr ""
 
+#: frmmain.rs_modesearching
+msgctxt "frmmain.rs_modesearching"
+msgid "Mode: Searching..."
+msgstr ""
+
 #: frmmain.rs_onemonth
 msgid "One month"
 msgstr ""
@@ -183,10 +188,6 @@ msgid ""
 "Exit FMD\n"
 "Shutdown\n"
 "Hibernate\n"
-msgstr ""
-
-#: frmmain.rs_searching
-msgid "Searching..."
 msgstr ""
 
 #: frmmain.rs_selected
