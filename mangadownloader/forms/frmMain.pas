@@ -742,6 +742,7 @@ resourcestring
   RS_InfoStatus = 'Status:';
   RS_InfoSummary = 'Summary:';
   RS_FMDAlreadyRunning = 'Free Manga Downloader already running!';
+  RS_Searching = 'Searching...';
 
 implementation
 
@@ -776,7 +777,7 @@ begin
   with MainForm do
   begin
     vtMangaList.Clear;
-    lbMode.Caption := RS_Loading;
+    lbMode.Caption := RS_Searching;
   end;
 end;
 
