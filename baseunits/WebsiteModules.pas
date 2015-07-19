@@ -165,6 +165,8 @@ begin
 end;
 
 function TWebsiteModules.LocateModuleByHost(const Host: String): Integer;
+var
+  i: Integer;
 begin
   Result := -1;
   if FModuleList.Count > 0 then
