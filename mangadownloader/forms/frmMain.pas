@@ -1746,52 +1746,47 @@ begin
   website := '';
   webs := '';
   link := '';
+  edURL.Text := FixURL(edURL.Text);
   regx := TRegExpr.Create;
   try
     regx.Expression := '^https?\://';
     if not (regx.Exec(edURL.Text)) then
       edURL.Text := 'http://' + edURL.Text;
 
-    regx.Expression := '^https?\:(//[^/]*\w+\.\w+)(\:\d+)?(/|\Z)(.*)$';
+    regx.Expression := REGEX_HOST;
     if regx.Exec(edURL.Text) then
     begin
-      link := regx.Replace(edURL.Text, '$4', True);
-      webs := regx.Replace(edURL.Text, '$1', True);
+      webs := regx.Replace(edURL.Text, '$2', True);
+      link := regx.Replace(edURL.Text, '$3', True);
     end;
 
     if (webs <> '') and (link <> '') then
     begin
-      for i := Low(WebsiteRoots) to High(WebsiteRoots) do
-        if Pos(webs, WebsiteRoots[i, 1]) > 0 then
-        begin
-          webid := i;
-          website := WebsiteRoots[i, 0];
-          Break;
-        end;
-      if website = '' then
+      webs := LowerCase(webs);
+      i := Modules.LocateModuleByHost(webs);
+      if i > -1 then
       begin
-        webs := TrimLeftChar(webs, ['/']);
+        website := Modules.Module(i).Website;
+        edURL.Text := FillHost(Modules.Module(i).RootURL, link);
+      end
+      else
+      begin
         for i := Low(WebsiteRoots) to High(WebsiteRoots) do
-        begin
           if Pos(webs, WebsiteRoots[i, 1]) > 0 then
           begin
             webid := i;
             website := WebsiteRoots[i, 0];
             Break;
           end;
-        end;
-      end;
-      if website <> '' then
-      begin
-        link := '/' + link;
-        edURL.Text := FixURL(WebsiteRoots[webid, 1] + link);
-        DisableAddToFavorites(website);
+        if website <> '' then
+          edURL.Text := FillMangaSiteHost(webid, link);
       end;
     end;
   finally
     regx.Free;
   end;
-  
+
+  DisableAddToFavorites(website);
   if (website = '') or (link = '') then
   begin
     MessageDlg('', RS_DlgURLNotSupport, mtInformation, [mbYes], 0);
