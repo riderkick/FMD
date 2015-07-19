@@ -53,7 +53,7 @@ type
     procedure ExtractFile;
     procedure RefreshList;
     procedure DlgReport;
-    procedure GetInfo(const limit: Cardinal; const cs: TCheckStyleType);
+    procedure GetInfo(const limit: Integer; const cs: TCheckStyleType);
     procedure DoTerminate; override;
   public
     CS_AddInfoToData, CS_AddNamesAndLinks: TCriticalSection;
@@ -63,7 +63,7 @@ type
     website, twebsite: String;
     workPtr, directoryCount,
     // for fakku's doujinshi only
-    directoryCount2, numberOfThreads, websitePtr: Cardinal;
+    directoryCount2, numberOfThreads, websitePtr: Integer;
     threads: TFPList;
     CS_threads: TCriticalSection;
     constructor Create;
@@ -401,7 +401,7 @@ begin
     mtInformation, [mbYes], 0);
 end;
 
-procedure TUpdateMangaManagerThread.GetInfo(const limit: Cardinal;
+procedure TUpdateMangaManagerThread.GetInfo(const limit: Integer;
   const cs: TCheckStyleType);
 
   procedure WaitForThreads;

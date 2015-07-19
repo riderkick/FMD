@@ -175,7 +175,7 @@ type
     constructor Create(AOwnerThread: TFMDThread = nil);
     destructor Destroy; override;
     procedure ClearInfo;
-    function GetDirectoryPage(var Page: Cardinal; const website: String): Byte;
+    function GetDirectoryPage(var Page: Integer; const website: String): Byte;
     function GetNameAndLink(const names, links: TStringList;
       const website, URL: String): Byte;
     function GetInfoFromURL(const website, URL: String; const Reconnect: Cardinal): Byte;
@@ -1798,7 +1798,7 @@ begin
   parse.Add(Text);
 end;
 
-function TMangaInformation.GetDirectoryPage(var Page: Cardinal;
+function TMangaInformation.GetDirectoryPage(var Page: Integer;
   const website: String): Byte;
 var
   s: String;

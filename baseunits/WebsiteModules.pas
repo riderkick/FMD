@@ -18,7 +18,7 @@ type
   TModuleContainer = class;
 
   TOnGetDirectoryPageNumber = function(var MangaInfo: TMangaInformation;
-    var Page: Cardinal; Module: TModuleContainer): Integer;
+    var Page: Integer; Module: TModuleContainer): Integer;
   TOnGetNameAndLink = function(var MangaInfo: TMangaInformation;
     const Names, Links: TStringList; const URL: String;
     Module: TModuleContainer): Integer;
@@ -69,9 +69,9 @@ type
     function ModuleAvailable(const Website: String): Boolean; overload;
 
     function GetDirectoryPageNumber(var MangaInfo: TMangaInformation;
-      var Page: Cardinal; const ModuleIndex: Integer): Integer; overload;
+      var Page: Integer; const ModuleIndex: Integer): Integer; overload;
     function GetDirectoryPageNumber(var MangaInfo: TMangaInformation;
-      var Page: Cardinal; const Website: String): Integer; overload;
+      var Page: Integer; const Website: String): Integer; overload;
 
     function GetNameAndLink(var MangaInfo: TMangaInformation;
       const Names, Links: TStringList; const URL: String;
@@ -221,7 +221,7 @@ begin
 end;
 
 function TWebsiteModules.GetDirectoryPageNumber(var MangaInfo: TMangaInformation;
-  var Page: Cardinal; const ModuleIndex: Integer): Integer;
+  var Page: Integer; const ModuleIndex: Integer): Integer;
 begin
   Result := MODULE_NOT_FOUND;
   if (ModuleIndex < 0) or (FModuleList.Count = 0) or
@@ -233,7 +233,7 @@ begin
 end;
 
 function TWebsiteModules.GetDirectoryPageNumber(var MangaInfo: TMangaInformation;
-  var Page: Cardinal; const Website: String): Integer;
+  var Page: Integer; const Website: String): Integer;
 begin
   Result := GetDirectoryPageNumber(MangaInfo, Page, LocateModule(Website));
 end;
