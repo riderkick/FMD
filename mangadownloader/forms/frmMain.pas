@@ -4041,19 +4041,19 @@ begin
 
     if cbOptionUseProxy.Checked then
     begin
-      ProxyType := cbOptionProxyType.Text;
-      Host := edOptionHost.Text;
-      Pass := edOptionPass.Text;
-      Port := edOptionPort.Text;
-      User := edOptionUser.Text;
+      OptionProxyType := cbOptionProxyType.Text;
+      OptionProxyHost := edOptionHost.Text;
+      OptionProxyPass := edOptionPass.Text;
+      OptionProxyPort := edOptionPort.Text;
+      OptionProxyUser := edOptionUser.Text;
     end
     else
     begin
-      ProxyType := '';
-      Host := '';
-      Pass := '';
-      Port := '';
-      User := '';
+      OptionProxyType := '';
+      OptionProxyHost := '';
+      OptionProxyPass := '';
+      OptionProxyPort := '';
+      OptionProxyUser := '';
     end;
 
     DLManager.maxDLTasks := seOptionMaxParallel.Value;
@@ -4514,11 +4514,11 @@ begin
   OptionCustomRename := edOptionCustomRename.Text;
   if options.ReadBool('connections', 'UseProxy', False) then
   begin
-    ProxyType := options.ReadString('connections', 'ProxyType', 'HTTP');
-    Host := options.ReadString('connections', 'Host', '');
-    Pass := options.ReadString('connections', 'Pass', '');
-    Port := options.ReadString('connections', 'Port', '');
-    User := options.ReadString('connections', 'User', '');
+    OptionProxyType := options.ReadString('connections', 'ProxyType', 'HTTP');
+    OptionProxyHost := options.ReadString('connections', 'Host', '');
+    OptionProxyPass := options.ReadString('connections', 'Pass', '');
+    OptionProxyPort := options.ReadString('connections', 'Port', '');
+    OptionProxyUser := options.ReadString('connections', 'User', '');
   end;
 
   // update

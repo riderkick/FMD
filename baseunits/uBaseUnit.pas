@@ -678,11 +678,11 @@ var
 
   currentWebsite: String;
 
-  ProxyType: String = '';
-  Host: String = '';
-  Port: String = '';
-  User: String = '';
-  Pass: String = '';
+  OptionProxyType: String = '';
+  OptionProxyHost: String = '';
+  OptionProxyPort: String = '';
+  OptionProxyUser: String = '';
+  OptionProxyPass: String = '';
 
   fmdDirectory: String;
 
@@ -2688,36 +2688,36 @@ begin
 
   globReturn:
 
-  if ProxyType = 'HTTP' then
+  if OptionProxyType = 'HTTP' then
   begin
-    HTTP.ProxyHost := Host;
-    HTTP.ProxyPort := Port;
-    HTTP.ProxyUser := User;
-    HTTP.ProxyPass := Pass;
+    HTTP.ProxyHost := OptionProxyHost;
+    HTTP.ProxyPort := OptionProxyPort;
+    HTTP.ProxyUser := OptionProxyUser;
+    HTTP.ProxyPass := OptionProxyPass;
   end
   else
-  if (ProxyType = 'SOCKS4') or (ProxyType = 'SOCKS5') then
+  if (OptionProxyType = 'SOCKS4') or (OptionProxyType = 'SOCKS5') then
   begin
-    if ProxyType = 'SOCKS4' then
+    if OptionProxyType = 'SOCKS4' then
       HTTP.Sock.SocksType := ST_Socks4
     else
-    if ProxyType = 'SOCKS5' then
+    if OptionProxyType = 'SOCKS5' then
       HTTP.Sock.SocksType := ST_Socks5;
-    HTTP.Sock.SocksIP := Host;
-    HTTP.Sock.SocksPort := Port;
-    HTTP.Sock.SocksUsername := User;
-    http.Sock.SocksPassword := Pass;
+    HTTP.Sock.SocksIP := OptionProxyHost;
+    HTTP.Sock.SocksPort := OptionProxyPort;
+    HTTP.Sock.SocksUsername := OptionProxyUser;
+    http.Sock.SocksPassword := OptionProxyPass;
   end
   else
   begin
-    HTTP.Sock.SocksIP := Host;
-    HTTP.Sock.SocksPort := Port;
-    HTTP.Sock.SocksUsername := User;
-    http.Sock.SocksPassword := Pass;
-    HTTP.ProxyHost := Host;
-    HTTP.ProxyPort := Port;
-    HTTP.ProxyUser := User;
-    HTTP.ProxyPass := Pass;
+    HTTP.Sock.SocksIP := OptionProxyHost;
+    HTTP.Sock.SocksPort := OptionProxyPort;
+    HTTP.Sock.SocksUsername := OptionProxyUser;
+    http.Sock.SocksPassword := OptionProxyPass;
+    HTTP.ProxyHost := OptionProxyHost;
+    HTTP.ProxyPort := OptionProxyPort;
+    HTTP.ProxyUser := OptionProxyUser;
+    HTTP.ProxyPass := OptionProxyPass;
   end;
 
   HTTPHeader.Values['DNT'] := ' 1';
@@ -2963,36 +2963,36 @@ begin
     HTTP := THTTPSend.Create;
   HTTP.Headers.NameValueSeparator := ':';
 
-  if ProxyType = 'HTTP' then
+  if OptionProxyType = 'HTTP' then
   begin
-    HTTP.ProxyHost := Host;
-    HTTP.ProxyPort := Port;
-    HTTP.ProxyUser := User;
-    HTTP.ProxyPass := Pass;
+    HTTP.ProxyHost := OptionProxyHost;
+    HTTP.ProxyPort := OptionProxyPort;
+    HTTP.ProxyUser := OptionProxyUser;
+    HTTP.ProxyPass := OptionProxyPass;
   end
   else
-  if (ProxyType = 'SOCKS4') or (ProxyType = 'SOCKS5') then
+  if (OptionProxyType = 'SOCKS4') or (OptionProxyType = 'SOCKS5') then
   begin
-    if ProxyType = 'SOCKS4' then
+    if OptionProxyType = 'SOCKS4' then
       HTTP.Sock.SocksType := ST_Socks4
     else
-    if ProxyType = 'SOCKS5' then
+    if OptionProxyType = 'SOCKS5' then
       HTTP.Sock.SocksType := ST_Socks5;
-    HTTP.Sock.SocksIP := Host;
-    HTTP.Sock.SocksPort := Port;
-    HTTP.Sock.SocksUsername := User;
-    http.Sock.SocksPassword := Pass;
+    HTTP.Sock.SocksIP := OptionProxyHost;
+    HTTP.Sock.SocksPort := OptionProxyPort;
+    HTTP.Sock.SocksUsername := OptionProxyUser;
+    http.Sock.SocksPassword := OptionProxyPass;
   end
   else
   begin
-    HTTP.Sock.SocksIP := Host;
-    HTTP.Sock.SocksPort := Port;
-    HTTP.Sock.SocksUsername := User;
-    http.Sock.SocksPassword := Pass;
-    HTTP.ProxyHost := Host;
-    HTTP.ProxyPort := Port;
-    HTTP.ProxyUser := User;
-    HTTP.ProxyPass := Pass;
+    HTTP.Sock.SocksIP := OptionProxyHost;
+    HTTP.Sock.SocksPort := OptionProxyPort;
+    HTTP.Sock.SocksUsername := OptionProxyUser;
+    http.Sock.SocksPassword := OptionProxyPass;
+    HTTP.ProxyHost := OptionProxyHost;
+    HTTP.ProxyPort := OptionProxyPort;
+    HTTP.ProxyUser := OptionProxyUser;
+    HTTP.ProxyPass := OptionProxyPass;
   end;
 
   HTTPHeader.Values['DNT'] := ' 1';
