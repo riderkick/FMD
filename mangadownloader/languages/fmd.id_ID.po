@@ -213,6 +213,10 @@ msgstr ""
 "Matikan komputer\n"
 "Tidurkan komputer\n"
 
+#: frmmain.rs_searching
+msgid "Searching..."
+msgstr "Mencari..."
+
 #: frmmain.rs_selected
 msgid "Selected: %d"
 msgstr "Dipilih: %d"

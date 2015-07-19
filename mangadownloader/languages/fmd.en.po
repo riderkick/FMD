@@ -218,6 +218,10 @@ msgstr ""
 "Shutdown\n"
 "Hibernate\n"
 
+#: frmmain.rs_searching
+msgid "Searching..."
+msgstr "Searching..."
+
 #: frmmain.rs_selected
 msgid "Selected: %d"
 msgstr "Selected: %d"

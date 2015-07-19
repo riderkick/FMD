@@ -185,6 +185,10 @@ msgid ""
 "Hibernate\n"
 msgstr ""
 
+#: frmmain.rs_searching
+msgid "Searching..."
+msgstr ""
+
 #: frmmain.rs_selected
 msgid "Selected: %d"
 msgstr ""
