@@ -47,6 +47,7 @@ type
     procedure ConsoleReport;
     procedure SaveCurrentDatabase;
     {$ENDIF}
+    procedure MainThreadStatusRepaint;
     procedure MainThreadShowGetting;
     procedure MainThreadEndGetting;
     procedure MainThreadRemoveFilter;
@@ -252,6 +253,11 @@ begin
 end;
 
 { TUpdateMangaManagerThread }
+
+procedure TUpdateMangaManagerThread.MainThreadStatusRepaint;
+begin
+  MainForm.sbUpdateList.Repaint;
+end;
 
 procedure TUpdateMangaManagerThread.MainThreadShowGetting;
 begin
@@ -486,19 +492,24 @@ begin
           Inc(workPtr);
           s := RS_UpdatingList + Format(' [%d/%d] %s | [T:%d] [%d/%d]',
             [websitePtr, websites.Count, website, threads.Count, workPtr, limit]);
-          if cs = CS_DIRECTORY_COUNT then
-            if limit = 1 then
-              s := RS_UpdatingList + Format(' [%d/%d] ', [websitePtr, websites.Count]) +
-                website + ' | ' + RS_GettingDirectory + '...'
-            else
-              s := s + ' | ' + RS_GettingDirectory + '...';
-          if cs = CS_DIRECTORY_PAGE then
-            s := s + ' | ' + RS_LookingForNewTitle + '...';
-          if cs = CS_DIRECTORY_PAGE_2 then
-            s := s + ' | ' + RS_LookingForNewTitleFromAnotherDirectory + '...';
-          if cs = CS_INFO then
-            s := Format('%s | %s "%s" "%s"', [s, RS_GettingInfo, names[workPtr - 1],
-              links[workPtr - 1]]);
+
+          case cs of
+            CS_DIRECTORY_COUNT:
+              begin
+                if limit = 1 then
+                  s := RS_UpdatingList + Format(' [%d/%d] ', [websitePtr, websites.Count]) +
+                    website + ' | ' + RS_GettingDirectory + '...'
+                else
+                  s := s + ' | ' + RS_GettingDirectory + '...';
+              end;
+            CS_DIRECTORY_PAGE:
+              s := s + ' | ' + RS_LookingForNewTitle + '...';
+            CS_DIRECTORY_PAGE_2:
+              s := s + ' | ' + RS_LookingForNewTitleFromAnotherDirectory + '...';
+            CS_INFO:
+              s := Format('%s | %s "%s" "%s"', [s, RS_GettingInfo, names[workPtr - 1],
+                links[workPtr - 1]]);
+          end;
           FStatus := s;
           Synchronize(MainThreadShowGetting);
         finally
@@ -536,7 +547,7 @@ procedure TUpdateMangaManagerThread.Execute;
   end;
 
 var
-  j, k: Integer;
+  c, j, k: Integer;
   del: Boolean;
 begin
   if websites.Count = 0 then
@@ -619,14 +630,25 @@ begin
         // remove duplicate
         if links.Count > 0 then
         begin
+          MainForm.ulTotalPtr := links.Count;
+          MainForm.ulWorkPtr := j;
           FStatus := RS_UpdatingList + Format(' [%d/%d] %s',
             [websitePtr, websites.Count, website]) + ' | ' + RS_RemovingDuplicateFromNewTitle + '...';
           Synchronize(MainThreadShowGetting);
+          c := 0;
           j := 0;
           while j < (links.Count - 1) do
           begin
             if Terminated then
               Break;
+            Inc(c);
+            if c > 499 then
+            begin
+              c := 0;
+              MainForm.ulTotalPtr := links.Count;
+              MainForm.ulWorkPtr := j;
+              Synchronize(MainThreadStatusRepaint);
+            end;
             del := False;
             if (j + 1) < links.Count then
               for k := j + 1 to links.Count - 1 do
@@ -650,14 +672,25 @@ begin
         // remove duplicate found<>current database
         if links.Count > 0 then
         begin
+          MainForm.ulTotalPtr := links.Count;
+          MainForm.ulWorkPtr := j;
           FStatus := RS_UpdatingList + Format(' [%d/%d] %s',
             [websitePtr, websites.Count, website]) + ' | ' + RS_RemovingDuplicateFromCurrentData + '...';
           Synchronize(MainThreadShowGetting);
+          c := 0;
           j := 0;
           while j < links.Count do
           begin
             if Terminated then
               Break;
+            Inc(c);
+            if c > 499 then
+            begin
+              c := 0;
+              MainForm.ulTotalPtr := links.Count;
+              MainForm.ulWorkPtr := j;
+              Synchronize(MainThreadStatusRepaint);
+            end;
             if mainDataProcess.LocateByLink(links[j]) then
             begin
               links.Delete(j);
