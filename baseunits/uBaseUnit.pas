@@ -980,7 +980,7 @@ procedure fmdHibernate;
 implementation
 
 uses
-  {$IFDEF DOWNLOADER}frmMain;{$ENDIF}
+  {$IFDEF DOWNLOADER}frmMain, WebsiteModules;{$ENDIF}
 
 {$IFDEF WINDOWS}
 // thanks Leledumbo for the code
@@ -1257,7 +1257,15 @@ begin
 end;
 
 function SitesWithSortedList(const website : String) : Boolean;
+var
+  i: Integer;
 begin
+  if Modules.ModuleAvailable(website, i) then
+  begin
+    Result := Modules.Module(i).SortedList;
+    Exit;
+  end;
+
   Result := SitesIsWPManga(website);
   if not Result then
     Result := SitesMemberOf(website, [
