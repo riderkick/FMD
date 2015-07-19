@@ -33,7 +33,7 @@ type
     checkStyle: TFlagType;
     ModuleId: Integer;
   public
-    workCounter: Cardinal;
+    workCounter: Integer;
     FSortColumn: Cardinal;
     FMessage, FAnotherURL: String;
     FHTTP: THTTPSend;
@@ -74,7 +74,7 @@ type
 
     property SortColumn: Cardinal read FSortColumn write FSortColumn;
     property AnotherURL: String read FAnotherURL write FAnotherURL;
-    property GetworkCounter: Cardinal read workCounter;
+    property GetworkCounter: Integer read workCounter;
   end;
 
   { TTaskThread }
@@ -2131,8 +2131,8 @@ end;
 procedure TDownloadManager.CheckAndActiveTask(const isCheckForFMDDo : Boolean;
   SenderThread : TThread);
 var
-  EHENTAI_Count: Cardinal = 0;
-  Count: Cardinal = 0;
+  EHENTAI_Count: Integer = 0;
+  Count: Integer = 0;
   i: Integer;
 
   procedure ShowExitCounter;

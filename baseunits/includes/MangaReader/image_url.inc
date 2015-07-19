@@ -7,24 +7,24 @@
     procedure BreakURL;
     var
       isSlashed: Boolean = False;
-      i, oldI: Cardinal;
+      j, oldI: Integer;
     begin
       if Pos('.html', URL) = 0 then
       begin
         realURL := URL + '/' + IntToStr(workCounter + 1);
         Exit;
       end;
-      i := 2;
+      j := 2;
       realURL := '/';
-      while i <= Length(URL) do
+      while j <= Length(URL) do
       begin
-        if (not isSlashed) and (URL[i] = '/') then
+        if (not isSlashed) and (URL[j] = '/') then
         begin
           isSlashed := True;
-          oldI := i;
-          for i := i - 1 downto 1 do
+          oldI := j;
+          for j := j - 1 downto 1 do
           begin
-            if URL[i] <> '-' then
+            if URL[j] <> '-' then
             begin
               SetLength(realURL, Length(realURL) - 1);
             end
@@ -34,13 +34,13 @@
               Break;
             end;
           end;
-          i := oldI;
+          j := oldI;
           // realURL:= realURL + '/';
         end
         else
         begin
-          realURL := realURL + URL[i];
-          Inc(i);
+          realURL := realURL + URL[j];
+          Inc(j);
         end;
       end;
     end;
