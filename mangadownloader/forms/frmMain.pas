@@ -1200,20 +1200,8 @@ begin
   itStartup.Enabled := False;
   if not isStartup then
   begin
-    Screen.Cursor := crHourGlass;
-    isStartup := True;
-    try
-      if cbSelectManga.ItemIndex > -1 then
-      begin
-        vtMangaList.Clear;
-        dataProcess.Open(cbSelectManga.Items[cbSelectManga.ItemIndex]);
-      end;
-      vtMangaList.RootNodeCount := dataProcess.RecordCount;
-      lbMode.Caption := Format(RS_ModeAll, [dataProcess.RecordCount]);
-      dataProcess.Refresh;
-    finally
-      Screen.Cursor := crDefault;
-    end;
+    if cbSelectManga.ItemIndex > -1 then
+      OpenDataDB(cbSelectManga.Items[cbSelectManga.ItemIndex]);
     if cbOptionAutoCheckUpdate.Checked then
       SubThread.CheckUpdate := True;
     SubThread.Start;
