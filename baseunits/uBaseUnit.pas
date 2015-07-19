@@ -259,6 +259,9 @@ const
   SEPERATOR  = '!%~';
   SEPERATOR2 = '~%!';
 
+  // common regex to split host/url
+  REGEX_HOST = '(?ig)^(\w+://)?([^/]*\.\w+)?(/?.*)$';
+
   ANIMEA_ID              = 0;
   MANGAHERE_ID           = 1;
   MANGAINN_ID            = 2;
@@ -856,7 +859,8 @@ function SitesIsWPManga(const websiteid: Cardinal): Boolean; overload;
 function SitesIsWPManga(const website: String): Boolean; overload;
 
 // Fill in website host if it's not present
-function FillMangaSiteHost(const MangaID: Cardinal; URL: String): String;
+function FillMangaSiteHost(const MangaID: Cardinal; URL: String): String; overload;
+function FillMangaSiteHost(const Website, URL: String): String; overload;
 function FillHost(const Host, URL: String): String;
 function RemoveHostFromURL(URL: String): String;
 procedure RemoveHostFromURLs(Const URLs: TStringList);
@@ -1208,12 +1212,13 @@ var
 begin
   Result := High(WebsiteRoots) + 1;
   for i := Low(WebsiteRoots) to High(WebsiteRoots) do
-    if Name = WebsiteRoots[i, 0] then
+    if SameText(Name, WebsiteRoots[i, 0]) then
       Exit(i);
 end;
 
 function GetMangaSiteName(const ID: Cardinal): String;
 begin
+  if ID >= High(WebsiteRoots) then Exit('');
   Result := WebsiteRoots[ID, 0];
 end;
 
@@ -1388,27 +1393,16 @@ begin
 end;
 
 function FillMangaSiteHost(const MangaID : Cardinal; URL : String) : String;
-var
-  regx: TRegExpr;
 begin
   Result := URL;
-  if Length(URL) < 3 then
-    Exit;
   if MangaID <= High(WebsiteRoots) then
-    regx := TRegExpr.Create;
-    try
-      regx.ModifierI := True;
-      regx.Expression := '^([a-z]+\:)?(//)?[^/]*\w+\.\w+(\:\d+)?/?';
-      if Pos('//', Result) = 1 then
-        Delete(Result, 1, 2);
-      if not regx.Exec(URL) then
-        Result := TrimRightChar(WebsiteRoots[MangaID, 1], ['/']) +
-          '/' + TrimLeftChar(URL, ['/']);
-      regx.Expression := '([^:])[/]{2,}(\b|\Z)';
-      Result := regx.Replace(Result, '$1/', True);
-    finally
-      regx.Free
-    end;
+    Result := FillHost(WebsiteRoots[MangaID, 1], URL);
+end;
+
+function FillMangaSiteHost(const Website, URL: String): String;
+begin
+  if Website = '' then Exit(URL);
+  Result := FillMangaSiteHost(GetMangaSiteID(Website), URL);
 end;
 
 function FillHost(const Host, URL: String): String;
@@ -1419,11 +1413,9 @@ begin
   if Host = '' then Exit;
   with TRegExpr.Create do
     try
-      ModifierI := True;
-      ModifierG := True;
-      Expression := '^((https?|ftp)://)?([^/]*\.\w+)?(/?.*)$';
-      th := Replace(Host, '$1$3', True);
-      tu := Replace(URL, '$4', True);
+      Expression := REGEX_HOST;
+      th := Replace(Host, '$1$2', True);
+      tu := Replace(URL, '$3', True);
       if (tu <> '') and (tu[1] <> '/') then
         tu := '/' + tu;
       Result := th + tu;
@@ -1433,41 +1425,24 @@ begin
 end;
 
 function RemoveHostFromURL(URL : String) : String;
-var
-  regx: TRegExpr;
 begin
-  Result := URL;
-  regx := TRegExpr.Create;
-  try
-    regx.ModifierI := True;
-    regx.Expression := '^([a-z]+\:)?(//)?[^/]*\w+\.\w+(\:\d+)?/?';
-    if regx.Exec(URL) then
-      Result := regx.Replace(URL, '/', False);
-  finally
-    regx.Free
-  end;
+  Result := ReplaceRegExpr(REGEX_HOST, URL, '$3', True);
 end;
 
 procedure RemoveHostFromURLs(const URLs : TStringList);
 var
  i: Integer;
- regx: TRegExpr;
 begin
+  if URLs = nil then Exit;
   if URLs.Count > 0 then
-  begin
-    regx := TRegExpr.Create;
+    with TRegExpr.Create do
     try
-      regx.ModifierI := True;
-      regx.Expression := '^([a-z]+\:)?(//)?[^/]*\w+\.\w+(\:\d+)?/?';
+      Expression := REGEX_HOST;
       for i := 0 to URLs.Count - 1 do
-      begin
-        if regx.Exec(URLs[i]) then
-          URLs[i] := regx.Replace(URLs[i], '/', False);
-      end;
+        URLs[i] := Replace(URLs[i], '$3', True);
     finally
-      regx.Free
+      Free;
     end;
-  end;
 end;
 
 procedure RemoveHostFromURLsPair(const URLs, Names : TStringList);
@@ -1475,18 +1450,16 @@ var
  i: Integer;
  regx: TRegExpr;
 begin
+  if (URLs = nil) or (Names = nil) then Exit;
+  if (URLs.Count <> Names.Count) then Exit;
   if URLs.Count > 0 then
-  begin
-    regx := TRegExpr.Create;
+    with TRegExpr.Create do
     try
-      regx.ModifierI := True;
-      regx.Expression := '^([a-z]+\:)?(//)?[^/]*\w+\.\w+(\:\d+)?/?';
       i := 0;
       while i < URLs.Count do
       begin
-        if regx.Exec(URLs[i]) then
-          URLs[i] := regx.Replace(URLs[i], '/', False);
-        if URLs[i] = '/' then
+        URLs[i] := Replace(URLs[i], '$3', True);
+        if (URLs[i] = '') or (URLs[i] = '/') then
         begin
           URLs.Delete(i);
           Names.Delete(i);
@@ -1495,9 +1468,8 @@ begin
           Inc(i);
       end;
     finally
-      regx.Free
+      Free;
     end;
-  end;
 end;
 
 procedure ParseJSONArray(const S, Path: String; var OutArray: TStringList);
