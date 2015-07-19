@@ -1344,6 +1344,7 @@ end;
 procedure TMainForm.miFavoritesViewInfosClick(Sender: TObject);
 var
   title, website, link: String;
+  i: Integer;
 begin
   if (not vtFavorites.Focused) then
     Exit;
@@ -1380,7 +1381,13 @@ begin
   if ExecRegExpr('^https?://', link) then
     edURL.Text := link
   else
-    edURL.Text := WebsiteRoots[GetMangaSiteID(website), 1] + link;
+  begin
+    i := Modules.LocateModule(website);
+    if i > -1 then
+      edURL.Text := FillHost(Modules.Module(i).RootURL, link)
+    else
+      edURL.Text := FillMangaSiteHost(website, link);
+  end;
 
   btDownload.Enabled := (clbChapterList.RootNodeCount > 0);
   btReadOnline.Enabled := (edURL.Text <> '');
