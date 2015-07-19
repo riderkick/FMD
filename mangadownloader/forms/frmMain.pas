@@ -806,9 +806,9 @@ end;
 
 constructor TOpenDBThread.Create(const AWebsite: String);
 begin
-  inherited Create(False);
   FreeOnTerminate := True;
   FWebsite := AWebsite;
+  inherited Create(False);
 end;
 
 destructor TOpenDBThread.Destroy;
