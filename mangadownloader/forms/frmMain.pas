@@ -2130,6 +2130,7 @@ begin
       if dataProcess = nil then
         dataProcess := TDBDataProcess.Create;
       vtMangaList.Clear;
+      lbMode.Caption := Format(RS_ModeAll, [0]);
       if DataFileExist(cbSelectManga.Items[cbSelectManga.ItemIndex]) then
       begin
         OpenDataDB(cbSelectManga.Items[cbSelectManga.ItemIndex]);
