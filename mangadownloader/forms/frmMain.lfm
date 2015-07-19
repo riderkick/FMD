@@ -2664,6 +2664,7 @@ object MainForm: TMainForm
             Caption = 'Remove duplicate local data when updating manga list'
             ParentFont = False
             TabOrder = 3
+            Visible = False
           end
         end
         object tsDialogs: TTabSheet
