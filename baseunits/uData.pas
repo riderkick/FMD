@@ -214,7 +214,7 @@ const
 
   function DBDataFilePath(const AWebsite: string): string;
   procedure ConvertDataProccessToDB(AWebsite: String; DeleteOriginal: Boolean = False);
-  function DBDataProcessExist(const AWebsite: string): Boolean;
+  function DataFileExist(const AWebsite: string): Boolean;
   procedure CopyDBDataProcess(const AWebsite, NWebsite: string);
   function DeleteDBDataProcess(const AWebsite: string): Boolean;
   procedure OverwriteDBDataProcess(const AWebsite, NWebsite: string);
@@ -323,16 +323,17 @@ begin
   end;
 end;
 
-function DBDataProcessExist(const AWebsite: string): Boolean;
+function DataFileExist(const AWebsite: string): Boolean;
 begin
   if AWebsite = '' then Exit(False);
-  Result := FileExistsUTF8(fmdDirectory + DATA_FOLDER + AWebsite + DBDATA_EXT);
+  Result := FileExistsUTF8(fmdDirectory + DATA_FOLDER + AWebsite + DATA_EXT) or
+    FileExistsUTF8(fmdDirectory + DATA_FOLDER + AWebsite + DBDATA_EXT);
 end;
 
 procedure CopyDBDataProcess(const AWebsite, NWebsite: string);
 begin
   if NWebsite = '' then Exit;
-  if DBDataProcessExist(AWebsite) then
+  if DataFileExist(AWebsite) then
   begin
     try
     CopyFile(fmdDirectory + DATA_FOLDER + AWebsite + DBDATA_EXT,
