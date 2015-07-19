@@ -38,7 +38,7 @@ type
   TModuleContainer = class
   public
     Website, RootURL: String;
-    SortedList, InformationAvailable: Boolean;
+    SortedList, InformationAvailable, FavoriteAvailable: Boolean;
     OnGetDirectoryPageNumber: TOnGetDirectoryPageNumber;
     OnGetNameAndLink: TOnGetNameAndLink;
     OnGetInfo: TOnGetInfo;
@@ -53,6 +53,9 @@ type
   private
     FCSModules: TRTLCriticalSection;
     FModuleList: TFPList;
+  protected
+    function GetModule(const Index: Integer): TModuleContainer;
+    function GetCount: Integer;
   public
     constructor Create;
     destructor Destroy; override;
@@ -100,7 +103,8 @@ type
     procedure LockModules;
     procedure UnlockModules;
 
-    function Module(const Index: Integer): TModuleContainer;
+    property Module[const Index: Integer]: TModuleContainer read GetModule;
+    property Count: Integer read GetCount;
   end;
 
 var
@@ -119,6 +123,7 @@ constructor TModuleContainer.Create;
 begin
   SortedList := False;
   InformationAvailable := True;
+  FavoriteAvailable := True;
 end;
 
 { TWebsiteModules }
@@ -330,11 +335,16 @@ begin
   LeaveCriticalsection(FCSModules);
 end;
 
-function TWebsiteModules.Module(const Index: Integer): TModuleContainer;
+function TWebsiteModules.GetModule(const Index: Integer): TModuleContainer;
 begin
   if (Index < 0) or (Index >= FModuleList.Count) then
     Exit(nil);
   Result := TModuleContainer(FModuleList[Index]);
+end;
+
+function TWebsiteModules.GetCount: Integer;
+begin
+  Result := FModuleList.Count;
 end;
 
 procedure doInitialize;

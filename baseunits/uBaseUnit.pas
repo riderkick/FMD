@@ -1262,7 +1262,7 @@ var
 begin
   if Modules.ModuleAvailable(website, i) then
   begin
-    Result := Modules.Module(i).SortedList;
+    Result := Modules.Module[i].SortedList;
     Exit;
   end;
 

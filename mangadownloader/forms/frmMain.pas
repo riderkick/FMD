@@ -1155,7 +1155,7 @@ begin
     begin
       i := Modules.LocateModule(DownloadInfo.Website);
       if i > -1 then
-        edURL.Text := FillHost(Modules.Module(i).RootURL, DownloadInfo.Link)
+        edURL.Text := FillHost(Modules.Module[i].RootURL, DownloadInfo.Link)
       else
         edURL.Text := FillMangaSiteHost(DownloadInfo.Website, DownloadInfo.Link);
       btURLClick(btURL);
@@ -1391,7 +1391,7 @@ begin
   begin
     i := Modules.LocateModule(website);
     if i > -1 then
-      edURL.Text := FillHost(Modules.Module(i).RootURL, link)
+      edURL.Text := FillHost(Modules.Module[i].RootURL, link)
     else
       edURL.Text := FillMangaSiteHost(website, link);
   end;
@@ -1780,8 +1780,8 @@ begin
       i := Modules.LocateModuleByHost(host);
       if i > -1 then
       begin
-        website := Modules.Module(i).Website;
-        edURL.Text := FillHost(Modules.Module(i).RootURL, link);
+        website := Modules.Module[i].Website;
+        edURL.Text := FillHost(Modules.Module[i].RootURL, link);
       end
       else
       begin
@@ -2725,7 +2725,7 @@ begin
 
   i := Modules.LocateModule(website);
   if i > -1 then
-    edURL.Text := FillHost(Modules.Module(i).RootURL, link)
+    edURL.Text := FillHost(Modules.Module[i].RootURL, link)
   else
     edURL.Text := FillMangaSiteHost(website, link);
 
