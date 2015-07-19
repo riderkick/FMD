@@ -1245,7 +1245,7 @@ end;
 
 function SitesMemberOf(const website: String; MangaSiteIDs: array of Cardinal): Boolean;
 var
-  i: Cardinal;
+  i: Integer;
 begin
   Result := False;
   for i := Low(MangaSiteIDs) to High(MangaSiteIDs) do
@@ -1258,14 +1258,13 @@ end;
 
 function SitesWithSortedList(const website : String) : Boolean;
 var
-  i: Integer;
+  i: Integer = -1;
 begin
   if Modules.ModuleAvailable(website, i) then
   begin
     Result := Modules.Module[i].SortedList;
     Exit;
   end;
-
   Result := SitesIsWPManga(website);
   if not Result then
     Result := SitesMemberOf(website, [
@@ -1299,7 +1298,14 @@ begin
 end;
 
 function SitesWithoutFavorites(const website : String) : Boolean;
+var
+  i: Integer = -1;
 begin
+  if Modules.ModuleAvailable(website, i) then
+  begin
+    Result := not Modules.Module[i].FavoriteAvailable;
+    Exit;
+  end;
   Result := False;
   Result := SitesMemberOf(website, [
     EHENTAI_ID,
@@ -1318,7 +1324,14 @@ begin
 end;
 
 function SitesWithoutInformation(const website: String): Boolean;
+var
+  i: Integer = -1;
 begin
+  if Modules.ModuleAvailable(website, i) then
+  begin
+    Result := not Modules.Module[i].InformationAvailable;
+    Exit;
+  end;
   Result := False;
   Result := SitesMemberOf(website, [
     MANGASPROJECT_ID,
