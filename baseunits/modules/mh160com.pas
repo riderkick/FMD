@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, WebsiteModules, uData, uBaseUnit, uDownloadsManager,
-  HTMLUtil, base64, RegExpr;
+  LConvEncoding, HTMLUtil, base64, RegExpr;
 
 implementation
 
@@ -50,7 +50,7 @@ begin
       diralpha[StrToInt(URL) + 1] + '.html', 3) then
     begin
       Result := NO_ERROR;
-      Source.Text := ConvertCharsetToUTF8(Source.Text);
+      Source.Text := CP936ToUTF8(Source.Text);
       Parse := TStringList.Create;
       try
         ParseHTML(Source.Text, Parse);
@@ -147,7 +147,7 @@ begin
     if MangaInfo.GetPage(TObject(Source), MangaInfo.mangaInfo.url, Reconnect) then
     begin
       Result := NO_ERROR;
-      Source.Text := ConvertCharsetToUTF8(Source.Text);
+      Source.Text := CP936ToUTF8(Source.Text);
       Parse := TStringList.Create;
       try
         ParseHTML(Source.Text, Parse);
@@ -265,7 +265,7 @@ begin
       begin
         Regx := TRegExpr.Create;
         try
-          Source.Text := ConvertCharsetToUTF8(Source.Text);
+          Source.Text := CP936ToUTF8(Source.Text);
           Result := ScanSource;
         finally
           Regx.Free;
