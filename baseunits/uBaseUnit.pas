@@ -19,9 +19,9 @@ uses
   UTF8Process,
   {$endif}
   SysUtils, Classes, Graphics, Forms, lazutf8classes, LazUTF8, LazFileUtils,
-  strutils, fileinfo, fpjson, jsonparser, FastHTMLParser, fgl, RegExpr,
-  synautil, httpsend, blcksock, ssl_openssl, GZIPUtils, uFMDThread, uMisc,
-  USimpleException, USimpleLogger;
+  LConvEncoding, strutils, fileinfo, fpjson, jsonparser, FastHTMLParser, fgl,
+  RegExpr, synautil, httpsend, blcksock, ssl_openssl, GZIPUtils, uFMDThread,
+  uMisc, USimpleException, USimpleLogger;
 
 Type
   TFMDDo = (DO_NOTHING, DO_EXIT, DO_POWEROFF, DO_HIBERNATE, DO_UPDATE);
@@ -872,6 +872,9 @@ procedure ParseJSONArray(const S, Path: String; var OutArray: TStringList);
 //HTML
 procedure ParseHTML(const aRaw: string; var aOutput: TStringList);
 
+//convert charset to utf8
+function ConvertCharsetToUTF8(const S: String): String;
+
 // StringUtils
 function QuotedStrd(const S: string): string; overload;
 function QuotedStrd(const S: Integer): string; overload;
@@ -1530,6 +1533,34 @@ begin
   finally
     Free;
   end;
+end;
+
+function ConvertCharsetToUTF8(const S: String): String;
+var
+  cs: String;
+begin
+  Result := S;
+  if S = '' then
+    Exit;
+  with TRegExpr.Create do
+  try
+    Expression := '(?ig)^.*<meta\s.*charset=([^''";\s]+).*$';
+    if Exec(S) then
+    begin
+      cs := LowerCase(Replace(S, '$1', True));
+      if cs = 'gb2312' then
+        cs := EncodingCP936
+      else
+      if (cs = 'big5') or (cs = 'big5-hkscs') then
+        cs := EncodingCP950;
+    end
+    else
+      cs := GuessEncoding(S);
+  finally
+    Free;
+  end;
+  if cs <> '' then
+    Result := ConvertEncoding(S, cs, 'utf8');
 end;
 
 function QuotedStrd(const S: string): string;
