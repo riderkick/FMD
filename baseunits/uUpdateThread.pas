@@ -181,6 +181,7 @@ begin
         begin
           Info.GetNameAndLink(names, links, manager.website, IntToStr(workPtr));
         end;
+
         //if website has sorted list by latest added
         //we will stop at first found against current db
         if SitesWithSortedList(manager.website) then
@@ -189,9 +190,6 @@ begin
             if manager.mainDataProcess.LocateByLink(links.Strings[0]) then
               manager.isFinishSearchingForNewManga := True;
         end;
-
-        //**removing hostname in links
-        RemoveHostFromURLs(links);
 
         if links.Count > 0 then
         begin
@@ -471,7 +469,7 @@ begin
           TerminateThreads;
           Break;
         end;
-        Sleep(200);   //waiting for empty slot / slowing down the circle
+        Sleep(250);   //waiting for empty slot / slowing down the circle
       end;
 
       if Terminated then
