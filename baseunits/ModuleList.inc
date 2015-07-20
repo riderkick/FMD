@@ -1,2 +1,3 @@
 uses
-  FoOlSlide;
+  FoOlSlide,
+  mh160com;
