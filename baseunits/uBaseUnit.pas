@@ -873,7 +873,7 @@ procedure ParseJSONArray(const S, Path: String; var OutArray: TStringList);
 procedure ParseHTML(const aRaw: string; var aOutput: TStringList);
 
 //convert charset to utf8
-function ConvertCharsetToUTF8(const S: String): String;
+procedure ConvertCharsetToUTF8(var TheStrings: TStringList);
 
 // StringUtils
 function QuotedStrd(const S: string): string; overload;
@@ -1535,19 +1535,32 @@ begin
   end;
 end;
 
-function ConvertCharsetToUTF8(const S: String): String;
+procedure ConvertCharsetToUTF8(var TheStrings: TStringList);
 var
   cs: String;
+  i: Integer;
 begin
-  Result := S;
-  if S = '' then
-    Exit;
+  if TheStrings = nil then Exit;
+  if TheStrings.Count = 0 then Exit;
   with TRegExpr.Create do
   try
+    cs := '';
     Expression := '(?ig)^.*<meta\s.*charset=([^''";\s]+).*$';
-    if Exec(S) then
+    for i := 0 to TheStrings.Count - 1 do
     begin
-      cs := LowerCase(Replace(S, '$1', True));
+      if Pos('<meta ', TheStrings[i]) <> 0 then
+      begin
+        if Exec(TheStrings[i]) then
+          cs := Replace(TheStrings[i], '$1', True);
+        if cs <> '' then
+        begin
+          cs := LowerCase(cs);
+          Break;
+        end;
+      end;
+    end;
+    if cs <> '' then
+    begin
       if cs = 'gb2312' then
         cs := EncodingCP936
       else
@@ -1555,12 +1568,12 @@ begin
         cs := EncodingCP950;
     end
     else
-      cs := GuessEncoding(S);
+      cs := GuessEncoding(TheStrings.Text);
   finally
     Free;
   end;
   if cs <> '' then
-    Result := ConvertEncoding(S, cs, 'utf8');
+    TheStrings.Text := ConvertEncoding(TheStrings.Text, cs, 'utf8');
 end;
 
 function QuotedStrd(const S: string): string;
