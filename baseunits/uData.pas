@@ -15,7 +15,7 @@ interface
 
 uses
   Classes, SysUtils, uBaseUnit, uFMDThread, FileUtil, LazFileUtils, sqlite3conn,
-  sqlite3backup, sqlite3dyn, sqldb, db, USimpleLogger, strutils, dateutils,
+  sqlite3backup, sqlite3dyn, sqldb, DB, USimpleLogger, strutils, dateutils,
   RegExpr, httpsend;
 
 type
@@ -48,8 +48,8 @@ type
     procedure CreateTable;
     procedure VacuumTable;
     procedure GetRecordCount;
-    procedure AddSQLCond(const sqltext: string; useOR: Boolean = False);
-    procedure AddSQLSimpleFilter(const fieldname, value: string;
+    procedure AddSQLCond(const sqltext: String; useOR: Boolean = False);
+    procedure AddSQLSimpleFilter(const fieldname, Value: String;
       useNOT: Boolean = False; useOR: Boolean = False; useRegexp: Boolean = False);
     function GetConnected: Boolean;
     function InternalOpen(const FilePath: String = ''): Boolean;
@@ -63,12 +63,14 @@ type
 
     function Connect(AWebsite: String): Boolean;
     function Open(AWebsite: String = ''): Boolean;
-    function OpenTable(const ATableName: String = ''; CheckRecordCount: Boolean = False): Boolean;
+    function OpenTable(const ATableName: String = '';
+      CheckRecordCount: Boolean = False): Boolean;
     function TableExist(const ATableName: String): Boolean;
     function Search(ATitle: String): Boolean;
     function CanFilter(const checkedGenres, uncheckedGenres: TStringList;
       const stTitle, stAuthors, stArtists, stStatus, stSummary: String;
-      const {%H-}minusDay: Cardinal; const haveAllChecked, searchNewManga: Boolean): Boolean;
+      const {%H-}minusDay: Cardinal;
+      const haveAllChecked, searchNewManga: Boolean): Boolean;
     function Filter(const checkedGenres, uncheckedGenres: TStringList;
       const stTitle, stAuthors, stArtists, stStatus, stSummary: String;
       const minusDay: Cardinal; const haveAllChecked, searchNewManga: Boolean;
@@ -109,7 +111,7 @@ type
   TDataProcess = class(TObject)
   private
     function GetInfo(const index: Cardinal): TStringList;
-    function GetParam(const index, paramNo : Integer) : String;
+    function GetParam(const index, paramNo: Integer): String;
   public
     website, Filename: String;
     isFilterAllSites, isFiltered: Boolean;
@@ -170,7 +172,7 @@ type
     isRemoveUnicode: Boolean;
     FHTTP: THTTPSend;
 
-    procedure OnTag(NoCaseTag, ActualTag: string);
+    procedure OnTag(NoCaseTag, ActualTag: String);
     procedure OnText(Text: String);
     constructor Create(AOwnerThread: TFMDThread = nil);
     destructor Destroy; override;
@@ -179,7 +181,8 @@ type
     function GetNameAndLink(const names, links: TStringList;
       const website, URL: String): Byte;
     function GetInfoFromURL(const website, URL: String; const Reconnect: Cardinal): Byte;
-    procedure SyncInfoToData(const DataProcess: TDataProcess; const index: Cardinal); overload;
+    procedure SyncInfoToData(const DataProcess: TDataProcess;
+      const index: Cardinal); overload;
     procedure SyncInfoToData(const DataProcess: TDBDataProcess); overload;
     procedure SyncMinorInfoToData(const DataProcess: TDataProcess;
       const index: Cardinal);
@@ -188,11 +191,14 @@ type
     procedure AddInfoToDataWithoutBreak(const Name, link: String;
       const DataProcess: TDataProcess);
     // Only use this function for update manga list
-    procedure AddInfoToData(const Name, link: String; const DataProcess: TDataProcess); overload;
+    procedure AddInfoToData(const Name, link: String; const DataProcess: TDataProcess);
+      overload;
     // to add data to TDBDataProcess
-    procedure AddInfoToData(const Title, Link: string; const DataProcess: TDBDataProcess); overload;
+    procedure AddInfoToData(const Title, Link: String;
+      const DataProcess: TDBDataProcess); overload;
     //wrapper
-    function GetPage(var output: TObject; URL: String; const Reconnect: Cardinal): Boolean; overload;
+    function GetPage(var output: TObject; URL: String;
+      const Reconnect: Cardinal): Boolean; overload;
   end;
 
 var
@@ -201,23 +207,26 @@ var
 const
   DBDataProcessParam = 'title,link,authors,artists,genres,status,summary,numchapter,jdn';
   DBDataProcessParams: array [0..8] of ShortString =
-    ('title', 'link', 'authors', 'artists', 'genres', 'status', 'summary', 'numchapter', 'jdn');
-  DBDataProccesCreateParam = '(title TEXT,'+
-                              'link STRING NOT NULL PRIMARY KEY,'+
-                              'authors TEXT,'+
-                              'artists TEXT,'+
-                              'genres TEXT,'+
-                              'status TEXT,'+
-                              'summary TEXT,'+
-                              'numchapter INTEGER,'+
-                              'jdn INTEGER);';
+    ('title', 'link', 'authors', 'artists', 'genres', 'status',
+    'summary', 'numchapter', 'jdn');
+  DBDataProccesCreateParam = '('#13#10 +
+    '"title" VARCHAR,'#13#10 +
+    '"link" VARCHAR NOT NULL PRIMARY KEY,'#13#10 +
+    '"authors" VARCHAR,'#13#10 +
+    '"artists" VARCHAR,'#13#10 +
+    '"genres" VARCHAR,'#13#10 +
+    '"status" VARCHAR,'#13#10 +
+    '"summary" VARCHAR,'#13#10 +
+    '"numchapter" INTEGER,'#13#10 +
+    '"jdn" INTEGER'#13#10 +
+    ');';
 
-  function DBDataFilePath(const AWebsite: string): string;
-  procedure ConvertDataProccessToDB(AWebsite: String; DeleteOriginal: Boolean = False);
-  function DataFileExist(const AWebsite: string): Boolean;
-  procedure CopyDBDataProcess(const AWebsite, NWebsite: string);
-  function DeleteDBDataProcess(const AWebsite: string): Boolean;
-  procedure OverwriteDBDataProcess(const AWebsite, NWebsite: string);
+function DBDataFilePath(const AWebsite: String): String;
+procedure ConvertDataProccessToDB(AWebsite: String; DeleteOriginal: Boolean = False);
+function DataFileExist(const AWebsite: String): Boolean;
+procedure CopyDBDataProcess(const AWebsite, NWebsite: String);
+function DeleteDBDataProcess(const AWebsite: String): Boolean;
+procedure OverwriteDBDataProcess(const AWebsite, NWebsite: String);
 
 implementation
 
@@ -225,8 +234,8 @@ uses
   Dialogs, fpJSON, JSONParser, IniFiles, jsHTMLUtil, FastHTMLParser, HTMLUtil,
   SynaCode, uMisc, frmMain, WebsiteModules;
 
-function NaturalCompareCallback({%H-}user: pointer; len1: longint; data1: pointer;
-  len2: longint; data2: pointer): longint; cdecl;
+function NaturalCompareCallback({%H-}user: pointer; len1: longint;
+  data1: pointer; len2: longint; data2: pointer): longint; cdecl;
 var
   s1, s2: String;
 begin
@@ -267,12 +276,12 @@ begin
   end;
 end;
 
-function QuotedLike(const S: string): string;
+function QuotedLike(const S: String): String;
 begin
-  Result := QuotedStr(AnsiQuotedStr(S, '%'));
+  Result := QuotedStrd(AnsiQuotedStr(S, '%'));
 end;
 
-function DBDataFilePath(const AWebsite: string): string;
+function DBDataFilePath(const AWebsite: String): String;
 begin
   Result := fmdDirectory + DATA_FOLDER + AWebsite + DBDATA_EXT;
 end;
@@ -296,23 +305,24 @@ begin
       rawdata.LoadFromFile(AWebsite);
       dbdata.CreateDatabase(AWebsite);
       if rawdata.Data.Count > 0 then
-      with rawdata do
-      begin
-        rcount := 0;
-        for i := 0 to Data.Count-1 do
+        with rawdata do
         begin
-          dbdata.AddData(Title[i], Link[i], Authors[i], Artists[i], Genres[i],
-            Status[i], StringBreaks(Summary[i]), StrToIntDef(Param[i, DATA_PARAM_NUMCHAPTER], 1),
-            {%H-}Integer(JDN[i])-3);
-          Inc(rcount);
-          if rcount >= 5000 then
+          rcount := 0;
+          for i := 0 to Data.Count - 1 do
           begin
-            rcount := 0;
-            dbdata.Commit;
+            dbdata.AddData(Title[i], Link[i], Authors[i], Artists[i], Genres[i],
+              Status[i], StringBreaks(Summary[i]),
+              StrToIntDef(Param[i, DATA_PARAM_NUMCHAPTER], 1),
+              {%H-}integer(JDN[i]) - 3);
+            Inc(rcount);
+            if rcount >= 5000 then
+            begin
+              rcount := 0;
+              dbdata.Commit;
+            end;
           end;
+          dbdata.Commit;
         end;
-        dbdata.Commit;
-      end;
       dbdata.Sort;
     finally
       rawdata.Free;
@@ -323,22 +333,24 @@ begin
   end;
 end;
 
-function DataFileExist(const AWebsite: string): Boolean;
+function DataFileExist(const AWebsite: String): Boolean;
 begin
-  if AWebsite = '' then Exit(False);
+  if AWebsite = '' then
+    Exit(False);
   Result := FileExistsUTF8(fmdDirectory + DATA_FOLDER + AWebsite + DATA_EXT) or
     FileExistsUTF8(fmdDirectory + DATA_FOLDER + AWebsite + DBDATA_EXT);
 end;
 
-procedure CopyDBDataProcess(const AWebsite, NWebsite: string);
+procedure CopyDBDataProcess(const AWebsite, NWebsite: String);
 begin
-  if NWebsite = '' then Exit;
+  if NWebsite = '' then
+    Exit;
   if DataFileExist(AWebsite) then
   begin
     try
-    CopyFile(fmdDirectory + DATA_FOLDER + AWebsite + DBDATA_EXT,
-      fmdDirectory + DATA_FOLDER + NWebsite + DBDATA_EXT,
-      [cffPreserveTime, cffOverwriteFile], True);
+      CopyFile(fmdDirectory + DATA_FOLDER + AWebsite + DBDATA_EXT,
+        fmdDirectory + DATA_FOLDER + NWebsite + DBDATA_EXT,
+        [cffPreserveTime, cffOverwriteFile], True);
     except
       on E: Exception do
         Writelog_E('CopyDBDataProcess.Error!', E);
@@ -346,7 +358,7 @@ begin
   end;
 end;
 
-function DeleteDBDataProcess(const AWebsite: string): Boolean;
+function DeleteDBDataProcess(const AWebsite: String): Boolean;
 var
   tryc: Integer;
 begin
@@ -365,7 +377,7 @@ begin
   end;
 end;
 
-procedure OverwriteDBDataProcess(const AWebsite, NWebsite: string);
+procedure OverwriteDBDataProcess(const AWebsite, NWebsite: String);
 begin
   if FileExistsUTF8(fmdDirectory + DATA_FOLDER + NWebsite + DBDATA_EXT) then
   begin
@@ -381,7 +393,8 @@ procedure TDBDataProcess.CreateTable;
 begin
   if FConn.Connected then
   begin
-    FConn.ExecuteDirect('CREATE TABLE ' + QuotedStr(FTableName) +
+    FConn.ExecuteDirect('DROP TABLE IF EXISTS ' + QuotedStrd(FTableName) + ';');
+    FConn.ExecuteDirect('CREATE TABLE ' + QuotedStrd(FTableName) + #13#10 +
       DBDataProccesCreateParam);
     FTrans.Commit;
   end;
@@ -423,13 +436,13 @@ begin
     FRecordCount := 0;
 end;
 
-procedure TDBDataProcess.AddSQLCond(const sqltext: string; useOR: Boolean);
+procedure TDBDataProcess.AddSQLCond(const sqltext: String; useOR: Boolean);
 begin
   with FQuery.SQL do
   begin
     if Count > 0 then
-      if (Strings[Count-1] <> '(') and
-        (UpCase(Trim(Strings[Count-1])) <> 'WHERE') then
+      if (Strings[Count - 1] <> '(') and
+        (UpCase(Trim(Strings[Count - 1])) <> 'WHERE') then
       begin
         if useOR then
           Add('OR')
@@ -440,20 +453,21 @@ begin
   end;
 end;
 
-procedure TDBDataProcess.AddSQLSimpleFilter(const fieldname, value: string;
+procedure TDBDataProcess.AddSQLSimpleFilter(const fieldname, Value: String;
   useNOT: Boolean; useOR: Boolean; useRegexp: Boolean);
 var
-  svalue: string;
-  scond: string;
+  svalue: String;
+  scond: String;
 begin
-  svalue := LowerCase(Trim(value));
-  if (fieldname = '') or (svalue = '') then Exit;
+  svalue := LowerCase(Trim(Value));
+  if (fieldname = '') or (svalue = '') then
+    Exit;
   if useNOT then
     scond := ' NOT'
   else
     scond := '';
   if useRegexp then
-    AddSQLCond(QuotedStrd(fieldname) + scond + ' REGEXP ' + QuotedStr(svalue), useOR)
+    AddSQLCond(QuotedStrd(fieldname) + scond + ' REGEXP ' + QuotedStrd(svalue), useOR)
   else
     AddSQLCond(QuotedStrd(fieldname) + scond + ' LIKE ' + QuotedLike(svalue), useOR);
 end;
@@ -471,6 +485,7 @@ begin
   if FConn.DatabaseName = '' then
     Exit;
   try
+    FConn.CharSet := 'UTF8';
     FConn.Connected := True;
     sqlite3_create_collation(FConn.Handle, PChar('NATCMP'), SQLITE_UTF8, nil,
       NaturalCompareCallback);
@@ -492,7 +507,7 @@ begin
   Result := FWebsite;
   if FQuery.Active and (FAttachedSites.Count > 0) then
     try
-      FQuery.RecNo := RecIndex+1;
+      FQuery.RecNo := RecIndex + 1;
       Result := FQuery.FieldByName('website').AsString;
     except
       on E: Exception do
@@ -527,7 +542,7 @@ procedure TDBDataProcess.AttachAllSites;
     j: Integer;
   begin
     if SitesList.Count > 0 then
-      for j := 0 to SitesList.Count-1 do
+      for j := 0 to SitesList.Count - 1 do
         if SitesList[j] = FWebsite then
         begin
           SitesList.Delete(j);
@@ -541,14 +556,15 @@ begin
   if FConn.Connected and (SitesList.Count > 0) then
   begin
     RemoveCurrentSite;
-    if Trim(SitesList.Text) = Trim(FAttachedSites.Text) then Exit;
+    if Trim(SitesList.Text) = Trim(FAttachedSites.Text) then
+      Exit;
     DetachAllSites;
     FConn.ExecuteDirect('END TRANSACTION');
-    for i := 0 to SitesList.Count-1 do
+    for i := 0 to SitesList.Count - 1 do
       if FileExistsUTF8(DBDataFilePath(SitesList[i])) then
       begin
-        FConn.ExecuteDirect('ATTACH ' + QuotedStrd(DBDataFilePath(SitesList[i]))
-          + ' AS ' + QuotedStrd(SitesList[i]));
+        FConn.ExecuteDirect('ATTACH ' +
+          QuotedStrd(DBDataFilePath(SitesList[i])) + ' AS ' + QuotedStrd(SitesList[i]));
         FAttachedSites.Add(SitesList[i]);
       end;
     FConn.ExecuteDirect('BEGIN TRANSACTION');
@@ -563,13 +579,15 @@ begin
     FConn.ExecuteDirect('END TRANSACTION');
     repeat
       try
-        FConn.ExecuteDirect('DETACH '+ QuotedStrd(FAttachedSites[FAttachedSites.Count-1]));
+        FConn.ExecuteDirect('DETACH ' +
+          QuotedStrd(FAttachedSites[FAttachedSites.Count - 1]));
       except
         on E: Exception do
-          Writelog_E('TDBDataProcess.DetachAllSites:'+FAttachedSites[FAttachedSites.Count-1],
+          Writelog_E('TDBDataProcess.DetachAllSites:' +
+            FAttachedSites[FAttachedSites.Count - 1],
             E, Self);
       end;
-      FAttachedSites.Delete(FAttachedSites.Count-1);
+      FAttachedSites.Delete(FAttachedSites.Count - 1);
     until FAttachedSites.Count = 0;
     FConn.ExecuteDirect('BEGIN TRANSACTION');
     FAllSitesAttached := False;
@@ -583,6 +601,7 @@ begin
   FTrans := TSQLTransaction.Create(nil);
   FQuery := TSQLQuery.Create(nil);
   FConn.Transaction := FTrans;
+  FQuery.PacketRecords := 25;
   FQuery.DataBase := FTrans.DataBase;
   FQuery.Transaction := FTrans;
   FRegxp := TRegExpr.Create;
@@ -621,7 +640,7 @@ end;
 
 function TDBDataProcess.Connect(AWebsite: String): Boolean;
 var
-  filepath: string;
+  filepath: String;
 begin
   Result := False;
   if AWebsite <> '' then
@@ -629,7 +648,8 @@ begin
   if FWebsite = '' then
     Exit;
   filepath := fmdDirectory + DATA_FOLDER + FWebsite + DBDATA_EXT;
-  if not FileExistsUTF8(filepath) Then Exit;
+  if not FileExistsUTF8(filepath) then
+    Exit;
   Result := InternalOpen(filepath);
 end;
 
@@ -771,21 +791,26 @@ end;
 
 procedure TDBDataProcess.AddData(Title, Link, Authors, Artists, Genres,
   Status, Summary: String; NumChapter, JDN: Integer);
+var
+  s: String;
 begin
   if FConn.Connected then
     try
-      FConn.ExecuteDirect('INSERT OR IGNORE INTO ' + QuotedStr(FTableName) +
+      FConn.ExecuteDirect(
+        'INSERT OR IGNORE INTO ' + QuotedStrd(FTableName) +
         #13#10'(' + DBDataProcessParam + ')' +
-        #13#10'VALUES (' +
-        QuotedStr(Title) + ',' +
-        QuotedStr(Link) + ',' +
-        QuotedStr(Authors) + ',' +
-        QuotedStr(Artists) + ',' +
-        QuotedStr(Genres) + ',' +
-        QuotedStr(Status) + ',' +
-        QuotedStr(Summary) + ',' +
-        QuotedStr(IntToStr(NumChapter)) + ',' +
-        QuotedStr(IntToStr(JDN)) + ');');
+        #13#10'VALUES' +
+        #13#10'('#13#10 +
+        QuotedStrd(Title) + ','#13#10 +
+        QuotedStrd(Link) + ','#13#10 +
+        QuotedStrd(Authors) + ','#13#10 +
+        QuotedStrd(Artists) + ','#13#10 +
+        QuotedStrd(Genres) + ','#13#10 +
+        QuotedStrd(Status) + ','#13#10 +
+        QuotedStrd(Summary) + ','#13#10 +
+        QuotedStrd(IntToStr(NumChapter)) + ','#13#10 +
+        QuotedStrd(IntToStr(JDN)) +
+        #13#10');');
     except
       on E: Exception do
         WriteLog_E('TDBDataProcess.AddData.Error!', E, Self);
@@ -799,8 +824,8 @@ begin
     NumChapter, DateToJDN(JDN));
 end;
 
-procedure TDBDataProcess.UpdateData(Title, Link, Authors, Artists, Genres,
-  Status, Summary: String; NumChapter: Integer; AWebsite: String);
+procedure TDBDataProcess.UpdateData(Title, Link, Authors, Artists,
+  Genres, Status, Summary: String; NumChapter: Integer; AWebsite: String);
 var
   sql: String;
 
@@ -808,11 +833,12 @@ var
   begin
     if sql <> '' then
       sql += ','#13#10;
-    sql += field + '=' + QuotedStr(Value);
+    sql += QuotedStrd(field) + '=' + QuotedStrd(Value);
   end;
 
 begin
-  if Link = '' then Exit;
+  if Link = '' then
+    Exit;
   if FConn.Connected then
   begin
     try
@@ -829,7 +855,7 @@ begin
           #13#10'SET'#13#10 + sql
       else
         sql := 'UPDATE OR IGNORE ' + QuotedStrd(FTableName) + #13#10'SET'#13#10 + sql;
-      sql += #13#10'WHERE link=' + QuotedStr(Link) + ';';
+      sql += #13#10'WHERE "link"=' + QuotedStrd(Link) + ';';
       FConn.ExecuteDirect(sql);
     except
       on E: Exception do
@@ -884,7 +910,7 @@ begin
                 if (SQL[i] = 'UNION ALL') or (SQL[i] = ')') then
                 begin
                   SQL.Insert(i, 'AND');
-                  SQL.Insert(i+1, '"title" LIKE ' + QuotedLike(ATitle));
+                  SQL.Insert(i + 1, '"title" LIKE ' + QuotedLike(ATitle));
                   Inc(i, 3);
                 end
                 else
@@ -904,7 +930,7 @@ begin
     except
       on E: Exception do
         WriteLog_E('TDBDataProcess.Search.Error!'#13#10 +
-                   'SQL:'#13#10 + FQuery.SQL.Text, E, Self);
+          'SQL:'#13#10 + FQuery.SQL.Text, E, Self);
     end;
   end;
   Result := FQuery.Active;
@@ -920,7 +946,8 @@ function TDBDataProcess.CanFilter(const checkedGenres, uncheckedGenres: TStringL
   const minusDay: Cardinal; const haveAllChecked, searchNewManga: Boolean): Boolean;
 begin
   Result := False;
-  if not FQuery.Active then Exit;
+  if not FQuery.Active then
+    Exit;
   if ((stTitle = '') and
     (stAuthors = '') and
     (stArtists = '') and
@@ -939,59 +966,61 @@ function TDBDataProcess.Filter(const checkedGenres, uncheckedGenres: TStringList
   const stTitle, stAuthors, stArtists, stStatus, stSummary: String;
   const minusDay: Cardinal; const haveAllChecked, searchNewManga: Boolean;
   useRegExpr: Boolean): Boolean;
-  var
-    tsql: string;
-    i: Integer;
-    filtersingle: Boolean = True;
+var
+  tsql: String;
+  i: Integer;
+  filtersingle: Boolean = True;
 
   procedure GenerateSQLFilter;
   var
     j: Integer;
   begin
     // filter new manga based on date
-      if searchNewManga then
-        AddSQLCond('"jdn" > ' + QuotedStr(IntToStr(DateToJDN(IncDay(Now, (0 - minusDay))))));
+    if searchNewManga then
+      AddSQLCond('"jdn" > ' +
+        QuotedStrd(IntToStr(DateToJDN(IncDay(Now, (0 - minusDay))))));
 
-      // filter title
-      AddSQLSimpleFilter('title', stTitle, False, False, useRegExpr);
+    // filter title
+    AddSQLSimpleFilter('title', stTitle, False, False, useRegExpr);
 
-      // filter authors
-      AddSQLSimpleFilter('authors', stAuthors, False, False, useRegExpr);
+    // filter authors
+    AddSQLSimpleFilter('authors', stAuthors, False, False, useRegExpr);
 
-      // filter artists
-      AddSQLSimpleFilter('artists', stArtists, False, False, useRegExpr);
+    // filter artists
+    AddSQLSimpleFilter('artists', stArtists, False, False, useRegExpr);
 
-      // filter summary
-      AddSQLSimpleFilter('summary', stSummary, False, False, useRegExpr);
+    // filter summary
+    AddSQLSimpleFilter('summary', stSummary, False, False, useRegExpr);
 
-      // filter status
-      if stStatus <> '2' then
-        AddSQLCond('"status"='+ QuotedStr(stStatus));
+    // filter status
+    if stStatus <> '2' then
+      AddSQLCond('"status"=' + QuotedStrd(stStatus));
 
-      //filter checked genres
-      if checkedGenres.Count > 0 then
-      begin
-        AddSQLCond('(');
-        for j := 0 to checkedGenres.Count-1 do
-          AddSQLSimpleFilter('genres', checkedGenres[j], False,
-            (not haveAllChecked), useRegExpr);
-        FQuery.SQL.Add(')');
-      end;
+    //filter checked genres
+    if checkedGenres.Count > 0 then
+    begin
+      AddSQLCond('(');
+      for j := 0 to checkedGenres.Count - 1 do
+        AddSQLSimpleFilter('genres', checkedGenres[j], False,
+          (not haveAllChecked), useRegExpr);
+      FQuery.SQL.Add(')');
+    end;
 
-      //filter unchecked genres
-      if uncheckedGenres.Count > 0 then
-      begin
-        AddSQLCond('(');
-        for j := 0 to uncheckedGenres.Count-1 do
-          AddSQLSimpleFilter('genres', uncheckedGenres[j], True,
-            (not haveAllChecked), useRegExpr);
-        FQuery.SQL.Add(')');
-      end;
+    //filter unchecked genres
+    if uncheckedGenres.Count > 0 then
+    begin
+      AddSQLCond('(');
+      for j := 0 to uncheckedGenres.Count - 1 do
+        AddSQLSimpleFilter('genres', uncheckedGenres[j], True,
+          (not haveAllChecked), useRegExpr);
+      FQuery.SQL.Add(')');
+    end;
   end;
 
 begin
   Result := False;
-  if FQuery.Active = False then Exit;
+  if FQuery.Active = False then
+    Exit;
   if not CanFilter(checkedGenres, uncheckedGenres, stTitle, stAuthors,
     stArtists, stStatus, stSummary, minusDay, haveAllChecked, searchNewManga) then
     Exit;
@@ -1013,10 +1042,11 @@ begin
             QuotedStrd(FTableName));
           SQL.Add('WHERE');
           GenerateSQLFilter;
-          for i := 0 to FAttachedSites.Count-1 do
+          for i := 0 to FAttachedSites.Count - 1 do
           begin
             SQL.Add('UNION ALL');
-            SQL.Add('SELECT *, ' + QuotedStrd(FAttachedSites[i]) + ' AS "website" FROM ' +
+            SQL.Add('SELECT *, ' + QuotedStrd(FAttachedSites[i]) +
+              ' AS "website" FROM ' +
               FAttachedSites[i] + '.' + QuotedStrd(FTableName));
             SQL.Add('WHERE');
             GenerateSQLFilter;
@@ -1045,7 +1075,7 @@ begin
       on E: Exception do
       begin
         WriteLog_E('TDBDataProcess.Filter.Error!'#13#10 +
-                   'SQL:'#13#10 + FQuery.SQL.Text, E, Self);
+          'SQL:'#13#10 + FQuery.SQL.Text, E, Self);
         FQuery.Close;
         SQL.Text := tsql;
         FQuery.Open;
@@ -1118,15 +1148,15 @@ begin
     FQuery.Close;
     with FConn do
     begin
-      ExecuteDirect('CREATE TABLE ' + QuotedStr(FTableName + '_ordered') +
+      ExecuteDirect('CREATE TABLE ' + QuotedStrd(FTableName + '_ordered') +
         DBDataProccesCreateParam);
-      ExecuteDirect('INSERT INTO ' + QuotedStr(FTableName + '_ordered') + ' ' +
+      ExecuteDirect('INSERT INTO ' + QuotedStrd(FTableName + '_ordered') + ' ' +
         BracketStr(DBDataProcessParam) + ' SELECT ' + DBDataProcessParam +
-        ' FROM ' + QuotedStr(FTableName) + 'ORDER BY title COLLATE NATCMP');
+        ' FROM ' + QuotedStrd(FTableName) + 'ORDER BY "title" COLLATE NATCMP');
       FTrans.Commit;
-      ExecuteDirect('DROP TABLE ' + QuotedStr(FTableName));
-      ExecuteDirect('ALTER TABLE ' + QuotedStr(FTableName + '_ordered') +
-        'RENAME TO ' + QuotedStr(FTableName));
+      ExecuteDirect('DROP TABLE ' + QuotedStrd(FTableName));
+      ExecuteDirect('ALTER TABLE ' + QuotedStrd(FTableName + '_ordered') +
+        'RENAME TO ' + QuotedStrd(FTableName));
       FTrans.Commit;
       VacuumTable;
     end;
@@ -1140,9 +1170,10 @@ var
   i: Integer;
 begin
   Result := False;
-  if FWebsite = AWebsite then Exit(True);
+  if FWebsite = AWebsite then
+    Exit(True);
   if FAllSitesAttached then
-    for i := 0 to FAttachedSites.Count-1 do
+    for i := 0 to FAttachedSites.Count - 1 do
       if FAttachedSites[i] = AWebsite then
       begin
         Result := True;
@@ -1267,7 +1298,7 @@ begin
     Genres.Strings[i] := GetParam(i, DATA_PARAM_GENRES);
     Status.Strings[i] := GetParam(i, DATA_PARAM_STATUS);
     Summary.Strings[i] := GetParam(i, DATA_PARAM_SUMMARY);
-    JDN.Items[i] := Pointer(StrToIntDef(GetParam(i, DATA_PARAM_JDN),0));
+    JDN.Items[i] := Pointer(StrToIntDef(GetParam(i, DATA_PARAM_JDN), 0));
   end;
 end;
 
@@ -1389,7 +1420,7 @@ begin
         l.Clear;
         try
           GetParams(l, Data.Strings[i]);
-          While l.Count < 10 do
+          while l.Count < 10 do
             l.Add('');
           title.Add(l.Strings[DATA_PARAM_TITLE]);
           link.Add(l.Strings[DATA_PARAM_LINK]);
@@ -1482,7 +1513,7 @@ begin
       for i := 0 to filterPos.Count - 1 do
       begin
         fpos := filterPos.Items[i];
-        if (currentJDN - {%H-}Integer(jdn.Items[fpos]) >= minusDay) and
+        if (currentJDN - {%H-}integer(jdn.Items[fpos]) >= minusDay) and
           (filterMark.Items[fpos] = FILTER_SHOW) then
           filterMark.Items[fpos] := FILTER_HIDE;
       end;
@@ -1789,7 +1820,7 @@ begin
   mangaInfo.chapterLinks.Clear;
 end;
 
-procedure TMangaInformation.OnTag(NoCaseTag, ActualTag : string);
+procedure TMangaInformation.OnTag(NoCaseTag, ActualTag: String);
 begin
   parse.Add(ActualTag);
 end;
@@ -1967,8 +1998,8 @@ begin
       if website = WebsiteRoots[REDHAWKSCANS_ID, 0] then
         Result := GetRedHawkScansDirectoryPageNumber
       else
-      if website = WebsiteRoots[S2SCAN_ID,0] then
-        Result:= GetS2ScanDirectoryPageNumber
+      if website = WebsiteRoots[S2SCAN_ID, 0] then
+        Result := GetS2ScanDirectoryPageNumber
       else
       if website = WebsiteRoots[SENMANGA_ID, 0] then
         Result := GetSenMangaDirectoryPageNumber
@@ -2720,7 +2751,8 @@ var
   {$I includes/WPManga/manga_information.inc}
 
 begin
-  if Trim(URL) = '' then Exit(INFORMATION_NOT_FOUND);
+  if Trim(URL) = '' then
+    Exit(INFORMATION_NOT_FOUND);
 
   //load User-Agent from INIAdvanced
   if website <> '' then
@@ -2737,7 +2769,8 @@ begin
   else
   begin
     WebsiteID := GetMangaSiteID(website);
-    if WebsiteID > High(WebsiteRoots) then Exit(INFORMATION_NOT_FOUND);
+    if WebsiteID > High(WebsiteRoots) then
+      Exit(INFORMATION_NOT_FOUND);
 
     Source := TStringList.Create;
     if website = WebsiteRoots[ANIMEA_ID, 0] then
@@ -3215,7 +3248,7 @@ begin
   l.Free;
 end;
 
-procedure TMangaInformation.AddInfoToData(const Title, Link: string;
+procedure TMangaInformation.AddInfoToData(const Title, Link: String;
   const DataProcess: TDBDataProcess);
 begin
   if Assigned(DataProcess) then
