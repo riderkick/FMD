@@ -23,7 +23,7 @@ type
   protected
     checkStyle: TCheckStyleType;
     names, links: TStringList;
-    workPtr: Cardinal;
+    workPtr: Integer;
     manager: TUpdateMangaManagerThread;
     Info: TMangaInformation;
 
@@ -181,9 +181,8 @@ begin
         begin
           Info.GetNameAndLink(names, links, manager.website, IntToStr(workPtr));
         end;
-        //Synchronize(MainThreadUpdateNamesAndLinks);
-        // For Fakku and Pururin only, reduce the number of page we have to visit
-        // in order to search for new series.
+        //if website has sorted list by latest added
+        //we will stop at first found against current db
         if SitesWithSortedList(manager.website) then
         begin
           if links.Count > 0 then
@@ -753,7 +752,7 @@ begin
         if Terminated then
           Break;
         websites[websitePtr - 1] :=
-            UTF8Encode(#$2714 + WideString(websites[websitePtr - 1]));
+          UTF8Encode(#$2714 + WideString(websites[websitePtr - 1]));
       end;
   except
     on E: Exception do
