@@ -5,7 +5,7 @@ unit mh160com;
 interface
 
 uses
-  Classes, sysutils, WebsiteModules, uData, uBaseUnit, uDownloadsManager,
+  Classes, SysUtils, WebsiteModules, uData, uBaseUnit, uDownloadsManager,
   HTMLUtil, base64, RegExpr;
 
 implementation
@@ -167,18 +167,84 @@ function GetPageNumber(var DownloadThread: TDownloadThread; const URL: String;
 var
   Source: TStringList;
   Container: TTaskContainer;
+  Regx: TRegExpr;
+  picTree: String;
 
-  procedure ScanParse;
+  procedure GetURLs;
   var
-    s: String;
+    realurls: TStringList;
+    i, j: Integer;
+    r, u: String;
   begin
-    s := ReplaceRegExpr('(?ig)^.*var\spicTree\s*=[''"](.+?)[''"].*$',
-      Source.Text, '$1', True);
-    if s <> '' then
+    realurls := TStringList.Create;
+    try
+      realurls.NameValueSeparator := '=';
+      Regx.Expression := '(?ig)^.*realurl\.replace\("(.+)","(.+)".*$';
+      for i := 0 to Source.Count - 1 do
+      begin
+        if Regx.Exec(Source[i]) then
+        begin
+          r := Trim(LowerCase(Regx.Replace(Source[i], '$1', True)));
+          u := Trim(LowerCase(Regx.Replace(Source[i], '$2', True)));
+          if (r <> '') and (u <> '') then
+            realurls.Values[r] := u;
+        end;
+      end;
+
+      if (realurls.Count > 0) and (Container.PageLinks.Count > 0) then
+      begin
+        for i := 0 to Container.PageLinks.Count - 1 do
+        begin
+          for j := 0 to realurls.Count - 1 do
+          begin
+            if Pos(realurls.Names[j], LowerCase(Container.PageLinks[i])) <> 0 then
+              Container.PageLinks[i] := StringReplace(Container.PageLinks[i],
+                realurls.Names[j], realurls.ValueFromIndex[j], [rfIgnoreCase]);
+          end;
+        end;
+      end;
+    finally
+      realurls.Free;
+    end;
+  end;
+
+  function ScanSource: Boolean;
+  var
+    i: Integer;
+    jsurl: String = '';
+  begin
+    Result := False;
+    Regx.Expression := '(?ig)^.*var\spicTree\s*=[''"](.+?)[''"].*$';
+    picTree := Regx.Replace(Source.Text, '$1', True);
+
+    if picTree <> '' then
     begin
-      s := DecodeStringBase64(s);
-      s := StringReplace(s, '$qingtiandy$', #13#10, [rfReplaceAll]);
-      Container.PageLinks.AddText(s);
+      picTree := DecodeStringBase64(picTree);
+      picTree := StringReplace(picTree, '$qingtiandy$', #13#10, [rfReplaceAll]);
+      Container.PageLinks.AddText(picTree);
+
+      if Container.PageLinks.Count > 0 then
+      begin
+        for i := 0 to Source.Count - 1 do
+          if (Pos('<script', Source[i]) <> 0) and
+            (Pos('/base64.js', Source[i]) <> 0) then
+          begin
+            jsurl := GetVal(Source[i], 'src');
+            jsurl := StringReplace(jsurl, '../..', Module.RootURL, []);
+            Break;
+          end;
+        if jsurl <> '' then
+        begin
+          Source.Clear;
+          if DownloadThread.GetPage(TObject(Source), jsurl,
+            Container.Manager.retryConnect) then
+            if Source.Count > 0 then
+            begin
+              Result := True;
+              GetURLs;
+            end;
+        end;
+      end;
     end;
   end;
 
@@ -195,8 +261,16 @@ begin
     if DownloadThread.GetPage(TObject(Source), FillHost(Module.RootURL, URL),
       Container.Manager.retryConnect) then
     begin
-      Result := True;
-      ScanParse;
+      if Source.Count > 0 then
+      begin
+        Regx := TRegExpr.Create;
+        try
+          Source.Text := ConvertCharsetToUTF8(Source.Text);
+          Result := ScanSource;
+        finally
+          Regx.Free;
+        end;
+      end;
     end;
   finally
     Source.Free;
