@@ -630,13 +630,13 @@ begin
         // remove duplicate
         if links.Count > 0 then
         begin
+          c := 0;
+          j := 0;
           MainForm.ulTotalPtr := links.Count;
           MainForm.ulWorkPtr := j;
           FStatus := RS_UpdatingList + Format(' [%d/%d] %s',
             [websitePtr, websites.Count, website]) + ' | ' + RS_RemovingDuplicateFromNewTitle + '...';
           Synchronize(MainThreadShowGetting);
-          c := 0;
-          j := 0;
           while j < (links.Count - 1) do
           begin
             if Terminated then
@@ -672,13 +672,13 @@ begin
         // remove duplicate found<>current database
         if links.Count > 0 then
         begin
+          c := 0;
+          j := 0;
           MainForm.ulTotalPtr := links.Count;
           MainForm.ulWorkPtr := j;
           FStatus := RS_UpdatingList + Format(' [%d/%d] %s',
             [websitePtr, websites.Count, website]) + ' | ' + RS_RemovingDuplicateFromCurrentData + '...';
           Synchronize(MainThreadShowGetting);
-          c := 0;
-          j := 0;
           while j < links.Count do
           begin
             if Terminated then
