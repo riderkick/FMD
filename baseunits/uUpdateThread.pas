@@ -214,7 +214,7 @@ begin
           try
             Info.AddInfoToData(manager.names[workPtr], manager.links[workPtr],
               manager.mainDataProcess);
-            manager.CheckCommit(16);
+            manager.CheckCommit(32);
           finally
             manager.CS_AddInfoToData.Release;
           end;
