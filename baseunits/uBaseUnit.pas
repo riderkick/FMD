@@ -260,7 +260,7 @@ const
   SEPERATOR2 = '~%!';
 
   // common regex to split host/url
-  REGEX_HOST = '(?ig)^(\w+://)?([^/]*\.\w+)?(/?.*)$';
+  REGEX_HOST = '(?ig)^(\w+://)?([^/]*\.\w+)?(\:\d+)?(/?.*)$';
 
   ANIMEA_ID              = 0;
   MANGAHERE_ID           = 1;
@@ -1439,7 +1439,7 @@ begin
     try
       Expression := REGEX_HOST;
       th := Replace(Host, '$1$2', True);
-      tu := Replace(URL, '$3', True);
+      tu := Replace(URL, '$4', True);
       if (tu <> '') and (tu[1] <> '/') then
         tu := '/' + tu;
       Result := th + tu;
@@ -1450,7 +1450,7 @@ end;
 
 function RemoveHostFromURL(URL : String) : String;
 begin
-  Result := ReplaceRegExpr(REGEX_HOST, URL, '$3', True);
+  Result := ReplaceRegExpr(REGEX_HOST, URL, '$4', True);
 end;
 
 procedure RemoveHostFromURLs(const URLs : TStringList);
@@ -1463,7 +1463,7 @@ begin
     try
       Expression := REGEX_HOST;
       for i := 0 to URLs.Count - 1 do
-        URLs[i] := Replace(URLs[i], '$3', True);
+        URLs[i] := Replace(URLs[i], '$4', True);
     finally
       Free;
     end;
@@ -1482,7 +1482,7 @@ begin
       i := 0;
       while i < URLs.Count do
       begin
-        URLs[i] := Replace(URLs[i], '$3', True);
+        URLs[i] := Replace(URLs[i], '$4', True);
         if (URLs[i] = '') or (URLs[i] = '/') then
         begin
           URLs.Delete(i);

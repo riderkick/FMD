@@ -1995,7 +1995,7 @@ begin
     if regx.Exec(edURL.Text) then
     begin
       host := regx.Replace(edURL.Text, '$2', True);
-      link := regx.Replace(edURL.Text, '$3', True);
+      link := regx.Replace(edURL.Text, '$4', True);
     end;
 
     if (host <> '') and (link <> '') then
