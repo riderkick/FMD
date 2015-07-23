@@ -676,19 +676,20 @@ begin
           FStatus := RS_UpdatingList + Format(' [%d/%d] %s',
             [websitePtr, websites.Count, website]) + ' | ' + RS_RemovingDuplicateFromCurrentData + '...';
           Synchronize(MainThreadShowGetting);
+          mainDataProcess.InitLocateLink;
           while j < links.Count do
           begin
             if Terminated then
               Break;
             Inc(c);
-            if c > 249 then
+            if c > 999 then
             begin
               c := 0;
               MainForm.ulTotalPtr := links.Count;
               MainForm.ulWorkPtr := j;
               Synchronize(MainThreadStatusRepaint);
             end;
-            if mainDataProcess.LocateByLink(links[j]) then
+            if mainDataProcess.LinkExist(links[j]) then
             begin
               links.Delete(j);
               names.Delete(j);
@@ -696,6 +697,7 @@ begin
             else
               Inc(j);
           end;
+          mainDataProcess.DoneLocateLink;
         end;
         mainDataProcess.CloseTable;
 

@@ -44,6 +44,7 @@ type
     FAttachedSites: TStringList;
     FSQLSelect: String;
     FFilterSQL: String;
+    FLinks: TStringList;
   protected
     procedure CreateTable;
     procedure VacuumTable;
@@ -76,7 +77,11 @@ type
       const minusDay: Cardinal; const haveAllChecked, searchNewManga: Boolean;
       useRegExpr: Boolean = False): Boolean;
     function LocateByLink(ALink: String): Boolean;
+    function WebsiteLoaded(const AWebsite: String): Boolean;
+    function LinkExist(ALink: String): Boolean;
 
+    procedure InitLocateLink;
+    procedure DoneLocateLink;
     procedure CreateDatabase(AWebsite: String = '');
     procedure GetFieldNames(List: TStringList);
     procedure Close;
@@ -93,7 +98,6 @@ type
     procedure Commit;
     procedure RemoveFilter;
     procedure Sort;
-    function WebsiteLoaded(const AWebsite: String): Boolean;
 
     property Website: String read FWebsite write FWebsite;
     property TableName: String read FTableName write FTableName;
@@ -629,6 +633,7 @@ begin
     on E: Exception do
       WriteLog_E('TDBDataProcess.Destroy.Error!', E, Self);
   end;
+  DoneLocateLink;
   FAttachedSites.Free;
   FSitesList.Free;
   FQuery.Free;
@@ -1179,6 +1184,37 @@ begin
         Result := True;
         Break;
       end;
+end;
+
+function TDBDataProcess.LinkExist(ALink: String): Boolean;
+var
+  i: Integer;
+begin
+  Result := FLinks.Find(ALink, i);
+end;
+
+procedure TDBDataProcess.InitLocateLink;
+begin
+  if Assigned(FLinks) then
+    FLinks.Clear
+  else
+    FLinks := TStringList.Create;
+  if FQuery.Active then
+  begin
+    FQuery.First;
+    repeat
+      FLinks.Add(FQuery.Fields[1].AsString);
+      FQuery.Next;
+    until FQuery.EOF;
+    if FLinks.Count > 0 then
+      FLinks.Sort;
+  end;
+end;
+
+procedure TDBDataProcess.DoneLocateLink;
+begin
+  if Assigned(FLinks) then
+    FreeAndNil(FLinks);
 end;
 
 // ----- TDataProcess -----
