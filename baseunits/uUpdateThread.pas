@@ -667,7 +667,7 @@ begin
 
         mainDataProcess.OpenTable('', True);
         // remove duplicate found<>current database
-        if links.Count > 0 then
+        if (links.Count > 0) and (mainDataProcess.RecordCount > 0) then
         begin
           c := 0;
           j := 0;
