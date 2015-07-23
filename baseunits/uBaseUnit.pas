@@ -2875,17 +2875,17 @@ begin
   end;
 
   counter := 0;
-  while (HTTP.ResultCode = 302) or (HTTP.ResultCode = 301) do
+  while (HTTP.ResultCode > 300) and (HTTP.ResultCode < 400) do
   begin
     if checkTerminate then Exit;
     HTTPHeader.Values['Referer'] := ' ' + URL;
     s := Trim(HTTP.Headers.Values['Location']);
-    s := TrimLeftChar(s, ['/', ':']);
     if s <> '' then
     begin
-      if LowerCase(Copy(s, 1, 4)) <> 'http' then
-        s := 'http://' + s;
-      URL := s;
+      if s[1] = '/' then
+        URL := ReplaceRegExpr(REGEX_HOST, URL, '$1$2$3', True) + s
+      else
+        URL := s;
     end;
 
     if Pos(HENTAI2READ_ROOT, URL) <> 0 then
@@ -3124,7 +3124,7 @@ begin
   end;
 
   counter := 0;
-  while (HTTP.ResultCode = 302) or (HTTP.ResultCode = 301) do
+  while (HTTP.ResultCode > 300) and (HTTP.ResultCode < 400) do
   begin
     {$IFDEF DOWNLOADER}
     if checkTerminate then Exit;
@@ -3132,12 +3132,12 @@ begin
 
     HTTPHeader.Values['Referer'] := ' ' + URL;
     s := Trim(HTTP.Headers.Values['Location']);
-    s := TrimLeftChar(s, ['/', ':']);
     if s <> '' then
     begin
-      if LowerCase(Copy(s, 1, 4)) <> 'http' then
-        s := 'http://' + s;
-      URL := s;
+      if s[1] = '/' then
+        URL := ReplaceRegExpr(REGEX_HOST, URL, '$1$2$3', True) + s
+      else
+        URL := s;
     end;
 
     HTTP.Clear;
