@@ -202,7 +202,6 @@ const
   DOWNLOADEDCHAPTERS_FILE = 'downloadedchapters.ini';
   FAVORITES_FILE          = 'favorites.ini';
   IMAGE_FOLDER            = 'images' + PathDelim;
-  DATA_FOLDER             = 'data' + PathDelim;
   DATA_EXT                = '.dat';
   DBDATA_EXT              = '.db';
   CONFIG_FOLDER           = 'config' + PathDelim;
@@ -650,8 +649,10 @@ const
 var
   FMD_VERSION_NUMBER: String = '';
 
+  DATA_FOLDER: String = 'data' + PathDelim;
+
   {$IFDEF WINDOWS}
-  DEFAULT_PATH : string = '/downloads';
+  DEFAULT_PATH : string = '\downloads';
   {$ELSE}
   DEFAULT_PATH: string = '/downloads';
   {$ENDIF}
