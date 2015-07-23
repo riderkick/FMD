@@ -665,8 +665,8 @@ begin
           end;
         end;
 
-        mainDataProcess.OpenTable('', True);
         // remove duplicate found<>current database
+        mainDataProcess.OpenTable('', True);
         if (links.Count > 0) and (mainDataProcess.RecordCount > 0) then
         begin
           c := 0;
@@ -681,7 +681,7 @@ begin
             if Terminated then
               Break;
             Inc(c);
-            if c > 499 then
+            if c > 249 then
             begin
               c := 0;
               MainForm.ulTotalPtr := links.Count;
