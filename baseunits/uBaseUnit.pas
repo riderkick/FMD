@@ -2883,10 +2883,20 @@ begin
     s := Trim(HTTP.Headers.Values['Location']);
     if s <> '' then
     begin
-      if s[1] = '/' then
-        URL := ReplaceRegExpr(REGEX_HOST, URL, '$1$2$3', True) + s
-      else
-        URL := s;
+      with TRegExpr.Create do
+      try
+        Expression := REGEX_HOST;
+        if Replace(s, '$1', True) = '' then
+        begin
+          if s[1] <> '/' then
+            s := '/' + s;
+          URL := Replace(URL, '$1$2$3', True) + s;
+        end
+        else
+          URL := s;
+      finally
+        Free;
+      end;
     end;
 
     if Pos(HENTAI2READ_ROOT, URL) <> 0 then
@@ -3135,10 +3145,20 @@ begin
     s := Trim(HTTP.Headers.Values['Location']);
     if s <> '' then
     begin
-      if s[1] = '/' then
-        URL := ReplaceRegExpr(REGEX_HOST, URL, '$1$2$3', True) + s
-      else
-        URL := s;
+      with TRegExpr.Create do
+      try
+        Expression := REGEX_HOST;
+        if Replace(s, '$1', True) = '' then
+        begin
+          if s[1] <> '/' then
+            s := '/' + s;
+          URL := Replace(URL, '$1$2$3', True) + s;
+        end
+        else
+          URL := s;
+      finally
+        Free;
+      end;
     end;
 
     HTTP.Clear;
