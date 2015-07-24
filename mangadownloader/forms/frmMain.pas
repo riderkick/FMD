@@ -2126,6 +2126,7 @@ procedure TMainForm.cbSelectMangaChange(Sender: TObject);
 begin
   if cbSelectManga.ItemIndex < 0 then
     Exit;
+  options.WriteInteger('form', 'SelectManga', cbSelectManga.ItemIndex);
   if currentWebsite <> cbSelectManga.Items[cbSelectManga.ItemIndex] then
   begin
       if dataProcess = nil then
