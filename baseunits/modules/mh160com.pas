@@ -50,10 +50,9 @@ begin
       diralpha[StrToInt(URL) + 1] + '.html', 3) then
     begin
       Result := NO_ERROR;
-      Source.Text := CP936ToUTF8(Source.Text);
       Parse := TStringList.Create;
       try
-        ParseHTML(Source.Text, Parse);
+        ParseHTML(CP936ToUTF8(Source.Text), Parse);
         if Parse.Count > 0 then
           ScanParse;
       finally
@@ -147,10 +146,9 @@ begin
     if MangaInfo.GetPage(TObject(Source), MangaInfo.mangaInfo.url, Reconnect) then
     begin
       Result := NO_ERROR;
-      Source.Text := CP936ToUTF8(Source.Text);
       Parse := TStringList.Create;
       try
-        ParseHTML(Source.Text, Parse);
+        ParseHTML(CP936ToUTF8(Source.Text), Parse);
         if Parse.Count > 0 then
           ScanParse;
       finally
@@ -264,27 +262,29 @@ end;
 function GetPageNumber(var DownloadThread: TDownloadThread; const URL: String;
   Module: TModuleContainer): Boolean;
 var
-  Source: TStringList;
+  Source, Parse: TStringList;
   Container: TTaskContainer;
-  Regx: TRegExpr;
-  picTree: String;
 
-  function ScanSource: Boolean;
+  procedure ScanParse;
   var
     i: Integer;
+    picTree: String;
   begin
-    Result := False;
-    Regx.Expression := '(?ig)^.*var\spicTree\s*=[''"](.+?)[''"].*$';
-    picTree := Regx.Replace(Source.Text, '$1', True);
-    if picTree <> '' then
+    for i := 0 to Parse.Count - 1 do
     begin
-      picTree := DecodeStringBase64(picTree);
-      picTree := StringReplace(picTree, '$qingtiandy$', #13#10, [rfReplaceAll]);
-      Container.PageLinks.AddText(picTree);
-      if Container.PageLinks.Count > 0 then
-        for i := 0 to Container.PageLinks.Count - 1 do
-          Container.PageLinks[i] := getcurpic_skin4_20110501(Container.PageLinks[i]);
+      if Pos('var picTree', Parse[i]) <> 0 then
+      begin
+        picTree := ReplaceRegExpr('(?ig)^.*var\spicTree\s*=[''"](.+?)[''"].*$',
+          Parse[i], '$1', True);
+        picTree := DecodeStringBase64(picTree);
+        picTree := StringReplace(picTree, '$qingtiandy$', #13#10, [rfReplaceAll]);
+        Container.PageLinks.AddText(picTree);
+        Break;
+      end;
     end;
+    if Container.PageLinks.Count > 0 then
+      for i := 0 to Container.PageLinks.Count - 1 do
+        Container.PageLinks[i] := getcurpic_skin4_20110501(Container.PageLinks[i]);
   end;
 
 begin
@@ -300,15 +300,13 @@ begin
     if DownloadThread.GetPage(TObject(Source), FillHost(Module.RootURL, URL),
       Container.Manager.retryConnect) then
     begin
-      if Source.Count > 0 then
-      begin
-        Regx := TRegExpr.Create;
-        try
-          Source.Text := CP936ToUTF8(Source.Text);
-          Result := ScanSource;
-        finally
-          Regx.Free;
-        end;
+      Parse := TStringList.Create;
+      try
+        ParseHTML(CP936ToUTF8(Source.Text), Parse);
+        if Parse.Count > 0 then
+          ScanParse;
+      finally
+        Parse.Free;
       end;
     end;
   finally
