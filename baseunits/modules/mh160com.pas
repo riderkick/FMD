@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, WebsiteModules, uData, uBaseUnit, uDownloadsManager,
-  LConvEncoding, HTMLUtil, base64, RegExpr;
+  synacode, synautil, LConvEncoding, HTMLUtil, base64, RegExpr;
 
 implementation
 
@@ -162,6 +162,105 @@ begin
   end;
 end;
 
+function padZero(const S: String; len: Integer): String;
+begin
+  Result := S;
+  while Length(Result) < len do
+    Result := '0' + Result;
+end;
+
+function getcurpic_skin4_20110501(const URL: String): String;
+
+  function getrealurl(const S: String): String;
+  begin
+    Result := S;
+    if Pos('img1.fshmy.com', S) <> 0 then
+      Result := StringReplace(S, 'img1.fshmy.com', 'img1.hgysxz.cn', [])
+    else if Pos('imgs.k6188.com', S) <> 0 then
+      Result := StringReplace(S, 'imgs.k6188.com', 'imgs.zhujios.com', [])
+    else if Pos('073.k6188.com', S) <> 0 then
+      Result := StringReplace(S, '073.k6188.com', 'cartoon.zhujios.com', [])
+    else if Pos('cartoon.jide123.cc', S) <> 0 then
+      Result := StringReplace(S, 'cartoon.jide123.cc',
+        'cartoon.shhh88.com', [])
+    else if Pos('www.jide123.com', S) <> 0 then
+      Result := StringReplace(S, 'www.jide123.com', 'cartoon.shhh88.com', [])
+    else if Pos('cartoon.chuixue123.com', S) <> 0 then
+      Result := StringReplace(S, 'cartoon.chuixue123.com',
+        'cartoon.shhh88.com', [])
+    else if Pos('p10.tuku.cc:8899', S) <> 0 then
+      Result := StringReplace(S, 'p10.tuku.cc:8899', 'tkpic.tukucc.com', []);
+  end;
+
+  function getkekerealurl(const S: String): String;
+  var
+    i: Integer;
+    sn: String;
+  begin
+    Result := S;
+    for i := 1 to 15 do
+    begin
+      sn := '/dm' + padZero(IntToStr(i), 2) + '/';
+      if Pos(sn, S) <> 0 then
+      begin
+        Result := 'http://2.cococomic.com:9115' + sn + SeparateRight(S, sn);
+        Break;
+      end;
+    end;
+  end;
+
+  function getremoteqqurl(const S: String): String;
+  var
+    qqfilename: String;
+  begin
+    Result := S;
+    qqfilename := SeparateRight(S, 'dir_path=/');
+    qqfilename := StringReplace(qqfilename, '&name', '', []);
+    qqfilename := StringReplace(qqfilename, 'mif2', 'jpg', []);
+    qqfilename := StringReplace(qqfilename, '/', '_', [rfReplaceAll]);
+    Result := 'http://img11.aoyuanba.com/pictmdown.php?p=' +
+      EncodeStringBase64(S) + '$sf=' + qqfilename +
+      '&ym=' + 'http://img11.hgysxz.cn';
+  end;
+
+begin
+  Result := URL;
+  if Pos('qq.com/store_file_download', URL) <> 0 then
+    Result := getremoteqqurl(URL)
+  else
+  if Pos('/ok-comic', URL) <> 0 then
+    Result := getkekerealurl(URL)
+  else if Pos('mangafiles.com', URL) <> 0 then
+    Result := 'http://img6.aoyuanba.com:8056/pictmdown.php?p=' + EncodeStringBase64(URL)
+  else if Pos('imgs.gengxin123.com', URL) <> 0 then
+  begin
+    Result := StringReplace(URL, 'imgs.gengxin123.com', 'imgs1.ysryd.com',
+      [rfIgnoreCase]);
+    Result := 'http://imgsty1.aoyuanba.com/pictmdown.php?bu=' + 'http://www.kxdm.com/' +
+      '&p=' + EncodeStringBase64(Result);
+  end
+  else if Pos('imgs1.ysryd.com', URL) <> 0 then
+    Result := 'http://imgsty1.aoyuanba.com/pictmdown.php?bu=' +
+      'http://www.kxdm.com/' + '&p=' + EncodeStringBase64(URL)
+  else if Pos('dmzj.com', URL) <> 0 then
+    Result := 'http://imgsty.aoyuanba.com:8056/pictmdown.php?bu=' +
+      'http://manhua.dmzj.com/' + '&p=' + EncodeStringBase64(EncodeURL(URL))
+  else if Pos('imgsrc.baidu.com', URL) <> 0 then
+    Result := 'http://img7.aoyuanba.com:8056/picinc/qTcms.Pic.FangDao.asp?p=' +
+      EncodeStringBase64(URL)
+  else if Pos('sinaimg.cn', URL) <> 0 then
+    Result := 'http://img7.aoyuanba.com:8056/picinc/qTcms.Pic.FangDao.asp?p=' +
+      EncodeStringBase64(URL)
+  else if Pos('jumpcn.cc', URL) <> 0 then
+    Result := 'http://img7.aoyuanba.com:8056/picinc/qTcms.Pic.FangDao.asp?p=' +
+      EncodeStringBase64(URL)
+  else if Pos('JLmh160', URL) <> 0 then
+    Result := 'http://img3.aoyuanba.com/picinc/qTcms.Pic.FangDao.asp?p=' +
+      EncodeStringBase64(URL)
+  else
+    Result := getrealurl(URL);
+end;
+
 function GetPageNumber(var DownloadThread: TDownloadThread; const URL: String;
   Module: TModuleContainer): Boolean;
 var
@@ -211,7 +310,7 @@ var
   function ScanSource: Boolean;
   var
     i: Integer;
-    jsurl: String = '';
+    //jsurl: String = '';
   begin
     Result := False;
     Regx.Expression := '(?ig)^.*var\spicTree\s*=[''"](.+?)[''"].*$';
@@ -222,7 +321,11 @@ var
       picTree := DecodeStringBase64(picTree);
       picTree := StringReplace(picTree, '$qingtiandy$', #13#10, [rfReplaceAll]);
       Container.PageLinks.AddText(picTree);
+      if Container.PageLinks.Count > 0 then
+        for i := 0 to Container.PageLinks.Count - 1 do
+          Container.PageLinks[i] := getcurpic_skin4_20110501(Container.PageLinks[i]);
 
+      {
       if Container.PageLinks.Count > 0 then
       begin
         for i := 0 to Source.Count - 1 do
@@ -245,6 +348,7 @@ var
             end;
         end;
       end;
+      }
     end;
   end;
 
