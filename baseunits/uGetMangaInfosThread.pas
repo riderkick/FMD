@@ -140,7 +140,10 @@ begin
       FCover.Clear;
       // If there's cover then we will load it to the TPicture component.
       if OptionEnableLoadCover and (Trim(FInfo.mangaInfo.coverLink) <> '') then
+      begin
+        FInfo.FHTTP.Document.Clear;
         FIsHasMangaCover := GetPage(FInfo.FHTTP, TObject(FCover), FInfo.mangaInfo.coverLink, 3)
+      end
       else
         FIsHasMangaCover := False;
       Synchronize(MainThreadShowCover);
