@@ -186,6 +186,7 @@ object MainForm: TMainForm
           Title.Text.Strings = (
             'TAChart'
           )
+          Toolset = TransferRateToolset
           Align = alClient
           BorderSpacing.Bottom = 2
           Visible = False
@@ -5703,6 +5704,10 @@ object MainForm: TMainForm
       '1|0|?|'
     )
     left = 648
+    top = 72
+  end
+  object TransferRateToolset: TChartToolset
+    left = 608
     top = 72
   end
 end

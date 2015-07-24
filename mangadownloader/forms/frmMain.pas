@@ -19,7 +19,7 @@ uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, LCLType,
   ExtCtrls, ComCtrls, Buttons, Spin, Menus, VirtualTrees, RichMemo, IniFiles,
   simpleipc, lclproc, types, strutils, LCLIntf, DefaultTranslator, EditBtn,
-  FileUtil, TAGraph, TASources, TASeries, AnimatedGif,
+  FileUtil, TAGraph, TASources, TASeries, TATools, AnimatedGif,
   uBaseUnit, uData, uDownloadsManager, uFavoritesManager, uUpdateThread,
   uUpdateDBThread, uSubThread, uSilentThread, uMisc, uGetMangaInfosThread,
   uTranslation, frmDropTarget, USimpleException, USimpleLogger;
@@ -60,6 +60,7 @@ type
     cbUseRegExpr: TCheckBox;
     cbOptionProxyType: TComboBox;
     cbOptionOneInstanceOnly: TCheckBox;
+    TransferRateToolset: TChartToolset;
     miFavoritesStopCheckNewChapter: TMenuItem;
     miFavoritesCheckNewChapter: TMenuItem;
     pnDownloadToolbarLeft: TPanel;
