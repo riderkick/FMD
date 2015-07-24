@@ -736,7 +736,7 @@ begin
           names.Clear;
           links.Clear;
 
-          if (workPtr > 0) and ((not Terminated) or (not SitesWithSortedList(website))) then
+          if (workPtr > 0) and (not SitesWithSortedList(website)) then
           begin
             FStatus := RS_UpdatingList + Format(' [%d/%d] %s',
               [websitePtr, websites.Count, website]) + ' | ' + RS_SavingData + '...';
