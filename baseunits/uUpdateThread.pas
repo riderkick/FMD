@@ -21,13 +21,11 @@ type
 
   TUpdateMangaThread = class(TFMDThread)
   protected
+    Info: TMangaInformation;
     checkStyle: TCheckStyleType;
-    names, links: TStringList;
     workPtr: Integer;
     manager: TUpdateMangaManagerThread;
-    Info: TMangaInformation;
 
-    procedure MainThreadUpdateNamesAndLinks;
     procedure Execute; override;
     procedure DoTerminate; override;
   public
@@ -93,36 +91,31 @@ implementation
 uses
   frmMain, Dialogs, ComCtrls, Forms, Controls, USimpleLogger;
 
-// ----- TUpdateMangaThread -----
+{ TUpdateMangaThread }
 
 constructor TUpdateMangaThread.Create;
 begin
   inherited Create(True);
-  names := TStringList.Create;
-  links := TStringList.Create;
-  Info := TMangaInformation.Create(Self);
-  info.isGetByUpdater := True;
 end;
 
 destructor TUpdateMangaThread.Destroy;
 begin
-  links.Free;
-  names.Free;
-  Info.Free;
+  if Assigned(Info) then
+    Info.Free;
   inherited Destroy;
 end;
 
-procedure TUpdateMangaThread.MainThreadUpdateNamesAndLinks;
-begin
-  if names.Count = 0 then
-    Exit;
-  manager.links.AddStrings(links);
-  manager.names.AddStrings(names);
-end;
-
 procedure TUpdateMangaThread.Execute;
+var
+  names, links: TStringList;
 begin
   try
+    if checkStyle = CS_INFO then
+      Info := TMangaInformation.Create(Self, True)
+    else
+      Info := TMangaInformation.Create(Self, False);
+    Info.isGetByUpdater := True;
+
     case CheckStyle of
       CS_DIRECTORY_COUNT:
       begin
@@ -148,58 +141,65 @@ begin
       //get names and links
       CS_DIRECTORY_PAGE, CS_DIRECTORY_PAGE_2:
       begin
-        if BROWSER_INVERT then
-        begin
-          if checkStyle = CS_DIRECTORY_PAGE then
-            workPtr := manager.directoryCount - workPtr - 1
-          else
-          if checkStyle = CS_DIRECTORY_PAGE_2 then
-            workPtr := manager.directoryCount2 - workPtr - 1;
-        end;
-        if SitesMemberOf(manager.website,
-          [BATOTO_ID, FAKKU_ID, MANGAEDEN_ID, PERVEDEN_ID]) then
-        begin
-          if checkStyle = CS_DIRECTORY_PAGE then
+        names := TStringList.Create;
+        links := TStringList.Create;
+        try
+          if BROWSER_INVERT then
           begin
-            BATOTO_BROWSER := BATOTO_BROWSER_1;
-            FAKKU_BROWSER := FAKKU_BROWSER_1;
-            MANGAEDEN_BROWSER := MANGAEDEN_BROWSER_1;
-            PERVEDEN_BROWSER := PERVEDEN_BROWSER_1;
-            Info.GetNameAndLink(names, links, manager.website, IntToStr(workPtr));
+            if checkStyle = CS_DIRECTORY_PAGE then
+              workPtr := manager.directoryCount - workPtr - 1
+            else
+            if checkStyle = CS_DIRECTORY_PAGE_2 then
+              workPtr := manager.directoryCount2 - workPtr - 1;
+          end;
+          if SitesMemberOf(manager.website,
+            [BATOTO_ID, FAKKU_ID, MANGAEDEN_ID, PERVEDEN_ID]) then
+          begin
+            if checkStyle = CS_DIRECTORY_PAGE then
+            begin
+              BATOTO_BROWSER := BATOTO_BROWSER_1;
+              FAKKU_BROWSER := FAKKU_BROWSER_1;
+              MANGAEDEN_BROWSER := MANGAEDEN_BROWSER_1;
+              PERVEDEN_BROWSER := PERVEDEN_BROWSER_1;
+              Info.GetNameAndLink(names, links, manager.website, IntToStr(workPtr));
+            end
+            else
+            if checkStyle = CS_DIRECTORY_PAGE_2 then
+            begin
+              BATOTO_BROWSER := BATOTO_BROWSER_2;
+              FAKKU_BROWSER := FAKKU_BROWSER_2;
+              MANGAEDEN_BROWSER := MANGAEDEN_BROWSER_2;
+              PERVEDEN_BROWSER := PERVEDEN_BROWSER_2;
+              Info.GetNameAndLink(names, links, manager.website, IntToStr(workPtr));
+            end;
           end
           else
-          if checkStyle = CS_DIRECTORY_PAGE_2 then
           begin
-            BATOTO_BROWSER := BATOTO_BROWSER_2;
-            FAKKU_BROWSER := FAKKU_BROWSER_2;
-            MANGAEDEN_BROWSER := MANGAEDEN_BROWSER_2;
-            PERVEDEN_BROWSER := PERVEDEN_BROWSER_2;
             Info.GetNameAndLink(names, links, manager.website, IntToStr(workPtr));
           end;
-        end
-        else
-        begin
-          Info.GetNameAndLink(names, links, manager.website, IntToStr(workPtr));
-        end;
 
-        //if website has sorted list by latest added
-        //we will stop at first found against current db
-        if SitesWithSortedList(manager.website) then
-        begin
-          if links.Count > 0 then
-            if manager.mainDataProcess.LinkExist(links.Strings[0]) then
-              manager.isFinishSearchingForNewManga := True;
-        end;
-
-        if links.Count > 0 then
-        begin
-          manager.CS_AddNamesAndLinks.Acquire;
-          try
-            manager.links.AddStrings(links);
-            manager.names.AddStrings(names);
-          finally
-            manager.CS_AddNamesAndLinks.Release;
+          //if website has sorted list by latest added
+          //we will stop at first found against current db
+          if SitesWithSortedList(manager.website) then
+          begin
+            if links.Count > 0 then
+              if manager.mainDataProcess.LinkExist(links.Strings[0]) then
+                manager.isFinishSearchingForNewManga := True;
           end;
+
+          if links.Count > 0 then
+          begin
+            manager.CS_AddNamesAndLinks.Acquire;
+            try
+              manager.links.AddStrings(links);
+              manager.names.AddStrings(names);
+            finally
+              manager.CS_AddNamesAndLinks.Release;
+            end;
+          end;
+        finally
+          names.Free;
+          links.Free;
         end;
       end;
 

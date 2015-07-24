@@ -180,7 +180,7 @@ type
 
     procedure OnTag(NoCaseTag, ActualTag: String);
     procedure OnText(Text: String);
-    constructor Create(AOwnerThread: TFMDThread = nil);
+    constructor Create(AOwnerThread: TFMDThread = nil; CreateInfo: Boolean = True);
     destructor Destroy; override;
     procedure ClearInfo;
     function GetDirectoryPage(var Page: Integer; const website: String): Byte;
@@ -1834,21 +1834,24 @@ end;
 
 { TMangaInformation }
 
-constructor TMangaInformation.Create(AOwnerThread: TFMDThread);
+constructor TMangaInformation.Create(AOwnerThread: TFMDThread;
+  CreateInfo: Boolean);
 begin
   inherited Create;
   FHTTP := THTTPSendThread.Create(AOwnerThread);
   FHTTP.Headers.NameValueSeparator := ':';
   parse := TStringList.Create;
-  mangaInfo := TMangaInfo.Create;
+  if CreateInfo then
+    mangaInfo := TMangaInfo.Create;
   isGetByUpdater := False;
 end;
 
 destructor TMangaInformation.Destroy;
 begin
-  ClearInfo;
-  mangaInfo.Free;
-  parse.Free;
+  if Assigned(mangaInfo) then
+    mangaInfo.Free;
+  if Assigned(parse) then
+    parse.Free;
   FHTTP.Free;
   inherited Destroy;
 end;
