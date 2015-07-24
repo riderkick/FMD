@@ -8,6 +8,18 @@ https://www.mediafire.com/folder/3ccy2c7g36hp3/Fmd
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.19.0 (xx-07-2015)
+[+] Mangalist data now using sqlite3, existing data will be automatically converted. 
+    BUGS EXPECTED!
+[*] Opening mangalist will be executed in separated thread, access to mangalist will be blocked until the process finish
+[*] Search mangalist will be executed in separated thread, eleminate lag when searching large mangalist
+[+] Added Soujosense (EN)
+[+] Added mh160 (CN)
+[*] Fix freeze in the middle of shutdown counter
+[*] Fix Readmanga.today
+[*] Fix various issue with unicode path
+[*] Various changes and bug fixes
+
 0.9.18.2 (05-07-2015)
 [*] Minor bug fixes
 
