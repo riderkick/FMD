@@ -468,8 +468,9 @@ begin
         begin
           TerminateThreads;
           Break;
-        end;
-        Sleep(SOCKHEARTBEATRATE);   //waiting for empty slot / slowing down the circle
+        end
+        else
+          Sleep(SOCKHEARTBEATRATE);   //waiting for empty slot / slowing down the circle
       end;
 
       if Terminated then
