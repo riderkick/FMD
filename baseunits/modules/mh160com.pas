@@ -300,6 +300,7 @@ begin
     if DownloadThread.GetPage(TObject(Source), FillHost(Module.RootURL, URL),
       Container.Manager.retryConnect) then
     begin
+      Result := True;
       Parse := TStringList.Create;
       try
         ParseHTML(CP936ToUTF8(Source.Text), Parse);
