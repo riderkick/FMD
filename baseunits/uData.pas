@@ -2630,7 +2630,6 @@ var
   s: String;
   j, k: Integer;
   del: Boolean;
-  rex: TRegExpr;
   Source: TStringList;
   Parser: THTMLParser;
   WebsiteID: Cardinal;
@@ -3115,21 +3114,12 @@ begin
   //mangaInfo.summary := Trim(StringReplace(mangaInfo.summary, '\r\n\r\n', '\r\n', [rfReplaceAll]));
 
   // fix info
-  rex := TRegExpr.Create;
-  try
-    rex.Expression := '^[\-\:]$';
-    if rex.Exec(mangaInfo.authors) then
-      mangaInfo.authors := '';
-    if rex.Exec(mangaInfo.artists) then
-      mangaInfo.artists := '';
-    if rex.Exec(mangaInfo.summary) then
-      mangaInfo.summary := '';
-    rex.Expression := '\<\/?\w\>';
-    if rex.Exec(LowerCase(mangaInfo.summary)) then
-      mangaInfo.summary := '';
-  finally
-    rex.Free;
-  end;
+  if (mangaInfo.authors = '-') or (mangaInfo.authors = ':') then
+    mangaInfo.authors := '';
+  if (mangaInfo.artists = '-') or (mangaInfo.artists = ':') then
+    mangaInfo.artists := '';
+  if (mangaInfo.summary = '-') or (mangaInfo.summary = ':') then
+    mangaInfo.summary := '';
 
   // remove duplicate chapter
   if mangaInfo.chapterLinks.Count > 0 then
