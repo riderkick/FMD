@@ -45,6 +45,7 @@ type
     FSQLSelect: String;
     FFilterSQL: String;
     FLinks: TStringList;
+    function GetLinkCount: Integer;
   protected
     procedure CreateTable;
     procedure VacuumTable;
@@ -108,6 +109,7 @@ type
     property SitesList: TStringList read FSitesList write FSitesList;
     property WebsiteName[RecIndex: Integer]: String read GetWebsiteName;
     property Value[RecIndex, ParamNo: Integer]: String read GetValue;
+    property LinkCount: Integer read GetLinkCount;
   end;
 
   { TDataProcess }
@@ -392,6 +394,14 @@ begin
 end;
 
 { TDBDataProcess }
+
+function TDBDataProcess.GetLinkCount: Integer;
+begin
+  if Assigned(FLinks) then
+    Result := FLinks.Count
+  else
+    Result := 0;
+end;
 
 procedure TDBDataProcess.CreateTable;
 begin
@@ -1190,7 +1200,10 @@ function TDBDataProcess.LinkExist(ALink: String): Boolean;
 var
   i: Integer;
 begin
-  Result := FLinks.Find(ALink, i);
+  if Assigned(FLinks) then
+    Result := FLinks.Find(ALink, i)
+  else
+    Result := False;
 end;
 
 procedure TDBDataProcess.InitLocateLink;

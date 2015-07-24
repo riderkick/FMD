@@ -187,7 +187,7 @@ begin
         if SitesWithSortedList(manager.website) then
         begin
           if links.Count > 0 then
-            if manager.mainDataProcess.LocateByLink(links.Strings[0]) then
+            if manager.mainDataProcess.LinkExist(links.Strings[0]) then
               manager.isFinishSearchingForNewManga := True;
         end;
 
@@ -588,6 +588,10 @@ begin
         if not mainDataProcess.Connect(twebsite) then
           mainDataProcess.CreateDatabase(twebsite);
 
+        mainDataProcess.OpenTable;
+        mainDataProcess.InitLocateLink;
+        mainDataProcess.CloseTable;
+
         //get directory page count
         INIAdvanced.Reload;
         directoryCount := 0;
@@ -666,8 +670,7 @@ begin
         end;
 
         // remove duplicate found<>current database
-        mainDataProcess.OpenTable('', True);
-        if (links.Count > 0) and (mainDataProcess.RecordCount > 0) then
+        if (links.Count > 0) and (mainDataProcess.LinkCount > 0) then
         begin
           c := 0;
           j := 0;
@@ -676,7 +679,6 @@ begin
           FStatus := RS_UpdatingList + Format(' [%d/%d] %s',
             [websitePtr, websites.Count, website]) + ' | ' + RS_RemovingDuplicateFromCurrentData + '...';
           Synchronize(MainThreadShowGetting);
-          mainDataProcess.InitLocateLink;
           while j < links.Count do
           begin
             if Terminated then
@@ -697,9 +699,9 @@ begin
             else
               Inc(j);
           end;
-          mainDataProcess.DoneLocateLink;
         end;
-        mainDataProcess.CloseTable;
+
+        mainDataProcess.DoneLocateLink;
 
         //get manga info
         if links.Count > 0 then
@@ -739,7 +741,6 @@ begin
             FStatus := RS_UpdatingList + Format(' [%d/%d] %s',
               [websitePtr, websites.Count, website]) + ' | ' + RS_SavingData + '...';
             Synchronize(MainThreadShowGetting);
-            mainDataProcess.CloseTable;
             mainDataProcess.Sort;
             mainDataProcess.Close;
             Synchronize(RefreshList);
