@@ -269,53 +269,13 @@ var
   Regx: TRegExpr;
   picTree: String;
 
-  procedure GetURLs;
-  var
-    realurls: TStringList;
-    i, j: Integer;
-    r, u: String;
-  begin
-    realurls := TStringList.Create;
-    try
-      realurls.NameValueSeparator := '=';
-      Regx.Expression := '(?ig)^.*realurl\.replace\("(.+)","(.+)".*$';
-      for i := 0 to Source.Count - 1 do
-      begin
-        if Regx.Exec(Source[i]) then
-        begin
-          r := Trim(LowerCase(Regx.Replace(Source[i], '$1', True)));
-          u := Trim(LowerCase(Regx.Replace(Source[i], '$2', True)));
-          if (r <> '') and (u <> '') then
-            realurls.Values[r] := u;
-        end;
-      end;
-
-      if (realurls.Count > 0) and (Container.PageLinks.Count > 0) then
-      begin
-        for i := 0 to Container.PageLinks.Count - 1 do
-        begin
-          for j := 0 to realurls.Count - 1 do
-          begin
-            if Pos(realurls.Names[j], LowerCase(Container.PageLinks[i])) <> 0 then
-              Container.PageLinks[i] := StringReplace(Container.PageLinks[i],
-                realurls.Names[j], realurls.ValueFromIndex[j], [rfIgnoreCase]);
-          end;
-        end;
-      end;
-    finally
-      realurls.Free;
-    end;
-  end;
-
   function ScanSource: Boolean;
   var
     i: Integer;
-    //jsurl: String = '';
   begin
     Result := False;
     Regx.Expression := '(?ig)^.*var\spicTree\s*=[''"](.+?)[''"].*$';
     picTree := Regx.Replace(Source.Text, '$1', True);
-
     if picTree <> '' then
     begin
       picTree := DecodeStringBase64(picTree);
@@ -324,31 +284,6 @@ var
       if Container.PageLinks.Count > 0 then
         for i := 0 to Container.PageLinks.Count - 1 do
           Container.PageLinks[i] := getcurpic_skin4_20110501(Container.PageLinks[i]);
-
-      {
-      if Container.PageLinks.Count > 0 then
-      begin
-        for i := 0 to Source.Count - 1 do
-          if (Pos('<script', Source[i]) <> 0) and
-            (Pos('/base64.js', Source[i]) <> 0) then
-          begin
-            jsurl := GetVal(Source[i], 'src');
-            jsurl := StringReplace(jsurl, '../..', Module.RootURL, []);
-            Break;
-          end;
-        if jsurl <> '' then
-        begin
-          Source.Clear;
-          if DownloadThread.GetPage(TObject(Source), jsurl,
-            Container.Manager.retryConnect) then
-            if Source.Count > 0 then
-            begin
-              Result := True;
-              GetURLs;
-            end;
-        end;
-      end;
-      }
     end;
   end;
 
