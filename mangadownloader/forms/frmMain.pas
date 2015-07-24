@@ -870,7 +870,6 @@ procedure TOpenDBThread.SyncOpenFinish;
 begin
   with MainForm do
   begin
-    currentWebsite := cbSelectManga.Items[cbSelectManga.ItemIndex];
     LastSearchStr := upcase(edSearch.Text);
     LastSearchWeb := currentWebsite;
     if dataProcess.Filtered then
@@ -2129,16 +2128,17 @@ begin
   options.WriteInteger('form', 'SelectManga', cbSelectManga.ItemIndex);
   if currentWebsite <> cbSelectManga.Items[cbSelectManga.ItemIndex] then
   begin
-      if dataProcess = nil then
-        dataProcess := TDBDataProcess.Create;
-      vtMangaList.Clear;
-      lbMode.Caption := Format(RS_ModeAll, [0]);
-      if DataFileExist(cbSelectManga.Items[cbSelectManga.ItemIndex]) then
-      begin
-        OpenDataDB(cbSelectManga.Items[cbSelectManga.ItemIndex]);
-      end
-      else
-        RunGetList;
+    currentWebsite := cbSelectManga.Items[cbSelectManga.ItemIndex];
+    if dataProcess = nil then
+      dataProcess := TDBDataProcess.Create;
+    vtMangaList.Clear;
+    lbMode.Caption := Format(RS_ModeAll, [0]);
+    if DataFileExist(cbSelectManga.Items[cbSelectManga.ItemIndex]) then
+    begin
+      OpenDataDB(cbSelectManga.Items[cbSelectManga.ItemIndex]);
+    end
+    else
+      RunGetList;
   end;
 end;
 
