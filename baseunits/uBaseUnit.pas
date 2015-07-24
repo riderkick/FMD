@@ -3075,6 +3075,9 @@ begin
   end;
 
   HTTPHeader.Values['DNT'] := ' 1';
+  HTTPHeader.Values['Accept'] := ' text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8';
+  HTTPHeader.Values['Accept-Charset'] := ' UTF-8';
+  HTTPHeader.Values['Accept-Language'] := ' en-US,en;q=0.8';
   HTTP.Protocol := '1.1';
   HTTP.KeepAlive := False;
   HTTP.Timeout := OptionConnectionTimeout;
