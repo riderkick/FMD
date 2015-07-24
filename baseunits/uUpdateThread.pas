@@ -402,7 +402,7 @@ procedure TUpdateMangaManagerThread.GetInfo(const limit: Integer;
   procedure WaitForThreads;
   begin
     while threads.Count > 0 do
-      Sleep(200);
+      Sleep(SOCKHEARTBEATRATE);
   end;
 
   procedure TerminateThreads;
@@ -469,7 +469,7 @@ begin
           TerminateThreads;
           Break;
         end;
-        Sleep(250);   //waiting for empty slot / slowing down the circle
+        Sleep(SOCKHEARTBEATRATE);   //waiting for empty slot / slowing down the circle
       end;
 
       if Terminated then
@@ -524,7 +524,7 @@ procedure TUpdateMangaManagerThread.DoTerminate;
 begin
   Synchronize(MainThreadEndGetting);
   while threads.Count > 0 do
-    Sleep(200);
+    Sleep(SOCKHEARTBEATRATE);
   inherited DoTerminate;
 end;
 
@@ -537,9 +537,16 @@ procedure TUpdateMangaManagerThread.Execute;
     while threads.Count > 0 do
     begin
       if Terminated then
-        for i := threads.Count - 1 downto 0 do
-          TUpdateMangaThread(threads[i]).Terminate;
-      Sleep(200);
+      begin
+        CS_threads.Acquire;
+        try
+          for i := threads.Count - 1 downto 0 do
+            TUpdateMangaThread(threads[i]).Terminate;
+        finally
+          CS_threads.Release;
+        end;
+      end;
+      Sleep(SOCKHEARTBEATRATE);
     end;
   end;
 
