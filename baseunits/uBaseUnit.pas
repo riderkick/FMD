@@ -2858,6 +2858,13 @@ begin
     HTTP.MimeType := 'application/x-www-form-urlencoded';
   end;
 
+  if meth <> 'POST' then
+  begin
+    HTTP.Document.Clear;
+    HTTP.RangeStart := 0;
+    HTTP.RangeEnd := 0;
+  end;
+
   counter := 0;
   HTTP.Headers.Text := HTTPHeader.Text;
   while (not HTTP.HTTPMethod(meth, URL)) or
@@ -3114,6 +3121,10 @@ begin
             HTTPHeader.Values['Referer'] := ' ' + WebsiteRoots[mangaSiteID, 1];
         end;
     end;
+
+  HTTP.Document.Clear;
+  HTTP.RangeStart := 0;
+  HTTP.RangeEnd := 0;
 
   {$IFDEF DOWNLOADER}
   if checkTerminate then Exit;
