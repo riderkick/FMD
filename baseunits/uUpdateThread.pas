@@ -12,7 +12,7 @@ interface
 
 uses
   Classes, SysUtils, typinfo, syncobjs, uData, LazFileUtils,
-  uBaseUnit, uFMDThread, uTranslation, uMisc;
+  uBaseUnit, uFMDThread, uTranslation, uMisc, WebsiteModules;
 
 type
   TUpdateMangaManagerThread = class;
@@ -60,6 +60,7 @@ type
     mainDataProcess: TDBDataProcess;
     names, links, websites: TStringList;
     website, twebsite: String;
+    ModuleId: Integer;
     workPtr, directoryCount,
     // for fakku's doujinshi only
     directoryCount2, numberOfThreads, websitePtr: Integer;
@@ -116,6 +117,7 @@ begin
     else
       Info := TMangaInformation.Create(Self, False);
     Info.isGetByUpdater := True;
+    info.ModuleId := manager.ModuleId;
 
     case CheckStyle of
       CS_DIRECTORY_COUNT:
@@ -330,6 +332,7 @@ begin
   threads := TFPList.Create;
   SortedList := False;
   NoMangaInfo := False;
+  ModuleId := -1;
 end;
 
 destructor TUpdateMangaManagerThread.Destroy;
@@ -579,6 +582,7 @@ begin
       while websitePtr < websites.Count do
       begin
         website := websites.Strings[websitePtr];
+        ModuleId := Modules.LocateModule(website);
         SortedList := SitesWithSortedList(website);
         NoMangaInfo := SitesWithoutInformation(website);
         Inc(websitePtr);

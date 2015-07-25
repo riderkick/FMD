@@ -177,6 +177,7 @@ type
     isGenerateFolderChapterName: Boolean;
     isRemoveUnicode: Boolean;
     FHTTP: THTTPSend;
+    ModuleId: Integer;
 
     procedure OnTag(NoCaseTag, ActualTag: String);
     procedure OnText(Text: String);
@@ -1844,6 +1845,7 @@ begin
   if CreateInfo then
     mangaInfo := TMangaInfo.Create;
   isGetByUpdater := False;
+  ModuleId := -2;
 end;
 
 destructor TMangaInformation.Destroy;
@@ -1983,7 +1985,6 @@ var
 
 begin
   Page := 0;
-  WebsiteID := GetMangaSiteID(website);
 
   //load User-Agent from INIAdvanced
   if website <> '' then
@@ -2000,10 +2001,13 @@ begin
   else
   begin
     BROWSER_INVERT := False;
-    if Modules.ModuleAvailable(website, MMGetDirectoryPageNumber, p) then
-      Result := Modules.GetDirectoryPageNumber(Self, Page, p)
+    if ModuleId <> -1 then
+      ModuleId := Modules.LocateModule(website);
+    if Modules.ModuleAvailable(ModuleId, MMGetDirectoryPageNumber) then
+      Result := Modules.GetDirectoryPageNumber(Self, Page, ModuleId)
     else
     begin
+      WebsiteID := GetMangaSiteID(website);
       Source := TStringList.Create;
       if website = WebsiteRoots[ANIMEA_ID, 0] then
         Result := GetAnimeADirectoryPageNumber
@@ -2173,7 +2177,6 @@ var
   Source: TStringList;
   Parser: THTMLParser;
   WebsiteID: Cardinal;
-  p: Integer;
 
   {$I includes/Manga2u/names_and_links.inc}
 
@@ -2340,17 +2343,17 @@ var
   {$I includes/WPManga/names_and_links.inc}
 
 begin
-  WebsiteID := GetMangaSiteID(website);
-
   //load User-Agent from INIAdvanced
   if website <> '' then
     FHTTP.UserAgent := INIAdvanced.ReadString('UserAgent', website, '');
 
-  p := -1;
-  if Modules.ModuleAvailable(website, MMGetNameAndLink, p) then
-    Result := Modules.GetNameAndLink(Self, names, links, URL, p)
+  if ModuleId <> -1 then
+    ModuleId := Modules.LocateModule(website);
+  if Modules.ModuleAvailable(ModuleId, MMGetNameAndLink) then
+    Result := Modules.GetNameAndLink(Self, names, links, URL, ModuleId)
   else
   begin
+    WebsiteID := GetMangaSiteID(website);
     Source := TStringList.Create;
     if website = WebsiteRoots[ANIMEA_ID, 0] then
       Result := AnimeAGetNamesAndLinks
@@ -2814,9 +2817,10 @@ begin
   mangaInfo.chapterName.Clear;
   mangaInfo.chapterLinks.Clear;
 
-  j := -1;
-  if Modules.ModuleAvailable(website, MMGetInfo, j) then
-    Result := Modules.GetInfo(Self, URL, Reconnect, j)
+  if ModuleId <> -1 then
+    ModuleId := Modules.LocateModule(website);
+  if Modules.ModuleAvailable(ModuleId, MMGetInfo) then
+    Result := Modules.GetInfo(Self, URL, Reconnect, ModuleId)
   else
   begin
     WebsiteID := GetMangaSiteID(website);
