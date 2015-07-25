@@ -564,7 +564,7 @@ begin
     end;
     UpdateStatus(RS_Finished);
     if (not Self.Terminated) and _UpdApp and (_LaunchApp <> '') then
-      RunExternalProcess(_LaunchApp, [''], True, True);
+      RunExternalProcess(_LaunchApp, [''], True, False);
   except
     on E: Exception do
       frmMain.ExceptionHandler(Self, E);
