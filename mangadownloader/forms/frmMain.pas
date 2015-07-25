@@ -1330,6 +1330,7 @@ begin
   itStartup.Enabled := False;
   if not isStartup then
   begin
+    isStartup := True;
     if cbSelectManga.ItemIndex > -1 then
       OpenDataDB(cbSelectManga.Items[cbSelectManga.ItemIndex]);
     if cbOptionAutoCheckUpdate.Checked then
