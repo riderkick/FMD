@@ -7,7 +7,6 @@ interface
 uses
   Classes, SysUtils, WebsiteModules, uData, uBaseUnit, uDownloadsManager,
   HTMLUtil, RegExpr;
-
 implementation
 
 function GetDirectoryPageNumber(var MangaInfo: TMangaInformation;
@@ -136,8 +135,8 @@ var
   var
     i: Integer;
   begin
-    for i := 0 to Parse.Count - 1 do
-      with MangaInfo.mangaInfo do
+    with MangaInfo.mangaInfo do
+      for i := 0 to Parse.Count - 1 do
       begin
         //title
         if title = '' then
