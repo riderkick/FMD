@@ -216,9 +216,10 @@ function getcurpic_skin4_20110501(const URL: String): String;
     Result := StringReplace(Result, '&name=', '', []);
     Result := StringReplace(Result, 'mif2', 'jpg', []);
     Result := StringReplace(Result, '/', '_', [rfReplaceAll]);
-    Result := 'http://img11.aoyuanba.com/pictmdown.php?p=' +
-      EncodeStringBase64(S) + '$sf=' + Result +
-      '&ym=http://img11.hgysxz.cn';
+    //Result := 'http://img11.aoyuanba.com/pictmdown.php?p=' +
+    //  EncodeStringBase64(S) + '$sf=' + Result +
+    //  '&ym=http://img11.hgysxz.cn';
+    Result := 'http://img11.hgysxz.cn/Pic/' + Result;
   end;
 
 begin
