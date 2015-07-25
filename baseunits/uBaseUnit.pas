@@ -480,9 +480,6 @@ const
 
   KISSMANGA_BROWSER = '/MangaList';
 
-  BATOTO_BROWSER_1 = '/comic/_/sp/';
-  BATOTO_BROWSER_2 = '/comic/_/comics/';
-
   MANGA24H_BROWSER = '/manga/update/page/';
 
   VNSHARING_BROWSER = '/DanhSach';
@@ -659,8 +656,6 @@ var
 
   // Sites var
   BROWSER_INVERT: Boolean = False;
-
-  BATOTO_BROWSER: string = '/search';
 
   FAKKU_BROWSER: string = '/manga/newest';
 

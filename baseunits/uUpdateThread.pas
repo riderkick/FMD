@@ -134,15 +134,13 @@ begin
         end
         else
         if SitesMemberOf(manager.website,
-          [BATOTO_ID, FAKKU_ID, MANGAEDEN_ID, PERVEDEN_ID]) then
+          [FAKKU_ID, MANGAEDEN_ID, PERVEDEN_ID]) then
         begin
-          BATOTO_BROWSER := BATOTO_BROWSER_1;
           FAKKU_BROWSER := FAKKU_BROWSER_1;
           MANGAEDEN_BROWSER := MANGAEDEN_BROWSER_1;
           PERVEDEN_BROWSER := PERVEDEN_BROWSER_1;
           info.GetDirectoryPage(manager.directoryCount, manager.website);
 
-          BATOTO_BROWSER := BATOTO_BROWSER_2;
           FAKKU_BROWSER := FAKKU_BROWSER_2;
           MANGAEDEN_BROWSER := MANGAEDEN_BROWSER_2;
           PERVEDEN_BROWSER := PERVEDEN_BROWSER_2;
@@ -167,11 +165,10 @@ begin
               workPtr := manager.directoryCount2 - workPtr - 1;
           end;
           if SitesMemberOf(manager.website,
-            [BATOTO_ID, FAKKU_ID, MANGAEDEN_ID, PERVEDEN_ID]) then
+            [FAKKU_ID, MANGAEDEN_ID, PERVEDEN_ID]) then
           begin
             if checkStyle = CS_DIRECTORY_PAGE then
             begin
-              BATOTO_BROWSER := BATOTO_BROWSER_1;
               FAKKU_BROWSER := FAKKU_BROWSER_1;
               MANGAEDEN_BROWSER := MANGAEDEN_BROWSER_1;
               PERVEDEN_BROWSER := PERVEDEN_BROWSER_1;
@@ -180,7 +177,6 @@ begin
             else
             if checkStyle = CS_DIRECTORY_PAGE_2 then
             begin
-              BATOTO_BROWSER := BATOTO_BROWSER_2;
               FAKKU_BROWSER := FAKKU_BROWSER_2;
               MANGAEDEN_BROWSER := MANGAEDEN_BROWSER_2;
               PERVEDEN_BROWSER := PERVEDEN_BROWSER_2;
@@ -650,7 +646,7 @@ begin
           end;
         end
         else
-        if SitesMemberOf(website, [BATOTO_ID, FAKKU_ID, MANGAEDEN_ID,
+        if SitesMemberOf(website, [FAKKU_ID, MANGAEDEN_ID,
           PERVEDEN_ID]) then
         begin
           if directoryCount = 0 then

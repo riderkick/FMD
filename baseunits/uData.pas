@@ -1897,8 +1897,6 @@ var
 
   {$I includes/KissManga/directory_page_number.inc}
 
-  {$I includes/Batoto/directory_page_number.inc}
-
   {$I includes/Manga24h/directory_page_number.inc}
 
   {$I includes/VnSharing/directory_page_number.inc}
@@ -2014,9 +2012,6 @@ begin
       else
       if website = WebsiteRoots[KISSMANGA_ID, 0] then
         Result := GetKissMangaDirectoryPageNumber
-      else
-      if website = WebsiteRoots[BATOTO_ID, 0] then
-        Result := GetBatotoDirectoryPageNumber
       else
       if website = WebsiteRoots[MANGA24H_ID, 0] then
         Result := GetManga24hDirectoryPageNumber
@@ -2192,8 +2187,6 @@ var
 
   {$I includes/KissManga/names_and_links.inc}
 
-  {$I includes/Batoto/names_and_links.inc}
-
   {$I includes/Manga24h/names_and_links.inc}
 
   {$I includes/VnSharing/names_and_links.inc}
@@ -2366,9 +2359,6 @@ begin
     else
     if website = WebsiteRoots[KISSMANGA_ID, 0] then
       Result := KissMangaGetNamesAndLinks
-    else
-    if website = WebsiteRoots[BATOTO_ID, 0] then
-      Result := BatotoGetNamesAndLinks
     else
     if website = WebsiteRoots[MANGA24H_ID, 0] then
       Result := Manga24hGetNamesAndLinks
@@ -2654,8 +2644,6 @@ var
 
   {$I includes/KissManga/manga_information.inc}
 
-  {$I includes/Batoto/manga_information.inc}
-
   {$I includes/Manga24h/manga_information.inc}
 
   {$I includes/VnSharing/manga_information.inc}
@@ -2839,9 +2827,6 @@ begin
     else
     if website = WebsiteRoots[KISSMANGA_ID, 0] then
       Result := GetKissMangaInfoFromURL
-    else
-    if website = WebsiteRoots[BATOTO_ID, 0] then
-      Result := GetBatotoInfoFromURL
     else
     if website = WebsiteRoots[MANGA24H_ID, 0] then
       Result := GetManga24hInfoFromURL
