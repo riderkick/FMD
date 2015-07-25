@@ -36,15 +36,23 @@ type
   { TModuleContainer }
 
   TModuleContainer = class
+  private
+    FTotalDirectory: Integer;
+    procedure SetTotalDirectory(AValue: Integer);
   public
     Website, RootURL: String;
     SortedList, InformationAvailable, FavoriteAvailable: Boolean;
+    TotalDirectoryPage: array of Integer;
+    CurrentDirectoryIndex: Integer;
     OnGetDirectoryPageNumber: TOnGetDirectoryPageNumber;
     OnGetNameAndLink: TOnGetNameAndLink;
     OnGetInfo: TOnGetInfo;
     OnGetPageNumber: TOnGetPageNumber;
     OnGetImageURL: TOnGetImageURL;
     constructor Create;
+    destructor Destroy; override;
+  public
+    property TotalDirectory: Integer read FTotalDirectory write SetTotalDirectory;
   end;
 
   { TWebsiteModules }
@@ -119,11 +127,31 @@ implementation
 
 { TModuleContainer }
 
+procedure TModuleContainer.SetTotalDirectory(AValue: Integer);
+var
+  i: Integer;
+begin
+  if FTotalDirectory = AValue then Exit;
+  FTotalDirectory := AValue;
+  SetLength(TotalDirectoryPage, FTotalDirectory);
+  if Length(TotalDirectoryPage) > 0 then
+    for i := Low(TotalDirectoryPage) to High(TotalDirectoryPage) do
+      TotalDirectoryPage[i] := 1;
+end;
+
 constructor TModuleContainer.Create;
 begin
   SortedList := False;
   InformationAvailable := True;
   FavoriteAvailable := True;
+  TotalDirectory := 1;
+  CurrentDirectoryIndex := 0;
+end;
+
+destructor TModuleContainer.Destroy;
+begin
+  SetLength(TotalDirectoryPage, 0);
+  inherited Destroy;
 end;
 
 { TWebsiteModules }
