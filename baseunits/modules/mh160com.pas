@@ -211,17 +211,14 @@ function getcurpic_skin4_20110501(const URL: String): String;
   end;
 
   function getremoteqqurl(const S: String): String;
-  var
-    qqfilename: String;
   begin
-    Result := S;
-    qqfilename := SeparateRight(S, 'dir_path=/');
-    qqfilename := StringReplace(qqfilename, '&name', '', []);
-    qqfilename := StringReplace(qqfilename, 'mif2', 'jpg', []);
-    qqfilename := StringReplace(qqfilename, '/', '_', [rfReplaceAll]);
+    Result := SeparateRight(S, 'dir_path=/');
+    Result := StringReplace(Result, '&name=', '', []);
+    Result := StringReplace(Result, 'mif2', 'jpg', []);
+    Result := StringReplace(Result, '/', '_', [rfReplaceAll]);
     Result := 'http://img11.aoyuanba.com/pictmdown.php?p=' +
-      EncodeStringBase64(S) + '$sf=' + qqfilename +
-      '&ym=' + 'http://img11.hgysxz.cn';
+      EncodeStringBase64(S) + '$sf=' + Result +
+      '&ym=http://img11.hgysxz.cn';
   end;
 
 begin
