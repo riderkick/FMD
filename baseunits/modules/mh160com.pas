@@ -41,7 +41,7 @@ var
   end;
 
 begin
-  Result := INFORMATION_NOT_FOUND;
+  Result := NET_PROBLEM;
   if MangaInfo = nil then
     Exit;
   Source := TStringList.Create;
@@ -138,7 +138,7 @@ var
   end;
 
 begin
-  Result := INFORMATION_NOT_FOUND;
+  Result := NET_PROBLEM;
   if MangaInfo = nil then
     Exit;
   info := MangaInfo.mangaInfo;
