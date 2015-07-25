@@ -110,6 +110,7 @@ end;
 procedure TUpdateMangaThread.Execute;
 var
   names, links: TStringList;
+  i: Integer;
 begin
   try
     if checkStyle = CS_INFO then
@@ -122,6 +123,16 @@ begin
     case CheckStyle of
       CS_DIRECTORY_COUNT:
       begin
+        if manager.ModuleId <> -1 then
+        begin
+          with Modules.Module[manager.ModuleId] do
+          for i := Low(TotalDirectoryPage) to High(TotalDirectoryPage) do
+          begin
+            CurrentDirectoryIndex := i;
+            info.GetDirectoryPage(TotalDirectoryPage[i], manager.website);
+          end;
+        end
+        else
         if SitesMemberOf(manager.website,
           [BATOTO_ID, FAKKU_ID, MANGAEDEN_ID, PERVEDEN_ID]) then
         begin
@@ -183,15 +194,12 @@ begin
 
           //if website has sorted list by latest added
           //we will stop at first found against current db
-          if manager.SortedList then
-          begin
-            if links.Count > 0 then
-              if manager.mainDataProcess.LinkExist(links.Strings[0]) then
-                manager.isFinishSearchingForNewManga := True;
-          end;
-
           if links.Count > 0 then
           begin
+            if manager.SortedList then
+              if manager.mainDataProcess.LinkExist(links.Strings[0]) then
+                manager.isFinishSearchingForNewManga := True;
+
             manager.CS_AddNamesAndLinks.Acquire;
             try
               manager.links.AddStrings(links);
@@ -507,7 +515,13 @@ begin
                   s := s + ' | ' + RS_GettingDirectory + '...';
               end;
             CS_DIRECTORY_PAGE:
-              s := s + ' | ' + RS_LookingForNewTitle + '...';
+              begin
+                s += ' | ' + RS_LookingForNewTitle;
+                if ModuleId <> -1 then
+                  with Modules.Module[ModuleId] do
+                    s += Format(' %d/%d', [CurrentDirectoryIndex + 1, TotalDirectory]);
+                s += '...';
+              end;
             CS_DIRECTORY_PAGE_2:
               s := s + ' | ' + RS_LookingForNewTitleFromAnotherDirectory + '...';
             CS_INFO:
@@ -539,7 +553,7 @@ procedure TUpdateMangaManagerThread.Execute;
 
   procedure WaitForThreads;
   var
-    i: Cardinal;
+    i: Integer;
   begin
     while threads.Count > 0 do
     begin
@@ -623,6 +637,19 @@ begin
         INIAdvanced.Reload;
         workPtr := 0;
         isFinishSearchingForNewManga := False;
+        if ModuleId <> -1 then
+        begin
+          with Modules.Module[ModuleId] do
+          for j := Low(TotalDirectoryPage) to High(TotalDirectoryPage) do
+          begin
+            workPtr := 0;
+            isFinishSearchingForNewManga := False;
+            CurrentDirectoryIndex := j;
+            GetInfo(TotalDirectoryPage[j], CS_DIRECTORY_PAGE);
+            WaitForThreads;
+          end;
+        end
+        else
         if SitesMemberOf(website, [BATOTO_ID, FAKKU_ID, MANGAEDEN_ID,
           PERVEDEN_ID]) then
         begin
