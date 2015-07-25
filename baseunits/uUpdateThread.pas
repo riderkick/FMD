@@ -65,6 +65,7 @@ type
     directoryCount2, numberOfThreads, websitePtr: Integer;
     threads: TFPList;
     CS_threads: TCriticalSection;
+    SortedList, NoMangaInfo: Boolean;
     constructor Create;
     destructor Destroy; override;
     procedure CheckCommit(const CommitCount: Integer = 32);
@@ -180,7 +181,7 @@ begin
 
           //if website has sorted list by latest added
           //we will stop at first found against current db
-          if SitesWithSortedList(manager.website) then
+          if manager.SortedList then
           begin
             if links.Count > 0 then
               if manager.mainDataProcess.LinkExist(links.Strings[0]) then
@@ -327,6 +328,8 @@ begin
   mainDataProcess := TDBDataProcess.Create;
 
   threads := TFPList.Create;
+  SortedList := False;
+  NoMangaInfo := False;
 end;
 
 destructor TUpdateMangaManagerThread.Destroy;
@@ -576,6 +579,8 @@ begin
       while websitePtr < websites.Count do
       begin
         website := websites.Strings[websitePtr];
+        SortedList := SitesWithSortedList(website);
+        NoMangaInfo := SitesWithoutInformation(website);
         Inc(websitePtr);
         FStatus := RS_UpdatingList + Format(' [%d/%d] %s',
           [websitePtr, websites.Count, website]) + ' | ' + RS_Preparing + '...';
@@ -716,7 +721,7 @@ begin
         begin
           workPtr := 0;
           FCommitCount := 0;
-          if (SitesWithoutInformation(website)) or
+          if NoMangaInfo or
             OptionUpdateListNoMangaInfo then
           begin
             Inc(workPtr);
@@ -744,7 +749,7 @@ begin
           names.Clear;
           links.Clear;
 
-          if (workPtr > 0) and (not SitesWithSortedList(website)) then
+          if (workPtr > 0) and (not SortedList) then
           begin
             FStatus := RS_UpdatingList + Format(' [%d/%d] %s',
               [websitePtr, websites.Count, website]) + ' | ' + RS_SavingData + '...';
