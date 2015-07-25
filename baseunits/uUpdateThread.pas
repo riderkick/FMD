@@ -776,15 +776,16 @@ begin
           names.Clear;
           links.Clear;
 
-          if (workPtr > 0) and (not SortedList) then
-          begin
-            FStatus := RS_UpdatingList + Format(' [%d/%d] %s',
-              [websitePtr, websites.Count, website]) + ' | ' + RS_SavingData + '...';
-            Synchronize(MainThreadShowGetting);
-            mainDataProcess.Sort;
-            mainDataProcess.Close;
-            Synchronize(RefreshList);
-          end;
+          if workPtr > 0 then
+            if not (Terminated and SortedList) then
+            begin
+              FStatus := RS_UpdatingList + Format(' [%d/%d] %s',
+                [websitePtr, websites.Count, website]) + ' | ' + RS_SavingData + '...';
+              Synchronize(MainThreadShowGetting);
+              mainDataProcess.Sort;
+              mainDataProcess.Close;
+              Synchronize(RefreshList);
+            end;
         end;
 
         mainDataProcess.Close;
