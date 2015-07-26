@@ -382,8 +382,6 @@ var
 
   {$I includes/AnimExtremist/chapter_page_number.inc}
 
-  {$I includes/Batoto/chapter_page_number.inc}
-
   {$I includes/EatManga/chapter_page_number.inc}
 
   {$I includes/EGScans/chapter_page_number.inc}
@@ -532,9 +530,6 @@ begin
     else
     if manager.container.MangaSiteID = MANGAINN_ID then
       Result := GetMangaInnPageNumber
-    else
-    if manager.container.MangaSiteID = BATOTO_ID then
-      Result := GetBatotoPageNumber
     else
     if manager.container.MangaSiteID = MANGAFOX_ID then
       Result := GetMangaFoxPageNumber
@@ -748,8 +743,6 @@ var
 
   {$I includes/AnimExtremist/image_url.inc}
 
-  {$I includes/Batoto/image_url.inc}
-
   {$I includes/BlogTruyen/image_url.inc}
 
   {$I includes/CentralDeMangas/image_url.inc}
@@ -897,9 +890,6 @@ begin
     else
     if manager.container.MangaSiteID = MANGAINN_ID then
       Result := GetMangaInnImageURL
-    else
-    if manager.container.MangaSiteID = BATOTO_ID then
-      Result := GetBatotoImageURL
     else
     if manager.container.MangaSiteID = MANGA2U_ID then
       Result := GetManga2uImageURL
