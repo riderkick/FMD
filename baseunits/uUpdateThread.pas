@@ -158,6 +158,10 @@ begin
         try
           if BROWSER_INVERT then
           begin
+            if manager.ModuleId <> -1 then
+            with Modules.Module[manager.ModuleId] do
+              workPtr := TotalDirectoryPage[CurrentDirectoryIndex] - workPtr -1
+            else
             if checkStyle = CS_DIRECTORY_PAGE then
               workPtr := manager.directoryCount - workPtr - 1
             else
