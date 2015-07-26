@@ -3090,9 +3090,12 @@ begin
   mangaInfo.authors := Trim(RemoveStringBreaks(Trim(mangaInfo.authors)));
   mangaInfo.artists := Trim(RemoveStringBreaks(Trim(mangaInfo.artists)));
   mangaInfo.genres := Trim(RemoveStringBreaks(Trim(mangaInfo.genres)));
+
   mangaInfo.authors := TrimRightChar(Trim(mangaInfo.authors), [',']);
   mangaInfo.artists := TrimRightChar(Trim(mangaInfo.artists), [',']);
   mangaInfo.genres := TrimRightChar(Trim(mangaInfo.genres), [',']);
+
+  mangaInfo.summary := Trim(mangaInfo.summary);
 
   //// strip
   //mangaInfo.summary := StringBreaks(mangaInfo.summary);
