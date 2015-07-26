@@ -7,13 +7,14 @@ interface
 uses
   Classes, SysUtils, WebsiteModules, uData, uBaseUnit, uDownloadsManager,
   HTMLUtil, RegExpr;
+
 implementation
 
 const
   dirurls: array [0..1] of String = (
     '/comic/_/sp/',
     '/comic/_/comics/');
-  perpage = 500;
+  perpage = 50;
   dirparam = '?sort_col=record_saved&sort_order=desc&per_page=';
 
 function GetDirectoryPageNumber(var MangaInfo: TMangaInformation;

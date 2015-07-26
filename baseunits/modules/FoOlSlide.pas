@@ -7,6 +7,7 @@ interface
 uses
   Classes, SysUtils, WebsiteModules, uData, uBaseUnit, uDownloadsManager,
   HTMLUtil, RegExpr;
+
 implementation
 
 function GetDirectoryPageNumber(var MangaInfo: TMangaInformation;
