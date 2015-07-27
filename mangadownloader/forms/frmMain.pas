@@ -2130,9 +2130,12 @@ begin
   if currentWebsite <> cbSelectManga.Items[cbSelectManga.ItemIndex] then
   begin
     currentWebsite := cbSelectManga.Items[cbSelectManga.ItemIndex];
-    if dataProcess = nil then
-      dataProcess := TDBDataProcess.Create;
     vtMangaList.Clear;
+    if dataProcess = nil then
+      dataProcess := TDBDataProcess.Create
+    else
+    if dataProcess.Connected then
+      dataProcess.Close;
     lbMode.Caption := Format(RS_ModeAll, [0]);
     if DataFileExist(cbSelectManga.Items[cbSelectManga.ItemIndex]) then
     begin
