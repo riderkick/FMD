@@ -104,7 +104,6 @@ begin
   RevokeDragDrop(Handle);
   OleUninitialize;
   FormDropTarget := nil;
-  MainForm.ckDropTarget.Checked := False;
 end;
 
 procedure TFormDropTarget.FormMouseDown(Sender: TObject; Button: TMouseButton;
@@ -163,6 +162,7 @@ end;
 
 procedure TFormDropTarget.miCloseClick(Sender: TObject);
 begin
+  MainForm.ckDropTarget.Checked := False;
   Self.Close;
 end;
 

@@ -5050,6 +5050,7 @@ procedure TMainForm.SaveDropTargetFormInformation;
 begin
   with options do
   begin
+    WriteBool('droptarget', 'Show', ckDropTarget.Checked);
     WriteInteger('droptarget', 'Opacity', frmDropTarget.FAlphaBlendValue);
     WriteInteger('droptarget', 'Width', frmDropTarget.FWidth);
     WriteInteger('droptarget', 'Heigth', frmDropTarget.FHeight);
