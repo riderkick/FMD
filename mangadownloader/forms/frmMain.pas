@@ -60,8 +60,10 @@ type
     cbUseRegExpr: TCheckBox;
     cbOptionProxyType: TComboBox;
     cbOptionOneInstanceOnly: TCheckBox;
+    miAbortSilentThread: TMenuItem;
     mmChangelog: TMemo;
     pcAbout: TPageControl;
+    pmSbMain: TPopupMenu;
     tsAboutText: TTabSheet;
     tsChangelogText: TTabSheet;
     TransferRateToolset: TChartToolset;
@@ -398,6 +400,7 @@ type
     procedure medtURLDeleteClick(Sender: TObject);
     procedure medURLSelectAllClick(Sender: TObject);
     procedure medURLUndoClick(Sender: TObject);
+    procedure miAbortSilentThreadClick(Sender: TObject);
     procedure miDownloadViewMangaInfoClick(Sender: TObject);
     procedure miChapterListHighlightClick(Sender: TObject);
     procedure miDownloadDeleteTaskClick(Sender: TObject);
@@ -436,6 +439,7 @@ type
     procedure pmEditURLPopup(Sender: TObject);
     procedure pmFavoritesPopup(Sender: TObject);
     procedure pmMangaListPopup(Sender: TObject);
+    procedure pmSbMainPopup(Sender: TObject);
     procedure sbUpdateListDrawPanel(StatusBar: TStatusBar; Panel: TStatusPanel;
       const Rect: TRect);
     procedure seOptionCheckMinutesChange(Sender: TObject);
@@ -1382,6 +1386,12 @@ end;
 procedure TMainForm.medURLUndoClick(Sender: TObject);
 begin
   edURL.Undo;
+end;
+
+procedure TMainForm.miAbortSilentThreadClick(Sender: TObject);
+begin
+  if Assigned(SilentThreadManager) then
+    SilentThreadManager.StopAll(False);
 end;
 
 procedure TMainForm.miDownloadViewMangaInfoClick(Sender: TObject);
@@ -3374,6 +3384,17 @@ begin
     pmMangaList.Items[2].Enabled := True;
   end;
   pmMangaList.Items[2].Enabled := not SitesWithoutFavorites(cbSelectManga.Text);
+end;
+
+procedure TMainForm.pmSbMainPopup(Sender: TObject);
+begin
+  if Assigned(SilentThreadManager) then
+  begin
+    if SilentThreadManager.ItemCount = 0 then
+      Abort;
+  end
+  else
+    Abort;
 end;
 
 procedure TMainForm.sbUpdateListDrawPanel(StatusBar: TStatusBar;

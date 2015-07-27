@@ -3427,6 +3427,7 @@ object MainForm: TMainForm
       item
         Width = 100
       end>
+    PopupMenu = pmSbMain
     SimplePanel = False
   end
   object spMainSplitter: TSplitter
@@ -5749,5 +5750,14 @@ object MainForm: TMainForm
   object TransferRateToolset: TChartToolset
     left = 608
     top = 72
+  end
+  object pmSbMain: TPopupMenu
+    OnPopup = pmSbMainPopup
+    left = 283
+    top = 416
+    object miAbortSilentThread: TMenuItem
+      Caption = 'Abort'
+      OnClick = miAbortSilentThreadClick
+    end
   end
 end
