@@ -465,55 +465,28 @@ begin
 end;
 
 procedure RegisterModule;
+
+  procedure AddWebsiteModule(AWebsite, ARootURL: String);
+  begin
+    with AddModule do
+    begin
+      Website := AWebsite;
+      RootURL := ARootURL;
+      SortedList := True;
+      InformationAvailable := True;
+      OnGetDirectoryPageNumber := @GetDirectoryPageNumber;
+      OnGetNameAndLink := @GetNameAndLink;
+      OnGetInfo := @GetInfo;
+      OnGetPageNumber := @GetPageNumber;
+      OnGetImageURL := @GetImageURL;
+    end;
+  end;
+
 begin
-  with AddModule do
-  begin
-    Website := 'MangaCap';
-    RootURL := 'http://www.mangacap.com';
-    SortedList := True;
-    InformationAvailable := True;
-    OnGetDirectoryPageNumber := @GetDirectoryPageNumber;
-    OnGetNameAndLink := @GetNameAndLink;
-    OnGetInfo := @GetInfo;
-    OnGetPageNumber := @GetPageNumber;
-    OnGetImageURL := @GetImageURL;
-  end;
-  with AddModule do
-  begin
-    Website := 'MangaBoom';
-    RootURL := 'http://www.mangaboom.com';
-    SortedList := True;
-    InformationAvailable := True;
-    OnGetDirectoryPageNumber := @GetDirectoryPageNumber;
-    OnGetNameAndLink := @GetNameAndLink;
-    OnGetInfo := @GetInfo;
-    OnGetPageNumber := @GetPageNumber;
-    OnGetImageURL := @GetImageURL;
-  end;
-  with AddModule do
-  begin
-    Website := 'Authrone';
-    RootURL := 'http://www.authrone.com';
-    SortedList := True;
-    InformationAvailable := True;
-    OnGetDirectoryPageNumber := @GetDirectoryPageNumber;
-    OnGetNameAndLink := @GetNameAndLink;
-    OnGetInfo := @GetInfo;
-    OnGetPageNumber := @GetPageNumber;
-    OnGetImageURL := @GetImageURL;
-  end;
-  with AddModule do
-  begin
-    Website := 'EyeOnManga';
-    RootURL := 'http://www.eyeonmanga.com';
-    SortedList := True;
-    InformationAvailable := True;
-    OnGetDirectoryPageNumber := @GetDirectoryPageNumber;
-    OnGetNameAndLink := @GetNameAndLink;
-    OnGetInfo := @GetInfo;
-    OnGetPageNumber := @GetPageNumber;
-    OnGetImageURL := @GetImageURL;
-  end;
+  AddWebsiteModule('MangaCap', 'http://www.mangacap.com');
+  AddWebsiteModule('MangaBoom', 'http://www.mangaboom.com');
+  AddWebsiteModule('Authrone', 'http://www.authrone.com');
+  AddWebsiteModule('EyeOnManga', 'http://www.eyeonmanga.com');
 end;
 
 initialization
