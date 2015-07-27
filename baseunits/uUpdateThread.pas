@@ -375,7 +375,7 @@ begin
   try
     with MainForm do
     begin
-      if dataProcess.WebsiteLoaded(website) then
+      if cbSelectManga.Items[cbSelectManga.ItemIndex] = website then
       begin
         vtMangaList.Clear;
         if dataProcess = nil then
