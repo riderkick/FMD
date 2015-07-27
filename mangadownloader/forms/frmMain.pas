@@ -4494,69 +4494,56 @@ end;
 
 procedure TMainForm.AddSilentThread(URL: string);
 var
+  i, j, m: Integer;
+  host, link, webs: String;
+  URls: TStringList;
   mt: TMetaDataType;
-  i: Integer;
-  webid: Cardinal;
-  website,
-  webs,
-  link: String;
-  regx: TRegExpr;
 begin
-  website := '';
-  webs := '';
-  link := '';
-  regx := TRegExpr.Create;
+  if Trim(URL) = '' then Exit;
+  URLs := TStringList.Create;
   try
-    regx.Expression := '^https?\://';
-    if not (regx.Exec(URL)) then
-      URL := 'http://' + URL;
-
-    regx.Expression := '^https?\:(//[^/]*\w+\.\w+)(\:\d+)?(/|\Z)(.*)$';
-    if regx.Exec(URL) then
+    URls.Text := URL;
+    if URls.Count > 0 then
     begin
-      link := regx.Replace(URL, '$4', True);
-      webs := regx.Replace(URL, '$1', True);
-    end;
-
-    if (webs <> '') and (link <> '') then
-    begin
-      for i := Low(WebsiteRoots) to High(WebsiteRoots) do
-        if Pos(webs, WebsiteRoots[i, 1]) > 0 then
+      with TRegExpr.Create do
+      try
+        Expression := REGEX_HOST;
+        for i := 0 to URls.Count - 1 do
         begin
-          webid := i;
-          website := WebsiteRoots[i, 0];
-          Break;
-        end;
-      if website = '' then
-      begin
-        webs := TrimLeftChar(webs, ['/']);
-        for i := Low(WebsiteRoots) to High(WebsiteRoots) do
-        begin
-          if Pos(webs, WebsiteRoots[i, 1]) > 0 then
+          host := '';
+          link := '';
+          webs := '';
+          host := LowerCase(Replace(URls[i], '$2', True));
+          link := Replace(URls[i], '$4', True);
+          if (host <> '') and (link <> '') then
           begin
-            webid := i;
-            website := WebsiteRoots[i, 0];
-            Break;
+            m := Modules.LocateModuleByHost(host);
+            if m > -1 then
+              webs := Modules.Module[m].Website;
+            if webs = '' then
+            begin
+              for j := Low(WebsiteRoots) to High(WebsiteRoots) do
+                if Pos(host, LowerCase(WebsiteRoots[j, 1])) <> 0 then
+                  webs := WebsiteRoots[j, 0];
+            end;
+            if webs <> '' then
+            begin
+              if rgDropTargetMode.ItemIndex = 0 then
+                mt := MD_DownloadAll
+              else
+                mt := MD_AddToFavorites;
+              if not ((mt = MD_AddToFavorites) and SitesWithoutFavorites(webs)) then
+                SilentThreadManager.Add(mt, webs, '', link);
+            end;
           end;
         end;
-      end;
-      if website <> '' then
-      begin
-        link := '/' + link;
-        URL := FixURL(WebsiteRoots[webid, 1] + link);
-        DisableAddToFavorites(website);
+      finally
+        Free;
       end;
     end;
   finally
-    regx.Free;
+    URls.Free;
   end;
-  if (website = '') or (link = '') then Exit;
-  if rgDropTargetMode.ItemIndex = 0 then
-    mt := MD_DownloadAll
-  else
-    mt := MD_AddToFavorites;
-  if (mt = MD_AddToFavorites) and (SitesWithoutFavorites(website)) then Exit;
-  SilentThreadManager.Add(mt, website, '', link);
 end;
 
 procedure TMainForm.AddTextToInfo(title, infoText: String);
