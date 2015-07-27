@@ -59,6 +59,7 @@ type
     function GetValue(RecIndex, FieldIndex: Integer): String;
     procedure AttachAllSites;
     procedure DetachAllSites;
+    function ExecuteDirect(SQL: String): Boolean;
   public
     constructor Create;
     destructor Destroy; override;
@@ -408,7 +409,7 @@ procedure TDBDataProcess.CreateTable;
 begin
   if FConn.Connected then
   begin
-    FConn.ExecuteDirect('DROP TABLE IF EXISTS ' + QuotedStrd(FTableName) + ';');
+    FConn.ExecuteDirect('DROP TABLE IF EXISTS ' + QuotedStrd(FTableName));
     FConn.ExecuteDirect('CREATE TABLE ' + QuotedStrd(FTableName) + #13#10 +
       DBDataProccesCreateParam);
     FTrans.Commit;
@@ -607,6 +608,20 @@ begin
     FConn.ExecuteDirect('BEGIN TRANSACTION');
     FAllSitesAttached := False;
   end;
+end;
+
+function TDBDataProcess.ExecuteDirect(SQL: String): Boolean;
+begin
+  Result := False;
+  if FConn.Connected then
+    try
+      FConn.ExecuteDirect(SQL);
+      Result := True;
+    except
+      on E: Exception do
+        WriteLog_E('TDBDataProcess.ExecuteDirect.Error!'#13#10 +
+          'SQL: ' + SQL, E, Self);
+    end;
 end;
 
 constructor TDBDataProcess.Create;
@@ -1163,21 +1178,25 @@ begin
     queryactive := FQuery.Active;
     FQuery.Close;
     with FConn do
-    begin
-      ExecuteDirect('CREATE TABLE ' + QuotedStrd(FTableName + '_ordered') +
-        DBDataProccesCreateParam);
-      ExecuteDirect('INSERT INTO ' + QuotedStrd(FTableName + '_ordered') + ' ' +
-        BracketStr(DBDataProcessParam) + ' SELECT ' + DBDataProcessParam +
-        ' FROM ' + QuotedStrd(FTableName) + 'ORDER BY "title" COLLATE NATCMP');
-      FTrans.Commit;
-      ExecuteDirect('DROP TABLE ' + QuotedStrd(FTableName));
-      ExecuteDirect('ALTER TABLE ' + QuotedStrd(FTableName + '_ordered') +
-        'RENAME TO ' + QuotedStrd(FTableName));
-      FTrans.Commit;
-      VacuumTable;
-    end;
+      try
+        ExecuteDirect('DROP TABLE IF EXISTS ' + QuotedStrd(FTableName + '_ordered'));
+        ExecuteDirect('CREATE TABLE ' + QuotedStrd(FTableName + '_ordered') +
+          DBDataProccesCreateParam);
+        ExecuteDirect('INSERT INTO ' + QuotedStrd(FTableName + '_ordered') + ' ' +
+          BracketStr(DBDataProcessParam) + ' SELECT ' + DBDataProcessParam +
+          ' FROM ' + QuotedStrd(FTableName) + 'ORDER BY "title" COLLATE NATCMP');
+        FTrans.Commit;
+        ExecuteDirect('DROP TABLE ' + QuotedStrd(FTableName));
+        ExecuteDirect('ALTER TABLE ' + QuotedStrd(FTableName + '_ordered') +
+          'RENAME TO ' + QuotedStrd(FTableName));
+        FTrans.Commit;
+        VacuumTable;
+      except
+        on E: Exception do
+          WriteLog_E('TDBDataProcess.Sort.Error!', E, Self);
+      end;
     if FQuery.Active <> queryactive then
-      FQuery.Open;
+      FQuery.Active := queryactive;
   end;
 end;
 
