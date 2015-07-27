@@ -8,6 +8,9 @@ https://www.mediafire.com/folder/3ccy2c7g36hp3/Fmd
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.19.3 (27-07-2015)
+[*] Various changes and bug fixes
+
 0.9.19.2 (26-07-2015)
 [*] Batoto: rewrite all script
 [*] Various changes and bug fixes
