@@ -15,6 +15,9 @@ type
   TFormDropTarget = class(TForm, IDropTarget)
     ImResize: TImage;
     ImDropIcon: TImage;
+    MenuItem1: TMenuItem;
+    miDownloadAll: TMenuItem;
+    miAddToFavorites: TMenuItem;
     miClose: TMenuItem;
     pmDropTarget: TPopupMenu;
     shBorder: TShape;
@@ -29,7 +32,10 @@ type
     procedure FormShow(Sender: TObject);
     procedure ImResizeMouseMove(Sender: TObject; Shift: TShiftState; X,
       Y: Integer);
+    procedure miAddToFavoritesClick(Sender: TObject);
     procedure miCloseClick(Sender: TObject);
+    procedure miDownloadAllClick(Sender: TObject);
+    procedure pmDropTargetPopup(Sender: TObject);
   private
     { private declarations }
     md: Boolean;
@@ -160,10 +166,30 @@ begin
   end;
 end;
 
+procedure TFormDropTarget.miAddToFavoritesClick(Sender: TObject);
+begin
+  miAddToFavorites.Checked := True;
+  MainForm.rgDropTargetMode.ItemIndex := 1;
+  MainForm.SaveDropTargetFormInformation;
+end;
+
 procedure TFormDropTarget.miCloseClick(Sender: TObject);
 begin
   MainForm.ckDropTarget.Checked := False;
   Self.Close;
+end;
+
+procedure TFormDropTarget.miDownloadAllClick(Sender: TObject);
+begin
+  miDownloadAll.Checked := True;
+  MainForm.rgDropTargetMode.ItemIndex := 0;
+  MainForm.SaveDropTargetFormInformation;
+end;
+
+procedure TFormDropTarget.pmDropTargetPopup(Sender: TObject);
+begin
+  miDownloadAll.Checked := MainForm.rgDropTargetMode.ItemIndex = 0;
+  miAddToFavorites.Checked := not miDownloadAll.Checked;
 end;
 
 function TFormDropTarget.MakeFormatEtc(const Fmt: TClipFormat): TFormatEtc;

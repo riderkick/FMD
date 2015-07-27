@@ -5051,6 +5051,7 @@ begin
   with options do
   begin
     WriteBool('droptarget', 'Show', ckDropTarget.Checked);
+    WriteInteger('droptarget', 'Mode', rgDropTargetMode.ItemIndex);
     WriteInteger('droptarget', 'Opacity', frmDropTarget.FAlphaBlendValue);
     WriteInteger('droptarget', 'Width', frmDropTarget.FWidth);
     WriteInteger('droptarget', 'Heigth', frmDropTarget.FHeight);

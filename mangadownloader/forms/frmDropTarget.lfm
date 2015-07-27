@@ -146,8 +146,22 @@ object FormDropTarget: TFormDropTarget
     Stretch = True
   end
   object pmDropTarget: TPopupMenu
+    OnPopup = pmDropTargetPopup
     left = 188
     top = 120
+    object miDownloadAll: TMenuItem
+      Caption = 'Download all'
+      RadioItem = True
+      OnClick = miDownloadAllClick
+    end
+    object miAddToFavorites: TMenuItem
+      Caption = 'Add to favorites'
+      RadioItem = True
+      OnClick = miAddToFavoritesClick
+    end
+    object MenuItem1: TMenuItem
+      Caption = '-'
+    end
     object miClose: TMenuItem
       Caption = '&Close'
       OnClick = miCloseClick
