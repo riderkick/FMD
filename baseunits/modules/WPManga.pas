@@ -372,7 +372,7 @@ var
   begin
     for i := 0 to Parse.Count - 1 do
       if (GetTagName(parse[i]) = 'select') and
-        (GetVal(parse[i], 'class') = 'cbo_wpm_pag') then
+        (Pos('cbo_wpm_pag', Parse[i]) <> 0) then
       begin
         for j := i + 1 to parse.Count - 1 do
         begin
