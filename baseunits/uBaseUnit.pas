@@ -851,8 +851,6 @@ function SitesWithoutPageLink(const website: String): Boolean;
 function SitesWithoutReferer(const website: String): Boolean;
 function SitesRefererisURL(const website: String): Boolean;
 function SitesWithSingleChapter(const website: String): Boolean;
-function SitesIsWPManga(const websiteid: Cardinal): Boolean; overload;
-function SitesIsWPManga(const website: String): Boolean; overload;
 
 // Fill in website host if it's not present
 function FillMangaSiteHost(const MangaID: Cardinal; URL: String): String; overload;
@@ -1264,7 +1262,6 @@ begin
     Result := Modules.Module[i].SortedList;
     Exit;
   end;
-  Result := SitesIsWPManga(website);
   if not Result then
     Result := SitesMemberOf(website, [
       FAKKU_ID,
@@ -1395,21 +1392,6 @@ begin
     XXCOMICS3D_ID,
     PORNCOMIXRE_ID
     ]);
-end;
-
-function SitesIsWPManga(const websiteid: Cardinal): Boolean;
-begin
-  Result := websiteid in [
-    MANGACAP_ID,
-    MANGABOOM_ID,
-    AUTHRONE_ID,
-    EYEONMANGA_ID
-    ];
-end;
-
-function SitesIsWPManga(const website: String): Boolean;
-begin
-  Result := SitesIsWPManga(GetMangaSiteID(website));
 end;
 
 function FillMangaSiteHost(const MangaID : Cardinal; URL : String) : String;

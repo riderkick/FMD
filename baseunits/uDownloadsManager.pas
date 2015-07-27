@@ -512,8 +512,6 @@ var
 
   {$I includes/Madokami/chapter_page_number.inc}
 
-  {$I includes/WPManga/chapter_page_number.inc}
-
 begin
   Result := False;
   manager.container.PageNumber := 0;
@@ -728,10 +726,7 @@ begin
       Result := GetDynastyScansPageNumber
     else
     if manager.container.MangaSiteID = MADOKAMI_ID then
-      Result := GetMadokamiPageNumber
-    else
-    if SitesIsWPManga(manager.container.MangaSiteID) then
-      Result := GetWPMangaPageNumber;
+      Result := GetMadokamiPageNumber;
   end;
 end;
 
@@ -866,8 +861,6 @@ var
   {$I includes/PornComix/image_url.inc}
 
   {$I includes/MangaAt/image_url.inc}
-
-  {$I includes/WPManga/image_url.inc}
 
 begin
   Result := False;
@@ -1082,10 +1075,7 @@ begin
       Result := GetPornComixImageURL
     else
     if manager.container.MangaSiteID = MANGAAT_ID then
-      Result := GetMangaAtImageURL
-    else
-    if SitesIsWPManga(manager.container.MangaSiteID) then
-      Result := GetWPMangaImageURL;
+      Result := GetMangaAtImageURL;
   end;
 end;
 

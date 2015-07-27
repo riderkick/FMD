@@ -1996,8 +1996,6 @@ var
 
   {$I includes/Madokami/directory_page_number.inc}
 
-  {$I includes/WPManga/directory_page_number.inc}
-
 begin
   Page := 0;
 
@@ -2167,9 +2165,6 @@ begin
       else
       if website = WebsiteRoots[MADOKAMI_ID, 0] then
         Result := GetMadokamiDirectoryPageNumber
-      else
-      if SitesIsWPManga(WebsiteID) then
-        Result := GetWPMangaDirectoryPageNumber
       else
       begin
         Result := NO_ERROR;
@@ -2349,8 +2344,6 @@ var
   {$I includes/Dynasty-Scans/names_and_links.inc}
 
   {$I includes/Madokami/names_and_links.inc}
-
-  {$I includes/WPManga/names_and_links.inc}
 
 begin
   //load User-Agent from INIAdvanced
@@ -2620,9 +2613,6 @@ begin
     if website = WebsiteRoots[MADOKAMI_ID, 0] then
       Result := MadokamiGetNamesAndLinks
     else
-    if SitesIsWPManga(WebsiteID) then
-      Result := GetWPMangaNamesAndLinks
-    else
     begin
       Result := INFORMATION_NOT_FOUND;
       Source.Free;
@@ -2806,8 +2796,6 @@ var
   {$I includes/Dynasty-Scans/manga_information.inc}
 
   {$I includes/Madokami/manga_information.inc}
-
-  {$I includes/WPManga/manga_information.inc}
 
 begin
   if Trim(URL) = '' then
@@ -3084,9 +3072,6 @@ begin
     else
     if website = GetMangaSiteName(MADOKAMI_ID) then
       Result := GetMadokamiInfoFromURL
-    else
-    if SitesIsWPManga(WebsiteID) then
-      Result := GetWPMangaInfoFromURL
     else
     begin
       Source.Free;
