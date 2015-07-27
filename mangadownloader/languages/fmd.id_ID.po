@@ -251,9 +251,19 @@ msgstr "Komputer akan dihibernasi dalam %d detik"
 msgid "System will shutdown in %d second."
 msgstr "Komputer akan dimatikan dalam %d detik"
 
+#: tformdroptarget.miaddtofavorites.caption
+msgctxt "tformdroptarget.miaddtofavorites.caption"
+msgid "Add to favorites"
+msgstr "Tambahkan ke kesukaan"
+
 #: tformdroptarget.miclose.caption
 msgid "&Close"
 msgstr "&Tutup"
+
+#: tformdroptarget.midownloadall.caption
+msgctxt "tformdroptarget.midownloadall.caption"
+msgid "Download all"
+msgstr "Unduh semua"
 
 #: timportfavorites.btcancel.caption
 msgctxt "timportfavorites.btcancel.caption"
@@ -287,6 +297,7 @@ msgid "Abort update list"
 msgstr "Batalkan pembaruan daftar komik"
 
 #: tmainform.btaddtofavorites.caption
+msgctxt "tmainform.btaddtofavorites.caption"
 msgid "Add to favorites"
 msgstr "Tambahkan ke kesukaan"
 

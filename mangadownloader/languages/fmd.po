@@ -223,8 +223,18 @@ msgstr ""
 msgid "System will shutdown in %d second."
 msgstr ""
 
+#: tformdroptarget.miaddtofavorites.caption
+msgctxt "TFORMDROPTARGET.MIADDTOFAVORITES.CAPTION"
+msgid "Add to favorites"
+msgstr ""
+
 #: tformdroptarget.miclose.caption
 msgid "&Close"
+msgstr ""
+
+#: tformdroptarget.midownloadall.caption
+msgctxt "TFORMDROPTARGET.MIDOWNLOADALL.CAPTION"
+msgid "Download all"
 msgstr ""
 
 #: timportfavorites.btcancel.caption
@@ -259,6 +269,7 @@ msgid "Abort update list"
 msgstr ""
 
 #: tmainform.btaddtofavorites.caption
+msgctxt "tmainform.btaddtofavorites.caption"
 msgid "Add to favorites"
 msgstr ""
 
