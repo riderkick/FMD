@@ -211,7 +211,7 @@ const
   UPDATE_FILE             = 'updates.ini';
   MANGALIST_FILE          = 'mangalist.ini';
   LANGUAGE_FILE           = 'languages.ini';
-  LOG_FILE                = 'changelog.txt';
+  CHANGELOG_FILE          = 'changelog.txt';
 
   UPDATE_URL = 'https://raw.githubusercontent.com/riderkick/FMD/master/';
 

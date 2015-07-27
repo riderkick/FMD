@@ -2952,25 +2952,6 @@ object MainForm: TMainForm
       ChildSizing.TopBottomSpacing = 2
       ClientHeight = 480
       ClientWidth = 606
-      object rmAbout: TRichMemo
-        Left = 2
-        Height = 409
-        Top = 4
-        Width = 600
-        Align = alTop
-        Anchors = [akTop, akLeft, akRight, akBottom]
-        BorderSpacing.Top = 2
-        BorderSpacing.Right = 2
-        BorderSpacing.Around = 2
-        Color = clWhite
-        Font.Style = [fsBold]
-        HideSelection = False
-        ParentFont = False
-        ReadOnly = True
-        ScrollBars = ssVertical
-        TabOrder = 0
-        ZoomFactor = 1
-      end
       object btCheckVersion: TBitBtn
         Left = 25
         Height = 40
@@ -3015,7 +2996,7 @@ object MainForm: TMainForm
           FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00
         }
         OnClick = btCheckVersionClick
-        TabOrder = 1
+        TabOrder = 0
       end
       object btVisitMyBlog: TBitBtn
         Left = 249
@@ -3061,7 +3042,66 @@ object MainForm: TMainForm
           80668080806680808066808080668080804D7F7F7F007F7F7F00
         }
         OnClick = btVisitMyBlogClick
+        TabOrder = 1
+      end
+      object pcAbout: TPageControl
+        Left = 2
+        Height = 416
+        Top = 2
+        Width = 602
+        ActivePage = tsAboutText
+        Align = alTop
+        Anchors = [akTop, akLeft, akRight, akBottom]
+        TabIndex = 0
         TabOrder = 2
+        object tsAboutText: TTabSheet
+          Caption = 'About FMD'
+          ClientHeight = 388
+          ClientWidth = 594
+          object rmAbout: TRichMemo
+            Left = 2
+            Height = 382
+            Top = 4
+            Width = 588
+            Align = alClient
+            BorderSpacing.Top = 2
+            BorderSpacing.Right = 2
+            BorderSpacing.Around = 2
+            Color = clWhite
+            Font.Style = [fsBold]
+            HideSelection = False
+            ParentFont = False
+            ReadOnly = True
+            ScrollBars = ssVertical
+            TabOrder = 0
+            ZoomFactor = 1
+          end
+        end
+        object tsChangelogText: TTabSheet
+          Caption = 'Changelog'
+          ClientHeight = 388
+          ClientWidth = 594
+          object mmChangelog: TMemo
+            Left = 2
+            Height = 380
+            Top = 4
+            Width = 588
+            Align = alClient
+            BorderSpacing.Top = 2
+            BorderSpacing.Right = 2
+            BorderSpacing.Bottom = 2
+            BorderSpacing.Around = 2
+            Font.CharSet = ANSI_CHARSET
+            Font.Height = -12
+            Font.Name = 'Courier New'
+            Font.Pitch = fpFixed
+            Font.Quality = fqDraft
+            ParentFont = False
+            ReadOnly = True
+            ScrollBars = ssAutoBoth
+            TabOrder = 0
+          end
+        end
       end
     end
   end

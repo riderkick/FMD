@@ -60,6 +60,10 @@ type
     cbUseRegExpr: TCheckBox;
     cbOptionProxyType: TComboBox;
     cbOptionOneInstanceOnly: TCheckBox;
+    mmChangelog: TMemo;
+    pcAbout: TPageControl;
+    tsAboutText: TTabSheet;
+    tsChangelogText: TTabSheet;
     TransferRateToolset: TChartToolset;
     miFavoritesStopCheckNewChapter: TMenuItem;
     miFavoritesCheckNewChapter: TMenuItem;
@@ -954,6 +958,10 @@ begin
       fs.free;
     end;
   end;
+
+  //load changelog
+  if FileExistsUTF8(CleanAndExpandDirectory(GetCurrentDirUTF8) + CHANGELOG_FILE) then
+    mmChangelog.Lines.LoadFromFile(CleanAndExpandDirectory(GetCurrentDirUTF8) + CHANGELOG_FILE);
 
   dataProcess := TDBDataProcess.Create;
   DLManager := TDownloadManager.Create;
