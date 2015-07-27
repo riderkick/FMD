@@ -4993,6 +4993,8 @@ begin
 end;
 
 procedure TMainForm.LoadFormInformation;
+var
+  i: Integer;
 begin
   pcLeft.Width := options.ReadInteger('form', 'MainSplitter', 195);
   sbMain.Panels[0].Width := pcLeft.Width + 4;
@@ -5010,59 +5012,34 @@ begin
     PrevWindowState := wsNormal;
   WindowState := PrevWindowState;
 
-  vtDownload.Header.Columns.Items[0].Width :=
-    options.ReadInteger('form', 'vtDownload0Width', 50);
-  vtDownload.Header.Columns.Items[1].Width :=
-    options.ReadInteger('form', 'vtDownload1Width', 50);
-  vtDownload.Header.Columns.Items[2].Width :=
-    options.ReadInteger('form', 'vtDownload2Width', 50);
-  vtDownload.Header.Columns.Items[3].Width :=
-    options.ReadInteger('form', 'vtDownload3Width', 50);
-  vtDownload.Header.Columns.Items[4].Width :=
-    options.ReadInteger('form', 'vtDownload4Width', 50);
-  vtDownload.Header.Columns.Items[5].Width :=
-    options.ReadInteger('form', 'vtDownload5Width', 50);
+  if vtDownload.Header.Columns.Count > 0 then
+   with vtDownload.Header.Columns do
+    for i := 0 to Count - 1 do
+      Items[i].Width := options.ReadInteger('form', 'vtDownload' + IntToStr(i) + 'Width', 50);
 
-  vtFavorites.Header.Columns.Items[0].Width :=
-    options.ReadInteger('form', 'vtFavorites0Width', 50);
-  vtFavorites.Header.Columns.Items[1].Width :=
-    options.ReadInteger('form', 'vtFavorites1Width', 50);
-  vtFavorites.Header.Columns.Items[2].Width :=
-    options.ReadInteger('form', 'vtFavorites2Width', 50);
-  vtFavorites.Header.Columns.Items[3].Width :=
-    options.ReadInteger('form', 'vtFavorites3Width', 50);
-  vtFavorites.Header.Columns.Items[4].Width :=
-    options.ReadInteger('form', 'vtFavorites4Width', 50);
+  if vtFavorites.Header.Columns.Count > 0 then
+   with vtFavorites.Header.Columns do
+    for i := 0 to Count - 1 do
+      Items[i].Width := options.ReadInteger('form', 'vtFavorites' + IntToStr(i) + 'Width', 50);
 end;
 
 procedure TMainForm.SaveFormInformation;
+var
+  i: Integer;
 begin
   options.WriteInteger('form', 'MainSplitter', pcLeft.Width);
   options.WriteInteger('form', 'pcMainPageIndex', pcMain.PageIndex);
 
-  options.WriteInteger('form', 'vtDownload0Width',
-    vtDownload.Header.Columns.Items[0].Width);
-  options.WriteInteger('form', 'vtDownload1Width',
-    vtDownload.Header.Columns.Items[1].Width);
-  options.WriteInteger('form', 'vtDownload2Width',
-    vtDownload.Header.Columns.Items[2].Width);
-  options.WriteInteger('form', 'vtDownload3Width',
-    vtDownload.Header.Columns.Items[3].Width);
-  options.WriteInteger('form', 'vtDownload4Width',
-    vtDownload.Header.Columns.Items[4].Width);
-  options.WriteInteger('form', 'vtDownload5Width',
-    vtDownload.Header.Columns.Items[5].Width);
+  if vtDownload.Header.Columns.Count > 0 then
+   with vtDownload.Header.Columns do
+    for i := 0 to Count - 1 do
+      options.WriteInteger('form', 'vtDownload' + IntToStr(i) + 'Width', Items[i].Width);
 
-  options.WriteInteger('form', 'vtFavorites0Width',
-    vtFavorites.Header.Columns.Items[0].Width);
-  options.WriteInteger('form', 'vtFavorites1Width',
-    vtFavorites.Header.Columns.Items[1].Width);
-  options.WriteInteger('form', 'vtFavorites2Width',
-    vtFavorites.Header.Columns.Items[2].Width);
-  options.WriteInteger('form', 'vtFavorites3Width',
-    vtFavorites.Header.Columns.Items[3].Width);
-  options.WriteInteger('form', 'vtFavorites4Width',
-    vtFavorites.Header.Columns.Items[4].Width);
+  if vtFavorites.Header.Columns.Count > 0 then
+   with vtFavorites.Header.Columns do
+    for i := 0 to Count - 1 do
+      options.WriteInteger('form', 'vtFavorites' + IntToStr(i) + 'Width', Items[i].Width);
+
   options.WriteInteger('form', 'SelectManga', cbSelectManga.ItemIndex);
 
   options.WriteBool('form', 'MainFormMaximized', (WindowState = wsMaximized));
