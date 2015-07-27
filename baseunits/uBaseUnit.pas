@@ -358,12 +358,8 @@ const
   LONEMANGA_ID           = 94;
   DYNASTYSCANS_ID        = 95;
   MADOKAMI_ID            = 96;
-  MANGACAP_ID            = 97;
-  MANGABOOM_ID           = 98;
-  AUTHRONE_ID            = 99;
-  EYEONMANGA_ID          = 100;
 
-  WebsiteRoots: array [0..100] of array [0..1] of string = (
+  WebsiteRoots: array [0..96] of array [0..1] of string = (
     ('AnimeA', 'http://manga.animea.net'),
     ('MangaHere', 'http://www.mangahere.co'),
     ('MangaInn', 'http://www.mangainn.me'),
@@ -460,11 +456,7 @@ const
     ('ReadMangaToday', 'http://www.readmanga.today'),
     ('LoneManga', 'http://lonemanga.com'),
     ('Dynasty-Scans', 'http://dynasty-scans.com'),
-    ('Madokami', 'https://manga.madokami.com'),
-    ('MangaCap', 'http://www.mangacap.com'),
-    ('MangaBoom', 'http://www.mangaboom.com'),
-    ('Authrone', 'http://www.authrone.com'),
-    ('EyeOnManga', 'http://www.eyeonmanga.com')
+    ('Madokami', 'https://manga.madokami.com')
     );
 
   ALPHA_LIST = '#abcdefghijklmnopqrstuvwxyz';
@@ -1288,8 +1280,7 @@ begin
       PORNCOMIXIC_ID,
       PORNXXXCOMICS_ID,
       MANGAPARK_ID,
-      SENMANGA_ID,
-      MANGACAP_ID
+      SENMANGA_ID
       ]);
 end;
 
