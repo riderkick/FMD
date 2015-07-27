@@ -1182,10 +1182,8 @@ begin
         ExecuteDirect('DROP TABLE IF EXISTS ' + QuotedStrd(FTableName + '_ordered'));
         ExecuteDirect('CREATE TABLE ' + QuotedStrd(FTableName + '_ordered') +
           DBDataProccesCreateParam);
-        ExecuteDirect('INSERT INTO ' + QuotedStrd(FTableName + '_ordered') + ' ' +
-          BracketStr(DBDataProcessParam) + ' SELECT ' + DBDataProcessParam +
-          ' FROM ' + QuotedStrd(FTableName) + ' ORDER BY "title" COLLATE NATCMP');
-        FTrans.Commit;
+        ExecuteDirect('INSERT INTO '+QuotedStrd(FTableName + '_ordered') +
+          ' SELECT * FROM ' + QuotedStrd(FTableName) + ' ORDER BY "title" COLLATE NATCMP');
         ExecuteDirect('DROP TABLE ' + QuotedStrd(FTableName));
         ExecuteDirect('ALTER TABLE ' + QuotedStrd(FTableName + '_ordered') +
           'RENAME TO ' + QuotedStrd(FTableName));
