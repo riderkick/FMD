@@ -1184,7 +1184,7 @@ begin
           DBDataProccesCreateParam);
         ExecuteDirect('INSERT INTO ' + QuotedStrd(FTableName + '_ordered') + ' ' +
           BracketStr(DBDataProcessParam) + ' SELECT ' + DBDataProcessParam +
-          ' FROM ' + QuotedStrd(FTableName) + 'ORDER BY "title" COLLATE NATCMP');
+          ' FROM ' + QuotedStrd(FTableName) + ' ORDER BY "title" COLLATE NATCMP');
         FTrans.Commit;
         ExecuteDirect('DROP TABLE ' + QuotedStrd(FTableName));
         ExecuteDirect('ALTER TABLE ' + QuotedStrd(FTableName + '_ordered') +
