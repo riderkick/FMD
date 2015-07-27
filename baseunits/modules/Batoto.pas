@@ -20,7 +20,7 @@ const
 function GetDirectoryPageNumber(var MangaInfo: TMangaInformation;
   var Page: Integer; Module: TModuleContainer): Integer;
 var
-  Source, Parse: TStringList;
+  Parse: TStringList;
 
   procedure ScanParse;
   var
@@ -29,9 +29,9 @@ var
   begin
     if Parse.Count > 0 then
       for i := 0 to Parse.Count - 1 do
-        if (Pos('Page 1 of ', parse.Strings[i]) > 0) then
+        if (Pos('Page 1 of ', Parse.Strings[i]) > 0) then
         begin
-          s := GetString(parse.Strings[i] + '~!@', 'Page 1 of ', '~!@');
+          s := GetString(Parse.Strings[i] + '~!@', 'Page 1 of ', '~!@');
           Page := StrToInt(TrimLeft(TrimRight(s)));
           Break;
         end;
@@ -41,30 +41,29 @@ begin
   Result := NET_PROBLEM;
   Page := 1;
   if MangaInfo = nil then Exit;
-  Source := TStringList.Create;
+  Parse := TStringList.Create;
   try
-    if MangaInfo.GetPage(TObject(Source),
+    if MangaInfo.GetPage(TObject(Parse),
       Module.RootURL + dirurls[Module.CurrentDirectoryIndex] +
       dirparam + IntToStr(perpage), 3) then
     begin
-      Result := NO_ERROR;
-      Parse := TStringList.Create;
-      try
-        ParseHTML(Source.Text, Parse);
+      Result := INFORMATION_NOT_FOUND;
+      ParseHTML(Parse.Text, Parse);
+      if Parse.Count > 0 then
+      begin
+        Result := NO_ERROR;
         ScanParse;
-      finally
-        Parse.Free;
       end;
     end;
   finally
-    Source.Free;
+    Parse.Free;
   end;
 end;
 
 function GetNameAndLink(var MangaInfo: TMangaInformation;
   const Names, Links: TStringList; const URL: String; Module: TModuleContainer): Integer;
 var
-  Source, Parse: TStringList;
+  Parse: TStringList;
   s: String;
   p: Integer;
 
@@ -100,29 +99,27 @@ begin
   p := StrToIntDef(URL, 0);
   if p > 0 then
     s += '&st=' + (IntToStr(p * perpage));
-  Source := TStringList.Create;
+  Parse := TStringList.Create;
   try
-    if MangaInfo.GetPage(TObject(Source), s, 3) then
+    if MangaInfo.GetPage(TObject(Parse), s, 3) then
     begin
-      Result := NO_ERROR;
-      Parse := TStringList.Create;
-      try
-        ParseHTML(Source.Text, Parse);
-        if Parse.Count > 0 then
-          ScanParse;
-      finally
-        Parse.Free;
+      Result := INFORMATION_NOT_FOUND;
+      ParseHTML(Parse.Text, Parse);
+      if Parse.Count > 0 then
+      begin
+        Result := NO_ERROR;
+        ScanParse;
       end;
     end;
   finally
-    Source.Free;
+    Parse.Free;
   end;
 end;
 
 function GetInfo(var MangaInfo: TMangaInformation; const URL: String;
   const Reconnect: Cardinal; Module: TModuleContainer): Integer;
 var
-  Source, Parse: TStringList;
+  Parse: TStringList;
   info: TMangaInfo;
 
   procedure ScanChapters(const StartIndex: Integer);
@@ -161,7 +158,6 @@ var
   var
     i, j: Integer;
   begin
-    info := MangaInfo.mangaInfo;
     info.genres := '';
     info.summary := '';
     for i := 0 to Parse.Count - 1 do
@@ -236,31 +232,30 @@ var
 begin
   Result := NET_PROBLEM;
   if MangaInfo = nil then Exit;
-  MangaInfo.mangaInfo.website := Module.Website;
-  MangaInfo.mangaInfo.url := FillHost(Module.RootURL, URL);
-  Source := TStringList.Create;
+  info := MangaInfo.mangaInfo;
+  info.website := Module.Website;
+  info.url := FillHost(Module.RootURL, URL);
+  Parse := TStringList.Create;
   try
-    if MangaInfo.GetPage(TObject(Source), MangaInfo.mangaInfo.url, Reconnect) then
+    if MangaInfo.GetPage(TObject(Parse), info.url, Reconnect) then
     begin
-      Result := NO_ERROR;
-      Parse := TStringList.Create;
-      try
-        ParseHTML(Source.Text, Parse);
-        if Parse.Count > 0 then
-          ScanParse;
-      finally
-        Parse.Free;
+      Result := INFORMATION_NOT_FOUND;
+      ParseHTML(Parse.Text, Parse);
+      if Parse.Count > 0 then
+      begin
+        Result := NO_ERROR;
+        ScanParse;
       end;
     end;
   finally
-    Source.Free;
+    Parse.Free;
   end;
 end;
 
 function GetPageNumber(var DownloadThread: TDownloadThread; const URL: String;
   Module: TModuleContainer): Boolean;
 var
-  Source, Parse: TStringList;
+  Parse: TStringList;
   Container: TTaskContainer;
 
   procedure ScanParse;
@@ -306,30 +301,27 @@ begin
   Container.PageLinks.Clear;
   Container.PageContainerLinks.Clear;
   Container.PageNumber := 0;
-  Source := TStringList.Create;
+  Parse := TStringList.Create;
   try
-    if DownloadThread.GetPage(TObject(Source), FillHost(Module.RootURL, URL) + '/1',
+    if DownloadThread.GetPage(TObject(Parse), FillHost(Module.RootURL, URL) + '/1',
       Container.Manager.retryConnect) then
     begin
-      Result := True;
-      Parse := TStringList.Create;
-      try
-        ParseHTML(Source.Text, Parse);
-        if Parse.Count > 0 then
-          ScanParse;
-      finally
-        Parse.Free;
+      ParseHTML(Parse.Text, Parse);
+      if Parse.Count > 0 then
+      begin
+        Result := True;
+        ScanParse;
       end;
     end;
   finally
-    Source.Free;
+    Parse.Free;
   end;
 end;
 
 function GetImageURL(var DownloadThread: TDownloadThread; const URL: String;
   Module: TModuleContainer): Boolean;
 var
-  Source, Parse: TStringList;
+  Parse: TStringList;
   Container: TTaskContainer;
 
   procedure ScanParse;
@@ -349,24 +341,21 @@ begin
   Result := False;
   if DownloadThread = nil then Exit;
   Container := DownloadThread.manager.container;
-  Source := TStringList.Create;
+  Parse := TStringList.Create;
   try
-    if DownloadThread.GetPage(TObject(Source), FillHost(Module.RootURL, URL) +
+    if DownloadThread.GetPage(TObject(Parse), FillHost(Module.RootURL, URL) +
       '/' + IntToStr(DownloadThread.workCounter + 1),
       Container.Manager.retryConnect) then
     begin
-      Result := True;
-      Parse := TStringList.Create;
-      try
-        ParseHTML(Source.Text, Parse);
-        if Parse.Count > 0 then
-          ScanParse;
-      finally
-        Parse.Free;
+      ParseHTML(Parse.Text, Parse);
+      if Parse.Count > 0 then
+      begin
+        Result := True;
+        ScanParse;
       end;
     end;
   finally
-    Source.Free;
+    Parse.Free;
   end;
 end;
 

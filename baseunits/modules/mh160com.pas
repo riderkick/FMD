@@ -23,7 +23,7 @@ end;
 function GetNameAndLink(var MangaInfo: TMangaInformation;
   const Names, Links: TStringList; const URL: String; Module: TModuleContainer): Integer;
 var
-  Source, Parse: TStringList;
+  Parse: TStringList;
 
   procedure ScanParse;
   var
@@ -42,32 +42,29 @@ var
 
 begin
   Result := NET_PROBLEM;
-  if MangaInfo = nil then
-    Exit;
-  Source := TStringList.Create;
+  if MangaInfo = nil then Exit;
+  Parse := TStringList.Create;
   try
-    if MangaInfo.GetPage(TObject(Source), Module.RootURL + '/kanmanhua/' +
+    if MangaInfo.GetPage(TObject(Parse), Module.RootURL + '/kanmanhua/' +
       diralpha[StrToInt(URL) + 1] + '.html', 3) then
     begin
-      Result := NO_ERROR;
-      Parse := TStringList.Create;
-      try
-        ParseHTML(CP936ToUTF8(Source.Text), Parse);
-        if Parse.Count > 0 then
-          ScanParse;
-      finally
-        Parse.Free;
+      Result := INFORMATION_NOT_FOUND;
+      ParseHTML(CP936ToUTF8(Parse.Text), Parse);
+      if Parse.Count > 0 then
+      begin
+        Result := NO_ERROR;
+        ScanParse;
       end;
     end;
   finally
-    Source.Free;
+    Parse.Free;
   end;
 end;
 
 function GetInfo(var MangaInfo: TMangaInformation; const URL: String;
   const Reconnect: Cardinal; Module: TModuleContainer): Integer;
 var
-  Source, Parse: TStringList;
+  Parse: TStringList;
   info: TMangaInfo;
 
   procedure ScanChapters(const StartIndex: Integer);
@@ -139,27 +136,24 @@ var
 
 begin
   Result := NET_PROBLEM;
-  if MangaInfo = nil then
-    Exit;
+  if MangaInfo = nil then Exit;
   info := MangaInfo.mangaInfo;
-  MangaInfo.mangaInfo.website := Module.Website;
-  MangaInfo.mangaInfo.url := FillHost(Module.RootURL, URL);
-  Source := TStringList.Create;
+  info.website := Module.Website;
+  info.url := FillHost(Module.RootURL, URL);
+  Parse := TStringList.Create;
   try
-    if MangaInfo.GetPage(TObject(Source), MangaInfo.mangaInfo.url, Reconnect) then
+    if MangaInfo.GetPage(TObject(Parse), MangaInfo.mangaInfo.url, Reconnect) then
     begin
-      Result := NO_ERROR;
-      Parse := TStringList.Create;
-      try
-        ParseHTML(CP936ToUTF8(Source.Text), Parse);
-        if Parse.Count > 0 then
-          ScanParse;
-      finally
-        Parse.Free;
+      Result := INFORMATION_NOT_FOUND;
+      ParseHTML(CP936ToUTF8(Parse.Text), Parse);
+      if Parse.Count > 0 then
+      begin
+        Result := NO_ERROR;
+        ScanParse;
       end;
     end;
   finally
-    Source.Free;
+    Parse.Free;
   end;
 end;
 
@@ -263,7 +257,7 @@ end;
 function GetPageNumber(var DownloadThread: TDownloadThread; const URL: String;
   Module: TModuleContainer): Boolean;
 var
-  Source, Parse: TStringList;
+  Parse: TStringList;
   Container: TTaskContainer;
 
   procedure ScanParse;
@@ -290,29 +284,25 @@ var
 
 begin
   Result := False;
-  if DownloadThread = nil then
-    Exit;
+  if DownloadThread = nil then Exit;
   Container := DownloadThread.manager.container;
   Container.PageLinks.Clear;
   Container.PageContainerLinks.Clear;
   Container.PageNumber := 0;
-  Source := TStringList.Create;
+  Parse := TStringList.Create;
   try
-    if DownloadThread.GetPage(TObject(Source), FillHost(Module.RootURL, URL),
+    if DownloadThread.GetPage(TObject(Parse), FillHost(Module.RootURL, URL),
       Container.Manager.retryConnect) then
     begin
-      Result := True;
-      Parse := TStringList.Create;
-      try
-        ParseHTML(CP936ToUTF8(Source.Text), Parse);
-        if Parse.Count > 0 then
-          ScanParse;
-      finally
-        Parse.Free;
+      ParseHTML(CP936ToUTF8(Parse.Text), Parse);
+      if Parse.Count > 0 then
+      begin
+        Result := True;
+        ScanParse;
       end;
     end;
   finally
-    Source.Free;
+    Parse.Free;
   end;
 end;
 
