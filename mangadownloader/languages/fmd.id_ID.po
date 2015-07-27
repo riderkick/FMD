@@ -1121,6 +1121,10 @@ msgstr "Pilih semua"
 msgid "Undo"
 msgstr "Urungkan"
 
+#: tmainform.miabortsilentthread.caption
+msgid "Abort"
+msgstr "Batalkan"
+
 #: tmainform.michapterlistcheckall.caption
 msgid "Check all"
 msgstr "Centang semua"

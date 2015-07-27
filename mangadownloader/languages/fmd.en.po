@@ -1132,6 +1132,10 @@ msgstr "Select all"
 msgid "Undo"
 msgstr "Undo"
 
+#: tmainform.miabortsilentthread.caption
+msgid "Abort"
+msgstr "Abort"
+
 #: tmainform.michapterlistcheckall.caption
 msgid "Check all"
 msgstr "Check all"

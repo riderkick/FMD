@@ -1073,6 +1073,10 @@ msgstr ""
 msgid "Undo"
 msgstr ""
 
+#: tmainform.miabortsilentthread.caption
+msgid "Abort"
+msgstr ""
+
 #: tmainform.michapterlistcheckall.caption
 msgid "Check all"
 msgstr ""
