@@ -92,84 +92,82 @@ function GetInfo(var MangaInfo: TMangaInformation; const URL: String;
   const Reconnect: Cardinal; Module: TModuleContainer): Integer;
 var
   Parse: TStringList;
+  info: TMangaInfo;
 
   procedure ScanChapters(const StartIndex: Integer);
   var
     i: Integer;
     g: String = '';
   begin
-    with MangaInfo.mangaInfo do
+    for i := StartIndex to Parse.Count - 1 do
     begin
-      for i := StartIndex to Parse.Count - 1 do
-      begin
-        if Parse[i] = '</article>' then
-          Break;
-        if GetVal(Parse[i], 'class') = 'group' then
-          if GetVal(Parse[i + 1], 'class') = 'title' then
-          begin
-            g := Trim(Parse[i + 2]);
-            if g = 'Chapters' then
-              g := ''
-            else
-              g += ' ';
-          end;
-        if GetTagName(Parse[i]) = 'a' then
-          if GetVal(Parse[i - 1], 'class') = 'title' then
-          begin
-            chapterLinks.Add(GetVal(Parse[i], 'href'));
-            chapterName.Add(g + Trim(Parse[i + 1]));
-          end;
-      end;
-      //invert chapters
-      if MangaInfo.mangaInfo.chapterLinks.Count > 0 then
-        InvertStrings([chapterLinks, chapterName]);
+      if Parse[i] = '</article>' then
+        Break;
+      if GetVal(Parse[i], 'class') = 'group' then
+        if GetVal(Parse[i + 1], 'class') = 'title' then
+        begin
+          g := Trim(Parse[i + 2]);
+          if g = 'Chapters' then
+            g := ''
+          else
+            g += ' ';
+        end;
+      if GetTagName(Parse[i]) = 'a' then
+        if GetVal(Parse[i - 1], 'class') = 'title' then
+        begin
+          info.chapterLinks.Add(GetVal(Parse[i], 'href'));
+          info.chapterName.Add(g + Trim(Parse[i + 1]));
+        end;
     end;
+    //invert chapters
+    if info.chapterLinks.Count > 0 then
+      InvertStrings([info.chapterLinks, info.chapterName]);
   end;
 
   procedure ScanParse;
   var
     i: Integer;
   begin
-    with MangaInfo.mangaInfo do
-      for i := 0 to Parse.Count - 1 do
+    for i := 0 to Parse.Count - 1 do
+    begin
+      //title
+      if info.title = '' then
+        if (GetTagName(Parse[i]) = 'h1') and (GetVal(Parse[i], 'class') = 'title') then
+          info.title := CommonStringFilter(Parse[i + 1]);
+
+      //cover
+      if info.coverLink = '' then
+        if GetVal(Parse[i], 'class') = 'thumbnail' then
+          if GetTagName(Parse[i + 2]) = 'img' then
+            info.coverLink := GetVal(Parse[i + 2], 'src');
+
+      //author
+      if (Parse[i] = 'Author') and (Parse[i + 1] = '</b>') then
+        info.authors := Trim(TrimLeftChar(Parse[i + 2], [':']));
+
+      //artist
+      if (Parse[i] = 'Artist') and (Parse[i + 1] = '</b>') then
+        info.artists := Trim(TrimLeftChar(Parse[i + 2], [':']));
+
+      //summary
+      if (Parse[i] = 'Synopsis') and (Parse[i + 1] = '</b>') then
+        info.summary := Trim(TrimLeftChar(Parse[i + 2], [':']));
+
+      //chapters
+      if GetVal(Parse[i], 'class') = 'list' then
       begin
-        //title
-        if title = '' then
-          if (GetTagName(Parse[i]) = 'h1') and (GetVal(Parse[i], 'class') = 'title') then
-            title := CommonStringFilter(Parse[i + 1]);
-
-        //cover
-        if coverLink = '' then
-          if GetVal(Parse[i], 'class') = 'thumbnail' then
-            if GetTagName(Parse[i + 2]) = 'img' then
-              coverLink := GetVal(Parse[i + 2], 'src');
-
-        //author
-        if (Parse[i] = 'Author') and (Parse[i + 1] = '</b>') then
-          authors := Trim(TrimLeftChar(Parse[i + 2], [':']));
-
-        //artist
-        if (Parse[i] = 'Artist') and (Parse[i + 1] = '</b>') then
-          artists := Trim(TrimLeftChar(Parse[i + 2], [':']));
-
-        //summary
-        if (Parse[i] = 'Synopsis') and (Parse[i + 1] = '</b>') then
-          summary := Trim(TrimLeftChar(Parse[i + 2], [':']));
-
-        //chapters
-        if GetVal(Parse[i], 'class') = 'list' then
-        begin
-          ScanChapters(i);
-          Break;
-        end;
+        ScanChapters(i);
+        Break;
       end;
+    end;
   end;
 
 begin
   Result := NET_PROBLEM;
   if MangaInfo = nil then Exit;
-  MangaInfo.mangaInfo.website := Module.Website;
-  MangaInfo.mangaInfo.url := FillHost(Module.RootURL, URL);
+  info := MangaInfo.mangaInfo;
+  info.website := Module.Website;
+  info.url := FillHost(Module.RootURL, URL);
   Parse := TStringList.Create;
   try
     if MangaInfo.GetPage(TObject(Parse), MangaInfo.mangaInfo.url, Reconnect) then
