@@ -1308,6 +1308,14 @@ msgstr "Expand All"
 msgid "About"
 msgstr "About"
 
+#: tmainform.tsabouttext.caption
+msgid "About FMD"
+msgstr "About FMD"
+
+#: tmainform.tschangelogtext.caption
+msgid "Changelog"
+msgstr "Changelog"
+
 #: tmainform.tsconnections.caption
 msgid "Connections"
 msgstr "Connections"

@@ -1249,6 +1249,14 @@ msgstr ""
 msgid "About"
 msgstr ""
 
+#: tmainform.tsabouttext.caption
+msgid "About FMD"
+msgstr ""
+
+#: tmainform.tschangelogtext.caption
+msgid "Changelog"
+msgstr ""
+
 #: tmainform.tsconnections.caption
 msgid "Connections"
 msgstr ""

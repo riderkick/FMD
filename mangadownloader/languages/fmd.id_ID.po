@@ -1297,6 +1297,14 @@ msgstr "Bentangkan semua"
 msgid "About"
 msgstr "Tentang"
 
+#: tmainform.tsabouttext.caption
+msgid "About FMD"
+msgstr "Tentang FMD"
+
+#: tmainform.tschangelogtext.caption
+msgid "Changelog"
+msgstr "Catatan perubahan"
+
 #: tmainform.tsconnections.caption
 msgid "Connections"
 msgstr "Koneksi"
