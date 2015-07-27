@@ -1,4 +1,5 @@
 uses
   FoOlSlide,
   mh160com,
-  Batoto;
+  Batoto,
+  WPManga;
