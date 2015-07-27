@@ -250,7 +250,7 @@ function TFormDropTarget.GetURLsFromHTML(const S: String): String;
 var
   Parse, URls: TStringList;
   i: Integer;
-  t: String;
+  url: String;
 begin
   Result := S;
   if S = '' then Exit;
@@ -261,12 +261,12 @@ begin
     begin
       URls := TStringList.Create;
       try
-        for i := 0 to Parse.Count -1 do
+        for i := 0 to Parse.Count - 1 do
         begin
           if LowerCase(GetTagName(Parse[i])) = 'a' then
-          t := GetVal(Parse[i], 'href');
-          if Pos('javascript', t) <> 1 then
-            URls.Add(t);
+          url := GetVal(Parse[i], 'href');
+          if Pos('javascript', url) <> 1 then
+            URls.Add(url);
         end;
         if URls.Count > 0 then
         begin
@@ -323,6 +323,7 @@ function TFormDropTarget.Drop(const dataObj: IDataObject; grfKeyState: DWORD;
 var
   Enum: IEnumFORMATETC;
   FmtEtc: TFORMATETC;
+  url: String;
 begin
   OleCheck(DataObj.EnumFormatEtc(DATADIR_GET, Enum));
   while Enum.Next(1, FmtEtc, nil) = S_OK do
@@ -331,8 +332,14 @@ begin
        (FmtEtc.CfFormat = CF_TEXT) then
     begin
       if Assigned(OnDropChekout) then
-        OnDropChekout(ParseDataObj(dataObj, FmtEtc.CfFormat));
-      Break;
+      begin
+        url := ParseDataObj(dataObj, FmtEtc.CfFormat);
+        if url <> '' then
+        begin
+          OnDropChekout(url);
+          Break;
+        end;
+      end;
     end;
   Result := S_OK;
 end;
