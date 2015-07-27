@@ -95,8 +95,6 @@ begin
         StringReplace(urlList.Strings[i], 'http://mangafox.com', WebsiteRoots[MANGAFOX_ID,1], []);
       urlList.Strings[i]:=
         StringReplace(urlList.Strings[i], 'http://www.mangafox.com', WebsiteRoots[MANGAFOX_ID,1], []);
-      urlList.Strings[i]:=
-        StringReplace(urlList.Strings[i], 'http://www.batoto.com', WebsiteRoots[BATOTO_ID,1], []);
       isUnimported:= TRUE;
       for j:= 0 to High(WebsiteRoots) do
       begin
