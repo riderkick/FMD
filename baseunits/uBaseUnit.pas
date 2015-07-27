@@ -3534,6 +3534,7 @@ begin
   if FRaw = '' then
     Exit('');
   Output.Clear;
+  Output.BeginUpdate;
   parser := THTMLParser.Create(PChar(FRaw));
   try
     parser.OnFoundTag := FoundTag;
@@ -3542,6 +3543,7 @@ begin
   finally
     parser.Free;
   end;
+  Output.EndUpdate;
 end;
 
 { TMangaInfo }
