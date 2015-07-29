@@ -8,6 +8,10 @@ https://www.mediafire.com/folder/3ccy2c7g36hp3/Fmd
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.19.5 (30-07-2015)
+[*] MangaFox: rewrite all script
+[*] Fix drop box range check error
+
 0.9.19.4 (28-07-2015)
 [+] Added changelog tab
 [+] Support multiple url on drop box
