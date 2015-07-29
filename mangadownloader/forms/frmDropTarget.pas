@@ -43,8 +43,8 @@ type
     FCanDrop: Boolean;
     // IDropTarget
     function MakeFormatEtc(const Fmt: TClipFormat): TFormatEtc;
-    function CursorEffect(const AllowedEffects: LongInt;
-      const KeyState: Integer): LongInt;
+    function CursorEffect(const AllowedEffects: Cardinal;
+      const KeyState: Integer): Cardinal;
     function CanDrop(const DataObj: IDataObject): Boolean;
     function GetTextFromObj(const DataObj: IDataObject;
       const Fmt: TClipFormat): String;
@@ -201,8 +201,8 @@ begin
   Result.tymed := TYMED_HGLOBAL;
 end;
 
-function TFormDropTarget.CursorEffect(const AllowedEffects: LongInt;
-  const KeyState: Integer): LongInt;
+function TFormDropTarget.CursorEffect(const AllowedEffects: Cardinal;
+  const KeyState: Integer): Cardinal;
 begin
   Result := DROPEFFECT_NONE;
   if FCanDrop then
