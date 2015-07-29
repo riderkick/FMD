@@ -97,11 +97,6 @@ begin
       regx.Expression := REGEX_HOST;
       for i:= 0 to urlList.Count-1 do
       begin
-        urlList.Strings[i]:=
-          StringReplace(urlList.Strings[i], 'http://mangafox.com', WebsiteRoots[MANGAFOX_ID,1], []);
-        urlList.Strings[i]:=
-          StringReplace(urlList.Strings[i], 'http://www.mangafox.com', WebsiteRoots[MANGAFOX_ID,1], []);
-
         host := '';
         webs := '';
         host := LowerCase(regx.Replace(urlList[i], '$2', True));

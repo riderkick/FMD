@@ -1926,8 +1926,6 @@ var
 
   {$I includes/MangaPark/directory_page_number.inc}
 
-  {$I includes/MangaFox/directory_page_number.inc}
-
   //{$I includes/MangaTraders/directory_page_number.inc}
 
   {$I includes/SenManga/directory_page_number.inc}
@@ -2043,9 +2041,6 @@ begin
       if website = WebsiteRoots[MANGAPARK_ID, 0] then
         Result := GetMangaParkDirectoryPageNumber
       else
-      //if website = WebsiteRoots[MANGAFOX_ID, 0] then
-      //  Result := GetMangaFoxDirectoryPageNumber
-      //else
       //if website = WebsiteRoots[MANGATRADERS_ID, 0] then
       //  Result := GetMangaTradersDirectoryPageNumber
       //else
@@ -2210,8 +2205,6 @@ var
   {$I includes/MangaReader/names_and_links.inc}
 
   {$I includes/MangaPark/names_and_links.inc}
-
-  {$I includes/MangaFox/names_and_links.inc}
 
   {$I includes/MangaTraders/names_and_links.inc}
 
@@ -2387,9 +2380,6 @@ begin
     else
     if website = WebsiteRoots[MANGAPARK_ID, 0] then
       Result := MangaParkGetNamesAndLinks
-    else
-    if website = WebsiteRoots[MANGAFOX_ID, 0] then
-      Result := MangaFoxGetNamesAndLinks
     else
     if website = WebsiteRoots[MANGATRADERS_ID, 0] then
       Result := MangaTradersGetNamesAndLinks
@@ -2663,8 +2653,6 @@ var
 
   {$I includes/MangaPark/manga_information.inc}
 
-  {$I includes/MangaFox/manga_information.inc}
-
   {$I includes/MangaTraders/manga_information.inc}
 
   {$I includes/MangaStream/manga_information.inc}
@@ -2850,9 +2838,6 @@ begin
     else
     if website = WebsiteRoots[MANGAPARK_ID, 0] then
       Result := GetMangaParkInfoFromURL
-    else
-    if website = WebsiteRoots[MANGAFOX_ID, 0] then
-      Result := GetMangaFoxInfoFromURL
     else
     if website = WebsiteRoots[MANGATRADERS_ID, 0] then
       Result := GetMangaTradersInfoFromURL
