@@ -248,7 +248,7 @@
         <PackageName Value="LCL"/>
       </Item4>
     </RequiredPackages>
-    <Units Count="19">
+    <Units Count="7">
       <Unit0>
         <Filename Value="md.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -295,54 +295,6 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
       </Unit6>
-      <Unit7>
-        <Filename Value="..\baseunits\uDownloadsManager.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit7>
-      <Unit8>
-        <Filename Value="..\baseunits\uFavoritesManager.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit8>
-      <Unit9>
-        <Filename Value="..\baseunits\uUpdateThread.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit9>
-      <Unit10>
-        <Filename Value="..\baseunits\uSubThread.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit10>
-      <Unit11>
-        <Filename Value="..\baseunits\uUpdateDBThread.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit11>
-      <Unit12>
-        <Filename Value="..\baseunits\uSilentThread.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit12>
-      <Unit13>
-        <Filename Value="..\baseunits\uFMDThread.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit13>
-      <Unit14>
-        <Filename Value="..\baseunits\uPacker.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit14>
-      <Unit15>
-        <Filename Value="..\baseunits\uGetMangaInfosThread.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit15>
-      <Unit16>
-        <Filename Value="..\baseunits\uBaseUnit.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit16>
-      <Unit17>
-        <Filename Value="..\baseunits\uData.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit17>
-      <Unit18>
-        <Filename Value="..\baseunits\uMisc.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit18>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
