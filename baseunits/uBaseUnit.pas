@@ -880,6 +880,9 @@ function HTMLDecode(const AStr: String): String;
 function RemoveSymbols(const input: String): String;
 function CorrectPathSys(const Path: String): String;
 
+function CleanAndExpandURL(const URL: String): String;
+function CleanURL(const URL: String): String;
+function AppendURLDelim(const URL: String): String;
 function FixURL(const URL: String): String;
 function FixPath(const path: String): String;
 function GetLastDir(const path: String): String;
@@ -2218,6 +2221,39 @@ begin
     Exit;
   for i := 0 to Length(input) - 1 do
     Result := Result + input[i] + SEPERATOR;
+end;
+
+function CleanAndExpandURL(const URL: String): String;
+begin
+  Result := AppendURLDelim(CleanURL(URL));
+end;
+
+function CleanURL(const URL: String): String;
+var
+  host, link: String;
+begin
+  Result := URL;
+  with TRegExpr.Create do
+  try
+    Expression := REGEX_HOST;
+    host := Replace(URL, '$1$2$3', True);
+    link := Replace(URL, '$4', True);
+    if link <> '' then
+    begin
+      while Pos('//', link) <> 0 do
+        link := StringReplace(link, '//', '/', [rfReplaceAll]);
+      Result := host + URL;
+    end;
+  finally
+    Free;
+  end;
+end;
+
+function AppendURLDelim(const URL: String): String;
+begin
+  Result := URL;
+  if (URL <> '') and (URL[Length(URL)] <> '/') then
+    Result := URL + '/';
 end;
 
 function FixURL(const URL : String) : String;
