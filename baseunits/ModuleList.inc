@@ -2,4 +2,5 @@ uses
   FoOlSlide,
   mh160com,
   Batoto,
-  WPManga;
+  WPManga,
+  MangaFox;
