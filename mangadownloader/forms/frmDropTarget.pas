@@ -313,7 +313,8 @@ function TFormDropTarget.ParseDataObj(const DataObj: IDataObject;
   const Fmt: TClipboardFormat): String;
 begin
   if Fmt = CF_TEXTHTML then
-    Result := GetURLsFromHTML(GetWideTextFromObj(DataObj, Fmt));
+    Result := GetURLsFromHTML(GetWideTextFromObj(DataObj, Fmt))
+  else
   if Fmt = CF_HTML then
     Result := GetURLsFromHTML(GetTextFromObj(DataObj, Fmt))
   else
@@ -383,6 +384,7 @@ var
   end;
 
 begin
+  url := '';
   OleCheck(DataObj.EnumFormatEtc(DATADIR_GET, Enum));
   if Assigned(OnDropChekout) then
     if GetDataObjectFormats([
