@@ -42,14 +42,14 @@ type
     x0, y0: Integer;
     FCanDrop: Boolean;
     // IDropTarget
-    function MakeFormatEtc(const Fmt: TClipFormat): TFormatEtc;
+    function MakeFormatEtc(const Fmt: TCLIPFORMAT): TFormatEtc;
     function CursorEffect(const AllowedEffects: Cardinal;
       const KeyState: Integer): Cardinal;
     function CanDrop(const DataObj: IDataObject): Boolean;
     function GetTextFromObj(const DataObj: IDataObject;
-      const Fmt: TClipFormat): String;
+      const Fmt: TCLIPFORMAT): String;
     function GetWideTextFromObj(const DataObj: IDataObject;
-      const Fmt: TClipFormat): String;
+      const Fmt: TCLIPFORMAT): String;
     function GetURLsFromHTML(const S: String): String;
     function ParseDataObj(const DataObj: IDataObject;
       const Fmt: TClipboardFormat): String;
@@ -81,7 +81,8 @@ uses
   frmMain;
 
 var
-  CF_HTML: TClipFormat;
+  CF_HTML: TCLIPFORMAT;
+  CF_TEXTHTML: TCLIPFORMAT;
 
 {$R *.lfm}
 
@@ -192,7 +193,7 @@ begin
   miAddToFavorites.Checked := not miDownloadAll.Checked;
 end;
 
-function TFormDropTarget.MakeFormatEtc(const Fmt: TClipFormat): TFormatEtc;
+function TFormDropTarget.MakeFormatEtc(const Fmt: TCLIPFORMAT): TFormatEtc;
 begin
   Result.cfFormat := Fmt;
   Result.ptd := nil;
@@ -225,7 +226,7 @@ begin
 end;
 
 function TFormDropTarget.GetTextFromObj(const DataObj: IDataObject;
-  const Fmt: TClipFormat): String;
+  const Fmt: TCLIPFORMAT): String;
 var
   Medium: TStgMedium;
   PText: PChar;
@@ -249,7 +250,7 @@ begin
 end;
 
 function TFormDropTarget.GetWideTextFromObj(const DataObj: IDataObject;
-  const Fmt: TClipFormat): String;
+  const Fmt: TCLIPFORMAT): String;
 var
   Medium: TStgMedium;
   PwText: PWideChar;
@@ -311,7 +312,7 @@ end;
 function TFormDropTarget.ParseDataObj(const DataObj: IDataObject;
   const Fmt: TClipboardFormat): String;
 begin
-  if Fmt = CF_HTML then
+  if (Fmt = CF_TEXTHTML) or (Fmt = CF_HTML) then
     Result := GetURLsFromHTML(GetTextFromObj(DataObj, Fmt))
   else
   if Fmt = CF_UNICODETEXT then
@@ -350,23 +351,45 @@ var
   Enum: IEnumFORMATETC;
   FmtEtc: TFORMATETC;
   url: String;
+
+  Function GetDataObjectFormat(Fmt: TCLIPFORMAT): Boolean;
+  begin
+    Result := False;
+    Enum.Reset;
+    while Enum.Next(1, FmtEtc, nil) = S_OK do
+      if FmtEtc.CfFormat = Fmt then
+      begin
+        url := ParseDataObj(dataObj, Fmt);
+        if url <> '' then
+          Result := True;
+        Break;
+      end;
+  end;
+
+  function GetDataObjectFormats(Fmts: array of TCLIPFORMAT): Boolean;
+  var
+    i: Integer;
+  begin
+    Result := False;
+    if Length(Fmts) = 0 then Exit;
+    for i := Low(Fmts) to High(Fmts) do
+      if GetDataObjectFormat(Fmts[i]) then
+      begin
+        Result := True;
+        Break;
+      end;
+  end;
+
 begin
   OleCheck(DataObj.EnumFormatEtc(DATADIR_GET, Enum));
-  while Enum.Next(1, FmtEtc, nil) = S_OK do
-    if (FmtEtc.CfFormat = CF_HTML) or
-       (FmtEtc.CfFormat = CF_UNICODETEXT) or
-       (FmtEtc.CfFormat = CF_TEXT) then
-    begin
-      if Assigned(OnDropChekout) then
-      begin
-        url := ParseDataObj(dataObj, FmtEtc.CfFormat);
-        if url <> '' then
-        begin
-          OnDropChekout(url);
-          Break;
-        end;
-      end;
-    end;
+  if Assigned(OnDropChekout) then
+    if GetDataObjectFormats([
+      CF_TEXTHTML,
+      CF_HTML,
+      CF_UNICODETEXT,
+      CF_TEXT
+      ]) then
+      OnDropChekout(url);
   Result := S_OK;
 end;
 
@@ -379,5 +402,6 @@ end;
 
 initialization
   CF_HTML := RegisterClipboardFormat('HTML Format');
+  CF_TEXTHTML := RegisterClipboardFormat('text/html');
 
 end.
