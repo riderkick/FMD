@@ -369,6 +369,8 @@ begin
   try
     with MainForm do
     begin
+      if Trim(title) = '' then
+        title := Info.mangaInfo.title;
       if FSavePath = '' then
       begin
 	if Trim(edSaveTo.Text) = '' then
