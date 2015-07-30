@@ -218,7 +218,9 @@ end;
 
 function TFormDropTarget.CanDrop(const DataObj: IDataObject): Boolean;
 begin
-  Result := DataObj.QueryGetData(MakeFormatEtc(CF_HTML)) = S_OK;
+  Result := DataObj.QueryGetData(MakeFormatEtc(CF_TEXTHTML)) = S_OK;
+  if not Result then
+    Result := DataObj.QueryGetData(MakeFormatEtc(CF_HTML)) = S_OK;
   if not Result then
     Result := DataObj.QueryGetData(MakeFormatEtc(CF_UNICODETEXT)) = S_OK;
   if not Result then
