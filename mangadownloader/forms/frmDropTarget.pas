@@ -82,7 +82,6 @@ uses
 
 var
   CF_HTML: TCLIPFORMAT;
-  CF_TEXTHTML: TCLIPFORMAT;
 
 {$R *.lfm}
 
@@ -218,9 +217,7 @@ end;
 
 function TFormDropTarget.CanDrop(const DataObj: IDataObject): Boolean;
 begin
-  Result := DataObj.QueryGetData(MakeFormatEtc(CF_TEXTHTML)) = S_OK;
-  if not Result then
-    Result := DataObj.QueryGetData(MakeFormatEtc(CF_HTML)) = S_OK;
+  Result := DataObj.QueryGetData(MakeFormatEtc(CF_HTML)) = S_OK;
   if not Result then
     Result := DataObj.QueryGetData(MakeFormatEtc(CF_UNICODETEXT)) = S_OK;
   if not Result then
@@ -314,9 +311,6 @@ end;
 function TFormDropTarget.ParseDataObj(const DataObj: IDataObject;
   const Fmt: TClipboardFormat): String;
 begin
-  if Fmt = CF_TEXTHTML then
-    Result := GetURLsFromHTML(GetWideTextFromObj(DataObj, Fmt))
-  else
   if Fmt = CF_HTML then
     Result := GetURLsFromHTML(GetTextFromObj(DataObj, Fmt))
   else
@@ -390,7 +384,6 @@ begin
   OleCheck(DataObj.EnumFormatEtc(DATADIR_GET, Enum));
   if Assigned(OnDropChekout) then
     if GetDataObjectFormats([
-      CF_TEXTHTML,
       CF_HTML,
       CF_UNICODETEXT,
       CF_TEXT
@@ -408,6 +401,5 @@ end;
 
 initialization
   CF_HTML := RegisterClipboardFormat('HTML Format');
-  CF_TEXTHTML := RegisterClipboardFormat('text/html');
 
 end.
