@@ -673,7 +673,7 @@ var
 
   OptionCheckMinutes: Cardinal = 0;
   OptionPDFQuality: Cardinal = 95;
-  OptionMaxRetry: Cardinal = 0;
+  OptionMaxRetry: Integer = 0;
   OptionConnectionTimeout: Integer = 15000;
   OptionUpdateListNoMangaInfo: Boolean = False;
   OptionUpdateListRemoveDuplicateLocalData: Boolean = False;

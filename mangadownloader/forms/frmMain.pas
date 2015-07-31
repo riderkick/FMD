@@ -4303,6 +4303,7 @@ begin
       OptionProxyUser := '';
     end;
 
+    OptionMaxRetry := seOptionMaxRetry.Value;
     DLManager.maxDLTasks := seOptionMaxParallel.Value;
     DLManager.maxDLThreadsPerTask := seOptionMaxThread.Value;
     DLManager.retryConnect := seOptionMaxRetry.Value;
@@ -4730,6 +4731,7 @@ begin
   seOptionMaxParallel.Value := options.ReadInteger('connections', 'NumberOfTasks', 1);
   seOptionMaxThread.Value := options.ReadInteger('connections', 'NumberOfThreadsPerTask', 1);
   seOptionMaxRetry.Value := options.ReadInteger('connections', 'Retry', 3);;
+  OptionMaxRetry := seOptionMaxRetry.Value;
   DLManager.maxDLTasks := seOptionMaxParallel.Value;
   DLManager.maxDLThreadsPerTask := seOptionMaxThread.Value;
   DLManager.retryConnect := seOptionMaxRetry.Value;
