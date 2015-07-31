@@ -57,7 +57,6 @@ type
 
     procedure SockOnStatus(Sender: TObject; Reason: THookSocketReason;
       const Value: String);
-    procedure SockOnHeartBeat(Sender: TObject);
     function GetPage(var output: TObject; URL: String;
       const Reconnect: Integer = 0): Boolean; overload;
 
@@ -280,16 +279,6 @@ destructor TDownloadThread.Destroy;
 begin
   FHTTP.Free;
   inherited Destroy;
-end;
-
-procedure TDownloadThread.SockOnHeartBeat(Sender: TObject);
-begin
-  if Terminated then
-  begin
-    TBlockSocket(Sender).Tag := 1;
-    TBlockSocket(Sender).StopFlag := True;
-    TBlockSocket(Sender).AbortSocket;
-  end;
 end;
 
 function TDownloadThread.GetPage(var output: TObject; URL: String;
