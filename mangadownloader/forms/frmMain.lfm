@@ -2303,7 +2303,7 @@ object MainForm: TMainForm
               Top = 120
               Width = 48
               MaxValue = 300
-              MinValue = 3
+              MinValue = 1
               ParentFont = False
               ParentShowHint = False
               TabOrder = 5
