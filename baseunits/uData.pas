@@ -177,7 +177,7 @@ type
     parse: TStringList;
     isGenerateFolderChapterName: Boolean;
     isRemoveUnicode: Boolean;
-    FHTTP: THTTPSend;
+    FHTTP: THTTPSendThread;
     ModuleId: Integer;
 
     procedure OnTag(NoCaseTag, ActualTag: String);

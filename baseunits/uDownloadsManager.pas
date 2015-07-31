@@ -36,7 +36,7 @@ type
     workCounter: Integer;
     FSortColumn: Cardinal;
     FMessage, FAnotherURL: String;
-    FHTTP: THTTPSend;
+    FHTTP: THTTPSendThread;
 
     procedure MainThreadMessageDialog;
     // Helper method allows to merge 2 images into 1 image.
