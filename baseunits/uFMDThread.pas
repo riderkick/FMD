@@ -11,36 +11,36 @@ unit uFMDThread;
 interface
 
 uses
-  Classes, SysUtils, USimpleException;
+  Classes, SysUtils, USimpleLogger;
 
 type
 
   { TFMDThread }
 
   TFMDThread = class(TThread)
-  protected
+  private
+    FOnCustomTerminate: TNotifyEvent;
     function GetTerminated: Boolean;
+  protected
     procedure DoTerminate; override;
   public
     constructor Create(CreateSuspended: Boolean = True);
     property IsTerminated: Boolean read GetTerminated;
+    procedure Terminate;
+    property OnCustomTerminate: TNotifyEvent read FOnCustomTerminate write FOnCustomTerminate;
   end;
 
 implementation
 
 function TFMDThread.GetTerminated: Boolean;
 begin
-  Result := Terminated;
+  Result := Self.Terminated;
 end;
 
 procedure TFMDThread.DoTerminate;
 begin
   if (FatalException <> nil) and (FatalException is Exception) then
-  begin
-    Exception(FatalException).Message :=
-      'FatalException, ' + Exception(FatalException).Message;
-    USimpleException.ExceptionHandle(Self, Exception(FatalException));
-  end;
+    WriteLog_E('TFMDThread.FatalException!', Exception(FatalException), Self);
   inherited DoTerminate;
 end;
 
@@ -48,6 +48,13 @@ constructor TFMDThread.Create(CreateSuspended: Boolean = True);
 begin
   inherited Create(CreateSuspended);
   FreeOnTerminate := True;
+end;
+
+procedure TFMDThread.Terminate;
+begin
+  inherited Terminate;
+  if Assigned(FOnCustomTerminate) then
+    FOnCustomTerminate(Self);
 end;
 
 end.
