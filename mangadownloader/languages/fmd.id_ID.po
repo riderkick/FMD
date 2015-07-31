@@ -393,6 +393,16 @@ msgstr "Otomatis nomor bab"
 msgid "Automatic remove completed manga from Favorites"
 msgstr "Otomatis hapus komik yang sudah tamat dari daftar kesukaan"
 
+#: tmainform.cboptionbatotoshowalllang.caption
+msgctxt "tmainform.cboptionbatotoshowalllang.caption"
+msgid "[Batoto] Show All Language"
+msgstr "[Batoto] Tampilkan semua bahasa"
+
+#: tmainform.cboptionbatotoshowscangroup.caption
+msgctxt "tmainform.cboptionbatotoshowscangroup.caption"
+msgid "[Batoto] Show scan group name"
+msgstr "[Batoto] Tampilkan nama grup scan"
+
 #: tmainform.cboptiondigitchapter.caption
 msgid "Chapter"
 msgstr "Bab"
@@ -436,14 +446,6 @@ msgstr "Ubah semua simbol unicode menjadi \"_\" (pilih ini ketika Anda memiliki 
 #: tmainform.cboptionproxytype.text
 msgid "HTTP"
 msgstr "HTTP"
-
-#: tmainform.cboptionshowalllang.caption
-msgid "[Batoto] Show All Language"
-msgstr "[Batoto] Tampilkan semua bahasa"
-
-#: tmainform.cboptionshowbatotosg.caption
-msgid "[Batoto] Show scan group name"
-msgstr "[Batoto] Tampilkan nama grup scan"
 
 #: tmainform.cboptionshowdeletetaskdialog.caption
 msgid "Delete task/favorite"

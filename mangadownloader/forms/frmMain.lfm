@@ -2868,7 +2868,7 @@ object MainForm: TMainForm
             ClientHeight = 329
             ClientWidth = 552
             TabOrder = 0
-            object cbOptionShowAllLang: TCheckBox
+            object cbOptionBatotoShowAllLang: TCheckBox
               Left = 16
               Height = 19
               Top = 40
@@ -2877,7 +2877,7 @@ object MainForm: TMainForm
               ParentFont = False
               TabOrder = 1
             end
-            object cbOptionShowBatotoSG: TCheckBox
+            object cbOptionBatotoShowScanGroup: TCheckBox
               Left = 16
               Height = 19
               Top = 16

@@ -399,6 +399,16 @@ msgstr "Auto number chapter"
 msgid "Automatic remove completed manga from Favorites"
 msgstr "Automatic remove completed manga from Favorites"
 
+#: tmainform.cboptionbatotoshowalllang.caption
+msgctxt "tmainform.cboptionbatotoshowalllang.caption"
+msgid "[Batoto] Show All Language"
+msgstr "[Batoto] Show All Language"
+
+#: tmainform.cboptionbatotoshowscangroup.caption
+msgctxt "tmainform.cboptionbatotoshowscangroup.caption"
+msgid "[Batoto] Show scan group name"
+msgstr "[Batoto] Show scan group name"
+
 #: tmainform.cboptiondigitchapter.caption
 msgid "Chapter"
 msgstr "Chapter"
@@ -442,14 +452,6 @@ msgstr "Change all all unicode symbols to \"_\" (choose this when you have probl
 #: tmainform.cboptionproxytype.text
 msgid "HTTP"
 msgstr "HTTP"
-
-#: tmainform.cboptionshowalllang.caption
-msgid "[Batoto] Show All Language"
-msgstr "[Batoto] Show All Language"
-
-#: tmainform.cboptionshowbatotosg.caption
-msgid "[Batoto] Show scan group name"
-msgstr "[Batoto] Show scan group name"
 
 #: tmainform.cboptionshowdeletetaskdialog.caption
 msgid "Delete task/favorite"

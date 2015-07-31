@@ -365,6 +365,16 @@ msgstr ""
 msgid "Automatic remove completed manga from Favorites"
 msgstr ""
 
+#: tmainform.cboptionbatotoshowalllang.caption
+msgctxt "TMAINFORM.CBOPTIONBATOTOSHOWALLLANG.CAPTION"
+msgid "[Batoto] Show All Language"
+msgstr ""
+
+#: tmainform.cboptionbatotoshowscangroup.caption
+msgctxt "TMAINFORM.CBOPTIONBATOTOSHOWSCANGROUP.CAPTION"
+msgid "[Batoto] Show scan group name"
+msgstr ""
+
 #: tmainform.cboptiondigitchapter.caption
 msgid "Chapter"
 msgstr ""
@@ -407,14 +417,6 @@ msgstr ""
 
 #: tmainform.cboptionproxytype.text
 msgid "HTTP"
-msgstr ""
-
-#: tmainform.cboptionshowalllang.caption
-msgid "[Batoto] Show All Language"
-msgstr ""
-
-#: tmainform.cboptionshowbatotosg.caption
-msgid "[Batoto] Show scan group name"
 msgstr ""
 
 #: tmainform.cboptionshowdeletetaskdialog.caption
