@@ -993,10 +993,11 @@ begin
 
   isStartup := False;
   CollectLanguagesFromFiles;
+  LoadFormInformation;
+  LoadMangaOptions;
   LoadOptions;
   ApplyOptions;
-  LoadMangaOptions;
-  LoadFormInformation;
+
   if cbFilterStatus.Items.Count > 2 then
     cbFilterStatus.ItemIndex := 2;
 
@@ -4423,21 +4424,18 @@ begin
         GetParams(l, s)    //for old config
       else
         ExtractStrings([','], [], PChar(s), l);
-      if l.Count > 0 then
+      if (l.Count > 0) and (Length(optionMangaSiteSelectionNodes) > 0) then
         for i := 0 to l.Count - 1 do
-        begin
-          if Length(optionMangaSiteSelectionNodes) > 0 then
-            for j := 0 to Length(optionMangaSiteSelectionNodes) - 1 do
+          for j := 0 to Length(optionMangaSiteSelectionNodes) - 1 do
+          begin
+            data := vtOptionMangaSiteSelection.GetNodeData(
+              optionMangaSiteSelectionNodes[j]);
+            if SameText(l[i], data^.Text) then
             begin
-              data := vtOptionMangaSiteSelection.GetNodeData(
-                optionMangaSiteSelectionNodes[j]);
-              if data^.Text = l.Strings[i] then
-              begin
-                optionMangaSiteSelectionNodes[j]^.CheckState := csCheckedNormal;
-                Break;
-              end;
+              optionMangaSiteSelectionNodes[j]^.CheckState := csCheckedNormal;
+              Break;
             end;
-        end;
+          end;
     finally
       l.Free;
     end;
@@ -4754,16 +4752,16 @@ end;
 
 function TMainForm.SaveMangaOptions: String;
 var
-  i: Cardinal;
+  i: Integer;
   data: PSingleItem;
 begin
   Result := '';
   if Length(optionMangaSiteSelectionNodes) > 0 then
-    for i := 0 to Length(optionMangaSiteSelectionNodes) - 1 do
+    for i := Low(optionMangaSiteSelectionNodes) to High(optionMangaSiteSelectionNodes) do
     begin
+      data := vtOptionMangaSiteSelection.GetNodeData(optionMangaSiteSelectionNodes[i]);
       if optionMangaSiteSelectionNodes[i]^.CheckState = csCheckedNormal then
       begin
-        data := vtOptionMangaSiteSelection.GetNodeData(optionMangaSiteSelectionNodes[i]);
         if Result = '' then
           Result := data^.Text
         else
