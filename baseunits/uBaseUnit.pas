@@ -222,7 +222,7 @@ const
   NET_PROBLEM           = 1;
   INFORMATION_NOT_FOUND = 2;
 
-  SOCKHEARTBEATRATE = 1000;
+  SOCKHEARTBEATRATE = 300;
 
   DEFAULT_LIST = 'AnimeA,MangaFox,MangaHere,MangaInn,MangaReader';
   DEFAULT_CUSTOM_RENAME = '%NUMBERING% - %CHAPTER%';
@@ -805,7 +805,7 @@ type
   protected
     FOwner: TFMDThread;
     procedure CloseConnection(SendTerminateTag: Boolean = True);
-    procedure SockOnHeartBeat(Sender: TObject);
+    procedure OnOwnerTerminate(Sender: TObject);
   public
     constructor Create(AOwner: TFMDThread);
   end;
@@ -3507,11 +3507,9 @@ begin
   end;
 end;
 
-procedure THTTPSendThread.SockOnHeartBeat(Sender: TObject);
+procedure THTTPSendThread.OnOwnerTerminate(Sender: TObject);
 begin
-  if Assigned(FOwner) then
-    if FOwner.IsTerminated then
-       CloseConnection;
+  CloseConnection;
 end;
 
 constructor THTTPSendThread.Create(AOwner: TFMDThread);
@@ -3519,9 +3517,8 @@ begin
   inherited Create;
   if Assigned(AOwner) then
   begin
-    FOwner := TFMDThread(AOwner);
-    Sock.OnHeartbeat := SockOnHeartBeat;
-    Sock.HeartbeatRate := SOCKHEARTBEATRATE;
+    FOwner := AOwner;
+    FOwner.OnCustomTerminate := OnOwnerTerminate;
   end;
 end;
 
