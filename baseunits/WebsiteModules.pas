@@ -123,10 +123,10 @@ function AddModule: TModuleContainer;
 
 implementation
 
+{$I ModuleList.inc}
+
 const
   REGEX_HOST = '(?ig)(\w+://)?([^/]*\.\w+)?(\:\d+)?(/?.*)$';
-
-{$I ModuleList.inc}
 
 { TModuleContainer }
 
