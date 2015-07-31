@@ -88,7 +88,7 @@ procedure TGetMangaInfosThread.DoGetInfos;
       FInfo.isRemoveUnicode := MainForm.cbOptionPathConvert.Checked;
 
       infob := INFORMATION_NOT_FOUND;
-      infob := FInfo.GetInfoFromURL(Website, Link, 2);
+      infob := FInfo.GetInfoFromURL(Website, Link, 0);
 
       if Self.Terminated then Exit;
       if infob <> NO_ERROR then Exit;
@@ -142,7 +142,7 @@ begin
       if OptionEnableLoadCover and (Trim(FInfo.mangaInfo.coverLink) <> '') then
       begin
         FInfo.FHTTP.Document.Clear;
-        FIsHasMangaCover := GetPage(FInfo.FHTTP, TObject(FCover), FInfo.mangaInfo.coverLink, 3)
+        FIsHasMangaCover := GetPage(FInfo.FHTTP, TObject(FCover), FInfo.mangaInfo.coverLink, 0)
       end
       else
         FIsHasMangaCover := False;
