@@ -5,13 +5,14 @@ unit WebsiteModules;
 interface
 
 uses
-  Classes, SysUtils, uData, uDownloadsManager;
+  Classes, SysUtils, uData, uDownloadsManager, RegExpr;
 
 const
   MODULE_NOT_FOUND = -1;
   NO_ERROR = 0;
   NET_PROBLEM = 1;
   INFORMATION_NOT_FOUND = 2;
+  REGEX_HOST = '(?ig)^(\w+://)?([^/]*\.\w+)?(\:\d+)?(/?.*)$';
 
 type
 
@@ -202,17 +203,35 @@ end;
 function TWebsiteModules.LocateModuleByHost(const Host: String): Integer;
 var
   i: Integer;
+  h: String;
 begin
   Result := -1;
   if FModuleList.Count > 0 then
+  begin
+    h := LowerCase(Host);
     for i := 0 to FModuleList.Count - 1 do
-    begin
-      if Pos(Host, TModuleContainer(FModuleList[i]).RootURL) <> 0 then
+      if Pos(h, LowerCase(TModuleContainer(FModuleList[i]).RootURL)) <> 0 then
       begin
         Result := i;
         Break;
       end;
+    if Result = -1 then
+    begin
+      with TRegExpr.Create do
+        try
+          Expression := REGEX_HOST;
+          for i := 0 to FModuleList.Count - 1 do
+            if Pos(LowerCase(Replace(TModuleContainer(FModuleList[i]).RootURL,
+              '$2', True)), h) <> 0 then
+            begin
+              Result := i;
+              Break;
+            end;
+        finally
+          Free;
+        end;
     end;
+  end;
 end;
 
 function TWebsiteModules.ModuleAvailable(const ModuleIndex: Integer;
@@ -300,8 +319,7 @@ begin
 end;
 
 function TWebsiteModules.GetInfo(var MangaInfo: TMangaInformation;
-  const URL: String; const Reconnect: Integer; const ModuleIndex: Integer
-  ): Integer;
+  const URL: String; const Reconnect: Integer; const ModuleIndex: Integer): Integer;
 begin
   Result := MODULE_NOT_FOUND;
   if (ModuleIndex < 0) or (FModuleList.Count = 0) or
