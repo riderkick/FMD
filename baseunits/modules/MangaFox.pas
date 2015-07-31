@@ -56,7 +56,7 @@ begin
 end;
 
 function GetInfo(var MangaInfo: TMangaInformation; const URL: String;
-  const Reconnect: Cardinal; Module: TModuleContainer): Integer;
+  const Reconnect: Integer; Module: TModuleContainer): Integer;
 var
   Parse: TStringList;
   info: TMangaInfo;

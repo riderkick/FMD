@@ -59,10 +59,10 @@ type
       const Value: String);
     procedure SockOnHeartBeat(Sender: TObject);
     function GetPage(var output: TObject; URL: String;
-      const Reconnect: Cardinal): Boolean; overload;
+      const Reconnect: Integer = 0): Boolean; overload;
 
     function SaveImage(const mangaSiteID: Integer; URL: String;
-      const Path, Name, prefix: String; const Reconnect: Cardinal): Boolean; overload;
+      const Path, Name, prefix: String; const Reconnect: Integer = 0): Boolean; overload;
 
     procedure Execute; override;
     procedure DoTerminate; override;
@@ -293,7 +293,7 @@ begin
 end;
 
 function TDownloadThread.GetPage(var output: TObject; URL: String;
-  const Reconnect: Cardinal): Boolean;
+  const Reconnect: Integer): Boolean;
 begin
   if FHTTP.Sock.Tag <> 100 then
     FHTTP.Clear;
@@ -301,7 +301,7 @@ begin
 end;
 
 function TDownloadThread.SaveImage(const mangaSiteID: Integer; URL: String;
-  const Path, Name, prefix: String; const Reconnect: Cardinal): Boolean;
+  const Path, Name, prefix: String; const Reconnect: Integer): Boolean;
 begin
   Result := uBaseUnit.SaveImage(FHTTP, mangaSiteID, URL, Path, Name, prefix, Reconnect);
 end;

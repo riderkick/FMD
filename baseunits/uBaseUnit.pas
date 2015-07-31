@@ -222,7 +222,7 @@ const
   NET_PROBLEM           = 1;
   INFORMATION_NOT_FOUND = 2;
 
-  SOCKHEARTBEATRATE = 300;
+  SOCKHEARTBEATRATE = 1000;
 
   DEFAULT_LIST = 'AnimeA,MangaFox,MangaHere,MangaInn,MangaReader';
   DEFAULT_CUSTOM_RENAME = '%NUMBERING% - %CHAPTER%';
@@ -802,12 +802,12 @@ type
   { THTTPSendThread }
 
   THTTPSendThread = class(THTTPSend)
-    protected
-      FOwner: TFMDThread;
-      procedure CloseConnection(SendTerminateTag: Boolean = True);
-      procedure SockOnHeartBeat(Sender: TObject);
-    public
-      constructor Create(AOwner: TFMDThread);
+  protected
+    FOwner: TFMDThread;
+    procedure CloseConnection(SendTerminateTag: Boolean = True);
+    procedure SockOnHeartBeat(Sender: TObject);
+  public
+    constructor Create(AOwner: TFMDThread);
   end;
 
 // Get current binary version
@@ -930,16 +930,16 @@ procedure CustomGenres(var output: TStringList; input: String);
 function SourceForgeURL(URL: String): String;
 // Get HTML source code from a URL.
 function GetPage(const AHTTP: THTTPSend; var output: TObject; URL: String;
-  const Reconnect: Cardinal): Boolean; overload;
-function GetPage(var output: TObject; URL: String; const Reconnect: Cardinal): Boolean;
+  const Reconnect: Integer = 0): Boolean; overload;
+function GetPage(var output: TObject; URL: String; const Reconnect: Integer = 0): Boolean;
   overload; inline;
 // Get url from a bitly url.
 function GetURLFromBitly(const URL: String): String;
 // Download an image from url and save it to a specific location.
 function SaveImage(const AHTTP: THTTPSend; const mangaSiteID: Integer; URL: String;
-  const Path, Name, prefix: String; const Reconnect: Cardinal): Boolean; overload;
+  const Path, Name, prefix: String; const Reconnect: Integer = 0): Boolean; overload;
 function SaveImage(const mangaSiteID: Integer; URL: String;
-  const Path, Name, prefix: String; const Reconnect: Cardinal): Boolean; overload; inline;
+  const Path, Name, prefix: String; const Reconnect: Integer = 0): Boolean; overload; inline;
 
 procedure QuickSortChapters(var chapterList, linkList: TStringList);
 procedure QuickSortData(var merge: TStringList);
@@ -2690,14 +2690,14 @@ begin
 end;
 
 function GetPage(const AHTTP: THTTPSend; var output: TObject; URL: String;
-  const Reconnect: Cardinal): Boolean;
+  const Reconnect: Integer): Boolean;
   // If AHTTP <> nil, we will use it as http sender. Otherwise we create a new
   // instance.
 var
   //i: Cardinal;
   HTTP: THTTPSend;
   HTTPHeader: TStringList;
-  counter: Cardinal = 0;
+  counter, counter2: Integer;
   s: String;
   meth: String = 'GET';
   //zstream: TGZFileStream;
@@ -2723,9 +2723,9 @@ var
       HTTP.Free;
   end;
 
-  function checkTerminate: boolean;
+  function checkTerminate: Boolean;
   begin
-    Result := HTTP.Sock.Tag =  1; //terminated via OnHeartBeat
+    Result := HTTP.Sock.Tag = 1; //terminated via OnHeartBeat
     if Result then
     begin
       HTTP.Sock.Tag := 0;
@@ -2876,7 +2876,7 @@ begin
     (HTTP.ResultCode = 451) do
   begin
     if checkTerminate then Exit;
-    if (Reconnect <> 0) and (Reconnect <= counter) then
+    if (Reconnect > -1) and (Reconnect <= counter) then
     begin
       preTerminate;
       Exit;
@@ -2890,6 +2890,12 @@ begin
   while (HTTP.ResultCode > 300) and (HTTP.ResultCode < 400) do
   begin
     if checkTerminate then Exit;
+    if (Reconnect > -1) and (Reconnect <= counter) then
+    begin
+      preTerminate;
+      Exit;
+    end;
+    Inc(counter);
     HTTPHeader.Values['Referer'] := ' ' + URL;
     s := Trim(HTTP.Headers.Values['Location']);
     if s <> '' then
@@ -2913,19 +2919,19 @@ begin
     if Pos(HENTAI2READ_ROOT, URL) <> 0 then
       HTTP.Headers.Insert(0, 'Referer:' + HENTAI2READ_ROOT + '/');
 
-    counter := 0;
+    counter2 := 0;
     HTTP.Clear;
     HTTP.Headers.Text := HTTPHeader.Text;
     while (not HTTP.HTTPMethod('GET', URL)) or
       (HTTP.ResultCode > 500) do  //500 for abort
     begin
       if checkTerminate then Exit;
-      if (Reconnect <> 0) and (Reconnect <= counter) then
+      if (Reconnect > -1) and (Reconnect <= counter2) then
       begin
         preTerminate;
         Exit;
       end;
-      Inc(Counter);
+      Inc(counter2);
       HTTP.Clear;
       HTTP.Headers.Text := HTTPHeader.Text;
     end;
@@ -2970,7 +2976,8 @@ begin
   preTerminate;
 end;
 
-function GetPage(var output: TObject; URL: String; const Reconnect: Cardinal): Boolean;
+function GetPage(var output: TObject; URL: String; const Reconnect: Integer
+  ): Boolean;
 begin
   Result := GetPage(nil, output, URL, Reconnect);
 end;
@@ -2994,7 +3001,7 @@ begin
 end;
 
 function SaveImage(const AHTTP: THTTPSend; const mangaSiteID: Integer;
-  URL: String; const Path, Name, prefix: String; const Reconnect: Cardinal
+  URL: String; const Path, Name, prefix: String; const Reconnect: Integer
   ): Boolean;
   // prefix: For example: 000<our prefix>.jpg.
 var
@@ -3003,7 +3010,7 @@ var
   ext, lpath, fpath: String;
   HTTPHeader: TStringList;
   HTTP: THTTPSend;
-  counter: Cardinal;
+  counter, counter2: Integer;
   s: String;
   //source    : TPicture;
   fstream: TFileStreamUTF8;
@@ -3015,7 +3022,7 @@ var
       HTTP.Free;
   end;
 
-  function checkTerminate: boolean;
+  function checkTerminate: Boolean;
   begin
     Result := HTTP.Sock.Tag = 1; //terminated via OnHeartBeat
     if Result then
@@ -3143,12 +3150,12 @@ begin
     {$IFDEF DOWNLOADER}
     if checkTerminate then Exit;
     {$ENDIF}
-    if (Reconnect <> 0) and (Reconnect <= counter) then
+    if (Reconnect > -1) and (Reconnect <= counter) then
     begin
       preTerminate;
       Exit;
     end;
-    Inc(Counter);
+    Inc(counter);
     HTTP.Clear;
     HTTP.Headers.Text := HTTPHeader.Text;
   end;
@@ -3159,7 +3166,12 @@ begin
     {$IFDEF DOWNLOADER}
     if checkTerminate then Exit;
     {$ENDIF}
-
+    if (Reconnect > -1) and (Reconnect <= counter) then
+    begin
+      preTerminate;
+      Exit;
+    end;
+    Inc(counter);
     HTTPHeader.Values['Referer'] := ' ' + URL;
     s := Trim(HTTP.Headers.Values['Location']);
     if s <> '' then
@@ -3181,7 +3193,7 @@ begin
     end;
 
     HTTP.Clear;
-    counter := 0;
+    counter2 := 0;
     HTTP.Headers.Text := HTTPHeader.Text;
     while (not HTTP.HTTPMethod('GET', URL)) or
       (HTTP.ResultCode > 500) or  //500 for abort
@@ -3190,12 +3202,12 @@ begin
       {$IFDEF DOWNLOADER}
       if checkTerminate then Exit;
       {$ENDIF}
-      if (Reconnect <> 0) and (Reconnect <= counter) then
+      if (Reconnect > -1) and (Reconnect <= counter2) then
       begin
         preTerminate;
         Exit;
       end;
-      Inc(Counter);
+      Inc(counter2);
       HTTP.Clear;
       HTTP.Headers.Text := HTTPHeader.Text;
       Sleep(500);
@@ -3276,8 +3288,8 @@ begin
   Result := (fpath <> '') and FileExistsUTF8(fpath);
 end;
 
-function SaveImage(const mangaSiteID: Integer; URL: String;
-  const Path, Name, prefix: String; const Reconnect: Cardinal): Boolean;
+function SaveImage(const mangaSiteID: Integer; URL: String; const Path, Name,
+  prefix: String; const Reconnect: Integer): Boolean;
 begin
   Result := SaveImage(nil, mangaSiteID, URL, Path, Name, prefix, Reconnect);
 end;

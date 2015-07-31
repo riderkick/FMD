@@ -23,7 +23,7 @@ type
     const Names, Links: TStringList; const URL: String;
     Module: TModuleContainer): Integer;
   TOnGetInfo = function(var MangaInfo: TMangaInformation; const URL: String;
-    const Reconnect: Cardinal; Module: TModuleContainer): Integer;
+    const Reconnect: Integer; Module: TModuleContainer): Integer;
 
   TOnGetPageNumber = function(var DownloadThread: TDownloadThread;
     const URL: String; Module: TModuleContainer): Boolean;
@@ -94,9 +94,9 @@ type
       const Names, Links: TStringList; const URL, Website: String): Integer; overload;
 
     function GetInfo(var MangaInfo: TMangaInformation; const URL: String;
-      const Reconnect: Cardinal; const ModuleIndex: Integer): Integer; overload;
+      const Reconnect: Integer; const ModuleIndex: Integer): Integer; overload;
     function GetInfo(var MangaInfo: TMangaInformation; const URL: String;
-      const Reconnect: Cardinal; const Website: String): Integer; overload;
+      const Reconnect: Integer; const Website: String): Integer; overload;
 
     function GetPageNumber(var DownloadThread: TDownloadThread;
       const URL: String; const ModuleIndex: Integer): Boolean; overload;
@@ -300,7 +300,8 @@ begin
 end;
 
 function TWebsiteModules.GetInfo(var MangaInfo: TMangaInformation;
-  const URL: String; const Reconnect: Cardinal; const ModuleIndex: Integer): Integer;
+  const URL: String; const Reconnect: Integer; const ModuleIndex: Integer
+  ): Integer;
 begin
   Result := MODULE_NOT_FOUND;
   if (ModuleIndex < 0) or (FModuleList.Count = 0) or
@@ -312,7 +313,7 @@ begin
 end;
 
 function TWebsiteModules.GetInfo(var MangaInfo: TMangaInformation;
-  const URL: String; const Reconnect: Cardinal; const Website: String): Integer;
+  const URL: String; const Reconnect: Integer; const Website: String): Integer;
 begin
   Result := GetInfo(MangaInfo, URL, Reconnect, LocateModule(Website));
 end;

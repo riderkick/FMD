@@ -188,7 +188,7 @@ type
     function GetDirectoryPage(var Page: Integer; const website: String): Byte;
     function GetNameAndLink(const names, links: TStringList;
       const website, URL: String): Byte;
-    function GetInfoFromURL(const website, URL: String; const Reconnect: Cardinal): Byte;
+    function GetInfoFromURL(const website, URL: String; const Reconnect: Integer = 0): Byte;
     procedure SyncInfoToData(const DataProcess: TDataProcess;
       const index: Cardinal); overload;
     procedure SyncInfoToData(const DataProcess: TDBDataProcess); overload;
@@ -206,7 +206,7 @@ type
       const DataProcess: TDBDataProcess); overload;
     //wrapper
     function GetPage(var output: TObject; URL: String;
-      const Reconnect: Cardinal): Boolean; overload;
+      const Reconnect: Integer = 0): Boolean; overload;
   end;
 
 var
@@ -2615,7 +2615,7 @@ begin
 end;
 
 function TMangaInformation.GetInfoFromURL(const website, URL: String;
-  const Reconnect: Cardinal): Byte;
+  const Reconnect: Integer): Byte;
 var
   s: String;
   j, k: Integer;
@@ -3285,7 +3285,7 @@ begin
 end;
 
 function TMangaInformation.GetPage(var output: TObject; URL: String;
-  const Reconnect: Cardinal): Boolean;
+  const Reconnect: Integer): Boolean;
 begin
   Result := uBaseUnit.GetPage(FHTTP, output, URL, Reconnect);
 end;

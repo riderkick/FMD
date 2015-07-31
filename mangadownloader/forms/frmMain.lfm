@@ -2093,7 +2093,7 @@ object MainForm: TMainForm
             Height = 375
             Top = 0
             Width = 579
-            HorzScrollBar.Page = 455
+            HorzScrollBar.Page = 457
             VertScrollBar.Page = 179
             Align = alClient
             BorderStyle = bsNone
@@ -2283,6 +2283,7 @@ object MainForm: TMainForm
               Height = 23
               Top = 90
               Width = 48
+              MinValue = -1
               ParentFont = False
               ParentShowHint = False
               TabOrder = 4
@@ -2291,8 +2292,8 @@ object MainForm: TMainForm
               Left = 66
               Height = 15
               Top = 93
-              Width = 386
-              Caption = 'Number of retry times if tasks have download problems (0 = always retry)'
+              Width = 391
+              Caption = 'Number of retry times if tasks have download problems (-1 = always retry)'
               ParentColor = False
               ParentFont = False
             end
