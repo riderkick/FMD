@@ -2796,6 +2796,7 @@ begin
   HTTP.Protocol := '1.1';
   HTTP.KeepAlive := False;
   HTTP.Timeout := OptionConnectionTimeout;
+  HTTP.Sock.ConnectionTimeout := OptionConnectionTimeout;
   HTTP.Sock.SetTimeout(OptionConnectionTimeout);
 
   //User-Agent
@@ -3091,6 +3092,7 @@ begin
   HTTP.Protocol := '1.1';
   HTTP.KeepAlive := False;
   HTTP.Timeout := OptionConnectionTimeout;
+  HTTP.Sock.ConnectionTimeout := OptionConnectionTimeout;
   HTTP.Sock.SetTimeout(OptionConnectionTimeout);
 
   //User-Agent
