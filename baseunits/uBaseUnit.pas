@@ -259,7 +259,7 @@ const
   SEPERATOR2 = '~%!';
 
   // common regex to split host/url
-  REGEX_HOST = '(?ig)^(\w+://)?([^/]*\.\w+)?(\:\d+)?(/?.*)$';
+  REGEX_HOST = '(?ig)(\w+://)?([^/]*\.\w+)?(\:\d+)?(/?.*)$';
 
   ANIMEA_ID              = 0;
   MANGAHERE_ID           = 1;

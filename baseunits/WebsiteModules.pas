@@ -12,7 +12,6 @@ const
   NO_ERROR = 0;
   NET_PROBLEM = 1;
   INFORMATION_NOT_FOUND = 2;
-  REGEX_HOST = '(?ig)^(\w+://)?([^/]*\.\w+)?(\:\d+)?(/?.*)$';
 
 type
 
@@ -123,6 +122,9 @@ procedure doInitialize;
 function AddModule: TModuleContainer;
 
 implementation
+
+const
+  REGEX_HOST = '(?ig)(\w+://)?([^/]*\.\w+)?(\:\d+)?(/?.*)$';
 
 {$I ModuleList.inc}
 
