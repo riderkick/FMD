@@ -1403,9 +1403,7 @@ begin
       tu := Replace(URL, '$4', True);
       if tu = '' then
         tu := URL;
-      if (tu <> '') and (tu[1] <> '/') then
-        tu := '/' + tu;
-      Result := th + tu;
+      Result := th + AppendURLDelimLeft(tu);
     finally
       Free;
     end;
@@ -1426,9 +1424,7 @@ begin
         tu := Replace(URL, '$4', True);
         if tu = '' then
           tu := URL;
-        if (tu <> '') and (tu[1] <> '/') then
-          tu := '/' + tu;
-        Result := th + tu;
+        Result := th + AppendURLDelimLeft(tu);
       end;
     finally
       Free;
