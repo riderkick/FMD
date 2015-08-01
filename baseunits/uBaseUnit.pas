@@ -1417,6 +1417,10 @@ end;
 function RemoveHostFromURL(URL : String) : String;
 begin
   Result := ReplaceRegExpr(REGEX_HOST, URL, '$4', True);
+  if Result = '' then
+    Result := URL;
+  if (Result <> '') and (Result[1] <> '/') then
+    Result := '/' + Result;
 end;
 
 procedure RemoveHostFromURLs(const URLs : TStringList);
