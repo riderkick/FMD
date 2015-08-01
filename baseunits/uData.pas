@@ -2270,8 +2270,6 @@ var
 
   {$I includes/Kivmanga/names_and_links.inc}
 
-  {$I includes/Mangacan/names_and_links.inc}
-
   {$I includes/MeinManga/names_and_links.inc}
 
   {$I includes/MangasPROJECT/names_and_links.inc}
@@ -2488,9 +2486,6 @@ begin
     else
     if website = WebsiteRoots[KIVMANGA_ID, 0] then
       Result := KivmangaGetNamesAndLinks
-    else
-    if website = WebsiteRoots[MANGACAN_ID, 0] then
-      Result := MangacanGetNamesAndLinks
     else
     if website = WebsiteRoots[MANGASPROJECT_ID, 0] then
       Result := MangasPROJECTGetNamesAndLinks
@@ -2719,8 +2714,6 @@ var
 
   {$I includes/KivManga/manga_information.inc}
 
-  {$I includes/Mangacan/manga_information.inc}
-
   {$I includes/MangasPROJECT/manga_information.inc}
 
   {$I includes/MangaREADER_POR/manga_information.inc}
@@ -2946,9 +2939,6 @@ begin
     else
     if website = WebsiteRoots[KIVMANGA_ID, 0] then
       Result := GetKivmangaInfoFromURL
-    else
-    if website = WebsiteRoots[MANGACAN_ID, 0] then
-      Result := GetMangacanInfoFromURL
     else
     if website = WebsiteRoots[MANGASPROJECT_ID, 0] then
       Result := GetMangasPROJECTInfoFromURL

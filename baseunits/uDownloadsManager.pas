@@ -754,8 +754,6 @@ var
 
   {$I includes/MangaAr/image_url.inc}
 
-  {$I includes/Mangacan/image_url.inc}
-
   {$I includes/Mangacow/image_url.inc}
 
   {$I includes/MangaEden/image_url.inc}
@@ -979,9 +977,6 @@ begin
     else
     if manager.container.MangaSiteID = KIVMANGA_ID then
       Result := GetKivmangaImageURL
-    else
-    if manager.container.MangaSiteID = MANGACAN_ID then
-      Result := GetMangacanImageURL
     else
     if manager.container.MangaSiteID = MANGASPROJECT_ID then
       Result := GetMangasPROJECTImageURL
