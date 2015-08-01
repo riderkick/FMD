@@ -875,6 +875,8 @@ function CleanAndExpandURL(const URL: String): String;
 function CleanURL(const URL: String): String;
 function AppendURLDelim(const URL: String): String;
 function AppendURLDelimLeft(const URL: String): String;
+function RemoveURLDelim(const URL: String): String;
+function RemoveURLDelimLeft(const URL: String): String;
 function FixURL(const URL: String): String;
 function FixPath(const path: String): String;
 function GetLastDir(const path: String): String;
@@ -2297,6 +2299,20 @@ begin
   Result := URL;
   if (URL <> '') and (URL[1] <> '/') then
     Result := '/' + URL;
+end;
+
+function RemoveURLDelim(const URL: String): String;
+begin
+  Result := URL;
+  if (URL <> '') and (URL[Length(URL)] = '/') then
+    SetLength(Result, Length(Result) - 1);
+end;
+
+function RemoveURLDelimLeft(const URL: String): String;
+begin
+  Result := URL;
+  if (URL <> '') and (URL[1] = '/') then
+    Delete(Result, 1, 1);
 end;
 
 function FixURL(const URL : String) : String;
