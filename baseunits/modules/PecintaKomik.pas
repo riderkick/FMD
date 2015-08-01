@@ -163,6 +163,61 @@ var
     end;
   end;
 
+  //broken layout
+  procedure ScanInfo3;
+  var
+    i, j: Integer;
+  begin
+    info.genres := '';
+    info.summary := '';
+    for i := 0 to Parse.Count - 1 do
+    begin
+      //cover
+      if info.coverLink = '' then
+        if (GetTagName(Parse[i]) = 'img') and
+          (GetVal(Parse[i], 'class') = 'pecintakomik') then
+          info.coverLink := MaybeFillHost(Module.RootURL, GetVal(Parse[i], 'src'));
+      //title
+      if info.title = '' then
+        if GetVal(Parse[i], 'class') = 'aname' then
+          info.title := CommonStringFilter(Parse[i + 1]);
+      if GetVal(Parse[i], 'class') = 'propertytitle' then
+      begin
+        //author
+        if Pos('Autor:', Parse[i + 1]) = 1 then
+          info.authors := CommonStringFilter(Parse[i + 6])
+        else
+        //artist
+        if Pos('Artist:', Parse[i + 1]) = 1 then
+          info.artists := CommonStringFilter(Parse[i + 6]);
+        //summary
+        if Pos('Ringkasan Cerita:', Parse[i + 1]) = 1 then
+          for j := i + 3 to Parse.Count - 1 do
+          begin
+            if GetTagName(Parse[j]) = '/td' then
+              Break
+            else
+            if (Parse[j] <> '') and (Parse[j][1] <> '<') then
+            begin
+              if info.summary <> '' then
+                info.summary += LineEnding;
+              info.summary += CommonStringFilter(Parse[j]);
+            end;
+          end;
+        //genre
+        if GetVal(Parse[i], 'class') = 'genretags' then
+          AddCommaString(info.genres, CommonStringFilter(Parse[i + 1]));
+      end;
+      //chapters
+      if (GetTagName(Parse[i]) = 'ul') and
+        (GetVal(Parse[i], 'class') = 'series_alpha') then
+      begin
+        ScanChapters(i);
+        Break;
+      end;
+    end;
+  end;
+
   procedure ScanParse;
   var
     i, j: Integer;
@@ -171,6 +226,12 @@ var
     begin
       for i := 0 to Parse.Count - 1 do
       begin
+        if GetVal(Parse[i], 'http-equiv') = 'x-ua-compatible' then
+        begin
+          ScanInfo3;
+          Break;
+        end;
+
         //cover
         if info.coverLink = '' then
           if (GetTagName(Parse[i]) = 'img') and
