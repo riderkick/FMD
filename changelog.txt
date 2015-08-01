@@ -8,6 +8,11 @@ https://www.mediafire.com/folder/3ccy2c7g36hp3/Fmd
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.20.0 (02-08-2015)
+[*] Mangacan: rewrite all script
+[*] PecintaKomik: rewrite all script
+[*] Various changes and bug fixes
+
 0.9.19.7 (30-07-2015)
 [*] Minor bug fixes
 
