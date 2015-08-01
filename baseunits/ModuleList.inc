@@ -4,4 +4,5 @@ uses
   Batoto,
   WPManga,
   MangaFox,
-  Mangacan;
+  Mangacan,
+  PecintaKomik;
