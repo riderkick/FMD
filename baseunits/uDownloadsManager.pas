@@ -712,6 +712,8 @@ begin
     if manager.container.MangaSiteID = MADOKAMI_ID then
       Result := GetMadokamiPageNumber;
   end;
+  if manager.container.PageLinks.Count > 0 then
+    TrimStrings(manager.container.PageLinks);
 end;
 
 function TDownloadThread.GetLinkPageFromURL(const URL: String): Boolean;
