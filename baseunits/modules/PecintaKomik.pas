@@ -77,13 +77,15 @@ var
   procedure ScanChapters(const StartIndex: Integer);
   var
     i: Integer;
+    s: String;
   begin
-    for i := StartIndex to Parse.Count - 1 do
+    for i := StartIndex + 1 to Parse.Count - 1 do
     begin
-      if GetTagName(Parse[i]) = '/div' then
+      s := GetTagName(Parse[i]);
+      if s = '/div' then
         Break
       else
-      if GetTagName(parse[i]) = 'a' then
+      if s = 'a' then
       begin
         info.chapterLinks.Add(AppendURLDelim(GetVal(Parse[i], 'href')));
         info.chapterName.Add(CommonStringFilter(Parse[i + 1]));
@@ -93,6 +95,72 @@ var
     //invert chapters
     if info.chapterLinks.Count > 0 then
       InvertStrings([info.chapterLinks, info.chapterName]);
+  end;
+
+  procedure ScanInfo(const StartIndex: Integer);
+  var
+    i: Integer;
+    s: String;
+  begin
+    for i := StartIndex + 1 to Parse.Count - 1 do
+    begin
+      s := GetTagName(Parse[i]);
+      if s = '/div' then
+        Break
+      else
+      if s = 'li' then
+      begin
+        //authors
+        if Pos('Author(s):', Parse[i + 1]) = 1 then
+          info.authors := CommonStringFilter(SeparateRight(Parse[i + 1],
+            'Author(s):'))
+        else
+        //artist
+        if Pos('Artist(s):', Parse[i + 1]) = 1 then
+          info.artists := CommonStringFilter(SeparateRight(Parse[i + 1],
+            'Artist(s):'))
+        else
+        //genres
+        if Pos('Genre:', Parse[i + 1]) = 1 then
+          info.genres := CommonStringFilter(SeparateRight(Parse[i + 1], 'Genre:'))
+        else
+        //summary
+        if Pos('Sinopsis:', Parse[i + 1]) = 1 then
+          info.summary := CommonStringFilter(SeparateRight(Parse[i + 1], 'Sinopsis:'));
+      end;
+    end;
+  end;
+
+  procedure ScanInfo2(const StartIndex: Integer);
+  var
+    i: Integer;
+    s: String;
+  begin
+    for i := StartIndex + 1 to Parse.Count - 1 do
+    begin
+      s := GetTagName(Parse[i]);
+      if s = '/div' then
+        Break
+      else
+      if s = 'li' then
+      begin
+        //authors
+        if Pos('Author(s):', Parse[i + 2]) = 1 then
+          info.authors := CommonStringFilter(Parse[i + 4])
+        else
+        //artist
+        if Pos('Artist(s):', Parse[i + 2]) = 1 then
+          info.artists := CommonStringFilter(Parse[i + 4])
+        else
+        //genres
+        if Pos('Genre:', Parse[i + 2]) = 1 then
+          info.genres := CommonStringFilter(Parse[i + 4])
+        else
+        //summary
+        if Pos('Sinopsis:', Parse[i + 2]) = 1 then
+          info.summary := CommonStringFilter(Parse[i + 4]);
+      end;
+    end;
   end;
 
   procedure ScanParse;
@@ -109,36 +177,28 @@ var
             (GetVal(Parse[i], 'class') = 'pecintakomik') then
             info.coverLink := MaybeFillHost(Module.RootURL, GetVal(Parse[i], 'src'));
 
-        //title
-        if info.title = '' then
-          if GetVal(Parse[i], 'class') = 'post-cnt' then
-            if GetTagName(Parse[i + 2]) = 'h2' then
-              info.title := CommonStringFilter(Parse[i + 3]);
-
-        if GetTagName(Parse[i]) = 'li' then
-        begin
-          //authors
-          if Pos('Author(s):', Parse[i + 1]) = 1 then
-            info.authors := CommonStringFilter(SeparateRight(Parse[i + 1],
-              'Author(s):'));
-          //artist
-          if Pos('Artist(s):', Parse[i + 1]) = 1 then
-            info.artists := CommonStringFilter(SeparateRight(Parse[i + 1],
-              'Artist(s):'));
-          //genres
-          if Pos('Genre:', Parse[i + 1]) = 1 then
-            info.genres := CommonStringFilter(SeparateRight(Parse[i + 1], 'Genre:'));
-          //summary
-          if Pos('Sinopsis:', Parse[i + 1]) = 1 then
-            info.summary := CommonStringFilter(SeparateRight(Parse[i + 1], 'Sinopsis:'));
-        end;
-
-        // chapters
-        if Parse[i] = 'List Chapter(s)' then
-        begin
-          ScanChapters(i);
-          Break;
-        end;
+        if GetVal(Parse[i], 'class') = 'post-cnt' then
+          if GetTagName(Parse[i + 2]) = 'h2' then
+          begin
+            //chapters
+            if Pos('List Chapter(s)', Parse[i + 3]) <> 0 then
+            begin
+              ScanChapters(i);
+              Break;
+            end
+            else
+            begin
+              //title
+              if info.title = '' then
+                info.title := CommonStringFilter(Parse[i + 3]);
+              //info
+              if (GetTagName(Parse[i + 8]) = 'li') and
+                (GetTagName(Parse[i + 9]) <> 'strong') then
+                ScanInfo(i)
+              else
+                ScanInfo2(i);
+            end;
+          end;
       end;
     end
     else
