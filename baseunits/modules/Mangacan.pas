@@ -142,21 +142,11 @@ var
   procedure ScanParse;
   var
     i: Integer;
-    s: String;
   begin
     for i := 0 to Parse.Count - 1 do
       if (GetTagName(Parse[i]) = 'img') and
         (GetVal(Parse[i], 'class') = 'picture') then
-      begin
-        s := GetVal(Parse[i], 'src');
-        if (Length(s) > 4) and (not SameText(LeftStr(s, 4), 'http')) then
-        begin
-          if s[1] <> '/' then
-            s := '/' + s;
-          s := FillHost(Module.RootURL, s);
-        end;
-        Container.PageLinks.Add(s);
-      end;
+        Container.PageLinks.Add(MaybeFillHost(Module.RootURL, GetVal(Parse[i], 'src')));
   end;
 
 begin
