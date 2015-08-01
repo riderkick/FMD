@@ -802,12 +802,15 @@ type
   { THTTPSendThread }
 
   THTTPSendThread = class(THTTPSend)
-  protected
+  private
     FOwner: TFMDThread;
+    procedure SetTimeout(AValue: Integer);
+  protected
     procedure CloseConnection(SendTerminateTag: Boolean = True);
     procedure OnOwnerTerminate(Sender: TObject);
   public
     constructor Create(AOwner: TFMDThread);
+    property Timeout: Integer read FTimeout write SetTimeout;
   end;
 
 // Get current binary version
@@ -2770,7 +2773,12 @@ begin
     HTTPClear;
   end
   else
+  begin
     HTTP := THTTPSend.Create;
+    HTTP.Timeout := OptionConnectionTimeout;
+    HTTP.Sock.ConnectionTimeout := OptionConnectionTimeout;
+    HTTP.Sock.SetTimeout(OptionConnectionTimeout);
+  end;
   HTTP.Headers.NameValueSeparator := ':';
 
   globReturn:
@@ -2813,9 +2821,6 @@ begin
   HTTPHeader.Values['Accept-Language'] := ' en-US,en;q=0.8';
   HTTP.Protocol := '1.1';
   HTTP.KeepAlive := False;
-  HTTP.Timeout := OptionConnectionTimeout;
-  HTTP.Sock.ConnectionTimeout := OptionConnectionTimeout;
-  HTTP.Sock.SetTimeout(OptionConnectionTimeout);
 
   //User-Agent
   if Trim(HTTPHeader.Values['User-Agent']) <> '' then
@@ -3075,7 +3080,12 @@ begin
     HTTP.Clear;
   end
   else
+  begin
     HTTP := THTTPSend.Create;
+    HTTP.Timeout := OptionConnectionTimeout;
+    HTTP.Sock.ConnectionTimeout := OptionConnectionTimeout;
+    HTTP.Sock.SetTimeout(OptionConnectionTimeout);
+  end;
   HTTP.Headers.NameValueSeparator := ':';
 
   if OptionProxyType = 'HTTP' then
@@ -3116,9 +3126,6 @@ begin
   HTTPHeader.Values['Accept-Language'] := ' en-US,en;q=0.8';
   HTTP.Protocol := '1.1';
   HTTP.KeepAlive := False;
-  HTTP.Timeout := OptionConnectionTimeout;
-  HTTP.Sock.ConnectionTimeout := OptionConnectionTimeout;
-  HTTP.Sock.SetTimeout(OptionConnectionTimeout);
 
   //User-Agent
   if Trim(HTTPHeader.Values['User-Agent']) <> '' then
@@ -3514,6 +3521,14 @@ end;
 
 { THTTPSendThread }
 
+procedure THTTPSendThread.SetTimeout(AValue: Integer);
+begin
+  if FTimeout = AValue then Exit;
+  FTimeout := AValue;
+  Sock.ConnectionTimeout := FTimeout;
+  Sock.SetTimeout(FTimeout);
+end;
+
 procedure THTTPSendThread.CloseConnection(SendTerminateTag: Boolean);
 begin
   with Self.Sock do
@@ -3533,6 +3548,7 @@ end;
 constructor THTTPSendThread.Create(AOwner: TFMDThread);
 begin
   inherited Create;
+  SetTimeout(OptionConnectionTimeout);
   if Assigned(AOwner) then
   begin
     FOwner := AOwner;
