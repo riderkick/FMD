@@ -2713,7 +2713,7 @@ var
   //i: Cardinal;
   HTTP: THTTPSend;
   HTTPHeader: TStringList;
-  counter, counter2: Integer;
+  counter: Integer;
   s: String;
   meth: String = 'GET';
   //zstream: TGZFileStream;
@@ -2741,7 +2741,7 @@ var
 
   function checkTerminate: Boolean;
   begin
-    Result := HTTP.Sock.Tag = 1; //terminated via OnHeartBeat
+    Result := HTTP.Sock.Tag = 1; //terminate via THTTPSendThread;
     if Result then
     begin
       HTTP.Sock.Tag := 0;
@@ -2887,11 +2887,10 @@ begin
     HTTP.RangeEnd := 0;
   end;
 
-  counter := 0;
+  if checkTerminate then Exit;
   HTTP.Headers.Text := HTTPHeader.Text;
-  while (not HTTP.HTTPMethod(meth, URL)) or
-    (HTTP.ResultCode >= 500) or
-    (HTTP.ResultCode = 451) do
+  counter := 0;
+  while (not HTTP.HTTPMethod(meth, URL)) or (HTTP.ResultCode > 500) do
   begin
     if checkTerminate then Exit;
     if (Reconnect > -1) and (Reconnect <= counter) then
@@ -2904,16 +2903,9 @@ begin
     HTTP.Headers.Text := HTTPHeader.Text;
   end;
 
-  counter := 0;
   while (HTTP.ResultCode > 300) and (HTTP.ResultCode < 400) do
   begin
     if checkTerminate then Exit;
-    if (Reconnect > -1) and (Reconnect <= counter) then
-    begin
-      preTerminate;
-      Exit;
-    end;
-    Inc(counter);
     HTTPHeader.Values['Referer'] := ' ' + URL;
     s := Trim(HTTP.Headers.Values['Location']);
     if s <> '' then
@@ -2937,19 +2929,18 @@ begin
     if Pos(HENTAI2READ_ROOT, URL) <> 0 then
       HTTP.Headers.Insert(0, 'Referer:' + HENTAI2READ_ROOT + '/');
 
-    counter2 := 0;
     HTTP.Clear;
     HTTP.Headers.Text := HTTPHeader.Text;
-    while (not HTTP.HTTPMethod('GET', URL)) or
-      (HTTP.ResultCode > 500) do  //500 for abort
+    counter := 0;
+    while (not HTTP.HTTPMethod('GET', URL)) or (HTTP.ResultCode > 500) do
     begin
       if checkTerminate then Exit;
-      if (Reconnect > -1) and (Reconnect <= counter2) then
+      if (Reconnect > -1) and (Reconnect <= counter) then
       begin
         preTerminate;
         Exit;
       end;
-      Inc(counter2);
+      Inc(counter);
       HTTP.Clear;
       HTTP.Headers.Text := HTTPHeader.Text;
     end;
@@ -2981,10 +2972,7 @@ begin
         HTTP.Document.SaveToStream(TStream(output));
     except
       on E: Exception do
-      begin
-        E.Message := 'GetPage.WriteOutput error: '#13#10 + E.Message;
-        USimpleException.ExceptionHandleSaveLogOnly(nil, E);
-      end;
+        WriteLog_E('GetPage.WriteOutput.Error!', E);
     end;
     Result := True;
   end
@@ -3028,7 +3016,7 @@ var
   ext, lpath, fpath: String;
   HTTPHeader: TStringList;
   HTTP: THTTPSend;
-  counter, counter2: Integer;
+  counter: Integer;
   s: String;
   //source    : TPicture;
   fstream: TFileStreamUTF8;
@@ -3042,7 +3030,7 @@ var
 
   function checkTerminate: Boolean;
   begin
-    Result := HTTP.Sock.Tag = 1; //terminated via OnHeartBeat
+    Result := HTTP.Sock.Tag = 1; //terminate via THTTPSendThread
     if Result then
     begin
       HTTP.Sock.Tag := 0;
@@ -3158,18 +3146,12 @@ begin
   HTTP.RangeStart := 0;
   HTTP.RangeEnd := 0;
 
-  {$IFDEF DOWNLOADER}
   if checkTerminate then Exit;
-  {$ENDIF}
-  counter := 0;
   HTTP.Headers.Text := HTTPHeader.Text;
-  while (not HTTP.HTTPMethod('GET', URL)) or
-    (HTTP.ResultCode >= 500) or   //500 for abort
-    (HTTP.ResultCode = 403) do
+  counter := 0;
+  while (not HTTP.HTTPMethod('GET', URL)) or (HTTP.ResultCode > 500) do
   begin
-    {$IFDEF DOWNLOADER}
     if checkTerminate then Exit;
-    {$ENDIF}
     if (Reconnect > -1) and (Reconnect <= counter) then
     begin
       preTerminate;
@@ -3180,18 +3162,9 @@ begin
     HTTP.Headers.Text := HTTPHeader.Text;
   end;
 
-  counter := 0;
   while (HTTP.ResultCode > 300) and (HTTP.ResultCode < 400) do
   begin
-    {$IFDEF DOWNLOADER}
     if checkTerminate then Exit;
-    {$ENDIF}
-    if (Reconnect > -1) and (Reconnect <= counter) then
-    begin
-      preTerminate;
-      Exit;
-    end;
-    Inc(counter);
     HTTPHeader.Values['Referer'] := ' ' + URL;
     s := Trim(HTTP.Headers.Values['Location']);
     if s <> '' then
@@ -3213,24 +3186,19 @@ begin
     end;
 
     HTTP.Clear;
-    counter2 := 0;
     HTTP.Headers.Text := HTTPHeader.Text;
-    while (not HTTP.HTTPMethod('GET', URL)) or
-      (HTTP.ResultCode > 500) or  //500 for abort
-      (HTTP.ResultCode = 403) do
+    counter := 0;
+    while (not HTTP.HTTPMethod('GET', URL)) or (HTTP.ResultCode > 500) do
     begin
-      {$IFDEF DOWNLOADER}
       if checkTerminate then Exit;
-      {$ENDIF}
-      if (Reconnect > -1) and (Reconnect <= counter2) then
+      if (Reconnect > -1) and (Reconnect <= counter) then
       begin
         preTerminate;
         Exit;
       end;
-      Inc(counter2);
+      Inc(counter);
       HTTP.Clear;
       HTTP.Headers.Text := HTTPHeader.Text;
-      Sleep(500);
     end;
   end;
   HTTP.Document.Seek(0, soBeginning);
@@ -3257,9 +3225,7 @@ begin
     // If the error still persists, break the loop.
     repeat
       try
-        {$IFDEF DOWNLOADER}
         if checkTerminate then Exit;
-        {$ENDIF}
         lpath := CleanAndExpandDirectory(CorrectPathSys(Path));
         if not DirectoryExistsUTF8(lpath) then
           ForceDirectoriesUTF8(lpath);
@@ -3282,12 +3248,9 @@ begin
       except
         on E: Exception do
         begin
-          E.Message := 'SaveImage.SavetoFile.Error'#13#10 + E.Message + #13#10 +
-            (CorrectPathSys(Path) + '/' + Name + prefix + ext);
-          USimpleException.ExceptionHandleSaveLogOnly(nil, E);
-          {$IFDEF DOWNLOADER}
+          WriteLog_E('SaveImage.SavetoFile.Error!'+ LineEnding +
+            CorrectPathSys(Path) + '/' + Name + prefix + ext, E);
           if checkTerminate then Exit;
-          {$ENDIF}
           if not retryToSave then
           begin
             CheckPath(Path);
@@ -3300,10 +3263,7 @@ begin
     until False;
   end
   else
-  begin
-    s := 'SaveImage.ExtEmpty'#13#10'URL: ' + URL;
-    USimpleException.ExceptionHandleSaveLogOnly(nil, Exception.Create(s));
-  end;
+    Writelog_E('SaveImage.ExtEmpty!' + LineEnding + URL);
   preTerminate;
   Result := (fpath <> '') and FileExistsUTF8(fpath);
 end;
