@@ -12,7 +12,7 @@ uses
   Classes, SysUtils, zipper, FileUtil,LazFileUtils, LazUTF8, LazUTF8Classes,
   Forms, Dialogs, ComCtrls, StdCtrls, Clipbrd, ExtCtrls, DefaultTranslator,
   RegExpr, IniFiles, USimpleException, uMisc, uTranslation,
-  httpsend, blcksock, ssl_openssl;
+  httpsend, blcksock, ssl_openssl, uFMDThread;
 
 type
 
@@ -40,7 +40,7 @@ type
 
   { TDownloadThread }
 
-  TDownloadThread = class(TThread)
+  TDownloadThread = class(TFMDThread)
   private
     FTotalSize, FCurrentSize :integer;
     FHTTP                    :THTTPSend;
@@ -51,7 +51,6 @@ type
   protected
     procedure SockOnStatus(Sender :TObject; Reason :THookSocketReason;
       const Value :string);
-    procedure SockOnHeartBeat(Sender :TObject);
     procedure UZipOnStartFile(Sender :TObject; const AFileName :string);
     procedure MainThreadUpdateStatus;
     procedure MainThreadUpdateProgress;
@@ -60,6 +59,7 @@ type
     procedure UpdateStatus(AStatus :string);
     procedure ShowErrorMessage(AMessage :string);
     procedure Execute; override;
+    procedure OnThreadTerminate(Sender: TObject);
   public
     URL      :string;
     isSFURL  :boolean;
@@ -169,12 +169,10 @@ constructor TDownloadThread.Create;
 begin
   inherited Create(True);
   isDownload := True;
-  FreeOnTerminate := True;
   FHTTP := THTTPSend.Create;
   FHTTP.Headers.NameValueSeparator := ':';
   FHTTP.Sock.OnStatus := @SockOnStatus;
-  FHTTP.Sock.OnHeartbeat := @SockOnHeartBeat;
-  FHTTP.Sock.HeartbeatRate := 250;
+  OnCustomTerminate := @OnThreadTerminate;
   FTotalSize := 0;
   FCurrentSize := 0;
   URL := '';
@@ -206,15 +204,6 @@ procedure TDownloadThread.ShowErrorMessage(AMessage: string);
 begin
   FErrorMessage := AMessage;
   Synchronize(@MainThreadErrorGetting);
-end;
-
-procedure TDownloadThread.SockOnHeartBeat(Sender :TObject);
-begin
-  if Self.Terminated then
-  begin
-    TBlockSocket(Sender).StopFlag := True;
-    TBlockSocket(Sender).AbortSocket;
-  end;
 end;
 
 procedure TDownloadThread.MainThreadUpdateProgress;
@@ -571,6 +560,15 @@ begin
   end;
   regx.Free;
   HTTPHeaders.Free;
+end;
+
+procedure TDownloadThread.OnThreadTerminate(Sender: TObject);
+begin
+  with FHTTP.Sock do
+  begin
+    StopFlag := True;
+    AbortSocket;
+  end;
 end;
 
 { TfrmMain }
