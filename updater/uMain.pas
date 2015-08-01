@@ -172,6 +172,9 @@ begin
   FHTTP := THTTPSend.Create;
   FHTTP.Headers.NameValueSeparator := ':';
   FHTTP.Sock.OnStatus := @SockOnStatus;
+  FHTTP.Timeout := 10000;
+  FHTTP.Sock.ConnectionTimeout := FHTTP.Timeout;
+  FHTTP.Sock.SetTimeout(FHTTP.Timeout);
   OnCustomTerminate := @OnThreadTerminate;
   FTotalSize := 0;
   FCurrentSize := 0;
