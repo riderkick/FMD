@@ -386,15 +386,21 @@ var
   procedure ScanParse;
   var
     i: Integer;
+    baseurl: String;
   begin
+    baseurl := Module.RootURL;
     for i := 0 to Parse.Count - 1 do
+    begin
+      if GetTagName(Parse[i]) = 'base' then
+        baseurl := GetVal(Parse[i], 'href');
       if (GetTagName(Parse[i]) = 'img') and (GetVal(Parse[i], 'class') = 'picture') then
       begin
         if DownloadThread.workCounter < Container.PageLinks.Count then
           Container.PageLinks[DownloadThread.workCounter] :=
-            MaybeFillHost(Module.RootURL, GetVal(Parse[i], 'src'));
+            MaybeFillHost(baseurl, GetVal(Parse[i], 'src'));
         Break;
       end;
+    end;
   end;
 
 begin
