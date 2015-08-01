@@ -840,6 +840,7 @@ function SitesWithSingleChapter(const website: String): Boolean;
 function FillMangaSiteHost(const MangaID: Cardinal; URL: String): String; overload;
 function FillMangaSiteHost(const Website, URL: String): String; overload;
 function FillHost(const Host, URL: String): String;
+function MaybeFillHost(const Host, URL: String): String;
 function RemoveHostFromURL(URL: String): String;
 procedure RemoveHostFromURLs(Const URLs: TStringList);
 procedure RemoveHostFromURLsPair(Const URLs, Names : TStringList);
@@ -1410,6 +1411,30 @@ begin
       if (tu <> '') and (tu[1] <> '/') then
         tu := '/' + tu;
       Result := th + tu;
+    finally
+      Free;
+    end;
+end;
+
+function MaybeFillHost(const Host, URL: String): String;
+var
+  th, tu: string;
+begin
+  Result := URL;
+  if Host = '' then Exit;
+  with TRegExpr.Create do
+    try
+      Expression := REGEX_HOST;
+      if Replace(URL, '$1', True) = '' then
+      begin
+        th := Replace(Host, '$1$2$3', True);
+        tu := Replace(URL, '$4', True);
+        if tu = '' then
+          tu := URL;
+        if (tu <> '') and (tu[1] <> '/') then
+          tu := '/' + tu;
+        Result := th + tu;
+      end;
     finally
       Free;
     end;
