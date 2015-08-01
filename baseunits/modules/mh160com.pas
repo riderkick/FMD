@@ -142,7 +142,7 @@ begin
   info.url := FillHost(Module.RootURL, URL);
   Parse := TStringList.Create;
   try
-    if MangaInfo.GetPage(TObject(Parse), MangaInfo.mangaInfo.url, Reconnect) then
+    if MangaInfo.GetPage(TObject(Parse), info.url, Reconnect) then
     begin
       Result := INFORMATION_NOT_FOUND;
       ParseHTML(CP936ToUTF8(Parse.Text), Parse);
