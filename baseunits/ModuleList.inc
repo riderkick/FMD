@@ -3,4 +3,5 @@ uses
   mh160com,
   Batoto,
   WPManga,
-  MangaFox;
+  MangaFox,
+  Mangacan;
