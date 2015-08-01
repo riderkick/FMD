@@ -126,7 +126,7 @@ implementation
 {$I ModuleList.inc}
 
 const
-  REGEX_HOST = '(?ig)(\w+://)?([^/]*\.\w+)?(\:\d+)?(/?.*)$';
+  REGEX_HOST = '(?ig)^(\w+://)?([^/]*\.\w+)?(\:\d+)?(/?.*)$';
 
 { TModuleContainer }
 
