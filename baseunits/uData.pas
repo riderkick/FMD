@@ -2214,8 +2214,6 @@ var
 
   {$I includes/Komikid/names_and_links.inc}
 
-  {$I includes/PecintaKomik/names_and_links.inc}
-
   {$I includes/Mabuns/names_and_links.inc}
 
   {$I includes/MangaEsta/names_and_links.inc}
@@ -2432,9 +2430,6 @@ begin
     else
     if website = WebsiteRoots[KOMIKID_ID, 0] then
       Result := KomikidGetNamesAndLinks
-    else
-    if website = WebsiteRoots[PECINTAKOMIK_ID, 0] then
-      Result := PecintaKomikGetNamesAndLinks
     else
     if website = WebsiteRoots[MABUNS_ID, 0] then
       Result := MabunsGetNamesAndLinks
@@ -2672,10 +2667,6 @@ var
 
   {$I includes/Komikid/manga_information.inc}
 
-  // this site have 2 kind of cover page
-
-  {$I includes/PecintaKomik/manga_information.inc}
-
   {$I includes/Mabuns/manga_information.inc}
 
   {$I includes/MangaEsta/manga_information.inc}
@@ -2885,9 +2876,6 @@ begin
     else
     if website = WebsiteRoots[KOMIKID_ID, 0] then
       Result := GetKomikidInfoFromURL
-    else
-    if website = WebsiteRoots[PECINTAKOMIK_ID, 0] then
-      Result := GetPecintaKomikInfoFromURL
     else
     if website = WebsiteRoots[MABUNS_ID, 0] then
       Result := GetMabunsInfoFromURL

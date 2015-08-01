@@ -423,8 +423,6 @@ var
 
   {$I includes/MeinManga/chapter_page_number.inc}
 
-  {$I includes/PecintaKomik/chapter_page_number.inc}
-
   {$I includes/Pururin/chapter_page_number.inc}
 
   {$I includes/RedHawkScans/chapter_page_number.inc}
@@ -563,9 +561,6 @@ begin
     else
     if manager.container.MangaSiteID = KOMIKID_ID then
       Result := GetKomikidPageNumber
-    else
-    if manager.container.MangaSiteID = PECINTAKOMIK_ID then
-      Result := GetPecintaKomikPageNumber
     else
     if manager.container.MangaSiteID = PURURIN_ID then
       Result := GetPururinPageNumber
@@ -786,8 +781,6 @@ var
 
   {$I includes/MangaVadisi/image_url.inc}
 
-  {$I includes/PecintaKomik/image_url.inc}
-
   {$I includes/Pururin/image_url.inc}
 
   {$I includes/RedHawkScans/image_url.inc}
@@ -919,9 +912,6 @@ begin
     else
     if manager.container.MangaSiteID = KOMIKID_ID then
       Result := GetKomikidImageURL
-    else
-    if manager.container.MangaSiteID = PECINTAKOMIK_ID then
-      Result := GetPecintaKomikImageURL
     else
     if manager.container.MangaSiteID = MABUNS_ID then
       Result := GetMabunsImageURL
@@ -1294,7 +1284,6 @@ begin
   else
   begin
     case container.MangaSiteID of
-      PECINTAKOMIK_ID : currentMaxThread := 1;
       EHENTAI_ID      : currentMaxThread := 2;
       else
         currentMaxThread := container.Manager.maxDLThreadsPerTask;
