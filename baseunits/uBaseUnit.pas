@@ -1403,8 +1403,10 @@ begin
   with TRegExpr.Create do
     try
       Expression := REGEX_HOST;
-      th := Replace(Host, '$1$2', True);
+      th := Replace(Host, '$1$2$3', True);
       tu := Replace(URL, '$4', True);
+      if tu = '' then
+        tu := URL;
       if (tu <> '') and (tu[1] <> '/') then
         tu := '/' + tu;
       Result := th + tu;
