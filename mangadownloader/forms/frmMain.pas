@@ -1344,7 +1344,13 @@ begin
       OpenDataDB(cbSelectManga.Items[cbSelectManga.ItemIndex]);
     if OptionAutoCheckLatestVersion then
       btCheckLatestVersionClick(btCheckLatestVersion);
-    SubThread.Start;
+    if OptionAutoCheckFavStartup then
+    begin
+      MainForm.FavoriteManager.isAuto := True;
+      MainForm.FavoriteManager.CheckForNewChapter;
+    end;
+    if Assigned(SubThread) then
+      SubThread.Start;
   end;
 end;
 

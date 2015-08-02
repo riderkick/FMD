@@ -35,12 +35,6 @@ procedure TSubThread.Execute;
 begin
   MainForm.isSubthread := True;
   try
-    if OptionAutoCheckFavStartup then
-    begin
-      MainForm.FavoriteManager.isAuto := True;
-      MainForm.FavoriteManager.CheckForNewChapter;
-    end;
-
     while not Terminated do
     begin
       with MainForm do
