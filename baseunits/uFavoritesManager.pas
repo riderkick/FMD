@@ -555,7 +555,7 @@ begin
               end;
 
               //add completed manga
-              if (OptionAutoRemoveCompletedManga) and (NewMangaInfo.status = '0') then
+              if (OptionAutoCheckFavRemoveCompletedManga) and (NewMangaInfo.status = '0') then
               begin
                 removeListStr := removeListStr + LineEnding +
                   Format('- %s <%s>', [FavoriteInfo.Title, FavoriteInfo.Website]);
@@ -617,7 +617,7 @@ begin
       else
       begin
         //if there's new chapters
-        if OptionAutoDlFav then
+        if OptionAutoCheckFavDownload then
         begin
           if MainForm.cbAddAsStopped.Checked then
             LNCResult := ncrQueue

@@ -34,7 +34,7 @@ type
     btAddToFavorites: TBitBtn;
     btBrowse: TSpeedButton;
     btCancelFavoritesCheck: TSpeedButton;
-    btAbortCheckVersion: TSpeedButton;
+    btAbortCheckLatestVersion: TSpeedButton;
     btOptionBrowse: TSpeedButton;
     btChecks: TSpeedButton;
     btDonate: TImage;
@@ -48,8 +48,10 @@ type
     btWebsitesSearchClear: TSpeedButton;
     btUpdateList: TSpeedButton;
     btURL: TSpeedButton;
-    cbOptionAutoDlFav: TCheckBox;
-    cbOptionAutoRemoveCompletedManga: TCheckBox;
+    cbOptionAutoCheckFavStartup: TCheckBox;
+    cbOptionAutoCheckFavInterval: TCheckBox;
+    cbOptionAutoCheckFavDownload: TCheckBox;
+    cbOptionAutoCheckFavRemoveCompletedManga: TCheckBox;
     cbOptionEnableLoadCover: TCheckBox;
     cbOptionShowDownloadToolbar: TCheckBox;
     cbOptionUpdateListNoMangaInfo: TCheckBox;
@@ -123,11 +125,11 @@ type
     pnThumbContainer: TPanel;
     pnMainTop: TPanel;
     btVisitMyBlog: TBitBtn;
-    btCheckVersion: TBitBtn;
+    btCheckLatestVersion: TBitBtn;
     btFavoritesCheckNewChapter: TBitBtn;
     btDownload: TBitBtn;
     btRemoveFilterLarge: TBitBtn;
-    cbOptionAutoCheckUpdate: TCheckBox;
+    cbOptionAutoCheckLatestVersion: TCheckBox;
     cbOptionShowDeleteTaskDialog: TCheckBox;
     cbOptionBatotoShowScanGroup: TCheckBox;
     cbOptionBatotoShowAllLang: TCheckBox;
@@ -174,7 +176,6 @@ type
     cbOptionGenerateMangaFolderName: TCheckBox;
     cbOptionMinimizeToTray: TCheckBox;
     cbOptionAutoNumberChapter: TCheckBox;
-    cbOptionAutoCheckFavStartup: TCheckBox;
     cbSearchFromAllSites: TCheckBox;
     ckFilterDoujinshi: TCheckBox;
     ckFilterDrama: TCheckBox;
@@ -203,12 +204,12 @@ type
     IconList: TImageList;
     itSaveDownloadedList: TIdleTimer;
     itRefreshDLInfo: TIdleTimer;
-    itCheckForChapters: TIdleTimer;
+    itCheckFav: TIdleTimer;
     itAnimate: TIdleTimer;
     imCover: TImage;
     lbOptionCustomRename: TLabel;
     lbOptionPDFQuality: TLabel;
-    lbOptionAutoCheckMinutes: TLabel;
+    lbOptionAutoCheckFavIntervalMinutes: TLabel;
     lbOptionLetFMDDo: TLabel;
     lbOptionNewMangaTime: TLabel;
     lbOptionLanguage: TLabel;
@@ -288,7 +289,7 @@ type
     seOptionConnectionTimeout: TSpinEdit;
     seOptionMaxThread: TSpinEdit;
     seOptionNewMangaTime: TSpinEdit;
-    seOptionCheckMinutes: TSpinEdit;
+    seOptionAutoCheckFavIntervalMinutes: TSpinEdit;
     seOptionPDFQuality: TSpinEdit;
     seOptionDigitVolume: TSpinEdit;
     seOptionDigitChapter: TSpinEdit;
@@ -336,10 +337,10 @@ type
       var CanShow: Boolean; var HintInfo: THintInfo);
     procedure btAddToFavoritesClick(Sender: TObject);
     procedure btAbortUpdateListClick(Sender: TObject);
-    procedure btAbortCheckVersionClick(Sender: TObject);
+    procedure btAbortCheckLatestVersionClick(Sender: TObject);
     procedure btCancelFavoritesCheckClick(Sender: TObject);
     procedure btChecksClick(Sender: TObject);
-    procedure btCheckVersionClick(Sender: TObject);
+    procedure btCheckLatestVersionClick(Sender: TObject);
     procedure btDonateClick(Sender: TObject);
     procedure btFavoritesImportClick(Sender: TObject);
     procedure btReadOnlineClick(Sender: TObject);
@@ -348,6 +349,7 @@ type
     procedure btURLClick(Sender: TObject);
     procedure btVisitMyBlogClick(Sender: TObject);
     procedure btWebsitesSearchClearClick(Sender: TObject);
+    procedure cbOptionAutoCheckFavIntervalChange(Sender: TObject);
     procedure cbOptionDigitChapterChange(Sender: TObject);
     procedure cbOptionDigitVolumeChange(Sender: TObject);
     procedure cbSelectMangaChange(Sender: TObject);
@@ -388,7 +390,7 @@ type
     procedure FormShow(Sender: TObject);
     procedure FormWindowStateChange(Sender: TObject);
     procedure itAnimateTimer(Sender: TObject);
-    procedure itCheckForChaptersTimer(Sender: TObject);
+    procedure itCheckFavTimer(Sender: TObject);
     procedure itMonitorTimer(Sender: TObject);
     procedure itRefreshDLInfoStartTimer(Sender: TObject);
     procedure itRefreshDLInfoStopTimer(Sender: TObject);
@@ -444,7 +446,7 @@ type
     procedure pmSbMainPopup(Sender: TObject);
     procedure sbUpdateListDrawPanel(StatusBar: TStatusBar; Panel: TStatusPanel;
       const Rect: TRect);
-    procedure seOptionCheckMinutesChange(Sender: TObject);
+    procedure seOptionAutoCheckFavIntervalMinutesChange(Sender: TObject);
     procedure spMainSplitterMoved(Sender: TObject);
     procedure tbDownloadDeleteCompletedClick(Sender: TObject);
     procedure tbDownloadResumeAllClick(Sender: TObject);
@@ -1114,7 +1116,7 @@ begin
   tmBackup.Enabled := False;
   itSaveDownloadedList.Enabled := False;
   itRefreshDLInfo.Enabled := False;
-  itCheckForChapters.Enabled := False;
+  itCheckFav.Enabled := False;
   itAnimate.Enabled := False;
   itStartup.Enabled := False;
   itMonitor.Enabled := False;
@@ -1212,11 +1214,11 @@ begin
   gifWaiting.Update(pbWait.Canvas, gifWaitingRect);
 end;
 
-procedure TMainForm.itCheckForChaptersTimer(Sender: TObject);
+procedure TMainForm.itCheckFavTimer(Sender: TObject);
 begin
   if IsDlgCounter then Exit;
-  if cbOptionAutoCheckUpdate.Checked then
-    btCheckVersionClick(btCheckVersion);
+  if OptionAutoCheckLatestVersion then
+    btCheckLatestVersionClick(btCheckLatestVersion);
   FavoriteManager.isAuto := True;
   FavoriteManager.CheckForNewChapter;
 end;
@@ -1340,8 +1342,8 @@ begin
     isStartup := True;
     if cbSelectManga.ItemIndex > -1 then
       OpenDataDB(cbSelectManga.Items[cbSelectManga.ItemIndex]);
-    if cbOptionAutoCheckUpdate.Checked then
-      btCheckVersionClick(btCheckVersion);
+    if OptionAutoCheckLatestVersion then
+      btCheckLatestVersionClick(btCheckLatestVersion);
     SubThread.Start;
   end;
 end;
@@ -1884,7 +1886,7 @@ begin
     updateList.Terminate;
 end;
 
-procedure TMainForm.btAbortCheckVersionClick(Sender: TObject);
+procedure TMainForm.btAbortCheckLatestVersionClick(Sender: TObject);
 begin
   if Assigned(CheckUpdateThread) then
     CheckUpdateThread.Terminate;
@@ -2092,6 +2094,12 @@ begin
   edWebsitesSearch.Clear;
 end;
 
+procedure TMainForm.cbOptionAutoCheckFavIntervalChange(Sender: TObject);
+begin
+  seOptionAutoCheckFavIntervalMinutes.Enabled := cbOptionAutoCheckFavInterval.Checked;
+  lbOptionAutoCheckFavIntervalMinutes.Enabled := cbOptionAutoCheckFavInterval.Checked;
+end;
+
 procedure TMainForm.cbOptionDigitChapterChange(Sender: TObject);
 begin
   seOptionDigitChapter.Enabled := cbOptionDigitChapter.Checked;
@@ -2113,7 +2121,7 @@ begin
   edSearch.Clear;
 end;
 
-procedure TMainForm.btCheckVersionClick(Sender: TObject);
+procedure TMainForm.btCheckLatestVersionClick(Sender: TObject);
 begin
   if Assigned(CheckUpdateThread) then
     MessageDlg('', RS_DlgUpdaterIsRunning, mtInformation, [mbYes], 0)
@@ -3353,10 +3361,10 @@ begin
   end;
 end;
 
-procedure TMainForm.seOptionCheckMinutesChange(Sender: TObject);
+procedure TMainForm.seOptionAutoCheckFavIntervalMinutesChange(Sender: TObject);
 begin
-  lbOptionAutoCheckMinutes.Caption :=
-    Format(RS_LblAutoCheckNewChapterMinute, [seOptionCheckMinutes.Value]);
+  lbOptionAutoCheckFavIntervalMinutes.Caption :=
+    Format(RS_LblAutoCheckNewChapterMinute, [seOptionAutoCheckFavIntervalMinutes.Value]);
 end;
 
 procedure TMainForm.spMainSplitterMoved(Sender: TObject);
@@ -4414,12 +4422,13 @@ begin
     seOptionDigitChapter.Enabled := cbOptionDigitChapter.Checked;
 
     // update
-    cbOptionAutoCheckUpdate.Checked := ReadBool('update', 'AutoCheckUpdate', True);
+    cbOptionAutoCheckLatestVersion.Checked := ReadBool('update', 'AutoCheckLatestVersion', True);
     cbOptionAutoCheckFavStartup.Checked := ReadBool('update', 'AutoCheckFavStartup', True);
-    seOptionCheckMinutes.Value := ReadInteger('update', 'AutoCheckMinutes', 60);
-    lbOptionAutoCheckMinutes.Caption := Format(RS_LblAutoCheckNewChapterMinute, [seOptionCheckMinutes.Value]);
-    cbOptionAutoDlFav.Checked := ReadBool('update', 'AutoDownloadFavorites', False);
-    cbOptionAutoRemoveCompletedManga.Checked := ReadBool('update', 'AutoRemoveCompletedManga', False);
+    cbOptionAutoCheckFavInterval.Checked := ReadBool('update', 'AutoCheckFavInterval', True);
+    seOptionAutoCheckFavIntervalMinutes.Value := ReadInteger('update', 'AutoCheckFavIntervalMinutes', 60);
+    lbOptionAutoCheckFavIntervalMinutes.Caption := Format(RS_LblAutoCheckNewChapterMinute, [seOptionAutoCheckFavIntervalMinutes.Value]);
+    cbOptionAutoCheckFavDownload.Checked := ReadBool('update', 'AutoCheckFavAutoDownload', False);
+    cbOptionAutoCheckFavRemoveCompletedManga.Checked := ReadBool('update', 'AutoCheckFavAutoRemoveCompletedManga', False);
     cbOptionUpdateListNoMangaInfo.Checked := ReadBool('update', 'UpdateListNoMangaInfo', False);
     cbOptionUpdateListRemoveDuplicateLocalData.Checked := ReadBool('update', 'UpdateListRemoveDuplicateLocalData', False);
 
@@ -4529,11 +4538,12 @@ begin
       WriteInteger('saveto', 'DigitChapterLength', seOptionDigitChapter.Value);
 
       // update
-      WriteBool('update', 'AutoCheckUpdate', cbOptionAutoCheckUpdate.Checked);
+      WriteBool('update', 'AutoCheckLatestVersion', cbOptionAutoCheckLatestVersion.Checked);
       WriteBool('update', 'AutoCheckFavStartup', cbOptionAutoCheckFavStartup.Checked);
-      WriteInteger('update', 'AutoCheckMinutes', seOptionCheckMinutes.Value);
-      WriteBool('update', 'AutoDownloadFavorites', cbOptionAutoDlFav.Checked);
-      WriteBool('update', 'AutoRemoveCompletedManga', cbOptionAutoRemoveCompletedManga.Checked);
+      WriteBool('update', 'AutoCheckFavInterval', cbOptionAutoCheckFavInterval.Checked);
+      WriteInteger('update', 'AutoCheckFavIntervalMinutes', seOptionAutoCheckFavIntervalMinutes.Value);
+      WriteBool('update', 'AutoCheckFavAutoDownloadFavorites', cbOptionAutoCheckFavDownload.Checked);
+      WriteBool('update', 'AutoCheckFavAutoRemoveCompletedManga', cbOptionAutoCheckFavRemoveCompletedManga.Checked);
       WriteBool('update', 'UpdateListNoMangaInfo', cbOptionUpdateListNoMangaInfo.Checked);
       WriteBool('update', 'UpdateListRemoveDuplicateLocalData', cbOptionUpdateListRemoveDuplicateLocalData.Checked);
 
@@ -4647,23 +4657,21 @@ begin
     DLManager.compress := rgOptionCompress.ItemIndex;
 
     //update
-    OptionAutoRemoveCompletedManga := cbOptionAutoRemoveCompletedManga.Checked;
+    OptionAutoCheckLatestVersion := cbOptionAutoCheckLatestVersion.Checked;
     OptionAutoCheckFavStartup := cbOptionAutoCheckFavStartup.Checked;
-    OptionCheckMinutes := seOptionCheckMinutes.Value;
-    if OptionCheckMinutes = 0 then
-      itCheckForChapters.Enabled := False
-    else
-    begin
-      itCheckForChapters.Interval := OptionCheckMinutes * 60000;
-      itCheckForChapters.Enabled := True;
-    end;
-    OptionAutoDlFav := cbOptionAutoDlFav.Checked;
+    OptionAutoCheckFavInterval := cbOptionAutoCheckFavInterval.Checked;
+    OptionAutoCheckFavIntervalMinutes := seOptionAutoCheckFavIntervalMinutes.Value;
+    OptionAutoCheckFavDownload := cbOptionAutoCheckFavDownload.Checked;
+    OptionAutoCheckFavRemoveCompletedManga := cbOptionAutoCheckFavRemoveCompletedManga.Checked;
+    if OptionAutoCheckFavIntervalMinutes <> 0 then
+      itCheckFav.Interval := OptionAutoCheckFavIntervalMinutes * 60000;
+    itCheckFav.Enabled := OptionAutoCheckLatestVersion and (OptionAutoCheckFavIntervalMinutes <> 0);
     OptionUpdateListNoMangaInfo := cbOptionUpdateListNoMangaInfo.Checked;
     OptionUpdateListRemoveDuplicateLocalData := cbOptionUpdateListRemoveDuplicateLocalData.Checked;
 
     //misc
-    OptionShowBatotoSG := cbOptionBatotoShowScanGroup.Checked;
-    OptionShowAllLang := cbOptionBatotoShowAllLang.Checked;
+    OptionBatotoShowScanGroup := cbOptionBatotoShowScanGroup.Checked;
+    OptionBatotoShowAllLang := cbOptionBatotoShowAllLang.Checked;
 
     //languages
     ApplyLanguage;

@@ -137,13 +137,13 @@ var
       begin
         addchap := True;
         s := CommonStringFilter(Parse[i + 6]);
-        if (not OptionShowAllLang) then
+        if (not OptionBatotoShowAllLang) then
           addchap := (Pos(' lang_English ', Parse[i]) <> 0)
         else
           s += Format(' [%s]', [Trim(GetVal(Parse[i + 12], 'title'))]);
         if addchap then
         begin
-          if OptionShowBatotoSG then
+          if OptionBatotoShowScanGroup then
             s += Format(' [%s]', [Trim(Parse[i + 19])]);
           info.chapterLinks.Add(GetVal(Parse[i + 4], 'href'));
           info.chapterName.Add(s);

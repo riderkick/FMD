@@ -27,7 +27,7 @@ resourcestring
   RS_NewVersionFound = 'New Version found!';
   RS_CurrentVersion = 'Installed Version';
   RS_LatestVersion = 'Latest Version   ';
-  RS_BtnCheckUpdates = 'Check for new version';
+  RS_BtnCheckUpdates = 'Check for latest version';
 
 implementation
 
@@ -60,7 +60,7 @@ begin
         MainForm.itMonitor.Enabled := True;
       end
       else
-        MainForm.btCheckVersion.Caption := RS_BtnCheckUpdates;
+        MainForm.btCheckLatestVersion.Caption := RS_BtnCheckUpdates;
     finally
       Free;
     end;
@@ -68,20 +68,20 @@ end;
 
 procedure TCheckUpdateThread.SyncStartUpdate;
 begin
-  with MainForm.btCheckVersion do
+  with MainForm.btCheckLatestVersion do
   begin
-    MainForm.btAbortCheckVersion.Visible := True;
-    Width := Width - MainForm.btAbortCheckVersion.Width - 4;
+    MainForm.btAbortCheckLatestVersion.Visible := True;
+    Width := Width - MainForm.btAbortCheckLatestVersion.Width - 4;
     Caption := RS_Checking;
   end;
 end;
 
 procedure TCheckUpdateThread.SyncEndUpdate;
 begin
-  with MainForm.btCheckVersion do
+  with MainForm.btCheckLatestVersion do
   begin
-    MainForm.btAbortCheckVersion.Visible := False;
-    Width := Width + MainForm.btAbortCheckVersion.Width + 4;
+    MainForm.btAbortCheckLatestVersion.Visible := False;
+    Width := Width + MainForm.btAbortCheckLatestVersion.Width + 4;
     Caption := RS_BtnCheckUpdates;
   end;
 end;

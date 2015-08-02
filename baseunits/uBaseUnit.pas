@@ -662,21 +662,25 @@ var
   OptionLetFMDDo: TFMDDo = DO_NOTHING;
 
   OptionCustomRename: String;
+  OptionAutoNumberChapterChecked: Boolean = True;
 
-  OptionCheckMinutes: Cardinal = 0;
   OptionPDFQuality: Cardinal = 95;
   OptionMaxRetry: Integer = 0;
   OptionConnectionTimeout: Integer = 15000;
   OptionUpdateListNoMangaInfo: Boolean = False;
   OptionUpdateListRemoveDuplicateLocalData: Boolean = False;
 
-  OptionShowBatotoSG: Boolean = True;
-  OptionShowAllLang: Boolean = True;
-  OptionAutoDlFav: Boolean = True;
   OptionEnableLoadCover: Boolean = False;
-  OptionAutoNumberChapterChecked: Boolean = True;
-  OptionAutoRemoveCompletedManga: Boolean = True;
-  OptionAutoCheckFavStartup: Boolean = False;
+
+  OptionAutoCheckLatestVersion: Boolean = True;
+  OptionAutoCheckFavStartup: Boolean = True;
+  OptionAutoCheckFavInterval: Boolean = True;
+  OptionAutoCheckFavIntervalMinutes: Cardinal = 0;
+  OptionAutoCheckFavDownload: Boolean = False;
+  OptionAutoCheckFavRemoveCompletedManga: Boolean = False;
+
+  OptionBatotoShowScanGroup: Boolean = True;
+  OptionBatotoShowAllLang: Boolean = True;
 
 type
   TArrayOfString = array of string;
