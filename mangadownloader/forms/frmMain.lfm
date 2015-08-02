@@ -35,13 +35,13 @@ object MainForm: TMainForm
     Height = 508
     Top = 11
     Width = 614
-    ActivePage = tsDownload
+    ActivePage = tsAbout
     Align = alClient
     BorderSpacing.Top = 3
     BorderSpacing.Right = 4
     BorderSpacing.Bottom = 3
     ParentFont = False
-    TabIndex = 0
+    TabIndex = 5
     TabOrder = 0
     OnChange = pcMainChange
     object tsDownload: TTabSheet

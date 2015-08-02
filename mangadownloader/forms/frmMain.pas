@@ -22,7 +22,7 @@ uses
   FileUtil, LazUTF8Classes, TAGraph, TASources, TASeries, TATools, AnimatedGif,
   uBaseUnit, uData, uDownloadsManager, uFavoritesManager, uUpdateThread,
   uUpdateDBThread, uSubThread, uSilentThread, uMisc, uGetMangaInfosThread,
-  uTranslation, frmDropTarget, USimpleException, USimpleLogger;
+  uTranslation, frmDropTarget, CheckUpdate, USimpleException, USimpleLogger;
 
 type
 
@@ -575,6 +575,9 @@ type
     GetInfosThread: TGetMangaInfosThread;
     isGetMangaInfos: Boolean;
 
+    // check update
+    CheckUpdateThread: TCheckUpdateThread;
+
     // repaint treeview
     procedure tvDownloadFilterRepaint;
 
@@ -950,6 +953,10 @@ begin
   Application.HintHidePause := 10000;
   sbUpdateList.DoubleBuffered := True;
 
+  // remove old updater
+  if FileExistsUTF8(fmdDirectory + 'old_updater.exe') then
+    DeleteFileUTF8(fmdDirectory + 'old_updater.exe');
+
   // TrayIcon
   TrayIcon.Icon.Assign(Application.Icon);
   PrevWindowState := wsNormal;
@@ -1087,6 +1094,11 @@ end;
 
 procedure TMainForm.CloseNow(WaitFor: Boolean);
 begin
+  if Assigned(CheckUpdateThread) then
+  begin
+    CheckUpdateThread.Terminate;
+    CheckUpdateThread.WaitFor;
+  end;
   if Assigned(SearchDBThread) then
   begin
     SearchDBThread.Terminate;
@@ -1203,8 +1215,8 @@ end;
 procedure TMainForm.itCheckForChaptersTimer(Sender: TObject);
 begin
   if IsDlgCounter then Exit;
-  if options.ReadBool('update', 'AutoCheckUpdate', True) then
-    SubThread.CheckUpdate := True;
+  if cbOptionAutoCheckUpdate.Checked then
+    btCheckVersionClick(btCheckVersion);
   FavoriteManager.isAuto := True;
   FavoriteManager.CheckForNewChapter;
 end;
@@ -1329,7 +1341,7 @@ begin
     if cbSelectManga.ItemIndex > -1 then
       OpenDataDB(cbSelectManga.Items[cbSelectManga.ItemIndex]);
     if cbOptionAutoCheckUpdate.Checked then
-      SubThread.CheckUpdate := True;
+      btCheckVersionClick(btCheckVersion);
     SubThread.Start;
   end;
 end;
@@ -1874,7 +1886,8 @@ end;
 
 procedure TMainForm.btAbortCheckVersionClick(Sender: TObject);
 begin
-  SubThread.AbortCheckUpdate;
+  if Assigned(CheckUpdateThread) then
+    CheckUpdateThread.Terminate;
 end;
 
 procedure TMainForm.btCancelFavoritesCheckClick(Sender: TObject);
@@ -2102,10 +2115,10 @@ end;
 
 procedure TMainForm.btCheckVersionClick(Sender: TObject);
 begin
-  if SubThread.CheckUpdate then
+  if Assigned(CheckUpdateThread) then
     MessageDlg('', RS_DlgUpdaterIsRunning, mtInformation, [mbYes], 0)
   else
-    SubThread.CheckUpdate := True;
+    CheckUpdateThread := TCheckUpdateThread.Create;
 end;
 
 procedure TMainForm.btDonateClick(Sender: TObject);
