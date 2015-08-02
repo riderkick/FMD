@@ -16,7 +16,7 @@ interface
 
 uses
   Classes, SysUtils, uBaseUnit, uData, uFMDThread, uDownloadsManager,
-  blcksock, syncobjs;
+  syncobjs;
 
 type
 
@@ -26,8 +26,8 @@ type
   public
     MetaDataType: TMetaDataType;
     Website, Title, URL, SaveTo: String;
-    constructor Create(const AType: TMetaDataType; const AWebsite, AManga,
-      AURL, APath: String);
+    constructor Create(const AType: TMetaDataType;
+      const AWebsite, AManga, AURL, APath: String);
   end;
 
   TSilentThreadManager = class;
@@ -58,11 +58,24 @@ type
     procedure MainThreadAfterChecking; override;
   end;
 
+  { TSilentThreadManagerThread }
+
+  TSilentThreadManagerThread = class(TFMDThread)
+  protected
+    procedure Execute; override;
+  public
+    Manager: TSilentThreadManager;
+    destructor Destroy; override;
+  end;
+
   { TSilentThreadManager }
 
   TSilentThreadManager = class
-  protected
+  private
+    FLockAdd: Boolean;
+    FManagerThread: TSilentThreadManagerThread;
     function GetItemCount: Integer;
+    procedure StartManagerThread;
   public
     CS_Threads: TCriticalSection;
     DLManager: TDownloadManager;
@@ -73,6 +86,8 @@ type
     procedure CheckOut;
     procedure StopAll(WaitFor: Boolean = True);
     procedure UpdateLoadStatus;
+    procedure BeginAdd;
+    procedure EndAdd;
     property ItemCount: Integer read GetItemCount;
     constructor Create;
     destructor Destroy; override;
@@ -86,6 +101,28 @@ implementation
 uses
   frmMain;
 
+{ TSilentThreadManagerThread }
+
+procedure TSilentThreadManagerThread.Execute;
+begin
+  if Manager = nil then Exit;
+  while (not Terminated) and (Manager.MetaData.Count > 0) do
+  begin
+    while Manager.Threads.Count >= Manager.DLManager.maxDLThreadsPerTask do
+    begin
+      if Terminated then Exit;
+      Sleep(500);
+    end;
+    Manager.CheckOut;
+  end;
+end;
+
+destructor TSilentThreadManagerThread.Destroy;
+begin
+  Manager.FManagerThread := nil;
+  inherited Destroy;
+end;
+
 { TSilentThreadManager }
 
 function TSilentThreadManager.GetItemCount: Integer;
@@ -98,8 +135,18 @@ begin
   end;
 end;
 
-procedure TSilentThreadManager.Add(AType: TMetaDataType; AWebsite, AManga,
-  AURL: String; ASavePath: String = '');
+procedure TSilentThreadManager.StartManagerThread;
+begin
+  if FManagerThread = nil then
+  begin
+    FManagerThread := TSilentThreadManagerThread.Create;
+    FManagerThread.Manager := Self;
+    FManagerThread.Start;
+  end;
+end;
+
+procedure TSilentThreadManager.Add(AType: TMetaDataType;
+  AWebsite, AManga, AURL: String; ASavePath: String = '');
 begin
   if not ((AType = MD_AddToFavorites) and
     (MainForm.FavoriteManager.IsMangaExist(AManga, AWebsite))) then
@@ -111,7 +158,11 @@ begin
     finally
       CS_Threads.Release;
     end;
-    UpdateLoadStatus;
+    if not FLockAdd then
+    begin
+      StartManagerThread;
+      UpdateLoadStatus;
+    end;
   end;
 end;
 
@@ -126,7 +177,8 @@ begin
         MD_DownloadAll: Threads.Add(TSilentThread.Create);
         MD_AddToFavorites: Threads.Add(TSilentAddToFavThread.Create);
       end;
-      with TSilentThread(Threads.Last) do begin
+      with TSilentThread(Threads.Last) do
+      begin
         Manager := Self;
         website := TSilentThreadMetaData(MetaData.First).Website;
         title := TSilentThreadMetaData(MetaData.First).Title;
@@ -155,6 +207,12 @@ begin
         TSilentThreadMetaData(MetaData.Last).Free;
         MetaData.Remove(MetaData.Last);
       end;
+      if Assigned(FManagerThread) then
+      begin
+        FManagerThread.Terminate;
+        if WaitFor then
+          FManagerThread.WaitFor;
+      end;
       if Threads.Count > 0 then
         for i := 0 to Threads.Count - 1 do
           TSilentThread(Threads[i]).Terminate;
@@ -162,10 +220,8 @@ begin
       CS_Threads.Release;
     end;
     if WaitFor then
-    begin
       while ItemCount > 0 do
         Sleep(100);
-    end;
   end;
 end;
 
@@ -178,12 +234,28 @@ begin
     MainForm.sbMain.Panels[1].Text := '';
 end;
 
+procedure TSilentThreadManager.BeginAdd;
+begin
+  FLockAdd := True;
+end;
+
+procedure TSilentThreadManager.EndAdd;
+begin
+  FLockAdd := False;
+  if (MetaData.Count > 0) then
+  begin
+    StartManagerThread;
+    UpdateLoadStatus;
+  end;
+end;
+
 constructor TSilentThreadManager.Create;
 begin
   inherited Create;
   CS_Threads := TCriticalSection.Create;
   MetaData := TFPList.Create;
   Threads := TFPList.Create;
+  FLockAdd := False;
 end;
 
 destructor TSilentThreadManager.Destroy;
@@ -305,8 +377,10 @@ begin
       // save downloaded chapters
       if Info.mangaInfo.chapterLinks.Count > 0 then
       begin
-        DLManager.AddToDownloadedChaptersList(Info.mangaInfo.website + URL, Info.mangaInfo.chapterLinks);
-        FavoriteManager.AddToDownloadedChaptersList(Info.mangaInfo.website, URL, Info.mangaInfo.chapterLinks);
+        DLManager.AddToDownloadedChaptersList(Info.mangaInfo.website +
+          URL, Info.mangaInfo.chapterLinks);
+        FavoriteManager.AddToDownloadedChaptersList(Info.mangaInfo.website,
+          URL, Info.mangaInfo.chapterLinks);
       end;
     end;
   except
@@ -373,7 +447,7 @@ begin
         title := Info.mangaInfo.title;
       if FSavePath = '' then
       begin
-	if Trim(edSaveTo.Text) = '' then
+        if Trim(edSaveTo.Text) = '' then
           edSaveTo.Text := options.ReadString('saveto', 'SaveTo', DEFAULT_PATH);
         if Trim(edSaveTo.Text) = '' then
           edSaveTo.Text := DEFAULT_PATH;

@@ -21,7 +21,7 @@ uses
   simpleipc, lclproc, types, strutils, LCLIntf, DefaultTranslator, EditBtn,
   FileUtil, LazUTF8Classes, TAGraph, TASources, TASeries, TATools, AnimatedGif,
   uBaseUnit, uData, uDownloadsManager, uFavoritesManager, uUpdateThread,
-  uUpdateDBThread, uSubThread, uSilentThread, uMisc, uGetMangaInfosThread,
+  uUpdateDBThread, uSilentThread, uMisc, uGetMangaInfosThread,
   uTranslation, frmDropTarget, CheckUpdate, USimpleException, USimpleLogger;
 
 type
@@ -572,8 +572,6 @@ type
     gifWaitingRect: TRect;
 
     // doing stuff like get manga info, compress, ...
-    SubThread: TSubThread;
-    isSubthread: Boolean;
     GetInfosThread: TGetMangaInfosThread;
     isGetMangaInfos: Boolean;
 
@@ -943,13 +941,10 @@ begin
   InitSimpleExceptionHandler;
   AddIgnoredException('EImagingError');
   AddIgnoredException('ERegExpr');
-  SilentThreadManager := TSilentThreadManager.Create;
   btAbortUpdateList.Parent := sbUpdateList;
-  INIAdvanced := TIniFileR.Create(fmdDirectory + CONFIG_FOLDER + CONFIG_ADVANCED);
   isRunDownloadFilter := False;
   isUpdating := False;
   isExiting := False;
-  isSubthread := False;
   isGetMangaInfos := False;
   DoAfterFMD := DO_NOTHING;
   Application.HintHidePause := 10000;
@@ -962,6 +957,9 @@ begin
   // TrayIcon
   TrayIcon.Icon.Assign(Application.Icon);
   PrevWindowState := wsNormal;
+
+  // advanced settings
+  INIAdvanced := TIniFileR.Create(fmdDirectory + CONFIG_FOLDER + CONFIG_ADVANCED);
 
   //main dataprocess
   dataProcess := TDBDataProcess.Create;
@@ -976,8 +974,9 @@ begin
   FavoriteManager.OnUpdateDownload := @UpdateVtDownload;
   FavoriteManager.DLManager := DLManager;
 
-  // subthread
-  SubThread := TSubThread.Create;
+  // download all / add to favorites
+  SilentThreadManager := TSilentThreadManager.Create;
+  SilentThreadManager.DLManager := Self.DLManager;
 
   // ShowInformation
   mangaInfo := TMangaInfo.Create;
@@ -1128,12 +1127,6 @@ begin
     GetInfosThread.Terminate;
     if WaitFor then
       GetInfosThread.WaitFor;
-  end;
-  if isSubthread then
-  begin
-    SubThread.Terminate;
-    if WaitFor then
-      SubThread.WaitFor;
   end;
   if isUpdating then
   begin
@@ -1349,8 +1342,6 @@ begin
       MainForm.FavoriteManager.isAuto := True;
       MainForm.FavoriteManager.CheckForNewChapter;
     end;
-    if Assigned(SubThread) then
-      SubThread.Start;
   end;
 end;
 
