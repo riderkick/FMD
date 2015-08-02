@@ -3089,7 +3089,8 @@ begin
   else
   if pcMain.ActivePage = tsFavorites then
     vtFavorites.Repaint;
-  LoadOptions;
+  if pcMain.ActivePage = tsOption then
+    LoadOptions;
 end;
 
 procedure TMainForm.pmDownloadPopup(Sender: TObject);
