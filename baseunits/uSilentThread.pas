@@ -242,7 +242,7 @@ end;
 procedure TSilentThreadManager.EndAdd;
 begin
   FLockAdd := False;
-  if (MetaData.Count > 0) then
+  if MetaData.Count > 0 then
   begin
     StartManagerThread;
     UpdateLoadStatus;
@@ -403,7 +403,7 @@ begin
   try
     Synchronize(MainThreadUpdateStatus);
     Info.mangaInfo.title := title;
-    if Info.GetInfoFromURL(website, URL, Freconnect) = NO_ERROR then
+    if Info.GetInfoFromURL(website, URL, OptionConnectionMaxRetry) = NO_ERROR then
       if not Terminated then
         Synchronize(MainThreadAfterChecking);
   except
