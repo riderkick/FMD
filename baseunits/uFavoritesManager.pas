@@ -188,7 +188,7 @@ begin
     Synchronize(SyncStatus);
     getInfo.mangaInfo.title := container.FavoriteInfo.Title;
     getInfo.GetInfoFromURL(container.FavoriteInfo.Website,
-      container.FavoriteInfo.Link, container.Manager.DLManager.retryConnect);
+      container.FavoriteInfo.Link, OptionConnectionMaxRetry);
     if container.MangaInfo = nil then
       container.MangaInfo := TMangaInfo.Create;
     TransferMangaInfo(container.MangaInfo, getInfo.mangaInfo);
@@ -320,7 +320,7 @@ begin
     CheckOut;
     while statuscheck > 0 do
     begin
-      while (not Terminated) and (threads.Count >= manager.DLManager.maxDLThreadsPerTask) do
+      while (not Terminated) and (threads.Count >= OptionMaxThreads) do
         Sleep(SOCKHEARTBEATRATE);
       if Terminated then Break;
       CheckOut;

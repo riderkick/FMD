@@ -218,7 +218,7 @@ begin
       begin
         Info.mangaInfo.title := manager.names[workPtr];
         Info.GetInfoFromURL(manager.website, manager.links[workPtr],
-          MainForm.DLManager.retryConnect);
+          OptionConnectionMaxRetry);
         if not Terminated then
         begin
           manager.CS_AddInfoToData.Acquire;
