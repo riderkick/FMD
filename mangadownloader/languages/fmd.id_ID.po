@@ -394,7 +394,7 @@ msgstr "Otomatis periksa bab baru saat program dimulai"
 #: tmainform.cboptionautochecklatestversion.caption
 msgctxt "tmainform.cboptionautochecklatestversion.caption"
 msgid "Auto check for latest version "
-msgstr "Periksa versi terbaru"
+msgstr "Otomatis periksa versi terbaru"
 
 #: tmainform.cboptionautonumberchapter.caption
 msgid "Auto number chapter"
