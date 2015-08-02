@@ -78,7 +78,6 @@ type
     procedure StartManagerThread;
   public
     CS_Threads: TCriticalSection;
-    DLManager: TDownloadManager;
     MetaData: TFPList;
     Threads: TFPList;
     procedure Add(AType: TMetaDataType; AWebsite, AManga, AURL: String;
@@ -108,7 +107,7 @@ begin
   if Manager = nil then Exit;
   while (not Terminated) and (Manager.MetaData.Count > 0) do
   begin
-    while Manager.Threads.Count >= Manager.DLManager.maxDLThreadsPerTask do
+    while Manager.Threads.Count >= OptionMaxThreads do
     begin
       if Terminated then Exit;
       Sleep(500);

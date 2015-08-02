@@ -670,6 +670,8 @@ var
   OptionUpdateListNoMangaInfo: Boolean = False;
   OptionUpdateListRemoveDuplicateLocalData: Boolean = False;
 
+  OptionMaxThreads: Integer = 1;
+
   OptionEnableLoadCover: Boolean = False;
 
   OptionAutoCheckLatestVersion: Boolean = True;

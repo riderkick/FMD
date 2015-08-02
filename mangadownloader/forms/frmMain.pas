@@ -972,11 +972,9 @@ begin
   FavoriteManager := TFavoriteManager.Create;
   FavoriteManager.OnUpdateFavorite := @UpdateVtFavorites;
   FavoriteManager.OnUpdateDownload := @UpdateVtDownload;
-  FavoriteManager.DLManager := DLManager;
 
   // download all / add to favorites
   SilentThreadManager := TSilentThreadManager.Create;
-  SilentThreadManager.DLManager := Self.DLManager;
 
   // ShowInformation
   mangaInfo := TMangaInfo.Create;
@@ -4637,6 +4635,7 @@ begin
     //connection
     OptionConnectionTimeout := seOptionConnectionTimeout.Value * 1000;
     OptionConnectionMaxRetry := seOptionMaxRetry.Value;
+    OptionMaxThreads := seOptionMaxThread.Value;
     DLManager.maxDLTasks := seOptionMaxParallel.Value;
     DLManager.maxDLThreadsPerTask := seOptionMaxThread.Value;
     DLManager.retryConnect := OptionConnectionMaxRetry;
