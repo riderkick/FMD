@@ -10,7 +10,7 @@ uses
   {$else}
   UTF8Process,
   {$endif}
-  Classes, SysUtils, Graphics, strutils, syncobjs, IniFiles,
+  Classes, SysUtils, Graphics, LazFileUtils, strutils, syncobjs, IniFiles,
   NaturalSortUnit;
 
 type
@@ -106,8 +106,8 @@ var
   slLines: TStringList;
 begin
   if FCSReload.TryEnter then try
-    if FileExists(FileName) then
-      if FileAge(FileName) <> FFileAge then
+    if FileExistsUTF8(FileName) then
+      if FileAgeUTF8(FileName) <> FFileAge then
       begin
         slLines := TStringList.Create;
         try
@@ -343,8 +343,8 @@ begin
     if fpic.Bitmap.Height < 100 then
       Exit;
     fpic.Bitmap.Height := fpic.Bitmap.Height - 90;// crop by 90px
-    if FileExists(Filename) then
-      DeleteFile(Filename);
+    if FileExistsUTF8(Filename) then
+      DeleteFileUTF8(Filename);
     fpic.SaveToFile(Filename);
     Result := True;
   finally

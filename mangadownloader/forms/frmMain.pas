@@ -1035,7 +1035,7 @@ begin
   btAddToFavorites.Enabled := False;
 
   // waiting gif
-  if FileExists(IMAGE_FOLDER + 'waiting.gif') then
+  if FileExistsUTF8(IMAGE_FOLDER + 'waiting.gif') then
   begin
     gifWaiting := TAnimatedGif.Create(IMAGE_FOLDER + 'waiting.gif');
     gifWaiting.EraseColor := Self.Color;

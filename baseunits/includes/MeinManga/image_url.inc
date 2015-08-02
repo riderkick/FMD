@@ -12,9 +12,9 @@
       Format('%.3d', [workCounter + 1]);
     // Check to see if a file with similar name was already exist. If so then we
     // skip the download process.
-    if (FileExists(s + '.jpg')) or
-      (FileExists(s + '.png')) or
-      (FileExists(s + '.gif')) then
+    if (FileExistsUTF8(s + '.jpg')) or
+      (FileExistsUTF8(s + '.png')) or
+      (FileExistsUTF8(s + '.gif')) then
     begin
       Result := True;
       Exit;

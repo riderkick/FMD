@@ -1722,7 +1722,7 @@ begin
 
   DownloadedChaptersListFile := TStringList.Create;
 
-  if FileExists(WORK_FOLDER + DOWNLOADEDCHAPTERS_FILE) then
+  if FileExistsUTF8(WORK_FOLDER + DOWNLOADEDCHAPTERS_FILE) then
     DownloadedChaptersListFile.LoadFromFile(WORK_FOLDER + DOWNLOADEDCHAPTERS_FILE);
 
   Containers := TFPList.Create;

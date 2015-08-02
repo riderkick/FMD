@@ -60,7 +60,7 @@ begin
   if f <> '' then
   begin
     if _LOG_ACTIVE and (not DirectoryExists(f)) then
-      ForceDirectories(f);
+      ForceDirectoriesUTF8(f);
     f := f + PathDelim + ExtractFileName(logfilename);
   end
   else
@@ -82,7 +82,7 @@ begin
     s := s + '[' + _LOG_SYMBOL[Integer(logType)+1] + ']';
     AssignFile(f, _FLOGFILE);
     try
-      if FileExists(_FLOGFILE) then
+      if FileExistsUTF8(_FLOGFILE) then
         Append(f)
       else
       begin

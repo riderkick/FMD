@@ -51,8 +51,8 @@ begin
   if AllowedToRun then
   begin
     {$IFDEF DEBUGLEAKS}
-    if FileExists(ChangeFileExt(Application.ExeName, '.trc')) then
-      DeleteFile(ChangeFileExt(Application.ExeName, '.trc'));
+    if FileExistsUTF8(ChangeFileExt(Application.ExeName, '.trc')) then
+      DeleteFileUTF8(ChangeFileExt(Application.ExeName, '.trc'));
     SetHeapTraceOutput(ChangeFileExt(Application.ExeName, '.trc'));
     {$ENDIF DEBUGLEAKS}
     Application.Title := 'Free Manga Downloader';

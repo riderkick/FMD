@@ -3273,7 +3273,7 @@ begin
         begin
           fpath := CleanAndExpandFilename(lpath + Name + prefix + ext);
           if FileExistsUTF8(fpath) then
-            DeleteFile(fpath);
+            DeleteFileUTF8(fpath);
           fstream := TFileStreamUTF8.Create(fpath, fmCreate);
           try
             HTTP.Document.SaveToStream(fstream);

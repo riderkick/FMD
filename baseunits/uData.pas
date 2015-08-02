@@ -1391,7 +1391,7 @@ begin
   summary.Clear;
   jdn.Clear;
 
-  if not FileExists(Filename + DATA_EXT) then
+  if not FileExistsUTF8(Filename + DATA_EXT) then
     Exit(False);
   l := TStringList.Create;
   try
@@ -1461,7 +1461,7 @@ begin
     begin
       Filename := DATA_FOLDER + websiteList.Strings[i];
       id := GetMangaSiteID(websiteList.Strings[i]);
-      if not FileExists(Filename + DATA_EXT) then
+      if not FileExistsUTF8(Filename + DATA_EXT) then
         continue;
       l.Clear;
       l.LoadFromFile(Filename + DATA_EXT);
