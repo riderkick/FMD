@@ -35,13 +35,13 @@ object MainForm: TMainForm
     Height = 508
     Top = 11
     Width = 614
-    ActivePage = tsOption
+    ActivePage = tsDownload
     Align = alClient
     BorderSpacing.Top = 3
     BorderSpacing.Right = 4
     BorderSpacing.Bottom = 3
     ParentFont = False
-    TabIndex = 4
+    TabIndex = 0
     TabOrder = 0
     OnChange = pcMainChange
     object tsDownload: TTabSheet
@@ -1829,10 +1829,10 @@ object MainForm: TMainForm
         Height = 403
         Top = 8
         Width = 587
-        ActivePage = tsUpdate
+        ActivePage = tsGeneral
         Anchors = [akTop, akLeft, akRight, akBottom]
         ParentFont = False
-        TabIndex = 4
+        TabIndex = 0
         TabOrder = 0
         object tsGeneral: TTabSheet
           Caption = 'General'
@@ -2705,7 +2705,7 @@ object MainForm: TMainForm
               Left = 16
               Height = 15
               Top = 8
-              Width = 165
+              Width = 158
               Caption = 'Show dialog confirmation for:'
               ParentColor = False
             end
