@@ -34,6 +34,7 @@ type
     btAddToFavorites: TBitBtn;
     btBrowse: TSpeedButton;
     btCancelFavoritesCheck: TSpeedButton;
+    btAbortCheckVersion: TSpeedButton;
     btOptionBrowse: TSpeedButton;
     btChecks: TSpeedButton;
     btDonate: TImage;
@@ -335,6 +336,7 @@ type
       var CanShow: Boolean; var HintInfo: THintInfo);
     procedure btAddToFavoritesClick(Sender: TObject);
     procedure btAbortUpdateListClick(Sender: TObject);
+    procedure btAbortCheckVersionClick(Sender: TObject);
     procedure btCancelFavoritesCheckClick(Sender: TObject);
     procedure btChecksClick(Sender: TObject);
     procedure btCheckVersionClick(Sender: TObject);
@@ -1868,6 +1870,11 @@ procedure TMainForm.btAbortUpdateListClick(Sender: TObject);
 begin
   if isUpdating then
     updateList.Terminate;
+end;
+
+procedure TMainForm.btAbortCheckVersionClick(Sender: TObject);
+begin
+  SubThread.AbortCheckUpdate;
 end;
 
 procedure TMainForm.btCancelFavoritesCheckClick(Sender: TObject);

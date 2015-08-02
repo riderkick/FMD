@@ -15,33 +15,37 @@ uses
 
 type
 
+   TSubThread = class;
+
   { TCheckUpdateThread }
 
   TCheckUpdateThread = class(TFMDThread)
   protected
+    FHTTP: THTTPSendThread;
     fNewVersionNumber,
     fUpdateURL,
     fChangelog,
     FBtnCheckCaption: String;
     procedure MainThreadUpdate;
-    procedure MainThreadSetButton;
+    procedure SyncStartUpdate;
+    procedure SyncEndUpdate;
     procedure Execute; override;
   public
-    CheckStatus: ^Boolean;
-    ThreadStatus: ^Boolean;
+    Manager: TSubThread;
+    constructor Create;
     destructor Destroy; override;
   end;
 
   { TSubThread }
   TSubThread = class(TFMDThread)
   protected
-    FCheckUpdateRunning: Boolean;
     FCheckUpdateThread: TCheckUpdateThread;
     procedure Execute; override;
   public
     CheckUpdate: Boolean;
     constructor Create;
     destructor Destroy; override;
+    procedure AbortCheckUpdate;
   end;
   
 resourcestring
@@ -87,25 +91,36 @@ begin
   end;
 end;
 
-procedure TCheckUpdateThread.MainThreadSetButton;
+procedure TCheckUpdateThread.SyncStartUpdate;
 begin
-  MainForm.btCheckVersion.Caption := FBtnCheckCaption;
+  with MainForm.btCheckVersion do
+  begin
+    MainForm.btAbortCheckVersion.Visible := True;
+    Width := Width - MainForm.btAbortCheckVersion.Width - 6;
+    Caption := RS_Checking;
+  end;
+end;
+
+procedure TCheckUpdateThread.SyncEndUpdate;
+begin
+  with MainForm.btCheckVersion do
+  begin
+    MainForm.btAbortCheckVersion.Visible := False;
+    Width := Width + MainForm.btAbortCheckVersion.Width + 6;
+    Caption := RS_BtnCheckUpdates;
+  end;
 end;
 
 procedure TCheckUpdateThread.Execute;
 var
   l: TStringList;
-  FHTTP: THTTPSendThread;
   updateFound: Boolean = False;
 begin
-  ThreadStatus^ := True;
+  Synchronize(SyncStartUpdate);
   l := TStringList.Create;
-  FHTTP := THTTPSendThread.Create(Self);
   try
     fNewVersionNumber := FMD_VERSION_NUMBER;
     fUpdateURL := '';
-    FBtnCheckCaption := RS_Checking;
-    Synchronize(MainThreadSetButton);
     if not Terminated and
       GetPage(FHTTP, TObject(l), UPDATE_URL + 'update', 3) then
       if l.Count > 1 then
@@ -123,21 +138,26 @@ begin
             GetPage(FHTTP, TObject(l), UPDATE_URL + 'changelog.txt', 3) then
             fChangelog := l.Text;
         end;
-      FBtnCheckCaption := RS_BtnCheckUpdates;
-      Synchronize(MainThreadSetButton);
     end;
   finally
-    FHTTP.Free;
     l.Free;
   end;
+  Synchronize(SyncEndUpdate);
   if not Terminated and updateFound and (not isDlgCounter) then
     Synchronize(MainThreadUpdate);
 end;
 
+constructor TCheckUpdateThread.Create;
+begin
+  inherited Create(True);
+  FHTTP := THTTPSendThread.Create(Self);
+end;
+
 destructor TCheckUpdateThread.Destroy;
 begin
-  CheckStatus^ := False;
-  ThreadStatus^ := False;
+  FHTTP.Free;
+  Manager.CheckUpdate := False;
+  Manager.FCheckUpdateThread := nil;
   inherited Destroy;
 end;
 
@@ -158,12 +178,11 @@ begin
 
     while not Terminated do
     begin
-      if CheckUpdate and (not FCheckUpdateRunning) and
+      if CheckUpdate and (FCheckUpdateThread = nil) and
         (not isDlgCounter) then
       begin
-        FCheckUpdateThread := TCheckUpdateThread.Create(True);
-        FCheckUpdateThread.CheckStatus := @CheckUpdate;
-        FCheckUpdateThread.ThreadStatus := @FCheckUpdateRunning;
+        FCheckUpdateThread := TCheckUpdateThread.Create;
+        FCheckUpdateThread.Manager := Self;
         FCheckUpdateThread.Start;
       end;
 
@@ -175,7 +194,7 @@ begin
       end;
       Sleep(500);
     end;
-    if FCheckUpdateRunning then
+    if Assigned(FCheckUpdateThread) then
     begin
       FCheckUpdateThread.Terminate;
       FCheckUpdateThread.WaitFor;
@@ -190,13 +209,21 @@ constructor TSubThread.Create;
 begin
   inherited Create(True);
   CheckUpdate := False;
-  FCheckUpdateRunning := CheckUpdate;
 end;
 
 destructor TSubThread.Destroy;
 begin
   MainForm.isSubthread := False;
   inherited Destroy;
+end;
+
+procedure TSubThread.AbortCheckUpdate;
+begin
+  if Assigned(FCheckUpdateThread) then
+  begin
+    FCheckUpdateThread.Terminate;
+    FCheckUpdateThread.WaitFor;
+  end;
 end;
 
 end.
