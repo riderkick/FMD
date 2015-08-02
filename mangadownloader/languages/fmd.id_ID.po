@@ -301,10 +301,10 @@ msgctxt "tmainform.btaddtofavorites.caption"
 msgid "Add to favorites"
 msgstr "Tambahkan ke kesukaan"
 
-#: tmainform.btcheckversion.caption
-msgctxt "tmainform.btcheckversion.caption"
-msgid "Check for new version"
-msgstr "Periksa versi baru"
+#: tmainform.btchecklatestversion.caption
+msgctxt "tmainform.btchecklatestversion.caption"
+msgid "Check for latest version"
+msgstr "Periksa versi terbaru"
 
 #: tmainform.btdownload.caption
 msgctxt "tmainform.btdownload.caption"
@@ -373,25 +373,32 @@ msgstr "<none>"
 msgid "Search only new manga"
 msgstr "Cari hanya komik baru"
 
-#: tmainform.cboptionautocheckfavstartup.caption
-msgid "Automatic check for new chapter at startup"
-msgstr "Otomatis periksa bab baru saat program dimulai"
-
-#: tmainform.cboptionautocheckupdate.caption
-msgid "Check for new version "
-msgstr "Periksa versi baru"
-
-#: tmainform.cboptionautodlfav.caption
+#: tmainform.cboptionautocheckfavdownload.caption
+msgctxt "tmainform.cboptionautocheckfavdownload.caption"
 msgid "Automatic download after finish checking"
 msgstr "Otomatis mengunduh setelah selesai memeriksa"
+
+#: tmainform.cboptionautocheckfavinterval.caption
+msgid "Auto check for new chapter in an interval"
+msgstr "Otomatis periksa bab baru dalam interval"
+
+#: tmainform.cboptionautocheckfavremovecompletedmanga.caption
+msgctxt "tmainform.cboptionautocheckfavremovecompletedmanga.caption"
+msgid "Automatic remove completed manga from Favorites"
+msgstr "Otomatis hapus komik yang sudah tamat dari daftar kesukaan"
+
+#: tmainform.cboptionautocheckfavstartup.caption
+msgid "Auto check for new chapter at startup"
+msgstr "Otomatis periksa bab baru saat program dimulai"
+
+#: tmainform.cboptionautochecklatestversion.caption
+msgctxt "tmainform.cboptionautochecklatestversion.caption"
+msgid "Auto check for latest version "
+msgstr "Periksa versi terbaru"
 
 #: tmainform.cboptionautonumberchapter.caption
 msgid "Auto number chapter"
 msgstr "Otomatis nomor bab"
-
-#: tmainform.cboptionautoremovecompletedmanga.caption
-msgid "Automatic remove completed manga from Favorites"
-msgstr "Otomatis hapus komik yang sudah tamat dari daftar kesukaan"
 
 #: tmainform.cboptionbatotoshowalllang.caption
 msgctxt "tmainform.cboptionbatotoshowalllang.caption"
@@ -967,8 +974,8 @@ msgstr "Judul"
 msgid "Mode: Show all (0)"
 msgstr "Mode: Tampilkan semua (0)"
 
-#: tmainform.lboptionautocheckminutes.caption
-msgctxt "tmainform.lboptionautocheckminutes.caption"
+#: tmainform.lboptionautocheckfavintervalminutes.caption
+msgctxt "tmainform.lboptionautocheckfavintervalminutes.caption"
 msgid "Auto check for new chapter every %d minutes"
 msgstr "Otomatis periksa bab baru setiap %d menit"
 

@@ -307,10 +307,11 @@ msgctxt "tmainform.btaddtofavorites.caption"
 msgid "Add to favorites"
 msgstr "Add to favorites"
 
-#: tmainform.btcheckversion.caption
-msgctxt "tmainform.btcheckversion.caption"
-msgid "Check for new version"
-msgstr "Check for new version"
+#: tmainform.btchecklatestversion.caption
+#| msgid "Check for new version"
+msgctxt "tmainform.btchecklatestversion.caption"
+msgid "Check for latest version"
+msgstr "Check for latest version"
 
 #: tmainform.btdownload.caption
 msgctxt "tmainform.btdownload.caption"
@@ -379,25 +380,34 @@ msgstr "<none>"
 msgid "Search only new manga"
 msgstr "Search only new manga"
 
-#: tmainform.cboptionautocheckfavstartup.caption
-msgid "Automatic check for new chapter at startup"
-msgstr "Automatic check for new chapter at startup"
-
-#: tmainform.cboptionautocheckupdate.caption
-msgid "Check for new version "
-msgstr "Check for new version "
-
-#: tmainform.cboptionautodlfav.caption
+#: tmainform.cboptionautocheckfavdownload.caption
+msgctxt "tmainform.cboptionautocheckfavdownload.caption"
 msgid "Automatic download after finish checking"
 msgstr "Automatic download after finish checking"
+
+#: tmainform.cboptionautocheckfavinterval.caption
+msgid "Auto check for new chapter in an interval"
+msgstr "Auto check for new chapter in an interval"
+
+#: tmainform.cboptionautocheckfavremovecompletedmanga.caption
+msgctxt "tmainform.cboptionautocheckfavremovecompletedmanga.caption"
+msgid "Automatic remove completed manga from Favorites"
+msgstr "Automatic remove completed manga from Favorites"
+
+#: tmainform.cboptionautocheckfavstartup.caption
+#| msgid "Automatic check for new chapter at startup"
+msgid "Auto check for new chapter at startup"
+msgstr "Auto check for new chapter at startup"
+
+#: tmainform.cboptionautochecklatestversion.caption
+#| msgid "Check for new version "
+msgctxt "tmainform.cboptionautochecklatestversion.caption"
+msgid "Auto check for latest version "
+msgstr "Auto check for latest version "
 
 #: tmainform.cboptionautonumberchapter.caption
 msgid "Auto number chapter"
 msgstr "Auto number chapter"
-
-#: tmainform.cboptionautoremovecompletedmanga.caption
-msgid "Automatic remove completed manga from Favorites"
-msgstr "Automatic remove completed manga from Favorites"
 
 #: tmainform.cboptionbatotoshowalllang.caption
 msgctxt "tmainform.cboptionbatotoshowalllang.caption"
@@ -978,8 +988,8 @@ msgstr "Title"
 msgid "Mode: Show all (0)"
 msgstr "Mode: Show all (0)"
 
-#: tmainform.lboptionautocheckminutes.caption
-msgctxt "tmainform.lboptionautocheckminutes.caption"
+#: tmainform.lboptionautocheckfavintervalminutes.caption
+msgctxt "tmainform.lboptionautocheckfavintervalminutes.caption"
 msgid "Auto check for new chapter every %d minutes"
 msgstr "Auto check for new chapter every %d minutes"
 

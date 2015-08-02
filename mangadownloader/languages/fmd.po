@@ -273,9 +273,9 @@ msgctxt "tmainform.btaddtofavorites.caption"
 msgid "Add to favorites"
 msgstr ""
 
-#: tmainform.btcheckversion.caption
-msgctxt "tmainform.btcheckversion.caption"
-msgid "Check for new version"
+#: tmainform.btchecklatestversion.caption
+msgctxt "TMAINFORM.BTCHECKLATESTVERSION.CAPTION"
+msgid "Check for latest version"
 msgstr ""
 
 #: tmainform.btdownload.caption
@@ -345,24 +345,31 @@ msgstr ""
 msgid "Search only new manga"
 msgstr ""
 
-#: tmainform.cboptionautocheckfavstartup.caption
-msgid "Automatic check for new chapter at startup"
-msgstr ""
-
-#: tmainform.cboptionautocheckupdate.caption
-msgid "Check for new version "
-msgstr ""
-
-#: tmainform.cboptionautodlfav.caption
+#: tmainform.cboptionautocheckfavdownload.caption
+msgctxt "TMAINFORM.CBOPTIONAUTOCHECKFAVDOWNLOAD.CAPTION"
 msgid "Automatic download after finish checking"
+msgstr ""
+
+#: tmainform.cboptionautocheckfavinterval.caption
+msgid "Auto check for new chapter in an interval"
+msgstr ""
+
+#: tmainform.cboptionautocheckfavremovecompletedmanga.caption
+msgctxt "TMAINFORM.CBOPTIONAUTOCHECKFAVREMOVECOMPLETEDMANGA.CAPTION"
+msgid "Automatic remove completed manga from Favorites"
+msgstr ""
+
+#: tmainform.cboptionautocheckfavstartup.caption
+msgid "Auto check for new chapter at startup"
+msgstr ""
+
+#: tmainform.cboptionautochecklatestversion.caption
+msgctxt "TMAINFORM.CBOPTIONAUTOCHECKLATESTVERSION.CAPTION"
+msgid "Auto check for latest version "
 msgstr ""
 
 #: tmainform.cboptionautonumberchapter.caption
 msgid "Auto number chapter"
-msgstr ""
-
-#: tmainform.cboptionautoremovecompletedmanga.caption
-msgid "Automatic remove completed manga from Favorites"
 msgstr ""
 
 #: tmainform.cboptionbatotoshowalllang.caption
@@ -928,8 +935,8 @@ msgstr ""
 msgid "Mode: Show all (0)"
 msgstr ""
 
-#: tmainform.lboptionautocheckminutes.caption
-msgctxt "tmainform.lboptionautocheckminutes.caption"
+#: tmainform.lboptionautocheckfavintervalminutes.caption
+msgctxt "TMAINFORM.LBOPTIONAUTOCHECKFAVINTERVALMINUTES.CAPTION"
 msgid "Auto check for new chapter every %d minutes"
 msgstr ""
 
