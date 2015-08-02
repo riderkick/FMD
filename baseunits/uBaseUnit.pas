@@ -665,7 +665,7 @@ var
   OptionAutoNumberChapterChecked: Boolean = True;
 
   OptionPDFQuality: Cardinal = 95;
-  OptionMaxRetry: Integer = 0;
+  OptionConnectionMaxRetry: Integer = 0;
   OptionConnectionTimeout: Integer = 15000;
   OptionUpdateListNoMangaInfo: Boolean = False;
   OptionUpdateListRemoveDuplicateLocalData: Boolean = False;

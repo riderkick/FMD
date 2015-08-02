@@ -4636,10 +4636,10 @@ begin
 
     //connection
     OptionConnectionTimeout := seOptionConnectionTimeout.Value * 1000;
-    OptionMaxRetry := seOptionMaxRetry.Value;
+    OptionConnectionMaxRetry := seOptionMaxRetry.Value;
     DLManager.maxDLTasks := seOptionMaxParallel.Value;
     DLManager.maxDLThreadsPerTask := seOptionMaxThread.Value;
-    DLManager.retryConnect := OptionMaxRetry;
+    DLManager.retryConnect := OptionConnectionMaxRetry;
     if cbOptionUseProxy.Checked then
     begin
       OptionProxyType := cbOptionProxyType.Text;
