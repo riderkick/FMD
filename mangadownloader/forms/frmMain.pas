@@ -1555,8 +1555,8 @@ var
   i: Integer;
   xNode: PVirtualNode;
 begin
-  if vtFavorites.SelectedCount = 0 then
-    Exit;
+  if vtFavorites.SelectedCount = 0 then Exit;
+  SilentThreadManager.BeginAdd;
   try
     xNode := vtFavorites.GetFirstSelected;
     for i := 0 to vtFavorites.SelectedCount - 1 do
@@ -1570,6 +1570,7 @@ begin
     on E: Exception do
       ExceptionHandler(Self, E);
   end;
+  SilentThreadManager.EndAdd;
 end;
 
 procedure TMainForm.miFavoritesStopCheckNewChapterClick(Sender: TObject);
@@ -2475,19 +2476,23 @@ var
   i: Cardinal;
   xNode: PVirtualNode;
 begin
-  if vtMangaList.SelectedCount = 0 then
-    Exit;
-  xNode := vtMangaList.GetFirstSelected;
-  for i := 0 to vtMangaList.SelectedCount - 1 do
-  begin
-    if vtMangaList.Selected[xNode] then
+  if vtMangaList.SelectedCount = 0 then Exit;
+  SilentThreadManager.BeginAdd;
+  try
+    xNode := vtMangaList.GetFirstSelected;
+    for i := 0 to vtMangaList.SelectedCount - 1 do
     begin
-      SilentThreadManager.Add(MD_AddToFavorites,
-        dataProcess.WebsiteName[xNode^.Index],
-        DataProcess.Value[xNode^.Index, DATA_PARAM_TITLE],
-        DataProcess.Value[xNode^.Index, DATA_PARAM_LINK]);
+      if vtMangaList.Selected[xNode] then
+      begin
+        SilentThreadManager.Add(MD_AddToFavorites,
+          dataProcess.WebsiteName[xNode^.Index],
+          DataProcess.Value[xNode^.Index, DATA_PARAM_TITLE],
+          DataProcess.Value[xNode^.Index, DATA_PARAM_LINK]);
+      end;
+      xNode := vtMangaList.GetNextSelected(xNode);
     end;
-    xNode := vtMangaList.GetNextSelected(xNode);
+  finally
+    SilentThreadManager.EndAdd;
   end;
 end;
 
@@ -2865,8 +2870,9 @@ var
   mResult: TModalResult;
   mBtns: TMsgDlgButtons;
 begin
-  if vtMangaList.SelectedCount = 0 then
-    Exit;
+  if vtMangaList.SelectedCount = 0 then Exit;
+
+  SilentThreadManager.BeginAdd;
   try
     YesAll := False;
     NoAll := False;
@@ -2928,6 +2934,7 @@ begin
     on E: Exception do
       ExceptionHandler(Self, E);
   end;
+  SilentThreadManager.EndAdd;
 end;
 
 procedure TMainForm.miMangaListViewInfosClick(Sender: TObject);
@@ -4210,6 +4217,7 @@ begin
     URls.Text := URL;
     if URls.Count > 0 then
     begin
+      SilentThreadManager.BeginAdd;
       with TRegExpr.Create do
       try
         Expression := REGEX_HOST;
@@ -4245,6 +4253,7 @@ begin
       finally
         Free;
       end;
+      SilentThreadManager.EndAdd;
     end;
   finally
     URls.Free;
