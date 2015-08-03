@@ -1278,8 +1278,8 @@ begin
     container.DownloadInfo.Website, -1);
   if (mt > 0) then
   begin
-    if mt > MAX_CONNECTIONLIMIT then
-      mt := MAX_CONNECTIONLIMIT;
+    if mt > MAX_CONNECTIONPERHOSTLIMIT then
+      mt := MAX_CONNECTIONPERHOSTLIMIT;
     currentMaxThread := mt;
   end
   else

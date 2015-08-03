@@ -14,7 +14,7 @@ const
   INFORMATION_NOT_FOUND = 2;
 
   MAX_TASKLIMIT = 8;
-  MAX_CONNECTIONLIMIT = 32;
+  MAX_CONNECTIONPERHOSTLIMIT = 32;
 
 type
 
@@ -177,7 +177,7 @@ end;
 constructor TModuleContainer.Create;
 begin
   MaxTaskLimit := MAX_TASKLIMIT;
-  MaxConnectionLimit := MAX_CONNECTIONLIMIT;
+  MaxConnectionLimit := MAX_CONNECTIONPERHOSTLIMIT;
   ActiveTaskCount := 0;
   ActiveConnectionCount := 0;
   SortedList := False;
@@ -469,7 +469,7 @@ end;
 
 function TWebsiteModules.GetMaxConnectionLimit(const ModuleId: Integer): Integer;
 begin
-  if (ModuleId < 0) or (ModuleId >= FModuleList.Count) then Exit(MAX_CONNECTIONLIMIT);
+  if (ModuleId < 0) or (ModuleId >= FModuleList.Count) then Exit(MAX_CONNECTIONPERHOSTLIMIT);
   Result := TModuleContainer(FModuleList[ModuleId]).MaxConnectionLimit;
 end;
 

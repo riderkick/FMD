@@ -1001,7 +1001,7 @@ begin
 
   // set connection limit
   seOptionMaxThread.MaxValue := MAX_TASKLIMIT;
-  seOptionMaxParallel.MaxValue := MAX_CONNECTIONLIMIT;
+  seOptionMaxParallel.MaxValue := MAX_CONNECTIONPERHOSTLIMIT;
 
   isStartup := False;
   CollectLanguagesFromFiles;
