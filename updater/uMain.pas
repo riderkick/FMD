@@ -286,7 +286,12 @@ procedure TDownloadThread.Execute;
         FHTTP.UserAgent := UA_CURL
       else
         FHTTP.UserAgent := DEFAULT_UA;
-      FHTTP.Timeout := 30000;
+      with FHTTP do
+      begin
+        Timeout := 10000;
+        Sock.ConnectionTimeout := Timeout;
+        Sock.SetTimeout(Timeout);
+      end;
 
       if ProxyType = 'HTTP' then
       begin
