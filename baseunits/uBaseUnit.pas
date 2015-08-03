@@ -2862,7 +2862,7 @@ begin
   HTTP.Protocol := '1.1';
   HTTP.KeepAlive := False;
   HTTP.UserAgent := DEFAULT_UA;
-  HTTP.MimeType := '';
+  HTTP.MimeType := 'text/html';
 
   if OptionHTTPUseGzip then
     HTTPHeader.Values['Accept-Encoding'] := ' gzip, deflate';
@@ -3056,7 +3056,6 @@ var
   HTTP: THTTPSend;
   counter: Integer;
   s: String;
-  //source    : TPicture;
   fstream: TFileStreamUTF8;
 
   procedure preTerminate;
@@ -3148,7 +3147,7 @@ begin
   HTTP.Protocol := '1.1';
   HTTP.KeepAlive := False;
   HTTP.UserAgent := DEFAULT_UA;
-  HTTP.MimeType := '';
+  HTTP.MimeType := 'text/html';
 
   //User-Agent
   if Trim(HTTPHeader.Values['User-Agent']) <> '' then
@@ -3235,6 +3234,7 @@ begin
       HTTP.Headers.Text := HTTPHeader.Text;
     end;
   end;
+  Initialize(header);
   HTTP.Document.Seek(0, soBeginning);
   HTTP.Document.Read(header[0], 4);
   if (header[0] = JPG_HEADER[0]) and
