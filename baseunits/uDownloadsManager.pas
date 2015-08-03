@@ -1287,13 +1287,7 @@ begin
     if Modules.MaxConnectionLimit[ModuleId] > 0 then
       currentMaxThread := Modules.MaxConnectionLimit[ModuleId]
     else
-    begin
-      case container.MangaSiteID of
-        EHENTAI_ID      : currentMaxThread := 2;
-        else
-          currentMaxThread := container.Manager.maxDLThreadsPerTask;
-      end;
-    end;
+      currentMaxThread := container.Manager.maxDLThreadsPerTask;
     if currentMaxThread > container.Manager.maxDLThreadsPerTask then
       currentMaxThread := container.Manager.maxDLThreadsPerTask;
   end;
