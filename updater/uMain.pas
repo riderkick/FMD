@@ -282,7 +282,10 @@ procedure TDownloadThread.Execute;
       FHTTP.Clear;
       FHTTP.Cookies.Clear;
       FHTTP.Protocol := '1.1';
-      FHTTP.UserAgent := UA_FIREFOX;
+      if isSFURL then
+        FHTTP.UserAgent := UA_CURL
+      else
+        FHTTP.UserAgent := DEFAULT_UA;
       FHTTP.Timeout := 30000;
 
       if ProxyType = 'HTTP' then
@@ -340,7 +343,6 @@ begin
     regx.ModifierI := True;
     if isSFURL then
     begin
-      FHTTP.UserAgent := UA_CURL;
       regx.Expression := '/download$';
       URL := Trim(regx.Replace(URL, '', False));
       //**parsing SF url
