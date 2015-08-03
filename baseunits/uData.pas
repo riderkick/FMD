@@ -1862,7 +1862,7 @@ begin
   if CreateInfo then
     mangaInfo := TMangaInfo.Create;
   isGetByUpdater := False;
-  ModuleId := -2;
+  ModuleId := -1;
 end;
 
 destructor TMangaInformation.Destroy;
@@ -2012,7 +2012,7 @@ begin
   else
   begin
     BROWSER_INVERT := False;
-    if ModuleId <> -1 then
+    if ModuleId < 0 then
       ModuleId := Modules.LocateModule(website);
     if Modules.ModuleAvailable(ModuleId, MMGetDirectoryPageNumber) then
       Result := Modules.GetDirectoryPageNumber(Self, Page, ModuleId)
@@ -2339,7 +2339,7 @@ begin
   if website <> '' then
     FHTTP.UserAgent := INIAdvanced.ReadString('UserAgent', website, '');
 
-  if ModuleId <> -1 then
+  if ModuleId < 0 then
     ModuleId := Modules.LocateModule(website);
   if Modules.ModuleAvailable(ModuleId, MMGetNameAndLink) then
     Result := Modules.GetNameAndLink(Self, names, links, URL, ModuleId)
@@ -2782,7 +2782,7 @@ begin
   mangaInfo.chapterName.Clear;
   mangaInfo.chapterLinks.Clear;
 
-  if ModuleId <> -1 then
+  if ModuleId < 0 then
     ModuleId := Modules.LocateModule(website);
   if Modules.ModuleAvailable(ModuleId, MMGetInfo) then
     Result := Modules.GetInfo(Self, URL, Reconnect, ModuleId)
