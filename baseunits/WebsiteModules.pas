@@ -44,6 +44,7 @@ type
     RootURL: String;
     MaxTaskLimit: Integer;
     MaxConnectionLimit: Integer;
+    ActiveTaskCount: Integer;
     ActiveConnectionCount: Integer;
     SortedList: Boolean;
     InformationAvailable: Boolean;
@@ -160,6 +161,7 @@ constructor TModuleContainer.Create;
 begin
   MaxTaskLimit := 0;
   MaxConnectionLimit := 0;
+  ActiveTaskCount := 0;
   ActiveConnectionCount := 0;
   SortedList := False;
   InformationAvailable := True;
