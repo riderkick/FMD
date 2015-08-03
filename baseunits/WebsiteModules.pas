@@ -40,8 +40,14 @@ type
     FTotalDirectory: Integer;
     procedure SetTotalDirectory(AValue: Integer);
   public
-    Website, RootURL: String;
-    SortedList, InformationAvailable, FavoriteAvailable: Boolean;
+    Website: String;
+    RootURL: String;
+    MaxTaskLimit: Integer;
+    MaxConnectionLimit: Integer;
+    ActiveConnectionCount: Integer;
+    SortedList: Boolean;
+    InformationAvailable: Boolean;
+    FavoriteAvailable: Boolean;
     TotalDirectoryPage: array of Integer;
     CurrentDirectoryIndex: Integer;
     OnGetDirectoryPageNumber: TOnGetDirectoryPageNumber;
@@ -57,13 +63,15 @@ type
 
   { TWebsiteModules }
 
-  TWebsiteModules = class(TObject)
+  TWebsiteModules = class
   private
     FCSModules: TRTLCriticalSection;
     FModuleList: TFPList;
-  protected
-    function GetModule(const Index: Integer): TModuleContainer;
+    function GetModule(const ModuleId: Integer): TModuleContainer;
     function GetCount: Integer;
+    function GetMaxTaskLimit(const ModuleId: Integer): Integer;
+    function GetMaxConnectionLimit(const ModuleId: Integer): Integer;
+    function GetActiveConnectionLimit(const ModuleId: Integer): Integer;
   public
     constructor Create;
     destructor Destroy; override;
@@ -111,8 +119,14 @@ type
     procedure LockModules;
     procedure UnlockModules;
 
-    property Module[const Index: Integer]: TModuleContainer read GetModule;
+    property Module[const ModuleId: Integer]: TModuleContainer read GetModule;
     property Count: Integer read GetCount;
+
+    property MaxTaskLimit[const ModuleId: Integer]: Integer read GetMaxTaskLimit;
+    property MaxConnectionLimit[const ModuleId: Integer]: Integer
+      read GetMaxConnectionLimit;
+    property ActiveConnectionCount[const ModuleId: Integer]: Integer
+      read GetActiveConnectionLimit;
   end;
 
 var
@@ -144,6 +158,9 @@ end;
 
 constructor TModuleContainer.Create;
 begin
+  MaxTaskLimit := 0;
+  MaxConnectionLimit := 0;
+  ActiveConnectionCount := 0;
   SortedList := False;
   InformationAvailable := True;
   FavoriteAvailable := True;
@@ -384,16 +401,33 @@ begin
   LeaveCriticalsection(FCSModules);
 end;
 
-function TWebsiteModules.GetModule(const Index: Integer): TModuleContainer;
+function TWebsiteModules.GetModule(const ModuleId: Integer): TModuleContainer;
 begin
-  if (Index < 0) or (Index >= FModuleList.Count) then
-    Exit(nil);
-  Result := TModuleContainer(FModuleList[Index]);
+  if (ModuleId < 0) or (ModuleId >= FModuleList.Count) then Exit(nil);
+  Result := TModuleContainer(FModuleList[ModuleId]);
 end;
 
 function TWebsiteModules.GetCount: Integer;
 begin
   Result := FModuleList.Count;
+end;
+
+function TWebsiteModules.GetMaxTaskLimit(const ModuleId: Integer): Integer;
+begin
+  if (ModuleId < 0) or (ModuleId >= FModuleList.Count) then Exit(0);
+  Result := TModuleContainer(FModuleList[ModuleId]).MaxTaskLimit;
+end;
+
+function TWebsiteModules.GetMaxConnectionLimit(const ModuleId: Integer): Integer;
+begin
+  if (ModuleId < 0) or (ModuleId >= FModuleList.Count) then Exit(0);
+  Result := TModuleContainer(FModuleList[ModuleId]).MaxConnectionLimit;
+end;
+
+function TWebsiteModules.GetActiveConnectionLimit(const ModuleId: Integer): Integer;
+begin
+  if (ModuleId < 0) or (ModuleId >= FModuleList.Count) then Exit(0);
+  Result := TModuleContainer(FModuleList[ModuleId]).ActiveConnectionCount;
 end;
 
 procedure doInitialize;
