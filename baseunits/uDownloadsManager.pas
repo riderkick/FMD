@@ -2170,18 +2170,18 @@ begin
   tcount := 0;
   for i := 0 to Containers.Count - 1 do
     with TTaskContainer(Containers[i]) do
-      if (tcount < maxDLTasks) and
-        (Status in [STATUS_DOWNLOAD, STATUS_PREPARE]) and
-        Modules.CanCreateTask(ModuleId) then
-      begin
-        ActiveTask(i);
-        Inc(tcount);
-      end
-      else
-      begin
-        Status := STATUS_WAIT;
-        DownloadInfo.Status := RS_Waiting;
-      end;
+      if Status in [STATUS_DOWNLOAD, STATUS_PREPARE] then
+        if (tcount < maxDLTasks) and
+          Modules.CanCreateTask(ModuleId) then
+        begin
+          ActiveTask(i);
+          Inc(tcount);
+        end
+        else
+        begin
+          Status := STATUS_WAIT;
+          DownloadInfo.Status := RS_Waiting;
+        end;
   //force to check task if all task loaded is STATUS_WAIT
   CheckAndActiveTask;
   MainForm.vtDownloadFilters;
@@ -2189,26 +2189,27 @@ end;
 
 procedure TDownloadManager.ActiveTask(const taskID: Integer);
 begin
-  if taskID < Containers.Count then
-  begin
-    if Assigned(TaskItem(taskID)) then
+  if taskID >= Containers.Count then Exit;
+  if Assigned(Containers[taskID]) then
+    with TTaskContainer(Containers[taskID]) do
     begin
-      if not((TaskItem(taskID).Status = STATUS_DOWNLOAD) or
-        (TaskItem(taskID).Status = STATUS_PREPARE) or
-        (TaskItem(taskID).Status = STATUS_FINISH)) then
+      if Status = STATUS_FINISH then Exit;
+      if ThreadState = False then
       begin
-        TaskItem(taskID).Status := STATUS_DOWNLOAD;
-        TaskItem(taskID).DownloadInfo.Status := RS_Downloading;
-        TaskItem(taskID).Thread := TTaskThread.Create;
-        TaskItem(taskID).Thread.container := TaskItem(taskID);
-        TaskItem(taskID).Thread.Start;
+        if not (Status in [STATUS_DOWNLOAD, STATUS_PREPARE]) then
+        begin
+          Status := STATUS_DOWNLOAD;
+          DownloadInfo.Status := RS_Downloading;
+        end;
+        Thread := TTaskThread.Create;
+        Thread.container := TaskItem(taskID);
+        Thread.Start;
         MainForm.vtDownload.Repaint;
         MainForm.vtDownloadFilters;
+        if not MainForm.itRefreshDLInfo.Enabled then
+          MainForm.itRefreshDLInfo.Enabled := True;
       end;
     end;
-    if not MainForm.itRefreshDLInfo.Enabled then
-      MainForm.itRefreshDLInfo.Enabled := True;
-  end;
 end;
 
 procedure TDownloadManager.StopTask(const taskID: Integer;
