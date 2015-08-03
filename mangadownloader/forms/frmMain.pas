@@ -1315,10 +1315,6 @@ end;
 
 procedure TMainForm.itRefreshDLInfoTimer(Sender: TObject);
 begin
-  //Writelog_D('BatotoMaxTaskLimit: '+IntToStr(Modules.MaxTaskLimit[2]));
-  Writelog_D('BatotoActiveTaskCount: '+IntToStr(Modules.ActiveTaskCOunt[2]));
-  //Writelog_D('BatotoMaxConnectionLimit: '+IntToStr(Modules.MaxConnectionLimit[2]));
-  //Writelog_D('BatotoActiveConnectionCount: '+IntToStr(Modules.ActiveConnectionCount[2]));
   if Assigned(DLManager) then
     TransferRateGraphAddItem(DLManager.TransferRate);
   vtDownload.Repaint;
