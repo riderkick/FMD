@@ -2862,25 +2862,21 @@ begin
   HTTPHeader.Values['Accept-Language'] := ' en-US,en;q=0.8';
   HTTP.Protocol := '1.1';
   HTTP.KeepAlive := False;
+  HTTP.UserAgent := DEFAULT_UA;
+  HTTP.MimeType := '';
 
   //User-Agent
   if Trim(HTTPHeader.Values['User-Agent']) <> '' then
   begin
     HTTP.UserAgent := Trim(HTTPHeader.Values['User-Agent']);
     HTTPHeader.Delete(HTTPHeader.IndexOfName('User-Agent'));
-  end
-  else
-  if Trim(HTTP.UserAgent) = '' then
-    HTTP.UserAgent := UA_FIREFOX;
+  end;
   //MimeType
   if Trim(HTTPHeader.Values['Content-Type']) <> '' then
   begin
     HTTP.MimeType := Trim(HTTPHeader.Values['Content-Type']);
     HTTPHeader.Delete(HTTPHeader.IndexOfName('Content-Type'));
-  end
-  else
-  if Trim(HTTP.MimeType) = '' then
-    HTTP.MimeType := '';
+  end;
 
   if isGZip then
   begin
@@ -3155,25 +3151,21 @@ begin
   HTTPHeader.Values['Accept-Language'] := ' en-US,en;q=0.8';
   HTTP.Protocol := '1.1';
   HTTP.KeepAlive := False;
+  HTTP.UserAgent := DEFAULT_UA;
+  HTTP.MimeType := '';
 
   //User-Agent
   if Trim(HTTPHeader.Values['User-Agent']) <> '' then
   begin
     HTTP.UserAgent := Trim(HTTPHeader.Values['User-Agent']);
     HTTPHeader.Delete(HTTPHeader.IndexOfName('User-Agent'));
-  end
-  else
-  if Trim(HTTP.UserAgent) = '' then
-    HTTP.UserAgent := UA_FIREFOX;
+  end;
   //MimeType
   if Trim(HTTPHeader.Values['Content-Type']) <> '' then
   begin
     HTTP.MimeType := Trim(HTTPHeader.Values['Content-Type']);
     HTTPHeader.Delete(HTTPHeader.IndexOfName('Content-Type'));
-  end
-  else
-  if Trim(HTTP.MimeType) = '' then
-    HTTP.MimeType := '';
+  end;
 
   if Pos('.imgur.com/', LowerCase(URL)) = 0 then
     if ((mangaSiteID >= 0) and (mangaSiteID <= High(WebsiteRoots))) then
