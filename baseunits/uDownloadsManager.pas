@@ -1281,8 +1281,8 @@ begin
     container.DownloadInfo.Website, -1);
   if (mt > 0) then
   begin
-    if (mt > 32) then
-      mt := 32;
+    if mt > MAX_CONNECTIONLIMIT then
+      mt := MAX_CONNECTIONLIMIT;
     currentMaxThread := mt;
   end
   else
@@ -2104,8 +2104,7 @@ end;
 procedure TDownloadManager.CheckAndActiveTask(const isCheckForFMDDo : Boolean;
   SenderThread : TThread);
 var
-  tcount: Integer;
-  i: Integer;
+  i, tcount: Integer;
 
   procedure ShowExitCounter;
   begin

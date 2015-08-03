@@ -13,6 +13,9 @@ const
   NET_PROBLEM = 1;
   INFORMATION_NOT_FOUND = 2;
 
+  MAX_TASKLIMIT = 8;
+  MAX_CONNECTIONLIMIT = 32;
+
 type
 
   TModuleContainer = class;
@@ -167,8 +170,8 @@ end;
 
 constructor TModuleContainer.Create;
 begin
-  MaxTaskLimit := 0;
-  MaxConnectionLimit := 0;
+  MaxTaskLimit := MAX_TASKLIMIT;
+  MaxConnectionLimit := MAX_CONNECTIONLIMIT;
   ActiveTaskCount := 0;
   ActiveConnectionCount := 0;
   SortedList := False;

@@ -447,8 +447,8 @@ begin
       mt := INIAdvanced.ReadInteger('UpdateListNumberOfThreads', website, -1);
       if mt > 0 then
       begin
-        if mt > 32 then //32 is max | be carefull, there's still memory leak problems
-          mt := 32;
+        if mt > MAX_CONNECTIONLIMIT then //32 is max | be carefull, there's still memory leak problems
+          mt := MAX_CONNECTIONLIMIT;
         numberOfThreads := mt;
       end
       else
