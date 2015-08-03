@@ -127,7 +127,7 @@ type
     property MaxTaskLimit[const ModuleId: Integer]: Integer read GetMaxTaskLimit;
     property MaxConnectionLimit[const ModuleId: Integer]: Integer
       read GetMaxConnectionLimit;
-    property ActiveTaskCOunt[const ModuleId: Integer]: Integer read GetActiveTaskCount;
+    property ActiveTaskCount[const ModuleId: Integer]: Integer read GetActiveTaskCount;
     property ActiveConnectionCount[const ModuleId: Integer]: Integer
       read GetActiveConnectionLimit;
     procedure IncActiveTaskCount(ModuleId: Integer);
