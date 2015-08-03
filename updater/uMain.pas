@@ -338,8 +338,8 @@ begin
   HTTPHeaders := TStringList.Create;
   regx := TRegExpr.Create;
   try
-    PrepareHTTP(FHTTP);
     HTTPHeaders.NameValueSeparator := ':';
+    PrepareHTTP(FHTTP);
     regx.ModifierI := True;
     if isSFURL then
     begin
