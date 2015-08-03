@@ -1283,10 +1283,15 @@ begin
   end
   else
   begin
-    case container.MangaSiteID of
-      EHENTAI_ID      : currentMaxThread := 2;
-      else
-        currentMaxThread := container.Manager.maxDLThreadsPerTask;
+    if Modules.MaxConnectionLimit[ModuleId] > 0 then
+      currentMaxThread := Modules.MaxConnectionLimit[ModuleId]
+    else
+    begin
+      case container.MangaSiteID of
+        EHENTAI_ID      : currentMaxThread := 2;
+        else
+          currentMaxThread := container.Manager.maxDLThreadsPerTask;
+      end;
     end;
     if currentMaxThread > container.Manager.maxDLThreadsPerTask then
       currentMaxThread := container.Manager.maxDLThreadsPerTask;
@@ -1307,8 +1312,16 @@ begin
       Exit;
     end;
 
-    while (not Terminated) and (threads.Count >= currentMaxThread) do
-      Sleep(SOCKHEARTBEATRATE);
+    if ModuleId > -1 then
+    begin
+      while (not Terminated) and (Modules.ActiveConnectionCount[ModuleId] >= currentMaxThread) do
+        Sleep(SOCKHEARTBEATRATE);
+    end
+    else
+    begin
+      while (not Terminated) and (threads.Count >= currentMaxThread) do
+        Sleep(SOCKHEARTBEATRATE);
+    end;
   end;
 
   if (not Terminated) and (threads.Count < currentMaxThread) then
