@@ -1326,9 +1326,9 @@ begin
 
   if (not Terminated) and (threads.Count < currentMaxThread) then
   begin
-    if currentMaxThread < Modules.ActiveConnectionCount[ModuleId] then Exit;
     CS_threads.Acquire;
     try
+      if Modules.ActiveConnectionCount[ModuleId] >= currentMaxThread then Exit;
       threads.Add(TDownloadThread.Create);
       with TDownloadThread(threads.Last) do begin
         manager := Self;
@@ -2174,8 +2174,8 @@ begin
         if (tcount < maxDLTasks) and
           Modules.CanCreateTask(ModuleId) then
         begin
-          ActiveTask(i);
           Inc(tcount);
+          ActiveTask(i);
         end
         else
         begin
@@ -2183,7 +2183,8 @@ begin
           DownloadInfo.Status := RS_Waiting;
         end;
   //force to check task if all task loaded is STATUS_WAIT
-  CheckAndActiveTask;
+  if tcount = 0 then
+    CheckAndActiveTask;
   MainForm.vtDownloadFilters;
 end;
 
@@ -2194,21 +2195,18 @@ begin
     with TTaskContainer(Containers[taskID]) do
     begin
       if Status = STATUS_FINISH then Exit;
-      if ThreadState = False then
+      if not (Status in [STATUS_DOWNLOAD, STATUS_PREPARE]) then
       begin
-        if not (Status in [STATUS_DOWNLOAD, STATUS_PREPARE]) then
-        begin
-          Status := STATUS_DOWNLOAD;
-          DownloadInfo.Status := RS_Downloading;
-        end;
-        Thread := TTaskThread.Create;
-        Thread.container := TaskItem(taskID);
-        Thread.Start;
-        MainForm.vtDownload.Repaint;
-        MainForm.vtDownloadFilters;
-        if not MainForm.itRefreshDLInfo.Enabled then
-          MainForm.itRefreshDLInfo.Enabled := True;
+        Status := STATUS_DOWNLOAD;
+        DownloadInfo.Status := RS_Downloading;
       end;
+      Thread := TTaskThread.Create;
+      Thread.container := TaskItem(taskID);
+      Thread.Start;
+      MainForm.vtDownload.Repaint;
+      MainForm.vtDownloadFilters;
+      if not MainForm.itRefreshDLInfo.Enabled then
+        MainForm.itRefreshDLInfo.Enabled := True;
     end;
 end;
 

@@ -1023,7 +1023,6 @@ begin
 
   pcMain.ActivePage := tsDownload;
 
-  DLManager.CheckAndActiveTaskAtStartup;
   TrayIcon.Show;
 
   // load some necessary options at startup
@@ -1344,6 +1343,7 @@ begin
       MainForm.FavoriteManager.isAuto := True;
       MainForm.FavoriteManager.CheckForNewChapter;
     end;
+    DLManager.CheckAndActiveTaskAtStartup;
   end;
 end;
 
@@ -4683,9 +4683,12 @@ begin
 
     //languages
     ApplyLanguage;
-  finally
-    DLManager.CheckAndActiveTask;
+  except
+    on E: Exception do
+      ExceptionHandle(Self, E);
   end;
+  if isStartup then
+    DLManager.CheckAndActiveTask;
 end;
 
 procedure TMainForm.LoadMangaOptions;
