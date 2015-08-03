@@ -457,13 +457,13 @@ end;
 
 function TWebsiteModules.GetMaxTaskLimit(const ModuleId: Integer): Integer;
 begin
-  if (ModuleId < 0) or (ModuleId >= FModuleList.Count) then Exit(0);
+  if (ModuleId < 0) or (ModuleId >= FModuleList.Count) then Exit(MAX_TASKLIMIT);
   Result := TModuleContainer(FModuleList[ModuleId]).MaxTaskLimit;
 end;
 
 function TWebsiteModules.GetMaxConnectionLimit(const ModuleId: Integer): Integer;
 begin
-  if (ModuleId < 0) or (ModuleId >= FModuleList.Count) then Exit(0);
+  if (ModuleId < 0) or (ModuleId >= FModuleList.Count) then Exit(MAX_CONNECTIONLIMIT);
   Result := TModuleContainer(FModuleList[ModuleId]).MaxConnectionLimit;
 end;
 
