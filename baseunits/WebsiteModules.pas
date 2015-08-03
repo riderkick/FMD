@@ -147,12 +147,18 @@ var
 procedure doInitialize;
 function AddModule: TModuleContainer;
 
+procedure LockCreateConnection;
+procedure UnlockCreateConnection;
+
 implementation
 
 {$I ModuleList.inc}
 
 const
   REGEX_HOST = '(?ig)^(\w+://)?([^/]*\.\w+)?(\:\d+)?(/?.*)$';
+
+var
+  CS_Connection: TRTLCriticalSection;
 
 { TModuleContainer }
 
@@ -492,11 +498,23 @@ begin
   Result := Modules.AddModule;
 end;
 
+procedure LockCreateConnection;
+begin
+  EnterCriticalsection(CS_Connection);
+end;
+
+procedure UnlockCreateConnection;
+begin
+  LeaveCriticalsection(CS_Connection);
+end;
+
 initialization
+  InitCriticalSection(CS_Connection);
   doInitialize;
 
 finalization
   if Assigned(Modules) then
     FreeAndNil(Modules);
+  DoneCriticalsection(CS_Connection);
 
 end.
