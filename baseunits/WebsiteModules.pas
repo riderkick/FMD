@@ -132,8 +132,10 @@ type
       read GetActiveConnectionLimit;
     procedure IncActiveTaskCount(ModuleId: Integer);
     procedure DecActiveTaskCount(ModuleId: Integer);
+    function CanCreateTask(ModuleId: Integer): Boolean;
     procedure IncActiveConnectionCount(ModuleId: Integer);
     procedure DecActiveConnectionCount(ModuleId: Integer);
+    function CanCreateConnection(ModuleId: Integer): Boolean;
   end;
 
 var
@@ -410,6 +412,14 @@ begin
     InterLockedDecrement(TModuleContainer(FModuleList[ModuleId]).ActiveTaskCount);
 end;
 
+function TWebsiteModules.CanCreateTask(ModuleId: Integer): Boolean;
+begin
+  Result := True;
+  if (ModuleId < 0) or (ModuleId >= FModuleList.Count) then Exit;
+  with TModuleContainer(FModuleList[ModuleId]) do
+    Result := ActiveTaskCount < MaxTaskLimit;
+end;
+
 procedure TWebsiteModules.IncActiveConnectionCount(ModuleId: Integer);
 begin
   if (ModuleId < 0) or (ModuleId >= FModuleList.Count) then Exit;
@@ -421,6 +431,14 @@ begin
   if (ModuleId < 0) or (ModuleId >= FModuleList.Count) then Exit;
   if TModuleContainer(FModuleList[ModuleId]).ActiveConnectionCount > 0 then
     InterLockedDecrement(TModuleContainer(FModuleList[ModuleId]).ActiveConnectionCount);
+end;
+
+function TWebsiteModules.CanCreateConnection(ModuleId: Integer): Boolean;
+begin
+  Result := True;
+  if (ModuleId < 0) or (ModuleId >= FModuleList.Count) then Exit;
+  with TModuleContainer(FModuleList[ModuleId]) do
+    Result := ActiveConnectionCount < MaxConnectionLimit;
 end;
 
 function TWebsiteModules.GetModule(const ModuleId: Integer): TModuleContainer;
