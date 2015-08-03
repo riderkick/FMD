@@ -100,7 +100,6 @@ type
     container: TTaskContainer;
     // download threads
     threads: TFPList;
-    CS_threads: TCriticalSection;
     constructor Create;
     destructor Destroy; override;
     property AnotherURL: String read FAnotherURL write FAnotherURL;
@@ -357,12 +356,12 @@ end;
 
 procedure TDownloadThread.DoTerminate;
 begin
-  manager.CS_threads.Acquire;
+  LockCreateConnection;
   try
     Modules.DecActiveConnectionCount(ModuleId);
     manager.threads.Remove(Self);
   finally
-    manager.CS_threads.Release;
+    UnlockCreateConnection;
   end;
   inherited DoTerminate;
 end;
@@ -1141,7 +1140,6 @@ end;
 constructor TTaskThread.Create;
 begin
   inherited Create(True);
-  CS_threads := TCriticalSection.Create;
   threads := TFPList.Create;
   ModuleId := -1;
   anotherURL := '';
@@ -1151,7 +1149,6 @@ end;
 destructor TTaskThread.Destroy;
 begin
   threads.Free;
-  CS_threads.Free;
   inherited Destroy;
 end;
 
@@ -1326,7 +1323,7 @@ begin
 
   if (not Terminated) and (threads.Count < currentMaxThread) then
   begin
-    CS_threads.Acquire;
+    LockCreateConnection;
     try
       if Modules.ActiveConnectionCount[ModuleId] >= currentMaxThread then Exit;
       threads.Add(TDownloadThread.Create);
@@ -1345,7 +1342,7 @@ begin
       if Flag = CS_GETPAGELINK then
         container.CurrentPageNumber := InterLockedIncrement(container.CurrentPageNumber);
     finally
-      CS_threads.Release;
+      UnlockCreateConnection;
     end;
   end;
 end;
@@ -1598,12 +1595,12 @@ var
 begin
   if threads.Count > 0 then
   begin
-    CS_threads.Acquire;
+    LockCreateConnection;
     try
       for i := 0 to threads.Count - 1 do
         TDownloadThread(threads[i]).Terminate;
     finally
-      CS_threads.Release;
+      UnlockCreateConnection;
     end;
     while threads.Count > 0 do
       Sleep(100);
