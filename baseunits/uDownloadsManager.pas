@@ -1317,19 +1317,16 @@ begin
     end;
 
     if ModuleId > -1 then
-    begin
       while (not Terminated) and (Modules.ActiveConnectionCount[ModuleId] >= currentMaxThread) do
-        Sleep(SOCKHEARTBEATRATE);
-    end
+        Sleep(SOCKHEARTBEATRATE)
     else
-    begin
       while (not Terminated) and (threads.Count >= currentMaxThread) do
         Sleep(SOCKHEARTBEATRATE);
-    end;
   end;
 
   if (not Terminated) and (threads.Count < currentMaxThread) then
   begin
+    if currentMaxThread < Modules.ActiveConnectionCount[ModuleId] then Exit;
     CS_threads.Acquire;
     try
       threads.Add(TDownloadThread.Create);
