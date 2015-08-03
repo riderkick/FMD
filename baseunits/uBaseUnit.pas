@@ -684,6 +684,8 @@ var
   OptionBatotoShowScanGroup: Boolean = True;
   OptionBatotoShowAllLang: Boolean = True;
 
+  OptionHTTPUseGzip: Boolean = True;
+
 type
   TArrayOfString = array of string;
 
@@ -2756,14 +2758,11 @@ function GetPage(const AHTTP: THTTPSend; var output: TObject; URL: String;
   // If AHTTP <> nil, we will use it as http sender. Otherwise we create a new
   // instance.
 var
-  //i: Cardinal;
   HTTP: THTTPSend;
   HTTPHeader: TStringList;
   counter: Integer;
   s: String;
   meth: String = 'GET';
-  //zstream: TGZFileStream;
-  isGZip: Boolean = True;
   mstream: TMemoryStream;
 
   procedure HTTPClear;
@@ -2865,6 +2864,9 @@ begin
   HTTP.UserAgent := DEFAULT_UA;
   HTTP.MimeType := '';
 
+  if OptionHTTPUseGzip then
+    HTTPHeader.Values['Accept-Encoding'] := ' gzip, deflate';
+
   //User-Agent
   if Trim(HTTPHeader.Values['User-Agent']) <> '' then
   begin
@@ -2876,12 +2878,6 @@ begin
   begin
     HTTP.MimeType := Trim(HTTPHeader.Values['Content-Type']);
     HTTPHeader.Delete(HTTPHeader.IndexOfName('Content-Type'));
-  end;
-
-  if isGZip then
-  begin
-    //HTTP.MimeType := 'application/x-www-form-urlencoded';
-    HTTPHeader.Values['Accept-Encoding'] := ' gzip, deflate';
   end;
 
   if Pos(WebsiteRoots[MEINMANGA_ID, 1], URL) > 0 then
