@@ -65,7 +65,6 @@ type
     // for fakku's doujinshi only
     directoryCount2, numberOfThreads, websitePtr: Integer;
     threads: TFPList;
-    CS_threads: TCriticalSection;
     SortedList, NoMangaInfo: Boolean;
     constructor Create;
     destructor Destroy; override;
@@ -112,6 +111,7 @@ var
   names, links: TStringList;
   i: Integer;
 begin
+  Modules.IncActiveConnectionCount(manager.ModuleId);
   try
     if checkStyle = CS_INFO then
       Info := TMangaInformation.Create(Self, True)
@@ -123,7 +123,7 @@ begin
     case CheckStyle of
       CS_DIRECTORY_COUNT:
       begin
-        if manager.ModuleId <> -1 then
+        if manager.ModuleId > -1 then
         begin
           with Modules.Module[manager.ModuleId] do
           for i := Low(TotalDirectoryPage) to High(TotalDirectoryPage) do
@@ -188,9 +188,7 @@ begin
             end;
           end
           else
-          begin
             Info.GetNameAndLink(names, links, manager.website, IntToStr(workPtr));
-          end;
 
           //if website has sorted list by latest added
           //we will stop at first found against current db
@@ -251,11 +249,12 @@ end;
 
 procedure TUpdateMangaThread.DoTerminate;
 begin
-  manager.CS_threads.Acquire;
+  LockCreateConnection;
   try
+    Modules.DecActiveConnectionCount(manager.ModuleId);
     manager.threads.Remove(Self);
   finally
-    manager.CS_threads.Release;
+    UnlockCreateConnection
   end;
   inherited DoTerminate;
 end;
@@ -326,7 +325,6 @@ end;
 constructor TUpdateMangaManagerThread.Create;
 begin
   inherited Create(True);
-  CS_threads := TCriticalSection.Create;
   CS_AddInfoToData := TCriticalSection.Create;
   CS_AddNamesAndLinks := TCriticalSection.Create;
   FreeOnTerminate := True;
@@ -355,7 +353,6 @@ begin
   MainForm.isUpdating := False;
   CS_AddInfoToData.Free;
   CS_AddNamesAndLinks.Free;
-  CS_threads.Free;
   inherited Destroy;
 end;
 
@@ -437,7 +434,6 @@ begin
   try
     while workPtr < limit do
     begin
-      MainForm.ulWorkPtr := workPtr + 1;
       if Terminated then
       begin
         TerminateThreads;
@@ -453,22 +449,18 @@ begin
       end
       else
       begin
-        mt := MainForm.options.ReadInteger('connections', 'NumberOfThreadsPerTask', 1);
-        case GetMangaSiteID(website) of
-          EATMANGA_ID   : numberOfThreads := 1;
-          SCANMANGA_ID  : numberOfThreads := 1;
-          EHENTAI_ID    : numberOfThreads := 3;
+        if Modules.MaxConnectionLimit[ModuleId] > 0 then
+          numberOfThreads := Modules.MaxConnectionLimit[ModuleId]
         else
-          numberOfThreads := mt;
-        end;
-        if numberOfThreads > mt then
-          numberOfThreads := mt;
+          numberOfThreads := OptionMaxThreads;
+        if numberOfThreads > OptionMaxThreads then
+          numberOfThreads := OptionMaxThreads;
       end;
       if numberOfThreads < 1 then
         numberOfThreads := 1;  //default
 
       // Finish searching for new series
-      if ((cs = CS_DIRECTORY_PAGE) or (cs = CS_DIRECTORY_PAGE_2)) and
+      if (cs in [CS_DIRECTORY_PAGE, CS_DIRECTORY_PAGE_2]) and
         (isFinishSearchingForNewManga) then
       begin
         WaitForThreads;
@@ -476,26 +468,24 @@ begin
         Break;
       end;
 
-      while threads.Count >= numberOfThreads do
-      begin
-        if Terminated then
-        begin
-          TerminateThreads;
-          Break;
-        end
-        else
-          Sleep(SOCKHEARTBEATRATE);   //waiting for empty slot / slowing down the circle
-      end;
+      if ModuleId > -1 then
+        while (not Terminated) and (Modules.ActiveConnectionCount[ModuleId] >= numberOfThreads) do
+          Sleep(SOCKHEARTBEATRATE)
+      else
+        while (not Terminated) and (threads.Count >= numberOfThreads) do
+          Sleep(SOCKHEARTBEATRATE);
 
       if Terminated then
       begin
         TerminateThreads;
         Break;
       end;
+
       if threads.Count < numberOfThreads then
       begin
-        CS_threads.Acquire;
+        LockCreateConnection;
         try
+          if Modules.ActiveConnectionCount[ModuleId] >= numberOfThreads then Exit;
           threads.Add(TUpdateMangaThread.Create);
           TUpdateMangaThread(threads.Last).checkStyle := cs;
           TUpdateMangaThread(threads.Last).manager := Self;
@@ -529,9 +519,10 @@ begin
                 links[workPtr - 1]]);
           end;
           FStatus := s;
+          MainForm.ulWorkPtr := workPtr + 1;
           Synchronize(MainThreadShowGetting);
         finally
-          CS_threads.Release;
+          UnlockCreateConnection;
         end;
       end;
     end;
@@ -559,12 +550,12 @@ procedure TUpdateMangaManagerThread.Execute;
     begin
       if Terminated then
       begin
-        CS_threads.Acquire;
+        LockCreateConnection;
         try
           for i := threads.Count - 1 downto 0 do
             TUpdateMangaThread(threads[i]).Terminate;
         finally
-          CS_threads.Release;
+          UnlockCreateConnection;
         end;
       end;
       Sleep(SOCKHEARTBEATRATE);
