@@ -112,6 +112,8 @@ type
   private
     FReadCount: Integer;
     CS_FReadCount: TCriticalSection;
+    FWebsite: String;
+    procedure SetWebsite(AValue: String);
   public
     // task thread of this container
     Thread: TTaskThread;
@@ -126,6 +128,7 @@ type
     DownCounter,
     PageNumber: Integer;
     MangaSiteID: Cardinal;
+    ModuleId: Integer;
     Status: TDownloadStatusType;
     ThreadState: Boolean;
     ChapterName,
@@ -137,6 +140,7 @@ type
     procedure IncReadCount(const ACount: Integer);
     constructor Create;
     destructor Destroy; override;
+    property Website: String read FWebsite write SetWebsite;
   end;
 
   { TDownloadManager }
@@ -196,8 +200,6 @@ type
     // Check and active waiting tasks.
     procedure CheckAndActiveTask(const isCheckForFMDDo: Boolean = False;
       {%H-}SenderThread: TThread = nil);
-    // Check if we can active another wating task or not.
-    function CanActiveTask(const pos : Integer) : Boolean;
     // Active a stopped task.
     procedure ActiveTask(const taskID : Integer);
     // Stop a download/wait task.
@@ -299,6 +301,7 @@ procedure TDownloadThread.Execute;
 var
   Reslt: Boolean = False;
 begin
+  Modules.IncActiveConnectionCount(ModuleId);
   try
     case checkStyle of
       // Get number of images.
@@ -356,6 +359,7 @@ procedure TDownloadThread.DoTerminate;
 begin
   manager.CS_threads.Acquire;
   try
+    Modules.DecActiveConnectionCount(ModuleId);
     manager.threads.Remove(Self);
   finally
     manager.CS_threads.Release;
@@ -1398,7 +1402,8 @@ var
   S, P: String;
 begin
   INIAdvanced.Reload;
-  ModuleId := Modules.LocateModule(container.DownloadInfo.Website);
+  ModuleId := container.ModuleId;
+  Modules.IncActiveTaskCount(ModuleId);
   container.ThreadState := True;
   container.DownloadInfo.TransferRate := '';
   try
@@ -1609,6 +1614,8 @@ begin
   Stop;
   container.DownloadInfo.TransferRate := '';
   container.ThreadState := False;
+  container.Thread := nil;
+  Modules.DecActiveTaskCount(ModuleId);
   inherited DoTerminate;
 end;
 
@@ -1642,6 +1649,14 @@ begin
 end;
 
 { TTaskContainer }
+
+procedure TTaskContainer.SetWebsite(AValue: String);
+begin
+  if FWebsite = AValue then Exit;
+  FWebsite := AValue;
+  MangaSiteID := GetMangaSiteID(AValue);
+  ModuleId := Modules.LocateModule(AValue);
+end;
 
 procedure TTaskContainer.IncReadCount(const ACount: Integer);
 begin
@@ -1853,7 +1868,7 @@ begin
         end;
         if DownloadInfo.dateTime > Now then DownloadInfo.dateTime := Now;
 
-        MangaSiteID := GetMangaSiteID(DownloadInfo.website);
+        Website := DownloadInfo.Website;
         ThreadState := False;
 
         //validating
@@ -2089,8 +2104,7 @@ end;
 procedure TDownloadManager.CheckAndActiveTask(const isCheckForFMDDo : Boolean;
   SenderThread : TThread);
 var
-  EHENTAI_Count: Integer = 0;
-  Count: Integer = 0;
+  tcount: Integer;
   i: Integer;
 
   procedure ShowExitCounter;
@@ -2110,141 +2124,71 @@ var
   end;
 
 begin
-  if Containers.Count = 0 then
-    Exit;
+  if Containers.Count = 0 then Exit;
   CS_DownloadManager_Task.Acquire;
   try
-    try
+    tcount := 0;
+    for i := 0 to Containers.Count - 1 do
+      if TTaskContainer(Containers[i]).ThreadState then
+        Inc(tcount);
+
+    if tcount < maxDLTasks then
       for i := 0 to Containers.Count - 1 do
-      begin
-        if (TaskItem(i).Status in [STATUS_DOWNLOAD, STATUS_PREPARE, STATUS_COMPRESS]) then
-        begin
-          Inc(Count);
-          if TaskItem(i).MangaSiteID = EHENTAI_ID then
-            Inc(EHENTAI_Count);
-        end;
-      end;
-
-      if Count < maxDLTasks then
-      begin
-        for i := 0 to Containers.Count - 1 do
-        begin
-          if Count >= maxDLTasks then
-            Break;
-          if (TaskItem(i).Status = STATUS_WAIT) then
-          begin
-            if (TaskItem(i).MangaSiteID = EHENTAI_ID) and
-              (EHENTAI_Count < EHENTAI_maxDLTask) then
-            begin
-              Inc(EHENTAI_Count);
-              Inc(Count);
-              ActiveTask(i);
-            end
-            else
+        with TTaskContainer(Containers[i]) do
+          if (tcount < maxDLTasks) and
+            (Status = STATUS_WAIT) and
+            Modules.CanCreateTask(ModuleId) then
             begin
               ActiveTask(i);
-              Inc(Count);
+              Inc(tcount);
             end;
-          end;
-        end;
-      end;
-
-      if Count > 0 then
-      begin
-        if not MainForm.itRefreshDLInfo.Enabled then
-          MainForm.itRefreshDLInfo.Enabled := True;
-      end
-      else
-        MainForm.itRefreshDLInfo.Enabled := False;
-
-      Self.Backup;
-      MainForm.vtDownloadFilters;
-
-      if (Count = 0) and (isCheckForFMDDo) then
-        ShowExitCounter;
-    except
-      on E: Exception do
-        MainForm.ExceptionHandler(Self, E);
-    end;
   finally
     CS_DownloadManager_Task.Release;
   end;
-end;
 
-function TDownloadManager.CanActiveTask(const pos: Integer): Boolean;
-var
-  EHENTAI_Count: Integer = 0;
-  i: Integer;
-  Count: Integer = 0;
-begin
-  Result := True;
-
-  if (Containers.Count = 0) or (pos >= Containers.Count) then
-    Exit(False);
-
-  for i := 0 to Containers.Count - 1 do
-  begin
-    if (TaskItem(i).Status in [STATUS_DOWNLOAD, STATUS_PREPARE, STATUS_COMPRESS]) and
-      (i <> pos) then
+  try
+    if tcount > 0 then
     begin
-      Inc(Count);
-      if (TaskItem(i).MangaSiteID = EHENTAI_ID) then
-        Inc(EHENTAI_Count);
-    end;
-  end;
+      if not MainForm.itRefreshDLInfo.Enabled then
+        MainForm.itRefreshDLInfo.Enabled := True;
+    end
+    else
+      MainForm.itRefreshDLInfo.Enabled := False;
 
-  if (TaskItem(pos).MangaSiteID = EHENTAI_ID) and
-    (EHENTAI_Count >= EHENTAI_maxDLTask) then
-    Result := False
-  else
-  if Count >= maxDLTasks then
-    Result := False;
+    Self.Backup;
+    MainForm.vtDownloadFilters;
+
+    if (Count = 0) and (isCheckForFMDDo) then
+      ShowExitCounter;
+  except
+    on E: Exception do
+      MainForm.ExceptionHandler(Self, E);
+  end;
 end;
 
 procedure TDownloadManager.CheckAndActiveTaskAtStartup;
-
-  procedure ActiveTaskAtStartup(const taskID: Integer);
-  begin
-    if taskID >= Containers.Count then
-      Exit;
-    if (not Assigned(TaskItem(taskID))) then
-      Exit;
-    if (TaskItem(taskID).Status = STATUS_WAIT) or
-      (TaskItem(taskID).Status = STATUS_STOP) or
-      (TaskItem(taskID).Status = STATUS_FINISH) then
-      Exit;
-    TaskItem(taskID).Status := STATUS_DOWNLOAD;
-    TaskItem(taskID).Thread := TTaskThread.Create;
-    TaskItem(taskID).Thread.container := TaskItem(taskID);
-    TaskItem(taskID).Thread.Start;
-  end;
-
 var
-  i: Integer;
-  Count: Integer = 0;
+  i, tcount: Integer;
 begin
-  if Containers.Count = 0 then
-    Exit;
+  if Containers.Count = 0 then Exit;
+  tcount := 0;
   for i := 0 to Containers.Count - 1 do
-  begin
-    if (TaskItem(i).Status = STATUS_DOWNLOAD) or
-      (TaskItem(i).Status = STATUS_PREPARE) then
-    begin
-      if Count < maxDLTasks then
+    with TTaskContainer(Containers[i]) do
+      if (tcount < maxDLTasks) and
+        (Status in [STATUS_DOWNLOAD, STATUS_PREPARE]) and
+        Modules.CanCreateTask(ModuleId) then
       begin
-        ActiveTaskAtStartup(i);
-        Inc(Count);
+        ActiveTask(i);
+        Inc(tcount);
       end
       else
       begin
-        TaskItem(i).Status := STATUS_WAIT;
-        TaskItem(i).DownloadInfo.Status := RS_Waiting;
+        Status := STATUS_WAIT;
+        DownloadInfo.Status := RS_Waiting;
       end;
-    end;
-  end;
-  MainForm.vtDownloadFilters;
   //force to check task if all task loaded is STATUS_WAIT
   CheckAndActiveTask;
+  MainForm.vtDownloadFilters;
 end;
 
 procedure TDownloadManager.ActiveTask(const taskID: Integer);

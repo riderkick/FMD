@@ -312,7 +312,7 @@ begin
     begin
       // add a new download task
       p := DLManager.AddTask;
-      DLManager.TaskItem(p).mangaSiteID := GetMangaSiteID(website);
+      DLManager.TaskItem(p).Website := website;
 
       if Trim(title) = '' then
         title := Info.mangaInfo.title;

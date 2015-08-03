@@ -1315,6 +1315,10 @@ end;
 
 procedure TMainForm.itRefreshDLInfoTimer(Sender: TObject);
 begin
+  //Writelog_D('BatotoMaxTaskLimit: '+IntToStr(Modules.MaxTaskLimit[2]));
+  Writelog_D('BatotoActiveTaskCount: '+IntToStr(Modules.ActiveTaskCOunt[2]));
+  //Writelog_D('BatotoMaxConnectionLimit: '+IntToStr(Modules.MaxConnectionLimit[2]));
+  //Writelog_D('BatotoActiveConnectionCount: '+IntToStr(Modules.ActiveConnectionCount[2]));
   if Assigned(DLManager) then
     TransferRateGraphAddItem(DLManager.TransferRate);
   vtDownload.Repaint;
@@ -1783,7 +1787,7 @@ begin
         pos := DLManager.AddTask;
         isCreate := True;
       end;
-      DLManager.TaskItem(pos).MangaSiteID := GetMangaSiteID(mangaInfo.website);
+      DLManager.TaskItem(pos).Website := mangaInfo.website;
       // generate folder name
       s := CustomRename(OptionCustomRename,
         mangaInfo.website,
@@ -2814,8 +2818,7 @@ begin
       DLManager.TaskItem(vtDownload.FocusedNode^.Index).Status := STATUS_WAIT;
       DLManager.TaskItem(vtDownload.FocusedNode^.Index).DownloadInfo.Status :=
         RS_Waiting;
-      if DLManager.CanActiveTask(vtDownload.FocusedNode^.Index) then
-        DLManager.ActiveTask(vtDownload.FocusedNode^.Index);
+      DLManager.CheckAndActiveTask;
       vtDownload.Repaint;
       DLManager.Backup;
     end;
@@ -2832,8 +2835,7 @@ begin
       begin
         DLManager.TaskItem(xNode^.Index).Status := STATUS_WAIT;
         DLManager.TaskItem(xNode^.Index).DownloadInfo.Status := RS_Waiting;
-        if DLManager.CanActiveTask(xNode^.Index) then
-          DLManager.ActiveTask(xNode^.Index);
+        DLManager.CheckAndActiveTask;
       end;
       xNode := vtDownload.GetNextSelected(xNode);
     end;

@@ -661,7 +661,7 @@ begin
                     with TTaskContainer(DLManager.Containers.Last) do begin
                       Manager := DLManager;
                       CurrentDownloadChapterPtr := 0;
-                      MangaSiteID := GetMangaSiteID(FavoriteInfo.Website);
+                      Website := Website;
                       with DownloadInfo do begin
                         Website := FavoriteInfo.Website;
                         Link := FavoriteInfo.Link;
