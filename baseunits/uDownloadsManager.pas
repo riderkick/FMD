@@ -2180,25 +2180,24 @@ end;
 
 procedure TDownloadManager.ActiveTask(const taskID: Integer);
 begin
-  if taskID >= Containers.Count then Exit;
-  if Assigned(Containers[taskID]) then
-    with TTaskContainer(Containers[taskID]) do
+  if (taskID < 0) or (taskID >= Containers.Count) then Exit;
+  with TTaskContainer(Containers[taskID]) do
+  begin
+    if Status = STATUS_FINISH then Exit;
+    if not (Status in [STATUS_DOWNLOAD, STATUS_PREPARE]) then
     begin
-      if Status = STATUS_FINISH then Exit;
-      if not (Status in [STATUS_DOWNLOAD, STATUS_PREPARE]) then
-      begin
-        Status := STATUS_DOWNLOAD;
-        DownloadInfo.Status := RS_Downloading;
-      end;
-      Modules.IncActiveTaskCount(ModuleId);
-      Thread := TTaskThread.Create;
-      Thread.container := TaskItem(taskID);
-      Thread.Start;
-      MainForm.vtDownload.Repaint;
-      MainForm.vtDownloadFilters;
-      if not MainForm.itRefreshDLInfo.Enabled then
-        MainForm.itRefreshDLInfo.Enabled := True;
+      Status := STATUS_DOWNLOAD;
+      DownloadInfo.Status := RS_Downloading;
     end;
+    Modules.IncActiveTaskCount(ModuleId);
+    Thread := TTaskThread.Create;
+    Thread.container := TaskItem(taskID);
+    Thread.Start;
+    MainForm.vtDownload.Repaint;
+    MainForm.vtDownloadFilters;
+    if not MainForm.itRefreshDLInfo.Enabled then
+      MainForm.itRefreshDLInfo.Enabled := True;
+  end;
 end;
 
 procedure TDownloadManager.StopTask(const taskID: Integer;
