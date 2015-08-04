@@ -286,10 +286,13 @@ var
   i: Integer;
 begin
   if Terminated then Exit;
+  if manager.FFavorites.Count = 0 then Exit;
   manager.CS_Favorites.Acquire;
   try
     statuscheck := 0;
     for i := 0 to manager.FFavorites.Count - 1 do
+    begin
+      if Terminated then Break;
       with TFavoriteContainer(manager.FFavorites[i]) do
         if Status = STATUS_CHECK then
         begin
@@ -316,6 +319,7 @@ begin
             UnlockCreateConnection;
           end;
         end;
+    end;
   finally
     manager.CS_Favorites.Release;
   end;
