@@ -16,13 +16,15 @@ interface
 
 uses
   Classes, SysUtils, uBaseUnit, uData, uFMDThread, uDownloadsManager,
-  syncobjs;
+  WebsiteModules;
 
 type
 
   TMetaDataType = (MD_DownloadAll, MD_AddToFavorites);
 
   TSilentThreadMetaData = class
+  private
+    ModuleId: Integer;
   public
     MetaDataType: TMetaDataType;
     Website, Title, URL, SaveTo: String;
@@ -41,8 +43,9 @@ type
     Freconnect: Cardinal;
     // manga information from main thread
     title, website, URL: String;
+    ModuleId: Integer;
     procedure MainThreadAfterChecking; virtual;
-    procedure MainThreadUpdateStatus;
+    procedure DoTerminate; override;
     procedure Execute; override;
   public
     Manager: TSilentThreadManager;
@@ -62,6 +65,7 @@ type
 
   TSilentThreadManagerThread = class(TFMDThread)
   protected
+    procedure Checkout;
     procedure Execute; override;
   public
     Manager: TSilentThreadManager;
@@ -76,13 +80,12 @@ type
     FManagerThread: TSilentThreadManagerThread;
     function GetItemCount: Integer;
     procedure StartManagerThread;
+    procedure Checkout(Index: Integer);
   public
-    CS_Threads: TCriticalSection;
     MetaData: TFPList;
     Threads: TFPList;
     procedure Add(AType: TMetaDataType; AWebsite, AManga, AURL: String;
       ASavePath: String = '');
-    procedure CheckOut;
     procedure StopAll(WaitFor: Boolean = True);
     procedure UpdateLoadStatus;
     procedure BeginAdd;
@@ -102,18 +105,48 @@ uses
 
 { TSilentThreadManagerThread }
 
+procedure TSilentThreadManagerThread.Checkout;
+var
+  i: Integer;
+begin
+  if Terminated then Exit;
+  if Manager.MetaData.Count = 0 then Exit;
+  with Manager do
+  begin
+    i := 0;
+    while i < MetaData.Count do
+    begin
+      if Terminated then Break;
+      with TSilentThreadMetaData(MetaData[i]) do
+        if (Threads.Count < OptionMaxThreads) and
+          Modules.CanCreateConnection(ModuleId) then
+        begin
+          LockCreateConnection;
+          try
+            if Modules.CanCreateConnection(ModuleId) then
+              Manager.Checkout(i);
+          finally
+            UnlockCreateConnection;
+          end;
+        end
+        else
+          Inc(i);
+    end;
+  end;
+end;
+
 procedure TSilentThreadManagerThread.Execute;
 begin
   if Manager = nil then Exit;
-  while (not Terminated) and (Manager.MetaData.Count > 0) do
-  begin
-    while Manager.Threads.Count >= OptionMaxThreads do
+  Self.Checkout;
+  with manager do
+    while (not Terminated) and (MetaData.Count > 0) do
     begin
-      if Terminated then Exit;
-      Sleep(500);
+      Sleep(SOCKHEARTBEATRATE);
+      while (not Terminated) and (Threads.Count >= OptionMaxThreads) do
+        Sleep(SOCKHEARTBEATRATE);
+      Self.Checkout;
     end;
-    Manager.CheckOut;
-  end;
 end;
 
 destructor TSilentThreadManagerThread.Destroy;
@@ -126,12 +159,7 @@ end;
 
 function TSilentThreadManager.GetItemCount: Integer;
 begin
-  CS_Threads.Acquire;
-  try
-    Result := MetaData.Count + Threads.Count;
-  finally
-    CS_Threads.Release;
-  end;
+  Result := MetaData.Count + Threads.Count;
 end;
 
 procedure TSilentThreadManager.StartManagerThread;
@@ -150,13 +178,8 @@ begin
   if not ((AType = MD_AddToFavorites) and
     (MainForm.FavoriteManager.IsMangaExist(AManga, AWebsite))) then
   begin
-    CS_Threads.Acquire;
-    try
-      MetaData.Add(TSilentThreadMetaData.Create(
-        AType, AWebsite, AManga, AURL, ASavePath));
-    finally
-      CS_Threads.Release;
-    end;
+    MetaData.Add(TSilentThreadMetaData.Create(
+      AType, AWebsite, AManga, AURL, ASavePath));
     if not FLockAdd then
     begin
       StartManagerThread;
@@ -165,31 +188,26 @@ begin
   end;
 end;
 
-procedure TSilentThreadManager.CheckOut;
+procedure TSilentThreadManager.Checkout(Index: Integer);
 begin
-  CS_Threads.Acquire;
-  try
-    INIAdvanced.Reload;
-    if MetaData.Count > 0 then
-    begin
-      case TSilentThreadMetaData(MetaData.First).MetaDataType of
-        MD_DownloadAll: Threads.Add(TSilentThread.Create);
-        MD_AddToFavorites: Threads.Add(TSilentAddToFavThread.Create);
-      end;
-      with TSilentThread(Threads.Last) do
-      begin
-        Manager := Self;
-        website := TSilentThreadMetaData(MetaData.First).Website;
-        title := TSilentThreadMetaData(MetaData.First).Title;
-        URL := TSilentThreadMetaData(MetaData.First).URL;
-        SavePath := TSilentThreadMetaData(MetaData.First).SaveTo;
-        Start;
-        TSilentThreadMetaData(MetaData.First).Free;
-        MetaData.Remove(MetaData.First);
-      end;
-    end;
-  finally
-    CS_Threads.Release;
+  if (Index < 0) or (Index >= MetaData.Count) then Exit;
+  INIAdvanced.Reload;
+  Modules.IncActiveConnectionCount(TSilentThreadMetaData(MetaData[Index]).ModuleId);
+  case TSilentThreadMetaData(MetaData[Index]).MetaDataType of
+    MD_DownloadAll: Threads.Add(TSilentThread.Create);
+    MD_AddToFavorites: Threads.Add(TSilentAddToFavThread.Create);
+  end;
+  with TSilentThread(Threads.Last) do
+  begin
+    Manager := Self;
+    website := TSilentThreadMetaData(MetaData[Index]).Website;
+    title := TSilentThreadMetaData(MetaData[Index]).Title;
+    URL := TSilentThreadMetaData(MetaData[Index]).URL;
+    SavePath := TSilentThreadMetaData(MetaData[Index]).SaveTo;
+    ModuleId := TSilentThreadMetaData(MetaData[Index]).ModuleId;
+    Start;
+    TSilentThreadMetaData(MetaData[Index]).Free;
+    MetaData.Delete(Index);
   end;
 end;
 
@@ -199,25 +217,20 @@ var
 begin
   if MetaData.Count or Threads.Count > 0 then
   begin
-    CS_Threads.Acquire;
-    try
-      while MetaData.Count > 0 do
-      begin
-        TSilentThreadMetaData(MetaData.Last).Free;
-        MetaData.Remove(MetaData.Last);
-      end;
-      if Assigned(FManagerThread) then
-      begin
-        FManagerThread.Terminate;
-        if WaitFor then
-          FManagerThread.WaitFor;
-      end;
-      if Threads.Count > 0 then
-        for i := 0 to Threads.Count - 1 do
-          TSilentThread(Threads[i]).Terminate;
-    finally
-      CS_Threads.Release;
+    while MetaData.Count > 0 do
+    begin
+      TSilentThreadMetaData(MetaData.Last).Free;
+      MetaData.Remove(MetaData.Last);
     end;
+    if Assigned(FManagerThread) then
+    begin
+      FManagerThread.Terminate;
+      if WaitFor then
+        FManagerThread.WaitFor;
+    end;
+    if Threads.Count > 0 then
+      for i := 0 to Threads.Count - 1 do
+        TSilentThread(Threads[i]).Terminate;
     if WaitFor then
       while ItemCount > 0 do
         Sleep(100);
@@ -251,7 +264,6 @@ end;
 constructor TSilentThreadManager.Create;
 begin
   inherited Create;
-  CS_Threads := TCriticalSection.Create;
   MetaData := TFPList.Create;
   Threads := TFPList.Create;
   FLockAdd := False;
@@ -263,25 +275,19 @@ var
 begin
   if ItemCount > 0 then
   begin
-    CS_Threads.Acquire;
-    try
-      while MetaData.Count > 0 do
-      begin
-        TSilentThreadMetaData(MetaData.Last).Free;
-        MetaData.Remove(MetaData.Last);
-      end;
-      if Threads.Count > 0 then
-        for i := 0 to Threads.Count - 1 do
-          TSilentThread(Threads[i]).Terminate;
-    finally
-      CS_Threads.Release;
+    while MetaData.Count > 0 do
+    begin
+      TSilentThreadMetaData(MetaData.Last).Free;
+      MetaData.Remove(MetaData.Last);
     end;
+    if Threads.Count > 0 then
+      for i := 0 to Threads.Count - 1 do
+        TSilentThread(Threads[i]).Terminate;
     while ItemCount > 0 do
       Sleep(100);
   end;
   MetaData.Free;
   Threads.Free;
-  CS_Threads.Free;
   inherited Destroy;
 end;
 
@@ -296,6 +302,7 @@ begin
   Title := AManga;
   URL := AURL;
   SaveTo := APath;
+  ModuleId := Modules.LocateModule(Website);
 end;
 
 { TSilentThread }
@@ -388,19 +395,24 @@ begin
   end;
 end;
 
-procedure TSilentThread.MainThreadUpdateStatus;
+procedure TSilentThread.DoTerminate;
 begin
-  if Manager.ItemCount > 0 then
-    MainForm.sbMain.Panels[1].Text :=
-      Format(RS_SilentThreadLoadStatus, [Manager.Threads.Count, Manager.ItemCount])
-  else
-    MainForm.sbMain.Panels[1].Text := '';
+  LockCreateConnection;
+  try
+    Modules.DecActiveConnectionCount(ModuleId);
+    Manager.Threads.Remove(Self);
+  finally
+    UnlockCreateConnection;
+  end;
+  Synchronize(Manager.UpdateLoadStatus);
+  inherited DoTerminate;
 end;
 
 procedure TSilentThread.Execute;
 begin
+  Synchronize(Manager.UpdateLoadStatus);
   try
-    Synchronize(MainThreadUpdateStatus);
+    Info.ModuleId := Self.ModuleId;
     Info.mangaInfo.title := title;
     if Info.GetInfoFromURL(website, URL, OptionConnectionMaxRetry) = NO_ERROR then
       if not Terminated then
@@ -409,13 +421,6 @@ begin
     on E: Exception do
       MainForm.ExceptionHandler(Self, E);
   end;
-  Manager.CS_Threads.Acquire;
-  try
-    Manager.Threads.Remove(Self);
-  finally
-    Manager.CS_Threads.Release;
-  end;
-  Synchronize(MainThreadUpdateStatus);
 end;
 
 constructor TSilentThread.Create;
@@ -424,6 +429,7 @@ begin
   Freconnect := 3;
   SavePath := '';
   Info := TMangaInformation.Create(Self);
+  ModuleId := -1;
 end;
 
 destructor TSilentThread.Destroy;
