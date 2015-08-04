@@ -365,6 +365,8 @@ begin
   begin
     Website := 'Batoto';
     RootURL := 'http://bato.to';
+    MaxTaskLimit := 2;
+    MaxConnectionLimit := 4;
     SortedList := True;
     InformationAvailable := True;
     TotalDirectory := Length(dirurls);
