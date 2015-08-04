@@ -1000,8 +1000,8 @@ begin
   GeneratetvDownloadFilterNodes;
 
   // set connection limit
-  seOptionMaxThread.MaxValue := MAX_TASKLIMIT;
-  seOptionMaxParallel.MaxValue := MAX_CONNECTIONPERHOSTLIMIT;
+  seOptionMaxParallel.MaxValue := MAX_TASKLIMIT;
+  seOptionMaxThread.MaxValue := MAX_CONNECTIONPERHOSTLIMIT;
 
   isStartup := False;
   CollectLanguagesFromFiles;
