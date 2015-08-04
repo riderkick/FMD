@@ -418,7 +418,7 @@ procedure TUpdateMangaManagerThread.GetInfo(const limit: Integer;
 
   procedure TerminateThreads;
   var
-    i: Cardinal;
+    i: Integer;
   begin
     if threads.Count > 0 then
       for i := threads.Count - 1 downto 0 do
@@ -481,7 +481,7 @@ begin
         Break;
       end;
 
-      if threads.Count < numberOfThreads then
+      if (not Terminated) and (threads.Count < numberOfThreads) then
       begin
         LockCreateConnection;
         try
@@ -530,6 +530,9 @@ begin
     on E: Exception do
       MainForm.ExceptionHandler(Self, E);
   end;
+  while (not Terminated) and (threads.Count > 0) do
+    Sleep(SOCKHEARTBEATRATE);
+  if Terminated then TerminateThreads;
 end;
 
 procedure TUpdateMangaManagerThread.DoTerminate;
@@ -541,27 +544,6 @@ begin
 end;
 
 procedure TUpdateMangaManagerThread.Execute;
-
-  procedure WaitForThreads;
-  var
-    i: Integer;
-  begin
-    while threads.Count > 0 do
-    begin
-      if Terminated then
-      begin
-        LockCreateConnection;
-        try
-          for i := threads.Count - 1 downto 0 do
-            TUpdateMangaThread(threads[i]).Terminate;
-        finally
-          UnlockCreateConnection;
-        end;
-      end;
-      Sleep(SOCKHEARTBEATRATE);
-    end;
-  end;
-
 var
   c, j, k: Integer;
   del: Boolean;
@@ -620,9 +602,7 @@ begin
         directoryCount2 := 0;
         workPtr := 0;
         GetInfo(1, CS_DIRECTORY_COUNT);
-        WaitForThreads;
-        if Terminated then
-          Break;
+        if Terminated then Break;
 
         //get names and links
         INIAdvanced.Reload;
@@ -637,7 +617,6 @@ begin
             isFinishSearchingForNewManga := False;
             CurrentDirectoryIndex := j;
             GetInfo(TotalDirectoryPage[j], CS_DIRECTORY_PAGE);
-            WaitForThreads;
           end;
         end
         else
@@ -655,9 +634,7 @@ begin
         end
         else
           GetInfo(directoryCount, CS_DIRECTORY_PAGE);
-        WaitForThreads;
-        if Terminated then
-          Break;
+        if Terminated then Break;
 
         FStatus := RS_UpdatingList + Format(' [%d/%d] %s',
           [websitePtr, websites.Count, website]) + ' | ' + RS_IndexingNewTitle + '...';
@@ -675,8 +652,7 @@ begin
           Synchronize(MainThreadShowGetting);
           while j < (links.Count - 1) do
           begin
-            if Terminated then
-              Break;
+            if Terminated then Break;
             Inc(c);
             if c > 499 then
             begin
@@ -689,8 +665,7 @@ begin
             if (j + 1) < links.Count then
               for k := j + 1 to links.Count - 1 do
               begin
-                if Terminated then
-                  Break;
+                if Terminated then Break;
                 if SameText(links[j], links[k]) then
                 begin
                   links.Delete(j);
@@ -716,8 +691,7 @@ begin
           Synchronize(MainThreadShowGetting);
           while j < links.Count do
           begin
-            if Terminated then
-              Break;
+            if Terminated then Break;
             Inc(c);
             if c > 999 then
             begin
@@ -765,7 +739,6 @@ begin
           end
           else
             GetInfo(links.Count, CS_INFO);
-          WaitForThreads;
           mainDataProcess.Commit;
 
           names.Clear;
