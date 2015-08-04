@@ -300,7 +300,6 @@ procedure TDownloadThread.Execute;
 var
   Reslt: Boolean = False;
 begin
-  Modules.IncActiveConnectionCount(ModuleId);
   try
     case checkStyle of
       // Get number of images.
@@ -1320,6 +1319,7 @@ begin
     LockCreateConnection;
     try
       if Modules.ActiveConnectionCount[ModuleId] >= currentMaxThread then Exit;
+      Modules.IncActiveConnectionCount(ModuleId);
       threads.Add(TDownloadThread.Create);
       with TDownloadThread(threads.Last) do begin
         manager := Self;
@@ -1391,7 +1391,6 @@ var
 begin
   INIAdvanced.Reload;
   ModuleId := container.ModuleId;
-  Modules.IncActiveTaskCount(ModuleId);
   container.ThreadState := True;
   container.DownloadInfo.TransferRate := '';
   try
@@ -2191,6 +2190,7 @@ begin
         Status := STATUS_DOWNLOAD;
         DownloadInfo.Status := RS_Downloading;
       end;
+      Modules.IncActiveTaskCount(ModuleId);
       Thread := TTaskThread.Create;
       Thread.container := TaskItem(taskID);
       Thread.Start;

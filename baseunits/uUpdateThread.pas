@@ -111,7 +111,6 @@ var
   names, links: TStringList;
   i: Integer;
 begin
-  Modules.IncActiveConnectionCount(manager.ModuleId);
   try
     if checkStyle = CS_INFO then
       Info := TMangaInformation.Create(Self, True)
@@ -466,6 +465,7 @@ begin
         LockCreateConnection;
         try
           if Modules.ActiveConnectionCount[ModuleId] >= numberOfThreads then Exit;
+          Modules.IncActiveConnectionCount(ModuleId);
           threads.Add(TUpdateMangaThread.Create);
           TUpdateMangaThread(threads.Last).checkStyle := cs;
           TUpdateMangaThread(threads.Last).manager := Self;
