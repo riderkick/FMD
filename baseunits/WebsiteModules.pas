@@ -176,8 +176,8 @@ end;
 
 constructor TModuleContainer.Create;
 begin
-  MaxTaskLimit := MAX_TASKLIMIT;
-  MaxConnectionLimit := MAX_CONNECTIONPERHOSTLIMIT;
+  MaxTaskLimit := 0;
+  MaxConnectionLimit := 0;
   ActiveTaskCount := 0;
   ActiveConnectionCount := 0;
   SortedList := False;
@@ -321,7 +321,7 @@ function TWebsiteModules.GetDirectoryPageNumber(var MangaInfo: TMangaInformation
   var Page: Integer; const ModuleId: Integer): Integer;
 begin
   Result := MODULE_NOT_FOUND;
- if (ModuleId < 0) or (ModuleId >= FModuleList.Count) then Exit;
+  if (ModuleId < 0) or (ModuleId >= FModuleList.Count) then Exit;
   if Assigned(TModuleContainer(FModuleList[ModuleId]).OnGetDirectoryPageNumber) then
     Result := TModuleContainer(FModuleList[ModuleId]).OnGetDirectoryPageNumber(
       MangaInfo, Page, TModuleContainer(FModuleList[ModuleId]));
@@ -334,11 +334,10 @@ begin
 end;
 
 function TWebsiteModules.GetNameAndLink(var MangaInfo: TMangaInformation;
-  const Names, Links: TStringList; const URL: String;
-  const ModuleId: Integer): Integer;
+  const Names, Links: TStringList; const URL: String; const ModuleId: Integer): Integer;
 begin
   Result := MODULE_NOT_FOUND;
- if (ModuleId < 0) or (ModuleId >= FModuleList.Count) then Exit;
+  if (ModuleId < 0) or (ModuleId >= FModuleList.Count) then Exit;
   if Assigned(TModuleContainer(FModuleList[ModuleId]).OnGetNameAndLink) then
     Result := TModuleContainer(FModuleList[ModuleId]).OnGetNameAndLink(
       MangaInfo, Names, Links, URL, TModuleContainer(FModuleList[ModuleId]));
@@ -411,14 +410,17 @@ end;
 procedure TWebsiteModules.IncActiveTaskCount(ModuleId: Integer);
 begin
   if (ModuleId < 0) or (ModuleId >= FModuleList.Count) then Exit;
-  InterLockedIncrement(TModuleContainer(FModuleList[ModuleId]).ActiveTaskCount);
+  with TModuleContainer(FModuleList[ModuleId]) do
+    if MaxTaskLimit > 0 then
+      InterLockedIncrement(ActiveTaskCount);
 end;
 
 procedure TWebsiteModules.DecActiveTaskCount(ModuleId: Integer);
 begin
   if (ModuleId < 0) or (ModuleId >= FModuleList.Count) then Exit;
-  if TModuleContainer(FModuleList[ModuleId]).ActiveTaskCount > 0 then
-    InterLockedDecrement(TModuleContainer(FModuleList[ModuleId]).ActiveTaskCount);
+  with TModuleContainer(FModuleList[ModuleId]) do
+    if ActiveTaskCount > 0 then
+      InterLockedDecrement(ActiveTaskCount);
 end;
 
 function TWebsiteModules.CanCreateTask(ModuleId: Integer): Boolean;
@@ -426,20 +428,24 @@ begin
   Result := True;
   if (ModuleId < 0) or (ModuleId >= FModuleList.Count) then Exit;
   with TModuleContainer(FModuleList[ModuleId]) do
-    Result := ActiveTaskCount < MaxTaskLimit;
+    if MaxTaskLimit > 0 then
+      Result := ActiveTaskCount < MaxTaskLimit;
 end;
 
 procedure TWebsiteModules.IncActiveConnectionCount(ModuleId: Integer);
 begin
   if (ModuleId < 0) or (ModuleId >= FModuleList.Count) then Exit;
-  InterLockedIncrement(TModuleContainer(FModuleList[ModuleId]).ActiveConnectionCount);
+  with TModuleContainer(FModuleList[ModuleId]) do
+    if MaxConnectionLimit > 0 then
+      InterLockedIncrement(ActiveConnectionCount);
 end;
 
 procedure TWebsiteModules.DecActiveConnectionCount(ModuleId: Integer);
 begin
   if (ModuleId < 0) or (ModuleId >= FModuleList.Count) then Exit;
-  if TModuleContainer(FModuleList[ModuleId]).ActiveConnectionCount > 0 then
-    InterLockedDecrement(TModuleContainer(FModuleList[ModuleId]).ActiveConnectionCount);
+  with TModuleContainer(FModuleList[ModuleId]) do
+    if ActiveConnectionCount > 0 then
+      InterLockedDecrement(ActiveConnectionCount);
 end;
 
 function TWebsiteModules.CanCreateConnection(ModuleId: Integer): Boolean;
@@ -447,7 +453,8 @@ begin
   Result := True;
   if (ModuleId < 0) or (ModuleId >= FModuleList.Count) then Exit;
   with TModuleContainer(FModuleList[ModuleId]) do
-    Result := ActiveConnectionCount < MaxConnectionLimit;
+    if MaxConnectionLimit > 0 then
+      Result := ActiveConnectionCount < MaxConnectionLimit;
 end;
 
 function TWebsiteModules.GetModule(const ModuleId: Integer): TModuleContainer;
