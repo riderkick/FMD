@@ -412,18 +412,8 @@ procedure TUpdateMangaManagerThread.GetInfo(const limit: Integer;
 
   procedure WaitForThreads;
   begin
-    while threads.Count > 0 do
+    while (not Terminated) and (threads.Count > 0) do
       Sleep(SOCKHEARTBEATRATE);
-  end;
-
-  procedure TerminateThreads;
-  var
-    i: Integer;
-  begin
-    if threads.Count > 0 then
-      for i := threads.Count - 1 downto 0 do
-        TUpdateMangaThread(threads[i]).Terminate;
-    WaitForThreads;
   end;
 
 var
@@ -434,11 +424,7 @@ begin
   try
     while workPtr < limit do
     begin
-      if Terminated then
-      begin
-        TerminateThreads;
-        Break;
-      end;
+      if Terminated then Exit;
 
       mt := INIAdvanced.ReadInteger('UpdateListNumberOfThreads', website, -1);
       if mt > 0 then
@@ -465,7 +451,7 @@ begin
       begin
         WaitForThreads;
         workPtr := limit;
-        Break;
+        Exit;
       end;
 
       if ModuleId > -1 then
@@ -474,12 +460,6 @@ begin
       else
         while (not Terminated) and (threads.Count >= numberOfThreads) do
           Sleep(SOCKHEARTBEATRATE);
-
-      if Terminated then
-      begin
-        TerminateThreads;
-        Break;
-      end;
 
       if (not Terminated) and (threads.Count < numberOfThreads) then
       begin
@@ -530,16 +510,25 @@ begin
     on E: Exception do
       MainForm.ExceptionHandler(Self, E);
   end;
-  while (not Terminated) and (threads.Count > 0) do
-    Sleep(SOCKHEARTBEATRATE);
-  if Terminated then TerminateThreads;
+  WaitForThreads;
 end;
 
 procedure TUpdateMangaManagerThread.DoTerminate;
+var
+  i: Integer;
 begin
-  Synchronize(MainThreadEndGetting);
-  while threads.Count > 0 do
-    Sleep(SOCKHEARTBEATRATE);
+  if threads.Count > 0 then
+  begin
+    LockCreateConnection;
+    try
+      for i := 0 to threads.Count - 1 do
+        TUpdateMangaThread(threads[i]).Terminate;
+    finally
+      UnlockCreateConnection;
+    end;
+    while threads.Count > 0 do
+      Sleep(SOCKHEARTBEATRATE);
+  end;
   inherited DoTerminate;
 end;
 
@@ -768,6 +757,7 @@ begin
     on E: Exception do
       MainForm.ExceptionHandler(Self, E);
   end;
+  Synchronize(MainThreadEndGetting);
 end;
 
 end.
