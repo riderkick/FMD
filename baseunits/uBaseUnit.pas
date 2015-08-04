@@ -805,8 +805,6 @@ type
   private
     FOwner: TFMDThread;
     procedure SetTimeout(AValue: Integer);
-  protected
-    procedure CloseConnection(SendTerminateTag: Boolean = True);
     procedure OnOwnerTerminate(Sender: TObject);
   public
     constructor Create(AOwner: TFMDThread);
@@ -3518,20 +3516,10 @@ begin
   Sock.SetTimeout(FTimeout);
 end;
 
-procedure THTTPSendThread.CloseConnection(SendTerminateTag: Boolean);
-begin
-  with Self.Sock do
-  begin
-    if SendTerminateTag then
-      Tag := 1;
-    StopFlag := True;
-    AbortSocket;
-  end;
-end;
-
 procedure THTTPSendThread.OnOwnerTerminate(Sender: TObject);
 begin
-  CloseConnection;
+  Sock.Tag := 1;
+  Sock.AbortSocket;
 end;
 
 constructor THTTPSendThread.Create(AOwner: TFMDThread);
