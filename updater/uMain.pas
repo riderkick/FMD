@@ -576,8 +576,8 @@ procedure TDownloadThread.OnThreadTerminate(Sender: TObject);
 begin
   with FHTTP.Sock do
   begin
-    StopFlag := True;
-    AbortSocket;
+    //StopFlag := True;
+    CloseSocket;
   end;
 end;
 
