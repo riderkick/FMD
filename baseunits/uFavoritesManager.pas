@@ -12,7 +12,7 @@ interface
 
 uses
   Classes, SysUtils, Dialogs, IniFiles, syncobjs, lazutf8classes, LazFileUtils,
-  uBaseUnit, uData, uDownloadsManager, uFMDThread, uMisc, USimpleLogger;
+  uBaseUnit, uData, uDownloadsManager, uFMDThread, uMisc, WebsiteModules;
 
 type
   TFavoriteManager = class;
@@ -25,6 +25,7 @@ type
   protected
     procedure SyncStatus;
     procedure Execute; override;
+    procedure DoTerminate; override;
   public
     workCounter: Cardinal;
     getInfo: TMangaInformation;
@@ -41,26 +42,28 @@ type
     FBtnCaption: String;
     statuscheck: Integer;
   protected
-    function GetThreadCount: Integer;
     procedure SyncStartChecking;
     procedure SyncFinishChecking;
     procedure SyncUpdateBtnCaption;
     procedure SyncShowResult;
+    procedure Checkout;
     procedure Execute; override;
   public
-    CS_Threads: TCriticalSection;
     manager: TFavoriteManager;
     threads: TFPList;
     procedure PushNewCheck;
     procedure UpdateBtnCaption(Cap: String);
     constructor Create;
     destructor Destroy; override;
-    property ThreadCount: Integer read GetThreadCount;
   end;
 
   { TFavoriteContainer }
 
   TFavoriteContainer = Class
+  private
+    FModuleId: Integer;
+    FWebsite: String;
+    procedure SetWebsite(AValue: String);
   public
     FavoriteInfo: TFavoriteInfo;
     MangaInfo: TMangaInfo;
@@ -69,7 +72,10 @@ type
     Thread: TFavoriteThread;
     Manager: TFavoriteManager;
     Status: TFavoriteStatusType;
+    constructor Create;
     destructor Destroy; override;
+    property ModuleId: Integer read FModuleId;
+    property Website: String read FWebsite write SetWebsite;
   end;
 
   { TFavoriteManager }
@@ -107,11 +113,11 @@ type
     function IsMangaExist(const title, website: String): Boolean;
     function IsMangaExistURL(const website, URL: String): Boolean;
     // Add new manga to the list
-    procedure Add(const title, currentChapter, downloadedChapterList,
-      website, saveTo, link: String);
+    procedure Add(const Atitle, AcurrentChapter, AdownloadedChapterList,
+      Awebsite, AsaveTo, Alink: String);
     // Merge manga information with a title that already exist in FFavorites
-    procedure AddMerge(const title, currentChapter, downloadedChapterList,
-      website, saveTo, link: String);
+    procedure AddMerge(const Atitle, AcurrentChapter, AdownloadedChapterList,
+      Awebsite, AsaveTo, Alink: String);
     // Merge a FFavorites.ini with another FFavorites.ini
     procedure MergeWith(const APath: String);
     // Remove a manga from FFavorites
@@ -156,6 +162,18 @@ uses
 
 { TFavoriteContainer }
 
+procedure TFavoriteContainer.SetWebsite(AValue: String);
+begin
+  if FWebsite = AValue then Exit;
+  FWebsite := AValue;
+  FModuleId := Modules.LocateModule(FavoriteInfo.Website);
+end;
+
+constructor TFavoriteContainer.Create;
+begin
+  FModuleId := -1;
+end;
+
 destructor TFavoriteContainer.Destroy;
 begin
   if Assigned(Thread) then
@@ -184,6 +202,7 @@ end;
 procedure TFavoriteThread.Execute;
 begin
   if (container.FavoriteInfo.Link) = '' then Exit;
+  //Modules.IncActiveConnectionCount(container.ModuleId);
   try
     Synchronize(SyncStatus);
     getInfo.mangaInfo.title := container.FavoriteInfo.Title;
@@ -196,6 +215,24 @@ begin
     on E: Exception do
       MainForm.ExceptionHandler(Self, E);
   end;
+  if Self.Terminated then
+    container.Status := STATUS_IDLE
+  else
+    container.Status := STATUS_CHECKED;
+  Synchronize(SyncStatus);
+end;
+
+procedure TFavoriteThread.DoTerminate;
+begin
+  LockCreateConnection;
+  try
+    Modules.DecActiveConnectionCount(container.ModuleId);
+    container.Thread := nil;
+    task.threads.Remove(Self);
+  finally
+    UnlockCreateConnection;
+  end;
+  inherited DoTerminate;
 end;
 
 constructor TFavoriteThread.Create;
@@ -207,33 +244,11 @@ end;
 
 destructor TFavoriteThread.Destroy;
 begin
-  if Self.Terminated then
-    container.Status := STATUS_IDLE
-  else
-    container.Status := STATUS_CHECKED;
-  task.CS_Threads.Acquire;
-  try
-    container.Thread := nil;
-    task.threads.Remove(Self);
-    Synchronize(SyncStatus);
-  finally
-    task.CS_Threads.Release;
-  end;
   getInfo.Free;
   inherited Destroy;
 end;
 
 { TFavoriteTask }
-
-function TFavoriteTask.GetThreadCount: Integer;
-begin
-  CS_Threads.Acquire;
-  try
-    Result := threads.Count;
-  finally
-    CS_Threads.Release;
-  end;
-end;
 
 procedure TFavoriteTask.SyncStartChecking;
 begin
@@ -266,76 +281,80 @@ begin
   manager.ShowResult;
 end;
 
-procedure TFavoriteTask.Execute;
+procedure TFavoriteTask.Checkout;
 var
   i: Integer;
-
-  procedure CheckOut;
-  var
-    j: Integer;
-    started: Boolean;
-  begin
-    manager.CS_Favorites.Acquire;
-    try
-      statuscheck := 0;
-      started := False;
-      for j := 0 to manager.FFavorites.Count-1 do
-      begin
-        with TFavoriteContainer(manager.FFavorites[j]) do
+begin
+  if Terminated then Exit;
+  manager.CS_Favorites.Acquire;
+  try
+    statuscheck := 0;
+    for i := 0 to manager.FFavorites.Count - 1 do
+      with TFavoriteContainer(manager.FFavorites[i]) do
+        if Status = STATUS_CHECK then
         begin
-          if (Status = STATUS_CHECK) and
-            (Trim(FavoriteInfo.Link) <> '') then
-          begin
-            if not started then
+          LockCreateConnection;
+          try
+            if (threads.Count < OptionMaxThreads) and
+              Modules.CanCreateConnection(ModuleId) then
             begin
-              CS_Threads.Acquire;
-              try
-                if Thread = nil then
-                begin
-                  Status := STATUS_CHECKING;
-                  Thread := TFavoriteThread.Create;
-                  Thread.task := Self;
-                  Thread.container := manager.FavoriteItem(j);
-                  Thread.workCounter := j;
-                  threads.Add(Thread);
-                  Thread.Start;
-                end;
-              finally
-                CS_Threads.Release;
+              Modules.IncActiveConnectionCount(ModuleId);
+              Thread := TFavoriteThread.Create;
+              threads.Add(Thread);
+              Status := STATUS_CHECKING;
+              with thread do
+              begin
+                task := Self;
+                container := manager.FavoriteItem(i);
+                workCounter := i;
+                Start;
               end;
-              started := True;
-            end;
-            Inc(statuscheck);
+            end
+            else
+              Inc(statuscheck);
+          finally
+            UnlockCreateConnection;
           end;
         end;
-      end;
-    finally
-      manager.CS_Favorites.Release;
-    end;
+  finally
+    manager.CS_Favorites.Release;
   end;
+end;
+
+procedure TFavoriteTask.Execute;
+var
+  i, cthread: Integer;
 begin
   manager.isRunning := True;
   Synchronize(SyncStartChecking);
   try
-    CheckOut;
-    while statuscheck > 0 do
+    Checkout;
+    while (not Terminated) and (statuscheck > 0) do
     begin
+      Sleep(SOCKHEARTBEATRATE);
+      // if current thread count > max threads allowed we wait until thread count decreased
       while (not Terminated) and (threads.Count >= OptionMaxThreads) do
         Sleep(SOCKHEARTBEATRATE);
-      if Terminated then Break;
-      CheckOut;
+      Checkout;
+      // if there is concurent connection limit applied and no more possible item to check
+      // we will wait until thread count decresed
+      cthread := threads.Count;
+      while (not Terminated) and (threads.Count > 0) and (threads.Count = cthread) do
+        Sleep(SOCKHEARTBEATRATE);
+      // if there is no more item need to be checked, but thread count still > 0 we will wait for it
+      // we will also wait if there is new item pushed, so we will check it after it
       while (not Terminated) and (statuscheck = 0) and (threads.Count > 0) do
         Sleep(SOCKHEARTBEATRATE);
     end;
 
-    if Terminated and (ThreadCount > 0) then
+    if Terminated and (threads.Count > 0) then
     begin
-      CS_Threads.Acquire;
+      LockCreateConnection;
       try
-        for i := 0 to ThreadCount - 1 do
+        for i := 0 to threads.Count - 1 do
           TFavoriteThread(threads[i]).Terminate;
       finally
-        CS_Threads.Release;
+        UnlockCreateConnection;
       end;
       while threads.Count > 0 do
          Sleep(100);
@@ -372,7 +391,6 @@ end;
 constructor TFavoriteTask.Create;
 begin
   inherited Create(True);
-  CS_Threads := TCriticalSection.Create;
   threads := TFPList.Create;
 end;
 
@@ -381,7 +399,6 @@ begin
   manager.taskthread := nil;
   manager.isRunning := False;
   threads.Free;
-  CS_Threads.Free;
   inherited Destroy;
 end;
 
@@ -452,8 +469,9 @@ begin
         CS_Favorites.Acquire;
         try
           for i := 0 to FFavorites.Count-1 do
-            if TFavoriteContainer(FFavorites[i]).Status = STATUS_IDLE then
-              TFavoriteContainer(FFavorites[i]).Status := STATUS_CHECK;
+             with TFavoriteContainer(FFavorites[i]) do
+               if (Status = STATUS_IDLE) and (Trim(FavoriteInfo.Link) <> '') then
+                 Status := STATUS_CHECK;
         finally
           CS_Favorites.Release;
         end;
@@ -768,21 +786,22 @@ begin
   Result := False;
 end;
 
-procedure TFavoriteManager.Add(
-  const title, currentChapter, downloadedChapterList, website, saveTo, link: String);
+procedure TFavoriteManager.Add(const Atitle, AcurrentChapter,
+  AdownloadedChapterList, Awebsite, AsaveTo, Alink: String);
 begin
-  if IsMangaExist(title, website) then Exit;
+  if IsMangaExist(Atitle, Awebsite) then Exit;
   CS_Favorites.Acquire;
   try
     FFavorites.Add(TFavoriteContainer.Create);
     with TFavoriteContainer(FFavorites.Last) do begin
       Manager := Self;
-      FavoriteInfo.Title := title;
-      FavoriteInfo.currentChapter := currentChapter;
-      FavoriteInfo.website := website;
-      FavoriteInfo.saveTo := saveTo;
-      FavoriteInfo.Link := Link;
-      FavoriteInfo.downloadedChapterList := downloadedChapterList;
+      FavoriteInfo.Title := Atitle;
+      FavoriteInfo.currentChapter := AcurrentChapter;
+      FavoriteInfo.website := Awebsite;
+      FavoriteInfo.saveTo := AsaveTo;
+      FavoriteInfo.Link := ALink;
+      FavoriteInfo.downloadedChapterList := AdownloadedChapterList;
+      Website := AWebsite;
       Status := STATUS_IDLE;
     end;
     if not isRunning then
@@ -795,22 +814,23 @@ begin
   end;
 end;
 
-procedure TFavoriteManager.AddMerge(
-  const title, currentChapter, downloadedChapterList, website, saveTo, link: String);
+procedure TFavoriteManager.AddMerge(const Atitle, AcurrentChapter,
+  AdownloadedChapterList, Awebsite, AsaveTo, Alink: String);
 begin
-  if IsMangaExist(title, website) then
+  if IsMangaExist(Atitle, Awebsite) then
     Exit;
   CS_Favorites.Acquire;
   try
     FFavorites.Add(TFavoriteContainer.Create);
     with TFavoriteContainer(FFavorites.Last) do begin
       Manager := Self;
-      FavoriteInfo.Title := title;
-      FavoriteInfo.currentChapter := currentChapter;
-      FavoriteInfo.website := website;
-      FavoriteInfo.saveTo := saveTo;
-      FavoriteInfo.Link := Link;
-      FavoriteInfo.downloadedChapterList := downloadedChapterList;
+      FavoriteInfo.Title := Atitle;
+      FavoriteInfo.currentChapter := AcurrentChapter;
+      FavoriteInfo.website := Awebsite;
+      FavoriteInfo.saveTo := AsaveTo;
+      FavoriteInfo.Link := Alink;
+      FavoriteInfo.downloadedChapterList := AdownloadedChapterList;
+      Website := Awebsite;
     end;
   except
     CS_Favorites.Release;
@@ -901,6 +921,7 @@ begin
         FavoriteInfo.SaveTo :=
           CorrectPathSys(favoritesFile.ReadString(IntToStr(i), 'SaveTo', ''));
         FavoriteInfo.link := favoritesFile.ReadString(IntToStr(i), 'Link', '');
+        Website := FavoriteInfo.Website;
         Status := STATUS_IDLE;
       end;
     end;
