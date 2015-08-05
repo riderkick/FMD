@@ -1258,7 +1258,6 @@ begin
       Format('%.3d', [workCounter + 1]),
       prefix,
       manager.container.Manager.retryConnect);
-
   if Terminated then Exit(False);
   if Result then
     manager.container.PageLinks[workCounter] := 'D';
@@ -1306,7 +1305,7 @@ begin
       Exit;
     end;
 
-    if ModuleId > -1 then
+    if Modules.MaxConnectionLimit[ModuleId] > 0 then
       while (not Terminated) and (Modules.ActiveConnectionCount[ModuleId] >= currentMaxThread) do
         Sleep(SOCKHEARTBEATRATE)
     else
