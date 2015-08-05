@@ -851,7 +851,7 @@ procedure RemoveHostFromURLsPair(Const URLs, Names : TStringList);
 procedure ParseJSONArray(const S, Path: String; var OutArray: TStringList);
 
 //HTML
-procedure ParseHTML(const aRaw: string; var aOutput: TStringList);
+procedure ParseHTML(const aRaw: string; aOutput: TStrings);
 
 //convert charset to utf8
 procedure ConvertCharsetToUTF8(var TheStrings: TStringList);
@@ -934,6 +934,8 @@ procedure CustomGenres(var output: TStringList; input: String);
 // deal with sourceforge URL.
 function SourceForgeURL(URL: String): String;
 // Get HTML source code from a URL.
+function GetPageAndParse(const AHTTP: THTTPSend; Output: TStrings; URL: String;
+  const Reconnect: Integer = 0): Integer;
 function GetPage(const AHTTP: THTTPSend; var output: TObject; URL: String;
   const Reconnect: Integer = 0): Boolean; overload;
 function GetPage(var output: TObject; URL: String; const Reconnect: Integer = 0): Boolean;
@@ -1531,7 +1533,7 @@ begin
   OutArray.EndUpdate;
 end;
 
-procedure ParseHTML(const aRaw: string; var aOutput: TStringList);
+procedure ParseHTML(const aRaw: string; aOutput: TStrings);
 begin
   if not Assigned(aOutput) then Exit;
   with TParseHTML.Create(aRaw) do try
@@ -2749,6 +2751,24 @@ begin
     end;
   end;
   Result := URL;
+end;
+
+function GetPageAndParse(const AHTTP: THTTPSend; Output: TStrings; URL: String;
+  const Reconnect: Integer): Integer;
+begin
+  if Output = nil then Exit(INFORMATION_NOT_FOUND);
+  if GetPage(AHTTP, TObject(Output), URL, Reconnect) then
+  begin
+    if Output.Count > 0 then
+    begin
+      Result := NO_ERROR;
+      ParseHTML(Output.Text, Output);
+    end
+    else
+      Result := INFORMATION_NOT_FOUND;
+  end
+  else
+    Result := NET_PROBLEM;
 end;
 
 function GetPage(const AHTTP: THTTPSend; var output: TObject; URL: String;
