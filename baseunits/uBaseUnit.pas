@@ -854,7 +854,8 @@ procedure ParseJSONArray(const S, Path: String; var OutArray: TStringList);
 procedure ParseHTML(const aRaw: string; aOutput: TStrings);
 
 //convert charset to utf8
-procedure ConvertCharsetToUTF8(var TheStrings: TStringList);
+function ConvertCharsetToUTF8(S: String): String; overload;
+procedure ConvertCharsetToUTF8(S: TStrings); overload;
 
 // StringUtils
 function QuotedStrd(const S: string): string; overload;
@@ -1544,45 +1545,55 @@ begin
   end;
 end;
 
-procedure ConvertCharsetToUTF8(var TheStrings: TStringList);
+function ConvertCharsetToUTF8(S: String): String;
+var
+  cs: String;
+begin
+  Result := S;
+  if Trim(S) = '' then Exit;
+  with TRegExpr.Create do
+    try
+      Expression := '(?ig)^.*<meta\s.*charset=([^''";\s]+).*$';
+      if Exec(S) then begin
+        cs := LowerCase(Replace(S, '$1', True));
+        if cs = 'gb2312' then cs := EncodingCP936
+        else if (cs = 'big5') or (cs = 'big5-hkscs') then cs := EncodingCP950;
+      end
+      else cs := GuessEncoding(S);
+    finally
+      Free;
+    end;
+  if cs <> '' then Result := ConvertEncoding(S, cs, 'utf8');
+end;
+
+procedure ConvertCharsetToUTF8(S: TStrings);
 var
   cs: String;
   i: Integer;
 begin
-  if TheStrings = nil then Exit;
-  if TheStrings.Count = 0 then Exit;
-  with TRegExpr.Create do
-  try
-    cs := '';
-    Expression := '(?ig)^.*<meta\s.*charset=([^''";\s]+).*$';
-    for i := 0 to TheStrings.Count - 1 do
-    begin
-      if Pos('<meta ', TheStrings[i]) <> 0 then
-      begin
-        if Exec(TheStrings[i]) then
-          cs := Replace(TheStrings[i], '$1', True);
-        if cs <> '' then
-        begin
-          cs := LowerCase(cs);
-          Break;
-        end;
+  if Trim(S.Text) = '' then Exit;
+  cs := '';
+  if S.Count > 1 then
+  begin
+    with TRegExpr.Create do
+      try
+        Expression := '(?ig)^.*<meta\s.*charset=([^''";\s]+).*$';
+        for i := 0 to S.Count - 1 do
+          if Pos('/head', S[i]) > 0 then Break
+          else if Pos('<meta', S[i]) > 0 then
+            if Exec(S[i]) then
+            begin
+              cs := LowerCase(Replace(S[i], '$1', True));
+              if cs = 'gb2312' then cs := EncodingCP936
+              else if (cs = 'big5') or (cs = 'big5-hkscs') then cs := EncodingCP950;
+              Break;
+            end;
+      finally
+        Free;
       end;
-    end;
-    if cs <> '' then
-    begin
-      if cs = 'gb2312' then
-        cs := EncodingCP936
-      else
-      if (cs = 'big5') or (cs = 'big5-hkscs') then
-        cs := EncodingCP950;
-    end
-    else
-      cs := GuessEncoding(TheStrings.Text);
-  finally
-    Free;
   end;
-  if cs <> '' then
-    TheStrings.Text := ConvertEncoding(TheStrings.Text, cs, 'utf8');
+  if cs = '' then cs := GuessEncoding(S.Text);
+  if cs <> '' then S.Text := ConvertEncoding(S.Text, cs, 'utf8');
 end;
 
 function QuotedStrd(const S: string): string;
