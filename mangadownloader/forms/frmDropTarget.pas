@@ -101,6 +101,11 @@ end;
 procedure TFormDropTarget.FormClose(Sender: TObject;
   var CloseAction: TCloseAction);
 begin
+  FAlphaBlendValue := AlphaBlendValue;
+  FWidth := Width;
+  FHeight := Height;
+  FLeft := Left;
+  FTop := Top;
   MainForm.SaveDropTargetFormInformation;
   CloseAction := caFree;
 end;

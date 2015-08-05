@@ -353,7 +353,6 @@ type
     procedure cbOptionDigitChapterChange(Sender: TObject);
     procedure cbOptionDigitVolumeChange(Sender: TObject);
     procedure cbSelectMangaChange(Sender: TObject);
-    procedure ckDropTargetChange(Sender: TObject);
     procedure clbChapterListBeforeCellPaint(Sender: TBaseVirtualTree;
       TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
       CellPaintMode: TVTCellPaintMode; CellRect: TRect; var ContentRect: TRect);
@@ -2175,23 +2174,6 @@ begin
     end
     else
       RunGetList;
-  end;
-end;
-
-procedure TMainForm.ckDropTargetChange(Sender: TObject);
-begin
-  if ckDropTarget.Checked then
-  begin
-    if FormDropTarget = nil then
-      Application.CreateForm(TFormDropTarget, FormDropTarget);
-    frmDropTarget.OnDropChekout := @AddSilentThread;
-    frmDropTarget.FAlphaBlendValue := tbDropTargetOpacity.Position;
-    FormDropTarget.Show;
-  end
-  else
-  begin
-    if Assigned(FormDropTarget) then
-      FormDropTarget.Close;
   end;
 end;
 
@@ -4635,6 +4617,19 @@ begin
 
     //view
     ToolBarDownload.Visible := cbOptionShowDownloadToolbar.Checked;
+    if ckDropTarget.Checked then
+    begin
+      if FormDropTarget = nil then
+        Application.CreateForm(TFormDropTarget, FormDropTarget);
+      frmDropTarget.OnDropChekout := @AddSilentThread;
+      frmDropTarget.FAlphaBlendValue := tbDropTargetOpacity.Position;
+      FormDropTarget.Show;
+    end
+    else
+    begin
+      if Assigned(FormDropTarget) then
+        FormDropTarget.Close;
+    end;
 
     //connection
     OptionConnectionTimeout := seOptionConnectionTimeout.Value * 1000;
@@ -4958,7 +4953,6 @@ begin
     WriteInteger('droptarget', 'Heigth', frmDropTarget.FHeight);
     WriteInteger('droptarget', 'Top', frmDropTarget.FTop);
     WriteInteger('droptarget', 'Left', frmDropTarget.FLeft);
-    UpdateFile;
   end;
 end;
 

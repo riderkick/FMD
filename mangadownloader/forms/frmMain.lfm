@@ -2023,7 +2023,6 @@ object MainForm: TMainForm
               Top = 9
               Width = 100
               Caption = 'Show Drop Box'
-              OnChange = ckDropTargetChange
               ParentFont = False
               TabOrder = 0
             end
