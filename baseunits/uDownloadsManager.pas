@@ -90,8 +90,8 @@ type
     procedure DoTerminate; override;
     procedure Compress;
     // show notification when download completed
-    procedure ShowBaloon;
-    procedure Stop(const check: Boolean = True);
+    procedure SyncShowBaloon;
+    procedure SyncStop;
   public
     //additional parameter
     httpCookies: String;
@@ -1190,7 +1190,7 @@ begin
   end;
 end;
 
-procedure TTaskThread.ShowBaloon;
+procedure TTaskThread.SyncShowBaloon;
 begin
   if container.Status = STATUS_FAILED then
   begin
@@ -1574,7 +1574,7 @@ begin
       container.DownloadInfo.Status := RS_Finish;
       container.DownloadInfo.Progress := '';
     end;
-    Synchronize(ShowBaloon);
+    Synchronize(SyncShowBaloon);
   except
     on E: Exception do
       MainForm.ExceptionHandler(Self, E);
@@ -1597,19 +1597,19 @@ begin
     while threads.Count > 0 do
       Sleep(100);
   end;
-  Stop;
   container.DownloadInfo.TransferRate := '';
   container.ThreadState := False;
   container.Thread := nil;
   Modules.DecActiveTaskCount(ModuleId);
+  Synchronize(SyncStop);
   inherited DoTerminate;
 end;
 
-procedure TTaskThread.Stop(const check: Boolean = True);
+procedure TTaskThread.SyncStop;
 begin
   if container.Status = STATUS_STOP then
     Exit;
-  if check and not (container.Manager.isReadyForExit) then
+  if not container.Manager.isReadyForExit then
   begin
     if (container.WorkCounter >= container.PageLinks.Count) and
       (container.CurrentDownloadChapterPtr >= container.ChapterLinks.Count)
@@ -1618,18 +1618,18 @@ begin
       container.Status := STATUS_FINISH;
       container.DownloadInfo.Status := RS_Finish;
       container.DownloadInfo.Progress := '';
-      container.Manager.CheckAndActiveTask(True, Self);
+      container.Manager.CheckAndActiveTask(True);
     end
     else
     if (container.Status in [STATUS_PROBLEM, STATUS_FAILED]) then
-      container.Manager.CheckAndActiveTask(True, Self)
+      container.Manager.CheckAndActiveTask(True)
     else
     begin
       container.Status := STATUS_STOP;
       container.DownloadInfo.Status :=
         Format('%s (%d/%d)', [RS_Stopped, container.CurrentDownloadChapterPtr +
         1, container.ChapterLinks.Count]);
-      container.Manager.CheckAndActiveTask(False, Self);
+      container.Manager.CheckAndActiveTask(False);
     end;
   end;
 end;
@@ -2206,7 +2206,6 @@ begin
   begin
     if TaskItem(taskID).Status in [STATUS_DOWNLOAD, STATUS_PREPARE, STATUS_WAIT] then
     begin
-      isReadyForExit := False;
       if TaskItem(taskID).Status = STATUS_WAIT then
       begin
         TaskItem(taskID).Status := STATUS_STOP;
@@ -2256,7 +2255,6 @@ var
 begin
   if Containers.Count > 0 then
   begin
-    isReadyForExit := False;
     for i := 0 to Containers.Count - 1 do
     begin
       if TaskItem(i).Status = STATUS_WAIT then
