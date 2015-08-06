@@ -35,4 +35,4 @@ Translations are stored inside "languages" folder with .po extension. In order t
 
 ---------------------------------
 
-Last update 25-05-2015
+Last update 06-08-2015
