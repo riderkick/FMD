@@ -2582,7 +2582,7 @@ var
   i: Cardinal;
   xNode: PVirtualNode;
 begin
-  if clbChapterList.RootNodeCount > 0 then
+  if clbChapterList.SelectedCount > 0 then
   begin
     xNode := clbChapterList.GetFirstSelected;
     for i := 0 to clbChapterList.SelectedCount - 1 do
