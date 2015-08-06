@@ -5,4 +5,5 @@ uses
   WPManga,
   MangaFox,
   Mangacan,
-  PecintaKomik;
+  PecintaKomik,
+  EHentai;
