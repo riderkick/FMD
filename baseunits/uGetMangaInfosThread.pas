@@ -34,6 +34,7 @@ type
     // Flush this thread, means that the result will not be shown.
     FIsFlushed: Boolean;
 
+    procedure DoTerminate; override;
     procedure Execute; override;
     procedure DoGetInfos;
 
@@ -54,7 +55,7 @@ type
 implementation
 
 uses
-  frmMain;
+  frmMain, WebsiteModules;
 
 procedure TGetMangaInfosThread.DoGetInfos;
 
@@ -67,6 +68,7 @@ procedure TGetMangaInfosThread.DoGetInfos;
     try
       FInfo.mangaInfo.website := Website;
       FInfo.mangaInfo.link := Link;
+      FInfo.ModuleId := Modules.LocateModule(Website);
       if (FMangaListPos >= 0) and
         (website = MainForm.cbSelectManga.Items[MainForm.cbSelectManga.ItemIndex]) then
       begin
@@ -86,6 +88,15 @@ procedure TGetMangaInfosThread.DoGetInfos;
       FInfo.isRemoveUnicode := MainForm.cbOptionPathConvert.Checked;
 
       infob := INFORMATION_NOT_FOUND;
+
+      //wait if there is concurrent connection limit
+      if Modules.MaxConnectionLimit[FInfo.ModuleId] > 0 then
+      begin
+        while not Modules.CanCreateConnection(FInfo.ModuleId) do
+          Sleep(SOCKHEARTBEATRATE);
+        Modules.IncActiveConnectionCount(FInfo.ModuleId);
+      end;
+
       infob := FInfo.GetInfoFromURL(Website, Link, 0);
 
       if Self.Terminated then Exit;
@@ -150,6 +161,12 @@ begin
     on E: Exception do
       MainForm.ExceptionHandler(Self, E);
   end;
+end;
+
+procedure TGetMangaInfosThread.DoTerminate;
+begin
+  Modules.DecActiveConnectionCount(FInfo.ModuleId);
+  inherited DoTerminate;
 end;
 
 procedure TGetMangaInfosThread.Execute;
