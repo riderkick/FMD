@@ -6,4 +6,5 @@ uses
   MangaFox,
   Mangacan,
   PecintaKomik,
-  EHentai;
+  EHentai,
+  Doujinmoeus;
