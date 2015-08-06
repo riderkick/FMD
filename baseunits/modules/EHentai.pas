@@ -164,8 +164,9 @@ begin
           info.summary := Source.Text
         else
         begin
-          ParseHTMLTree(Parser, Source.Text);
+          Parser := TTreeParser.Create;
           try
+            ParseHTMLTree(Parser, Source.Text);
             ScanParse;
           finally
             Parser.Free;
@@ -244,8 +245,9 @@ begin
       if Source.Count > 0 then
       begin
         Result := True;
-        ParseHTMLTree(Parser, Source.Text);
+        Parser := TTreeParser.Create;
         try
+          ParseHTMLTree(Parser, Source.Text);
           ScanParse;
         finally
           Parser.Free;
