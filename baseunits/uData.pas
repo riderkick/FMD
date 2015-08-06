@@ -1950,8 +1950,6 @@ var
 
   {$I includes/DM5/directory_page_number.inc}
 
-  {$I includes/EHentai/directory_page_number.inc}
-
   {$I includes/NineManga/directory_page_number.inc}
 
   {$I includes/JapanShin/directory_page_number.inc}
@@ -2082,9 +2080,6 @@ begin
       else
       if website = WebsiteRoots[PURURIN_ID, 0] then
         Result := GetPururinDirectoryPageNumber
-      else
-      if website = WebsiteRoots[EHENTAI_ID, 0] then
-        Result := GetEHentaiDirectoryPageNumber
       else
       if (website = WebsiteRoots[NINEMANGA_ID, 0]) or
         (website = WebsiteRoots[NINEMANGA_ES_ID, 0]) or
@@ -2273,8 +2268,6 @@ var
   {$I includes/MangasPROJECT/names_and_links.inc}
 
   {$I includes/MangaREADER_POR/names_and_links.inc}
-
-  {$I includes/EHentai/names_and_links.inc}
 
   {$I includes/MangaStreamTo/names_and_links.inc}
 
@@ -2491,9 +2484,6 @@ begin
     if website = WebsiteRoots[MANGA2U_ID, 0] then
       Result := Manga2uGetNamesAndLinks
     else
-    if website = WebsiteRoots[EHENTAI_ID, 0] then
-      Result := EHentaiGetNamesAndLinks
-    else
     if website = WebsiteRoots[MANGASTREAMTO_ID, 0] then
       Result := MangaStreamToGetNamesAndLinks
     else
@@ -2708,8 +2698,6 @@ var
   {$I includes/MangasPROJECT/manga_information.inc}
 
   {$I includes/MangaREADER_POR/manga_information.inc}
-
-  {$I includes/EHentai/manga_information.inc}
 
   {$I includes/MangaStreamTo/manga_information.inc}
 
@@ -2933,9 +2921,6 @@ begin
     else
     if website = WebsiteRoots[MANGAREADER_POR_ID, 0] then
       Result := GetMangaREADER_PORInfoFromURL
-    else
-    if website = WebsiteRoots[EHENTAI_ID, 0] then
-      Result := GetEHentaiInfoFromURL
     else
     if website = WebsiteRoots[MANGASTREAMTO_ID, 0] then
       Result := GetMangaStreamToInfoFromURL

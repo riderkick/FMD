@@ -78,10 +78,8 @@ procedure TGetMangaInfosThread.DoGetInfos;
         FInfo.mangaInfo.status := MainForm.dataProcess.Value[filterPos, DATA_PARAM_STATUS];
         FInfo.mangaInfo.summary := MainForm.dataProcess.Value[filterPos, DATA_PARAM_SUMMARY];
         FInfo.mangaInfo.numChapter := StrToIntDef(MainForm.dataProcess.Value[filterPos, DATA_PARAM_NUMCHAPTER], 0);
+        FInfo.mangaInfo.genres := MainForm.dataProcess.Value[filterPos, DATA_PARAM_GENRES];
         FNumChapter := StrToIntDef(MainForm.dataProcess.Value[filterPos, DATA_PARAM_NUMCHAPTER], 0);
-        if SitesWithoutInformation(website) or
-          (website = WebsiteRoots[EHENTAI_ID, 0]) then
-          FInfo.mangaInfo.genres := MainForm.dataProcess.Value[filterPos, DATA_PARAM_GENRES];
       end;
 
       FInfo.isGenerateFolderChapterName := MainForm.cbOptionGenerateChapterName.Checked;

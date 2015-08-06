@@ -377,8 +377,6 @@ var
 
   {$I includes/EGScans/chapter_page_number.inc}
 
-  {$I includes/EHentai/chapter_page_number.inc}
-
   {$I includes/EsMangaHere/chapter_page_number.inc}
 
   {$I includes/Hentai2Read/chapter_page_number.inc}
@@ -603,9 +601,6 @@ begin
     else
     if manager.container.MangaSiteID = HENTAI2READ_ID then
       Result := GetHentai2ReadPageNumber
-    else
-    if manager.container.MangaSiteID = EHENTAI_ID then
-      Result := GetEHentaiPageNumber
     else
     if manager.container.MangaSiteID = MANGASTREAMTO_ID then
       Result := GetMangaStreamToPageNumber
@@ -1212,8 +1207,6 @@ function TDownloadThread.DownloadImage(const prefix: String): Boolean;
 var
   TURL, lpath: String;
 
-  {$I includes/EHentai/image_url.inc}
-
   {$I includes/MeinManga/image_url.inc}
 
   {$I includes/SenMangaRAW/image_url.inc}
@@ -1244,8 +1237,14 @@ begin
   TURL := DecodeURL(TURL); //decode first to avoid double encoded
   TURL := EncodeTriplet(TURL, '%', URLSpecialChar + ['#']);
 
-  if manager.container.MangaSiteID = EHENTAI_ID then
-    Result := getEHentaiImageURL
+  if Modules.ModuleAvailable(ModuleId, MMDownloadImage) then
+  Result := Modules.DownloadImage(
+    Self,
+    manager.container.PageContainerLinks[workCounter],
+    lpath,
+    Format('%.3d', [workCounter + 1]),
+    prefix,
+    ModuleId)
   else
   if manager.container.MangaSiteID = MEINMANGA_ID then
     Result := GetMeinMangaImageURL
