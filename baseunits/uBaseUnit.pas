@@ -21,7 +21,7 @@ uses
   SysUtils, Classes, Graphics, Forms, lazutf8classes, LazUTF8, LazFileUtils,
   LConvEncoding, strutils, fileinfo, fpjson, jsonparser, FastHTMLParser, fgl,
   RegExpr, synautil, httpsend, blcksock, ssl_openssl, GZIPUtils, uFMDThread,
-  uMisc, USimpleException, USimpleLogger;
+  uMisc, simplehtmltreeparser, xquery, USimpleException, USimpleLogger;
 
 Type
   TFMDDo = (DO_NOTHING, DO_EXIT, DO_POWEROFF, DO_HIBERNATE, DO_UPDATE);
@@ -848,6 +848,13 @@ procedure ParseJSONArray(const S, Path: String; var OutArray: TStringList);
 //HTML
 procedure ParseHTML(const aRaw: string; aOutput: TStrings);
 
+// XPath / CSS Selector
+procedure ParseHTMLTree(var tp: TTreeParser; const S: String);
+function SelectXPathString(Expression: String; TP: TTreeParser): String;
+function SelectXPathIX(Expression: String; TP: TTreeParser): IXQValue;
+function SelectCSSString(Expression: String; TP: TTreeParser): String;
+function SelectCSSIX(Expression: String; TP: TTreeParser): IXQValue;
+
 //convert charset to utf8
 function ConvertCharsetToUTF8(S: String): String; overload;
 procedure ConvertCharsetToUTF8(S: TStrings); overload;
@@ -1531,6 +1538,65 @@ begin
     Exec;
   finally
     Free;
+  end;
+end;
+
+procedure ParseHTMLTree(var tp: TTreeParser; const S: String);
+begin
+  if tp = nil then tp := TTreeParser.Create;
+  with tp do begin
+    parsingModel := pmHTML;
+    repairMissingStartTags := True;
+    repairMissingEndTags := True;
+    trimText := False;
+    readComments := False;
+    readProcessingInstructions := False;
+    autoDetectHTMLEncoding := False;
+    if S <> '' then parseTree(S);
+  end;
+end;
+
+function SelectXPathString(Expression: String; TP: TTreeParser): String;
+begin
+  Result := '';
+  if TP = nil then Exit;
+  if TP.getLastTree = nil then Exit;
+  try
+    Result := TXQueryEngine.evaluateStaticXPath3(Expression, TP.getLastTree).toString;
+  except
+  end;
+end;
+
+function SelectXPathIX(Expression: String; TP: TTreeParser): IXQValue;
+begin
+  Result := xqvalue();
+  if TP = nil then Exit;
+  if TP.getLastTree = nil then Exit;
+  try
+    Result := TXQueryEngine.evaluateStaticXPath3(Expression, TP.getLastTree);
+  except
+  end;
+end;
+
+function SelectCSSString(Expression: String; TP: TTreeParser): String;
+begin
+  Result := '';
+  if TP = nil then Exit;
+  if TP.getLastTree = nil then Exit;
+  try
+    Result := TXQueryEngine.evaluateStaticCSS3(Expression, TP.getLastTree).toString;
+  except
+  end;
+end;
+
+function SelectCSSIX(Expression: String; TP: TTreeParser): IXQValue;
+begin
+  Result := xqvalue();
+  if TP = nil then Exit;
+  if TP.getLastTree = nil then Exit;
+  try
+    Result := TXQueryEngine.evaluateStaticCSS3(Expression, TP.getLastTree);
+  except
   end;
 end;
 
