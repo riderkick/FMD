@@ -290,7 +290,7 @@ var
         //get url param
         for i := 0 to Source.Count - 1 do begin
           if Pos('var base_url=', Source[i]) > 0 then
-            base_url := GetValuesFromString(Source[i], '=')
+            base_url := RemoveURLDelim(GetValuesFromString(Source[i], '='))
           else if Pos('var startkey=', Source[i]) > 0 then
             startkey := GetValuesFromString(Source[i], '=')
           else if Pos('var gid=', Source[i]) > 0 then
