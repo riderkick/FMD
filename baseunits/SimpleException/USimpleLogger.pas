@@ -199,13 +199,12 @@ begin
       else
         maxStack := ExceptFrameCount - 1;
       for i := 0 to maxStack do
-        Result := Result + '  ' + SimpleBackTraceStr(ExceptFrames[i]) +
-          LineEnding;
+        Result := Result + '  ' + SimpleBackTraceStr(ExceptFrames[i]) + LineEnding;
     end
     else
     begin
-      //cf := get_caller_frame(get_frame);
-      cf := get_caller_frame(get_caller_frame(get_frame));
+      cf := get_caller_frame(get_frame);
+      //cf := get_caller_frame(get_caller_frame(get_frame));
       if cf <> nil then
       begin
         Result :=
@@ -219,15 +218,14 @@ begin
             cFrame := get_caller_frame(cf);
             if cAddress = nil then
               Break;
+            Result := Result + '  ' + SimpleBackTraceStr(cAddress) + LineEnding;
             Inc(i);
-            if i > MaxStackCount then
+            if (i >= MaxStackCount) or (cFrame = nil) then
               Break;
-            Result := Result + '  ' + SimpleBackTraceStr(cAddress) +
-              LineEnding;
             pcf := cf;
             cf := cFrame;
           end;
-        finally
+        except
         end;
       end;
     end;
