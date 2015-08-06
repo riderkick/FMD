@@ -3358,7 +3358,8 @@ begin
           finally
             fstream.Free;
           end;
-          Result := FileExistsUTF8(fpath);
+          if FileExistsUTF8(fpath) then
+            Result := HTTP.Document.Size = FileSizeUtf8(fpath);
         end
         else
           Result := False;
