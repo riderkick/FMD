@@ -546,15 +546,8 @@ type
   public
     ulTotalPtr, ulWorkPtr: Integer;
     optionMangaSiteSelectionNodes: array of PVirtualNode;
-    LastSearchStr: String;
-    LastSearchWeb: String;
-    isStartup, isExiting: Boolean;
-    // for manga website that available for visible on selection list
-    //websiteName     :TStringList;
-    //websiteLanguage :TStringList;
-
-    isRunDownloadFilter: Boolean;
-    isUpdating: Boolean;
+    LastSearchStr, LastSearchWeb: String;
+    isStartup, isExiting, isRunDownloadFilter, isUpdating: Boolean;
     revisionIni, updates, mangalistIni, options: TIniFile;
     FavoriteManager: TFavoriteManager;
     dataProcess: TDBDataProcess;
@@ -564,8 +557,6 @@ type
     updateDB: TUpdateDBThread;
     updateList: TUpdateMangaManagerThread;
     SilentThreadManager: TSilentThreadManager;
-    ticks: Cardinal;
-    backupTicks: Cardinal;
     // animation gif
     gifWaiting: TAnimatedGif;
     gifWaitingRect: TRect;
@@ -4054,7 +4045,6 @@ begin
         s := s + cbFilterStatus.Items[1];
     end;
     if Trim(Value[LPos, DATA_PARAM_SUMMARY]) <> '' then
-      //s := s + LineEndingLineEnding + infoSummary + ':' + LineEnding + PrepareSummaryForHint(dataProcess.Value[LPos, DATA_PARAM_SUMMARY], 80);
       s := s + LineEnding + LineEnding + RS_InfoSummary + LineEnding +
         StringBreaks(dataProcess.Value[LPos, DATA_PARAM_SUMMARY]);
   end;
@@ -4852,7 +4842,6 @@ end;
 
 procedure TMainForm.UpdateVtDownload;
 begin
-  //vtDownload.Clear;
   vtDownload.RootNodeCount := DLManager.Count;
   // the reason we put vtDownloadFilters in here instead of in DLManager because
   // the size of download list can change while this method is running
