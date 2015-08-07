@@ -4055,7 +4055,7 @@ begin
     end;
     if Trim(Value[LPos, DATA_PARAM_SUMMARY]) <> '' then
       //s := s + LineEndingLineEnding + infoSummary + ':' + LineEnding + PrepareSummaryForHint(dataProcess.Value[LPos, DATA_PARAM_SUMMARY], 80);
-      s := s + LineEnding + LineEnding + RS_InfoSummary + ':' + LineEnding +
+      s := s + LineEnding + LineEnding + RS_InfoSummary + LineEnding +
         StringBreaks(dataProcess.Value[LPos, DATA_PARAM_SUMMARY]);
   end;
   HintText := s;
