@@ -102,6 +102,10 @@ procedure TGetMangaInfosThread.DoGetInfos;
       if Self.Terminated then Exit;
       if infob <> NO_ERROR then Exit;
 
+      //set back if title changed
+      if (FInfo.mangaInfo.title <> '') and (FInfo.mangaInfo.title <> FTitle) then
+        FTitle := FInfo.mangaInfo.title;
+
       if FMangaListPos >= 0 then
       begin
         if MainForm.dataProcess.WebsiteLoaded(Website) then
