@@ -21,7 +21,7 @@ uses
   SysUtils, Classes, Graphics, Forms, lazutf8classes, LazUTF8, LazFileUtils,
   LConvEncoding, strutils, fileinfo, fpjson, jsonparser, FastHTMLParser, fgl,
   RegExpr, synautil, httpsend, blcksock, ssl_openssl, GZIPUtils, uFMDThread,
-  uMisc, simplehtmltreeparser, xquery, USimpleException, USimpleLogger;
+  uMisc, simplehtmltreeparser, xquery, xquery_json, USimpleException, USimpleLogger;
 
 Type
   TFMDDo = (DO_NOTHING, DO_EXIT, DO_POWEROFF, DO_HIBERNATE, DO_UPDATE);
