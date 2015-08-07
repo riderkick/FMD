@@ -3237,10 +3237,8 @@ procedure TMangaInformation.AddInfoToData(const Title, Link: String;
 begin
   if Assigned(DataProcess) then
   begin
-    if Title <> '' then
-      mangaInfo.title := Title;
-    if Link <> '' then
-      mangaInfo.link := Link;
+    if (mangaInfo.title = '') and (Title <> '') then mangaInfo.title := Title;
+    if (mangaInfo.link = '') and (Link <> '') then mangaInfo.link := Link;
     with mangaInfo do
       DataProcess.AddData(title, link, authors, artists, genres, status,
         StringBreaks(summary), numChapter, Now);
