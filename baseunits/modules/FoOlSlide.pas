@@ -5,275 +5,220 @@ unit FoOlSlide;
 interface
 
 uses
-  Classes, SysUtils, WebsiteModules, uData, uBaseUnit, uDownloadsManager,
-  HTMLUtil, RegExpr;
+  Classes, SysUtils, WebsiteModules, uData, uBaseUnit, uDownloadsManager;
 
 implementation
+
+uses
+  simplehtmltreeparser, xquery, RegExpr;
+
+const
+  dirurl = '/directory/';
 
 function GetDirectoryPageNumber(var MangaInfo: TMangaInformation;
   var Page: Integer; Module: TModuleContainer): Integer;
 var
-  Parse: TStringList;
-
-  procedure ScanParse;
-  var
-    i: Integer;
-  begin
-    for i := 0 to Parse.Count - 1 do
-      if GetVal(Parse[i], 'class') = 'next' then
-        if GetTagName(Parse[i + 2]) = 'a' then
-        begin
-          Page := StrToIntDef(ReplaceRegExpr('^.*/(\d+)/$',
-            GetVal(Parse[i + 2], 'href'), '$1', True), 1);
-          Break;
-        end;
-  end;
-
+  Source: TStringList;
+  Parser: TTreeParser;
 begin
   Result := NET_PROBLEM;
   Page := 1;
   if MangaInfo = nil then Exit;
-  Parse := TStringList.Create;
+  Source := TStringList.Create;
   try
-    if MangaInfo.GetPage(TObject(Parse), Module.RootURL + '/directory/', 3) then
+    if GetPage(TObject(Source), Module.RootURL + dirurl, 3) then
     begin
       Result := INFORMATION_NOT_FOUND;
-      ParseHTML(Parse.Text, Parse);
-      if Parse.Count > 0 then
+      if Source.Count > 0 then
       begin
         Result := NO_ERROR;
-        ScanParse;
+        Parser := TTreeParser.Create;
+        try
+          ParseHTMLTree(Parser, Source.Text);
+          Page := StrToIntDef(ReplaceRegExpr('^.*/(\d+)/$',
+            SelectXPathString('//a[contains(text(),"Last »»")]/@href', Parser),
+            '$1', True), 1);
+        finally
+          Parser.Free;
+        end;
       end;
     end;
   finally
-    Parse.Free;
+    Source.Free;
   end;
 end;
 
 function GetNameAndLink(var MangaInfo: TMangaInformation;
   const Names, Links: TStringList; const URL: String; Module: TModuleContainer): Integer;
 var
-  Parse: TStringList;
-
-  procedure ScanParse;
-  var
-    i: Integer;
-  begin
-    for i := 0 to Parse.Count - 1 do
-      if (GetTagName(Parse[i]) = 'a') and (Pos('/series/', Parse[i]) > 0) then
-      begin
-        Links.Add(GetVal(Parse[i], 'href'));
-        Names.Add(CommonStringFilter(Parse[i + 1]));
-      end;
-  end;
-
+  Source: TStringList;
+  Parser: TTreeParser;
+  v: IXQValue;
 begin
   Result := NET_PROBLEM;
   if MangaInfo = nil then Exit;
-  Parse := TStringList.Create;
+  Source := TStringList.Create;
   try
-    if MangaInfo.GetPage(TObject(Parse), Module.RootURL + '/directory/' +
-      IncStr(URL), 3) then
+    if GetPage(TObject(Source), Module.RootURL + dirurl + IncStr(URL), 3) then
     begin
       Result := INFORMATION_NOT_FOUND;
-      ParseHTML(Parse.Text, Parse);
-      if Parse.Count > 0 then
+      if Source.Count > 0 then
       begin
         Result := NO_ERROR;
-        ScanParse;
+        Parser := TTreeParser.Create;
+        try
+          ParseHTMLTree(Parser, Source.Text);
+          for v in SelectXPathIX('//*[@class="list series"]/*/*[@class="title"]/a',
+              Parser) do
+          begin
+            Links.Add(v.toNode.getAttribute('href'));
+            Names.Add(v.toString);
+          end;
+        finally
+          Parser.Free;
+        end;
       end;
     end;
   finally
-    Parse.Free;
+    Source.Free;
   end;
 end;
 
 function GetInfo(var MangaInfo: TMangaInformation; const URL: String;
   const Reconnect: Integer; Module: TModuleContainer): Integer;
 var
-  Parse: TStringList;
-  info: TMangaInfo;
+  Source: TStringList;
+  Parser: TTreeParser;
 
-  procedure ScanChapters(const StartIndex: Integer);
+  procedure ScanInfo;
   var
-    i: Integer;
-    g: String = '';
+    v: IXQValue;
   begin
-    for i := StartIndex to Parse.Count - 1 do
-    begin
-      if Parse[i] = '</article>' then
-        Break;
-      if GetVal(Parse[i], 'class') = 'group' then
-        if GetVal(Parse[i + 1], 'class') = 'title' then
-        begin
-          g := Trim(Parse[i + 2]);
-          if g = 'Chapters' then
-            g := ''
-          else
-            g += ' ';
-        end;
-      if GetTagName(Parse[i]) = 'a' then
-        if GetVal(Parse[i - 1], 'class') = 'title' then
-        begin
-          info.chapterLinks.Add(GetVal(Parse[i], 'href'));
-          info.chapterName.Add(g + Trim(Parse[i + 1]));
-        end;
-    end;
-    //invert chapters
-    if info.chapterLinks.Count > 0 then
-      InvertStrings([info.chapterLinks, info.chapterName]);
-  end;
-
-  procedure ScanParse;
-  var
-    i: Integer;
-  begin
-    for i := 0 to Parse.Count - 1 do
-    begin
-      //title
-      if info.title = '' then
-        if (GetTagName(Parse[i]) = 'h1') and (GetVal(Parse[i], 'class') = 'title') then
-          info.title := CommonStringFilter(Parse[i + 1]);
-
+    with MangaInfo.mangaInfo do begin
       //cover
-      if info.coverLink = '' then
-        if GetVal(Parse[i], 'class') = 'thumbnail' then
-          if GetTagName(Parse[i + 2]) = 'img' then
-            info.coverLink := GetVal(Parse[i + 2], 'src');
-
+      coverLink := SelectXPathString(
+        '//*[@id="content"]//*[@class="thumbnail"]/img/@src', Parser);
+      //title
+      title := SelectXPathString('//*[@id="content"]//h1[@class="title"]', Parser);
       //author
-      if (Parse[i] = 'Author') and (Parse[i + 1] = '</b>') then
-        info.authors := Trim(TrimLeftChar(Parse[i + 2], [':']));
-
+      authors := TrimLeftChar(SelectXPathString(
+        '//div[@class="info"]/*[contains(text(),"Author")]/following-sibling::text()[1]',
+        Parser), [':', ' ']);
       //artist
-      if (Parse[i] = 'Artist') and (Parse[i + 1] = '</b>') then
-        info.artists := Trim(TrimLeftChar(Parse[i + 2], [':']));
-
+      artists := TrimLeftChar(SelectXPathString(
+        '//div[@class="info"]/*[contains(text(),"Artist")]/following-sibling::text()[1]',
+        Parser), [':', ' ']);
       //summary
-      if (Parse[i] = 'Synopsis') and (Parse[i + 1] = '</b>') then
-        info.summary := Trim(TrimLeftChar(Parse[i + 2], [':']));
-
+      summary := TrimLeftChar(SelectXPathString(
+        '//div[@class="info"]/*[contains(text(),"Synopsis")]/following-sibling::text()[1]',
+        Parser), [':', ' ']);
       //chapters
-      if GetVal(Parse[i], 'class') = 'list' then
+      for v in SelectXPathIX('//*[@class="list"]//*[@class="title"]/a', Parser) do
       begin
-        ScanChapters(i);
-        Break;
+        chapterLinks.Add(v.toNode.getAttribute('href'));
+        if v.toNode.getAttribute('title') <> '' then
+          chapterName.Add(v.toNode.getAttribute('title'))
+        else chapterName.Add(v.toString);
       end;
+      if chapterLinks.Count > 0 then
+        InvertStrings([chapterLinks, chapterName]);
     end;
   end;
 
 begin
   Result := NET_PROBLEM;
   if MangaInfo = nil then Exit;
-  info := MangaInfo.mangaInfo;
-  info.website := Module.Website;
-  info.url := FillHost(Module.RootURL, URL);
-  Parse := TStringList.Create;
+  MangaInfo.mangaInfo.website := Module.Website;
+  MangaInfo.mangaInfo.url := FillHost(Module.RootURL, URL);
+  Source := TStringList.Create;
   try
-    if MangaInfo.GetPage(TObject(Parse), info.url, Reconnect) then
+    if GetPage(TObject(Source), MangaInfo.mangaInfo.url, Reconnect) then
     begin
       Result := INFORMATION_NOT_FOUND;
-      ParseHTML(Parse.Text, Parse);
-      if Parse.Count > 0 then
+      if Source.Count > 0 then
       begin
         Result := NO_ERROR;
-        ScanParse;
+        Parser := TTreeParser.Create;
+        try
+          ParseHTMLTree(Parser, Source.Text);
+          ScanInfo;
+        finally
+          Parser.Free;
+        end;
       end;
     end;
   finally
-    Parse.Free;
+    Source.Free;
   end;
 end;
 
 function GetPageNumber(var DownloadThread: TDownloadThread; const URL: String;
   Module: TModuleContainer): Boolean;
 var
-  Parse: TStringList;
-  Container: TTaskContainer;
-
-  procedure ScanParse;
-  var
-    i, p: Integer;
-  begin
-    p := -1;
-    for i := 0 to Parse.Count - 1 do
-      if (GetVal(Parse[i], 'class') = 'dropdown') and (Pos('style=', Parse[i]) > 0) then
-      begin
-        p := i + 1;
-        Break;
-      end;
-    if p > -1 then
-      for i := p to Parse.Count - 1 do
-      begin
-        if Pos('</ul>', Parse[i]) <> 0 then
-          Break;
-        if GetTagName(Parse[i]) = 'a' then
-          Inc(Container.PageNumber);
-      end;
-  end;
-
+  Source: TStringList;
+  Parser: TTreeParser;
 begin
   Result := False;
   if DownloadThread = nil then Exit;
-  Container := DownloadThread.manager.container;
-  Container.PageLinks.Clear;
-  Container.PageContainerLinks.Clear;
-  Container.PageNumber := 0;
-  Parse := TStringList.Create;
-  try
-    if DownloadThread.GetPage(TObject(Parse), FillHost(Module.RootURL, URL),
-      Container.Manager.retryConnect) then
-    begin
-      ParseHTML(Parse.Text, Parse);
-      if Parse.Count > 0 then
+  with DownloadThread.manager.container do begin
+    PageLinks.Clear;
+    PageContainerLinks.Clear;
+    PageNumber := 0;
+    Source := TStringList.Create;
+    try
+      if GetPage(TObject(Source), FillHost(Module.RootURL, URL),
+        Manager.retryConnect) then
       begin
-        Result := True;
-        ScanParse;
+        if Source.Count > 0 then
+        begin
+          Result := True;
+          Parser := TTreeParser.Create;
+          try
+            ParseHTMLTree(Parser, Source.Text);
+            PageNumber := SelectXPathIX(
+              '//*[@class="topbar_right"]//ul[@class="dropdown"]/li', Parser).Count;
+          finally
+            Parser.Free;
+          end;
+        end;
       end;
+    finally
+      Source.Free;
     end;
-  finally
-    Parse.Free;
   end;
 end;
 
 function GetImageURL(var DownloadThread: TDownloadThread; const URL: String;
   Module: TModuleContainer): Boolean;
 var
-  Parse: TStringList;
-  Container: TTaskContainer;
-
-  procedure ScanParse;
-  var
-    i: Integer;
-  begin
-    for i := 0 to Parse.Count - 1 do
-      if (GetTagName(Parse[i]) = 'img') and (GetVal(Parse[i], 'class') = 'open') then
-      begin
-        if DownloadThread.workCounter < Container.PageLinks.Count then
-          Container.PageLinks[DownloadThread.workCounter] := GetVal(Parse[i], 'src');
-        Break;
-      end;
-  end;
-
+  Source: TStringList;
+  Parser: TTreeParser;
 begin
   Result := False;
   if DownloadThread = nil then Exit;
-  Container := DownloadThread.manager.container;
-  Parse := TStringList.Create;
-  try
-    if DownloadThread.GetPage(TObject(Parse), FillHost(Module.RootURL, URL) +
-      'page/' + IntToStr(DownloadThread.workCounter + 1),
-      Container.Manager.retryConnect) then
-    begin
-      ParseHTML(Parse.Text, Parse);
-      if Parse.Count > 0 then
+  with DownloadThread.manager.container do begin
+    Source := TStringList.Create;
+    try
+      if GetPage(TObject(Source), FillHost(Module.RootURL, URL) +
+        'page/' + IncStr(DownloadThread.workCounter),
+        Manager.retryConnect) then
       begin
-        Result := True;
-        ScanParse;
+        if Source.Count > 0 then
+        begin
+          Result := True;
+          Parser := TTreeParser.Create;
+          try
+            ParseHTMLTree(Parser, Source.Text);
+            PageLinks[DownloadThread.workCounter] :=
+              SelectXPathString('//*[@id="page"]//img/@src', Parser);
+          finally
+            Parser.Free;
+          end;
+        end;
       end;
+    finally
+      Source.Free;
     end;
-  finally
-    Parse.Free;
   end;
 end;
 
@@ -283,8 +228,6 @@ begin
   begin
     Website := 'Shoujosense';
     RootURL := 'http://reader.shoujosense.com';
-    SortedList := False;
-    InformationAvailable := True;
     OnGetDirectoryPageNumber := @GetDirectoryPageNumber;
     OnGetNameAndLink := @GetNameAndLink;
     OnGetInfo := @GetInfo;
