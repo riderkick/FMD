@@ -940,7 +940,7 @@ function SourceForgeURL(URL: String): String;
 function GetPageAndParse(const AHTTP: THTTPSend; Output: TStrings; URL: String;
   const Reconnect: Integer = 0): Integer;
 function GetPage(const AHTTP: THTTPSend; var output: TObject; URL: String;
-  const Reconnect: Integer = 0): Boolean; overload;
+  const Reconnect: Integer = 0; Method: String = 'GET'): Boolean; overload;
 function GetPage(var output: TObject; URL: String; const Reconnect: Integer = 0): Boolean;
   overload; inline;
 // Get url from a bitly url.
@@ -2838,7 +2838,7 @@ begin
 end;
 
 function GetPage(const AHTTP: THTTPSend; var output: TObject; URL: String;
-  const Reconnect: Integer): Boolean;
+  const Reconnect: Integer; Method: String): Boolean;
   // If AHTTP <> nil, we will use it as http sender. Otherwise we create a new
   // instance.
 var
@@ -2846,7 +2846,7 @@ var
   HTTPHeader: TStringList;
   counter: Integer;
   s: String;
-  meth: String = 'GET';
+  meth: String;
   mstream: TMemoryStream;
 
   procedure HTTPClear;
@@ -2857,7 +2857,6 @@ var
         RangeStart := 0;
         RangeEnd := 0;
         Headers.Clear;
-        MimeType := 'text/html';
       end;
   end;
 
@@ -2946,10 +2945,22 @@ begin
   HTTP.Protocol := '1.1';
   HTTP.KeepAlive := False;
   HTTP.UserAgent := DEFAULT_UA;
-  HTTP.MimeType := 'text/html';
-
   if OptionHTTPUseGzip then
     HTTPHeader.Values['Accept-Encoding'] := ' gzip, deflate';
+
+  //Method
+  if Method <> '' then meth := Method
+  else meth := 'GET';
+  if HTTP.Sock.Tag = 100 then //POST form
+    meth := 'POST';
+  if meth = 'POST' then
+    HTTP.MimeType := 'application/x-www-form-urlencoded; charset=UTF-8'
+  else
+  begin
+    HTTP.Document.Clear;
+    HTTP.RangeStart := 0;
+    HTTP.RangeEnd := 0;
+  end;
 
   //User-Agent
   if Trim(HTTPHeader.Values['User-Agent']) <> '' then
@@ -2994,19 +3005,6 @@ begin
     HTTP.Document.Position := 0;
     HTTP.Document.Write(PChar(s)^, Length(s));
     HTTP.MimeType := 'application/x-www-form-urlencoded';
-  end;
-
-  if HTTP.Sock.Tag = 100 then //POST
-  begin
-    meth := 'POST';
-    HTTP.MimeType := 'application/x-www-form-urlencoded';
-  end;
-
-  if meth <> 'POST' then
-  begin
-    HTTP.Document.Clear;
-    HTTP.RangeStart := 0;
-    HTTP.RangeEnd := 0;
   end;
 
   if checkTerminate then Exit;
