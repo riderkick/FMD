@@ -93,7 +93,7 @@ begin
             summary := SelectXPathString(
               '//*[@id="page_info"]/div/div[@class="message"]', Parser);
             //chapter
-            if title <> '' then
+            if coverLink <> '' then
             begin
               chapterLinks.Add(info.url);
               chapterName.Add(title);
