@@ -44,12 +44,6 @@ begin
         ParseHTMLTree(Parser, Source.Text);
         if SelectXPathString('json(*)("success")', Parser) = 'true' then
         begin
-          s := SelectXPathString('json(*)("top")("token")', Parser);
-          if s <> '' then
-          begin
-            Links.Add(s);
-            names.Add(SelectXPathString('json(*)("top")("name")', Parser));
-          end;
           for v in SelectXPathIX('json(*)("newest")()("token")', Parser) do
             Links.Add(v.toString);
           for v in SelectXPathIX('json(*)("newest")()("name")', Parser) do
