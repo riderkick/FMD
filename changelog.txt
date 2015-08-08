@@ -8,6 +8,9 @@ https://www.mediafire.com/folder/3ccy2c7g36hp3/Fmd
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.21.1 (08-08-2015)
+[*] Minor bug fixes
+
 0.9.21.0 (08-08-2015)
 [+] Add button to abort check new version
 [*] Minor UI changes
