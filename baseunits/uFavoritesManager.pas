@@ -12,7 +12,7 @@ interface
 
 uses
   Classes, SysUtils, Dialogs, IniFiles, syncobjs, lazutf8classes, LazFileUtils,
-  uBaseUnit, uData, uDownloadsManager, uFMDThread, uMisc, WebsiteModules;
+  uBaseUnit, uData, uDownloadsManager, uFMDThread, uMisc, WebsiteModules, USimpleException;
 
 type
   TFavoriteManager = class;
@@ -45,7 +45,6 @@ type
     procedure SyncStartChecking;
     procedure SyncFinishChecking;
     procedure SyncUpdateBtnCaption;
-    procedure SyncShowResult;
     procedure Checkout;
     procedure Execute; override;
   public
@@ -213,7 +212,7 @@ begin
     TransferMangaInfo(container.MangaInfo, getInfo.mangaInfo);
   except
     on E: Exception do
-      MainForm.ExceptionHandler(Self, E);
+      ExceptionHandle(Self, E);
   end;
   if Self.Terminated then
     container.Status := STATUS_IDLE
@@ -274,11 +273,6 @@ end;
 procedure TFavoriteTask.SyncUpdateBtnCaption;
 begin
   MainForm.btFavoritesCheckNewChapter.Caption := FBtnCaption;
-end;
-
-procedure TFavoriteTask.SyncShowResult;
-begin
-  manager.ShowResult;
 end;
 
 procedure TFavoriteTask.Checkout;
@@ -365,10 +359,10 @@ begin
     end;
 
     if (not Terminated) and (not isDlgCounter) then
-      Synchronize(SyncShowResult);
+      Synchronize(manager.ShowResult);
   except
     on E: Exception do
-      MainForm.ExceptionHandler(Self, E);
+      ExceptionHandle(Self, E);
   end;
   manager.CS_Favorites.Acquire;
   try
@@ -491,7 +485,7 @@ begin
       taskthread.PushNewCheck;
   except
     on E: Exception do
-      MainForm.ExceptionHandler(Self, E);
+      ExceptionHandle(Self, E);
   end;
 end;
 
@@ -761,7 +755,7 @@ begin
     end;
   except
     on E: Exception do
-      MainForm.ExceptionHandler(Self, E);
+      ExceptionHandle(Self, E);
   end;
 end;
 
