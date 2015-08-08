@@ -960,6 +960,7 @@ begin
 
   // favorites
   FavoriteManager := TFavoriteManager.Create;
+  FavoriteManager.DLManager := Self.DLManager;
   FavoriteManager.OnUpdateFavorite := @UpdateVtFavorites;
   FavoriteManager.OnUpdateDownload := @UpdateVtDownload;
 
