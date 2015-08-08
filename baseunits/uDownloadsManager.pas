@@ -1874,8 +1874,8 @@ begin
   if isRunningBackup then
     Exit;
 
-  CS_DownloadManager_Task.Acquire;
   isRunningBackup := True;
+  CS_DownloadManager_Task.Acquire;
   try
     DownloadManagerFile.CacheUpdates := True;
     // Erase all sections
@@ -1917,9 +1917,9 @@ begin
     end;
     DownloadManagerFile.UpdateFile;
   finally
-    isRunningBackup := False;
     CS_DownloadManager_Task.Release;
   end;
+  isRunningBackup := False;
 end;
 
 procedure TDownloadManager.ClearTransferRate;
