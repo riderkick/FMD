@@ -1142,12 +1142,11 @@ begin
   FavoriteManager.Backup;
   SaveOptions;
   SaveFormInformation;
-
-  SetLength(optionMangaSiteSelectionNodes, 0);
 end;
 
 procedure TMainForm.FormDestroy(Sender: TObject);
 begin
+  SetLength(optionMangaSiteSelectionNodes, 0);
   SetLength(ChapterList, 0);
   FreeAndNil(mangaInfo);
 
