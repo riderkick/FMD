@@ -184,6 +184,16 @@ function TSimpleException.OSVer: String;
 {$IFDEF WINDOWS}
 var
   wdir: array [0..MAX_PATH] of Char;
+  function WinLater: String;
+  begin
+    if (Win32MajorVersion = 6) and (Win32MinorVersion = 3) then
+      Result := 'Windows 8.1'
+    else if (Win32MajorVersion = 10) and (Win32MinorVersion = 0) then
+      Result := 'Windows 10'
+    else
+      Result := Format('Windows %d.%d', [Win32MajorVersion, Win32MinorVersion]);
+  end;
+
 {$ENDIF}
 begin
   {$IFDEF LCLcarbon}
@@ -208,7 +218,7 @@ begin
     wv7: Result := 'Windows 7';
     wv8: Result := 'Windows 8';
     else
-      Result := 'Windows';
+      Result := WinLater;
   end;
   Initialize(wdir);
   GetWindowsDirectory(PChar(wdir), MAX_PATH);
