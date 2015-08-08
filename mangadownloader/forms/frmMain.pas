@@ -4452,12 +4452,15 @@ procedure TMainForm.SaveOptions;
 var
   s: String;
 begin
-  s := SaveMangaOptions;
-  if s = '' then
+  if Length(optionMangaSiteSelectionNodes) > 0 then
   begin
-    MessageDlg('', RS_DlgMangaListSelect,
-      mtConfirmation, [mbYes], 0);
-    Exit;
+    s := SaveMangaOptions;
+    if s = '' then
+    begin
+      MessageDlg('', RS_DlgMangaListSelect,
+        mtConfirmation, [mbYes], 0);
+      Exit;
+    end;
   end;
 
   with options do
