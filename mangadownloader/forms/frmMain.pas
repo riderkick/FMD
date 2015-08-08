@@ -577,7 +577,7 @@ type
     // load about information
     procedure LoadAbout;
 
-    procedure CloseNow(WaitFor: Boolean = True);
+    procedure CloseNow;
 
     // en: Too lazy to add it one by one
     procedure InitCheckboxes;
@@ -1084,7 +1084,7 @@ begin
   CloseAction := caFree;
 end;
 
-procedure TMainForm.CloseNow(WaitFor: Boolean);
+procedure TMainForm.CloseNow;
 begin
   if Assigned(CheckUpdateThread) then
   begin
@@ -1116,17 +1116,15 @@ begin
   begin
     GetInfosThread.IsFlushed := True;
     GetInfosThread.Terminate;
-    if WaitFor then
-      GetInfosThread.WaitFor;
+    GetInfosThread.WaitFor;
   end;
   if isUpdating then
   begin
     updateList.Terminate;
-    if WaitFor then
-      updateList.WaitFor;
+    updateList.WaitFor;
   end;
-  FavoriteManager.StopChekForNewChapter(WaitFor);
-  SilentThreadManager.StopAll(WaitFor);
+  FavoriteManager.StopChekForNewChapter(True);
+  SilentThreadManager.StopAll(True);
   DLManager.StopAllDownloadTasksForExit;
 
   if FMDInstance <> nil then
@@ -1259,7 +1257,7 @@ begin
     begin
       if ShowExitCounter then
       begin
-        Self.CloseNow(False);
+        Self.CloseNow;
         if DoAfterFMD = DO_POWEROFF then
           fmdPowerOff
         else
@@ -1275,7 +1273,7 @@ begin
         CopyFile(fmdDirectory + 'updater.exe', fmdDirectory + 'old_updater.exe');
       if FileExistsUTF8(fmdDirectory + 'old_updater.exe') then
       begin
-        Self.CloseNow(False);
+        Self.CloseNow;
         RunExternalProcess(fmdDirectory + 'old_updater.exe',
           ['-x', '-r', '3', '-a', FUpdateURL, '-l', Application.ExeName,
            '--lang', uTranslation.LastSelected], True, False);
