@@ -527,6 +527,9 @@ var
   favDelete             : Boolean;
 begin
   if isDlgCounter then Exit;
+  if (Self.DLManager = nil) and Assigned(MainForm.DLManager) then
+    Self.DLManager := MainForm.DLManager
+  else Exit;
   try
     CS_Favorites.Acquire;
     dlChapters := TStringList.Create;
