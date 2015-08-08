@@ -4523,7 +4523,7 @@ begin
       WriteBool('update', 'AutoCheckFavStartup', cbOptionAutoCheckFavStartup.Checked);
       WriteBool('update', 'AutoCheckFavInterval', cbOptionAutoCheckFavInterval.Checked);
       WriteInteger('update', 'AutoCheckFavIntervalMinutes', seOptionAutoCheckFavIntervalMinutes.Value);
-      WriteBool('update', 'AutoCheckFavAutoDownloadFavorites', cbOptionAutoCheckFavDownload.Checked);
+      WriteBool('update', 'AutoCheckFavAutoDownload', cbOptionAutoCheckFavDownload.Checked);
       WriteBool('update', 'AutoCheckFavAutoRemoveCompletedManga', cbOptionAutoCheckFavRemoveCompletedManga.Checked);
       WriteBool('update', 'UpdateListNoMangaInfo', cbOptionUpdateListNoMangaInfo.Checked);
       WriteBool('update', 'UpdateListRemoveDuplicateLocalData', cbOptionUpdateListRemoveDuplicateLocalData.Checked);
