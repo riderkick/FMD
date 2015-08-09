@@ -2191,51 +2191,35 @@ end;
 procedure TDownloadManager.ActiveTask(const taskID: Integer);
 begin
   if (taskID < 0) or (taskID >= Containers.Count) then Exit;
-  with TTaskContainer(Containers[taskID]) do
-  begin
+  with TTaskContainer(Containers[taskID]) do begin
     if Status = STATUS_FINISH then Exit;
-    if not (Status in [STATUS_DOWNLOAD, STATUS_PREPARE]) then
-    begin
-      Status := STATUS_DOWNLOAD;
-      DownloadInfo.Status := RS_Downloading;
+    if not ThreadState then begin
+      if not (Status in [STATUS_DOWNLOAD, STATUS_PREPARE]) then begin
+        Status := STATUS_DOWNLOAD;
+        DownloadInfo.Status := RS_Downloading;
+      end;
+      Modules.IncActiveTaskCount(ModuleId);
+      Thread := TTaskThread.Create;
+      Thread.container := TaskItem(taskID);
+      Thread.Start;
     end;
-    Modules.IncActiveTaskCount(ModuleId);
-    Thread := TTaskThread.Create;
-    Thread.container := TaskItem(taskID);
-    Thread.Start;
-    MainForm.vtDownload.Repaint;
-    MainForm.vtDownloadFilters;
-    if not MainForm.itRefreshDLInfo.Enabled then
-      MainForm.itRefreshDLInfo.Enabled := True;
   end;
 end;
 
 procedure TDownloadManager.StopTask(const taskID: Integer;
   const isCheckForActive: Boolean; isWaitFor: Boolean);
 begin
-  if taskID < Containers.Count then
-  begin
-    if TaskItem(taskID).Status in [STATUS_DOWNLOAD, STATUS_PREPARE, STATUS_WAIT] then
-    begin
-      if TaskItem(taskID).Status = STATUS_WAIT then
-      begin
-        TaskItem(taskID).Status := STATUS_STOP;
-        TaskItem(taskID).DownloadInfo.Status := RS_Stopped;
-      end;
-      if TaskItem(taskID).ThreadState then
-      begin
-        TaskItem(taskID).Thread.Terminate;
-        if isWaitFor then
-          TaskItem(taskID).Thread.WaitFor;
-      end;
-      if isCheckForActive then
-      begin
-        Backup;
-        CheckAndActiveTask;
-      end;
-      MainForm.vtDownload.Repaint;
-      MainForm.vtDownloadFilters;
+  if (taskID < 0) or (taskID >= Containers.Count) then Exit;
+  with TTaskContainer(Containers[taskID]) do begin
+    if Status = STATUS_WAIT then begin
+      Status := STATUS_STOP;
+      DownloadInfo.Status := RS_Stopped;
+    end
+    else if ThreadState then begin
+      Thread.Terminate;
+      if isWaitFor then Thread.WaitFor;
     end;
+    if isCheckForActive then CheckAndActiveTask();
   end;
 end;
 
