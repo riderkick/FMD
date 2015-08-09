@@ -2276,8 +2276,8 @@ var
 begin
   if Containers.Count > 0 then
   begin
+    isReadyForExit := True;
     try
-      isReadyForExit := True;
       for i := 0 to Containers.Count - 1 do
         if TaskItem(i).ThreadState then
           TaskItem(i).Thread.Terminate;
@@ -2285,7 +2285,7 @@ begin
         if TaskItem(i).ThreadState then
           TaskItem(i).Thread.WaitFor;
     finally
-      Backup;
+      isReadyForExit := False;
     end;
   end;
 end;
