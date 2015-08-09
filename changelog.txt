@@ -8,6 +8,10 @@ https://www.mediafire.com/folder/3ccy2c7g36hp3/Fmd
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.21.3 (09-08-2015)
+[*] Fix favoritemanager doesn't showing the result when new chapter found
+[*] Fix per item favorite check
+
 0.9.21.2 (08-08-2015)
 [*] Fix access violation when trying to download new chapter from favorites
 [*] Fix option "Automatic download after finish checking" (favorites) doesn't stored properly
