@@ -2140,9 +2140,6 @@ begin
     else
       MainForm.itRefreshDLInfo.Enabled := False;
 
-    Self.Backup;
-    MainForm.vtDownloadFilters;
-
     if (Count = 0) and (isCheckForFMDDo) then
       ShowExitCounter;
   except
@@ -2258,16 +2255,17 @@ procedure TDownloadManager.StopAllDownloadTasksForExit;
 var
   i: Integer;
 begin
-  if Containers.Count > 0 then
-  begin
+  if Containers.Count > 0 then begin
     isReadyForExit := True;
     try
       for i := 0 to Containers.Count - 1 do
-        if TaskItem(i).ThreadState then
-          TaskItem(i).Thread.Terminate;
+        with TTaskContainer(Containers[i]) do
+          if ThreadState then
+            Thread.Terminate;
       for i := 0 to Containers.Count - 1 do
-        if TaskItem(i).ThreadState then
-          TaskItem(i).Thread.WaitFor;
+        with TTaskContainer(Containers[i]) do
+          if ThreadState then
+            Thread.WaitFor;
     finally
       isReadyForExit := False;
     end;
@@ -2276,41 +2274,33 @@ end;
 
 procedure TDownloadManager.RemoveTask(const taskID: Integer);
 begin
-  if taskID < Containers.Count then
-  begin
-    CS_DownloadManager_Task.Acquire;
-    try
-      if TaskItem(taskID).ThreadState then
-      begin
-        TaskItem(taskID).Status := STATUS_STOP;
-        TaskItem(taskID).Thread.Terminate;
-        TaskItem(taskID).Thread.WaitFor;
+  if (taskID < 0) or (taskID >= Containers.Count) then Exit;
+  CS_DownloadManager_Task.Acquire;
+  try
+    with TTaskContainer(Containers[taskID]) do
+      if ThreadState then begin
+        Thread.Terminate;
+        Thread.WaitFor;
       end;
-      TaskItem(taskID).Free;
-      Containers.Delete(taskID);
-    finally
-      CS_DownloadManager_Task.Release;
-    end;
-    CheckAndActiveTask;
+    TTaskContainer(Containers[taskID]).Free;
+    Containers.Delete(taskID);
+  finally
+    CS_DownloadManager_Task.Release;
   end;
+  CheckAndActiveTask;
 end;
 
 procedure TDownloadManager.RemoveAllFinishedTasks;
 var
   i: Integer;
 begin
-  if Containers.Count = 0 then
-    Exit;
-  // remove
-  i := 0;
-  repeat
-    if TaskItem(i).Status = STATUS_FINISH then
-    begin
-      Containers.Delete(i);
-    end
-    else
-      Inc(i);
-  until i >= Containers.Count;
+  if Containers.Count > 0 then begin
+    i := 0;
+    while i < Containers.Count do
+      if TTaskContainer(Containers[i]).Status = STATUS_FINISH then
+        Containers.Delete(i)
+      else Inc(i);
+  end;
 end;
 
 procedure TDownloadManager.doExitWaitCounter;
