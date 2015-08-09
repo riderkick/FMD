@@ -1891,7 +1891,7 @@ begin
       for i := 0 to Containers.Count - 1 do
       begin
         tid := 'task' + IntToStr(i);
-        with DownloadManagerFile, TTaskContainer(TaskItem(i)) do begin
+        with DownloadManagerFile, TTaskContainer(Containers[i]) do begin
           WriteString(tid, 'Website', DownloadInfo.Website);
           WriteString(tid, 'Link', DownloadInfo.Link);
           WriteString(tid, 'Title', DownloadInfo.Title);
@@ -2197,7 +2197,7 @@ begin
       end;
       Modules.IncActiveTaskCount(ModuleId);
       Thread := TTaskThread.Create;
-      Thread.container := TaskItem(taskID);
+      Thread.container := TTaskContainer(Containers[taskID]);
       Thread.Start;
     end;
   end;
@@ -2319,13 +2319,10 @@ begin
     CS_DownloadManager_Task.Acquire;
     try
       for i := 0 to Containers.Count - 1 do
-      begin
-        if TaskItem(i).Status in Stats then
-        begin
+        if TTaskContainer(Containers[i]).Status in Stats then begin
           Result := True;
           Break;
         end;
-      end;
     finally
       CS_DownloadManager_Task.Release;
     end;
