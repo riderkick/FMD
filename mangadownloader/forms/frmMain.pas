@@ -1936,6 +1936,7 @@ var
   i: Cardinal;
   {$ENDIF}
 begin
+  CloseNow;
   {$IFDEF SELFUPDATE}
   pmUpdate.Items[0].Enabled := True;
   pmUpdate.Items[3].Enabled := True;
