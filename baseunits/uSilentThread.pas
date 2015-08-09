@@ -378,7 +378,7 @@ begin
 
       UpdateVtDownload;
       DLManager.Backup;
-      DLManager.CheckAndActiveTask(False, Self);
+      DLManager.CheckAndActiveTask(False);
 
       // save downloaded chapters
       if Info.mangaInfo.chapterLinks.Count > 0 then

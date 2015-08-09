@@ -197,8 +197,7 @@ type
     // Check and active previous work-in-progress tasks.
     procedure CheckAndActiveTaskAtStartup;
     // Check and active waiting tasks.
-    procedure CheckAndActiveTask(const isCheckForFMDDo: Boolean = False;
-      {%H-}SenderThread: TThread = nil);
+    procedure CheckAndActiveTask(const isCheckForFMDDo: Boolean = False);
     // Active a stopped task.
     procedure SetTaskActive(const taskID: Integer);
     procedure ActiveTask(const taskID : Integer);
@@ -2087,27 +2086,9 @@ begin
   end;
 end;
 
-procedure TDownloadManager.CheckAndActiveTask(const isCheckForFMDDo : Boolean;
-  SenderThread : TThread);
+procedure TDownloadManager.CheckAndActiveTask(const isCheckForFMDDo: Boolean);
 var
   i, tcount: Integer;
-
-  procedure ShowExitCounter;
-  begin
-    if OptionLetFMDDo in [DO_NOTHING, DO_UPDATE] then Exit;
-    if ThreadID <> MainThreadID then
-    begin
-      {$IFDEF FPC271}
-      TThread.Synchronize(TThread.CurrentThread, doExitWaitCounter);
-      {$ELSE}
-      if SenderThread <> nil then
-        TThread.Synchronize(SenderThread, doExitWaitCounter);
-      {$ENDIF}
-    end
-    else
-      doExitWaitCounter;
-  end;
-
 begin
   if Containers.Count = 0 then Exit;
   CS_DownloadManager_Task.Acquire;
@@ -2142,7 +2123,7 @@ begin
       MainForm.itRefreshDLInfo.Enabled := False;
       MainForm.UpdateVtDownload;
       if isCheckForFMDDo then
-        ShowExitCounter;
+        doExitWaitCounter;
     end;
   except
     on E: Exception do
