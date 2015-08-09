@@ -4,6 +4,7 @@
 # Text files
 *.txt	text
 *.pas	text
+*.lfm	text
 *.lpr	text
 *.lpi	text
 *.po	text
