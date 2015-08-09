@@ -12,7 +12,7 @@ uses
   Classes, SysUtils, zipper, FileUtil,LazFileUtils, LazUTF8, LazUTF8Classes,
   Forms, Dialogs, ComCtrls, StdCtrls, Clipbrd, ExtCtrls, DefaultTranslator,
   RegExpr, IniFiles, USimpleException, uMisc, uTranslation,
-  httpsend, blcksock, ssl_openssl, uFMDThread;
+  httpsend, blcksock, ssl_openssl, ssl_openssl_lib, uFMDThread;
 
 type
 
@@ -187,7 +187,7 @@ end;
 
 destructor TDownloadThread.Destroy;
 begin
-  FHTTP.Free;
+  if FHTTP <> nil then FHTTP.Free;
   isDownload := False;
   inherited Destroy;
 end;
@@ -510,6 +510,11 @@ begin
 
       if Extract and FileExistsUTF8(fname) then
       begin
+        FHTTP.Free;
+        FHTTP := nil;
+        SSLImplementation := TSSLNone;
+        ssl_openssl_lib.DestroySSLInterface;
+
         UpdateStatus(Format(RS_UnpackFile, [fname]));
         Sza := GetCurrentDirUTF8 + DirectorySeparator + '7za.exe';
         if _UpdApp and
