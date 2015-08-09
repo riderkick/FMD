@@ -2790,7 +2790,7 @@ begin
     end;
     DLManager.CheckAndActiveTask();
     DLManager.Backup;
-    vtDownload.Repaint;
+    UpdateVtDownload;
   end;
 end;
 
@@ -2806,7 +2806,7 @@ begin
     end;
     DLManager.CheckAndActiveTask();
     DLManager.Backup;
-    vtDownload.Repaint;
+    UpdateVtDownload;
   end;
 end;
 
