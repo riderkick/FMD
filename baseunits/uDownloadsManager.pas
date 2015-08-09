@@ -2141,10 +2141,9 @@ begin
     begin
       MainForm.itRefreshDLInfo.Enabled := False;
       MainForm.UpdateVtDownload;
+      if isCheckForFMDDo then
+        ShowExitCounter;
     end;
-
-    if (Count = 0) and (isCheckForFMDDo) then
-      ShowExitCounter;
   except
     on E: Exception do
       MainForm.ExceptionHandler(Self, E);
