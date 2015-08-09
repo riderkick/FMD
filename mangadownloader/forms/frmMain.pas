@@ -940,6 +940,9 @@ begin
   Application.HintHidePause := 10000;
   sbUpdateList.DoubleBuffered := True;
 
+  // load about
+  LoadAbout;
+
   // remove old updater
   if FileExistsUTF8(fmdDirectory + 'old_updater.exe') then
     DeleteFileUTF8(fmdDirectory + 'old_updater.exe');
@@ -1643,12 +1646,34 @@ end;
 
 procedure TMainForm.LoadAbout;
 var
+  i: Integer;
+  s: string;
   fs: TFileStreamUTF8;
+  st: TStringList;
+  regx: TRegExpr;
 begin
   // load readme.rtf
-  if FileExistsUTF8(CleanAndExpandDirectory(GetCurrentDirUTF8) + README_FILE) then
-  begin
-    fs := TFileStreamUTF8.Create(README_FILE, fmOpenRead or fmShareDenyNone);
+  s := fmdDirectory + README_FILE;
+  if FileExistsUTF8(s) then begin
+    regx := TRegExpr.Create;
+    st := TStringList.Create;
+    try
+      regx.ModifierI := True;
+      regx.Expression := '(version.*)(\d+\.){3}\d+';
+      st.LoadFromFile(s);
+      if st.Count > 0 then
+        for i := 0 to st.Count - 1 do
+          if regx.Exec(st[i]) then
+          begin
+            st[i] := regx.Replace(st[i], '$1\' + FMD_VERSION_NUMBER, True);
+            st.SaveToFile(s);
+            Break;
+          end;
+    finally
+      st.Free;
+      regx.Free;
+    end;
+    fs := TFileStreamUTF8.Create(s, fmOpenRead or fmShareDenyNone);
     try
       rmAbout.LoadRichText(fs);
     finally
@@ -1656,8 +1681,8 @@ begin
     end;
   end;
   // load changelog.txt
-  if FileExistsUTF8(CleanAndExpandDirectory(GetCurrentDirUTF8) + CHANGELOG_FILE) then
-    mmChangelog.Lines.LoadFromFile(CleanAndExpandDirectory(GetCurrentDirUTF8) + CHANGELOG_FILE);
+  s := CleanAndExpandDirectory(fmdDirectory) + CHANGELOG_FILE;
+  if FileExistsUTF8(s) then  mmChangelog.Lines.LoadFromFile(s);
 end;
 
 procedure TMainForm.tvDownloadFilterRepaint;
@@ -3034,12 +3059,9 @@ end;
 
 procedure TMainForm.pcMainChange(Sender: TObject);
 begin
-  if pcMain.ActivePage = tsAbout then
-    LoadAbout
-  else
   if pcMain.ActivePage = tsFavorites then
-    vtFavorites.Repaint;
-  if pcMain.ActivePage = tsOption then
+    vtFavorites.Repaint
+  else if pcMain.ActivePage = tsOption then
     LoadOptions;
 end;
 
