@@ -2227,20 +2227,14 @@ procedure TDownloadManager.StartAllTasks;
 var
   i: Integer;
 begin
-  if Containers.Count > 0 then
-  begin
+  if Containers.Count > 0 then begin
     for i := 0 to Containers.Count - 1 do
-    begin
-      if TaskItem(i).Status in [STATUS_STOP, STATUS_FAILED, STATUS_PROBLEM] then
-      begin
-        TaskItem(i).Status := STATUS_WAIT;
-        TaskItem(i).DownloadInfo.Status := RS_Waiting;
-      end;
-    end;
-    Backup;
+      with TTaskContainer(Containers[i]) do
+        if not ThreadState then begin
+          Status := STATUS_WAIT;
+          DownloadInfo.Status := RS_Waiting;
+        end;
     CheckAndActiveTask;
-    MainForm.vtDownload.Repaint;
-    MainForm.vtDownloadFilters;
   end;
 end;
 
@@ -2248,21 +2242,15 @@ procedure TDownloadManager.StopAllTasks;
 var
   i: Integer;
 begin
-  if Containers.Count > 0 then
-  begin
+  if Containers.Count > 0 then begin
     for i := 0 to Containers.Count - 1 do
-    begin
-      if TaskItem(i).Status = STATUS_WAIT then
-      begin
-        TaskItem(i).Status := STATUS_STOP;
-        TaskItem(i).DownloadInfo.Status := RS_Stopped;
-      end;
-      if TaskItem(i).ThreadState then
-        TaskItem(i).Thread.Terminate;
-    end;
-    Backup;
-    MainForm.vtDownload.Repaint;
-    MainForm.vtDownloadFilters;
+      with TTaskContainer(Containers[i]) do
+        if ThreadState then
+          Thread.Terminate
+        else begin
+          Status := STATUS_STOP;
+          DownloadInfo.Status := RS_Stopped;
+        end;
   end;
 end;
 
