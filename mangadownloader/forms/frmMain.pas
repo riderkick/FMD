@@ -4822,10 +4822,12 @@ end;
 
 procedure TMainForm.UpdateVtDownload;
 begin
-  vtDownload.RootNodeCount := DLManager.Count;
+  if vtDownload.RootNodeCount <> DLManager.Count then
+    vtDownload.RootNodeCount := DLManager.Count;
   // the reason we put vtDownloadFilters in here instead of in DLManager because
   // the size of download list can change while this method is running
   vtDownloadFilters;
+  vtDownload.Repaint;
 end;
 
 procedure TMainForm.UpdateVtFavorites;
