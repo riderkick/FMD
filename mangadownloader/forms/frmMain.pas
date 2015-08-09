@@ -4137,7 +4137,7 @@ begin
   case tvDownloadFilter.Selected.AbsoluteIndex of
     0, 5: ShowTasks;
     1: ShowTasks([STATUS_FINISH]);
-    2: ShowTasks([STATUS_PREPARE, STATUS_DOWNLOAD, STATUS_COMPRESS]);
+    2: ShowTasks([STATUS_WAIT, STATUS_PREPARE, STATUS_DOWNLOAD, STATUS_COMPRESS]);
     3: ShowTasks([STATUS_STOP]);
     4: ShowTasks([STATUS_PROBLEM, STATUS_FAILED]);
     6: ShowTodayTasks;
