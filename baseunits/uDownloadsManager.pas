@@ -2138,7 +2138,10 @@ begin
         MainForm.itRefreshDLInfo.Enabled := True;
     end
     else
+    begin
       MainForm.itRefreshDLInfo.Enabled := False;
+      MainForm.UpdateVtDownload;
+    end;
 
     if (Count = 0) and (isCheckForFMDDo) then
       ShowExitCounter;
