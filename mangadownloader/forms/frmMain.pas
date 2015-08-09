@@ -2780,59 +2780,34 @@ end;
 
 procedure TMainForm.miDownloadResumeClick(Sender: TObject);
 var
-  i: Cardinal;
   xNode: PVirtualNode;
 begin
-  if (vtDownload.SelectedCount = 1) and (Assigned(vtDownload.FocusedNode)) then
-  begin
-    if DLManager.TaskItem(vtDownload.FocusedNode^.Index).Status in
-      [STATUS_STOP, STATUS_PROBLEM, STATUS_FAILED] then
-    begin
-      DLManager.TaskItem(vtDownload.FocusedNode^.Index).Status := STATUS_WAIT;
-      DLManager.TaskItem(vtDownload.FocusedNode^.Index).DownloadInfo.Status :=
-        RS_Waiting;
-      DLManager.CheckAndActiveTask;
-      vtDownload.Repaint;
-      DLManager.Backup;
-    end;
-  end
-  else
-  if (vtDownload.SelectedCount > 1) then
-  begin
-    xNode := vtDownload.GetFirstSelected;
-    for i := 0 to vtDownload.SelectedCount - 1 do
-    begin
-      if vtDownload.Selected[xNode] and
-        (DLManager.TaskItem(xNode^.Index).Status in
-          [STATUS_STOP, STATUS_PROBLEM, STATUS_FAILED]) then
-      begin
-        DLManager.TaskItem(xNode^.Index).Status := STATUS_WAIT;
-        DLManager.TaskItem(xNode^.Index).DownloadInfo.Status := RS_Waiting;
-        DLManager.CheckAndActiveTask;
-      end;
+  if vtDownload.SelectedCount > 0 then begin
+    xNode := vtDownload.GetFirstSelected();
+    while Assigned(xNode) do begin
+      DLManager.SetTaskActive(xNode^.Index);
       xNode := vtDownload.GetNextSelected(xNode);
     end;
-    vtDownload.Repaint;
+    DLManager.CheckAndActiveTask();
     DLManager.Backup;
+    vtDownload.Repaint;
   end;
 end;
 
 procedure TMainForm.miDownloadStopClick(Sender: TObject);
 var
-  i: Cardinal;
   xNode: PVirtualNode;
 begin
-  if not Assigned(vtDownload.FocusedNode) then exit;
-  xNode := vtDownload.GetFirstSelected;
-  for i := 0 to vtDownload.SelectedCount - 1 do
-  begin
-    if vtDownload.Selected[xNode] then
+  if vtDownload.SelectedCount > 0 then begin
+    xNode := vtDownload.GetFirstSelected();
+    while Assigned(xNode) do begin
       DLManager.StopTask(xNode^.Index, False);
-    xNode := vtDownload.GetNextSelected(xNode);
+      xNode := vtDownload.GetNextSelected(xNode);
+    end;
+    DLManager.CheckAndActiveTask();
+    DLManager.Backup;
+    vtDownload.Repaint;
   end;
-  DLManager.Backup;
-  DLManager.CheckAndActiveTask;
-  vtDownload.Repaint;
 end;
 
 procedure TMainForm.miMangaListDownloadAllClick(Sender: TObject);
