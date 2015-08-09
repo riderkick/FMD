@@ -200,6 +200,7 @@ type
     procedure CheckAndActiveTask(const isCheckForFMDDo: Boolean = False;
       {%H-}SenderThread: TThread = nil);
     // Active a stopped task.
+    procedure SetTaskActive(const taskID: Integer);
     procedure ActiveTask(const taskID : Integer);
     // Stop a download/wait task.
     procedure StopTask(const taskID : Integer; const isCheckForActive : Boolean =
@@ -2148,6 +2149,17 @@ begin
     on E: Exception do
       MainForm.ExceptionHandler(Self, E);
   end;
+end;
+
+procedure TDownloadManager.SetTaskActive(const taskID: Integer);
+begin
+  if (taskID < 0) or (taskID >= Containers.Count) then Exit;
+  with TTaskContainer(Containers[taskID]) do
+    if not ThreadState then
+    begin
+      Status := STATUS_WAIT;
+      DownloadInfo.Status := RS_Waiting;
+    end;
 end;
 
 procedure TDownloadManager.CheckAndActiveTaskAtStartup;
