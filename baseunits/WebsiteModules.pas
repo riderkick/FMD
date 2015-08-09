@@ -439,7 +439,7 @@ begin
   if (ModuleId < 0) or (ModuleId >= FModuleList.Count) then Exit;
   with TModuleContainer(FModuleList[ModuleId]) do
     if MaxTaskLimit > 0 then
-      InterLockedIncrement(ActiveTaskCount);
+      ActiveTaskCount := InterLockedIncrement(ActiveTaskCount);
 end;
 
 procedure TWebsiteModules.DecActiveTaskCount(ModuleId: Integer);
@@ -447,7 +447,7 @@ begin
   if (ModuleId < 0) or (ModuleId >= FModuleList.Count) then Exit;
   with TModuleContainer(FModuleList[ModuleId]) do
     if ActiveTaskCount > 0 then
-      InterLockedDecrement(ActiveTaskCount);
+      ActiveTaskCount := InterLockedDecrement(ActiveTaskCount);
 end;
 
 function TWebsiteModules.CanCreateTask(ModuleId: Integer): Boolean;
@@ -464,7 +464,7 @@ begin
   if (ModuleId < 0) or (ModuleId >= FModuleList.Count) then Exit;
   with TModuleContainer(FModuleList[ModuleId]) do
     if MaxConnectionLimit > 0 then
-      InterLockedIncrement(ActiveConnectionCount);
+      ActiveConnectionCount := InterLockedIncrement(ActiveConnectionCount);
 end;
 
 procedure TWebsiteModules.DecActiveConnectionCount(ModuleId: Integer);
@@ -472,7 +472,7 @@ begin
   if (ModuleId < 0) or (ModuleId >= FModuleList.Count) then Exit;
   with TModuleContainer(FModuleList[ModuleId]) do
     if ActiveConnectionCount > 0 then
-      InterLockedDecrement(ActiveConnectionCount);
+      ActiveConnectionCount := InterLockedDecrement(ActiveConnectionCount);
 end;
 
 function TWebsiteModules.CanCreateConnection(ModuleId: Integer): Boolean;
