@@ -2229,7 +2229,7 @@ begin
   if Containers.Count > 0 then begin
     for i := 0 to Containers.Count - 1 do
       with TTaskContainer(Containers[i]) do
-        if not ThreadState then begin
+        if (Status <> STATUS_FINISH) and (not ThreadState) then begin
           Status := STATUS_WAIT;
           DownloadInfo.Status := RS_Waiting;
         end;
@@ -2246,7 +2246,7 @@ begin
       with TTaskContainer(Containers[i]) do
         if ThreadState then
           Thread.Terminate
-        else begin
+        else if Status <> STATUS_FINISH then begin
           Status := STATUS_STOP;
           DownloadInfo.Status := RS_Stopped;
         end;
