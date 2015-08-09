@@ -328,21 +328,24 @@ end;
 
 procedure TFavoriteTask.Execute;
 var
-  i, cthread: Integer;
+  i, cthread, cmaxthreads: Integer;
 begin
   manager.isRunning := True;
   Synchronize(SyncStartChecking);
   try
     while not Terminated do
     begin
+      cmaxthreads := OptionMaxThreads;
       // if current thread count > max threads allowed we wait until thread count decreased
-      while (not Terminated) and (threads.Count >= OptionMaxThreads) do
+      while (not Terminated) and (threads.Count >= cmaxthreads) do
         Sleep(SOCKHEARTBEATRATE);
       Checkout;
       // if there is concurent connection limit applied and no more possible item to check
       // we will wait until thread count decreased
+      // break wait if OptionMaxThreads changed
       cthread := threads.Count;
-      while (not Terminated) and (threads.Count > 0) and (threads.Count = cthread) do
+      while (not Terminated) and (threads.Count > 0) and (threads.Count = cthread) and
+        (cmaxthreads = OptionMaxThreads) do
         Sleep(SOCKHEARTBEATRATE);
       // if there is no more item need to be checked, but thread count still > 0 we will wait for it
       // we will also wait if there is new item pushed, so we will check it after it
@@ -350,6 +353,9 @@ begin
         Sleep(SOCKHEARTBEATRATE);
       if statuscheck = 0 then Break;
     end;
+
+    while (not Terminated) and (threads.Count > 0) do
+      Sleep(SOCKHEARTBEATRATE);
 
     if Terminated and (threads.Count > 0) then
     begin
