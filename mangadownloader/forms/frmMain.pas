@@ -1087,6 +1087,7 @@ end;
 
 procedure TMainForm.CloseNow;
 begin
+  //Terminating all threads and wait for it
   if Assigned(CheckUpdateThread) then
   begin
     CheckUpdateThread.Terminate;
@@ -1102,17 +1103,6 @@ begin
     OpenDBThread.Terminate;
     OpenDBThread.WaitFor;
   end;
-  if Assigned(FormDropTarget) then
-    FormDropTarget.Close;
-  tmBackup.Enabled := False;
-  itSaveDownloadedList.Enabled := False;
-  itRefreshDLInfo.Enabled := False;
-  itCheckFav.Enabled := False;
-  itAnimate.Enabled := False;
-  itStartup.Enabled := False;
-  itMonitor.Enabled := False;
-
-  //Terminating all threads and wait for it
   if isGetMangaInfos then
   begin
     GetInfosThread.IsFlushed := True;
@@ -1127,6 +1117,17 @@ begin
   FavoriteManager.StopChekForNewChapter(True);
   SilentThreadManager.StopAll(True);
   DLManager.StopAllDownloadTasksForExit;
+
+  tmBackup.Enabled := False;
+  itSaveDownloadedList.Enabled := False;
+  itRefreshDLInfo.Enabled := False;
+  itCheckFav.Enabled := False;
+  itAnimate.Enabled := False;
+  itStartup.Enabled := False;
+  itMonitor.Enabled := False;
+
+  if Assigned(FormDropTarget) then
+    FormDropTarget.Close;
 
   if FMDInstance <> nil then
   begin
