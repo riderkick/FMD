@@ -46,11 +46,11 @@ type
     procedure SyncFinishChecking;
     procedure SyncUpdateBtnCaption;
     procedure Checkout;
+    procedure DoTerminate; override;
     procedure Execute; override;
   public
     manager: TFavoriteManager;
     threads: TFPList;
-    procedure PushNewCheck;
     procedure UpdateBtnCaption(Cap: String);
     constructor Create;
     destructor Destroy; override;
@@ -319,6 +319,13 @@ begin
   end;
 end;
 
+procedure TFavoriteTask.DoTerminate;
+begin
+  manager.isRunning := False;
+  manager.taskthread := nil;
+  inherited DoTerminate;
+end;
+
 procedure TFavoriteTask.Execute;
 var
   i, cthread: Integer;
@@ -326,16 +333,14 @@ begin
   manager.isRunning := True;
   Synchronize(SyncStartChecking);
   try
-    Checkout;
-    while (not Terminated) and (statuscheck > 0) do
+    while not Terminated do
     begin
-      Sleep(SOCKHEARTBEATRATE);
       // if current thread count > max threads allowed we wait until thread count decreased
       while (not Terminated) and (threads.Count >= OptionMaxThreads) do
         Sleep(SOCKHEARTBEATRATE);
       Checkout;
       // if there is concurent connection limit applied and no more possible item to check
-      // we will wait until thread count decresed
+      // we will wait until thread count decreased
       cthread := threads.Count;
       while (not Terminated) and (threads.Count > 0) and (threads.Count = cthread) do
         Sleep(SOCKHEARTBEATRATE);
@@ -343,6 +348,7 @@ begin
       // we will also wait if there is new item pushed, so we will check it after it
       while (not Terminated) and (statuscheck = 0) and (threads.Count > 0) do
         Sleep(SOCKHEARTBEATRATE);
+      if statuscheck = 0 then Break;
     end;
 
     if Terminated and (threads.Count > 0) then
@@ -375,11 +381,6 @@ begin
   Synchronize(SyncFinishChecking);
 end;
 
-procedure TFavoriteTask.PushNewCheck;
-begin
-  Inc(statuscheck);
-end;
-
 procedure TFavoriteTask.UpdateBtnCaption(Cap: String);
 begin
   FBtnCaption := Cap;
@@ -394,8 +395,6 @@ end;
 
 destructor TFavoriteTask.Destroy;
 begin
-  manager.taskthread := nil;
-  manager.isRunning := False;
   threads.Free;
   inherited Destroy;
 end;
@@ -454,7 +453,14 @@ begin
   if isDlgCounter then Exit;
   try
     if FavoriteIndex > -1 then
-      TFavoriteContainer(FFavorites[FavoriteIndex]).Status := STATUS_CHECK
+    begin
+      if TFavoriteContainer(FFavorites[FavoriteIndex]).Status = STATUS_IDLE then
+      begin
+        TFavoriteContainer(FFavorites[FavoriteIndex]).Status := STATUS_CHECK;
+        if Assigned(taskthread) then
+          taskthread.statuscheck := InterLockedIncrement(taskthread.statuscheck);
+      end;
+    end
     else
     begin
       if isRunning then
@@ -480,9 +486,7 @@ begin
       taskthread := TFavoriteTask.Create;
       taskthread.manager := Self;
       taskthread.Start;
-    end
-    else
-      taskthread.PushNewCheck;
+    end;
   except
     on E: Exception do
       ExceptionHandle(Self, E);
