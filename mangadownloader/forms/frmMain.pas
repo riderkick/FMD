@@ -3334,11 +3334,13 @@ end;
 procedure TMainForm.tbDownloadResumeAllClick(Sender: TObject);
 begin
   DLManager.StartAllTasks;
+  UpdateVtDownload;
 end;
 
 procedure TMainForm.tbDownloadStopAllClick(Sender: TObject);
 begin
   DLManager.StopAllTasks;
+  UpdateVtDownload;
 end;
 
 procedure TMainForm.tbDropTargetOpacityChange(Sender: TObject);
