@@ -913,7 +913,7 @@ msgid ""
 "\n"
 "Custom Genres:\n"
 "- Separate multiple genres with ','.\n"
-"- Exclude a genre by placing ''!'' at the beginning of a genre.\n"
+"- Exclude a genre by placing '!' or '-' at the beginning of a genre.\n"
 "- Example: Adventure,!Ecchi,Comedy.\n"
 msgstr ""
 
