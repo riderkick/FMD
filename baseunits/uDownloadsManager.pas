@@ -1639,6 +1639,7 @@ procedure TTaskContainer.SetWebsite(AValue: String);
 begin
   if FWebsite = AValue then Exit;
   FWebsite := AValue;
+  DownloadInfo.Website := AValue;
   MangaSiteID := GetMangaSiteID(AValue);
   ModuleId := Modules.LocateModule(AValue);
 end;
