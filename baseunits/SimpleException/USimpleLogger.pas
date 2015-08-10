@@ -41,12 +41,12 @@ const
   _LOG_SYMBOL = 'EWIDV';
 
   procedure SetLogFile(const LogFileName: String);
-  procedure WriteLog_E(const msg: String); overload;
+  procedure WriteLog_E(const msg: String); overload; inline;
   procedure WriteLog_E(const msg: String; Exc: Exception; Sender: TObject = nil); overload;
-  procedure Writelog_W(const msg: String);
-  procedure Writelog_I(const msg: String);
-  procedure Writelog_D(const msg: String);
-  procedure Writelog_V(const msg: String);
+  procedure Writelog_W(const msg: String); inline;
+  procedure Writelog_I(const msg: String); inline;
+  procedure Writelog_D(const msg: String); inline;
+  procedure Writelog_V(const msg: String); inline;
   function SimpleBackTraceStr(const Addr: Pointer): String;
   function GetStackTraceInfo(const MaxStackCount: Integer = 20): string;
 
