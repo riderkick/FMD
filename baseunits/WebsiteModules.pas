@@ -28,6 +28,7 @@ type
   TOnGetInfo = function(var MangaInfo: TMangaInformation; const URL: String;
     const Reconnect: Integer; Module: TModuleContainer): Integer;
 
+  TOnTaskStart = function(var Task: TTaskContainer; Module: TModuleContainer): Boolean;
   TOnGetPageNumber = function(var DownloadThread: TDownloadThread;
     const URL: String; Module: TModuleContainer): Boolean;
   TOnGetImageURL = function(var DownloadThread: TDownloadThread;
@@ -37,7 +38,7 @@ type
     const URL, Path, Name, Prefix: String; Module: TModuleContainer): Boolean;
 
   TModuleMethod = (MMGetDirectoryPageNumber, MMGetNameAndLink, MMGetInfo,
-    MMGetPageNumber, MMGetImageURL, MMDownloadImage);
+    MMTaskStart, MMGetPageNumber, MMGetImageURL, MMDownloadImage);
 
   { TModuleContainer }
 
@@ -60,6 +61,7 @@ type
     OnGetDirectoryPageNumber: TOnGetDirectoryPageNumber;
     OnGetNameAndLink: TOnGetNameAndLink;
     OnGetInfo: TOnGetInfo;
+    OnTaskStart: TOnTaskStart;
     OnGetPageNumber: TOnGetPageNumber;
     OnGetImageURL: TOnGetImageURL;
     OnDownloadImage: TOnDownloadImage;
@@ -90,9 +92,11 @@ type
     function LocateModule(const Website: String): Integer;
     function LocateModuleByHost(const Host: String): Integer;
     function ModuleAvailable(const ModuleId: Integer;
-      ModuleMethod: TModuleMethod): Boolean; overload;
+      ModuleMethod: TModuleMethod): Boolean;
+      overload;
     function ModuleAvailable(const Website: String;
-      ModuleMethod: TModuleMethod): Boolean; overload;
+      ModuleMethod: TModuleMethod): Boolean;
+      overload;
     function ModuleAvailable(const Website: String; ModuleMethod: TModuleMethod;
       var OutIndex: Integer): Boolean; overload;
     function ModuleAvailable(const Website: String): Boolean; overload;
@@ -116,15 +120,22 @@ type
     function GetInfo(var MangaInfo: TMangaInformation; const URL: String;
       const Reconnect: Integer; const Website: String): Integer; overload;
 
+    function TaskStart(var Task: TTaskContainer; const ModuleId: Integer): Boolean;
+      overload;
+    function TaskStart(var Task: TTaskContainer; const Website: String): Boolean;
+      overload;
+
     function GetPageNumber(var DownloadThread: TDownloadThread;
       const URL: String; const ModuleId: Integer): Boolean; overload;
     function GetPageNumber(var DownloadThread: TDownloadThread;
-      const URL, Website: String): Boolean; overload;
+      const URL, Website: String): Boolean;
+      overload;
 
     function GetImageURL(var DownloadThread: TDownloadThread;
       const URL: String; const ModuleId: Integer): Boolean; overload;
     function GetImageURL(var DownloadThread: TDownloadThread;
-      const URL, Website: String): Boolean; overload;
+      const URL, Website: String): Boolean;
+      overload;
 
     function DownloadImage(var DownloadThread: TDownloadThread;
       const URL, Path, Name, Prefix: String; ModuleId: Integer): Boolean;
@@ -265,7 +276,6 @@ begin
         Break;
       end;
     if Result = -1 then
-    begin
       with TRegExpr.Create do
         try
           Expression := REGEX_HOST;
@@ -279,7 +289,6 @@ begin
         finally
           Free;
         end;
-    end;
   end;
 end;
 
@@ -289,7 +298,6 @@ begin
   Result := False;
   if (ModuleId < 0) or (ModuleId >= FModuleList.Count) then Exit;
   with TModuleContainer(FModuleList[ModuleId]) do
-  begin
     case ModuleMethod of
       MMGetDirectoryPageNumber: Result := Assigned(OnGetDirectoryPageNumber);
       MMGetNameAndLink: Result := Assigned(OnGetNameAndLink);
@@ -300,7 +308,6 @@ begin
       else
         Result := False;
     end;
-  end;
 end;
 
 function TWebsiteModules.ModuleAvailable(const Website: String;
@@ -375,6 +382,22 @@ function TWebsiteModules.GetInfo(var MangaInfo: TMangaInformation;
   const URL: String; const Reconnect: Integer; const Website: String): Integer;
 begin
   Result := GetInfo(MangaInfo, URL, Reconnect, LocateModule(Website));
+end;
+
+function TWebsiteModules.TaskStart(var Task: TTaskContainer;
+  const ModuleId: Integer): Boolean;
+begin
+  Result := False;
+  if (ModuleId < 0) or (ModuleId >= FModuleList.Count) then Exit;
+  if Assigned(TModuleContainer(FModuleList[ModuleId]).OnTaskStart) then
+    Result := TModuleContainer(FModuleList[ModuleId]).OnTaskStart(
+      Task, TModuleContainer(FModuleList[ModuleId]));
+end;
+
+function TWebsiteModules.TaskStart(var Task: TTaskContainer;
+  const Website: String): Boolean;
+begin
+  TaskStart(Task, LocateModule(Website));
 end;
 
 function TWebsiteModules.GetPageNumber(var DownloadThread: TDownloadThread;
