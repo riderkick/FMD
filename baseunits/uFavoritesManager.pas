@@ -163,6 +163,7 @@ procedure TFavoriteContainer.SetWebsite(AValue: String);
 begin
   if FWebsite = AValue then Exit;
   FWebsite := AValue;
+  FavoriteInfo.Website := AValue;
   FModuleId := Modules.LocateModule(FavoriteInfo.Website);
 end;
 
