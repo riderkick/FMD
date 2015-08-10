@@ -1960,15 +1960,10 @@ begin
   if Str.Count > 0 then
   begin
     i := 0;
-    while i < Str.Count do
-    begin
-      if Trim(Str[i]) = '' then
-        Str.Delete(i)
-      else
-      begin
-        Str[i] := Trim(Str[i]);
-        Inc(i);
-      end;
+    while i < Str.Count do begin
+      Str[i] := Trim(Str[i]);
+      if Str[i] = '' then Str.Delete(i)
+      else Inc(i);
     end;
   end;
 end;
