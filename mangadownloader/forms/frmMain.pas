@@ -1459,7 +1459,6 @@ begin
   end;
   DLManager.CheckAndActiveTask;
   UpdateVtDownload;
-  DLManager.Backup;
 end;
 
 procedure TMainForm.miDownloadMergeCompletedClick(Sender: TObject);
@@ -1827,7 +1826,6 @@ begin
   DLManager.TaskItem(pos).DownloadInfo.SaveTo := s;
   UpdateVtDownload;
 
-  DLManager.Backup;
   DLManager.CheckAndActiveTask;
   DLManager.AddToDownloadedChaptersList(
     mangaInfo.website + mangaInfo.link, DLManager.TaskItem(pos).ChapterLinks);
@@ -2774,7 +2772,6 @@ begin
       Exit;
   DLManager.RemoveAllFinishedTasks;
   UpdateVtDownload;
-  DLManager.Backup;
   // the reason we put it in here instead of in DLManager because of the size of
   // download list will change during this method
 end;
@@ -2790,7 +2787,6 @@ begin
       xNode := vtDownload.GetNextSelected(xNode);
     end;
     DLManager.CheckAndActiveTask();
-    DLManager.Backup;
     UpdateVtDownload;
   end;
 end;
@@ -2806,7 +2802,6 @@ begin
       xNode := vtDownload.GetNextSelected(xNode);
     end;
     DLManager.CheckAndActiveTask();
-    DLManager.Backup;
     UpdateVtDownload;
   end;
 end;

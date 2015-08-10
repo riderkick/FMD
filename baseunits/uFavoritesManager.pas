@@ -717,7 +717,6 @@ begin
             Inc(counter);
           end;
           Backup;
-          DLManager.Backup;
           if Assigned(OnUpdateDownload) then
             OnUpdateDownload;
           if LNCResult = ncrDownload then

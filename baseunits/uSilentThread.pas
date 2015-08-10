@@ -377,7 +377,6 @@ begin
       DLManager.TaskItem(p).downloadInfo.SaveTo := FSavePath;
 
       UpdateVtDownload;
-      DLManager.Backup;
       DLManager.CheckAndActiveTask(False);
 
       // save downloaded chapters
