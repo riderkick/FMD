@@ -1013,76 +1013,40 @@ begin
   end;
 end;
 
-procedure TFavoriteManager.Sort(const AColumn: Integer);
+function CompareFavoriteContainer(Item1, Item2: Pointer): Integer;
 
   function GetStr(ARow: Pointer): String;
   begin
     with TFavoriteContainer(ARow).FavoriteInfo do
-      case AColumn of
+      case TFavoriteContainer(ARow).Manager.SortColumn of
         1: Result := Title;
         2: Result := currentChapter;
         3: Result := website;
         4: Result := SaveTo;
+        else
+          Result := '';
       end;
   end;
 
-  function Compare(Item1, Item2: Pointer): Integer;
-  var
-    ItemT: Pointer;
+var
+  ItemT: Pointer;
+begin
+  if TFavoriteContainer(Item1).Manager.SortDirection then
   begin
-    if SortDirection then
-    begin
-      ItemT := Item1;
-      Item1 := Item2;
-      Item2 := ItemT;
-    end;
-    Result := NaturalCompareStr(GetStr(Item1), GetStr(Item2));
+    ItemT := Item1;
+    Item1 := Item2;
+    Item2 := ItemT;
   end;
+  Result := NaturalCompareStr(GetStr(Item1), GetStr(Item2));
+end;
 
-  procedure QSort(FList: TFPList; L, R: Integer);
-  var
-    I, J: longint;
-    P, Q: Pointer;
-  begin
-    repeat
-      I := L;
-      J := R;
-      P := FList[(L + R) div 2];
-      repeat
-        while Compare(P, FList[i]) > 0 do
-          I := I + 1;
-        while Compare(P, FList[J]) < 0 do
-          J := J - 1;
-        if I <= J then
-        begin
-          Q := FList[I];
-          Flist[I] := FList[J];
-          FList[J] := Q;
-          I := I + 1;
-          J := J - 1;
-        end;
-      until I > J;
-      if J - L < R - I then
-      begin
-        if L < J then
-          QSort(FList, L, J);
-        L := I;
-      end
-      else
-      begin
-        if I < R then
-          QSort(FList, I, R);
-        R := J;
-      end;
-    until L >= R;
-  end;
-
+procedure TFavoriteManager.Sort(const AColumn: Integer);
 begin
   if FFavorites.Count < 2 then Exit;
   CS_Favorites.Acquire;
   try
     SortColumn := AColumn;
-    QSort(FFavorites, 0, FFavorites.Count - 1);
+    FFavorites.Sort(CompareFavoriteContainer);
   finally
     CS_Favorites.Release;
   end;
