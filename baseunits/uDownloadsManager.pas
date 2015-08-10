@@ -1415,6 +1415,8 @@ begin
       //if no total page number found, we reset pagelinks here
       if container.MangaSiteID = SUBMANGA_ID then
         container.PageLinks.Clear;
+      if ModuleId > -1 then
+        Modules.TaskStart(container, ModuleId);
 
       // Get page number.
       if container.PageLinks.Count = 0 then
