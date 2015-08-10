@@ -53,7 +53,7 @@ function FindStrLinearPos(aList: TStrings; aValue: String): Integer;
 function FormatByteSize(const bytes :longint; persecond: boolean = False) :string;
 
 //sorting
-function NaturalCompareStr(Str1, Str2: string): integer;
+function NaturalCompareStr(Str1, Str2: string): integer; inline;
 
 //run external process
 function RunExternalProcessAsAdmin(Exe, Params: String; ShowWind: Boolean = True;
