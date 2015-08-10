@@ -647,12 +647,7 @@ begin
       begin
         //if there's new chapters
         if OptionAutoCheckFavDownload then
-        begin
-          if MainForm.cbAddAsStopped.Checked then
-            LNCResult := ncrQueue
-          else
-            LNCResult := ncrDownload;
-        end
+            LNCResult := ncrDownload
         else
         begin
           with TNewChapter.Create(MainForm) do try
