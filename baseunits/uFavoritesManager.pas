@@ -685,7 +685,7 @@ begin
                     with TTaskContainer(DLManager.Containers.Last) do begin
                       Manager := DLManager;
                       CurrentDownloadChapterPtr := 0;
-                      Website := Website;
+                      Website := FavoriteInfo.Website;
                       with DownloadInfo do begin
                         Website := FavoriteInfo.Website;
                         Link := FavoriteInfo.Link;
