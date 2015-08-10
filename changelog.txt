@@ -8,6 +8,12 @@ https://www.mediafire.com/folder/3ccy2c7g36hp3/Fmd
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.21.6 (11-08-2015)
+[*] Doujin-Mode: reset image url every task start, fix expired url
+[*] Fix empty website when adding a favorite
+[*] Fix filter custom genres incorrectly treats whitespaces as separator
+[*] Various changes
+
 0.9.21.5 (10-08-2015)
 [*] Fix remove multiple task
 [*] Fix timer auto check favorites on interval not enabled if auto check new version not enabled
