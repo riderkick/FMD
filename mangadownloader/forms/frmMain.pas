@@ -2372,14 +2372,16 @@ begin
           Inc(i);
       end;
     end;
-    for i := 0 to 37 do
-    begin
-      if TCheckBox(pnGenres.Controls[i]).State = cbChecked then
-        checkGenres.Add(TCheckBox(pnGenres.Controls[i]).Caption)
-      else
-      if TCheckBox(pnGenres.Controls[i]).State = cbUnchecked then
-        uncheckGenres.Add(TCheckBox(pnGenres.Controls[i]).Caption);
-    end;
+
+    if pnGenres.ControlCount > 0 then
+      for i := 0 to pnGenres.ControlCount - 1 do
+        if pnGenres.Controls[i] is TCheckBox then begin
+          if TCheckBox(pnGenres.Controls[i]).State = cbChecked then
+            checkGenres.Add(TCheckBox(pnGenres.Controls[i]).Caption)
+          else
+          if TCheckBox(pnGenres.Controls[i]).State = cbUnchecked then
+            uncheckGenres.Add(TCheckBox(pnGenres.Controls[i]).Caption);
+        end;
 
     if dataProcess.CanFilter(
       checkGenres,
