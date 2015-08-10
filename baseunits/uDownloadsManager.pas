@@ -2313,92 +2313,53 @@ begin
   end;
 end;
 
-procedure TDownloadManager.Sort(const AColumn: Integer);
+function CompareTaskContainer(Item1, Item2: Pointer): Integer;
 
   function GetStr(ARow: Pointer): String;
   begin
-    case AColumn of
-      0: Result := TTaskContainer(ARow).DownloadInfo.title;
-      1: Result := TTaskContainer(ARow).DownloadInfo.Status;
-      2: Result := TTaskContainer(ARow).DownloadInfo.Progress;
-      3: Result := TTaskContainer(ARow).DownloadInfo.TransferRate;
-      4: Result := TTaskContainer(ARow).DownloadInfo.Website;
-      5: Result := TTaskContainer(ARow).DownloadInfo.SaveTo;
-      6: Result := FloatToStr(TTaskContainer(ARow).DownloadInfo.dateTime, FMDFormatSettings);
-    end;
+    with TTaskContainer(ARow).DownloadInfo do
+      case TTaskContainer(ARow).Manager.SortColumn of
+        0: Result := Title;
+        1: Result := Status;
+        2: Result := Progress;
+        3: Result := TransferRate;
+        4: Result := Website;
+        5: Result := SaveTo;
+        else
+          Result := '';
+      end;
   end;
 
-  function GetAddedDate(ARow: Pointer): TDateTime;
+  function GetDateTime(ARow: Pointer): TDateTime;
   begin
     Result := TTaskContainer(ARow).DownloadInfo.DateTime;
   end;
 
-  function Compare(Item1, Item2: Pointer): Integer;
-  var
-    ItemT: Pointer;
+var
+  ItemT: Pointer;
+begin
+  if TTaskContainer(Item1).Manager.SortDirection then
   begin
-    if SortDirection then
-    begin
-      ItemT := Item1;
-      Item1 := Item2;
-      Item2 := ItemT;
-    end;
-    case AColumn of
-      6 : Result := CompareDateTime(GetAddedDate(Item1), GetAddedDate(Item2));
-      else
-        Result := NaturalCompareStr(GetStr(Item1), GetStr(Item2));
-    end;
+    ItemT := Item1;
+    Item1 := Item2;
+    Item2 := ItemT;
   end;
+  if TTaskContainer(Item1).Manager.SortColumn = 6 then
+    Result := CompareDateTime(GetDateTime(Item1), GetDateTime(Item2))
+  else
+    Result := NaturalCompareStr(GetStr(Item1), GetStr(Item2));
+end;
 
-  procedure QSort(FList: TFPList; L, R: Integer);
-  var
-    I, J : Longint;
-    P, Q : Pointer;
-  begin
-   repeat
-     I := L;
-     J := R;
-     P := FList[ (L + R) div 2 ];
-     repeat
-       while Compare(P, FList[i]) > 0 do
-         I := I + 1;
-       while Compare(P, FList[J]) < 0 do
-         J := J - 1;
-       If I <= J then
-       begin
-         Q := FList[I];
-         Flist[I] := FList[J];
-         FList[J] := Q;
-         I := I + 1;
-         J := J - 1;
-       end;
-     until I > J;
-     if J - L < R - I then
-     begin
-       if L < J then
-         QSort(FList, L, J);
-       L := I;
-     end
-     else
-     begin
-       if I < R then
-         QSort(FList, I, R);
-       R := J;
-     end;
-   until L >= R;
-  end;
-
+procedure TDownloadManager.Sort(const AColumn: Integer);
 begin
   if Containers.Count < 2 then Exit;
   CS_DownloadManager_Task.Acquire;
   try
     SortColumn := AColumn;
-    QSort(Containers, 0, Containers.Count - 1);
+    Containers.Sort(CompareTaskContainer);
   finally
     CS_DownloadManager_Task.Release;
   end;
-  MainForm.vtDownload.Repaint;
-  MainForm.vtDownloadFilters;
 end;
 
 end.
