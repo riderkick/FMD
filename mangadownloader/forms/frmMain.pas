@@ -4636,11 +4636,10 @@ begin
     OptionAutoCheckFavIntervalMinutes := seOptionAutoCheckFavIntervalMinutes.Value;
     OptionAutoCheckFavDownload := cbOptionAutoCheckFavDownload.Checked;
     OptionAutoCheckFavRemoveCompletedManga := cbOptionAutoCheckFavRemoveCompletedManga.Checked;
-    if OptionAutoCheckFavIntervalMinutes <> 0 then
-      itCheckFav.Interval := OptionAutoCheckFavIntervalMinutes * 60000;
-    itCheckFav.Enabled := OptionAutoCheckLatestVersion and (OptionAutoCheckFavIntervalMinutes <> 0);
     OptionUpdateListNoMangaInfo := cbOptionUpdateListNoMangaInfo.Checked;
     OptionUpdateListRemoveDuplicateLocalData := cbOptionUpdateListRemoveDuplicateLocalData.Checked;
+    itCheckFav.Interval := OptionAutoCheckFavIntervalMinutes * 60000;
+    itCheckFav.Enabled := OptionAutoCheckFavInterval and (itCheckFav.Interval > 0);
 
     //misc
     OptionBatotoShowScanGroup := cbOptionBatotoShowScanGroup.Checked;
