@@ -29,13 +29,13 @@ type
 
 //String utils
 procedure padZero(var S: String; VolLength, ChapLength: Integer);
-function padZeros(const S: String; VolLength, ChapLength: Integer): String;
-function BrackText(const S: String): String; overload;
-function BrackText(const S: Integer): String; overload;
-function BrackSquareText(const S: String): String; overload;
-function BrackSquareText(const S: Integer): String; overload;
-function BrackTextQuoted(const S: String): String; overload;
-function BrackTextQuoted(const S: Integer): String; overload;
+function padZeros(const S: String; VolLength, ChapLength: Integer): String; inline;
+function BrackText(const S: String): String; overload; inline;
+function BrackText(const S: Integer): String; overload; inline;
+function BrackSquareText(const S: String): String; overload; inline;
+function BrackSquareText(const S: Integer): String; overload; inline;
+function BrackTextQuoted(const S: String): String; overload; inline;
+function BrackTextQuoted(const S: Integer): String; overload; inline;
 function StringToASCII(S: String): String;
 function StringToHex(S: String): String;
 
