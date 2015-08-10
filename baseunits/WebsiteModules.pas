@@ -81,6 +81,7 @@ type
     function GetMaxConnectionLimit(const ModuleId: Integer): Integer;
     function GetActiveTaskCount(const ModuleId: Integer): Integer;
     function GetActiveConnectionLimit(const ModuleId: Integer): Integer;
+    function GetWebsite(const ModuleId: Integer): String;
   public
     constructor Create;
     destructor Destroy; override;
@@ -135,6 +136,7 @@ type
 
     property Module[const ModuleId: Integer]: TModuleContainer read GetModule;
     property Count: Integer read GetCount;
+    property Website[const ModuleId: Integer]: String read GetWebsite;
 
     property MaxTaskLimit[const ModuleId: Integer]: Integer read GetMaxTaskLimit;
     property MaxConnectionLimit[const ModuleId: Integer]: Integer
@@ -517,6 +519,12 @@ function TWebsiteModules.GetActiveConnectionLimit(const ModuleId: Integer): Inte
 begin
   if (ModuleId < 0) or (ModuleId >= FModuleList.Count) then Exit(0);
   Result := TModuleContainer(FModuleList[ModuleId]).ActiveConnectionCount;
+end;
+
+function TWebsiteModules.GetWebsite(const ModuleId: Integer): String;
+begin
+  if (ModuleId < 0) or (ModuleId >= FModuleList.Count) then Exit('');
+  Result := TModuleContainer(FModuleList[ModuleId]).Website;
 end;
 
 procedure doInitialize;
