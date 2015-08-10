@@ -25,7 +25,7 @@ var
   Source: TStringList;
   Parser: TTreeParser;
   s: String;
-  v:IXQValue;
+  v: IXQValue;
 begin
   Result := NET_PROBLEM;
   if MangaInfo = nil then Exit;
@@ -73,7 +73,6 @@ begin
   Source := TStringList.Create;
   try
     if MangaInfo.GetPage(TObject(Source), info.url, Reconnect) then
-    begin
       if Source.Count > 0 then
       begin
         Result := NO_ERROR;
@@ -105,10 +104,17 @@ begin
       end
       else
         Result := INFORMATION_NOT_FOUND;
-    end;
   finally
     Source.Free;
   end;
+end;
+
+function TaskStart(var Task: TTaskContainer; Module: TModuleContainer): Boolean;
+begin
+  Result := True;
+  if Task = nil then Exit;
+  Task.PageLinks.Clear;
+  Task.PageNumber := 0;
 end;
 
 function GetPageNumber(var DownloadThread: TDownloadThread; const URL: String;
@@ -129,7 +135,6 @@ begin
   try
     if DownloadThread.GetPage(TObject(Source), FillHost(Module.RootURL, URL),
       Container.Manager.retryConnect) then
-    begin
       if Source.Count > 0 then
       begin
         Result := True;
@@ -142,7 +147,6 @@ begin
           Parser.Free;
         end;
       end;
-    end;
   finally
     Source.Free;
   end;
@@ -159,6 +163,7 @@ begin
     OnGetDirectoryPageNumber := @GetDirectoryPageNumber;
     OnGetNameAndLink := @GetNameAndLink;
     OnGetInfo := @GetInfo;
+    OnTaskStart := @TaskStart;
     OnGetPageNumber := @GetPageNumber;
   end;
 end;
