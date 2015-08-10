@@ -762,9 +762,9 @@ type
     Title,
     Link,
     SaveTo,
-    numbering,
-    downloadedChapterList,
-    currentChapter: String;
+    Numbering,
+    DownloadedChapterList,
+    CurrentChapter: String;
   end;
 
   TCardinalList = TFPGList<Cardinal>;
