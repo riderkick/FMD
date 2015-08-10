@@ -820,7 +820,6 @@ begin
       with FavoriteInfo do begin
         Title := ATitle;
         CurrentChapter := ACurrentChapter;
-        Website := AWebsite;
         SaveTo := ASaveTo;
         Link := ALink;
         DownloadedChapterList := ADownloadedChapterList;
