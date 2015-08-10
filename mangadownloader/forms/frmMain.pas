@@ -4633,7 +4633,7 @@ begin
     OptionUpdateListNoMangaInfo := cbOptionUpdateListNoMangaInfo.Checked;
     OptionUpdateListRemoveDuplicateLocalData := cbOptionUpdateListRemoveDuplicateLocalData.Checked;
     itCheckFav.Interval := OptionAutoCheckFavIntervalMinutes * 60000;
-    itCheckFav.Enabled := OptionAutoCheckFavInterval and (itCheckFav.Interval > 0);
+    itCheckFav.Enabled := OptionAutoCheckFavInterval;
 
     //misc
     OptionBatotoShowScanGroup := cbOptionBatotoShowScanGroup.Checked;
