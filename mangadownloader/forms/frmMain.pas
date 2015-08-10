@@ -1417,11 +1417,9 @@ end;
 
 procedure TMainForm.miDownloadDeleteTaskClick(Sender: TObject);
 var
-  i, j: Integer;
   xNode: PVirtualNode;
+  i: Integer;
   f: String;
-  finfo: TSearchRec;
-  fs: TStringList;
 begin
   if vtDownload.SelectedCount = 0 then Exit;
   if DLManager.Count = 0 then Exit;
@@ -1431,21 +1429,14 @@ begin
       Exit;
   DLManager.CS_DownloadManager_Task.Acquire;
   try
-    i:=0;
-    xNode := vtDownload.GetFirst;
-    while i < DLManager.Count do
-    begin
-      if vtDownload.Selected[xNode] then
-      begin
-        if Sender = miDownloadDeleteTaskData then
-        begin
-          DLManager.StopTask(i, True, False);
-          if DLManager.TaskItem(i).ChapterName.Count > 0 then
-          begin
-            for j := 0 to DLManager.TaskItem(i).ChapterName.Count-1 do
-            begin
-              f := CleanAndExpandDirectory(DLManager.TaskItem(i).DownloadInfo.SaveTo) +
-                DLManager.TaskItem(i).ChapterName[j];
+    xNode := vtDownload.GetLast();
+    while Assigned(xNode) do begin
+      if vtDownload.Selected[xNode] then begin
+        DLManager.StopTask(xNode^.Index, False, True);
+        with TTaskContainer(DLManager.Containers[xNode^.Index]) do begin
+          if (Sender = miDownloadDeleteTaskData) and (ChapterName.Count > 0) then begin
+            for i := 0 to ChapterName.Count - 1 do begin
+              f := CleanAndExpandDirectory(DownloadInfo.SaveTo) + ChapterName[i];
               if FileExistsUTF8(f + '.zip') then
                 DeleteFileUTF8(f + '.zip')
               else if FileExistsUTF8(f + '.cbz') then
@@ -1455,31 +1446,17 @@ begin
               else if DirectoryExistsUTF8(f) then
                 DeleteDirectory(f, False);
             end;
+            RemoveDirUTF8(CleanAndExpandDirectory(DownloadInfo.SaveTo));
           end;
-          f := CleanAndExpandDirectory(DLManager.TaskItem(i).DownloadInfo.SaveTo);
-          fs := TStringList.Create;
-          try
-            if FindFirstUTF8(f + '*', faAnyFile and faDirectory, finfo) = 0 then
-            repeat
-              fs.Add(finfo.Name);
-            until FindNextUTF8(finfo) <> 0;
-            FindCloseUTF8(finfo);
-            if fs.Count = 2 then
-              DeleteDirectory(f, False);
-          finally
-            fs.Free;
-          end;
+          TTaskContainer(DLManager.Containers[xNode^.Index]).Free;
+          DLManager.Containers.Delete(xNode^.Index);
         end;
-        DLManager.RemoveTask(i);
-      end
-      else
-        Inc(i);
-      xNode := vtDownload.GetNext(xNode);
+      end;
+      xNode := vtDownload.GetPreviousSelected(xNode);
     end;
   finally
     DLManager.CS_DownloadManager_Task.Release;
   end;
-  vtDownload.ClearSelection;
   DLManager.CheckAndActiveTask;
   UpdateVtDownload;
   DLManager.Backup;
