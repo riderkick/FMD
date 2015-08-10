@@ -2348,28 +2348,22 @@ begin
   checkGenres := TStringList.Create;
   uncheckGenres := TStringList.Create;
   try
-    if cbUseRegExpr.Checked and (Trim(edCustomGenres.Text) <> '') then
-      checkGenres.Add(Trim(edCustomGenres.Text))
+    edCustomGenres.Text := Trim(edCustomGenres.Text);
+    if cbUseRegExpr.Checked and (edCustomGenres.Text <> '') then
+      checkGenres.Add(edCustomGenres.Text)
     else
     begin
-      checkGenres.Delimiter := ',';
-      checkGenres.DelimitedText := edCustomGenres.Text;
+      ExtractStrings([','], [], PChar(edCustomGenres.Text), checkGenres);
       TrimStrings(checkGenres);
       i := 0;
-      while i < checkGenres.Count do
-      begin
-        s := checkGenres.Strings[i];
-        if (s[1] = '-') or (s[1] = '!') then
-        begin
-          if (s[1] = '-') then
-            s := StringReplace(s, '-', '', [])
-          else
-            s := StringReplace(s, '!', '', []);
+      while i < checkGenres.Count do begin
+        s := Trim(checkGenres.Strings[i]);
+        if (s <> '') and (s[1] = '-') or (s[1] = '!') then begin
+          Delete(s, 1, 1);
           uncheckGenres.Add(s);
           checkGenres.Delete(i);
         end
-        else
-          Inc(i);
+        else Inc(i);
       end;
     end;
 
