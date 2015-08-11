@@ -215,7 +215,7 @@ var
   prgText: string;
 begin
   if Terminated then Exit;
-  if FCurrentSize > 0then
+  if FCurrentSize > 0 then
   begin
     if FTotalSize > 0 then
     begin
