@@ -2470,50 +2470,26 @@ end;
 
 procedure TMainForm.miFavoritesDeleteClick(Sender: TObject);
 var
-  i: Cardinal;
   xNode: PVirtualNode;
-  delList: array of Cardinal;
 begin
-  if (cbOptionShowDeleteTaskDialog.Checked) and (vtFavorites.SelectedCount > 0) then
-    if MessageDlg('', RS_DlgRemoveFavorite,
-      mtConfirmation, [mbYes, mbNo], 0) = mrNo then
-      Exit;
-  if FavoriteManager.isRunning then
-  begin
+  if vtFavorites.SelectedCount = 0 then Exit;
+  if FavoriteManager.isRunning then begin
     MessageDlg('', RS_DlgFavoritesCheckIsRunning,
-      mtInformation, [mbYes, mbNo], 0);
+      mtInformation, [mbOK], 0);
     Exit;
   end;
-  if vtFavorites.SelectedCount = 1 then
-  begin
-    if not Assigned(vtFavorites.FocusedNode) then
+  if cbOptionShowDeleteTaskDialog.Checked then
+    if MessageDlg('', RS_DlgRemoveFavorite, mtConfirmation, [mbYes, mbNo], 0) = mrNo then
       Exit;
-    FavoriteManager.Remove(vtFavorites.FocusedNode^.Index);
-  end
-  else
-  begin
-    xNode := vtFavorites.GetFirst;
-    SetLength(delList, 0);
-    i := 0;
-    while i < FavoriteManager.Count do
-    begin
-      if vtFavorites.Selected[xNode] then
-      begin
-        SetLength(delList, Length(delList) + 1);
-        delList[Length(delList) - 1] := i;
-      end;
-      Inc(i);
-      xNode := vtFavorites.GetNext(xNode);
-    end;
 
-    if Length(delList) > 0 then
-      for i := Length(delList) - 1 downto 0 do
-        FavoriteManager.Remove(delList[i], False);
-
-    FavoriteManager.Backup;
+  xNode := vtFavorites.GetLast();
+  while Assigned(xNode) do begin
+    if vtFavorites.Selected[xNode] then
+      FavoriteManager.Remove(xNode^.Index, False);
+    xNode := vtFavorites.GetPreviousSelected(xNode);
   end;
+  FavoriteManager.Backup;
   UpdateVtFavorites;
-  SetLength(delList, 0);
 end;
 
 procedure TMainForm.miFavoritesChangeCurrentChapterClick(Sender: TObject);
