@@ -4636,11 +4636,14 @@ begin
   lang := TStringList.Create;
   try
     mangalistIni.ReadSection('available', lang);
+    TrimStrings(lang);
     if lang.Count > 0 then
       for i := 0 to lang.Count - 1 do
       begin
-        s := mangalistIni.ReadString('available', lang[i], '');
-        ExtractParam(wName, s, ',', False);
+        s := Trim(mangalistIni.ReadString('available', lang[i], ''));
+        if s <> '' then
+          ExtractStrings([','], [], PChar(s), wName);
+        TrimStrings(wName);
         while wlang.Count < wName.Count do
           wLang.Add(lang[i]);
       end;
