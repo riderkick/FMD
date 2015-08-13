@@ -7,4 +7,5 @@ uses
   Mangacan,
   PecintaKomik,
   EHentai,
-  Doujinmoeus;
+  Doujinmoeus,
+  MangaReader;
