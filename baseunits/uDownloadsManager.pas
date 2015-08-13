@@ -407,11 +407,7 @@ var
 
   {$I includes/MangaInn/chapter_page_number.inc}
 
-  {$I includes/MangaPanda/chapter_page_number.inc}
-
   {$I includes/MangaPark/chapter_page_number.inc}
-
-  {$I includes/MangaReader/chapter_page_number.inc}
 
   {$I includes/MangaStream/chapter_page_number.inc}
 
@@ -514,9 +510,6 @@ begin
     if manager.container.MangaSiteID = MANGAINN_ID then
       Result := GetMangaInnPageNumber
     else
-    if manager.container.MangaSiteID = MANGAREADER_ID then
-      Result := GetMangaReaderPageNumber
-    else
     if manager.container.MangaSiteID = MANGATRADERS_ID then
       Result := GetMangaTradersPageNumber
     else
@@ -525,9 +518,6 @@ begin
     else
     if manager.container.MangaSiteID = EATMANGA_ID then
       Result := GetEatMangaPageNumber
-    else
-    if manager.container.MangaSiteID = MANGAPANDA_ID then
-      Result := GetMangaPandaPageNumber
     else
     if manager.container.MangaSiteID = MANGAPARK_ID then
       Result := GetMangaParkPageNumber
@@ -760,11 +750,7 @@ var
 
   {$I includes/MangaInn/image_url.inc}
 
-  {$I includes/MangaPanda/image_url.inc}
-
   //{$I includes/MangaPark/image_url.inc}
-
-  {$I includes/MangaReader/image_url.inc}
 
   {$I includes/MangaREADER_POR/image_url.inc}
 
@@ -871,9 +857,6 @@ begin
     if manager.container.MangaSiteID = FAKKU_ID then
       Result := GetFakkuImageURL
     else
-    if manager.container.MangaSiteID = MANGAREADER_ID then
-      Result := GetMangaReaderImageURL
-    else
     //if manager.container.MangaSiteID = MANGAPARK_ID then
     //  Result := GetMangaParkImageURL
     //else
@@ -882,9 +865,6 @@ begin
     else
     if manager.container.MangaSiteID = EATMANGA_ID then
       Result := GetEatMangaImageURL
-    else
-    if manager.container.MangaSiteID = MANGAPANDA_ID then
-      Result := GetMangaPandaImageURL
     else
     if manager.container.MangaSiteID = MANGAGO_ID then
       Result := GetMangaGoImageURL

@@ -2197,8 +2197,6 @@ var
 
   {$I includes/Fakku/names_and_links.inc}
 
-  {$I includes/MangaReader/names_and_links.inc}
-
   {$I includes/MangaPark/names_and_links.inc}
 
   {$I includes/MangaTraders/names_and_links.inc}
@@ -2244,8 +2242,6 @@ var
   {$I includes/Starkana/names_and_links.inc}
 
   {$I includes/EatManga/names_and_links.inc}
-
-  {$I includes/MangaPanda/names_and_links.inc}
 
   {$I includes/MangaGo/names_and_links.inc}
 
@@ -2364,9 +2360,6 @@ begin
     if website = WebsiteRoots[FAKKU_ID, 0] then
       Result := FakkuGetNamesAndLinks
     else
-    if website = WebsiteRoots[MANGAREADER_ID, 0] then
-      Result := MangaReaderGetNamesAndLinks
-    else
     if website = WebsiteRoots[MANGAPARK_ID, 0] then
       Result := MangaParkGetNamesAndLinks
     else
@@ -2378,9 +2371,6 @@ begin
     else
     if website = WebsiteRoots[EATMANGA_ID, 0] then
       Result := EatMangaGetNamesAndLinks
-    else
-    if website = WebsiteRoots[MANGAPANDA_ID, 0] then
-      Result := MangaPandaGetNamesAndLinks
     else
     if website = WebsiteRoots[MANGAGO_ID, 0] then
       Result := MangaGoGetNamesAndLinks
@@ -2629,8 +2619,6 @@ var
 
   {$I includes/Fakku/manga_information.inc}
 
-  {$I includes/MangaReader/manga_information.inc}
-
   {$I includes/MangaPark/manga_information.inc}
 
   {$I includes/MangaTraders/manga_information.inc}
@@ -2648,8 +2636,6 @@ var
   {$I includes/S2Scans/manga_information.inc}
 
   {$I includes/EGScans/manga_information.inc}
-
-  {$I includes/MangaPanda/manga_information.inc}
 
   {$I includes/MangaGo/manga_information.inc}
 
@@ -2805,9 +2791,6 @@ begin
     if website = WebsiteRoots[FAKKU_ID, 0] then
       Result := GetFakkuInfoFromURL
     else
-    if website = WebsiteRoots[MANGAREADER_ID, 0] then
-      Result := GetMangaReaderInfoFromURL
-    else
     if website = WebsiteRoots[MANGAPARK_ID, 0] then
       Result := GetMangaParkInfoFromURL
     else
@@ -2819,9 +2802,6 @@ begin
     else
     if website = WebsiteRoots[EATMANGA_ID, 0] then
       Result := GetEatMangaInfoFromURL
-    else
-    if website = WebsiteRoots[MANGAPANDA_ID, 0] then
-      Result := GetMangaPandaInfoFromURL
     else
     if website = WebsiteRoots[MANGAGO_ID, 0] then
       Result := GetMangaGoInfoFromURL
