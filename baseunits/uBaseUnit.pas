@@ -868,7 +868,7 @@ function RandomString(SLength: Integer; ONumber: Boolean = False;
 function GetValuesFromString(Str: String; Sepr: Char): String;
 procedure InvertStrings(Const St: TStringList); overload;
 procedure InvertStrings(const Sts: array of TStringList); overload;
-procedure TrimStrings(Const Str: TStringList);
+procedure TrimStrings(TheStrings: TStrings);
 procedure RemoveDuplicateStrings(Strs: Array of TStringList; RemIndex: Cardinal = 0);
 procedure CleanHTMLComments(Const Str: TStringList);
 
@@ -1953,16 +1953,17 @@ begin
     InvertStrings(Sts[i]);
 end;
 
-procedure TrimStrings(const Str : TStringList);
+procedure TrimStrings(TheStrings: TStrings);
 var
   i: Integer;
 begin
-  if Str.Count > 0 then
+  if TheStrings = nil then Exit;
+  if TheStrings.Count > 0 then
   begin
     i := 0;
-    while i < Str.Count do begin
-      Str[i] := Trim(Str[i]);
-      if Str[i] = '' then Str.Delete(i)
+    while i < TheStrings.Count do begin
+      TheStrings[i] := Trim(TheStrings[i]);
+      if TheStrings[i] = '' then TheStrings.Delete(i)
       else Inc(i);
     end;
   end;
