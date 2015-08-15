@@ -33,7 +33,7 @@ begin
   if MangaInfo = nil then Exit;
   Source := TStringList.Create;
   try
-    if GetPage(TObject(Source), Module.RootURL + dirurl, 3) then
+    if GetPage(MangaInfo.FHTTP, TObject(Source), Module.RootURL + dirurl, 3) then
     begin
       Result := INFORMATION_NOT_FOUND;
       if Source.Count > 0 then
@@ -107,7 +107,7 @@ begin
   MangaInfo.mangaInfo.url := FillHost(Module.RootURL, URL);
   Source := TStringList.Create;
   try
-    if GetPage(TObject(Source), MangaInfo.mangaInfo.url, Reconnect) then
+    if GetPage(MangaInfo.FHTTP, TObject(Source), MangaInfo.mangaInfo.url, Reconnect) then
     begin
       Result := INFORMATION_NOT_FOUND;
       if Source.Count > 0 then
@@ -141,7 +141,7 @@ begin
     PageNumber := 0;
     Source := TStringList.Create;
     try
-      if GetPage(TObject(Source), FillHost(Module.RootURL, URL),
+      if GetPage(DownloadThread.FHTTP, TObject(Source), FillHost(Module.RootURL, URL),
         Manager.retryConnect) then
         if Source.Count > 0 then
         begin
@@ -172,7 +172,8 @@ begin
   with DownloadThread.manager.container do begin
     Source := TStringList.Create;
     try
-      if GetPage(TObject(Source), AppendURLDelim(FillHost(Module.RootURL, URL)) +
+      if GetPage(DownloadThread.FHTTP, TObject(Source),
+        AppendURLDelim(FillHost(Module.RootURL, URL)) +
         IncStr(DownloadThread.workCounter), Manager.retryConnect) then
         if Source.Count > 0 then
         begin
@@ -181,7 +182,7 @@ begin
           try
             ParseHTMLTree(Parser, Source.Text);
             PageLinks[DownloadThread.workCounter] :=
-              SelectXPathString('//*[@id="img"]/@src', Parser);
+              SelectXPathString('//img[@id="img"]/@src', Parser);
           finally
             Parser.Free;
           end;
