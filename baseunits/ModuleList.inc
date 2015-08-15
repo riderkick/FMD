@@ -8,4 +8,5 @@ uses
   PecintaKomik,
   EHentai,
   Doujinmoeus,
-  MangaReader;
+  MangaReader,
+  MangaStream;
