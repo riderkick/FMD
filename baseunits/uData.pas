@@ -2245,8 +2245,6 @@ var
 
   {$I includes/MangaGo/names_and_links.inc}
 
-  {$I includes/MangaStream/names_and_links.inc}
-
   {$I includes/RedHawkScans/names_and_links.inc}
 
   {$I includes/S2Scans/names_and_links.inc}
@@ -2374,9 +2372,6 @@ begin
     else
     if website = WebsiteRoots[MANGAGO_ID, 0] then
       Result := MangaGoGetNamesAndLinks
-    else
-    if website = WebsiteRoots[MANGASTREAM_ID, 0] then
-      Result := MangaStreamGetNamesAndLinks
     else
     if website = WebsiteRoots[REDHAWKSCANS_ID, 0] then
       Result := RedHawkScansGetNamesAndLinks
@@ -2623,8 +2618,6 @@ var
 
   {$I includes/MangaTraders/manga_information.inc}
 
-  {$I includes/MangaStream/manga_information.inc}
-
   {$I includes/MangaEden/manga_information.inc}
 
   {$I includes/Starkana/manga_information.inc}
@@ -2805,9 +2798,6 @@ begin
     else
     if website = WebsiteRoots[MANGAGO_ID, 0] then
       Result := GetMangaGoInfoFromURL
-    else
-    if website = WebsiteRoots[MANGASTREAM_ID, 0] then
-      Result := GetMangaStreamInfoFromURL
     else
     if website = WebsiteRoots[REDHAWKSCANS_ID, 0] then
       Result := GetRedHawkScansInfoFromURL

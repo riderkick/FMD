@@ -273,86 +273,85 @@ const
   TRUYEN18_ID            = 9;
   MANGAPARK_ID           = 10;
   MANGATRADERS_ID        = 11;
-  MANGASTREAM_ID         = 12;
-  MANGAEDEN_ID           = 13;
-  PERVEDEN_ID            = 14;
-  TRUYENTRANHTUAN_ID     = 15;
-  TURKCRAFT_ID           = 16;
-  MANGAVADISI_ID         = 17;
-  MANGAFRAME_ID          = 18;
-  EATMANGA_ID            = 19;
-  STARKANA_ID            = 20;
-  REDHAWKSCANS_ID        = 21;
-  BLOGTRUYEN_ID          = 22;
-  KOMIKID_ID             = 23;
-  SUBMANGA_ID            = 24;
-  ESMANGAHERE_ID         = 25;
-  ANIMEEXTREMIST_ID      = 26;
-  HUGEMANGA_ID           = 27;
-  S2SCAN_ID              = 28;
-  SENMANGA_ID            = 29;
-  IMANHUA_ID             = 30;
-  MABUNS_ID              = 31;
-  MANGAESTA_ID           = 32;
-  CENTRALDEMANGAS_ID     = 33;
-  EGSCANS_ID             = 34;
-  MANGAAR_ID             = 35;
-  MANGAAE_ID             = 36;
-  ANIMESTORY_ID          = 37;
-  LECTUREENLIGNE_ID      = 38;
-  SCANMANGA_ID           = 39;
-  MANGAGO_ID             = 40;
-  DM5_ID                 = 41;
-  PURURIN_ID             = 42;
-  MANGACOW_ID            = 43;
-  KIVMANGA_ID            = 44;
-  MEINMANGA_ID           = 45;
-  MANGASPROJECT_ID       = 46;
-  MANGAREADER_POR_ID     = 47;
-  MANGA2U_ID             = 48;
-  MANGASTREAMTO_ID       = 49;
-  NINEMANGA_ID           = 50;
-  NINEMANGA_ES_ID        = 51;
-  NINEMANGA_CN_ID        = 52;
-  NINEMANGA_RU_ID        = 53;
-  NINEMANGA_DE_ID        = 54;
-  NINEMANGA_IT_ID        = 55;
-  NINEMANGA_BR_ID        = 56;
-  JAPANSHIN_ID           = 57;
-  JAPSCAN_ID             = 58;
-  CENTRUMMANGI_PL_ID     = 59;
-  MANGALIB_PL_ID         = 60;
-  ONEMANGA_ID            = 61;
-  MANGATOWN_ID           = 62;
-  READHENTAIMANGA_ID     = 63;
-  MANGAOKU_ID            = 64;
-  MYREADINGMANGAINFO_ID  = 65;
-  IKOMIK_ID              = 66;
-  NHENTAI_ID             = 67;
-  UNIONMANGAS_ID         = 68;
-  MANGAMINT_ID           = 69;
-  UNIXMANGA_ID           = 70;
-  HAKIHOME_ID            = 71;
-  EXTREMEMANGAS_ID       = 72;
-  MANGAHOST_ID           = 73;
-  PORNCOMIX_ID           = 74;
-  PORNCOMIXRE_ID         = 75;
-  PORNCOMIXIC_ID         = 76;
-  XXCOMICS_ID            = 77;
-  XXCOMICSMT_ID          = 78;
-  XXCOMICS3D_ID          = 79;
-  PORNXXXCOMICS_ID       = 80;
-  MANGASEE_ID            = 81;
-  MANGAKU_ID             = 82;
-  ACADEMYVN_ID           = 83;
-  MANGAAT_ID             = 84;
-  SENMANGARAW_ID         = 85;
-  READMANGATODAY_ID      = 86;
-  LONEMANGA_ID           = 87;
-  DYNASTYSCANS_ID        = 88;
-  MADOKAMI_ID            = 89;
+  MANGAEDEN_ID           = 12;
+  PERVEDEN_ID            = 13;
+  TRUYENTRANHTUAN_ID     = 14;
+  TURKCRAFT_ID           = 15;
+  MANGAVADISI_ID         = 16;
+  MANGAFRAME_ID          = 17;
+  EATMANGA_ID            = 18;
+  STARKANA_ID            = 19;
+  REDHAWKSCANS_ID        = 20;
+  BLOGTRUYEN_ID          = 21;
+  KOMIKID_ID             = 22;
+  SUBMANGA_ID            = 23;
+  ESMANGAHERE_ID         = 24;
+  ANIMEEXTREMIST_ID      = 25;
+  HUGEMANGA_ID           = 26;
+  S2SCAN_ID              = 27;
+  SENMANGA_ID            = 28;
+  IMANHUA_ID             = 29;
+  MABUNS_ID              = 30;
+  MANGAESTA_ID           = 31;
+  CENTRALDEMANGAS_ID     = 32;
+  EGSCANS_ID             = 33;
+  MANGAAR_ID             = 34;
+  MANGAAE_ID             = 35;
+  ANIMESTORY_ID          = 36;
+  LECTUREENLIGNE_ID      = 37;
+  SCANMANGA_ID           = 38;
+  MANGAGO_ID             = 39;
+  DM5_ID                 = 40;
+  PURURIN_ID             = 41;
+  MANGACOW_ID            = 42;
+  KIVMANGA_ID            = 43;
+  MEINMANGA_ID           = 44;
+  MANGASPROJECT_ID       = 45;
+  MANGAREADER_POR_ID     = 46;
+  MANGA2U_ID             = 47;
+  MANGASTREAMTO_ID       = 48;
+  NINEMANGA_ID           = 49;
+  NINEMANGA_ES_ID        = 50;
+  NINEMANGA_CN_ID        = 51;
+  NINEMANGA_RU_ID        = 52;
+  NINEMANGA_DE_ID        = 53;
+  NINEMANGA_IT_ID        = 54;
+  NINEMANGA_BR_ID        = 55;
+  JAPANSHIN_ID           = 56;
+  JAPSCAN_ID             = 57;
+  CENTRUMMANGI_PL_ID     = 58;
+  MANGALIB_PL_ID         = 59;
+  ONEMANGA_ID            = 60;
+  MANGATOWN_ID           = 61;
+  READHENTAIMANGA_ID     = 62;
+  MANGAOKU_ID            = 63;
+  MYREADINGMANGAINFO_ID  = 64;
+  IKOMIK_ID              = 65;
+  NHENTAI_ID             = 66;
+  UNIONMANGAS_ID         = 67;
+  MANGAMINT_ID           = 68;
+  UNIXMANGA_ID           = 69;
+  HAKIHOME_ID            = 70;
+  EXTREMEMANGAS_ID       = 71;
+  MANGAHOST_ID           = 72;
+  PORNCOMIX_ID           = 73;
+  PORNCOMIXRE_ID         = 74;
+  PORNCOMIXIC_ID         = 75;
+  XXCOMICS_ID            = 76;
+  XXCOMICSMT_ID          = 77;
+  XXCOMICS3D_ID          = 78;
+  PORNXXXCOMICS_ID       = 79;
+  MANGASEE_ID            = 80;
+  MANGAKU_ID             = 81;
+  ACADEMYVN_ID           = 82;
+  MANGAAT_ID             = 83;
+  SENMANGARAW_ID         = 84;
+  READMANGATODAY_ID      = 85;
+  LONEMANGA_ID           = 86;
+  DYNASTYSCANS_ID        = 87;
+  MADOKAMI_ID            = 88;
 
-  WebsiteRoots: array [0..89] of array [0..1] of string = (
+  WebsiteRoots: array [0..88] of array [0..1] of string = (
     ('AnimeA', 'http://manga.animea.net'),
     ('MangaHere', 'http://www.mangahere.co'),
     ('MangaInn', 'http://www.mangainn.me'),
@@ -365,7 +364,6 @@ const
     ('Truyen18', 'http://www.truyen18.org'),
     ('MangaPark', 'http://mangapark.me'),
     ('MangaTraders', 'http://mangatraders.org'),
-    ('MangaStream', 'http://mangastream.com'),
     ('MangaEden', 'http://www.mangaeden.com'),
     ('PervEden', 'http://www.perveden.com'),
     ('TruyenTranhTuan', 'http://truyentranhtuan.com'),
@@ -473,9 +471,6 @@ const
   TRUYEN18_BROWSER = '/moi-dang/danhsach';
 
   MANGATRADERS_BROWSER = '/directory/';
-
-  MANGASTREAM_ROOT = 'http://mangastream.com';
-  MANGASTREAM_ROOT2 = 'http://readms.com';
 
   MANGAEDEN_BROWSER_1 = '/en-directory/';
   MANGAEDEN_BROWSER_2 = '/it-directory/';
@@ -2102,8 +2097,7 @@ begin
   Result := StringReplace(Result, '%AUTHOR%', AAuthor, [rfReplaceAll]);
   Result := StringReplace(Result, '%ARTIST%', AArtist, [rfReplaceAll]);
   Result := StringReplace(Result, '%CHAPTER%', chap, [rfReplaceAll]);
-  if (AWebsite = WebsiteRoots[FAKKU_ID, 0]) or
-    (AWebsite = WebsiteRoots[MANGASTREAM_ID, 0]) then
+  if AWebsite = WebsiteRoots[FAKKU_ID, 0] then
   begin
     if Pos('%NUMBERING% - ', Result) > 0 then
       Result := StringReplace(Result, '%NUMBERING% - ', '', [rfReplaceAll])
@@ -2116,8 +2110,7 @@ begin
   Result := StringReplace(Result, '\', '', [rfReplaceAll]);
   if Result = '' then
   begin
-    if (AWebsite = WebsiteRoots[FAKKU_ID, 0]) or
-      (AWebsite = WebsiteRoots[MANGASTREAM_ID, 0]) then
+    if AWebsite = WebsiteRoots[FAKKU_ID, 0] then
       Result := chap
     else
       Result := ANumbering;

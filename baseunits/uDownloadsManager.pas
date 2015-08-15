@@ -409,8 +409,6 @@ var
 
   {$I includes/MangaPark/chapter_page_number.inc}
 
-  {$I includes/MangaStream/chapter_page_number.inc}
-
   {$I includes/MangaStreamTo/chapter_page_number.inc}
 
   {$I includes/MangaTraders/chapter_page_number.inc}
@@ -524,9 +522,6 @@ begin
     else
     if manager.container.MangaSiteID = MANGAGO_ID then
       Result := GetMangaGoPageNumber
-    else
-    if manager.container.MangaSiteID = MANGASTREAM_ID then
-      Result := GetMangaStreamPageNumber
     else
     if manager.container.MangaSiteID = REDHAWKSCANS_ID then
       Result := GetRedHawkScansPageNumber
@@ -756,8 +751,6 @@ var
 
   {$I includes/MangasPROJECT/image_url.inc}
 
-  {$I includes/MangaStream/image_url.inc}
-
   {$I includes/MangaStreamTo/image_url.inc}
 
   {$I includes/MangaTraders/image_url.inc}
@@ -868,9 +861,6 @@ begin
     else
     if manager.container.MangaSiteID = MANGAGO_ID then
       Result := GetMangaGoImageURL
-    else
-    if manager.container.MangaSiteID = MANGASTREAM_ID then
-      Result := GetMangaStreamImageURL
     else
     if manager.container.MangaSiteID = REDHAWKSCANS_ID then
       Result := GetRedHawkScansImageURL
