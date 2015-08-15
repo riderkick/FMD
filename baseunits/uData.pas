@@ -206,7 +206,7 @@ type
       const DataProcess: TDBDataProcess); overload;
     //wrapper
     function GetPage(var output: TObject; URL: String;
-      const Reconnect: Integer = 0): Boolean; overload;
+      const Reconnect: Integer = 0): Boolean; inline;
   end;
 
 var

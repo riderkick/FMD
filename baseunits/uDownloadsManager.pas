@@ -58,7 +58,7 @@ type
     procedure SockOnStatus(Sender: TObject; Reason: THookSocketReason;
       const Value: String);
     function GetPage(var output: TObject; URL: String;
-      const Reconnect: Integer = 0): Boolean; overload;
+      const Reconnect: Integer = 0): Boolean; inline;
 
     function SaveImage(const mangaSiteID: Integer; URL: String;
       const Path, Name, prefix: String; const Reconnect: Integer = 0): Boolean; overload;
