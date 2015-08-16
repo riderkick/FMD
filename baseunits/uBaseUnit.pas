@@ -1746,26 +1746,18 @@ end;
 
 function GetValuesFromString(Str: String; Sepr: Char): String;
 var
-  i: Integer;
+  p: Integer;
+  s: String;
 begin
   Result := '';
-  if Str = '' then
-    Exit;
-  if Pos(Sepr, Str) > 0 then
+  if Str = '' then Exit;
+  p := Pos(Sepr, Str);
+  if p > 0 then
   begin
-    for i := 1 to Length(Str) do
-      if (Str[i] = Sepr) and (i < Length(Str)) then
-      begin
-        Result := Copy(Str, i + 1, Length(Str) - i);
-        Break;
-      end;
-    if Result <> '' then
-    begin
-      while (Result <> '') and (Result[Length(Result)] in [' ', '"', '''', ';']) do
-        Delete(Result, Length(Result), 1);
-      while (Result <> '') and (Result[1] in [' ', '"', '''']) do
-        Delete(Result, 1, 1);
-    end;
+    p := p + Length(Sepr);
+    s := Trim(Copy(Str, p, Length(Str)));
+    if s <> '' then s := TrimChar(s, ['''', '"', ';', ' ']);
+    Result := s;
   end;
 end;
 
