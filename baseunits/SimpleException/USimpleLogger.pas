@@ -40,13 +40,20 @@ var
 const
   _LOG_SYMBOL = 'EWIDV';
 
+  function ArrayToString(Args: array of const): String;
   procedure SetLogFile(const LogFileName: String);
   procedure WriteLog_E(const msg: String); overload; inline;
+  procedure WriteLog_E(msg: array of const); overload; inline;
   procedure WriteLog_E(const msg: String; Exc: Exception; Sender: TObject = nil); overload;
+  procedure WriteLog_E(msg: array of const; Exc: Exception; Sender: TObject = nil); overload; inline;
   procedure Writelog_W(const msg: String); inline;
+  procedure WriteLog_W(msg: array of const); overload; inline;
   procedure Writelog_I(const msg: String); inline;
+  procedure WriteLog_I(msg: array of const); overload; inline;
   procedure Writelog_D(const msg: String); inline;
+  procedure WriteLog_D(msg: array of const); overload; inline;
   procedure Writelog_V(const msg: String); inline;
+  procedure WriteLog_V(msg: array of const); overload; inline;
   function SimpleBackTraceStr(const Addr: Pointer): String;
   function GetStackTraceInfo(const MaxStackCount: Integer = 20): string;
 
@@ -111,9 +118,50 @@ begin
   end;
 end;
 
+function VarRecToString(AVarRec: TVarRec): String;
+begin
+  case AVarRec.VType of
+    vtInteger       : Result := IntToStr(AVarRec.VInteger);
+    vtBoolean       : Result := BoolToStr(AVarRec.VBoolean, True);
+    vtChar          : Result := AVarRec.VChar;
+    vtWideChar      : Result := WideString(AVarRec.VWideChar);
+    vtExtended      : Result := FloatToStr(AVarRec.VExtended^);
+    vtString        : Result := AVarRec.VString^;
+    vtPointer       : Result := hexStr(AVarRec.VPointer);
+    vtPChar         : Result := AVarRec.VPChar;
+    vtObject        : Result := AVarRec.VObject.ClassName;
+    vtClass         : Result := AVarRec.VClass.ClassName;
+    vtPWideChar     : Result := AVarRec.VPWideChar;
+    vtAnsiString    : Result := AnsiString(AVarRec.VAnsiString);
+    vtCurrency      : Result := CurrToStr(AVarRec.VCurrency^);
+    vtVariant       : Result := String(AVarRec.VVariant);
+    vtWideString    : Result := WideString(AVarRec.VWideString);
+    vtInt64         : Result := IntToStr(AVarRec.VInt64^);
+    vtUnicodeString : Result := UnicodeString(AVarRec.VUnicodeString);
+    vtQWord         : Result := IntToStr(AVarRec.VQWord^);
+    else
+      Result := '';
+  end;
+end;
+
+function ArrayToString(Args: array of const): String;
+var
+  i: Integer;
+begin
+  Result := '';
+  if High(Args) < 0 then Exit;
+  for i := Low(Args) to High(Args) do
+    Result += VarRecToString(Args[i]);
+end;
+
 procedure WriteLog_E(const msg: String);
 begin
   WriteLog(msg, ERROR);
+end;
+
+procedure WriteLog_E(msg: array of const);
+begin
+  WriteLog(ArrayToString(msg), ERROR);
 end;
 
 procedure WriteLog_E(const msg: String; Exc: Exception; Sender: TObject);
@@ -134,9 +182,19 @@ begin
   WriteLog_E(msg + s);
 end;
 
+procedure WriteLog_E(msg: array of const; Exc: Exception; Sender: TObject);
+begin
+  WriteLog_E(ArrayToString(msg), Exc, Sender);
+end;
+
 procedure Writelog_W(const msg: String);
 begin
   WriteLog(msg, WARNING);
+end;
+
+procedure WriteLog_W(msg: array of const);
+begin
+  WriteLog(ArrayToString(msg), WARNING);
 end;
 
 procedure Writelog_I(const msg: String);
@@ -144,14 +202,29 @@ begin
   WriteLog(msg, INFO);
 end;
 
+procedure WriteLog_I(msg: array of const);
+begin
+  WriteLog(ArrayToString(msg), INFO);
+end;
+
 procedure Writelog_D(const msg: String);
 begin
   WriteLog(msg, DEBUG);
 end;
 
+procedure WriteLog_D(msg: array of const);
+begin
+  WriteLog(ArrayToString(msg), DEBUG);
+end;
+
 procedure Writelog_V(const msg: String);
 begin
   WriteLog(msg, VERBOSE);
+end;
+
+procedure WriteLog_V(msg: array of const);
+begin
+  WriteLog(ArrayToString(msg), VERBOSE);
 end;
 
 function SimpleBackTraceStr(const Addr: Pointer): String;
