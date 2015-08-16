@@ -29,23 +29,26 @@ var
   Parser: TTreeParser;
   v: IXQValue;
 begin
+  if MangaInfo = nil then Exit(UNKNOWN_ERROR);
   Result := NET_PROBLEM;
-  if MangaInfo = nil then Exit;
   Source := TStringList.Create;
   try
     if GetPage(MangaInfo.FHTTP, TObject(Source), Module.RootURL + '/manga', 3) then
-    begin
-      Parser := TTreeParser.Create;
-      try
-        ParseHTMLTree(Parser, Source.Text);
-        for v in SelectXPathIX('//table//tr/td[1]//a', Parser) do begin
-          Links.Add(v.toNode.getAttribute('href'));
-          Names.Add(v.toString);
-        end
-      finally
-        Parser.Free;
-      end;
-    end;
+      if Source.Count > 0 then begin
+        Result := NO_ERROR;
+        Parser := TTreeParser.Create;
+        try
+          ParseHTMLTree(Parser, Source.Text);
+          for v in SelectXPathIX('//table//tr/td[1]//a', Parser) do begin
+            Links.Add(v.toNode.getAttribute('href'));
+            Names.Add(v.toString);
+          end
+        finally
+          Parser.Free;
+        end;
+      end
+      else
+        Result := INFORMATION_NOT_FOUND;
   finally
     Source.Free;
   end;
@@ -60,8 +63,8 @@ var
   v: IXQValue;
   s: String;
 begin
+  if MangaInfo = nil then Exit(UNKNOWN_ERROR);
   Result := NET_PROBLEM;
-  if MangaInfo = nil then Exit;
   info := MangaInfo.mangaInfo;
   info.website := Module.Website;
   info.url := FillHost(Module.RootURL, URL);
