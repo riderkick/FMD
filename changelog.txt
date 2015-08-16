@@ -8,6 +8,9 @@ https://www.mediafire.com/folder/3ccy2c7g36hp3/Fmd
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.21.8 (16-08-2015)
+[*] Fix high cpu usage while updating manga list
+
 0.9.21.7 (16-08-2015)
 [*] Various changes and bug fixes
 
