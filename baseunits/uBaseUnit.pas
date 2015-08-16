@@ -793,6 +793,25 @@ type
     property Timeout: Integer read FTimeout write SetTimeout;
   end;
 
+  { TXQueryEngineHTML }
+
+  TXQueryEngineHTML = class
+  private
+    FEngine: TXQueryEngine;
+    FTreeParser: TTreeParser;
+    function Eval(Expression: String; isCSS: Boolean = False): IXQValue;
+  public
+    constructor Create(HTML: String = '');
+    destructor Destroy; override;
+    procedure ParseTree(HTML: String);
+    function XPath(Expression: String): IXQValue; inline;
+    function XPathString(Expression: String): String; inline;
+    function CSS(Expression: String): IXQValue; inline;
+    function CSSString(Expression: String): String; inline;
+  end;
+
+  IXQValue = xquery.IXQValue;
+
 // Get current binary version
 function GetCurrentBinVersion: String;
 // Remove Unicode
@@ -3562,6 +3581,67 @@ begin
   dest.numChapter := Source.numChapter;
   dest.chapterName.Assign(Source.chapterName);
   dest.chapterLinks.Assign(Source.chapterLinks);
+end;
+
+{ TXQueryEngineHTML }
+
+function TXQueryEngineHTML.Eval(Expression: String; isCSS: Boolean): IXQValue;
+begin
+  Result := xqvalue();
+  if Expression = '' then Exit;
+  try
+    if isCSS then Result := FEngine.evaluateXPath3(Expression, FTreeParser.getLastTree)
+    else Result := FEngine.evaluateCSS3(Expression, FTreeParser.getLastTree);
+  except
+  end;
+end;
+
+constructor TXQueryEngineHTML.Create(HTML: String);
+begin
+  FEngine := TXQueryEngine.create;
+  FTreeParser := TTreeParser.Create;
+  with FTreeParser do begin
+    parsingModel := pmHTML;
+    repairMissingStartTags := True;
+    repairMissingEndTags := True;
+    trimText := False;
+    readComments := False;
+    readProcessingInstructions := False;
+    autoDetectHTMLEncoding := False;
+    if HTML <> '' then parseTree(HTML);
+  end;
+end;
+
+destructor TXQueryEngineHTML.Destroy;
+begin
+  FEngine.Free;
+  FTreeParser.Free;
+  inherited Destroy;
+end;
+
+procedure TXQueryEngineHTML.ParseTree(HTML: String);
+begin
+  if HTML <> '' then FTreeParser.parseTree(HTML);
+end;
+
+function TXQueryEngineHTML.XPath(Expression: String): IXQValue;
+begin
+  Result := Eval(Expression);
+end;
+
+function TXQueryEngineHTML.XPathString(Expression: String): String;
+begin
+  Result := Eval(Expression).toString;
+end;
+
+function TXQueryEngineHTML.CSS(Expression: String): IXQValue;
+begin
+  Result := Eval(Expression, True);
+end;
+
+function TXQueryEngineHTML.CSSString(Expression: String): String;
+begin
+  Result := Eval(Expression, True).toString;
 end;
 
 { THTTPSendThread }
