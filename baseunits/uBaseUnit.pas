@@ -218,6 +218,7 @@ const
   OPTION_MANGALIST = 0;
   OPTION_RECONNECT = 1;
 
+  UNKNOWN_ERROR         = -1;
   NO_ERROR              = 0;
   NET_PROBLEM           = 1;
   INFORMATION_NOT_FOUND = 2;
