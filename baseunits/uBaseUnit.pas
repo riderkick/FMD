@@ -3590,8 +3590,8 @@ begin
   Result := xqvalue();
   if Expression = '' then Exit;
   try
-    if isCSS then Result := FEngine.evaluateXPath3(Expression, FTreeParser.getLastTree)
-    else Result := FEngine.evaluateCSS3(Expression, FTreeParser.getLastTree);
+    if isCSS then Result := FEngine.evaluateCSS3(Expression, FTreeParser.getLastTree)
+    else Result := FEngine.evaluateXPath3(Expression, FTreeParser.getLastTree);
   except
   end;
 end;
