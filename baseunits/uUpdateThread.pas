@@ -421,10 +421,7 @@ var
 begin
   MainForm.ulTotalPtr := limit;
   try
-    while workPtr < limit do
-    begin
-      if Terminated then Exit;
-
+    while (not Terminated) and (workPtr < limit) do begin
       mt := INIAdvanced.ReadInteger('UpdateListNumberOfThreads', website, -1);
       if mt > 0 then
       begin
