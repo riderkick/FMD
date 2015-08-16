@@ -453,7 +453,7 @@ begin
         Exit;
       end;
 
-      if ModuleId > -1 then
+      if Modules.MaxConnectionLimit[ModuleId] > 0 then
         while (not Terminated) and (Modules.ActiveConnectionCount[ModuleId] >= numberOfThreads) do
           Sleep(SOCKHEARTBEATRATE)
       else
