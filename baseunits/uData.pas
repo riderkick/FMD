@@ -569,13 +569,12 @@ procedure TDBDataProcess.AttachAllSites;
 var
   i: Integer;
 begin
-  if FConn.Connected and (SitesList.Count > 0) then
-  begin
-    RemoveCurrentSite;
-    if Trim(SitesList.Text) = Trim(FAttachedSites.Text) then
-      Exit;
-    DetachAllSites;
-    FConn.ExecuteDirect('END TRANSACTION');
+  RemoveCurrentSite;
+  if (not FConn.Connected) or (SitesList.Count = 0) then Exit;
+  if Trim(SitesList.Text) = Trim(FAttachedSites.Text) then Exit;
+  DetachAllSites;
+  FConn.ExecuteDirect('END TRANSACTION');
+  try
     for i := 0 to SitesList.Count - 1 do
       if FileExistsUTF8(DBDataFilePath(SitesList[i])) then
       begin
@@ -583,31 +582,30 @@ begin
           QuotedStrd(DBDataFilePath(SitesList[i])) + ' AS ' + QuotedStrd(SitesList[i]));
         FAttachedSites.Add(SitesList[i]);
       end;
-    FConn.ExecuteDirect('BEGIN TRANSACTION');
-    FAllSitesAttached := FAttachedSites.Count > 0;
+  except
+    on E: Exception do
+      Writelog_E('TDBDataProcess.AttachAllSites.Error!', E, Self)
   end;
+  FConn.ExecuteDirect('BEGIN TRANSACTION');
+  FAllSitesAttached := FAttachedSites.Count > 0;
 end;
 
 procedure TDBDataProcess.DetachAllSites;
 begin
-  if FConn.Connected and FAllSitesAttached then
-  begin
-    FConn.ExecuteDirect('END TRANSACTION');
+  if (not FConn.Connected) or (FAttachedSites.Count = 0) then Exit;
+  FConn.ExecuteDirect('END TRANSACTION');
+  try
     repeat
-      try
-        FConn.ExecuteDirect('DETACH ' +
-          QuotedStrd(FAttachedSites[FAttachedSites.Count - 1]));
-      except
-        on E: Exception do
-          Writelog_E('TDBDataProcess.DetachAllSites:' +
-            FAttachedSites[FAttachedSites.Count - 1],
-            E, Self);
-      end;
+      FConn.ExecuteDirect('DETACH ' +
+        QuotedStrd(FAttachedSites[FAttachedSites.Count - 1]));
       FAttachedSites.Delete(FAttachedSites.Count - 1);
     until FAttachedSites.Count = 0;
-    FConn.ExecuteDirect('BEGIN TRANSACTION');
-    FAllSitesAttached := False;
+  except
+    on E: Exception do
+      Writelog_E('TDBDataProcess.DetachAllSites.Error!', E, Self);
   end;
+  FConn.ExecuteDirect('BEGIN TRANSACTION');
+  FAllSitesAttached := FAttachedSites.Count > 0;
 end;
 
 function TDBDataProcess.ExecuteDirect(SQL: String): Boolean;
