@@ -591,18 +591,19 @@ begin
 end;
 
 procedure TDBDataProcess.DetachAllSites;
+var
+  i: Integer;
 begin
   if (not FConn.Connected) or (FAttachedSites.Count = 0) then Exit;
   FConn.ExecuteDirect('END TRANSACTION');
-  try
-    repeat
-      FConn.ExecuteDirect('DETACH ' +
-        QuotedStrd(FAttachedSites[FAttachedSites.Count - 1]));
-      FAttachedSites.Delete(FAttachedSites.Count - 1);
-    until FAttachedSites.Count = 0;
-  except
-    on E: Exception do
-      Writelog_E('TDBDataProcess.DetachAllSites.Error!', E, Self);
+  for i := FAttachedSites.Count - 1 downto 0 do begin
+    try
+      FConn.ExecuteDirect('DETACH ' + QuotedStrd(FAttachedSites[i]));
+      FAttachedSites.Delete(i);
+    except
+      on E: Exception do
+        Writelog_E('TDBDataProcess.DetachAllSites.Error!', E, Self);
+    end;
   end;
   FConn.ExecuteDirect('BEGIN TRANSACTION');
   FAllSitesAttached := FAttachedSites.Count > 0;
