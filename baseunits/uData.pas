@@ -537,17 +537,15 @@ begin
     Result := '0'
   else
     Result := '';
-  if FQuery.Active and
-    (FieldIndex < Length(DBDataProcessParams)) and
-    (RecIndex < FRecordCount) then
-  begin
-    try
-      FQuery.RecNo := RecIndex + 1;
-      Result := FQuery.FieldByName(DBDataProcessParams[FieldIndex]).AsString;
-    except
-      on E: Exception do
-        WriteLog_E('TDBDataProcess.GetParam.Error!', E, Self);
-    end;
+  if not FQuery.Active then Exit;
+  if FieldIndex >= Length(DBDataProcessParams) then Exit;
+  if (RecIndex < 0) and (RecIndex > FRecordCount) then Exit;
+  try
+    FQuery.RecNo := RecIndex + 1;
+    Result := FQuery.FieldByName(DBDataProcessParams[FieldIndex]).AsString;
+  except
+    on E: Exception do
+      WriteLog_E('TDBDataProcess.GetParam.Error!', E, Self);
   end;
 end;
 
