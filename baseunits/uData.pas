@@ -644,6 +644,8 @@ begin
   FTableName := 'masterlist';
   FSQLSelect := 'SELECT * FROM ' + QuotedStrd(FTableName);
   FRecordCount := 0;
+  FFiltered := False;
+  FFilterAllSites := False;
   FFilterApplied := False;
   FFilterSQL := '';
   FAllSitesAttached := False;
@@ -1113,6 +1115,7 @@ begin
         FQuery.Close;
         SQL.Text := tsql;
         FQuery.Open;
+        FFilterAllSites := False;
         FFiltered := False;
         FFilterApplied := False;
         FFilterSQL := '';
@@ -1160,6 +1163,7 @@ procedure TDBDataProcess.RemoveFilter;
 begin
   if FFiltered then
   begin
+    FFilterAllSites := False;
     FFiltered := False;
     FFilterApplied := False;
     FFilterSQL := '';
