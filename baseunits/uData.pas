@@ -576,7 +576,8 @@ begin
   FConn.ExecuteDirect('END TRANSACTION');
   try
     for i := 0 to SitesList.Count - 1 do
-      if FileExistsUTF8(DBDataFilePath(SitesList[i])) then
+      if (FAttachedSites.IndexOf(SitesList[i]) = -1) and
+        (FileExistsUTF8(DBDataFilePath(SitesList[i]))) then
       begin
         FConn.ExecuteDirect('ATTACH ' +
           QuotedStrd(DBDataFilePath(SitesList[i])) + ' AS ' + QuotedStrd(SitesList[i]));
