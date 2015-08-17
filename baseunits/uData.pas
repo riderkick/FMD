@@ -1076,7 +1076,7 @@ begin
             SQL.Add('UNION ALL');
             SQL.Add('SELECT *, ' + QuotedStrd(FAttachedSites[i]) +
               ' AS "website" FROM ' +
-              FAttachedSites[i] + '.' + QuotedStrd(FTableName));
+              QuotedStrd(FAttachedSites[i]) + '.' + QuotedStrd(FTableName));
             SQL.Add('WHERE');
             GenerateSQLFilter;
           end;
