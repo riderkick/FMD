@@ -866,9 +866,9 @@ function ConvertCharsetToUTF8(S: String): String; overload;
 procedure ConvertCharsetToUTF8(S: TStrings); overload;
 
 // StringUtils
-function QuotedStrd(const S: string): string; overload;
-function QuotedStrd(const S: Integer): string; overload;
-function BracketStr(const S: string): string;
+function QuotedStrd(const S: string): string; overload; inline;
+function QuotedStrd(const S: Integer): string; overload; inline;
+function BracketStr(const S: string): string; inline;
 function RandomString(SLength: Integer; ONumber: Boolean = False;
   OSymbol: Boolean = False; OSpace: Boolean = False): string;
 function GetValuesFromString(Str: String; Sepr: Char): String;
