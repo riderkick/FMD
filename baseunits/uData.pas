@@ -594,8 +594,12 @@ end;
 procedure TDBDataProcess.DetachAllSites;
 var
   i: Integer;
+  queryactive: Boolean;
 begin
   if (not FConn.Connected) or (FAttachedSites.Count = 0) then Exit;
+  queryactive := FQuery.Active;
+  if FQuery.Active then FQuery.Close;
+  FTrans.Commit;
   FConn.ExecuteDirect('END TRANSACTION');
   for i := FAttachedSites.Count - 1 downto 0 do begin
     try
@@ -608,6 +612,7 @@ begin
   end;
   FConn.ExecuteDirect('BEGIN TRANSACTION');
   FAllSitesAttached := FAttachedSites.Count > 0;
+  if FQuery.Active <> queryactive then FQuery.Active := queryactive;
 end;
 
 function TDBDataProcess.ExecuteDirect(SQL: String): Boolean;
@@ -902,7 +907,7 @@ begin
   if FConn.Connected then
     try
       queryactive := FQuery.Active;
-      FQuery.Close;
+      if FQuery.Active then FQuery.Close;
       FTrans.Commit;
       if FQuery.Active <> queryactive then
         FQuery.Active := queryactive;
@@ -1160,6 +1165,8 @@ begin
     FFiltered := False;
     FFilterApplied := False;
     FFilterSQL := '';
+    FQuery.SQL.Text := FSQLSelect;
+    FRecordCount := 0;
     DetachAllSites;
     if FQuery.Active then
     begin
