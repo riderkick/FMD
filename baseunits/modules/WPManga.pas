@@ -53,7 +53,7 @@ var
   Source: TStringList;
   Query: TXQueryEngineHTML;
   v: IXQValue;
-  i: Integer;
+  s: String;
 begin
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
   Result := NET_PROBLEM;
@@ -68,14 +68,13 @@ begin
         try
           if (Module.Website = 'EyeOnManga') or
             (Module.Website = 'MangaBoom') then
-            v := Query.XPath('//*[@id="sct_content"]//h2/a[1]')
+            s := '//*[@id="sct_content"]//h2/a[1]'
           else
-            v := Query.XPath('//*[@id="sct_content"]//div[@class="det"]/a[1]');
-          if v.Count > 0 then
-            for i := 0 to v.Count - 1 do begin
-              Links.Add(v.get(i).toNode.getAttribute('href'));
-              Names.Add(v.get(i).toString);
-            end;
+            s := '//*[@id="sct_content"]//div[@class="det"]/a[1]';
+          for v in Query.XPath(s) do begin
+            Links.Add(v.toNode.getAttribute('href'));
+            Names.Add(v.toString);
+          end;
         finally
           Query.Free;
         end;
