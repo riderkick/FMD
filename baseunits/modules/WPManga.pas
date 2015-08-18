@@ -14,6 +14,7 @@ uses
 
 const
   dirURL = '/manga-list/all/any/last-added/';
+  dirURLmangaindo = '/daftar-manga/all/any/last-added/';
 
 function GetDirectoryPageNumber(var MangaInfo: TMangaInformation;
   var Page: Integer; Module: TModuleContainer): Integer;
@@ -27,7 +28,9 @@ begin
   Result := NET_PROBLEM;
   Source := TStringList.Create;
   try
-    if GetPage(MangaInfo.FHTTP, TObject(Source), Module.RootURL + dirURL, 3) then
+    if Module.Website = 'MangaIndo' then s := dirURLmangaindo
+    else s := dirURL;
+    if GetPage(MangaInfo.FHTTP, TObject(Source), Module.RootURL + s, 3) then
       if Source.Count > 0 then
       begin
         Result := NO_ERROR;
@@ -59,21 +62,32 @@ begin
   Result := NET_PROBLEM;
   Source := TStringList.Create;
   try
-    if GetPage(MangaInfo.FHTTP, TObject(Source), Module.RootURL + dirURL +
+    if Module.Website = 'MangaIndo' then s := dirURLmangaindo
+    else s := dirURL;
+    if GetPage(MangaInfo.FHTTP, TObject(Source), Module.RootURL + s +
       IncStr(URL) + '/', 3) then
       if Source.Count > 0 then
       begin
         Result := NO_ERROR;
         Query := TXQueryEngineHTML.Create(Source.Text);
         try
-          if (Module.Website = 'EyeOnManga') or
-            (Module.Website = 'MangaBoom') then
-            s := '//*[@id="sct_content"]//h2/a[1]'
-          else
-            s := '//*[@id="sct_content"]//div[@class="det"]/a[1]';
-          for v in Query.XPath(s) do begin
-            Links.Add(v.toNode.getAttribute('href'));
-            Names.Add(v.toString);
+          if Module.Website = 'MangaIndo' then begin
+            for v in Query.XPath(
+                '//*[@id="sct_content"]//div[@class="node"]/a[1]/@href') do
+              Links.Add(v.toString);
+            for v in Query.XPath('//*[@id="sct_content"]//div[@class="node"]/div[1]') do
+              Names.Add(v.toString);
+          end
+          else begin
+            if (Module.Website = 'EyeOnManga') or
+              (Module.Website = 'MangaBoom') then
+              s := '//*[@id="sct_content"]//h2/a[1]'
+            else
+              s := '//*[@id="sct_content"]//div[@class="det"]/a[1]';
+            for v in Query.XPath(s) do begin
+              Links.Add(v.toNode.getAttribute('href'));
+              Names.Add(v.toString);
+            end;
           end;
         finally
           Query.Free;
@@ -104,7 +118,9 @@ var
         info.chapterName.Add(v.toNode.Next.toString());
       end;
     end
-    else if module.Website = 'EyeOnManga' then begin
+    else if (Module.Website = 'EyeOnManga') or
+      (Module.Website = 'MangaIndo') then
+    begin
       for v in Query.XPath('//ul[@class="chp_lst"]//a[1]') do begin
         info.chapterLinks.Add(v.toNode.getAttribute('href'));
         info.chapterName.Add(v.toString);
@@ -118,27 +134,26 @@ var
     end;
   end;
 
+  function getwpmangavalue(aname: String): String;
+  begin
+    Result := Query.XPathString('(//*[@class="mng_ifo"]//p)[contains(.,"' +
+      aname + '")]');
+    if Result <> '' then Result := TrimChar(SeparateRight(Result, aname), [':', ' ']);
+  end;
+
   procedure scaninfo;
   begin
     with info, Query do begin
-      coverLink := XPathString('//img[starts-with(@class,"cvr")]/@src');
-      title := Query.XPathString('//*[@itemprop="itemreviewed"]');
       if Module.Website = 'EyeOnManga' then
         summary := XPathString('//*[@class="wpm_pag mng_det"]/p[1]')
       else
         summary := XPathString('//*[@class="det"]/p[1]');
-      authors := XPathString('(//*[@class="mng_ifo"]//p)[contains(.,"Author")]');
-      artists := XPathString('(//*[@class="mng_ifo"]//p)[contains(.,"Artist")]');
-      genres := XPathString('(//*[@class="mng_ifo"]//p)[contains(.,"Category")]');
-      status := XPathString('(//*[@class="mng_ifo"]//p)[contains(.,"Status")]');
-      if summary <> '' then summary :=
-          TrimChar(SeparateRight(summary, 'Summary'), [':', ' ']);
-      if authors <> '' then authors :=
-          TrimChar(SeparateRight(authors, 'Author'), [':', ' ']);
-      if artists <> '' then artists :=
-          TrimChar(SeparateRight(artists, 'Artist'), [':', ' ']);
-      if genres <> '' then genres :=
-          TrimChar(SeparateRight(genres, 'Category'), [':', ' ']);
+      if summary <> '' then
+        summary := TrimChar(SeparateRight(summary, 'Summary'), [':', ' ']);
+      authors := getwpmangavalue('Author');
+      artists := getwpmangavalue('Artist');
+      genres := getwpmangavalue('Category');
+      status := getwpmangavalue('Status');
       if status <> '' then begin
         status := LowerCase(status);
         if Pos('ongoing', status) > 0 then status := '1'
@@ -147,6 +162,24 @@ var
       end;
       scanchapters;
     end;
+  end;
+
+  procedure scaninfomangaindo;
+  begin
+    with info, Query do begin
+      summary := XPathString('//*[@class="wpm_pag mng_det"]/p[1]');
+      authors := getwpmangavalue('Penulis');
+      artists := getwpmangavalue('Seniman');
+      genres := getwpmangavalue('Kategori');
+      status := getwpmangavalue('Status');
+      if status <> '' then begin
+        status := LowerCase(status);
+        if Pos('berjalan', status) > 0 then status := '1'
+        else if Pos('tamat', status) > 0 then status := '0'
+        else status := '';
+      end;
+    end;
+    scanchapters;
   end;
 
 begin
@@ -163,7 +196,10 @@ begin
         Result := NO_ERROR;
         Query := TXQueryEngineHTML.Create(Source.Text);
         try
-          scaninfo;
+          info.coverLink := Query.XPathString('//img[starts-with(@class,"cvr")]/@src');
+          info.title := Query.XPathString('//*[@itemprop="itemreviewed"]');
+          if Module.Website = 'MangaIndo' then scaninfomangaindo
+          else scaninfo;
           s := Query.XPathString('//*[@class="pgg"]/li[last()]/a/@href');
           if s <> '' then begin
             s := ReplaceRegExpr('^.*\/(\d+)/.*$', s, '$1', True);
@@ -180,6 +216,11 @@ begin
           end;
           if Module.Website <> 'EyeOnManga' then
             InvertStrings([info.chapterLinks, info.chapterName]);
+          if (Module.Website = 'EyeOnManga') or
+            (Module.Website = 'MangaIndo') and
+            (info.chapterName.Count > 0) then
+            for i := 0 to info.chapterName.Count - 1 do
+              info.chapterName[i] := 'Ch.' + IncStr(i) + ' ' + info.chapterName[i];
         finally
           Query.Free;
         end;
@@ -287,6 +328,7 @@ begin
   AddWebsiteModule('MangaBoom', 'http://www.mangaboom.com');
   AddWebsiteModule('Authrone', 'http://www.authrone.com');
   AddWebsiteModule('EyeOnManga', 'http://www.eyeonmanga.com');
+  AddWebsiteModule('MangaIndo', 'http://mangaindo.id');
 end;
 
 initialization
