@@ -174,7 +174,7 @@ begin
                   info.url + 'chapter-list/' + IntToStr(i) + '/',
                   Reconnect) then
                 begin
-                  Query.ParseTree(Source.Text);
+                  Query.ParseHTML(Source.Text);
                   scanchapters;
                 end;
           end;

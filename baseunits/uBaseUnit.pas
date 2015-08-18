@@ -803,7 +803,7 @@ type
   public
     constructor Create(HTML: String = '');
     destructor Destroy; override;
-    procedure ParseTree(HTML: String);
+    procedure ParseHTML(HTML: String);
     function XPath(Expression: String): IXQValue; inline;
     function XPathString(Expression: String): String; inline;
     function CSS(Expression: String): IXQValue; inline;
@@ -3619,7 +3619,7 @@ begin
   inherited Destroy;
 end;
 
-procedure TXQueryEngineHTML.ParseTree(HTML: String);
+procedure TXQueryEngineHTML.ParseHTML(HTML: String);
 begin
   if HTML <> '' then FTreeParser.parseTree(HTML);
 end;
