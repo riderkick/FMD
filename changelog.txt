@@ -8,6 +8,12 @@ https://www.mediafire.com/folder/3ccy2c7g36hp3/Fmd
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.22.0 (19-08-2015)
+[*] Fix various bug on filter
+[*] WP-Manga: rewrite all script
+[*] Added MangaIndo(ID)
+[*] Various changes and bug fixes
+
 0.9.21.8 (16-08-2015)
 [*] Fix high cpu usage while updating manga list
 
