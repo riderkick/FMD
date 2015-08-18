@@ -492,8 +492,7 @@ begin
             CS_DIRECTORY_PAGE_2:
               s := s + ' | ' + RS_LookingForNewTitleFromAnotherDirectory + '...';
             CS_INFO:
-              s := Format('%s | %s "%s" "%s"', [s, RS_GettingInfo, names[workPtr - 1],
-                links[workPtr - 1]]);
+              s := Format('%s | %s "%s"', [s, RS_GettingInfo, names[workPtr - 1]]);
           end;
           FStatus := s;
           MainForm.ulWorkPtr := workPtr + 1;
