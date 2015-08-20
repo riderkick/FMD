@@ -216,11 +216,12 @@ begin
           end;
           if Module.Website <> 'EyeOnManga' then
             InvertStrings([info.chapterLinks, info.chapterName]);
-          if (Module.Website = 'EyeOnManga') or
-            (Module.Website = 'MangaIndo') and
-            (info.chapterName.Count > 0) then
-            for i := 0 to info.chapterName.Count - 1 do
-              info.chapterName[i] := 'Ch.' + IncStr(i) + ' ' + info.chapterName[i];
+          { add missing chapter number }
+          //if (Module.Website = 'EyeOnManga') or
+          //  (Module.Website = 'MangaIndo') and
+          //  (info.chapterName.Count > 0) then
+          //  for i := 0 to info.chapterName.Count - 1 do
+          //    info.chapterName[i] := 'Ch.' + IncStr(i) + ' ' + info.chapterName[i];
         finally
           Query.Free;
         end;
