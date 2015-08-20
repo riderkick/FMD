@@ -8,6 +8,12 @@ https://www.mediafire.com/folder/3ccy2c7g36hp3/Fmd
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.22.1 (21-08-2015)
+[*] E-Hentai: fix image url
+[*] MangaIndo: remove automatically added chapter number
+[*] ReadHentaiManga: fix image url
+[*] Fix cover image sometimes failed to load
+
 0.9.22.0 (19-08-2015)
 [*] Fix various bug on filter
 [*] WP-Manga: rewrite all script
@@ -21,7 +27,7 @@ Changelog:
 [*] Various changes and bug fixes
 
 0.9.21.6 (11-08-2015)
-[*] Doujin-Mode: reset image url every task start, fix expired url
+[*] Doujin-Moe: reset image url every task start, fix expired url
 [*] Fix empty website when adding a favorite
 [*] Fix filter custom genres incorrectly treats whitespaces as separator
 [*] Various changes
