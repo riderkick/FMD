@@ -324,35 +324,34 @@ const
   MANGALIB_PL_ID         = 59;
   ONEMANGA_ID            = 60;
   MANGATOWN_ID           = 61;
-  READHENTAIMANGA_ID     = 62;
-  MANGAOKU_ID            = 63;
-  MYREADINGMANGAINFO_ID  = 64;
-  IKOMIK_ID              = 65;
-  NHENTAI_ID             = 66;
-  UNIONMANGAS_ID         = 67;
-  MANGAMINT_ID           = 68;
-  UNIXMANGA_ID           = 69;
-  HAKIHOME_ID            = 70;
-  EXTREMEMANGAS_ID       = 71;
-  MANGAHOST_ID           = 72;
-  PORNCOMIX_ID           = 73;
-  PORNCOMIXRE_ID         = 74;
-  PORNCOMIXIC_ID         = 75;
-  XXCOMICS_ID            = 76;
-  XXCOMICSMT_ID          = 77;
-  XXCOMICS3D_ID          = 78;
-  PORNXXXCOMICS_ID       = 79;
-  MANGASEE_ID            = 80;
-  MANGAKU_ID             = 81;
-  ACADEMYVN_ID           = 82;
-  MANGAAT_ID             = 83;
-  SENMANGARAW_ID         = 84;
-  READMANGATODAY_ID      = 85;
-  LONEMANGA_ID           = 86;
-  DYNASTYSCANS_ID        = 87;
-  MADOKAMI_ID            = 88;
+  MANGAOKU_ID            = 62;
+  MYREADINGMANGAINFO_ID  = 63;
+  IKOMIK_ID              = 64;
+  NHENTAI_ID             = 65;
+  UNIONMANGAS_ID         = 66;
+  MANGAMINT_ID           = 67;
+  UNIXMANGA_ID           = 68;
+  HAKIHOME_ID            = 69;
+  EXTREMEMANGAS_ID       = 70;
+  MANGAHOST_ID           = 71;
+  PORNCOMIX_ID           = 72;
+  PORNCOMIXRE_ID         = 73;
+  PORNCOMIXIC_ID         = 74;
+  XXCOMICS_ID            = 75;
+  XXCOMICSMT_ID          = 76;
+  XXCOMICS3D_ID          = 77;
+  PORNXXXCOMICS_ID       = 78;
+  MANGASEE_ID            = 79;
+  MANGAKU_ID             = 80;
+  ACADEMYVN_ID           = 81;
+  MANGAAT_ID             = 82;
+  SENMANGARAW_ID         = 83;
+  READMANGATODAY_ID      = 84;
+  LONEMANGA_ID           = 85;
+  DYNASTYSCANS_ID        = 86;
+  MADOKAMI_ID            = 87;
 
-  WebsiteRoots: array [0..88] of array [0..1] of string = (
+  WebsiteRoots: array [0..87] of array [0..1] of string = (
     ('AnimeA', 'http://manga.animea.net'),
     ('MangaHere', 'http://www.mangahere.co'),
     ('MangaInn', 'http://www.mangainn.me'),
@@ -415,7 +414,6 @@ const
     ('Manga-Lib_PL', 'http://www.manga-lib.pl/index.php'),
     ('OneManga', 'http://www.onemanga2.com'),
     ('MangaTown', 'http://www.mangatown.com'),
-    ('ReadHentaiManga', 'http://readhentaimanga.com'),
     ('MangaOku', 'http://www.mangaoku.net'),
     ('MyReadingMangaInfo', 'http://myreadingmanga.info'),
     ('I-Komik', 'http://www.i-komik.com'),
@@ -565,8 +563,6 @@ const
   ONEMANGA_BROWSER = '/manga-list/all/any/last-added/';
 
   MANGATOWN_BROWSER = '/directory/';
-
-  READHENTAIMANGA_BROWSER = '/hentai-manga-list/all/any/last-added/';
 
   IKOMIK_BROWSER = '/manga-directory/';
 
@@ -1280,7 +1276,6 @@ begin
       NINEMANGA_BR_ID,
       MANGACOW_ID,
       ONEMANGA_ID,
-      READHENTAIMANGA_ID,
       MYREADINGMANGAINFO_ID,
       NHENTAI_ID,
       MANGA2U_ID,

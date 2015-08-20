@@ -449,8 +449,6 @@ var
 
   {$I includes/MangaTown/chapter_page_number.inc}
 
-  {$I includes/ReadHentaiManga/chapter_page_number.inc}
-
   {$I includes/MangaOku/chapter_page_number.inc}
 
   {$I includes/MyReadingMangaInfo/chapter_page_number.inc}
@@ -619,9 +617,6 @@ begin
     else
     if manager.container.MangaSiteID = MANGATOWN_ID then
       Result := GetMangaTownPageNumber
-    else
-    if manager.container.MangaSiteID = READHENTAIMANGA_ID then
-      Result := GetReadHentaiMangaPageNumber
     else
     if manager.container.MangaSiteID = MANGAOKU_ID then
       Result := GetMangaOkuPageNumber
@@ -792,8 +787,6 @@ var
   {$I includes/OneManga/image_url.inc}
 
   {$I includes/MangaTown/image_url.inc}
-
-  {$I includes/ReadHentaiManga/image_url.inc}
 
   {$I includes/MangaOku/image_url.inc}
 
@@ -973,9 +966,6 @@ begin
     else
     if manager.container.MangaSiteID = MANGATOWN_ID then
       Result := GetMangaTownImageURL
-    else
-    if manager.container.MangaSiteID = READHENTAIMANGA_ID then
-      Result := GetReadHentaiMangaImageURL
     else
     if manager.container.MangaSiteID = MANGAOKU_ID then
       Result := GetMangaOkuImageURL

@@ -1969,8 +1969,6 @@ var
 
   {$I includes/MangaTown/directory_page_number.inc}
 
-  {$I includes/ReadHentaiManga/directory_page_number.inc}
-
   {$I includes/MyReadingMangaInfo/directory_page_number.inc}
 
   {$I includes/IKomik/directory_page_number.inc}
@@ -2110,9 +2108,6 @@ begin
       else
       if website = WebsiteRoots[MANGATOWN_ID, 0] then
         Result := GetMangaTownDirectoryPageNumber
-      else
-      if website = WebsiteRoots[READHENTAIMANGA_ID, 0] then
-        Result := GetReadHentaiMangaDirectoryPageNumber
       else
       if website = WebsiteRoots[MYREADINGMANGAINFO_ID, 0] then
         Result := GetMyReadingMangaInfoDirectoryPageNumber
@@ -2287,8 +2282,6 @@ var
   {$I includes/OneManga/names_and_links.inc}
 
   {$I includes/MangaTown/names_and_links.inc}
-
-  {$I includes/ReadHentaiManga/names_and_links.inc}
 
   {$I includes/MangaOku/names_and_links.inc}
 
@@ -2508,9 +2501,6 @@ begin
     if website = WebsiteRoots[MANGATOWN_ID, 0] then
       Result := MangaTownGetNamesAndLinks
     else
-    if website = WebsiteRoots[READHENTAIMANGA_ID, 0] then
-      Result := ReadHentaiMangaGetNamesAndLinks
-    else
     if website = WebsiteRoots[MANGAOKU_ID, 0] then
       Result := MangaOkuGetNamesAndLinks
     else
@@ -2702,8 +2692,6 @@ var
   {$I includes/OneManga/manga_information.inc}
 
   {$I includes/MangaTown/manga_information.inc}
-
-  {$I includes/ReadHentaiManga/manga_information.inc}
 
   {$I includes/MangaOku/manga_information.inc}
 
@@ -2930,9 +2918,6 @@ begin
     else
     if website = WebsiteRoots[MANGATOWN_ID, 0] then
       Result := GetMangaTownInfoFromURL
-    else
-    if website = WebsiteRoots[READHENTAIMANGA_ID, 0] then
-      Result := GetReadHentaiMangaInfoFromURL
     else
     if website = WebsiteRoots[MANGAOKU_ID, 0] then
       Result := GetMangaOkuInfoFromURL
