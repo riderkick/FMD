@@ -15,6 +15,7 @@ uses
 const
   dirURL = '/manga-list/all/any/last-added/';
   dirURLmangaindo = '/daftar-manga/all/any/last-added/';
+  dirURLreadhentaimanga = '/hentai-manga-list/all/any/last-added/';
 
 function GetDirectoryPageNumber(var MangaInfo: TMangaInformation;
   var Page: Integer; Module: TModuleContainer): Integer;
@@ -29,6 +30,7 @@ begin
   Source := TStringList.Create;
   try
     if Module.Website = 'MangaIndo' then s := dirURLmangaindo
+    else if Module.Website = 'ReadHentaiManga' then s := dirURLreadhentaimanga
     else s := dirURL;
     if GetPage(MangaInfo.FHTTP, TObject(Source), Module.RootURL + s, 3) then
       if Source.Count > 0 then
@@ -63,6 +65,7 @@ begin
   Source := TStringList.Create;
   try
     if Module.Website = 'MangaIndo' then s := dirURLmangaindo
+    else if Module.Website = 'ReadHentaiManga' then s := dirURLreadhentaimanga
     else s := dirURL;
     if GetPage(MangaInfo.FHTTP, TObject(Source), Module.RootURL + s +
       IncStr(URL) + '/', 3) then
@@ -77,6 +80,12 @@ begin
               Links.Add(v.toString);
             for v in Query.XPath('//*[@id="sct_content"]//div[@class="node"]/div[1]') do
               Names.Add(v.toString);
+          end
+          else if Module.Website = 'ReadHentaiManga' then begin
+            for v in Query.XPath('//*[@id="content"]//*[@id="center"]/a') do begin
+              Links.Add(v.toNode.getAttribute('href'));
+              Names.Add(v.toNode.getAttribute('title'));
+            end;
           end
           else begin
             if (Module.Website = 'EyeOnManga') or
@@ -275,6 +284,7 @@ var
   Source: TStringList;
   Query: TXQueryEngineHTML;
   Container: TTaskContainer;
+  s: String;
 begin
   Result := False;
   if DownloadThread = nil then Exit;
@@ -293,8 +303,11 @@ begin
           Result := True;
           Query := TXQueryEngineHTML.Create(Source.Text);
           try
-            Container.PageLinks[DownloadThread.WorkCounter] :=
-              Query.XPathString('//*[@class="wpm_pag mng_rdr"]//img/@src');
+            if Module.Website = 'ReadHentaiManga' then
+              s := HTMLDecode(Query.XPathString('//img[@id="main_img"]/@src'))
+            else
+              s := Query.XPathString('//*[@class="wpm_pag mng_rdr"]//img/@src');
+            Container.PageLinks[DownloadThread.WorkCounter] := s;
           finally
             Query.Free;
           end;
@@ -330,6 +343,7 @@ begin
   AddWebsiteModule('Authrone', 'http://www.authrone.com');
   AddWebsiteModule('EyeOnManga', 'http://www.eyeonmanga.com');
   AddWebsiteModule('MangaIndo', 'http://mangaindo.id');
+  AddWebsiteModule('ReadHentaiManga', 'http://readhentaimanga.com');
 end;
 
 initialization
