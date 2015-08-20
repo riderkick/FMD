@@ -20,25 +20,24 @@ function GetDirectoryPageNumber(var MangaInfo: TMangaInformation;
   var Page: Integer; Module: TModuleContainer): Integer;
 var
   Source: TStringList;
-  Parser: TTreeParser;
+  Query: TXQueryEngineHTML;
 begin
   Result := NET_PROBLEM;
   Page := 1;
   if MangaInfo = nil then Exit;
   Source := TStringList.Create;
   try
-    if MangaInfo.GetPage(TObject(Source), Module.RootURL + '/?' + dirURL, 3) then
+    if GetPage(MangaInfo.FHTTP, TObject(Source), Module.RootURL + '/?' + dirURL, 3) then
     begin
       if Source.Count > 0 then
       begin
         Result := NO_ERROR;
-        Parser := TTreeParser.Create;
+        Query := TXQueryEngineHTML.Create(Source.Text);
         try
-          ParseHTMLTree(Parser, Source.Text);
-          Page := StrToIntDef(SelectCSSString(
-            'table.ptt>tbody>tr>td:nth-last-child(2)>a', Parser), 1) + 1;
+          Page := StrToIntDef(Query.CSSString(
+            'table.ptt>tbody>tr>td:nth-last-child(2)>a'), 1) + 1;
         finally
-          Parser.Free;
+          Query.Free;
         end;
       end
       else Result := INFORMATION_NOT_FOUND;
@@ -52,7 +51,7 @@ function GetNameAndLink(var MangaInfo: TMangaInformation;
   const Names, Links: TStringList; const URL: String; Module: TModuleContainer): Integer;
 var
   Source: TStringList;
-  Parser: TTreeParser;
+  Query: TXQueryEngineHTML;
   rurl: String;
   v: IXQValue;
 begin
@@ -62,23 +61,21 @@ begin
   try
     if URL = '0' then rurl := Module.RootURL + '/?' + dirURL
     else rurl := Module.RootURL + '/?page=' + IncStr(URL) + '&' + dirURL;
-    if MangaInfo.GetPage(TObject(Source), rurl, 3) then
+    if GetPage(MangaInfo.FHTTP, TObject(Source), rurl, 3) then
     begin
       Result := INFORMATION_NOT_FOUND;
       if Source.Count > 0 then
       begin
         Result := NO_ERROR;
-        Parser := TTreeParser.Create;
+        Query := TXQueryEngineHTML.Create(Source.Text);
         try
-          ParseHTMLTree(Parser, Source.Text);
-          for v in SelectXPathIX('//table[@class="itg"]/tbody/tr/td/div/div/a',
-              Parser) do
+          for v in Query.XPath('//table[@class="itg"]/tbody/tr/td/div/div/a') do
           begin
             Names.Add(v.toString);
             Links.Add(v.toNode.getAttribute('href'));
           end;
         finally
-          Parser.Free;
+          Query.Free;
         end;
       end;
     end;
@@ -92,7 +89,7 @@ function GetInfo(var MangaInfo: TMangaInformation; const URL: String;
 var
   info: TMangaInfo;
   Source: TStringList;
-  Parser: TTreeParser;
+  Query: TXQueryEngineHTML;
   v: IXQValue;
 
   procedure ScanParse;
@@ -101,28 +98,28 @@ var
   begin
     getOK := True;
     // check content warning
-    if Pos('Content Warning', SelectXPathString('//div/h1', Parser)) > 0 then
+    if Pos('Content Warning', Query.XPathString('//div/h1')) > 0 then
     begin
-      getOK := MangaInfo.GetPage(TObject(Source), info.url + '?nw=session', Reconnect);
+      getOK := GetPage(MangaInfo.FHTTP, TObject(Source), info.url +
+        '?nw=session', Reconnect);
       if getOK then
-        ParseHTMLTree(Parser, Source.Text);
+        Query.ParseHTML(Source.Text);
     end;
     if getOK then
     begin
       with info do begin
         //title
-        title := SelectXPathString('//*[@id="gn"]', Parser);
+        title := Query.XPathString('//*[@id="gn"]');
         //cover
-        coverLink := SelectXPathString('//*[@id="gd1"]/img/@src', Parser);
+        coverLink := Query.XPathString('//*[@id="gd1"]/img/@src');
         //artists
         artists := '';
-        for v in SelectXPathIX('//a[starts-with(@id,"ta_artist")]', Parser) do
+        for v in Query.XPath('//a[starts-with(@id,"ta_artist")]') do
           AddCommaString(artists, v.toString);
         //genres
         genres := '';
-        for v in SelectXPathIX(
-            '//a[starts-with(@id,"ta_")and(not(starts-with(@id,"ta_artist")))]',
-            Parser) do
+        for v in Query.XPath(
+            '//a[starts-with(@id,"ta_")and(not(starts-with(@id,"ta_artist")))]') do
           AddCommaString(genres, v.toString);
         //chapter
         chapterLinks.Add(url);
@@ -154,7 +151,7 @@ begin
   info.url := FillHost(Module.RootURL, URL);
   Source := TStringList.Create;
   try
-    if MangaInfo.GetPage(TObject(Source), info.url, Reconnect) then
+    if GetPage(MangaInfo.FHTTP, TObject(Source), info.url, Reconnect) then
     begin
       if Source.Count > 0 then
       begin
@@ -164,12 +161,11 @@ begin
           info.summary := Source.Text
         else
         begin
-          Parser := TTreeParser.Create;
+          Query := TXQueryEngineHTML.Create(Source.Text);
           try
-            ParseHTMLTree(Parser, Source.Text);
             ScanParse;
           finally
-            Parser.Free;
+            Query.Free;
           end;
         end;
       end
@@ -186,13 +182,13 @@ function GetPageNumber(var DownloadThread: TDownloadThread; const URL: String;
 var
   Container: TTaskContainer;
   Source: TStringList;
-  Parser: TTreeParser;
+  Query: TXQueryEngineHTML;
   v: IXQValue;
   rurl: String;
 
   procedure GetImageLink;
   begin
-    for v in SelectXPathIX('//*[@class="gdtm"]/div/a/@href', Parser) do
+    for v in Query.XPath('//*[@class="gdtm"]/div/a/@href') do
     begin
       Container.PageLinks.Add('G');
       Container.PageContainerLinks.Add(v.toString);
@@ -207,23 +203,23 @@ var
   begin
     getOK := True;
     //check content warning
-    if Pos('Content Warning', SelectXPathString('//div/h1', Parser)) > 0 then
+    if Pos('Content Warning', Query.XPathString('//div/h1')) > 0 then
     begin
       rurl += '?nw=session';
-      getOK := DownloadThread.GetPage(TObject(Source), rurl,
+      getOK := GetPage(DownloadThread.FHTTP, TObject(Source), rurl,
         Container.Manager.retryConnect);
       if getOK then
-        ParseHTMLTree(Parser, Source.Text);
+        Query.ParseHTML(Source.Text);
     end;
     if getOK then
     begin
       GetImageLink;
       //get page count
-      p := StrToIntDef(SelectCSSString('table.ptt>tbody>tr>td:nth-last-child(2)>a',
-        Parser), 1) - 1;
+      p := StrToIntDef(Query.CSSString(
+        'table.ptt>tbody>tr>td:nth-last-child(2)>a'), 1) - 1;
       if p > 0 then
         for i := 1 to p do
-          if DownloadThread.GetPage(TObject(Source), rurl + '?p=' + IntToStr(i),
+          if GetPage(DownloadThread.FHTTP, TObject(Source), rurl + '?p=' + IntToStr(i),
             Container.Manager.retryConnect) then
             GetImageLink;
     end;
@@ -239,18 +235,17 @@ begin
   Source := TStringList.Create;
   try
     rurl := FillHost(Module.RootURL, URL);
-    if DownloadThread.GetPage(TObject(Source), rurl,
+    if GetPage(DownloadThread.FHTTP, TObject(Source), rurl,
       Container.Manager.retryConnect) then
     begin
       if Source.Count > 0 then
       begin
         Result := True;
-        Parser := TTreeParser.Create;
+        Query := TXQueryEngineHTML.Create(Source.Text);
         try
-          ParseHTMLTree(Parser, Source.Text);
           ScanParse;
         finally
-          Parser.Free;
+          Query.Free;
         end;
       end;
     end;
@@ -264,7 +259,7 @@ function DownloadImage(var DownloadThread: TDownloadThread;
 var
   Source: TStringList;
   Container: TTaskContainer;
-  Parser: TTreeParser;
+  Query: TXQueryEngineHTML;
   iurl: String;
   reconnect: Integer;
 
@@ -276,9 +271,11 @@ var
     rcount := 0;
     Result := False;
     while (not Result) and (not DownloadThread.IsTerminated) do begin
-      ParseHTMLTree(Parser, Source.Text);
-      iurl := SelectXPathString('/html/body/div/a/img/@src', Parser);
-      Result := SaveImage(DownloadThread.FHTTP, -1, iurl, Path, Name, Prefix, reconnect);
+      Query.ParseHTML(Source.Text);
+      iurl := Query.XPathString('//*[@id="img"]/@src');
+      if iurl = '' then iurl := Query.XPathString('//body/div/div/a/img/@src');
+      if iurl <> '' then
+        Result := SaveImage(DownloadThread.FHTTP, -1, iurl, Path, Name, Prefix, reconnect);
       if DownloadThread.IsTerminated then Break;
       if not Result then
       begin
@@ -307,7 +304,8 @@ var
         else iurl := FillHost(Module.RootURL, URL);
         if nl <> '' then begin
           iurl := iurl + '?nl=' + nl;
-          if not DownloadThread.GetPage(TObject(Source), iurl, reconnect) then Break;
+          if not GetPage(DownloadThread.FHTTP, TObject(Source), iurl, reconnect) then
+            Break;
         end else Break;
         if rcount >= reconnect then Break
         else Inc(rcount);
@@ -323,15 +321,15 @@ begin
   iurl := FillHost(Module.RootURL, URL);
   Source := TStringList.Create;
   try
-    if DownloadThread.GetPage(TObject(Source), iurl, reconnect) then
+    if GetPage(DownloadThread.FHTTP, TObject(Source), iurl, reconnect) then
     begin
       if Source.Count > 0 then
       begin
-        Parser := TTreeParser.Create;
+        Query := TXQueryEngineHTML.Create(Source.Text);
         try
           Result := DoDownloadImage;
         finally
-          Parser.Free;
+          Query.Free;
         end;
       end;
     end;
@@ -346,7 +344,7 @@ begin
   begin
     Website := 'E-Hentai';
     RootURL := 'http://g.e-hentai.org';
-    MaxTaskLimit := 2;
+    MaxTaskLimit := 1;
     MaxConnectionLimit := 4;
     SortedList := True;
     InformationAvailable := True;
