@@ -10,9 +10,6 @@ uses
 
 implementation
 
-uses
-  simplehtmltreeparser, xquery;
-
 const
   dirURL = 'f_doujinshi=on&f_manga=on&f_western=on&f_apply=Apply+Filter';
 
@@ -273,9 +270,11 @@ var
     while (not Result) and (not DownloadThread.IsTerminated) do begin
       Query.ParseHTML(Source.Text);
       iurl := Query.XPathString('//*[@id="img"]/@src');
-      if iurl = '' then iurl := Query.XPathString('//body/div/div/a/img/@src');
+      if iurl = '' then
+        iurl := Query.XPathString('//a/img/@src[not(contains(.,"ehgt.org/"))]');
       if iurl <> '' then
-        Result := SaveImage(DownloadThread.FHTTP, -1, iurl, Path, Name, Prefix, reconnect);
+        Result := SaveImage(DownloadThread.FHTTP, -1, iurl, Path,
+          Name, Prefix, reconnect);
       if DownloadThread.IsTerminated then Break;
       if not Result then
       begin
