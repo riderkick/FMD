@@ -218,7 +218,10 @@ var
         for i := 1 to p do
           if GetPage(DownloadThread.FHTTP, TObject(Source), rurl + '?p=' + IntToStr(i),
             Container.Manager.retryConnect) then
+          begin
+            Query.ParseHTML(Source.Text);
             GetImageLink;
+          end;
     end;
   end;
 
@@ -231,7 +234,7 @@ begin
   Container.PageNumber := 0;
   Source := TStringList.Create;
   try
-    rurl := FillHost(Module.RootURL, URL);
+    rurl := AppendURLDelim(FillHost(Module.RootURL, URL));
     if GetPage(DownloadThread.FHTTP, TObject(Source), rurl,
       Container.Manager.retryConnect) then
     begin
