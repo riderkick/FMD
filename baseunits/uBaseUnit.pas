@@ -830,7 +830,6 @@ function SitesWithSortedList(const website:String): Boolean;
 function SitesWithoutFavorites(const website:String): Boolean;
 // Return true if the website doesn't contain manga information
 function SitesWithoutInformation(const website: String): Boolean;
-function SitesWithoutPageLink(const website: String): Boolean;
 function SitesWithoutReferer(const website: String): Boolean;
 function SitesRefererisURL(const website: String): Boolean;
 function SitesWithSingleChapter(const website: String): Boolean;
@@ -1338,11 +1337,6 @@ begin
     MANGAOKU_ID,
     UNIXMANGA_ID
     ]);
-end;
-
-function SitesWithoutPageLink(const website : String) : Boolean;
-begin
-  Result := False;
 end;
 
 function SitesWithoutReferer(const website : String) : Boolean;
