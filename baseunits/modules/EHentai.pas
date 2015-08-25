@@ -202,8 +202,7 @@ var
     //check content warning
     if Pos('Content Warning', Query.XPathString('//div/h1')) > 0 then
     begin
-      rurl += '?nw=session';
-      getOK := GetPage(DownloadThread.FHTTP, TObject(Source), rurl,
+      getOK := GetPage(DownloadThread.FHTTP, TObject(Source), rurl + '?nw=session',
         Container.Manager.retryConnect);
       if getOK then
         Query.ParseHTML(Source.Text);
