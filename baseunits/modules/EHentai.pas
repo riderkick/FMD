@@ -349,6 +349,7 @@ begin
     MaxConnectionLimit := 4;
     SortedList := True;
     InformationAvailable := True;
+    DynamicPageLink := True;
     OnGetDirectoryPageNumber := @GetDirectoryPageNumber;
     OnGetNameAndLink := @GetNameAndLink;
     OnGetInfo := @GetInfo;
