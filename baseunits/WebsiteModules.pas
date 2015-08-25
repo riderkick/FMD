@@ -341,6 +341,7 @@ end;
 function TWebsiteModules.GetDirectoryPageNumber(var MangaInfo: TMangaInformation;
   var Page: Integer; const ModuleId: Integer): Integer;
 begin
+  Page := 1;
   Result := MODULE_NOT_FOUND;
   if (ModuleId < 0) or (ModuleId >= FModuleList.Count) then Exit;
   if Assigned(TModuleContainer(FModuleList[ModuleId]).OnGetDirectoryPageNumber) then
