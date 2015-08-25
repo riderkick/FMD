@@ -56,6 +56,7 @@ type
     SortedList: Boolean;
     InformationAvailable: Boolean;
     FavoriteAvailable: Boolean;
+    DynamicPageLink: Boolean;
     TotalDirectoryPage: array of Integer;
     CurrentDirectoryIndex: Integer;
     OnGetDirectoryPageNumber: TOnGetDirectoryPageNumber;
@@ -205,6 +206,7 @@ begin
   SortedList := False;
   InformationAvailable := True;
   FavoriteAvailable := True;
+  DynamicPageLink := False;
   TotalDirectory := 1;
   CurrentDirectoryIndex := 0;
 end;
