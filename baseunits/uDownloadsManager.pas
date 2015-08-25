@@ -1346,12 +1346,18 @@ procedure TTaskThread.Execute;
 var
   j: Integer;
   S, P: String;
+  DynamicPageLink: Boolean;
 begin
   INIAdvanced.Reload;
   ModuleId := container.ModuleId;
   container.ThreadState := True;
   container.DownloadInfo.TransferRate := '';
   try
+    if container.ModuleId > -1 then
+      DynamicPageLink := Modules.Module[ModuleId].DynamicPageLink
+    else
+      DynamicPageLink := False;
+
     while container.CurrentDownloadChapterPtr < container.ChapterLinks.Count do
     begin
       WaitForThreads;
@@ -1410,11 +1416,12 @@ begin
             (FileExistsUTF8(P + '.gif')) then
             container.PageLinks[j] := 'D'
           else
-          if container.PageLinks[j] = 'D' then
-            if SitesWithoutPageLink(WebsiteRoots[container.MangaSiteID, 0]) then
+          begin
+            if DynamicPageLink then
               container.PageLinks[j] := 'G'
             else
               container.PageLinks[j] := 'W';
+          end;
         end;
       end;
 
@@ -1422,8 +1429,7 @@ begin
       if container.PageLinks.Count = 0 then
         container.PageLinks.Add('W');
       container.PageNumber := container.PageLinks.Count;
-      if not SitesWithoutPageLink(container.DownloadInfo.Website) and
-        CheckForPrepare then
+      if (not DynamicPageLink) and CheckForPrepare then
       begin
         Flag := CS_GETPAGELINK;
         container.WorkCounter := 0;
