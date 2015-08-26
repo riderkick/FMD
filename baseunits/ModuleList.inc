@@ -9,4 +9,5 @@ uses
   EHentai,
   Doujinmoeus,
   MangaReader,
-  MangaStream;
+  MangaStream,
+  MangaLife;
