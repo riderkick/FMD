@@ -10,4 +10,5 @@ uses
   Doujinmoeus,
   MangaReader,
   MangaStream,
-  MangaLife;
+  MangaLife,
+  Luscious;
