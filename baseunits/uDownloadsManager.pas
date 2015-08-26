@@ -1416,6 +1416,7 @@ begin
             (FileExistsUTF8(P + '.gif')) then
             container.PageLinks[j] := 'D'
           else
+          if container.PageLinks[j] = 'D' then
           begin
             if DynamicPageLink then
               container.PageLinks[j] := 'G'
