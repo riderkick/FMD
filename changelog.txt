@@ -8,6 +8,13 @@ https://www.mediafire.com/folder/3ccy2c7g36hp3/Fmd
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.23.0 (26-08-2015)
+[*] E-Hentai: fix image URL on multiple page
+[-] Drop support for SenMangaRAW
+[+] Added MangaLife(EN)
+[+] Added Luscious(H)
+[*] Various changes and bug fixes
+
 0.9.22.1 (21-08-2015)
 [*] E-Hentai: fix image url
 [*] MangaIndo: remove automatically added chapter number
