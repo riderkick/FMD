@@ -34,7 +34,7 @@ begin
         try
           for v in Query.XPath('//*[@id="content"]/p/a') do begin
             Links.Add(TrimLeftChar(v.toNode.getAttribute('href'), ['.']));
-            Names.Add(v.toString, ['.']);
+            Names.Add(v.toString);
           end;
         finally
           Query.Free;
@@ -86,6 +86,7 @@ begin
               coverLink := MaybeFillHost(Module.RootURL, coverLink);
             title := Query.XPathString('//h1');
             authors := getpropvalue('Author');
+            artists := getpropvalue('Artist');
             genres := getpropvalue('Genre');
             summary := getpropvalue('Description');
             s := LowerCase(getpropvalue('Scanlation Status'));
