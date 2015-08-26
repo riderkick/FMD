@@ -1402,7 +1402,11 @@ begin
         container.Status := STATUS_PREPARE;
         CheckOut;
         WaitForThreads;
-        if Terminated then Exit;
+        if Terminated then begin
+          container.PageLinks.Clear;
+          container.PageNumber := 0;
+          Exit;
+        end;
       end;
 
       //Check file, if exist set mark 'D', otherwise 'W' or 'G' for dynamic image url
