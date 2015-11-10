@@ -22,9 +22,6 @@
       <Attributes pvaPrivateBuild="True"/>
       <StringTable Comments="Unofficial Build" FileDescription="Free Manga Downloader" LegalCopyright="©2015 FMD Project Team" OriginalFilename="fmd.exe" ProductName="Free Manga Downloader" ProductVersion="$BuildMode()" PrivateBuild="Cholif"/>
     </VersionInfo>
-    <MacroValues Count="1">
-      <Macro1 Name="LCLWidgetType" Value="win32"/>
-    </MacroValues>
     <BuildModes Count="5">
       <Item1 Name="Win32" Default="True"/>
       <Item2 Name="Win64">
@@ -215,11 +212,6 @@
           </Other>
         </CompilerOptions>
       </Item5>
-      <SharedMatrixOptions Count="3">
-        <Item1 ID="004106748078" Modes="Win32" Type="IDEMacro" MacroName="LCLWidgetType" Value="win32"/>
-        <Item2 ID="255873403449" Type="IDEMacro" MacroName="LCLWidgetType" Value="gtk2"/>
-        <Item3 ID="733756013539" Modes="Win32 Debug Leaks,Win64 Debug,Win32,Win64,Win32 Debug" Value="-dEnableUTF8RTL"/>
-      </SharedMatrixOptions>
     </BuildModes>
     <PublishOptions>
       <Version Value="2"/>
