@@ -758,8 +758,13 @@ begin
     ts := TStringList.Create;
     try
       FConn.GetTableNames(ts);
-      ts.Sort;
-      Result := ts.Find(ATableName, i);
+      if ts.Count > 0 then
+        for i := 0 to ts.Count - 1 do
+          if SameText(ts[i], ATableName) then
+          begin
+            Result := True;
+            Break;
+          end;
     finally
       ts.Free;
     end;
