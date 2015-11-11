@@ -655,7 +655,8 @@ var
   OptionAutoCheckLatestVersion: Boolean = True;
   OptionAutoCheckFavStartup: Boolean = True;
   OptionAutoCheckFavInterval: Boolean = True;
-  OptionAutoCheckFavIntervalMinutes: Cardinal = 0;
+  OptionAutoCheckFavIntervalMinutes: Cardinal = 60;
+  OptionNewMangaTime: Cardinal = 1;
   OptionAutoCheckFavDownload: Boolean = False;
   OptionAutoCheckFavRemoveCompletedManga: Boolean = False;
 

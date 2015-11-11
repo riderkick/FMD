@@ -2385,7 +2385,7 @@ begin
       edFilterArtists.Text,
       IntToStr(cbFilterStatus.ItemIndex),
       edFilterSummary.Text,
-      seOptionNewMangaTime.Value,
+      OptionNewMangaTime,
       rbAll.Checked,
       cbOnlyNew.Checked) then
     begin
@@ -2405,7 +2405,7 @@ begin
         edFilterArtists.Text,
         IntToStr(cbFilterStatus.ItemIndex),
         edFilterSummary.Text,
-        seOptionNewMangaTime.Value,
+        OptionNewMangaTime,
         rbAll.Checked,
         cbOnlyNew.Checked,
         cbUseRegExpr.Checked);
@@ -3939,7 +3939,7 @@ begin
   if miHighlightNewManga.Checked then
   begin
     if Assigned(Node) then
-      if StrToIntDef(dataProcess.Value[Node^.Index, DATA_PARAM_JDN], 0) > (currentJDN - seOptionNewMangaTime.Value) then
+      if StrToIntDef(dataProcess.Value[Node^.Index, DATA_PARAM_JDN], 0) > (currentJDN - OptionNewMangaTime) then
       begin
         TargetCanvas.Brush.Color := CL_HLBlueMarks;
         TargetCanvas.FillRect(CellRect);
@@ -4349,6 +4349,7 @@ begin
     seOptionAutoCheckFavIntervalMinutes.Value := ReadInteger('update', 'AutoCheckFavIntervalMinutes', 60);
     lbOptionAutoCheckFavIntervalMinutes.Caption := Format(RS_LblAutoCheckNewChapterMinute, [seOptionAutoCheckFavIntervalMinutes.Value]);
     cbOptionAutoCheckFavIntervalChange(cbOptionAutoCheckFavInterval);
+    seOptionNewMangaTime.Value := ReadInteger('update', 'NewMangaTime', 1);
     cbOptionAutoCheckFavDownload.Checked := ReadBool('update', 'AutoCheckFavAutoDownload', False);
     cbOptionAutoCheckFavRemoveCompletedManga.Checked := ReadBool('update', 'AutoCheckFavAutoRemoveCompletedManga', False);
     cbOptionUpdateListNoMangaInfo.Checked := ReadBool('update', 'UpdateListNoMangaInfo', False);
@@ -4417,7 +4418,6 @@ begin
       if cbLanguages.ItemIndex > -1 then
         WriteString('languages', 'Selected', AvailableLanguages.Names[cbLanguages.ItemIndex]);
       WriteBool('general', 'MinimizeToTray', cbOptionMinimizeToTray.Checked);
-      WriteInteger('general', 'NewMangaTime', seOptionNewMangaTime.Value);
       WriteInteger('general', 'LetFMDDo', cbOptionLetFMDDo.ItemIndex);
       WriteString('general', 'ExternalProgramPath', edOptionExternalPath.FileName);
       WriteString('general', 'ExternalProgramParams', edOptionExternalParams.Text);
@@ -4467,6 +4467,7 @@ begin
       WriteBool('update', 'AutoCheckFavStartup', cbOptionAutoCheckFavStartup.Checked);
       WriteBool('update', 'AutoCheckFavInterval', cbOptionAutoCheckFavInterval.Checked);
       WriteInteger('update', 'AutoCheckFavIntervalMinutes', seOptionAutoCheckFavIntervalMinutes.Value);
+      WriteInteger('update', 'NewMangaTime', seOptionNewMangaTime.Value);
       WriteBool('update', 'AutoCheckFavAutoDownload', cbOptionAutoCheckFavDownload.Checked);
       WriteBool('update', 'AutoCheckFavAutoRemoveCompletedManga', cbOptionAutoCheckFavRemoveCompletedManga.Checked);
       WriteBool('update', 'UpdateListNoMangaInfo', cbOptionUpdateListNoMangaInfo.Checked);
@@ -4600,6 +4601,7 @@ begin
     OptionAutoCheckFavStartup := cbOptionAutoCheckFavStartup.Checked;
     OptionAutoCheckFavInterval := cbOptionAutoCheckFavInterval.Checked;
     OptionAutoCheckFavIntervalMinutes := seOptionAutoCheckFavIntervalMinutes.Value;
+    OptionNewMangaTime := seOptionNewMangaTime.Value;
     OptionAutoCheckFavDownload := cbOptionAutoCheckFavDownload.Checked;
     OptionAutoCheckFavRemoveCompletedManga := cbOptionAutoCheckFavRemoveCompletedManga.Checked;
     OptionUpdateListNoMangaInfo := cbOptionUpdateListNoMangaInfo.Checked;
