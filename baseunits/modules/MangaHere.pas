@@ -68,7 +68,8 @@ begin
         try
           with info do begin
             coverLink := Query.XPathString('//*[@class="manga_detail"]//img[@class="img"]/@src');
-            title := Query.XPathString('//h1[@class="title"]');
+            if title = '' then
+              title := Query.XPathString('//h1[@class="title"]');
             for v in Query.XPath('//*[@class="detail_topText"]/li') do begin
               s := v.toString;
               if Pos('Author(s):', s) = 1 then authors := SeparateRight(s, ':')
