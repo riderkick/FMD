@@ -1,11 +1,12 @@
 object MainForm: TMainForm
   Left = 273
-  Height = 575
+  Height = 616
   Top = 96
   Width = 819
+  ActiveControl = pcMain
   Align = alBottom
   Caption = 'Free Manga Downloader'
-  ClientHeight = 575
+  ClientHeight = 616
   ClientWidth = 819
   OnClose = FormClose
   OnCreate = FormCreate
@@ -13,10 +14,11 @@ object MainForm: TMainForm
   OnShow = FormShow
   OnWindowStateChange = FormWindowStateChange
   LCLVersion = '1.5'
+  Visible = False
   object sbUpdateList: TStatusBar
     Left = 0
     Height = 30
-    Top = 545
+    Top = 586
     Width = 819
     AutoSize = False
     Panels = <    
@@ -32,7 +34,7 @@ object MainForm: TMainForm
   end
   object pcMain: TPageControl
     Left = 201
-    Height = 508
+    Height = 549
     Top = 11
     Width = 614
     ActivePage = tsDownload
@@ -46,11 +48,11 @@ object MainForm: TMainForm
     OnChange = pcMainChange
     object tsDownload: TTabSheet
       Caption = 'Downloads'
-      ClientHeight = 480
+      ClientHeight = 521
       ClientWidth = 606
       object vtDownload: TVirtualStringTree
         Left = 2
-        Height = 445
+        Height = 486
         Top = 32
         Width = 600
         Align = alClient
@@ -269,7 +271,7 @@ object MainForm: TMainForm
         Height = 480
         Top = 0
         Width = 606
-        HorzScrollBar.Page = 214
+        HorzScrollBar.Page = 218
         VertScrollBar.Page = 317
         Align = alClient
         BorderStyle = bsNone
@@ -1822,11 +1824,11 @@ object MainForm: TMainForm
     end
     object tsOption: TTabSheet
       Caption = 'Options'
-      ClientHeight = 480
+      ClientHeight = 521
       ClientWidth = 606
       object pnOptions: TPageControl
         Left = 9
-        Height = 403
+        Height = 444
         Top = 8
         Width = 587
         ActivePage = tsGeneral
@@ -1836,7 +1838,7 @@ object MainForm: TMainForm
         TabOrder = 0
         object tsGeneral: TTabSheet
           Caption = 'General'
-          ClientHeight = 375
+          ClientHeight = 416
           ClientWidth = 579
           object cbLanguages: TComboBox
             Left = 20
@@ -2093,7 +2095,7 @@ object MainForm: TMainForm
             Top = 0
             Width = 579
             HorzScrollBar.Page = 457
-            VertScrollBar.Page = 179
+            VertScrollBar.Page = 304
             Align = alClient
             BorderStyle = bsNone
             ClientHeight = 375
@@ -2321,109 +2323,215 @@ object MainForm: TMainForm
         end
         object tsSaveTo: TTabSheet
           Caption = 'Save to'
-          ClientHeight = 375
+          ClientHeight = 416
           ClientWidth = 579
-          object rgOptionCompress: TRadioGroup
-            Left = 20
-            Height = 60
-            Top = 66
-            Width = 520
-            Anchors = [akTop, akLeft, akRight]
-            AutoFill = True
-            Caption = 'Save downloaded chapters as'
-            ChildSizing.LeftRightSpacing = 6
-            ChildSizing.TopBottomSpacing = 6
-            ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
-            ChildSizing.EnlargeVertical = crsHomogenousChildResize
-            ChildSizing.ShrinkHorizontal = crsScaleChilds
-            ChildSizing.ShrinkVertical = crsScaleChilds
-            ChildSizing.Layout = cclLeftToRightThenTopToBottom
-            ChildSizing.ControlsPerLine = 4
-            ClientHeight = 40
-            ClientWidth = 516
-            Columns = 4
-            ItemIndex = 0
-            Items.Strings = (
-              'None'
-              'ZIP'
-              'CBZ'
-              'PDF'
-            )
-            ParentFont = False
+          object sbSaveTo: TScrollBox
+            Left = 0
+            Height = 416
+            Top = 0
+            Width = 579
+            HorzScrollBar.Page = 544
+            VertScrollBar.Page = 400
+            Align = alClient
+            BorderStyle = bsNone
+            ClientHeight = 416
+            ClientWidth = 579
             TabOrder = 0
-          end
-          object gbOptionRenaming: TGroupBox
-            Left = 20
-            Height = 196
-            Top = 170
-            Width = 520
-            Anchors = [akTop, akLeft, akRight]
-            Caption = 'Renaming'
-            ClientHeight = 176
-            ClientWidth = 516
-            ParentFont = False
-            TabOrder = 1
-            object cbOptionGenerateMangaFolderName: TCheckBox
-              Left = 22
-              Height = 19
-              Top = 36
-              Width = 261
-              Caption = 'Auto generate folder based on manga''s name'
+            object rgOptionCompress: TRadioGroup
+              Left = 20
+              Height = 60
+              Top = 66
+              Width = 520
+              Anchors = [akTop, akLeft, akRight]
+              AutoFill = True
+              Caption = 'Save downloaded chapters as'
+              ChildSizing.LeftRightSpacing = 6
+              ChildSizing.TopBottomSpacing = 6
+              ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+              ChildSizing.EnlargeVertical = crsHomogenousChildResize
+              ChildSizing.ShrinkHorizontal = crsScaleChilds
+              ChildSizing.ShrinkVertical = crsScaleChilds
+              ChildSizing.Layout = cclLeftToRightThenTopToBottom
+              ChildSizing.ControlsPerLine = 4
+              ClientHeight = 40
+              ClientWidth = 516
+              Columns = 4
+              ItemIndex = 0
+              Items.Strings = (
+                'None'
+                'ZIP'
+                'CBZ'
+                'PDF'
+              )
               ParentFont = False
               TabOrder = 0
             end
-            object cbOptionGenerateChapterName: TCheckBox
-              Left = 294
-              Height = 19
-              Top = 52
-              Width = 246
-              Caption = 'Generate chapter folder with chapter name'
+            object gbOptionRenaming: TGroupBox
+              Left = 20
+              Height = 230
+              Top = 170
+              Width = 520
+              Anchors = [akTop, akLeft, akRight]
+              Caption = 'Renaming'
+              ClientHeight = 210
+              ClientWidth = 516
               ParentFont = False
               TabOrder = 1
-              Visible = False
+              object cbOptionRemoveMangaNameFromChapter: TCheckBox
+                Left = 22
+                Height = 19
+                Top = 10
+                Width = 208
+                Caption = 'Remove manga name from chapter'
+                ParentFont = False
+                TabOrder = 9
+              end
+              object cbOptionGenerateMangaFolderName: TCheckBox
+                Left = 22
+                Height = 19
+                Top = 54
+                Width = 261
+                Caption = 'Auto generate folder based on manga''s name'
+                ParentFont = False
+                TabOrder = 0
+              end
+              object cbOptionGenerateChapterName: TCheckBox
+                Left = 294
+                Height = 19
+                Top = 70
+                Width = 246
+                Caption = 'Generate chapter folder with chapter name'
+                ParentFont = False
+                TabOrder = 1
+                Visible = False
+              end
+              object cbOptionPathConvert: TCheckBox
+                Left = 22
+                Height = 19
+                Top = 32
+                Width = 517
+                Caption = 'Change all all unicode symbols to "_" (choose this when you have problem with unicode path)'
+                ParentFont = False
+                TabOrder = 2
+              end
+              object cbOptionAutoNumberChapter: TCheckBox
+                Left = 294
+                Height = 19
+                Top = 54
+                Width = 134
+                Caption = 'Auto number chapter'
+                TabOrder = 3
+                Visible = False
+              end
+              object edOptionCustomRename: TEdit
+                Left = 22
+                Height = 23
+                Top = 158
+                Width = 434
+                Anchors = [akTop, akLeft, akRight]
+                TabOrder = 4
+                TextHint = 'Custom rename'
+              end
+              object lbOptionCustomRename: TLabel
+                Left = 22
+                Height = 15
+                Top = 142
+                Width = 112
+                Caption = 'Chapter folder name:'
+                ParentColor = False
+              end
+              object lbOptionCustomRenameHint: TLabel
+                Left = 462
+                Height = 15
+                Hint = '%WEBSITE% : Website name'#13#10'%MANGA% : Manga title'#13#10'%CHAPTER% : Chapter title'#13#10'%AUTHOR% : Author'#13#10'%ARTIST% : Artist'#13#10'%NUMBERING% : Numbering'#13#10#13#10'Note:'#13#10'Chapter folder name must have at least %CHAPTER% or %NUMBERING%.'
+                Top = 160
+                Width = 13
+                Anchors = [akTop, akRight]
+                Caption = '[?]'
+                Font.Color = clBlue
+                ParentColor = False
+                ParentFont = False
+                ParentShowHint = False
+                ShowHint = True
+              end
+              object lbOptionRenameDigits: TLabel
+                Left = 22
+                Height = 15
+                Top = 86
+                Width = 78
+                Caption = 'Rename  digits'
+                ParentColor = False
+              end
+              object seOptionDigitVolume: TSpinEdit
+                Left = 94
+                Height = 23
+                Top = 108
+                Width = 50
+                MaxValue = 10
+                MinValue = 1
+                TabOrder = 5
+                Value = 1
+              end
+              object seOptionDigitChapter: TSpinEdit
+                Left = 230
+                Height = 23
+                Top = 108
+                Width = 50
+                MaxValue = 10
+                MinValue = 1
+                TabOrder = 6
+                Value = 1
+              end
+              object cbOptionDigitVolume: TCheckBox
+                Left = 25
+                Height = 19
+                Top = 110
+                Width = 61
+                Caption = 'Volume'
+                OnChange = cbOptionDigitVolumeChange
+                TabOrder = 7
+              end
+              object cbOptionDigitChapter: TCheckBox
+                Left = 158
+                Height = 19
+                Top = 110
+                Width = 62
+                Caption = 'Chapter'
+                OnChange = cbOptionDigitChapterChange
+                TabOrder = 8
+              end
             end
-            object cbOptionPathConvert: TCheckBox
-              Left = 22
-              Height = 19
-              Top = 14
-              Width = 517
-              Caption = 'Change all all unicode symbols to "_" (choose this when you have problem with unicode path)'
-              ParentFont = False
-              TabOrder = 2
-            end
-            object cbOptionAutoNumberChapter: TCheckBox
-              Left = 294
-              Height = 19
-              Top = 36
-              Width = 134
-              Caption = 'Auto number chapter'
-              TabOrder = 3
-              Visible = False
-            end
-            object edOptionCustomRename: TEdit
-              Left = 22
+            object seOptionPDFQuality: TSpinEdit
+              Left = 44
               Height = 23
-              Top = 140
-              Width = 434
-              Anchors = [akTop, akLeft, akRight]
-              TabOrder = 4
-              TextHint = 'Custom rename'
+              Hint = '100 = FlateEncode (lossless), lower = DCTEncode (lossy)'
+              Top = 132
+              Width = 50
+              MinValue = 5
+              ParentFont = False
+              ParentShowHint = False
+              ShowHint = True
+              TabOrder = 2
+              Value = 100
             end
-            object lbOptionCustomRename: TLabel
-              Left = 22
+            object lbOptionPDFQuality: TLabel
+              Left = 103
               Height = 15
-              Top = 124
-              Width = 112
-              Caption = 'Chapter folder name:'
+              Hint = '100 = FlateEncode (lossless), lower = DCTEncode (lossy)'
+              Top = 135
+              Width = 119
+              Caption = 'PDF compression level'
               ParentColor = False
+              ParentFont = False
+              ParentShowHint = False
+              ShowHint = True
             end
-            object lbOptionCustomRenameHint: TLabel
-              Left = 462
+            object lbOptionCustomRenameHint1: TLabel
+              Left = 260
               Height = 15
-              Hint = '%WEBSITE% : Website name'#13#10'%MANGA% : Manga title'#13#10'%CHAPTER% : Chapter title'#13#10'%AUTHOR% : Author'#13#10'%ARTIST% : Artist'#13#10'%NUMBERING% : Numbering'#13#10#13#10'Note:'#13#10'Chapter folder name must have at least %CHAPTER% or %NUMBERING%.'
-              Top = 142
+              Hint = '100: FlateEncode (lossless), lower: DCTEncode (lossy)'
+              Top = 135
               Width = 13
-              Anchors = [akTop, akRight]
               Caption = '[?]'
               Font.Color = clBlue
               ParentColor = False
@@ -2431,153 +2539,69 @@ object MainForm: TMainForm
               ParentShowHint = False
               ShowHint = True
             end
-            object lbOptionRenameDigits: TLabel
-              Left = 22
+            object btOptionBrowse: TSpeedButton
+              Left = 512
+              Height = 23
+              Top = 34
+              Width = 23
+              Anchors = [akTop, akRight]
+              Glyph.Data = {
+                36040000424D3604000000000000360000002800000010000000100000000100
+                2000000000000004000064000000640000000000000000000000FFFFFF00FFFF
+                FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+                FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00000000060000
+                00160000001A0000001A0000001A0000001A0000001A0000001A0000001A0000
+                001A0000001A0000001A0000001A0000001A000000160000000600476A91005D
+                8CBD005D8CBD005D8CBD005D8CBD005D8CBD005D8CBD005D8CBD005D8CBD005D
+                8CBD005D8CBD005D8CBD005D8CBD005D8CBD005D8CBD00476A9100679AB086CF
+                F0FF82CBEDFF82CBEDFF82CBEDFF82CBEDFF82CBEDFF82CBEDFF82CBEDFF82CB
+                EDFF82CBEDFF82CBEDFF82CBEDFF82CBEDFF86CFF0FF00679AB00070A9A286CF
+                EEFF7DC8E8FF7DC8E8FF7DC8E8FF7DC8E8FF7DC8E8FF7DC8E8FF7DC8E8FF7DC8
+                E8FF7DC8E8FF7DC8E8FF7DC8E8FF7DC8E8FF86CFEEFF0070A9A20074AD9D8AD3
+                F0FF82CCEBFF82CCEBFF82CCEBFF82CCEBFF82CCEBFF82CCEBFF82CCEBFF82CC
+                EBFF82CCEBFF82CCEBFF82CCEBFF82CCEBFF8AD3F0FF0074AD9D0076B2998FD7
+                F2FF87D0EDFF87D0EDFF87D0EDFF87D0EDFF87D0EDFF87D0EDFF87D0EDFF87D0
+                EDFF87D0EDFF87D0EDFF87D0EDFF87D0EDFF8FD7F2FF0076B2990079B69594DB
+                F4FF8DD5F0FF8DD5F0FF8DD5F0FF8DD5F0FF8DD5F0FF8DD5F0FF8DD5F0FF8DD5
+                F0FF8DD5F0FF8DD5F0FF8DD5F0FF8DD5F0FF94DBF4FF0079B695007CBA9299E0
+                F6FF92DAF3FF92DAF3FF92DAF3FF92DAF3FF92DAF3FF92DAF3FF92DAF3FF92DA
+                F3FF92DAF3FF92DAF3FF92DAF3FF92DAF3FF99E0F6FF007CBA92007FBD8E9FE5
+                F9FF98DFF6FF98DFF6FF98DFF6FF98DFF6FF98DFF6FF98DFF6FF98DFF6FF98DF
+                F6FF98DFF6FF98DFF6FF98DFF6FF98DFF6FF9FE5F9FF007FBD8E0081C18BA3E9
+                FBFF9DE3F9FF9DE3F9FF9DE3F9FF9DE3F9FF9DE3F9FF9DE3F9FFA3E9FAFFA3E9
+                FAFFA3E9FAFFA3E9FAFFA3E9FAFFA3E9FAFFA6ECFBFF0081C18B0083C488A8ED
+                FDFFA2E7FBFFA2E7FBFFA2E7FBFFA2E7FBFFA2E7FBFFABF0FDFF85CAE6FF78BC
+                DEFF78BCDEFF78BCDEFF78BCDEFF78BCDEFF78BCDEFF0083C4880085C785AEF3
+                FFFFABF0FEFFABF0FEFFABF0FEFFABF0FEFFAEF3FFFF89CDE9FF89CDE9FFABF0
+                FEFFABF0FEFFABF0FEFFABF0FEFFABF0FEFFAEF3FFFF0085C7850087CA630087
+                CA830087CA830087CA830087CA830087CA830087CA830087CA83FEFEFDFFF8F8
+                F3FFF0F0E6FFE9E9DBFFFEC941FFF4B62EFF0087CA830087CA630087CA000087
+                CA000087CA000087CA000087CA000087CA000087CA000088CC2E0088CC810088
+                CC810088CC810088CC810088CC810088CC810088CC2E0087CA00FFFFFF00FFFF
+                FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+                FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00
+              }
+              OnClick = btOptionBrowseClick
+            end
+            object edOptionDefaultPath: TEdit
+              Left = 20
+              Height = 23
+              Top = 34
+              Width = 490
+              Anchors = [akTop, akLeft, akRight]
+              ParentFont = False
+              TabOrder = 3
+              TextHint = 'Default download path'
+            end
+            object lbDefaultDownloadPath: TLabel
+              Left = 20
               Height = 15
-              Top = 68
-              Width = 78
-              Caption = 'Rename  digits'
+              Top = 15
+              Width = 186
+              Caption = 'Choose the default download path:'
               ParentColor = False
+              ParentFont = False
             end
-            object seOptionDigitVolume: TSpinEdit
-              Left = 94
-              Height = 23
-              Top = 90
-              Width = 50
-              MaxValue = 10
-              MinValue = 1
-              TabOrder = 5
-              Value = 1
-            end
-            object seOptionDigitChapter: TSpinEdit
-              Left = 230
-              Height = 23
-              Top = 90
-              Width = 50
-              MaxValue = 10
-              MinValue = 1
-              TabOrder = 6
-              Value = 1
-            end
-            object cbOptionDigitVolume: TCheckBox
-              Left = 25
-              Height = 19
-              Top = 92
-              Width = 61
-              Caption = 'Volume'
-              OnChange = cbOptionDigitVolumeChange
-              TabOrder = 7
-            end
-            object cbOptionDigitChapter: TCheckBox
-              Left = 158
-              Height = 19
-              Top = 92
-              Width = 62
-              Caption = 'Chapter'
-              OnChange = cbOptionDigitChapterChange
-              TabOrder = 8
-            end
-          end
-          object seOptionPDFQuality: TSpinEdit
-            Left = 44
-            Height = 23
-            Hint = '100 = FlateEncode (lossless), lower = DCTEncode (lossy)'
-            Top = 132
-            Width = 50
-            MinValue = 5
-            ParentFont = False
-            ParentShowHint = False
-            ShowHint = True
-            TabOrder = 2
-            Value = 100
-          end
-          object lbOptionPDFQuality: TLabel
-            Left = 103
-            Height = 15
-            Hint = '100 = FlateEncode (lossless), lower = DCTEncode (lossy)'
-            Top = 135
-            Width = 119
-            Caption = 'PDF compression level'
-            ParentColor = False
-            ParentFont = False
-            ParentShowHint = False
-            ShowHint = True
-          end
-          object lbOptionCustomRenameHint1: TLabel
-            Left = 260
-            Height = 15
-            Hint = '100: FlateEncode (lossless), lower: DCTEncode (lossy)'
-            Top = 135
-            Width = 13
-            Caption = '[?]'
-            Font.Color = clBlue
-            ParentColor = False
-            ParentFont = False
-            ParentShowHint = False
-            ShowHint = True
-          end
-          object btOptionBrowse: TSpeedButton
-            Left = 512
-            Height = 23
-            Top = 34
-            Width = 23
-            Anchors = [akTop, akRight]
-            Glyph.Data = {
-              36040000424D3604000000000000360000002800000010000000100000000100
-              2000000000000004000064000000640000000000000000000000FFFFFF00FFFF
-              FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-              FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00000000060000
-              00160000001A0000001A0000001A0000001A0000001A0000001A0000001A0000
-              001A0000001A0000001A0000001A0000001A000000160000000600476A91005D
-              8CBD005D8CBD005D8CBD005D8CBD005D8CBD005D8CBD005D8CBD005D8CBD005D
-              8CBD005D8CBD005D8CBD005D8CBD005D8CBD005D8CBD00476A9100679AB086CF
-              F0FF82CBEDFF82CBEDFF82CBEDFF82CBEDFF82CBEDFF82CBEDFF82CBEDFF82CB
-              EDFF82CBEDFF82CBEDFF82CBEDFF82CBEDFF86CFF0FF00679AB00070A9A286CF
-              EEFF7DC8E8FF7DC8E8FF7DC8E8FF7DC8E8FF7DC8E8FF7DC8E8FF7DC8E8FF7DC8
-              E8FF7DC8E8FF7DC8E8FF7DC8E8FF7DC8E8FF86CFEEFF0070A9A20074AD9D8AD3
-              F0FF82CCEBFF82CCEBFF82CCEBFF82CCEBFF82CCEBFF82CCEBFF82CCEBFF82CC
-              EBFF82CCEBFF82CCEBFF82CCEBFF82CCEBFF8AD3F0FF0074AD9D0076B2998FD7
-              F2FF87D0EDFF87D0EDFF87D0EDFF87D0EDFF87D0EDFF87D0EDFF87D0EDFF87D0
-              EDFF87D0EDFF87D0EDFF87D0EDFF87D0EDFF8FD7F2FF0076B2990079B69594DB
-              F4FF8DD5F0FF8DD5F0FF8DD5F0FF8DD5F0FF8DD5F0FF8DD5F0FF8DD5F0FF8DD5
-              F0FF8DD5F0FF8DD5F0FF8DD5F0FF8DD5F0FF94DBF4FF0079B695007CBA9299E0
-              F6FF92DAF3FF92DAF3FF92DAF3FF92DAF3FF92DAF3FF92DAF3FF92DAF3FF92DA
-              F3FF92DAF3FF92DAF3FF92DAF3FF92DAF3FF99E0F6FF007CBA92007FBD8E9FE5
-              F9FF98DFF6FF98DFF6FF98DFF6FF98DFF6FF98DFF6FF98DFF6FF98DFF6FF98DF
-              F6FF98DFF6FF98DFF6FF98DFF6FF98DFF6FF9FE5F9FF007FBD8E0081C18BA3E9
-              FBFF9DE3F9FF9DE3F9FF9DE3F9FF9DE3F9FF9DE3F9FF9DE3F9FFA3E9FAFFA3E9
-              FAFFA3E9FAFFA3E9FAFFA3E9FAFFA3E9FAFFA6ECFBFF0081C18B0083C488A8ED
-              FDFFA2E7FBFFA2E7FBFFA2E7FBFFA2E7FBFFA2E7FBFFABF0FDFF85CAE6FF78BC
-              DEFF78BCDEFF78BCDEFF78BCDEFF78BCDEFF78BCDEFF0083C4880085C785AEF3
-              FFFFABF0FEFFABF0FEFFABF0FEFFABF0FEFFAEF3FFFF89CDE9FF89CDE9FFABF0
-              FEFFABF0FEFFABF0FEFFABF0FEFFABF0FEFFAEF3FFFF0085C7850087CA630087
-              CA830087CA830087CA830087CA830087CA830087CA830087CA83FEFEFDFFF8F8
-              F3FFF0F0E6FFE9E9DBFFFEC941FFF4B62EFF0087CA830087CA630087CA000087
-              CA000087CA000087CA000087CA000087CA000087CA000088CC2E0088CC810088
-              CC810088CC810088CC810088CC810088CC810088CC2E0087CA00FFFFFF00FFFF
-              FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-              FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00
-            }
-            OnClick = btOptionBrowseClick
-          end
-          object edOptionDefaultPath: TEdit
-            Left = 20
-            Height = 23
-            Top = 34
-            Width = 490
-            Anchors = [akTop, akLeft, akRight]
-            ParentFont = False
-            TabOrder = 3
-            TextHint = 'Default download path'
-          end
-          object lbDefaultDownloadPath: TLabel
-            Left = 20
-            Height = 15
-            Top = 15
-            Width = 186
-            Caption = 'Choose the default download path:'
-            ParentColor = False
-            ParentFont = False
           end
         end
         object tsUpdate: TTabSheet
@@ -2914,7 +2938,7 @@ object MainForm: TMainForm
       object btOptionApply: TBitBtn
         Left = 8
         Height = 41
-        Top = 425
+        Top = 466
         Width = 128
         Anchors = [akLeft, akBottom]
         Caption = 'Apply'
@@ -3173,7 +3197,7 @@ object MainForm: TMainForm
   end
   object pcLeft: TPageControl
     Left = 4
-    Height = 506
+    Height = 547
     Top = 12
     Width = 195
     ActivePage = tsMangaList
@@ -3188,7 +3212,7 @@ object MainForm: TMainForm
       Caption = 'Manga List'
       ChildSizing.LeftRightSpacing = 2
       ChildSizing.TopBottomSpacing = 3
-      ClientHeight = 478
+      ClientHeight = 519
       ClientWidth = 187
       object lbMode: TLabel
         Left = 3
@@ -3203,7 +3227,7 @@ object MainForm: TMainForm
       end
       object vtMangaList: TVirtualStringTree
         Left = 2
-        Height = 383
+        Height = 424
         Top = 92
         Width = 181
         Align = alBottom
@@ -3475,7 +3499,7 @@ object MainForm: TMainForm
   object sbMain: TStatusBar
     Left = 0
     Height = 23
-    Top = 522
+    Top = 563
     Width = 819
     Panels = <    
       item
@@ -3489,7 +3513,7 @@ object MainForm: TMainForm
   end
   object spMainSplitter: TSplitter
     Left = 199
-    Height = 514
+    Height = 555
     Top = 8
     Width = 2
     OnMoved = spMainSplitterMoved

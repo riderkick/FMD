@@ -661,6 +661,7 @@ var
 
   OptionHTTPUseGzip: Boolean = True;
 
+  OptionRemoveMangaNameFromChapter: Boolean = False;
 type
   TArrayOfString = array of string;
 

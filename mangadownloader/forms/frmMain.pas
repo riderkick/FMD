@@ -53,6 +53,7 @@ type
     cbOptionAutoCheckFavDownload: TCheckBox;
     cbOptionAutoCheckFavRemoveCompletedManga: TCheckBox;
     cbOptionEnableLoadCover: TCheckBox;
+    cbOptionRemoveMangaNameFromChapter: TCheckBox;
     cbOptionShowDownloadToolbar: TCheckBox;
     cbOptionUpdateListNoMangaInfo: TCheckBox;
     cbOptionDigitVolume: TCheckBox;
@@ -67,6 +68,7 @@ type
     mmChangelog: TMemo;
     pcAbout: TPageControl;
     pmSbMain: TPopupMenu;
+    sbSaveTo: TScrollBox;
     tsAboutText: TTabSheet;
     tsChangelogText: TTabSheet;
     TransferRateToolset: TChartToolset;
@@ -4328,6 +4330,7 @@ begin
       edOptionDefaultPath.Text := DEFAULT_PATH;
     rgOptionCompress.ItemIndex := ReadInteger('saveto', 'Compress', 0);
     cbOptionPathConvert.Checked := ReadBool('saveto', 'PathConvert', False);
+    cbOptionRemoveMangaNameFromChapter.Checked := ReadBool('saveto', 'RemoveMangaNameFromChapter', True);
     cbOptionGenerateChapterName.Checked := ReadBool('saveto', 'GenerateChapterName', False);
     cbOptionGenerateMangaFolderName.Checked := ReadBool('saveto', 'GenerateMangaName', True);
     cbOptionAutoNumberChapter.Checked := ReadBool('saveto', 'AutoNumberChapter', True);
@@ -4454,6 +4457,7 @@ begin
       WriteBool('saveto', 'AutoNumberChapter', cbOptionAutoNumberChapter.Checked);
       OptionAutoNumberChapterChecked := cbOptionAutoNumberChapter.Checked;
       WriteInteger('saveto', 'PDFQuality', seOptionPDFQuality.Value);
+      WriteBool('saveto', 'RemoveMangaNameFromChapter', cbOptionRemoveMangaNameFromChapter.Checked);
       if Trim(edOptionCustomRename.Text) = '' then
         edOptionCustomRename.Text := DEFAULT_CUSTOM_RENAME;
       WriteString('saveto', 'CustomRename', edOptionCustomRename.Text);
@@ -4595,6 +4599,7 @@ begin
     OptionPDFQuality := seOptionPDFQuality.Value;
     OptionCustomRename := edOptionCustomRename.Text;
     DLManager.compress := rgOptionCompress.ItemIndex;
+    OptionRemoveMangaNameFromChapter := cbOptionRemoveMangaNameFromChapter.Checked;
 
     //update
     OptionAutoCheckLatestVersion := cbOptionAutoCheckLatestVersion.Checked;

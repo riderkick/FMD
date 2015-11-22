@@ -363,11 +363,6 @@ msgstr "Update manga list"
 msgid "Visit my blog"
 msgstr "Visit my blog"
 
-#: tmainform.caption
-msgctxt "tmainform.caption"
-msgid "Free Manga Downloader"
-msgstr "Free Manga Downloader"
-
 #: tmainform.cbaddasstopped.caption
 msgid "Add to download list as stopped task"
 msgstr "Add to download list as stopped task"
@@ -462,6 +457,10 @@ msgstr "Change all all unicode symbols to \"_\" (choose this when you have probl
 #: tmainform.cboptionproxytype.text
 msgid "HTTP"
 msgstr "HTTP"
+
+#: tmainform.cboptionremovemanganamefromchapter.caption
+msgid "Remove manga name from chapter"
+msgstr ""
 
 #: tmainform.cboptionshowdeletetaskdialog.caption
 msgid "Delete task/favorite"

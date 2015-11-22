@@ -328,11 +328,6 @@ msgstr ""
 msgid "Visit my blog"
 msgstr ""
 
-#: tmainform.caption
-msgctxt "tmainform.caption"
-msgid "Free Manga Downloader"
-msgstr ""
-
 #: tmainform.cbaddasstopped.caption
 msgid "Add to download list as stopped task"
 msgstr ""
@@ -424,6 +419,10 @@ msgstr ""
 
 #: tmainform.cboptionproxytype.text
 msgid "HTTP"
+msgstr ""
+
+#: tmainform.cboptionremovemanganamefromchapter.caption
+msgid "Remove manga name from chapter"
 msgstr ""
 
 #: tmainform.cboptionshowdeletetaskdialog.caption

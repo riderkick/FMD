@@ -2581,7 +2581,7 @@ end;
 function TMangaInformation.GetInfoFromURL(const website, URL: String;
   const Reconnect: Integer): Byte;
 var
-  s: String;
+  s, s2: String;
   j, k: Integer;
   del: Boolean;
   Source: TStringList;
@@ -3054,6 +3054,22 @@ begin
     begin
       mangaInfo.chapterName.Strings[j] := Trim(RemoveStringBreaks(
         CommonStringFilter(mangaInfo.chapterName[j])));
+    end;
+
+    //remove manga name from chapter
+    if OptionRemoveMangaNameFromChapter and (mangaInfo.title <> '') then
+    begin
+      s := LowerCase(mangaInfo.title);
+      j := Length(s);
+      for k := 0 to mangaInfo.chapterName.Count - 1 do begin
+        s2 := LowerCase(mangaInfo.chapterName[k]);
+        if Length(s2) > j then
+          if Pos(s, s2) = 1 then begin
+            s2 := mangaInfo.chapterName[k];
+            Delete(s2, 1, j);
+            mangaInfo.chapterName[k] := Trim(s2);
+          end;
+      end;
     end;
   end;
 
