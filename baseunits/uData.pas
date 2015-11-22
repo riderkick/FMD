@@ -2188,8 +2188,6 @@ var
 
   {$I includes/AnimeA/names_and_links.inc}
 
-  {$I includes/MangaHere/names_and_links.inc}
-
   {$I includes/EsMangaHere/names_and_links.inc}
 
   {$I includes/AnimExtremist/names_and_links.inc}
@@ -2343,9 +2341,6 @@ begin
     Source := TStringList.Create;
     if website = WebsiteRoots[ANIMEA_ID, 0] then
       Result := AnimeAGetNamesAndLinks
-    else
-    if website = WebsiteRoots[MANGAHERE_ID, 0] then
-      Result := MangaHereGetNamesAndLinks
     else
     if website = WebsiteRoots[MANGAINN_ID, 0] then
       Result := MangaInnGetNamesAndLinks
@@ -2595,8 +2590,6 @@ var
 
   {$I includes/AnimeA/manga_information.inc}
 
-  {$I includes/MangaHere/manga_information.inc}
-
   // due to its weird designs, this will take a lot of work (and time) for it to
   // work property
 
@@ -2764,9 +2757,6 @@ begin
     Source := TStringList.Create;
     if website = WebsiteRoots[ANIMEA_ID, 0] then
       Result := GetAnimeAInfoFromURL
-    else
-    if website = WebsiteRoots[MANGAHERE_ID, 0] then
-      Result := GetMangaHereInfoFromURL
     else
     if website = WebsiteRoots[MANGAINN_ID, 0] then
       Result := GetMangaInnInfoFromURL

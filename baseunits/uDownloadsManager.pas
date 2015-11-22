@@ -403,8 +403,6 @@ var
 
   {$I includes/MangaGo/chapter_page_number.inc}
 
-  {$I includes/MangaHere/chapter_page_number.inc}
-
   {$I includes/MangaInn/chapter_page_number.inc}
 
   {$I includes/MangaPark/chapter_page_number.inc}
@@ -499,9 +497,6 @@ begin
   begin
     if manager.container.MangaSiteID = ANIMEA_ID then
       Result := GetAnimeAPageNumber
-    else
-    if manager.container.MangaSiteID = MANGAHERE_ID then
-      Result := GetMangaHerePageNumber
     else
     if manager.container.MangaSiteID = MANGAINN_ID then
       Result := GetMangaInnPageNumber
@@ -736,8 +731,6 @@ var
 
   {$I includes/MangaGo/image_url.inc}
 
-  {$I includes/MangaHere/image_url.inc}
-
   {$I includes/MangaInn/image_url.inc}
 
   //{$I includes/MangaPark/image_url.inc}
@@ -821,9 +814,6 @@ begin
     else
     if manager.container.MangaSiteID = MANGATRADERS_ID then
       Result := GetMangaTradersImageURL
-    else
-    if manager.container.MangaSiteID = MANGAHERE_ID then
-      Result := GetMangaHereImageURL
     else
     if manager.container.MangaSiteID = MANGAINN_ID then
       Result := GetMangaInnImageURL
