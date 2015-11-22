@@ -11,4 +11,5 @@ uses
   MangaReader,
   MangaStream,
   MangaLife,
-  Luscious;
+  Luscious,
+  MangaHere;
