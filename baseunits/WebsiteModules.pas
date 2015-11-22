@@ -400,7 +400,7 @@ end;
 function TWebsiteModules.TaskStart(var Task: TTaskContainer;
   const Website: String): Boolean;
 begin
-  TaskStart(Task, LocateModule(Website));
+  Result := TaskStart(Task, LocateModule(Website));
 end;
 
 function TWebsiteModules.GetPageNumber(var DownloadThread: TDownloadThread;
