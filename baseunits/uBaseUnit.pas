@@ -882,6 +882,7 @@ function HTMLDecode(const AStr: String): String;
 function RemoveSymbols(const input: String): String;
 function CorrectPathSys(const Path: String): String;
 
+function CleanString(const S: String): String;
 function CleanAndExpandURL(const URL: String): String;
 function CleanURL(const URL: String): String;
 function AppendURLDelim(const URL: String): String;
@@ -2313,6 +2314,15 @@ begin
     Exit;
   for i := 0 to Length(input) - 1 do
     Result := Result + input[i] + SEPERATOR;
+end;
+
+function CleanString(const S: String): String;
+begin
+  Result := Trim(S);
+  Result := StringReplace(Result, #13, '', [rfReplaceAll]);
+  Result := StringReplace(Result, #10, '', [rfReplaceAll]);
+  while Pos('  ', Result) > 0 do
+    Result := StringReplace(Result, '  ', ' ', [rfReplaceAll]);
 end;
 
 function CleanAndExpandURL(const URL: String): String;
