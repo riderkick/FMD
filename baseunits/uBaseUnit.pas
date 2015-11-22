@@ -2167,7 +2167,7 @@ begin
   if AStrings.Count > 0 then
   begin
     if not AStrings.Sorted then
-      AStrings.Sort;
+      AStrings.Sorted := True;
     Result := AStrings.Find(s, p);
   end
   else

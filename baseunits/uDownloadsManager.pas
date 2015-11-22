@@ -1956,7 +1956,7 @@ begin
       Ch.Assign(AValue);
       if dlCh.Count > 0 then
       begin
-        dlCh.Sort;
+        dlCh.Sorted := True;
         i := 0;
         while i < Ch.Count do
         begin
@@ -2019,7 +2019,7 @@ begin
           GetParams(dlCh, DownloadedChaptersListFile[p]);
           if dlCh.Count > 0 then
           begin
-            dlCh.Sort;
+            dlCh.Sorted := True;
             for i := Low(Chapters) to High(Chapters) do
               Chapters[i].Downloaded := dlCh.Find(Chapters[i].Link, q);
           end;

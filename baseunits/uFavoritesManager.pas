@@ -547,14 +547,16 @@ begin
             if Assigned(MangaInfo) then
               if MangaInfo.chapterLinks.Count > 0 then
               begin
+                //compare new mangainfo's chapters with downloadedchapter from favorites
                 NewMangaInfo := TMangaInfo.Create;
                 NewMangaInfoChaptersPos := TCardinalList.Create;
                 TransferMangaInfo(NewMangaInfo, MangaInfo);
                 NewMangaInfo.chapterLinks.Clear;
                 NewMangaInfo.chapterName.Clear;
                 dlChapters.Clear;
+                dlChapters.Sorted := False;
                 GetParams(dlChapters, FavoriteInfo.downloadedChapterList);
-                dlChapters.Sort;
+                dlChapters.Sorted := True;
                 for i := 0 to MangaInfo.chapterLinks.Count - 1 do
                   if not dlChapters.Find(MangaInfo.chapterLinks[i], p) then
                   begin
@@ -585,8 +587,8 @@ begin
               end;
           finally
             Inc(counter);
-          end//compare new mangainfo's chapters with downloadedchapter from favorites
-      ;
+          end;
+
       dlChapters.Clear;
 
       if numOfNewChapters = 0 then
@@ -988,7 +990,7 @@ begin
         Ch.Assign(AValue);
         if dlCh.Count > 0 then
         begin
-          dlCh.Sort;
+          dlCh.Sorted := True;
           i := 0;
           while i < Ch.Count do
             if dlCh.Find(Ch[i], q) then

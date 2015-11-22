@@ -758,13 +758,8 @@ begin
     ts := TStringList.Create;
     try
       FConn.GetTableNames(ts);
-      if ts.Count > 0 then
-        for i := 0 to ts.Count - 1 do
-          if SameText(ts[i], ATableName) then
-          begin
-            Result := True;
-            Break;
-          end;
+      ts.Sorted := True;
+      Result := ts.Find(ATableName, i);
     finally
       ts.Free;
     end;
@@ -1244,6 +1239,7 @@ begin
     FLinks.Clear
   else
     FLinks := TStringList.Create;
+  FLinks.Sorted := False;
   if FQuery.Active then
   begin
     FQuery.First;
@@ -1252,7 +1248,7 @@ begin
       FQuery.Next;
     until FQuery.EOF;
     if FLinks.Count > 0 then
-      FLinks.Sort;
+      FLinks.Sorted := True;
   end;
 end;
 
