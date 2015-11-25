@@ -1,7 +1,7 @@
   function GetMangaEdenPageNumber: Boolean;
   var
     s: String;
-    i: Cardinal;
+    i, j: Integer;
     l: TStringList;
   begin
     l := TStringList.Create;
@@ -22,14 +22,18 @@
     begin
       manager.container.pageNumber := 0;
       for i := 0 to parse.Count - 1 do
-      begin
-        if (Pos('span class="next"', parse.Strings[i]) > 0) then
+        if (Pos('<select', parse[i]) > 0) and
+          (GetVal(parse[i], 'id') = 'pageSelect') then
         begin
-          s := parse.Strings[i - 3];
-          manager.container.PageNumber := StrToInt(TrimLeft(TrimRight(s)));
+          for j := i to parse.Count - 1 do
+          begin
+            if Pos('</select', parse[j]) > 0 then
+              Break
+            else if Pos('<option', parse[j]) > 0 then
+              Inc(manager.container.PageNumber);
+          end;
           Break;
         end;
-      end;
     end;
     parse.Free;
     l.Free;
