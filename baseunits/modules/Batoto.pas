@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, WebsiteModules, uData, uBaseUnit, uDownloadsManager,
-  HTMLUtil, RegExpr;
+  synautil, HTMLUtil, RegExpr;
 
 implementation
 
@@ -255,107 +255,71 @@ end;
 function GetPageNumber(var DownloadThread: TDownloadThread; const URL: String;
   Module: TModuleContainer): Boolean;
 var
-  Parse: TStringList;
+  Source: TStringList;
+  Query: TXQueryEngineHTML;
   Container: TTaskContainer;
-
-  procedure ScanParse;
-  var
-    i, j: Integer;
-    isWebtoon: Boolean;
-  begin
-    for i := 0 to Parse.Count - 1 do
-      if (Pos('page_select', Parse[i]) > 0) then
-      begin
-        isWebtoon := False;
-        Break;
-      end;
-
-    //webtoon
-    if isWebtoon then
-      for i := 0 to Parse.Count - 1 do
-      begin
-        if Pos('<img ', Parse[i]) > 0 then
-          if Pos('<br/>', Parse[i + 1]) > 0 then
-            Container.pageLinks.Add(GetVal(Parse[i], 'src'));
-      end
-    else
-      for i := 0 to Parse.Count - 1 do
-      begin
-        if Pos('page_select', Parse[i]) <> 0 then
-        begin
-          j := i + 2;
-          while GetTagName(Parse[j]) = 'option' do
-          begin
-            Inc(Container.PageNumber);
-            Inc(j, 3);
-          end;
-          Break;
-        end;
-      end;
-  end;
-
+  v: IXQValue;
+  cid: String;
 begin
   Result := False;
   if DownloadThread = nil then Exit;
   Container := DownloadThread.manager.container;
-  Container.PageLinks.Clear;
-  Container.PageContainerLinks.Clear;
-  Container.PageNumber := 0;
-  Parse := TStringList.Create;
-  try
-    if DownloadThread.GetPage(TObject(Parse), FillHost(Module.RootURL, URL) + '/1',
-      Container.Manager.retryConnect) then
-    begin
-      ParseHTML(Parse.Text, Parse);
-      if Parse.Count > 0 then
-      begin
-        Result := True;
-        ScanParse;
-      end;
+  with Container, DownloadThread.FHTTP do begin
+    Source := TStringList.Create;
+    try
+      cid := SeparateRight(URL, '/reader#');
+      Headers.Values['Referer'] := ' ' + Module.RootURL + '/reader';
+      if GetPage(DownloadThread.FHTTP, TObject(Source),
+        Module.RootURL + '/areader?id=' + cid + '&p=1', Manager.retryConnect) then
+        if Source.Count > 0 then
+        begin
+          Result := True;
+          Query := TXQueryEngineHTML.Create(Source.Text);
+          try
+            v := Query.XPath('//div[1]/ul/li/select[@id="page_select"]/option/@value');
+            PageNumber := v.Count;
+            PageContainerLinks.Text := cid;
+          finally
+            Query.Free;
+          end;
+        end;
+    finally
+      Source.Free;
     end;
-  finally
-    Parse.Free;
   end;
 end;
 
 function GetImageURL(var DownloadThread: TDownloadThread; const URL: String;
   Module: TModuleContainer): Boolean;
 var
-  Parse: TStringList;
-  Container: TTaskContainer;
-
-  procedure ScanParse;
-  var
-    i: Integer;
-  begin
-    for i := 0 to Parse.Count - 1 do
-      if (GetTagName(Parse[i]) = 'img') and (GetVal(Parse[i], 'id') = 'comic_page') then
-      begin
-        if DownloadThread.workCounter < Container.PageLinks.Count then
-          Container.PageLinks[DownloadThread.workCounter] := GetVal(Parse[i], 'src');
-        Break;
-      end;
-  end;
-
+  Source: TStringList;
+  Query: TXQueryEngineHTML;
+  rurl: String;
 begin
   Result := False;
   if DownloadThread = nil then Exit;
-  Container := DownloadThread.manager.container;
-  Parse := TStringList.Create;
-  try
-    if DownloadThread.GetPage(TObject(Parse), FillHost(Module.RootURL, URL) +
-      '/' + IntToStr(DownloadThread.workCounter + 1),
-      Container.Manager.retryConnect) then
-    begin
-      ParseHTML(Parse.Text, Parse);
-      if Parse.Count > 0 then
-      begin
-        Result := True;
-        ScanParse;
-      end;
+  with DownloadThread.manager.container, DownloadThread.FHTTP do begin
+    if PageContainerLinks.Text = '' then Exit;
+    Source := TStringList.Create;
+    try
+      rurl := Module.RootURL + '/areader?id=' + PageContainerLinks[0] + '&p=' +
+        IntToStr(DownloadThread.WorkCounter + 1);
+      Headers.Values['Referer'] := ' ' + Module.RootURL + '/reader';
+      if GetPage(DownloadThread.FHTTP, TObject(Source), rurl, Manager.retryConnect) then
+        if Source.Count > 0 then
+        begin
+          Result := True;
+          Query := TXQueryEngineHTML.Create(Source.Text);
+          try
+            PageLinks[DownloadThread.workCounter] :=
+              Query.XPathString('//div[@id="full_image"]//img/@src');
+          finally
+            Query.Free;
+          end;
+        end;
+    finally
+      Source.Free;
     end;
-  finally
-    Parse.Free;
   end;
 end;
 
@@ -366,7 +330,7 @@ begin
     Website := 'Batoto';
     RootURL := 'http://bato.to';
     MaxTaskLimit := 1;
-    MaxConnectionLimit := 4;
+    MaxConnectionLimit := 3;
     SortedList := True;
     InformationAvailable := True;
     TotalDirectory := Length(dirurls);
