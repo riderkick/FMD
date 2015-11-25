@@ -55,16 +55,6 @@ var
   info: TMangaInfo;
   v: IXQValue;
   s: String;
-
-  function getpropvalue(aname: String): String;
-  begin
-    Result := Query.XPathString(
-      '(/html/body/div[3]/div/div[1]/div/div[2]/div)[contains(.,"' +
-      aname + '")]');
-    if Result <> '' then
-      Result := Trim(TrimChar(SeparateRight(Result, aname), [':', ' ']));
-  end;
-
 begin
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
   Result := NET_PROBLEM;
@@ -80,22 +70,23 @@ begin
         Query := TXQueryEngineHTML.Create(Source.Text);
         try
           with info do begin
-            coverLink := Query.XPathString(
-              '//div[@class="col-lg-3 col-md-3 col-sm-3 col-xs-3"]/img/@src');
+            coverLink := Query.XPathString('//div[@class="well"]/div[1]/div/img/@src');
             if coverLink <> '' then
               coverLink := MaybeFillHost(Module.RootURL, coverLink);
             title := Query.XPathString('//h1');
-            authors := getpropvalue('Author');
-            artists := getpropvalue('Artist');
-            genres := getpropvalue('Genre');
-            summary := getpropvalue('Description');
-            s := LowerCase(getpropvalue('Scanlation Status'));
-            if s <> '' then begin
-              if Pos('ongoing', s) > 0 then status := '1'
-              else if Pos('completed', s) > 0 then status := '0'
+            for v in Query.XPath('//span[@class="details hidden-xs"]/div') do begin
+              s := v.toString;
+              if Pos('Author:', s) = 1 then authors := SeparateRight(s, ':')
+              else if Pos('Artist:', s) = 1 then artists := SeparateRight(s, ':')
+              else if Pos('Genre:', s) = 1 then artists := SeparateRight(s, ':')
+              else if Pos('Scanlation Status:', s) = 1 then begin
+                if Pos('Ongoing', s) > 0 then status := '1'
+                else status := '0';
+              end;
             end;
+            summary := Query.XPathString('//span[@class="details hidden-xs"]/div/div/div');
             //chapters
-            for v in Query.XPath('/html/body/div[3]/div/div/div/a') do begin
+            for v in Query.XPath('//div[@class="list"]/div/div/a') do begin
               s := v.toNode.getAttribute('href');
               if RightStr(s, 6) = 'page-1' then SetLength(s, Length(s) - 6);
               chapterLinks.Add(s);
