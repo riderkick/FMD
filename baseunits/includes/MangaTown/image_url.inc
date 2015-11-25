@@ -5,11 +5,9 @@
     s: String;
   begin
     l := TStringList.Create;
-    s := FillMangaSiteHost(MANGATOWN_ID, URL);
-    if Length(s) > 0 then
-      if s[Length(s)] <> '/' then
-         s := s + '/';
-    s := s + IntToStr(workCounter + 1) + '.html';
+    s := AppendURLDelim(FillMangaSiteHost(MANGATOWN_ID, URL));
+    if workCounter > 0 then
+      s := s + IncStr(workCounter) + '.html';
     Result := GetPage(TObject(l), s , manager.container.Manager.retryConnect);
 
     if Self.Terminated then
