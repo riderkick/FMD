@@ -683,6 +683,8 @@ type
     procedure NewSearch(const ASearchStr: String);
   end;
 
+  procedure AdvanceLoadHTTPConfig(const HTTP: THTTPSendThread; Website: String);
+
 var
   //Instance
   FMDInstance: TSimpleIPCServer;
@@ -780,6 +782,14 @@ begin
   if ParentControl.ControlCount > 0 then
     for i := 0 to ParentControl.ControlCount - 1 do
       ParentControl.Controls[i].Cursor := Cur;
+end;
+
+procedure AdvanceLoadHTTPConfig(const HTTP: THTTPSendThread; Website: String);
+begin
+  if HTTP = nil then Exit;
+  if Website = '' then Exit;
+  HTTP.UserAgent := INIAdvanced.ReadString('UserAgent', Website, '');
+  HTTP.Cookies.Text := INIAdvanced.ReadString('Cookies', Website, '');
 end;
 
 { TSearchDBThread }

@@ -1275,9 +1275,7 @@ begin
         workCounter := container.WorkCounter;
         checkStyle := Flag;
         //load User-Agent from INIAdvanced
-        if container.DownloadInfo.Website <> '' then
-          FHTTP.UserAgent := INIAdvanced.ReadString('UserAgent',
-            container.DownloadInfo.Website, '');
+        AdvanceLoadHTTPConfig(FHTTP, container.DownloadInfo.Website);
         Start;
         container.WorkCounter := InterLockedIncrement(container.WorkCounter);
       end;

@@ -2004,8 +2004,7 @@ begin
   Page := 0;
 
   //load User-Agent from INIAdvanced
-  if website <> '' then
-    FHTTP.UserAgent := INIAdvanced.ReadString('UserAgent', website, '');
+  AdvanceLoadHTTPConfig(FHTTP, website);
 
   //load pagenumber_config if available
   p := INIAdvanced.ReadInteger('UpdateListDirectoryPageNumber', website, -1);
@@ -2324,8 +2323,7 @@ var
 
 begin
   //load User-Agent from INIAdvanced
-  if website <> '' then
-    FHTTP.UserAgent := INIAdvanced.ReadString('UserAgent', website, '');
+  AdvanceLoadHTTPConfig(FHTTP, website);
 
   if ModuleId < 0 then
     ModuleId := Modules.LocateModule(website);
@@ -2732,8 +2730,7 @@ begin
     Exit(INFORMATION_NOT_FOUND);
 
   //load User-Agent from INIAdvanced
-  if website <> '' then
-    FHTTP.UserAgent := INIAdvanced.ReadString('UserAgent', website, '');
+  AdvanceLoadHTTPConfig(FHTTP, website);
 
   mangaInfo.coverLink := '';
   mangaInfo.numChapter := 0;
