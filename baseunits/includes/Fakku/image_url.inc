@@ -31,16 +31,14 @@
       end;
 
       if totalPages = 0 then
-      begin
         Result := False;
-      end;
 
       //Get imgurl
       for i := 0 to l.Count - 1 do
       begin
-        if (Pos('return ''//', l.Strings[i]) > 0) then
+        if (Pos('return ''', l.Strings[i]) > 0) then
         begin
-          imgURL := GetString(l.Strings[i], 'return ''//', ''' +');
+          imgURL := GetString(l.Strings[i], 'return ''', ''' +');
           imgExt := GetString(l.Strings[i], 'x + ''', ''';');
           Break;
         end;
@@ -53,7 +51,6 @@
       if imgURL <> '' then
       begin
         imgURL := TrimLeftChar(imgURL, ['/', '\', ':']);
-        imgURL := 'http://' + imgURL;
         for i := 1 to totalPages do
         begin
           s := IntToStr(i);
