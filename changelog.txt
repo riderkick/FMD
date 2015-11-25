@@ -8,6 +8,17 @@ https://www.mediafire.com/folder/3ccy2c7g36hp3/Fmd
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.24.0 (25-11-2015)
+[*] E-Hentai: get new image url if failed
+[*] MangaHere: rewrite all script
+[+] Added option to remove manga name in chapter name
+[*] MangaLife: fix manga info
+[*] NHentai: fix image url
+[*] MangaTown: fix image url
+[*] Fakku: fix image url
+[*] MangaEden: fix page number
+[*] Various changes and bug fixes
+
 0.9.23.0 (26-08-2015)
 [*] E-Hentai: fix image URL on multiple page
 [-] Drop support for SenMangaRAW
