@@ -212,6 +212,9 @@
           </Other>
         </CompilerOptions>
       </Item5>
+      <SharedMatrixOptions Count="1">
+        <Item1 ID="178609478703" Modes="Win32 Debug Leaks,Win64 Debug,Win32 Debug,Win64,Win32" Value="-dEnableUTF8RTL"/>
+      </SharedMatrixOptions>
     </BuildModes>
     <PublishOptions>
       <Version Value="2"/>
