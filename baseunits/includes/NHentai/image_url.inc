@@ -30,7 +30,7 @@
     begin
       for i := 0 to parse.Count - 1 do
       begin
-        if (Pos('<div', parse[i]) > 0) and (Pos('id="image-container"', parse[i]) > 0) then
+        if Pos('id="image-container"', parse[i]) > 0 then
         begin
           for j := i + 1 to parse.Count - 1 do
           begin
