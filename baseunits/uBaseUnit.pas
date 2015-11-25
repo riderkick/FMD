@@ -2366,14 +2366,14 @@ end;
 function RemoveURLDelim(const URL: String): String;
 begin
   Result := URL;
-  if (URL <> '') and (URL[Length(URL)] = '/') then
+  while (URL <> '') and (URL[Length(URL)] = '/') do
     SetLength(Result, Length(Result) - 1);
 end;
 
 function RemoveURLDelimLeft(const URL: String): String;
 begin
   Result := URL;
-  if (URL <> '') and (URL[1] = '/') then
+  while (URL <> '') and (URL[1] = '/') do
     Delete(Result, 1, 1);
 end;
 
