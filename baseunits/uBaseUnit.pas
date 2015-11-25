@@ -1415,6 +1415,7 @@ var
 begin
   Result := URL;
   if Host = '' then Exit;
+  if URL = '' then Exit;
   with TRegExpr.Create do
     try
       Expression := REGEX_HOST;
