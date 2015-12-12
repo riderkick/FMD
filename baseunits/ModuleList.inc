@@ -12,4 +12,5 @@ uses
   MangaStream,
   MangaLife,
   Luscious,
-  MangaHere;
+  MangaHere,
+  EightMuses;
