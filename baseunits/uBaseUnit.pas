@@ -856,6 +856,7 @@ function ConvertCharsetToUTF8(S: String): String; overload;
 procedure ConvertCharsetToUTF8(S: TStrings); overload;
 
 // StringUtils
+function GetRightValue(const name, s: string): string;
 function QuotedStrd(const S: string): string; overload; inline;
 function QuotedStrd(const S: Integer): string; overload; inline;
 function BracketStr(const S: string): string; inline;
@@ -1641,6 +1642,17 @@ begin
   end;
   if cs = '' then cs := GuessEncoding(S.Text);
   if cs <> '' then S.Text := ConvertEncoding(S.Text, cs, 'utf8');
+end;
+
+function GetRightValue(const name, s: string): string;
+var
+  i: Integer;
+begin
+  if s = '' then Exit('');
+  if name = '' then Exit(s);
+  i := Pos(name, s);
+  if i > 0 then
+    Result := Trim(Copy(s, i + Length(name), Length(s)));
 end;
 
 function QuotedStrd(const S: string): string;
