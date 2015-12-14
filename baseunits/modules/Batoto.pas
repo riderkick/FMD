@@ -50,6 +50,7 @@ begin
   if MangaInfo = nil then Exit;
   Parse := TStringList.Create;
   try
+    MangaInfo.FHTTP.Cookies.Text := Account.Cookies[modulename];
     if MangaInfo.GetPage(TObject(Parse),
       Module.RootURL + dirurls[Module.CurrentDirectoryIndex] +
       dirparam + IntToStr(perpage), 3) then
@@ -108,6 +109,7 @@ begin
     s += '&st=' + (IntToStr(p * perpage));
   Parse := TStringList.Create;
   try
+    MangaInfo.FHTTP.Cookies.Text := Account.Cookies[modulename];
     if MangaInfo.GetPage(TObject(Parse), s, 3) then
     begin
       Result := INFORMATION_NOT_FOUND;
@@ -265,6 +267,7 @@ begin
   if DownloadThread = nil then Exit;
   Container := DownloadThread.manager.container;
   with Container, DownloadThread.FHTTP do begin
+    Cookies.Text := Account.Cookies[modulename];
     Source := TStringList.Create;
     try
       cid := SeparateRight(URL, '/reader#');
@@ -300,6 +303,7 @@ begin
   if DownloadThread = nil then Exit;
   with DownloadThread.manager.container, DownloadThread.FHTTP do begin
     if PageContainerLinks.Text = '' then Exit;
+    Cookies.Text := Account.Cookies[modulename];
     Source := TStringList.Create;
     try
       rurl := Module.RootURL + '/areader?id=' + PageContainerLinks[0] + '&p=' +
