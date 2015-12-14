@@ -21,8 +21,8 @@ uses
   simpleipc, lclproc, types, strutils, LCLIntf, DefaultTranslator, EditBtn,
   FileUtil, LazUTF8Classes, TAGraph, TASources, TASeries, TATools, AnimatedGif,
   uBaseUnit, uData, uDownloadsManager, uFavoritesManager, uUpdateThread,
-  uUpdateDBThread, uSilentThread, uMisc, uGetMangaInfosThread,
-  uTranslation, frmDropTarget, CheckUpdate, USimpleException, USimpleLogger;
+  uUpdateDBThread, uSilentThread, uMisc, uGetMangaInfosThread, uTranslation,
+  frmDropTarget, CheckUpdate, accountmanager, USimpleException, USimpleLogger;
 
 type
 
@@ -963,10 +963,13 @@ begin
   TrayIcon.Icon.Assign(Application.Icon);
   PrevWindowState := wsNormal;
 
+  // account
+  accountmanager.InitAccountManager(fmdDirectory + CONFIG_FOLDER + ACCOUNTS_FILE);
+
   // advanced settings
   INIAdvanced := TIniFileR.Create(fmdDirectory + CONFIG_FOLDER + CONFIG_ADVANCED);
 
-  //main dataprocess
+  // main dataprocess
   dataProcess := TDBDataProcess.Create;
 
   // downloadmanager
