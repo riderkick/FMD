@@ -21,7 +21,8 @@ uses
   SysUtils, Classes, Graphics, Forms, lazutf8classes, LazUTF8, LazFileUtils,
   LConvEncoding, strutils, fileinfo, fpjson, jsonparser, FastHTMLParser, fgl,
   RegExpr, synautil, httpsend, blcksock, ssl_openssl, GZIPUtils, uFMDThread,
-  uMisc, simplehtmltreeparser, xquery, xquery_json, USimpleException, USimpleLogger;
+  uMisc, httpsendthread, simplehtmltreeparser, xquery, xquery_json,
+  USimpleException, USimpleLogger;
 
 Type
   TFMDDo = (DO_NOTHING, DO_EXIT, DO_POWEROFF, DO_HIBERNATE, DO_UPDATE);
@@ -212,6 +213,7 @@ const
   MANGALIST_FILE          = 'mangalist.ini';
   LANGUAGE_FILE           = 'languages.ini';
   CHANGELOG_FILE          = 'changelog.txt';
+  ACCOUNTS_FILE            = 'accounts.db';
 
   UPDATE_URL = 'https://raw.githubusercontent.com/riderkick/FMD/master/';
 
@@ -777,14 +779,9 @@ type
 
   { THTTPSendThread }
 
-  THTTPSendThread = class(THTTPSend)
-  private
-    FOwner: TFMDThread;
-    procedure SetTimeout(AValue: Integer);
-    procedure OnOwnerTerminate(Sender: TObject);
+  THTTPSendThread = class(httpsendthread.THTTPSendThread)
   public
-    constructor Create(AOwner: TFMDThread);
-    property Timeout: Integer read FTimeout write SetTimeout;
+    constructor Create(AOwner: TFMDThread = nil);
   end;
 
   { TXQueryEngineHTML }
@@ -3577,6 +3574,16 @@ begin
   dest.chapterLinks.Assign(Source.chapterLinks);
 end;
 
+{ THTTPSendThread }
+
+constructor THTTPSendThread.Create(AOwner: TFMDThread);
+begin
+  inherited Create(AOwner);
+  RetryCount := OptionConnectionMaxRetry;
+  Timeout := OptionConnectionTimeout;
+  SetProxy(OptionProxyType, OptionProxyHost, OptionProxyPort, OptionProxyUser, OptionProxyPass);
+end;
+
 { TXQueryEngineHTML }
 
 function TXQueryEngineHTML.Eval(Expression: String; isCSS: Boolean): IXQValue;
@@ -3636,33 +3643,6 @@ end;
 function TXQueryEngineHTML.CSSString(Expression: String): String;
 begin
   Result := Eval(Expression, True).toString;
-end;
-
-{ THTTPSendThread }
-
-procedure THTTPSendThread.SetTimeout(AValue: Integer);
-begin
-  if FTimeout = AValue then Exit;
-  FTimeout := AValue;
-  Sock.ConnectionTimeout := FTimeout;
-  Sock.SetTimeout(FTimeout);
-end;
-
-procedure THTTPSendThread.OnOwnerTerminate(Sender: TObject);
-begin
-  Sock.Tag := 1;
-  Sock.AbortSocket;
-end;
-
-constructor THTTPSendThread.Create(AOwner: TFMDThread);
-begin
-  inherited Create;
-  SetTimeout(OptionConnectionTimeout);
-  if Assigned(AOwner) then
-  begin
-    FOwner := AOwner;
-    FOwner.OnCustomTerminate := OnOwnerTerminate;
-  end;
 end;
 
 { TParseHTML }
