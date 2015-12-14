@@ -257,37 +257,35 @@ end;
 function GetPageNumber(var DownloadThread: TDownloadThread; const URL: String;
   Module: TModuleContainer): Boolean;
 var
-  Source: TStringList;
-  Query: TXQueryEngineHTML;
-  Container: TTaskContainer;
+  source: TStringList;
+  query: TXQueryEngineHTML;
   v: IXQValue;
   cid: String;
 begin
   Result := False;
   if DownloadThread = nil then Exit;
-  Container := DownloadThread.manager.container;
-  with Container, DownloadThread.FHTTP do begin
+  with DownloadThread.manager.container, DownloadThread.FHTTP do begin
     Cookies.Text := Account.Cookies[modulename];
-    Source := TStringList.Create;
-    try
-      cid := SeparateRight(URL, '/reader#');
-      Headers.Values['Referer'] := ' ' + Module.RootURL + '/reader';
-      if GetPage(DownloadThread.FHTTP, TObject(Source),
-        Module.RootURL + '/areader?id=' + cid + '&p=1', Manager.retryConnect) then
-        if Source.Count > 0 then
-        begin
-          Result := True;
-          Query := TXQueryEngineHTML.Create(Source.Text);
-          try
-            v := Query.XPath('//div[1]/ul/li/select[@id="page_select"]/option/@value');
-            PageNumber := v.Count;
-            PageContainerLinks.Text := cid;
-          finally
-            Query.Free;
-          end;
+    Headers.Values['Referer'] := ' ' + urlroot + '/reader';
+    cid := SeparateRight(URL, '/reader#');
+    if GET(urlroot + '/areader?id=' + cid + '&p=1') then begin
+      source := TStringList.Create;
+      query := TXQueryEngineHTML.Create;
+      try
+        source.LoadFromStream(Document);
+        query.ParseHTML(source.Text);
+        PageContainerLinks.Text := cid;
+        if query.XPathString('//select[@id="page_select"]') <> '' then
+          PageNumber := Query.XPath('//div[1]/ul/li/select[@id="page_select"]/option/@value').Count
+        else begin
+        // long-strip view
+          PageLinks.Clear;
+          for v in query.XPath('//div/img/@src') do
+            PageLinks.Add(v.toString);
         end;
-    finally
-      Source.Free;
+      finally
+        source.Free;
+      end;
     end;
   end;
 end;
