@@ -53,6 +53,7 @@ type
     MaxConnectionLimit: Integer;
     ActiveTaskCount: Integer;
     ActiveConnectionCount: Integer;
+    AccountSupport: Boolean;
     SortedList: Boolean;
     InformationAvailable: Boolean;
     FavoriteAvailable: Boolean;
@@ -203,6 +204,7 @@ begin
   MaxConnectionLimit := 0;
   ActiveTaskCount := 0;
   ActiveConnectionCount := 0;
+  AccountSupport := False;
   SortedList := False;
   InformationAvailable := True;
   FavoriteAvailable := True;

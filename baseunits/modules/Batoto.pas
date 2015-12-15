@@ -330,6 +330,7 @@ begin
     RootURL := urlroot;
     MaxTaskLimit := 1;
     MaxConnectionLimit := 3;
+    AccountSupport := True;
     SortedList := True;
     InformationAvailable := True;
     TotalDirectory := Length(dirurls);
