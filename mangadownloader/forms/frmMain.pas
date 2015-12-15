@@ -22,7 +22,8 @@ uses
   FileUtil, LazUTF8Classes, TAGraph, TASources, TASeries, TATools, AnimatedGif,
   uBaseUnit, uData, uDownloadsManager, uFavoritesManager, uUpdateThread,
   uUpdateDBThread, uSilentThread, uMisc, uGetMangaInfosThread, uTranslation,
-  frmDropTarget, CheckUpdate, accountmanager, USimpleException, USimpleLogger;
+  frmDropTarget, CheckUpdate, accountmanager, accountmanagerdb,
+  USimpleException, USimpleLogger;
 
 type
 
@@ -964,7 +965,7 @@ begin
   PrevWindowState := wsNormal;
 
   // account
-  accountmanager.InitAccountManager(fmdDirectory + CONFIG_FOLDER + ACCOUNTS_FILE);
+  accountmanagerdb.InitAccountManager(fmdDirectory + CONFIG_FOLDER + ACCOUNTS_FILE);
 
   // advanced settings
   INIAdvanced := TIniFileR.Create(fmdDirectory + CONFIG_FOLDER + CONFIG_ADVANCED);

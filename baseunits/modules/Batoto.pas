@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, WebsiteModules, uData, uBaseUnit, uDownloadsManager,
-  accountmanager, synautil, HTMLUtil, RegExpr;
+  accountmanagerdb, synautil, HTMLUtil, RegExpr;
 
 implementation
 
@@ -139,6 +139,7 @@ var
 begin
   Result := False;
   if http = nil then Exit;
+  if Account.Enabled[modulename] = False then Exit;
   if Account.Username[modulename] = '' then Exit;
 
   if TryEnterCriticalsection(locklogin) > 0 then
