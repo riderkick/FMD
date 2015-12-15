@@ -177,7 +177,8 @@ begin
           source.Free
         end;
       end;
-      onlogin := False
+      onlogin := False;
+      LeaveCriticalsection(locklogin);
     end
   else
   begin
