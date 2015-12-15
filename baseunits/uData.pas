@@ -3219,8 +3219,4 @@ begin
   Result := uBaseUnit.GetPage(FHTTP, output, URL, Reconnect);
 end;
 
-initialization
-  sqlite3dyn.SQLiteDefaultLibrary :=
-    CleanAndExpandDirectory(GetCurrentDirUTF8) + 'sqlite3.dll';
-
 end.

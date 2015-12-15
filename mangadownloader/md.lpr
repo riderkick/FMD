@@ -14,7 +14,7 @@ uses
     cthreads,
     {$ENDIF}
   {$ENDIF}
-  Forms, LazFileUtils, Interfaces, simpleipc, IniFiles,
+  Forms, LazFileUtils, Interfaces, simpleipc, IniFiles, sqlite3dyn,
   uBaseUnit, frmMain;
 
 var
@@ -55,6 +55,7 @@ begin
       DeleteFileUTF8(ChangeFileExt(Application.ExeName, '.trc'));
     SetHeapTraceOutput(ChangeFileExt(Application.ExeName, '.trc'));
     {$ENDIF DEBUGLEAKS}
+    sqlite3dyn.SQLiteDefaultLibrary := CleanAndExpandDirectory(GetCurrentDirUTF8) + 'sqlite3.dll';
     Application.Title := 'Free Manga Downloader';
     RequireDerivedFormResource := True;
     Application.Initialize;
