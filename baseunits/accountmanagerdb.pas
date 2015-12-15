@@ -110,7 +110,7 @@ end;
 
 function TAccountManager.GetCookies(AName: string): string;
 begin
-  Result := GetValueString(AName, 'cookies');
+  Result := decode(GetValueString(AName, 'cookies'));
 end;
 
 function TAccountManager.GetStatus(AName: string): string;
@@ -135,7 +135,7 @@ end;
 
 procedure TAccountManager.SetCookies(AName: string; AValue: string);
 begin
-  SetValueString(AName, 'cookies', AValue);
+  SetValueString(AName, 'cookies', encode(AValue));
 end;
 
 procedure TAccountManager.SetStatus(AName: string; AValue: string);
