@@ -10,6 +10,8 @@ uses
 
 type
 
+  TAccountStatus = (asUnknown, asValid, asInvalid);
+
   { TAccountManager }
 
   TAccountManager = class
@@ -20,7 +22,15 @@ type
     fquery: TSQLQuery;
     ffilename: String;
     frecordcount: Integer;
-
+    function CreateDB: Boolean;
+    function InternalOpenDB: Boolean;
+    function CreateDBTable: Boolean;
+    function OpenDBTable: Boolean;
+    function GetValueString(const AName, AField: string): string;
+    function GetValueBoolean(const AName, AField: string): boolean;
+    function GetValueStr(const RecIndex, FieldIndex: Integer): string;
+    function GetValueBool(const RecIndex, FieldIndex: Integer): boolean;
+    function GetValueInt(const RecIndex, FieldIndex: Integer): Integer;
     function GetUsername(AName: string): string;
     function GetEnabled(AName: string): boolean;
     function GetPassword(AName: string): string;
@@ -31,15 +41,11 @@ type
     procedure SetPassword(AName: string; AValue: string);
     procedure SetCookies(AName: string; AValue: string);
     procedure SetStatus(AName: string; AValue: string);
-
-    function CreateDB: Boolean;
-    function InternalOpenDB: Boolean;
-    function CreateDBTable: Boolean;
-    function OpenDBTable: Boolean;
-    function GetValueString(const AName, AField: string): string;
-    function GetValueBoolean(const AName, AField: string): boolean;
     procedure SetValueString(const AName, AField, AValue: string);
     procedure SetValueBoolean(const AName, AField: string; AValue: boolean);
+    procedure SetValueStr(const RecIndex, FieldIndex: Integer; AValue: string);
+    procedure SetValueBool(const RecIndex, FieldIndex: Integer; AValue: boolean);
+    procedure SetValueInt(const RecIndex, FieldIndex: Integer; AValue: Integer);
     procedure GetRecordCount;
     procedure Vacuum;
   public
@@ -53,6 +59,9 @@ type
     property Password[AName: string]: string read GetPassword write SetPassword;
     property Cookies[AName: string]: string read GetCookies write SetCookies;
     property Status[AName: string]: string read GetStatus write SetStatus;
+    property ValueStr[const RecIndex, FieldIndex: Integer]: string read GetValueStr write SetValueStr;
+    property ValueBool[const RecIndex, FieldIndex: Integer]: boolean read GetValueBool write SetValueBool;
+    property ValueInt[const RecIndex, FieldIndex: Integer]: Integer read GetValueInt write SetValueInt;
     property Count: Integer read frecordcount;
   end;
 
@@ -66,12 +75,12 @@ implementation
 const
   ctablename = 'accounts';
   ctbaccountscreateparams = '('#13#10 +
-    '"aname" VARCHAR NOT NULL PRIMARY KEY,'#13#10 +
     '"enabled" BOOL,'#13#10 +
+    '"aname" VARCHAR NOT NULL PRIMARY KEY,'#13#10 +
     '"username" VARCHAR,'#13#10 +
     '"password" VARCHAR,'#13#10 +
     '"cookies" VARCHAR,'#13#10 +
-    '"status" VARCHAR'#13#10 +
+    '"status" INTEGER'#13#10 +
     ');';
 
 procedure InitAccountManager(const AFilename: string);
@@ -116,6 +125,45 @@ end;
 function TAccountManager.GetStatus(AName: string): string;
 begin
   Result := GetValueString(AName, 'status');
+end;
+
+function TAccountManager.GetValueStr(const RecIndex, FieldIndex: Integer
+  ): string;
+begin
+  Result := '';
+  if fquery.Active = False then Exit;
+  if (RecIndex > frecordcount) and (RecIndex < 0) then Exit;
+  try
+    fquery.RecNo := RecIndex + 1;
+    Result := fquery.Fields[FieldIndex].AsString;
+  except
+  end;
+end;
+
+function TAccountManager.GetValueBool(const RecIndex, FieldIndex: Integer
+  ): boolean;
+begin
+  Result := False;
+  if fquery.Active = False then Exit;
+  if (RecIndex > frecordcount) and (RecIndex < 0) then Exit;
+  try
+    fquery.RecNo := RecIndex + 1;
+    Result := fquery.Fields[FieldIndex].AsBoolean;
+  except
+  end;
+end;
+
+function TAccountManager.GetValueInt(const RecIndex, FieldIndex: Integer
+  ): Integer;
+begin
+  Result := 0;
+  if fquery.Active = False then Exit;
+  if (RecIndex > frecordcount) and (RecIndex < 0) then Exit;
+  try
+    fquery.RecNo := RecIndex + 1;
+    Result := fquery.Fields[FieldIndex].AsInteger;
+  except
+  end;
 end;
 
 procedure TAccountManager.SetUsername(AName: string; AValue: string);
@@ -200,7 +248,8 @@ end;
 
 function TAccountManager.GetValueString(const AName, AField: string): string;
 begin
-  if fquery.Active = False then Exit('');
+  Result := '';
+  if fquery.Active = False then Exit;
   EnterCriticalsection(locklocate);
   try
     if fquery.Locate('aname', AName, []) then Result := fquery.FieldByName(AField).AsString
@@ -212,11 +261,60 @@ end;
 
 function TAccountManager.GetValueBoolean(const AName, AField: string): boolean;
 begin
-  if fquery.Active = False then Exit(False);
+  Result := False;
+  if fquery.Active = False then Exit;
   EnterCriticalsection(locklocate);
   try
     if fquery.Locate('aname', AName, []) then Result := fquery.FieldByName(AField).AsBoolean
     else Result := False;
+  finally
+    LeaveCriticalsection(locklocate);
+  end;
+end;
+
+procedure TAccountManager.SetValueStr(const RecIndex, FieldIndex: Integer;
+  AValue: string);
+begin
+  if fquery.Active = False then Exit;
+  if (RecIndex > frecordcount) and (RecIndex < 0) then Exit;
+  EnterCriticalsection(locklocate);
+  try
+    fquery.RecNo := RecIndex + 1;
+    fquery.Edit;
+    fquery.Fields[FieldIndex].AsString := AValue;
+    fquery.Post;
+  finally
+    LeaveCriticalsection(locklocate);
+  end;
+end;
+
+procedure TAccountManager.SetValueBool(const RecIndex, FieldIndex: Integer;
+  AValue: boolean);
+begin
+  if fquery.Active = False then Exit;
+  if (RecIndex > frecordcount) and (RecIndex < 0) then Exit;
+  EnterCriticalsection(locklocate);
+  try
+    fquery.RecNo := RecIndex + 1;
+    fquery.Edit;
+    fquery.Fields[FieldIndex].AsBoolean := AValue;
+    fquery.Post;
+  finally
+    LeaveCriticalsection(locklocate);
+  end;
+end;
+
+procedure TAccountManager.SetValueInt(const RecIndex, FieldIndex: Integer;
+  AValue: Integer);
+begin
+  if fquery.Active = False then Exit;
+  if (RecIndex > frecordcount) and (RecIndex < 0) then Exit;
+  EnterCriticalsection(locklocate);
+  try
+    fquery.RecNo := RecIndex + 1;
+    fquery.Edit;
+    fquery.Fields[FieldIndex].AsInteger := AValue;
+    fquery.Post;
   finally
     LeaveCriticalsection(locklocate);
   end;
@@ -333,11 +431,11 @@ begin
   try
     with fquery do begin
       Append;
-      FieldByName('aname').AsString := AName;
       FieldByName('enabled').AsBoolean := True;
+      FieldByName('aname').AsString := AName;
       FieldByName('username').AsString := AUsername;
       FieldByName('password').AsString := encode(APassword);
-      FieldByName('status').AsString := 'Unknown';
+      FieldByName('status').AsInteger := Integer(asUnknown);
       Post;
     end;
     GetRecordCount;
