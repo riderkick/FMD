@@ -1,6 +1,30 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=UTF-8"
 
+#: frmaccountmanager.rs_accountdeleteconfirmation
+msgid "Are you sure you want to delete this account?"
+msgstr ""
+
+#: frmaccountmanager.rs_checking
+msgid "Checking"
+msgstr ""
+
+#: frmaccountmanager.rs_invalid
+msgid "Invalid"
+msgstr ""
+
+#: frmaccountmanager.rs_unknown
+msgid "Unknown"
+msgstr ""
+
+#: frmaccountmanager.rs_valid
+msgid "OK"
+msgstr ""
+
+#: frmaccountset.rs_cantbeempty
+msgid "Username or password can't be empty!"
+msgstr ""
+
 #: frmimportfavorites.rs_importcompleted
 msgid "Import completed."
 msgstr ""
@@ -221,6 +245,72 @@ msgstr ""
 
 #: frmshutdowncounter.rs_lblmessageshutdown
 msgid "System will shutdown in %d second."
+msgstr ""
+
+#: taccountmanagerform.btadd.caption
+msgid "Add"
+msgstr ""
+
+#: taccountmanagerform.btdelete.caption
+msgctxt "taccountmanagerform.btdelete.caption"
+msgid "Delete"
+msgstr ""
+
+#: taccountmanagerform.btedit.caption
+msgid "Edit"
+msgstr ""
+
+#: taccountmanagerform.btrefresh.caption
+msgid "Refresh"
+msgstr ""
+
+#: taccountmanagerform.vtaccountlist.header.columns[1].text
+msgctxt "TACCOUNTMANAGERFORM.VTACCOUNTLIST.HEADER.COLUMNS[1].TEXT"
+msgid "Website"
+msgstr ""
+
+#: taccountmanagerform.vtaccountlist.header.columns[2].text
+msgctxt "TACCOUNTMANAGERFORM.VTACCOUNTLIST.HEADER.COLUMNS[2].TEXT"
+msgid "Username"
+msgstr ""
+
+#: taccountmanagerform.vtaccountlist.header.columns[3].text
+msgctxt "TACCOUNTMANAGERFORM.VTACCOUNTLIST.HEADER.COLUMNS[3].TEXT"
+msgid "Status"
+msgstr ""
+
+#: taccountsetform.btcancel.caption
+msgctxt "TACCOUNTSETFORM.BTCANCEL.CAPTION"
+msgid "Cancel"
+msgstr ""
+
+#: taccountsetform.btok.caption
+msgid "Ok"
+msgstr ""
+
+#: taccountsetform.edpassword.texthint
+msgctxt "TACCOUNTSETFORM.EDPASSWORD.TEXTHINT"
+msgid "Password"
+msgstr ""
+
+#: taccountsetform.edusername.texthint
+msgctxt "TACCOUNTSETFORM.EDUSERNAME.TEXTHINT"
+msgid "Username"
+msgstr ""
+
+#: taccountsetform.label1.caption
+msgctxt "TACCOUNTSETFORM.LABEL1.CAPTION"
+msgid "Website"
+msgstr ""
+
+#: taccountsetform.label2.caption
+msgctxt "TACCOUNTSETFORM.LABEL2.CAPTION"
+msgid "Username"
+msgstr ""
+
+#: taccountsetform.label3.caption
+msgctxt "TACCOUNTSETFORM.LABEL3.CAPTION"
+msgid "Password"
 msgstr ""
 
 #: tformdroptarget.miaddtofavorites.caption
@@ -1020,6 +1110,7 @@ msgid "New manga based on  it's update time (days)"
 msgstr ""
 
 #: tmainform.lboptionpass.caption
+msgctxt "tmainform.lboptionpass.caption"
 msgid "Password"
 msgstr ""
 
@@ -1045,6 +1136,7 @@ msgid "Rename  digits"
 msgstr ""
 
 #: tmainform.lboptionuser.caption
+msgctxt "tmainform.lboptionuser.caption"
 msgid "Username"
 msgstr ""
 
@@ -1274,6 +1366,10 @@ msgstr ""
 
 #: tmainform.tsabouttext.caption
 msgid "About FMD"
+msgstr ""
+
+#: tmainform.tsaccounts.caption
+msgid "Accounts"
 msgstr ""
 
 #: tmainform.tschangelogtext.caption

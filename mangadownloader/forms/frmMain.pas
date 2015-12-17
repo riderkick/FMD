@@ -22,8 +22,8 @@ uses
   FileUtil, LazUTF8Classes, TAGraph, TASources, TASeries, TATools, AnimatedGif,
   uBaseUnit, uData, uDownloadsManager, uFavoritesManager, uUpdateThread,
   uUpdateDBThread, uSilentThread, uMisc, uGetMangaInfosThread, uTranslation,
-  frmDropTarget, CheckUpdate, accountmanager, accountmanagerdb,
-  USimpleException, USimpleLogger;
+  frmDropTarget, frmAccountManager, CheckUpdate, accountmanager,
+  accountmanagerdb, USimpleException, USimpleLogger;
 
 type
 
@@ -70,6 +70,7 @@ type
     pcAbout: TPageControl;
     pmSbMain: TPopupMenu;
     sbSaveTo: TScrollBox;
+    tsAccounts: TTabSheet;
     tsAboutText: TTabSheet;
     tsChangelogText: TTabSheet;
     TransferRateToolset: TChartToolset;
@@ -1088,6 +1089,14 @@ begin
     RightToLeft := False;
     EndEllipsis := True;
   end;
+
+  // embed form
+  AccountManagerForm := TAccountManagerForm.Create(Self);
+  with AccountManagerForm do begin
+    Parent := tsAccounts;
+    Align := alClient;
+    Show;
+  end;
 end;
 
 procedure TMainForm.FormClose(Sender: TObject; var CloseAction: TCloseAction);
@@ -1161,6 +1170,10 @@ begin
   FavoriteManager.Backup;
   SaveOptions;
   SaveFormInformation;
+
+  //embed form
+  if Assigned(AccountManagerForm) then
+    AccountManagerForm.Close;
 end;
 
 procedure TMainForm.FormDestroy(Sender: TObject);

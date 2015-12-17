@@ -264,18 +264,18 @@ object MainForm: TMainForm
     end
     object tsInformation: TTabSheet
       Caption = 'Manga Info'
-      ClientHeight = 480
+      ClientHeight = 521
       ClientWidth = 606
       object sbInformation: TScrollBox
         Left = 0
-        Height = 480
+        Height = 521
         Top = 0
         Width = 606
         HorzScrollBar.Page = 218
         VertScrollBar.Page = 317
         Align = alClient
         BorderStyle = bsNone
-        ClientHeight = 480
+        ClientHeight = 521
         ClientWidth = 606
         TabOrder = 0
         object pnInfomation: TPanel
@@ -412,18 +412,18 @@ object MainForm: TMainForm
         end
         object pnChapterList: TPanel
           Left = 0
-          Height = 213
+          Height = 254
           Top = 267
           Width = 606
           Align = alClient
           BevelOuter = bvNone
-          ClientHeight = 213
+          ClientHeight = 254
           ClientWidth = 606
           TabOrder = 2
           object btDownload: TBitBtn
             Left = 387
             Height = 30
-            Top = 145
+            Top = 186
             Width = 101
             Anchors = [akRight, akBottom]
             Caption = 'Download'
@@ -469,7 +469,7 @@ object MainForm: TMainForm
           object cbAddAsStopped: TCheckBox
             Left = 4
             Height = 19
-            Top = 182
+            Top = 223
             Width = 214
             Anchors = [akLeft, akBottom]
             Caption = 'Add to download list as stopped task'
@@ -479,7 +479,7 @@ object MainForm: TMainForm
           end
           object clbChapterList: TVirtualStringTree
             Left = 4
-            Height = 125
+            Height = 166
             Top = 0
             Width = 563
             Anchors = [akTop, akLeft, akRight, akBottom]
@@ -507,7 +507,7 @@ object MainForm: TMainForm
           object btReadOnline: TBitBtn
             Left = 493
             Height = 30
-            Top = 145
+            Top = 186
             Width = 108
             Anchors = [akRight, akBottom]
             Caption = 'Read online'
@@ -553,7 +553,7 @@ object MainForm: TMainForm
           object btBrowse: TSpeedButton
             Left = 360
             Height = 23
-            Top = 148
+            Top = 189
             Width = 23
             Anchors = [akRight, akBottom]
             Glyph.Data = {
@@ -641,7 +641,7 @@ object MainForm: TMainForm
           object btAddToFavorites: TBitBtn
             Left = 387
             Height = 30
-            Top = 179
+            Top = 220
             Width = 214
             Anchors = [akRight, akBottom]
             Caption = 'Add to favorites'
@@ -687,7 +687,7 @@ object MainForm: TMainForm
           object edSaveTo: TEdit
             Left = 4
             Height = 23
-            Top = 148
+            Top = 189
             Width = 353
             Anchors = [akLeft, akRight, akBottom]
             ParentFont = False
@@ -697,7 +697,7 @@ object MainForm: TMainForm
           object lbSaveTo: TLabel
             Left = 4
             Height = 15
-            Top = 130
+            Top = 171
             Width = 41
             Anchors = [akLeft, akBottom]
             Caption = 'Save to:'
@@ -1619,12 +1619,12 @@ object MainForm: TMainForm
     end
     object tsFavorites: TTabSheet
       Caption = 'Favorites'
-      ClientHeight = 480
+      ClientHeight = 521
       ClientWidth = 606
       object btFavoritesCheckNewChapter: TBitBtn
         Left = 33
         Height = 40
-        Top = 400
+        Top = 441
         Width = 545
         Anchors = [akLeft, akRight, akBottom]
         Caption = 'Check for new chapter'
@@ -1669,7 +1669,7 @@ object MainForm: TMainForm
       end
       object vtFavorites: TVirtualStringTree
         Left = 2
-        Height = 389
+        Height = 430
         Top = 4
         Width = 600
         Align = alTop
@@ -1732,7 +1732,7 @@ object MainForm: TMainForm
       object btFavoritesImport: TBitBtn
         Left = 33
         Height = 24
-        Top = 446
+        Top = 487
         Width = 545
         Anchors = [akLeft, akRight, akBottom]
         Caption = 'Import list'
@@ -1779,7 +1779,7 @@ object MainForm: TMainForm
       object btCancelFavoritesCheck: TSpeedButton
         Left = 538
         Height = 40
-        Top = 400
+        Top = 441
         Width = 40
         Anchors = [akRight, akBottom]
         Glyph.Data = {
@@ -2747,11 +2747,11 @@ object MainForm: TMainForm
         end
         object tsWebsites: TTabSheet
           Caption = 'Websites'
-          ClientHeight = 375
+          ClientHeight = 416
           ClientWidth = 579
           object vtOptionMangaSiteSelection: TVirtualStringTree
             Left = 2
-            Height = 336
+            Height = 377
             Top = 35
             Width = 573
             Align = alClient
@@ -2890,6 +2890,9 @@ object MainForm: TMainForm
               end
             end
           end
+        end
+        object tsAccounts: TTabSheet
+          Caption = 'Accounts'
         end
         object tsMisc: TTabSheet
           Caption = 'Misc'
