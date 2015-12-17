@@ -10,7 +10,7 @@ uses
 
 type
 
-  TAccountStatus = (asUnknown, asValid, asInvalid);
+  TAccountStatus = (asUnknown, asChecking, asValid, asInvalid);
 
   { TAccountManager }
 
@@ -54,6 +54,7 @@ type
     procedure Save;
     function AddAccount(const AName, AUsername, APassword: string): Boolean;
     function DeleteAccount(const AName: string): Boolean;
+    function DeleteAccount(const RecIndex: Integer): Boolean; overload;
     property Enabled[AName: string]: boolean read GetEnabled write SetEnabled;
     property Username[AName: string]: string read GetUsername write SetUsername;
     property Password[AName: string]: string read GetPassword write SetPassword;
@@ -449,7 +450,7 @@ end;
 function TAccountManager.DeleteAccount(const AName: string): Boolean;
 begin
   Result := False;
-  if fconn.Connected = False then Exit;
+  if fquery.Active = False then Exit;
   try
     with fquery do begin
       if Locate('aname', AName, []) then begin
@@ -461,6 +462,24 @@ begin
   except
     on E: Exception do
       WriteLog_E('TAccountManager.DeleteAccount.Failed, ' + AName, E, Self);
+  end;
+end;
+
+function TAccountManager.DeleteAccount(const RecIndex: Integer): Boolean;
+begin
+  Result := False;
+  if fquery.Active = False then Exit;
+  if (RecIndex > frecordcount) and (RecIndex < 0) then Exit;
+  try
+    with fquery do begin
+      RecNo := RecIndex + 1;
+      Delete;
+      GetRecordCount;
+      Result := True;
+    end;
+  except
+    on E: Exception do
+      WriteLog_E('TAccountManager.DeleteAccount.Failed, ' + IntToStr(RecIndex), E, Self);
   end;
 end;
 
