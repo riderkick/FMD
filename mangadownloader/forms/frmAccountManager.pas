@@ -368,6 +368,7 @@ end;
 procedure TAccountManagerForm.btEditClick(Sender: TObject);
 var
   node: PVirtualNode;
+  u, p: String;
 begin
   if vtAccountList.SelectedCount > 0 then begin
     node := vtAccountList.GetFirstSelected;
@@ -377,14 +378,16 @@ begin
         cbWebsiteName.Items.Add(Account.ValueStr[node^.Index, 1]);
         cbWebsiteName.ItemIndex := 0;
         cbWebsiteName.Enabled := False;
-        edUsername.Text := Account.ValueStr[node^.Index, 2];
-        edPassword.Text := Account.ValueStr[node^.Index, 3];
+        u := Account.ValueStr[node^.Index, 2];
+        p := Account.ValueStr[node^.Index, 3];
+        edUsername.Text := u;
+        edPassword.Text := p;
         if ShowModal = mrOK then
-        begin
-          Account.Username[cbWebsiteName.Text] := edUsername.Text;
-          Account.Password[cbWebsiteName.Text] := edPassword.Text;
-          btRefreshClick(btRefresh);
-        end;
+          if (edUsername.Text <> u) or (edPassword.Text <> p) then begin
+            Account.Username[cbWebsiteName.Text] := edUsername.Text;
+            Account.Password[cbWebsiteName.Text] := edPassword.Text;
+            btRefreshClick(btRefresh);
+          end;
       finally
         Free;
       end;
