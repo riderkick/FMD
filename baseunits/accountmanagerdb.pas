@@ -140,6 +140,7 @@ begin
   try
     fquery.RecNo := RecIndex + 1;
     Result := fquery.Fields[FieldIndex].AsString;
+    if (FieldIndex = 3) or (FieldIndex = 4) then Result := decode(Result);
   except
   end;
 end;
@@ -320,7 +321,10 @@ begin
   try
     fquery.RecNo := RecIndex + 1;
     fquery.Edit;
-    fquery.Fields[FieldIndex].AsString := AValue;
+    if (FieldIndex = 3) or (FieldIndex = 4) then
+      fquery.Fields[FieldIndex].AsString := encode(AValue)
+    else
+      fquery.Fields[FieldIndex].AsString := decode(AValue);
     fquery.Post;
   finally
     LeaveCriticalsection(locklocate);
