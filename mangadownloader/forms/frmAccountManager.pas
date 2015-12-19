@@ -5,9 +5,9 @@ unit frmAccountManager;
 interface
 
 uses
-  Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, ComCtrls,
-  Buttons, ExtCtrls, VirtualTrees, accountmanagerdb, WebsiteModules,
-  frmAccountSet, USimpleLogger;
+  Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, Buttons,
+  ExtCtrls, VirtualTrees, accountmanagerdb, WebsiteModules, uFMDThread,
+  uBaseUnit, frmAccountSet, USimpleLogger, USimpleException;
 
 type
 
@@ -23,10 +23,14 @@ type
     procedure btAddClick(Sender: TObject);
     procedure btDeleteClick(Sender: TObject);
     procedure btEditClick(Sender: TObject);
+    procedure btRefreshClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormShow(Sender: TObject);
+    procedure vtAccountListBeforeCellPaint(Sender: TBaseVirtualTree;
+      TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
+      CellPaintMode: TVTCellPaintMode; CellRect: TRect; var ContentRect: TRect);
     procedure vtAccountListChange(Sender: TBaseVirtualTree; Node: PVirtualNode);
     procedure vtAccountListChecked(Sender: TBaseVirtualTree; Node: PVirtualNode
       );
@@ -48,8 +52,40 @@ type
     procedure RefreshWebsiteAvailable;
   end;
 
+  TAccountCheck = class;
+
+  { TAccountCheckThread }
+
+  TAccountCheckThread = class(TFMDThread)
+  private
+    fwebsite: String;
+    fhttp: THTTPSendThread;
+    fthreadlist: TAccountCheck;
+    procedure SyncStatus;
+  protected
+    procedure Execute; override;
+  public
+    constructor Create(const AWebsite: String; ThreadList: TAccountCheck);
+    destructor Destroy; override;
+  end;
+
+  TAccountCheck = class
+  private
+    fthreads: TFPList;
+    fthreadslock: TRTLCriticalSection;
+  public
+    constructor Create;
+    destructor Destroy; override;
+    procedure AddThread(const t: TAccountCheckThread);
+    procedure DeleteThread(const t: TAccountCheckThread);
+    procedure StopAll;
+  end;
+
 var
   AccountManagerForm: TAccountManagerForm;
+
+const
+  CL_HLRedMarks = $008080FF;
 
 resourcestring
   RS_Unknown = 'Unknown';
@@ -64,8 +100,106 @@ uses frmMain;
 
 var
   Websites, WebsitesAvailable: TStringlist;
+  AccountThreadList: TAccountCheck;
 
 {$R *.lfm}
+
+{ TAccountCheck }
+
+constructor TAccountCheck.Create;
+begin
+  fthreads := TFPList.Create;
+  InitCriticalSection(fthreadslock);
+end;
+
+destructor TAccountCheck.Destroy;
+begin
+  if fthreads.Count > 0 then
+    StopAll;
+  while fthreads.Count > 0 do Sleep(250);
+  fthreads.Free;
+  DoneCriticalsection(fthreadslock);
+  inherited Destroy;
+end;
+
+procedure TAccountCheck.AddThread(const t: TAccountCheckThread);
+begin
+  EnterCriticalsection(fthreadslock);
+  try
+    fthreads.Add(t);
+  finally
+    LeaveCriticalsection(fthreadslock);
+  end;
+end;
+
+procedure TAccountCheck.DeleteThread(const t: TAccountCheckThread);
+begin
+  EnterCriticalsection(fthreadslock);
+  try
+    fthreads.Remove(t);
+  finally
+    LeaveCriticalsection(fthreadslock);
+  end;
+end;
+
+procedure TAccountCheck.StopAll;
+var
+  i: Integer;
+begin
+  EnterCriticalsection(fthreadslock);
+  try
+    if fthreads.Count > 0 then
+      for i := 0 to fthreads.Count - 1 do
+        TAccountCheckThread(fthreads[i]).Terminate;
+  finally
+    LeaveCriticalsection(fthreadslock);
+  end;
+end;
+
+{ TAccountCheckThread }
+
+procedure TAccountCheckThread.SyncStatus;
+begin
+  if Assigned(AccountManagerForm) then
+    AccountManagerForm.vtAccountList.Repaint;
+end;
+
+procedure TAccountCheckThread.Execute;
+var
+  p: Integer;
+begin
+  if fwebsite = '' then Exit;
+  try
+    p := Modules.LocateModule(fwebsite);
+    if p > -1 then
+      Modules.Login(fhttp, p);
+    Synchronize(@SyncStatus);
+  except
+    on E: Exception do
+      ExceptionHandle(Self, E);
+  end;
+end;
+
+constructor TAccountCheckThread.Create(const AWebsite: String;
+  ThreadList: TAccountCheck);
+begin
+  inherited Create(False);
+  if AWebsite <> '' then fwebsite := AWebsite
+  else fwebsite :=  '';
+  fhttp := THTTPSendThread.Create(Self);
+  if Assigned(ThreadList) then begin
+    fthreadlist := ThreadList;
+    fthreadlist.AddThread(Self);
+  end
+  else fthreadlist := nil;
+end;
+
+destructor TAccountCheckThread.Destroy;
+begin
+  if Assigned(fthreadlist) then fthreadlist.DeleteThread(Self);
+  if Assigned(fhttp) then fhttp.Free;
+  inherited Destroy;
+end;
 
 { TAccountManagerForm }
 
@@ -80,6 +214,7 @@ procedure TAccountManagerForm.vtAccountListPaintText(Sender: TBaseVirtualTree;
   const TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
   TextType: TVSTTextType);
 begin
+  if node = nil then Exit;
   if Node^.CheckState = csUncheckedNormal then TargetCanvas.Font.Color := clGrayText
   else TargetCanvas.Font.Color := clDefault;
 end;
@@ -140,9 +275,10 @@ begin
       1: CellText := Account.ValueStr[Node^.Index, 1];
       2: CellText := Account.ValueStr[Node^.Index, 2];
       3: case Account.ValueInt[Node^.Index, 5] of
-           Integer(asUnknown): CellText := RS_Unknown;
-           Integer(asValid)  : CellText := RS_Valid;
-           Integer(asInvalid): CellText := RS_Invalid;
+           Integer(asUnknown) : CellText := RS_Unknown;
+           Integer(asChecking): CellText := RS_Checking;
+           Integer(asValid)   : CellText := RS_Valid;
+           Integer(asInvalid) : CellText := RS_Invalid;
          end;
     end;
   end;
@@ -153,6 +289,18 @@ begin
   LoadForm;
   RefreshList;
   RefreshWebsiteAvailable;
+end;
+
+procedure TAccountManagerForm.vtAccountListBeforeCellPaint(
+  Sender: TBaseVirtualTree; TargetCanvas: TCanvas; Node: PVirtualNode;
+  Column: TColumnIndex; CellPaintMode: TVTCellPaintMode; CellRect: TRect;
+  var ContentRect: TRect);
+begin
+  if Node = nil then Exit;
+  if Account.ValueInt[Node^.Index, 5] = Integer(asInvalid) then begin
+    TargetCanvas.Brush.Color := CL_HLRedMarks;
+    TargetCanvas.FillRect(CellRect);
+  end;
 end;
 
 procedure TAccountManagerForm.vtAccountListChange(Sender: TBaseVirtualTree;
@@ -174,6 +322,7 @@ procedure TAccountManagerForm.FormClose(Sender: TObject;
   var CloseAction: TCloseAction);
 begin
   SaveForm;
+  AccountThreadList.StopAll;
 end;
 
 procedure TAccountManagerForm.FormCreate(Sender: TObject);
@@ -182,6 +331,7 @@ var
 begin
   Websites := TStringList.Create;
   WebsitesAvailable := TStringList.Create;
+  AccountThreadList := TAccountCheck.Create;
   if Modules.Count > 0 then begin
     for i := 0 to Modules.Count - 1 do
       if Modules.Module[i].AccountSupport then
@@ -194,6 +344,7 @@ procedure TAccountManagerForm.FormDestroy(Sender: TObject);
 begin
   if Assigned(Websites) then Websites.Free;
   if Assigned(WebsitesAvailable) then WebsitesAvailable.Free;
+  if Assigned(AccountThreadList) then AccountThreadList.Free;
 end;
 
 procedure TAccountManagerForm.btDeleteClick(Sender: TObject);
@@ -232,12 +383,28 @@ begin
         begin
           Account.Username[cbWebsiteName.Text] := edUsername.Text;
           Account.Password[cbWebsiteName.Text] := edPassword.Text;
-          vtAccountList.Repaint;
+          btRefreshClick(btRefresh);
         end;
       finally
         Free;
       end;
     end;
+  end;
+end;
+
+procedure TAccountManagerForm.btRefreshClick(Sender: TObject);
+var
+  node: PVirtualNode;
+  web: String;
+begin
+  if vtAccountList.SelectedCount = 0 then Exit;
+  node := vtAccountList.GetFirstSelected;
+  if node = nil then Exit;
+  if Account.ValueInt[node^.Index, 5] = Integer(asChecking) then Exit;
+  web := Account.ValueStr[node^.Index, 1];
+  if web <> '' then begin
+    TAccountCheckThread.Create(web, AccountThreadList);
+    vtAccountList.Repaint;
   end;
 end;
 
@@ -255,6 +422,8 @@ begin
         Account.Save;
         RefreshList;
         RefreshWebsiteAvailable;
+        vtAccountList.Selected[vtAccountList.GetLast] := True;
+        btRefreshClick(btRefresh);
       end;
   finally
     Free;

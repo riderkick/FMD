@@ -304,6 +304,7 @@
         <Filename Value="forms\frmAccountSet.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="AccountSetForm"/>
+        <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
       </Unit8>
     </Units>

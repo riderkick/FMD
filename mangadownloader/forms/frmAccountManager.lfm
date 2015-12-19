@@ -223,6 +223,7 @@ object AccountManagerForm: TAccountManagerForm
         FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
         FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00
       }
+      OnClick = btRefreshClick
       TabOrder = 3
     end
   end
@@ -259,6 +260,7 @@ object AccountManagerForm: TAccountManagerForm
     TreeOptions.MiscOptions = [toAcceptOLEDrop, toCheckSupport, toFullRepaintOnResize, toInitOnSave, toToggleOnDblClick, toWheelPanning, toEditOnClick]
     TreeOptions.PaintOptions = [toHideFocusRect, toShowButtons, toShowDropmark, toShowHorzGridLines, toShowTreeLines, toShowVertGridLines, toThemeAware, toUseBlendedImages, toFullVertGridLines]
     TreeOptions.SelectionOptions = [toFullRowSelect]
+    OnBeforeCellPaint = vtAccountListBeforeCellPaint
     OnChange = vtAccountListChange
     OnChecked = vtAccountListChecked
     OnGetText = vtAccountListGetText
