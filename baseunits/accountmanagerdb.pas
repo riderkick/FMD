@@ -26,6 +26,7 @@ type
     function InternalOpenDB: Boolean;
     function CreateDBTable: Boolean;
     function OpenDBTable: Boolean;
+    function FixStatus: Boolean;
     function GetValueString(const AName, AField: string): string;
     function GetValueBoolean(const AName, AField: string): boolean;
     function GetValueInteger(const AName, AField: string): Integer;
@@ -241,11 +242,34 @@ begin
     if fquery.Active then fquery.Close;
     fquery.SQL.Text := 'SELECT * FROM ' + AnsiQuotedStr(ctablename, '"');
     fquery.Open;
+    FixStatus;
     GetRecordCount;
     Result := fquery.Active;
   except
     on E: Exception do
       WriteLog_E('TAccountManager.OpenDBTable.Failed, ' + ffilename, E, Self);
+  end;
+end;
+
+function TAccountManager.FixStatus: Boolean;
+begin
+  Result := False;
+  if fquery.Active = False then Exit;
+  EnterCriticalsection(locklocate);
+  try
+    if fquery.RecordCount > 0 then begin
+      fquery.First;
+      while not fquery.EOF do begin
+        if fquery.FieldByName('status').AsInteger = Integer(asChecking) then begin
+          fquery.Edit;
+          fquery.FieldByName('status').AsInteger := Integer(asUnknown);
+          fquery.Post;
+        end;
+        fquery.Next;
+      end;
+    end;
+  finally
+    LeaveCriticalsection(locklocate);
   end;
 end;
 
