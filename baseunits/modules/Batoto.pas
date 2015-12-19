@@ -131,20 +131,21 @@ begin
   Result := (Pos('class=''logged_in''', source) > 0) or (Pos('class="logged_in"', source) > 0);
 end;
 
-function Login(http: THTTPSendThread): Boolean;
+function Login(var AHTTP: THTTPSendThread): Boolean;
 var
   query: TXQueryEngineHTML;
   source: TStringList;
   s, key, user, pass: string;
 begin
   Result := False;
-  if http = nil then Exit;
+  if AHTTP = nil then Exit;
   if Account.Enabled[modulename] = False then Exit;
   if Account.Username[modulename] = '' then Exit;
 
   if TryEnterCriticalsection(locklogin) > 0 then
-    with http do begin
+    with AHTTP do begin
       onlogin := True;
+      Account.Status[modulename] := asChecking;
       Reset;
       Cookies.Clear;
       if Get(urlroot) then begin
@@ -165,10 +166,9 @@ begin
                 Result := Cookies.Values['pass_hash'] <> '';
                 if Result then begin
                   Account.Cookies[modulename] := GetCookies;
-                  Account.Status[modulename] := 'OK';
-                end else begin
-                  Account.Status[modulename] := 'Invalid user/password!';
-                end;
+                  Account.Status[modulename] := asValid;
+                end else
+                  Account.Status[modulename] := asInvalid;
                 Account.Save;
               end;
             end;
@@ -179,12 +179,14 @@ begin
         end;
       end;
       onlogin := False;
+      if Account.Status[modulename] = asChecking then
+        Account.Status[modulename] := asUnknown;
       LeaveCriticalsection(locklogin);
     end
   else
   begin
     while onlogin do Sleep(1000);
-    if Result then http.Cookies.Text := Account.Cookies[modulename];
+    if Result then AHTTP.Cookies.Text := Account.Cookies[modulename];
   end;
 end;
 
@@ -339,6 +341,7 @@ begin
     OnGetInfo := @GetInfo;
     OnGetPageNumber := @GetPageNumber;
     OnGetImageURL := @GetImageURL;
+    OnLogin := @Login;
   end;
 end;
 
