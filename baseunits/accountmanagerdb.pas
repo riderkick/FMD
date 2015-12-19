@@ -28,6 +28,7 @@ type
     function OpenDBTable: Boolean;
     function GetValueString(const AName, AField: string): string;
     function GetValueBoolean(const AName, AField: string): boolean;
+    function GetValueInteger(const AName, AField: string): Integer;
     function GetValueStr(const RecIndex, FieldIndex: Integer): string;
     function GetValueBool(const RecIndex, FieldIndex: Integer): boolean;
     function GetValueInt(const RecIndex, FieldIndex: Integer): Integer;
@@ -35,17 +36,18 @@ type
     function GetEnabled(AName: string): boolean;
     function GetPassword(AName: string): string;
     function GetCookies(AName: string): string;
-    function GetStatus(AName: string): string;
+    function GetStatus(AName: string): TAccountStatus;
     procedure SetUsername(AName: string; AValue: string);
     procedure SetEnabled(AName: string; AValue: boolean);
     procedure SetPassword(AName: string; AValue: string);
     procedure SetCookies(AName: string; AValue: string);
-    procedure SetStatus(AName: string; AValue: string);
+    procedure SetStatus(AName: string; AValue: TAccountStatus);
     procedure SetValueString(const AName, AField, AValue: string);
     procedure SetValueBoolean(const AName, AField: string; AValue: boolean);
+    procedure SetValueInteger(const AName, AField: string; AValue: Integer);
     procedure SetValueStr(const RecIndex, FieldIndex: Integer; AValue: string);
     procedure SetValueBool(const RecIndex, FieldIndex: Integer; AValue: boolean);
-    procedure SetValueInt(const RecIndex, FieldIndex: Integer; AValue: Integer);
+    procedure SetValueInt(const RecIndex, FieldIndex, AValue: Integer);
     procedure GetRecordCount;
     procedure Vacuum;
   public
@@ -59,7 +61,7 @@ type
     property Username[AName: string]: string read GetUsername write SetUsername;
     property Password[AName: string]: string read GetPassword write SetPassword;
     property Cookies[AName: string]: string read GetCookies write SetCookies;
-    property Status[AName: string]: string read GetStatus write SetStatus;
+    property Status[AName: string]: TAccountStatus read GetStatus write SetStatus;
     property ValueStr[const RecIndex, FieldIndex: Integer]: string read GetValueStr write SetValueStr;
     property ValueBool[const RecIndex, FieldIndex: Integer]: boolean read GetValueBool write SetValueBool;
     property ValueInt[const RecIndex, FieldIndex: Integer]: Integer read GetValueInt write SetValueInt;
@@ -123,9 +125,9 @@ begin
   Result := decode(GetValueString(AName, 'cookies'));
 end;
 
-function TAccountManager.GetStatus(AName: string): string;
+function TAccountManager.GetStatus(AName: string): TAccountStatus;
 begin
-  Result := GetValueString(AName, 'status');
+  Result := TAccountStatus(GetValueInteger(AName, 'status'));
 end;
 
 function TAccountManager.GetValueStr(const RecIndex, FieldIndex: Integer
@@ -187,9 +189,9 @@ begin
   SetValueString(AName, 'cookies', encode(AValue));
 end;
 
-procedure TAccountManager.SetStatus(AName: string; AValue: string);
+procedure TAccountManager.SetStatus(AName: string; AValue: TAccountStatus);
 begin
-  SetValueString(AName, 'status', AValue);
+  SetValueInteger(AName, 'status', Integer(AValue));
 end;
 
 function TAccountManager.CreateDB: Boolean;
@@ -273,6 +275,18 @@ begin
   end;
 end;
 
+function TAccountManager.GetValueInteger(const AName, AField: string): Integer;
+begin
+  Result := 0;
+  if fquery.Active = False then Exit;
+  EnterCriticalsection(locklocate);
+  try
+    if fquery.Locate('aname', AName, []) then Result := fquery.FieldByName(AField).AsInteger;
+  finally
+    LeaveCriticalsection(locklocate);
+  end;
+end;
+
 procedure TAccountManager.SetValueStr(const RecIndex, FieldIndex: Integer;
   AValue: string);
 begin
@@ -305,8 +319,7 @@ begin
   end;
 end;
 
-procedure TAccountManager.SetValueInt(const RecIndex, FieldIndex: Integer;
-  AValue: Integer);
+procedure TAccountManager.SetValueInt(const RecIndex, FieldIndex, AValue: Integer);
 begin
   if fquery.Active = False then Exit;
   if (RecIndex > frecordcount) and (RecIndex < 0) then Exit;
@@ -345,6 +358,22 @@ begin
     if fquery.Locate('aname', AName, []) then begin
       fquery.Edit;
       fquery.FieldByName(AField).AsBoolean := AValue;
+      fquery.Post;
+    end;
+  finally
+    LeaveCriticalsection(locklocate);
+  end;
+end;
+
+procedure TAccountManager.SetValueInteger(const AName, AField: string;
+  AValue: Integer);
+begin
+  if fquery.Active = False then Exit;
+  EnterCriticalsection(locklocate);
+  try
+    if fquery.Locate('aname', AName, []) then begin
+      fquery.Edit;
+      fquery.FieldByName(AField).AsInteger := AValue;
       fquery.Post;
     end;
   finally
