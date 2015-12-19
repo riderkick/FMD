@@ -5,7 +5,7 @@ unit WebsiteModules;
 interface
 
 uses
-  Classes, SysUtils, uData, uDownloadsManager, RegExpr;
+  Classes, SysUtils, uData, uDownloadsManager, uBaseUnit, RegExpr;
 
 const
   MODULE_NOT_FOUND = -1;
@@ -37,8 +37,10 @@ type
   TOnDownloadImage = function(var DownloadThread: TDownloadThread;
     const URL, Path, Name, Prefix: String; Module: TModuleContainer): Boolean;
 
+  TOnLogin = function(var AHTTP: THTTPSendThread): Boolean;
+
   TModuleMethod = (MMGetDirectoryPageNumber, MMGetNameAndLink, MMGetInfo,
-    MMTaskStart, MMGetPageNumber, MMGetImageURL, MMDownloadImage);
+    MMTaskStart, MMGetPageNumber, MMGetImageURL, MMDownloadImage, MMLogin);
 
   { TModuleContainer }
 
@@ -67,6 +69,7 @@ type
     OnGetPageNumber: TOnGetPageNumber;
     OnGetImageURL: TOnGetImageURL;
     OnDownloadImage: TOnDownloadImage;
+    OnLogin: TOnLogin;
     constructor Create;
     destructor Destroy; override;
   public
@@ -140,9 +143,12 @@ type
       overload;
 
     function DownloadImage(var DownloadThread: TDownloadThread;
-      const URL, Path, Name, Prefix: String; ModuleId: Integer): Boolean;
+      const URL, Path, Name, Prefix: String; ModuleId: Integer): Boolean; overload;
     function DownloadImage(var DownloadThread: TDownloadThread;
-      const URL, Path, Name, Prefix, Website: String): Boolean;
+      const URL, Path, Name, Prefix, Website: String): Boolean; overload;
+
+    function Login(var AHTTP: THTTPSendThread; const ModuleId: Integer): Boolean; overload;
+    function Login(var AHTTP: THTTPSendThread; const Website: String): Boolean; overload;
 
     procedure LockModules;
     procedure UnlockModules;
@@ -308,7 +314,8 @@ begin
       MMGetInfo: Result := Assigned(OnGetInfo);
       MMGetPageNumber: Result := Assigned(OnGetPageNumber);
       MMGetImageURL: Result := Assigned(OnGetImageURL);
-      MMDownloadImage: Result := Assigned(OnDownloadImage)
+      MMDownloadImage: Result := Assigned(OnDownloadImage);
+      MMLogin: Result := Assigned(OnLogin);
       else
         Result := False;
     end;
@@ -452,6 +459,21 @@ function TWebsiteModules.DownloadImage(var DownloadThread: TDownloadThread;
 begin
   Result := DownloadImage(DownloadThread, URL, Path, Name, Prefix,
     LocateModule(Website));
+end;
+
+function TWebsiteModules.Login(var AHTTP: THTTPSendThread;
+  const ModuleId: Integer): Boolean;
+begin
+  Result := False;
+  if (ModuleId < 0) or (ModuleId >= FModuleList.Count) then Exit;
+  if Assigned(TModuleContainer(FModuleList[ModuleId]).OnLogin) then
+    Result := TModuleContainer(FModuleList[ModuleId]).OnLogin(AHTTP);
+end;
+
+function TWebsiteModules.Login(var AHTTP: THTTPSendThread; const Website: String
+  ): Boolean;
+begin
+  Result := Login(AHTTP, LocateModule(Website));
 end;
 
 procedure TWebsiteModules.LockModules;
