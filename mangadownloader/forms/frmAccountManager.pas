@@ -286,7 +286,6 @@ end;
 
 procedure TAccountManagerForm.FormShow(Sender: TObject);
 begin
-  LoadForm;
   RefreshList;
   RefreshWebsiteAvailable;
 end;
@@ -338,6 +337,7 @@ begin
         Websites.Add(Modules.Module[i].Website);
     Websites.Sorted := True;
   end;
+  LoadForm;
 end;
 
 procedure TAccountManagerForm.FormDestroy(Sender: TObject);
