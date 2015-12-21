@@ -20,139 +20,123 @@ const
 function GetDirectoryPageNumber(var MangaInfo: TMangaInformation;
   var Page: Integer; Module: TModuleContainer): Integer;
 var
-  Source: TStringList;
-  Query: TXQueryEngineHTML;
+  query: TXQueryEngineHTML;
   s: String;
 begin
   Page := 1;
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
   Result := NET_PROBLEM;
-  Source := TStringList.Create;
-  try
+  with MangaInfo.FHTTP do begin
     if Module.Website = 'MangaIndo' then s := dirURLmangaindo
     else if Module.Website = 'ReadHentaiManga' then s := dirURLreadhentaimanga
     else s := dirURL;
-    if GetPage(MangaInfo.FHTTP, TObject(Source), Module.RootURL + s, 3) then
-      if Source.Count > 0 then
-      begin
-        Result := NO_ERROR;
-        Query := TXQueryEngineHTML.Create(Source.Text);
-        try
-          s := Query.XPathString('//*[@class="pgg"]/li[last()]/a/@href');
-          s := ReplaceRegExpr('^.*\/(\d+)/.*$', s, '$1', True);
-          Page := StrToIntDef(s, 1);
-        finally
-          Query.Free;
-        end;
-      end
-      else
-        Result := INFORMATION_NOT_FOUND;
-  finally
-    Source.Free;
+    if GET(Module.RootURL + s) then begin
+      Result := NO_ERROR;
+      query := TXQueryEngineHTML.Create;
+      try
+        query.ParseHTML(StreamToString(Document));
+        s := Query.XPathString('//*[@class="pgg"]/li[last()]/a/@href');
+        s := ReplaceRegExpr('^.*\/(\d+)/.*$', s, '$1', True);
+        Page := StrToIntDef(s, 1);
+      finally
+        query.Free;
+      end;
+    end;
   end;
 end;
 
 function GetNameAndLink(var MangaInfo: TMangaInformation;
-  const Names, Links: TStringList; const URL: String; Module: TModuleContainer): Integer;
+  const Names, Links: TStringList; const AURL: String; Module: TModuleContainer): Integer;
 var
-  Source: TStringList;
-  Query: TXQueryEngineHTML;
+  query: TXQueryEngineHTML;
   v: IXQValue;
   s: String;
 begin
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
   Result := NET_PROBLEM;
-  Source := TStringList.Create;
-  try
+  with MangaInfo.FHTTP do begin
     if Module.Website = 'MangaIndo' then s := dirURLmangaindo
     else if Module.Website = 'ReadHentaiManga' then s := dirURLreadhentaimanga
     else s := dirURL;
-    if GetPage(MangaInfo.FHTTP, TObject(Source), Module.RootURL + s +
-      IncStr(URL) + '/', 3) then
-      if Source.Count > 0 then
-      begin
-        Result := NO_ERROR;
-        Query := TXQueryEngineHTML.Create(Source.Text);
-        try
-          if Module.Website = 'MangaIndo' then begin
-            for v in Query.XPath(
-                '//*[@id="sct_content"]//div[@class="node"]/a[1]/@href') do
-              Links.Add(v.toString);
-            for v in Query.XPath('//*[@id="sct_content"]//div[@class="node"]/div[1]') do
-              Names.Add(v.toString);
-          end
-          else if Module.Website = 'ReadHentaiManga' then begin
-            for v in Query.XPath('//*[@id="content"]//*[@id="center"]/a') do begin
-              Links.Add(v.toNode.getAttribute('href'));
-              Names.Add(v.toNode.getAttribute('title'));
-            end;
-          end
-          else begin
-            if (Module.Website = 'EyeOnManga') or
-              (Module.Website = 'MangaBoom') then
-              s := '//*[@id="sct_content"]//h2/a[1]'
-            else
-              s := '//*[@id="sct_content"]//div[@class="det"]/a[1]';
-            for v in Query.XPath(s) do begin
-              Links.Add(v.toNode.getAttribute('href'));
-              Names.Add(v.toString);
-            end;
+    if GET(Module.RootURL + s + IncStr(AURL) + '/') then begin
+      Result := NO_ERROR;
+      query := TXQueryEngineHTML.Create;
+      try
+        query.ParseHTML(StreamToString(Document));
+        if Module.Website = 'MangaIndo' then begin
+          for v in Query.XPath('//*[@id="sct_content"]//div[@class="node"]/a[1]/@href') do
+            Links.Add(v.toString);
+          for v in Query.XPath('//*[@id="sct_content"]//div[@class="node"]/div[1]') do
+            Names.Add(v.toString);
+        end
+        else if Module.Website = 'ReadHentaiManga' then begin
+          for v in Query.XPath('//*[@id="content"]//*[@id="center"]/a') do begin
+            Links.Add(v.toNode.getAttribute('href'));
+            Names.Add(v.toNode.getAttribute('title'));
           end;
-        finally
-          Query.Free;
+        end
+        else begin
+          if (Module.Website = 'EyeOnManga') or
+            (Module.Website = 'MangaBoom') then
+            s := '//*[@id="sct_content"]//h2/a[1]'
+          else
+            s := '//*[@id="sct_content"]//div[@class="det"]/a[1]';
+          for v in Query.XPath(s) do begin
+            Links.Add(v.toNode.getAttribute('href'));
+            Names.Add(v.toString);
+          end;
         end;
-      end
-      else
-        Result := INFORMATION_NOT_FOUND;
-  finally
-    Source.Free;
+      finally
+        query.Free;
+      end;
+    end;
   end;
 end;
 
-function GetInfo(var MangaInfo: TMangaInformation; const URL: String;
+function GetInfo(var MangaInfo: TMangaInformation; const AURL: String;
   const Reconnect: Integer; Module: TModuleContainer): Integer;
 var
-  Source: TStringList;
-  Query: TXQueryEngineHTML;
-  info: TMangaInfo;
+  query: TXQueryEngineHTML;
   v: IXQValue;
   s: String;
   i, pagecount: Integer;
 
   procedure scanchapters;
   begin
-    if Module.Website = 'MangaBoom' then begin
-      for v in Query.XPath('//ul[@class="lst"]//a[1]') do begin
-        info.chapterLinks.Add(v.toNode.getAttribute('href'));
-        info.chapterName.Add(v.toNode.Next.toString());
+    with MangaInfo.mangaInfo, query do begin
+      if Module.Website = 'MangaBoom' then begin
+        for v in XPath('//ul[@class="lst"]//a[1]') do begin
+          chapterLinks.Add(v.toNode.getAttribute('href'));
+          chapterName.Add(v.toNode.Next.toString());
+        end;
+      end
+      else if (Module.Website = 'EyeOnManga') or
+        (Module.Website = 'MangaIndo') then
+      begin
+        for v in XPath('//ul[@class="chp_lst"]//a[1]') do begin
+          chapterLinks.Add(v.toNode.getAttribute('href'));
+          chapterName.Add(v.toString);
+        end;
+      end
+      else begin
+        for v in XPath('//ul[@class="lst"]//a[1]/@href') do
+          chapterLinks.Add(v.toString);
+        for v in XPath('//ul[@class="lst"]//a[1]/b[1]') do
+          chapterName.Add(v.toString);
       end;
-    end
-    else if (Module.Website = 'EyeOnManga') or
-      (Module.Website = 'MangaIndo') then
-    begin
-      for v in Query.XPath('//ul[@class="chp_lst"]//a[1]') do begin
-        info.chapterLinks.Add(v.toNode.getAttribute('href'));
-        info.chapterName.Add(v.toString);
-      end;
-    end
-    else begin
-      for v in Query.XPath('//ul[@class="lst"]//a[1]/@href') do
-        info.chapterLinks.Add(v.toString);
-      for v in Query.XPath('//ul[@class="lst"]//a[1]/b[1]') do
-        info.chapterName.Add(v.toString);
     end;
   end;
 
   function getwpmangavalue(aname: String): String;
   begin
-    Result := Query.XPathString('(//*[@class="mng_ifo"]//p)[contains(.,"' +
+    Result := query.XPathString('(//*[@class="mng_ifo"]//p)[contains(.,"' +
       aname + '")]');
     if Result <> '' then Result := TrimChar(SeparateRight(Result, aname), [':', ' ']);
   end;
 
   procedure scaninfo;
   begin
-    with info, Query do begin
+    with MangaInfo.mangaInfo, query do begin
       if Module.Website = 'EyeOnManga' then
         summary := XPathString('//*[@class="wpm_pag mng_det"]/p[1]')
       else
@@ -175,7 +159,7 @@ var
 
   procedure scaninfomangaindo;
   begin
-    with info, Query do begin
+    with MangaInfo.mangaInfo, query do begin
       summary := XPathString('//*[@class="wpm_pag mng_det"]/p[1]');
       authors := getwpmangavalue('Penulis');
       artists := getwpmangavalue('Seniman');
@@ -194,127 +178,90 @@ var
 begin
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
   Result := NET_PROBLEM;
-  info := MangaInfo.mangaInfo;
-  info.website := Module.Website;
-  info.url := AppendURLDelim(FillHost(Module.RootURL, URL));
-  Source := TStringList.Create;
-  try
-    if GetPage(MangaInfo.FHTTP, TObject(Source), info.url, Reconnect) then
-      if Source.Count > 0 then
-      begin
-        Result := NO_ERROR;
-        Query := TXQueryEngineHTML.Create(Source.Text);
-        try
-          info.coverLink := Query.XPathString('//img[starts-with(@class,"cvr")]/@src');
-          info.title := Query.XPathString('//*[@itemprop="itemreviewed"]');
-          if Module.Website = 'MangaIndo' then scaninfomangaindo
-          else scaninfo;
-          s := Query.XPathString('//*[@class="pgg"]/li[last()]/a/@href');
-          if s <> '' then begin
-            s := ReplaceRegExpr('^.*\/(\d+)/.*$', s, '$1', True);
-            pagecount := StrToIntDef(s, 1);
-            if pagecount > 1 then
-              for i := 2 to pagecount do
-                if GetPage(MangaInfo.FHTTP, TObject(Source),
-                  info.url + 'chapter-list/' + IntToStr(i) + '/',
-                  Reconnect) then
-                begin
-                  Query.ParseHTML(Source.Text);
-                  scanchapters;
-                end;
-          end;
-          if Module.Website <> 'EyeOnManga' then
-            InvertStrings([info.chapterLinks, info.chapterName]);
-          { add missing chapter number }
-          //if (Module.Website = 'EyeOnManga') or
-          //  (Module.Website = 'MangaIndo') and
-          //  (info.chapterName.Count > 0) then
-          //  for i := 0 to info.chapterName.Count - 1 do
-          //    info.chapterName[i] := 'Ch.' + IncStr(i) + ' ' + info.chapterName[i];
-        finally
-          Query.Free;
+  with MangaInfo.FHTTP, MangaInfo.mangaInfo do begin
+    website := Module.Website;
+    url := AppendURLDelim(FillHost(Module.RootURL, AURL));
+    if GET(MangaInfo.mangaInfo.url) then begin
+      Result := NO_ERROR;
+      query := TXQueryEngineHTML.Create;
+      try
+        query.ParseHTML(StreamToString(MangaInfo.FHTTP.Document));
+        coverLink := query.XPathString('//img[starts-with(@class,"cvr")]/@src');
+        title := query.XPathString('//*[@itemprop="itemreviewed"]');
+        if Module.Website = 'MangaIndo' then scaninfomangaindo
+        else scaninfo;
+        s := query.XPathString('//*[@class="pgg"]/li[last()]/a/@href');
+        if s <> '' then begin
+          s := ReplaceRegExpr('^.*\/(\d+)/.*$', s, '$1', True);
+          pagecount := StrToIntDef(s, 1);
+          if pagecount > 1 then
+            for i := 2 to pagecount do
+              if GET(url + 'chapter-list/' + IntToStr(i) + '/') then begin
+                query.ParseHTML(StreamToString(Document));
+                scanchapters;
+              end;
         end;
-      end
-      else
-        Result := INFORMATION_NOT_FOUND;
-  finally
-    Source.Free;
-  end;
-end;
-
-function GetPageNumber(var DownloadThread: TDownloadThread; const URL: String;
-  Module: TModuleContainer): Boolean;
-var
-  Source: TStringList;
-  Query: TXQueryEngineHTML;
-  Container: TTaskContainer;
-begin
-  Result := False;
-  if DownloadThread = nil then Exit;
-  Container := DownloadThread.manager.container;
-  with Container do begin
-    PageLinks.Clear;
-    PageContainerLinks.Clear;
-    PageNumber := 0;
-    Source := TStringList.Create;
-    try
-      if GetPage(DownloadThread.FHTTP, TObject(Source),
-        AppendURLDelim(FillHost(Module.RootURL, URL)) + '1',
-        Manager.retryConnect) then
-        if Source.Count > 0 then
-        begin
-          Result := True;
-          Query := TXQueryEngineHTML.Create(Source.Text);
-          try
-            PageNumber :=
-              Query.XPath('(//select[@class="cbo_wpm_pag"])[1]/option').Count;
-          finally
-            Query.Free;
-          end;
-        end;
-    finally
-      Source.Free;
+        if Module.Website <> 'EyeOnManga' then
+          InvertStrings([chapterLinks, chapterName]);
+        { add missing chapter number }
+        //if (Module.Website = 'EyeOnManga') or
+        //  (Module.Website = 'MangaIndo') and
+        //  (chapterName.Count > 0) then
+        //  for i := 0 to chapterName.Count - 1 do
+        //    chapterName[i] := 'Ch.' + IncStr(i) + ' ' + chapterName[i];
+      finally
+        query.Free;
+      end;
     end;
   end;
 end;
 
-function GetImageURL(var DownloadThread: TDownloadThread; const URL: String;
+function GetPageNumber(var DownloadThread: TDownloadThread; const AURL: String;
   Module: TModuleContainer): Boolean;
 var
-  Source: TStringList;
-  Query: TXQueryEngineHTML;
-  Container: TTaskContainer;
+  query: TXQueryEngineHTML;
+begin
+  Result := False;
+  if DownloadThread = nil then Exit;
+  with DownloadThread.FHTTP, DownloadThread.manager.container do begin
+    PageLinks.Clear;
+    PageContainerLinks.Clear;
+    PageNumber := 0;
+    if GET(AppendURLDelim(FillHost(Module.RootURL, AURL)) + '1') then begin
+      Result := True;
+      query := TXQueryEngineHTML.Create;
+      try
+        query.ParseHTML(StreamToString(Document));
+        PageNumber := query.XPath('(//select[@class="cbo_wpm_pag"])[1]/option').Count;
+      finally
+        query.Free;
+      end;
+    end;
+  end;
+end;
+
+function GetImageURL(var DownloadThread: TDownloadThread; const AURL: String;
+  Module: TModuleContainer): Boolean;
+var
+  query: TXQueryEngineHTML;
   s: String;
 begin
   Result := False;
   if DownloadThread = nil then Exit;
-  Container := DownloadThread.manager.container;
-  with Container do begin
-    Source := TStringList.Create;
-    try
-      if DownloadThread.GetPage(TObject(Source),
-        AppendURLDelim(FillHost(Module.RootURL, URL)) +
-        IncStr(DownloadThread.workCounter) + '/',
-        Manager.retryConnect) then
-      begin
-        ParseHTML(Source.Text, Source);
-        if Source.Count > 0 then
-        begin
-          Result := True;
-          Query := TXQueryEngineHTML.Create(Source.Text);
-          try
-            if Module.Website = 'ReadHentaiManga' then
-              s := HTMLDecode(Query.XPathString('//img[@id="main_img"]/@src'))
-            else
-              s := Query.XPathString('//*[@class="wpm_pag mng_rdr"]//img/@src');
-            Container.PageLinks[DownloadThread.WorkCounter] := s;
-          finally
-            Query.Free;
-          end;
-        end;
+  with DownloadThread.FHTTP, DownloadThread.manager.container do begin
+    if GET(AppendURLDelim(FillHost(Module.RootURL, AURL)) + IncStr(DownloadThread.workCounter) + '/') then begin
+      Result := True;
+      query := TXQueryEngineHTML.Create;
+      try
+        query.ParseHTML(StreamToString(Document));
+        if Module.Website = 'ReadHentaiManga' then
+          s := HTMLDecode(query.XPathString('//img[@id="main_img"]/@src'))
+        else
+          s := query.XPathString('//*[@class="wpm_pag mng_rdr"]//img/@src');
+        PageLinks[DownloadThread.WorkCounter] := s;
+      finally
+        query.Free;
       end;
-    finally
-      Source.Free;
     end;
   end;
 end;
