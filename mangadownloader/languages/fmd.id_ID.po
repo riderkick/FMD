@@ -14,27 +14,27 @@ msgstr ""
 
 #: frmaccountmanager.rs_accountdeleteconfirmation
 msgid "Are you sure you want to delete this account?"
-msgstr ""
+msgstr "Apakah anda yakin ingin menghapus akun ini?"
 
 #: frmaccountmanager.rs_checking
 msgid "Checking"
-msgstr ""
+msgstr "Memerika"
 
 #: frmaccountmanager.rs_invalid
 msgid "Invalid"
-msgstr ""
+msgstr "Tidak valid"
 
 #: frmaccountmanager.rs_unknown
 msgid "Unknown"
-msgstr ""
+msgstr "Tidak diketahui"
 
 #: frmaccountmanager.rs_valid
 msgid "OK"
-msgstr ""
+msgstr "OK"
 
 #: frmaccountset.rs_cantbeempty
 msgid "Username or password can't be empty!"
-msgstr ""
+msgstr "Nama user atau kata kunci tidak boleh kosong!"
 
 #: frmimportfavorites.rs_importcompleted
 msgid "Import completed."
@@ -91,10 +91,6 @@ msgid "Are you sure you want to delete the task(s)?"
 msgstr "Apakah Anda yakin ingin menghapus unduhan ini?"
 
 #: frmmain.rs_dlgtitleexistindllist
-#, fuzzy
-#| msgid ""
-#| "This title are already in download list.\n"
-#| "Do you want to download it anyway?\n"
 msgid ""
 "This title are already in download list.\n"
 "Do you want to download it anyway?\n"
@@ -123,10 +119,6 @@ msgid "URL not supported!"
 msgstr "URL tidak didukung!"
 
 #: frmmain.rs_droptargetmodeitems
-#, fuzzy
-#| msgid ""
-#| "Download all\n"
-#| "Add to favorites\n"
 msgid ""
 "Download all\n"
 "Add to favorites\n"
@@ -135,11 +127,6 @@ msgstr ""
 "Tambahkan ke kesukaan\n"
 
 #: frmmain.rs_filterstatusitems
-#, fuzzy
-#| msgid ""
-#| "Completed\n"
-#| "Ongoing\n"
-#| "<none>\n"
 msgid ""
 "Completed\n"
 "Ongoing\n"
@@ -154,10 +141,6 @@ msgid "Free Manga Downloader already running!"
 msgstr "Free Manga Downloader sudah berjalan!"
 
 #: frmmain.rs_hintfavoriteproblem
-#, fuzzy
-#| msgid ""
-#| "There is a problem with this data!\n"
-#| "Removing and re-adding this data may fix the problem.\n"
 msgid ""
 "There is a problem with this data!\n"
 "Removing and re-adding this data may fix the problem.\n"
@@ -211,12 +194,6 @@ msgid "Auto check for new chapter every %d minutes"
 msgstr "Otomatis periksa bab baru setiap %d menit"
 
 #: frmmain.rs_lbloptionexternalparamshint
-#, fuzzy
-#| msgid ""
-#| "%s : Path to the manga\n"
-#| "%s : Chapter filename\n"
-#| "\n"
-#| "Example : \"%s%s\"\n"
 msgid ""
 "%s : Path to the manga\n"
 "%s : Chapter filename\n"
@@ -254,12 +231,6 @@ msgid "One week"
 msgstr "Satu minggu"
 
 #: frmmain.rs_optionfmddoitems
-#, fuzzy
-#| msgid ""
-#| "Do nothing\n"
-#| "Exit FMD\n"
-#| "Shutdown\n"
-#| "Hibernate\n"
 msgid ""
 "Do nothing\n"
 "Exit FMD\n"
@@ -306,81 +277,66 @@ msgstr "Komputer akan dimatikan dalam %d detik"
 
 #: taccountmanagerform.btadd.caption
 msgid "Add"
-msgstr ""
+msgstr "Tambah"
 
 #: taccountmanagerform.btdelete.caption
 msgctxt "taccountmanagerform.btdelete.caption"
 msgid "Delete"
-msgstr ""
+msgstr "Hapus"
 
 #: taccountmanagerform.btedit.caption
 msgid "Edit"
-msgstr ""
+msgstr "Ubah"
 
 #: taccountmanagerform.btrefresh.caption
 msgid "Refresh"
-msgstr ""
+msgstr "Segarkan"
 
 #: taccountmanagerform.vtaccountlist.header.columns[1].text
-#, fuzzy
-#| msgid "Username"
 msgctxt "taccountmanagerform.vtaccountlist.header.columns[1].text"
 msgid "Website"
-msgstr "Nama user"
+msgstr "Situs web"
 
 #: taccountmanagerform.vtaccountlist.header.columns[2].text
-#, fuzzy
-#| msgid "Status"
 msgctxt "taccountmanagerform.vtaccountlist.header.columns[2].text"
 msgid "Username"
-msgstr "Status"
+msgstr "Nama user"
 
 #: taccountmanagerform.vtaccountlist.header.columns[3].text
-#, fuzzy
-#| msgid "Status"
 msgctxt "taccountmanagerform.vtaccountlist.header.columns[3].text"
 msgid "Status"
 msgstr "Status"
 
 #: taccountsetform.btcancel.caption
-#, fuzzy
 msgctxt "taccountsetform.btcancel.caption"
 msgid "Cancel"
 msgstr "Batal"
 
 #: taccountsetform.btok.caption
 msgid "Ok"
-msgstr ""
+msgstr "Akun"
 
 #: taccountsetform.edpassword.texthint
-#, fuzzy
 msgctxt "taccountsetform.edpassword.texthint"
 msgid "Password"
 msgstr "Kata kunci"
 
 #: taccountsetform.edusername.texthint
-#, fuzzy
-#| msgid "Status"
 msgctxt "taccountsetform.edusername.texthint"
 msgid "Username"
-msgstr "Status"
-
-#: taccountsetform.label1.caption
-#, fuzzy
-#| msgid "Username"
-msgctxt "taccountsetform.label1.caption"
-msgid "Website"
 msgstr "Nama user"
 
+#: taccountsetform.label1.caption
+msgctxt "taccountsetform.label1.caption"
+msgid "Website"
+msgstr "Situs web"
+
 #: taccountsetform.label2.caption
-#, fuzzy
-#| msgid "Status"
 msgctxt "taccountsetform.label2.caption"
 msgid "Username"
-msgstr "Status"
+msgstr "Nama user"
 
 #: taccountsetform.label3.caption
-#, fuzzy
 msgctxt "taccountsetform.label3.caption"
 msgid "Password"
 msgstr "Kata kunci"
@@ -1462,7 +1418,7 @@ msgstr "Tentang FMD"
 
 #: tmainform.tsaccounts.caption
 msgid "Accounts"
-msgstr ""
+msgstr "Akun"
 
 #: tmainform.tschangelogtext.caption
 msgid "Changelog"
@@ -1801,4 +1757,3 @@ msgstr "Sinkronisasi data"
 #: uupdatethread.rs_updatinglist
 msgid "Updating list"
 msgstr "Memperbarui daftar"
-
