@@ -5,7 +5,8 @@ unit EHentai;
 interface
 
 uses
-  Classes, SysUtils, WebsiteModules, uData, uBaseUnit, uDownloadsManager;
+  Classes, SysUtils, WebsiteModules, uData, uBaseUnit, uDownloadsManager,
+  accountmanagerdb;
 
 implementation
 
@@ -13,6 +14,73 @@ uses RegExpr;
 
 const
   dirURL = 'f_doujinshi=on&f_manga=on&f_western=on&f_apply=Apply+Filter';
+  exhentaiurllogin = 'https://forums.e-hentai.org/index.php?act=Login&CODE=01';
+
+var
+  onlogin: Boolean = False;
+  locklogin: TRTLCriticalSection;
+
+function ExHentaiLogin(var AHTTP: THTTPSendThread): Boolean;
+var
+  s: String;
+const
+  acc = 'ExHentai';
+begin
+  Result := False;
+  if AHTTP = nil then Exit;
+  if Account.Enabled[acc] = False then Exit;
+  if Account.Username[acc] = '' then Exit;
+
+  if TryEnterCriticalsection(locklogin) > 0 then
+    with AHTTP do begin
+      onlogin := True;
+      Account.Status[acc] := asChecking;
+      Reset;
+      Cookies.Clear;
+      s := 'returntype=8&CookieDate=1&b=d&bt=pone&UserName='
+            +Account.Username[acc]+
+           '&PassWord='
+            +Account.Password[acc]+
+           '&ipb_login_submit=Login%21';
+      if POST(exhentaiurllogin, s) then begin
+        if ResultCode = 200 then begin
+          Result := Cookies.Values['ipb_pass_hash'] <> '';
+          if Result then begin
+            Account.Cookies[acc] := GetCookies;
+            Account.Status[acc] := asValid;
+          end
+          else Account.Status[acc] := asInvalid;
+          Account.Save;
+        end;
+      end;
+      onlogin := False;
+      if Account.Status[acc] = asChecking then
+        Account.Status[acc] := asUnknown;
+      LeaveCriticalsection(locklogin);
+    end
+  else
+  begin
+    while onlogin do Sleep(1000);
+    if Result then AHTTP.Cookies.Text := Account.Cookies[acc];
+  end;
+end;
+
+function GETWithLogin(var AHTTP: THTTPSendThread; const AURL, AWebsite: String): Boolean;
+begin
+  Result := False;
+  if AWebsite = 'ExHentai' then begin
+    AHTTP.FollowRedirection := False;
+    AHTTP.Cookies.Text := Account.Cookies[AWebsite];
+    Result := AHTTP.GET(AURL);
+    if Result and (AHTTP.ResultCode > 300) then begin
+      Result := ExHentaiLogin(AHTTP);
+      if Result then
+        Result := AHTTP.GET(AURL);
+    end;
+  end
+  else
+    Result := AHTTP.GET(AURL);
+end;
 
 function GetDirectoryPageNumber(var MangaInfo: TMangaInformation;
   var Page: Integer; Module: TModuleContainer): Integer;
@@ -22,7 +90,7 @@ begin
   Result := NET_PROBLEM;
   Page := 1;
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
-  if MangaInfo.FHTTP.GET(Module.RootURL + '/?' + dirURL) then begin
+  if GETWithLogin(MangaInfo.FHTTP, Module.RootURL + '/?' + dirURL, Module.Website) then begin
     Result := NO_ERROR;
     query := TXQueryEngineHTML.Create;
     try
@@ -45,7 +113,7 @@ begin
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
   if AURL = '0' then rurl := Module.RootURL + '/?' + dirURL
   else rurl := Module.RootURL + '/?page=' + IncStr(AURL) + '&' + dirURL;
-  if MangaInfo.FHTTP.GET(rurl) then begin
+  if GETWithLogin(MangaInfo.FHTTP, rurl, Module.Website) then begin
     Result := NO_ERROR;
     query := TXQueryEngineHTML.Create;
     try
@@ -75,7 +143,7 @@ var
     // check content warning
     if Pos('Content Warning', query.XPathString('//div/h1')) > 0 then
     begin
-      getOK := MangaInfo.FHTTP.GET(MangaInfo.mangaInfo.url + '?nw=session');
+      getOK := GETWithLogin(MangaInfo.FHTTP, MangaInfo.mangaInfo.url + '?nw=session', Module.Website);
       if getOK then
         query.ParseHTML(StreamToString(MangaInfo.FHTTP.Document));
     end;
@@ -122,11 +190,10 @@ var
 begin
   Result := NET_PROBLEM;
   if MangaInfo = nil then Exit;
-  with MangaInfo.FHTTP, MangaInfo.mangaInfo do begin
+  with MangaInfo.mangaInfo do begin
     website := Module.Website;
     url := FillHost(Module.RootURL, AURL);
-    if GET(url) then
-    begin
+    if GETWithLogin(MangaInfo.FHTTP, url, Module.Website) then begin
       Result := NO_ERROR;
       // if there is only 1 line, it's banned message!
       //if Source.Count = 1 then
@@ -134,7 +201,7 @@ begin
       //else
       query := TXQueryEngineHTML.Create;
       try
-        query.ParseHTML(StreamToString(Document));
+        query.ParseHTML(StreamToString(MangaInfo.FHTTP.Document));
         ScanParse;
       finally
         query.Free;
@@ -169,7 +236,7 @@ var
     //check content warning
     if Pos('Content Warning', query.XPathString('//div/h1')) > 0 then
     begin
-      getOK := DownloadThread.FHTTP.GET(rurl + '?nw=session');
+      getOK := GETWithLogin(DownloadThread.FHTTP, rurl + '?nw=session', Module.Website);
       if getOK then
         query.ParseHTML(StreamToString(DownloadThread.FHTTP.Document));
     end;
@@ -181,7 +248,7 @@ var
         'table.ptt>tbody>tr>td:nth-last-child(2)>a'), 1) - 1;
       if p > 0 then
         for i := 1 to p do
-          if DownloadThread.FHTTP.GET(rurl + '?p=' + IntToStr(i)) then
+          if GETWithLogin(DownloadThread.FHTTP, rurl + '?p' + IntToStr(i), Module.Website) then
           begin
             query.ParseHTML(StreamToString(DownloadThread.FHTTP.Document));
             GetImageLink;
@@ -197,7 +264,7 @@ begin
     PageContainerLinks.Clear;
     PageNumber := 0;
     rurl := AppendURLDelim(FillHost(Module.RootURL, AURL));
-    if GET(rurl) then begin
+    if GETWithLogin(DownloadThread.FHTTP, rurl, Module.Website) then begin
       Result := True;
       query := TXQueryEngineHTML.Create;
       try
@@ -264,7 +331,7 @@ var
           else iurl := FillHost(Module.RootURL, AURL);
           if nl <> '' then begin
             iurl := iurl + '?nl=' + nl;
-            if not DownloadThread.FHTTP.GET(iurl) then Break;
+            if not GETWithLogin(DownloadThread.FHTTP, iurl, Module.Website) then Break;
           end else Break;
           if rcount >= reconnect then Break
           else Inc(rcount);
@@ -280,7 +347,7 @@ begin
   if DownloadThread = nil then Exit;
   reconnect := DownloadThread.FHTTP.RetryCount;
   iurl := FillHost(Module.RootURL, AURL);
-  if DownloadThread.FHTTP.GET(iurl) then begin
+  if GETWithLogin(DownloadThread.FHTTP, iurl, Module.Website) then begin
     query := TXQueryEngineHTML.Create;
     try
       query.ParseHTML(StreamToString(DownloadThread.FHTTP.Document));
@@ -308,9 +375,30 @@ begin
     OnGetPageNumber := @GetPageNumber;
     OnDownloadImage := @DownloadImage;
   end;
+  with AddModule do
+  begin
+    Website := 'ExHentai';
+    RootURL := 'http://exhentai.org';
+    MaxTaskLimit := 1;
+    MaxConnectionLimit := 4;
+    SortedList := True;
+    InformationAvailable := True;
+    DynamicPageLink := True;
+    OnGetDirectoryPageNumber := @GetDirectoryPageNumber;
+    OnGetNameAndLink := @GetNameAndLink;
+    OnGetInfo := @GetInfo;
+    OnGetPageNumber := @GetPageNumber;
+    OnDownloadImage := @DownloadImage;
+    AccountSupport := True;
+    OnLogin := @ExHentaiLogin;
+  end;
 end;
 
 initialization
+  InitCriticalSection(locklogin);
   RegisterModule;
+
+finalization
+  DoneCriticalsection(locklogin);
 
 end.
