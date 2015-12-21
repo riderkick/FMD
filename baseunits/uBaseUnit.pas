@@ -856,6 +856,7 @@ function ConvertCharsetToUTF8(S: String): String; overload;
 procedure ConvertCharsetToUTF8(S: TStrings); overload;
 
 // StringUtils
+function StreamToString(const M: TMemoryStream): string; inline;
 function GetRightValue(const name, s: string): string;
 function QuotedStrd(const S: string): string; overload; inline;
 function QuotedStrd(const S: Integer): string; overload; inline;
@@ -1386,7 +1387,7 @@ end;
 function FillMangaSiteHost(const Website, URL: String): String;
 begin
   Result := URL;
-  if Website = '' then Exit;
+  if Website = '' then Exit(URL);
   Result := FillMangaSiteHost(GetMangaSiteID(Website), URL);
 end;
 
@@ -1643,6 +1644,11 @@ begin
   end;
   if cs = '' then cs := GuessEncoding(S.Text);
   if cs <> '' then S.Text := ConvertEncoding(S.Text, cs, 'utf8');
+end;
+
+function StreamToString(const M: TMemoryStream): string;
+begin
+  SetString(Result, PChar(M.Memory), M.Size div SizeOf(Char));
 end;
 
 function GetRightValue(const name, s: string): string;
