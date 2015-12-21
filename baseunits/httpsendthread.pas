@@ -96,7 +96,7 @@ begin
   HTTPHeader.Assign(Headers);
   try
     // first request
-    while (not HTTPMethod(Method, rurl)) or (ResultCode > 500) do begin
+    while (not HTTPMethod(Method, rurl)) or (ResultCode = 500) do begin
       if CheckTerminate then Exit;
       if (fretrycount > -1) and (fretrycount <= counter) then Exit;
       Inc(Counter);
@@ -135,38 +135,34 @@ begin
       end;
 
     // response
-    if ResultCode < 500 then begin
-      // decompress data
-      s := LowerCase(Headers.Values['Content-Encoding']);
-      if (Pos('gzip', s) <> 0) or (Pos('deflate', s) <> 0) then
-      begin
-        mstream := TMemoryStream.Create;
-        try
-          ZUncompressStream(Document, mstream);
-          Document.Clear;
-          Document.LoadFromStream(mstream);
-        except
-        end;
-        mstream.Free;
+    // decompress data
+    s := LowerCase(Headers.Values['Content-Encoding']);
+    if (Pos('gzip', s) <> 0) or (Pos('deflate', s) <> 0) then
+    begin
+      mstream := TMemoryStream.Create;
+      try
+        ZUncompressStream(Document, mstream);
+        Document.Clear;
+        Document.LoadFromStream(mstream);
+      except
       end;
-      if Assigned(Response) then
-        try
-          if Response is TStringList then
-            TStringList(Response).LoadFromStream(Document)
-          else
-          if Response is TPicture then
-            TPicture(Response).LoadFromStream(Document)
-          else
-          if Response is TStream then
-            Document.SaveToStream(TStream(Response));
-        except
-          on E: Exception do
-            WriteLog_E('HTTPRequest.WriteOutput.Error!', E);
-        end;
-      Result := True;
-    end
-    else
-      Result := False;
+      mstream.Free;
+    end;
+    if Assigned(Response) then
+      try
+        if Response is TStringList then
+          TStringList(Response).LoadFromStream(Document)
+        else
+        if Response is TPicture then
+          TPicture(Response).LoadFromStream(Document)
+        else
+        if Response is TStream then
+          Document.SaveToStream(TStream(Response));
+      except
+        on E: Exception do
+          WriteLog_E('HTTPRequest.WriteOutput.Error!', E);
+      end;
+    Result := ResultCode < 500;
   finally
     HTTPHeader.Free;
   end;
