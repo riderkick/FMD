@@ -14,14 +14,14 @@ type
 
   THTTPSendThread = class(THTTPSend)
   private
-    FOwner: TFMDThread;
+    fowner: TFMDThread;
+    fretrycount: Integer;
+    fgzip: Boolean;
+    ffollowredirection: Boolean;
     procedure SetTimeout(AValue: integer);
     procedure OnOwnerTerminate(Sender: TObject);
   public
-    RetryCount: Integer;
-    GZip: Boolean;
     constructor Create(AOwner: TFMDThread = nil);
-    property Timeout: integer read FTimeout write SetTimeout;
     function HTTPRequest(const Method, URL: String; Response: TObject = nil): Boolean;
     function GET(const URL: String; Response: TObject = nil): Boolean;
     function POST(const URL: String; URLData: String = ''; Response: TObject = nil): Boolean;
@@ -30,6 +30,10 @@ type
     procedure SetProxy(const ProxyType, Host, Port, User, Pass: String);
     procedure SetNoProxy;
     procedure Reset;
+    property Timeout: integer read FTimeout write SetTimeout;
+    property RetryCount: Integer read fretrycount write fretrycount;
+    property GZip: Boolean read fgzip write fgzip;
+    property FollowRedirection: Boolean read ffollowredirection write ffollowredirection;
   end;
 
 implementation
@@ -58,15 +62,16 @@ begin
   Protocol := '1.1';
   Headers.NameValueSeparator := ':';
   Cookies.NameValueSeparator := '=';
-  GZip := True;
-  RetryCount := 0;
+  fgzip := True;
+  fretrycount := 0;
+  ffollowredirection := True;
   SetTimeout(15000);
+  Reset;
   if Assigned(AOwner) then
   begin
-    FOwner := AOwner;
-    FOwner.OnCustomTerminate := @OnOwnerTerminate;
+    fowner := AOwner;
+    fowner.OnCustomTerminate := @OnOwnerTerminate;
   end;
-  Reset;
 end;
 
 function THTTPSendThread.HTTPRequest(const Method, URL: String;
@@ -93,43 +98,44 @@ begin
     // first request
     while (not HTTPMethod(Method, rurl)) or (ResultCode > 500) do begin
       if CheckTerminate then Exit;
-      if (RetryCount > -1) and (RetryCount <= counter) then Exit;
+      if (fretrycount > -1) and (fretrycount <= counter) then Exit;
       Inc(Counter);
       Headers.Assign(HTTPHeader);
     end;
 
-    // redirection
-    while (ResultCode > 300) and (ResultCode < 400) do begin
-      if CheckTerminate then Exit;
-      HTTPHeader.Values['Referer'] := ' ' + rurl;
-      s := Trim(Headers.Values['Location']);
-      if s <> '' then begin
-        with TRegExpr.Create do
-          try
-            Expression := '(?ig)^(\w+://)?([^/]*\.\w+)?(\:\d+)?(/?.*)$';
-            if Replace(s, '$1', True) = '' then begin
-              if s[1] <> '/' then s := '/' + s;
-              rurl := Replace(rurl, '$1$2$3', True) + s;
-            end else rurl := s;
-          finally
-            Free;
-          end;
-      end;
+    // redirection      '
+    if ffollowredirection then
+      while (ResultCode > 300) and (ResultCode < 400) do begin
+        if CheckTerminate then Exit;
+        HTTPHeader.Values['Referer'] := ' ' + rurl;
+        s := Trim(Headers.Values['Location']);
+        if s <> '' then begin
+          with TRegExpr.Create do
+            try
+              Expression := '(?ig)^(\w+://)?([^/]*\.\w+)?(\:\d+)?(/?.*)$';
+              if Replace(s, '$1', True) = '' then begin
+                if s[1] <> '/' then s := '/' + s;
+                rurl := Replace(rurl, '$1$2$3', True) + s;
+              end else rurl := s;
+            finally
+              Free;
+            end;
+        end;
 
-      Clear;
-      Headers.Assign(HTTPHeader);
-      counter := 0;
-      while (not HTTPMethod('GET', rurl)) or (ResultCode > 500) do begin
-        if checkTerminate then Exit;
-        if (RetryCount > -1) and (RetryCount <= counter) then Exit;
-        Inc(counter);
         Clear;
         Headers.Assign(HTTPHeader);
+        counter := 0;
+        while (not HTTPMethod('GET', rurl)) or (ResultCode > 500) do begin
+          if checkTerminate then Exit;
+          if (fretrycount > -1) and (fretrycount <= counter) then Exit;
+          Inc(counter);
+          Clear;
+          Headers.Assign(HTTPHeader);
+        end;
       end;
-    end;
 
     // response
-    if ResultCode <> 404 then begin
+    if ResultCode < 500 then begin
       // decompress data
       s := LowerCase(Headers.Values['Content-Encoding']);
       if (Pos('gzip', s) <> 0) or (Pos('deflate', s) <> 0) then
@@ -259,7 +265,7 @@ begin
   Headers.Values['Accept'] := ' text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8';
   Headers.Values['Accept-Charset'] := ' utf8';
   Headers.Values['Accept-Language'] := ' en-US,en;q=0.8';
-  if GZip then Headers.Values['Accept-Encoding'] := ' gzip, deflate';
+  if fgzip then Headers.Values['Accept-Encoding'] := ' gzip, deflate';
 end;
 
 end.
