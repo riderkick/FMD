@@ -1254,49 +1254,49 @@ function SitesWithSortedList(const website : String) : Boolean;
 var
   i: Integer = -1;
 begin
+  Result := False;
   if Modules.ModuleAvailable(website, i) then
   begin
     Result := Modules.Module[i].SortedList;
     Exit;
   end;
-  if not Result then
-    Result := SitesMemberOf(website, [
-      FAKKU_ID,
-      PURURIN_ID,
-      NINEMANGA_ID,
-      NINEMANGA_ES_ID,
-      NINEMANGA_CN_ID,
-      NINEMANGA_RU_ID,
-      NINEMANGA_DE_ID,
-      NINEMANGA_IT_ID,
-      NINEMANGA_BR_ID,
-      MANGACOW_ID,
-      ONEMANGA_ID,
-      MYREADINGMANGAINFO_ID,
-      NHENTAI_ID,
-      MANGA2U_ID,
-      PORNCOMIX_ID,
-      XXCOMICS_ID,
-      XXCOMICSMT_ID,
-      XXCOMICS3D_ID,
-      PORNCOMIXRE_ID,
-      PORNCOMIXIC_ID,
-      PORNXXXCOMICS_ID,
-      MANGAPARK_ID,
-      SENMANGA_ID
-      ]);
+  Result := SitesMemberOf(website, [
+    FAKKU_ID,
+    PURURIN_ID,
+    NINEMANGA_ID,
+    NINEMANGA_ES_ID,
+    NINEMANGA_CN_ID,
+    NINEMANGA_RU_ID,
+    NINEMANGA_DE_ID,
+    NINEMANGA_IT_ID,
+    NINEMANGA_BR_ID,
+    MANGACOW_ID,
+    ONEMANGA_ID,
+    MYREADINGMANGAINFO_ID,
+    NHENTAI_ID,
+    MANGA2U_ID,
+    PORNCOMIX_ID,
+    XXCOMICS_ID,
+    XXCOMICSMT_ID,
+    XXCOMICS3D_ID,
+    PORNCOMIXRE_ID,
+    PORNCOMIXIC_ID,
+    PORNXXXCOMICS_ID,
+    MANGAPARK_ID,
+    SENMANGA_ID
+    ]);
 end;
 
 function SitesWithoutFavorites(const website : String) : Boolean;
 var
   i: Integer = -1;
 begin
+  Result := False;
   if Modules.ModuleAvailable(website, i) then
   begin
     Result := not Modules.Module[i].FavoriteAvailable;
     Exit;
   end;
-  Result := False;
   Result := SitesMemberOf(website, [
     FAKKU_ID,
     PURURIN_ID,
@@ -1316,12 +1316,12 @@ function SitesWithoutInformation(const website: String): Boolean;
 var
   i: Integer = -1;
 begin
+  Result := False;
   if Modules.ModuleAvailable(website, i) then
   begin
     Result := not Modules.Module[i].InformationAvailable;
     Exit;
   end;
-  Result := False;
   Result := SitesMemberOf(website, [
     MANGASPROJECT_ID,
     MANGAVADISI_ID,
@@ -1385,7 +1385,8 @@ end;
 
 function FillMangaSiteHost(const Website, URL: String): String;
 begin
-  if Website = '' then Exit(URL);
+  Result := URL;
+  if Website = '' then Exit;
   Result := FillMangaSiteHost(GetMangaSiteID(Website), URL);
 end;
 
