@@ -8,6 +8,16 @@ https://www.mediafire.com/folder/3ccy2c7g36hp3/Fmd
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.25.0 (21-12-2015)
+[+] Added 8Muses[H] (no list, use drop box)
+[+] Added Account Manager, Options > Accounts
+[+] Batoto, add account support
+[-] Drop support for Manga2u
+[+] Added MangaHen[EN]
+[+] Added ExHentai[H] with account support
+[+] Added MangaBug[EN]
+[*] Various changes and bug fixes
+
 0.9.24.1 (25-11-2015)
 [*] Fix fmd freeze
 
