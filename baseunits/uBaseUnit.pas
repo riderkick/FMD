@@ -310,49 +310,48 @@ const
   MEINMANGA_ID           = 43;
   MANGASPROJECT_ID       = 44;
   MANGAREADER_POR_ID     = 45;
-  MANGA2U_ID             = 46;
-  MANGASTREAMTO_ID       = 47;
-  NINEMANGA_ID           = 48;
-  NINEMANGA_ES_ID        = 49;
-  NINEMANGA_CN_ID        = 50;
-  NINEMANGA_RU_ID        = 51;
-  NINEMANGA_DE_ID        = 52;
-  NINEMANGA_IT_ID        = 53;
-  NINEMANGA_BR_ID        = 54;
-  JAPANSHIN_ID           = 55;
-  JAPSCAN_ID             = 56;
-  CENTRUMMANGI_PL_ID     = 57;
-  MANGALIB_PL_ID         = 58;
-  ONEMANGA_ID            = 59;
-  MANGATOWN_ID           = 60;
-  MANGAOKU_ID            = 61;
-  MYREADINGMANGAINFO_ID  = 62;
-  IKOMIK_ID              = 63;
-  NHENTAI_ID             = 64;
-  UNIONMANGAS_ID         = 65;
-  MANGAMINT_ID           = 66;
-  UNIXMANGA_ID           = 67;
-  HAKIHOME_ID            = 68;
-  EXTREMEMANGAS_ID       = 69;
-  MANGAHOST_ID           = 70;
-  PORNCOMIX_ID           = 71;
-  PORNCOMIXRE_ID         = 72;
-  PORNCOMIXIC_ID         = 73;
-  XXCOMICS_ID            = 74;
-  XXCOMICSMT_ID          = 75;
-  XXCOMICS3D_ID          = 76;
-  PORNXXXCOMICS_ID       = 77;
-  MANGASEE_ID            = 78;
-  MANGAKU_ID             = 79;
-  ACADEMYVN_ID           = 80;
-  MANGAAT_ID             = 81;
-  SENMANGARAW_ID         = 82;
-  READMANGATODAY_ID      = 83;
-  LONEMANGA_ID           = 84;
-  DYNASTYSCANS_ID        = 85;
-  MADOKAMI_ID            = 86;
+  MANGASTREAMTO_ID       = 46;
+  NINEMANGA_ID           = 47;
+  NINEMANGA_ES_ID        = 48;
+  NINEMANGA_CN_ID        = 49;
+  NINEMANGA_RU_ID        = 50;
+  NINEMANGA_DE_ID        = 51;
+  NINEMANGA_IT_ID        = 52;
+  NINEMANGA_BR_ID        = 53;
+  JAPANSHIN_ID           = 54;
+  JAPSCAN_ID             = 55;
+  CENTRUMMANGI_PL_ID     = 56;
+  MANGALIB_PL_ID         = 57;
+  ONEMANGA_ID            = 58;
+  MANGATOWN_ID           = 59;
+  MANGAOKU_ID            = 60;
+  MYREADINGMANGAINFO_ID  = 61;
+  IKOMIK_ID              = 62;
+  NHENTAI_ID             = 63;
+  UNIONMANGAS_ID         = 64;
+  MANGAMINT_ID           = 65;
+  UNIXMANGA_ID           = 66;
+  HAKIHOME_ID            = 67;
+  EXTREMEMANGAS_ID       = 68;
+  MANGAHOST_ID           = 69;
+  PORNCOMIX_ID           = 70;
+  PORNCOMIXRE_ID         = 71;
+  PORNCOMIXIC_ID         = 72;
+  XXCOMICS_ID            = 73;
+  XXCOMICSMT_ID          = 74;
+  XXCOMICS3D_ID          = 75;
+  PORNXXXCOMICS_ID       = 76;
+  MANGASEE_ID            = 77;
+  MANGAKU_ID             = 78;
+  ACADEMYVN_ID           = 79;
+  MANGAAT_ID             = 80;
+  SENMANGARAW_ID         = 81;
+  READMANGATODAY_ID      = 82;
+  LONEMANGA_ID           = 83;
+  DYNASTYSCANS_ID        = 84;
+  MADOKAMI_ID            = 85;
 
-  WebsiteRoots: array [0..86] of array [0..1] of string = (
+  WebsiteRoots: array [0..85] of array [0..1] of string = (
     ('AnimeA', 'http://manga.animea.net'),
     ('MangaInn', 'http://www.mangainn.me'),
     ('OurManga', 'http://www.ourmanga.com'),
@@ -399,7 +398,6 @@ const
     ('MeinManga', 'http://www.meinmanga.com/'),
     ('MangasPROJECT', 'http://mangaproject.xpg.uol.com.br'),
     ('MangaREADER_POR', 'http://www.mangareader.com.br'),
-    ('Manga2u', 'http://www.mangakaka.com'),
     ('MangaStreamTo', 'http://www.mangastream.to'),
     ('NineManga', 'http://www.ninemanga.com'),
     ('NineManga_ES', 'http://es.ninemanga.com'),
@@ -542,9 +540,6 @@ const
   MANGASPROJECT_BROWSER = '/AJAX/listaMangas/all';
 
   MANGAREADER_POR_BROWSER = '/AJAX/listaMangas/all';
-
-  //MANGA2U_BROWSER = '/list/all/any/most-popular/';
-  MANGA2U_BROWSER = '/manga_list/all/any/last-added/';
 
   MANGASTREAMTO_BROWSER = '/series.html';
 
@@ -1275,7 +1270,6 @@ begin
     ONEMANGA_ID,
     MYREADINGMANGAINFO_ID,
     NHENTAI_ID,
-    MANGA2U_ID,
     PORNCOMIX_ID,
     XXCOMICS_ID,
     XXCOMICSMT_ID,

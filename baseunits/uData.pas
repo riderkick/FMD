@@ -1956,8 +1956,6 @@ var
 
   {$I includes/CentralDeMangas/directory_page_number.inc}
 
-  {$I includes/Manga2u/directory_page_number.inc}
-
   {$I includes/DM5/directory_page_number.inc}
 
   {$I includes/NineManga/directory_page_number.inc}
@@ -2079,9 +2077,6 @@ begin
       if website = WebsiteRoots[CENTRALDEMANGAS_ID, 0] then
         Result := GetCentralDeMangasDirectoryPageNumber
       else
-      if website = WebsiteRoots[MANGA2U_ID, 0] then
-        Result := GetManga2uDirectoryPageNumber
-      else
       if website = WebsiteRoots[DM5_ID, 0] then
         Result := GetDM5DirectoryPageNumber
       else
@@ -2178,8 +2173,6 @@ var
   Source: TStringList;
   Parser: THTMLParser;
   WebsiteID: Cardinal;
-
-  {$I includes/Manga2u/names_and_links.inc}
 
   {$I includes/AnimeA/names_and_links.inc}
 
@@ -2462,9 +2455,6 @@ begin
     if website = WebsiteRoots[MANGAREADER_POR_ID, 0] then
       Result := MangaREADER_PORGetNamesAndLinks
     else
-    if website = WebsiteRoots[MANGA2U_ID, 0] then
-      Result := Manga2uGetNamesAndLinks
-    else
     if website = WebsiteRoots[MANGASTREAMTO_ID, 0] then
       Result := MangaStreamToGetNamesAndLinks
     else
@@ -2661,8 +2651,6 @@ var
 
   {$I includes/MeinManga/manga_information.inc}
 
-  {$I includes/Manga2u/manga_information.inc}
-
   {$I includes/KivManga/manga_information.inc}
 
   {$I includes/MangasPROJECT/manga_information.inc}
@@ -2804,9 +2792,6 @@ begin
     else
     if website = WebsiteRoots[MEINMANGA_ID, 0] then
       Result := GetMeinMangaInfoFromURL
-    else
-    if website = WebsiteRoots[MANGA2U_ID, 0] then
-      Result := GetManga2uInfoFromURL
     else
     if website = WebsiteRoots[SUBMANGA_ID, 0] then
       Result := GetSubMangaInfoFromURL

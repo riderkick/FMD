@@ -16,6 +16,7 @@ const
   dirURL = '/manga-list/all/any/last-added/';
   dirURLmangaindo = '/daftar-manga/all/any/last-added/';
   dirURLreadhentaimanga = '/hentai-manga-list/all/any/last-added/';
+  dirURLmangahen = '/manga_list/all/any/last-added/';
 
 function GetDirectoryPageNumber(var MangaInfo: TMangaInformation;
   var Page: Integer; Module: TModuleContainer): Integer;
@@ -29,6 +30,7 @@ begin
   with MangaInfo.FHTTP do begin
     if Module.Website = 'MangaIndo' then s := dirURLmangaindo
     else if Module.Website = 'ReadHentaiManga' then s := dirURLreadhentaimanga
+    else if Module.Website = 'MangaHen' then s := dirURLmangahen
     else s := dirURL;
     if GET(Module.RootURL + s) then begin
       Result := NO_ERROR;
@@ -57,6 +59,7 @@ begin
   with MangaInfo.FHTTP do begin
     if Module.Website = 'MangaIndo' then s := dirURLmangaindo
     else if Module.Website = 'ReadHentaiManga' then s := dirURLreadhentaimanga
+    else if Module.Website = 'MangaHen' then s := dirURLmangahen
     else s := dirURL;
     if GET(Module.RootURL + s + IncStr(AURL) + '/') then begin
       Result := NO_ERROR;
@@ -291,6 +294,7 @@ begin
   AddWebsiteModule('EyeOnManga', 'http://www.eyeonmanga.com');
   AddWebsiteModule('MangaIndo', 'http://mangaindo.id');
   AddWebsiteModule('ReadHentaiManga', 'http://readhentaimanga.com');
+  AddWebsiteModule('MangaHen', 'http://www.mangahen.com');
 end;
 
 initialization
