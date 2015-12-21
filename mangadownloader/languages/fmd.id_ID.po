@@ -314,7 +314,7 @@ msgstr "Batal"
 
 #: taccountsetform.btok.caption
 msgid "Ok"
-msgstr "Akun"
+msgstr "Ok"
 
 #: taccountsetform.edpassword.texthint
 msgctxt "taccountsetform.edpassword.texthint"
