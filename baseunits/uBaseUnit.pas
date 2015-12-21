@@ -20,8 +20,8 @@ uses
   {$endif}
   SysUtils, Classes, Graphics, Forms, lazutf8classes, LazUTF8, LazFileUtils,
   LConvEncoding, strutils, fileinfo, fpjson, jsonparser, FastHTMLParser, fgl,
-  RegExpr, synautil, httpsend, blcksock, ssl_openssl, GZIPUtils, uFMDThread,
-  uMisc, httpsendthread, simplehtmltreeparser, xquery, xquery_json,
+  RegExpr, synautil, httpsend, blcksock, ssl_openssl, synacode, GZIPUtils,
+  uFMDThread, uMisc, httpsendthread, simplehtmltreeparser, xquery, xquery_json,
   USimpleException, USimpleLogger;
 
 Type
@@ -797,6 +797,24 @@ type
   end;
 
   IXQValue = xquery.IXQValue;
+
+  { THTMLForm }
+
+  THTMLForm = class
+  private
+    fdata: TStringList;
+    fvalueseparator: String;
+    fdelimiter: String;
+  public
+    constructor Create;
+    destructor Destroy; override;
+    procedure Put(const AName, AValue: String);
+    procedure Remove(const AName: String);
+    function GetData: String;
+    property ValueSeparator: String read fvalueseparator write fvalueseparator;
+    property Delimiter: String read fdelimiter write fdelimiter;
+    property Data: TStringList read fdata;
+  end;
 
 // Get current binary version
 function GetCurrentBinVersion: String;
@@ -3585,6 +3603,48 @@ begin
   dest.numChapter := Source.numChapter;
   dest.chapterName.Assign(Source.chapterName);
   dest.chapterLinks.Assign(Source.chapterLinks);
+end;
+
+{ THTMLForm }
+
+constructor THTMLForm.Create;
+begin
+  fdata := TStringList.Create;
+  fdata.NameValueSeparator := '=';
+  fdata.Delimiter := '&';
+  fvalueseparator := '=';
+  fdelimiter := '&';
+end;
+
+destructor THTMLForm.Destroy;
+begin
+  fdata.Free;
+  inherited Destroy;
+end;
+
+procedure THTMLForm.Put(const AName, AValue: String);
+begin
+  fdata.Values[AName] := AValue;
+end;
+
+procedure THTMLForm.Remove(const AName: String);
+var
+  i: Integer;
+begin
+  i := fdata.IndexOfName(AName);
+  if i > -1 then fdata.Delete(i);
+end;
+
+function THTMLForm.GetData: String;
+var
+  i: Integer;
+begin
+  Result := '';
+  if fdata.Count > 0 then
+    for i := 0 to fdata.Count - 1 do begin
+      if Result <> '' then Result := Result + fdelimiter;
+      Result := Result + fdata.Names[i] + fvalueseparator + EncodeURLElement(fdata.ValueFromIndex[i]);
+    end;
 end;
 
 { THTTPSendThread }
