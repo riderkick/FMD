@@ -134,8 +134,8 @@ end;
 function Login(var AHTTP: THTTPSendThread): Boolean;
 var
   query: TXQueryEngineHTML;
-  source: TStringList;
-  s, key, user, pass: string;
+  loginform: THTMLForm;
+  key: string;
 begin
   Result := False;
   if AHTTP = nil then Exit;
@@ -148,20 +148,23 @@ begin
       Account.Status[modulename] := asChecking;
       Reset;
       Cookies.Clear;
-      if Get(urlroot) then begin
-        source := TStringList.Create;
+      if GET(urlroot) then begin
+        loginform := THTMLForm.Create;
         query := TXQueryEngineHTML.Create;
         try
-          source.LoadFromStream(Document);
-          query.ParseHTML(source.Text);
+          query.ParseHTML(StreamToString(Document));
           key := query.XPathString('//input[@name="auth_key"]/@value');
           if key <> '' then begin
-            user:= Account.Username[modulename];
-            pass:= Account.Password[modulename];
-            s := 'auth_key='+key+'&referer=https%3A%2F%2Fbato.to%2F'+'&ips_username='+user+'&ips_password='+pass+'&rememberMe=1';
+            with loginform do begin
+              Put('auth_key', key);
+              Put('referer', 'https://bato.to/');
+              Put('ips_username', Account.Username[modulename]);
+              Put('ips_password', Account.Password[modulename]);
+              Put('rememberMe', '1');
+            end;
             Clear;
             Headers.Values['Referer'] := ' https://bato.to/';
-            if Post(urllogin, s) then begin
+            if POST(urllogin, loginform.GetData) then begin
               if ResultCode = 200 then begin
                 Result := Cookies.Values['pass_hash'] <> '';
                 if Result then begin
@@ -175,7 +178,7 @@ begin
           end;
         finally
           query.Free;
-          source.Free
+          loginform.Free
         end;
       end;
       onlogin := False;
