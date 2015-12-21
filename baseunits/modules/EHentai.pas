@@ -5,10 +5,11 @@ unit EHentai;
 interface
 
 uses
-  Classes, SysUtils, WebsiteModules, uData, uBaseUnit, uDownloadsManager,
-  RegExpr;
+  Classes, SysUtils, WebsiteModules, uData, uBaseUnit, uDownloadsManager;
 
 implementation
+
+uses RegExpr;
 
 const
   dirURL = 'f_doujinshi=on&f_manga=on&f_western=on&f_apply=Apply+Filter';
@@ -16,77 +17,54 @@ const
 function GetDirectoryPageNumber(var MangaInfo: TMangaInformation;
   var Page: Integer; Module: TModuleContainer): Integer;
 var
-  Source: TStringList;
-  Query: TXQueryEngineHTML;
+  query: TXQueryEngineHTML;
 begin
   Result := NET_PROBLEM;
   Page := 1;
-  if MangaInfo = nil then Exit;
-  Source := TStringList.Create;
-  try
-    if GetPage(MangaInfo.FHTTP, TObject(Source), Module.RootURL + '/?' + dirURL, 3) then
-    begin
-      if Source.Count > 0 then
-      begin
-        Result := NO_ERROR;
-        Query := TXQueryEngineHTML.Create(Source.Text);
-        try
-          Page := StrToIntDef(Query.CSSString(
-            'table.ptt>tbody>tr>td:nth-last-child(2)>a'), 1) + 1;
-        finally
-          Query.Free;
-        end;
-      end
-      else Result := INFORMATION_NOT_FOUND;
+  if MangaInfo = nil then Exit(UNKNOWN_ERROR);
+  if MangaInfo.FHTTP.GET(Module.RootURL + '/?' + dirURL) then begin
+    Result := NO_ERROR;
+    query := TXQueryEngineHTML.Create;
+    try
+      query.ParseHTML(StreamToString(MangaInfo.FHTTP.Document));
+      Page := StrToIntDef(query.CSSString('table.ptt>tbody>tr>td:nth-last-child(2)>a'), 1) + 1;
+    finally
+      query.Free;
     end;
-  finally
-    Source.Free;
   end;
 end;
 
 function GetNameAndLink(var MangaInfo: TMangaInformation;
-  const Names, Links: TStringList; const URL: String; Module: TModuleContainer): Integer;
+  const Names, Links: TStringList; const AURL: String; Module: TModuleContainer): Integer;
 var
-  Source: TStringList;
-  Query: TXQueryEngineHTML;
+  query: TXQueryEngineHTML;
   rurl: String;
   v: IXQValue;
 begin
   Result := NET_PROBLEM;
-  if MangaInfo = nil then Exit;
-  Source := TStringList.Create;
-  try
-    if URL = '0' then rurl := Module.RootURL + '/?' + dirURL
-    else rurl := Module.RootURL + '/?page=' + IncStr(URL) + '&' + dirURL;
-    if GetPage(MangaInfo.FHTTP, TObject(Source), rurl, 3) then
-    begin
-      Result := INFORMATION_NOT_FOUND;
-      if Source.Count > 0 then
+  if MangaInfo = nil then Exit(UNKNOWN_ERROR);
+  if AURL = '0' then rurl := Module.RootURL + '/?' + dirURL
+  else rurl := Module.RootURL + '/?page=' + IncStr(AURL) + '&' + dirURL;
+  if MangaInfo.FHTTP.GET(rurl) then begin
+    Result := NO_ERROR;
+    query := TXQueryEngineHTML.Create;
+    try
+      query.ParseHTML(StreamToString(MangaInfo.FHTTP.Document));
+      for v in query.XPath('//table[@class="itg"]/tbody/tr/td/div/div/a') do
       begin
-        Result := NO_ERROR;
-        Query := TXQueryEngineHTML.Create(Source.Text);
-        try
-          for v in Query.XPath('//table[@class="itg"]/tbody/tr/td/div/div/a') do
-          begin
-            Names.Add(v.toString);
-            Links.Add(v.toNode.getAttribute('href'));
-          end;
-        finally
-          Query.Free;
-        end;
+        Names.Add(v.toString);
+        Links.Add(v.toNode.getAttribute('href'));
       end;
+    finally
+      query.Free;
     end;
-  finally
-    Source.Free;
   end;
 end;
 
-function GetInfo(var MangaInfo: TMangaInformation; const URL: String;
+function GetInfo(var MangaInfo: TMangaInformation; const AURL: String;
   const Reconnect: Integer; Module: TModuleContainer): Integer;
 var
-  info: TMangaInfo;
-  Source: TStringList;
-  Query: TXQueryEngineHTML;
+  query: TXQueryEngineHTML;
   v: IXQValue;
 
   procedure ScanParse;
@@ -95,16 +73,15 @@ var
   begin
     getOK := True;
     // check content warning
-    if Pos('Content Warning', Query.XPathString('//div/h1')) > 0 then
+    if Pos('Content Warning', query.XPathString('//div/h1')) > 0 then
     begin
-      getOK := GetPage(MangaInfo.FHTTP, TObject(Source), info.url +
-        '?nw=session', Reconnect);
+      getOK := MangaInfo.FHTTP.GET(MangaInfo.mangaInfo.url + '?nw=session');
       if getOK then
-        Query.ParseHTML(Source.Text);
+        query.ParseHTML(StreamToString(MangaInfo.FHTTP.Document));
     end;
     if getOK then
     begin
-      with info do begin
+      with MangaInfo.mangaInfo do begin
         //title
         title := Query.XPathString('//*[@id="gn"]');
         //cover
@@ -143,53 +120,41 @@ var
 begin
   Result := NET_PROBLEM;
   if MangaInfo = nil then Exit;
-  info := MangaInfo.mangaInfo;
-  info.website := Module.Website;
-  info.url := FillHost(Module.RootURL, URL);
-  Source := TStringList.Create;
-  try
-    if GetPage(MangaInfo.FHTTP, TObject(Source), info.url, Reconnect) then
+  with MangaInfo.FHTTP, MangaInfo.mangaInfo do begin
+    website := Module.Website;
+    url := FillHost(Module.RootURL, AURL);
+    if GET(url) then
     begin
-      if Source.Count > 0 then
-      begin
-        Result := NO_ERROR;
-        // if there is only 1 line, it's banned message!
-        if Source.Count = 1 then
-          info.summary := Source.Text
-        else
-        begin
-          Query := TXQueryEngineHTML.Create(Source.Text);
-          try
-            ScanParse;
-          finally
-            Query.Free;
-          end;
-        end;
-      end
-      else
-        Result := INFORMATION_NOT_FOUND;
+      Result := NO_ERROR;
+      // if there is only 1 line, it's banned message!
+      //if Source.Count = 1 then
+      //  info.summary := Source.Text
+      //else
+      query := TXQueryEngineHTML.Create;
+      try
+        query.ParseHTML(StreamToString(Document));
+        ScanParse;
+      finally
+        query.Free;
+      end;
     end;
-  finally
-    Source.Free;
   end;
 end;
 
-function GetPageNumber(var DownloadThread: TDownloadThread; const URL: String;
+function GetPageNumber(var DownloadThread: TDownloadThread; const AURL: String;
   Module: TModuleContainer): Boolean;
 var
-  Container: TTaskContainer;
-  Source: TStringList;
-  Query: TXQueryEngineHTML;
+  query: TXQueryEngineHTML;
   v: IXQValue;
   rurl: String;
 
   procedure GetImageLink;
   begin
-    for v in Query.XPath('//*[@class="gdtm"]/div/a/@href') do
-    begin
-      Container.PageLinks.Add('G');
-      Container.PageContainerLinks.Add(v.toString);
-    end;
+    for v in query.XPath('//*[@class="gdtm"]/div/a/@href') do
+      with DownloadThread.manager.container do begin
+        PageLinks.Add('G');
+        PageContainerLinks.Add(v.toString);
+      end;
   end;
 
   procedure ScanParse;
@@ -200,25 +165,23 @@ var
   begin
     getOK := True;
     //check content warning
-    if Pos('Content Warning', Query.XPathString('//div/h1')) > 0 then
+    if Pos('Content Warning', query.XPathString('//div/h1')) > 0 then
     begin
-      getOK := GetPage(DownloadThread.FHTTP, TObject(Source), rurl + '?nw=session',
-        Container.Manager.retryConnect);
+      getOK := DownloadThread.FHTTP.GET(rurl + '?nw=session');
       if getOK then
-        Query.ParseHTML(Source.Text);
+        query.ParseHTML(StreamToString(DownloadThread.FHTTP.Document));
     end;
     if getOK then
     begin
       GetImageLink;
       //get page count
-      p := StrToIntDef(Query.CSSString(
+      p := StrToIntDef(query.CSSString(
         'table.ptt>tbody>tr>td:nth-last-child(2)>a'), 1) - 1;
       if p > 0 then
         for i := 1 to p do
-          if GetPage(DownloadThread.FHTTP, TObject(Source), rurl + '?p=' + IntToStr(i),
-            Container.Manager.retryConnect) then
+          if DownloadThread.FHTTP.GET(rurl + '?p=' + IntToStr(i)) then
           begin
-            Query.ParseHTML(Source.Text);
+            query.ParseHTML(StreamToString(DownloadThread.FHTTP.Document));
             GetImageLink;
           end;
     end;
@@ -227,38 +190,28 @@ var
 begin
   Result := False;
   if DownloadThread = nil then Exit;
-  Container := DownloadThread.manager.container;
-  Container.PageLinks.Clear;
-  Container.PageContainerLinks.Clear;
-  Container.PageNumber := 0;
-  Source := TStringList.Create;
-  try
-    rurl := AppendURLDelim(FillHost(Module.RootURL, URL));
-    if GetPage(DownloadThread.FHTTP, TObject(Source), rurl,
-      Container.Manager.retryConnect) then
-    begin
-      if Source.Count > 0 then
-      begin
-        Result := True;
-        Query := TXQueryEngineHTML.Create(Source.Text);
-        try
-          ScanParse;
-        finally
-          Query.Free;
-        end;
+  with DownloadThread.FHTTP, DownloadThread.manager.container do begin
+    PageLinks.Clear;
+    PageContainerLinks.Clear;
+    PageNumber := 0;
+    rurl := AppendURLDelim(FillHost(Module.RootURL, AURL));
+    if GET(rurl) then begin
+      Result := True;
+      query := TXQueryEngineHTML.Create;
+      try
+        query.ParseHTML(StreamToString(Document));
+        ScanParse;
+      finally
+        query.Free;
       end;
     end;
-  finally
-    Source.Free;
   end;
 end;
 
 function DownloadImage(var DownloadThread: TDownloadThread;
-  const URL, Path, Name, Prefix: String; Module: TModuleContainer): Boolean;
+  const AURL, APath, AName, APrefix: String; Module: TModuleContainer): Boolean;
 var
-  Source: TStringList;
-  Container: TTaskContainer;
-  Query: TXQueryEngineHTML;
+  query: TXQueryEngineHTML;
   iurl: String;
   reconnect: Integer;
 
@@ -266,76 +219,74 @@ var
   var
     i, rcount: Integer;
     base_url, startkey, gid, startpage, nl: String;
+    source: TStringList;
+    s: String;
   begin
     rcount := 0;
     Result := False;
-    while (not Result) and (not DownloadThread.IsTerminated) do begin
-      Query.ParseHTML(Source.Text);
-      iurl := Query.XPathString('//*[@id="img"]/@src');
-      if iurl = '' then
-        iurl := Query.XPathString('//a/img/@src[not(contains(.,"ehgt.org/"))]');
-      if iurl <> '' then
-        Result := SaveImage(DownloadThread.FHTTP, -1, iurl, Path,
-          Name, Prefix);
-      if DownloadThread.IsTerminated then Break;
-      if not Result then
-      begin
-        base_url := '';
-        startkey := '';
-        gid := '';
-        startpage := '';
-        nl := '';
-        //get url param
-        for i := 0 to Source.Count - 1 do begin
-          if Pos('var base_url=', Source[i]) > 0 then
-            base_url := RemoveURLDelim(GetValuesFromString(Source[i], '='))
-          else if Pos('var startkey=', Source[i]) > 0 then
-            startkey := GetValuesFromString(Source[i], '=')
-          else if Pos('var gid=', Source[i]) > 0 then
-            gid := GetValuesFromString(Source[i], '=')
-          else if Pos('var startpage=', Source[i]) > 0 then
-            startpage := GetValuesFromString(Source[i], '=')
-          else if Pos('return nl(', Source[i]) > 0 then
-            nl := ReplaceRegExpr('(?i)^.*nl\([''"](.*)[''"]\).*$',
-              Source[i], '$1', True);
+    source := TStringList.Create;
+    try
+      while (not Result) and (not DownloadThread.IsTerminated) do begin
+        source.LoadFromStream(DownloadThread.FHTTP.Document);
+        query.ParseHTML(source.Text);
+        iurl := query.XPathString('//*[@id="img"]/@src');
+        if iurl = '' then
+          iurl := query.XPathString('//a/img/@src[not(contains(.,"ehgt.org/"))]');
+        if iurl <> '' then
+          Result := SaveImage(DownloadThread.FHTTP, -1, iurl, APath, AName, APrefix);
+        if DownloadThread.IsTerminated then Break;
+        if rcount >= reconnect then Break;
+        if not Result then begin
+          base_url := '';
+          startkey := '';
+          gid := '';
+          startpage := '';
+          nl := '';
+          //get AURL param
+          if source.Count > 0 then
+            for i := 0 to source.Count - 1 do begin
+              if Pos('var base_url=', source[i]) > 0 then
+                base_url := RemoveURLDelim(GetValuesFromString(source[i], '='))
+              else if Pos('var startkey=', source[i]) > 0 then
+                startkey := GetValuesFromString(source[i], '=')
+              else if Pos('var gid=', source[i]) > 0 then
+                gid := GetValuesFromString(source[i], '=')
+              else if Pos('var startpage=', source[i]) > 0 then
+                startpage := GetValuesFromString(source[i], '=')
+              else if Pos('return nl(', source[i]) > 0 then
+                nl := ReplaceRegExpr('(?i)^.*nl\([''"](.*)[''"]\).*$',
+                  source[i], '$1', True);
+            end;
+          if (base_url <> '') and (startkey <> '') and (gid <> '') and
+            (startpage <> '') then
+            iurl := base_url + '/s/' + startkey + '/' + gid + '-' + startpage
+          else iurl := FillHost(Module.RootURL, AURL);
+          if nl <> '' then begin
+            iurl := iurl + '?nl=' + nl;
+            if not DownloadThread.FHTTP.GET(iurl) then Break;
+          end else Break;
+          if rcount >= reconnect then Break
+          else Inc(rcount);
         end;
-        if (base_url <> '') and (startkey <> '') and (gid <> '') and
-          (startpage <> '') then
-          iurl := base_url + '/s/' + startkey + '/' + gid + '-' + startpage
-        else iurl := FillHost(Module.RootURL, URL);
-        if nl <> '' then begin
-          iurl := iurl + '?nl=' + nl;
-          if not GetPage(DownloadThread.FHTTP, TObject(Source), iurl, reconnect) then
-            Break;
-        end else Break;
-        if rcount >= reconnect then Break
-        else Inc(rcount);
       end;
+    finally
+      source.Free;
     end;
   end;
 
 begin
   Result := False;
   if DownloadThread = nil then Exit;
-  Container := DownloadThread.manager.container;
-  reconnect := Container.Manager.retryConnect;
-  iurl := FillHost(Module.RootURL, URL);
-  Source := TStringList.Create;
-  try
-    if GetPage(DownloadThread.FHTTP, TObject(Source), iurl, reconnect) then
-    begin
-      if Source.Count > 0 then
-      begin
-        Query := TXQueryEngineHTML.Create(Source.Text);
-        try
-          Result := DoDownloadImage;
-        finally
-          Query.Free;
-        end;
-      end;
+  reconnect := DownloadThread.FHTTP.RetryCount;
+  iurl := FillHost(Module.RootURL, AURL);
+  if DownloadThread.FHTTP.GET(iurl) then begin
+    query := TXQueryEngineHTML.Create;
+    try
+      query.ParseHTML(StreamToString(DownloadThread.FHTTP.Document));
+      Result := DoDownloadImage;
+    finally
+      query.Free;
     end;
-  finally
-    Source.Free;
   end;
 end;
 
