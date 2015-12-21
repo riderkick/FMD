@@ -150,7 +150,7 @@ var
 
   procedure GetImageLink;
   begin
-    for v in query.XPath('//*[@class="gdtm"]/div/a/@href') do
+    for v in query.XPath('//div[@id="gdt"]//a/@href') do
       with DownloadThread.manager.container do begin
         PageLinks.Add('G');
         PageContainerLinks.Add(v.toString);
