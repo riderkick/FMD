@@ -22,8 +22,8 @@ uses
   FileUtil, LazUTF8Classes, TAGraph, TASources, TASeries, TATools, AnimatedGif,
   uBaseUnit, uData, uDownloadsManager, uFavoritesManager, uUpdateThread,
   uUpdateDBThread, uSilentThread, uMisc, uGetMangaInfosThread, uTranslation,
-  frmDropTarget, frmAccountManager, CheckUpdate, accountmanager,
-  accountmanagerdb, USimpleException, USimpleLogger;
+  frmDropTarget, frmAccountManager, CheckUpdate, accountmanagerdb,
+  USimpleException, USimpleLogger;
 
 type
 
