@@ -35,7 +35,7 @@ begin
 end;
 
 function GetNameAndLink(var MangaInfo: TMangaInformation;
-  const Names, Links: TStringList; const AURL: String; Module: TModuleContainer): Integer;
+  const ANames, ALinks: TStringList; const AURL: String; Module: TModuleContainer): Integer;
 var
   query: TXQueryEngineHTML;
   rurl: String;
@@ -52,8 +52,8 @@ begin
       query.ParseHTML(StreamToString(MangaInfo.FHTTP.Document));
       for v in query.XPath('//table[@class="itg"]/tbody/tr/td/div/div/a') do
       begin
-        Names.Add(v.toString);
-        Links.Add(v.toNode.getAttribute('href'));
+        ANames.Add(v.toString);
+        ALinks.Add(v.toNode.getAttribute('href'));
       end;
     finally
       query.Free;

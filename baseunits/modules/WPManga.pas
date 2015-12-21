@@ -48,7 +48,7 @@ begin
 end;
 
 function GetNameAndLink(var MangaInfo: TMangaInformation;
-  const Names, Links: TStringList; const AURL: String; Module: TModuleContainer): Integer;
+  const ANames, ALinks: TStringList; const AURL: String; Module: TModuleContainer): Integer;
 var
   query: TXQueryEngineHTML;
   v: IXQValue;
@@ -68,14 +68,14 @@ begin
         query.ParseHTML(StreamToString(Document));
         if Module.Website = 'MangaIndo' then begin
           for v in Query.XPath('//*[@id="sct_content"]//div[@class="node"]/a[1]/@href') do
-            Links.Add(v.toString);
+            ALinks.Add(v.toString);
           for v in Query.XPath('//*[@id="sct_content"]//div[@class="node"]/div[1]') do
-            Names.Add(v.toString);
+            ANames.Add(v.toString);
         end
         else if Module.Website = 'ReadHentaiManga' then begin
           for v in Query.XPath('//*[@id="content"]//*[@id="center"]/a') do begin
-            Links.Add(v.toNode.getAttribute('href'));
-            Names.Add(v.toNode.getAttribute('title'));
+            ALinks.Add(v.toNode.getAttribute('href'));
+            ANames.Add(v.toNode.getAttribute('title'));
           end;
         end
         else begin
@@ -85,8 +85,8 @@ begin
           else
             s := '//*[@id="sct_content"]//div[@class="det"]/a[1]';
           for v in Query.XPath(s) do begin
-            Links.Add(v.toNode.getAttribute('href'));
-            Names.Add(v.toString);
+            ALinks.Add(v.toNode.getAttribute('href'));
+            ANames.Add(v.toString);
           end;
         end;
       finally

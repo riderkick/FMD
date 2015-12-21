@@ -69,7 +69,7 @@ begin
 end;
 
 function GetNameAndLink(var MangaInfo: TMangaInformation;
-  const Names, Links: TStringList; const URL: String; Module: TModuleContainer): Integer;
+  const ANames, ALinks: TStringList; const AURL: String; Module: TModuleContainer): Integer;
 var
   Parse: TStringList;
   s: String;
@@ -94,8 +94,8 @@ var
         else
         if GetTagName(Parse[i]) = 'a' then
         begin
-          Links.Add(GetVal(Parse[i], 'href'));
-          Names.Add(CommonStringFilter(Parse[i + 1]));
+          ALinks.Add(GetVal(Parse[i], 'href'));
+          ANames.Add(CommonStringFilter(Parse[i + 1]));
         end;
   end;
 
@@ -104,7 +104,7 @@ begin
   if MangaInfo = nil then Exit;
   s := Module.RootURL + dirurls[Module.CurrentDirectoryIndex] +
     dirparam + IntToStr(perpage);
-  p := StrToIntDef(URL, 0);
+  p := StrToIntDef(AURL, 0);
   if p > 0 then
     s += '&st=' + (IntToStr(p * perpage));
   Parse := TStringList.Create;
@@ -190,7 +190,7 @@ begin
   end;
 end;
 
-function GetInfo(var MangaInfo: TMangaInformation; const URL: String;
+function GetInfo(var MangaInfo: TMangaInformation; const AURL: String;
   const Reconnect: Integer; Module: TModuleContainer): Integer;
 var
   source: TStringList;
@@ -203,7 +203,7 @@ begin
   Result := NET_PROBLEM;
   with MangaInfo do begin
     mangaInfo.website := modulename;
-    mangaInfo.url := FillHost(urlroot, URL);
+    mangaInfo.url := FillHost(urlroot, AURL);
     while onlogin do Sleep(1000);
     FHTTP.Cookies.Text := Account.Cookies[modulename];
     if FHTTP.GET(mangaInfo.url) then begin
@@ -256,7 +256,7 @@ begin
   end;
 end;
 
-function GetPageNumber(var DownloadThread: TDownloadThread; const URL: String;
+function GetPageNumber(var DownloadThread: TDownloadThread; const AURL: String;
   Module: TModuleContainer): Boolean;
 var
   source: TStringList;
@@ -269,7 +269,7 @@ begin
   with DownloadThread.manager.container, DownloadThread.FHTTP do begin
     Cookies.Text := Account.Cookies[modulename];
     Headers.Values['Referer'] := ' ' + urlroot + '/reader';
-    cid := SeparateRight(URL, '/reader#');
+    cid := SeparateRight(AURL, '/reader#');
     if GET(urlroot + '/areader?id=' + cid + '&p=1') then begin
       Result := True;
       source := TStringList.Create;
@@ -294,7 +294,7 @@ begin
   end;
 end;
 
-function GetImageURL(var DownloadThread: TDownloadThread; const URL: String;
+function GetImageURL(var DownloadThread: TDownloadThread; const AURL: String;
   Module: TModuleContainer): Boolean;
 var
   source: TStringList;
