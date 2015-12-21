@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, WebsiteModules, uData, uBaseUnit, uDownloadsManager,
-  accountmanagerdb;
+  accountmanagerdb, synacode;
 
 implementation
 
@@ -37,10 +37,9 @@ begin
       Account.Status[acc] := asChecking;
       Reset;
       Cookies.Clear;
-      s := 'returntype=8&CookieDate=1&b=d&bt=pone&UserName='
-            +Account.Username[acc]+
-           '&PassWord='
-            +Account.Password[acc]+
+      s := 'returntype=8&CookieDate=1&b=d&bt=pone'+
+           '&UserName=' + EncodeURLElement(Account.Username[acc]) +
+           '&PassWord=' + EncodeURLElement(Account.Password[acc]) +
            '&ipb_login_submit=Login%21';
       if POST(exhentaiurllogin, s) then begin
         if ResultCode = 200 then begin
