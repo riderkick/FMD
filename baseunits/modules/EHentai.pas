@@ -96,8 +96,10 @@ var
             '//a[starts-with(@id,"ta_")and(not(starts-with(@id,"ta_artist")))]') do
           AddCommaString(genres, v.toString);
         //chapter
-        chapterLinks.Add(url);
-        chapterName.Add(title);
+        if title <> '' then begin
+          chapterLinks.Add(url);
+          chapterName.Add(title);
+        end;
         //status
         with TRegExpr.Create do
           try
@@ -220,7 +222,6 @@ var
     i, rcount: Integer;
     base_url, startkey, gid, startpage, nl: String;
     source: TStringList;
-    s: String;
   begin
     rcount := 0;
     Result := False;
