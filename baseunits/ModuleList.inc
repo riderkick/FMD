@@ -14,4 +14,5 @@ uses
   Luscious,
   MangaHere,
   EightMuses,
-  HitomiLa;
+  HitomiLa,
+  HentaiCafe;
