@@ -842,6 +842,9 @@ function SitesWithoutReferer(const website: String): Boolean;
 function SitesRefererisURL(const website: String): Boolean;
 function SitesWithSingleChapter(const website: String): Boolean;
 
+// url
+function FillURLProtocol(const AProtocol, AURL: String): String;
+
 // Fill in website host if it's not present
 function FillMangaSiteHost(const MangaID: Cardinal; URL: String): String; overload;
 function FillMangaSiteHost(const Website, URL: String): String; overload;
@@ -1387,6 +1390,16 @@ begin
     XXCOMICS3D_ID,
     PORNCOMIXRE_ID
     ]);
+end;
+
+function FillURLProtocol(const AProtocol, AURL: String): String;
+begin
+  Result := AURL;
+  if AURL <> '' then begin
+    Result := ReplaceRegExpr('^\w*:?//', AURL, '', False);
+    if AProtocol <> '' then
+      Result := AProtocol + Result;
+  end;
 end;
 
 function FillMangaSiteHost(const MangaID : Cardinal; URL : String) : String;
