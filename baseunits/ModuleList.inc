@@ -13,4 +13,5 @@ uses
   MangaLife,
   Luscious,
   MangaHere,
-  EightMuses;
+  EightMuses,
+  HitomiLa;
