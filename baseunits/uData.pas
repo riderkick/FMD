@@ -2720,6 +2720,9 @@ begin
   //load User-Agent from INIAdvanced
   AdvanceLoadHTTPConfig(FHTTP, website);
 
+  mangaInfo.website := website;
+  if mangaInfo.url = '' then mangaInfo.url := URL;
+  if mangaInfo.link = '' then mangaInfo.link := URL;
   mangaInfo.coverLink := '';
   mangaInfo.numChapter := 0;
   mangaInfo.chapterName.Clear;
