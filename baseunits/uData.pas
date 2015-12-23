@@ -2721,7 +2721,6 @@ begin
   AdvanceLoadHTTPConfig(FHTTP, website);
 
   mangaInfo.website := website;
-  if mangaInfo.url = '' then mangaInfo.url := URL;
   if mangaInfo.link = '' then mangaInfo.link := URL;
   mangaInfo.coverLink := '';
   mangaInfo.numChapter := 0;
@@ -2730,14 +2729,16 @@ begin
 
   if ModuleId < 0 then
     ModuleId := Modules.LocateModule(website);
-  if Modules.ModuleAvailable(ModuleId, MMGetInfo) then
+  if Modules.ModuleAvailable(ModuleId, MMGetInfo) then begin
+    mangaInfo.url := FillHost(Modules.Module[ModuleId].RootURL, URL);
     Result := Modules.GetInfo(Self, URL, Reconnect, ModuleId)
+  end
   else
   begin
     WebsiteID := GetMangaSiteID(website);
     if WebsiteID > High(WebsiteRoots) then
       Exit(INFORMATION_NOT_FOUND);
-
+    mangaInfo.url := FillMangaSiteHost(WebsiteID, URL);
     Source := TStringList.Create;
     if website = WebsiteRoots[ANIMEA_ID, 0] then
       Result := GetAnimeAInfoFromURL
