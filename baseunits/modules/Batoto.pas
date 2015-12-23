@@ -239,7 +239,7 @@ begin
           v := query.XPath('//table[@class="ipb_table"]//tr[starts-with(*, "Genres:")]/td/a');
           if v.Count > 0 then begin
             genres := '';
-            for i := 0 to v.Count do AddCommaString(genres, v.get(i).toString);
+            for i := 1 to v.Count do AddCommaString(genres, v.get(i).toString);
           end;
 
           if OptionBatotoShowAllLang then
