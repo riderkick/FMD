@@ -8,6 +8,15 @@ https://www.mediafire.com/folder/3ccy2c7g36hp3/Fmd
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.26.0 (23-12-2015)
+[*] Batoto: fix login
+[*] ExHentai: fix login
+[+] Added HitomiLa[H]
+[+] Added HentaiCafe[H]
+[+] Added Manga-Tr[TR]
+[*] Madokami: fix image url
+[*] Various changes and bug fixes
+
 0.9.25.0 (21-12-2015)
 [+] Added 8Muses[H] (no list, use drop box)
 [+] Added Account Manager, Options > Accounts
