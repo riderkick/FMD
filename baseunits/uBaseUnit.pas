@@ -1229,7 +1229,7 @@ end;
 
 function GetMangaSiteName(const ID: Cardinal): String;
 begin
-  if ID >= High(WebsiteRoots) then Exit('');
+  if ID > High(WebsiteRoots) then Exit('');
   Result := WebsiteRoots[ID, 0];
 end;
 
