@@ -1174,8 +1174,8 @@ begin
   if manager.container.MangaSiteID = SENMANGARAW_ID then
     Result := GetSenMangaRAWImageURL;
 
-  TURL := DecodeURL(TURL); //decode first to avoid double encoded
-  TURL := EncodeTriplet(TURL, '%', URLSpecialChar + ['#']);
+  //TURL := DecodeURL(TURL); //decode first to avoid double encoded
+  //TURL := EncodeTriplet(TURL, '%', URLSpecialChar + ['#']);
 
   if Modules.ModuleAvailable(ModuleId, MMDownloadImage) then
   Result := Modules.DownloadImage(
