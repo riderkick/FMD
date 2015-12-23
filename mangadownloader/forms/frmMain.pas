@@ -3950,6 +3950,7 @@ procedure TMainForm.btOptionApplyClick(Sender: TObject);
 begin
   SaveOptions;
   ApplyOptions;
+  if not Self.Focused then Self.SetFocus;
 end;
 
 procedure TMainForm.cbAddAsStoppedChange(Sender: TObject);
