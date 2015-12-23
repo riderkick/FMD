@@ -15,4 +15,5 @@ uses
   MangaHere,
   EightMuses,
   HitomiLa,
-  HentaiCafe;
+  HentaiCafe,
+  MangaTr;
