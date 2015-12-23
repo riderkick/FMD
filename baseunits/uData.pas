@@ -2023,136 +2023,136 @@ begin
     begin
       WebsiteID := GetMangaSiteID(website);
       Source := TStringList.Create;
-      if website = WebsiteRoots[ANIMEA_ID, 0] then
+      if WebsiteID = ANIMEA_ID then
         Result := GetAnimeADirectoryPageNumber
       else
-      if website = WebsiteRoots[KISSMANGA_ID, 0] then
+      if WebsiteID = KISSMANGA_ID then
         Result := GetKissMangaDirectoryPageNumber
       else
-      if website = WebsiteRoots[MANGA24H_ID, 0] then
+      if WebsiteID = MANGA24H_ID then
         Result := GetManga24hDirectoryPageNumber
       else
-      if website = WebsiteRoots[VNSHARING_ID, 0] then
+      if WebsiteID = VNSHARING_ID then
         Result := GetVnSharingDirectoryPageNumber
       else
-      if website = WebsiteRoots[HENTAI2READ_ID, 0] then
+      if WebsiteID = HENTAI2READ_ID then
         Result := GetHentai2ReadDirectoryPageNumber
       else
-      if website = WebsiteRoots[FAKKU_ID, 0] then
+      if WebsiteID = FAKKU_ID then
         Result := GetFakkuDirectoryPageNumber
       else
-      if website = WebsiteRoots[MANGAPARK_ID, 0] then
+      if WebsiteID = MANGAPARK_ID then
         Result := GetMangaParkDirectoryPageNumber
       else
-      //if website = WebsiteRoots[MANGATRADERS_ID, 0] then
+      //if WebsiteID = MANGATRADERS_ID then
       //  Result := GetMangaTradersDirectoryPageNumber
       //else
-      if website = WebsiteRoots[MANGAGO_ID, 0] then
+      if WebsiteID = MANGAGO_ID then
         Result := GetMangaGoDirectoryPageNumber
       else
-      if website = WebsiteRoots[MANGAEDEN_ID, 0] then
+      if WebsiteID = MANGAEDEN_ID then
         Result := GetMangaEdenDirectoryPageNumber(WebsiteRoots[MANGAEDEN_ID, 1])
       else
-      if website = WebsiteRoots[PERVEDEN_ID, 0] then
+      if WebsiteID = PERVEDEN_ID then
         Result := GetMangaEdenDirectoryPageNumber(WebsiteRoots[PERVEDEN_ID, 1])
       else
-      if website = WebsiteRoots[BLOGTRUYEN_ID, 0] then
+      if WebsiteID = BLOGTRUYEN_ID then
         Result := GetBlogTruyenDirectoryPageNumber
       else
-      if website = WebsiteRoots[REDHAWKSCANS_ID, 0] then
+      if WebsiteID = REDHAWKSCANS_ID then
         Result := GetRedHawkScansDirectoryPageNumber
       else
-      if website = WebsiteRoots[S2SCAN_ID, 0] then
+      if WebsiteID = S2SCAN_ID then
         Result := GetS2ScanDirectoryPageNumber
       else
-      if website = WebsiteRoots[SENMANGA_ID, 0] then
+      if WebsiteID = SENMANGA_ID then
         Result := GetSenMangaDirectoryPageNumber
       else
-      if website = WebsiteRoots[LECTUREENLIGNE_ID, 0] then
+      if WebsiteID = LECTUREENLIGNE_ID then
         Result := GetLectureEnLigneDirectoryPageNumber
       else
-      if website = WebsiteRoots[MANGAAE_ID, 0] then
+      if WebsiteID = MANGAAE_ID then
         Result := GetMangaAeDirectoryPageNumber
       else
-      if website = WebsiteRoots[CENTRALDEMANGAS_ID, 0] then
+      if WebsiteID = CENTRALDEMANGAS_ID then
         Result := GetCentralDeMangasDirectoryPageNumber
       else
-      if website = WebsiteRoots[DM5_ID, 0] then
+      if WebsiteID = DM5_ID then
         Result := GetDM5DirectoryPageNumber
       else
-      if website = WebsiteRoots[PURURIN_ID, 0] then
+      if WebsiteID = PURURIN_ID then
         Result := GetPururinDirectoryPageNumber
       else
-      if (website = WebsiteRoots[NINEMANGA_ID, 0]) or
-        (website = WebsiteRoots[NINEMANGA_ES_ID, 0]) or
-        (website = WebsiteRoots[NINEMANGA_CN_ID, 0]) or
-        (website = WebsiteRoots[NINEMANGA_RU_ID, 0]) or
-        (website = WebsiteRoots[NINEMANGA_DE_ID, 0]) or
-        (website = WebsiteRoots[NINEMANGA_IT_ID, 0]) or
-        (website = WebsiteRoots[NINEMANGA_BR_ID, 0]) then
+      if (WebsiteID = NINEMANGA_ID) or
+        (WebsiteID = NINEMANGA_ES_ID) or
+        (WebsiteID = NINEMANGA_CN_ID) or
+        (WebsiteID = NINEMANGA_RU_ID) or
+        (WebsiteID = NINEMANGA_DE_ID) or
+        (WebsiteID = NINEMANGA_IT_ID) or
+        (WebsiteID = NINEMANGA_BR_ID) then
         Result := GetNineMangaDirectoryPageNumber
       else
-      if website = WebsiteRoots[JAPANSHIN_ID, 0] then
+      if WebsiteID = JAPANSHIN_ID then
         Result := GetJapanShinDirectoryPageNumber
       else
-      if website = WebsiteRoots[MANGACOW_ID, 0] then
+      if WebsiteID = MANGACOW_ID then
         Result := GetMangaCowDirectoryPageNumber
       else
-      if website = WebsiteRoots[ONEMANGA_ID, 0] then
+      if WebsiteID = ONEMANGA_ID then
         Result := GetOneMangaDirectoryPageNumber
       else
-      if website = WebsiteRoots[MANGATOWN_ID, 0] then
+      if WebsiteID = MANGATOWN_ID then
         Result := GetMangaTownDirectoryPageNumber
       else
-      if website = WebsiteRoots[MYREADINGMANGAINFO_ID, 0] then
+      if WebsiteID = MYREADINGMANGAINFO_ID then
         Result := GetMyReadingMangaInfoDirectoryPageNumber
       else
-      if website = WebsiteRoots[IKOMIK_ID, 0] then
+      if WebsiteID = IKOMIK_ID then
         Result := GetIKomikDirectoryPageNumber
       else
-      if website = WebsiteRoots[NHENTAI_ID, 0] then
+      if WebsiteID = NHENTAI_ID then
         Result := GetNHentaiDirectoryPageNumber
       else
       if website = GetMangaSiteName(UNIONMANGAS_ID) then
         Result := GetUnionMangasDirectoryPageNumber
       else
-      if website = WebsiteRoots[MANGAMINT_ID, 0] then
+      if WebsiteID = MANGAMINT_ID then
         Result := GetMangaMintDirectoryPageNumber
       else
-      if website = WebsiteRoots[HAKIHOME_ID, 0] then
+      if WebsiteID = HAKIHOME_ID then
         Result := GetHakiHomeDirectoryPageNumber
       else
-      if website = WebsiteRoots[MANGAFRAME_ID, 0] then
+      if WebsiteID = MANGAFRAME_ID then
         Result := GetMangaFrameDirectoryPageNumber
       else
-      if website = WebsiteRoots[MANGAHOST_ID, 0] then
+      if WebsiteID = MANGAHOST_ID then
         Result := GetMangaHostDirectoryPageNumber
       else
-      if (website = WebsiteRoots[PORNCOMIX_ID, 0]) or
-        (website = WebsiteRoots[XXCOMICS_ID, 0]) or
-        (website = WebsiteRoots[XXCOMICSMT_ID, 0]) or
-        (website = WebsiteRoots[XXCOMICS3D_ID, 0]) or
-        (website = WebsiteRoots[PORNCOMIXRE_ID, 0]) or
-        (website = WebsiteRoots[PORNCOMIXIC_ID, 0]) or
-        (website = WebsiteRoots[PORNXXXCOMICS_ID, 0]) then
+      if (WebsiteID = PORNCOMIX_ID) or
+        (WebsiteID = XXCOMICS_ID) or
+        (WebsiteID = XXCOMICSMT_ID) or
+        (WebsiteID = XXCOMICS3D_ID) or
+        (WebsiteID = PORNCOMIXRE_ID) or
+        (WebsiteID = PORNCOMIXIC_ID) or
+        (WebsiteID = PORNXXXCOMICS_ID) then
         Result := GetPornComixDirectoryPageNumber(GetMangaSiteID(website))
       else
-      if website = WebsiteRoots[MANGASEE_ID, 0] then
+      if WebsiteID = MANGASEE_ID then
         Result := GetMangaSeeDirectoryPageNumber
       else
-      if website = WebsiteRoots[ACADEMYVN_ID, 0] then
+      if WebsiteID = ACADEMYVN_ID then
         Result := GetAcademyVNDirectoryPageNumber
       else
-      if website = WebsiteRoots[MANGAAT_ID, 0] then
+      if WebsiteID = MANGAAT_ID then
         Result := GetMangaAtDirectoryPageNumber
       else
-      if website = WebsiteRoots[READMANGATODAY_ID, 0] then
+      if WebsiteID = READMANGATODAY_ID then
         Result := GetReadMangaTodayDirectoryPageNumber
       else
-      if website = WebsiteRoots[DYNASTYSCANS_ID, 0] then
+      if WebsiteID = DYNASTYSCANS_ID then
         Result := GetDynastyScansDirectoryPageNumber
       else
-      if website = WebsiteRoots[MADOKAMI_ID, 0] then
+      if WebsiteID = MADOKAMI_ID then
         Result := GetMadokamiDirectoryPageNumber
       else
       begin
@@ -2326,229 +2326,229 @@ begin
   begin
     WebsiteID := GetMangaSiteID(website);
     Source := TStringList.Create;
-    if website = WebsiteRoots[ANIMEA_ID, 0] then
+    if WebsiteID = ANIMEA_ID then
       Result := AnimeAGetNamesAndLinks
     else
-    if website = WebsiteRoots[MANGAINN_ID, 0] then
+    if WebsiteID = MANGAINN_ID then
       Result := MangaInnGetNamesAndLinks
     else
-    if website = WebsiteRoots[KISSMANGA_ID, 0] then
+    if WebsiteID = KISSMANGA_ID then
       Result := KissMangaGetNamesAndLinks
     else
-    if website = WebsiteRoots[MANGA24H_ID, 0] then
+    if WebsiteID = MANGA24H_ID then
       Result := Manga24hGetNamesAndLinks
     else
-    if website = WebsiteRoots[VNSHARING_ID, 0] then
+    if WebsiteID = VNSHARING_ID then
       Result := VnSharingGetNamesAndLinks
     else
-    if website = WebsiteRoots[HENTAI2READ_ID, 0] then
+    if WebsiteID = HENTAI2READ_ID then
       Result := Hentai2ReadGetNamesAndLinks
     else
-    if website = WebsiteRoots[FAKKU_ID, 0] then
+    if WebsiteID = FAKKU_ID then
       Result := FakkuGetNamesAndLinks
     else
-    if website = WebsiteRoots[MANGAPARK_ID, 0] then
+    if WebsiteID = MANGAPARK_ID then
       Result := MangaParkGetNamesAndLinks
     else
-    if website = WebsiteRoots[MANGATRADERS_ID, 0] then
+    if WebsiteID = MANGATRADERS_ID then
       Result := MangaTradersGetNamesAndLinks
     else
-    if website = WebsiteRoots[STARKANA_ID, 0] then
+    if WebsiteID = STARKANA_ID then
       Result := StarkanaGetNamesAndLinks
     else
-    if website = WebsiteRoots[EATMANGA_ID, 0] then
+    if WebsiteID = EATMANGA_ID then
       Result := EatMangaGetNamesAndLinks
     else
-    if website = WebsiteRoots[MANGAGO_ID, 0] then
+    if WebsiteID = MANGAGO_ID then
       Result := MangaGoGetNamesAndLinks
     else
-    if website = WebsiteRoots[REDHAWKSCANS_ID, 0] then
+    if WebsiteID = REDHAWKSCANS_ID then
       Result := RedHawkScansGetNamesAndLinks
     else
-    if website = WebsiteRoots[S2SCAN_ID, 0] then
+    if WebsiteID = S2SCAN_ID then
       Result := S2ScanGetNamesAndLinks
     else
-    if website = WebsiteRoots[EGSCANS_ID, 0] then
+    if WebsiteID = EGSCANS_ID then
       Result := EGScansGetNamesAndLinks
     else
-    if website = WebsiteRoots[MANGAEDEN_ID, 0] then
+    if WebsiteID = MANGAEDEN_ID then
       Result := MangaEdenGetNamesAndLinks(WebsiteRoots[MANGAEDEN_ID, 1])
     else
-    if website = WebsiteRoots[PERVEDEN_ID, 0] then
+    if WebsiteID = PERVEDEN_ID then
       Result := MangaEdenGetNamesAndLinks(WebsiteRoots[PERVEDEN_ID, 1])
     else
-    if website = WebsiteRoots[MEINMANGA_ID, 0] then
+    if WebsiteID = MEINMANGA_ID then
       Result := MeinMangaGetNamesAndLinks
     else
-    if website = WebsiteRoots[BLOGTRUYEN_ID, 0] then
+    if WebsiteID = BLOGTRUYEN_ID then
       Result := BlogTruyenGetNamesAndLinks
     else
-    if website = WebsiteRoots[TRUYENTRANHTUAN_ID, 0] then
+    if WebsiteID = TRUYENTRANHTUAN_ID then
       Result := TruyenTranhTuanGetNamesAndLinks
     else
-    if website = WebsiteRoots[SUBMANGA_ID, 0] then
+    if WebsiteID = SUBMANGA_ID then
       Result := SubMangaGetNamesAndLinks
     else
-    if website = WebsiteRoots[ESMANGAHERE_ID, 0] then
+    if WebsiteID = ESMANGAHERE_ID then
       Result := EsMangaHereGetNamesAndLinks
     else
-    if website = WebsiteRoots[ANIMEEXTREMIST_ID, 0] then
+    if WebsiteID = ANIMEEXTREMIST_ID then
       Result := AnimeExtremistGetNamesAndLinks
     else
-    if website = WebsiteRoots[KOMIKID_ID, 0] then
+    if WebsiteID = KOMIKID_ID then
       Result := KomikidGetNamesAndLinks
     else
-    if website = WebsiteRoots[MABUNS_ID, 0] then
+    if WebsiteID = MABUNS_ID then
       Result := MabunsGetNamesAndLinks
     else
-    if website = WebsiteRoots[MANGAESTA_ID, 0] then
+    if WebsiteID = MANGAESTA_ID then
       Result := MangaEstaGetNamesAndLinks
     else
-    if website = WebsiteRoots[PURURIN_ID, 0] then
+    if WebsiteID = PURURIN_ID then
       Result := PururinGetNamesAndLinks
     else
-    if website = WebsiteRoots[HUGEMANGA_ID, 0] then
+    if WebsiteID = HUGEMANGA_ID then
       Result := HugeMangaGetNamesAndLinks
     else
-    if website = WebsiteRoots[ANIMESTORY_ID, 0] then
+    if WebsiteID = ANIMESTORY_ID then
       Result := AnimeStoryGetNamesAndLinks
     else
-    if website = WebsiteRoots[LECTUREENLIGNE_ID, 0] then
+    if WebsiteID = LECTUREENLIGNE_ID then
       Result := LectureEnLigneGetNamesAndLinks
     else
-    if website = WebsiteRoots[SCANMANGA_ID, 0] then
+    if WebsiteID = SCANMANGA_ID then
       Result := ScanMangaGetNamesAndLinks
     else
-    if website = WebsiteRoots[MANGAAR_ID, 0] then
+    if WebsiteID = MANGAAR_ID then
       Result := MangaArGetNamesAndLinks
     else
-    if website = WebsiteRoots[MANGAAE_ID, 0] then
+    if WebsiteID = MANGAAE_ID then
       Result := MangaAeGetNamesAndLinks
     else
-    if website = WebsiteRoots[CENTRALDEMANGAS_ID, 0] then
+    if WebsiteID = CENTRALDEMANGAS_ID then
       Result := CentralDeMangasGetNamesAndLinks
     else
-    if website = WebsiteRoots[IMANHUA_ID, 0] then
+    if WebsiteID = IMANHUA_ID then
       Result := imanhuaGetNamesAndLinks
     else
-    if website = WebsiteRoots[TURKCRAFT_ID, 0] then
+    if WebsiteID = TURKCRAFT_ID then
       Result := TurkcraftGetNamesAndLinks
     else
-    if website = WebsiteRoots[MANGAVADISI_ID, 0] then
+    if WebsiteID = MANGAVADISI_ID then
       Result := MangaVadisiGetNamesAndLinks
     else
-    if website = WebsiteRoots[MANGAFRAME_ID, 0] then
+    if WebsiteID = MANGAFRAME_ID then
       Result := MangaFrameNamesAndLinks
     else
-    if website = WebsiteRoots[MANGACOW_ID, 0] then
+    if WebsiteID = MANGACOW_ID then
       Result := MangaCowGetNamesAndLinks
     else
-    if website = WebsiteRoots[SENMANGA_ID, 0] then
+    if WebsiteID = SENMANGA_ID then
       Result := SenMangaGetNamesAndLinks
     else
-    if website = WebsiteRoots[KIVMANGA_ID, 0] then
+    if WebsiteID = KIVMANGA_ID then
       Result := KivmangaGetNamesAndLinks
     else
-    if website = WebsiteRoots[MANGASPROJECT_ID, 0] then
+    if WebsiteID = MANGASPROJECT_ID then
       Result := MangasPROJECTGetNamesAndLinks
     else
-    if website = WebsiteRoots[MANGAREADER_POR_ID, 0] then
+    if WebsiteID = MANGAREADER_POR_ID then
       Result := MangaREADER_PORGetNamesAndLinks
     else
-    if website = WebsiteRoots[MANGASTREAMTO_ID, 0] then
+    if WebsiteID = MANGASTREAMTO_ID then
       Result := MangaStreamToGetNamesAndLinks
     else
-    if (website = WebsiteRoots[NINEMANGA_ID, 0]) or
-      (website = WebsiteRoots[NINEMANGA_ES_ID, 0]) or
-      (website = WebsiteRoots[NINEMANGA_CN_ID, 0]) or
-      (website = WebsiteRoots[NINEMANGA_RU_ID, 0]) or
-      (website = WebsiteRoots[NINEMANGA_DE_ID, 0]) or
-      (website = WebsiteRoots[NINEMANGA_IT_ID, 0]) or
-      (website = WebsiteRoots[NINEMANGA_BR_ID, 0]) then
+    if (WebsiteID = NINEMANGA_ID) or
+      (WebsiteID = NINEMANGA_ES_ID) or
+      (WebsiteID = NINEMANGA_CN_ID) or
+      (WebsiteID = NINEMANGA_RU_ID) or
+      (WebsiteID = NINEMANGA_DE_ID) or
+      (WebsiteID = NINEMANGA_IT_ID) or
+      (WebsiteID = NINEMANGA_BR_ID) then
       Result := NineMangaGetNamesAndLinks
     else
-    if website = WebsiteRoots[JAPANSHIN_ID, 0] then
+    if WebsiteID = JAPANSHIN_ID then
       Result := JapanShinGetNamesAndLinks
     else
-    if website = WebsiteRoots[JAPSCAN_ID, 0] then
+    if WebsiteID = JAPSCAN_ID then
       Result := JapscanNamesAndLinks
     else
-    if website = WebsiteRoots[CENTRUMMANGI_PL_ID, 0] then
+    if WebsiteID = CENTRUMMANGI_PL_ID then
       Result := CentrumMangi_PLGetNamesAndLinks
     else
-    if website = WebsiteRoots[MANGALIB_PL_ID, 0] then
+    if WebsiteID = MANGALIB_PL_ID then
       Result := MangaLib_PLGetNamesAndLinks
     else
-    if website = WebsiteRoots[ONEMANGA_ID, 0] then
+    if WebsiteID = ONEMANGA_ID then
       Result := OneMangaGetNamesAndLinks
     else
-    if website = WebsiteRoots[MANGATOWN_ID, 0] then
+    if WebsiteID = MANGATOWN_ID then
       Result := MangaTownGetNamesAndLinks
     else
-    if website = WebsiteRoots[MANGAOKU_ID, 0] then
+    if WebsiteID = MANGAOKU_ID then
       Result := MangaOkuGetNamesAndLinks
     else
-    if website = WebsiteRoots[MYREADINGMANGAINFO_ID, 0] then
+    if WebsiteID = MYREADINGMANGAINFO_ID then
       Result := MyReadingMangaInfoNamesAndLinks
     else
-    if website = WebsiteRoots[IKOMIK_ID, 0] then
+    if WebsiteID = IKOMIK_ID then
       Result := IKomikNamesAndLinks
     else
-    if website = WebsiteRoots[NHENTAI_ID, 0] then
+    if WebsiteID = NHENTAI_ID then
       Result := NHentaiNamesAndLinks
     else
-    if website = WebsiteRoots[UNIONMANGAS_ID, 0] then
+    if WebsiteID = UNIONMANGAS_ID then
       Result := UnionMangasNamesAndLinks
     else
-    if website = WebsiteRoots[MANGAMINT_ID, 0] then
+    if WebsiteID = MANGAMINT_ID then
       Result := MangaMintGetNamesAndLinks
     else
-    if website = WebsiteRoots[UNIXMANGA_ID, 0] then
+    if WebsiteID = UNIXMANGA_ID then
       Result := UnixMangaNamesAndLinks
     else
-    if website = WebsiteRoots[HAKIHOME_ID, 0] then
+    if WebsiteID = HAKIHOME_ID then
       Result := HakiHomeNamesAndLinks
     else
-    if website = WebsiteRoots[EXTREMEMANGAS_ID, 0] then
+    if WebsiteID = EXTREMEMANGAS_ID then
       Result := ExtremeMangasNamesAndLinks
     else
-    if website = WebsiteRoots[MANGAHOST_ID, 0] then
+    if WebsiteID = MANGAHOST_ID then
       Result := MangaHostGetNamesAndLinks
     else
-    if (website = WebsiteRoots[PORNCOMIX_ID, 0]) or
-      (website = WebsiteRoots[XXCOMICS_ID, 0]) or
-      (website = WebsiteRoots[XXCOMICSMT_ID, 0]) or
-      (website = WebsiteRoots[XXCOMICS3D_ID, 0]) or
-      (website = WebsiteRoots[PORNCOMIXRE_ID, 0]) or
-      (website = WebsiteRoots[PORNCOMIXIC_ID, 0]) or
-      (website = WebsiteRoots[PORNXXXCOMICS_ID, 0]) then
+    if (WebsiteID = PORNCOMIX_ID) or
+      (WebsiteID = XXCOMICS_ID) or
+      (WebsiteID = XXCOMICSMT_ID) or
+      (WebsiteID = XXCOMICS3D_ID) or
+      (WebsiteID = PORNCOMIXRE_ID) or
+      (WebsiteID = PORNCOMIXIC_ID) or
+      (WebsiteID = PORNXXXCOMICS_ID) then
       Result := PornComixGetNamesAndLinks(GetMangaSiteID(website))
     else
-    if website = WebsiteRoots[MANGASEE_ID, 0] then
+    if WebsiteID = MANGASEE_ID then
       Result := MangaSeeGetNamesAndLinks
     else
-    if website = WebsiteRoots[MANGAKU_ID, 0] then
+    if WebsiteID = MANGAKU_ID then
       Result := MangaKuGetNamesAndLinks
     else
-    if website = WebsiteRoots[ACADEMYVN_ID, 0] then
+    if WebsiteID = ACADEMYVN_ID then
       Result := AcademyVNGetNamesAndLinks
     else
-    if website = WebsiteRoots[MANGAAT_ID, 0] then
+    if WebsiteID = MANGAAT_ID then
       Result := MangaAtGetNamesAndLinks
     else
-    if website = WebsiteRoots[SENMANGARAW_ID, 0] then
+    if WebsiteID = SENMANGARAW_ID then
       Result := SenMangaRAWGetNamesAndLinks
     else
-    if website = WebsiteRoots[READMANGATODAY_ID, 0] then
+    if WebsiteID = READMANGATODAY_ID then
       Result := ReadMangaTodayGetNamesAndLinks
     else
-    if website = WebsiteRoots[LONEMANGA_ID, 0] then
+    if WebsiteID = LONEMANGA_ID then
       Result := LoneMangaGetNamesAndLinks
     else
-    if website = WebsiteRoots[DYNASTYSCANS_ID, 0] then
+    if WebsiteID = DYNASTYSCANS_ID then
       Result := DynastyScansGetNamesAndLinks
     else
-    if website = WebsiteRoots[MADOKAMI_ID, 0] then
+    if WebsiteID = MADOKAMI_ID then
       Result := MadokamiGetNamesAndLinks
     else
     begin
@@ -2740,226 +2740,226 @@ begin
       Exit(INFORMATION_NOT_FOUND);
     mangaInfo.url := FillMangaSiteHost(WebsiteID, URL);
     Source := TStringList.Create;
-    if website = WebsiteRoots[ANIMEA_ID, 0] then
+    if WebsiteID = ANIMEA_ID then
       Result := GetAnimeAInfoFromURL
     else
-    if website = WebsiteRoots[MANGAINN_ID, 0] then
+    if WebsiteID = MANGAINN_ID then
       Result := GetMangaInnInfoFromURL
     else
-    if website = WebsiteRoots[KISSMANGA_ID, 0] then
+    if WebsiteID = KISSMANGA_ID then
       Result := GetKissMangaInfoFromURL
     else
-    if website = WebsiteRoots[MANGA24H_ID, 0] then
+    if WebsiteID = MANGA24H_ID then
       Result := GetManga24hInfoFromURL
     else
-    if website = WebsiteRoots[VNSHARING_ID, 0] then
+    if WebsiteID = VNSHARING_ID then
       Result := GetVnSharingInfoFromURL
     else
-    if website = WebsiteRoots[HENTAI2READ_ID, 0] then
+    if WebsiteID = HENTAI2READ_ID then
       Result := GetHentai2ReadInfoFromURL
     else
-    if website = WebsiteRoots[FAKKU_ID, 0] then
+    if WebsiteID = FAKKU_ID then
       Result := GetFakkuInfoFromURL
     else
-    if website = WebsiteRoots[MANGAPARK_ID, 0] then
+    if WebsiteID = MANGAPARK_ID then
       Result := GetMangaParkInfoFromURL
     else
-    if website = WebsiteRoots[MANGATRADERS_ID, 0] then
+    if WebsiteID = MANGATRADERS_ID then
       Result := GetMangaTradersInfoFromURL
     else
-    if website = WebsiteRoots[STARKANA_ID, 0] then
+    if WebsiteID = STARKANA_ID then
       Result := GetStarkanaInfoFromURL
     else
-    if website = WebsiteRoots[EATMANGA_ID, 0] then
+    if WebsiteID = EATMANGA_ID then
       Result := GetEatMangaInfoFromURL
     else
-    if website = WebsiteRoots[MANGAGO_ID, 0] then
+    if WebsiteID = MANGAGO_ID then
       Result := GetMangaGoInfoFromURL
     else
-    if website = WebsiteRoots[REDHAWKSCANS_ID, 0] then
+    if WebsiteID = REDHAWKSCANS_ID then
       Result := GetRedHawkScansInfoFromURL
     else
-    if website = WebsiteRoots[S2SCAN_ID, 0] then
+    if WebsiteID = S2SCAN_ID then
       Result := GetS2scanInfoFromURL
     else
-    if website = WebsiteRoots[EGSCANS_ID, 0] then
+    if WebsiteID = EGSCANS_ID then
       Result := GetEGScansInfoFromURL
     else
-    if website = WebsiteRoots[TRUYENTRANHTUAN_ID, 0] then
+    if WebsiteID = TRUYENTRANHTUAN_ID then
       Result := GetTruyenTranhTuanInfoFromURL
     else
-    if website = WebsiteRoots[MANGAEDEN_ID, 0] then
+    if WebsiteID = MANGAEDEN_ID then
       Result := GetMangaEdenInfoFromURL(WebsiteRoots[MANGAEDEN_ID, 1])
     else
-    if website = WebsiteRoots[PERVEDEN_ID, 0] then
+    if WebsiteID = PERVEDEN_ID then
       Result := GetMangaEdenInfoFromURL(WebsiteRoots[PERVEDEN_ID, 1])
     else
-    if website = WebsiteRoots[MEINMANGA_ID, 0] then
+    if WebsiteID = MEINMANGA_ID then
       Result := GetMeinMangaInfoFromURL
     else
-    if website = WebsiteRoots[SUBMANGA_ID, 0] then
+    if WebsiteID = SUBMANGA_ID then
       Result := GetSubMangaInfoFromURL
     else
-    if website = WebsiteRoots[ESMANGAHERE_ID, 0] then
+    if WebsiteID = ESMANGAHERE_ID then
       Result := GetEsMangaHereInfoFromURL
     else
-    if website = WebsiteRoots[ANIMEEXTREMIST_ID, 0] then
+    if WebsiteID = ANIMEEXTREMIST_ID then
       Result := GetAnimeExtremistInfoFromURL
     else
-    if website = WebsiteRoots[KOMIKID_ID, 0] then
+    if WebsiteID = KOMIKID_ID then
       Result := GetKomikidInfoFromURL
     else
-    if website = WebsiteRoots[MABUNS_ID, 0] then
+    if WebsiteID = MABUNS_ID then
       Result := GetMabunsInfoFromURL
     else
-    if website = WebsiteRoots[MANGAESTA_ID, 0] then
+    if WebsiteID = MANGAESTA_ID then
       Result := GetMangaEstaInfoFromURL
     else
-    if website = WebsiteRoots[PURURIN_ID, 0] then
+    if WebsiteID = PURURIN_ID then
       Result := GetPururinInfoFromURL
     else
-    if website = WebsiteRoots[HUGEMANGA_ID, 0] then
+    if WebsiteID = HUGEMANGA_ID then
       Result := GetHugeMangaInfoFromURL
     else
-    if website = WebsiteRoots[ANIMESTORY_ID, 0] then
+    if WebsiteID = ANIMESTORY_ID then
       Result := GetAnimeStoryInfoFromURL
     else
-    if website = WebsiteRoots[LECTUREENLIGNE_ID, 0] then
+    if WebsiteID = LECTUREENLIGNE_ID then
       Result := GetLectureEnLigneInfoFromURL
     else
-    if website = WebsiteRoots[SCANMANGA_ID, 0] then
+    if WebsiteID = SCANMANGA_ID then
       Result := GetScanMangaInfoFromURL
     else
-    if website = WebsiteRoots[TURKCRAFT_ID, 0] then
+    if WebsiteID = TURKCRAFT_ID then
       Result := GetTurkcraftInfoFromURL
     else
-    if website = WebsiteRoots[MANGAFRAME_ID, 0] then
+    if WebsiteID = MANGAFRAME_ID then
       Result := GetMangaframeInfoFromURL
     else
-    if website = WebsiteRoots[MANGAVADISI_ID, 0] then
+    if WebsiteID = MANGAVADISI_ID then
       Result := GetMangaVadisiInfoFromURL
     else
-    if website = WebsiteRoots[MANGAAR_ID, 0] then
+    if WebsiteID = MANGAAR_ID then
       Result := GetMangaArInfoFromURL
     else
-    if website = WebsiteRoots[MANGAAE_ID, 0] then
+    if WebsiteID = MANGAAE_ID then
       Result := GetMangaAeInfoFromURL
     else
-    if website = WebsiteRoots[CENTRALDEMANGAS_ID, 0] then
+    if WebsiteID = CENTRALDEMANGAS_ID then
       Result := GetCentralDeMangasInfoFromURL
     else
-    if website = WebsiteRoots[MANGACOW_ID, 0] then
+    if WebsiteID = MANGACOW_ID then
       Result := GetMangaCowInfoFromURL
     else
-    if website = WebsiteRoots[SENMANGA_ID, 0] then
+    if WebsiteID = SENMANGA_ID then
       Result := GetSenMangaInfoFromURL
     else
-    if website = WebsiteRoots[BLOGTRUYEN_ID, 0] then
+    if WebsiteID = BLOGTRUYEN_ID then
       Result := GetBlogTruyenInfoFromURL
     else
-    if website = WebsiteRoots[KIVMANGA_ID, 0] then
+    if WebsiteID = KIVMANGA_ID then
       Result := GetKivmangaInfoFromURL
     else
-    if website = WebsiteRoots[MANGASPROJECT_ID, 0] then
+    if WebsiteID = MANGASPROJECT_ID then
       Result := GetMangasPROJECTInfoFromURL
     else
-    if website = WebsiteRoots[MANGAREADER_POR_ID, 0] then
+    if WebsiteID = MANGAREADER_POR_ID then
       Result := GetMangaREADER_PORInfoFromURL
     else
-    if website = WebsiteRoots[MANGASTREAMTO_ID, 0] then
+    if WebsiteID = MANGASTREAMTO_ID then
       Result := GetMangaStreamToInfoFromURL
     else
-    if (website = WebsiteRoots[NINEMANGA_ID, 0]) or
-      (website = WebsiteRoots[NINEMANGA_ES_ID, 0]) or
-      (website = WebsiteRoots[NINEMANGA_CN_ID, 0]) or
-      (website = WebsiteRoots[NINEMANGA_RU_ID, 0]) or
-      (website = WebsiteRoots[NINEMANGA_DE_ID, 0]) or
-      (website = WebsiteRoots[NINEMANGA_IT_ID, 0]) or
-      (website = WebsiteRoots[NINEMANGA_BR_ID, 0]) then
+    if (WebsiteID = NINEMANGA_ID) or
+      (WebsiteID = NINEMANGA_ES_ID) or
+      (WebsiteID = NINEMANGA_CN_ID) or
+      (WebsiteID = NINEMANGA_RU_ID) or
+      (WebsiteID = NINEMANGA_DE_ID) or
+      (WebsiteID = NINEMANGA_IT_ID) or
+      (WebsiteID = NINEMANGA_BR_ID) then
       Result := GetNineMangaInfoFromURL
     else
-    if website = WebsiteRoots[JAPANSHIN_ID, 0] then
+    if WebsiteID = JAPANSHIN_ID then
       Result := GetJapanShinInfoFromURL
     else
-    if website = WebsiteRoots[JAPSCAN_ID, 0] then
+    if WebsiteID = JAPSCAN_ID then
       Result := GetJapscanInfoFromURL
     else
-    if website = WebsiteRoots[CENTRUMMANGI_PL_ID, 0] then
+    if WebsiteID = CENTRUMMANGI_PL_ID then
       Result := GetCentrumMangi_PLInfoFromURL
     else
-    if website = WebsiteRoots[MANGALIB_PL_ID, 0] then
+    if WebsiteID = MANGALIB_PL_ID then
       Result := GetMangaLib_PLInfoFromURL
     else
-    if website = WebsiteRoots[ONEMANGA_ID, 0] then
+    if WebsiteID = ONEMANGA_ID then
       Result := GetOneMangaInfoFromURL
     else
-    if website = WebsiteRoots[MANGATOWN_ID, 0] then
+    if WebsiteID = MANGATOWN_ID then
       Result := GetMangaTownInfoFromURL
     else
-    if website = WebsiteRoots[MANGAOKU_ID, 0] then
+    if WebsiteID = MANGAOKU_ID then
       Result := GetMangaOkuInfoFromURL
     else
-    if website = WebsiteRoots[MYREADINGMANGAINFO_ID, 0] then
+    if WebsiteID = MYREADINGMANGAINFO_ID then
       Result := GetMyReadingMangaInfoInfoFromURL
     else
-    if website = WebsiteRoots[IKOMIK_ID, 0] then
+    if WebsiteID = IKOMIK_ID then
       Result := GetIKomikInfoFromURL
     else
-    if website = WebsiteRoots[NHENTAI_ID, 0] then
+    if WebsiteID = NHENTAI_ID then
       Result := GetNHentaiInfoFromURL
     else
-    if website = WebsiteRoots[UNIONMANGAS_ID, 0] then
+    if WebsiteID = UNIONMANGAS_ID then
       Result := GetUnionMangasInfoFromURL
     else
-    if website = WebsiteRoots[MANGAMINT_ID, 0] then
+    if WebsiteID = MANGAMINT_ID then
       Result := GetMangaMintInfoFromURL
     else
-    if website = WebsiteRoots[UNIXMANGA_ID, 0] then
+    if WebsiteID = UNIXMANGA_ID then
       Result := GetUnixMangaInfoFromURL
     else
-    if website = WebsiteRoots[HAKIHOME_ID, 0] then
+    if WebsiteID = HAKIHOME_ID then
       Result := GetHakiHomeInfoFromURL
     else
-    if website = WebsiteRoots[EXTREMEMANGAS_ID, 0] then
+    if WebsiteID = EXTREMEMANGAS_ID then
       Result := GetExtremeMangasInfoFromURL
     else
-    if website = GetMangaSiteName(MANGAHOST_ID) then
+    if WebsiteID = MANGAHOST_ID then
       Result := GetMangaHostInfoFromURL
     else
-    if (website = GetMangaSiteName(PORNCOMIX_ID)) or
-      (website = GetMangaSiteName(XXCOMICS_ID)) or
-      (website = GetMangaSiteName(XXCOMICSMT_ID)) or
-      (website = GetMangaSiteName(XXCOMICS3D_ID)) or
-      (website = GetMangaSiteName(PORNCOMIXRE_ID)) or
-      (website = GetMangaSiteName(PORNCOMIXIC_ID)) or
-      (website = GetMangaSiteName(PORNXXXCOMICS_ID)) then
+    if (WebsiteID = PORNCOMIX_ID) or
+      (WebsiteID = XXCOMICS_ID) or
+      (WebsiteID = XXCOMICSMT_ID) or
+      (WebsiteID = XXCOMICS3D_ID) or
+      (WebsiteID = PORNCOMIXRE_ID) or
+      (WebsiteID = PORNCOMIXIC_ID) or
+      (WebsiteID = PORNXXXCOMICS_ID) then
       Result := GetPornComixInfoFromURL(GetMangaSiteID(website))
     else
-    if website = GetMangaSiteName(MANGASEE_ID) then
+    if WebsiteID = MANGASEE_ID then
       Result := GetMangaSeeInfoFromURL
     else
-    if website = GetMangaSiteName(MANGAKU_ID) then
+    if WebsiteID = MANGAKU_ID then
       Result := GetMangaKuInfoFromURL
     else
-    if website = GetMangaSiteName(ACADEMYVN_ID) then
+    if WebsiteID = ACADEMYVN_ID then
       Result := GetAcademyVNInfoFromURL
     else
-    if website = GetMangaSiteName(MANGAAT_ID) then
+    if WebsiteID = MANGAAT_ID then
       Result := GetMangaAtInfoFromURL
     else
-    if website = GetMangaSiteName(SENMANGARAW_ID) then
+    if WebsiteID = SENMANGARAW_ID then
       Result := GetSenMangaRAWInfoFromURL
     else
-    if website = GetMangaSiteName(READMANGATODAY_ID) then
+    if WebsiteID = READMANGATODAY_ID then
       Result := GetReadMangaTodayInfoFromURL
     else
-    if website = GetMangaSiteName(LONEMANGA_ID) then
+    if WebsiteID = LONEMANGA_ID then
       Result := GetLoneMangaInfoFromURL
     else
-    if website = GetMangaSiteName(DYNASTYSCANS_ID) then
+    if WebsiteID = DYNASTYSCANS_ID then
       Result := GetDynastyScansInfoFromURL
     else
-    if website = GetMangaSiteName(MADOKAMI_ID) then
+    if WebsiteID = MADOKAMI_ID then
       Result := GetMadokamiInfoFromURL
     else
     begin
