@@ -2,8 +2,7 @@ Free Manga Downloader
 Project page: https://github.com/riderkick/FMD
 
 For manga list data check:
-https://bintray.com/riderkick/FMD/data/all/#files
-https://www.mediafire.com/folder/3ccy2c7g36hp3/Fmd
+https://bintray.com/riderkick/FMD/data/db/view#files
 
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
