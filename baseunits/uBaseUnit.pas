@@ -655,6 +655,8 @@ var
 
   OptionBatotoShowScanGroup: Boolean = True;
   OptionBatotoShowAllLang: Boolean = True;
+  OptionMangaFoxTemplateFolder: String = 'extras' + PathDelim + 'mangafoxtemplate';
+  OptionMangaFoxRemoveWatermark: Boolean = False;
 
   OptionHTTPUseGzip: Boolean = True;
 
@@ -962,9 +964,11 @@ function GetPage(var output: TObject; URL: String; const Reconnect: Integer = 0)
 function GetURLFromBitly(const URL: String): String;
 // Download an image from url and save it to a specific location.
 function SaveImage(const AHTTP: THTTPSend; const mangaSiteID: Integer; URL: String;
+  const Path, Name, prefix: String; var SavedFilename: String; const Reconnect: Integer = 0): Boolean; overload;
+function SaveImage(const AHTTP: THTTPSend; const mangaSiteID: Integer; URL: String;
   const Path, Name, prefix: String; const Reconnect: Integer = 0): Boolean; overload;
 function SaveImage(const mangaSiteID: Integer; URL: String;
-  const Path, Name, prefix: String; const Reconnect: Integer = 0): Boolean; overload; inline;
+  const Path, Name, prefix: String; var SavedFilename: String; const Reconnect: Integer = 0): Boolean; overload; inline;
 
 procedure QuickSortChapters(var chapterList, linkList: TStringList);
 procedure QuickSortData(var merge: TStringList);
@@ -3154,7 +3158,7 @@ begin
 end;
 
 function SaveImage(const AHTTP: THTTPSend; const mangaSiteID: Integer;
-  URL: String; const Path, Name, prefix: String; const Reconnect: Integer
+  URL: String; const Path, Name, prefix: String; var SavedFilename: String; const Reconnect: Integer
   ): Boolean;
   // prefix: For example: 000<our prefix>.jpg.
 var
@@ -3410,12 +3414,23 @@ begin
     Writelog_E('SaveImage.ExtEmpty!' + LineEnding + URL);
   preTerminate;
   Result := (fpath <> '') and FileExistsUTF8(fpath);
+  if Result then SavedFilename := fpath
+  else SavedFilename := '';
+end;
+
+function SaveImage(const AHTTP: THTTPSend; const mangaSiteID: Integer;
+  URL: String; const Path, Name, prefix: String; const Reconnect: Integer
+  ): Boolean;
+var
+  f: String;
+begin
+  Result := SaveImage(AHTTP, mangaSiteID, URL, Path, Name, prefix, f, Reconnect);
 end;
 
 function SaveImage(const mangaSiteID: Integer; URL: String; const Path, Name,
-  prefix: String; const Reconnect: Integer): Boolean;
+  prefix: String; var SavedFilename: String; const Reconnect: Integer): Boolean;
 begin
-  Result := SaveImage(nil, mangaSiteID, URL, Path, Name, prefix, Reconnect);
+  Result := SaveImage(nil, mangaSiteID, URL, Path, Name, prefix, SavedFilename, Reconnect);
 end;
 
 procedure QuickSortChapters(var chapterList, linkList: TStringList);
