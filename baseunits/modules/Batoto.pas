@@ -212,7 +212,7 @@ function GetInfo(var MangaInfo: TMangaInformation; const AURL: String;
 var
   query: TXQueryEngineHTML;
   v, w: IXQValue;
-  s, t: String;
+  s, t, l: String;
   i: Integer;
 begin
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
@@ -253,12 +253,16 @@ begin
           for v in query.XPath(s) do begin
             w := query.Engine.evaluateXPath3('td[1]/a', v.toNode);
             chapterLinks.Add(w.toNode.getAttribute('href'));
-            t := '';
-            if OptionBatotoShowScanGroup then begin
-              t := query.Engine.evaluateXPath3('td[3]', v.toNode).toString;
-              if t <> '' then t := ' ['+ t +']' else t := '';
+            t := w.toString;
+            if OptionBatotoShowAllLang then begin
+              l := query.Engine.evaluateXPath3('td[2]/div', v.toNode).toNode.getAttribute('title');
+              if l <> '' then t += ' ['+ l +']';
             end;
-            chapterName.Add(w.toString + t);
+            if OptionBatotoShowScanGroup then begin
+              l := query.Engine.evaluateXPath3('td[3]', v.toNode).toString;
+              if l <> '' then t += ' ['+ l +']';
+            end;
+            chapterName.Add(t);
           end;
           InvertStrings([chapterLinks, chapterName])
         end;
