@@ -15,43 +15,46 @@ procedure ClearTemplate;
 
 var
   minwhiteborder: Integer = 4;
+  minpsnr: Single = 9.0;
 
 implementation
 
 var
   imgtemplate: TDynImageDataArray;
   lockproc: TRTLCriticalSection;
+  colorwhite: TColor32Rec = (Color: $FFFFFFFF);
 
 function LoadTemplate(const TempDir: String): Integer;
 var
   flist: TStringList;
   i: Integer;
 begin
-  Result := 0;
+  Result := Length(imgtemplate);
   if DirectoryExists(TempDir) = False then Exit;
-  EnterCriticalsection(lockproc);
-  flist := TStringList.Create;
-  try
-    FreeImagesInArray(imgtemplate);
-    // load all images in template folder
-    FindAllFiles(flist, CleanAndExpandDirectory(TempDir), '*.*', False);
-    if flist.Count > 0 then
-      for i := 0 to flist.Count - 1 do begin
-        SetLength(imgtemplate, Length(imgtemplate) + 1);
-        InitImage(imgtemplate[High(imgtemplate)]);
-        if LoadImageFromFile(flist.Strings[i], imgtemplate[High(imgtemplate)]) then begin
-          // convert to grayscale and do thresholding
-          ConvertImage(imgtemplate[High(imgtemplate)], ifGray8);
-          OtsuThresholding(imgtemplate[High(imgtemplate)], True);
-        end
-        else begin
-          FreeImage(imgtemplate[High(imgtemplate)]);
-          SetLength(imgtemplate, Length(imgtemplate) - 1);
+  if TryEnterCriticalsection(lockproc) > 0 then begin
+    flist := TStringList.Create;
+    try
+      FreeImagesInArray(imgtemplate);
+      // load all images in template folder
+      FindAllFiles(flist, CleanAndExpandDirectory(TempDir), '*.*', False);
+      if flist.Count > 0 then
+        for i := 0 to flist.Count - 1 do begin
+          SetLength(imgtemplate, Length(imgtemplate) + 1);
+          InitImage(imgtemplate[High(imgtemplate)]);
+          if LoadImageFromFile(flist.Strings[i], imgtemplate[High(imgtemplate)]) then begin
+            // convert to grayscale and do thresholding
+            ConvertImage(imgtemplate[High(imgtemplate)], ifGray8);
+            OtsuThresholding(imgtemplate[High(imgtemplate)], True);
+          end
+          else begin
+            FreeImage(imgtemplate[High(imgtemplate)]);
+            SetLength(imgtemplate, Length(imgtemplate) - 1);
+          end;
         end;
-      end;
-  finally
+    finally
+      flist.Free;
+    end;
     Result := Length(imgtemplate);
-    flist.Free;
     LeaveCriticalsection(lockproc);
   end;
 end;
@@ -68,10 +71,9 @@ end;
 
 function RemoveWatermark(const AFilename: String): Boolean;
 var
-  imgbase, imgproc: TImageData;
-  i, x, y: Integer;
-  nh, bmi: Integer;
-  bmv, PSNR, MSE, RMSE, PAE, MAE: single;
+  imgbase, imgproc, imgtemp: TImageData;
+  i, x, y, bmi: Integer;
+  bmv, PSNR, MSE, RMSE, PAE, MAE: Single;
   invalidborder: Boolean;
 begin
   Result := False;
@@ -80,59 +82,79 @@ begin
 
   EnterCriticalsection(lockproc);
   InitImage(imgbase);
-  InitImage(imgproc);
   try
     // not supported image file
     if not LoadImageFromFile(AFilename, imgbase) then Exit;
-
-    // probably doesn't have watermark / 728px is default mangafox image width
-    if imgbase.Width <> 728 then Exit;
 
     bmi := -1;
     bmv := 0;
     // compare image to all template
     for i := Low(imgtemplate) to High(imgtemplate) do
       if imgbase.Height > imgtemplate[i].Height then begin
-        invalidborder := False;
-        // crop image to match template
-        NewImage(imgtemplate[i].Width, imgtemplate[i].Height, imgtemplate[i].Format, imgproc);
-        CopyRect(imgbase, 0, imgbase.Height - imgtemplate[i].Height, imgbase.Width, imgbase.Height - imgtemplate[i].Height, imgproc, 0, 0);
-        // do thresholding
-        OtsuThresholding(imgproc, True);
+        InitImage(imgproc);
+        InitImage(imgtemp);
+        try
+          invalidborder := False;
 
-        // check minimal white border
-        for y := 1 to minwhiteborder do begin
-          for x := 1 to imgproc.Width do begin
-            if not ColorIsWhite(GetPixel32(imgproc, x, y)) then begin
-              invalidborder := True;
-              Break;
+          // crop image to match template
+          NewImage(imgbase.Width, imgtemplate[i].Height, imgtemplate[i].Format, imgproc);
+          CopyRect(imgbase, 0, imgbase.Height - imgtemplate[i].Height, imgbase.Width, imgbase.Height - imgtemplate[i].Height, imgproc, 0, 0);
+          // do thresholding
+          OtsuThresholding(imgproc, True);
+
+          // check minimal white border
+          for y := 1 to minwhiteborder do begin
+            for x := 1 to imgproc.Width do begin
+              if not ColorIsWhite(GetPixel32(imgproc, x, y)) then begin
+                invalidborder := True;
+                Break;
+              end;
+            end;
+            if invalidborder then Break;
+          end;
+
+          if not invalidborder then begin
+            // adjust imagetemp width
+            if imgbase.Width <> imgtemplate[i].Width then begin
+              NewImage(imgbase.Width, imgtemplate[i].Height, imgtemplate[i].Format, imgtemp);
+              FillRect(imgtemp, 0, 0, imgtemp.Width, imgtemp.Height, @colorwhite);
+              if imgbase.Width > imgtemplate[i].Width then begin
+                CopyRect(imgtemplate[i], 0, 0, imgtemplate[i].Width, imgtemp.Height, imgtemp, round((imgtemp.Width - imgtemplate[i].Width) / 2), 0);
+              end
+              else begin
+                CopyRect(imgtemplate[i], round((imgtemplate[i].Width-imgtemp.Width) / 2), 0, imgtemp.Width, imgtemp.Height, imgtemp, 0, 0);
+              end;
+            end
+            else
+              CloneImage(imgtemplate[i], imgtemp);
+
+            // compute error metrics
+            ComputeErrorMetrics(imgtemp, imgproc, PSNR, MSE, RMSE, PAE, MAE);
+            if PSNR > bmv then begin
+              bmi := i;
+              bmv := PSNR;
             end;
           end;
-          if invalidborder then Break;
+        finally
+          FreeImage(imgproc);
+          FreeImage(imgtemp);
         end;
-
-        if not invalidborder then begin
-          // compute error metrics
-          ComputeErrorMetrics(imgtemplate[i], imgproc, PSNR, MSE, RMSE, PAE, MAE);
-          if PSNR > bmv then begin
-            bmi := i;
-            bmv := PSNR;
-          end;
-        end;
-        FreeImage(imgproc);
       end;
 
     // save cropped image
-    if bmi > -1 then begin
-      nh := imgbase.Height - imgtemplate[bmi].Height;
-      NewImage(imgbase.Width, nh, imgbase.Format, imgproc);
-      CopyRect(imgbase, 0, 0, imgbase.Width, nh, imgproc, 0, 0);
-      if DeleteFileUTF8(AFilename) then
-        Result := SaveImageToFile(AFilename, imgproc);
+    if (bmi > -1) and (bmv > minpsnr) then begin
+      InitImage(imgproc);
+      try
+        NewImage(imgbase.Width, imgbase.Height - imgtemplate[bmi].Height, imgbase.Format, imgproc);
+        CopyRect(imgbase, 0, 0, imgbase.Width, imgbase.Height - imgtemplate[bmi].Height, imgproc, 0, 0);
+        if DeleteFileUTF8(AFilename) then
+          Result := SaveImageToFile(AFilename, imgproc);
+      finally
+        FreeImage(imgproc);
+      end;
     end;
   finally
     FreeImage(imgbase);
-    FreeImage(imgproc);
     LeaveCriticalsection(lockproc);
   end;
 end;
