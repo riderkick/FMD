@@ -491,8 +491,9 @@ msgstr ""
 msgid "Enable live search (slow on long list)"
 msgstr ""
 
-#: tmainform.cboptionmangafoxremovewatermarks.caption
-msgid "[Mangafox] Remove watermarks (Beware! Experimental!)"
+#: tmainform.cboptionmangafoxremovewatermark.caption
+msgctxt "TMAINFORM.CBOPTIONMANGAFOXREMOVEWATERMARK.CAPTION"
+msgid "[Mangafox] Remove watermark"
 msgstr ""
 
 #: tmainform.cboptionminimizetotray.caption

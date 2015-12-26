@@ -519,9 +519,10 @@ msgstr "Buat otomatis folder berdasarkan nama komik"
 msgid "Enable live search (slow on long list)"
 msgstr "Aktifkan pencarian langsung (lambat dengan daftar yang panjang)"
 
-#: tmainform.cboptionmangafoxremovewatermarks.caption
-msgid "[Mangafox] Remove watermarks (Beware! Experimental!)"
-msgstr "[Mangafox] Menghapus Watermark (Waspadalah! Eksperimental!)"
+#: tmainform.cboptionmangafoxremovewatermark.caption
+msgctxt "tmainform.cboptionmangafoxremovewatermark.caption"
+msgid "[Mangafox] Remove watermark"
+msgstr "[Mangafox] Hapus watermark"
 
 #: tmainform.cboptionminimizetotray.caption
 msgid "Minimize to tray"

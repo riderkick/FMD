@@ -91,6 +91,9 @@ msgid "Are you sure you want to delete the task(s)?"
 msgstr "Are you sure you want to delete the task(s)?"
 
 #: frmmain.rs_dlgtitleexistindllist
+#| msgid ""
+#| "This title are already in download list.\n"
+#| "Do you want to download it anyway?\n"
 msgid ""
 "This title are already in download list.\n"
 "Do you want to download it anyway?\n"
@@ -119,6 +122,9 @@ msgid "URL not supported!"
 msgstr "URL not supported!"
 
 #: frmmain.rs_droptargetmodeitems
+#| msgid ""
+#| "Download all\n"
+#| "Add to favorites\n"
 msgid ""
 "Download all\n"
 "Add to favorites\n"
@@ -127,6 +133,10 @@ msgstr ""
 "Add to favorites\n"
 
 #: frmmain.rs_filterstatusitems
+#| msgid ""
+#| "Completed\n"
+#| "Ongoing\n"
+#| "<none>\n"
 msgid ""
 "Completed\n"
 "Ongoing\n"
@@ -141,6 +151,9 @@ msgid "Free Manga Downloader already running!"
 msgstr "Free Manga Downloader already running!"
 
 #: frmmain.rs_hintfavoriteproblem
+#| msgid ""
+#| "There is a problem with this data!\n"
+#| "Removing and re-adding this data may fix the problem.\n"
 msgid ""
 "There is a problem with this data!\n"
 "Removing and re-adding this data may fix the problem.\n"
@@ -194,6 +207,11 @@ msgid "Auto check for new chapter every %d minutes"
 msgstr "Auto check for new chapter every %d minutes"
 
 #: frmmain.rs_lbloptionexternalparamshint
+#| msgid ""
+#| "%s : Path to the manga\n"
+#| "%s : Chapter filename\n"
+#| "\n"
+#| "Example : \"%s%s\"\n"
 msgid ""
 "%s : Path to the manga\n"
 "%s : Chapter filename\n"
@@ -232,6 +250,11 @@ msgid "One week"
 msgstr "One week"
 
 #: frmmain.rs_optionfmddoitems
+#| msgid ""
+#| "Do nothing\n"
+#| "Exit FMD\n"
+#| "Shutdown\n"
+#| "Hibernate\n"
 msgid ""
 "Do nothing\n"
 "Exit FMD\n"
@@ -529,9 +552,11 @@ msgstr "Auto generate folder based on manga's name"
 msgid "Enable live search (slow on long list)"
 msgstr "Enable live search (slow on long list)"
 
-#: tmainform.cboptionmangafoxremovewatermarks.caption
-msgid "[Mangafox] Remove watermarks (Beware! Experimental!)"
-msgstr "[Mangafox] Remove watermarks (Beware! Experimental!)"
+#: tmainform.cboptionmangafoxremovewatermark.caption
+#| msgid "[Mangafox] Remove watermark (Beware! Experimental!)"
+msgctxt "tmainform.cboptionmangafoxremovewatermark.caption"
+msgid "[Mangafox] Remove watermark"
+msgstr "[Mangafox] Remove watermark"
 
 #: tmainform.cboptionminimizetotray.caption
 msgid "Minimize to tray"

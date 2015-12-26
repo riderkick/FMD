@@ -23,7 +23,7 @@ uses
   uBaseUnit, uData, uDownloadsManager, uFavoritesManager, uUpdateThread,
   uUpdateDBThread, uSilentThread, uMisc, uGetMangaInfosThread, uTranslation,
   frmDropTarget, frmAccountManager, CheckUpdate, accountmanagerdb,
-  USimpleException, USimpleLogger;
+  mangafoxwatermarkremover, USimpleException, USimpleLogger;
 
 type
 
@@ -54,12 +54,12 @@ type
     cbOptionAutoCheckFavDownload: TCheckBox;
     cbOptionAutoCheckFavRemoveCompletedManga: TCheckBox;
     cbOptionEnableLoadCover: TCheckBox;
+    cbOptionMangaFoxRemoveWatermark: TCheckBox;
     cbOptionRemoveMangaNameFromChapter: TCheckBox;
     cbOptionShowDownloadToolbar: TCheckBox;
     cbOptionUpdateListNoMangaInfo: TCheckBox;
     cbOptionDigitVolume: TCheckBox;
     cbOptionDigitChapter: TCheckBox;
-    cbOptionMangaFoxRemoveWatermarks: TCheckBox;
     cbOptionLiveSearch: TCheckBox;
     cbOptionUpdateListRemoveDuplicateLocalData : TCheckBox;
     cbUseRegExpr: TCheckBox;
@@ -4393,7 +4393,7 @@ begin
     // misc
     cbOptionBatotoShowScanGroup.Checked := ReadBool('misc', 'BatotoShowScanGroup', True);
     cbOptionBatotoShowAllLang.Checked := ReadBool('misc', 'BatotoShowAllLang', False);
-    cbOptionMangaFoxRemoveWatermarks.Checked := ReadBool('misc', 'MangafoxRemoveWatermarks', False);
+    cbOptionMangaFoxRemoveWatermark.Checked := ReadBool('misc', 'MangafoxRemoveWatermark', False);
 
     // websites
     if Length(optionMangaSiteSelectionNodes) > 0 then
@@ -4512,7 +4512,7 @@ begin
       // misc
       WriteBool('misc', 'BatotoShowScanGroup', cbOptionBatotoShowScanGroup.Checked);
       WriteBool('misc', 'BatotoShowAllLang', cbOptionBatotoShowAllLang.Checked);
-      WriteBool('misc', 'MangafoxRemoveWatermarks', cbOptionMangaFoxRemoveWatermarks.Checked);
+      WriteBool('misc', 'MangafoxRemoveWatermark', cbOptionMangaFoxRemoveWatermark.Checked);
     finally
       UpdateFile;
     end;
@@ -4645,6 +4645,11 @@ begin
     //misc
     OptionBatotoShowScanGroup := cbOptionBatotoShowScanGroup.Checked;
     OptionBatotoShowAllLang := cbOptionBatotoShowAllLang.Checked;
+    OptionMangaFoxRemoveWatermark := cbOptionMangaFoxRemoveWatermark.Checked;
+    if OptionMangaFoxRemoveWatermark then
+      mangafoxwatermarkremover.LoadTemplate(CleanAndExpandDirectory(GetCurrentDirUTF8) + OptionMangaFoxTemplateFolder)
+    else
+      mangafoxwatermarkremover.ClearTemplate;
 
     //languages
     ApplyLanguage;
