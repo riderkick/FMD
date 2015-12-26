@@ -211,8 +211,8 @@ function GetInfo(var MangaInfo: TMangaInformation; const AURL: String;
   const Reconnect: Integer; Module: TModuleContainer): Integer;
 var
   query: TXQueryEngineHTML;
-  v: IXQValue;
-  s: String;
+  v, w: IXQValue;
+  s, t: String;
   i: Integer;
 begin
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
@@ -248,11 +248,17 @@ begin
           end;
 
           if OptionBatotoShowAllLang then
-            s := '//table[@class="ipb_table chapters_list"]//tr[starts-with(@class, "row lang")]/td[1]/a'
-          else s := '//table[@class="ipb_table chapters_list"]//tr[starts-with(@class, "row lang_English")]/td[1]/a';
+            s := '//table[@class="ipb_table chapters_list"]//tr[starts-with(@class, "row lang")]'
+          else s := '//table[@class="ipb_table chapters_list"]//tr[starts-with(@class, "row lang_English")]';
           for v in query.XPath(s) do begin
-            chapterLinks.Add(v.toNode.getAttribute('href'));
-            chapterName.Add(v.toString);
+            w := query.Engine.evaluateXPath3('td[1]/a', v.toNode);
+            chapterLinks.Add(w.toNode.getAttribute('href'));
+            t := '';
+            if OptionBatotoShowScanGroup then begin
+              t := query.Engine.evaluateXPath3('td[3]', v.toNode).toString;
+              if t <> '' then t := ' ['+ t +']' else t := '';
+            end;
+            chapterName.Add(w.toString + t);
           end;
           InvertStrings([chapterLinks, chapterName])
         end;
