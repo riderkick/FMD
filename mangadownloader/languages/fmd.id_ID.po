@@ -18,7 +18,7 @@ msgstr "Apakah anda yakin ingin menghapus akun ini?"
 
 #: frmaccountmanager.rs_checking
 msgid "Checking"
-msgstr "Memerika"
+msgstr "Memeriksa"
 
 #: frmaccountmanager.rs_invalid
 msgid "Invalid"
