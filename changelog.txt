@@ -7,6 +7,11 @@ https://bintray.com/riderkick/FMD/data/db/view#files
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.27.0 (26-12-2015)
+[+] Added Remove MangaFox watermark feature. Options > Misc
+[*] Batoto: fix add language and scan group to chapter title
+[*] Various changes and bug fixes
+
 0.9.26.0 (23-12-2015)
 [*] Batoto: fix login
 [*] ExHentai: fix login
