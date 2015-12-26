@@ -18,7 +18,7 @@ uses
   lazutf8classes, LazFileUtils, jsHTMLUtil, FastHTMLParser, HTMLUtil, SynaCode,
   RegExpr, Imaging, ImagingTypes, ImagingCanvases, Classes, SysUtils, Dialogs,
   ExtCtrls, IniFiles, typinfo, syncobjs, httpsend, blcksock, uBaseUnit, uPacker,
-  uFMDThread, uMisc, USimpleLogger, dateutils;
+  uFMDThread, uMisc, mangafoxwatermarkremover, USimpleLogger, dateutils;
 
 type
   TDownloadManager = class;
@@ -1145,13 +1145,14 @@ end;
 
 function TDownloadThread.DownloadImage(const prefix: String): Boolean;
 var
-  TURL, lpath: String;
+  TURL, lpath, sfilename: String;
 
   {$I includes/MeinManga/image_url.inc}
 
   {$I includes/SenMangaRAW/image_url.inc}
 
 begin
+  sfilename := '';
   lpath := CleanAndExpandDirectory(CorrectPathSys(manager.container.DownloadInfo.SaveTo +
     manager.container.ChapterName[manager.container.CurrentDownloadChapterPtr]));
   if not DirectoryExistsUTF8(lpath) then
@@ -1190,16 +1191,24 @@ begin
     Result := GetMeinMangaImageURL
   else
   if Result then
-    Result := SaveImage(
+    Result := uBaseUnit.SaveImage(
+      FHTTP,
       manager.container.MangaSiteID,
       TURL,
       lpath,
       Format('%.3d', [workCounter + 1]),
       prefix,
+      sfilename,
       manager.container.Manager.retryConnect);
   if Terminated then Exit(False);
-  if Result then
+  if Result then begin
     manager.container.PageLinks[workCounter] := 'D';
+
+    // remove mangafox watermark
+    if manager.container.ModuleId > -1 then
+      if Modules.Module[ModuleId].Website = 'MangaFox' then
+        mangafoxwatermarkremover.RemoveWatermark(sfilename);
+  end;
 end;
 
 procedure TTaskThread.CheckOut;
