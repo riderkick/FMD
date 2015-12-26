@@ -24,6 +24,88 @@ var
   locklogin: TRTLCriticalSection;
   onlogin: Boolean = False;
 
+function Login(var AHTTP: THTTPSendThread): Boolean;
+var
+  query: TXQueryEngineHTML;
+  loginform: THTMLForm;
+  key: string;
+begin
+  Result := False;
+  if AHTTP = nil then Exit;
+  if Account.Enabled[modulename] = False then Exit;
+  if Account.Username[modulename] = '' then Exit;
+
+  if TryEnterCriticalsection(locklogin) > 0 then
+    with AHTTP do begin
+      onlogin := True;
+      Account.Status[modulename] := asChecking;
+      Reset;
+      Cookies.Clear;
+      if GET(urlroot) then begin
+        loginform := THTMLForm.Create;
+        query := TXQueryEngineHTML.Create;
+        try
+          query.ParseHTML(StreamToString(Document));
+          key := query.XPathString('//input[@name="auth_key"]/@value');
+          if key <> '' then begin
+            with loginform do begin
+              Put('auth_key', key);
+              Put('referer', 'https://bato.to/');
+              Put('ips_username', Account.Username[modulename]);
+              Put('ips_password', Account.Password[modulename]);
+              Put('rememberMe', '1');
+            end;
+            Clear;
+            Headers.Values['Referer'] := ' https://bato.to/';
+            if POST(urllogin, loginform.GetData) then begin
+              if ResultCode = 200 then begin
+                Result := Cookies.Values['pass_hash'] <> '';
+                if Result then begin
+                  Account.Cookies[modulename] := GetCookies;
+                  Account.Status[modulename] := asValid;
+                end else
+                  Account.Status[modulename] := asInvalid;
+                Account.Save;
+              end;
+            end;
+          end;
+        finally
+          query.Free;
+          loginform.Free
+        end;
+      end;
+      onlogin := False;
+      if Account.Status[modulename] = asChecking then
+        Account.Status[modulename] := asUnknown;
+      LeaveCriticalsection(locklogin);
+    end
+  else
+  begin
+    while onlogin do Sleep(1000);
+    if Result then AHTTP.Cookies.Text := Account.Cookies[modulename];
+  end;
+end;
+
+function GETWithLogin(var AHTTP: THTTPSendThread; AURL: String): Boolean;
+var
+  s: String;
+begin
+  Result := False;
+  s := '';
+  AHTTP.Cookies.Text := Account.Cookies['Batoto'];
+  if AHTTP.GET(AURL) then begin
+    s := StreamToString(AHTTP.Document);
+    Result := (Pos('class=''logged_in''', s) > 0) or (Pos('class="logged_in"', s) > 0);
+    if not Result then
+      if Login(AHTTP) then
+         Result := AHTTP.GET(AURL);
+    if not Result then begin
+      AHTTP.Document.Clear;
+      WriteStrToStream(AHTTP.Document, s);
+    end;
+  end;
+end;
+
 function GetDirectoryPageNumber(var MangaInfo: TMangaInformation;
   var Page: Integer; Module: TModuleContainer): Integer;
 var
@@ -125,78 +207,9 @@ begin
   end;
 end;
 
-function CheckLogin(const source: string): Boolean;
-begin
-  if source = '' then Exit(False);
-  Result := (Pos('class=''logged_in''', source) > 0) or (Pos('class="logged_in"', source) > 0);
-end;
-
-function Login(var AHTTP: THTTPSendThread): Boolean;
-var
-  query: TXQueryEngineHTML;
-  loginform: THTMLForm;
-  key: string;
-begin
-  Result := False;
-  if AHTTP = nil then Exit;
-  if Account.Enabled[modulename] = False then Exit;
-  if Account.Username[modulename] = '' then Exit;
-
-  if TryEnterCriticalsection(locklogin) > 0 then
-    with AHTTP do begin
-      onlogin := True;
-      Account.Status[modulename] := asChecking;
-      Reset;
-      Cookies.Clear;
-      if GET(urlroot) then begin
-        loginform := THTMLForm.Create;
-        query := TXQueryEngineHTML.Create;
-        try
-          query.ParseHTML(StreamToString(Document));
-          key := query.XPathString('//input[@name="auth_key"]/@value');
-          if key <> '' then begin
-            with loginform do begin
-              Put('auth_key', key);
-              Put('referer', 'https://bato.to/');
-              Put('ips_username', Account.Username[modulename]);
-              Put('ips_password', Account.Password[modulename]);
-              Put('rememberMe', '1');
-            end;
-            Clear;
-            Headers.Values['Referer'] := ' https://bato.to/';
-            if POST(urllogin, loginform.GetData) then begin
-              if ResultCode = 200 then begin
-                Result := Cookies.Values['pass_hash'] <> '';
-                if Result then begin
-                  Account.Cookies[modulename] := GetCookies;
-                  Account.Status[modulename] := asValid;
-                end else
-                  Account.Status[modulename] := asInvalid;
-                Account.Save;
-              end;
-            end;
-          end;
-        finally
-          query.Free;
-          loginform.Free
-        end;
-      end;
-      onlogin := False;
-      if Account.Status[modulename] = asChecking then
-        Account.Status[modulename] := asUnknown;
-      LeaveCriticalsection(locklogin);
-    end
-  else
-  begin
-    while onlogin do Sleep(1000);
-    if Result then AHTTP.Cookies.Text := Account.Cookies[modulename];
-  end;
-end;
-
 function GetInfo(var MangaInfo: TMangaInformation; const AURL: String;
   const Reconnect: Integer; Module: TModuleContainer): Integer;
 var
-  source: TStringList;
   query: TXQueryEngineHTML;
   v: IXQValue;
   s: String;
@@ -209,19 +222,11 @@ begin
     mangaInfo.url := FillHost(urlroot, AURL);
     while onlogin do Sleep(1000);
     FHTTP.Cookies.Text := Account.Cookies[modulename];
-    if FHTTP.GET(mangaInfo.url) then begin
+    if GETWithLogin(FHTTP, mangaInfo.url) then begin
       Result := NO_ERROR;
-      source := TStringList.Create;
       query := TXQueryEngineHTML.Create;
       try
-        source.LoadFromStream(FHTTP.Document);
-        if not CheckLogin(source.Text) then begin
-          if Login(FHTTP) then begin
-            FHTTP.GET(mangaInfo.url, source);
-          end;
-        end;
-
-        query.ParseHTML(source.Text);
+        query.ParseHTML(StreamToString(FHTTP.Document));
         with mangaInfo do begin
           coverLink := Query.XPathString('//div[@class="ipsBox"]//img/@src');
           if title = '' then
@@ -253,7 +258,6 @@ begin
         end;
       finally
         query.Free;
-        source.Free;
       end;
     end else Result := INFORMATION_NOT_FOUND;
   end;
