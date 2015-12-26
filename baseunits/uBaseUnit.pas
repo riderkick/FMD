@@ -796,6 +796,7 @@ type
     function XPathString(Expression: String): String; inline;
     function CSS(Expression: String): IXQValue; inline;
     function CSSString(Expression: String): String; inline;
+    property Engine: TXQueryEngine read FEngine;
   end;
 
   IXQValue = xquery.IXQValue;
