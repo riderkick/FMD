@@ -91,9 +91,10 @@ var
   s: String;
 begin
   Result := False;
-  s := '';
   AHTTP.Cookies.Text := Account.Cookies['Batoto'];
   if AHTTP.GET(AURL) then begin
+    Result := True;
+    if (Account.Enabled[modulename] = False) or (Account.Username[modulename] = '') then Exit;
     s := StreamToString(AHTTP.Document);
     Result := (Pos('class=''logged_in''', s) > 0) or (Pos('class="logged_in"', s) > 0);
     if not Result then
