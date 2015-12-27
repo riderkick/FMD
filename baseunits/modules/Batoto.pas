@@ -252,15 +252,15 @@ begin
             s := '//table[@class="ipb_table chapters_list"]//tr[starts-with(@class, "row lang")]'
           else s := '//table[@class="ipb_table chapters_list"]//tr[starts-with(@class, "row lang_English")]';
           for v in query.XPath(s) do begin
-            w := query.Engine.evaluateXPath3('td[1]/a', v.toNode);
+            w := query.XPath('td[1]/a', v.toNode);
             chapterLinks.Add(w.toNode.getAttribute('href'));
             t := w.toString;
             if OptionBatotoShowAllLang then begin
-              l := query.Engine.evaluateXPath3('td[2]/div', v.toNode).toNode.getAttribute('title');
+              l := query.XPath('td[2]/div', v.toNode).toNode.getAttribute('title');
               if l <> '' then t += ' ['+ l +']';
             end;
             if OptionBatotoShowScanGroup then begin
-              l := query.Engine.evaluateXPath3('td[3]', v.toNode).toString;
+              l := query.XPath('td[3]', v.toNode).toString;
               if l <> '' then t += ' ['+ l +']';
             end;
             chapterName.Add(t);

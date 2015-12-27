@@ -787,15 +787,15 @@ type
   private
     FEngine: TXQueryEngine;
     FTreeParser: TTreeParser;
-    function Eval(Expression: String; isCSS: Boolean = False): IXQValue;
+    function Eval(Expression: String; isCSS: Boolean = False; Tree: TTreeNode = nil): IXQValue;
   public
     constructor Create(HTML: String = '');
     destructor Destroy; override;
     procedure ParseHTML(HTML: String);
-    function XPath(Expression: String): IXQValue; inline;
-    function XPathString(Expression: String): String; inline;
-    function CSS(Expression: String): IXQValue; inline;
-    function CSSString(Expression: String): String; inline;
+    function XPath(Expression: String; Tree: TTreeNode = nil): IXQValue; inline;
+    function XPathString(Expression: String; Tree: TTreeNode = nil): String; inline;
+    function CSS(Expression: String; Tree: TTreeNode = nil): IXQValue; inline;
+    function CSSString(Expression: String; Tree: TTreeNode = nil): String; inline;
     property Engine: TXQueryEngine read FEngine;
   end;
 
@@ -3688,13 +3688,17 @@ end;
 
 { TXQueryEngineHTML }
 
-function TXQueryEngineHTML.Eval(Expression: String; isCSS: Boolean): IXQValue;
+function TXQueryEngineHTML.Eval(Expression: String; isCSS: Boolean; Tree: TTreeNode): IXQValue;
+var
+  t: TTreeNode;
 begin
   Result := xqvalue();
+  t := Tree;
+  if t = nil then t := FTreeParser.getLastTree;
   if Expression = '' then Exit;
   try
-    if isCSS then Result := FEngine.evaluateCSS3(Expression, FTreeParser.getLastTree)
-    else Result := FEngine.evaluateXPath3(Expression, FTreeParser.getLastTree);
+    if isCSS then Result := FEngine.evaluateCSS3(Expression, t)
+    else Result := FEngine.evaluateXPath3(Expression, t);
   except
   end;
 end;
@@ -3727,24 +3731,26 @@ begin
   if HTML <> '' then FTreeParser.parseTree(HTML);
 end;
 
-function TXQueryEngineHTML.XPath(Expression: String): IXQValue;
+function TXQueryEngineHTML.XPath(Expression: String; Tree: TTreeNode): IXQValue;
 begin
-  Result := Eval(Expression);
+  Result := Eval(Expression, False, Tree);
 end;
 
-function TXQueryEngineHTML.XPathString(Expression: String): String;
+function TXQueryEngineHTML.XPathString(Expression: String; Tree: TTreeNode
+  ): String;
 begin
-  Result := Eval(Expression).toString;
+  Result := Eval(Expression, False, Tree).toString;
 end;
 
-function TXQueryEngineHTML.CSS(Expression: String): IXQValue;
+function TXQueryEngineHTML.CSS(Expression: String; Tree: TTreeNode): IXQValue;
 begin
-  Result := Eval(Expression, True);
+  Result := Eval(Expression, True, Tree);
 end;
 
-function TXQueryEngineHTML.CSSString(Expression: String): String;
+function TXQueryEngineHTML.CSSString(Expression: String; Tree: TTreeNode
+  ): String;
 begin
-  Result := Eval(Expression, True).toString;
+  Result := Eval(Expression, True, Tree).toString;
 end;
 
 { TParseHTML }
