@@ -2392,6 +2392,7 @@ object MainForm: TMainForm
                 Top = 30
                 Width = 261
                 Caption = 'Auto generate folder based on manga''s name'
+                OnChange = cbOptionGenerateMangaFolderNameChange
                 ParentFont = False
                 TabOrder = 0
               end
@@ -2490,7 +2491,7 @@ object MainForm: TMainForm
                 TabOrder = 8
                 TextHint = 'Custom rename'
               end
-              object lbOptionMangaRename: TLabel
+              object lbOptionMangaCustomRename: TLabel
                 Left = 16
                 Height = 15
                 Top = 56

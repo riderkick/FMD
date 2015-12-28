@@ -67,7 +67,7 @@ type
     cbOptionOneInstanceOnly: TCheckBox;
     edOptionMangaCustomRename: TEdit;
     lbOptionMangaCustomRenameHint: TLabel;
-    lbOptionMangaRename: TLabel;
+    lbOptionMangaCustomRename: TLabel;
     miAbortSilentThread: TMenuItem;
     mmChangelog: TMemo;
     pcAbout: TPageControl;
@@ -357,6 +357,7 @@ type
     procedure cbOptionAutoCheckFavIntervalChange(Sender: TObject);
     procedure cbOptionDigitChapterChange(Sender: TObject);
     procedure cbOptionDigitVolumeChange(Sender: TObject);
+    procedure cbOptionGenerateMangaFolderNameChange(Sender: TObject);
     procedure cbSelectMangaChange(Sender: TObject);
     procedure clbChapterListBeforeCellPaint(Sender: TBaseVirtualTree;
       TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
@@ -2133,6 +2134,13 @@ end;
 procedure TMainForm.cbOptionDigitVolumeChange(Sender: TObject);
 begin
   seOptionDigitVolume.Enabled := cbOptionDigitVolume.Checked;
+end;
+
+procedure TMainForm.cbOptionGenerateMangaFolderNameChange(Sender: TObject);
+begin
+  lbOptionMangaCustomRename.Enabled := cbOptionGenerateMangaFolderName.Checked;
+  edOptionMangaCustomRename.Enabled := cbOptionGenerateMangaFolderName.Checked;
+  lbOptionMangaCustomRenameHint.Enabled := cbOptionGenerateMangaFolderName.Checked;
 end;
 
 procedure TMainForm.btReadOnlineClick(Sender: TObject);
