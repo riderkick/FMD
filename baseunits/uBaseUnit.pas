@@ -3008,7 +3008,8 @@ begin
   HTTPHeader.Values['Accept-Language'] := ' en-US,en;q=0.8';
   HTTP.Protocol := '1.1';
   HTTP.KeepAlive := False;
-  HTTP.UserAgent := DEFAULT_UA;
+  if (HTTP.UserAgent = '') or (HTTP.UserAgent = UA_SYNAPSE) then
+    HTTP.UserAgent := DEFAULT_UA;
   if OptionHTTPUseGzip then
     HTTPHeader.Values['Accept-Encoding'] := ' gzip, deflate';
 
@@ -3292,7 +3293,8 @@ begin
   HTTPHeader.Values['Accept-Language'] := ' en-US,en;q=0.8';
   HTTP.Protocol := '1.1';
   HTTP.KeepAlive := False;
-  HTTP.UserAgent := DEFAULT_UA;
+  if (HTTP.UserAgent = '') or (HTTP.UserAgent = UA_SYNAPSE) then
+    HTTP.UserAgent := DEFAULT_UA;
   HTTP.MimeType := 'text/html';
 
   //User-Agent

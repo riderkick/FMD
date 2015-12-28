@@ -75,6 +75,7 @@ function StringsToCommandLine(const S: array of string): string; overload;
 procedure DeleteArrayOfString(Var TheStrings: TArrayOfString; Index: Integer);
 
 const
+  UA_SYNAPSE   = 'Mozilla/4.0 (compatible; Synapse)';
   UA_CURL      = 'curl/7.42.1';
   UA_GOOGLEBOT = 'Mozilla/5.0 (compatible; Googlebot/2.1;  http://www.google.com/bot.html)';
   UA_MSIE      = 'Mozilla/5.0 (compatible; WOW64; MSIE 10.0; Windows NT 6.2)';
