@@ -1809,7 +1809,7 @@ begin
         isCreate := True;
       end;
       DLManager.TaskItem(pos).Website := mangaInfo.website;
-      // generate folder name
+      // generate chapter folder name
       s := CustomRename(OptionChapterCustomRename,
         mangaInfo.website,
         mangaInfo.title,
