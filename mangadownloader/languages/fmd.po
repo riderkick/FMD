@@ -463,6 +463,11 @@ msgctxt "TMAINFORM.CBOPTIONBATOTOSHOWSCANGROUP.CAPTION"
 msgid "[Batoto] Show scan group name"
 msgstr ""
 
+#: tmainform.cboptionchangeunicodecharacter.caption
+msgctxt "TMAINFORM.CBOPTIONCHANGEUNICODECHARACTER.CAPTION"
+msgid "Change all all unicode symbols to \"_\" (choose this when you have problem with unicode path)"
+msgstr ""
+
 #: tmainform.cboptiondigitchapter.caption
 msgid "Chapter"
 msgstr ""
@@ -494,10 +499,6 @@ msgstr ""
 
 #: tmainform.cboptiononeinstanceonly.caption
 msgid "Permit only one FMD running"
-msgstr ""
-
-#: tmainform.cboptionpathconvert.caption
-msgid "Change all all unicode symbols to \"_\" (choose this when you have problem with unicode path)"
 msgstr ""
 
 #: tmainform.cboptionproxytype.text
@@ -885,7 +886,8 @@ msgctxt "TMAINFORM.EDFILTERTITLE.TEXTHINT"
 msgid "Title"
 msgstr ""
 
-#: tmainform.edoptioncustomrename.texthint
+#: tmainform.edoptionchaptercustomrename.texthint
+msgctxt "TMAINFORM.EDOPTIONCHAPTERCUSTOMRENAME.TEXTHINT"
 msgid "Custom rename"
 msgstr ""
 
@@ -905,6 +907,11 @@ msgstr ""
 
 #: tmainform.edoptionhost.texthint
 msgid "Proxy host/IP"
+msgstr ""
+
+#: tmainform.edoptionmangacustomrename.texthint
+msgctxt "TMAINFORM.EDOPTIONMANGACUSTOMRENAME.TEXTHINT"
+msgid "Custom rename"
 msgstr ""
 
 #: tmainform.edoptionpass.texthint
@@ -1022,20 +1029,13 @@ msgctxt "TMAINFORM.LBOPTIONAUTOCHECKFAVINTERVALMINUTES.CAPTION"
 msgid "Auto check for new chapter every %d minutes"
 msgstr ""
 
-#: tmainform.lboptionconnectiontimeout.caption
-msgid "Connection timeout (seconds)"
-msgstr ""
-
-#: tmainform.lboptioncustomrename.caption
-msgid "Chapter folder name:"
-msgstr ""
-
-#: tmainform.lboptioncustomrenamehint.caption
-msgctxt "TMAINFORM.LBOPTIONCUSTOMRENAMEHINT.CAPTION"
+#: tmainform.lboptionchaptercustomrenamehint.caption
+msgctxt "TMAINFORM.LBOPTIONCHAPTERCUSTOMRENAMEHINT.CAPTION"
 msgid "[?]"
 msgstr ""
 
-#: tmainform.lboptioncustomrenamehint.hint
+#: tmainform.lboptionchaptercustomrenamehint.hint
+msgctxt "TMAINFORM.LBOPTIONCHAPTERCUSTOMRENAMEHINT.HINT"
 msgid ""
 "%WEBSITE% : Website name\n"
 "%MANGA% : Manga title\n"
@@ -1046,6 +1046,14 @@ msgid ""
 "\n"
 "Note:\n"
 "Chapter folder name must have at least %CHAPTER% or %NUMBERING%.\n"
+msgstr ""
+
+#: tmainform.lboptionconnectiontimeout.caption
+msgid "Connection timeout (seconds)"
+msgstr ""
+
+#: tmainform.lboptioncustomrename.caption
+msgid "Chapter folder name:"
 msgstr ""
 
 #: tmainform.lboptioncustomrenamehint1.caption
@@ -1084,6 +1092,27 @@ msgstr ""
 
 #: tmainform.lboptionletfmddo.caption
 msgid "After download finish:"
+msgstr ""
+
+#: tmainform.lboptionmangacustomrename.caption
+msgctxt "TMAINFORM.LBOPTIONMANGACUSTOMRENAME.CAPTION"
+msgid "Manga folder name:"
+msgstr ""
+
+#: tmainform.lboptionmangacustomrenamehint.caption
+msgctxt "TMAINFORM.LBOPTIONMANGACUSTOMRENAMEHINT.CAPTION"
+msgid "[?]"
+msgstr ""
+
+#: tmainform.lboptionmangacustomrenamehint.hint
+msgid ""
+"%WEBSITE% : Website name\n"
+"%MANGA% : Manga title\n"
+"%AUTHOR% : Author\n"
+"%ARTIST% : Artist\n"
+"\n"
+"Note:\n"
+"Manga folder name must have at least %MANGA%.\n"
 msgstr ""
 
 #: tmainform.lboptionmaxparallel.caption

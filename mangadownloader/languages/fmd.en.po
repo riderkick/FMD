@@ -524,6 +524,11 @@ msgctxt "tmainform.cboptionbatotoshowscangroup.caption"
 msgid "[Batoto] Show scan group name"
 msgstr "[Batoto] Show scan group name"
 
+#: tmainform.cboptionchangeunicodecharacter.caption
+msgctxt "tmainform.cboptionchangeunicodecharacter.caption"
+msgid "Change all all unicode symbols to \"_\" (choose this when you have problem with unicode path)"
+msgstr "Change all all unicode symbols to \"_\" (choose this when you have problem with unicode path)"
+
 #: tmainform.cboptiondigitchapter.caption
 msgid "Chapter"
 msgstr "Chapter"
@@ -557,10 +562,6 @@ msgstr "Minimize to tray"
 #: tmainform.cboptiononeinstanceonly.caption
 msgid "Permit only one FMD running"
 msgstr "Permit only one FMD running"
-
-#: tmainform.cboptionpathconvert.caption
-msgid "Change all all unicode symbols to \"_\" (choose this when you have problem with unicode path)"
-msgstr "Change all all unicode symbols to \"_\" (choose this when you have problem with unicode path)"
 
 #: tmainform.cboptionproxytype.text
 msgid "HTTP"
@@ -949,7 +950,8 @@ msgctxt "TMAINFORM.EDFILTERTITLE.TEXTHINT"
 msgid "Title"
 msgstr "Title"
 
-#: tmainform.edoptioncustomrename.texthint
+#: tmainform.edoptionchaptercustomrename.texthint
+msgctxt "tmainform.edoptionchaptercustomrename.texthint"
 msgid "Custom rename"
 msgstr "Custom rename"
 
@@ -972,6 +974,11 @@ msgstr "External program path"
 #: tmainform.edoptionhost.texthint
 msgid "Proxy host/IP"
 msgstr "Proxy host/IP"
+
+#: tmainform.edoptionmangacustomrename.texthint
+msgctxt "tmainform.edoptionmangacustomrename.texthint"
+msgid "Custom rename"
+msgstr "Custom rename"
 
 #: tmainform.edoptionpass.texthint
 msgid "Proxy password"
@@ -1110,20 +1117,13 @@ msgctxt "tmainform.lboptionautocheckfavintervalminutes.caption"
 msgid "Auto check for new chapter every %d minutes"
 msgstr "Auto check for new chapter every %d minutes"
 
-#: tmainform.lboptionconnectiontimeout.caption
-msgid "Connection timeout (seconds)"
-msgstr "Connection timeout (seconds)"
-
-#: tmainform.lboptioncustomrename.caption
-msgid "Chapter folder name:"
-msgstr "Chapter folder name:"
-
-#: tmainform.lboptioncustomrenamehint.caption
-msgctxt "TMAINFORM.LBOPTIONCUSTOMRENAMEHINT.CAPTION"
+#: tmainform.lboptionchaptercustomrenamehint.caption
+msgctxt "tmainform.lboptionchaptercustomrenamehint.caption"
 msgid "[?]"
 msgstr "[?]"
 
-#: tmainform.lboptioncustomrenamehint.hint
+#: tmainform.lboptionchaptercustomrenamehint.hint
+msgctxt "tmainform.lboptionchaptercustomrenamehint.hint"
 msgid ""
 "%WEBSITE% : Website name\n"
 "%MANGA% : Manga title\n"
@@ -1144,6 +1144,14 @@ msgstr ""
 "\n"
 "Note:\n"
 "Chapter folder name must have at least %CHAPTER% or %NUMBERING%.\n"
+
+#: tmainform.lboptionconnectiontimeout.caption
+msgid "Connection timeout (seconds)"
+msgstr "Connection timeout (seconds)"
+
+#: tmainform.lboptioncustomrename.caption
+msgid "Chapter folder name:"
+msgstr "Chapter folder name:"
 
 #: tmainform.lboptioncustomrenamehint1.caption
 msgctxt "TMAINFORM.LBOPTIONCUSTOMRENAMEHINT1.CAPTION"
@@ -1182,6 +1190,42 @@ msgstr "Language:"
 #: tmainform.lboptionletfmddo.caption
 msgid "After download finish:"
 msgstr "After download finish:"
+
+#: tmainform.lboptionmangacustomrename.caption
+msgctxt "tmainform.lboptionmangacustomrename.caption"
+msgid "Manga folder name:"
+msgstr "Manga folder name:"
+
+#: tmainform.lboptionmangacustomrenamehint.caption
+msgctxt "tmainform.lboptionmangacustomrenamehint.caption"
+msgid "[?]"
+msgstr "[?]"
+
+#: tmainform.lboptionmangacustomrenamehint.hint
+#| msgid ""
+#| "%WEBSITE% : Website name\n"
+#| "%MANGA% : Chapter title\n"
+#| "%AUTHOR% : Author\n"
+#| "%ARTIST% : Artist\n"
+#| "\n"
+#| "Note:\n"
+#| "Manga folder name must have at least %MANGA%.\n"
+msgid ""
+"%WEBSITE% : Website name\n"
+"%MANGA% : Manga title\n"
+"%AUTHOR% : Author\n"
+"%ARTIST% : Artist\n"
+"\n"
+"Note:\n"
+"Manga folder name must have at least %MANGA%.\n"
+msgstr ""
+"%WEBSITE% : Website name\n"
+"%MANGA% : Manga title\n"
+"%AUTHOR% : Author\n"
+"%ARTIST% : Artist\n"
+"\n"
+"Note:\n"
+"Manga folder name must have at least %MANGA%.\n"
 
 #: tmainform.lboptionmaxparallel.caption
 msgid "Number of downloaded tasks at the same time (Max: 8)"

@@ -491,6 +491,11 @@ msgctxt "tmainform.cboptionbatotoshowscangroup.caption"
 msgid "[Batoto] Show scan group name"
 msgstr "[Batoto] Tampilkan nama grup scan"
 
+#: tmainform.cboptionchangeunicodecharacter.caption
+msgctxt "tmainform.cboptionchangeunicodecharacter.caption"
+msgid "Change all all unicode symbols to \"_\" (choose this when you have problem with unicode path)"
+msgstr "Ubah semua simbol unicode menjadi \"_\" (pilih ini ketika Anda memiliki masalah dengan lokasi unicode)"
+
 #: tmainform.cboptiondigitchapter.caption
 msgid "Chapter"
 msgstr "Bab"
@@ -523,10 +528,6 @@ msgstr "Perkecil ke penampan"
 #: tmainform.cboptiononeinstanceonly.caption
 msgid "Permit only one FMD running"
 msgstr "Hanya ijinkan satu FMD berjalan"
-
-#: tmainform.cboptionpathconvert.caption
-msgid "Change all all unicode symbols to \"_\" (choose this when you have problem with unicode path)"
-msgstr "Ubah semua simbol unicode menjadi \"_\" (pilih ini ketika Anda memiliki masalah dengan lokasi unicode)"
 
 #: tmainform.cboptionproxytype.text
 msgid "HTTP"
@@ -915,7 +916,8 @@ msgctxt "tmainform.edfiltertitle.texthint"
 msgid "Title"
 msgstr "Judul"
 
-#: tmainform.edoptioncustomrename.texthint
+#: tmainform.edoptionchaptercustomrename.texthint
+msgctxt "tmainform.edoptionchaptercustomrename.texthint"
 msgid "Custom rename"
 msgstr "Ubah nama kustom"
 
@@ -936,6 +938,11 @@ msgstr "Parameter program"
 #: tmainform.edoptionhost.texthint
 msgid "Proxy host/IP"
 msgstr "Host/IP"
+
+#: tmainform.edoptionmangacustomrename.texthint
+msgctxt "tmainform.edoptionmangacustomrename.texthint"
+msgid "Custom rename"
+msgstr "Ubah nama kustom"
 
 #: tmainform.edoptionpass.texthint
 msgid "Proxy password"
@@ -1061,20 +1068,13 @@ msgctxt "tmainform.lboptionautocheckfavintervalminutes.caption"
 msgid "Auto check for new chapter every %d minutes"
 msgstr "Otomatis periksa bab baru setiap %d menit"
 
-#: tmainform.lboptionconnectiontimeout.caption
-msgid "Connection timeout (seconds)"
-msgstr "Batas waktu koneksi (detik)"
-
-#: tmainform.lboptioncustomrename.caption
-msgid "Chapter folder name:"
-msgstr "Nama folder bab:"
-
-#: tmainform.lboptioncustomrenamehint.caption
-msgctxt "TMAINFORM.LBOPTIONCUSTOMRENAMEHINT.CAPTION"
+#: tmainform.lboptionchaptercustomrenamehint.caption
+msgctxt "tmainform.lboptionchaptercustomrenamehint.caption"
 msgid "[?]"
 msgstr "[?]"
 
-#: tmainform.lboptioncustomrenamehint.hint
+#: tmainform.lboptionchaptercustomrenamehint.hint
+msgctxt "tmainform.lboptionchaptercustomrenamehint.hint"
 msgid ""
 "%WEBSITE% : Website name\n"
 "%MANGA% : Manga title\n"
@@ -1095,6 +1095,14 @@ msgstr ""
 "\n"
 "Catatan:\n"
 "Nama folder harus memiliki setidaknya %CHAPTER% atau %NUMBERING%.\n"
+
+#: tmainform.lboptionconnectiontimeout.caption
+msgid "Connection timeout (seconds)"
+msgstr "Batas waktu koneksi (detik)"
+
+#: tmainform.lboptioncustomrename.caption
+msgid "Chapter folder name:"
+msgstr "Nama folder bab:"
 
 #: tmainform.lboptioncustomrenamehint1.caption
 msgctxt "TMAINFORM.LBOPTIONCUSTOMRENAMEHINT1.CAPTION"
@@ -1133,6 +1141,34 @@ msgstr "Bahasa:"
 #: tmainform.lboptionletfmddo.caption
 msgid "After download finish:"
 msgstr "Tugas setelah unduhan selesai:"
+
+#: tmainform.lboptionmangacustomrename.caption
+msgctxt "tmainform.lboptionmangacustomrename.caption"
+msgid "Manga folder name:"
+msgstr "Nama folder komik:"
+
+#: tmainform.lboptionmangacustomrenamehint.caption
+msgctxt "tmainform.lboptionmangacustomrenamehint.caption"
+msgid "[?]"
+msgstr "[?]"
+
+#: tmainform.lboptionmangacustomrenamehint.hint
+msgid ""
+"%WEBSITE% : Website name\n"
+"%MANGA% : Manga title\n"
+"%AUTHOR% : Author\n"
+"%ARTIST% : Artist\n"
+"\n"
+"Note:\n"
+"Manga folder name must have at least %MANGA%.\n"
+msgstr ""
+"%WEBSITE% : Nama situs\n"
+"%MANGA% : Judul komik\n"
+"%AUTHOR% : Penulis\n"
+"%ARTIST% : Seniman\n"
+"\n"
+"Catatan:\n"
+"Nama folder harus memiliki setidaknya %MANGA%\n"
 
 #: tmainform.lboptionmaxparallel.caption
 msgid "Number of downloaded tasks at the same time (Max: 8)"
