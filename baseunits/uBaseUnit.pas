@@ -350,9 +350,8 @@ const
   READMANGATODAY_ID      = 82;
   LONEMANGA_ID           = 83;
   DYNASTYSCANS_ID        = 84;
-  MADOKAMI_ID            = 85;
 
-  WebsiteRoots: array [0..85] of array [0..1] of string = (
+  WebsiteRoots: array [0..84] of array [0..1] of string = (
     ('AnimeA', 'http://manga.animea.net'),
     ('MangaInn', 'http://www.mangainn.me'),
     ('OurManga', 'http://www.ourmanga.com'),
@@ -437,8 +436,7 @@ const
     ('SenMangaRAW', 'http://raw.senmanga.com'),
     ('ReadMangaToday', 'http://www.readmanga.today'),
     ('LoneManga', 'http://lonemanga.com'),
-    ('Dynasty-Scans', 'http://dynasty-scans.com'),
-    ('Madokami', 'https://manga.madokami.com')
+    ('Dynasty-Scans', 'http://dynasty-scans.com')
     );
 
   ALPHA_LIST = '#abcdefghijklmnopqrstuvwxyz';
@@ -575,21 +573,6 @@ const
     '/doujins',
     '/issues',
     '/series'
-    );
-
-  MADOKAMI_BROWSER: array [0..11] of string = (
-    '/Manga/%23%20-%20F',
-    '/Manga/G%20-%20M',
-    '/Manga/N%20-%20Z',
-    '/Manga/_Autouploads/AutoUploaded%20from%20Assorted%20Sources',
-    '/Manga/_Autouploads/ComicWalker',
-    '/Manga/Non-English/Bahasa%20Indonesia',
-    '/Manga/Non-English/Brazilian%20Portuguese',
-    '/Manga/Non-English/Fran%C3%A7ais',
-    '/Manga/Non-English/Italian',
-    '/Manga/Non-English/Spanish',
-    '/Manga/_Doujinshi',
-    '/Raws'
     );
 
 var

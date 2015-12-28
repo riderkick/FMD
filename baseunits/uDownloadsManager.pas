@@ -483,8 +483,6 @@ var
 
   {$I includes/Dynasty-Scans/chapter_page_number.inc}
 
-  {$I includes/Madokami/chapter_page_number.inc}
-
 begin
   Result := False;
   manager.container.PageNumber := 0;
@@ -669,10 +667,7 @@ begin
       Result := GetLoneMangaPageNumber
     else
     if manager.container.MangaSiteID = DYNASTYSCANS_ID then
-      Result := GetDynastyScansPageNumber
-    else
-    if manager.container.MangaSiteID = MADOKAMI_ID then
-      Result := GetMadokamiPageNumber;
+      Result := GetDynastyScansPageNumber;
   end;
   if manager.container.PageLinks.Count > 0 then
     TrimStrings(manager.container.PageLinks);
