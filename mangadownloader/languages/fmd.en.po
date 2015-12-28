@@ -514,10 +514,6 @@ msgctxt "tmainform.cboptionautochecklatestversion.caption"
 msgid "Auto check for latest version "
 msgstr "Auto check for latest version "
 
-#: tmainform.cboptionautonumberchapter.caption
-msgid "Auto number chapter"
-msgstr "Auto number chapter"
-
 #: tmainform.cboptionbatotoshowalllang.caption
 msgctxt "tmainform.cboptionbatotoshowalllang.caption"
 msgid "[Batoto] Show All Language"
@@ -539,10 +535,6 @@ msgstr "Volume"
 #: tmainform.cboptionenableloadcover.caption
 msgid "Enable load manga cover"
 msgstr "Enable load manga cover"
-
-#: tmainform.cboptiongeneratechaptername.caption
-msgid "Generate chapter folder with chapter name"
-msgstr "Generate chapter folder with chapter name"
 
 #: tmainform.cboptiongeneratemangafoldername.caption
 msgid "Auto generate folder based on manga's name"
