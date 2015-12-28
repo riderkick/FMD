@@ -875,6 +875,7 @@ function ConvertCharsetToUTF8(S: String): String; overload;
 procedure ConvertCharsetToUTF8(S: TStrings); overload;
 
 // StringUtils
+function StringReplaceBrackets(const S, OldPattern, NewPattern: string; Flags: TReplaceFlags): string;
 function StreamToString(const M: TMemoryStream): string; inline;
 function GetRightValue(const name, s: string): string;
 function QuotedStrd(const S: string): string; overload; inline;
@@ -2113,6 +2114,32 @@ begin
             Length(AHeaders.Strings[i]) - p - 1);
       end;
     end;
+  end;
+end;
+
+function StringReplaceBrackets(const S, OldPattern, NewPattern: string; Flags: TReplaceFlags): string;
+var
+  b1, b2: Char;
+  p, r: String;
+  i: Integer;
+begin
+  Result := Trim(S);
+  if OldPattern = '' then Exit;
+  p := Trim(OldPattern);
+  r := Trim(NewPattern);
+  b1 := #0;
+  b2 := #0;
+  i := Pos(p, Result);
+  if i > 0 then begin
+    if i > 1 then b1 := Result[i - 1];
+    if i + Length(p) <= Length(Result) then b2 := Result[i + Length(p)];
+    if b1 in ['(', '[', '{'] then p := b1 + p else b1 := #0;
+    if b2 in [')', ']', '}'] then p := p + b2 else b2 := #0;
+    if r <> '' then begin
+      if b1 <> #0 then r := b1 + r;
+      if b2 <> #0 then r := r + b2;
+    end;
+    Result := StringReplace(Result, p, r, Flags);
   end;
 end;
 
