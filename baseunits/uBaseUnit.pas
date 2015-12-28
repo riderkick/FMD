@@ -2148,52 +2148,71 @@ function CustomRename(const AString, AWebsite, AMangaName, AAuthor, AArtist,
 var
   chap: String;
 begin
-  Result := '';
-  chap := Trim(AChapter);
-  //Convert Digit in chapter name
-  if MainForm.options.ReadBool('saveto', 'ConvertDigitVolume', True) then
-    if MainForm.options.ReadBool('saveto', 'ConvertDigitChapter', True) then
-      padZero(chap, MainForm.options.ReadInteger('saveto', 'DigitVolumeLength', 2),
-        MainForm.options.ReadInteger('saveto', 'DigitChapterLength', 3))
-    else
-      padZero(chap, MainForm.options.ReadInteger('saveto', 'DigitVolumeLength', 2), 0)
-  else if MainForm.options.ReadBool('saveto', 'ConvertDigitChapter', True) then
-    padZero(chap, 0, MainForm.options.ReadInteger('saveto', 'DigitChapterLength', 3));
+  Result := Trim(AString);
 
-  if (Pos('%NUMBERING%', AString) = 0) and (Pos('%CHAPTER%', AString) = 0) then
-    Result := ANumbering + AString
-  else
-    Result := AString;
-
-  Result := TrimLeft(TrimRight(Result));
-  Result := StringReplace(Result, '%WEBSITE%', AWebsite, [rfReplaceAll]);
-  Result := StringReplace(Result, '%MANGA%', AMangaName, [rfReplaceAll]);
-  Result := StringReplace(Result, '%AUTHOR%', AAuthor, [rfReplaceAll]);
-  Result := StringReplace(Result, '%ARTIST%', AArtist, [rfReplaceAll]);
-  Result := StringReplace(Result, '%CHAPTER%', chap, [rfReplaceAll]);
-  if AWebsite = WebsiteRoots[FAKKU_ID, 0] then
-  begin
-    if Pos('%NUMBERING% - ', Result) > 0 then
-      Result := StringReplace(Result, '%NUMBERING% - ', '', [rfReplaceAll])
+  // for rename chapter only
+  if AChapter <> '' then begin
+    // numbering/index
+    if (Pos('%NUMBERING%', Result) = 0) and (Pos('%CHAPTER%', Result) = 0) then
+      Result := ANumbering + Result
     else
-      Result := StringReplace(Result, '%NUMBERING%', '', [rfReplaceAll])
-  end
-  else
-    Result := StringReplace(Result, '%NUMBERING%', ANumbering, [rfReplaceAll]);
-  Result := StringReplace(Result, '/', '', [rfReplaceAll]);
-  Result := StringReplace(Result, '\', '', [rfReplaceAll]);
-  if Result = '' then
-  begin
+      Result := Result;
     if AWebsite = WebsiteRoots[FAKKU_ID, 0] then
-      Result := chap
+    begin
+      if Pos('%NUMBERING% - ', Result) > 0 then
+        Result := StringReplaceBrackets(Result, '%NUMBERING% - ', '', [rfReplaceAll])
+      else
+        Result := StringReplaceBrackets(Result, '%NUMBERING%', '', [rfReplaceAll])
+    end
     else
-      Result := ANumbering;
+      Result := StringReplaceBrackets(Result, '%NUMBERING%', ANumbering, [rfReplaceAll]);
+    // pad number
+    chap := Trim(AChapter);
+    with MainForm.options do begin
+      if ReadBool('saveto', 'ConvertDigitVolume', False) then begin
+        if ReadBool('saveto', 'ConvertDigitChapter', False) then
+          padZero(chap, ReadInteger('saveto', 'DigitVolumeLength', 2),
+            ReadInteger('saveto', 'DigitChapterLength', 3))
+        else
+          padZero(chap, ReadInteger('saveto', 'DigitVolumeLength', 2), 0);
+      end
+      else if ReadBool('saveto', 'ConvertDigitChapter', False) then
+        padZero(chap, 0, ReadInteger('saveto', 'DigitChapterLength', 3));
+    end;
+    Result := StringReplaceBrackets(Result, '%CHAPTER%', chap, [rfReplaceAll]);
+
+    if Result = '' then begin
+      if AWebsite = WebsiteRoots[FAKKU_ID, 0] then
+        Result := chap
+      else
+        Result := ANumbering;
+    end;
   end;
+
+  Result := StringReplaceBrackets(Result, '%WEBSITE%', AWebsite, [rfReplaceAll]);
+  Result := StringReplaceBrackets(Result, '%MANGA%', AMangaName, [rfReplaceAll]);
+  Result := StringReplaceBrackets(Result, '%AUTHOR%', AAuthor, [rfReplaceAll]);
+  Result := StringReplaceBrackets(Result, '%ARTIST%', AArtist, [rfReplaceAll]);
+
+  if Result = '' then Result := AMangaName;
+
+  if Result = '' then Exit;
+
+  // strip unicode character
   if AIsUnicodeRemove then
     Result := UnicodeRemove(Result);
 
+  // replace htmlentities
+  Result := HTMLEntitiesFilter(StringFilter(Result));
+
+  // remove unaccepted character (Windows)
+  Result := RemoveSymbols(Result);
+
+  // remove pathdelim
+  Result := StringReplace(Result, '/', '', [rfReplaceAll]);
+  Result := StringReplace(Result, '\', '', [rfReplaceAll]);
+
   Result := Trim(Result);
-  Result := RemoveSymbols(HTMLEntitiesFilter(StringFilter(Result)));
 end;
 
 function GetString(const Source, sStart, sEnd: String): String;
