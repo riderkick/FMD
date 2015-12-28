@@ -176,10 +176,8 @@ type
     cbAddAsStopped: TCheckBox;
     cbOptionShowQuitDialog: TCheckBox;
     cbOptionPathConvert: TCheckBox;
-    cbOptionGenerateChapterName: TCheckBox;
     cbOptionGenerateMangaFolderName: TCheckBox;
     cbOptionMinimizeToTray: TCheckBox;
-    cbOptionAutoNumberChapter: TCheckBox;
     cbSearchFromAllSites: TCheckBox;
     ckFilterDoujinshi: TCheckBox;
     ckFilterDrama: TCheckBox;
@@ -1844,7 +1842,7 @@ begin
 
   s := CorrectPathSys(edSaveTo.Text);
   // save to
-  if cbOptionGenerateMangaFolderName.Checked then
+  if OptionGenerateMangaFolderName then
   begin
     if not cbOptionPathConvert.Checked then
       s := s + RemoveSymbols(mangaInfo.title)
@@ -1874,7 +1872,7 @@ begin
     s := CorrectPathSys(edSaveTo.Text);
 
     // save to
-    if cbOptionGenerateMangaFolderName.Checked then
+    if OptionGenerateMangaFolderName then
     begin
       if not cbOptionPathConvert.Checked then
         s := s + RemoveSymbols(mangaInfo.title)
@@ -4322,7 +4320,6 @@ begin
     cbOptionLiveSearch.Checked := ReadBool('general', 'LiveSearch', True);
     cbOptionMinimizeToTray.Checked := ReadBool('general', 'MinimizeToTray', False);
     cbOptionLetFMDDo.ItemIndex := ReadInteger('general', 'LetFMDDo', 0);
-    cbOptionAutoNumberChapter.Checked := ReadBool('general', 'AutoNumberChapter', True);
     edOptionExternalPath.FileName := ReadString('general', 'ExternalProgramPath', '');
     edOptionExternalParams.Text := ReadString('general', 'ExternalProgramParams', DEFAULT_EXPARAM);
     cbAddAsStopped.Checked := ReadBool('general', 'AddAsStopped', False);
@@ -4359,9 +4356,7 @@ begin
     rgOptionCompress.ItemIndex := ReadInteger('saveto', 'Compress', 0);
     cbOptionPathConvert.Checked := ReadBool('saveto', 'PathConvert', False);
     cbOptionRemoveMangaNameFromChapter.Checked := ReadBool('saveto', 'RemoveMangaNameFromChapter', True);
-    cbOptionGenerateChapterName.Checked := ReadBool('saveto', 'GenerateChapterName', False);
     cbOptionGenerateMangaFolderName.Checked := ReadBool('saveto', 'GenerateMangaName', True);
-    cbOptionAutoNumberChapter.Checked := ReadBool('saveto', 'AutoNumberChapter', True);
     seOptionPDFQuality.Value := ReadInteger('saveto', 'PDFQuality', 100);
     edOptionCustomRename.Text := ReadString('saveto', 'CustomRename', DEFAULT_CUSTOM_RENAME);
     if Trim(edOptionCustomRename.Text) = '' then
@@ -4479,11 +4474,8 @@ begin
       edOptionDefaultPath.Text := CorrectPathSys(edOptionDefaultPath.Text);
       WriteString('saveto', 'SaveTo', edOptionDefaultPath.Text);
       WriteBool('saveto', 'PathConvert', cbOptionPathConvert.Checked);
-      WriteBool('saveto', 'GenerateChapterName', cbOptionGenerateChapterName.Checked);
       WriteBool('saveto', 'GenerateMangaName', cbOptionGenerateMangaFolderName.Checked);
       WriteInteger('saveto', 'Compress', rgOptionCompress.ItemIndex);
-      WriteBool('saveto', 'AutoNumberChapter', cbOptionAutoNumberChapter.Checked);
-      OptionAutoNumberChapterChecked := cbOptionAutoNumberChapter.Checked;
       WriteInteger('saveto', 'PDFQuality', seOptionPDFQuality.Value);
       WriteBool('saveto', 'RemoveMangaNameFromChapter', cbOptionRemoveMangaNameFromChapter.Checked);
       if Trim(edOptionCustomRename.Text) = '' then
@@ -4581,7 +4573,6 @@ begin
     end;
     OptionLetFMDDo := TFMDDo(cbOptionLetFMDDo.ItemIndex);
     OptionEnableLoadCover := cbOptionEnableLoadCover.Checked;
-    OptionAutoNumberChapterChecked := cbOptionAutoNumberChapter.Checked;
 
     //view
     ToolBarDownload.Visible := cbOptionShowDownloadToolbar.Checked;
@@ -4628,6 +4619,7 @@ begin
     OptionCustomRename := edOptionCustomRename.Text;
     DLManager.compress := rgOptionCompress.ItemIndex;
     OptionRemoveMangaNameFromChapter := cbOptionRemoveMangaNameFromChapter.Checked;
+    OptionGenerateMangaFolderName := cbOptionGenerateMangaFolderName.Checked;
 
     //update
     OptionAutoCheckLatestVersion := cbOptionAutoCheckLatestVersion.Checked;

@@ -365,7 +365,7 @@ begin
         edSaveTo.Text := CorrectPathSys(edSaveTo.Text);
         FSavePath := edSaveTo.Text;
         // save to
-        if cbOptionGenerateMangaFolderName.Checked then
+        if OptionGenerateMangaFolderName then
         begin
           if not cbOptionPathConvert.Checked then
             FSavePath := FSavePath + RemoveSymbols(Info.mangaInfo.title)
@@ -461,7 +461,7 @@ begin
       else
         s := CorrectPathSys(FSavePath);
 
-      if cbOptionGenerateMangaFolderName.Checked then
+      if OptionGenerateMangaFolderName then
       begin
         if not cbOptionPathConvert.Checked then
           s := s + RemoveSymbols(title)

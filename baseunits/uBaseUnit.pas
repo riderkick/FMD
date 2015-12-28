@@ -632,8 +632,8 @@ var
 
   OptionLetFMDDo: TFMDDo = DO_NOTHING;
 
+  OptionGenerateMangaFolderName: Boolean = False;
   OptionCustomRename: String;
-  OptionAutoNumberChapterChecked: Boolean = True;
 
   OptionPDFQuality: Cardinal = 95;
   OptionConnectionMaxRetry: Integer = 0;
