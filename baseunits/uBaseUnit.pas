@@ -228,7 +228,8 @@ const
   SOCKHEARTBEATRATE = 400;
 
   DEFAULT_LIST = 'AnimeA,MangaFox,MangaHere,MangaInn,MangaReader';
-  DEFAULT_CUSTOM_RENAME = '%NUMBERING% - %CHAPTER%';
+  DEFAULT_MANGA_CUSTOMRENAME = '%MANGA%';
+  DEFAULT_CHAPTER_CUSTOMRENAME = '%NUMBERING% - %CHAPTER%';
 
   FMDFormatSettings :TFormatSettings = (
     CurrencyFormat            :1;
@@ -632,8 +633,10 @@ var
 
   OptionLetFMDDo: TFMDDo = DO_NOTHING;
 
+  OptionChangeUnicodeCharacter: Boolean = False;
   OptionGenerateMangaFolderName: Boolean = False;
-  OptionCustomRename: String;
+  OptionMangaCustomRename: String;
+  OptionChapterCustomRename: String;
 
   OptionPDFQuality: Cardinal = 95;
   OptionConnectionMaxRetry: Integer = 0;

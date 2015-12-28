@@ -85,7 +85,7 @@ procedure TGetMangaInfosThread.DoGetInfos;
       end;
 
       FInfo.isGenerateFolderChapterName := OptionGenerateMangaFolderName;
-      FInfo.isRemoveUnicode := MainForm.cbOptionPathConvert.Checked;
+      FInfo.isRemoveUnicode := OptionChangeUnicodeCharacter;
 
       infob := INFORMATION_NOT_FOUND;
 

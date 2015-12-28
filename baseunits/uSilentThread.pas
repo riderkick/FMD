@@ -16,7 +16,7 @@ interface
 
 uses
   Classes, SysUtils, uBaseUnit, uData, uFMDThread, uDownloadsManager,
-  WebsiteModules;
+  WebsiteModules, LazFileUtils;
 
 type
 
@@ -326,14 +326,14 @@ begin
       for i := 0 to Info.mangaInfo.numChapter - 1 do
       begin
         // generate folder name
-        s := CustomRename(OptionCustomRename,
-          website,
-          title,
-          info.mangaInfo.authors,
-          Info.mangaInfo.artists,
-          Info.mangaInfo.chapterName.Strings[i],
-          Format('%.4d', [i + 1]),
-          cbOptionPathConvert.Checked);
+        s := CustomRename(OptionChapterCustomRename,
+                          website,
+                          title,
+                          info.mangaInfo.authors,
+                          Info.mangaInfo.artists,
+                          Info.mangaInfo.chapterName.Strings[i],
+                          Format('%.4d', [i + 1]),
+                          OptionChangeUnicodeCharacter);
         DLManager.TaskItem(p).chapterName.Add(s);
         DLManager.TaskItem(p).chapterLinks.Add(
           Info.mangaInfo.chapterLinks.Strings[i]);
@@ -362,16 +362,19 @@ begin
           edSaveTo.Text := options.ReadString('saveto', 'SaveTo', DEFAULT_PATH);
         if Trim(edSaveTo.Text) = '' then
           edSaveTo.Text := DEFAULT_PATH;
-        edSaveTo.Text := CorrectPathSys(edSaveTo.Text);
+        edSaveTo.Text := CleanAndExpandDirectory(CorrectPathSys(edSaveTo.Text));
         FSavePath := edSaveTo.Text;
         // save to
         if OptionGenerateMangaFolderName then
-        begin
-          if not cbOptionPathConvert.Checked then
-            FSavePath := FSavePath + RemoveSymbols(Info.mangaInfo.title)
-          else
-            FSavePath := FSavePath + RemoveSymbols(UnicodeRemove(Info.mangaInfo.title));
-        end;
+          FSavePath := FSavePath + CustomRename(
+            OptionMangaCustomRename,
+            website,
+            title,
+            info.mangaInfo.authors,
+            info.mangaInfo.artists,
+            '',
+            '',
+            OptionChangeUnicodeCharacter);
         FSavePath := CorrectPathSys(FSavePath);
       end;
       DLManager.TaskItem(p).downloadInfo.SaveTo := FSavePath;
@@ -461,13 +464,18 @@ begin
       else
         s := CorrectPathSys(FSavePath);
 
+      s := CleanAndExpandDirectory(s);
+
       if OptionGenerateMangaFolderName then
-      begin
-        if not cbOptionPathConvert.Checked then
-          s := s + RemoveSymbols(title)
-        else
-          s := s + RemoveSymbols(UnicodeRemove(title));
-      end;
+        s := s + CustomRename(
+          OptionMangaCustomRename,
+          website,
+          title,
+          info.mangaInfo.authors,
+          info.mangaInfo.artists,
+          '',
+          '',
+          OptionChangeUnicodeCharacter);
       s := CorrectPathSys(s);
 
       s2 := '';

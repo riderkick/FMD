@@ -65,6 +65,9 @@ type
     cbUseRegExpr: TCheckBox;
     cbOptionProxyType: TComboBox;
     cbOptionOneInstanceOnly: TCheckBox;
+    edOptionMangaCustomRename: TEdit;
+    lbOptionMangaCustomRenameHint: TLabel;
+    lbOptionMangaRename: TLabel;
     miAbortSilentThread: TMenuItem;
     mmChangelog: TMemo;
     pcAbout: TPageControl;
@@ -103,7 +106,7 @@ type
     lbOptionRenameDigits: TLabel;
     lbFilterHint: TLabel;
     lbOptionExternal: TLabel;
-    lbOptionCustomRenameHint: TLabel;
+    lbOptionChapterCustomRenameHint: TLabel;
     lbOptionCustomRenameHint1: TLabel;
     lbOptionExternalParamsHint: TLabel;
     TransferRateGraphList: TListChartSource;
@@ -175,7 +178,7 @@ type
     cbOnlyNew: TCheckBox;
     cbAddAsStopped: TCheckBox;
     cbOptionShowQuitDialog: TCheckBox;
-    cbOptionPathConvert: TCheckBox;
+    cbOptionChangeUnicodeCharacter: TCheckBox;
     cbOptionGenerateMangaFolderName: TCheckBox;
     cbOptionMinimizeToTray: TCheckBox;
     cbSearchFromAllSites: TCheckBox;
@@ -192,7 +195,7 @@ type
     edFilterAuthors: TEdit;
     edFilterArtists: TEdit;
     edCustomGenres: TEdit;
-    edOptionCustomRename: TEdit;
+    edOptionChapterCustomRename: TEdit;
     edOptionHost: TEdit;
     edOptionPass: TEdit;
     edOptionPort: TEdit;
@@ -1806,14 +1809,14 @@ begin
       end;
       DLManager.TaskItem(pos).Website := mangaInfo.website;
       // generate folder name
-      s := CustomRename(OptionCustomRename,
+      s := CustomRename(OptionChapterCustomRename,
         mangaInfo.website,
         mangaInfo.title,
         mangaInfo.authors,
         mangaInfo.artists,
         mangaInfo.chapterName.Strings[xNode^.Index],
         Format('%.4d', [xNode^.Index + 1]),
-        cbOptionPathConvert.Checked);
+        OptionChangeUnicodeCharacter);
       DLManager.TaskItem(pos).ChapterName.Add(s);
       DLManager.TaskItem(pos).ChapterLinks.Add(
         mangaInfo.chapterLinks.Strings[xNode^.Index]);
@@ -1840,15 +1843,18 @@ begin
   DLManager.TaskItem(pos).DownloadInfo.Title := mangaInfo.title;
   DLManager.TaskItem(pos).DownloadInfo.DateTime := Now;
 
-  s := CorrectPathSys(edSaveTo.Text);
+  s := CorrectPathSys(CleanAndExpandDirectory(edSaveTo.Text));
   // save to
   if OptionGenerateMangaFolderName then
-  begin
-    if not cbOptionPathConvert.Checked then
-      s := s + RemoveSymbols(mangaInfo.title)
-    else
-      s := s + RemoveSymbols(UnicodeRemove(mangaInfo.title));
-  end;
+    s := s + CustomRename(
+      OptionMangaCustomRename,
+      mangaInfo.website,
+      mangaInfo.title,
+      mangaInfo.authors,
+      mangaInfo.artists,
+      '',
+      '',
+      OptionChangeUnicodeCharacter);
   s := CorrectPathSys(s);
   DLManager.TaskItem(pos).DownloadInfo.SaveTo := s;
   UpdateVtDownload;
@@ -1873,12 +1879,15 @@ begin
 
     // save to
     if OptionGenerateMangaFolderName then
-    begin
-      if not cbOptionPathConvert.Checked then
-        s := s + RemoveSymbols(mangaInfo.title)
-      else
-        s := s + RemoveSymbols(UnicodeRemove(mangaInfo.title));
-    end;
+      s := s + CustomRename(
+          OptionMangaCustomRename,
+          mangaInfo.website,
+          mangaInfo.title,
+          mangaInfo.authors,
+          mangaInfo.artists,
+          '',
+          '',
+          OptionChangeUnicodeCharacter);
     s := CorrectPathSys(s);
 
     s2 := '';
@@ -4353,14 +4362,17 @@ begin
     edOptionDefaultPath.Text := ReadString('saveto', 'SaveTo', DEFAULT_PATH);
     if Trim(edOptionDefaultPath.Text) = '' then
       edOptionDefaultPath.Text := DEFAULT_PATH;
+    seOptionPDFQuality.Value := ReadInteger('saveto', 'PDFQuality', 100);
     rgOptionCompress.ItemIndex := ReadInteger('saveto', 'Compress', 0);
-    cbOptionPathConvert.Checked := ReadBool('saveto', 'PathConvert', False);
+    cbOptionChangeUnicodeCharacter.Checked := ReadBool('saveto', 'ChangeUnicodeCharacter', False);
     cbOptionRemoveMangaNameFromChapter.Checked := ReadBool('saveto', 'RemoveMangaNameFromChapter', True);
     cbOptionGenerateMangaFolderName.Checked := ReadBool('saveto', 'GenerateMangaName', True);
-    seOptionPDFQuality.Value := ReadInteger('saveto', 'PDFQuality', 100);
-    edOptionCustomRename.Text := ReadString('saveto', 'CustomRename', DEFAULT_CUSTOM_RENAME);
-    if Trim(edOptionCustomRename.Text) = '' then
-      edOptionCustomRename.Text := DEFAULT_CUSTOM_RENAME;
+    edOptionMangaCustomRename.Text := ReadString('saveto', 'MangaCustomRename', DEFAULT_MANGA_CUSTOMRENAME);
+    if Trim(edOptionMangaCustomRename.Text) = '' then
+      edOptionMangaCustomRename.Text := DEFAULT_MANGA_CUSTOMRENAME;
+    edOptionChapterCustomRename.Text := ReadString('saveto', 'ChapterCustomRename', DEFAULT_CHAPTER_CUSTOMRENAME);
+    if Trim(edOptionChapterCustomRename.Text) = '' then
+      edOptionChapterCustomRename.Text := DEFAULT_CHAPTER_CUSTOMRENAME;
     cbOptionDigitVolume.Checked := ReadBool('saveto', 'ConvertDigitVolume', True);
     seOptionDigitVolume.Value := ReadInteger('saveto', 'DigitVolumeLength', 2);
     seOptionDigitVolume.Enabled := cbOptionDigitVolume.Checked;
@@ -4473,14 +4485,17 @@ begin
         edOptionDefaultPath.Text := DEFAULT_PATH;
       edOptionDefaultPath.Text := CorrectPathSys(edOptionDefaultPath.Text);
       WriteString('saveto', 'SaveTo', edOptionDefaultPath.Text);
-      WriteBool('saveto', 'PathConvert', cbOptionPathConvert.Checked);
+      WriteBool('saveto', 'ChangeUnicodeCharacter', cbOptionChangeUnicodeCharacter.Checked);
       WriteBool('saveto', 'GenerateMangaName', cbOptionGenerateMangaFolderName.Checked);
+      if Trim(edOptionMangaCustomRename.Text) = '' then
+        edOptionMangaCustomRename.Text := DEFAULT_MANGA_CUSTOMRENAME;
+      WriteString('saveto', 'MangaCustomRename', edOptionMangaCustomRename.Text);
       WriteInteger('saveto', 'Compress', rgOptionCompress.ItemIndex);
       WriteInteger('saveto', 'PDFQuality', seOptionPDFQuality.Value);
       WriteBool('saveto', 'RemoveMangaNameFromChapter', cbOptionRemoveMangaNameFromChapter.Checked);
-      if Trim(edOptionCustomRename.Text) = '' then
-        edOptionCustomRename.Text := DEFAULT_CUSTOM_RENAME;
-      WriteString('saveto', 'CustomRename', edOptionCustomRename.Text);
+      if Trim(edOptionChapterCustomRename.Text) = '' then
+        edOptionChapterCustomRename.Text := DEFAULT_CHAPTER_CUSTOMRENAME;
+      WriteString('saveto', 'ChapterCustomRename', edOptionChapterCustomRename.Text);
       WriteBool('saveto', 'ConvertDigitVolume', cbOptionDigitVolume.Checked);
       WriteBool('saveto', 'ConvertDigitChapter', cbOptionDigitChapter.Checked);
       WriteInteger('saveto', 'DigitVolumeLength', seOptionDigitVolume.Value);
@@ -4616,10 +4631,12 @@ begin
 
     //saveto
     OptionPDFQuality := seOptionPDFQuality.Value;
-    OptionCustomRename := edOptionCustomRename.Text;
     DLManager.compress := rgOptionCompress.ItemIndex;
+    OptionChangeUnicodeCharacter := cbOptionChangeUnicodeCharacter.Checked;
     OptionRemoveMangaNameFromChapter := cbOptionRemoveMangaNameFromChapter.Checked;
     OptionGenerateMangaFolderName := cbOptionGenerateMangaFolderName.Checked;
+    OptionMangaCustomRename := edOptionMangaCustomRename.Text;
+    OptionChapterCustomRename := edOptionChapterCustomRename.Text;
 
     //update
     OptionAutoCheckLatestVersion := cbOptionAutoCheckLatestVersion.Checked;

@@ -37,13 +37,13 @@ object MainForm: TMainForm
     Height = 549
     Top = 11
     Width = 614
-    ActivePage = tsOption
+    ActivePage = tsDownload
     Align = alClient
     BorderSpacing.Top = 3
     BorderSpacing.Right = 4
     BorderSpacing.Bottom = 3
     ParentFont = False
-    TabIndex = 4
+    TabIndex = 0
     TabOrder = 0
     OnChange = pcMainChange
     object tsDownload: TTabSheet
@@ -1831,10 +1831,10 @@ object MainForm: TMainForm
         Height = 444
         Top = 8
         Width = 587
-        ActivePage = tsSaveTo
+        ActivePage = tsGeneral
         Anchors = [akTop, akLeft, akRight, akBottom]
         ParentFont = False
-        TabIndex = 3
+        TabIndex = 0
         TabOrder = 0
         object tsGeneral: TTabSheet
           Caption = 'General'
@@ -2330,18 +2330,18 @@ object MainForm: TMainForm
             Height = 416
             Top = 0
             Width = 579
-            HorzScrollBar.Page = 543
-            VertScrollBar.Page = 400
+            HorzScrollBar.Page = 537
+            VertScrollBar.Page = 416
             Align = alClient
             BorderStyle = bsNone
             ClientHeight = 416
-            ClientWidth = 579
+            ClientWidth = 562
             TabOrder = 0
             object rgOptionCompress: TRadioGroup
               Left = 20
               Height = 60
               Top = 66
-              Width = 520
+              Width = 503
               Anchors = [akTop, akLeft, akRight]
               AutoFill = True
               Caption = 'Save downloaded chapters as'
@@ -2354,7 +2354,7 @@ object MainForm: TMainForm
               ChildSizing.Layout = cclLeftToRightThenTopToBottom
               ChildSizing.ControlsPerLine = 4
               ClientHeight = 40
-              ClientWidth = 516
+              ClientWidth = 499
               Columns = 4
               ItemIndex = 0
               Items.Strings = (
@@ -2368,64 +2368,64 @@ object MainForm: TMainForm
             end
             object gbOptionRenaming: TGroupBox
               Left = 20
-              Height = 230
+              Height = 254
               Top = 170
-              Width = 520
+              Width = 503
               Anchors = [akTop, akLeft, akRight]
               Caption = 'Renaming'
-              ClientHeight = 210
-              ClientWidth = 516
+              ClientHeight = 234
+              ClientWidth = 499
               ParentFont = False
               TabOrder = 1
               object cbOptionRemoveMangaNameFromChapter: TCheckBox
-                Left = 22
+                Left = 16
                 Height = 19
-                Top = 10
+                Top = 104
                 Width = 208
                 Caption = 'Remove manga name from chapter'
                 ParentFont = False
                 TabOrder = 7
               end
               object cbOptionGenerateMangaFolderName: TCheckBox
-                Left = 22
+                Left = 16
                 Height = 19
-                Top = 54
+                Top = 30
                 Width = 261
                 Caption = 'Auto generate folder based on manga''s name'
                 ParentFont = False
                 TabOrder = 0
               end
-              object cbOptionPathConvert: TCheckBox
-                Left = 22
+              object cbOptionChangeUnicodeCharacter: TCheckBox
+                Left = 16
                 Height = 19
-                Top = 32
+                Top = 8
                 Width = 517
                 Caption = 'Change all all unicode symbols to "_" (choose this when you have problem with unicode path)'
                 ParentFont = False
                 TabOrder = 1
               end
-              object edOptionCustomRename: TEdit
-                Left = 22
+              object edOptionChapterCustomRename: TEdit
+                Left = 16
                 Height = 23
-                Top = 158
-                Width = 434
+                Top = 200
+                Width = 417
                 Anchors = [akTop, akLeft, akRight]
                 TabOrder = 2
                 TextHint = 'Custom rename'
               end
               object lbOptionCustomRename: TLabel
-                Left = 22
+                Left = 16
                 Height = 15
-                Top = 142
+                Top = 184
                 Width = 112
                 Caption = 'Chapter folder name:'
                 ParentColor = False
               end
-              object lbOptionCustomRenameHint: TLabel
-                Left = 462
+              object lbOptionChapterCustomRenameHint: TLabel
+                Left = 436
                 Height = 15
                 Hint = '%WEBSITE% : Website name'#13#10'%MANGA% : Manga title'#13#10'%CHAPTER% : Chapter title'#13#10'%AUTHOR% : Author'#13#10'%ARTIST% : Artist'#13#10'%NUMBERING% : Numbering'#13#10#13#10'Note:'#13#10'Chapter folder name must have at least %CHAPTER% or %NUMBERING%.'
-                Top = 160
+                Top = 203
                 Width = 13
                 Anchors = [akTop, akRight]
                 Caption = '[?]'
@@ -2436,17 +2436,17 @@ object MainForm: TMainForm
                 ShowHint = True
               end
               object lbOptionRenameDigits: TLabel
-                Left = 22
+                Left = 16
                 Height = 15
-                Top = 86
+                Top = 128
                 Width = 78
                 Caption = 'Rename  digits'
                 ParentColor = False
               end
               object seOptionDigitVolume: TSpinEdit
-                Left = 94
+                Left = 88
                 Height = 23
-                Top = 108
+                Top = 150
                 Width = 50
                 MaxValue = 10
                 MinValue = 1
@@ -2454,9 +2454,9 @@ object MainForm: TMainForm
                 Value = 1
               end
               object seOptionDigitChapter: TSpinEdit
-                Left = 230
+                Left = 224
                 Height = 23
-                Top = 108
+                Top = 150
                 Width = 50
                 MaxValue = 10
                 MinValue = 1
@@ -2464,22 +2464,53 @@ object MainForm: TMainForm
                 Value = 1
               end
               object cbOptionDigitVolume: TCheckBox
-                Left = 25
+                Left = 19
                 Height = 19
-                Top = 110
+                Top = 152
                 Width = 61
                 Caption = 'Volume'
                 OnChange = cbOptionDigitVolumeChange
                 TabOrder = 5
               end
               object cbOptionDigitChapter: TCheckBox
-                Left = 158
+                Left = 152
                 Height = 19
-                Top = 110
+                Top = 152
                 Width = 62
                 Caption = 'Chapter'
                 OnChange = cbOptionDigitChapterChange
                 TabOrder = 6
+              end
+              object edOptionMangaCustomRename: TEdit
+                Left = 16
+                Height = 23
+                Top = 72
+                Width = 417
+                Anchors = [akTop, akLeft, akRight]
+                TabOrder = 8
+                TextHint = 'Custom rename'
+              end
+              object lbOptionMangaRename: TLabel
+                Left = 16
+                Height = 15
+                Top = 56
+                Width = 107
+                Caption = 'Manga folder name:'
+                ParentColor = False
+              end
+              object lbOptionMangaCustomRenameHint: TLabel
+                Left = 436
+                Height = 15
+                Hint = '%WEBSITE% : Website name'#13#10'%MANGA% : Manga title'#13#10'%AUTHOR% : Author'#13#10'%ARTIST% : Artist'#13#10#13#10'Note:'#13#10'Manga folder name must have at least %MANGA%.'
+                Top = 75
+                Width = 13
+                Anchors = [akTop, akRight]
+                Caption = '[?]'
+                Font.Color = clBlue
+                ParentColor = False
+                ParentFont = False
+                ParentShowHint = False
+                ShowHint = True
               end
             end
             object seOptionPDFQuality: TSpinEdit
@@ -2521,7 +2552,7 @@ object MainForm: TMainForm
               ShowHint = True
             end
             object btOptionBrowse: TSpeedButton
-              Left = 512
+              Left = 495
               Height = 23
               Top = 34
               Width = 23
@@ -2568,7 +2599,7 @@ object MainForm: TMainForm
               Left = 20
               Height = 23
               Top = 34
-              Width = 490
+              Width = 473
               Anchors = [akTop, akLeft, akRight]
               ParentFont = False
               TabOrder = 3
@@ -5817,8 +5848,8 @@ object MainForm: TMainForm
   end
   object pmSbMain: TPopupMenu
     OnPopup = pmSbMainPopup
-    left = 283
-    top = 416
+    left = 152
+    top = 376
     object miAbortSilentThread: TMenuItem
       Caption = 'Abort'
       OnClick = miAbortSilentThreadClick

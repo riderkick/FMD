@@ -685,14 +685,14 @@ begin
                       ChapterLinks.Assign(NewMangaInfo.chapterLinks);
                       for i := 0 to NewMangaInfo.chapterLinks.Count - 1 do
                         ChapterName.Add(CustomRename(
-                          OptionCustomRename,
+                          OptionChapterCustomRename,
                           FavoriteInfo.Website,
                           FavoriteInfo.Title,
                           NewMangaInfo.authors,
                           NewMangaInfo.artists,
                           NewMangaInfo.chapterName[i],
                           Format('%.4d', [NewMangaInfoChaptersPos[i] + 1]),
-                          MainForm.cbOptionPathConvert.Checked));
+                          OptionChangeUnicodeCharacter));
                       if LNCResult = ncrDownload then
                       begin
                         DownloadInfo.Status := RS_Waiting;
