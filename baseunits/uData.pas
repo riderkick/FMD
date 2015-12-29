@@ -112,6 +112,7 @@ type
     property WebsiteName[RecIndex: Integer]: String read GetWebsiteName;
     property Value[RecIndex, ParamNo: Integer]: String read GetValue;
     property LinkCount: Integer read GetLinkCount;
+    property Table: TSQLQuery read FQuery;
   end;
 
   { TDataProcess }
