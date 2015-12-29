@@ -58,7 +58,8 @@ type
     CS_AddInfoToData, CS_AddNamesAndLinks: TCriticalSection;
     isFinishSearchingForNewManga, isDownloadFromServer, isDoneUpdateNecessary: Boolean;
     mainDataProcess: TDBDataProcess;
-    names, links, websites: TStringList;
+    tempDataProcess: TDBDataProcess;
+    websites: TStringList;
     website, twebsite: String;
     ModuleId: Integer;
     workPtr, directoryCount,
@@ -109,6 +110,7 @@ end;
 procedure TUpdateMangaThread.Execute;
 var
   names, links: TStringList;
+  name, link: String;
   i: Integer;
 begin
   try
@@ -194,13 +196,14 @@ begin
           if links.Count > 0 then
           begin
             if manager.SortedList then
-              if manager.mainDataProcess.LinkExist(links.Strings[0]) then
+              if manager.mainDataProcess.LinkExist(links[0]) then
                 manager.isFinishSearchingForNewManga := True;
 
             manager.CS_AddNamesAndLinks.Acquire;
             try
-              manager.links.AddStrings(links);
-              manager.names.AddStrings(names);
+              for i := 0 to links.Count - 1 do
+                manager.tempDataProcess.AddData(names[i],links[i],'','','','','',0,0);
+              manager.tempDataProcess.Commit;
             finally
               manager.CS_AddNamesAndLinks.Release;
             end;
@@ -213,14 +216,15 @@ begin
 
       CS_INFO:
       begin
-        Info.mangaInfo.title := manager.names[workPtr];
-        Info.GetInfoFromURL(manager.website, manager.links[workPtr],
-          OptionConnectionMaxRetry);
+        name := manager.tempDataProcess.Value[workPtr,0];
+        link := manager.tempDataProcess.Value[workPtr,1];
+        Info.mangaInfo.title := name;
+        Info.GetInfoFromURL(manager.website, link,OptionConnectionMaxRetry);
         if not Terminated then
         begin
           manager.CS_AddInfoToData.Acquire;
           try
-            Info.AddInfoToData(manager.names[workPtr], manager.links[workPtr],
+            Info.AddInfoToData(name, link,
               manager.mainDataProcess);
             manager.CheckCommit(32);
           finally
@@ -238,8 +242,8 @@ begin
       if checkStyle = CS_INFO then
       begin
         E.Message := E.Message +
-        '  Title   : ' + manager.names[workPtr] + LineEnding +
-        '  URL     : ' + manager.links[workPtr] + LineEnding;
+        '  Title   : ' + name + LineEnding +
+        '  URL     : ' + link + LineEnding;
       end;
       MainForm.ExceptionHandler(Self, E);
     end;
@@ -329,10 +333,9 @@ begin
   FreeOnTerminate := True;
 
   websites := TStringList.Create;
-  names := TStringList.Create;
-  links := TStringList.Create;
 
   mainDataProcess := TDBDataProcess.Create;
+  tempDataProcess := TDBDataProcess.Create;
 
   threads := TFPList.Create;
   SortedList := False;
@@ -342,12 +345,13 @@ end;
 
 destructor TUpdateMangaManagerThread.Destroy;
 begin
+  websites.Free;
   mainDataProcess.Close;
   DeleteDBDataProcess(twebsite);
-  websites.Free;
-  names.Free;
-  links.Free;
+  tempDataProcess.Close;
+  DeleteDBDataProcess('__tempupdatelist');
   mainDataProcess.Free;
+  tempDataProcess.Free;
   threads.Free;
   MainForm.isUpdating := False;
   CS_AddInfoToData.Free;
@@ -402,7 +406,7 @@ end;
 
 procedure TUpdateMangaManagerThread.DlgReport;
 begin
-  MessageDlg('', Format(RS_DlgHasNewManga, [website, links.Count]),
+  MessageDlg('', Format(RS_DlgHasNewManga, [website, tempDataProcess.RecordCount]),
     mtInformation, [mbYes], 0);
 end;
 
@@ -492,7 +496,7 @@ begin
             CS_DIRECTORY_PAGE_2:
               s := s + ' | ' + RS_LookingForNewTitleFromAnotherDirectory + '...';
             CS_INFO:
-              s := Format('%s | %s "%s"', [s, RS_GettingInfo, names[workPtr - 1]]);
+              s := Format('%s | %s "%s"', [s, RS_GettingInfo, tempDataProcess.Value[workPtr-1,0]]);
           end;
           FStatus := s;
           MainForm.ulWorkPtr := workPtr + 1;
@@ -531,7 +535,6 @@ end;
 procedure TUpdateMangaManagerThread.Execute;
 var
   c, j, k: Integer;
-  del: Boolean;
 begin
   if websites.Count = 0 then
     Exit;
@@ -551,6 +554,7 @@ begin
       end;
     end
     else
+      tempDataProcess.CreateDatabase('__tempupdatelist');
       while websitePtr < websites.Count do
       begin
         website := websites.Strings[websitePtr];
@@ -581,7 +585,7 @@ begin
         mainDataProcess.InitLocateLink;
         mainDataProcess.CloseTable;
 
-        //get directory page count
+        // get directory page count
         INIAdvanced.Reload;
         directoryCount := 0;
         directoryCount2 := 0;
@@ -589,7 +593,7 @@ begin
         GetInfo(1, CS_DIRECTORY_COUNT);
         if Terminated then Break;
 
-        //get names and links
+        // get names and links
         INIAdvanced.Reload;
         workPtr := 0;
         isFinishSearchingForNewManga := False;
@@ -625,80 +629,40 @@ begin
           [websitePtr, websites.Count, website]) + ' | ' + RS_IndexingNewTitle + '...';
         Synchronize(MainThreadShowGetting);
 
-        // remove duplicate
-        if links.Count > 0 then
-        begin
-          c := 0;
-          j := 0;
-          MainForm.ulTotalPtr := links.Count;
-          MainForm.ulWorkPtr := j;
-          FStatus := RS_UpdatingList + Format(' [%d/%d] %s',
-            [websitePtr, websites.Count, website]) + ' | ' + RS_RemovingDuplicateFromNewTitle + '...';
-          Synchronize(MainThreadShowGetting);
-          while j < (links.Count - 1) do
-          begin
-            if Terminated then Break;
-            Inc(c);
-            if c > 499 then
-            begin
-              c := 0;
-              MainForm.ulTotalPtr := links.Count;
-              MainForm.ulWorkPtr := j;
-              Synchronize(MainThreadStatusRepaint);
-            end;
-            del := False;
-            if (j + 1) < links.Count then
-              for k := j + 1 to links.Count - 1 do
-              begin
-                if Terminated then Break;
-                if SameText(links[j], links[k]) then
-                begin
-                  links.Delete(j);
-                  names.Delete(j);
-                  del := True;
-                  Break;
-                end;
-              end;
-            if not del then
-              Inc(j);
-          end;
-        end;
+        tempDataProcess.OpenTable('', True);
 
         // remove duplicate found<>current database
-        if (links.Count > 0) and (mainDataProcess.LinkCount > 0) then
-        begin
-          c := 0;
-          j := 0;
-          MainForm.ulTotalPtr := links.Count;
-          MainForm.ulWorkPtr := j;
+        if (mainDataProcess.LinkCount>0) and (tempDataProcess.RecordCount>0) then begin
+          MainForm.ulTotalPtr:=tempDataProcess.RecordCount;
+          MainForm.ulWorkPtr:=0;
           FStatus := RS_UpdatingList + Format(' [%d/%d] %s',
             [websitePtr, websites.Count, website]) + ' | ' + RS_RemovingDuplicateFromCurrentData + '...';
           Synchronize(MainThreadShowGetting);
-          while j < links.Count do
-          begin
-            if Terminated then Break;
-            Inc(c);
-            if c > 999 then
-            begin
-              c := 0;
-              MainForm.ulTotalPtr := links.Count;
-              MainForm.ulWorkPtr := j;
-              Synchronize(MainThreadStatusRepaint);
+          with tempDataProcess.Table do begin
+            c:=0;
+            First;
+            while not tempDataProcess.Table.EOF do begin
+              if Terminated then Break;
+              Inc(c);
+              Inc(MainForm.ulWorkPtr);
+              if c>750 then begin
+                c:=0;
+                Synchronize(MainThreadStatusRepaint);
+              end;
+              if mainDataProcess.LinkExist(Fields[1].AsString) then
+                Delete
+              else
+                Next;
             end;
-            if mainDataProcess.LinkExist(links[j]) then
-            begin
-              links.Delete(j);
-              names.Delete(j);
-            end
-            else
-              Inc(j);
+            ApplyUpdates;
           end;
         end;
 
+        tempDataProcess.Refresh(True);
         mainDataProcess.DoneLocateLink;
 
-        //get manga info
-        if links.Count > 0 then
+        // get manga info
+        if tempDataProcess.RecordCount>0 then
         begin
           workPtr := 0;
           FCommitCount := 0;
@@ -706,11 +670,11 @@ begin
             OptionUpdateListNoMangaInfo then
           begin
             Inc(workPtr);
-            for k := 0 to links.Count - 1 do
+            for k:=0 to tempDataProcess.RecordCount-1 do
             begin
               mainDataProcess.AddData(
-                names[k],
-                links[k],
+                tempDataProcess.Value[k,0],
+                tempDataProcess.Value[k,1],
                 '',
                 '',
                 '',
@@ -723,11 +687,8 @@ begin
             end;
           end
           else
-            GetInfo(links.Count, CS_INFO);
+            GetInfo(tempDataProcess.RecordCount, CS_INFO);
           mainDataProcess.Commit;
-
-          names.Clear;
-          links.Clear;
 
           if workPtr > 0 then
             if not (Terminated and SortedList) then
