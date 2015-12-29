@@ -283,27 +283,29 @@ end;
 
 procedure TAccountManager.ConvertNewTable;
 begin
+  if fquery.Active = False then Exit;
   EnterCriticalsection(locklocate);
   try
     if (FieldTypeNames[fquery.FieldByName('username').DataType] <> Fieldtypenames[ftMemo]) or
       (FieldTypeNames[fquery.FieldByName('password').DataType] <> Fieldtypenames[ftMemo]) or
       (FieldTypeNames[fquery.FieldByName('cookies').DataType] <> Fieldtypenames[ftMemo]) then
-    begin
-      fquery.Close;
-      with fconn do begin
-        ExecuteDirect('DROP TABLE IF EXISTS '+QuotedStr('temp'+ctablename));
-        ExecuteDirect('CREATE TABLE '+QuotedStrd('temp'+ctablename)+ctbaccountscreateparams);
-        ExecuteDirect('INSERT INTO '+QuotedStrd('temp'+ctablename)+' SELECT * FROM '+QuotedStrd(ctablename));
-        ExecuteDirect('DROP TABLE '+QuotedStrd(ctablename));
-        ExecuteDirect('ALTER TABLE '+QuotedStrd('temp'+ctablename)+' RENAME TO '+QuotedStrd(ctablename));
+      try
+        fquery.Close;
+        with fconn do begin
+          ExecuteDirect('DROP TABLE IF EXISTS '+QuotedStr('temp'+ctablename));
+          ExecuteDirect('CREATE TABLE '+QuotedStrd('temp'+ctablename)+ctbaccountscreateparams);
+          ExecuteDirect('INSERT INTO '+QuotedStrd('temp'+ctablename)+' SELECT * FROM '+QuotedStrd(ctablename));
+          ExecuteDirect('DROP TABLE '+QuotedStrd(ctablename));
+          ExecuteDirect('ALTER TABLE '+QuotedStrd('temp'+ctablename)+' RENAME TO '+QuotedStrd(ctablename));
+        end;
+        ftrans.Commit;
+        fquery.Open;
+      except
+        ftrans.Rollback;
       end;
-      ftrans.Commit;
-      fquery.Open;
-    end;
-  except
-    ftrans.Rollback;
+  finally
+    LeaveCriticalsection(locklocate);
   end;
-  LeaveCriticalsection(locklocate);
 end;
 
 function TAccountManager.GetValueString(const AName, AField: string): string;
