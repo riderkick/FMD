@@ -1177,10 +1177,9 @@ procedure TDBDataProcess.CreateDatabase(AWebsite: String);
 var
   filepath: String;
 begin
-  if AWebsite <> '' then
-    FWebsite := AWebsite;
-  if FWebsite = '' then
-    Exit;
+  if AWebsite <> '' then FWebsite := AWebsite;
+  if FWebsite = '' then Exit;
+  Close;
   filepath := fmdDirectory + DATA_FOLDER + FWebsite + DBDATA_EXT;
   if FileExistsUTF8(filepath) then
     DeleteFileUTF8(filepath);
