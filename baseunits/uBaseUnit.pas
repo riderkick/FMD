@@ -22,7 +22,7 @@ uses
   LConvEncoding, strutils, fileinfo, base64, fpjson, jsonparser, FastHTMLParser,
   fgl, RegExpr, synautil, httpsend, blcksock, ssl_openssl, synacode, GZIPUtils,
   uFMDThread, uMisc, httpsendthread, simplehtmltreeparser, xquery, xquery_json,
-  USimpleException, USimpleLogger;
+  Imaging, ImagingExtras, USimpleException, USimpleLogger;
 
 Type
   TFMDDo = (DO_NOTHING, DO_EXIT, DO_POWEROFF, DO_HIBERNATE, DO_UPDATE);
@@ -954,6 +954,10 @@ function GetPage(var output: TObject; URL: String; const Reconnect: Integer = 0)
   overload; inline;
 // Get url from a bitly url.
 function GetURLFromBitly(const URL: String): String;
+
+// try to save tmemorystream to file, return the saved filename if success, otherwise return empty string
+function SaveImageStreamToFile(Stream: TMemoryStream; Path, FileName: String): String;
+
 // Download an image from url and save it to a specific location.
 function SaveImage(const AHTTP: THTTPSend; const mangaSiteID: Integer; URL: String;
   const Path, Name, prefix: String; var SavedFilename: String; const Reconnect: Integer = 0): Boolean; overload;
@@ -3207,19 +3211,46 @@ begin
   httpSource.Free;
 end;
 
+function SaveImageStreamToFile(Stream: TMemoryStream; Path, FileName: String
+  ): String;
+var
+  p, f: String;
+  fs: TFileStreamUTF8;
+begin
+  Result := '';
+  if Stream = nil then Exit;
+  if Stream.Size = 0 then Exit;
+  p := CleanAndExpandDirectory(Path);
+  if not DirectoryExistsUTF8(p) then ForceDirectoriesUTF8(p);
+  if DirectoryExistsUTF8(p) then begin
+    f := DetermineStreamFormat(Stream);
+    if f = '' then f := 'dat';
+    f := p + FileName + '.' + f;
+    if FileExistsUTF8(f) then DeleteFileUTF8(f);
+    try
+      fs := TFileStreamUTF8.Create(f, fmCreate);
+      try
+        Stream.SaveToStream(fs);
+      finally
+        fs.Free;
+      end;
+    except
+      on E: Exception do
+        WriteLog_E('SaveImageStreamToFile.Failed!', E);
+    end;
+    if FileExistsUTF8(f) then Result := f
+  end;
+end;
+
 function SaveImage(const AHTTP: THTTPSend; const mangaSiteID: Integer;
   URL: String; const Path, Name, prefix: String; var SavedFilename: String; const Reconnect: Integer
   ): Boolean;
   // prefix: For example: 000<our prefix>.jpg.
 var
-  retryToSave: Boolean = False;
-  header: array [0..3] of Byte;
-  ext, lpath, fpath: String;
   HTTPHeader: TStringList;
   HTTP: THTTPSend;
   counter: Integer;
   s: String;
-  fstream: TFileStreamUTF8;
 
   procedure preTerminate;
   begin
@@ -3241,14 +3272,14 @@ var
 begin
   Result := False;
   if Trim(URL) = '' then Exit;
-  fpath := '';
-  s := Path + '/' + Name;
+
   // Check to see if a file with similar name was already exist. If so then we
   // skip the download process.
+  if Trim(URL) = 'D' then Exit(True);
+  s := CleanAndExpandDirectory(Path) + Name + prefix;
   if (FileExistsUTF8(s + '.jpg')) or
     (FileExistsUTF8(s + '.png')) or
-    (FileExistsUTF8(s + '.gif')) or
-    (Trim(URL) = 'D') then
+    (FileExistsUTF8(s + '.gif')) then
     Exit(True);
 
   URL := FixURL(URL);
@@ -3398,75 +3429,9 @@ begin
       HTTP.Headers.Text := HTTPHeader.Text;
     end;
   end;
-  Initialize(header);
-  HTTP.Document.Seek(0, soBeginning);
-  HTTP.Document.Read(header[0], 4);
-  if (header[0] = JPG_HEADER[0]) and
-    (header[1] = JPG_HEADER[1]) and
-    (header[2] = JPG_HEADER[2]) then
-    ext := '.jpg'
-  else
-  if (header[0] = PNG_HEADER[0]) and
-    (header[1] = PNG_HEADER[1]) and
-    (header[2] = PNG_HEADER[2]) then
-    ext := '.png'
-  else
-  if (header[0] = GIF_HEADER[0]) and
-    (header[1] = GIF_HEADER[1]) and
-    (header[2] = GIF_HEADER[2]) then
-    ext := '.gif'
-  else
-    ext := '';
-  if ext <> '' then
-  begin
-    // If an error occured, verify the path and redo the job.
-    // If the error still persists, break the loop.
-    repeat
-      try
-        if checkTerminate then Exit;
-        lpath := CleanAndExpandDirectory(CorrectPathSys(Path));
-        if not DirectoryExistsUTF8(lpath) then
-          ForceDirectoriesUTF8(lpath);
-        if DirectoryExistsUTF8(lpath) then
-        begin
-          fpath := CleanAndExpandFilename(lpath + Name + prefix + ext);
-          if FileExistsUTF8(fpath) then
-            DeleteFileUTF8(fpath);
-          fstream := TFileStreamUTF8.Create(fpath, fmCreate);
-          try
-            HTTP.Document.SaveToStream(fstream);
-          finally
-            fstream.Free;
-          end;
-          if FileExistsUTF8(fpath) then
-            Result := HTTP.Document.Size = FileSizeUtf8(fpath);
-        end
-        else
-          Result := False;
-        Break;
-      except
-        on E: Exception do
-        begin
-          WriteLog_E('SaveImage.SavetoFile.Error!'+ LineEnding +
-            CorrectPathSys(Path) + '/' + Name + prefix + ext, E);
-          if checkTerminate then Exit;
-          if not retryToSave then
-          begin
-            CheckPath(Path);
-            retryToSave := True;
-          end
-          else
-            Break;
-        end;
-      end;
-    until False;
-  end
-  else
-    Writelog_E('SaveImage.ExtEmpty!' + LineEnding + URL);
+  SavedFilename := SaveImageStreamToFile(HTTP.Document, Path, Name + prefix);
   preTerminate;
-  Result := (fpath <> '') and FileExistsUTF8(fpath);
-  if Result then SavedFilename := fpath
-  else SavedFilename := '';
+  Result := SavedFilename <> '';
 end;
 
 function SaveImage(const AHTTP: THTTPSend; const mangaSiteID: Integer;
