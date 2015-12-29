@@ -960,11 +960,11 @@ function SaveImageStreamToFile(Stream: TMemoryStream; Path, FileName: String): S
 
 // Download an image from url and save it to a specific location.
 function SaveImage(const AHTTP: THTTPSend; const mangaSiteID: Integer; URL: String;
-  const Path, Name, prefix: String; var SavedFilename: String; const Reconnect: Integer = 0): Boolean; overload;
+  const Path, Name: String; var SavedFilename: String; const Reconnect: Integer = 0): Boolean; overload;
 function SaveImage(const AHTTP: THTTPSend; const mangaSiteID: Integer; URL: String;
-  const Path, Name, prefix: String; const Reconnect: Integer = 0): Boolean; overload;
+  const Path, Name: String; const Reconnect: Integer = 0): Boolean; overload;
 function SaveImage(const mangaSiteID: Integer; URL: String;
-  const Path, Name, prefix: String; var SavedFilename: String; const Reconnect: Integer = 0): Boolean; overload; inline;
+  const Path, Name: String; var SavedFilename: String; const Reconnect: Integer = 0): Boolean; overload; inline;
 
 procedure QuickSortChapters(var chapterList, linkList: TStringList);
 procedure QuickSortData(var merge: TStringList);
@@ -3243,9 +3243,8 @@ begin
 end;
 
 function SaveImage(const AHTTP: THTTPSend; const mangaSiteID: Integer;
-  URL: String; const Path, Name, prefix: String; var SavedFilename: String; const Reconnect: Integer
-  ): Boolean;
-  // prefix: For example: 000<our prefix>.jpg.
+  URL: String; const Path, Name: String; var SavedFilename: String;
+  const Reconnect: Integer): Boolean;
 var
   HTTPHeader: TStringList;
   HTTP: THTTPSend;
@@ -3276,7 +3275,7 @@ begin
   // Check to see if a file with similar name was already exist. If so then we
   // skip the download process.
   if Trim(URL) = 'D' then Exit(True);
-  s := CleanAndExpandDirectory(Path) + Name + prefix;
+  s := CleanAndExpandDirectory(Path) + Name;
   if (FileExistsUTF8(s + '.jpg')) or
     (FileExistsUTF8(s + '.png')) or
     (FileExistsUTF8(s + '.gif')) then
@@ -3429,24 +3428,23 @@ begin
       HTTP.Headers.Text := HTTPHeader.Text;
     end;
   end;
-  SavedFilename := SaveImageStreamToFile(HTTP.Document, Path, Name + prefix);
+  SavedFilename := SaveImageStreamToFile(HTTP.Document, Path, Name);
   preTerminate;
   Result := SavedFilename <> '';
 end;
 
 function SaveImage(const AHTTP: THTTPSend; const mangaSiteID: Integer;
-  URL: String; const Path, Name, prefix: String; const Reconnect: Integer
-  ): Boolean;
+  URL: String; const Path, Name: String; const Reconnect: Integer): Boolean;
 var
   f: String;
 begin
-  Result := SaveImage(AHTTP, mangaSiteID, URL, Path, Name, prefix, f, Reconnect);
+  Result := SaveImage(AHTTP, mangaSiteID, URL, Path, Name, f, Reconnect);
 end;
 
-function SaveImage(const mangaSiteID: Integer; URL: String; const Path, Name,
-  prefix: String; var SavedFilename: String; const Reconnect: Integer): Boolean;
+function SaveImage(const mangaSiteID: Integer; URL: String; const Path,
+  Name: String; var SavedFilename: String; const Reconnect: Integer): Boolean;
 begin
-  Result := SaveImage(nil, mangaSiteID, URL, Path, Name, prefix, SavedFilename, Reconnect);
+  Result := SaveImage(nil, mangaSiteID, URL, Path, Name, SavedFilename, Reconnect);
 end;
 
 procedure QuickSortChapters(var chapterList, linkList: TStringList);

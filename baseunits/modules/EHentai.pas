@@ -300,7 +300,7 @@ var
         if iurl = '' then
           iurl := query.XPathString('//a/img/@src[not(contains(.,"ehgt.org/"))]');
         if iurl <> '' then
-          Result := SaveImage(DownloadThread.FHTTP, -1, iurl, APath, AName, APrefix);
+          Result := SaveImage(DownloadThread.FHTTP, -1, iurl, APath, AName);
         if DownloadThread.IsTerminated then Break;
         if rcount >= reconnect then Break;
         if not Result then begin

@@ -60,7 +60,7 @@
             CorrectPathSys(manager.container.DownloadInfo.SaveTo +
               manager.container.ChapterName.Strings[
             manager.container.CurrentDownloadChapterPtr]),
-            Format('%.3d', [workCounter + 1]),
+            Format('%.3d', [workCounter + 1]) +
             '_' + IntToStr(prefix),
             manager.container.Manager.retryConnect);
 

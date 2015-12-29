@@ -61,7 +61,7 @@ type
       const Reconnect: Integer = 0): Boolean; inline;
 
     function SaveImage(const mangaSiteID: Integer; URL: String;
-      const Path, Name, prefix: String; const Reconnect: Integer = 0): Boolean; overload;
+      const Path, Name: String; const Reconnect: Integer = 0): Boolean; overload;
 
     procedure Execute; override;
     procedure DoTerminate; override;
@@ -291,9 +291,9 @@ begin
 end;
 
 function TDownloadThread.SaveImage(const mangaSiteID: Integer; URL: String;
-  const Path, Name, prefix: String; const Reconnect: Integer): Boolean;
+  const Path, Name: String; const Reconnect: Integer): Boolean;
 begin
-  Result := uBaseUnit.SaveImage(FHTTP, mangaSiteID, URL, Path, Name, prefix, Reconnect);
+  Result := uBaseUnit.SaveImage(FHTTP, mangaSiteID, URL, Path, Name, Reconnect);
 end;
 
 procedure TDownloadThread.Execute;
@@ -1199,7 +1199,6 @@ begin
       TURL,
       lpath,
       Format('%.3d', [workCounter + 1]),
-      prefix,
       sfilename,
       manager.container.Manager.retryConnect);
   if Terminated then Exit(False);
