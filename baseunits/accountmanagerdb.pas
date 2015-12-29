@@ -293,7 +293,7 @@ begin
         fquery.Close;
         with fconn do begin
           ExecuteDirect('DROP TABLE IF EXISTS '+QuotedStr('temp'+ctablename));
-          ExecuteDirect('CREATE TABLE '+QuotedStrd('temp'+ctablename)+ctbaccountscreateparams);
+          ExecuteDirect('CREATE TABLE '+QuotedStrd('temp'+ctablename)+#13#10+ctbaccountscreateparams);
           ExecuteDirect('INSERT INTO '+QuotedStrd('temp'+ctablename)+' SELECT * FROM '+QuotedStrd(ctablename));
           ExecuteDirect('DROP TABLE '+QuotedStrd(ctablename));
           ExecuteDirect('ALTER TABLE '+QuotedStrd('temp'+ctablename)+' RENAME TO '+QuotedStrd(ctablename));
