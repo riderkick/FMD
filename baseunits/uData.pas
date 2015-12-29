@@ -48,6 +48,7 @@ type
     function GetLinkCount: Integer;
   protected
     procedure CreateTable;
+    procedure ConvertNewTable;
     procedure VacuumTable;
     procedure GetRecordCount;
     procedure AddSQLCond(const sqltext: String; useOR: Boolean = False);
@@ -218,13 +219,13 @@ const
     ('title', 'link', 'authors', 'artists', 'genres', 'status',
     'summary', 'numchapter', 'jdn');
   DBDataProccesCreateParam = '('#13#10 +
-    '"title" VARCHAR,'#13#10 +
+    '"title" TEXT,'#13#10 +
     '"link" VARCHAR NOT NULL PRIMARY KEY,'#13#10 +
-    '"authors" VARCHAR,'#13#10 +
-    '"artists" VARCHAR,'#13#10 +
-    '"genres" VARCHAR,'#13#10 +
-    '"status" VARCHAR,'#13#10 +
-    '"summary" VARCHAR,'#13#10 +
+    '"authors" TEXT,'#13#10 +
+    '"artists" TEXT,'#13#10 +
+    '"genres" TEXT,'#13#10 +
+    '"status" TEXT,'#13#10 +
+    '"summary" TEXT,'#13#10 +
     '"numchapter" INTEGER,'#13#10 +
     '"jdn" INTEGER'#13#10 +
     ');';
@@ -414,6 +415,38 @@ begin
       DBDataProccesCreateParam);
     FTrans.Commit;
   end;
+end;
+
+procedure TDBDataProcess.ConvertNewTable;
+begin
+  //'"title" TEXT,'#13#10 +
+  //  '"link" VARCHAR NOT NULL PRIMARY KEY,'#13#10 +
+  //  '"authors" TEXT,'#13#10 +
+  //  '"artists" TEXT,'#13#10 +
+  //  '"genres" TEXT,'#13#10 +
+  //  '"status" TEXT,'#13#10 +
+  //  '"summary" TEXT,'#13#10 +
+  if FQuery.Active = False then Exit;
+  if (FieldTypeNames[FQuery.FieldByName('title').DataType] <> Fieldtypenames[ftMemo]) or
+      (FieldTypeNames[FQuery.FieldByName('authors').DataType] <> Fieldtypenames[ftMemo]) or
+      (FieldTypeNames[FQuery.FieldByName('artists').DataType] <> Fieldtypenames[ftMemo]) or
+      (FieldTypeNames[FQuery.FieldByName('genres').DataType] <> Fieldtypenames[ftMemo]) or
+      (FieldTypeNames[FQuery.FieldByName('status').DataType] <> Fieldtypenames[ftMemo]) or
+      (FieldTypeNames[FQuery.FieldByName('summary').DataType] <> Fieldtypenames[ftMemo]) then
+    try
+      FQuery.Close;
+      with fconn do begin
+        ExecuteDirect('DROP TABLE IF EXISTS '+QuotedStr('temp'+FTableName));
+        ExecuteDirect('CREATE TABLE '+QuotedStrd('temp'+FTableName)+#13#10+DBDataProccesCreateParam);
+        ExecuteDirect('INSERT INTO '+QuotedStrd('temp'+FTableName)+' SELECT * FROM '+QuotedStrd(FTableName));
+        ExecuteDirect('DROP TABLE '+QuotedStrd(FTableName));
+        ExecuteDirect('ALTER TABLE '+QuotedStrd('temp'+FTableName)+' RENAME TO '+QuotedStrd(FTableName));
+      end;
+      FTrans.Commit;
+      FQuery.Open;
+    except
+      FTrans.Rollback;
+    end;
 end;
 
 procedure TDBDataProcess.VacuumTable;
@@ -745,6 +778,7 @@ begin
     end;
   end;
   Result := FQuery.Active;
+  if Result then ConvertNewTable;
 end;
 
 function TDBDataProcess.TableExist(const ATableName: String): Boolean;
