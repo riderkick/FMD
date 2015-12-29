@@ -1140,7 +1140,7 @@ end;
 
 function TDownloadThread.DownloadImage(const prefix: String): Boolean;
 var
-  TURL, lpath, sfilename: String;
+  s, TURL, lpath, sfilename: String;
 
   {$I includes/MeinManga/image_url.inc}
 
@@ -1173,14 +1173,21 @@ begin
   //TURL := DecodeURL(TURL); //decode first to avoid double encoded
   //TURL := EncodeTriplet(TURL, '%', URLSpecialChar + ['#']);
 
-  if Modules.ModuleAvailable(ModuleId, MMDownloadImage) then
-  Result := Modules.DownloadImage(
-    Self,
-    manager.container.PageContainerLinks[workCounter],
-    lpath,
-    Format('%.3d', [workCounter + 1]),
-    prefix,
-    ModuleId)
+  if Modules.ModuleAvailable(ModuleId, MMDownloadImage) then begin
+    s := '';
+    if workCounter < manager.container.PageContainerLinks.Count then
+      s := manager.container.PageContainerLinks[workCounter]
+    else if workCounter < manager.container.PageLinks.Count then
+      s := manager.container.PageLinks[workCounter];
+    if s <> '' then
+      Result := Modules.DownloadImage(
+        Self,
+        s,
+        lpath,
+        Format('%.3d', [workCounter + 1]),
+        prefix,
+        ModuleId);
+  end
   else
   if manager.container.MangaSiteID = MEINMANGA_ID then
     Result := GetMeinMangaImageURL
