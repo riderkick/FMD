@@ -19,8 +19,8 @@ uses
   UTF8Process,
   {$endif}
   SysUtils, Classes, Graphics, Forms, lazutf8classes, LazUTF8, LazFileUtils,
-  LConvEncoding, strutils, fileinfo, fpjson, jsonparser, FastHTMLParser, fgl,
-  RegExpr, synautil, httpsend, blcksock, ssl_openssl, synacode, GZIPUtils,
+  LConvEncoding, strutils, fileinfo, base64, fpjson, jsonparser, FastHTMLParser,
+  fgl, RegExpr, synautil, httpsend, blcksock, ssl_openssl, synacode, GZIPUtils,
   uFMDThread, uMisc, httpsendthread, simplehtmltreeparser, xquery, xquery_json,
   USimpleException, USimpleLogger;
 
@@ -859,6 +859,10 @@ function SelectCSSIX(Expression: String; TP: TTreeParser): IXQValue;
 //convert charset to utf8
 function ConvertCharsetToUTF8(S: String): String; overload;
 procedure ConvertCharsetToUTF8(S: TStrings); overload;
+
+// encode/decode
+function Base64Encode(const s: string): string;
+function Base64Decode(const s: string): string;
 
 // StringUtils
 function StringReplaceBrackets(const S, OldPattern, NewPattern: string; Flags: TReplaceFlags): string;
@@ -2101,6 +2105,18 @@ begin
       end;
     end;
   end;
+end;
+
+function Base64Encode(const s: string): string;
+begin
+  if s = '' then Exit(s);
+  Result := EncodeStringBase64(s);
+end;
+
+function Base64Decode(const s: string): string;
+begin
+  if s = '' then Exit(s);
+  Result := DecodeStringBase64(s);
 end;
 
 function StringReplaceBrackets(const S, OldPattern, NewPattern: string; Flags: TReplaceFlags): string;
