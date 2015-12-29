@@ -16,4 +16,5 @@ uses
   EightMuses,
   HitomiLa,
   HentaiCafe,
-  MangaTr;
+  MangaTr,
+  Madokami;
