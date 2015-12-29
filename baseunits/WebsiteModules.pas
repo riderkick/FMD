@@ -34,13 +34,17 @@ type
   TOnGetImageURL = function(var DownloadThread: TDownloadThread;
     const AURL: String; Module: TModuleContainer): Boolean;
 
+  TOnBeforeDownloadImage = function(var DownloadThread: TDownloadThread;
+    AURL: String; Module: TModuleContainer): Boolean;
+
   TOnDownloadImage = function(var DownloadThread: TDownloadThread;
     const AURL, APath, AName, APrefix: String; Module: TModuleContainer): Boolean;
 
   TOnLogin = function(var AHTTP: THTTPSendThread): Boolean;
 
   TModuleMethod = (MMGetDirectoryPageNumber, MMGetNameAndLink, MMGetInfo,
-    MMTaskStart, MMGetPageNumber, MMGetImageURL, MMDownloadImage, MMLogin);
+    MMTaskStart, MMGetPageNumber, MMGetImageURL, MMBeforeDownloadImage,
+    MMDownloadImage, MMLogin);
 
   { TModuleContainer }
 
@@ -68,6 +72,7 @@ type
     OnTaskStart: TOnTaskStart;
     OnGetPageNumber: TOnGetPageNumber;
     OnGetImageURL: TOnGetImageURL;
+    OnBeforeDownloadImage: TOnBeforeDownloadImage;
     OnDownloadImage: TOnDownloadImage;
     OnLogin: TOnLogin;
     constructor Create;
@@ -141,6 +146,11 @@ type
     function GetImageURL(var DownloadThread: TDownloadThread;
       const AURL, AWebsite: String): Boolean;
       overload;
+
+    function BeforeDownloadImage(var DownloadThread: TDownloadThread;
+      AURL: String; const ModuleId: Integer): Boolean; overload;
+    function BeforeDownloadImage(var DownloadThread: TDownloadThread;
+      AURL: String; const AWebsite: String): Boolean; overload;
 
     function DownloadImage(var DownloadThread: TDownloadThread;
       const AURL, APath, AName, APrefix: String; ModuleId: Integer): Boolean; overload;
@@ -442,6 +452,24 @@ function TWebsiteModules.GetImageURL(var DownloadThread: TDownloadThread;
   const AURL, AWebsite: String): Boolean;
 begin
   Result := GetImageURL(DownloadThread, AURL, LocateModule(AWebsite));
+end;
+
+function TWebsiteModules.BeforeDownloadImage(
+  var DownloadThread: TDownloadThread; AURL: String; const ModuleId: Integer
+  ): Boolean;
+begin
+  Result := False;
+  if (ModuleId < 0) or (ModuleId >= FModuleList.Count) then Exit;
+  if Assigned(TModuleContainer(FModuleList[ModuleId]).OnBeforeDownloadImage) then
+    Result := TModuleContainer(FModuleList[ModuleId]).OnBeforeDownloadImage(
+      DownloadThread, AURL, TModuleContainer(FModuleList[ModuleId]));
+end;
+
+function TWebsiteModules.BeforeDownloadImage(
+  var DownloadThread: TDownloadThread; AURL: String; const AWebsite: String
+  ): Boolean;
+begin
+  Result := BeforeDownloadImage(DownloadThread, AURL, LocateModule(AWebsite));
 end;
 
 function TWebsiteModules.DownloadImage(var DownloadThread: TDownloadThread;
