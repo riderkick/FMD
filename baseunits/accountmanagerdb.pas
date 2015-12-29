@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, LazFileUtils, USimpleLogger, base64, sqlite3conn,
-  sqldb;
+  sqldb, db;
 
 type
 
@@ -27,6 +27,7 @@ type
     function CreateDBTable: Boolean;
     function OpenDBTable: Boolean;
     function FixStatus: Boolean;
+    procedure ConvertNewTable;
     function GetValueString(const AName, AField: string): string;
     function GetValueBoolean(const AName, AField: string): boolean;
     function GetValueInteger(const AName, AField: string): Integer;
@@ -48,7 +49,7 @@ type
     procedure SetValueInteger(const AName, AField: string; AValue: Integer);
     procedure SetValueStr(const RecIndex, FieldIndex: Integer; AValue: string);
     procedure SetValueBool(const RecIndex, FieldIndex: Integer; AValue: boolean);
-    procedure SetValueInt(const RecIndex, FieldIndex, AValue: Integer);
+    procedure SetValueInt(const RecIndex, FieldIndex: Integer; AValue: Integer);
     procedure GetRecordCount;
     procedure Vacuum;
   public
@@ -81,11 +82,16 @@ const
   ctbaccountscreateparams = '('#13#10 +
     '"enabled" BOOL,'#13#10 +
     '"aname" VARCHAR NOT NULL PRIMARY KEY,'#13#10 +
-    '"username" VARCHAR,'#13#10 +
-    '"password" VARCHAR,'#13#10 +
-    '"cookies" VARCHAR,'#13#10 +
+    '"username" TEXT,'#13#10 +
+    '"password" TEXT,'#13#10 +
+    '"cookies" TEXT,'#13#10 +
     '"status" INTEGER'#13#10 +
     ');';
+
+function QuotedStrd(const S: string): string;
+begin
+  Result := AnsiQuotedStr(S, '"');
+end;
 
 procedure InitAccountManager(const AFilename: string);
 begin
@@ -201,7 +207,7 @@ begin
   Result := False;
   if ffilename = '' then Exit;
   if FileExistsUTF8(ffilename) then DeleteFileUTF8(ffilename);
-  if InternalOpenDB then Result := CreateDBTable;
+  CreateDBTable;
 end;
 
 function TAccountManager.InternalOpenDB: Boolean;
@@ -250,6 +256,7 @@ begin
     on E: Exception do
       WriteLog_E('TAccountManager.OpenDBTable.Failed, ' + ffilename, E, Self);
   end;
+  if Result then ConvertNewTable;
 end;
 
 function TAccountManager.FixStatus: Boolean;
@@ -272,6 +279,31 @@ begin
   finally
     LeaveCriticalsection(locklocate);
   end;
+end;
+
+procedure TAccountManager.ConvertNewTable;
+begin
+  EnterCriticalsection(locklocate);
+  try
+    if (FieldTypeNames[fquery.FieldByName('username').DataType] <> Fieldtypenames[ftMemo]) or
+      (FieldTypeNames[fquery.FieldByName('password').DataType] <> Fieldtypenames[ftMemo]) or
+      (FieldTypeNames[fquery.FieldByName('cookies').DataType] <> Fieldtypenames[ftMemo]) then
+    begin
+      fquery.Close;
+      with fconn do begin
+        ExecuteDirect('DROP TABLE IF EXISTS '+QuotedStr('temp'+ctablename));
+        ExecuteDirect('CREATE TABLE '+QuotedStrd('temp'+ctablename)+ctbaccountscreateparams);
+        ExecuteDirect('INSERT INTO '+QuotedStrd('temp'+ctablename)+' SELECT * FROM '+QuotedStrd(ctablename));
+        ExecuteDirect('DROP TABLE '+QuotedStrd(ctablename));
+        ExecuteDirect('ALTER TABLE '+QuotedStrd('temp'+ctablename)+' RENAME TO '+QuotedStrd(ctablename));
+      end;
+      ftrans.Commit;
+      fquery.Open;
+    end;
+  except
+    ftrans.Rollback;
+  end;
+  LeaveCriticalsection(locklocate);
 end;
 
 function TAccountManager.GetValueString(const AName, AField: string): string;
@@ -347,7 +379,8 @@ begin
   end;
 end;
 
-procedure TAccountManager.SetValueInt(const RecIndex, FieldIndex, AValue: Integer);
+procedure TAccountManager.SetValueInt(const RecIndex, FieldIndex: Integer;
+  AValue: Integer);
 begin
   if fquery.Active = False then Exit;
   if (RecIndex > frecordcount) and (RecIndex < 0) then Exit;
