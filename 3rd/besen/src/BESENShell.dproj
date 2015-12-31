@@ -1,0 +1,214 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{64B522E5-F0C1-47B8-BF9A-FB051D6D623B}</ProjectGuid>
+        <MainSource>BESENShell.dpr</MainSource>
+        <Base>True</Base>
+        <Config Condition="'$(Config)'==''">Release</Config>
+        <TargetedPlatforms>1</TargetedPlatforms>
+        <AppType>Console</AppType>
+        <FrameworkType>None</FrameworkType>
+        <ProjectVersion>14.3</ProjectVersion>
+        <Platform Condition="'$(Platform)'==''">Win32</Platform>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Config)'=='Base' or '$(Base)'!=''">
+        <Base>true</Base>
+    </PropertyGroup>
+    <PropertyGroup Condition="('$(Platform)'=='Win32' and '$(Base)'=='true') or '$(Base_Win32)'!=''">
+        <Base_Win32>true</Base_Win32>
+        <CfgParent>Base</CfgParent>
+        <Base>true</Base>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Config)'=='Release' or '$(Cfg_1)'!=''">
+        <Cfg_1>true</Cfg_1>
+        <CfgParent>Base</CfgParent>
+        <Base>true</Base>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Config)'=='Debug' or '$(Cfg_2)'!=''">
+        <Cfg_2>true</Cfg_2>
+        <CfgParent>Base</CfgParent>
+        <Base>true</Base>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Base)'!=''">
+        <DCC_ImageBase>00400000</DCC_ImageBase>
+        <DCC_Namespace>System;Xml;Data;Datasnap;Web;Soap;Winapi;$(DCC_Namespace)</DCC_Namespace>
+        <DCC_SymbolReferenceInfo>1</DCC_SymbolReferenceInfo>
+        <DCC_F>false</DCC_F>
+        <DCC_K>false</DCC_K>
+        <VerInfo_Locale>1031</VerInfo_Locale>
+        <DCC_N>true</DCC_N>
+        <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+        <DCC_E>false</DCC_E>
+        <DCC_S>false</DCC_S>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Base_Win32)'!=''">
+        <DCC_Namespace>System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;Bde;$(DCC_Namespace)</DCC_Namespace>
+        <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+        <VerInfo_Locale>1033</VerInfo_Locale>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Cfg_1)'!=''">
+        <DCC_Define>RELEASE;$(DCC_Define)</DCC_Define>
+        <DCC_SymbolReferenceInfo>0</DCC_SymbolReferenceInfo>
+        <DCC_DebugInformation>false</DCC_DebugInformation>
+        <DCC_LocalDebugSymbols>false</DCC_LocalDebugSymbols>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Cfg_2)'!=''">
+        <DCC_Define>DEBUG;$(DCC_Define)</DCC_Define>
+        <DCC_Optimize>false</DCC_Optimize>
+        <DCC_GenerateStackFrames>true</DCC_GenerateStackFrames>
+    </PropertyGroup>
+    <ItemGroup>
+        <DelphiCompile Include="$(MainSource)">
+            <MainSource>MainSource</MainSource>
+        </DelphiCompile>
+        <DCCReference Include="BESEN.pas"/>
+        <DCCReference Include="BESENCodeSnapshot.pas"/>
+        <DCCReference Include="BESENVersionConstants.pas"/>
+        <DCCReference Include="BESENConstants.pas"/>
+        <DCCReference Include="BESENValueContainer.pas"/>
+        <DCCReference Include="BESENUnicodeTables.pas"/>
+        <DCCReference Include="BESENStringUtils.pas"/>
+        <DCCReference Include="BESENStringTree.pas"/>
+        <DCCReference Include="BESENStringList.pas"/>
+        <DCCReference Include="BESENSelfBalancedTree.pas"/>
+        <DCCReference Include="BESENScope.pas"/>
+        <DCCReference Include="BESENRegExpCache.pas"/>
+        <DCCReference Include="BESENRandomGenerator.pas"/>
+        <DCCReference Include="BESENPointerSelfBalancedTree.pas"/>
+        <DCCReference Include="BESENPointerList.pas"/>
+        <DCCReference Include="BESENParser.pas"/>
+        <DCCReference Include="BESENOpcodes.pas"/>
+        <DCCReference Include="BESENObjectThrowTypeErrorFunction.pas"/>
+        <DCCReference Include="BESENObjectStringPrototype.pas"/>
+        <DCCReference Include="BESENObjectStringConstructor.pas"/>
+        <DCCReference Include="BESENObjectString.pas"/>
+        <DCCReference Include="BESENObjectRegExpPrototype.pas"/>
+        <DCCReference Include="BESENObjectRegExpConstructor.pas"/>
+        <DCCReference Include="BESENObjectRegExp.pas"/>
+        <DCCReference Include="BESENObjectPrototype.pas"/>
+        <DCCReference Include="BESENObjectPropertyDescriptor.pas"/>
+        <DCCReference Include="BESENObjectNumberPrototype.pas"/>
+        <DCCReference Include="BESENObjectNumberConstructor.pas"/>
+        <DCCReference Include="BESENObjectNumber.pas"/>
+        <DCCReference Include="BESENObjectNativeFunction.pas"/>
+        <DCCReference Include="BESENObjectMath.pas"/>
+        <DCCReference Include="BESENObjectJSON.pas"/>
+        <DCCReference Include="BESENObjectGlobal.pas"/>
+        <DCCReference Include="BESENObjectFunctionPrototype.pas"/>
+        <DCCReference Include="BESENObjectFunctionConstructor.pas"/>
+        <DCCReference Include="BESENObjectFunctionArguments.pas"/>
+        <DCCReference Include="BESENObjectFunction.pas"/>
+        <DCCReference Include="BESENObjectErrorPrototype.pas"/>
+        <DCCReference Include="BESENObjectErrorConstructor.pas"/>
+        <DCCReference Include="BESENObjectError.pas"/>
+        <DCCReference Include="BESENObjectEnvironmentRecord.pas"/>
+        <DCCReference Include="BESENObjectDeclaredFunction.pas"/>
+        <DCCReference Include="BESENObjectDatePrototype.pas"/>
+        <DCCReference Include="BESENObjectDateConstructor.pas"/>
+        <DCCReference Include="BESENObjectDate.pas"/>
+        <DCCReference Include="BESENObjectConstructor.pas"/>
+        <DCCReference Include="BESENObjectBooleanPrototype.pas"/>
+        <DCCReference Include="BESENObjectBooleanConstructor.pas"/>
+        <DCCReference Include="BESENObjectBoolean.pas"/>
+        <DCCReference Include="BESENObjectBindingFunction.pas"/>
+        <DCCReference Include="BESENObjectArrayPrototype.pas"/>
+        <DCCReference Include="BESENObjectArrayConstructor.pas"/>
+        <DCCReference Include="BESENObjectArray.pas"/>
+        <DCCReference Include="BESENObjectArgSetterFunction.pas"/>
+        <DCCReference Include="BESENObjectArgGetterFunction.pas"/>
+        <DCCReference Include="BESENObject.pas"/>
+        <DCCReference Include="BESENNumberUtils.pas"/>
+        <DCCReference Include="BESENNativeObject.pas"/>
+        <DCCReference Include="BESENNativeCodeMemoryManager.pas"/>
+        <DCCReference Include="BESENLocale.pas"/>
+        <DCCReference Include="BESENLexicalEnvironment.pas"/>
+        <DCCReference Include="BESENLexer.pas"/>
+        <DCCReference Include="BESENKeyIDManager.pas"/>
+        <DCCReference Include="BESENIntegerList.pas"/>
+        <DCCReference Include="BESENInt64SelfBalancedTree.pas"/>
+        <DCCReference Include="BESENHashUtils.pas"/>
+        <DCCReference Include="BESENHashMap.pas"/>
+        <DCCReference Include="BESENGlobals.pas"/>
+        <DCCReference Include="BESENGarbageCollector.pas"/>
+        <DCCReference Include="BESENEvalCacheItem.pas"/>
+        <DCCReference Include="BESENEvalCache.pas"/>
+        <DCCReference Include="BESENErrors.pas"/>
+        <DCCReference Include="BESENEnvironmentRecord.pas"/>
+        <DCCReference Include="BESENDoubleList.pas"/>
+        <DCCReference Include="BESENDecompiler.pas"/>
+        <DCCReference Include="BESENDeclarativeEnvironmentRecord.pas"/>
+        <DCCReference Include="BESENDateUtils.pas"/>
+        <DCCReference Include="BESENCompiler.pas"/>
+        <DCCReference Include="BESENCollectorObject.pas"/>
+        <DCCReference Include="BESENCollector.pas"/>
+        <DCCReference Include="BESENCharset.pas"/>
+        <DCCReference Include="BESENBaseObject.pas"/>
+        <DCCReference Include="BESENArrayUtils.pas"/>
+        <DCCReference Include="BESENTypes.pas"/>
+        <DCCReference Include="BESENUtils.pas"/>
+        <DCCReference Include="BESENValue.pas"/>
+        <DCCReference Include="BESENRegExp.pas"/>
+        <DCCReference Include="BESENCode.pas"/>
+        <DCCReference Include="BESENASTNodes.pas"/>
+        <DCCReference Include="BESENCodeContext.pas"/>
+        <DCCReference Include="BESENCodeGeneratorContext.pas"/>
+        <DCCReference Include="BESENContext.pas"/>
+        <DCCReference Include="BESENObjectConsole.pas"/>
+        <BuildConfiguration Include="Debug">
+            <Key>Cfg_2</Key>
+            <CfgParent>Base</CfgParent>
+        </BuildConfiguration>
+        <BuildConfiguration Include="Base">
+            <Key>Base</Key>
+        </BuildConfiguration>
+        <BuildConfiguration Include="Release">
+            <Key>Cfg_1</Key>
+            <CfgParent>Base</CfgParent>
+        </BuildConfiguration>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Delphi.Personality.12</Borland.Personality>
+        <Borland.ProjectType>VCLApplication</Borland.ProjectType>
+        <BorlandProject>
+            <Delphi.Personality>
+                <Source>
+                    <Source Name="MainSource">BESENShell.dpr</Source>
+                </Source>
+                <VersionInfo>
+                    <VersionInfo Name="IncludeVerInfo">False</VersionInfo>
+                    <VersionInfo Name="AutoIncBuild">False</VersionInfo>
+                    <VersionInfo Name="MajorVer">1</VersionInfo>
+                    <VersionInfo Name="MinorVer">0</VersionInfo>
+                    <VersionInfo Name="Release">0</VersionInfo>
+                    <VersionInfo Name="Build">0</VersionInfo>
+                    <VersionInfo Name="Debug">False</VersionInfo>
+                    <VersionInfo Name="PreRelease">False</VersionInfo>
+                    <VersionInfo Name="Special">False</VersionInfo>
+                    <VersionInfo Name="Private">False</VersionInfo>
+                    <VersionInfo Name="DLL">False</VersionInfo>
+                    <VersionInfo Name="Locale">1031</VersionInfo>
+                    <VersionInfo Name="CodePage">1252</VersionInfo>
+                </VersionInfo>
+                <VersionInfoKeys>
+                    <VersionInfoKeys Name="CompanyName"/>
+                    <VersionInfoKeys Name="FileDescription"/>
+                    <VersionInfoKeys Name="FileVersion">1.0.0.0</VersionInfoKeys>
+                    <VersionInfoKeys Name="InternalName"/>
+                    <VersionInfoKeys Name="LegalCopyright"/>
+                    <VersionInfoKeys Name="LegalTrademarks"/>
+                    <VersionInfoKeys Name="OriginalFilename"/>
+                    <VersionInfoKeys Name="ProductName"/>
+                    <VersionInfoKeys Name="ProductVersion">1.0.0.0</VersionInfoKeys>
+                    <VersionInfoKeys Name="Comments"/>
+                </VersionInfoKeys>
+            </Delphi.Personality>
+            <Platforms>
+                <Platform value="OSX32">False</Platform>
+                <Platform value="Win32">True</Platform>
+                <Platform value="Win64">False</Platform>
+            </Platforms>
+        </BorlandProject>
+        <ProjectFileVersion>12</ProjectFileVersion>
+    </ProjectExtensions>
+    <Import Project="$(BDS)\Bin\CodeGear.Delphi.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Delphi.Targets')"/>
+    <Import Project="$(APPDATA)\Embarcadero\$(BDSAPPDATABASEDIR)\$(PRODUCTVERSION)\UserTools.proj" Condition="Exists('$(APPDATA)\Embarcadero\$(BDSAPPDATABASEDIR)\$(PRODUCTVERSION)\UserTools.proj')"/>
+</Project>
