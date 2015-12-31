@@ -1173,9 +1173,8 @@ begin
   //TURL := DecodeURL(TURL); //decode first to avoid double encoded
   //TURL := EncodeTriplet(TURL, '%', URLSpecialChar + ['#']);
 
-  if Modules.ModuleAvailable(ModuleId, MMBeforeDownloadImage) then begin
+  if Modules.ModuleAvailable(ModuleId, MMBeforeDownloadImage) then
     Result := Modules.BeforeDownloadImage(Self,TURL,ModuleId);
-  end;
 
   if Modules.ModuleAvailable(ModuleId, MMDownloadImage) then begin
     s := '';
@@ -1208,6 +1207,9 @@ begin
   if Terminated then Exit(False);
   if Result then begin
     manager.container.PageLinks[workCounter] := 'D';
+
+    if Modules.ModuleAvailable(ModuleId, MMAfterImageSaved) then
+      Modules.AfterImageSaved(sfilename, ModuleId);
 
     // remove mangafox watermark
     if manager.container.ModuleId > -1 then
