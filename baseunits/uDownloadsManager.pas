@@ -475,8 +475,6 @@ var
 
   {$I includes/MangaAt/chapter_page_number.inc}
 
-  {$I includes/SenMangaRAW/chapter_page_number.inc}
-
   {$I includes/ReadMangaToday/chapter_page_number.inc}
 
   {$I includes/LoneManga/chapter_page_number.inc}
@@ -656,9 +654,6 @@ begin
     else
     if manager.container.MangaSiteID = MANGAAT_ID then
       Result := GetMangaAtPageNumber
-    else
-    if manager.container.MangaSiteID = SENMANGARAW_ID then
-      Result := GetSenMangaRAWPageNumber
     else
     if manager.container.MangaSiteID = READMANGATODAY_ID then
       Result := GetReadMangaTodayPageNumber
@@ -1144,8 +1139,6 @@ var
 
   {$I includes/MeinManga/image_url.inc}
 
-  {$I includes/SenMangaRAW/image_url.inc}
-
 begin
   sfilename := '';
   lpath := CleanAndExpandDirectory(CorrectPathSys(manager.container.DownloadInfo.SaveTo +
@@ -1167,8 +1160,6 @@ begin
     Exit;
 
   FHTTP.Clear;
-  if manager.container.MangaSiteID = SENMANGARAW_ID then
-    Result := GetSenMangaRAWImageURL;
 
   if Modules.ModuleAvailable(ModuleId, MMBeforeDownloadImage) then
     Result := Modules.BeforeDownloadImage(Self,TURL,ModuleId);

@@ -2333,8 +2333,6 @@ var
 
   {$I includes/MangaAt/names_and_links.inc}
 
-  {$I includes/SenMangaRAW/names_and_links.inc}
-
   {$I includes/ReadMangaToday/names_and_links.inc}
 
   {$I includes/LoneManga/names_and_links.inc}
@@ -2563,9 +2561,6 @@ begin
     if WebsiteID = MANGAAT_ID then
       Result := MangaAtGetNamesAndLinks
     else
-    if WebsiteID = SENMANGARAW_ID then
-      Result := SenMangaRAWGetNamesAndLinks
-    else
     if WebsiteID = READMANGATODAY_ID then
       Result := ReadMangaTodayGetNamesAndLinks
     else
@@ -2726,8 +2721,6 @@ var
   {$I includes/AcademyVN/manga_information.inc}
 
   {$I includes/MangaAt/manga_information.inc}
-
-  {$I includes/SenMangaRAW/manga_information.inc}
 
   {$I includes/ReadMangaToday/manga_information.inc}
 
@@ -2968,9 +2961,6 @@ begin
     else
     if WebsiteID = MANGAAT_ID then
       Result := GetMangaAtInfoFromURL
-    else
-    if WebsiteID = SENMANGARAW_ID then
-      Result := GetSenMangaRAWInfoFromURL
     else
     if WebsiteID = READMANGATODAY_ID then
       Result := GetReadMangaTodayInfoFromURL

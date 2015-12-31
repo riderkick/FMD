@@ -346,12 +346,11 @@ const
   MANGAKU_ID             = 78;
   ACADEMYVN_ID           = 79;
   MANGAAT_ID             = 80;
-  SENMANGARAW_ID         = 81;
-  READMANGATODAY_ID      = 82;
-  LONEMANGA_ID           = 83;
-  DYNASTYSCANS_ID        = 84;
+  READMANGATODAY_ID      = 81;
+  LONEMANGA_ID           = 82;
+  DYNASTYSCANS_ID        = 83;
 
-  WebsiteRoots: array [0..84] of array [0..1] of string = (
+  WebsiteRoots: array [0..83] of array [0..1] of string = (
     ('AnimeA', 'http://manga.animea.net'),
     ('MangaInn', 'http://www.mangainn.me'),
     ('OurManga', 'http://www.ourmanga.com'),
@@ -433,7 +432,6 @@ const
     ('MangaKu', 'http://mangaku.web.id'),
     ('AcademyVN', 'http://truyen.academyvn.com'),
     ('MangaAt', 'http://www.mangaat.com'),
-    ('SenMangaRAW', 'http://raw.senmanga.com'),
     ('ReadMangaToday', 'http://www.readmanga.today'),
     ('LoneManga', 'http://lonemanga.com'),
     ('Dynasty-Scans', 'http://dynasty-scans.com')
