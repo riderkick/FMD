@@ -383,8 +383,6 @@ var
 
   {$I includes/HugeManga/chapter_page_number.inc}
 
-  {$I includes/KissManga/chapter_page_number.inc}
-
   {$I includes/Kivmanga/chapter_page_number.inc}
 
   {$I includes/Komikid/chapter_page_number.inc}
@@ -561,9 +559,6 @@ begin
     if (manager.container.MangaSiteID = MANGAEDEN_ID) or
       (manager.container.MangaSiteID = PERVEDEN_ID) then
       Result := GetMangaEdenPageNumber
-    else
-    if manager.container.MangaSiteID = KISSMANGA_ID then
-      Result := GetKissMangaPageNumber
     else
     if manager.container.MangaSiteID = KIVMANGA_ID then
       Result := GetKivmangaPageNumber

@@ -1956,8 +1956,6 @@ var
 
   {$I includes/AnimeA/directory_page_number.inc}
 
-  {$I includes/KissManga/directory_page_number.inc}
-
   {$I includes/Manga24h/directory_page_number.inc}
 
   {$I includes/VnSharing/directory_page_number.inc}
@@ -2057,9 +2055,6 @@ begin
       Source := TStringList.Create;
       if WebsiteID = ANIMEA_ID then
         Result := GetAnimeADirectoryPageNumber
-      else
-      if WebsiteID = KISSMANGA_ID then
-        Result := GetKissMangaDirectoryPageNumber
       else
       if WebsiteID = MANGA24H_ID then
         Result := GetManga24hDirectoryPageNumber
@@ -2211,8 +2206,6 @@ var
 
   {$I includes/MangaInn/names_and_links.inc}
 
-  {$I includes/KissManga/names_and_links.inc}
-
   {$I includes/Manga24h/names_and_links.inc}
 
   {$I includes/VnSharing/names_and_links.inc}
@@ -2356,9 +2349,6 @@ begin
     else
     if WebsiteID = MANGAINN_ID then
       Result := MangaInnGetNamesAndLinks
-    else
-    if WebsiteID = KISSMANGA_ID then
-      Result := KissMangaGetNamesAndLinks
     else
     if WebsiteID = MANGA24H_ID then
       Result := Manga24hGetNamesAndLinks
@@ -2604,8 +2594,6 @@ var
 
   {$I includes/MangaInn/manga_information.inc}
 
-  {$I includes/KissManga/manga_information.inc}
-
   {$I includes/Manga24h/manga_information.inc}
 
   {$I includes/VnSharing/manga_information.inc}
@@ -2760,9 +2748,6 @@ begin
     else
     if WebsiteID = MANGAINN_ID then
       Result := GetMangaInnInfoFromURL
-    else
-    if WebsiteID = KISSMANGA_ID then
-      Result := GetKissMangaInfoFromURL
     else
     if WebsiteID = MANGA24H_ID then
       Result := GetManga24hInfoFromURL
