@@ -3428,6 +3428,7 @@ begin
       HTTP.Headers.Text := HTTPHeader.Text;
     end;
   end;
+  if checkTerminate then Exit;
   SavedFilename := SaveImageStreamToFile(HTTP.Document, Path, Name);
   preTerminate;
   Result := SavedFilename <> '';
