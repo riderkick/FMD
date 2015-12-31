@@ -3222,7 +3222,7 @@ begin
   if not DirectoryExistsUTF8(p) then ForceDirectoriesUTF8(p);
   if DirectoryExistsUTF8(p) then begin
     f := DetermineStreamFormat(Stream);
-    if f = '' then f := 'dat';
+    if f = '' then Exit;
     f := p + FileName + '.' + f;
     if FileExistsUTF8(f) then DeleteFileUTF8(f);
     try
