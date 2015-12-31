@@ -17,4 +17,5 @@ uses
   HitomiLa,
   HentaiCafe,
   MangaTr,
-  Madokami;
+  Madokami,
+  RawSenManga;
