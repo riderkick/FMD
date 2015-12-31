@@ -836,6 +836,9 @@ function FillURLProtocol(const AProtocol, AURL: String): String;
 function FillMangaSiteHost(const MangaID: Cardinal; URL: String): String; overload;
 function FillMangaSiteHost(const Website, URL: String): String; overload;
 function FillHost(const Host, URL: String): String;
+
+// modify url
+function GetHostURL(URL: String): String;
 function MaybeFillHost(const Host, URL: String): String;
 function RemoveHostFromURL(URL: String): String;
 procedure RemoveHostFromURLs(Const URLs: TStringList);
@@ -1430,6 +1433,13 @@ begin
     finally
       Free;
     end;
+end;
+
+function GetHostURL(URL: String): String;
+begin
+  Result:=URL;
+  if URL='' then Exit;
+  Result:=ReplaceRegExpr(REGEX_HOST,Result,'$1$2',True);
 end;
 
 function MaybeFillHost(const Host, URL: String): String;
