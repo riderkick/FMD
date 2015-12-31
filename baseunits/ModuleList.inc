@@ -18,4 +18,5 @@ uses
   HentaiCafe,
   MangaTr,
   Madokami,
-  RawSenManga;
+  RawSenManga,
+  KissManga;
