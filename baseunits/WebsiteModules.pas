@@ -324,6 +324,7 @@ begin
       MMGetInfo: Result := Assigned(OnGetInfo);
       MMGetPageNumber: Result := Assigned(OnGetPageNumber);
       MMGetImageURL: Result := Assigned(OnGetImageURL);
+      MMBeforeDownloadImage: Result := Assigned(OnBeforeDownloadImage);
       MMDownloadImage: Result := Assigned(OnDownloadImage);
       MMLogin: Result := Assigned(OnLogin);
       else
