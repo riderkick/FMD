@@ -1173,6 +1173,10 @@ begin
   //TURL := DecodeURL(TURL); //decode first to avoid double encoded
   //TURL := EncodeTriplet(TURL, '%', URLSpecialChar + ['#']);
 
+  if Modules.ModuleAvailable(ModuleId, MMBeforeDownloadImage) then begin
+    Result := Modules.BeforeDownloadImage(Self,TURL,ModuleId);
+  end;
+
   if Modules.ModuleAvailable(ModuleId, MMDownloadImage) then begin
     s := '';
     if workCounter < manager.container.PageContainerLinks.Count then
