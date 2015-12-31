@@ -6,8 +6,7 @@ interface
 
 uses
   Classes, SysUtils, WebsiteModules, uData, uBaseUnit, uDownloadsManager,
-  accountmanagerdb, LazFileUtils, LazUTF8Classes, synacode, Imaging, RegExpr,
-  fpjson;
+  accountmanagerdb, synacode, RegExpr, fpjson;
 
 implementation
 
@@ -206,9 +205,6 @@ end;
 
 function DownloadImage(var DownloadThread: TDownloadThread;
     const AURL, APath, AName, APrefix: String; Module: TModuleContainer): Boolean;
-var
-  ext, s: String;
-  fs: TFileStreamUTF8;
 begin
   Result := False;
   if DownloadThread = nil then Exit;
