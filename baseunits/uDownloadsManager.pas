@@ -1170,40 +1170,38 @@ begin
   if manager.container.MangaSiteID = SENMANGARAW_ID then
     Result := GetSenMangaRAWImageURL;
 
-  //TURL := DecodeURL(TURL); //decode first to avoid double encoded
-  //TURL := EncodeTriplet(TURL, '%', URLSpecialChar + ['#']);
-
   if Modules.ModuleAvailable(ModuleId, MMBeforeDownloadImage) then
     Result := Modules.BeforeDownloadImage(Self,TURL,ModuleId);
 
-  if Modules.ModuleAvailable(ModuleId, MMDownloadImage) then begin
-    s := '';
-    if workCounter < manager.container.PageContainerLinks.Count then
-      s := manager.container.PageContainerLinks[workCounter]
-    else if workCounter < manager.container.PageLinks.Count then
-      s := manager.container.PageLinks[workCounter];
-    if s <> '' then
-      Result := Modules.DownloadImage(
-        Self,
-        s,
+  if Result then begin
+    if Modules.ModuleAvailable(ModuleId, MMDownloadImage) then begin
+      s := '';
+      if workCounter < manager.container.PageContainerLinks.Count then
+        s := manager.container.PageContainerLinks[workCounter]
+      else if workCounter < manager.container.PageLinks.Count then
+        s := manager.container.PageLinks[workCounter];
+      if s <> '' then
+        Result := Modules.DownloadImage(
+          Self,
+          s,
+          lpath,
+          Format('%.3d', [workCounter + 1]),
+          prefix,
+          ModuleId);
+    end
+    else
+    if manager.container.MangaSiteID = MEINMANGA_ID then
+      Result := GetMeinMangaImageURL
+    else
+      Result := uBaseUnit.SaveImage(
+        FHTTP,
+        manager.container.MangaSiteID,
+        TURL,
         lpath,
         Format('%.3d', [workCounter + 1]),
-        prefix,
-        ModuleId);
-  end
-  else
-  if manager.container.MangaSiteID = MEINMANGA_ID then
-    Result := GetMeinMangaImageURL
-  else
-  if Result then
-    Result := uBaseUnit.SaveImage(
-      FHTTP,
-      manager.container.MangaSiteID,
-      TURL,
-      lpath,
-      Format('%.3d', [workCounter + 1]),
-      sfilename,
-      manager.container.Manager.retryConnect);
+        sfilename,
+        manager.container.Manager.retryConnect);
+  end;
   if Terminated then Exit(False);
   if Result then begin
     manager.container.PageLinks[workCounter] := 'D';
