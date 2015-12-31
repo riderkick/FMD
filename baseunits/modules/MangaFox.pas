@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, WebsiteModules, uData, uBaseUnit, uDownloadsManager,
-  HTMLUtil, RegExpr;
+  mangafoxwatermarkremover, HTMLUtil, RegExpr;
 
 implementation
 
@@ -295,6 +295,11 @@ begin
   end;
 end;
 
+function AfterImageSaved(const AFilename: String; Module: TModuleContainer): Boolean;
+begin
+  Result := mangafoxwatermarkremover.RemoveWatermark(AFilename);
+end;
+
 procedure RegisterModule;
 begin
   with AddModule do
@@ -308,6 +313,7 @@ begin
     OnGetInfo := @GetInfo;
     OnGetPageNumber := @GetPageNumber;
     OnGetImageURL := @GetImageURL;
+    OnAfterImageSaved := @AfterImageSaved;
   end;
 end;
 

@@ -18,7 +18,7 @@ uses
   lazutf8classes, LazFileUtils, jsHTMLUtil, FastHTMLParser, HTMLUtil, SynaCode,
   RegExpr, Imaging, ImagingTypes, ImagingCanvases, Classes, SysUtils, Dialogs,
   ExtCtrls, IniFiles, typinfo, syncobjs, httpsend, blcksock, uBaseUnit, uPacker,
-  uFMDThread, uMisc, mangafoxwatermarkremover, USimpleLogger, dateutils;
+  uFMDThread, uMisc, USimpleLogger, dateutils;
 
 type
   TDownloadManager = class;
@@ -1210,11 +1210,6 @@ begin
 
     if Modules.ModuleAvailable(ModuleId, MMAfterImageSaved) then
       Modules.AfterImageSaved(sfilename, ModuleId);
-
-    // remove mangafox watermark
-    if manager.container.ModuleId > -1 then
-      if Modules.Module[ModuleId].Website = 'MangaFox' then
-        mangafoxwatermarkremover.RemoveWatermark(sfilename);
   end;
 end;
 
