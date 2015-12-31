@@ -40,11 +40,13 @@ type
   TOnDownloadImage = function(var DownloadThread: TDownloadThread;
     const AURL, APath, AName, APrefix: String; Module: TModuleContainer): Boolean;
 
+  TOnAfterImageSaved = function(const AFilename: String; Module: TModuleContainer): Boolean;
+
   TOnLogin = function(var AHTTP: THTTPSendThread): Boolean;
 
   TModuleMethod = (MMGetDirectoryPageNumber, MMGetNameAndLink, MMGetInfo,
     MMTaskStart, MMGetPageNumber, MMGetImageURL, MMBeforeDownloadImage,
-    MMDownloadImage, MMLogin);
+    MMDownloadImage, MMAfterImageSaved, MMLogin);
 
   { TModuleContainer }
 
@@ -74,6 +76,7 @@ type
     OnGetImageURL: TOnGetImageURL;
     OnBeforeDownloadImage: TOnBeforeDownloadImage;
     OnDownloadImage: TOnDownloadImage;
+    OnAfterImageSaved: TOnAfterImageSaved;
     OnLogin: TOnLogin;
     constructor Create;
     destructor Destroy; override;
@@ -156,6 +159,9 @@ type
       const AURL, APath, AName, APrefix: String; ModuleId: Integer): Boolean; overload;
     function DownloadImage(var DownloadThread: TDownloadThread;
       const AURL, APath, AName, APrefix, AWebsite: String): Boolean; overload;
+
+    function AfterImageSaved(const AFilename: String; ModuleId: Integer): Boolean; overload;
+    function AfterImageSaved(const AFilename: String; AWebsite: String): Boolean; overload;
 
     function Login(var AHTTP: THTTPSendThread; const ModuleId: Integer): Boolean; overload;
     function Login(var AHTTP: THTTPSendThread; const AWebsite: String): Boolean; overload;
@@ -326,6 +332,7 @@ begin
       MMGetImageURL: Result := Assigned(OnGetImageURL);
       MMBeforeDownloadImage: Result := Assigned(OnBeforeDownloadImage);
       MMDownloadImage: Result := Assigned(OnDownloadImage);
+      MMAfterImageSaved: Result := Assigned(OnAfterImageSaved);
       MMLogin: Result := Assigned(OnLogin);
       else
         Result := False;
@@ -488,6 +495,21 @@ function TWebsiteModules.DownloadImage(var DownloadThread: TDownloadThread;
 begin
   Result := DownloadImage(DownloadThread, AURL, APath, AName, APrefix,
     LocateModule(AWebsite));
+end;
+
+function TWebsiteModules.AfterImageSaved(const AFilename: String;
+  ModuleId: Integer): Boolean;
+begin
+  Result := False;
+  if (ModuleId < 0) or (ModuleId >= FModuleList.Count) then Exit;
+  if Assigned(TModuleContainer(FModuleList[ModuleId]).OnAfterImageSaved) then
+    Result := TModuleContainer(FModuleList[ModuleId]).OnAfterImageSaved(AFilename, TModuleContainer(FModuleList[ModuleId]));
+end;
+
+function TWebsiteModules.AfterImageSaved(const AFilename: String;
+  AWebsite: String): Boolean;
+begin
+  Result := AfterImageSaved(AFilename, LocateModule(AWebsite));
 end;
 
 function TWebsiteModules.Login(var AHTTP: THTTPSendThread;
