@@ -19,10 +19,10 @@ uses
   UTF8Process,
   {$endif}
   SysUtils, Classes, Graphics, Forms, lazutf8classes, LazUTF8, LazFileUtils,
-  LConvEncoding, strutils, fileinfo, base64, fpjson, jsonparser, FastHTMLParser,
-  fgl, RegExpr, synautil, httpsend, blcksock, ssl_openssl, synacode, GZIPUtils,
-  uFMDThread, uMisc, httpsendthread, simplehtmltreeparser, xquery, xquery_json,
-  Imaging, ImagingExtras, USimpleException, USimpleLogger;
+  LConvEncoding, strutils, fileinfo, base64, fpjson, jsonparser, jsonscanner,
+  FastHTMLParser, fgl, RegExpr, synautil, httpsend, blcksock, ssl_openssl,
+  synacode, GZIPUtils, uFMDThread, uMisc, httpsendthread, simplehtmltreeparser,
+  xquery, xquery_json, Imaging, ImagingExtras, USimpleException, USimpleLogger;
 
 Type
   TFMDDo = (DO_NOTHING, DO_EXIT, DO_POWEROFF, DO_HIBERNATE, DO_UPDATE);
@@ -1534,7 +1534,7 @@ var
   i: Integer;
 begin
   OutArray.BeginUpdate;
-  P := TJSONParser.Create(Trim(S));
+  P := TJSONParser.Create(Trim(S), jsonscanner.DefaultOptions);
   try
     D := P.Parse;
     try
