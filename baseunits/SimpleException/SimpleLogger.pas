@@ -18,7 +18,7 @@
   MA 02111-1307, USA.
 }
 
-unit USimpleLogger;
+unit SimpleLogger;
 
 {$mode objfpc}{$H+}
 

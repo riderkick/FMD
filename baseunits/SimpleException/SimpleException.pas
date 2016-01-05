@@ -18,7 +18,7 @@
   MA 02111-1307, USA.
 }
 
-unit USimpleException;
+unit SimpleException;
 
 {$mode objfpc}{$H+}
 
@@ -26,7 +26,7 @@ interface
 
 uses
   Classes, SysUtils, LazFileUtils, LazUTF8, Forms, Controls, LCLVersion,
-  USimpleExceptionForm, USimpleLogger,
+  SimpleExceptionForm, SimpleLogger,
   {$IFDEF WINDOWS}
   windows, win32proc,
   {$ENDIF}
@@ -95,7 +95,7 @@ procedure InitSimpleExceptionHandler(const LogFilename: String = '');
 procedure DoneSimpleExceptionHandler;
 
 var
-  SimpleException: TSimpleException;
+  MyException: TSimpleException;
 
 resourcestring
   SExceptionDialogTitle = 'Exception Info';
@@ -110,63 +110,63 @@ implementation
 
 procedure SetMaxStackCount(const ACount : Integer);
 begin
-  if SimpleException <> nil then
-    SimpleException.MaxStackCount := ACount;
+  if MyException <> nil then
+    MyException.MaxStackCount := ACount;
 end;
 
 function AddIgnoredException(const EClassName : String) : Boolean;
 begin
   Result := False;
-  if SimpleException <> nil then
-    if SimpleException.IgnoredExceptionList.IndexOf(EClassName) < 0 then
+  if MyException <> nil then
+    if MyException.IgnoredExceptionList.IndexOf(EClassName) < 0 then
     begin
       Result := True;
-      SimpleException.IgnoredExceptionList.Add(EClassName);
+      MyException.IgnoredExceptionList.Add(EClassName);
     end;
 end;
 
 function RemoveIgnoredClass(const EClassName : String) : Boolean;
 begin
   Result := False;
-  if SimpleException <> nil then
-    if SimpleException.IgnoredExceptionList.IndexOf(EClassName) > -1 then
+  if MyException <> nil then
+    if MyException.IgnoredExceptionList.IndexOf(EClassName) > -1 then
     begin
       Result := True;
-      SimpleException.IgnoredExceptionList.Delete(
-        SimpleException.IgnoredExceptionList.IndexOf(EClassName));
+      MyException.IgnoredExceptionList.Delete(
+        MyException.IgnoredExceptionList.IndexOf(EClassName));
     end;
 end;
 
 procedure ClearIgnoredException;
 begin
-  if SimpleException <> nil then
-    SimpleException.IgnoredExceptionList.Clear;
+  if MyException <> nil then
+    MyException.IgnoredExceptionList.Clear;
 end;
 
 procedure ExceptionHandle(Sender: TObject; E: Exception);
 begin
-  if not Assigned(SimpleException) then
+  if not Assigned(MyException) then
     InitSimpleExceptionHandler;
-  SimpleException.SimpleExceptionHandler(Sender, E);
+  MyException.SimpleExceptionHandler(Sender, E);
 end;
 
 procedure ExceptionHandleSaveLogOnly(Sender: TObject; E: Exception);
 begin
-  if not Assigned(SimpleException) then
+  if not Assigned(MyException) then
     InitSimpleExceptionHandler;
-  SimpleException.SimpleExceptionHandlerSaveLogOnly(Sender, E);
+  MyException.SimpleExceptionHandlerSaveLogOnly(Sender, E);
 end;
 
 procedure InitSimpleExceptionHandler(const LogFilename : String);
 begin
-  if SimpleException = nil then
-    SimpleException := TSimpleException.Create(LogFilename);
+  if MyException = nil then
+    MyException := TSimpleException.Create(LogFilename);
 end;
 
 procedure DoneSimpleExceptionHandler;
 begin
-  if SimpleException <> nil then
-    FreeAndNil(SimpleException);
+  if MyException <> nil then
+    FreeAndNil(MyException);
 end;
 
 { TSimpleException }
@@ -407,8 +407,8 @@ end;
 
 Procedure CatchUnhandledExcept(Obj : TObject; Addr: CodePointer; FrameCount: Longint; Frames: PCodePointer);
 begin
-  if Assigned(SimpleException) then
-    SimpleException.UnhandledException(Obj, Addr, FrameCount, Frames);
+  if Assigned(MyException) then
+    MyException.UnhandledException(Obj, Addr, FrameCount, Frames);
 end;
 
 constructor TSimpleException.Create(Filename : string);

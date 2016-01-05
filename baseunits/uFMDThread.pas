@@ -11,7 +11,7 @@ unit uFMDThread;
 interface
 
 uses
-  Classes, SysUtils, USimpleLogger;
+  Classes, SysUtils, SimpleLogger;
 
 type
 

@@ -13,7 +13,8 @@ object frmMain: TfrmMain
   OnDestroy = FormDestroy
   OnShow = FormShow
   Position = poOwnerFormCenter
-  LCLVersion = '1.5'
+  LCLVersion = '1.7'
+  Visible = False
   object pbDownload: TProgressBar
     Left = 8
     Height = 20

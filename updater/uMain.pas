@@ -11,7 +11,7 @@ uses
   {$endif}
   Classes, SysUtils, zipper, FileUtil,LazFileUtils, LazUTF8, LazUTF8Classes,
   Forms, Dialogs, ComCtrls, StdCtrls, Clipbrd, ExtCtrls, DefaultTranslator,
-  RegExpr, IniFiles, USimpleException, uMisc, uTranslation,
+  RegExpr, IniFiles, SimpleException, uMisc, uTranslation,
   httpsend, blcksock, ssl_openssl, ssl_openssl_lib, uFMDThread;
 
 type
@@ -729,7 +729,7 @@ end;
 
 procedure TfrmMain.ExceptionHandler(Sender : TObject; E : Exception);
 begin
-  USimpleException.ExceptionHandle(Sender, E);
+  SimpleException.ExceptionHandle(Sender, E);
 end;
 
 end.

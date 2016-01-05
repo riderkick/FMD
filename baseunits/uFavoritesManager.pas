@@ -13,7 +13,7 @@ interface
 uses
   Classes, SysUtils, Dialogs, IniFiles, syncobjs, lazutf8classes, LazFileUtils,
   uBaseUnit, uData, uDownloadsManager, uFMDThread, uMisc, WebsiteModules,
-  USimpleException;
+  SimpleException;
 
 type
   TFavoriteManager = class;

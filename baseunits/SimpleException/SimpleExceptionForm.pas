@@ -18,7 +18,7 @@
   MA 02111-1307, USA.
 }
 
-unit USimpleExceptionForm;
+unit SimpleExceptionForm;
 
 {$mode objfpc}{$H+}
 
@@ -64,7 +64,7 @@ type
 
 implementation
 
-uses USimpleException;
+uses SimpleException;
 
 {$R *.lfm}
 

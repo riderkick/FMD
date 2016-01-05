@@ -11,10 +11,6 @@ msgstr ""
 "Language: en\n"
 "X-Generator: Poedit 1.7.6\n"
 
-#: tfrmmain.caption
-msgid "Free Manga Downloader - Updater"
-msgstr "Free Manga Downloader - Updater"
-
 #: tfrmmain.lbfilesize.caption
 msgid "File size"
 msgstr "File size"
@@ -56,6 +52,7 @@ msgid "File not found!"
 msgstr "File not found!"
 
 #: umain.rs_filenotfound_mfdatalink
+#, fuzzy
 #| msgid ""
 #| "File not found!\n"
 #| "This site probably have been added to unofficial build.\n"

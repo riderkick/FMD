@@ -15,7 +15,7 @@ interface
 
 uses
   Classes, SysUtils, uBaseUnit, uFMDThread, FileUtil, LazFileUtils, sqlite3conn,
-  sqlite3backup, sqlite3dyn, sqldb, DB, USimpleLogger, strutils, dateutils,
+  sqlite3backup, sqlite3dyn, sqldb, DB, SimpleLogger, strutils, dateutils,
   RegExpr, httpsend;
 
 type

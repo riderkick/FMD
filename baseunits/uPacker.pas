@@ -12,7 +12,7 @@ interface
 
 uses
   Classes, Zipper, SysUtils, uBaseUnit, uImg2Pdf, FileUtil,
-  USimpleException, USimpleLogger;
+  SimpleException, SimpleLogger;
 
 type
   TPacker = class
@@ -96,7 +96,7 @@ begin
     on E: Exception do
     begin
       E.Message := 'DoZipCbz.Exception'#13#10 + E.Message;
-      USimpleException.ExceptionHandleSaveLogOnly(Self, E);
+      SimpleException.ExceptionHandleSaveLogOnly(Self, E);
     end;
   end;
 end;
@@ -154,7 +154,7 @@ begin
     on E: Exception do
     begin
       E.Message := 'DoPdf.Exception'#13#10 + E.Message;
-      USimpleException.ExceptionHandleSaveLogOnly(Self, E);
+      SimpleException.ExceptionHandleSaveLogOnly(Self, E);
     end;
   end;
 end;

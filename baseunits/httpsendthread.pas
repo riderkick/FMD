@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, httpsend, synautil, synacode, ssl_openssl, blcksock,
-  uFMDThread, GZIPUtils, Graphics, USimpleLogger, RegExpr;
+  uFMDThread, GZIPUtils, Graphics, SimpleLogger, RegExpr;
 
 type
 

@@ -91,7 +91,7 @@ resourcestring
 implementation
 
 uses
-  frmMain, Dialogs, ComCtrls, Forms, Controls, USimpleLogger;
+  frmMain, Dialogs, ComCtrls, Forms, Controls, SimpleLogger;
 
 { TUpdateMangaThread }
 

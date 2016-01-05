@@ -12,7 +12,7 @@ interface
 
 uses
   Classes, SysUtils, ZStream, FPImage, FPReadJPEG, FPWriteJPEG,
-  ImagingTypes, Imaging, lazutf8classes, USimpleLogger, USimpleException;
+  ImagingTypes, Imaging, lazutf8classes, SimpleLogger, SimpleException;
 
 const
   TPDFFormatSetings: TFormatSettings = (
@@ -341,7 +341,7 @@ begin
   except
     on E :Exception do begin
       WriteLog_E('TImg2Pdf.AddFlateImage.Error, '+E.Message);
-      USimpleException.ExceptionHandleSaveLogOnly(Self, E);
+      SimpleException.ExceptionHandleSaveLogOnly(Self, E);
     end;
   end;
   fs.Free;
@@ -383,7 +383,7 @@ begin
   except
     on E :Exception do begin
       WriteLog_E('TImg2Pdf.AddCDTImage.Error, '+E.Message);
-      USimpleException.ExceptionHandleSaveLogOnly(Self, E);
+      SimpleException.ExceptionHandleSaveLogOnly(Self, E);
     end;
   end;
   EndPDFPage;

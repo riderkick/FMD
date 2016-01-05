@@ -5,7 +5,7 @@ unit accountmanagerdb;
 interface
 
 uses
-  Classes, SysUtils, LazFileUtils, USimpleLogger, base64, sqlite3conn,
+  Classes, SysUtils, LazFileUtils, SimpleLogger, base64, sqlite3conn,
   sqldb, db;
 
 type

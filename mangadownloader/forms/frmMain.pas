@@ -23,7 +23,7 @@ uses
   uBaseUnit, uData, uDownloadsManager, uFavoritesManager, uUpdateThread,
   uUpdateDBThread, uSilentThread, uMisc, uGetMangaInfosThread, uTranslation,
   frmDropTarget, frmAccountManager, CheckUpdate, accountmanagerdb,
-  mangafoxwatermarkremover, USimpleException, USimpleLogger;
+  mangafoxwatermarkremover, SimpleException, SimpleLogger;
 
 type
 
@@ -5064,7 +5064,7 @@ end;
 
 procedure TMainForm.ExceptionHandler(Sender: TObject; E: Exception);
 begin
-  USimpleException.ExceptionHandle(Sender, E);
+  SimpleException.ExceptionHandle(Sender, E);
 end;
 
 procedure TMainForm.tmBackupTimer(Sender: TObject);

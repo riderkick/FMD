@@ -18,7 +18,7 @@ uses
   lazutf8classes, LazFileUtils, jsHTMLUtil, FastHTMLParser, HTMLUtil, SynaCode,
   RegExpr, Imaging, ImagingTypes, ImagingCanvases, Classes, SysUtils, Dialogs,
   ExtCtrls, IniFiles, typinfo, syncobjs, httpsend, blcksock, uBaseUnit, uPacker,
-  uFMDThread, uMisc, USimpleLogger, dateutils;
+  uFMDThread, uMisc, SimpleLogger, dateutils;
 
 type
   TDownloadManager = class;
