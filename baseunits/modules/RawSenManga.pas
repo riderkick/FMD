@@ -49,11 +49,11 @@ begin
   cl:='';
   with TRegExpr.Create do
     try
-      Expression:='/\d+(/\d+)?$';
+      Expression:='(.+)/.+/\d+?$';
       cu:=Exec(s);
       if cu then begin
         cl:=s;
-        s:=Replace(s,'',False);
+        s:=Replace(s,'$1',True);
       end;
     finally
       Free;
@@ -110,7 +110,7 @@ begin
     s:=RemoveURLDelim(ChapterLinks[CurrentDownloadChapterPtr]);
     with TRegExpr.Create do
       try
-        Expression:='/\d+/\d+$';
+        Expression:='(.+)/.+/\d+?$';
         if Exec(s) then begin
           Expression:='/\d+$';
           s:=Replace(s,'',False);
