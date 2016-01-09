@@ -2973,6 +2973,7 @@ begin
   if Trim(URL) = '' then Exit;
 
   URL := FixURL(URL);
+  URL := EncodeURL(URL);
 
   HTTPHeader := TStringList.Create;
   HTTPHeader.NameValueSeparator := ':';
@@ -3286,6 +3287,7 @@ begin
     Exit(True);
 
   URL := FixURL(URL);
+  URL := EncodeURL(URL);
 
   HTTPHeader := TStringList.Create;
   HTTPHeader.NameValueSeparator := ':';
