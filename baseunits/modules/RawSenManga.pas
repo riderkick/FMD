@@ -44,7 +44,7 @@ var
 begin
   Result:=NET_PROBLEM;
   if MangaInfo=nil then Exit(UNKNOWN_ERROR);
-  m:=FillHost(Module.RootURL,AURL);
+  m:=RemoveHostFromURL(AURL);
   m:=RemoveURLDelim(m);
   cl:='';
   with TRegExpr.Create do
@@ -60,9 +60,9 @@ begin
     end;
   m:=AppendURLDelim(m);
   with MangaInfo.FHTTP,MangaInfo.mangaInfo do begin
-    if cl<>'' then url:=cl
-    else url:=m;
-    if GET(m) then begin
+    if cl<>'' then url:=FillHost(Module.RootURL,cl)
+    else url:=FillHost(Module.RootURL,m);
+    if GET(FillHost(Module.RootURL,m)) then begin
       Result:=NO_ERROR;
       query:=TXQueryEngineHTML.Create;
       try
@@ -84,7 +84,7 @@ begin
         end;
         summary:=query.XPathString('//div[@class="series_desc"]//div[@itemprop="description"]');
         if cu and (cl<>'') then
-          if GET(cl) then
+          if GET(FillHost(Module.RootURL,cl)) then
           begin
             query.ParseHTML(StreamToString(Document));
             //selected chapter
