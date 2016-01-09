@@ -215,8 +215,8 @@ procedure TAccountManagerForm.vtAccountListPaintText(Sender: TBaseVirtualTree;
   TextType: TVSTTextType);
 begin
   if node = nil then Exit;
-  if Node^.CheckState = csUncheckedNormal then TargetCanvas.Font.Color := clGrayText
-  else TargetCanvas.Font.Color := clDefault;
+  if Node^.CheckState = csUncheckedNormal then
+    TargetCanvas.Font.Color := clGrayText;
 end;
 
 procedure TAccountManagerForm.RefreshList;
