@@ -349,7 +349,7 @@ begin
     Website := modulename;
     RootURL := urlroot;
     MaxTaskLimit := 1;
-    MaxConnectionLimit := 3;
+    MaxConnectionLimit := 2;
     AccountSupport := True;
     SortedList := True;
     InformationAvailable := True;
