@@ -39,28 +39,30 @@ var
   query: TXQueryEngineHTML;
   v: IXQValue;
   i: Integer;
-  s: String;
+  s,cl,m: String;
   cu: Boolean;
-  cl: String;
 begin
   Result:=NET_PROBLEM;
   if MangaInfo=nil then Exit(UNKNOWN_ERROR);
-  s:=RemoveURLDelim(AURL);
+  m:=FillHost(Module.RootURL,AURL);
+  m:=RemoveURLDelim(m);
   cl:='';
   with TRegExpr.Create do
     try
       Expression:='(.+)/.+/\d+?$';
-      cu:=Exec(s);
+      cu:=Exec(m);
       if cu then begin
-        cl:=s;
-        s:=Replace(s,'$1',True);
+        cl:=m;
+        m:=Replace(m,'$1',True);
       end;
     finally
       Free;
     end;
+  m:=AppendURLDelim(m);
   with MangaInfo.FHTTP,MangaInfo.mangaInfo do begin
-    url:=AppendURLDelim(FillHost(Module.RootURL,s));
-    if GET(url) then begin
+    if cl<>'' then url:=cl
+    else url:=m;
+    if GET(m) then begin
       Result:=NO_ERROR;
       query:=TXQueryEngineHTML.Create;
       try
@@ -82,14 +84,21 @@ begin
         end;
         summary:=query.XPathString('//div[@class="series_desc"]//div[@itemprop="description"]');
         if cu and (cl<>'') then
-          if GET(FillHost(Module.RootURL,cl)) then
+          if GET(cl) then
           begin
             query.ParseHTML(StreamToString(Document));
-            s:=query.XPathString('//select[@name="chapter"]/option[@selected="selected"]');
-            if s<>'' then begin
-              chapterLinks.Add(cl);
-              chapterName.Add(s);
+            //selected chapter
+            //s:=query.XPathString('//select[@name="chapter"]/option[@selected="selected"]');
+            //if s<>'' then begin
+            //  chapterLinks.Add(cl);
+            //  chapterName.Add(s);
+            //end;
+            //all chapter
+            for v in query.XPath('//select[@name="chapter"]/option') do begin
+              chapterLinks.Add(m+v.toNode.getAttribute('value'));
+              chapterName.Add(v.toString);
             end;
+            InvertStrings([chapterLinks,chapterName]);
           end;
       finally
         query.Free;
