@@ -2006,8 +2006,6 @@ var
 
   {$I includes/NHentai/directory_page_number.inc}
 
-  {$I includes/UnionMangas/directory_page_number.inc}
-
   {$I includes/MangaMint/directory_page_number.inc}
 
   {$I includes/HakiHome/directory_page_number.inc}
@@ -2139,9 +2137,6 @@ begin
       else
       if WebsiteID = NHENTAI_ID then
         Result := GetNHentaiDirectoryPageNumber
-      else
-      if website = GetMangaSiteName(UNIONMANGAS_ID) then
-        Result := GetUnionMangasDirectoryPageNumber
       else
       if WebsiteID = MANGAMINT_ID then
         Result := GetMangaMintDirectoryPageNumber
@@ -2303,8 +2298,6 @@ var
   {$I includes/IKomik/names_and_links.inc}
 
   {$I includes/NHentai/names_and_links.inc}
-
-  {$I includes/UnionMangas/names_and_links.inc}
 
   {$I includes/MangaMint/names_and_links.inc}
 
@@ -2512,9 +2505,6 @@ begin
     if WebsiteID = NHENTAI_ID then
       Result := NHentaiNamesAndLinks
     else
-    if WebsiteID = UNIONMANGAS_ID then
-      Result := UnionMangasNamesAndLinks
-    else
     if WebsiteID = MANGAMINT_ID then
       Result := MangaMintGetNamesAndLinks
     else
@@ -2687,8 +2677,6 @@ var
   {$I includes/IKomik/manga_information.inc}
 
   {$I includes/NHentai/manga_information.inc}
-
-  {$I includes/UnionMangas/manga_information.inc}
 
   {$I includes/MangaMint/manga_information.inc}
 
@@ -2907,9 +2895,6 @@ begin
     else
     if WebsiteID = NHENTAI_ID then
       Result := GetNHentaiInfoFromURL
-    else
-    if WebsiteID = UNIONMANGAS_ID then
-      Result := GetUnionMangasInfoFromURL
     else
     if WebsiteID = MANGAMINT_ID then
       Result := GetMangaMintInfoFromURL

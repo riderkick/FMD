@@ -451,8 +451,6 @@ var
 
   {$I includes/NHentai/chapter_page_number.inc}
 
-  {$I includes/UnionMangas/chapter_page_number.inc}
-
   {$I includes/MangaMint/chapter_page_number.inc}
 
   {$I includes/UnixManga/chapter_page_number.inc}
@@ -610,9 +608,6 @@ begin
     else
     if manager.container.MangaSiteID = NHENTAI_ID then
       Result := GetNHentaiPageNumber
-    else
-    if manager.container.MangaSiteID = UNIONMANGAS_ID then
-      Result := GetUnionMangasPageNumber
     else
     if manager.container.MangaSiteID = MANGAMINT_ID then
       Result := GetMangaMintPageNumber

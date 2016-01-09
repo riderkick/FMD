@@ -328,28 +328,27 @@ const
   MYREADINGMANGAINFO_ID  = 60;
   IKOMIK_ID              = 61;
   NHENTAI_ID             = 62;
-  UNIONMANGAS_ID         = 63;
-  MANGAMINT_ID           = 64;
-  UNIXMANGA_ID           = 65;
-  HAKIHOME_ID            = 66;
-  EXTREMEMANGAS_ID       = 67;
-  MANGAHOST_ID           = 68;
-  PORNCOMIX_ID           = 69;
-  PORNCOMIXRE_ID         = 70;
-  PORNCOMIXIC_ID         = 71;
-  XXCOMICS_ID            = 72;
-  XXCOMICSMT_ID          = 73;
-  XXCOMICS3D_ID          = 74;
-  PORNXXXCOMICS_ID       = 75;
-  MANGASEE_ID            = 76;
-  MANGAKU_ID             = 77;
-  ACADEMYVN_ID           = 78;
-  MANGAAT_ID             = 79;
-  READMANGATODAY_ID      = 80;
-  LONEMANGA_ID           = 81;
-  DYNASTYSCANS_ID        = 82;
+  MANGAMINT_ID           = 63;
+  UNIXMANGA_ID           = 64;
+  HAKIHOME_ID            = 65;
+  EXTREMEMANGAS_ID       = 66;
+  MANGAHOST_ID           = 67;
+  PORNCOMIX_ID           = 68;
+  PORNCOMIXRE_ID         = 69;
+  PORNCOMIXIC_ID         = 70;
+  XXCOMICS_ID            = 71;
+  XXCOMICSMT_ID          = 72;
+  XXCOMICS3D_ID          = 73;
+  PORNXXXCOMICS_ID       = 74;
+  MANGASEE_ID            = 75;
+  MANGAKU_ID             = 76;
+  ACADEMYVN_ID           = 77;
+  MANGAAT_ID             = 78;
+  READMANGATODAY_ID      = 79;
+  LONEMANGA_ID           = 80;
+  DYNASTYSCANS_ID        = 81;
 
-  WebsiteRoots: array [0..82] of array [0..1] of string = (
+  WebsiteRoots: array [0..81] of array [0..1] of string = (
     ('AnimeA', 'http://manga.animea.net'),
     ('MangaInn', 'http://www.mangainn.me'),
     ('OurManga', 'http://www.ourmanga.com'),
@@ -413,7 +412,6 @@ const
     ('MyReadingMangaInfo', 'http://myreadingmanga.info'),
     ('I-Komik', 'http://www.i-komik.com'),
     ('NHentai', 'http://nhentai.net'),
-    ('UnionMangas', 'http://unionmangas.com.br'),
     ('MangaMint', 'http://www.mangamint.com'),
     ('UnixManga', 'http://unixmanga.co'),
     ('HakiHome', 'http://hakihome.com'),
