@@ -19,4 +19,5 @@ uses
   MangaTr,
   Madokami,
   RawSenManga,
-  KissManga;
+  KissManga,
+  UnionMangas;
