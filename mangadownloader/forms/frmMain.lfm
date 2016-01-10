@@ -14,7 +14,6 @@ object MainForm: TMainForm
   OnShow = FormShow
   OnWindowStateChange = FormWindowStateChange
   LCLVersion = '1.7'
-  Visible = False
   object sbUpdateList: TStatusBar
     Left = 0
     Height = 30
@@ -2942,10 +2941,21 @@ object MainForm: TMainForm
               Left = 16
               Height = 19
               Top = 88
-              Width = 312
+              Width = 186
               Caption = '[Mangafox] Remove watermark'
+              OnChange = cbOptionMangaFoxRemoveWatermarkChange
               ParentFont = False
               TabOrder = 2
+            end
+            object cbOptionMangaFoxRemoveWatermarkSaveAsPNG: TCheckBox
+              Left = 34
+              Height = 19
+              Top = 112
+              Width = 85
+              Caption = 'Save as PNG'
+              Enabled = False
+              ParentFont = False
+              TabOrder = 3
             end
           end
         end

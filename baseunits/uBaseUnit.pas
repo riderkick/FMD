@@ -631,6 +631,7 @@ var
   OptionBatotoShowAllLang: Boolean = True;
   OptionMangaFoxTemplateFolder: String = 'extras' + PathDelim + 'mangafoxtemplate';
   OptionMangaFoxRemoveWatermark: Boolean = False;
+  OptionMangaFoxRemoveWatermarkSaveAsPNG: Boolean = False;
 
   OptionHTTPUseGzip: Boolean = True;
 

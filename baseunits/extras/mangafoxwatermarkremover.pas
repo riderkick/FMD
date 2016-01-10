@@ -10,7 +10,7 @@ uses
   LazFileUtils;
 
 function LoadTemplate(const TempDir: String): Integer;
-function RemoveWatermark(const AFilename: String): Boolean;
+function RemoveWatermark(const AFilename: String; SaveAsPNG: Boolean = False): Boolean;
 procedure ClearTemplate;
 
 var
@@ -69,7 +69,7 @@ begin
   Result := (Color.R = 255) and (Color.G = 255) and (Color.B = 255);
 end;
 
-function RemoveWatermark(const AFilename: String): Boolean;
+function RemoveWatermark(const AFilename: String; SaveAsPNG: Boolean): Boolean;
 var
   imgbase, imgproc, imgtemp: TImageData;
   i, x, y, bmi: Integer;
@@ -147,8 +147,12 @@ begin
       try
         NewImage(imgbase.Width, imgbase.Height - imgtemplate[bmi].Height, imgbase.Format, imgproc);
         CopyRect(imgbase, 0, 0, imgbase.Width, imgbase.Height - imgtemplate[bmi].Height, imgproc, 0, 0);
-        if DeleteFileUTF8(AFilename) then
-          Result := SaveImageToFile(AFilename, imgproc);
+        if DeleteFileUTF8(AFilename) then begin
+          if SaveAsPNG then
+            Result := SaveImageToFile(ChangeFileExt(AFilename, '.png'), imgproc)
+          else
+            Result := SaveImageToFile(AFilename, imgproc);
+        end;
       finally
         FreeImage(imgproc);
       end;
