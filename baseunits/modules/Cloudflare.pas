@@ -102,6 +102,8 @@ begin
       if (m<>'') and (u<>'') then begin
         AHTTP.Reset;
         AHTTP.Headers.Values['Referer']:=' '+AURL;
+        //minimum wait time is 5000
+        if st<5000 then st:=5000;
         Sleep(st);
         AHTTP.FollowRedirection:=False;
         if AHTTP.HTTPRequest(m,FillHost(h,u)) then
