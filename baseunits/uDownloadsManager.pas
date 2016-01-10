@@ -403,8 +403,6 @@ var
 
   {$I includes/MangaPark/chapter_page_number.inc}
 
-  {$I includes/MangaStreamTo/chapter_page_number.inc}
-
   {$I includes/MangaTraders/chapter_page_number.inc}
 
   {$I includes/MangaVadisi/chapter_page_number.inc}
@@ -559,9 +557,6 @@ begin
     if manager.container.MangaSiteID = HENTAI2READ_ID then
       Result := GetHentai2ReadPageNumber
     else
-    if manager.container.MangaSiteID = MANGASTREAMTO_ID then
-      Result := GetMangaStreamToPageNumber
-    else
     if (manager.container.MangaSiteID = NINEMANGA_ID) or
       (manager.container.MangaSiteID = NINEMANGA_ES_ID) or
       (manager.container.MangaSiteID = NINEMANGA_CN_ID) or
@@ -706,8 +701,6 @@ var
   {$I includes/MangaREADER_POR/image_url.inc}
 
   {$I includes/MangasPROJECT/image_url.inc}
-
-  {$I includes/MangaStreamTo/image_url.inc}
 
   {$I includes/MangaTraders/image_url.inc}
 
@@ -883,9 +876,6 @@ begin
     else
     if manager.container.MangaSiteID = MANGAREADER_POR_ID then
       Result := GetMangaREADER_PORImageURL
-    else
-    if manager.container.MangaSiteID = MANGASTREAMTO_ID then
-      Result := GetMangaStreamToImageURL
     else
     if (manager.container.MangaSiteID = NINEMANGA_ID) or
       (manager.container.MangaSiteID = NINEMANGA_ES_ID) or

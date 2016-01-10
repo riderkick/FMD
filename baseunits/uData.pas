@@ -2268,8 +2268,6 @@ var
 
   {$I includes/MangaREADER_POR/names_and_links.inc}
 
-  {$I includes/MangaStreamTo/names_and_links.inc}
-
   {$I includes/NineManga/names_and_links.inc}
 
   {$I includes/JapanShin/names_and_links.inc}
@@ -2452,9 +2450,6 @@ begin
     else
     if WebsiteID = MANGAREADER_POR_ID then
       Result := MangaREADER_PORGetNamesAndLinks
-    else
-    if WebsiteID = MANGASTREAMTO_ID then
-      Result := MangaStreamToGetNamesAndLinks
     else
     if (WebsiteID = NINEMANGA_ID) or
       (WebsiteID = NINEMANGA_ES_ID) or
@@ -2641,8 +2636,6 @@ var
   {$I includes/MangasPROJECT/manga_information.inc}
 
   {$I includes/MangaREADER_POR/manga_information.inc}
-
-  {$I includes/MangaStreamTo/manga_information.inc}
 
   {$I includes/NineManga/manga_information.inc}
 
@@ -2838,9 +2831,6 @@ begin
     else
     if WebsiteID = MANGAREADER_POR_ID then
       Result := GetMangaREADER_PORInfoFromURL
-    else
-    if WebsiteID = MANGASTREAMTO_ID then
-      Result := GetMangaStreamToInfoFromURL
     else
     if (WebsiteID = NINEMANGA_ID) or
       (WebsiteID = NINEMANGA_ES_ID) or
