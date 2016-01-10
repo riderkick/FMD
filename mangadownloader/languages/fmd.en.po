@@ -91,9 +91,6 @@ msgid "Are you sure you want to delete the task(s)?"
 msgstr "Are you sure you want to delete the task(s)?"
 
 #: frmmain.rs_dlgtitleexistindllist
-#| msgid ""
-#| "This title are already in download list.\n"
-#| "Do you want to download it anyway?\n"
 msgid ""
 "This title are already in download list.\n"
 "Do you want to download it anyway?\n"
@@ -122,9 +119,6 @@ msgid "URL not supported!"
 msgstr "URL not supported!"
 
 #: frmmain.rs_droptargetmodeitems
-#| msgid ""
-#| "Download all\n"
-#| "Add to favorites\n"
 msgid ""
 "Download all\n"
 "Add to favorites\n"
@@ -133,10 +127,6 @@ msgstr ""
 "Add to favorites\n"
 
 #: frmmain.rs_filterstatusitems
-#| msgid ""
-#| "Completed\n"
-#| "Ongoing\n"
-#| "<none>\n"
 msgid ""
 "Completed\n"
 "Ongoing\n"
@@ -151,9 +141,6 @@ msgid "Free Manga Downloader already running!"
 msgstr "Free Manga Downloader already running!"
 
 #: frmmain.rs_hintfavoriteproblem
-#| msgid ""
-#| "There is a problem with this data!\n"
-#| "Removing and re-adding this data may fix the problem.\n"
 msgid ""
 "There is a problem with this data!\n"
 "Removing and re-adding this data may fix the problem.\n"
@@ -207,11 +194,6 @@ msgid "Auto check for new chapter every %d minutes"
 msgstr "Auto check for new chapter every %d minutes"
 
 #: frmmain.rs_lbloptionexternalparamshint
-#| msgid ""
-#| "%s : Path to the manga\n"
-#| "%s : Chapter filename\n"
-#| "\n"
-#| "Example : \"%s%s\"\n"
 msgid ""
 "%s : Path to the manga\n"
 "%s : Chapter filename\n"
@@ -250,11 +232,6 @@ msgid "One week"
 msgstr "One week"
 
 #: frmmain.rs_optionfmddoitems
-#| msgid ""
-#| "Do nothing\n"
-#| "Exit FMD\n"
-#| "Shutdown\n"
-#| "Hibernate\n"
 msgid ""
 "Do nothing\n"
 "Exit FMD\n"
@@ -477,6 +454,11 @@ msgstr "Update manga list"
 msgid "Visit my blog"
 msgstr "Visit my blog"
 
+#: tmainform.caption
+msgctxt "tmainform.caption"
+msgid "Free Manga Downloader"
+msgstr "Free Manga Downloader"
+
 #: tmainform.cbaddasstopped.caption
 msgid "Add to download list as stopped task"
 msgstr "Add to download list as stopped task"
@@ -554,6 +536,10 @@ msgstr "Enable live search (slow on long list)"
 msgctxt "tmainform.cboptionmangafoxremovewatermark.caption"
 msgid "[Mangafox] Remove watermark"
 msgstr "[Mangafox] Remove watermark"
+
+#: tmainform.cboptionmangafoxremovewatermarksaveaspng.caption
+msgid "Save as PNG"
+msgstr "Save as PNG"
 
 #: tmainform.cboptionminimizetotray.caption
 msgid "Minimize to tray"

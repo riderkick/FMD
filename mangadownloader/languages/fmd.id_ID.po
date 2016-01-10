@@ -446,6 +446,11 @@ msgstr "Perbarui daftar komik"
 msgid "Visit my blog"
 msgstr "Kunjungi blog"
 
+#: tmainform.caption
+msgctxt "tmainform.caption"
+msgid "Free Manga Downloader"
+msgstr "Free Manga Downloader"
+
 #: tmainform.cbaddasstopped.caption
 msgid "Add to download list as stopped task"
 msgstr "Tambahkan ke daftar unduhan tanpa dimulai"
@@ -520,6 +525,10 @@ msgstr "Aktifkan pencarian langsung (lambat dengan daftar yang panjang)"
 msgctxt "tmainform.cboptionmangafoxremovewatermark.caption"
 msgid "[Mangafox] Remove watermark"
 msgstr "[Mangafox] Hapus watermark"
+
+#: tmainform.cboptionmangafoxremovewatermarksaveaspng.caption
+msgid "Save as PNG"
+msgstr "Simpan sebagai PNG"
 
 #: tmainform.cboptionminimizetotray.caption
 msgid "Minimize to tray"
