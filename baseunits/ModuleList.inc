@@ -20,4 +20,5 @@ uses
   Madokami,
   RawSenManga,
   KissManga,
-  UnionMangas;
+  UnionMangas,
+  Seemh;
