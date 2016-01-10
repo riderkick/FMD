@@ -791,11 +791,15 @@ begin
 end;
 
 procedure AdvanceLoadHTTPConfig(const HTTP: THTTPSendThread; Website: String);
+var
+  s: String;
 begin
   if HTTP = nil then Exit;
   if Website = '' then Exit;
-  HTTP.UserAgent := INIAdvanced.ReadString('UserAgent', Website, '');
-  HTTP.Cookies.Text := INIAdvanced.ReadString('Cookies', Website, '');
+  s:=Trim(INIAdvanced.ReadString('UserAgent',Website,''));
+  if s<>'' then HTTP.UserAgent:=s;
+  s:=Trim(INIAdvanced.ReadString('Cookies',Website,''));
+  if s<>'' then HTTP.Cookies.Text:=s;
 end;
 
 { TSearchDBThread }
