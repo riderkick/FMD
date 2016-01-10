@@ -7,6 +7,15 @@ https://bintray.com/riderkick/FMD/data/db/view#files
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.29.0 (10-01-2016)
+[*] KissManga: rewrite all script
+[*] RawSenManga: rewrite all script (load full chapter list via one of chapter link https://github.com/riderkick/FMD/issues/146)
+[*] UnionMangas: rewrite all script
+[-] Pururin: drop support
+[+] MangaFox: added option to save as PNG on remove watermark
+[*] PecintaKomik: rewrite all script
+[*] Various changes and bug fixes
+
 0.9.28.0 (29-12-2015)
 [+] Added Manga folder custom rename. Options > Save to
 [*] Madokami: rewrite and add account support
