@@ -7,6 +7,9 @@ https://bintray.com/riderkick/FMD/data/db/view#files
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.29.1 (11-01-2016)
+[!*] Fix empty user-agent if it's not defined in advanced.ini (causing connection issue)
+
 0.9.29.0 (10-01-2016)
 [*] KissManga: rewrite all script
 [*] RawSenManga: rewrite all script (load full chapter list via one of chapter link https://github.com/riderkick/FMD/issues/146)
