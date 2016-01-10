@@ -87,30 +87,38 @@ end;
 function GETCF(const AHTTP:THTTPSendThread;AURL:String;var Cookie:String):Boolean;
 var
   m, u, h: String;
-  st: Integer;
+  st, counter: Integer;
 begin
   Result:=False;
   if AHTTP=nil then Exit;
   if Cookie<>'' then AHTTP.Cookies.Text:=Cookie;
-  Result := AHTTP.GET(AURL);
-  if AntiBotActive(AHTTP) then begin
-    m:='GET';
-    u:='';
-    h:=AppendURLDelim(GetHostURL(AURL));
-    st:=5000;
-    if GetAnsweredURL(StreamToString(AHTTP.Document),h,m,u,st) then
-      if (m<>'') and (u<>'') then begin
-        AHTTP.Reset;
-        AHTTP.Headers.Values['Referer']:=' '+AURL;
-        //minimum wait time is 5000
-        if st<5000 then st:=5000;
-        Sleep(st);
-        AHTTP.FollowRedirection:=False;
-        if AHTTP.HTTPRequest(m,FillHost(h,u)) then
-          Result:=AHTTP.Cookies.Values['cf_clearance']<>'';
-        AHTTP.FollowRedirection:=True;
-        if Result then Cookie:=AHTTP.GetCookies;
-      end;
+  counter:=0;
+  while counter<3 do begin
+    Inc(counter);
+    if AntiBotActive(AHTTP) then begin
+      m:='GET';
+      u:='';
+      h:=AppendURLDelim(GetHostURL(AURL));
+      st:=5000;
+      if GetAnsweredURL(StreamToString(AHTTP.Document),h,m,u,st) then
+        if (m<>'') and (u<>'') then begin
+          AHTTP.Reset;
+          AHTTP.Headers.Values['Referer']:=' '+AURL;
+          //minimum wait time is 5000
+          if st<5000 then st:=5000;
+          Sleep(st);
+          AHTTP.FollowRedirection:=False;
+          if AHTTP.HTTPRequest(m,FillHost(h,u)) then
+            Result:=AHTTP.Cookies.Values['cf_clearance']<>'';
+          AHTTP.FollowRedirection:=True;
+          if Result then Cookie:=AHTTP.GetCookies;
+        end;
+    end;
+    if Result then Exit
+    else if counter<3 then begin
+      AHTTP.Reset;
+      Result:=AHTTP.GET(AURL);
+    end;
   end;
 end;
 
