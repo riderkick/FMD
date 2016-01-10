@@ -1964,8 +1964,6 @@ var
 
   {$I includes/Fakku/directory_page_number.inc}
 
-  {$I includes/Pururin/directory_page_number.inc}
-
   {$I includes/MangaPark/directory_page_number.inc}
 
   //{$I includes/MangaTraders/directory_page_number.inc}
@@ -2105,9 +2103,6 @@ begin
       if WebsiteID = DM5_ID then
         Result := GetDM5DirectoryPageNumber
       else
-      if WebsiteID = PURURIN_ID then
-        Result := GetPururinDirectoryPageNumber
-      else
       if (WebsiteID = NINEMANGA_ID) or
         (WebsiteID = NINEMANGA_ES_ID) or
         (WebsiteID = NINEMANGA_CN_ID) or
@@ -2222,8 +2217,6 @@ var
   {$I includes/Mabuns/names_and_links.inc}
 
   {$I includes/MangaEsta/names_and_links.inc}
-
-  {$I includes/Pururin/names_and_links.inc}
 
   {$I includes/HugeManga/names_and_links.inc}
 
@@ -2411,9 +2404,6 @@ begin
     else
     if WebsiteID = MANGAESTA_ID then
       Result := MangaEstaGetNamesAndLinks
-    else
-    if WebsiteID = PURURIN_ID then
-      Result := PururinGetNamesAndLinks
     else
     if WebsiteID = HUGEMANGA_ID then
       Result := HugeMangaGetNamesAndLinks
@@ -2618,8 +2608,6 @@ var
 
   {$I includes/MangaEsta/manga_information.inc}
 
-  {$I includes/Pururin/manga_information.inc}
-
   {$I includes/HugeManga/manga_information.inc}
 
   {$I includes/AnimeStory/manga_information.inc}
@@ -2802,9 +2790,6 @@ begin
     else
     if WebsiteID = MANGAESTA_ID then
       Result := GetMangaEstaInfoFromURL
-    else
-    if WebsiteID = PURURIN_ID then
-      Result := GetPururinInfoFromURL
     else
     if WebsiteID = HUGEMANGA_ID then
       Result := GetHugeMangaInfoFromURL

@@ -411,8 +411,6 @@ var
 
   {$I includes/MeinManga/chapter_page_number.inc}
 
-  {$I includes/Pururin/chapter_page_number.inc}
-
   {$I includes/RedHawkScans/chapter_page_number.inc}
 
   {$I includes/S2Scans/chapter_page_number.inc}
@@ -526,9 +524,6 @@ begin
     else
     if manager.container.MangaSiteID = KOMIKID_ID then
       Result := GetKomikidPageNumber
-    else
-    if manager.container.MangaSiteID = PURURIN_ID then
-      Result := GetPururinPageNumber
     else
     if manager.container.MangaSiteID = HUGEMANGA_ID then
       Result := GetHugeMangaPageNumber
@@ -718,8 +713,6 @@ var
 
   {$I includes/MangaVadisi/image_url.inc}
 
-  {$I includes/Pururin/image_url.inc}
-
   {$I includes/RedHawkScans/image_url.inc}
 
   {$I includes/ScanManga/image_url.inc}
@@ -838,9 +831,6 @@ begin
     else
     if manager.container.MangaSiteID = MANGAESTA_ID then
       Result := GetMangaEstaImageURL
-    else
-    if manager.container.MangaSiteID = PURURIN_ID then
-      Result := GetPururinImageURL
     else
     if manager.container.MangaSiteID = HUGEMANGA_ID then
       Result := GetHugeMangaImageURL

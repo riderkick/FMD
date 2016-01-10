@@ -304,51 +304,50 @@ const
   SCANMANGA_ID           = 36;
   MANGAGO_ID             = 37;
   DM5_ID                 = 38;
-  PURURIN_ID             = 39;
-  MANGACOW_ID            = 40;
-  KIVMANGA_ID            = 41;
-  MEINMANGA_ID           = 42;
-  MANGASPROJECT_ID       = 43;
-  MANGAREADER_POR_ID     = 44;
-  MANGASTREAMTO_ID       = 45;
-  NINEMANGA_ID           = 46;
-  NINEMANGA_ES_ID        = 47;
-  NINEMANGA_CN_ID        = 48;
-  NINEMANGA_RU_ID        = 49;
-  NINEMANGA_DE_ID        = 50;
-  NINEMANGA_IT_ID        = 51;
-  NINEMANGA_BR_ID        = 52;
-  JAPANSHIN_ID           = 53;
-  JAPSCAN_ID             = 54;
-  CENTRUMMANGI_PL_ID     = 55;
-  MANGALIB_PL_ID         = 56;
-  ONEMANGA_ID            = 57;
-  MANGATOWN_ID           = 58;
-  MANGAOKU_ID            = 59;
-  MYREADINGMANGAINFO_ID  = 60;
-  IKOMIK_ID              = 61;
-  NHENTAI_ID             = 62;
-  MANGAMINT_ID           = 63;
-  UNIXMANGA_ID           = 64;
-  HAKIHOME_ID            = 65;
-  EXTREMEMANGAS_ID       = 66;
-  MANGAHOST_ID           = 67;
-  PORNCOMIX_ID           = 68;
-  PORNCOMIXRE_ID         = 69;
-  PORNCOMIXIC_ID         = 70;
-  XXCOMICS_ID            = 71;
-  XXCOMICSMT_ID          = 72;
-  XXCOMICS3D_ID          = 73;
-  PORNXXXCOMICS_ID       = 74;
-  MANGASEE_ID            = 75;
-  MANGAKU_ID             = 76;
-  ACADEMYVN_ID           = 77;
-  MANGAAT_ID             = 78;
-  READMANGATODAY_ID      = 79;
-  LONEMANGA_ID           = 80;
-  DYNASTYSCANS_ID        = 81;
+  MANGACOW_ID            = 39;
+  KIVMANGA_ID            = 40;
+  MEINMANGA_ID           = 41;
+  MANGASPROJECT_ID       = 42;
+  MANGAREADER_POR_ID     = 43;
+  MANGASTREAMTO_ID       = 44;
+  NINEMANGA_ID           = 45;
+  NINEMANGA_ES_ID        = 46;
+  NINEMANGA_CN_ID        = 47;
+  NINEMANGA_RU_ID        = 48;
+  NINEMANGA_DE_ID        = 49;
+  NINEMANGA_IT_ID        = 50;
+  NINEMANGA_BR_ID        = 51;
+  JAPANSHIN_ID           = 52;
+  JAPSCAN_ID             = 53;
+  CENTRUMMANGI_PL_ID     = 54;
+  MANGALIB_PL_ID         = 55;
+  ONEMANGA_ID            = 56;
+  MANGATOWN_ID           = 57;
+  MANGAOKU_ID            = 58;
+  MYREADINGMANGAINFO_ID  = 59;
+  IKOMIK_ID              = 60;
+  NHENTAI_ID             = 61;
+  MANGAMINT_ID           = 62;
+  UNIXMANGA_ID           = 63;
+  HAKIHOME_ID            = 64;
+  EXTREMEMANGAS_ID       = 65;
+  MANGAHOST_ID           = 66;
+  PORNCOMIX_ID           = 67;
+  PORNCOMIXRE_ID         = 68;
+  PORNCOMIXIC_ID         = 69;
+  XXCOMICS_ID            = 70;
+  XXCOMICSMT_ID          = 71;
+  XXCOMICS3D_ID          = 72;
+  PORNXXXCOMICS_ID       = 73;
+  MANGASEE_ID            = 74;
+  MANGAKU_ID             = 75;
+  ACADEMYVN_ID           = 76;
+  MANGAAT_ID             = 77;
+  READMANGATODAY_ID      = 78;
+  LONEMANGA_ID           = 79;
+  DYNASTYSCANS_ID        = 80;
 
-  WebsiteRoots: array [0..81] of array [0..1] of string = (
+  WebsiteRoots: array [0..80] of array [0..1] of string = (
     ('AnimeA', 'http://manga.animea.net'),
     ('MangaInn', 'http://www.mangainn.me'),
     ('OurManga', 'http://www.ourmanga.com'),
@@ -388,7 +387,6 @@ const
     ('ScanManga', 'http://www.scan-manga.com'),
     ('MangaGo', 'http://www.mangago.me'),
     ('DM5', 'http://www.dm5.com'),
-    ('Pururin', 'http://pururin.com'),
     ('Mangacow', 'http://mangacow.co'),
     ('KivManga', 'http://www.kivmanga.com'),
     ('MeinManga', 'http://www.meinmanga.com/'),
@@ -518,8 +516,6 @@ const
   MANGAGO_BROWSER = '/list/directory/all/';
 
   DM5_BROWSER = '/manhua-new';
-
-  PURURIN_BROWSER = '/browse/';
 
   //MANGACOW_BROWSER :string = '/manga-list/all/any/name-az/';
   MANGACOW_BROWSER = '/manga-list/all/any/last-added/';
@@ -1274,7 +1270,6 @@ begin
   end;
   Result := SitesMemberOf(website, [
     FAKKU_ID,
-    PURURIN_ID,
     NINEMANGA_ID,
     NINEMANGA_ES_ID,
     NINEMANGA_CN_ID,
@@ -1310,7 +1305,6 @@ begin
   end;
   Result := SitesMemberOf(website, [
     FAKKU_ID,
-    PURURIN_ID,
     MYREADINGMANGAINFO_ID,
     NHENTAI_ID,
     PORNCOMIX_ID,
@@ -1376,7 +1370,6 @@ begin
   Result := False;
   Result := SitesMemberOf(website, [
     FAKKU_ID,
-    PURURIN_ID,
     MYREADINGMANGAINFO_ID,
     NHENTAI_ID,
     PORNCOMIX_ID,
