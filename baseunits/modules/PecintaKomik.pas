@@ -101,7 +101,7 @@ function GetImageURL(var DownloadThread: TDownloadThread; const AURL: String;
   Module: TModuleContainer): Boolean;
 var
   query: TXQueryEngineHTML;
-  s: String;
+  s, b: String;
 begin
   Result:=False;
   if DownloadThread=nil then Exit;
@@ -113,9 +113,10 @@ begin
       query:=TXQueryEngineHTML.Create;
       try
         query.ParseHTML(StreamToString(Document));
+        b:=query.XPathString('//base/@href');
+        if b='' then b:=Module.RootURL;
         s:=query.XPathString('//img[@class="picture"]/@src');
-        if s<>'' then
-          PageLinks[DownloadThread.workCounter]:=MaybeFillHost(Module.RootURL,s);
+        if s<>'' then PageLinks[DownloadThread.workCounter]:=MaybeFillHost(b,s);
       finally
         query.Free;
       end;
