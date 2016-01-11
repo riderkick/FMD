@@ -126,101 +126,52 @@ end;
 function GetDirectoryPageNumber(var MangaInfo: TMangaInformation;
   var Page: Integer; Module: TModuleContainer): Integer;
 var
-  Parse: TStringList;
-
-  procedure ScanParse;
-  var
-    i: Integer;
-    s: String;
-  begin
-    if Parse.Count > 0 then
-      for i := 0 to Parse.Count - 1 do
-        if (Pos('Page 1 of ', Parse.Strings[i]) > 0) then
-        begin
-          s := GetString(Parse.Strings[i] + '~!@', 'Page 1 of ', '~!@');
-          Page := StrToInt(TrimLeft(TrimRight(s)));
-          Break;
-        end;
-  end;
-
+  query: TXQueryEngineHTML;
+  s: String;
 begin
-  Result := NET_PROBLEM;
-  Page := 1;
-  if MangaInfo = nil then Exit;
-  Parse := TStringList.Create;
-  try
-    MangaInfo.FHTTP.Cookies.Text := Account.Cookies[modulename];
-    if MangaInfo.GetPage(TObject(Parse),
-      Module.RootURL + dirurls[Module.CurrentDirectoryIndex] +
-      dirparam + IntToStr(perpage), 3) then
-    begin
-      Result := INFORMATION_NOT_FOUND;
-      ParseHTML(Parse.Text, Parse);
-      if Parse.Count > 0 then
-      begin
-        Result := NO_ERROR;
-        ScanParse;
-      end;
+  Result:=NET_PROBLEM;
+  Page:=1;
+  if MangaInfo =nil then Exit(UNKNOWN_ERROR);
+  MangaInfo.FHTTP.Cookies.Text:=Account.Cookies[modulename];
+  if MangaInfo.FHTTP.GET(Module.RootURL+dirurls[Module.CurrentDirectoryIndex]+dirparam+IntToStr(perpage)) then begin
+    Result:=NO_ERROR;
+    query:=TXQueryEngineHTML.Create;
+    try
+      query.ParseHTML(StreamToString(MangaInfo.FHTTP.Document));
+      s:=Trim(query.XPathString('//ul[@class="ipsList_inline left pages"]/li/a'));
+      if s<>'' then
+        Page:=StrToIntDef(Trim(SeparateRight(LowerCase(s),'page 1 of ')),1);
+    finally
+      query.Free;
     end;
-  finally
-    Parse.Free;
   end;
 end;
 
 function GetNameAndLink(var MangaInfo: TMangaInformation;
   const ANames, ALinks: TStringList; const AURL: String; Module: TModuleContainer): Integer;
 var
-  Parse: TStringList;
+  query: TXQueryEngineHTML;
+  v: IXQValue;
   s: String;
-  p: Integer;
-
-  procedure ScanParse;
-  var
-    i, j: Integer;
-  begin
-    j := -1;
-    for i := 0 to Parse.Count - 1 do
-      if (GetTagName(Parse[i]) = 'table') and
-        (GetVal(Parse[i], 'class') = 'ipb_table topic_list hover_rows') then
-      begin
-        j := i;
-        Break;
-      end;
-    if (j > -1) and (j < Parse.Count) then
-      for i := j to Parse.Count - 1 do
-        if Pos('</table', Parse[i]) <> 0 then
-          Break
-        else
-        if GetTagName(Parse[i]) = 'a' then
-        begin
-          ALinks.Add(GetVal(Parse[i], 'href'));
-          ANames.Add(CommonStringFilter(Parse[i + 1]));
-        end;
-  end;
-
 begin
-  Result := NET_PROBLEM;
-  if MangaInfo = nil then Exit;
-  s := Module.RootURL + dirurls[Module.CurrentDirectoryIndex] +
-    dirparam + IntToStr(perpage);
-  p := StrToIntDef(AURL, 0);
-  if p > 0 then
-    s += '&st=' + (IntToStr(p * perpage));
-  Parse := TStringList.Create;
-  try
-    MangaInfo.FHTTP.Cookies.Text := Account.Cookies[modulename];
-    if MangaInfo.GetPage(TObject(Parse), s, 3) then
-    begin
-      Result := INFORMATION_NOT_FOUND;
-      ParseHTML(Parse.Text, Parse);
-      if Parse.Count > 0 then
-      begin
-        Result := NO_ERROR;
-        ScanParse;
+  Result:=NET_PROBLEM;
+  if MangaInfo=nil then Exit(UNKNOWN_ERROR);
+  s:=Module.RootURL+dirurls[Module.CurrentDirectoryIndex]+dirparam+IntToStr(perpage);
+  if AURL<>'0' then s+='&st='+IntToStr(StrToInt(AURL)*perpage);
+  MangaInfo.FHTTP.Cookies.Text:=Account.Cookies[modulename];
+  if MangaInfo.FHTTP.GET(s) then begin
+    Result:=NO_ERROR;
+    query:=TXQueryEngineHTML.Create;
+    try
+      query.ParseHTML(StreamToString(MangaInfo.FHTTP.Document));
+      for v in query.XPath('//table[@class="ipb_table topic_list hover_rows"]/tbody/tr/td/h4/a') do begin
+        WriteLog_D('name: '+v.toString);
+        ALinks.Add(v.toNode.getAttribute('href'));
+        ANames.Add(v.toString);
       end;
+    finally
+      query.Free;
     end;
-  finally
-    Parse.Free;
   end;
 end;
 
