@@ -949,7 +949,7 @@ begin
   fmdDirectory := CleanAndExpandDirectory(GetCurrentDirUTF8);
   SetLogFile(Format('%s\%s_LOG_%s.txt', ['log', ExtractFileNameOnly(ParamStrUTF8(0)),
     FormatDateTime('dd-mm-yyyy', Now)]));
-  Writelog_I('Starting ' + AnsiQuotedStr(Application.Title, '"'));
+  Writelog_I(['Starting ',QuotedStrd(Application.Title),' [PID:',GetProcessID,' HANDLE:',IntToStr(GetCurrentProcess),']']);
   InitSimpleExceptionHandler;
   AddIgnoredException('EImagingError');
   AddIgnoredException('ERegExpr');
@@ -1202,7 +1202,7 @@ begin
   FreeAndNil(updates);
   FreeAndNil(options);
   FreeAndNil(INIAdvanced);
-  Writelog_I(AnsiQuotedStr(Application.Title, '"') + ' exit normally');
+  Writelog_I(QuotedStrd(Application.Title)+' exit normally [PID:'+IntToStr(GetProcessID)+' HANDLE:'+IntToStr(GetCurrentProcess)+']');
 end;
 
 procedure TMainForm.FormShow(Sender: TObject);
