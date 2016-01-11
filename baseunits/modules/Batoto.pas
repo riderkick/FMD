@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, WebsiteModules, uData, uBaseUnit, uDownloadsManager,
-  accountmanagerdb, synautil, HTMLUtil, RegExpr;
+  accountmanagerdb, SimpleLogger, synautil, HTMLUtil, RegExpr;
 
 implementation
 
@@ -41,6 +41,7 @@ begin
       Account.Status[modulename] := asChecking;
       Reset;
       Cookies.Clear;
+      Writelog_V('Batoto, login: get login form');
       if GET(urlroot) then begin
         loginform := THTMLForm.Create;
         query := TXQueryEngineHTML.Create;
@@ -57,17 +58,25 @@ begin
             end;
             Clear;
             Headers.Values['Referer'] := ' https://bato.to/';
+            Writelog_V('Batoto, login: send authentification');
             if POST(urllogin, loginform.GetData) then begin
               if ResultCode = 200 then begin
                 Result := Cookies.Values['pass_hash'] <> '';
                 if Result then begin
+                  Writelog_V('Batoto, login: success');
                   Account.Cookies[modulename] := GetCookies;
                   Account.Status[modulename] := asValid;
-                end else
+                end else begin
+                  Writelog_V('Batoto, login: failed, wrong user/password?');
                   Account.Status[modulename] := asInvalid;
+                end;
                 Account.Save;
-              end;
-            end;
+              end
+              else
+                Writelog_V(['Batoto, login: failed, unexpected server reply: ',ResultCode,' ',ResultString]);
+            end
+            else
+              Writelog_V('Batoto, login: connection failed');
           end;
         finally
           query.Free;
@@ -90,19 +99,26 @@ function GETWithLogin(var AHTTP: THTTPSendThread; AURL: String): Boolean;
 var
   s: String;
 begin
-  Result := False;
-  AHTTP.Cookies.Text := Account.Cookies['Batoto'];
-  if AHTTP.GET(AURL) then begin
-    Result := True;
-    if (Account.Enabled[modulename] = False) or (Account.Username[modulename] = '') then Exit;
-    s := StreamToString(AHTTP.Document);
+  Result:=False;
+  AHTTP.Cookies.Text:=Account.Cookies['Batoto'];
+  Result:=AHTTP.GET(AURL);
+  if Result then begin
+    Result:=True;
+    if Account.Enabled[modulename]=False then Exit;
+    if Account.Username[modulename]='' then Exit;
+    if Account.Status[modulename]=asInvalid then Exit;
+    s:=StreamToString(AHTTP.Document);
     Result := (Pos('class=''logged_in''', s) > 0) or (Pos('class="logged_in"', s) > 0);
-    if not Result then
-      if Login(AHTTP) then
-         Result := AHTTP.GET(AURL);
     if not Result then begin
-      AHTTP.Document.Clear;
-      WriteStrToStream(AHTTP.Document, s);
+      Result:=Login(AHTTP);
+      if Result then
+        Result:=AHTTP.GET(AURL)
+      else
+      begin
+        Result:=True;
+        AHTTP.Document.Clear;
+        WriteStrToStream(AHTTP.Document, s);
+      end;
     end;
   end;
 end;
