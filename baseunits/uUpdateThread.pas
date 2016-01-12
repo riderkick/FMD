@@ -650,7 +650,7 @@ begin
               if Terminated then Break;
               Inc(c);
               Inc(MainForm.ulWorkPtr);
-              if c>750 then begin
+              if c>250 then begin
                 c:=0;
                 Synchronize(MainThreadStatusRepaint);
               end;
