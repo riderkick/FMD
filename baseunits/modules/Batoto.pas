@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, WebsiteModules, uData, uBaseUnit, uDownloadsManager,
-  accountmanagerdb, SimpleLogger, synautil;
+  accountmanagerdb, dateutils, SimpleLogger, synautil;
 
 implementation
 
@@ -101,6 +101,7 @@ var
 begin
   Result:=False;
   AHTTP.Cookies.Text:=Account.Cookies['Batoto'];
+  AHTTP.KeepAlive:=False;
   Result:=AHTTP.GET(AURL);
   if Result then begin
     Result:=True;
@@ -302,7 +303,7 @@ begin
     Website := modulename;
     RootURL := urlroot;
     MaxTaskLimit := 1;
-    MaxConnectionLimit := 1;
+    MaxConnectionLimit := 2;
     AccountSupport := True;
     SortedList := True;
     InformationAvailable := True;
