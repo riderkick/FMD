@@ -5081,7 +5081,11 @@ end;
 
 procedure TMainForm.DoExitWaitCounter;
 begin
-  if isUpdating then isPendingExitCounter:=True
+  Writelog_V('Execute exit counter');
+  if isUpdating then begin
+    Writelog_V('Update thread still exist, pending exit counter');
+    isPendingExitCounter:=True
+  end
   else itMonitor.Enabled:=True;
 end;
 

@@ -292,7 +292,10 @@ begin
   MainForm.sbUpdateList.Hide;
   MainForm.sbMain.SizeGrip := not MainForm.sbUpdateList.Visible;
   MainForm.isUpdating:=False;
-  if MainForm.isPendingExitCounter then MainForm.DoExitWaitCounter;
+  if MainForm.isPendingExitCounter then begin
+    WriteLog_V('UpdateManagerThread, pending exit counter executed');
+    MainForm.DoExitWaitCounter;
+  end;
 end;
 
 procedure TUpdateMangaManagerThread.MainThreadRemoveFilter;
@@ -702,7 +705,7 @@ begin
           if workPtr > 0 then
             if not (Terminated and SortedList) then
             begin
-              WriteLog_V('UpdateManagerThread, '+website+': saving data');
+              WriteLog_V('UpdateManagerThread, '+website+': saving data '+IntToStr(workPtr));
               FStatus := RS_UpdatingList + Format(' [%d/%d] %s',
                 [websitePtr, websites.Count, website]) + ' | ' + RS_SavingData + '...';
               Synchronize(MainThreadShowGetting);
