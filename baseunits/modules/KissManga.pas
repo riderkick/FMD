@@ -10,6 +10,9 @@ uses
 
 implementation
 
+const
+  dirurl='/MangaList/Newest';
+
 var
   kissmangacookies: String='';
   lockget: TRTLCriticalSection;
@@ -43,7 +46,7 @@ begin
   Result := NET_PROBLEM;
   Page := 1;
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
-  if GETWithCookie(MangaInfo.FHTTP,Module.RootURL+'/MangaList/Newest') then begin
+  if GETWithCookie(MangaInfo.FHTTP,Module.RootURL+dirurl) then begin
     Result := NO_ERROR;
     query := TXQueryEngineHTML.Create;
     try
@@ -68,7 +71,7 @@ var
 begin
   Result:=NET_PROBLEM;
   if MangaInfo=nil then Exit(UNKNOWN_ERROR);
-  s:=Module.RootURL+'/Mangalist/Newest';
+  s:=Module.RootURL+dirurl;
   if AURL<>'0' then
   s:=s+'?page='+IncStr(AURL);
   if GETWithCookie(MangaInfo.FHTTP,s) then begin
