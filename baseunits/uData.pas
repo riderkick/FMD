@@ -92,13 +92,14 @@ type
     procedure Save;
     procedure Backup(AWebsite: String);
     procedure Refresh(RecheckDataCount: Boolean = False);
-    procedure AddData(Title, Link, Authors, Artists, Genres, Status, Summary: String;
-      NumChapter, JDN: Integer); overload;
-    procedure AddData(Title, Link, Authors, Artists, Genres, Status, Summary: String;
-      NumChapter: Integer; JDN: TDateTime); overload;
+    function AddData(Title, Link, Authors, Artists, Genres, Status, Summary: String;
+      NumChapter, JDN: Integer): Boolean; overload;
+    function AddData(Title, Link, Authors, Artists, Genres, Status, Summary: String;
+      NumChapter: Integer; JDN: TDateTime): Boolean; overload;
     procedure UpdateData(Title, Link, Authors, Artists, Genres, Status, Summary: String;
       NumChapter: Integer; AWebsite: String = '');
     procedure Commit;
+    procedure Rollback;
     procedure RemoveFilter;
     procedure Sort;
 
@@ -860,38 +861,36 @@ begin
   end;
 end;
 
-procedure TDBDataProcess.AddData(Title, Link, Authors, Artists, Genres,
-  Status, Summary: String; NumChapter, JDN: Integer);
-var
-  s: String;
+function TDBDataProcess.AddData(Title, Link, Authors, Artists, Genres, Status,
+  Summary: String; NumChapter, JDN: Integer): Boolean;
 begin
-  if FConn.Connected then
-    try
-      FConn.ExecuteDirect(
-        'INSERT OR IGNORE INTO ' + QuotedStrd(FTableName) +
-        #13#10'(' + DBDataProcessParam + ')' +
-        #13#10'VALUES' +
-        #13#10'('#13#10 +
-        QuotedStrd(Title) + ','#13#10 +
-        QuotedStrd(Link) + ','#13#10 +
-        QuotedStrd(Authors) + ','#13#10 +
-        QuotedStrd(Artists) + ','#13#10 +
-        QuotedStrd(Genres) + ','#13#10 +
-        QuotedStrd(Status) + ','#13#10 +
-        QuotedStrd(Summary) + ','#13#10 +
-        QuotedStrd(IntToStr(NumChapter)) + ','#13#10 +
-        QuotedStrd(IntToStr(JDN)) +
-        #13#10');');
-    except
-      on E: Exception do
-        WriteLog_E('TDBDataProcess.AddData.Error!', E, Self);
-    end;
+  if FConn.Connected=False then Exit(False);
+  try
+    FConn.ExecuteDirect(
+      'INSERT OR ABORT INTO ' + QuotedStrd(FTableName) +
+      #13#10'(' + DBDataProcessParam + ')' +
+      #13#10'VALUES' +
+      #13#10'('#13#10 +
+      QuotedStrd(Title) + ','#13#10 +
+      QuotedStrd(Link) + ','#13#10 +
+      QuotedStrd(Authors) + ','#13#10 +
+      QuotedStrd(Artists) + ','#13#10 +
+      QuotedStrd(Genres) + ','#13#10 +
+      QuotedStrd(Status) + ','#13#10 +
+      QuotedStrd(Summary) + ','#13#10 +
+      QuotedStrd(IntToStr(NumChapter)) + ','#13#10 +
+      QuotedStrd(IntToStr(JDN)) +
+      #13#10');');
+    Result:=True;
+  except
+    Result:=False;
+  end;
 end;
 
-procedure TDBDataProcess.AddData(Title, Link, Authors, Artists, Genres,
-  Status, Summary: String; NumChapter: Integer; JDN: TDateTime);
+function TDBDataProcess.AddData(Title, Link, Authors, Artists, Genres, Status,
+  Summary: String; NumChapter: Integer; JDN: TDateTime): Boolean;
 begin
-  AddData(Title, Link, Authors, Artists, Genres, Status, Summary,
+  Result := AddData(Title, Link, Authors, Artists, Genres, Status, Summary,
     NumChapter, DateToJDN(JDN));
 end;
 
@@ -949,6 +948,17 @@ begin
     except
       on E: Exception do
         WriteLog_E('TDBDataProcess.Commit.Error!', E, Self);
+    end;
+end;
+
+procedure TDBDataProcess.Rollback;
+begin
+  if FConn.Connected then
+    try
+      FTrans.RollbackRetaining;
+    except
+      on E: Exception do
+        WriteLog_E('TDBDataProcess.Rollback.Error!', E, Self);
     end;
 end;
 
