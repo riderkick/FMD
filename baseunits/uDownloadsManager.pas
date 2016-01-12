@@ -214,8 +214,6 @@ type
     procedure RemoveTask(const taskID : Integer);
     // Remove all finished tasks.
     procedure RemoveAllFinishedTasks;
-    // show exit counter
-    procedure doExitWaitCounter;
     // check status of task
     function TaskStatusPresent(Stats: TDownloadStatusTypes): Boolean;
 
@@ -2044,8 +2042,10 @@ begin
     begin
       MainForm.itRefreshDLInfo.Enabled := False;
       MainForm.UpdateVtDownload;
-      if isCheckForFMDDo then
-        doExitWaitCounter;
+      if isCheckForFMDDo then begin
+        frmMain.DoAfterFMD := OptionLetFMDDo;
+        MainForm.DoExitWaitCounter;
+      end;
     end;
   except
     on E: Exception do
@@ -2206,13 +2206,6 @@ begin
         Containers.Delete(i)
       else Inc(i);
   end;
-end;
-
-procedure TDownloadManager.doExitWaitCounter;
-begin
-  if MainForm.isUpdating then Exit;
-  frmMain.DoAfterFMD := OptionLetFMDDo;
-  MainForm.itMonitor.Enabled := True;
 end;
 
 function TDownloadManager.TaskStatusPresent(Stats: TDownloadStatusTypes): Boolean;

@@ -555,7 +555,7 @@ type
     ulTotalPtr, ulWorkPtr: Integer;
     optionMangaSiteSelectionNodes: array of PVirtualNode;
     LastSearchStr, LastSearchWeb: String;
-    isStartup, isExiting, isRunDownloadFilter, isUpdating: Boolean;
+    isStartup, isExiting, isRunDownloadFilter, isUpdating, isPendingExitCounter: Boolean;
     revisionIni, updates, mangalistIni, options: TIniFile;
     FavoriteManager: TFavoriteManager;
     dataProcess: TDBDataProcess;
@@ -645,6 +645,7 @@ type
     procedure TransferRateGraphAddItem(TransferRate: Integer);
 
     // exit counter
+    procedure DoExitWaitCounter;
     function ShowExitCounter: Boolean;
 
     // open db with thread
@@ -958,6 +959,7 @@ begin
   isUpdating := False;
   isExiting := False;
   isGetMangaInfos := False;
+  isPendingExitCounter:=False;
   DoAfterFMD := DO_NOTHING;
   Application.HintHidePause := 10000;
   sbUpdateList.DoubleBuffered := True;
@@ -1271,6 +1273,7 @@ begin
   finally
     Free;
   end;
+  isPendingExitCounter:=False;
   IsDlgCounter := False;
 end;
 
@@ -5074,6 +5077,12 @@ begin
         Strings[i] := Format('%d|%s', [i+1, ValueFromIndex[i+1]]);
     Strings[Count-1] := Format('%d|%d|?|',[Count,TransferRate]);
   end;
+end;
+
+procedure TMainForm.DoExitWaitCounter;
+begin
+  if isUpdating then isPendingExitCounter:=True
+  else itMonitor.Enabled:=True;
 end;
 
 procedure TMainForm.ExceptionHandler(Sender: TObject; E: Exception);

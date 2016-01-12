@@ -291,6 +291,8 @@ begin
   mainForm.sbUpdateList.Panels[0].Style := psText;
   MainForm.sbUpdateList.Hide;
   MainForm.sbMain.SizeGrip := not MainForm.sbUpdateList.Visible;
+  MainForm.isUpdating:=False;
+  if MainForm.isPendingExitCounter then MainForm.DoExitWaitCounter;
 end;
 
 procedure TUpdateMangaManagerThread.MainThreadRemoveFilter;
