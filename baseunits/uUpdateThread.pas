@@ -554,9 +554,9 @@ begin
       end;
     end
     else
-      tempDataProcess.CreateDatabase('__tempupdatelist');
       while websitePtr < websites.Count do
       begin
+        tempDataProcess.CreateDatabase('__tempupdatelist');
         website := websites.Strings[websitePtr];
         ModuleId := Modules.LocateModule(website);
         SortedList := SitesWithSortedList(website);
