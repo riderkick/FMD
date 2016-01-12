@@ -867,7 +867,7 @@ begin
   if FConn.Connected=False then Exit(False);
   try
     FConn.ExecuteDirect(
-      'INSERT OR ABORT INTO ' + QuotedStrd(FTableName) +
+      'INSERT OR IGNORE INTO ' + QuotedStrd(FTableName) +
       #13#10'(' + DBDataProcessParam + ')' +
       #13#10'VALUES' +
       #13#10'('#13#10 +
@@ -958,7 +958,6 @@ begin
     try
       WriteLog_V('TDBDataProcess['+Website+'].Rollback');
       FTrans.Rollback;
-      FTrans.EndTransaction;
     except
       on E: Exception do
         WriteLog_E('TDBDataProcess['+Website+'].Rollback.Error!',E,Self);
