@@ -201,9 +201,19 @@ begin
 
             manager.CS_AddNamesAndLinks.Acquire;
             try
-              for i := 0 to links.Count - 1 do
-                manager.tempDataProcess.AddData(names[i],links[i],'','','','','',0,0);
-              manager.tempDataProcess.Commit;
+              i:=0;
+              while i<links.Count do begin
+                if manager.mainDataProcess.LinkExist(links[i]) then begin
+                   links.Delete(i);
+                   names.Delete(i);
+                end
+                else Inc(i);
+              end;
+              if links.Count>0 then begin
+                for i:=0 to links.Count-1 do
+                  manager.tempDataProcess.AddData(names[i],links[i],'','','','','',0,0);
+                manager.tempDataProcess.Commit;
+              end;
             finally
               manager.CS_AddNamesAndLinks.Release;
             end;
@@ -588,10 +598,6 @@ begin
         if not mainDataProcess.Connect(twebsite) then
           mainDataProcess.CreateDatabase(twebsite);
 
-        mainDataProcess.OpenTable;
-        mainDataProcess.InitLocateLink;
-        mainDataProcess.CloseTable;
-
         WriteLog_V('UpdateManagerThread, '+website+': get number of directory page');
         // get directory page count
         INIAdvanced.Reload;
@@ -600,6 +606,10 @@ begin
         workPtr := 0;
         GetInfo(1, CS_DIRECTORY_COUNT);
         if Terminated then Break;
+
+        mainDataProcess.OpenTable;
+        mainDataProcess.InitLocateLink;
+        mainDataProcess.CloseTable;
 
         WriteLog_V('UpdateManagerThread, '+website+': get names and links');
         // get names and links
@@ -632,44 +642,15 @@ begin
         end
         else
           GetInfo(directoryCount, CS_DIRECTORY_PAGE);
+        mainDataProcess.DoneLocateLink;
+
         if Terminated then Break;
+
+        tempDataProcess.OpenTable('', True);
 
         FStatus := RS_UpdatingList + Format(' [%d/%d] %s',
           [websitePtr, websites.Count, website]) + ' | ' + RS_IndexingNewTitle + '...';
         Synchronize(MainThreadShowGetting);
-
-        tempDataProcess.OpenTable('', True);
-
-        WriteLog_V('UpdateManagerThread, '+website+': removing duplicate '+IntToStr(tempDataProcess.RecordCount));
-        // remove duplicate found<>current database
-        if (mainDataProcess.LinkCount>0) and (tempDataProcess.RecordCount>0) then begin
-          MainForm.ulTotalPtr:=tempDataProcess.RecordCount;
-          MainForm.ulWorkPtr:=0;
-          FStatus := RS_UpdatingList + Format(' [%d/%d] %s',
-            [websitePtr, websites.Count, website]) + ' | ' + RS_RemovingDuplicateFromCurrentData + '...';
-          Synchronize(MainThreadShowGetting);
-          with tempDataProcess.Table do begin
-            c:=0;
-            First;
-            while not tempDataProcess.Table.EOF do begin
-              if Terminated then Break;
-              Inc(c);
-              Inc(MainForm.ulWorkPtr);
-              if c>500 then begin
-                c:=0;
-                Synchronize(MainThreadStatusRepaint);
-              end;
-              if mainDataProcess.LinkExist(Fields[1].AsString) then
-                Delete
-              else
-                Next;
-            end;
-            ApplyUpdates;
-          end;
-        end;
-
-        tempDataProcess.Refresh(True);
-        mainDataProcess.DoneLocateLink;
 
         WriteLog_V('UpdateManagerThread, '+website+': get info '+IntToStr(tempDataProcess.RecordCount));
         // get manga info
