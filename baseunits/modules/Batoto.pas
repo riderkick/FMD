@@ -165,7 +165,6 @@ begin
     try
       query.ParseHTML(StreamToString(MangaInfo.FHTTP.Document));
       for v in query.XPath('//table[@class="ipb_table topic_list hover_rows"]/tbody/tr/td/h4/a') do begin
-        WriteLog_D('name: '+v.toString);
         ALinks.Add(v.toNode.getAttribute('href'));
         ANames.Add(v.toString);
       end;
