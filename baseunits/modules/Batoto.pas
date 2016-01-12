@@ -132,8 +132,7 @@ begin
   Result:=NET_PROBLEM;
   Page:=1;
   if MangaInfo =nil then Exit(UNKNOWN_ERROR);
-  MangaInfo.FHTTP.Cookies.Text:=Account.Cookies[modulename];
-  if MangaInfo.FHTTP.GET(Module.RootURL+dirurls[Module.CurrentDirectoryIndex]+dirparam+IntToStr(perpage)) then begin
+  if GETWithLogin(MangaInfo.FHTTP,Module.RootURL+dirurls[Module.CurrentDirectoryIndex]+dirparam+IntToStr(perpage)) then begin
     Result:=NO_ERROR;
     query:=TXQueryEngineHTML.Create;
     try
@@ -158,8 +157,7 @@ begin
   if MangaInfo=nil then Exit(UNKNOWN_ERROR);
   s:=Module.RootURL+dirurls[Module.CurrentDirectoryIndex]+dirparam+IntToStr(perpage);
   if AURL<>'0' then s+='&st='+IntToStr(StrToInt(AURL)*perpage);
-  MangaInfo.FHTTP.Cookies.Text:=Account.Cookies[modulename];
-  if MangaInfo.FHTTP.GET(s) then begin
+  if GETWithLogin(MangaInfo.FHTTP,s) then begin
     Result:=NO_ERROR;
     query:=TXQueryEngineHTML.Create;
     try
@@ -188,7 +186,6 @@ begin
     mangaInfo.website := modulename;
     mangaInfo.url := FillHost(urlroot, AURL);
     while onlogin do Sleep(1000);
-    FHTTP.Cookies.Text := Account.Cookies[modulename];
     if GETWithLogin(FHTTP, mangaInfo.url) then begin
       Result := NO_ERROR;
       query := TXQueryEngineHTML.Create;
@@ -250,10 +247,9 @@ begin
   Result := False;
   if DownloadThread = nil then Exit;
   with DownloadThread.manager.container, DownloadThread.FHTTP do begin
-    Cookies.Text := Account.Cookies[modulename];
     Headers.Values['Referer'] := ' ' + urlroot + '/reader';
     cid := SeparateRight(AURL, '/reader#');
-    if GET(urlroot + '/areader?id=' + cid + '&p=1') then begin
+    if GETWithLogin(DownloadThread.FHTTP,urlroot + '/areader?id=' + cid + '&p=1') then begin
       Result := True;
       query := TXQueryEngineHTML.Create;
       try
@@ -284,10 +280,9 @@ begin
   if DownloadThread = nil then Exit;
   with DownloadThread.manager.container, DownloadThread.FHTTP do begin
     if PageContainerLinks.Text = '' then Exit;
-    Cookies.Text := Account.Cookies[modulename];
     rurl := urlroot + '/areader?id=' + PageContainerLinks[0] + '&p=' + IntToStr(DownloadThread.WorkCounter + 1);
     Headers.Values['Referer'] := ' ' + Module.RootURL + '/reader';
-    if GET(rurl) then begin
+    if GETWithLogin(DownloadThread.FHTTP,rurl) then begin
       Result := True;
       query := TXQueryEngineHTML.Create;
       try
@@ -307,7 +302,7 @@ begin
     Website := modulename;
     RootURL := urlroot;
     MaxTaskLimit := 1;
-    MaxConnectionLimit := 2;
+    MaxConnectionLimit := 1;
     AccountSupport := True;
     SortedList := True;
     InformationAvailable := True;
