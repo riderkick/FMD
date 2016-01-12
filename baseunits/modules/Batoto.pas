@@ -244,7 +244,6 @@ end;
 function GetPageNumber(var DownloadThread: TDownloadThread; const AURL: String;
   Module: TModuleContainer): Boolean;
 var
-  source: TStringList;
   query: TXQueryEngineHTML;
   v: IXQValue;
   cid: String;
@@ -257,11 +256,9 @@ begin
     cid := SeparateRight(AURL, '/reader#');
     if GET(urlroot + '/areader?id=' + cid + '&p=1') then begin
       Result := True;
-      source := TStringList.Create;
       query := TXQueryEngineHTML.Create;
       try
-        source.LoadFromStream(Document);
-        query.ParseHTML(source.Text);
+        query.ParseHTML(StreamToString(Document));
         PageContainerLinks.Text := cid;
         if query.XPathString('//select[@id="page_select"]') <> '' then
           PageNumber := Query.XPath('//div[1]/ul/li/select[@id="page_select"]/option/@value').Count
@@ -273,7 +270,6 @@ begin
         end;
       finally
         query.Free;
-        source.Free;
       end;
     end;
   end;
@@ -282,7 +278,6 @@ end;
 function GetImageURL(var DownloadThread: TDownloadThread; const AURL: String;
   Module: TModuleContainer): Boolean;
 var
-  source: TStringList;
   query: TXQueryEngineHTML;
   rurl: String;
 begin
@@ -295,15 +290,12 @@ begin
     Headers.Values['Referer'] := ' ' + Module.RootURL + '/reader';
     if GET(rurl) then begin
       Result := True;
-      source := TStringList.Create;
       query := TXQueryEngineHTML.Create;
       try
-        source.LoadFromStream(Document);
-        query.ParseHTML(source.Text);
+        query.ParseHTML(StreamToString(Document));
         PageLinks[DownloadThread.workCounter] := query.XPathString('//div[@id="full_image"]//img/@src');
       finally
         query.Free;
-        source.Free;
       end;
     end;
   end;
