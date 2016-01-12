@@ -440,6 +440,7 @@ var
 begin
   MainForm.ulTotalPtr := limit;
   try
+    INIAdvanced.Reload;
     while (not Terminated) and (workPtr < limit) do begin
       mt := INIAdvanced.ReadInteger('UpdateListNumberOfThreads', website, -1);
       if mt > 0 then
@@ -516,6 +517,7 @@ begin
           FStatus := s;
           MainForm.ulWorkPtr := workPtr + 1;
           Synchronize(MainThreadShowGetting);
+          INIAdvanced.Reload;
         finally
           UnlockCreateConnection;
         end;
