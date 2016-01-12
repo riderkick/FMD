@@ -17,7 +17,7 @@ const
   dirurls: array [0..1] of String = (
     '/comic/_/sp/',
     '/comic/_/comics/');
-  perpage = 50;
+  perpage = 1000;
   dirparam = '?sort_col=record_saved&sort_order=desc&per_page=';
 
 var
