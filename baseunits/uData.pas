@@ -466,7 +466,7 @@ begin
         ExecuteDirect('VACUUM');
       except
         on E: Exception do
-          WriteLog_E('TDBDataProcess.VacuumTable.Error!', E, Self);
+          WriteLog_E('TDBDataProcess['+Website+'].VacuumTable.Error!', E, Self);
       end;
       ExecuteDirect('BEGIN TRANSACTION');
     end;
@@ -546,7 +546,7 @@ begin
   except
     on E: Exception do
     begin
-      WriteLog_E('TDBDataProcess.InternalOpen.Error!', E, Self);
+      WriteLog_E('TDBDataProcess['+Website+'].InternalOpen.Error!', E, Self);
       Result := False;
     end;
   end;
@@ -562,7 +562,7 @@ begin
       Result := FQuery.FieldByName('website').AsString;
     except
       on E: Exception do
-        WriteLog_E('TDBDataProcess.GetWebsiteName', E, Self);
+        WriteLog_E('TDBDataProcess['+Website+'].GetWebsiteName', E, Self);
     end;
 end;
 
@@ -580,7 +580,7 @@ begin
     Result := FQuery.FieldByName(DBDataProcessParams[FieldIndex]).AsString;
   except
     on E: Exception do
-      WriteLog_E('TDBDataProcess.GetParam.Error!', E, Self);
+      WriteLog_E('TDBDataProcess['+Website+'].GetParam.Error!', E, Self);
   end;
 end;
 
@@ -618,7 +618,7 @@ begin
       end;
   except
     on E: Exception do
-      Writelog_E('TDBDataProcess.AttachAllSites.Error!', E, Self)
+      Writelog_E('TDBDataProcess['+Website+'].AttachAllSites.Error!', E, Self)
   end;
   FConn.ExecuteDirect('BEGIN TRANSACTION');
   FAllSitesAttached := FAttachedSites.Count > 0;
@@ -640,7 +640,7 @@ begin
       FAttachedSites.Delete(i);
     except
       on E: Exception do
-        Writelog_E('TDBDataProcess.DetachAllSites.Error!', E, Self);
+        Writelog_E('TDBDataProcess['+Website+'].DetachAllSites.Error!', E, Self);
     end;
   end;
   FConn.ExecuteDirect('BEGIN TRANSACTION');
@@ -657,7 +657,7 @@ begin
       Result := True;
     except
       on E: Exception do
-        WriteLog_E('TDBDataProcess.ExecuteDirect.Error!'#13#10 +
+        WriteLog_E('TDBDataProcess['+Website+'].ExecuteDirect.Error!'#13#10 +
           'SQL: ' + SQL, E, Self);
     end;
 end;
@@ -697,7 +697,7 @@ begin
     end;
   except
     on E: Exception do
-      WriteLog_E('TDBDataProcess.Destroy.Error!', E, Self);
+      WriteLog_E('TDBDataProcess['+Website+'].Destroy.Error!', E, Self);
   end;
   DoneLocateLink;
   FAttachedSites.Free;
@@ -749,7 +749,7 @@ begin
     Result := FQuery.Active;
   except
     on E: Exception do
-      WriteLog_E('TDBDataProcess.Open.Error!', E, Self);
+      WriteLog_E('TDBDataProcess['+Website+'].Open.Error!', E, Self);
   end;
 end;
 
@@ -776,7 +776,7 @@ begin
       end;
     except
       on E: Exception do
-        WriteLog_E('TDBDataProcess.OpenTable.Error!', E, Self);
+        WriteLog_E('TDBDataProcess['+Website+'].OpenTable.Error!', E, Self);
     end;
   end;
   Result := FQuery.Active;
@@ -813,7 +813,7 @@ begin
       FConn.DatabaseName := '';
     except
       on E: Exception do
-        WriteLog_E('TDBDataProcess.Close.Error!', E, Self);
+        WriteLog_E('TDBDataProcess['+Website+'].Close.Error!', E, Self);
     end;
 end;
 
@@ -929,7 +929,7 @@ begin
       FConn.ExecuteDirect(sql);
     except
       on E: Exception do
-        WriteLog_E('TDBDataProcess.UpdateData.Error!', E, Self);
+        WriteLog_E('TDBDataProcess['+Website+'].UpdateData.Error!', E, Self);
     end;
   end;
 end;
@@ -940,6 +940,7 @@ var
 begin
   if FConn.Connected then
     try
+      WriteLog_V('TDBDataProcess['+Website+'].Commit');
       queryactive := FQuery.Active;
       if FQuery.Active then FQuery.Close;
       FTrans.Commit;
@@ -947,7 +948,7 @@ begin
         FQuery.Active := queryactive;
     except
       on E: Exception do
-        WriteLog_E('TDBDataProcess.Commit.Error!', E, Self);
+        WriteLog_E('TDBDataProcess['+Website+'].Commit.Error!',E,Self);
     end;
 end;
 
@@ -955,10 +956,12 @@ procedure TDBDataProcess.Rollback;
 begin
   if FConn.Connected then
     try
-      FTrans.RollbackRetaining;
+      WriteLog_V('TDBDataProcess['+Website+'].Rollback');
+      FTrans.Rollback;
+      FTrans.EndTransaction;
     except
       on E: Exception do
-        WriteLog_E('TDBDataProcess.Rollback.Error!', E, Self);
+        WriteLog_E('TDBDataProcess['+Website+'].Rollback.Error!',E,Self);
     end;
 end;
 
@@ -1010,7 +1013,7 @@ begin
       GetRecordCount;
     except
       on E: Exception do
-        WriteLog_E('TDBDataProcess.Search.Error!'#13#10 +
+        WriteLog_E('TDBDataProcess['+Website+'].Search.Error!'#13#10 +
           'SQL:'#13#10 + FQuery.SQL.Text, E, Self);
     end;
   end;
@@ -1155,7 +1158,7 @@ begin
     except
       on E: Exception do
       begin
-        WriteLog_E('TDBDataProcess.Filter.Error!'#13#10 +
+        WriteLog_E('TDBDataProcess['+Website+'].Filter.Error!'#13#10 +
           'SQL:'#13#10 + FQuery.SQL.Text, E, Self);
         FQuery.Close;
         SQL.Text := tsql;
@@ -1244,7 +1247,7 @@ begin
         VacuumTable;
       except
         on E: Exception do
-          WriteLog_E('TDBDataProcess.Sort.Error!', E, Self);
+          WriteLog_E('TDBDataProcess['+Website+'].Sort.Error!', E, Self);
       end;
     if FQuery.Active <> queryactive then
       FQuery.Active := queryactive;
