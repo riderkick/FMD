@@ -652,7 +652,7 @@ begin
               if Terminated then Break;
               Inc(c);
               Inc(MainForm.ulWorkPtr);
-              if c>250 then begin
+              if c>500 then begin
                 c:=0;
                 Synchronize(MainThreadStatusRepaint);
               end;
@@ -697,6 +697,7 @@ begin
           else
             GetInfo(tempDataProcess.RecordCount, CS_INFO);
           mainDataProcess.Commit;
+        WriteLog_V('UpdateManagerThread, '+website+': get info finished '+IntToStr(workPtr));
 
           if workPtr > 0 then
             if not (Terminated and SortedList) then
