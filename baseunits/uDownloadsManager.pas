@@ -2210,6 +2210,7 @@ end;
 
 procedure TDownloadManager.doExitWaitCounter;
 begin
+  if MainForm.isUpdating then Exit;
   frmMain.DoAfterFMD := OptionLetFMDDo;
   MainForm.itMonitor.Enabled := True;
 end;
