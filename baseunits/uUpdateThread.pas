@@ -562,6 +562,8 @@ begin
         SortedList := SitesWithSortedList(website);
         NoMangaInfo := SitesWithoutInformation(website);
         Inc(websitePtr);
+        WriteLog_V('UpdateManagerThread, '+website+': sortedlist='+BoolToStr(SortedList,True)+'; '+'nomangainfo='+BoolToStr(NoMangaInfo,True));
+        WriteLog_V('UpdateManagerThread, '+website+': prepare database file');
         FStatus := RS_UpdatingList + Format(' [%d/%d] %s',
           [websitePtr, websites.Count, website]) + ' | ' + RS_Preparing + '...';
         Synchronize(MainThreadShowGetting);
@@ -585,6 +587,7 @@ begin
         mainDataProcess.InitLocateLink;
         mainDataProcess.CloseTable;
 
+        WriteLog_V('UpdateManagerThread, '+website+': get number of directory page');
         // get directory page count
         INIAdvanced.Reload;
         directoryCount := 0;
@@ -593,6 +596,7 @@ begin
         GetInfo(1, CS_DIRECTORY_COUNT);
         if Terminated then Break;
 
+        WriteLog_V('UpdateManagerThread, '+website+': get names and links');
         // get names and links
         INIAdvanced.Reload;
         workPtr := 0;
@@ -631,6 +635,7 @@ begin
 
         tempDataProcess.OpenTable('', True);
 
+        WriteLog_V('UpdateManagerThread, '+website+': removing duplicate '+IntToStr(tempDataProcess.RecordCount));
         // remove duplicate found<>current database
         if (mainDataProcess.LinkCount>0) and (tempDataProcess.RecordCount>0) then begin
           MainForm.ulTotalPtr:=tempDataProcess.RecordCount;
@@ -661,6 +666,7 @@ begin
         tempDataProcess.Refresh(True);
         mainDataProcess.DoneLocateLink;
 
+        WriteLog_V('UpdateManagerThread, '+website+': get info '+IntToStr(tempDataProcess.RecordCount));
         // get manga info
         if tempDataProcess.RecordCount>0 then
         begin
@@ -693,15 +699,19 @@ begin
           if workPtr > 0 then
             if not (Terminated and SortedList) then
             begin
+              WriteLog_V('UpdateManagerThread, '+website+': saving data');
               FStatus := RS_UpdatingList + Format(' [%d/%d] %s',
                 [websitePtr, websites.Count, website]) + ' | ' + RS_SavingData + '...';
               Synchronize(MainThreadShowGetting);
               mainDataProcess.Sort;
               mainDataProcess.Close;
               Synchronize(RefreshList);
-            end;
+            end
+            else
+              WriteLog_V('UpdateManagerThread, '+website+': sorted list, data abandoned');
         end;
 
+        WriteLog_V('UpdateManagerThread, '+website+': close database file');
         mainDataProcess.Close;
         DeleteDBDataProcess(twebsite);
 
