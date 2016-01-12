@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, WebsiteModules, uData, uBaseUnit, uDownloadsManager,
-  accountmanagerdb, SimpleLogger, synautil, HTMLUtil, RegExpr;
+  accountmanagerdb, SimpleLogger, synautil;
 
 implementation
 
