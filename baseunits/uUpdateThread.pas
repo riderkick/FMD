@@ -12,7 +12,7 @@ interface
 
 uses
   Classes, SysUtils, typinfo, syncobjs, uData, LazFileUtils,
-  uBaseUnit, uFMDThread, uTranslation, uMisc, WebsiteModules;
+  uBaseUnit, uFMDThread, uTranslation, uMisc, WebsiteModules, DBDataProcess;
 
 type
   TUpdateMangaManagerThread = class;

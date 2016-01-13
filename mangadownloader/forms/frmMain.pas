@@ -23,7 +23,7 @@ uses
   uBaseUnit, uData, uDownloadsManager, uFavoritesManager, uUpdateThread,
   uUpdateDBThread, uSilentThread, uMisc, uGetMangaInfosThread, uTranslation,
   frmDropTarget, frmAccountManager, CheckUpdate, accountmanagerdb,
-  mangafoxwatermarkremover, SimpleException, SimpleLogger;
+  DBDataProcess, mangafoxwatermarkremover, SimpleException, SimpleLogger;
 
 type
 
