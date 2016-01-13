@@ -867,7 +867,7 @@ begin
   if FConn.Connected=False then Exit(False);
   try
     FConn.ExecuteDirect(
-      'INSERT OR IGNORE INTO ' + QuotedStrd(FTableName) +
+      'INSERT OR FAIL INTO ' + QuotedStrd(FTableName) +
       #13#10'(' + DBDataProcessParam + ')' +
       #13#10'VALUES' +
       #13#10'('#13#10 +
