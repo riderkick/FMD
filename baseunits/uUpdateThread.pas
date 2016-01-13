@@ -39,8 +39,9 @@ type
   private
     FStatus: String;
     FCommitCount: Integer;
-    FThreadAborted: Boolean;
-    FThreadEndNormally: Boolean;
+    FThreadAborted,
+    FThreadEndNormally,
+    FIsPreListAvailable: Boolean;
   protected
     procedure Execute; override;
     {$IFNDEF DOWNLOADER}
@@ -199,13 +200,18 @@ begin
           begin
             manager.CS_AddNamesAndLinks.Acquire;
             try
-              for i:=0 to links.Count-1 do begin
-                if manager.mainDataProcess.AddData(names[i],links[i],'','','','','',0,0) then
-                  manager.tempDataProcess.AddData(names[i],links[i],'','','','','',0,0)
-                else if (manager.isFinishSearchingForNewManga=False) and manager.SortedList then
-                  manager.isFinishSearchingForNewManga:=True;
-              end;
-              manager.mainDataProcess.Rollback;
+              if manager.FIsPreListAvailable then begin
+                for i:=0 to links.Count-1 do begin
+                  if manager.mainDataProcess.AddData(names[i],links[i],'','','','','',0,0) then
+                    manager.tempDataProcess.AddData(names[i],links[i],'','','','','',0,0)
+                  else if (manager.isFinishSearchingForNewManga=False) and manager.SortedList then
+                    manager.isFinishSearchingForNewManga:=True;
+                end;
+                manager.mainDataProcess.Rollback;
+              end
+              else
+                for i:=0 to links.Count-1 do
+                  manager.tempDataProcess.AddData(names[i],links[i],'','','','','',0,0);
               manager.tempDataProcess.Commit;
             finally
               manager.CS_AddNamesAndLinks.Release;
@@ -351,6 +357,7 @@ begin
   ModuleId := -1;
   FThreadEndNormally:=False;
   FThreadAborted:=False;
+  FIsPreListAvailable:=False;
 end;
 
 destructor TUpdateMangaManagerThread.Destroy;
@@ -602,6 +609,10 @@ begin
 
         if not mainDataProcess.Connect(twebsite) then
           mainDataProcess.CreateDatabase(twebsite);
+
+        mainDataProcess.OpenTable('',True);
+        FIsPreListAvailable:=mainDataProcess.RecordCount>0;
+        mainDataProcess.CloseTable;
 
         WriteLog_V(cloghead+'get number of directory page');
         // get directory page count
