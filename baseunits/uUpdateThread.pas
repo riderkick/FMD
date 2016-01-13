@@ -229,7 +229,7 @@ begin
           try
             Info.AddInfoToData(name, link,
               manager.mainDataProcess);
-            manager.CheckCommit(32);
+            manager.CheckCommit(16);
           finally
             manager.CS_AddInfoToData.Release;
           end;
