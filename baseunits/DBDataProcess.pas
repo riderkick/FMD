@@ -5,9 +5,8 @@ unit DBDataProcess;
 interface
 
 uses
-  Classes, SysUtils, FileUtil, LazFileUtils, sqlite3conn,
-  sqlite3backup, sqlite3dyn, sqldb, DB, SimpleLogger, dateutils,
-  RegExpr;
+  Classes, SysUtils, FileUtil, LazFileUtils, sqlite3conn, sqlite3backup,
+  sqlite3dyn, sqldb, DB, dateutils, RegExpr;
 
 type
 
@@ -134,7 +133,7 @@ procedure OverwriteDBDataProcess(const AWebsite, NWebsite: String);
 implementation
 
 uses
-  uBaseUnit, uData, uMisc;
+  uBaseUnit, uData, uMisc, SimpleLogger;
 
 function NaturalCompareCallback({%H-}user: pointer; len1: longint;
   data1: pointer; len2: longint; data2: pointer): longint; cdecl;
