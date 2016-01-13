@@ -99,23 +99,23 @@ var
   currentdir: Integer;
   s: String;
 begin
-  Result := NET_PROBLEM;
-  if MangaInfo = nil then Exit(UNKNOWN_ERROR);
-  currentdir := StrToIntDef(AURL, 0);
-  if currentdir > Length(madokamidirlist) then Exit;
-  if MangaInfo.FHTTP.GET(Module.RootURL + madokamidirlist[currentdir]) then begin
-    Result := NO_ERROR;
-    query := TXQueryEngineHTML.Create;
+  Result:=NET_PROBLEM;
+  if MangaInfo=nil then Exit(UNKNOWN_ERROR);
+  currentdir:=StrToIntDef(AURL,0);
+  if currentdir>Length(madokamidirlist) then Exit;
+  if MangaInfo.FHTTP.GET(Module.RootURL+madokamidirlist[currentdir]) then begin
+    Result:=NO_ERROR;
+    query:=TXQueryEngineHTML.Create;
     try
       query.ParseHTML(StreamToString(MangaInfo.FHTTP.Document));
       for v in query.XPath('//table[@id="index-table"]/tbody/tr/td[1]/a') do
       begin
-        s := v.toString;
-        if Length(s) > 1 then begin
-          if s[Length(s)] = '/' then SetLength(s, Length(s) - 1);
-          ANames.Add(v.toString);
-          ALinks.Add(v.toNode.getAttribute('href'));
-        end;
+        ALinks.Add(v.toNode.getAttribute('href'));
+        s:=v.toString;
+        if Length(s)>1 then
+          if s[Length(s)]='/' then
+            SetLength(s,Length(s)-1);
+        ANames.Add(s);
       end;
     finally
       query.Free;
