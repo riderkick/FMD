@@ -92,11 +92,11 @@ type
     procedure Save;
     procedure Backup(AWebsite: String);
     procedure Refresh(RecheckDataCount: Boolean = False);
-    function AddData(Title, Link, Authors, Artists, Genres, Status, Summary: String;
+    function AddData(Const Title, Link, Authors, Artists, Genres, Status, Summary: String;
       NumChapter, JDN: Integer): Boolean; overload;
-    function AddData(Title, Link, Authors, Artists, Genres, Status, Summary: String;
+    function AddData(Const Title, Link, Authors, Artists, Genres, Status, Summary: String;
       NumChapter: Integer; JDN: TDateTime): Boolean; overload;
-    procedure UpdateData(Title, Link, Authors, Artists, Genres, Status, Summary: String;
+    procedure UpdateData(Const Title, Link, Authors, Artists, Genres, Status, Summary: String;
       NumChapter: Integer; AWebsite: String = '');
     procedure Commit;
     procedure Rollback;
@@ -861,76 +861,60 @@ begin
   end;
 end;
 
-function TDBDataProcess.AddData(Title, Link, Authors, Artists, Genres, Status,
-  Summary: String; NumChapter, JDN: Integer): Boolean;
+function TDBDataProcess.AddData(const Title, Link, Authors, Artists, Genres,
+  Status, Summary: String; NumChapter, JDN: Integer): Boolean;
 begin
-  if FConn.Connected=False then Exit(False);
+  Result:=False;
+  if FConn.Connected=False then Exit;
   try
     FConn.ExecuteDirect(
-      'INSERT OR FAIL INTO ' + QuotedStrd(FTableName) +
-      #13#10'(' + DBDataProcessParam + ')' +
-      #13#10'VALUES' +
-      #13#10'('#13#10 +
-      QuotedStrd(Title) + ','#13#10 +
-      QuotedStrd(Link) + ','#13#10 +
-      QuotedStrd(Authors) + ','#13#10 +
-      QuotedStrd(Artists) + ','#13#10 +
-      QuotedStrd(Genres) + ','#13#10 +
-      QuotedStrd(Status) + ','#13#10 +
-      QuotedStrd(Summary) + ','#13#10 +
-      QuotedStrd(IntToStr(NumChapter)) + ','#13#10 +
-      QuotedStrd(IntToStr(JDN)) +
-      #13#10');');
+      'INSERT INTO "'+FTableName+'" ('+DBDataProcessParam+') VALUES ("'+
+      Title+'","'+
+      Link+'","'+
+      Authors+'","'+
+      Artists+'","'+
+      Genres+'","'+
+      Status+'","'+
+      Summary+'","'+
+      IntToStr(NumChapter)+'","'+
+      IntToStr(JDN)+'")');
     Result:=True;
   except
-    Result:=False;
   end;
 end;
 
-function TDBDataProcess.AddData(Title, Link, Authors, Artists, Genres, Status,
-  Summary: String; NumChapter: Integer; JDN: TDateTime): Boolean;
+function TDBDataProcess.AddData(const Title, Link, Authors, Artists, Genres,
+  Status, Summary: String; NumChapter: Integer; JDN: TDateTime): Boolean;
 begin
   Result := AddData(Title, Link, Authors, Artists, Genres, Status, Summary,
     NumChapter, DateToJDN(JDN));
 end;
 
-procedure TDBDataProcess.UpdateData(Title, Link, Authors, Artists,
+procedure TDBDataProcess.UpdateData(const Title, Link, Authors, Artists,
   Genres, Status, Summary: String; NumChapter: Integer; AWebsite: String);
 var
   sql: String;
-
-  procedure AddSQL(const field, Value: String);
-  begin
-    if sql <> '' then
-      sql += ','#13#10;
-    sql += QuotedStrd(field) + '=' + QuotedStrd(Value);
-  end;
-
 begin
-  if Link = '' then
-    Exit;
-  if FConn.Connected then
-  begin
-    try
-      sql := '';
-      AddSQL('title', Title);
-      AddSQL('authors', Authors);
-      AddSQL('artists', Artists);
-      AddSQL('genres', Genres);
-      AddSQL('status', Status);
-      AddSQL('summary', Summary);
-      AddSQL('numchapter', IntToStr(NumChapter));
-      if (AWebsite <> '') and (AWebsite <> FWebsite) and FAllSitesAttached then
-        sql := 'UPDATE OR IGNORE ' + AWebsite + '.' + QuotedStrd(FTableName) +
-          #13#10'SET'#13#10 + sql
-      else
-        sql := 'UPDATE OR IGNORE ' + QuotedStrd(FTableName) + #13#10'SET'#13#10 + sql;
-      sql += #13#10'WHERE "link"=' + QuotedStrd(Link) + ';';
-      FConn.ExecuteDirect(sql);
-    except
-      on E: Exception do
-        WriteLog_E('TDBDataProcess['+Website+'].UpdateData.Error!', E, Self);
-    end;
+  if Link='' then Exit;
+  if FConn.Connected=False then Exit;
+  try
+    sql:='UPDATE "';
+    if (AWebsite<>'') and (AWebsite<>FWebsite) and FAllSitesAttached then
+      sql+=AWebsite+'"."'+FTableName
+    else
+      sql+=FTableName;
+    sql+='" SET "title"="'+Title+
+         '","authors"="'+Authors+
+         '","artists"="'+Artists+
+         '","genres"="'+Genres+
+         '","status"="'+Status+
+         '","summary"="'+Summary+
+         '","numchapter"="'+IntToStr(NumChapter)+'"';
+    sql+=' WHERE "link"="'+Link+'"';
+    FConn.ExecuteDirect(sql);
+  except
+    on E: Exception do
+      WriteLog_E('TDBDataProcess['+Website+'].UpdateData.Error!'#13#10'SQL = '+sql, E, Self);
   end;
 end;
 
