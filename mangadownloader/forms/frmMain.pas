@@ -1111,10 +1111,12 @@ end;
 
 procedure TMainForm.FormClose(Sender: TObject; var CloseAction: TCloseAction);
 begin
+  WriteLog_V('FormClose action');
   if cbOptionShowQuitDialog.Checked and (DoAfterFMD = DO_NOTHING) then
   begin
     if MessageDlg('', RS_DlgQuit, mtConfirmation, [mbYes, mbNo], 0) <> mrYes then
     begin
+      WriteLog_V('FormClose aborted');
       CloseAction := caNone;
       Exit;
     end;
@@ -1125,6 +1127,7 @@ end;
 
 procedure TMainForm.CloseNow;
 begin
+  WriteLog_V('FormClose.CloseNow, terminating all threads and waitfor');
   //Terminating all threads and wait for it
   if Assigned(CheckUpdateThread) then
   begin
@@ -1156,6 +1159,7 @@ begin
   SilentThreadManager.StopAll(True);
   DLManager.StopAllDownloadTasksForExit;
 
+  WriteLog_V('FormClose.CloseNow, disabling all timer');
   tmBackup.Enabled := False;
   itSaveDownloadedList.Enabled := False;
   itRefreshDLInfo.Enabled := False;
@@ -1164,15 +1168,7 @@ begin
   itStartup.Enabled := False;
   itMonitor.Enabled := False;
 
-  if Assigned(FormDropTarget) then
-    FormDropTarget.Close;
-
-  if FMDInstance <> nil then
-  begin
-    FMDInstance.StopServer;
-    FreeAndNil(FMDInstance);
-  end;
-
+  WriteLog_V('FormClose.CloseNow, backup all data to file');
   //Backup data
   DLManager.Backup;
   DLManager.BackupDownloadedChaptersList;
@@ -1181,13 +1177,25 @@ begin
   SaveOptions;
   SaveFormInformation;
 
+  WriteLog_V('FormClose.CloseNow, closing other form');
   //embed form
   if Assigned(AccountManagerForm) then
     AccountManagerForm.Close;
+
+  if Assigned(FormDropTarget) then
+    FormDropTarget.Close;
+
+  if FMDInstance <> nil then
+  begin
+    WriteLog_V('FormClose.CloseNow, stop ipc server');
+    FMDInstance.StopServer;
+    FreeAndNil(FMDInstance);
+  end;
 end;
 
 procedure TMainForm.FormDestroy(Sender: TObject);
 begin
+  WriteLog_V('FormDestroy, freeing all objects');
   SetLength(optionMangaSiteSelectionNodes, 0);
   SetLength(ChapterList, 0);
   FreeAndNil(mangaInfo);
