@@ -940,7 +940,6 @@ var
 begin
   if FConn.Connected then
     try
-      WriteLog_V('TDBDataProcess['+Website+'].Commit');
       queryactive := FQuery.Active;
       if FQuery.Active then FQuery.Close;
       FTrans.Commit;
@@ -956,7 +955,6 @@ procedure TDBDataProcess.Rollback;
 begin
   if FConn.Connected then
     try
-      WriteLog_V('TDBDataProcess['+Website+'].Rollback');
       FTrans.Rollback;
     except
       on E: Exception do
