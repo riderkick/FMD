@@ -201,19 +201,12 @@ begin
 
             manager.CS_AddNamesAndLinks.Acquire;
             try
-              i:=0;
-              while i<links.Count do begin
-                if manager.mainDataProcess.LinkExist(links[i]) then begin
-                   links.Delete(i);
-                   names.Delete(i);
-                end
-                else Inc(i);
-              end;
-              if links.Count>0 then begin
-                for i:=0 to links.Count-1 do
+              for i:=0 to links.Count-1 do begin
+                if manager.mainDataProcess.AddData(names[i],links[i],'','','','','',0,0) then
                   manager.tempDataProcess.AddData(names[i],links[i],'','','','','',0,0);
-                manager.tempDataProcess.Commit;
               end;
+              manager.mainDataProcess.Rollback;
+              manager.tempDataProcess.Commit;
             finally
               manager.CS_AddNamesAndLinks.Release;
             end;
@@ -551,7 +544,7 @@ end;
 
 procedure TUpdateMangaManagerThread.Execute;
 var
-  c, j, k: Integer;
+  j, k: Integer;
 begin
   if websites.Count = 0 then
     Exit;
@@ -609,10 +602,6 @@ begin
         GetInfo(1, CS_DIRECTORY_COUNT);
         if Terminated then Break;
 
-        mainDataProcess.OpenTable;
-        mainDataProcess.InitLocateLink;
-        mainDataProcess.CloseTable;
-
         WriteLog_V('UpdateManagerThread, '+website+': get names and links');
         // get names and links
         INIAdvanced.Reload;
@@ -644,7 +633,6 @@ begin
         end
         else
           GetInfo(directoryCount, CS_DIRECTORY_PAGE);
-        mainDataProcess.DoneLocateLink;
 
         if Terminated then Break;
 
