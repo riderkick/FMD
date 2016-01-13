@@ -1059,7 +1059,7 @@ var
     // filter new manga based on date
     if searchNewManga then
       AddSQLCond('"jdn" > ' +
-        QuotedStrd(IntToStr(DateToJDN(IncDay(Now, (0 - minusDay))))));
+        QuotedStrd(IntToStr(DateToJDN(Now)-minusDay)));
 
     // filter title
     AddSQLSimpleFilter('title', stTitle, False, False, useRegExpr);
