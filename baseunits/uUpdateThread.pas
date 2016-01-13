@@ -652,10 +652,10 @@ begin
           [websitePtr, websites.Count, website]) + ' | ' + RS_IndexingNewTitle + '...';
         Synchronize(MainThreadShowGetting);
 
-        WriteLog_V(cloghead+'get info '+IntToStr(tempDataProcess.RecordCount));
         // get manga info
         if tempDataProcess.RecordCount>0 then
         begin
+          WriteLog_V(cloghead+'get info '+IntToStr(tempDataProcess.RecordCount));
           workPtr := 0;
           FCommitCount := 0;
           if NoMangaInfo or
