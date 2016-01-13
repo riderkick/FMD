@@ -699,6 +699,7 @@ begin
         end;
 
         WriteLog_V(cloghead+'close database file');
+        tempDataProcess.Close;
         mainDataProcess.Close;
         DeleteDBDataProcess(twebsite);
 
