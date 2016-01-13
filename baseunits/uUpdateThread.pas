@@ -39,6 +39,8 @@ type
   private
     FStatus: String;
     FCommitCount: Integer;
+    FThreadAborted: Boolean;
+    FThreadEndNormally: Boolean;
   protected
     procedure Execute; override;
     {$IFNDEF DOWNLOADER}
@@ -347,10 +349,14 @@ begin
   SortedList := False;
   NoMangaInfo := False;
   ModuleId := -1;
+  FThreadEndNormally:=False;
+  FThreadAborted:=False;
 end;
 
 destructor TUpdateMangaManagerThread.Destroy;
 begin
+  if FThreadAborted then WriteLog_W('UpdateManagerThread, thread aborted by user?');
+  if not FThreadEndNormally then WriteLog_W('UpdateManagerThread, thread doesn''t end normally, ended by user?');
   websites.Free;
   mainDataProcess.Close;
   DeleteDBDataProcess(twebsite);
@@ -546,6 +552,7 @@ var
 begin
   if websites.Count = 0 then
     Exit;
+  WriteLog_V('UpdateManagerThread, thread started');
   try
     websitePtr := 0;
     if isDownloadFromServer then
@@ -564,12 +571,14 @@ begin
     else
       while websitePtr < websites.Count do
       begin
+        FThreadAborted:=True;
         tempDataProcess.CreateDatabase('__tempupdatelist');
         website := websites.Strings[websitePtr];
         ModuleId := Modules.LocateModule(website);
         SortedList := SitesWithSortedList(website);
         NoMangaInfo := SitesWithoutInformation(website);
         Inc(websitePtr);
+        WriteLog_V('UpdateManagerThread, '+website+': update list started');
         WriteLog_V('UpdateManagerThread, '+website+': sortedlist='+BoolToStr(SortedList,True)+'; '+'nomangainfo='+BoolToStr(NoMangaInfo,True));
         WriteLog_V('UpdateManagerThread, '+website+': prepare database file');
         FStatus := RS_UpdatingList + Format(' [%d/%d] %s',
@@ -694,11 +703,15 @@ begin
           Break;
         websites[websitePtr - 1] :=
           UTF8Encode(#$2714 + WideString(websites[websitePtr - 1]));
+        WriteLog_V('UpdateManagerThread, '+website+': update list finished');
+        FThreadAborted:=False;
       end;
   except
     on E: Exception do
       MainForm.ExceptionHandler(Self, E);
   end;
+  FThreadEndNormally:=True;
+  WriteLog_V('UpdateManagerThread, thread ended normally');
   Synchronize(MainThreadEndGetting);
 end;
 

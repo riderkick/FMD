@@ -1177,7 +1177,7 @@ begin
   SaveOptions;
   SaveFormInformation;
 
-  WriteLog_V('FormClose.CloseNow, closing other form');
+  WriteLog_V('FormClose.CloseNow, closing other forms');
   //embed form
   if Assigned(AccountManagerForm) then
     AccountManagerForm.Close;
