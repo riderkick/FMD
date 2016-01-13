@@ -296,7 +296,7 @@ begin
   MainForm.sbMain.SizeGrip := not MainForm.sbUpdateList.Visible;
   MainForm.isUpdating:=False;
   if MainForm.isPendingExitCounter then begin
-    WriteLog_V('UpdateManagerThread, pending exit counter executed');
+    WriteLog_V(Self.ClassName+', pending exit counter executed');
     MainForm.DoExitWaitCounter;
   end;
 end;
@@ -355,8 +355,8 @@ end;
 
 destructor TUpdateMangaManagerThread.Destroy;
 begin
-  if FThreadAborted then WriteLog_W('UpdateManagerThread, thread aborted by user?');
-  if not FThreadEndNormally then WriteLog_W('UpdateManagerThread, thread doesn''t end normally, ended by user?');
+  if FThreadAborted then WriteLog_W(Self.ClassName+', thread aborted by user?');
+  if not FThreadEndNormally then WriteLog_W(Self.ClassName+', thread doesn''t end normally, ended by user?');
   websites.Free;
   mainDataProcess.Close;
   DeleteDBDataProcess(twebsite);
@@ -549,10 +549,11 @@ end;
 procedure TUpdateMangaManagerThread.Execute;
 var
   j, k: Integer;
+  cloghead: String;
 begin
   if websites.Count = 0 then
     Exit;
-  WriteLog_V('UpdateManagerThread, thread started');
+  WriteLog_V(Self.ClassName+', thread started');
   try
     websitePtr := 0;
     if isDownloadFromServer then
@@ -578,9 +579,11 @@ begin
         SortedList := SitesWithSortedList(website);
         NoMangaInfo := SitesWithoutInformation(website);
         Inc(websitePtr);
-        WriteLog_V('UpdateManagerThread, '+website+': update list started');
-        WriteLog_V('UpdateManagerThread, '+website+': sortedlist='+BoolToStr(SortedList,True)+'; '+'nomangainfo='+BoolToStr(NoMangaInfo,True));
-        WriteLog_V('UpdateManagerThread, '+website+': prepare database file');
+
+        cloghead:=Self.ClassName+', '+website+': ';
+        WriteLog_V(cloghead+'update list started');
+        WriteLog_V(cloghead+'sortedlist='+BoolToStr(SortedList,True)+'; '+'nomangainfo='+BoolToStr(NoMangaInfo,True));
+        WriteLog_V(cloghead+'prepare database file');
         FStatus := RS_UpdatingList + Format(' [%d/%d] %s',
           [websitePtr, websites.Count, website]) + ' | ' + RS_Preparing + '...';
         Synchronize(MainThreadShowGetting);
@@ -600,7 +603,7 @@ begin
         if not mainDataProcess.Connect(twebsite) then
           mainDataProcess.CreateDatabase(twebsite);
 
-        WriteLog_V('UpdateManagerThread, '+website+': get number of directory page');
+        WriteLog_V(cloghead+'get number of directory page');
         // get directory page count
         INIAdvanced.Reload;
         directoryCount := 0;
@@ -609,7 +612,7 @@ begin
         GetInfo(1, CS_DIRECTORY_COUNT);
         if Terminated then Break;
 
-        WriteLog_V('UpdateManagerThread, '+website+': get names and links');
+        WriteLog_V(cloghead+'get names and links');
         // get names and links
         INIAdvanced.Reload;
         workPtr := 0;
@@ -649,7 +652,7 @@ begin
           [websitePtr, websites.Count, website]) + ' | ' + RS_IndexingNewTitle + '...';
         Synchronize(MainThreadShowGetting);
 
-        WriteLog_V('UpdateManagerThread, '+website+': get info '+IntToStr(tempDataProcess.RecordCount));
+        WriteLog_V(cloghead+'get info '+IntToStr(tempDataProcess.RecordCount));
         // get manga info
         if tempDataProcess.RecordCount>0 then
         begin
@@ -678,12 +681,12 @@ begin
           else
             GetInfo(tempDataProcess.RecordCount, CS_INFO);
           mainDataProcess.Commit;
-        WriteLog_V('UpdateManagerThread, '+website+': get info finished '+IntToStr(workPtr));
+        WriteLog_V(cloghead+'get info finished '+IntToStr(workPtr));
 
           if workPtr > 0 then
             if not (Terminated and SortedList) then
             begin
-              WriteLog_V('UpdateManagerThread, '+website+': saving data '+IntToStr(workPtr));
+              WriteLog_V(cloghead+'saving data '+IntToStr(workPtr));
               FStatus := RS_UpdatingList + Format(' [%d/%d] %s',
                 [websitePtr, websites.Count, website]) + ' | ' + RS_SavingData + '...';
               Synchronize(MainThreadShowGetting);
@@ -692,10 +695,10 @@ begin
               Synchronize(RefreshList);
             end
             else
-              WriteLog_V('UpdateManagerThread, '+website+': sorted list, data abandoned');
+              WriteLog_V(cloghead+'sorted list, data abandoned');
         end;
 
-        WriteLog_V('UpdateManagerThread, '+website+': close database file');
+        WriteLog_V(cloghead+'close database file');
         mainDataProcess.Close;
         DeleteDBDataProcess(twebsite);
 
@@ -703,7 +706,7 @@ begin
           Break;
         websites[websitePtr - 1] :=
           UTF8Encode(#$2714 + WideString(websites[websitePtr - 1]));
-        WriteLog_V('UpdateManagerThread, '+website+': update list finished');
+        WriteLog_V(cloghead+'update list finished');
         FThreadAborted:=False;
       end;
   except
@@ -711,7 +714,7 @@ begin
       MainForm.ExceptionHandler(Self, E);
   end;
   FThreadEndNormally:=True;
-  WriteLog_V('UpdateManagerThread, thread ended normally');
+  WriteLog_V(Self.ClassName+', thread ended normally');
   Synchronize(MainThreadEndGetting);
 end;
 
