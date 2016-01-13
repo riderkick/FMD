@@ -195,15 +195,13 @@ begin
           //we will stop at first found against current db
           if links.Count > 0 then
           begin
-            if manager.SortedList then
-              if manager.mainDataProcess.LinkExist(links[0]) then
-                manager.isFinishSearchingForNewManga := True;
-
             manager.CS_AddNamesAndLinks.Acquire;
             try
               for i:=0 to links.Count-1 do begin
                 if manager.mainDataProcess.AddData(names[i],links[i],'','','','','',0,0) then
-                  manager.tempDataProcess.AddData(names[i],links[i],'','','','','',0,0);
+                  manager.tempDataProcess.AddData(names[i],links[i],'','','','','',0,0)
+                else if (manager.isFinishSearchingForNewManga=False) and manager.SortedList then
+                  manager.isFinishSearchingForNewManga:=True;
               end;
               manager.mainDataProcess.Rollback;
               manager.tempDataProcess.Commit;
