@@ -4,7 +4,6 @@ object MainForm: TMainForm
   Top = 96
   Width = 819
   ActiveControl = pcMain
-  Align = alBottom
   Caption = 'Free Manga Downloader'
   ClientHeight = 616
   ClientWidth = 819
@@ -13,7 +12,6 @@ object MainForm: TMainForm
   OnDestroy = FormDestroy
   OnShow = FormShow
   OnWindowStateChange = FormWindowStateChange
-  LCLVersion = '1.7'
   Visible = False
   object sbUpdateList: TStatusBar
     Left = 0
