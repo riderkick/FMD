@@ -504,17 +504,21 @@ begin
   DetachAllSites;
   FConn.ExecuteDirect('END TRANSACTION');
   try
-    for i := 0 to SitesList.Count - 1 do
+    for i:=0 to SitesList.Count-1 do begin
+      //max attached database is 10
+      if FAttachedSites.Count=10 then Break;
       if (FAttachedSites.IndexOf(SitesList[i]) = -1) and
         (FileExistsUTF8(DBDataFilePath(SitesList[i]))) then
       begin
         FConn.ExecuteDirect('ATTACH ' +
-          QuotedStrd(DBDataFilePath(SitesList[i])) + ' AS ' + QuotedStrd(SitesList[i]));
+          QuotedStr(DBDataFilePath(SitesList[i])) + ' AS ' + QuotedStrd(SitesList[i]));
         FAttachedSites.Add(SitesList[i]);
       end;
+    end;
   except
     on E: Exception do
-      Writelog_E(Self.ClassName+'['+Website+'].AttachAllSites.Error!', E, Self)
+      Writelog_E(Self.ClassName+'['+Website+'].AttachAllSites.Error!'+
+        ' try to attach '+QuotedStr(SitesList[i]), E, Self)
   end;
   FConn.ExecuteDirect('BEGIN TRANSACTION');
   FAllSitesAttached := FAttachedSites.Count > 0;
