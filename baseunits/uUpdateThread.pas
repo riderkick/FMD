@@ -596,119 +596,124 @@ begin
 
         twebsite:='__'+website;
         twebsitetemp:=twebsite+'_templist';
-        DeleteDBDataProcess(twebsite);
-        DeleteDBDataProcess(twebsitetemp);
-        if (MainForm.dataProcess.Website = website) and
-          (MainForm.dataProcess.Connected) then
-          MainForm.dataProcess.Backup(twebsite)
-        else
-        begin
-          if MainForm.dataProcess.WebsiteLoaded(website) then
-            Synchronize(MainThreadRemoveFilter);
-          CopyDBDataProcess(website, twebsite);
-        end;
-
-        if not mainDataProcess.Connect(twebsite) then
-          mainDataProcess.CreateDatabase(twebsite);
-        tempDataProcess.CreateDatabase(twebsitetemp);
-
-        mainDataProcess.OpenTable('',True);
-        FIsPreListAvailable:=mainDataProcess.RecordCount>0;
-        mainDataProcess.CloseTable;
-
-        Writelog_D(cloghead+'get number of directory page');
-        // get directory page count
-        INIAdvanced.Reload;
-        directoryCount := 0;
-        directoryCount2 := 0;
-        workPtr := 0;
-        GetInfo(1, CS_DIRECTORY_COUNT);
-        if Terminated then Break;
-
-        Writelog_D(cloghead+'get names and links');
-        // get names and links
-        INIAdvanced.Reload;
-        workPtr := 0;
-        isFinishSearchingForNewManga := False;
-        if ModuleId <> -1 then
-        begin
-          with Modules.Module[ModuleId] do
-          for j := Low(TotalDirectoryPage) to High(TotalDirectoryPage) do
+        try
+          DeleteDBDataProcess(twebsite);
+          DeleteDBDataProcess(twebsitetemp);
+          if (MainForm.dataProcess.Website = website) and
+            (MainForm.dataProcess.Connected) then
+            MainForm.dataProcess.Backup(twebsite)
+          else
           begin
-            workPtr := 0;
-            isFinishSearchingForNewManga := False;
-            CurrentDirectoryIndex := j;
-            GetInfo(TotalDirectoryPage[j], CS_DIRECTORY_PAGE);
+            if MainForm.dataProcess.WebsiteLoaded(website) then
+              Synchronize(MainThreadRemoveFilter);
+            CopyDBDataProcess(website, twebsite);
           end;
-        end
-        else
-        if SitesMemberOf(website, [FAKKU_ID, MANGAEDEN_ID,
-          PERVEDEN_ID]) then
-        begin
-          if directoryCount = 0 then
-            directoryCount := 1;
-          GetInfo(directoryCount, CS_DIRECTORY_PAGE);
+
+          if not mainDataProcess.Connect(twebsite) then
+            mainDataProcess.CreateDatabase(twebsite);
+          tempDataProcess.CreateDatabase(twebsitetemp);
+
+          mainDataProcess.OpenTable('',True);
+          FIsPreListAvailable:=mainDataProcess.RecordCount>0;
+          mainDataProcess.CloseTable;
+
+          Writelog_D(cloghead+'get number of directory page');
+          // get directory page count
+          INIAdvanced.Reload;
+          directoryCount := 0;
+          directoryCount2 := 0;
+          workPtr := 0;
+          GetInfo(1, CS_DIRECTORY_COUNT);
+          if Terminated then Break;
+
+          Writelog_D(cloghead+'get names and links');
+          // get names and links
+          INIAdvanced.Reload;
           workPtr := 0;
           isFinishSearchingForNewManga := False;
-          if directoryCount2 = 0 then
-            directoryCount2 := 1;
-          GetInfo(directoryCount2, CS_DIRECTORY_PAGE_2);
-        end
-        else
-          GetInfo(directoryCount, CS_DIRECTORY_PAGE);
-
-        if Terminated then Break;
-
-        tempDataProcess.OpenTable('', True);
-
-        FStatus := RS_UpdatingList + Format(' [%d/%d] %s',
-          [websitePtr, websites.Count, website]) + ' | ' + RS_IndexingNewTitle + '...';
-        Synchronize(MainThreadShowGetting);
-
-        // get manga info
-        if tempDataProcess.RecordCount>0 then
-        begin
-          Writelog_D(cloghead+'get info '+IntToStr(tempDataProcess.RecordCount));
-          workPtr := 0;
-          FCommitCount := 0;
-          if NoMangaInfo or
-            OptionUpdateListNoMangaInfo then
+          if ModuleId <> -1 then
           begin
-            Inc(workPtr);
-            for k:=0 to tempDataProcess.RecordCount-1 do
+            with Modules.Module[ModuleId] do
+            for j := Low(TotalDirectoryPage) to High(TotalDirectoryPage) do
             begin
-              mainDataProcess.AddData(
-                tempDataProcess.Value[k,0],
-                tempDataProcess.Value[k,1],
-                '',
-                '',
-                '',
-                '',
-                '',
-                0,
-                Now
-                );
-              CheckCommit(5000);
+              workPtr := 0;
+              isFinishSearchingForNewManga := False;
+              CurrentDirectoryIndex := j;
+              GetInfo(TotalDirectoryPage[j], CS_DIRECTORY_PAGE);
             end;
           end
           else
-            GetInfo(tempDataProcess.RecordCount, CS_INFO);
-          mainDataProcess.Commit;
-        Writelog_D(cloghead+'get info finished '+IntToStr(workPtr));
+          if SitesMemberOf(website, [FAKKU_ID, MANGAEDEN_ID,
+            PERVEDEN_ID]) then
+          begin
+            if directoryCount = 0 then
+              directoryCount := 1;
+            GetInfo(directoryCount, CS_DIRECTORY_PAGE);
+            workPtr := 0;
+            isFinishSearchingForNewManga := False;
+            if directoryCount2 = 0 then
+              directoryCount2 := 1;
+            GetInfo(directoryCount2, CS_DIRECTORY_PAGE_2);
+          end
+          else
+            GetInfo(directoryCount, CS_DIRECTORY_PAGE);
 
-          if workPtr > 0 then
-            if not (Terminated and SortedList) then
+          if Terminated then Break;
+
+          tempDataProcess.OpenTable('', True);
+
+          FStatus := RS_UpdatingList + Format(' [%d/%d] %s',
+            [websitePtr, websites.Count, website]) + ' | ' + RS_IndexingNewTitle + '...';
+          Synchronize(MainThreadShowGetting);
+
+          // get manga info
+          if tempDataProcess.RecordCount>0 then
+          begin
+            Writelog_D(cloghead+'get info '+IntToStr(tempDataProcess.RecordCount));
+            workPtr := 0;
+            FCommitCount := 0;
+            if NoMangaInfo or
+              OptionUpdateListNoMangaInfo then
             begin
-              Writelog_D(cloghead+'saving data '+IntToStr(workPtr));
-              FStatus := RS_UpdatingList + Format(' [%d/%d] %s',
-                [websitePtr, websites.Count, website]) + ' | ' + RS_SavingData + '...';
-              Synchronize(MainThreadShowGetting);
-              mainDataProcess.Sort;
-              mainDataProcess.Close;
-              Synchronize(RefreshList);
+              Inc(workPtr);
+              for k:=0 to tempDataProcess.RecordCount-1 do
+              begin
+                mainDataProcess.AddData(
+                  tempDataProcess.Value[k,0],
+                  tempDataProcess.Value[k,1],
+                  '',
+                  '',
+                  '',
+                  '',
+                  '',
+                  0,
+                  Now
+                  );
+                CheckCommit(5000);
+              end;
             end
             else
-              Writelog_D(cloghead+'sorted list, data abandoned');
+              GetInfo(tempDataProcess.RecordCount, CS_INFO);
+            mainDataProcess.Commit;
+            Writelog_D(cloghead+'get info finished '+IntToStr(workPtr));
+
+            if workPtr > 0 then
+              if not (Terminated and SortedList) then
+              begin
+                Writelog_D(cloghead+'saving data '+IntToStr(workPtr));
+                FStatus := RS_UpdatingList + Format(' [%d/%d] %s',
+                  [websitePtr, websites.Count, website]) + ' | ' + RS_SavingData + '...';
+                Synchronize(MainThreadShowGetting);
+                mainDataProcess.Sort;
+                mainDataProcess.Close;
+                Synchronize(RefreshList);
+              end
+              else
+                Writelog_D(cloghead+'sorted list, data abandoned');
+          end;
+        except
+          on E: Exception do
+            WriteLog_E(cloghead+'error occured!', E, Self);
         end;
 
         Writelog_D(cloghead+'close database file');
@@ -729,8 +734,8 @@ begin
       MainForm.ExceptionHandler(Self, E);
   end;
   FThreadEndNormally:=True;
-  Writelog_D(Self.ClassName+', thread ended normally');
   Synchronize(MainThreadEndGetting);
+  Writelog_D(Self.ClassName+', thread ended');
 end;
 
 end.
