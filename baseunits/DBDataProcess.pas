@@ -458,19 +458,20 @@ end;
 
 function TDBDataProcess.GetValue(RecIndex, FieldIndex: Integer): String;
 begin
-  if FieldIndex in [DATA_PARAM_NUMCHAPTER, DATA_PARAM_JDN] then
-    Result := '0'
+  if FieldIndex in [DATA_PARAM_NUMCHAPTER,DATA_PARAM_JDN] then
+    Result:='0'
   else
-    Result := '';
-  if not FQuery.Active then Exit;
-  if FieldIndex >= Length(DBDataProcessParams) then Exit;
-  if (RecIndex < 0) and (RecIndex > FRecordCount) then Exit;
+    Result:='';
+  if FQuery.Active=False then Exit;
+  if FieldIndex>=FQuery.Fields.Count then Exit;
+  if (RecIndex<0) or (RecIndex>FRecordCount) then Exit;
   try
-    FQuery.RecNo := RecIndex + 1;
-    Result := FQuery.FieldByName(DBDataProcessParams[FieldIndex]).AsString;
+    FQuery.RecNo:=RecIndex+1;
+    Result:=FQuery.Fields[FieldIndex].AsString;
   except
     on E: Exception do
-      WriteLog_E(Self.ClassName+'['+Website+'].GetParam.Error!', E, Self);
+      WriteLog_E(Self.ClassName+'['+Website+'].GetValue.Error!'+
+        'RecIndex: '+IntToStr(RecIndex)+', FieldIndex: '+IntToStr(FieldIndex), E, Self);
   end;
 end;
 
