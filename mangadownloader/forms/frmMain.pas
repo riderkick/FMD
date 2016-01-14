@@ -555,7 +555,8 @@ type
     ulTotalPtr, ulWorkPtr: Integer;
     optionMangaSiteSelectionNodes: array of PVirtualNode;
     LastSearchStr, LastSearchWeb: String;
-    isStartup, isExiting, isRunDownloadFilter, isUpdating, isPendingExitCounter: Boolean;
+    isStartup, isExiting, isRunDownloadFilter, isUpdating, isPendingExitCounter,
+    isNormalExit: Boolean;
     revisionIni, updates, mangalistIni, options: TIniFile;
     FavoriteManager: TFavoriteManager;
     dataProcess: TDBDataProcess;
@@ -960,6 +961,7 @@ begin
   isExiting := False;
   isGetMangaInfos := False;
   isPendingExitCounter:=False;
+  isNormalExit:=False;
   DoAfterFMD := DO_NOTHING;
   Application.HintHidePause := 10000;
   sbUpdateList.DoubleBuffered := True;
@@ -1201,6 +1203,7 @@ begin
     FMDInstance.StopServer;
     FreeAndNil(FMDInstance);
   end;
+  isNormalExit:=True;
 end;
 
 procedure TMainForm.FormDestroy(Sender: TObject);
@@ -1222,7 +1225,10 @@ begin
   FreeAndNil(updates);
   FreeAndNil(options);
   FreeAndNil(INIAdvanced);
-  Writelog_I(QuotedStrd(Application.Title)+' exit normally [PID:'+IntToStr(GetProcessID)+'] [HANDLE:'+IntToStr(GetCurrentProcess)+']');
+  if isNormalExit then
+    Writelog_I(QuotedStrd(Application.Title)+' exit normally [PID:'+IntToStr(GetProcessID)+'] [HANDLE:'+IntToStr(GetCurrentProcess)+']')
+  else
+    Writelog_W(QuotedStrd(Application.Title)+' doesn''t exit normally [PID:'+IntToStr(GetProcessID)+'] [HANDLE:'+IntToStr(GetCurrentProcess)+']');
 end;
 
 procedure TMainForm.FormShow(Sender: TObject);
