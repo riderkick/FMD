@@ -63,7 +63,7 @@ type
     mainDataProcess: TDBDataProcess;
     tempDataProcess: TDBDataProcess;
     websites: TStringList;
-    website, twebsite: String;
+    website, twebsite, twebsitetemp: String;
     ModuleId: Integer;
     workPtr, directoryCount,
     // for fakku's doujinshi only
@@ -366,9 +366,9 @@ begin
   if not FThreadEndNormally then WriteLog_W(Self.ClassName+', thread doesn''t end normally, ended by user?');
   websites.Free;
   mainDataProcess.Close;
-  DeleteDBDataProcess(twebsite);
   tempDataProcess.Close;
-  DeleteDBDataProcess('__tempupdatelist');
+  DeleteDBDataProcess(twebsite);
+  DeleteDBDataProcess(twebsitetemp);
   mainDataProcess.Free;
   tempDataProcess.Free;
   threads.Free;
@@ -580,7 +580,6 @@ begin
       while websitePtr < websites.Count do
       begin
         FThreadAborted:=True;
-        tempDataProcess.CreateDatabase('__tempupdatelist');
         website := websites.Strings[websitePtr];
         ModuleId := Modules.LocateModule(website);
         SortedList := SitesWithSortedList(website);
@@ -595,8 +594,10 @@ begin
           [websitePtr, websites.Count, website]) + ' | ' + RS_Preparing + '...';
         Synchronize(MainThreadShowGetting);
 
-        twebsite := '__' + website;
+        twebsite:='__'+website;
+        twebsitetemp:=twebsite+'_templist';
         DeleteDBDataProcess(twebsite);
+        DeleteDBDataProcess(twebsitetemp);
         if (MainForm.dataProcess.Website = website) and
           (MainForm.dataProcess.Connected) then
           MainForm.dataProcess.Backup(twebsite)
@@ -609,6 +610,7 @@ begin
 
         if not mainDataProcess.Connect(twebsite) then
           mainDataProcess.CreateDatabase(twebsite);
+        tempDataProcess.CreateDatabase(twebsitetemp);
 
         mainDataProcess.OpenTable('',True);
         FIsPreListAvailable:=mainDataProcess.RecordCount>0;
@@ -713,6 +715,7 @@ begin
         tempDataProcess.Close;
         mainDataProcess.Close;
         DeleteDBDataProcess(twebsite);
+        DeleteDBDataProcess(twebsitetemp);
 
         if Terminated then
           Break;
