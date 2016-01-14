@@ -302,7 +302,7 @@ begin
   MainForm.sbMain.SizeGrip := not MainForm.sbUpdateList.Visible;
   MainForm.isUpdating:=False;
   if MainForm.isPendingExitCounter then begin
-    WriteLog_V(Self.ClassName+', pending exit counter executed');
+    Writelog_D(Self.ClassName+', pending exit counter executed');
     MainForm.DoExitWaitCounter;
   end;
 end;
@@ -560,7 +560,7 @@ var
 begin
   if websites.Count = 0 then
     Exit;
-  WriteLog_V(Self.ClassName+', thread started');
+  Writelog_D(Self.ClassName+', thread started');
   try
     websitePtr := 0;
     if isDownloadFromServer then
@@ -587,9 +587,9 @@ begin
         Inc(websitePtr);
 
         cloghead:=Self.ClassName+', '+website+': ';
-        WriteLog_V(cloghead+'update list started');
-        WriteLog_V(cloghead+'sortedlist='+BoolToStr(SortedList,True)+'; '+'nomangainfo='+BoolToStr(NoMangaInfo,True));
-        WriteLog_V(cloghead+'prepare database file');
+        Writelog_D(cloghead+'update list started');
+        Writelog_D(cloghead+'sortedlist='+BoolToStr(SortedList,True)+'; '+'nomangainfo='+BoolToStr(NoMangaInfo,True));
+        Writelog_D(cloghead+'prepare database file');
         FStatus := RS_UpdatingList + Format(' [%d/%d] %s',
           [websitePtr, websites.Count, website]) + ' | ' + RS_Preparing + '...';
         Synchronize(MainThreadShowGetting);
@@ -616,7 +616,7 @@ begin
         FIsPreListAvailable:=mainDataProcess.RecordCount>0;
         mainDataProcess.CloseTable;
 
-        WriteLog_V(cloghead+'get number of directory page');
+        Writelog_D(cloghead+'get number of directory page');
         // get directory page count
         INIAdvanced.Reload;
         directoryCount := 0;
@@ -625,7 +625,7 @@ begin
         GetInfo(1, CS_DIRECTORY_COUNT);
         if Terminated then Break;
 
-        WriteLog_V(cloghead+'get names and links');
+        Writelog_D(cloghead+'get names and links');
         // get names and links
         INIAdvanced.Reload;
         workPtr := 0;
@@ -668,7 +668,7 @@ begin
         // get manga info
         if tempDataProcess.RecordCount>0 then
         begin
-          WriteLog_V(cloghead+'get info '+IntToStr(tempDataProcess.RecordCount));
+          Writelog_D(cloghead+'get info '+IntToStr(tempDataProcess.RecordCount));
           workPtr := 0;
           FCommitCount := 0;
           if NoMangaInfo or
@@ -694,12 +694,12 @@ begin
           else
             GetInfo(tempDataProcess.RecordCount, CS_INFO);
           mainDataProcess.Commit;
-        WriteLog_V(cloghead+'get info finished '+IntToStr(workPtr));
+        Writelog_D(cloghead+'get info finished '+IntToStr(workPtr));
 
           if workPtr > 0 then
             if not (Terminated and SortedList) then
             begin
-              WriteLog_V(cloghead+'saving data '+IntToStr(workPtr));
+              Writelog_D(cloghead+'saving data '+IntToStr(workPtr));
               FStatus := RS_UpdatingList + Format(' [%d/%d] %s',
                 [websitePtr, websites.Count, website]) + ' | ' + RS_SavingData + '...';
               Synchronize(MainThreadShowGetting);
@@ -708,10 +708,10 @@ begin
               Synchronize(RefreshList);
             end
             else
-              WriteLog_V(cloghead+'sorted list, data abandoned');
+              Writelog_D(cloghead+'sorted list, data abandoned');
         end;
 
-        WriteLog_V(cloghead+'close database file');
+        Writelog_D(cloghead+'close database file');
         tempDataProcess.Close;
         mainDataProcess.Close;
         DeleteDBDataProcess(twebsite);
@@ -721,7 +721,7 @@ begin
           Break;
         websites[websitePtr - 1] :=
           UTF8Encode(#$2714 + WideString(websites[websitePtr - 1]));
-        WriteLog_V(cloghead+'update list finished');
+        Writelog_D(cloghead+'update list finished');
         FThreadAborted:=False;
       end;
   except
@@ -729,7 +729,7 @@ begin
       MainForm.ExceptionHandler(Self, E);
   end;
   FThreadEndNormally:=True;
-  WriteLog_V(Self.ClassName+', thread ended normally');
+  Writelog_D(Self.ClassName+', thread ended normally');
   Synchronize(MainThreadEndGetting);
 end;
 
