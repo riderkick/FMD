@@ -111,6 +111,7 @@ const
   DBDataProcessParams: array [0..8] of ShortString =
     ('title', 'link', 'authors', 'artists', 'genres', 'status',
     'summary', 'numchapter', 'jdn');
+  DBTempFieldWebsiteIndex = Length(DBDataProcessParams);
   DBDataProccesCreateParam = '('#13#10 +
     '"title" TEXT,'#13#10 +
     '"link" VARCHAR NOT NULL PRIMARY KEY,'#13#10 +
@@ -445,14 +446,18 @@ end;
 
 function TDBDataProcess.GetWebsiteName(RecIndex: Integer): String;
 begin
-  Result := FWebsite;
-  if FQuery.Active and (FAttachedSites.Count > 0) then
+  Result:=FWebsite;
+  if FQuery.Active=False then Exit;
+  if DBTempFieldWebsiteIndex>=FQuery.Fields.Count then Exit;
+  if (RecIndex<0) or (RecIndex>FRecordCount) then Exit;
+  if FAttachedSites.Count>0 then
     try
-      FQuery.RecNo := RecIndex + 1;
-      Result := FQuery.FieldByName('website').AsString;
+      FQuery.RecNo:=RecIndex+1;
+      Result:=FQuery.Fields[DBTempFieldWebsiteIndex].AsString;
     except
       on E: Exception do
-        WriteLog_E(Self.ClassName+'['+Website+'].GetWebsiteName', E, Self);
+        WriteLog_E(Self.ClassName+'['+Website+'].GetWebsiteName Error!'+
+        'RecIndex: '+IntToStr(RecIndex), E, Self);
     end;
 end;
 
