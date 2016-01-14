@@ -191,7 +191,8 @@ begin
   if MangaInfo = nil then Exit;
   with MangaInfo.mangaInfo do begin
     website := Module.Website;
-    url := FillHost(Module.RootURL, AURL);
+    url:=ReplaceRegExpr('/\?\w+.*$',AURL,'/',False);
+    url:=AppendURLDelim(FillHost(Module.RootURL,url));
     if GETWithLogin(MangaInfo.FHTTP, url, Module.Website) then begin
       Result := NO_ERROR;
       // if there is only 1 line, it's banned message!
@@ -262,7 +263,8 @@ begin
     PageLinks.Clear;
     PageContainerLinks.Clear;
     PageNumber := 0;
-    rurl := AppendURLDelim(FillHost(Module.RootURL, AURL));
+    rurl:=ReplaceRegExpr('/\?\w+.*$',AURL,'/',False);
+    rurl:=AppendURLDelim(FillHost(Module.RootURL,rurl));
     if GETWithLogin(DownloadThread.FHTTP, rurl, Module.Website) then begin
       Result := True;
       query := TXQueryEngineHTML.Create;
