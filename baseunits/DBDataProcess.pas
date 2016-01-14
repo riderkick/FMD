@@ -179,7 +179,7 @@ end;
 
 function QuotedLike(const S: String): String;
 begin
-  Result := QuotedStrd(AnsiQuotedStr(S, '%'));
+  Result := QuotedStr('%'+S+'%');
 end;
 
 function DBDataFilePath(const AWebsite: String): String;
@@ -408,7 +408,7 @@ begin
   else
     scond := '';
   if useRegexp then
-    AddSQLCond(QuotedStrd(fieldname) + scond + ' REGEXP ' + QuotedStrd(svalue), useOR)
+    AddSQLCond(QuotedStrd(fieldname) + scond + ' REGEXP ' + QuotedStr(svalue), useOR)
   else
     AddSQLCond(QuotedStrd(fieldname) + scond + ' LIKE ' + QuotedLike(svalue), useOR);
 end;
