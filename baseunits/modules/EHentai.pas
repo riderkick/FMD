@@ -6,11 +6,11 @@ interface
 
 uses
   Classes, SysUtils, WebsiteModules, uData, uBaseUnit, uDownloadsManager,
-  accountmanagerdb, synacode;
+  accountmanagerdb;
 
 implementation
 
-uses RegExpr;
+uses RegExpr, synacode;
 
 const
   dirURL = 'f_doujinshi=on&f_manga=on&f_western=on&f_apply=Apply+Filter';
@@ -214,23 +214,25 @@ function GetPageNumber(var DownloadThread: TDownloadThread; const AURL: String;
   Module: TModuleContainer): Boolean;
 var
   query: TXQueryEngineHTML;
-  v: IXQValue;
   rurl: String;
 
   procedure GetImageLink;
+  var
+    x: IXQValue;
   begin
-    for v in query.XPath('//div[@id="gdt"]//a/@href') do
-      with DownloadThread.manager.container do begin
+    with DownloadThread.manager.container do begin
+      for x in query.XPath('//div[@id="gdt"]//a/@href') do
+        PageContainerLinks.Add(x.toString);
+      while PageLinks.Count<PageContainerLinks.Count do
         PageLinks.Add('G');
-        PageContainerLinks.Add(v.toString);
-      end;
+    end;
   end;
 
   procedure ScanParse;
   var
     getOK: Boolean;
     i, p: Integer;
-    //s: String;
+    v: IXQValue;
   begin
     getOK := True;
     //check content warning
@@ -244,11 +246,12 @@ var
     begin
       GetImageLink;
       //get page count
-      p := StrToIntDef(query.CSSString(
-        'table.ptt>tbody>tr>td:nth-last-child(2)>a'), 1) - 1;
+      p:=0;
+      v:=query.XPath('//table[@class="ptt"]//td');
+      if v.Count>2 then p:=StrToIntDef(v.get(v.Count-2).toString,0);
       if p > 0 then
         for i := 1 to p do
-          if GETWithLogin(DownloadThread.FHTTP, rurl + '?p' + IntToStr(i), Module.Website) then
+          if GETWithLogin(DownloadThread.FHTTP, rurl + '?p=' + IntToStr(i), Module.Website) then
           begin
             query.ParseHTML(StreamToString(DownloadThread.FHTTP.Document));
             GetImageLink;
