@@ -506,7 +506,7 @@ begin
   try
     for i:=0 to SitesList.Count-1 do begin
       //max attached database is 10
-      if FAttachedSites.Count=10 then Break;
+      //if FAttachedSites.Count=10 then Break;
       if (FAttachedSites.IndexOf(SitesList[i]) = -1) and
         (FileExistsUTF8(DBDataFilePath(SitesList[i]))) then
       begin
