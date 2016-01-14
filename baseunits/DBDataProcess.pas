@@ -758,16 +758,16 @@ begin
   if FConn.Connected=False then Exit;
   try
     FConn.ExecuteDirect(
-      'INSERT INTO "'+FTableName+'" ('+DBDataProcessParam+') VALUES ("'+
-      Title+'","'+
-      Link+'","'+
-      Authors+'","'+
-      Artists+'","'+
-      Genres+'","'+
-      Status+'","'+
-      Summary+'","'+
-      IntToStr(NumChapter)+'","'+
-      IntToStr(JDN)+'")');
+      'INSERT INTO '+QuotedStrd(FTableName)+' ('+DBDataProcessParam+') VALUES ('+
+      QuotedStr(Title)+', '+
+      QuotedStr(Link)+', '+
+      QuotedStr(Authors)+', '+
+      QuotedStr(Artists)+', '+
+      QuotedStr(Genres)+', '+
+      QuotedStr(Status)+', '+
+      QuotedStr(Summary)+', '+
+      QuotedStr(IntToStr(NumChapter))+', '+
+      QuotedStr(IntToStr(JDN))+');');
     Result:=True;
   except
   end;
@@ -788,19 +788,19 @@ begin
   if Link='' then Exit;
   if FConn.Connected=False then Exit;
   try
-    sql:='UPDATE "';
+    sql:='UPDATE ';
     if (AWebsite<>'') and (AWebsite<>FWebsite) and FAllSitesAttached then
-      sql+=AWebsite+'"."'+FTableName
+      sql+=QuotedStrd(AWebsite)+'.'+QuotedStrd(FTableName)
     else
-      sql+=FTableName;
-    sql+='" SET "title"="'+Title+
-         '","authors"="'+Authors+
-         '","artists"="'+Artists+
-         '","genres"="'+Genres+
-         '","status"="'+Status+
-         '","summary"="'+Summary+
-         '","numchapter"="'+IntToStr(NumChapter)+'"';
-    sql+=' WHERE "link"="'+Link+'"';
+      sql+=QuotedStrd(FTableName);
+    sql+=' SET "title"='+QuotedStr(Title)+
+         ', "authors"='+QuotedStr(Authors)+
+         ', "artists"='+QuotedStr(Artists)+
+         ', "genres"='+QuotedStr(Genres)+
+         ', "status"='+QuotedStr(Status)+
+         ', "summary"='+QuotedStr(Summary)+
+         ', "numchapter"='+QuotedStr(IntToStr(NumChapter))+
+         ' WHERE ("link"='+QuotedStr(Link)+');';
     FConn.ExecuteDirect(sql);
   except
     on E: Exception do
