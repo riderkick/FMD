@@ -1111,12 +1111,12 @@ end;
 
 procedure TMainForm.FormClose(Sender: TObject; var CloseAction: TCloseAction);
 begin
-  WriteLog_V('FormClose action');
+  WriteLog_V(Self.ClassName+'.FormClose action');
   if cbOptionShowQuitDialog.Checked and (DoAfterFMD = DO_NOTHING) then
   begin
     if MessageDlg('', RS_DlgQuit, mtConfirmation, [mbYes, mbNo], 0) <> mrYes then
     begin
-      WriteLog_V('FormClose aborted');
+      WriteLog_V(Self.ClassName+'.FormClose aborted');
       CloseAction := caNone;
       Exit;
     end;
@@ -1127,7 +1127,7 @@ end;
 
 procedure TMainForm.CloseNow;
 begin
-  WriteLog_V('FormClose.CloseNow, terminating all threads and waitfor');
+  WriteLog_V(Self.ClassName+'.CloseNow, terminating all threads and waitfor');
   //Terminating all threads and wait for it
   if Assigned(CheckUpdateThread) then
   begin
@@ -1159,7 +1159,7 @@ begin
   SilentThreadManager.StopAll(True);
   DLManager.StopAllDownloadTasksForExit;
 
-  WriteLog_V('FormClose.CloseNow, disabling all timer');
+  WriteLog_V(Self.ClassName+'.CloseNow, disabling all timer');
   tmBackup.Enabled := False;
   itSaveDownloadedList.Enabled := False;
   itRefreshDLInfo.Enabled := False;
@@ -1168,7 +1168,7 @@ begin
   itStartup.Enabled := False;
   itMonitor.Enabled := False;
 
-  WriteLog_V('FormClose.CloseNow, backup all data to file');
+  WriteLog_V(Self.ClassName+'.CloseNow, backup all data to file');
   //Backup data
   DLManager.Backup;
   DLManager.BackupDownloadedChaptersList;
@@ -1177,7 +1177,7 @@ begin
   SaveOptions;
   SaveFormInformation;
 
-  WriteLog_V('FormClose.CloseNow, closing other forms');
+  WriteLog_V(Self.ClassName+'.CloseNow, closing other forms');
   //embed form
   if Assigned(AccountManagerForm) then
     AccountManagerForm.Close;
@@ -1187,7 +1187,7 @@ begin
 
   if FMDInstance <> nil then
   begin
-    WriteLog_V('FormClose.CloseNow, stop ipc server');
+    WriteLog_V(Self.ClassName+'.CloseNow, stop ipc server');
     FMDInstance.StopServer;
     FreeAndNil(FMDInstance);
   end;
@@ -1195,7 +1195,7 @@ end;
 
 procedure TMainForm.FormDestroy(Sender: TObject);
 begin
-  WriteLog_V('FormDestroy, freeing all objects');
+  WriteLog_V(Self.ClassName+'.FormDestroy, freeing all objects');
   SetLength(optionMangaSiteSelectionNodes, 0);
   SetLength(ChapterList, 0);
   FreeAndNil(mangaInfo);
@@ -5089,9 +5089,9 @@ end;
 
 procedure TMainForm.DoExitWaitCounter;
 begin
-  Writelog_V('Execute exit counter');
+  Writelog_V(Self.ClassName+'Execute exit counter');
   if isUpdating then begin
-    Writelog_V('Update thread still exist, pending exit counter');
+    Writelog_V(Self.ClassName+'Update thread still exist, pending exit counter');
     isPendingExitCounter:=True
   end
   else itMonitor.Enabled:=True;
