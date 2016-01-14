@@ -12,6 +12,7 @@ object MainForm: TMainForm
   OnDestroy = FormDestroy
   OnShow = FormShow
   OnWindowStateChange = FormWindowStateChange
+  LCLVersion = '1.7'
   Visible = False
   object sbUpdateList: TStatusBar
     Left = 0

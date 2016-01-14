@@ -1128,36 +1128,46 @@ end;
 procedure TMainForm.CloseNow;
 begin
   WriteLog_V(Self.ClassName+'.CloseNow, terminating all threads and waitfor');
-  //Terminating all threads and wait for it
-  if Assigned(CheckUpdateThread) then
-  begin
-    CheckUpdateThread.Terminate;
-    CheckUpdateThread.WaitFor;
-  end;
-  if Assigned(SearchDBThread) then
-  begin
-    SearchDBThread.Terminate;
-    SearchDBThread.WaitFor;
-  end;
-  if Assigned(OpenDBThread) then
-  begin
-    OpenDBThread.Terminate;
-    OpenDBThread.WaitFor;
-  end;
-  if isGetMangaInfos then
-  begin
-    GetInfosThread.IsFlushed := True;
-    GetInfosThread.Terminate;
-    GetInfosThread.WaitFor;
-  end;
-  if isUpdating then
-  begin
-    updateList.Terminate;
-    updateList.WaitFor;
-  end;
   FavoriteManager.StopChekForNewChapter(True);
   SilentThreadManager.StopAll(True);
   DLManager.StopAllDownloadTasksForExit;
+  //Terminating all threads and wait for it
+  if Assigned(CheckUpdateThread) then
+  begin
+    WriteLog_V(Self.ClassName+'.CloseNow, terminating CheckUpdateThread');
+    CheckUpdateThread.Terminate;
+    CheckUpdateThread.WaitFor;
+    WriteLog_V(Self.ClassName+'.CloseNow, CheckUpdateThread terminated');
+  end;
+  if Assigned(SearchDBThread) then
+  begin
+    WriteLog_V(Self.ClassName+'.CloseNow, terminating SearchDBThread');
+    SearchDBThread.Terminate;
+    SearchDBThread.WaitFor;
+    WriteLog_V(Self.ClassName+'.CloseNow, SearchDBThread terminated');
+  end;
+  if Assigned(OpenDBThread) then
+  begin
+    WriteLog_V(Self.ClassName+'.CloseNow, terminating OpenDBThread');
+    OpenDBThread.Terminate;
+    OpenDBThread.WaitFor;
+    WriteLog_V(Self.ClassName+'.CloseNow, OpenDBThread terminated');
+  end;
+  if isGetMangaInfos then
+  begin
+    WriteLog_V(Self.ClassName+'.CloseNow, terminating GetInfosThread');
+    GetInfosThread.IsFlushed := True;
+    GetInfosThread.Terminate;
+    GetInfosThread.WaitFor;
+    WriteLog_V(Self.ClassName+'.CloseNow, GetInfosThread terminated');
+  end;
+  if isUpdating then
+  begin
+    WriteLog_V(Self.ClassName+'.CloseNow, terminating UpdateListThread');
+    updateList.Terminate;
+    updateList.WaitFor;
+    WriteLog_V(Self.ClassName+'.CloseNow, UpdateListThread terminated');
+  end;
 
   WriteLog_V(Self.ClassName+'.CloseNow, disabling all timer');
   tmBackup.Enabled := False;
@@ -5089,9 +5099,9 @@ end;
 
 procedure TMainForm.DoExitWaitCounter;
 begin
-  Writelog_V(Self.ClassName+'Execute exit counter');
+  Writelog_V(Self.ClassName+', Execute exit counter');
   if isUpdating then begin
-    Writelog_V(Self.ClassName+'Update thread still exist, pending exit counter');
+    Writelog_V(Self.ClassName+', Update thread still exist, pending exit counter');
     isPendingExitCounter:=True
   end
   else itMonitor.Enabled:=True;
