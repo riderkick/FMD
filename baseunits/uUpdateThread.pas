@@ -21,7 +21,6 @@ type
 
   TUpdateMangaThread = class(TFMDThread)
   protected
-    Info: TMangaInformation;
     checkStyle: TCheckStyleType;
     workPtr: Integer;
     manager: TUpdateMangaManagerThread;
@@ -29,6 +28,8 @@ type
     procedure Execute; override;
     procedure DoTerminate; override;
   public
+    Info: TMangaInformation;
+
     constructor Create;
     destructor Destroy; override;
   end;
