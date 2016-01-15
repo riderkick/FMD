@@ -481,7 +481,8 @@ begin
   except
     on E: Exception do
       WriteLog_E(Self.ClassName+'['+Website+'].GetValue.Error!'+
-        'RecIndex: '+IntToStr(RecIndex)+', FieldIndex: '+IntToStr(FieldIndex), E, Self);
+        ' RecIndex: '+IntToStr(RecIndex)+', FieldIndex: '+IntToStr(FieldIndex)+
+        ', RecordCount: '+IntToStr(FQuery.RecordCount), E, Self);
   end;
 end;
 
@@ -673,6 +674,7 @@ begin
       begin
         if FQuery.Active then
           FQuery.Close;
+        if FTrans.Active=False then FTrans.Active:=True;
         FSQLSelect := 'SELECT * FROM ' + QuotedStrd(FTableName);
         FQuery.SQL.Text := FSQLSelect;
         FQuery.Open;
