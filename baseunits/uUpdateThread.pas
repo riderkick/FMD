@@ -21,6 +21,7 @@ type
 
   TUpdateMangaThread = class(TFMDThread)
   protected
+    Info: TMangaInformation;
     checkStyle: TCheckStyleType;
     workPtr: Integer;
     manager: TUpdateMangaManagerThread;
@@ -28,8 +29,7 @@ type
     procedure Execute; override;
     procedure DoTerminate; override;
   public
-    Info: TMangaInformation;
-
+    title, link: String;
     constructor Create;
     destructor Destroy; override;
   end;
@@ -114,7 +114,6 @@ end;
 procedure TUpdateMangaThread.Execute;
 var
   names, links: TStringList;
-  name, link: String;
   i: Integer;
 begin
   try
@@ -226,19 +225,18 @@ begin
 
       CS_INFO:
       begin
-        name := manager.tempDataProcess.Value[workPtr,0];
-        link := manager.tempDataProcess.Value[workPtr,1];
-        Info.mangaInfo.title := name;
-        Info.GetInfoFromURL(manager.website, link,OptionConnectionMaxRetry);
-        if not Terminated then
-        begin
-          manager.CS_AddInfoToData.Acquire;
-          try
-            Info.AddInfoToData(name, link,
-              manager.mainDataProcess);
-            manager.CheckCommit(manager.numberOfThreads);
-          finally
-            manager.CS_AddInfoToData.Release;
+        Info.mangaInfo.title:=title;
+        if link<>'' then begin
+          Info.GetInfoFromURL(manager.website,link,OptionConnectionMaxRetry);
+          if not Terminated then
+          begin
+            manager.CS_AddInfoToData.Acquire;
+            try
+              Info.AddInfoToData(title,link,manager.mainDataProcess);
+              manager.CheckCommit(manager.numberOfThreads);
+            finally
+              manager.CS_AddInfoToData.Release;
+            end;
           end;
         end;
       end;
@@ -252,7 +250,7 @@ begin
       if checkStyle = CS_INFO then
       begin
         E.Message := E.Message +
-        '  Title   : ' + name + LineEnding +
+        '  Title   : ' + title + LineEnding +
         '  URL     : ' + link + LineEnding;
       end;
       MainForm.ExceptionHandler(Self, E);
@@ -440,7 +438,7 @@ procedure TUpdateMangaManagerThread.GetInfo(const limit: Integer;
   end;
 
 var
-  mt: Integer;
+  mt, i: Integer;
   s: String;
 begin
   MainForm.ulTotalPtr := limit;
@@ -488,11 +486,15 @@ begin
         try
           if Modules.ActiveConnectionCount[ModuleId] >= numberOfThreads then Exit;
           Modules.IncActiveConnectionCount(ModuleId);
-          threads.Add(TUpdateMangaThread.Create);
-          TUpdateMangaThread(threads.Last).checkStyle := cs;
-          TUpdateMangaThread(threads.Last).manager := Self;
-          TUpdateMangaThread(threads.Last).workPtr := workPtr;
-          TUpdateMangaThread(threads.Last).Start;
+          i:=threads.Add(TUpdateMangaThread.Create);
+          if cs=CS_INFO then begin
+            TUpdateMangaThread(threads[i]).title:=tempDataProcess.Value[workPtr,0];
+            TUpdateMangaThread(threads[i]).link:=tempDataProcess.Value[workPtr,1];
+          end;
+          TUpdateMangaThread(threads[i]).checkStyle:=cs;
+          TUpdateMangaThread(threads[i]).manager:=Self;
+          TUpdateMangaThread(threads[i]).workPtr:=Self.workPtr;
+          TUpdateMangaThread(threads[i]).Start;
           Inc(workPtr);
           s := RS_UpdatingList + Format(' [%d/%d] %s | [T:%d] [%d/%d]',
             [websitePtr, websites.Count, website, threads.Count, workPtr, limit]);
