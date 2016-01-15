@@ -91,8 +91,8 @@ type
       NumChapter, JDN: Integer): Boolean; overload;
     function AddData(Const Title, Link, Authors, Artists, Genres, Status, Summary: String;
       NumChapter: Integer; JDN: TDateTime): Boolean; overload;
-    procedure UpdateData(Const Title, Link, Authors, Artists, Genres, Status, Summary: String;
-      NumChapter: Integer; AWebsite: String = '');
+    function UpdateData(Const Title, Link, Authors, Artists, Genres, Status, Summary: String;
+      NumChapter: Integer; AWebsite: String = ''): Boolean;
     procedure Commit;
     procedure Rollback;
     procedure RemoveFilter;
@@ -797,11 +797,12 @@ begin
     NumChapter, DateToJDN(JDN));
 end;
 
-procedure TDBDataProcess.UpdateData(const Title, Link, Authors, Artists,
-  Genres, Status, Summary: String; NumChapter: Integer; AWebsite: String);
+function TDBDataProcess.UpdateData(const Title, Link, Authors, Artists, Genres,
+  Status, Summary: String; NumChapter: Integer; AWebsite: String): Boolean;
 var
   sql: String;
 begin
+  Result:=False;
   if Link='' then Exit;
   if FConn.Connected=False then Exit;
   try
@@ -819,9 +820,8 @@ begin
          ', "numchapter"='+QuotedStr(IntToStr(NumChapter))+
          ' WHERE ("link"='+QuotedStr(Link)+');';
     FConn.ExecuteDirect(sql);
+    Result:=True;
   except
-    on E: Exception do
-      WriteLog_E(Self.ClassName+'['+Website+'].UpdateData.Error!'#13#10'SQL = '+sql, E, Self);
   end;
 end;
 
