@@ -772,6 +772,7 @@ function TDBDataProcess.AddData(const Title, Link, Authors, Artists, Genres,
   Status, Summary: String; NumChapter, JDN: Integer): Boolean;
 begin
   Result:=False;
+  if Link='' then Exit;
   if FConn.Connected=False then Exit;
   try
     FConn.ExecuteDirect(
