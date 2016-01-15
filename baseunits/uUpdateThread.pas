@@ -660,6 +660,7 @@ begin
 
           if Terminated then Break;
 
+          mainDataProcess.CloseTable;
           tempDataProcess.OpenTable('', True);
 
           FStatus := RS_UpdatingList + Format(' [%d/%d] %s',
