@@ -564,7 +564,7 @@ type
     ChapterList: array of TChapterStateItem;
     DLManager: TDownloadManager;
     updateDB: TUpdateDBThread;
-    updateList: TUpdateMangaManagerThread;
+    updateList: TUpdateListManagerThread;
     SilentThreadManager: TSilentThreadManager;
     // animation gif
     gifWaiting: TAnimatedGif;
@@ -2705,7 +2705,7 @@ begin
       // if dataProcess.Title.Count > 1 then
       //begin
       isUpdating := True;
-      updateList := TUpdateMangaManagerThread.Create;
+      updateList := TUpdateListManagerThread.Create;
       for i := 0 to cbSelectManga.Items.Count - 1 do
         updateList.websites.Add(cbSelectManga.Items[i]);
       updateList.isDownloadFromServer := True;
@@ -2730,7 +2730,7 @@ begin
     {$ENDIF}
     begin
       isUpdating := True;
-      updateList := TUpdateMangaManagerThread.Create;
+      updateList := TUpdateListManagerThread.Create;
       for i := 0 to cbSelectManga.Items.Count - 1 do
         updateList.websites.Add(cbSelectManga.Items[i]);
       updateList.isDownloadFromServer := False;
@@ -2789,7 +2789,7 @@ begin
     {$ENDIF}
     begin
       isUpdating := True;
-      updateList := TUpdateMangaManagerThread.Create;
+      updateList := TUpdateListManagerThread.Create;
       updateList.numberOfThreads := 4;
       updateList.websites.Add(cbSelectManga.Items[cbSelectManga.ItemIndex]);
       updateList.isDownloadFromServer := False;

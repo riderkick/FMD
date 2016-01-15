@@ -15,16 +15,16 @@ uses
   uBaseUnit, uFMDThread, uTranslation, uMisc, WebsiteModules, DBDataProcess;
 
 type
-  TUpdateMangaManagerThread = class;
+  TUpdateListManagerThread = class;
 
-  { TUpdateMangaThread }
+  { TUpdateListThread }
 
-  TUpdateMangaThread = class(TFMDThread)
+  TUpdateListThread = class(TFMDThread)
   protected
     Info: TMangaInformation;
     checkStyle: TCheckStyleType;
     workPtr: Integer;
-    manager: TUpdateMangaManagerThread;
+    manager: TUpdateListManagerThread;
 
     procedure Execute; override;
     procedure DoTerminate; override;
@@ -34,9 +34,9 @@ type
     destructor Destroy; override;
   end;
 
-  { TUpdateMangaManagerThread }
+  { TUpdateListManagerThread }
 
-  TUpdateMangaManagerThread = class(TFMDThread)
+  TUpdateListManagerThread = class(TFMDThread)
   private
     FStatus: String;
     FCommitCount: Integer;
@@ -97,21 +97,21 @@ implementation
 uses
   frmMain, Dialogs, ComCtrls, Forms, Controls, SimpleLogger;
 
-{ TUpdateMangaThread }
+{ TUpdateListThread }
 
-constructor TUpdateMangaThread.Create;
+constructor TUpdateListThread.Create;
 begin
   inherited Create(True);
 end;
 
-destructor TUpdateMangaThread.Destroy;
+destructor TUpdateListThread.Destroy;
 begin
   if Assigned(Info) then
     Info.Free;
   inherited Destroy;
 end;
 
-procedure TUpdateMangaThread.Execute;
+procedure TUpdateListThread.Execute;
 var
   names, links: TStringList;
   i: Integer;
@@ -258,7 +258,7 @@ begin
   end;
 end;
 
-procedure TUpdateMangaThread.DoTerminate;
+procedure TUpdateListThread.DoTerminate;
 begin
   LockCreateConnection;
   try
@@ -270,14 +270,14 @@ begin
   inherited DoTerminate;
 end;
 
-{ TUpdateMangaManagerThread }
+{ TUpdateListManagerThread }
 
-procedure TUpdateMangaManagerThread.MainThreadStatusRepaint;
+procedure TUpdateListManagerThread.MainThreadStatusRepaint;
 begin
   MainForm.sbUpdateList.Repaint;
 end;
 
-procedure TUpdateMangaManagerThread.MainThreadShowGetting;
+procedure TUpdateListManagerThread.MainThreadShowGetting;
 begin
   if MainForm.sbUpdateList.Visible = False then
   begin
@@ -293,7 +293,7 @@ begin
   MainForm.sbUpdateList.Panels[0].Text := FStatus;
 end;
 
-procedure TUpdateMangaManagerThread.MainThreadEndGetting;
+procedure TUpdateListManagerThread.MainThreadEndGetting;
 begin
   MainForm.sbUpdateList.Panels[0].Text := '';
   mainForm.sbUpdateList.Panels[0].Style := psText;
@@ -306,12 +306,12 @@ begin
   end;
 end;
 
-procedure TUpdateMangaManagerThread.MainThreadRemoveFilter;
+procedure TUpdateListManagerThread.MainThreadRemoveFilter;
 begin
   MainForm.btRemoveFilterClick(MainForm.btRemoveFilter);
 end;
 
-procedure TUpdateMangaManagerThread.ExtractFile;
+procedure TUpdateListManagerThread.ExtractFile;
 var
   Sza, datapath, filepath: String;
 begin
@@ -338,7 +338,7 @@ begin
   end
 end;
 
-constructor TUpdateMangaManagerThread.Create;
+constructor TUpdateListManagerThread.Create;
 begin
   inherited Create(True);
   CS_AddInfoToData := TCriticalSection.Create;
@@ -359,7 +359,7 @@ begin
   FIsPreListAvailable:=False;
 end;
 
-destructor TUpdateMangaManagerThread.Destroy;
+destructor TUpdateListManagerThread.Destroy;
 begin
   if FThreadAborted then WriteLog_W(Self.ClassName+', thread aborted by user?');
   if not FThreadEndNormally then WriteLog_W(Self.ClassName+', thread doesn''t end normally, ended by user?');
@@ -377,7 +377,7 @@ begin
   inherited Destroy;
 end;
 
-procedure TUpdateMangaManagerThread.CheckCommit(const CommitCount: Integer);
+procedure TUpdateListManagerThread.CheckCommit(const CommitCount: Integer);
 begin
   Inc(FCommitCount);
   if FCommitCount >= CommitCount then
@@ -388,7 +388,7 @@ begin
   end;
 end;
 
-procedure TUpdateMangaManagerThread.RefreshList;
+procedure TUpdateListManagerThread.RefreshList;
 begin
   try
     with MainForm do
@@ -422,13 +422,13 @@ begin
   end;
 end;
 
-procedure TUpdateMangaManagerThread.DlgReport;
+procedure TUpdateListManagerThread.DlgReport;
 begin
   MessageDlg('', Format(RS_DlgHasNewManga, [website, tempDataProcess.RecordCount]),
     mtInformation, [mbYes], 0);
 end;
 
-procedure TUpdateMangaManagerThread.GetInfo(const limit: Integer;
+procedure TUpdateListManagerThread.GetInfo(const limit: Integer;
   const cs: TCheckStyleType);
 
   procedure WaitForThreads;
@@ -486,15 +486,15 @@ begin
         try
           if Modules.ActiveConnectionCount[ModuleId] >= numberOfThreads then Exit;
           Modules.IncActiveConnectionCount(ModuleId);
-          i:=threads.Add(TUpdateMangaThread.Create);
+          i:=threads.Add(TUpdateListThread.Create);
           if cs=CS_INFO then begin
-            TUpdateMangaThread(threads[i]).title:=tempDataProcess.Value[workPtr,0];
-            TUpdateMangaThread(threads[i]).link:=tempDataProcess.Value[workPtr,1];
+            TUpdateListThread(threads[i]).title:=tempDataProcess.Value[workPtr,0];
+            TUpdateListThread(threads[i]).link:=tempDataProcess.Value[workPtr,1];
           end;
-          TUpdateMangaThread(threads[i]).checkStyle:=cs;
-          TUpdateMangaThread(threads[i]).manager:=Self;
-          TUpdateMangaThread(threads[i]).workPtr:=Self.workPtr;
-          TUpdateMangaThread(threads[i]).Start;
+          TUpdateListThread(threads[i]).checkStyle:=cs;
+          TUpdateListThread(threads[i]).manager:=Self;
+          TUpdateListThread(threads[i]).workPtr:=Self.workPtr;
+          TUpdateListThread(threads[i]).Start;
           Inc(workPtr);
           s := RS_UpdatingList + Format(' [%d/%d] %s | [T:%d] [%d/%d]',
             [websitePtr, websites.Count, website, threads.Count, workPtr, limit]);
@@ -537,7 +537,7 @@ begin
   WaitForThreads;
 end;
 
-procedure TUpdateMangaManagerThread.DoTerminate;
+procedure TUpdateListManagerThread.DoTerminate;
 var
   i: Integer;
 begin
@@ -546,7 +546,7 @@ begin
     LockCreateConnection;
     try
       for i := 0 to threads.Count - 1 do
-        TUpdateMangaThread(threads[i]).Terminate;
+        TUpdateListThread(threads[i]).Terminate;
     finally
       UnlockCreateConnection;
     end;
@@ -556,7 +556,7 @@ begin
   inherited DoTerminate;
 end;
 
-procedure TUpdateMangaManagerThread.Execute;
+procedure TUpdateListManagerThread.Execute;
 var
   j, k: Integer;
   cloghead: String;
