@@ -613,10 +613,6 @@ begin
             mainDataProcess.CreateDatabase(twebsite);
           tempDataProcess.CreateDatabase(twebsitetemp);
 
-          mainDataProcess.OpenTable('',True);
-          FIsPreListAvailable:=mainDataProcess.RecordCount>0;
-          mainDataProcess.CloseTable;
-
           Writelog_D(cloghead+'get number of directory page');
           // get directory page count
           INIAdvanced.Reload;
@@ -625,6 +621,9 @@ begin
           workPtr := 0;
           GetInfo(1, CS_DIRECTORY_COUNT);
           if Terminated then Break;
+
+          mainDataProcess.OpenTable('',True);
+          FIsPreListAvailable:=mainDataProcess.RecordCount>0;
 
           Writelog_D(cloghead+'get names and links');
           // get names and links
