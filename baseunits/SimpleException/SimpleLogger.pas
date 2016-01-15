@@ -171,12 +171,12 @@ begin
   s := '';
   if Assigned(Sender) then
     s += LineEnding +
-         'Sender Class     : ' + Sender.ClassName;
+         'Sender Class      : ' + Sender.ClassName;
   if Assigned(Exc) then
   begin
     s += LineEnding +
-         'Exception Class  : ' + Exc.ClassName + LineEnding +
-         'Exception Message: ' + Exc.Message;
+         'Exception Class   : ' + Exc.ClassName + LineEnding +
+         'Exception Message : ' + Exc.Message;
   end;
   s += LineEnding + GetStackTraceInfo;
   WriteLog_E(msg + s);
