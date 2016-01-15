@@ -235,7 +235,7 @@ begin
           try
             Info.AddInfoToData(name, link,
               manager.mainDataProcess);
-            manager.CheckCommit(16);
+            manager.CheckCommit(manager.numberOfThreads);
           finally
             manager.CS_AddInfoToData.Release;
           end;
