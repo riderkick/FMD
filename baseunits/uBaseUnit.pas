@@ -762,7 +762,8 @@ type
   public
     constructor Create(HTML: String = '');
     destructor Destroy; override;
-    procedure ParseHTML(HTML: String);
+    procedure ParseHTML(HTML: String); overload;
+    procedure ParseHTML(Stream: TStream); overload;
     function XPath(Expression: String; Tree: TTreeNode = nil): IXQValue; inline;
     function XPathString(Expression: String; Tree: TTreeNode = nil): String; inline;
     function CSS(Expression: String; Tree: TTreeNode = nil): IXQValue; inline;
@@ -3742,6 +3743,11 @@ end;
 procedure TXQueryEngineHTML.ParseHTML(HTML: String);
 begin
   if HTML <> '' then FTreeParser.parseTree(HTML);
+end;
+
+procedure TXQueryEngineHTML.ParseHTML(Stream: TStream);
+begin
+  ParseHTML(StreamToString(Stream));
 end;
 
 function TXQueryEngineHTML.XPath(Expression: String; Tree: TTreeNode): IXQValue;
