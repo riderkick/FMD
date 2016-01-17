@@ -258,7 +258,7 @@ begin
         query.ParseHTML(StreamToString(Document));
         PageContainerLinks.Text := cid;
         if query.XPathString('//select[@id="page_select"]') <> '' then
-          PageNumber := Query.XPath('//div[1]/ul/li/select[@id="page_select"]/option/@value').Count
+          PageNumber := Query.XPath('(//select[@id="page_select"])[1]/option/@value').Count
         else begin
         // long-strip view
           PageLinks.Clear;
