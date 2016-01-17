@@ -13,7 +13,6 @@ object MainForm: TMainForm
   OnShow = FormShow
   OnWindowStateChange = FormWindowStateChange
   LCLVersion = '1.7'
-  Visible = False
   object sbUpdateList: TStatusBar
     Left = 0
     Height = 30
@@ -114,6 +113,7 @@ object MainForm: TMainForm
         TreeOptions.PaintOptions = [toHideFocusRect, toShowButtons, toShowDropmark, toShowVertGridLines, toThemeAware, toUseBlendedImages, toFullVertGridLines]
         TreeOptions.SelectionOptions = [toFullRowSelect, toMultiSelect]
         OnAfterCellPaint = vtDownloadAfterCellPaint
+        OnBeforeCellPaint = vtDownloadBeforeCellPaint
         OnColumnDblClick = vtDownloadColumnDblClick
         OnDragAllowed = vtDownloadDragAllowed
         OnDragOver = vtDownloadDragOver

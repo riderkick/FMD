@@ -468,6 +468,9 @@ type
     procedure vtDownloadAfterCellPaint(Sender: TBaseVirtualTree;
       TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
       const CellRect: TRect);
+    procedure vtDownloadBeforeCellPaint(Sender: TBaseVirtualTree;
+      TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
+      CellPaintMode: TVTCellPaintMode; CellRect: TRect; var ContentRect: TRect);
     procedure vtDownloadColumnDblClick(Sender: TBaseVirtualTree;
       Column: TColumnIndex; Shift: TShiftState);
     procedure vtDownloadDragAllowed(Sender : TBaseVirtualTree;
@@ -725,14 +728,17 @@ const
   CL_BarBlueLine        = $b36b1d;
   CL_BarBlue            = $fab24f;
 
-  CL_BarBlueLigthLine   = $eab27c;
-  CL_BarBlueLigth       = $fed2a3;
+  CL_BarBlueLightLine   = $eab27c;
+  CL_BarBlueLight       = $fed2a3;
 
   CL_BarYellowLine      = $4a4af0;
   CL_BarYellow          = $80ebfe;
 
   CL_BarBrownGoldLine   = $5ea2c8;
   CL_BarBrownGold       = $8dd5f0;
+
+  CL_YellowLight        = $eaffff;
+  CL_BlueLight          = $f8f8f3;
 
 resourcestring
   RS_FilterStatusItems = 'Completed'#13#10'Ongoing'#13#10'<none>';
@@ -3553,6 +3559,17 @@ begin
   end;
 end;
 
+procedure TMainForm.vtDownloadBeforeCellPaint(Sender: TBaseVirtualTree;
+  TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
+  CellPaintMode: TVTCellPaintMode; CellRect: TRect; var ContentRect: TRect);
+begin
+  if Column=TVirtualStringTree(Sender).Header.SortColumn then
+  begin
+    TargetCanvas.Brush.Color:=CL_BlueLight;
+    TargetCanvas.FillRect(CellRect);
+  end;
+end;
+
 procedure TMainForm.vtDownloadColumnDblClick(Sender: TBaseVirtualTree;
   Column: TColumnIndex; Shift: TShiftState);
 begin
@@ -3836,6 +3853,11 @@ procedure TMainForm.vtFavoritesBeforeCellPaint(Sender: TBaseVirtualTree;
 var
   Data: PFavoriteInfo;
 begin
+  if Column=TVirtualStringTree(Sender).Header.SortColumn then
+  begin
+    TargetCanvas.Brush.Color:=CL_BlueLight;
+    TargetCanvas.FillRect(CellRect);
+  end;
   Data := Sender.GetNodeData(Node);
   if Assigned(Data) then
   begin
