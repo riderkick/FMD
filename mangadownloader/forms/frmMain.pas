@@ -1550,33 +1550,26 @@ end;
 procedure TMainForm.miDownloadMergeCompletedClick(Sender: TObject);
 var
   i, j: Cardinal;
+  ic, jc: TTaskContainer;
   // merge all finished tasks that have same manga name, website and directory
 begin
-  i := DLManager.Count - 1;
-  while i > 0 do
-  begin
-    if DLManager.Items[i].Status = STATUS_FINISH then
+  i:=DLManager.Count-1;
+  while i>0 do begin
+    ic:=DLManager.Items[i];
+    if ic.Status=STATUS_FINISH then
     begin
-      j := i - 1;
-      while j > 0 do
-      begin
-        if (i <> j) and
-          (DLManager.Items[j].Status = STATUS_FINISH) and
-          SameText(DLManager.Items[i].DownloadInfo.title,
-          DLManager.Items[j].DownloadInfo.title) and
-          SameText(DLManager.Items[i].DownloadInfo.website,
-          DLManager.Items[j].DownloadInfo.website) and
-          SameText(DLManager.Items[i].DownloadInfo.saveTo,
-          DLManager.Items[j].DownloadInfo.saveTo) then
+      j:=i-1;
+      while j>0 do begin
+        jc:=DLManager.Items[j];
+        if (i<>j) and
+          (jc.Status = STATUS_FINISH) and
+          SameText(ic.DownloadInfo.title,jc.DownloadInfo.title) and
+          SameText(ic.DownloadInfo.website,jc.DownloadInfo.website) and
+          SameText(ic.DownloadInfo.saveTo,jc.DownloadInfo.saveTo) then
         begin
-          DLManager.Items[i].ChapterLinks.Text :=
-            DLManager.Items[j].ChapterLinks.Text +
-            DLManager.Items[i].ChapterLinks.Text;
-          DLManager.Items[i].ChapterName.Text :=
-            DLManager.Items[j].ChapterName.Text +
-            DLManager.Items[i].ChapterName.Text;
-          DLManager.Items[i].DownloadInfo.dateTime :=
-            DLManager.Items[j].DownloadInfo.dateTime;
+          ic.ChapterLinks.Text:=jc.ChapterLinks.Text+ic.ChapterLinks.Text;
+          ic.ChapterName.Text:=jc.ChapterName.Text+ic.ChapterName.Text;
+          ic.DownloadInfo.dateTime:=jc.DownloadInfo.dateTime;
           DLManager.RemoveTask(j);
           Dec(i);
         end;
@@ -1759,31 +1752,35 @@ begin
     for i := 0 to DLManager.Count - 1 do
     begin
       case DLManager.Items[i].Status of
-        STATUS_FINISH: Inc(LFinishedTasks);
-        STATUS_DOWNLOAD, STATUS_PREPARE, STATUS_WAIT: Inc(LInProgressTasks);
-        STATUS_STOP: Inc(LStoppedTasks);
-        STATUS_PROBLEM, STATUS_FAILED: Inc(LFailedTask);
+        STATUS_FINISH    : Inc(LFinishedTasks);
+        STATUS_DOWNLOAD,
+        STATUS_PREPARE,
+        STATUS_WAIT      : Inc(LInProgressTasks);
+        STATUS_STOP      : Inc(LStoppedTasks);
+        STATUS_PROBLEM,
+        STATUS_FAILED    : Inc(LFailedTask);
       end;
     end;
 
-  // root
-  tvDownloadFilter.Items[0].Text :=
-    Format('%s (%d)', [RS_AllDownloads, vtDownload.RootNodeCount]);
+  with tvDownloadFilter do begin
+    // root
+    Items[0].Text := Format('%s (%d)', [RS_AllDownloads, vtDownload.RootNodeCount]);
 
-  // childs
-  tvDownloadFilter.Items[1].Text := Format('%s (%d)', [RS_Finish, LFinishedTasks]);
-  tvDownloadFilter.Items[2].Text := Format('%s (%d)', [RS_InProgress, LInProgressTasks]);
-  tvDownloadFilter.Items[3].Text := Format('%s (%d)', [RS_Stopped, LStoppedTasks]);
-  tvDownloadFilter.Items[4].Text := Format('%s (%d)', [RS_Failed, LFailedTask]);
+    // childs
+    Items[1].Text := Format('%s (%d)', [RS_Finish, LFinishedTasks]);
+    Items[2].Text := Format('%s (%d)', [RS_InProgress, LInProgressTasks]);
+    Items[3].Text := Format('%s (%d)', [RS_Stopped, LStoppedTasks]);
+    Items[4].Text := Format('%s (%d)', [RS_Failed, LFailedTask]);
 
-  // root
-  tvDownloadFilter.Items[5].Text := RS_History;
+    // root
+    Items[5].Text := RS_History;
 
-  // childs
-  tvDownloadFilter.Items[6].Text := RS_Today;
-  tvDownloadFilter.Items[7].Text := RS_Yesterday;
-  tvDownloadFilter.Items[8].Text := RS_OneWeek;
-  tvDownloadFilter.Items[9].Text := RS_OneMonth;
+    // childs
+    Items[6].Text := RS_Today;
+    Items[7].Text := RS_Yesterday;
+    Items[8].Text := RS_OneWeek;
+    Items[9].Text := RS_OneMonth;
+  end;
 end;
 
 procedure TMainForm.GeneratetvDownloadFilterNodes;
