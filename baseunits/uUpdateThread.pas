@@ -627,6 +627,7 @@ begin
 
           mainDataProcess.OpenTable('',True);
           FIsPreListAvailable:=mainDataProcess.RecordCount>0;
+          mainDataProcess.CloseTable;
 
           Writelog_D(cloghead+'get names and links');
           // get names and links
@@ -662,7 +663,6 @@ begin
 
           if Terminated then Break;
 
-          mainDataProcess.CloseTable;
           tempDataProcess.OpenTable('', True);
 
           FStatus := RS_UpdatingList + Format(' [%d/%d] %s',
