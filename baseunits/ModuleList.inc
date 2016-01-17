@@ -21,4 +21,5 @@ uses
   KissManga,
   UnionMangas,
   Seemh,
-  MangaStreamTo;
+  MangaStreamTo,
+  MangaKoi;
