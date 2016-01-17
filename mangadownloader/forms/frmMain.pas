@@ -706,9 +706,33 @@ var
   FUpdateURL: String;
 
 const
-  CL_HLBlueMarks = $FDC594;
-  CL_HLGreenMarks = $B8FFB8;
-  CL_HLRedMarks = $008080FF;
+  CL_HLBlueMarks        = $FDC594;
+  CL_HLGreenMarks       = $B8FFB8;
+  CL_HLRedMarks         = $8080FF;
+
+  CL_BarGrayLine        = $bcbcbc;
+  CL_BarGray            = $e6e6e6;
+
+  CL_BarGreenLine       = $25b006;
+  CL_BarGreen           = $42d932;
+
+  CL_BarOrangLine       = $00b399;
+  CL_BarOrange          = $1870e9;
+
+  CL_BarRedLine         = $1a1ab1;
+  CL_BarRed             = $4b4af0;
+
+  CL_BarBlueLine        = $b36b1d;
+  CL_BarBlue            = $fab24f;
+
+  CL_BarBlueLigthLine   = $eab27c;
+  CL_BarBlueLigth       = $fed2a3;
+
+  CL_BarYellowLine      = $4a4af0;
+  CL_BarYellow          = $80ebfe;
+
+  CL_BarBrownGoldLine   = $5ea2c8;
+  CL_BarBrownGold       = $8dd5f0;
 
 resourcestring
   RS_FilterStatusItems = 'Completed'#13#10'Ongoing'#13#10'<none>';
@@ -3337,8 +3361,8 @@ begin
 
       Pen.Style := psSolid;
       Brush.Style := bsSolid;
-      Pen.Color := RGB(188, 188, 188);
-      Brush.Color := RGB(230, 230, 230);
+      Pen.Color:=CL_BarGrayLine;
+      Brush.Color:=CL_BarGray;
       Rectangle(BarRect);
 
       ProgressBarRect := BarRect;
@@ -3347,12 +3371,8 @@ begin
 
       if (ProgressBarRect.Right - ProgressBarRect.Left) > 0 then
       begin
-        //green
-        Pen.Color := RGB(6, 176, 37);
-        Brush.Color := RGB(50, 217, 66);
-        //orange
-        //Pen.Color := RGB(153, 79, 0);
-        //Brush.Color := RGB(233, 112, 24);
+        Pen.Color:=CL_BarGreenLine;
+        Brush.Color:=CL_BarGreen;
         Rectangle(ProgressBarRect);
       end;
       Brush.Style := bsClear;
@@ -3468,8 +3488,8 @@ begin
     TargetCanvas.Pen.Style := psSolid;
     TargetCanvas.Brush.Style := bsSolid;
 
-    TargetCanvas.Pen.Color := RGB(188, 188, 188);
-    TargetCanvas.Brush.Color := RGB(230, 230, 230);
+    TargetCanvas.Pen.Color:=CL_BarGrayLine;
+    TargetCanvas.Brush.Color:=CL_BarGray;
 
     TargetCanvas.Rectangle(BarRect);
     //TargetCanvas.RoundRect(BarRect, 6,6);
@@ -3491,43 +3511,33 @@ begin
         //STATUS_DOWNLOAD, STATUS_FINISH, STATUS_COMPRESS, STATUS_PROBLEM, STATUS_FAILED);
         STATUS_STOP, STATUS_FAILED:
         begin
-          //Red
-          TargetCanvas.Pen.Color := RGB(177, 26, 26);
-          TargetCanvas.Brush.Color := RGB(240, 74, 74);
+          TargetCanvas.Pen.Color   := CL_BarRedLine;
+          TargetCanvas.Brush.Color := CL_BarRed;
         end;
         STATUS_WAIT:
         begin
-          //gray
-          TargetCanvas.Pen.Color := RGB(188, 188, 188);
-          TargetCanvas.Brush.Color := RGB(230, 230, 230);
+          TargetCanvas.Pen.Color   := CL_BarGray;
+          TargetCanvas.Brush.Color := CL_BarGrayLine;
         end;
         STATUS_DOWNLOAD:
         begin
-          //blue
-          TargetCanvas.Pen.Color := RGB(29, 107, 179);
-          TargetCanvas.Brush.Color := RGB(79, 178, 250);
-          //blue light
-          //TargetCanvas.Pen.Color:= RGB(124,178,234);
-          //TargetCanvas.Brush.Color:= RGB(163,210,254);
+          TargetCanvas.Pen.Color   := CL_BarBlueLine;
+          TargetCanvas.Brush.Color := CL_BarBlue;
         end;
         STATUS_PROBLEM:
         begin
-          //yellow
-          //TargetCanvas.Pen.Color := RGB(195, 145, 79);
-          TargetCanvas.Pen.Color := RGB(240, 74, 74);
-          TargetCanvas.Brush.Color := RGB(254, 235, 128);
+          TargetCanvas.Pen.Color   := CL_BarYellowLine;
+          TargetCanvas.Brush.Color := CL_BarYellow;
         end;
         STATUS_FINISH:
         begin
-          //green
-          TargetCanvas.Pen.Color := RGB(6, 176, 37);
-          TargetCanvas.Brush.Color := RGB(50, 217, 66);
+          TargetCanvas.Pen.Color   := CL_BarGreenLine;
+          TargetCanvas.Brush.Color := CL_BarGreenLine;
         end;
         else
         begin
-          //browngold
-          TargetCanvas.Pen.Color := RGB(200, 162, 94);
-          TargetCanvas.Brush.Color := RGB(240, 213, 141);
+          TargetCanvas.Pen.Color   := CL_BarBrownGoldLine;
+          TargetCanvas.Brush.Color := CL_BarBrownGold;
         end;
       end;
       //TargetCanvas.RoundRect(ProgressBarRect, 5, 5);
