@@ -1,4 +1,4 @@
-{ Simple Translation Collector
+{ Simple Translator
 
   Copyright (C) 2015 Nur Cholif
 
@@ -18,7 +18,7 @@
   MA 02111-1307, USA.
 }
 
-unit uTranslation;
+unit SimpleTranslator;
 
 {$mode objfpc}{$H+}
 

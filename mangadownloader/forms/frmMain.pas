@@ -21,9 +21,9 @@ uses
   simpleipc, lclproc, types, strutils, LCLIntf, DefaultTranslator, EditBtn,
   FileUtil, LazUTF8Classes, TAGraph, TASources, TASeries, TATools, AnimatedGif,
   uBaseUnit, uData, uDownloadsManager, uFavoritesManager, uUpdateThread,
-  uUpdateDBThread, uSilentThread, uMisc, uGetMangaInfosThread, uTranslation,
-  frmDropTarget, frmAccountManager, CheckUpdate, accountmanagerdb,
-  DBDataProcess, mangafoxwatermarkremover, SimpleException, SimpleLogger;
+  uUpdateDBThread, uSilentThread, uMisc, uGetMangaInfosThread, frmDropTarget,
+  frmAccountManager, CheckUpdate, accountmanagerdb, DBDataProcess,
+  mangafoxwatermarkremover, SimpleTranslator, SimpleException, SimpleLogger;
 
 type
 
@@ -1360,7 +1360,7 @@ begin
         Self.CloseNow;
         RunExternalProcess(fmdDirectory + 'old_updater.exe',
           ['-x', '-r', '3', '-a', FUpdateURL, '-l', Application.ExeName,
-           '--lang', uTranslation.LastSelected], True, False);
+           '--lang', SimpleTranslator.LastSelected], True, False);
         Self.Close;
       end;
     end;
@@ -4839,14 +4839,14 @@ var
   i: Integer;
 begin
   cbLanguages.Items.Clear;
-  uTranslation.LangDir := CleanAndExpandDirectory(GetCurrentDirUTF8) + 'languages';
-  uTranslation.LangAppName := 'fmd';
-  uTranslation.CollectLanguagesFiles;
-  if uTranslation.AvailableLanguages.Count > 0 then
+  SimpleTranslator.LangDir := CleanAndExpandDirectory(GetCurrentDirUTF8) + 'languages';
+  SimpleTranslator.LangAppName := 'fmd';
+  SimpleTranslator.CollectLanguagesFiles;
+  if SimpleTranslator.AvailableLanguages.Count > 0 then
   begin
     for i := 0 to AvailableLanguages.Count - 1 do
-      cbLanguages.Items.Add(uTranslation.AvailableLanguages.ValueFromIndex[i]);
-    cbLanguages.ItemIndex := uTranslation.AvailableLanguages.IndexOfName(
+      cbLanguages.Items.Add(SimpleTranslator.AvailableLanguages.ValueFromIndex[i]);
+    cbLanguages.ItemIndex := SimpleTranslator.AvailableLanguages.IndexOfName(
     options.ReadString('languages', 'Selected', 'en'));
   end;
 end;
@@ -4860,14 +4860,14 @@ var
   idxDropTargetMode: Integer;
 begin
   if AvailableLanguages.Count = 0 then Exit;
-  if uTranslation.LastSelected <> AvailableLanguages.Names[cbLanguages.ItemIndex] then
+  if SimpleTranslator.LastSelected <> AvailableLanguages.Names[cbLanguages.ItemIndex] then
   begin
     idxLanguages := cbLanguages.ItemIndex;
     idxFilterStatus := cbFilterStatus.ItemIndex;
     idxOptionLetFMDDo := cbOptionLetFMDDo.ItemIndex;
     idxOptionProxyType := cbOptionProxyType.ItemIndex;
     idxDropTargetMode := rgDropTargetMode.ItemIndex;
-    if uTranslation.SetLangByIndex(cbLanguages.ItemIndex) then
+    if SimpleTranslator.SetLangByIndex(cbLanguages.ItemIndex) then
     begin
       lbOptionExternalParamsHint.Hint := Format(RS_LblOptionExternalParamsHint,
         [EXPARAM_PATH, EXPARAM_CHAPTER, EXPARAM_PATH, EXPARAM_CHAPTER]);

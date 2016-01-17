@@ -12,7 +12,7 @@ interface
 
 uses
   Classes, SysUtils, typinfo, syncobjs, uData, LazFileUtils,
-  uBaseUnit, uFMDThread, uTranslation, uMisc, WebsiteModules, DBDataProcess;
+  uBaseUnit, uFMDThread, uMisc, WebsiteModules, DBDataProcess, SimpleTranslator;
 
 type
   TUpdateListManagerThread = class;
@@ -575,7 +575,7 @@ begin
         FStatus := RS_GettingListFor + ' ' + website + ' ...';
         Synchronize(MainThreadShowGetting);
         RunExternalProcess(fmdDirectory + 'updater.exe', ['-r' , '3', '-d',
-          GetMangaDatabaseURL(website), '--lang', uTranslation.LastSelected]);
+          GetMangaDatabaseURL(website), '--lang', SimpleTranslator.LastSelected]);
         Synchronize(RefreshList);
       end;
     end

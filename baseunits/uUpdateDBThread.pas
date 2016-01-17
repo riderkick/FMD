@@ -11,7 +11,7 @@ unit uUpdateDBThread;
 interface
 
 uses
-  Classes, SysUtils, uBaseUnit, uTranslation, uMisc,
+  Classes, SysUtils, uBaseUnit, uMisc, SimpleTranslator,
   LazFileUtils;
 
 type
@@ -134,7 +134,7 @@ begin
   try
     Synchronize(MainThreadShowGetting);
     RunExternalProcess(fmdDirectory + 'updater.exe', ['-r' , '3', '-d',
-      GetMangaDatabaseURL(websiteName), '--lang', uTranslation.LastSelected]);
+      GetMangaDatabaseURL(websiteName), '--lang', SimpleTranslator.LastSelected]);
     if FileExistsUTF8(fmdDirectory + DATA_FOLDER + websiteName + '.7z') or
       FileExistsUTF8(fmdDirectory + DATA_FOLDER + websiteName + '.zip') then
       Synchronize(MainThreadRefreshList)
