@@ -5,219 +5,155 @@ unit FoOlSlide;
 interface
 
 uses
-  Classes, SysUtils, WebsiteModules, uData, uBaseUnit, uDownloadsManager;
+  Classes, SysUtils, WebsiteModules, uData, uBaseUnit, uDownloadsManager,
+  RegExpr, synautil;
 
 implementation
 
-uses
-  simplehtmltreeparser, xquery, RegExpr;
-
 const
-  dirurl = '/directory/';
+  dirurl='/directory/';
 
 function GetDirectoryPageNumber(var MangaInfo: TMangaInformation;
   var Page: Integer; Module: TModuleContainer): Integer;
 var
-  Source: TStringList;
-  Parser: TTreeParser;
+  query: TXQueryEngineHTML;
+  s: String;
 begin
   Result := NET_PROBLEM;
   Page := 1;
-  if MangaInfo = nil then Exit;
-  Source := TStringList.Create;
-  try
-    if GetPage(TObject(Source), Module.RootURL + dirurl, 3) then
-    begin
-      Result := INFORMATION_NOT_FOUND;
-      if Source.Count > 0 then
-      begin
-        Result := NO_ERROR;
-        Parser := TTreeParser.Create;
-        try
-          ParseHTMLTree(Parser, Source.Text);
-          Page := StrToIntDef(ReplaceRegExpr('^.*/(\d+)/$',
-            SelectXPathString('//a[contains(text(),"Last »»")]/@href', Parser),
-            '$1', True), 1);
-        finally
-          Parser.Free;
-        end;
+  if MangaInfo = nil then Exit(UNKNOWN_ERROR);
+  if MangaInfo.FHTTP.GET(Module.RootURL+dirurl) then begin
+    Result := NO_ERROR;
+    query := TXQueryEngineHTML.Create;
+    try
+      query.ParseHTML(StreamToString(MangaInfo.FHTTP.Document));
+      s:=query.XPathString('//div[@class="next"]/a[contains(text(),"Last")]/@href');
+      if s<>'' then begin
+        s:=ReplaceRegExpr('.*/(\d+)/$',s,'$1',True);
+        Page:=StrToIntDef(s,1);
       end;
+    finally
+      query.Free;
     end;
-  finally
-    Source.Free;
   end;
 end;
 
 function GetNameAndLink(var MangaInfo: TMangaInformation;
-  const Names, Links: TStringList; const URL: String; Module: TModuleContainer): Integer;
+  const ANames, ALinks: TStringList; const AURL: String; Module: TModuleContainer): Integer;
 var
-  Source: TStringList;
-  Parser: TTreeParser;
+  query: TXQueryEngineHTML;
   v: IXQValue;
+  s: String;
 begin
-  Result := NET_PROBLEM;
-  if MangaInfo = nil then Exit;
-  Source := TStringList.Create;
-  try
-    if GetPage(TObject(Source), Module.RootURL + dirurl + IncStr(URL), 3) then
-    begin
-      Result := INFORMATION_NOT_FOUND;
-      if Source.Count > 0 then
-      begin
-        Result := NO_ERROR;
-        Parser := TTreeParser.Create;
-        try
-          ParseHTMLTree(Parser, Source.Text);
-          for v in SelectXPathIX('//*[@class="list series"]/*/*[@class="title"]/a',
-              Parser) do
-          begin
-            Links.Add(v.toNode.getAttribute('href'));
-            Names.Add(v.toString);
-          end;
-        finally
-          Parser.Free;
-        end;
+  Result:=NET_PROBLEM;
+  if MangaInfo=nil then Exit(UNKNOWN_ERROR);
+  s:=Module.RootURL+dirurl;
+  if AURL<>'0' then s+=IncStr(AURL)+'/';
+  if MangaInfo.FHTTP.GET(s) then begin
+    Result:=NO_ERROR;
+    query:=TXQueryEngineHTML.Create;
+    try
+      query.ParseHTML(StreamToString(MangaInfo.FHTTP.Document));
+      for v in query.XPath('//div[@class="list series"]/div/div[@class="title"]/a') do begin
+        ALinks.Add(v.toNode.getAttribute('href'));
+        ANames.Add(v.toString);
       end;
+    finally
+      query.Free;
     end;
-  finally
-    Source.Free;
   end;
 end;
 
-function GetInfo(var MangaInfo: TMangaInformation; const URL: String;
+function GetInfo(var MangaInfo: TMangaInformation; const AURL: String;
   const Reconnect: Integer; Module: TModuleContainer): Integer;
 var
-  Source: TStringList;
-  Parser: TTreeParser;
-
-  procedure ScanInfo;
-  var
-    v: IXQValue;
-  begin
-    with MangaInfo.mangaInfo do begin
-      //cover
-      coverLink := SelectXPathString(
-        '//*[@id="content"]//*[@class="thumbnail"]/img/@src', Parser);
-      //title
-      title := SelectXPathString('//*[@id="content"]//h1[@class="title"]', Parser);
-      //author
-      authors := TrimLeftChar(SelectXPathString(
-        '//div[@class="info"]/*[contains(text(),"Author")]/following-sibling::text()[1]',
-        Parser), [':', ' ']);
-      //artist
-      artists := TrimLeftChar(SelectXPathString(
-        '//div[@class="info"]/*[contains(text(),"Artist")]/following-sibling::text()[1]',
-        Parser), [':', ' ']);
-      //summary
-      summary := TrimLeftChar(SelectXPathString(
-        '//div[@class="info"]/*[contains(text(),"Synopsis")]/following-sibling::text()[1]',
-        Parser), [':', ' ']);
-      //chapters
-      for v in SelectXPathIX('//*[@class="list"]//*[@class="title"]/a', Parser) do
-      begin
-        chapterLinks.Add(v.toNode.getAttribute('href'));
-        if v.toNode.getAttribute('title') <> '' then
-          chapterName.Add(v.toNode.getAttribute('title'))
-        else chapterName.Add(v.toString);
-      end;
-      if chapterLinks.Count > 0 then
-        InvertStrings([chapterLinks, chapterName]);
-    end;
-  end;
-
+  query: TXQueryEngineHTML;
+  v: IXQValue;
 begin
-  Result := NET_PROBLEM;
-  if MangaInfo = nil then Exit;
-  MangaInfo.mangaInfo.website := Module.Website;
-  MangaInfo.mangaInfo.url := FillHost(Module.RootURL, URL);
-  Source := TStringList.Create;
-  try
-    if GetPage(TObject(Source), MangaInfo.mangaInfo.url, Reconnect) then
-    begin
-      Result := INFORMATION_NOT_FOUND;
-      if Source.Count > 0 then
-      begin
-        Result := NO_ERROR;
-        Parser := TTreeParser.Create;
-        try
-          ParseHTMLTree(Parser, Source.Text);
-          ScanInfo;
-        finally
-          Parser.Free;
+  Result:=NET_PROBLEM;
+  if MangaInfo=nil then Exit(UNKNOWN_ERROR);
+  with MangaInfo.FHTTP,MangaInfo.mangaInfo do begin
+    if GET(FillHost(Module.RootURL,AURL)) then begin
+      Result:=NO_ERROR;
+      query:=TXQueryEngineHTML.Create;
+      try
+        query.ParseHTML(StreamToString(Document));
+        coverLink:=query.XPathString('//div[@class="thumbnail"]/img/@src');
+        if title=''then title:=query.XPathString('//h1[@class="title"]');
+        authors:=TrimLeftChar(query.XPathString('//div[@class="info"]/*[contains(text(),"Author")]/following-sibling::text()[1]'),[':',' ']);
+        artists:=TrimLeftChar(query.XPathString('//div[@class="info"]/*[contains(text(),"Artist")]/following-sibling::text()[1]'),[':',' ']);
+        summary:=TrimLeftChar(query.XPathString('//div[@class="info"]/*[contains(text(),"Synopsis")]/following-sibling::text()[1]'),[':',' ']);
+        for v in query.XPath('//div[@class="list"]//div[@class="title"]/a') do
+        begin
+          chapterLinks.Add(v.toNode.getAttribute('href'));
+          if v.toNode.getAttribute('title') <> '' then
+            chapterName.Add(v.toNode.getAttribute('title'))
+          else chapterName.Add(v.toString);
         end;
+        InvertStrings([chapterLinks,chapterName]);
+      finally
+        query.Free;
       end;
     end;
-  finally
-    Source.Free;
   end;
 end;
 
-function GetPageNumber(var DownloadThread: TDownloadThread; const URL: String;
+function GetPageNumber(var DownloadThread: TDownloadThread; const AURL: String;
   Module: TModuleContainer): Boolean;
 var
-  Source: TStringList;
-  Parser: TTreeParser;
+  query: TXQueryEngineHTML;
+  v: IXQValue;
+  s: String;
 begin
-  Result := False;
-  if DownloadThread = nil then Exit;
-  with DownloadThread.manager.container do begin
+  Result:=False;
+  if DownloadThread=nil then Exit;
+  with DownloadThread.FHTTP,DownloadThread.manager.container do begin
     PageLinks.Clear;
     PageContainerLinks.Clear;
     PageNumber := 0;
-    Source := TStringList.Create;
-    try
-      if GetPage(TObject(Source), FillHost(Module.RootURL, URL),
-        Manager.retryConnect) then
-      begin
-        if Source.Count > 0 then
-        begin
-          Result := True;
-          Parser := TTreeParser.Create;
+    if GET(FillHost(Module.RootURL,AURL)) then begin
+      Result:=True;
+      query:=TXQueryEngineHTML.Create;
+      try
+        query.ParseHTML(StreamToString(Document));
+        PageNumber:=query.XPath('//div[@class="topbar_right"]//ul[@class="dropdown"]/li').Count;
+        s:=query.XPathString('//script[contains(.,"var pages")]');
+        if s<>'' then begin
+          s:=GetBetween('var pages = ',';',s);
           try
-            ParseHTMLTree(Parser, Source.Text);
-            PageNumber := SelectXPathIX(
-              '//*[@class="topbar_right"]//ul[@class="dropdown"]/li', Parser).Count;
-          finally
-            Parser.Free;
+            query.ParseHTML(s);
+            for v in query.XPath('json(*)()("url")') do
+              PageLinks.Add(v.toString);
+          except
           end;
         end;
+      finally
+        query.Free;
       end;
-    finally
-      Source.Free;
     end;
   end;
 end;
 
-function GetImageURL(var DownloadThread: TDownloadThread; const URL: String;
+function GetImageURL(var DownloadThread: TDownloadThread; const AURL: String;
   Module: TModuleContainer): Boolean;
 var
-  Source: TStringList;
-  Parser: TTreeParser;
+  query: TXQueryEngineHTML;
+  s: String;
 begin
-  Result := False;
-  if DownloadThread = nil then Exit;
-  with DownloadThread.manager.container do begin
-    Source := TStringList.Create;
-    try
-      if GetPage(TObject(Source), FillHost(Module.RootURL, URL) +
-        'page/' + IncStr(DownloadThread.workCounter),
-        Manager.retryConnect) then
-      begin
-        if Source.Count > 0 then
-        begin
-          Result := True;
-          Parser := TTreeParser.Create;
-          try
-            ParseHTMLTree(Parser, Source.Text);
-            PageLinks[DownloadThread.workCounter] :=
-              SelectXPathString('//*[@id="page"]//img/@src', Parser);
-          finally
-            Parser.Free;
-          end;
-        end;
+  Result:=False;
+  if DownloadThread=nil then Exit;
+  with DownloadThread.manager.container,DownloadThread.FHTTP do begin
+    s:=AURL;
+    if DownloadThread.workCounter>0 then s:=AppendURLDelim(s)+'page/'+IncStr(DownloadThread.workCounter);
+    if GET(FillHost(Module.RootURL,s)) then begin
+      Result:=True;
+      query:=TXQueryEngineHTML.Create;
+      try
+        query.ParseHTML(StreamToString(Document));
+        PageLinks[DownloadThread.workCounter]:=query.XPathString('//div[@id="page"]//img/@src');
+      finally
+        query.Free;
       end;
-    finally
-      Source.Free;
     end;
   end;
 end;
