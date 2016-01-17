@@ -499,7 +499,6 @@ type
       CellPaintMode: TVTCellPaintMode; CellRect: TRect; var ContentRect: TRect);
     procedure vtFavoritesColumnDblClick(Sender: TBaseVirtualTree;
       Column: TColumnIndex; Shift: TShiftState);
-    procedure vtFavoritesFreeNode(Sender: TBaseVirtualTree; Node: PVirtualNode);
     procedure vtFavoritesGetHint(Sender: TBaseVirtualTree; Node: PVirtualNode;
       Column: TColumnIndex; var LineBreakStyle: TVTTooltipLineBreakStyle;
       var HintText: String);
@@ -510,8 +509,6 @@ type
       Column: TColumnIndex; TextType: TVSTTextType; var CellText: String);
     procedure vtFavoritesHeaderClick(Sender: TVTHeader; Column: TColumnIndex;
       Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
-    procedure vtFavoritesInitNode(Sender: TBaseVirtualTree;
-      ParentNode, Node: PVirtualNode; var InitialStates: TVirtualNodeInitStates);
     procedure vtMangaListChange(Sender: TBaseVirtualTree; Node: PVirtualNode);
     procedure vtMangaListColumnDblClick(Sender: TBaseVirtualTree;
       Column: TColumnIndex; Shift: TShiftState);
@@ -3792,58 +3789,36 @@ begin
   miFavoritesOpenFolderClick(Sender);
 end;
 
-procedure TMainForm.vtFavoritesFreeNode(Sender: TBaseVirtualTree;
-  Node: PVirtualNode);
-var
-  Data: PFavoriteInfo;
-begin
-  Data := Sender.GetNodeData(Node);
-  if Assigned(Data) then
-    Finalize(Data^);
-end;
-
 procedure TMainForm.vtFavoritesGetHint(Sender: TBaseVirtualTree;
   Node: PVirtualNode; Column: TColumnIndex;
   var LineBreakStyle: TVTTooltipLineBreakStyle; var HintText: String);
-var
-  Data: PFavoriteInfo;
 begin
-  Data := Sender.GetNodeData(Node);
-  if Assigned(Data) then
+  if Node^.Index>=FavoriteManager.Count then Exit;
+  with FavoriteManager.FavoriteItem(Node^.Index).FavoriteInfo do
     case Column of
-      1: if Trim(Data^.Link) = '' then
-           HintText := RS_HintFavoriteProblem
-         else
-           HintText := Data^.Title;
-      2: HintText := Data^.currentChapter;
-      3: HintText := Data^.website;
-      4: HintText := Data^.saveTo;
+      1: if Trim(Link)='' then HintText:=RS_HintFavoriteProblem
+         else HintText:=Title;
+      2: HintText:=currentChapter;
+      3: HintText:=website;
+      4: HintText:=saveTo;
     end;
 end;
 
 procedure TMainForm.vtFavoritesGetImageIndex(Sender: TBaseVirtualTree;
   Node: PVirtualNode; Kind: TVTImageKind; Column: TColumnIndex;
   var Ghosted: Boolean; var ImageIndex: Integer);
-var
-  Data: PFavoriteInfo;
 begin
-  if vtFavorites.Header.Columns[Column].Position = 1 then
-  begin
-    Data := Sender.GetNodeData(Node);
-    if Assigned(Data) then
-      with FavoriteManager.FavoriteItem(Node^.Index) do
-      begin
-        if Trim(FavoriteInfo.Link) = '' then
-          ImageIndex := 16
-        else
-        case Status of
-          STATUS_CHECK: ImageIndex := 19;
-          STATUS_CHECKING: ImageIndex := 12;
-          STATUS_CHECKED: ImageIndex := 20;
-          else
-            ImageIndex := -1;
-        end;
-      end;
+  if vtFavorites.Header.Columns[Column].Position<>1 then Exit;
+  if Node^.Index>=FavoriteManager.Count then Exit;
+  if Trim(FavoriteManager.FavoriteItem(Node^.Index).FavoriteInfo.Link)='' then
+    ImageIndex:=16
+  else
+  case FavoriteManager.FavoriteItem(Node^.Index).Status of
+    STATUS_CHECK    : ImageIndex:=19;
+    STATUS_CHECKING : ImageIndex:=12;
+    STATUS_CHECKED  : ImageIndex:=20;
+    else
+      ImageIndex:=-1;
   end;
 end;
 
@@ -3852,17 +3827,15 @@ end;
 procedure TMainForm.vtFavoritesGetText(Sender: TBaseVirtualTree;
   Node: PVirtualNode; Column: TColumnIndex; TextType: TVSTTextType;
   var CellText: String);
-var
-  Data: PFavoriteInfo;
 begin
-  Data := Sender.GetNodeData(Node);
-  if Assigned(Data) then
+  if Node^.Index>=FavoriteManager.Count then Exit;
+  with FavoriteManager.FavoriteItem(Node^.Index).FavoriteInfo do
     case Column of
-      0: CellText := Data^.numbering;
-      1: CellText := Data^.Title;
-      2: CellText := Data^.currentChapter;
-      3: CellText := Data^.website;
-      4: CellText := Data^.saveTo;
+      0: CellText:=IntToStr(Node^.Index+1);
+      1: CellText:=Title;
+      2: CellText:=currentChapter;
+      3: CellText:=website;
+      4: CellText:=saveTo;
     end;
 end;
 
@@ -3885,26 +3858,6 @@ begin
     UpdateVtFavorites;
     FavoriteManager.isRunning := False;
   end;
-end;
-
-procedure TMainForm.vtFavoritesInitNode(Sender: TBaseVirtualTree;
-  ParentNode, Node: PVirtualNode; var InitialStates: TVirtualNodeInitStates);
-var
-  Data: PFavoriteInfo;
-  pos: Cardinal;
-begin
-  with Sender do
-  begin
-    pos := Node^.Index;
-    Data := GetNodeData(Node);
-    Data^.numbering := IntToStr(QWord(pos) + 1);
-    Data^.Title := FavoriteManager.FavoriteItem(pos).FavoriteInfo.Title;
-    Data^.currentChapter := FavoriteManager.FavoriteItem(pos).FavoriteInfo.currentChapter;
-    Data^.website := FavoriteManager.FavoriteItem(pos).FavoriteInfo.website;
-    Data^.saveTo := FavoriteManager.FavoriteItem(pos).FavoriteInfo.saveTo;
-    Data^.Link := FavoriteManager.FavoriteItem(pos).FavoriteInfo.Link;
-  end;
-  vtFavorites.ValidateNode(Node, False);
 end;
 
 procedure TMainForm.vtMangaListChange(Sender: TBaseVirtualTree; Node: PVirtualNode);

@@ -496,7 +496,6 @@ object MainForm: TMainForm
             TreeOptions.PaintOptions = [toHideFocusRect, toShowButtons, toShowDropmark, toThemeAware, toUseBlendedImages]
             TreeOptions.SelectionOptions = [toFullRowSelect, toMultiSelect]
             OnBeforeCellPaint = clbChapterListBeforeCellPaint
-            OnFreeNode = clbChapterListFreeNode
             OnGetText = clbChapterListGetText
             OnGetNodeDataSize = clbChapterListGetNodeDataSize
             OnInitNode = clbChapterListInitNode
@@ -1719,12 +1718,10 @@ object MainForm: TMainForm
         TreeOptions.SelectionOptions = [toFullRowSelect, toMultiSelect]
         OnBeforeCellPaint = vtFavoritesBeforeCellPaint
         OnColumnDblClick = vtFavoritesColumnDblClick
-        OnFreeNode = vtFavoritesFreeNode
         OnGetText = vtFavoritesGetText
         OnGetImageIndex = vtFavoritesGetImageIndex
         OnGetHint = vtFavoritesGetHint
         OnHeaderClick = vtFavoritesHeaderClick
-        OnInitNode = vtFavoritesInitNode
       end
       object btFavoritesImport: TBitBtn
         Left = 33
