@@ -22,4 +22,5 @@ uses
   UnionMangas,
   Seemh,
   MangaStreamTo,
-  MangaKoi;
+  MangaKoi,
+  GameofScanlation;
