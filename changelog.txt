@@ -7,6 +7,17 @@ https://bintray.com/riderkick/FMD/data/db/view#files
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.30.0 (17-01-2016)
+[*] E-Hentai/ExHentai: fix incorrect page links/page number
+[*] Batoto: various fix
+[*] Fix filter "Search only new manga"
+[*] Fix various issue on "Update manga list"
+[+] Added MangaKoi[EN]
+[+] Added YoManga[EN-SC]
+[+] Added RawYoManga[RAW]
+[+] Added GameofScanlation[EN-SC]
+[*] Various changes and bug fixes
+
 0.9.29.1 (11-01-2016)
 [!*] Fix empty user-agent if it's not defined in advanced.ini (causing connection issue)
 
