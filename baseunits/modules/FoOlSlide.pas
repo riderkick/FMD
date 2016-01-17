@@ -12,6 +12,7 @@ implementation
 
 const
   dirurl='/directory/';
+  yomangadirurl='/reader/directory/';
 
 function GetDirectoryPageNumber(var MangaInfo: TMangaInformation;
   var Page: Integer; Module: TModuleContainer): Integer;
@@ -22,7 +23,9 @@ begin
   Result := NET_PROBLEM;
   Page := 1;
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
-  if MangaInfo.FHTTP.GET(Module.RootURL+dirurl) then begin
+  if Module.Website='YoManga' then s:=yomangadirurl
+  else s:=dirurl;
+  if MangaInfo.FHTTP.GET(Module.RootURL+s) then begin
     Result := NO_ERROR;
     query := TXQueryEngineHTML.Create;
     try
@@ -47,7 +50,9 @@ var
 begin
   Result:=NET_PROBLEM;
   if MangaInfo=nil then Exit(UNKNOWN_ERROR);
-  s:=Module.RootURL+dirurl;
+  if Module.Website='YoManga' then s:=yomangadirurl
+  else s:=dirurl;
+  s:=Module.RootURL+s;
   if AURL<>'0' then s+=IncStr(AURL)+'/';
   if MangaInfo.FHTTP.GET(s) then begin
     Result:=NO_ERROR;
@@ -159,17 +164,25 @@ begin
 end;
 
 procedure RegisterModule;
+
+  procedure AddWebsiteModule(AWebsite,ARootURL: String);
+    begin
+      with AddModule do
+      begin
+        Website:=AWebsite;
+        RootURL:=ARootURL;
+        OnGetDirectoryPageNumber:=@GetDirectoryPageNumber;
+        OnGetNameAndLink:=@GetNameAndLink;
+        OnGetInfo:=@GetInfo;
+        OnGetPageNumber:=@GetPageNumber;
+        OnGetImageURL:=@GetImageURL;
+      end;
+    end;
+
 begin
-  with AddModule do
-  begin
-    Website := 'Shoujosense';
-    RootURL := 'http://reader.shoujosense.com';
-    OnGetDirectoryPageNumber := @GetDirectoryPageNumber;
-    OnGetNameAndLink := @GetNameAndLink;
-    OnGetInfo := @GetInfo;
-    OnGetPageNumber := @GetPageNumber;
-    OnGetImageURL := @GetImageURL;
-  end;
+  AddWebsiteModule('Shoujosense','http://reader.shoujosense.com');
+  AddWebsiteModule('YoManga','http://yomanga.co');
+  AddWebsiteModule('RawYoManga','http://raws.yomanga.co');
 end;
 
 initialization
