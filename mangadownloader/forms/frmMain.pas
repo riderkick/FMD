@@ -4853,6 +4853,7 @@ end;
 
 procedure TMainForm.ApplyLanguage;
 var
+  idxSelectManga,
   idxLanguages,
   idxFilterStatus,
   idxOptionLetFMDDo,
@@ -4862,6 +4863,9 @@ begin
   if AvailableLanguages.Count = 0 then Exit;
   if SimpleTranslator.LastSelected <> AvailableLanguages.Names[cbLanguages.ItemIndex] then
   begin
+    // TCombobox.Items will be cleared upon changing languge
+    // save TComboBox.ItemIndex and restore it
+    idxSelectManga:=cbSelectManga.ItemIndex;
     idxLanguages := cbLanguages.ItemIndex;
     idxFilterStatus := cbFilterStatus.ItemIndex;
     idxOptionLetFMDDo := cbOptionLetFMDDo.ItemIndex;
@@ -4876,6 +4880,7 @@ begin
       cbOptionLetFMDDo.Items.Text := RS_OptionFMDDoItems;
       rgDropTargetMode.Items.Text := RS_DropTargetModeItems;
 
+      cbSelectManga.ItemIndex:=idxSelectManga;
       cbLanguages.ItemIndex := idxLanguages;
       cbFilterStatus.ItemIndex := idxFilterStatus;
       cbOptionLetFMDDo.ItemIndex := idxOptionLetFMDDo;
