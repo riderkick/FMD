@@ -3863,17 +3863,13 @@ procedure TMainForm.vtMangaListBeforeCellPaint(Sender: TBaseVirtualTree;
   TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
   CellPaintMode: TVTCellPaintMode; CellRect: TRect; var ContentRect: TRect);
 begin
-  if (isExiting) or (dataProcess.RecordCount = 0) then
-    Exit;
+  if Node^.Index>=dataProcess.RecordCount then Exit;
   if miHighlightNewManga.Checked then
-  begin
-    if Assigned(Node) then
-      if StrToIntDef(dataProcess.Value[Node^.Index, DATA_PARAM_JDN], 0) > (currentJDN - OptionNewMangaTime) then
-      begin
-        TargetCanvas.Brush.Color := CL_HLBlueMarks;
-        TargetCanvas.FillRect(CellRect);
-      end;
-  end;
+    if StrToIntDef(dataProcess.Value[Node^.Index, DATA_PARAM_JDN], 0) > (currentJDN - OptionNewMangaTime) then
+    begin
+      TargetCanvas.Brush.Color := CL_HLBlueMarks;
+      TargetCanvas.FillRect(CellRect);
+    end;
 end;
 
 procedure TMainForm.vtMangaListGetCursor(Sender: TBaseVirtualTree;
