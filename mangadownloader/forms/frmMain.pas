@@ -3344,7 +3344,7 @@ begin
     if ulTotalPtr = 0 then
       ulTotalPtr := 100;
     if ulWorkPtr > ulTotalPtr then
-      ulWorkPtr := 0;
+      ulWorkPtr := ulTotalPtr;
     Percents := ulWorkPtr / ulTotalPtr;
     with StatusBar.Canvas do
     begin
