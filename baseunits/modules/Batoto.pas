@@ -244,7 +244,7 @@ function GetPageNumber(var DownloadThread: TDownloadThread; const AURL: String;
 var
   query: TXQueryEngineHTML;
   v: IXQValue;
-  cid: String;
+  cid, s: String;
 begin
   Result := False;
   if DownloadThread = nil then Exit;
@@ -257,8 +257,13 @@ begin
       try
         query.ParseHTML(StreamToString(Document));
         PageContainerLinks.Text := cid;
-        if query.XPathString('//select[@id="page_select"]') <> '' then
-          PageNumber := Query.XPath('(//select[@id="page_select"])[1]/option/@value').Count
+        if query.XPathString('//select[@id="page_select"]') <> '' then begin
+          PageNumber := Query.XPath('(//select[@id="page_select"])[1]/option/@value').Count;
+          if PageNumber>0 then begin
+            s:=query.XPathString('//div[@id="full_image"]//img/@src');
+            if s<>'' then PageLinks.Add(s)
+          end;
+        end
         else begin
         // long-strip view
           PageLinks.Clear;
