@@ -663,11 +663,11 @@ begin
 
           if Terminated then Break;
 
-          tempDataProcess.OpenTable('', True);
-
           FStatus := RS_UpdatingList + Format(' [%d/%d] %s',
             [websitePtr, websites.Count, website]) + ' | ' + RS_IndexingNewTitle + '...';
           Synchronize(MainThreadShowGetting);
+
+          tempDataProcess.OpenTable('', True);
 
           // get manga info
           if tempDataProcess.RecordCount>0 then
