@@ -1677,6 +1677,7 @@ object MainForm: TMainForm
         Header.Columns = <        
           item
             Alignment = taRightJustify
+            Options = [coDraggable, coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coFixed]
             Position = 0
             Text = '#'
           end        
