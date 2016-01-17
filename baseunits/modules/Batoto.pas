@@ -103,6 +103,7 @@ begin
   AHTTP.Cookies.Text:=Account.Cookies['Batoto'];
   AHTTP.KeepAlive:=False;
   Result:=AHTTP.GET(AURL);
+  if (AHTTP.ResultCode>400) and (AHTTP.ResultCode<500) then Exit;
   if Result then begin
     Result:=True;
     if Account.Enabled[modulename]=False then Exit;
