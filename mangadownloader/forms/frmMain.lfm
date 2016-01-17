@@ -497,7 +497,6 @@ object MainForm: TMainForm
             TreeOptions.SelectionOptions = [toFullRowSelect, toMultiSelect]
             OnBeforeCellPaint = clbChapterListBeforeCellPaint
             OnGetText = clbChapterListGetText
-            OnGetNodeDataSize = clbChapterListGetNodeDataSize
             OnInitNode = clbChapterListInitNode
           end
           object btReadOnline: TBitBtn

@@ -364,15 +364,11 @@ type
     procedure clbChapterListBeforeCellPaint(Sender: TBaseVirtualTree;
       TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
       CellPaintMode: TVTCellPaintMode; CellRect: TRect; var ContentRect: TRect);
-    procedure clbChapterListFreeNode(Sender : TBaseVirtualTree;
-      Node : PVirtualNode);
-    procedure clbChapterListGetNodeDataSize(Sender: TBaseVirtualTree;
-      var NodeDataSize: Integer);
     procedure clbChapterListGetText(Sender: TBaseVirtualTree;
       Node: PVirtualNode; Column: TColumnIndex; TextType: TVSTTextType;
       var CellText: String);
-    procedure clbChapterListInitNode(Sender: TBaseVirtualTree;
-      ParentNode, Node: PVirtualNode; var InitialStates: TVirtualNodeInitStates);
+    procedure clbChapterListInitNode(Sender: TBaseVirtualTree; ParentNode,
+      Node: PVirtualNode; var InitialStates: TVirtualNodeInitStates);
     procedure edSearchChange(Sender: TObject);
     procedure edSearchKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState
       );
@@ -2269,59 +2265,29 @@ procedure TMainForm.clbChapterListBeforeCellPaint(Sender: TBaseVirtualTree;
   TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
   CellPaintMode: TVTCellPaintMode; CellRect: TRect; var ContentRect: TRect);
 begin
-  if Assigned(Node) then
-    if ChapterList[Node^.Index].Downloaded then
-    begin
-      TargetCanvas.Brush.Color := CL_HLGreenMarks;
-      TargetCanvas.FillRect(CellRect);
-    end;
-end;
-
-procedure TMainForm.clbChapterListFreeNode(Sender : TBaseVirtualTree;
-  Node : PVirtualNode);
-var
-  Data: PChapterStateItem;
-begin
-  Data := Sender.GetNodeData(Node);
-  if Assigned(Data) then
-    Finalize(Data^);
-end;
-
-procedure TMainForm.clbChapterListGetNodeDataSize(Sender: TBaseVirtualTree;
-  var NodeDataSize: Integer);
-begin
-  NodeDataSize := SizeOf(TChapterStateItem);
+  if Node^.Index>=Length(ChapterList) then Exit;
+  if ChapterList[Node^.Index].Downloaded then
+  begin
+    TargetCanvas.Brush.Color:=CL_HLGreenMarks;
+    TargetCanvas.FillRect(CellRect);
+  end;
 end;
 
 procedure TMainForm.clbChapterListGetText(Sender: TBaseVirtualTree;
   Node: PVirtualNode; Column: TColumnIndex; TextType: TVSTTextType;
   var CellText: String);
-var
-  Data: PChapterStateItem;
 begin
-  Data := clbChapterList.GetNodeData(Node);
-  if Assigned(Data) then
-    CellText := Data^.Title;
+  if Node^.Index>=Length(ChapterList) then Exit;
+  if Length(ChapterList)=1 then
+    CellText:=ChapterList[Node^.Index].Title
+  else
+    CellText:=Format('%.4d - %s',[Node^.Index+1,ChapterList[Node^.Index].Title]);
 end;
 
 procedure TMainForm.clbChapterListInitNode(Sender: TBaseVirtualTree;
   ParentNode, Node: PVirtualNode; var InitialStates: TVirtualNodeInitStates);
-var
-  Data: PChapterStateItem;
 begin
-  with Sender do
-  begin
-    Data := GetNodeData(Node);
-    if mangaInfo.chapterName.Count = 1 then
-      Data^.Title := ChapterList[Node^.Index].Title
-    else
-      Data^.Title := Format('%.4d - %s', [Node^.Index + 1,
-        ChapterList[Node^.Index].Title]);
-    Data^.Link := ChapterList[Node^.Index].Link;
-    Data^.Downloaded := ChapterList[Node^.Index].Downloaded;
-    Node^.CheckType := ctCheckBox;
-    clbChapterList.ValidateNode(Node, False);
-  end;
+  if Assigned(Node) then Node^.CheckType:=ctCheckBox;
 end;
 
 procedure TMainForm.edURLKeyPress(Sender: TObject; var Key: Char);
