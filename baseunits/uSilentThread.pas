@@ -319,7 +319,7 @@ begin
     begin
       // add a new download task
       p := DLManager.AddTask;
-      DLManager.TaskItem(p).Website := website;
+      DLManager.Items[p].Website := website;
 
       if Trim(title) = '' then
         title := Info.mangaInfo.title;
@@ -334,27 +334,27 @@ begin
                           Info.mangaInfo.chapterName.Strings[i],
                           Format('%.4d', [i + 1]),
                           OptionChangeUnicodeCharacter);
-        DLManager.TaskItem(p).chapterName.Add(s);
-        DLManager.TaskItem(p).chapterLinks.Add(
+        DLManager.Items[p].chapterName.Add(s);
+        DLManager.Items[p].chapterLinks.Add(
           Info.mangaInfo.chapterLinks.Strings[i]);
       end;
 
       if cbAddAsStopped.Checked then
       begin
-        DLManager.TaskItem(p).Status := STATUS_STOP;
-        DLManager.TaskItem(p).downloadInfo.Status := RS_Stopped;
+        DLManager.Items[p].Status := STATUS_STOP;
+        DLManager.Items[p].downloadInfo.Status := RS_Stopped;
       end
       else
       begin
-        DLManager.TaskItem(p).downloadInfo.Status := RS_Waiting;
-        DLManager.TaskItem(p).Status := STATUS_WAIT;
+        DLManager.Items[p].downloadInfo.Status := RS_Waiting;
+        DLManager.Items[p].Status := STATUS_WAIT;
       end;
 
-      DLManager.TaskItem(p).currentDownloadChapterPtr := 0;
-      DLManager.TaskItem(p).downloadInfo.Website := website;
-      DLManager.TaskItem(p).downloadInfo.Link := URL;
-      DLManager.TaskItem(p).downloadInfo.Title := title;
-      DLManager.TaskItem(p).downloadInfo.DateTime := Now;
+      DLManager.Items[p].currentDownloadChapterPtr := 0;
+      DLManager.Items[p].downloadInfo.Website := website;
+      DLManager.Items[p].downloadInfo.Link := URL;
+      DLManager.Items[p].downloadInfo.Title := title;
+      DLManager.Items[p].downloadInfo.DateTime := Now;
 
       if FSavePath = '' then
       begin
@@ -377,7 +377,7 @@ begin
             OptionChangeUnicodeCharacter);
         FSavePath := CorrectPathSys(FSavePath);
       end;
-      DLManager.TaskItem(p).downloadInfo.SaveTo := FSavePath;
+      DLManager.Items[p].downloadInfo.SaveTo := FSavePath;
 
       UpdateVtDownload;
       DLManager.CheckAndActiveTask(False);

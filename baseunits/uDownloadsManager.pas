@@ -150,6 +150,7 @@ type
     FSortDirection: Boolean;
     FSortColumn: Integer;
     DownloadManagerFile: TIniFile;
+    function GetItems(Index: Integer): TTaskContainer;
   protected
     function GetTaskCount: Integer;
     function GetTransferRate: Integer;
@@ -175,7 +176,6 @@ type
     constructor Create;
     destructor Destroy; override;
 
-    function TaskItem(const Index: Integer): TTaskContainer;
     property Count: Integer read GetTaskCount;
 
     procedure BackupDownloadedChaptersList;
@@ -223,6 +223,7 @@ type
     property SortDirection: Boolean read FSortDirection write FSortDirection;
     property SortColumn: Integer read FSortColumn write FSortColumn;
     property TransferRate: Integer read GetTransferRate;
+    property Items[Index: Integer]: TTaskContainer read GetItems;
   end;
 
 resourcestring
@@ -1604,6 +1605,12 @@ end;
 
 { TDownloadManager }
 
+function TDownloadManager.GetItems(Index: Integer): TTaskContainer;
+begin
+  if (Index<0) or (Containers.Count=0) then Exit(nil);
+  Result:=TTaskContainer(Containers[Index]);
+end;
+
 function TDownloadManager.GetTaskCount: Integer;
 begin
   Result := Containers.Count;
@@ -1683,13 +1690,6 @@ begin
   CS_DownloadedChapterList.Free;
   CS_DownloadManager_Task.Free;
   inherited Destroy;
-end;
-
-function TDownloadManager.TaskItem(const Index: Integer): TTaskContainer;
-begin
-  if (Index < 0) or (Containers.Count < 0) then
-    Exit(nil);
-  Result := TTaskContainer(Containers[Index]);
 end;
 
 procedure TDownloadManager.BackupDownloadedChaptersList;
