@@ -14,12 +14,12 @@ object AccountManagerForm: TAccountManagerForm
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   OnShow = FormShow
-  Visible = False
+  LCLVersion = '1.7'
   object pnBtContainer: TPanel
-    Left = 297
+    Left = 295
     Height = 304
     Top = 6
-    Width = 89
+    Width = 91
     Align = alRight
     AutoSize = True
     BevelOuter = bvNone
@@ -27,13 +27,13 @@ object AccountManagerForm: TAccountManagerForm
     ChildSizing.Layout = cclLeftToRightThenTopToBottom
     ChildSizing.ControlsPerLine = 1
     ClientHeight = 304
-    ClientWidth = 89
+    ClientWidth = 91
     TabOrder = 1
     object btDelete: TBitBtn
       Left = 6
       Height = 26
       Top = 64
-      Width = 83
+      Width = 85
       Align = alTop
       AutoSize = True
       BorderSpacing.Left = 6
@@ -82,7 +82,7 @@ object AccountManagerForm: TAccountManagerForm
       Left = 6
       Height = 26
       Top = 32
-      Width = 83
+      Width = 85
       Align = alTop
       AutoSize = True
       BorderSpacing.Left = 6
@@ -131,7 +131,7 @@ object AccountManagerForm: TAccountManagerForm
       Left = 6
       Height = 26
       Top = 0
-      Width = 83
+      Width = 85
       Align = alTop
       AutoSize = True
       BorderSpacing.Left = 6
@@ -180,7 +180,7 @@ object AccountManagerForm: TAccountManagerForm
       Left = 6
       Height = 26
       Top = 96
-      Width = 83
+      Width = 85
       Align = alTop
       AutoSize = True
       BorderSpacing.Left = 6
@@ -230,13 +230,13 @@ object AccountManagerForm: TAccountManagerForm
     Left = 6
     Height = 304
     Top = 6
-    Width = 291
+    Width = 289
     Align = alClient
     Header.AutoSizeIndex = 0
     Header.Columns = <    
       item
         MinWidth = 25
-        Options = [coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible]
+        Options = [coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coFixed]
         Position = 0
         Width = 25
       end    
@@ -253,6 +253,7 @@ object AccountManagerForm: TAccountManagerForm
         Text = 'Status'
       end>
     Header.DefaultHeight = 17
+    Header.Height = 25
     Header.Options = [hoColumnResize, hoDrag, hoShowSortGlyphs, hoVisible]
     NodeDataSize = 1
     TabOrder = 0
