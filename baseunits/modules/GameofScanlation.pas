@@ -64,7 +64,7 @@ begin
         query.ParseHTML(Document);
         if title=''then title:=query.XPathString('//div[@class="titleBarContent"]/h1');
         GetChapters;
-        p:=StrToIntDef(query.XPathString('(//div[@class="PageNav"])[1]/@data-end'),1);
+        p:=StrToIntDef(query.XPathString('(//div[@class="PageNav"])[1]/@data-last'),1);
         if p>1 then
           for i:=2 to p do
             if GET(rurl+'page-'+IntToStr(i)) then begin
