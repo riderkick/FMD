@@ -4297,7 +4297,7 @@ begin
         optionMangaSiteSelectionNodes[i]^.CheckState := csUncheckedNormal;
     l := TStringList.Create;
     try
-      s := options.ReadString('general', 'MangaListSelect',
+      s := ReadString('general', 'MangaListSelect',
         mangalistIni.ReadString('general', 'DefaultSelect', DEFAULT_LIST));
       if Pos(SEPERATOR, s) > 0 then
         GetParams(l, s)    //for old config
