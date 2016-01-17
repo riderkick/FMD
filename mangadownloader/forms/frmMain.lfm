@@ -112,18 +112,16 @@ object MainForm: TMainForm
         TreeOptions.MiscOptions = [toAcceptOLEDrop, toFullRepaintOnResize, toInitOnSave, toToggleOnDblClick, toWheelPanning, toFullRowDrag, toEditOnClick]
         TreeOptions.PaintOptions = [toHideFocusRect, toShowButtons, toShowDropmark, toShowVertGridLines, toThemeAware, toUseBlendedImages, toFullVertGridLines]
         TreeOptions.SelectionOptions = [toFullRowSelect, toMultiSelect]
-        OnAfterCellPaint = vtDownloadAfterCellPaint
         OnBeforeCellPaint = vtDownloadBeforeCellPaint
         OnColumnDblClick = vtDownloadColumnDblClick
         OnDragAllowed = vtDownloadDragAllowed
         OnDragOver = vtDownloadDragOver
         OnDragDrop = vtDownloadDragDrop
-        OnFreeNode = vtDownloadFreeNode
+        OnDrawText = vtDownloadDrawText
         OnGetText = vtDownloadGetText
         OnGetImageIndex = vtDownloadGetImageIndex
         OnGetHint = vtDownloadGetHint
         OnHeaderClick = vtDownloadHeaderClick
-        OnInitNode = vtDownloadInitNode
         OnKeyDown = vtDownloadKeyDown
         OnKeyUp = vtDownloadKeyUp
       end

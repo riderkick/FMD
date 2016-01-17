@@ -465,9 +465,6 @@ type
     procedure tvDownloadFilterSelectionChanged(Sender: TObject);
     procedure UniqueInstanceFMDOtherInstance(Sender: TObject;
       ParamCount: Integer; Parameters: array of String);
-    procedure vtDownloadAfterCellPaint(Sender: TBaseVirtualTree;
-      TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
-      const CellRect: TRect);
     procedure vtDownloadBeforeCellPaint(Sender: TBaseVirtualTree;
       TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
       CellPaintMode: TVTCellPaintMode; CellRect: TRect; var ContentRect: TRect);
@@ -481,7 +478,9 @@ type
     procedure vtDownloadDragOver(Sender : TBaseVirtualTree; Source : TObject;
       Shift : TShiftState; State : TDragState; const Pt : TPoint;
       Mode : TDropMode; var Effect : LongWord; var Accept : Boolean);
-    procedure vtDownloadFreeNode(Sender: TBaseVirtualTree; Node: PVirtualNode);
+    procedure vtDownloadDrawText(Sender: TBaseVirtualTree;
+      TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
+      const CellText: String; const CellRect: TRect; var DefaultDraw: Boolean);
     procedure vtDownloadGetHint(Sender: TBaseVirtualTree; Node: PVirtualNode;
       Column: TColumnIndex; var LineBreakStyle: TVTTooltipLineBreakStyle;
       var HintText: String);
@@ -492,8 +491,6 @@ type
       Column: TColumnIndex; TextType: TVSTTextType; var CellText: String);
     procedure vtDownloadHeaderClick(Sender: TVTHeader; Column: TColumnIndex;
       Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
-    procedure vtDownloadInitNode(Sender: TBaseVirtualTree;
-      ParentNode, Node: PVirtualNode; var InitialStates: TVirtualNodeInitStates);
     procedure vtDownloadKeyDown(Sender : TObject; var Key : Word;
       Shift : TShiftState);
     procedure vtDownloadKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
@@ -3457,103 +3454,6 @@ begin
   BringToFront;
 end;
 
-procedure TMainForm.vtDownloadAfterCellPaint(Sender: TBaseVirtualTree;
-  TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
-  const CellRect: TRect);
-var
-  Data: PDownloadInfo;
-  BarRect, ProgressBarRect: TRect;
-  Percents: double;
-  ww, hh: Integer;
-begin
-  if Node = nil then Exit;
-  if Node^.Index >= DLManager.Count then Exit;
-  if Column = 2 then
-  begin
-    Data := vtDownload.GetNodeData(Node);
-    //if Data^.Status = stFinish then
-    if DLManager.TaskItem(Node^.Index).Status in
-      [STATUS_FINISH, STATUS_COMPRESS, STATUS_FAILED] then
-      Percents := 1
-    else
-    if StrToIntDef(Trim(ExtractWord(2, Data^.Progress, ['/'])), 100) = 0 then
-      Percents := 0
-    else
-      Percents := StrToIntDef(Trim(ExtractWord(1, Data^.Progress, ['/'])), 0) /
-        StrToIntDef(Trim(ExtractWord(2, Data^.Progress, ['/'])), 100);
-    //progress-bar box
-    BarRect.Left := CellRect.Left + 2;
-    BarRect.Top := CellRect.Top + 2;
-    BarRect.Right := CellRect.Right - 2;
-    BarRect.Bottom := CellRect.Bottom - 2;
-    TargetCanvas.Pen.Style := psSolid;
-    TargetCanvas.Brush.Style := bsSolid;
-
-    TargetCanvas.Pen.Color:=CL_BarGrayLine;
-    TargetCanvas.Brush.Color:=CL_BarGray;
-
-    TargetCanvas.Rectangle(BarRect);
-    //TargetCanvas.RoundRect(BarRect, 6,6);
-
-    // a progress-bar
-    ProgressBarRect := BarRect;
-    //Inc(ProgressBarRect.Left);
-    //Inc(ProgressBarRect.Top);
-    //Dec(ProgressBarRect.Right);
-    //Dec(ProgressBarRect.Bottom);
-    ProgressBarRect.Right := round((ProgressBarRect.Right - ProgressBarRect.Left) *
-      Percents) + ProgressBarRect.Left;
-    if (ProgressBarRect.Right - ProgressBarRect.Left) > 0 then
-    begin
-      //TargetCanvas.Pen.Style:= psClear;
-
-      case DLManager.TaskItem(Node^.Index).Status of
-        //(STATUS_STOP, STATUS_WAIT, STATUS_PREPARE,
-        //STATUS_DOWNLOAD, STATUS_FINISH, STATUS_COMPRESS, STATUS_PROBLEM, STATUS_FAILED);
-        STATUS_STOP, STATUS_FAILED:
-        begin
-          TargetCanvas.Pen.Color   := CL_BarRedLine;
-          TargetCanvas.Brush.Color := CL_BarRed;
-        end;
-        STATUS_WAIT:
-        begin
-          TargetCanvas.Pen.Color   := CL_BarGray;
-          TargetCanvas.Brush.Color := CL_BarGrayLine;
-        end;
-        STATUS_DOWNLOAD:
-        begin
-          TargetCanvas.Pen.Color   := CL_BarBlueLine;
-          TargetCanvas.Brush.Color := CL_BarBlue;
-        end;
-        STATUS_PROBLEM:
-        begin
-          TargetCanvas.Pen.Color   := CL_BarYellowLine;
-          TargetCanvas.Brush.Color := CL_BarYellow;
-        end;
-        STATUS_FINISH:
-        begin
-          TargetCanvas.Pen.Color   := CL_BarGreenLine;
-          TargetCanvas.Brush.Color := CL_BarGreenLine;
-        end;
-        else
-        begin
-          TargetCanvas.Pen.Color   := CL_BarBrownGoldLine;
-          TargetCanvas.Brush.Color := CL_BarBrownGold;
-        end;
-      end;
-      //TargetCanvas.RoundRect(ProgressBarRect, 5, 5);
-      TargetCanvas.Rectangle(ProgressBarRect);
-      //TargetCanvas.FillRect(ProgressBarRect);
-    end;
-    //text
-    TargetCanvas.Font.Color := clBlack;
-    TargetCanvas.Brush.Style := bsClear;
-    TargetCanvas.GetTextSize(Data^.Progress, ww, hh);
-    TargetCanvas.TextOut(CellRect.Left + ((CellRect.Right - CellRect.Left - ww) div 2),
-      CellRect.Top + ((CellRect.Bottom - CellRect.Top - hh) div 2), Data^.Progress);
-  end;
-end;
-
 procedure TMainForm.vtDownloadBeforeCellPaint(Sender: TBaseVirtualTree;
   TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
   CellPaintMode: TVTCellPaintMode; CellRect: TRect; var ContentRect: TRect);
@@ -3669,73 +3569,130 @@ begin
   Accept := (Sender = Source);
 end;
 
-// Download table
-
-procedure TMainForm.vtDownloadFreeNode(Sender: TBaseVirtualTree; Node: PVirtualNode);
+procedure TMainForm.vtDownloadDrawText(Sender: TBaseVirtualTree;
+  TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
+  const CellText: String; const CellRect: TRect; var DefaultDraw: Boolean);
 var
-  Data: PDownloadInfo;
+  BarRect, ProgressBarRect: TRect;
+  Percents: double;
+  ww, hh: Integer;
 begin
-  Data := Sender.GetNodeData(Node);
-  if Assigned(Data) then
-    Finalize(Data^);
+  if Column = 2 then
+  begin
+    DefaultDraw:=False;
+    if Node=nil then Exit;
+    if Node^.Index>=DLManager.Count then Exit;
+    with DLManager.TaskItem(Node^.Index).DownloadInfo,TargetCanvas do begin
+      if DLManager.TaskItem(Node^.Index).Status in
+        [STATUS_FINISH, STATUS_COMPRESS, STATUS_FAILED] then
+        Percents := 1
+      else
+      if StrToIntDef(Trim(ExtractWord(2, Progress, ['/'])), 100) = 0 then
+        Percents:= 0
+      else
+        Percents:=StrToIntDef(Trim(ExtractWord(1, Progress, ['/'])), 0) /
+          StrToIntDef(Trim(ExtractWord(2, Progress, ['/'])), 100);
+
+      //base bar
+      BarRect.Left := CellRect.Left + 2;
+      BarRect.Top := CellRect.Top + 2;
+      BarRect.Right := CellRect.Right - 2;
+      BarRect.Bottom := CellRect.Bottom - 2;
+      Pen.Style := psSolid;
+      Brush.Style := bsSolid;
+      Pen.Color:=CL_BarGrayLine;
+      Brush.Color:=CL_BarGray;
+      Rectangle(BarRect);
+      //progress bar
+      ProgressBarRect := BarRect;
+      //Inc(ProgressBarRect.Left);
+      //Inc(ProgressBarRect.Top);
+      //Dec(ProgressBarRect.Right);
+      //Dec(ProgressBarRect.Bottom);
+      ProgressBarRect.Right := round((ProgressBarRect.Right - ProgressBarRect.Left) *
+        Percents) + ProgressBarRect.Left;
+      if (ProgressBarRect.Right - ProgressBarRect.Left) > 0 then
+      begin
+        case DLManager.TaskItem(Node^.Index).Status of
+          STATUS_STOP,
+          STATUS_FAILED  : begin
+                             Pen.Color   := CL_BarRedLine;
+                             Brush.Color := CL_BarRed;
+                           end;
+          STATUS_WAIT    : begin
+                             Pen.Color   := CL_BarGrayLine;
+                             Brush.Color := CL_BarGray;
+                           end;
+          STATUS_DOWNLOAD: begin
+                             Pen.Color   := CL_BarBlueLine;
+                             Brush.Color := CL_BarBlue;
+                           end;
+          STATUS_PROBLEM : begin
+                             Pen.Color   := CL_BarYellowLine;
+                             Brush.Color := CL_BarYellow;
+                           end;
+          STATUS_FINISH  : begin
+                             Pen.Color   := CL_BarGreenLine;
+                             Brush.Color := CL_BarGreenLine;
+                           end;
+          else begin
+            Pen.Color   := CL_BarBrownGoldLine;
+            Brush.Color := CL_BarBrownGold;
+          end;
+        end;
+        Rectangle(ProgressBarRect);
+      end;
+      //text
+      Font.Color := clBlack;
+      Brush.Style := bsClear;
+      GetTextSize(Progress, ww, hh);
+      TextOut(CellRect.Left + ((CellRect.Right - CellRect.Left - ww) div 2),
+        CellRect.Top + ((CellRect.Bottom - CellRect.Top - hh) div 2), Progress);
+    end;
+  end;
 end;
+
+// Download table
 
 procedure TMainForm.vtDownloadGetHint(Sender: TBaseVirtualTree;
   Node: PVirtualNode; Column: TColumnIndex; var LineBreakStyle: TVTTooltipLineBreakStyle;
   var HintText: String);
 var
   l, i: Cardinal;
-  p: PDownloadInfo;
 begin
-  if Node^.Index >= DLManager.Count then Exit;
-  if Column = 0 then
-  begin
-    l := DLManager.TaskItem(Node^.Index).ChapterLinks.Count;
-    if l > 0 then
-    begin
-      HintText := '';
-      if l < 5 then
-      begin
-        for i := 0 to l - 1 do
-          if HintText = '' then
-            HintText :=
-              DLManager.TaskItem(Node^.Index).ChapterName.Strings[i]{ + ' : ' +
-        DLManager.TaskItem(Node^.Index).ChapterLinks.Strings[i]}
-          else
-            HintText := HintText + LineEnding +
-              DLManager.TaskItem(Node^.Index).ChapterName.Strings[i]{ + ' : ' +
-        DLManager.TaskItem(Node^.Index).ChapterLinks.Strings[i]};
-      end
-      else
-      begin
-        for i := 0 to 1 do
-          if HintText = '' then
-            HintText :=
-              DLManager.TaskItem(Node^.Index).ChapterName.Strings[i]{ + ' : ' +
-        DLManager.TaskItem(Node^.Index).ChapterLinks.Strings[i]}
-          else
-            HintText := HintText + LineEnding +
-              DLManager.TaskItem(Node^.Index).ChapterName.Strings[i]{ + ' : ' +
-        DLManager.TaskItem(Node^.Index).ChapterLinks.Strings[i]};
-        HintText := HintText + LineEnding + '...';
-        for i := l - 2 to l - 1 do
-          HintText := HintText + LineEnding +
-            DLManager.TaskItem(Node^.Index).ChapterName.Strings[i]{ + ' : ' +
-        DLManager.TaskItem(Node^.Index).ChapterLinks.Strings[i]};
-      end;
-    end;
-  end
-  else
-  begin
-    p := Sender.GetNodeData(Node);
+  if Node^.Index>=DLManager.Count then Exit;
+  with DLManager.TaskItem(Node^.Index),DLManager.TaskItem(Node^.Index).DownloadInfo do
     case Column of
-      1: HintText := p^.Status;
-      2: HintText := p^.Progress;
-      4: HintText := p^.Website;
-      5: HintText := p^.SaveTo;
-      6: HintText := DateTimeToStr(p^.dateTime);
+      0: begin
+           l := ChapterLinks.Count;
+           if l>0 then
+           begin
+             HintText:='';
+             if l<5 then
+               for i:=0 to l-1 do begin
+                 if HintText<>'' then HintText+=LineEnding;
+                 HintText+=ChapterName.Strings[i]
+               end
+             else
+             begin
+               for i:=0 to 1 do begin
+                 if HintText<>'' then HintText+=LineEnding;
+                 HintText+=ChapterName.Strings[i]
+               end;
+               HintText+=LineEnding+'...';
+               for i:=l-2 to l-1 do begin
+                 if HintText<>'' then HintText+=LineEnding;
+                 HintText+=ChapterName.Strings[i]
+               end;
+             end;
+           end;
+         end;
+      1: HintText:=Status;
+      2: HintText:=Progress;
+      4: HintText:=Website;
+      5: HintText:=SaveTo;
+      6: HintText:=DateTimeToStr(DateTime);
     end;
-  end;
 end;
 
 procedure TMainForm.vtDownloadGetImageIndex(Sender: TBaseVirtualTree;
@@ -3744,42 +3701,27 @@ procedure TMainForm.vtDownloadGetImageIndex(Sender: TBaseVirtualTree;
 begin
   if (Node^.Index < DLManager.Count) and
     (vtDownload.Header.Columns[Column].Position = 0) then
-    ImageIndex := integer(DLManager.TaskItem(Node^.Index).Status);
+    ImageIndex := Integer(DLManager.TaskItem(Node^.Index).Status);
 end;
 
 procedure TMainForm.vtDownloadGetText(Sender: TBaseVirtualTree;
   Node: PVirtualNode; Column: TColumnIndex; TextType: TVSTTextType;
   var CellText: String);
-var
-  Data: PDownloadInfo;
-  pos: Cardinal;
 begin
   if Node^.Index >= DLManager.Count then Exit;
-  with Sender do
-  begin
-    pos := Node^.Index;
-    Data := Sender.GetNodeData(Node);
-    if (DLManager.Count > 0) then
-      if Assigned(Data) and (DLManager.TaskItem(pos) <> nil) then
-      begin
-        Data^.Title := DLManager.TaskItem(pos).DownloadInfo.Title;
-        Data^.Status := DLManager.TaskItem(pos).DownloadInfo.Status;
-        Data^.Progress := DLManager.TaskItem(pos).DownloadInfo.Progress;
-        Data^.TransferRate := DLManager.TaskItem(pos).DownloadInfo.TransferRate;
-        Data^.Website := DLManager.TaskItem(pos).DownloadInfo.Website;
-        Data^.SaveTo := DLManager.TaskItem(pos).DownloadInfo.SaveTo;
-        Data^.DateTime := DLManager.TaskItem(pos).DownloadInfo.DateTime;
-        case Column of
-          0: CellText := Data^.title;
-          1: CellText := Data^.status;
-          2: CellText := '';
-          3: CellText := Data^.TransferRate;
-          4: CellText := Data^.website;
-          5: CellText := Data^.saveTo;
-          6: CellText := DateTimeToStr(Data^.dateTime);
-        end;
-      end;
-  end;
+  with DLManager.TaskItem(Node^.Index).DownloadInfo do
+    case Column of
+      0: CellText:=Title;
+      1: CellText:=Status;
+      2: begin
+           if Progress='' then CellText:='Empty'
+           else CellText:=Progress;
+         end;
+      3: CellText:=TransferRate;
+      4: CellText:=Website;
+      5: CellText:=SaveTo;
+      6: CellText:=DateTimeToStr(DateTime);
+    end;
 end;
 
 procedure TMainForm.vtDownloadHeaderClick(Sender: TVTHeader;
@@ -3795,32 +3737,6 @@ begin
   vtDownload.Header.SortColumn := Column;
   DLManager.Sort(Column);
   vtDownload.Repaint;
-end;
-
-procedure TMainForm.vtDownloadInitNode(Sender: TBaseVirtualTree;
-  ParentNode, Node: PVirtualNode; var InitialStates: TVirtualNodeInitStates);
-var
-  Data: PDownloadInfo;
-  pos: Cardinal;
-begin
-  with Sender do
-  begin
-    pos := Node^.Index;
-    Data := GetNodeData(Node);
-    if (DLManager.Count <> 0) then
-      if (DLManager.TaskItem(pos) <> nil) or
-        (not DLManager.TaskItem(pos).Thread.isTerminated) then
-      begin
-        Data^.title := DLManager.TaskItem(pos).DownloadInfo.title;
-        Data^.status := DLManager.TaskItem(pos).DownloadInfo.Status;
-        Data^.progress := DLManager.TaskItem(pos).DownloadInfo.Progress;
-        Data^.TransferRate := DLManager.TaskItem(pos).DownloadInfo.TransferRate;
-        Data^.website := DLManager.TaskItem(pos).DownloadInfo.Website;
-        Data^.saveTo := DLManager.TaskItem(pos).DownloadInfo.SaveTo;
-        Data^.dateTime := DLManager.TaskItem(pos).DownloadInfo.dateTime;
-      end;
-  end;
-  vtDownload.ValidateNode(Node, False);
 end;
 
 procedure TMainForm.vtDownloadKeyDown(Sender : TObject; var Key : Word;
