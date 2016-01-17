@@ -86,6 +86,7 @@ type
     FSortColumn: Integer;
     FSortDirection, FIsAuto, FIsRunning: Boolean;
     FFavorites: TFPList;
+    function GetItems(Index: Integer): TFavoriteContainer;
   protected
     function GetFavoritesCount: Integer;
   public
@@ -97,8 +98,6 @@ type
 
     constructor Create;
     destructor Destroy; override;
-
-    function FavoriteItem(const Index: Integer): TFavoriteContainer;
 
     //Check favorites
     procedure CheckForNewChapter(FavoriteIndex: Integer = -1);
@@ -137,6 +136,7 @@ type
     property SortColumn: Integer read FSortColumn write FSortColumn;
     property isAuto: Boolean read FIsAuto write FIsAuto;
     property isRunning: Boolean read FIsRunning write FIsRunning;
+    property Items[Index: Integer]: TFavoriteContainer read GetItems;
   end;
 
 resourcestring
@@ -301,7 +301,7 @@ begin
               with thread do
               begin
                 task := Self;
-                container := manager.FavoriteItem(i);
+                container := manager.Items[i];
                 workCounter := i;
                 Start;
               end;
@@ -406,6 +406,12 @@ end;
 
 { TFavoriteManager }
 
+function TFavoriteManager.GetItems(Index: Integer): TFavoriteContainer;
+begin
+  if (Index<0) or (Index>=FFavorites.Count) then Exit(nil);
+  Result := TFavoriteContainer(FFavorites.Items[Index]);
+end;
+
 function TFavoriteManager.GetFavoritesCount: Integer;
 begin
   CS_Favorites.Acquire;
@@ -442,13 +448,6 @@ begin
   FFavorites.Free;
   CS_Favorites.Free;
   inherited Destroy;
-end;
-
-function TFavoriteManager.FavoriteItem(const Index: Integer): TFavoriteContainer;
-begin
-  if (Index < 0) or (Index >= FFavorites.Count) then
-    Exit(nil);
-  Result := TFavoriteContainer(FFavorites.Items[Index]);
 end;
 
 procedure TFavoriteManager.CheckForNewChapter(FavoriteIndex: Integer);
@@ -543,7 +542,7 @@ begin
       numOfCompleted := 0;
       counter := 0;
       while counter < FFavorites.Count do
-        with FavoriteItem(counter) do try
+        with Items[counter] do try
             if Assigned(MangaInfo) then
               if MangaInfo.chapterLinks.Count > 0 then
               begin
@@ -571,7 +570,7 @@ begin
                 begin
                   newChapterListStr := newChapterListStr + LineEnding + '- ' +
                     Format(RS_FavoriteHasNewChapter,
-                    [FavoriteInfo.Title, FavoriteItem(counter).FavoriteInfo.Website,
+                    [FavoriteInfo.Title, Items[counter].FavoriteInfo.Website,
                     NewMangaInfo.chapterLinks.Count]);
                   Inc(numOfMangaNewChapters);
                 end;
@@ -618,11 +617,11 @@ begin
             while counter < FFavorites.Count do
             begin
               favDelete := False;
-              with FavoriteItem(counter) do if Assigned(NewMangaInfo) then
+              with Items[counter] do if Assigned(NewMangaInfo) then
                   if (NewMangaInfo.chapterLinks.Count = 0) and
                     (NewMangaInfo.status = '0') then
                   begin
-                    FavoriteItem(counter).Free;
+                    Items[counter].Free;
                     FFavorites.Delete(counter);
                     favDelete := True;
                   end;
@@ -666,7 +665,7 @@ begin
           counter := 0;
           while counter < FFavorites.Count do
           begin
-            with FavoriteItem(counter) do if Assigned(NewMangaInfo) then
+            with Items[counter] do if Assigned(NewMangaInfo) then
                 if NewMangaInfo.chapterLinks.Count > 0 then
                 begin
                   DLManager.CS_DownloadManager_Task.Acquire;
@@ -736,7 +735,7 @@ begin
       counter := 0;
       while counter < FFavorites.Count do
       begin
-        with FavoriteItem(counter) do begin
+        with Items[counter] do begin
           if Assigned(MangaInfo) then
             FreeAndNil(MangaInfo);
           if Assigned(NewMangaInfo) then
