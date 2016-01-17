@@ -87,7 +87,7 @@ begin
             if Pos('ongoing',s)>0 then status:='1' else status:='0';
           end;
         end;
-        summary:=query.XPathString('//p[@id="show"]/text()]');
+        summary:=query.XPathString('//p[@id="show"]/text()');
 
         a:=query.XPath('//ul[@class="detail-chlist"]/li/a/@href');
         v:=query.XPath('//ul[@class="detail-chlist"]/li/a/span[1]');
