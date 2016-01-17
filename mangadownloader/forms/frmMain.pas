@@ -518,11 +518,6 @@ type
     procedure vtMangaListChange(Sender: TBaseVirtualTree; Node: PVirtualNode);
     procedure vtMangaListColumnDblClick(Sender: TBaseVirtualTree;
       Column: TColumnIndex; Shift: TShiftState);
-    procedure vtMangaListDragAllowed(Sender : TBaseVirtualTree;
-      Node : PVirtualNode; Column : TColumnIndex; var Allowed : Boolean);
-    procedure vtMangaListDragOver(Sender : TBaseVirtualTree; Source : TObject;
-      Shift : TShiftState; State : TDragState; const Pt : TPoint;
-      Mode : TDropMode; var Effect : LongWord; var Accept : Boolean);
     procedure vtMangaListBeforeCellPaint(Sender: TBaseVirtualTree;
       TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
       CellPaintMode: TVTCellPaintMode; CellRect: TRect; var ContentRect: TRect);
@@ -4014,19 +4009,6 @@ procedure TMainForm.vtMangaListColumnDblClick(Sender: TBaseVirtualTree;
   Column: TColumnIndex; Shift: TShiftState);
 begin
   miMangaListViewInfosClick(vtMangaList);
-end;
-
-procedure TMainForm.vtMangaListDragAllowed(Sender : TBaseVirtualTree;
-  Node : PVirtualNode; Column : TColumnIndex; var Allowed : Boolean);
-begin
-  Allowed := False;
-end;
-
-procedure TMainForm.vtMangaListDragOver(Sender : TBaseVirtualTree;
-  Source : TObject; Shift : TShiftState; State : TDragState; const Pt : TPoint;
-  Mode : TDropMode; var Effect : LongWord; var Accept : Boolean);
-begin
-  Accept := False;
 end;
 
 // options
