@@ -18,7 +18,6 @@ function GetNameAndLink(var MangaInfo: TMangaInformation;
 var
   query: TXQueryEngineHTML;
   v: IXQValue;
-  s: String;
 begin
   Result:=NET_PROBLEM;
   if MangaInfo=nil then Exit(UNKNOWN_ERROR);
