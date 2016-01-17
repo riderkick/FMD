@@ -854,7 +854,7 @@ function Base64Decode(const s: string): string;
 
 // StringUtils
 function StringReplaceBrackets(const S, OldPattern, NewPattern: string; Flags: TReplaceFlags): string;
-function StreamToString(const M: TMemoryStream): string; inline;
+function StreamToString(const Stream: TStream): string; inline;
 function GetRightValue(const name, s: string): string;
 function QuotedStrd(const S: string): string; overload; inline;
 function QuotedStrd(const S: Integer): string; overload; inline;
@@ -1662,9 +1662,15 @@ begin
   if cs <> '' then S.Text := ConvertEncoding(S.Text, cs, 'utf8');
 end;
 
-function StreamToString(const M: TMemoryStream): string;
+function StreamToString(const Stream: TStream): string;
+var
+  x: Integer;
 begin
-  SetString(Result, PChar(M.Memory), M.Size div SizeOf(Char));
+  //SetString(Result, PChar(Stream.Memory), Stream.Size div SizeOf(Char));
+  Stream.Position:=0;
+  Setlength(Result,Stream.Size);
+  x:=Stream.Read(PChar(Result)^,Stream.Size);
+  SetLength(Result,x);
 end;
 
 function GetRightValue(const name, s: string): string;
