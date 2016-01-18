@@ -3701,14 +3701,17 @@ end;
 
 procedure TMainForm.vtDownloadKeyDown(Sender : TObject; var Key : Word;
   Shift : TShiftState);
+var
+  p: Cardinal;
 begin
-  if (Key in [VK_UP, VK_DOWN]) and (ssCtrl in Shift) then
-  begin
-    if Key = VK_DOWN then
-      vtDownloadMoveItems(vtDownload.GetFirstSelected^.Index, dmBelow)
-    else
-      if vtDownload.GetFirstSelected^.Index > 0 then
-        vtDownloadMoveItems(vtDownload.GetFirstSelected^.Index - 1, dmAbove);
+  if not (ssCtrl in Shift) then Exit;
+  if vtDownload.SelectedCount=0 then Exit;
+  p:=vtDownload.GetFirstSelected()^.Index;
+  case Key of
+    VK_UP   : if p>0 then vtDownloadMoveItems(p-1,dmAbove);
+    VK_DOWN : vtDownloadMoveItems(p,dmBelow);
+    VK_HOME : vtDownloadMoveItems(0,dmAbove);
+    VK_END  : vtDownloadMoveItems(vtDownload.RootNodeCount-1,dmBelow);
   end;
 end;
 
