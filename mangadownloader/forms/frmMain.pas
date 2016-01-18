@@ -3593,7 +3593,7 @@ begin
                            end;
           STATUS_FINISH  : begin
                              Pen.Color   := CL_BarGreenLine;
-                             Brush.Color := CL_BarGreenLine;
+                             Brush.Color := CL_BarGreen;
                            end;
           else begin
             Pen.Color   := CL_BarBrownGoldLine;
