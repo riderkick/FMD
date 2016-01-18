@@ -497,6 +497,12 @@ type
       CellPaintMode: TVTCellPaintMode; CellRect: TRect; var ContentRect: TRect);
     procedure vtFavoritesColumnDblClick(Sender: TBaseVirtualTree;
       Column: TColumnIndex; Shift: TShiftState);
+    procedure vtFavoritesDragDrop(Sender: TBaseVirtualTree; Source: TObject;
+      DataObject: IDataObject; Formats: TFormatArray; Shift: TShiftState;
+      const Pt: TPoint; var Effect: LongWord; Mode: TDropMode);
+    procedure vtFavoritesDragOver(Sender: TBaseVirtualTree; Source: TObject;
+      Shift: TShiftState; State: TDragState; const Pt: TPoint; Mode: TDropMode;
+      var Effect: LongWord; var Accept: Boolean);
     procedure vtFavoritesGetHint(Sender: TBaseVirtualTree; Node: PVirtualNode;
       Column: TColumnIndex; var LineBreakStyle: TVTTooltipLineBreakStyle;
       var HintText: String);
@@ -3757,6 +3763,21 @@ procedure TMainForm.vtFavoritesColumnDblClick(Sender: TBaseVirtualTree;
   Column: TColumnIndex; Shift: TShiftState);
 begin
   miFavoritesOpenFolderClick(Sender);
+end;
+
+procedure TMainForm.vtFavoritesDragDrop(Sender: TBaseVirtualTree;
+  Source: TObject; DataObject: IDataObject; Formats: TFormatArray;
+  Shift: TShiftState; const Pt: TPoint; var Effect: LongWord; Mode: TDropMode);
+begin
+  AddSilentThread(frmDropTarget.GetDropURLs(DataObject), MD_AddToFavorites);
+end;
+
+procedure TMainForm.vtFavoritesDragOver(Sender: TBaseVirtualTree;
+  Source: TObject; Shift: TShiftState; State: TDragState; const Pt: TPoint;
+  Mode: TDropMode; var Effect: LongWord; var Accept: Boolean);
+begin
+  Accept:=True;
+  Effect:=DROPEFFECT_LINK;
 end;
 
 procedure TMainForm.vtFavoritesGetHint(Sender: TBaseVirtualTree;

@@ -1721,6 +1721,8 @@ object MainForm: TMainForm
         TreeOptions.SelectionOptions = [toFullRowSelect, toMultiSelect]
         OnBeforeCellPaint = vtFavoritesBeforeCellPaint
         OnColumnDblClick = vtFavoritesColumnDblClick
+        OnDragOver = vtFavoritesDragOver
+        OnDragDrop = vtFavoritesDragDrop
         OnGetText = vtFavoritesGetText
         OnGetImageIndex = vtFavoritesGetImageIndex
         OnGetHint = vtFavoritesGetHint
