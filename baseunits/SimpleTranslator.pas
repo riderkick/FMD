@@ -944,6 +944,8 @@ begin
       LRSTranslator := ltrans;
       for i := 0 to Screen.CustomFormCount-1 do
         ltrans.UpdateTranslation(Screen.CustomForms[i]);
+      for i := 0 to Screen.DataModuleCount-1 do
+        ltrans.UpdateTranslation(Screen.DataModules[i]);
       LastSelected := lang;
       Result := True;
     end;
