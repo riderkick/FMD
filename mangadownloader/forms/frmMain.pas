@@ -3473,10 +3473,10 @@ begin
       else
       if (i > 0) then
       begin
-        if (nIndex < DLManager.Count) then
+        if nIndex < vtDownload.RootNodeCount then
           Inc(nIndex);
       end;
-      if nIndex > DLManager.Count then
+      if nIndex > vtDownload.RootNodeCount then
         Dec(nIndex);
       DLManager.containers.Insert(nIndex, ConTemp[i]);
     end;
