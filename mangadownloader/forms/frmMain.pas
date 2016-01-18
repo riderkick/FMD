@@ -3446,61 +3446,51 @@ var
   ConTemp: TFPList;
 begin
   if vtDownload.SelectedCount=0 then Exit;
+  nIndex:=NextIndex;
   vtDownload.BeginUpdate;
-  ConTemp := TFPList.Create;
+  ConTemp:=TFPList.Create;
+  DLManager.CS_DownloadManager_Task.Acquire;
   try
-    nIndex := NextIndex;
-    cNode := vtDownload.GetFirst;
-    i := 0;
-    while i < vtDownload.RootNodeCount do
+    i:=0;
+    cNode:=vtDownload.GetFirstSelected();
+    while cNode<>nil do
     begin
-      if vtDownload.Selected[cNode] then
-      begin
-        vtDownload.Selected[cNode] := False;
-        ConTemp.Add(DLManager.Items[i]);
-        DLManager.containers.Delete(i);
-        if (i < nIndex) and (nIndex > 0) then
-          Dec(nIndex);
-      end
-      else
-        Inc(i);
-      cNode := vtDownload.GetNext(cNode);
-    end;
-    vtDownload.FocusedNode := nil;
-
-    for i := 0 to ConTemp.Count - 1 do
-    begin
-      if (i = 0) and (Mode in [dmBelow, dmNowhere]) then
-        Inc(nIndex)
-      else
-      if (i > 0) then
-      begin
-        if nIndex < vtDownload.RootNodeCount then
-          Inc(nIndex);
-      end;
-      if nIndex > vtDownload.RootNodeCount then
+      vtDownload.Selected[cNode]:=False;
+      ConTemp.Add(DLManager.Items[cNode^.Index-i]);
+      DLManager.Containers.Delete(cNode^.Index-i);
+      if (nIndex>0) and (cNode^.Index<nIndex) then
         Dec(nIndex);
+      Inc(i);
+      cNode:=vtDownload.GetNextSelected(cNode);
+    end;
+
+    for i:=0 to ConTemp.Count-1 do
+    begin
+      if (i=0) and (Mode in [dmBelow,dmNowhere]) then
+        Inc(nIndex)
+      else if (i>0) and (nIndex<DLManager.Count) then
+        Inc(nIndex);
+      if nIndex>DLManager.Count then
+        nIndex:=DLManager.Count;
       DLManager.containers.Insert(nIndex, ConTemp[i]);
     end;
 
-    cNode := vtDownload.GetFirst;
-    while Assigned(cNode) and (cNode^.Index < nIndex) do
-      cNode := vtDownload.GetNext(cNode);
+    cNode:=vtDownload.GetFirst;
+    while cNode^.Index<nIndex do
+      cNode:=vtDownload.GetNext(cNode);
 
-    for i := 0 to ConTemp.Count - 1 do
+    for i:=0 to ConTemp.Count-1 do
     begin
-      if Assigned(cNode) then
-      begin
-        vtDownload.Selected[cNode] := True;
-        vtDownload.FocusedNode := cNode;
-        cNode := vtDownload.GetPrevious(cNode);
-      end;
+      vtDownload.Selected[cNode]:=True;
+      if i<ConTemp.Count-1 then
+        cNode:=vtDownload.GetPrevious(cNode);
     end;
+    vtDownload.FocusedNode:=cNode;
   finally
-    ConTemp.Free;
-    cNode := nil;
-    vtDownload.EndUpdate;
+    DLManager.CS_DownloadManager_Task.Release;
   end;
+  ConTemp.Free;
+  vtDownload.EndUpdate;
   vtDownloadFilters;
 end;
 
