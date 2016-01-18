@@ -594,7 +594,8 @@ type
     procedure AddChapterNameToList;
 
     // Create silent thread
-    procedure AddSilentThread(URL: string);
+    procedure AddSilentThread(URL: string; MetaDataType: TMetaDataType); overload;
+    procedure AddSilentThread(URL: string); overload;
 
     // Add text to TRichMemo
     procedure AddTextToInfo(title, infoText: String);
@@ -4045,12 +4046,11 @@ begin
   UpdateVtChapter;
 end;
 
-procedure TMainForm.AddSilentThread(URL: string);
+procedure TMainForm.AddSilentThread(URL: string; MetaDataType: TMetaDataType);
 var
   i, j, m: Integer;
   host, link, webs: String;
   URls: TStringList;
-  mt: TMetaDataType;
 begin
   if Trim(URL) = '' then Exit;
   URLs := TStringList.Create;
@@ -4082,12 +4082,8 @@ begin
             end;
             if webs <> '' then
             begin
-              if rgDropTargetMode.ItemIndex = 0 then
-                mt := MD_DownloadAll
-              else
-                mt := MD_AddToFavorites;
-              if not ((mt = MD_AddToFavorites) and SitesWithoutFavorites(webs)) then
-                SilentThreadManager.Add(mt, webs, '', link);
+              if not ((MetaDataType = MD_AddToFavorites) and SitesWithoutFavorites(webs)) then
+                SilentThreadManager.Add(MetaDataType, webs, '', link);
             end;
           end;
         end;
@@ -4099,6 +4095,18 @@ begin
   finally
     URls.Free;
   end;
+end;
+
+procedure TMainForm.AddSilentThread(URL: string);
+var
+  mt: TMetaDataType;
+begin
+  if Trim(URL)='' then Exit;
+  if rgDropTargetMode.ItemIndex=0 then
+    mt:=MD_DownloadAll
+  else
+    mt:=MD_AddToFavorites;
+  AddSilentThread(URL,mt);
 end;
 
 procedure TMainForm.AddTextToInfo(title, infoText: String);
