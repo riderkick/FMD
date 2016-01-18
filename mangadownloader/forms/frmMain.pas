@@ -3479,6 +3479,9 @@ begin
     while cNode^.Index<nIndex do
       cNode:=vtDownload.GetNext(cNode);
 
+    if Mode=dmBelow then
+      vtDownload.ScrollIntoView(cNode,False,False);
+
     for i:=0 to ConTemp.Count-1 do
     begin
       vtDownload.Selected[cNode]:=True;
@@ -3486,6 +3489,8 @@ begin
         cNode:=vtDownload.GetPrevious(cNode);
     end;
     vtDownload.FocusedNode:=cNode;
+    if Mode=dmAbove then
+      vtDownload.ScrollIntoView(cNode,False,False);
   finally
     DLManager.CS_DownloadManager_Task.Release;
   end;
