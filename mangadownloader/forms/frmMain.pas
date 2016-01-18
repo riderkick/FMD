@@ -20,7 +20,7 @@ uses
   ExtCtrls, ComCtrls, Buttons, Spin, Menus, VirtualTrees, RichMemo, IniFiles,
   simpleipc, lclproc, types, strutils, LCLIntf, DefaultTranslator, EditBtn,
   FileUtil, LazUTF8Classes, TAGraph, TASources, TASeries, TATools, AnimatedGif,
-  uBaseUnit, uData, uDownloadsManager, uFavoritesManager, uUpdateThread,
+  uBaseUnit, uDownloadsManager, uFavoritesManager, uUpdateThread,
   uUpdateDBThread, uSilentThread, uMisc, uGetMangaInfosThread, frmDropTarget,
   frmAccountManager, CheckUpdate, accountmanagerdb, DBDataProcess,
   mangafoxwatermarkremover, SimpleTranslator, SimpleException, SimpleLogger;
@@ -487,6 +487,8 @@ type
       Column: TColumnIndex; TextType: TVSTTextType; var CellText: String);
     procedure vtDownloadHeaderClick(Sender: TVTHeader; Column: TColumnIndex;
       Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+    procedure vtDownloadKeyAction(Sender: TBaseVirtualTree; var CharCode: Word;
+      var Shift: TShiftState; var DoDefault: Boolean);
     procedure vtDownloadKeyDown(Sender : TObject; var Key : Word;
       Shift : TShiftState);
     procedure vtDownloadKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
@@ -3691,6 +3693,13 @@ begin
   vtDownload.Header.SortColumn := Column;
   DLManager.Sort(Column);
   vtDownload.Repaint;
+end;
+
+procedure TMainForm.vtDownloadKeyAction(Sender: TBaseVirtualTree;
+  var CharCode: Word; var Shift: TShiftState; var DoDefault: Boolean);
+begin
+  if (ssCtrl in Shift) and (CharCode in [VK_HOME,VK_END]) then
+    DoDefault:=False;
 end;
 
 procedure TMainForm.vtDownloadKeyDown(Sender : TObject; var Key : Word;

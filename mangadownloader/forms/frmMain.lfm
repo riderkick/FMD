@@ -122,6 +122,7 @@ object MainForm: TMainForm
         OnGetImageIndex = vtDownloadGetImageIndex
         OnGetHint = vtDownloadGetHint
         OnHeaderClick = vtDownloadHeaderClick
+        OnKeyAction = vtDownloadKeyAction
         OnKeyDown = vtDownloadKeyDown
         OnKeyUp = vtDownloadKeyUp
       end
