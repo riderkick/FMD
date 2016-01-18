@@ -291,6 +291,7 @@ begin
   HTTPHeaders := TStringList.Create;
   regx := TRegExpr.Create;
   try
+    HTTPHeaders.NameValueSeparator:=':';
     regx.ModifierI := True;
     if isSFURL then
     begin
