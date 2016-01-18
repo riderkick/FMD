@@ -42,17 +42,9 @@ type
     x0, y0: Integer;
     FCanDrop: Boolean;
     // IDropTarget
-    function MakeFormatEtc(const Fmt: TCLIPFORMAT): TFormatEtc;
     function CursorEffect(const AllowedEffects: Cardinal;
       const KeyState: Integer): Cardinal;
     function CanDrop(const DataObj: IDataObject): Boolean;
-    function GetTextFromObj(const DataObj: IDataObject;
-      const Fmt: TCLIPFORMAT): String;
-    function GetWideTextFromObj(const DataObj: IDataObject;
-      const Fmt: TCLIPFORMAT): String;
-    function GetURLsFromHTML(const S: String): String;
-    function ParseDataObj(const DataObj: IDataObject;
-      const Fmt: TClipboardFormat): String;
     function DragEnter(const dataObj: IDataObject; grfKeyState: DWORD;
       {%H-}pt: TPoint; var dwEffect: DWORD): HResult; stdcall;
     function {%H-}DragOver(grfKeyState: DWORD; {%H-}pt: TPoint;
@@ -65,6 +57,8 @@ type
   public
     { public declarations }
   end;
+
+  function GetDropURLs(const DataObject: IDataObject): string;
 
 var
   FormDropTarget: TFormDropTarget;
@@ -84,6 +78,162 @@ var
   CF_HTML: TCLIPFORMAT;
 
 {$R *.lfm}
+
+function MakeFormatEtc(const Fmt: TCLIPFORMAT): TFormatEtc;
+begin
+  Result.cfFormat := Fmt;
+  Result.ptd := nil;
+  Result.dwAspect := DVASPECT_CONTENT;
+  Result.lindex := -1;
+  Result.tymed := TYMED_HGLOBAL;
+end;
+
+function GetTextFromObj(const DataObj: IDataObject;
+  const Fmt: TCLIPFORMAT): String;
+var
+  Medium: TStgMedium;
+  PText: PChar;
+begin
+  if DataObj.GetData(MakeFormatEtc(Fmt), Medium) = S_OK then
+  begin
+    Assert(Medium.tymed = MakeFormatEtc(Fmt).tymed);
+    try
+      PText := GlobalLock(Medium.hGlobal);
+      try
+        Result := PText;
+      finally
+        GlobalUnlock(Medium.hGlobal);
+      end;
+    finally
+      ReleaseStgMedium(Medium);
+    end;
+  end
+  else
+    Result := '';
+end;
+
+function GetWideTextFromObj(const DataObj: IDataObject;
+  const Fmt: TCLIPFORMAT): String;
+var
+  Medium: TStgMedium;
+  PwText: PWideChar;
+begin
+  if DataObj.GetData(MakeFormatEtc(Fmt), Medium) = S_OK then
+  begin
+    Assert(Medium.tymed = MakeFormatEtc(Fmt).tymed);
+    try
+      PwText := GlobalLock(Medium.hGlobal);
+      try
+        Result := PwText;
+      finally
+        GlobalUnlock(Medium.hGlobal);
+      end;
+    finally
+      ReleaseStgMedium(Medium);
+    end;
+  end
+  else
+    Result := '';
+end;
+
+function GetURLsFromHTML(const S: String): String;
+var
+  Parse, URls: TStringList;
+  i: Integer;
+  url: String;
+begin
+  Result := S;
+  if S = '' then Exit;
+  Parse:= TStringList.Create;
+  try
+    ParseHTML(S, Parse);
+    if Parse.Count > 0 then
+    begin
+      URls := TStringList.Create;
+      try
+        for i := 0 to Parse.Count - 1 do
+        begin
+          if LowerCase(GetTagName(Parse[i])) = 'a' then
+          url := GetVal(Parse[i], 'href');
+          if Pos('javascript', url) <> 1 then
+            URls.Add(url);
+        end;
+        if URls.Count > 0 then
+        begin
+          RemoveDuplicateStrings(URls);
+          Result := URls.Text;
+        end;
+      finally
+        URls.Free;
+      end;
+    end;
+  finally
+    Parse.Free;
+  end;
+end;
+
+function ParseDataObj(const DataObj: IDataObject;
+  const Fmt: TClipboardFormat): String;
+begin
+  if Fmt = CF_HTML then
+    Result := GetURLsFromHTML(GetTextFromObj(DataObj, Fmt))
+  else
+  if Fmt = CF_UNICODETEXT then
+    Result := GetWideTextFromObj(DataObj, Fmt)
+  else
+  if Fmt = CF_TEXT then
+    Result := GetTextFromObj(DataObj, Fmt)
+  else
+    Result := '';
+  Result := Trim(Result);
+end;
+
+function GetDropURLs(const DataObject: IDataObject): string;
+var
+  Enum: IEnumFORMATETC;
+  FmtEtc: TFORMATETC;
+  url: String;
+
+  function GetDataObjectFormat(Fmt: TCLIPFORMAT): Boolean;
+  begin
+    Result:=False;
+    Enum.Reset;
+    while Enum.Next(1,FmtEtc,nil)=S_OK do
+      if FmtEtc.CfFormat=Fmt then
+      begin
+        url:=ParseDataObj(DataObject,Fmt);
+        if url<>'' then
+          Result:=True;
+        Break;
+      end;
+  end;
+
+  function GetDataObjectFormats(Fmts: array of TCLIPFORMAT): Boolean;
+  var
+    i: Integer;
+  begin
+    Result:=False;
+    if Length(Fmts)=0 then Exit;
+    for i:=Low(Fmts) to High(Fmts) do
+      if GetDataObjectFormat(Fmts[i]) then
+      begin
+        Result:=True;
+        Break;
+      end;
+  end;
+
+begin
+  Result:='';
+  if DataObject=nil then Exit;
+  url:=Result;
+  OleCheck(DataObject.EnumFormatEtc(DATADIR_GET,Enum));
+  if GetDataObjectFormats([
+      CF_HTML,
+      CF_UNICODETEXT,
+      CF_TEXT
+      ]) then
+      Result:=url;
+end;
 
 { TFormDropTarget }
 
@@ -197,15 +347,6 @@ begin
   miAddToFavorites.Checked := not miDownloadAll.Checked;
 end;
 
-function TFormDropTarget.MakeFormatEtc(const Fmt: TCLIPFORMAT): TFormatEtc;
-begin
-  Result.cfFormat := Fmt;
-  Result.ptd := nil;
-  Result.dwAspect := DVASPECT_CONTENT;
-  Result.lindex := -1;
-  Result.tymed := TYMED_HGLOBAL;
-end;
-
 function TFormDropTarget.CursorEffect(const AllowedEffects: Cardinal;
   const KeyState: Integer): Cardinal;
 begin
@@ -227,106 +368,6 @@ begin
     Result := DataObj.QueryGetData(MakeFormatEtc(CF_UNICODETEXT)) = S_OK;
   if not Result then
     Result := DataObj.QueryGetData(MakeFormatEtc(CF_TEXT)) = S_OK;
-end;
-
-function TFormDropTarget.GetTextFromObj(const DataObj: IDataObject;
-  const Fmt: TCLIPFORMAT): String;
-var
-  Medium: TStgMedium;
-  PText: PChar;
-begin
-  if DataObj.GetData(MakeFormatEtc(Fmt), Medium) = S_OK then
-  begin
-    Assert(Medium.tymed = MakeFormatEtc(Fmt).tymed);
-    try
-      PText := GlobalLock(Medium.hGlobal);
-      try
-        Result := PText;
-      finally
-        GlobalUnlock(Medium.hGlobal);
-      end;
-    finally
-      ReleaseStgMedium(Medium);
-    end;
-  end
-  else
-    Result := '';
-end;
-
-function TFormDropTarget.GetWideTextFromObj(const DataObj: IDataObject;
-  const Fmt: TCLIPFORMAT): String;
-var
-  Medium: TStgMedium;
-  PwText: PWideChar;
-begin
-  if DataObj.GetData(MakeFormatEtc(Fmt), Medium) = S_OK then
-  begin
-    Assert(Medium.tymed = MakeFormatEtc(Fmt).tymed);
-    try
-      PwText := GlobalLock(Medium.hGlobal);
-      try
-        Result := PwText;
-      finally
-        GlobalUnlock(Medium.hGlobal);
-      end;
-    finally
-      ReleaseStgMedium(Medium);
-    end;
-  end
-  else
-    Result := '';
-end;
-
-function TFormDropTarget.GetURLsFromHTML(const S: String): String;
-var
-  Parse, URls: TStringList;
-  i: Integer;
-  url: String;
-begin
-  Result := S;
-  if S = '' then Exit;
-  Parse:= TStringList.Create;
-  try
-    ParseHTML(S, Parse);
-    if Parse.Count > 0 then
-    begin
-      URls := TStringList.Create;
-      try
-        for i := 0 to Parse.Count - 1 do
-        begin
-          if LowerCase(GetTagName(Parse[i])) = 'a' then
-          url := GetVal(Parse[i], 'href');
-          if Pos('javascript', url) <> 1 then
-            URls.Add(url);
-        end;
-        if URls.Count > 0 then
-        begin
-          RemoveDuplicateStrings(URls);
-          Result := URls.Text;
-        end;
-      finally
-        URls.Free;
-      end;
-    end;
-  finally
-    Parse.Free;
-  end;
-end;
-
-function TFormDropTarget.ParseDataObj(const DataObj: IDataObject;
-  const Fmt: TClipboardFormat): String;
-begin
-  if Fmt = CF_HTML then
-    Result := GetURLsFromHTML(GetTextFromObj(DataObj, Fmt))
-  else
-  if Fmt = CF_UNICODETEXT then
-    Result := GetWideTextFromObj(DataObj, Fmt)
-  else
-  if Fmt = CF_TEXT then
-    Result := GetTextFromObj(DataObj, Fmt)
-  else
-    Result := '';
-  Result := Trim(Result);
 end;
 
 function TFormDropTarget.DragEnter(const dataObj: IDataObject; grfKeyState: DWORD;
@@ -353,49 +394,9 @@ end;
 
 function TFormDropTarget.Drop(const dataObj: IDataObject; grfKeyState: DWORD;
   pt: TPoint; var dwEffect: DWORD): HResult; stdcall;
-var
-  Enum: IEnumFORMATETC;
-  FmtEtc: TFORMATETC;
-  url: String;
-
-  function GetDataObjectFormat(Fmt: TCLIPFORMAT): Boolean;
-  begin
-    Result := False;
-    Enum.Reset;
-    while Enum.Next(1, FmtEtc, nil) = S_OK do
-      if FmtEtc.CfFormat = Fmt then
-      begin
-        url := ParseDataObj(dataObj, Fmt);
-        if url <> '' then
-          Result := True;
-        Break;
-      end;
-  end;
-
-  function GetDataObjectFormats(Fmts: array of TCLIPFORMAT): Boolean;
-  var
-    i: Integer;
-  begin
-    Result := False;
-    if Length(Fmts) = 0 then Exit;
-    for i := Low(Fmts) to High(Fmts) do
-      if GetDataObjectFormat(Fmts[i]) then
-      begin
-        Result := True;
-        Break;
-      end;
-  end;
-
 begin
-  url := '';
-  OleCheck(DataObj.EnumFormatEtc(DATADIR_GET, Enum));
   if Assigned(OnDropChekout) then
-    if GetDataObjectFormats([
-      CF_HTML,
-      CF_UNICODETEXT,
-      CF_TEXT
-      ]) then
-      OnDropChekout(url);
+      OnDropChekout(GetDropURLs(dataObj));
   Result := S_OK;
 end;
 
