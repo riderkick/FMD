@@ -4863,8 +4863,9 @@ begin
   if AvailableLanguages.Count = 0 then Exit;
   if SimpleTranslator.LastSelected <> AvailableLanguages.Names[cbLanguages.ItemIndex] then
   begin
-    // TCombobox.Items will be cleared upon changing languge
-    // save TComboBox.ItemIndex and restore it
+    // TCombobox.Items will be cleared upon changing language,
+    // and ItemIndex will fall to -1
+    // save TComboBox.ItemIndex
     idxSelectManga:=cbSelectManga.ItemIndex;
     idxLanguages := cbLanguages.ItemIndex;
     idxFilterStatus := cbFilterStatus.ItemIndex;
@@ -4880,6 +4881,7 @@ begin
       cbOptionLetFMDDo.Items.Text := RS_OptionFMDDoItems;
       rgDropTargetMode.Items.Text := RS_DropTargetModeItems;
 
+      // restore ItemIndex
       cbSelectManga.ItemIndex:=idxSelectManga;
       cbLanguages.ItemIndex := idxLanguages;
       cbFilterStatus.ItemIndex := idxFilterStatus;
