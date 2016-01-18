@@ -3505,20 +3505,22 @@ procedure TMainForm.vtDownloadDragDrop(Sender : TBaseVirtualTree;
   Shift : TShiftState; const Pt : TPoint; var Effect : LongWord;
   Mode : TDropMode);
 begin
-  if (Source <> vtDownload) or (Source <> Sender) or
-    (DLManager.Count < 2) then
-    Exit;
-  if Mode = dmNowhere then
-    vtDownloadMoveItems(vtDownload.GetLast^.Index, Mode)
+  if (Source=vtDownload) and (vtDownload.RootNodeCount>1) then
+  begin
+    if Mode = dmNowhere then
+      vtDownloadMoveItems(vtDownload.GetLast^.Index, Mode)
+    else
+      vtDownloadMoveItems(vtDownload.DropTargetNode^.Index, Mode);
+  end
   else
-    vtDownloadMoveItems(vtDownload.DropTargetNode^.Index, Mode);
+    AddSilentThread(frmDropTarget.GetDropURLs(DataObject), MD_DownloadAll);
 end;
 
 procedure TMainForm.vtDownloadDragOver(Sender : TBaseVirtualTree;
   Source : TObject; Shift : TShiftState; State : TDragState; const Pt : TPoint;
   Mode : TDropMode; var Effect : LongWord; var Accept : Boolean);
 begin
-  Accept := (Sender = Source);
+  Accept:=True;
 end;
 
 procedure TMainForm.vtDownloadDrawText(Sender: TBaseVirtualTree;
