@@ -9,10 +9,10 @@ uses
   cthreads,
   cmem,
   {$endif}
-  Classes, SysUtils, zipper, FileUtil,LazFileUtils, LazUTF8, LazUTF8Classes,
+  Classes, SysUtils, zipper, FileUtil, LazFileUtils, LazUTF8, LazUTF8Classes,
   Forms, Dialogs, ComCtrls, StdCtrls, Clipbrd, ExtCtrls, DefaultTranslator,
-  RegExpr, IniFiles, SimpleException, uMisc, uTranslation,
-  httpsend, blcksock, ssl_openssl, ssl_openssl_lib, uFMDThread;
+  RegExpr, IniFiles, SimpleException, uMisc, httpsend, blcksock, ssl_openssl,
+  ssl_openssl_lib, uFMDThread, SimpleTranslator, httpsendthread;
 
 type
 
@@ -43,7 +43,7 @@ type
   TDownloadThread = class(TFMDThread)
   private
     FTotalSize, FCurrentSize :integer;
-    FHTTP                    :THTTPSend;
+    FHTTP                    :THTTPSendThread;
     FStatus                  :string;
     FProgress                :string;
     FErrorMessage            :string;
@@ -169,13 +169,14 @@ constructor TDownloadThread.Create;
 begin
   inherited Create(True);
   isDownload := True;
-  FHTTP := THTTPSend.Create;
-  FHTTP.Headers.NameValueSeparator := ':';
+  FHTTP := THTTPSendThread.Create(Self);
   FHTTP.Sock.OnStatus := @SockOnStatus;
   FHTTP.Timeout := 10000;
-  FHTTP.Sock.ConnectionTimeout := FHTTP.Timeout;
-  FHTTP.Sock.SetTimeout(FHTTP.Timeout);
-  OnCustomTerminate := @OnThreadTerminate;
+  FHTTP.SetProxy(ProxyType,ProxyHost,ProxyPort,ProxyUser,ProxyPass);
+  if isSFURL then
+    FHTTP.UserAgent := UA_CURL
+  else
+    FHTTP.UserAgent := DEFAULT_UA;
   FTotalSize := 0;
   FCurrentSize := 0;
   URL := '';
@@ -274,59 +275,6 @@ begin
 end;
 
 procedure TDownloadThread.Execute;
-
-  procedure PrepareHTTP(var HTTP :THTTPSend);
-  begin
-    if HTTP <> nil then
-    begin
-      FHTTP.Clear;
-      FHTTP.Cookies.Clear;
-      FHTTP.Protocol := '1.1';
-      if isSFURL then
-        FHTTP.UserAgent := UA_CURL
-      else
-        FHTTP.UserAgent := DEFAULT_UA;
-      with FHTTP do
-      begin
-        Timeout := 10000;
-        Sock.ConnectionTimeout := Timeout;
-        Sock.SetTimeout(Timeout);
-      end;
-
-      if ProxyType = 'HTTP' then
-      begin
-        HTTP.ProxyHost := ProxyHost;
-        HTTP.ProxyPort := ProxyPort;
-        HTTP.ProxyUser := ProxyUser;
-        HTTP.ProxyPass := ProxyPass;
-      end
-      else
-      if (ProxyType = 'SOCKS4') or (ProxyType = 'SOCKS5') then
-      begin
-        if ProxyType = 'SOCKS4' then
-          HTTP.Sock.SocksType := ST_Socks4
-        else
-        if ProxyType = 'SOCKS5' then
-          HTTP.Sock.SocksType := ST_Socks5;
-        HTTP.Sock.SocksIP := ProxyHost;
-        HTTP.Sock.SocksPort := ProxyPort;
-        HTTP.Sock.SocksUsername := ProxyUser;
-        http.Sock.SocksPassword := ProxyPass;
-      end
-      else
-      begin
-        HTTP.Sock.SocksIP := ProxyHost;
-        HTTP.Sock.SocksPort := ProxyPort;
-        HTTP.Sock.SocksUsername := ProxyUser;
-        http.Sock.SocksPassword := ProxyPass;
-        HTTP.ProxyHost := ProxyHost;
-        HTTP.ProxyPort := ProxyPort;
-        HTTP.ProxyUser := ProxyUser;
-        HTTP.ProxyPass := ProxyPass;
-      end;
-    end;
-  end;
-
 var
   regx           : TRegExpr;
   i, ctry        : Cardinal;
@@ -343,8 +291,6 @@ begin
   HTTPHeaders := TStringList.Create;
   regx := TRegExpr.Create;
   try
-    HTTPHeaders.NameValueSeparator := ':';
-    PrepareHTTP(FHTTP);
     regx.ModifierI := True;
     if isSFURL then
     begin
@@ -600,9 +546,9 @@ var
 begin
   Randomize;
   InitSimpleExceptionHandler(ChangeFileExt(Application.ExeName, '.log'));
-  uTranslation.LangDir := CleanAndExpandDirectory(GetCurrentDirUTF8) + 'languages';
-  uTranslation.LangAppName := 'updater';
-  uTranslation.CollectLanguagesFiles;
+  SimpleTranslator.LangDir := CleanAndExpandDirectory(GetCurrentDirUTF8) + 'languages';
+  SimpleTranslator.LangAppName := 'updater';
+  SimpleTranslator.CollectLanguagesFiles;
   InitCriticalSection(CS_ReadCount);
   //load proxy config from fmd
   config := TIniFile.Create('config/config.ini');
@@ -668,7 +614,7 @@ begin
         else if s = '-l' then
           _LaunchApp := ParamStrUTF8(i + 1)
         else if (LowerCase(s) = '--lang') then
-          uTranslation.SetLang(ParamStrUTF8(i + 1));
+          SimpleTranslator.SetLang(ParamStrUTF8(i + 1));
       end;
     end;
   end;

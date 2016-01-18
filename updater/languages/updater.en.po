@@ -9,7 +9,11 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: en\n"
-"X-Generator: Poedit 1.7.6\n"
+"X-Generator: Poedit 1.8.2\n"
+
+#: tfrmmain.caption
+msgid "Free Manga Downloader - Updater"
+msgstr "Free Manga Downloader - Updater"
 
 #: tfrmmain.lbfilesize.caption
 msgid "File size"
@@ -52,7 +56,6 @@ msgid "File not found!"
 msgstr "File not found!"
 
 #: umain.rs_filenotfound_mfdatalink
-#, fuzzy
 #| msgid ""
 #| "File not found!\n"
 #| "This site probably have been added to unofficial build.\n"
@@ -125,4 +128,3 @@ msgstr "Unpacking file [%s]..."
 #: umain.rs_waitmainapp
 msgid "Waiting main app to close..."
 msgstr "Waiting main app to close..."
-

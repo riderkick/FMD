@@ -1,6 +1,10 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=UTF-8"
 
+#: tfrmmain.caption
+msgid "Free Manga Downloader - Updater"
+msgstr ""
+
 #: tfrmmain.lbfilesize.caption
 msgid "File size"
 msgstr ""

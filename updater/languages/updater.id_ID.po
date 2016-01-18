@@ -11,6 +11,10 @@ msgstr ""
 "Language: id_ID\n"
 "X-Generator: Poedit 1.8.2\n"
 
+#: tfrmmain.caption
+msgid "Free Manga Downloader - Updater"
+msgstr "Free Manga Downloader - Pembaruan"
+
 #: tfrmmain.lbfilesize.caption
 msgid "File size"
 msgstr "Ukuran"
@@ -52,15 +56,6 @@ msgid "File not found!"
 msgstr "Berkas tidak ditemukan!"
 
 #: umain.rs_filenotfound_mfdatalink
-#, fuzzy
-#| msgid ""
-#| "File not found!\n"
-#| "This site probably have been added to unofficial build.\n"
-#| "\n"
-#| "Remedy:\n"
-#| "Build you manga list from scratch or download manually from this link:\n"
-#| "%s\n"
-#| "Link copied to clipboard!\n"
 msgid ""
 "File not found!\n"
 "This site probably have been added to unofficial build.\n"
@@ -124,4 +119,3 @@ msgstr "Membuka berkas [%s]..."
 #: umain.rs_waitmainapp
 msgid "Waiting main app to close..."
 msgstr "Menunggu aplikasi utama untuk berhenti..."
-
