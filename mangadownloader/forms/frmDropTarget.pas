@@ -333,14 +333,16 @@ function TFormDropTarget.DragEnter(const dataObj: IDataObject; grfKeyState: DWOR
   pt: TPoint; var dwEffect: DWORD): HResult; stdcall;
 begin
   FCanDrop := CanDrop(dataObj);
-  dwEffect := CursorEffect(dwEffect, grfKeyState);
+  if FCanDrop then
+    dwEffect:=DROPEFFECT_LINK;
   Result := S_OK;
 end;
 
 function TFormDropTarget.DragOver(grfKeyState: DWORD; pt: TPoint;
   var dwEffect: DWORD): HResult; stdcall;
 begin
-  dwEffect := CursorEffect(dwEffect, grfKeyState);
+  if FCanDrop then
+    dwEffect:=DROPEFFECT_LINK;
   Result := S_OK;
 end;
 
