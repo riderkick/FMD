@@ -293,6 +293,10 @@ msgstr "Edit"
 msgid "Refresh"
 msgstr "Refresh"
 
+#: taccountmanagerform.caption
+msgid "AccountManagerForm"
+msgstr "AccountManagerForm"
+
 #: taccountmanagerform.vtaccountlist.header.columns[1].text
 #| msgid "Username"
 msgctxt "taccountmanagerform.vtaccountlist.header.columns[1].text"

@@ -292,6 +292,10 @@ msgstr "Ubah"
 msgid "Refresh"
 msgstr "Segarkan"
 
+#: taccountmanagerform.caption
+msgid "AccountManagerForm"
+msgstr "AccountManagerForm"
+
 #: taccountmanagerform.vtaccountlist.header.columns[1].text
 msgctxt "taccountmanagerform.vtaccountlist.header.columns[1].text"
 msgid "Website"
