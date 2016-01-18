@@ -3439,71 +3439,65 @@ end;
 
 procedure TMainForm.vtDownloadMoveItems(NextIndex: Cardinal; Mode: TDropMode);
 var
-  i, nIndex: Integer;
+  i, nIndex: Cardinal;
   cNode: PVirtualNode;
   ConTemp: TFPList;
 begin
+  if vtDownload.SelectedCount=0 then Exit;
   vtDownload.BeginUpdate;
   ConTemp := TFPList.Create;
   try
     nIndex := NextIndex;
-
-    if vtDownload.SelectedCount > 0 then
+    cNode := vtDownload.GetFirst;
+    i := 0;
+    while i < vtDownload.RootNodeCount do
     begin
-      cNode := vtDownload.GetFirst;
-      i := 0;
-      while i < vtDownload.RootNodeCount do
-               //DLManager.Count do
+      if vtDownload.Selected[cNode] then
       begin
-        if vtDownload.Selected[cNode] then
-        begin
-          vtDownload.Selected[cNode] := False;
-          ConTemp.Add(DLManager.Items[i]);
-          DLManager.containers.Delete(i);
-          if (i < nIndex) and (nIndex > 0) then
-            Dec(nIndex);
-        end
-        else
-          Inc(i);
-        cNode := vtDownload.GetNext(cNode);
-      end;
-      vtDownload.FocusedNode := nil;
-
-      for i := 0 to ConTemp.Count - 1 do
-      begin
-        if (i = 0) and (Mode in [dmBelow, dmNowhere]) then
-          Inc(nIndex)
-        else
-        if (i > 0) then
-        begin
-          if (nIndex < DLManager.Count) then
-            Inc(nIndex);
-        end;
-        if nIndex > DLManager.Count then
+        vtDownload.Selected[cNode] := False;
+        ConTemp.Add(DLManager.Items[i]);
+        DLManager.containers.Delete(i);
+        if (i < nIndex) and (nIndex > 0) then
           Dec(nIndex);
-        DLManager.containers.Insert(nIndex, ConTemp[i]);
-      end;
+      end
+      else
+        Inc(i);
+      cNode := vtDownload.GetNext(cNode);
+    end;
+    vtDownload.FocusedNode := nil;
 
-      cNode := vtDownload.GetFirst;
-      while Assigned(cNode) and (cNode^.Index < nIndex) do
-        cNode := vtDownload.GetNext(cNode);
-
-      for i := 0 to ConTemp.Count - 1 do
+    for i := 0 to ConTemp.Count - 1 do
+    begin
+      if (i = 0) and (Mode in [dmBelow, dmNowhere]) then
+        Inc(nIndex)
+      else
+      if (i > 0) then
       begin
-        if Assigned(cNode) then
-        begin
-          vtDownload.Selected[cNode] := True;
-          vtDownload.FocusedNode := cNode;
-          cNode := vtDownload.GetPrevious(cNode);
-        end;
+        if (nIndex < DLManager.Count) then
+          Inc(nIndex);
+      end;
+      if nIndex > DLManager.Count then
+        Dec(nIndex);
+      DLManager.containers.Insert(nIndex, ConTemp[i]);
+    end;
+
+    cNode := vtDownload.GetFirst;
+    while Assigned(cNode) and (cNode^.Index < nIndex) do
+      cNode := vtDownload.GetNext(cNode);
+
+    for i := 0 to ConTemp.Count - 1 do
+    begin
+      if Assigned(cNode) then
+      begin
+        vtDownload.Selected[cNode] := True;
+        vtDownload.FocusedNode := cNode;
+        cNode := vtDownload.GetPrevious(cNode);
       end;
     end;
   finally
     ConTemp.Free;
     cNode := nil;
     vtDownload.EndUpdate;
-    //vtDownload.Repaint;
-    //Some node isn't repaint correctly if not explicitly triggering repaint?
   end;
   vtDownloadFilters;
 end;
