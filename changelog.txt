@@ -7,6 +7,12 @@ https://bintray.com/riderkick/FMD/data/db/view#files
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.31.0 (19-01-2016)
+[+] Download list: Assign CTRL+Home to move item to top and CTRL+End to move item to bottom
+[+] Download list and Favorite list now accept url(s) via drag n drop
+[*] Updater: fix various issue
+[*] Various changes and bug fixes
+
 0.9.30.0 (17-01-2016)
 [*] E-Hentai/ExHentai: fix incorrect page links/page number
 [*] Batoto: various fix
