@@ -411,24 +411,26 @@ begin
         else
         if (FHTTP.ResultCode >= 400) and (FHTTP.ResultCode < 500) then
         begin
-          {
-          UpdateStatus(RS_FileNotFound);
-          if _UpdApp then
-            ShowErrorMessage(RS_FileNotFound + LineEnding + LineEnding +
-              RS_Response + ':' + LineEnding +
-              IntToStr(FHTTP.ResultCode) + ' ' + FHTTP.ResultString)
-          else
+          if ctry>=MaxRetry then
           begin
-            Clipboard.AsText := mf_data_link;
-            ShowErrorMessage(Format(RS_FileNotFound_mfdatalink, [mf_data_link]));
+            UpdateStatus(RS_FileNotFound);
+            if _UpdApp then
+              ShowErrorMessage(RS_FileNotFound + LineEnding + LineEnding +
+                RS_Response + ':' + LineEnding +
+                IntToStr(FHTTP.ResultCode) + ' ' + FHTTP.ResultString)
+            else
+            begin
+              Clipboard.AsText := mf_data_link;
+              ShowErrorMessage(Format(RS_FileNotFound_mfdatalink, [mf_data_link]));
+            end;
+            Break;
           end;
-          Break;
-          }
           //try to load previous url, in case it was temporary url
           if ctry>0 then begin
             rurl:=URL;
             FHTTP.Cookies.Clear;
           end;
+          Inc(ctry);
         end
         else
         if FHTTP.ResultCode >= 300 then
