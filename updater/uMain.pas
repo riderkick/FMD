@@ -390,6 +390,7 @@ begin
       FHTTP.Clear;
       HTTPHeaders.Values['Accept'] := ' */*';
       FHTTP.Headers.Text := HTTPHeaders.Text;
+      FHTTP.Cookies.Clear;
       while (not FHTTP.HTTPMethod('GET', Trim(rurl))) or
         (FHTTP.ResultCode >= 300) do
       begin
@@ -410,6 +411,7 @@ begin
         else
         if (FHTTP.ResultCode >= 400) and (FHTTP.ResultCode < 500) then
         begin
+          {
           UpdateStatus(RS_FileNotFound);
           if _UpdApp then
             ShowErrorMessage(RS_FileNotFound + LineEnding + LineEnding +
@@ -421,6 +423,12 @@ begin
             ShowErrorMessage(Format(RS_FileNotFound_mfdatalink, [mf_data_link]));
           end;
           Break;
+          }
+          //try to load previous url, in case it was temporary url
+          if ctry>0 then begin
+            rurl:=URL;
+            FHTTP.Cookies.Clear;
+          end;
         end
         else
         if FHTTP.ResultCode >= 300 then
