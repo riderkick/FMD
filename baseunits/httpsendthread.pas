@@ -90,7 +90,7 @@ var
   mstream: TMemoryStream;
 begin
   Result := False;
-  rurl := EncodeURL(URL);
+  rurl := EncodeURL(DecodeURL(URL));
   if Pos('HTTP/', Headers.Text) = 1 then Reset;
   HTTPHeader:= TStringList.Create;
   HTTPHeader.Assign(Headers);
