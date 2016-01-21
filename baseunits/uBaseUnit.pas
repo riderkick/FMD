@@ -1328,7 +1328,6 @@ begin
   Result := SitesMemberOf(website, [
     MANGASPROJECT_ID,
     MANGAVADISI_ID,
-    EGSCANS_ID,
     TURKCRAFT_ID,
     HUGEMANGA_ID,
     KIVMANGA_ID,
