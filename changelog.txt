@@ -7,6 +7,10 @@ https://bintray.com/riderkick/FMD/data/db/view#files
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.31.0 (21-01-2016)
+[*] Fix double URL encoding
+[*] Various changes
+
 0.9.31.0 (19-01-2016)
 [+] Download list: Assign CTRL+Home to move item to top and CTRL+End to move item to bottom
 [+] Download list and Favorite list now accept url(s) via drag n drop
