@@ -12,7 +12,7 @@ uses
   Classes, SysUtils, zipper, FileUtil, LazFileUtils, LazUTF8, LazUTF8Classes,
   Forms, Dialogs, ComCtrls, StdCtrls, Clipbrd, ExtCtrls, DefaultTranslator,
   RegExpr, IniFiles, SimpleException, uMisc, httpsend, blcksock, ssl_openssl,
-  ssl_openssl_lib, uFMDThread, SimpleTranslator, httpsendthread;
+  ssl_openssl_lib, synacode, uFMDThread, SimpleTranslator, httpsendthread;
 
 type
 
@@ -287,7 +287,7 @@ var
   st, HTTPHeaders: TStringList;
   filestream     : TFileStreamUTF8;
 begin
-  URL := Trim(URL);
+  URL := EncodeURL(DecodeURL(Trim(URL)));
   HTTPHeaders := TStringList.Create;
   regx := TRegExpr.Create;
   try
@@ -312,6 +312,7 @@ begin
         FileName := sfile;
       rurl := 'http://sourceforge.net/projects/' + sproject + '/files/' +
         sdir + '/' + sfile + '/download';
+      rurl := EncodeURL(DecodeURL(Trim(rurl)));
     end
     else
     begin
@@ -380,6 +381,7 @@ begin
             sproject + '/' + sdir + '/' + sfile;
         end;
       end;
+      rurl := EncodeURL(DecodeURL(Trim(rurl)));
     end;
 
     //**download file
@@ -437,6 +439,7 @@ begin
         begin
           HTTPHeaders.Values['Referer'] := ' ' + rurl;
           rurl := Trim(FHTTP.Headers.Values['location']);
+          rurl := EncodeURL(DecodeURL(Trim(rurl)));
         end;
         FHTTP.Clear;
         FHTTP.Headers.Text := HTTPHeaders.Text;
