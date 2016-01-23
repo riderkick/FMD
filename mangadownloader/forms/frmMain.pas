@@ -3702,8 +3702,11 @@ end;
 procedure TMainForm.vtDownloadKeyAction(Sender: TBaseVirtualTree;
   var CharCode: Word; var Shift: TShiftState; var DoDefault: Boolean);
 begin
-  if (ssCtrl in Shift) and (CharCode in [VK_HOME,VK_END]) then
-    DoDefault:=False;
+  if (ssCtrl in Shift) then begin
+    if (Sender.SelectedCount>0) and
+      (CharCode in [VK_UP,VK_DOWN,VK_HOME,VK_END]) then
+      DoDefault:=False;
+  end;
 end;
 
 procedure TMainForm.vtDownloadKeyDown(Sender : TObject; var Key : Word;
