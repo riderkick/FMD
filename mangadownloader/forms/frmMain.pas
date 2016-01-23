@@ -3449,8 +3449,9 @@ end;
 procedure TMainForm.vtDownloadMoveItems(NextIndex: Cardinal; Mode: TDropMode);
 var
   i, nIndex: Cardinal;
-  cNode: PVirtualNode;
+  cNode, fNode: PVirtualNode;
   ConTemp: TFPList;
+  fRect: TRect;
 begin
   if vtDownload.SelectedCount=0 then Exit;
   nIndex:=NextIndex;
@@ -3485,19 +3486,22 @@ begin
     cNode:=vtDownload.GetFirst;
     while cNode^.Index<nIndex do
       cNode:=vtDownload.GetNext(cNode);
+    vtDownload.FocusedNode:=cNode;
 
-    if Mode=dmBelow then
-      vtDownload.ScrollIntoView(cNode,False,False);
-
+    if Mode in [dmBelow,dmNowhere] then
+      fNode:=cNode;
     for i:=0 to ConTemp.Count-1 do
     begin
       vtDownload.Selected[cNode]:=True;
       if i<ConTemp.Count-1 then
         cNode:=vtDownload.GetPrevious(cNode);
     end;
-    vtDownload.FocusedNode:=cNode;
     if Mode=dmAbove then
-      vtDownload.ScrollIntoView(cNode,False,False);
+      fNode:=cNode;
+
+    fRect:=vtDownload.GetDisplayRect(fNode,0,False);
+    if (fRect.Top-vtDownload.Header.Height<0) or (fRect.Bottom>vtDownload.ClientHeight) then
+      vtDownload.ScrollIntoView(fNode,False,False);
   finally
     DLManager.CS_DownloadManager_Task.Release;
   end;
