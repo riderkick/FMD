@@ -6,8 +6,8 @@ interface
 
 uses
   Classes, SysUtils, ImagingCompare, ImagingExtras, ImagingBinary,
-  ImagingClasses, ImagingTypes, ImagingCanvases, Imaging, FileUtil,
-  LazFileUtils;
+  ImagingTypes, ImagingCanvases, Imaging, FileUtil, LazFileUtils,
+  LazUTF8Classes, SimpleLogger;
 
 function LoadTemplate(const TempDir: String): Integer;
 function RemoveWatermark(const AFilename: String; SaveAsPNG: Boolean = False): Boolean;
@@ -23,6 +23,9 @@ var
   imgtemplate: TDynImageDataArray;
   lockproc: TRTLCriticalSection;
   colorwhite: TColor32Rec = (Color: $FFFFFFFF);
+
+const
+  mftempfile = 'mangafoxremovewatermarktempfile';
 
 function LoadTemplate(const TempDir: String): Integer;
 var
@@ -71,29 +74,43 @@ end;
 
 function RemoveWatermark(const AFilename: String; SaveAsPNG: Boolean): Boolean;
 var
+  ms: TMemoryStreamUTF8;
   imgbase, imgproc, imgtemp: TImageData;
   i, x, y, bmi: Integer;
   bmv, PSNR, MSE, RMSE, PAE, MAE: Single;
   invalidborder: Boolean;
+  tempfilename, newfilename, newfileext: String;
 begin
   Result := False;
   if not FileExistsUTF8(AFilename) then Exit;
   if Length(imgtemplate) = 0 then Exit;
 
   EnterCriticalsection(lockproc);
-  InitImage(imgbase);
   try
-    // not supported image file
-    if not LoadImageFromFile(AFilename, imgbase) then Exit;
+    InitImage(imgbase);
+    ms:=TMemoryStreamUTF8.Create;
+    try
+      ms.LoadFromFile(AFilename);
+      newfileext:=DetermineStreamFormat(ms);
+      if newfileext<>'' then
+        Result:=LoadImageFromStream(ms,imgbase);
+    finally
+      ms.Free;
+    end;
+    if not Result then begin
+      FreeImage(imgbase);
+      Exit;
+    end;
+    Result:=False;
 
     bmi := -1;
     bmv := 0;
     // compare image to all template
     for i := Low(imgtemplate) to High(imgtemplate) do
       if imgbase.Height > imgtemplate[i].Height then begin
-        InitImage(imgproc);
-        InitImage(imgtemp);
         try
+          InitImage(imgproc);
+          InitImage(imgtemp);
           invalidborder := False;
 
           // crop image to match template
@@ -147,11 +164,36 @@ begin
       try
         NewImage(imgbase.Width, imgbase.Height - imgtemplate[bmi].Height, imgbase.Format, imgproc);
         CopyRect(imgbase, 0, 0, imgbase.Width, imgbase.Height - imgtemplate[bmi].Height, imgproc, 0, 0);
-        if DeleteFileUTF8(AFilename) then begin
-          if SaveAsPNG then
-            Result := SaveImageToFile(ChangeFileExt(AFilename, '.png'), imgproc)
-          else
-            Result := SaveImageToFile(AFilename, imgproc);
+
+        tempfilename:=ExtractFileDir(AFilename)+mftempfile;
+        WriteLog_D('tempfilename: '+tempfilename);
+
+        if SaveAsPNG then begin
+          newfilename:=ChangeFileExt(AFilename,'.png');
+          newfileext:='png';
+        end
+        else
+          newfilename:=AFilename;
+
+        ms:=TMemoryStreamUTF8.Create;
+        try
+          Result:=SaveImageToStream(newfileext,ms,imgproc);
+          if Result then begin
+            Result:=DeleteFileUTF8(AFilename);
+            if Result then begin
+              ms.SaveToFile(newfilename);
+              Result:=FileExistsUTF8(newfilename);
+            end
+            else
+              WriteLog_E('MangaFoxRemoveWatermark, failed to replace file! '+AFilename);
+          end
+          else begin
+            WriteLog_E('MangaFoxRemoveWatermark, failed to save to file! '+AFilename);
+            if FileExistsUTF8(tempfilename) then
+              DeleteFileUTF8(tempfilename);
+          end;
+        finally
+          ms.Free;
         end;
       finally
         FreeImage(imgproc);
