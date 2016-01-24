@@ -7,7 +7,11 @@ https://bintray.com/riderkick/FMD/data/db/view#files
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
-0.9.31.0 (21-01-2016)
+0.9.31.2 (24-01-2016)
+[*] Fix remove mangafox watermark (file IO error when using multiple threads)
+[*] Various changes and bug fixes
+
+0.9.31.1 (21-01-2016)
 [*] Fix double URL encoding
 [*] Various changes
 
