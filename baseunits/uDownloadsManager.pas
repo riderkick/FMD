@@ -2042,7 +2042,7 @@ begin
     begin
       MainForm.itRefreshDLInfo.Enabled := False;
       MainForm.UpdateVtDownload;
-      if isCheckForFMDDo then begin
+      if isCheckForFMDDo and (OptionLetFMDDo<>DO_NOTHING) then begin
         frmMain.DoAfterFMD := OptionLetFMDDo;
         MainForm.DoExitWaitCounter;
       end;
