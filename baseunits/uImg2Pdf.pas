@@ -11,8 +11,9 @@ unit uImg2Pdf;
 interface
 
 uses
-  Classes, SysUtils, ZStream, FPImage, FPReadJPEG, FPWriteJPEG,
-  ImagingTypes, Imaging, lazutf8classes, SimpleLogger, SimpleException;
+  Classes, SysUtils, lazutf8classes, LazFileUtils,
+  ZStream, ImagingTypes, Imaging, ImagingExtras,
+  SimpleLogger, SimpleException;
 
 const
   TPDFFormatSetings: TFormatSettings = (
@@ -44,7 +45,7 @@ const
 type
   TPageInfo = record
     fWidth, fHeight: Single;
-    imgStream      : TMemoryStream;
+    imgStream      : TMemoryStreamUTF8;
     bpc            : Byte;
     cs, f          : String;
   end;
@@ -53,7 +54,7 @@ type
 
   TImg2Pdf = class(TObject)
   private
-    FBuffer     : TMemoryStream;
+    FBuffer     : TMemoryStreamUTF8;
     FState      : Integer;
     FCompressionQuality,
     FObjCount,
@@ -71,10 +72,7 @@ type
     procedure   PDFWrite(AText: String);
     function    PDFString(const AText: String): String;
     procedure   Error(AMsg: String);
-    procedure   AddFlateImage(const AName: String);
-    procedure   AddDCTImage(const AName: String);
     function    GetImageFormat(imData: TImageData): string;
-    procedure   SetCompressionQuality(Quality: Cardinal);
   public
     constructor Create;
     destructor  Destroy; override;
@@ -83,7 +81,7 @@ type
     procedure   SaveToFile(const AFile: String);
 
     property    Title: String read FTitle write FTitle;
-    property    CompressionQuality: Cardinal read FCompressionQuality write SetCompressionQuality;
+    property    CompressionQuality: Cardinal read FCompressionQuality write FCompressionQuality;
   end;
 
 implementation
@@ -270,7 +268,7 @@ begin
   SetLength(FPages, 0);
   SetLength(FOffsets, 3);
   SetLength(FPageInfos, 0);
-  FBuffer:= TMemoryStream.Create;
+  FBuffer:= TMemoryStreamUTF8.Create;
 
   BeginPDF;
 end;
@@ -287,107 +285,6 @@ begin
   SetLength(FPages, 0);
   FBuffer.Free;
   inherited;
-end;
-
-procedure   TImg2Pdf.AddFlateImage(const AName: String);
-var
-  fs  : TFileStreamUTF8;
-  ext : String;
-  im  : TImageData;
-begin
-  ext:= StringReplace(UpperCase(ExtractFileExt(AName)), '.', '', [rfReplaceAll]);
-  if (ext = '') then
-    Error('File without an extension!');
-
-  Initialize(im);
-  fs := TFileStreamUTF8.Create(AName, fmOpenRead);
-  try
-    LoadImageFromStream(fs, im);
-    if not Assigned(im.Bits) then Exit;
-
-    BeginPDFPage(im.Width, im.Height);
-    FPageInfos[FCurrentPage].imgStream:= TMemoryStream.Create;
-    try
-      FPageInfos[FCurrentPage].cs     := GetImageFormat(im);
-      FPageInfos[FCurrentPage].fWidth := im.Width;
-      FPageInfos[FCurrentPage].fHeight:= im.Height;
-      FPageInfos[FCurrentPage].bpc    := 8;
-      PDFWrite('q ' + FloatToStr(im.Width) + ' 0 0 ' + FloatToStr(im.Height) +
-        ' 0 -' + FloatToStr(im.Height) + ' cm /I' +
-        IntToStr(FCurrentPage) + ' Do Q');
-
-      if (ext = 'JPG') or (ext = 'JPEG') then
-      begin
-        FPageInfos[FCurrentPage].f := 'DCTDecode';
-        FPageInfos[FCurrentPage].imgStream.CopyFrom(fs, 0);
-      end
-      else
-      begin
-        FPageInfos[FCurrentPage].f := 'FlateDecode';
-        if GetImageFormat(im) = 'DeviceRGB' then try
-          SwapChannels(im, ChannelRed, ChannelBlue);
-        except
-        end;
-        FPageInfos[FCurrentPage].imgStream.Position := 0;
-        with Tcompressionstream.create(clmax, FPageInfos[FCurrentPage].imgStream) do try
-          write(im.Bits^, im.Size);
-        finally
-          Free;
-        end;
-      end;
-    finally
-      EndPDFPage;
-    end;
-  except
-    on E :Exception do begin
-      WriteLog_E('TImg2Pdf.AddFlateImage.Error, '+E.Message);
-      SimpleException.ExceptionHandleSaveLogOnly(Self, E);
-    end;
-  end;
-  fs.Free;
-  FreeImage(im);
-end;
-
-procedure   TImg2Pdf.AddDCTImage(const AName: String);
-var
-  fs  : TFileStreamUTF8;
-  im  : TImageData;
-  ext : string;
-begin
-  ext := StringReplace(UpperCase(ExtractFileExt(AName)), '.', '', [rfReplaceAll]);
-  if (ext = '') then
-    Error('File without an extension!');
-
-  Initialize(im);
-  fs:= TFileStreamUTF8.Create(AName, fmOpenRead);
-  try
-    LoadImageFromStream(fs, im);
-  finally
-    fs.Free;
-  end;
-  if not Assigned(im.Bits) then Exit;
-
-  BeginPDFPage(im.Width, im.Height);
-  FPageInfos[FCurrentPage].imgStream := TMemoryStream.Create;
-  try
-    FPageInfos[FCurrentPage].cs     := GetImageFormat(im);
-    FPageInfos[FCurrentPage].fWidth := im.Width;
-    FPageInfos[FCurrentPage].fHeight:= im.Height;
-    FPageInfos[FCurrentPage].bpc    := 8;
-    FPageInfos[FCurrentPage].f      := 'DCTDecode';
-    PDFWrite('q ' + FloatToStr(im.Width) + ' 0 0 ' + FloatToStr(im.Height) +
-      ' 0 -' + FloatToStr(im.Height) + ' cm /I' +
-      IntToStr(FCurrentPage) + ' Do Q');
-
-    SaveImageToStream('jpg', FPageInfos[FCurrentPage].imgStream, im);
-  except
-    on E :Exception do begin
-      WriteLog_E('TImg2Pdf.AddCDTImage.Error, '+E.Message);
-      SimpleException.ExceptionHandleSaveLogOnly(Self, E);
-    end;
-  end;
-  EndPDFPage;
-  FreeImage(im);
 end;
 
 function TImg2Pdf.GetImageFormat(imData: TImageData): string;
@@ -430,18 +327,93 @@ begin
   end;
 end;
 
-procedure TImg2Pdf.SetCompressionQuality(Quality: Cardinal);
-begin
-  FCompressionQuality := Quality;
-  Imaging.SetOption(ImagingJpegQuality, FCompressionQuality);
-end;
-
 procedure   TImg2Pdf.AddImage(const AName: String);
+var
+  ms: TMemoryStreamUTF8;
+  img: TImageData;
+  imgloaded: Boolean;
+  imgext,imgc: String;
+  imgwidth,imgheight,defaultjpeg: LongInt;
 begin
-  if FCompressionQuality = 100 then
-    AddFlateImage(AName)
-  else
-    AddDCTImage(AName);
+  if not FileExistsUTF8(AName) then Exit;
+  imgloaded:=False;
+  ms:=TMemoryStreamUTF8.Create;
+  try
+    ms.LoadFromFile(AName);
+    imgext:=LowerCase(DetermineStreamFormat(ms));
+
+    if imgext<> '' then begin
+      InitImage(img);
+      try
+        if LoadImageFromStream(ms,img) then begin
+          imgc:=GetImageFormat(img);
+          imgwidth:=img.Width;
+          imgheight:=img.Height;
+          if (imgext<>'jpg') and (imgext<>'jpeg') then begin
+            ms.Clear;
+            if FCompressionQuality<100 then begin
+              //DCTDecode
+              //convert to jpg for non jpg
+              defaultjpeg:=Imaging.GetOption(ImagingJpegQuality);
+              try
+                Imaging.SetOption(ImagingJpegQuality,FCompressionQuality);
+                imgloaded:=SaveImageToStream('jpg',ms,img);
+                imgext:='jpg';
+              finally
+                Imaging.SetOption(ImagingJpegQuality,defaultjpeg);
+              end;
+            end
+            else begin
+              //FlateDecode
+              if imgc='DeviceRGB' then
+                try
+                  SwapChannels(img,ChannelRed,ChannelBlue);
+                except
+                end;
+                with Tcompressionstream.create(clmax,ms) do
+                  try
+                    write(img.Bits^,img.Size);
+                    imgloaded:=True;
+                  finally
+                    Free;
+                  end;
+            end;
+          end
+          else
+            imgloaded:=True;
+        end;
+      finally
+        FreeImage(img);
+      end;
+
+      if imgloaded then begin
+        try
+          BeginPDFPage(imgwidth,imgheight);
+          with FPageInfos[FCurrentPage] do begin
+            if (imgext='jpg') or (imgext='jpeg') then
+              f:='DCTDecode'
+            else
+              f:='FlateDecode';
+            imgStream:=ms;
+            bpc:=8;
+            cs:=imgc;
+            fWidth:=imgwidth;
+            fHeight:=imgheight;
+            PDFWrite(Format('q %d 0 0 %d 0 -%d cm /I%d Do Q',[imgwidth,imgheight,imgheight,FCurrentPage]));
+          end
+        finally
+          EndPDFPage;
+        end;
+      end;
+    end;
+  except
+    on E :Exception do begin
+      WriteLog_E('TImg2Pdf.AddFlateImage.Error, '+E.Message);
+      SimpleException.ExceptionHandleSaveLogOnly(Self, E);
+    end;
+  end;
+  if (imgloaded=False) and Assigned(ms) then
+    FreeAndNil(ms);
 end;
 
 procedure   TImg2Pdf.SaveToStream(const AStream: TStream);
@@ -478,4 +450,5 @@ begin
 end;
 
 end.
+
 
