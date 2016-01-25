@@ -170,7 +170,6 @@ begin
         CopyRect(imgbase, 0, 0, imgbase.Width, imgbase.Height - imgtemplate[bmi].Height, imgproc, 0, 0);
 
         tempfilename:=ExtractFileDir(AFilename)+mftempfile;
-        WriteLog_D('tempfilename: '+tempfilename);
 
         if SaveAsPNG then begin
           newfilename:=ChangeFileExt(AFilename,'.png');
