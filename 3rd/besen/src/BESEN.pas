@@ -4,7 +4,7 @@
  Version: See at line in BESENVersionConstants.pas, which contains "BESENVersion"
 --------------------------------------------------------------------------------
 
- Copyright (C) 2009-2015, Benjamin 'BeRo' Rosseaux <benjamin@rosseaux.com>
+ Copyright (C) 2009-2016, Benjamin 'BeRo' Rosseaux <benjamin@rosseaux.com>
 
  Website: www.rosseaux.com
 
@@ -47,7 +47,7 @@ To-Do:
 ********************************************************************************
 
 BESEN - A ECMAScript Fifth Edition Object Pascal Implementation
-Copyright (C) 2009-2015, Benjamin 'BeRo' Rosseaux
+Copyright (C) 2009-2016, Benjamin 'BeRo' Rosseaux
 
 The source code of the BESEN ecmascript engine library and helper tools are 
 distributed under the Library GNU Lesser General Public License Version 2.1 

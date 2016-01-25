@@ -3,7 +3,7 @@
 ********************************************************************************
 
 BESEN - A ECMAScript Fifth Edition Object Pascal Implementation
-Copyright (C) 2009-2015, Benjamin 'BeRo' Rosseaux
+Copyright (C) 2009-2016, Benjamin 'BeRo' Rosseaux
 
 The source code of the BESEN ecmascript engine library and helper tools are 
 distributed under the Library GNU Lesser General Public License Version 2.1 
@@ -850,11 +850,11 @@ var Code,s:TBESENUTF8STRING;
      end;
     end;
     bntUNARYVOIDEXPRESSION:begin
-     Add('void');
+     Add('void ');
      Visit(TBESENASTNodeUnaryVoidExpression(ToVisit).SubExpression);
     end;
     bntUNARYTYPEOFEXPRESSION:begin
-     Add('typeof');
+     Add('typeof ');
      Visit(TBESENASTNodeUnaryTypeOfExpression(ToVisit).SubExpression);
     end;
     bntPROPERTYEXPRESSION:begin
