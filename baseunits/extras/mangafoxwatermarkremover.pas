@@ -74,6 +74,7 @@ end;
 
 function RemoveWatermark(const AFilename: String; SaveAsPNG: Boolean): Boolean;
 var
+  fs: TFileStreamUTF8;
   ms: TMemoryStreamUTF8;
   imgbase, imgproc, imgtemp: TImageData;
   i, x, y, bmi: Integer;
@@ -85,17 +86,20 @@ begin
   if not FileExistsUTF8(AFilename) then Exit;
   if Length(imgtemplate) = 0 then Exit;
 
+  tempfilename:='';
+  newfilename:='';
+  newfileext:='';
+
   EnterCriticalsection(lockproc);
   try
     InitImage(imgbase);
-    ms:=TMemoryStreamUTF8.Create;
+    fs:=TFileStreamUTF8.Create(AFilename,fmOpenRead or fmShareDenyWrite);
     try
-      ms.LoadFromFile(AFilename);
-      newfileext:=DetermineStreamFormat(ms);
+      newfileext:=DetermineStreamFormat(fs);
       if newfileext<>'' then
-        Result:=LoadImageFromStream(ms,imgbase);
+        Result:=LoadImageFromStream(fs,imgbase);
     finally
-      ms.Free;
+      fs.Free;
     end;
     if not Result then begin
       FreeImage(imgbase);
