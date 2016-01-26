@@ -44,10 +44,12 @@ const
 
 type
   TPageInfo = record
-    fWidth, fHeight: Single;
-    imgStream      : TMemoryStreamUTF8;
-    bpc            : Byte;
-    cs, f          : String;
+    Width,
+    Height: Single;
+    BitsPerComponent: Byte;
+    ColorSpace,
+    Filter: String;
+    Stream: TMemoryStreamUTF8;
   end;
 
   { TImg2Pdf }
@@ -118,7 +120,7 @@ begin
 
     PDFWrite('<</Type /Page');
     PDFWrite('/Parent 1 0 R');
-    PDFWrite('/MediaBox [0 0 ' + FloatToStr(FPageInfos[i].fWidth) + ' ' + FloatToStr(FPageInfos[i].fHeight) + ']');
+    PDFWrite('/MediaBox [0 0 ' + FloatToStr(FPageInfos[i].Width) + ' ' + FloatToStr(FPageInfos[i].Height) + ']');
     PDFWrite('/Resources 2 0 R');
     PDFWrite('/Contents ' + IntToStr(QWord(FObjCount) + 1) + ' 0 R>>');
     PDFWrite('endobj');
@@ -137,15 +139,15 @@ begin
     CreateNewObj;
     PDFWrite('<</Type /XObject');
     PDFWrite('/Subtype /Image');
-    PDFWrite('/Width ' + FloatToStr(FPageInfos[i].fWidth));
-    PDFWrite('/Height ' + FloatToStr(FPageInfos[i].fHeight));
-    PDFWrite('/ColorSpace /' + FPageInfos[i].cs);
-    PDFWrite('/BitsPerComponent ' + IntToStr(FPageInfos[i].bpc));
-    PDFWrite('/Filter /' + FPageInfos[i].f);
-    PDFWrite('/Length ' + IntToStr(FPageInfos[i].imgStream.Size) + '>>');
+    PDFWrite('/Width ' + FloatToStr(FPageInfos[i].Width));
+    PDFWrite('/Height ' + FloatToStr(FPageInfos[i].Height));
+    PDFWrite('/ColorSpace [ /' + FPageInfos[i].ColorSpace + ' ]');
+    PDFWrite('/BitsPerComponent ' + IntToStr(FPageInfos[i].BitsPerComponent));
+    PDFWrite('/Filter /' + FPageInfos[i].Filter);
+    PDFWrite('/Length ' + IntToStr(FPageInfos[i].Stream.Size) + '>>');
     PDFWrite('stream');
-    FPageInfos[i].imgStream.Position := 0;
-    FBuffer.CopyFrom(FPageInfos[i].imgStream, FPageInfos[i].imgStream.Size);
+    FPageInfos[i].Stream.Position := 0;
+    FBuffer.CopyFrom(FPageInfos[i].Stream, FPageInfos[i].Stream.Size);
     PDFWrite(#10 + 'endstream');
     PDFWrite('endobj');
   end;
@@ -173,7 +175,7 @@ begin
   begin
     PDFWrite('/I' + IntToStr(i) + ' ' +
       IntToStr(vni + (i) + vnbpal) + ' 0 R');
-    if (FPageInfos[i].cs = 'Indexed') then
+    if (FPageInfos[i].ColorSpace = 'Indexed') then
       vnbpal:= vnbpal + 1;
   end;
   PDFWrite('>>');
@@ -279,7 +281,7 @@ var
 begin
   if FCurrentPage > 0 then
     for i:= 1 to FCurrentPage do
-      FPageInfos[i].imgStream.Free;
+      FPageInfos[i].Stream.Free;
   SetLength(FPageInfos, 0);
   SetLength(FOffsets, 0);
   SetLength(FPages, 0);
@@ -290,6 +292,8 @@ end;
 function TImg2Pdf.GetImageFormat(imData: TImageData): string;
 begin
   case imData.Format of
+    ifIndex8: Result := 'Indexed';
+
     ifGray8,
     ifA8Gray8,
     ifGray16,
@@ -297,9 +301,6 @@ begin
     ifGray64,
     ifA16Gray16: Result := 'DeviceGray';
 
-    ifUnknown,
-    ifDefault,
-    ifIndex8,
     ifX5R1G1B1,
     ifR3G3B2,
     ifR5G6B5,
@@ -365,18 +366,22 @@ begin
             end
             else begin
               //FlateDecode
+              if imgc='Indexed' then begin
+                ConvertImage(img,ifR8G8B8);
+                imgc:='DeviceRGB';
+              end;
               if imgc='DeviceRGB' then
                 try
                   SwapChannels(img,ChannelRed,ChannelBlue);
                 except
                 end;
-                with Tcompressionstream.create(clmax,ms) do
-                  try
-                    write(img.Bits^,img.Size);
-                    imgloaded:=True;
-                  finally
-                    Free;
-                  end;
+              with Tcompressionstream.create(clmax,ms) do
+                try
+                  write(img.Bits^,img.Size);
+                  imgloaded:=True;
+                finally
+                  Free;
+                end;
             end;
           end
           else
@@ -391,14 +396,14 @@ begin
           BeginPDFPage(imgwidth,imgheight);
           with FPageInfos[FCurrentPage] do begin
             if (imgext='jpg') or (imgext='jpeg') then
-              f:='DCTDecode'
+              Filter:='DCTDecode'
             else
-              f:='FlateDecode';
-            imgStream:=ms;
-            bpc:=8;
-            cs:=imgc;
-            fWidth:=imgwidth;
-            fHeight:=imgheight;
+              Filter:='FlateDecode';
+            Stream:=ms;
+            BitsPerComponent:=8;
+            ColorSpace:=imgc;
+            Width:=imgwidth;
+            Height:=imgheight;
             PDFWrite(Format('q %d 0 0 %d 0 -%d cm /I%d Do Q',[imgwidth,imgheight,imgheight,FCurrentPage]));
           end
         finally
