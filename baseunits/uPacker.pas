@@ -110,46 +110,52 @@ var
   fstream: TFileStreamUTF8;
 begin
   try
-    // Path:= FixPath(Path);
     fPath := Trim(Path);
     RenameFileUTF8(Path, fPath);
     list := TStringList.Create;
     searcher := TFileSearcher.Create;
-    searcher.OnFileFound := OnFileFound;
-    searcher.Search(fPath, '*.jpg;*.jpeg;*.png;*.gif', False, False);
+    try
+      searcher.OnFileFound := OnFileFound;
+      searcher.Search(fPath, '*.jpg;*.jpeg;*.png;*.gif', False, False);
 
-    if list.Count <> 0 then
-    begin
-      pdf := TImg2Pdf.Create;
-      pdf.CompressionQuality := CompressionQuality;
-      pdf.Title := GetLastDir(Path);
-      // pdf.FileName:= fPath+ext;
-      for i := 0 to list.Count - 1 do
+      if list.Count <> 0 then
       begin
-        s := list[i];
-        {$IFDEF WINDOWS}
-        s := StringReplace(s, '/', '\', [rfReplaceAll]);
-        {$ENDIF}
-        // add image to PDF
+        pdf := TImg2Pdf.Create;
         try
-          pdf.AddImage(s);
-        except
-        end;
-      end;
+          pdf.CompressionQuality := CompressionQuality;
+          pdf.Title := GetLastDir(Path);
+          // pdf.FileName:= fPath+ext;
+          for i := 0 to list.Count - 1 do
+          begin
+            s := list[i];
+            {$IFDEF WINDOWS}
+            s := StringReplace(s, '/', '\', [rfReplaceAll]);
+            {$ENDIF}
+            // add image to PDF
+            try
+              pdf.AddImage(s);
+            except
+            end;
+          end;
 
-      fstream := TFileStreamUTF8.Create(fPath + ext, fmCreate);
-      pdf.SaveToStream(fstream);
-      fstream.Free;
-      pdf.Free;
-      //searcher.Search(fPath, '*.db', False, False);
-      //for i := 0 to list.Count - 1 do
-      //  DeleteFileUTF8(list.Strings[i]);
-      if DeleteDirectory(fPath, False) then
-        RemoveDirUTF8(fPath);
-      RenameFileUTF8(fPath + ext, Path + ext);
+          fstream := TFileStreamUTF8.Create(fPath + ext, fmCreate);
+          try
+            pdf.SaveToStream(fstream);
+          finally
+            fstream.Free;
+          end;
+
+        finally
+          pdf.Free;
+        end;
+        if DeleteDirectory(fPath, False) then
+          RemoveDirUTF8(fPath);
+        RenameFileUTF8(fPath + ext, Path + ext);
+      end;
+    finally
+      searcher.Free;
+      list.Free;
     end;
-    searcher.Free;
-    list.Free;
   except
     on E: Exception do
     begin
