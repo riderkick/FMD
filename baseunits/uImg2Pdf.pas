@@ -141,7 +141,7 @@ begin
     PDFWrite('/Subtype /Image');
     PDFWrite('/Width ' + FloatToStr(FPageInfos[i].Width));
     PDFWrite('/Height ' + FloatToStr(FPageInfos[i].Height));
-    PDFWrite('/ColorSpace [ /' + FPageInfos[i].ColorSpace + ' ]');
+    PDFWrite('/ColorSpace [/' + FPageInfos[i].ColorSpace + ']');
     PDFWrite('/BitsPerComponent ' + IntToStr(FPageInfos[i].BitsPerComponent));
     PDFWrite('/Filter /' + FPageInfos[i].Filter);
     PDFWrite('/Length ' + IntToStr(FPageInfos[i].Stream.Size) + '>>');
@@ -335,6 +335,8 @@ var
   imgloaded: Boolean;
   imgext,imgc: String;
   imgwidth,imgheight,defaultjpeg: LongInt;
+  i: Integer;
+  imginfo: TImageFormatInfo;
 begin
   if not FileExistsUTF8(AName) then Exit;
   imgloaded:=False;
@@ -366,9 +368,13 @@ begin
             end
             else begin
               //FlateDecode
-              if imgc='Indexed' then begin
-                ConvertImage(img,ifR8G8B8);
-                imgc:='DeviceRGB';
+              GetImageFormatInfo(img.Format,imginfo);
+              if (imginfo.IsIndexed) and (imginfo.PaletteEntries>0) then begin
+                imgc:='Indexed /DeviceRGB '+IntToStr(imginfo.PaletteEntries)+' <';
+                for i:=0 to imginfo.PaletteEntries-1 do
+                  with img.Palette^[i] do
+                    imgc+=IntToHex(R,2)+IntToHex(G,2)+IntToHex(B,2);
+                imgc+='>';
               end;
               if imgc='DeviceRGB' then
                 try
