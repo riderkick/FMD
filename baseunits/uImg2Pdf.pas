@@ -370,7 +370,7 @@ begin
               //FlateDecode
               GetImageFormatInfo(img.Format,imginfo);
               if (imginfo.IsIndexed) and (imginfo.PaletteEntries>0) then begin
-                imgc:='Indexed /DeviceRGB '+IntToStr(imginfo.PaletteEntries)+' <';
+                imgc:='Indexed /DeviceRGB '+IntToStr(imginfo.PaletteEntries-1)+' <';
                 for i:=0 to imginfo.PaletteEntries-1 do
                   with img.Palette^[i] do
                     imgc+=IntToHex(R,2)+IntToHex(G,2)+IntToHex(B,2);
