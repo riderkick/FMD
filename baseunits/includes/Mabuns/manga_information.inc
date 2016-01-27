@@ -28,50 +28,49 @@
     begin
       // get cover
       if (mangaInfo.coverLink = '') and
-        (Pos('rel="image_src"', parse.Strings[i]) > 0) then
-        mangaInfo.coverLink := CorrectURL(GetAttributeValue(
-          GetTagAttribute(parse.Strings[i], 'href=')));
+        (Pos('rel="image_src"', parse[i]) > 0) then
+        mangaInfo.coverLink := CorrectURL(GetVal(parse[i], 'href'));
 
       // get title
-      if (Pos('Judul :', parse.Strings[i]) <> 0) and (mangaInfo.title = '') then
+      if (Pos('Judul :', parse[i]) <> 0) and (mangaInfo.title = '') then
         mangaInfo.title := TrimLeft(
-          TrimRight(HTMLEntitiesFilter(StringFilter(GetString(parse.Strings[i] + '~!@',
+          TrimRight(HTMLEntitiesFilter(StringFilter(GetString(parse[i] + '~!@',
           'Judul :', '~!@')))));
 
-      if (not isExtractChapter) and (Pos('Baca Online:', parse.Strings[i]) > 0) then
+      if (not isExtractChapter) and (Pos('Baca Online:', parse[i]) > 0) then
         isExtractChapter := True;
 
       // get chapter name and links
       if (isExtractChapter) and
-        (Pos('<a href', parse.Strings[i]) > 0) then
+        (Pos('<a href', parse[i]) > 0) then
       begin
         Inc(mangaInfo.numChapter);
-        s := StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href=')),
+        s := StringReplace(GetVal(parse[i], 'href'),
           WebsiteRoots[MABUNS_ID, 1], '', []);
         mangaInfo.chapterLinks.Add(s);
-        s := RemoveSymbols(TrimLeft(TrimRight(parse.Strings[i + 1])));
+        s := RemoveSymbols(TrimLeft(TrimRight(parse[i + 1])));
         mangaInfo.chapterName.Add(StringFilter(HTMLEntitiesFilter(s)));
       end;
 
       if (isExtractChapter) and
-        (Pos('</table>', parse.Strings[i]) > 0) then
+        (Pos('</table>', parse[i]) > 0) then
         isExtractChapter := False;
 
       // get authors
-      if (i + 8 < parse.Count) and (Pos('Author :', parse.Strings[i]) <> 0) then
+      if (i + 8 < parse.Count) and (Pos('Author :', parse[i]) <> 0) then
         mangaInfo.authors := TrimLeft(
-          TrimRight(GetString(parse.Strings[i] + '~!@', 'Author :', '~!@')));
+          TrimRight(GetString(parse[i] + '~!@', 'Author :', '~!@')));
 
       // get artists
-      if (i + 1 < parse.Count) and (Pos('Artist :', parse.Strings[i]) <> 0) then
+      if (i + 1 < parse.Count) and (Pos('Artist :', parse[i]) <> 0) then
         mangaInfo.artists := TrimLeft(
-          TrimRight(GetString(parse.Strings[i] + '~!@', 'Artist :', '~!@')));
+          TrimRight(GetString(parse[i] + '~!@', 'Artist :', '~!@')));
 
       // get genres
-      if (Pos('Genre :', parse.Strings[i]) <> 0) then
+      if (Pos('Genre :', parse[i]) <> 0) then
       begin
         mangaInfo.genres := TrimLeft(
-          TrimRight(GetString(parse.Strings[i] + '~!@', 'Genre :', '~!@')));
+          TrimRight(GetString(parse[i] + '~!@', 'Genre :', '~!@')));
       end;
     end;
 

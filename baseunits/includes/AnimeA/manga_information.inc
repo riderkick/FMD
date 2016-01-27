@@ -30,23 +30,23 @@
     begin
       // get manga title
       if (mangaInfo.title = '') and
-        (Pos('<title>', parse.Strings[i]) > 0) then
-        mangaInfo.title := GetString(parse.Strings[i + 1], 'Manga - Read ', ' Manga Scans');
+        (Pos('<title>', parse[i]) > 0) then
+        mangaInfo.title := GetString(parse[i + 1], 'Manga - Read ', ' Manga Scans');
 
       // get cover link
       if Pos('class="cover_mp"', parse[i]) > 0 then
         mangaInfo.coverLink := GetVal(parse[i], 'src');
 
       // get authors
-      if (Pos('Author(s):', parse.Strings[i]) <> 0) then
-        mangaInfo.authors := TrimRight(TrimLeft(parse.Strings[i + 3]));
+      if (Pos('Author(s):', parse[i]) <> 0) then
+        mangaInfo.authors := TrimRight(TrimLeft(parse[i + 3]));
 
       // get artists
-      if (Pos('Artist(s):', parse.Strings[i]) <> 0) then
-        mangaInfo.artists := TrimRight(TrimLeft(parse.Strings[i + 2]));
+      if (Pos('Artist(s):', parse[i]) <> 0) then
+        mangaInfo.artists := TrimRight(TrimLeft(parse[i + 2]));
 
       // get genres
-      if (Pos('Genre(s):', parse.Strings[i]) <> 0) then
+      if (Pos('Genre(s):', parse[i]) <> 0) then
       begin
         mangaInfo.genres := '';
         isExtractGenres := True;
@@ -54,31 +54,31 @@
 
       if isExtractGenres then
       begin
-        if GetTagName(parse.Strings[i]) <> 'a' then
+        if GetTagName(parse[i]) <> 'a' then
           for j := 0 to 37 do
-            if Pos(LowerCase(defaultGenres[j]), LowerCase(parse.Strings[i])) <> 0 then
+            if Pos(LowerCase(defaultGenres[j]), LowerCase(parse[i])) <> 0 then
               mangaInfo.genres := mangaInfo.genres + (defaultGenres[j] + ', ');
-        if Pos('</li>', parse.Strings[i]) > 0 then
+        if Pos('</li>', parse[i]) > 0 then
           isExtractGenres := False;
       end;
 
       // get summary
-      if Pos('Upload a chapter', parse.Strings[i]) > 0 then
+      if Pos('Upload a chapter', parse[i]) > 0 then
       begin
         j := i + 8;
         mangaInfo.summary := '';
-        while (j < parse.Count - 4) and (Pos('</p>', parse.Strings[j]) = 0) do
+        while (j < parse.Count - 4) and (Pos('</p>', parse[j]) = 0) do
         begin
-          mangaInfo.summary := StringFilter(mangaInfo.summary + parse.Strings[j]);
+          mangaInfo.summary := StringFilter(mangaInfo.summary + parse[j]);
           Inc(j);
         end;
         mangaInfo.summary := StringFilter(mangaInfo.summary);
       end;
 
       // get status
-      if (Pos('Status:', parse.Strings[i]) <> 0) then
+      if (Pos('Status:', parse[i]) <> 0) then
       begin
-        if Pos('Ongoing', parse.Strings[i + 2]) <> 0 then
+        if Pos('Ongoing', parse[i + 2]) <> 0 then
           mangaInfo.status := '1'   // ongoing
         else
           mangaInfo.status := '0';  // completed

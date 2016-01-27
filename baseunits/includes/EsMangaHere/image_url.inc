@@ -23,10 +23,10 @@
     if parse.Count > 0 then
     begin
       for i := 0 to parse.Count - 1 do
-        if (Pos('class="read_img"', parse.Strings[i]) <> 0) then
+        if (Pos('class="read_img"', parse[i]) <> 0) then
         begin
-          manager.container.PageLinks.Strings[workCounter] :=
-            GetAttributeValue(GetTagAttribute(parse.Strings[i + 6], 'src='));
+          manager.container.PageLinks[workCounter] :=
+            GetVal(parse[i + 6], 'src');
           parse.Free;
           l.Free;
           Exit;

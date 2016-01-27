@@ -20,9 +20,9 @@
       manager.container.PageNumber := 0;
       for i := 1 to parse.Count - 1 do
       begin
-        if (Pos('class="topbar_right"', parse.Strings[i]) > 0) then
+        if (Pos('class="topbar_right"', parse[i]) > 0) then
         begin
-          s := parse.Strings[i + 4];
+          s := parse[i + 4];
           manager.container.PageNumber := StrToInt(TrimLeft(TrimRight(s)));
           Break;
         end;

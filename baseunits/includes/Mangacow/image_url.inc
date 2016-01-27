@@ -22,7 +22,7 @@
         if (GetTagName(parse[i]) = 'img') and
           (GetVal(parse[i], 'style') = 'width:0px; height:0px') then
         begin
-          manager.container.PageLinks.Strings[workCounter] := GetVal(parse[i], 'src');
+          manager.container.PageLinks[workCounter] := GetVal(parse[i], 'src');
           Break;
         end;
     end;

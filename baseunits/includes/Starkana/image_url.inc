@@ -20,7 +20,7 @@
         if (Pos('<img', parse[i]) > 0) and (Pos('class="dyn', parse[i]) > 0) and
          (Pos('style="cursor: pointer', parse[i]) > 0) then
         begin
-          manager.container.PageLinks.Strings[workCounter] := GetVal(parse[i], 'src');
+          manager.container.PageLinks[workCounter] := GetVal(parse[i], 'src');
           Break;
         end;
     end;

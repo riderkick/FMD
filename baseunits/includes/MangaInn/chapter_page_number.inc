@@ -16,10 +16,10 @@
     if parse.Count > 0 then
       for i := parse.Count - 1 downto 5 do
       begin
-        if Pos('</select>', parse.Strings[i]) <> 0 then
+        if Pos('</select>', parse[i]) <> 0 then
         begin
           try
-            manager.container.PageNumber := StrToInt(Trim(parse.Strings[i - 3]));
+            manager.container.PageNumber := StrToInt(Trim(parse[i - 3]));
           except
             manager.container.PageNumber := 0;
           end;

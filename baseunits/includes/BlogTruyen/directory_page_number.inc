@@ -23,9 +23,9 @@
     end;
     for i := 0 to parse.Count - 1 do
     begin
-      if (Pos('[cuối]', parse.Strings[i]) > 0) then
+      if (Pos('[cuối]', parse[i]) > 0) then
       begin
-        s := TrimRight(TrimLeft(GetString(parse.Strings[i - 1], 'LoadPage(', ')')));
+        s := TrimRight(TrimLeft(GetString(parse[i - 1], 'LoadPage(', ')')));
         Page := StrToInt(s);
         Result := NO_ERROR;
         Source.Free;

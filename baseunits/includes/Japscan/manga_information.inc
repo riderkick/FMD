@@ -85,7 +85,7 @@
         if Pos('.htm', s) > 0 then
           s := ReplaceRegExpr('/\d+\.html?$', s, '', False);
         mangaInfo.chapterLinks.Add(s);
-        s := RemoveSymbols(Trim(parse.Strings[i + 1]));
+        s := RemoveSymbols(Trim(parse[i + 1]));
         mangaInfo.chapterName.Add(CommonStringFilter(s));
       end;
     end;

@@ -24,15 +24,14 @@
     end;
     for i := 0 to parse.Count - 3 do
     begin
-      if (Pos('<b>', parse.Strings[i]) <> 0) and
-        (Pos('</b>', parse.Strings[i + 2]) <> 0) and
-        (GetAttributeValue(GetTagAttribute(parse.Strings[i - 1], 'href=')) <> '') then
+      if (Pos('<b>', parse[i]) <> 0) and
+        (Pos('</b>', parse[i + 2]) <> 0) and
+        (GetVal(parse[i - 1], 'href') <> '') then
       begin
         Result := NO_ERROR;
-        s := StringFilter(TrimLeft(TrimRight(parse.Strings[i + 1])));
+        s := StringFilter(TrimLeft(TrimRight(parse[i + 1])));
         names.Add(s);
-        links.Add('/' + StringReplace(GetAttributeValue(
-          GetTagAttribute(parse.Strings[i - 1], 'href=')), WebsiteRoots[MANGA24H_ID, 1], '', []));
+        links.Add('/' + StringReplace(GetVal(parse[i - 1], 'href'), WebsiteRoots[MANGA24H_ID, 1], '', []));
       end;
     end;
     Source.Free;

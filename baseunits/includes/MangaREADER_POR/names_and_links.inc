@@ -23,7 +23,7 @@
       if Copy(s, 1, 3) = UTF8BOM then
         Delete(s, 1, 3);
     end;
-    parser := TJSONParser.Create(s);
+    parser := TJSONParser.Create(s, [joUTF8]);
     try
       Data := parser.Parse;
       try

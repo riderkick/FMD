@@ -40,16 +40,16 @@
         mangaInfo.title := regx.Replace(s, '$1', True);
       end;
       //if (mangaInfo.title = '') AND
-      //(Pos('meta name="description" content="', parse.Strings[i])>0) then
-      //mangaInfo.title:= GetString(parse.Strings[i], 'meta name="description" content="', ' hentai chapters');
+      //(Pos('meta name="description" content="', parse[i])>0) then
+      //mangaInfo.title:= GetString(parse[i], 'meta name="description" content="', ' hentai chapters');
 
       // get cover link
-      if (GetTagName(parse.Strings[i]) = 'div') and
+      if (GetTagName(parse[i]) = 'div') and
         (i < parse.Count - 3) then
-        if (GetAttributeValue(GetTagAttribute(parse.Strings[i], 'class=')) = 'cover') then
+        if (GetVal(parse[i], 'class') = 'cover') then
         begin
           mangaInfo.coverLink :=
-            GetAttributeValue(GetTagAttribute(parse.Strings[i + 2], 'src='));
+            GetVal(parse[i + 2], 'src');
           if mangaInfo.coverLink =
             'http://hentai2read.com/wp-content/hentai/cover/tbn/001_1535_233x0.jpg' then
             mangaInfo.coverLink := '';
@@ -58,44 +58,43 @@
       // get chapter name and links
       if isExtractChapters then
       begin
-        if (GetTagName(parse.Strings[i]) = 'a') and (i < parse.Count - 2) then
+        if (GetTagName(parse[i]) = 'a') and (i < parse.Count - 2) then
         begin
           Inc(mangaInfo.numChapter);
-          s := StringReplace(GetAttributeValue(
-            GetTagAttribute(parse.Strings[i], 'href=')),
+          s := StringReplace(GetVal(parse[i], 'href'),
             HENTAI2READ_ROOT, '', [rfReplaceAll]);
           s := StringReplace(s, HENTAI2READ_MROOT, '', [rfReplaceAll]);
           mangaInfo.chapterLinks.Add(s);
-          //s:= StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href=')), HENTAI2READ_ROOT, '', [rfReplaceAll]);
-          //parse.Strings[i+1]:= StringReplace(parse.Strings[i+1], #10, '', [rfReplaceAll]);
-          //parse.Strings[i+1]:= StringReplace(parse.Strings[i+1], #13, '', [rfReplaceAll]);
-          //parse.Strings[i+1]:= TrimLeft(parse.Strings[i+1]);
-          //parse.Strings[i+1]:= TrimRight(parse.Strings[i+1]);
-          //s:= RemoveSymbols(parse.Strings[i+1]);
+          //s:= StringReplace(GetVal(parse[i], 'href'), HENTAI2READ_ROOT, '', [rfReplaceAll]);
+          //parse[i+1]:= StringReplace(parse[i+1], #10, '', [rfReplaceAll]);
+          //parse[i+1]:= StringReplace(parse[i+1], #13, '', [rfReplaceAll]);
+          //parse[i+1]:= TrimLeft(parse[i+1]);
+          //parse[i+1]:= TrimRight(parse[i+1]);
+          //s:= RemoveSymbols(parse[i+1]);
           regx.Expression := '^\d+\s[-_]\s';
           s := regx.Replace(Trim(parse[i + 1]), '', False);
           mangaInfo.chapterName.Add(Trim(StringFilter(RemoveSymbols(s))));
-          //mangaInfo.chapterName.Add(StringFilter(TrimRight(RemoveSymbols(parse.Strings[i+1]))));
+          //mangaInfo.chapterName.Add(StringFilter(TrimRight(RemoveSymbols(parse[i+1]))));
         end
         else
-        if (GetTagName(parse.Strings[i]) = 'div') and
-          (GetAttributeValue(GetTagAttribute(parse.Strings[i], 'class=')) = 'right') then
+        if (GetTagName(parse[i]) = 'div') and
+          (GetVal(parse[i], 'class') = 'right') then
           isExtractChapters := False;
       end;
 
       // get summary
-      if (Pos('Hentai Summary', parse.Strings[i]) <> 0) and
+      if (Pos('Hentai Summary', parse[i]) <> 0) and
         (isExtractSummary) then
       begin
         j := i + 5;
         mangaInfo.summary := '';
-        while (j < parse.Count) and (Pos('<div class="box">', parse.Strings[j]) = 0) and
+        while (j < parse.Count) and (Pos('<div class="box">', parse[j]) = 0) and
           (j < parse.Count - 1) do
         begin
-          s := parse.Strings[j];
+          s := parse[j];
           if s[1] <> '<' then
           begin
-            s := HTMLEntitiesFilter(StringFilter(parse.Strings[j]));
+            s := HTMLEntitiesFilter(StringFilter(parse[j]));
             s := Trim(BreaksString(s));
             mangaInfo.summary := Trim(mangaInfo.summary + s);
           end;
@@ -104,19 +103,19 @@
         isExtractSummary := False;
       end;
 
-      if Pos('Hentai Chapters', parse.Strings[i]) > 0 then
+      if Pos('Hentai Chapters', parse[i]) > 0 then
         isExtractChapters := True;
 
       // get authors
-      if (Pos('Author(s):', parse.Strings[i]) <> 0) and (i < parse.Count - 6) then
-        mangaInfo.authors := parse.Strings[i + 5];
+      if (Pos('Author(s):', parse[i]) <> 0) and (i < parse.Count - 6) then
+        mangaInfo.authors := parse[i + 5];
 
       // get artists
-      if (Pos('Artist(s):', parse.Strings[i]) <> 0) and (i < parse.Count - 6) then
-        mangaInfo.artists := parse.Strings[i + 5];
+      if (Pos('Artist(s):', parse[i]) <> 0) and (i < parse.Count - 6) then
+        mangaInfo.artists := parse[i + 5];
 
       // get genres
-      if (Pos('Genre(s):', parse.Strings[i]) <> 0) and (i < parse.Count - 6) then
+      if (Pos('Genre(s):', parse[i]) <> 0) and (i < parse.Count - 6) then
       begin
         mangaInfo.genres := '';
         isExtractGenres := True;
@@ -124,7 +123,7 @@
 
       if isExtractGenres then
       begin
-        if GetTagName(parse.Strings[i]) = 'a' then
+        if GetTagName(parse[i]) = 'a' then
         begin
           if mangaInfo.genres = '' then
             mangaInfo.genres := Trim(parse[i + 1])
@@ -132,15 +131,15 @@
             mangaInfo.genres := mangaInfo.genres + ', ' + Trim(parse[i + 1]);
         end
         else
-        if (GetTagName(parse.Strings[i]) = 'div') and
-          (GetAttributeValue(GetTagAttribute(parse.Strings[i], 'class=')) = 'box') then
+        if (GetTagName(parse[i]) = 'div') and
+          (GetVal(parse[i], 'class') = 'box') then
           isExtractGenres := False;
       end;
 
       // get status
-      if (Pos('Status:', parse.Strings[i]) <> 0) and (i <= parse.Count - 5) then
+      if (Pos('Status:', parse[i]) <> 0) and (i <= parse.Count - 5) then
       begin
-        if Pos('Ongoing', parse.Strings[i + 4]) <> 0 then
+        if Pos('Ongoing', parse[i + 4]) <> 0 then
           mangaInfo.status := '1'   // ongoing
         else
           mangaInfo.status := '0';  // completed

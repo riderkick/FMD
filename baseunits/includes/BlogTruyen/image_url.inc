@@ -19,13 +19,13 @@
       manager.container.PageLinks.Clear;
       for i := 0 to parse.Count - 1 do
       begin
-        if not (isExtrackLink) and (Pos('id="content"', parse.Strings[i]) > 0) then
+        if not (isExtrackLink) and (Pos('id="content"', parse[i]) > 0) then
           isExtrackLink := True;
-        if (isExtrackLink) and (GetTagName(parse.Strings[i]) = 'img') then
+        if (isExtrackLink) and (GetTagName(parse[i]) = 'img') then
           manager.container.PageLinks.Add(
-            EncodeUrl(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src='))))
+            EncodeUrl(GetVal(parse[i], 'src')))
         else
-        if (isExtrackLink) and (Pos('</article>', parse.Strings[i]) > 0) then
+        if (isExtrackLink) and (Pos('</article>', parse[i]) > 0) then
           Break;
       end;
     end;

@@ -22,11 +22,11 @@
     end;
     for i := 0 to parse.Count - 1 do
     begin
-      if (GetTagName(parse.Strings[i]) = 'a') and
-        (GetAttributeValue(GetTagAttribute(parse.Strings[i], 'title=')) =
+      if (GetTagName(parse[i]) = 'a') and
+        (GetVal(parse[i], 'title') =
         'Last Page') then
       begin
-        s := TrimRight(TrimLeft(GetString(parse.Strings[i], '/page/', '"')));
+        s := TrimRight(TrimLeft(GetString(parse[i], '/page/', '"')));
         Page := StrToInt(s);
         Result := NO_ERROR;
         Source.Free;

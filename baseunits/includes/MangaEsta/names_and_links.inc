@@ -24,14 +24,13 @@
     end;
     for i := 0 to parse.Count - 1 do
     begin
-      if (Pos('class="gallery-icon"', parse.Strings[i]) > 0) then
+      if (Pos('class="gallery-icon"', parse[i]) > 0) then
       begin
         Result := NO_ERROR;
         s := StringFilter(TrimLeft(
-          TrimRight(GetAttributeValue(GetTagAttribute(parse.Strings[i + 3], 'title=')))));
+          TrimRight(GetVal(parse[i + 3], 'title'))));
         names.Add(HTMLEntitiesFilter(s));
-        s := StringReplace(GetAttributeValue(GetTagAttribute(
-          parse.Strings[i + 2], 'href=')),
+        s := StringReplace(GetVal(parse[i + 2], 'href'),
           WebsiteRoots[MANGAESTA_ID, 1], '', []);
         links.Add(s);
       end;

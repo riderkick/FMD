@@ -20,11 +20,11 @@
       manager.container.PageNumber := 0;
       for i := parse.Count - 1 downto 5 do
       begin
-        if (Pos('data-page=', parse.Strings[i]) > 0) then
+        if (Pos('data-page=', parse[i]) > 0) then
         begin
-          s := parse.Strings[i];
+          s := parse[i];
           manager.container.pageNumber :=
-            StrToInt(GetAttributeValue(GetTagAttribute(s, 'data-page=')));
+            StrToInt(GetVal(s, 'data-page'));
           Break;
         end;
       end;

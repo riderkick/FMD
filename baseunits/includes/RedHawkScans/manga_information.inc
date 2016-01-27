@@ -29,72 +29,71 @@
     begin
       // get cover
       if (mangaInfo.coverLink = '') and
-        (GetTagName(parse.Strings[i]) = 'img') and
-        (Pos('class="thumbnail"', parse.Strings[i - 2]) > 0) then
-        mangaInfo.coverLink := CorrectURL(GetAttributeValue(
-          GetTagAttribute(parse.Strings[i], 'src=')));
+        (GetTagName(parse[i]) = 'img') and
+        (Pos('class="thumbnail"', parse[i - 2]) > 0) then
+        mangaInfo.coverLink := CorrectURL(GetVal(parse[i], 'src'));
 
       // get summary
-      if (Pos('Description', parse.Strings[i]) <> 0) and
-        (Pos('<b', parse.Strings[i - 1]) <> 0) then
+      if (Pos('Description', parse[i]) <> 0) and
+        (Pos('<b', parse[i - 1]) <> 0) then
       begin
         j := i + 2;
-        while (j < parse.Count) and (Pos('</li>', parse.Strings[j]) = 0) do
+        while (j < parse.Count) and (Pos('</li>', parse[j]) = 0) do
         begin
-          s := parse.Strings[j];
+          s := parse[j];
           if s[1] <> '<' then
           begin
-            parse.Strings[j] := HTMLEntitiesFilter(StringFilter(parse.Strings[j]));
-            parse.Strings[j] := StringReplace(parse.Strings[j], #10, '\n', [rfReplaceAll]);
-            parse.Strings[j] := StringReplace(parse.Strings[j], #13, '\r', [rfReplaceAll]);
-            mangaInfo.summary := mangaInfo.summary + parse.Strings[j];
+            parse[j] := HTMLEntitiesFilter(StringFilter(parse[j]));
+            parse[j] := StringReplace(parse[j], #10, '\n', [rfReplaceAll]);
+            parse[j] := StringReplace(parse[j], #13, '\r', [rfReplaceAll]);
+            mangaInfo.summary := mangaInfo.summary + parse[j];
           end;
           Inc(j);
         end;
       end;
 
       // get title
-      if (Pos('Title', parse.Strings[i]) <> 0) and
-        (Pos('<b', parse.Strings[i - 1]) <> 0) and
+      if (Pos('Title', parse[i]) <> 0) and
+        (Pos('<b', parse[i - 1]) <> 0) and
         (mangaInfo.title = '') then
-        mangaInfo.title := StringReplace(TrimLeft(StringFilter(parse.Strings[i + 2])),
+        mangaInfo.title := StringReplace(TrimLeft(StringFilter(parse[i + 2])),
           ': ', '', []);
 
       if (not isExtractChapter) and
-        (Pos('All chapters available for', parse.Strings[i]) > 0) then
+        (Pos('All chapters available for', parse[i]) > 0) then
         isExtractChapter := True;
 
       if (isExtractChapter) and
-        (Pos('class="element"', parse.Strings[i]) > 0) then
+        (Pos('class="element"', parse[i]) > 0) then
       begin
         Inc(mangaInfo.numChapter);
-        s := StringReplace(GetString(parse.Strings[i + 3], 'href="', '"'),
+        s := StringReplace(GetString(parse[i + 3], 'href="', '"'),
           WebsiteRoots[REDHAWKSCANS_ID, 1], '', []);
         mangaInfo.chapterLinks.Add(s);
-        s := RemoveSymbols(TrimLeft(TrimRight(parse.Strings[i + 4])));
+        s := RemoveSymbols(TrimLeft(TrimRight(parse[i + 4])));
         mangaInfo.chapterName.Add(StringFilter(StringFilter(HTMLEntitiesFilter(s))));
       end;
 
       // get authors
-      if (i + 2 < parse.Count) and (Pos('Author', parse.Strings[i]) <> 0) and
-        (Pos('<b', parse.Strings[i - 1]) <> 0) then
-        mangaInfo.authors := StringReplace(TrimLeft(parse.Strings[i + 2]), ': ', '', []);
+      if (i + 2 < parse.Count) and (Pos('Author', parse[i]) <> 0) and
+        (Pos('<b', parse[i - 1]) <> 0) then
+        mangaInfo.authors := StringReplace(TrimLeft(parse[i + 2]), ': ', '', []);
 
       // get artists
-      if (i + 2 < parse.Count) and (Pos('Artist', parse.Strings[i]) <> 0) and
-        (Pos('<b', parse.Strings[i - 1]) <> 0) then
-        mangaInfo.artists := StringReplace(TrimLeft(parse.Strings[i + 2]), ': ', '', []);
+      if (i + 2 < parse.Count) and (Pos('Artist', parse[i]) <> 0) and
+        (Pos('<b', parse[i - 1]) <> 0) then
+        mangaInfo.artists := StringReplace(TrimLeft(parse[i + 2]), ': ', '', []);
 
       // get genres
-      if (Pos('Genre', parse.Strings[i]) <> 0) and
-        (Pos('<b', parse.Strings[i - 1]) <> 0) then
-        mangaInfo.genres := StringReplace(TrimLeft(parse.Strings[i + 2]), ': ', '', []);
+      if (Pos('Genre', parse[i]) <> 0) and
+        (Pos('<b', parse[i - 1]) <> 0) then
+        mangaInfo.genres := StringReplace(TrimLeft(parse[i + 2]), ': ', '', []);
 
       // get status
-      if (i + 2 < parse.Count) and (Pos('Status', parse.Strings[i]) <> 0) and
-        (Pos('<b', parse.Strings[i - 1]) <> 0) then
+      if (i + 2 < parse.Count) and (Pos('Status', parse[i]) <> 0) and
+        (Pos('<b', parse[i - 1]) <> 0) then
       begin
-        if Pos('Ongoing', parse.Strings[i + 2]) <> 0 then
+        if Pos('Ongoing', parse[i + 2]) <> 0 then
           mangaInfo.status := '1'   // ongoing
         else
           mangaInfo.status := '0';  // completed

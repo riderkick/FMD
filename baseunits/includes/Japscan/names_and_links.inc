@@ -28,7 +28,7 @@
         if (Pos(' href="/mangas/', parse[i + 1]) > 0) then
         begin
           Result := NO_ERROR;
-          links.Add(GetAttributeValue(GetTagAttribute(parse[i + 1], 'href=')));
+          links.Add(GetVal(parse[i + 1], 'href'));
           names.Add(Trim(parse[i + 2]));
         end;
     end;

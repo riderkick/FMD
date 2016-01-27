@@ -26,13 +26,13 @@
     end;
     for i := 0 to parse.Count - 1 do
     begin
-      if (Pos('class="tiptip', parse.Strings[i]) > 0) then
+      if (Pos('class="tiptip', parse[i]) > 0) then
       begin
         Result := NO_ERROR;
         s := StringFilter(TrimLeft(
-          TrimRight(GetString(parse.Strings[i + 2], 'title="truyện tranh ', '">'))));
+          TrimRight(GetString(parse[i + 2], 'title="truyện tranh ', '">'))));
         names.Add(HTMLEntitiesFilter(s));
-        links.Add(GetAttributeValue(GetTagAttribute(parse.Strings[i + 2], 'href="')));
+        links.Add(GetVal(parse[i + 2], 'href="'));
       end;
     end;
     Source.Free;

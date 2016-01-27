@@ -130,24 +130,24 @@
         end;
 
         // get genres
-        if (Pos('Category', parse.Strings[i]) <> 0) then
+        if (Pos('Category', parse[i]) <> 0) then
         begin
           isExtractGenres := True;
         end;
 
         if isExtractGenres then
         begin
-          if Pos('manga-list/category/', parse.Strings[i]) <> 0 then
+          if Pos('manga-list/category/', parse[i]) <> 0 then
             mangaInfo.genres := mangaInfo.genres +
-              TrimLeft(TrimRight(parse.Strings[i + 1])) + ', ';
-          if Pos('</p>', parse.Strings[i]) <> 0 then
+              TrimLeft(TrimRight(parse[i + 1])) + ', ';
+          if Pos('</p>', parse[i]) <> 0 then
             isExtractGenres := False;
         end;
 
         // get status
-        if (i + 2 < parse.Count) and (Pos('Status', parse.Strings[i]) <> 0) then
+        if (i + 2 < parse.Count) and (Pos('Status', parse[i]) <> 0) then
         begin
-          if Pos('Ongoing', parse.Strings[i + 3]) <> 0 then
+          if Pos('Ongoing', parse[i + 3]) <> 0 then
             mangaInfo.status := '1'   // ongoing
           else
             mangaInfo.status := '0';  // completed

@@ -25,14 +25,13 @@
     end;
     for i := 0 to parse.Count - 1 do
     begin
-      if ((Pos('class="openManga"', parse.Strings[i]) > 0) or
-        (Pos('class="closedManga"', parse.Strings[i]) > 0)) then
+      if ((Pos('class="openManga"', parse[i]) > 0) or
+        (Pos('class="closedManga"', parse[i]) > 0)) then
       begin
         Result := NO_ERROR;
-        s := TrimLeft(TrimRight(StringFilter(parse.Strings[i + 1])));
+        s := TrimLeft(TrimRight(StringFilter(parse[i + 1])));
         names.Add(s);
-        links.Add(StringReplace(GetAttributeValue(GetTagAttribute(
-          parse.Strings[i], 'href=')), root, '', []));
+        links.Add(StringReplace(GetVal(parse[i], 'href'), root, '', []));
       end;
     end;
     Source.Free;

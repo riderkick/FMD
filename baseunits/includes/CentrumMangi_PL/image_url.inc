@@ -20,9 +20,9 @@
     begin
       manager.container.PageLinks.Clear;
       for i := 0 to parse.Count - 1 do
-        if (Pos('<img alt=', parse.Strings[i]) > 0) then
+        if (Pos('<img alt=', parse[i]) > 0) then
         begin
-          s := GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src='));
+          s := GetVal(parse[i], 'src');
           s := StringReplace(s, 'https://', 'http://', [rfReplaceAll]);
           s := StringReplace(s, 'mangas/', WebsiteRoots[CENTRUMMANGI_PL_ID, 1] +
             '/mangas/', [rfReplaceAll]);

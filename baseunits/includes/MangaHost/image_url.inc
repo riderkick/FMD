@@ -19,7 +19,7 @@
       for i := 0 to parse.Count - 1 do
         if (Pos('<img', parse[i]) > 0) and (Pos('class="open', parse[i]) > 0) then
         begin
-          manager.container.PageLinks.Strings[workCounter] := GetVal(parse[i], 'src');
+          manager.container.PageLinks[workCounter] := GetVal(parse[i], 'src');
           Break;
         end;
     end;

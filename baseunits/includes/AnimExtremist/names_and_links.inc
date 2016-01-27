@@ -23,11 +23,11 @@
     end;
     for i := 0 to parse.Count - 1 do
     begin
-      if Pos('id="manga" style="margin', parse.Strings[i]) <> 0 then
+      if Pos('id="manga" style="margin', parse[i]) <> 0 then
       begin
         Result := NO_ERROR;
-        names.Add(TrimLeft(TrimRight(parse.Strings[i + 4])));
-        links.Add(StringReplace(GetString(parse.Strings[i + 3], 'href="', '">'),
+        names.Add(TrimLeft(TrimRight(parse[i + 4])));
+        links.Add(StringReplace(GetString(parse[i + 3], 'href="', '">'),
           WebsiteRoots[ANIMEEXTREMIST_ID, 1], '', []));
       end;
     end;

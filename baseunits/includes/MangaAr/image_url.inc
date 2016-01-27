@@ -22,18 +22,18 @@
     begin
       for i := 0 to parse.Count - 1 do
       begin
-        if (Pos('var pages =', parse.Strings[i]) > 0) then
+        if (Pos('var pages =', parse[i]) > 0) then
         begin
           ts := TStringList.Create;
-          s := GetString(parse.Strings[i], '[{', '}];');
+          s := GetString(parse[i], '[{', '}];');
           s := StringReplace(s, '":', '",', [rfReplaceAll]);
           s := StringReplace(s, '\', '', [rfReplaceAll]);
           ts.DelimitedText := s;
           for j := 0 to ts.Count - 1 do
           begin
-            if (Pos('url', ts.Strings[j]) > 0) then
+            if (Pos('url', ts[j]) > 0) then
             begin
-              s := ts.Strings[j + 1];
+              s := ts[j + 1];
               s := 'http' + GetString(s, 'http', '?w='); //original resolution
               manager.container.PageLinks.Add(s);
             end;

@@ -24,13 +24,13 @@
     end;
     for i := 0 to parse.Count - 1 do
     begin
-      if (Pos('option value="', parse.Strings[i]) > 0) and
-        (Pos('value="0"', parse.Strings[i]) = 0) then
+      if (Pos('option value="', parse[i]) > 0) and
+        (Pos('value="0"', parse[i]) = 0) then
       begin
         Result := NO_ERROR;
-        s := StringFilter(parse.Strings[i + 1]);
+        s := StringFilter(parse[i + 1]);
         names.Add(HTMLEntitiesFilter(s));
-        s := GetAttributeValue(GetTagAttribute(parse.Strings[i], 'value='));
+        s := GetVal(parse[i], 'value');
         links.Add(s);
       end;
     end;

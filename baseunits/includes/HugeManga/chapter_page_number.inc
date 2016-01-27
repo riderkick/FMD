@@ -20,11 +20,11 @@
       manager.container.pageNumber := 0;
       for i := parse.Count - 1 downto 5 do
       begin
-        if (Pos('</option>', parse.Strings[i]) > 0) then
+        if (Pos('</option>', parse[i]) > 0) then
         begin
-          s := parse.Strings[i - 2];
+          s := parse[i - 2];
           manager.container.pageNumber :=
-            StrToInt(GetAttributeValue(GetTagAttribute(s, 'value=')));
+            StrToInt(GetVal(s, 'value'));
           Break;
         end;
       end;

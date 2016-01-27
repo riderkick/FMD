@@ -20,9 +20,9 @@
       manager.container.PageLinks.Clear;
       for i := 0 to parse.Count - 1 do
       begin
-        if Pos('addpage(''', parse.Strings[i]) > 0 then
+        if Pos('addpage(''', parse[i]) > 0 then
         begin
-          s := parse.Strings[i];
+          s := parse[i];
           s := StringReplace(s, 'https://', 'http://', [rfReplaceAll]);
           repeat
             j := Pos('addpage(''', s);

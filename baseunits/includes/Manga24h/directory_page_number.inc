@@ -23,9 +23,9 @@
     end;
     for i := 0 to parse.Count - 1 do
     begin
-      if (Pos('Pages (', parse.Strings[i]) > 0) then
+      if (Pos('Pages (', parse[i]) > 0) then
       begin
-        s := GetString(parse.Strings[i], 'Pages (', ')');
+        s := GetString(parse[i], 'Pages (', ')');
         Page := StrToInt(s);
         Result := NO_ERROR;
         Source.Free;

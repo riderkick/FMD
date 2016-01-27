@@ -24,14 +24,14 @@
     end;
     for i := 0 to parse.Count - 1 do
     begin
-      if (Pos('class="title"', parse.Strings[i]) > 0) and
-        (Pos('<a', parse.Strings[i + 1]) > 0) then
+      if (Pos('class="title"', parse[i]) > 0) and
+        (Pos('<a', parse[i + 1]) > 0) then
       begin
         Result := NO_ERROR;
-        s := StringFilter(TrimLeft(TrimRight(parse.Strings[i + 2])));
+        s := StringFilter(TrimLeft(TrimRight(parse[i + 2])));
         names.Add(HTMLEntitiesFilter(s));
-        s := StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i + 1],
-          'href="')), WebsiteRoots[REDHAWKSCANS_ID, 1], '', []);
+        s := StringReplace(GetVal(parse[i + 1],
+          'href="'), WebsiteRoots[REDHAWKSCANS_ID, 1], '', []);
         links.Add(s);
       end;
     end;

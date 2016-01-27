@@ -18,12 +18,12 @@
       manager.container.PageNumber := 0;
       for i := 0 to parse.Count - 1 do
       begin
-        if (GetTagName(parse.Strings[i]) = 'select') and
-          (GetAttributeValue(GetTagAttribute(parse.Strings[i], 'class=')) =
+        if (GetTagName(parse[i]) = 'select') and
+          (GetVal(parse[i], 'class') =
           'cbo_wpm_pag') then
         begin
           j := i + 1;
-          while GetTagName(parse.Strings[j]) = 'option' do
+          while GetTagName(parse[j]) = 'option' do
           begin
             Inc(manager.container.PageNumber);
             Inc(j, 3);

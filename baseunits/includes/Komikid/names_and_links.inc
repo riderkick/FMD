@@ -23,17 +23,17 @@
     end;
     for i := 0 to parse.Count - 1 do
     begin
-      if Pos('class="series_col"', LowerCase(parse.Strings[i])) > 0 then
+      if Pos('class="series_col"', LowerCase(parse[i])) > 0 then
         isFound := True;
-      if isFound and (Pos('</html>', LowerCase(parse.Strings[i])) > 0) then
+      if isFound and (Pos('</html>', LowerCase(parse[i])) > 0) then
         isFound := False;
-      if isFound and (Pos('<a ', parse.Strings[i]) > 0) then
-        if (Pos('<li>', parse.Strings[i - 1]) > 0) then
+      if isFound and (Pos('<a ', parse[i]) > 0) then
+        if (Pos('<li>', parse[i - 1]) > 0) then
         begin
           Result := NO_ERROR;
-          links.Add('/' + GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href="')));
+          links.Add('/' + GetVal(parse[i], 'href="'));
           names.Add(Trim(RemoveStringBreaks(HTMLEntitiesFilter(
-            StringFilter(parse.Strings[i + 1])))));
+            StringFilter(parse[i + 1])))));
         end;
     end;
     parse.Clear;

@@ -15,7 +15,7 @@
       Exit;
     end;
     sstream := TStringStream.Create(Source.Text);
-    parser := TJSONParser.Create(sstream);
+    parser := TJSONParser.Create(sstream, [joUTF8]);
     try
       Data := Parser.Parse;
       if Data <> nil then

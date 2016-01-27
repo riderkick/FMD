@@ -22,10 +22,10 @@
     end;
     for i := 0 to parse.Count - 1 do
     begin
-      if (GetTagName(parse.Strings[i]) = 'span') and
-        (GetAttributeValue(GetTagAttribute(parse.Strings[i], 'class=')) = 'next') then
+      if (GetTagName(parse[i]) = 'span') and
+        (GetVal(parse[i], 'class') = 'next') then
       begin
-        s := TrimRight(TrimLeft(parse.Strings[i - 4]));
+        s := TrimRight(TrimLeft(parse[i - 4]));
         Page := StrToInt(s);
         Result := NO_ERROR;
         Source.Free;

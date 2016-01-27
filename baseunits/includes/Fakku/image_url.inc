@@ -16,9 +16,9 @@
       //Get total pages
       for i := 0 to l.Count - 1 do
       begin
-        if (Pos('window.params.thumbs = ', l.strings[i]) > 0) then
+        if (Pos('window.params.thumbs = ', l[i]) > 0) then
         begin
-          s := GetString(l.Strings[i], '= [', '];');
+          s := GetString(l[i], '= [', '];');
           with TStringList.Create do
             try
               DelimitedText := s;
@@ -36,10 +36,10 @@
       //Get imgurl
       for i := 0 to l.Count - 1 do
       begin
-        if (Pos('return ''', l.Strings[i]) > 0) then
+        if (Pos('return ''', l[i]) > 0) then
         begin
-          imgURL := GetString(l.Strings[i], 'return ''', ''' +');
-          imgExt := GetString(l.Strings[i], 'x + ''', ''';');
+          imgURL := GetString(l[i], 'return ''', ''' +');
+          imgExt := GetString(l[i], 'x + ''', ''';');
           Break;
         end;
       end;

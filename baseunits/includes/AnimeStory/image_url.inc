@@ -19,10 +19,10 @@
     if parse.Count > 0 then
     begin
       for i := 0 to parse.Count - 1 do
-        if (Pos('id="chpimg"', parse.Strings[i]) > 0) then
+        if (Pos('id="chpimg"', parse[i]) > 0) then
         begin
-          manager.container.PageLinks.Strings[workCounter] :=
-            DecodeURL(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src=')));
+          manager.container.PageLinks[workCounter] :=
+            DecodeURL(GetVal(parse[i], 'src'));
           Break;
         end;
     end;

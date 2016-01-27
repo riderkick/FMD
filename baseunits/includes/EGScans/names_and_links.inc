@@ -24,18 +24,18 @@
     end;
     for i := parse.Count - 1 downto 2 do
     begin
-      if (Pos('<option value="', parse.Strings[i]) > 0) and
-        (Pos('="0"', parse.Strings[i]) = 0) then
+      if (Pos('<option value="', parse[i]) > 0) and
+        (Pos('="0"', parse[i]) = 0) then
       begin
         Result := NO_ERROR;
-        s := StringFilter(TrimLeft(TrimRight(parse.Strings[i + 1])));
+        s := StringFilter(TrimLeft(TrimRight(parse[i + 1])));
         names.Add(HTMLEntitiesFilter(s));
-        s := StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i],
-          'value="')),
+        s := StringReplace(GetVal(parse[i],
+          'value="'),
           WebsiteRoots[S2SCAN_ID, 1], '', []);
         links.Add(s);
       end;
-      if Pos('<select name="manga"', parse.Strings[i]) > 0 then
+      if Pos('<select name="manga"', parse[i]) > 0 then
         Break;
     end;
     Source.Free;

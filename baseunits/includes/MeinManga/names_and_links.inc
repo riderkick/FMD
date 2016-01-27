@@ -24,13 +24,13 @@
     end;
     for i := 0 to parse.Count - 1 do
     begin
-      if (Pos('/manga/', parse.Strings[i]) > 0) and
-        (Pos('<img', parse.Strings[i - 2]) > 0) then
+      if (Pos('/manga/', parse[i]) > 0) and
+        (Pos('<img', parse[i - 2]) > 0) then
       begin
         Result := NO_ERROR;
-        s := GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href='));
+        s := GetVal(parse[i], 'href');
         links.Add(s);
-        s := StringFilter(Trim(parse.Strings[i + 1]));
+        s := StringFilter(Trim(parse[i + 1]));
         s := StringReplace(s, WebsiteRoots[MEINMANGA_ID, 1], '', []);
         names.Add(HTMLEntitiesFilter(s));
       end;

@@ -32,44 +32,44 @@
     begin
       // get manga title
       if (mangaInfo.title = '') and
-        (Pos('content="Leer ', parse.Strings[i]) > 0) then
-        mangaInfo.title := GetString(parse.Strings[i], 'content="Leer ', ' manga online');
+        (Pos('content="Leer ', parse[i]) > 0) then
+        mangaInfo.title := GetString(parse[i], 'content="Leer ', ' manga online');
 
-      if Pos('class="suscripcion', parse.Strings[i]) > 0 then
+      if Pos('class="suscripcion', parse[i]) > 0 then
       begin
         // get cover link
-        if Pos('<img', parse.Strings[i + 5]) > 0 then
+        if Pos('<img', parse[i + 5]) > 0 then
           mangaInfo.coverLink :=
-            GetAttributeValue(GetTagAttribute(parse.Strings[i + 5], 'src'));
+            GetVal(parse[i + 5], 'src');
         // get summary
         j := i + 8;
-        while (j < parse.Count - 1) and (Pos('</p>', parse.Strings[j]) = 0) do
+        while (j < parse.Count - 1) and (Pos('</p>', parse[j]) = 0) do
         begin
           Inc(j);
-          s := parse.Strings[j];
+          s := parse[j];
           if (s <> '') and
             (s[1] <> '<') then
           begin
-            parse.Strings[j] := StringFilter(parse.Strings[j]);
-            parse.Strings[j] := StringReplace(parse.Strings[j], #10, '\n', [rfReplaceAll]);
-            parse.Strings[j] := StringReplace(parse.Strings[j], #13, '\r', [rfReplaceAll]);
-            mangaInfo.summary := mangaInfo.summary + parse.Strings[j];
+            parse[j] := StringFilter(parse[j]);
+            parse[j] := StringReplace(parse[j], #10, '\n', [rfReplaceAll]);
+            parse[j] := StringReplace(parse[j], #13, '\r', [rfReplaceAll]);
+            mangaInfo.summary := mangaInfo.summary + parse[j];
           end;
         end;
       end;
 
       // get authors/artists
-      if (Pos('Creado por', parse.Strings[i]) <> 0) then
+      if (Pos('Creado por', parse[i]) <> 0) then
       begin
-        if Pos('/autor/', parse.Strings[i + 1]) > 0 then
-          mangaInfo.authors := parse.Strings[i + 2];
-        if Pos('/mangaka/', parse.Strings[i + 5]) > 0 then
-          mangaInfo.authors := parse.Strings[i + 6];
+        if Pos('/autor/', parse[i + 1]) > 0 then
+          mangaInfo.authors := parse[i + 2];
+        if Pos('/mangaka/', parse[i + 5]) > 0 then
+          mangaInfo.authors := parse[i + 6];
       end;
 
       // get genres
-      if (Pos('submanga.com/genero/', parse.Strings[i]) <> 0) then
-        mangaInfo.genres := mangaInfo.genres + parse.Strings[i + 1] + ', ';
+      if (Pos('submanga.com/genero/', parse[i]) <> 0) then
+        mangaInfo.genres := mangaInfo.genres + parse[i + 1] + ', ';
     end;
 
     // get chapters

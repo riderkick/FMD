@@ -20,10 +20,10 @@
     begin
       manager.container.PageLinks.Clear;
       for i := 0 to parse.Count - 1 do
-        if (Pos('<img ondragstart', parse.Strings[i]) > 0) then
+        if (Pos('<img ondragstart', parse[i]) > 0) then
         begin
           manager.container.PageLinks.Add(WebsiteRoots[EGSCANS_ID, 1] +
-            '/' + EncodeURL(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src='))));
+            '/' + EncodeURL(GetVal(parse[i], 'src')));
         end;
     end;
     parse.Free;

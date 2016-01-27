@@ -21,16 +21,16 @@
       manager.container.PageNumber := 0;
       for i := 0 to parse.Count - 1 do
       begin
-        if (Pos('<select', parse.Strings[i]) > 0) and
-          (Pos('name="page"', parse.Strings[i]) > 0) and
-          (Pos('id="page"', parse.Strings[i]) > 0) then
+        if (Pos('<select', parse[i]) > 0) and
+          (Pos('name="page"', parse[i]) > 0) and
+          (Pos('id="page"', parse[i]) > 0) then
           isExtractPageNumber := True;
-        if isExtractPageNumber and (Pos('</select', parse.Strings[i]) > 0) then
+        if isExtractPageNumber and (Pos('</select', parse[i]) > 0) then
         begin
           isExtractPageNumber := False;
           Break;
         end;
-        if isExtractPageNumber and (Pos('<option', parse.Strings[i]) > 0) then
+        if isExtractPageNumber and (Pos('<option', parse[i]) > 0) then
           Inc(manager.container.PageNumber);
       end;
     end;

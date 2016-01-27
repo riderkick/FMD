@@ -36,22 +36,22 @@
     for i := 0 to parse.Count - 1 do
     begin
       // get chapter name and links
-      if (Pos('select name="chapter"', parse.Strings[i]) > 0) then
+      if (Pos('select name="chapter"', parse[i]) > 0) then
         isExtractChapter := True;
 
       // get manga name
-      if (mangaInfo.title = '') and (Pos('<title>', parse.Strings[i]) > 0) then
-        mangaInfo.title := GetString(parse.Strings[i - 2], 'content="', ' Chapter');
+      if (mangaInfo.title = '') and (Pos('<title>', parse[i]) > 0) then
+        mangaInfo.title := GetString(parse[i - 2], 'content="', ' Chapter');
 
-      if (isExtractChapter) and (Pos('</select>', parse.Strings[i]) > 0) then
+      if (isExtractChapter) and (Pos('</select>', parse[i]) > 0) then
         Break;
 
-      if (isExtractChapter) and (Pos('option value=', parse.Strings[i]) > 0) then
+      if (isExtractChapter) and (Pos('option value=', parse[i]) > 0) then
       begin
         Inc(mangaInfo.numChapter);
-        s := URL + '/' + GetAttributeValue(GetTagAttribute(parse.Strings[i], 'value='));
+        s := URL + '/' + GetVal(parse[i], 'value');
         mangaInfo.chapterLinks.Add(s);
-        s := RemoveSymbols(TrimLeft(TrimRight(parse.Strings[i + 1])));
+        s := RemoveSymbols(TrimLeft(TrimRight(parse[i + 1])));
         mangaInfo.chapterName.Add(StringFilter(StringFilter(HTMLEntitiesFilter(s))));
       end;
     end;

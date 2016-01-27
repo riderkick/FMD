@@ -39,8 +39,8 @@
       if Pos('class="content-title"', parse[i]) > 0 then
       begin
         Result := NO_ERROR;
-        names.Add(Trim(GetAttributeValue(GetTagAttribute(parse[i], 'title='))));
-        links.Add(StringReplace(GetAttributeValue(GetTagAttribute(parse[i], 'href=')),
+        names.Add(Trim(GetVal(parse[i], 'title')));
+        links.Add(StringReplace(GetVal(parse[i], 'href'),
           WebsiteRoots[FAKKU_ID, 1], '', []));
       end;
     end;

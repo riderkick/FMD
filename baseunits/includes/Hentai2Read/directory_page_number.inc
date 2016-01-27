@@ -23,10 +23,10 @@
     end;
     for i := 0 to parse.Count - 1 do
     begin
-      if (GetTagName(parse.Strings[i]) = 'img') and
-        (GetAttributeValue(GetTagAttribute(parse.Strings[i], 'alt=')) = 'Next Page') then
+      if (GetTagName(parse[i]) = 'img') and
+        (GetVal(parse[i], 'alt') = 'Next Page') then
       begin
-        s := TrimRight(TrimLeft(parse.Strings[i - 5]));
+        s := TrimRight(TrimLeft(parse[i - 5]));
         Page := StrToInt(s);
         Result := NO_ERROR;
         Source.Free;

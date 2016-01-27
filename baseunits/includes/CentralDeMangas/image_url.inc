@@ -21,9 +21,9 @@
       manager.container.PageLinks.Clear;
       for i := 0 to parse.Count - 1 do
       begin
-        if Pos('var pages = ', parse.Strings[i]) > 0 then
+        if Pos('var pages = ', parse[i]) > 0 then
         begin
-          s := StringReplace(parse.Strings[i], '\/', '/', [rfReplaceAll]);
+          s := StringReplace(parse[i], '\/', '/', [rfReplaceAll]);
           repeat
             j := Pos('http://', s);
             manager.container.PageLinks.Add(EncodeURL(GetString(s, '"', '"')));

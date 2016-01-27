@@ -23,10 +23,9 @@
     end;
     for i := 0 to parse.Count - 1 do
     begin
-      if (Pos('class="pagination"', parse.Strings[i]) <> 0) then
+      if (Pos('class="pagination"', parse[i]) <> 0) then
       begin
-        s := TrimLeft(TrimRight(GetAttributeValue(
-          GetTagAttribute(parse.Strings[i], 'total='))));
+        s := TrimLeft(TrimRight(GetVal(parse[i], 'total')));
         Page := StrToInt(s);
         Result := NO_ERROR;
         Source.Free;

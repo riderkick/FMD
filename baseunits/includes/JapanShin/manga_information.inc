@@ -27,40 +27,40 @@
     for i := 0 to parse.Count - 1 do
     begin
       //get title
-      if (Pos('h1 class="title"', parse.Strings[i]) > 0) then
-        mangaInfo.title := Trim(parse.Strings[i + 1]);
+      if (Pos('h1 class="title"', parse[i]) > 0) then
+        mangaInfo.title := Trim(parse[i + 1]);
 
       //get coverlink
-      if (Pos('class="thumbnail"', parse.Strings[i]) > 0) then
+      if (Pos('class="thumbnail"', parse[i]) > 0) then
       begin
         j := i + 1;
-        while (Pos('<img', parse.Strings[j]) = 0) do
+        while (Pos('<img', parse[j]) = 0) do
           Inc(j);
-        mangaInfo.coverLink := GetAttributeValue(GetTagAttribute(parse.Strings[j], 'src='));
+        mangaInfo.coverLink := GetVal(parse[j], 'src');
       end;
 
       //get authors
-      if (Pos('Auteur :', parse.Strings[i]) > 0) then
-        mangaInfo.authors := parse.Strings[i + 2];
+      if (Pos('Auteur :', parse[i]) > 0) then
+        mangaInfo.authors := parse[i + 2];
 
       //get genre
-      if (Pos('Genre :', parse.Strings[i]) > 0) then
-        mangaInfo.genres := parse.Strings[i + 2];
+      if (Pos('Genre :', parse[i]) > 0) then
+        mangaInfo.genres := parse[i + 2];
 
       //get summary
-      if (Pos('Synopsis :', parse.Strings[i]) > 0) then
-        mangaInfo.summary := parse.Strings[i + 2];
+      if (Pos('Synopsis :', parse[i]) > 0) then
+        mangaInfo.summary := parse[i + 2];
 
       //get chapter name and links
-      if (Pos('href="', parse.Strings[i]) > 0) and
-        (Pos('title="', parse.Strings[i]) > 0) and
-        (Pos('/reader/read/', parse.Strings[i]) > 0) then
+      if (Pos('href="', parse[i]) > 0) and
+        (Pos('title="', parse[i]) > 0) and
+        (Pos('/reader/read/', parse[i]) > 0) then
       begin
         Inc(mangaInfo.numChapter);
         mangaInfo.chapterLinks.Add(
-          StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href=')),
+          StringReplace(GetVal(parse[i], 'href'),
           WebsiteRoots[JAPANSHIN_ID, 1], '', [rfIgnoreCase]));
-        mangaInfo.chapterName.Add(Trim(parse.Strings[i + 1]));
+        mangaInfo.chapterName.Add(Trim(parse[i + 1]));
       end;
     end;
 

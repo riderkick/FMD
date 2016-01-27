@@ -17,12 +17,12 @@
     if parse.Count > 0 then
     begin
       for i := 0 to parse.Count - 1 do
-        if (GetTagName(parse.Strings[i]) = 'img') and
-          (GetAttributeValue(GetTagAttribute(parse.Strings[i], 'id=')) =
+        if (GetTagName(parse[i]) = 'img') and
+          (GetVal(parse[i], 'id') =
           'img_mng_enl') then
         begin
-          manager.container.PageLinks.Strings[workCounter] :=
-            GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src='));
+          manager.container.PageLinks[workCounter] :=
+            GetVal(parse[i], 'src');
           Break;
         end;
     end;

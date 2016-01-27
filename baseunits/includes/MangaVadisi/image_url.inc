@@ -20,11 +20,11 @@
     if parse.Count > 0 then
     begin
       for i := 0 to parse.Count - 1 do
-        if (Pos('class="picture"', parse.Strings[i]) > 0) then
+        if (Pos('class="picture"', parse[i]) > 0) then
         begin
-          manager.container.pageLinks.Strings[workCounter] :=
+          manager.container.pageLinks[workCounter] :=
             EncodeURL(WebsiteRoots[MANGAVADISI_ID, 1] + MANGAVADISI_BROWSER +
-            GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src=')));
+            GetVal(parse[i], 'src'));
           Break;
         end;
     end;

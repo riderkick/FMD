@@ -28,16 +28,15 @@
     regx.Expression := '^.+\sdj\s[-_]\s(.+)$';
     for i := 0 to parse.Count - 1 do
     begin
-      //if Pos('class="lst-anm-ifo"', parse.Strings[i])>0 then
+      //if Pos('class="lst-anm-ifo"', parse[i])>0 then
       if Pos('class="mng_det_pop"', parse[i]) > 0 then
       begin
         begin
           Result := NO_ERROR;
-          s := Trim(StringFilter(GetAttributeValue(
-            GetTagAttribute(parse[i], 'title='))));
+          s := Trim(StringFilter(GetVal(parse[i], 'title')));
           s := regx.Replace(s, '$1', True);
           names.Add(s);
-          links.Add(StringReplace(GetAttributeValue(GetTagAttribute(parse[i], 'href=')),
+          links.Add(StringReplace(GetVal(parse[i], 'href'),
             HENTAI2READ_ROOT, '', []));
         end;
       end;

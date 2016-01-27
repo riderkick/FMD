@@ -19,11 +19,10 @@
     begin
       manager.container.PageLinks.Clear;
       for i := 0 to parse.Count - 1 do
-        // if GetTagName(parse.Strings[i]) = 'img' then
-        if (Pos('a target="_blank"', parse.Strings[i]) > 0) then
+        // if GetTagName(parse[i]) = 'img' then
+        if (Pos('a target="_blank"', parse[i]) > 0) then
         begin
-          manager.container.PageLinks.Add(GetAttributeValue(
-            GetTagAttribute(parse.Strings[i], 'href=')));
+          manager.container.PageLinks.Add(GetVal(parse[i], 'href'));
           //    break;
         end;
     end;

@@ -23,13 +23,12 @@
     end;
     for i := 0 to parse.Count - 1 do
     begin
-      if (Pos('class="manga"', parse.Strings[i]) > 0) then
+      if (Pos('class="manga"', parse[i]) > 0) then
       begin
         Result := NO_ERROR;
-        s := StringFilter(TrimLeft(TrimRight(parse.Strings[i + 3])));
+        s := StringFilter(TrimLeft(TrimRight(parse[i + 3])));
         names.Add(HTMLEntitiesFilter(s));
-        s := StringReplace(GetAttributeValue(GetTagAttribute(
-          parse.Strings[i + 6], 'href=')),
+        s := StringReplace(GetVal(parse[i + 6], 'href'),
           WebsiteRoots[MABUNS_ID, 1], '', []);
         links.Add(s);
       end;

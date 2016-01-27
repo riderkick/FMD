@@ -18,10 +18,10 @@
       manager.container.PageNumber := 0;
       for i := parse.Count - 1 downto 4 do
       begin
-        if Pos('</select>', parse.Strings[i]) > 0 then
+        if Pos('</select>', parse[i]) > 0 then
         begin
           manager.container.PageNumber :=
-            StrToInt(TrimLeft(TrimRight(parse.Strings[i - 3])));
+            StrToInt(TrimLeft(TrimRight(parse[i - 3])));
           Break;
         end;
       end;

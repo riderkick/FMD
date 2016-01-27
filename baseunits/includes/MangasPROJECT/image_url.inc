@@ -21,17 +21,17 @@
       manager.container.PageLinks.Clear;
       for i := 0 to parse.Count - 1 do
       begin
-        if Pos('{ path: ', parse.Strings[i]) > 0 then
+        if Pos('{ path: ', parse[i]) > 0 then
         begin
-          s := GetString(parse.Strings[i], 'new Array({ path: ', '});');
+          s := GetString(parse[i], 'new Array({ path: ', '});');
           s := StringReplace(s, sLineBreak, '', [rfReplaceAll]);
           ts := TStringList.Create;
           try
             ts.DelimitedText := s;
             for j := 0 to ts.Count - 1 do
             begin
-              if Pos('http', ts.Strings[j]) > 0 then
-                manager.container.PageLinks.Add(ts.Strings[j]);
+              if Pos('http', ts[j]) > 0 then
+                manager.container.PageLinks.Add(ts[j]);
             end;
           finally
             ts.Free;

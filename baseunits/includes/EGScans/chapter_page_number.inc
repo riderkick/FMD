@@ -20,9 +20,9 @@
       manager.container.PageNumber := 0;
       for i := parse.Count - 1 downto 2 do
       begin
-        if (Pos('</span>', parse.Strings[i]) > 0) then
+        if (Pos('</span>', parse[i]) > 0) then
         begin
-          s := parse.Strings[i - 4];
+          s := parse[i - 4];
           manager.container.PageNumber :=
             StrToInt(TrimLeft(TrimRight(GetString(s + ' ', 'of ', ' '))));
           Break;

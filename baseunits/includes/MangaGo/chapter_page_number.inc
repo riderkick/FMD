@@ -18,12 +18,12 @@
     begin
       manager.container.PageNumber := 0;
       for i := 0 to parse.Count - 1 do
-        if Pos('total_pages=', parse.Strings[i]) > 0 then
+        if Pos('total_pages=', parse[i]) > 0 then
         begin
           regx := TRegExpr.Create;
           regx.Expression := '^.*total_pages=(\d+)\b.*$';
           manager.container.PageNumber :=
-            StrToIntDef(regx.Replace(parse.Strings[i], '$1', True), 0);
+            StrToIntDef(regx.Replace(parse[i], '$1', True), 0);
           regx.Free;
           Break;
         end;

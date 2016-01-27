@@ -23,9 +23,9 @@
     end;
     for i := 0 to parse.Count - 1 do
     begin
-      if (Pos('&raquo;', parse.Strings[i]) > 0) then
+      if (Pos('&raquo;', parse[i]) > 0) then
       begin
-        s := GetAttributeValue(GetTagAttribute(parse.Strings[i - 1], 'page='));
+        s := GetVal(parse[i - 1], 'page');
         SetLength(s, Length(s) - 1);
         Page := StrToInt(s);
         Result := NO_ERROR;

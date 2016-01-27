@@ -25,13 +25,13 @@
     end;
     for i := 0 to parse.Count - 1 do
     begin
-      if (Pos('class="bookname"', parse.Strings[i]) > 0) then
+      if (Pos('class="bookname"', parse[i]) > 0) then
       begin
         Result := NO_ERROR;
         links.Add(
-          StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href=')),
+          StringReplace(GetVal(parse[i], 'href'),
           WebsiteRoots[SiteID, 1], '', [rfReplaceAll]));
-        names.Add(HTMLEntitiesFilter(StringFilter(Trim(parse.Strings[i + 1]))));
+        names.Add(HTMLEntitiesFilter(StringFilter(Trim(parse[i + 1]))));
       end;
     end;
     Source.Free;

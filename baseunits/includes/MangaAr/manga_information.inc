@@ -30,20 +30,20 @@
     begin
       // get cover
       if (mangaInfo.coverLink = '') and
-        (Pos('class=" thumbnail"', parse.Strings[i]) > 0) then
+        (Pos('class=" thumbnail"', parse[i]) > 0) then
         mangaInfo.coverLink :=
-          CorrectURL(GetAttributeValue(GetTagAttribute(parse.Strings[i + 2], 'src=')));
+          CorrectURL(GetVal(parse[i + 2], 'src'));
 
       // get summary
-      if (i + 4 < parse.Count) and (Pos('القصة', parse.Strings[i]) > 0) then
-        if (Pos('</span>', parse.Strings[i - 1]) > 0) and
-          (Pos('</dt>', parse.Strings[i + 1]) > 0) then
+      if (i + 4 < parse.Count) and (Pos('القصة', parse[i]) > 0) then
+        if (Pos('</span>', parse[i - 1]) > 0) and
+          (Pos('</dt>', parse[i + 1]) > 0) then
         begin
           mangaInfo.summary := '';
           j := i + 4;
-          while (j < parse.Count) and (not (Pos('</dd>', parse.Strings[j]) > 0)) do
+          while (j < parse.Count) and (not (Pos('</dd>', parse[j]) > 0)) do
           begin
-            s := Trim(parse.Strings[j]);
+            s := Trim(parse[j]);
             s := HTMLEntitiesFilter(StringFilter(s));
             mangaInfo.summary := mangaInfo.summary + s;
             Inc(j);
@@ -61,40 +61,39 @@
 
       // get title
       if (mangaInfo.title = '') and
-        (Pos('http-equiv="description" content="', parse.Strings[i]) <> 0) then
-        mangaInfo.title := Trim(GetAttributeValue(
-          GetTagAttribute(parse.Strings[i], 'content=')));
+        (Pos('http-equiv="description" content="', parse[i]) <> 0) then
+        mangaInfo.title := Trim(GetVal(parse[i], 'content'));
 
       // get chapter name and links
-      if (Pos('class="tit ajaxify {title:', parse.Strings[i]) > 0) then
+      if (Pos('class="tit ajaxify {title:', parse[i]) > 0) then
       begin
         Inc(mangaInfo.numChapter);
-        s := GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href='));
+        s := GetVal(parse[i], 'href');
         s := StringReplace(s, WebsiteRoots[MANGAAR_ID, 1], '', []);
         mangaInfo.chapterLinks.Add(s);
-        s := RemoveSymbols(Trim(parse.Strings[i + 1]));
+        s := RemoveSymbols(Trim(parse[i + 1]));
         s := StringFilter(HTMLEntitiesFilter(s));
         mangaInfo.chapterName.Add(s);
       end;
 
       // get authors
-      if (i + 4 < parse.Count) and (Pos('اسم المؤلف', parse.Strings[i]) > 0) then
-        if (Pos('</span>', parse.Strings[i - 1]) > 0) and
-          (Pos('</dt>', parse.Strings[i + 1]) > 0) then
-          mangaInfo.authors := Trim(parse.Strings[i + 4]);
+      if (i + 4 < parse.Count) and (Pos('اسم المؤلف', parse[i]) > 0) then
+        if (Pos('</span>', parse[i - 1]) > 0) and
+          (Pos('</dt>', parse[i + 1]) > 0) then
+          mangaInfo.authors := Trim(parse[i + 4]);
 
       // get artists
-      if (i + 4 < parse.Count) and (Pos('اسم الرسام', parse.Strings[i]) > 0) then
-        if (Pos('</span>', parse.Strings[i - 1]) > 0) and
-          (Pos('</dt>', parse.Strings[i + 1]) > 0) then
-          mangaInfo.artists := Trim(parse.Strings[i + 4]);
+      if (i + 4 < parse.Count) and (Pos('اسم الرسام', parse[i]) > 0) then
+        if (Pos('</span>', parse[i - 1]) > 0) and
+          (Pos('</dt>', parse[i + 1]) > 0) then
+          mangaInfo.artists := Trim(parse[i + 4]);
 
       // get genres
-      if (i + 4 < parse.Count) and (Pos('التصنيف', parse.Strings[i]) > 0) then
-        if (Pos('</span>', parse.Strings[i - 1]) > 0) and
-          (Pos('</dt>', parse.Strings[i + 1]) > 0) then
+      if (i + 4 < parse.Count) and (Pos('التصنيف', parse[i]) > 0) then
+        if (Pos('</span>', parse[i - 1]) > 0) and
+          (Pos('</dt>', parse[i + 1]) > 0) then
         begin
-          mangaInfo.genres := Trim(parse.Strings[i + 4]);
+          mangaInfo.genres := Trim(parse[i + 4]);
           mangaInfo.genres := StringReplace(mangaInfo.genres, sLineBreak,
             '', [rfReplaceAll]);
           mangaInfo.genres := StringReplace(mangaInfo.genres, '    ', '', [rfReplaceAll]);
@@ -102,11 +101,11 @@
         end;
 
       // get status
-      if (i + 4 < parse.Count) and (Pos('حالة الترجمة', parse.Strings[i]) > 0) then
-        if (Pos('</span>', parse.Strings[i - 1]) > 0) and
-          (Pos('</dt>', parse.Strings[i + 1]) > 0) then
+      if (i + 4 < parse.Count) and (Pos('حالة الترجمة', parse[i]) > 0) then
+        if (Pos('</span>', parse[i - 1]) > 0) and
+          (Pos('</dt>', parse[i + 1]) > 0) then
         begin
-          if Trim(parse.Strings[i + 4]) = 'مكتملة' then
+          if Trim(parse[i + 4]) = 'مكتملة' then
             mangaInfo.status := '1'  // Ongoing
           else
             mangaInfo.status := '0'; // Completed

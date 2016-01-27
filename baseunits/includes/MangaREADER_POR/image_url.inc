@@ -21,10 +21,10 @@
       manager.container.pageLinks.Clear;
       for i := 0 to parse.Count - 1 do
       begin
-        if Pos('function Proxima()', parse.Strings[i]) > 0 then
+        if Pos('function Proxima()', parse[i]) > 0 then
         begin
-          //s:= GetString(parse.Strings[i], 'new Array("",', 'function Proxima');
-          s := GetString(parse.Strings[i], 'new Array("",', ');');
+          //s:= GetString(parse[i], 'new Array("",', 'function Proxima');
+          s := GetString(parse[i], 'new Array("",', ');');
           s := StringReplace(s, sLineBreak, '', [rfReplaceAll]);
           manager.container.PageLinks.DelimitedText := s;
           Break;

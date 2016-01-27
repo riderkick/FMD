@@ -22,17 +22,17 @@
     begin
       for i := 0 to parse.Count - 1 do
       begin
-        if (Pos('<img', LowerCase(parse.Strings[i])) > 0) and
-          (Pos('class="picture"', LowerCase(parse.Strings[i])) > 0) then
+        if (Pos('<img', LowerCase(parse[i])) > 0) and
+          (Pos('class="picture"', LowerCase(parse[i])) > 0) then
         begin
-          s := GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src='));
+          s := GetVal(parse[i], 'src');
           regx := TRegExpr.Create;
           try
             regx.Expression := 'https?://';
             if not regx.Exec(s) then
               s := WebsiteRoots[KOMIKID_ID, 1] + '/' + s;
             s := EncodeURL(s);
-            manager.container.PageLinks.Strings[workCounter] := s;
+            manager.container.PageLinks[workCounter] := s;
           finally
             regx.Free;
           end;

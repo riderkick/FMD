@@ -24,12 +24,12 @@
     end;
     for i := parse.Count - 1 downto 5 do
     begin
-      if (Pos('<option value="', parse.Strings[i]) > 0) then
+      if (Pos('<option value="', parse[i]) > 0) then
       begin
         Result := NO_ERROR;
-        s := StringFilter(TrimLeft(TrimRight(parse.Strings[i + 1])));
+        s := StringFilter(TrimLeft(TrimRight(parse[i + 1])));
         names.Add(HTMLEntitiesFilter(s));
-        s := '/' + GetAttributeValue(GetTagAttribute(parse.Strings[i], 'value='));
+        s := '/' + GetVal(parse[i], 'value');
         links.Add(s);
       end;
     end;

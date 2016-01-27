@@ -22,12 +22,12 @@
     end;
     for i := 0 to parse.Count - 1 do
     begin
-      if (GetTagName(parse.Strings[i]) = 'a') and
-        (GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href=')) =
+      if (GetTagName(parse[i]) = 'a') and
+        (GetVal(parse[i], 'href') =
         'http://manga.animea.net/browse.html?page=1') and
-        (Pos('Next', parse.Strings[i + 1]) > 0) then
+        (Pos('Next', parse[i + 1]) > 0) then
       begin
-        Page := StrToInt(TrimRight(TrimLeft(parse.Strings[i - 4])));
+        Page := StrToInt(TrimRight(TrimLeft(parse[i - 4])));
         Result := NO_ERROR;
         Source.Free;
         Exit;

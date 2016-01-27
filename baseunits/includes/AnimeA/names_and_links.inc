@@ -12,11 +12,11 @@
     end;
     for i := 0 to Source.Count - 1 do
     begin
-      if Pos('manga_img', Source.Strings[i]) <> 0 then
+      if Pos('manga_img', Source[i]) <> 0 then
       begin
         Result := NO_ERROR;
-        links.Add(GetString(Source.Strings[i], '"', '"'));
-        names.Add(GetString(Source.Strings[i], 'title="', ' Manga"'));
+        links.Add(GetString(Source[i], '"', '"'));
+        names.Add(GetString(Source[i], 'title="', ' Manga"'));
       end;
     end;
     Source.Free;

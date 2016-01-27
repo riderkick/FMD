@@ -21,8 +21,8 @@
       for i := 1 to parse.Count - 1 do
       begin
 
-        if (Pos('<select ', parse.Strings[i]) > 0) and
-          (Pos('class="cbo_wpm_pag"', parse.Strings[i]) > 0) then
+        if (Pos('<select ', parse[i]) > 0) and
+          (Pos('class="cbo_wpm_pag"', parse[i]) > 0) then
           isGetPage := True;
         if isGetPage and (Pos('</select', parse[i]) > 0) then
         begin

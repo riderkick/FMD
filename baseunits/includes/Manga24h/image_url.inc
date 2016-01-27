@@ -18,12 +18,11 @@
       manager.container.PageLinks.Clear;
       for i := 0 to parse.Count - 1 do
       begin
-        if (GetTagName(parse.Strings[i]) = 'img') and
-          (Pos('style="border:3px', parse.Strings[i]) <> 0) then
-          // (GetAttributeValue(GetTagAttribute(parse.Strings[i], 'class=')) = 'm_picture') then
+        if (GetTagName(parse[i]) = 'img') and
+          (Pos('style="border:3px', parse[i]) <> 0) then
+          // (GetVal(parse[i], 'class') = 'm_picture') then
         begin
-          manager.container.PageLinks.Add(GetAttributeValue(
-            GetTagAttribute(parse.Strings[i], 'src=')));
+          manager.container.PageLinks.Add(GetVal(parse[i], 'src'));
         end;
       end;
     end;

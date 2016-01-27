@@ -24,12 +24,12 @@
     end;
     for i := 0 to parse.Count - 1 do
     begin
-      if Pos('h3 class="title"', parse.Strings[i]) > 0 then
+      if Pos('h3 class="title"', parse[i]) > 0 then
       begin
         Result := NO_ERROR;
-        s := StringFilter(TrimLeft(TrimRight(parse.Strings[i + 2])));
+        s := StringFilter(TrimLeft(TrimRight(parse[i + 2])));
         names.Add(HTMLEntitiesFilter(s));
-        s := GetAttributeValue(GetTagAttribute(parse.Strings[i + 1], 'href='));
+        s := GetVal(parse[i + 1], 'href');
         s := StringReplace(s, WebsiteRoots[MANGAGO_ID, 1], '', []);
         links.Add(s);
       end;

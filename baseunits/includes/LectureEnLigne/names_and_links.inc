@@ -28,15 +28,15 @@
       begin
         Result:= NO_ERROR;
         names.Add(Trim(HTMLEntitiesFilter(StringFilter(parse[i+1]))));
-        links.Add(StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'value=')), WebsiteRoots[LECTUREENLIGNE_ID,1], '', []));
+        links.Add(StringReplace(GetVal(parse[i], 'value'), WebsiteRoots[LECTUREENLIGNE_ID,1], '', []));
       end;
       }
-      if (Pos('class="infoImages"', parse.Strings[i]) > 0) and
-        (Pos('href="', parse.Strings[i]) > 0) then
+      if (Pos('class="infoImages"', parse[i]) > 0) and
+        (Pos('href="', parse[i]) > 0) then
       begin
         Result := NO_ERROR;
-        names.Add(Trim(HTMLEntitiesFilter(StringFilter(parse.Strings[i + 1]))));
-        links.Add('/' + GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href=')));
+        names.Add(Trim(HTMLEntitiesFilter(StringFilter(parse[i + 1]))));
+        links.Add('/' + GetVal(parse[i], 'href'));
       end;
     end;
     Source.Free;

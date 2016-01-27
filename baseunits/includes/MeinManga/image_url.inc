@@ -7,7 +7,7 @@
     Parser: THTMLParser;
   begin
     s := manager.container.DownloadInfo.SaveTo +
-      '/' + manager.container.ChapterName.Strings[
+      '/' + manager.container.ChapterName[
       manager.container.CurrentDownloadChapterPtr] + '/' +
       Format('%.3d', [workCounter + 1]);
     // Check to see if a file with similar name was already exist. If so then we
@@ -27,7 +27,7 @@
     FHTTP.Headers.Values['Accept-Language'] := ' en-US,en;q=0.5';
 
     Result := GetPage(TObject(l),
-      manager.container.PageLinks.Strings[workCounter],
+      manager.container.PageLinks[workCounter],
       manager.container.Manager.retryConnect);
 
     if Self.Terminated then
@@ -50,15 +50,15 @@
     if parse.Count > 0 then
     begin
       for i := 0 to parse.Count - 1 do
-        if (Pos('class="pic_fragment"', parse.Strings[i]) > 0) then
+        if (Pos('class="pic_fragment"', parse[i]) > 0) then
         begin
           FHTTP.Clear;
 
           SaveImage(
             manager.container.MangaSiteID,
-            GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src=')),
+            GetVal(parse[i], 'src'),
             CorrectPathSys(manager.container.DownloadInfo.SaveTo +
-              manager.container.ChapterName.Strings[
+              manager.container.ChapterName[
             manager.container.CurrentDownloadChapterPtr]),
             Format('%.3d', [workCounter + 1]) +
             '_' + IntToStr(prefix),
@@ -81,7 +81,7 @@
       imageName := Format('%.3d', [workCounter + 1]);
       Merge2Images(
         CorrectPathSys(manager.container.DownloadInfo.SaveTo + '/' +
-        manager.container.ChapterName.Strings[manager.container.CurrentDownloadChapterPtr]),
+        manager.container.ChapterName[manager.container.CurrentDownloadChapterPtr]),
         imageName + '_' + IntToStr(prefix - 2) + '.jpg',
         imageName + '_' + IntToStr(prefix - 1) + '.jpg',
         imageName + '.jpg');

@@ -40,12 +40,12 @@
             '', [rfIgnoreCase]);
           links.Add(S);
         end;
-      //if (Pos('class="img_wrp', parse.Strings[i]) > 0) then
+      //if (Pos('class="img_wrp', parse[i]) > 0) then
       //begin
       //  Result:= NO_ERROR;
-      //  s:= StringFilter(GetAttributeValue(GetTagAttribute(parse.Strings[i+1], 'title=')));
+      //  s:= StringFilter(GetVal(parse[i+1], 'title'));
       //  names.Add(HTMLEntitiesFilter(s));
-      //  s:= StringReplace(GetAttributeValue(GetTagAttribute(parse.Strings[i+1], 'href=')), WebsiteRoots[MANGACOW_ID,1], '', []);
+      //  s:= StringReplace(GetVal(parse[i+1], 'href'), WebsiteRoots[MANGACOW_ID,1], '', []);
       //  links.Add(s);
       //end;
     end;

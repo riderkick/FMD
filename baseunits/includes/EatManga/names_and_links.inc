@@ -24,13 +24,13 @@
     end;
     for i := parse.Count - 1 downto 5 do
     begin
-      if (Pos(' Online">', parse.Strings[i]) > 0) and
-        (Pos('<th>', parse.Strings[i - 1]) > 0) then
+      if (Pos(' Online">', parse[i]) > 0) and
+        (Pos('<th>', parse[i - 1]) > 0) then
       begin
         Result := NO_ERROR;
-        s := StringFilter(TrimLeft(TrimRight(parse.Strings[i + 1])));
+        s := StringFilter(TrimLeft(TrimRight(parse[i + 1])));
         names.Add(HTMLEntitiesFilter(s));
-        s := GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href="'));
+        s := GetVal(parse[i], 'href="');
         links.Add(s);
       end;
     end;

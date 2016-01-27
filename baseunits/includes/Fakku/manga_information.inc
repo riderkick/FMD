@@ -55,43 +55,43 @@
       end;
 
       // get series/authors
-      if (Pos('div class="left"', parse.Strings[i]) > 0) and
-        (Pos('Series', parse.Strings[i + 1]) > 0) then
+      if (Pos('div class="left"', parse[i]) > 0) and
+        (Pos('Series', parse[i + 1]) > 0) then
       begin
-        mangaInfo.authors := parse.Strings[i + 6];
+        mangaInfo.authors := parse[i + 6];
         mangaInfo.genres := mangaInfo.authors;
       end;
 
       // get artists
-      if (Pos('div class="left"', parse.Strings[i]) > 0) and
-        (Pos('Artist', parse.Strings[i + 1]) > 0) then
+      if (Pos('div class="left"', parse[i]) > 0) and
+        (Pos('Artist', parse[i + 1]) > 0) then
       begin
-        mangaInfo.artists := parse.Strings[i + 6];
+        mangaInfo.artists := parse[i + 6];
         mangaInfo.genres := mangaInfo.genres + ', ' + mangaInfo.artists;
       end;
 
       // get language
-      if (Pos('div class="left"', parse.Strings[i]) > 0) and
-        (Pos('Language', parse.Strings[i + 1]) > 0) then
-        mangaInfo.genres := mangaInfo.genres + ', ' + Trim(parse.Strings[i + 7]);
+      if (Pos('div class="left"', parse[i]) > 0) and
+        (Pos('Language', parse[i + 1]) > 0) then
+        mangaInfo.genres := mangaInfo.genres + ', ' + Trim(parse[i + 7]);
 
       // get descriptions
-      if (Pos('div class="left"', parse.Strings[i]) > 0) and
-        (Pos('Description', parse.Strings[i + 1]) > 0) then
+      if (Pos('div class="left"', parse[i]) > 0) and
+        (Pos('Description', parse[i + 1]) > 0) then
         isExtractSummary := True;
 
       if isExtractSummary then
       begin
-        if (Pos('</div>', parse.Strings[i + 5]) > 0) then
+        if (Pos('</div>', parse[i + 5]) > 0) then
           isExtractSummary := False
-        else if (not (Pos('<', parse.Strings[i + 5]) > 0)) then
-          mangaInfo.summary := Trim(mangaInfo.summary) + ' ' + Trim(parse.Strings[i + 5]);
+        else if (not (Pos('<', parse[i + 5]) > 0)) then
+          mangaInfo.summary := Trim(mangaInfo.summary) + ' ' + Trim(parse[i + 5]);
       end;
 
       // get genres
-      if (Pos('"/tags/', parse.Strings[i]) > 0) then
+      if (Pos('"/tags/', parse[i]) > 0) then
       begin
-        mangaInfo.genres := mangaInfo.genres + ', ' + Trim(parse.Strings[i + 1]);
+        mangaInfo.genres := mangaInfo.genres + ', ' + Trim(parse[i + 1]);
       end;
     end;
 

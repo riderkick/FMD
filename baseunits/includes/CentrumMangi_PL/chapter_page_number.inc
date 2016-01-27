@@ -21,10 +21,10 @@
       manager.container.PageNumber := 0;
       for i := 0 to parse.Count - 1 do
       begin
-        if (Pos('</select>', parse.Strings[i]) > 0) then
+        if (Pos('</select>', parse[i]) > 0) then
           if Count > 0 then
           begin
-            s := parse.Strings[i - 2];
+            s := parse[i - 2];
             manager.container.PageNumber := StrToInt(TrimLeft(TrimRight(s)));
             Break;
           end

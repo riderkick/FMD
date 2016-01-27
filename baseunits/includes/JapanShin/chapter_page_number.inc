@@ -18,8 +18,8 @@
       manager.container.PageNumber := 0;
       //class="tbtitle dropdown_parent dropdown_right
       for i := 0 to parse.Count - 1 do
-        if (Pos('onClick="changePage', parse.Strings[i]) > 0) and
-          (Pos('return false', parse.Strings[i]) > 0) then
+        if (Pos('onClick="changePage', parse[i]) > 0) and
+          (Pos('return false', parse[i]) > 0) then
           Inc(manager.container.PageNumber);
     end;
     parse.Free;
