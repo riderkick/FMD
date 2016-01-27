@@ -4919,7 +4919,6 @@ begin
     idxOptionLetFMDDo := cbOptionLetFMDDo.ItemIndex;
     idxOptionProxyType := cbOptionProxyType.ItemIndex;
     idxDropTargetMode := rgDropTargetMode.ItemIndex;
-    ShowMessage('widthBefore: '+IntToStr(lbOptionPDFQuality.Width));
     if SimpleTranslator.SetLangByIndex(cbLanguages.ItemIndex) then
     begin
       // assign new value
