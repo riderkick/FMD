@@ -7,6 +7,11 @@ https://bintray.com/riderkick/FMD/data/db/view#files
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.31.3 (28-01-2016)
+[*] Fix save as pdf issue with indexed images
+[*] Updater, fix download manga list always failed (403 Forbidden)
+[*] Various changes and bug fixes
+
 0.9.31.2 (24-01-2016)
 [*] Fix remove mangafox watermark (file IO error when using multiple threads)
 [*] Various changes and bug fixes
