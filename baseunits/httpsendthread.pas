@@ -36,6 +36,9 @@ type
     property FollowRedirection: Boolean read ffollowredirection write ffollowredirection;
   end;
 
+var
+  DefaultUserAgent: String = 'Mozilla/5.0 (Windows NT 10.0; WOW64; rv:44.0) Gecko/20100101 Firefox/44.0';
+
 implementation
 
 { THTTPSendThread }
@@ -58,7 +61,8 @@ constructor THTTPSendThread.Create(AOwner: TFMDThread);
 begin
   inherited Create;
   KeepAlive := True;
-  UserAgent := 'Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.125 Safari/537.36';
+  if Trim(DefaultUserAgent) <> '' then
+    UserAgent := DefaultUserAgent;
   Protocol := '1.1';
   Headers.NameValueSeparator := ':';
   Cookies.NameValueSeparator := '=';
