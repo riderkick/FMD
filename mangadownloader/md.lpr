@@ -14,8 +14,8 @@ uses
     cthreads,
     {$ENDIF}
   {$ENDIF}
-  Forms, LazFileUtils, Interfaces, simpleipc, IniFiles, sqlite3dyn,
-  uBaseUnit, frmMain;
+  Forms, LazFileUtils, Interfaces, simpleipc, IniFiles,
+  sqlite3dyn, uBaseUnit, frmMain;
 
 var
   CheckInstance: Boolean = True;
