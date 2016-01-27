@@ -121,7 +121,7 @@ var
 implementation
 
 uses
-  Dialogs, fpJSON, JSONParser, IniFiles, jsHTMLUtil, FastHTMLParser, HTMLUtil,
+  Dialogs, fpJSON, JSONParser, IniFiles, FastHTMLParser, HTMLUtil,
   SynaCode, uMisc, frmMain, WebsiteModules;
 
 // ----- TDataProcess -----
