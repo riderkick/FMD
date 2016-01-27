@@ -23,8 +23,9 @@ type
   public
     constructor Create(AOwner: TFMDThread = nil);
     function HTTPRequest(const Method, URL: String; Response: TObject = nil): Boolean;
+    function HEAD(const URL: String; Response: TObject = nil): Boolean;
     function GET(const URL: String; Response: TObject = nil): Boolean;
-    function POST(const URL: String; URLData: String = ''; Response: TObject = nil): Boolean;
+    function POST(const URL: String; POSTData: String = ''; Response: TObject = nil): Boolean;
     function GetCookies: String;
     procedure RemoveCookie(const CookieName: string);
     procedure SetProxy(const ProxyType, Host, Port, User, Pass: String);
@@ -172,17 +173,22 @@ begin
   end;
 end;
 
+function THTTPSendThread.HEAD(const URL: String; Response: TObject): Boolean;
+begin
+  Result := HTTPRequest('HEAD', URL, Response);
+end;
+
 function THTTPSendThread.GET(const URL: String; Response: TObject): Boolean;
 begin
   Result := HTTPRequest('GET', URL, Response);
 end;
 
-function THTTPSendThread.POST(const URL: String; URLData: String;
+function THTTPSendThread.POST(const URL: String; POSTData: String;
   Response: TObject): Boolean;
 begin
-  if URLData <> '' then begin
+  if POSTData <> '' then begin
     Document.Clear;
-    WriteStrToStream(Document, URLData);
+    WriteStrToStream(Document, POSTData);
   end;
   MimeType := 'application/x-www-form-urlencoded';
   Result := HTTPRequest('POST', URL, Response);
