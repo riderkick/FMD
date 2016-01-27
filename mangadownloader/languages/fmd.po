@@ -1069,15 +1069,6 @@ msgstr ""
 msgid "Chapter folder name:"
 msgstr ""
 
-#: tmainform.lboptioncustomrenamehint1.caption
-msgctxt "TMAINFORM.LBOPTIONCUSTOMRENAMEHINT1.CAPTION"
-msgid "[?]"
-msgstr ""
-
-#: tmainform.lboptioncustomrenamehint1.hint
-msgid "100: FlateEncode (lossless), lower: DCTEncode (lossy)"
-msgstr ""
-
 #: tmainform.lboptiondialogs.caption
 msgid "Show dialog confirmation for:"
 msgstr ""
@@ -1156,6 +1147,11 @@ msgstr ""
 #: tmainform.lboptionpdfquality.hint
 msgctxt "TMAINFORM.LBOPTIONPDFQUALITY.HINT"
 msgid "100 = FlateEncode (lossless), lower = DCTEncode (lossy)"
+msgstr ""
+
+#: tmainform.lboptionpdfqualityhint.caption
+msgctxt "TMAINFORM.LBOPTIONPDFQUALITYHINT.CAPTION"
+msgid "[?]"
 msgstr ""
 
 #: tmainform.lboptionport.caption

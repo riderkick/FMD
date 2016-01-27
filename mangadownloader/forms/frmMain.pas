@@ -108,7 +108,7 @@ type
     lbFilterHint: TLabel;
     lbOptionExternal: TLabel;
     lbOptionChapterCustomRenameHint: TLabel;
-    lbOptionCustomRenameHint1: TLabel;
+    lbOptionPDFQualityHint: TLabel;
     lbOptionExternalParamsHint: TLabel;
     TransferRateGraphList: TListChartSource;
     medURLCut: TMenuItem;
@@ -447,6 +447,7 @@ type
     procedure pmFavoritesPopup(Sender: TObject);
     procedure pmMangaListPopup(Sender: TObject);
     procedure pmSbMainPopup(Sender: TObject);
+    procedure rgOptionCompressSelectionChanged(Sender: TObject);
     procedure sbUpdateListDrawPanel(StatusBar: TStatusBar; Panel: TStatusPanel;
       const Rect: TRect);
     procedure seOptionAutoCheckFavIntervalMinutesChange(Sender: TObject);
@@ -3292,6 +3293,13 @@ begin
     Abort;
 end;
 
+procedure TMainForm.rgOptionCompressSelectionChanged(Sender: TObject);
+begin
+  seOptionPDFQuality.Enabled:=rgOptionCompress.ItemIndex=3;
+  lbOptionPDFQuality.Enabled:=seOptionPDFQuality.Enabled;
+  lbOptionPDFQualityHint.Enabled:=seOptionPDFQuality.Enabled;
+end;
+
 procedure TMainForm.sbUpdateListDrawPanel(StatusBar: TStatusBar;
   Panel: TStatusPanel; const Rect: TRect);
 var
@@ -4911,10 +4919,13 @@ begin
     idxOptionLetFMDDo := cbOptionLetFMDDo.ItemIndex;
     idxOptionProxyType := cbOptionProxyType.ItemIndex;
     idxDropTargetMode := rgDropTargetMode.ItemIndex;
+    ShowMessage('widthBefore: '+IntToStr(lbOptionPDFQuality.Width));
     if SimpleTranslator.SetLangByIndex(cbLanguages.ItemIndex) then
     begin
+      // assign new value
       lbOptionExternalParamsHint.Hint := Format(RS_LblOptionExternalParamsHint,
         [EXPARAM_PATH, EXPARAM_CHAPTER, EXPARAM_PATH, EXPARAM_CHAPTER]);
+      lbOptionPDFQualityHint.Hint:=lbOptionPDFQuality.Hint;
 
       cbFilterStatus.Items.Text := RS_FilterStatusItems;
       cbOptionLetFMDDo.Items.Text := RS_OptionFMDDoItems;

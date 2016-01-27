@@ -1117,15 +1117,6 @@ msgstr "Batas waktu koneksi (detik)"
 msgid "Chapter folder name:"
 msgstr "Nama folder bab:"
 
-#: tmainform.lboptioncustomrenamehint1.caption
-msgctxt "TMAINFORM.LBOPTIONCUSTOMRENAMEHINT1.CAPTION"
-msgid "[?]"
-msgstr "[?]"
-
-#: tmainform.lboptioncustomrenamehint1.hint
-msgid "100: FlateEncode (lossless), lower: DCTEncode (lossy)"
-msgstr "100 = FlateEncode (lossless), lebih rendah = DCTEncode (lossy)"
-
 #: tmainform.lboptiondialogs.caption
 msgid "Show dialog confirmation for:"
 msgstr "Tampilkan dialog konfirmasi untuk:"
@@ -1212,6 +1203,11 @@ msgstr "Tingkat kompresi PDF"
 msgctxt "TMAINFORM.LBOPTIONPDFQUALITY.HINT"
 msgid "100 = FlateEncode (lossless), lower = DCTEncode (lossy)"
 msgstr "100 = FlateEncode (lossless), lebih rendah = DCTEncode (lossy)"
+
+#: tmainform.lboptionpdfqualityhint.caption
+msgctxt "tmainform.lboptionpdfqualityhint.caption"
+msgid "[?]"
+msgstr "[?]"
 
 #: tmainform.lboptionport.caption
 msgid "Port"

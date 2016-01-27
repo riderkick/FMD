@@ -2362,6 +2362,7 @@ object MainForm: TMainForm
                 'CBZ'
                 'PDF'
               )
+              OnSelectionChanged = rgOptionCompressSelectionChanged
               ParentFont = False
               TabOrder = 0
             end
@@ -2514,11 +2515,12 @@ object MainForm: TMainForm
               end
             end
             object seOptionPDFQuality: TSpinEdit
-              Left = 44
+              Left = 20
               Height = 23
               Hint = '100 = FlateEncode (lossless), lower = DCTEncode (lossy)'
-              Top = 132
+              Top = 133
               Width = 50
+              Enabled = False
               MinValue = 5
               ParentFont = False
               ParentShowHint = False
@@ -2527,24 +2529,25 @@ object MainForm: TMainForm
               Value = 100
             end
             object lbOptionPDFQuality: TLabel
-              Left = 103
+              Left = 79
               Height = 15
               Hint = '100 = FlateEncode (lossless), lower = DCTEncode (lossy)'
-              Top = 135
+              Top = 136
               Width = 119
               Caption = 'PDF compression level'
+              Enabled = False
               ParentColor = False
               ParentFont = False
               ParentShowHint = False
               ShowHint = True
             end
-            object lbOptionCustomRenameHint1: TLabel
-              Left = 260
+            object lbOptionPDFQualityHint: TLabel
+              Left = 224
               Height = 15
-              Hint = '100: FlateEncode (lossless), lower: DCTEncode (lossy)'
-              Top = 135
+              Top = 136
               Width = 13
               Caption = '[?]'
+              Enabled = False
               Font.Color = clBlue
               ParentColor = False
               ParentFont = False

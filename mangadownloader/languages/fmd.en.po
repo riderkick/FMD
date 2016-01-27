@@ -1133,15 +1133,6 @@ msgstr "Connection timeout (seconds)"
 msgid "Chapter folder name:"
 msgstr "Chapter folder name:"
 
-#: tmainform.lboptioncustomrenamehint1.caption
-msgctxt "TMAINFORM.LBOPTIONCUSTOMRENAMEHINT1.CAPTION"
-msgid "[?]"
-msgstr "[?]"
-
-#: tmainform.lboptioncustomrenamehint1.hint
-msgid "100: FlateEncode (lossless), lower: DCTEncode (lossy)"
-msgstr "100: FlateEncode (lossless), lower: DCTEncode (lossy)"
-
 #: tmainform.lboptiondialogs.caption
 msgid "Show dialog confirmation for:"
 msgstr "Show dialog confirmation for:"
@@ -1229,6 +1220,11 @@ msgstr "PDF compression level"
 msgctxt "TMAINFORM.LBOPTIONPDFQUALITY.HINT"
 msgid "100 = FlateEncode (lossless), lower = DCTEncode (lossy)"
 msgstr "100 = FlateEncode (lossless), lower = DCTEncode (lossy)"
+
+#: tmainform.lboptionpdfqualityhint.caption
+msgctxt "tmainform.lboptionpdfqualityhint.caption"
+msgid "[?]"
+msgstr "[?]"
 
 #: tmainform.lboptionport.caption
 msgid "Port"
