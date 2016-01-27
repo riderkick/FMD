@@ -1,0 +1,3 @@
+[submodule "3rd/BESEN"]
+	path = 3rd/BESEN
+	url = https://github.com/BeRo1985/besen.git
