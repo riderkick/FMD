@@ -174,9 +174,7 @@ begin
   FHTTP.Timeout := 10000;
   FHTTP.SetProxy(ProxyType,ProxyHost,ProxyPort,ProxyUser,ProxyPass);
   if isSFURL then
-    FHTTP.UserAgent := UA_CURL
-  else
-    FHTTP.UserAgent := DEFAULT_UA;
+    FHTTP.UserAgent := UA_CURL;
   FTotalSize := 0;
   FCurrentSize := 0;
   URL := '';
@@ -291,7 +289,8 @@ begin
   HTTPHeaders := TStringList.Create;
   regx := TRegExpr.Create;
   try
-    HTTPHeaders.NameValueSeparator:=':';
+    HTTPHeaders.Assign(FHTTP.Headers);
+
     regx.ModifierI := True;
     if isSFURL then
     begin
@@ -327,7 +326,7 @@ begin
         FileName := 'new_version.7z';
     end;
 
-    FHTTP.Headers.Text := HTTPHeaders.Text;
+    FHTTP.Headers.Assign(HTTPHeaders);
     //**loading page
     UpdateStatus(RS_LoadingPage);
     ctry := 0;
@@ -390,8 +389,7 @@ begin
       UpdateStatus(Format(RS_Downloading, [FileName]));
       ctry := 0;
       FHTTP.Clear;
-      HTTPHeaders.Values['Accept'] := ' */*';
-      FHTTP.Headers.Text := HTTPHeaders.Text;
+      FHTTP.Headers.Assign(HTTPHeaders);
       FHTTP.Cookies.Clear;
       while (not FHTTP.HTTPMethod('GET', Trim(rurl))) or
         (FHTTP.ResultCode >= 300) do
@@ -439,10 +437,9 @@ begin
         begin
           HTTPHeaders.Values['Referer'] := ' ' + rurl;
           rurl := Trim(FHTTP.Headers.Values['location']);
-          rurl := EncodeURL(DecodeURL(Trim(rurl)));
         end;
         FHTTP.Clear;
-        FHTTP.Headers.Text := HTTPHeaders.Text;
+        FHTTP.Headers.Assign(HTTPHeaders);
       end;
     end;
 
