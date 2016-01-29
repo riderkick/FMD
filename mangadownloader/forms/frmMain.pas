@@ -1717,14 +1717,17 @@ begin
     st := TStringList.Create;
     try
       regx.ModifierI := True;
-      regx.Expression := '(version.*)(\d+\.){3}\d+';
+      regx.Expression := '(version.*)((\d+\.){3}\d+)';
       st.LoadFromFile(s);
       if st.Count > 0 then
         for i := 0 to st.Count - 1 do
           if regx.Exec(st[i]) then
           begin
-            st[i] := regx.Replace(st[i], '$1\' + FMD_VERSION_NUMBER, True);
-            st.SaveToFile(s);
+            if regx.Match[2] <> FMD_VERSION_NUMBER then begin
+              st[i] := regx.Replace(st[i], '$1\' + FMD_VERSION_NUMBER, True);
+              if DeleteFileUTF8(s) then
+                st.SaveToFile(s);
+            end;
             Break;
           end;
     finally
