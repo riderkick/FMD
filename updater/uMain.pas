@@ -43,7 +43,6 @@ type
   TDownloadThread = class(TFMDThread)
   private
     FTotalSize, FCurrentSize :integer;
-    FIsSFURL                 :boolean;
     FHTTP                    :THTTPSendThread;
     FStatus                  :string;
     FProgress                :string;
@@ -288,17 +287,20 @@ begin
   regx := TRegExpr.Create;
   try
     HTTPHeaders.Assign(FHTTP.Headers);
-    s := LowerCase(URL);
-    FIsSFURL := (Pos('sourceforge.net/', s) <> 0) or (Pos('sf.net/', s) <> 0);
-    if FIsSFURL then
-      FHTTP.UserAgent := UA_CURL;
-
     regx.ModifierI := True;
-    if FIsSFURL then
+    s := LowerCase(URL);
+    if (Pos('sourceforge.net/', s) <> 0) or (Pos('sf.net/', s) <> 0) then
     begin
+      FHTTP.UserAgent := UA_CURL;
       regx.Expression := '/download$';
       URL := Trim(regx.Replace(URL, '', False));
-      //**parsing SF url
+      //**parsing and fixing SF url
+      if Pos('sf.net/', s) > 0 then begin
+        URL := StringReplace(URL, 'sf.net/', 'sourceforge.net/', [rfIgnoreCase]);
+        s := LowerCase(URL);
+      end;
+      if Pos('sourceforge.net/p/', s) > 0 then
+        URL := StringReplace(URL, 'sourceforge.net/p/', 'sourceforge.net/projects/', [rfIgnoreCase]);
       regx.Expression := '^.*sourceforge.net/projects/(.+)/files/(.+)/([^/]+)$';
       if not regx.Exec(URL) then
       begin
@@ -366,22 +368,11 @@ begin
       FHTTP.Clear;
     end;
 
-    if ((FHTTP.ResultCode >= 300) or FIsSFURL) and (FHTTP.Headers.Values['Location'] <> '') then
+    if (FHTTP.ResultCode >= 300) and (FHTTP.Headers.Values['Location'] <> '') then
     begin
       HTTPHeaders.Values['Referer'] := ' ' + rurl;
       UpdateStatus(RS_Redirected);
       rurl := Trim(FHTTP.Headers.Values['Location']);
-      if FIsSFURL then
-      begin
-        if (Pos('use_mirror=', rurl) > 0) then
-        begin
-          regx.Expression := '.*use_mirror=(.+)$';
-          rurl := regx.Replace(rurl, '$1', True);
-          rurl := 'http://' + rurl + '.dl.sourceforge.net/project/' +
-            sproject + '/' + sdir + '/' + sfile;
-        end;
-      end;
-      rurl := EncodeURL(DecodeURL(Trim(rurl)));
     end;
 
     //**download file
