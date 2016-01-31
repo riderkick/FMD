@@ -408,8 +408,6 @@ var
 
   {$I includes/MeinManga/chapter_page_number.inc}
 
-  {$I includes/RedHawkScans/chapter_page_number.inc}
-
   {$I includes/S2Scans/chapter_page_number.inc}
 
   {$I includes/SenManga/chapter_page_number.inc}
@@ -500,9 +498,6 @@ begin
     else
     if manager.container.MangaSiteID = MANGAGO_ID then
       Result := GetMangaGoPageNumber
-    else
-    if manager.container.MangaSiteID = REDHAWKSCANS_ID then
-      Result := GetRedHawkScansPageNumber
     else
     if manager.container.MangaSiteID = S2SCAN_ID then
       Result := GetS2scanPageNumber
@@ -705,8 +700,6 @@ var
 
   {$I includes/MangaVadisi/image_url.inc}
 
-  {$I includes/RedHawkScans/image_url.inc}
-
   {$I includes/ScanManga/image_url.inc}
 
   {$I includes/SenManga/image_url.inc}
@@ -799,9 +792,6 @@ begin
     else
     if manager.container.MangaSiteID = MANGAGO_ID then
       Result := GetMangaGoImageURL
-    else
-    if manager.container.MangaSiteID = REDHAWKSCANS_ID then
-      Result := GetRedHawkScansImageURL
     else
     if manager.container.MangaSiteID = EGSCANS_ID then
       Result := GetEGScansImageURL

@@ -808,8 +808,6 @@ var
 
   {$I includes/BlogTruyen/directory_page_number.inc}
 
-  {$I includes/RedHawkScans/directory_page_number.inc}
-
   {$I includes/S2Scans/directory_page_number.inc}
 
   {$I includes/LectureEnLigne/directory_page_number.inc}
@@ -913,9 +911,6 @@ begin
       else
       if WebsiteID = BLOGTRUYEN_ID then
         Result := GetBlogTruyenDirectoryPageNumber
-      else
-      if WebsiteID = REDHAWKSCANS_ID then
-        Result := GetRedHawkScansDirectoryPageNumber
       else
       if WebsiteID = S2SCAN_ID then
         Result := GetS2ScanDirectoryPageNumber
@@ -1082,8 +1077,6 @@ var
 
   {$I includes/MangaGo/names_and_links.inc}
 
-  {$I includes/RedHawkScans/names_and_links.inc}
-
   {$I includes/S2Scans/names_and_links.inc}
 
   {$I includes/EGScans/names_and_links.inc}
@@ -1192,9 +1185,6 @@ begin
     else
     if WebsiteID = MANGAGO_ID then
       Result := MangaGoGetNamesAndLinks
-    else
-    if WebsiteID = REDHAWKSCANS_ID then
-      Result := RedHawkScansGetNamesAndLinks
     else
     if WebsiteID = S2SCAN_ID then
       Result := S2ScanGetNamesAndLinks
@@ -1419,8 +1409,6 @@ var
 
   {$I includes/EatManga/manga_information.inc}
 
-  {$I includes/RedHawkScans/manga_information.inc}
-
   {$I includes/S2Scans/manga_information.inc}
 
   {$I includes/EGScans/manga_information.inc}
@@ -1576,9 +1564,6 @@ begin
     else
     if WebsiteID = MANGAGO_ID then
       Result := GetMangaGoInfoFromURL
-    else
-    if WebsiteID = REDHAWKSCANS_ID then
-      Result := GetRedHawkScansInfoFromURL
     else
     if WebsiteID = S2SCAN_ID then
       Result := GetS2scanInfoFromURL
