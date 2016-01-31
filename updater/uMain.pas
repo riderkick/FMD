@@ -43,6 +43,7 @@ type
   TDownloadThread = class(TFMDThread)
   private
     FTotalSize, FCurrentSize :integer;
+    FIsSFURL                 :boolean;
     FHTTP                    :THTTPSendThread;
     FStatus                  :string;
     FProgress                :string;
@@ -62,7 +63,6 @@ type
     procedure OnThreadTerminate(Sender: TObject);
   public
     URL      :string;
-    isSFURL  :boolean;
     FileName :string;
     DirPath  :string;
     MaxRetry :cardinal;
@@ -173,8 +173,6 @@ begin
   FHTTP.Sock.OnStatus := @SockOnStatus;
   FHTTP.Timeout := 10000;
   FHTTP.SetProxy(ProxyType,ProxyHost,ProxyPort,ProxyUser,ProxyPass);
-  if isSFURL then
-    FHTTP.UserAgent := UA_CURL;
   FTotalSize := 0;
   FCurrentSize := 0;
   URL := '';
@@ -281,7 +279,7 @@ var
   fname,
   sproject,
   sdir,
-  sfile          : String;
+  s, sfile       : String;
   st, HTTPHeaders: TStringList;
   filestream     : TFileStreamUTF8;
 begin
@@ -290,9 +288,13 @@ begin
   regx := TRegExpr.Create;
   try
     HTTPHeaders.Assign(FHTTP.Headers);
+    s := LowerCase(URL);
+    FIsSFURL := (Pos('sourceforge.net/', s) <> 0) or (Pos('sf.net/', s) <> 0);
+    if FIsSFURL then
+      FHTTP.UserAgent := UA_CURL;
 
     regx.ModifierI := True;
-    if isSFURL then
+    if FIsSFURL then
     begin
       regx.Expression := '/download$';
       URL := Trim(regx.Replace(URL, '', False));
@@ -311,7 +313,6 @@ begin
         FileName := sfile;
       rurl := 'http://sourceforge.net/projects/' + sproject + '/files/' +
         sdir + '/' + sfile + '/download';
-      rurl := EncodeURL(DecodeURL(Trim(rurl)));
     end
     else
     begin
@@ -365,12 +366,12 @@ begin
       FHTTP.Clear;
     end;
 
-    if (FHTTP.ResultCode >= 300) or isSFURL then
+    if ((FHTTP.ResultCode >= 300) or FIsSFURL) and (FHTTP.Headers.Values['Location'] <> '') then
     begin
       HTTPHeaders.Values['Referer'] := ' ' + rurl;
       UpdateStatus(RS_Redirected);
       rurl := Trim(FHTTP.Headers.Values['Location']);
-      if isSFURL then
+      if FIsSFURL then
       begin
         if (Pos('use_mirror=', rurl) > 0) then
         begin
@@ -646,8 +647,6 @@ begin
     begin
       dl := TDownloadThread.Create;
       dl.URL := _URL;
-      dl.isSFURL := (Pos('sourceforge.net/', LowerCase(dl.URL)) <> 0) or
-        (Pos('sf.net/', dl.URL) <> 0);
       dl.MaxRetry := _MaxRetry;
       if _UpdApp then
         dl.DirPath := GetCurrentDirUTF8
