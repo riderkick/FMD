@@ -6,16 +6,13 @@ program md;
 
 uses
   {$IFDEF DEBUGLEAKS}
-  heaptrc, SysUtils,
+  SysUtils,
   {$ENDIF}
-  {$DEFINE UseCThreads}
-  {$IFDEF UNIX}
-    {$IFDEF UseCThreads}
-    cthreads,
-    {$ENDIF}
-  {$ENDIF}
-  Forms, LazFileUtils, Interfaces, simpleipc, IniFiles,
-  sqlite3dyn, uBaseUnit, frmMain;
+  {$IFDEF UNIX}{$IFDEF UseCThreads}
+  cthreads,
+  {$ENDIF}{$ENDIF}
+  Interfaces, // this includes the LCL widgetset
+  Forms, LazFileUtils, IniFiles, simpleipc, sqlite3dyn, uBaseUnit, frmMain;
 
 var
   CheckInstance: Boolean = True;
