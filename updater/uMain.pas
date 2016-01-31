@@ -116,15 +116,6 @@ resourcestring
   RS_UnpackFile = 'Unpacking file [%s]...';
   RS_Finished = 'Finished.';
   RS_ErrorCheckAntiVirus = 'Error saving file, check your AntiVirus!';
-  RS_FileNotFound_mfdatalink =
-    'File not found!' + LineEnding +
-    'This site probably have been added to unofficial build.' + LineEnding +
-    LineEnding +
-    'Remedy:' + LineEnding +
-    'Build you manga list from scratch or download manually from this link:' +
-    LineEnding +
-    '%s' + LineEnding +
-    'Link copied to clipboard!';
   RS_7zNotFound = 'Can''t extract file because 7za.exe not found!';
   RS_Unknown = '(unknown)';
 
@@ -354,15 +345,9 @@ begin
       if (FHTTP.ResultCode >= 400) and (FHTTP.ResultCode < 500) then
       begin
         UpdateStatus(RS_FileNotFound);
-        if _UpdApp then
-          ShowErrorMessage(RS_FileNotFound + LineEnding + LineEnding +
-            RS_Response + ':' + LineEnding +
-            IntToStr(FHTTP.ResultCode) + ' ' + FHTTP.ResultString)
-        else
-        begin
-          Clipboard.AsText := mf_data_link;
-          ShowErrorMessage(Format(RS_FileNotFound_mfdatalink, [mf_data_link]));
-        end;
+        ShowErrorMessage(RS_FileNotFound + LineEnding + LineEnding +
+          RS_Response + ':' + LineEnding +
+          IntToStr(FHTTP.ResultCode) + ' ' + FHTTP.ResultString);
         Break;
       end;
       FHTTP.Clear;
@@ -406,15 +391,9 @@ begin
           if ctry>=MaxRetry then
           begin
             UpdateStatus(RS_FileNotFound);
-            if _UpdApp then
-              ShowErrorMessage(RS_FileNotFound + LineEnding + LineEnding +
-                RS_Response + ':' + LineEnding +
-                IntToStr(FHTTP.ResultCode) + ' ' + FHTTP.ResultString)
-            else
-            begin
-              Clipboard.AsText := mf_data_link;
-              ShowErrorMessage(Format(RS_FileNotFound_mfdatalink, [mf_data_link]));
-            end;
+            ShowErrorMessage(RS_FileNotFound + LineEnding + LineEnding +
+              RS_Response + ':' + LineEnding +
+              IntToStr(FHTTP.ResultCode) + ' ' + FHTTP.ResultString);
             Break;
           end;
           //try to load previous url, in case it was temporary url

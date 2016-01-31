@@ -1,6 +1,10 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=UTF-8"
 
+#: tfrmmain.caption
+msgid "Free Manga Downloader - Updater"
+msgstr ""
+
 #: tfrmmain.lbfilesize.caption
 msgid "File size"
 msgstr ""
@@ -39,17 +43,6 @@ msgstr ""
 
 #: umain.rs_filenotfound
 msgid "File not found!"
-msgstr ""
-
-#: umain.rs_filenotfound_mfdatalink
-msgid ""
-"File not found!\n"
-"This site probably have been added to unofficial build.\n"
-"\n"
-"Remedy:\n"
-"Build you manga list from scratch or download manually from this link:\n"
-"%s\n"
-"Link copied to clipboard!\n"
 msgstr ""
 
 #: umain.rs_finished

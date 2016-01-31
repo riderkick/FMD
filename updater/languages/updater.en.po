@@ -11,6 +11,10 @@ msgstr ""
 "Language: en\n"
 "X-Generator: Poedit 1.8.2\n"
 
+#: tfrmmain.caption
+msgid "Free Manga Downloader - Updater"
+msgstr ""
+
 #: tfrmmain.lbfilesize.caption
 msgid "File size"
 msgstr "File size"
@@ -50,32 +54,6 @@ msgstr "Failed loading page!"
 #: umain.rs_filenotfound
 msgid "File not found!"
 msgstr "File not found!"
-
-#: umain.rs_filenotfound_mfdatalink
-#| msgid ""
-#| "File not found!\n"
-#| "This site probably have been added to unofficial build.\n"
-#| "\n"
-#| "Remedy:\n"
-#| "Build you manga list from scratch or download manually from this link:\n"
-#| "%s\n"
-#| "Link copied to clipboard!\n"
-msgid ""
-"File not found!\n"
-"This site probably have been added to unofficial build.\n"
-"\n"
-"Remedy:\n"
-"Build you manga list from scratch or download manually from this link:\n"
-"%s\n"
-"Link copied to clipboard!\n"
-msgstr ""
-"File not found!\n"
-"This site probably have been added to unofficial build.\n"
-"\n"
-"Remedy:\n"
-"Build you manga list from scratch or download manually from this link:\n"
-"%s\n"
-"Link copied to clipboard!\n"
 
 #: umain.rs_finished
 msgid "Finished."

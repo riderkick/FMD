@@ -11,6 +11,10 @@ msgstr ""
 "Language: id_ID\n"
 "X-Generator: Poedit 1.8.2\n"
 
+#: tfrmmain.caption
+msgid "Free Manga Downloader - Updater"
+msgstr ""
+
 #: tfrmmain.lbfilesize.caption
 msgid "File size"
 msgstr "Ukuran"
@@ -50,23 +54,6 @@ msgstr "Gagal memuat halaman!"
 #: umain.rs_filenotfound
 msgid "File not found!"
 msgstr "Berkas tidak ditemukan!"
-
-#: umain.rs_filenotfound_mfdatalink
-msgid ""
-"File not found!\n"
-"This site probably have been added to unofficial build.\n"
-"\n"
-"Remedy:\n"
-"Build you manga list from scratch or download manually from this link:\n"
-"%s\n"
-"Link copied to clipboard!\n"
-msgstr ""
-"Berkas tidak ditemukan\n"
-"Kemungkinan situs ini telah ditambahkan ke versi tidak resmi.\n"
-"\n"
-"Buat sendiri list kamu dari awal atau coba download dari link ini:\n"
-"%s\n"
-"Link sudah disalin ke clipboard!\n"
 
 #: umain.rs_finished
 msgid "Finished."
