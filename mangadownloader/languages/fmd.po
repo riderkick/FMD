@@ -526,6 +526,10 @@ msgstr ""
 msgid "Delete task/favorite"
 msgstr ""
 
+#: tmainform.cboptionshowdownloadmangalistdialog.caption
+msgid "Download manga list if empty"
+msgstr ""
+
 #: tmainform.cboptionshowdownloadtoolbar.caption
 msgid "Show downloads toolbar"
 msgstr ""
@@ -958,6 +962,10 @@ msgctxt "TMAINFORM.EDWEBSITESSEARCH.TEXTHINT"
 msgid "Search website..."
 msgstr ""
 
+#: tmainform.gbdialogs.caption
+msgid "Show dialog confirmation for"
+msgstr ""
+
 #: tmainform.gbdroptarget.caption
 msgid "Drop Box"
 msgstr ""
@@ -1067,10 +1075,6 @@ msgstr ""
 
 #: tmainform.lboptioncustomrename.caption
 msgid "Chapter folder name:"
-msgstr ""
-
-#: tmainform.lboptiondialogs.caption
-msgid "Show dialog confirmation for:"
 msgstr ""
 
 #: tmainform.lboptionexternal.caption

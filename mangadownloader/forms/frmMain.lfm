@@ -1,7 +1,7 @@
 object MainForm: TMainForm
   Left = 273
   Height = 616
-  Top = 96
+  Top = 76
   Width = 819
   ActiveControl = pcMain
   Caption = 'Free Manga Downloader'
@@ -2621,7 +2621,7 @@ object MainForm: TMainForm
         end
         object tsUpdate: TTabSheet
           Caption = 'Updates'
-          ClientHeight = 375
+          ClientHeight = 416
           ClientWidth = 579
           object cbOptionAutoCheckLatestVersion: TCheckBox
             Left = 16
@@ -2721,42 +2721,52 @@ object MainForm: TMainForm
         end
         object tsDialogs: TTabSheet
           Caption = 'Dialogs'
-          ClientHeight = 375
+          ChildSizing.LeftRightSpacing = 10
+          ChildSizing.TopBottomSpacing = 10
+          ClientHeight = 416
           ClientWidth = 579
           object gbDialogs: TGroupBox
             Left = 10
-            Height = 346
-            Top = 14
-            Width = 556
-            Anchors = [akTop, akLeft, akRight, akBottom]
-            ClientHeight = 326
-            ClientWidth = 552
+            Height = 101
+            Top = 10
+            Width = 559
+            Align = alTop
+            AutoSize = True
+            Caption = 'Show dialog confirmation for'
+            ChildSizing.LeftRightSpacing = 6
+            ChildSizing.TopBottomSpacing = 6
+            ChildSizing.VerticalSpacing = 6
+            ChildSizing.Layout = cclLeftToRightThenTopToBottom
+            ChildSizing.ControlsPerLine = 1
+            ClientHeight = 81
+            ClientWidth = 555
             TabOrder = 0
             object cbOptionShowQuitDialog: TCheckBox
-              Left = 24
+              Left = 6
               Height = 19
-              Top = 32
-              Width = 66
+              Top = 6
+              Width = 179
               Caption = 'Exit FMD'
               ParentFont = False
               TabOrder = 0
             end
-            object lbOptionDialogs: TLabel
-              Left = 16
-              Height = 15
-              Top = 8
-              Width = 158
-              Caption = 'Show dialog confirmation for:'
-              ParentColor = False
-            end
             object cbOptionShowDeleteTaskDialog: TCheckBox
-              Left = 24
+              Left = 6
               Height = 19
-              Top = 56
-              Width = 122
+              Top = 31
+              Width = 179
               Caption = 'Delete task/favorite'
               ParentFont = False
               TabOrder = 1
+            end
+            object cbOptionShowDownloadMangalistDialog: TCheckBox
+              Left = 6
+              Height = 19
+              Top = 56
+              Width = 179
+              Caption = 'Download manga list if empty'
+              ParentFont = False
+              TabOrder = 2
             end
           end
         end

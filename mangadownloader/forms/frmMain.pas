@@ -57,6 +57,7 @@ type
     cbOptionMangaFoxRemoveWatermark: TCheckBox;
     cbOptionMangaFoxRemoveWatermarkSaveAsPNG: TCheckBox;
     cbOptionRemoveMangaNameFromChapter: TCheckBox;
+    cbOptionShowDownloadMangalistDialog: TCheckBox;
     cbOptionShowDownloadToolbar: TCheckBox;
     cbOptionUpdateListNoMangaInfo: TCheckBox;
     cbOptionDigitVolume: TCheckBox;
@@ -219,7 +220,6 @@ type
     lbOptionLetFMDDo: TLabel;
     lbOptionNewMangaTime: TLabel;
     lbOptionLanguage: TLabel;
-    lbOptionDialogs: TLabel;
     lbFilterCustomGenres: TLabel;
     lbFilterSummary: TLabel;
     lbFilterStatus: TLabel;
@@ -2270,6 +2270,7 @@ begin
       OpenDataDB(cbSelectManga.Items[cbSelectManga.ItemIndex]);
     end
     else
+    if cbOptionShowDownloadMangalistDialog.Checked then
       RunGetList;
   end;
 end;
@@ -4334,6 +4335,7 @@ begin
     // dialogs
     cbOptionShowQuitDialog.Checked := ReadBool('dialogs', 'ShowQuitDialog', True);
     cbOptionShowDeleteTaskDialog.Checked := ReadBool('dialogs', 'ShowDeleteDldTaskDialog', True);
+    cbOptionShowDownloadMangalistDialog.Checked := ReadBool('dialogs', 'ShowDownloadMangalistDialog', True);
 
     // misc
     cbOptionBatotoShowScanGroup.Checked := ReadBool('misc', 'BatotoShowScanGroup', True);
@@ -4454,6 +4456,7 @@ begin
       // dialogs
       WriteBool('dialogs', 'ShowQuitDialog', cbOptionShowQuitDialog.Checked);
       WriteBool('dialogs', 'ShowDeleteDldTaskDialog', cbOptionShowDeleteTaskDialog.Checked);
+      WriteBool('dialogs', 'ShowDownloadMangalistDialog', cbOptionShowDownloadMangalistDialog.Checked);
 
       // misc
       WriteBool('misc', 'BatotoShowScanGroup', cbOptionBatotoShowScanGroup.Checked);

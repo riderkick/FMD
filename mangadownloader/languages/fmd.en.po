@@ -565,6 +565,10 @@ msgstr "Remove manga name from chapter"
 msgid "Delete task/favorite"
 msgstr "Delete task/favorite"
 
+#: tmainform.cboptionshowdownloadmangalistdialog.caption
+msgid "Download manga list if empty"
+msgstr "Download manga list if empty"
+
 #: tmainform.cboptionshowdownloadtoolbar.caption
 msgid "Show downloads toolbar"
 msgstr "Show downloads toolbar"
@@ -1003,6 +1007,10 @@ msgctxt "tmainform.edwebsitessearch.texthint"
 msgid "Search website..."
 msgstr "Search website..."
 
+#: tmainform.gbdialogs.caption
+msgid "Show dialog confirmation for"
+msgstr "Show dialog confirmation for"
+
 #: tmainform.gbdroptarget.caption
 msgid "Drop Box"
 msgstr "Drop Box"
@@ -1132,10 +1140,6 @@ msgstr "Connection timeout (seconds)"
 #: tmainform.lboptioncustomrename.caption
 msgid "Chapter folder name:"
 msgstr "Chapter folder name:"
-
-#: tmainform.lboptiondialogs.caption
-msgid "Show dialog confirmation for:"
-msgstr "Show dialog confirmation for:"
 
 #: tmainform.lboptionexternal.caption
 msgid "Open manga by using external program:"

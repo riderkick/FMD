@@ -554,6 +554,10 @@ msgstr "Hapus nama komik dari bab"
 msgid "Delete task/favorite"
 msgstr "Hapus unduhan/kesukaan"
 
+#: tmainform.cboptionshowdownloadmangalistdialog.caption
+msgid "Download manga list if empty"
+msgstr "Unduh daftar komik jika kosong"
+
 #: tmainform.cboptionshowdownloadtoolbar.caption
 msgid "Show downloads toolbar"
 msgstr "Tampilkan toolbar unduhan"
@@ -988,6 +992,10 @@ msgctxt "tmainform.edwebsitessearch.texthint"
 msgid "Search website..."
 msgstr "Cari situs web..."
 
+#: tmainform.gbdialogs.caption
+msgid "Show dialog confirmation for"
+msgstr "Tampilkan dialog konfirmasi untuk"
+
 #: tmainform.gbdroptarget.caption
 msgid "Drop Box"
 msgstr "Kotak unduh"
@@ -1116,10 +1124,6 @@ msgstr "Batas waktu koneksi (detik)"
 #: tmainform.lboptioncustomrename.caption
 msgid "Chapter folder name:"
 msgstr "Nama folder bab:"
-
-#: tmainform.lboptiondialogs.caption
-msgid "Show dialog confirmation for:"
-msgstr "Tampilkan dialog konfirmasi untuk:"
 
 #: tmainform.lboptionexternal.caption
 msgid "Open manga by using external program:"
