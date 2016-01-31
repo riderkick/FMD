@@ -580,6 +580,8 @@ var
   PERVEDEN_BROWSER: string = '/en-directory/';
 
   MANGALIB_PL_COOKIES: String;
+
+  DBDownloadURL: string;
   //------------------------------------------
 
   Genre: array [0..37] of String;
@@ -806,7 +808,7 @@ function GetMangaSiteID(const Name: String): Integer;
 function GetMangaSiteName(const ID: Cardinal): String;
 function GetMangaSiteRoot(const Website: String): String; overload;
 function GetMangaSiteRoot(const MangaID: Cardinal): String; overload;
-function GetMangaDatabaseURL(const Name: String): String;
+function GetMangaDatabaseURL(const AWebsite: String): String;
 
 function SitesMemberOf(const website: String; MangaSiteIDs: array of Cardinal): Boolean;
 function SitesWithSortedList(const website:String): Boolean;
@@ -1237,10 +1239,15 @@ begin
   Result := WebsiteRoots[MangaID, 1];
 end;
 
-// bad coding.. but this is how FMD works
-function GetMangaDatabaseURL(const Name: String): String;
+function GetMangaDatabaseURL(const AWebsite: String): String;
 begin
-  Result := 'https://bintray.com/artifact/download/riderkick/FMD/db/' + Name + '.7z';
+  if DBDownloadURL='' then
+    DBDownloadURL:='https://bintray.com/artifact/download/riderkick/FMD/db/<website>.7z';
+  Result:=DBDownloadURL;
+  if Pos('<website>',LowerCase(Result))>0 then
+    Result:=StringReplace(Result,'<website>',AWebsite,[rfIgnoreCase,rfReplaceAll])
+  else
+    Result:=Result+AWebsite;
 end;
 
 function SitesMemberOf(const website: String; MangaSiteIDs: array of Cardinal): Boolean;
