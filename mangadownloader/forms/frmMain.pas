@@ -4621,6 +4621,7 @@ var
   data: PSingleItem;
   wName, wLang: TStringList;
 begin
+  DBDownloadURL:=mangalistIni.ReadString('general','DBDownloadURL','');
   wName := TStringList.Create;
   wLang := TStringList.Create;
   lang := TStringList.Create;
