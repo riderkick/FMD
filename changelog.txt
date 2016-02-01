@@ -1,11 +1,15 @@
 Free Manga Downloader
 Project page: https://github.com/riderkick/FMD
 
-For manga list data check:
-https://bintray.com/riderkick/FMD/data/db/view#files
-
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
+
+0.9.32.0 (01-02-2016)
+[*] Updater: various fix
+[+] Added option to show/hide dialog download manga list from server when local database empty
+[*] RedHawkScan: Removed, website offline
+[*] Change manga list download url to new location
+[*] Various changes and bug fixes
 
 0.9.31.3 (28-01-2016)
 [*] Fix save as pdf issue with indexed images
