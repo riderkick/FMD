@@ -1470,6 +1470,7 @@ begin
       Expression := REGEX_HOST;
       for i := 0 to URLs.Count - 1 do
       begin
+        URLs[i]:=Trim(URLs[i]);
         s := Replace(URLs[i], '$4', True);
         if s = '' then
           s := URLs[i];
@@ -1496,6 +1497,7 @@ begin
       i := 0;
       while i < URLs.Count do
       begin
+        URLs[i]:=Trim(URLs[i]);
         s := Replace(URLs[i], '$4', True);
         if s = '' then
           s := URLs[i];
