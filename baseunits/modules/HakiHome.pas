@@ -51,7 +51,7 @@ begin
     query:=TXQueryEngineHTML.Create;
     try
       query.ParseHTML(StreamToString(MangaInfo.FHTTP.Document));
-      for v in query.XPath('//table[@class="listing"]/tbody/tr/td/a') do begin
+      for v in query.XPath('//table[@class="listing"]/tbody/tr/td[2]/a') do begin
         ALinks.Add(v.toNode.getAttribute('href'));
         ANames.Add(v.toString);
       end;
