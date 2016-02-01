@@ -1740,93 +1740,107 @@ begin
     end;
   end;
 
-  s := mangaInfo.artists;
-  if (s <> '') and (s[1] = '<') then
-    mangaInfo.artists := '';
-  s := mangaInfo.authors;
-  if (s <> '') and (s[1] = '<') then
-    mangaInfo.authors := '';
+  with mangaInfo do begin
+    s := artists;
+    if (s <> '') and (s[1] = '<') then
+      artists := '';
+    s := authors;
+    if (s <> '') and (s[1] = '<') then
+      authors := '';
 
-  // check everything once more
-  mangaInfo.title := Trim(RemoveStringBreaks(CommonStringFilter(mangaInfo.title)));
-  mangaInfo.authors := Trim(RemoveStringBreaks(Trim(mangaInfo.authors)));
-  mangaInfo.artists := Trim(RemoveStringBreaks(Trim(mangaInfo.artists)));
-  mangaInfo.genres := Trim(RemoveStringBreaks(Trim(mangaInfo.genres)));
+    // check everything once more
+    title := Trim(RemoveStringBreaks(CommonStringFilter(title)));
+    authors := Trim(RemoveStringBreaks(Trim(authors)));
+    artists := Trim(RemoveStringBreaks(Trim(artists)));
+    genres := Trim(RemoveStringBreaks(Trim(genres)));
 
-  mangaInfo.authors := TrimRightChar(Trim(mangaInfo.authors), [',']);
-  mangaInfo.artists := TrimRightChar(Trim(mangaInfo.artists), [',']);
-  mangaInfo.genres := TrimRightChar(Trim(mangaInfo.genres), [',']);
+    authors := TrimRightChar(Trim(authors), [',']);
+    artists := TrimRightChar(Trim(artists), [',']);
+    genres := TrimRightChar(Trim(genres), [',']);
 
-  mangaInfo.summary := Trim(mangaInfo.summary);
+    summary := Trim(summary);
 
-  //// strip
-  //mangaInfo.summary := StringBreaks(mangaInfo.summary);
-  //mangaInfo.summary := Trim(TrimChar(mangaInfo.summary, [#13, #10]));
-  //mangaInfo.summary := BreaksString(mangaInfo.summary);
-  //// strip double CR
-  //mangaInfo.summary := Trim(StringReplace(mangaInfo.summary, '\n\r\n\r', '\n\r', [rfReplaceAll]));
-  //mangaInfo.summary := Trim(StringReplace(mangaInfo.summary, '\r\n\r\n', '\r\n', [rfReplaceAll]));
+    //// strip
+    //summary := StringBreaks(summary);
+    //summary := Trim(TrimChar(summary, [#13, #10]));
+    //summary := BreaksString(summary);
+    //// strip double CR
+    //summary := Trim(StringReplace(summary, '\n\r\n\r', '\n\r', [rfReplaceAll]));
+    //summary := Trim(StringReplace(summary, '\r\n\r\n', '\r\n', [rfReplaceAll]));
 
-  // fix info
-  if (mangaInfo.authors = '-') or (mangaInfo.authors = ':') then
-    mangaInfo.authors := '';
-  if (mangaInfo.artists = '-') or (mangaInfo.artists = ':') then
-    mangaInfo.artists := '';
-  if (mangaInfo.summary = '-') or (mangaInfo.summary = ':') then
-    mangaInfo.summary := '';
+    // fix info
+    if (authors = '-') or (authors = ':') then
+      authors := '';
+    if (artists = '-') or (artists = ':') then
+      artists := '';
+    if (summary = '-') or (summary = ':') then
+      summary := '';
 
-  // remove duplicate chapter
-  if mangaInfo.chapterLinks.Count > 0 then
-  begin
-    j := 0;
-    while j < (mangaInfo.chapterLinks.Count - 1) do
-    begin
-      del := False;
-      if (j + 1) < mangaInfo.chapterLinks.Count then
-        for k := j + 1 to mangaInfo.chapterLinks.Count - 1 do
-        begin
-          if SameText(mangaInfo.chapterLinks[j], mangaInfo.chapterLinks[k]) then
-          begin
-            mangaInfo.chapterLinks.Delete(j);
-            mangaInfo.chapterName.Delete(j);
-            del := True;
-            Break;
-          end;
-        end;
-      if not del then
-        Inc(j);
-    end;
-  end;
-
-  if mangaInfo.chapterLinks.Count > 0 then
-  begin
-    // remove host from chapter links
-    RemoveHostFromURLsPair(mangaInfo.chapterLinks, mangaInfo.chapterName);
-    // fixing chapter name
-    for j := 0 to mangaInfo.chapterName.Count - 1 do
-    begin
-      mangaInfo.chapterName.Strings[j] := Trim(RemoveStringBreaks(
-        CommonStringFilter(mangaInfo.chapterName[j])));
-    end;
-
-    //remove manga name from chapter
-    if OptionRemoveMangaNameFromChapter and (mangaInfo.title <> '') then
-    begin
-      s := LowerCase(mangaInfo.title);
-      j := Length(s);
-      for k := 0 to mangaInfo.chapterName.Count - 1 do begin
-        s2 := LowerCase(mangaInfo.chapterName[k]);
-        if Length(s2) > j then
-          if Pos(s, s2) = 1 then begin
-            s2 := mangaInfo.chapterName[k];
-            Delete(s2, 1, j);
-            mangaInfo.chapterName[k] := Trim(s2);
-          end;
+    // cleanup chapters
+    if chapterLinks.Count>0 then begin
+      while chapterName.Count<chapterLinks.Count do
+        chapterName.Add('');
+      while chapterLinks.Count<chapterName.Count do
+        chapterName.Delete(chapterName.Count-1);
+      for j:=0 to chapterLinks.Count-1 do begin
+        chapterLinks[j]:=Trim(chapterLinks[j]);
+        chapterName[j]:=Trim(chapterName[j]);
       end;
     end;
-  end;
 
-  mangaInfo.numChapter := mangaInfo.chapterLinks.Count;
+    // remove duplicate chapter
+    if chapterLinks.Count > 0 then
+    begin
+      j := 0;
+      while j < (chapterLinks.Count - 1) do
+      begin
+        del := False;
+        if (j + 1) < chapterLinks.Count then
+          for k := j + 1 to chapterLinks.Count - 1 do
+          begin
+            if SameText(chapterLinks[j], chapterLinks[k]) then
+            begin
+              chapterLinks.Delete(j);
+              chapterName.Delete(j);
+              del := True;
+              Break;
+            end;
+          end;
+        if not del then
+          Inc(j);
+      end;
+    end;
+
+    if chapterLinks.Count > 0 then
+    begin
+      // remove host from chapter links
+      RemoveHostFromURLsPair(chapterLinks, chapterName);
+      // fixing chapter name
+      for j := 0 to chapterName.Count - 1 do
+      begin
+        chapterName.Strings[j] := Trim(RemoveStringBreaks(
+          CommonStringFilter(chapterName[j])));
+      end;
+
+      //remove manga name from chapter
+      if OptionRemoveMangaNameFromChapter and (title <> '') then
+      begin
+        s := LowerCase(title);
+        j := Length(s);
+        for k := 0 to chapterName.Count - 1 do begin
+          s2 := LowerCase(chapterName[k]);
+          if Length(s2) > j then
+            if Pos(s, s2) = 1 then begin
+              s2 := chapterName[k];
+              Delete(s2, 1, j);
+              chapterName[k] := Trim(s2);
+            end;
+        end;
+      end;
+    end;
+
+    numChapter := chapterLinks.Count;
+  end;
 end;
 
 procedure TMangaInformation.SyncMinorInfoToData(const DataProcess: TDataProcess;
