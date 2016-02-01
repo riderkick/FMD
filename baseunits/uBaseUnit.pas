@@ -327,25 +327,25 @@ const
   NHENTAI_ID             = 59;
   MANGAMINT_ID           = 60;
   UNIXMANGA_ID           = 61;
-  HAKIHOME_ID            = 62;
-  EXTREMEMANGAS_ID       = 63;
-  MANGAHOST_ID           = 64;
-  PORNCOMIX_ID           = 65;
-  PORNCOMIXRE_ID         = 66;
-  PORNCOMIXIC_ID         = 67;
-  XXCOMICS_ID            = 68;
-  XXCOMICSMT_ID          = 69;
-  XXCOMICS3D_ID          = 70;
-  PORNXXXCOMICS_ID       = 71;
-  MANGASEE_ID            = 72;
-  MANGAKU_ID             = 73;
-  ACADEMYVN_ID           = 74;
-  MANGAAT_ID             = 75;
-  READMANGATODAY_ID      = 76;
-  LONEMANGA_ID           = 77;
-  DYNASTYSCANS_ID        = 78;
 
-  WebsiteRoots: array [0..78] of array [0..1] of string = (
+  EXTREMEMANGAS_ID       = 62;
+  MANGAHOST_ID           = 63;
+  PORNCOMIX_ID           = 64;
+  PORNCOMIXRE_ID         = 65;
+  PORNCOMIXIC_ID         = 66;
+  XXCOMICS_ID            = 67;
+  XXCOMICSMT_ID          = 68;
+  XXCOMICS3D_ID          = 69;
+  PORNXXXCOMICS_ID       = 70;
+  MANGASEE_ID            = 71;
+  MANGAKU_ID             = 72;
+  ACADEMYVN_ID           = 73;
+  MANGAAT_ID             = 74;
+  READMANGATODAY_ID      = 75;
+  LONEMANGA_ID           = 76;
+  DYNASTYSCANS_ID        = 77;
+
+  WebsiteRoots: array [0..77] of array [0..1] of string = (
     ('AnimeA', 'http://manga.animea.net'),
     ('MangaInn', 'http://www.mangainn.me'),
     ('OurManga', 'http://www.ourmanga.com'),
@@ -408,7 +408,6 @@ const
     ('NHentai', 'http://nhentai.net'),
     ('MangaMint', 'http://www.mangamint.com'),
     ('UnixManga', 'http://unixmanga.co'),
-    ('HakiHome', 'http://hakihome.com'),
     ('ExtremeMangas', 'http://www.extrememangas.com'),
     ('MangaHost', 'http://br.mangahost.com'),
     ('PornComix', 'http://porncomix.wf'),
@@ -541,8 +540,6 @@ const
   UNIONMANGAS_BROWSER = '/mangas';
 
   UNIXMANGA_BROWSER = '/onlinereading/manga-lists.html';
-
-  HAKIHOME_BROWSER = '/ListMangaHentai.html';
 
   EXTREMEMANGAS_BROWSER = '/2013/04/lista-de-mangas.html';
 

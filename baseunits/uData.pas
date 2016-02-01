@@ -836,8 +836,6 @@ var
 
   {$I includes/MangaMint/directory_page_number.inc}
 
-  {$I includes/HakiHome/directory_page_number.inc}
-
   {$I includes/MangaFrame/directory_page_number.inc}
 
   {$I includes/MangaHost/directory_page_number.inc}
@@ -962,9 +960,6 @@ begin
       else
       if WebsiteID = MANGAMINT_ID then
         Result := GetMangaMintDirectoryPageNumber
-      else
-      if WebsiteID = HAKIHOME_ID then
-        Result := GetHakiHomeDirectoryPageNumber
       else
       if WebsiteID = MANGAFRAME_ID then
         Result := GetMangaFrameDirectoryPageNumber
@@ -1118,8 +1113,6 @@ var
   {$I includes/MangaMint/names_and_links.inc}
 
   {$I includes/UnixManga/names_and_links.inc}
-
-  {$I includes/HakiHome/names_and_links.inc}
 
   {$I includes/ExtremeMangas/names_and_links.inc}
 
@@ -1318,9 +1311,6 @@ begin
     if WebsiteID = UNIXMANGA_ID then
       Result := UnixMangaNamesAndLinks
     else
-    if WebsiteID = HAKIHOME_ID then
-      Result := HakiHomeNamesAndLinks
-    else
     if WebsiteID = EXTREMEMANGAS_ID then
       Result := ExtremeMangasNamesAndLinks
     else
@@ -1482,8 +1472,6 @@ var
   {$I includes/MangaMint/manga_information.inc}
 
   {$I includes/UnixManga/manga_information.inc}
-
-  {$I includes/HakiHome/manga_information.inc}
 
   {$I includes/ExtremeMangas/manga_information.inc}
 
@@ -1693,9 +1681,6 @@ begin
     else
     if WebsiteID = UNIXMANGA_ID then
       Result := GetUnixMangaInfoFromURL
-    else
-    if WebsiteID = HAKIHOME_ID then
-      Result := GetHakiHomeInfoFromURL
     else
     if WebsiteID = EXTREMEMANGAS_ID then
       Result := GetExtremeMangasInfoFromURL

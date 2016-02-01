@@ -448,8 +448,6 @@ var
 
   {$I includes/UnixManga/chapter_page_number.inc}
 
-  {$I includes/HakiHome/chapter_page_number.inc}
-
   {$I includes/ExtremeMangas/chapter_page_number.inc}
 
   {$I includes/MangaHost/chapter_page_number.inc}
@@ -599,9 +597,6 @@ begin
     if manager.container.MangaSiteID = UNIXMANGA_ID then
       Result := GetUnixMangaPageNumber
     else
-    if manager.container.MangaSiteID = HAKIHOME_ID then
-      Result := GetHakiHomePageNumber
-    else
     if manager.container.MangaSiteID = EXTREMEMANGAS_ID then
       Result := GetExtremeMangasPageNumber
     else
@@ -741,8 +736,6 @@ var
   {$I includes/MangaMint/image_url.inc}
 
   {$I includes/UnixManga/image_url.inc}
-
-  {$I includes/HakiHome/image_url.inc}
 
   {$I includes/MangaHost/image_url.inc}
 
@@ -910,9 +903,6 @@ begin
     else
     if manager.container.MangaSiteID = UNIXMANGA_ID then
       Result := GetUnixMangaImageURL
-    else
-    if manager.container.MangaSiteID = HAKIHOME_ID then
-      Result := GetHakiHomeImageURL
     else
     if manager.container.MangaSiteID = MANGAHOST_ID then
       Result := GetMangaHostImageURL
