@@ -22,4 +22,5 @@ uses
   UnionMangas,
   MangaStreamTo,
   MangaKoi,
-  GameofScanlation;
+  GameofScanlation,
+  Hakihome;
