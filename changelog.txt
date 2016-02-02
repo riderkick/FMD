@@ -4,6 +4,10 @@ Project page: https://github.com/riderkick/FMD
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.32.2 (03-02-2016)
+[*] E-Hentai/ExHentai: fix incorrect page number
+[*] Various changes and bug fixes
+
 0.9.32.1 (02-02-2016)
 [*] Hakihome: rewrite all script
 [*] Various changes and bug fixes
