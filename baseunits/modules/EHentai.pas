@@ -215,47 +215,19 @@ function GetPageNumber(var DownloadThread: TDownloadThread; const AURL: String;
 var
   query: TXQueryEngineHTML;
   rurl: String;
+  getOK: Boolean;
+  i, p: Integer;
 
   procedure GetImageLink;
   var
     x: IXQValue;
   begin
+    query.ParseHTML(DownloadThread.FHTTP.Document);
     with DownloadThread.manager.container do begin
       for x in query.XPath('//div[@id="gdt"]//a/@href') do
         PageContainerLinks.Add(x.toString);
       while PageLinks.Count<PageContainerLinks.Count do
         PageLinks.Add('G');
-    end;
-  end;
-
-  procedure ScanParse;
-  var
-    getOK: Boolean;
-    i, p: Integer;
-    v: IXQValue;
-  begin
-    getOK := True;
-    //check content warning
-    if Pos('Content Warning', query.XPathString('//div/h1')) > 0 then
-    begin
-      getOK := GETWithLogin(DownloadThread.FHTTP, rurl + '?nw=session', Module.Website);
-      if getOK then
-        query.ParseHTML(StreamToString(DownloadThread.FHTTP.Document));
-    end;
-    if getOK then
-    begin
-      GetImageLink;
-      //get page count
-      p:=0;
-      v:=query.XPath('//table[@class="ptt"]//td');
-      if v.Count>2 then p:=StrToIntDef(v.get(v.Count-2).toString,0);
-      if p > 0 then
-        for i := 1 to p do
-          if GETWithLogin(DownloadThread.FHTTP, rurl + '?p=' + IntToStr(i), Module.Website) then
-          begin
-            query.ParseHTML(StreamToString(DownloadThread.FHTTP.Document));
-            GetImageLink;
-          end;
     end;
   end;
 
@@ -272,8 +244,22 @@ begin
       Result := True;
       query := TXQueryEngineHTML.Create;
       try
-        query.ParseHTML(StreamToString(Document));
-        ScanParse;
+        getOK := True;
+        //check content warning
+        if Pos('Content Warning', query.XPathString('//div/h1')) > 0 then
+          getOK := GETWithLogin(DownloadThread.FHTTP, rurl + '?nw=session', Module.Website);
+        if getOK then begin
+          GetImageLink;
+          //get page count
+          p:=0;
+          p:=StrToIntDef(query.XPathString('//table[@class="ptt"]//td[last()-1]'),0);
+          if p>1 then begin
+            Dec(p);
+            for i:=1 to p do
+              if GETWithLogin(DownloadThread.FHTTP, rurl + '?p=' + IntToStr(i), Module.Website) then
+                GetImageLink;
+          end;
+        end;
       finally
         query.Free;
       end;
