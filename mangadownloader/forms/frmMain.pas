@@ -478,6 +478,8 @@ type
     procedure vtDownloadDrawText(Sender: TBaseVirtualTree;
       TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
       const CellText: String; const CellRect: TRect; var DefaultDraw: Boolean);
+    procedure vtDownloadFocusChanged(Sender: TBaseVirtualTree;
+      Node: PVirtualNode; Column: TColumnIndex);
     procedure vtDownloadGetHint(Sender: TBaseVirtualTree; Node: PVirtualNode;
       Column: TColumnIndex; var LineBreakStyle: TVTTooltipLineBreakStyle;
       var HintText: String);
@@ -3626,6 +3628,12 @@ begin
         CellRect.Top + ((CellRect.Bottom - CellRect.Top - hh) div 2), Progress);
     end;
   end;
+end;
+
+procedure TMainForm.vtDownloadFocusChanged(Sender: TBaseVirtualTree;
+  Node: PVirtualNode; Column: TColumnIndex);
+begin
+  Sender.ScrollIntoView(Node, False, False);
 end;
 
 // Download table

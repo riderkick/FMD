@@ -100,7 +100,6 @@ object MainForm: TMainForm
         Header.Options = [hoColumnResize, hoDrag, hoHotTrack, hoShowSortGlyphs, hoVisible]
         HintMode = hmHintAndDefault
         Images = IconDL
-        IncrementalSearch = isVisibleOnly
         Margin = 2
         ParentFont = False
         ParentShowHint = False
@@ -118,6 +117,7 @@ object MainForm: TMainForm
         OnDragOver = vtDownloadDragOver
         OnDragDrop = vtDownloadDragDrop
         OnDrawText = vtDownloadDrawText
+        OnFocusChanged = vtDownloadFocusChanged
         OnGetText = vtDownloadGetText
         OnGetImageIndex = vtDownloadGetImageIndex
         OnGetHint = vtDownloadGetHint
@@ -487,13 +487,12 @@ object MainForm: TMainForm
             Header.Columns = <>
             Header.DefaultHeight = 17
             Header.MainColumn = -1
-            IncrementalSearch = isVisibleOnly
             Margin = 2
             ParentFont = False
             PopupMenu = pmChapterList
             TabOrder = 0
             TextMargin = 0
-            TreeOptions.AutoOptions = [toAutoDropExpand, toAutoScrollOnExpand, toAutoTristateTracking, toAutoDeleteMovedNodes, toDisableAutoscrollOnFocus]
+            TreeOptions.AutoOptions = [toAutoDropExpand, toAutoScrollOnExpand, toAutoTristateTracking]
             TreeOptions.MiscOptions = [toAcceptOLEDrop, toCheckSupport, toFullRepaintOnResize, toInitOnSave, toToggleOnDblClick, toWheelPanning, toEditOnClick]
             TreeOptions.PaintOptions = [toHideFocusRect, toShowButtons, toShowDropmark, toThemeAware, toUseBlendedImages]
             TreeOptions.SelectionOptions = [toFullRowSelect, toMultiSelect]
@@ -1708,7 +1707,6 @@ object MainForm: TMainForm
         Header.Options = [hoColumnResize, hoDrag, hoHotTrack, hoShowSortGlyphs, hoVisible]
         HintMode = hmHintAndDefault
         Images = IconList
-        IncrementalSearch = isVisibleOnly
         Margin = 0
         ParentFont = False
         ParentShowHint = False
@@ -1716,13 +1714,14 @@ object MainForm: TMainForm
         ShowHint = True
         TabOrder = 0
         TextMargin = 2
-        TreeOptions.AutoOptions = [toAutoDropExpand, toAutoScrollOnExpand, toAutoTristateTracking, toAutoDeleteMovedNodes, toDisableAutoscrollOnFocus]
+        TreeOptions.AutoOptions = [toAutoDropExpand, toAutoScrollOnExpand, toAutoTristateTracking, toDisableAutoscrollOnFocus]
         TreeOptions.PaintOptions = [toHideFocusRect, toShowButtons, toShowDropmark, toShowVertGridLines, toThemeAware, toUseBlendedImages, toFullVertGridLines]
         TreeOptions.SelectionOptions = [toFullRowSelect, toMultiSelect]
         OnBeforeCellPaint = vtFavoritesBeforeCellPaint
         OnColumnDblClick = vtFavoritesColumnDblClick
         OnDragOver = vtFavoritesDragOver
         OnDragDrop = vtFavoritesDragDrop
+        OnFocusChanged = vtDownloadFocusChanged
         OnGetText = vtFavoritesGetText
         OnGetImageIndex = vtFavoritesGetImageIndex
         OnGetHint = vtFavoritesGetHint
@@ -2789,12 +2788,11 @@ object MainForm: TMainForm
             Header.Columns = <>
             Header.DefaultHeight = 17
             Header.MainColumn = -1
-            IncrementalSearch = isVisibleOnly
             Margin = 0
             ParentFont = False
             TabOrder = 0
             TextMargin = 0
-            TreeOptions.AutoOptions = [toAutoDropExpand, toAutoScrollOnExpand, toAutoTristateTracking, toAutoDeleteMovedNodes, toDisableAutoscrollOnFocus]
+            TreeOptions.AutoOptions = [toAutoDropExpand, toAutoScrollOnExpand, toAutoTristateTracking]
             TreeOptions.MiscOptions = [toAcceptOLEDrop, toCheckSupport, toFullRepaintOnResize, toInitOnSave, toToggleOnDblClick, toWheelPanning, toEditOnClick]
             TreeOptions.PaintOptions = [toHideFocusRect, toShowButtons, toShowDropmark, toShowRoot, toShowTreeLines, toThemeAware, toUseBlendedImages]
             OnChange = vtOptionMangaSiteSelectionChange
@@ -3280,14 +3278,13 @@ object MainForm: TMainForm
         Header.DefaultHeight = 17
         Header.MainColumn = -1
         HintMode = hmHint
-        IncrementalSearch = isAll
         Margin = 0
         ParentShowHint = False
         PopupMenu = pmMangaList
         ShowHint = True
         TabOrder = 0
         TextMargin = 3
-        TreeOptions.AutoOptions = [toAutoDropExpand, toAutoScrollOnExpand, toAutoSort, toAutoTristateTracking, toAutoDeleteMovedNodes, toDisableAutoscrollOnFocus]
+        TreeOptions.AutoOptions = [toAutoDropExpand, toAutoScrollOnExpand, toAutoTristateTracking]
         TreeOptions.PaintOptions = [toHideFocusRect, toShowButtons, toThemeAware, toUseBlendedImages]
         TreeOptions.SelectionOptions = [toFullRowSelect, toMultiSelect, toRightClickSelect]
         OnBeforeCellPaint = vtMangaListBeforeCellPaint
@@ -3562,6 +3559,7 @@ object MainForm: TMainForm
   end
   object pmDownload: TPopupMenu
     Images = IconList
+    OwnerDraw = False
     OnPopup = pmDownloadPopup
     left = 616
     top = 360
@@ -3881,6 +3879,7 @@ object MainForm: TMainForm
     end
   end
   object pmChapterList: TPopupMenu
+    OwnerDraw = False
     left = 616
     top = 392
     object miChapterListCheckSelected: TMenuItem
@@ -3912,6 +3911,7 @@ object MainForm: TMainForm
   end
   object pmFavorites: TPopupMenu
     Images = IconList
+    OwnerDraw = False
     OnPopup = pmFavoritesPopup
     left = 616
     top = 432
@@ -4223,6 +4223,7 @@ object MainForm: TMainForm
   end
   object pmMangaList: TPopupMenu
     Images = IconList
+    OwnerDraw = False
     OnPopup = pmMangaListPopup
     left = 128
     top = 272
@@ -4371,6 +4372,7 @@ object MainForm: TMainForm
   end
   object pmUpdate: TPopupMenu
     ParentBidiMode = False
+    OwnerDraw = False
     left = 128
     top = 144
     object mnUpdateList: TMenuItem
@@ -5796,6 +5798,7 @@ object MainForm: TMainForm
     }
   end
   object pmEditURL: TPopupMenu
+    OwnerDraw = False
     OnPopup = pmEditURLPopup
     left = 592
     top = 136
@@ -5871,6 +5874,7 @@ object MainForm: TMainForm
     top = 72
   end
   object pmSbMain: TPopupMenu
+    OwnerDraw = False
     OnPopup = pmSbMainPopup
     left = 152
     top = 376

@@ -34,6 +34,8 @@ type
     procedure vtAccountListChange(Sender: TBaseVirtualTree; Node: PVirtualNode);
     procedure vtAccountListChecked(Sender: TBaseVirtualTree; Node: PVirtualNode
       );
+    procedure vtAccountListFocusChanged(Sender: TBaseVirtualTree;
+      Node: PVirtualNode; Column: TColumnIndex);
     procedure vtAccountListGetText(Sender: TBaseVirtualTree;
       Node: PVirtualNode; Column: TColumnIndex; TextType: TVSTTextType;
       var CellText: String);
@@ -438,6 +440,12 @@ procedure TAccountManagerForm.vtAccountListChecked(Sender: TBaseVirtualTree;
 begin
   if Assigned(Node) then
     Account.ValueBool[Node^.Index, 0] := Node^.CheckState = csCheckedNormal;
+end;
+
+procedure TAccountManagerForm.vtAccountListFocusChanged(
+  Sender: TBaseVirtualTree; Node: PVirtualNode; Column: TColumnIndex);
+begin
+  Sender.ScrollIntoView(Node, False, False);
 end;
 
 end.

@@ -264,6 +264,7 @@ object AccountManagerForm: TAccountManagerForm
     OnBeforeCellPaint = vtAccountListBeforeCellPaint
     OnChange = vtAccountListChange
     OnChecked = vtAccountListChecked
+    OnFocusChanged = vtAccountListFocusChanged
     OnGetText = vtAccountListGetText
     OnPaintText = vtAccountListPaintText
     OnInitNode = vtAccountListInitNode
