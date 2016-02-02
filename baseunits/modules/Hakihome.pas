@@ -83,7 +83,7 @@ begin
         AddCommaString(genres,SeparateRight(query.XPathString('//*[@class="lan rights"]'),':'));
         for v in query.XPath('//table[@class="listing"]//a[@class="readchap"]') do begin
           chapterLinks.Add(v.toNode.getAttribute('href'));
-          chapterName.Add(v.toString);
+          chapterName.Add(Trim(title+' '+v.toString));
         end;
         if (chapterName.Count=1) and (title<>'') then
           chapterName[0]:=title;
