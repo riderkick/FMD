@@ -4,6 +4,10 @@ Project page: https://github.com/riderkick/FMD
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.32.1 (02-02-2016)
+[*] Hakihome: rewrite all script
+[*] Various changes and bug fixes
+
 0.9.32.0 (01-02-2016)
 [*] Updater: various fix
 [+] Added option to show/hide dialog download manga list from server when local database empty
