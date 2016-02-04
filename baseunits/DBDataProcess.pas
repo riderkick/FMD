@@ -74,7 +74,6 @@ type
       const stTitle, stAuthors, stArtists, stStatus, stSummary: String;
       const minusDay: Cardinal; const haveAllChecked, searchNewManga: Boolean;
       useRegExpr: Boolean = False): Boolean;
-    function LocateByLink(ALink: String): Boolean;
     function WebsiteLoaded(const AWebsite: String): Boolean;
     function LinkExist(ALink: String): Boolean;
 
@@ -1056,18 +1055,6 @@ begin
     GetRecordCount;
     Result := FFiltered;
   end;
-end;
-
-function TDBDataProcess.LocateByLink(ALink: String): Boolean;
-begin
-  Result := False;
-  if (FQuery.Active) and (FRecordCount > 0) and (ALink <> '') then
-    try
-      Result := FQuery.Locate('link', ALink, [loCaseInsensitive]);
-    except
-      on E: Exception do
-        WriteLog_E('TDBDataProcess.LocateByLink.Error!', E, Self);
-    end;
 end;
 
 procedure TDBDataProcess.CreateDatabase(AWebsite: String);
