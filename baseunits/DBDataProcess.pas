@@ -119,7 +119,7 @@ const
   DBTempFieldWebsiteIndex = Length(DBDataProcessParams);
   DBDataProccesCreateParam = '('#13#10 +
     '"title" TEXT,'#13#10 +
-    '"link" VARCHAR NOT NULL PRIMARY KEY,'#13#10 +
+    '"link" TEXT NOT NULL PRIMARY KEY,'#13#10 +
     '"authors" TEXT,'#13#10 +
     '"artists" TEXT,'#13#10 +
     '"genres" TEXT,'#13#10 +
@@ -317,15 +317,9 @@ end;
 
 procedure TDBDataProcess.ConvertNewTable;
 begin
-  //'"title" TEXT,'#13#10 +
-  //  '"link" VARCHAR NOT NULL PRIMARY KEY,'#13#10 +
-  //  '"authors" TEXT,'#13#10 +
-  //  '"artists" TEXT,'#13#10 +
-  //  '"genres" TEXT,'#13#10 +
-  //  '"status" TEXT,'#13#10 +
-  //  '"summary" TEXT,'#13#10 +
   if FQuery.Active = False then Exit;
   if (FieldTypeNames[FQuery.FieldByName('title').DataType] <> Fieldtypenames[ftMemo]) or
+      (FieldTypeNames[FQuery.FieldByName('link').DataType] <> Fieldtypenames[ftMemo]) or
       (FieldTypeNames[FQuery.FieldByName('authors').DataType] <> Fieldtypenames[ftMemo]) or
       (FieldTypeNames[FQuery.FieldByName('artists').DataType] <> Fieldtypenames[ftMemo]) or
       (FieldTypeNames[FQuery.FieldByName('genres').DataType] <> Fieldtypenames[ftMemo]) or
