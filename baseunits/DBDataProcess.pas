@@ -335,6 +335,7 @@ begin
         ExecuteDirect('ALTER TABLE '+QuotedStrd('temp'+FTableName)+' RENAME TO '+QuotedStrd(FTableName));
       end;
       FTrans.Commit;
+      VacuumTable;
       FQuery.Open;
     except
       FTrans.Rollback;
