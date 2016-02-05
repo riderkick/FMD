@@ -110,7 +110,7 @@ type
   TTaskContainer = class
   private
     FReadCount: Integer;
-    CS_FReadCount: TCriticalSection;
+    CS_FContainer: TCriticalSection;
     FWebsite: String;
     procedure SetWebsite(AValue: String);
   public
@@ -136,9 +136,11 @@ type
     FailedChapterLinks,
     PageContainerLinks,
     PageLinks: TStringList;
-    procedure IncReadCount(const ACount: Integer);
     constructor Create;
     destructor Destroy; override;
+    procedure IncReadCount(const ACount: Integer);
+    procedure Lock; inline;
+    procedure Unlock; inline;
     property Website: String read FWebsite write SetWebsite;
   end;
 
@@ -333,9 +335,14 @@ begin
 
     if not Terminated and Reslt then
     begin
-      manager.container.DownCounter := InterLockedIncrement(manager.container.DownCounter);
-      manager.container.DownloadInfo.Progress :=
-        Format('%d/%d', [manager.container.DownCounter, manager.container.PageNumber]);
+      manager.container.Lock;
+      try
+        manager.container.DownCounter := InterLockedIncrement(manager.container.DownCounter);
+        manager.container.DownloadInfo.Progress :=
+          Format('%d/%d', [manager.container.DownCounter, manager.container.PageNumber]);
+      finally
+        manager.container.Unlock;
+      end;
     end;
   except
     on E: Exception do
@@ -1544,21 +1551,11 @@ begin
   ModuleId := Modules.LocateModule(AValue);
 end;
 
-procedure TTaskContainer.IncReadCount(const ACount: Integer);
-begin
-  CS_FReadCount.Acquire;
-  try
-    Inc(FReadCount, ACount);
-  finally
-    CS_FReadCount.Release;
-  end;
-end;
-
 constructor TTaskContainer.Create;
 begin
   inherited Create;
   ThreadState := False;
-  CS_FReadCount := TCriticalSection.Create;
+  CS_FContainer := TCriticalSection.Create;
   ChapterLinks := TStringList.Create;
   ChapterName := TStringList.Create;
   FailedChapterName := TStringList.Create;
@@ -1579,8 +1576,28 @@ begin
   ChapterLinks.Free;
   FailedChapterName.Free;
   FailedChapterLinks.Free;
-  CS_FReadCount.Free;
+  CS_FContainer.Free;
   inherited Destroy;
+end;
+
+procedure TTaskContainer.IncReadCount(const ACount: Integer);
+begin
+  Lock;
+  try
+    Inc(FReadCount, ACount);
+  finally
+    Unlock;
+  end;
+end;
+
+procedure TTaskContainer.Lock;
+begin
+  CS_FContainer.Acquire;
+end;
+
+procedure TTaskContainer.Unlock;
+begin
+  CS_FContainer.Release;
 end;
 
 { TDownloadManager }
@@ -1610,7 +1627,7 @@ begin
         with TTaskContainer(Containers[i]) do
           if ThreadState then
           begin
-            CS_FReadCount.Acquire;
+            Lock;
             try
               if Status = STATUS_COMPRESS then
                 DownloadInfo.TransferRate := ''
@@ -1621,7 +1638,7 @@ begin
               end;
               FReadCount := 0;
             finally
-              CS_FReadCount.Release;
+              Unlock;
             end;
           end;
       Result := FTotalReadCount;
@@ -1834,12 +1851,12 @@ begin
       for i := 0 to Containers.Count - 1 do
         with TTaskContainer(Containers[i]) do
         begin
-          CS_FReadCount.Acquire;
+          Lock;
           try
             FReadCount := 0;
             DownloadInfo.TransferRate := '';
           finally
-            CS_FReadCount.Release;
+            Unlock;
           end;
         end;
     finally
