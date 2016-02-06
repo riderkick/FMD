@@ -288,7 +288,6 @@ procedure RegisterModule;
   end;
 
 begin
-  AddWebsiteModule('MangaCap', 'http://www.mangacap.com');
   AddWebsiteModule('MangaBoom', 'http://www.mangaboom.com');
   AddWebsiteModule('Authrone', 'http://www.authrone.com');
   AddWebsiteModule('EyeOnManga', 'http://www.eyeonmanga.com');
