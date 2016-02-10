@@ -299,7 +299,7 @@ function AfterImageSaved(const AFilename: String; Module: TModuleContainer): Boo
 begin
   Result := True;
   if OptionMangaFoxRemoveWatermark then
-    Result := mangafoxwatermarkremover.RemoveWatermark(AFilename, OptionMangaFoxRemoveWatermarkSaveAsPNG);
+    Result := mangafoxwatermarkremover.RemoveWatermark(AFilename, OptionMangaFoxSaveAsPNG);
 end;
 
 procedure RegisterModule;

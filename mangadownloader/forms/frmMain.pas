@@ -49,13 +49,14 @@ type
     btWebsitesSearchClear: TSpeedButton;
     btUpdateList: TSpeedButton;
     btURL: TSpeedButton;
+    cbEHentaiDownloadOriginalImage: TCheckBox;
     cbOptionAutoCheckFavStartup: TCheckBox;
     cbOptionAutoCheckFavInterval: TCheckBox;
     cbOptionAutoCheckFavDownload: TCheckBox;
     cbOptionAutoCheckFavRemoveCompletedManga: TCheckBox;
     cbOptionEnableLoadCover: TCheckBox;
-    cbOptionMangaFoxRemoveWatermark: TCheckBox;
-    cbOptionMangaFoxRemoveWatermarkSaveAsPNG: TCheckBox;
+    cbMangaFoxRemoveWatermark: TCheckBox;
+    cbMangaFoxSaveAsPNG: TCheckBox;
     cbOptionRemoveMangaNameFromChapter: TCheckBox;
     cbOptionShowDownloadMangalistDialog: TCheckBox;
     cbOptionShowDownloadToolbar: TCheckBox;
@@ -68,6 +69,8 @@ type
     cbOptionProxyType: TComboBox;
     cbOptionOneInstanceOnly: TCheckBox;
     edOptionMangaCustomRename: TEdit;
+    gbMangafox: TGroupBox;
+    gbEHentai: TGroupBox;
     lbOptionMangaCustomRenameHint: TLabel;
     lbOptionMangaCustomRename: TLabel;
     miAbortSilentThread: TMenuItem;
@@ -140,8 +143,8 @@ type
     btRemoveFilterLarge: TBitBtn;
     cbOptionAutoCheckLatestVersion: TCheckBox;
     cbOptionShowDeleteTaskDialog: TCheckBox;
-    cbOptionBatotoShowScanGroup: TCheckBox;
-    cbOptionBatotoShowAllLang: TCheckBox;
+    cbBatotoShowScanGroup: TCheckBox;
+    cbBatotoShowAllLang: TCheckBox;
     cbOptionUseProxy: TCheckBox;
     cbSelectManga: TComboBox;
     ckFilterAction: TCheckBox;
@@ -207,7 +210,7 @@ type
     gbOptionProxy: TGroupBox;
     gbOptionRenaming: TGroupBox;
     gbOptionFavorites: TGroupBox;
-    gbMisc: TGroupBox;
+    gbBatoto: TGroupBox;
     IconList: TImageList;
     itSaveDownloadedList: TIdleTimer;
     itRefreshDLInfo: TIdleTimer;
@@ -359,7 +362,7 @@ type
     procedure cbOptionDigitChapterChange(Sender: TObject);
     procedure cbOptionDigitVolumeChange(Sender: TObject);
     procedure cbOptionGenerateMangaFolderNameChange(Sender: TObject);
-    procedure cbOptionMangaFoxRemoveWatermarkChange(Sender: TObject);
+    procedure cbMangaFoxRemoveWatermarkChange(Sender: TObject);
     procedure cbSelectMangaChange(Sender: TObject);
     procedure clbChapterListBeforeCellPaint(Sender: TBaseVirtualTree;
       TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
@@ -2203,9 +2206,9 @@ begin
   lbOptionMangaCustomRenameHint.Enabled := cbOptionGenerateMangaFolderName.Checked;
 end;
 
-procedure TMainForm.cbOptionMangaFoxRemoveWatermarkChange(Sender: TObject);
+procedure TMainForm.cbMangaFoxRemoveWatermarkChange(Sender: TObject);
 begin
-  cbOptionMangaFoxRemoveWatermarkSaveAsPNG.Enabled:=cbOptionMangaFoxRemoveWatermark.Checked;
+  cbMangaFoxSaveAsPNG.Enabled:=cbMangaFoxRemoveWatermark.Checked;
 end;
 
 procedure TMainForm.btReadOnlineClick(Sender: TObject);
@@ -4343,10 +4346,11 @@ begin
     cbOptionShowDownloadMangalistDialog.Checked := ReadBool('dialogs', 'ShowDownloadMangalistDialog', True);
 
     // misc
-    cbOptionBatotoShowScanGroup.Checked := ReadBool('misc', 'BatotoShowScanGroup', True);
-    cbOptionBatotoShowAllLang.Checked := ReadBool('misc', 'BatotoShowAllLang', False);
-    cbOptionMangaFoxRemoveWatermark.Checked := ReadBool('misc', 'MangafoxRemoveWatermark', False);
-    cbOptionMangaFoxRemoveWatermarkSaveAsPNG.Checked := ReadBool('misc', 'MangafoxRemoveWatermarkSaveAsPNG', False);
+    cbBatotoShowScanGroup.Checked := ReadBool('Batoto', 'ShowScanGroup', True);
+    cbBatotoShowAllLang.Checked := ReadBool('Batoto', 'ShowAllLang', True);
+    cbMangaFoxRemoveWatermark.Checked := ReadBool('MangaFox', 'RemoveWatermark', True);
+    cbMangaFoxSaveAsPNG.Checked := ReadBool('MangaFox', 'SaveAsPNG', False);
+    cbEHentaiDownloadOriginalImage.Checked:=ReadBool('EHentai','DownloadOriginalImage',False);
 
     // websites
     if Length(optionMangaSiteSelectionNodes) > 0 then
@@ -4464,10 +4468,11 @@ begin
       WriteBool('dialogs', 'ShowDownloadMangalistDialog', cbOptionShowDownloadMangalistDialog.Checked);
 
       // misc
-      WriteBool('misc', 'BatotoShowScanGroup', cbOptionBatotoShowScanGroup.Checked);
-      WriteBool('misc', 'BatotoShowAllLang', cbOptionBatotoShowAllLang.Checked);
-      WriteBool('misc', 'MangafoxRemoveWatermark', cbOptionMangaFoxRemoveWatermark.Checked);
-      WriteBool('misc', 'MangafoxRemoveWatermarkSaveAsPNG', cbOptionMangaFoxRemoveWatermarkSaveAsPNG.Checked);
+      WriteBool('Batoto', 'ShowScanGroup', cbBatotoShowScanGroup.Checked);
+      WriteBool('Batoto', 'ShowAllLang', cbBatotoShowAllLang.Checked);
+      WriteBool('MangaFox', 'RemoveWatermark', cbMangaFoxRemoveWatermark.Checked);
+      WriteBool('MangaFox', 'SaveAsPNG', cbMangaFoxSaveAsPNG.Checked);
+      WriteBool('EHentai','DownloadOriginalImage',cbEHentaiDownloadOriginalImage.Checked);
     finally
       UpdateFile;
     end;
@@ -4600,14 +4605,15 @@ begin
     itCheckFav.Enabled := OptionAutoCheckFavInterval;
 
     //misc
-    OptionBatotoShowScanGroup := cbOptionBatotoShowScanGroup.Checked;
-    OptionBatotoShowAllLang := cbOptionBatotoShowAllLang.Checked;
-    OptionMangaFoxRemoveWatermark := cbOptionMangaFoxRemoveWatermark.Checked;
-    OptionMangaFoxRemoveWatermarkSaveAsPNG := cbOptionMangaFoxRemoveWatermarkSaveAsPNG.Checked;
+    OptionBatotoShowScanGroup := cbBatotoShowScanGroup.Checked;
+    OptionBatotoShowAllLang := cbBatotoShowAllLang.Checked;
+    OptionMangaFoxRemoveWatermark := cbMangaFoxRemoveWatermark.Checked;
+    OptionMangaFoxSaveAsPNG := cbMangaFoxSaveAsPNG.Checked;
     if OptionMangaFoxRemoveWatermark then
       mangafoxwatermarkremover.LoadTemplate(CleanAndExpandDirectory(GetCurrentDirUTF8) + OptionMangaFoxTemplateFolder)
     else
       mangafoxwatermarkremover.ClearTemplate;
+    OptionEHentaiDownloadOriginalImage:=cbEHentaiDownloadOriginalImage.Checked;
 
     //languages
     ApplyLanguage;

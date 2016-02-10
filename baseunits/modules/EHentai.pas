@@ -15,6 +15,7 @@ uses RegExpr, synacode;
 const
   dirURL = 'f_doujinshi=on&f_manga=on&f_western=on&f_apply=Apply+Filter';
   exhentaiurllogin = 'https://forums.e-hentai.org/index.php?act=Login&CODE=01';
+  accname='ExHentai';
 
 var
   onlogin: Boolean = False;
@@ -23,53 +24,51 @@ var
 function ExHentaiLogin(var AHTTP: THTTPSendThread): Boolean;
 var
   s: String;
-const
-  acc = 'ExHentai';
 begin
   Result := False;
   if AHTTP = nil then Exit;
-  if Account.Enabled[acc] = False then Exit;
-  if Account.Username[acc] = '' then Exit;
+  if Account.Enabled[accname] = False then Exit;
 
   if TryEnterCriticalsection(locklogin) > 0 then
     with AHTTP do begin
       onlogin := True;
-      Account.Status[acc] := asChecking;
+      Account.Status[accname] := asChecking;
       Reset;
       Cookies.Clear;
       s := 'returntype=8&CookieDate=1&b=d&bt=pone'+
-           '&UserName=' + EncodeURLElement(Account.Username[acc]) +
-           '&PassWord=' + EncodeURLElement(Account.Password[acc]) +
+           '&UserName=' + EncodeURLElement(Account.Username[accname]) +
+           '&PassWord=' + EncodeURLElement(Account.Password[accname]) +
            '&ipb_login_submit=Login%21';
       if POST(exhentaiurllogin, s) then begin
         if ResultCode = 200 then begin
           Result := Cookies.Values['ipb_pass_hash'] <> '';
           if Result then begin
-            Account.Cookies[acc] := GetCookies;
-            Account.Status[acc] := asValid;
+            Account.Cookies[accname] := GetCookies;
+            Account.Status[accname] := asValid;
           end
-          else Account.Status[acc] := asInvalid;
+          else Account.Status[accname] := asInvalid;
           Account.Save;
         end;
       end;
       onlogin := False;
-      if Account.Status[acc] = asChecking then
-        Account.Status[acc] := asUnknown;
+      if Account.Status[accname] = asChecking then
+        Account.Status[accname] := asUnknown;
       LeaveCriticalsection(locklogin);
     end
   else
   begin
     while onlogin do Sleep(1000);
-    if Result then AHTTP.Cookies.Text := Account.Cookies[acc];
+    if Result then AHTTP.Cookies.Text := Account.Cookies[accname];
   end;
 end;
 
 function GETWithLogin(var AHTTP: THTTPSendThread; const AURL, AWebsite: String): Boolean;
 begin
   Result := False;
-  if AWebsite = 'ExHentai' then begin
+  //if AWebsite = accname then begin
+  if Account.Enabled[accname] then begin
     AHTTP.FollowRedirection := False;
-    AHTTP.Cookies.Text := Account.Cookies[AWebsite];
+    AHTTP.Cookies.Text := Account.Cookies[accname];
     Result := AHTTP.GET(AURL);
     if Result and (AHTTP.ResultCode > 300) then begin
       Result := ExHentaiLogin(AHTTP);
@@ -287,7 +286,10 @@ var
       while (not Result) and (not DownloadThread.IsTerminated) do begin
         source.LoadFromStream(DownloadThread.FHTTP.Document);
         query.ParseHTML(source.Text);
-        iurl := query.XPathString('//*[@id="img"]/@src');
+        if OptionEHentaiDownloadOriginalImage and (Account.Status[accname]=asValid) then
+          iurl:=query.XPathString('//a/@href[contains(.,"/fullimg.php")]')
+        else
+          iurl := query.XPathString('//*[@id="img"]/@src');
         if iurl = '' then
           iurl := query.XPathString('//a/img/@src[not(contains(.,"ehgt.org/"))]');
         if iurl <> '' then
@@ -349,38 +351,30 @@ begin
 end;
 
 procedure RegisterModule;
-begin
-  with AddModule do
+
+  function AddWebsiteModule(AWebsite,ARootURL:String):TModuleContainer;
   begin
-    Website := 'E-Hentai';
-    RootURL := 'http://g.e-hentai.org';
-    MaxTaskLimit := 1;
-    MaxConnectionLimit := 4;
-    SortedList := True;
-    InformationAvailable := True;
-    DynamicPageLink := True;
-    OnGetDirectoryPageNumber := @GetDirectoryPageNumber;
-    OnGetNameAndLink := @GetNameAndLink;
-    OnGetInfo := @GetInfo;
-    OnGetPageNumber := @GetPageNumber;
-    OnDownloadImage := @DownloadImage;
+    Result:=AddModule;
+    with Result do begin
+      Website:=AWebsite;
+      RootURL:=ARootURL;
+      MaxTaskLimit := 1;
+      MaxConnectionLimit:=4;
+      SortedList:=True;
+      DynamicPageLink:=True;
+      OnGetDirectoryPageNumber:=@GetDirectoryPageNumber;
+      OnGetNameAndLink:=@GetNameAndLink;
+      OnGetInfo:=@GetInfo;
+      OnGetPageNumber:=@GetPageNumber;
+      OnDownloadImage:=@DownloadImage;
+    end;
   end;
-  with AddModule do
-  begin
-    Website := 'ExHentai';
-    RootURL := 'http://exhentai.org';
-    MaxTaskLimit := 1;
-    MaxConnectionLimit := 4;
-    SortedList := True;
-    InformationAvailable := True;
-    DynamicPageLink := True;
-    OnGetDirectoryPageNumber := @GetDirectoryPageNumber;
-    OnGetNameAndLink := @GetNameAndLink;
-    OnGetInfo := @GetInfo;
-    OnGetPageNumber := @GetPageNumber;
-    OnDownloadImage := @DownloadImage;
-    AccountSupport := True;
-    OnLogin := @ExHentaiLogin;
+
+begin
+  AddWebsiteModule('E-Hentai','http://g.e-hentai.org');
+  with AddWebsiteModule('ExHentai','http://exhentai.org') do begin
+    AccountSupport:=True;
+    OnLogin:=@ExHentaiLogin;
   end;
 end;
 

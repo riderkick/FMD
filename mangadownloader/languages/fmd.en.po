@@ -467,9 +467,30 @@ msgstr "Free Manga Downloader"
 msgid "Add to download list as stopped task"
 msgstr "Add to download list as stopped task"
 
+#: tmainform.cbbatotoshowalllang.caption
+msgid "Show all language"
+msgstr "Show all language"
+
+#: tmainform.cbbatotoshowscangroup.caption
+msgid "Show scan group name"
+msgstr "Show scan group name"
+
+#: tmainform.cbehentaidownloadoriginalimage.caption
+msgid "Download original image (require ExHentai account)"
+msgstr "Download original image (require ExHentai account)"
+
 #: tmainform.cbfilterstatus.text
 msgid "<none>"
 msgstr "<none>"
+
+#: tmainform.cbmangafoxremovewatermark.caption
+msgid "Remove watermark"
+msgstr "Remove watermark"
+
+#: tmainform.cbmangafoxsaveaspng.caption
+msgctxt "tmainform.cbmangafoxsaveaspng.caption"
+msgid "Save as PNG"
+msgstr "Save as PNG"
 
 #: tmainform.cbonlynew.caption
 msgid "Search only new manga"
@@ -500,16 +521,6 @@ msgctxt "tmainform.cboptionautochecklatestversion.caption"
 msgid "Auto check for latest version "
 msgstr "Auto check for latest version "
 
-#: tmainform.cboptionbatotoshowalllang.caption
-msgctxt "tmainform.cboptionbatotoshowalllang.caption"
-msgid "[Batoto] Show All Language"
-msgstr "[Batoto] Show All Language"
-
-#: tmainform.cboptionbatotoshowscangroup.caption
-msgctxt "tmainform.cboptionbatotoshowscangroup.caption"
-msgid "[Batoto] Show scan group name"
-msgstr "[Batoto] Show scan group name"
-
 #: tmainform.cboptionchangeunicodecharacter.caption
 msgctxt "tmainform.cboptionchangeunicodecharacter.caption"
 msgid "Change all all unicode symbols to \"_\" (choose this when you have problem with unicode path)"
@@ -534,16 +545,6 @@ msgstr "Auto generate folder based on manga's name"
 #: tmainform.cboptionlivesearch.caption
 msgid "Enable live search (slow on long list)"
 msgstr "Enable live search (slow on long list)"
-
-#: tmainform.cboptionmangafoxremovewatermark.caption
-#| msgid "[Mangafox] Remove watermark (Beware! Experimental!)"
-msgctxt "tmainform.cboptionmangafoxremovewatermark.caption"
-msgid "[Mangafox] Remove watermark"
-msgstr "[Mangafox] Remove watermark"
-
-#: tmainform.cboptionmangafoxremovewatermarksaveaspng.caption
-msgid "Save as PNG"
-msgstr "Save as PNG"
 
 #: tmainform.cboptionminimizetotray.caption
 msgid "Minimize to tray"
@@ -1007,6 +1008,10 @@ msgctxt "tmainform.edwebsitessearch.texthint"
 msgid "Search website..."
 msgstr "Search website..."
 
+#: tmainform.gbbatoto.caption
+msgid "Batoto"
+msgstr "Batoto"
+
 #: tmainform.gbdialogs.caption
 msgid "Show dialog confirmation for"
 msgstr "Show dialog confirmation for"
@@ -1014,6 +1019,14 @@ msgstr "Show dialog confirmation for"
 #: tmainform.gbdroptarget.caption
 msgid "Drop Box"
 msgstr "Drop Box"
+
+#: tmainform.gbehentai.caption
+msgid "E-Hentai/ExHentai"
+msgstr "E-Hentai/ExHentai"
+
+#: tmainform.gbmangafox.caption
+msgid "Mangafox"
+msgstr "Mangafox"
 
 #: tmainform.gboptionexternal.caption
 msgid "External program"

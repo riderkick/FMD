@@ -621,8 +621,9 @@ var
   OptionBatotoShowScanGroup: Boolean = True;
   OptionBatotoShowAllLang: Boolean = True;
   OptionMangaFoxTemplateFolder: String = 'extras' + PathDelim + 'mangafoxtemplate';
-  OptionMangaFoxRemoveWatermark: Boolean = False;
-  OptionMangaFoxRemoveWatermarkSaveAsPNG: Boolean = False;
+  OptionMangaFoxRemoveWatermark: Boolean = True;
+  OptionMangaFoxSaveAsPNG: Boolean = False;
+  OptionEHentaiDownloadOriginalImage: Boolean=False;
 
   OptionHTTPUseGzip: Boolean = True;
 

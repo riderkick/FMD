@@ -431,8 +431,29 @@ msgstr ""
 msgid "Add to download list as stopped task"
 msgstr ""
 
+#: tmainform.cbbatotoshowalllang.caption
+msgid "Show all language"
+msgstr ""
+
+#: tmainform.cbbatotoshowscangroup.caption
+msgid "Show scan group name"
+msgstr ""
+
+#: tmainform.cbehentaidownloadoriginalimage.caption
+msgid "Download original image (require ExHentai account)"
+msgstr ""
+
 #: tmainform.cbfilterstatus.text
 msgid "<none>"
+msgstr ""
+
+#: tmainform.cbmangafoxremovewatermark.caption
+msgid "Remove watermark"
+msgstr ""
+
+#: tmainform.cbmangafoxsaveaspng.caption
+msgctxt "TMAINFORM.CBMANGAFOXSAVEASPNG.CAPTION"
+msgid "Save as PNG"
 msgstr ""
 
 #: tmainform.cbonlynew.caption
@@ -462,16 +483,6 @@ msgctxt "TMAINFORM.CBOPTIONAUTOCHECKLATESTVERSION.CAPTION"
 msgid "Auto check for latest version "
 msgstr ""
 
-#: tmainform.cboptionbatotoshowalllang.caption
-msgctxt "TMAINFORM.CBOPTIONBATOTOSHOWALLLANG.CAPTION"
-msgid "[Batoto] Show All Language"
-msgstr ""
-
-#: tmainform.cboptionbatotoshowscangroup.caption
-msgctxt "TMAINFORM.CBOPTIONBATOTOSHOWSCANGROUP.CAPTION"
-msgid "[Batoto] Show scan group name"
-msgstr ""
-
 #: tmainform.cboptionchangeunicodecharacter.caption
 msgctxt "TMAINFORM.CBOPTIONCHANGEUNICODECHARACTER.CAPTION"
 msgid "Change all all unicode symbols to \"_\" (choose this when you have problem with unicode path)"
@@ -495,15 +506,6 @@ msgstr ""
 
 #: tmainform.cboptionlivesearch.caption
 msgid "Enable live search (slow on long list)"
-msgstr ""
-
-#: tmainform.cboptionmangafoxremovewatermark.caption
-msgctxt "TMAINFORM.CBOPTIONMANGAFOXREMOVEWATERMARK.CAPTION"
-msgid "[Mangafox] Remove watermark"
-msgstr ""
-
-#: tmainform.cboptionmangafoxremovewatermarksaveaspng.caption
-msgid "Save as PNG"
 msgstr ""
 
 #: tmainform.cboptionminimizetotray.caption
@@ -962,12 +964,24 @@ msgctxt "TMAINFORM.EDWEBSITESSEARCH.TEXTHINT"
 msgid "Search website..."
 msgstr ""
 
+#: tmainform.gbbatoto.caption
+msgid "Batoto"
+msgstr ""
+
 #: tmainform.gbdialogs.caption
 msgid "Show dialog confirmation for"
 msgstr ""
 
 #: tmainform.gbdroptarget.caption
 msgid "Drop Box"
+msgstr ""
+
+#: tmainform.gbehentai.caption
+msgid "E-Hentai/ExHentai"
+msgstr ""
+
+#: tmainform.gbmangafox.caption
+msgid "Mangafox"
 msgstr ""
 
 #: tmainform.gboptionexternal.caption
