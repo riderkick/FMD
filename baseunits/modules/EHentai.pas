@@ -65,7 +65,6 @@ end;
 function GETWithLogin(var AHTTP: THTTPSendThread; const AURL, AWebsite: String): Boolean;
 begin
   Result := False;
-  //if AWebsite = accname then begin
   if Account.Enabled[accname] then begin
     AHTTP.FollowRedirection := False;
     AHTTP.Cookies.Text := Account.Cookies[accname];
@@ -285,7 +284,7 @@ var
     try
       while (not Result) and (not DownloadThread.IsTerminated) do begin
         source.LoadFromStream(DownloadThread.FHTTP.Document);
-        query.ParseHTML(source.Text);
+        query.ParseHTML(DownloadThread.FHTTP.Document);
         iurl:='';
         if OptionEHentaiDownloadOriginalImage and (Account.Status[accname]=asValid) then
           iurl:=query.XPathString('//a/@href[contains(.,"/fullimg.php")]');
