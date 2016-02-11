@@ -1,4 +1,4 @@
-unit MintManga;
+unit MintMangaRU;
 
 {$mode objfpc}{$H+}
 
@@ -156,7 +156,7 @@ procedure RegisterModule;
 begin
   with AddModule do
   begin
-    Website:='MintManga';
+    Website:='MintMangaRU';
     RootURL:='http://mintmanga.com';
     SortedList:=True;
     OnGetDirectoryPageNumber:=@GetDirectoryPageNumber;

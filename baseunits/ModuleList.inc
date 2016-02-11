@@ -25,4 +25,4 @@ uses
   GameofScanlation,
   Hakihome,
   MangaChanRU,
-  MintManga;
+  MintMangaRU;
