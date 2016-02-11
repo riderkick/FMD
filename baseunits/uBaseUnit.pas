@@ -756,7 +756,8 @@ type
     FTreeParser: TTreeParser;
     function Eval(Expression: String; isCSS: Boolean = False; Tree: TTreeNode = nil): IXQValue;
   public
-    constructor Create(HTML: String = '');
+    constructor Create(HTML: String = ''); overload;
+    constructor Create(HTMLStream: TStream); overload;
     destructor Destroy; override;
     procedure ParseHTML(HTML: String); overload;
     procedure ParseHTML(HTMLStream: TStream); overload;
@@ -3732,6 +3733,14 @@ begin
     autoDetectHTMLEncoding := False;
     if HTML <> '' then parseTree(HTML);
   end;
+end;
+
+constructor TXQueryEngineHTML.Create(HTMLStream: TStream);
+begin
+  if Assigned(HTMLStream) then
+    Create(StreamToString(HTMLStream))
+  else
+    Create;
 end;
 
 destructor TXQueryEngineHTML.Destroy;
