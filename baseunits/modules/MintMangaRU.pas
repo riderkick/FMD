@@ -153,17 +153,24 @@ begin
 end;
 
 procedure RegisterModule;
-begin
-  with AddModule do
+
+  function AddWebsiteModule(AWebsite,ARootURL:String):TModuleContainer;
   begin
-    Website:='MintMangaRU';
-    RootURL:='http://mintmanga.com';
-    SortedList:=True;
-    OnGetDirectoryPageNumber:=@GetDirectoryPageNumber;
-    OnGetNameAndLink:=@GetNameAndLink;
-    OnGetInfo:=@GetInfo;
-    OnGetPageNumber:=@GetPageNumber;
+    Result:=AddModule;
+    with Result do begin
+      Website:=AWebsite;
+      RootURL:=ARootURL;
+      SortedList:=True;
+      OnGetDirectoryPageNumber:=@GetDirectoryPageNumber;
+      OnGetNameAndLink:=@GetNameAndLink;
+      OnGetInfo:=@GetInfo;
+      OnGetPageNumber:=@GetPageNumber;
+    end;
   end;
+
+begin
+  AddWebsiteModule('MintMangaRU','http://mintmanga.com');
+  AddWebsiteModule('ReadMangaRU','http://readmanga.me');
 end;
 
 initialization
