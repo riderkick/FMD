@@ -286,9 +286,10 @@ var
       while (not Result) and (not DownloadThread.IsTerminated) do begin
         source.LoadFromStream(DownloadThread.FHTTP.Document);
         query.ParseHTML(source.Text);
+        iurl:='';
         if OptionEHentaiDownloadOriginalImage and (Account.Status[accname]=asValid) then
-          iurl:=query.XPathString('//a/@href[contains(.,"/fullimg.php")]')
-        else
+          iurl:=query.XPathString('//a/@href[contains(.,"/fullimg.php")]');
+        if iurl='' then
           iurl := query.XPathString('//*[@id="img"]/@src');
         if iurl = '' then
           iurl := query.XPathString('//a/img/@src[not(contains(.,"ehgt.org/"))]');
