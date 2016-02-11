@@ -23,4 +23,5 @@ uses
   MangaStreamTo,
   MangaKoi,
   GameofScanlation,
-  Hakihome;
+  Hakihome,
+  MangaChanRU;
