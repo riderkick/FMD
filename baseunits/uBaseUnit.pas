@@ -2723,8 +2723,8 @@ end;
 
 procedure AddCommaString(var Dest: string; S: string);
 begin
-  if Trim(S) = '' then Exit;
-  if Trim(S) = ',' then Exit;
+  S := Trim(TrimChar(Trim(S), [',', ' ']));
+  if (S = '') or (S = ',') then Exit;
   if Dest = '' then
     Dest := S
   else
