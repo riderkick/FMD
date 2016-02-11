@@ -29,7 +29,7 @@ begin
         s:=XPathString('//*[@id="pagination"]/a[last()]/@href');
         if s<>'' then Page:=StrToIntDef(SeparateRight(s,'offset='),1);
         if Page>1 then
-          Page:=ceil(Page/perpage);
+          Page:=ceil(Page/perpage)+1;
       finally
         Free;
       end;
