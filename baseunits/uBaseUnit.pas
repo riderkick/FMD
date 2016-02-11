@@ -2415,10 +2415,12 @@ end;
 function CleanString(const S: String): String;
 begin
   Result := Trim(S);
-  Result := StringReplace(Result, #13, '', [rfReplaceAll]);
-  Result := StringReplace(Result, #10, '', [rfReplaceAll]);
+  if Result = '' then Exit;
+  Result := StringReplace(Result, #13, ' ', [rfReplaceAll]);
+  Result := StringReplace(Result, #10, ' ', [rfReplaceAll]);
   while Pos('  ', Result) > 0 do
     Result := StringReplace(Result, '  ', ' ', [rfReplaceAll]);
+  Result := Trim(Result);
 end;
 
 function CleanAndExpandURL(const URL: String): String;
