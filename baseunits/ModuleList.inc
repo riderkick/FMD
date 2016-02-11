@@ -24,4 +24,5 @@ uses
   MangaKoi,
   GameofScanlation,
   Hakihome,
-  MangaChanRU;
+  MangaChanRU,
+  MintManga;
