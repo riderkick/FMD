@@ -4296,8 +4296,8 @@ begin
     // connection
     seOptionMaxParallel.Value := ReadInteger('connections', 'NumberOfTasks', 1);
     seOptionMaxThread.Value := ReadInteger('connections', 'NumberOfThreadsPerTask', 1);
-    seOptionMaxRetry.Value := ReadInteger('connections', 'Retry', 3);;
-    seOptionConnectionTimeout.Value := ReadInteger('connections', 'ConnectionTimeout', 15);
+    seOptionMaxRetry.Value := ReadInteger('connections', 'Retry', OptionConnectionMaxRetry);;
+    seOptionConnectionTimeout.Value := ReadInteger('connections', 'ConnectionTimeout', OptionConnectionTimeout);
     cbOptionUseProxy.Checked := ReadBool('connections', 'UseProxy', False);
     cbOptionProxyType.Text := ReadString('connections', 'ProxyType', 'HTTP');
     edOptionHost.Text := ReadString('connections', 'Host', '');

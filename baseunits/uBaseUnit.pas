@@ -601,8 +601,8 @@ var
   OptionChapterCustomRename: String;
 
   OptionPDFQuality: Cardinal = 95;
-  OptionConnectionMaxRetry: Integer = 0;
-  OptionConnectionTimeout: Integer = 15000;
+  OptionConnectionMaxRetry: Integer = 5;
+  OptionConnectionTimeout: Integer = 30000;
   OptionUpdateListNoMangaInfo: Boolean = False;
   OptionUpdateListRemoveDuplicateLocalData: Boolean = False;
 
