@@ -309,7 +309,7 @@ begin
     Website := modulename;
     RootURL := urlroot;
     MaxTaskLimit := 1;
-    MaxConnectionLimit := 2;
+    MaxConnectionLimit := 1;
     AccountSupport := True;
     SortedList := True;
     InformationAvailable := True;
