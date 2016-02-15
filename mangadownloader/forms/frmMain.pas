@@ -4347,7 +4347,7 @@ begin
 
     // misc
     cbBatotoShowScanGroup.Checked := ReadBool('Batoto', 'ShowScanGroup', True);
-    cbBatotoShowAllLang.Checked := ReadBool('Batoto', 'ShowAllLang', True);
+    cbBatotoShowAllLang.Checked := ReadBool('Batoto', 'ShowAllLang', False);
     cbMangaFoxRemoveWatermark.Checked := ReadBool('MangaFox', 'RemoveWatermark', True);
     cbMangaFoxSaveAsPNG.Checked := ReadBool('MangaFox', 'SaveAsPNG', False);
     cbEHentaiDownloadOriginalImage.Checked:=ReadBool('EHentai','DownloadOriginalImage',False);
