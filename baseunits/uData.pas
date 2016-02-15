@@ -1730,14 +1730,6 @@ begin
 
     summary := CleanMultilinedString(summary);
 
-    //// strip
-    //summary := StringBreaks(summary);
-    //summary := Trim(TrimChar(summary, [#13, #10]));
-    //summary := BreaksString(summary);
-    //// strip double CR
-    //summary := Trim(StringReplace(summary, '\n\r\n\r', '\n\r', [rfReplaceAll]));
-    //summary := Trim(StringReplace(summary, '\r\n\r\n', '\r\n', [rfReplaceAll]));
-
     // fix info
     if (authors = '-') or (authors = ':') then
       authors := '';
