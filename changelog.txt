@@ -4,6 +4,10 @@ Project page: https://github.com/riderkick/FMD
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.34.0 (15-02-2016)
+[*] AcademyVN: rewrite all script
+[*] Various changes and bug fixes
+
 0.9.33.0 (11-02-2016)
 [-] MangaCap: removed, website offline
 [+] E-Hentai/ExHentai: added option to download original image if available
