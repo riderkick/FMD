@@ -873,6 +873,7 @@ function RemoveSymbols(const input: String): String;
 function CorrectPathSys(const Path: String): String;
 
 function CleanString(const S: String): String;
+function CleanMultilinedString(const S: String; MaxLineEnding: Integer = 1): String;
 function CleanAndExpandURL(const URL: String): String;
 function CleanURL(const URL: String): String;
 function AppendURLDelim(const URL: String): String;
@@ -897,6 +898,7 @@ function TrimRightChar(const Source: String; const Chars: TSysCharSet): String;
 function PrepareSummaryForHint(const Source: String; MaxLength: Cardinal = 80): String;
 procedure AddCommaString(var Dest: string; S: string);
 
+function StringOfString(c: String; l: Integer): String;
 function IncStr(const S: String; N: Integer = 1): String; overload;
 function IncStr(const I: Integer; N: Integer = 1): String; overload; inline;
 
@@ -2071,6 +2073,17 @@ begin
   end;
 end;
 
+function StringOfString(c: String; l: Integer): String;
+var
+  i: Integer;
+begin
+  Result:='';
+  if c='' then Exit;
+  if l<1 then Exit;
+  for i:=1 to l do
+    Result+=c;
+end;
+
 function IncStr(const S: String; N: Integer): String;
 var
   i: Integer;
@@ -2419,6 +2432,25 @@ begin
   while Pos('  ', Result) > 0 do
     Result := StringReplace(Result, '  ', ' ', [rfReplaceAll]);
   Result := Trim(Result);
+end;
+
+function CleanMultilinedString(const S: String; MaxLineEnding: Integer): String;
+var
+  rn, rnp, n, np: String;
+begin
+  Result:=Trim(s);
+  if Result='' then Exit;
+  if MaxLineEnding<1 then MaxLineEnding:=1;
+
+  rn:=StringOfString(#13#10,MaxLineEnding);
+  rnp:=rn+#13#10;
+  while Pos(rnp,Result)>0 do
+    Result:=StringReplace(Result,rnp,rn,[rfReplaceAll]);
+
+  n:=StringOfChar(#10,MaxLineEnding);
+  np:=n+#10;
+  while Pos(np,Result)>0 do
+    Result:=StringReplace(Result,np,n,[rfReplaceAll]);
 end;
 
 function CleanAndExpandURL(const URL: String): String;
