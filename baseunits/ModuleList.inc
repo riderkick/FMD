@@ -25,4 +25,5 @@ uses
   GameofScanlation,
   Hakihome,
   MangaChanRU,
-  MintMangaRU;
+  MintMangaRU,
+  AcademyVN;
