@@ -5,8 +5,8 @@ unit AcademyVN;
 interface
 
 uses
-  Classes, SysUtils, math, WebsiteModules, uData, uBaseUnit, uDownloadsManager,
-  synautil, RegExpr;
+  Classes, SysUtils, WebsiteModules, uData, uBaseUnit, uDownloadsManager,
+  synautil;
 
 implementation
 
