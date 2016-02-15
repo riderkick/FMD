@@ -844,8 +844,6 @@ var
 
   {$I includes/MangaSee/directory_page_number.inc}
 
-  {$I includes/AcademyVN/directory_page_number.inc}
-
   {$I includes/MangaAt/directory_page_number.inc}
 
   {$I includes/ReadMangaToday/directory_page_number.inc}
@@ -978,9 +976,6 @@ begin
       else
       if WebsiteID = MANGASEE_ID then
         Result := GetMangaSeeDirectoryPageNumber
-      else
-      if WebsiteID = ACADEMYVN_ID then
-        Result := GetAcademyVNDirectoryPageNumber
       else
       if WebsiteID = MANGAAT_ID then
         Result := GetMangaAtDirectoryPageNumber
@@ -1123,8 +1118,6 @@ var
   {$I includes/MangaSee/names_and_links.inc}
 
   {$I includes/MangaKu/names_and_links.inc}
-
-  {$I includes/AcademyVN/names_and_links.inc}
 
   {$I includes/MangaAt/names_and_links.inc}
 
@@ -1332,9 +1325,6 @@ begin
     if WebsiteID = MANGAKU_ID then
       Result := MangaKuGetNamesAndLinks
     else
-    if WebsiteID = ACADEMYVN_ID then
-      Result := AcademyVNGetNamesAndLinks
-    else
     if WebsiteID = MANGAAT_ID then
       Result := MangaAtGetNamesAndLinks
     else
@@ -1482,8 +1472,6 @@ var
   {$I includes/MangaSee/manga_information.inc}
 
   {$I includes/MangaKu/manga_information.inc}
-
-  {$I includes/AcademyVN/manga_information.inc}
 
   {$I includes/MangaAt/manga_information.inc}
 
@@ -1702,9 +1690,6 @@ begin
     else
     if WebsiteID = MANGAKU_ID then
       Result := GetMangaKuInfoFromURL
-    else
-    if WebsiteID = ACADEMYVN_ID then
-      Result := GetAcademyVNInfoFromURL
     else
     if WebsiteID = MANGAAT_ID then
       Result := GetMangaAtInfoFromURL

@@ -339,13 +339,12 @@ const
   PORNXXXCOMICS_ID       = 70;
   MANGASEE_ID            = 71;
   MANGAKU_ID             = 72;
-  ACADEMYVN_ID           = 73;
-  MANGAAT_ID             = 74;
-  READMANGATODAY_ID      = 75;
-  LONEMANGA_ID           = 76;
-  DYNASTYSCANS_ID        = 77;
+  MANGAAT_ID             = 73;
+  READMANGATODAY_ID      = 74;
+  LONEMANGA_ID           = 75;
+  DYNASTYSCANS_ID        = 76;
 
-  WebsiteRoots: array [0..77] of array [0..1] of string = (
+  WebsiteRoots: array [0..76] of array [0..1] of string = (
     ('AnimeA', 'http://manga.animea.net'),
     ('MangaInn', 'http://www.mangainn.me'),
     ('OurManga', 'http://www.ourmanga.com'),
@@ -419,7 +418,6 @@ const
     ('PornXXXComics', 'http://pornxxxcomics.com'),
     ('MangaSee', 'http://mangasee.co'),
     ('MangaKu', 'http://mangaku.web.id'),
-    ('AcademyVN', 'http://truyen.academyvn.com'),
     ('MangaAt', 'http://www.mangaat.com'),
     ('ReadMangaToday', 'http://www.readmanga.today'),
     ('LoneManga', 'http://lonemanga.com'),

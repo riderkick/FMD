@@ -465,8 +465,6 @@ var
 
   {$I includes/MangaKu/chapter_page_number.inc}
 
-  {$I includes/AcademyVN/chapter_page_number.inc}
-
   {$I includes/MangaAt/chapter_page_number.inc}
 
   {$I includes/ReadMangaToday/chapter_page_number.inc}
@@ -624,9 +622,6 @@ begin
     else
     if manager.container.MangaSiteID = MANGAKU_ID then
       Result := GetMangaKuPageNumber
-    else
-    if manager.container.MangaSiteID = ACADEMYVN_ID then
-      Result := GetAcademyVNPageNumber
     else
     if manager.container.MangaSiteID = MANGAAT_ID then
       Result := GetMangaAtPageNumber
