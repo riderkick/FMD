@@ -616,7 +616,7 @@ var
   OptionAutoCheckFavDownload: Boolean = False;
   OptionAutoCheckFavRemoveCompletedManga: Boolean = False;
 
-  OptionBatotoShowScanGroup: Boolean = True;
+  OptionBatotoShowScanGroup: Boolean = False;
   OptionBatotoShowAllLang: Boolean = False;
   OptionMangaFoxTemplateFolder: String = 'extras' + PathDelim + 'mangafoxtemplate';
   OptionMangaFoxRemoveWatermark: Boolean = True;

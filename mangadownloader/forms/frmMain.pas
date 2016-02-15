@@ -4346,11 +4346,11 @@ begin
     cbOptionShowDownloadMangalistDialog.Checked := ReadBool('dialogs', 'ShowDownloadMangalistDialog', True);
 
     // misc
-    cbBatotoShowScanGroup.Checked := ReadBool('Batoto', 'ShowScanGroup', True);
-    cbBatotoShowAllLang.Checked := ReadBool('Batoto', 'ShowAllLang', False);
-    cbMangaFoxRemoveWatermark.Checked := ReadBool('MangaFox', 'RemoveWatermark', True);
-    cbMangaFoxSaveAsPNG.Checked := ReadBool('MangaFox', 'SaveAsPNG', False);
-    cbEHentaiDownloadOriginalImage.Checked:=ReadBool('EHentai','DownloadOriginalImage',False);
+    cbBatotoShowScanGroup.Checked := ReadBool('Batoto', 'ShowScanGroup', OptionBatotoShowScanGroup);
+    cbBatotoShowAllLang.Checked := ReadBool('Batoto', 'ShowAllLang', OptionBatotoShowAllLang);
+    cbMangaFoxRemoveWatermark.Checked := ReadBool('MangaFox', 'RemoveWatermark', OptionMangaFoxRemoveWatermark);
+    cbMangaFoxSaveAsPNG.Checked := ReadBool('MangaFox', 'SaveAsPNG', OptionMangaFoxSaveAsPNG);
+    cbEHentaiDownloadOriginalImage.Checked:=ReadBool('EHentai','DownloadOriginalImage',OptionEHentaiDownloadOriginalImage);
 
     // websites
     if Length(optionMangaSiteSelectionNodes) > 0 then
