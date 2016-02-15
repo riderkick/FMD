@@ -1728,7 +1728,7 @@ begin
     artists := TrimRightChar(Trim(artists), [',']);
     genres := TrimRightChar(Trim(genres), [',']);
 
-    summary := Trim(summary);
+    summary := CleanMultilinedString(summary);
 
     //// strip
     //summary := StringBreaks(summary);
