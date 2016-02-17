@@ -1606,8 +1606,8 @@ msgstr ""
 msgid "Failed"
 msgstr ""
 
-#: udownloadsmanager.rs_failedtocreatedirtoolong
-msgid "Failed to create dir! Too long?"
+#: udownloadsmanager.rs_failedtocreatedir
+msgid "Failed to create direktory!"
 msgstr ""
 
 #: udownloadsmanager.rs_failedtryresumetask

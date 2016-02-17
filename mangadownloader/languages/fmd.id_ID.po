@@ -1663,9 +1663,9 @@ msgstr "Mengunduh"
 msgid "Failed"
 msgstr "Gagal"
 
-#: udownloadsmanager.rs_failedtocreatedirtoolong
-msgid "Failed to create dir! Too long?"
-msgstr "Gagal membuat folder! Terlalu panjang?"
+#: udownloadsmanager.rs_failedtocreatedir
+msgid "Failed to create directory!"
+msgstr "Gagal membuat direktori!"
 
 #: udownloadsmanager.rs_failedtryresumetask
 msgid "Failed, try resuming this task!"
@@ -1813,3 +1813,4 @@ msgstr "Sinkronisasi data"
 #: uupdatethread.rs_updatinglist
 msgid "Updating list"
 msgstr "Memperbarui daftar"
+

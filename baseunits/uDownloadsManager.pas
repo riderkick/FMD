@@ -229,7 +229,7 @@ type
   end;
 
 resourcestring
-  RS_FailedToCreateDirTooLong = 'Failed to create dir! Too long?';
+  RS_FailedToCreateDir = 'Failed to create directory!';
   RS_FailedTryResumeTask = 'Failed, try resuming this task!';
   RS_Preparing = 'Preparing';
   RS_Downloading = 'Downloading';
@@ -1302,7 +1302,7 @@ begin
         if not ForceDirectoriesUTF8(S) then
         begin
           container.Status := STATUS_FAILED;
-          container.DownloadInfo.Status := RS_FailedToCreateDirTooLong;
+          container.DownloadInfo.Status := RS_FailedToCreateDir;
           Exit;
         end;
       end;
