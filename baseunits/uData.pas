@@ -1712,14 +1712,7 @@ begin
   with mangaInfo do begin
     if mangaInfo.link = '' then mangaInfo.link := mangaInfo.url;
 
-    s := artists;
-    if (s <> '') and (s[1] = '<') then
-      artists := '';
-    s := authors;
-    if (s <> '') and (s[1] = '<') then
-      authors := '';
-
-    // check everything once more
+    // cleanup info
     title := Trim(RemoveStringBreaks(CommonStringFilter(title)));
     authors := Trim(RemoveStringBreaks(Trim(authors)));
     artists := Trim(RemoveStringBreaks(Trim(artists)));
@@ -1732,9 +1725,9 @@ begin
     summary := CleanMultilinedString(summary);
 
     // fix info
-    if (authors = '-') or (authors = ':') then
+    if (LeftStr(authors, 1) = '<') or (authors = '-') or (authors = ':') then
       authors := '';
-    if (artists = '-') or (artists = ':') then
+    if (LeftStr(artists, 1) = '<') or (artists = '-') or (artists = ':') then
       artists := '';
     if (summary = '-') or (summary = ':') then
       summary := '';
