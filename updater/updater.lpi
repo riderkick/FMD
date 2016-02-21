@@ -18,8 +18,7 @@
     <VersionInfo>
       <UseVersionInfo Value="True"/>
       <MajorVersionNr Value="2"/>
-      <MinorVersionNr Value="3"/>
-      <RevisionNr Value="3"/>
+      <MinorVersionNr Value="4"/>
       <Attributes pvaPrivateBuild="True"/>
       <StringTable FileDescription="Updater for Free Manga Downloader" LegalCopyright="©2015 FMD Project Team" OriginalFilename="updater.exe" ProductName="Updater" ProductVersion="$BuildMode()" PrivateBuild="Cholif"/>
     </VersionInfo>
