@@ -26,4 +26,5 @@ uses
   Hakihome,
   MangaChanRU,
   MintMangaRU,
-  AcademyVN;
+  AcademyVN,
+  Webtoons;
