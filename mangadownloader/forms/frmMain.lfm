@@ -12,7 +12,7 @@ object MainForm: TMainForm
   OnDestroy = FormDestroy
   OnShow = FormShow
   OnWindowStateChange = FormWindowStateChange
-  LCLVersion = '1.7'
+  Visible = False
   object sbUpdateList: TStatusBar
     Left = 0
     Height = 30
@@ -96,7 +96,7 @@ object MainForm: TMainForm
             Width = 80
           end>
         Header.DefaultHeight = 17
-        Header.Height = 25
+        Header.Height = 23
         Header.Options = [hoColumnResize, hoDrag, hoHotTrack, hoShowSortGlyphs, hoVisible]
         HintMode = hmHintAndDefault
         Images = IconDL
@@ -486,6 +486,7 @@ object MainForm: TMainForm
             Header.AutoSizeIndex = 0
             Header.Columns = <>
             Header.DefaultHeight = 17
+            Header.Height = 23
             Header.MainColumn = -1
             Margin = 2
             ParentFont = False
@@ -1703,7 +1704,7 @@ object MainForm: TMainForm
             Width = 200
           end>
         Header.DefaultHeight = 24
-        Header.Height = 24
+        Header.Height = 23
         Header.Options = [hoColumnResize, hoDrag, hoHotTrack, hoShowSortGlyphs, hoVisible]
         HintMode = hmHintAndDefault
         Images = IconList
@@ -2787,6 +2788,7 @@ object MainForm: TMainForm
             Header.AutoSizeIndex = 0
             Header.Columns = <>
             Header.DefaultHeight = 17
+            Header.Height = 23
             Header.MainColumn = -1
             Margin = 0
             ParentFont = False
@@ -3327,6 +3329,7 @@ object MainForm: TMainForm
         Header.AutoSizeIndex = 0
         Header.Columns = <>
         Header.DefaultHeight = 17
+        Header.Height = 23
         Header.MainColumn = -1
         HintMode = hmHint
         Margin = 0

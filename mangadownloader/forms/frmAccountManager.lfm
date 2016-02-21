@@ -15,6 +15,7 @@ object AccountManagerForm: TAccountManagerForm
   OnDestroy = FormDestroy
   OnShow = FormShow
   LCLVersion = '1.7'
+  Visible = False
   object pnBtContainer: TPanel
     Left = 295
     Height = 304
@@ -253,7 +254,7 @@ object AccountManagerForm: TAccountManagerForm
         Text = 'Status'
       end>
     Header.DefaultHeight = 17
-    Header.Height = 25
+    Header.Height = 23
     Header.Options = [hoColumnResize, hoDrag, hoShowSortGlyphs, hoVisible]
     NodeDataSize = 1
     TabOrder = 0
