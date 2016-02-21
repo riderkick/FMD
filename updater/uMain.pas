@@ -262,6 +262,7 @@ end;
 
 procedure TDownloadThread.Execute;
 var
+  sf             : Boolean = False;
   regx           : TRegExpr;
   i, ctry        : Cardinal;
   Sza,
@@ -282,6 +283,7 @@ begin
     s := LowerCase(URL);
     if (Pos('sourceforge.net/', s) <> 0) or (Pos('sf.net/', s) <> 0) then
     begin
+      sf := True;
       FHTTP.UserAgent := UA_CURL;
       regx.Expression := '/download$';
       URL := Trim(regx.Replace(URL, '', False));
@@ -304,7 +306,11 @@ begin
       sfile := regx.Replace(URL, '$3', True);
       if FileName = '' then
         FileName := sfile;
-      rurl := 'http://sourceforge.net/projects/' + sproject + '/files/' +
+      if Pos('https://',LowerCase(URL)) = 1 then
+        rurl := 'https://'
+      else
+        rurl:='http://';
+      rurl := rurl + 'sourceforge.net/projects/' + sproject + '/files/' +
         sdir + '/' + sfile + '/download';
     end
     else
@@ -355,7 +361,8 @@ begin
 
     if (FHTTP.ResultCode >= 300) and (FHTTP.Headers.Values['Location'] <> '') then
     begin
-      HTTPHeaders.Values['Referer'] := ' ' + rurl;
+      if not sf then
+        HTTPHeaders.Values['Referer'] := ' ' + rurl;
       UpdateStatus(RS_Redirected);
       rurl := Trim(FHTTP.Headers.Values['Location']);
     end;
