@@ -1489,7 +1489,6 @@ begin
   AdvanceLoadHTTPConfig(FHTTP, website);
 
   mangaInfo.website := website;
-  if mangaInfo.link = '' then mangaInfo.link := URL;
   mangaInfo.coverLink := '';
   mangaInfo.numChapter := 0;
   mangaInfo.chapterName.Clear;
@@ -1711,6 +1710,8 @@ begin
   end;
 
   with mangaInfo do begin
+    if mangaInfo.link = '' then mangaInfo.link := mangaInfo.url;
+
     s := artists;
     if (s <> '') and (s[1] = '<') then
       artists := '';
