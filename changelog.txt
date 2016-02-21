@@ -4,6 +4,9 @@ Project page: https://github.com/riderkick/FMD
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.35.1 (21-02-2016)
+[*] Updater: fix download manga list from server
+
 0.9.35.0 (21-02-2016)
 [*] Added Webtoons[EN]
 [*] Various changes and bug fixes
