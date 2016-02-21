@@ -10,15 +10,16 @@ uses
 
 implementation
 
-function GetDirectoryPageNumber(var {%H-}MangaInfo: TMangaInformation;
-  var Page: Integer; {%H-}Module: TModuleContainer): Integer;
+function GetDirectoryPageNumber(const MangaInfo: TMangaInformation;
+  var Page: Integer; const Module: TModuleContainer): Integer;
 begin
   Result := NO_ERROR;
   Page := 1;
 end;
 
-function GetNameAndLink(var MangaInfo: TMangaInformation;
-  const Names, Links: TStringList; const {%H-}URL: String; Module: TModuleContainer): Integer;
+function GetNameAndLink(const MangaInfo: TMangaInformation;
+  const ANames, ALinks: TStringList; const AURL: String;
+  const Module: TModuleContainer): Integer;
 var
   Parse: TStringList;
 
@@ -30,8 +31,8 @@ var
       if (GetTagName(Parse[i]) = 'a') and
         (Pos('series_preview manga_', Parse[i]) > 0) then
       begin
-        Links.Add(GetVal(Parse[i], 'href'));
-        Names.Add(CommonStringFilter(Parse[i + 1]));
+        ALinks.Add(GetVal(Parse[i], 'href'));
+        ANames.Add(CommonStringFilter(Parse[i + 1]));
       end;
   end;
 
@@ -55,8 +56,8 @@ begin
   end;
 end;
 
-function GetInfo(var MangaInfo: TMangaInformation; const URL: String;
-  const Reconnect: Integer; Module: TModuleContainer): Integer;
+function GetInfo(const MangaInfo: TMangaInformation;
+  const AURL: String; const Module: TModuleContainer): Integer;
 var
   Parse: TStringList;
   info: TMangaInfo;
@@ -183,10 +184,10 @@ begin
   if MangaInfo = nil then Exit;
   info := MangaInfo.mangaInfo;
   info.website := Module.Website;
-  info.url := FillHost(Module.RootURL, URL);
+  info.url := FillHost(Module.RootURL, AURL);
   Parse := TStringList.Create;
   try
-    if MangaInfo.GetPage(TObject(Parse), info.url, Reconnect) then
+    if MangaInfo.FHTTP.GET(info.url, TObject(Parse)) then
     begin
       Result := INFORMATION_NOT_FOUND;
       ParseHTML(Parse.Text, Parse);
@@ -201,8 +202,8 @@ begin
   end;
 end;
 
-function GetPageNumber(var DownloadThread: TDownloadThread; const URL: String;
-  Module: TModuleContainer): Boolean;
+function GetPageNumber(const DownloadThread: TDownloadThread;
+  const AURL: String; const Module: TModuleContainer): Boolean;
 var
   Parse: TStringList;
   Container: TTaskContainer;
@@ -238,7 +239,7 @@ begin
   Parse := TStringList.Create;
   try
     if DownloadThread.GetPage(TObject(Parse),
-      AppendURLDelim(FillHost(Module.RootURL, URL)) + '1.html',
+      AppendURLDelim(FillHost(Module.RootURL, AURL)) + '1.html',
       Container.Manager.retryConnect) then
     begin
       ParseHTML(Parse.Text, Parse);
@@ -253,8 +254,8 @@ begin
   end;
 end;
 
-function GetImageURL(var DownloadThread: TDownloadThread; const URL: String;
-  Module: TModuleContainer): Boolean;
+function GetImageURL(const DownloadThread: TDownloadThread;
+  const AURL: String; const Module: TModuleContainer): Boolean;
 var
   Parse: TStringList;
   Container: TTaskContainer;
@@ -279,7 +280,7 @@ begin
   Parse := TStringList.Create;
   try
     if DownloadThread.GetPage(TObject(Parse),
-      AppendURLDelim(FillHost(Module.RootURL, URL)) +
+      AppendURLDelim(FillHost(Module.RootURL, AURL)) +
       IncStr(DownloadThread.workCounter) + '.html',
       Container.Manager.retryConnect) then
     begin
@@ -295,7 +296,7 @@ begin
   end;
 end;
 
-function AfterImageSaved(const AFilename: String; Module: TModuleContainer): Boolean;
+function AfterImageSaved(const AFilename: String; const Module: TModuleContainer): Boolean;
 begin
   Result := True;
   if OptionMangaFoxRemoveWatermark then

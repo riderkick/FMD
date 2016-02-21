@@ -1499,7 +1499,7 @@ begin
     ModuleId := Modules.LocateModule(website);
   if Modules.ModuleAvailable(ModuleId, MMGetInfo) then begin
     mangaInfo.url := FillHost(Modules.Module[ModuleId].RootURL, URL);
-    Result := Modules.GetInfo(Self, URL, Reconnect, ModuleId)
+    Result := Modules.GetInfo(Self, URL, ModuleId)
   end
   else
   begin

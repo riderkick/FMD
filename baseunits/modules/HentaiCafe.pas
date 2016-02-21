@@ -11,8 +11,8 @@ implementation
 
 uses synautil;
 
-function GetDirectoryPageNumber(var MangaInfo: TMangaInformation;
-  var Page: Integer; Module: TModuleContainer): Integer;
+function GetDirectoryPageNumber(const MangaInfo: TMangaInformation;
+  var Page: Integer; const Module: TModuleContainer): Integer;
 var
   query: TXQueryEngineHTML;
 begin
@@ -31,8 +31,9 @@ begin
   end;
 end;
 
-function GetNameAndLink(var MangaInfo: TMangaInformation;
-  const ANames, ALinks: TStringList; const AURL: String; Module: TModuleContainer): Integer;
+function GetNameAndLink(const MangaInfo: TMangaInformation;
+  const ANames, ALinks: TStringList; const AURL: String;
+  const Module: TModuleContainer): Integer;
 var
   query: TXQueryEngineHTML;
   v: IXQValue;
@@ -55,8 +56,8 @@ begin
   end;
 end;
 
-function GetInfo(var MangaInfo: TMangaInformation; const AURL: String;
-  const Reconnect: Integer; Module: TModuleContainer): Integer;
+function GetInfo(const MangaInfo: TMangaInformation;
+  const AURL: String; const Module: TModuleContainer): Integer;
 var
   query: TXQueryEngineHTML;
   v: IXQValue;
@@ -91,8 +92,8 @@ begin
   end;
 end;
 
-function GetPageNumber(var DownloadThread: TDownloadThread; const AURL: String;
-  Module: TModuleContainer): Boolean;
+function GetPageNumber(const DownloadThread: TDownloadThread;
+  const AURL: String; const Module: TModuleContainer): Boolean;
 var
   source: TStringList;
   i: Integer;

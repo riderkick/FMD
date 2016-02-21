@@ -15,15 +15,16 @@ uses
 const
   readURL = 'http://readms.com';
 
-function GetDirectoryPageNumber(var MangaInfo: TMangaInformation;
-  var Page: Integer; Module: TModuleContainer): Integer;
+function GetDirectoryPageNumber(const MangaInfo: TMangaInformation;
+  var Page: Integer; const Module: TModuleContainer): Integer;
 begin
   Page := 1;
   Result := NO_ERROR;
 end;
 
-function GetNameAndLink(var MangaInfo: TMangaInformation;
-  const Names, Links: TStringList; const URL: String; Module: TModuleContainer): Integer;
+function GetNameAndLink(const MangaInfo: TMangaInformation;
+  const ANames, ALinks: TStringList; const AURL: String;
+  const Module: TModuleContainer): Integer;
 var
   Source: TStringList;
   Parser: TTreeParser;
@@ -40,8 +41,8 @@ begin
         try
           ParseHTMLTree(Parser, Source.Text);
           for v in SelectXPathIX('//table//tr/td[1]//a', Parser) do begin
-            Links.Add(v.toNode.getAttribute('href'));
-            Names.Add(v.toString);
+            ALinks.Add(v.toNode.getAttribute('href'));
+            ANames.Add(v.toString);
           end
         finally
           Parser.Free;
@@ -54,8 +55,8 @@ begin
   end;
 end;
 
-function GetInfo(var MangaInfo: TMangaInformation; const URL: String;
-  const Reconnect: Integer; Module: TModuleContainer): Integer;
+function GetInfo(const MangaInfo: TMangaInformation;
+  const AURL: String; const Module: TModuleContainer): Integer;
 var
   info: TMangaInfo;
   Source: TStringList;
@@ -67,10 +68,10 @@ begin
   Result := NET_PROBLEM;
   info := MangaInfo.mangaInfo;
   info.website := Module.Website;
-  info.url := FillHost(Module.RootURL, URL);
+  info.url := FillHost(Module.RootURL, AURL);
   Source := TStringList.Create;
   try
-    if GetPage(MangaInfo.FHTTP, TObject(Source), info.url, Reconnect) then
+    if MangaInfo.FHTTP.GET(info.url, TObject(Source)) then
       if Source.Count > 0 then
       begin
         Result := NO_ERROR;
@@ -103,8 +104,8 @@ begin
   end;
 end;
 
-function GetPageNumber(var DownloadThread: TDownloadThread; const URL: String;
-  Module: TModuleContainer): Boolean;
+function GetPageNumber(const DownloadThread: TDownloadThread;
+  const AURL: String; const Module: TModuleContainer): Boolean;
 var
   Container: TTaskContainer;
   Source: TStringList;
@@ -119,7 +120,7 @@ begin
   Container.PageNumber := 0;
   Source := TStringList.Create;
   try
-    if GetPage(DownloadThread.FHTTP, TObject(Source), FillHost(readURL, URL + '/1'),
+    if GetPage(DownloadThread.FHTTP, TObject(Source), FillHost(readURL, AURL + '/1'),
       Container.Manager.retryConnect) then
       if Source.Count > 0 then
       begin
@@ -143,8 +144,8 @@ begin
   end;
 end;
 
-function GetImageURL(var DownloadThread: TDownloadThread; const URL: String;
-  Module: TModuleContainer): Boolean;
+function GetImageURL(const DownloadThread: TDownloadThread;
+  const AURL: String; const Module: TModuleContainer): Boolean;
 var
   Source: TStringList;
   Parser: TTreeParser;
@@ -155,7 +156,7 @@ begin
     Source := TStringList.Create;
     try
       if GetPage(DownloadThread.FHTTP, TObject(Source),
-        AppendURLDelim(FillHost(readURL, URL)) +
+        AppendURLDelim(FillHost(readURL, AURL)) +
         IncStr(DownloadThread.workCounter), Manager.retryConnect) then
         if Source.Count > 0 then
         begin

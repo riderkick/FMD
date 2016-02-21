@@ -21,7 +21,7 @@ var
   onlogin: Boolean = False;
   locklogin: TRTLCriticalSection;
 
-function ExHentaiLogin(var AHTTP: THTTPSendThread): Boolean;
+function ExHentaiLogin(const AHTTP: THTTPSendThread): Boolean;
 var
   s: String;
 begin
@@ -62,7 +62,7 @@ begin
   end;
 end;
 
-function GETWithLogin(var AHTTP: THTTPSendThread; const AURL, AWebsite: String): Boolean;
+function GETWithLogin(const AHTTP: THTTPSendThread; const AURL, AWebsite: String): Boolean;
 begin
   Result := False;
   if Account.Enabled[accname] then begin
@@ -79,8 +79,8 @@ begin
     Result := AHTTP.GET(AURL);
 end;
 
-function GetDirectoryPageNumber(var MangaInfo: TMangaInformation;
-  var Page: Integer; Module: TModuleContainer): Integer;
+function GetDirectoryPageNumber(const MangaInfo: TMangaInformation;
+  var Page: Integer; const Module: TModuleContainer): Integer;
 var
   query: TXQueryEngineHTML;
 begin
@@ -99,8 +99,9 @@ begin
   end;
 end;
 
-function GetNameAndLink(var MangaInfo: TMangaInformation;
-  const ANames, ALinks: TStringList; const AURL: String; Module: TModuleContainer): Integer;
+function GetNameAndLink(const MangaInfo: TMangaInformation;
+  const ANames, ALinks: TStringList; const AURL: String;
+  const Module: TModuleContainer): Integer;
 var
   query: TXQueryEngineHTML;
   rurl: String;
@@ -126,8 +127,8 @@ begin
   end;
 end;
 
-function GetInfo(var MangaInfo: TMangaInformation; const AURL: String;
-  const Reconnect: Integer; Module: TModuleContainer): Integer;
+function GetInfo(const MangaInfo: TMangaInformation;
+  const AURL: String; const Module: TModuleContainer): Integer;
 var
   query: TXQueryEngineHTML;
   v: IXQValue;
@@ -208,8 +209,8 @@ begin
   end;
 end;
 
-function GetPageNumber(var DownloadThread: TDownloadThread; const AURL: String;
-  Module: TModuleContainer): Boolean;
+function GetPageNumber(const DownloadThread: TDownloadThread;
+  const AURL: String; const Module: TModuleContainer): Boolean;
 var
   query: TXQueryEngineHTML;
   rurl: String;
@@ -265,8 +266,8 @@ begin
   end;
 end;
 
-function DownloadImage(var DownloadThread: TDownloadThread;
-  const AURL, APath, AName, APrefix: String; Module: TModuleContainer): Boolean;
+function DownloadImage(const DownloadThread: TDownloadThread;
+  const AURL, APath, AName: String; const Module: TModuleContainer): Boolean;
 var
   query: TXQueryEngineHTML;
   iurl: String;

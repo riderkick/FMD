@@ -9,8 +9,8 @@ uses
 
 implementation
 
-function GetInfo(var MangaInfo: TMangaInformation; const URL: String;
-  const Reconnect: Integer; Module: TModuleContainer): Integer;
+function GetInfo(const MangaInfo: TMangaInformation;
+  const AURL: String; const Module: TModuleContainer): Integer;
 var
   Source: TStringList;
   Query: TXQueryEngineHTML;
@@ -22,10 +22,10 @@ begin
   Result := NET_PROBLEM;
   info := MangaInfo.mangaInfo;
   info.website := Module.Website;
-  info.url := RemoveURLDelim(FillHost(Module.RootURL, URL));
+  info.url := RemoveURLDelim(FillHost(Module.RootURL, AURL));
   Source := TStringList.Create;
   try
-    if GetPage(MangaInfo.FHTTP, TObject(Source), info.url, Reconnect) then
+    if MangaInfo.FHTTP.GET(info.url, TObject(Source)) then
       if Source.Count > 0 then
       begin
         Result := NO_ERROR;
@@ -61,8 +61,8 @@ begin
   end;
 end;
 
-function GetPageNumber(var DownloadThread: TDownloadThread; const URL: String;
-  Module: TModuleContainer): Boolean;
+function GetPageNumber(const DownloadThread: TDownloadThread;
+  const AURL: String; const Module: TModuleContainer): Boolean;
 var
   Source: TStringList;
   Query: TXQueryEngineHTML;
@@ -76,7 +76,7 @@ begin
     Source := TStringList.Create;
     try
       if GetPage(DownloadThread.FHTTP, TObject(Source),
-        RemoveURLDelim(FillHost(Module.RootURL, URL)), Manager.retryConnect) then
+        RemoveURLDelim(FillHost(Module.RootURL, AURL)), Manager.retryConnect) then
         if Source.Count > 0 then
         begin
           Result := True;
@@ -96,8 +96,8 @@ begin
   end;
 end;
 
-function GetImageURL(var DownloadThread: TDownloadThread; const URL: String;
-  Module: TModuleContainer): Boolean;
+function GetImageURL(const DownloadThread: TDownloadThread;
+  const AURL: String; const Module: TModuleContainer): Boolean;
 var
   Source: TStringList;
   Query: TXQueryEngineHTML;

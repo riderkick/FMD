@@ -50,7 +50,7 @@ type
     // Get number of download link from URL
     function GetPageNumberFromURL(const URL: String): Boolean;
     // Download image
-    function DownloadImage(const prefix: String = ''): Boolean;
+    function DownloadImage: Boolean;
 
     procedure OnTag({%H-}NoCaseTag, ActualTag: string);
     procedure OnText(Text: String);
@@ -1084,7 +1084,7 @@ begin
   MainForm.TrayIcon.ShowBalloonHint;
 end;
 
-function TDownloadThread.DownloadImage(const prefix: String): Boolean;
+function TDownloadThread.DownloadImage: Boolean;
 var
   s, TURL, lpath, sfilename: String;
 
@@ -1128,7 +1128,6 @@ begin
           s,
           lpath,
           Format('%.3d', [workCounter + 1]),
-          prefix,
           ModuleId);
     end
     else

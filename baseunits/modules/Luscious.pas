@@ -15,15 +15,16 @@ uses
 const
   dirURL = '/c/-/albums/t/manga/sorted/new/page/';
 
-function GetDirectoryPageNumber(var MangaInfo: TMangaInformation;
-  var Page: Integer; Module: TModuleContainer): Integer;
+function GetDirectoryPageNumber(const MangaInfo: TMangaInformation;
+  var Page: Integer; const Module: TModuleContainer): Integer;
 begin
   Page := 100;
   Result := NO_ERROR;
 end;
 
-function GetNameAndLink(var MangaInfo: TMangaInformation;
-  const Names, Links: TStringList; const URL: String; Module: TModuleContainer): Integer;
+function GetNameAndLink(const MangaInfo: TMangaInformation;
+  const ANames, ALinks: TStringList; const AURL: String;
+  const Module: TModuleContainer): Integer;
 var
   Source: TStringList;
   Query: TXQueryEngineHTML;
@@ -34,15 +35,15 @@ begin
   Source := TStringList.Create;
   try
     if GetPage(MangaInfo.FHTTP, TObject(Source),
-      Module.RootURL + dirURL + IncStr(URL) + '/', 3) then
+      Module.RootURL + dirURL + IncStr(AURL) + '/', 3) then
       if Source.Count > 0 then
       begin
         Result := NO_ERROR;
         Query := TXQueryEngineHTML.Create(Source.Text);
         try
           for v in Query.XPath('//*[@id="albums_wrapper"]//*[@class="caption"]//a') do begin
-            Links.Add(TrimLeftChar(v.toNode.getAttribute('href'), ['.']));
-            Names.Add(v.toString);
+            ALinks.Add(TrimLeftChar(v.toNode.getAttribute('href'), ['.']));
+            ANames.Add(v.toString);
           end;
         finally
           Query.Free;
@@ -55,8 +56,8 @@ begin
   end;
 end;
 
-function GetInfo(var MangaInfo: TMangaInformation; const URL: String;
-  const Reconnect: Integer; Module: TModuleContainer): Integer;
+function GetInfo(const MangaInfo: TMangaInformation;
+  const AURL: String; const Module: TModuleContainer): Integer;
 var
   Source: TStringList;
   Query: TXQueryEngineHTML;
@@ -69,7 +70,7 @@ begin
   Result := NET_PROBLEM;
   info := MangaInfo.mangaInfo;
   info.website := Module.Website;
-  info.url := AppendURLDelim(FillHost(Module.RootURL, URL));
+  info.url := AppendURLDelim(FillHost(Module.RootURL, AURL));
   Source := TStringList.Create;
   regx := TRegExpr.Create;
   try
@@ -80,7 +81,7 @@ begin
     if RightStr(info.url, 5) <> 'view/' then info.url += 'view/';
     if Pos('/pictures/album/', info.url) > 0 then
       info.url := StringReplace(info.url, '/pictures/album/', '/albums/', []);
-    if GetPage(MangaInfo.FHTTP, TObject(Source), info.url, Reconnect) then
+    if MangaInfo.FHTTP.GET(info.url, TObject(Source)) then
       if Source.Count > 0 then
       begin
         Result := NO_ERROR;
@@ -122,8 +123,8 @@ begin
   end;
 end;
 
-function GetPageNumber(var DownloadThread: TDownloadThread; const URL: String;
-  Module: TModuleContainer): Boolean;
+function GetPageNumber(const DownloadThread: TDownloadThread;
+  const AURL: String; const Module: TModuleContainer): Boolean;
 var
   Source: TStringList;
   Query: TXQueryEngineHTML;
@@ -142,7 +143,7 @@ begin
     PageLinks.Clear;
     PageContainerLinks.Clear;
     PageNumber := 0;
-    rurl := AppendURLDelim(FillHost(Module.RootURL, URL));
+    rurl := AppendURLDelim(FillHost(Module.RootURL, AURL));
     Source := TStringList.Create;
     regx:=TRegExpr.Create;
     try

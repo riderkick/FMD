@@ -15,8 +15,9 @@ uses
 const
   dirURL = '/directory/';
 
-function GetNameAndLink(var MangaInfo: TMangaInformation;
-  const Names, Links: TStringList; const URL: String; Module: TModuleContainer): Integer;
+function GetNameAndLink(const MangaInfo: TMangaInformation;
+  const ANames, ALinks: TStringList; const AURL: String;
+  const Module: TModuleContainer): Integer;
 var
   Source: TStringList;
   Query: TXQueryEngineHTML;
@@ -33,8 +34,8 @@ begin
         Query := TXQueryEngineHTML.Create(Source.Text);
         try
           for v in Query.XPath('//*[@id="content"]/p/a') do begin
-            Links.Add(TrimLeftChar(v.toNode.getAttribute('href'), ['.']));
-            Names.Add(v.toString);
+            ALinks.Add(TrimLeftChar(v.toNode.getAttribute('href'), ['.']));
+            ANames.Add(v.toString);
           end;
         finally
           Query.Free;
@@ -47,8 +48,8 @@ begin
   end;
 end;
 
-function GetInfo(var MangaInfo: TMangaInformation; const URL: String;
-  const Reconnect: Integer; Module: TModuleContainer): Integer;
+function GetInfo(const MangaInfo: TMangaInformation;
+  const AURL: String; const Module: TModuleContainer): Integer;
 var
   Source: TStringList;
   Query: TXQueryEngineHTML;
@@ -60,10 +61,10 @@ begin
   Result := NET_PROBLEM;
   info := MangaInfo.mangaInfo;
   info.website := Module.Website;
-  info.url := AppendURLDelim(FillHost(Module.RootURL, URL));
+  info.url := AppendURLDelim(FillHost(Module.RootURL, AURL));
   Source := TStringList.Create;
   try
-    if GetPage(MangaInfo.FHTTP, TObject(Source), info.url, Reconnect) then
+    if MangaInfo.FHTTP.GET(info.url, TObject(Source)) then
       if Source.Count > 0 then
       begin
         Result := NO_ERROR;
@@ -105,8 +106,8 @@ begin
   end;
 end;
 
-function GetPageNumber(var DownloadThread: TDownloadThread; const URL: String;
-  Module: TModuleContainer): Boolean;
+function GetPageNumber(const DownloadThread: TDownloadThread;
+  const AURL: String; const Module: TModuleContainer): Boolean;
 var
   Source: TStringList;
   Query: TXQueryEngineHTML;
@@ -123,7 +124,7 @@ begin
     Source := TStringList.Create;
     try
       if GetPage(DownloadThread.FHTTP, TObject(Source),
-        AppendURLDelim(FillHost(Module.RootURL, URL)), Manager.retryConnect) then
+        AppendURLDelim(FillHost(Module.RootURL, AURL)), Manager.retryConnect) then
         if Source.Count > 0 then
         begin
           Result := True;
