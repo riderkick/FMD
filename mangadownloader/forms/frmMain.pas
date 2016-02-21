@@ -1034,12 +1034,11 @@ begin
 
   // Load config.ini
   options := TIniFile.Create(fmdDirectory + CONFIG_FOLDER + CONFIG_FILE);
-  options.CacheUpdates := True;
+  options.CacheUpdates := False;
+  options.Options := options.Options-[ifoStripQuotes];
 
   // Load revision.ini
   revisionIni := TIniFile.Create(fmdDirectory + CONFIG_FOLDER + REVISION_FILE);
-  options.CacheUpdates := False;
-  options.StripQuotes := False;
 
   // Load updates.ini
   updates := TIniFile.Create(fmdDirectory + CONFIG_FOLDER + UPDATE_FILE);
@@ -3466,9 +3465,8 @@ end;
 procedure TMainForm.vtDownloadMoveItems(NextIndex: Cardinal; Mode: TDropMode);
 var
   i, nIndex: Cardinal;
-  cNode, fNode: PVirtualNode;
+  cNode: PVirtualNode;
   ConTemp: TFPList;
-  fRect: TRect;
 begin
   if vtDownload.SelectedCount=0 then Exit;
   nIndex:=NextIndex;
