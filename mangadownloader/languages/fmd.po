@@ -1607,7 +1607,7 @@ msgid "Failed"
 msgstr ""
 
 #: udownloadsmanager.rs_failedtocreatedir
-msgid "Failed to create direktory!"
+msgid "Failed to create directory!"
 msgstr ""
 
 #: udownloadsmanager.rs_failedtryresumetask
