@@ -4,6 +4,10 @@ Project page: https://github.com/riderkick/FMD
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.35.0 (21-02-2016)
+[*] Added Webtoons[EN]
+[*] Various changes and bug fixes
+
 0.9.34.0 (15-02-2016)
 [*] AcademyVN: rewrite all script
 [*] Various changes and bug fixes
