@@ -69,7 +69,7 @@ procedure TGetMangaInfosThread.DoGetInfos;
       FInfo.mangaInfo.website := Website;
       FInfo.mangaInfo.link := Link;
       FInfo.ModuleId := Modules.LocateModule(Website);
-      if (FMangaListPos >= 0) and
+      if (FMangaListPos >= 0) and (MainForm.cbSelectManga.ItemIndex<>-1) and
         (website = MainForm.cbSelectManga.Items[MainForm.cbSelectManga.ItemIndex]) then
       begin
         filterPos := FMangaListPos;
@@ -138,8 +138,6 @@ procedure TGetMangaInfosThread.DoGetInfos;
   end;
 
 begin
-  if MainForm.cbSelectManga.ItemIndex < 0 then
-    Exit;
   try
     INIAdvanced.Reload;
     if not GetMangaInfo then
