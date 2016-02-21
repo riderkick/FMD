@@ -1710,7 +1710,7 @@ begin
   end;
 
   with mangaInfo do begin
-    if mangaInfo.link = '' then mangaInfo.link := mangaInfo.url;
+    if mangaInfo.link = '' then mangaInfo.link := RemoveHostFromURL(mangaInfo.url);
 
     // cleanup info
     title := Trim(RemoveStringBreaks(CommonStringFilter(title)));
