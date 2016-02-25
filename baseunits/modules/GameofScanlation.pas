@@ -17,22 +17,20 @@ function GetNameAndLink(const MangaInfo: TMangaInformation;
   const ANames, ALinks: TStringList; const AURL: String;
   const Module: TModuleContainer): Integer;
 var
-  query: TXQueryEngineHTML;
   v: IXQValue;
 begin
   Result:=NET_PROBLEM;
   if MangaInfo=nil then Exit(UNKNOWN_ERROR);
   if MangaInfo.FHTTP.GET(Module.RootURL+dirurl) then begin
     Result:=NO_ERROR;
-    query:=TXQueryEngineHTML.Create;
+    with TXQueryEngineHTML.Create(MangaInfo.FHTTP.Document) do
     try
-      query.ParseHTML(MangaInfo.FHTTP.Document);
-      for v in query.XPath('//h4/a[@class="menuRow"]') do begin
+      for v in XPath('//h4/a[@class="menuRow"]') do begin
         ALinks.Add(v.toNode.getAttribute('href'));
         ANames.Add(v.toString);
       end;
     finally
-      query.Free;
+      Free;
     end;
   end;
 end;
@@ -83,9 +81,8 @@ end;
 function GetPageNumber(const DownloadThread: TDownloadThread;
   const AURL: String; const Module: TModuleContainer): Boolean;
 var
-  query: TXQueryEngineHTML;
   v: IXQValue;
-  s: RegExprString;
+  s: String;
 begin
   Result:=False;
   if DownloadThread=nil then Exit;
@@ -97,14 +94,13 @@ begin
     s:=AppendURLDelim(FillHost(Module.RootURL,s))+'?chapter_view=fullstrip';
     if GET(s) then begin
       Result:=True;
-      query:=TXQueryEngineHTML.Create;
+      with TXQueryEngineHTML.Create(Document) do
       try
-        query.ParseHTML(Document);
-        for v in query.XPath('//div[@id="comicMainImage"]/a/img/@src') do
+        for v in XPath('//div[@id="comicMainImage"]/a/img/@src') do
           PageLinks.Add(MaybeFillHost(Module.RootURL,v.toString));
-        PageNumber:=query.XPath('//select[@id="ctrl_chapter_page"]/option').Count;
+        PageNumber:=XPath('//select[@id="ctrl_chapter_page"]/option').Count;
       finally
-        query.Free;
+        Free;
       end;
     end;
   end;
@@ -113,7 +109,6 @@ end;
 function GetImageURL(const DownloadThread: TDownloadThread;
   const AURL: String; const Module: TModuleContainer): Boolean;
 var
-  query: TXQueryEngineHTML;
   s: String;
 begin
   Result:=False;
@@ -123,16 +118,15 @@ begin
     if DownloadThread.workCounter>0 then s+='?comic_page='+IncStr(DownloadThread.workCounter);
     if GET(FillHost(Module.RootURL,s)) then begin
       Result:=True;
-      query:=TXQueryEngineHTML.Create;
+      with TXQueryEngineHTML.Create(Document) do
       try
-        query.ParseHTML(Document);
-        s:=query.XPathString('//img[@id="comicMainImage"]/@src');
+        s:=XPathString('//img[@id="comicMainImage"]/@src');
         if s<>'' then begin
           s:=MaybeFillHost(Module.RootURL,s);
           PageLinks[DownloadThread.workCounter]:=s;
         end;
       finally
-        query.Free;
+        Free;
       end;
     end;
   end;
