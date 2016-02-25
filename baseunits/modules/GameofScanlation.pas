@@ -6,12 +6,20 @@ interface
 
 uses
   Classes, SysUtils, WebsiteModules, uData, uBaseUnit, uDownloadsManager,
-  RegExpr, synautil;
+  RegExpr, synautil, Cloudflare;
 
 implementation
 
 const
-  dirurl='/forums/projects-releases.9/';
+  dirurl='/projects/';
+var
+  goscookies: string='';
+  goslockget: TRTLCriticalSection;
+
+function GETWithCookie(const AHTTP: THTTPSendThread; const AURL: String): Boolean;
+begin
+  Result:=Cloudflare.GETCF(AHTTP,AURL,goscookies,goslockget);
+end;
 
 function GetNameAndLink(const MangaInfo: TMangaInformation;
   const ANames, ALinks: TStringList; const AURL: String;
@@ -21,11 +29,11 @@ var
 begin
   Result:=NET_PROBLEM;
   if MangaInfo=nil then Exit(UNKNOWN_ERROR);
-  if MangaInfo.FHTTP.GET(Module.RootURL+dirurl) then begin
+  if GETWithCookie(MangaInfo.FHTTP,Module.RootURL+dirurl) then begin
     Result:=NO_ERROR;
     with TXQueryEngineHTML.Create(MangaInfo.FHTTP.Document) do
     try
-      for v in XPath('//h4/a[@class="menuRow"]') do begin
+      for v in XPath('//div[@class="info"]/a') do begin
         ALinks.Add(v.toNode.getAttribute('href'));
         ANames.Add(v.toString);
       end;
@@ -41,11 +49,11 @@ var
   query: TXQueryEngineHTML;
   v: IXQValue;
   i, p: Integer;
-  rurl: String;
+  s: String;
 
   procedure GetChapters;
   begin
-    for v in query.XPath('//*[@class="discussionListItems"]//div[@class="listBlock main"]/div/h3/a') do begin
+    for v in query.XPath('//div[@class="list_press_text"]/p[@class="text_work"]/a') do begin
       MangaInfo.mangaInfo.chapterLinks.Add(v.toNode.getAttribute('href'));
       MangaInfo.mangaInfo.chapterName.Add(v.toString);
     end;
@@ -55,18 +63,26 @@ begin
   Result:=NET_PROBLEM;
   if MangaInfo=nil then Exit(UNKNOWN_ERROR);
   with MangaInfo.FHTTP,MangaInfo.mangaInfo do begin
-    rurl:=AppendURLDelim(FillHost(Module.RootURL,AURL));
-    if GET(rurl) then begin
+    url:=AppendURLDelim(FillHost(Module.RootURL,AURL));
+    if GETWithCookie(MangaInfo.FHTTP,url) then begin
       Result:=NO_ERROR;
-      query:=TXQueryEngineHTML.Create;
+      query:=TXQueryEngineHTML.Create(Document);
       try
-        query.ParseHTML(Document);
-        if title=''then title:=query.XPathString('//div[@class="titleBarContent"]/h1');
+        if title=''then title:=query.XPathString('//div[@class="con"]/h2');
+        summary:=query.XPathString('//dd[@class="dsc"]');
+        s:=query.XPathString('//div[@class="con"]/dl/span[@class="aln"]');
+        if s<>'' then begin
+          s:=LowerCase(s);
+          if Pos('ongoing',s)>0 then
+            status:='1'
+          else if Pos('completed',s)>0 then
+            status:='0';
+        end;
         GetChapters;
-        p:=StrToIntDef(query.XPathString('(//div[@class="PageNav"])[1]/@data-last'),1);
+        p:=StrToIntDef(query.XPathString('//nav/a[last()-1]'),1);
         if p>1 then
           for i:=2 to p do
-            if GET(rurl+'page-'+IntToStr(i)) then begin
+            if GET(AppendURLDelim(url)+'page-'+IntToStr(i)) then begin
               query.ParseHTML(Document);
               GetChapters;
             end;
@@ -92,13 +108,12 @@ begin
     PageNumber := 0;
     s:=ReplaceRegExpr('/\?\w+.*$',AURL,'/',False);
     s:=AppendURLDelim(FillHost(Module.RootURL,s))+'?chapter_view=fullstrip';
-    if GET(s) then begin
+    if GETWithCookie(DownloadThread.FHTTP,s) then begin
       Result:=True;
       with TXQueryEngineHTML.Create(Document) do
       try
         for v in XPath('//div[@id="comicMainImage"]/a/img/@src') do
           PageLinks.Add(MaybeFillHost(Module.RootURL,v.toString));
-        PageNumber:=XPath('//select[@id="ctrl_chapter_page"]/option').Count;
       finally
         Free;
       end;
@@ -106,30 +121,20 @@ begin
   end;
 end;
 
-function GetImageURL(const DownloadThread: TDownloadThread;
+function BeforeDownloadImage(const DownloadThread: TDownloadThread;
   const AURL: String; const Module: TModuleContainer): Boolean;
-var
-  s: String;
 begin
   Result:=False;
-  if DownloadThread=nil then Exit;
-  with DownloadThread.manager.container,DownloadThread.FHTTP do begin
-    s:=AppendURLDelim(AURL);
-    if DownloadThread.workCounter>0 then s+='?comic_page='+IncStr(DownloadThread.workCounter);
-    if GET(FillHost(Module.RootURL,s)) then begin
-      Result:=True;
-      with TXQueryEngineHTML.Create(Document) do
-      try
-        s:=XPathString('//img[@id="comicMainImage"]/@src');
-        if s<>'' then begin
-          s:=MaybeFillHost(Module.RootURL,s);
-          PageLinks[DownloadThread.workCounter]:=s;
-        end;
-      finally
-        Free;
-      end;
+  if DownloadThread = nil then Exit;
+  with DownloadThread.manager.container,DownloadThread.FHTTP do
+    if CurrentDownloadChapterPtr<ChapterLinks.Count then begin
+      Headers.Values['Referer']:=' '+FillHost(Module.RootURL,ChapterLinks[CurrentDownloadChapterPtr]);
+      Cookies.Text:=goscookies;
+      if (goscookies='') or (HEAD(AURL) and (ResultCode=503)) then
+        Result:=GETWithCookie(DownloadThread.FHTTP,Module.RootURL)
+      else
+        Result:=True;
     end;
-  end;
 end;
 
 procedure RegisterModule;
@@ -141,11 +146,15 @@ begin
     OnGetNameAndLink:=@GetNameAndLink;
     OnGetInfo:=@GetInfo;
     OnGetPageNumber:=@GetPageNumber;
-    OnGetImageURL:=@GetImageURL;
+    OnBeforeDownloadImage:=@BeforeDownloadImage;
   end;
 end;
 
 initialization
+  InitCriticalSection(goslockget);
   RegisterModule;
+
+finalization
+  DoneCriticalsection(goslockget);
 
 end.
