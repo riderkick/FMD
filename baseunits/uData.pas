@@ -1123,8 +1123,6 @@ var
 
   {$I includes/ReadMangaToday/names_and_links.inc}
 
-  {$I includes/LoneManga/names_and_links.inc}
-
   {$I includes/Dynasty-Scans/names_and_links.inc}
 
 begin
@@ -1331,9 +1329,6 @@ begin
     if WebsiteID = READMANGATODAY_ID then
       Result := ReadMangaTodayGetNamesAndLinks
     else
-    if WebsiteID = LONEMANGA_ID then
-      Result := LoneMangaGetNamesAndLinks
-    else
     if WebsiteID = DYNASTYSCANS_ID then
       Result := DynastyScansGetNamesAndLinks
     else
@@ -1476,8 +1471,6 @@ var
   {$I includes/MangaAt/manga_information.inc}
 
   {$I includes/ReadMangaToday/manga_information.inc}
-
-  {$I includes/LoneManga/manga_information.inc}
 
   {$I includes/Dynasty-Scans/manga_information.inc}
 
@@ -1695,9 +1688,6 @@ begin
     else
     if WebsiteID = READMANGATODAY_ID then
       Result := GetReadMangaTodayInfoFromURL
-    else
-    if WebsiteID = LONEMANGA_ID then
-      Result := GetLoneMangaInfoFromURL
     else
     if WebsiteID = DYNASTYSCANS_ID then
       Result := GetDynastyScansInfoFromURL

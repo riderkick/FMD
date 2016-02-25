@@ -469,8 +469,6 @@ var
 
   {$I includes/ReadMangaToday/chapter_page_number.inc}
 
-  {$I includes/LoneManga/chapter_page_number.inc}
-
   {$I includes/Dynasty-Scans/chapter_page_number.inc}
 
 begin
@@ -628,9 +626,6 @@ begin
     else
     if manager.container.MangaSiteID = READMANGATODAY_ID then
       Result := GetReadMangaTodayPageNumber
-    else
-    if manager.container.MangaSiteID = LONEMANGA_ID then
-      Result := GetLoneMangaPageNumber
     else
     if manager.container.MangaSiteID = DYNASTYSCANS_ID then
       Result := GetDynastyScansPageNumber;
