@@ -4,6 +4,9 @@ Project page: https://github.com/riderkick/FMD
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.36.0 (27-02-2016)
+[+] Added Tsumino[H], require cookie in advanced.ini
+
 0.9.35.2 (25-02-2016)
 [*] GameofScanlation: rewrite all script
 [-] LoneManga: removed, website redirected to GameofScanlation
