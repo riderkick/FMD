@@ -27,4 +27,5 @@ uses
   MangaChanRU,
   MintMangaRU,
   AcademyVN,
-  Webtoons;
+  Webtoons,
+  Tsumino;
