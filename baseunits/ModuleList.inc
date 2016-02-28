@@ -28,4 +28,5 @@ uses
   MintMangaRU,
   AcademyVN,
   Webtoons,
-  Tsumino;
+  Tsumino,
+  SubManga;
