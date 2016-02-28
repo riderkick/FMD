@@ -229,7 +229,7 @@ const
 
   DEFAULT_LIST = 'AnimeA,MangaFox,MangaHere,MangaInn,MangaReader';
   DEFAULT_MANGA_CUSTOMRENAME = '%MANGA%';
-  DEFAULT_CHAPTER_CUSTOMRENAME = '%NUMBERING% - %CHAPTER%';
+  DEFAULT_CHAPTER_CUSTOMRENAME = '%CHAPTER%';
 
   FMDFormatSettings :TFormatSettings = (
     CurrencyFormat            :1;
