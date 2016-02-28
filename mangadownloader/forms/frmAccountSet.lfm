@@ -1,16 +1,15 @@
 object AccountSetForm: TAccountSetForm
   Left = 0
-  Height = 224
+  Height = 234
   Top = 0
   Width = 269
   ActiveControl = cbWebsiteName
   Caption = 'Account'
   ChildSizing.LeftRightSpacing = 8
   ChildSizing.TopBottomSpacing = 8
-  ClientHeight = 224
+  ClientHeight = 234
   ClientWidth = 269
   Position = poMainFormCenter
-  LCLVersion = '1.7'
   Visible = False
   object cbWebsiteName: TComboBox
     Left = 8
@@ -77,7 +76,7 @@ object AccountSetForm: TAccountSetForm
   object pnButtons: TPanel
     Left = 8
     Height = 26
-    Top = 190
+    Top = 200
     Width = 253
     Align = alBottom
     AutoSize = True
@@ -182,5 +181,15 @@ object AccountSetForm: TAccountSetForm
       ModalResult = 2
       TabOrder = 1
     end
+  end
+  object ckShowPassword: TCheckBox
+    Left = 8
+    Height = 19
+    Top = 176
+    Width = 102
+    Caption = 'Show password'
+    OnChange = ckShowPasswordChange
+    TabOrder = 4
+    Visible = False
   end
 end

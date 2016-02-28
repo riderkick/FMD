@@ -16,6 +16,7 @@ type
     btOk: TBitBtn;
     btCancel: TBitBtn;
     cbWebsiteName: TComboBox;
+    ckShowPassword: TCheckBox;
     edUsername: TEdit;
     edPassword: TEdit;
     Label1: TLabel;
@@ -23,6 +24,7 @@ type
     Label3: TLabel;
     pnButtons: TPanel;
     procedure btOkClick(Sender: TObject);
+    procedure ckShowPasswordChange(Sender: TObject);
   private
     { private declarations }
   public
@@ -50,6 +52,14 @@ begin
   end
   else
     ModalResult := mrOK;
+end;
+
+procedure TAccountSetForm.ckShowPasswordChange(Sender: TObject);
+begin
+  if ckShowPassword.Checked then
+    edPassword.PasswordChar:=#0
+  else
+    edPassword.PasswordChar:='*';
 end;
 
 end.

@@ -421,6 +421,7 @@ begin
     cbWebsiteName.Items.Assign(WebsitesAvailable);
     if cbWebsiteName.Items.Count > 0 then
       cbWebsiteName.ItemIndex := 0;
+    ckShowPassword.Visible:=True;
     if ShowModal = mrOK then
       if Account.AddAccount(cbWebsiteName.Text, edUsername.Text, edPassword.Text) then
       begin

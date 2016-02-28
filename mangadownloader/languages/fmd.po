@@ -264,10 +264,6 @@ msgstr ""
 msgid "Refresh"
 msgstr ""
 
-#: taccountmanagerform.caption
-msgid "AccountManagerForm"
-msgstr ""
-
 #: taccountmanagerform.vtaccountlist.header.columns[1].text
 msgctxt "TACCOUNTMANAGERFORM.VTACCOUNTLIST.HEADER.COLUMNS[1].TEXT"
 msgid "Website"
@@ -290,6 +286,10 @@ msgstr ""
 
 #: taccountsetform.btok.caption
 msgid "Ok"
+msgstr ""
+
+#: taccountsetform.ckshowpassword.caption
+msgid "Show password"
 msgstr ""
 
 #: taccountsetform.edpassword.texthint

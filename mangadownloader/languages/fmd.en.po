@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: en_US\n"
-"X-Generator: Poedit 1.8.2\n"
+"X-Generator: Poedit 1.8.7\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: frmaccountmanager.rs_accountdeleteconfirmation
@@ -293,10 +293,6 @@ msgstr "Edit"
 msgid "Refresh"
 msgstr "Refresh"
 
-#: taccountmanagerform.caption
-msgid "AccountManagerForm"
-msgstr "AccountManagerForm"
-
 #: taccountmanagerform.vtaccountlist.header.columns[1].text
 #| msgid "Username"
 msgctxt "taccountmanagerform.vtaccountlist.header.columns[1].text"
@@ -323,6 +319,10 @@ msgstr "Cancel"
 #: taccountsetform.btok.caption
 msgid "Ok"
 msgstr "Ok"
+
+#: taccountsetform.ckshowpassword.caption
+msgid "Show password"
+msgstr "Show password"
 
 #: taccountsetform.edpassword.texthint
 msgctxt "taccountsetform.edpassword.texthint"
@@ -1829,4 +1829,3 @@ msgstr "Synchronizing data"
 #: uupdatethread.rs_updatinglist
 msgid "Updating list"
 msgstr "Updating list"
-
