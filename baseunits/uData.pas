@@ -1779,7 +1779,10 @@ begin
             if Pos(s, s2) = 1 then begin
               s2 := chapterName[k];
               Delete(s2, 1, j);
-              chapterName[k] := Trim(s2);
+              s2:=Trim(s2);
+              if LeftStr(s2,2)='- ' then
+                Delete(s2,1,2);
+              chapterName[k] := s2;
             end;
         end;
       end;
