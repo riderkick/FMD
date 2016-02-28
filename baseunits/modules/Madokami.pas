@@ -137,6 +137,7 @@ begin
       try
         coverLink := XPathString('//img[@itemprop="image"]/@src');
         if title = '' then title := XPathString('//*[@class="title"]');
+        if title = '' then title := XPathString('(//h1//span[@itemprop="title"])[last()]');
         authors := XPathString('//*[@itemprop="author"]');
         v := XPath('//div[@class="genres"]/a');
         if v.Count > 0 then begin
