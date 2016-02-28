@@ -421,8 +421,6 @@ var
 
   {$I includes/Starkana/chapter_page_number.inc}
 
-  {$I includes/SubManga/chapter_page_number.inc}
-
   {$I includes/Turkcraft/chapter_page_number.inc}
 
   {$I includes/AnimeA/chapter_page_number.inc}
@@ -508,9 +506,6 @@ begin
     else
     if manager.container.MangaSiteID = ESMANGAHERE_ID then
       Result := GetEsMangaHerePageNumber
-    else
-    if manager.container.MangaSiteID = SUBMANGA_ID then
-      Result := GetSubMangaPageNumber
     else
     if manager.container.MangaSiteID = ANIMEEXTREMIST_ID then
       Result := GetAnimeExtremistPageNumber
@@ -698,8 +693,6 @@ var
 
   {$I includes/Starkana/image_url.inc}
 
-  {$I includes/SubManga/image_url.inc}
-
   {$I includes/TruyenTranhTuan/image_url.inc}
 
   {$I includes/Turkcraft/image_url.inc}
@@ -788,9 +781,6 @@ begin
     else
     if manager.container.MangaSiteID = ESMANGAHERE_ID then
       Result := GetEsMangaHereImageURL
-    else
-    if manager.container.MangaSiteID = SUBMANGA_ID then
-      Result := GetSubMangaImageURL
     else
     if manager.container.MangaSiteID = ANIMEEXTREMIST_ID then
       Result := GetAnimeExtremistImageURL
@@ -1301,9 +1291,6 @@ begin
         end;
       end;
 
-      //if no total page number found, we reset pagelinks here
-      if container.MangaSiteID = SUBMANGA_ID then
-        container.PageLinks.Clear;
       if ModuleId > -1 then
         Modules.TaskStart(container, ModuleId);
 

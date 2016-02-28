@@ -1027,8 +1027,6 @@ var
 
   {$I includes/TruyenTranhTuan/names_and_links.inc}
 
-  {$I includes/SubManga/names_and_links.inc}
-
   {$I includes/Komikid/names_and_links.inc}
 
   {$I includes/Mabuns/names_and_links.inc}
@@ -1190,9 +1188,6 @@ begin
     else
     if WebsiteID = TRUYENTRANHTUAN_ID then
       Result := TruyenTranhTuanGetNamesAndLinks
-    else
-    if WebsiteID = SUBMANGA_ID then
-      Result := SubMangaGetNamesAndLinks
     else
     if WebsiteID = ESMANGAHERE_ID then
       Result := EsMangaHereGetNamesAndLinks
@@ -1357,8 +1352,6 @@ var
 
   // due to its weird designs, this will take a lot of work (and time) for it to
   // work property
-
-  {$I includes/SubManga/manga_information.inc}
 
   {$I includes/EsMangaHere/manga_information.inc}
 
@@ -1550,9 +1543,6 @@ begin
     else
     if WebsiteID = MEINMANGA_ID then
       Result := GetMeinMangaInfoFromURL
-    else
-    if WebsiteID = SUBMANGA_ID then
-      Result := GetSubMangaInfoFromURL
     else
     if WebsiteID = ESMANGAHERE_ID then
       Result := GetEsMangaHereInfoFromURL

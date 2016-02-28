@@ -285,65 +285,63 @@ const
   STARKANA_ID            = 17;
   BLOGTRUYEN_ID          = 18;
   KOMIKID_ID             = 19;
-  SUBMANGA_ID            = 20;
-  ESMANGAHERE_ID         = 21;
-  ANIMEEXTREMIST_ID      = 22;
-  HUGEMANGA_ID           = 23;
-  S2SCAN_ID              = 24;
-  SENMANGA_ID            = 25;
-  IMANHUA_ID             = 26;
-  MABUNS_ID              = 27;
-  MANGAESTA_ID           = 28;
-  CENTRALDEMANGAS_ID     = 29;
-  EGSCANS_ID             = 30;
-  MANGAAR_ID             = 31;
-  MANGAAE_ID             = 32;
-  ANIMESTORY_ID          = 33;
-  LECTUREENLIGNE_ID      = 34;
-  SCANMANGA_ID           = 35;
-  MANGAGO_ID             = 36;
-  DM5_ID                 = 37;
-  MANGACOW_ID            = 38;
-  KIVMANGA_ID            = 39;
-  MEINMANGA_ID           = 40;
-  MANGASPROJECT_ID       = 41;
-  MANGAREADER_POR_ID     = 42;
-  NINEMANGA_ID           = 43;
-  NINEMANGA_ES_ID        = 44;
-  NINEMANGA_CN_ID        = 45;
-  NINEMANGA_RU_ID        = 46;
-  NINEMANGA_DE_ID        = 47;
-  NINEMANGA_IT_ID        = 48;
-  NINEMANGA_BR_ID        = 49;
-  JAPANSHIN_ID           = 50;
-  JAPSCAN_ID             = 51;
-  CENTRUMMANGI_PL_ID     = 52;
-  MANGALIB_PL_ID         = 53;
-  ONEMANGA_ID            = 54;
-  MANGATOWN_ID           = 55;
-  MANGAOKU_ID            = 56;
-  MYREADINGMANGAINFO_ID  = 57;
-  IKOMIK_ID              = 58;
-  NHENTAI_ID             = 59;
-  MANGAMINT_ID           = 60;
-  UNIXMANGA_ID           = 61;
+  ESMANGAHERE_ID         = 20;
+  ANIMEEXTREMIST_ID      = 21;
+  HUGEMANGA_ID           = 22;
+  S2SCAN_ID              = 23;
+  SENMANGA_ID            = 24;
+  IMANHUA_ID             = 25;
+  MABUNS_ID              = 26;
+  MANGAESTA_ID           = 27;
+  CENTRALDEMANGAS_ID     = 28;
+  EGSCANS_ID             = 29;
+  MANGAAR_ID             = 30;
+  MANGAAE_ID             = 31;
+  ANIMESTORY_ID          = 32;
+  LECTUREENLIGNE_ID      = 33;
+  SCANMANGA_ID           = 34;
+  MANGAGO_ID             = 35;
+  DM5_ID                 = 36;
+  MANGACOW_ID            = 37;
+  KIVMANGA_ID            = 38;
+  MEINMANGA_ID           = 39;
+  MANGASPROJECT_ID       = 40;
+  MANGAREADER_POR_ID     = 41;
+  NINEMANGA_ID           = 42;
+  NINEMANGA_ES_ID        = 43;
+  NINEMANGA_CN_ID        = 44;
+  NINEMANGA_RU_ID        = 45;
+  NINEMANGA_DE_ID        = 46;
+  NINEMANGA_IT_ID        = 47;
+  NINEMANGA_BR_ID        = 48;
+  JAPANSHIN_ID           = 49;
+  JAPSCAN_ID             = 50;
+  CENTRUMMANGI_PL_ID     = 51;
+  MANGALIB_PL_ID         = 52;
+  ONEMANGA_ID            = 53;
+  MANGATOWN_ID           = 54;
+  MANGAOKU_ID            = 55;
+  MYREADINGMANGAINFO_ID  = 56;
+  IKOMIK_ID              = 57;
+  NHENTAI_ID             = 58;
+  MANGAMINT_ID           = 59;
+  UNIXMANGA_ID           = 60;
+  EXTREMEMANGAS_ID       = 61;
+  MANGAHOST_ID           = 62;
+  PORNCOMIX_ID           = 63;
+  PORNCOMIXRE_ID         = 64;
+  PORNCOMIXIC_ID         = 65;
+  XXCOMICS_ID            = 66;
+  XXCOMICSMT_ID          = 67;
+  XXCOMICS3D_ID          = 68;
+  PORNXXXCOMICS_ID       = 69;
+  MANGASEE_ID            = 70;
+  MANGAKU_ID             = 71;
+  MANGAAT_ID             = 72;
+  READMANGATODAY_ID      = 73;
+  DYNASTYSCANS_ID        = 74;
 
-  EXTREMEMANGAS_ID       = 62;
-  MANGAHOST_ID           = 63;
-  PORNCOMIX_ID           = 64;
-  PORNCOMIXRE_ID         = 65;
-  PORNCOMIXIC_ID         = 66;
-  XXCOMICS_ID            = 67;
-  XXCOMICSMT_ID          = 68;
-  XXCOMICS3D_ID          = 69;
-  PORNXXXCOMICS_ID       = 70;
-  MANGASEE_ID            = 71;
-  MANGAKU_ID             = 72;
-  MANGAAT_ID             = 73;
-  READMANGATODAY_ID      = 74;
-  DYNASTYSCANS_ID        = 75;
-
-  WebsiteRoots: array [0..75] of array [0..1] of string = (
+  WebsiteRoots: array [0..74] of array [0..1] of string = (
     ('AnimeA', 'http://manga.animea.net'),
     ('MangaInn', 'http://www.mangainn.me'),
     ('OurManga', 'http://www.ourmanga.com'),
@@ -364,7 +362,6 @@ const
     ('Starkana', 'http://starkana.jp'),
     ('BlogTruyen', 'http://blogtruyen.com'),
     ('Komikid', 'http://www.komikid.com'),
-    ('SubManga', 'http://submanga.com'),
     ('ESMangaHere', 'http://es.mangahere.co'),
     ('AnimExtremist', 'http://www.animextremist.com'),
     ('HugeManga', 'http://hugemanga.com'),
@@ -471,8 +468,6 @@ const
   BLOGTRUYEN_POST_FORM = 'Url=tatca&OrderBy=1&PageIndex=';
 
   KOMIKID_BROWSER = '/daftar.php';
-
-  SUBMANGA_BROWSER = '/series/n';
 
   ESMANGAHERE_BROWSER = '/mangalist/';
 
