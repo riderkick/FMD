@@ -46,7 +46,8 @@ begin
         ' Basic ' + Base64Encode(Account.Username[modulename] +
         ':' + Account.Password[modulename]);
       if AHTTP.GET(urlroot + '/login') then begin
-        Result := AHTTP.Cookies.Values['laravel_session'] <> '';
+        //Result := AHTTP.Cookies.Values['laravel_session'] <> '';
+        Result:=(AHTTP.ResultCode<400) and (AHTTP.Headers.Values['WWW-Authenticate']='');
         if Result then begin
           Account.Cookies[modulename] := AHTTP.GetCookies;
           Account.Status[modulename] := asValid;
