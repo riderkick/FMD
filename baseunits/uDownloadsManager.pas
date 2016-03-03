@@ -1035,9 +1035,9 @@ begin
     uPacker := TPacker.Create;
     try
       case container.Manager.compress of
-        1: uPacker.ext := '.zip';
-        2: uPacker.ext := '.cbz';
-        3: uPacker.ext := '.pdf';
+        1: uPacker.Format := pfZIP;
+        2: uPacker.Format := pfCBZ;
+        3: uPacker.Format := pfPDF;
       end;
       uPacker.CompressionQuality := OptionPDFQuality;
       uPacker.Path := CorrectPathSys(container.DownloadInfo.SaveTo) +
