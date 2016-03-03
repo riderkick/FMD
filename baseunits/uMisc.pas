@@ -54,6 +54,7 @@ function FormatByteSize(const bytes :longint; persecond: boolean = False) :strin
 
 //sorting
 function NaturalCompareStr(Str1, Str2: string): integer; inline;
+function NaturalCustomSort(List: TStringList; Index1, Index2: Integer): Integer; inline;
 
 //run external process
 function RunExternalProcessAsAdmin(Exe, Params: String; ShowWind: Boolean = True;
@@ -381,6 +382,11 @@ end;
 function NaturalCompareStr(Str1, Str2: string): integer;
 begin
   Result := NaturalSortUnit.UTF8LogicalCompareText(Str1, Str2);
+end;
+
+function NaturalCustomSort(List: TStringList; Index1, Index2: Integer): Integer;
+begin
+  Result := NaturalCompareStr(List[Index1], List[Index2]);
 end;
 
 procedure QuickSortNaturalPart(var Alist: TStringList; Separator: String;
