@@ -4,6 +4,11 @@ Project page: https://github.com/riderkick/FMD
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.38.0 (04-03-2016)
+[+] Added MangaBackup[EN]
+[*] GameofScanlation: fix get image url
+[*] Various changes and bug fixes
+
 0.9.37.0 (28-02-2016)
 [*] Madokami: fix login
 [*] SubManga: rewrite all script
