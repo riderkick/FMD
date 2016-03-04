@@ -29,4 +29,5 @@ uses
   AcademyVN,
   Webtoons,
   Tsumino,
-  SubManga;
+  SubManga,
+  MangaBackup;
