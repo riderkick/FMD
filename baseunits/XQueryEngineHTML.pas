@@ -25,8 +25,12 @@ type
     procedure ParseHTML(const HTMLStream: TStream); overload;
     function XPath(const Expression: String; const Tree: TTreeNode = nil): IXQValue; inline;
     function XPathString(const Expression: String; const Tree: TTreeNode = nil): String; inline;
+    function XPathStringAll(const Expression: String; const Tree: TTreeNode = nil;
+      const Separator: String = ', '): String;
     function CSS(const Expression: String; const Tree: TTreeNode = nil): IXQValue; inline;
     function CSSString(const Expression: String; const Tree: TTreeNode = nil): String; inline;
+    function CSSStringAll(const Expression: String; const Tree: TTreeNode = nil;
+      const Separator: String = ', '): String;
     property Engine: TXQueryEngine read FEngine;
   end;
 
@@ -42,6 +46,17 @@ begin
   Setlength(Result, Stream.Size);
   x := Stream.Read(PChar(Result)^, Stream.Size);
   SetLength(Result, x);
+end;
+
+procedure AddSeparatorString(var Dest: String; const S: String; const Separator: String = ', ');
+begin
+  if Trim(S) <> '' then
+  begin
+    if Trim(Dest) = '' then
+      Dest := Trim(S)
+    else
+      Dest := Trim(Dest) + Separator + Trim(S);
+  end;
 end;
 
 { TXQueryEngineHTML }
@@ -120,6 +135,16 @@ begin
   Result := Eval(Expression, False, Tree).toString;
 end;
 
+function TXQueryEngineHTML.XPathStringAll(const Expression: String;
+  const Tree: TTreeNode; const Separator: String): String;
+var
+  v: IXQValue;
+begin
+  Result := '';
+  for v in Eval(Expression, False, Tree) do
+    AddSeparatorString(Result, v.toString, Separator);
+end;
+
 function TXQueryEngineHTML.CSS(const Expression: String; const Tree: TTreeNode): IXQValue;
 begin
   Result := Eval(Expression, True, Tree);
@@ -128,6 +153,16 @@ end;
 function TXQueryEngineHTML.CSSString(const Expression: String; const Tree: TTreeNode): String;
 begin
   Result := Eval(Expression, True, Tree).toString;
+end;
+
+function TXQueryEngineHTML.CSSStringAll(const Expression: String; const Tree: TTreeNode;
+  const Separator: String): String;
+var
+  v: IXQValue;
+begin
+  Result := '';
+  for v in Eval(Expression, True, Tree) do
+    AddSeparatorString(Result, v.toString, Separator);
 end;
 
 end.
