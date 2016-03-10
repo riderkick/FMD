@@ -385,8 +385,6 @@ var
 
   {$I includes/EsMangaHere/chapter_page_number.inc}
 
-  {$I includes/Hentai2Read/chapter_page_number.inc}
-
   {$I includes/HugeManga/chapter_page_number.inc}
 
   {$I includes/Kivmanga/chapter_page_number.inc}
@@ -544,9 +542,6 @@ begin
     if manager.container.MangaSiteID = KIVMANGA_ID then
       Result := GetKivmangaPageNumber
     else
-    if manager.container.MangaSiteID = HENTAI2READ_ID then
-      Result := GetHentai2ReadPageNumber
-    else
     if (manager.container.MangaSiteID = NINEMANGA_ID) or
       (manager.container.MangaSiteID = NINEMANGA_ES_ID) or
       (manager.container.MangaSiteID = NINEMANGA_CN_ID) or
@@ -648,8 +643,6 @@ var
   {$I includes/EsMangaHere/image_url.inc}
 
   {$I includes/Fakku/image_url.inc}
-
-  {$I includes/Hentai2Read/image_url.inc}
 
   {$I includes/HugeManga/image_url.inc}
 
@@ -757,9 +750,6 @@ begin
     else
     if manager.container.MangaSiteID = VNSHARING_ID then
       Result := GetVnSharingImageURL
-    else
-    if manager.container.MangaSiteID = HENTAI2READ_ID then
-      Result := GetHentai2ReadImageURL
     else
     if manager.container.MangaSiteID = FAKKU_ID then
       Result := GetFakkuImageURL

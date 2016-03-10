@@ -792,8 +792,6 @@ var
 
   {$I includes/VnSharing/directory_page_number.inc}
 
-  {$I includes/Hentai2Read/directory_page_number.inc}
-
   {$I includes/Fakku/directory_page_number.inc}
 
   {$I includes/MangaPark/directory_page_number.inc}
@@ -883,9 +881,6 @@ begin
       else
       if WebsiteID = VNSHARING_ID then
         Result := GetVnSharingDirectoryPageNumber
-      else
-      if WebsiteID = HENTAI2READ_ID then
-        Result := GetHentai2ReadDirectoryPageNumber
       else
       if WebsiteID = FAKKU_ID then
         Result := GetFakkuDirectoryPageNumber
@@ -1017,8 +1012,6 @@ var
 
   {$I includes/VnSharing/names_and_links.inc}
 
-  {$I includes/Hentai2Read/names_and_links.inc}
-
   {$I includes/Fakku/names_and_links.inc}
 
   {$I includes/MangaPark/names_and_links.inc}
@@ -1146,9 +1139,6 @@ begin
     else
     if WebsiteID = VNSHARING_ID then
       Result := VnSharingGetNamesAndLinks
-    else
-    if WebsiteID = HENTAI2READ_ID then
-      Result := Hentai2ReadGetNamesAndLinks
     else
     if WebsiteID = FAKKU_ID then
       Result := FakkuGetNamesAndLinks
@@ -1363,8 +1353,6 @@ var
 
   {$I includes/VnSharing/manga_information.inc}
 
-  {$I includes/Hentai2Read/manga_information.inc}
-
   {$I includes/Fakku/manga_information.inc}
 
   {$I includes/MangaPark/manga_information.inc}
@@ -1504,9 +1492,6 @@ begin
     else
     if WebsiteID = VNSHARING_ID then
       Result := GetVnSharingInfoFromURL
-    else
-    if WebsiteID = HENTAI2READ_ID then
-      Result := GetHentai2ReadInfoFromURL
     else
     if WebsiteID = FAKKU_ID then
       Result := GetFakkuInfoFromURL
