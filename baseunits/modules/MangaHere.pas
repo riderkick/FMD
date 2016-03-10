@@ -5,7 +5,8 @@ unit MangaHere;
 interface
 
 uses
-  Classes, SysUtils, WebsiteModules, uData, uBaseUnit, uDownloadsManager, synautil;
+  Classes, SysUtils, WebsiteModules, uData, uBaseUnit, uDownloadsManager,
+  XQueryEngineHTML, synautil;
 
 implementation
 

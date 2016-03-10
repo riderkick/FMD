@@ -5,7 +5,7 @@ unit Cloudflare;
 interface
 
 uses
-  Classes, SysUtils, uBaseUnit, BESEN, BESENValue, RegExpr;
+  Classes, SysUtils, uBaseUnit, XQueryEngineHTML, BESEN, BESENValue, RegExpr;
 
 function GETCF(const AHTTP: THTTPSendThread; const AURL: String; var Cookie: String;
   var CS: TRTLCriticalSection): Boolean; overload;

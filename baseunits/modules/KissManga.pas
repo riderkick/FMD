@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, WebsiteModules, uData, uBaseUnit, uDownloadsManager,
-  Cloudflare, RegExpr, synautil;
+  XQueryEngineHTML, Cloudflare, RegExpr, synautil;
 
 implementation
 

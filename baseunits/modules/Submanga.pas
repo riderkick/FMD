@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, WebsiteModules, uData, uBaseUnit, uDownloadsManager,
-  RegExpr;
+  XQueryEngineHTML, RegExpr;
 
 implementation
 

@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, WebsiteModules, uData, uBaseUnit, uDownloadsManager,
-  synautil;
+  XQueryEngineHTML, synautil;
 
 implementation
 
@@ -59,7 +59,6 @@ function GetInfo(const MangaInfo: TMangaInformation;
   const AURL: String; const Module: TModuleContainer): Integer;
 var
   i: Integer;
-  s: String;
   v: IXQValue;
 const
   g: array[0..2] of String = ('Parody','Characters','Tags');

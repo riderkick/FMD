@@ -5,7 +5,8 @@ unit HitomiLa;
 interface
 
 uses
-  Classes, SysUtils, WebsiteModules, uData, uBaseUnit, uDownloadsManager;
+  Classes, SysUtils, WebsiteModules, uData, uBaseUnit, uDownloadsManager,
+  XQueryEngineHTML;
 
 implementation
 
