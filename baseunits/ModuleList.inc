@@ -30,4 +30,5 @@ uses
   Webtoons,
   Tsumino,
   SubManga,
-  MangaBackup;
+  MangaBackup,
+  Hentai2Read;
