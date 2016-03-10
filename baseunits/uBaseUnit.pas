@@ -1407,7 +1407,7 @@ begin
   with TRegExpr.Create do
     try
       Expression := REGEX_HOST;
-      if Replace(URL, '$1', True) = '' then
+      if Replace(URL, '$2', True) = '' then
       begin
         tu := Replace(URL, '$4', True);
         if tu = '' then
