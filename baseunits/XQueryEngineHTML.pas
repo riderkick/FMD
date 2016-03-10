@@ -15,17 +15,18 @@ type
   private
     FEngine: TXQueryEngine;
     FTreeParser: TTreeParser;
-    function Eval(Expression: String; isCSS: Boolean = False; Tree: TTreeNode = nil): IXQValue;
+    function Eval(const Expression: String; const isCSS: Boolean = False;
+      const Tree: TTreeNode = nil): IXQValue;
   public
-    constructor Create(HTML: String = ''); overload;
-    constructor Create(HTMLStream: TStream); overload;
+    constructor Create(const HTML: String = ''); overload;
+    constructor Create(const HTMLStream: TStream); overload;
     destructor Destroy; override;
-    procedure ParseHTML(HTML: String); overload;
-    procedure ParseHTML(HTMLStream: TStream); overload;
-    function XPath(Expression: String; Tree: TTreeNode = nil): IXQValue; inline;
-    function XPathString(Expression: String; Tree: TTreeNode = nil): String; inline;
-    function CSS(Expression: String; Tree: TTreeNode = nil): IXQValue; inline;
-    function CSSString(Expression: String; Tree: TTreeNode = nil): String; inline;
+    procedure ParseHTML(const HTML: String); overload;
+    procedure ParseHTML(const HTMLStream: TStream); overload;
+    function XPath(const Expression: String; const Tree: TTreeNode = nil): IXQValue; inline;
+    function XPathString(const Expression: String; const Tree: TTreeNode = nil): String; inline;
+    function CSS(const Expression: String; const Tree: TTreeNode = nil): IXQValue; inline;
+    function CSSString(const Expression: String; const Tree: TTreeNode = nil): String; inline;
     property Engine: TXQueryEngine read FEngine;
   end;
 
@@ -33,7 +34,7 @@ type
 
 implementation
 
-function StreamToString(const Stream: TStream): string;
+function StreamToString(const Stream: TStream): String;
 var
   x: Integer;
 begin
@@ -45,26 +46,32 @@ end;
 
 { TXQueryEngineHTML }
 
-function TXQueryEngineHTML.Eval(Expression: String; isCSS: Boolean; Tree: TTreeNode): IXQValue;
+function TXQueryEngineHTML.Eval(const Expression: String; const isCSS: Boolean;
+  const Tree: TTreeNode): IXQValue;
 var
   t: TTreeNode;
 begin
   Result := xqvalue();
   t := Tree;
-  if t = nil then t := FTreeParser.getLastTree;
-  if Expression = '' then Exit;
+  if t = nil then
+    t := FTreeParser.getLastTree;
+  if Expression = '' then
+    Exit;
   try
-    if isCSS then Result := FEngine.evaluateCSS3(Expression, t)
-    else Result := FEngine.evaluateXPath3(Expression, t);
+    if isCSS then
+      Result := FEngine.evaluateCSS3(Expression, t)
+    else
+      Result := FEngine.evaluateXPath3(Expression, t);
   except
   end;
 end;
 
-constructor TXQueryEngineHTML.Create(HTML: String);
+constructor TXQueryEngineHTML.Create(const HTML: String);
 begin
-  FEngine := TXQueryEngine.create;
+  FEngine := TXQueryEngine.Create;
   FTreeParser := TTreeParser.Create;
-  with FTreeParser do begin
+  with FTreeParser do
+  begin
     parsingModel := pmHTML;
     repairMissingStartTags := True;
     repairMissingEndTags := True;
@@ -72,16 +79,17 @@ begin
     readComments := False;
     readProcessingInstructions := False;
     autoDetectHTMLEncoding := False;
-    if HTML <> '' then parseTree(HTML);
+    if HTML <> '' then
+      parseTree(HTML);
   end;
 end;
 
-constructor TXQueryEngineHTML.Create(HTMLStream: TStream);
+constructor TXQueryEngineHTML.Create(const HTMLStream: TStream);
 begin
   if Assigned(HTMLStream) then
     Create(StreamToString(HTMLStream))
   else
-    Create;
+    Create('');
 end;
 
 destructor TXQueryEngineHTML.Destroy;
@@ -91,37 +99,35 @@ begin
   inherited Destroy;
 end;
 
-procedure TXQueryEngineHTML.ParseHTML(HTML: String);
+procedure TXQueryEngineHTML.ParseHTML(const HTML: String);
 begin
-  if HTML <> '' then FTreeParser.parseTree(HTML);
+  if HTML <> '' then
+    FTreeParser.parseTree(HTML);
 end;
 
-procedure TXQueryEngineHTML.ParseHTML(HTMLStream: TStream);
+procedure TXQueryEngineHTML.ParseHTML(const HTMLStream: TStream);
 begin
   ParseHTML(StreamToString(HTMLStream));
 end;
 
-function TXQueryEngineHTML.XPath(Expression: String; Tree: TTreeNode): IXQValue;
+function TXQueryEngineHTML.XPath(const Expression: String; const Tree: TTreeNode): IXQValue;
 begin
   Result := Eval(Expression, False, Tree);
 end;
 
-function TXQueryEngineHTML.XPathString(Expression: String; Tree: TTreeNode
-  ): String;
+function TXQueryEngineHTML.XPathString(const Expression: String; const Tree: TTreeNode): String;
 begin
   Result := Eval(Expression, False, Tree).toString;
 end;
 
-function TXQueryEngineHTML.CSS(Expression: String; Tree: TTreeNode): IXQValue;
+function TXQueryEngineHTML.CSS(const Expression: String; const Tree: TTreeNode): IXQValue;
 begin
   Result := Eval(Expression, True, Tree);
 end;
 
-function TXQueryEngineHTML.CSSString(Expression: String; Tree: TTreeNode
-  ): String;
+function TXQueryEngineHTML.CSSString(const Expression: String; const Tree: TTreeNode): String;
 begin
   Result := Eval(Expression, True, Tree).toString;
 end;
 
 end.
-
