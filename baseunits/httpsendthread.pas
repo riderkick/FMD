@@ -18,33 +18,34 @@ type
     fretrycount: Integer;
     fgzip: Boolean;
     ffollowredirection: Boolean;
-    procedure SetTimeout(AValue: integer);
+    procedure SetTimeout(AValue: Integer);
     procedure OnOwnerTerminate(Sender: TObject);
   public
     constructor Create(AOwner: TFMDThread = nil);
-    function HTTPRequest(const Method, URL: String; Response: TObject = nil): Boolean;
-    function HEAD(const URL: String; Response: TObject = nil): Boolean;
-    function GET(const URL: String; Response: TObject = nil): Boolean;
-    function POST(const URL: String; POSTData: String = ''; Response: TObject = nil): Boolean;
+    function HTTPRequest(const Method, URL: String; const Response: TObject = nil): Boolean;
+    function HEAD(const URL: String; const Response: TObject = nil): Boolean;
+    function GET(const URL: String; const Response: TObject = nil): Boolean;
+    function POST(const URL: String; const POSTData: String = ''; const Response: TObject = nil): Boolean;
     function GetCookies: String;
-    procedure RemoveCookie(const CookieName: string);
+    procedure RemoveCookie(const CookieName: String);
     procedure SetProxy(const ProxyType, Host, Port, User, Pass: String);
     procedure SetNoProxy;
     procedure Reset;
-    property Timeout: integer read FTimeout write SetTimeout;
+    property Timeout: Integer read FTimeout write SetTimeout;
     property RetryCount: Integer read fretrycount write fretrycount;
     property GZip: Boolean read fgzip write fgzip;
     property FollowRedirection: Boolean read ffollowredirection write ffollowredirection;
   end;
 
 var
-  DefaultUserAgent: String = 'Mozilla/5.0 (Windows NT 10.0; WOW64; rv:44.0) Gecko/20100101 Firefox/44.0';
+  DefaultUserAgent: String =
+  'Mozilla/5.0 (Windows NT 10.0; WOW64; rv:44.0) Gecko/20100101 Firefox/44.0';
 
 implementation
 
 { THTTPSendThread }
 
-procedure THTTPSendThread.SetTimeout(AValue: integer);
+procedure THTTPSendThread.SetTimeout(AValue: Integer);
 begin
   if FTimeout = AValue then Exit;
   FTimeout := AValue;
@@ -79,8 +80,7 @@ begin
   end;
 end;
 
-function THTTPSendThread.HTTPRequest(const Method, URL: String;
-  Response: TObject): Boolean;
+function THTTPSendThread.HTTPRequest(const Method, URL: String; const Response: TObject): Boolean;
 
   function CheckTerminate: Boolean;
   begin
@@ -97,7 +97,7 @@ begin
   Result := False;
   rurl := EncodeURL(DecodeURL(URL));
   if Pos('HTTP/', Headers.Text) = 1 then Reset;
-  HTTPHeader:= TStringList.Create;
+  HTTPHeader := TStringList.Create;
   HTTPHeader.Assign(Headers);
   try
     // first request
@@ -173,18 +173,17 @@ begin
   end;
 end;
 
-function THTTPSendThread.HEAD(const URL: String; Response: TObject): Boolean;
+function THTTPSendThread.HEAD(const URL: String; const Response: TObject): Boolean;
 begin
   Result := HTTPRequest('HEAD', URL, Response);
 end;
 
-function THTTPSendThread.GET(const URL: String; Response: TObject): Boolean;
+function THTTPSendThread.GET(const URL: String; const Response: TObject): Boolean;
 begin
   Result := HTTPRequest('GET', URL, Response);
 end;
 
-function THTTPSendThread.POST(const URL: String; POSTData: String;
-  Response: TObject): Boolean;
+function THTTPSendThread.POST(const URL: String; const POSTData: String; const Response: TObject): Boolean;
 begin
   if POSTData <> '' then begin
     Document.Clear;
@@ -207,7 +206,7 @@ begin
     end;
 end;
 
-procedure THTTPSendThread.RemoveCookie(const CookieName: string);
+procedure THTTPSendThread.RemoveCookie(const CookieName: String);
 var
   i: Integer;
 begin
@@ -218,8 +217,7 @@ begin
   end;
 end;
 
-procedure THTTPSendThread.SetProxy(const ProxyType, Host, Port, User,
-  Pass: String);
+procedure THTTPSendThread.SetProxy(const ProxyType, Host, Port, User, Pass: String);
 var
   pt: String;
 begin
@@ -262,7 +260,7 @@ end;
 
 procedure THTTPSendThread.SetNoProxy;
 begin
-  SetProxy('', '', '', '' ,'');
+  SetProxy('', '', '', '', '');
 end;
 
 procedure THTTPSendThread.Reset;
@@ -276,4 +274,3 @@ begin
 end;
 
 end.
-
