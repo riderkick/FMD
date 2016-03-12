@@ -44,12 +44,14 @@ implementation
 
 function StreamToString(const Stream: TStream): String;
 var
-  x: Integer;
+  p, x: Int64;
 begin
+  p := Stream.Position;
   Stream.Position := 0;
   Setlength(Result, Stream.Size);
   x := Stream.Read(PChar(Result)^, Stream.Size);
   SetLength(Result, x);
+  Stream.Position := p;
 end;
 
 procedure AddSeparatorString(var Dest: String; const S: String; const Separator: String = ', ');
