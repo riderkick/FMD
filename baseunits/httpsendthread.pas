@@ -37,11 +37,36 @@ type
     property FollowRedirection: Boolean read ffollowredirection write ffollowredirection;
   end;
 
+  TKeyValuePair = array[0..1] of String;
+
+function KeyVal(const AKey, AValue: String): TKeyValuePair;
+function QueryString(KeyValuePairs: array of TKeyValuePair): String;
+
 var
   DefaultUserAgent: String =
   'Mozilla/5.0 (Windows NT 10.0; WOW64; rv:44.0) Gecko/20100101 Firefox/44.0';
 
 implementation
+
+function KeyVal(const AKey, AValue: String): TKeyValuePair;
+begin
+  Result[0] := AKey;
+  Result[1] := AValue;
+end;
+
+function QueryString(KeyValuePairs: array of TKeyValuePair): String;
+var
+  i: Integer;
+begin
+  Result := '';
+  if Length(KeyValuePairs) > 0 then
+    for i := Low(KeyValuePairs) to High(KeyValuePairs) do
+    begin
+      if Result <> '' then
+        Result := Result + '&';
+      Result := Result + EncodeURL(KeyValuePairs[i, 0]) + '=' + EncodeURL(KeyValuePairs[i, 1]);
+    end;
+end;
 
 { THTTPSendThread }
 
