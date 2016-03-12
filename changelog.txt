@@ -4,6 +4,10 @@ Project page: https://github.com/riderkick/FMD
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.40.0 (12-03-2016)
+[+] Added Tsumangaonline[ES]
+[*] Various changes and bug fixes
+
 0.9.39.0 (10-03-2016)
 [*] Hentai2Read: rewrite all script
 [*] Various changes and bug fixes
