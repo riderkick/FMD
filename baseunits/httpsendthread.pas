@@ -190,7 +190,8 @@ begin
     Document.Clear;
     WriteStrToStream(Document, POSTData);
   end;
-  MimeType := 'application/x-www-form-urlencoded';
+  if (MimeType = 'text/html') or (MimeType = '') then
+    MimeType := 'application/x-www-form-urlencoded';
   Result := HTTPRequest('POST', URL, Response);
 end;
 
