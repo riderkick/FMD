@@ -31,4 +31,5 @@ uses
   Tsumino,
   SubManga,
   MangaBackup,
-  Hentai2Read;
+  Hentai2Read,
+  Tumangaonline;
