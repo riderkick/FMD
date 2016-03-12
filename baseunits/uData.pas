@@ -83,6 +83,7 @@ type
     parse: TStringList;
     isGenerateFolderChapterName: Boolean;
     isRemoveUnicode: Boolean;
+    RemoveHostFromChapterLinks: Boolean;
     FHTTP: THTTPSendThread;
     ModuleId: Integer;
 
@@ -739,6 +740,7 @@ begin
     mangaInfo := TMangaInfo.Create;
   isGetByUpdater := False;
   ModuleId := -1;
+  RemoveHostFromChapterLinks := True;
 end;
 
 destructor TMangaInformation.Destroy;
@@ -1735,7 +1737,8 @@ begin
     if chapterLinks.Count > 0 then
     begin
       // remove host from chapter links
-      RemoveHostFromURLsPair(chapterLinks, chapterName);
+      if RemoveHostFromChapterLinks then
+        RemoveHostFromURLsPair(chapterLinks, chapterName);
       // fixing chapter name
       for j := 0 to chapterName.Count - 1 do
       begin
