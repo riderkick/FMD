@@ -102,6 +102,17 @@ begin
   end;
 end;
 
+function TaskStart(const Task: TTaskContainer; const Module: TModuleContainer): Boolean;
+begin
+  Result := True;
+  if Task = nil then Exit;
+  with Task.PageContainerLinks do
+  begin
+    NameValueSeparator := '=';
+    Delimiter := '&';
+  end;
+end;
+
 function GetPageNumber(const DownloadThread: TDownloadThread; const AURL: String;
   const Module: TModuleContainer): Boolean;
 var
@@ -152,8 +163,6 @@ begin
     if GET(MaybeFillHost(Module.RootURL, s)) then begin
       Result := True;
       with PageContainerLinks do begin
-        NameValueSeparator := '=';
-        Delimiter := '&';
         source := TStringList.Create;
         try
           source.LoadFromStream(Document);
@@ -190,13 +199,7 @@ begin
   if DownloadThread = nil then Exit;
   with DownloadThread.manager.container, DownloadThread.FHTTP do begin
     if PageContainerLinks.Count = 0 then Exit;
-    with PageContainerLinks do begin
-      if NameValueSeparator <> '=' then
-        NameValueSeparator := '=';
-      if Delimiter <> '&' then
-        Delimiter := '&';
-      Values['pagina'] := IncStr(DownloadThread.workCounter);
-    end;
+    PageContainerLinks.Values['pagina'] := IncStr(DownloadThread.workCounter);
     Headers.Values['Referer'] :=
       ' ' + MaybeFillHost(Module.RootURL, ChapterLinks[CurrentDownloadChapterPtr]);
     if POST(Module.RootURL + '/visor/x.php', PageContainerLinks.DelimitedText) then begin
@@ -218,6 +221,7 @@ begin
     Website := 'Tumangaonline';
     RootURL := 'http://www.tumangaonline.com';
     TotalDirectory := Length(dirurls);
+    OnTaskStart := @TaskStart;
     OnGetDirectoryPageNumber := @GetDirectoryPageNumber;
     OnGetNameAndLink := @GetNameAndLink;
     OnGetInfo := @GetInfo;
