@@ -458,6 +458,12 @@ msgstr "Update manga list"
 msgid "Visit my blog"
 msgstr "Visit my blog"
 
+#: tmainform.caption
+#, fuzzy
+msgctxt "tmainform.caption"
+msgid "Free Manga Downloader"
+msgstr "Free Manga Downloader"
+
 #: tmainform.cbaddasstopped.caption
 msgid "Add to download list as stopped task"
 msgstr "Add to download list as stopped task"

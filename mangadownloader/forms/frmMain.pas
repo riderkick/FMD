@@ -31,12 +31,9 @@ type
 
   TMainForm = class(TForm)
     appPropertiesMain: TApplicationProperties;
-    Bevel1: TBevel;
     btAddToFavorites: TBitBtn;
-    btBrowse: TSpeedButton;
     btCancelFavoritesCheck: TSpeedButton;
     btAbortCheckLatestVersion: TSpeedButton;
-    btOptionBrowse: TSpeedButton;
     btChecks: TSpeedButton;
     btDonate: TImage;
     btFavoritesImport: TBitBtn;
@@ -48,7 +45,6 @@ type
     btSearchClear: TSpeedButton;
     btWebsitesSearchClear: TSpeedButton;
     btUpdateList: TSpeedButton;
-    btURL: TSpeedButton;
     cbEHentaiDownloadOriginalImage: TCheckBox;
     cbOptionAutoCheckFavStartup: TCheckBox;
     cbOptionAutoCheckFavInterval: TCheckBox;
@@ -68,13 +64,20 @@ type
     cbUseRegExpr: TCheckBox;
     cbOptionProxyType: TComboBox;
     cbOptionOneInstanceOnly: TCheckBox;
+    edOptionDefaultPath: TDirectoryEdit;
     edOptionMangaCustomRename: TEdit;
+    edSaveTo: TDirectoryEdit;
+    edURL: TEditButton;
     gbMangafox: TGroupBox;
     gbEHentai: TGroupBox;
     lbOptionMangaCustomRenameHint: TLabel;
     lbOptionMangaCustomRename: TLabel;
     miAbortSilentThread: TMenuItem;
     mmChangelog: TMemo;
+    Panel1: TPanel;
+    Panel2: TPanel;
+    Panel3: TPanel;
+    Panel8: TPanel;
     pcAbout: TPageControl;
     pmSbMain: TPopupMenu;
     sbSaveTo: TScrollBox;
@@ -89,12 +92,9 @@ type
     TransferRateGraphArea: TAreaSeries;
     TransferRateGraph: TChart;
     ckDropTarget: TCheckBox;
-    edOptionDefaultPath: TEdit;
     edOptionExternalParams: TEdit;
     edOptionExternalPath: TFileNameEdit;
-    edSaveTo: TEdit;
     edWebsitesSearch: TEdit;
-    edURL: TEdit;
     gbDropTarget: TGroupBox;
     gbOptionExternal: TGroupBox;
     IconDL: TImageList;
@@ -355,7 +355,6 @@ type
     procedure btReadOnlineClick(Sender: TObject);
     procedure btSearchClearClick(Sender: TObject);
     procedure btUpdateListClick(Sender: TObject);
-    procedure btURLClick(Sender: TObject);
     procedure btVisitMyBlogClick(Sender: TObject);
     procedure btWebsitesSearchClearClick(Sender: TObject);
     procedure cbOptionAutoCheckFavIntervalChange(Sender: TObject);
@@ -375,13 +374,12 @@ type
     procedure edSearchChange(Sender: TObject);
     procedure edSearchKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState
       );
+    procedure edURLButtonClick(Sender: TObject);
     procedure edURLKeyPress(Sender: TObject; var Key: Char);
     procedure edWebsitesSearchChange(Sender: TObject);
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCreate(Sender: TObject);
 
-    procedure btBrowseClick(Sender: TObject);
-    procedure btOptionBrowseClick(Sender: TObject);
     procedure btDownloadClick(Sender: TObject);
     procedure btFavoritesCheckNewChapterClick(Sender: TObject);
     procedure btOptionApplyClick(Sender: TObject);
@@ -1450,7 +1448,7 @@ end;
 procedure TMainForm.medURLPasteandgoClick(Sender: TObject);
 begin
   edURL.Text := Clipboard.AsText;
-  btURLClick(edURL);
+  edURLButtonClick(edURL);
 end;
 
 procedure TMainForm.medtURLDeleteClick(Sender: TObject);
@@ -1487,7 +1485,7 @@ begin
         edURL.Text := FillHost(Modules.Module[i].RootURL, DownloadInfo.Link)
       else
         edURL.Text := FillMangaSiteHost(DownloadInfo.Website, DownloadInfo.Link);
-      btURLClick(btURL);
+      edURLButtonClick(edURL);
       pcMain.ActivePage := tsInformation;
     end;
 end;
@@ -2007,24 +2005,6 @@ end;
 
 // -----
 
-procedure TMainForm.btBrowseClick(Sender: TObject);
-begin
-  //dlgSaveTo.InitialDir := CorrectFilePath(edSaveTo.Text);
-  dlgSaveTo.InitialDir := edSaveTo.Text;
-  if dlgSaveTo.Execute then
-    edSaveTo.Text := dlgSaveTo.FileName;
-  //edSaveTo.Text := CorrectFilePath(dlgSaveTo.FileName);
-end;
-
-procedure TMainForm.btOptionBrowseClick(Sender: TObject);
-begin
-  //dlgSaveTo.InitialDir := CorrectFilePath(edOptionDefaultPath.Text);
-  dlgSaveTo.InitialDir := edOptionDefaultPath.Text;
-  if dlgSaveTo.Execute then
-    edOptionDefaultPath.Text := CorrectPathSys(dlgSaveTo.FileName);
-  //edOptionDefaultPath.Text := CorrectFilePath(dlgSaveTo.FileName);
-end;
-
 // -----
 
 procedure TMainForm.btUpdateListClick(Sender: TObject);
@@ -2085,91 +2065,6 @@ begin
   if Length(ChapterList) > 0 then
     for i := Low(ChapterList) to High(ChapterList) do
       ChapterList[i].Downloaded := False;
-end;
-
-procedure TMainForm.btURLClick(Sender: TObject);
-var
-  i: Integer;
-  webid: Cardinal;
-  website,
-  host,
-  link: String;
-  regx: TRegExpr;
-begin
-  website := '';
-  host := '';
-  link := '';
-  edURL.Text := FixURL(edURL.Text);
-  regx := TRegExpr.Create;
-  try
-    regx.Expression := '^https?\://';
-    if not (regx.Exec(edURL.Text)) then
-      edURL.Text := 'http://' + edURL.Text;
-
-    regx.Expression := REGEX_HOST;
-    if regx.Exec(edURL.Text) then
-    begin
-      host := regx.Replace(edURL.Text, '$2', True);
-      link := regx.Replace(edURL.Text, '$4', True);
-    end;
-
-    if (host <> '') and (link <> '') then
-    begin
-      host := LowerCase(host);
-      i := Modules.LocateModuleByHost(host);
-      if i > -1 then
-      begin
-        website := Modules.Module[i].Website;
-        edURL.Text := FillHost(Modules.Module[i].RootURL, link);
-      end
-      else
-      begin
-        for i := Low(WebsiteRoots) to High(WebsiteRoots) do
-          if Pos(host, WebsiteRoots[i, 1]) > 0 then
-          begin
-            webid := i;
-            website := WebsiteRoots[i, 0];
-            Break;
-          end;
-        if website <> '' then
-          edURL.Text := FillMangaSiteHost(webid, link);
-      end;
-    end;
-  finally
-    regx.Free;
-  end;
-
-  DisableAddToFavorites(website);
-  if (website = '') or (link = '') then
-  begin
-    MessageDlg('', RS_DlgURLNotSupport, mtInformation, [mbYes], 0);
-    Exit;
-  end;
-
-  if isGetMangaInfos then
-  begin
-    GetInfosThread.IsFlushed := True;
-    GetInfosThread.Terminate;
-    //GetInfosThread.WaitFor;
-  end;
-  GetInfosThread := TGetMangaInfosThread.Create;
-  GetInfosThread.MangaListPos := -1;
-  GetInfosThread.Title := '';
-  GetInfosThread.Website := website;
-  GetInfosThread.Link := link;
-  GetInfosThread.Start;
-
-  pcMain.ActivePage := tsInformation;
-  imCover.Picture.Assign(nil);
-  clbChapterList.Clear;
-  if Assigned(gifWaiting) then
-  begin
-    itAnimate.Enabled := True;
-    pbWait.Visible := True;
-  end;
-  btAddToFavorites.Enabled := not SitesWithoutFavorites(website);
-  rmInformation.Clear;
-  rmInformation.Lines.Add(RS_Loading);
 end;
 
 procedure TMainForm.btVisitMyBlogClick(Sender: TObject);
@@ -2311,7 +2206,7 @@ end;
 procedure TMainForm.edURLKeyPress(Sender: TObject; var Key: Char);
 begin
   if Key = #13 then
-    btURLClick(btURL);
+    edURLButtonClick(edURL);
 end;
 
 procedure TMainForm.edWebsitesSearchChange(Sender: TObject);
@@ -4782,6 +4677,91 @@ begin
   else
   if edSearch.Tag <> 0 then
     edSearch.Tag := 0;
+end;
+
+procedure TMainForm.edURLButtonClick(Sender: TObject);
+var
+  i: Integer;
+  webid: Cardinal;
+  website,
+  host,
+  link: String;
+  regx: TRegExpr;
+begin
+  website := '';
+  host := '';
+  link := '';
+  edURL.Text := FixURL(edURL.Text);
+  regx := TRegExpr.Create;
+  try
+    regx.Expression := '^https?\://';
+    if not (regx.Exec(edURL.Text)) then
+      edURL.Text := 'http://' + edURL.Text;
+
+    regx.Expression := REGEX_HOST;
+    if regx.Exec(edURL.Text) then
+    begin
+      host := regx.Replace(edURL.Text, '$2', True);
+      link := regx.Replace(edURL.Text, '$4', True);
+    end;
+
+    if (host <> '') and (link <> '') then
+    begin
+      host := LowerCase(host);
+      i := Modules.LocateModuleByHost(host);
+      if i > -1 then
+      begin
+        website := Modules.Module[i].Website;
+        edURL.Text := FillHost(Modules.Module[i].RootURL, link);
+      end
+      else
+      begin
+        for i := Low(WebsiteRoots) to High(WebsiteRoots) do
+          if Pos(host, WebsiteRoots[i, 1]) > 0 then
+          begin
+            webid := i;
+            website := WebsiteRoots[i, 0];
+            Break;
+          end;
+        if website <> '' then
+          edURL.Text := FillMangaSiteHost(webid, link);
+      end;
+    end;
+  finally
+    regx.Free;
+  end;
+
+  DisableAddToFavorites(website);
+  if (website = '') or (link = '') then
+  begin
+    MessageDlg('', RS_DlgURLNotSupport, mtInformation, [mbYes], 0);
+    Exit;
+  end;
+
+  if isGetMangaInfos then
+  begin
+    GetInfosThread.IsFlushed := True;
+    GetInfosThread.Terminate;
+    //GetInfosThread.WaitFor;
+  end;
+  GetInfosThread := TGetMangaInfosThread.Create;
+  GetInfosThread.MangaListPos := -1;
+  GetInfosThread.Title := '';
+  GetInfosThread.Website := website;
+  GetInfosThread.Link := link;
+  GetInfosThread.Start;
+
+  pcMain.ActivePage := tsInformation;
+  imCover.Picture.Assign(nil);
+  clbChapterList.Clear;
+  if Assigned(gifWaiting) then
+  begin
+    itAnimate.Enabled := True;
+    pbWait.Visible := True;
+  end;
+  btAddToFavorites.Enabled := not SitesWithoutFavorites(website);
+  rmInformation.Clear;
+  rmInformation.Lines.Add(RS_Loading);
 end;
 
 procedure TMainForm.UpdateVtChapter;
