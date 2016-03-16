@@ -2049,7 +2049,9 @@ begin
         end;
   //force to check task if all task loaded is STATUS_WAIT
   if tcount = 0 then
-    CheckAndActiveTask;
+    CheckAndActiveTask
+  else if MainForm.itRefreshDLInfo.Enabled = False then
+    MainForm.itRefreshDLInfo.Enabled := True;
   MainForm.vtDownloadFilters;
 end;
 
