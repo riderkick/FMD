@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, WebsiteModules, uData, uBaseUnit, uDownloadsManager,
-  XQueryEngineHTML, synautil;
+  XQueryEngineHTML, synautil, RegExpr;
 
 implementation
 
@@ -57,11 +57,6 @@ end;
 
 function GetInfo(const MangaInfo: TMangaInformation;
   const AURL: String; const Module: TModuleContainer): Integer;
-var
-  i: Integer;
-  v: IXQValue;
-const
-  g: array[0..2] of String = ('Parody','Characters','Tags');
 begin
   Result:=NET_PROBLEM;
   if MangaInfo=nil then Exit(UNKNOWN_ERROR);
@@ -75,10 +70,7 @@ begin
           if coverLink<>'' then coverLink:=MaybeFillHost(Module.RootURL,coverLink);
           if title=''then title:=XPathString('//div[@class="book-line"][starts-with(.,"Title")]/div[@class="book-data"]');
           artists:=XPathString('//div[@class="book-line"][starts-with(.,"Artist")]/div[@class="book-data"]');
-          genres:='';
-          for i:=Low(g) to High(g) do
-            for v in XPath('//div[@class="book-line"][starts-with(.,"'+g[i]+'")]/div[@class="book-data"]/*') do
-              AddCommaString(genres,v.toString);
+          genres:=XPathStringAll('//div[@class="book-line"][starts-with(.,"Parody") or starts-with(.,"Characters") or starts-with(.,"Tags")]/div[@class="book-data"]/*');
           if title<>'' then begin
             chapterLinks.Add(url);
             chapterName.Add(title);
@@ -93,8 +85,9 @@ end;
 function GetPageNumber(const DownloadThread: TDownloadThread;
   const AURL: String; const Module: TModuleContainer): Boolean;
 var
-  v: IXQValue;
-  s: String;
+  source: TStringList;
+  i, pgLast: Integer;
+  thumbUrl: String;
 begin
   Result:=False;
   if DownloadThread=nil then Exit;
@@ -104,18 +97,29 @@ begin
     PageNumber := 0;
     if GET(FillHost(Module.RootURL,AURL)) then begin
       Result:=True;
-      with TXQueryEngineHTML.Create(Document) do
-        try
-          for v in XPath('//div[@class="no-border book-grid-item"]/a/img/@data-original') do begin
-            s:=Trim(v.toString);
-            if s<>'' then begin
-              s:=StringReplace(s,'/Thumb/','/Image/',[rfIgnoreCase]);
-              PageLinks.Add(MaybeFillHost(Module.RootURL,s));
+      source:=TStringList.Create;
+      try
+        source.LoadFromStream(Document);
+        pgLast:=0;
+        thumbUrl:='';
+        if source.Count>0 then
+          for i:=0 to source.Count-1 do begin
+            if Pos('var pgLast',source[i])>0 then
+              pgLast:=StrToIntDef(GetValuesFromString(source[i],'='),0)
+            else if Pos('var thumbUrl',source[i])>0 then begin
+              thumbUrl:=GetValuesFromString(source[i],'=');
+              Break;
             end;
           end;
-        finally
-          Free;
+        if (pgLast>0) and (thumbUrl<>'') then begin
+          thumbUrl:=ReplaceRegExpr('(?i)/Thumb(/\d+/)[9]+',thumbUrl,'/Image$1',True);
+          thumbUrl:=AppendURLDelim(FillHost(Module.RootURL,thumbUrl));
+          for i:=1 to pgLast do
+            PageLinks.Add(thumbUrl+IntToStr(i));
         end;
+      finally
+        source.Free;
+      end;
     end;
   end;
 end;
