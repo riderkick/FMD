@@ -295,7 +295,7 @@ msgstr "Refresh"
 
 #: taccountmanagerform.caption
 msgid "AccountManagerForm"
-msgstr ""
+msgstr "AccountManagerForm"
 
 #: taccountmanagerform.vtaccountlist.header.columns[1].text
 #| msgid "Username"
@@ -326,7 +326,7 @@ msgstr "Ok"
 
 #: taccountsetform.caption
 msgid "Account"
-msgstr ""
+msgstr "Account"
 
 #: taccountsetform.ckshowpassword.caption
 msgid "Show password"
@@ -392,8 +392,8 @@ msgstr "Import list ..."
 msgid "Domdomsoft Manga Downloader"
 msgstr "Domdomsoft Manga Downloader"
 
-#: timportfavorites.edpath.text
-msgctxt "TIMPORTFAVORITES.EDPATH.TEXT"
+#: timportfavorites.edpath.texthint
+msgctxt "timportfavorites.edpath.texthint"
 msgid "Path to the software (e.g. C:\\MangaDownloader)"
 msgstr "Path to the software (e.g. C:\\MangaDownloader)"
 
@@ -467,7 +467,6 @@ msgid "Visit my blog"
 msgstr "Visit my blog"
 
 #: tmainform.caption
-#, fuzzy
 msgctxt "tmainform.caption"
 msgid "Free Manga Downloader"
 msgstr "Free Manga Downloader"
@@ -1838,4 +1837,3 @@ msgstr "Synchronizing data"
 #: uupdatethread.rs_updatinglist
 msgid "Updating list"
 msgstr "Updating list"
-

@@ -294,7 +294,7 @@ msgstr "Segarkan"
 
 #: taccountmanagerform.caption
 msgid "AccountManagerForm"
-msgstr ""
+msgstr "AccountManagerForm"
 
 #: taccountmanagerform.vtaccountlist.header.columns[1].text
 msgctxt "taccountmanagerform.vtaccountlist.header.columns[1].text"
@@ -322,7 +322,7 @@ msgstr "Ok"
 
 #: taccountsetform.caption
 msgid "Account"
-msgstr ""
+msgstr "Akun"
 
 #: taccountsetform.ckshowpassword.caption
 msgid "Show password"
@@ -385,8 +385,8 @@ msgstr "Impor daftar ..."
 msgid "Domdomsoft Manga Downloader"
 msgstr "Domdomsoft Manga Downloader"
 
-#: timportfavorites.edpath.text
-msgctxt "timportfavorites.edpath.text"
+#: timportfavorites.edpath.texthint
+msgctxt "timportfavorites.edpath.texthint"
 msgid "Path to the software (e.g. C:\\MangaDownloader)"
 msgstr "Path ke perangkat lunak (misalnya C:\\MangaDownloader)"
 
@@ -459,7 +459,6 @@ msgid "Visit my blog"
 msgstr "Kunjungi blog"
 
 #: tmainform.caption
-#, fuzzy
 msgctxt "tmainform.caption"
 msgid "Free Manga Downloader"
 msgstr "Free Manga Downloader"
@@ -1822,4 +1821,3 @@ msgstr "Sinkronisasi data"
 #: uupdatethread.rs_updatinglist
 msgid "Updating list"
 msgstr "Memperbarui daftar"
-

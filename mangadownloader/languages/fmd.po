@@ -357,8 +357,8 @@ msgstr ""
 msgid "Domdomsoft Manga Downloader"
 msgstr ""
 
-#: timportfavorites.edpath.text
-msgctxt "TIMPORTFAVORITES.EDPATH.TEXT"
+#: timportfavorites.edpath.texthint
+msgctxt "TIMPORTFAVORITES.EDPATH.TEXTHINT"
 msgid "Path to the software (e.g. C:\\MangaDownloader)"
 msgstr ""
 
