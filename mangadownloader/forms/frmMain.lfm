@@ -3279,13 +3279,13 @@ object MainForm: TMainForm
           ChildSizing.TopBottomSpacing = 8
           ChildSizing.HorizontalSpacing = 4
           ChildSizing.VerticalSpacing = 4
-          ClientHeight = 406
-          ClientWidth = 498
+          ClientHeight = 357
+          ClientWidth = 531
           object gbBatoto: TGroupBox
             Left = 4
             Height = 70
             Top = 8
-            Width = 490
+            Width = 523
             Align = alTop
             AutoSize = True
             Caption = 'Batoto'
@@ -3294,13 +3294,13 @@ object MainForm: TMainForm
             ChildSizing.HorizontalSpacing = 4
             ChildSizing.VerticalSpacing = 4
             ClientHeight = 50
-            ClientWidth = 486
+            ClientWidth = 519
             TabOrder = 0
             object cbBatotoShowAllLang: TCheckBox
               Left = 4
               Height = 19
               Top = 4
-              Width = 478
+              Width = 511
               Align = alTop
               Caption = 'Show all language'
               ParentFont = False
@@ -3310,7 +3310,7 @@ object MainForm: TMainForm
               Left = 4
               Height = 19
               Top = 27
-              Width = 478
+              Width = 511
               Align = alTop
               Caption = 'Show scan group name'
               ParentFont = False
@@ -3321,7 +3321,7 @@ object MainForm: TMainForm
             Left = 4
             Height = 70
             Top = 82
-            Width = 490
+            Width = 523
             Align = alTop
             AutoSize = True
             Caption = 'Mangafox'
@@ -3330,13 +3330,13 @@ object MainForm: TMainForm
             ChildSizing.HorizontalSpacing = 4
             ChildSizing.VerticalSpacing = 4
             ClientHeight = 50
-            ClientWidth = 486
+            ClientWidth = 519
             TabOrder = 1
             object cbMangaFoxRemoveWatermark: TCheckBox
               Left = 4
               Height = 19
-              Top = 27
-              Width = 478
+              Top = 4
+              Width = 511
               Align = alTop
               Caption = 'Remove watermark'
               OnChange = cbMangaFoxRemoveWatermarkChange
@@ -3346,8 +3346,8 @@ object MainForm: TMainForm
             object cbMangaFoxSaveAsPNG: TCheckBox
               Left = 4
               Height = 19
-              Top = 4
-              Width = 478
+              Top = 27
+              Width = 511
               Align = alTop
               Caption = 'Save as PNG'
               Enabled = False
@@ -3359,7 +3359,7 @@ object MainForm: TMainForm
             Left = 4
             Height = 47
             Top = 156
-            Width = 490
+            Width = 523
             Align = alTop
             AutoSize = True
             Caption = 'E-Hentai/ExHentai'
@@ -3368,13 +3368,13 @@ object MainForm: TMainForm
             ChildSizing.HorizontalSpacing = 4
             ChildSizing.VerticalSpacing = 4
             ClientHeight = 27
-            ClientWidth = 486
+            ClientWidth = 519
             TabOrder = 2
             object cbEHentaiDownloadOriginalImage: TCheckBox
               Left = 4
               Height = 19
               Top = 4
-              Width = 478
+              Width = 511
               Align = alTop
               Caption = 'Download original image (require ExHentai account)'
               OnChange = cbMangaFoxRemoveWatermarkChange
