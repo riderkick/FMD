@@ -4,6 +4,12 @@ Project page: https://github.com/riderkick/FMD
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.41.0 (18-03-2016)
+[*] MangaFox: fixed remove watermark and rewrite all code
+[*] Tsumino: fixed get image url
+[*] Fixed mainform's components layout
+[*] Various changes and bug fixes
+
 0.9.40.0 (12-03-2016)
 [+] Added Tsumangaonline[ES]
 [*] Various changes and bug fixes
