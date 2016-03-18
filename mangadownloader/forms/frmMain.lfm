@@ -2272,13 +2272,13 @@ object MainForm: TMainForm
         end
         object tsConnections: TTabSheet
           Caption = 'Connections'
-          ClientHeight = 406
-          ClientWidth = 498
+          ClientHeight = 357
+          ClientWidth = 531
           object sbDownloadConnections: TScrollBox
             Left = 0
-            Height = 406
+            Height = 357
             Top = 0
-            Width = 498
+            Width = 531
             HorzScrollBar.Page = 455
             VertScrollBar.Page = 268
             Align = alClient
@@ -2287,8 +2287,8 @@ object MainForm: TMainForm
             ChildSizing.TopBottomSpacing = 8
             ChildSizing.HorizontalSpacing = 4
             ChildSizing.VerticalSpacing = 4
-            ClientHeight = 406
-            ClientWidth = 498
+            ClientHeight = 357
+            ClientWidth = 531
             TabOrder = 0
             object cbOptionUseProxy: TCheckBox
               AnchorSideLeft.Control = seOptionConnectionTimeout
@@ -2943,13 +2943,13 @@ object MainForm: TMainForm
           ChildSizing.TopBottomSpacing = 8
           ChildSizing.HorizontalSpacing = 4
           ChildSizing.VerticalSpacing = 4
-          ClientHeight = 406
-          ClientWidth = 498
+          ClientHeight = 357
+          ClientWidth = 531
           object cbOptionAutoCheckLatestVersion: TCheckBox
             Left = 4
             Height = 19
             Top = 8
-            Width = 490
+            Width = 523
             Align = alTop
             Caption = 'Auto check for latest version '
             ParentFont = False
@@ -2959,7 +2959,7 @@ object MainForm: TMainForm
             Left = 4
             Height = 143
             Top = 31
-            Width = 490
+            Width = 523
             Align = alTop
             AutoSize = True
             Caption = 'Favorites'
@@ -2968,22 +2968,22 @@ object MainForm: TMainForm
             ChildSizing.HorizontalSpacing = 4
             ChildSizing.VerticalSpacing = 4
             ClientHeight = 123
-            ClientWidth = 486
+            ClientWidth = 519
             ParentFont = False
             TabOrder = 1
             object cbOptionAutoCheckFavStartup: TCheckBox
               Left = 4
               Height = 19
-              Top = 27
-              Width = 478
+              Top = 4
+              Width = 511
               Align = alTop
               Caption = 'Auto check for new chapter at startup'
               ParentFont = False
               TabOrder = 3
             end
             object seOptionAutoCheckFavIntervalMinutes: TSpinEdit
-              AnchorSideLeft.Control = cbOptionAutoCheckFavStartup
-              AnchorSideTop.Control = cbOptionAutoCheckFavStartup
+              AnchorSideLeft.Control = cbOptionAutoCheckFavInterval
+              AnchorSideTop.Control = cbOptionAutoCheckFavInterval
               AnchorSideTop.Side = asrBottom
               Left = 4
               Height = 23
@@ -3033,8 +3033,8 @@ object MainForm: TMainForm
             object cbOptionAutoCheckFavInterval: TCheckBox
               Left = 4
               Height = 19
-              Top = 4
-              Width = 478
+              Top = 27
+              Width = 511
               Align = alTop
               Caption = 'Auto check for new chapter in an interval'
               OnChange = cbOptionAutoCheckFavIntervalChange
@@ -3046,7 +3046,7 @@ object MainForm: TMainForm
             Left = 4
             Height = 19
             Top = 178
-            Width = 490
+            Width = 523
             Align = alTop
             Caption = 'Don''t load manga information when updating list (filter will be not work!)'
             ParentFont = False
@@ -3056,7 +3056,7 @@ object MainForm: TMainForm
             Left = 4
             Height = 19
             Top = 201
-            Width = 490
+            Width = 523
             Align = alTop
             Caption = 'Remove duplicate local data when updating manga list'
             ParentFont = False
@@ -3070,13 +3070,13 @@ object MainForm: TMainForm
           ChildSizing.TopBottomSpacing = 8
           ChildSizing.HorizontalSpacing = 4
           ChildSizing.VerticalSpacing = 4
-          ClientHeight = 406
-          ClientWidth = 498
+          ClientHeight = 357
+          ClientWidth = 531
           object gbDialogs: TGroupBox
             Left = 4
             Height = 93
             Top = 8
-            Width = 490
+            Width = 523
             Align = alTop
             AutoSize = True
             Caption = 'Show dialog confirmation for'
@@ -3085,13 +3085,13 @@ object MainForm: TMainForm
             ChildSizing.HorizontalSpacing = 4
             ChildSizing.VerticalSpacing = 4
             ClientHeight = 73
-            ClientWidth = 486
+            ClientWidth = 519
             TabOrder = 0
             object cbOptionShowQuitDialog: TCheckBox
               Left = 4
               Height = 19
               Top = 4
-              Width = 478
+              Width = 511
               Align = alTop
               Caption = 'Exit FMD'
               ParentFont = False
@@ -3101,7 +3101,7 @@ object MainForm: TMainForm
               Left = 4
               Height = 19
               Top = 27
-              Width = 478
+              Width = 511
               Align = alTop
               Caption = 'Delete task/favorite'
               ParentFont = False
@@ -3111,7 +3111,7 @@ object MainForm: TMainForm
               Left = 4
               Height = 19
               Top = 50
-              Width = 478
+              Width = 511
               Align = alTop
               Caption = 'Download manga list if empty'
               ParentFont = False
@@ -3125,13 +3125,13 @@ object MainForm: TMainForm
           ChildSizing.TopBottomSpacing = 8
           ChildSizing.HorizontalSpacing = 4
           ChildSizing.VerticalSpacing = 4
-          ClientHeight = 406
-          ClientWidth = 498
+          ClientHeight = 357
+          ClientWidth = 531
           object vtOptionMangaSiteSelection: TVirtualStringTree
             Left = 4
-            Height = 361
+            Height = 312
             Top = 37
-            Width = 490
+            Width = 523
             Align = alClient
             DefaultText = 'Node'
             Header.AutoSizeIndex = 0
@@ -3157,7 +3157,7 @@ object MainForm: TMainForm
             Left = 4
             Height = 23
             Top = 8
-            Width = 490
+            Width = 523
             Align = alTop
             BorderSpacing.Top = 4
             BorderSpacing.Right = 2
@@ -3167,7 +3167,7 @@ object MainForm: TMainForm
             ChildSizing.HorizontalSpacing = 4
             ChildSizing.VerticalSpacing = 4
             ClientHeight = 23
-            ClientWidth = 490
+            ClientWidth = 523
             TabOrder = 1
             object edWebsitesSearch: TEdit
               Left = 0
@@ -3225,7 +3225,7 @@ object MainForm: TMainForm
               OnClick = btWebsitesSearchClearClick
             end
             object pnlWebsitesToolRight: TPanel
-              Left = 320
+              Left = 353
               Height = 23
               Top = 0
               Width = 170
