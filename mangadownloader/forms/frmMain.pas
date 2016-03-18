@@ -1134,6 +1134,8 @@ begin
   with AccountManagerForm do begin
     Parent := tsAccounts;
     Align := alClient;
+    ChildSizing.LeftRightSpacing := 0;
+    ChildSizing.TopBottomSpacing := 0;
     Show;
   end;
 end;

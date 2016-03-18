@@ -22,7 +22,6 @@ type
     Label1: TLabel;
     Label2: TLabel;
     Label3: TLabel;
-    pnButtons: TPanel;
     procedure btOkClick(Sender: TObject);
     procedure ckShowPasswordChange(Sender: TObject);
   private

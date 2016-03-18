@@ -292,6 +292,10 @@ msgstr "Ubah"
 msgid "Refresh"
 msgstr "Segarkan"
 
+#: taccountmanagerform.caption
+msgid "AccountManagerForm"
+msgstr ""
+
 #: taccountmanagerform.vtaccountlist.header.columns[1].text
 msgctxt "taccountmanagerform.vtaccountlist.header.columns[1].text"
 msgid "Website"
@@ -315,6 +319,10 @@ msgstr "Batal"
 #: taccountsetform.btok.caption
 msgid "Ok"
 msgstr "Ok"
+
+#: taccountsetform.caption
+msgid "Account"
+msgstr ""
 
 #: taccountsetform.ckshowpassword.caption
 msgid "Show password"
