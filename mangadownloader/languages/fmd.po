@@ -1247,7 +1247,7 @@ msgid "Hide downloaded chapters"
 msgstr ""
 
 #: tmainform.michapterlisthighlight.caption
-msgid "Highlight download chapters"
+msgid "Highlight downloaded chapters"
 msgstr ""
 
 #: tmainform.michapterlistuncheckall.caption

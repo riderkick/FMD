@@ -1302,7 +1302,7 @@ msgid "Hide downloaded chapters"
 msgstr ""
 
 #: tmainform.michapterlisthighlight.caption
-msgid "Highlight download chapters"
+msgid "Highlight downloaded chapters"
 msgstr "Sorot bab terunduh"
 
 #: tmainform.michapterlistuncheckall.caption
@@ -1825,4 +1825,3 @@ msgstr "Sinkronisasi data"
 #: uupdatethread.rs_updatinglist
 msgid "Updating list"
 msgstr "Memperbarui daftar"
-

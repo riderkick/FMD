@@ -4345,7 +4345,7 @@ object MainForm: TMainForm
       Caption = '-'
     end
     object miChapterListHighlight: TMenuItem
-      Caption = 'Highlight download chapters'
+      Caption = 'Highlight downloaded chapters'
       OnClick = miChapterListHighlightClick
     end
     object miChapterListHideDownloaded: TMenuItem
