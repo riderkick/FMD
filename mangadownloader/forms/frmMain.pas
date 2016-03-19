@@ -1518,18 +1518,15 @@ end;
 
 procedure TMainForm.miChapterListHighlightClick(Sender: TObject);
 begin
-  miChapterListHighlight.Checked := not miChapterListHighlight.Checked;
-  options.WriteBool('general', 'HighlightDownloadedChapters',
-    miChapterListHighlight.Checked);
-  if Length(ChapterList) > 0 then
-  begin
-    if miChapterListHighlight.Checked then
-      DLManager.GetDownloadedChaptersState(mangaInfo.website + mangaInfo.link,
-        ChapterList)
-    else
-      ClearChapterListState;
-    clbChapterList.Repaint;
-  end;
+  if Sender = miChapterListHighlight then
+    miChapterListHighlight.Checked := not miChapterListHighlight.Checked;
+  if Length(ChapterList) = 0 then Exit;
+  if miChapterListHighlight.Checked then
+    DLManager.GetDownloadedChaptersState(mangaInfo.website + mangaInfo.link,
+      ChapterList)
+  else
+    ClearChapterListState;
+  clbChapterList.Repaint;
 end;
 
 procedure TMainForm.miDownloadDeleteTaskClick(Sender: TObject);
@@ -4148,11 +4145,7 @@ begin
     ChapterList[i].Link := mangaInfo.chapterLinks[i];
     ChapterList[i].Downloaded := False;
   end;
-  if miChapterListHighlight.Checked then
-    DLManager.GetDownloadedChaptersState(mangaInfo.website + mangaInfo.link,
-      ChapterList)
-  else
-    ClearChapterListState;
+  miChapterListHighlightClick(nil);
   UpdateVtChapter;
   miChapterListHideDownloadedClick(nil);
 
