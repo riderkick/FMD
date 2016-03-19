@@ -1884,7 +1884,7 @@ begin
   xNode := clbChapterList.GetFirstChecked;
   for i := 0 to clbChapterList.CheckedCount - 1 do
   begin
-    if xNode^.CheckState = csCheckedNormal then
+    if (xNode^.CheckState = csCheckedNormal) and (vsVisible in xNode^.States) then
     begin
       if not isCreate then
       begin
