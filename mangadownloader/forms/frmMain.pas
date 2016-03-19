@@ -1481,7 +1481,10 @@ var
   xnode: PVirtualNode;
 begin
   if Sender = miChapterListHideDownloaded then
+  begin
     miChapterListHideDownloaded.Checked := not miChapterListHideDownloaded.Checked;
+    options.WriteBool('general', 'ChapterListHideDownloaded', miChapterListHideDownloaded.Checked);
+  end;
   if (Length(ChapterList) = 0) or (Length(ChapterList) <> clbChapterList.RootNodeCount) then Exit;
   clbChapterList.BeginUpdate;
   try
@@ -1519,7 +1522,10 @@ end;
 procedure TMainForm.miChapterListHighlightClick(Sender: TObject);
 begin
   if Sender = miChapterListHighlight then
+  begin
     miChapterListHighlight.Checked := not miChapterListHighlight.Checked;
+    options.WriteBool('general', 'HighlightDownloadedChapters', miChapterListHighlight.Checked);
+  end;
   if Length(ChapterList) = 0 then Exit;
   if miChapterListHighlight.Checked then
     DLManager.GetDownloadedChaptersState(mangaInfo.website + mangaInfo.link,
