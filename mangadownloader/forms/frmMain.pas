@@ -72,6 +72,7 @@ type
     gbEHentai: TGroupBox;
     lbOptionMangaCustomRenameHint: TLabel;
     lbOptionMangaCustomRename: TLabel;
+    miChapterListHideDownloaded: TMenuItem;
     miAbortSilentThread: TMenuItem;
     mmChangelog: TMemo;
     Panel1: TPanel;
@@ -388,7 +389,6 @@ type
     procedure btFilterResetClick(Sender: TObject);
     procedure btRemoveFilterClick(Sender: TObject);
 
-    procedure cbAddAsStoppedChange(Sender: TObject);
     procedure cbOptionUseProxyChange(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -409,6 +409,7 @@ type
     procedure medURLSelectAllClick(Sender: TObject);
     procedure medURLUndoClick(Sender: TObject);
     procedure miAbortSilentThreadClick(Sender: TObject);
+    procedure miChapterListHideDownloadedClick(Sender: TObject);
     procedure miDownloadViewMangaInfoClick(Sender: TObject);
     procedure miChapterListHighlightClick(Sender: TObject);
     procedure miDownloadDeleteTaskClick(Sender: TObject);
@@ -1473,6 +1474,29 @@ procedure TMainForm.miAbortSilentThreadClick(Sender: TObject);
 begin
   if Assigned(SilentThreadManager) then
     SilentThreadManager.StopAll(False);
+end;
+
+procedure TMainForm.miChapterListHideDownloadedClick(Sender: TObject);
+var
+  xnode: PVirtualNode;
+begin
+  if Sender = miChapterListHideDownloaded then
+    miChapterListHideDownloaded.Checked := not miChapterListHideDownloaded.Checked;
+  if (Length(ChapterList) = 0) or (Length(ChapterList) <> clbChapterList.RootNodeCount) then Exit;
+  clbChapterList.BeginUpdate;
+  try
+    xnode := clbChapterList.GetFirst;
+    while Assigned (xnode) do
+    begin
+      if miChapterListHideDownloaded.Checked and ChapterList[xnode^.Index].Downloaded then
+        Exclude(xnode^.States, vsVisible)
+      else
+        Include(xnode^.States, vsVisible);
+      xnode := clbChapterList.GetNext(xnode);
+    end;
+  finally
+    clbChapterList.EndUpdate;
+  end;
 end;
 
 procedure TMainForm.miDownloadViewMangaInfoClick(Sender: TObject);
@@ -3799,11 +3823,6 @@ begin
   if not Self.Focused then Self.SetFocus;
 end;
 
-procedure TMainForm.cbAddAsStoppedChange(Sender: TObject);
-begin
-  options.WriteBool('general', 'AddAsStopped', cbAddAsStopped.Checked);
-end;
-
 // vtMangaList
 
 procedure TMainForm.vtMangaListBeforeCellPaint(Sender: TBaseVirtualTree;
@@ -4135,6 +4154,7 @@ begin
   else
     ClearChapterListState;
   UpdateVtChapter;
+  miChapterListHideDownloadedClick(nil);
 
   btDownload.Enabled := (clbChapterList.RootNodeCount > 0);
   btReadOnline.Enabled := (mangaInfo.link <> '');
@@ -4173,6 +4193,7 @@ begin
     cbOptionLetFMDDo.ItemIndex := ReadInteger('general', 'LetFMDDo', 0);
     edOptionExternalPath.FileName := ReadString('general', 'ExternalProgramPath', '');
     edOptionExternalParams.Text := ReadString('general', 'ExternalProgramParams', DEFAULT_EXPARAM);
+    miChapterListHideDownloaded.Checked := ReadBool('general', 'ChapterListHideDownloaded', False);
     cbAddAsStopped.Checked := ReadBool('general', 'AddAsStopped', False);
     miHighLightNewManga.Checked := ReadBool('general', 'HighlightNewManga', True);
     miChapterListHighlight.Checked := ReadBool('general', 'HighlightDownloadedChapters', True);
@@ -4304,6 +4325,7 @@ begin
       WriteInteger('general', 'LetFMDDo', cbOptionLetFMDDo.ItemIndex);
       WriteString('general', 'ExternalProgramPath', edOptionExternalPath.FileName);
       WriteString('general', 'ExternalProgramParams', edOptionExternalParams.Text);
+      WriteBool('general', 'ChapterListHideDownloaded', miChapterListHideDownloaded.Checked);
       WriteBool('general', 'AddAsStopped', cbAddAsStopped.Checked);
       WriteBool('general', 'HighlightNewManga', miHighlightNewManga.Checked);
       WriteBool('general', 'HighlightDownloadedChapters', miChapterListHighlight.Checked);

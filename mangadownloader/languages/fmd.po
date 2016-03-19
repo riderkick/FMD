@@ -1242,6 +1242,10 @@ msgstr ""
 msgid "Check selected"
 msgstr ""
 
+#: tmainform.michapterlisthidedownloaded.caption
+msgid "Hide downloaded chapters"
+msgstr ""
+
 #: tmainform.michapterlisthighlight.caption
 msgid "Highlight download chapters"
 msgstr ""

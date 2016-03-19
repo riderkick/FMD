@@ -1297,6 +1297,10 @@ msgstr "Centang semua"
 msgid "Check selected"
 msgstr "Centang yang dipilih"
 
+#: tmainform.michapterlisthidedownloaded.caption
+msgid "Hide downloaded chapters"
+msgstr ""
+
 #: tmainform.michapterlisthighlight.caption
 msgid "Highlight download chapters"
 msgstr "Sorot bab terunduh"
@@ -1821,3 +1825,4 @@ msgstr "Sinkronisasi data"
 #: uupdatethread.rs_updatinglist
 msgid "Updating list"
 msgstr "Memperbarui daftar"
+
