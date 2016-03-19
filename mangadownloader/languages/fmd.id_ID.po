@@ -1299,7 +1299,7 @@ msgstr "Centang yang dipilih"
 
 #: tmainform.michapterlisthidedownloaded.caption
 msgid "Hide downloaded chapters"
-msgstr ""
+msgstr "Sembunyikan bab terunduh"
 
 #: tmainform.michapterlisthighlight.caption
 msgid "Highlight downloaded chapters"
