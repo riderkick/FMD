@@ -110,6 +110,7 @@ begin
             chapterLinks.Add(v.toNode.getAttribute('href'));
             chapterName.Add(XPathString('text()', v.toNode));
           end;
+          InvertStrings([chapterLinks, chapterName]);
         finally
           Free;
         end;
