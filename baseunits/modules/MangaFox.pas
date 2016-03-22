@@ -36,7 +36,6 @@ function GetInfo(const MangaInfo: TMangaInformation; const AURL: String;
   const Module: TModuleContainer): Integer;
 var
   v: IXQValue;
-  s: String;
 begin
   Result := NET_PROBLEM;
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
@@ -58,15 +57,11 @@ begin
           artists := XPathString('//div[@id="title"]/table/tbody/tr[2]/td[3]');
           genres := XPathString('//div[@id="title"]/table/tbody/tr[2]/td[4]');
           summary := XPathString('//p[@class="summary"]');
-          for v in XPath('//ul[@class="chlist"]/li//h3') do
+          for v in XPath('//ul[@class="chlist"]/li') do
           begin
-            s := XPathString('a/@href', v.toNode);
-            if RightStr(s, 6) = '1.html' then
-              SetLength(s, Length(s) - 6);
-            chapterLinks.Add(s);
-            s := XPathString('a', v.toNode);
-            s := s + ' ' + XPathString('span[@class="title nowrap"]', v.toNode);
-            chapterName.Add(s);
+            chapterLinks.Add(XPathString('div/*/a[@class="tips"]/@href', v.toNode));
+            chapterName.Add(Trim(XPathString('div/*/a[@class="tips"]', v.toNode) + ' ' +
+              XPathString('div/*/span[@class="title nowrap"]', v.toNode)));
           end;
           InvertStrings([chapterLinks, chapterName]);
         finally
@@ -89,7 +84,12 @@ begin
     PageLinks.Clear;
     PageContainerLinks.Clear;
     PageNumber := 0;
-    if GET(AppendURLDelim(FillHost(Module.RootURL, AURL)) + '1.html') then begin
+    s := ChapterLinks[CurrentDownloadChapterPtr];
+    if RightStr(s, 6) = '1.html' then begin
+      SetLength(s, Length(s) - 6);
+      ChapterLinks[CurrentDownloadChapterPtr] := s;
+    end;
+    if GET(AppendURLDelim(FillHost(Module.RootURL, s)) + '1.html') then begin
       Result := True;
       with TXQueryEngineHTML.Create(Document) do
         try
