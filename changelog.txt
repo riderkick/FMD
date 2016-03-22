@@ -4,6 +4,13 @@ Project page: https://github.com/riderkick/FMD
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.42.0 (22-03-2016)
+[+] Added option to hide downloaded chapter. chapter list > right click > hide downloaded chapter
+[*] Fixed various form layout
+[*] Hentai2Read: fixed chapter list order
+[*] MangaFox: fixed only show last 10 chapter
+[*] Various changes and bug fixes
+
 0.9.41.0 (18-03-2016)
 [*] MangaFox: fixed remove watermark and rewrite all code
 [*] Tsumino: fixed get image url
