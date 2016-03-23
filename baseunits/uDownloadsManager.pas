@@ -1095,10 +1095,12 @@ begin
   if Result then begin
     if Modules.ModuleAvailable(ModuleId, MMDownloadImage) then begin
       s := '';
-      if workCounter < manager.container.PageContainerLinks.Count then
+      if (manager.container.PageNumber = manager.container.PageContainerLinks.Count)
+        and (workCounter < manager.container.PageContainerLinks.Count) then
         s := manager.container.PageContainerLinks[workCounter]
       else if workCounter < manager.container.PageLinks.Count then
         s := manager.container.PageLinks[workCounter];
+
       if s <> '' then
         Result := Modules.DownloadImage(
           Self,
