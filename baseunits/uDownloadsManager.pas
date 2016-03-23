@@ -1170,14 +1170,14 @@ begin
         container.CurrentPageNumber := InterLockedIncrement(container.CurrentPageNumber);
       Exit;
     end;
-
-    if Modules.MaxConnectionLimit[ModuleId] > 0 then
-      while (not Terminated) and (Modules.ActiveConnectionCount[ModuleId] >= currentMaxThread) do
-        Sleep(SOCKHEARTBEATRATE)
-    else
-      while (not Terminated) and (threads.Count >= currentMaxThread) do
-        Sleep(SOCKHEARTBEATRATE);
   end;
+
+  if Modules.MaxConnectionLimit[ModuleId] > 0 then
+    while (not Terminated) and (Modules.ActiveConnectionCount[ModuleId] >= currentMaxThread) do
+      Sleep(SOCKHEARTBEATRATE)
+  else
+    while (not Terminated) and (threads.Count >= currentMaxThread) do
+      Sleep(SOCKHEARTBEATRATE);
 
   if (not Terminated) and (threads.Count < currentMaxThread) then
   begin
@@ -1238,8 +1238,15 @@ procedure TTaskThread.Execute;
       if Trim(container.PageLinks[i]) <> 'D' then
         Inc(c);
     end;
-    if c > 0 then
+    if c > 0 then begin
+      WriteLog_W(Format('%s, checkforfinish failed=%d/%d "%s" > "%s"',
+        [Self.ClassName,
+        c,
+        container.PageLinks.Count,
+        container.DownloadInfo.Title,
+        container.ChapterName[container.CurrentDownloadChapterPtr]]));
       Result := False;
+    end;
   end;
 
   procedure WaitForThreads;
@@ -1412,8 +1419,14 @@ begin
         else
           container.Status := STATUS_FAILED;
       end
-      else
+      else begin
+        WriteLog_W(Format('%s, failed download image PageLinks=%d "%s" > "%s"',
+        [Self.ClassName,
+        container.PageLinks.Count,
+        container.DownloadInfo.Title,
+        container.ChapterName[container.CurrentDownloadChapterPtr]]));
         container.Status := STATUS_FAILED;
+      end;
 
       if (container.Status = STATUS_FAILED) and
          (not FindStrLinear(container.FailedChapterLinks,
