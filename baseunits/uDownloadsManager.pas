@@ -1074,7 +1074,7 @@ begin
     if not ForceDirectoriesUTF8(lpath) then
     begin
       manager.container.Status := STATUS_FAILED;
-      manager.container.DownloadInfo.Status := 'Failed to create dir! Too long?';
+      manager.container.DownloadInfo.Status := RS_FailedToCreateDir;
       Result := False;
       Exit;
     end;
