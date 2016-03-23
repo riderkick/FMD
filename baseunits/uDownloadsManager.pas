@@ -1061,7 +1061,7 @@ end;
 
 function TDownloadThread.DownloadImage: Boolean;
 var
-  s, TURL, lpath, sfilename: String;
+  s, TURL, lpath, lname, sfilename: String;
 
   {$I includes/MeinManga/image_url.inc}
 
@@ -1090,6 +1090,8 @@ begin
   if Modules.ModuleAvailable(ModuleId, MMBeforeDownloadImage) then
     Result := Modules.BeforeDownloadImage(Self,TURL,ModuleId);
 
+  lname := Format('%.3d', [workCounter + 1]);
+
   if Result then begin
     if Modules.ModuleAvailable(ModuleId, MMDownloadImage) then begin
       s := '';
@@ -1102,7 +1104,7 @@ begin
           Self,
           s,
           lpath,
-          Format('%.3d', [workCounter + 1]),
+          lname,
           ModuleId);
     end
     else
@@ -1114,7 +1116,7 @@ begin
         manager.container.MangaSiteID,
         TURL,
         lpath,
-        Format('%.3d', [workCounter + 1]),
+        lname,
         sfilename,
         manager.container.Manager.retryConnect);
   end;
