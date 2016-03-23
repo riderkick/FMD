@@ -220,11 +220,17 @@ var
   procedure GetImageLink;
   var
     x: IXQValue;
+    s: String;
   begin
-    query.ParseHTML(DownloadThread.FHTTP.Document);
-    with DownloadThread.manager.container do begin
-      for x in query.XPath('//div[@id="gdt"]//a/@href') do
-        PageContainerLinks.Add(x.toString);
+    with DownloadThread.manager.container, query do begin
+      ParseHTML(DownloadThread.FHTTP.Document);
+      for x in XPath('//div[@id="gdt"]//a') do
+      begin
+        PageContainerLinks.Add(x.toNode.getAttribute('href'));
+        s := Trim(SeparateRight(XPathString('img/@title', x.toNode), ':'));
+        if s <> '' then
+          Filenames.Add(ExtractFileNameOnly(s));
+      end;
       while PageLinks.Count<PageContainerLinks.Count do
         PageLinks.Add('G');
     end;
@@ -236,6 +242,7 @@ begin
   with DownloadThread.FHTTP, DownloadThread.manager.container do begin
     PageLinks.Clear;
     PageContainerLinks.Clear;
+    Filenames.Clear;
     PageNumber := 0;
     rurl:=ReplaceRegExpr('/\?\w+.*$',AURL,'/',False);
     rurl:=AppendURLDelim(FillHost(Module.RootURL,rurl));
@@ -275,20 +282,13 @@ var
   function DoDownloadImage: Boolean;
   var
     i, rcount: Integer;
-    iname, base_url, startkey, gid, startpage, nl: String;
+    base_url, startkey, gid, startpage, nl: String;
     source: TStringList;
   begin
     rcount := 0;
     Result := False;
     source := TStringList.Create;
     try
-      iname := query.XPathString('//div[@id="i2"]/div[2]');
-      if iname <> '' then begin
-        iname := Trim(SeparateLeft(iname, '::'));
-        iname := ExtractFileNameOnly(iname);
-      end;
-      if iname = '' then
-        iname := AName;
       while (not Result) and (not DownloadThread.IsTerminated) do begin
         source.LoadFromStream(DownloadThread.FHTTP.Document);
         query.ParseHTML(DownloadThread.FHTTP.Document);
@@ -300,7 +300,7 @@ var
         if iurl = '' then
           iurl := query.XPathString('//a/img/@src[not(contains(.,"ehgt.org/"))]');
         if iurl <> '' then
-          Result := SaveImage(DownloadThread.FHTTP, iurl, APath, iname);
+          Result := SaveImage(DownloadThread.FHTTP, iurl, APath, AName);
         if DownloadThread.IsTerminated then Break;
         if rcount >= reconnect then Break;
         if not Result then begin
