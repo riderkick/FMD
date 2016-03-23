@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, WebsiteModules, uData, uBaseUnit, uDownloadsManager,
-  accountmanagerdb, XQueryEngineHTML;
+  accountmanagerdb, XQueryEngineHTML, synautil, LazFileUtils;
 
 implementation
 
@@ -250,7 +250,6 @@ begin
         if getOK then begin
           GetImageLink;
           //get page count
-          p:=0;
           p:=StrToIntDef(query.XPathString('//table[@class="ptt"]//td[last()-1]'),0);
           if p>1 then begin
             Dec(p);
@@ -276,13 +275,20 @@ var
   function DoDownloadImage: Boolean;
   var
     i, rcount: Integer;
-    base_url, startkey, gid, startpage, nl: String;
+    iname, base_url, startkey, gid, startpage, nl: String;
     source: TStringList;
   begin
     rcount := 0;
     Result := False;
     source := TStringList.Create;
     try
+      iname := query.XPathString('//div[@id="i2"]/div[2]');
+      if iname <> '' then begin
+        iname := Trim(SeparateLeft(iname, '::'));
+        iname := ExtractFileNameOnly(iname);
+      end;
+      if iname = '' then
+        iname := AName;
       while (not Result) and (not DownloadThread.IsTerminated) do begin
         source.LoadFromStream(DownloadThread.FHTTP.Document);
         query.ParseHTML(DownloadThread.FHTTP.Document);
@@ -294,7 +300,7 @@ var
         if iurl = '' then
           iurl := query.XPathString('//a/img/@src[not(contains(.,"ehgt.org/"))]');
         if iurl <> '' then
-          Result := SaveImage(DownloadThread.FHTTP, -1, iurl, APath, AName);
+          Result := SaveImage(DownloadThread.FHTTP, iurl, APath, iname);
         if DownloadThread.IsTerminated then Break;
         if rcount >= reconnect then Break;
         if not Result then begin
@@ -341,9 +347,8 @@ begin
   reconnect := DownloadThread.FHTTP.RetryCount;
   iurl := FillHost(Module.RootURL, AURL);
   if GETWithLogin(DownloadThread.FHTTP, iurl, Module.Website) then begin
-    query := TXQueryEngineHTML.Create;
+    query := TXQueryEngineHTML.Create(DownloadThread.FHTTP.Document);
     try
-      query.ParseHTML(StreamToString(DownloadThread.FHTTP.Document));
       Result := DoDownloadImage;
     finally
       query.Free;
