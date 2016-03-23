@@ -138,7 +138,6 @@ begin
   if DownloadThread = nil then Exit;
   with DownloadThread.manager.container do begin
     PageLinks.Clear;
-    PageContainerLinks.Clear;
     PageNumber := 0;
     Source := TStringList.Create;
     try

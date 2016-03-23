@@ -120,7 +120,6 @@ begin
   Container := DownloadThread.manager.container;
   with Container do begin
     PageLinks.Clear;
-    PageContainerLinks.Clear;
     PageNumber := 0;
     Source := TStringList.Create;
     try

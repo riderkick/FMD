@@ -123,7 +123,6 @@ begin
   if DownloadThread=nil then Exit;
   with DownloadThread.FHTTP,DownloadThread.manager.container do begin
     PageLinks.Clear;
-    PageContainerLinks.Clear;
     PageNumber := 0;
     if GETWithCookie(DownloadThread.FHTTP,FillHost(Module.RootURL,AURL)) then begin
       Result:=True;

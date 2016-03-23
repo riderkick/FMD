@@ -130,7 +130,6 @@ begin
         Free;
       end;
     PageLinks.Clear;
-    PageContainerLinks.Clear;
     PageNumber := 0;
     if GET(FillHost(Module.RootURL,s+'/1')) then begin
       Result:=True;

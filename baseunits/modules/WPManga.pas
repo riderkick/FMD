@@ -230,7 +230,6 @@ begin
   if DownloadThread = nil then Exit;
   with DownloadThread.FHTTP, DownloadThread.manager.container do begin
     PageLinks.Clear;
-    PageContainerLinks.Clear;
     PageNumber := 0;
     if GET(AppendURLDelim(FillHost(Module.RootURL, AURL)) + '1') then begin
       Result := True;

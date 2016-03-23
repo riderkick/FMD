@@ -142,7 +142,6 @@ begin
   Container := DownloadThread.manager.container;
   with Container do begin
     PageLinks.Clear;
-    PageContainerLinks.Clear;
     PageNumber := 0;
     rurl := AppendURLDelim(FillHost(Module.RootURL, AURL));
     Source := TStringList.Create;
