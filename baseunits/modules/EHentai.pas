@@ -220,16 +220,14 @@ var
   procedure GetImageLink;
   var
     x: IXQValue;
-    s: String;
   begin
     with DownloadThread.manager.container, query do begin
       ParseHTML(DownloadThread.FHTTP.Document);
       for x in XPath('//div[@id="gdt"]//a') do
       begin
         PageContainerLinks.Add(x.toNode.getAttribute('href'));
-        s := Trim(SeparateRight(XPathString('img/@title', x.toNode), ':'));
-        if s <> '' then
-          Filenames.Add(ExtractFileNameOnly(s));
+        Filenames.Add(ExtractFileNameOnly(Trim(SeparateRight(
+          XPathString('img/@title', x.toNode), ':'))));
       end;
       while PageLinks.Count<PageContainerLinks.Count do
         PageLinks.Add('G');
