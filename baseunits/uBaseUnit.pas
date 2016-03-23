@@ -915,6 +915,8 @@ function SaveImage(const AHTTP: THTTPSend; const mangaSiteID: Integer; URL: Stri
   const Path, Name: String; var SavedFilename: String; const Reconnect: Integer = 0): Boolean; overload;
 function SaveImage(const AHTTP: THTTPSend; const mangaSiteID: Integer; URL: String;
   const Path, Name: String; const Reconnect: Integer = 0): Boolean; overload;
+function SaveImage(const AHTTP: THTTPSend; URL: String;
+  const Path, Name: String; const Reconnect: Integer = 0): Boolean; overload;
 function SaveImage(const mangaSiteID: Integer; URL: String;
   const Path, Name: String; var SavedFilename: String; const Reconnect: Integer = 0): Boolean; overload; inline;
 
@@ -3439,6 +3441,14 @@ var
   f: String;
 begin
   Result := SaveImage(AHTTP, mangaSiteID, URL, Path, Name, f, Reconnect);
+end;
+
+function SaveImage(const AHTTP: THTTPSend; URL: String; const Path, Name: String; const Reconnect: Integer
+  ): Boolean;
+var
+  f: String;
+begin
+  Result := SaveImage(AHTTP, -1, URL, Path, Name, f, Reconnect);
 end;
 
 function SaveImage(const mangaSiteID: Integer; URL: String; const Path,
