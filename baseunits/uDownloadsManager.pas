@@ -136,6 +136,7 @@ type
     FailedChapterLinks,
     PageContainerLinks,
     PageLinks: TStringList;
+    Filenames: TStringList;
     constructor Create;
     destructor Destroy; override;
     procedure IncReadCount(const ACount: Integer);
@@ -1090,7 +1091,11 @@ begin
   if Modules.ModuleAvailable(ModuleId, MMBeforeDownloadImage) then
     Result := Modules.BeforeDownloadImage(Self,TURL,ModuleId);
 
-  lname := Format('%.3d', [workCounter + 1]);
+  lname := '';
+  if workCounter < manager.container.Filenames.Count then
+    lname := manager.container.Filenames[workCounter];
+  if lname = '' then
+    lname := Format('%.3d', [workCounter + 1]);
 
   if Result then begin
     if Modules.ModuleAvailable(ModuleId, MMDownloadImage) then begin
@@ -1545,6 +1550,7 @@ begin
   FailedChapterLinks := TStringList.Create;
   PageLinks := TStringList.Create;
   PageContainerLinks := TStringList.Create;
+  Filenames := TStringList.Create;
   FReadCount := 0;
   WorkCounter := 0;
   CurrentPageNumber := 0;
@@ -1553,6 +1559,7 @@ end;
 
 destructor TTaskContainer.Destroy;
 begin
+  Filenames.Free;
   PageContainerLinks.Free;
   PageLinks.Free;
   ChapterName.Free;
@@ -1725,7 +1732,9 @@ begin
         s := ReadString(tid, 'PageLinks', '');
         if s <> '' then GetParams(PageLinks, s);
         s := ReadString(tid, 'PageContainerLinks', '');
-        if s <> '' then GetParams(PageContainerLinks, s);        //deprecated, for old config
+        if s <> '' then GetParams(PageContainerLinks, s);
+        s := ReadString(tid, 'Filenames', '');
+        if s <> '' then GetParams(Filenames, s);
         j := ReadInteger(tid, 'TaskStatus', -1);
         if j >= 0 then
           Status := TDownloadStatusType(j)
@@ -1808,6 +1817,8 @@ begin
             WriteString(tid, 'PageLinks', SetParams(PageLinks));
           if PageContainerLinks.Count > 0 then
             WriteString(tid, 'PageContainerLinks', SetParams(PageContainerLinks));
+          if Filenames.Count > 0 then
+            WriteString(tid, 'Filenames', SetParams(Filenames));
           WriteString(tid, 'TaskStatus', GetEnumName(TypeInfo(TDownloadStatusType), integer(Status)));
           WriteInteger(tid, 'ChapterPtr', CurrentDownloadChapterPtr);
           WriteInteger(tid, 'NumberOfPages', PageNumber);
