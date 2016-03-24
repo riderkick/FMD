@@ -11,7 +11,7 @@ uses
 implementation
 
 const
-  dirurl='/listmangahentai.html';
+  dirurl = '/listmangahentai.html';
 
 function GetDirectoryPageNumber(const MangaInfo: TMangaInformation;
   var Page: Integer; const Module: TModuleContainer): Integer;
@@ -22,13 +22,13 @@ begin
   Result := NET_PROBLEM;
   Page := 1;
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
-  if MangaInfo.FHTTP.GET(Module.RootURL+dirurl) then begin
+  if MangaInfo.FHTTP.GET(Module.RootURL + dirurl) then begin
     Result := NO_ERROR;
     query := TXQueryEngineHTML.Create;
     try
       query.ParseHTML(StreamToString(MangaInfo.FHTTP.Document));
-      s:=query.XPathString('//*[@class="nav"]/li[last()-1]/a/@href');
-      if s<>'' then Page:=StrToIntDef(GetBetween('/pagel/','/',s),1);
+      s := query.XPathString('//*[@class="nav"]/li[last()-1]/a/@href');
+      if s <> '' then Page := StrToIntDef(GetBetween('/pagel/', '/', s), 1);
     finally
       query.Free;
     end;
@@ -43,13 +43,13 @@ var
   v: IXQValue;
   s: String;
 begin
-  Result:=NET_PROBLEM;
-  if MangaInfo=nil then Exit(UNKNOWN_ERROR);
-  s:=Module.RootURL+dirurl;
-  if AURL<>'0' then s+='/pagel/'+IncStr(AURL)+'/';
+  Result := NET_PROBLEM;
+  if MangaInfo = nil then Exit(UNKNOWN_ERROR);
+  s := Module.RootURL + dirurl;
+  if AURL <> '0' then s += '/pagel/' + IncStr(AURL) + '/';
   if MangaInfo.FHTTP.GET(s) then begin
-    Result:=NO_ERROR;
-    query:=TXQueryEngineHTML.Create;
+    Result := NO_ERROR;
+    query := TXQueryEngineHTML.Create;
     try
       query.ParseHTML(StreamToString(MangaInfo.FHTTP.Document));
       for v in query.XPath('//table[@class="listing"]/tbody/tr/td[2]/a') do begin
@@ -68,27 +68,27 @@ var
   query: TXQueryEngineHTML;
   v: IXQValue;
 begin
-  Result:=NET_PROBLEM;
-  if MangaInfo=nil then Exit(UNKNOWN_ERROR);
-  with MangaInfo.FHTTP,MangaInfo.mangaInfo do begin
-    if GET(FillHost(Module.RootURL,AURL)) then begin
-      Result:=NO_ERROR;
-      query:=TXQueryEngineHTML.Create;
+  Result := NET_PROBLEM;
+  if MangaInfo = nil then Exit(UNKNOWN_ERROR);
+  with MangaInfo.FHTTP, MangaInfo.mangaInfo do begin
+    if GET(FillHost(Module.RootURL, AURL)) then begin
+      Result := NO_ERROR;
+      query := TXQueryEngineHTML.Create;
       try
         query.ParseHTML(StreamToString(Document));
-        coverLink:=query.XPathString('//*[@class="noidung"]//img/@src');
-        if title=''then title:=query.XPathString('//*[@class="tuade"]');
-        artists:=SeparateRight(query.XPathString('//*[@class="art lefts"]'),':');
-        genres:=SeparateRight(query.XPathString('//*[@class="category lefts"]'),':');
-        AddCommaString(genres,SeparateRight(query.XPathString('//*[@class="tag"]'),':'));
-        AddCommaString(genres,SeparateRight(query.XPathString('//*[@class="lan rights"]'),':'));
+        coverLink := query.XPathString('//*[@class="noidung"]//img/@src');
+        if title = '' then title := query.XPathString('//*[@class="tuade"]');
+        artists := SeparateRight(query.XPathString('//*[@class="art lefts"]'), ':');
+        genres := SeparateRight(query.XPathString('//*[@class="category lefts"]'), ':');
+        AddCommaString(genres, SeparateRight(query.XPathString('//*[@class="tag"]'), ':'));
+        AddCommaString(genres, SeparateRight(query.XPathString('//*[@class="lan rights"]'), ':'));
         for v in query.XPath('//table[@class="listing"]//a[@class="readchap"]') do begin
           chapterLinks.Add(v.toNode.getAttribute('href'));
-          chapterName.Add(Trim(title+' '+v.toString));
+          chapterName.Add(Trim(title + ' ' + v.toString));
         end;
-        if (chapterName.Count=1) and (title<>'') then
-          chapterName[0]:=title;
-        InvertStrings([chapterLinks,chapterName]);
+        if (chapterName.Count = 1) and (title <> '') then
+          chapterName[0] := title;
+        InvertStrings([chapterLinks, chapterName]);
       finally
         query.Free;
       end;
@@ -103,24 +103,24 @@ var
   s: String;
   v: IXQValue;
 begin
-  Result:=False;
-  if DownloadThread=nil then Exit;
-  with DownloadThread.FHTTP,DownloadThread.manager.container do begin
+  Result := False;
+  if DownloadThread = nil then Exit;
+  with DownloadThread.FHTTP, DownloadThread.manager.container do begin
     PageLinks.Clear;
     PageNumber := 0;
-    Cookies.Values['ReadType']:='2';
-    if GET(FillHost(Module.RootURL,AURL)) then begin
-      Result:=True;
-      query:=TXQueryEngineHTML.Create;
+    Cookies.Values['ReadType'] := '2';
+    if GET(FillHost(Module.RootURL, AURL)) then begin
+      Result := True;
+      query := TXQueryEngineHTML.Create;
       try
         query.ParseHTML(StreamToString(Document));
-        PageNumber:=query.XPath('(//*[@id="topn"]/span/select)[last()]/option').Count;
-        s:=query.XPathString('//*[@id="contentchap"]//script[contains(.,"var jsondata")]');
-        if s<>'' then begin
-          s:=Trim(GetBetween('=',';',s));
+        PageNumber := query.XPath('(//*[@id="topn"]/span/select)[last()]/option').Count;
+        s := query.XPathString('//*[@id="contentchap"]//script[contains(.,"var jsondata")]');
+        if s <> '' then begin
+          s := Trim(GetBetween('=', ';', s));
           query.ParseHTML(s);
           for v in query.XPath('json(*)()') do
-             PageLinks.Add(v.toString);
+            PageLinks.Add(v.toString);
         end;
       finally
         query.Free;
@@ -135,16 +135,16 @@ var
   query: TXQueryEngineHTML;
   s: String;
 begin
-  Result:=False;
-  if DownloadThread=nil then Exit;
-  with DownloadThread.manager.container,DownloadThread.FHTTP do begin
-    s:=AppendURLDelim(AURL)+IncStr(DownloadThread.workCounter)+'/';
-    if GET(FillHost(Module.RootURL,s)) then begin
-      Result:=True;
-      query:=TXQueryEngineHTML.Create;
+  Result := False;
+  if DownloadThread = nil then Exit;
+  with DownloadThread.manager.container, DownloadThread.FHTTP do begin
+    s := AppendURLDelim(AURL) + IncStr(DownloadThread.workCounter) + '/';
+    if GET(FillHost(Module.RootURL, s)) then begin
+      Result := True;
+      query := TXQueryEngineHTML.Create;
       try
         query.ParseHTML(StreamToString(Document));
-        PageLinks[DownloadThread.workCounter]:=query.XPathString('//*[@id="con"]//img/@src');
+        PageLinks[DownloadThread.workCounter] := query.XPathString('//*[@id="con"]//img/@src');
       finally
         query.Free;
       end;
@@ -156,13 +156,13 @@ procedure RegisterModule;
 begin
   with AddModule do
   begin
-    Website:='Hakihome';
-    RootURL:='http://hakihome.com';
-    OnGetDirectoryPageNumber:=@GetDirectoryPageNumber;
-    OnGetNameAndLink:=@GetNameAndLink;
-    OnGetInfo:=@GetInfo;
-    OnGetPageNumber:=@GetPageNumber;
-    OnGetImageURL:=@GetImageURL;
+    Website := 'Hakihome';
+    RootURL := 'http://hakihome.com';
+    OnGetDirectoryPageNumber := @GetDirectoryPageNumber;
+    OnGetNameAndLink := @GetNameAndLink;
+    OnGetInfo := @GetInfo;
+    OnGetPageNumber := @GetPageNumber;
+    OnGetImageURL := @GetImageURL;
   end;
 end;
 

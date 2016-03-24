@@ -93,27 +93,21 @@ type
     destructor Destroy; override;
     procedure ClearInfo;
     function GetDirectoryPage(var Page: Integer; const website: String): Byte;
-    function GetNameAndLink(const names, links: TStringList;
-      const website, URL: String): Byte;
+    function GetNameAndLink(const names, links: TStringList; const website, URL: String): Byte;
     function GetInfoFromURL(const website, URL: String; const Reconnect: Integer = 0): Byte;
-    procedure SyncInfoToData(const DataProcess: TDataProcess;
-      const index: Cardinal); overload;
+    procedure SyncInfoToData(const DataProcess: TDataProcess; const index: Cardinal); overload;
     procedure SyncInfoToData(const DataProcess: TDBDataProcess); overload;
-    procedure SyncMinorInfoToData(const DataProcess: TDataProcess;
-      const index: Cardinal);
+    procedure SyncMinorInfoToData(const DataProcess: TDataProcess; const index: Cardinal);
 
     // Only use this function for getting manga infos for the first time
-    procedure AddInfoToDataWithoutBreak(const Name, link: String;
-      const DataProcess: TDataProcess);
+    procedure AddInfoToDataWithoutBreak(const Name, link: String; const DataProcess: TDataProcess);
     // Only use this function for update manga list
     procedure AddInfoToData(const Name, link: String; const DataProcess: TDataProcess);
       overload;
     // to add data to TDBDataProcess
-    procedure AddInfoToData(const Title, Link: String;
-      const DataProcess: TDBDataProcess); overload;
+    procedure AddInfoToData(const Title, Link: String; const DataProcess: TDBDataProcess); overload;
     //wrapper
-    function GetPage(var output: TObject; URL: String;
-      const Reconnect: Integer = 0): Boolean; inline;
+    function GetPage(var output: TObject; URL: String; const Reconnect: Integer = 0): Boolean; inline;
   end;
 
 var
@@ -346,9 +340,7 @@ begin
       if l.Count <> 0 then
       begin
         for j := 0 to l.Count - 1 do
-        begin
           site.Add(id);
-        end;
         Data.Text := Data.Text + l.Text;
       end;
     end;
@@ -404,8 +396,8 @@ end;
 
 // check if we need to filter or not
 function TDataProcess.CanFilter(const checkedGenres, uncheckedGenres: TStringList;
-  const stTitle, stAuthors, stArtists, stStatus, stSummary: String;
-  const minusDay: Cardinal; const haveAllChecked, searchNewManga: Boolean): Boolean;
+  const stTitle, stAuthors, stArtists, stStatus, stSummary: String; const minusDay: Cardinal;
+  const haveAllChecked, searchNewManga: Boolean): Boolean;
 begin
   if (filterPos.Count = 0) or
     (Data.Count = 0) or
@@ -423,9 +415,8 @@ begin
 end;
 
 function TDataProcess.Filter(const checkedGenres, uncheckedGenres: TStringList;
-  const stTitle, stAuthors, stArtists, stStatus, stSummary: String;
-  const minusDay: Cardinal; const haveAllChecked, searchNewManga: Boolean;
-  useRegExpr: Boolean = False): Boolean;
+  const stTitle, stAuthors, stArtists, stStatus, stSummary: String; const minusDay: Cardinal;
+  const haveAllChecked, searchNewManga: Boolean; useRegExpr: Boolean = False): Boolean;
 var
   currentJDN, i, j, k, fpos, Count: Integer;
   s: String;
@@ -457,7 +448,7 @@ begin
       for i := 0 to filterPos.Count - 1 do
       begin
         fpos := filterPos.Items[i];
-        if (currentJDN - {%H-}integer(jdn.Items[fpos]) >= minusDay) and
+        if (currentJDN - {%H-}Integer(jdn.Items[fpos]) >= minusDay) and
           (filterMark.Items[fpos] = FILTER_SHOW) then
           filterMark.Items[fpos] := FILTER_HIDE;
       end;
@@ -616,10 +607,8 @@ begin
             end;
           end
           else
-          begin
-            if filterMark.Items[fpos] = FILTER_SHOW then
-              filterMark.Items[fpos] := FILTER_HIDE;
-          end;
+          if filterMark.Items[fpos] = FILTER_SHOW then
+            filterMark.Items[fpos] := FILTER_HIDE;
         end;
       end;
       gen.Free;
@@ -646,14 +635,12 @@ begin
               filterMark.Items[fpos] := FILTER_HIDE;
           end
           else
-          begin
             for j := 0 to uncheckedGenres.Count - 1 do
               if Pos((uncheckedGenres.Strings[j] + ','), s) <> 0 then
               begin
                 filterMark.Items[fpos] := FILTER_HIDE;
                 Break;
               end;
-          end;
         end;
       end;
     end;
@@ -685,13 +672,11 @@ begin
     Exit;
   AMangaName := Upcase(AMangaName);
   for i := 0 to filterPos.Count - 1 do
-  begin
     if Pos(AMangaName, upcase(Title.Strings[filterPos.Items[i]])) > 0 then
     begin
       searchPos.Add(filterPos.Items[i]);
       Result := True;
     end;
-  end;
 end;
 
 // get data position
@@ -711,13 +696,11 @@ begin
   filterMark.Clear;
   filterPos.Clear;
   if Data.Count > 0 then
-  begin
     for i := 0 to Data.Count - 1 do
     begin
       filterMark.Add(FILTER_SHOW);
       filterPos.Add(i);
     end;
-  end;
   isFiltered := False;
 end;
 
@@ -729,8 +712,7 @@ end;
 
 { TMangaInformation }
 
-constructor TMangaInformation.Create(AOwnerThread: TFMDThread;
-  CreateInfo: Boolean);
+constructor TMangaInformation.Create(AOwnerThread: TFMDThread; CreateInfo: Boolean);
 begin
   inherited Create;
   FHTTP := THTTPSendThread.Create(AOwnerThread);
@@ -779,8 +761,7 @@ begin
   parse.Add(Text);
 end;
 
-function TMangaInformation.GetDirectoryPage(var Page: Integer;
-  const website: String): Byte;
+function TMangaInformation.GetDirectoryPage(var Page: Integer; const website: String): Byte;
 var
   s: String;
   p: Integer;
@@ -1320,8 +1301,7 @@ begin
     RemoveHostFromURLsPair(links, names);
 end;
 
-function TMangaInformation.GetInfoFromURL(const website, URL: String;
-  const Reconnect: Integer): Byte;
+function TMangaInformation.GetInfoFromURL(const website, URL: String; const Reconnect: Integer): Byte;
 var
   s, s2: String;
   j, k: Integer;
@@ -1462,7 +1442,7 @@ begin
     ModuleId := Modules.LocateModule(website);
   if Modules.ModuleAvailable(ModuleId, MMGetInfo) then begin
     mangaInfo.url := FillHost(Modules.Module[ModuleId].RootURL, URL);
-    Result := Modules.GetInfo(Self, URL, ModuleId)
+    Result := Modules.GetInfo(Self, URL, ModuleId);
   end
   else
   begin
@@ -1686,14 +1666,14 @@ begin
       summary := '';
 
     // cleanup chapters
-    if chapterLinks.Count>0 then begin
-      while chapterName.Count<chapterLinks.Count do
+    if chapterLinks.Count > 0 then begin
+      while chapterName.Count < chapterLinks.Count do
         chapterName.Add('');
-      while chapterLinks.Count<chapterName.Count do
-        chapterName.Delete(chapterName.Count-1);
-      for j:=0 to chapterLinks.Count-1 do begin
-        chapterLinks[j]:=Trim(chapterLinks[j]);
-        chapterName[j]:=Trim(chapterName[j]);
+      while chapterLinks.Count < chapterName.Count do
+        chapterName.Delete(chapterName.Count - 1);
+      for j := 0 to chapterLinks.Count - 1 do begin
+        chapterLinks[j] := Trim(chapterLinks[j]);
+        chapterName[j] := Trim(chapterName[j]);
       end;
     end;
 
@@ -1706,7 +1686,6 @@ begin
         del := False;
         if (j + 1) < chapterLinks.Count then
           for k := j + 1 to chapterLinks.Count - 1 do
-          begin
             if SameText(chapterLinks[j], chapterLinks[k]) then
             begin
               chapterLinks.Delete(j);
@@ -1714,7 +1693,6 @@ begin
               del := True;
               Break;
             end;
-          end;
         if not del then
           Inc(j);
       end;
@@ -1727,10 +1705,8 @@ begin
         RemoveHostFromURLsPair(chapterLinks, chapterName);
       // fixing chapter name
       for j := 0 to chapterName.Count - 1 do
-      begin
         chapterName.Strings[j] := Trim(RemoveStringBreaks(
           CommonStringFilter(chapterName[j])));
-      end;
 
       //remove manga name from chapter
       if OptionRemoveMangaNameFromChapter and (title <> '') then
@@ -1743,9 +1719,9 @@ begin
             if Pos(s, s2) = 1 then begin
               s2 := chapterName[k];
               Delete(s2, 1, j);
-              s2:=Trim(s2);
-              if LeftStr(s2,2)='- ' then
-                Delete(s2,1,2);
+              s2 := Trim(s2);
+              if LeftStr(s2, 2) = '- ' then
+                Delete(s2, 1, 2);
               chapterName[k] := s2;
             end;
         end;
@@ -1756,14 +1732,12 @@ begin
   end;
 end;
 
-procedure TMangaInformation.SyncMinorInfoToData(const DataProcess: TDataProcess;
-  const index: Cardinal);
+procedure TMangaInformation.SyncMinorInfoToData(const DataProcess: TDataProcess; const index: Cardinal);
 begin
   // sync info to data
   {$IFDEF DOWNLOADER}
   if not dataProcess.isFilterAllSites then
   {$ENDIF}
-  begin
     DataProcess.Data.Strings[index] := SetParams(
       [DataProcess.Param[index, DATA_PARAM_TITLE],
       DataProcess.Param[index, DATA_PARAM_LINK],
@@ -1779,13 +1753,11 @@ begin
       '0',
       {$ENDIF}
       '0']);
-  end;
   // then break it into parts
   dataProcess.BreakDataToParts(index);
 end;
 
-procedure TMangaInformation.SyncInfoToData(const DataProcess: TDataProcess;
-  const index: Cardinal);
+procedure TMangaInformation.SyncInfoToData(const DataProcess: TDataProcess; const index: Cardinal);
 begin
   // sync info to data
   {$IFDEF DOWNLOADER}
@@ -1852,8 +1824,7 @@ begin
     ])));
 end;
 
-procedure TMangaInformation.AddInfoToData(const Name, link: String;
-  const DataProcess: TDataProcess);
+procedure TMangaInformation.AddInfoToData(const Name, link: String; const DataProcess: TDataProcess);
 var
   l: TStringList;
 begin
@@ -1887,8 +1858,7 @@ begin
   l.Free;
 end;
 
-procedure TMangaInformation.AddInfoToData(const Title, Link: String;
-  const DataProcess: TDBDataProcess);
+procedure TMangaInformation.AddInfoToData(const Title, Link: String; const DataProcess: TDBDataProcess);
 begin
   if Assigned(DataProcess) then
   begin
@@ -1900,8 +1870,7 @@ begin
   end;
 end;
 
-function TMangaInformation.GetPage(var output: TObject; URL: String;
-  const Reconnect: Integer): Boolean;
+function TMangaInformation.GetPage(var output: TObject; URL: String; const Reconnect: Integer): Boolean;
 begin
   Result := uBaseUnit.GetPage(FHTTP, output, URL, Reconnect);
 end;

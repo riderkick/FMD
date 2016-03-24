@@ -10,12 +10,13 @@ uses
 
 implementation
 
-uses RegExpr, synacode;
+uses
+  RegExpr, synacode;
 
 const
   dirURL = 'f_doujinshi=on&f_manga=on&f_western=on&f_apply=Apply+Filter';
   exhentaiurllogin = 'https://forums.e-hentai.org/index.php?act=Login&CODE=01';
-  accname='ExHentai';
+  accname = 'ExHentai';
 
 var
   onlogin: Boolean = False;
@@ -35,10 +36,10 @@ begin
       Account.Status[accname] := asChecking;
       Reset;
       Cookies.Clear;
-      s := 'returntype=8&CookieDate=1&b=d&bt=pone'+
-           '&UserName=' + EncodeURLElement(Account.Username[accname]) +
-           '&PassWord=' + EncodeURLElement(Account.Password[accname]) +
-           '&ipb_login_submit=Login%21';
+      s := 'returntype=8&CookieDate=1&b=d&bt=pone' +
+        '&UserName=' + EncodeURLElement(Account.Username[accname]) +
+        '&PassWord=' + EncodeURLElement(Account.Password[accname]) +
+        '&ipb_login_submit=Login%21';
       if POST(exhentaiurllogin, s) then begin
         if ResultCode = 200 then begin
           Result := Cookies.Values['ipb_pass_hash'] <> '';
@@ -190,8 +191,8 @@ begin
   if MangaInfo = nil then Exit;
   with MangaInfo.mangaInfo do begin
     website := Module.Website;
-    url:=ReplaceRegExpr('/\?\w+.*$',AURL,'/',False);
-    url:=AppendURLDelim(FillHost(Module.RootURL,url));
+    url := ReplaceRegExpr('/\?\w+.*$', AURL, '/', False);
+    url := AppendURLDelim(FillHost(Module.RootURL, url));
     if GETWithLogin(MangaInfo.FHTTP, url, Module.Website) then begin
       Result := NO_ERROR;
       // if there is only 1 line, it's banned message!
@@ -229,7 +230,7 @@ var
         Filenames.Add(ExtractFileNameOnly(Trim(SeparateRight(
           XPathString('img/@title', x.toNode), ':'))));
       end;
-      while PageLinks.Count<PageContainerLinks.Count do
+      while PageLinks.Count < PageContainerLinks.Count do
         PageLinks.Add('G');
     end;
   end;
@@ -242,8 +243,8 @@ begin
     PageContainerLinks.Clear;
     Filenames.Clear;
     PageNumber := 0;
-    rurl:=ReplaceRegExpr('/\?\w+.*$',AURL,'/',False);
-    rurl:=AppendURLDelim(FillHost(Module.RootURL,rurl));
+    rurl := ReplaceRegExpr('/\?\w+.*$', AURL, '/', False);
+    rurl := AppendURLDelim(FillHost(Module.RootURL, rurl));
     if GETWithLogin(DownloadThread.FHTTP, rurl, Module.Website) then begin
       Result := True;
       query := TXQueryEngineHTML.Create;
@@ -255,10 +256,10 @@ begin
         if getOK then begin
           GetImageLink;
           //get page count
-          p:=StrToIntDef(query.XPathString('//table[@class="ptt"]//td[last()-1]'),0);
-          if p>1 then begin
+          p := StrToIntDef(query.XPathString('//table[@class="ptt"]//td[last()-1]'), 0);
+          if p > 1 then begin
             Dec(p);
-            for i:=1 to p do
+            for i := 1 to p do
               if GETWithLogin(DownloadThread.FHTTP, rurl + '?p=' + IntToStr(i), Module.Website) then
                 GetImageLink;
           end;
@@ -290,10 +291,10 @@ var
       while (not Result) and (not DownloadThread.IsTerminated) do begin
         source.LoadFromStream(DownloadThread.FHTTP.Document);
         query.ParseHTML(DownloadThread.FHTTP.Document);
-        iurl:='';
-        if OptionEHentaiDownloadOriginalImage and (Account.Status[accname]=asValid) then
-          iurl:=query.XPathString('//a/@href[contains(.,"/fullimg.php")]');
-        if iurl='' then
+        iurl := '';
+        if OptionEHentaiDownloadOriginalImage and (Account.Status[accname] = asValid) then
+          iurl := query.XPathString('//a/@href[contains(.,"/fullimg.php")]');
+        if iurl = '' then
           iurl := query.XPathString('//*[@id="img"]/@src');
         if iurl = '' then
           iurl := query.XPathString('//a/img/@src[not(contains(.,"ehgt.org/"))]');
@@ -356,29 +357,29 @@ end;
 
 procedure RegisterModule;
 
-  function AddWebsiteModule(AWebsite,ARootURL:String):TModuleContainer;
+  function AddWebsiteModule(AWebsite, ARootURL: String): TModuleContainer;
   begin
-    Result:=AddModule;
+    Result := AddModule;
     with Result do begin
-      Website:=AWebsite;
-      RootURL:=ARootURL;
+      Website := AWebsite;
+      RootURL := ARootURL;
       MaxTaskLimit := 1;
-      MaxConnectionLimit:=4;
-      SortedList:=True;
-      DynamicPageLink:=True;
-      OnGetDirectoryPageNumber:=@GetDirectoryPageNumber;
-      OnGetNameAndLink:=@GetNameAndLink;
-      OnGetInfo:=@GetInfo;
-      OnGetPageNumber:=@GetPageNumber;
-      OnDownloadImage:=@DownloadImage;
+      MaxConnectionLimit := 4;
+      SortedList := True;
+      DynamicPageLink := True;
+      OnGetDirectoryPageNumber := @GetDirectoryPageNumber;
+      OnGetNameAndLink := @GetNameAndLink;
+      OnGetInfo := @GetInfo;
+      OnGetPageNumber := @GetPageNumber;
+      OnDownloadImage := @DownloadImage;
     end;
   end;
 
 begin
-  AddWebsiteModule('E-Hentai','http://g.e-hentai.org');
-  with AddWebsiteModule('ExHentai','http://exhentai.org') do begin
-    AccountSupport:=True;
-    OnLogin:=@ExHentaiLogin;
+  AddWebsiteModule('E-Hentai', 'http://g.e-hentai.org');
+  with AddWebsiteModule('ExHentai', 'http://exhentai.org') do begin
+    AccountSupport := True;
+    OnLogin := @ExHentaiLogin;
   end;
 end;
 

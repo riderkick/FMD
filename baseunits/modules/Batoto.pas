@@ -27,7 +27,7 @@ function Login(const AHTTP: THTTPSendThread): Boolean;
 var
   query: TXQueryEngineHTML;
   loginform: THTMLForm;
-  key: string;
+  key: String;
 begin
   Result := False;
   if AHTTP = nil then Exit;
@@ -70,7 +70,8 @@ begin
                 Account.Save;
               end
               else
-                Writelog_V(['Batoto, login: failed, unexpected server reply: ',ResultCode,' ',ResultString]);
+                Writelog_V(['Batoto, login: failed, unexpected server reply: ',
+                  ResultCode, ' ', ResultString]);
             end
             else
               Writelog_V('Batoto, login: connection failed');
@@ -89,7 +90,7 @@ begin
     EnterCriticalsection(locklogin);
     try
       if Result then
-        AHTTP.Cookies.Text:=Account.Cookies[modulename];
+        AHTTP.Cookies.Text := Account.Cookies[modulename];
     finally
       LeaveCriticalsection(locklogin);
     end;
@@ -100,25 +101,25 @@ function GETWithLogin(const AHTTP: THTTPSendThread; const AURL: String): Boolean
 var
   s: String;
 begin
-  Result:=False;
-  AHTTP.Cookies.Text:=Account.Cookies['Batoto'];
-  AHTTP.KeepAlive:=False;
-  Result:=AHTTP.GET(AURL);
-  if (AHTTP.ResultCode>400) and (AHTTP.ResultCode<500) then Exit;
+  Result := False;
+  AHTTP.Cookies.Text := Account.Cookies['Batoto'];
+  AHTTP.KeepAlive := False;
+  Result := AHTTP.GET(AURL);
+  if (AHTTP.ResultCode > 400) and (AHTTP.ResultCode < 500) then Exit;
   if Result then begin
-    Result:=True;
-    if Account.Enabled[modulename]=False then Exit;
-    if Account.Username[modulename]='' then Exit;
-    if Account.Status[modulename]=asInvalid then Exit;
-    s:=StreamToString(AHTTP.Document);
+    Result := True;
+    if Account.Enabled[modulename] = False then Exit;
+    if Account.Username[modulename] = '' then Exit;
+    if Account.Status[modulename] = asInvalid then Exit;
+    s := StreamToString(AHTTP.Document);
     Result := (Pos('class=''logged_in''', s) > 0) or (Pos('class="logged_in"', s) > 0);
     if not Result then begin
-      Result:=Login(AHTTP);
+      Result := Login(AHTTP);
       if Result then
-        Result:=AHTTP.GET(AURL)
+        Result := AHTTP.GET(AURL)
       else
       begin
-        Result:=True;
+        Result := True;
         AHTTP.Document.Clear;
         WriteStrToStream(AHTTP.Document, s);
       end;
@@ -131,17 +132,19 @@ function GetDirectoryPageNumber(const MangaInfo: TMangaInformation;
 var
   s: String;
 begin
-  Result:=NET_PROBLEM;
-  Page:=1;
-  if MangaInfo =nil then Exit(UNKNOWN_ERROR);
-  if MangaInfo.FHTTP.GET(Module.RootURL+dirurls[Module.CurrentDirectoryIndex]+dirparam+IntToStr(perpage)) then begin
-    Result:=NO_ERROR;
+  Result := NET_PROBLEM;
+  Page := 1;
+  if MangaInfo = nil then Exit(UNKNOWN_ERROR);
+  if MangaInfo.FHTTP.GET(Module.RootURL + dirurls[Module.CurrentDirectoryIndex] +
+    dirparam + IntToStr(perpage))
+  then begin
+    Result := NO_ERROR;
     with TXQueryEngineHTML.Create(MangaInfo.FHTTP.Document) do
       try
         ParseHTML(StreamToString(MangaInfo.FHTTP.Document));
-        s:=Trim(XPathString('//ul[@class="ipsList_inline left pages"]/li/a'));
-        if s<>'' then
-          Page:=StrToIntDef(Trim(SeparateRight(LowerCase(s),'page 1 of ')),1);
+        s := Trim(XPathString('//ul[@class="ipsList_inline left pages"]/li/a'));
+        if s <> '' then
+          Page := StrToIntDef(Trim(SeparateRight(LowerCase(s), 'page 1 of ')), 1);
       finally
         Free;
       end;
@@ -155,12 +158,12 @@ var
   v: IXQValue;
   s: String;
 begin
-  Result:=NET_PROBLEM;
-  if MangaInfo=nil then Exit(UNKNOWN_ERROR);
-  s:=Module.RootURL+dirurls[Module.CurrentDirectoryIndex]+dirparam+IntToStr(perpage);
-  if AURL<>'0' then s+='&st='+IntToStr(StrToInt(AURL)*perpage);
+  Result := NET_PROBLEM;
+  if MangaInfo = nil then Exit(UNKNOWN_ERROR);
+  s := Module.RootURL + dirurls[Module.CurrentDirectoryIndex] + dirparam + IntToStr(perpage);
+  if AURL <> '0' then s += '&st=' + IntToStr(StrToInt(AURL) * perpage);
   if MangaInfo.FHTTP.GET(s) then begin
-    Result:=NO_ERROR;
+    Result := NO_ERROR;
     with TXQueryEngineHTML.Create(MangaInfo.FHTTP.Document) do
       try
         for v in XPath('//table[@class="ipb_table topic_list hover_rows"]/tbody/tr/td/h4/a') do begin
@@ -185,7 +188,7 @@ begin
   with MangaInfo.mangaInfo do begin
     website := modulename;
     url := FillHost(urlroot, AURL);
-    if GETWithLogin(MangaInfo.FHTTP,url) then begin
+    if GETWithLogin(MangaInfo.FHTTP, url) then begin
       Result := NO_ERROR;
       with TXQueryEngineHTML.Create(MangaInfo.FHTTP.Document) do
         try
@@ -194,9 +197,9 @@ begin
             title := XPathString('//h1[@class="ipsType_pagetitle"]');
           for v in XPath('//table[@class="ipb_table"]//tr') do begin
             s := v.toString;
-            if Pos('Author:', s) > 0 then authors:= GetRightValue('Author:', s)
-            else if Pos('Artist:', s) > 0 then artists:= GetRightValue('Artist:', s)
-            else if Pos('Description:', s) > 0 then summary:= GetRightValue('Description:', s)
+            if Pos('Author:', s) > 0 then authors := GetRightValue('Author:', s)
+            else if Pos('Artist:', s) > 0 then artists := GetRightValue('Artist:', s)
+            else if Pos('Description:', s) > 0 then summary := GetRightValue('Description:', s)
             else if Pos('Status:', s) > 0 then begin
               if Pos('Ongoing', s) > 0 then status := '1'
               else status := '0';
@@ -217,11 +220,11 @@ begin
             t := w.toString;
             if OptionBatotoShowAllLang then begin
               l := XPath('td[2]/div', v.toNode).toNode.getAttribute('title');
-              if l <> '' then t += ' ['+ l +']';
+              if l <> '' then t += ' [' + l + ']';
             end;
             if OptionBatotoShowScanGroup then begin
               l := XPath('td[3]', v.toNode).toString;
-              if l <> '' then t += ' ['+ l +']';
+              if l <> '' then t += ' [' + l + ']';
             end;
             chapterName.Add(t);
           end;
@@ -251,9 +254,9 @@ begin
           PageContainerLinks.Text := cid;
           if XPathString('//select[@id="page_select"]') <> '' then begin
             PageNumber := XPath('(//select[@id="page_select"])[1]/option/@value').Count;
-            if PageNumber>0 then begin
-              s:=XPathString('//div[@id="full_image"]//img/@src');
-              if s<>'' then PageLinks.Add(s)
+            if PageNumber > 0 then begin
+              s := XPathString('//div[@id="full_image"]//img/@src');
+              if s <> '' then PageLinks.Add(s);
             end;
           end
           else begin
@@ -278,7 +281,8 @@ begin
   if DownloadThread = nil then Exit;
   with DownloadThread.manager.container, DownloadThread.FHTTP do begin
     if PageContainerLinks.Text = '' then Exit;
-    rurl := urlroot + '/areader?id=' + PageContainerLinks[0] + '&p=' + IntToStr(DownloadThread.WorkCounter + 1);
+    rurl := urlroot + '/areader?id=' + PageContainerLinks[0] + '&p=' +
+      IntToStr(DownloadThread.WorkCounter + 1);
     Headers.Values['Referer'] := ' ' + Module.RootURL + '/reader';
     if GET(rurl) then begin
       Result := True;

@@ -10,7 +10,8 @@ uses
 
 implementation
 
-uses synautil;
+uses
+  synautil;
 
 function GetDirectoryPageNumber(const MangaInfo: TMangaInformation;
   var Page: Integer; const Module: TModuleContainer): Integer;
@@ -41,7 +42,7 @@ var
 begin
   Result := NET_PROBLEM;
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
-  if MangaInfo.FHTTP.GET(Module.RootURL + '/page/'+ AURL +'/') then begin
+  if MangaInfo.FHTTP.GET(Module.RootURL + '/page/' + AURL + '/') then begin
     Result := NO_ERROR;
     query := TXQueryEngineHTML.Create;
     try

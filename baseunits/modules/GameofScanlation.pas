@@ -11,14 +11,14 @@ uses
 implementation
 
 const
-  dirurl='/projects/';
+  dirurl = '/projects/';
 var
-  goscookies: string='';
+  goscookies: String = '';
   goslockget: TRTLCriticalSection;
 
 function GETWithCookie(const AHTTP: THTTPSendThread; const AURL: String): Boolean;
 begin
-  Result:=Cloudflare.GETCF(AHTTP,AURL,goscookies,goslockget);
+  Result := Cloudflare.GETCF(AHTTP, AURL, goscookies, goslockget);
 end;
 
 function GetNameAndLink(const MangaInfo: TMangaInformation;
@@ -27,19 +27,19 @@ function GetNameAndLink(const MangaInfo: TMangaInformation;
 var
   v: IXQValue;
 begin
-  Result:=NET_PROBLEM;
-  if MangaInfo=nil then Exit(UNKNOWN_ERROR);
-  if GETWithCookie(MangaInfo.FHTTP,Module.RootURL+dirurl) then begin
-    Result:=NO_ERROR;
+  Result := NET_PROBLEM;
+  if MangaInfo = nil then Exit(UNKNOWN_ERROR);
+  if GETWithCookie(MangaInfo.FHTTP, Module.RootURL + dirurl) then begin
+    Result := NO_ERROR;
     with TXQueryEngineHTML.Create(MangaInfo.FHTTP.Document) do
-    try
-      for v in XPath('//div[@class="info"]/a') do begin
-        ALinks.Add(v.toNode.getAttribute('href'));
-        ANames.Add(v.toString);
+      try
+        for v in XPath('//div[@class="info"]/a') do begin
+          ALinks.Add(v.toNode.getAttribute('href'));
+          ANames.Add(v.toString);
+        end;
+      finally
+        Free;
       end;
-    finally
-      Free;
-    end;
   end;
 end;
 
@@ -60,33 +60,33 @@ var
   end;
 
 begin
-  Result:=NET_PROBLEM;
-  if MangaInfo=nil then Exit(UNKNOWN_ERROR);
-  with MangaInfo.FHTTP,MangaInfo.mangaInfo do begin
-    url:=AppendURLDelim(FillHost(Module.RootURL,AURL));
-    if GETWithCookie(MangaInfo.FHTTP,url) then begin
-      Result:=NO_ERROR;
-      query:=TXQueryEngineHTML.Create(Document);
+  Result := NET_PROBLEM;
+  if MangaInfo = nil then Exit(UNKNOWN_ERROR);
+  with MangaInfo.FHTTP, MangaInfo.mangaInfo do begin
+    url := AppendURLDelim(FillHost(Module.RootURL, AURL));
+    if GETWithCookie(MangaInfo.FHTTP, url) then begin
+      Result := NO_ERROR;
+      query := TXQueryEngineHTML.Create(Document);
       try
-        if title=''then title:=query.XPathString('//div[@class="con"]/h2');
-        summary:=query.XPathString('//dd[@class="dsc"]');
-        s:=query.XPathString('//div[@class="con"]/dl/span[@class="aln"]');
-        if s<>'' then begin
-          s:=LowerCase(s);
-          if Pos('ongoing',s)>0 then
-            status:='1'
-          else if Pos('completed',s)>0 then
-            status:='0';
+        if title = '' then title := query.XPathString('//div[@class="con"]/h2');
+        summary := query.XPathString('//dd[@class="dsc"]');
+        s := query.XPathString('//div[@class="con"]/dl/span[@class="aln"]');
+        if s <> '' then begin
+          s := LowerCase(s);
+          if Pos('ongoing', s) > 0 then
+            status := '1'
+          else if Pos('completed', s) > 0 then
+            status := '0';
         end;
         GetChapters;
-        p:=StrToIntDef(query.XPathString('//nav/a[last()-1]'),1);
-        if p>1 then
-          for i:=2 to p do
-            if GET(AppendURLDelim(url)+'page-'+IntToStr(i)) then begin
+        p := StrToIntDef(query.XPathString('//nav/a[last()-1]'), 1);
+        if p > 1 then
+          for i := 2 to p do
+            if GET(AppendURLDelim(url) + 'page-' + IntToStr(i)) then begin
               query.ParseHTML(Document);
               GetChapters;
             end;
-        InvertStrings([chapterLinks,chapterName]);
+        InvertStrings([chapterLinks, chapterName]);
       finally
         query.Free;
       end;
@@ -100,22 +100,22 @@ var
   v: IXQValue;
   s: String;
 begin
-  Result:=False;
-  if DownloadThread=nil then Exit;
-  with DownloadThread.FHTTP,DownloadThread.manager.container do begin
+  Result := False;
+  if DownloadThread = nil then Exit;
+  with DownloadThread.FHTTP, DownloadThread.manager.container do begin
     PageLinks.Clear;
     PageNumber := 0;
-    s:=ReplaceRegExpr('/\?\w+.*$',AURL,'/',False);
-    s:=AppendURLDelim(FillHost(Module.RootURL,s))+'?chapter_view=fullstrip';
-    if GETWithCookie(DownloadThread.FHTTP,s) then begin
-      Result:=True;
+    s := ReplaceRegExpr('/\?\w+.*$', AURL, '/', False);
+    s := AppendURLDelim(FillHost(Module.RootURL, s)) + '?chapter_view=fullstrip';
+    if GETWithCookie(DownloadThread.FHTTP, s) then begin
+      Result := True;
       with TXQueryEngineHTML.Create(Document) do
-      try
-        for v in XPath('//div[@id="comicMainImage"]//img/@src') do
-          PageLinks.Add(MaybeFillHost(Module.RootURL,v.toString));
-      finally
-        Free;
-      end;
+        try
+          for v in XPath('//div[@id="comicMainImage"]//img/@src') do
+            PageLinks.Add(MaybeFillHost(Module.RootURL, v.toString));
+        finally
+          Free;
+        end;
     end;
   end;
 end;
@@ -123,16 +123,16 @@ end;
 function BeforeDownloadImage(const DownloadThread: TDownloadThread;
   const AURL: String; const Module: TModuleContainer): Boolean;
 begin
-  Result:=False;
+  Result := False;
   if DownloadThread = nil then Exit;
-  with DownloadThread.manager.container,DownloadThread.FHTTP do
-    if CurrentDownloadChapterPtr<ChapterLinks.Count then begin
-      Headers.Values['Referer']:=' '+FillHost(Module.RootURL,ChapterLinks[CurrentDownloadChapterPtr]);
-      Cookies.Text:=goscookies;
-      if (goscookies='') or (HEAD(AURL) and (ResultCode=503)) then
-        Result:=GETWithCookie(DownloadThread.FHTTP,Module.RootURL)
+  with DownloadThread.manager.container, DownloadThread.FHTTP do
+    if CurrentDownloadChapterPtr < ChapterLinks.Count then begin
+      Headers.Values['Referer'] := ' ' + FillHost(Module.RootURL, ChapterLinks[CurrentDownloadChapterPtr]);
+      Cookies.Text := goscookies;
+      if (goscookies = '') or (HEAD(AURL) and (ResultCode = 503)) then
+        Result := GETWithCookie(DownloadThread.FHTTP, Module.RootURL)
       else
-        Result:=True;
+        Result := True;
     end;
 end;
 
@@ -140,12 +140,12 @@ procedure RegisterModule;
 begin
   with AddModule do
   begin
-    Website:='GameofScanlation';
-    RootURL:='https://gameofscanlation.moe';
-    OnGetNameAndLink:=@GetNameAndLink;
-    OnGetInfo:=@GetInfo;
-    OnGetPageNumber:=@GetPageNumber;
-    OnBeforeDownloadImage:=@BeforeDownloadImage;
+    Website := 'GameofScanlation';
+    RootURL := 'https://gameofscanlation.moe';
+    OnGetNameAndLink := @GetNameAndLink;
+    OnGetInfo := @GetInfo;
+    OnGetPageNumber := @GetPageNumber;
+    OnBeforeDownloadImage := @BeforeDownloadImage;
   end;
 end;
 

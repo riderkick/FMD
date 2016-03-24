@@ -145,7 +145,7 @@ begin
     PageNumber := 0;
     rurl := AppendURLDelim(FillHost(Module.RootURL, AURL));
     Source := TStringList.Create;
-    regx:=TRegExpr.Create;
+    regx := TRegExpr.Create;
     try
       regx.ModifierI := True;
       regx.Expression := '/page/\d+/?$';

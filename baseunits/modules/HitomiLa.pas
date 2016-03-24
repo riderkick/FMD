@@ -46,7 +46,7 @@ var
 begin
   Result := NET_PROBLEM;
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
-  if MangaInfo.FHTTP.GET(Module.RootURL + '/index-all-'+ AURL +'.html') then begin
+  if MangaInfo.FHTTP.GET(Module.RootURL + '/index-all-' + AURL + '.html') then begin
     Result := NO_ERROR;
     query := TXQueryEngineHTML.Create;
     try

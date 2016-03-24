@@ -14,7 +14,7 @@ interface
 
 uses
   {$ifdef windows}
-  windows,
+  Windows,
   {$else}
   UTF8Process,
   {$endif}
@@ -24,14 +24,14 @@ uses
   synacode, GZIPUtils, uFMDThread, uMisc, httpsendthread, simplehtmltreeparser,
   xquery, xquery_json, Imaging, ImagingExtras, SimpleException, SimpleLogger;
 
-Type
+type
   TFMDDo = (DO_NOTHING, DO_EXIT, DO_POWEROFF, DO_HIBERNATE, DO_UPDATE);
 
 const
   FMD_REVISION = '$WCREV$';
   FMD_INSTANCE = '_FreeMangaDownloaderInstance_';
 
-  FMD_TARGETOS = {$i %FPCTARGETOS%};
+  FMD_TARGETOS  = {$i %FPCTARGETOS%};
   FMD_TARGETCPU = {$i %FPCTARGETCPU%};
 
   JPG_HEADER: array[0..2] of Byte = ($FF, $D8, $FF);
@@ -72,7 +72,7 @@ const
   Symbols: array [0..10] of Char =
     ('\', '/', ':', '*', '?', '"', '<', '>', '|', #9, ';');
 
-  StringFilterChar: array [0..35] of array [0..1] of string = (
+  StringFilterChar: array [0..35] of array [0..1] of String = (
     (#10, '\n'),
     (#13, '\r'),
     ('&#x27;', ''''),
@@ -111,7 +111,7 @@ const
     ('&sup2;', '²')
     );
 
-  HTMLEntitiesChar: array [0..82] of array [0..1] of string = (
+  HTMLEntitiesChar: array [0..82] of array [0..1] of String = (
     ('&#171;', '«'),
     ('&#176;', '°'),
     ('&Agrave;', 'À'),
@@ -270,7 +270,6 @@ const
   OURMANGA_ID            = 2;
   MANGA24H_ID            = 3;
   VNSHARING_ID           = 4;
-
   FAKKU_ID               = 5;
   TRUYEN18_ID            = 6;
   MANGAPARK_ID           = 7;
@@ -340,7 +339,7 @@ const
   READMANGATODAY_ID      = 71;
   DYNASTYSCANS_ID        = 72;
 
-  WebsiteRoots: array [0..72] of array [0..1] of string = (
+  WebsiteRoots: array [0..72] of array [0..1] of String = (
     ('AnimeA', 'http://manga.animea.net'),
     ('MangaInn', 'http://www.mangainn.me'),
     ('OurManga', 'http://www.ourmanga.com'),
@@ -504,7 +503,7 @@ const
   MANGAREADER_POR_BROWSER = '/AJAX/listaMangas/all';
 
   NINEMANGA_BROWSER =
-  '/search/?name_sel=contain&wd=&author_sel=contain&author=&artist_sel=contain&artist=&category_id=&out_category_id=&completed_series=either';
+    '/search/?name_sel=contain&wd=&author_sel=contain&author=&artist_sel=contain&artist=&category_id=&out_category_id=&completed_series=either';
 
   JAPANSHIN_BROWSER = '/lectureenligne/reader/list/';
   JAPSCAN_BROWSER = '/mangas/';
@@ -527,7 +526,7 @@ const
 
   MANGAHOST_BROWSER = '/mangas';
 
-  DYNASTYSCANS_BROWSER: array [0..3] of string = (
+  DYNASTYSCANS_BROWSER: array [0..3] of String = (
     '/anthologies',
     '/doujins',
     '/issues',
@@ -540,23 +539,23 @@ var
   DATA_FOLDER: String = 'data' + PathDelim;
 
   {$IFDEF WINDOWS}
-  DEFAULT_PATH : string = '\downloads';
+  DEFAULT_PATH: String = '\downloads';
   {$ELSE}
-  DEFAULT_PATH: string = '/downloads';
+  DEFAULT_PATH: String = '/downloads';
   {$ENDIF}
 
   // Sites var
   BROWSER_INVERT: Boolean = False;
 
-  FAKKU_BROWSER: string = '/manga/newest';
+  FAKKU_BROWSER: String = '/manga/newest';
 
-  MANGAEDEN_BROWSER: string = '/en-directory/';
+  MANGAEDEN_BROWSER: String = '/en-directory/';
 
-  PERVEDEN_BROWSER: string = '/en-directory/';
+  PERVEDEN_BROWSER: String = '/en-directory/';
 
   MANGALIB_PL_COOKIES: String;
 
-  DBDownloadURL: string;
+  DBDownloadURL: String;
   //------------------------------------------
 
   Genre: array [0..37] of String;
@@ -605,20 +604,20 @@ var
   OptionMangaFoxTemplateFolder: String = 'extras' + PathDelim + 'mangafoxtemplate';
   OptionMangaFoxRemoveWatermark: Boolean = True;
   OptionMangaFoxSaveAsPNG: Boolean = False;
-  OptionEHentaiDownloadOriginalImage: Boolean=False;
+  OptionEHentaiDownloadOriginalImage: Boolean = False;
 
   OptionHTTPUseGzip: Boolean = True;
 
   OptionRemoveMangaNameFromChapter: Boolean = False;
 type
-  TArrayOfString = array of string;
+  TArrayOfString = array of String;
 
   TCheckStyleType = (CS_DIRECTORY_COUNT, CS_DIRECTORY_PAGE,
-                     CS_DIRECTORY_PAGE_2, CS_INFO);
-  TFlagType       = (CS_GETPAGENUMBER, CS_GETPAGELINK, CS_DOWNLOAD);
-  TDownloadStatusType     = (STATUS_STOP, STATUS_WAIT, STATUS_PREPARE,
-                             STATUS_DOWNLOAD, STATUS_FINISH, STATUS_COMPRESS,
-                             STATUS_PROBLEM, STATUS_FAILED);
+    CS_DIRECTORY_PAGE_2, CS_INFO);
+  TFlagType = (CS_GETPAGENUMBER, CS_GETPAGELINK, CS_DOWNLOAD);
+  TDownloadStatusType = (STATUS_STOP, STATUS_WAIT, STATUS_PREPARE,
+    STATUS_DOWNLOAD, STATUS_FINISH, STATUS_COMPRESS,
+    STATUS_PROBLEM, STATUS_FAILED);
   TDownloadStatusTypes = set of TDownloadStatusType;
 
   TFavoriteStatusType = (STATUS_IDLE, STATUS_CHECK, STATUS_CHECKING, STATUS_CHECKED);
@@ -630,7 +629,7 @@ type
 
   TMangaListItem = record
     Text: String;
-    JDN: LongInt;
+    JDN: Longint;
   end;
 
   PSingleItem = ^TSingleItem;
@@ -643,7 +642,7 @@ type
 
   TChapterStateItem = record
     Title,
-    Link      : String;
+    Link: String;
     Downloaded: Boolean;
   end;
 
@@ -713,14 +712,14 @@ type
 
   TParseHTML = class
   private
-    FRaw: string;
-    procedure FoundTag(NoCaseTag, ActualTag: string);
-    procedure FoundText(Text: string);
+    FRaw: String;
+    procedure FoundTag(NoCaseTag, ActualTag: String);
+    procedure FoundText(Text: String);
   public
     Output: TStrings;
-    constructor Create(const Raw: string = '');
-    function Exec(const Raw: string = ''): string;
-    property Raw: string read FRaw write FRaw;
+    constructor Create(const Raw: String = '');
+    function Exec(const Raw: String = ''): String;
+    property Raw: String read FRaw write FRaw;
   end;
 
   { THTTPSendThread }
@@ -766,8 +765,8 @@ function GetMangaSiteRoot(const MangaID: Cardinal): String; overload;
 function GetMangaDatabaseURL(const AWebsite: String): String;
 
 function SitesMemberOf(const website: String; MangaSiteIDs: array of Cardinal): Boolean;
-function SitesWithSortedList(const website:String): Boolean;
-function SitesWithoutFavorites(const website:String): Boolean;
+function SitesWithSortedList(const website: String): Boolean;
+function SitesWithoutFavorites(const website: String): Boolean;
 // Return true if the website doesn't contain manga information
 function SitesWithoutInformation(const website: String): Boolean;
 function SitesWithoutReferer(const website: String): Boolean;
@@ -785,14 +784,14 @@ function MaybeFillHost(const Host, URL: String): String;
 // modify url
 function GetHostURL(URL: String): String;
 function RemoveHostFromURL(URL: String): String;
-procedure RemoveHostFromURLs(Const URLs: TStringList);
-procedure RemoveHostFromURLsPair(Const URLs, Names : TStringList);
+procedure RemoveHostFromURLs(const URLs: TStringList);
+procedure RemoveHostFromURLsPair(const URLs, Names: TStringList);
 
 //JSON
 procedure ParseJSONArray(const S, Path: String; var OutArray: TStringList);
 
 //HTML
-procedure ParseHTML(const aRaw: string; aOutput: TStrings);
+procedure ParseHTML(const aRaw: String; aOutput: TStrings);
 
 // XPath / CSS Selector
 procedure ParseHTMLTree(var tp: TTreeParser; const S: String);
@@ -806,27 +805,27 @@ function ConvertCharsetToUTF8(S: String): String; overload;
 procedure ConvertCharsetToUTF8(S: TStrings); overload;
 
 // encode/decode
-function Base64Encode(const s: string): string;
-function Base64Decode(const s: string): string;
+function Base64Encode(const s: String): String;
+function Base64Decode(const s: String): String;
 
 // StringUtils
-function StringReplaceBrackets(const S, OldPattern, NewPattern: string; Flags: TReplaceFlags): string;
-function StreamToString(const Stream: TStream): string; inline;
-function GetRightValue(const name, s: string): string;
-function QuotedStrd(const S: string): string; overload; inline;
-function QuotedStrd(const S: Integer): string; overload; inline;
-function BracketStr(const S: string): string; inline;
+function StringReplaceBrackets(const S, OldPattern, NewPattern: String; Flags: TReplaceFlags): String;
+function StreamToString(const Stream: TStream): String; inline;
+function GetRightValue(const Name, s: String): String;
+function QuotedStrd(const S: String): String; overload; inline;
+function QuotedStrd(const S: Integer): String; overload; inline;
+function BracketStr(const S: String): String; inline;
 function RandomString(SLength: Integer; ONumber: Boolean = False;
-  OSymbol: Boolean = False; OSpace: Boolean = False): string;
+  OSymbol: Boolean = False; OSpace: Boolean = False): String;
 function GetValuesFromString(Str: String; Sepr: Char): String;
-procedure InvertStrings(Const St: TStringList); overload;
+procedure InvertStrings(const St: TStringList); overload;
 procedure InvertStrings(const Sts: array of TStringList); overload;
 procedure TrimStrings(TheStrings: TStrings);
-procedure RemoveDuplicateStrings(Strs: Array of TStringList; RemIndex: Cardinal = 0);
-procedure CleanHTMLComments(Const Str: TStringList);
+procedure RemoveDuplicateStrings(Strs: array of TStringList; RemIndex: Cardinal = 0);
+procedure CleanHTMLComments(const Str: TStringList);
 
 function FixHTMLTagQuote(const s: String): String;
-function FixCommonBrokenHTML(const s:String): string;
+function FixCommonBrokenHTML(const s: String): String;
 function URLDecode(const s: String): String;
 function HTMLDecode(const AStr: String): String;
 
@@ -857,7 +856,7 @@ function TrimLeftChar(const Source: String; const Chars: TSysCharSet): String;
 function TrimRightChar(const Source: String; const Chars: TSysCharSet): String;
 
 function PrepareSummaryForHint(const Source: String; MaxLength: Cardinal = 80): String;
-procedure AddCommaString(var Dest: string; S: string);
+procedure AddCommaString(var Dest: String; S: String);
 
 function StringOfString(c: String; l: Integer): String;
 function IncStr(const S: String; N: Integer = 1): String; overload;
@@ -913,7 +912,8 @@ function SaveImage(const AHTTP: THTTPSend; const mangaSiteID: Integer; URL: Stri
 function SaveImage(const AHTTP: THTTPSend; URL: String;
   const Path, Name: String; const Reconnect: Integer = 0): Boolean; overload;
 function SaveImage(const mangaSiteID: Integer; URL: String;
-  const Path, Name: String; var SavedFilename: String; const Reconnect: Integer = 0): Boolean; overload; inline;
+  const Path, Name: String; var SavedFilename: String; const Reconnect: Integer = 0): Boolean;
+  overload; inline;
 
 procedure QuickSortChapters(var chapterList, linkList: TStringList);
 procedure QuickSortData(var merge: TStringList);
@@ -921,10 +921,10 @@ procedure QuickSortData(var merge: TStringList);
 procedure QuickSortDataWithWebID(var merge: TStringList; const webIDList: TByteList);
 
 
-function GetCurrentJDN: longint;
-function DateToJDN(const year, month, day: word): longint; overload;
-function DateToJDN(const date: TDate): longint; overload;
-function JDNToDate(const JDN: longint): TDate;
+function GetCurrentJDN: Longint;
+function DateToJDN(const year, month, day: Word): Longint; overload;
+function DateToJDN(const date: TDate): Longint; overload;
+function JDNToDate(const JDN: Longint): TDate;
 
 {function  ConvertInt32ToStr(const aValue: Cardinal)  : String;
 function  ConvertStrToInt32(const aStr  : String): Cardinal;}
@@ -945,34 +945,34 @@ uses
 {$IFDEF WINDOWS}
 // thanks Leledumbo for the code
 const
-  SE_CREATE_TOKEN_NAME        = 'SeCreateTokenPrivilege';
-  SE_ASSIGNPRIMARYTOKEN_NAME  = 'SeAssignPrimaryTokenPrivilege';
-  SE_LOCK_MEMORY_NAME         = 'SeLockMemoryPrivilege';
-  SE_INCREASE_QUOTA_NAME      = 'SeIncreaseQuotaPrivilege';
-  SE_UNSOLICITED_INPUT_NAME   = 'SeUnsolicitedInputPrivilege';
-  SE_MACHINE_ACCOUNT_NAME     = 'SeMachineAccountPrivilege';
-  SE_TCB_NAME                 = 'SeTcbPrivilege';
-  SE_SECURITY_NAME            = 'SeSecurityPrivilege';
-  SE_TAKE_OWNERSHIP_NAME      = 'SeTakeOwnershipPrivilege';
-  SE_LOAD_DRIVER_NAME         = 'SeLoadDriverPrivilege';
-  SE_SYSTEM_PROFILE_NAME      = 'SeSystemProfilePrivilege';
-  SE_SYSTEMTIME_NAME          = 'SeSystemtimePrivilege';
+  SE_CREATE_TOKEN_NAME = 'SeCreateTokenPrivilege';
+  SE_ASSIGNPRIMARYTOKEN_NAME = 'SeAssignPrimaryTokenPrivilege';
+  SE_LOCK_MEMORY_NAME = 'SeLockMemoryPrivilege';
+  SE_INCREASE_QUOTA_NAME = 'SeIncreaseQuotaPrivilege';
+  SE_UNSOLICITED_INPUT_NAME = 'SeUnsolicitedInputPrivilege';
+  SE_MACHINE_ACCOUNT_NAME = 'SeMachineAccountPrivilege';
+  SE_TCB_NAME = 'SeTcbPrivilege';
+  SE_SECURITY_NAME = 'SeSecurityPrivilege';
+  SE_TAKE_OWNERSHIP_NAME = 'SeTakeOwnershipPrivilege';
+  SE_LOAD_DRIVER_NAME = 'SeLoadDriverPrivilege';
+  SE_SYSTEM_PROFILE_NAME = 'SeSystemProfilePrivilege';
+  SE_SYSTEMTIME_NAME = 'SeSystemtimePrivilege';
   SE_PROF_SINGLE_PROCESS_NAME = 'SeProfileSingleProcessPrivilege';
-  SE_INC_BASE_PRIORITY_NAME   = 'SeIncreaseBasePriorityPrivilege';
-  SE_CREATE_PAGEFILE_NAME     = 'SeCreatePagefilePrivilege';
-  SE_CREATE_PERMANENT_NAME    = 'SeCreatePermanentPrivilege';
-  SE_BACKUP_NAME              = 'SeBackupPrivilege';
-  SE_RESTORE_NAME             = 'SeRestorePrivilege';
-  SE_SHUTDOWN_NAME            = 'SeShutdownPrivilege';
-  SE_DEBUG_NAME               = 'SeDebugPrivilege';
-  SE_AUDIT_NAME               = 'SeAuditPrivilege';
-  SE_SYSTEM_ENVIRONMENT_NAME  = 'SeSystemEnvironmentPrivilege';
-  SE_CHANGE_NOTIFY_NAME       = 'SeChangeNotifyPrivilege';
-  SE_REMOTE_SHUTDOWN_NAME     = 'SeRemoteShutdownPrivilege';
-  SE_UNDOCK_NAME              = 'SeUndockPrivilege';
-  SE_SYNC_AGENT_NAME          = 'SeSyncAgentPrivilege';
-  SE_ENABLE_DELEGATION_NAME   = 'SeEnableDelegationPrivilege';
-  SE_MANAGE_VOLUME_NAME       = 'SeManageVolumePrivilege';
+  SE_INC_BASE_PRIORITY_NAME = 'SeIncreaseBasePriorityPrivilege';
+  SE_CREATE_PAGEFILE_NAME = 'SeCreatePagefilePrivilege';
+  SE_CREATE_PERMANENT_NAME = 'SeCreatePermanentPrivilege';
+  SE_BACKUP_NAME = 'SeBackupPrivilege';
+  SE_RESTORE_NAME = 'SeRestorePrivilege';
+  SE_SHUTDOWN_NAME = 'SeShutdownPrivilege';
+  SE_DEBUG_NAME = 'SeDebugPrivilege';
+  SE_AUDIT_NAME = 'SeAuditPrivilege';
+  SE_SYSTEM_ENVIRONMENT_NAME = 'SeSystemEnvironmentPrivilege';
+  SE_CHANGE_NOTIFY_NAME = 'SeChangeNotifyPrivilege';
+  SE_REMOTE_SHUTDOWN_NAME = 'SeRemoteShutdownPrivilege';
+  SE_UNDOCK_NAME = 'SeUndockPrivilege';
+  SE_SYNC_AGENT_NAME = 'SeSyncAgentPrivilege';
+  SE_ENABLE_DELEGATION_NAME = 'SeEnableDelegationPrivilege';
+  SE_MANAGE_VOLUME_NAME = 'SeManageVolumePrivilege';
 
 function SetSuspendState(hibernate, forcecritical, disablewakeevent: Boolean): Boolean;
   stdcall; external 'powrprof.dll' Name 'SetSuspendState';
@@ -1077,7 +1077,7 @@ begin
   Result := S;
   for i := 1 to Length(Result) do
   begin
-    if (byte(Result[i]) < 31) or (byte(Result[i]) > 127) then
+    if (Byte(Result[i]) < 31) or (Byte(Result[i]) > 127) then
     begin
       Delete(Result, i, 1);
       Insert('_', Result, i);
@@ -1126,7 +1126,7 @@ end;
 procedure CheckPath(const S: String);
 var
   wS, lcS, lcS2: String;
-  i, j: word;
+  i, j: Word;
 begin
   wS := s;
   lcS2 := '';
@@ -1182,7 +1182,7 @@ begin
   Result := WebsiteRoots[ID, 0];
 end;
 
-function GetMangaSiteRoot(const Website : String) : String;
+function GetMangaSiteRoot(const Website: String): String;
 var
   i: Integer;
 begin
@@ -1192,20 +1192,20 @@ begin
       Exit(WebsiteRoots[i, 1]);
 end;
 
-function GetMangaSiteRoot(const MangaID : Cardinal) : String;
+function GetMangaSiteRoot(const MangaID: Cardinal): String;
 begin
   Result := WebsiteRoots[MangaID, 1];
 end;
 
 function GetMangaDatabaseURL(const AWebsite: String): String;
 begin
-  if DBDownloadURL='' then
-    DBDownloadURL:='https://bintray.com/artifact/download/riderkick/FMD/db/<website>.7z';
-  Result:=DBDownloadURL;
-  if Pos('<website>',LowerCase(Result))>0 then
-    Result:=StringReplace(Result,'<website>',AWebsite,[rfIgnoreCase,rfReplaceAll])
+  if DBDownloadURL = '' then
+    DBDownloadURL := 'https://bintray.com/artifact/download/riderkick/FMD/db/<website>.7z';
+  Result := DBDownloadURL;
+  if Pos('<website>', LowerCase(Result)) > 0 then
+    Result := StringReplace(Result, '<website>', AWebsite, [rfIgnoreCase, rfReplaceAll])
   else
-    Result:=Result+AWebsite;
+    Result := Result + AWebsite;
 end;
 
 function SitesMemberOf(const website: String; MangaSiteIDs: array of Cardinal): Boolean;
@@ -1221,7 +1221,7 @@ begin
     end;
 end;
 
-function SitesWithSortedList(const website : String) : Boolean;
+function SitesWithSortedList(const website: String): Boolean;
 var
   i: Integer = -1;
 begin
@@ -1255,7 +1255,7 @@ begin
     ]);
 end;
 
-function SitesWithoutFavorites(const website : String) : Boolean;
+function SitesWithoutFavorites(const website: String): Boolean;
 var
   i: Integer = -1;
 begin
@@ -1300,10 +1300,10 @@ begin
     ]);
 end;
 
-function SitesWithoutReferer(const website : String) : Boolean;
+function SitesWithoutReferer(const website: String): Boolean;
 begin
   Result := False;
-  Result:= SitesMemberOf(website, [
+  Result := SitesMemberOf(website, [
     MEINMANGA_ID,
     IKOMIK_ID,
     PORNCOMIX_ID,
@@ -1316,7 +1316,7 @@ begin
     ]);
 end;
 
-function SitesWithSingleChapter(const website : String) : Boolean;
+function SitesWithSingleChapter(const website: String): Boolean;
 begin
   Result := False;
   Result := SitesMemberOf(website, [
@@ -1341,7 +1341,7 @@ begin
   end;
 end;
 
-function FillMangaSiteHost(const MangaID : Cardinal; URL : String) : String;
+function FillMangaSiteHost(const MangaID: Cardinal; URL: String): String;
 begin
   Result := URL;
   if MangaID <= High(WebsiteRoots) then
@@ -1357,7 +1357,7 @@ end;
 
 function FillHost(const Host, URL: String): String;
 var
-  tu: string;
+  tu: String;
 begin
   Result := CleanURL(URL);
   if Host = '' then Exit;
@@ -1374,7 +1374,7 @@ end;
 
 function MaybeFillHost(const Host, URL: String): String;
 var
-  tu: string;
+  tu: String;
 begin
   Result := CleanURL(URL);
   if Host = '' then Exit;
@@ -1395,12 +1395,12 @@ end;
 
 function GetHostURL(URL: String): String;
 begin
-  Result:=URL;
-  if URL='' then Exit;
-  Result:=ReplaceRegExpr(REGEX_HOST,Result,'$1$2',True);
+  Result := URL;
+  if URL = '' then Exit;
+  Result := ReplaceRegExpr(REGEX_HOST, Result, '$1$2', True);
 end;
 
-function RemoveHostFromURL(URL : String) : String;
+function RemoveHostFromURL(URL: String): String;
 begin
   Result := ReplaceRegExpr(REGEX_HOST, URL, '$4', True);
   if Result = '' then
@@ -1409,63 +1409,63 @@ begin
     Result := '/' + Result;
 end;
 
-procedure RemoveHostFromURLs(const URLs : TStringList);
+procedure RemoveHostFromURLs(const URLs: TStringList);
 var
- i: Integer;
- s: String;
+  i: Integer;
+  s: String;
 begin
   if URLs = nil then Exit;
   if URLs.Count > 0 then
     with TRegExpr.Create do
-    try
-      Expression := REGEX_HOST;
-      for i := 0 to URLs.Count - 1 do
-      begin
-        URLs[i]:=Trim(URLs[i]);
-        s := Replace(URLs[i], '$4', True);
-        if s = '' then
-          s := URLs[i];
-        if (s <> '') and (s[1] <> '/') then
-          s := '/' + s;
-        URLs[i] := s;
+      try
+        Expression := REGEX_HOST;
+        for i := 0 to URLs.Count - 1 do
+        begin
+          URLs[i] := Trim(URLs[i]);
+          s := Replace(URLs[i], '$4', True);
+          if s = '' then
+            s := URLs[i];
+          if (s <> '') and (s[1] <> '/') then
+            s := '/' + s;
+          URLs[i] := s;
+        end;
+      finally
+        Free;
       end;
-    finally
-      Free;
-    end;
 end;
 
-procedure RemoveHostFromURLsPair(const URLs, Names : TStringList);
+procedure RemoveHostFromURLsPair(const URLs, Names: TStringList);
 var
- i: Integer;
- s: String;
+  i: Integer;
+  s: String;
 begin
   if (URLs = nil) or (Names = nil) then Exit;
   if (URLs.Count <> Names.Count) then Exit;
   if URLs.Count > 0 then
     with TRegExpr.Create do
-    try
-      Expression := REGEX_HOST;
-      i := 0;
-      while i < URLs.Count do
-      begin
-        URLs[i]:=Trim(URLs[i]);
-        s := Replace(URLs[i], '$4', True);
-        if s = '' then
-          s := URLs[i];
-        if (s <> '') and (s[1] <> '/') then
-          s := '/' + s;
-        URLs[i] := s;
-        if (URLs[i] = '') or (URLs[i] = '/') then
+      try
+        Expression := REGEX_HOST;
+        i := 0;
+        while i < URLs.Count do
         begin
-          URLs.Delete(i);
-          Names.Delete(i);
-        end
-        else
-          Inc(i);
+          URLs[i] := Trim(URLs[i]);
+          s := Replace(URLs[i], '$4', True);
+          if s = '' then
+            s := URLs[i];
+          if (s <> '') and (s[1] <> '/') then
+            s := '/' + s;
+          URLs[i] := s;
+          if (URLs[i] = '') or (URLs[i] = '/') then
+          begin
+            URLs.Delete(i);
+            Names.Delete(i);
+          end
+          else
+            Inc(i);
+        end;
+      finally
+        Free;
       end;
-    finally
-      Free;
-    end;
 end;
 
 procedure ParseJSONArray(const S, Path: String; var OutArray: TStringList);
@@ -1480,7 +1480,7 @@ begin
   try
     D := P.Parse;
     try
-      If Assigned(D) then
+      if Assigned(D) then
         if (D.JSONType = jtArray) and (D.Count > 0) then
           for i := 0 to D.Count - 1 do
           begin
@@ -1496,15 +1496,15 @@ begin
   OutArray.EndUpdate;
 end;
 
-procedure ParseHTML(const aRaw: string; aOutput: TStrings);
+procedure ParseHTML(const aRaw: String; aOutput: TStrings);
 begin
   if not Assigned(aOutput) then Exit;
   with TParseHTML.Create(aRaw) do try
-    Output := aOutput;
-    Exec;
-  finally
-    Free;
-  end;
+      Output := aOutput;
+      Exec;
+    finally
+      Free;
+    end;
 end;
 
 procedure ParseHTMLTree(var tp: TTreeParser; const S: String);
@@ -1617,49 +1617,49 @@ begin
   if cs <> '' then S.Text := ConvertEncoding(S.Text, cs, 'utf8');
 end;
 
-function StreamToString(const Stream: TStream): string;
+function StreamToString(const Stream: TStream): String;
 var
   p, x: Int64;
 begin
   //SetString(Result, PChar(Stream.Memory), Stream.Size div SizeOf(Char));
-  p:=Stream.Position;
-  Stream.Position:=0;
-  Setlength(Result,Stream.Size);
-  x:=Stream.Read(PChar(Result)^,Stream.Size);
-  SetLength(Result,x);
-  Stream.Position:=p;
+  p := Stream.Position;
+  Stream.Position := 0;
+  Setlength(Result, Stream.Size);
+  x := Stream.Read(PChar(Result)^, Stream.Size);
+  SetLength(Result, x);
+  Stream.Position := p;
 end;
 
-function GetRightValue(const name, s: string): string;
+function GetRightValue(const Name, s: String): String;
 var
   i: Integer;
 begin
   if s = '' then Exit('');
-  if name = '' then Exit(s);
-  i := Pos(name, s);
+  if Name = '' then Exit(s);
+  i := Pos(Name, s);
   if i > 0 then
-    Result := Trim(Copy(s, i + Length(name), Length(s)));
+    Result := Trim(Copy(s, i + Length(Name), Length(s)));
 end;
 
-function QuotedStrd(const S: string): string;
+function QuotedStrd(const S: String): String;
 begin
   Result := AnsiQuotedStr(S, '"');
 end;
 
-function QuotedStrd(const S: Integer): string;
+function QuotedStrd(const S: Integer): String;
 begin
   Result := QuotedStrd(IntToStr(S));
 end;
 
-function BracketStr(const S: string): string;
+function BracketStr(const S: String): String;
 begin
   Result := '(' + S + ')';
 end;
 
-procedure ParseCommandLine(const cmd: string; var Output: TStrings;
+procedure ParseCommandLine(const cmd: String; var Output: TStrings;
   AStripQuotes: Boolean = False);
 var
-  s, cl: string;
+  s, cl: String;
   cq: Integer;
   acl, lq: Boolean;
 
@@ -1725,7 +1725,7 @@ begin
 end;
 
 function RandomString(SLength: Integer; ONumber: Boolean; OSymbol: Boolean;
-  OSpace: Boolean): string;
+  OSpace: Boolean): String;
 var
   sgen: String;
 const
@@ -1745,7 +1745,7 @@ begin
     sgen := sgen + #32;
   repeat
     Result := Result + sgen[Random(Length(sgen)) + 1];
-  until (Length(Result) = SLength)
+  until (Length(Result) = SLength);
 end;
 
 function GetValuesFromString(Str: String; Sepr: Char): String;
@@ -1765,7 +1765,7 @@ begin
   end;
 end;
 
-procedure InvertStrings(const St : TStringList);
+procedure InvertStrings(const St: TStringList);
 var
   i: Integer;
 begin
@@ -1774,7 +1774,7 @@ begin
       St.Exchange(i, St.Count - 1 - i);
 end;
 
-function FixHTMLTagQuote(const s : String) : String;
+function FixHTMLTagQuote(const s: String): String;
 begin
   Result := s;
   if Length(Result) > 2 then
@@ -1786,7 +1786,7 @@ begin
   end;
 end;
 
-function FixCommonBrokenHTML(const s: String): string;
+function FixCommonBrokenHTML(const s: String): String;
 begin
   Result := s;
   Result := StringReplace(Result, '="width="', '="width:', [rfReplaceAll]);
@@ -1796,48 +1796,48 @@ end;
 
 function URLDecode(const s: String): String;
 var
-   sAnsi: String;
-   sUtf8: String;
-   sWide: WideString;
+  sAnsi: String;
+  sUtf8: String;
+  sWide: WideString;
 
-   i, len: Cardinal;
-   ESC: string[2];
-   CharCode: integer;
-   c: char;
+  i, len: Cardinal;
+  ESC: String[2];
+  CharCode: Integer;
+  c: Char;
 begin
-   sAnsi := PChar(s);
-   SetLength(sUtf8, Length(sAnsi));
-   i := 1;
-   len := 1;
-   while (i <= Cardinal(Length(sAnsi))) do begin
-      if (sAnsi[i] <> '%') then begin
-         if (sAnsi[i] = '+') then begin
-            c := ' ';
-         end else begin
-            c := sAnsi[i];
-         end;
-         sUtf8[len] := c;
-         Inc(len);
+  sAnsi := PChar(s);
+  SetLength(sUtf8, Length(sAnsi));
+  i := 1;
+  len := 1;
+  while (i <= Cardinal(Length(sAnsi))) do begin
+    if (sAnsi[i] <> '%') then begin
+      if (sAnsi[i] = '+') then begin
+        c := ' ';
       end else begin
-         Inc(i);
-         ESC := Copy(sAnsi, i, 2);
-         Inc(i, 1);
-         try
-            CharCode := StrToInt('$' + ESC);
-            c := Char(CharCode);
-            sUtf8[len] := c;
-            Inc(len);
-         except end;
+        c := sAnsi[i];
       end;
+      sUtf8[len] := c;
+      Inc(len);
+    end else begin
       Inc(i);
-   end;
-   Dec(len);
-   SetLength(sUtf8, len);
+      ESC := Copy(sAnsi, i, 2);
+      Inc(i, 1);
+      try
+        CharCode := StrToInt('$' + ESC);
+        c := Char(CharCode);
+        sUtf8[len] := c;
+        Inc(len);
+      except end;
+    end;
+    Inc(i);
+  end;
+  Dec(len);
+  SetLength(sUtf8, len);
 
-   sWide := UTF8Decode(sUtf8);
-   len := Length(sWide);
+  sWide := UTF8Decode(sUtf8);
+  len := Length(sWide);
 
-   Result := {%H-}sWide;
+  Result := {%H-}sWide;
 end;
 
 function HTMLDecode(const AStr: String): String;
@@ -1855,51 +1855,52 @@ begin
     begin
       case Sp^ of
         '&': begin
-               Cp := Sp;
-               Inc(Sp);
-               case Sp^ of
-                 'a': if AnsiStrPos(Sp, 'amp;') = Sp then  { do not localize }
-                      begin
-                        Inc(Sp, 3);
-                        Rp^ := '&';
-                      end;
-                 'l',
-                 'g': if (AnsiStrPos(Sp, 'lt;') = Sp) or (AnsiStrPos(Sp, 'gt;') = Sp) then { do not localize }
-                      begin
-                        Cp := Sp;
-                        Inc(Sp, 2);
-                        while (Sp^ <> ';') and (Sp^ <> #0) do
-                          Inc(Sp);
-                        if Cp^ = 'l' then
-                          Rp^ := '<'
-                        else
-                          Rp^ := '>';
-                      end;
-                 'n': if AnsiStrPos(Sp, 'nbsp;') = Sp then  { do not localize }
-                      begin
-                        Inc(Sp, 4);
-                        Rp^ := ' ';
-                      end;
-                 'q': if AnsiStrPos(Sp, 'quot;') = Sp then  { do not localize }
-                      begin
-                        Inc(Sp,4);
-                        Rp^ := '"';
-                      end;
-                 '#': begin
-                        Tp := Sp;
-                        Inc(Tp);
-                        while (Sp^ <> ';') and (Sp^ <> #0) do
-                          Inc(Sp);
-                        SetString(S, Tp, Sp - Tp);
-                        Val(S, I, Code);
-                        Rp^ := Chr((I));
-                      end;
-                 else
-                   Exit;
-               end;
-           end
-      else
-        Rp^ := Sp^;
+          Cp := Sp;
+          Inc(Sp);
+          case Sp^ of
+            'a': if AnsiStrPos(Sp, 'amp;') = Sp then  { do not localize }
+              begin
+                Inc(Sp, 3);
+                Rp^ := '&';
+              end;
+            'l',
+            'g': if (AnsiStrPos(Sp, 'lt;') = Sp) or (AnsiStrPos(Sp, 'gt;') = Sp) then
+                { do not localize }
+              begin
+                Cp := Sp;
+                Inc(Sp, 2);
+                while (Sp^ <> ';') and (Sp^ <> #0) do
+                  Inc(Sp);
+                if Cp^ = 'l' then
+                  Rp^ := '<'
+                else
+                  Rp^ := '>';
+              end;
+            'n': if AnsiStrPos(Sp, 'nbsp;') = Sp then  { do not localize }
+              begin
+                Inc(Sp, 4);
+                Rp^ := ' ';
+              end;
+            'q': if AnsiStrPos(Sp, 'quot;') = Sp then  { do not localize }
+              begin
+                Inc(Sp, 4);
+                Rp^ := '"';
+              end;
+            '#': begin
+              Tp := Sp;
+              Inc(Tp);
+              while (Sp^ <> ';') and (Sp^ <> #0) do
+                Inc(Sp);
+              SetString(S, Tp, Sp - Tp);
+              Val(S, I, Code);
+              Rp^ := Chr((I));
+            end;
+            else
+              Exit;
+          end;
+        end
+        else
+          Rp^ := Sp^;
       end;
       Inc(Rp);
       Inc(Sp);
@@ -1951,8 +1952,8 @@ begin
   end;
 end;
 
-procedure RemoveDuplicateStrings(Strs : array of TStringList;
-  RemIndex : Cardinal);
+procedure RemoveDuplicateStrings(Strs: array of TStringList;
+  RemIndex: Cardinal);
 var
   i, j, k: Integer;
 begin
@@ -1969,7 +1970,7 @@ begin
       if Strs[RemIndex].Strings[i] = Strs[RemIndex].Strings[j] then
       begin
         for k := 0 to High(Strs) do
-         Strs[k].Delete(j);
+          Strs[k].Delete(j);
       end
       else
         Inc(j);
@@ -1978,7 +1979,7 @@ begin
   end;
 end;
 
-procedure CleanHTMLComments(const Str : TStringList);
+procedure CleanHTMLComments(const Str: TStringList);
 var
   i: Integer;
 begin
@@ -2031,11 +2032,11 @@ function StringOfString(c: String; l: Integer): String;
 var
   i: Integer;
 begin
-  Result:='';
-  if c='' then Exit;
-  if l<1 then Exit;
-  for i:=1 to l do
-    Result+=c;
+  Result := '';
+  if c = '' then Exit;
+  if l < 1 then Exit;
+  for i := 1 to l do
+    Result += c;
 end;
 
 function IncStr(const S: String; N: Integer): String;
@@ -2076,19 +2077,19 @@ begin
   end;
 end;
 
-function Base64Encode(const s: string): string;
+function Base64Encode(const s: String): String;
 begin
   if s = '' then Exit(s);
   Result := EncodeStringBase64(s);
 end;
 
-function Base64Decode(const s: string): string;
+function Base64Decode(const s: String): String;
 begin
   if s = '' then Exit(s);
   Result := DecodeStringBase64(s);
 end;
 
-function StringReplaceBrackets(const S, OldPattern, NewPattern: string; Flags: TReplaceFlags): string;
+function StringReplaceBrackets(const S, OldPattern, NewPattern: String; Flags: TReplaceFlags): String;
 var
   b1, b2: Char;
   p, r: String;
@@ -2115,7 +2116,7 @@ begin
 end;
 
 function CustomRename(const AString, AWebsite, AMangaName, AAuthor, AArtist,
-  AChapter, ANumbering : String; const AIsUnicodeRemove : Boolean) : String;
+  AChapter, ANumbering: String; const AIsUnicodeRemove: Boolean): String;
 var
   chap: String;
 begin
@@ -2133,7 +2134,7 @@ begin
       if Pos('%NUMBERING% - ', Result) > 0 then
         Result := StringReplaceBrackets(Result, '%NUMBERING% - ', '', [rfReplaceAll])
       else
-        Result := StringReplaceBrackets(Result, '%NUMBERING%', '', [rfReplaceAll])
+        Result := StringReplaceBrackets(Result, '%NUMBERING%', '', [rfReplaceAll]);
     end
     else
       Result := StringReplaceBrackets(Result, '%NUMBERING%', ANumbering, [rfReplaceAll]);
@@ -2240,7 +2241,7 @@ end;
 
 procedure GetParams(const output: TStrings; input: String);
 var
-  l: word;
+  l: Word;
 begin
   repeat
     l := Pos(SEPERATOR, input);
@@ -2254,7 +2255,7 @@ end;
 
 procedure GetParams(var output: TCardinalList; input: String);
 var
-  l: word;
+  l: Word;
 begin
   repeat
     l := Pos(SEPERATOR, input);
@@ -2268,7 +2269,7 @@ end;
 
 procedure GetParams(var output: TList; input: String);
 var
-  l: word;
+  l: Word;
 begin
   repeat
     l := Pos(SEPERATOR, input);
@@ -2280,8 +2281,8 @@ begin
   until l = 0;
 end;
 
-function ExtractParam(const output : TStrings; input, sep : String;
-  WhiteSp : Boolean) : Integer;
+function ExtractParam(const output: TStrings; input, sep: String;
+  WhiteSp: Boolean): Integer;
 var
   l, lse: QWord;
   s: String;
@@ -2332,7 +2333,7 @@ begin
   end;
   Result := '';
   for i := 0 to list.Count - 1 do
-    Result := Result + IntToStr(integer(list.Items[i])) + SEPERATOR;
+    Result := Result + IntToStr(Integer(list.Items[i])) + SEPERATOR;
   list.Free;
 end;
 
@@ -2392,19 +2393,19 @@ function CleanMultilinedString(const S: String; MaxLineEnding: Integer): String;
 var
   rn, rnp, n, np: String;
 begin
-  Result:=Trim(s);
-  if Result='' then Exit;
-  if MaxLineEnding<1 then MaxLineEnding:=1;
+  Result := Trim(s);
+  if Result = '' then Exit;
+  if MaxLineEnding < 1 then MaxLineEnding := 1;
 
-  rn:=StringOfString(#13#10,MaxLineEnding);
-  rnp:=rn+#13#10;
-  while Pos(rnp,Result)>0 do
-    Result:=StringReplace(Result,rnp,rn,[rfReplaceAll]);
+  rn := StringOfString(#13#10, MaxLineEnding);
+  rnp := rn + #13#10;
+  while Pos(rnp, Result) > 0 do
+    Result := StringReplace(Result, rnp, rn, [rfReplaceAll]);
 
-  n:=StringOfChar(#10,MaxLineEnding);
-  np:=n+#10;
-  while Pos(np,Result)>0 do
-    Result:=StringReplace(Result,np,n,[rfReplaceAll]);
+  n := StringOfChar(#10, MaxLineEnding);
+  np := n + #10;
+  while Pos(np, Result) > 0 do
+    Result := StringReplace(Result, np, n, [rfReplaceAll]);
 end;
 
 function CleanAndExpandURL(const URL: String): String;
@@ -2462,7 +2463,7 @@ begin
   Result := TrimLeftChar(URL, ['/']);
 end;
 
-function FixURL(const URL : String) : String;
+function FixURL(const URL: String): String;
 begin
   Result := URL;
   if Pos(':', Result) or Pos('/', Result) > 0 then
@@ -2478,7 +2479,7 @@ begin
     Exit;
   for i := 1 to Length(path) do
   begin
-    if byte(path[i]) >= 128 then
+    if Byte(path[i]) >= 128 then
       Result := Result + '_'
     else
       Result := Result + path[i];
@@ -2517,7 +2518,7 @@ begin
   begin
     if Pos(StringFilterChar[i, 0], LowerCase(Result)) > 0 then
       Result := StringReplace(Result, StringFilterChar[i, 0], StringFilterChar[i, 1],
-      [rfIgnoreCase, rfReplaceAll]);
+        [rfIgnoreCase, rfReplaceAll]);
   end;
 
   // broken entities
@@ -2571,7 +2572,7 @@ end;
 procedure CustomGenres(var output: TStringList; input: String);
 var
   s: String = '';
-  i: word;
+  i: Word;
 begin
   if Length(input) = 0 then
     Exit;
@@ -2594,7 +2595,7 @@ begin
     output.Add(s);
 end;
 
-function CommonStringFilter(const Source : String) : String;
+function CommonStringFilter(const Source: String): String;
 begin
   Result := Source;
   if Source = '' then Exit;
@@ -2639,7 +2640,7 @@ begin
   Result := StringReplace(Result, '\r', '', [rfReplaceAll]);
 end;
 
-function RemoveDoubleSpace(const Source : String) : String;
+function RemoveDoubleSpace(const Source: String): String;
 begin
   Result := Source;
   while Pos('  ', Result) > 0 do
@@ -2659,7 +2660,7 @@ end;
 
 function TrimLeftChar(const Source: String; const Chars: TSysCharSet): String;
 var
-  i, j: LongInt;
+  i, j: Longint;
 begin
   Result := Source;
   i := Length(Result);
@@ -2675,7 +2676,7 @@ end;
 
 function TrimRightChar(const Source: String; const Chars: TSysCharSet): String;
 var
-  i, j: LongInt;
+  i, j: Longint;
 begin
   Result := Source;
   i := Length(Result);
@@ -2710,7 +2711,7 @@ begin
   Result := TrimLeft(TrimRight(Result));
 end;
 
-procedure AddCommaString(var Dest: string; S: string);
+procedure AddCommaString(var Dest: String; S: String);
 begin
   S := Trim(TrimChar(Trim(S), [',', ' ']));
   if (S = '') or (S = ',') then Exit;
@@ -2982,37 +2983,37 @@ begin
 
   globReturn:
 
-  if OptionProxyType = 'HTTP' then
-  begin
-    HTTP.ProxyHost := OptionProxyHost;
-    HTTP.ProxyPort := OptionProxyPort;
-    HTTP.ProxyUser := OptionProxyUser;
-    HTTP.ProxyPass := OptionProxyPass;
-  end
-  else
-  if (OptionProxyType = 'SOCKS4') or (OptionProxyType = 'SOCKS5') then
-  begin
-    if OptionProxyType = 'SOCKS4' then
-      HTTP.Sock.SocksType := ST_Socks4
+    if OptionProxyType = 'HTTP' then
+    begin
+      HTTP.ProxyHost := OptionProxyHost;
+      HTTP.ProxyPort := OptionProxyPort;
+      HTTP.ProxyUser := OptionProxyUser;
+      HTTP.ProxyPass := OptionProxyPass;
+    end
     else
-    if OptionProxyType = 'SOCKS5' then
-      HTTP.Sock.SocksType := ST_Socks5;
-    HTTP.Sock.SocksIP := OptionProxyHost;
-    HTTP.Sock.SocksPort := OptionProxyPort;
-    HTTP.Sock.SocksUsername := OptionProxyUser;
-    http.Sock.SocksPassword := OptionProxyPass;
-  end
-  else
-  begin
-    HTTP.Sock.SocksIP := OptionProxyHost;
-    HTTP.Sock.SocksPort := OptionProxyPort;
-    HTTP.Sock.SocksUsername := OptionProxyUser;
-    http.Sock.SocksPassword := OptionProxyPass;
-    HTTP.ProxyHost := OptionProxyHost;
-    HTTP.ProxyPort := OptionProxyPort;
-    HTTP.ProxyUser := OptionProxyUser;
-    HTTP.ProxyPass := OptionProxyPass;
-  end;
+    if (OptionProxyType = 'SOCKS4') or (OptionProxyType = 'SOCKS5') then
+    begin
+      if OptionProxyType = 'SOCKS4' then
+        HTTP.Sock.SocksType := ST_Socks4
+      else
+      if OptionProxyType = 'SOCKS5' then
+        HTTP.Sock.SocksType := ST_Socks5;
+      HTTP.Sock.SocksIP := OptionProxyHost;
+      HTTP.Sock.SocksPort := OptionProxyPort;
+      HTTP.Sock.SocksUsername := OptionProxyUser;
+      http.Sock.SocksPassword := OptionProxyPass;
+    end
+    else
+    begin
+      HTTP.Sock.SocksIP := OptionProxyHost;
+      HTTP.Sock.SocksPort := OptionProxyPort;
+      HTTP.Sock.SocksUsername := OptionProxyUser;
+      http.Sock.SocksPassword := OptionProxyPass;
+      HTTP.ProxyHost := OptionProxyHost;
+      HTTP.ProxyPort := OptionProxyPort;
+      HTTP.ProxyUser := OptionProxyUser;
+      HTTP.ProxyPass := OptionProxyPass;
+    end;
 
   HTTPHeader.Values['DNT'] := ' 1';
   HTTPHeader.Values['Accept'] := ' text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8';
@@ -3108,19 +3109,19 @@ begin
     if s <> '' then
     begin
       with TRegExpr.Create do
-      try
-        Expression := REGEX_HOST;
-        if Replace(s, '$1', True) = '' then
-        begin
-          if s[1] <> '/' then
-            s := '/' + s;
-          URL := Replace(URL, '$1$2$3', True) + s;
-        end
-        else
-          URL := s;
-      finally
-        Free;
-      end;
+        try
+          Expression := REGEX_HOST;
+          if Replace(s, '$1', True) = '' then
+          begin
+            if s[1] <> '/' then
+              s := '/' + s;
+            URL := Replace(URL, '$1$2$3', True) + s;
+          end
+          else
+            URL := s;
+        finally
+          Free;
+        end;
     end;
 
     HTTP.Clear;
@@ -3227,7 +3228,7 @@ begin
       on E: Exception do
         WriteLog_E('SaveImageStreamToFile.Failed!', E);
     end;
-    if FileExistsUTF8(f) then Result := f
+    if FileExistsUTF8(f) then Result := f;
   end;
 end;
 
@@ -3382,19 +3383,19 @@ begin
     if s <> '' then
     begin
       with TRegExpr.Create do
-      try
-        Expression := REGEX_HOST;
-        if Replace(s, '$1', True) = '' then
-        begin
-          if s[1] <> '/' then
-            s := '/' + s;
-          URL := Replace(URL, '$1$2$3', True) + s;
-        end
-        else
-          URL := s;
-      finally
-        Free;
-      end;
+        try
+          Expression := REGEX_HOST;
+          if Replace(s, '$1', True) = '' then
+          begin
+            if s[1] <> '/' then
+              s := '/' + s;
+            URL := Replace(URL, '$1$2$3', True) + s;
+          end
+          else
+            URL := s;
+        finally
+          Free;
+        end;
     end;
 
     HTTP.Clear;
@@ -3580,9 +3581,9 @@ begin
   names.Free;
 end;
 
-function DateToJDN(const year, month, day: word): longint;
+function DateToJDN(const year, month, day: Word): Longint;
 var
-  a, y, m: longint;
+  a, y, m: Longint;
 begin
   a := (14 - month) div 12;
   y := year + 4800 - a;
@@ -3591,17 +3592,17 @@ begin
     (y div 400) - 32045) - 0.5);
 end;
 
-function DateToJDN(const date: TDate): longint;
+function DateToJDN(const date: TDate): Longint;
 var
-  day, month, year: word;
+  day, month, year: Word;
 begin
   DecodeDate(date, year, month, day);
   Result := DateToJDN(year, month, day);
 end;
 
-function JDNToDate(const JDN: longint): TDate;
+function JDNToDate(const JDN: Longint): TDate;
 var
-  a, b, c, d, e, m: longint;
+  a, b, c, d, e, m: Longint;
   day, month, year: Word;
 begin
   a := trunc(JDN + 32044.5);
@@ -3616,9 +3617,9 @@ begin
   Result := EncodeDate(year, month, day);
 end;
 
-function GetCurrentJDN: longint;
+function GetCurrentJDN: Longint;
 var
-  day, month, year: word;
+  day, month, year: Word;
 begin
   DecodeDate(Now, year, month, day);
   Result := DateToJDN(year, month, day);
@@ -3695,17 +3696,17 @@ end;
 
 { TParseHTML }
 
-procedure TParseHTML.FoundTag(NoCaseTag, ActualTag: string);
+procedure TParseHTML.FoundTag(NoCaseTag, ActualTag: String);
 begin
   Output.Add(ActualTag);
 end;
 
-procedure TParseHTML.FoundText(Text: string);
+procedure TParseHTML.FoundText(Text: String);
 begin
   Output.Add(Text);
 end;
 
-constructor TParseHTML.Create(const Raw: string);
+constructor TParseHTML.Create(const Raw: String);
 begin
   inherited Create;
   if Raw <> '' then
@@ -3714,7 +3715,7 @@ begin
     FRaw := '';
 end;
 
-function TParseHTML.Exec(const Raw: string): string;
+function TParseHTML.Exec(const Raw: String): String;
 var
   parser: THTMLParser;
 begin
@@ -3799,11 +3800,11 @@ begin
 {$IFDEF UNIX}
   // This process require admin rights in order to execute
   with TProcessUTF8.Create(nil) do try
-    CommandLine := 'poweroff';
-    Execute;
-  finally
-    Free;
-  end;
+      CommandLine := 'poweroff';
+      Execute;
+    finally
+      Free;
+    end;
 {$ENDIF}
 end;
 

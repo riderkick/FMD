@@ -139,12 +139,14 @@ begin
   with DownloadThread.manager.container, DownloadThread.FHTTP do begin
     Headers.Values['Referer'] := ' ' + AURL;
     if DownloadThread.workCounter > PageContainerLinks.Count then Exit;
-    if GETWithCookie(DownloadThread.FHTTP, FillHost(Module.RootURL, PageContainerLinks[DownloadThread.workCounter])) then begin
+    if GETWithCookie(DownloadThread.FHTTP, FillHost(Module.RootURL,
+      PageContainerLinks[DownloadThread.workCounter])) then begin
       Result := True;
       query := TXQueryEngineHTML.Create;
       try
         query.ParseHTML(StreamToString(Document));
-        PageLinks[DownloadThread.workCounter] := query.XPathString('//div[@class="chapter-content"]//img/@src');
+        PageLinks[DownloadThread.workCounter] :=
+          query.XPathString('//div[@class="chapter-content"]//img/@src');
       finally
         query.Free;
       end;

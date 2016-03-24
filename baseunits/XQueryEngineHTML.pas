@@ -57,12 +57,10 @@ end;
 procedure AddSeparatorString(var Dest: String; const S: String; const Separator: String = ', ');
 begin
   if Trim(S) <> '' then
-  begin
     if Trim(Dest) = '' then
       Dest := Trim(S)
     else
       Dest := Trim(Dest) + Separator + Trim(S);
-  end;
 end;
 
 function StringInArray(const S: String; const SS: array of String): Boolean;

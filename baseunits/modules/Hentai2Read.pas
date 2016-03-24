@@ -191,9 +191,9 @@ begin
       with TXQueryEngineHTML.Create(Document) do
         try
           s := XPathString('//img[@id="arf-reader"]/@src');
-          if s<>'' then
+          if s <> '' then
           begin
-            s:=TrimLeftChar(s,['/']);
+            s := TrimLeftChar(s, ['/']);
             PageLinks[DownloadThread.workCounter] := MaybeFillHost(cdnurl, s);
           end;
         finally

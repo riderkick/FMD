@@ -1,4 +1,4 @@
-unit  uMisc;
+unit uMisc;
 
 {$mode objfpc}{$H+}
 
@@ -6,7 +6,7 @@ interface
 
 uses
   {$ifdef windows}
-  ShellApi, windows,
+  ShellApi, Windows,
   {$else}
   UTF8Process,
   {$endif}
@@ -19,7 +19,7 @@ type
   TIniFileR = class(TMemIniFile)
   private
     FCSReload: TCriticalSection;
-    FFileAge: longint;
+    FFileAge: Longint;
   public
     constructor Create(const AFileName: String; AEscapeLineFeeds: Boolean = False);
       override;
@@ -50,39 +50,41 @@ function FindStrLinear(aList: TStrings; aValue: String): Boolean;
 function FindStrLinearPos(aList: TStrings; aValue: String): Integer;
 
 //formatting
-function FormatByteSize(const bytes :longint; persecond: boolean = False) :string;
+function FormatByteSize(const bytes: Longint; persecond: Boolean = False): String;
 
 //sorting
-function NaturalCompareStr(Str1, Str2: string): integer; inline;
+function NaturalCompareStr(Str1, Str2: String): Integer; inline;
 function NaturalCustomSort(List: TStringList; Index1, Index2: Integer): Integer; inline;
 
 //run external process
 function RunExternalProcessAsAdmin(Exe, Params: String; ShowWind: Boolean = True;
   isPersistent: Boolean = True): Boolean;
-function RunExternalProcess(Exe: String; Params: array of string; ShowWind: Boolean = True;
+function RunExternalProcess(Exe: String; Params: array of String; ShowWind: Boolean = True;
   isPersistent: Boolean = True): Boolean; overload;
-function RunExternalProcess(Exe, Params: String; ShowWind: Boolean =  True;
+function RunExternalProcess(Exe, Params: String; ShowWind: Boolean = True;
   isPersistent: Boolean = True): Boolean; overload;
-function RunExternalProcess(CommandLine: String; ShowWind: Boolean =  True;
+function RunExternalProcess(CommandLine: String; ShowWind: Boolean = True;
   isPersistent: Boolean = True): Boolean; overload;
 
 //stringutils
-procedure ParseCommandLine(const cmd: string; var Output: TStrings;
+procedure ParseCommandLine(const cmd: String; var Output: TStrings;
   AStripQuotes: Boolean = False);
 function ParsedCommandLine(const cmd: String): TArrayOfString;
 function StringsToArray(const S: TStrings): TArrayOfString;
-function StringsToCommandLine(const S: TStrings): string; overload;
-function StringsToCommandLine(const S: array of string): string; overload;
-procedure DeleteArrayOfString(Var TheStrings: TArrayOfString; Index: Integer);
+function StringsToCommandLine(const S: TStrings): String; overload;
+function StringsToCommandLine(const S: array of String): String; overload;
+procedure DeleteArrayOfString(var TheStrings: TArrayOfString; Index: Integer);
 
 const
-  UA_SYNAPSE   = 'Mozilla/4.0 (compatible; Synapse)';
-  UA_CURL      = 'curl/7.42.1';
+  UA_SYNAPSE = 'Mozilla/4.0 (compatible; Synapse)';
+  UA_CURL = 'curl/7.42.1';
   UA_GOOGLEBOT = 'Mozilla/5.0 (compatible; Googlebot/2.1;  http://www.google.com/bot.html)';
-  UA_MSIE      = 'Mozilla/5.0 (compatible; WOW64; MSIE 10.0; Windows NT 6.2)';
-  UA_FIREFOX   = 'Mozilla/5.0 (Windows NT 6.3; WOW64; rv:39.0) Gecko/20100101 Firefox/39.0';
-  UA_CHROME    = 'Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.125 Safari/537.36';
-  UA_OPERA     = 'Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.130 Safari/537.36 OPR/30.0.1835.125';
+  UA_MSIE = 'Mozilla/5.0 (compatible; WOW64; MSIE 10.0; Windows NT 6.2)';
+  UA_FIREFOX = 'Mozilla/5.0 (Windows NT 6.3; WOW64; rv:39.0) Gecko/20100101 Firefox/39.0';
+  UA_CHROME =
+    'Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.125 Safari/537.36';
+  UA_OPERA =
+    'Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.130 Safari/537.36 OPR/30.0.1835.125';
 
   RANDOM_SLEEP = 3000;
 
@@ -111,21 +113,21 @@ var
   slLines: TStringList;
 begin
   if FCSReload.TryEnter then try
-    if FileExistsUTF8(FileName) then
-      if FileAgeUTF8(FileName) <> FFileAge then
-      begin
-        slLines := TStringList.Create;
-        try
-          FFileAge := FileAge(FileName);
-          slLines.LoadFromFile(FileName);
-          SetStrings(slLines);
-        finally
-          slLines.Free;
+      if FileExistsUTF8(FileName) then
+        if FileAgeUTF8(FileName) <> FFileAge then
+        begin
+          slLines := TStringList.Create;
+          try
+            FFileAge := FileAge(FileName);
+            slLines.LoadFromFile(FileName);
+            SetStrings(slLines);
+          finally
+            slLines.Free;
+          end;
         end;
-      end;
-  finally
-    FCSReload.Release;
-  end;
+    finally
+      FCSReload.Release;
+    end;
 end;
 
 { uMisc }
@@ -150,21 +152,21 @@ begin
   Result := BrackText(IntToStr(S));
 end;
 
-function BrackTextQuoted(const S : String) : String;
+function BrackTextQuoted(const S: String): String;
 begin
   Result := BrackText(QuotedStr(S));
 end;
 
-function BrackTextQuoted(const S : Integer) : String;
+function BrackTextQuoted(const S: Integer): String;
 begin
   Result := BrackText(QuotedStr(IntToStr(S)));
 end;
 
-function StringToASCII(S : String) : String;
+function StringToASCII(S: String): String;
 var
   i: Integer;
 begin
-  Result:='#0';
+  Result := '#0';
   if Length(S) > 0 then
   begin
     Result := '';
@@ -173,11 +175,11 @@ begin
   end;
 end;
 
-function StringToHex(S : String) : String;
+function StringToHex(S: String): String;
 var
   i: Integer;
 begin
-  Result:='#0';
+  Result := '#0';
   if Length(S) > 0 then
   begin
     Result := '';
@@ -192,7 +194,7 @@ procedure padZero(var S: String; VolLength, ChapLength: Integer);
   var
     j: Integer;
   begin
-    for  j := i to Length(t) do
+    for j := i to Length(t) do
     begin
       if (cstart = -1) and (t[j] in ['0'..'9']) then
         cstart := j
@@ -242,7 +244,7 @@ begin
     vlength := 1;
     if vol then
     begin
-      for  i := Pos('VOL', upcase(t)) to Length(t) do
+      for i := Pos('VOL', upcase(t)) to Length(t) do
       begin
         if (vstart = -1) and (t[i] in ['0'..'9']) then
           vstart := i
@@ -379,7 +381,7 @@ begin
   Result := Copy(txt, lpos, rpos - lpos - Length(sep));
 end;
 
-function NaturalCompareStr(Str1, Str2: string): integer;
+function NaturalCompareStr(Str1, Str2: String): Integer;
 begin
   Result := NaturalSortUnit.UTF8LogicalCompareText(Str1, Str2);
 end;
@@ -395,7 +397,7 @@ procedure QuickSortNaturalPart(var Alist: TStringList; Separator: String;
   function CompareFn(Index1, Index2: Integer): Integer;
   begin
     Result := NaturalCompareStr(getStringPart(Alist[Index1], Separator, PartIndex),
-              getStringPart(Alist[Index2], Separator, PartIndex));
+      getStringPart(Alist[Index2], Separator, PartIndex));
   end;
 
   procedure QSort(L, R: Integer);
@@ -469,9 +471,9 @@ begin
     Result := False;
 end;
 
-function FormatByteSize(const bytes :longint; persecond: boolean = False) :string;
+function FormatByteSize(const bytes: Longint; persecond: Boolean = False): String;
 const
-  B  = 1;
+  B = 1;
   KB = 1024 * B;
   MB = 1024 * KB;
   GB = 1024 * MB;
@@ -553,7 +555,7 @@ begin
 end;
 
 {$ifdef windows}
-function WinRunProcessA(Exe, Params: string; ShowWind: Boolean; isPersistent: Boolean): Boolean;
+function WinRunProcessA(Exe, Params: String; ShowWind: Boolean; isPersistent: Boolean): Boolean;
 var
   SEInfo: TSHELLEXECUTEINFOA;
 begin
@@ -577,7 +579,7 @@ begin
     WaitForSingleObject(SEInfo.hProcess, INFINITE);
 end;
 
-function WinRunProcessW(Exe, Params: string; ShowWind: Boolean; isPersistent: Boolean): Boolean;
+function WinRunProcessW(Exe, Params: String; ShowWind: Boolean; isPersistent: Boolean): Boolean;
 var
   SEInfo: TSHELLEXECUTEINFOW;
 begin
@@ -600,9 +602,10 @@ begin
   if isPersistent then
     WaitForSingleObject(SEInfo.hProcess, INFINITE);
 end;
+
 {$endif}
 
-function RunExternalProcess(Exe: String; Params: array of string;
+function RunExternalProcess(Exe: String; Params: array of String;
   ShowWind: Boolean; isPersistent: Boolean): Boolean;
 {$ifndef windows}
 var
@@ -638,10 +641,10 @@ begin
   except
     on E: Exception do
     begin
-      WriteLog_E('RunExternalProcess.Error '#13#10+
-        'Executable: '+Exe+#13#10+
-        'Parameters: '+StringsToCommandLine(Params)+#13#10+
-        'Message   : '+E.Message+#13#10+
+      WriteLog_E('RunExternalProcess.Error '#13#10 +
+        'Executable: ' + Exe + #13#10 +
+        'Parameters: ' + StringsToCommandLine(Params) + #13#10 +
+        'Message   : ' + E.Message + #13#10 +
         GetStackTraceInfo);
     end;
   end;
@@ -666,8 +669,8 @@ end;
 function RunExternalProcess(CommandLine: String; ShowWind: Boolean;
   isPersistent: Boolean): Boolean;
 var
- s: string;
- sa: TArrayOfString;
+  s: String;
+  sa: TArrayOfString;
 begin
   if Trim(CommandLine) = '' then Exit(False);
   try
@@ -687,10 +690,10 @@ begin
   end;
 end;
 
-procedure ParseCommandLine(const cmd: string; var Output: TStrings;
+procedure ParseCommandLine(const cmd: String; var Output: TStrings;
   AStripQuotes: Boolean = False);
 var
-  s, cl: string;
+  s, cl: String;
   cq: Integer;
   acl, lq: Boolean;
 
@@ -781,14 +784,14 @@ begin
     Result[i] := S[i];
 end;
 
-function StringsToCommandLine(const S: TStrings): string;
+function StringsToCommandLine(const S: TStrings): String;
 var
   i: Integer;
 begin
   Result := '';
-  if S.Count>0 then
+  if S.Count > 0 then
   begin
-    for i := 0 to S.Count-1 do
+    for i := 0 to S.Count - 1 do
     begin
       if Pos(' ', S[i]) <> 0 then
         Result := Result + '"' + S[i] + '" '
@@ -799,12 +802,12 @@ begin
   end;
 end;
 
-function StringsToCommandLine(const S: array of string): string;
+function StringsToCommandLine(const S: array of String): String;
 var
   i: Integer;
 begin
   Result := '';
-  if Length(S)>0 then
+  if Length(S) > 0 then
   begin
     for i := Low(S) to High(S) do
     begin

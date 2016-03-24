@@ -11,7 +11,7 @@ uses
 implementation
 
 const
-  dirurl='/series.html';
+  dirurl = '/series.html';
 
 function GetNameAndLink(const MangaInfo: TMangaInformation;
   const ANames, ALinks: TStringList; const AURL: String;
@@ -20,11 +20,11 @@ var
   query: TXQueryEngineHTML;
   v: IXQValue;
 begin
-  Result:=NET_PROBLEM;
-  if MangaInfo=nil then Exit(UNKNOWN_ERROR);
-  if MangaInfo.FHTTP.GET(Module.RootURL+dirurl) then begin
-    Result:=NO_ERROR;
-    query:=TXQueryEngineHTML.Create;
+  Result := NET_PROBLEM;
+  if MangaInfo = nil then Exit(UNKNOWN_ERROR);
+  if MangaInfo.FHTTP.GET(Module.RootURL + dirurl) then begin
+    Result := NO_ERROR;
+    query := TXQueryEngineHTML.Create;
     try
       query.ParseHTML(StreamToString(MangaInfo.FHTTP.Document));
       for v in query.XPath('//table[@id="page-list"]//tr/td/p/a') do begin
@@ -43,15 +43,15 @@ var
   query: TXQueryEngineHTML;
   v: IXQValue;
 begin
-  Result:=NET_PROBLEM;
-  if MangaInfo=nil then Exit(UNKNOWN_ERROR);
-  with MangaInfo.FHTTP,MangaInfo.mangaInfo do begin
-    if GET(FillHost(Module.RootURL,AURL)) then begin
-      Result:=NO_ERROR;
-      query:=TXQueryEngineHTML.Create;
+  Result := NET_PROBLEM;
+  if MangaInfo = nil then Exit(UNKNOWN_ERROR);
+  with MangaInfo.FHTTP, MangaInfo.mangaInfo do begin
+    if GET(FillHost(Module.RootURL, AURL)) then begin
+      Result := NO_ERROR;
+      query := TXQueryEngineHTML.Create;
       try
         query.ParseHTML(StreamToString(Document));
-        if title=''then title:=query.XPathString('//div[@id="content-main"]/h1');
+        if title = '' then title := query.XPathString('//div[@id="content-main"]/h1');
         for v in query.XPath('//table[@class="ch-table"]/tbody/tr/td/a') do begin
           chapterLinks.Add(v.toNode.getAttribute('href'));
           chapterName.Add(v.toString);
@@ -68,17 +68,17 @@ function GetPageNumber(const DownloadThread: TDownloadThread;
 var
   query: TXQueryEngineHTML;
 begin
-  Result:=False;
-  if DownloadThread=nil then Exit;
-  with DownloadThread.FHTTP,DownloadThread.manager.container do begin
+  Result := False;
+  if DownloadThread = nil then Exit;
+  with DownloadThread.FHTTP, DownloadThread.manager.container do begin
     PageLinks.Clear;
     PageNumber := 0;
-    if GET(FillHost(Module.RootURL,AURL)) then begin
-      Result:=True;
-      query:=TXQueryEngineHTML.Create;
+    if GET(FillHost(Module.RootURL, AURL)) then begin
+      Result := True;
+      query := TXQueryEngineHTML.Create;
       try
         query.ParseHTML(StreamToString(Document));
-        PageNumber:=query.XPath('//select[@id="id_page"]/option').Count;
+        PageNumber := query.XPath('//select[@id="id_page"]/option').Count;
       finally
         query.Free;
       end;
@@ -92,18 +92,19 @@ var
   query: TXQueryEngineHTML;
   s: String;
 begin
-  Result:=False;
-  if DownloadThread=nil then Exit;
-  with DownloadThread.manager.container,DownloadThread.FHTTP do begin
-    s:=AURL;
-    s:=ReplaceRegExpr('\.html?$',s,'',False);
-    s+='-page-'+IncStr(DownloadThread.workCounter)+'.html';
-    if GET(FillHost(Module.RootURL,s)) then begin
-      Result:=True;
-      query:=TXQueryEngineHTML.Create;
+  Result := False;
+  if DownloadThread = nil then Exit;
+  with DownloadThread.manager.container, DownloadThread.FHTTP do begin
+    s := AURL;
+    s := ReplaceRegExpr('\.html?$', s, '', False);
+    s += '-page-' + IncStr(DownloadThread.workCounter) + '.html';
+    if GET(FillHost(Module.RootURL, s)) then begin
+      Result := True;
+      query := TXQueryEngineHTML.Create;
       try
         query.ParseHTML(StreamToString(Document));
-        PageLinks[DownloadThread.workCounter]:=query.XPathString('//img[@class="manga-page center-block"]/@src');
+        PageLinks[DownloadThread.workCounter] :=
+          query.XPathString('//img[@class="manga-page center-block"]/@src');
       finally
         query.Free;
       end;
@@ -115,13 +116,13 @@ procedure RegisterModule;
 begin
   with AddModule do
   begin
-    Website:='MangaStreamTo';
-    RootURL:='http://www.mangastream.to';
-    InformationAvailable:=False;
-    OnGetNameAndLink:=@GetNameAndLink;
-    OnGetInfo:=@GetInfo;
-    OnGetPageNumber:=@GetPageNumber;
-    OnGetImageURL:=@GetImageURL;
+    Website := 'MangaStreamTo';
+    RootURL := 'http://www.mangastream.to';
+    InformationAvailable := False;
+    OnGetNameAndLink := @GetNameAndLink;
+    OnGetInfo := @GetInfo;
+    OnGetPageNumber := @GetPageNumber;
+    OnGetImageURL := @GetImageURL;
   end;
 end;
 

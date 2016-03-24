@@ -13,7 +13,7 @@ implementation
 const
   modulename = 'Madokami';
   urlroot = 'https://manga.madokami.com';
-  madokamidirlist: array [0..12] of string = (
+  madokamidirlist: array [0..12] of String = (
     '/Manga/%23%20-%20F',
     '/Manga/G%20-%20M',
     '/Manga/N%20-%20Z',
@@ -47,7 +47,7 @@ begin
         ':' + Account.Password[modulename]);
       if AHTTP.GET(urlroot + '/login') then begin
         //Result := AHTTP.Cookies.Values['laravel_session'] <> '';
-        Result:=(AHTTP.ResultCode<400) and (AHTTP.Headers.Values['WWW-Authenticate']='');
+        Result := (AHTTP.ResultCode < 400) and (AHTTP.Headers.Values['WWW-Authenticate'] = '');
         if Result then begin
           Account.Cookies[modulename] := AHTTP.GetCookies;
           Account.Status[modulename] := asValid;
@@ -65,7 +65,7 @@ begin
     EnterCriticalsection(locklogin);
     try
       if Result then
-        AHTTP.Cookies.Text:=Account.Cookies[modulename];
+        AHTTP.Cookies.Text := Account.Cookies[modulename];
     finally
       LeaveCriticalsection(locklogin);
     end;
@@ -101,21 +101,21 @@ var
   currentdir: Integer;
   s: String;
 begin
-  Result:=NET_PROBLEM;
-  if MangaInfo=nil then Exit(UNKNOWN_ERROR);
-  currentdir:=StrToIntDef(AURL,0);
-  if currentdir>Length(madokamidirlist) then Exit;
-  if MangaInfo.FHTTP.GET(Module.RootURL+madokamidirlist[currentdir]) then begin
-    Result:=NO_ERROR;
+  Result := NET_PROBLEM;
+  if MangaInfo = nil then Exit(UNKNOWN_ERROR);
+  currentdir := StrToIntDef(AURL, 0);
+  if currentdir > Length(madokamidirlist) then Exit;
+  if MangaInfo.FHTTP.GET(Module.RootURL + madokamidirlist[currentdir]) then begin
+    Result := NO_ERROR;
     with TXQueryEngineHTML.Create(MangaInfo.FHTTP.Document) do
       try
         for v in XPath('//table[@id="index-table"]/tbody/tr/td[1]/a') do
         begin
           ALinks.Add(v.toNode.getAttribute('href'));
-          s:=v.toString;
-          if Length(s)>1 then
-            if s[Length(s)]='/' then
-              SetLength(s,Length(s)-1);
+          s := v.toString;
+          if Length(s) > 1 then
+            if s[Length(s)] = '/' then
+              SetLength(s, Length(s) - 1);
           ANames.Add(s);
         end;
       finally
@@ -134,7 +134,7 @@ begin
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
   if MangaInfo.FHTTP.GET(FillHost(Module.RootURL, AURL)) then begin
     Result := NO_ERROR;
-    with MangaInfo.mangaInfo,TXQueryEngineHTML.Create(MangaInfo.FHTTP.Document) do
+    with MangaInfo.mangaInfo, TXQueryEngineHTML.Create(MangaInfo.FHTTP.Document) do
       try
         coverLink := XPathString('//img[@itemprop="image"]/@src');
         if title = '' then title := XPathString('//*[@class="title"]');
@@ -179,27 +179,27 @@ begin
     if GETWithLogin(DownloadThread.FHTTP, FillHost(Module.RootURL, AURL)) then begin
       Result := True;
       with TXQueryEngineHTML.Create(DownloadThread.FHTTP.Document) do
-      try
-        datapath := XPathString('//div[@id="reader"]/@data-path');
-        datapath := EncodeURLElement(datapath);
-        datafiles := XPathString('//div[@id="reader"]/@data-files');
-        datafiles := Trim(TrimChar(datafiles, ['[', ']']));
-        datafiles := JSONStringToString(datafiles);
-        PageLinks.Delimiter := ',';
-        PageLinks.DelimitedText := datafiles;
-        if PageLinks.Count > 0 then
-          for i := 0 to PageLinks.Count - 1 do
-            PageLinks[i] := Module.RootURL + '/reader/image?path=' +
-              datapath + '&file=' + EncodeURLElement(PageLinks[i]);
-      finally
-        Free;
-      end;
+        try
+          datapath := XPathString('//div[@id="reader"]/@data-path');
+          datapath := EncodeURLElement(datapath);
+          datafiles := XPathString('//div[@id="reader"]/@data-files');
+          datafiles := Trim(TrimChar(datafiles, ['[', ']']));
+          datafiles := JSONStringToString(datafiles);
+          PageLinks.Delimiter := ',';
+          PageLinks.DelimitedText := datafiles;
+          if PageLinks.Count > 0 then
+            for i := 0 to PageLinks.Count - 1 do
+              PageLinks[i] := Module.RootURL + '/reader/image?path=' +
+                datapath + '&file=' + EncodeURLElement(PageLinks[i]);
+        finally
+          Free;
+        end;
     end;
   end;
 end;
 
 function DownloadImage(const DownloadThread: TDownloadThread;
-    const AURL, APath, AName: String; const Module: TModuleContainer): Boolean;
+  const AURL, APath, AName: String; const Module: TModuleContainer): Boolean;
 begin
   Result := False;
   if DownloadThread = nil then Exit;

@@ -5,12 +5,12 @@ program md;
 {$DEFINE MANGADOWNLOADER}
 
 uses
-  {$IFDEF DEBUGLEAKS}
+ {$IFDEF DEBUGLEAKS}
   SysUtils,
-  {$ENDIF}
-  {$IFDEF UNIX}{$IFDEF UseCThreads}
+ {$ENDIF}
+ {$IFDEF UNIX} {$IFDEF UseCThreads}
   cthreads,
-  {$ENDIF}{$ENDIF}
+ {$ENDIF} {$ENDIF}
   Interfaces, // this includes the LCL widgetset
   Forms, LazFileUtils, IniFiles, simpleipc, sqlite3dyn, uBaseUnit, frmMain;
 
@@ -22,7 +22,7 @@ var
 
 begin
   with TIniFile.Create(CleanAndExpandDirectory(GetCurrentDirUTF8) +
-    CONFIG_FOLDER + CONFIG_FILE) do
+      CONFIG_FOLDER + CONFIG_FILE) do
     try
       CheckInstance := ReadBool('general', 'OneInstanceOnly', True);
     finally

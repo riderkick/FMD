@@ -52,7 +52,7 @@ type
     // Download image
     function DownloadImage: Boolean;
 
-    procedure OnTag({%H-}NoCaseTag, ActualTag: string);
+    procedure OnTag({%H-}NoCaseTag, ActualTag: String);
     procedure OnText(Text: String);
 
     procedure SockOnStatus(Sender: TObject; Reason: THookSocketReason;
@@ -196,16 +196,16 @@ type
       var Chapters: array of TChapterStateItem);
 
     // Add new task to the list.
-    function AddTask:Integer;
+    function AddTask: Integer;
     // Check and active previous work-in-progress tasks.
     procedure CheckAndActiveTaskAtStartup;
     // Check and active waiting tasks.
     procedure CheckAndActiveTask(const isCheckForFMDDo: Boolean = False);
     // Active a stopped task.
     procedure SetTaskActive(const taskID: Integer);
-    procedure ActiveTask(const taskID : Integer);
+    procedure ActiveTask(const taskID: Integer);
     // Stop a download/wait task.
-    procedure StopTask(const taskID : Integer; const isCheckForActive : Boolean =
+    procedure StopTask(const taskID: Integer; const isCheckForActive: Boolean =
       True; isWaitFor: Boolean = False);
     // Start all task
     procedure StartAllTasks;
@@ -214,7 +214,7 @@ type
     // Stop all download task inside a task before terminate the program.
     procedure StopAllDownloadTasksForExit;
     // Remove a task from list.
-    procedure RemoveTask(const taskID : Integer);
+    procedure RemoveTask(const taskID: Integer);
     // Remove all finished tasks.
     procedure RemoveAllFinishedTasks;
     // check status of task
@@ -245,14 +245,14 @@ implementation
 uses
   frmMain, WebsiteModules;
 
-function IntToStr(Value: Cardinal): string;
+function IntToStr(Value: Cardinal): String;
 begin
   Result := SysUtils.IntToStr(QWord(Value));
 end;
 
 { TDownloadThread }
 
-procedure TDownloadThread.OnTag(NoCaseTag, ActualTag : string);
+procedure TDownloadThread.OnTag(NoCaseTag, ActualTag: String);
 begin
   parse.Add(ActualTag);
 end;
@@ -318,7 +318,7 @@ begin
             manager.container.PageLinks.Add('W');
         end
         else
-          Reslt := False
+          Reslt := False;
       end;
       // Get image urls.
       CS_GETPAGELINK:
@@ -349,12 +349,14 @@ begin
     on E: Exception do
     begin
       E.Message := E.Message + LineEnding +
-        '  In TDownloadThread.Execute : ' + GetEnumName(TypeInfo(TFlagType), integer(checkStyle)) + LineEnding +
+        '  In TDownloadThread.Execute : ' + GetEnumName(TypeInfo(TFlagType), Integer(checkStyle)) +
+        LineEnding +
         '  Website : ' + manager.container.DownloadInfo.Website + LineEnding +
         '  URL     : ' + FillMangaSiteHost(manager.container.MangaSiteID,
-          manager.container.ChapterLinks[manager.container.CurrentDownloadChapterPtr]) + LineEnding +
+        manager.container.ChapterLinks[manager.container.CurrentDownloadChapterPtr]) + LineEnding +
         '  Title   : ' + manager.container.DownloadInfo.title + LineEnding +
-        '  Chapter : ' + manager.container.ChapterName[manager.container.CurrentDownloadChapterPtr] + LineEnding;
+        '  Chapter : ' + manager.container.ChapterName[manager.container.CurrentDownloadChapterPtr] +
+        LineEnding;
       MainForm.ExceptionHandler(Self, E);
     end;
   end;
@@ -723,7 +725,7 @@ var
 begin
   Result := False;
   if (manager.container.PageLinks.Count > 0) and
-   (manager.container.PageLinks.Strings[workCounter] <> 'W') then
+    (manager.container.PageLinks.Strings[workCounter] <> 'W') then
     Exit;
 
   if Modules.ModuleAvailable(ModuleId, MMGetImageURL) then
@@ -1079,7 +1081,7 @@ begin
   FHTTP.Clear;
 
   if Modules.ModuleAvailable(ModuleId, MMBeforeDownloadImage) then
-    Result := Modules.BeforeDownloadImage(Self,TURL,ModuleId);
+    Result := Modules.BeforeDownloadImage(Self, TURL, ModuleId);
 
   lname := '';
   if workCounter < manager.container.Filenames.Count then
@@ -1418,16 +1420,16 @@ begin
       end
       else begin
         WriteLog_W(Format('%s, failed download image PageLinks=%d "%s" > "%s"',
-        [Self.ClassName,
-        container.PageLinks.Count,
-        container.DownloadInfo.Title,
-        container.ChapterName[container.CurrentDownloadChapterPtr]]));
+          [Self.ClassName,
+          container.PageLinks.Count,
+          container.DownloadInfo.Title,
+          container.ChapterName[container.CurrentDownloadChapterPtr]]));
         container.Status := STATUS_FAILED;
       end;
 
       if (container.Status = STATUS_FAILED) and
-         (not FindStrLinear(container.FailedChapterLinks,
-          container.ChapterName[container.CurrentDownloadChapterPtr])) then
+        (not FindStrLinear(container.FailedChapterLinks,
+        container.ChapterName[container.CurrentDownloadChapterPtr])) then
       begin
         container.FailedChapterName.Add(container.ChapterName[container.CurrentDownloadChapterPtr]);
         container.FailedChapterLinks.Add(container.ChapterLinks[container.CurrentDownloadChapterPtr]);
@@ -1584,8 +1586,8 @@ end;
 
 function TDownloadManager.GetItems(Index: Integer): TTaskContainer;
 begin
-  if (Index<0) or (Containers.Count=0) then Exit(nil);
-  Result:=TTaskContainer(Containers[Index]);
+  if (Index < 0) or (Containers.Count = 0) then Exit(nil);
+  Result := TTaskContainer(Containers[Index]);
 end;
 
 function TDownloadManager.GetTaskCount: Integer;
@@ -1809,7 +1811,7 @@ begin
             WriteString(tid, 'PageContainerLinks', SetParams(PageContainerLinks));
           if Filenames.Count > 0 then
             WriteString(tid, 'Filenames', SetParams(Filenames));
-          WriteString(tid, 'TaskStatus', GetEnumName(TypeInfo(TDownloadStatusType), integer(Status)));
+          WriteString(tid, 'TaskStatus', GetEnumName(TypeInfo(TDownloadStatusType), Integer(Status)));
           WriteInteger(tid, 'ChapterPtr', CurrentDownloadChapterPtr);
           WriteInteger(tid, 'NumberOfPages', PageNumber);
           WriteInteger(tid, 'CurrentPage', CurrentPageNumber);
@@ -1871,7 +1873,7 @@ var
   i, p, q: Integer;
   Ch, dlCh: TStringList;
 begin
-  if (Alink <> '') and  (AValue.Count > 0) then
+  if (Alink <> '') and (AValue.Count > 0) then
   begin
     CS_DownloadedChapterList.Acquire;
     Ch := TStringList.Create;
@@ -1929,7 +1931,7 @@ end;
 procedure TDownloadManager.GetDownloadedChaptersState(const Alink: String;
   var Chapters: array of TChapterStateItem);
 var
-  dlCh   : TStringList;
+  dlCh: TStringList;
   i, p, q: Integer;
 begin
   if (Alink <> '') and (Length(Chapters) > 0) and
@@ -1975,7 +1977,7 @@ begin
   end;
 end;
 
-function TDownloadManager.AddTask : Integer;
+function TDownloadManager.AddTask: Integer;
 begin
   Result := -1;
   CS_DownloadManager_Task.Acquire;
@@ -2005,10 +2007,10 @@ begin
           if (tcount < maxDLTasks) and
             (Status = STATUS_WAIT) and
             Modules.CanCreateTask(ModuleId) then
-            begin
-              ActiveTask(i);
-              Inc(tcount);
-            end;
+          begin
+            ActiveTask(i);
+            Inc(tcount);
+          end;
   finally
     CS_DownloadManager_Task.Release;
   end;
@@ -2023,7 +2025,7 @@ begin
     begin
       MainForm.itRefreshDLInfo.Enabled := False;
       MainForm.UpdateVtDownload;
-      if isCheckForFMDDo and (OptionLetFMDDo<>DO_NOTHING) then begin
+      if isCheckForFMDDo and (OptionLetFMDDo <> DO_NOTHING) then begin
         frmMain.DoAfterFMD := OptionLetFMDDo;
         MainForm.DoExitWaitCounter;
       end;
