@@ -4,6 +4,13 @@ Project page: https://github.com/riderkick/FMD
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.44.0 (24-03-2016)
+[*] MangaFox: fixed downloaded chapters incorrectly recognized as new chapter
+[*] WPManga: fixed mangainfo and get image url
+[*] SenManga: fixed get image url
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.43.0...0.9.44.0
+
 0.9.43.0 (23-03-2016)
 [*] Fixed download sometimes failed when max connection limit = 1
 [*] 8Muses: faster get image url
