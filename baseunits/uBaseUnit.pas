@@ -1373,15 +1373,14 @@ function FillHost(const Host, URL: String): String;
 var
   tu: string;
 begin
-  Result := URL;
+  Result := CleanURL(URL);
   if Host = '' then Exit;
   with TRegExpr.Create do
     try
       Expression := REGEX_HOST;
-      tu := Replace(URL, '$4', True);
-      if tu = '' then
-        tu := URL;
-      Result := RemoveURLDelim(Host) + AppendURLDelimLeft(tu);
+      tu := Replace(Result, '$4', True);
+      if tu <> '' then
+        Result := RemoveURLDelim(Host) + AppendURLDelimLeft(tu);
     finally
       Free;
     end;
