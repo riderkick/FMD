@@ -226,22 +226,45 @@ end;
 function GetPageNumber(const DownloadThread: TDownloadThread; const AURL: String;
   const Module: TModuleContainer): Boolean;
 var
-  query: TXQueryEngineHTML;
+  s: String;
+  v: IXQValue;
 begin
   Result := False;
   if DownloadThread = nil then Exit;
   with DownloadThread.FHTTP, DownloadThread.manager.container do begin
     PageLinks.Clear;
     PageNumber := 0;
+    Cookies.Values['viewer'] := '1';
     if GET(AppendURLDelim(FillHost(Module.RootURL, AURL)) + '1') then begin
       Result := True;
-      query := TXQueryEngineHTML.Create;
-      try
-        query.ParseHTML(StreamToString(Document));
-        PageNumber := query.XPath('(//select[@class="cbo_wpm_pag"])[1]/option').Count;
-      finally
-        query.Free;
+      //multi page
+      s := StreamToString(Document);
+      if Pos('var imglist = ', s) > 0 then
+      begin
+        s := GetBetween('var imglist = ', '];', s);
+        if s <> '' then
+        begin
+          s := s + ']';
+          s := RemoveBreaks(s);
+          with TXQueryEngineHTML.Create(s) do
+            try
+              for v in XPath('json(*)()("url")') do
+                PageLinks.Add(v.toString);
+            finally
+              Free;
+            end;
+        end;
       end;
+      //single page
+      if PageLinks.Count = 0 then
+        with TXQueryEngineHTML.Create(Document) do
+          try
+            PageNumber := XPath('(//select[@class="cbo_wpm_pag"])[1]/option').Count;
+            if PageNumber = 0 then
+              PageNumber := XPath('(//select[@name="page"])[1]/option').Count;
+          finally
+            Free;
+          end;
     end;
   end;
 end;
@@ -249,7 +272,6 @@ end;
 function GetImageURL(const DownloadThread: TDownloadThread; const AURL: String;
   const Module: TModuleContainer): Boolean;
 var
-  query: TXQueryEngineHTML;
   s: String;
 begin
   Result := False;
@@ -258,17 +280,18 @@ begin
     if GET(AppendURLDelim(FillHost(Module.RootURL, AURL)) + IncStr(DownloadThread.workCounter) + '/') then
     begin
       Result := True;
-      query := TXQueryEngineHTML.Create;
-      try
-        query.ParseHTML(StreamToString(Document));
-        if Module.Website = 'ReadHentaiManga' then
-          s := HTMLDecode(query.XPathString('//img[@id="main_img"]/@src'))
-        else
-          s := query.XPathString('//*[@class="wpm_pag mng_rdr"]//img/@src');
-        PageLinks[DownloadThread.WorkCounter] := s;
-      finally
-        query.Free;
-      end;
+      with TXQueryEngineHTML.Create(Document) do
+        try
+          if Module.Website = 'ReadHentaiManga' then
+            s := HTMLDecode(XPathString('//img[@id="main_img"]/@src'))
+          else
+            s := XPathString('//*[@class="wpm_pag mng_rdr"]//img/@src');
+          if s = '' then
+            s := XPathString('//*[@id="reader"]//img[@id="picture"]/@src');
+          PageLinks[DownloadThread.WorkCounter] := s;
+        finally
+          Free;
+        end;
     end;
   end;
 end;
