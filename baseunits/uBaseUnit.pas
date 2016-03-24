@@ -1390,18 +1390,17 @@ function MaybeFillHost(const Host, URL: String): String;
 var
   tu: string;
 begin
-  Result := URL;
+  Result := CleanURL(URL);
   if Host = '' then Exit;
   if URL = '' then Exit;
   with TRegExpr.Create do
     try
       Expression := REGEX_HOST;
-      if Replace(URL, '$2', True) = '' then
+      if Replace(Result, '$2', True) = '' then
       begin
-        tu := Replace(URL, '$4', True);
-        if tu = '' then
-          tu := URL;
-        Result := RemoveURLDelim(Host) + AppendURLDelimLeft(tu);
+        tu := Replace(Result, '$4', True);
+        if tu <> '' then
+          Result := RemoveURLDelim(Host) + AppendURLDelimLeft(tu);
       end;
     finally
       Free;
