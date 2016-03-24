@@ -437,7 +437,7 @@ msgstr "Terapkan"
 
 #: tmainform.btreadonline.caption
 msgid "Read online"
-msgstr "Baca online"
+msgstr "Baca daring"
 
 #: tmainform.btremovefilterlarge.caption
 msgctxt "TMAINFORM.BTREMOVEFILTERLARGE.CAPTION"
