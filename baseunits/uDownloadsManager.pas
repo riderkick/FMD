@@ -416,8 +416,6 @@ var
 
   {$I includes/S2Scans/chapter_page_number.inc}
 
-  {$I includes/SenManga/chapter_page_number.inc}
-
   {$I includes/Starkana/chapter_page_number.inc}
 
   {$I includes/Turkcraft/chapter_page_number.inc}
@@ -532,9 +530,6 @@ begin
     else
     if manager.container.MangaSiteID = MANGACOW_ID then
       Result := GetMangaCowPageNumber
-    else
-    if manager.container.MangaSiteID = SENMANGA_ID then
-      Result := GetSenMangaPageNumber
     else
     if (manager.container.MangaSiteID = MANGAEDEN_ID) or
       (manager.container.MangaSiteID = PERVEDEN_ID) then
@@ -683,8 +678,6 @@ var
 
   {$I includes/ScanManga/image_url.inc}
 
-  {$I includes/SenManga/image_url.inc}
-
   {$I includes/Starkana/image_url.inc}
 
   {$I includes/TruyenTranhTuan/image_url.inc}
@@ -814,9 +807,6 @@ begin
     else
     if manager.container.MangaSiteID = MANGACOW_ID then
       Result := GetMangaCowImageURL
-    else
-    if manager.container.MangaSiteID = SENMANGA_ID then
-      Result := GetSenMangaImageURL
     else
     if manager.container.MangaSiteID = TRUYENTRANHTUAN_ID then
       Result := GetTruyenTranhTuanImageURL

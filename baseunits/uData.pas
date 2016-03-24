@@ -800,8 +800,6 @@ var
 
   //{$I includes/MangaTraders/directory_page_number.inc}
 
-  {$I includes/SenManga/directory_page_number.inc}
-
   {$I includes/MangaGo/directory_page_number.inc}
 
   {$I includes/MangaEden/directory_page_number.inc}
@@ -907,9 +905,6 @@ begin
       else
       if WebsiteID = S2SCAN_ID then
         Result := GetS2ScanDirectoryPageNumber
-      else
-      if WebsiteID = SENMANGA_ID then
-        Result := GetSenMangaDirectoryPageNumber
       else
       if WebsiteID = LECTUREENLIGNE_ID then
         Result := GetLectureEnLigneDirectoryPageNumber
@@ -1051,8 +1046,6 @@ var
   {$I includes/MangaFrame/names_and_links.inc}
 
   {$I includes/Mangacow/names_and_links.inc}
-
-  {$I includes/SenManga/names_and_links.inc}
 
   {$I includes/Starkana/names_and_links.inc}
 
@@ -1232,9 +1225,6 @@ begin
     if WebsiteID = MANGACOW_ID then
       Result := MangaCowGetNamesAndLinks
     else
-    if WebsiteID = SENMANGA_ID then
-      Result := SenMangaGetNamesAndLinks
-    else
     if WebsiteID = KIVMANGA_ID then
       Result := KivmangaGetNamesAndLinks
     else
@@ -1402,8 +1392,6 @@ var
   {$I includes/CentralDeMangas/manga_information.inc}
 
   {$I includes/Mangacow/manga_information.inc}
-
-  {$I includes/SenManga/manga_information.inc}
 
   {$I includes/BlogTruyen/manga_information.inc}
 
@@ -1578,9 +1566,6 @@ begin
     else
     if WebsiteID = MANGACOW_ID then
       Result := GetMangaCowInfoFromURL
-    else
-    if WebsiteID = SENMANGA_ID then
-      Result := GetSenMangaInfoFromURL
     else
     if WebsiteID = BLOGTRUYEN_ID then
       Result := GetBlogTruyenInfoFromURL

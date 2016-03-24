@@ -289,59 +289,58 @@ const
   ANIMEEXTREMIST_ID      = 20;
   HUGEMANGA_ID           = 21;
   S2SCAN_ID              = 22;
-  SENMANGA_ID            = 23;
-  IMANHUA_ID             = 24;
-  MABUNS_ID              = 25;
-  MANGAESTA_ID           = 26;
-  CENTRALDEMANGAS_ID     = 27;
-  EGSCANS_ID             = 28;
-  MANGAAR_ID             = 29;
-  MANGAAE_ID             = 30;
-  ANIMESTORY_ID          = 31;
-  LECTUREENLIGNE_ID      = 32;
-  SCANMANGA_ID           = 33;
-  MANGAGO_ID             = 34;
-  DM5_ID                 = 35;
-  MANGACOW_ID            = 36;
-  KIVMANGA_ID            = 37;
-  MEINMANGA_ID           = 38;
-  MANGASPROJECT_ID       = 39;
-  MANGAREADER_POR_ID     = 40;
-  NINEMANGA_ID           = 41;
-  NINEMANGA_ES_ID        = 42;
-  NINEMANGA_CN_ID        = 43;
-  NINEMANGA_RU_ID        = 44;
-  NINEMANGA_DE_ID        = 45;
-  NINEMANGA_IT_ID        = 46;
-  NINEMANGA_BR_ID        = 47;
-  JAPANSHIN_ID           = 48;
-  JAPSCAN_ID             = 49;
-  CENTRUMMANGI_PL_ID     = 50;
-  MANGALIB_PL_ID         = 51;
-  ONEMANGA_ID            = 52;
-  MANGATOWN_ID           = 53;
-  MANGAOKU_ID            = 54;
-  MYREADINGMANGAINFO_ID  = 55;
-  IKOMIK_ID              = 56;
-  NHENTAI_ID             = 57;
-  MANGAMINT_ID           = 58;
-  UNIXMANGA_ID           = 59;
-  EXTREMEMANGAS_ID       = 60;
-  MANGAHOST_ID           = 61;
-  PORNCOMIX_ID           = 62;
-  PORNCOMIXRE_ID         = 63;
-  PORNCOMIXIC_ID         = 64;
-  XXCOMICS_ID            = 65;
-  XXCOMICSMT_ID          = 66;
-  XXCOMICS3D_ID          = 67;
-  PORNXXXCOMICS_ID       = 68;
-  MANGASEE_ID            = 69;
-  MANGAKU_ID             = 70;
-  MANGAAT_ID             = 71;
-  READMANGATODAY_ID      = 72;
-  DYNASTYSCANS_ID        = 73;
+  IMANHUA_ID             = 23;
+  MABUNS_ID              = 24;
+  MANGAESTA_ID           = 25;
+  CENTRALDEMANGAS_ID     = 26;
+  EGSCANS_ID             = 27;
+  MANGAAR_ID             = 28;
+  MANGAAE_ID             = 29;
+  ANIMESTORY_ID          = 30;
+  LECTUREENLIGNE_ID      = 31;
+  SCANMANGA_ID           = 32;
+  MANGAGO_ID             = 33;
+  DM5_ID                 = 34;
+  MANGACOW_ID            = 35;
+  KIVMANGA_ID            = 36;
+  MEINMANGA_ID           = 37;
+  MANGASPROJECT_ID       = 38;
+  MANGAREADER_POR_ID     = 39;
+  NINEMANGA_ID           = 40;
+  NINEMANGA_ES_ID        = 41;
+  NINEMANGA_CN_ID        = 42;
+  NINEMANGA_RU_ID        = 43;
+  NINEMANGA_DE_ID        = 44;
+  NINEMANGA_IT_ID        = 45;
+  NINEMANGA_BR_ID        = 46;
+  JAPANSHIN_ID           = 47;
+  JAPSCAN_ID             = 48;
+  CENTRUMMANGI_PL_ID     = 49;
+  MANGALIB_PL_ID         = 50;
+  ONEMANGA_ID            = 51;
+  MANGATOWN_ID           = 52;
+  MANGAOKU_ID            = 53;
+  MYREADINGMANGAINFO_ID  = 54;
+  IKOMIK_ID              = 55;
+  NHENTAI_ID             = 56;
+  MANGAMINT_ID           = 57;
+  UNIXMANGA_ID           = 58;
+  EXTREMEMANGAS_ID       = 59;
+  MANGAHOST_ID           = 60;
+  PORNCOMIX_ID           = 61;
+  PORNCOMIXRE_ID         = 62;
+  PORNCOMIXIC_ID         = 63;
+  XXCOMICS_ID            = 64;
+  XXCOMICSMT_ID          = 65;
+  XXCOMICS3D_ID          = 66;
+  PORNXXXCOMICS_ID       = 67;
+  MANGASEE_ID            = 68;
+  MANGAKU_ID             = 69;
+  MANGAAT_ID             = 70;
+  READMANGATODAY_ID      = 71;
+  DYNASTYSCANS_ID        = 72;
 
-  WebsiteRoots: array [0..73] of array [0..1] of string = (
+  WebsiteRoots: array [0..72] of array [0..1] of string = (
     ('AnimeA', 'http://manga.animea.net'),
     ('MangaInn', 'http://www.mangainn.me'),
     ('OurManga', 'http://www.ourmanga.com'),
@@ -365,7 +364,6 @@ const
     ('AnimExtremist', 'http://www.animextremist.com'),
     ('HugeManga', 'http://hugemanga.com'),
     ('S2Scans', 'http://reader.s2smanga.com'),
-    ('SenManga', 'http://www.senmanga.com'),
     ('imanhua', 'http://www.imanhua.com'),
     ('Mabuns', 'http://www.mabuns.web.id'),
     ('MangaEsta', 'http://www.mangaesta.net'),
@@ -469,8 +467,6 @@ const
   ANIMEEXTREMIST_BROWSER = '/mangas.htm?ord=todos';
 
   HUGEMANGA_BROWSER = '/';
-
-  SENMANGA_BROWSER = '/Manga/';
 
   IMANHUA_BROWSER = '/all.html';
 
@@ -775,7 +771,6 @@ function SitesWithoutFavorites(const website:String): Boolean;
 // Return true if the website doesn't contain manga information
 function SitesWithoutInformation(const website: String): Boolean;
 function SitesWithoutReferer(const website: String): Boolean;
-function SitesRefererisURL(const website: String): Boolean;
 function SitesWithSingleChapter(const website: String): Boolean;
 
 // url
@@ -1256,8 +1251,7 @@ begin
     PORNCOMIXRE_ID,
     PORNCOMIXIC_ID,
     PORNXXXCOMICS_ID,
-    MANGAPARK_ID,
-    SENMANGA_ID
+    MANGAPARK_ID
     ]);
 end;
 
@@ -1319,14 +1313,6 @@ begin
     PORNCOMIXRE_ID,
     PORNCOMIXIC_ID,
     PORNXXXCOMICS_ID
-    ]);
-end;
-
-function SitesRefererisURL(const website : String) : Boolean;
-begin
-  Result := False;
-  Result := SitesMemberOf(website, [
-    SENMANGA_ID
     ]);
 end;
 
@@ -3365,12 +3351,7 @@ begin
     begin
       if HTTPHeader.Values['Referer'] = '' then
         if not (SitesWithoutReferer(WebsiteRoots[mangaSiteID, 0])) then
-        begin
-          if SitesRefererisURL(WebsiteRoots[mangaSiteID, 0]) then
-            HTTPHeader.Values['Referer'] := ' ' + URL
-          else
-            HTTPHeader.Values['Referer'] := ' ' + WebsiteRoots[mangaSiteID, 1];
-        end;
+          HTTPHeader.Values['Referer'] := ' ' + WebsiteRoots[mangaSiteID, 1];
     end;
 
   HTTP.Document.Clear;
