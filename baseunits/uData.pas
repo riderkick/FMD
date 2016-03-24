@@ -1680,6 +1680,7 @@ begin
     if mangaInfo.link = '' then mangaInfo.link := RemoveHostFromURL(mangaInfo.url);
 
     // cleanup info
+    coverLink := CleanURL(coverLink);
     title := Trim(RemoveStringBreaks(CommonStringFilter(title)));
     authors := Trim(RemoveStringBreaks(Trim(authors)));
     artists := Trim(RemoveStringBreaks(Trim(artists)));
