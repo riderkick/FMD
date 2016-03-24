@@ -2431,7 +2431,7 @@ var
   x: Integer;
   p: String;
 begin
-  Result := URL;
+  Result := Trim(URL);
   if Result = '' then Exit;
   if Pos(':', Result) = 1 then
     Delete(Result, 1, 1);
