@@ -2430,23 +2430,28 @@ end;
 
 function CleanURL(const URL: String): String;
 var
-  host, link: String;
+  x: Integer;
+  p: String;
 begin
   Result := URL;
-  with TRegExpr.Create do
-  try
-    Expression := REGEX_HOST;
-    host := Replace(URL, '$1$2$3', True);
-    link := Replace(URL, '$4', True);
-    if link <> '' then
-    begin
-      while Pos('//', link) <> 0 do
-        link := StringReplace(link, '//', '/', [rfReplaceAll]);
-      Result := host + URL;
-    end;
-  finally
-    Free;
+  if Result = '' then Exit;
+  if Pos(':', Result) = 1 then
+    Delete(Result, 1, 1);
+  if Pos('//', Result) = 1 then
+    Delete(Result, 1, 2);
+  p := '';
+  x := Pos('://', Result);
+  if x > 0 then
+  begin
+    x := x + 2;
+    p := Copy(Result, 1, x);
+    Delete(Result, 1, x);
+    while Pos('/', Result) = 1 do
+      Delete(Result, 1, 1);
   end;
+  while Pos('//', Result) > 0 do
+    Result := StringReplace(Result, '//', '/', [rfReplaceAll]);
+  Result := p + Result;
 end;
 
 function AppendURLDelim(const URL: String): String;
