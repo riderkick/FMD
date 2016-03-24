@@ -19,8 +19,8 @@ const
   dirURLreadhentaimanga = '/hentai-manga-list/all/any/last-added/';
   dirURLmangahen = '/manga_list/all/any/last-added/';
 
-function GetDirectoryPageNumber(const MangaInfo: TMangaInformation;
-  var Page: Integer; const Module: TModuleContainer): Integer;
+function GetDirectoryPageNumber(const MangaInfo: TMangaInformation; var Page: Integer;
+  const Module: TModuleContainer): Integer;
 var
   query: TXQueryEngineHTML;
   s: String;
@@ -48,9 +48,8 @@ begin
   end;
 end;
 
-function GetNameAndLink(const MangaInfo: TMangaInformation;
-  const ANames, ALinks: TStringList; const AURL: String;
-  const Module: TModuleContainer): Integer;
+function GetNameAndLink(const MangaInfo: TMangaInformation; const ANames, ALinks: TStringList;
+  const AURL: String; const Module: TModuleContainer): Integer;
 var
   query: TXQueryEngineHTML;
   v: IXQValue;
@@ -98,8 +97,8 @@ begin
   end;
 end;
 
-function GetInfo(const MangaInfo: TMangaInformation;
-  const AURL: String; const Module: TModuleContainer): Integer;
+function GetInfo(const MangaInfo: TMangaInformation; const AURL: String;
+  const Module: TModuleContainer): Integer;
 var
   query: TXQueryEngineHTML;
   v: IXQValue;
@@ -134,9 +133,11 @@ var
 
   function getwpmangavalue(aname: String): String;
   begin
-    Result := query.XPathString('(//*[@class="mng_ifo"]//p)[contains(.,"' +
+    Result := query.XPathString('(//*[@class="mng_ifo"]//p)[starts-with(.,"' +
       aname + '")]');
-    if Result <> '' then Result := TrimChar(SeparateRight(Result, aname), [':', ' ']);
+    if Result <> '' then Result := Trim(TrimChar(SeparateRight(Result, aname), [':', ' ']));
+    if Result = '-' then
+      Result := '';
   end;
 
   procedure scaninfo;
@@ -192,6 +193,7 @@ begin
       try
         query.ParseHTML(StreamToString(MangaInfo.FHTTP.Document));
         coverLink := query.XPathString('//img[starts-with(@class,"cvr")]/@src');
+        if coverLink <> '' then coverLink := MaybeFillHost(Module.RootURL, coverLink);
         title := query.XPathString('//*[@itemprop="itemreviewed"]');
         if Module.Website = 'MangaIndo' then scaninfomangaindo
         else scaninfo;
@@ -221,8 +223,8 @@ begin
   end;
 end;
 
-function GetPageNumber(const DownloadThread: TDownloadThread;
-  const AURL: String; const Module: TModuleContainer): Boolean;
+function GetPageNumber(const DownloadThread: TDownloadThread; const AURL: String;
+  const Module: TModuleContainer): Boolean;
 var
   query: TXQueryEngineHTML;
 begin
@@ -244,8 +246,8 @@ begin
   end;
 end;
 
-function GetImageURL(const DownloadThread: TDownloadThread;
-  const AURL: String; const Module: TModuleContainer): Boolean;
+function GetImageURL(const DownloadThread: TDownloadThread; const AURL: String;
+  const Module: TModuleContainer): Boolean;
 var
   query: TXQueryEngineHTML;
   s: String;
@@ -253,7 +255,8 @@ begin
   Result := False;
   if DownloadThread = nil then Exit;
   with DownloadThread.FHTTP, DownloadThread.manager.container do begin
-    if GET(AppendURLDelim(FillHost(Module.RootURL, AURL)) + IncStr(DownloadThread.workCounter) + '/') then begin
+    if GET(AppendURLDelim(FillHost(Module.RootURL, AURL)) + IncStr(DownloadThread.workCounter) + '/') then
+    begin
       Result := True;
       query := TXQueryEngineHTML.Create;
       try
