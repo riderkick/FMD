@@ -36,6 +36,7 @@ function GetInfo(const MangaInfo: TMangaInformation; const AURL: String;
   const Module: TModuleContainer): Integer;
 var
   v: IXQValue;
+  s: String;
 begin
   Result := NET_PROBLEM;
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
@@ -59,7 +60,10 @@ begin
           summary := XPathString('//p[@class="summary"]');
           for v in XPath('//ul[@class="chlist"]/li') do
           begin
-            chapterLinks.Add(XPathString('div/*/a[@class="tips"]/@href', v.toNode));
+            s := XPathString('div/*/a[@class="tips"]/@href', v.toNode);
+            if RightStr(s, 6) = '1.html' then
+              SetLength(s, Length(s) - 6);
+            chapterLinks.Add(s);
             chapterName.Add(Trim(XPathString('div/*/a[@class="tips"]', v.toNode) + ' ' +
               XPathString('div/*/span[@class="title nowrap"]', v.toNode)));
           end;
