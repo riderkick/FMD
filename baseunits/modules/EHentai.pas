@@ -6,12 +6,9 @@ interface
 
 uses
   Classes, SysUtils, WebsiteModules, uData, uBaseUnit, uDownloadsManager,
-  accountmanagerdb, XQueryEngineHTML, synautil, LazFileUtils;
+  accountmanagerdb, XQueryEngineHTML, synautil, synacode, RegExpr, LazFileUtils;
 
 implementation
-
-uses
-  RegExpr, synacode;
 
 const
   dirURL = 'f_doujinshi=on&f_manga=on&f_western=on&f_apply=Apply+Filter';
@@ -281,63 +278,76 @@ var
 
   function DoDownloadImage: Boolean;
   var
-    i, rcount: Integer;
-    base_url, startkey, gid, startpage, nl: String;
-    source: TStringList;
+    rcount: Integer;
+    base_url, startkey, gid, startpage, nl, s, nls: String;
   begin
     rcount := 0;
     Result := False;
-    source := TStringList.Create;
-    try
-      while (not Result) and (not DownloadThread.IsTerminated) do begin
-        source.LoadFromStream(DownloadThread.FHTTP.Document);
-        query.ParseHTML(DownloadThread.FHTTP.Document);
-        iurl := '';
-        if OptionEHentaiDownloadOriginalImage and (Account.Status[accname] = asValid) then
-          iurl := query.XPathString('//a/@href[contains(.,"/fullimg.php")]');
-        if iurl = '' then
-          iurl := query.XPathString('//*[@id="img"]/@src');
-        if iurl = '' then
-          iurl := query.XPathString('//a/img/@src[not(contains(.,"ehgt.org/"))]');
-        if iurl <> '' then
-          Result := SaveImage(DownloadThread.FHTTP, iurl, APath, AName);
-        if DownloadThread.IsTerminated then Break;
-        if rcount >= reconnect then Break;
-        if not Result then begin
-          base_url := '';
-          startkey := '';
-          gid := '';
-          startpage := '';
-          nl := '';
-          //get AURL param
-          if source.Count > 0 then
-            for i := 0 to source.Count - 1 do begin
-              if Pos('var base_url=', source[i]) > 0 then
-                base_url := RemoveURLDelim(GetValuesFromString(source[i], '='))
-              else if Pos('var startkey=', source[i]) > 0 then
-                startkey := GetValuesFromString(source[i], '=')
-              else if Pos('var gid=', source[i]) > 0 then
-                gid := GetValuesFromString(source[i], '=')
-              else if Pos('var startpage=', source[i]) > 0 then
-                startpage := GetValuesFromString(source[i], '=')
-              else if Pos('return nl(', source[i]) > 0 then
-                nl := ReplaceRegExpr('(?i)^.*nl\([''"](.*)[''"]\).*$',
-                  source[i], '$1', True);
-            end;
-          if (base_url <> '') and (startkey <> '') and (gid <> '') and
-            (startpage <> '') then
-            iurl := base_url + '/s/' + startkey + '/' + gid + '-' + startpage
-          else iurl := FillHost(Module.RootURL, AURL);
-          if nl <> '' then begin
-            iurl := iurl + '?nl=' + nl;
-            if not GETWithLogin(DownloadThread.FHTTP, iurl, Module.Website) then Break;
-          end else Break;
-          if rcount >= reconnect then Break
-          else Inc(rcount);
+    nls := '';
+    while (not Result) and (not DownloadThread.IsTerminated) do begin
+      s := StreamToString(DownloadThread.FHTTP.Document);
+      query.ParseHTML(DownloadThread.FHTTP.Document);
+      iurl := '';
+      if OptionEHentaiDownloadOriginalImage and (Account.Status[accname] = asValid) then
+        iurl := query.XPathString('//a/@href[contains(.,"/fullimg.php")]');
+      if iurl = '' then
+        iurl := query.XPathString('//*[@id="img"]/@src');
+      if iurl = '' then
+        iurl := query.XPathString('//a/img/@src[not(contains(.,"ehgt.org/"))]');
+      if iurl <> '' then
+        Result := SaveImage(DownloadThread.FHTTP, iurl, APath, AName);
+      if DownloadThread.IsTerminated then Break;
+      if rcount >= reconnect then Break;
+      if not Result then begin
+        base_url := '';
+        startkey := '';
+        gid := '';
+        startpage := '';
+        nl := '';
+        //get AURL param
+        if Pos('var base_url', s) > 0 then
+        begin
+          base_url := GetBetween('var base_url=', ';', s);
+          base_url := TrimChar(base_url, ['''', '"']);
         end;
+        if Pos('var startkey', s) > 0 then
+        begin
+          startkey := GetBetween('var startkey=', ';', s);
+          startkey := TrimChar(startkey, ['''', '"']);
+        end;
+        if Pos('var gid', s) > 0 then
+        begin
+          gid := GetBetween('var gid=', ';', s);
+          gid := TrimChar(gid, ['''', '"']);
+        end;
+        if Pos('var startpage', s) > 0 then
+        begin
+          startpage := GetBetween('var startpage=', ';', s);
+          startpage := TrimChar(startpage, ['''', '"']);
+        end;
+        if Pos('return nl(', s) > 0 then
+        begin
+          nl := GetBetween('return nl(', ')', s);
+          nl := TrimChar(nl, ['''', '"']);
+        end;
+        s := '';
+
+        if (base_url <> '') and (startkey <> '') and (gid <> '') and
+          (startpage <> '') then
+          iurl := RemoveURLDelim(base_url) + '/s/' + startkey + '/' + gid + '-' + startpage
+        else
+          iurl := FillHost(Module.RootURL, AURL);
+        if nl <> '' then
+        begin
+          if nls = '' then
+            nls := '?nl=' + nl
+          else
+            nls := nls + '&nl=' + nl;
+          iurl := iurl + nls;
+        end;
+        if not GETWithLogin(DownloadThread.FHTTP, iurl, Module.Website) then Break;
+        Inc(rcount);
       end;
-    finally
-      source.Free;
     end;
   end;
 
