@@ -814,6 +814,9 @@ function PadZero(const S: String; ATotalWidth: Integer = 3;
 procedure PadZeros(S: TStrings; ATotalWidth: Integer = 3;
   PadAll: Boolean = False; StripZeros: Boolean = False);
 
+// maintain the order of strings by adding serialized number if necessary
+procedure SerializeAndMaintainNames(F: TStrings);
+
 function StringReplaceBrackets(const S, OldPattern, NewPattern: String; Flags: TReplaceFlags): String;
 function StreamToString(const Stream: TStream): String; inline;
 function GetRightValue(const Name, s: String): String;
@@ -2154,6 +2157,80 @@ begin
   for i := 0 to S.Count - 1 do
   begin
     S[i] := PadZero(S[i], ATotalWidth, PadAll, StripZeros);
+  end;
+end;
+
+procedure SerializeAndMaintainNames(F: TStrings);
+var
+  s, so: TStringList;
+  sameorder: Boolean;
+  i, ls: Integer;
+  fs: String;
+
+  function identicalstrings(s1, s2: TStrings): Boolean;
+  var
+    j: Integer;
+  begin
+    Result := False;
+    if s1.Count <> s2.Count then Exit;
+    for j := 0 to s1.Count - 1 do
+      if s1[j] <> s2[j] then
+        Exit;
+    Result := True;
+  end;
+
+  procedure checksorder;
+  begin
+    so.Clear;
+    so.AddStrings(s);
+    so.Sort;
+    sameorder := identicalstrings(s, so);
+  end;
+
+begin
+  if F = nil then Exit;
+  if F.Count = 0 then Exit;
+  s := TStringList.Create;
+  try
+    //try sorting it
+    s.AddStrings(F);
+    s.Sort;
+    sameorder := identicalstrings(s, F);
+
+    //try padzero
+    if not sameorder then
+    begin
+      so := TStringList.Create;
+      try
+        ls := Length(IntToStr(F.Count));
+        if ls < 3 then
+          ls := 3;
+        s.Clear;
+        s.AddStrings(F);
+        PadZeros(s, ls, False, False);
+        checksorder;
+
+        // add serializing number
+        if not sameorder then
+        begin
+          s.Clear;
+          s.AddStrings(F);
+          fs := '%.' + IntToStr(ls) + 'd_%s';
+          for i := 0 to s.Count - 1 do
+            s[i] := Format(fs, [i + 1, s[i]]);
+          checksorder;
+        end;
+      finally
+        so.Free;
+      end;
+    end;
+    if sameorder then
+    begin
+      F.Clear;
+      F.AddStrings(s);
+    end;
+  finally
+    s.Free;
   end;
 end;
 
