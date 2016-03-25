@@ -232,6 +232,7 @@ var
       end;
       while PageLinks.Count < PageContainerLinks.Count do
         PageLinks.Add('G');
+      SerializeAndMaintainNames(Filenames);
     end;
   end;
 
