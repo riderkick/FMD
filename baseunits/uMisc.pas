@@ -28,7 +28,7 @@ type
   end;
 
 //String utils
-procedure padZero(var S: String; VolLength, ChapLength: Integer);
+procedure VolumeChapterPadZero(var S: String; VolLength, ChapLength: Integer);
 function padZeros(const S: String; VolLength, ChapLength: Integer): String; inline;
 function BrackText(const S: String): String; overload; inline;
 function BrackText(const S: Integer): String; overload; inline;
@@ -188,7 +188,7 @@ begin
   end;
 end;
 
-procedure padZero(var S: String; VolLength, ChapLength: Integer);
+procedure VolumeChapterPadZero(var S: String; VolLength, ChapLength: Integer);
 
   procedure searchChap(var i, cstart, clength: Integer; var t: String);
   var
@@ -332,7 +332,7 @@ end;
 function padZeros(const S: String; VolLength, ChapLength: Integer): String;
 begin
   Result := S;
-  padZero(Result, VolLength, ChapLength);
+  VolumeChapterPadZero(Result, VolLength, ChapLength);
 end;
 
 //loading directly from stream accepted as raw (file become bigger)

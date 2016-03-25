@@ -2143,13 +2143,13 @@ begin
     with MainForm.options do begin
       if ReadBool('saveto', 'ConvertDigitVolume', False) then begin
         if ReadBool('saveto', 'ConvertDigitChapter', False) then
-          padZero(chap, ReadInteger('saveto', 'DigitVolumeLength', 2),
+          VolumeChapterPadZero(chap, ReadInteger('saveto', 'DigitVolumeLength', 2),
             ReadInteger('saveto', 'DigitChapterLength', 3))
         else
-          padZero(chap, ReadInteger('saveto', 'DigitVolumeLength', 2), 0);
+          VolumeChapterPadZero(chap, ReadInteger('saveto', 'DigitVolumeLength', 2), 0);
       end
       else if ReadBool('saveto', 'ConvertDigitChapter', False) then
-        padZero(chap, 0, ReadInteger('saveto', 'DigitChapterLength', 3));
+        VolumeChapterPadZero(chap, 0, ReadInteger('saveto', 'DigitChapterLength', 3));
     end;
     Result := StringReplaceBrackets(Result, '%CHAPTER%', chap, [rfReplaceAll]);
 
