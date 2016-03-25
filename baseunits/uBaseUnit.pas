@@ -809,6 +809,11 @@ function Base64Encode(const s: String): String;
 function Base64Decode(const s: String): String;
 
 // StringUtils
+function PadZero(const S: String; ATotalWidth: Integer = 3;
+  PadAll: Boolean = False; StripZero: Boolean = False): String;
+procedure PadZeros(S: TStrings; ATotalWidth: Integer = 3;
+  PadAll: Boolean = False; StripZeros: Boolean = False);
+
 function StringReplaceBrackets(const S, OldPattern, NewPattern: String; Flags: TReplaceFlags): String;
 function StreamToString(const Stream: TStream): String; inline;
 function GetRightValue(const Name, s: String): String;
@@ -822,8 +827,8 @@ procedure InvertStrings(const St: TStringList); overload;
 procedure InvertStrings(const Sts: array of TStringList); overload;
 procedure TrimStrings(TheStrings: TStrings);
 procedure RemoveDuplicateStrings(Strs: array of TStringList; RemIndex: Cardinal = 0);
-procedure CleanHTMLComments(const Str: TStringList);
 
+procedure CleanHTMLComments(const Str: TStringList);
 function FixHTMLTagQuote(const s: String): String;
 function FixCommonBrokenHTML(const s: String): String;
 function URLDecode(const s: String): String;
@@ -2087,6 +2092,69 @@ function Base64Decode(const s: String): String;
 begin
   if s = '' then Exit(s);
   Result := DecodeStringBase64(s);
+end;
+
+function PadZero(const S: String; ATotalWidth: Integer; PadAll: Boolean; StripZero: Boolean): String;
+var
+  isnumber: Boolean;
+  n: String;
+  i: Integer;
+
+  procedure padn(var R: String);
+  begin
+    if isnumber then
+    begin
+      if StripZero then
+        while (Length(n) > 0) and (n[1] = '0') do
+          Delete(n, 1, 1);
+      R := R + StringOfChar('0', ATotalWidth - Length(n)) + n;
+      n := '';
+      isnumber := False;
+    end;
+  end;
+
+begin
+  if S = '' then Exit(S);
+  Result := '';
+  isnumber := False;
+  n := '';
+  for i := 1 to Length(S) do
+  begin
+    if S[i] in ['0'..'9'] then
+    begin
+      n := n + S[i];
+      isnumber := True;
+    end
+    else
+    begin
+      if isnumber then
+      begin
+        padn(Result);
+        if not PadAll then
+        begin
+          Result := Result + S[i];
+          Break;
+        end;
+      end;
+      Result := Result + S[i];
+    end;
+  end;
+  padn(Result);
+  Inc(i);
+  if i < Length(S) then
+    Result := Result + Copy(S, i, Length(S) - i + 1);
+end;
+
+procedure PadZeros(S: TStrings; ATotalWidth: Integer; PadAll: Boolean; StripZeros: Boolean);
+var
+  i: Integer;
+begin
+  if S = nil then Exit;
+  if S.Count = 0 then Exit;
+  for i := 0 to S.Count - 1 do
+  begin
+    S[i] := PadZero(S[i], ATotalWidth, PadAll, StripZeros);
+  end;
 end;
 
 function StringReplaceBrackets(const S, OldPattern, NewPattern: String; Flags: TReplaceFlags): String;
