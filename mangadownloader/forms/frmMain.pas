@@ -1029,8 +1029,12 @@ begin
   mangaInfo := TMangaInfo.Create;
 
   // Load config.ini
-  options := TIniFile.Create(CONFIG_FILE);
-  options.CacheUpdates := False;
+  if FileExistsUTF8(CONFIG_FILE_RUN) then
+    DeleteFileUTF8(CONFIG_FILE_RUN);
+  if FileExistsUTF8(CONFIG_FILE) then
+    CopyFile(CONFIG_FILE, CONFIG_FILE_RUN, [cffOverwriteFile, cffPreserveTime]);
+  options := TIniFile.Create(CONFIG_FILE_RUN);
+  options.CacheUpdates := True;
   options.Options := options.Options-[ifoStripQuotes];
 
   // Load revision.ini
@@ -1249,6 +1253,7 @@ begin
   FreeAndNil(mangalistIni);
   FreeAndNil(updates);
   FreeAndNil(options);
+  DeleteFileUTF8(CONFIG_FILE_RUN);
   FreeAndNil(INIAdvanced);
   if isNormalExit then
     Writelog_I(QuotedStrd(Application.Title)+' exit normally [PID:'+IntToStr(GetProcessID)+'] [HANDLE:'+IntToStr(GetCurrentProcess)+']')
@@ -4378,6 +4383,7 @@ begin
       WriteBool('EHentai','DownloadOriginalImage',cbEHentaiDownloadOriginalImage.Checked);
     finally
       UpdateFile;
+      CopyFile(CONFIG_FILE_RUN, CONFIG_FILE, [cffOverwriteFile, cffPreserveTime]);
     end;
 end;
 

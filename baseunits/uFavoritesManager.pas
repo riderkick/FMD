@@ -11,7 +11,7 @@ unit uFavoritesManager;
 interface
 
 uses
-  Classes, SysUtils, Dialogs, IniFiles, syncobjs, lazutf8classes, LazFileUtils,
+  Classes, SysUtils, Dialogs, IniFiles, syncobjs, lazutf8classes, LazFileUtils, FileUtil,
   uBaseUnit, uData, uDownloadsManager, uFMDThread, uMisc, WebsiteModules,
   SimpleException;
 
@@ -427,7 +427,11 @@ begin
   inherited Create;
   CS_Favorites := TCriticalSection.Create;
   isRunning := False;
-  favoritesFile := TIniFile.Create(FAVORITES_FILE);
+  if FileExistsUTF8(FAVORITES_FILE_RUN) then
+    DeleteFileUTF8(FAVORITES_FILE_RUN);
+  if FileExistsUTF8(FAVORITES_FILE) then
+    CopyFile(FAVORITES_FILE, FAVORITES_FILE_RUN, [cffOverwriteFile, cffPreserveTime]);
+  favoritesFile := TIniFile.Create(FAVORITES_FILE_RUN);
   favoritesFile.CacheUpdates := True;
   FFavorites := TFPList.Create;
   Restore;
@@ -436,8 +440,8 @@ end;
 destructor TFavoriteManager.Destroy;
 begin
   Backup;
-  favoritesFile.UpdateFile;
   favoritesFile.Free;
+  DeleteFileUTF8(FAVORITES_FILE_RUN);
   if FFavorites.Count > 0 then begin
     StopChekForNewChapter;
     while FFavorites.Count > 0 do begin
@@ -938,6 +942,7 @@ begin
           WriteString(IntToStr(i), 'Link', Link);
         end;
     UpdateFile;
+    CopyFile(FAVORITES_FILE_RUN, FAVORITES_FILE, [cffOverwriteFile, cffPreserveTime]);
   end;
 end;
 

@@ -15,7 +15,7 @@ unit uDownloadsManager;
 interface
 
 uses
-  lazutf8classes, LazFileUtils, FastHTMLParser, HTMLUtil, SynaCode,
+  lazutf8classes, LazFileUtils, FileUtil, FastHTMLParser, HTMLUtil, SynaCode,
   RegExpr, Imaging, ImagingTypes, ImagingCanvases, Classes, SysUtils, Dialogs,
   ExtCtrls, IniFiles, typinfo, syncobjs, httpsend, blcksock, uBaseUnit, uPacker,
   uFMDThread, uMisc, DownloadedChaptersDB, SimpleLogger, dateutils;
@@ -1632,7 +1632,12 @@ begin
   CS_DownloadManager_Task := TCriticalSection.Create;
   CS_DownloadedChapterList := TCriticalSection.Create;
 
-  DownloadManagerFile := TIniFile.Create(WORK_FILE);
+  if FileExistsUTF8(WORK_FILE_RUN) then
+    DeleteFileUTF8(WORK_FILE_RUN);
+  if FileExistsUTF8(WORK_FILE) then
+    CopyFile(WORK_FILE, WORK_FILE_RUN, [cffOverwriteFile, cffPreserveTime]);
+
+  DownloadManagerFile := TIniFile.Create(WORK_FILE_RUN);
   DownloadManagerFile.CacheUpdates := True;
 
   DownloadedChapters := TDownloadedChaptersDB.Create;
@@ -1664,6 +1669,7 @@ begin
   end;
   FreeAndNil(Containers);
   FreeAndNil(DownloadManagerFile);
+  DeleteFileUTF8(WORK_FILE_RUN);
   DownloadedChapters.Free;
   CS_DownloadedChapterList.Free;
   CS_DownloadManager_Task.Free;
@@ -1763,21 +1769,21 @@ begin
 
   isRunningBackup := True;
   CS_DownloadManager_Task.Acquire;
+  with DownloadManagerFile do
   try
-    DownloadManagerFile.CacheUpdates := True;
     // Erase all sections
-    for i := 0 to DownloadManagerFile.ReadInteger('general', 'NumberOfTasks', 0) do
-      DownloadManagerFile.EraseSection('task' + IntToStr(i));
-    DownloadManagerFile.EraseSection('general');
+    for i := 0 to ReadInteger('general', 'NumberOfTasks', 0) do
+      EraseSection('task' + IntToStr(i));
+    EraseSection('general');
 
     // backup
     if Containers.Count > 0 then
     begin
-      DownloadManagerFile.WriteInteger('general', 'NumberOfTasks', Containers.Count);
+      WriteInteger('general', 'NumberOfTasks', Containers.Count);
       for i := 0 to Containers.Count - 1 do
       begin
         tid := 'task' + IntToStr(i);
-        with DownloadManagerFile, TTaskContainer(Containers[i]) do begin
+        with TTaskContainer(Containers[i]) do begin
           WriteString(tid, 'Website', DownloadInfo.Website);
           WriteString(tid, 'Link', DownloadInfo.Link);
           WriteString(tid, 'Title', DownloadInfo.Title);
@@ -1804,7 +1810,8 @@ begin
         end;
       end;
     end;
-    DownloadManagerFile.UpdateFile;
+    UpdateFile;
+    CopyFile(WORK_FILE_RUN, WORK_FILE, [cffOverwriteFile, cffPreserveTime]);
   finally
     CS_DownloadManager_Task.Release;
   end;

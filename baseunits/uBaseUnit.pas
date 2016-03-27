@@ -525,11 +525,14 @@ var
   FMD_DIRECTORY,
   WORK_FOLDER,
   WORK_FILE,
+  WORK_FILE_RUN,
   DOWNLOADEDCHAPTERS_FILE,
   DOWNLOADEDCHAPTERSDB_FILE,
   FAVORITES_FILE,
+  FAVORITES_FILE_RUN,
   CONFIG_FOLDER,
   CONFIG_FILE,
+  CONFIG_FILE_RUN,
   CONFIG_ADVANCED,
   REVISION_FILE,
   UPDATE_FILE,
@@ -1050,12 +1053,15 @@ begin
 
   WORK_FOLDER               := FMD_DIRECTORY + 'works' + PathDelim;
   WORK_FILE                 := WORK_FOLDER + 'works.ini';
+  WORK_FILE_RUN             := WORK_FILE + '.run';
   DOWNLOADEDCHAPTERS_FILE   := WORK_FOLDER + 'downloadedchapters.ini';
   DOWNLOADEDCHAPTERSDB_FILE := WORK_FOLDER + 'downloadedchapters.db';
   FAVORITES_FILE            := WORK_FOLDER + 'favorites.ini';
+  FAVORITES_FILE_RUN        := FAVORITES_FILE + '.run';
 
   CONFIG_FOLDER             := FMD_DIRECTORY + 'config' + PathDelim;
   CONFIG_FILE               := CONFIG_FOLDER + 'config.ini';
+  CONFIG_FILE_RUN           := CONFIG_FILE + '.run';
   CONFIG_ADVANCED           := CONFIG_FOLDER + 'advanced.ini';
   REVISION_FILE             := CONFIG_FOLDER + 'revision.ini';
   UPDATE_FILE               := CONFIG_FOLDER + 'updates.ini';
