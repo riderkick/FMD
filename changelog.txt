@@ -4,6 +4,11 @@ Project page: https://github.com/riderkick/FMD
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.46.0 (27-03-2016)
+[*] Downloaded Chapters now using SQLite3 database
+[*] Config, Downloads and Favorites using temporary file at runtime (#218)
+Full changes: https://github.com/riderkick/FMD/compare/0.9.45.0...0.9.46.0
+
 0.9.45.0 (25-03-2016)
 [*] E-Hentai/ExHentai: fixed file naming problem (#217)
 [*] E-Hentai/ExHentai: fixed get another image url when failed (#213)
