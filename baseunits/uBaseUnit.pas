@@ -197,25 +197,6 @@ const
     ('&gamma;', 'γ')
     );
 
-  README_FILE               = 'readme.rtf';
-  WORK_FOLDER               = 'works' + PathDelim;
-  WORK_FILE                 = WORK_FOLDER + 'works.ini';
-  DOWNLOADEDCHAPTERS_FILE   = WORK_FOLDER + 'downloadedchapters.ini';
-  DOWNLOADEDCHAPTERSDB_FILE = WORK_FOLDER + 'downloadedchapters.db';
-  FAVORITES_FILE            = WORK_FOLDER + 'favorites.ini';
-  IMAGE_FOLDER              = 'images' + PathDelim;
-  DATA_EXT                  = '.dat';
-  DBDATA_EXT                = '.db';
-  CONFIG_FOLDER             = 'config' + PathDelim;
-  CONFIG_FILE               = CONFIG_FOLDER + 'config.ini';
-  CONFIG_ADVANCED           = CONFIG_FOLDER + 'advanced.ini';
-  REVISION_FILE             = CONFIG_FOLDER + 'revision.ini';
-  UPDATE_FILE               = CONFIG_FOLDER + 'updates.ini';
-  MANGALIST_FILE            = CONFIG_FOLDER + 'mangalist.ini';
-  ACCOUNTS_FILE             = CONFIG_FOLDER + 'accounts.db';
-  LANGUAGE_FILE             = 'languages.ini';
-  CHANGELOG_FILE            = 'changelog.txt';
-
   UPDATE_URL = 'https://raw.githubusercontent.com/riderkick/FMD/master/';
 
   OPTION_MANGALIST = 0;
@@ -534,10 +515,31 @@ const
     '/series'
     );
 
-var
-  FMD_VERSION_NUMBER: String = '';
+  DATA_EXT    = '.dat';
+  DBDATA_EXT  = '.db';
+  UPDATER_EXE = 'updater.exe';
+  ZIP_EXE    = '7za.exe';
 
-  DATA_FOLDER: String = 'data' + PathDelim;
+var
+  FMD_VERSION_NUMBER,
+  FMD_DIRECTORY,
+  WORK_FOLDER,
+  WORK_FILE,
+  DOWNLOADEDCHAPTERS_FILE,
+  DOWNLOADEDCHAPTERSDB_FILE,
+  FAVORITES_FILE,
+  CONFIG_FOLDER,
+  CONFIG_FILE,
+  CONFIG_ADVANCED,
+  REVISION_FILE,
+  UPDATE_FILE,
+  MANGALIST_FILE,
+  ACCOUNTS_FILE,
+  DATA_FOLDER,
+  IMAGE_FOLDER,
+  LANGUAGE_FILE,
+  CHANGELOG_FILE,
+  README_FILE: String;
 
   {$IFDEF WINDOWS}
   DEFAULT_PATH: String = '\downloads';
@@ -572,8 +574,6 @@ var
   OptionProxyPort: String = '';
   OptionProxyUser: String = '';
   OptionProxyPass: String = '';
-
-  fmdDirectory: String;
 
   OptionLetFMDDo: TFMDDo = DO_NOTHING;
 
@@ -748,6 +748,8 @@ type
     property Data: TStringList read fdata;
   end;
 
+// Set base directory
+procedure SetFMDdirectory(const ADir: String);
 // Get current binary version
 function GetCurrentBinVersion: String;
 // Remove Unicode
@@ -1042,6 +1044,32 @@ end;
 
 {$ENDIF}
 
+procedure SetFMDdirectory(const ADir: String);
+begin
+  FMD_DIRECTORY             := CleanAndExpandDirectory(ADir);
+
+  WORK_FOLDER               := FMD_DIRECTORY + 'works' + PathDelim;
+  WORK_FILE                 := WORK_FOLDER + 'works.ini';
+  DOWNLOADEDCHAPTERS_FILE   := WORK_FOLDER + 'downloadedchapters.ini';
+  DOWNLOADEDCHAPTERSDB_FILE := WORK_FOLDER + 'downloadedchapters.db';
+  FAVORITES_FILE            := WORK_FOLDER + 'favorites.ini';
+
+  CONFIG_FOLDER             := FMD_DIRECTORY + 'config' + PathDelim;
+  CONFIG_FILE               := CONFIG_FOLDER + 'config.ini';
+  CONFIG_ADVANCED           := CONFIG_FOLDER + 'advanced.ini';
+  REVISION_FILE             := CONFIG_FOLDER + 'revision.ini';
+  UPDATE_FILE               := CONFIG_FOLDER + 'updates.ini';
+  MANGALIST_FILE            := CONFIG_FOLDER + 'mangalist.ini';
+  ACCOUNTS_FILE             := CONFIG_FOLDER + 'accounts.db';
+
+  DATA_FOLDER               := FMD_DIRECTORY + 'data' + PathDelim;
+
+  IMAGE_FOLDER              := FMD_DIRECTORY + 'images' + PathDelim;
+  LANGUAGE_FILE             := FMD_DIRECTORY + 'languages.ini';
+  CHANGELOG_FILE            := FMD_DIRECTORY + 'changelog.txt';
+  README_FILE               := FMD_DIRECTORY + 'readme.rtf';
+end;
+
 function GetCurrentBinVersion: String;
 var
   AppVerInfo: TStringList;
@@ -1142,7 +1170,7 @@ begin
   if wS[2] <> ':' then
   begin
     {$IFDEF WINDOWS}
-    lcS2 := CorrectFilePath(fmdDirectory);
+    lcS2 := CorrectFilePath(FMD_DIRECTORY);
     {$ELSE}
     lcS2 := '';
     {$ENDIF}
@@ -3988,6 +4016,7 @@ begin
 end;
 
 initialization
+  SetFMDdirectory(GetCurrentDirUTF8);
   FMD_VERSION_NUMBER := GetCurrentBinVersion;
   {$IFDEF WINDOWS}
   DEFAULT_PATH := GetCurrentDir + DirectorySeparator + 'downloads';

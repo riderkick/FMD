@@ -315,10 +315,10 @@ procedure TUpdateListManagerThread.ExtractFile;
 var
   Sza, datapath, filepath: String;
 begin
-  Sza := fmdDirectory + '7za.exe';
+  Sza := FMD_DIRECTORY + ZIP_EXE;
   if not FileExistsUTF8(Sza) then Exit;
 
-  datapath := fmdDirectory + DATA_FOLDER;
+  datapath := DATA_FOLDER;
   filepath := datapath + website;
   if FileExistsUTF8(filepath + '.7z') then
      filepath += '.7z'
@@ -574,7 +574,7 @@ begin
         Inc(websitePtr);
         FStatus := RS_GettingListFor + ' ' + website + ' ...';
         Synchronize(MainThreadShowGetting);
-        RunExternalProcess(fmdDirectory + 'updater.exe', ['-r' , '3', '-d',
+        RunExternalProcess(FMD_DIRECTORY + UPDATER_EXE, ['-r' , '3', '-d',
           GetMangaDatabaseURL(website), '--lang', SimpleTranslator.LastSelected]);
         Synchronize(RefreshList);
       end;

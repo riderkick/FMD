@@ -21,8 +21,7 @@ var
 {$R *.res}
 
 begin
-  fmdDirectory := CleanAndExpandDirectory(GetCurrentDirUTF8);
-  with TIniFile.Create(fmdDirectory + CONFIG_FILE) do
+  with TIniFile.Create(CONFIG_FILE) do
     try
       CheckInstance := ReadBool('general', 'OneInstanceOnly', True);
     finally

@@ -246,7 +246,7 @@ var
   l: TStringList;
   Filename: String;
 begin
-  Filename := fmdDirectory + DATA_FOLDER + website;
+  Filename := DATA_FOLDER + website;
 
   Data.Clear;
   searchPos.Clear;

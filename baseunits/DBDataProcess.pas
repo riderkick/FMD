@@ -189,7 +189,7 @@ end;
 
 function DBDataFilePath(const AWebsite: String): String;
 begin
-  Result := fmdDirectory + DATA_FOLDER + AWebsite + DBDATA_EXT;
+  Result := DATA_FOLDER + AWebsite + DBDATA_EXT;
 end;
 
 procedure ConvertDataProccessToDB(AWebsite: String; DeleteOriginal: Boolean);
@@ -200,7 +200,7 @@ var
   rcount: Integer;
   i: Integer;
 begin
-  filepath := fmdDirectory + DATA_FOLDER + AWebsite;
+  filepath := DATA_FOLDER + AWebsite;
   if FileExistsUTF8(filepath + DATA_EXT) then
   begin
     rawdata := TDataProcess.Create;
@@ -243,8 +243,8 @@ function DataFileExist(const AWebsite: String): Boolean;
 begin
   if AWebsite = '' then
     Exit(False);
-  Result := FileExistsUTF8(fmdDirectory + DATA_FOLDER + AWebsite + DATA_EXT) or
-    FileExistsUTF8(fmdDirectory + DATA_FOLDER + AWebsite + DBDATA_EXT);
+  Result := FileExistsUTF8(DATA_FOLDER + AWebsite + DATA_EXT) or
+    FileExistsUTF8(DATA_FOLDER + AWebsite + DBDATA_EXT);
 end;
 
 procedure CopyDBDataProcess(const AWebsite, NWebsite: String);
@@ -254,8 +254,8 @@ begin
   if DataFileExist(AWebsite) then
   begin
     try
-      CopyFile(fmdDirectory + DATA_FOLDER + AWebsite + DBDATA_EXT,
-        fmdDirectory + DATA_FOLDER + NWebsite + DBDATA_EXT,
+      CopyFile(DATA_FOLDER + AWebsite + DBDATA_EXT,
+        DATA_FOLDER + NWebsite + DBDATA_EXT,
         [cffPreserveTime, cffOverwriteFile], True);
     except
       on E: Exception do
@@ -268,28 +268,28 @@ function DeleteDBDataProcess(const AWebsite: String): Boolean;
 var
   tryc: Integer;
 begin
-  Result := not FileExistsUTF8(fmdDirectory + DATA_FOLDER + AWebsite + DBDATA_EXT);
+  Result := not FileExistsUTF8(DATA_FOLDER + AWebsite + DBDATA_EXT);
   if Result = False then
   begin
     tryc := 0;
-    while not DeleteFileUTF8(fmdDirectory + DATA_FOLDER + AWebsite + DBDATA_EXT) do
+    while not DeleteFileUTF8(DATA_FOLDER + AWebsite + DBDATA_EXT) do
     begin
       if tryc > 3 then
         Break;
       Inc(tryc);
       Sleep(250);
     end;
-    Result := not FileExistsUTF8(fmdDirectory + DATA_FOLDER + AWebsite + DBDATA_EXT);
+    Result := not FileExistsUTF8(DATA_FOLDER + AWebsite + DBDATA_EXT);
   end;
 end;
 
 procedure OverwriteDBDataProcess(const AWebsite, NWebsite: String);
 begin
-  if FileExistsUTF8(fmdDirectory + DATA_FOLDER + NWebsite + DBDATA_EXT) then
+  if FileExistsUTF8(DATA_FOLDER + NWebsite + DBDATA_EXT) then
   begin
     if DeleteDBDataProcess(AWebsite) then
-      RenameFileUTF8(fmdDirectory + DATA_FOLDER + NWebsite + DBDATA_EXT,
-        fmdDirectory + DATA_FOLDER + AWebsite + DBDATA_EXT);
+      RenameFileUTF8(DATA_FOLDER + NWebsite + DBDATA_EXT,
+        DATA_FOLDER + AWebsite + DBDATA_EXT);
   end;
 end;
 
@@ -618,7 +618,7 @@ begin
     FWebsite := AWebsite;
   if FWebsite = '' then
     Exit;
-  filepath := fmdDirectory + DATA_FOLDER + FWebsite + DBDATA_EXT;
+  filepath := DATA_FOLDER + FWebsite + DBDATA_EXT;
   if not FileExistsUTF8(filepath) then
     Exit;
   Result := InternalOpen(filepath);
@@ -634,7 +634,7 @@ begin
     FWebsite := AWebsite;
   if FWebsite = '' then
     Exit;
-  filepath := fmdDirectory + DATA_FOLDER + FWebsite + DBDATA_EXT;
+  filepath := DATA_FOLDER + FWebsite + DBDATA_EXT;
   if not FileExistsUTF8(filepath) then
     ConvertDataProccessToDB(AWebsite, True);
   if not FileExistsUTF8(filepath) then
@@ -741,7 +741,7 @@ begin
   begin
     with TSQLite3Backup.Create do
       try
-        Backup(FConn, fmdDirectory + DATA_FOLDER + AWebsite + DBDATA_EXT);
+        Backup(FConn, DATA_FOLDER + AWebsite + DBDATA_EXT);
       finally
         Free;
       end;
@@ -1064,7 +1064,7 @@ begin
   if AWebsite <> '' then FWebsite := AWebsite;
   if FWebsite = '' then Exit;
   Close;
-  filepath := fmdDirectory + DATA_FOLDER + FWebsite + DBDATA_EXT;
+  filepath := DATA_FOLDER + FWebsite + DBDATA_EXT;
   if FileExistsUTF8(filepath) then
     DeleteFileUTF8(filepath);
   InternalOpen(filepath);

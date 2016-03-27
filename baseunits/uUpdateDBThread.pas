@@ -67,10 +67,10 @@ procedure TUpdateDBThread.ExtractFile;
 var
   Sza, datapath, filepath: String;
 begin
-  Sza := fmdDirectory + '7za.exe';
+  Sza := FMD_DIRECTORY + ZIP_EXE;
   if not FileExistsUTF8(Sza) then Exit;
 
-  datapath := fmdDirectory + DATA_FOLDER;
+  datapath := DATA_FOLDER;
   filepath := datapath + websiteName;
   if FileExistsUTF8(filepath + '.7z') then
      filepath += '.7z'
@@ -133,10 +133,10 @@ procedure TUpdateDBThread.Execute;
 begin
   try
     Synchronize(MainThreadShowGetting);
-    RunExternalProcess(fmdDirectory + 'updater.exe', ['-r' , '3', '-d',
+    RunExternalProcess(FMD_DIRECTORY + UPDATER_EXE, ['-r' , '3', '-d',
       GetMangaDatabaseURL(websiteName), '--lang', SimpleTranslator.LastSelected]);
-    if FileExistsUTF8(fmdDirectory + DATA_FOLDER + websiteName + '.7z') or
-      FileExistsUTF8(fmdDirectory + DATA_FOLDER + websiteName + '.zip') then
+    if FileExistsUTF8(DATA_FOLDER + websiteName + '.7z') or
+      FileExistsUTF8(DATA_FOLDER + websiteName + '.zip') then
       Synchronize(MainThreadRefreshList)
     else
       Synchronize(MainThreadShowEndGetting);

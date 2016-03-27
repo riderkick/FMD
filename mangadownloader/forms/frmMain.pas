@@ -996,18 +996,18 @@ begin
   LoadAbout;
 
   // remove old updater
-  if FileExistsUTF8(fmdDirectory + 'old_updater.exe') then
-    DeleteFileUTF8(fmdDirectory + 'old_updater.exe');
+  if FileExistsUTF8(FMD_DIRECTORY + 'old_updater.exe') then
+    DeleteFileUTF8(FMD_DIRECTORY + 'old_updater.exe');
 
   // TrayIcon
   TrayIcon.Icon.Assign(Application.Icon);
   PrevWindowState := wsNormal;
 
   // account
-  accountmanagerdb.InitAccountManager(fmdDirectory + ACCOUNTS_FILE);
+  accountmanagerdb.InitAccountManager(ACCOUNTS_FILE);
 
   // advanced settings
-  INIAdvanced := TIniFileR.Create(fmdDirectory + CONFIG_ADVANCED);
+  INIAdvanced := TIniFileR.Create(CONFIG_ADVANCED);
 
   // main dataprocess
   dataProcess := TDBDataProcess.Create;
@@ -1029,19 +1029,19 @@ begin
   mangaInfo := TMangaInfo.Create;
 
   // Load config.ini
-  options := TIniFile.Create(fmdDirectory + CONFIG_FILE);
+  options := TIniFile.Create(CONFIG_FILE);
   options.CacheUpdates := False;
   options.Options := options.Options-[ifoStripQuotes];
 
   // Load revision.ini
-  revisionIni := TIniFile.Create(fmdDirectory + REVISION_FILE);
+  revisionIni := TIniFile.Create(REVISION_FILE);
 
   // Load updates.ini
-  updates := TIniFile.Create(fmdDirectory + UPDATE_FILE);
+  updates := TIniFile.Create(UPDATE_FILE);
   updates.CacheUpdates := False;
 
   // Load mangalist.ini
-  mangalistIni := TIniFile.Create(fmdDirectory + MANGALIST_FILE);
+  mangalistIni := TIniFile.Create(MANGALIST_FILE);
   mangalistIni.CacheUpdates := True;
 
   // generate tvDownloadFilter nodes
@@ -1363,12 +1363,12 @@ begin
     else
     if DoAfterFMD = DO_UPDATE then
     begin
-      if FileExistsUTF8(fmdDirectory + 'updater.exe') then
-        CopyFile(fmdDirectory + 'updater.exe', fmdDirectory + 'old_updater.exe');
-      if FileExistsUTF8(fmdDirectory + 'old_updater.exe') then
+      if FileExistsUTF8(FMD_DIRECTORY + UPDATER_EXE) then
+        CopyFile(FMD_DIRECTORY + UPDATER_EXE, FMD_DIRECTORY + 'old_' + UPDATER_EXE);
+      if FileExistsUTF8(FMD_DIRECTORY + 'old_' + UPDATER_EXE) then
       begin
         Self.CloseNow;
-        RunExternalProcess(fmdDirectory + 'old_updater.exe',
+        RunExternalProcess(FMD_DIRECTORY + 'old_' + UPDATER_EXE,
           ['-x', '-r', '3', '-a', FUpdateURL, '-l', Application.ExeName,
            '--lang', SimpleTranslator.LastSelected], True, False);
         Self.Close;
@@ -1726,28 +1726,26 @@ end;
 procedure TMainForm.LoadAbout;
 var
   i: Integer;
-  s: string;
   fs: TFileStreamUTF8;
   st: TStringList;
   regx: TRegExpr;
 begin
   // load readme.rtf
-  s := fmdDirectory + README_FILE;
-  if FileExistsUTF8(s) then begin
+  if FileExistsUTF8(README_FILE) then begin
     regx := TRegExpr.Create;
     st := TStringList.Create;
     try
       regx.ModifierI := True;
       regx.Expression := '(version.*)((\d+\.){3}\d+)';
-      st.LoadFromFile(s);
+      st.LoadFromFile(README_FILE);
       if st.Count > 0 then
         for i := 0 to st.Count - 1 do
           if regx.Exec(st[i]) then
           begin
             if regx.Match[2] <> FMD_VERSION_NUMBER then begin
               st[i] := regx.Replace(st[i], '$1\' + FMD_VERSION_NUMBER, True);
-              if DeleteFileUTF8(s) then
-                st.SaveToFile(s);
+              if DeleteFileUTF8(README_FILE) then
+                st.SaveToFile(README_FILE);
             end;
             Break;
           end;
@@ -1755,7 +1753,7 @@ begin
       st.Free;
       regx.Free;
     end;
-    fs := TFileStreamUTF8.Create(s, fmOpenRead or fmShareDenyNone);
+    fs := TFileStreamUTF8.Create(README_FILE, fmOpenRead or fmShareDenyNone);
     try
       rmAbout.LoadRichText(fs);
     finally
@@ -1763,8 +1761,7 @@ begin
     end;
   end;
   // load changelog.txt
-  s := CleanAndExpandDirectory(fmdDirectory) + CHANGELOG_FILE;
-  if FileExistsUTF8(s) then  mmChangelog.Lines.LoadFromFile(s);
+  if FileExistsUTF8(CHANGELOG_FILE) then  mmChangelog.Lines.LoadFromFile(CHANGELOG_FILE);
 end;
 
 procedure TMainForm.tvDownloadFilterRepaint;
