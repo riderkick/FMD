@@ -357,6 +357,7 @@ type
     procedure btUpdateListClick(Sender: TObject);
     procedure btVisitMyBlogClick(Sender: TObject);
     procedure btWebsitesSearchClearClick(Sender: TObject);
+    procedure cbAddAsStoppedChange(Sender: TObject);
     procedure cbOptionAutoCheckFavIntervalChange(Sender: TObject);
     procedure cbOptionDigitChapterChange(Sender: TObject);
     procedure cbOptionDigitVolumeChange(Sender: TObject);
@@ -2096,6 +2097,11 @@ end;
 procedure TMainForm.btWebsitesSearchClearClick(Sender: TObject);
 begin
   edWebsitesSearch.Clear;
+end;
+
+procedure TMainForm.cbAddAsStoppedChange(Sender: TObject);
+begin
+  options.WriteBool('general', 'AddAsStopped', cbAddAsStopped.Checked);
 end;
 
 procedure TMainForm.cbOptionAutoCheckFavIntervalChange(Sender: TObject);

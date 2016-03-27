@@ -521,6 +521,7 @@ object MainForm: TMainForm
             Width = 334
             Anchors = [akTop, akLeft, akRight]
             Caption = 'Add to download list as stopped task'
+            OnChange = cbAddAsStoppedChange
             ParentFont = False
             TabOrder = 3
           end
