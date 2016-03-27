@@ -25,12 +25,28 @@ unit SimpleLogger;
 interface
 
 uses
-  Classes, SysUtils, DbgInfoReader, LazFileUtils, LazUTF8;
+  Classes, SysUtils, DbgInfoReader, LazFileUtils, LazUTF8
+  {$ifdef traplazlogger or sendtolazlogger}
+  , LazLogger
+  {$endif};
 
 type
   TLogType = (ERROR, WARNING, INFO, DEBUG, VERBOSE);
 
+  {$ifdef traplazlogger}
+  { TLazloggerHelper }
+
+  TLazloggerHelper = class
+  public
+    procedure DbgLn(Sender: TObject; S: String; var Handled: Boolean);
+  end;
+
+  {$endif}
+
 var
+  {$ifdef traplazlogger}
+  lazloggerhelper: TLazloggerHelper;
+  {$endif}
   _CS_LOG: TRTLCriticalSection;
   _LOG_ACTIVE: Boolean = False;
   _LOG_LEVEL: Integer = 2;
@@ -40,26 +56,26 @@ var
 const
   _LOG_SYMBOL = 'EWIDV';
 
-  function ArrayToString(Args: array of const): String;
-  procedure SetLogFile(const LogFileName: String);
-  procedure WriteLog_E(const msg: String); overload; inline;
-  procedure WriteLog_E(msg: array of const); overload; inline;
-  procedure WriteLog_E(const msg: String; Exc: Exception; Sender: TObject = nil); overload;
-  procedure WriteLog_E(msg: array of const; Exc: Exception; Sender: TObject = nil); overload; inline;
-  procedure Writelog_W(const msg: String); inline;
-  procedure WriteLog_W(msg: array of const); overload; inline;
-  procedure Writelog_I(const msg: String); inline;
-  procedure WriteLog_I(msg: array of const); overload; inline;
-  procedure Writelog_D(const msg: String); inline;
-  procedure WriteLog_D(msg: array of const); overload; inline;
-  procedure Writelog_V(const msg: String); inline;
-  procedure WriteLog_V(msg: array of const); overload; inline;
-  function SimpleBackTraceStr(const Addr: Pointer): String;
-  function GetStackTraceInfo(const MaxStackCount: Integer = 20): string;
+function ArrayToString(Args: array of const): String;
+procedure SetLogFile(const LogFileName: String);
+procedure WriteLog_E(const msg: String); overload; inline;
+procedure WriteLog_E(msg: array of const); overload; inline;
+procedure WriteLog_E(const msg: String; Exc: Exception; Sender: TObject = nil); overload;
+procedure WriteLog_E(msg: array of const; Exc: Exception; Sender: TObject = nil); overload; inline;
+procedure Writelog_W(const msg: String); inline;
+procedure WriteLog_W(msg: array of const); overload; inline;
+procedure Writelog_I(const msg: String); inline;
+procedure WriteLog_I(msg: array of const); overload; inline;
+procedure Writelog_D(const msg: String); inline;
+procedure WriteLog_D(msg: array of const); overload; inline;
+procedure Writelog_V(const msg: String); inline;
+procedure WriteLog_V(msg: array of const); overload; inline;
+function SimpleBackTraceStr(const Addr: Pointer): String;
+function GetStackTraceInfo(const MaxStackCount: Integer = 20): String;
 
 implementation
 
-procedure ForceLogFile(const logfilename: string);
+procedure ForceLogFile(const logfilename: String);
 var
   f: String;
 begin
@@ -75,36 +91,6 @@ begin
   _FLOGFILE := f;
 end;
 
-procedure WriteLog(const msg: String; LogType: TLogType = DEBUG);
-var
-  s: String;
-  f: TextFile;
-begin
-  if not _LOG_ACTIVE then Exit;
-  if _FLOGFILE = '' then Exit;
-  if Integer(logType) > _LOG_LEVEL then Exit;
-  EnterCriticalsection(_CS_LOG);
-  try
-    s := FormatDateTime('dd/mm/yyyy|hh:nn:ss.zzz ', Now);
-    s := s + '[' + _LOG_SYMBOL[Integer(logType)+1] + ']';
-    AssignFile(f, _FLOGFILE);
-    try
-      if FileExistsUTF8(_FLOGFILE) then
-        Append(f)
-      else
-      begin
-        ForceLogFile(_FLOGFILE);
-        Rewrite(f);
-      end;
-      WriteLn(f, s + ' ' + msg);
-    finally
-      CloseFile(f);
-    end;
-  finally
-    LeaveCriticalsection(_CS_LOG);
-  end;
-end;
-
 procedure SetLogFile(const LogFileName: String);
 begin
   if Trim(LogFileName) <> '' then
@@ -118,27 +104,60 @@ begin
   end;
 end;
 
+function FormatLogMessage(const msg: String; LogType: TLogType = DEBUG): String;
+begin
+  Result := FormatDateTime('dd/mm/yyyy|hh:nn:ss.zzz ', Now) +
+    '[' + _LOG_SYMBOL[Integer(logType) + 1] + '] ' + msg;
+end;
+
+procedure WriteLog(const msg: String; LogType: TLogType = DEBUG);
+var
+  f: TextFile;
+begin
+  if not _LOG_ACTIVE then Exit;
+  if _FLOGFILE = '' then Exit;
+  if Integer(logType) > _LOG_LEVEL then Exit;
+  EnterCriticalsection(_CS_LOG);
+  try
+    AssignFile(f, _FLOGFILE);
+    try
+      if FileExistsUTF8(_FLOGFILE) then
+        Append(f)
+      else
+      begin
+        ForceLogFile(_FLOGFILE);
+        Rewrite(f);
+      end;
+      WriteLn(f, FormatLogMessage(msg, LogType));
+    finally
+      CloseFile(f);
+    end;
+  finally
+    LeaveCriticalsection(_CS_LOG);
+  end;
+end;
+
 function VarRecToString(AVarRec: TVarRec): String;
 begin
   case AVarRec.VType of
-    vtInteger       : Result := IntToStr(AVarRec.VInteger);
-    vtBoolean       : Result := BoolToStr(AVarRec.VBoolean, True);
-    vtChar          : Result := AVarRec.VChar;
-    vtWideChar      : Result := WideString(AVarRec.VWideChar);
-    vtExtended      : Result := FloatToStr(AVarRec.VExtended^);
-    vtString        : Result := AVarRec.VString^;
-    vtPointer       : Result := hexStr(AVarRec.VPointer);
-    vtPChar         : Result := AVarRec.VPChar;
-    vtObject        : Result := AVarRec.VObject.ClassName;
-    vtClass         : Result := AVarRec.VClass.ClassName;
-    vtPWideChar     : Result := AVarRec.VPWideChar;
-    vtAnsiString    : Result := AnsiString(AVarRec.VAnsiString);
-    vtCurrency      : Result := CurrToStr(AVarRec.VCurrency^);
-    vtVariant       : Result := String(AVarRec.VVariant);
-    vtWideString    : Result := WideString(AVarRec.VWideString);
-    vtInt64         : Result := IntToStr(AVarRec.VInt64^);
-    vtUnicodeString : Result := UnicodeString(AVarRec.VUnicodeString);
-    vtQWord         : Result := IntToStr(AVarRec.VQWord^);
+    vtInteger: Result := IntToStr(AVarRec.VInteger);
+    vtBoolean: Result := BoolToStr(AVarRec.VBoolean, True);
+    vtChar: Result := AVarRec.VChar;
+    vtWideChar: Result := WideString(AVarRec.VWideChar);
+    vtExtended: Result := FloatToStr(AVarRec.VExtended^);
+    vtString: Result := AVarRec.VString^;
+    vtPointer: Result := hexStr(AVarRec.VPointer);
+    vtPChar: Result := AVarRec.VPChar;
+    vtObject: Result := AVarRec.VObject.ClassName;
+    vtClass: Result := AVarRec.VClass.ClassName;
+    vtPWideChar: Result := AVarRec.VPWideChar;
+    vtAnsiString: Result := Ansistring(AVarRec.VAnsiString);
+    vtCurrency: Result := CurrToStr(AVarRec.VCurrency^);
+    vtVariant: Result := String(AVarRec.VVariant);
+    vtWideString: Result := WideString(AVarRec.VWideString);
+    vtInt64: Result := IntToStr(AVarRec.VInt64^);
+    vtUnicodeString: Result := UnicodeString(AVarRec.VUnicodeString);
+    vtQWord: Result := IntToStr(AVarRec.VQWord^);
     else
       Result := '';
   end;
@@ -161,22 +180,22 @@ end;
 
 procedure WriteLog_E(msg: array of const);
 begin
-  WriteLog(ArrayToString(msg), ERROR);
+  WriteLog_E(ArrayToString(msg));
 end;
 
 procedure WriteLog_E(const msg: String; Exc: Exception; Sender: TObject);
 var
-  s: string;
+  s: String;
 begin
   s := '';
   if Assigned(Sender) then
     s += LineEnding +
-         'Sender Class      : ' + Sender.ClassName;
+      'Sender Class      : ' + Sender.ClassName;
   if Assigned(Exc) then
   begin
     s += LineEnding +
-         'Exception Class   : ' + Exc.ClassName + LineEnding +
-         'Exception Message : ' + Exc.Message;
+      'Exception Class   : ' + Exc.ClassName + LineEnding +
+      'Exception Message : ' + Exc.Message;
   end;
   s += LineEnding + GetStackTraceInfo;
   WriteLog_E(msg + s);
@@ -194,7 +213,7 @@ end;
 
 procedure WriteLog_W(msg: array of const);
 begin
-  WriteLog(ArrayToString(msg), WARNING);
+  WriteLog_W(ArrayToString(msg));
 end;
 
 procedure Writelog_I(const msg: String);
@@ -204,17 +223,21 @@ end;
 
 procedure WriteLog_I(msg: array of const);
 begin
-  WriteLog(ArrayToString(msg), INFO);
+  WriteLog_I(ArrayToString(msg));
 end;
 
 procedure Writelog_D(const msg: String);
 begin
+  {$ifdef sendtolazlogger}
+  DebugLn(msg);
+  {$else}
   WriteLog(msg, DEBUG);
+  {$endif}
 end;
 
 procedure WriteLog_D(msg: array of const);
 begin
-  WriteLog(ArrayToString(msg), DEBUG);
+  WriteLog_D(ArrayToString(msg));
 end;
 
 procedure Writelog_V(const msg: String);
@@ -224,14 +247,14 @@ end;
 
 procedure WriteLog_V(msg: array of const);
 begin
-  WriteLog(ArrayToString(msg), VERBOSE);
+  WriteLog_V(ArrayToString(msg));
 end;
 
 function SimpleBackTraceStr(const Addr: Pointer): String;
 var
   func, Source: ShortString;
   hs: String[32];
-  line: longint;
+  line: LongInt;
 begin
   Result := '$' + hexStr(Addr);
   if _HAS_DEBUG_LINE then
@@ -257,7 +280,7 @@ begin
   end;
 end;
 
-function GetStackTraceInfo(const MaxStackCount: Integer): string;
+function GetStackTraceInfo(const MaxStackCount: Integer): String;
 var
   i, maxStack: Integer;
   cf, pcf, cAddress, cFrame: Pointer;
@@ -318,6 +341,10 @@ begin
   _LOG_ACTIVE := True;
   _LOG_LEVEL := SizeOf(TLogType);
   {$ENDIF}
+  {$ifdef traplazlogger}
+  lazloggerhelper := TLazloggerHelper.Create;
+  LazLogger.DebugLogger.OnDebugLn := @lazloggerhelper.DbgLn;
+  {$endif}
   _FLOGFILE := ChangeFileExt(ExtractFileName(ParamStrUTF8(0)), '_LOG.txt');
   for i := 1 to Paramcount do
   begin
@@ -326,8 +353,8 @@ begin
       _LOG_ACTIVE := True;
       if i < Paramcount then
       begin
-        if StrToIntDef(ParamStr(i+1), -1) > -1 then
-          _LOG_LEVEL := StrToInt(ParamStr(i+1));
+        if StrToIntDef(ParamStr(i + 1), -1) > -1 then
+          _LOG_LEVEL := StrToInt(ParamStr(i + 1));
       end;
       if _LOG_LEVEL > SizeOf(TLogType) then
         _LOG_LEVEL := SizeOf(TLogType);
@@ -337,9 +364,24 @@ end;
 
 procedure doFinalization;
 begin
+  {$ifdef traplazlogger}
+  DebugLogger.OnDebugLn := nil;
+  lazloggerhelper.Free;
+  {$endif}
   CloseSymbolFile;
   DoneCriticalsection(_CS_LOG);
 end;
+
+{$ifdef traplazlogger}
+{ TLazloggerHelper }
+
+procedure TLazloggerHelper.DbgLn(Sender: TObject; S: String; var Handled: Boolean);
+begin
+  Handled := False;
+  WriteLog(S, DEBUG);
+end;
+
+{$endif}
 
 initialization
   doInitialization;
@@ -348,4 +390,3 @@ finalization
   doFinalization;
 
 end.
-
