@@ -975,7 +975,6 @@ end;
 procedure TMainForm.FormCreate(Sender: TObject);
 begin
   Randomize;
-  fmdDirectory := CleanAndExpandDirectory(GetCurrentDirUTF8);
   SetLogFile(Format('%s\%s_LOG_%s.txt', ['log', ExtractFileNameOnly(ParamStrUTF8(0)),
     FormatDateTime('dd-mm-yyyy', Now)]));
   Writelog_I(['Starting ',QuotedStrd(Application.Title),' [PID:',GetProcessID,'] [HANDLE:',IntToStr(GetCurrentProcess),']']);
@@ -1005,10 +1004,10 @@ begin
   PrevWindowState := wsNormal;
 
   // account
-  accountmanagerdb.InitAccountManager(fmdDirectory + CONFIG_FOLDER + ACCOUNTS_FILE);
+  accountmanagerdb.InitAccountManager(fmdDirectory + ACCOUNTS_FILE);
 
   // advanced settings
-  INIAdvanced := TIniFileR.Create(fmdDirectory + CONFIG_FOLDER + CONFIG_ADVANCED);
+  INIAdvanced := TIniFileR.Create(fmdDirectory + CONFIG_ADVANCED);
 
   // main dataprocess
   dataProcess := TDBDataProcess.Create;
@@ -1030,19 +1029,19 @@ begin
   mangaInfo := TMangaInfo.Create;
 
   // Load config.ini
-  options := TIniFile.Create(fmdDirectory + CONFIG_FOLDER + CONFIG_FILE);
+  options := TIniFile.Create(fmdDirectory + CONFIG_FILE);
   options.CacheUpdates := False;
   options.Options := options.Options-[ifoStripQuotes];
 
   // Load revision.ini
-  revisionIni := TIniFile.Create(fmdDirectory + CONFIG_FOLDER + REVISION_FILE);
+  revisionIni := TIniFile.Create(fmdDirectory + REVISION_FILE);
 
   // Load updates.ini
-  updates := TIniFile.Create(fmdDirectory + CONFIG_FOLDER + UPDATE_FILE);
+  updates := TIniFile.Create(fmdDirectory + UPDATE_FILE);
   updates.CacheUpdates := False;
 
   // Load mangalist.ini
-  mangalistIni := TIniFile.Create(fmdDirectory + CONFIG_FOLDER + MANGALIST_FILE);
+  mangalistIni := TIniFile.Create(fmdDirectory + MANGALIST_FILE);
   mangalistIni.CacheUpdates := True;
 
   // generate tvDownloadFilter nodes

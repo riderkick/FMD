@@ -1632,16 +1632,16 @@ begin
   CS_DownloadManager_Task := TCriticalSection.Create;
   CS_DownloadedChapterList := TCriticalSection.Create;
 
-  DownloadManagerFile := TIniFile.Create(WORK_FOLDER + WORK_FILE);
+  DownloadManagerFile := TIniFile.Create(WORK_FILE);
   DownloadManagerFile.CacheUpdates := True;
 
   DownloadedChapters := TDownloadedChaptersDB.Create;
-  DownloadedChapters.Filename := WORK_FOLDER + DOWNLOADEDCHAPTERSDB_FILE;
+  DownloadedChapters.Filename := DOWNLOADEDCHAPTERSDB_FILE;
   DownloadedChapters.OnError := MainForm.ExceptionHandler;
   DownloadedChapters.Open;
-  if FileExistsUTF8(WORK_FOLDER + DOWNLOADEDCHAPTERS_FILE) then
-    if DownloadedChapters.ImportFromIni(WORK_FOLDER + DOWNLOADEDCHAPTERS_FILE) then
-      DeleteFileUTF8(WORK_FOLDER + DOWNLOADEDCHAPTERS_FILE);
+  if FileExistsUTF8(DOWNLOADEDCHAPTERS_FILE) then
+    if DownloadedChapters.ImportFromIni(DOWNLOADEDCHAPTERS_FILE) then
+      DeleteFileUTF8(DOWNLOADEDCHAPTERS_FILE);
 
   Containers := TFPList.Create;
   isFinishTaskAccessed := False;

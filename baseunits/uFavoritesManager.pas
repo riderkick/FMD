@@ -427,7 +427,7 @@ begin
   inherited Create;
   CS_Favorites := TCriticalSection.Create;
   isRunning := False;
-  favoritesFile := TIniFile.Create(WORK_FOLDER + FAVORITES_FILE);
+  favoritesFile := TIniFile.Create(FAVORITES_FILE);
   favoritesFile.CacheUpdates := True;
   FFavorites := TFPList.Create;
   Restore;

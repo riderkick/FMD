@@ -199,22 +199,22 @@ const
 
   README_FILE               = 'readme.rtf';
   WORK_FOLDER               = 'works' + PathDelim;
-  WORK_FILE                 = 'works.ini';
-  DOWNLOADEDCHAPTERS_FILE   = 'downloadedchapters.ini';
-  DOWNLOADEDCHAPTERSDB_FILE = 'downloadedchapters.db';
-  FAVORITES_FILE            = 'favorites.ini';
+  WORK_FILE                 = WORK_FOLDER + 'works.ini';
+  DOWNLOADEDCHAPTERS_FILE   = WORK_FOLDER + 'downloadedchapters.ini';
+  DOWNLOADEDCHAPTERSDB_FILE = WORK_FOLDER + 'downloadedchapters.db';
+  FAVORITES_FILE            = WORK_FOLDER + 'favorites.ini';
   IMAGE_FOLDER              = 'images' + PathDelim;
   DATA_EXT                  = '.dat';
   DBDATA_EXT                = '.db';
   CONFIG_FOLDER             = 'config' + PathDelim;
-  CONFIG_FILE               = 'config.ini';
-  CONFIG_ADVANCED           = 'advanced.ini';
-  REVISION_FILE             = 'revision.ini';
-  UPDATE_FILE               = 'updates.ini';
-  MANGALIST_FILE            = 'mangalist.ini';
+  CONFIG_FILE               = CONFIG_FOLDER + 'config.ini';
+  CONFIG_ADVANCED           = CONFIG_FOLDER + 'advanced.ini';
+  REVISION_FILE             = CONFIG_FOLDER + 'revision.ini';
+  UPDATE_FILE               = CONFIG_FOLDER + 'updates.ini';
+  MANGALIST_FILE            = CONFIG_FOLDER + 'mangalist.ini';
+  ACCOUNTS_FILE             = CONFIG_FOLDER + 'accounts.db';
   LANGUAGE_FILE             = 'languages.ini';
   CHANGELOG_FILE            = 'changelog.txt';
-  ACCOUNTS_FILE             = 'accounts.db';
 
   UPDATE_URL = 'https://raw.githubusercontent.com/riderkick/FMD/master/';
 
