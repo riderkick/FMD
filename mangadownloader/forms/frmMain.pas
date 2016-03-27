@@ -213,7 +213,6 @@ type
     gbOptionFavorites: TGroupBox;
     gbBatoto: TGroupBox;
     IconList: TImageList;
-    itSaveDownloadedList: TIdleTimer;
     itRefreshDLInfo: TIdleTimer;
     itCheckFav: TIdleTimer;
     itAnimate: TIdleTimer;
@@ -399,7 +398,6 @@ type
     procedure itRefreshDLInfoStartTimer(Sender: TObject);
     procedure itRefreshDLInfoStopTimer(Sender: TObject);
     procedure itRefreshDLInfoTimer(Sender: TObject);
-    procedure itSaveDownloadedListTimer(Sender: TObject);
     procedure itStartupTimer(Sender: TObject);
     procedure medURLCutClick(Sender: TObject);
     procedure medURLCopyClick(Sender: TObject);
@@ -1203,7 +1201,6 @@ begin
 
   Writelog_D(Self.ClassName+'.CloseNow, disabling all timer');
   tmBackup.Enabled := False;
-  itSaveDownloadedList.Enabled := False;
   itRefreshDLInfo.Enabled := False;
   itCheckFav.Enabled := False;
   itAnimate.Enabled := False;
@@ -1213,7 +1210,6 @@ begin
   Writelog_D(Self.ClassName+'.CloseNow, backup all data to file');
   //Backup data
   DLManager.Backup;
-  DLManager.BackupDownloadedChaptersList;
   isExiting := True;
   FavoriteManager.Backup;
   SaveOptions;
@@ -1407,11 +1403,6 @@ begin
   if Assigned(DLManager) then
     TransferRateGraphAddItem(DLManager.TransferRate);
   vtDownload.Repaint;
-end;
-
-procedure TMainForm.itSaveDownloadedListTimer(Sender: TObject);
-begin
-  DLManager.BackupDownloadedChaptersList;
 end;
 
 procedure TMainForm.itStartupTimer(Sender: TObject);
@@ -1950,8 +1941,8 @@ begin
   UpdateVtDownload;
 
   DLManager.CheckAndActiveTask;
-  DLManager.AddToDownloadedChaptersList(
-    mangaInfo.website + mangaInfo.link, DLManager.Items[pos].ChapterLinks);
+  DLManager.DownloadedChapters.Chapters[mangaInfo.website + mangaInfo.link]:=
+    DLManager.Items[pos].ChapterLinks.Text;
   FavoriteManager.AddToDownloadedChaptersList(
     mangaInfo.website, mangaInfo.link, DLManager.Items[pos].ChapterLinks);
   clbChapterList.Repaint;

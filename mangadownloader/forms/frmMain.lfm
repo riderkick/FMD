@@ -5569,12 +5569,6 @@ object MainForm: TMainForm
       82F2107B87EA008398D00066779A
     }
   end
-  object itSaveDownloadedList: TIdleTimer
-    Interval = 300000
-    OnTimer = itSaveDownloadedListTimer
-    left = 752
-    top = 120
-  end
   object IconDL: TImageList
     left = 24
     top = 184

@@ -713,8 +713,8 @@ begin
                     FavoriteInfo.downloadedChapterList +
                     SetParams(NewMangaInfo.chapterLinks);
                   //save to downloaded chapter list from dlmanager.
-                  DLManager.AddToDownloadedChaptersList(
-                    FavoriteInfo.Website + FavoriteInfo.Link, NewMangaInfo.chapterLinks);
+                  DLManager.DownloadedChapters.Chapters[FavoriteInfo.Website + FavoriteInfo.Link] :=
+                    NewMangaInfo.chapterLinks.Text;
                 end;
             Inc(counter);
           end;
