@@ -186,17 +186,14 @@
               <UseHeaptrc Value="True"/>
               <UseExternalDbgSyms Value="True"/>
             </Debugging>
-            <Options>
-              <Win32>
-                <GraphicApplication Value="True"/>
-              </Win32>
-            </Options>
           </Linking>
           <Other>
             <CustomOptions Value="-dMANGADOWNLOADER
 -dDOWNLOADER
 -dSELFUPDATE
 -dLOGACTIVE
+-dTRAPLAZLOGGER
+-dSENDTOLAZLOGGER
 -dDEBUGWIN32
 -dDEBUGLEAKS"/>
             <ExecuteAfter>
