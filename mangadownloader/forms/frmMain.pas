@@ -809,6 +809,25 @@ var
   // ...
   UpdateStatusTextStyle: TTextStyle;
 
+{$ifdef windows}
+  PrevWndProc: WNDPROC;
+
+function WndCallback(Ahwnd: HWND; uMsg: UINT; wParam: WParam; lParam: LParam): LRESULT; stdcall;
+begin
+  if uMsg = WM_DISPLAYCHANGE then
+  begin
+    Screen.UpdateMonitors;
+    Screen.UpdateScreen;
+    if Screen.MonitorCount < MainForm.Monitor.MonitorNum then
+      MainForm.DefaultMonitor := dmMainForm;
+    if (MainForm.Left > Screen.Width) or (MainForm.Top > Screen.Height) then
+      MainForm.MoveToDefaultPosition;
+  end
+  else
+    Result := CallWindowProc(PrevWndProc, Ahwnd, uMsg, WParam, LParam);
+end;
+{$endif}
+
 procedure ChangeAllCursor(const ParentControl: TWinControl; const Cur: TCursor);
 var
   i: Integer;
@@ -976,6 +995,9 @@ end;
 procedure TMainForm.FormCreate(Sender: TObject);
 begin
   Randomize;
+  {$ifdef windows}
+  PrevWndProc := Windows.WNDPROC(SetWindowLong(Self.Handle, GWL_WNDPROC, PtrInt(@WndCallback)));
+  {$endif}
   SetLogFile(Format('%s\%s_LOG_%s.txt', ['log', ExtractFileNameOnly(ParamStrUTF8(0)),
     FormatDateTime('dd-mm-yyyy', Now)]));
   Writelog_I(['Starting ',QuotedStrd(Application.Title),' [PID:',GetProcessID,'] [HANDLE:',IntToStr(GetCurrentProcess),']']);
