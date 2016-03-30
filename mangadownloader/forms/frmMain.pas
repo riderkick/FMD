@@ -993,6 +993,8 @@ begin
   Application.HintHidePause := 10000;
   sbUpdateList.DoubleBuffered := True;
 
+  ForceDirectoriesUTF8(CONFIG_FOLDER);
+
   // load about
   LoadAbout;
 

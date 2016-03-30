@@ -1629,6 +1629,8 @@ end;
 constructor TDownloadManager.Create;
 begin
   inherited Create;
+  ForceDirectoriesUTF8(WORK_FOLDER);
+
   CS_DownloadManager_Task := TCriticalSection.Create;
   CS_DownloadedChapterList := TCriticalSection.Create;
 

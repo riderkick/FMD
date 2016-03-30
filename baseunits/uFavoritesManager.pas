@@ -425,6 +425,7 @@ end;
 constructor TFavoriteManager.Create;
 begin
   inherited Create;
+  ForceDirectoriesUTF8(WORK_FOLDER);
   CS_Favorites := TCriticalSection.Create;
   isRunning := False;
   if FileExistsUTF8(FAVORITES_FILE_RUN) then
