@@ -10,6 +10,14 @@ uses
 
 implementation
 
+var
+  removewatermark: Boolean = True;
+  saveaspng: Boolean = False;
+
+resourcestring
+  RS_RemoveWatermark = 'Remove watermark';
+  RS_SaveAsPNG = 'Save as PNG';
+
 function GetNameAndLink(const MangaInfo: TMangaInformation; const ANames, ALinks: TStringList;
   const AURL: String; const Module: TModuleContainer): Integer;
 var
@@ -135,8 +143,8 @@ end;
 function AfterImageSaved(const AFilename: String; const Module: TModuleContainer): Boolean;
 begin
   Result := True;
-  if OptionMangaFoxRemoveWatermark then
-    Result := mangafoxwatermarkremover.RemoveWatermark(AFilename, OptionMangaFoxSaveAsPNG);
+  if removewatermark then
+    Result := mangafoxwatermarkremover.RemoveWatermark(AFilename, saveaspng);
 end;
 
 procedure RegisterModule;
@@ -150,6 +158,8 @@ begin
     OnGetPageNumber := @GetPageNumber;
     OnGetImageURL := @GetImageURL;
     OnAfterImageSaved := @AfterImageSaved;
+    AddOption(woCheckBox, @removewatermark, 'RemoveWatermak', @RS_RemoveWatermark);
+    AddOption(woCheckBox, @saveaspng, 'SaveAsPNG', @RS_SaveAsPNG);
   end;
 end;
 

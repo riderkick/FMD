@@ -18,6 +18,10 @@ const
 var
   onlogin: Boolean = False;
   locklogin: TRTLCriticalSection;
+  downloadoriginalimage: Boolean = False;
+
+resourcestring
+  RS_DownloadOriginalImage = 'Download original image(require ExHentai account)';
 
 function ExHentaiLogin(const AHTTP: THTTPSendThread): Boolean;
 var
@@ -288,7 +292,7 @@ var
       s := StreamToString(DownloadThread.FHTTP.Document);
       query.ParseHTML(DownloadThread.FHTTP.Document);
       iurl := '';
-      if OptionEHentaiDownloadOriginalImage and (Account.Status[accname] = asValid) then
+      if downloadoriginalimage and (Account.Status[accname] = asValid) then
         iurl := query.XPathString('//a/@href[contains(.,"/fullimg.php")]');
       if iurl = '' then
         iurl := query.XPathString('//*[@id="img"]/@src');
@@ -387,7 +391,8 @@ procedure RegisterModule;
   end;
 
 begin
-  AddWebsiteModule('E-Hentai', 'http://g.e-hentai.org');
+  with AddWebsiteModule('E-Hentai', 'http://g.e-hentai.org') do
+    AddOption(woCheckBox, @downloadoriginalimage, 'DownloadOriginal', @RS_DownloadOriginalImage);
   with AddWebsiteModule('ExHentai', 'http://exhentai.org') do begin
     AccountSupport := True;
     OnLogin := @ExHentaiLogin;

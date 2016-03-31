@@ -1,6 +1,18 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=UTF-8"
 
+#: batoto.rs_showalllang
+msgid "Show all language"
+msgstr ""
+
+#: batoto.rs_showscangroup
+msgid "Show scanlation group"
+msgstr ""
+
+#: ehentai.rs_downloadoriginalimage
+msgid "Download original image(require ExHentai account)"
+msgstr ""
+
 #: frmaccountmanager.rs_accountdeleteconfirmation
 msgid "Are you sure you want to delete this account?"
 msgstr ""
@@ -247,6 +259,14 @@ msgstr ""
 msgid "System will shutdown in %d second."
 msgstr ""
 
+#: mangafox.rs_removewatermark
+msgid "Remove watermark"
+msgstr ""
+
+#: mangafox.rs_saveaspng
+msgid "Save as PNG"
+msgstr ""
+
 #: taccountmanagerform.btadd.caption
 msgid "Add"
 msgstr ""
@@ -439,29 +459,8 @@ msgstr ""
 msgid "Add to download list as stopped task"
 msgstr ""
 
-#: tmainform.cbbatotoshowalllang.caption
-msgid "Show all language"
-msgstr ""
-
-#: tmainform.cbbatotoshowscangroup.caption
-msgid "Show scan group name"
-msgstr ""
-
-#: tmainform.cbehentaidownloadoriginalimage.caption
-msgid "Download original image (require ExHentai account)"
-msgstr ""
-
 #: tmainform.cbfilterstatus.text
 msgid "<none>"
-msgstr ""
-
-#: tmainform.cbmangafoxremovewatermark.caption
-msgid "Remove watermark"
-msgstr ""
-
-#: tmainform.cbmangafoxsaveaspng.caption
-msgctxt "TMAINFORM.CBMANGAFOXSAVEASPNG.CAPTION"
-msgid "Save as PNG"
 msgstr ""
 
 #: tmainform.cbonlynew.caption
@@ -972,24 +971,12 @@ msgctxt "TMAINFORM.EDWEBSITESSEARCH.TEXTHINT"
 msgid "Search website..."
 msgstr ""
 
-#: tmainform.gbbatoto.caption
-msgid "Batoto"
-msgstr ""
-
 #: tmainform.gbdialogs.caption
 msgid "Show dialog confirmation for"
 msgstr ""
 
 #: tmainform.gbdroptarget.caption
 msgid "Drop Box"
-msgstr ""
-
-#: tmainform.gbehentai.caption
-msgid "E-Hentai/ExHentai"
-msgstr ""
-
-#: tmainform.gbmangafox.caption
-msgid "Mangafox"
 msgstr ""
 
 #: tmainform.gboptionexternal.caption
@@ -1480,6 +1467,7 @@ msgid "Misc"
 msgstr ""
 
 #: tmainform.tsoption.caption
+msgctxt "tmainform.tsoption.caption"
 msgid "Options"
 msgstr ""
 
@@ -1496,7 +1484,18 @@ msgstr ""
 msgid "View"
 msgstr ""
 
+#: tmainform.tswebsiteoptions.caption
+msgctxt "TMAINFORM.TSWEBSITEOPTIONS.CAPTION"
+msgid "Options"
+msgstr ""
+
 #: tmainform.tswebsites.caption
+msgctxt "tmainform.tswebsites.caption"
+msgid "Websites"
+msgstr ""
+
+#: tmainform.tswebsiteselection.caption
+msgctxt "TMAINFORM.TSWEBSITESELECTION.CAPTION"
 msgid "Websites"
 msgstr ""
 

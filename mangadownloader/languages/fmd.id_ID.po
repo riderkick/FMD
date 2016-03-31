@@ -12,6 +12,18 @@ msgstr ""
 "X-Generator: Poedit 1.8.7\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
+#: batoto.rs_showalllang
+msgid "Show all language"
+msgstr "Tampilkan semua bahasa"
+
+#: batoto.rs_showscangroup
+msgid "Show scanlation group"
+msgstr "Tampilkan nama grup scan"
+
+#: ehentai.rs_downloadoriginalimage
+msgid "Download original image(require ExHentai account)"
+msgstr "Unduh gambar asli(membutuhkan akun ExHentai)"
+
 #: frmaccountmanager.rs_accountdeleteconfirmation
 msgid "Are you sure you want to delete this account?"
 msgstr "Apakah anda yakin ingin menghapus akun ini?"
@@ -275,6 +287,14 @@ msgstr "Komputer akan dihibernasi dalam %d detik"
 msgid "System will shutdown in %d second."
 msgstr "Komputer akan dimatikan dalam %d detik"
 
+#: mangafox.rs_removewatermark
+msgid "Remove watermark"
+msgstr "Hapus watermark"
+
+#: mangafox.rs_saveaspng
+msgid "Save as PNG"
+msgstr "Simpan sebagai PNG"
+
 #: taccountmanagerform.btadd.caption
 msgid "Add"
 msgstr "Tambah"
@@ -467,30 +487,9 @@ msgstr "Free Manga Downloader"
 msgid "Add to download list as stopped task"
 msgstr "Tambahkan ke daftar unduhan tanpa dimulai"
 
-#: tmainform.cbbatotoshowalllang.caption
-msgid "Show all language"
-msgstr "Tampilkan semua bahasa"
-
-#: tmainform.cbbatotoshowscangroup.caption
-msgid "Show scan group name"
-msgstr "Tampilkan nama grup scan"
-
-#: tmainform.cbehentaidownloadoriginalimage.caption
-msgid "Download original image (require ExHentai account)"
-msgstr "Unduh gambar asli (membutuhkan akun ExHentai)"
-
 #: tmainform.cbfilterstatus.text
 msgid "<none>"
 msgstr "<none>"
-
-#: tmainform.cbmangafoxremovewatermark.caption
-msgid "Remove watermark"
-msgstr "Hapus watermark"
-
-#: tmainform.cbmangafoxsaveaspng.caption
-msgctxt "tmainform.cbmangafoxsaveaspng.caption"
-msgid "Save as PNG"
-msgstr "Simpan sebagai PNG"
 
 #: tmainform.cbonlynew.caption
 msgid "Search only new manga"
@@ -1002,10 +1001,6 @@ msgctxt "tmainform.edwebsitessearch.texthint"
 msgid "Search website..."
 msgstr "Cari situs web..."
 
-#: tmainform.gbbatoto.caption
-msgid "Batoto"
-msgstr "Batoto"
-
 #: tmainform.gbdialogs.caption
 msgid "Show dialog confirmation for"
 msgstr "Tampilkan dialog konfirmasi untuk"
@@ -1013,14 +1008,6 @@ msgstr "Tampilkan dialog konfirmasi untuk"
 #: tmainform.gbdroptarget.caption
 msgid "Drop Box"
 msgstr "Kotak unduh"
-
-#: tmainform.gbehentai.caption
-msgid "E-Hentai/ExHentai"
-msgstr "E-Hentai/ExHentai"
-
-#: tmainform.gbmangafox.caption
-msgid "Mangafox"
-msgstr "Mangafox"
 
 #: tmainform.gboptionexternal.caption
 msgid "External program"
@@ -1535,6 +1522,7 @@ msgid "Misc"
 msgstr "Lain-lain"
 
 #: tmainform.tsoption.caption
+msgctxt "tmainform.tsoption.caption"
 msgid "Options"
 msgstr "Pengaturan"
 
@@ -1551,7 +1539,18 @@ msgstr "Pembaruan"
 msgid "View"
 msgstr "Tampilan"
 
+#: tmainform.tswebsiteoptions.caption
+msgctxt "tmainform.tswebsiteoptions.caption"
+msgid "Options"
+msgstr "Pengaturan"
+
 #: tmainform.tswebsites.caption
+msgctxt "tmainform.tswebsites.caption"
+msgid "Websites"
+msgstr "Situs web"
+
+#: tmainform.tswebsiteselection.caption
+msgctxt "tmainform.tswebsiteselection.caption"
 msgid "Websites"
 msgstr "Situs web"
 

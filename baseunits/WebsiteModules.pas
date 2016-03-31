@@ -10,7 +10,7 @@ unit WebsiteModules;
 interface
 
 uses
-  Classes, SysUtils, uData, uDownloadsManager, uBaseUnit, RegExpr;
+  Classes, SysUtils, uData, uDownloadsManager, uBaseUnit, RegExpr, IniFiles;
 
 const
   MODULE_NOT_FOUND = -1;
@@ -53,6 +53,15 @@ type
     MMTaskStart, MMGetPageNumber, MMGetImageURL, MMBeforeDownloadImage,
     MMDownloadImage, MMAfterImageSaved, MMLogin);
 
+  TWebsiteOptionType = (woCheckBox, woEdit, woSpinEdit);
+
+  TWebsiteOptionItem = record
+    OptionType: TWebsiteOptionType;
+    Name: String;
+    Caption: PString;
+    BindValue: Pointer;
+  end;
+
   { TModuleContainer }
 
   TModuleContainer = class
@@ -73,6 +82,7 @@ type
     DynamicPageLink: Boolean;
     TotalDirectoryPage: array of Integer;
     CurrentDirectoryIndex: Integer;
+    OptionList: array of TWebsiteOptionItem;
     OnGetDirectoryPageNumber: TOnGetDirectoryPageNumber;
     OnGetNameAndLink: TOnGetNameAndLink;
     OnGetInfo: TOnGetInfo;
@@ -87,6 +97,8 @@ type
     destructor Destroy; override;
   public
     property TotalDirectory: Integer read FTotalDirectory write SetTotalDirectory;
+    procedure AddOption(const AOptionType: TWebsiteOptionType;
+      const ABindValue: Pointer; const AName: String; const ACaption: PString);
   end;
 
   { TWebsiteModules }
@@ -95,6 +107,7 @@ type
   private
     FCSModules: TRTLCriticalSection;
     FModuleList: TFPList;
+    FWebsiteOptionFile: TIniFile;
     function GetModule(const ModuleId: Integer): TModuleContainer;
     function GetCount: Integer;
     function GetMaxTaskLimit(const ModuleId: Integer): Integer;
@@ -176,17 +189,18 @@ type
     property Website[const ModuleId: Integer]: String read GetWebsite;
 
     property MaxTaskLimit[const ModuleId: Integer]: Integer read GetMaxTaskLimit;
-    property MaxConnectionLimit[const ModuleId: Integer]: Integer
-      read GetMaxConnectionLimit;
+    property MaxConnectionLimit[const ModuleId: Integer]: Integer read GetMaxConnectionLimit;
     property ActiveTaskCount[const ModuleId: Integer]: Integer read GetActiveTaskCount;
-    property ActiveConnectionCount[const ModuleId: Integer]: Integer
-      read GetActiveConnectionLimit;
+    property ActiveConnectionCount[const ModuleId: Integer]: Integer read GetActiveConnectionLimit;
     procedure IncActiveTaskCount(ModuleId: Integer);
     procedure DecActiveTaskCount(ModuleId: Integer);
     function CanCreateTask(ModuleId: Integer): Boolean;
     procedure IncActiveConnectionCount(ModuleId: Integer);
     procedure DecActiveConnectionCount(ModuleId: Integer);
     function CanCreateConnection(ModuleId: Integer): Boolean;
+
+    procedure LoadWebsiteOption;
+    procedure SaveWebsiteOption;
   end;
 
 var
@@ -197,6 +211,9 @@ function AddModule: TModuleContainer;
 
 procedure LockCreateConnection;
 procedure UnlockCreateConnection;
+
+function CleanOptionName(const S: String): String;
+
 
 implementation
 
@@ -209,6 +226,26 @@ var
   CS_Connection: TRTLCriticalSection;
 
 { TModuleContainer }
+
+function CleanOptionName(const S: String): String;
+const
+  Alpha = ['A'..'Z', 'a'..'z', '_'];
+  Num = ['0'..'9'];
+  AlphaNum = Alpha + Num;
+var
+  i: Integer;
+begin
+  Result := Trim(S);
+  if Result = '' then Exit;
+  while (Length(Result) > 0) and (Result[1] in Num) do
+    Delete(Result, 1, 1);
+  i := 1;
+  while i <= Length(Result) do
+    if not (Result[i] in AlphaNum) then
+      Delete(Result, i, 1)
+    else
+      Inc(i);
+end;
 
 procedure TModuleContainer.SetTotalDirectory(AValue: Integer);
 var
@@ -240,7 +277,23 @@ end;
 destructor TModuleContainer.Destroy;
 begin
   SetLength(TotalDirectoryPage, 0);
+  SetLength(OptionList,0);
   inherited Destroy;
+end;
+
+procedure TModuleContainer.AddOption(const AOptionType: TWebsiteOptionType; const ABindValue: Pointer;
+  const AName: String; const ACaption: PString);
+begin
+  if ABindValue = nil then Exit;
+  if AName = '' then Exit;
+  SetLength(OptionList, Length(OptionList) + 1);
+  with OptionList[High(OptionList)] do
+  begin
+    OptionType := AOptionType;
+    BindValue := ABindValue;
+    Name := CleanOptionName(AName);
+    Caption := ACaption;
+  end;
 end;
 
 { TWebsiteModules }
@@ -249,12 +302,16 @@ constructor TWebsiteModules.Create;
 begin
   InitCriticalSection(FCSModules);
   FModuleList := TFPList.Create;
+  FWebsiteOptionFile := TIniFile.Create(WEBSITE_CONFIG_FILE);
+  FWebsiteOptionFile.CacheUpdates := True;
 end;
 
 destructor TWebsiteModules.Destroy;
 var
   i: Integer;
 begin
+  if Assigned(FWebsiteOptionFile) then
+    FWebsiteOptionFile.Free;
   if FModuleList.Count > 0 then
     for i := 0 to FModuleList.Count - 1 do
       TModuleContainer(FModuleList[i]).Free;
@@ -506,7 +563,9 @@ begin
   Result := False;
   if (ModuleId < 0) or (ModuleId >= FModuleList.Count) then Exit;
   if Assigned(TModuleContainer(FModuleList[ModuleId]).OnAfterImageSaved) then
-    Result := TModuleContainer(FModuleList[ModuleId]).OnAfterImageSaved(AFilename, TModuleContainer(FModuleList[ModuleId]));
+    Result := TModuleContainer(FModuleList[ModuleId]).OnAfterImageSaved(AFilename,
+      TModuleContainer(FModuleList[ModuleId]));
+
 end;
 
 function TWebsiteModules.AfterImageSaved(const AFilename, AWebsite: String
@@ -588,6 +647,45 @@ begin
   with TModuleContainer(FModuleList[ModuleId]) do
     if MaxConnectionLimit > 0 then
       Result := ActiveConnectionCount < MaxConnectionLimit;
+end;
+
+procedure TWebsiteModules.LoadWebsiteOption;
+var
+  i, j: Integer;
+begin
+  if FModuleList.Count = 0 then Exit;
+  for i := 0 to FModuleList.Count - 1 do
+    with TModuleContainer(FModuleList[i]) do
+      if Length(OptionList) > 0 then
+        for j := Low(OptionList) to High(OptionList) do
+          with OptionList[j], FWebsiteOptionFile do
+          begin
+            case OptionType of
+              woCheckBox: PBoolean(BindValue)^ := ReadBool(Website, Name, PBoolean(BindValue)^);
+              woEdit: PString(BindValue)^ := ReadString(Website, Name, PString(BindValue)^);
+              woSpinEdit: PInteger(BindValue)^ := ReadInteger(Website, Name, PInteger(BindValue)^);
+            end;
+          end;
+end;
+
+procedure TWebsiteModules.SaveWebsiteOption;
+var
+  i, j: Integer;
+begin
+  if FModuleList.Count = 0 then Exit;
+  for i := 0 to FModuleList.Count - 1 do
+    with TModuleContainer(FModuleList[i]) do
+      if Length(OptionList) > 0 then
+        for j := Low(OptionList) to High(OptionList) do
+          with OptionList[j], FWebsiteOptionFile do
+          begin
+            case OptionType of
+              woCheckBox: WriteBool(Website, Name, PBoolean(BindValue)^);
+              woEdit: WriteString(Website, Name, PString(BindValue)^);
+              woSpinEdit: WriteInteger(Website, Name, PInteger(BindValue)^);
+            end;
+          end;
+  FWebsiteOptionFile.UpdateFile;
 end;
 
 function TWebsiteModules.GetModule(const ModuleId: Integer): TModuleContainer;

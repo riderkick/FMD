@@ -22,6 +22,12 @@ const
 
 var
   locklogin: TRTLCriticalSection;
+  showalllang: Boolean = False;
+  showscangroup: Boolean = False;
+
+resourcestring
+  RS_ShowAllLang = 'Show all language';
+  RS_ShowScanGroup = 'Show scanlation group';
 
 function Login(const AHTTP: THTTPSendThread): Boolean;
 var
@@ -211,18 +217,18 @@ begin
             for i := 1 to v.Count do AddCommaString(genres, v.get(i).toString);
           end;
 
-          if OptionBatotoShowAllLang then
+          if showalllang then
             s := '//table[@class="ipb_table chapters_list"]//tr[starts-with(@class, "row lang")]'
           else s := '//table[@class="ipb_table chapters_list"]//tr[starts-with(@class, "row lang_English")]';
           for v in XPath(s) do begin
             w := XPath('td[1]/a', v.toNode);
             chapterLinks.Add(w.toNode.getAttribute('href'));
             t := w.toString;
-            if OptionBatotoShowAllLang then begin
+            if showalllang then begin
               l := XPath('td[2]/div', v.toNode).toNode.getAttribute('title');
               if l <> '' then t += ' [' + l + ']';
             end;
-            if OptionBatotoShowScanGroup then begin
+            if showscangroup then begin
               l := XPath('td[3]', v.toNode).toString;
               if l <> '' then t += ' [' + l + ']';
             end;
@@ -314,6 +320,8 @@ begin
     OnGetPageNumber := @GetPageNumber;
     OnGetImageURL := @GetImageURL;
     OnLogin := @Login;
+    AddOption(woCheckBox, @showalllang,'ShowAllLang', @RS_ShowAllLang);
+    AddOption(woCheckBox, @showscangroup,'ShowScanGroup', @RS_ShowScanGroup);
   end;
 end;
 

@@ -538,11 +538,14 @@ var
   UPDATE_FILE,
   MANGALIST_FILE,
   ACCOUNTS_FILE,
+  WEBSITE_CONFIG_FILE,
   DATA_FOLDER,
   IMAGE_FOLDER,
   LANGUAGE_FILE,
   CHANGELOG_FILE,
-  README_FILE: String;
+  README_FILE,
+  EXTRAS_FOLDER,
+  MANGAFOXTEMPLATE_FOLDER: String;
 
   {$IFDEF WINDOWS}
   DEFAULT_PATH: String = '\downloads';
@@ -602,13 +605,6 @@ var
   OptionNewMangaTime: Cardinal = 1;
   OptionAutoCheckFavDownload: Boolean = False;
   OptionAutoCheckFavRemoveCompletedManga: Boolean = False;
-
-  OptionBatotoShowScanGroup: Boolean = False;
-  OptionBatotoShowAllLang: Boolean = False;
-  OptionMangaFoxTemplateFolder: String = 'extras' + PathDelim + 'mangafoxtemplate';
-  OptionMangaFoxRemoveWatermark: Boolean = True;
-  OptionMangaFoxSaveAsPNG: Boolean = False;
-  OptionEHentaiDownloadOriginalImage: Boolean = False;
 
   OptionHTTPUseGzip: Boolean = True;
 
@@ -1048,7 +1044,7 @@ end;
 {$ENDIF}
 
 procedure SetFMDdirectory(const ADir: String);
-begin
+begin                           WriteLog_D('setfmddirectory: '+adir);
   FMD_DIRECTORY             := CleanAndExpandDirectory(ADir);
 
   WORK_FOLDER               := FMD_DIRECTORY + 'works' + PathDelim;
@@ -1067,6 +1063,7 @@ begin
   UPDATE_FILE               := CONFIG_FOLDER + 'updates.ini';
   MANGALIST_FILE            := CONFIG_FOLDER + 'mangalist.ini';
   ACCOUNTS_FILE             := CONFIG_FOLDER + 'accounts.db';
+  WEBSITE_CONFIG_FILE       := CONFIG_FOLDER + 'websiteconfig.ini';
 
   DATA_FOLDER               := FMD_DIRECTORY + 'data' + PathDelim;
 
@@ -1074,6 +1071,9 @@ begin
   LANGUAGE_FILE             := FMD_DIRECTORY + 'languages.ini';
   CHANGELOG_FILE            := FMD_DIRECTORY + 'changelog.txt';
   README_FILE               := FMD_DIRECTORY + 'readme.rtf';
+
+  EXTRAS_FOLDER             := FMD_DIRECTORY + 'extras' + PathDelim;
+  MANGAFOXTEMPLATE_FOLDER   := EXTRAS_FOLDER + 'mangafoxtemplate' + PathDelim;
 end;
 
 function GetCurrentBinVersion: String;
