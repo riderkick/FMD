@@ -14,7 +14,7 @@ unit uData;
 interface
 
 uses
-  Classes, SysUtils, uBaseUnit, uFMDThread, DBDataProcess, FileUtil,
+  Classes, SysUtils, uBaseUnit, uFMDThread, DBDataProcess, FMDOptions, FileUtil,
   LazFileUtils, SimpleLogger, strutils, dateutils, RegExpr, httpsend;
 
 type
@@ -832,11 +832,11 @@ var
 begin
   Page := 0;
 
-  //load User-Agent from INIAdvanced
+  //load User-Agent from advancedfile
   AdvanceLoadHTTPConfig(FHTTP, website);
 
   //load pagenumber_config if available
-  p := INIAdvanced.ReadInteger('UpdateListDirectoryPageNumber', website, -1);
+  p := advancedfile.ReadInteger('UpdateListDirectoryPageNumber', website, -1);
 
   if p > 0 then
   begin
@@ -1093,7 +1093,7 @@ var
   {$I includes/Dynasty-Scans/names_and_links.inc}
 
 begin
-  //load User-Agent from INIAdvanced
+  //load User-Agent from advancedfile
   AdvanceLoadHTTPConfig(FHTTP, website);
 
   if ModuleId < 0 then
@@ -1429,7 +1429,7 @@ begin
   if Trim(URL) = '' then
     Exit(INFORMATION_NOT_FOUND);
 
-  //load User-Agent from INIAdvanced
+  //load User-Agent from advancedfile
   AdvanceLoadHTTPConfig(FHTTP, website);
 
   mangaInfo.website := website;

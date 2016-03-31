@@ -23,7 +23,7 @@ uses
   uBaseUnit, uDownloadsManager, uFavoritesManager, uUpdateThread,
   uUpdateDBThread, uSilentThread, uMisc, uGetMangaInfosThread, frmDropTarget,
   frmAccountManager, frmCustomOption, CheckUpdate, accountmanagerdb, DBDataProcess,
-  mangafoxwatermarkremover, SimpleTranslator, SimpleException, SimpleLogger;
+  mangafoxwatermarkremover, SimpleTranslator, FMDOptions, SimpleException, SimpleLogger;
 
 type
 
@@ -552,7 +552,6 @@ type
     LastSearchStr, LastSearchWeb: String;
     isStartup, isExiting, isRunDownloadFilter, isUpdating, isPendingExitCounter,
     isNormalExit: Boolean;
-    revisionIni, updates, mangalistIni, options: TIniFile;
     FavoriteManager: TFavoriteManager;
     dataProcess: TDBDataProcess;
     mangaInfo: TMangaInfo;
@@ -694,7 +693,6 @@ var
   FMDInstance: TSimpleIPCServer;
 
   MainForm: TMainForm;
-  INIAdvanced: TIniFileR;
 
   // update fmd through main thread
   DoAfterFMD: TFMDDo;
@@ -840,9 +838,9 @@ var
 begin
   if HTTP = nil then Exit;
   if Website = '' then Exit;
-  s:=Trim(INIAdvanced.ReadString('UserAgent',Website,''));
+  s:=Trim(advancedfile.ReadString('UserAgent',Website,''));
   if s<>'' then HTTP.UserAgent:=s;
-  s:=Trim(INIAdvanced.ReadString('Cookies',Website,''));
+  s:=Trim(advancedfile.ReadString('Cookies',Website,''));
   if s<>'' then HTTP.Cookies.Text:=s;
 end;
 
@@ -1026,9 +1024,6 @@ begin
   // account
   accountmanagerdb.InitAccountManager(ACCOUNTS_FILE);
 
-  // advanced settings
-  INIAdvanced := TIniFileR.Create(CONFIG_ADVANCED);
-
   // main dataprocess
   dataProcess := TDBDataProcess.Create;
 
@@ -1047,26 +1042,6 @@ begin
 
   // ShowInformation
   mangaInfo := TMangaInfo.Create;
-
-  // Load config.ini
-  if FileExistsUTF8(CONFIG_FILE_RUN) then
-    DeleteFileUTF8(CONFIG_FILE_RUN);
-  if FileExistsUTF8(CONFIG_FILE) then
-    CopyFile(CONFIG_FILE, CONFIG_FILE_RUN, [cffOverwriteFile, cffPreserveTime]);
-  options := TIniFile.Create(CONFIG_FILE_RUN);
-  options.CacheUpdates := True;
-  options.Options := options.Options-[ifoStripQuotes];
-
-  // Load revision.ini
-  revisionIni := TIniFile.Create(REVISION_FILE);
-
-  // Load updates.ini
-  updates := TIniFile.Create(UPDATE_FILE);
-  updates.CacheUpdates := False;
-
-  // Load mangalist.ini
-  mangalistIni := TIniFile.Create(MANGALIST_FILE);
-  mangalistIni.CacheUpdates := True;
 
   // generate tvDownloadFilter nodes
   GeneratetvDownloadFilterNodes;
@@ -1089,10 +1064,6 @@ begin
   pcMain.ActivePage := tsDownload;
 
   TrayIcon.Show;
-
-  // load some necessary options at startup
-  Revision := revisionIni.ReadInteger('general', 'Revision', 0);
-  revisionIni.Free;
 
   currentJDN := GetCurrentJDN;
 
@@ -1166,7 +1137,7 @@ begin
   // load mangafox template
   mangafoxwatermarkremover.LoadTemplate(MANGAFOXTEMPLATE_FOLDER);
 
-  // load options
+  // load configfile
   isStartup := False;
   CollectLanguagesFromFiles;
   LoadFormInformation;
@@ -1283,11 +1254,6 @@ begin
   FreeAndNil(gifWaiting);
   FreeAndNil(mangaCover);
 
-  FreeAndNil(mangalistIni);
-  FreeAndNil(updates);
-  FreeAndNil(options);
-  DeleteFileUTF8(CONFIG_FILE_RUN);
-  FreeAndNil(INIAdvanced);
   if isNormalExit then
     Writelog_I(QuotedStrd(Application.Title)+' exit normally [PID:'+IntToStr(GetProcessID)+'] [HANDLE:'+IntToStr(GetCurrentProcess)+']')
   else
@@ -1511,7 +1477,7 @@ begin
   if Sender = miChapterListHideDownloaded then
   begin
     miChapterListHideDownloaded.Checked := not miChapterListHideDownloaded.Checked;
-    options.WriteBool('general', 'ChapterListHideDownloaded', miChapterListHideDownloaded.Checked);
+    configfile.WriteBool('general', 'ChapterListHideDownloaded', miChapterListHideDownloaded.Checked);
   end;
   if (Length(ChapterList) = 0) or (Length(ChapterList) <> clbChapterList.RootNodeCount) then Exit;
   clbChapterList.BeginUpdate;
@@ -1552,7 +1518,7 @@ begin
   if Sender = miChapterListHighlight then
   begin
     miChapterListHighlight.Checked := not miChapterListHighlight.Checked;
-    options.WriteBool('general', 'HighlightDownloadedChapters', miChapterListHighlight.Checked);
+    configfile.WriteBool('general', 'HighlightDownloadedChapters', miChapterListHighlight.Checked);
   end;
   if Length(ChapterList) = 0 then Exit;
   if miChapterListHighlight.Checked then
@@ -1757,7 +1723,7 @@ end;
 procedure TMainForm.miHighlightNewMangaClick(Sender: TObject);
 begin
   miHighlightNewManga.Checked := not miHighlightNewManga.Checked;
-  options.WriteBool('general', 'HighLightNewManga', miHighlightNewManga.Checked);
+  configfile.WriteBool('general', 'HighLightNewManga', miHighlightNewManga.Checked);
   vtMangaList.Repaint;
 end;
 
@@ -1898,7 +1864,7 @@ begin
     Items[9].SelectedIndex := 8;
     Items[9].StateIndex := 8;
 
-    Items[Self.options.ReadInteger('general', 'DownloadFilterSelect',0)].Selected := True;
+    Items[configfile.ReadInteger('general', 'DownloadFilterSelect',0)].Selected := True;
   end;
 end;
 
@@ -2133,7 +2099,7 @@ end;
 
 procedure TMainForm.cbAddAsStoppedChange(Sender: TObject);
 begin
-  options.WriteBool('general', 'AddAsStopped', cbAddAsStopped.Checked);
+  configfile.WriteBool('general', 'AddAsStopped', cbAddAsStopped.Checked);
 end;
 
 procedure TMainForm.cbOptionAutoCheckFavIntervalChange(Sender: TObject);
@@ -2207,7 +2173,7 @@ procedure TMainForm.cbSelectMangaChange(Sender: TObject);
 begin
   if cbSelectManga.ItemIndex < 0 then
     Exit;
-  options.WriteInteger('form', 'SelectManga', cbSelectManga.ItemIndex);
+  configfile.WriteInteger('form', 'SelectManga', cbSelectManga.ItemIndex);
   if currentWebsite <> cbSelectManga.Items[cbSelectManga.ItemIndex] then
   begin
     currentWebsite := cbSelectManga.Items[cbSelectManga.ItemIndex];
@@ -3375,7 +3341,7 @@ procedure TMainForm.tvDownloadFilterSelectionChanged(Sender: TObject);
 begin
   vtDownloadFilters;
   pcMain.ActivePage := tsDownload;
-  options.WriteInteger('general', 'DownloadFilterSelect',
+  configfile.WriteInteger('general', 'DownloadFilterSelect',
     tvDownloadFilter.Selected.AbsoluteIndex);
 end;
 
@@ -4140,7 +4106,7 @@ var
 begin
   pcMain.ActivePage := tsInformation;
   if Trim(edSaveTo.Text) = '' then
-    edSaveTo.Text := options.ReadString('saveto', 'SaveTo', DEFAULT_PATH);
+    edSaveTo.Text := configfile.ReadString('saveto', 'SaveTo', DEFAULT_PATH);
   if Trim(edSaveTo.Text) = '' then
     edSaveTo.Text := DEFAULT_PATH;
   edSaveTo.Text := CorrectPathSys(edSaveTo.Text);
@@ -4209,7 +4175,7 @@ var
   s: String;
   data: PSingleItem;
 begin
-  with options do begin
+  with configfile do begin
     // general
     cbOptionOneInstanceOnly.Checked := ReadBool('general', 'OneInstanceOnly', True);
     cbOptionLiveSearch.Checked := ReadBool('general', 'LiveSearch', True);
@@ -4295,7 +4261,7 @@ begin
     l := TStringList.Create;
     try
       s := ReadString('general', 'MangaListSelect',
-        mangalistIni.ReadString('general', 'DefaultSelect', DEFAULT_LIST));
+        mangalistfile.ReadString('general', 'DefaultSelect', DEFAULT_LIST));
       if Pos(SEPERATOR, s) > 0 then
         GetParams(l, s)    //for old config
       else
@@ -4333,7 +4299,7 @@ begin
     end;
   end;
 
-  with options do
+  with configfile do
     try
       // general
       WriteString('general', 'MangaListSelect', s);
@@ -4408,7 +4374,6 @@ begin
 
     finally
       UpdateFile;
-      CopyFile(CONFIG_FILE_RUN, CONFIG_FILE, [cffOverwriteFile, cffPreserveTime]);
     end;
   Modules.SaveWebsiteOption;
 end;
@@ -4561,17 +4526,17 @@ var
   data: PSingleItem;
   wName, wLang: TStringList;
 begin
-  DBDownloadURL:=mangalistIni.ReadString('general','DBDownloadURL','');
+  DBDownloadURL:=mangalistfile.ReadString('general','DBDownloadURL','');
   wName := TStringList.Create;
   wLang := TStringList.Create;
   lang := TStringList.Create;
   try
-    mangalistIni.ReadSection('available', lang);
+    mangalistfile.ReadSection('available', lang);
     TrimStrings(lang);
     if lang.Count > 0 then
       for i := 0 to lang.Count - 1 do
       begin
-        s := Trim(mangalistIni.ReadString('available', lang[i], ''));
+        s := Trim(mangalistfile.ReadString('available', lang[i], ''));
         if s <> '' then
           ExtractStrings([','], [], PChar(s), wName);
         TrimStrings(wName);
@@ -4606,7 +4571,7 @@ begin
 
     // load selected manga list
     lang.Clear;
-    s := options.ReadString('general', 'MangaListSelect', DEFAULT_LIST);
+    s := configfile.ReadString('general', 'MangaListSelect', DEFAULT_LIST);
     if Pos(SEPERATOR, s) <> 0 then
       ExtractParam(lang, s, SEPERATOR, False)
     else
@@ -4638,7 +4603,7 @@ begin
     // load last selected manga
     if cbSelectManga.Items.Count > 0 then
     begin
-      sel := options.ReadInteger('form', 'SelectManga', 0);
+      sel := configfile.ReadInteger('form', 'SelectManga', 0);
       if sel < 0 then
         sel := 0;
       if sel > cbSelectManga.Items.Count - 1 then
@@ -4823,7 +4788,7 @@ procedure TMainForm.LoadFormInformation;
 var
   i: Integer;
 begin
-  with options do
+  with configfile do
   begin
     pcLeft.Width := ReadInteger('form', 'MainSplitter', 195);
     sbMain.Panels[0].Width := pcLeft.Width + 4;
@@ -4865,7 +4830,7 @@ procedure TMainForm.SaveFormInformation;
 var
   i: Integer;
 begin
-  with options do
+  with configfile do
   begin
     WriteInteger('form', 'MainSplitter', pcLeft.Width);
     WriteInteger('form', 'pcMainPageIndex', pcMain.PageIndex);
@@ -4898,7 +4863,7 @@ end;
 
 procedure TMainForm.SaveDropTargetFormInformation;
 begin
-  with options do
+  with configfile do
   begin
     WriteBool('droptarget', 'Show', ckDropTarget.Checked);
     WriteInteger('droptarget', 'Mode', rgDropTargetMode.ItemIndex);
@@ -4923,7 +4888,7 @@ begin
     for i := 0 to AvailableLanguages.Count - 1 do
       cbLanguages.Items.Add(SimpleTranslator.AvailableLanguages.ValueFromIndex[i]);
     cbLanguages.ItemIndex := SimpleTranslator.AvailableLanguages.IndexOfName(
-    options.ReadString('languages', 'Selected', 'en'));
+    configfile.ReadString('languages', 'Selected', 'en'));
   end;
 end;
 
@@ -4981,8 +4946,8 @@ var
   Exe, Params,
   p, f: String;
 begin
-  Exe := Trim(options.ReadString('general', 'ExternalProgramPath', ''));
-  Params := Trim(options.ReadString('general', 'ExternalProgramParams', DEFAULT_EXPARAM));
+  Exe := Trim(configfile.ReadString('general', 'ExternalProgramPath', ''));
+  Params := Trim(configfile.ReadString('general', 'ExternalProgramParams', DEFAULT_EXPARAM));
 
   p := Trim(TrimRightChar(Trim(dirPath), [PathDelim]));
   f := Trim(TrimChar(Trim(Filename), [PathDelim]));

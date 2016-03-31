@@ -12,7 +12,7 @@ uses
   cthreads,
  {$ENDIF} {$ENDIF}
   Interfaces, // this includes the LCL widgetset
-  Forms, LazFileUtils, IniFiles, simpleipc, sqlite3dyn, uBaseUnit, frmMain;
+  Forms, LazFileUtils, IniFiles, simpleipc, sqlite3dyn, FMDOptions, uBaseUnit, frmMain;
 
 var
   CheckInstance: Boolean = True;

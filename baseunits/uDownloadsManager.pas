@@ -18,7 +18,7 @@ uses
   lazutf8classes, LazFileUtils, FileUtil, FastHTMLParser, HTMLUtil, SynaCode,
   RegExpr, Imaging, ImagingTypes, ImagingCanvases, Classes, SysUtils, Dialogs,
   ExtCtrls, IniFiles, typinfo, syncobjs, httpsend, blcksock, uBaseUnit, uPacker,
-  uFMDThread, uMisc, DownloadedChaptersDB, SimpleLogger, dateutils;
+  uFMDThread, uMisc, DownloadedChaptersDB, FMDOptions, SimpleLogger, dateutils;
 
 type
   TDownloadManager = class;
@@ -152,7 +152,7 @@ type
     FTotalReadCount: Integer;
     FSortDirection: Boolean;
     FSortColumn: Integer;
-    DownloadManagerFile: TIniFile;
+    DownloadManagerFile: TIniFileRun;
     function GetItems(Index: Integer): TTaskContainer;
   protected
     function GetTaskCount: Integer;
@@ -1133,7 +1133,7 @@ begin
   if Terminated then Exit;
 
   //load advanced config if any
-  mt := INIAdvanced.ReadInteger('DownloadMaxThreadsPerTask',
+  mt := advancedfile.ReadInteger('DownloadMaxThreadsPerTask',
     container.DownloadInfo.Website, -1);
   if (mt > 0) then
   begin
@@ -1186,7 +1186,7 @@ begin
         ModuleId := Self.ModuleId;
         workCounter := container.WorkCounter;
         checkStyle := Flag;
-        //load User-Agent from INIAdvanced
+        //load User-Agent from advancedfile
         AdvanceLoadHTTPConfig(FHTTP, container.DownloadInfo.Website);
         Start;
         container.WorkCounter := InterLockedIncrement(container.WorkCounter);
@@ -1255,7 +1255,7 @@ var
   S, P: String;
   DynamicPageLink: Boolean;
 begin
-  INIAdvanced.Reload;
+  advancedfile.Reload;
   ModuleId := container.ModuleId;
   container.ThreadState := True;
   container.DownloadInfo.TransferRate := '';
@@ -1634,12 +1634,7 @@ begin
   CS_DownloadManager_Task := TCriticalSection.Create;
   CS_DownloadedChapterList := TCriticalSection.Create;
 
-  if FileExistsUTF8(WORK_FILE_RUN) then
-    DeleteFileUTF8(WORK_FILE_RUN);
-  if FileExistsUTF8(WORK_FILE) then
-    CopyFile(WORK_FILE, WORK_FILE_RUN, [cffOverwriteFile, cffPreserveTime]);
-
-  DownloadManagerFile := TIniFile.Create(WORK_FILE_RUN);
+  DownloadManagerFile := TIniFileRun.Create(WORK_FILE);
   DownloadManagerFile.CacheUpdates := True;
 
   DownloadedChapters := TDownloadedChaptersDB.Create;
@@ -1671,7 +1666,6 @@ begin
   end;
   FreeAndNil(Containers);
   FreeAndNil(DownloadManagerFile);
-  DeleteFileUTF8(WORK_FILE_RUN);
   DownloadedChapters.Free;
   CS_DownloadedChapterList.Free;
   CS_DownloadManager_Task.Free;
@@ -1813,7 +1807,6 @@ begin
       end;
     end;
     UpdateFile;
-    CopyFile(WORK_FILE_RUN, WORK_FILE, [cffOverwriteFile, cffPreserveTime]);
   finally
     CS_DownloadManager_Task.Release;
   end;

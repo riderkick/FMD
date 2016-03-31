@@ -16,7 +16,7 @@ interface
 
 uses
   Classes, SysUtils, uBaseUnit, uData, uFMDThread, uDownloadsManager,
-  WebsiteModules, LazFileUtils;
+  WebsiteModules, FMDOptions, LazFileUtils;
 
 type
 
@@ -191,7 +191,7 @@ end;
 procedure TSilentThreadManager.Checkout(Index: Integer);
 begin
   if (Index < 0) or (Index >= MetaData.Count) then Exit;
-  INIAdvanced.Reload;
+  advancedfile.Reload;
   Modules.IncActiveConnectionCount(TSilentThreadMetaData(MetaData[Index]).ModuleId);
   case TSilentThreadMetaData(MetaData[Index]).MetaDataType of
     MD_DownloadAll: Threads.Add(TSilentThread.Create);
@@ -359,7 +359,7 @@ begin
       if FSavePath = '' then
       begin
         if Trim(edSaveTo.Text) = '' then
-          edSaveTo.Text := options.ReadString('saveto', 'SaveTo', DEFAULT_PATH);
+          edSaveTo.Text := configfile.ReadString('saveto', 'SaveTo', DEFAULT_PATH);
         if Trim(edSaveTo.Text) = '' then
           edSaveTo.Text := DEFAULT_PATH;
         edSaveTo.Text := CleanAndExpandDirectory(CorrectPathSys(edSaveTo.Text));
@@ -455,7 +455,7 @@ begin
       if FSavePath = '' then
       begin
         if Trim(edSaveTo.Text) = '' then
-          edSaveTo.Text := options.ReadString('saveto', 'SaveTo', DEFAULT_PATH);
+          edSaveTo.Text := configfile.ReadString('saveto', 'SaveTo', DEFAULT_PATH);
         if Trim(edSaveTo.Text) = '' then
           edSaveTo.Text := DEFAULT_PATH;
         edSaveTo.Text := CorrectPathSys(edSaveTo.Text);

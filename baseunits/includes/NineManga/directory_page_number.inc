@@ -8,7 +8,7 @@
     BROWSER_INVERT := True;
     //I can't get manga directory total pages. Its not available on any page
     //The only option to get total pages is just checking manually with browser :(
-    p := INIAdvanced.ReadInteger('UpdateListDirectoryPageNumber', website, -1);
+    p := advancedfile.ReadInteger('UpdateListDirectoryPageNumber', website, -1);
     if p > 0 then
       Page := p
     else

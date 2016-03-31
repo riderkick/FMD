@@ -5,9 +5,9 @@ unit frmAccountManager;
 interface
 
 uses
-  Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, Buttons,
+  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, Buttons,
   ExtCtrls, VirtualTrees, accountmanagerdb, WebsiteModules, uFMDThread,
-  uBaseUnit, frmAccountSet, SimpleLogger, SimpleException;
+  uBaseUnit, FMDOptions, frmAccountSet, SimpleException;
 
 type
 
@@ -230,7 +230,7 @@ procedure TAccountManagerForm.SaveForm;
 var
   i: Integer;
 begin
-  with MainForm.options, vtAccountList.Header.Columns do begin
+  with configfile, vtAccountList.Header.Columns do begin
     if Count > 0 then
       for i := 0 to Count - 1 do
         WriteInteger('form', 'vtAccountList' + IntToStr(i) + 'Width', Items[i].Width);
@@ -241,7 +241,7 @@ procedure TAccountManagerForm.LoadForm;
 var
   i: Integer;
 begin
-   with MainForm.options, vtAccountList.Header.Columns do begin
+   with configfile, vtAccountList.Header.Columns do begin
      if Count > 0 then
        for i := 0 to Count - 1 do
          Items[i].Width := ReadInteger('form', 'vtAccountList' + IntToStr(i) + 'Width', 50);

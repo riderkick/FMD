@@ -12,7 +12,7 @@ interface
 
 uses
   Classes, SysUtils, Forms, Dialogs, StdCtrls, Buttons, DefaultTranslator, EditBtn,
-  lazutf8classes, LazFileUtils, uBaseUnit, WebsiteModules, RegExpr,
+  lazutf8classes, LazFileUtils, uBaseUnit, WebsiteModules, FMDOptions, RegExpr,
   frmNewChapter;
 
 type
@@ -87,7 +87,7 @@ begin
 
   if urlList.Count > 0 then
   begin
-    path:= CleanAndExpandDirectory(MainForm.options.ReadString('saveto', 'SaveTo', ''));
+    path:= CleanAndExpandDirectory(configfile.ReadString('saveto', 'SaveTo', ''));
     regx := TRegExpr.Create;
     try
       regx.Expression := REGEX_HOST;

@@ -10,7 +10,7 @@ unit WebsiteModules;
 interface
 
 uses
-  Classes, SysUtils, uData, uDownloadsManager, uBaseUnit, RegExpr, IniFiles;
+  Classes, SysUtils, uData, uDownloadsManager, uBaseUnit, FMDOptions, RegExpr, IniFiles;
 
 const
   MODULE_NOT_FOUND = -1;
@@ -107,7 +107,6 @@ type
   private
     FCSModules: TRTLCriticalSection;
     FModuleList: TFPList;
-    FWebsiteOptionFile: TIniFile;
     function GetModule(const ModuleId: Integer): TModuleContainer;
     function GetCount: Integer;
     function GetMaxTaskLimit(const ModuleId: Integer): Integer;
@@ -302,16 +301,12 @@ constructor TWebsiteModules.Create;
 begin
   InitCriticalSection(FCSModules);
   FModuleList := TFPList.Create;
-  FWebsiteOptionFile := TIniFile.Create(WEBSITE_CONFIG_FILE);
-  FWebsiteOptionFile.CacheUpdates := True;
 end;
 
 destructor TWebsiteModules.Destroy;
 var
   i: Integer;
 begin
-  if Assigned(FWebsiteOptionFile) then
-    FWebsiteOptionFile.Free;
   if FModuleList.Count > 0 then
     for i := 0 to FModuleList.Count - 1 do
       TModuleContainer(FModuleList[i]).Free;
@@ -658,7 +653,7 @@ begin
     with TModuleContainer(FModuleList[i]) do
       if Length(OptionList) > 0 then
         for j := Low(OptionList) to High(OptionList) do
-          with OptionList[j], FWebsiteOptionFile do
+          with OptionList[j], configfile do
           begin
             case OptionType of
               woCheckBox: PBoolean(BindValue)^ := ReadBool(Website, Name, PBoolean(BindValue)^);
@@ -677,7 +672,7 @@ begin
     with TModuleContainer(FModuleList[i]) do
       if Length(OptionList) > 0 then
         for j := Low(OptionList) to High(OptionList) do
-          with OptionList[j], FWebsiteOptionFile do
+          with OptionList[j], configfile do
           begin
             case OptionType of
               woCheckBox: WriteBool(Website, Name, PBoolean(BindValue)^);
@@ -685,7 +680,7 @@ begin
               woSpinEdit: WriteInteger(Website, Name, PInteger(BindValue)^);
             end;
           end;
-  FWebsiteOptionFile.UpdateFile;
+  configfile.UpdateFile;
 end;
 
 function TWebsiteModules.GetModule(const ModuleId: Integer): TModuleContainer;

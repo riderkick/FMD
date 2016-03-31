@@ -16,7 +16,7 @@ unit uGetMangaInfosThread;
 interface
 
 uses
-  SysUtils, Graphics, Dialogs, uBaseUnit, uData, uFMDThread;
+  SysUtils, Graphics, Dialogs, uBaseUnit, uData, uFMDThread, FMDOptions;
 
 type
 
@@ -139,7 +139,7 @@ procedure TGetMangaInfosThread.DoGetInfos;
 
 begin
   try
-    INIAdvanced.Reload;
+    advancedfile.Reload;
     if not GetMangaInfo then
     begin
       if not Self.Terminated then

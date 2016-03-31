@@ -11,7 +11,7 @@ unit uUpdateDBThread;
 interface
 
 uses
-  Classes, SysUtils, uBaseUnit, uMisc, SimpleTranslator,
+  Classes, SysUtils, uBaseUnit, uMisc, SimpleTranslator, FMDOptions,
   LazFileUtils;
 
 type

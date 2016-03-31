@@ -21,28 +21,18 @@ uses
   SysUtils, Classes, Graphics, Forms, lazutf8classes, LazUTF8, LazFileUtils,
   LConvEncoding, strutils, fileinfo, base64, fpjson, jsonparser, jsonscanner,
   FastHTMLParser, fgl, RegExpr, synautil, httpsend, blcksock, ssl_openssl,
-  synacode, GZIPUtils, uFMDThread, uMisc, httpsendthread, simplehtmltreeparser,
+  synacode, GZIPUtils, uFMDThread, uMisc, httpsendthread, FMDOptions, simplehtmltreeparser,
   xquery, xquery_json, Imaging, ImagingExtras, SimpleException, SimpleLogger;
 
 type
   TFMDDo = (DO_NOTHING, DO_EXIT, DO_POWEROFF, DO_HIBERNATE, DO_UPDATE);
 
 const
-  FMD_REVISION = '$WCREV$';
-  FMD_INSTANCE = '_FreeMangaDownloaderInstance_';
-
-  FMD_TARGETOS  = {$i %FPCTARGETOS%};
-  FMD_TARGETCPU = {$i %FPCTARGETCPU%};
-
   JPG_HEADER: array[0..2] of Byte = ($FF, $D8, $FF);
   GIF_HEADER: array[0..2] of Byte = ($47, $49, $46);
   PNG_HEADER: array[0..2] of Byte = ($89, $50, $4E);
 
   UTF8BOM = #$EF#$BB#$BF;
-
-  EXPARAM_PATH    = '%PATH%';
-  EXPARAM_CHAPTER = '%CHAPTER%';
-  DEFAULT_EXPARAM = '"' + EXPARAM_PATH + EXPARAM_CHAPTER + '"';
 
   DATA_PARAM_TITLE      = 0;
   DATA_PARAM_LINK       = 1;
@@ -206,12 +196,6 @@ const
   NO_ERROR              = 0;
   NET_PROBLEM           = 1;
   INFORMATION_NOT_FOUND = 2;
-
-  SOCKHEARTBEATRATE = 400;
-
-  DEFAULT_LIST = 'AnimeA,MangaFox,MangaHere,MangaInn,MangaReader';
-  DEFAULT_MANGA_CUSTOMRENAME = '%MANGA%';
-  DEFAULT_CHAPTER_CUSTOMRENAME = '%CHAPTER%';
 
   FMDFormatSettings :TFormatSettings = (
     CurrencyFormat            :1;
@@ -515,44 +499,7 @@ const
     '/series'
     );
 
-  DATA_EXT    = '.dat';
-  DBDATA_EXT  = '.db';
-  UPDATER_EXE = 'updater.exe';
-  ZIP_EXE    = '7za.exe';
-
 var
-  FMD_VERSION_NUMBER,
-  FMD_DIRECTORY,
-  WORK_FOLDER,
-  WORK_FILE,
-  WORK_FILE_RUN,
-  DOWNLOADEDCHAPTERS_FILE,
-  DOWNLOADEDCHAPTERSDB_FILE,
-  FAVORITES_FILE,
-  FAVORITES_FILE_RUN,
-  CONFIG_FOLDER,
-  CONFIG_FILE,
-  CONFIG_FILE_RUN,
-  CONFIG_ADVANCED,
-  REVISION_FILE,
-  UPDATE_FILE,
-  MANGALIST_FILE,
-  ACCOUNTS_FILE,
-  WEBSITE_CONFIG_FILE,
-  DATA_FOLDER,
-  IMAGE_FOLDER,
-  LANGUAGE_FILE,
-  CHANGELOG_FILE,
-  README_FILE,
-  EXTRAS_FOLDER,
-  MANGAFOXTEMPLATE_FOLDER: String;
-
-  {$IFDEF WINDOWS}
-  DEFAULT_PATH: String = '\downloads';
-  {$ELSE}
-  DEFAULT_PATH: String = '/downloads';
-  {$ENDIF}
-
   // Sites var
   BROWSER_INVERT: Boolean = False;
 
@@ -747,10 +694,6 @@ type
     property Data: TStringList read fdata;
   end;
 
-// Set base directory
-procedure SetFMDdirectory(const ADir: String);
-// Get current binary version
-function GetCurrentBinVersion: String;
 // Remove Unicode
 function UnicodeRemove(const S: String): String;
 // Check a directory to see if it's empty (return TRUE) or not
@@ -1042,76 +985,6 @@ begin
 end;
 
 {$ENDIF}
-
-procedure SetFMDdirectory(const ADir: String);
-begin                           WriteLog_D('setfmddirectory: '+adir);
-  FMD_DIRECTORY             := CleanAndExpandDirectory(ADir);
-
-  WORK_FOLDER               := FMD_DIRECTORY + 'works' + PathDelim;
-  WORK_FILE                 := WORK_FOLDER + 'works.ini';
-  WORK_FILE_RUN             := WORK_FILE + '.run';
-  DOWNLOADEDCHAPTERS_FILE   := WORK_FOLDER + 'downloadedchapters.ini';
-  DOWNLOADEDCHAPTERSDB_FILE := WORK_FOLDER + 'downloadedchapters.db';
-  FAVORITES_FILE            := WORK_FOLDER + 'favorites.ini';
-  FAVORITES_FILE_RUN        := FAVORITES_FILE + '.run';
-
-  CONFIG_FOLDER             := FMD_DIRECTORY + 'config' + PathDelim;
-  CONFIG_FILE               := CONFIG_FOLDER + 'config.ini';
-  CONFIG_FILE_RUN           := CONFIG_FILE + '.run';
-  CONFIG_ADVANCED           := CONFIG_FOLDER + 'advanced.ini';
-  REVISION_FILE             := CONFIG_FOLDER + 'revision.ini';
-  UPDATE_FILE               := CONFIG_FOLDER + 'updates.ini';
-  MANGALIST_FILE            := CONFIG_FOLDER + 'mangalist.ini';
-  ACCOUNTS_FILE             := CONFIG_FOLDER + 'accounts.db';
-  WEBSITE_CONFIG_FILE       := CONFIG_FOLDER + 'websiteconfig.ini';
-
-  DATA_FOLDER               := FMD_DIRECTORY + 'data' + PathDelim;
-
-  IMAGE_FOLDER              := FMD_DIRECTORY + 'images' + PathDelim;
-  LANGUAGE_FILE             := FMD_DIRECTORY + 'languages.ini';
-  CHANGELOG_FILE            := FMD_DIRECTORY + 'changelog.txt';
-  README_FILE               := FMD_DIRECTORY + 'readme.rtf';
-
-  EXTRAS_FOLDER             := FMD_DIRECTORY + 'extras' + PathDelim;
-  MANGAFOXTEMPLATE_FOLDER   := EXTRAS_FOLDER + 'mangafoxtemplate' + PathDelim;
-end;
-
-function GetCurrentBinVersion: String;
-var
-  AppVerInfo: TStringList;
-  i: Integer;
-begin
-  Result := '';
-  AppVerInfo := TStringList.Create;
-  with TFileVersionInfo.Create(nil) do
-    try
-      try
-        FileName := ParamStrUTF8(0);
-        if FileName = '' then
-          FileName := Application.ExeName;
-        {$IF FPC_FULLVERSION >= 20701}
-        ReadFileInfo;
-        {$ENDIF}
-        if VersionStrings.Count > 0 then
-        begin
-        {$IF FPC_FULLVERSION >= 20701}
-          AppVerInfo.Assign(VersionStrings);
-        {$ELSE}
-          for i := 0 to VersionStrings.Count - 1 do
-            AppVerInfo.Add(VersionCategories.Strings[i] + '=' +
-              VersionStrings.Strings[i]);
-        {$ENDIF}
-          for i := 0 to AppVerInfo.Count - 1 do
-            AppVerInfo.Strings[i] := LowerCase(AppVerInfo.Names[i]) + '=' + AppVerInfo.ValueFromIndex[i];
-          Result := AppVerInfo.Values['fileversion'];
-        end;
-      except
-      end;
-    finally
-      Free;
-      AppVerInfo.Free;
-    end;
-end;
 
 function UnicodeRemove(const S: String): String;
 var
@@ -2320,7 +2193,7 @@ begin
       Result := StringReplaceBrackets(Result, '%NUMBERING%', ANumbering, [rfReplaceAll]);
     // pad number
     chap := Trim(AChapter);
-    with MainForm.options do begin
+    with configfile do begin
       if ReadBool('saveto', 'ConvertDigitVolume', False) then begin
         if ReadBool('saveto', 'ConvertDigitChapter', False) then
           VolumeChapterPadZero(chap, ReadInteger('saveto', 'DigitVolumeLength', 2),
@@ -4020,14 +3893,5 @@ begin
     end;
   end;
 end;
-
-initialization
-  SetFMDdirectory(GetCurrentDirUTF8);
-  FMD_VERSION_NUMBER := GetCurrentBinVersion;
-  {$IFDEF WINDOWS}
-  DEFAULT_PATH := GetCurrentDir + DirectorySeparator + 'downloads';
-  {$ELSE}
-  DEFAULT_PATH := '/downloads';
-  {$ENDIF}
 
 end.

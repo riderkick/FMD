@@ -10,7 +10,7 @@ unit DBDataProcess;
 interface
 
 uses
-  Classes, SysUtils, FileUtil, LazFileUtils, sqlite3conn, sqlite3backup,
+  Classes, SysUtils, FileUtil, LazFileUtils, FMDOptions, sqlite3conn, sqlite3backup,
   sqlite3dyn, sqldb, DB, dateutils, RegExpr;
 
 type
