@@ -24,9 +24,6 @@ uses
   synacode, GZIPUtils, uFMDThread, uMisc, httpsendthread, FMDOptions, simplehtmltreeparser,
   xquery, xquery_json, Imaging, ImagingExtras, SimpleException, SimpleLogger;
 
-type
-  TFMDDo = (DO_NOTHING, DO_EXIT, DO_POWEROFF, DO_HIBERNATE, DO_UPDATE);
-
 const
   JPG_HEADER: array[0..2] of Byte = ($FF, $D8, $FF);
   GIF_HEADER: array[0..2] of Byte = ($47, $49, $46);
@@ -511,7 +508,6 @@ var
 
   MANGALIB_PL_COOKIES: String;
 
-  DBDownloadURL: String;
   //------------------------------------------
 
   Genre: array [0..37] of String;
@@ -519,43 +515,6 @@ var
   Revision: Cardinal;
   currentJDN: Integer;
   isChangeDirectory: Boolean = False;
-
-  currentWebsite: String;
-
-  OptionProxyType: String = '';
-  OptionProxyHost: String = '';
-  OptionProxyPort: String = '';
-  OptionProxyUser: String = '';
-  OptionProxyPass: String = '';
-
-  OptionLetFMDDo: TFMDDo = DO_NOTHING;
-
-  OptionChangeUnicodeCharacter: Boolean = False;
-  OptionGenerateMangaFolderName: Boolean = False;
-  OptionMangaCustomRename: String;
-  OptionChapterCustomRename: String;
-
-  OptionPDFQuality: Cardinal = 95;
-  OptionConnectionMaxRetry: Integer = 5;
-  OptionConnectionTimeout: Integer = 30000;
-  OptionUpdateListNoMangaInfo: Boolean = False;
-  OptionUpdateListRemoveDuplicateLocalData: Boolean = False;
-
-  OptionMaxThreads: Integer = 1;
-
-  OptionEnableLoadCover: Boolean = False;
-
-  OptionAutoCheckLatestVersion: Boolean = True;
-  OptionAutoCheckFavStartup: Boolean = True;
-  OptionAutoCheckFavInterval: Boolean = True;
-  OptionAutoCheckFavIntervalMinutes: Cardinal = 60;
-  OptionNewMangaTime: Cardinal = 1;
-  OptionAutoCheckFavDownload: Boolean = False;
-  OptionAutoCheckFavRemoveCompletedManga: Boolean = False;
-
-  OptionHTTPUseGzip: Boolean = True;
-
-  OptionRemoveMangaNameFromChapter: Boolean = False;
 type
   TArrayOfString = array of String;
 

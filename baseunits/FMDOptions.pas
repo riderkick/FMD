@@ -23,6 +23,8 @@ type
     procedure Reload;
   end;
 
+  TFMDDo = (DO_NOTHING, DO_EXIT, DO_POWEROFF, DO_HIBERNATE, DO_UPDATE);
+
 const
   FMD_REVISION = '$WCREV$';
   FMD_INSTANCE = '_FreeMangaDownloaderInstance_';
@@ -77,6 +79,46 @@ var
   mangalistfile: TIniFile;
   configfile,
   advancedfile: TIniFileRun;
+
+  // db data download url
+  DBDownloadURL: String;
+
+  currentWebsite: String;
+
+  OptionProxyType: String = '';
+  OptionProxyHost: String = '';
+  OptionProxyPort: String = '';
+  OptionProxyUser: String = '';
+  OptionProxyPass: String = '';
+
+  OptionLetFMDDo: TFMDDo = DO_NOTHING;
+
+  OptionChangeUnicodeCharacter: Boolean = False;
+  OptionGenerateMangaFolderName: Boolean = False;
+  OptionMangaCustomRename: String;
+  OptionChapterCustomRename: String;
+
+  OptionPDFQuality: Cardinal = 95;
+  OptionConnectionMaxRetry: Integer = 5;
+  OptionConnectionTimeout: Integer = 30000;
+  OptionUpdateListNoMangaInfo: Boolean = False;
+  OptionUpdateListRemoveDuplicateLocalData: Boolean = False;
+
+  OptionMaxThreads: Integer = 1;
+
+  OptionEnableLoadCover: Boolean = False;
+
+  OptionAutoCheckLatestVersion: Boolean = True;
+  OptionAutoCheckFavStartup: Boolean = True;
+  OptionAutoCheckFavInterval: Boolean = True;
+  OptionAutoCheckFavIntervalMinutes: Cardinal = 60;
+  OptionNewMangaTime: Cardinal = 1;
+  OptionAutoCheckFavDownload: Boolean = False;
+  OptionAutoCheckFavRemoveCompletedManga: Boolean = False;
+
+  OptionHTTPUseGzip: Boolean = True;
+
+  OptionRemoveMangaNameFromChapter: Boolean = False;
 
 // set base directory
 procedure SetFMDdirectory(const ADir: String);

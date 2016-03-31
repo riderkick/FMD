@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, Math, WebsiteModules, uData, uBaseUnit, uDownloadsManager,
-  XQueryEngineHTML, synautil;
+  XQueryEngineHTML, FMDOptions, synautil;
 
 implementation
 
