@@ -628,13 +628,6 @@ type
     property Raw: String read FRaw write FRaw;
   end;
 
-  { THTTPSendThread }
-
-  THTTPSendThread = class(httpsendthread.THTTPSendThread)
-  public
-    constructor Create(AOwner: TFMDThread = nil);
-  end;
-
   { THTMLForm }
 
   THTMLForm = class
@@ -2995,36 +2988,36 @@ begin
 
   globReturn:
 
-    if OptionProxyType = 'HTTP' then
+    if DefaultProxyType = 'HTTP' then
     begin
-      HTTP.ProxyHost := OptionProxyHost;
-      HTTP.ProxyPort := OptionProxyPort;
-      HTTP.ProxyUser := OptionProxyUser;
-      HTTP.ProxyPass := OptionProxyPass;
+      HTTP.ProxyHost := DefaultProxyHost;
+      HTTP.ProxyPort := DefaultProxyPort;
+      HTTP.ProxyUser := DefaultProxyUser;
+      HTTP.ProxyPass := DefaultProxyPass;
     end
     else
-    if (OptionProxyType = 'SOCKS4') or (OptionProxyType = 'SOCKS5') then
+    if (DefaultProxyType = 'SOCKS4') or (DefaultProxyType = 'SOCKS5') then
     begin
-      if OptionProxyType = 'SOCKS4' then
+      if DefaultProxyType = 'SOCKS4' then
         HTTP.Sock.SocksType := ST_Socks4
       else
-      if OptionProxyType = 'SOCKS5' then
+      if DefaultProxyType = 'SOCKS5' then
         HTTP.Sock.SocksType := ST_Socks5;
-      HTTP.Sock.SocksIP := OptionProxyHost;
-      HTTP.Sock.SocksPort := OptionProxyPort;
-      HTTP.Sock.SocksUsername := OptionProxyUser;
-      http.Sock.SocksPassword := OptionProxyPass;
+      HTTP.Sock.SocksIP := DefaultProxyHost;
+      HTTP.Sock.SocksPort := DefaultProxyPort;
+      HTTP.Sock.SocksUsername := DefaultProxyUser;
+      http.Sock.SocksPassword := DefaultProxyPass;
     end
     else
     begin
-      HTTP.Sock.SocksIP := OptionProxyHost;
-      HTTP.Sock.SocksPort := OptionProxyPort;
-      HTTP.Sock.SocksUsername := OptionProxyUser;
-      http.Sock.SocksPassword := OptionProxyPass;
-      HTTP.ProxyHost := OptionProxyHost;
-      HTTP.ProxyPort := OptionProxyPort;
-      HTTP.ProxyUser := OptionProxyUser;
-      HTTP.ProxyPass := OptionProxyPass;
+      HTTP.Sock.SocksIP := DefaultProxyHost;
+      HTTP.Sock.SocksPort := DefaultProxyPort;
+      HTTP.Sock.SocksUsername := DefaultProxyUser;
+      http.Sock.SocksPassword := DefaultProxyPass;
+      HTTP.ProxyHost := DefaultProxyHost;
+      HTTP.ProxyPort := DefaultProxyPort;
+      HTTP.ProxyUser := DefaultProxyUser;
+      HTTP.ProxyPass := DefaultProxyPass;
     end;
 
   HTTPHeader.Values['DNT'] := ' 1';
@@ -3304,36 +3297,36 @@ begin
   end;
   HTTP.Headers.NameValueSeparator := ':';
 
-  if OptionProxyType = 'HTTP' then
+  if DefaultProxyType = 'HTTP' then
   begin
-    HTTP.ProxyHost := OptionProxyHost;
-    HTTP.ProxyPort := OptionProxyPort;
-    HTTP.ProxyUser := OptionProxyUser;
-    HTTP.ProxyPass := OptionProxyPass;
+    HTTP.ProxyHost := DefaultProxyHost;
+    HTTP.ProxyPort := DefaultProxyPort;
+    HTTP.ProxyUser := DefaultProxyUser;
+    HTTP.ProxyPass := DefaultProxyPass;
   end
   else
-  if (OptionProxyType = 'SOCKS4') or (OptionProxyType = 'SOCKS5') then
+  if (DefaultProxyType = 'SOCKS4') or (DefaultProxyType = 'SOCKS5') then
   begin
-    if OptionProxyType = 'SOCKS4' then
+    if DefaultProxyType = 'SOCKS4' then
       HTTP.Sock.SocksType := ST_Socks4
     else
-    if OptionProxyType = 'SOCKS5' then
+    if DefaultProxyType = 'SOCKS5' then
       HTTP.Sock.SocksType := ST_Socks5;
-    HTTP.Sock.SocksIP := OptionProxyHost;
-    HTTP.Sock.SocksPort := OptionProxyPort;
-    HTTP.Sock.SocksUsername := OptionProxyUser;
-    http.Sock.SocksPassword := OptionProxyPass;
+    HTTP.Sock.SocksIP := DefaultProxyHost;
+    HTTP.Sock.SocksPort := DefaultProxyPort;
+    HTTP.Sock.SocksUsername := DefaultProxyUser;
+    http.Sock.SocksPassword := DefaultProxyPass;
   end
   else
   begin
-    HTTP.Sock.SocksIP := OptionProxyHost;
-    HTTP.Sock.SocksPort := OptionProxyPort;
-    HTTP.Sock.SocksUsername := OptionProxyUser;
-    http.Sock.SocksPassword := OptionProxyPass;
-    HTTP.ProxyHost := OptionProxyHost;
-    HTTP.ProxyPort := OptionProxyPort;
-    HTTP.ProxyUser := OptionProxyUser;
-    HTTP.ProxyPass := OptionProxyPass;
+    HTTP.Sock.SocksIP := DefaultProxyHost;
+    HTTP.Sock.SocksPort := DefaultProxyPort;
+    HTTP.Sock.SocksUsername := DefaultProxyUser;
+    http.Sock.SocksPassword := DefaultProxyPass;
+    HTTP.ProxyHost := DefaultProxyHost;
+    HTTP.ProxyPort := DefaultProxyPort;
+    HTTP.ProxyUser := DefaultProxyUser;
+    HTTP.ProxyPass := DefaultProxyPass;
   end;
 
   HTTPHeader.Values['DNT'] := ' 1';
@@ -3694,16 +3687,6 @@ begin
       if Result <> '' then Result := Result + fdelimiter;
       Result := Result + fdata.Names[i] + fvalueseparator + EncodeURLElement(fdata.ValueFromIndex[i]);
     end;
-end;
-
-{ THTTPSendThread }
-
-constructor THTTPSendThread.Create(AOwner: TFMDThread);
-begin
-  inherited Create(AOwner);
-  RetryCount := OptionConnectionMaxRetry;
-  Timeout := OptionConnectionTimeout;
-  SetProxy(OptionProxyType, OptionProxyHost, OptionProxyPort, OptionProxyUser, OptionProxyPass);
 end;
 
 { TParseHTML }

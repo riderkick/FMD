@@ -5,7 +5,7 @@ unit Doujinmoeus;
 interface
 
 uses
-  Classes, WebsiteModules, uData, uBaseUnit, uDownloadsManager;
+  Classes, WebsiteModules, uData, uBaseUnit, uDownloadsManager, httpsendthread;
 
 implementation
 

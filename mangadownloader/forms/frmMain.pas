@@ -23,7 +23,7 @@ uses
   uBaseUnit, uDownloadsManager, uFavoritesManager, uUpdateThread,
   uUpdateDBThread, uSilentThread, uMisc, uGetMangaInfosThread, frmDropTarget,
   frmAccountManager, frmCustomOption, CheckUpdate, accountmanagerdb, DBDataProcess,
-  mangafoxwatermarkremover, SimpleTranslator, FMDOptions, SimpleException, SimpleLogger;
+  mangafoxwatermarkremover, SimpleTranslator, FMDOptions, httpsendthread, SimpleException, SimpleLogger;
 
 type
 
@@ -4459,27 +4459,29 @@ begin
     end;
 
     //connection
-    OptionConnectionTimeout := seOptionConnectionTimeout.Value * 1000;
-    OptionConnectionMaxRetry := seOptionMaxRetry.Value;
-    OptionMaxThreads := seOptionMaxThread.Value;
     DLManager.maxDLTasks := seOptionMaxParallel.Value;
     DLManager.maxDLThreadsPerTask := seOptionMaxThread.Value;
-    DLManager.retryConnect := OptionConnectionMaxRetry;
+    DLManager.retryConnect := seOptionMaxRetry.Value;
+    OptionMaxThreads := seOptionMaxThread.Value;
+    OptionConnectionTimeout := seOptionConnectionTimeout.Value * 1000;
+    OptionConnectionMaxRetry := seOptionMaxRetry.Value;
+    DefaultTimeout := OptionConnectionTimeout;
+    DefaultRetryCount := OptionConnectionMaxRetry;
     if cbOptionUseProxy.Checked then
     begin
-      OptionProxyType := cbOptionProxyType.Text;
-      OptionProxyHost := edOptionHost.Text;
-      OptionProxyPass := edOptionPass.Text;
-      OptionProxyPort := edOptionPort.Text;
-      OptionProxyUser := edOptionUser.Text;
+      DefaultProxyType := cbOptionProxyType.Text;
+      DefaultProxyHost := edOptionHost.Text;
+      DefaultProxyPass := edOptionPass.Text;
+      DefaultProxyPort := edOptionPort.Text;
+      DefaultProxyUser := edOptionUser.Text;
     end
     else
     begin
-      OptionProxyType := '';
-      OptionProxyHost := '';
-      OptionProxyPass := '';
-      OptionProxyPort := '';
-      OptionProxyUser := '';
+      DefaultProxyType := '';
+      DefaultProxyHost := '';
+      DefaultProxyPass := '';
+      DefaultProxyPort := '';
+      DefaultProxyUser := '';
     end;
 
     //saveto

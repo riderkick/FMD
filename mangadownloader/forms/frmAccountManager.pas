@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, Buttons,
   ExtCtrls, VirtualTrees, accountmanagerdb, WebsiteModules, uFMDThread,
-  uBaseUnit, FMDOptions, frmAccountSet, SimpleException;
+  uBaseUnit, FMDOptions, httpsendthread, frmAccountSet, SimpleException;
 
 type
 

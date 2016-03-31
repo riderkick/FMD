@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, WebsiteModules, uData, uBaseUnit, uDownloadsManager,
-  accountmanagerdb, XQueryEngineHTML, synacode, RegExpr, fpjson;
+  accountmanagerdb, XQueryEngineHTML, httpsendthread, synacode, RegExpr, fpjson;
 
 implementation
 

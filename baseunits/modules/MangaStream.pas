@@ -5,7 +5,7 @@ unit MangaStream;
 interface
 
 uses
-  Classes, SysUtils, WebsiteModules, uData, uBaseUnit, uDownloadsManager;
+  Classes, SysUtils, WebsiteModules, uData, uBaseUnit, uDownloadsManager, httpsendthread;
 
 implementation
 

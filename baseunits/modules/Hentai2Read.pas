@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, WebsiteModules, uData, uBaseUnit, uDownloadsManager,
-  XQueryEngineHTML, synautil;
+  XQueryEngineHTML, httpsendthread, synautil;
 
 const
   dirurl = '/hentai-list/all/any/last-added/';

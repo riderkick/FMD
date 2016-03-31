@@ -15,10 +15,10 @@ unit uDownloadsManager;
 interface
 
 uses
-  lazutf8classes, LazFileUtils, FileUtil, FastHTMLParser, HTMLUtil, SynaCode,
-  RegExpr, Imaging, ImagingTypes, ImagingCanvases, Classes, SysUtils, Dialogs,
-  ExtCtrls, IniFiles, typinfo, syncobjs, httpsend, blcksock, uBaseUnit, uPacker,
-  uFMDThread, uMisc, DownloadedChaptersDB, FMDOptions, SimpleLogger, dateutils;
+  lazutf8classes, LazFileUtils, FileUtil, FastHTMLParser, HTMLUtil, SynaCode, RegExpr,
+  Imaging, ImagingTypes, ImagingCanvases, Classes, SysUtils, Dialogs, ExtCtrls, IniFiles,
+  typinfo, syncobjs, httpsend, blcksock, uBaseUnit, uPacker, uFMDThread, uMisc,
+  DownloadedChaptersDB, FMDOptions, httpsendthread, SimpleLogger, dateutils;
 
 type
   TDownloadManager = class;

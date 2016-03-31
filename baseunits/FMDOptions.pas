@@ -85,12 +85,6 @@ var
 
   currentWebsite: String;
 
-  OptionProxyType: String = '';
-  OptionProxyHost: String = '';
-  OptionProxyPort: String = '';
-  OptionProxyUser: String = '';
-  OptionProxyPass: String = '';
-
   OptionLetFMDDo: TFMDDo = DO_NOTHING;
 
   OptionChangeUnicodeCharacter: Boolean = False;

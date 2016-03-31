@@ -10,7 +10,7 @@ unit CheckUpdate;
 interface
 
 uses
-  Classes, SysUtils, Forms, Controls, uFMDThread, uBaseUnit, FMDOptions;
+  Classes, SysUtils, Forms, Controls, uFMDThread, uBaseUnit, FMDOptions, httpsendthread;
 
 type
 

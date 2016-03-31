@@ -10,7 +10,8 @@ unit WebsiteModules;
 interface
 
 uses
-  Classes, SysUtils, uData, uDownloadsManager, uBaseUnit, FMDOptions, RegExpr, IniFiles;
+  Classes, SysUtils, uData, uDownloadsManager, FMDOptions, httpsendthread,
+  RegExpr, IniFiles;
 
 const
   MODULE_NOT_FOUND = -1;

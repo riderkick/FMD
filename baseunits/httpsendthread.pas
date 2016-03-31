@@ -41,10 +41,18 @@ type
 
 function KeyVal(const AKey, AValue: String): TKeyValuePair;
 function QueryString(KeyValuePairs: array of TKeyValuePair): String;
+procedure SetDefaultProxy(const ProxyType, Host, Port, User, Pass: String);
 
 var
   DefaultUserAgent: String =
   'Mozilla/5.0 (Windows NT 10.0; WOW64; rv:44.0) Gecko/20100101 Firefox/44.0';
+  DefaultRetryCount: Integer = 1;
+  DefaultTimeout: Integer = 15000;
+  DefaultProxyType: String = '';
+  DefaultProxyHost: String = '';
+  DefaultProxyPort: String = '';
+  DefaultProxyUser: String = '';
+  DefaultProxyPass: String = '';
 
 implementation
 
@@ -66,6 +74,15 @@ begin
         Result := Result + '&';
       Result := Result + EncodeURL(KeyValuePairs[i, 0]) + '=' + EncodeURL(KeyValuePairs[i, 1]);
     end;
+end;
+
+procedure SetDefaultProxy(const ProxyType, Host, Port, User, Pass: String);
+begin
+  DefaultProxyType := ProxyType;
+  DefaultProxyHost := Host;
+  DefaultProxyPort := Port;
+  DefaultProxyUser := User;
+  DefaultProxyPass := Pass;
 end;
 
 { THTTPSendThread }
@@ -94,9 +111,10 @@ begin
   Headers.NameValueSeparator := ':';
   Cookies.NameValueSeparator := '=';
   fgzip := True;
-  fretrycount := 0;
   ffollowredirection := True;
-  SetTimeout(15000);
+  fretrycount := DefaultRetryCount;
+  SetTimeout(DefaultTimeout);
+  SetProxy(DefaultProxyType, DefaultProxyHost, DefaultProxyPort, DefaultProxyUser, DefaultProxyPass);
   Reset;
   if Assigned(AOwner) then
   begin
