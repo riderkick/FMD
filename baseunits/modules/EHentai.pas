@@ -234,7 +234,6 @@ var
       end;
       while PageLinks.Count < PageContainerLinks.Count do
         PageLinks.Add('G');
-      SerializeAndMaintainNames(Filenames);
     end;
   end;
 
@@ -266,6 +265,7 @@ begin
               if GETWithLogin(DownloadThread.FHTTP, rurl + '?p=' + IntToStr(i), Module.Website) then
                 GetImageLink;
           end;
+          SerializeAndMaintainNames(Filenames);
         end;
       finally
         query.Free;
