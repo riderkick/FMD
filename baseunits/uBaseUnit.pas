@@ -737,6 +737,7 @@ function HTMLDecode(const AStr: String): String;
 function RemoveSymbols(const input: String): String;
 function CorrectPathSys(const Path: String): String;
 
+function FixWhiteSpace(const S: String): String;
 function CleanString(const S: String): String;
 function CleanMultilinedString(const S: String; MaxLineEnding: Integer = 1): String;
 function CleanAndExpandURL(const URL: String): String;
@@ -2381,6 +2382,14 @@ begin
     Exit;
   for i := 0 to Length(input) - 1 do
     Result := Result + input[i] + SEPERATOR;
+end;
+
+function FixWhiteSpace(const S: String): String;
+begin
+  Result := S;
+  if Result = '' then Exit;
+  while Pos(#$C2#$A0, Result) > 0 do
+    Result := StringReplace(Result, #$C2#$A0, ' ', [rfReplaceAll]);
 end;
 
 function CleanString(const S: String): String;
