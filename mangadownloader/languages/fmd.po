@@ -1484,6 +1484,10 @@ msgstr ""
 msgid "View"
 msgstr ""
 
+#: tmainform.tswebsiteadvanced.caption
+msgid "Advanced"
+msgstr ""
+
 #: tmainform.tswebsiteoptions.caption
 msgctxt "TMAINFORM.TSWEBSITEOPTIONS.CAPTION"
 msgid "Options"
@@ -1603,6 +1607,16 @@ msgstr ""
 msgid ""
 "New version found! Do you want to update now?\n"
 "FMD will be closed to finish the update.\n"
+msgstr ""
+
+#: twebsiteoptionadvancedform.tscookies.caption
+msgctxt "twebsiteoptionadvancedform.tscookies.caption"
+msgid "Cookies"
+msgstr ""
+
+#: twebsiteoptionadvancedform.tsuseragent.caption
+msgctxt "twebsiteoptionadvancedform.tsuseragent.caption"
+msgid "User Agent"
 msgstr ""
 
 #: udownloadsmanager.rs_compressing

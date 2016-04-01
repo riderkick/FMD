@@ -16,15 +16,15 @@ uses
   {$else}
   FakeActiveX,
   {$endif}
-  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, LCLType,
-  ExtCtrls, ComCtrls, Buttons, Spin, Menus, VirtualTrees, RichMemo, IniFiles,
-  simpleipc, lclproc, types, strutils, LCLIntf, DefaultTranslator, EditBtn,
-  FileUtil, LazUTF8Classes, TAGraph, TASources, TASeries, TATools, AnimatedGif,
-  uBaseUnit, uDownloadsManager, uFavoritesManager, uUpdateThread,
-  uUpdateDBThread, uSilentThread, uMisc, uGetMangaInfosThread, frmDropTarget,
-  frmAccountManager, frmWebsiteOptionCustom, CheckUpdate, accountmanagerdb,
-  DBDataProcess, mangafoxwatermarkremover, SimpleTranslator, FMDOptions,
-  httpsendthread, SimpleException, SimpleLogger;
+  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, LCLType, ExtCtrls,
+  ComCtrls, Buttons, Spin, Menus, VirtualTrees, RichMemo, IniFiles, simpleipc, lclproc,
+  types, strutils, LCLIntf, DefaultTranslator, EditBtn, FileUtil, LazUTF8Classes, TAGraph,
+  TASources, TASeries, TATools, AnimatedGif, uBaseUnit, uDownloadsManager,
+  uFavoritesManager, uUpdateThread, uUpdateDBThread, uSilentThread, uMisc,
+  uGetMangaInfosThread, frmDropTarget, frmAccountManager, frmWebsiteOptionCustom,
+  frmWebsiteOptionAdvanced, CheckUpdate, accountmanagerdb, DBDataProcess,
+  mangafoxwatermarkremover, SimpleTranslator, FMDOptions, httpsendthread, SimpleException,
+  SimpleLogger;
 
 type
 
@@ -80,6 +80,7 @@ type
     pmSbMain: TPopupMenu;
     sbSaveTo: TScrollBox;
     sbWebsiteOptions: TScrollBox;
+    tsWebsiteAdvanced: TTabSheet;
     tsWebsiteSelection: TTabSheet;
     tsWebsiteOptions: TTabSheet;
     tsAccounts: TTabSheet;
@@ -1130,6 +1131,15 @@ begin
   with WebsiteOptionCustomForm do
   begin
     Parent := sbWebsiteOptions;
+    BorderStyle := bsNone;
+    Align := alClient;
+    Show;
+  end;
+
+  WebsiteOptionAdvancedForm := TWebsiteOptionAdvancedForm.Create(Self);
+  with WebsiteOptionAdvancedForm do
+  begin
+    Parent := tsWebsiteAdvanced;
     BorderStyle := bsNone;
     Align := alClient;
     Show;

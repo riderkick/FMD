@@ -1,0 +1,95 @@
+object WebsiteOptionAdvancedForm: TWebsiteOptionAdvancedForm
+  Left = 281
+  Height = 456
+  Top = 68
+  Width = 545
+  ClientHeight = 456
+  ClientWidth = 545
+  OnCreate = FormCreate
+  OnDestroy = FormDestroy
+  LCLVersion = '1.7'
+  object pcAdvanced: TPageControl
+    Left = 0
+    Height = 456
+    Top = 0
+    Width = 545
+    ActivePage = tsCookies
+    Align = alClient
+    TabIndex = 0
+    TabOrder = 0
+    object tsCookies: TTabSheet
+      Caption = 'Cookies'
+      ChildSizing.LeftRightSpacing = 6
+      ChildSizing.TopBottomSpacing = 6
+      ChildSizing.HorizontalSpacing = 4
+      ChildSizing.VerticalSpacing = 4
+      ClientHeight = 428
+      ClientWidth = 537
+      object sgCookies: TStringGrid
+        Left = 6
+        Height = 416
+        Top = 6
+        Width = 525
+        Align = alClient
+        AutoAdvance = aaNone
+        AutoEdit = False
+        ColCount = 2
+        Columns = <        
+          item
+            Title.Caption = 'Website'
+          end        
+          item
+            Title.Caption = 'Cookies'
+            Width = 400
+          end>
+        DefaultDrawing = False
+        FixedCols = 0
+        Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goDrawFocusSelected, goColSizing, goEditing, goSmoothScroll, goHeaderPushedLook, goCellHints, goTruncCellHints, goCellEllipsis]
+        RowCount = 2
+        TabAdvance = aaNone
+        TabOrder = 0
+        TitleStyle = tsNative
+        OnDblClick = sgUserAgentDblClick
+        OnKeyDown = sgUserAgentKeyDown
+        OnSetEditText = sgUserAgentSetEditText
+      end
+    end
+    object tsUserAgent: TTabSheet
+      Caption = 'User Agent'
+      ChildSizing.LeftRightSpacing = 6
+      ChildSizing.TopBottomSpacing = 6
+      ChildSizing.HorizontalSpacing = 4
+      ChildSizing.VerticalSpacing = 4
+      ClientHeight = 428
+      ClientWidth = 537
+      object sgUserAgent: TStringGrid
+        Left = 6
+        Height = 416
+        Top = 6
+        Width = 525
+        Align = alClient
+        AutoAdvance = aaNone
+        AutoEdit = False
+        ColCount = 2
+        Columns = <        
+          item
+            Title.Caption = 'Website'
+          end        
+          item
+            Title.Caption = 'User Agent'
+            Width = 400
+          end>
+        DefaultDrawing = False
+        FixedCols = 0
+        Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goDrawFocusSelected, goColSizing, goEditing, goSmoothScroll, goHeaderPushedLook, goCellHints, goTruncCellHints, goCellEllipsis]
+        RowCount = 2
+        TabAdvance = aaNone
+        TabOrder = 0
+        TitleStyle = tsNative
+        OnDblClick = sgUserAgentDblClick
+        OnKeyDown = sgUserAgentKeyDown
+        OnSetEditText = sgUserAgentSetEditText
+      end
+    end
+  end
+end

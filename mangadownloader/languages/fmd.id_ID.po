@@ -1539,6 +1539,10 @@ msgstr "Pembaruan"
 msgid "View"
 msgstr "Tampilan"
 
+#: tmainform.tswebsiteadvanced.caption
+msgid "Advanced"
+msgstr "Lanjutan"
+
 #: tmainform.tswebsiteoptions.caption
 msgctxt "tmainform.tswebsiteoptions.caption"
 msgid "Options"
@@ -1661,6 +1665,16 @@ msgid ""
 msgstr ""
 "Versi baru ditemukan! Apakah Anda ingin memperbarui sekarang? \n"
 "FMD akan ditutup untuk menyelesaikan update.\n"
+
+#: twebsiteoptionadvancedform.tscookies.caption
+msgctxt "twebsiteoptionadvancedform.tscookies.caption"
+msgid "Cookies"
+msgstr "Cookies"
+
+#: twebsiteoptionadvancedform.tsuseragent.caption
+msgctxt "twebsiteoptionadvancedform.tsuseragent.caption"
+msgid "User Agent"
+msgstr "User Agent"
 
 #: udownloadsmanager.rs_compressing
 msgid "Compressing..."
