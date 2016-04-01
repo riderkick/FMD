@@ -103,20 +103,20 @@ begin
         coverLink := XPathString('//div[@id="rightside"]//img/@src');
         if title = '' then title := XPathString('//div[@id="leftside"]//a[@class="bigChar"]');
         v := XPath('//div[@id="leftside"]//div[@class="barContent"]/div/p');
-        if v.Count > 0 then begin
-          i := 0;
-          while i < v.Count - 2 do begin
-            s := v.get(i).toString;
-            if Pos('Genres:', s) = 1 then genres := SeparateRight(s, ':') else
-            if Pos('Author:', s) = 1 then authors := SeparateRight(s, ':') else
-            if Pos('Artist:', s) = 1 then artists := SeparateRight(s, ':') else
-            if Pos('Status:', s) = 1 then begin
-              if Pos('ongoing', LowerCase(v.get(i).toString)) > 0 then status := '1'
-              else status := '0';
-            end else
-            if Pos('Summary:', s) = 1 then summary := v.get(i + 1).toString;
-            Inc(i);
-          end;
+        for i := 1 to v.Count do
+        begin
+          s := v.get(i).toString;
+          WriteLn(s);
+          if Pos('Genres', s) = 1 then genres := SeparateRight(s, ':') else
+          if (Pos('Author', s) = 1) or (Pos('Writer', s) = 1) then authors := SeparateRight(s, ':') else
+          if Pos('Artist', s) = 1 then artists := SeparateRight(s, ':') else
+          if Pos('Status', s) = 1 then begin
+            if Pos('ONGOING', UpperCase(s)) > 0 then
+              status := '1'
+            else if Pos('COMPLETED', UpperCase(s)) > 0 then
+              status := '0';
+          end else
+          if Pos('Summary:', s) = 1 then summary := v.get(i + 1).toString;
         end;
         for v in XPath('//table[@class="listing"]/tbody/tr/td/a') do begin
           chapterLinks.Add(v.toNode.getAttribute('href'));
