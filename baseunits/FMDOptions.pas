@@ -85,6 +85,9 @@ var
 
   currentWebsite: String;
 
+  // available website
+  AvailableWebsite: TStringList;
+
   OptionLetFMDDo: TFMDDo = DO_NOTHING;
 
   OptionChangeUnicodeCharacter: Boolean = False;
@@ -147,6 +150,7 @@ end;
 
 procedure TIniFileRun.UpdateFile;
 begin
+  if CacheUpdates and (Dirty = False) then Exit;
   inherited UpdateFile;
   CopyFile(FileName, FRealFileName, [cffOverwriteFile, cffPreserveTime, cffCreateDestDirectory]);
 end;
@@ -188,10 +192,46 @@ begin
   FreeNil(advancedfile);
 end;
 
+procedure GetAvailableWebsite;
+var
+  l, w: TStringList;
+  i, j: Integer;
+begin
+  AvailableWebsite.Clear;
+  AvailableWebsite.BeginUpdate;
+  try
+    l := TStringList.Create;
+    try
+      mangalistfile.ReadSection('available', l);
+      if l.Count > 0 then
+      begin
+        w := TStringList.Create;
+        try
+          for i := 0 to l.Count - 1 do
+          begin
+            w.Clear;
+            w.CommaText := mangalistfile.ReadString('available', l[i], '');
+            if w.Count > 0 then
+              for j := 0 to w.Count - 1 do
+                AvailableWebsite.Values[w[j]] := l[i];
+          end;
+        finally
+          w.Free;
+        end;
+      end;
+    finally
+      l.Free;
+    end;
+  finally
+    AvailableWebsite.EndUpdate;
+  end;
+end;
+
 procedure SetIniFiles;
 begin
   FreeIniFiles;
   mangalistfile := TIniFile.Create(MANGALIST_FILE);
+  GetAvailableWebsite;
   configfile := TIniFileRun.Create(CONFIG_FILE);
   configfile.Options := configfile.Options - [ifoStripQuotes];
   advancedfile := TIniFileRun.Create(CONFIG_ADVANCED);
@@ -277,6 +317,8 @@ end;
 procedure doInitialization;
 begin
   FMD_VERSION_NUMBER := GetCurrentBinVersion;
+  AvailableWebsite := TStringList.Create;
+  AvailableWebsite.Sorted := True;
   SetFMDdirectory(GetCurrentDirUTF8);
   SetAppDataDirectory(GetCurrentDirUTF8);
 end;
@@ -284,6 +326,7 @@ end;
 procedure doFinalization;
 begin
   FreeIniFiles;
+  AvailableWebsite.Free;
 end;
 
 initialization
