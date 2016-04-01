@@ -4386,6 +4386,7 @@ begin
     finally
       UpdateFile;
     end;
+  advancedfile.UpdateFile;
   Modules.SaveWebsiteOption;
 end;
 
