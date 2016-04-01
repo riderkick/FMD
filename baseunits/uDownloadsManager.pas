@@ -1635,7 +1635,6 @@ begin
   CS_DownloadedChapterList := TCriticalSection.Create;
 
   DownloadManagerFile := TIniFileRun.Create(WORK_FILE);
-  DownloadManagerFile.CacheUpdates := True;
 
   DownloadedChapters := TDownloadedChaptersDB.Create;
   DownloadedChapters.Filename := DOWNLOADEDCHAPTERSDB_FILE;

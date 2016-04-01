@@ -429,7 +429,6 @@ begin
   CS_Favorites := TCriticalSection.Create;
   isRunning := False;
   favoritesFile := TIniFileRun.Create(FAVORITES_FILE);
-  favoritesFile.CacheUpdates := True;
   FFavorites := TFPList.Create;
   Restore;
 end;
