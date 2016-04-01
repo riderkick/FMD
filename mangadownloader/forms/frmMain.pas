@@ -22,8 +22,9 @@ uses
   FileUtil, LazUTF8Classes, TAGraph, TASources, TASeries, TATools, AnimatedGif,
   uBaseUnit, uDownloadsManager, uFavoritesManager, uUpdateThread,
   uUpdateDBThread, uSilentThread, uMisc, uGetMangaInfosThread, frmDropTarget,
-  frmAccountManager, frmCustomOption, CheckUpdate, accountmanagerdb, DBDataProcess,
-  mangafoxwatermarkremover, SimpleTranslator, FMDOptions, httpsendthread, SimpleException, SimpleLogger;
+  frmAccountManager, frmWebsiteOptionCustom, CheckUpdate, accountmanagerdb,
+  DBDataProcess, mangafoxwatermarkremover, SimpleTranslator, FMDOptions,
+  httpsendthread, SimpleException, SimpleLogger;
 
 type
 
@@ -1125,8 +1126,8 @@ begin
     Show;
   end;
 
-  CustomOptionForm := TCustomOptionForm.Create(Self);
-  with CustomOptionForm do
+  WebsiteOptionCustomForm := TCustomOptionForm.Create(Self);
+  with WebsiteOptionCustomForm do
   begin
     Parent := sbWebsiteOptions;
     BorderStyle := bsNone;
@@ -4938,7 +4939,7 @@ begin
       tvDownloadFilterRepaint;
 
       // refresh custom option
-      CustomOptionForm.CreateWebsiteOption;
+      WebsiteOptionCustomForm.CreateWebsiteOption;
     end;
   end;
 end;

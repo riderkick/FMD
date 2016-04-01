@@ -1,4 +1,4 @@
-unit frmCustomOption;
+unit frmWebsiteOptionCustom;
 
 {$mode objfpc}{$H+}
 
@@ -69,7 +69,7 @@ type
   end;
 
 var
-  CustomOptionForm: TCustomOptionForm;
+  WebsiteOptionCustomForm: TCustomOptionForm;
   dparent: TWinControl;
   tbspace: Cardinal = 6;
   lrspace: Cardinal = 6;
