@@ -4,6 +4,15 @@ Project page: https://github.com/riderkick/FMD
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.48.0 (02-04-2016)
+[*] E-Hentai/ExHentai: Fixed filename serialized several times
+[+] Added ReadComicOnline[EN]
+[*] Website specific option moved to Options > Websites > Options
+[+] Added website specific cookies and user agent, Options > Websites > Advanced
+[*] Changed double click behaviour on download list and favorite list to "Open ..."
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.47.0...0.9.48.0
+ 
 0.9.47.0 (30-03-2016)
 [*] Fixed crash with clean install without works folder (#222)
 Full changes: https://github.com/riderkick/FMD/compare/0.9.46.0...0.9.47.0
