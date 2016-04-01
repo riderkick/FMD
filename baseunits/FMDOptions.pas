@@ -5,7 +5,7 @@ unit FMDOptions;
 interface
 
 uses
-  Classes, SysUtils, IniFiles, fileinfo, LazFileUtils, LazUTF8, FileUtil, Forms, LCLProc;
+  Classes, SysUtils, IniFiles, fileinfo, LazFileUtils, LazUTF8, FileUtil, Forms;
 
 type
 
@@ -14,10 +14,10 @@ type
   TIniFileRun = class(IniFiles.TMemIniFile)
   private
     FCSLock: TRTLCriticalSection;
-    FFileAge: Longint;
+    FFileAge: LongInt;
     FRealFileName: String;
   public
-    constructor Create(const AFileName: string; AEscapeLineFeeds: Boolean = False); overload; override;
+    constructor Create(const AFileName: String; AEscapeLineFeeds: Boolean = False); overload; override;
     destructor Destroy; override;
     procedure UpdateFile; override;
     procedure Reload;
@@ -122,7 +122,7 @@ implementation
 
 { TIniFileRun }
 
-constructor TIniFileRun.Create(const AFileName: string; AEscapeLineFeeds: Boolean);
+constructor TIniFileRun.Create(const AFileName: String; AEscapeLineFeeds: Boolean);
 begin
   FRealFileName := AFileName;
   if FileExistsUTF8(AFileName + RUN_EXE) then
