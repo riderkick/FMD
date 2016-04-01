@@ -1676,6 +1676,26 @@ msgctxt "twebsiteoptionadvancedform.tsuseragent.caption"
 msgid "User Agent"
 msgstr "User Agent"
 
+#: twebsiteoptionadvancedform.vtcookies.header.columns[0].text
+msgctxt "twebsiteoptionadvancedform.vtcookies.header.columns[0].text"
+msgid "Website"
+msgstr "Situs web"
+
+#: twebsiteoptionadvancedform.vtcookies.header.columns[1].text
+msgctxt "twebsiteoptionadvancedform.vtcookies.header.columns[1].text"
+msgid "Cookies"
+msgstr "Cookies"
+
+#: twebsiteoptionadvancedform.vtuseragent.header.columns[0].text
+msgctxt "twebsiteoptionadvancedform.vtuseragent.header.columns[0].text"
+msgid "Website"
+msgstr "Situs web"
+
+#: twebsiteoptionadvancedform.vtuseragent.header.columns[1].text
+msgctxt "twebsiteoptionadvancedform.vtuseragent.header.columns[1].text"
+msgid "User Agent"
+msgstr "User Agent"
+
 #: udownloadsmanager.rs_compressing
 msgid "Compressing..."
 msgstr "Mengompresi..."

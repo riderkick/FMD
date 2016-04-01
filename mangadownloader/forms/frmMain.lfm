@@ -36,13 +36,13 @@ object MainForm: TMainForm
     Height = 525
     Top = 11
     Width = 566
-    ActivePage = tsOption
+    ActivePage = tsDownload
     Align = alClient
     BorderSpacing.Top = 3
     BorderSpacing.Right = 4
     BorderSpacing.Bottom = 3
     ParentFont = False
-    TabIndex = 4
+    TabIndex = 0
     TabOrder = 0
     OnChange = pcMainChange
     object tsDownload: TTabSheet
@@ -1911,10 +1911,10 @@ object MainForm: TMainForm
         Height = 420
         Top = 8
         Width = 539
-        ActivePage = tsWebsites
+        ActivePage = tsGeneral
         Anchors = [akTop, akLeft, akRight, akBottom]
         ParentFont = False
-        TabIndex = 6
+        TabIndex = 0
         TabOrder = 0
         object tsGeneral: TTabSheet
           Caption = 'General'
@@ -3133,9 +3133,9 @@ object MainForm: TMainForm
             Height = 376
             Top = 8
             Width = 523
-            ActivePage = tsWebsiteAdvanced
+            ActivePage = tsWebsiteSelection
             Align = alClient
-            TabIndex = 2
+            TabIndex = 0
             TabOrder = 0
             object tsWebsiteSelection: TTabSheet
               Caption = 'Websites'
@@ -3306,6 +3306,8 @@ object MainForm: TMainForm
             end
             object tsWebsiteAdvanced: TTabSheet
               Caption = 'Advanced'
+              ChildSizing.LeftRightSpacing = 6
+              ChildSizing.TopBottomSpacing = 6
             end
           end
         end

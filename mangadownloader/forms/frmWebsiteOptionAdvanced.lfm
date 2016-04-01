@@ -6,7 +6,6 @@ object WebsiteOptionAdvancedForm: TWebsiteOptionAdvancedForm
   ClientHeight = 456
   ClientWidth = 545
   OnCreate = FormCreate
-  OnDestroy = FormDestroy
   LCLVersion = '1.7'
   object pcAdvanced: TPageControl
     Left = 0
@@ -25,33 +24,40 @@ object WebsiteOptionAdvancedForm: TWebsiteOptionAdvancedForm
       ChildSizing.VerticalSpacing = 4
       ClientHeight = 428
       ClientWidth = 537
-      object sgCookies: TStringGrid
+      object vtCookies: TVirtualStringTree
         Left = 6
         Height = 416
         Top = 6
         Width = 525
         Align = alClient
-        AutoAdvance = aaNone
-        AutoEdit = False
-        ColCount = 2
-        Columns = <        
+        DefaultText = 'Node'
+        Header.AutoSizeIndex = 0
+        Header.Columns = <        
           item
-            Title.Caption = 'Website'
+            Position = 0
+            Text = 'Website'
           end        
           item
-            Title.Caption = 'Cookies'
+            Position = 1
+            Text = 'Cookies'
             Width = 400
           end>
-        DefaultDrawing = False
-        FixedCols = 0
-        Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goDrawFocusSelected, goColSizing, goEditing, goSmoothScroll, goHeaderPushedLook, goCellHints, goTruncCellHints, goCellEllipsis]
-        RowCount = 2
-        TabAdvance = aaNone
+        Header.DefaultHeight = 23
+        Header.Height = 23
+        Header.Options = [hoColumnResize, hoDrag, hoShowSortGlyphs, hoVisible]
         TabOrder = 0
-        TitleStyle = tsNative
-        OnDblClick = sgUserAgentDblClick
-        OnKeyDown = sgUserAgentKeyDown
-        OnSetEditText = sgUserAgentSetEditText
+        TreeOptions.MiscOptions = [toAcceptOLEDrop, toEditable, toFullRepaintOnResize, toGridExtensions, toInitOnSave, toToggleOnDblClick, toWheelPanning]
+        TreeOptions.PaintOptions = [toHideFocusRect, toShowDropmark, toShowHorzGridLines, toShowVertGridLines, toThemeAware, toUseBlendedImages, toFullVertGridLines]
+        TreeOptions.SelectionOptions = [toExtendedFocus]
+        OnColumnDblClick = vtCookiesColumnDblClick
+        OnCompareNodes = vtCookiesCompareNodes
+        OnEditing = vtCookiesEditing
+        OnFreeNode = vtCookiesFreeNode
+        OnGetText = vtCookiesGetText
+        OnGetNodeDataSize = vtCookiesGetNodeDataSize
+        OnHeaderClick = vtCookiesHeaderClick
+        OnKeyDown = vtCookiesKeyDown
+        OnNewText = vtCookiesNewText
       end
     end
     object tsUserAgent: TTabSheet
@@ -62,33 +68,40 @@ object WebsiteOptionAdvancedForm: TWebsiteOptionAdvancedForm
       ChildSizing.VerticalSpacing = 4
       ClientHeight = 428
       ClientWidth = 537
-      object sgUserAgent: TStringGrid
+      object vtUserAgent: TVirtualStringTree
         Left = 6
         Height = 416
         Top = 6
         Width = 525
         Align = alClient
-        AutoAdvance = aaNone
-        AutoEdit = False
-        ColCount = 2
-        Columns = <        
+        DefaultText = 'Node'
+        Header.AutoSizeIndex = 0
+        Header.Columns = <        
           item
-            Title.Caption = 'Website'
+            Position = 0
+            Text = 'Website'
           end        
           item
-            Title.Caption = 'User Agent'
+            Position = 1
+            Text = 'User Agent'
             Width = 400
           end>
-        DefaultDrawing = False
-        FixedCols = 0
-        Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goDrawFocusSelected, goColSizing, goEditing, goSmoothScroll, goHeaderPushedLook, goCellHints, goTruncCellHints, goCellEllipsis]
-        RowCount = 2
-        TabAdvance = aaNone
+        Header.DefaultHeight = 23
+        Header.Height = 23
+        Header.Options = [hoColumnResize, hoDrag, hoShowSortGlyphs, hoVisible]
         TabOrder = 0
-        TitleStyle = tsNative
-        OnDblClick = sgUserAgentDblClick
-        OnKeyDown = sgUserAgentKeyDown
-        OnSetEditText = sgUserAgentSetEditText
+        TreeOptions.MiscOptions = [toAcceptOLEDrop, toEditable, toFullRepaintOnResize, toGridExtensions, toInitOnSave, toToggleOnDblClick, toWheelPanning]
+        TreeOptions.PaintOptions = [toHideFocusRect, toShowDropmark, toShowHorzGridLines, toShowVertGridLines, toThemeAware, toUseBlendedImages, toFullVertGridLines]
+        TreeOptions.SelectionOptions = [toExtendedFocus]
+        OnColumnDblClick = vtCookiesColumnDblClick
+        OnCompareNodes = vtCookiesCompareNodes
+        OnEditing = vtCookiesEditing
+        OnFreeNode = vtCookiesFreeNode
+        OnGetText = vtCookiesGetText
+        OnGetNodeDataSize = vtCookiesGetNodeDataSize
+        OnHeaderClick = vtCookiesHeaderClick
+        OnKeyDown = vtCookiesKeyDown
+        OnNewText = vtCookiesNewText
       end
     end
   end
