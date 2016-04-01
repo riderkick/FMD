@@ -300,14 +300,16 @@
         <ResourceBaseClass Value="Form"/>
       </Unit8>
       <Unit9>
-        <Filename Value="..\baseunits\FMDOptions.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit9>
-      <Unit10>
         <Filename Value="forms\frmWebsiteOptionAdvanced.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="WebsiteOptionAdvancedForm"/>
         <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit9>
+      <Unit10>
+        <Filename Value="forms\frmWebsiteSelection.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="WebsiteSelectionForm"/>
         <ResourceBaseClass Value="Form"/>
       </Unit10>
     </Units>

@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, Windows, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, ComCtrls,
-  LCLProc, Grids, VirtualTrees, FMDOptions;
+  LCLProc, Grids, Menus, VirtualTrees, FMDOptions, frmWebsiteSelection;
 
 type
 
@@ -19,12 +19,21 @@ type
   { TWebsiteOptionAdvancedForm }
 
   TWebsiteOptionAdvancedForm = class(TForm)
+    imglstpmCokies: TImageList;
+    MenuItem1: TMenuItem;
+    MenuItem2: TMenuItem;
+    MenuItem3: TMenuItem;
+    MenuItem4: TMenuItem;
     pcAdvanced: TPageControl;
+    pmCookies: TPopupMenu;
     tsCookies: TTabSheet;
     tsUserAgent: TTabSheet;
     vtCookies: TVirtualStringTree;
     vtUserAgent: TVirtualStringTree;
     procedure FormCreate(Sender: TObject);
+    procedure MenuItem1Click(Sender: TObject);
+    procedure MenuItem2Click(Sender: TObject);
+    procedure MenuItem4Click(Sender: TObject);
     procedure vtCookiesColumnDblClick(Sender: TBaseVirtualTree; Column: TColumnIndex;
       Shift: TShiftState);
     procedure vtCookiesCompareNodes(Sender: TBaseVirtualTree; Node1,
@@ -43,9 +52,10 @@ type
       Column: TColumnIndex; const NewText: String);
   private
     { private declarations }
+    procedure LoadFromFileToVT(const AVT: TVirtualStringTree; const ASection: String);
+    procedure GetWebsite(const AVT: TVirtualStringTree; const S: TStrings);
   public
     { public declarations }
-    procedure LoadFromFileToVT(const AVT: TVirtualStringTree; const ASection: String);
   end;
 
 var
@@ -63,6 +73,49 @@ begin
   LoadFromFileToVT(vtUserAgent, 'UserAgent');
 end;
 
+procedure TWebsiteOptionAdvancedForm.MenuItem1Click(Sender: TObject);
+var
+  Data: PNameValue;
+  Node: PVirtualNode;
+begin
+  if Screen.ActiveControl is TVirtualStringTree then
+    with TWebsiteSelectionForm.Create(Self) do
+      try
+        GetWebsite(TVirtualStringTree(Screen.ActiveControl), cbWebsites.Items);
+        if (ShowModal = mrOk) and (cbWebsites.Text <> '') then
+          with TVirtualStringTree(Screen.ActiveControl) do
+          begin
+            Node := AddChild(nil);
+            Data := GetNodeData(Node);
+            Data^.Name := cbWebsites.Text;
+            advancedfile.WriteString(DefaultText, cbWebsites.Text, '');
+            EditNode(Node, 1);
+          end;
+      finally
+        Free;
+      end;
+end;
+
+procedure TWebsiteOptionAdvancedForm.MenuItem2Click(Sender: TObject);
+begin
+  if Screen.ActiveControl is TVirtualStringTree then
+    with TVirtualStringTree(Screen.ActiveControl) do
+      EditNode(FocusedNode, 1);
+end;
+
+procedure TWebsiteOptionAdvancedForm.MenuItem4Click(Sender: TObject);
+var
+  Data: PNameValue;
+begin
+  if Screen.ActiveControl is TVirtualStringTree then
+    with TVirtualStringTree(Screen.ActiveControl) do
+    begin
+      Data := GetNodeData(FocusedNode);
+      advancedfile.DeleteKey(DefaultText, Data^.Name);
+      DeleteNode(FocusedNode);
+    end;
+end;
+
 procedure TWebsiteOptionAdvancedForm.vtCookiesColumnDblClick(Sender: TBaseVirtualTree;
   Column: TColumnIndex; Shift: TShiftState);
 begin
@@ -77,11 +130,10 @@ var
 begin
   Data1 := Sender.GetNodeData(Node1);
   Data2 := Sender.GetNodeData(Node2);
-  if Assigned(Data1) and Assigned(Data2) then
-    case Column of
-      0: Result := CompareStr(Data1^.Name, Data2^.Name);
-      1: Result := CompareStr(Data1^.Value, Data2^.Value);
-    end;
+  case Column of
+    0: Result := CompareStr(Data1^.Name, Data2^.Name);
+    1: Result := CompareStr(Data1^.Value, Data2^.Value);
+  end;
 end;
 
 procedure TWebsiteOptionAdvancedForm.vtCookiesEditing(Sender: TBaseVirtualTree;
@@ -112,11 +164,10 @@ var
   Data: PNameValue;
 begin
   Data := Sender.GetNodeData(Node);
-  if Assigned(Data) then
-    case Column of
-      0: CellText := Data^.Name;
-      1: CellText := Data^.Value;
-    end;
+  case Column of
+    0: CellText := Data^.Name;
+    1: CellText := Data^.Value;
+  end;
 end;
 
 procedure TWebsiteOptionAdvancedForm.vtCookiesHeaderClick(Sender: TVTHeader;
@@ -133,8 +184,8 @@ end;
 procedure TWebsiteOptionAdvancedForm.vtCookiesKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
-  if not (Sender is TBaseVirtualTree) then Exit;
-  with TBaseVirtualTree(Sender) do
+  if not (Sender is TVirtualStringTree) then Exit;
+  with TVirtualStringTree(Sender) do
     if (Key = VK_RETURN) and (FocusedColumn <> 0) then
       EditNode(FocusedNode, FocusedColumn);
 end;
@@ -189,6 +240,40 @@ begin
     end;
   finally
     s.Free;
+  end;
+end;
+
+procedure TWebsiteOptionAdvancedForm.GetWebsite(const AVT: TVirtualStringTree;
+  const S: TStrings);
+var
+  Data: PNameValue;
+  Node: PVirtualNode;
+  i, p: Integer;
+begin
+  if AVT = nil then Exit;
+  if S = nil then Exit;
+  S.Clear;
+  if AvailableWebsite.Count > 0 then
+  begin
+    S.BeginUpdate;
+    try
+      for i := 0 to AvailableWebsite.Count - 1 do
+        S.Add(AvailableWebsite.Names[i]);
+      if AVT.RootNodeCount > 0 then
+      begin
+        Node := AVT.GetFirst();
+        while Assigned(Node) do
+        begin
+          Data := AVT.GetNodeData(Node);
+          p := S.IndexOf(Data^.Name);
+          if p > -1 then
+            S.Delete(p);
+          Node := AVT.GetNext(Node);
+        end;
+      end;
+    finally
+      S.EndUpdate;
+    end;
   end;
 end;
 

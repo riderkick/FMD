@@ -193,6 +193,7 @@ msgid "Title:"
 msgstr "Judul:"
 
 #: frmmain.rs_infowebsite
+msgctxt "frmmain.rs_infowebsite"
 msgid "Website:"
 msgstr "Situs web:"
 
@@ -296,6 +297,7 @@ msgid "Save as PNG"
 msgstr "Simpan sebagai PNG"
 
 #: taccountmanagerform.btadd.caption
+msgctxt "taccountmanagerform.btadd.caption"
 msgid "Add"
 msgstr "Tambah"
 
@@ -305,6 +307,7 @@ msgid "Delete"
 msgstr "Hapus"
 
 #: taccountmanagerform.btedit.caption
+msgctxt "taccountmanagerform.btedit.caption"
 msgid "Edit"
 msgstr "Ubah"
 
@@ -1666,6 +1669,21 @@ msgstr ""
 "Versi baru ditemukan! Apakah Anda ingin memperbarui sekarang? \n"
 "FMD akan ditutup untuk menyelesaikan update.\n"
 
+#: twebsiteoptionadvancedform.menuitem1.caption
+msgctxt "twebsiteoptionadvancedform.menuitem1.caption"
+msgid "Add"
+msgstr "Tambah"
+
+#: twebsiteoptionadvancedform.menuitem2.caption
+msgctxt "twebsiteoptionadvancedform.menuitem2.caption"
+msgid "Edit"
+msgstr "Ubah"
+
+#: twebsiteoptionadvancedform.menuitem4.caption
+msgctxt "twebsiteoptionadvancedform.menuitem4.caption"
+msgid "Delete"
+msgstr "Hapus"
+
 #: twebsiteoptionadvancedform.tscookies.caption
 msgctxt "twebsiteoptionadvancedform.tscookies.caption"
 msgid "Cookies"
@@ -1695,6 +1713,10 @@ msgstr "Situs web"
 msgctxt "twebsiteoptionadvancedform.vtuseragent.header.columns[1].text"
 msgid "User Agent"
 msgstr "User Agent"
+
+#: twebsiteselectionform.caption
+msgid "Select a website"
+msgstr "Pilih situs web"
 
 #: udownloadsmanager.rs_compressing
 msgid "Compressing..."

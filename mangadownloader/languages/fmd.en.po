@@ -193,6 +193,7 @@ msgid "Title:"
 msgstr "Title:"
 
 #: frmmain.rs_infowebsite
+msgctxt "frmmain.rs_infowebsite"
 msgid "Website:"
 msgstr "Website:"
 
@@ -297,6 +298,7 @@ msgid "Save as PNG"
 msgstr "Save as PNG"
 
 #: taccountmanagerform.btadd.caption
+msgctxt "taccountmanagerform.btadd.caption"
 msgid "Add"
 msgstr "Add"
 
@@ -306,6 +308,7 @@ msgid "Delete"
 msgstr "Delete"
 
 #: taccountmanagerform.btedit.caption
+msgctxt "taccountmanagerform.btedit.caption"
 msgid "Edit"
 msgstr "Edit"
 
@@ -1683,6 +1686,21 @@ msgstr ""
 "New version found! Do you want to update now?\n"
 "FMD will be closed to finish the update.\n"
 
+#: twebsiteoptionadvancedform.menuitem1.caption
+msgctxt "twebsiteoptionadvancedform.menuitem1.caption"
+msgid "Add"
+msgstr "Add"
+
+#: twebsiteoptionadvancedform.menuitem2.caption
+msgctxt "twebsiteoptionadvancedform.menuitem2.caption"
+msgid "Edit"
+msgstr "Edit"
+
+#: twebsiteoptionadvancedform.menuitem4.caption
+msgctxt "twebsiteoptionadvancedform.menuitem4.caption"
+msgid "Delete"
+msgstr "Delete"
+
 #: twebsiteoptionadvancedform.tscookies.caption
 msgctxt "twebsiteoptionadvancedform.tscookies.caption"
 msgid "Cookies"
@@ -1712,6 +1730,10 @@ msgstr "Website"
 msgctxt "twebsiteoptionadvancedform.vtuseragent.header.columns[1].text"
 msgid "User Agent"
 msgstr "User Agent"
+
+#: twebsiteselectionform.caption
+msgid "Select a website"
+msgstr "Select a website"
 
 #: udownloadsmanager.rs_compressing
 msgid "Compressing..."
