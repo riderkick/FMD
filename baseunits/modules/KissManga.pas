@@ -11,15 +11,22 @@ uses
 implementation
 
 const
-  dirurl = '/MangaList/Newest';
+  kissmangadirurl = '/MangaList/Newest';
+  readcomiconlinedirurl = '/ComicList/Newest';
 
 var
   kissmangacookies: String = '';
   kissmangalockget: TRTLCriticalSection;
+  readcomiconlinecookies: String = '';
+  readcomiconlinelockget: TRTLCriticalSection;
 
-function GETWithCookie(const AHTTP: THTTPSendThread; const AURL: String): Boolean;
+function GETWithCookie(const AHTTP: THTTPSendThread; const AURL: String;
+  const Module: TModuleContainer): Boolean;
 begin
-  Result := Cloudflare.GETCF(AHTTP, AURL, kissmangacookies, kissmangalockget);
+  if Module.Website = 'KissManga' then
+    Result := Cloudflare.GETCF(AHTTP, AURL, kissmangacookies, kissmangalockget)
+  else if Module.Website = 'ReadComicOnline' then
+    Result := Cloudflare.GETCF(AHTTP, AURL, readcomiconlinecookies, readcomiconlinelockget);
 end;
 
 function GetDirectoryPageNumber(const MangaInfo: TMangaInformation;
@@ -30,7 +37,12 @@ begin
   Result := NET_PROBLEM;
   Page := 1;
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
-  if GETWithCookie(MangaInfo.FHTTP, Module.RootURL + dirurl) then begin
+  s := Module.RootURL;
+  if Module.Website = 'KissManga' then
+    s := s + kissmangadirurl
+  else if Module.Website = 'ReadComicOnline' then
+    s := s + readcomiconlinedirurl;
+  if GETWithCookie(MangaInfo.FHTTP, s, Module) then begin
     Result := NO_ERROR;
     with TXQueryEngineHTML.Create(MangaInfo.FHTTP.Document) do
       try
@@ -54,10 +66,14 @@ var
 begin
   Result := NET_PROBLEM;
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
-  s := Module.RootURL + dirurl;
+  s := Module.RootURL;
+  if Module.Website = 'KissManga' then
+    s := s + kissmangadirurl
+  else if Module.Website = 'ReadComicOnline' then
+    s := s + readcomiconlinedirurl;
   if AURL <> '0' then
     s := s + '?page=' + IncStr(AURL);
-  if GETWithCookie(MangaInfo.FHTTP, s) then begin
+  if GETWithCookie(MangaInfo.FHTTP, s, Module) then begin
     Result := NO_ERROR;
     with TXQueryEngineHTML.Create(MangaInfo.FHTTP.Document) do
       try
@@ -80,7 +96,7 @@ var
 begin
   Result := NET_PROBLEM;
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
-  if GETWithCookie(MangaInfo.FHTTP, FillHost(Module.RootURL, AURL)) then begin
+  if GETWithCookie(MangaInfo.FHTTP, FillHost(Module.RootURL, AURL), Module) then begin
     Result := NO_ERROR;
     with MangaInfo.mangaInfo, TXQueryEngineHTML.Create(MangaInfo.FHTTP.Document) do
       try
@@ -124,7 +140,7 @@ begin
   with DownloadThread.FHTTP, DownloadThread.manager.container do begin
     PageLinks.Clear;
     PageNumber := 0;
-    if GETWithCookie(DownloadThread.FHTTP, FillHost(Module.RootURL, AURL)) then begin
+    if GETWithCookie(DownloadThread.FHTTP, FillHost(Module.RootURL, AURL), Module) then begin
       Result := True;
       source := TStringList.Create;
       try
@@ -142,24 +158,33 @@ begin
 end;
 
 procedure RegisterModule;
-begin
-  with AddModule do
+
+  procedure AddWebsiteModule(AWebsite, ARootURL: String);
   begin
-    Website := 'KissManga';
-    RootURL := 'http://kissmanga.com';
-    SortedList := True;
-    OnGetDirectoryPageNumber := @GetDirectoryPageNumber;
-    OnGetNameAndLink := @GetNameAndLink;
-    OnGetInfo := @GetInfo;
-    OnGetPageNumber := @GetPageNumber;
+    with AddModule do
+    begin
+      Website := AWebsite;
+      RootURL := ARootURL;
+      SortedList := True;
+      OnGetDirectoryPageNumber := @GetDirectoryPageNumber;
+      OnGetNameAndLink := @GetNameAndLink;
+      OnGetInfo := @GetInfo;
+      OnGetPageNumber := @GetPageNumber;
+    end;
   end;
+
+begin
+  AddWebsiteModule('KissManga', 'http://kissmanga.com');
+  AddWebsiteModule('ReadComicOnline', 'http://readcomiconline.com');
 end;
 
 initialization
   InitCriticalSection(kissmangalockget);
+  InitCriticalSection(readcomiconlinelockget);
   RegisterModule;
 
 finalization
   DoneCriticalsection(kissmangalockget);
+  DoneCriticalsection(readcomiconlinelockget);
 
 end.
