@@ -106,7 +106,6 @@ begin
         for i := 1 to v.Count do
         begin
           s := v.get(i).toString;
-          WriteLn(s);
           if Pos('Genres', s) = 1 then genres := SeparateRight(s, ':') else
           if (Pos('Author', s) = 1) or (Pos('Writer', s) = 1) then authors := SeparateRight(s, ':') else
           if Pos('Artist', s) = 1 then artists := SeparateRight(s, ':') else
