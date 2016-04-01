@@ -1646,16 +1646,16 @@ begin
 
     // cleanup info
     coverLink := CleanURL(coverLink);
-    title := Trim(RemoveStringBreaks(CommonStringFilter(title)));
-    authors := Trim(RemoveStringBreaks(Trim(authors)));
-    artists := Trim(RemoveStringBreaks(Trim(artists)));
-    genres := Trim(RemoveStringBreaks(Trim(genres)));
+    title := Trim(FixWhiteSpace(RemoveStringBreaks(CommonStringFilter(title))));
+    authors := Trim(FixWhiteSpace(RemoveStringBreaks(Trim(authors))));
+    artists := Trim(FixWhiteSpace(RemoveStringBreaks(Trim(artists))));
+    genres := Trim(FixWhiteSpace(RemoveStringBreaks(Trim(genres))));
 
-    authors := TrimRightChar(Trim(authors), [',']);
-    artists := TrimRightChar(Trim(artists), [',']);
-    genres := TrimRightChar(Trim(genres), [',']);
+    authors := TrimRightChar(Trim(FixWhiteSpace(authors)), [',']);
+    artists := TrimRightChar(Trim(FixWhiteSpace(artists)), [',']);
+    genres := TrimRightChar(Trim(FixWhiteSpace(genres)), [',']);
 
-    summary := CleanMultilinedString(summary);
+    summary := CleanMultilinedString(FixWhiteSpace(summary));
 
     // fix info
     if (LeftStr(authors, 1) = '<') or (authors = '-') or (authors = ':') then
