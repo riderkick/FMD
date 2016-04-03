@@ -19,7 +19,7 @@ uses
   UTF8Process,
   {$endif}
   SysUtils, Classes, Graphics, Forms, lazutf8classes, LazUTF8, LazFileUtils,
-  LConvEncoding, strutils, fileinfo, base64, fpjson, jsonparser, jsonscanner,
+  LConvEncoding, strutils, dateutils, fileinfo, base64, fpjson, jsonparser, jsonscanner,
   FastHTMLParser, fgl, RegExpr, synautil, httpsend, blcksock, ssl_openssl,
   synacode, GZIPUtils, uFMDThread, uMisc, httpsendthread, FMDOptions, simplehtmltreeparser,
   xquery, xquery_json, Imaging, ImagingExtras, SimpleException, SimpleLogger;
@@ -220,6 +220,8 @@ const
                                 'Thursday', 'Friday', 'Saturday');
     TwoDigitYearCenturyWindow :50;
     );
+
+  HTTPDateTimeFormatStr = 'ddd, dd mmm yyyy hh:nn:ss';
 
   // EN: Param seperator
   SEPERATOR  = '!%~';
@@ -808,7 +810,7 @@ function GetPage(var output: TObject; URL: String; const Reconnect: Integer = 0)
 function GetURLFromBitly(const URL: String): String;
 
 // try to save tmemorystream to file, return the saved filename if success, otherwise return empty string
-function SaveImageStreamToFile(Stream: TMemoryStream; Path, FileName: String): String;
+function SaveImageStreamToFile(Stream: TMemoryStream; Path, FileName: String; Age: LongInt = 0): String;
 
 // Download an image from url and save it to a specific location.
 function SaveImage(const AHTTP: THTTPSend; const mangaSiteID: Integer; URL: String;
@@ -3215,7 +3217,7 @@ begin
   httpSource.Free;
 end;
 
-function SaveImageStreamToFile(Stream: TMemoryStream; Path, FileName: String
+function SaveImageStreamToFile(Stream: TMemoryStream; Path, FileName: String; Age: LongInt
   ): String;
 var
   p, f: String;
@@ -3240,9 +3242,19 @@ begin
       end;
     except
       on E: Exception do
-        WriteLog_E('SaveImageStreamToFile.Failed!', E);
+        WriteLog_E('SaveImageStreamToFile.WriteToFile Failed! ' + f, E);
     end;
-    if FileExistsUTF8(f) then Result := f;
+    if FileExistsUTF8(f) then
+    begin
+      Result := f;
+      if Age > 0 then
+        try
+          FileSetDateUTF8(f, Age);
+        except
+          on E: Exception do
+            WriteLog_E('SaveImageStreamToFile.FileSetDate Error! ' + f, E);
+        end;
+    end;
   end;
 end;
 
@@ -3252,7 +3264,7 @@ function SaveImage(const AHTTP: THTTPSend; const mangaSiteID: Integer;
 var
   HTTPHeader: TStringList;
   HTTP: THTTPSend;
-  counter: Integer;
+  counter, lastmodified: LongInt;
   s: String;
 
   procedure preTerminate;
@@ -3429,7 +3441,14 @@ begin
     end;
   end;
   if checkTerminate then Exit;
-  SavedFilename := SaveImageStreamToFile(HTTP.Document, Path, Name);
+  s := Trim(HTTP.Headers.Values['last-modified']);
+  lastmodified := 0;
+  if s <> '' then
+    try
+      lastmodified := DateTimeToFileDate(ScanDateTime(HTTPDateTimeFormatStr, s, FMDFormatSettings));
+    except
+    end;
+  SavedFilename := SaveImageStreamToFile(HTTP.Document, Path, Name, lastmodified);
   preTerminate;
   Result := SavedFilename <> '';
 end;
