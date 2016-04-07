@@ -39,6 +39,7 @@ type
   end;
 
   IXQValue = xquery.IXQValue;
+  TTreeNode = simplehtmltreeparser.TTreeNode;
 
 implementation
 
