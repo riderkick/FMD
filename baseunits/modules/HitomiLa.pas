@@ -67,7 +67,6 @@ end;
 function GetInfo(const MangaInfo: TMangaInformation;
   const AURL: String; const Module: TModuleContainer): Integer;
 var
-  query: TXQueryEngineHTML;
   v: IXQValue;
   s: String;
 begin
@@ -76,10 +75,8 @@ begin
   MangaInfo.mangaInfo.website := Module.Website;
   if MangaInfo.FHTTP.GET(FillHost(Module.RootURL, AURL)) then begin
     Result := NO_ERROR;
-    query := TXQueryEngineHTML.Create;
-    try
-      query.ParseHTML(StreamToString(MangaInfo.FHTTP.Document));
-      with MangaInfo.mangaInfo, query do begin
+    with MangaInfo.mangaInfo, TXQueryEngineHTML.Create(MangaInfo.FHTTP.Document) do
+      try
         coverLink := FillURLProtocol('https://', XPathString('//div[@class="cover"]//img/@src'));
         title := XPathString('//div/h1');
         for v in XPath('//div[@class="gallery-info"]/table//tr/td[2]//a') do
@@ -89,17 +86,15 @@ begin
           chapterLinks.Add(s);
           chapterName.Add(title);
         end;
+      finally
+        Free;
       end;
-    finally
-      query.Free;
-    end;
   end;
 end;
 
 function GetPageNumber(const DownloadThread: TDownloadThread;
   const AURL: String; const Module: TModuleContainer): Boolean;
 var
-  query: TXQueryEngineHTML;
   v: IXQValue;
 begin
   Result := False;
@@ -109,15 +104,14 @@ begin
     PageNumber := 0;
     if GET(FillHost(Module.RootURL, AURL)) then begin
       Result := True;
-      query := TXQueryEngineHTML.Create;
-      try
-        query.ParseHTML(StreamToString(Document));
-        for v in query.XPath('//div[@class="img-url"]') do
-          PageLinks.Add(FillURLProtocol('https://', v.toString));
-        PageNumber := PageLinks.Count
-      finally
-        query.Free;
-      end;
+      with TXQueryEngineHTML.Create(Document) do
+        try
+          for v in XPath('//div[@class="img-url"]') do
+            PageLinks.Add(FillURLProtocol('https://', v.toString));
+          PageNumber := PageLinks.Count
+        finally
+          Free;
+        end;
     end;
   end;
 end;
