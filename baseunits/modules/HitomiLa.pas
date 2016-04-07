@@ -41,24 +41,26 @@ function GetNameAndLink(const MangaInfo: TMangaInformation;
   const ANames, ALinks: TStringList; const AURL: String;
   const Module: TModuleContainer): Integer;
 var
-  query: TXQueryEngineHTML;
   v: IXQValue;
+  s: String;
 begin
   Result := NET_PROBLEM;
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
-  if MangaInfo.FHTTP.GET(Module.RootURL + '/index-all-' + AURL + '.html') then begin
+  s := Module.RootURL;
+  if AURL <> '0' then
+    s := s + '/index-all-' + AURL + '.html';
+  if MangaInfo.FHTTP.GET(s) then begin
     Result := NO_ERROR;
-    query := TXQueryEngineHTML.Create;
-    try
-      query.ParseHTML(StreamToString(MangaInfo.FHTTP.Document));
-      for v in query.XPath('//div[@class="gallery-content"]/div/h1/a') do
-      begin
-        ANames.Add(v.toString);
-        ALinks.Add(v.toNode.getAttribute('href'));
+    with TXQueryEngineHTML.Create(MangaInfo.FHTTP.Document) do
+      try
+        for v in XPath('//div[@class="gallery-content"]/div/h1/a') do
+        begin
+          ANames.Add(v.toString);
+          ALinks.Add(v.toNode.getAttribute('href'));
+        end;
+      finally
+        Free;
       end;
-    finally
-      query.Free;
-    end;
   end;
 end;
 
