@@ -68,6 +68,7 @@ function GetInfo(const MangaInfo: TMangaInformation;
   const AURL: String; const Module: TModuleContainer): Integer;
 var
   v: IXQValue;
+  t: TTreeNode;
   s: String;
 begin
   Result := NET_PROBLEM;
@@ -77,11 +78,16 @@ begin
     Result := NO_ERROR;
     with MangaInfo.mangaInfo, TXQueryEngineHTML.Create(MangaInfo.FHTTP.Document) do
       try
-        coverLink := FillURLProtocol('https://', XPathString('//div[@class="cover"]//img/@src'));
-        title := XPathString('//div/h1');
-        for v in XPath('//div[@class="gallery-info"]/table//tr/td[2]//a') do
+        t := XPath('//div[contains(@class,"dj-gallery")]').toNode;
+        coverLink := FillURLProtocol('https://', XPathString('//div[@class="cover"]//img/@src', t));
+        title := XPathString('//div/h1', t);
+        artists := XPathString('//h2//a[contains(@href,"/artist/")]', t);
+        if (title = '') and (artists <> '') then
+          title := artists;
+        genres := '';
+        for v in XPath('//div[@class="gallery-info"]/table//tr/td[2]//a', t) do
           AddCommaString(genres, v.toString);
-        s := XPathString('//div[@class="cover-column"]/a/@href');
+        s := XPathString('//div[@class="cover-column"]/a/@href', t);
         if (s <> '') and (title <> '') then begin
           chapterLinks.Add(s);
           chapterName.Add(title);
