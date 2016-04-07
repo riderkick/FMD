@@ -24,11 +24,21 @@ type
     MenuItem2: TMenuItem;
     MenuItem3: TMenuItem;
     MenuItem4: TMenuItem;
+    pcUpdateList: TPageControl;
+    pcDownloads: TPageControl;
     pcAdvanced: TPageControl;
     pmCookies: TPopupMenu;
+    tsMaxThreadsPerTask: TTabSheet;
+    tsDirectoryPageNumber: TTabSheet;
+    tsNumberofThreads: TTabSheet;
+    tsUpdateList: TTabSheet;
+    tsDownloads: TTabSheet;
     tsCookies: TTabSheet;
     tsUserAgent: TTabSheet;
     vtCookies: TVirtualStringTree;
+    vtDownloadMaxThreadsPerTask: TVirtualStringTree;
+    vtUpdateListDirectoryPageNumber: TVirtualStringTree;
+    vtUpdateListNumberOfThreads: TVirtualStringTree;
     vtUserAgent: TVirtualStringTree;
     procedure FormCreate(Sender: TObject);
     procedure MenuItem1Click(Sender: TObject);
@@ -71,6 +81,9 @@ procedure TWebsiteOptionAdvancedForm.FormCreate(Sender: TObject);
 begin
   LoadFromFileToVT(vtCookies, 'Cookies');
   LoadFromFileToVT(vtUserAgent, 'UserAgent');
+  LoadFromFileToVT(vtDownloadMaxThreadsPerTask, 'DownloadMaxThreadsPerTask');
+  LoadFromFileToVT(vtUpdateListDirectoryPageNumber, 'UpdateListDirectoryPageNumber');
+  LoadFromFileToVT(vtUpdateListNumberOfThreads, 'UpdateListNumberOfThreads');
 end;
 
 procedure TWebsiteOptionAdvancedForm.MenuItem1Click(Sender: TObject);

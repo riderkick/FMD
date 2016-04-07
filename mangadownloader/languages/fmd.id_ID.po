@@ -1491,6 +1491,7 @@ msgid "Dialogs"
 msgstr "Dialog"
 
 #: tmainform.tsdownload.caption
+msgctxt "tmainform.tsdownload.caption"
 msgid "Downloads"
 msgstr "Unduhan"
 
@@ -1689,6 +1690,27 @@ msgctxt "twebsiteoptionadvancedform.tscookies.caption"
 msgid "Cookies"
 msgstr "Cookies"
 
+#: twebsiteoptionadvancedform.tsdirectorypagenumber.caption
+msgid "Directory page number"
+msgstr "Jumlah halaman directory"
+
+#: twebsiteoptionadvancedform.tsdownloads.caption
+msgctxt "twebsiteoptionadvancedform.tsdownloads.caption"
+msgid "Downloads"
+msgstr "Unduhan"
+
+#: twebsiteoptionadvancedform.tsmaxthreadspertask.caption
+msgid "Max threads per task"
+msgstr "Max jumlah threafs per unduhan"
+
+#: twebsiteoptionadvancedform.tsnumberofthreads.caption
+msgid "Number of threads"
+msgstr "Jumlah threads"
+
+#: twebsiteoptionadvancedform.tsupdatelist.caption
+msgid "Update List"
+msgstr "Pembaruan daftar"
+
 #: twebsiteoptionadvancedform.tsuseragent.caption
 msgctxt "twebsiteoptionadvancedform.tsuseragent.caption"
 msgid "User Agent"
@@ -1703,6 +1725,36 @@ msgstr "Situs web"
 msgctxt "twebsiteoptionadvancedform.vtcookies.header.columns[1].text"
 msgid "Cookies"
 msgstr "Cookies"
+
+#: twebsiteoptionadvancedform.vtdownloadmaxthreadspertask.header.columns[0].text
+msgctxt "twebsiteoptionadvancedform.vtdownloadmaxthreadspertask.header.columns[0].text"
+msgid "Website"
+msgstr "Situs web"
+
+#: twebsiteoptionadvancedform.vtdownloadmaxthreadspertask.header.columns[1].text
+msgctxt "twebsiteoptionadvancedform.vtdownloadmaxthreadspertask.header.columns[1].text"
+msgid "Value"
+msgstr "Nilai"
+
+#: twebsiteoptionadvancedform.vtupdatelistdirectorypagenumber.header.columns[0].text
+msgctxt "twebsiteoptionadvancedform.vtupdatelistdirectorypagenumber.header.columns[0].text"
+msgid "Website"
+msgstr "Situs web"
+
+#: twebsiteoptionadvancedform.vtupdatelistdirectorypagenumber.header.columns[1].text
+msgctxt "twebsiteoptionadvancedform.vtupdatelistdirectorypagenumber.header.columns[1].text"
+msgid "Value"
+msgstr "Nilai"
+
+#: twebsiteoptionadvancedform.vtupdatelistnumberofthreads.header.columns[0].text
+msgctxt "twebsiteoptionadvancedform.vtupdatelistnumberofthreads.header.columns[0].text"
+msgid "Website"
+msgstr "Situs web"
+
+#: twebsiteoptionadvancedform.vtupdatelistnumberofthreads.header.columns[1].text
+msgctxt "twebsiteoptionadvancedform.vtupdatelistnumberofthreads.header.columns[1].text"
+msgid "Value"
+msgstr "Nilai"
 
 #: twebsiteoptionadvancedform.vtuseragent.header.columns[0].text
 msgctxt "twebsiteoptionadvancedform.vtuseragent.header.columns[0].text"
