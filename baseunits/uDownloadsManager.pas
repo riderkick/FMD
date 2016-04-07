@@ -81,6 +81,7 @@ type
   TTaskThread = class(TFMDThread)
   private
     ModuleId: Integer;
+    FCheckAndActiveTaskFlag: Boolean;
   protected
     FMessage, FAnotherURL: String;
     procedure CheckOut;
@@ -89,9 +90,9 @@ type
     procedure Execute; override;
     procedure DoTerminate; override;
     procedure Compress;
+    procedure SyncStop;
     // show notification when download completed
     procedure SyncShowBaloon;
-    procedure SyncStop;
   public
     //additional parameter
     httpCookies: String;
@@ -109,11 +110,13 @@ type
 
   TTaskContainer = class
   private
-    FReadCount: Integer;
-    CS_FContainer: TCriticalSection;
     FWebsite: String;
     procedure SetWebsite(AValue: String);
   public
+    // critical section
+    CS_Container: TCriticalSection;
+    // read count for transfer rate
+    ReadCount: Integer;
     // task thread of this container
     Thread: TTaskThread;
     // download manager
@@ -140,8 +143,6 @@ type
     constructor Create;
     destructor Destroy; override;
     procedure IncReadCount(const ACount: Integer);
-    procedure Lock; inline;
-    procedure Unlock; inline;
     property Website: String read FWebsite write SetWebsite;
   end;
 
@@ -149,7 +150,6 @@ type
 
   TDownloadManager = class
   private
-    FTotalReadCount: Integer;
     FSortDirection: Boolean;
     FSortColumn: Integer;
     DownloadManagerFile: TIniFileRun;
@@ -158,9 +158,9 @@ type
     function GetTaskCount: Integer;
     function GetTransferRate: Integer;
   public
-    CS_DownloadManager_Task: TCriticalSection;
-    CS_DownloadedChapterList: TCriticalSection;
+    CS_Task: TCriticalSection;
     Containers: TFPList;
+    ContainersActiveTask: TFPList;
     isRunningBackup, isFinishTaskAccessed, isRunningBackupDownloadedChaptersList,
     isReadyForExit: Boolean;
 
@@ -183,9 +183,6 @@ type
 
     procedure Restore;
     procedure Backup;
-
-    // TransferRate
-    procedure ClearTransferRate;
 
     // These methods relate to highlight downloaded chapters.
     procedure GetDownloadedChaptersState(const Alink: String;
@@ -332,13 +329,13 @@ begin
 
     if not Terminated and Reslt then
     begin
-      manager.container.Lock;
+      manager.container.CS_Container.Acquire;
       try
         manager.container.DownCounter := InterLockedIncrement(manager.container.DownCounter);
         manager.container.DownloadInfo.Progress :=
           Format('%d/%d', [manager.container.DownCounter, manager.container.PageNumber]);
       finally
-        manager.container.Unlock;
+        manager.container.CS_Container.Release;
       end;
     end;
   except
@@ -981,6 +978,7 @@ begin
   inherited Create(True);
   threads := TFPList.Create;
   ModuleId := -1;
+  FCheckAndActiveTaskFlag := True;
   anotherURL := '';
   httpCookies := '';
 end;
@@ -1028,6 +1026,11 @@ begin
     end;
     uPacker.Free;
   end;
+end;
+
+procedure TTaskThread.SyncStop;
+begin
+  container.Manager.CheckAndActiveTask(FCheckAndActiveTaskFlag);
 end;
 
 procedure TTaskThread.SyncShowBaloon;
@@ -1257,7 +1260,7 @@ var
 begin
   ModuleId := container.ModuleId;
   container.ThreadState := True;
-  container.DownloadInfo.TransferRate := '';
+  container.DownloadInfo.TransferRate := FormatByteSize(container.ReadCount, true);
   try
     if container.ModuleId > -1 then
       DynamicPageLink := Modules.Module[ModuleId].DynamicPageLink
@@ -1478,41 +1481,40 @@ begin
     while threads.Count > 0 do
       Sleep(100);
   end;
-  container.DownloadInfo.TransferRate := '';
-  container.ThreadState := False;
-  container.Thread := nil;
   Modules.DecActiveTaskCount(ModuleId);
-  Synchronize(SyncStop);
-  inherited DoTerminate;
-end;
-
-procedure TTaskThread.SyncStop;
-begin
-  if container.Status = STATUS_STOP then
-    Exit;
-  if not container.Manager.isReadyForExit then
-  begin
-    if (container.WorkCounter >= container.PageLinks.Count) and
-      (container.CurrentDownloadChapterPtr >= container.ChapterLinks.Count)
-      and (container.FailedChapterLinks.Count = 0) then
+  with container do begin
+    container.ReadCount := 0;
+    DownloadInfo.TransferRate := '';
+    ThreadState := False;
+    Thread := nil;
+    Manager.CS_Task.Acquire;
+    try
+      Manager.ContainersActiveTask.Remove(container);
+    finally
+      Manager.CS_Task.Release;
+    end;
+    if (Status <> STATUS_STOP) and (not Manager.isReadyForExit) then
     begin
-      container.Status := STATUS_FINISH;
-      container.DownloadInfo.Status := RS_Finish;
-      container.DownloadInfo.Progress := '';
-      container.Manager.CheckAndActiveTask(True);
-    end
-    else
-    if (container.Status in [STATUS_PROBLEM, STATUS_FAILED]) then
-      container.Manager.CheckAndActiveTask(True)
-    else
-    begin
-      container.Status := STATUS_STOP;
-      container.DownloadInfo.Status :=
-        Format('%s (%d/%d)', [RS_Stopped, container.CurrentDownloadChapterPtr +
-        1, container.ChapterLinks.Count]);
-      container.Manager.CheckAndActiveTask(False);
+      if (WorkCounter >= PageLinks.Count) and
+        (CurrentDownloadChapterPtr >= ChapterLinks.Count)
+        and (FailedChapterLinks.Count = 0) then
+      begin
+        Status := STATUS_FINISH;
+        DownloadInfo.Status := RS_Finish;
+        DownloadInfo.Progress := '';
+      end
+      else
+      begin
+        Status := STATUS_STOP;
+        DownloadInfo.Status :=
+          Format('%s (%d/%d)', [RS_Stopped, CurrentDownloadChapterPtr +
+          1, ChapterLinks.Count]);
+        FCheckAndActiveTaskFlag := False;
+      end;
+      Synchronize(SyncStop);
     end;
   end;
+  inherited DoTerminate;
 end;
 
 { TTaskContainer }
@@ -1530,7 +1532,7 @@ constructor TTaskContainer.Create;
 begin
   inherited Create;
   ThreadState := False;
-  CS_FContainer := TCriticalSection.Create;
+  CS_Container := TCriticalSection.Create;
   ChapterLinks := TStringList.Create;
   ChapterName := TStringList.Create;
   FailedChapterName := TStringList.Create;
@@ -1538,7 +1540,7 @@ begin
   PageLinks := TStringList.Create;
   PageContainerLinks := TStringList.Create;
   Filenames := TStringList.Create;
-  FReadCount := 0;
+  ReadCount := 0;
   WorkCounter := 0;
   CurrentPageNumber := 0;
   CurrentDownloadChapterPtr := 0;
@@ -1553,28 +1555,18 @@ begin
   ChapterLinks.Free;
   FailedChapterName.Free;
   FailedChapterLinks.Free;
-  CS_FContainer.Free;
+  CS_Container.Free;
   inherited Destroy;
 end;
 
 procedure TTaskContainer.IncReadCount(const ACount: Integer);
 begin
-  Lock;
+  CS_Container.Acquire;
   try
-    Inc(FReadCount, ACount);
+    Inc(ReadCount, ACount);
   finally
-    Unlock;
+    CS_Container.Release;
   end;
-end;
-
-procedure TTaskContainer.Lock;
-begin
-  CS_FContainer.Acquire;
-end;
-
-procedure TTaskContainer.Unlock;
-begin
-  CS_FContainer.Release;
 end;
 
 { TDownloadManager }
@@ -1595,33 +1587,23 @@ var
   i: Integer;
 begin
   Result := 0;
-  if Containers.Count > 0 then
-  begin
-    CS_DownloadManager_Task.Acquire;
-    try
-      FTotalReadCount := 0;
-      for i := 0 to Containers.Count - 1 do
-        with TTaskContainer(Containers[i]) do
-          if ThreadState then
-          begin
-            Lock;
-            try
-              if Status = STATUS_COMPRESS then
-                DownloadInfo.TransferRate := ''
-              else
-              begin
-                DownloadInfo.TransferRate := FormatByteSize(FReadCount, True);
-                Inc(FTotalReadCount, FReadCount);
-              end;
-              FReadCount := 0;
-            finally
-              Unlock;
-            end;
-          end;
-      Result := FTotalReadCount;
-    finally
-      CS_DownloadManager_Task.Release;
-    end;
+  if ContainersActiveTask.Count = 0 then Exit;
+  CS_Task.Acquire;
+  try
+    for i := 0 to ContainersActiveTask.Count - 1 do
+      with TTaskContainer(ContainersActiveTask[i]) do
+      begin
+        CS_Container.Acquire;
+        try
+          DownloadInfo.TransferRate := FormatByteSize(ReadCount, True);
+          Inc(Result, ReadCount);
+          ReadCount := 0;
+        finally
+          CS_Container.Release;
+        end;
+      end;
+  finally
+    CS_Task.Release;
   end;
 end;
 
@@ -1630,11 +1612,8 @@ begin
   inherited Create;
   ForceDirectoriesUTF8(WORK_FOLDER);
 
-  CS_DownloadManager_Task := TCriticalSection.Create;
-  CS_DownloadedChapterList := TCriticalSection.Create;
-
+  CS_Task := TCriticalSection.Create;
   DownloadManagerFile := TIniFileRun.Create(WORK_FILE);
-
   DownloadedChapters := TDownloadedChaptersDB.Create;
   DownloadedChapters.Filename := DOWNLOADEDCHAPTERSDB_FILE;
   DownloadedChapters.OnError := MainForm.ExceptionHandler;
@@ -1644,6 +1623,7 @@ begin
       DeleteFileUTF8(DOWNLOADEDCHAPTERS_FILE);
 
   Containers := TFPList.Create;
+  ContainersActiveTask := TFPList.Create;
   isFinishTaskAccessed := False;
   isRunningBackup := False;
   isRunningBackupDownloadedChaptersList := False;
@@ -1652,7 +1632,7 @@ end;
 
 destructor TDownloadManager.Destroy;
 begin
-  CS_DownloadManager_Task.Acquire;
+  CS_Task.Acquire;
   try
     while Containers.Count > 0 do
     begin
@@ -1660,13 +1640,13 @@ begin
       Containers.Remove(Containers.Last);
     end;
   finally
-    CS_DownloadManager_Task.Release;
+    CS_Task.Release;
   end;
-  FreeAndNil(Containers);
-  FreeAndNil(DownloadManagerFile);
+  Containers.Free;
+  DownloadManagerFile.Free;
+  ContainersActiveTask.Free;
   DownloadedChapters.Free;
-  CS_DownloadedChapterList.Free;
-  CS_DownloadManager_Task.Free;
+  CS_Task.Free;
   inherited Destroy;
 end;
 
@@ -1675,7 +1655,7 @@ var
   tid, s: String;
   tmp, i, j: Integer;
 begin
-  CS_DownloadManager_Task.Acquire;
+  CS_Task.Acquire;
   try
     while Containers.Count > 0 do
     begin
@@ -1749,7 +1729,7 @@ begin
       end;
     end;
   finally
-    CS_DownloadManager_Task.Release;
+    CS_Task.Release;
   end;
 end;
 
@@ -1762,7 +1742,7 @@ begin
     Exit;
 
   isRunningBackup := True;
-  CS_DownloadManager_Task.Acquire;
+  CS_Task.Acquire;
   with DownloadManagerFile do
   try
     // Erase all sections
@@ -1806,35 +1786,9 @@ begin
     end;
     UpdateFile;
   finally
-    CS_DownloadManager_Task.Release;
+    CS_Task.Release;
   end;
   isRunningBackup := False;
-end;
-
-procedure TDownloadManager.ClearTransferRate;
-var
-  i: Integer;
-begin
-  if Containers.Count > 0 then
-  begin
-    CS_DownloadManager_Task.Acquire;
-    try
-      FTotalReadCount := 0;
-      for i := 0 to Containers.Count - 1 do
-        with TTaskContainer(Containers[i]) do
-        begin
-          Lock;
-          try
-            FReadCount := 0;
-            DownloadInfo.TransferRate := '';
-          finally
-            Unlock;
-          end;
-        end;
-    finally
-      CS_DownloadManager_Task.Release;
-    end;
-  end;
 end;
 
 procedure TDownloadManager.GetDownloadedChaptersState(const Alink: String;
@@ -1861,12 +1815,12 @@ end;
 function TDownloadManager.AddTask: Integer;
 begin
   Result := -1;
-  CS_DownloadManager_Task.Acquire;
+  CS_Task.Acquire;
   try
     Result := Containers.Add(TTaskContainer.Create);
     TTaskContainer(Containers.Last).Manager := Self;
   finally
-    CS_DownloadManager_Task.Release;
+    CS_Task.Release;
   end;
 end;
 
@@ -1875,7 +1829,7 @@ var
   i, tcount: Integer;
 begin
   if Containers.Count = 0 then Exit;
-  CS_DownloadManager_Task.Acquire;
+  CS_Task.Acquire;
   try
     tcount := 0;
     for i := 0 to Containers.Count - 1 do
@@ -1893,7 +1847,7 @@ begin
             Inc(tcount);
           end;
   finally
-    CS_DownloadManager_Task.Release;
+    CS_Task.Release;
   end;
 
   try
@@ -1969,6 +1923,7 @@ begin
       Modules.IncActiveTaskCount(ModuleId);
       Thread := TTaskThread.Create;
       Thread.container := TTaskContainer(Containers[taskID]);
+      ContainersActiveTask.Add(Thread.container);
       Thread.Start;
     end;
   end;
@@ -2046,7 +2001,7 @@ end;
 procedure TDownloadManager.RemoveTask(const taskID: Integer);
 begin
   if (taskID < 0) or (taskID >= Containers.Count) then Exit;
-  CS_DownloadManager_Task.Acquire;
+  CS_Task.Acquire;
   try
     with TTaskContainer(Containers[taskID]) do
       if ThreadState then begin
@@ -2056,7 +2011,7 @@ begin
     TTaskContainer(Containers[taskID]).Free;
     Containers.Delete(taskID);
   finally
-    CS_DownloadManager_Task.Release;
+    CS_Task.Release;
   end;
   CheckAndActiveTask;
 end;
@@ -2081,7 +2036,7 @@ begin
   Result := False;
   if Containers.Count > 0 then
   begin
-    CS_DownloadManager_Task.Acquire;
+    CS_Task.Acquire;
     try
       for i := 0 to Containers.Count - 1 do
         if TTaskContainer(Containers[i]).Status in Stats then begin
@@ -2089,7 +2044,7 @@ begin
           Break;
         end;
     finally
-      CS_DownloadManager_Task.Release;
+      CS_Task.Release;
     end;
   end;
 end;
@@ -2134,12 +2089,12 @@ end;
 procedure TDownloadManager.Sort(const AColumn: Integer);
 begin
   if Containers.Count < 2 then Exit;
-  CS_DownloadManager_Task.Acquire;
+  CS_Task.Acquire;
   try
     SortColumn := AColumn;
     Containers.Sort(CompareTaskContainer);
   finally
-    CS_DownloadManager_Task.Release;
+    CS_Task.Release;
   end;
 end;
 

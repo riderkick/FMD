@@ -667,7 +667,7 @@ begin
             with Items[counter] do if Assigned(NewMangaInfo) then
                 if NewMangaInfo.chapterLinks.Count > 0 then
                 begin
-                  DLManager.CS_DownloadManager_Task.Acquire;
+                  DLManager.CS_Task.Acquire;
                   try
                     DLManager.containers.Add(TTaskContainer.Create);
                     with TTaskContainer(DLManager.Containers.Last) do begin
@@ -705,7 +705,7 @@ begin
                     FavoriteInfo.currentChapter :=
                       IntToStr(MangaInfo.chapterLinks.Count);
                   finally
-                    DLManager.CS_DownloadManager_Task.Release;
+                    DLManager.CS_Task.Release;
                   end;
                   //mark downloaded
                   FavoriteInfo.downloadedChapterList :=

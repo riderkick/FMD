@@ -1404,11 +1404,7 @@ end;
 
 procedure TMainForm.itRefreshDLInfoStopTimer(Sender: TObject);
 begin
-  if Assigned(DLManager) then
-  begin
-    DLManager.ClearTransferRate;
-    TransferRateGraph.Visible := False;
-  end;
+  TransferRateGraph.Visible := False;
   vtDownload.Repaint;
 end;
 
@@ -1552,7 +1548,7 @@ begin
     if MessageDlg('', RS_DlgRemoveTask,
       mtConfirmation, [mbYes, mbNo], 0) <> mrYes then
       Exit;
-  DLManager.CS_DownloadManager_Task.Acquire;
+  DLManager.CS_Task.Acquire;
   try
     xNode := vtDownload.GetLast();
     while Assigned(xNode) do begin
@@ -1580,7 +1576,7 @@ begin
       xNode := vtDownload.GetPreviousSelected(xNode);
     end;
   finally
-    DLManager.CS_DownloadManager_Task.Release;
+    DLManager.CS_Task.Release;
   end;
   DLManager.CheckAndActiveTask;
   UpdateVtDownload;
@@ -3024,7 +3020,7 @@ procedure TMainForm.pmDownloadPopup(Sender: TObject);
   begin
     Result := False;
     with DLManager do begin
-      CS_DownloadManager_Task.Acquire;
+      CS_Task.Acquire;
       try
         for i := 0 to Count - 1 do
           if Items[i].Status = STATUS_FINISH then
@@ -3033,7 +3029,7 @@ procedure TMainForm.pmDownloadPopup(Sender: TObject);
             Break;
           end;
       finally
-        CS_DownloadManager_Task.Release;
+        CS_Task.Release;
       end;
     end;
   end;
@@ -3047,7 +3043,7 @@ procedure TMainForm.pmDownloadPopup(Sender: TObject);
     begin
       with DLManager do
       begin
-        CS_DownloadManager_Task.Acquire;
+        CS_Task.Acquire;
         try
           xNode := vtDownload.GetFirstSelected;
           repeat
@@ -3059,7 +3055,7 @@ procedure TMainForm.pmDownloadPopup(Sender: TObject);
             xNode := vtDownload.GetNextSelected(xNode);
           until xNode = nil;
         finally
-          CS_DownloadManager_Task.Release;
+          CS_Task.Release;
         end;
       end;
     end;
@@ -3398,7 +3394,7 @@ begin
   nIndex:=NextIndex;
   vtDownload.BeginUpdate;
   ConTemp:=TFPList.Create;
-  DLManager.CS_DownloadManager_Task.Acquire;
+  DLManager.CS_Task.Acquire;
   try
     i:=0;
     cNode:=vtDownload.GetFirstSelected();
@@ -3441,7 +3437,7 @@ begin
     if Mode=dmAbove then
       vtDownload.FocusedNode:=cNode;
   finally
-    DLManager.CS_DownloadManager_Task.Release;
+    DLManager.CS_Task.Release;
   end;
   ConTemp.Free;
   vtDownload.EndUpdate;
