@@ -139,7 +139,6 @@ procedure TGetMangaInfosThread.DoGetInfos;
 
 begin
   try
-    advancedfile.Reload;
     if not GetMangaInfo then
     begin
       if not Self.Terminated then

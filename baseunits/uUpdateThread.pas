@@ -443,7 +443,6 @@ var
 begin
   MainForm.ulTotalPtr := limit;
   try
-    advancedfile.Reload;
     while (not Terminated) and (workPtr < limit) do begin
       mt := advancedfile.ReadInteger('UpdateListNumberOfThreads', website, -1);
       if mt > 0 then
@@ -524,7 +523,6 @@ begin
           FStatus := s;
           MainForm.ulWorkPtr := workPtr + 1;
           Synchronize(MainThreadShowGetting);
-          advancedfile.Reload;
         finally
           UnlockCreateConnection;
         end;
@@ -618,7 +616,6 @@ begin
 
           Writelog_D(cloghead+'get number of directory page');
           // get directory page count
-          advancedfile.Reload;
           directoryCount := 0;
           directoryCount2 := 0;
           workPtr := 0;
@@ -631,7 +628,6 @@ begin
 
           Writelog_D(cloghead+'get names and links');
           // get names and links
-          advancedfile.Reload;
           workPtr := 0;
           isFinishSearchingForNewManga := False;
           if ModuleId <> -1 then

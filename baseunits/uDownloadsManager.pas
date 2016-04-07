@@ -1255,7 +1255,6 @@ var
   S, P: String;
   DynamicPageLink: Boolean;
 begin
-  advancedfile.Reload;
   ModuleId := container.ModuleId;
   container.ThreadState := True;
   container.DownloadInfo.TransferRate := '';

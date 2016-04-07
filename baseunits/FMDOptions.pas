@@ -20,7 +20,6 @@ type
     constructor Create(const AFileName: String; AEscapeLineFeeds: Boolean = False); overload; override;
     destructor Destroy; override;
     procedure UpdateFile; override;
-    procedure Reload;
   end;
 
   TFMDDo = (DO_NOTHING, DO_EXIT, DO_POWEROFF, DO_HIBERNATE, DO_UPDATE);
@@ -153,29 +152,6 @@ begin
   if CacheUpdates and (Dirty = False) then Exit;
   inherited UpdateFile;
   CopyFile(FileName, FRealFileName, [cffOverwriteFile, cffPreserveTime, cffCreateDestDirectory]);
-end;
-
-procedure TIniFileRun.Reload;
-var
-  s: TStringList;
-begin
-  if TryEnterCriticalsection(FCSLock) > 0 then
-    try
-      if FileExistsUTF8(FileName) then
-        if FileAgeUTF8(FileName) <> FFileAge then
-        begin
-          s := TStringList.Create;
-          try
-            FFileAge := FileAge(FileName);
-            s.LoadFromFile(FileName);
-            SetStrings(s);
-          finally
-            s.Free;
-          end;
-        end;
-    finally
-      LeaveCriticalsection(FCSLock);
-    end;
 end;
 
 procedure FreeNil(var Obj);
