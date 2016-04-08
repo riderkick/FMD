@@ -79,7 +79,7 @@ begin
     with MangaInfo.mangaInfo, TXQueryEngineHTML.Create(MangaInfo.FHTTP.Document) do
       try
         coverLink := FillURLProtocol('https://', XPathString('//div[@class="cover"]//img/@src'));
-        title := ReplaceRegExpr('( by.*)? - Read Online.*$', XPathString('//title'), '', False);
+        title := Trim(ReplaceRegExpr('( by.*)?- Read Online.*$', XPathString('//title'), '', False));
         if title = '' then
           title := GetBetween('/galleries/', '.html', AnsiLowerCase(AURL));
         artists := TitleCase(XPathString('//div[starts-with(@class,"gallery")]/h2/ul/li/a'));
