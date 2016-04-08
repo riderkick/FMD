@@ -716,6 +716,7 @@ procedure PadZeros(S: TStrings; ATotalWidth: Integer = 3;
 // maintain the order of strings by adding serialized number if necessary
 procedure SerializeAndMaintainNames(F: TStrings);
 
+function TitleCase(const S: string): string;
 function StringReplaceBrackets(const S, OldPattern, NewPattern: String; Flags: TReplaceFlags): String;
 function StreamToString(const Stream: TStream): String; inline;
 function GetRightValue(const Name, s: String): String;
@@ -2095,6 +2096,14 @@ begin
   finally
     s.Free;
   end;
+end;
+
+function TitleCase(const S: string): string;
+begin
+  Result := AnsiProperCase(S,
+    [#9, #10, #13,
+     ' ', '.', ',', '-', '+', '_', '=',
+     '/', '\', '[', ']', '(', ')', '{', '}', '<', '>']);
 end;
 
 function StringReplaceBrackets(const S, OldPattern, NewPattern: String; Flags: TReplaceFlags): String;
