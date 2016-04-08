@@ -1658,6 +1658,8 @@ begin
     summary := CleanMultilinedString(FixWhiteSpace(summary));
 
     // fix info
+    if title = '' then
+      title := 'N/A';
     if (LeftStr(authors, 1) = '<') or (authors = '-') or (authors = ':') then
       authors := '';
     if (LeftStr(artists, 1) = '<') or (artists = '-') or (artists = ':') then
