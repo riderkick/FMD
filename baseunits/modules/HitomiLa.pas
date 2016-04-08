@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, WebsiteModules, uData, uBaseUnit, uDownloadsManager,
-  XQueryEngineHTML, httpsendthread;
+  XQueryEngineHTML, httpsendthread, synautil, RegExpr;
 
 implementation
 
@@ -68,8 +68,8 @@ function GetInfo(const MangaInfo: TMangaInformation;
   const AURL: String; const Module: TModuleContainer): Integer;
 var
   v: IXQValue;
-  t: TTreeNode;
   s: String;
+  i: SizeInt;
 begin
   Result := NET_PROBLEM;
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
@@ -78,16 +78,15 @@ begin
     Result := NO_ERROR;
     with MangaInfo.mangaInfo, TXQueryEngineHTML.Create(MangaInfo.FHTTP.Document) do
       try
-        t := XPath('//div[contains(@class,"dj-gallery")]').toNode;
-        coverLink := FillURLProtocol('https://', XPathString('//div[@class="cover"]//img/@src', t));
-        title := XPathString('//div/h1', t);
-        artists := XPathString('//h2//a[contains(@href,"/artist/")]', t);
-        if (title = '') and (artists <> '') then
-          title := artists;
+        coverLink := FillURLProtocol('https://', XPathString('//div[@class="cover"]//img/@src'));
+        title := ReplaceRegExpr('( by.*)? - Read Online.*$', XPathString('//title'), '', False);
+        if title = '' then
+          title := GetBetween('/galleries/', '.html', AnsiLowerCase(AURL));
+        artists := TitleCase(XPathString('//div[starts-with(@class,"gallery")]/h2/ul/li/a'));
         genres := '';
-        for v in XPath('//div[@class="gallery-info"]/table//tr/td[2]//a', t) do
-          AddCommaString(genres, v.toString);
-        s := XPathString('//div[@class="cover-column"]/a/@href', t);
+        for v in XPath('//div[@class="gallery-info"]/table//tr/td//a') do
+          AddCommaString(genres, TitleCase(v.toString));
+        s := XPathString('//div[@class="cover-column"]/a/@href');
         if (s <> '') and (title <> '') then begin
           chapterLinks.Add(s);
           chapterName.Add(title);
