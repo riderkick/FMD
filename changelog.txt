@@ -4,6 +4,13 @@ Project page: https://github.com/riderkick/FMD
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.49.0 (08-04-2016)
+[*] Preserve file last modified date from server
+[*] Added more website advanced option
+[*] HitomiLa: fix info
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.48.0...0.9.49.0
+
 0.9.48.0 (02-04-2016)
 [*] E-Hentai/ExHentai: Fixed filename serialized several times
 [+] Added ReadComicOnline[EN]
