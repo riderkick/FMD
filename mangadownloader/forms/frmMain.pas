@@ -4209,8 +4209,8 @@ begin
     // connection
     seOptionMaxParallel.Value := ReadInteger('connections', 'NumberOfTasks', 1);
     seOptionMaxThread.Value := ReadInteger('connections', 'NumberOfThreadsPerTask', 1);
-    seOptionMaxRetry.Value := ReadInteger('connections', 'Retry', OptionConnectionMaxRetry);;
-    seOptionConnectionTimeout.Value := ReadInteger('connections', 'ConnectionTimeout', OptionConnectionTimeout);
+    seOptionMaxRetry.Value := ReadInteger('connections', 'Retry', DefaultRetryCount);;
+    seOptionConnectionTimeout.Value := ReadInteger('connections', 'ConnectionTimeout', DefaultTimeout);
     cbOptionUseProxy.Checked := ReadBool('connections', 'UseProxy', False);
     cbOptionProxyType.Text := ReadString('connections', 'ProxyType', 'HTTP');
     edOptionHost.Text := ReadString('connections', 'Host', '');
@@ -4471,26 +4471,13 @@ begin
     DLManager.maxDLThreadsPerTask := seOptionMaxThread.Value;
     DLManager.retryConnect := seOptionMaxRetry.Value;
     OptionMaxThreads := seOptionMaxThread.Value;
-    OptionConnectionTimeout := seOptionConnectionTimeout.Value * 1000;
-    OptionConnectionMaxRetry := seOptionMaxRetry.Value;
-    DefaultTimeout := OptionConnectionTimeout;
-    DefaultRetryCount := OptionConnectionMaxRetry;
+    SetDefaultTimeoutAndApply(seOptionConnectionTimeout.Value * 1000);
+    SetDefaultRetryCountAndApply(seOptionMaxRetry.Value);
     if cbOptionUseProxy.Checked then
-    begin
-      DefaultProxyType := cbOptionProxyType.Text;
-      DefaultProxyHost := edOptionHost.Text;
-      DefaultProxyPass := edOptionPass.Text;
-      DefaultProxyPort := edOptionPort.Text;
-      DefaultProxyUser := edOptionUser.Text;
-    end
+      SetDefaultProxyAndApply(cbOptionProxyType.Text, edOptionHost.Text,
+        edOptionPort.Text, edOptionUser.Text, edOptionPass.Text)
     else
-    begin
-      DefaultProxyType := '';
-      DefaultProxyHost := '';
-      DefaultProxyPass := '';
-      DefaultProxyPort := '';
-      DefaultProxyUser := '';
-    end;
+      SetDefaultProxyAndApply('', '', '' ,'', '');
 
     //saveto
     OptionPDFQuality := seOptionPDFQuality.Value;

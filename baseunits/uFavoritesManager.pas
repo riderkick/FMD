@@ -13,7 +13,7 @@ interface
 uses
   Classes, SysUtils, Dialogs, IniFiles, syncobjs, lazutf8classes, LazFileUtils, FileUtil,
   uBaseUnit, uData, uDownloadsManager, uFMDThread, uMisc, WebsiteModules, FMDOptions,
-  SimpleException;
+  httpsendthread, SimpleException;
 
 type
   TFavoriteManager = class;
@@ -205,7 +205,7 @@ begin
     Synchronize(SyncStatus);
     getInfo.mangaInfo.title := container.FavoriteInfo.Title;
     getInfo.GetInfoFromURL(container.FavoriteInfo.Website,
-      container.FavoriteInfo.Link, OptionConnectionMaxRetry);
+      container.FavoriteInfo.Link, DefaultRetryCount);
     if container.MangaInfo = nil then
       container.MangaInfo := TMangaInfo.Create;
     TransferMangaInfo(container.MangaInfo, getInfo.mangaInfo);

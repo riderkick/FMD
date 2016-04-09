@@ -11,8 +11,8 @@ unit uUpdateThread;
 interface
 
 uses
-  Classes, SysUtils, typinfo, syncobjs, uData, LazFileUtils,
-  uBaseUnit, uFMDThread, uMisc, WebsiteModules, DBDataProcess, SimpleTranslator, FMDOptions;
+  Classes, SysUtils, typinfo, syncobjs, uData, LazFileUtils, uBaseUnit, uFMDThread, uMisc,
+  WebsiteModules, DBDataProcess, SimpleTranslator, FMDOptions, httpsendthread;
 
 type
   TUpdateListManagerThread = class;
@@ -227,7 +227,7 @@ begin
       begin
         Info.mangaInfo.title:=title;
         if link<>'' then begin
-          Info.GetInfoFromURL(manager.website,link,OptionConnectionMaxRetry);
+          Info.GetInfoFromURL(manager.website,link,DefaultRetryCount);
           if not Terminated then
           begin
             manager.CS_AddInfoToData.Acquire;

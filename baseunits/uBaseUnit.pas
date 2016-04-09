@@ -3000,9 +3000,9 @@ begin
   else
   begin
     HTTP := THTTPSend.Create;
-    HTTP.Timeout := OptionConnectionTimeout;
-    HTTP.Sock.ConnectionTimeout := OptionConnectionTimeout;
-    HTTP.Sock.SetTimeout(OptionConnectionTimeout);
+    HTTP.Timeout := DefaultTimeout;
+    HTTP.Sock.ConnectionTimeout := DefaultTimeout;
+    HTTP.Sock.SetTimeout(DefaultTimeout);
   end;
   HTTP.Headers.NameValueSeparator := ':';
 
@@ -3321,9 +3321,9 @@ begin
   else
   begin
     HTTP := THTTPSend.Create;
-    HTTP.Timeout := OptionConnectionTimeout;
-    HTTP.Sock.ConnectionTimeout := OptionConnectionTimeout;
-    HTTP.Sock.SetTimeout(OptionConnectionTimeout);
+    HTTP.Timeout := DefaultTimeout;
+    HTTP.Sock.ConnectionTimeout := DefaultTimeout;
+    HTTP.Sock.SetTimeout(DefaultTimeout);
   end;
   HTTP.Headers.NameValueSeparator := ':';
 
