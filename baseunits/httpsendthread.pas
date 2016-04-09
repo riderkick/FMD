@@ -22,6 +22,7 @@ type
     procedure OnOwnerTerminate(Sender: TObject);
   public
     constructor Create(AOwner: TFMDThread = nil);
+    destructor Destroy; override;
     function HTTPRequest(const Method, URL: String; const Response: TObject = nil): Boolean;
     function HEAD(const URL: String; const Response: TObject = nil): Boolean;
     function GET(const URL: String; const Response: TObject = nil): Boolean;
@@ -41,7 +42,10 @@ type
 
 function KeyVal(const AKey, AValue: String): TKeyValuePair;
 function QueryString(KeyValuePairs: array of TKeyValuePair): String;
-procedure SetDefaultProxy(const ProxyType, Host, Port, User, Pass: String);
+function SetDefaultProxy(const ProxyType, Host, Port, User, Pass: String): Boolean;
+procedure SetDefaultProxyAndApply(const ProxyType, Host, Port, User, Pass: String);
+procedure SetDefaultTimeoutAndApply(const ATimeout: Integer);
+procedure SetDefaultRetryCountAndApply(const ARetryCount: Integer);
 
 var
   DefaultUserAgent: String =
@@ -55,6 +59,10 @@ var
   DefaultProxyPass: String = '';
 
 implementation
+
+var
+  ALLHTTPSendThread: TFPList;
+  CS_ALLHTTPSendThread: TRTLCriticalSection;
 
 function KeyVal(const AKey, AValue: String): TKeyValuePair;
 begin
@@ -76,13 +84,66 @@ begin
     end;
 end;
 
-procedure SetDefaultProxy(const ProxyType, Host, Port, User, Pass: String);
+function SetDefaultProxy(const ProxyType, Host, Port, User, Pass: String): Boolean;
 begin
+  Result := (ProxyType <> DefaultProxyType) or
+    (Host <> DefaultProxyHost) or
+    (Port <> DefaultProxyPort) or
+    (User <> DefaultProxyUser) or
+    (Pass <> DefaultProxyPass);
+  if not Result then Exit;
   DefaultProxyType := ProxyType;
   DefaultProxyHost := Host;
   DefaultProxyPort := Port;
   DefaultProxyUser := User;
   DefaultProxyPass := Pass;
+end;
+
+procedure SetDefaultProxyAndApply(const ProxyType, Host, Port, User, Pass: String);
+var
+  i: SizeInt;
+begin
+  if not SetDefaultProxy(ProxyType, Host, Port, User, Pass) then Exit;
+  EnterCriticalsection(CS_ALLHTTPSendThread);
+  try
+    if ALLHTTPSendThread.Count > 0 then
+      for i := 0 to ALLHTTPSendThread.Count - 1 do
+        THTTPSendThread(ALLHTTPSendThread[i]).SetProxy(ProxyType, Host, Port, User, Pass);
+  finally
+    LeaveCriticalsection(CS_ALLHTTPSendThread);
+  end;
+end;
+
+procedure SetDefaultTimeoutAndApply(const ATimeout: Integer);
+var
+  i: SizeInt;
+begin
+  if ATimeout = DefaultTimeout then Exit;
+  DefaultTimeout := ATimeout;
+  EnterCriticalsection(CS_ALLHTTPSendThread);
+  try
+    if ALLHTTPSendThread.Count > 0 then
+      for i := 0 to ALLHTTPSendThread.Count - 1 do
+        THTTPSendThread(ALLHTTPSendThread[i]).Timeout := ATimeout;
+  finally
+    LeaveCriticalsection(CS_ALLHTTPSendThread);
+  end;
+end;
+
+procedure SetDefaultRetryCountAndApply(const ARetryCount: Integer);
+var
+  i: SizeInt;
+begin
+  if ARetryCount = DefaultRetryCount then Exit;
+  DefaultRetryCount := ARetryCount;
+  EnterCriticalsection(CS_ALLHTTPSendThread);
+  try
+    if ALLHTTPSendThread.Count > 0 then
+      for i := 0 to ALLHTTPSendThread.Count - 1 do
+        THTTPSendThread(ALLHTTPSendThread[i]).RetryCount := ARetryCount;
+  finally
+    LeaveCriticalsection(CS_ALLHTTPSendThread);
+  end;
 end;
 
 { THTTPSendThread }
@@ -121,6 +182,23 @@ begin
     fowner := AOwner;
     fowner.OnCustomTerminate := @OnOwnerTerminate;
   end;
+  EnterCriticalsection(CS_ALLHTTPSendThread);
+  try
+    ALLHTTPSendThread.Add(Self);
+  finally
+    LeaveCriticalsection(CS_ALLHTTPSendThread);
+  end;
+end;
+
+destructor THTTPSendThread.Destroy;
+begin
+  EnterCriticalsection(CS_ALLHTTPSendThread);
+  try
+    ALLHTTPSendThread.Remove(Self);
+  finally
+    LeaveCriticalsection(CS_ALLHTTPSendThread);
+  end;
+  inherited Destroy;
 end;
 
 function THTTPSendThread.HTTPRequest(const Method, URL: String; const Response: TObject): Boolean;
@@ -264,7 +342,7 @@ procedure THTTPSendThread.SetProxy(const ProxyType, Host, Port, User, Pass: Stri
 var
   pt: String;
 begin
-  pt := upcase(ProxyType);
+  pt := AnsiUpperCase(ProxyType);
   with Sock do begin
     if pt = 'HTTP' then
     begin
@@ -315,5 +393,13 @@ begin
   Headers.Values['Accept-Language'] := ' en-US,en;q=0.8';
   if fgzip then Headers.Values['Accept-Encoding'] := ' gzip, deflate';
 end;
+
+initialization
+  InitCriticalSection(CS_ALLHTTPSendThread);
+  ALLHTTPSendThread := TFPList.Create;
+
+finalization
+  ALLHTTPSendThread.Free;
+  DoneCriticalsection(CS_ALLHTTPSendThread);
 
 end.
