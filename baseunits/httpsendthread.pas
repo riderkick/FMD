@@ -50,7 +50,7 @@ procedure SetDefaultRetryCountAndApply(const ARetryCount: Integer);
 var
   DefaultUserAgent: String =
   'Mozilla/5.0 (Windows NT 10.0; WOW64; rv:44.0) Gecko/20100101 Firefox/44.0';
-  DefaultRetryCount: Integer = 1;
+  DefaultRetryCount: Integer = 0;
   DefaultTimeout: Integer = 15000;
   DefaultProxyType: String = '';
   DefaultProxyHost: String = '';
