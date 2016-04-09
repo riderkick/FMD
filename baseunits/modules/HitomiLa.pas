@@ -69,7 +69,6 @@ function GetInfo(const MangaInfo: TMangaInformation;
 var
   v: IXQValue;
   s: String;
-  i: SizeInt;
 begin
   Result := NET_PROBLEM;
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
