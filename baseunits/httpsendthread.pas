@@ -344,6 +344,15 @@ var
 begin
   pt := AnsiUpperCase(ProxyType);
   with Sock do begin
+    ProxyHost := '';
+    ProxyPort := '';
+    ProxyUser := '';
+    ProxyPass := '';
+    SocksIP := '';
+    SocksPort := '1080';
+    SocksType := ST_Socks5;
+    SocksUsername := '';
+    SocksPassword := '';
     if pt = 'HTTP' then
     begin
       ProxyHost := Host;
@@ -363,18 +372,6 @@ begin
       SocksPort := Port;
       SocksUsername := User;
       SocksPassword := Pass;
-    end
-    else
-    begin
-      SocksIP := '';
-      SocksPort := '1080';
-      SocksType := ST_Socks5;
-      SocksUsername := '';
-      SocksPassword := '';
-      ProxyHost := '';
-      ProxyPort := '';
-      ProxyUser := '';
-      ProxyPass := '';
     end;
   end;
 end;
