@@ -23,8 +23,11 @@ begin
   Result := NET_PROBLEM;
   Page := 1;
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
-  if Module.Website = 'YoManga' then s := yomangadirurl
-  else s := dirurl;
+  if (Module.Website = 'YoManga') or
+    (Module.Website = 'GoManga') then
+    s := yomangadirurl
+  else
+    s := dirurl;
   if MangaInfo.FHTTP.GET(Module.RootURL + s) then begin
     Result := NO_ERROR;
     query := TXQueryEngineHTML.Create;
@@ -51,8 +54,11 @@ var
 begin
   Result := NET_PROBLEM;
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
-  if Module.Website = 'YoManga' then s := yomangadirurl
-  else s := dirurl;
+  if (Module.Website = 'YoManga') or
+    (Module.Website = 'GoManga') then
+    s := yomangadirurl
+  else
+    s := dirurl;
   s := Module.RootURL + s;
   if AURL <> '0' then s += IncStr(AURL) + '/';
   if MangaInfo.FHTTP.GET(s) then begin
@@ -187,6 +193,7 @@ begin
   AddWebsiteModule('Shoujosense', 'http://reader.shoujosense.com');
   AddWebsiteModule('YoManga', 'http://yomanga.co');
   AddWebsiteModule('RawYoManga', 'http://raws.yomanga.co');
+  AddWebsiteModule('GoManga', 'http://gomanga.co');
 end;
 
 initialization
