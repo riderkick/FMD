@@ -17,7 +17,6 @@ const
 function GetDirectoryPageNumber(const MangaInfo: TMangaInformation;
   var Page: Integer; const Module: TModuleContainer): Integer;
 var
-  query: TXQueryEngineHTML;
   s: String;
 begin
   Result := NET_PROBLEM;
@@ -30,17 +29,16 @@ begin
     s := dirurl;
   if MangaInfo.FHTTP.GET(Module.RootURL + s) then begin
     Result := NO_ERROR;
-    query := TXQueryEngineHTML.Create;
-    try
-      query.ParseHTML(StreamToString(MangaInfo.FHTTP.Document));
-      s := query.XPathString('//div[@class="next"]/a[contains(text(),"Last")]/@href');
-      if s <> '' then begin
-        s := ReplaceRegExpr('.*/(\d+)/$', s, '$1', True);
-        Page := StrToIntDef(s, 1);
+    with TXQueryEngineHTML.Create(MangaInfo.FHTTP.Document) do
+      try
+        s := XPathString('//div[@class="next"]/a[contains(text(),"Last")]/@href');
+        if s <> '' then begin
+          s := ReplaceRegExpr('.*/(\d+)/$', s, '$1', True);
+          Page := StrToIntDef(s, 1);
+        end;
+      finally
+        Free;
       end;
-    finally
-      query.Free;
-    end;
   end;
 end;
 
@@ -48,7 +46,6 @@ function GetNameAndLink(const MangaInfo: TMangaInformation;
   const ANames, ALinks: TStringList; const AURL: String;
   const Module: TModuleContainer): Integer;
 var
-  query: TXQueryEngineHTML;
   v: IXQValue;
   s: String;
 begin
@@ -63,23 +60,21 @@ begin
   if AURL <> '0' then s += IncStr(AURL) + '/';
   if MangaInfo.FHTTP.GET(s) then begin
     Result := NO_ERROR;
-    query := TXQueryEngineHTML.Create;
-    try
-      query.ParseHTML(StreamToString(MangaInfo.FHTTP.Document));
-      for v in query.XPath('//div[@class="list series"]/div/div[@class="title"]/a') do begin
-        ALinks.Add(v.toNode.getAttribute('href'));
-        ANames.Add(v.toString);
+    with TXQueryEngineHTML.Create(MangaInfo.FHTTP.Document) do
+      try
+        for v in XPath('//div[@class="list series"]/div/div[@class="title"]/a') do begin
+          ALinks.Add(v.toNode.getAttribute('href'));
+          ANames.Add(v.toString);
+        end;
+      finally
+        Free;
       end;
-    finally
-      query.Free;
-    end;
   end;
 end;
 
 function GetInfo(const MangaInfo: TMangaInformation;
   const AURL: String; const Module: TModuleContainer): Integer;
 var
-  query: TXQueryEngineHTML;
   v: IXQValue;
 begin
   Result := NET_PROBLEM;
@@ -87,28 +82,27 @@ begin
   with MangaInfo.FHTTP, MangaInfo.mangaInfo do begin
     if GET(FillHost(Module.RootURL, AURL)) then begin
       Result := NO_ERROR;
-      query := TXQueryEngineHTML.Create;
-      try
-        query.ParseHTML(StreamToString(Document));
-        coverLink := query.XPathString('//div[@class="thumbnail"]/img/@src');
-        if title = '' then title := query.XPathString('//h1[@class="title"]');
-        authors := TrimLeftChar(query.XPathString(
-          '//div[@class="info"]/*[contains(text(),"Author")]/following-sibling::text()[1]'), [':', ' ']);
-        artists := TrimLeftChar(query.XPathString(
-          '//div[@class="info"]/*[contains(text(),"Artist")]/following-sibling::text()[1]'), [':', ' ']);
-        summary := TrimLeftChar(query.XPathString(
-          '//div[@class="info"]/*[contains(text(),"Synopsis")]/following-sibling::text()[1]'), [':', ' ']);
-        for v in query.XPath('//div[@class="list"]//div[@class="title"]/a') do
-        begin
-          chapterLinks.Add(v.toNode.getAttribute('href'));
-          if v.toNode.getAttribute('title') <> '' then
-            chapterName.Add(v.toNode.getAttribute('title'))
-          else chapterName.Add(v.toString);
+      with TXQueryEngineHTML.Create(Document) do
+        try
+          coverLink := XPathString('//div[@class="thumbnail"]/img/@src');
+          if title = '' then title := XPathString('//h1[@class="title"]');
+          authors := TrimLeftChar(XPathString(
+            '//div[@class="info"]/*[contains(text(),"Author")]/following-sibling::text()[1]'), [':', ' ']);
+          artists := TrimLeftChar(XPathString(
+            '//div[@class="info"]/*[contains(text(),"Artist")]/following-sibling::text()[1]'), [':', ' ']);
+          summary := TrimLeftChar(XPathString(
+            '//div[@class="info"]/*[contains(text(),"Synopsis")]/following-sibling::text()[1]'), [':', ' ']);
+          for v in XPath('//div[@class="list"]//div[@class="title"]/a') do
+          begin
+            chapterLinks.Add(v.toNode.getAttribute('href'));
+            if v.toNode.getAttribute('title') <> '' then
+              chapterName.Add(v.toNode.getAttribute('title'))
+            else chapterName.Add(v.toString);
+          end;
+          InvertStrings([chapterLinks, chapterName]);
+        finally
+          Free;
         end;
-        InvertStrings([chapterLinks, chapterName]);
-      finally
-        query.Free;
-      end;
     end;
   end;
 end;
@@ -116,7 +110,6 @@ end;
 function GetPageNumber(const DownloadThread: TDownloadThread;
   const AURL: String; const Module: TModuleContainer): Boolean;
 var
-  query: TXQueryEngineHTML;
   v: IXQValue;
   s: String;
 begin
@@ -127,23 +120,22 @@ begin
     PageNumber := 0;
     if GET(FillHost(Module.RootURL, AURL)) then begin
       Result := True;
-      query := TXQueryEngineHTML.Create;
-      try
-        query.ParseHTML(StreamToString(Document));
-        PageNumber := query.XPath('//div[@class="topbar_right"]//ul[@class="dropdown"]/li').Count;
-        s := query.XPathString('//script[contains(.,"var pages")]');
-        if s <> '' then begin
-          s := GetBetween('var pages = ', ';', s);
-          try
-            query.ParseHTML(s);
-            for v in query.XPath('json(*)()("url")') do
-              PageLinks.Add(v.toString);
-          except
+      with TXQueryEngineHTML.Create(Document) do
+        try
+          PageNumber := XPath('//div[@class="topbar_right"]//ul[@class="dropdown"]/li').Count;
+          s := XPathString('//script[contains(.,"var pages")]');
+          if s <> '' then begin
+            s := GetBetween('var pages = ', ';', s);
+            try
+              ParseHTML(s);
+              for v in XPath('json(*)()("url")') do
+                PageLinks.Add(v.toString);
+            except
+            end;
           end;
+        finally
+          Free;
         end;
-      finally
-        query.Free;
-      end;
     end;
   end;
 end;
@@ -151,7 +143,6 @@ end;
 function GetImageURL(const DownloadThread: TDownloadThread;
   const AURL: String; const Module: TModuleContainer): Boolean;
 var
-  query: TXQueryEngineHTML;
   s: String;
 begin
   Result := False;
@@ -162,13 +153,12 @@ begin
       s := AppendURLDelim(s) + 'page/' + IncStr(DownloadThread.workCounter);
     if GET(FillHost(Module.RootURL, s)) then begin
       Result := True;
-      query := TXQueryEngineHTML.Create;
-      try
-        query.ParseHTML(StreamToString(Document));
-        PageLinks[DownloadThread.workCounter] := query.XPathString('//div[@id="page"]//img/@src');
-      finally
-        query.Free;
-      end;
+      with TXQueryEngineHTML.Create(Document) do
+        try
+          PageLinks[DownloadThread.workCounter] := XPathString('//div[@id="page"]//img/@src');
+        finally
+          Free;
+        end;
     end;
   end;
 end;

@@ -14,23 +14,21 @@ function GetNameAndLink(const MangaInfo: TMangaInformation;
   const ANames, ALinks: TStringList; const AURL: String;
   const Module: TModuleContainer): Integer;
 var
-  query: TXQueryEngineHTML;
   v: IXQValue;
 begin
   Result := NET_PROBLEM;
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
   if MangaInfo.FHTTP.GET(Module.RootURL + '/Manga/?order=text-version') then begin
     Result := NO_ERROR;
-    query := TXQueryEngineHTML.Create;
-    try
-      query.ParseHTML(StreamToString(MangaInfo.FHTTP.Document));
-      for v in query.XPath('//table//tr/td[2]/a') do begin
-        ALinks.Add(v.toNode.getAttribute('href'));
-        ANames.Add(v.toString);
+    with TXQueryEngineHTML.Create(MangaInfo.FHTTP.Document) do
+      try
+        for v in XPath('//table//tr/td[2]/a') do begin
+          ALinks.Add(v.toNode.getAttribute('href'));
+          ANames.Add(v.toString);
+        end;
+      finally
+        Free;
       end;
-    finally
-      query.Free;
-    end;
   end;
 end;
 
@@ -153,7 +151,6 @@ end;
 function GetImageURL(const DownloadThread: TDownloadThread;
   const AURL: String; const Module: TModuleContainer): Boolean;
 var
-  query: TXQueryEngineHTML;
   s: String;
 begin
   Result := False;
@@ -161,15 +158,14 @@ begin
   with DownloadThread.manager.container, DownloadThread.FHTTP do begin
     if GET(FillHost(Module.RootURL, AURL) + '/' + IncStr(DownloadThread.WorkCounter)) then begin
       Result := True;
-      query := TXQueryEngineHTML.Create;
-      try
-        query.ParseHTML(StreamToString(Document));
-        s := MaybeFillHost(Module.RootURL, query.XPathString('//img[@id="picture"]/@src'));
-        if s <> '' then
-          PageLinks[DownloadThread.workCounter] := s;
-      finally
-        query.Free;
-      end;
+      with TXQueryEngineHTML.Create(Document) do
+        try
+          s := MaybeFillHost(Module.RootURL, XPathString('//img[@id="picture"]/@src'));
+          if s <> '' then
+            PageLinks[DownloadThread.workCounter] := s;
+        finally
+          Free;
+        end;
     end;
   end;
 end;
