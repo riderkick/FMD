@@ -37,7 +37,6 @@ end;
 function GetInfo(const MangaInfo: TMangaInformation;
   const AURL: String; const Module: TModuleContainer): Integer;
 var
-  query: TXQueryEngineHTML;
   v: IXQValue;
   i: Integer;
   s, cl, m: String;
@@ -65,46 +64,44 @@ begin
     else url := FillHost(Module.RootURL, m);
     if GET(FillHost(Module.RootURL, m)) then begin
       Result := NO_ERROR;
-      query := TXQueryEngineHTML.Create;
-      try
-        query.ParseHTML(StreamToString(Document));
-        coverLink := query.XPathString('//img[@class="series-cover"]/@src');
-        if coverLink <> '' then coverLink := MaybeFillHost(Module.RootURL, coverLink);
-        if title = '' then title := query.XPathString('//h1[@itemprop="name"]');
-        v := query.XPath('//div[@class="series_desc"]/*');
-        if v.Count > 0 then begin
-          i := 0;
-          while i < v.Count - 2 do begin
-            s := v.get(i).toString;
-            if Pos('Categorize in:', s) = 1 then genres := v.get(i + 1).toString else
-            if Pos('Author:', s) = 1 then authors := v.get(i + 1).toString else
-            if Pos('Artist:', s) = 1 then artists := Trim(SeparateRight(v.get(i).toString, ':')) else
-            if Pos('Status:', s) = 1 then if Pos('ongoing', LowerCase(v.get(i).toString)) > 0 then
-                status := '1' else status := '0';
-            Inc(i);
-          end;
-        end;
-        summary := query.XPathString('//div[@class="series_desc"]//div[@itemprop="description"]');
-        if cu and (cl <> '') then
-          if GET(FillHost(Module.RootURL, cl)) then
-          begin
-            query.ParseHTML(StreamToString(Document));
-            //selected chapter
-            //s:=query.XPathString('//select[@name="chapter"]/option[@selected="selected"]');
-            //if s<>'' then begin
-            //  chapterLinks.Add(cl);
-            //  chapterName.Add(s);
-            //end;
-            //all chapter
-            for v in query.XPath('//select[@name="chapter"]/option') do begin
-              chapterLinks.Add(m + v.toNode.getAttribute('value'));
-              chapterName.Add(v.toString);
+      with TXQueryEngineHTML.Create(Document) do
+        try
+          coverLink := XPathString('//img[@class="series-cover"]/@src');
+          if coverLink <> '' then coverLink := MaybeFillHost(Module.RootURL, coverLink);
+          if title = '' then title := XPathString('//h1[@itemprop="name"]');
+          v := XPath('//div[@class="series_desc"]/*');
+          if v.Count > 0 then begin
+            i := 0;
+            while i < v.Count - 2 do begin
+              s := v.get(i).toString;
+              if Pos('Categorize in:', s) = 1 then genres := v.get(i + 1).toString else
+              if Pos('Author:', s) = 1 then authors := v.get(i + 1).toString else
+              if Pos('Artist:', s) = 1 then artists := Trim(SeparateRight(v.get(i).toString, ':')) else
+              if Pos('Status:', s) = 1 then if Pos('ongoing', LowerCase(v.get(i).toString)) > 0 then
+                  status := '1' else status := '0';
+              Inc(i);
             end;
-            InvertStrings([chapterLinks, chapterName]);
           end;
-      finally
-        query.Free;
-      end;
+          summary := XPathString('//div[@class="series_desc"]//div[@itemprop="description"]');
+          if not cu then
+            for v in XPath('//*[@id="content"]/*[@id="post"]//tr[@class="even" or @class="odd"]/td[2]/a') do
+            begin
+              chapterLinks.Add(v.toNode.getAttribute('href'));
+              chapterName.Add(v.toString);
+            end
+          else if cl <> '' then
+            if GET(FillHost(Module.RootURL, cl)) then
+            begin
+              ParseHTML(Document);
+              for v in XPath('//select[@name="chapter"]/option') do begin
+                chapterLinks.Add(m + v.toNode.getAttribute('value'));
+                chapterName.Add(v.toString);
+              end;
+            end;
+          InvertStrings([chapterLinks, chapterName]);
+        finally
+          Free;
+        end;
     end;
   end;
 end;
