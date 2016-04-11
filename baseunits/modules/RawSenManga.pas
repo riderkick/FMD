@@ -109,7 +109,6 @@ end;
 function GetPageNumber(const DownloadThread: TDownloadThread;
   const AURL: String; const Module: TModuleContainer): Boolean;
 var
-  query: TXQueryEngineHTML;
   s: String;
 begin
   Result := False;
@@ -131,22 +130,22 @@ begin
     PageNumber := 0;
     if GET(FillHost(Module.RootURL, s + '/1')) then begin
       Result := True;
-      query := TXQueryEngineHTML.Create;
-      try
-        query.ParseHTML(StreamToString(Document));
-        PageNumber := query.XPath('//select[@name="page"]/option').Count;
-        if PageNumber > 0 then begin
-          s := MaybeFillHost(Module.RootURL, query.XPathString('//img[@id="picture"]/@src'));
-          if Pos('/raw-viewer.php?', LowerCase(s)) > 0 then begin
-            if LowerCase(RightStr(s, 7)) = '&page=1' then begin
+      with TXQueryEngineHTML.Create(Document) do
+        try
+          PageNumber := XPath('//select[@name="page"]/option').Count;
+          if PageNumber > 0 then begin
+            s := MaybeFillHost(Module.RootURL, XPathString('//img[@id="picture"]/@src'));
+            if ((Pos('/raw-viewer.php?', LowerCase(s)) > 0) and (LowerCase(RightStr(s, 7)) = '&page=1')) or
+              ((Pos('/viewer/', AnsiLowerCase(s)) > 0) and (RightStr(s, 2) = '/1')) then
+            begin
               SetLength(s, Length(s) - 1);
-              while PageLinks.Count < PageNumber do PageLinks.Add(s + IncStr(PageLinks.Count));
+              while PageLinks.Count < PageNumber do
+                PageLinks.Add(s + IncStr(PageLinks.Count));
             end;
           end;
+        finally
+          Free;
         end;
-      finally
-        query.Free;
-      end;
     end;
   end;
 end;
