@@ -26,7 +26,7 @@ interface
 
 uses
   Classes, SysUtils, DbgInfoReader, LazFileUtils, LazUTF8
-  {$ifdef traplazlogger or sendtolazlogger}
+  {$if defined(traplazlogger) or defined(sendtolazlogger)}
   , LazLogger
   {$endif};
 
