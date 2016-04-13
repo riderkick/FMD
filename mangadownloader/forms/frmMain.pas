@@ -1151,7 +1151,6 @@ begin
   // load configfile
   isStartup := False;
   CollectLanguagesFromFiles;
-  LoadFormInformation;
   LoadMangaOptions;
   LoadOptions;
   ApplyOptions;
@@ -1274,7 +1273,10 @@ end;
 procedure TMainForm.FormShow(Sender: TObject);
 begin
   if not isStartup then
+  begin
+    LoadFormInformation;
     itStartup.Enabled := True;
+  end;
 end;
 
 procedure TMainForm.cbOptionUseProxyChange(Sender: TObject);
