@@ -102,10 +102,9 @@ end;
 function GetPageNumber(const DownloadThread: TDownloadThread; const AURL: String;
   const Module: TModuleContainer): Boolean;
 var
-  s, idManga, idCapitulo: String;
+  s: String;
   source: TStringList;
   i: Integer;
-  v: IXQValue;
 begin
   Result := False;
   if DownloadThread = nil then Exit;
