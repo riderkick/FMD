@@ -76,7 +76,7 @@ begin
               s := v.toString;
               if Pos('Author(s):', s) = 1 then authors := SeparateRight(s, ':')
               else if Pos('Artist(s):', s) = 1 then artists := SeparateRight(s, ':')
-              else if Pos('Genre(s):', s) = 1 then artists := SeparateRight(s, ':')
+              else if Pos('Genre(s):', s) = 1 then genres := SeparateRight(s, ':')
               else if Pos('Status:', s) = 1 then begin
                 if Pos('Ongoing', s) > 0 then status := '1'
                 else status := '0';
