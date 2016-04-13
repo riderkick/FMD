@@ -51,7 +51,7 @@ begin
     Result := NO_ERROR;
     with TXQueryEngineHTML.Create(MangaInfo.FHTTP.Document) do
       try
-        for v in XPath('//a[@class="mangaPopover"]') do
+        for v in XPath('//*[@class="img-overlay text-center"]/a') do
         begin
           ALinks.Add(v.toNode.getAttribute('href'));
           ANames.Add(v.toString);
