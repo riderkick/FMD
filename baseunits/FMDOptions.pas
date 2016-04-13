@@ -149,7 +149,10 @@ procedure TIniFileRun.UpdateFile;
 begin
   if CacheUpdates and (Dirty = False) then Exit;
   inherited UpdateFile;
-  CopyFile(FileName, FRealFileName, [cffOverwriteFile, cffPreserveTime, cffCreateDestDirectory]);
+  try
+    CopyFile(FileName, FRealFileName, [cffOverwriteFile, cffPreserveTime, cffCreateDestDirectory]);
+  except
+  end;
 end;
 
 procedure FreeNil(var Obj);
