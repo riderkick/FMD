@@ -32,4 +32,5 @@ uses
   SubManga,
   MangaBackup,
   Hentai2Read,
-  Tumangaonline;
+  Tumangaonline,
+  MangaEden;
