@@ -783,8 +783,6 @@ var
 
   {$I includes/MangaGo/directory_page_number.inc}
 
-  {$I includes/MangaEden/directory_page_number.inc}
-
   {$I includes/BlogTruyen/directory_page_number.inc}
 
   {$I includes/S2Scans/directory_page_number.inc}
@@ -874,12 +872,6 @@ begin
       //else
       if WebsiteID = MANGAGO_ID then
         Result := GetMangaGoDirectoryPageNumber
-      else
-      if WebsiteID = MANGAEDEN_ID then
-        Result := GetMangaEdenDirectoryPageNumber(WebsiteRoots[MANGAEDEN_ID, 1])
-      else
-      if WebsiteID = PERVEDEN_ID then
-        Result := GetMangaEdenDirectoryPageNumber(WebsiteRoots[PERVEDEN_ID, 1])
       else
       if WebsiteID = BLOGTRUYEN_ID then
         Result := GetBlogTruyenDirectoryPageNumber
@@ -1040,8 +1032,6 @@ var
 
   {$I includes/BlogTruyen/names_and_links.inc}
 
-  {$I includes/MangaEden/names_and_links.inc}
-
   {$I includes/Kivmanga/names_and_links.inc}
 
   {$I includes/MeinManga/names_and_links.inc}
@@ -1139,12 +1129,6 @@ begin
     else
     if WebsiteID = EGSCANS_ID then
       Result := EGScansGetNamesAndLinks
-    else
-    if WebsiteID = MANGAEDEN_ID then
-      Result := MangaEdenGetNamesAndLinks(WebsiteRoots[MANGAEDEN_ID, 1])
-    else
-    if WebsiteID = PERVEDEN_ID then
-      Result := MangaEdenGetNamesAndLinks(WebsiteRoots[PERVEDEN_ID, 1])
     else
     if WebsiteID = MEINMANGA_ID then
       Result := MeinMangaGetNamesAndLinks
@@ -1331,8 +1315,6 @@ var
 
   {$I includes/MangaTraders/manga_information.inc}
 
-  {$I includes/MangaEden/manga_information.inc}
-
   {$I includes/Starkana/manga_information.inc}
 
   {$I includes/EatManga/manga_information.inc}
@@ -1489,12 +1471,6 @@ begin
     else
     if WebsiteID = TRUYENTRANHTUAN_ID then
       Result := GetTruyenTranhTuanInfoFromURL
-    else
-    if WebsiteID = MANGAEDEN_ID then
-      Result := GetMangaEdenInfoFromURL(WebsiteRoots[MANGAEDEN_ID, 1])
-    else
-    if WebsiteID = PERVEDEN_ID then
-      Result := GetMangaEdenInfoFromURL(WebsiteRoots[PERVEDEN_ID, 1])
     else
     if WebsiteID = MEINMANGA_ID then
       Result := GetMeinMangaInfoFromURL

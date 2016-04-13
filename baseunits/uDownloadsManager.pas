@@ -393,8 +393,6 @@ var
 
   {$I includes/Mangacow/chapter_page_number.inc}
 
-  {$I includes/MangaEden/chapter_page_number.inc}
-
   {$I includes/MangaFrame/chapter_page_number.inc}
 
   {$I includes/MangaGo/chapter_page_number.inc}
@@ -526,10 +524,6 @@ begin
     if manager.container.MangaSiteID = MANGACOW_ID then
       Result := GetMangaCowPageNumber
     else
-    if (manager.container.MangaSiteID = MANGAEDEN_ID) or
-      (manager.container.MangaSiteID = PERVEDEN_ID) then
-      Result := GetMangaEdenPageNumber
-    else
     if manager.container.MangaSiteID = KIVMANGA_ID then
       Result := GetKivmangaPageNumber
     else
@@ -650,8 +644,6 @@ var
   {$I includes/MangaAr/image_url.inc}
 
   {$I includes/Mangacow/image_url.inc}
-
-  {$I includes/MangaEden/image_url.inc}
 
   {$I includes/MangaEsta/image_url.inc}
 
@@ -808,10 +800,6 @@ begin
     else
     if manager.container.MangaSiteID = BLOGTRUYEN_ID then
       Result := GetBlogTruyenImageURL
-    else
-    if (manager.container.MangaSiteID = MANGAEDEN_ID) or
-      (manager.container.MangaSiteID = PERVEDEN_ID) then
-      Result := GetMangaEdenImageURL
     else
     if manager.container.MangaSiteID = KIVMANGA_ID then
       Result := GetKivmangaImageURL

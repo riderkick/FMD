@@ -137,17 +137,12 @@ begin
           end;
         end
         else
-        if SitesMemberOf(manager.website,
-          [FAKKU_ID, MANGAEDEN_ID, PERVEDEN_ID]) then
+        if manager.website = WebsiteRoots[FAKKU_ID, 0] then
         begin
           FAKKU_BROWSER := FAKKU_BROWSER_1;
-          MANGAEDEN_BROWSER := MANGAEDEN_BROWSER_1;
-          PERVEDEN_BROWSER := PERVEDEN_BROWSER_1;
           info.GetDirectoryPage(manager.directoryCount, manager.website);
 
           FAKKU_BROWSER := FAKKU_BROWSER_2;
-          MANGAEDEN_BROWSER := MANGAEDEN_BROWSER_2;
-          PERVEDEN_BROWSER := PERVEDEN_BROWSER_2;
           info.GetDirectoryPage(manager.directoryCount2, manager.website);
         end
         else
@@ -172,22 +167,17 @@ begin
             if checkStyle = CS_DIRECTORY_PAGE_2 then
               workPtr := manager.directoryCount2 - workPtr - 1;
           end;
-          if SitesMemberOf(manager.website,
-            [FAKKU_ID, MANGAEDEN_ID, PERVEDEN_ID]) then
+          if manager.website = WebsiteRoots[FAKKU_ID, 0] then
           begin
             if checkStyle = CS_DIRECTORY_PAGE then
             begin
               FAKKU_BROWSER := FAKKU_BROWSER_1;
-              MANGAEDEN_BROWSER := MANGAEDEN_BROWSER_1;
-              PERVEDEN_BROWSER := PERVEDEN_BROWSER_1;
               Info.GetNameAndLink(names, links, manager.website, IntToStr(workPtr));
             end
             else
             if checkStyle = CS_DIRECTORY_PAGE_2 then
             begin
               FAKKU_BROWSER := FAKKU_BROWSER_2;
-              MANGAEDEN_BROWSER := MANGAEDEN_BROWSER_2;
-              PERVEDEN_BROWSER := PERVEDEN_BROWSER_2;
               Info.GetNameAndLink(names, links, manager.website, IntToStr(workPtr));
             end;
           end
@@ -642,8 +632,7 @@ begin
             end;
           end
           else
-          if SitesMemberOf(website, [FAKKU_ID, MANGAEDEN_ID,
-            PERVEDEN_ID]) then
+          if website = WebsiteRoots[FAKKU_ID, 0] then
           begin
             if directoryCount = 0 then
               directoryCount := 1;
