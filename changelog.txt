@@ -4,6 +4,14 @@ Project page: https://github.com/riderkick/FMD
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.51.0 (13-04-2016)
+[*] Fixed restore window position
+[*] MangaEden/PerEven: rewrite all script
+[*] MangaHere: fixed missing genres
+[*] Hentai2Read: fixed update list
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.50.0...0.9.51.0
+
 0.9.50.0 (11-04-2016)
 [*] Added GoManga[EN]
 [*] Various changes and bug fixes
