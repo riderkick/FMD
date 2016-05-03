@@ -33,4 +33,5 @@ uses
   MangaBackup,
   Hentai2Read,
   Tumangaonline,
-  MangaEden;
+  MangaEden,
+  HeyMangaXyz;
