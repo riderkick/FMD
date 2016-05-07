@@ -48,7 +48,7 @@ begin
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
   s := Module.RootURL;
   if AURL <> '0' then
-    s := s + '/index-all-' + AURL + '.html';
+    s := s + '/index-all-' + IncStr(AURL) + '.html';
   if MangaInfo.FHTTP.GET(s) then begin
     Result := NO_ERROR;
     with TXQueryEngineHTML.Create(MangaInfo.FHTTP.Document) do
