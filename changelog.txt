@@ -4,6 +4,10 @@ Project page: https://github.com/riderkick/FMD
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.53.0 (08-05-2016)
+[*] Tsumino: fixed update list
+Full changes: https://github.com/riderkick/FMD/compare/0.9.52.0...0.9.53.0
+
 0.9.52.0 (07-05-2016)
 [*] Added HeyManga[EN]
 [*] HitomiLa: fixed update list
