@@ -11,7 +11,11 @@ uses
 implementation
 
 const
-  dirurl = '/Browse/Index/1/';
+  //dirurl = '/Browse/Index/1/';
+  // '/?pageNumber=532&RawSearch=&SortOptions=Newest&PageMinimum=1&PageMaximum=10000&RateMinimum=0&RateMaximum=5'
+  dirurl = '/Browse/Query';
+  dirurldata = 'pageNumber=';
+  dirurldataend = '&RawSearch=&SortOptions=Newest&PageMinimum=1&PageMaximum=10000&RateMinimum=0&RateMaximum=5';
 
 function GetDirectoryPageNumber(const MangaInfo: TMangaInformation;
   var Page: Integer; const Module: TModuleContainer): Integer;
@@ -19,14 +23,10 @@ begin
   Result := NET_PROBLEM;
   Page := 1;
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
-  if MangaInfo.FHTTP.GET(Module.RootURL + dirurl + '10000000') then begin
+  if MangaInfo.FHTTP.POST(Module.RootURL + dirurl, dirurldata + '1' + dirurldataend) then
+  begin
     Result := NO_ERROR;
-    with TXQueryEngineHTML.Create(MangaInfo.FHTTP.Document) do
-      try
-        page := StrToIntDef(XPathString('//ul[@class="pagination"]/li[last()-1]'), 1);
-      finally
-        Free;
-      end;
+    Page := StrToIntDef(XPathString('json(*)("PageCount")', MangaInfo.FHTTP.Document), 1);
   end;
 end;
 
@@ -39,15 +39,20 @@ var
 begin
   Result := NET_PROBLEM;
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
-  s := Module.RootURL;
-  if AURL <> '0' then s := s + dirurl + IncStr(AURL);
-  if MangaInfo.FHTTP.GET(s) then begin
+  if MangaInfo.FHTTP.POST(Module.RootURL + dirurl,
+    dirurldata + IncStr(AURL) + dirurldataend) then
+  begin
     Result := NO_ERROR;
     with TXQueryEngineHTML.Create(MangaInfo.FHTTP.Document) do
       try
-        for v in XPath('//div[@class="row row-no-padding"]//div[@class="overlay"]') do begin
-          ALinks.Add(XPathString('a/@href', v.toNode));
-          ANames.Add(XPathString('div/div[@class="overlay-title"]', v.toNode));
+        s := XPathString('json(*)("Data")');
+        if s <> '' then
+        begin
+          ParseHTML(s);
+          for v in XPath('//div[@class="overlay"]/a/@href') do
+            ALinks.Add(v.toString);
+          for v in XPath('//div[@class="overlay"]/div[@class="overlay-data"]/div[@class="overlay-title"]') do
+            ANames.Add(v.toString);
         end;
       finally
         Free;
