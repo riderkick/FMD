@@ -41,6 +41,11 @@ type
   IXQValue = xquery.IXQValue;
   TTreeNode = simplehtmltreeparser.TTreeNode;
 
+  function XPath(const Expression, HTMLString: String): IXQValue; overload;
+  function XPath(const Expression: String; const HTMLStream: TStream): IXQValue; overload;
+  function XPathString(const Expression, HTMLString: String): String; overload;
+  function XPathString(const Expression: String; const HTMLStream: TStream): String; overload;
+
 implementation
 
 function StreamToString(const Stream: TStream): String;
@@ -74,6 +79,32 @@ begin
       if SameText(S, SS[i]) then
         Exit;
   Result := False;
+end;
+
+function XPath(const Expression, HTMLString: String): IXQValue;
+begin
+  Result := xqvalue();
+  with TXQueryEngineHTML.Create(HTMLString) do
+    try
+      Result := XPath(Expression);
+    finally
+      Free;
+    end;
+end;
+
+function XPath(const Expression: String; const HTMLStream: TStream): IXQValue;
+begin
+  Result := XPath(Expression, StreamToString(HTMLStream));
+end;
+
+function XPathString(const Expression, HTMLString: String): String;
+begin
+  Result := XPath(Expression, HTMLString).toString;
+end;
+
+function XPathString(const Expression: String; const HTMLStream: TStream): String;
+begin
+  Result := XPathString(Expression, StreamToString(HTMLStream));
 end;
 
 { TXQueryEngineHTML }
