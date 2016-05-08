@@ -41,8 +41,6 @@ type
   IXQValue = xquery.IXQValue;
   TTreeNode = simplehtmltreeparser.TTreeNode;
 
-  function XPath(const Expression, HTMLString: String): IXQValue; overload;
-  function XPath(const Expression: String; const HTMLStream: TStream): IXQValue; overload;
   function XPathString(const Expression, HTMLString: String): String; overload;
   function XPathString(const Expression: String; const HTMLStream: TStream): String; overload;
 
@@ -81,25 +79,15 @@ begin
   Result := False;
 end;
 
-function XPath(const Expression, HTMLString: String): IXQValue;
+function XPathString(const Expression, HTMLString: String): String;
 begin
-  Result := xqvalue();
+  Result := '';
   with TXQueryEngineHTML.Create(HTMLString) do
     try
-      Result := XPath(Expression);
+      Result := XPath(Expression).toString;
     finally
       Free;
     end;
-end;
-
-function XPath(const Expression: String; const HTMLStream: TStream): IXQValue;
-begin
-  Result := XPath(Expression, StreamToString(HTMLStream));
-end;
-
-function XPathString(const Expression, HTMLString: String): String;
-begin
-  Result := XPath(Expression, HTMLString).toString;
 end;
 
 function XPathString(const Expression: String; const HTMLStream: TStream): String;
