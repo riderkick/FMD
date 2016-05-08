@@ -41,19 +41,17 @@ end;
 function GetInfo(const MangaInfo: TMangaInformation;
   const AURL: String; const Module: TModuleContainer): Integer;
 var
-  query: TXQueryEngineHTML;
   v: IXQValue;
   i: Integer;
+  s: String;
 begin
   Result := NET_PROBLEM;
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
   MangaInfo.mangaInfo.website := Module.Website;
   if MangaInfo.FHTTP.GET(FillHost(Module.RootURL, AURL)) then begin
     Result := NO_ERROR;
-    query := TXQueryEngineHTML.Create;
-    try
-      query.ParseHTML(StreamToString(MangaInfo.FHTTP.Document));
-      with MangaInfo.mangaInfo, query do begin
+    with MangaInfo.mangaInfo, TXQueryEngineHTML.Create(MangaInfo.FHTTP.Document) do
+      try
         coverLink := XPathString('//img[starts-with(@class,"thumbnail")]/@src');
         if coverLink <> '' then coverLink := FillHost(Module.RootURL, coverLink);
         if title = '' then title := XPathString('//title');
@@ -61,21 +59,27 @@ begin
           if Pos(' Manga - Oku ', title) > 0 then
             title := SeparateLeft(title, ' Manga - Oku ');
         if title = '' then title := XPathString('//h1');
-        authors := XPathString('//table[2]/tbody/tr[2]/td[1]');
-        artists := XPathString('//table[2]/tbody/tr[2]/td[2]');
-        genres := TrimRightChar(Trim(XPathString('//table[2]/tbody/tr[2]/td[3]')), [',']);
+        if Pos('Yazar', XPathString('//table[1]/tbody/tr[1]/td[1]')) > 0 then
+          s := '//table[1]/tbody/tr[2]'
+        else
+          s := '//table[2]/tbody/tr[2]/';
+        authors := XPathString(s + '/td[1]');
+        artists := XPathString(s + '/td[2]');
+        genres := TrimRightChar(Trim(XPathString(s + '/td[3]')), [',']);
         summary := XPathString('//div[@class="well"]/p');
         v := XPath('//table[4]/tbody/tr/td/a');
         if v.Count = 0 then v := XPath('//table[3]/tbody/tr/td/a');
         if v.Count > 0 then
+        begin
           for i := 1 to v.Count do begin
             chapterLinks.Add(v.get(i).toNode.getAttribute('href'));
             chapterName.Add(v.get(i).toString);
           end;
+          InvertStrings([chapterLinks, chapterName]);
+        end;
+      finally
+        Free;
       end;
-    finally
-      query.Free;
-    end;
   end;
 end;
 
