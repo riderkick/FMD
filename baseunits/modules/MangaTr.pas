@@ -92,6 +92,8 @@ begin
     AHTTP.Reset;
     if AHTTP.GET(AURL) then begin
       if AHTTP.Cookies.Values['PHPSESSID'] <> '' then begin
+        // allpage = 1; perpage = 2
+        AHTTP.Cookies.Values['read_type'] := '1';
         mangatrcookie := AHTTP.GetCookies;
         AHTTP.Reset;
         AHTTP.Headers.Values['Referer'] := ' ' + AURL;
@@ -104,7 +106,6 @@ end;
 function GetPageNumber(const DownloadThread: TDownloadThread;
   const AURL: String; const Module: TModuleContainer): Boolean;
 var
-  query: TXQueryEngineHTML;
   v: IXQValue;
 begin
   Result := False;
@@ -115,16 +116,13 @@ begin
     PageNumber := 0;
     if GETWithCookie(DownloadThread.FHTTP, FillHost(Module.RootURL, AURL)) then begin
       Result := True;
-      query := TXQueryEngineHTML.Create;
-      try
-        query.ParseHTML(StreamToString(Document));
-        for v in query.XPath('//div[@class="chapter-content"]/select[2]/option') do
-          if StrToIntDef(v.toString, 0) > 0 then
-            PageContainerLinks.Add(v.toNode.getAttribute('value'));
-        PageNumber := PageContainerLinks.Count;
-      finally
-        query.Free;
-      end;
+      with TXQueryEngineHTML.Create(Document) do
+        try
+          for v in XPath('//div[@class="chapter-content"]//img[@class="chapter-img"]/@src') do
+            PageLinks.Add(MaybeFillHost(Module.RootURL, v.toString));
+        finally
+          Free;
+        end;
     end;
   end;
 end;
