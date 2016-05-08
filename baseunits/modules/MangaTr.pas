@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, WebsiteModules, uData, uBaseUnit, uDownloadsManager,
-  XQueryEngineHTML, httpsendthread;
+  XQueryEngineHTML, httpsendthread, synautil;
 
 implementation
 
@@ -54,8 +54,12 @@ begin
     try
       query.ParseHTML(StreamToString(MangaInfo.FHTTP.Document));
       with MangaInfo.mangaInfo, query do begin
-        coverLink := XPathString('//img[@class="thumbnail"]/@src');
+        coverLink := XPathString('//img[starts-with(@class,"thumbnail")]/@src');
         if coverLink <> '' then coverLink := FillHost(Module.RootURL, coverLink);
+        if title = '' then title := XPathString('//title');
+        if title <> '' then
+          if Pos(' Manga - Oku ', title) > 0 then
+            title := SeparateLeft(title, ' Manga - Oku ');
         if title = '' then title := XPathString('//h1');
         authors := XPathString('//table[2]/tbody/tr[2]/td[1]');
         artists := XPathString('//table[2]/tbody/tr[2]/td[2]');
