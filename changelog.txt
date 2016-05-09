@@ -4,6 +4,12 @@ Project page: https://github.com/riderkick/FMD
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.54.0 (09-05-2016)
+[*] Manga-Tr: fixed get image url
+[+] Added Puzzmos[TR]
+[+] Added WebtoonTr[TR]
+Full changes: https://github.com/riderkick/FMD/compare/0.9.53.0...0.9.54.0
+
 0.9.53.0 (08-05-2016)
 [*] Tsumino: fixed update list
 Full changes: https://github.com/riderkick/FMD/compare/0.9.52.0...0.9.53.0
