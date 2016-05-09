@@ -34,4 +34,5 @@ uses
   Hentai2Read,
   Tumangaonline,
   MangaEden,
-  HeyMangaXyz;
+  HeyMangaXyz,
+  WebtoonTr;
