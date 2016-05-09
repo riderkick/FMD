@@ -1219,6 +1219,12 @@ var
 begin
   Result := CleanURL(URL);
   if Host = '' then Exit;
+  if Pos(Host, URL) = 1 then Exit;
+  if Pos('://', URL) = 0 then
+  begin
+    Result := RemoveURLDelim(Host) + AppendURLDelimLeft(Result);
+    Exit;
+  end;
   with TRegExpr.Create do
     try
       Expression := REGEX_HOST;
@@ -1237,6 +1243,12 @@ begin
   Result := CleanURL(URL);
   if Host = '' then Exit;
   if URL = '' then Exit;
+  if Pos(Host, URL) = 1 then Exit;
+  if Pos('://', URL) = 0 then
+  begin
+    Result := RemoveURLDelim(Host) + AppendURLDelimLeft(Result);
+    Exit;
+  end;
   with TRegExpr.Create do
     try
       Expression := REGEX_HOST;
