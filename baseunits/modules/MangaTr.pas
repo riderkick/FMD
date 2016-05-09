@@ -12,29 +12,38 @@ implementation
 
 var
   mangatrcookie: String = '';
+  puzzmoscookie: String = '';
+
+const
+  mangatrdirurl = '/manga-list.html?listType=allABC';
+  puzzmosdirurl = '/directory?type=text';
 
 function GetNameAndLink(const MangaInfo: TMangaInformation;
   const ANames, ALinks: TStringList; const AURL: String;
   const Module: TModuleContainer): Integer;
 var
-  query: TXQueryEngineHTML;
   v: IXQValue;
+  s: String;
 begin
   Result := NET_PROBLEM;
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
-  if MangaInfo.FHTTP.GET(Module.RootURL + '/manga-list.html') then begin
+  s := Module.RootURL;
+  if Module.Website = 'Manga-Tr' then
+    s := s + mangatrdirurl
+  else if Module.Website = 'Puzzmos' then
+    s := s + puzzmosdirurl;
+  if MangaInfo.FHTTP.GET(s) then begin
     Result := NO_ERROR;
-    query := TXQueryEngineHTML.Create;
-    try
-      query.ParseHTML(StreamToString(MangaInfo.FHTTP.Document));
-      for v in query.XPath('//span[starts-with(@class, "manga")]//a') do
-      begin
-        ANames.Add(v.toString);
-        ALinks.Add(v.toNode.getAttribute('href'));
+    with TXQueryEngineHTML.Create(MangaInfo.FHTTP.Document) do
+      try
+        for v in XPath('//span[starts-with(@class, "manga")]//a') do
+        begin
+          ANames.Add(v.toString);
+          ALinks.Add(v.toNode.getAttribute('href'));
+        end;
+      finally
+        Free;
       end;
-    finally
-      query.Free;
-    end;
   end;
 end;
 
@@ -56,8 +65,12 @@ begin
         if coverLink <> '' then coverLink := FillHost(Module.RootURL, coverLink);
         if title = '' then title := XPathString('//title');
         if title <> '' then
+        begin
           if Pos(' Manga - Oku ', title) > 0 then
-            title := SeparateLeft(title, ' Manga - Oku ');
+            title := SeparateLeft(title, ' Manga - Oku ')
+          else if Pos(' Mangasını Oku ', title) > 0 then
+            title := SeparateLeft(title, ' Mangasını Oku ');
+        end;
         if title = '' then title := XPathString('//h1');
         if Pos('Yazar', XPathString('//table[1]/tbody/tr[1]/td[1]')) > 0 then
           s := '//table[1]/tbody/tr[2]'
@@ -83,29 +96,49 @@ begin
   end;
 end;
 
-function GETWithCookie(const AHTTP: THTTPSendThread; AURL: String): Boolean;
+function GETWithCookie(const AHTTP: THTTPSendThread;
+  const AURL: String;
+  const Module: TModuleContainer;
+  const usePOST: Boolean = False;
+  const POSTData: String = ''): Boolean;
 var
-  s: String;
+  iurl, s: String;
+  ccookie: PString;
 begin
   Result := False;
-  if mangatrcookie <> '' then begin
-    AHTTP.Cookies.Text := mangatrcookie;
-    if AHTTP.GET(AURL) then begin
+  if Module.Website = 'Manga-Tr' then
+    ccookie := @mangatrcookie
+  else if Module.Website = 'Puzzmos' then
+    ccookie := @puzzmoscookie;
+  iurl := MaybeFillHost(Module.RootURL, AURL);
+  if ccookie^ <> '' then
+  begin
+    AHTTP.Cookies.Text := ccookie^;
+    if AHTTP.GET(iurl) then
+    begin
       s := StreamToString(AHTTP.Document);
       if (Pos('class="chapter-content"', s) > 0) or (Pos('class=''chapter-content''', s) > 0) then
         Result := True;
     end;
   end;
-  if not Result then begin
+  if not Result then
+  begin
     AHTTP.Reset;
-    if AHTTP.GET(AURL) then begin
-      if AHTTP.Cookies.Values['PHPSESSID'] <> '' then begin
-        // allpage = 1; perpage = 2
-        AHTTP.Cookies.Values['read_type'] := '1';
-        mangatrcookie := AHTTP.GetCookies;
+    if usePOST then
+      Result := AHTTP.POST(iurl, POSTData)
+    else
+      Result := AHTTP.GET(iurl);
+    if Result then
+    begin
+      if AHTTP.Cookies.Values['PHPSESSID'] <> '' then
+      begin
+        // manga-tr allpage = 1; perpage = 2
+        if Module.Website = 'Manga-Tr' then
+          AHTTP.Cookies.Values['read_type'] := '1';
+        ccookie^ := AHTTP.GetCookies;
         AHTTP.Reset;
-        AHTTP.Headers.Values['Referer'] := ' ' + AURL;
-        Result := AHTTP.GET(AURL);
+        AHTTP.Headers.Values['Referer'] := ' ' + iurl;
+        Result := AHTTP.GET(iurl);
       end;
     end;
   end;
@@ -115,6 +148,7 @@ function GetPageNumber(const DownloadThread: TDownloadThread;
   const AURL: String; const Module: TModuleContainer): Boolean;
 var
   v: IXQValue;
+  s: String;
 begin
   Result := False;
   if DownloadThread = nil then Exit;
@@ -122,10 +156,26 @@ begin
     PageLinks.Clear;
     PageContainerLinks.Clear;
     PageNumber := 0;
-    if GETWithCookie(DownloadThread.FHTTP, FillHost(Module.RootURL, AURL)) then begin
-      Result := True;
+    //if Module.Website = 'Manga-Tr' then
+    //  Result := GETWithCookie(DownloadThread.FHTTP, AURL, Module)
+    // puzzmos POST perpage = "sayfadansayfa:" allpage = "altalta:"
+    //else if Module.Website = 'Puzzmos' then
+    //  Result := GETWithCookie(DownloadThread.FHTTP, AURL, Module, True, 'altalta:');
+    Result := GETWithCookie(DownloadThread.FHTTP, AURL, Module);
+    if Result then
+    begin
       with TXQueryEngineHTML.Create(Document) do
         try
+          //perpage
+          if Module.Website = 'Manga-Tr' then
+            s := '//div[@class="chapter-content"]/select[2]/option'
+          else if Module.Website = 'Puzzmos' then
+            s := '(//select)[2]/option';
+          for v in XPath(s) do
+            if Pos('Yorumlar', v.toString) = 0 then
+              PageContainerLinks.Add(v.toNode.getAttribute('value'));
+          PageNumber := PageContainerLinks.Count;
+          //allpage
           for v in XPath('//div[@class="chapter-content"]//img[@class="chapter-img"]/@src') do
             PageLinks.Add(MaybeFillHost(Module.RootURL, v.toString));
         finally
@@ -137,40 +187,44 @@ end;
 
 function GetImageURL(const DownloadThread: TDownloadThread;
   const AURL: String; const Module: TModuleContainer): Boolean;
-var
-  query: TXQueryEngineHTML;
 begin
   Result := False;
   if DownloadThread = nil then Exit;
   with DownloadThread.manager.container, DownloadThread.FHTTP do begin
     Headers.Values['Referer'] := ' ' + AURL;
     if DownloadThread.workCounter > PageContainerLinks.Count then Exit;
-    if GETWithCookie(DownloadThread.FHTTP, FillHost(Module.RootURL,
-      PageContainerLinks[DownloadThread.workCounter])) then begin
+    if GETWithCookie(DownloadThread.FHTTP, PageContainerLinks[DownloadThread.workCounter], Module) then
+    begin
       Result := True;
-      query := TXQueryEngineHTML.Create;
-      try
-        query.ParseHTML(StreamToString(Document));
-        PageLinks[DownloadThread.workCounter] :=
-          query.XPathString('//div[@class="chapter-content"]//img/@src');
-      finally
-        query.Free;
-      end;
+      with TXQueryEngineHTML.Create(Document) do
+        try
+          PageLinks[DownloadThread.workCounter] :=
+            MaybeFillHost(Module.RootURL, XPathString('//div[@class="chapter-content"]//img/@src'));
+        finally
+          Free;
+        end;
     end;
   end;
 end;
 
 procedure RegisterModule;
-begin
-  with AddModule do
+
+  procedure AddWebsiteModule(const AWebsite, ARootURL: String);
   begin
-    Website := 'Manga-Tr';
-    RootURL := 'http://manga-tr.com';
-    OnGetNameAndLink := @GetNameAndLink;
-    OnGetInfo := @GetInfo;
-    OnGetPageNumber := @GetPageNumber;
-    OnGetImageURL := @GetImageURL;
+    with AddModule do
+    begin
+      Website := AWebsite;
+      RootURL := ARootURL;
+      OnGetNameAndLink := @GetNameAndLink;
+      OnGetInfo := @GetInfo;
+      OnGetPageNumber := @GetPageNumber;
+      OnGetImageURL := @GetImageURL;
+    end;
   end;
+
+begin
+  AddWebsiteModule('Manga-Tr', 'http://manga-tr.com');
+  AddWebsiteModule('Puzzmos', 'http://puzzmos.com');
 end;
 
 initialization
