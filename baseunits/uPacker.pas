@@ -11,7 +11,7 @@ unit uPacker;
 interface
 
 uses
-  Classes, Zipper, SysUtils, uBaseUnit, uImg2Pdf, FileUtil, lazutf8classes,
+  Classes, Zipper, zstream, SysUtils, uBaseUnit, uImg2Pdf, FileUtil, lazutf8classes,
   LazFileUtils, SimpleException, uMisc;
 
 type
@@ -40,39 +40,27 @@ end;
 
 procedure TPacker.DoZipCbz;
 var
-  Zip: TZipper;
-  i: Cardinal;
-  fstream: TFileStreamUTF8;
+  i: Integer;
 begin
-  try
-    Zip := TZipper.Create;
+  with TZipper.Create do
     try
-      for i := 0 to FFileList.Count - 1 do
-      begin
-        Zip.Entries.AddFileEntry(TFileStreamUTF8.Create(FFileList[i], fmOpenRead),
-          ExtractFileName(FFileList[i]));
-      end;
-      if Zip.Entries.Count>0 then begin
-        fstream := TFileStreamUTF8.Create(FSavedFilename, fmCreate);
-        try
-          Zip.SaveToStream(fstream);
-        finally
-          fstream.Free;
+      try
+        FileName := FSavedFilename;
+        Entries.AddFileEntries(FFileList);
+        if Entries.Count > 0 then
+          for i := 0 to Entries.Count - 1 do
+            Entries[i].CompressionLevel := clnone;
+        ZipAllFiles;
+      except
+        on E: Exception do
+        begin
+          E.Message := 'DoZipCbz.Exception'#13#10 + E.Message;
+          SimpleException.ExceptionHandleSaveLogOnly(Self, E);
         end;
-        for i:=0 to Zip.Entries.Count-1 do
-          Zip.Entries[i].Stream.Free;
-        zip.Clear;
       end;
     finally
-      Zip.Free;
+      Free;
     end;
-  except
-    on E: Exception do
-    begin
-      E.Message := 'DoZipCbz.Exception'#13#10 + E.Message;
-      SimpleException.ExceptionHandleSaveLogOnly(Self, E);
-    end;
-  end;
 end;
 
 procedure TPacker.DoPdf;
