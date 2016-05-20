@@ -204,7 +204,7 @@ begin
   Result := False;
   if DownloadThread = nil then Exit;
   if GETWithLogin(DownloadThread.FHTTP, AURL) then begin
-    SaveImageStreamToFile(DownloadThread.FHTTP.Document, APath, AName);
+    SaveImageStreamToFile(DownloadThread.FHTTP, APath, AName);
   end;
 end;
 
