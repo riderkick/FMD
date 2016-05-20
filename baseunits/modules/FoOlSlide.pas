@@ -184,11 +184,21 @@ begin
   end;
 end;
 
+function DownloadImageWithCookie(const DownloadThread: TDownloadThread;
+  const AURL, APath, AName: String; const Module: TModuleContainer): Boolean;
+begin
+  Result := False;
+  if DownloadThread = nil then Exit;
+  if GETWithCookie(DownloadThread.FHTTP, AURL, Module) then
+    SaveImageStreamToFile(DownloadThread.FHTTP, APath, AName);
+end;
+
 procedure RegisterModule;
 
-  procedure AddWebsiteModule(AWebsite, ARootURL: String);
+  function AddWebsiteModule(AWebsite, ARootURL: String): TModuleContainer;
   begin
-    with AddModule do
+    Result := AddModule;
+    with Result do
     begin
       Website := AWebsite;
       RootURL := ARootURL;
@@ -202,7 +212,12 @@ procedure RegisterModule;
 
 begin
   AddWebsiteModule('Shoujosense', 'http://reader.shoujosense.com');
-  AddWebsiteModule('YoManga', 'http://yomanga.co');
+  with AddWebsiteModule('YoManga', 'http://yomanga.co') do
+  begin
+    MaxTaskLimit := 1;
+    MaxConnectionLimit := 4;
+    OnDownloadImage := @DownloadImageWithCookie;
+  end;
   AddWebsiteModule('RawYoManga', 'http://raws.yomanga.co');
   AddWebsiteModule('GoManga', 'http://gomanga.co');
 end;
