@@ -6,13 +6,26 @@ interface
 
 uses
   Classes, SysUtils, WebsiteModules, uData, uBaseUnit, uDownloadsManager,
-  XQueryEngineHTML, httpsendthread, RegExpr, synautil;
+  XQueryEngineHTML, httpsendthread, Cloudflare, RegExpr, synautil;
 
 implementation
+
+var
+  yomangalockget: TRTLCriticalSection;
+  yomangacookies: String;
 
 const
   dirurl = '/directory/';
   yomangadirurl = '/reader/directory/';
+
+function GETWithCookie(const AHTTP: THTTPSendThread; const AURL: String;
+  const Module: TModuleContainer): Boolean;
+begin
+  if Module.Website = 'YoManga' then
+    Result := Cloudflare.GETCF(AHTTP, AURL, yomangacookies, yomangalockget)
+  else
+    Result := AHTTP.GET(AURL);
+end;
 
 function GetDirectoryPageNumber(const MangaInfo: TMangaInformation;
   var Page: Integer; const Module: TModuleContainer): Integer;
@@ -27,7 +40,8 @@ begin
     s := yomangadirurl
   else
     s := dirurl;
-  if MangaInfo.FHTTP.GET(Module.RootURL + s) then begin
+  if GETWithCookie(MangaInfo.FHTTP, Module.RootURL + s, Module) then
+  begin
     Result := NO_ERROR;
     with TXQueryEngineHTML.Create(MangaInfo.FHTTP.Document) do
       try
@@ -58,7 +72,8 @@ begin
     s := dirurl;
   s := Module.RootURL + s;
   if AURL <> '0' then s += IncStr(AURL) + '/';
-  if MangaInfo.FHTTP.GET(s) then begin
+  if GETWithCookie(MangaInfo.FHTTP, s, Module) then
+  begin
     Result := NO_ERROR;
     with TXQueryEngineHTML.Create(MangaInfo.FHTTP.Document) do
       try
@@ -79,8 +94,10 @@ var
 begin
   Result := NET_PROBLEM;
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
-  with MangaInfo.FHTTP, MangaInfo.mangaInfo do begin
-    if GET(FillHost(Module.RootURL, AURL)) then begin
+  with MangaInfo.FHTTP, MangaInfo.mangaInfo do
+  begin
+    if GETWithCookie(MangaInfo.FHTTP, FillHost(Module.RootURL, AURL), Module) then
+    begin
       Result := NO_ERROR;
       with TXQueryEngineHTML.Create(Document) do
         try
@@ -115,10 +132,12 @@ var
 begin
   Result := False;
   if DownloadThread = nil then Exit;
-  with DownloadThread.FHTTP, DownloadThread.manager.container do begin
+  with DownloadThread.FHTTP, DownloadThread.manager.container do
+  begin
     PageLinks.Clear;
     PageNumber := 0;
-    if GET(FillHost(Module.RootURL, AURL)) then begin
+    if GETWithCookie(DownloadThread.FHTTP, FillHost(Module.RootURL, AURL), Module) then
+    begin
       Result := True;
       with TXQueryEngineHTML.Create(Document) do
         try
@@ -147,11 +166,13 @@ var
 begin
   Result := False;
   if DownloadThread = nil then Exit;
-  with DownloadThread.manager.container, DownloadThread.FHTTP do begin
+  with DownloadThread.manager.container, DownloadThread.FHTTP do
+  begin
     s := AURL;
     if DownloadThread.workCounter > 0 then
       s := AppendURLDelim(s) + 'page/' + IncStr(DownloadThread.workCounter);
-    if GET(FillHost(Module.RootURL, s)) then begin
+    if GETWithCookie(DownloadThread.FHTTP, FillHost(Module.RootURL, s), Module) then
+    begin
       Result := True;
       with TXQueryEngineHTML.Create(Document) do
         try
@@ -187,6 +208,9 @@ begin
 end;
 
 initialization
+  InitCriticalSection(yomangalockget);
   RegisterModule;
+finalization
+  DoneCriticalsection(yomangalockget);
 
 end.
