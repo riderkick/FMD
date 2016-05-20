@@ -18,7 +18,7 @@ uses
   lazutf8classes, LazFileUtils, FileUtil, FastHTMLParser, HTMLUtil, SynaCode, RegExpr,
   Imaging, ImagingTypes, ImagingCanvases, Classes, SysUtils, Dialogs, ExtCtrls, IniFiles,
   typinfo, syncobjs, httpsend, blcksock, uBaseUnit, uPacker, uFMDThread, uMisc,
-  DownloadedChaptersDB, FMDOptions, httpsendthread, SimpleLogger, dateutils;
+  DownloadedChaptersDB, FMDOptions, httpsendthread, SimpleLogger, dateutils, strutils;
 
 type
   TDownloadManager = class;
@@ -1656,17 +1656,23 @@ begin
       Exit;
     for i := 0 to tmp - 1 do
     begin
-      // Restore chapter links, chapter name and page links
+      // restore download task from file
       Containers.Add(TTaskContainer.Create);
-      with DownloadManagerFile, TTaskContainer(Containers.Last) do begin
+      with DownloadManagerFile, TTaskContainer(Containers.Last) do
+      begin
         tid := 'task' + IntToStr(i);
         Manager := Self;
         DownloadInfo.Website := ReadString(tid, 'Website', 'NULL');
         DownloadInfo.Link := ReadString(tid, 'Link', '');
         DownloadInfo.Title := ReadString(tid, 'Title', 'NULL');
-        DownloadInfo.SaveTo := CorrectPathSys(ReadString(tid, 'SaveTo', 'NULL'));
+        DownloadInfo.SaveTo := CleanAndExpandDirectory(ReadString(tid, 'SaveTo', 'NULL'));
         DownloadInfo.Status := ReadString(tid, 'Status', 'NULL');
         DownloadInfo.Progress := ReadString(tid, 'Progress', 'NULL');
+        if Pos('/', DownloadInfo.Progress) > 0 then
+        begin
+          DownCounter := StrToIntDef(ExtractWord(1, DownloadInfo.Progress, ['/']), 0);
+          PageNumber := StrToIntDef(ExtractWord(2, DownloadInfo.Progress, ['/']), 0);
+        end;
         s := ReadString(tid, 'ChapterLinks', '');
         if s <> '' then GetParams(ChapterLinks, s);
         s := ReadString(tid, 'ChapterName', '');
