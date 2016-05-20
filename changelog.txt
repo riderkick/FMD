@@ -4,6 +4,15 @@ Project page: https://github.com/riderkick/FMD
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.55.0 (20-05-2016)
+[*] Tumangaonline: rewrite all code, require new manga list
+[*] Yomanga: fixed blocked by cf
+[*] GameofScanlation: fixed download
+[-] MangaVadisi and MangaFrame removed
+[+] Added MangaDenizi[TR]
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.54.0...0.9.55.0
+
 0.9.54.0 (09-05-2016)
 [*] Manga-Tr: fixed get image url
 [+] Added Puzzmos[TR]
@@ -90,7 +99,7 @@ Full changes: https://github.com/riderkick/FMD/compare/0.9.42.0...0.9.43.0
 [*] Various changes and bug fixes
 
 0.9.40.0 (12-03-2016)
-[+] Added Tsumangaonline[ES]
+[+] Added Tumangaonline[ES]
 [*] Various changes and bug fixes
 
 0.9.39.0 (10-03-2016)
