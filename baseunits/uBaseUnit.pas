@@ -789,7 +789,8 @@ function GetPage(var output: TObject; URL: String; const Reconnect: Integer = 0)
 function GetURLFromBitly(const URL: String): String;
 
 // try to save tmemorystream to file, return the saved filename if success, otherwise return empty string
-function SaveImageStreamToFile(Stream: TMemoryStream; Path, FileName: String; Age: LongInt = 0): String;
+function SaveImageStreamToFile(Stream: TMemoryStream; Path, FileName: String; Age: LongInt = 0): String; overload;
+function SaveImageStreamToFile(AHTTP: THTTPSend; Path, FileName: String): String; overload;
 
 // Download an image from url and save it to a specific location.
 function SaveImage(const AHTTP: THTTPSend; const mangaSiteID: Integer; URL: String;
@@ -3259,13 +3260,30 @@ begin
   end;
 end;
 
+function SaveImageStreamToFile(AHTTP: THTTPSend; Path, FileName: String): String;
+var
+  s: String;
+  lastmodified: LongInt;
+begin
+  Result := '';
+  if AHTTP = nil then Exit;
+  s := Trim(AHTTP.Headers.Values['last-modified']);
+  lastmodified := 0;
+  if s <> '' then
+    try
+      lastmodified := DateTimeToFileDate(ScanDateTime(HTTPDateTimeFormatStr, s, FMDFormatSettings));
+    except
+    end;
+  Result := SaveImageStreamToFile(AHTTP.Document, Path, FileName, lastmodified);
+end;
+
 function SaveImage(const AHTTP: THTTPSend; const mangaSiteID: Integer;
   URL: String; const Path, Name: String; var SavedFilename: String;
   const Reconnect: Integer): Boolean;
 var
   HTTPHeader: TStringList;
   HTTP: THTTPSend;
-  counter, lastmodified: LongInt;
+  counter: Integer;
   s: String;
 
   procedure preTerminate;
@@ -3440,14 +3458,7 @@ begin
     end;
   end;
   if checkTerminate then Exit;
-  s := Trim(HTTP.Headers.Values['last-modified']);
-  lastmodified := 0;
-  if s <> '' then
-    try
-      lastmodified := DateTimeToFileDate(ScanDateTime(HTTPDateTimeFormatStr, s, FMDFormatSettings));
-    except
-    end;
-  SavedFilename := SaveImageStreamToFile(HTTP.Document, Path, Name, lastmodified);
+  SavedFilename := SaveImageStreamToFile(HTTP, Path, Name);
   preTerminate;
   Result := SavedFilename <> '';
 end;
