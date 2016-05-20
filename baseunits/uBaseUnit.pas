@@ -241,68 +241,66 @@ const
   MANGATRADERS_ID        = 8;
   TRUYENTRANHTUAN_ID     = 9;
   TURKCRAFT_ID           = 10;
-  MANGAVADISI_ID         = 11;
-  MANGAFRAME_ID          = 12;
-  EATMANGA_ID            = 13;
-  STARKANA_ID            = 14;
-  BLOGTRUYEN_ID          = 15;
-  KOMIKID_ID             = 16;
-  ESMANGAHERE_ID         = 17;
-  ANIMEEXTREMIST_ID      = 18;
-  HUGEMANGA_ID           = 19;
-  S2SCAN_ID              = 20;
-  IMANHUA_ID             = 21;
-  MABUNS_ID              = 22;
-  MANGAESTA_ID           = 23;
-  CENTRALDEMANGAS_ID     = 24;
-  EGSCANS_ID             = 25;
-  MANGAAR_ID             = 26;
-  MANGAAE_ID             = 27;
-  ANIMESTORY_ID          = 28;
-  LECTUREENLIGNE_ID      = 29;
-  SCANMANGA_ID           = 30;
-  MANGAGO_ID             = 31;
-  DM5_ID                 = 32;
-  MANGACOW_ID            = 33;
-  KIVMANGA_ID            = 34;
-  MEINMANGA_ID           = 35;
-  MANGASPROJECT_ID       = 36;
-  MANGAREADER_POR_ID     = 37;
-  NINEMANGA_ID           = 38;
-  NINEMANGA_ES_ID        = 39;
-  NINEMANGA_CN_ID        = 40;
-  NINEMANGA_RU_ID        = 41;
-  NINEMANGA_DE_ID        = 42;
-  NINEMANGA_IT_ID        = 43;
-  NINEMANGA_BR_ID        = 44;
-  JAPANSHIN_ID           = 45;
-  JAPSCAN_ID             = 46;
-  CENTRUMMANGI_PL_ID     = 47;
-  MANGALIB_PL_ID         = 48;
-  ONEMANGA_ID            = 49;
-  MANGATOWN_ID           = 50;
-  MANGAOKU_ID            = 51;
-  MYREADINGMANGAINFO_ID  = 52;
-  IKOMIK_ID              = 53;
-  NHENTAI_ID             = 54;
-  MANGAMINT_ID           = 55;
-  UNIXMANGA_ID           = 56;
-  EXTREMEMANGAS_ID       = 57;
-  MANGAHOST_ID           = 58;
-  PORNCOMIX_ID           = 59;
-  PORNCOMIXRE_ID         = 60;
-  PORNCOMIXIC_ID         = 61;
-  XXCOMICS_ID            = 62;
-  XXCOMICSMT_ID          = 63;
-  XXCOMICS3D_ID          = 64;
-  PORNXXXCOMICS_ID       = 65;
-  MANGASEE_ID            = 66;
-  MANGAKU_ID             = 67;
-  MANGAAT_ID             = 68;
-  READMANGATODAY_ID      = 69;
-  DYNASTYSCANS_ID        = 70;
+  EATMANGA_ID            = 11;
+  STARKANA_ID            = 12;
+  BLOGTRUYEN_ID          = 13;
+  KOMIKID_ID             = 14;
+  ESMANGAHERE_ID         = 15;
+  ANIMEEXTREMIST_ID      = 16;
+  HUGEMANGA_ID           = 17;
+  S2SCAN_ID              = 18;
+  IMANHUA_ID             = 19;
+  MABUNS_ID              = 20;
+  MANGAESTA_ID           = 21;
+  CENTRALDEMANGAS_ID     = 22;
+  EGSCANS_ID             = 23;
+  MANGAAR_ID             = 24;
+  MANGAAE_ID             = 25;
+  ANIMESTORY_ID          = 26;
+  LECTUREENLIGNE_ID      = 27;
+  SCANMANGA_ID           = 28;
+  MANGAGO_ID             = 29;
+  DM5_ID                 = 30;
+  MANGACOW_ID            = 31;
+  KIVMANGA_ID            = 32;
+  MEINMANGA_ID           = 33;
+  MANGASPROJECT_ID       = 34;
+  MANGAREADER_POR_ID     = 35;
+  NINEMANGA_ID           = 36;
+  NINEMANGA_ES_ID        = 37;
+  NINEMANGA_CN_ID        = 38;
+  NINEMANGA_RU_ID        = 39;
+  NINEMANGA_DE_ID        = 40;
+  NINEMANGA_IT_ID        = 41;
+  NINEMANGA_BR_ID        = 42;
+  JAPANSHIN_ID           = 43;
+  JAPSCAN_ID             = 44;
+  CENTRUMMANGI_PL_ID     = 45;
+  MANGALIB_PL_ID         = 46;
+  ONEMANGA_ID            = 47;
+  MANGATOWN_ID           = 48;
+  MANGAOKU_ID            = 49;
+  MYREADINGMANGAINFO_ID  = 50;
+  IKOMIK_ID              = 51;
+  NHENTAI_ID             = 52;
+  MANGAMINT_ID           = 53;
+  UNIXMANGA_ID           = 54;
+  EXTREMEMANGAS_ID       = 55;
+  MANGAHOST_ID           = 56;
+  PORNCOMIX_ID           = 57;
+  PORNCOMIXRE_ID         = 58;
+  PORNCOMIXIC_ID         = 59;
+  XXCOMICS_ID            = 60;
+  XXCOMICSMT_ID          = 61;
+  XXCOMICS3D_ID          = 62;
+  PORNXXXCOMICS_ID       = 63;
+  MANGASEE_ID            = 64;
+  MANGAKU_ID             = 65;
+  MANGAAT_ID             = 66;
+  READMANGATODAY_ID      = 67;
+  DYNASTYSCANS_ID        = 68;
 
-  WebsiteRoots: array [0..70] of array [0..1] of String = (
+  WebsiteRoots: array [0..68] of array [0..1] of String = (
     ('AnimeA', 'http://manga.animea.net'),
     ('MangaInn', 'http://www.mangainn.me'),
     ('OurManga', 'http://www.ourmanga.com'),
@@ -314,8 +312,6 @@ const
     ('MangaTraders', 'http://mangatraders.org'),
     ('TruyenTranhTuan', 'http://truyentranhtuan.com'),
     ('Turkcraft', 'http://turkcraft.com'),
-    ('MangaVadisi', 'http://www.mangavadisi.net'),
-    ('MangaFrame', 'http://www.mangaframe.com'),
     ('EatManga', 'http://eatmanga.com'),
     ('Starkana', 'http://starkana.jp'),
     ('BlogTruyen', 'http://blogtruyen.com'),
@@ -400,10 +396,6 @@ const
   TRUYENTRANHTUAN_BROWSER = '/danh-sach-truyen';
 
   TURKCRAFT_BROWSER = '/';
-
-  MANGAVADISI_BROWSER = '/hemenoku/';
-
-  MANGAFRAME_BROWSER = '/okuyucu/directory/';
 
   EATMANGA_BROWSER = '/Manga-Scan/';
   EATMANGA_maxDLTask: Cardinal = 1;
@@ -1149,7 +1141,6 @@ begin
   end;
   Result := SitesMemberOf(website, [
     MANGASPROJECT_ID,
-    MANGAVADISI_ID,
     TURKCRAFT_ID,
     HUGEMANGA_ID,
     KIVMANGA_ID,

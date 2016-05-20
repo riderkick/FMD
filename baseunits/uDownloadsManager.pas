@@ -393,8 +393,6 @@ var
 
   {$I includes/Mangacow/chapter_page_number.inc}
 
-  {$I includes/MangaFrame/chapter_page_number.inc}
-
   {$I includes/MangaGo/chapter_page_number.inc}
 
   {$I includes/MangaInn/chapter_page_number.inc}
@@ -402,8 +400,6 @@ var
   {$I includes/MangaPark/chapter_page_number.inc}
 
   {$I includes/MangaTraders/chapter_page_number.inc}
-
-  {$I includes/MangaVadisi/chapter_page_number.inc}
 
   {$I includes/MeinManga/chapter_page_number.inc}
 
@@ -511,12 +507,6 @@ begin
     else
     if manager.container.MangaSiteID = TURKCRAFT_ID then
       Result := GetTurkcraftPageNumber
-    else
-    if manager.container.MangaSiteID = MANGAVADISI_ID then
-      Result := GetMangaVadisiPageNumber
-    else
-    if manager.container.MangaSiteID = MANGAFRAME_ID then
-      Result := GetMangaFramePageNumber
     else
     if manager.container.MangaSiteID = MANGAAE_ID then
       Result := GetMangaAePageNumber
@@ -647,8 +637,6 @@ var
 
   {$I includes/MangaEsta/image_url.inc}
 
-  {$I includes/MangaFrame/image_url.inc}
-
   {$I includes/MangaGo/image_url.inc}
 
   {$I includes/MangaInn/image_url.inc}
@@ -660,8 +648,6 @@ var
   {$I includes/MangasPROJECT/image_url.inc}
 
   {$I includes/MangaTraders/image_url.inc}
-
-  {$I includes/MangaVadisi/image_url.inc}
 
   {$I includes/ScanManga/image_url.inc}
 
@@ -776,12 +762,6 @@ begin
     else
     if manager.container.MangaSiteID = TURKCRAFT_ID then
       Result := GetTurkcraftImageURL
-    else
-    if manager.container.MangaSiteID = MANGAVADISI_ID then
-      Result := GetMangaVadisiImageURL
-    else
-    if manager.container.MangaSiteID = MANGAFRAME_ID then
-      Result := GetMangaFrameImageURL
     else
     if manager.container.MangaSiteID = MANGAAR_ID then
       Result := GetMangaArImageURL

@@ -813,8 +813,6 @@ var
 
   {$I includes/MangaMint/directory_page_number.inc}
 
-  {$I includes/MangaFrame/directory_page_number.inc}
-
   {$I includes/MangaHost/directory_page_number.inc}
 
   {$I includes/PornComix/directory_page_number.inc}
@@ -924,9 +922,6 @@ begin
       if WebsiteID = MANGAMINT_ID then
         Result := GetMangaMintDirectoryPageNumber
       else
-      if WebsiteID = MANGAFRAME_ID then
-        Result := GetMangaFrameDirectoryPageNumber
-      else
       if WebsiteID = MANGAHOST_ID then
         Result := GetMangaHostDirectoryPageNumber
       else
@@ -1013,10 +1008,6 @@ var
   {$I includes/Imanhua/names_and_links.inc}
 
   {$I includes/Turkcraft/names_and_links.inc}
-
-  {$I includes/MangaVadisi/names_and_links.inc}
-
-  {$I includes/MangaFrame/names_and_links.inc}
 
   {$I includes/Mangacow/names_and_links.inc}
 
@@ -1181,12 +1172,6 @@ begin
     if WebsiteID = TURKCRAFT_ID then
       Result := TurkcraftGetNamesAndLinks
     else
-    if WebsiteID = MANGAVADISI_ID then
-      Result := MangaVadisiGetNamesAndLinks
-    else
-    if WebsiteID = MANGAFRAME_ID then
-      Result := MangaFrameNamesAndLinks
-    else
     if WebsiteID = MANGACOW_ID then
       Result := MangaCowGetNamesAndLinks
     else
@@ -1342,10 +1327,6 @@ var
   {$I includes/ScanManga/manga_information.inc}
 
   {$I includes/Turkcraft/manga_information.inc}
-
-  {$I includes/MangaVadisi/manga_information.inc}
-
-  {$I includes/MangaFrame/manga_information.inc}
 
   {$I includes/MangaAr/manga_information.inc}
 
@@ -1504,12 +1485,6 @@ begin
     else
     if WebsiteID = TURKCRAFT_ID then
       Result := GetTurkcraftInfoFromURL
-    else
-    if WebsiteID = MANGAFRAME_ID then
-      Result := GetMangaframeInfoFromURL
-    else
-    if WebsiteID = MANGAVADISI_ID then
-      Result := GetMangaVadisiInfoFromURL
     else
     if WebsiteID = MANGAAR_ID then
       Result := GetMangaArInfoFromURL
