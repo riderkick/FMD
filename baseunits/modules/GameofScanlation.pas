@@ -111,7 +111,7 @@ begin
       Result := True;
       with TXQueryEngineHTML.Create(Document) do
         try
-          for v in XPath('//div[@id="comicMainImage"]//img/@src') do
+          for v in XPath('//div[@class="chapterPages"]//img/@src') do
             PageLinks.Add(MaybeFillHost(Module.RootURL, v.toString));
         finally
           Free;
