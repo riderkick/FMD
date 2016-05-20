@@ -210,6 +210,7 @@ end;
 initialization
   InitCriticalSection(yomangalockget);
   RegisterModule;
+
 finalization
   DoneCriticalsection(yomangalockget);
 
