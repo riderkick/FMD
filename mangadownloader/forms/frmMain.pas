@@ -712,7 +712,7 @@ const
   CL_BarGreenLine       = $25b006;
   CL_BarGreen           = $42d932;
 
-  CL_BarOrangLine       = $00b399;
+  CL_BarOrangeLine       = $00b399;
   CL_BarOrange          = $1870e9;
 
   CL_BarRedLine         = $1a1ab1;
@@ -3473,81 +3473,76 @@ procedure TMainForm.vtDownloadDrawText(Sender: TBaseVirtualTree;
   TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
   const CellText: String; const CellRect: TRect; var DefaultDraw: Boolean);
 var
-  BarRect, ProgressBarRect: TRect;
+  BarRect: TRect;
   Percents: double;
   ww, hh: Integer;
 begin
-  if Column = 2 then
+  if Column <> 2 then Exit;
+  DefaultDraw := False;
+  with DLManager.Items[Node^.Index], TargetCanvas do
   begin
-    DefaultDraw:=False;
-    if Node=nil then Exit;
-    if Node^.Index>=DLManager.Count then Exit;
-    with DLManager.Items[Node^.Index].DownloadInfo,TargetCanvas do begin
-      if DLManager.Items[Node^.Index].Status in
-        [STATUS_FINISH, STATUS_COMPRESS, STATUS_FAILED] then
-        Percents := 1
-      else
-      if StrToIntDef(Trim(ExtractWord(2, Progress, ['/'])), 100) = 0 then
-        Percents:= 0
-      else
-        Percents:=StrToIntDef(Trim(ExtractWord(1, Progress, ['/'])), 0) /
-          StrToIntDef(Trim(ExtractWord(2, Progress, ['/'])), 100);
+    if Status in [STATUS_FINISH, STATUS_COMPRESS, STATUS_FAILED] then
+      Percents := 1
+    else
+    if (DLManager.Items[Node^.Index].DownCounter = 0) or
+      (DLManager.Items[Node^.Index].PageNumber = 0) then
+      Percents := 0
+    else
+      Percents := DLManager.Items[Node^.Index].DownCounter / DLManager.Items[Node^.Index].PageNumber;
 
-      //base bar
-      BarRect.Left := CellRect.Left + 2;
-      BarRect.Top := CellRect.Top + 2;
-      BarRect.Right := CellRect.Right - 2;
-      BarRect.Bottom := CellRect.Bottom - 2;
-      Pen.Style := psSolid;
-      Brush.Style := bsSolid;
-      Pen.Color:=CL_BarGrayLine;
-      Brush.Color:=CL_BarGray;
-      Rectangle(BarRect);
-      //progress bar
-      ProgressBarRect := BarRect;
-      //Inc(ProgressBarRect.Left);
-      //Inc(ProgressBarRect.Top);
-      //Dec(ProgressBarRect.Right);
-      //Dec(ProgressBarRect.Bottom);
-      ProgressBarRect.Right := round((ProgressBarRect.Right - ProgressBarRect.Left) *
-        Percents) + ProgressBarRect.Left;
-      if (ProgressBarRect.Right - ProgressBarRect.Left) > 0 then
-      begin
-        case DLManager.Items[Node^.Index].Status of
-          STATUS_STOP,
-          STATUS_FAILED  : begin
-                             Pen.Color   := CL_BarRedLine;
-                             Brush.Color := CL_BarRed;
-                           end;
-          STATUS_WAIT    : begin
-                             Pen.Color   := CL_BarGrayLine;
-                             Brush.Color := CL_BarGray;
-                           end;
-          STATUS_DOWNLOAD: begin
-                             Pen.Color   := CL_BarBlueLine;
-                             Brush.Color := CL_BarBlue;
-                           end;
-          STATUS_PROBLEM : begin
-                             Pen.Color   := CL_BarYellowLine;
-                             Brush.Color := CL_BarYellow;
-                           end;
-          STATUS_FINISH  : begin
-                             Pen.Color   := CL_BarGreenLine;
-                             Brush.Color := CL_BarGreen;
-                           end;
-          else begin
+    // base bar
+    BarRect.Left := CellRect.Left + 2;
+    BarRect.Top := CellRect.Top + 2;
+    BarRect.Right := CellRect.Right - 2;
+    BarRect.Bottom := CellRect.Bottom - 2;
+    Pen.Style := psSolid;
+    Brush.Style := bsSolid;
+    Pen.Color := CL_BarGrayLine;
+    Brush.Color := CL_BarGray;
+    Rectangle(BarRect);
+
+    // progress bar
+    if Percents > 0 then
+    begin
+      BarRect.Right := round((BarRect.Right - BarRect.Left) * Percents) + BarRect.Left;
+      case DLManager.Items[Node^.Index].Status of
+        STATUS_STOP,
+        STATUS_FAILED  : begin
+                           Pen.Color   := CL_BarRedLine;
+                           Brush.Color := CL_BarRed;
+                         end;
+        STATUS_WAIT    : begin
+                           Pen.Color   := CL_BarGrayLine;
+                           Brush.Color := CL_BarGray;
+                         end;
+        STATUS_DOWNLOAD: begin
+                           Pen.Color   := CL_BarBlueLine;
+                           Brush.Color := CL_BarBlue;
+                         end;
+        STATUS_PROBLEM : begin
+                           Pen.Color   := CL_BarYellowLine;
+                           Brush.Color := CL_BarYellow;
+                         end;
+        STATUS_FINISH  : begin
+                           Pen.Color   := CL_BarGreenLine;
+                           Brush.Color := CL_BarGreen;
+                         end;
+        else
+          begin
             Pen.Color   := CL_BarBrownGoldLine;
             Brush.Color := CL_BarBrownGold;
           end;
-        end;
-        Rectangle(ProgressBarRect);
       end;
-      //text
+      Rectangle(BarRect);
+    end;
+    // text
+    if DownloadInfo.Progress <> '' then
+    begin
       Font.Color := clBlack;
       Brush.Style := bsClear;
-      GetTextSize(Progress, ww, hh);
+      GetTextSize(DownloadInfo.Progress, ww, hh);
       TextOut(CellRect.Left + ((CellRect.Right - CellRect.Left - ww) div 2),
-        CellRect.Top + ((CellRect.Bottom - CellRect.Top - hh) div 2), Progress);
+        CellRect.Top + ((CellRect.Bottom - CellRect.Top - hh) div 2), DownloadInfo.Progress);
     end;
   end;
 end;
