@@ -35,4 +35,5 @@ uses
   Tumangaonline,
   MangaEden,
   HeyMangaXyz,
-  WebtoonTr;
+  WebtoonTr,
+  MangaDenizi;
