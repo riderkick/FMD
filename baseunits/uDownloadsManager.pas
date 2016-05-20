@@ -1288,10 +1288,12 @@ begin
       begin
         for j := 0 to container.PageLinks.Count - 1 do
         begin
-          P := S + PathDelim + Format('%.3d', [j + 1]);
-          if (FileExistsUTF8(P + '.jpg')) or
-            (FileExistsUTF8(P + '.png')) or
-            (FileExistsUTF8(P + '.gif')) then
+          if container.Filenames.Count = container.PageLinks.Count then
+            P := S + PathDelim + container.Filenames[j]
+          else
+            P := S + PathDelim + Format('%.3d', [j + 1]);
+
+          if ImageFileExist(P) then
             container.PageLinks[j] := 'D'
           else
           if container.PageLinks[j] = 'D' then
