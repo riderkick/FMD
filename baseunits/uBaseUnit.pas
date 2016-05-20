@@ -802,6 +802,9 @@ function SaveImage(const mangaSiteID: Integer; URL: String;
   const Path, Name: String; var SavedFilename: String; const Reconnect: Integer = 0): Boolean;
   overload; inline;
 
+// check file exist with known extensions. AFilename is a filename without extensions
+function ImageFileExist(const AFilename: String): Boolean;
+
 procedure QuickSortChapters(var chapterList, linkList: TStringList);
 procedure QuickSortData(var merge: TStringList);
 // This method uses to sort the data. Use when we load all the lists.
@@ -3290,9 +3293,7 @@ begin
   // skip the download process.
   if Trim(URL) = 'D' then Exit(True);
   s := CleanAndExpandDirectory(Path) + Name;
-  if (FileExistsUTF8(s + '.jpg')) or
-    (FileExistsUTF8(s + '.png')) or
-    (FileExistsUTF8(s + '.gif')) then
+  if ImageFileExist(s) then
     Exit(True);
 
   URL := FixURL(URL);
@@ -3471,6 +3472,13 @@ function SaveImage(const mangaSiteID: Integer; URL: String; const Path,
   Name: String; var SavedFilename: String; const Reconnect: Integer): Boolean;
 begin
   Result := SaveImage(nil, mangaSiteID, URL, Path, Name, SavedFilename, Reconnect);
+end;
+
+function ImageFileExist(const AFilename: String): Boolean;
+begin
+  Result := (FileExistsUTF8(AFilename + '.jpg')) or
+            (FileExistsUTF8(AFilename + '.png')) or
+            (FileExistsUTF8(AFilename + '.gif'));
 end;
 
 procedure QuickSortChapters(var chapterList, linkList: TStringList);
