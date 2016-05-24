@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, WebsiteModules, uData, uBaseUnit, uDownloadsManager,
-  XQueryEngineHTML, httpsendthread, synautil;
+  XQueryEngineHTML, httpsendthread, synautil, RegExpr;
 
 implementation
 
@@ -110,8 +110,14 @@ begin
       Result := True;
       with TXQueryEngineHTML.Create(Document) do
         try
-          for v in XPath('//div[@id="_imageList"]/img[@class="_images"]/@data-url') do
-            PageLinks.Add(v.toString);
+          with TRegExpr.Create do
+            try
+              Expression := '[\?\&]type=q\d+';
+              for v in XPath('//div[@id="_imageList"]/img[@class="_images"]/@data-url') do
+                PageLinks.Add(Replace(v.toString, '', False));
+            finally
+              Free;
+            end;
         finally
           Free;
         end;
