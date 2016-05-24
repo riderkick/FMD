@@ -148,7 +148,7 @@ begin
       Result := True;
       with TXQueryEngineHTML.Create(Document) do
         try
-          PageLinks[DownloadThread.workCounter] := XPathString('//picture/img[@id="img-content"]/@src');
+          PageLinks[DownloadThread.workCounter] := XPathString('//img[@id="img-content"]/@src');
         finally
           Free;
         end;
