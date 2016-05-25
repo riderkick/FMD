@@ -36,4 +36,5 @@ uses
   MangaEden,
   HeyMangaXyz,
   WebtoonTr,
-  MangaDenizi;
+  MangaDenizi,
+  MangaSaurus;
