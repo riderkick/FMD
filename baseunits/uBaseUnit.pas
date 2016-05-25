@@ -480,6 +480,9 @@ const
     '/series'
     );
 
+  MangaInfo_StatusCompleted = '0';
+  MangaInfo_StatusOngoing = '1';
+
 var
   // Sites var
   BROWSER_INVERT: Boolean = False;
