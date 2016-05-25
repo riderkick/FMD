@@ -4,6 +4,14 @@ Project page: https://github.com/riderkick/FMD
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.56.0 (25-05-2016)
+[*] YoManga: fixed download
+[*] HeyManga: fixed download
+[*] Webtoons: download original images (#254)
+[+] Added MangaSaurus[EN]
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.55.0...0.9.56.0
+
 0.9.55.0 (20-05-2016)
 [*] Tumangaonline: rewrite all code, require new manga list
 [*] Yomanga: fixed blocked by cf
