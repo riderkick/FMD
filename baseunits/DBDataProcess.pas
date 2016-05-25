@@ -366,15 +366,28 @@ begin
 end;
 
 procedure TDBDataProcess.GetRecordCount;
+var
+  bsql, s: String;
+  queryopen: Boolean;
 begin
-  if FQuery.Active then
+  FRecordCount := 0;
+  queryopen := FQuery.Active;
+  if queryopen then FQuery.Close;
+  bsql := Trim(FQuery.SQL.Text);
+  if UpperCase(LeftStr(bsql, 8)) = 'SELECT *' then
   begin
-    FQuery.Last;
-    FRecordCount := FQuery.RecordCount;
-    FQuery.Refresh;
-  end
-  else
-    FRecordCount := 0;
+    s := 'SELECT COUNT("link") as recordcount' + Copy(bsql, 9, Length(bsql));
+    FQuery.SQL.Text := s;
+    FQuery.Open;
+    if FQuery.Active then
+    begin
+      FRecordCount := FQuery.Fields[0].AsInteger;
+      FQuery.Close;
+    end;
+  end;
+  FQuery.SQL.Text := bsql;
+  if FQuery.Active <> queryopen then
+    FQuery.Active := queryopen;
 end;
 
 procedure TDBDataProcess.AddSQLCond(const sqltext: String; useOR: Boolean);
@@ -671,9 +684,9 @@ begin
         if FTrans.Active=False then FTrans.Active:=True;
         FSQLSelect := 'SELECT * FROM ' + QuotedStrd(FTableName);
         FQuery.SQL.Text := FSQLSelect;
-        FQuery.Open;
         if CheckRecordCount then
           GetRecordCount;
+        FQuery.Open;
       end;
     except
       on E: Exception do
@@ -756,9 +769,11 @@ begin
       FQuery.Refresh
     else
     if Trim(FQuery.SQL.Text) <> '' then
+    begin
+      if RecheckDataCount then
+        GetRecordCount;
       FQuery.Open;
-    if RecheckDataCount then
-      GetRecordCount;
+    end;
   end;
 end;
 
@@ -892,8 +907,8 @@ begin
         else
           FFiltered := FFilterApplied;
       end;
-      FQuery.Open;
       GetRecordCount;
+      FQuery.Open;
     except
       on E: Exception do
         WriteLog_E(Self.ClassName+'['+Website+'].Search.Error!'#13#10 +
@@ -1031,6 +1046,7 @@ begin
         GenerateSQLFilter;
       end;
 
+      Self.GetRecordCount;
       FQuery.Open;
       FFiltered := Active;
       FFilterApplied := FFiltered;
@@ -1045,6 +1061,7 @@ begin
           'SQL:'#13#10 + FQuery.SQL.Text, E, Self);
         FQuery.Close;
         SQL.Text := tsql;
+        Self.GetRecordCount;
         FQuery.Open;
         FFilterAllSites := False;
         FFiltered := False;
@@ -1052,7 +1069,6 @@ begin
         FFilterSQL := '';
       end;
     end;
-    GetRecordCount;
     Result := FFiltered;
   end;
 end;
@@ -1089,10 +1105,7 @@ begin
     FRecordCount := 0;
     DetachAllSites;
     if FQuery.Active then
-    begin
-      OpenTable;
-      GetRecordCount;
-    end;
+      OpenTable(FTableName, True);
   end;
 end;
 
