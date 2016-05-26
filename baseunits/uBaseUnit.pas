@@ -2406,6 +2406,7 @@ begin
   if Result = '' then Exit;
   Result := StringReplace(Result, #13, ' ', [rfReplaceAll]);
   Result := StringReplace(Result, #10, ' ', [rfReplaceAll]);
+  Result := StringReplace(Result, #9, ' ', [rfReplaceAll]);
   while Pos('  ', Result) > 0 do
     Result := StringReplace(Result, '  ', ' ', [rfReplaceAll]);
   Result := Trim(Result);
