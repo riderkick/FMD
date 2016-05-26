@@ -823,6 +823,7 @@ function JDNToDate(const JDN: Longint): TDate;
 {function  ConvertInt32ToStr(const aValue: Cardinal)  : String;
 function  ConvertStrToInt32(const aStr  : String): Cardinal;}
 procedure TransferMangaInfo(var dest: TMangaInfo; const Source: TMangaInfo);
+function MangaInfoStatusIfPos(const SearchStr, OngoingStr, CompletedStr: String): String;
 
 // cross platform funcs
 
@@ -3693,6 +3694,16 @@ begin
   dest.numChapter := Source.numChapter;
   dest.chapterName.Assign(Source.chapterName);
   dest.chapterLinks.Assign(Source.chapterLinks);
+end;
+
+function MangaInfoStatusIfPos(const SearchStr, OngoingStr, CompletedStr: String): String;
+begin
+  Result := '';
+  if SearchStr = '' then Exit;
+  If Pos(OngoingStr, SearchStr) <> 0 then
+    Result := MangaInfo_StatusOngoing
+  else if Pos(CompletedStr, SearchStr) <> 0 then
+    Result := MangaInfo_StatusCompleted;
 end;
 
 { THTMLForm }
