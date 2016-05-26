@@ -1658,8 +1658,8 @@ begin
         RemoveHostFromURLsPair(chapterLinks, chapterName);
       // fixing chapter name
       for j := 0 to chapterName.Count - 1 do
-        chapterName.Strings[j] := Trim(RemoveStringBreaks(
-          CommonStringFilter(chapterName[j])));
+        chapterName[j] := Trim(CleanString(RemoveStringBreaks(
+          CommonStringFilter(chapterName[j]))));
 
       //remove manga name from chapter
       if OptionRemoveMangaNameFromChapter and (title <> '') then
