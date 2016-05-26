@@ -36,6 +36,7 @@ type
     function CSSStringAll(const Expression: String; const Exc: array of String;
       const Separator: String = ', '; const Tree: TTreeNode = nil): String; overload;
     property Engine: TXQueryEngine read FEngine;
+    property TreeParser: TTreeParser read FTreeParser;
   end;
 
   IXQValue = xquery.IXQValue;
@@ -103,8 +104,9 @@ var
   t: TTreeNode;
 begin
   Result := xqvalue();
-  t := Tree;
-  if t = nil then
+  if Assigned(Tree) then
+    t := Tree
+  else
     t := FTreeParser.getLastTree;
   if Expression = '' then
     Exit;
