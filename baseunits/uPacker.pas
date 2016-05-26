@@ -46,10 +46,12 @@ begin
     try
       try
         FileName := FSavedFilename;
-        Entries.AddFileEntries(FFileList);
-        if Entries.Count > 0 then
-          for i := 0 to Entries.Count - 1 do
-            Entries[i].CompressionLevel := clnone;
+        for i := 0 to FFileList.Count - 1 do
+          with Entries.AddFileEntry(FFileList[i]) do
+          begin
+            CompressionLevel := clnone;
+            ArchiveFileName := ExtractFileName(FFileList[i]);
+          end;
         ZipAllFiles;
       except
         on E: Exception do
