@@ -122,6 +122,8 @@ type
     // download manager
     Manager: TDownloadManager;
     DownloadInfo: TDownloadInfo;
+    // current working dir, save to + chapter name
+    CurrentWorkingDir: String;
     // current link index
     CurrentPageNumber,
     // current chapter index
@@ -985,8 +987,7 @@ begin
         3: uPacker.Format := pfPDF;
       end;
       uPacker.CompressionQuality := OptionPDFQuality;
-      uPacker.Path := CorrectPathSys(container.DownloadInfo.SaveTo) +
-        container.ChapterName.Strings[container.CurrentDownloadChapterPtr];
+      uPacker.Path := container.CurrentWorkingDir;
       uPacker.Execute;
     except
       on E: Exception do
@@ -1027,8 +1028,8 @@ var
 
 begin
   sfilename := '';
-  lpath := CleanAndExpandDirectory(CorrectPathSys(manager.container.DownloadInfo.SaveTo +
-    manager.container.ChapterName[manager.container.CurrentDownloadChapterPtr]));
+  lpath := CleanAndExpandDirectory(manager.container.DownloadInfo.SaveTo +
+    manager.container.ChapterName[manager.container.CurrentDownloadChapterPtr]);
   if not DirectoryExistsUTF8(lpath) then
   begin
     if not ForceDirectoriesUTF8(lpath) then
@@ -1223,7 +1224,7 @@ procedure TTaskThread.Execute;
 
 var
   j: Integer;
-  S, P: String;
+  s: String;
   DynamicPageLink: Boolean;
 begin
   ModuleId := container.ModuleId;
@@ -1240,14 +1241,12 @@ begin
       WaitForThreads;
       if Terminated then Exit;
 
-      //strip
-      container.DownloadInfo.SaveTo := CorrectPathSys(container.DownloadInfo.SaveTo);
-      S := CorrectPathSys(container.DownloadInfo.SaveTo +
-        container.ChapterName[container.CurrentDownloadChapterPtr]);
       //check path
-      if not DirectoryExistsUTF8(S) then
+      container.CurrentWorkingDir := CleanAndExpandDirectory(container.DownloadInfo.SaveTo +
+        container.ChapterName[container.CurrentDownloadChapterPtr]);
+      if not DirectoryExistsUTF8(container.CurrentWorkingDir) then
       begin
-        if not ForceDirectoriesUTF8(S) then
+        if not ForceDirectoriesUTF8(container.CurrentWorkingDir) then
         begin
           container.Status := STATUS_FAILED;
           container.DownloadInfo.Status := RS_FailedToCreateDir;
@@ -1272,7 +1271,7 @@ begin
           [RS_Preparing,
           container.CurrentDownloadChapterPtr + 1,
           container.ChapterLinks.Count,
-          container.ChapterName.Strings[container.CurrentDownloadChapterPtr]]);
+          container.ChapterName[container.CurrentDownloadChapterPtr]]);
         container.Status := STATUS_PREPARE;
         CheckOut;
         WaitForThreads;
@@ -1289,11 +1288,11 @@ begin
         for j := 0 to container.PageLinks.Count - 1 do
         begin
           if container.Filenames.Count = container.PageLinks.Count then
-            P := S + PathDelim + container.Filenames[j]
+            s := container.CurrentWorkingDir + container.Filenames[j]
           else
-            P := S + PathDelim + Format('%.3d', [j + 1]);
+            s := container.CurrentWorkingDir + Format('%.3d', [j + 1]);
 
-          if ImageFileExist(P) then
+          if ImageFileExist(s) then
             container.PageLinks[j] := 'D'
           else
           if container.PageLinks[j] = 'D' then
@@ -1365,7 +1364,7 @@ begin
           [RS_Downloading,
           container.CurrentDownloadChapterPtr + 1,
           container.ChapterLinks.Count,
-          container.ChapterName.Strings[container.CurrentDownloadChapterPtr]]);
+          container.ChapterName[container.CurrentDownloadChapterPtr]]);
         while container.WorkCounter < container.PageLinks.Count do
         begin
           if Terminated then Exit;

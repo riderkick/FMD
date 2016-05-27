@@ -36,13 +36,13 @@ object MainForm: TMainForm
     Height = 525
     Top = 11
     Width = 566
-    ActivePage = tsDownload
+    ActivePage = tsOption
     Align = alClient
     BorderSpacing.Top = 3
     BorderSpacing.Right = 4
     BorderSpacing.Bottom = 3
     ParentFont = False
-    TabIndex = 0
+    TabIndex = 4
     TabOrder = 0
     OnChange = pcMainChange
     object tsDownload: TTabSheet
@@ -695,6 +695,7 @@ object MainForm: TMainForm
             Height = 23
             Top = 150
             Width = 334
+            OnAcceptDirectory = edSaveToAcceptDirectory
             ShowHidden = False
             ButtonWidth = 23
             Glyph.Data = {
@@ -1911,10 +1912,10 @@ object MainForm: TMainForm
         Height = 420
         Top = 8
         Width = 539
-        ActivePage = tsGeneral
+        ActivePage = tsSaveTo
         Anchors = [akTop, akLeft, akRight, akBottom]
         ParentFont = False
-        TabIndex = 0
+        TabIndex = 3
         TabOrder = 0
         object tsGeneral: TTabSheet
           Caption = 'General'
@@ -2562,23 +2563,23 @@ object MainForm: TMainForm
         end
         object tsSaveTo: TTabSheet
           Caption = 'Save to'
-          ClientHeight = 357
+          ClientHeight = 392
           ClientWidth = 531
           object sbSaveTo: TScrollBox
             Left = 0
-            Height = 357
+            Height = 392
             Top = 0
             Width = 531
             HorzScrollBar.Page = 198
-            VertScrollBar.Page = 357
+            VertScrollBar.Page = 390
             Align = alClient
             BorderStyle = bsNone
             ChildSizing.LeftRightSpacing = 4
             ChildSizing.TopBottomSpacing = 8
             ChildSizing.HorizontalSpacing = 4
             ChildSizing.VerticalSpacing = 4
-            ClientHeight = 357
-            ClientWidth = 514
+            ClientHeight = 392
+            ClientWidth = 531
             TabOrder = 0
             object rgOptionCompress: TRadioGroup
               AnchorSideLeft.Control = lbDefaultDownloadPath
@@ -2589,7 +2590,7 @@ object MainForm: TMainForm
               Left = 4
               Height = 60
               Top = 54
-              Width = 506
+              Width = 523
               Anchors = [akTop, akLeft, akRight]
               AutoFill = True
               BorderSpacing.Top = 4
@@ -2603,7 +2604,7 @@ object MainForm: TMainForm
               ChildSizing.Layout = cclLeftToRightThenTopToBottom
               ChildSizing.ControlsPerLine = 4
               ClientHeight = 40
-              ClientWidth = 502
+              ClientWidth = 519
               Columns = 4
               ItemIndex = 0
               Items.Strings = (
@@ -2625,7 +2626,7 @@ object MainForm: TMainForm
               Left = 4
               Height = 237
               Top = 145
-              Width = 506
+              Width = 523
               Anchors = [akTop, akLeft, akRight]
               AutoSize = True
               BorderSpacing.Top = 4
@@ -2635,14 +2636,14 @@ object MainForm: TMainForm
               ChildSizing.HorizontalSpacing = 4
               ChildSizing.VerticalSpacing = 4
               ClientHeight = 217
-              ClientWidth = 502
+              ClientWidth = 519
               ParentFont = False
               TabOrder = 4
               object cbOptionRemoveMangaNameFromChapter: TCheckBox
                 Left = 4
                 Height = 19
                 Top = 50
-                Width = 494
+                Width = 511
                 Align = alTop
                 Caption = 'Remove manga name from chapter'
                 ParentFont = False
@@ -2652,7 +2653,7 @@ object MainForm: TMainForm
                 Left = 4
                 Height = 19
                 Top = 27
-                Width = 494
+                Width = 511
                 Align = alTop
                 Caption = 'Auto generate folder based on manga''s name'
                 OnChange = cbOptionGenerateMangaFolderNameChange
@@ -2663,7 +2664,7 @@ object MainForm: TMainForm
                 Left = 4
                 Height = 15
                 Top = 79
-                Width = 494
+                Width = 511
                 Align = alTop
                 BorderSpacing.Top = 10
                 Caption = 'Manga folder name:'
@@ -2686,7 +2687,7 @@ object MainForm: TMainForm
                 Left = 4
                 Height = 19
                 Top = 4
-                Width = 494
+                Width = 511
                 Align = alTop
                 Caption = 'Change all all unicode symbols to "_" (choose this when you have problem with unicode path)'
                 ParentFont = False
@@ -2817,7 +2818,7 @@ object MainForm: TMainForm
               Left = 4
               Height = 15
               Top = 8
-              Width = 506
+              Width = 523
               Align = alTop
               Caption = 'Choose the default download path:'
               ParentColor = False
@@ -2827,7 +2828,8 @@ object MainForm: TMainForm
               Left = 4
               Height = 23
               Top = 27
-              Width = 506
+              Width = 523
+              OnAcceptDirectory = edSaveToAcceptDirectory
               ShowHidden = False
               ButtonWidth = 23
               Glyph.Data = {
@@ -2877,7 +2879,7 @@ object MainForm: TMainForm
               Left = 4
               Height = 0
               Top = 54
-              Width = 506
+              Width = 523
               Align = alTop
               AutoSize = True
               BevelOuter = bvNone

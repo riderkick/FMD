@@ -57,9 +57,7 @@
           SaveImage(
             manager.container.MangaSiteID,
             GetVal(parse[i], 'src'),
-            CorrectPathSys(manager.container.DownloadInfo.SaveTo +
-              manager.container.ChapterName[
-            manager.container.CurrentDownloadChapterPtr]),
+            manager.container.CurrentWorkingDir,
             Format('%.3d', [workCounter + 1]) +
             '_' + IntToStr(prefix),
             manager.container.Manager.retryConnect);
@@ -80,8 +78,7 @@
     begin
       imageName := Format('%.3d', [workCounter + 1]);
       Merge2Images(
-        CorrectPathSys(manager.container.DownloadInfo.SaveTo + '/' +
-        manager.container.ChapterName[manager.container.CurrentDownloadChapterPtr]),
+        manager.container.CurrentWorkingDir,
         imageName + '_' + IntToStr(prefix - 2) + '.jpg',
         imageName + '_' + IntToStr(prefix - 1) + '.jpg',
         imageName + '.jpg');

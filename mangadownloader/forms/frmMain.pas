@@ -369,6 +369,7 @@ type
       var CellText: String);
     procedure clbChapterListInitNode(Sender: TBaseVirtualTree; ParentNode,
       Node: PVirtualNode; var InitialStates: TVirtualNodeInitStates);
+    procedure edSaveToAcceptDirectory(Sender: TObject; var Value: String);
     procedure edSearchChange(Sender: TObject);
     procedure edSearchKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState
       );
@@ -605,6 +606,9 @@ type
 
     // Add text to TRichMemo
     procedure AddTextToInfo(title, infoText: String);
+
+    // fill edSaveTo with default path
+    procedure FilledSaveTo;
 
     // Show manga information
     procedure ShowInformation(const title, website, link: String);
@@ -1559,7 +1563,7 @@ begin
         with TTaskContainer(DLManager.Containers[xNode^.Index]) do begin
           if (Sender = miDownloadDeleteTaskData) and (ChapterName.Count > 0) then begin
             for i := 0 to ChapterName.Count - 1 do begin
-              f := CleanAndExpandDirectory(DownloadInfo.SaveTo) + ChapterName[i];
+              f := CleanAndExpandDirectory(DownloadInfo.SaveTo + ChapterName[i]);
               if FileExistsUTF8(f + '.zip') then
                 DeleteFileUTF8(f + '.zip')
               else if FileExistsUTF8(f + '.cbz') then
@@ -1569,7 +1573,7 @@ begin
               else if DirectoryExistsUTF8(f) then
                 DeleteDirectory(f, False);
             end;
-            RemoveDirUTF8(CleanAndExpandDirectory(DownloadInfo.SaveTo));
+            RemoveDirUTF8(DownloadInfo.SaveTo);
           end;
           TTaskContainer(DLManager.Containers[xNode^.Index]).Free;
           DLManager.Containers.Delete(xNode^.Index);
@@ -1933,10 +1937,10 @@ begin
   DLManager.Items[pos].DownloadInfo.Title := mangaInfo.title;
   DLManager.Items[pos].DownloadInfo.DateTime := Now;
 
-  s := CorrectPathSys(CleanAndExpandDirectory(edSaveTo.Text));
   // save to
+  s := edSaveTo.Text;
   if OptionGenerateMangaFolderName then
-    s := s + CustomRename(
+    s := AppendPathDelim(s) + CustomRename(
       OptionMangaCustomRename,
       mangaInfo.website,
       mangaInfo.title,
@@ -1945,8 +1949,7 @@ begin
       '',
       '',
       OptionChangeUnicodeCharacter);
-  s := CorrectPathSys(s);
-  DLManager.Items[pos].DownloadInfo.SaveTo := s;
+  DLManager.Items[pos].DownloadInfo.SaveTo := CleanAndExpandDirectory(s);
   UpdateVtDownload;
 
   DLManager.CheckAndActiveTask;
@@ -1965,11 +1968,10 @@ var
 begin
   if mangaInfo.title <> '' then
   begin
-    s := CorrectPathSys(edSaveTo.Text);
-
     // save to
+    s := edSaveTo.Text;
     if OptionGenerateMangaFolderName then
-      s := s + CustomRename(
+      s := AppendPathDelim(s) + CustomRename(
           OptionMangaCustomRename,
           mangaInfo.website,
           mangaInfo.title,
@@ -1978,17 +1980,15 @@ begin
           '',
           '',
           OptionChangeUnicodeCharacter);
-    s := CorrectPathSys(s);
 
+    // downloaded chapters
     s2 := '';
-    if (mangaInfo.numChapter > 0) {AND (mangaInfo.website = MANGASTREAM_NAME)} then
-    begin
+    if mangaInfo.numChapter > 0 then
       for i := 0 to mangaInfo.numChapter - 1 do
         s2 := s2 + mangaInfo.chapterLinks.Strings[i] + SEPERATOR;
-    end;
 
     FavoriteManager.Add(mangaInfo.title, IntToStr(mangaInfo.numChapter), s2,
-      mangaInfo.website, s, mangaInfo.link);
+      mangaInfo.website, CleanAndExpandDirectory(s), mangaInfo.link);
     vtFavorites.NodeDataSize := SizeOf(TFavoriteInfo);
     UpdateVtFavorites;
     btAddToFavorites.Enabled := False;
@@ -2230,6 +2230,11 @@ procedure TMainForm.clbChapterListInitNode(Sender: TBaseVirtualTree;
   ParentNode, Node: PVirtualNode; var InitialStates: TVirtualNodeInitStates);
 begin
   if Assigned(Node) then Node^.CheckType:=ctCheckBox;
+end;
+
+procedure TMainForm.edSaveToAcceptDirectory(Sender: TObject; var Value: String);
+begin
+  Value := CleanAndExpandDirectory(Value);
 end;
 
 procedure TMainForm.edURLKeyPress(Sender: TObject; var Key: Char);
@@ -2920,9 +2925,7 @@ procedure TMainForm.miDownloadOpenFolderClick(Sender: TObject);
 begin
   if (vtDownload.SelectedCount = 0) or (Assigned(vtDownload.FocusedNode) = False) then
     Exit;
-  OpenDocument(TrimRightChar(
-    DLManager.Items[vtDownload.FocusedNode^.Index].DownloadInfo.SaveTo,
-    [PathDelim]));
+  OpenDocument(ChompPathDelim(DLManager.Items[vtDownload.FocusedNode^.Index].DownloadInfo.SaveTo));
 end;
 
 procedure TMainForm.miFavoritesOpenWithClick(Sender: TObject);
@@ -2961,20 +2964,18 @@ var
   f, fd, ff: String;
   Info: TSearchRec;
   l: TStringList;
+  task: TTaskContainer;
 begin
   if (not Assigned(vtDownload.FocusedNode)) then
     Exit;
+  task := DLManager.Items[vtDownload.FocusedNode^.Index];
   l := TStringList.Create;
   try
-    fd := StringReplace(DLManager.Items[
-      vtDownload.FocusedNode^.Index].DownloadInfo.SaveTo, '/', '\', [rfReplaceAll]);
-    if fd[Length(fd)] <> PathDelim then
-      fd := fd + PathDelim;
+    fd := task.DownloadInfo.SaveTo;
 
-    if DLManager.Items[vtDownload.FocusedNode^.Index].ChapterName.Count > 0 then
+    if task.ChapterName.Count > 0 then
     begin
-      ff := DLManager.Items[vtDownload.FocusedNode^.Index].
-        ChapterName[0];
+      ff := task.ChapterName[0];
       if FileExistsUTF8(fd + ff + '.zip') then
         f := ff + '.zip'
       else if FileExistsUTF8(fd + ff + '.cbz') then
@@ -4104,16 +4105,24 @@ begin
     end;
 end;
 
+procedure TMainForm.FilledSaveTo;
+begin
+  if Trim(edSaveTo.Text) = '' then
+  begin
+    edSaveTo.Text := Trim(configfile.ReadString('saveto', 'SaveTo', DEFAULT_PATH));
+    if edSaveTo.Text = '' then
+      edSaveTo.Text := DEFAULT_PATH;
+  end
+  else
+    edSaveTo.Text := CleanAndExpandDirectory(edSaveTo.Text);
+end;
+
 procedure TMainForm.ShowInformation(const title, website, link: String);
 var
   i: Integer;
 begin
   pcMain.ActivePage := tsInformation;
-  if Trim(edSaveTo.Text) = '' then
-    edSaveTo.Text := configfile.ReadString('saveto', 'SaveTo', DEFAULT_PATH);
-  if Trim(edSaveTo.Text) = '' then
-    edSaveTo.Text := DEFAULT_PATH;
-  edSaveTo.Text := CorrectPathSys(edSaveTo.Text);
+  FilledSaveTo;
 
   with rmInformation do
   begin
@@ -4340,7 +4349,7 @@ begin
       // saveto
       if Trim(edOptionDefaultPath.Text) = '' then
         edOptionDefaultPath.Text := DEFAULT_PATH;
-      edOptionDefaultPath.Text := CorrectPathSys(edOptionDefaultPath.Text);
+      edOptionDefaultPath.Text := CleanAndExpandDirectory(edOptionDefaultPath.Text);
       WriteString('saveto', 'SaveTo', edOptionDefaultPath.Text);
       WriteBool('saveto', 'ChangeUnicodeCharacter', cbOptionChangeUnicodeCharacter.Checked);
       WriteBool('saveto', 'GenerateMangaName', cbOptionGenerateMangaFolderName.Checked);

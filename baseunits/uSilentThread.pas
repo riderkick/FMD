@@ -357,15 +357,11 @@ begin
 
       if FSavePath = '' then
       begin
-        if Trim(edSaveTo.Text) = '' then
-          edSaveTo.Text := configfile.ReadString('saveto', 'SaveTo', DEFAULT_PATH);
-        if Trim(edSaveTo.Text) = '' then
-          edSaveTo.Text := DEFAULT_PATH;
-        edSaveTo.Text := CleanAndExpandDirectory(CorrectPathSys(edSaveTo.Text));
+        FilledSaveTo;
         FSavePath := edSaveTo.Text;
         // save to
         if OptionGenerateMangaFolderName then
-          FSavePath := FSavePath + CustomRename(
+          FSavePath := AppendPathDelim(FSavePath) + CustomRename(
             OptionMangaCustomRename,
             website,
             title,
@@ -374,9 +370,8 @@ begin
             '',
             '',
             OptionChangeUnicodeCharacter);
-        FSavePath := CorrectPathSys(FSavePath);
       end;
-      DLManager.Items[p].downloadInfo.SaveTo := FSavePath;
+      DLManager.Items[p].downloadInfo.SaveTo := CleanAndExpandDirectory(FSavePath);
 
       UpdateVtDownload;
       DLManager.CheckAndActiveTask(False);
@@ -453,20 +448,13 @@ begin
         title := Info.mangaInfo.title;
       if FSavePath = '' then
       begin
-        if Trim(edSaveTo.Text) = '' then
-          edSaveTo.Text := configfile.ReadString('saveto', 'SaveTo', DEFAULT_PATH);
-        if Trim(edSaveTo.Text) = '' then
-          edSaveTo.Text := DEFAULT_PATH;
-        edSaveTo.Text := CorrectPathSys(edSaveTo.Text);
+        FilledSaveTo;
         s := edSaveTo.Text;
       end
       else
-        s := CorrectPathSys(FSavePath);
-
-      s := CleanAndExpandDirectory(s);
-
+        s := FSavePath;
       if OptionGenerateMangaFolderName then
-        s := s + CustomRename(
+        s := AppendPathDelim(s) + CustomRename(
           OptionMangaCustomRename,
           website,
           title,
@@ -475,8 +463,6 @@ begin
           '',
           '',
           OptionChangeUnicodeCharacter);
-      s := CorrectPathSys(s);
-
       s2 := '';
       if (Info.mangaInfo.numChapter > 0) then
       begin
@@ -489,7 +475,7 @@ begin
         IntToStr(Info.mangaInfo.numChapter),
         s2,
         website,
-        s,
+        CleanAndExpandDirectory(s),
         URL);
       UpdateVtFavorites;
     end;
