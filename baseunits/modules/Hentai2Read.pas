@@ -183,8 +183,8 @@ begin
   with DownloadThread.Task.Container, DownloadThread.FHTTP do
   begin
     s := FillHost(Module.RootURL, AURL);
-    if DownloadThread.workCounter > 0 then
-      s := AppendURLDelim(s) + IncStr(DownloadThread.workCounter) + '/';
+    if WorkCounter > 0 then
+      s := AppendURLDelim(s) + IncStr(WorkCounter) + '/';
     if GET(s) then
     begin
       Result := True;
@@ -194,7 +194,7 @@ begin
           if s <> '' then
           begin
             s := TrimLeftChar(s, ['/']);
-            PageLinks[DownloadThread.workCounter] := MaybeFillHost(cdnurl, s);
+            PageLinks[WorkCounter] := MaybeFillHost(cdnurl, s);
           end;
         finally
           Free;

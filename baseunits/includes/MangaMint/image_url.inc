@@ -9,8 +9,8 @@
     parse := TStringList.Create;
     try
       s := FillMangaSiteHost(MANGAMINT_ID, URL);
-      if workCounter > 0 then
-       s := s + '?page=' + IntToStr(workCounter);
+      if Task.Container.WorkCounter > 0 then
+       s := s + '?page=' + IntToStr(Task.Container.WorkCounter);
       Result := GetPage(TObject(l),
         s,
         Task.Container.Manager.retryConnect);
@@ -33,7 +33,7 @@
           begin
             if Pos('src =', parse[i]) > 0 then
               parse[i] := StringReplace(parse[i], 'src =', 'src=', []);
-            Task.Container.PageLinks[workCounter] := GetVal(parse[i], 'src');
+            Task.Container.PageLinks[Task.Container.WorkCounter] := GetVal(parse[i], 'src');
             Break;
           end;
         end;

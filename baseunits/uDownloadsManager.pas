@@ -15,10 +15,10 @@ unit uDownloadsManager;
 interface
 
 uses
-  lazutf8classes, LazFileUtils, FileUtil, FastHTMLParser, HTMLUtil, SynaCode, RegExpr,
-  Imaging, ImagingTypes, ImagingCanvases, Classes, SysUtils, Dialogs, ExtCtrls, IniFiles,
-  typinfo, syncobjs, httpsend, blcksock, uBaseUnit, uPacker, uFMDThread, uMisc,
-  DownloadedChaptersDB, FMDOptions, httpsendthread, SimpleLogger, dateutils, strutils;
+  LazFileUtils, FastHTMLParser, HTMLUtil, SynaCode, RegExpr, Classes, SysUtils,
+  ExtCtrls, typinfo, syncobjs, blcksock, uBaseUnit, uPacker, uFMDThread, uMisc,
+  DownloadedChaptersDB, FMDOptions, httpsendthread, SimpleLogger, dateutils,
+  strutils;
 
 type
   TDownloadManager = class;
@@ -30,17 +30,9 @@ type
   TDownloadThread = class(TFMDThread)
   private
     parse: TStringList;
-    checkStyle: TFlagType;
   public
-    workCounter: Integer;
-    FSortColumn: Cardinal;
-    FMessage, FAnotherURL: String;
     FHTTP: THTTPSendThread;
 
-    procedure MainThreadMessageDialog;
-    // wait for changing directory completed
-    procedure SetChangeDirectoryFalse;
-    procedure SetChangeDirectoryTrue;
     // Get download link from URL
     function GetLinkPageFromURL(const URL: String): Boolean;
     // Get number of download link from URL
@@ -65,22 +57,16 @@ type
     Task: TTaskThread;
     constructor Create;
     destructor Destroy; override;
-
-    property SortColumn: Cardinal read FSortColumn write FSortColumn;
-    property AnotherURL: String read FAnotherURL write FAnotherURL;
   end;
 
   { TTaskThread }
 
   TTaskThread = class(TFMDThread)
   private
-    ModuleId: Integer;
     FCheckAndActiveTaskFlag: Boolean;
   protected
-    FMessage, FAnotherURL: String;
     procedure CheckOut;
     procedure MainThreadCompressRepaint;
-    procedure MainThreadMessageDialog;
     procedure Execute; override;
     procedure DoTerminate; override;
     procedure Compress;
@@ -97,7 +83,6 @@ type
     Threads: TFPList;
     constructor Create;
     destructor Destroy; override;
-    property AnotherURL: String read FAnotherURL write FAnotherURL;
   end;
 
   { TTaskContainer }
@@ -231,8 +216,7 @@ resourcestring
 
 implementation
 
-uses
-  frmMain, WebsiteModules;
+uses frmMain, WebsiteModules;
 
 function IntToStr(Value: Cardinal): String;
 begin
@@ -291,7 +275,7 @@ var
   Reslt: Boolean = False;
 begin
   try
-    case checkStyle of
+    case Task.Flag of
       // Get number of images.
       CS_GETPAGENUMBER:
       begin
@@ -337,7 +321,7 @@ begin
     on E: Exception do
     begin
       E.Message := E.Message + LineEnding +
-        '  In TDownloadThread.Execute : ' + GetEnumName(TypeInfo(TFlagType), Integer(checkStyle)) +
+        '  In TDownloadThread.Execute : ' + GetEnumName(TypeInfo(TFlagType), Integer(Task.Flag)) +
         LineEnding +
         '  Website : ' + Task.Container.DownloadInfo.Website + LineEnding +
         '  URL     : ' + FillMangaSiteHost(Task.Container.MangaSiteID,
@@ -354,7 +338,7 @@ procedure TDownloadThread.DoTerminate;
 begin
   LockCreateConnection;
   try
-    Modules.DecActiveConnectionCount(Task.ModuleId);
+    Modules.DecActiveConnectionCount(Task.Container.ModuleId);
     Task.Threads.Remove(Self);
   finally
     UnlockCreateConnection;
@@ -454,8 +438,8 @@ begin
   Result := False;
   Task.Container.PageNumber := 0;
 
-  if Modules.ModuleAvailable(Task.ModuleId, MMGetPageNumber) then
-    Result := Modules.GetPageNumber(Self, URL, Task.ModuleId)
+  if Modules.ModuleAvailable(Task.Container.ModuleId, MMGetPageNumber) then
+    Result := Modules.GetPageNumber(Self, URL, Task.Container.ModuleId)
   else
   begin
     if Task.Container.MangaSiteID = ANIMEA_ID then
@@ -691,11 +675,11 @@ var
 begin
   Result := False;
   if (Task.Container.PageLinks.Count > 0) and
-    (Task.Container.PageLinks.Strings[workCounter] <> 'W') then
+    (Task.Container.PageLinks.Strings[Task.Container.WorkCounter] <> 'W') then
     Exit;
 
-  if Modules.ModuleAvailable(Task.ModuleId, MMGetImageURL) then
-    Result := Modules.GetImageURL(Self, URL, Task.ModuleId)
+  if Modules.ModuleAvailable(Task.Container.ModuleId, MMGetImageURL) then
+    Result := Modules.GetImageURL(Self, URL, Task.Container.ModuleId)
   else
   begin
     if Task.Container.MangaSiteID = ANIMEA_ID then
@@ -847,30 +831,13 @@ begin
   end;
 end;
 
-procedure TDownloadThread.MainThreadMessageDialog;
-begin
-  MessageDlg('TDownloadThread', FMessage, mtInformation, [mbOK], '');
-end;
-
-procedure TDownloadThread.SetChangeDirectoryFalse;
-begin
-  isChangeDirectory := False;
-end;
-
-procedure TDownloadThread.SetChangeDirectoryTrue;
-begin
-  isChangeDirectory := True;
-end;
-
 // ----- TTaskThread -----
 
 constructor TTaskThread.Create;
 begin
   inherited Create(True);
   Threads := TFPList.Create;
-  ModuleId := -1;
   FCheckAndActiveTaskFlag := True;
-  anotherURL := '';
   httpCookies := '';
 end;
 
@@ -886,11 +853,6 @@ begin
     Format('%s (%d/%d)', [RS_Compressing, Container.CurrentDownloadChapterPtr +
     1, Container.ChapterLinks.Count]);
   MainForm.vtDownload.Repaint;
-end;
-
-procedure TTaskThread.MainThreadMessageDialog;
-begin
-  MessageDlg('TTaskThread', FMessage, mtInformation, [mbOK], '');
 end;
 
 procedure TTaskThread.Compress;
@@ -969,7 +931,7 @@ begin
     end;
 
   // check pagelinks url
-  workURL := Task.Container.PageLinks[workCounter];
+  workURL := Task.Container.PageLinks[Task.Container.WorkCounter];
   if (workURL = '') or
      (workURL = 'W') or
      (workURL = 'D') then
@@ -978,28 +940,28 @@ begin
   FHTTP.Clear;
 
   // call beforedownloadimage if available
-  if Modules.ModuleAvailable(Task.ModuleId, MMBeforeDownloadImage) then
-    Result := Modules.BeforeDownloadImage(Self, workURL, Task.ModuleId);
+  if Modules.ModuleAvailable(Task.Container.ModuleId, MMBeforeDownloadImage) then
+    Result := Modules.BeforeDownloadImage(Self, workURL, Task.Container.ModuleId);
 
   // prepare filename
   workFilename := '';
-  if workCounter < Task.Container.Filenames.Count then
-    workFilename := Task.Container.Filenames[workCounter];
+  if Task.Container.WorkCounter < Task.Container.Filenames.Count then
+    workFilename := Task.Container.Filenames[Task.Container.WorkCounter];
   if workFilename = '' then
-    workFilename := Format('%.3d', [workCounter + 1]);
+    workFilename := Format('%.3d', [Task.Container.WorkCounter + 1]);
 
   // download image
   savedFilename := '';
   if Result then
   begin
-    if Modules.ModuleAvailable(Task.ModuleId, MMDownloadImage) then
+    if Modules.ModuleAvailable(Task.Container.ModuleId, MMDownloadImage) then
     begin
       workURL := '';
       if (Task.Container.PageNumber = Task.Container.PageContainerLinks.Count)
-        and (workCounter < Task.Container.PageContainerLinks.Count) then
-        workURL := Task.Container.PageContainerLinks[workCounter]
-      else if workCounter < Task.Container.PageLinks.Count then
-        workURL := Task.Container.PageLinks[workCounter];
+        and (Task.Container.WorkCounter < Task.Container.PageContainerLinks.Count) then
+        workURL := Task.Container.PageContainerLinks[Task.Container.WorkCounter]
+      else if Task.Container.WorkCounter < Task.Container.PageLinks.Count then
+        workURL := Task.Container.PageLinks[Task.Container.WorkCounter];
 
       if workURL <> '' then
         Result := Modules.DownloadImage(
@@ -1007,7 +969,7 @@ begin
           workURL,
           Task.Container.CurrentWorkingDir,
           workFilename,
-          Task.ModuleId);
+          Task.Container.ModuleId);
     end
     else
     if Task.Container.MangaSiteID = MEINMANGA_ID then
@@ -1025,10 +987,10 @@ begin
   if Terminated then Exit(False);
   if Result then
   begin
-    Task.Container.PageLinks[workCounter] := 'D';
+    Task.Container.PageLinks[Task.Container.WorkCounter] := 'D';
 
-    if Modules.ModuleAvailable(Task.ModuleId, MMAfterImageSaved) then
-      Modules.AfterImageSaved(savedFilename, Task.ModuleId);
+    if Modules.ModuleAvailable(Task.Container.ModuleId, MMAfterImageSaved) then
+      Modules.AfterImageSaved(savedFilename, Task.Container.ModuleId);
   end;
 end;
 
@@ -1051,8 +1013,8 @@ begin
   end
   else
   begin
-    if Modules.MaxConnectionLimit[ModuleId] > 0 then
-      currentMaxThread := Modules.MaxConnectionLimit[ModuleId]
+    if Modules.MaxConnectionLimit[Container.ModuleId] > 0 then
+      currentMaxThread := Modules.MaxConnectionLimit[Container.ModuleId]
     else
       currentMaxThread := Container.Manager.maxDLThreadsPerTask;
     if currentMaxThread > Container.Manager.maxDLThreadsPerTask then
@@ -1075,8 +1037,8 @@ begin
     end;
   end;
 
-  if Modules.MaxConnectionLimit[ModuleId] > 0 then
-    while (not Terminated) and (Modules.ActiveConnectionCount[ModuleId] >= currentMaxThread) do
+  if Modules.MaxConnectionLimit[Container.ModuleId] > 0 then
+    while (not Terminated) and (Modules.ActiveConnectionCount[Container.ModuleId] >= currentMaxThread) do
       Sleep(SOCKHEARTBEATRATE)
   else
     while (not Terminated) and (Threads.Count >= currentMaxThread) do
@@ -1086,14 +1048,11 @@ begin
   begin
     LockCreateConnection;
     try
-      if Modules.ActiveConnectionCount[ModuleId] >= currentMaxThread then Exit;
-      Modules.IncActiveConnectionCount(ModuleId);
+      if Modules.ActiveConnectionCount[Container.ModuleId] >= currentMaxThread then Exit;
+      Modules.IncActiveConnectionCount(Container.ModuleId);
       Threads.Add(TDownloadThread.Create);
       with TDownloadThread(Threads.Last) do begin
         Task := Self;
-        ModuleId := Self.ModuleId;
-        workCounter := Container.WorkCounter;
-        checkStyle := Flag;
         //load User-Agent from advancedfile
         AdvanceLoadHTTPConfig(FHTTP, Container.DownloadInfo.Website);
         Start;
@@ -1163,12 +1122,11 @@ var
   s: String;
   DynamicPageLink: Boolean;
 begin
-  ModuleId := Container.ModuleId;
   Container.ThreadState := True;
   Container.DownloadInfo.TransferRate := FormatByteSize(Container.ReadCount, true);
   try
     if Container.ModuleId > -1 then
-      DynamicPageLink := Modules.Module[ModuleId].DynamicPageLink
+      DynamicPageLink := Modules.Module[Container.ModuleId].DynamicPageLink
     else
       DynamicPageLink := False;
 
@@ -1189,8 +1147,8 @@ begin
           Exit;
         end;
 
-      if ModuleId > -1 then
-        Modules.TaskStart(Container, ModuleId);
+      if Container.ModuleId > -1 then
+        Modules.TaskStart(Container, Container.ModuleId);
 
       // Get page number.
       if Container.PageLinks.Count = 0 then
@@ -1385,7 +1343,7 @@ begin
     while Threads.Count > 0 do
       Sleep(100);
   end;
-  Modules.DecActiveTaskCount(ModuleId);
+  Modules.DecActiveTaskCount(Container.ModuleId);
   with Container do begin
     Container.ReadCount := 0;
     DownloadInfo.TransferRate := '';

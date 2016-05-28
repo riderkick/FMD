@@ -9,7 +9,7 @@
     if Length(s) > 0 then
       if s[Length(s)] <> '/' then
          s := s + '/';
-    s := s + IntToStr(QWord(workCounter) + 1);
+    s := s + IntToStr(QWord(Task.Container.WorkCounter) + 1);
     Result := GetPage(TObject(l), s , Task.Container.Manager.retryConnect);
 
     if Self.Terminated then
@@ -36,7 +36,7 @@
           begin
             if Pos('<img', parse[j]) > 0 then
             begin
-              Task.Container.PageLinks[workCounter] := GetVal(parse[j], 'src');
+              Task.Container.PageLinks[Task.Container.WorkCounter] := GetVal(parse[j], 'src');
               Break;
             end;
           end;

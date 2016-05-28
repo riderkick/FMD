@@ -169,14 +169,14 @@ begin
   with DownloadThread.Task.Container, DownloadThread.FHTTP do
   begin
     s := AURL;
-    if DownloadThread.workCounter > 0 then
-      s := AppendURLDelim(s) + 'page/' + IncStr(DownloadThread.workCounter);
+    if WorkCounter > 0 then
+      s := AppendURLDelim(s) + 'page/' + IncStr(WorkCounter);
     if GETWithCookie(DownloadThread.FHTTP, FillHost(Module.RootURL, s), Module) then
     begin
       Result := True;
       with TXQueryEngineHTML.Create(Document) do
         try
-          PageLinks[DownloadThread.workCounter] := XPathString('//div[@id="page"]//img/@src');
+          PageLinks[WorkCounter] := XPathString('//div[@id="page"]//img/@src');
         finally
           Free;
         end;

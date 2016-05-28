@@ -8,7 +8,7 @@
     s := FillMangaSiteHost(Task.Container.MangaSiteID, URL);
     s := StringReplace(s, '.html', '', []);
     s := StringReplace(s, '.htm', '', []);
-    s := s + '-' + IntToStr(workCounter + 1) + '.html';
+    s := s + '-' + IntToStr(Task.Container.WorkCounter + 1) + '.html';
 
     Result := GetPage(TObject(l),
       s,
@@ -32,7 +32,7 @@
         if (Pos('<img', parse[i]) > 0) and
           (Pos('class="manga_pic', parse[i]) > 0) then
         begin
-          Task.Container.PageLinks[workCounter] :=
+          Task.Container.PageLinks[Task.Container.WorkCounter] :=
             GetVal(parse[i], 'src');
           Break;
         end;

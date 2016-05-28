@@ -497,7 +497,6 @@ var
 
   Revision: Cardinal;
   currentJDN: Integer;
-  isChangeDirectory: Boolean = False;
 type
   TArrayOfString = array of String;
 

@@ -175,14 +175,14 @@ begin
     try
       if GetPage(DownloadThread.FHTTP, TObject(Source),
         AppendURLDelim(FillHost(Module.RootURL, AURL)) +
-        IncStr(DownloadThread.workCounter), Manager.retryConnect) then
+        IncStr(WorkCounter), Manager.retryConnect) then
         if Source.Count > 0 then
         begin
           Result := True;
           Parser := TTreeParser.Create;
           try
             ParseHTMLTree(Parser, Source.Text);
-            PageLinks[DownloadThread.workCounter] :=
+            PageLinks[WorkCounter] :=
               SelectXPathString('//img[@id="img"]/@src', Parser);
           finally
             Parser.Free;

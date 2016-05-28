@@ -94,7 +94,7 @@ begin
   Result := False;
   if DownloadThread = nil then Exit;
   with DownloadThread.FHTTP, DownloadThread.Task.Container do begin
-    rurl := RemoveURLDelim(FillHost(Module.RootURL, PageContainerLinks[DownloadThread.WorkCounter]));
+    rurl := RemoveURLDelim(FillHost(Module.RootURL, PageContainerLinks[WorkCounter]));
     if GET(rurl) then begin
       Result := True;
       with TXQueryEngineHTML.Create(Document) do
@@ -102,7 +102,7 @@ begin
           rurl := XPathString('//img[@id="image"]/@src');
           if Pos('//', rurl) = 1 then
             rurl := 'https:' + rurl;
-          PageLinks[DownloadThread.workCounter] := rurl;
+          PageLinks[WorkCounter] := rurl;
         finally
           Free;
         end;

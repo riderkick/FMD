@@ -163,12 +163,12 @@ begin
   if RightStr(s, 2) = '/1' then
     SetLength(s, Length(s) - 1);
   with DownloadThread.Task.Container, DownloadThread.FHTTP do begin
-    s := AppendURLDelim(s) + IncStr(DownloadThread.workCounter) + '/';
+    s := AppendURLDelim(s) + IncStr(WorkCounter) + '/';
     if GET(FillHost(Module.RootURL, s)) then begin
       Result := True;
       with TXQueryEngineHTML.Create(Document) do
         try
-          PageLinks[DownloadThread.workCounter] :=
+          PageLinks[WorkCounter] :=
             XPathString('//img[@id="mainImg"]/@src');
         finally
           Free;

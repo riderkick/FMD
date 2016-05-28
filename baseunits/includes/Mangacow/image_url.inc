@@ -5,7 +5,7 @@
     l: TStringList;
   begin
     l := TStringList.Create;
-    s := DecodeUrl(FillMangaSiteHost(MANGACOW_ID, URL) + IntToStr(workCounter + 1) + '/');
+    s := DecodeUrl(FillMangaSiteHost(MANGACOW_ID, URL) + IntToStr(Task.Container.WorkCounter + 1) + '/');
     Result := GetPage(TObject(l),
       s,
       Task.Container.Manager.retryConnect);
@@ -22,7 +22,7 @@
         if (GetTagName(parse[i]) = 'img') and
           (GetVal(parse[i], 'style') = 'width:0px; height:0px') then
         begin
-          Task.Container.PageLinks[workCounter] := GetVal(parse[i], 'src');
+          Task.Container.PageLinks[Task.Container.WorkCounter] := GetVal(parse[i], 'src');
           Break;
         end;
     end;

@@ -143,12 +143,12 @@ begin
   if DownloadThread = nil then Exit;
   with DownloadThread.Task.Container, DownloadThread.FHTTP do
   begin
-    if GET(FillHost(Module.RootURL, AURL) + IncStr(DownloadThread.workCounter)) then
+    if GET(FillHost(Module.RootURL, AURL) + IncStr(WorkCounter)) then
     begin
       Result := True;
       with TXQueryEngineHTML.Create(Document) do
         try
-          PageLinks[DownloadThread.workCounter] := XPathString('//img[@id="img-content"]/@src');
+          PageLinks[WorkCounter] := XPathString('//img[@id="img-content"]/@src');
         finally
           Free;
         end;

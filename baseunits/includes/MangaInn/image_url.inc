@@ -6,7 +6,7 @@
     l := TStringList.Create;
     Result := GetPage(TObject(l),
       FillMangaSiteHost(MANGAINN_ID, URL) +
-      '/page_' + IntToStr(workCounter + 1),
+      '/page_' + IntToStr(Task.Container.WorkCounter + 1),
       Task.Container.Manager.retryConnect);
     parse := TStringList.Create;
     Parser := THTMLParser.Create(PChar(l.Text));
@@ -21,7 +21,7 @@
         if GetTagName(parse[i]) = 'img' then
           if GetVal(parse[i], 'id') = 'imgPage' then
           begin
-            Task.Container.PageLinks[workCounter] :=
+            Task.Container.PageLinks[Task.Container.WorkCounter] :=
               GetVal(parse[i], 'src');
             Break;
           end;
