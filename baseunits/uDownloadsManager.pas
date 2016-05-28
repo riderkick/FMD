@@ -1556,7 +1556,6 @@ end;
 
 function TDownloadManager.GetItems(Index: Integer): TTaskContainer;
 begin
-  if (Index < 0) or (Containers.Count = 0) then Exit(nil);
   Result := TTaskContainer(Containers[Index]);
 end;
 
@@ -1862,7 +1861,6 @@ end;
 
 procedure TDownloadManager.SetTaskActive(const taskID: Integer);
 begin
-  if (taskID < 0) or (taskID >= Containers.Count) then Exit;
   with TTaskContainer(Containers[taskID]) do
     if not ThreadState then
     begin
@@ -1901,7 +1899,6 @@ end;
 
 procedure TDownloadManager.ActiveTask(const taskID: Integer);
 begin
-  if (taskID < 0) or (taskID >= Containers.Count) then Exit;
   with TTaskContainer(Containers[taskID]) do begin
     if Status = STATUS_FINISH then Exit;
     if not ThreadState then begin
@@ -1921,17 +1918,21 @@ end;
 procedure TDownloadManager.StopTask(const taskID: Integer;
   const isCheckForActive: Boolean; isWaitFor: Boolean);
 begin
-  if (taskID < 0) or (taskID >= Containers.Count) then Exit;
-  with TTaskContainer(Containers[taskID]) do begin
-    if Status = STATUS_WAIT then begin
+  with TTaskContainer(Containers[taskID]) do
+  begin
+    if Status = STATUS_WAIT then
+    begin
       Status := STATUS_STOP;
       DownloadInfo.Status := RS_Stopped;
     end
-    else if ThreadState then begin
+    else if ThreadState then
+    begin
       Thread.Terminate;
-      if isWaitFor then Thread.WaitFor;
+      if isWaitFor then
+        Thread.WaitFor;
     end;
-    if isCheckForActive then CheckAndActiveTask();
+    if isCheckForActive then
+      CheckAndActiveTask();
   end;
 end;
 
@@ -1939,10 +1940,12 @@ procedure TDownloadManager.StartAllTasks;
 var
   i: Integer;
 begin
-  if Containers.Count > 0 then begin
+  if Containers.Count > 0 then
+  begin
     for i := 0 to Containers.Count - 1 do
       with TTaskContainer(Containers[i]) do
-        if (Status <> STATUS_FINISH) and (not ThreadState) then begin
+        if (Status <> STATUS_FINISH) and (not ThreadState) then
+        begin
           Status := STATUS_WAIT;
           DownloadInfo.Status := RS_Waiting;
         end;
@@ -1954,23 +1957,17 @@ procedure TDownloadManager.StopAllTasks;
 var
   i: Integer;
 begin
-  if Containers.Count > 0 then begin
-    for i := 0 to Containers.Count - 1 do
-      with TTaskContainer(Containers[i]) do
-        if ThreadState then
-          Thread.Terminate
-        else if Status <> STATUS_FINISH then begin
-          Status := STATUS_STOP;
-          DownloadInfo.Status := RS_Stopped;
-        end;
-  end;
+  if Containers.Count = 0 then Exit;
+  for i := 0 to Containers.Count - 1 do
+    StopTask(i, False, False);
 end;
 
 procedure TDownloadManager.StopAllDownloadTasksForExit;
 var
   i: Integer;
 begin
-  if Containers.Count > 0 then begin
+  if Containers.Count > 0 then
+  begin
     isReadyForExit := True;
     try
       for i := 0 to Containers.Count - 1 do
@@ -1989,7 +1986,6 @@ end;
 
 procedure TDownloadManager.RemoveTask(const taskID: Integer);
 begin
-  if (taskID < 0) or (taskID >= Containers.Count) then Exit;
   CS_Task.Acquire;
   try
     with TTaskContainer(Containers[taskID]) do
