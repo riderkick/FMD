@@ -1472,25 +1472,29 @@ begin
     finally
       Manager.CS_Task.Release;
     end;
-    if (Status <> STATUS_STOP) and (not Manager.isReadyForExit) then
+    if not Manager.isReadyForExit then
     begin
-      if (WorkCounter >= PageLinks.Count) and
-        (CurrentDownloadChapterPtr >= ChapterLinks.Count)
-        and (FailedChapterLinks.Count = 0) then
+      if Status <> STATUS_STOP then
       begin
-        Status := STATUS_FINISH;
-        DownloadInfo.Status := RS_Finish;
-        DownloadInfo.Progress := '';
-      end
-      else
-      begin
-        Status := STATUS_STOP;
-        DownloadInfo.Status :=
-          Format('%s (%d/%d)', [RS_Stopped, CurrentDownloadChapterPtr +
-          1, ChapterLinks.Count]);
-        FCheckAndActiveTaskFlag := False;
+        if (WorkCounter >= PageLinks.Count) and
+           (CurrentDownloadChapterPtr >= ChapterLinks.Count) and
+           (FailedChapterLinks.Count = 0) then
+        begin
+          Status := STATUS_FINISH;
+          DownloadInfo.Status := RS_Finish;
+          DownloadInfo.Progress := '';
+        end
+        else
+        if not (Status in [STATUS_FAILED, STATUS_PROBLEM]) then
+        begin
+          Status := STATUS_STOP;
+          DownloadInfo.Status :=
+            Format('%s (%d/%d)', [RS_Stopped, CurrentDownloadChapterPtr +
+            1, ChapterLinks.Count]);
+          FCheckAndActiveTaskFlag := False;
+        end;
+        Synchronize(SyncStop);
       end;
-      Synchronize(SyncStop);
     end;
   end;
   inherited DoTerminate;
