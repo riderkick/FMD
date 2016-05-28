@@ -145,15 +145,15 @@ begin
     Source := TStringList.Create;
     try
       rurl := AppendURLDelim(FillHost(Module.RootURL, AURL));
-      if WorkCounter > 0 then
-        rurl += IncStr(WorkCounter) + '.html';
+      if DownloadThread.WorkId > 0 then
+        rurl += IncStr(DownloadThread.WorkId) + '.html';
       if GetPage(DownloadThread.FHTTP, TObject(Source), rurl, Manager.retryConnect) then
         if Source.Count > 0 then
         begin
           Result := True;
           Query := TXQueryEngineHTML.Create(Source.Text);
           try
-            PageLinks[WorkCounter] :=
+            PageLinks[DownloadThread.WorkId] :=
               Query.XPathString('//*[@id="viewer"]//img[@id="image"]/@src');
           finally
             Query.Free;

@@ -7,7 +7,7 @@
   begin
     l := TStringList.Create;
     s := EncodeURL(FillMangaSiteHost(KOMIKID_ID, URL) + '/' +
-      IntToStr(Task.Container.WorkCounter + 1) + '/');
+      IntToStr(WorkId + 1) + '/');
     Result := GetPage(TObject(l),
       s,
       Task.Container.Manager.retryConnect);
@@ -32,7 +32,7 @@
             if not regx.Exec(s) then
               s := WebsiteRoots[KOMIKID_ID, 1] + '/' + s;
             s := EncodeURL(s);
-            Task.container.PageLinks[Task.Container.WorkCounter] := s;
+            Task.container.PageLinks[WorkId] := s;
           finally
             regx.Free;
           end;

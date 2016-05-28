@@ -5,7 +5,7 @@
     l: TStringList;
   begin
     l := TStringList.Create;
-    s := DecodeUrl(FillMangaSiteHost(ANIMESTORY_ID, URL) + IntToStr(Task.Container.WorkCounter + 1));
+    s := DecodeUrl(FillMangaSiteHost(ANIMESTORY_ID, URL) + IntToStr(WorkId + 1));
     Result := GetPage(TObject(l),
       s,
       Task.Container.Manager.retryConnect);
@@ -21,7 +21,7 @@
       for i := 0 to parse.Count - 1 do
         if (Pos('id="chpimg"', parse[i]) > 0) then
         begin
-          Task.Container.PageLinks[Task.Container.WorkCounter] :=
+          Task.Container.PageLinks[WorkId] :=
             DecodeURL(GetVal(parse[i], 'src'));
           Break;
         end;

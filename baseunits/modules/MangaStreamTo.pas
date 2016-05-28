@@ -97,13 +97,13 @@ begin
   with DownloadThread.Task.Container, DownloadThread.FHTTP do begin
     s := AURL;
     s := ReplaceRegExpr('\.html?$', s, '', False);
-    s += '-page-' + IncStr(WorkCounter) + '.html';
+    s += '-page-' + IncStr(DownloadThread.WorkId) + '.html';
     if GET(FillHost(Module.RootURL, s)) then begin
       Result := True;
       query := TXQueryEngineHTML.Create;
       try
         query.ParseHTML(StreamToString(Document));
-        PageLinks[WorkCounter] :=
+        PageLinks[DownloadThread.WorkId] :=
           query.XPathString('//img[@class="manga-page center-block"]/@src');
       finally
         query.Free;

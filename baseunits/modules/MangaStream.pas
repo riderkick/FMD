@@ -157,14 +157,14 @@ begin
     try
       if GetPage(DownloadThread.FHTTP, TObject(Source),
         AppendURLDelim(FillHost(readURL, AURL)) +
-        IncStr(WorkCounter), Manager.retryConnect) then
+        IncStr(DownloadThread.WorkId), Manager.retryConnect) then
         if Source.Count > 0 then
         begin
           Result := True;
           Parser := TTreeParser.Create;
           try
             ParseHTMLTree(Parser, Source.Text);
-            PageLinks[WorkCounter] :=
+            PageLinks[DownloadThread.WorkId] :=
               SelectXPathString('//img[@id="manga-page"]/@src', Parser);
           finally
             Parser.Free;

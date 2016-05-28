@@ -4,7 +4,7 @@
     s, surl: String;
     l: TStringList;
   begin
-    surl := Task.Container.PageContainerLinks[Task.Container.WorkCounter];
+    surl := Task.Container.PageContainerLinks[WorkId];
     if not ((Pos('imagetwist.', surl) <> 0) or
       (Pos('imgmega.', surl) <> 0) or
       (Pos('imgchili.', surl) <> 0)) then
@@ -43,7 +43,7 @@
         for i := 0 to parse.Count - 1 do
           if (Pos('<img', parse[i]) <> 0) and (Pos('class="pic', parse[i]) <> 0) then
           begin
-            Task.Container.PageLinks[Task.Container.WorkCounter] := GetVal(parse[i], 'src');
+            Task.Container.PageLinks[WorkId] := GetVal(parse[i], 'src');
             Break;
           end;
       end
@@ -54,7 +54,7 @@
         for i := 0 to parse.Count - 1 do
           if (Pos('<img', parse[i]) <> 0) and (Pos('id="show_image', parse[i]) <> 0) then
           begin
-            Task.Container.PageLinks[Task.Container.WorkCounter] := GetVal(parse[i], 'src');
+            Task.Container.PageLinks[WorkId] := GetVal(parse[i], 'src');
             Break;
           end;
       end;

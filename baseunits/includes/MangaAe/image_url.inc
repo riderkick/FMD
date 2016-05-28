@@ -6,7 +6,7 @@
     isImageURL: Boolean = False;
   begin
     l := TStringList.Create;
-    s := DecodeUrl(FillMangaSiteHost(MANGAAE_ID, URL) + '/' + IntToStr(Task.Container.WorkCounter + 1));
+    s := DecodeUrl(FillMangaSiteHost(MANGAAE_ID, URL) + '/' + IntToStr(WorkId + 1));
     Result := GetPage(TObject(l),
       s,
       Task.Container.manager.retryConnect);
@@ -25,7 +25,7 @@
           isImageURL := True;
         if isImageURL and (Pos('<img', parse[i]) <> 0) then
         begin
-          Task.Container.PageLinks[Task.Container.WorkCounter] := GetVal(parse[i], 'src');
+          Task.Container.PageLinks[WorkId] := GetVal(parse[i], 'src');
           Break;
         end;
       end;

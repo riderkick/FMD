@@ -6,7 +6,7 @@
     l := TStringList.Create;
     Result := GetPage(TObject(l),
       FillMangaSiteHost(MANGAPARK_ID, URL) +
-      'all',//IntToStr(Task.Container.WorkCounter+1),
+      'all',//IntToStr(WorkId+1),
       Task.Container.Manager.retryConnect);
     parse := TStringList.Create;
     Parser := THTMLParser.Create(PChar(l.Text));

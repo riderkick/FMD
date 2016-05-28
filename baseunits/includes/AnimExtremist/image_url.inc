@@ -6,7 +6,7 @@
   begin
     l := TStringList.Create;
     s := DecodeUrl(StringReplace(FillMangaSiteHost(ANIMEEXTREMIST_ID, URL),
-      '.html', '', []) + '-' + IntToStr(Task.Container.WorkCounter + 1) + '.html');
+      '.html', '', []) + '-' + IntToStr(WorkId + 1) + '.html');
     Result := GetPage(TObject(l),
       s,
       Task.Container.Manager.retryConnect);
@@ -23,7 +23,7 @@
         if (Pos('id="photo"', parse[i]) > 0) then
         begin
           s := GetVal(parse[i], 'src');
-          Task.Container.pageLinks[Task.Container.WorkCounter] :=
+          Task.Container.pageLinks[WorkId] :=
             GetVal(parse[i], 'src');
           Break;
         end;

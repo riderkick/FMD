@@ -6,7 +6,7 @@
   begin
     l := TStringList.Create;
     s := FillMangaSiteHost(MANGATRADERS_ID, URL);
-    s := s + '/page-' + IntToStr(Task.Container.WorkCounter + 1);
+    s := s + '/page-' + IntToStr(WorkId + 1);
     Result := GetPage(TObject(l), s, Task.Container.manager.retryConnect);
     parse := TStringList.Create;
     Parser := THTMLParser.Create(PChar(l.Text));
@@ -24,7 +24,7 @@
           parse[i] := RemoveBreaks(parse[i]);
           if Pos(#9, parse[i]) > 0 then
             parse[i] := StringReplace(parse[i], #9, ' ', [rfReplaceAll, rfIgnoreCase]);
-          Task.Container.PageLinks[Task.Container.WorkCounter] := GetVal(parse[i], 'src');
+          Task.Container.PageLinks[WorkId] := GetVal(parse[i], 'src');
           Break;
         end;
     end;

@@ -6,7 +6,7 @@
   begin
     l := TStringList.Create;
     s := EncodeUrl(FillMangaSiteHost(CENTRALDEMANGAS_ID, URL));
-    // + IntToStr(Task.Container.WorkCounter+1));
+    // + IntToStr(WorkId+1));
     Result := GetPage(TObject(l),
       s,
       Task.Container.Manager.retryConnect);

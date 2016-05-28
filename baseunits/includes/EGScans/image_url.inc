@@ -5,7 +5,7 @@
     l: TStringList;
   begin
     l := TStringList.Create;
-    s := DecodeUrl(FillMangaSiteHost(EGSCANS_ID, URL) + '/' + IntToStr(Task.Container.WorkCounter + 1));
+    s := DecodeUrl(FillMangaSiteHost(EGSCANS_ID, URL) + '/' + IntToStr(WorkId + 1));
     Result := GetPage(TObject(l),
       s,
       Task.Container.manager.retryConnect);

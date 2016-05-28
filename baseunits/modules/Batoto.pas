@@ -289,13 +289,13 @@ begin
   with DownloadThread.Task.Container, DownloadThread.FHTTP do begin
     if PageContainerLinks.Text = '' then Exit;
     rurl := urlroot + '/areader?id=' + PageContainerLinks[0] + '&p=' +
-      IntToStr(WorkCounter + 1);
+      IntToStr(DownloadThread.WorkId + 1);
     Headers.Values['Referer'] := ' ' + Module.RootURL + '/reader';
     if GET(rurl) then begin
       Result := True;
       with TXQueryEngineHTML.Create(Document) do
         try
-          PageLinks[WorkCounter] := XPathString('//div[@id="full_image"]//img/@src');
+          PageLinks[DownloadThread.WorkId] := XPathString('//div[@id="full_image"]//img/@src');
         finally
           Free;
         end;

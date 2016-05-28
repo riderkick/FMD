@@ -6,8 +6,8 @@
   begin
     l := TStringList.Create;
     s := AppendURLDelim(FillMangaSiteHost(MANGATOWN_ID, URL));
-    if Task.Container.WorkCounter > 0 then
-      s := s + IncStr(Task.Container.WorkCounter) + '.html';
+    if WorkId > 0 then
+      s := s + IncStr(WorkId) + '.html';
     Result := GetPage(TObject(l), s , Task.Container.Manager.retryConnect);
 
     if Self.Terminated then
@@ -30,7 +30,7 @@
       begin
         if (Pos('<img', parse[i]) > 0) and (Pos('onerror=', parse[i]) > 0) then
         begin
-          Task.Container.PageLinks[Task.Container.WorkCounter] := GetVal(parse[i], 'src');
+          Task.Container.PageLinks[WorkId] := GetVal(parse[i], 'src');
           Break;
         end;
       end;

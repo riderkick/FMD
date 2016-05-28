@@ -14,7 +14,7 @@
     if (not regx.Exec(s)) and (s[Length(s)] <> '/') then
       s := s + '/';
     s := FillMangaSiteHost(MANGAGO_ID, s);
-    Result := GetPage(TObject(l), s + IntToStr(Task.Container.WorkCounter + 1) + '/',
+    Result := GetPage(TObject(l), s + IntToStr(WorkId + 1) + '/',
       Task.Container.Manager.retryConnect);
 
     if Self.Terminated then
@@ -38,7 +38,7 @@
         if (Pos('imgReady(''', parse[i]) > 0) then
         begin
           regx.Expression := '^.*imgReady\(''([^'']*)''.*$';
-          Task.Container.PageLinks[Task.Container.WorkCounter] := regx.Replace(parse[i], '$1', True);
+          Task.Container.PageLinks[WorkId] := regx.Replace(parse[i], '$1', True);
           Break;
         end;
     end;

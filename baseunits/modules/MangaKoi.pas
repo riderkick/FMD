@@ -139,13 +139,13 @@ begin
   if DownloadThread = nil then Exit;
   with DownloadThread.Task.Container, DownloadThread.FHTTP do begin
     s := RemoveURLDelim(AURL);
-    if WorkCounter > 0 then s += '/' + IncStr(WorkCounter) + '.html';
+    if DownloadThread.WorkId > 0 then s += '/' + IncStr(DownloadThread.WorkId) + '.html';
     if GET(FillHost(Module.RootURL, s)) then begin
       Result := True;
       query := TXQueryEngineHTML.Create;
       try
         query.ParseHTML(StreamToString(Document));
-        PageLinks[WorkCounter] := query.XPathString('//section[@id="viewer"]//img/@src');
+        PageLinks[DownloadThread.WorkId] := query.XPathString('//section[@id="viewer"]//img/@src');
       finally
         query.Free;
       end;

@@ -107,7 +107,7 @@ begin
   if DownloadThread = nil then Exit;
   with DownloadThread.Task.Container, DownloadThread.FHTTP do begin
     s := RemoveURLDelim(AURL);
-    if WorkCounter > 0 then s += '/' + IncStr(WorkCounter);
+    if DownloadThread.WorkId > 0 then s += '/' + IncStr(DownloadThread.WorkId);
     if GET(FillHost(Module.RootURL, s)) then begin
       Result := True;
       query := TXQueryEngineHTML.Create;
@@ -116,7 +116,7 @@ begin
         b := query.XPathString('//base/@href');
         if b = '' then b := Module.RootURL;
         s := query.XPathString('//img[@class="picture"]/@src');
-        if s <> '' then PageLinks[WorkCounter] := MaybeFillHost(b, s);
+        if s <> '' then PageLinks[DownloadThread.WorkId] := MaybeFillHost(b, s);
       finally
         query.Free;
       end;

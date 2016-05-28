@@ -272,7 +272,7 @@ begin
   Result := False;
   if DownloadThread = nil then Exit;
   with DownloadThread.FHTTP, DownloadThread.Task.Container do
-    if GET(AppendURLDelim(FillHost(Module.RootURL, AURL)) + IncStr(WorkCounter) + '/') then
+    if GET(AppendURLDelim(FillHost(Module.RootURL, AURL)) + IncStr(DownloadThread.WorkId) + '/') then
     begin
       Result := True;
       with TXQueryEngineHTML.Create(Document) do
@@ -283,7 +283,7 @@ begin
             s := XPathString('//*[@class="wpm_pag mng_rdr"]//img/@src');
           if s = '' then
             s := XPathString('//*[@id="reader"]//img[@id="picture"]/@src');
-          PageLinks[WorkCounter] := s;
+          PageLinks[DownloadThread.WorkId] := s;
         finally
           Free;
         end;

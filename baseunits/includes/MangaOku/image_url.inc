@@ -9,7 +9,7 @@
     if Length(s) > 0 then
       if s[Length(s)] <> '/' then
          s := s + '/';
-    s := s + IntToStr(Task.Container.WorkCounter + 1) + '/';
+    s := s + IntToStr(WorkId + 1) + '/';
     Result := GetPage(TObject(l), s , Task.Container.Manager.retryConnect);
 
     if Self.Terminated then
@@ -35,7 +35,7 @@
           s := GetVal(parse[i], 'src');
           if Pos(WebsiteRoots[MANGAOKU_ID, 1], s) = 0 then
           s := WebsiteRoots[MANGAOKU_ID, 1] + '/' + s;
-          Task.Container.PageLinks[Task.Container.WorkCounter] := s;
+          Task.Container.PageLinks[WorkId] := s;
           Break;
         end;
       end;

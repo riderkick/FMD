@@ -4,10 +4,10 @@
     l: TStringList;
   begin
     l := TStringList.Create;
-    if Task.Container.WorkCounter > 0 then
+    if WorkId > 0 then
       Result := GetPage(TObject(l),
         FillMangaSiteHost(ESMANGAHERE_ID, URL) +
-        IntToStr(Task.Container.WorkCounter + 1) + '.html',
+        IntToStr(WorkId + 1) + '.html',
         Task.Container.manager.retryConnect)
     else
       Result := GetPage(TObject(l),
@@ -25,7 +25,7 @@
       for i := 0 to parse.Count - 1 do
         if (Pos('class="read_img"', parse[i]) <> 0) then
         begin
-          Task.Container.PageLinks[Task.Container.WorkCounter] :=
+          Task.Container.PageLinks[WorkId] :=
             GetVal(parse[i + 6], 'src');
           parse.Free;
           l.Free;

@@ -31,8 +31,6 @@ type
   private
     parse: TStringList;
   public
-    FHTTP: THTTPSendThread;
-
     // Get download link from URL
     function GetLinkPageFromURL(const URL: String): Boolean;
     // Get number of download link from URL
@@ -54,7 +52,9 @@ type
     procedure Execute; override;
     procedure DoTerminate; override;
   public
+    FHTTP: THTTPSendThread;
     Task: TTaskThread;
+    WorkId: Integer;
     constructor Create;
     destructor Destroy; override;
   end;
@@ -216,7 +216,8 @@ resourcestring
 
 implementation
 
-uses frmMain, WebsiteModules;
+uses
+  frmMain, WebsiteModules;
 
 function IntToStr(Value: Cardinal): String;
 begin
@@ -674,10 +675,7 @@ var
 
 begin
   Result := False;
-  if (Task.Container.PageLinks.Count > 0) and
-    (Task.Container.PageLinks.Strings[Task.Container.WorkCounter] <> 'W') then
-    Exit;
-
+  if Task.Container.PageLinks[WorkId] <> 'W' then Exit;
   if Modules.ModuleAvailable(Task.Container.ModuleId, MMGetImageURL) then
     Result := Modules.GetImageURL(Self, URL, Task.Container.ModuleId)
   else
@@ -931,7 +929,7 @@ begin
     end;
 
   // check pagelinks url
-  workURL := Task.Container.PageLinks[Task.Container.WorkCounter];
+  workURL := Task.Container.PageLinks[WorkId];
   if (workURL = '') or
      (workURL = 'W') or
      (workURL = 'D') then
@@ -945,10 +943,10 @@ begin
 
   // prepare filename
   workFilename := '';
-  if Task.Container.WorkCounter < Task.Container.Filenames.Count then
-    workFilename := Task.Container.Filenames[Task.Container.WorkCounter];
+  if WorkId < Task.Container.Filenames.Count then
+    workFilename := Task.Container.Filenames[WorkId];
   if workFilename = '' then
-    workFilename := Format('%.3d', [Task.Container.WorkCounter + 1]);
+    workFilename := Format('%.3d', [WorkId + 1]);
 
   // download image
   savedFilename := '';
@@ -958,10 +956,10 @@ begin
     begin
       workURL := '';
       if (Task.Container.PageNumber = Task.Container.PageContainerLinks.Count)
-        and (Task.Container.WorkCounter < Task.Container.PageContainerLinks.Count) then
-        workURL := Task.Container.PageContainerLinks[Task.Container.WorkCounter]
-      else if Task.Container.WorkCounter < Task.Container.PageLinks.Count then
-        workURL := Task.Container.PageLinks[Task.Container.WorkCounter];
+        and (WorkId < Task.Container.PageContainerLinks.Count) then
+        workURL := Task.Container.PageContainerLinks[WorkId]
+      else if WorkId < Task.Container.PageLinks.Count then
+        workURL := Task.Container.PageLinks[WorkId];
 
       if workURL <> '' then
         Result := Modules.DownloadImage(
@@ -987,7 +985,7 @@ begin
   if Terminated then Exit(False);
   if Result then
   begin
-    Task.Container.PageLinks[Task.Container.WorkCounter] := 'D';
+    Task.Container.PageLinks[WorkId] := 'D';
 
     if Modules.ModuleAvailable(Task.Container.ModuleId, MMAfterImageSaved) then
       Modules.AfterImageSaved(savedFilename, Task.Container.ModuleId);
@@ -1053,6 +1051,7 @@ begin
       Threads.Add(TDownloadThread.Create);
       with TDownloadThread(Threads.Last) do begin
         Task := Self;
+        WorkId := Container.WorkCounter;
         //load User-Agent from advancedfile
         AdvanceLoadHTTPConfig(FHTTP, Container.DownloadInfo.Website);
         Start;

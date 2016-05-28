@@ -192,13 +192,13 @@ begin
   if DownloadThread = nil then Exit;
   with DownloadThread.Task.Container, DownloadThread.FHTTP do begin
     Headers.Values['Referer'] := ' ' + AURL;
-    if WorkCounter > PageContainerLinks.Count then Exit;
-    if GETWithCookie(DownloadThread.FHTTP, PageContainerLinks[WorkCounter], Module) then
+    if DownloadThread.WorkId > PageContainerLinks.Count then Exit;
+    if GETWithCookie(DownloadThread.FHTTP, PageContainerLinks[DownloadThread.WorkId], Module) then
     begin
       Result := True;
       with TXQueryEngineHTML.Create(Document) do
         try
-          PageLinks[WorkCounter] :=
+          PageLinks[DownloadThread.WorkId] :=
             MaybeFillHost(Module.RootURL, XPathString('//div[@class="chapter-content"]//img/@src'));
         finally
           Free;

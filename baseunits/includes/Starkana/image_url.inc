@@ -5,7 +5,7 @@
   begin
     l := TStringList.Create;
     Result := GetPage(TObject(l),
-      DecodeUrl(FillMangaSiteHost(STARKANA_ID, URL) + '/' + IntToStr(Task.Container.WorkCounter + 1)),
+      DecodeUrl(FillMangaSiteHost(STARKANA_ID, URL) + '/' + IntToStr(WorkId + 1)),
       Task.Container.manager.retryConnect);
     parse := TStringList.Create;
     Parser := THTMLParser.Create(PChar(l.Text));
@@ -20,7 +20,7 @@
         if (Pos('<img', parse[i]) > 0) and (Pos('class="dyn', parse[i]) > 0) and
          (Pos('style="cursor: pointer', parse[i]) > 0) then
         begin
-          Task.Container.PageLinks[Task.Container.WorkCounter] := GetVal(parse[i], 'src');
+          Task.Container.PageLinks[WorkId] := GetVal(parse[i], 'src');
           Break;
         end;
     end;

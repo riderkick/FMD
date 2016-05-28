@@ -5,7 +5,7 @@
     s: String;
   begin
     l := TStringList.Create;
-    s := Task.Container.PageContainerLinks[Task.Container.WorkCounter];
+    s := Task.Container.PageContainerLinks[WorkId];
     Result := GetPage(TObject(l), s , Task.Container.Manager.retryConnect);
 
     if Self.Terminated then
@@ -28,7 +28,7 @@
       begin
         if (Pos('STYLE="border', parse[i]) > 0) and (Pos('<IMG', parse[i]) > 0) then
         begin
-          Task.Container.PageLinks[Task.Container.WorkCounter] := Trim(GetVal(parse[i], 'SRC'));
+          Task.Container.PageLinks[WorkId] := Trim(GetVal(parse[i], 'SRC'));
 		  Break;
         end;
       end;
