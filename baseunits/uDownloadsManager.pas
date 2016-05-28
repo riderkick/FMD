@@ -31,7 +31,6 @@ type
   private
     parse: TStringList;
     checkStyle: TFlagType;
-    ModuleId: Integer;
   public
     workCounter: Integer;
     FSortColumn: Cardinal;
@@ -66,14 +65,12 @@ type
     procedure Execute; override;
     procedure DoTerminate; override;
   public
-    // ID of the site
     manager: TTaskThread;
     constructor Create;
     destructor Destroy; override;
 
     property SortColumn: Cardinal read FSortColumn write FSortColumn;
     property AnotherURL: String read FAnotherURL write FAnotherURL;
-    property GetworkCounter: Integer read workCounter;
   end;
 
   { TTaskThread }
@@ -270,7 +267,6 @@ begin
   FHTTP := THTTPSendThread.Create(Self);
   FHTTP.Headers.NameValueSeparator := ':';
   FHTTP.Sock.OnStatus := SockOnStatus;
-  ModuleId := -1;
 end;
 
 destructor TDownloadThread.Destroy;
@@ -361,7 +357,7 @@ procedure TDownloadThread.DoTerminate;
 begin
   LockCreateConnection;
   try
-    Modules.DecActiveConnectionCount(ModuleId);
+    Modules.DecActiveConnectionCount(manager.ModuleId);
     manager.threads.Remove(Self);
   finally
     UnlockCreateConnection;
@@ -461,8 +457,8 @@ begin
   Result := False;
   manager.container.PageNumber := 0;
 
-  if Modules.ModuleAvailable(ModuleId, MMGetPageNumber) then
-    Result := Modules.GetPageNumber(Self, URL, ModuleId)
+  if Modules.ModuleAvailable(manager.ModuleId, MMGetPageNumber) then
+    Result := Modules.GetPageNumber(Self, URL, manager.ModuleId)
   else
   begin
     if manager.container.MangaSiteID = ANIMEA_ID then
@@ -701,8 +697,8 @@ begin
     (manager.container.PageLinks.Strings[workCounter] <> 'W') then
     Exit;
 
-  if Modules.ModuleAvailable(ModuleId, MMGetImageURL) then
-    Result := Modules.GetImageURL(Self, URL, ModuleId)
+  if Modules.ModuleAvailable(manager.ModuleId, MMGetImageURL) then
+    Result := Modules.GetImageURL(Self, URL, manager.ModuleId)
   else
   begin
     if manager.container.MangaSiteID = ANIMEA_ID then
@@ -1028,57 +1024,65 @@ end;
 
 function TDownloadThread.DownloadImage: Boolean;
 var
-  s, TURL, lpath, lname, sfilename: String;
+  workFilename,
+  workURL,
+  savedFilename: String;
 
   {$I includes/MeinManga/image_url.inc}
 
 begin
-  sfilename := '';
-  lpath := CleanAndExpandDirectory(manager.container.DownloadInfo.SaveTo +
-    manager.container.ChapterName[manager.container.CurrentDownloadChapterPtr]);
-  if not DirectoryExistsUTF8(lpath) then
-  begin
-    if not ForceDirectoriesUTF8(lpath) then
+  Result := True;
+
+  // check download path
+  if not DirectoryExistsUTF8(manager.container.CurrentWorkingDir) then
+    if not ForceDirectoriesUTF8(manager.container.CurrentWorkingDir) then
     begin
       manager.container.Status := STATUS_FAILED;
       manager.container.DownloadInfo.Status := RS_FailedToCreateDir;
       Result := False;
       Exit;
     end;
-  end;
 
-  Result := True;
-  TURL := manager.container.PageLinks[workCounter];
-  if (TURL = '') or (TURL = 'W') or (TURL = 'D') then
+  // check pagelinks url
+  workURL := manager.container.PageLinks[workCounter];
+  if (workURL = '') or
+     (workURL = 'W') or
+     (workURL = 'D') then
     Exit;
 
   FHTTP.Clear;
 
-  if Modules.ModuleAvailable(ModuleId, MMBeforeDownloadImage) then
-    Result := Modules.BeforeDownloadImage(Self, TURL, ModuleId);
+  // call beforedownloadimage if available
+  if Modules.ModuleAvailable(manager.ModuleId, MMBeforeDownloadImage) then
+    Result := Modules.BeforeDownloadImage(Self, workURL, manager.ModuleId);
 
-  lname := '';
+  // prepare filename
+  workFilename := '';
   if workCounter < manager.container.Filenames.Count then
-    lname := manager.container.Filenames[workCounter];
-  if lname = '' then
-    lname := Format('%.3d', [workCounter + 1]);
+    workFilename := manager.container.Filenames[workCounter];
+  if workFilename = '' then
+    workFilename := Format('%.3d', [workCounter + 1]);
 
-  if Result then begin
-    if Modules.ModuleAvailable(ModuleId, MMDownloadImage) then begin
-      s := '';
+  // download image
+  savedFilename := '';
+  if Result then
+  begin
+    if Modules.ModuleAvailable(manager.ModuleId, MMDownloadImage) then
+    begin
+      workURL := '';
       if (manager.container.PageNumber = manager.container.PageContainerLinks.Count)
         and (workCounter < manager.container.PageContainerLinks.Count) then
-        s := manager.container.PageContainerLinks[workCounter]
+        workURL := manager.container.PageContainerLinks[workCounter]
       else if workCounter < manager.container.PageLinks.Count then
-        s := manager.container.PageLinks[workCounter];
+        workURL := manager.container.PageLinks[workCounter];
 
-      if s <> '' then
+      if workURL <> '' then
         Result := Modules.DownloadImage(
           Self,
-          s,
-          lpath,
-          lname,
-          ModuleId);
+          workURL,
+          manager.container.CurrentWorkingDir,
+          workFilename,
+          manager.ModuleId);
     end
     else
     if manager.container.MangaSiteID = MEINMANGA_ID then
@@ -1087,18 +1091,19 @@ begin
       Result := uBaseUnit.SaveImage(
         FHTTP,
         manager.container.MangaSiteID,
-        TURL,
-        lpath,
-        lname,
-        sfilename,
+        workURL,
+        manager.container.CurrentWorkingDir,
+        workFilename,
+        savedFilename,
         manager.container.Manager.retryConnect);
   end;
   if Terminated then Exit(False);
-  if Result then begin
+  if Result then
+  begin
     manager.container.PageLinks[workCounter] := 'D';
 
-    if Modules.ModuleAvailable(ModuleId, MMAfterImageSaved) then
-      Modules.AfterImageSaved(sfilename, ModuleId);
+    if Modules.ModuleAvailable(manager.ModuleId, MMAfterImageSaved) then
+      Modules.AfterImageSaved(savedFilename, manager.ModuleId);
   end;
 end;
 
