@@ -254,7 +254,9 @@ begin
   with DownloadThread.Task.Container, DownloadThread.FHTTP do begin
     Headers.Values['Referer'] := ' ' + urlroot + '/reader';
     cid := SeparateRight(AURL, '/reader#');
+    Cookies.Text := Account.Cookies['Batoto'];
     if GET(urlroot + '/areader?id=' + cid + '&p=1') then begin
+    begin
       Result := True;
       with TXQueryEngineHTML.Create(Document) do
         try
@@ -277,6 +279,7 @@ begin
         end;
     end;
   end;
+  end;
 end;
 
 function GetImageURL(const DownloadThread: TDownloadThread;
@@ -291,6 +294,7 @@ begin
     rurl := urlroot + '/areader?id=' + PageContainerLinks[0] + '&p=' +
       IntToStr(DownloadThread.WorkId + 1);
     Headers.Values['Referer'] := ' ' + Module.RootURL + '/reader';
+    Cookies.Text := Account.Cookies['Batoto'];
     if GET(rurl) then begin
       Result := True;
       with TXQueryEngineHTML.Create(Document) do
