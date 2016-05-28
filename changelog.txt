@@ -4,6 +4,11 @@ Project page: https://github.com/riderkick/FMD
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.58.0 (29-05-2016)
+[*] Batoto: fixed download
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.57.0...0.9.58.0
+
 0.9.57.0 (28-05-2016)
 [*] Fixed incorrectly store full path inside archive (zip/cbz)
 [+] Added GManga[AR]
