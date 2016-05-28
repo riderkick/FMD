@@ -2129,9 +2129,9 @@ end;
 
 procedure TMainForm.cbOptionGenerateMangaFolderNameChange(Sender: TObject);
 begin
-  lbOptionMangaCustomRename.Enabled := cbOptionGenerateMangaFolderName.Checked;
   edOptionMangaCustomRename.Enabled := cbOptionGenerateMangaFolderName.Checked;
-  lbOptionMangaCustomRenameHint.Enabled := cbOptionGenerateMangaFolderName.Checked;
+  lbOptionMangaCustomRename.Enabled := edOptionMangaCustomRename.Enabled;
+  lbOptionMangaCustomRenameHint.Enabled := edOptionMangaCustomRename.Enabled;
 end;
 
 procedure TMainForm.btReadOnlineClick(Sender: TObject);
