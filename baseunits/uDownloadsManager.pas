@@ -1004,20 +1004,26 @@ end;
 
 procedure TTaskThread.SyncShowBaloon;
 begin
-  if container.Status = STATUS_FAILED then
+  with MainForm.TrayIcon, container.DownloadInfo do
   begin
-    MainForm.TrayIcon.BalloonFlags := bfError;
-    MainForm.TrayIcon.BalloonHint :=
-      '"' + container.DownloadInfo.title + '" - ' + RS_Failed;;
-  end
-  else
-  if container.Status = STATUS_FINISH then
-  begin
-    MainForm.TrayIcon.BalloonFlags := bfInfo;
-    MainForm.TrayIcon.BalloonHint :=
-      '"' + container.DownloadInfo.title + '" - ' + RS_Finish;
+    if container.Status = STATUS_FAILED then
+    begin
+      BalloonFlags := bfError;
+      BalloonHint := QuotedStrd(Title);
+      if Status = '' then
+        BalloonHint := BalloonHint + ' - ' + RS_Failed
+      else
+        BalloonHint := BalloonHint + LineEnding + Status;
+    end
+    else
+    if container.Status = STATUS_FINISH then
+    begin
+      BalloonFlags := bfInfo;
+      BalloonHint :=
+        '"' + container.DownloadInfo.title + '" - ' + RS_Finish;
+    end;
+    ShowBalloonHint;
   end;
-  MainForm.TrayIcon.ShowBalloonHint;
 end;
 
 function TDownloadThread.DownloadImage: Boolean;
@@ -1245,14 +1251,13 @@ begin
       container.CurrentWorkingDir := CleanAndExpandDirectory(container.DownloadInfo.SaveTo +
         container.ChapterName[container.CurrentDownloadChapterPtr]);
       if not DirectoryExistsUTF8(container.CurrentWorkingDir) then
-      begin
         if not ForceDirectoriesUTF8(container.CurrentWorkingDir) then
         begin
           container.Status := STATUS_FAILED;
           container.DownloadInfo.Status := RS_FailedToCreateDir;
+          SyncShowBaloon;
           Exit;
         end;
-      end;
 
       if ModuleId > -1 then
         Modules.TaskStart(container, ModuleId);
