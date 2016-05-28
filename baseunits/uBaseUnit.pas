@@ -20,9 +20,9 @@ uses
   {$endif}
   SysUtils, Classes, Graphics, Forms, lazutf8classes, LazUTF8, LazFileUtils,
   LConvEncoding, strutils, dateutils, fileinfo, base64, fpjson, jsonparser, jsonscanner,
-  FastHTMLParser, fgl, RegExpr, synautil, httpsend, blcksock, ssl_openssl,
-  synacode, GZIPUtils, uFMDThread, uMisc, httpsendthread, FMDOptions, simplehtmltreeparser,
-  xquery, xquery_json, Imaging, ImagingExtras, SimpleException, SimpleLogger;
+  FastHTMLParser, fgl, RegExpr, synautil, httpsend, blcksock, ssl_openssl, synacode,
+  GZIPUtils, uFMDThread, uMisc, httpsendthread, FMDOptions, simplehtmltreeparser, xquery,
+  xquery_json, Imaging, ImagingTypes, ImagingExtras, SimpleException, SimpleLogger;
 
 const
   JPG_HEADER: array[0..2] of Byte = ($FF, $D8, $FF);
@@ -808,6 +808,12 @@ function SaveImage(const mangaSiteID: Integer; URL: String;
 
 // check file exist with known extensions. AFilename is a filename without extensions
 function ImageFileExist(const AFilename: String): Boolean;
+
+// load TImageData from file with UTF8 aware
+function LoadImageDataFromFileUTF8(const FileName: String; var Image: TImageData): Boolean;
+
+// merge 2 images to one
+function Merge2Image(const Directory, ImgName1, ImgName2, FinalName: String; const Landscape: Boolean = False): Boolean;
 
 procedure QuickSortChapters(var chapterList, linkList: TStringList);
 procedure QuickSortData(var merge: TStringList);
@@ -3495,6 +3501,85 @@ begin
   Result := (FileExistsUTF8(AFilename + '.jpg')) or
             (FileExistsUTF8(AFilename + '.png')) or
             (FileExistsUTF8(AFilename + '.gif'));
+end;
+
+function LoadImageDataFromFileUTF8(const FileName: String; var Image: TImageData): Boolean;
+var
+  f: TFileStreamUTF8;
+begin
+  Result := False;
+  FreeImage(Image);
+  if not FileExistsUTF8(FileName) then Exit;
+  f := TFileStreamUTF8.Create(FileName, fmOpenRead or fmShareDenyWrite);
+  try
+    Result := LoadImageFromStream(f, Image);
+  finally
+    f.Free;
+  end;
+end;
+
+function Merge2Image(const Directory, ImgName1, ImgName2, FinalName: String; const Landscape: Boolean): Boolean;
+var
+  dir, ext, fullImgName1, fullImgName2, fullFileName: String;
+  img1, img2, imgProc: TImageData;
+  fileStream: TFileStreamUTF8;
+  newWidth, newHeigth: LongInt;
+begin
+  Result := False;
+  dir := CleanAndExpandDirectory(Directory);
+  if not DirectoryExistsUTF8(dir) then Exit;
+  fullImgName1 := dir + ImgName1;
+  fullImgName2 := dir + ImgName2;
+  if not (FileExistsUTF8(fullImgName1) and FileExistsUTF8(fullImgName2)) then Exit;
+  InitImage(img1);
+  InitImage(img2);
+  InitImage(imgProc);
+  try
+    if LoadImageDataFromFileUTF8(fullImgName1, img1) and
+       LoadImageDataFromFileUTF8(fullImgName2, img2) then
+    begin
+      if Landscape then
+      begin
+        newWidth := img1.Width + img2.Width;
+        newHeigth := max(img1.Height, img2.Height);
+      end
+      else
+      begin
+        newWidth := max(img1.Width, img2.Width);
+        newHeigth := img1.Height + img2.Height;
+      end;
+      NewImage(newWidth, newHeigth, ifR8G8B8, imgProc);
+      CopyRect(img1, 0, 0, img1.Width, img1.Width, imgProc, 0, 0);
+      if Landscape then
+        CopyRect(img2, 0, 0, img2.Width, img2.Width, imgProc, img1.Width + 1, 0)
+      else
+        CopyRect(img2, 0, 0, img2.Width, img2.Width, imgProc, 0, img1.Height + 1);
+      fullFileName := dir + FinalName;
+      if FileExistsUTF8(fullFileName) then
+        DeleteFileUTF8(fullFileName);
+      if not FileExistsUTF8(fullFileName) then
+      begin
+        fileStream := TFileStreamUTF8.Create(fullFileName, fmCreate);
+        try
+          ext := ExtractFileExt(fullFileName);
+          if ext <> '' then
+            SaveImageToStream(ext, fileStream, imgProc);
+        finally
+          fileStream.Free;
+        end;
+        Result := FileExistsUTF8(fullFileName);
+        if Result then
+        begin
+          DeleteFileUTF8(fullImgName1);
+          DeleteFileUTF8(fullImgName2);
+        end;
+      end;
+    end;
+  finally
+    FreeImage(img1);
+    FreeImage(img2);
+    FreeImage(imgProc);
+  end;
 end;
 
 procedure QuickSortChapters(var chapterList, linkList: TStringList);

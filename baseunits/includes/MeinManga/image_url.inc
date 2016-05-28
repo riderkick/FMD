@@ -77,7 +77,7 @@
     if prefix = 2 then
     begin
       imageName := Format('%.3d', [workCounter + 1]);
-      Merge2Images(
+      Merge2Image(
         manager.container.CurrentWorkingDir,
         imageName + '_' + IntToStr(prefix - 2) + '.jpg',
         imageName + '_' + IntToStr(prefix - 1) + '.jpg',

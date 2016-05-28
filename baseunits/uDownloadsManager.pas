@@ -38,10 +38,7 @@ type
     FHTTP: THTTPSendThread;
 
     procedure MainThreadMessageDialog;
-    // Helper method allows to merge 2 images into 1 image.
-    // Final image format: png. (too big!)
-    procedure Merge2Images(const path, imgName1, imgName2, finalName: String);
-    // wait for changing directoet completed
+    // wait for changing directory completed
     procedure SetChangeDirectoryFalse;
     procedure SetChangeDirectoryTrue;
     // Get download link from URL
@@ -853,78 +850,6 @@ end;
 procedure TDownloadThread.MainThreadMessageDialog;
 begin
   MessageDlg('TDownloadThread', FMessage, mtInformation, [mbOK], '');
-end;
-
-procedure TDownloadThread.Merge2Images(
-  const path, imgName1, imgName2, finalName: String);
-var
-  rect: TRect;
-  img1, img2, finalImg: TImageData;
-  cv1, cv2, canvas: TImagingCanvas;
-  stream: TFileStreamUTF8;
-  fullImgName1, fullImgName2, fullFinalImgName, fext: String;
-begin
-  fullImgName1 := Path + '/' + imgName1;
-  fullImgName2 := Path + '/' + imgName2;
-  fullFinalImgName := Path + '/' + finalName;
-
-  if (not FileExistsUTF8(fullImgName1)) or (not FileExistsUTF8(fullImgName2)) then
-    Exit;
-
-  Initialize(img1);
-  Initialize(img2);
-  Initialize(finalImg);
-  // Load first image to stream.
-  stream := TFileStreamUTF8.Create(fullImgName1, fmOpenRead);
-  LoadImageFromStream(stream, img1);
-  stream.Free;
-  cv1 := TImagingCanvas.CreateForData(@img1);
-
-  // Load second image to stream.
-  stream := TFileStreamUTF8.Create(fullImgName2, fmOpenRead);
-  LoadImageFromStream(stream, img2);
-  stream.Free;
-  cv2 := TImagingCanvas.CreateForData(@img2);
-
-  // Create new buffer for merging images ...
-  NewImage(img1.Width, img1.Height + img2.Height, ifR8G8B8, finalImg);
-  canvas := TImagingCanvas.CreateForData(@finalImg);
-
-  // Merge images.
-  rect.Left := 0;
-  rect.Top := 0;
-  rect.Right := img1.Width;
-  rect.Bottom := img1.Height;
-  cv1.DrawBlend(rect, canvas, 0, 0, bfOne, bfZero);
-
-  rect.Left := 0;
-  rect.Top := 0;
-  rect.Right := img2.Width;
-  rect.Bottom := img2.Height;
-  cv2.DrawBlend(rect, canvas, 0, img1.Height, bfOne, bfZero);
-
-  // Save final image.
-  if FileExistsUTF8(fullFinalImgName) then
-    DeleteFileUTF8(fullFinalImgName);
-  stream := TFileStreamUTF8.Create(fullFinalImgName, fmCreate);
-  //SaveImageToStream('png', stream, finalImg);
-  fext := ExtractFileExt(finalName);
-  if fext[1] = '.' then
-    fext := Copy(fext, 2, Length(fext) - 1);
-  SaveImageToStream(fext, stream, finalImg);
-  stream.Free;
-
-  // Remove old images.
-  DeleteFileUTF8(fullImgName1);
-  DeleteFileUTF8(fullImgName2);
-
-  // Free memory.
-  cv1.Free;
-  cv2.Free;
-  canvas.Free;
-  FreeImage(img1);
-  FreeImage(img2);
-  FreeImage(finalImg);
 end;
 
 procedure TDownloadThread.SetChangeDirectoryFalse;
