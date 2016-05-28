@@ -112,7 +112,7 @@ var
 begin
   Result := False;
   if DownloadThread = nil then Exit;
-  with DownloadThread.FHTTP, DownloadThread.manager.container do begin
+  with DownloadThread.FHTTP, DownloadThread.Task.Container do begin
     PageLinks.Clear;
     PageNumber := 0;
     if GET(FillHost(Module.RootURL, AURL)) then begin

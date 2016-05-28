@@ -10,7 +10,7 @@
       IntToStr(workCounter + 1) + '/');
     Result := GetPage(TObject(l),
       s,
-      manager.container.Manager.retryConnect);
+      Task.Container.Manager.retryConnect);
     parse := TStringList.Create;
     Parser := THTMLParser.Create(PChar(l.Text));
     Parser.OnFoundTag := OnTag;
@@ -32,7 +32,7 @@
             if not regx.Exec(s) then
               s := WebsiteRoots[KOMIKID_ID, 1] + '/' + s;
             s := EncodeURL(s);
-            manager.container.PageLinks[workCounter] := s;
+            Task.container.PageLinks[workCounter] := s;
           finally
             regx.Free;
           end;

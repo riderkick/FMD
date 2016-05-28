@@ -102,7 +102,7 @@ var
 begin
   Result := False;
   if DownloadThread = nil then Exit;
-  with DownloadThread.FHTTP, DownloadThread.manager.container do begin
+  with DownloadThread.FHTTP, DownloadThread.Task.Container do begin
     PageLinks.Clear;
     PageNumber := 0;
     s := ReplaceRegExpr('/\?\w+.*$', AURL, '/', False);
@@ -125,7 +125,7 @@ function BeforeDownloadImage(const DownloadThread: TDownloadThread;
 begin
   Result := False;
   if DownloadThread = nil then Exit;
-  with DownloadThread.manager.container, DownloadThread.FHTTP do
+  with DownloadThread.Task.Container, DownloadThread.FHTTP do
     if CurrentDownloadChapterPtr < ChapterLinks.Count then begin
       Headers.Values['Referer'] := ' ' + FillHost(Module.RootURL, ChapterLinks[CurrentDownloadChapterPtr]);
       Cookies.Text := goscookies;

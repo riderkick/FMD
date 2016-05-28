@@ -251,7 +251,7 @@ var
 begin
   Result := False;
   if DownloadThread = nil then Exit;
-  with DownloadThread.manager.container, DownloadThread.FHTTP do begin
+  with DownloadThread.Task.Container, DownloadThread.FHTTP do begin
     Headers.Values['Referer'] := ' ' + urlroot + '/reader';
     cid := SeparateRight(AURL, '/reader#');
     if GET(urlroot + '/areader?id=' + cid + '&p=1') then begin
@@ -286,7 +286,7 @@ var
 begin
   Result := False;
   if DownloadThread = nil then Exit;
-  with DownloadThread.manager.container, DownloadThread.FHTTP do begin
+  with DownloadThread.Task.Container, DownloadThread.FHTTP do begin
     if PageContainerLinks.Text = '' then Exit;
     rurl := urlroot + '/areader?id=' + PageContainerLinks[0] + '&p=' +
       IntToStr(DownloadThread.WorkCounter + 1);

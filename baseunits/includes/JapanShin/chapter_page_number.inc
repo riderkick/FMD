@@ -7,7 +7,7 @@
     parse := TStringList.Create;
     Result := GetPage(TObject(l),
       FillMangaSiteHost(JAPANSHIN_ID, URL),
-      manager.container.Manager.retryConnect);
+      Task.Container.Manager.retryConnect);
     Parser := THTMLParser.Create(PChar(l.Text));
     Parser.OnFoundTag := OnTag;
     Parser.OnFoundText := OnText;
@@ -15,12 +15,12 @@
     Parser.Free;
     if parse.Count > 0 then
     begin
-      manager.container.PageNumber := 0;
+      Task.Container.PageNumber := 0;
       //class="tbtitle dropdown_parent dropdown_right
       for i := 0 to parse.Count - 1 do
         if (Pos('onClick="changePage', parse[i]) > 0) and
           (Pos('return false', parse[i]) > 0) then
-          Inc(manager.container.PageNumber);
+          Inc(Task.Container.PageNumber);
     end;
     parse.Free;
     l.Free;

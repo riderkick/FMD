@@ -10,7 +10,7 @@
     s := DecodeUrl(FillMangaSiteHost(MANGACOW_ID, URL) + '1/');
     Result := GetPage(TObject(l),
       s,
-      manager.container.Manager.retryConnect);
+      Task.Container.Manager.retryConnect);
     Parser := THTMLParser.Create(PChar(l.Text));
     Parser.OnFoundTag := OnTag;
     Parser.OnFoundText := OnText;
@@ -24,7 +24,7 @@
         regx.ModifierI := True;
         for i := 0 to parse.Count - 1 do
           if Pos('arr_img.push(', parse[i]) > 0 then
-            manager.container.PageLinks.Add(regx.Replace(parse[i], '$1', True));
+            Task.Container.PageLinks.Add(regx.Replace(parse[i], '$1', True));
       finally
         regx.Free
       end;

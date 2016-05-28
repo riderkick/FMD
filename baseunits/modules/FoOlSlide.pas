@@ -132,7 +132,7 @@ var
 begin
   Result := False;
   if DownloadThread = nil then Exit;
-  with DownloadThread.FHTTP, DownloadThread.manager.container do
+  with DownloadThread.FHTTP, DownloadThread.Task.Container do
   begin
     PageLinks.Clear;
     PageNumber := 0;
@@ -166,7 +166,7 @@ var
 begin
   Result := False;
   if DownloadThread = nil then Exit;
-  with DownloadThread.manager.container, DownloadThread.FHTTP do
+  with DownloadThread.Task.Container, DownloadThread.FHTTP do
   begin
     s := AURL;
     if DownloadThread.workCounter > 0 then

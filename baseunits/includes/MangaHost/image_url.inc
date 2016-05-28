@@ -6,7 +6,7 @@
     l := TStringList.Create;
     Result := GetPage(TObject(l),
       DecodeUrl(FillMangaSiteHost(MANGAHOST_ID, URL) + '/' + IntToStr(workCounter + 1)),
-      manager.container.manager.retryConnect);
+      Task.Container.manager.retryConnect);
     parse := TStringList.Create;
     Parser := THTMLParser.Create(PChar(l.Text));
     Parser.OnFoundTag := OnTag;
@@ -19,7 +19,7 @@
       for i := 0 to parse.Count - 1 do
         if (Pos('<img', parse[i]) > 0) and (Pos('class="open', parse[i]) > 0) then
         begin
-          manager.container.PageLinks[workCounter] := GetVal(parse[i], 'src');
+          Task.Container.PageLinks[workCounter] := GetVal(parse[i], 'src');
           Break;
         end;
     end;

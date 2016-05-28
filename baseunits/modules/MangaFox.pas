@@ -92,7 +92,7 @@ var
 begin
   Result := False;
   if DownloadThread = nil then Exit;
-  with DownloadThread.FHTTP, DownloadThread.manager.container do begin
+  with DownloadThread.FHTTP, DownloadThread.Task.Container do begin
     PageLinks.Clear;
     PageNumber := 0;
     s := ChapterLinks[CurrentDownloadChapterPtr];
@@ -124,7 +124,7 @@ function GetImageURL(const DownloadThread: TDownloadThread; const AURL: String;
 begin
   Result := False;
   if DownloadThread = nil then Exit;
-  with DownloadThread.manager.container, DownloadThread.FHTTP do begin
+  with DownloadThread.Task.Container, DownloadThread.FHTTP do begin
     if GET(AppendURLDelim(FillHost(Module.RootURL, AURL)) +
       IncStr(DownloadThread.workCounter) + '.html') then
     begin

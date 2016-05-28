@@ -224,7 +224,7 @@ var
   var
     x: IXQValue;
   begin
-    with DownloadThread.manager.container, query do begin
+    with DownloadThread.Task.Container, query do begin
       ParseHTML(DownloadThread.FHTTP.Document);
       for x in XPath('//div[@id="gdt"]//a') do
       begin
@@ -240,7 +240,7 @@ var
 begin
   Result := False;
   if DownloadThread = nil then Exit;
-  with DownloadThread.FHTTP, DownloadThread.manager.container do begin
+  with DownloadThread.FHTTP, DownloadThread.Task.Container do begin
     PageLinks.Clear;
     PageContainerLinks.Clear;
     Filenames.Clear;

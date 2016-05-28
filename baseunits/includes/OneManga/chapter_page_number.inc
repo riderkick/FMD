@@ -10,13 +10,13 @@
     s := FillMangaSiteHost(ONEMANGA_ID, URL);
     Result := GetPage(TObject(l),
       s,
-      manager.container.Manager.retryConnect);
+      Task.Container.Manager.retryConnect);
     Parser := THTMLParser.Create(PChar(l.Text));
     Parser.OnFoundTag := OnTag;
     Parser.OnFoundText := OnText;
     Parser.Exec;
     Parser.Free;
-    manager.container.PageNumber := 0;
+    Task.Container.PageNumber := 0;
     if parse.Count > 0 then
       for i := 1 to parse.Count - 1 do
       begin
@@ -30,7 +30,7 @@
           Break;
         end;
         if isGetPage and (Pos('<option', parse[i]) > 0) then
-          Inc(manager.container.PageNumber);
+          Inc(Task.Container.PageNumber);
       end;
     parse.Free;
     l.Free;

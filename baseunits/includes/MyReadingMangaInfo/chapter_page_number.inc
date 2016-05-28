@@ -6,11 +6,11 @@
     s: String;
     isExtractImg: Boolean = False;
   begin
-    manager.container.PageNumber := 0;
+    Task.Container.PageNumber := 0;
     l := TStringList.Create;
     parse := TStringList.Create;
     s := FillMangaSiteHost(MYREADINGMANGAINFO_ID, URL);
-    Result := GetPage(TObject(l), s, manager.container.Manager.retryConnect);
+    Result := GetPage(TObject(l), s, Task.Container.Manager.retryConnect);
     Parser := THTMLParser.Create(PChar(l.Text));
     Parser.OnFoundTag := OnTag;
     Parser.OnFoundText := OnText;
@@ -19,7 +19,7 @@
     l.Free;
     if parse.Count > 0 then
     begin
-      manager.container.PageLinks.Clear;
+      Task.Container.PageLinks.Clear;
       for i := 0 to parse.Count - 1 do
       begin
         //if (Pos('class="separator"', parse[i]) > 0) and
@@ -27,7 +27,7 @@
         //  for j := i + 1 to parse.Count - 1 do
         //    if (Pos('<img', parse[j]) > 0) then
         //    begin
-        //      manager.container.PageLinks.Add(GetVal(parse[j], 'src'));
+        //      Task.Container.PageLinks.Add(GetVal(parse[j], 'src'));
         //      Break;
         //    end;
         if isExtractImg and (Pos('<footer', parse[i]) > 0) and
@@ -40,9 +40,9 @@
           (Pos('class="entry-content"', parse[i]) > 0) then
           isExtractImg := True;
         if isExtractImg and (Pos('<img', parse[i]) > 0) then
-          manager.container.PageLinks.Add(GetVal(parse[i], 'src'));
+          Task.Container.PageLinks.Add(GetVal(parse[i], 'src'));
       end;
-      manager.container.PageNumber := manager.container.PageLinks.Count;
+      Task.Container.PageNumber := Task.Container.PageLinks.Count;
     end;
     parse.Free;
   end;

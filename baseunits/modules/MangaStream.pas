@@ -114,7 +114,7 @@ var
 begin
   Result := False;
   if DownloadThread = nil then Exit;
-  Container := DownloadThread.manager.container;
+  Container := DownloadThread.Task.Container;
   Container.PageLinks.Clear;
   Container.PageContainerLinks.Clear;
   Container.PageNumber := 0;
@@ -152,7 +152,7 @@ var
 begin
   Result := False;
   if DownloadThread = nil then Exit;
-  with DownloadThread.manager.container do begin
+  with DownloadThread.Task.Container do begin
     Source := TStringList.Create;
     try
       if GetPage(DownloadThread.FHTTP, TObject(Source),

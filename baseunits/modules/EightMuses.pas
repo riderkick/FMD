@@ -56,7 +56,7 @@ var
 begin
   Result := False;
   if DownloadThread = nil then Exit;
-  with DownloadThread.FHTTP, DownloadThread.manager.container do begin
+  with DownloadThread.FHTTP, DownloadThread.Task.Container do begin
     PageLinks.Clear;
     PageContainerLinks.Clear;
     PageNumber := 0;
@@ -93,7 +93,7 @@ var
 begin
   Result := False;
   if DownloadThread = nil then Exit;
-  with DownloadThread.FHTTP, DownloadThread.manager.container do begin
+  with DownloadThread.FHTTP, DownloadThread.Task.Container do begin
     rurl := RemoveURLDelim(FillHost(Module.RootURL, PageContainerLinks[DownloadThread.WorkCounter]));
     if GET(rurl) then begin
       Result := True;

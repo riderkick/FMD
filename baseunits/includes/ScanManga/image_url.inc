@@ -11,7 +11,7 @@
     s := DecodeUrl(FillMangaSiteHost(SCANMANGA_ID, URL));
     Result := GetPage(TObject(l),
       s,
-      manager.container.Manager.retryConnect);
+      Task.Container.Manager.retryConnect);
 
     for i := 0 to l.Count - 1 do
     begin
@@ -24,7 +24,7 @@
         Break;
       end;
     end;
-    manager.container.PageLinks.Clear;
+    Task.Container.PageLinks.Clear;
     for i := 0 to l.Count - 1 do
     begin
       if (Pos('var c = new Array;', l[i]) > 0) and
@@ -36,7 +36,7 @@
         t.DelimitedText := s;
         for j := 0 to t.Count - 1 do
           if Pos(']="', t[j]) > 0 then
-            manager.container.PageLinks.Add(h + GetString(t[j], '="', '"'));
+            Task.Container.PageLinks.Add(h + GetString(t[j], '="', '"'));
         Break;
       end;
     end;

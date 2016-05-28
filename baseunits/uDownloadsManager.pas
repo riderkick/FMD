@@ -62,7 +62,7 @@ type
     procedure Execute; override;
     procedure DoTerminate; override;
   public
-    manager: TTaskThread;
+    Task: TTaskThread;
     constructor Create;
     destructor Destroy; override;
 
@@ -92,9 +92,9 @@ type
     httpCookies: String;
     Flag: TFlagType;
     // container (for storing information)
-    container: TTaskContainer;
+    Container: TTaskContainer;
     // download threads
-    threads: TFPList;
+    Threads: TFPList;
     constructor Create;
     destructor Destroy; override;
     property AnotherURL: String read FAnotherURL write FAnotherURL;
@@ -112,7 +112,7 @@ type
     // read count for transfer rate
     ReadCount: Integer;
     // task thread of this container
-    Thread: TTaskThread;
+    Task: TTaskThread;
     // download manager
     Manager: TDownloadManager;
     DownloadInfo: TDownloadInfo;
@@ -255,7 +255,7 @@ procedure TDownloadThread.SockOnStatus(Sender: TObject;
   Reason: THookSocketReason; const Value: String);
 begin
   if Reason = HR_ReadCount then
-    manager.container.IncReadCount(StrToIntDef(Value, 0));
+    Task.Container.IncReadCount(StrToIntDef(Value, 0));
 end;
 
 constructor TDownloadThread.Create;
@@ -296,14 +296,14 @@ begin
       CS_GETPAGENUMBER:
       begin
         Reslt := GetPageNumberFromURL(
-          manager.container.ChapterLinks.Strings[
-          manager.container.CurrentDownloadChapterPtr]);
+          Task.Container.ChapterLinks.Strings[
+          Task.Container.CurrentDownloadChapterPtr]);
         // Prepare 'space' for storing image url.
         if (not Terminated) and
-          (manager.container.PageNumber > 0) then
+          (Task.Container.PageNumber > 0) then
         begin
-          while manager.container.PageLinks.Count < manager.container.PageNumber do
-            manager.container.PageLinks.Add('W');
+          while Task.Container.PageLinks.Count < Task.Container.PageNumber do
+            Task.Container.PageLinks.Add('W');
         end
         else
           Reslt := False;
@@ -312,8 +312,8 @@ begin
       CS_GETPAGELINK:
       begin
         Reslt := GetLinkPageFromURL(
-          manager.container.ChapterLinks.Strings[
-          manager.container.CurrentDownloadChapterPtr]);
+          Task.Container.ChapterLinks.Strings[
+          Task.Container.CurrentDownloadChapterPtr]);
       end;
       // Download images.
       CS_DOWNLOAD:
@@ -324,13 +324,13 @@ begin
 
     if not Terminated and Reslt then
     begin
-      manager.container.CS_Container.Acquire;
+      Task.Container.CS_Container.Acquire;
       try
-        manager.container.DownCounter := InterLockedIncrement(manager.container.DownCounter);
-        manager.container.DownloadInfo.Progress :=
-          Format('%d/%d', [manager.container.DownCounter, manager.container.PageNumber]);
+        Task.Container.DownCounter := InterLockedIncrement(Task.Container.DownCounter);
+        Task.Container.DownloadInfo.Progress :=
+          Format('%d/%d', [Task.Container.DownCounter, Task.Container.PageNumber]);
       finally
-        manager.container.CS_Container.Release;
+        Task.Container.CS_Container.Release;
       end;
     end;
   except
@@ -339,11 +339,11 @@ begin
       E.Message := E.Message + LineEnding +
         '  In TDownloadThread.Execute : ' + GetEnumName(TypeInfo(TFlagType), Integer(checkStyle)) +
         LineEnding +
-        '  Website : ' + manager.container.DownloadInfo.Website + LineEnding +
-        '  URL     : ' + FillMangaSiteHost(manager.container.MangaSiteID,
-        manager.container.ChapterLinks[manager.container.CurrentDownloadChapterPtr]) + LineEnding +
-        '  Title   : ' + manager.container.DownloadInfo.title + LineEnding +
-        '  Chapter : ' + manager.container.ChapterName[manager.container.CurrentDownloadChapterPtr] +
+        '  Website : ' + Task.Container.DownloadInfo.Website + LineEnding +
+        '  URL     : ' + FillMangaSiteHost(Task.Container.MangaSiteID,
+        Task.Container.ChapterLinks[Task.Container.CurrentDownloadChapterPtr]) + LineEnding +
+        '  Title   : ' + Task.Container.DownloadInfo.title + LineEnding +
+        '  Chapter : ' + Task.Container.ChapterName[Task.Container.CurrentDownloadChapterPtr] +
         LineEnding;
       MainForm.ExceptionHandler(Self, E);
     end;
@@ -354,8 +354,8 @@ procedure TDownloadThread.DoTerminate;
 begin
   LockCreateConnection;
   try
-    Modules.DecActiveConnectionCount(manager.ModuleId);
-    manager.threads.Remove(Self);
+    Modules.DecActiveConnectionCount(Task.ModuleId);
+    Task.Threads.Remove(Self);
   finally
     UnlockCreateConnection;
   end;
@@ -452,146 +452,146 @@ var
 
 begin
   Result := False;
-  manager.container.PageNumber := 0;
+  Task.Container.PageNumber := 0;
 
-  if Modules.ModuleAvailable(manager.ModuleId, MMGetPageNumber) then
-    Result := Modules.GetPageNumber(Self, URL, manager.ModuleId)
+  if Modules.ModuleAvailable(Task.ModuleId, MMGetPageNumber) then
+    Result := Modules.GetPageNumber(Self, URL, Task.ModuleId)
   else
   begin
-    if manager.container.MangaSiteID = ANIMEA_ID then
+    if Task.Container.MangaSiteID = ANIMEA_ID then
       Result := GetAnimeAPageNumber
     else
-    if manager.container.MangaSiteID = MANGAINN_ID then
+    if Task.Container.MangaSiteID = MANGAINN_ID then
       Result := GetMangaInnPageNumber
     else
-    if manager.container.MangaSiteID = MANGATRADERS_ID then
+    if Task.Container.MangaSiteID = MANGATRADERS_ID then
       Result := GetMangaTradersPageNumber
     else
-    if manager.container.MangaSiteID = STARKANA_ID then
+    if Task.Container.MangaSiteID = STARKANA_ID then
       Result := GetStarkanaPageNumber
     else
-    if manager.container.MangaSiteID = EATMANGA_ID then
+    if Task.Container.MangaSiteID = EATMANGA_ID then
       Result := GetEatMangaPageNumber
     else
-    if manager.container.MangaSiteID = MANGAPARK_ID then
+    if Task.Container.MangaSiteID = MANGAPARK_ID then
       Result := GetMangaParkPageNumber
     else
-    if manager.container.MangaSiteID = MANGAGO_ID then
+    if Task.Container.MangaSiteID = MANGAGO_ID then
       Result := GetMangaGoPageNumber
     else
-    if manager.container.MangaSiteID = S2SCAN_ID then
+    if Task.Container.MangaSiteID = S2SCAN_ID then
       Result := GetS2scanPageNumber
     else
-    if manager.container.MangaSiteID = MEINMANGA_ID then
+    if Task.Container.MangaSiteID = MEINMANGA_ID then
       Result := GetMeinMangaPageNumber
     else
-    if manager.container.MangaSiteID = ESMANGAHERE_ID then
+    if Task.Container.MangaSiteID = ESMANGAHERE_ID then
       Result := GetEsMangaHerePageNumber
     else
-    if manager.container.MangaSiteID = ANIMEEXTREMIST_ID then
+    if Task.Container.MangaSiteID = ANIMEEXTREMIST_ID then
       Result := GetAnimeExtremistPageNumber
     else
-    if manager.container.MangaSiteID = KOMIKID_ID then
+    if Task.Container.MangaSiteID = KOMIKID_ID then
       Result := GetKomikidPageNumber
     else
-    if manager.container.MangaSiteID = HUGEMANGA_ID then
+    if Task.Container.MangaSiteID = HUGEMANGA_ID then
       Result := GetHugeMangaPageNumber
     else
-    if manager.container.MangaSiteID = ANIMESTORY_ID then
+    if Task.Container.MangaSiteID = ANIMESTORY_ID then
       Result := GetAnimeStoryPageNumber
     else
-    if manager.container.MangaSiteID = TURKCRAFT_ID then
+    if Task.Container.MangaSiteID = TURKCRAFT_ID then
       Result := GetTurkcraftPageNumber
     else
-    if manager.container.MangaSiteID = MANGAAE_ID then
+    if Task.Container.MangaSiteID = MANGAAE_ID then
       Result := GetMangaAePageNumber
     else
-    if manager.container.MangaSiteID = MANGACOW_ID then
+    if Task.Container.MangaSiteID = MANGACOW_ID then
       Result := GetMangaCowPageNumber
     else
-    if manager.container.MangaSiteID = KIVMANGA_ID then
+    if Task.Container.MangaSiteID = KIVMANGA_ID then
       Result := GetKivmangaPageNumber
     else
-    if (manager.container.MangaSiteID = NINEMANGA_ID) or
-      (manager.container.MangaSiteID = NINEMANGA_ES_ID) or
-      (manager.container.MangaSiteID = NINEMANGA_CN_ID) or
-      (manager.container.MangaSiteID = NINEMANGA_RU_ID) or
-      (manager.container.MangaSiteID = NINEMANGA_DE_ID) or
-      (manager.container.MangaSiteID = NINEMANGA_IT_ID) or
-      (manager.container.MangaSiteID = NINEMANGA_BR_ID) then
+    if (Task.Container.MangaSiteID = NINEMANGA_ID) or
+      (Task.Container.MangaSiteID = NINEMANGA_ES_ID) or
+      (Task.Container.MangaSiteID = NINEMANGA_CN_ID) or
+      (Task.Container.MangaSiteID = NINEMANGA_RU_ID) or
+      (Task.Container.MangaSiteID = NINEMANGA_DE_ID) or
+      (Task.Container.MangaSiteID = NINEMANGA_IT_ID) or
+      (Task.Container.MangaSiteID = NINEMANGA_BR_ID) then
       Result := GetNineMangaPageNumber
     else
-    if manager.container.MangaSiteID = LECTUREENLIGNE_ID then
+    if Task.Container.MangaSiteID = LECTUREENLIGNE_ID then
       Result := GetLectureEnLignePageNumber
     else
-    if manager.container.MangaSiteID = JAPANSHIN_ID then
+    if Task.Container.MangaSiteID = JAPANSHIN_ID then
       Result := GetJapanShinPageNumber
     else
-    if manager.container.MangaSiteID = JAPSCAN_ID then
+    if Task.Container.MangaSiteID = JAPSCAN_ID then
       Result := GetJapscanPageNumber
     else
-    if manager.container.MangaSiteID = CENTRUMMANGI_PL_ID then
+    if Task.Container.MangaSiteID = CENTRUMMANGI_PL_ID then
       Result := GetCentrumMangi_PLPageNumber
     else
-    if manager.container.MangaSiteID = MANGALIB_PL_ID then
+    if Task.Container.MangaSiteID = MANGALIB_PL_ID then
       Result := GetMangaLib_PLPageNumber
     else
-    if manager.container.MangaSiteID = ONEMANGA_ID then
+    if Task.Container.MangaSiteID = ONEMANGA_ID then
       Result := GetOneMangaPageNumber
     else
-    if manager.container.MangaSiteID = MANGATOWN_ID then
+    if Task.Container.MangaSiteID = MANGATOWN_ID then
       Result := GetMangaTownPageNumber
     else
-    if manager.container.MangaSiteID = MANGAOKU_ID then
+    if Task.Container.MangaSiteID = MANGAOKU_ID then
       Result := GetMangaOkuPageNumber
     else
-    if manager.container.MangaSiteID = MYREADINGMANGAINFO_ID then
+    if Task.Container.MangaSiteID = MYREADINGMANGAINFO_ID then
       Result := GetMyReadingMangaInfoPageNumber
     else
-    if manager.container.MangaSiteID = IKOMIK_ID then
+    if Task.Container.MangaSiteID = IKOMIK_ID then
       Result := GetIKomikPageNumber
     else
-    if manager.container.MangaSiteID = NHENTAI_ID then
+    if Task.Container.MangaSiteID = NHENTAI_ID then
       Result := GetNHentaiPageNumber
     else
-    if manager.container.MangaSiteID = MANGAMINT_ID then
+    if Task.Container.MangaSiteID = MANGAMINT_ID then
       Result := GetMangaMintPageNumber
     else
-    if manager.container.MangaSiteID = UNIXMANGA_ID then
+    if Task.Container.MangaSiteID = UNIXMANGA_ID then
       Result := GetUnixMangaPageNumber
     else
-    if manager.container.MangaSiteID = EXTREMEMANGAS_ID then
+    if Task.Container.MangaSiteID = EXTREMEMANGAS_ID then
       Result := GetExtremeMangasPageNumber
     else
-    if manager.container.MangaSiteID = MANGAHOST_ID then
+    if Task.Container.MangaSiteID = MANGAHOST_ID then
       Result := GetMangaHostPageNumber
     else
-    if (manager.container.MangaSiteID = PORNCOMIX_ID) or
-      (manager.container.MangaSiteID = XXCOMICS_ID) or
-      (manager.container.MangaSiteID = XXCOMICSMT_ID) or
-      (manager.container.MangaSiteID = XXCOMICS3D_ID) or
-      (manager.container.MangaSiteID = PORNCOMIXRE_ID) or
-      (manager.container.MangaSiteID = PORNCOMIXIC_ID) or
-      (manager.container.MangaSiteID = PORNXXXCOMICS_ID) then
-      Result := GetPornComixPageNumber(manager.container.MangaSiteID)
+    if (Task.Container.MangaSiteID = PORNCOMIX_ID) or
+      (Task.Container.MangaSiteID = XXCOMICS_ID) or
+      (Task.Container.MangaSiteID = XXCOMICSMT_ID) or
+      (Task.Container.MangaSiteID = XXCOMICS3D_ID) or
+      (Task.Container.MangaSiteID = PORNCOMIXRE_ID) or
+      (Task.Container.MangaSiteID = PORNCOMIXIC_ID) or
+      (Task.Container.MangaSiteID = PORNXXXCOMICS_ID) then
+      Result := GetPornComixPageNumber(Task.Container.MangaSiteID)
     else
-    if manager.container.MangaSiteID = MANGASEE_ID then
+    if Task.Container.MangaSiteID = MANGASEE_ID then
       Result := GetMangaSeePageNumber
     else
-    if manager.container.MangaSiteID = MANGAKU_ID then
+    if Task.Container.MangaSiteID = MANGAKU_ID then
       Result := GetMangaKuPageNumber
     else
-    if manager.container.MangaSiteID = MANGAAT_ID then
+    if Task.Container.MangaSiteID = MANGAAT_ID then
       Result := GetMangaAtPageNumber
     else
-    if manager.container.MangaSiteID = READMANGATODAY_ID then
+    if Task.Container.MangaSiteID = READMANGATODAY_ID then
       Result := GetReadMangaTodayPageNumber
     else
-    if manager.container.MangaSiteID = DYNASTYSCANS_ID then
+    if Task.Container.MangaSiteID = DYNASTYSCANS_ID then
       Result := GetDynastyScansPageNumber;
   end;
-  if manager.container.PageLinks.Count > 0 then
-    TrimStrings(manager.container.PageLinks);
+  if Task.Container.PageLinks.Count > 0 then
+    TrimStrings(Task.Container.PageLinks);
 end;
 
 function TDownloadThread.GetLinkPageFromURL(const URL: String): Boolean;
@@ -690,159 +690,159 @@ var
 
 begin
   Result := False;
-  if (manager.container.PageLinks.Count > 0) and
-    (manager.container.PageLinks.Strings[workCounter] <> 'W') then
+  if (Task.Container.PageLinks.Count > 0) and
+    (Task.Container.PageLinks.Strings[workCounter] <> 'W') then
     Exit;
 
-  if Modules.ModuleAvailable(manager.ModuleId, MMGetImageURL) then
-    Result := Modules.GetImageURL(Self, URL, manager.ModuleId)
+  if Modules.ModuleAvailable(Task.ModuleId, MMGetImageURL) then
+    Result := Modules.GetImageURL(Self, URL, Task.ModuleId)
   else
   begin
-    if manager.container.MangaSiteID = ANIMEA_ID then
+    if Task.Container.MangaSiteID = ANIMEA_ID then
       Result := GetAnimeAImageURL
     else
-    if manager.container.MangaSiteID = MANGATRADERS_ID then
+    if Task.Container.MangaSiteID = MANGATRADERS_ID then
       Result := GetMangaTradersImageURL
     else
-    if manager.container.MangaSiteID = MANGAINN_ID then
+    if Task.Container.MangaSiteID = MANGAINN_ID then
       Result := GetMangaInnImageURL
     else
-    if manager.container.MangaSiteID = MANGA24H_ID then
+    if Task.Container.MangaSiteID = MANGA24H_ID then
       Result := GetManga24hImageURL
     else
-    if manager.container.MangaSiteID = VNSHARING_ID then
+    if Task.Container.MangaSiteID = VNSHARING_ID then
       Result := GetVnSharingImageURL
     else
-    if manager.container.MangaSiteID = FAKKU_ID then
+    if Task.Container.MangaSiteID = FAKKU_ID then
       Result := GetFakkuImageURL
     else
-    //if manager.container.MangaSiteID = MANGAPARK_ID then
+    //if Task.Container.MangaSiteID = MANGAPARK_ID then
     //  Result := GetMangaParkImageURL
     //else
-    if manager.container.MangaSiteID = STARKANA_ID then
+    if Task.Container.MangaSiteID = STARKANA_ID then
       Result := GetStarkanaImageURL
     else
-    if manager.container.MangaSiteID = EATMANGA_ID then
+    if Task.Container.MangaSiteID = EATMANGA_ID then
       Result := GetEatMangaImageURL
     else
-    if manager.container.MangaSiteID = MANGAGO_ID then
+    if Task.Container.MangaSiteID = MANGAGO_ID then
       Result := GetMangaGoImageURL
     else
-    if manager.container.MangaSiteID = EGSCANS_ID then
+    if Task.Container.MangaSiteID = EGSCANS_ID then
       Result := GetEGScansImageURL
     else
-    if manager.container.MangaSiteID = ESMANGAHERE_ID then
+    if Task.Container.MangaSiteID = ESMANGAHERE_ID then
       Result := GetEsMangaHereImageURL
     else
-    if manager.container.MangaSiteID = ANIMEEXTREMIST_ID then
+    if Task.Container.MangaSiteID = ANIMEEXTREMIST_ID then
       Result := GetAnimeExtremistImageURL
     else
-    if manager.container.MangaSiteID = KOMIKID_ID then
+    if Task.Container.MangaSiteID = KOMIKID_ID then
       Result := GetKomikidImageURL
     else
-    if manager.container.MangaSiteID = MABUNS_ID then
+    if Task.Container.MangaSiteID = MABUNS_ID then
       Result := GetMabunsImageURL
     else
-    if manager.container.MangaSiteID = MANGAESTA_ID then
+    if Task.Container.MangaSiteID = MANGAESTA_ID then
       Result := GetMangaEstaImageURL
     else
-    if manager.container.MangaSiteID = HUGEMANGA_ID then
+    if Task.Container.MangaSiteID = HUGEMANGA_ID then
       Result := GetHugeMangaImageURL
     else
-    if manager.container.MangaSiteID = ANIMESTORY_ID then
+    if Task.Container.MangaSiteID = ANIMESTORY_ID then
       Result := GetAnimeStoryImageURL
     else
-    if manager.container.MangaSiteID = SCANMANGA_ID then
+    if Task.Container.MangaSiteID = SCANMANGA_ID then
       Result := GetScanMangaImageURL
     else
-    if manager.container.MangaSiteID = TURKCRAFT_ID then
+    if Task.Container.MangaSiteID = TURKCRAFT_ID then
       Result := GetTurkcraftImageURL
     else
-    if manager.container.MangaSiteID = MANGAAR_ID then
+    if Task.Container.MangaSiteID = MANGAAR_ID then
       Result := GetMangaArImageURL
     else
-    if manager.container.MangaSiteID = MANGAAE_ID then
+    if Task.Container.MangaSiteID = MANGAAE_ID then
       Result := GetMangaAeImageURL
     else
-    if manager.container.MangaSiteID = CENTRALDEMANGAS_ID then
+    if Task.Container.MangaSiteID = CENTRALDEMANGAS_ID then
       Result := GetCentralDeMangasImageURL
     else
-    if manager.container.MangaSiteID = MANGACOW_ID then
+    if Task.Container.MangaSiteID = MANGACOW_ID then
       Result := GetMangaCowImageURL
     else
-    if manager.container.MangaSiteID = TRUYENTRANHTUAN_ID then
+    if Task.Container.MangaSiteID = TRUYENTRANHTUAN_ID then
       Result := GetTruyenTranhTuanImageURL
     else
-    if manager.container.MangaSiteID = BLOGTRUYEN_ID then
+    if Task.Container.MangaSiteID = BLOGTRUYEN_ID then
       Result := GetBlogTruyenImageURL
     else
-    if manager.container.MangaSiteID = KIVMANGA_ID then
+    if Task.Container.MangaSiteID = KIVMANGA_ID then
       Result := GetKivmangaImageURL
     else
-    if manager.container.MangaSiteID = MANGASPROJECT_ID then
+    if Task.Container.MangaSiteID = MANGASPROJECT_ID then
       Result := GetMangasPROJECTImageURL
     else
-    if manager.container.MangaSiteID = MANGAREADER_POR_ID then
+    if Task.Container.MangaSiteID = MANGAREADER_POR_ID then
       Result := GetMangaREADER_PORImageURL
     else
-    if (manager.container.MangaSiteID = NINEMANGA_ID) or
-      (manager.container.MangaSiteID = NINEMANGA_ES_ID) or
-      (manager.container.MangaSiteID = NINEMANGA_CN_ID) or
-      (manager.container.MangaSiteID = NINEMANGA_RU_ID) or
-      (manager.container.MangaSiteID = NINEMANGA_DE_ID) or
-      (manager.container.MangaSiteID = NINEMANGA_IT_ID) or
-      (manager.container.MangaSiteID = NINEMANGA_BR_ID) then
+    if (Task.Container.MangaSiteID = NINEMANGA_ID) or
+      (Task.Container.MangaSiteID = NINEMANGA_ES_ID) or
+      (Task.Container.MangaSiteID = NINEMANGA_CN_ID) or
+      (Task.Container.MangaSiteID = NINEMANGA_RU_ID) or
+      (Task.Container.MangaSiteID = NINEMANGA_DE_ID) or
+      (Task.Container.MangaSiteID = NINEMANGA_IT_ID) or
+      (Task.Container.MangaSiteID = NINEMANGA_BR_ID) then
       Result := GetNineMangaImageURL
     else
-    if manager.container.MangaSiteID = LECTUREENLIGNE_ID then
+    if Task.Container.MangaSiteID = LECTUREENLIGNE_ID then
       Result := GeLectureEnligneImageURL
     else
-    if manager.container.MangaSiteID = JAPANSHIN_ID then
+    if Task.Container.MangaSiteID = JAPANSHIN_ID then
       Result := GetJapanShinImageURL
     else
-    if manager.container.MangaSiteID = JAPSCAN_ID then
+    if Task.Container.MangaSiteID = JAPSCAN_ID then
       Result := GetJapscanImageURL
     else
-    if manager.container.MangaSiteID = CENTRUMMANGI_PL_ID then
+    if Task.Container.MangaSiteID = CENTRUMMANGI_PL_ID then
       Result := GetCentrumMangi_PLImageURL
     else
-    if manager.container.MangaSiteID = MANGALIB_PL_ID then
+    if Task.Container.MangaSiteID = MANGALIB_PL_ID then
       Result := GetMangaLib_PLImageURL
     else
-    if manager.container.MangaSiteID = ONEMANGA_ID then
+    if Task.Container.MangaSiteID = ONEMANGA_ID then
       Result := GetOneMangaImageURL
     else
-    if manager.container.MangaSiteID = MANGATOWN_ID then
+    if Task.Container.MangaSiteID = MANGATOWN_ID then
       Result := GetMangaTownImageURL
     else
-    if manager.container.MangaSiteID = MANGAOKU_ID then
+    if Task.Container.MangaSiteID = MANGAOKU_ID then
       Result := GetMangaOkuImageURL
     else
-    if manager.container.MangaSiteID = IKOMIK_ID then
+    if Task.Container.MangaSiteID = IKOMIK_ID then
       Result := GetIKomikImageURL
     else
-    if manager.container.MangaSiteID = NHENTAI_ID then
+    if Task.Container.MangaSiteID = NHENTAI_ID then
       Result := GetNHentaiImageURL
     else
-    if manager.container.MangaSiteID = MANGAMINT_ID then
+    if Task.Container.MangaSiteID = MANGAMINT_ID then
       Result := GetMangaMintImageURL
     else
-    if manager.container.MangaSiteID = UNIXMANGA_ID then
+    if Task.Container.MangaSiteID = UNIXMANGA_ID then
       Result := GetUnixMangaImageURL
     else
-    if manager.container.MangaSiteID = MANGAHOST_ID then
+    if Task.Container.MangaSiteID = MANGAHOST_ID then
       Result := GetMangaHostImageURL
     else
-    if (manager.container.MangaSiteID = PORNCOMIX_ID) or
-      (manager.container.MangaSiteID = XXCOMICS_ID) or
-      (manager.container.MangaSiteID = XXCOMICSMT_ID) or
-      (manager.container.MangaSiteID = XXCOMICS3D_ID) or
-      (manager.container.MangaSiteID = PORNCOMIXRE_ID) or
-      (manager.container.MangaSiteID = PORNCOMIXIC_ID) or
-      (manager.container.MangaSiteID = PORNXXXCOMICS_ID) then
+    if (Task.Container.MangaSiteID = PORNCOMIX_ID) or
+      (Task.Container.MangaSiteID = XXCOMICS_ID) or
+      (Task.Container.MangaSiteID = XXCOMICSMT_ID) or
+      (Task.Container.MangaSiteID = XXCOMICS3D_ID) or
+      (Task.Container.MangaSiteID = PORNCOMIXRE_ID) or
+      (Task.Container.MangaSiteID = PORNCOMIXIC_ID) or
+      (Task.Container.MangaSiteID = PORNXXXCOMICS_ID) then
       Result := GetPornComixImageURL
     else
-    if manager.container.MangaSiteID = MANGAAT_ID then
+    if Task.Container.MangaSiteID = MANGAAT_ID then
       Result := GetMangaAtImageURL;
   end;
 end;
@@ -867,7 +867,7 @@ end;
 constructor TTaskThread.Create;
 begin
   inherited Create(True);
-  threads := TFPList.Create;
+  Threads := TFPList.Create;
   ModuleId := -1;
   FCheckAndActiveTaskFlag := True;
   anotherURL := '';
@@ -876,15 +876,15 @@ end;
 
 destructor TTaskThread.Destroy;
 begin
-  threads.Free;
+  Threads.Free;
   inherited Destroy;
 end;
 
 procedure TTaskThread.MainThreadCompressRepaint;
 begin
-  container.DownloadInfo.Status :=
-    Format('%s (%d/%d)', [RS_Compressing, container.CurrentDownloadChapterPtr +
-    1, container.ChapterLinks.Count]);
+  Container.DownloadInfo.Status :=
+    Format('%s (%d/%d)', [RS_Compressing, Container.CurrentDownloadChapterPtr +
+    1, Container.ChapterLinks.Count]);
   MainForm.vtDownload.Repaint;
 end;
 
@@ -897,18 +897,18 @@ procedure TTaskThread.Compress;
 var
   uPacker: TPacker;
 begin
-  if (container.Manager.compress >= 1) then
+  if (Container.Manager.compress >= 1) then
   begin
     Synchronize(MainThreadCompressRepaint);
     uPacker := TPacker.Create;
     try
-      case container.Manager.compress of
+      case Container.Manager.compress of
         1: uPacker.Format := pfZIP;
         2: uPacker.Format := pfCBZ;
         3: uPacker.Format := pfPDF;
       end;
       uPacker.CompressionQuality := OptionPDFQuality;
-      uPacker.Path := container.CurrentWorkingDir;
+      uPacker.Path := Container.CurrentWorkingDir;
       uPacker.Execute;
     except
       on E: Exception do
@@ -920,14 +920,14 @@ end;
 
 procedure TTaskThread.SyncStop;
 begin
-  container.Manager.CheckAndActiveTask(FCheckAndActiveTaskFlag);
+  Container.Manager.CheckAndActiveTask(FCheckAndActiveTaskFlag);
 end;
 
 procedure TTaskThread.SyncShowBaloon;
 begin
-  with MainForm.TrayIcon, container.DownloadInfo do
+  with MainForm.TrayIcon, Container.DownloadInfo do
   begin
-    if container.Status = STATUS_FAILED then
+    if Container.Status = STATUS_FAILED then
     begin
       BalloonFlags := bfError;
       BalloonHint := QuotedStrd(Title);
@@ -937,11 +937,11 @@ begin
         BalloonHint := BalloonHint + LineEnding + Status;
     end
     else
-    if container.Status = STATUS_FINISH then
+    if Container.Status = STATUS_FINISH then
     begin
       BalloonFlags := bfInfo;
       BalloonHint :=
-        '"' + container.DownloadInfo.title + '" - ' + RS_Finish;
+        '"' + Container.DownloadInfo.title + '" - ' + RS_Finish;
     end;
     ShowBalloonHint;
   end;
@@ -959,17 +959,17 @@ begin
   Result := True;
 
   // check download path
-  if not DirectoryExistsUTF8(manager.container.CurrentWorkingDir) then
-    if not ForceDirectoriesUTF8(manager.container.CurrentWorkingDir) then
+  if not DirectoryExistsUTF8(Task.Container.CurrentWorkingDir) then
+    if not ForceDirectoriesUTF8(Task.Container.CurrentWorkingDir) then
     begin
-      manager.container.Status := STATUS_FAILED;
-      manager.container.DownloadInfo.Status := RS_FailedToCreateDir;
+      Task.Container.Status := STATUS_FAILED;
+      Task.Container.DownloadInfo.Status := RS_FailedToCreateDir;
       Result := False;
       Exit;
     end;
 
   // check pagelinks url
-  workURL := manager.container.PageLinks[workCounter];
+  workURL := Task.Container.PageLinks[workCounter];
   if (workURL = '') or
      (workURL = 'W') or
      (workURL = 'D') then
@@ -978,13 +978,13 @@ begin
   FHTTP.Clear;
 
   // call beforedownloadimage if available
-  if Modules.ModuleAvailable(manager.ModuleId, MMBeforeDownloadImage) then
-    Result := Modules.BeforeDownloadImage(Self, workURL, manager.ModuleId);
+  if Modules.ModuleAvailable(Task.ModuleId, MMBeforeDownloadImage) then
+    Result := Modules.BeforeDownloadImage(Self, workURL, Task.ModuleId);
 
   // prepare filename
   workFilename := '';
-  if workCounter < manager.container.Filenames.Count then
-    workFilename := manager.container.Filenames[workCounter];
+  if workCounter < Task.Container.Filenames.Count then
+    workFilename := Task.Container.Filenames[workCounter];
   if workFilename = '' then
     workFilename := Format('%.3d', [workCounter + 1]);
 
@@ -992,43 +992,43 @@ begin
   savedFilename := '';
   if Result then
   begin
-    if Modules.ModuleAvailable(manager.ModuleId, MMDownloadImage) then
+    if Modules.ModuleAvailable(Task.ModuleId, MMDownloadImage) then
     begin
       workURL := '';
-      if (manager.container.PageNumber = manager.container.PageContainerLinks.Count)
-        and (workCounter < manager.container.PageContainerLinks.Count) then
-        workURL := manager.container.PageContainerLinks[workCounter]
-      else if workCounter < manager.container.PageLinks.Count then
-        workURL := manager.container.PageLinks[workCounter];
+      if (Task.Container.PageNumber = Task.Container.PageContainerLinks.Count)
+        and (workCounter < Task.Container.PageContainerLinks.Count) then
+        workURL := Task.Container.PageContainerLinks[workCounter]
+      else if workCounter < Task.Container.PageLinks.Count then
+        workURL := Task.Container.PageLinks[workCounter];
 
       if workURL <> '' then
         Result := Modules.DownloadImage(
           Self,
           workURL,
-          manager.container.CurrentWorkingDir,
+          Task.Container.CurrentWorkingDir,
           workFilename,
-          manager.ModuleId);
+          Task.ModuleId);
     end
     else
-    if manager.container.MangaSiteID = MEINMANGA_ID then
+    if Task.Container.MangaSiteID = MEINMANGA_ID then
       Result := GetMeinMangaImageURL
     else
       Result := uBaseUnit.SaveImage(
         FHTTP,
-        manager.container.MangaSiteID,
+        Task.Container.MangaSiteID,
         workURL,
-        manager.container.CurrentWorkingDir,
+        Task.Container.CurrentWorkingDir,
         workFilename,
         savedFilename,
-        manager.container.Manager.retryConnect);
+        Task.Container.Manager.retryConnect);
   end;
   if Terminated then Exit(False);
   if Result then
   begin
-    manager.container.PageLinks[workCounter] := 'D';
+    Task.Container.PageLinks[workCounter] := 'D';
 
-    if Modules.ModuleAvailable(manager.ModuleId, MMAfterImageSaved) then
-      Modules.AfterImageSaved(savedFilename, manager.ModuleId);
+    if Modules.ModuleAvailable(Task.ModuleId, MMAfterImageSaved) then
+      Modules.AfterImageSaved(savedFilename, Task.ModuleId);
   end;
 end;
 
@@ -1042,7 +1042,7 @@ begin
 
   //load advanced config if any
   mt := advancedfile.ReadInteger('DownloadMaxThreadsPerTask',
-    container.DownloadInfo.Website, -1);
+    Container.DownloadInfo.Website, -1);
   if (mt > 0) then
   begin
     if mt > MAX_CONNECTIONPERHOSTLIMIT then
@@ -1054,23 +1054,23 @@ begin
     if Modules.MaxConnectionLimit[ModuleId] > 0 then
       currentMaxThread := Modules.MaxConnectionLimit[ModuleId]
     else
-      currentMaxThread := container.Manager.maxDLThreadsPerTask;
-    if currentMaxThread > container.Manager.maxDLThreadsPerTask then
-      currentMaxThread := container.Manager.maxDLThreadsPerTask;
+      currentMaxThread := Container.Manager.maxDLThreadsPerTask;
+    if currentMaxThread > Container.Manager.maxDLThreadsPerTask then
+      currentMaxThread := Container.Manager.maxDLThreadsPerTask;
   end;
 
-  if container.PageLinks.Count > 0 then
+  if Container.PageLinks.Count > 0 then
   begin
-    s := Trim(container.PageLinks[container.WorkCounter]);
+    s := Trim(Container.PageLinks[Container.WorkCounter]);
     if ((Flag = CS_GETPAGELINK) and (s <> 'W')) or
       ((Flag = CS_DOWNLOAD) and (s = 'D')) then
     begin
-      container.WorkCounter := InterLockedIncrement(container.WorkCounter);
-      container.DownCounter := InterLockedIncrement(container.DownCounter);
-      container.DownloadInfo.Progress :=
-        Format('%d/%d', [container.DownCounter, container.PageNumber]);
+      Container.WorkCounter := InterLockedIncrement(Container.WorkCounter);
+      Container.DownCounter := InterLockedIncrement(Container.DownCounter);
+      Container.DownloadInfo.Progress :=
+        Format('%d/%d', [Container.DownCounter, Container.PageNumber]);
       if Flag = CS_GETPAGELINK then
-        container.CurrentPageNumber := InterLockedIncrement(container.CurrentPageNumber);
+        Container.CurrentPageNumber := InterLockedIncrement(Container.CurrentPageNumber);
       Exit;
     end;
   end;
@@ -1079,28 +1079,28 @@ begin
     while (not Terminated) and (Modules.ActiveConnectionCount[ModuleId] >= currentMaxThread) do
       Sleep(SOCKHEARTBEATRATE)
   else
-    while (not Terminated) and (threads.Count >= currentMaxThread) do
+    while (not Terminated) and (Threads.Count >= currentMaxThread) do
       Sleep(SOCKHEARTBEATRATE);
 
-  if (not Terminated) and (threads.Count < currentMaxThread) then
+  if (not Terminated) and (Threads.Count < currentMaxThread) then
   begin
     LockCreateConnection;
     try
       if Modules.ActiveConnectionCount[ModuleId] >= currentMaxThread then Exit;
       Modules.IncActiveConnectionCount(ModuleId);
-      threads.Add(TDownloadThread.Create);
-      with TDownloadThread(threads.Last) do begin
-        manager := Self;
+      Threads.Add(TDownloadThread.Create);
+      with TDownloadThread(Threads.Last) do begin
+        Task := Self;
         ModuleId := Self.ModuleId;
-        workCounter := container.WorkCounter;
+        workCounter := Container.WorkCounter;
         checkStyle := Flag;
         //load User-Agent from advancedfile
-        AdvanceLoadHTTPConfig(FHTTP, container.DownloadInfo.Website);
+        AdvanceLoadHTTPConfig(FHTTP, Container.DownloadInfo.Website);
         Start;
-        container.WorkCounter := InterLockedIncrement(container.WorkCounter);
+        Container.WorkCounter := InterLockedIncrement(Container.WorkCounter);
       end;
       if Flag = CS_GETPAGELINK then
-        container.CurrentPageNumber := InterLockedIncrement(container.CurrentPageNumber);
+        Container.CurrentPageNumber := InterLockedIncrement(Container.CurrentPageNumber);
     finally
       UnlockCreateConnection;
     end;
@@ -1113,13 +1113,13 @@ procedure TTaskThread.Execute;
   var
     i: Integer;
   begin
-    if container.PageLinks.Count = 0 then
+    if Container.PageLinks.Count = 0 then
       Exit(True);
     Result := False;
-    if container.PageLinks.Count > 0 then
-      for i := 0 to container.PageLinks.Count - 1 do
-        if (Trim(container.PageLinks[i]) = 'W') or
-          (Trim(container.PageLinks[i]) = '') then
+    if Container.PageLinks.Count > 0 then
+      for i := 0 to Container.PageLinks.Count - 1 do
+        if (Trim(Container.PageLinks[i]) = 'W') or
+          (Trim(Container.PageLinks[i]) = '') then
           Exit(True);
   end;
 
@@ -1127,7 +1127,7 @@ procedure TTaskThread.Execute;
   var
     i, c: Integer;
   begin
-    if container.PageLinks.Count > 0 then
+    if Container.PageLinks.Count > 0 then
       Result := True
     else
     begin
@@ -1136,25 +1136,25 @@ procedure TTaskThread.Execute;
     end;
 
     c := 0;
-    for i := 0 to container.PageLinks.Count - 1 do
+    for i := 0 to Container.PageLinks.Count - 1 do
     begin
-      if Trim(container.PageLinks[i]) <> 'D' then
+      if Trim(Container.PageLinks[i]) <> 'D' then
         Inc(c);
     end;
     if c > 0 then begin
       WriteLog_W(Format('%s, checkforfinish failed=%d/%d "%s" > "%s"',
         [Self.ClassName,
         c,
-        container.PageLinks.Count,
-        container.DownloadInfo.Title,
-        container.ChapterName[container.CurrentDownloadChapterPtr]]));
+        Container.PageLinks.Count,
+        Container.DownloadInfo.Title,
+        Container.ChapterName[Container.CurrentDownloadChapterPtr]]));
       Result := False;
     end;
   end;
 
   procedure WaitForThreads;
   begin
-    while (not Terminated) and (threads.Count > 0) do
+    while (not Terminated) and (Threads.Count > 0) do
       Sleep(SOCKHEARTBEATRATE);
   end;
 
@@ -1163,149 +1163,149 @@ var
   s: String;
   DynamicPageLink: Boolean;
 begin
-  ModuleId := container.ModuleId;
-  container.ThreadState := True;
-  container.DownloadInfo.TransferRate := FormatByteSize(container.ReadCount, true);
+  ModuleId := Container.ModuleId;
+  Container.ThreadState := True;
+  Container.DownloadInfo.TransferRate := FormatByteSize(Container.ReadCount, true);
   try
-    if container.ModuleId > -1 then
+    if Container.ModuleId > -1 then
       DynamicPageLink := Modules.Module[ModuleId].DynamicPageLink
     else
       DynamicPageLink := False;
 
-    while container.CurrentDownloadChapterPtr < container.ChapterLinks.Count do
+    while Container.CurrentDownloadChapterPtr < Container.ChapterLinks.Count do
     begin
       WaitForThreads;
       if Terminated then Exit;
 
       //check path
-      container.CurrentWorkingDir := CleanAndExpandDirectory(container.DownloadInfo.SaveTo +
-        container.ChapterName[container.CurrentDownloadChapterPtr]);
-      if not DirectoryExistsUTF8(container.CurrentWorkingDir) then
-        if not ForceDirectoriesUTF8(container.CurrentWorkingDir) then
+      Container.CurrentWorkingDir := CleanAndExpandDirectory(Container.DownloadInfo.SaveTo +
+        Container.ChapterName[Container.CurrentDownloadChapterPtr]);
+      if not DirectoryExistsUTF8(Container.CurrentWorkingDir) then
+        if not ForceDirectoriesUTF8(Container.CurrentWorkingDir) then
         begin
-          container.Status := STATUS_FAILED;
-          container.DownloadInfo.Status := RS_FailedToCreateDir;
+          Container.Status := STATUS_FAILED;
+          Container.DownloadInfo.Status := RS_FailedToCreateDir;
           SyncShowBaloon;
           Exit;
         end;
 
       if ModuleId > -1 then
-        Modules.TaskStart(container, ModuleId);
+        Modules.TaskStart(Container, ModuleId);
 
       // Get page number.
-      if container.PageLinks.Count = 0 then
+      if Container.PageLinks.Count = 0 then
       begin
-        container.PageNumber := 0;
+        Container.PageNumber := 0;
         Flag := CS_GETPAGENUMBER;
-        container.WorkCounter := 0;
-        container.DownCounter := 0;
-        container.DownloadInfo.iProgress := 0;
-        container.DownloadInfo.Progress := '0/0';
-        container.DownloadInfo.Status :=
+        Container.WorkCounter := 0;
+        Container.DownCounter := 0;
+        Container.DownloadInfo.iProgress := 0;
+        Container.DownloadInfo.Progress := '0/0';
+        Container.DownloadInfo.Status :=
           Format('%s (%d/%d [%s])',
           [RS_Preparing,
-          container.CurrentDownloadChapterPtr + 1,
-          container.ChapterLinks.Count,
-          container.ChapterName[container.CurrentDownloadChapterPtr]]);
-        container.Status := STATUS_PREPARE;
+          Container.CurrentDownloadChapterPtr + 1,
+          Container.ChapterLinks.Count,
+          Container.ChapterName[Container.CurrentDownloadChapterPtr]]);
+        Container.Status := STATUS_PREPARE;
         CheckOut;
         WaitForThreads;
         if Terminated then begin
-          container.PageLinks.Clear;
-          container.PageNumber := 0;
+          Container.PageLinks.Clear;
+          Container.PageNumber := 0;
           Exit;
         end;
       end;
 
       //Check file, if exist set mark 'D', otherwise 'W' or 'G' for dynamic image url
-      if container.PageLinks.Count > 0 then
+      if Container.PageLinks.Count > 0 then
       begin
-        for j := 0 to container.PageLinks.Count - 1 do
+        for j := 0 to Container.PageLinks.Count - 1 do
         begin
-          if container.Filenames.Count = container.PageLinks.Count then
-            s := container.CurrentWorkingDir + container.Filenames[j]
+          if Container.Filenames.Count = Container.PageLinks.Count then
+            s := Container.CurrentWorkingDir + Container.Filenames[j]
           else
-            s := container.CurrentWorkingDir + Format('%.3d', [j + 1]);
+            s := Container.CurrentWorkingDir + Format('%.3d', [j + 1]);
 
           if ImageFileExist(s) then
-            container.PageLinks[j] := 'D'
+            Container.PageLinks[j] := 'D'
           else
-          if container.PageLinks[j] = 'D' then
+          if Container.PageLinks[j] = 'D' then
           begin
             if DynamicPageLink then
-              container.PageLinks[j] := 'G'
+              Container.PageLinks[j] := 'G'
             else
-              container.PageLinks[j] := 'W';
+              Container.PageLinks[j] := 'W';
           end;
         end;
       end;
 
       //Get page links
-      if container.PageLinks.Count = 0 then
-        container.PageLinks.Add('W');
-      container.PageNumber := container.PageLinks.Count;
+      if Container.PageLinks.Count = 0 then
+        Container.PageLinks.Add('W');
+      Container.PageNumber := Container.PageLinks.Count;
       if (not DynamicPageLink) and CheckForPrepare then
       begin
         Flag := CS_GETPAGELINK;
-        container.WorkCounter := 0;
-        container.DownCounter := 0;
-        container.DownloadInfo.iProgress := 0;
-        container.DownloadInfo.Progress :=
-          Format('%d/%d', [container.DownCounter, container.PageNumber]);
-        container.DownloadInfo.Status :=
+        Container.WorkCounter := 0;
+        Container.DownCounter := 0;
+        Container.DownloadInfo.iProgress := 0;
+        Container.DownloadInfo.Progress :=
+          Format('%d/%d', [Container.DownCounter, Container.PageNumber]);
+        Container.DownloadInfo.Status :=
           Format('%s (%d/%d [%s])',
           [RS_Preparing,
-          container.CurrentDownloadChapterPtr + 1,
-          container.ChapterLinks.Count,
-          container.ChapterName[container.CurrentDownloadChapterPtr]]);
-        container.Status := STATUS_PREPARE;
-        while container.WorkCounter < container.PageNumber do
+          Container.CurrentDownloadChapterPtr + 1,
+          Container.ChapterLinks.Count,
+          Container.ChapterName[Container.CurrentDownloadChapterPtr]]);
+        Container.Status := STATUS_PREPARE;
+        while Container.WorkCounter < Container.PageNumber do
         begin
           if Terminated then Exit;
           Checkout;
-          container.DownloadInfo.iProgress :=
-            InterLockedIncrement(container.DownloadInfo.iProgress);
+          Container.DownloadInfo.iProgress :=
+            InterLockedIncrement(Container.DownloadInfo.iProgress);
         end;
         WaitForThreads;
         if Terminated then Exit;
 
         //check if pagelink is found. Else set again to 'W'(some script return '')
-        if container.PageLinks.Count > 0 then
+        if Container.PageLinks.Count > 0 then
         begin
-          for j := 0 to container.PageLinks.Count - 1 do
+          for j := 0 to Container.PageLinks.Count - 1 do
           begin
-            if Trim(container.PageLinks[j]) = '' then
-              container.PageLinks[j] := 'W';
+            if Trim(Container.PageLinks[j]) = '' then
+              Container.PageLinks[j] := 'W';
           end;
         end;
       end;
       if Terminated then Exit;
 
       // download pages
-      // If container doesn't have any image, we will skip the loop. Otherwise
+      // If Container doesn't have any image, we will skip the loop. Otherwise
       // download them
-      container.PageNumber := container.PageLinks.Count;
-      if (container.PageLinks.Count > 0) then
+      Container.PageNumber := Container.PageLinks.Count;
+      if (Container.PageLinks.Count > 0) then
       begin
         Flag := CS_DOWNLOAD;
-        container.WorkCounter := 0;
-        container.DownCounter := 0;
-        container.DownloadInfo.iProgress := 0;
-        container.DownloadInfo.Progress :=
-          Format('%d/%d', [container.DownCounter, container.PageNumber]);
-        container.Status := STATUS_DOWNLOAD;
-        container.DownloadInfo.Status :=
+        Container.WorkCounter := 0;
+        Container.DownCounter := 0;
+        Container.DownloadInfo.iProgress := 0;
+        Container.DownloadInfo.Progress :=
+          Format('%d/%d', [Container.DownCounter, Container.PageNumber]);
+        Container.Status := STATUS_DOWNLOAD;
+        Container.DownloadInfo.Status :=
           Format('%s (%d/%d) [%s]',
           [RS_Downloading,
-          container.CurrentDownloadChapterPtr + 1,
-          container.ChapterLinks.Count,
-          container.ChapterName[container.CurrentDownloadChapterPtr]]);
-        while container.WorkCounter < container.PageLinks.Count do
+          Container.CurrentDownloadChapterPtr + 1,
+          Container.ChapterLinks.Count,
+          Container.ChapterName[Container.CurrentDownloadChapterPtr]]);
+        while Container.WorkCounter < Container.PageLinks.Count do
         begin
           if Terminated then Exit;
           Checkout;
-          container.DownloadInfo.iProgress :=
-            InterLockedIncrement(container.DownloadInfo.iProgress);
+          Container.DownloadInfo.iProgress :=
+            InterLockedIncrement(Container.DownloadInfo.iProgress);
         end;
         WaitForThreads;
         if Terminated then Exit;
@@ -1313,54 +1313,54 @@ begin
         //check if all page is downloaded
         if CheckForFinish then
         begin
-          container.Status := STATUS_COMPRESS;
-          container.DownloadInfo.Progress := '';
+          Container.Status := STATUS_COMPRESS;
+          Container.DownloadInfo.Progress := '';
           Compress;
         end
         else
-          container.Status := STATUS_FAILED;
+          Container.Status := STATUS_FAILED;
       end
       else begin
         WriteLog_W(Format('%s, failed download image PageLinks=%d "%s" > "%s"',
           [Self.ClassName,
-          container.PageLinks.Count,
-          container.DownloadInfo.Title,
-          container.ChapterName[container.CurrentDownloadChapterPtr]]));
-        container.Status := STATUS_FAILED;
+          Container.PageLinks.Count,
+          Container.DownloadInfo.Title,
+          Container.ChapterName[Container.CurrentDownloadChapterPtr]]));
+        Container.Status := STATUS_FAILED;
       end;
 
-      if (container.Status = STATUS_FAILED) and
-        (not FindStrLinear(container.FailedChapterLinks,
-        container.ChapterName[container.CurrentDownloadChapterPtr])) then
+      if (Container.Status = STATUS_FAILED) and
+        (not FindStrLinear(Container.FailedChapterLinks,
+        Container.ChapterName[Container.CurrentDownloadChapterPtr])) then
       begin
-        container.FailedChapterName.Add(container.ChapterName[container.CurrentDownloadChapterPtr]);
-        container.FailedChapterLinks.Add(container.ChapterLinks[container.CurrentDownloadChapterPtr]);
+        Container.FailedChapterName.Add(Container.ChapterName[Container.CurrentDownloadChapterPtr]);
+        Container.FailedChapterLinks.Add(Container.ChapterLinks[Container.CurrentDownloadChapterPtr]);
       end;
 
-      container.CurrentPageNumber := 0;
-      container.PageLinks.Clear;
-      container.PageContainerLinks.Clear;
-      container.CurrentDownloadChapterPtr :=
-        InterLockedIncrement(container.CurrentDownloadChapterPtr);
+      Container.CurrentPageNumber := 0;
+      Container.PageLinks.Clear;
+      Container.PageContainerLinks.Clear;
+      Container.CurrentDownloadChapterPtr :=
+        InterLockedIncrement(Container.CurrentDownloadChapterPtr);
     end;
 
-    if container.FailedChapterLinks.Count > 0 then
+    if Container.FailedChapterLinks.Count > 0 then
     begin
-      container.Status := STATUS_FAILED;
-      container.DownloadInfo.Status := RS_FailedTryResumeTask;
-      container.DownloadInfo.Progress := '';
-      container.CurrentDownloadChapterPtr := 0;
+      Container.Status := STATUS_FAILED;
+      Container.DownloadInfo.Status := RS_FailedTryResumeTask;
+      Container.DownloadInfo.Progress := '';
+      Container.CurrentDownloadChapterPtr := 0;
 
-      container.ChapterName.Assign(container.FailedChapterName);
-      container.ChapterLinks.Assign(container.FailedChapterLinks);
-      container.FailedChapterName.Clear;
-      container.FailedChapterLinks.Clear;
+      Container.ChapterName.Assign(Container.FailedChapterName);
+      Container.ChapterLinks.Assign(Container.FailedChapterLinks);
+      Container.FailedChapterName.Clear;
+      Container.FailedChapterLinks.Clear;
     end
     else
     begin
-      container.Status := STATUS_FINISH;
-      container.DownloadInfo.Status := RS_Finish;
-      container.DownloadInfo.Progress := '';
+      Container.Status := STATUS_FINISH;
+      Container.DownloadInfo.Status := RS_Finish;
+      Container.DownloadInfo.Progress := '';
     end;
     Synchronize(SyncShowBaloon);
   except
@@ -1373,27 +1373,27 @@ procedure TTaskThread.DoTerminate;
 var
   i: Integer;
 begin
-  if threads.Count > 0 then
+  if Threads.Count > 0 then
   begin
     LockCreateConnection;
     try
-      for i := 0 to threads.Count - 1 do
-        TDownloadThread(threads[i]).Terminate;
+      for i := 0 to Threads.Count - 1 do
+        TDownloadThread(Threads[i]).Terminate;
     finally
       UnlockCreateConnection;
     end;
-    while threads.Count > 0 do
+    while Threads.Count > 0 do
       Sleep(100);
   end;
   Modules.DecActiveTaskCount(ModuleId);
-  with container do begin
-    container.ReadCount := 0;
+  with Container do begin
+    Container.ReadCount := 0;
     DownloadInfo.TransferRate := '';
     ThreadState := False;
-    Thread := nil;
+    Task := nil;
     Manager.CS_Task.Acquire;
     try
-      Manager.ContainersActiveTask.Remove(container);
+      Manager.ContainersActiveTask.Remove(Container);
     finally
       Manager.CS_Task.Release;
     end;
@@ -1832,10 +1832,10 @@ begin
         DownloadInfo.Status := RS_Downloading;
       end;
       Modules.IncActiveTaskCount(ModuleId);
-      Thread := TTaskThread.Create;
-      Thread.container := TTaskContainer(Containers[taskID]);
-      ContainersActiveTask.Add(Thread.container);
-      Thread.Start;
+      Task := TTaskThread.Create;
+      Task.Container := TTaskContainer(Containers[taskID]);
+      ContainersActiveTask.Add(Task.Container);
+      Task.Start;
     end;
   end;
 end;
@@ -1852,9 +1852,9 @@ begin
     end
     else if ThreadState then
     begin
-      Thread.Terminate;
+      Task.Terminate;
       if isWaitFor then
-        Thread.WaitFor;
+        Task.WaitFor;
     end;
     if isCheckForActive then
       CheckAndActiveTask();
@@ -1898,11 +1898,11 @@ begin
       for i := 0 to Containers.Count - 1 do
         with TTaskContainer(Containers[i]) do
           if ThreadState then
-            Thread.Terminate;
+            Task.Terminate;
       for i := 0 to Containers.Count - 1 do
         with TTaskContainer(Containers[i]) do
           if ThreadState then
-            Thread.WaitFor;
+            Task.WaitFor;
     finally
       isReadyForExit := False;
     end;
@@ -1915,8 +1915,8 @@ begin
   try
     with TTaskContainer(Containers[taskID]) do
       if ThreadState then begin
-        Thread.Terminate;
-        Thread.WaitFor;
+        Task.Terminate;
+        Task.WaitFor;
       end;
     TTaskContainer(Containers[taskID]).Free;
     Containers.Delete(taskID);

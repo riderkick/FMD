@@ -8,7 +8,7 @@
     s := DecodeUrl(FillMangaSiteHost(KIVMANGA_ID, URL) + '/' + IntToStr(workCounter + 1));
     Result := GetPage(TObject(l),
       s,
-      manager.container.manager.retryConnect);
+      Task.Container.manager.retryConnect);
     parse := TStringList.Create;
     Parser := THTMLParser.Create(PChar(l.Text));
     Parser.OnFoundTag := OnTag;
@@ -23,7 +23,7 @@
         begin
           s := WebsiteRoots[KIVMANGA_ID, 1] + KIVMANGA_BROWSER +
             GetVal(parse[i], 'src');
-          manager.container.PageLinks[workCounter] := EncodeURL(s);
+          Task.Container.PageLinks[workCounter] := EncodeURL(s);
           Break;
         end;
     end;

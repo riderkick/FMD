@@ -128,7 +128,7 @@ var
 begin
   Result := False;
   if DownloadThread = nil then Exit;
-  Container := DownloadThread.manager.container;
+  Container := DownloadThread.Task.Container;
   Container.PageLinks.Clear;
   Container.PageContainerLinks.Clear;
   Container.PageNumber := 0;

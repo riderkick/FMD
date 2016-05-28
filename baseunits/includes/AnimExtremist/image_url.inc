@@ -9,7 +9,7 @@
       '.html', '', []) + '-' + IntToStr(workCounter + 1) + '.html');
     Result := GetPage(TObject(l),
       s,
-      manager.container.Manager.retryConnect);
+      Task.Container.Manager.retryConnect);
     parse := TStringList.Create;
     Parser := THTMLParser.Create(PChar(l.Text));
     Parser.OnFoundTag := OnTag;
@@ -23,7 +23,7 @@
         if (Pos('id="photo"', parse[i]) > 0) then
         begin
           s := GetVal(parse[i], 'src');
-          manager.container.pageLinks[workCounter] :=
+          Task.Container.pageLinks[workCounter] :=
             GetVal(parse[i], 'src');
           Break;
         end;

@@ -8,7 +8,7 @@
     s := DecodeUrl(FillMangaSiteHost(MANGASPROJECT_ID, URL) + '/#1');
     Result := GetPage(TObject(l),
       s,
-      manager.container.Manager.retryConnect);
+      Task.Container.Manager.retryConnect);
     parse := TStringList.Create;
     Parser := THTMLParser.Create(PChar(l.Text));
     Parser.OnFoundTag := OnTag;
@@ -18,7 +18,7 @@
 
     if parse.Count > 0 then
     begin
-      manager.container.PageLinks.Clear;
+      Task.Container.PageLinks.Clear;
       for i := 0 to parse.Count - 1 do
       begin
         if Pos('{ path: ', parse[i]) > 0 then
@@ -31,7 +31,7 @@
             for j := 0 to ts.Count - 1 do
             begin
               if Pos('http', ts[j]) > 0 then
-                manager.container.PageLinks.Add(ts[j]);
+                Task.Container.PageLinks.Add(ts[j]);
             end;
           finally
             ts.Free;

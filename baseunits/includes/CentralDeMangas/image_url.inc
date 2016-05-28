@@ -9,7 +9,7 @@
     // + IntToStr(workCounter+1));
     Result := GetPage(TObject(l),
       s,
-      manager.container.Manager.retryConnect);
+      Task.Container.Manager.retryConnect);
     parse := TStringList.Create;
     Parser := THTMLParser.Create(PChar(l.Text));
     Parser.OnFoundTag := OnTag;
@@ -18,7 +18,7 @@
     Parser.Free;
     if parse.Count > 0 then
     begin
-      manager.container.PageLinks.Clear;
+      Task.Container.PageLinks.Clear;
       for i := 0 to parse.Count - 1 do
       begin
         if Pos('var pages = ', parse[i]) > 0 then
@@ -26,7 +26,7 @@
           s := StringReplace(parse[i], '\/', '/', [rfReplaceAll]);
           repeat
             j := Pos('http://', s);
-            manager.container.PageLinks.Add(EncodeURL(GetString(s, '"', '"')));
+            Task.Container.PageLinks.Add(EncodeURL(GetString(s, '"', '"')));
             s := StringReplace(s, '"', '', []);
             s := StringReplace(s, '"', '', []);
             Delete(s, j, 10);

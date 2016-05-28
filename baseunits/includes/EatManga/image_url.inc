@@ -6,7 +6,7 @@
     l := TStringList.Create;
     Result := GetPage(TObject(l),
       DecodeUrl(FillMangaSiteHost(EATMANGA_ID, URL) + 'page-' + IntToStr(workCounter + 1)),
-      manager.container.Manager.retryConnect);
+      Task.Container.Manager.retryConnect);
 
     parse := TStringList.Create;
     try
@@ -25,7 +25,7 @@
           if (GetTagName(parse[i]) = 'img') and
             (GetVal(parse[i], 'id') = 'eatmanga_image') then
           begin
-            manager.container.PageLinks[workCounter] := GetVal(parse[i], 'src');
+            Task.Container.PageLinks[workCounter] := GetVal(parse[i], 'src');
             Break;
           end;
       end;

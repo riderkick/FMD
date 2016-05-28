@@ -10,9 +10,9 @@
     s := DecodeUrl(URL);
     if RightStr(s, 7) = '&page=1' then
       SetLength(s, Length(s) - 7);
-    s := FillMangaSiteHost(manager.container.MangaSiteID, s);
+    s := FillMangaSiteHost(Task.Container.MangaSiteID, s);
 
-    Result := GetPage(TObject(l), s, manager.container.Manager.retryConnect);
+    Result := GetPage(TObject(l), s, Task.container.Manager.retryConnect);
 
     parse := TStringList.Create;
     Parser := THTMLParser.Create(PChar(l.Text));
@@ -29,8 +29,8 @@
         for i := 0 to parse.Count - 1 do
           if (Pos('<img', parse[i]) <> 0) and (Pos('this.onerror=null', parse[i]) <> 0) then
           begin
-            Inc(manager.container.PageNumber);
-            manager.container.PageLinks.Add(regx.Replace(parse[i], '$1', True));
+            Inc(Task.Container.PageNumber);
+            Task.Container.PageLinks.Add(regx.Replace(parse[i], '$1', True));
           end;
       finally
         regx.Free;

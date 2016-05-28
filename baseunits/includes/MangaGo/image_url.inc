@@ -15,7 +15,7 @@
       s := s + '/';
     s := FillMangaSiteHost(MANGAGO_ID, s);
     Result := GetPage(TObject(l), s + IntToStr(workCounter + 1) + '/',
-      manager.container.Manager.retryConnect);
+      Task.Container.Manager.retryConnect);
 
     if Self.Terminated then
     begin
@@ -38,7 +38,7 @@
         if (Pos('imgReady(''', parse[i]) > 0) then
         begin
           regx.Expression := '^.*imgReady\(''([^'']*)''.*$';
-          manager.container.PageLinks[workCounter] := regx.Replace(parse[i], '$1', True);
+          Task.Container.PageLinks[workCounter] := regx.Replace(parse[i], '$1', True);
           Break;
         end;
     end;

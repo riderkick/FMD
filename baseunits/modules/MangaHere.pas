@@ -109,7 +109,7 @@ var
 begin
   Result := False;
   if DownloadThread = nil then Exit;
-  Container := DownloadThread.manager.container;
+  Container := DownloadThread.Task.Container;
   with Container do begin
     Source := TStringList.Create;
     try
@@ -141,7 +141,7 @@ var
 begin
   Result := False;
   if DownloadThread = nil then Exit;
-  with DownloadThread.manager.container do begin
+  with DownloadThread.Task.Container do begin
     Source := TStringList.Create;
     try
       rurl := AppendURLDelim(FillHost(Module.RootURL, AURL));

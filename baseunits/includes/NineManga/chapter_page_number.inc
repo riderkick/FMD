@@ -8,8 +8,8 @@
     parse := TStringList.Create;
 
     Result := GetPage(TObject(l),
-      FillMangaSiteHost(manager.container.MangaSiteID, URL),
-      manager.container.Manager.retryConnect);
+      FillMangaSiteHost(Task.Container.MangaSiteID, URL),
+      Task.Container.Manager.retryConnect);
 
     Parser := THTMLParser.Create(PChar(l.Text));
     Parser.OnFoundTag := OnTag;
@@ -18,7 +18,7 @@
     Parser.Free;
     if parse.Count > 0 then
     begin
-      manager.container.PageNumber := 0;
+      Task.Container.PageNumber := 0;
       for i := 0 to parse.Count - 1 do
       begin
         if (Pos('<select', parse[i]) > 0) and
@@ -31,7 +31,7 @@
           Break;
         end;
         if isExtractPageNumber and (Pos('<option', parse[i]) > 0) then
-          Inc(manager.container.PageNumber);
+          Inc(Task.Container.PageNumber);
       end;
     end;
     parse.Free;

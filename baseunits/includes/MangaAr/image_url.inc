@@ -8,7 +8,7 @@
     s := FillMangaSiteHost(MANGAAR_ID, URL) + '/1';
     Result := GetPage(TObject(l),
       s,
-      manager.container.Manager.retryConnect);
+      Task.Container.Manager.retryConnect);
 
     parse := TStringList.Create;
     Parser := THTMLParser.Create(PChar(l.Text));
@@ -17,7 +17,7 @@
     Parser.Exec;
     Parser.Free;
 
-    manager.container.PageLinks.Clear;
+    Task.Container.PageLinks.Clear;
     if parse.Count > 0 then
     begin
       for i := 0 to parse.Count - 1 do
@@ -35,7 +35,7 @@
             begin
               s := ts[j + 1];
               s := 'http' + GetString(s, 'http', '?w='); //original resolution
-              manager.container.PageLinks.Add(s);
+              Task.Container.PageLinks.Add(s);
             end;
           end;
           ts.Free;

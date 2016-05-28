@@ -152,7 +152,7 @@ var
 begin
   Result := False;
   if DownloadThread = nil then Exit;
-  with DownloadThread.FHTTP, DownloadThread.manager.container do begin
+  with DownloadThread.FHTTP, DownloadThread.Task.Container do begin
     PageLinks.Clear;
     PageContainerLinks.Clear;
     PageNumber := 0;
@@ -190,7 +190,7 @@ function GetImageURL(const DownloadThread: TDownloadThread;
 begin
   Result := False;
   if DownloadThread = nil then Exit;
-  with DownloadThread.manager.container, DownloadThread.FHTTP do begin
+  with DownloadThread.Task.Container, DownloadThread.FHTTP do begin
     Headers.Values['Referer'] := ' ' + AURL;
     if DownloadThread.workCounter > PageContainerLinks.Count then Exit;
     if GETWithCookie(DownloadThread.FHTTP, PageContainerLinks[DownloadThread.workCounter], Module) then

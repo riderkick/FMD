@@ -6,10 +6,10 @@
 
   begin
     totalPages := 0;
-    manager.container.PageLinks.Clear;
+    Task.Container.PageLinks.Clear;
     l := TStringList.Create;
     s := FillMangaSiteHost(FAKKU_ID, URL);
-    Result := GetPage(TObject(l), s, manager.container.Manager.retryConnect);
+    Result := GetPage(TObject(l), s, Task.Container.Manager.retryConnect);
 
     if l.Count > 0 then
     begin
@@ -56,7 +56,7 @@
           s := IntToStr(i);
           while Length(s) < 3 do
             s := '0' + s;
-          manager.container.PageLinks.Add(imgURL + s + imgExt);
+          Task.Container.PageLinks.Add(imgURL + s + imgExt);
         end;
       end;
     end;

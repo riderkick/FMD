@@ -10,7 +10,7 @@
 
     Result := GetPage(TObject(l),
       s,
-      manager.container.Manager.retryConnect);
+      Task.Container.Manager.retryConnect);
 
     //check confirm
     if l.Count > 0 then
@@ -37,7 +37,7 @@
         l.Clear;
         Result := GetPage(TObject(l),
           s,
-          manager.container.Manager.retryConnect);
+          Task.Container.Manager.retryConnect);
       end;
     end;
 
@@ -53,7 +53,7 @@
         if (Pos('<img ', parse[i]) > 0) and
           (Pos('id="img_curr"', parse[i]) > 0) then
         begin
-          manager.container.PageLinks[workCounter] := GetVal(parse[i], 'src');
+          Task.Container.PageLinks[workCounter] := GetVal(parse[i], 'src');
           Break;
         end;
     end;

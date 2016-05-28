@@ -105,7 +105,7 @@ var
 begin
   Result := False;
   if DownloadThread = nil then Exit;
-  with DownloadThread.FHTTP, DownloadThread.manager.container do begin
+  with DownloadThread.FHTTP, DownloadThread.Task.Container do begin
     PageLinks.Clear;
     PageNumber := 0;
     Cookies.Values['ReadType'] := '2';
@@ -137,7 +137,7 @@ var
 begin
   Result := False;
   if DownloadThread = nil then Exit;
-  with DownloadThread.manager.container, DownloadThread.FHTTP do begin
+  with DownloadThread.Task.Container, DownloadThread.FHTTP do begin
     s := AppendURLDelim(AURL) + IncStr(DownloadThread.workCounter) + '/';
     if GET(FillHost(Module.RootURL, s)) then begin
       Result := True;

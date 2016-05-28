@@ -117,7 +117,7 @@ var
 begin
   Result := False;
   if DownloadThread = nil then Exit;
-  with DownloadThread.FHTTP, DownloadThread.manager.container do
+  with DownloadThread.FHTTP, DownloadThread.Task.Container do
   begin
     PageLinks.Clear;
     PageNumber := 0;
@@ -141,7 +141,7 @@ function GetImageURL(const DownloadThread: TDownloadThread;
 begin
   Result := False;
   if DownloadThread = nil then Exit;
-  with DownloadThread.manager.container, DownloadThread.FHTTP do
+  with DownloadThread.Task.Container, DownloadThread.FHTTP do
   begin
     if GET(FillHost(Module.RootURL, AURL) + IncStr(DownloadThread.workCounter)) then
     begin

@@ -4,13 +4,13 @@
     s, surl: String;
     l: TStringList;
   begin
-    surl := manager.container.PageContainerLinks[workCounter];
+    surl := Task.Container.PageContainerLinks[workCounter];
     if not ((Pos('imagetwist.', surl) <> 0) or
       (Pos('imgmega.', surl) <> 0) or
       (Pos('imgchili.', surl) <> 0)) then
       Exit(False);
     l := TStringList.Create;
-    Result := GetPage(TObject(l), DecodeUrl(surl), manager.container.manager.retryConnect);
+    Result := GetPage(TObject(l), DecodeUrl(surl), Task.Container.manager.retryConnect);
 
     //broken source
     if l.Count > 0 then
@@ -43,7 +43,7 @@
         for i := 0 to parse.Count - 1 do
           if (Pos('<img', parse[i]) <> 0) and (Pos('class="pic', parse[i]) <> 0) then
           begin
-            manager.container.PageLinks[workCounter] := GetVal(parse[i], 'src');
+            Task.Container.PageLinks[workCounter] := GetVal(parse[i], 'src');
             Break;
           end;
       end
@@ -54,7 +54,7 @@
         for i := 0 to parse.Count - 1 do
           if (Pos('<img', parse[i]) <> 0) and (Pos('id="show_image', parse[i]) <> 0) then
           begin
-            manager.container.PageLinks[workCounter] := GetVal(parse[i], 'src');
+            Task.Container.PageLinks[workCounter] := GetVal(parse[i], 'src');
             Break;
           end;
       end;

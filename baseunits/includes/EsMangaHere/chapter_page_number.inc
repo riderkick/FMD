@@ -7,7 +7,7 @@
     parse := TStringList.Create;
     Result := GetPage(TObject(l),
       FillMangaSiteHost(ESMANGAHERE_ID, URL),
-      manager.container.Manager.retryConnect);
+      Task.Container.Manager.retryConnect);
     Parser := THTMLParser.Create(PChar(l.Text));
     Parser.OnFoundTag := OnTag;
     Parser.OnFoundText := OnText;
@@ -15,12 +15,12 @@
     Parser.Free;
     if parse.Count > 0 then
     begin
-      manager.container.PageNumber := 0;
+      Task.Container.PageNumber := 0;
       for i := parse.Count - 1 downto 4 do
       begin
         if Pos('</select>', parse[i]) > 0 then
         begin
-          manager.container.PageNumber :=
+          Task.Container.PageNumber :=
             StrToInt(TrimLeft(TrimRight(parse[i - 3])));
           Break;
         end;

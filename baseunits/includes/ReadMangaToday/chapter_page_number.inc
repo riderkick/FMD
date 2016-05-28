@@ -9,17 +9,17 @@
     s := DecodeUrl(FillMangaSiteHost(READMANGATODAY_ID, URL)+'/all-pages');
     Result := GetPage(TObject(l),
       s,
-      manager.container.manager.retryConnect);
+      Task.Container.manager.retryConnect);
 
     ParseHTML(l.Text, parse);
     if parse.Count > 0 then
     begin
-      manager.container.PageLinks.Clear;
+      Task.Container.PageLinks.Clear;
       for i := 0 to parse.Count-1 do
         if (GetTagName(parse[i]) = 'img') and
           (Pos('img-responsive-', parse[i]) <> 0) then
-          manager.container.PageLinks.Add(GetVal(parse[i], 'src'));
-      manager.container.PageNumber := manager.container.PageLinks.Count;
+          Task.Container.PageLinks.Add(GetVal(parse[i], 'src'));
+      Task.Container.PageNumber := Task.Container.PageLinks.Count;
     end;
     parse.Free;
     l.Free;

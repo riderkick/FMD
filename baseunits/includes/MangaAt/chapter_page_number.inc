@@ -10,7 +10,7 @@
     s := DecodeUrl(FillMangaSiteHost(MANGAAT_ID, URL + '/1/'));
     Result := GetPage(TObject(l),
       s,
-      manager.container.manager.retryConnect);
+      Task.Container.manager.retryConnect);
 
     Parser := THTMLParser.Create(l.Text);
     try
@@ -23,7 +23,7 @@
 
     if parse.Count > 0 then
     begin
-      manager.container.PageNumber := 0;
+      Task.Container.PageNumber := 0;
       for i := 0 to parse.Count - 1 do
       begin
         if (GetTagName(parse[i]) = 'a') and (GetVal(parse[i], 'class') = 'active') then
@@ -32,7 +32,7 @@
           if GetVal(parse[i], 'class') = 'chapter' then
             Break
           else
-            Inc(manager.container.PageNumber);
+            Inc(Task.Container.PageNumber);
       end;
     end;
     parse.Free;

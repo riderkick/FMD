@@ -8,7 +8,7 @@
 
     Result := GetPage(TObject(l),
       DecodeUrl(FillMangaSiteHost(DYNASTYSCANS_ID, URL)),
-      manager.container.manager.retryConnect);
+      Task.Container.manager.retryConnect);
 
     imgs_ := '';
     if l.Count > 0 then
@@ -24,7 +24,7 @@
     end;
     l.Free;
 
-    with manager.container do
+    with Task.Container do
     begin
       if imgs_ <> '' then
       begin

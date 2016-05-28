@@ -8,7 +8,7 @@
     s := DecodeUrl(FillMangaSiteHost(HUGEMANGA_ID, URL) + '/' + IntToStr(workCounter + 1));
     Result := GetPage(TObject(l),
       s,
-      manager.container.manager.retryConnect);
+      Task.Container.manager.retryConnect);
     parse := TStringList.Create;
     Parser := THTMLParser.Create(PChar(l.Text));
     Parser.OnFoundTag := OnTag;
@@ -21,7 +21,7 @@
       for i := 0 to parse.Count - 1 do
         if (Pos('class="picture"', parse[i]) > 0) then
         begin
-          manager.container.PageLinks[workCounter] :=
+          Task.Container.PageLinks[workCounter] :=
             EncodeURL(WebsiteRoots[HUGEMANGA_ID, 1] + HUGEMANGA_BROWSER +
             GetVal(parse[i], 'src'));
           Break;

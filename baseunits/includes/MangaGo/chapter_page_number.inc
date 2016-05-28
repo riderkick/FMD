@@ -8,7 +8,7 @@
     l := TStringList.Create;
     parse := TStringList.Create;
     s := FillMangaSiteHost(MANGAGO_ID, URL);
-    Result := GetPage(TObject(l), s, manager.container.Manager.retryConnect);
+    Result := GetPage(TObject(l), s, Task.Container.Manager.retryConnect);
     Parser := THTMLParser.Create(PChar(l.Text));
     Parser.OnFoundTag := OnTag;
     Parser.OnFoundText := OnText;
@@ -16,13 +16,13 @@
     Parser.Free;
     if parse.Count > 0 then
     begin
-      manager.container.PageNumber := 0;
+      Task.Container.PageNumber := 0;
       for i := 0 to parse.Count - 1 do
         if Pos('total_pages=', parse[i]) > 0 then
         begin
           regx := TRegExpr.Create;
           regx.Expression := '^.*total_pages=(\d+)\b.*$';
-          manager.container.PageNumber :=
+          Task.container.PageNumber :=
             StrToIntDef(regx.Replace(parse[i], '$1', True), 0);
           regx.Free;
           Break;

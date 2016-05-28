@@ -7,7 +7,7 @@
     parse := TStringList.Create;
     Result := GetPage(TObject(l),
       FillMangaSiteHost(MANGAINN_ID, URL),
-      manager.container.Manager.retryConnect);
+      Task.Container.Manager.retryConnect);
     Parser := THTMLParser.Create(PChar(l.Text));
     Parser.OnFoundTag := OnTag;
     Parser.OnFoundText := OnText;
@@ -19,9 +19,9 @@
         if Pos('</select>', parse[i]) <> 0 then
         begin
           try
-            manager.container.PageNumber := StrToInt(Trim(parse[i - 3]));
+            Task.Container.PageNumber := StrToInt(Trim(parse[i - 3]));
           except
-            manager.container.PageNumber := 0;
+            Task.Container.PageNumber := 0;
           end;
           Break;
         end;

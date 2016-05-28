@@ -5,11 +5,11 @@
     s: String;
     isExtractPage: Boolean = False;
   begin
-    manager.container.PageNumber := 0;
+    Task.Container.PageNumber := 0;
     l := TStringList.Create;
     parse := TStringList.Create;
     s := FillMangaSiteHost(MANGAOKU_ID, URL);
-    Result := GetPage(TObject(l), s, manager.container.Manager.retryConnect);
+    Result := GetPage(TObject(l), s, Task.Container.Manager.retryConnect);
 
     Parser := THTMLParser.Create(PChar(l.Text));
     Parser.OnFoundTag := OnTag;
@@ -29,7 +29,7 @@
         end;
         if isExtractPage and (Pos('<option', parse[i]) > 0) then
         begin
-          Inc(manager.container.PageNumber);
+          Inc(Task.Container.PageNumber);
         end;
       end;
     end;

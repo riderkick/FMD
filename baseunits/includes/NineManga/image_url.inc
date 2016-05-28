@@ -5,14 +5,14 @@
     l: TStringList;
   begin
     l := TStringList.Create;
-    s := FillMangaSiteHost(manager.container.MangaSiteID, URL);
+    s := FillMangaSiteHost(Task.Container.MangaSiteID, URL);
     s := StringReplace(s, '.html', '', []);
     s := StringReplace(s, '.htm', '', []);
     s := s + '-' + IntToStr(workCounter + 1) + '.html';
 
     Result := GetPage(TObject(l),
       s,
-      manager.container.Manager.retryConnect);
+      Task.container.Manager.retryConnect);
     if Self.Terminated then
     begin
       l.Free;
@@ -32,7 +32,7 @@
         if (Pos('<img', parse[i]) > 0) and
           (Pos('class="manga_pic', parse[i]) > 0) then
         begin
-          manager.container.PageLinks[workCounter] :=
+          Task.Container.PageLinks[workCounter] :=
             GetVal(parse[i], 'src');
           Break;
         end;

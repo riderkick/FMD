@@ -103,7 +103,7 @@ var
 begin
   Result := False;
   if DownloadThread = nil then Exit;
-  with DownloadThread.FHTTP, DownloadThread.manager.container do begin
+  with DownloadThread.FHTTP, DownloadThread.Task.Container do begin
     PageLinks.Clear;
     PageNumber := 0;
     if GET(FillHost(Module.RootURL, AURL)) then begin
@@ -130,7 +130,7 @@ function BeforeDownloadImage(const DownloadThread: TDownloadThread;
 begin
   Result := False;
   if DownloadThread = nil then Exit;
-  with DownloadThread.manager.container do
+  with DownloadThread.Task.Container do
     if CurrentDownloadChapterPtr < ChapterLinks.Count then begin
       DownloadThread.FHTTP.Headers.Values['Referer'] :=
         ' ' + FillHost(Module.RootURL, ChapterLinks[CurrentDownloadChapterPtr]);

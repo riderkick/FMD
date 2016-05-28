@@ -15,16 +15,16 @@
       RepeatGet := False;
       l.Clear;
       parse.Clear;
-      Result := GetPage(TObject(l), s, manager.container.Manager.retryConnect);
+      Result := GetPage(TObject(l), s, Task.Container.Manager.retryConnect);
       Parser := THTMLParser.Create(PChar(l.Text));
       Parser.OnFoundTag := OnTag;
       Parser.OnFoundText := OnText;
       Parser.Exec;
       Parser.Free;
 
-      manager.container.PageNumber := 0;
-      manager.container.PageLinks.Clear;
-      manager.container.PageContainerLinks.Clear;
+      Task.Container.PageNumber := 0;
+      Task.Container.PageLinks.Clear;
+      Task.Container.PageContainerLinks.Clear;
       if parse.Count > 0 then
       begin
         regx := TRegExpr.Create;
@@ -42,28 +42,28 @@
               ((Pos('target="_blank', parse[i]) <> 0) or
                (Pos('rel="nofollow', parse[i]) <> 0)) then
             begin
-              Inc(manager.container.PageNumber);
+              Inc(Task.Container.PageNumber);
               s := GetVal(parse[i], 'href');
               if (Pos('<img', parse[i + 1]) <> 0) and
                 (Pos('/upload/small/', parse[i + 1]) <> 0) then
               begin
                 s := GetVal(parse[i + 1], 'src');
                 s := StringReplace(s, '/small/', '/big/', [rfIgnoreCase]);
-                manager.container.PageLinks.Add(s);
-                manager.container.PageContainerLinks.Add('W');
+                Task.Container.PageLinks.Add(s);
+                Task.Container.PageContainerLinks.Add('W');
               end
               else if (Pos('imagetwist.', s) <> 0) or
                 (Pos('imgmega.', s) <> 0) or
                 (Pos('imgchili.', s) <> 0) then
               begin
-                manager.container.PageContainerLinks.Add(s);
-                manager.container.PageLinks.Add('W');
+                Task.Container.PageContainerLinks.Add(s);
+                Task.Container.PageLinks.Add('W');
               end
               else if regx.Exec(s) then
               begin
                 s := regx.Replace(s, '$1/dlimg.php?id=$2', True);
-                manager.container.PageLinks.Add(s);
-                manager.container.PageContainerLinks.Add('W');
+                Task.Container.PageLinks.Add(s);
+                Task.Container.PageContainerLinks.Add('W');
               end
               else if (Pos('/category/', s) = 0) and
                 ((Pos(WebsiteRoots[PORNCOMIX_ID, 1], s) <> 0) or
@@ -82,7 +82,7 @@
                 Break;
               end
               else
-                Dec(manager.container.PageNumber);
+                Dec(Task.Container.PageNumber);
             end;
           end;
         finally

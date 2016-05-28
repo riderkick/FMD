@@ -4,11 +4,11 @@
     l: TStringList;
     isPage: Boolean = False;
   begin
-    manager.container.PageNumber := 0;
+    Task.Container.PageNumber := 0;
     l := TStringList.Create;
     Result := GetPage(TObject(l), FillMangaSiteHost(ANIMEA_ID,
       StringReplace(URL, '.html', '', [])) +
-      '.html', manager.container.Manager.retryConnect);
+      '.html', Task.Container.Manager.retryConnect);
 
     parse := TStringList.Create;
     Parser := THTMLParser.Create(PChar(l.Text));
@@ -30,7 +30,7 @@
           Break;
         end;
         if isPage and (Pos('<option', parse[i]) > 0) then
-          Inc(manager.container.PageNumber);
+          Inc(Task.Container.PageNumber);
       end;
     end;
     parse.Free;

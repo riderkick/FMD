@@ -9,7 +9,7 @@
     s := FillMangaSiteHost(MANGAAR_ID, URL) + '/1';
     Result := GetPage(TObject(l),
       s,
-      manager.container.manager.retryConnect);
+      Task.Container.manager.retryConnect);
 
     if l.Count > 0 then
      try
@@ -23,9 +23,9 @@
          end;
        if s <> '' then
        begin
-         manager.container.PageLinks.Clear;
-         ParseJSONArray(s, 'url', manager.container.PageLinks);
-         manager.container.PageNumber := manager.container.PageLinks.Count;
+         Task.Container.PageLinks.Clear;
+         ParseJSONArray(s, 'url', Task.Container.PageLinks);
+         Task.Container.PageNumber := Task.Container.PageLinks.Count;
        end;
      finally
        parse.Free;

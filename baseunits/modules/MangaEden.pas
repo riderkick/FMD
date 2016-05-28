@@ -108,7 +108,7 @@ var
 begin
   Result := False;
   if DownloadThread = nil then Exit;
-  with DownloadThread.FHTTP, DownloadThread.manager.container do begin
+  with DownloadThread.FHTTP, DownloadThread.Task.Container do begin
     PageLinks.Clear;
     PageNumber := 0;
     if GET(MaybeFillHost(Module.RootURL, AURL)) then begin
@@ -162,7 +162,7 @@ begin
   s := RemoveURLDelim(AURL);
   if RightStr(s, 2) = '/1' then
     SetLength(s, Length(s) - 1);
-  with DownloadThread.manager.container, DownloadThread.FHTTP do begin
+  with DownloadThread.Task.Container, DownloadThread.FHTTP do begin
     s := AppendURLDelim(s) + IncStr(DownloadThread.workCounter) + '/';
     if GET(FillHost(Module.RootURL, s)) then begin
       Result := True;

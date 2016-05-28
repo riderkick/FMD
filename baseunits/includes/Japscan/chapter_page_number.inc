@@ -13,7 +13,7 @@
       s := ReplaceRegExpr('/\d+\.html?$', s, '', False);
     Result := GetPage(TObject(l),
       s,
-      manager.container.manager.retryConnect);
+      Task.Container.manager.retryConnect);
 
     CleanHTMLComments(l);
     Parser := THTMLParser.Create(PChar(l.Text));
@@ -22,7 +22,7 @@
     Parser.Exec;
     Parser.Free;
 
-    manager.container.PageNumber := 0;
+    Task.Container.PageNumber := 0;
     if parse.Count > 0 then
     begin
       regx := TRegExpr.Create;
@@ -42,8 +42,8 @@
           begin
             s := GetVal(parse[i], 'href');
             s := regx.Replace(s, '$1', True);
-            if manager.container.PageNumber < StrToIntDef(s, 0) then
-              manager.container.PageNumber := StrToIntDef(s, 0);
+            if Task.Container.PageNumber < StrToIntDef(s, 0) then
+              Task.Container.PageNumber := StrToIntDef(s, 0);
           end;
         end;
       finally

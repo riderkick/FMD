@@ -11,7 +11,7 @@
       SetLength(s, Length(s) - 2);
     Result := GetPage(TObject(l),
       FillMangaSiteHost(MANGAPARK_ID, s),
-      manager.container.Manager.retryConnect);
+      Task.Container.Manager.retryConnect);
     Parser := THTMLParser.Create(PChar(l.Text));
     Parser.OnFoundTag := OnTag;
     Parser.OnFoundText := OnText;
@@ -21,8 +21,8 @@
       for i := 0 to parse.Count - 1 do
         if (Pos('<img', parse[i]) <> 0) and (Pos('id="img-', parse[i]) <> 0) then
         begin
-          Inc(manager.container.PageNumber);
-          manager.container.PageLinks.Add(GetVal(parse[i], 'src'));
+          Inc(Task.Container.PageNumber);
+          Task.Container.PageLinks.Add(GetVal(parse[i], 'src'));
         end;
     parse.Free;
     l.Free;

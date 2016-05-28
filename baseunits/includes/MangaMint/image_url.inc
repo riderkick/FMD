@@ -13,7 +13,7 @@
        s := s + '?page=' + IntToStr(workCounter);
       Result := GetPage(TObject(l),
         s,
-        manager.container.Manager.retryConnect);
+        Task.Container.Manager.retryConnect);
 
       Parser := THTMLParser.Create(PChar(l.Text));
       try
@@ -33,7 +33,7 @@
           begin
             if Pos('src =', parse[i]) > 0 then
               parse[i] := StringReplace(parse[i], 'src =', 'src=', []);
-            manager.container.PageLinks[workCounter] := GetVal(parse[i], 'src');
+            Task.Container.PageLinks[workCounter] := GetVal(parse[i], 'src');
             Break;
           end;
         end;

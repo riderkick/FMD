@@ -111,7 +111,7 @@ var
 begin
   Result := False;
   if DownloadThread = nil then Exit;
-  with DownloadThread.FHTTP, DownloadThread.manager.container do begin
+  with DownloadThread.FHTTP, DownloadThread.Task.Container do begin
     s := RemoveURLDelim(ChapterLinks[CurrentDownloadChapterPtr]);
     with TRegExpr.Create do
       try
@@ -155,7 +155,7 @@ var
 begin
   Result := False;
   if DownloadThread = nil then Exit;
-  with DownloadThread.manager.container, DownloadThread.FHTTP do begin
+  with DownloadThread.Task.Container, DownloadThread.FHTTP do begin
     if GET(FillHost(Module.RootURL, AURL) + '/' + IncStr(DownloadThread.WorkCounter)) then begin
       Result := True;
       with TXQueryEngineHTML.Create(Document) do
@@ -175,7 +175,7 @@ function BeforeDownloadImage(const DownloadThread: TDownloadThread;
 begin
   Result := False;
   if DownloadThread = nil then Exit;
-  with DownloadThread.manager.container do
+  with DownloadThread.Task.Container do
     if CurrentDownloadChapterPtr < ChapterLinks.Count then begin
       DownloadThread.FHTTP.Headers.Values['Referer'] :=
         ' ' + FillHost(Module.RootURL, ChapterLinks[CurrentDownloadChapterPtr]);

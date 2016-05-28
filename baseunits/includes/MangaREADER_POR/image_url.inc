@@ -8,7 +8,7 @@
     s := DecodeUrl(FillMangaSiteHost(MANGAREADER_POR_ID, URL) + '/#1');
     Result := GetPage(TObject(l),
       s,
-      manager.container.Manager.retryConnect);
+      Task.Container.Manager.retryConnect);
     parse := TStringList.Create;
     Parser := THTMLParser.Create(PChar(l.Text));
     Parser.OnFoundTag := OnTag;
@@ -18,7 +18,7 @@
 
     if parse.Count > 0 then
     begin
-      manager.container.pageLinks.Clear;
+      Task.Container.pageLinks.Clear;
       for i := 0 to parse.Count - 1 do
       begin
         if Pos('function Proxima()', parse[i]) > 0 then
@@ -26,11 +26,11 @@
           //s:= GetString(parse[i], 'new Array("",', 'function Proxima');
           s := GetString(parse[i], 'new Array("",', ');');
           s := StringReplace(s, sLineBreak, '', [rfReplaceAll]);
-          manager.container.PageLinks.DelimitedText := s;
+          Task.Container.PageLinks.DelimitedText := s;
           Break;
           //repeat
           //  j:= Pos('http://', s);
-          //  manager.container.PageLinks.Add(EncodeURL(GetString(s, '"', '"')));
+          //  Task.Container.PageLinks.Add(EncodeURL(GetString(s, '"', '"')));
           //  s:= StringReplace(s, '"', '', []);
           //  s:= StringReplace(s, '"', '', []);
           //  Delete(s, j, 7);
