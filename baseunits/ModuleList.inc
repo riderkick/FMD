@@ -38,4 +38,5 @@ uses
   WebtoonTr,
   MangaDenizi,
   MangaSaurus,
-  GMangaMe;
+  GMangaMe,
+  SekaiManga;
