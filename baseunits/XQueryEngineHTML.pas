@@ -29,12 +29,16 @@ type
       const Tree: TTreeNode = nil): String; overload;
     function XPathStringAll(const Expression: String; const Exc: array of String;
       const Separator: String = ', '; const Tree: TTreeNode = nil): String; overload;
+    procedure XPathStringAll(const Expression: String; const TheStrings: TStrings;
+      const Tree: TTreeNode = nil); overload;
     function CSS(const Expression: String; const Tree: TTreeNode = nil): IXQValue; inline;
     function CSSString(const Expression: String; const Tree: TTreeNode = nil): String; inline;
     function CSSStringAll(const Expression: String; const Separator: String = ', ';
       const Tree: TTreeNode = nil): String; overload;
     function CSSStringAll(const Expression: String; const Exc: array of String;
       const Separator: String = ', '; const Tree: TTreeNode = nil): String; overload;
+    procedure CSSStringAll(const Expression: String; const TheStrings: TStrings;
+      const Tree: TTreeNode = nil); overload;
     property Engine: TXQueryEngine read FEngine;
     property TreeParser: TTreeParser read FTreeParser;
   end;
@@ -42,8 +46,8 @@ type
   IXQValue = xquery.IXQValue;
   TTreeNode = simplehtmltreeparser.TTreeNode;
 
-  function XPathString(const Expression, HTMLString: String): String; overload;
-  function XPathString(const Expression: String; const HTMLStream: TStream): String; overload;
+function XPathString(const Expression, HTMLString: String): String; overload;
+function XPathString(const Expression: String; const HTMLStream: TStream): String; overload;
 
 implementation
 
@@ -194,6 +198,15 @@ begin
       AddSeparatorString(Result, v.toString, Separator);
 end;
 
+procedure TXQueryEngineHTML.XPathStringAll(const Expression: String;
+  const TheStrings: TStrings; const Tree: TTreeNode);
+var
+  v: IXQValue;
+begin
+  for v in Eval(Expression, False, Tree) do
+    TheStrings.Add(v.toString);
+end;
+
 function TXQueryEngineHTML.CSS(const Expression: String; const Tree: TTreeNode): IXQValue;
 begin
   Result := Eval(Expression, True, Tree);
@@ -223,6 +236,15 @@ begin
   for v in Eval(Expression, False, Tree) do
     if StringInArray(Trim(v.toString), Exc) = False then
       AddSeparatorString(Result, v.toString, Separator);
+end;
+
+procedure TXQueryEngineHTML.CSSStringAll(const Expression: String;
+  const TheStrings: TStrings; const Tree: TTreeNode);
+var
+  v: IXQValue;
+begin
+  for v in Eval(Expression, True, Tree) do
+    TheStrings.Add(v.toString);
 end;
 
 end.
