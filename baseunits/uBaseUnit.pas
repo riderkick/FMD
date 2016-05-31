@@ -56,8 +56,8 @@ const
     'Sports',        'Supernatural', 'Tragedy',       'Yaoi',
     'Yuri',          'Webtoons');
 
-  Symbols: array [0..10] of Char =
-    ('\', '/', ':', '*', '?', '"', '<', '>', '|', #9, ';');
+  Symbols: set of Char =
+    ['\', '/', ':', '*', '?', '"', '<', '>', '|', #9, ';'];
 
   StringFilterChar: array [0..35] of array [0..1] of String = (
     (#10, '\n'),
@@ -1789,17 +1789,9 @@ var
   i: Integer;
 begin
   Result := input;
-  for i := Low(Symbols) to High(Symbols) do
-  begin
-    if Pos(Symbols[i], Result) > 0 then
-      Result := StringReplace(Result, Symbols[i], '', [rfReplaceAll]);
-  end;
-
-  if (Length(Result) > 0) and
-    (Result[Length(Result)] = '.') then
-  begin
-    Result[Length(Result)] := '-';
-  end;
+  for i := 1 to Length(Result) do
+    if CharInSet(Result[i], Symbols) then
+      Result[i] := '_';
 end;
 
 procedure InvertStrings(const Sts: array of TStringList);
