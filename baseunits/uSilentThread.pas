@@ -371,7 +371,7 @@ begin
             '',
             OptionChangeUnicodeCharacter);
       end;
-      DLManager.Items[p].downloadInfo.SaveTo := CleanAndExpandDirectory(FSavePath);
+      DLManager.Items[p].downloadInfo.SaveTo := CorrectPathSys(FSavePath);
 
       UpdateVtDownload;
       DLManager.CheckAndActiveTask(False);
@@ -475,7 +475,7 @@ begin
         IntToStr(Info.mangaInfo.numChapter),
         s2,
         website,
-        CleanAndExpandDirectory(s),
+        CorrectPathSys(s),
         URL);
       UpdateVtFavorites;
     end;

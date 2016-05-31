@@ -919,14 +919,13 @@ begin
   Result := True;
 
   // check download path
-  if not DirectoryExistsUTF8(Task.Container.CurrentWorkingDir) then
-    if not ForceDirectoriesUTF8(Task.Container.CurrentWorkingDir) then
-    begin
-      Task.Container.Status := STATUS_FAILED;
-      Task.Container.DownloadInfo.Status := RS_FailedToCreateDir;
-      Result := False;
-      Exit;
-    end;
+  if not ForceDirectoriesUTF8(Task.Container.CurrentWorkingDir) then
+  begin
+    Task.Container.Status := STATUS_FAILED;
+    Task.Container.DownloadInfo.Status := RS_FailedToCreateDir;
+    Result := False;
+    Exit;
+  end;
 
   // check pagelinks url
   workURL := Task.Container.PageLinks[WorkId];
@@ -1135,16 +1134,15 @@ begin
       if Terminated then Exit;
 
       //check path
-      Container.CurrentWorkingDir := CleanAndExpandDirectory(Container.DownloadInfo.SaveTo +
+      Container.CurrentWorkingDir := CorrectPathSys(Container.DownloadInfo.SaveTo +
         Container.ChapterName[Container.CurrentDownloadChapterPtr]);
-      if not DirectoryExistsUTF8(Container.CurrentWorkingDir) then
-        if not ForceDirectoriesUTF8(Container.CurrentWorkingDir) then
-        begin
-          Container.Status := STATUS_FAILED;
-          Container.DownloadInfo.Status := RS_FailedToCreateDir;
-          SyncShowBaloon;
-          Exit;
-        end;
+      if not ForceDirectoriesUTF8(Container.CurrentWorkingDir) then
+      begin
+        Container.Status := STATUS_FAILED;
+        Container.DownloadInfo.Status := RS_FailedToCreateDir;
+        SyncShowBaloon;
+        Exit;
+      end;
 
       if Container.ModuleId > -1 then
         Modules.TaskStart(Container, Container.ModuleId);
@@ -1541,7 +1539,7 @@ begin
         DownloadInfo.Website := ReadString(tid, 'Website', 'NULL');
         DownloadInfo.Link := ReadString(tid, 'Link', '');
         DownloadInfo.Title := ReadString(tid, 'Title', 'NULL');
-        DownloadInfo.SaveTo := CleanAndExpandDirectory(ReadString(tid, 'SaveTo', 'NULL'));
+        DownloadInfo.SaveTo := CorrectPathSys(ReadString(tid, 'SaveTo', 'NULL'));
         DownloadInfo.Status := ReadString(tid, 'Status', 'NULL');
         DownloadInfo.Progress := ReadString(tid, 'Progress', 'NULL');
         if Pos('/', DownloadInfo.Progress) > 0 then

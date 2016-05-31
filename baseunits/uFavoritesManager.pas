@@ -906,7 +906,7 @@ begin
           currentChapter := ReadString(IntToStr(i), 'CurrentChapter', '0');
           downloadedChapterList := ReadString(IntToStr(i), 'DownloadedChapterList', '');
           Website := ReadString(IntToStr(i), 'Website', '');
-          SaveTo := CleanAndExpandDirectory(ReadString(IntToStr(i), 'SaveTo', ''));
+          SaveTo := CorrectPathSys(ReadString(IntToStr(i), 'SaveTo', ''));
           Link := ReadString(IntToStr(i), 'Link', '');
           Website := Website;
           Status := STATUS_IDLE;

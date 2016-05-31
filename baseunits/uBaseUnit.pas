@@ -3209,8 +3209,7 @@ begin
   if Stream = nil then Exit;
   if Stream.Size = 0 then Exit;
   p := CleanAndExpandDirectory(Path);
-  if not DirectoryExistsUTF8(p) then ForceDirectoriesUTF8(p);
-  if DirectoryExistsUTF8(p) then begin
+  if ForceDirectoriesUTF8(p) then begin
     f := DetermineStreamFormat(Stream);
     if f = '' then Exit;
     f := p + FileName + '.' + f;
