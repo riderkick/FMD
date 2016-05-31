@@ -1872,34 +1872,12 @@ end;
 
 function CorrectPathSys(const Path: String): String;
 begin
-  Result := Trim(Path);
-  if Length(Result) > 0 then
-  begin
-    {$IFDEF WINDOWS}
-    //max length = 260
-    Result := StringReplace(Result, '/', '\', [rfReplaceAll]);
-    if Length(Result) > 0 then
-    begin
-      if Length(Result) > MAX_PATH - 13 then
-        SetLength(Result, MAX_PATH - 13);
-      Result := StringReplace(Result, '\\', '\', [rfReplaceAll]);
-    end;
-    if Length(Result) > 0 then
-    begin
-      if Result[Length(Result)] <> '\' then
-        Result := Result + '\';
-    end;
-    {$ENDIF}
-    {$IFDEF UNIX}
-    Result := StringReplace(Result, '\', '/', [rfReplaceAll]);
-    Result := StringReplace(Result, '//', '/', [rfReplaceAll]);
-    if Length(Result) > 0 then
-    begin
-      if Result[Length(Result)] <> '/' then
-        Result := Result + '/';
-    end;
-    {$ENDIF}
-  end;
+  Result := CleanAndExpandDirectory(GetForcedPathDelims(Path));
+  {$IFDEF WINDOWS}
+  //max length = 247 (MAX_PATH(260) - 12 - 1)
+  if Length(Result) > 247 then
+    SetLength(Result, 247);
+  {$ENDIF}
 end;
 
 function StringOfString(c: String; l: Integer): String;
