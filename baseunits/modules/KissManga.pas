@@ -174,7 +174,7 @@ procedure RegisterModule;
 
 begin
   AddWebsiteModule('KissManga', 'http://kissmanga.com');
-  AddWebsiteModule('ReadComicOnline', 'http://readcomiconline.com');
+  AddWebsiteModule('ReadComicOnline', 'http://readcomiconline.to');
 end;
 
 initialization
