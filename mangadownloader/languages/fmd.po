@@ -510,7 +510,12 @@ msgstr ""
 msgid "Enable load manga cover"
 msgstr ""
 
-#: tmainform.cboptiongeneratemangafoldername.caption
+#: tmainform.cboptiongeneratechapterfolder.caption
+msgid "Auto generate chapter folder"
+msgstr ""
+
+#: tmainform.cboptiongeneratemangafolder.caption
+msgctxt "TMAINFORM.CBOPTIONGENERATEMANGAFOLDER.CAPTION"
 msgid "Auto generate folder based on manga's name"
 msgstr ""
 
@@ -934,6 +939,11 @@ msgctxt "TMAINFORM.EDOPTIONEXTERNALPATH.TEXTHINT"
 msgid "External program path"
 msgstr ""
 
+#: tmainform.edoptionfilenamecustomrename.texthint
+msgctxt "TMAINFORM.EDOPTIONFILENAMECUSTOMRENAME.TEXTHINT"
+msgid "Custom rename"
+msgstr ""
+
 #: tmainform.edoptionhost.texthint
 msgid "Proxy host/IP"
 msgstr ""
@@ -1062,6 +1072,11 @@ msgctxt "TMAINFORM.LBOPTIONAUTOCHECKFAVINTERVALMINUTES.CAPTION"
 msgid "Auto check for new chapter every %d minutes"
 msgstr ""
 
+#: tmainform.lboptionchaptercustomrename.caption
+msgctxt "TMAINFORM.LBOPTIONCHAPTERCUSTOMRENAME.CAPTION"
+msgid "Chapter name:"
+msgstr ""
+
 #: tmainform.lboptionchaptercustomrenamehint.caption
 msgctxt "TMAINFORM.LBOPTIONCHAPTERCUSTOMRENAMEHINT.CAPTION"
 msgid "[?]"
@@ -1085,10 +1100,6 @@ msgstr ""
 msgid "Connection timeout (seconds)"
 msgstr ""
 
-#: tmainform.lboptioncustomrename.caption
-msgid "Chapter folder name:"
-msgstr ""
-
 #: tmainform.lboptionexternal.caption
 msgid "Open manga by using external program:"
 msgstr ""
@@ -1100,6 +1111,26 @@ msgstr ""
 #: tmainform.lboptionexternalparamshint.caption
 msgctxt "TMAINFORM.LBOPTIONEXTERNALPARAMSHINT.CAPTION"
 msgid "[?]"
+msgstr ""
+
+#: tmainform.lboptionfilenamecustomrename.caption
+msgid "Filename:"
+msgstr ""
+
+#: tmainform.lboptionfilenamecustomrenamehint.caption
+msgctxt "TMAINFORM.LBOPTIONFILENAMECUSTOMRENAMEHINT.CAPTION"
+msgid "[?]"
+msgstr ""
+
+#: tmainform.lboptionfilenamecustomrenamehint.hint
+msgid ""
+"%WEBSITE% : Website name\n"
+"%MANGA% : Manga title\n"
+"%CHAPTER% : Chapter title\n"
+"%FILENAME% : Filename\n"
+"\n"
+"Note:\n"
+"Filename must have at least %FILENAME%\n"
 msgstr ""
 
 #: tmainform.lboptionhost.caption

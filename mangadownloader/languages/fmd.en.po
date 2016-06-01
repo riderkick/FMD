@@ -548,7 +548,12 @@ msgstr "Volume"
 msgid "Enable load manga cover"
 msgstr "Enable load manga cover"
 
-#: tmainform.cboptiongeneratemangafoldername.caption
+#: tmainform.cboptiongeneratechapterfolder.caption
+msgid "Auto generate chapter folder"
+msgstr "Auto generate chapter folder"
+
+#: tmainform.cboptiongeneratemangafolder.caption
+msgctxt "tmainform.cboptiongeneratemangafolder.caption"
 msgid "Auto generate folder based on manga's name"
 msgstr "Auto generate folder based on manga's name"
 
@@ -976,6 +981,11 @@ msgctxt "tmainform.edoptionexternalpath.texthint"
 msgid "External program path"
 msgstr "External program path"
 
+#: tmainform.edoptionfilenamecustomrename.texthint
+msgctxt "tmainform.edoptionfilenamecustomrename.texthint"
+msgid "Custom rename"
+msgstr "Custom rename"
+
 #: tmainform.edoptionhost.texthint
 msgid "Proxy host/IP"
 msgstr "Proxy host/IP"
@@ -1116,6 +1126,12 @@ msgctxt "tmainform.lboptionautocheckfavintervalminutes.caption"
 msgid "Auto check for new chapter every %d minutes"
 msgstr "Auto check for new chapter every %d minutes"
 
+#: tmainform.lboptionchaptercustomrename.caption
+#| msgid "Chapter folder name:"
+msgctxt "tmainform.lboptionchaptercustomrename.caption"
+msgid "Chapter name:"
+msgstr "Chapter name:"
+
 #: tmainform.lboptionchaptercustomrenamehint.caption
 msgctxt "tmainform.lboptionchaptercustomrenamehint.caption"
 msgid "[?]"
@@ -1148,10 +1164,6 @@ msgstr ""
 msgid "Connection timeout (seconds)"
 msgstr "Connection timeout (seconds)"
 
-#: tmainform.lboptioncustomrename.caption
-msgid "Chapter folder name:"
-msgstr "Chapter folder name:"
-
 #: tmainform.lboptionexternal.caption
 msgid "Open manga by using external program:"
 msgstr "Open manga by using external program:"
@@ -1164,6 +1176,33 @@ msgstr "Parameters:"
 msgctxt "tmainform.lboptionexternalparamshint.caption"
 msgid "[?]"
 msgstr "[?]"
+
+#: tmainform.lboptionfilenamecustomrename.caption
+msgid "Filename:"
+msgstr "Filename:"
+
+#: tmainform.lboptionfilenamecustomrenamehint.caption
+msgctxt "tmainform.lboptionfilenamecustomrenamehint.caption"
+msgid "[?]"
+msgstr "[?]"
+
+#: tmainform.lboptionfilenamecustomrenamehint.hint
+msgid ""
+"%WEBSITE% : Website name\n"
+"%MANGA% : Manga title\n"
+"%CHAPTER% : Chapter title\n"
+"%FILENAME% : Filename\n"
+"\n"
+"Note:\n"
+"Filename must have at least %FILENAME%\n"
+msgstr ""
+"%WEBSITE% : Website name\n"
+"%MANGA% : Manga title\n"
+"%CHAPTER% : Chapter title\n"
+"%FILENAME% : Filename\n"
+"\n"
+"Note:\n"
+"Filename must have at least %FILENAME%\n"
 
 #: tmainform.lboptionhost.caption
 msgid "Host"
