@@ -1335,6 +1335,7 @@ msgid "Abort"
 msgstr "Abort"
 
 #: tmainform.michapterlistcheckall.caption
+msgctxt "tmainform.michapterlistcheckall.caption"
 msgid "Check all"
 msgstr "Check all"
 
@@ -1352,6 +1353,7 @@ msgid "Highlight downloaded chapters"
 msgstr "Highlight downloaded chapters"
 
 #: tmainform.michapterlistuncheckall.caption
+msgctxt "tmainform.michapterlistuncheckall.caption"
 msgid "Uncheck all"
 msgstr "Uncheck all"
 
@@ -1466,6 +1468,20 @@ msgstr "View manga infos"
 #: tmainform.mndownload1click.caption
 msgid "Download all lists from server at once"
 msgstr "Download all lists from server at once"
+
+#: tmainform.mnfiltergenreallcheck.caption
+msgctxt "tmainform.mnfiltergenreallcheck.caption"
+msgid "Check all"
+msgstr "Check all"
+
+#: tmainform.mnfiltergenreallindeterminate.caption
+msgid "Indeterminate all"
+msgstr "Indeterminate all"
+
+#: tmainform.mnfiltergenrealluncheck.caption
+msgctxt "tmainform.mnfiltergenrealluncheck.caption"
+msgid "Uncheck all"
+msgstr "Uncheck all"
 
 #: tmainform.mnupdate1click.caption
 msgid "Update all lists at once"

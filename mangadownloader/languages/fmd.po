@@ -1256,6 +1256,7 @@ msgid "Abort"
 msgstr ""
 
 #: tmainform.michapterlistcheckall.caption
+msgctxt "tmainform.michapterlistcheckall.caption"
 msgid "Check all"
 msgstr ""
 
@@ -1272,6 +1273,7 @@ msgid "Highlight downloaded chapters"
 msgstr ""
 
 #: tmainform.michapterlistuncheckall.caption
+msgctxt "tmainform.michapterlistuncheckall.caption"
 msgid "Uncheck all"
 msgstr ""
 
@@ -1385,6 +1387,20 @@ msgstr ""
 
 #: tmainform.mndownload1click.caption
 msgid "Download all lists from server at once"
+msgstr ""
+
+#: tmainform.mnfiltergenreallcheck.caption
+msgctxt "TMAINFORM.MNFILTERGENREALLCHECK.CAPTION"
+msgid "Check all"
+msgstr ""
+
+#: tmainform.mnfiltergenreallindeterminate.caption
+msgid "Indeterminate all"
+msgstr ""
+
+#: tmainform.mnfiltergenrealluncheck.caption
+msgctxt "TMAINFORM.MNFILTERGENREALLUNCHECK.CAPTION"
+msgid "Uncheck all"
 msgstr ""
 
 #: tmainform.mnupdate1click.caption

@@ -72,6 +72,9 @@ type
     lbOptionFilenameCustomRename: TLabel;
     lbOptionMangaCustomRenameHint: TLabel;
     lbOptionMangaCustomRename: TLabel;
+    mnFilterGenreAllIndeterminate: TMenuItem;
+    mnFilterGenreAllCheck: TMenuItem;
+    mnFilterGenreAllUncheck: TMenuItem;
     miChapterListHideDownloaded: TMenuItem;
     miAbortSilentThread: TMenuItem;
     mmChangelog: TMemo;
@@ -82,6 +85,7 @@ type
     Panel8: TPanel;
     pcAbout: TPageControl;
     pmSbMain: TPopupMenu;
+    pmFilterGenreAll: TPopupMenu;
     sbSaveTo: TScrollBox;
     sbWebsiteOptions: TScrollBox;
     tsWebsiteAdvanced: TTabSheet;
@@ -441,6 +445,9 @@ type
     procedure miFavoritesOpenWithClick(Sender: TObject);
     procedure miDownloadOpenWithClick(Sender: TObject);
     procedure mnDownload1ClickClick(Sender: TObject);
+    procedure mnFilterGenreAllCheckClick(Sender: TObject);
+    procedure mnFilterGenreAllIndeterminateClick(Sender: TObject);
+    procedure mnFilterGenreAllUncheckClick(Sender: TObject);
     procedure mnUpdate1ClickClick(Sender: TObject);
     procedure mnUpdateDownFromServerClick(Sender: TObject);
     procedure mnUpdateListClick(Sender: TObject);
@@ -659,6 +666,9 @@ type
 
     // search db with thread
     procedure SearchDataDB(const ATitle: String);
+
+    // change all filter genre checkbox state
+    procedure FilterGenreChangeAllState(const AState: TCheckBoxState);
 
     // exception handle
     procedure ExceptionHandler(Sender: TObject; E: Exception);
@@ -1365,6 +1375,15 @@ begin
   begin
     SearchDBThread.NewSearch(ATitle);
   end;
+end;
+
+procedure TMainForm.FilterGenreChangeAllState(const AState: TCheckBoxState);
+var
+  i: Integer;
+begin
+  for i := 0 to pnGenres.ControlCount - 1 do
+    if pnGenres.Controls[i] is TCheckBox then
+      TCheckBox(pnGenres.Controls[i]).State := AState;
 end;
 
 procedure TMainForm.itMonitorTimer(Sender: TObject);
@@ -2648,6 +2667,21 @@ begin
   end
   else
     MessageDlg('', RS_DlgFavoritesCheckIsRunning, mtInformation, [mbYes], 0);
+end;
+
+procedure TMainForm.mnFilterGenreAllCheckClick(Sender: TObject);
+begin
+  FilterGenreChangeAllState(cbChecked);
+end;
+
+procedure TMainForm.mnFilterGenreAllIndeterminateClick(Sender: TObject);
+begin
+  FilterGenreChangeAllState(cbGrayed);
+end;
+
+procedure TMainForm.mnFilterGenreAllUncheckClick(Sender: TObject);
+begin
+  FilterGenreChangeAllState(cbUnchecked);
 end;
 
 procedure TMainForm.mnUpdate1ClickClick(Sender: TObject);

@@ -1318,6 +1318,7 @@ msgid "Abort"
 msgstr "Batalkan"
 
 #: tmainform.michapterlistcheckall.caption
+msgctxt "tmainform.michapterlistcheckall.caption"
 msgid "Check all"
 msgstr "Centang semua"
 
@@ -1334,6 +1335,7 @@ msgid "Highlight downloaded chapters"
 msgstr "Sorot bab terunduh"
 
 #: tmainform.michapterlistuncheckall.caption
+msgctxt "tmainform.michapterlistuncheckall.caption"
 msgid "Uncheck all"
 msgstr "Hapus semua centang"
 
@@ -1448,6 +1450,20 @@ msgstr "Lihat informasi komik"
 #: tmainform.mndownload1click.caption
 msgid "Download all lists from server at once"
 msgstr "Unduh semua daftar dari server"
+
+#: tmainform.mnfiltergenreallcheck.caption
+msgctxt "tmainform.mnfiltergenreallcheck.caption"
+msgid "Check all"
+msgstr "Centang semua"
+
+#: tmainform.mnfiltergenreallindeterminate.caption
+msgid "Indeterminate all"
+msgstr "Semua tak tentu"
+
+#: tmainform.mnfiltergenrealluncheck.caption
+msgctxt "tmainform.mnfiltergenrealluncheck.caption"
+msgid "Uncheck all"
+msgstr "Hapus semua centang"
 
 #: tmainform.mnupdate1click.caption
 msgid "Update all lists at once"
