@@ -2130,17 +2130,17 @@ begin
       Result := StringReplaceBrackets(Result, '%NUMBERING%', ANumbering, [rfReplaceAll]);
     // pad number
     chap := Trim(AChapter);
-    with configfile do begin
-      if ReadBool('saveto', 'ConvertDigitVolume', False) then begin
-        if ReadBool('saveto', 'ConvertDigitChapter', False) then
-          VolumeChapterPadZero(chap, ReadInteger('saveto', 'DigitVolumeLength', 2),
-            ReadInteger('saveto', 'DigitChapterLength', 3))
-        else
-          VolumeChapterPadZero(chap, ReadInteger('saveto', 'DigitVolumeLength', 2), 0);
-      end
-      else if ReadBool('saveto', 'ConvertDigitChapter', False) then
-        VolumeChapterPadZero(chap, 0, ReadInteger('saveto', 'DigitChapterLength', 3));
-    end;
+    if OptionConvertDigitVolume then
+    begin
+      if OptionConvertDigitChapter then
+        VolumeChapterPadZero(chap, OptionConvertDigitVolumeLength, OptionConvertDigitChapterLength)
+      else
+        VolumeChapterPadZero(chap, OptionConvertDigitVolumeLength, 0);
+    end
+    else
+    if OptionConvertDigitChapter then
+      VolumeChapterPadZero(chap, 0, OptionConvertDigitChapterLength);
+
     Result := StringReplaceBrackets(Result, '%CHAPTER%', chap, [rfReplaceAll]);
 
     if Result = '' then begin

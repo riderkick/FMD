@@ -97,6 +97,11 @@ var
   OptionChapterCustomRename: String;
   OptionFilenameCustomRename: String;
 
+  OptionConvertDigitVolume: Boolean;
+  OptionConvertDigitChapter: Boolean;
+  OptionConvertDigitVolumeLength: Integer;
+  OptionConvertDigitChapterLength: Integer;
+
   OptionPDFQuality: Cardinal = 95;
   OptionUpdateListNoMangaInfo: Boolean = False;
   OptionUpdateListRemoveDuplicateLocalData: Boolean = False;

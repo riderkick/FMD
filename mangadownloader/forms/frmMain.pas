@@ -4507,6 +4507,10 @@ begin
     OptionGenerateChapterFolder := cbOptionGenerateChapterFolder.Checked;
     OptionChapterCustomRename := edOptionChapterCustomRename.Text;
     OptionFilenameCustomRename := edOptionFilenameCustomRename.Text;
+    OptionConvertDigitVolume := cbOptionDigitVolume.Checked;
+    OptionConvertDigitVolumeLength := seOptionDigitVolume.Value;
+    OptionConvertDigitChapter := cbOptionDigitChapter.Checked;
+    OptionConvertDigitChapterLength := seOptionDigitChapter.Value;
 
     //update
     OptionAutoCheckLatestVersion := cbOptionAutoCheckLatestVersion.Checked;
