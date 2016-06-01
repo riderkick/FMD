@@ -360,7 +360,7 @@ begin
         FilledSaveTo;
         FSavePath := edSaveTo.Text;
         // save to
-        if OptionGenerateMangaFolderName then
+        if OptionGenerateMangaFolder then
           FSavePath := AppendPathDelim(FSavePath) + CustomRename(
             OptionMangaCustomRename,
             website,
@@ -453,7 +453,7 @@ begin
       end
       else
         s := FSavePath;
-      if OptionGenerateMangaFolderName then
+      if OptionGenerateMangaFolder then
         s := AppendPathDelim(s) + CustomRename(
           OptionMangaCustomRename,
           website,

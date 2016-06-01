@@ -756,7 +756,8 @@ function GetHeaderValue(const AHeaders: TStrings; HName: String): String;
 
 // custom rename feature
 function CustomRename(const AString, AWebsite, AMangaName, AAuthor, AArtist,
-  AChapter, ANumbering: String; const AIsUnicodeRemove: Boolean): String;
+  AChapter, ANumbering: String; const ARemoveUnicode: Boolean;
+  const AFilename: String = ''): String;
 
 // Get substring from source
 function GetString(const Source, sStart, sEnd: String): String;
@@ -2104,8 +2105,8 @@ begin
   end;
 end;
 
-function CustomRename(const AString, AWebsite, AMangaName, AAuthor, AArtist,
-  AChapter, ANumbering: String; const AIsUnicodeRemove: Boolean): String;
+function CustomRename(const AString, AWebsite, AMangaName, AAuthor, AArtist, AChapter,
+  ANumbering: String; const ARemoveUnicode: Boolean; const AFilename: String): String;
 var
   chap: String;
 begin
@@ -2154,13 +2155,14 @@ begin
   Result := StringReplaceBrackets(Result, '%MANGA%', AMangaName, [rfReplaceAll]);
   Result := StringReplaceBrackets(Result, '%AUTHOR%', AAuthor, [rfReplaceAll]);
   Result := StringReplaceBrackets(Result, '%ARTIST%', AArtist, [rfReplaceAll]);
+  Result := StringReplaceBrackets(Result, '%FILENAME%', AFilename, [rfReplaceAll]);
 
   if Result = '' then Result := AMangaName;
 
   if Result = '' then Exit;
 
   // strip unicode character
-  if AIsUnicodeRemove then
+  if ARemoveUnicode then
     Result := UnicodeRemove(Result);
 
   // replace htmlentities

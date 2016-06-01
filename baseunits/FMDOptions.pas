@@ -39,6 +39,7 @@ const
   DEFAULT_LIST = 'AnimeA,MangaFox,MangaHere,MangaInn,MangaReader';
   DEFAULT_MANGA_CUSTOMRENAME = '%MANGA%';
   DEFAULT_CHAPTER_CUSTOMRENAME = '%CHAPTER%';
+  DEFAULT_FILENAME_CUSTOMRENAME = '%FILENAME%';
 
   DATA_EXT = '.dat';
   DBDATA_EXT = '.db';
@@ -90,9 +91,11 @@ var
   OptionLetFMDDo: TFMDDo = DO_NOTHING;
 
   OptionChangeUnicodeCharacter: Boolean = False;
-  OptionGenerateMangaFolderName: Boolean = False;
+  OptionGenerateMangaFolder: Boolean = False;
   OptionMangaCustomRename: String;
+  OptionGenerateChapterFolder: Boolean = True;
   OptionChapterCustomRename: String;
+  OptionFilenameCustomRename: String;
 
   OptionPDFQuality: Cardinal = 95;
   OptionUpdateListNoMangaInfo: Boolean = False;

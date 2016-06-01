@@ -1,11 +1,11 @@
 object MainForm: TMainForm
-  Left = 379
-  Height = 592
-  Top = 113
+  Left = 297
+  Height = 538
+  Top = 115
   Width = 771
   ActiveControl = pcMain
   Caption = 'Free Manga Downloader'
-  ClientHeight = 592
+  ClientHeight = 538
   ClientWidth = 771
   OnClose = FormClose
   OnCreate = FormCreate
@@ -17,7 +17,7 @@ object MainForm: TMainForm
   object sbUpdateList: TStatusBar
     Left = 0
     Height = 30
-    Top = 562
+    Top = 508
     Width = 771
     AutoSize = False
     Panels = <    
@@ -33,7 +33,7 @@ object MainForm: TMainForm
   end
   object pcMain: TPageControl
     Left = 201
-    Height = 525
+    Height = 471
     Top = 11
     Width = 566
     ActivePage = tsDownload
@@ -47,11 +47,11 @@ object MainForm: TMainForm
     OnChange = pcMainChange
     object tsDownload: TTabSheet
       Caption = 'Downloads'
-      ClientHeight = 497
+      ClientHeight = 443
       ClientWidth = 558
       object vtDownload: TVirtualStringTree
         Left = 4
-        Height = 461
+        Height = 407
         Top = 32
         Width = 550
         Align = alClient
@@ -260,22 +260,22 @@ object MainForm: TMainForm
     end
     object tsInformation: TTabSheet
       Caption = 'Manga Info'
-      ClientHeight = 497
+      ClientHeight = 443
       ClientWidth = 558
       object sbInformation: TScrollBox
         Left = 0
-        Height = 497
+        Height = 443
         Top = 0
         Width = 558
         HorzScrollBar.Page = 327
-        VertScrollBar.Page = 487
+        VertScrollBar.Page = 433
         Align = alClient
         BorderStyle = bsNone
         ChildSizing.LeftRightSpacing = 4
         ChildSizing.TopBottomSpacing = 8
         ChildSizing.HorizontalSpacing = 4
         ChildSizing.VerticalSpacing = 4
-        ClientHeight = 497
+        ClientHeight = 443
         ClientWidth = 558
         TabOrder = 0
         object pnInfomation: TPanel
@@ -420,21 +420,21 @@ object MainForm: TMainForm
         end
         object pnChapterList: TPanel
           Left = 4
-          Height = 206
+          Height = 152
           Top = 283
           Width = 550
           Align = alClient
           BevelOuter = bvNone
           ChildSizing.HorizontalSpacing = 4
           ChildSizing.VerticalSpacing = 4
-          ClientHeight = 206
+          ClientHeight = 152
           ClientWidth = 550
           TabOrder = 2
           object clbChapterList: TVirtualStringTree
             AnchorSideTop.Side = asrBottom
             AnchorSideBottom.Control = lbSaveTo
             Left = 0
-            Height = 127
+            Height = 73
             Top = 0
             Width = 516
             Anchors = [akTop, akLeft, akRight, akBottom]
@@ -465,7 +465,7 @@ object MainForm: TMainForm
             AnchorSideBottom.Side = asrBottom
             Left = 338
             Height = 26
-            Top = 150
+            Top = 96
             Width = 100
             Anchors = [akTop, akRight, akBottom]
             AutoSize = True
@@ -517,7 +517,7 @@ object MainForm: TMainForm
             AnchorSideRight.Side = asrBottom
             Left = 0
             Height = 19
-            Top = 177
+            Top = 123
             Width = 334
             Anchors = [akTop, akLeft, akRight]
             Caption = 'Add to download list as stopped task'
@@ -531,7 +531,7 @@ object MainForm: TMainForm
             AnchorSideRight.Side = asrBottom
             Left = 442
             Height = 26
-            Top = 150
+            Top = 96
             Width = 108
             Anchors = [akRight, akBottom]
             AutoSize = True
@@ -629,7 +629,7 @@ object MainForm: TMainForm
             AnchorSideRight.Side = asrBottom
             Left = 338
             Height = 26
-            Top = 180
+            Top = 126
             Width = 212
             Anchors = [akTop, akLeft, akRight, akBottom]
             AutoSize = True
@@ -680,7 +680,7 @@ object MainForm: TMainForm
             AnchorSideBottom.Control = edSaveTo
             Left = 0
             Height = 15
-            Top = 131
+            Top = 77
             Width = 41
             Anchors = [akLeft, akBottom]
             Caption = 'Save to:'
@@ -693,7 +693,7 @@ object MainForm: TMainForm
             AnchorSideRight.Control = btDownload
             Left = 0
             Height = 23
-            Top = 150
+            Top = 96
             Width = 334
             OnAcceptDirectory = edSaveToAcceptDirectory
             ShowHidden = False
@@ -746,18 +746,18 @@ object MainForm: TMainForm
     end
     object tsFilter: TTabSheet
       Caption = 'Filter'
-      ClientHeight = 462
+      ClientHeight = 443
       ClientWidth = 558
       object sbFilter: TScrollBox
         Left = 0
-        Height = 462
+        Height = 443
         Top = 0
         Width = 558
         HorzScrollBar.Page = 488
         VertScrollBar.Page = 416
         Align = alClient
         BorderStyle = bsNone
-        ClientHeight = 462
+        ClientHeight = 443
         ClientWidth = 558
         TabOrder = 0
         object pnCustomGenre: TPanel
@@ -1905,11 +1905,11 @@ object MainForm: TMainForm
     end
     object tsOption: TTabSheet
       Caption = 'Options'
-      ClientHeight = 497
+      ClientHeight = 443
       ClientWidth = 558
       object pnOptions: TPageControl
         Left = 8
-        Height = 420
+        Height = 366
         Top = 8
         Width = 539
         ActivePage = tsGeneral
@@ -1923,7 +1923,7 @@ object MainForm: TMainForm
           ChildSizing.TopBottomSpacing = 8
           ChildSizing.HorizontalSpacing = 4
           ChildSizing.VerticalSpacing = 4
-          ClientHeight = 392
+          ClientHeight = 338
           ClientWidth = 531
           object cbOptionMinimizeToTray: TCheckBox
             AnchorSideLeft.Control = seOptionNewMangaTime
@@ -2563,23 +2563,23 @@ object MainForm: TMainForm
         end
         object tsSaveTo: TTabSheet
           Caption = 'Save to'
-          ClientHeight = 392
+          ClientHeight = 338
           ClientWidth = 531
           object sbSaveTo: TScrollBox
             Left = 0
-            Height = 392
+            Height = 338
             Top = 0
             Width = 531
             HorzScrollBar.Page = 198
-            VertScrollBar.Page = 390
+            VertScrollBar.Page = 338
             Align = alClient
             BorderStyle = bsNone
             ChildSizing.LeftRightSpacing = 4
             ChildSizing.TopBottomSpacing = 8
             ChildSizing.HorizontalSpacing = 4
             ChildSizing.VerticalSpacing = 4
-            ClientHeight = 392
-            ClientWidth = 531
+            ClientHeight = 338
+            ClientWidth = 514
             TabOrder = 0
             object rgOptionCompress: TRadioGroup
               AnchorSideLeft.Control = lbDefaultDownloadPath
@@ -2590,7 +2590,7 @@ object MainForm: TMainForm
               Left = 4
               Height = 60
               Top = 54
-              Width = 523
+              Width = 506
               Anchors = [akTop, akLeft, akRight]
               AutoFill = True
               BorderSpacing.Top = 4
@@ -2604,7 +2604,7 @@ object MainForm: TMainForm
               ChildSizing.Layout = cclLeftToRightThenTopToBottom
               ChildSizing.ControlsPerLine = 4
               ClientHeight = 40
-              ClientWidth = 519
+              ClientWidth = 502
               Columns = 4
               ItemIndex = 0
               Items.Strings = (
@@ -2624,9 +2624,9 @@ object MainForm: TMainForm
               AnchorSideRight.Control = lbDefaultDownloadPath
               AnchorSideRight.Side = asrBottom
               Left = 4
-              Height = 237
+              Height = 302
               Top = 145
-              Width = 523
+              Width = 506
               Anchors = [akTop, akLeft, akRight]
               AutoSize = True
               BorderSpacing.Top = 4
@@ -2635,38 +2635,41 @@ object MainForm: TMainForm
               ChildSizing.TopBottomSpacing = 4
               ChildSizing.HorizontalSpacing = 4
               ChildSizing.VerticalSpacing = 4
-              ClientHeight = 217
-              ClientWidth = 519
+              ClientHeight = 282
+              ClientWidth = 502
               ParentFont = False
               TabOrder = 4
-              object cbOptionRemoveMangaNameFromChapter: TCheckBox
+              object cbOptionChangeUnicodeCharacter: TCheckBox
                 Left = 4
                 Height = 19
-                Top = 50
-                Width = 511
+                Top = 4
+                Width = 494
                 Align = alTop
-                Caption = 'Remove manga name from chapter'
-                ParentFont = False
-                TabOrder = 3
-              end
-              object cbOptionGenerateMangaFolderName: TCheckBox
-                Left = 4
-                Height = 19
-                Top = 27
-                Width = 511
-                Align = alTop
-                Caption = 'Auto generate folder based on manga''s name'
-                OnChange = cbOptionGenerateMangaFolderNameChange
+                Caption = 'Change all all unicode symbols to "_" (choose this when you have problem with unicode path)'
                 ParentFont = False
                 TabOrder = 0
               end
+              object cbOptionGenerateMangaFolder: TCheckBox
+                AnchorSideLeft.Control = cbOptionChangeUnicodeCharacter
+                AnchorSideTop.Control = cbOptionChangeUnicodeCharacter
+                AnchorSideTop.Side = asrBottom
+                Left = 4
+                Height = 19
+                Top = 27
+                Width = 261
+                Caption = 'Auto generate folder based on manga''s name'
+                OnChange = cbOptionGenerateMangaFolderChange
+                ParentFont = False
+                TabOrder = 1
+              end
               object lbOptionMangaCustomRename: TLabel
+                AnchorSideLeft.Control = cbOptionGenerateMangaFolder
+                AnchorSideTop.Control = cbOptionGenerateMangaFolder
+                AnchorSideTop.Side = asrBottom
                 Left = 4
                 Height = 15
-                Top = 79
-                Width = 511
-                Align = alTop
-                BorderSpacing.Top = 10
+                Top = 50
+                Width = 107
                 Caption = 'Manga folder name:'
                 Enabled = False
                 ParentColor = False
@@ -2679,43 +2682,77 @@ object MainForm: TMainForm
                 AnchorSideRight.Side = asrBottom
                 Left = 4
                 Height = 23
-                Top = 98
+                Top = 69
                 Width = 308
                 Enabled = False
-                TabOrder = 4
+                TabOrder = 3
                 TextHint = 'Custom rename'
               end
-              object cbOptionChangeUnicodeCharacter: TCheckBox
-                Left = 4
-                Height = 19
-                Top = 4
-                Width = 511
-                Align = alTop
-                Caption = 'Change all all unicode symbols to "_" (choose this when you have problem with unicode path)'
-                ParentFont = False
-                TabOrder = 1
-              end
-              object edOptionChapterCustomRename: TEdit
-                AnchorSideLeft.Control = lbOptionCustomRename
-                AnchorSideTop.Control = lbOptionCustomRename
-                AnchorSideTop.Side = asrBottom
-                Left = 4
-                Height = 23
-                Top = 144
-                Width = 308
-                TabOrder = 2
-                TextHint = 'Custom rename'
-              end
-              object lbOptionCustomRename: TLabel
+              object lbOptionMangaCustomRenameHint: TLabel
                 AnchorSideLeft.Control = edOptionMangaCustomRename
+                AnchorSideLeft.Side = asrBottom
+                AnchorSideTop.Control = edOptionMangaCustomRename
+                AnchorSideTop.Side = asrCenter
+                Left = 316
+                Height = 15
+                Hint = '%WEBSITE% : Website name'#13#10'%MANGA% : Manga title'#13#10'%AUTHOR% : Author'#13#10'%ARTIST% : Artist'#13#10#13#10'Note:'#13#10'Manga folder name must have at least %MANGA%.'
+                Top = 73
+                Width = 13
+                Caption = '[?]'
+                Enabled = False
+                Font.Color = clBlue
+                ParentColor = False
+                ParentFont = False
+                ParentShowHint = False
+                ShowHint = True
+              end
+              object cbOptionRemoveMangaNameFromChapter: TCheckBox
+                AnchorSideLeft.Control = lbOptionMangaCustomRename
                 AnchorSideTop.Control = edOptionMangaCustomRename
                 AnchorSideTop.Side = asrBottom
                 Left = 4
+                Height = 19
+                Top = 96
+                Width = 208
+                Caption = 'Remove manga name from chapter'
+                ParentFont = False
+                TabOrder = 2
+              end
+              object cbOptionGenerateChapterFolder: TCheckBox
+                AnchorSideLeft.Control = cbOptionRemoveMangaNameFromChapter
+                AnchorSideTop.Control = cbOptionRemoveMangaNameFromChapter
+                AnchorSideTop.Side = asrBottom
+                Left = 4
+                Height = 19
+                Top = 119
+                Width = 172
+                Caption = 'Auto generate chapter folder'
+                Checked = True
+                ParentFont = False
+                State = cbChecked
+                TabOrder = 4
+              end
+              object lbOptionChapterCustomRename: TLabel
+                AnchorSideLeft.Control = cbOptionGenerateChapterFolder
+                AnchorSideTop.Control = cbOptionGenerateChapterFolder
+                AnchorSideTop.Side = asrBottom
+                Left = 4
                 Height = 15
-                Top = 125
-                Width = 112
-                Caption = 'Chapter folder name:'
+                Top = 142
+                Width = 78
+                Caption = 'Chapter name:'
                 ParentColor = False
+              end
+              object edOptionChapterCustomRename: TEdit
+                AnchorSideLeft.Control = lbOptionChapterCustomRename
+                AnchorSideTop.Control = lbOptionChapterCustomRename
+                AnchorSideTop.Side = asrBottom
+                Left = 4
+                Height = 23
+                Top = 161
+                Width = 308
+                TabOrder = 5
+                TextHint = 'Custom rename'
               end
               object lbOptionChapterCustomRenameHint: TLabel
                 AnchorSideLeft.Control = edOptionChapterCustomRename
@@ -2725,7 +2762,7 @@ object MainForm: TMainForm
                 Left = 316
                 Height = 15
                 Hint = '%WEBSITE% : Website name'#13#10'%MANGA% : Manga title'#13#10'%CHAPTER% : Chapter title'#13#10'%AUTHOR% : Author'#13#10'%ARTIST% : Artist'#13#10'%NUMBERING% : Numbering'#13#10#13#10'Note:'#13#10'Chapter folder name must have at least %CHAPTER% or %NUMBERING%.'
-                Top = 148
+                Top = 165
                 Width = 13
                 Caption = '[?]'
                 Font.Color = clBlue
@@ -2740,56 +2777,10 @@ object MainForm: TMainForm
                 AnchorSideTop.Side = asrBottom
                 Left = 4
                 Height = 15
-                Top = 171
+                Top = 188
                 Width = 78
                 Caption = 'Rename  digits'
                 ParentColor = False
-              end
-              object lbOptionMangaCustomRenameHint: TLabel
-                AnchorSideLeft.Control = edOptionMangaCustomRename
-                AnchorSideLeft.Side = asrBottom
-                AnchorSideTop.Control = edOptionMangaCustomRename
-                AnchorSideTop.Side = asrCenter
-                Left = 316
-                Height = 15
-                Hint = '%WEBSITE% : Website name'#13#10'%MANGA% : Manga title'#13#10'%AUTHOR% : Author'#13#10'%ARTIST% : Artist'#13#10#13#10'Note:'#13#10'Manga folder name must have at least %MANGA%.'
-                Top = 102
-                Width = 13
-                Caption = '[?]'
-                Enabled = False
-                Font.Color = clBlue
-                ParentColor = False
-                ParentFont = False
-                ParentShowHint = False
-                ShowHint = True
-              end
-              object seOptionDigitVolume: TSpinEdit
-                AnchorSideLeft.Control = cbOptionDigitVolume
-                AnchorSideLeft.Side = asrBottom
-                AnchorSideTop.Control = cbOptionDigitVolume
-                Left = 69
-                Height = 23
-                Top = 190
-                Width = 50
-                BorderSpacing.Left = 4
-                MaxValue = 10
-                MinValue = 1
-                TabOrder = 5
-                Value = 1
-              end
-              object seOptionDigitChapter: TSpinEdit
-                AnchorSideLeft.Control = cbOptionDigitChapter
-                AnchorSideLeft.Side = asrBottom
-                AnchorSideTop.Control = cbOptionDigitChapter
-                Left = 205
-                Height = 23
-                Top = 190
-                Width = 50
-                BorderSpacing.Left = 4
-                MaxValue = 10
-                MinValue = 1
-                TabOrder = 6
-                Value = 1
               end
               object cbOptionDigitVolume: TCheckBox
                 AnchorSideLeft.Control = lbOptionRenameDigits
@@ -2797,11 +2788,25 @@ object MainForm: TMainForm
                 AnchorSideTop.Side = asrBottom
                 Left = 4
                 Height = 19
-                Top = 190
+                Top = 207
                 Width = 61
                 Caption = 'Volume'
                 OnChange = cbOptionDigitVolumeChange
-                TabOrder = 7
+                TabOrder = 8
+              end
+              object seOptionDigitVolume: TSpinEdit
+                AnchorSideLeft.Control = cbOptionDigitVolume
+                AnchorSideLeft.Side = asrBottom
+                AnchorSideTop.Control = cbOptionDigitVolume
+                Left = 69
+                Height = 23
+                Top = 207
+                Width = 50
+                BorderSpacing.Left = 4
+                MaxValue = 10
+                MinValue = 1
+                TabOrder = 6
+                Value = 1
               end
               object cbOptionDigitChapter: TCheckBox
                 AnchorSideLeft.Control = seOptionDigitVolume
@@ -2809,19 +2814,73 @@ object MainForm: TMainForm
                 AnchorSideTop.Control = seOptionDigitVolume
                 Left = 139
                 Height = 19
-                Top = 190
+                Top = 207
                 Width = 62
                 BorderSpacing.Left = 20
                 Caption = 'Chapter'
                 OnChange = cbOptionDigitChapterChange
-                TabOrder = 8
+                TabOrder = 9
+              end
+              object seOptionDigitChapter: TSpinEdit
+                AnchorSideLeft.Control = cbOptionDigitChapter
+                AnchorSideLeft.Side = asrBottom
+                AnchorSideTop.Control = cbOptionDigitChapter
+                Left = 205
+                Height = 23
+                Top = 207
+                Width = 50
+                BorderSpacing.Left = 4
+                MaxValue = 10
+                MinValue = 1
+                TabOrder = 7
+                Value = 1
+              end
+              object lbOptionFilenameCustomRenameHint: TLabel
+                AnchorSideLeft.Control = edOptionFilenameCustomRename
+                AnchorSideLeft.Side = asrBottom
+                AnchorSideTop.Control = edOptionFilenameCustomRename
+                AnchorSideTop.Side = asrCenter
+                Left = 316
+                Height = 15
+                Hint = '%WEBSITE% : Website name'#13#10'%MANGA% : Manga title'#13#10'%CHAPTER% : Chapter title'#13#10'%FILENAME% : Filename'#13#10#13#10'Note:'#13#10'Filename must have at least %FILENAME%'
+                Top = 259
+                Width = 13
+                Caption = '[?]'
+                Font.Color = clBlue
+                ParentColor = False
+                ParentFont = False
+                ParentShowHint = False
+                ShowHint = True
+              end
+              object edOptionFilenameCustomRename: TEdit
+                AnchorSideLeft.Control = lbOptionFilenameCustomRename
+                AnchorSideTop.Control = lbOptionFilenameCustomRename
+                AnchorSideTop.Side = asrBottom
+                Left = 4
+                Height = 23
+                Top = 255
+                Width = 308
+                TabOrder = 10
+                TextHint = 'Custom rename'
+              end
+              object lbOptionFilenameCustomRename: TLabel
+                AnchorSideLeft.Control = cbOptionGenerateChapterFolder
+                AnchorSideTop.Control = cbOptionDigitVolume
+                AnchorSideTop.Side = asrBottom
+                Left = 4
+                Height = 15
+                Top = 236
+                Width = 51
+                BorderSpacing.Top = 10
+                Caption = 'Filename:'
+                ParentColor = False
               end
             end
             object lbDefaultDownloadPath: TLabel
               Left = 4
               Height = 15
               Top = 8
-              Width = 523
+              Width = 506
               Align = alTop
               Caption = 'Choose the default download path:'
               ParentColor = False
@@ -2831,7 +2890,7 @@ object MainForm: TMainForm
               Left = 4
               Height = 23
               Top = 27
-              Width = 523
+              Width = 506
               OnAcceptDirectory = edSaveToAcceptDirectory
               ShowHidden = False
               ButtonWidth = 23
@@ -2882,7 +2941,7 @@ object MainForm: TMainForm
               Left = 4
               Height = 0
               Top = 54
-              Width = 523
+              Width = 506
               Align = alTop
               AutoSize = True
               BevelOuter = bvNone
@@ -3332,7 +3391,7 @@ object MainForm: TMainForm
       object btOptionApply: TBitBtn
         Left = 8
         Height = 45
-        Top = 439
+        Top = 385
         Width = 125
         Anchors = [akLeft, akBottom]
         AutoSize = True
@@ -3594,7 +3653,7 @@ object MainForm: TMainForm
   end
   object pcLeft: TPageControl
     Left = 4
-    Height = 523
+    Height = 469
     Top = 12
     Width = 195
     ActivePage = tsMangaList
@@ -3611,7 +3670,7 @@ object MainForm: TMainForm
       ChildSizing.TopBottomSpacing = 4
       ChildSizing.HorizontalSpacing = 4
       ChildSizing.VerticalSpacing = 4
-      ClientHeight = 495
+      ClientHeight = 441
       ClientWidth = 187
       object vtMangaList: TVirtualStringTree
         AnchorSideLeft.Control = lbMode
@@ -3620,7 +3679,7 @@ object MainForm: TMainForm
         AnchorSideRight.Control = btRemoveFilter
         AnchorSideRight.Side = asrBottom
         Left = 4
-        Height = 406
+        Height = 352
         Top = 85
         Width = 179
         Anchors = [akTop, akLeft, akRight, akBottom]
@@ -3921,7 +3980,7 @@ object MainForm: TMainForm
   object sbMain: TStatusBar
     Left = 0
     Height = 23
-    Top = 539
+    Top = 485
     Width = 771
     Panels = <    
       item
@@ -3935,7 +3994,7 @@ object MainForm: TMainForm
   end
   object spMainSplitter: TSplitter
     Left = 199
-    Height = 531
+    Height = 477
     Top = 8
     Width = 2
     OnMoved = spMainSplitterMoved

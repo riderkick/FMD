@@ -84,7 +84,7 @@ procedure TGetMangaInfosThread.DoGetInfos;
         FNumChapter := StrToIntDef(MainForm.dataProcess.Value[filterPos, DATA_PARAM_NUMCHAPTER], 0);
       end;
 
-      FInfo.isGenerateFolderChapterName := OptionGenerateMangaFolderName;
+      FInfo.isGenerateFolderChapterName := OptionGenerateMangaFolder;
       FInfo.isRemoveUnicode := OptionChangeUnicodeCharacter;
 
       infob := INFORMATION_NOT_FOUND;

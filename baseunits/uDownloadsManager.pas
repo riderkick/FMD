@@ -121,9 +121,11 @@ type
     PageContainerLinks,
     PageLinks: TStringList;
     Filenames: TStringList;
+    // custom filenames
     constructor Create;
     destructor Destroy; override;
     procedure IncReadCount(const ACount: Integer);
+  public
     property Website: String read FWebsite write SetWebsite;
   end;
 
@@ -946,6 +948,19 @@ begin
     workFilename := Task.Container.Filenames[WorkId];
   if workFilename = '' then
     workFilename := Format('%.3d', [WorkId + 1]);
+  // custom filename
+  with task.Container.DownloadInfo do
+  begin
+    workFilename := CustomRename(OptionFilenameCustomRename,
+      Website,
+      Title,
+      '',
+      '',
+      Task.Container.ChapterName[Task.Container.CurrentDownloadChapterPtr],
+      '',
+      OptionChangeUnicodeCharacter,
+      workFilename);
+  end;
 
   // download image
   savedFilename := '';
@@ -1134,8 +1149,11 @@ begin
       if Terminated then Exit;
 
       //check path
-      Container.CurrentWorkingDir := CorrectPathSys(Container.DownloadInfo.SaveTo +
-        Container.ChapterName[Container.CurrentDownloadChapterPtr]);
+      if OptionGenerateChapterFolder then
+        Container.CurrentWorkingDir := CorrectPathSys(Container.DownloadInfo.SaveTo +
+          Container.ChapterName[Container.CurrentDownloadChapterPtr])
+      else
+        Container.CurrentWorkingDir := CorrectPathSys(Container.DownloadInfo.SaveTo);
       if not ForceDirectoriesUTF8(Container.CurrentWorkingDir) then
       begin
         Container.Status := STATUS_FAILED;
