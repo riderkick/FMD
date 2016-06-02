@@ -63,6 +63,7 @@ type
     cbUseRegExpr: TCheckBox;
     cbOptionProxyType: TComboBox;
     cbOptionOneInstanceOnly: TCheckBox;
+    edFilterMangaInfoChapters: TEditButton;
     edOptionFilenameCustomRename: TEdit;
     edOptionDefaultPath: TDirectoryEdit;
     edOptionMangaCustomRename: TEdit;
@@ -72,6 +73,8 @@ type
     lbOptionFilenameCustomRename: TLabel;
     lbOptionMangaCustomRenameHint: TLabel;
     lbOptionMangaCustomRename: TLabel;
+    MenuItem2: TMenuItem;
+    miChapterListFilter: TMenuItem;
     mnFilterGenreAllIndeterminate: TMenuItem;
     mnFilterGenreAllCheck: TMenuItem;
     mnFilterGenreAllUncheck: TMenuItem;
@@ -377,6 +380,8 @@ type
       var CellText: String);
     procedure clbChapterListInitNode(Sender: TBaseVirtualTree; ParentNode,
       Node: PVirtualNode; var InitialStates: TVirtualNodeInitStates);
+    procedure edFilterMangaInfoChaptersButtonClick(Sender: TObject);
+    procedure edFilterMangaInfoChaptersChange(Sender: TObject);
     procedure edSaveToAcceptDirectory(Sender: TObject; var Value: String);
     procedure edSearchChange(Sender: TObject);
     procedure edSearchKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState
@@ -414,6 +419,7 @@ type
     procedure medURLSelectAllClick(Sender: TObject);
     procedure medURLUndoClick(Sender: TObject);
     procedure miAbortSilentThreadClick(Sender: TObject);
+    procedure miChapterListFilterClick(Sender: TObject);
     procedure miChapterListHideDownloadedClick(Sender: TObject);
     procedure miDownloadViewMangaInfoClick(Sender: TObject);
     procedure miChapterListHighlightClick(Sender: TObject);
@@ -1506,6 +1512,24 @@ begin
     SilentThreadManager.StopAll(False);
 end;
 
+procedure TMainForm.miChapterListFilterClick(Sender: TObject);
+begin
+  edFilterMangaInfoChapters.Visible := miChapterListFilter.Checked;
+  if edFilterMangaInfoChapters.Visible then
+  begin
+    clbChapterList.AnchorSide[akTop].Control := edFilterMangaInfoChapters;
+    clbChapterList.AnchorSide[akTop].Side := asrBottom;
+    edFilterMangaInfoChapters.SetFocus;
+  end
+  else
+  begin
+    edFilterMangaInfoChapters.Clear;
+    clbChapterList.AnchorSide[akTop].Control := nil;
+    clbChapterList.AnchorSide[akTop].Side := asrTop;
+    clbChapterList.Top := 0;
+  end;
+end;
+
 procedure TMainForm.miChapterListHideDownloadedClick(Sender: TObject);
 var
   xnode: PVirtualNode;
@@ -2253,6 +2277,35 @@ procedure TMainForm.clbChapterListInitNode(Sender: TBaseVirtualTree;
   ParentNode, Node: PVirtualNode; var InitialStates: TVirtualNodeInitStates);
 begin
   if Assigned(Node) then Node^.CheckType:=ctCheckBox;
+end;
+
+procedure TMainForm.edFilterMangaInfoChaptersButtonClick(Sender: TObject);
+begin
+  edFilterMangaInfoChapters.Clear;
+end;
+
+procedure TMainForm.edFilterMangaInfoChaptersChange(Sender: TObject);
+var
+  Node: PVirtualNode;
+  s: String;
+begin
+  if clbChapterList.RootNodeCount = 0 then Exit;
+  s := LowerCase(edFilterMangaInfoChapters.Text);
+  clbChapterList.BeginUpdate;
+  try
+    Node := clbChapterList.GetFirst();
+    while Assigned(Node) do
+    begin
+      if s <> '' then
+        clbChapterList.IsVisible[Node] :=
+          Pos(s, LowerCase(ChapterList[Node^.Index].Title)) <> 0
+      else
+        clbChapterList.IsVisible[Node] := True;
+      Node := clbChapterList.GetNext(Node);
+    end;
+  finally
+    clbChapterList.EndUpdate;
+  end;
 end;
 
 procedure TMainForm.edSaveToAcceptDirectory(Sender: TObject; var Value: String);
@@ -4196,6 +4249,7 @@ begin
   miChapterListHighlightClick(nil);
   UpdateVtChapter;
   miChapterListHideDownloadedClick(nil);
+  edFilterMangaInfoChaptersChange(nil);
 
   btDownload.Enabled := (clbChapterList.RootNodeCount > 0);
   btReadOnline.Enabled := (mangaInfo.link <> '');

@@ -1,11 +1,11 @@
 object MainForm: TMainForm
   Left = 297
-  Height = 538
-  Top = 115
+  Height = 587
+  Top = 66
   Width = 771
   ActiveControl = pcMain
   Caption = 'Free Manga Downloader'
-  ClientHeight = 538
+  ClientHeight = 587
   ClientWidth = 771
   OnClose = FormClose
   OnCreate = FormCreate
@@ -17,7 +17,7 @@ object MainForm: TMainForm
   object sbUpdateList: TStatusBar
     Left = 0
     Height = 30
-    Top = 508
+    Top = 557
     Width = 771
     AutoSize = False
     Panels = <    
@@ -33,7 +33,7 @@ object MainForm: TMainForm
   end
   object pcMain: TPageControl
     Left = 201
-    Height = 471
+    Height = 520
     Top = 11
     Width = 566
     ActivePage = tsDownload
@@ -47,11 +47,11 @@ object MainForm: TMainForm
     OnChange = pcMainChange
     object tsDownload: TTabSheet
       Caption = 'Downloads'
-      ClientHeight = 443
+      ClientHeight = 492
       ClientWidth = 558
       object vtDownload: TVirtualStringTree
         Left = 4
-        Height = 407
+        Height = 456
         Top = 32
         Width = 550
         Align = alClient
@@ -260,34 +260,34 @@ object MainForm: TMainForm
     end
     object tsInformation: TTabSheet
       Caption = 'Manga Info'
-      ClientHeight = 443
+      ClientHeight = 492
       ClientWidth = 558
       object sbInformation: TScrollBox
         Left = 0
-        Height = 443
+        Height = 492
         Top = 0
         Width = 558
         HorzScrollBar.Page = 327
-        VertScrollBar.Page = 433
+        VertScrollBar.Page = 482
         Align = alClient
         BorderStyle = bsNone
         ChildSizing.LeftRightSpacing = 4
         ChildSizing.TopBottomSpacing = 8
         ChildSizing.HorizontalSpacing = 4
         ChildSizing.VerticalSpacing = 4
-        ClientHeight = 443
+        ClientHeight = 492
         ClientWidth = 558
         TabOrder = 0
         object pnInfomation: TPanel
           Left = 4
-          Height = 262
+          Height = 248
           Top = 8
           Width = 550
           Align = alTop
           BevelOuter = bvNone
           ChildSizing.HorizontalSpacing = 4
           ChildSizing.VerticalSpacing = 4
-          ClientHeight = 262
+          ClientHeight = 248
           ClientWidth = 550
           ParentFont = False
           TabOrder = 0
@@ -299,7 +299,7 @@ object MainForm: TMainForm
             AnchorSideRight.Control = edURL
             AnchorSideRight.Side = asrBottom
             Left = 158
-            Height = 233
+            Height = 219
             Top = 27
             Width = 392
             Anchors = [akTop, akLeft, akRight, akBottom]
@@ -413,28 +413,28 @@ object MainForm: TMainForm
           Cursor = crVSplit
           Left = 4
           Height = 5
-          Top = 274
+          Top = 260
           Width = 550
           Align = alTop
           ResizeAnchor = akTop
         end
         object pnChapterList: TPanel
           Left = 4
-          Height = 152
-          Top = 283
+          Height = 215
+          Top = 269
           Width = 550
           Align = alClient
           BevelOuter = bvNone
           ChildSizing.HorizontalSpacing = 4
           ChildSizing.VerticalSpacing = 4
-          ClientHeight = 152
+          ClientHeight = 215
           ClientWidth = 550
           TabOrder = 2
           object clbChapterList: TVirtualStringTree
-            AnchorSideTop.Side = asrBottom
+            AnchorSideTop.Control = edFilterMangaInfoChapters
             AnchorSideBottom.Control = lbSaveTo
             Left = 0
-            Height = 73
+            Height = 136
             Top = 0
             Width = 516
             Anchors = [akTop, akLeft, akRight, akBottom]
@@ -465,7 +465,7 @@ object MainForm: TMainForm
             AnchorSideBottom.Side = asrBottom
             Left = 338
             Height = 26
-            Top = 96
+            Top = 159
             Width = 100
             Anchors = [akTop, akRight, akBottom]
             AutoSize = True
@@ -517,7 +517,7 @@ object MainForm: TMainForm
             AnchorSideRight.Side = asrBottom
             Left = 0
             Height = 19
-            Top = 123
+            Top = 186
             Width = 334
             Anchors = [akTop, akLeft, akRight]
             Caption = 'Add to download list as stopped task'
@@ -531,7 +531,7 @@ object MainForm: TMainForm
             AnchorSideRight.Side = asrBottom
             Left = 442
             Height = 26
-            Top = 96
+            Top = 159
             Width = 108
             Anchors = [akRight, akBottom]
             AutoSize = True
@@ -629,7 +629,7 @@ object MainForm: TMainForm
             AnchorSideRight.Side = asrBottom
             Left = 338
             Height = 26
-            Top = 126
+            Top = 189
             Width = 212
             Anchors = [akTop, akLeft, akRight, akBottom]
             AutoSize = True
@@ -680,7 +680,7 @@ object MainForm: TMainForm
             AnchorSideBottom.Control = edSaveTo
             Left = 0
             Height = 15
-            Top = 77
+            Top = 140
             Width = 41
             Anchors = [akLeft, akBottom]
             Caption = 'Save to:'
@@ -693,7 +693,7 @@ object MainForm: TMainForm
             AnchorSideRight.Control = btDownload
             Left = 0
             Height = 23
-            Top = 96
+            Top = 159
             Width = 334
             OnAcceptDirectory = edSaveToAcceptDirectory
             ShowHidden = False
@@ -740,6 +740,57 @@ object MainForm: TMainForm
             ParentFont = False
             TabOrder = 5
             TextHint = 'Save to'
+          end
+          object edFilterMangaInfoChapters: TEditButton
+            Left = 0
+            Height = 23
+            Top = 0
+            Width = 250
+            ButtonWidth = 23
+            Glyph.Data = {
+              36040000424D3604000000000000360000002800000010000000100000000100
+              2000000000000004000064000000640000000000000000000000000000090000
+              00160000001A0000001A0000001A0000001A0000001A0000001A0000001A0000
+              001A0000001A0000001A0000001A0000001A0000001600000009000000120000
+              0E3300004A8300005DBC00005DCC00005DCC00005DCC00005DCC00005DCC0000
+              5DCC00005DCC00005DCC00005DBC00004A8300000E330000001200001D000000
+              6D73080893DD1010CCF91111D9FF1111D9FF1111D9FF1111D9FF1111D9FF1111
+              D9FF1111D9FF1111D9FF0F0FCCF9070792DD00006D7300001D0000007D000000
+              7DBA1616CBF91111D1FF1111D1FF1111B6FF1111D1FF1111D1FF1111D1FF1111
+              D1FF1111B6FF1111D1FF1111D1FF0F0FC8F900007DBA00007D00000084000000
+              84CC1C1CCEFF1111C8FF1111B2FFDCDCDCFF1111B2FF1111C8FF1111C8FF1111
+              B2FFEEEEEEFF1111B2FF1111C8FF1111C8FF000084CC00008400000089000000
+              89CC2222C8FF1111BEFFD1D1D1FFD6D6D6FFDCDCDCFF1111ADFF1111ADFFEAEA
+              EAFFEEEEEEFFEEEEEEFF1111BEFF1212BEFF000089CC0000890000008D000000
+              8DCC3434C7FF1212B4FF1111B4FFD1D1D1FFD6D6D6FFDCDCDCFFE2E2E2FFE6E6
+              E6FFEAEAEAFF1111B4FF1111B4FF1414B6FF00008DCC00008D00000092000000
+              92CC4646CEFF2626B5FF1414ABFF1111AAFFD1D1D1FFD6D6D6FFDCDCDCFFE2E2
+              E2FF1111AAFF1111AAFF1111AAFF1818B0FF000092CC00009200000096000000
+              96CC4A4AD2FF3333BBFF2E2EB8FF13139FFFCECECEFFD1D1D1FFD6D6D6FFDCDC
+              DCFF11119EFF1111A1FF1111A1FF1D1DACFF000096CC0000960000009A000000
+              9ACC5050D8FF3737BFFF2323ABFFFFFFFFFFF7F7F7FFE8E8E8FFDEDEDEFFDBDB
+              DBFFDDDDDDFF11119BFF1616A0FF2B2BB5FF00009ACC00009A0000009E000000
+              9ECC5A5AE2FF4242CAFFFFFFFFFFFFFFFFFFFFFFFFFF4242CAFF4242CAFFFFFF
+              FFFFFFFFFFFFFFFFFFFF4242CAFF4E4ED6FF00009ECC00009E000000A2000000
+              A2CC6262EAFF4F4FD7FF4F4FD7FFFFFFFFFF4F4FD7FF4F4FD7FF4F4FD7FF4F4F
+              D7FFFFFFFFFF4F4FD7FF4F4FD7FF5A5AE2FF0000A2CC0000A2000000A5000000
+              A5BA6060ECF95B5BE3FF5B5BE3FF5B5BE3FF5B5BE3FF5B5BE3FF5B5BE3FF5B5B
+              E3FF5B5BE3FF5B5BE3FF5B5BE3FF5B5BE7F90000A5BA0000A5000000A8000000
+              A8732A2AC7DD6363EFF96D6DF5FF6D6DF5FF6D6DF5FF6D6DF5FF6D6DF5FF6D6D
+              F5FF6D6DF5FF6C6CF4FF6262EEF92929C5DD0000A8730000A8000000A8000000
+              A90C0000AA730000AABA0000AACC0000AACC0000AACC0000AACC0000AACC0000
+              AACC0000AACC0000AACC0000AABA0000AA730000A90C0000A800FFFFFF00FFFF
+              FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+              FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00
+            }
+            MaxLength = 0
+            NumGlyphs = 1
+            OnButtonClick = edFilterMangaInfoChaptersButtonClick
+            OnChange = edFilterMangaInfoChaptersChange
+            PasswordChar = #0
+            TabOrder = 6
+            TextHint = 'Filter'
+            Visible = False
           end
         end
       end
@@ -1944,11 +1995,11 @@ object MainForm: TMainForm
     end
     object tsOption: TTabSheet
       Caption = 'Options'
-      ClientHeight = 443
+      ClientHeight = 492
       ClientWidth = 558
       object pnOptions: TPageControl
         Left = 8
-        Height = 366
+        Height = 415
         Top = 8
         Width = 539
         ActivePage = tsGeneral
@@ -1962,7 +2013,7 @@ object MainForm: TMainForm
           ChildSizing.TopBottomSpacing = 8
           ChildSizing.HorizontalSpacing = 4
           ChildSizing.VerticalSpacing = 4
-          ClientHeight = 338
+          ClientHeight = 387
           ClientWidth = 531
           object cbOptionMinimizeToTray: TCheckBox
             AnchorSideLeft.Control = seOptionNewMangaTime
@@ -3229,11 +3280,11 @@ object MainForm: TMainForm
           ChildSizing.TopBottomSpacing = 8
           ChildSizing.HorizontalSpacing = 4
           ChildSizing.VerticalSpacing = 4
-          ClientHeight = 392
+          ClientHeight = 387
           ClientWidth = 531
           object pcWebsiteOptions: TPageControl
             Left = 4
-            Height = 376
+            Height = 371
             Top = 8
             Width = 523
             ActivePage = tsWebsiteSelection
@@ -3242,11 +3293,11 @@ object MainForm: TMainForm
             TabOrder = 0
             object tsWebsiteSelection: TTabSheet
               Caption = 'Websites'
-              ClientHeight = 348
+              ClientHeight = 343
               ClientWidth = 515
               object vtOptionMangaSiteSelection: TVirtualStringTree
                 Left = 0
-                Height = 313
+                Height = 308
                 Top = 35
                 Width = 515
                 Align = alClient
@@ -3430,7 +3481,7 @@ object MainForm: TMainForm
       object btOptionApply: TBitBtn
         Left = 8
         Height = 45
-        Top = 385
+        Top = 434
         Width = 125
         Anchors = [akLeft, akBottom]
         AutoSize = True
@@ -3692,7 +3743,7 @@ object MainForm: TMainForm
   end
   object pcLeft: TPageControl
     Left = 4
-    Height = 469
+    Height = 518
     Top = 12
     Width = 195
     ActivePage = tsMangaList
@@ -3709,7 +3760,7 @@ object MainForm: TMainForm
       ChildSizing.TopBottomSpacing = 4
       ChildSizing.HorizontalSpacing = 4
       ChildSizing.VerticalSpacing = 4
-      ClientHeight = 441
+      ClientHeight = 490
       ClientWidth = 187
       object vtMangaList: TVirtualStringTree
         AnchorSideLeft.Control = lbMode
@@ -3718,7 +3769,7 @@ object MainForm: TMainForm
         AnchorSideRight.Control = btRemoveFilter
         AnchorSideRight.Side = asrBottom
         Left = 4
-        Height = 352
+        Height = 401
         Top = 85
         Width = 179
         Anchors = [akTop, akLeft, akRight, akBottom]
@@ -4019,7 +4070,7 @@ object MainForm: TMainForm
   object sbMain: TStatusBar
     Left = 0
     Height = 23
-    Top = 485
+    Top = 534
     Width = 771
     Panels = <    
       item
@@ -4033,7 +4084,7 @@ object MainForm: TMainForm
   end
   object spMainSplitter: TSplitter
     Left = 199
-    Height = 477
+    Height = 526
     Top = 8
     Width = 2
     OnMoved = spMainSplitterMoved
@@ -4394,6 +4445,14 @@ object MainForm: TMainForm
     object miChapterListHideDownloaded: TMenuItem
       Caption = 'Hide downloaded chapters'
       OnClick = miChapterListHideDownloadedClick
+    end
+    object MenuItem2: TMenuItem
+      Caption = '-'
+    end
+    object miChapterListFilter: TMenuItem
+      AutoCheck = True
+      Caption = 'Filter'
+      OnClick = miChapterListFilterClick
     end
   end
   object pmFavorites: TPopupMenu
