@@ -911,6 +911,11 @@ msgctxt "tmainform.edfilterauthors.texthint"
 msgid "Author"
 msgstr ""
 
+#: tmainform.edfiltermangainfochapters.texthint
+msgctxt "TMAINFORM.EDFILTERMANGAINFOCHAPTERS.TEXTHINT"
+msgid "Filter"
+msgstr ""
+
 #: tmainform.edfiltersummary.texthint
 msgid "Part of summary"
 msgstr ""
@@ -1262,6 +1267,11 @@ msgstr ""
 
 #: tmainform.michapterlistcheckselected.caption
 msgid "Check selected"
+msgstr ""
+
+#: tmainform.michapterlistfilter.caption
+msgctxt "TMAINFORM.MICHAPTERLISTFILTER.CAPTION"
+msgid "Filter"
 msgstr ""
 
 #: tmainform.michapterlisthidedownloaded.caption
