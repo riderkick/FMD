@@ -676,6 +676,9 @@ type
     // change all filter genre checkbox state
     procedure FilterGenreChangeAllState(const AState: TCheckBoxState);
 
+    // filter chapter list
+    procedure FilterChapterList(const SearchStr: String; const HideDownloaded: Boolean);
+
     // exception handle
     procedure ExceptionHandler(Sender: TObject; E: Exception);
     { public declarations }
@@ -1392,6 +1395,28 @@ begin
       TCheckBox(pnGenres.Controls[i]).State := AState;
 end;
 
+procedure TMainForm.FilterChapterList(const SearchStr: String;
+  const HideDownloaded: Boolean);
+var
+  xNode: PVirtualNode;
+  s: String;
+  isShow: Boolean;
+begin
+  if clbChapterList.RootNodeCount = 0 then Exit;
+  xNode := clbChapterList.GetFirst();
+  s := lowerCase(SearchStr);
+  while Assigned(xNode) do
+  begin
+    isShow := True;
+    if HideDownloaded then
+      isShow := not ChapterList[xNode^.Index].Downloaded;
+    if isShow and (s <> '') then
+      isShow := Pos(s, LowerCase(ChapterList[xNode^.Index].Title)) <> 0;
+    clbChapterList.IsVisible[xNode] := isShow;
+    xNode := clbChapterList.GetNext(xNode);
+  end;
+end;
+
 procedure TMainForm.itMonitorTimer(Sender: TObject);
 begin
   itMonitor.Enabled := False;
@@ -1531,29 +1556,14 @@ begin
 end;
 
 procedure TMainForm.miChapterListHideDownloadedClick(Sender: TObject);
-var
-  xnode: PVirtualNode;
 begin
   if Sender = miChapterListHideDownloaded then
   begin
     miChapterListHideDownloaded.Checked := not miChapterListHideDownloaded.Checked;
     configfile.WriteBool('general', 'ChapterListHideDownloaded', miChapterListHideDownloaded.Checked);
   end;
-  if (Length(ChapterList) = 0) or (Length(ChapterList) <> clbChapterList.RootNodeCount) then Exit;
-  clbChapterList.BeginUpdate;
-  try
-    xnode := clbChapterList.GetFirst;
-    while Assigned (xnode) do
-    begin
-      if miChapterListHideDownloaded.Checked and ChapterList[xnode^.Index].Downloaded then
-        Exclude(xnode^.States, vsVisible)
-      else
-        Include(xnode^.States, vsVisible);
-      xnode := clbChapterList.GetNext(xnode);
-    end;
-  finally
-    clbChapterList.EndUpdate;
-  end;
+
+  FilterChapterList(edFilterMangaInfoChapters.Text, miChapterListHideDownloaded.Checked);
 end;
 
 procedure TMainForm.miDownloadViewMangaInfoClick(Sender: TObject);
@@ -2285,27 +2295,8 @@ begin
 end;
 
 procedure TMainForm.edFilterMangaInfoChaptersChange(Sender: TObject);
-var
-  Node: PVirtualNode;
-  s: String;
 begin
-  if clbChapterList.RootNodeCount = 0 then Exit;
-  s := LowerCase(edFilterMangaInfoChapters.Text);
-  clbChapterList.BeginUpdate;
-  try
-    Node := clbChapterList.GetFirst();
-    while Assigned(Node) do
-    begin
-      if s <> '' then
-        clbChapterList.IsVisible[Node] :=
-          Pos(s, LowerCase(ChapterList[Node^.Index].Title)) <> 0
-      else
-        clbChapterList.IsVisible[Node] := True;
-      Node := clbChapterList.GetNext(Node);
-    end;
-  finally
-    clbChapterList.EndUpdate;
-  end;
+  FilterChapterList(edFilterMangaInfoChapters.Text, miChapterListHideDownloaded.Checked);
 end;
 
 procedure TMainForm.edSaveToAcceptDirectory(Sender: TObject; var Value: String);
