@@ -3395,7 +3395,10 @@ end;
 procedure TMainForm.vtDownloadColumnDblClick(Sender: TBaseVirtualTree;
   Column: TColumnIndex; Shift: TShiftState);
 begin
-  miDownloadOpenWithClick(Sender);
+  if Column = 5 then
+    miDownloadOpenFolderClick(Sender)
+  else
+    miDownloadOpenWithClick(Sender);
 end;
 
 procedure TMainForm.vtDownloadDragAllowed(Sender : TBaseVirtualTree;
@@ -3724,7 +3727,10 @@ end;
 procedure TMainForm.vtFavoritesColumnDblClick(Sender: TBaseVirtualTree;
   Column: TColumnIndex; Shift: TShiftState);
 begin
-  miFavoritesOpenWithClick(Sender);
+  if Column = 4 then
+    miFavoritesOpenFolderClick(Sender)
+  else
+    miFavoritesOpenWithClick(Sender);
 end;
 
 procedure TMainForm.vtFavoritesDragDrop(Sender: TBaseVirtualTree;

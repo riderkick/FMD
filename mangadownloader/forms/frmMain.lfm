@@ -1790,12 +1790,12 @@ object MainForm: TMainForm
     end
     object tsFavorites: TTabSheet
       Caption = 'Favorites'
-      ClientHeight = 462
+      ClientHeight = 492
       ClientWidth = 558
       object btFavoritesCheckNewChapter: TBitBtn
         Left = 33
         Height = 40
-        Top = 382
+        Top = 412
         Width = 491
         Anchors = [akLeft, akRight, akBottom]
         Caption = 'Check for new chapter'
@@ -1840,7 +1840,7 @@ object MainForm: TMainForm
       end
       object vtFavorites: TVirtualStringTree
         Left = 4
-        Height = 371
+        Height = 401
         Top = 4
         Width = 550
         Align = alTop
@@ -1903,7 +1903,7 @@ object MainForm: TMainForm
       object btFavoritesImport: TBitBtn
         Left = 33
         Height = 24
-        Top = 428
+        Top = 458
         Width = 491
         Anchors = [akLeft, akRight, akBottom]
         Caption = 'Import list'
@@ -1950,7 +1950,7 @@ object MainForm: TMainForm
       object btCancelFavoritesCheck: TSpeedButton
         Left = 490
         Height = 40
-        Top = 382
+        Top = 412
         Width = 34
         Anchors = [akRight, akBottom]
         Glyph.Data = {
