@@ -657,7 +657,9 @@ type
     procedure ApplyLanguage;
 
     // openwith
-    procedure OpenWithExternalProgram(const dirPath, Filename: String);
+    procedure OpenWithExternalProgramChapters(const Dir: String;
+      const Chapters: TStrings = nil);
+    procedure OpenWithExternalProgram(const Dir, Filename: String);
 
     // transfer rate graph
     procedure TransferRateGraphInit(xCount: Integer = 10);
@@ -2996,97 +2998,30 @@ end;
 
 procedure TMainForm.miFavoritesOpenFolderClick(Sender: TObject);
 begin
-  if not Assigned(vtFavorites.FocusedNode) then
-    Exit;
-  OpenDocument(TrimRightChar(
-    FavoriteManager.Items[vtFavorites.FocusedNode^.Index].FavoriteInfo.SaveTo,
-    [PathDelim]));
+  if Assigned(vtFavorites.FocusedNode) then
+    OpenDocument(ChompPathDelim(
+      FavoriteManager.Items[vtFavorites.FocusedNode^.Index].FavoriteInfo.SaveTo));
 end;
 
 procedure TMainForm.miDownloadOpenFolderClick(Sender: TObject);
 begin
-  if (vtDownload.SelectedCount = 0) or (Assigned(vtDownload.FocusedNode) = False) then
-    Exit;
-  OpenDocument(ChompPathDelim(DLManager.Items[vtDownload.FocusedNode^.Index].DownloadInfo.SaveTo));
+  if Assigned(vtDownload.FocusedNode) then
+    OpenDocument(ChompPathDelim(
+      DLManager.Items[vtDownload.FocusedNode^.Index].DownloadInfo.SaveTo));
 end;
 
 procedure TMainForm.miFavoritesOpenWithClick(Sender: TObject);
-var
-  f, fd: String;
-  Info: TSearchRec;
-  l: TStringList;
 begin
-  if (not Assigned(vtFavorites.FocusedNode)) then
-    Exit;
-  l := TStringList.Create;
-  try
-    fd := StringReplace(FavoriteManager.Items[
-      vtFavorites.FocusedNode^.Index].FavoriteInfo.SaveTo, '/', '\', [rfReplaceAll]);
-    if fd[Length(fd)] <> PathDelim then
-      fd := fd + PathDelim;
-
-    if FindFirstUTF8(fd + '*', faAnyFile and faDirectory, Info) = 0 then
-      repeat
-        l.Add(Info.Name);
-      until FindNextUTF8(Info) <> 0;
-    if l.Count >= 3 then
-      f := l.Strings[2]
-    else
-      f := '';
-    FindCloseUTF8(Info);
-
-    OpenWithExternalProgram(fd, f);
-  except
-  end;
-  l.Free;
+  if Assigned(vtFavorites.FocusedNode) then
+     OpenWithExternalProgramChapters(
+       FavoriteManager.Items[vtFavorites.FocusedNode^.Index].FavoriteInfo.SaveTo);
 end;
 
 procedure TMainForm.miDownloadOpenWithClick(Sender: TObject);
-var
-  f, fd, ff: String;
-  Info: TSearchRec;
-  l: TStringList;
-  task: TTaskContainer;
 begin
-  if (not Assigned(vtDownload.FocusedNode)) then
-    Exit;
-  task := DLManager.Items[vtDownload.FocusedNode^.Index];
-  l := TStringList.Create;
-  try
-    fd := task.DownloadInfo.SaveTo;
-
-    if task.ChapterName.Count > 0 then
-    begin
-      ff := task.ChapterName[0];
-      if FileExistsUTF8(fd + ff + '.zip') then
-        f := ff + '.zip'
-      else if FileExistsUTF8(fd + ff + '.cbz') then
-        f := ff + '.cbz'
-      else if FileExistsUTF8(fd + ff + '.pdf') then
-        f := ff + '.pdf'
-      else if DirectoryExistsUTF8(fd + ff) then
-        f := ff
-      else
-        f := '';
-    end;
-
-    if f = '' then
-    begin
-      if FindFirstUTF8(fd + '*', faAnyFile and faDirectory, Info) = 0 then
-        repeat
-          l.Add(Info.Name);
-        until FindNextUTF8(Info) <> 0;
-      if l.Count >= 3 then
-        f := l.Strings[2]
-      else
-        f := '';
-      FindCloseUTF8(Info);
-    end;
-
-    OpenWithExternalProgram(fd, f);
-  except
-  end;
-  l.Free;
+  if Assigned(vtDownload.FocusedNode) then
+    with DLManager.Items[vtDownload.FocusedNode^.Index] do
+      OpenWithExternalProgramChapters(DownloadInfo.SaveTo, ChapterName);
 end;
 
 procedure TMainForm.pcMainChange(Sender: TObject);
@@ -5041,30 +4976,93 @@ begin
   end;
 end;
 
-procedure TMainForm.OpenWithExternalProgram(const dirPath, Filename: String);
+procedure TMainForm.OpenWithExternalProgramChapters(const Dir: String;
+  const Chapters: TStrings);
+
+  function FindSupportedOutputExt(const Dir, Filename: String): String;
+  var
+    i: Integer;
+    ADir, SDir: String;
+  begin
+    Result := '';
+    if Filename = '' then Exit;
+    ADir := CorrectPathSys(Dir);
+    if not DirectoryExistsUTF8(ADir) then Exit;
+    for i := Low(FMDSupportedOutputExt) to High(FMDSupportedOutputExt) do
+    begin
+      SDir := ChompPathDelim(CorrectPathSys(ADir + Filename));
+      if FileExistsUTF8(SDir + FMDSupportedOutputExt[i]) then
+      begin
+        Result := GetLastDir(SDir) + FMDSupportedOutputExt[i];
+        Break;
+      end;
+    end;
+    if Result = '' then
+    begin
+      ADir := CorrectPathSys(ADir + Filename);
+      if DirectoryExistsUTF8(ADir) then
+      Result := GetLastDir(ADir);
+    end;
+  end;
+
 var
-  Exe, Params,
-  p, f: String;
+  ADir, AFilename: String;
+  i: Integer;
+  FindList: TStringList;
+  SearchRec: TSearchRec;
+begin
+  if Dir = '' then Exit;
+  ADir := CorrectPathSys(Dir);
+  if Assigned(Chapters) then
+    if Chapters.Count > 0 then
+      for i := 0 to Chapters.Count - 1 do
+      begin
+        AFilename := FindSupportedOutputExt(ADir, Chapters[i]);
+        if AFilename <> '' then
+          Break;
+      end;
+
+  if AFilename = '' then
+    try
+      FindList := TStringList.Create;
+      if FindFirstUTF8(ADir + '*', faAnyFile and faDirectory, SearchRec) = 0 then
+        repeat
+          FindList.Add(SearchRec.Name);
+        until FindNextUTF8(SearchRec) <> 0;
+      if FindList.Count >= 3 then
+        AFilename := FindList.Strings[2]
+      else
+        AFilename := '';
+      FindCloseUTF8(SearchRec);
+    finally
+      FindList.Free;
+    end;
+  OpenWithExternalProgram(ADir, AFilename);
+end;
+
+procedure TMainForm.OpenWithExternalProgram(const Dir, Filename: String);
+var
+  ADir, AParam, Exe, Params: String;
 begin
   Exe := Trim(configfile.ReadString('general', 'ExternalProgramPath', ''));
   Params := Trim(configfile.ReadString('general', 'ExternalProgramParams', DEFAULT_EXPARAM));
 
-  p := Trim(TrimRightChar(Trim(dirPath), [PathDelim]));
-  f := Trim(TrimChar(Trim(Filename), [PathDelim]));
+  ADir := Trim(ChompPathDelim(CorrectPathSys(Dir)));
+  AParam := Trim(ChompPathDelim(Filename));
 
   if Exe <> '' then
   begin
     if (Pos(EXPARAM_PATH + EXPARAM_CHAPTER, Params) <> 0) then
-      f := PathDelim + f;
-    Params := StringReplace(Params, EXPARAM_PATH, p, [rfIgnoreCase, rfReplaceAll]);
-    Params := StringReplace(Params, EXPARAM_CHAPTER, f, [rfIgnoreCase, rfReplaceAll]);
+      AParam := PathDelim + AParam;
+    Params := StringReplace(Params, EXPARAM_PATH, ADir, [rfIgnoreCase, rfReplaceAll]);
+    Params := StringReplace(Params, EXPARAM_CHAPTER, AParam, [rfIgnoreCase, rfReplaceAll]);
     RunExternalProcess(Exe, Params, True, False);
   end
   else
   begin
-    if (p <> '') and (f <> '') then
-      f := p + PathDelim + f;
-    OpenDocument(f);
+    if (ADir <> '') and (AParam <> '') then
+      AParam := ADir + PathDelim + AParam;
+    OpenDocument(AParam);
   end;
 end;
 

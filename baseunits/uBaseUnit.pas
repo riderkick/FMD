@@ -483,6 +483,8 @@ const
   MangaInfo_StatusCompleted = '0';
   MangaInfo_StatusOngoing = '1';
 
+  FMDSupportedOutputExt: array[0..2] of string = ('.zip', '.cbz', '.pdf');
+
   {$ifdef windows}
   // MAX_PATH(260) - 12 - 1
   MAX_PATH_LENGTH = 247;
@@ -736,7 +738,7 @@ function RemoveURLDelim(const URL: String): String; inline;
 function RemoveURLDelimLeft(const URL: String): String; inline;
 function FixURL(const URL: String): String;
 function FixPath(const path: String): String;
-function GetLastDir(const path: String): String;
+function GetLastDir(const Dir: String): String;
 function StringFilter(const Source: String): String;
 function HTMLEntitiesFilter(const Source: String): String;
 function CommonStringFilter(const Source: String): String;
@@ -2494,24 +2496,24 @@ begin
   end;
 end;
 
-function GetLastDir(const path: String): String;
+function GetLastDir(const Dir: String): String;
 var
-  i: Cardinal;
   s: String;
+  i: Integer;
 begin
   Result := '';
-  if Length(path) = 0 then
-    Exit;
-  s := path;
-  while s[Length(s)] in ['/', '\'] do
-    SetLength(s, Length(s) - 1);
-  i := Length(s);
-  for i := 1 to Length(s) do
-  begin
-    Result := Result + s[i];
-    if (s[i] in ['/', '\']) and (i < Length(s)) then
-      Result := '';
-  end;
+  s := Trim(Dir);
+  if s = '' then Exit;
+  s := TrimRightChar(s, AllowDirectorySeparators);
+  if s <> '' then
+    for i := Length(s) downto 1 do
+      if s[i] in AllowDirectorySeparators then
+      begin
+        Result := Copy(s, i + 1, Length(s) - i);
+        Break;
+      end;
+  if Result = ''  then
+    Result := s;
 end;
 
 function StringFilter(const Source: String): String;
