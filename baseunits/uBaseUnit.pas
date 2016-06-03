@@ -483,6 +483,11 @@ const
   MangaInfo_StatusCompleted = '0';
   MangaInfo_StatusOngoing = '1';
 
+  {$ifdef windows}
+  // MAX_PATH(260) - 12 - 1
+  MAX_PATH_LENGTH = 247;
+  {$endif}
+
 var
   // Sites var
   BROWSER_INVERT: Boolean = False;
@@ -1867,9 +1872,12 @@ function CorrectPathSys(const Path: String): String;
 begin
   Result := CleanAndExpandDirectory(GetForcedPathDelims(Path));
   {$IFDEF WINDOWS}
-  //max length = 247 (MAX_PATH(260) - 12 - 1)
-  if Length(Result) > 247 then
-    SetLength(Result, 247);
+  if Length(Result) > MAX_PATH_LENGTH then
+  begin
+    SetLength(Result, MAX_PATH_LENGTH);
+    if Result[MAX_PATH_LENGTH] <> PathDelim then
+      Result[MAX_PATH_LENGTH] := PathDelim;
+  end;
   {$ENDIF}
 end;
 
