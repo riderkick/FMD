@@ -4,6 +4,17 @@ Project page: https://github.com/riderkick/FMD
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.60.0 (03-06-2016)
+[*] ReadComicOnline: fixed domain
+[*] Fixed various path issue
+[+] Added option for custom filename
+[+] Added option to disable auto generate chapter folder
+[+] Added popup menu to check/uncheck/indeterminate all genres in filter
+[+] Added filter chapter list in mangainfo, activate via popup menu on chapter list
+[*] Double click on "Save to" column on download list/favorite list will open folder
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.59.0...0.9.60.0
+
 0.9.59.0 (30-05-2016)
 [+] Added SekaiManga[ES]
 Full changes: https://github.com/riderkick/FMD/compare/0.9.58.0...0.9.59.0
