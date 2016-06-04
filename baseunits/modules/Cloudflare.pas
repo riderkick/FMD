@@ -15,6 +15,9 @@ function GETCF(const AHTTP: THTTPSendThread; const AURL: String): Boolean; overl
 
 implementation
 
+const
+  MIN_WAIT_TIME = 4000;
+
 function AntiBotActive(const AHTTP: THTTPSendThread): Boolean;
 begin
   Result := False;
@@ -54,31 +57,33 @@ begin
     try
       ModifierG := False;
       ModifierI := True;
-      Expression := '^.*setTimeout\(function\(\)\{\s+var t,r,a,f,\s*(\S.+a\.value =.+)\r?\n.*$';
-      Expression := '^.*setTimeout\(function\(\)\{\s+var t,r,a,f,\s*(\S.+a\.value =.+)\r?\n.*$';
-      s := Replace(s, '$1', True);
-      Expression := '\s{3,}[a-z](\s*=\s*document\.|\.).+;\r?\n';
-      s := Replace(s, '', False);
-      Expression := 't\s=\s*t\.firstChild.href;';
-      s := Replace(s, ' t = "' + URL + '";', False);
-      Expression := 'a\.value\s*=';
-      s := Replace(s, 'a =', False);
-      Expression := '^.*\.submit\(.*\},\s*(\d{4,})\).*$';
-      OSleepTime := StrToIntDef(Replace(Source, '$1', True), 5000);
+
+      Expression := 'setTimeout\(function\(\)\{\s*var.*\w,\s+(\S.+a\.value =.+)\r?\n';
+      Exec(s);
+      if SubExprMatchCount > 0 then
+      begin
+        s := Match[1];
+        Expression := '\s{3,}[a-z](\s*=\s*document\.|\.).+;\r?\n';
+        s := Replace(s, '', False);
+        Expression := 't\s=\s*t\.firstChild.href;';
+        s := Replace(s, ' t = "' + URL + '";', False);
+        Expression := 'a\.value\s*=';
+        s := Replace(s, 'a =', False);
+        Expression := '^.*\.submit\(.*\},\s*(\d{4,})\).*$';
+        OSleepTime := StrToIntDef(Replace(Source, '$1', True), MIN_WAIT_TIME);
+
+        with TBESEN.Create do
+          try
+            v := Execute(s);
+            if v.ValueType = bvtNUMBER then
+              jschl_answer := FloatToStr(v.Num);
+          finally
+            Free;
+          end;
+      end;
     finally
       Free;
     end;
-
-  with TBESEN.Create do begin
-    try
-      v := Execute(s);
-      if v.ValueType = bvtNUMBER then
-        jschl_answer := FloatToStr(v.Num);
-    except
-      jschl_answer := '';
-    end;
-    Free;
-  end;
 
   if jschl_answer = '' then Exit;
   OMethod := meth;
@@ -101,13 +106,12 @@ begin
       m := 'GET';
       u := '';
       h := AppendURLDelim(GetHostURL(AURL));
-      st := 5000;
+      st := MIN_WAIT_TIME;
       if JSGetAnsweredURL(StreamToString(AHTTP.Document), h, m, u, st) then
         if (m <> '') and (u <> '') then begin
           AHTTP.Reset;
           AHTTP.Headers.Values['Referer'] := ' ' + AURL;
-          //minimum wait time is 5000
-          if st < 5000 then st := 5000;
+          if st < MIN_WAIT_TIME then st := MIN_WAIT_TIME;
           Sleep(st);
           AHTTP.FollowRedirection := False;
           if AHTTP.HTTPRequest(m, FillHost(h, u)) then
