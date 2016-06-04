@@ -28,6 +28,7 @@ type
     function GET(const URL: String; const Response: TObject = nil): Boolean;
     function POST(const URL: String; const POSTData: String = ''; const Response: TObject = nil): Boolean;
     function GetCookies: String;
+    function ThreadTerminated: Boolean;
     procedure RemoveCookie(const CookieName: String);
     procedure SetProxy(const ProxyType, Host, Port, User, Pass: String);
     procedure SetNoProxy;
@@ -36,6 +37,7 @@ type
     property RetryCount: Integer read fretrycount write fretrycount;
     property GZip: Boolean read fgzip write fgzip;
     property FollowRedirection: Boolean read ffollowredirection write ffollowredirection;
+    property Thread: TFMDThread read fowner;
   end;
 
   TKeyValuePair = array[0..1] of String;
@@ -325,6 +327,13 @@ begin
       if Result = '' then Result := Cookies.Strings[i]
       else Result := Result + '; ' + Cookies.Strings[i];
     end;
+end;
+
+function THTTPSendThread.ThreadTerminated: Boolean;
+begin
+  Result := False;
+  if Assigned(fowner) then
+    Result := fowner.IsTerminated;
 end;
 
 procedure THTTPSendThread.RemoveCookie(const CookieName: String);
