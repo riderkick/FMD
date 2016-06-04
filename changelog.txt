@@ -4,6 +4,10 @@ Project page: https://github.com/riderkick/FMD
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.61.0 (05-06-2016)
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.60.0...0.9.61.0
+
 0.9.60.0 (03-06-2016)
 [*] ReadComicOnline: fixed domain
 [*] Fixed various path issue
