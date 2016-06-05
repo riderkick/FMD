@@ -2661,13 +2661,8 @@ end;
 
 function TrimChar(const Source: String; const Chars: TSysCharSet): String;
 begin
-  Result := Source;
-  if Length(Result) > 0 then
-    while (Length(Result) > 0) and (Result[1] in Chars) do
-      Delete(Result, 1, 1);
-  if Length(Result) > 0 then
-    while (Length(Result) > 0) and (Result[Length(Result)] in Chars) do
-      Delete(Result, Length(Result), 1);
+  Result := TrimLeftChar(Source, Chars);
+  Result := TrimRightChar(Result, Chars);
 end;
 
 function TrimLeftChar(const Source: String; const Chars: TSysCharSet): String;
