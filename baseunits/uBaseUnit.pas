@@ -2117,10 +2117,22 @@ end;
 
 function CustomRename(const AString, AWebsite, AMangaName, AAuthor, AArtist, AChapter,
   ANumbering: String; const ARemoveUnicode: Boolean; const AFilename: String): String;
+
+  function FixStringLocal(const S: String): String;
+  begin
+    // fix htmlentities
+    Result := CommonStringFilter(S);
+    // remove unaccepted character (Windows)
+    Result := RemoveSymbols(Result);
+    // strip unicode character
+    if ARemoveUnicode then
+      Result := UnicodeRemove(Result);
+  end;
+
 var
-  chap: String;
+  fchapter: String;
 begin
-  Result := Trim(AString);
+  Result := AString;
 
   // for rename chapter only
   if AChapter <> '' then begin
@@ -2138,54 +2150,44 @@ begin
     end
     else
       Result := StringReplaceBrackets(Result, '%NUMBERING%', ANumbering, [rfReplaceAll]);
+
     // pad number
-    chap := Trim(AChapter);
+    fchapter := Trim(AChapter);
     if OptionConvertDigitVolume then
     begin
       if OptionConvertDigitChapter then
-        VolumeChapterPadZero(chap, OptionConvertDigitVolumeLength, OptionConvertDigitChapterLength)
+        VolumeChapterPadZero(fchapter, OptionConvertDigitVolumeLength, OptionConvertDigitChapterLength)
       else
-        VolumeChapterPadZero(chap, OptionConvertDigitVolumeLength, 0);
+        VolumeChapterPadZero(fchapter, OptionConvertDigitVolumeLength, 0);
     end
     else
     if OptionConvertDigitChapter then
-      VolumeChapterPadZero(chap, 0, OptionConvertDigitChapterLength);
+      VolumeChapterPadZero(fchapter, 0, OptionConvertDigitChapterLength);
 
-    Result := StringReplaceBrackets(Result, '%CHAPTER%', chap, [rfReplaceAll]);
+    fchapter := FixStringLocal(fchapter);
+
+    Result := StringReplaceBrackets(Result, '%CHAPTER%', fchapter, [rfReplaceAll]);
 
     if Result = '' then begin
       if AWebsite = WebsiteRoots[FAKKU_ID, 0] then
-        Result := chap
+        Result := fchapter
       else
         Result := ANumbering;
     end;
   end;
 
-  Result := StringReplaceBrackets(Result, '%WEBSITE%', AWebsite, [rfReplaceAll]);
-  Result := StringReplaceBrackets(Result, '%MANGA%', AMangaName, [rfReplaceAll]);
-  Result := StringReplaceBrackets(Result, '%AUTHOR%', AAuthor, [rfReplaceAll]);
-  Result := StringReplaceBrackets(Result, '%ARTIST%', AArtist, [rfReplaceAll]);
-  Result := StringReplaceBrackets(Result, '%FILENAME%', AFilename, [rfReplaceAll]);
+  Result := StringReplaceBrackets(Result, '%WEBSITE%', FixStringLocal(AWebsite), [rfReplaceAll]);
+  Result := StringReplaceBrackets(Result, '%MANGA%', FixStringLocal(AMangaName), [rfReplaceAll]);
+  Result := StringReplaceBrackets(Result, '%AUTHOR%', FixStringLocal(AAuthor), [rfReplaceAll]);
+  Result := StringReplaceBrackets(Result, '%ARTIST%', FixStringLocal(AArtist), [rfReplaceAll]);
+  Result := StringReplaceBrackets(Result, '%FILENAME%', FixStringLocal(AFilename), [rfReplaceAll]);
 
-  if Result = '' then Result := AMangaName;
+  if Result = '' then Result := FixStringLocal(AMangaName);
 
   if Result = '' then Exit;
 
-  // strip unicode character
-  if ARemoveUnicode then
-    Result := UnicodeRemove(Result);
-
-  // replace htmlentities
-  Result := HTMLEntitiesFilter(StringFilter(Result));
-
-  // remove unaccepted character (Windows)
-  Result := RemoveSymbols(Result);
-
   // remove pathdelim
-  Result := StringReplace(Result, '/', '', [rfReplaceAll]);
-  Result := StringReplace(Result, '\', '', [rfReplaceAll]);
-
-  Result := Trim(Result);
+  Result := TrimChar(Result, AllowDirectorySeparators);
 end;
 
 function GetString(const Source, sStart, sEnd: String): String;
