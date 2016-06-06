@@ -871,6 +871,8 @@ begin
       end;
       uPacker.CompressionQuality := OptionPDFQuality;
       uPacker.Path := Container.CurrentWorkingDir;
+      uPacker.FileName := Container.DownloadInfo.SaveTo +
+        Container.ChapterName[Container.CurrentDownloadChapterPtr];
       uPacker.Execute;
     except
       on E: Exception do

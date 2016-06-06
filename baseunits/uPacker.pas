@@ -17,18 +17,21 @@ uses
 type
   TPackerFormat = (pfZIP, pfCBZ, pfPDF);
 
+  { TPacker }
+
   TPacker = class
   protected
-    FSavedFilename, FExt: String;
+    FSavedFileName, FExt: String;
     FFileList: TStringList;
     procedure FileFound(FileIterator: TFileIterator);
     procedure DoZipCbz;
     procedure DoPdf;
   public
-    Path: String;
+    Path,
+    FileName: String;
     Format: TPackerFormat;
     CompressionQuality: Cardinal;
-    procedure Execute;
+    function Execute: Boolean;
   end;
 
 implementation
@@ -45,7 +48,7 @@ begin
   with TZipper.Create do
     try
       try
-        FileName := FSavedFilename;
+        FileName := FSavedFileName;
         for i := 0 to FFileList.Count - 1 do
           with Entries.AddFileEntry(FFileList[i]) do
           begin
@@ -84,7 +87,7 @@ begin
         end;
       end;
 
-      fstream := TFileStreamUTF8.Create(FSavedFilename, fmCreate);
+      fstream := TFileStreamUTF8.Create(FSavedFileName, fmCreate);
       try
         pdf.SaveToStream(fstream);
       finally
@@ -102,8 +105,9 @@ begin
   end;
 end;
 
-procedure TPacker.Execute;
+function TPacker.Execute: Boolean;
 begin
+  Result:=False;
   Path:=CleanAndExpandDirectory(Path);
   if DirectoryExistsUTF8(Path)=False then Exit;
   FFileList:=TStringList.Create;
@@ -122,15 +126,25 @@ begin
         pfCBZ: FExt:='.cbz';
         pfPDF: FExt:='.pdf';
       end;
-      FSavedFilename:=TrimAndExpandFilename(Path)+FExt;
-      if FileExistsUTF8(FSavedFilename) then
-        if DeleteFileUTF8(FSavedFilename)=False then
+      if FileName<>'' then
+      begin
+        FSavedFileName:=FileName;
+        if Length(ExtractFileExt(FSavedFileName))>1 then
+          FSavedFileName:=ChangeFileExt(FSavedFileName,FExt)
+        else
+          FSavedFileName:=FSavedFileName+FExt;
+      end
+      else
+        FSavedFileName:=TrimAndExpandFilename(Path)+FExt;
+      if FileExistsUTF8(FSavedFileName) then
+        if DeleteFileUTF8(FSavedFileName)=False then
           Exit;
       case Format of
         pfZIP,pfCBZ: DoZipCbz;
         pfPDF: DoPdf;
       end;
-      if FileExistsUTF8(FSavedFilename) then
+      Result := FileExistsUTF8(FSavedFileName);
+      if Result then
         if DeleteDirectory(Path,False) then
           RemoveDirUTF8(Path);
     end;

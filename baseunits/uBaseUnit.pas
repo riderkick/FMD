@@ -726,6 +726,7 @@ function HTMLDecode(const AStr: String): String;
 
 function RemoveSymbols(const input: String): String;
 function CorrectPathSys(const Path: String): String;
+function RemovePathDelim(const Path: string): string;
 
 function FixWhiteSpace(const S: String): String;
 function CleanString(const S: String): String;
@@ -1872,15 +1873,20 @@ end;
 
 function CorrectPathSys(const Path: String): String;
 begin
-  Result := CleanAndExpandDirectory(GetForcedPathDelims(Path));
   {$IFDEF WINDOWS}
+  Result := RemovePathDelim(CleanAndExpandFilename(GetForcedPathDelims(Path)));
+  Result := TrimRightChar(Result, ['.']);
   if Length(Result) > MAX_PATH_LENGTH then
-  begin
     SetLength(Result, MAX_PATH_LENGTH);
-    if Result[MAX_PATH_LENGTH] <> PathDelim then
-      Result[MAX_PATH_LENGTH] := PathDelim;
-  end;
+  Result := AppendPathDelim(Result);
+  {$ELSE}
+  Result := CleanAndExpandDirectory(GetForcedPathDelims(Path));
   {$ENDIF}
+end;
+
+function RemovePathDelim(const Path: string): string;
+begin
+  Result := TrimRightChar(Path, AllowDirectorySeparators);
 end;
 
 function StringOfString(c: String; l: Integer): String;
