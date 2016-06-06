@@ -83,6 +83,7 @@ type
     Threads: TFPList;
     constructor Create;
     destructor Destroy; override;
+    function GetFileName(const AWorkId: Integer): String;
   end;
 
   { TTaskContainer }
@@ -103,6 +104,8 @@ type
     DownloadInfo: TDownloadInfo;
     // current working dir, save to + chapter name
     CurrentWorkingDir: String;
+    // current custom filename with only %FILENAME% left intact
+    CurrentCustomFileName: String;
     // current link index
     CurrentPageNumber,
     // current chapter index
@@ -121,7 +124,8 @@ type
     PageContainerLinks,
     PageLinks: TStringList;
     Filenames: TStringList;
-    // custom filenames
+    // custom filename
+    CustomFileName: String;
     constructor Create;
     destructor Destroy; override;
     procedure IncReadCount(const ACount: Integer);
@@ -847,6 +851,17 @@ begin
   inherited Destroy;
 end;
 
+function TTaskThread.GetFileName(const AWorkId: Integer): String;
+begin
+  Result := '';
+  if (Container.Filenames.Count = Container.PageLinks.Count) and
+    (AWorkId < Container.Filenames.Count) then
+    Result := Container.Filenames[AWorkId];
+  if Result = '' then
+    Result := Format('%.3d', [AWorkId + 1]);
+  Result := StringReplace(Container.CurrentCustomFileName, CR_FILENAME, Result, [rfReplaceAll]);
+end;
+
 procedure TTaskThread.MainThreadCompressRepaint;
 begin
   Container.DownloadInfo.Status :=
@@ -858,6 +873,8 @@ end;
 procedure TTaskThread.Compress;
 var
   uPacker: TPacker;
+  i: Integer;
+  s: String;
 begin
   if (Container.Manager.compress >= 1) then
   begin
@@ -873,6 +890,12 @@ begin
       uPacker.Path := Container.CurrentWorkingDir;
       uPacker.FileName := Container.DownloadInfo.SaveTo +
         Container.ChapterName[Container.CurrentDownloadChapterPtr];
+      for i := 0 to Container.PageLinks.Count - 1 do
+      begin
+        s := FindImageFile(Container.CurrentWorkingDir + GetFileName(i));
+        if s <> '' then
+          uPacker.FileList.Add(s);
+      end;
       uPacker.Execute;
     except
       on E: Exception do
@@ -945,24 +968,7 @@ begin
     Result := Modules.BeforeDownloadImage(Self, workURL, Task.Container.ModuleId);
 
   // prepare filename
-  workFilename := '';
-  if WorkId < Task.Container.Filenames.Count then
-    workFilename := Task.Container.Filenames[WorkId];
-  if workFilename = '' then
-    workFilename := Format('%.3d', [WorkId + 1]);
-  // custom filename
-  with task.Container.DownloadInfo do
-  begin
-    workFilename := CustomRename(OptionFilenameCustomRename,
-      Website,
-      Title,
-      '',
-      '',
-      Task.Container.ChapterName[Task.Container.CurrentDownloadChapterPtr],
-      '',
-      OptionChangeUnicodeCharacter,
-      workFilename);
-  end;
+  workFilename := Task.GetFileName(WorkId);
 
   // download image
   savedFilename := '';
@@ -1134,7 +1140,6 @@ procedure TTaskThread.Execute;
 
 var
   j: Integer;
-  s: String;
   DynamicPageLink: Boolean;
 begin
   Container.ThreadState := True;
@@ -1144,6 +1149,9 @@ begin
       DynamicPageLink := Modules.Module[Container.ModuleId].DynamicPageLink
     else
       DynamicPageLink := False;
+
+    if Trim(Container.CustomFileName) = '' then
+      Container.CustomFileName := DEFAULT_FILENAME_CUSTOMRENAME;
 
     while Container.CurrentDownloadChapterPtr < Container.ChapterLinks.Count do
     begin
@@ -1166,6 +1174,17 @@ begin
 
       if Container.ModuleId > -1 then
         Modules.TaskStart(Container, Container.ModuleId);
+
+      // set current working custom filename
+      Container.CurrentCustomFileName :=  CustomRename(Container.CustomFileName,
+        Container.DownloadInfo.Website,
+        Container.DownloadInfo.Title,
+        '',
+        '',
+        Container.ChapterName[Container.CurrentDownloadChapterPtr],
+        '',
+        OptionChangeUnicodeCharacter,
+        CR_FILENAME);
 
       // Get page number.
       if Container.PageLinks.Count = 0 then
@@ -1197,12 +1216,7 @@ begin
       begin
         for j := 0 to Container.PageLinks.Count - 1 do
         begin
-          if Container.Filenames.Count = Container.PageLinks.Count then
-            s := Container.CurrentWorkingDir + Container.Filenames[j]
-          else
-            s := Container.CurrentWorkingDir + Format('%.3d', [j + 1]);
-
-          if ImageFileExist(s) then
+          if ImageFileExist(Container.CurrentWorkingDir + GetFileName(j)) then
             Container.PageLinks[j] := 'D'
           else
           if Container.PageLinks[j] = 'D' then
@@ -1567,6 +1581,7 @@ begin
           DownCounter := StrToIntDef(ExtractWord(1, DownloadInfo.Progress, ['/']), 0);
           PageNumber := StrToIntDef(ExtractWord(2, DownloadInfo.Progress, ['/']), 0);
         end;
+        CustomFileName := ReadString(tid, 'CustomFileName', DEFAULT_FILENAME_CUSTOMRENAME);
         s := ReadString(tid, 'ChapterLinks', '');
         if s <> '' then GetParams(ChapterLinks, s);
         s := ReadString(tid, 'ChapterName', '');
@@ -1653,6 +1668,7 @@ begin
           WriteString(tid, 'Status', DownloadInfo.Status);
           WriteString(tid, 'Progress', DownloadInfo.Progress);
           WriteString(tid, 'DateTime', FloatToStr(DownloadInfo.dateTime, FMDFormatSettings));
+          WriteString(tid, 'CustomFileName', CustomFileName);
           WriteString(tid, 'ChapterLinks', SetParams(ChapterLinks));
           WriteString(tid, 'ChapterName', SetParams(ChapterName));
           if FailedChapterLinks.Count > 0 then
@@ -1706,7 +1722,11 @@ begin
   CS_Task.Acquire;
   try
     Result := Containers.Add(TTaskContainer.Create);
-    TTaskContainer(Containers.Last).Manager := Self;
+    with TTaskContainer(Containers[Result]) do
+    begin
+      Manager := Self;
+      CustomFileName := OptionFilenameCustomRename;
+    end;
   finally
     CS_Task.Release;
   end;

@@ -32,6 +32,10 @@ type
     Format: TPackerFormat;
     CompressionQuality: Cardinal;
     function Execute: Boolean;
+    property FileList: TStringList read FFileList;
+  public
+    constructor Create;
+    destructor Destroy; override;
   end;
 
 implementation
@@ -109,48 +113,59 @@ function TPacker.Execute: Boolean;
 var
   i: Integer;
 begin
-  Result:=False;
-  Path:=CleanAndExpandDirectory(Path);
-  if DirectoryExistsUTF8(Path)=False then Exit;
-  FFileList:=TStringList.Create;
-  try
+  Result := False;
+  Path := CleanAndExpandDirectory(Path);
+
+  if FFileList.Count = 0 then
+  begin
+    if DirectoryExistsUTF8(Path) = False then Exit;
     with TFileSearcher.Create do
       try
-        OnFileFound:=FileFound;
-        Search(Self.Path,'*.jpg;*.jpeg;*.png;*.gif',False,False);
+        OnFileFound := FileFound;
+        Search(Self.Path, '*.jpg;*.png;*.gif', False, False);
       finally
         Free;
       end;
-    if FFileList.Count>0 then begin
-      FFileList.CustomSort(NaturalCustomSort);
-      case Format of
-        pfZIP: FExt:='.zip';
-        pfCBZ: FExt:='.cbz';
-        pfPDF: FExt:='.pdf';
-      end;
-      if FileName<>'' then
-        FSavedFileName:=FileName+FExt
-      else
-        FSavedFileName:=TrimAndExpandFilename(Path)+FExt;
-      if FileExistsUTF8(FSavedFileName) then
-        if DeleteFileUTF8(FSavedFileName)=False then
-          Exit;
-      case Format of
-        pfZIP,pfCBZ: DoZipCbz;
-        pfPDF: DoPdf;
-      end;
-      Result := FileExistsUTF8(FSavedFileName);
-      if Result then
-      begin
-        for i:=0 to FFileList.Count-1 do
-          DeleteFileUTF8(FFileList[i]);
-        if IsDirectoryEmpty(Path) then
-          RemoveDirUTF8(Path);
-      end;
-    end;
-  finally
-    FFileList.Free;
   end;
+
+  if FFileList.Count = 0 then Exit;
+
+  FFileList.CustomSort(NaturalCustomSort);
+  case Format of
+    pfZIP: FExt := '.zip';
+    pfCBZ: FExt := '.cbz';
+    pfPDF: FExt := '.pdf';
+  end;
+  if FileName <> '' then
+    FSavedFileName := FileName + FExt
+  else
+    FSavedFileName := TrimAndExpandFilename(Path) + FExt;
+  if FileExistsUTF8(FSavedFileName) then
+    if DeleteFileUTF8(FSavedFileName) = False then
+      Exit;
+  case Format of
+    pfZIP, pfCBZ: DoZipCbz;
+    pfPDF: DoPdf;
+  end;
+  Result := FileExistsUTF8(FSavedFileName);
+  if Result then
+  begin
+    for i := 0 to FFileList.Count - 1 do
+      DeleteFileUTF8(FFileList[i]);
+    if IsDirectoryEmpty(Path) then
+      RemoveDirUTF8(Path);
+  end;
+end;
+
+constructor TPacker.Create;
+begin
+  FFileList := TStringList.Create;
+end;
+
+destructor TPacker.Destroy;
+begin
+  FFileList.Free;
+  inherited Destroy;
 end;
 
 end.

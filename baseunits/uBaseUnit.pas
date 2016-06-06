@@ -483,7 +483,17 @@ const
   MangaInfo_StatusCompleted = '0';
   MangaInfo_StatusOngoing = '1';
 
-  FMDSupportedOutputExt: array[0..2] of string = ('.zip', '.cbz', '.pdf');
+  FMDSupportedOutputExt: array[0..2] of ShortString = ('.zip', '.cbz', '.pdf');
+  FMDImageFileExt: array[0..2] of ShortString = ('.png', '.gif', '.jpg');
+
+  // custom rename
+  CR_NUMBERING = '%NUMBERING%';
+  CR_CHAPTER   = '%CHAPTER%';
+  CR_WEBSITE   = '%WEBSITE%';
+  CR_MANGA     = '%MANGA%';
+  CR_AUTHOR    = '%AUTHOR%';
+  CR_ARTIST    = '%ARTIST%';
+  CR_FILENAME  = '%FILENAME%';
 
   {$ifdef windows}
   // MAX_PATH(260) - 12 - 1
@@ -815,7 +825,8 @@ function SaveImage(const mangaSiteID: Integer; URL: String;
   overload; inline;
 
 // check file exist with known extensions. AFilename is a filename without extensions
-function ImageFileExist(const AFilename: String): Boolean;
+function ImageFileExist(const AFileName: String): Boolean;
+function FindImageFile(const AFileName: String): String;
 
 // load TImageData from file with UTF8 aware
 function LoadImageDataFromFileUTF8(const FileName: String; var Image: TImageData): Boolean;
@@ -2141,19 +2152,19 @@ begin
   // for rename chapter only
   if AChapter <> '' then begin
     // numbering/index
-    if (Pos('%NUMBERING%', Result) = 0) and (Pos('%CHAPTER%', Result) = 0) then
+    if (Pos(CR_NUMBERING, Result) = 0) and (Pos(CR_CHAPTER, Result) = 0) then
       Result := ANumbering + Result
     else
       Result := Result;
     if AWebsite = WebsiteRoots[FAKKU_ID, 0] then
     begin
       if Pos('%NUMBERING% - ', Result) > 0 then
-        Result := StringReplaceBrackets(Result, '%NUMBERING% - ', '', [rfReplaceAll])
+        Result := StringReplaceBrackets(Result, CR_NUMBERING + ' - ', '', [rfReplaceAll])
       else
-        Result := StringReplaceBrackets(Result, '%NUMBERING%', '', [rfReplaceAll]);
+        Result := StringReplaceBrackets(Result, CR_NUMBERING, '', [rfReplaceAll]);
     end
     else
-      Result := StringReplaceBrackets(Result, '%NUMBERING%', ANumbering, [rfReplaceAll]);
+      Result := StringReplaceBrackets(Result, CR_NUMBERING, ANumbering, [rfReplaceAll]);
 
     // pad number
     fchapter := Trim(AChapter);
@@ -2170,7 +2181,7 @@ begin
 
     fchapter := FixStringLocal(fchapter);
 
-    Result := StringReplaceBrackets(Result, '%CHAPTER%', fchapter, [rfReplaceAll]);
+    Result := StringReplaceBrackets(Result, CR_CHAPTER, fchapter, [rfReplaceAll]);
 
     if Result = '' then begin
       if AWebsite = WebsiteRoots[FAKKU_ID, 0] then
@@ -2180,11 +2191,11 @@ begin
     end;
   end;
 
-  Result := StringReplaceBrackets(Result, '%WEBSITE%', FixStringLocal(AWebsite), [rfReplaceAll]);
-  Result := StringReplaceBrackets(Result, '%MANGA%', FixStringLocal(AMangaName), [rfReplaceAll]);
-  Result := StringReplaceBrackets(Result, '%AUTHOR%', FixStringLocal(AAuthor), [rfReplaceAll]);
-  Result := StringReplaceBrackets(Result, '%ARTIST%', FixStringLocal(AArtist), [rfReplaceAll]);
-  Result := StringReplaceBrackets(Result, '%FILENAME%', FixStringLocal(AFilename), [rfReplaceAll]);
+  Result := StringReplaceBrackets(Result, CR_WEBSITE, FixStringLocal(AWebsite), [rfReplaceAll]);
+  Result := StringReplaceBrackets(Result, CR_MANGA, FixStringLocal(AMangaName), [rfReplaceAll]);
+  Result := StringReplaceBrackets(Result, CR_AUTHOR, FixStringLocal(AAuthor), [rfReplaceAll]);
+  Result := StringReplaceBrackets(Result, CR_ARTIST, FixStringLocal(AArtist), [rfReplaceAll]);
+  Result := StringReplaceBrackets(Result, CR_FILENAME, FixStringLocal(AFilename), [rfReplaceAll]);
 
   if Result = '' then Result := FixStringLocal(AMangaName);
 
@@ -3477,11 +3488,22 @@ begin
   Result := SaveImage(nil, mangaSiteID, URL, Path, Name, SavedFilename, Reconnect);
 end;
 
-function ImageFileExist(const AFilename: String): Boolean;
+function ImageFileExist(const AFileName: String): Boolean;
 begin
-  Result := (FileExistsUTF8(AFilename + '.jpg')) or
-            (FileExistsUTF8(AFilename + '.png')) or
-            (FileExistsUTF8(AFilename + '.gif'));
+  Result := FindImageFile(AFileName) <> '';
+end;
+
+function FindImageFile(const AFileName: String): String;
+var
+  i: Byte;
+begin
+  Result := '';
+  for i := Low(FMDImageFileExt) to High(FMDImageFileExt) do
+    if FileExistsUTF8(AFileName + FMDImageFileExt[i]) then
+    begin
+      Result := AFileName + FMDImageFileExt[i];
+      Break;
+    end;
 end;
 
 function LoadImageDataFromFileUTF8(const FileName: String; var Image: TImageData): Boolean;
