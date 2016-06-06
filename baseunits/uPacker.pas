@@ -127,13 +127,7 @@ begin
         pfPDF: FExt:='.pdf';
       end;
       if FileName<>'' then
-      begin
-        FSavedFileName:=FileName;
-        if Length(ExtractFileExt(FSavedFileName))>1 then
-          FSavedFileName:=ChangeFileExt(FSavedFileName,FExt)
-        else
-          FSavedFileName:=FSavedFileName+FExt;
-      end
+        FSavedFileName:=FileName+FExt
       else
         FSavedFileName:=TrimAndExpandFilename(Path)+FExt;
       if FileExistsUTF8(FSavedFileName) then
