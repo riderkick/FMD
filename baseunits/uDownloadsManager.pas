@@ -860,6 +860,10 @@ begin
   if Result = '' then
     Result := Format('%.3d', [AWorkId + 1]);
   Result := StringReplace(Container.CurrentCustomFileName, CR_FILENAME, Result, [rfReplaceAll]);
+  {$IFDEF WINDOWS}
+  if Length(Container.CurrentWorkingDir + Result) > FMDMaxImageFilePath then
+    Result := ShortenString(Result, FMDMaxImageFilePath - Length(Container.CurrentWorkingDir), 4, '');
+  {$ENDIF}
 end;
 
 procedure TTaskThread.MainThreadCompressRepaint;

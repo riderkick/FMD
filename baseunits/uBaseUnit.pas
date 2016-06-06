@@ -485,6 +485,10 @@ const
 
   FMDSupportedOutputExt: array[0..2] of ShortString = ('.zip', '.cbz', '.pdf');
   FMDImageFileExt: array[0..2] of ShortString = ('.png', '.gif', '.jpg');
+  // max file extension length = 4
+  FMDImageFileExtLength = 4;
+  FMDMaxImageFilePath = MAX_PATH - FMDImageFileExtLength;
+
 
   // custom rename
   CR_NUMBERING = '%NUMBERING%';
@@ -496,8 +500,8 @@ const
   CR_FILENAME  = '%FILENAME%';
 
   {$ifdef windows}
-  // MAX_PATH(260) - 12 - 1
-  MAX_PATH_LENGTH = 247;
+  // MAX_PATHDIR(260) - 12 - 1
+  MAX_PATHDIR = 247;
   {$endif}
 
 var
@@ -712,6 +716,9 @@ procedure PadZeros(S: TStrings; ATotalWidth: Integer = 3;
 
 // maintain the order of strings by adding serialized number if necessary
 procedure SerializeAndMaintainNames(F: TStrings);
+
+function ShortenString(const S: String; const MaxWidth: Integer;
+  const RightLength: Integer = 0; const EllipsisStr: String = '...'): String;
 
 function TitleCase(const S: string): string;
 function StringReplaceBrackets(const S, OldPattern, NewPattern: String; Flags: TReplaceFlags): String;
@@ -1885,8 +1892,8 @@ begin
   {$IFDEF WINDOWS}
   Result := RemovePathDelim(CleanAndExpandFilename(GetForcedPathDelims(Path)));
   Result := TrimRightChar(Result, ['.']);
-  if Length(Result) > MAX_PATH_LENGTH then
-    SetLength(Result, MAX_PATH_LENGTH);
+  if Length(Result) > MAX_PATHDIR then
+    SetLength(Result, MAX_PATHDIR);
   Result := AppendPathDelim(Result);
   {$ELSE}
   Result := CleanAndExpandDirectory(GetForcedPathDelims(Path));
@@ -2093,6 +2100,20 @@ begin
     end;
   finally
     s.Free;
+  end;
+end;
+
+function ShortenString(const S: String; const MaxWidth: Integer;
+  const RightLength: Integer; const EllipsisStr: String): String;
+var
+  r: String;
+begin
+  Result := S;
+  if Length(Result) > MaxWidth then
+  begin
+    r := RightStr(Result, RightLength);
+    SetLength(Result, MaxWidth - RightLength - Length(EllipsisStr));
+    Result := Result + EllipsisStr + r;
   end;
 end;
 
