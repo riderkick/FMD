@@ -106,6 +106,8 @@ begin
 end;
 
 function TPacker.Execute: Boolean;
+var
+  i: Integer;
 begin
   Result:=False;
   Path:=CleanAndExpandDirectory(Path);
@@ -139,8 +141,12 @@ begin
       end;
       Result := FileExistsUTF8(FSavedFileName);
       if Result then
-        if DeleteDirectory(Path,False) then
+      begin
+        for i:=0 to FFileList.Count-1 do
+          DeleteFileUTF8(FFileList[i]);
+        if IsDirectoryEmpty(Path) then
           RemoveDirUTF8(Path);
+      end;
     end;
   finally
     FFileList.Free;
