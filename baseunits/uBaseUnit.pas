@@ -962,10 +962,8 @@ var
   searchRec: TSearchRec;
 begin
   try
-    Result := (FindFirstUTF8(CorrectFilePath(ADir) + '*.*', faAnyFile
-{$ifdef unix} or faSymLink
-{$endif unix}
-      , searchRec) = 0) and
+    Result := (FindFirstUTF8(CleanAndExpandDirectory(ADir) + '*.*',
+      faAnyFile{$ifdef unix} or faSymLink{$endif unix}, searchRec) = 0) and
       (FindNextUTF8(searchRec) = 0) and
       (FindNextUTF8(searchRec) <> 0);
   finally
