@@ -17,6 +17,7 @@ var
 const
   dirurl = '/directory/';
   yomangadirurl = '/reader/directory/';
+  onetimescansdirurl = '/foolslide/directory/';
 
 function GETWithCookie(const AHTTP: THTTPSendThread; const AURL: String;
   const Module: TModuleContainer): Boolean;
@@ -38,6 +39,8 @@ begin
   if (Module.Website = 'YoManga') or
     (Module.Website = 'GoManga') then
     s := yomangadirurl
+  else if Module.Website = 'OneTimeScans' then
+    s := onetimescansdirurl
   else
     s := dirurl;
   if GETWithCookie(MangaInfo.FHTTP, Module.RootURL + s, Module) then
@@ -68,6 +71,8 @@ begin
   if (Module.Website = 'YoManga') or
     (Module.Website = 'GoManga') then
     s := yomangadirurl
+  else if Module.Website = 'OneTimeScans' then
+    s := onetimescansdirurl
   else
     s := dirurl;
   s := Module.RootURL + s;
@@ -220,6 +225,7 @@ begin
   end;
   AddWebsiteModule('RawYoManga', 'http://raws.yomanga.co');
   AddWebsiteModule('GoManga', 'http://gomanga.co');
+  AddWebsiteModule('OneTimeScans', 'http://otscans.com');
 end;
 
 initialization
