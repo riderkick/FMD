@@ -226,6 +226,7 @@ begin
   AddWebsiteModule('RawYoManga', 'http://raws.yomanga.co');
   AddWebsiteModule('GoManga', 'http://gomanga.co');
   AddWebsiteModule('OneTimeScans', 'http://otscans.com');
+  AddWebsiteModule('SenseScans', 'http://reader.sensescans.com/');
 end;
 
 initialization
