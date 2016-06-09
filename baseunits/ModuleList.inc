@@ -39,4 +39,5 @@ uses
   MangaDenizi,
   MangaSaurus,
   GMangaMe,
-  SekaiManga;
+  SekaiManga,
+  KuManga;
