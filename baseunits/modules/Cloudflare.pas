@@ -59,7 +59,7 @@ begin
       ModifierG := False;
       ModifierI := True;
 
-      Expression := 'setTimeout\(function\(\)\{\s*var.*\w,\s+(\S.+a\.value =.+)\r?\n';
+      Expression := 'setTimeout\(function\(\)\{\s*var.*\w,\s+(\S.+a\.value =[^;]+;)';
       Exec(s);
       if SubExprMatchCount > 0 then
       begin
