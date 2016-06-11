@@ -4,6 +4,10 @@ Project page: https://github.com/riderkick/FMD
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.63.0 (11-06-2016)
+[*] Fixed an issue with CF
+Full changes: https://github.com/riderkick/FMD/compare/0.9.62.0...0.9.63.0
+
 0.9.62.0 (09-06-2016)
 [*] Fixed various path issue (#275, #276, #279)
 [+] Added OneTimeScans[EN-SC]
