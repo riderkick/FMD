@@ -1117,19 +1117,6 @@ begin
 
   mangaCover := TPicture.Create;
 
-  // refresh sort
-  if DLManager.Count > 1 then
-  begin
-    DLManager.SortDirection := Boolean(vtDownload.Header.SortDirection);
-    vtDownload.Repaint;
-  end;
-  if FavoriteManager.Count > 0 then
-  begin
-    FavoriteManager.SortDirection := Boolean(vtFavorites.Header.SortDirection);
-    FavoriteManager.Sort(vtFavorites.Header.SortColumn);
-    vtFavorites.Repaint;
-  end;
-
   //textstyle for updatestatusbar
   with UpdateStatusTextStyle do
   begin
@@ -3808,8 +3795,9 @@ begin
   FavoriteManager.isRunning := True;
   try
     if FavoriteManager.SortColumn = Column then
-      FavoriteManager.sortDirection := not FavoriteManager.sortDirection;
-    FavoriteManager.SortColumn := Column;
+      FavoriteManager.sortDirection := not FavoriteManager.sortDirection
+    else
+      FavoriteManager.SortColumn := Column;
     vtFavorites.Header.SortColumn := Column;
     vtFavorites.Header.SortDirection := TSortDirection(FavoriteManager.sortDirection);
     FavoriteManager.Sort(Column);
@@ -4857,12 +4845,14 @@ begin
       for i := 0 to Count - 1 do
         Items[i].Width := ReadInteger('form', 'vtFavorites' + IntToStr(i) + 'Width', 50);
 
+    FavoriteManager.SortColumn := ReadInteger('misc', 'SortFavoritesColumn', 1);
     FavoriteManager.sortDirection := ReadBool('misc', 'SortFavoritesDirection', False);
-    vtFavorites.Header.SortColumn := ReadInteger('misc', 'SortFavoritesColumn', 1);
+    vtFavorites.Header.SortColumn := FavoriteManager.SortColumn;
     vtFavorites.Header.SortDirection := TSortDirection(FavoriteManager.sortDirection);
 
+    DLManager.SortColumn := ReadInteger('misc', 'SortDownloadColumn', 0);
     DLManager.SortDirection := ReadBool('misc', 'SortDownloadDirection', False);
-    vtDownload.Header.SortColumn := ReadInteger('misc', 'SortDownloadColumn', 0);
+    vtDownload.Header.SortColumn := DLManager.SortColumn;
     vtDownload.Header.SortDirection := TSortDirection(DLManager.SortDirection);
   end;
 end;
