@@ -1157,6 +1157,8 @@ begin
       DynamicPageLink := False;
 
     if Trim(Container.CustomFileName) = '' then
+      Container.CustomFileName := OptionFilenameCustomRename;
+    if Trim(Container.CustomFileName) = '' then
       Container.CustomFileName := DEFAULT_FILENAME_CUSTOMRENAME;
 
     while Container.CurrentDownloadChapterPtr < Container.ChapterLinks.Count do
@@ -1447,6 +1449,7 @@ begin
   WorkCounter := 0;
   CurrentPageNumber := 0;
   CurrentDownloadChapterPtr := 0;
+  CustomFileName := OptionFilenameCustomRename;
 end;
 
 destructor TTaskContainer.Destroy;
@@ -1724,10 +1727,7 @@ begin
   try
     Result := Items.Add(TTaskContainer.Create);
     with Items[Result] do
-    begin
       Manager := Self;
-      CustomFileName := OptionFilenameCustomRename;
-    end;
   finally
     CS_Task.Release;
   end;
