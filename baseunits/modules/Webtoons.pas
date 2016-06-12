@@ -77,7 +77,7 @@ begin
           getp;
           if p > 1 then begin
             i := 2;
-            while i <= p do begin
+            while (i <= p) and (Thread.IsTerminated = False) do begin
               if GET(url + '&page=' + IntToStr(i)) then begin
                 ParseHTML(Document);
                 getchapters;
