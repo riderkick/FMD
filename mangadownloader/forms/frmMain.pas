@@ -1606,7 +1606,7 @@ begin
     while Assigned(xNode) do begin
       if vtDownload.Selected[xNode] then begin
         DLManager.StopTask(xNode^.Index, False, True);
-        with TTaskContainer(DLManager.Containers[xNode^.Index]) do begin
+        with DLManager.Items[xNode^.Index] do begin
           if (Sender = miDownloadDeleteTaskData) and (ChapterName.Count > 0) then begin
             for i := 0 to ChapterName.Count - 1 do begin
               f := CleanAndExpandDirectory(DownloadInfo.SaveTo + ChapterName[i]);
@@ -1621,8 +1621,8 @@ begin
             end;
             RemoveDirUTF8(DownloadInfo.SaveTo);
           end;
-          TTaskContainer(DLManager.Containers[xNode^.Index]).Free;
-          DLManager.Containers.Delete(xNode^.Index);
+          DLManager.Items[xNode^.Index].Free;
+          DLManager.Items.Delete(xNode^.Index);
         end;
       end;
       xNode := vtDownload.GetPreviousSelected(xNode);
@@ -3398,12 +3398,12 @@ procedure TMainForm.vtDownloadMoveItems(NextIndex: Cardinal; Mode: TDropMode);
 var
   i, nIndex: Cardinal;
   cNode: PVirtualNode;
-  ConTemp: TFPList;
+  ConTemp: TTaskContainers;
 begin
   if vtDownload.SelectedCount=0 then Exit;
   nIndex:=NextIndex;
   vtDownload.BeginUpdate;
-  ConTemp:=TFPList.Create;
+  ConTemp:=TTaskContainers.Create;
   DLManager.CS_Task.Acquire;
   try
     i:=0;
@@ -3412,7 +3412,7 @@ begin
     begin
       vtDownload.Selected[cNode]:=False;
       ConTemp.Add(DLManager.Items[cNode^.Index-i]);
-      DLManager.Containers.Delete(cNode^.Index-i);
+      DLManager.Items.Delete(cNode^.Index-i);
       if (nIndex>0) and (cNode^.Index<nIndex) then
         Dec(nIndex);
       Inc(i);
@@ -3427,7 +3427,7 @@ begin
         Inc(nIndex);
       if nIndex>DLManager.Count then
         nIndex:=DLManager.Count;
-      DLManager.containers.Insert(nIndex, ConTemp[i]);
+      DLManager.Items.Insert(nIndex, ConTemp[i]);
     end;
 
     cNode:=vtDownload.GetFirst;

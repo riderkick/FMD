@@ -661,8 +661,8 @@ begin
               begin
                 DLManager.CS_Task.Acquire;
                 try
-                  DLManager.containers.Add(TTaskContainer.Create);
-                  with TTaskContainer(DLManager.Containers.Last) do begin
+                  DLManager.Items.Add(TTaskContainer.Create);
+                  with DLManager.Items.Last do begin
                     Manager := DLManager;
                     CurrentDownloadChapterPtr := 0;
                     Website := FavoriteInfo.Website;

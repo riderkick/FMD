@@ -16,7 +16,7 @@ interface
 
 uses
   LazFileUtils, FastHTMLParser, HTMLUtil, SynaCode, RegExpr, Classes, SysUtils,
-  ExtCtrls, typinfo, syncobjs, blcksock, uBaseUnit, uPacker, uFMDThread, uMisc,
+  ExtCtrls, typinfo, fgl, syncobjs, blcksock, uBaseUnit, uPacker, uFMDThread, uMisc,
   DownloadedChaptersDB, FMDOptions, httpsendthread, SimpleLogger, dateutils,
   strutils;
 
@@ -59,6 +59,8 @@ type
     destructor Destroy; override;
   end;
 
+  TDownloadThreads = TFPGList<TDownloadThread>;
+
   { TTaskThread }
 
   TTaskThread = class(TFMDThread)
@@ -80,7 +82,7 @@ type
     // container (for storing information)
     Container: TTaskContainer;
     // download threads
-    Threads: TFPList;
+    Threads: TDownloadThreads;
     constructor Create;
     destructor Destroy; override;
     function GetFileName(const AWorkId: Integer): String;
@@ -133,6 +135,8 @@ type
     property Website: String read FWebsite write SetWebsite;
   end;
 
+  TTaskContainers = TFPGList<TTaskContainer>;
+
   { TDownloadManager }
 
   TDownloadManager = class
@@ -140,14 +144,13 @@ type
     FSortDirection: Boolean;
     FSortColumn: Integer;
     DownloadManagerFile: TIniFileRun;
-    function GetItems(Index: Integer): TTaskContainer;
   protected
-    function GetTaskCount: Integer;
+    function GetTaskCount: Integer; inline;
     function GetTransferRate: Integer;
   public
     CS_Task: TCriticalSection;
-    Containers: TFPList;
-    ContainersActiveTask: TFPList;
+    Items,
+    ItemsActiveTask: TTaskContainers;
     isRunningBackup, isFinishTaskAccessed, isRunningBackupDownloadedChaptersList,
     isReadyForExit: Boolean;
 
@@ -206,7 +209,6 @@ type
     property SortDirection: Boolean read FSortDirection write FSortDirection;
     property SortColumn: Integer read FSortColumn write FSortColumn;
     property TransferRate: Integer read GetTransferRate;
-    property Items[Index: Integer]: TTaskContainer read GetItems;
   end;
 
 resourcestring
@@ -840,7 +842,7 @@ end;
 constructor TTaskThread.Create;
 begin
   inherited Create(True);
-  Threads := TFPList.Create;
+  Threads := TDownloadThreads.Create;
   FCheckAndActiveTaskFlag := True;
   httpCookies := '';
 end;
@@ -1386,7 +1388,7 @@ begin
     Task := nil;
     Manager.CS_Task.Acquire;
     try
-      Manager.ContainersActiveTask.Remove(Container);
+      Manager.ItemsActiveTask.Remove(Container);
     finally
       Manager.CS_Task.Release;
     end;
@@ -1472,14 +1474,9 @@ end;
 
 { TDownloadManager }
 
-function TDownloadManager.GetItems(Index: Integer): TTaskContainer;
-begin
-  Result := TTaskContainer(Containers[Index]);
-end;
-
 function TDownloadManager.GetTaskCount: Integer;
 begin
-  Result := Containers.Count;
+  Result := Items.Count;
 end;
 
 function TDownloadManager.GetTransferRate: Integer;
@@ -1487,11 +1484,11 @@ var
   i: Integer;
 begin
   Result := 0;
-  if ContainersActiveTask.Count = 0 then Exit;
+  if ItemsActiveTask.Count = 0 then Exit;
   CS_Task.Acquire;
   try
-    for i := 0 to ContainersActiveTask.Count - 1 do
-      with TTaskContainer(ContainersActiveTask[i]) do
+    for i := 0 to ItemsActiveTask.Count - 1 do
+      with ItemsActiveTask[i] do
       begin
         CS_Container.Acquire;
         try
@@ -1522,8 +1519,8 @@ begin
     if DownloadedChapters.ImportFromIni(DOWNLOADEDCHAPTERS_FILE) then
       DeleteFileUTF8(DOWNLOADEDCHAPTERS_FILE);
 
-  Containers := TFPList.Create;
-  ContainersActiveTask := TFPList.Create;
+  Items := TTaskContainers.Create;
+  ItemsActiveTask := TTaskContainers.Create;
   isFinishTaskAccessed := False;
   isRunningBackup := False;
   isRunningBackupDownloadedChaptersList := False;
@@ -1534,17 +1531,17 @@ destructor TDownloadManager.Destroy;
 begin
   CS_Task.Acquire;
   try
-    while Containers.Count > 0 do
+    while Items.Count > 0 do
     begin
-      TTaskContainer(Containers.Last).Free;
-      Containers.Remove(Containers.Last);
+      Items.Last.Free;
+      Items.Remove(Items.Last);
     end;
   finally
     CS_Task.Release;
   end;
-  Containers.Free;
+  Items.Free;
   DownloadManagerFile.Free;
-  ContainersActiveTask.Free;
+  ItemsActiveTask.Free;
   DownloadedChapters.Free;
   CS_Task.Free;
   inherited Destroy;
@@ -1557,10 +1554,10 @@ var
 begin
   CS_Task.Acquire;
   try
-    while Containers.Count > 0 do
+    while Items.Count > 0 do
     begin
-      TTaskContainer(Containers.Last).Free;
-      Containers.Remove(Containers.Last);
+      Items.Last.Free;
+      Items.Remove(Items.Last);
     end;
 
     tmp := DownloadManagerFile.ReadInteger('general', 'NumberOfTasks', 0);
@@ -1569,8 +1566,8 @@ begin
     for i := 0 to tmp - 1 do
     begin
       // restore download task from file
-      Containers.Add(TTaskContainer.Create);
-      with DownloadManagerFile, TTaskContainer(Containers.Last) do
+      Items.Add(TTaskContainer.Create);
+      with DownloadManagerFile, Items.Last do
       begin
         tid := 'task' + IntToStr(i);
         Manager := Self;
@@ -1658,13 +1655,13 @@ begin
     EraseSection('general');
 
     // backup
-    if Containers.Count > 0 then
+    if Items.Count > 0 then
     begin
-      WriteInteger('general', 'NumberOfTasks', Containers.Count);
-      for i := 0 to Containers.Count - 1 do
+      WriteInteger('general', 'NumberOfTasks', Items.Count);
+      for i := 0 to Items.Count - 1 do
       begin
         tid := 'task' + IntToStr(i);
-        with TTaskContainer(Containers[i]) do begin
+        with Items[i] do begin
           WriteString(tid, 'Website', DownloadInfo.Website);
           WriteString(tid, 'Link', DownloadInfo.Link);
           WriteString(tid, 'Title', DownloadInfo.Title);
@@ -1725,8 +1722,8 @@ begin
   Result := -1;
   CS_Task.Acquire;
   try
-    Result := Containers.Add(TTaskContainer.Create);
-    with TTaskContainer(Containers[Result]) do
+    Result := Items.Add(TTaskContainer.Create);
+    with Items[Result] do
     begin
       Manager := Self;
       CustomFileName := OptionFilenameCustomRename;
@@ -1740,17 +1737,17 @@ procedure TDownloadManager.CheckAndActiveTask(const isCheckForFMDDo: Boolean);
 var
   i, tcount: Integer;
 begin
-  if Containers.Count = 0 then Exit;
+  if Items.Count = 0 then Exit;
   CS_Task.Acquire;
   try
     tcount := 0;
-    for i := 0 to Containers.Count - 1 do
-      if TTaskContainer(Containers[i]).ThreadState then
+    for i := 0 to Items.Count - 1 do
+      if Items[i].ThreadState then
         Inc(tcount);
 
     if tcount < maxDLTasks then
-      for i := 0 to Containers.Count - 1 do
-        with TTaskContainer(Containers[i]) do
+      for i := 0 to Items.Count - 1 do
+        with Items[i] do
           if (tcount < maxDLTasks) and
             (Status = STATUS_WAIT) and
             Modules.CanCreateTask(ModuleId) then
@@ -1785,7 +1782,7 @@ end;
 
 procedure TDownloadManager.SetTaskActive(const taskID: Integer);
 begin
-  with TTaskContainer(Containers[taskID]) do
+  with Items[taskID] do
     if not ThreadState then
     begin
       Status := STATUS_WAIT;
@@ -1797,10 +1794,10 @@ procedure TDownloadManager.CheckAndActiveTaskAtStartup;
 var
   i, tcount: Integer;
 begin
-  if Containers.Count = 0 then Exit;
+  if Items.Count = 0 then Exit;
   tcount := 0;
-  for i := 0 to Containers.Count - 1 do
-    with TTaskContainer(Containers[i]) do
+  for i := 0 to Items.Count - 1 do
+    with Items[i] do
       if Status in [STATUS_DOWNLOAD, STATUS_PREPARE] then
         if (tcount < maxDLTasks) and
           Modules.CanCreateTask(ModuleId) then
@@ -1823,7 +1820,7 @@ end;
 
 procedure TDownloadManager.ActiveTask(const taskID: Integer);
 begin
-  with TTaskContainer(Containers[taskID]) do begin
+  with Items[taskID] do begin
     if Status = STATUS_FINISH then Exit;
     if not ThreadState then begin
       if not (Status in [STATUS_DOWNLOAD, STATUS_PREPARE]) then begin
@@ -1832,8 +1829,8 @@ begin
       end;
       Modules.IncActiveTaskCount(ModuleId);
       Task := TTaskThread.Create;
-      Task.Container := TTaskContainer(Containers[taskID]);
-      ContainersActiveTask.Add(Task.Container);
+      Task.Container := Items[taskID];
+      ItemsActiveTask.Add(Task.Container);
       Task.Start;
     end;
   end;
@@ -1842,7 +1839,7 @@ end;
 procedure TDownloadManager.StopTask(const taskID: Integer;
   const isCheckForActive: Boolean; isWaitFor: Boolean);
 begin
-  with TTaskContainer(Containers[taskID]) do
+  with Items[taskID] do
   begin
     if Status = STATUS_WAIT then
     begin
@@ -1864,10 +1861,10 @@ procedure TDownloadManager.StartAllTasks;
 var
   i: Integer;
 begin
-  if Containers.Count > 0 then
+  if Items.Count > 0 then
   begin
-    for i := 0 to Containers.Count - 1 do
-      with TTaskContainer(Containers[i]) do
+    for i := 0 to Items.Count - 1 do
+      with Items[i] do
         if (Status <> STATUS_FINISH) and (not ThreadState) then
         begin
           Status := STATUS_WAIT;
@@ -1881,8 +1878,8 @@ procedure TDownloadManager.StopAllTasks;
 var
   i: Integer;
 begin
-  if Containers.Count = 0 then Exit;
-  for i := 0 to Containers.Count - 1 do
+  if Items.Count = 0 then Exit;
+  for i := 0 to Items.Count - 1 do
     StopTask(i, False, False);
 end;
 
@@ -1890,16 +1887,16 @@ procedure TDownloadManager.StopAllDownloadTasksForExit;
 var
   i: Integer;
 begin
-  if Containers.Count > 0 then
+  if Items.Count > 0 then
   begin
     isReadyForExit := True;
     try
-      for i := 0 to Containers.Count - 1 do
-        with TTaskContainer(Containers[i]) do
+      for i := 0 to Items.Count - 1 do
+        with Items[i] do
           if ThreadState then
             Task.Terminate;
-      for i := 0 to Containers.Count - 1 do
-        with TTaskContainer(Containers[i]) do
+      for i := 0 to Items.Count - 1 do
+        with Items[i] do
           if ThreadState then
             Task.WaitFor;
     finally
@@ -1912,13 +1909,13 @@ procedure TDownloadManager.RemoveTask(const taskID: Integer);
 begin
   CS_Task.Acquire;
   try
-    with TTaskContainer(Containers[taskID]) do
+    with Items[taskID] do
       if ThreadState then begin
         Task.Terminate;
         Task.WaitFor;
       end;
-    TTaskContainer(Containers[taskID]).Free;
-    Containers.Delete(taskID);
+    Items[taskID].Free;
+    Items.Delete(taskID);
   finally
     CS_Task.Release;
   end;
@@ -1929,11 +1926,11 @@ procedure TDownloadManager.RemoveAllFinishedTasks;
 var
   i: Integer;
 begin
-  if Containers.Count > 0 then begin
+  if Items.Count > 0 then begin
     i := 0;
-    while i < Containers.Count do
-      if TTaskContainer(Containers[i]).Status = STATUS_FINISH then
-        Containers.Delete(i)
+    while i < Items.Count do
+      if Items[i].Status = STATUS_FINISH then
+        Items.Delete(i)
       else Inc(i);
   end;
 end;
@@ -1943,12 +1940,12 @@ var
   i: Integer;
 begin
   Result := False;
-  if Containers.Count > 0 then
+  if Items.Count > 0 then
   begin
     CS_Task.Acquire;
     try
-      for i := 0 to Containers.Count - 1 do
-        if TTaskContainer(Containers[i]).Status in Stats then begin
+      for i := 0 to Items.Count - 1 do
+        if Items[i].Status in Stats then begin
           Result := True;
           Break;
         end;
@@ -1958,12 +1955,12 @@ begin
   end;
 end;
 
-function CompareTaskContainer(Item1, Item2: Pointer): Integer;
+function CompareTaskContainer(const Item1, Item2: TTaskContainer): Integer;
 
-  function GetStr(ARow: Pointer): String;
+  function GetStr(ARow: TTaskContainer): String;
   begin
-    with TTaskContainer(ARow).DownloadInfo do
-      case TTaskContainer(ARow).Manager.SortColumn of
+    with ARow.DownloadInfo do
+      case ARow.Manager.SortColumn of
         0: Result := Title;
         1: Result := Status;
         2: Result := Progress;
@@ -1975,33 +1972,35 @@ function CompareTaskContainer(Item1, Item2: Pointer): Integer;
       end;
   end;
 
-  function GetDateTime(ARow: Pointer): TDateTime;
+  function GetDateTime(ARow: TTaskContainer): TDateTime;
   begin
-    Result := TTaskContainer(ARow).DownloadInfo.DateTime;
+    Result := ARow.DownloadInfo.DateTime;
   end;
 
-var
-  ItemT: Pointer;
 begin
-  if TTaskContainer(Item1).Manager.SortDirection then
+  if Item1.Manager.SortColumn = 6 then
   begin
-    ItemT := Item1;
-    Item1 := Item2;
-    Item2 := ItemT;
-  end;
-  if TTaskContainer(Item1).Manager.SortColumn = 6 then
-    Result := CompareDateTime(GetDateTime(Item1), GetDateTime(Item2))
+    if Item1.Manager.SortDirection then
+      Result := CompareDateTime(GetDateTime(Item2), GetDateTime(Item1))
+    else
+      Result := CompareDateTime(GetDateTime(Item1), GetDateTime(Item2));
+  end
   else
-    Result := NaturalCompareStr(GetStr(Item1), GetStr(Item2));
+  begin
+    if Item1.Manager.SortDirection then
+      Result := NaturalCompareStr(GetStr(Item2), GetStr(Item1))
+    else
+      Result := NaturalCompareStr(GetStr(Item1), GetStr(Item2));
+  end;
 end;
 
 procedure TDownloadManager.Sort(const AColumn: Integer);
 begin
-  if Containers.Count < 2 then Exit;
+  if Items.Count < 2 then Exit;
   CS_Task.Acquire;
   try
     SortColumn := AColumn;
-    Containers.Sort(CompareTaskContainer);
+    Items.Sort(CompareTaskContainer);
   finally
     CS_Task.Release;
   end;
