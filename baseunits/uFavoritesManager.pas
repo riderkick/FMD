@@ -28,13 +28,15 @@ type
     procedure Execute; override;
     procedure DoTerminate; override;
   public
-    workCounter: Cardinal;
-    getInfo: TMangaInformation;
-    task: TFavoriteTask;
-    container: TfavoriteContainer;
+    WorkId: Cardinal;
+    GetInfo: TMangaInformation;
+    Task: TFavoriteTask;
+    Container: TfavoriteContainer;
     constructor Create;
     destructor Destroy; override;
   end;
+
+  TFavoriteThreads = TFPGList<TFavoriteThread>;
 
   { TFavoriteTask }
 
@@ -50,8 +52,8 @@ type
     procedure DoTerminate; override;
     procedure Execute; override;
   public
-    manager: TFavoriteManager;
-    threads: TFPList;
+    Manager: TFavoriteManager;
+    Threads: TFavoriteThreads;
     procedure UpdateBtnCaption(Cap: String);
     constructor Create;
     destructor Destroy; override;
@@ -198,24 +200,24 @@ end;
 
 procedure TFavoriteThread.Execute;
 begin
-  if (container.FavoriteInfo.Link) = '' then Exit;
-  //Modules.IncActiveConnectionCount(container.ModuleId);
+  if (Container.FavoriteInfo.Link) = '' then Exit;
+  //Modules.IncActiveConnectionCount(Container.ModuleId);
   try
     Synchronize(SyncStatus);
-    getInfo.mangaInfo.title := container.FavoriteInfo.Title;
-    getInfo.GetInfoFromURL(container.FavoriteInfo.Website,
-      container.FavoriteInfo.Link, DefaultRetryCount);
-    if container.MangaInfo = nil then
-      container.MangaInfo := TMangaInfo.Create;
-    TransferMangaInfo(container.MangaInfo, getInfo.mangaInfo);
+    GetInfo.mangaInfo.title := Container.FavoriteInfo.Title;
+    GetInfo.GetInfoFromURL(Container.FavoriteInfo.Website,
+      Container.FavoriteInfo.Link, DefaultRetryCount);
+    if Container.MangaInfo = nil then
+      Container.MangaInfo := TMangaInfo.Create;
+    TransferMangaInfo(Container.MangaInfo, GetInfo.mangaInfo);
   except
     on E: Exception do
       ExceptionHandle(Self, E);
   end;
   if Self.Terminated then
-    container.Status := STATUS_IDLE
+    Container.Status := STATUS_IDLE
   else
-    container.Status := STATUS_CHECKED;
+    Container.Status := STATUS_CHECKED;
   Synchronize(SyncStatus);
 end;
 
@@ -223,9 +225,9 @@ procedure TFavoriteThread.DoTerminate;
 begin
   LockCreateConnection;
   try
-    Modules.DecActiveConnectionCount(container.ModuleId);
-    container.Thread := nil;
-    task.threads.Remove(Self);
+    Modules.DecActiveConnectionCount(Container.ModuleId);
+    Container.Thread := nil;
+    Task.Threads.Remove(Self);
   finally
     UnlockCreateConnection;
   end;
@@ -235,13 +237,13 @@ end;
 constructor TFavoriteThread.Create;
 begin
   inherited Create(True);
-  getInfo := TMangaInformation.Create(Self);
-  getInfo.isGetByUpdater := False;
+  GetInfo := TMangaInformation.Create(Self);
+  GetInfo.isGetByUpdater := False;
 end;
 
 destructor TFavoriteThread.Destroy;
 begin
-  getInfo.Free;
+  GetInfo.Free;
   inherited Destroy;
 end;
 
@@ -278,30 +280,30 @@ var
   i: Integer;
 begin
   if Terminated then Exit;
-  if manager.Favorites.Count = 0 then Exit;
-  manager.CS_Favorites.Acquire;
+  if Manager.Favorites.Count = 0 then Exit;
+  Manager.CS_Favorites.Acquire;
   try
     statuscheck := 0;
-    for i := 0 to manager.Favorites.Count - 1 do
+    for i := 0 to Manager.Favorites.Count - 1 do
     begin
       if Terminated then Break;
-      with manager.Favorites[i] do
+      with Manager.Favorites[i] do
         if Status = STATUS_CHECK then
         begin
           LockCreateConnection;
           try
-            if (threads.Count < OptionMaxThreads) and
+            if (Threads.Count < OptionMaxThreads) and
               Modules.CanCreateConnection(ModuleId) then
             begin
               Modules.IncActiveConnectionCount(ModuleId);
               Thread := TFavoriteThread.Create;
-              threads.Add(Thread);
+              Threads.Add(Thread);
               Status := STATUS_CHECKING;
               with thread do
               begin
-                task := Self;
-                container := manager.Favorites[i];
-                workCounter := i;
+                Task := Self;
+                Container := manager.Favorites[i];
+                WorkId := i;
                 Start;
               end;
             end
@@ -313,14 +315,14 @@ begin
         end;
     end;
   finally
-    manager.CS_Favorites.Release;
+    Manager.CS_Favorites.Release;
   end;
 end;
 
 procedure TFavoriteTask.DoTerminate;
 begin
-  manager.isRunning := False;
-  manager.taskthread := nil;
+  Manager.isRunning := False;
+  Manager.taskthread := nil;
   inherited DoTerminate;
 end;
 
@@ -328,59 +330,59 @@ procedure TFavoriteTask.Execute;
 var
   i, cthread, cmaxthreads: Integer;
 begin
-  manager.isRunning := True;
+  Manager.isRunning := True;
   Synchronize(SyncStartChecking);
   try
     while not Terminated do
     begin
       cmaxthreads := OptionMaxThreads;
-      // if current thread count > max threads allowed we wait until thread count decreased
-      while (not Terminated) and (threads.Count >= cmaxthreads) do
+      // if current thread count > max Threads allowed we wait until thread count decreased
+      while (not Terminated) and (Threads.Count >= cmaxthreads) do
         Sleep(SOCKHEARTBEATRATE);
       Checkout;
       // if there is concurent connection limit applied and no more possible item to check
       // we will wait until thread count decreased
       // break wait if OptionMaxThreads changed
-      cthread := threads.Count;
-      while (not Terminated) and (threads.Count > 0) and (threads.Count = cthread) and
+      cthread := Threads.Count;
+      while (not Terminated) and (Threads.Count > 0) and (Threads.Count = cthread) and
         (cmaxthreads = OptionMaxThreads) do
         Sleep(SOCKHEARTBEATRATE);
       // if there is no more item need to be checked, but thread count still > 0 we will wait for it
       // we will also wait if there is new item pushed, so we will check it after it
-      while (not Terminated) and (statuscheck = 0) and (threads.Count > 0) do
+      while (not Terminated) and (statuscheck = 0) and (Threads.Count > 0) do
         Sleep(SOCKHEARTBEATRATE);
       if statuscheck = 0 then Break;
     end;
 
-    while (not Terminated) and (threads.Count > 0) do
+    while (not Terminated) and (Threads.Count > 0) do
       Sleep(SOCKHEARTBEATRATE);
 
-    if Terminated and (threads.Count > 0) then
+    if Terminated and (Threads.Count > 0) then
     begin
       LockCreateConnection;
       try
-        for i := 0 to threads.Count - 1 do
-          TFavoriteThread(threads[i]).Terminate;
+        for i := 0 to Threads.Count - 1 do
+          Threads[i].Terminate;
       finally
         UnlockCreateConnection;
       end;
-      while threads.Count > 0 do
+      while Threads.Count > 0 do
         Sleep(100);
     end;
 
     if (not Terminated) and (not isDlgCounter) then
-      Synchronize(manager.ShowResult);
+      Synchronize(Manager.ShowResult);
   except
     on E: Exception do
       ExceptionHandle(Self, E);
   end;
-  manager.CS_Favorites.Acquire;
+  Manager.CS_Favorites.Acquire;
   try
-    for i := 0 to manager.Favorites.Count - 1 do
-      if manager.Favorites[i].Status <> STATUS_IDLE then
-        manager.Favorites[i].Status := STATUS_IDLE;
+    for i := 0 to Manager.Favorites.Count - 1 do
+      if Manager.Favorites[i].Status <> STATUS_IDLE then
+        Manager.Favorites[i].Status := STATUS_IDLE;
   finally
-    manager.CS_Favorites.Release;
+    Manager.CS_Favorites.Release;
   end;
   Synchronize(SyncFinishChecking);
 end;
@@ -394,12 +396,12 @@ end;
 constructor TFavoriteTask.Create;
 begin
   inherited Create(True);
-  threads := TFPList.Create;
+  Threads := TFavoriteThreads.Create;
 end;
 
 destructor TFavoriteTask.Destroy;
 begin
-  threads.Free;
+  Threads.Free;
   inherited Destroy;
 end;
 
@@ -474,7 +476,7 @@ begin
     if taskthread = nil then
     begin
       taskthread := TFavoriteTask.Create;
-      taskthread.manager := Self;
+      taskthread.Manager := Self;
       taskthread.Start;
     end;
   except
