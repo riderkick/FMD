@@ -21,12 +21,13 @@ type
   private
     FOnCustomTerminate: TNotifyEvent;
     function GetTerminated: Boolean;
+    procedure CallCustomTerminate;
   protected
     procedure DoTerminate; override;
   public
     constructor Create(CreateSuspended: Boolean = True);
-    property IsTerminated: Boolean read GetTerminated;
     procedure Terminate;
+    property IsTerminated: Boolean read GetTerminated;
     property OnCustomTerminate: TNotifyEvent read FOnCustomTerminate write FOnCustomTerminate;
   end;
 
@@ -35,6 +36,11 @@ implementation
 function TFMDThread.GetTerminated: Boolean;
 begin
   Result := Self.Terminated;
+end;
+
+procedure TFMDThread.CallCustomTerminate;
+begin
+  FOnCustomTerminate(Self);
 end;
 
 procedure TFMDThread.DoTerminate;
@@ -54,7 +60,7 @@ procedure TFMDThread.Terminate;
 begin
   inherited Terminate;
   if Assigned(FOnCustomTerminate) then
-    FOnCustomTerminate(Self);
+    Synchronize(CallCustomTerminate);
 end;
 
 end.
