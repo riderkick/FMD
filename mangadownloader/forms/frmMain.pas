@@ -1698,7 +1698,7 @@ begin
     for i := 0 to vtFavorites.SelectedCount - 1 do
     begin
       if vtFavorites.Selected[xNode] then
-        with FavoriteManager.Favorites[xNode^.Index].FavoriteInfo do
+        with FavoriteManager.Items[xNode^.Index].FavoriteInfo do
           SilentThreadManager.Add(MD_DownloadAll, Website, Title, Link, SaveTo);
       xNode := vtFavorites.GetNextSelected(xNode);
     end;
@@ -1741,9 +1741,9 @@ begin
   rmInformation.Lines.Add('Loading ...');
   clbChapterList.Clear;
 
-  website := FavoriteManager.Favorites[vtFavorites.FocusedNode^.Index].FavoriteInfo.Website;
-  link := FavoriteManager.Favorites[vtFavorites.FocusedNode^.Index].FavoriteInfo.link;
-  title := FavoriteManager.Favorites[vtFavorites.FocusedNode^.Index].FavoriteInfo.Title;
+  website := FavoriteManager.Items[vtFavorites.FocusedNode^.Index].FavoriteInfo.Website;
+  link := FavoriteManager.Items[vtFavorites.FocusedNode^.Index].FavoriteInfo.link;
+  title := FavoriteManager.Items[vtFavorites.FocusedNode^.Index].FavoriteInfo.Title;
 
   if isGetMangaInfos then
   begin
@@ -2572,13 +2572,13 @@ begin
   end;
   if not Assigned(vtFavorites.FocusedNode) then
     Exit;
-  s := FavoriteManager.Favorites[vtFavorites.FocusedNode^.Index].FavoriteInfo.currentChapter;
+  s := FavoriteManager.Items[vtFavorites.FocusedNode^.Index].FavoriteInfo.currentChapter;
   repeat
     if InputQuery('', RS_DlgTypeInNewChapter, s) then
   until TryStrToInt(s, i);
-  if s <> FavoriteManager.Favorites[vtFavorites.FocusedNode^.Index].FavoriteInfo.currentChapter then
+  if s <> FavoriteManager.Items[vtFavorites.FocusedNode^.Index].FavoriteInfo.currentChapter then
   begin
-    FavoriteManager.Favorites[vtFavorites.FocusedNode^.Index].FavoriteInfo.currentChapter := s;
+    FavoriteManager.Items[vtFavorites.FocusedNode^.Index].FavoriteInfo.currentChapter := s;
     UpdateVtFavorites;
     FavoriteManager.Backup;
   end;
@@ -2595,10 +2595,10 @@ begin
   if not Assigned(vtFavorites.FocusedNode) then
     Exit;
   if InputQuery('', RS_DlgTypeInNewSavePath,
-    FavoriteManager.Favorites[vtFavorites.FocusedNode^.Index].FavoriteInfo.SaveTo) then
+    FavoriteManager.Items[vtFavorites.FocusedNode^.Index].FavoriteInfo.SaveTo) then
   begin
-    FavoriteManager.Favorites[vtFavorites.FocusedNode^.Index].FavoriteInfo.SaveTo :=
-      CorrectFilePath(FavoriteManager.Favorites[vtFavorites.FocusedNode^.Index].FavoriteInfo.SaveTo);
+    FavoriteManager.Items[vtFavorites.FocusedNode^.Index].FavoriteInfo.SaveTo :=
+      CorrectFilePath(FavoriteManager.Items[vtFavorites.FocusedNode^.Index].FavoriteInfo.SaveTo);
     UpdateVtFavorites;
     FavoriteManager.Backup;
   end;
@@ -2987,7 +2987,7 @@ procedure TMainForm.miFavoritesOpenFolderClick(Sender: TObject);
 begin
   if Assigned(vtFavorites.FocusedNode) then
     OpenDocument(ChompPathDelim(
-      FavoriteManager.Favorites[vtFavorites.FocusedNode^.Index].FavoriteInfo.SaveTo));
+      FavoriteManager.Items[vtFavorites.FocusedNode^.Index].FavoriteInfo.SaveTo));
 end;
 
 procedure TMainForm.miDownloadOpenFolderClick(Sender: TObject);
@@ -3001,7 +3001,7 @@ procedure TMainForm.miFavoritesOpenWithClick(Sender: TObject);
 begin
   if Assigned(vtFavorites.FocusedNode) then
      OpenWithExternalProgramChapters(
-       FavoriteManager.Favorites[vtFavorites.FocusedNode^.Index].FavoriteInfo.SaveTo);
+       FavoriteManager.Items[vtFavorites.FocusedNode^.Index].FavoriteInfo.SaveTo);
 end;
 
 procedure TMainForm.miDownloadOpenWithClick(Sender: TObject);
@@ -3142,7 +3142,7 @@ procedure TMainForm.pmFavoritesPopup(Sender: TObject);
           repeat
             if Assigned(xNode) then
             begin
-              if FavoriteManager.Favorites[xNode^.Index].Status in Stats then
+              if FavoriteManager.Items[xNode^.Index].Status in Stats then
               begin
                 Result := True;
                 Break;
@@ -3174,12 +3174,12 @@ begin
     miFavoritesStopCheckNewChapter.Visible :=
       SelectedStatusPresent([STATUS_CHECK, STATUS_CHECKING]);
     miFavoritesViewInfos.Enabled := True;
-    miFavoritesDownloadAll.Enabled := (Trim(FavoriteManager.Favorites[
+    miFavoritesDownloadAll.Enabled := (Trim(FavoriteManager.Items[
       vtFavorites.FocusedNode^.Index].FavoriteInfo.Link) <> '');
     miFavoritesDelete.Enabled := True;
     miFavoritesChangeSaveTo.Enabled := True;
     miFavoritesOpenFolder.Enabled :=
-      DirectoryExistsUTF8(FavoriteManager.Favorites[vtFavorites.FocusedNode^.Index].FavoriteInfo.SaveTo);
+      DirectoryExistsUTF8(FavoriteManager.Items[vtFavorites.FocusedNode^.Index].FavoriteInfo.SaveTo);
     miFavoritesOpenWith.Enabled := miFavoritesOpenFolder.Enabled;
   end
   else
@@ -3694,7 +3694,7 @@ begin
   Data := Sender.GetNodeData(Node);
   if Assigned(Data) then
   begin
-    with FavoriteManager.Favorites[Node^.Index] do
+    with FavoriteManager.Items[Node^.Index] do
     begin
       if Trim(FavoriteInfo.Link) = '' then
       begin
@@ -3740,7 +3740,7 @@ procedure TMainForm.vtFavoritesGetHint(Sender: TBaseVirtualTree;
   var LineBreakStyle: TVTTooltipLineBreakStyle; var HintText: String);
 begin
   if Node^.Index>=FavoriteManager.Count then Exit;
-  with FavoriteManager.Favorites[Node^.Index].FavoriteInfo do
+  with FavoriteManager.Items[Node^.Index].FavoriteInfo do
     case Column of
       1: if Trim(Link)='' then HintText:=RS_HintFavoriteProblem
          else HintText:=Title;
@@ -3756,10 +3756,10 @@ procedure TMainForm.vtFavoritesGetImageIndex(Sender: TBaseVirtualTree;
 begin
   if vtFavorites.Header.Columns[Column].Position<>1 then Exit;
   if Node^.Index>=FavoriteManager.Count then Exit;
-  if Trim(FavoriteManager.Favorites[Node^.Index].FavoriteInfo.Link)='' then
+  if Trim(FavoriteManager.Items[Node^.Index].FavoriteInfo.Link)='' then
     ImageIndex:=16
   else
-  case FavoriteManager.Favorites[Node^.Index].Status of
+  case FavoriteManager.Items[Node^.Index].Status of
     STATUS_CHECK    : ImageIndex:=19;
     STATUS_CHECKING : ImageIndex:=12;
     STATUS_CHECKED  : ImageIndex:=20;
@@ -3775,7 +3775,7 @@ procedure TMainForm.vtFavoritesGetText(Sender: TBaseVirtualTree;
   var CellText: String);
 begin
   if Node^.Index>=FavoriteManager.Count then Exit;
-  with FavoriteManager.Favorites[Node^.Index].FavoriteInfo do
+  with FavoriteManager.Items[Node^.Index].FavoriteInfo do
     case Column of
       0: CellText:=IntToStr(Node^.Index+1);
       1: CellText:=Title;
