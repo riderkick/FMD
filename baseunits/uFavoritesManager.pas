@@ -11,7 +11,7 @@ unit uFavoritesManager;
 interface
 
 uses
-  Classes, SysUtils, fgl, Dialogs, IniFiles, syncobjs, lazutf8classes, LazFileUtils,
+  Classes, SysUtils, fgl, Dialogs, IniFiles, lazutf8classes, LazFileUtils,
   FileUtil, uBaseUnit, uData, uDownloadsManager, uFMDThread, uMisc, WebsiteModules,
   FMDOptions, httpsendthread, SimpleException;
 
@@ -29,11 +29,9 @@ type
     procedure DoTerminate; override;
   public
     WorkId: Cardinal;
-    GetInfo: TMangaInformation;
     Task: TFavoriteTask;
     Container: TfavoriteContainer;
     constructor Create;
-    destructor Destroy; override;
   end;
 
   TFavoriteThreads = TFPGList<TFavoriteThread>;
@@ -43,15 +41,16 @@ type
   TFavoriteTask = class(TFMDThread)
   private
     FBtnCaption: String;
-    statuscheck: Integer;
+    FPendingCount: Integer;
   protected
     procedure SyncStartChecking;
     procedure SyncFinishChecking;
     procedure SyncUpdateBtnCaption;
     procedure Checkout;
-    procedure DoTerminate; override;
     procedure Execute; override;
+    procedure DoTerminate; override;
   public
+    CS_Threads: TRTLCriticalSection;
     Manager: TFavoriteManager;
     Threads: TFavoriteThreads;
     procedure UpdateBtnCaption(Cap: String);
@@ -68,7 +67,6 @@ type
     procedure SetWebsite(AValue: String);
   public
     FavoriteInfo: TFavoriteInfo;
-    MangaInfo: TMangaInfo;
     NewMangaInfo: TMangaInfo;
     NewMangaInfoChaptersPos: TCardinalList;
     Thread: TFavoriteThread;
@@ -86,7 +84,7 @@ type
 
   TFavoriteManager = class
   private
-    CS_Favorites: TCriticalSection;
+    CS_Favorites: TRTLCriticalSection;
     FSortColumn: Integer;
     FSortDirection, FIsAuto, FIsRunning: Boolean;
     function GetFavoritesCount: Integer; inline;
@@ -118,7 +116,7 @@ type
     // Merge a FFavorites.ini with another FFavorites.ini
     procedure MergeWith(const APath: String);
     // Remove a manga from FFavorites
-    procedure Remove(const pos: Integer; const isBackup: Boolean = True);
+    procedure Remove(const Pos: Integer; const isBackup: Boolean = True);
     // Restore information from FFavorites.ini
     procedure Restore;
     // Backup to FFavorites.ini
@@ -181,12 +179,11 @@ begin
     Thread.WaitFor;
     Thread := nil;
   end;
-  if Assigned(MangaInfo) then
-    MangaInfo.Free;
   if Assigned(NewMangaInfo) then
+  begin
     NewMangaInfo.Free;
-  if Assigned(NewMangaInfoChaptersPos) then
     NewMangaInfoChaptersPos.Free;
+  end;
   inherited Destroy;
 end;
 
@@ -199,52 +196,97 @@ begin
 end;
 
 procedure TFavoriteThread.Execute;
+var
+  DLChapters: TStringList;
+  i: Integer;
 begin
   if (Container.FavoriteInfo.Link) = '' then Exit;
-  //Modules.IncActiveConnectionCount(Container.ModuleId);
-  try
-    Synchronize(SyncStatus);
-    GetInfo.mangaInfo.title := Container.FavoriteInfo.Title;
-    GetInfo.GetInfoFromURL(Container.FavoriteInfo.Website,
-      Container.FavoriteInfo.Link, DefaultRetryCount);
-    if Container.MangaInfo = nil then
-      Container.MangaInfo := TMangaInfo.Create;
-    TransferMangaInfo(Container.MangaInfo, GetInfo.mangaInfo);
-  except
-    on E: Exception do
-      ExceptionHandle(Self, E);
-  end;
-  if Self.Terminated then
-    Container.Status := STATUS_IDLE
-  else
-    Container.Status := STATUS_CHECKED;
+
   Synchronize(SyncStatus);
+  with Container do
+    try
+      // get new manga info
+      with TMangaInformation.Create(Self) do
+        try
+          isGetByUpdater := False;
+          mangaInfo.title := FavoriteInfo.Title;
+          GetInfoFromURL(FavoriteInfo.Website, FavoriteInfo.Link, DefaultRetryCount);
+          if not Terminated then
+          begin
+            NewMangaInfoChaptersPos := TCardinalList.Create;
+            NewMangaInfo := mangaInfo;
+            mangaInfo := nil;
+          end;
+        finally
+          Free;
+        end;
+
+      // check for new chapters
+      if (not Terminated) and Assigned(NewMangaInfo) then
+      begin
+        if NewMangaInfo.chapterLinks.Count > 0 then
+          try
+            DLChapters := TStringList.Create;
+            DLChapters.Sorted := False;
+            GetParams(DLChapters, FavoriteInfo.DownloadedChapterList);
+            DLChapters.Sorted := True;
+            for i := 0 to NewMangaInfo.chapterLinks.Count - 1 do
+              if DLChapters.IndexOf(NewMangaInfo.chapterLinks[i]) > -1 then
+                NewMangaInfoChaptersPos.Add(i);
+          finally
+            DLChapters.Free;
+          end;
+
+        // free unneeded objects
+        if (NewMangaInfoChaptersPos.Count = 0) and
+          (NewMangaInfo.status <> MangaInfo_StatusCompleted) then
+        begin
+          FreeAndNil(NewMangaInfo);
+          FreeAndNil(NewMangaInfoChaptersPos);
+        end;
+      end;
+    except
+      on E: Exception do
+        ExceptionHandle(Self, E);
+    end;
 end;
 
 procedure TFavoriteThread.DoTerminate;
 begin
-  LockCreateConnection;
+  EnterCriticalsection(Container.Manager.CS_Favorites);
   try
-    Modules.DecActiveConnectionCount(Container.ModuleId);
+    if Terminated then
+    begin
+      Container.Status := STATUS_IDLE;
+      // free unused objects
+      if Assigned(Container.NewMangaInfo) then
+      begin
+        FreeAndNil(Container.NewMangaInfo);
+        FreeAndNil(Container.NewMangaInfoChaptersPos);
+      end;
+    end
+    else
+      Container.Status := STATUS_CHECKED;
     Container.Thread := nil;
-    Task.Threads.Remove(Self);
+
+    EnterCriticalsection(Task.CS_Threads);
+    try
+      Modules.DecActiveConnectionCount(Container.ModuleId);
+      Task.Threads.Remove(Self);
+    finally
+      LeaveCriticalsection(Task.CS_Threads);
+    end;
   finally
-    UnlockCreateConnection;
+    LeaveCriticalsection(Container.Manager.CS_Favorites);
   end;
+  if not Terminated then
+    Synchronize(SyncStatus);
   inherited DoTerminate;
 end;
 
 constructor TFavoriteThread.Create;
 begin
   inherited Create(True);
-  GetInfo := TMangaInformation.Create(Self);
-  GetInfo.isGetByUpdater := False;
-end;
-
-destructor TFavoriteThread.Destroy;
-begin
-  GetInfo.Free;
-  inherited Destroy;
 end;
 
 { TFavoriteTask }
@@ -261,12 +303,20 @@ end;
 
 procedure TFavoriteTask.SyncFinishChecking;
 begin
-  with MainForm do begin
+  with MainForm do
+  begin
     btCancelFavoritesCheck.Visible := False;
-    btFavoritesCheckNewChapter.Width :=
-      btFavoritesCheckNewChapter.Width + btCancelFavoritesCheck.Width + 6;
+    btFavoritesCheckNewChapter.Width := btFavoritesCheckNewChapter.Width +
+      btCancelFavoritesCheck.Width + 6;
     btFavoritesCheckNewChapter.Caption := RS_BtnCheckFavorites;
     vtFavorites.Repaint;
+  end;
+  try
+    EnterCriticalsection(Manager.CS_Favorites);
+    Manager.isRunning := False;
+    Manager.taskthread := nil;
+  finally
+    LeaveCriticalsection(Manager.CS_Favorites);
   end;
 end;
 
@@ -281,54 +331,41 @@ var
 begin
   if Terminated then Exit;
   if Manager.Items.Count = 0 then Exit;
-  Manager.CS_Favorites.Acquire;
-  try
-    statuscheck := 0;
-    for i := 0 to Manager.Items.Count - 1 do
-    begin
-      if Terminated then Break;
-      with Manager.Items[i] do
-        if Status = STATUS_CHECK then
-        begin
-          LockCreateConnection;
-          try
-            if (Threads.Count < OptionMaxThreads) and
-              Modules.CanCreateConnection(ModuleId) then
-            begin
-              Modules.IncActiveConnectionCount(ModuleId);
-              Thread := TFavoriteThread.Create;
-              Threads.Add(Thread);
-              Status := STATUS_CHECKING;
-              with thread do
-              begin
-                Task := Self;
-                Container := manager.Items[i];
-                WorkId := i;
-                Start;
-              end;
-            end
-            else
-              Inc(statuscheck);
-          finally
-            UnlockCreateConnection;
-          end;
-        end;
-    end;
-  finally
-    Manager.CS_Favorites.Release;
-  end;
-end;
 
-procedure TFavoriteTask.DoTerminate;
-begin
-  Manager.isRunning := False;
-  Manager.taskthread := nil;
-  inherited DoTerminate;
+  FPendingCount := 0;
+  for i := 0 to Manager.Items.Count - 1 do
+  begin
+    if Terminated then Break;
+    with Manager.Items[i] do
+      if (Status = STATUS_CHECK) then
+      begin
+        if (Threads.Count < OptionMaxThreads) and
+          Modules.CanCreateConnection(ModuleId) then
+        begin
+          EnterCriticalsection(CS_Threads);
+          try
+            Modules.IncActiveConnectionCount(ModuleId);
+            Status := STATUS_CHECKING;
+            Threads.Add(TFavoriteThread.Create);
+            Thread := Threads.Last;
+            Thread.Task := Self;
+            Thread.Container := Manager.Items[i];
+            Thread.WorkId := i;
+            Thread.Start;
+          finally
+            LeaveCriticalsection(CS_Threads);
+          end
+        end
+        else
+          Inc(FPendingCount);
+      end;
+  end;
 end;
 
 procedure TFavoriteTask.Execute;
 var
-  i, cthread, cmaxthreads: Integer;
+  cthread,
+  cmaxthreads: Integer;
 begin
   Manager.isRunning := True;
   Synchronize(SyncStartChecking);
@@ -349,42 +386,66 @@ begin
         Sleep(SOCKHEARTBEATRATE);
       // if there is no more item need to be checked, but thread count still > 0 we will wait for it
       // we will also wait if there is new item pushed, so we will check it after it
-      while (not Terminated) and (statuscheck = 0) and (Threads.Count > 0) do
+      while (not Terminated) and (FPendingCount = 0) and (Threads.Count > 0) do
         Sleep(SOCKHEARTBEATRATE);
-      if statuscheck = 0 then Break;
+      if FPendingCount = 0 then Break;
     end;
 
     while (not Terminated) and (Threads.Count > 0) do
       Sleep(SOCKHEARTBEATRATE);
-
-    if Terminated and (Threads.Count > 0) then
-    begin
-      LockCreateConnection;
-      try
-        for i := 0 to Threads.Count - 1 do
-          Threads[i].Terminate;
-      finally
-        UnlockCreateConnection;
-      end;
-      while Threads.Count > 0 do
-        Sleep(100);
-    end;
-
-    if (not Terminated) and (not isDlgCounter) then
-      Synchronize(Manager.ShowResult);
   except
     on E: Exception do
       ExceptionHandle(Self, E);
   end;
-  Manager.CS_Favorites.Acquire;
+end;
+
+procedure TFavoriteTask.DoTerminate;
+var
+  i: Integer;
+begin
+  // reset all status
+  EnterCriticalsection(Manager.CS_Favorites);
   try
     for i := 0 to Manager.Items.Count - 1 do
-      if Manager.Items[i].Status <> STATUS_IDLE then
-        Manager.Items[i].Status := STATUS_IDLE;
+      Manager.Items[i].Status := STATUS_IDLE;
   finally
-    Manager.CS_Favorites.Release;
+    LeaveCriticalsection(Manager.CS_Favorites);
   end;
+
+  // terminate all threads and wait
+  EnterCriticalsection(CS_Threads);
+  try
+    if Threads.Count > 0 then
+      for i := 0 to Threads.Count - 1 do
+        Threads[i].Terminate;
+  finally
+    LeaveCriticalsection(CS_Threads);
+  end;
+  while Threads.Count > 0 do
+    Sleep(100);
+
+  // reset the ui
   Synchronize(SyncFinishChecking);
+
+  if (not Terminated) and (not isDlgCounter) then
+    Synchronize(Manager.ShowResult)
+  else
+  // free unused unit
+  begin
+    EnterCriticalsection(Manager.CS_Favorites);
+    try
+      for i := 0 to Manager.Items.Count - 1 do
+        with Manager.Items[i] do
+          if Assigned(NewMangaInfo) then
+          begin
+            FreeAndNil(NewMangaInfo);
+            FreeAndNil(NewMangaInfoChaptersPos);
+          end;
+    finally
+      LeaveCriticalsection(Manager.CS_Favorites);
+    end;
+  end;
+  inherited DoTerminate;
 end;
 
 procedure TFavoriteTask.UpdateBtnCaption(Cap: String);
@@ -396,12 +457,14 @@ end;
 constructor TFavoriteTask.Create;
 begin
   inherited Create(True);
+  InitCriticalSection(CS_Threads);
   Threads := TFavoriteThreads.Create;
 end;
 
 destructor TFavoriteTask.Destroy;
 begin
   Threads.Free;
+  DoneCriticalsection(CS_Threads);
   inherited Destroy;
 end;
 
@@ -416,7 +479,7 @@ constructor TFavoriteManager.Create;
 begin
   inherited Create;
   ForceDirectoriesUTF8(WORK_FOLDER);
-  CS_Favorites := TCriticalSection.Create;
+  InitCriticalSection(CS_Favorites);
   isRunning := False;
   favoritesFile := TIniFileRun.Create(FAVORITES_FILE);
   Items := TFavoriteContainers.Create;
@@ -435,7 +498,7 @@ begin
     end;
   end;
   Items.Free;
-  CS_Favorites.Free;
+  DoneCriticalsection(CS_Favorites);
   inherited Destroy;
 end;
 
@@ -452,7 +515,7 @@ begin
         begin
           Status := STATUS_CHECK;
           if Assigned(taskthread) then
-            taskthread.statuscheck := InterLockedIncrement(taskthread.statuscheck);
+            taskthread.FPendingCount := InterLockedIncrement(taskthread.FPendingCount);
         end;
     end
     else
@@ -463,14 +526,14 @@ begin
     end
     else
     begin
-      CS_Favorites.Acquire;
+      EnterCriticalsection(CS_Favorites);
       try
         for i := 0 to Items.Count - 1 do
           with Items[i] do
             if (Status = STATUS_IDLE) and (Trim(FavoriteInfo.Link) <> '') then
               Status := STATUS_CHECK;
       finally
-        CS_Favorites.Release;
+        LeaveCriticalsection(CS_Favorites);
       end;
     end;
     if taskthread = nil then
@@ -511,126 +574,99 @@ end;
 
 procedure TFavoriteManager.ShowResult;
 var
-  i, p, counter, numOfNewChapters, numOfMangaNewChapters, numOfCompleted: Integer;
-  dlChapters: TStringList;
+  i, j,
+  numOfNewChapters,
+  numOfMangaNewChapters,
+  numOfCompleted: Integer;
   LNCResult: TNewChapterResult = ncrCancel;
   newChapterListStr: String = '';
   removeListStr: String = '';
-  favDelete: Boolean;
 begin
   if isDlgCounter then Exit;
   if (Self.DLManager = nil) and Assigned(MainForm.DLManager) then
     Self.DLManager := MainForm.DLManager;
   if Self.DLManager = nil then Exit;
+
+  EnterCriticalsection(CS_Favorites);
   try
-    CS_Favorites.Acquire;
-    dlChapters := TStringList.Create;
+    numOfNewChapters := 0;
+    numOfMangaNewChapters := 0;
+    numOfCompleted := 0;
+
     try
-      numOfNewChapters := 0;
-      numOfMangaNewChapters := 0;
-      numOfCompleted := 0;
-      counter := 0;
-      while counter < Items.Count do
-        with Items[counter] do try
-            if Assigned(MangaInfo) then
-              if MangaInfo.chapterLinks.Count > 0 then
-              begin
-                //compare new mangainfo's chapters with downloadedchapter from favorites
-                NewMangaInfo := TMangaInfo.Create;
-                NewMangaInfoChaptersPos := TCardinalList.Create;
-                TransferMangaInfo(NewMangaInfo, MangaInfo);
-                NewMangaInfo.chapterLinks.Clear;
-                NewMangaInfo.chapterName.Clear;
-                dlChapters.Clear;
-                dlChapters.Sorted := False;
-                GetParams(dlChapters, FavoriteInfo.downloadedChapterList);
-                dlChapters.Sorted := True;
-                for i := 0 to MangaInfo.chapterLinks.Count - 1 do
-                  if not dlChapters.Find(MangaInfo.chapterLinks[i], p) then
-                  begin
-                    NewMangaInfo.chapterLinks.Add(MangaInfo.chapterLinks[i]);
-                    NewMangaInfo.chapterName.Add(MangaInfo.chapterName[i]);
-                    NewMangaInfoChaptersPos.Add(i);
-                    Inc(numOfNewChapters);
-                  end;
-
-                //add to notification
-                if NewMangaInfo.chapterLinks.Count > 0 then
-                begin
-                  newChapterListStr := newChapterListStr + LineEnding + '- ' +
-                    Format(RS_FavoriteHasNewChapter,
-                    [FavoriteInfo.Title, FavoriteInfo.Website,
-                    NewMangaInfo.chapterLinks.Count]);
-                  Inc(numOfMangaNewChapters);
-                end;
-
-                //add completed manga
-                if (OptionAutoCheckFavRemoveCompletedManga) and
-                  (NewMangaInfo.status = '0') then
-                begin
-                  removeListStr := removeListStr + LineEnding +
-                    Format('- %s <%s>', [FavoriteInfo.Title, FavoriteInfo.Website]);
-                  Inc(numOfCompleted);
-                end;
-              end;
-          finally
-            Inc(counter);
-          end;
-
-      dlChapters.Clear;
-
-      if numOfNewChapters = 0 then
-      begin
-        // If there's no new chapter, but there're completed mangas, show dialog
-        if numOfCompleted > 0 then
-        begin
-          with TNewChapter.Create(MainForm) do try
-              Caption := Format(RS_DlgCompletedMangaCaption, [numOfCompleted]);
-              lbNotification.Caption := RS_LblMangaWillBeRemoved;
-              mmMemo.Lines.Text := Trim(removeListStr);
-              btDownload.Caption := RS_BtnRemove;
-              btCancel.Caption := RS_BtnCancel;
-              btDownload.Show;
-              btCancel.Show;
-              btQueue.Hide;
-              ShowModal;
-              LNCResult := FormResult;
-            finally
-              Free;
-            end;
-
-          //delete complete FFavorites
-          if LNCResult = ncrDownload then
+      // check for all favorites
+      for i := 0 to Items.Count - 1 do
+        with Items[i] do
+          if Assigned(NewMangaInfo) then
           begin
-            counter := 0;
-            while counter < Items.Count do
+            // new chapters add to notification
+            if NewMangaInfoChaptersPos.Count > 0 then
             begin
-              favDelete := False;
-              with Items[counter] do
-                if Assigned(NewMangaInfo) and
-                  (NewMangaInfo.chapterLinks.Count = 0) and
-                  (NewMangaInfo.status = '0') then
-                begin
-                  Items[counter].Free;
-                  Items.Delete(counter);
-                  favDelete := True;
-                end;
-              if not favDelete then
-                Inc(counter);
+              newChapterListStr += LineEnding + '- ' + Format(
+                RS_FavoriteHasNewChapter, [FavoriteInfo.Title, FavoriteInfo.Website,
+                NewMangaInfoChaptersPos.Count]);
+              Inc(numOfMangaNewChapters);
+              Inc(numOfNewChapters, NewMangaInfoChaptersPos.Count);
+            end
+            else
+            // completed series add to notification
+            if OptionAutoCheckFavRemoveCompletedManga and
+              (NewMangaInfo.status = MangaInfo_StatusCompleted) then
+            begin
+              removeListStr += LineEnding + Format('- %s <%s>',
+                [FavoriteInfo.Title, FavoriteInfo.Website]);
+              Inc(numOfCompleted);
             end;
           end;
-          Backup;
-          if Assigned(OnUpdateFavorite) then
-            OnUpdateFavorite;
-        end;
-      end
-      else
+
+      // if there is completed mangas, show dialog
+      if numOfCompleted > 0 then
       begin
-        //if there's new chapters
+        with TNewChapter.Create(MainForm) do
+          try
+            Caption := Format(RS_DlgCompletedMangaCaption, [numOfCompleted]);
+            lbNotification.Caption := RS_LblMangaWillBeRemoved;
+            mmMemo.Lines.Text := Trim(removeListStr);
+            btDownload.Caption := RS_BtnRemove;
+            btCancel.Caption := RS_BtnCancel;
+            btDownload.Show;
+            btCancel.Show;
+            btQueue.Hide;
+            ShowModal;
+            LNCResult := FormResult;
+          finally
+            Free;
+          end;
+
+        //delete complete FFavorites
+        if LNCResult = ncrDownload then
+        begin
+          i := 0;
+          while i < Items.Count do
+            with Items[i] do
+            begin
+              if Assigned(NewMangaInfo) and
+                (NewMangaInfoChaptersPos.Count = 0) and
+                (NewMangaInfo.status = MangaInfo_StatusCompleted) then
+              begin
+                Items[i].Free;
+                Items.Delete(i);
+              end
+              else
+                Inc(i);
+            end;
+        end;
+        Backup;
+      end;
+
+      // if there is new chapters
+      if numOfNewChapters > 0 then
+      begin
         if OptionAutoCheckFavDownload then
           LNCResult := ncrDownload
         else
-          with TNewChapter.Create(MainForm) do try
+          with TNewChapter.Create(MainForm) do
+            try
               Caption := Format(RS_DlgNewChapterCaption, [numOfNewChapters]);
               lbNotification.Caption :=
                 Format(RS_LblNewChapterFound, [numOfNewChapters, numOfMangaNewChapters]);
@@ -647,42 +683,43 @@ begin
               Free;
             end;
 
+        // generate download task
         if LNCResult <> ncrCancel then
-          //generate new download task
         begin
           while DLManager.isRunningBackup do
             Sleep(100);
-          counter := 0;
-          while counter < Items.Count do
-          begin
-            with Items[counter] do
+
+          for i := 0 to Items.Count - 1 do
+            with Items[i] do
               if Assigned(NewMangaInfo) and
-                (NewMangaInfo.chapterLinks.Count > 0) then
-              begin
-                DLManager.CS_Task.Acquire;
+                (NewMangaInfoChaptersPos.Count > 0) then
                 try
+                  DLManager.CS_Task.Acquire;
                   DLManager.Items.Add(TTaskContainer.Create);
-                  with DLManager.Items.Last do begin
+                  with DLManager.Items.Last do
+                  begin
                     Manager := DLManager;
                     CurrentDownloadChapterPtr := 0;
                     Website := FavoriteInfo.Website;
-                    with DownloadInfo do begin
-                      Link := FavoriteInfo.Link;
-                      Title := FavoriteInfo.Title;
-                      SaveTo := FavoriteInfo.SaveTo;
-                      dateTime := Now;
-                    end;
-                    ChapterLinks.Assign(NewMangaInfo.chapterLinks);
-                    for i := 0 to NewMangaInfo.chapterLinks.Count - 1 do
+                    DownloadInfo.Link := FavoriteInfo.Link;
+                    DownloadInfo.Title := FavoriteInfo.Title;
+                    DownloadInfo.SaveTo := FavoriteInfo.SaveTo;
+                    DownloadInfo.dateTime := Now;
+
+                    for j := 0 to NewMangaInfoChaptersPos.Count - 1 do
+                    begin
+                      ChapterLinks.Add(NewMangaInfo.chapterLinks[NewMangaInfoChaptersPos[j]]);
                       ChapterName.Add(CustomRename(
                         OptionChapterCustomRename,
                         FavoriteInfo.Website,
                         FavoriteInfo.Title,
                         NewMangaInfo.authors,
                         NewMangaInfo.artists,
-                        NewMangaInfo.chapterName[i],
-                        Format('%.4d', [NewMangaInfoChaptersPos[i] + 1]),
+                        NewMangaInfo.chapterName[NewMangaInfoChaptersPos[j]],
+                        Format('%.4d', [NewMangaInfoChaptersPos[j] + 1]),
                         OptionChangeUnicodeCharacter));
+                    end;
+
                     if LNCResult = ncrDownload then
                     begin
                       DownloadInfo.Status := RS_Waiting;
@@ -694,54 +731,48 @@ begin
                       Status := STATUS_STOP;
                     end;
                   end;
-                  FavoriteInfo.currentChapter :=
-                    IntToStr(MangaInfo.chapterLinks.Count);
+                  FavoriteInfo.currentChapter := IntToStr(NewMangaInfoChaptersPos.Count);
+                  // add to downloaded chapter list
+                  FavoriteInfo.downloadedChapterList += SetParams(NewMangaInfo.chapterLinks);
+                  // add to downloaded chapter list in downloadmanager
+                  DLManager.DownloadedChapters.Chapters[FavoriteInfo.Website + FavoriteInfo.Link] :=
+                    NewMangaInfo.chapterLinks.Text;
+
+                  // free unused objects
+                  FreeAndNil(NewMangaInfo);
+                  FreeAndNil(NewMangaInfoChaptersPos);
                 finally
                   DLManager.CS_Task.Release;
                 end;
-                //mark downloaded
-                FavoriteInfo.downloadedChapterList :=
-                  FavoriteInfo.downloadedChapterList +
-                  SetParams(NewMangaInfo.chapterLinks);
-                //save to downloaded chapter list from dlmanager.
-                DLManager.DownloadedChapters.Chapters[FavoriteInfo.Website + FavoriteInfo.Link] :=
-                  NewMangaInfo.chapterLinks.Text;
-              end;
-            Inc(counter);
-          end;
+
           Backup;
-          if Assigned(OnUpdateDownload) then
-            OnUpdateDownload;
           if LNCResult = ncrDownload then
           begin
             DLManager.CheckAndActiveTask;
             MainForm.pcMain.ActivePage := MainForm.tsDownload;
           end;
+          if Assigned(OnUpdateDownload) then
+            OnUpdateDownload;
           if Assigned(OnUpdateFavorite) then
             OnUpdateFavorite;
         end;
       end;
-    finally
-      //free used memory
-      counter := 0;
-      while counter < Items.Count do
-      begin
-        with Items[counter] do begin
-          if Assigned(MangaInfo) then
-            FreeAndNil(MangaInfo);
-          if Assigned(NewMangaInfo) then
-            FreeAndNil(NewMangaInfo);
-          if Assigned(NewMangaInfoChaptersPos) then
-            FreeAndNil(NewMangaInfoChaptersPos);
-        end;
-        Inc(counter);
-      end;
-      FreeAndNil(dlChapters);
-      CS_Favorites.Release;
+
+    except
+      on E: Exception do
+        ExceptionHandle(Self, E);
     end;
-  except
-    on E: Exception do
-      ExceptionHandle(Self, E);
+
+    // check again for unused objects and free them
+    for i := 0 to Items.Count - 1 do
+      with Items[i] do
+        if Assigned(NewMangaInfo) then
+        begin
+          FreeAndNil(NewMangaInfo);
+          FreeAndNil(NewMangaInfoChaptersPos);
+        end;
+  finally
+    LeaveCriticalsection(CS_Favorites);
   end;
 end;
 
@@ -773,7 +804,7 @@ procedure TFavoriteManager.Add(const ATitle, ACurrentChapter, ADownloadedChapter
   AWebsite, ASaveTo, ALink: String);
 begin
   if IsMangaExist(ATitle, AWebsite) then Exit;
-  CS_Favorites.Acquire;
+  EnterCriticalsection(CS_Favorites);
   try
     Items.Add(TFavoriteContainer.Create);
     with Items.Last do begin
@@ -794,7 +825,7 @@ begin
       Backup;
     end;
   finally
-    CS_Favorites.Release;
+    LeaveCriticalsection(CS_Favorites);
   end;
 end;
 
@@ -803,7 +834,7 @@ procedure TFavoriteManager.AddMerge(const ATitle, ACurrentChapter, ADownloadedCh
 begin
   if IsMangaExist(ATitle, AWebsite) then
     Exit;
-  CS_Favorites.Acquire;
+  EnterCriticalsection(CS_Favorites);
   try
     Items.Add(TFavoriteContainer.Create);
     with Items.Last do begin
@@ -818,7 +849,7 @@ begin
       end;
     end;
   except
-    CS_Favorites.Release;
+    LeaveCriticalsection(CS_Favorites);
   end;
 end;
 
@@ -866,18 +897,18 @@ begin
   isRunning := False;
 end;
 
-procedure TFavoriteManager.Remove(const pos: Integer; const isBackup: Boolean);
+procedure TFavoriteManager.Remove(const Pos: Integer; const isBackup: Boolean);
 begin
-  if (not isRunning) and (pos < Items.Count) then
+  if (not isRunning) and (Pos < Items.Count) then
   begin
-    CS_Favorites.Acquire;
+    EnterCriticalsection(CS_Favorites);
     try
-      Items[pos].Free;
-      Items.Delete(pos);
+      Items[Pos].Free;
+      Items.Delete(Pos);
       if isBackup then
         Backup;
     finally
-      CS_Favorites.Release;
+      LeaveCriticalsection(CS_Favorites);
     end;
   end;
 end;
@@ -959,7 +990,7 @@ begin
   begin
     Ch := TStringList.Create;
     dlCh := TStringList.Create;
-    CS_Favorites.Acquire;
+    EnterCriticalsection(CS_Favorites);
     try
       p := -1;
       //locate the link
@@ -997,7 +1028,7 @@ begin
         MainForm.UpdateVtFavorites;
       end;
     finally
-      CS_Favorites.Release;
+      LeaveCriticalsection(CS_Favorites);
     end;
     dlCh.Free;
     Ch.Free;
@@ -1029,23 +1060,23 @@ end;
 procedure TFavoriteManager.Sort(const AColumn: Integer);
 begin
   if Items.Count < 2 then Exit;
-  CS_Favorites.Acquire;
+  EnterCriticalsection(CS_Favorites);
   try
     SortColumn := AColumn;
     Items.Sort(CompareFavoriteContainer);
   finally
-    CS_Favorites.Release;
+    LeaveCriticalsection(CS_Favorites);
   end;
 end;
 
 procedure TFavoriteManager.Lock;
 begin
-  CS_Favorites.Acquire;
+  EnterCriticalsection(CS_Favorites);
 end;
 
 procedure TFavoriteManager.LockRelease;
 begin
-  CS_Favorites.Release;
+  LeaveCriticalsection(CS_Favorites);
 end;
 
 end.
