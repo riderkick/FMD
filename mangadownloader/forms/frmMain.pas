@@ -734,6 +734,7 @@ const
   CL_HLBlueMarks        = $FDC594;
   CL_HLGreenMarks       = $B8FFB8;
   CL_HLRedMarks         = $8080FF;
+  CL_HLYellowMarks      = $80EBFE;
 
   CL_BarGrayLine        = $bcbcbc;
   CL_BarGray            = $e6e6e6;
@@ -3683,30 +3684,33 @@ end;
 procedure TMainForm.vtFavoritesBeforeCellPaint(Sender: TBaseVirtualTree;
   TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
   CellPaintMode: TVTCellPaintMode; CellRect: TRect; var ContentRect: TRect);
-var
-  Data: PFavoriteInfo;
-begin
-  if Column=TVirtualStringTree(Sender).Header.SortColumn then
+
+  procedure FillRectBC(const AColor: TColor);
   begin
-    TargetCanvas.Brush.Color:=CL_BlueLight;
+    TargetCanvas.Brush.Color := AColor;
     TargetCanvas.FillRect(CellRect);
   end;
-  Data := Sender.GetNodeData(Node);
-  if Assigned(Data) then
+
+begin
+  if Column=TVirtualStringTree(Sender).Header.SortColumn then
+    FillRectBC(CL_BlueLight);
+
+  with TargetCanvas, FavoriteManager.Items[Node^.Index] do
   begin
-    with FavoriteManager.Items[Node^.Index] do
+    if Trim(FavoriteInfo.Link) = '' then
+      FillRectBC(CL_HLRedMarks)
+    else
+    if Status = STATUS_CHECKING then
+      FillRectBC(CL_HLYellowMarks)
+    else
+    if (Status = STATUS_CHECKED) and
+      Assigned(NewMangaInfo) then
     begin
-      if Trim(FavoriteInfo.Link) = '' then
-      begin
-        TargetCanvas.Brush.Color := CL_HLRedMarks;
-        TargetCanvas.FillRect(CellRect);
-      end
+      if NewMangaInfoChaptersPos.Count > 0 then
+      FillRectBC(CL_HLBlueMarks)
       else
-      if Status = STATUS_CHECKING then
-      begin
-        TargetCanvas.Brush.Color := CL_HLGreenMarks;
-        TargetCanvas.FillRect(CellRect);
-      end;
+      if NewMangaInfo.status = MangaInfo_StatusCompleted then
+        FillRectBC(CL_HLGreenMarks);
     end;
   end;
 end;
@@ -3755,16 +3759,29 @@ procedure TMainForm.vtFavoritesGetImageIndex(Sender: TBaseVirtualTree;
   var Ghosted: Boolean; var ImageIndex: Integer);
 begin
   if vtFavorites.Header.Columns[Column].Position<>1 then Exit;
-  if Node^.Index>=FavoriteManager.Count then Exit;
-  if Trim(FavoriteManager.Items[Node^.Index].FavoriteInfo.Link)='' then
-    ImageIndex:=16
-  else
-  case FavoriteManager.Items[Node^.Index].Status of
-    STATUS_CHECK    : ImageIndex:=19;
-    STATUS_CHECKING : ImageIndex:=12;
-    STATUS_CHECKED  : ImageIndex:=20;
+  with FavoriteManager.Items[Node^.Index] do
+  begin
+    if Trim(FavoriteInfo.Link)='' then
+      ImageIndex:=16
     else
-      ImageIndex:=-1;
+      case FavoriteManager.Items[Node^.Index].Status of
+        STATUS_CHECK    : ImageIndex:=19;
+        STATUS_CHECKING : ImageIndex:=12;
+        STATUS_CHECKED  :
+          begin
+            ImageIndex:=20;
+            if Assigned(NewMangaInfo) then
+            begin
+              if NewMangaInfoChaptersPos.Count>0 then
+                ImageIndex:=21
+              else
+              if NewMangaInfo.status=MangaInfo_StatusCompleted then
+                ImageIndex:=5
+            end;
+          end;
+        else
+          ImageIndex:=-1;
+      end;
   end;
 end;
 
