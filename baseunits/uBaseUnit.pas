@@ -485,9 +485,18 @@ const
 
   FMDSupportedOutputExt: array[0..2] of ShortString = ('.zip', '.cbz', '.pdf');
   FMDImageFileExt: array[0..2] of ShortString = ('.png', '.gif', '.jpg');
-  // max file extension length = 4
-  FMDImageFileExtLength = 4;
-  FMDMaxImageFilePath = MAX_PATH - FMDImageFileExtLength;
+  {$ifdef windows}
+  // MAX_PATH = 260
+  // MAX_PATH - 12 - 1
+  MAX_PATHDIR = 247;
+  // fmd max file extension = 4
+  // max path + file in windows explorer is 259
+  // = MAX_PATH - fmd max file extension - 1
+  // 1 is pahtdelim "/"
+  FMDMaxImageFilePath = 255;
+  // if directory length is max_pathdir, the remaining allowed filename is 7
+  // = 259 - fmd max file extension - 1
+  {$endif}
 
 
   // custom rename
@@ -498,11 +507,6 @@ const
   CR_AUTHOR    = '%AUTHOR%';
   CR_ARTIST    = '%ARTIST%';
   CR_FILENAME  = '%FILENAME%';
-
-  {$ifdef windows}
-  // MAX_PATHDIR(260) - 12 - 1
-  MAX_PATHDIR = 247;
-  {$endif}
 
 var
   // Sites var
@@ -2111,6 +2115,11 @@ begin
   Result := S;
   if Length(Result) > MaxWidth then
   begin
+    if RightLength + Length(EllipsisStr) > MaxWidth then
+    begin
+      Result := RightStr(Result, MaxWidth);
+      Exit;
+    end;
     r := RightStr(Result, RightLength);
     SetLength(Result, MaxWidth - RightLength - Length(EllipsisStr));
     Result := Result + EllipsisStr + r;
