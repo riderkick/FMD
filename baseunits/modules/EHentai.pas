@@ -30,7 +30,7 @@ var
 
 resourcestring
   RS_DownloadOriginalImage = 'Download original image(require ExHentai account)';
-  RS_SettingsImageSize = 'Image size';
+  RS_SettingsImageSize = 'Image size:';
   RS_SettingsImageSizeItems =
     'Auto' + LineEnding +
     '780x' + LineEnding +
