@@ -843,17 +843,20 @@ var
 
 function WndCallback(Ahwnd: HWND; uMsg: UINT; wParam: WParam; lParam: LParam): LRESULT; stdcall;
 begin
-  if uMsg = WM_DISPLAYCHANGE then
-  begin
-    Screen.UpdateMonitors;
-    Screen.UpdateScreen;
-    if Screen.MonitorCount < MainForm.Monitor.MonitorNum then
-      MainForm.DefaultMonitor := dmMainForm;
-    if (MainForm.Left > Screen.Width) or (MainForm.Top > Screen.Height) then
-      MainForm.MoveToDefaultPosition;
-  end
-  else
-    Result := CallWindowProc(PrevWndProc, Ahwnd, uMsg, WParam, LParam);
+  try
+    if uMsg = WM_DISPLAYCHANGE then
+    begin
+      Screen.UpdateMonitors;
+      Screen.UpdateScreen;
+      if Screen.MonitorCount < MainForm.Monitor.MonitorNum then
+        MainForm.DefaultMonitor := dmMainForm;
+      if (MainForm.Left > Screen.Width) or (MainForm.Top > Screen.Height) then
+        MainForm.MoveToDefaultPosition;
+    end
+    else
+      Result := CallWindowProc(PrevWndProc, Ahwnd, uMsg, WParam, LParam);
+  except
+  end;
 end;
 {$endif}
 
