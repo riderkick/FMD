@@ -40,4 +40,5 @@ uses
   MangaSaurus,
   GMangaMe,
   SekaiManga,
-  KuManga;
+  KuManga,
+  SenManga;

@@ -15,7 +15,6 @@ const
   dirURLmangaindo = '/daftar-manga/all/any/last-added/';
   dirURLreadhentaimanga = '/hentai-manga-list/all/any/last-added/';
   dirURLmangahen = '/manga_list/all/any/last-added/';
-  dirURLsenmanga = '/directory/all/any/last-added/';
 
 function GetDirectoryPageNumber(const MangaInfo: TMangaInformation; var Page: Integer;
   const Module: TModuleContainer): Integer;
@@ -29,7 +28,6 @@ begin
     if Module.Website = 'MangaIndo' then s := dirURLmangaindo
     else if Module.Website = 'ReadHentaiManga' then s := dirURLreadhentaimanga
     else if Module.Website = 'MangaHen' then s := dirURLmangahen
-    else if Module.Website = 'SenManga' then s := dirURLsenmanga
     else s := dirURL;
     if GET(Module.RootURL + s) then begin
       Result := NO_ERROR;
@@ -57,7 +55,6 @@ begin
     if Module.Website = 'MangaIndo' then s := dirURLmangaindo
     else if Module.Website = 'ReadHentaiManga' then s := dirURLreadhentaimanga
     else if Module.Website = 'MangaHen' then s := dirURLmangahen
-    else if Module.Website = 'SenManga' then s := dirURLsenmanga
     else s := dirURL;
     if GET(Module.RootURL + s + IncStr(AURL) + '/') then begin
       Result := NO_ERROR;
@@ -71,11 +68,6 @@ begin
           end
           else if Module.Website = 'ReadHentaiManga' then
             for v in XPath('//*[@id="content"]//*[@id="center"]/a') do begin
-              ALinks.Add(v.toNode.getAttribute('href'));
-              ANames.Add(v.toNode.getAttribute('title'));
-            end
-          else if Module.Website = 'SenManga' then
-            for v in XPath('//table[@id="wpm_mng_lst"]/tbody/tr/td/a[1]') do begin
               ALinks.Add(v.toNode.getAttribute('href'));
               ANames.Add(v.toNode.getAttribute('title'));
             end
@@ -316,7 +308,6 @@ begin
   AddWebsiteModule('ReadHentaiManga', 'http://readhentaimanga.com');
   AddWebsiteModule('MangaHen', 'http://www.mangahen.com');
   AddWebsiteModule('MangaBug', 'http://www.mangabug.com');
-  AddWebsiteModule('SenManga', 'http://www.senmanga.com');
 end;
 
 initialization
