@@ -325,8 +325,8 @@ begin
     OnGetPageNumber := @GetPageNumber;
     OnGetImageURL := @GetImageURL;
     OnLogin := @Login;
-    AddOption(woCheckBox, @showalllang,'ShowAllLang', @RS_ShowAllLang);
-    AddOption(woCheckBox, @showscangroup,'ShowScanGroup', @RS_ShowScanGroup);
+    AddOptionCheckBox(@showalllang,'ShowAllLang', @RS_ShowAllLang);
+    AddOptionCheckBox(@showscangroup,'ShowScanGroup', @RS_ShowScanGroup);
   end;
 end;
 

@@ -310,6 +310,7 @@
         <Filename Value="forms\frmWebsiteSelection.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="WebsiteSelectionForm"/>
+        <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
       </Unit10>
     </Units>

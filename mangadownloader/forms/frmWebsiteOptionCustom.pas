@@ -48,6 +48,19 @@ type
     property BindValue: PInteger read FBindValue write SetBindValue;
   end;
 
+  { TComboBoxBindValue }
+
+  TComboBoxBindValue = class(TComboBox)
+  private
+    FBindValue: PInteger;
+    procedure SetBindValue(AValue: PInteger);
+  protected
+    procedure ValueChange(Sender: TObject);
+  public
+    constructor Create(TheOwner: TComponent); override;
+    property BindValue: PInteger read FBindValue write SetBindValue;
+  end;
+
   { TCustomOptionForm }
 
   TCustomOptionForm = class(TForm)
@@ -65,6 +78,8 @@ type
       const AName, ACaption, AGroup, AGroupCaption: String): TWinControl;
     function AddSpinEdit(const ABindValue: PInteger;
       AName, ACaption, AGroup, AGroupCaption: String): TWinControl;
+    function AddComboBox(const ABindValue: PInteger;
+      AName, ACaption, AGroup, AGroupCaption, AItems: String): TWinControl;
     procedure CreateWebsiteOption;
   end;
 
@@ -78,7 +93,7 @@ var
 
 const
   TWebsiteOptionItemTypeStr: array[TWebsiteOptionType] of String =
-    ('ack', 'ae', 'ase');
+    ('ack', 'ae', 'ase', 'acb');
 
 implementation
 
@@ -152,6 +167,30 @@ begin
   OnChange := @ValueChange;
 end;
 
+{ TComboBoxBindValue }
+
+procedure TComboBoxBindValue.SetBindValue(AValue: PInteger);
+begin
+  if FBindValue = AValue then Exit;
+  FBindValue := AValue;
+  if Assigned(FBindValue) then
+    if FBindValue^ < Items.Count then
+      ItemIndex := FBindValue^;
+end;
+
+procedure TComboBoxBindValue.ValueChange(Sender: TObject);
+begin
+  if Assigned(FBindValue) then
+    FBindValue^ := ItemIndex;
+end;
+
+constructor TComboBoxBindValue.Create(TheOwner: TComponent);
+begin
+  inherited Create(TheOwner);
+  OnChange := @ValueChange;
+  Style := csDropDownList;
+end;
+
 { TCustomOptionForm }
 
 procedure TCustomOptionForm.FormCreate(Sender: TObject);
@@ -173,8 +212,8 @@ begin
   Modules.SaveWebsiteOption;
 end;
 
-function TCustomOptionForm.AddOptionItem(const AOptionItemType: TWebsiteOptionType; const AName, ACaption,
-  AGroup, AGroupCaption: String): TWinControl;
+function TCustomOptionForm.AddOptionItem(const AOptionItemType: TWebsiteOptionType;
+  const AName, ACaption, AGroup, AGroupCaption: String): TWinControl;
 var
   i, j: Integer;
   compparent: TWinControl;
@@ -288,12 +327,15 @@ begin
         SetControlProp(Result, compsibling, compparent, lcomp, lcompcaption);
       end;
 
-      woEdit:
+      woEdit, woComboBox:
       begin
         lb := TLabel.Create(compparent);
         SetControlProp(lb, compsibling, compparent, lcomp + 'Lbl', lcompcaption);
         compsibling := lb;
-        Result := TEditBindValue.Create(compparent);
+        case AOptionItemType of
+          woEdit    : Result := TEditBindValue.Create(compparent);
+          woComboBox: Result := TComboBoxBindValue.Create(compparent);
+        end;
         SetControlProp(Result, compsibling, compparent, lcomp, '');
         with Result do
         begin
@@ -305,10 +347,10 @@ begin
 
       woSpinEdit:
       begin
-        lb := TLabel.Create(compparent);
         Result := TSpinEditBindValue.Create(compparent);
         SetControlProp(Result, compsibling, compparent, lcomp, lcompcaption);
         Result.Width := Result.Width + (Result.Width div 4);
+        lb := TLabel.Create(compparent);
         SetControlProp(lb, Result, compparent, lcomp + 'Lbl', lcompcaption);
         with lb do
         begin
@@ -346,6 +388,17 @@ begin
   TSpinEditBindValue(Result).BindValue := ABindValue;
 end;
 
+function TCustomOptionForm.AddComboBox(const ABindValue: PInteger; AName, ACaption,
+  AGroup, AGroupCaption, AItems: String): TWinControl;
+begin
+  Result := AddOptionItem(woComboBox, AName, ACaption, AGroup, AGroupCaption);
+  with TComboBoxBindValue(Result) do
+  begin
+    Items.Text := AItems;
+    TComboBoxBindValue(Result).BindValue := ABindValue;
+  end;
+end;
+
 procedure TCustomOptionForm.CreateWebsiteOption;
 var
   i, j: Integer;
@@ -376,6 +429,7 @@ begin
                 woCheckBox: AddCheckbox(BindValue, Name, cap, Website, Website);
                 woEdit: AddEdit(BindValue, Name, cap, Website, Website);
                 woSpinEdit: AddSpinEdit(BindValue, Name, cap, Website, Website);
+                woComboBox: AddComboBox(BindValue, Name, cap, Website, Website, Items^);
               end;
             end;
 end;

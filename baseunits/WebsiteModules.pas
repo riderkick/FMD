@@ -54,13 +54,14 @@ type
     MMTaskStart, MMGetPageNumber, MMGetImageURL, MMBeforeDownloadImage,
     MMDownloadImage, MMAfterImageSaved, MMLogin);
 
-  TWebsiteOptionType = (woCheckBox, woEdit, woSpinEdit);
+  TWebsiteOptionType = (woCheckBox, woEdit, woSpinEdit, woComboBox);
 
   TWebsiteOptionItem = record
     OptionType: TWebsiteOptionType;
     Name: String;
     Caption: PString;
     BindValue: Pointer;
+    Items: PString;
   end;
 
   { TModuleContainer }
@@ -69,6 +70,8 @@ type
   private
     FTotalDirectory: Integer;
     procedure SetTotalDirectory(AValue: Integer);
+    procedure AddOption(const AOptionType: TWebsiteOptionType;
+      const ABindValue: Pointer; const AName: String; const ACaption: PString);
   public
     Website: String;
     RootURL: String;
@@ -98,8 +101,14 @@ type
     destructor Destroy; override;
   public
     property TotalDirectory: Integer read FTotalDirectory write SetTotalDirectory;
-    procedure AddOption(const AOptionType: TWebsiteOptionType;
-      const ABindValue: Pointer; const AName: String; const ACaption: PString);
+    procedure AddOptionCheckBox(const ABindValue: PBoolean; const AName: String;
+      const ACaption: PString);
+    procedure AddOptionEdit(const ABindValue: PString; const AName: String;
+      const ACaption: PString);
+    procedure AddOptionSpinEdit(const ABindValue: PInteger; const AName: String;
+      const ACaption: PString);
+    procedure AddOptionComboBox(const ABindValue: PInteger; const AName: String;
+      const ACaption, AItems: PString);
   end;
 
   { TWebsiteModules }
@@ -281,8 +290,34 @@ begin
   inherited Destroy;
 end;
 
-procedure TModuleContainer.AddOption(const AOptionType: TWebsiteOptionType; const ABindValue: Pointer;
+procedure TModuleContainer.AddOptionCheckBox(const ABindValue: PBoolean;
   const AName: String; const ACaption: PString);
+begin
+  AddOption(woCheckBox, ABindValue, AName, ACaption);
+end;
+
+procedure TModuleContainer.AddOptionEdit(const ABindValue: PString; const AName: String;
+  const ACaption: PString);
+begin
+  AddOption(woEdit, ABindValue, AName, ACaption);
+end;
+
+procedure TModuleContainer.AddOptionSpinEdit(const ABindValue: PInteger;
+  const AName: String; const ACaption: PString);
+begin
+  AddOption(woSpinEdit, ABindValue, AName, ACaption);
+end;
+
+procedure TModuleContainer.AddOptionComboBox(const ABindValue: PInteger;
+  const AName: String; const ACaption, AItems: PString);
+begin
+  AddOption(woComboBox, ABindValue, AName, ACaption);
+  with OptionList[High(OptionList)] do
+    Items := AItems;
+end;
+
+procedure TModuleContainer.AddOption(const AOptionType: TWebsiteOptionType;
+  const ABindValue: Pointer; const AName: String; const ACaption: PString);
 begin
   if ABindValue = nil then Exit;
   if AName = '' then Exit;

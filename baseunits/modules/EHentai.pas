@@ -393,7 +393,7 @@ procedure RegisterModule;
 
 begin
   with AddWebsiteModule('E-Hentai', 'http://g.e-hentai.org') do
-    AddOption(woCheckBox, @downloadoriginalimage, 'DownloadOriginalImage', @RS_DownloadOriginalImage);
+    AddOptionCheckBox(@downloadoriginalimage, 'DownloadOriginalImage', @RS_DownloadOriginalImage);
   with AddWebsiteModule('ExHentai', 'http://exhentai.org') do begin
     AccountSupport := True;
     OnLogin := @ExHentaiLogin;

@@ -158,8 +158,8 @@ begin
     OnGetPageNumber := @GetPageNumber;
     OnGetImageURL := @GetImageURL;
     OnAfterImageSaved := @AfterImageSaved;
-    AddOption(woCheckBox, @removewatermark, 'RemoveWatermark', @RS_RemoveWatermark);
-    AddOption(woCheckBox, @saveaspng, 'SaveAsPNG', @RS_SaveAsPNG);
+    AddOptionCheckBox(@removewatermark, 'RemoveWatermark', @RS_RemoveWatermark);
+    AddOptionCheckBox(@saveaspng, 'SaveAsPNG', @RS_SaveAsPNG);
   end;
 end;
 
