@@ -627,6 +627,10 @@ type
     // fill edSaveTo with default path
     procedure FilledSaveTo;
 
+    // View manga information
+    procedure ViewMangaInfo(const AURL, AWebsite, ATitle: String;
+      const AMangaListPos: Integer = -1);
+
     // Show manga information
     procedure ShowInformation(const title, website, link: String);
 
@@ -1557,20 +1561,10 @@ begin
 end;
 
 procedure TMainForm.miDownloadViewMangaInfoClick(Sender: TObject);
-var
-  i: Integer;
 begin
-  if vtDownload.Focused then
-    with DLManager.Items[vtDownload.FocusedNode^.Index] do
-    begin
-      i := Modules.LocateModule(DownloadInfo.Website);
-      if i > -1 then
-        edURL.Text := FillHost(Modules.Module[i].RootURL, DownloadInfo.Link)
-      else
-        edURL.Text := FillMangaSiteHost(DownloadInfo.Website, DownloadInfo.Link);
-      edURLButtonClick(edURL);
-      pcMain.ActivePage := tsInformation;
-    end;
+  if Assigned(vtDownload.FocusedNode) then
+    with DLManager.Items[vtDownload.FocusedNode^.Index].DownloadInfo do
+      ViewMangaInfo(Link, Website, Title);
 end;
 
 procedure TMainForm.miChapterListHighlightClick(Sender: TObject);
@@ -1729,55 +1723,10 @@ begin
 end;
 
 procedure TMainForm.miFavoritesViewInfosClick(Sender: TObject);
-var
-  title, website, link: String;
-  i: Integer;
 begin
-  if (not vtFavorites.Focused) then
-    Exit;
-  btDownload.Enabled := False;
-  pcMain.ActivePage := tsInformation;
-  imCover.Picture.Assign(nil);
-  rmInformation.Clear;
-  rmInformation.Lines.Add('Loading ...');
-  clbChapterList.Clear;
-
-  website := FavoriteManager.Items[vtFavorites.FocusedNode^.Index].FavoriteInfo.Website;
-  link := FavoriteManager.Items[vtFavorites.FocusedNode^.Index].FavoriteInfo.link;
-  title := FavoriteManager.Items[vtFavorites.FocusedNode^.Index].FavoriteInfo.Title;
-
-  if isGetMangaInfos then
-  begin
-    GetInfosThread.IsFlushed := True;
-    GetInfosThread.Terminate;
-    //GetInfosThread.WaitFor;
-  end;
-  GetInfosThread := TGetMangaInfosThread.Create;
-  GetInfosThread.MangaListPos := -2;
-  GetInfosThread.Title := title;
-  GetInfosThread.Website := website;
-  GetInfosThread.Link := link;
-  GetInfosThread.Start;
-
-  if Assigned(gifWaiting) then
-  begin
-    itAnimate.Enabled := True;
-    pbWait.Visible := True;
-  end;
-
-  if ExecRegExpr('^https?://', link) then
-    edURL.Text := link
-  else
-  begin
-    i := Modules.LocateModule(website);
-    if i > -1 then
-      edURL.Text := FillHost(Modules.Module[i].RootURL, link)
-    else
-      edURL.Text := FillMangaSiteHost(website, link);
-  end;
-
-  btDownload.Enabled := (clbChapterList.RootNodeCount > 0);
-  btReadOnline.Enabled := (edURL.Text <> '');
+  if Assigned(vtFavorites.FocusedNode) then
+    with FavoriteManager.Items[vtFavorites.FocusedNode^.Index].FavoriteInfo do
+      ViewMangaInfo(Link, Website, Title);
 end;
 
 procedure TMainForm.miHighlightNewMangaClick(Sender: TObject);
@@ -2937,51 +2886,12 @@ begin
 end;
 
 procedure TMainForm.miMangaListViewInfosClick(Sender: TObject);
-var
-  title, website, link: String;
-  i: Integer;
 begin
-  if (not vtMangaList.Focused) or (vtMangaList.SelectedCount = 0) then
-    Exit;
-  btDownload.Enabled := False;
-  btAddToFavorites.Enabled := False;
-  pcMain.ActivePage := tsInformation;
-  imCover.Picture.Assign(nil);
-  rmInformation.Clear;
-  rmInformation.Lines.Add(RS_Loading);
-  clbChapterList.Clear;
-
-  if isGetMangaInfos then
-  begin
-    GetInfosThread.IsFlushed := True;
-    GetInfosThread.Terminate;
-    //GetInfosThread.WaitFor;
-  end;
-  GetInfosThread := TGetMangaInfosThread.Create;
-  GetInfosThread.MangaListPos := vtMangaList.FocusedNode^.Index;
-
-  website := dataProcess.WebsiteName[GetInfosThread.MangaListPos];
-  title := DataProcess.Value[GetInfosThread.mangaListPos, DATA_PARAM_TITLE];
-  link := DataProcess.Value[GetInfosThread.mangaListPos, DATA_PARAM_LINK];
-
-  GetInfosThread.Title := title;
-  GetInfosThread.Website := website;
-  GetInfosThread.Link := link;
-  GetInfosThread.Start;
-
-  i := Modules.LocateModule(website);
-  if i > -1 then
-    edURL.Text := FillHost(Modules.Module[i].RootURL, link)
-  else
-    edURL.Text := FillMangaSiteHost(website, link);
-
-  if Assigned(gifWaiting) then
-  begin
-    itAnimate.Enabled := True;
-    pbWait.Visible := True;
-  end;
-
-  btReadOnline.Enabled := (link <> '');
+  if Assigned(vtMangaList.FocusedNode) then
+    ViewMangaInfo(DataProcess.Value[vtMangaList.FocusedNode^.Index, DATA_PARAM_LINK],
+      DataProcess.WebsiteName[vtMangaList.FocusedNode^.Index],
+      DataProcess.Value[vtMangaList.FocusedNode^.Index, DATA_PARAM_TITLE],
+      vtMangaList.FocusedNode^.Index);
 end;
 
 procedure TMainForm.miFavoritesOpenFolderClick(Sender: TObject);
@@ -4145,6 +4055,59 @@ begin
     edSaveTo.Text := CleanAndExpandDirectory(edSaveTo.Text);
 end;
 
+procedure TMainForm.ViewMangaInfo(const AURL, AWebsite, ATitle: String;
+  const AMangaListPos: Integer);
+var
+  TURL: String;
+  i: Integer;
+begin
+  if (AURL = '') or (AWebsite = '') then Exit;
+  TURL := Trim(AURL);
+
+  // fix url
+  i := Modules.LocateModule(AWebsite);
+  if i > -1 then
+    TURL := FillHost(Modules.Module[i].RootURL, TURL)
+  else
+    TURL := FillMangaSiteHost(AWebsite, TURL);
+
+  // terminate exisiting getmangainfo thread
+  if isGetMangaInfos then
+  begin
+    GetInfosThread.IsFlushed := True;
+    GetInfosThread.Terminate;
+  end;
+
+  // set the UI
+  pcMain.ActivePage := tsInformation;
+  edURL.Text := TURL;
+  imCover.Picture.Assign(nil);
+  rmInformation.Clear;
+  rmInformation.Lines.Add(RS_Loading);
+  clbChapterList.Clear;
+  if Assigned(gifWaiting) then
+  begin
+    itAnimate.Enabled := True;
+    pbWait.Visible := True;
+  end;
+  btDownload.Enabled := False;
+  btReadOnline.Enabled := True;
+  DisableAddToFavorites(AWebsite);
+  //check if manga already in FavoriteManager list
+  if btAddToFavorites.Enabled and
+    (ATitle <> '') and
+    (FavoriteManager.Count > 0) then
+    btAddToFavorites.Enabled := not FavoriteManager.IsMangaExist(ATitle, AWebsite);
+
+  // start the thread
+  GetInfosThread := TGetMangaInfosThread.Create;
+  GetInfosThread.MangaListPos := AMangaListPos;
+  GetInfosThread.Title := ATitle;
+  GetInfosThread.Website := AWebsite;
+  GetInfosThread.Link := TURL;
+  GetInfosThread.Start;
+end;
+
 procedure TMainForm.ShowInformation(const title, website, link: String);
 var
   i: Integer;
@@ -4190,7 +4153,7 @@ begin
 
   btDownload.Enabled := (clbChapterList.RootNodeCount > 0);
   btReadOnline.Enabled := (mangaInfo.link <> '');
-  btAddToFavorites.Enabled := not SitesWithoutFavorites(website);
+  DisableAddToFavorites(website);
 
   //check if manga already in FavoriteManager list
   if btAddToFavorites.Enabled and (FavoriteManager.Count > 0) then
@@ -4732,10 +4695,15 @@ var
   link: String;
   regx: TRegExpr;
 begin
+  btDownload.Enabled := False;
+  btAddToFavorites.Enabled := False;
+  btReadOnline.Enabled := False;
+
   website := '';
   host := '';
   link := '';
   edURL.Text := FixURL(edURL.Text);
+
   regx := TRegExpr.Create;
   try
     regx.Expression := '^https?\://';
@@ -4775,37 +4743,13 @@ begin
     regx.Free;
   end;
 
-  DisableAddToFavorites(website);
   if (website = '') or (link = '') then
   begin
     MessageDlg('', RS_DlgURLNotSupport, mtInformation, [mbYes], 0);
     Exit;
   end;
 
-  if isGetMangaInfos then
-  begin
-    GetInfosThread.IsFlushed := True;
-    GetInfosThread.Terminate;
-    //GetInfosThread.WaitFor;
-  end;
-  GetInfosThread := TGetMangaInfosThread.Create;
-  GetInfosThread.MangaListPos := -1;
-  GetInfosThread.Title := '';
-  GetInfosThread.Website := website;
-  GetInfosThread.Link := link;
-  GetInfosThread.Start;
-
-  pcMain.ActivePage := tsInformation;
-  imCover.Picture.Assign(nil);
-  clbChapterList.Clear;
-  if Assigned(gifWaiting) then
-  begin
-    itAnimate.Enabled := True;
-    pbWait.Visible := True;
-  end;
-  btAddToFavorites.Enabled := not SitesWithoutFavorites(website);
-  rmInformation.Clear;
-  rmInformation.Lines.Add(RS_Loading);
+  ViewMangaInfo(link, website, '');
 end;
 
 procedure TMainForm.UpdateVtChapter;
