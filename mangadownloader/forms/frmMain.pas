@@ -1595,7 +1595,7 @@ begin
     if MessageDlg('', RS_DlgRemoveTask,
       mtConfirmation, [mbYes, mbNo], 0) <> mrYes then
       Exit;
-  DLManager.CS_Task.Acquire;
+  EnterCriticalSection(DLManager.CS_Task);
   try
     xNode := vtDownload.GetLast();
     while Assigned(xNode) do begin
@@ -1623,7 +1623,7 @@ begin
       xNode := vtDownload.GetPreviousSelected(xNode);
     end;
   finally
-    DLManager.CS_Task.Release;
+    LeaveCriticalSection(DLManager.CS_Task);
   end;
   DLManager.CheckAndActiveTask;
   UpdateVtDownload;
@@ -2938,7 +2938,7 @@ procedure TMainForm.pmDownloadPopup(Sender: TObject);
   begin
     Result := False;
     with DLManager do begin
-      CS_Task.Acquire;
+      EnterCriticalSection(CS_Task);
       try
         for i := 0 to Count - 1 do
           if Items[i].Status = STATUS_FINISH then
@@ -2947,7 +2947,7 @@ procedure TMainForm.pmDownloadPopup(Sender: TObject);
             Break;
           end;
       finally
-        CS_Task.Release;
+        LeaveCriticalSection(CS_Task);
       end;
     end;
   end;
@@ -2961,7 +2961,7 @@ procedure TMainForm.pmDownloadPopup(Sender: TObject);
     begin
       with DLManager do
       begin
-        CS_Task.Acquire;
+        EnterCriticalSection(CS_Task);
         try
           xNode := vtDownload.GetFirstSelected;
           repeat
@@ -2973,7 +2973,7 @@ procedure TMainForm.pmDownloadPopup(Sender: TObject);
             xNode := vtDownload.GetNextSelected(xNode);
           until xNode = nil;
         finally
-          CS_Task.Release;
+          LeaveCriticalSection(CS_Task);
         end;
       end;
     end;
@@ -3315,7 +3315,7 @@ begin
   nIndex:=NextIndex;
   vtDownload.BeginUpdate;
   ConTemp:=TTaskContainers.Create;
-  DLManager.CS_Task.Acquire;
+  EnterCriticalSection(DLManager.CS_Task);
   try
     i:=0;
     cNode:=vtDownload.GetFirstSelected();
@@ -3358,7 +3358,7 @@ begin
     if Mode=dmAbove then
       vtDownload.FocusedNode:=cNode;
   finally
-    DLManager.CS_Task.Release;
+    LeaveCriticalSection(DLManager.CS_Task);
   end;
   ConTemp.Free;
   vtDownload.EndUpdate;

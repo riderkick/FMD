@@ -16,7 +16,7 @@ interface
 
 uses
   LazFileUtils, FastHTMLParser, HTMLUtil, SynaCode, RegExpr, Classes, SysUtils,
-  ExtCtrls, typinfo, fgl, syncobjs, blcksock, uBaseUnit, uPacker, uFMDThread, uMisc,
+  ExtCtrls, typinfo, fgl, blcksock, uBaseUnit, uPacker, uFMDThread, uMisc,
   DownloadedChaptersDB, FMDOptions, httpsendthread, SimpleLogger, dateutils,
   strutils;
 
@@ -96,7 +96,7 @@ type
     procedure SetWebsite(AValue: String);
   public
     // critical section
-    CS_Container: TCriticalSection;
+    CS_Container: TRTLCriticalSection;
     // read count for transfer rate
     ReadCount: Integer;
     // task thread of this container
@@ -148,7 +148,7 @@ type
     function GetTaskCount: Integer; inline;
     function GetTransferRate: Integer;
   public
-    CS_Task: TCriticalSection;
+    CS_Task: TRTLCriticalSection;
     Items,
     ItemsActiveTask: TTaskContainers;
     isRunningBackup, isFinishTaskAccessed, isRunningBackupDownloadedChaptersList,
@@ -317,13 +317,13 @@ begin
 
     if not Terminated and Reslt then
     begin
-      Task.Container.CS_Container.Acquire;
+      EnterCriticalSection(Task.Container.CS_Container);
       try
         Task.Container.DownCounter := InterLockedIncrement(Task.Container.DownCounter);
         Task.Container.DownloadInfo.Progress :=
           Format('%d/%d', [Task.Container.DownCounter, Task.Container.PageNumber]);
       finally
-        Task.Container.CS_Container.Release;
+        LeaveCriticalSection(Task.Container.CS_Container);
       end;
     end;
   except
@@ -1388,11 +1388,11 @@ begin
     DownloadInfo.TransferRate := '';
     ThreadState := False;
     Task := nil;
-    Manager.CS_Task.Acquire;
+    EnterCriticalSection(Manager.CS_Task);
     try
       Manager.ItemsActiveTask.Remove(Container);
     finally
-      Manager.CS_Task.Release;
+      LeaveCriticalSection(Manager.CS_Task);
     end;
     if not Manager.isReadyForExit then
     begin
@@ -1436,8 +1436,8 @@ end;
 constructor TTaskContainer.Create;
 begin
   inherited Create;
+  InitCriticalSection(CS_Container);
   ThreadState := False;
-  CS_Container := TCriticalSection.Create;
   ChapterLinks := TStringList.Create;
   ChapterName := TStringList.Create;
   FailedChapterName := TStringList.Create;
@@ -1461,17 +1461,17 @@ begin
   ChapterLinks.Free;
   FailedChapterName.Free;
   FailedChapterLinks.Free;
-  CS_Container.Free;
+  DoneCriticalsection(CS_Container);
   inherited Destroy;
 end;
 
 procedure TTaskContainer.IncReadCount(const ACount: Integer);
 begin
-  CS_Container.Acquire;
+  EnterCriticalSection(CS_Container);
   try
     Inc(ReadCount, ACount);
   finally
-    CS_Container.Release;
+    LeaveCriticalSection(CS_Container);
   end;
 end;
 
@@ -1488,31 +1488,30 @@ var
 begin
   Result := 0;
   if ItemsActiveTask.Count = 0 then Exit;
-  CS_Task.Acquire;
+  EnterCriticalSection(CS_Task);
   try
     for i := 0 to ItemsActiveTask.Count - 1 do
       with ItemsActiveTask[i] do
       begin
-        CS_Container.Acquire;
+        EnterCriticalSection(CS_Container);
         try
           DownloadInfo.TransferRate := FormatByteSize(ReadCount, True);
           Inc(Result, ReadCount);
           ReadCount := 0;
         finally
-          CS_Container.Release;
+          LeaveCriticalSection(CS_Container);
         end;
       end;
   finally
-    CS_Task.Release;
+    LeaveCriticalSection(CS_Task);
   end;
 end;
 
 constructor TDownloadManager.Create;
 begin
   inherited Create;
+  InitCriticalSection(CS_Task);
   ForceDirectoriesUTF8(WORK_FOLDER);
-
-  CS_Task := TCriticalSection.Create;
   DownloadManagerFile := TIniFileRun.Create(WORK_FILE);
   DownloadedChapters := TDownloadedChaptersDB.Create;
   DownloadedChapters.Filename := DOWNLOADEDCHAPTERSDB_FILE;
@@ -1532,7 +1531,7 @@ end;
 
 destructor TDownloadManager.Destroy;
 begin
-  CS_Task.Acquire;
+  EnterCriticalSection(CS_Task);
   try
     while Items.Count > 0 do
     begin
@@ -1540,13 +1539,13 @@ begin
       Items.Remove(Items.Last);
     end;
   finally
-    CS_Task.Release;
+    LeaveCriticalSection(CS_Task);
   end;
   Items.Free;
   DownloadManagerFile.Free;
   ItemsActiveTask.Free;
   DownloadedChapters.Free;
-  CS_Task.Free;
+  DoneCriticalsection(CS_Task);
   inherited Destroy;
 end;
 
@@ -1555,7 +1554,7 @@ var
   tid, s: String;
   tmp, i, j: Integer;
 begin
-  CS_Task.Acquire;
+  EnterCriticalSection(CS_Task);
   try
     while Items.Count > 0 do
     begin
@@ -1636,7 +1635,7 @@ begin
       end;
     end;
   finally
-    CS_Task.Release;
+    LeaveCriticalSection(CS_Task);
   end;
 end;
 
@@ -1649,7 +1648,7 @@ begin
     Exit;
 
   isRunningBackup := True;
-  CS_Task.Acquire;
+  EnterCriticalSection(CS_Task);
   with DownloadManagerFile do
   try
     // Erase all sections
@@ -1694,7 +1693,7 @@ begin
     end;
     UpdateFile;
   finally
-    CS_Task.Release;
+    LeaveCriticalSection(CS_Task);
   end;
   isRunningBackup := False;
 end;
@@ -1723,13 +1722,13 @@ end;
 function TDownloadManager.AddTask: Integer;
 begin
   Result := -1;
-  CS_Task.Acquire;
+  EnterCriticalSection(CS_Task);
   try
     Result := Items.Add(TTaskContainer.Create);
     with Items[Result] do
       Manager := Self;
   finally
-    CS_Task.Release;
+    LeaveCriticalSection(CS_Task);
   end;
 end;
 
@@ -1738,7 +1737,7 @@ var
   i, tcount: Integer;
 begin
   if Items.Count = 0 then Exit;
-  CS_Task.Acquire;
+  EnterCriticalSection(CS_Task);
   try
     tcount := 0;
     for i := 0 to Items.Count - 1 do
@@ -1756,7 +1755,7 @@ begin
             Inc(tcount);
           end;
   finally
-    CS_Task.Release;
+    LeaveCriticalSection(CS_Task);
   end;
 
   try
@@ -1907,7 +1906,7 @@ end;
 
 procedure TDownloadManager.RemoveTask(const taskID: Integer);
 begin
-  CS_Task.Acquire;
+  EnterCriticalSection(CS_Task);
   try
     with Items[taskID] do
       if ThreadState then begin
@@ -1917,7 +1916,7 @@ begin
     Items[taskID].Free;
     Items.Delete(taskID);
   finally
-    CS_Task.Release;
+    LeaveCriticalSection(CS_Task);
   end;
   CheckAndActiveTask;
 end;
@@ -1942,7 +1941,7 @@ begin
   Result := False;
   if Items.Count > 0 then
   begin
-    CS_Task.Acquire;
+    EnterCriticalSection(CS_Task);
     try
       for i := 0 to Items.Count - 1 do
         if Items[i].Status in Stats then begin
@@ -1950,7 +1949,7 @@ begin
           Break;
         end;
     finally
-      CS_Task.Release;
+      LeaveCriticalSection(CS_Task);
     end;
   end;
 end;
@@ -1997,12 +1996,12 @@ end;
 procedure TDownloadManager.Sort(const AColumn: Integer);
 begin
   if Items.Count < 2 then Exit;
-  CS_Task.Acquire;
+  EnterCriticalSection(CS_Task);
   try
     SortColumn := AColumn;
     Items.Sort(CompareTaskContainer);
   finally
-    CS_Task.Release;
+    LeaveCriticalSection(CS_Task);
   end;
 end;
 

@@ -11,7 +11,7 @@ unit uUpdateThread;
 interface
 
 uses
-  Classes, SysUtils, typinfo, syncobjs, uData, LazFileUtils, uBaseUnit, uFMDThread, uMisc,
+  Classes, SysUtils, typinfo, uData, LazFileUtils, uBaseUnit, uFMDThread, uMisc,
   WebsiteModules, DBDataProcess, SimpleTranslator, FMDOptions, httpsendthread;
 
 type
@@ -59,7 +59,7 @@ type
     procedure GetInfo(const limit: Integer; const cs: TCheckStyleType);
     procedure DoTerminate; override;
   public
-    CS_AddInfoToData, CS_AddNamesAndLinks: TCriticalSection;
+    CS_AddInfoToData, CS_AddNamesAndLinks: TRTLCriticalSection;
     isFinishSearchingForNewManga, isDownloadFromServer, isDoneUpdateNecessary: Boolean;
     mainDataProcess: TDBDataProcess;
     tempDataProcess: TDBDataProcess;
@@ -188,7 +188,7 @@ begin
           //we will stop at first found against current db
           if links.Count > 0 then
           begin
-            manager.CS_AddNamesAndLinks.Acquire;
+            EnterCriticalSection(manager.CS_AddNamesAndLinks);
             try
               if manager.FIsPreListAvailable then begin
                 for i:=0 to links.Count-1 do begin
@@ -204,7 +204,7 @@ begin
                   manager.tempDataProcess.AddData(names[i],links[i],'','','','','',0,0);
               manager.tempDataProcess.Commit;
             finally
-              manager.CS_AddNamesAndLinks.Release;
+              LeaveCriticalSection(manager.CS_AddNamesAndLinks);
             end;
           end;
         finally
@@ -220,12 +220,12 @@ begin
           Info.GetInfoFromURL(manager.website,link,DefaultRetryCount);
           if not Terminated then
           begin
-            manager.CS_AddInfoToData.Acquire;
+            EnterCriticalSection(manager.CS_AddInfoToData);
             try
               Info.AddInfoToData(title,link,manager.mainDataProcess);
               manager.CheckCommit(manager.numberOfThreads);
             finally
-              manager.CS_AddInfoToData.Release;
+              LeaveCriticalSection(manager.CS_AddInfoToData);
             end;
           end;
         end;
@@ -331,8 +331,8 @@ end;
 constructor TUpdateListManagerThread.Create;
 begin
   inherited Create(True);
-  CS_AddInfoToData := TCriticalSection.Create;
-  CS_AddNamesAndLinks := TCriticalSection.Create;
+  InitCriticalSection(CS_AddInfoToData);
+  InitCriticalSection(CS_AddNamesAndLinks);
   FreeOnTerminate := True;
 
   websites := TStringList.Create;
@@ -362,8 +362,8 @@ begin
   tempDataProcess.Free;
   threads.Free;
   MainForm.isUpdating := False;
-  CS_AddInfoToData.Free;
-  CS_AddNamesAndLinks.Free;
+  DoneCriticalsection(CS_AddInfoToData);
+  DoneCriticalsection(CS_AddNamesAndLinks);
   inherited Destroy;
 end;
 

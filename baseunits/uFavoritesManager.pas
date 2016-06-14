@@ -694,7 +694,7 @@ begin
               if Assigned(NewMangaInfo) and
                 (NewMangaInfoChaptersPos.Count > 0) then
                 try
-                  DLManager.CS_Task.Acquire;
+                  EnterCriticalSection(DLManager.CS_Task);
                   DLManager.Items.Add(TTaskContainer.Create);
                   with DLManager.Items.Last do
                   begin
@@ -742,7 +742,7 @@ begin
                   FreeAndNil(NewMangaInfo);
                   FreeAndNil(NewMangaInfoChaptersPos);
                 finally
-                  DLManager.CS_Task.Release;
+                  LeaveCriticalSection(DLManager.CS_Task);
                 end;
 
           Backup;

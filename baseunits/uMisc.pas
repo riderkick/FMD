@@ -10,7 +10,7 @@ uses
   {$else}
   UTF8Process,
   {$endif}
-  Classes, SysUtils, Graphics, LazFileUtils, strutils, syncobjs, IniFiles,
+  Classes, SysUtils, Graphics, LazFileUtils, strutils, IniFiles,
   NaturalSortUnit;
 
 type
@@ -18,7 +18,7 @@ type
 
   TIniFileR = class(TMemIniFile)
   private
-    FCSReload: TCriticalSection;
+    FCSReload: TRTLCriticalSection;
     FFileAge: Longint;
   public
     constructor Create(const AFileName: String; AEscapeLineFeeds: Boolean = False);
@@ -98,13 +98,13 @@ implementation
 constructor TIniFileR.Create(const AFileName: String; AEscapeLineFeeds: Boolean = False);
 begin
   inherited Create(AFileName, AEscapeLineFeeds);
-  FCSReload := TCriticalSection.Create;
+  InitCriticalSection(FCSReload);
   FFileAge := FileAge(Self.FileName);
 end;
 
 destructor TIniFileR.Destroy;
 begin
-  FCSReload.Free;
+  DoneCriticalsection(FCSReload);
   inherited Destroy;
 end;
 
@@ -112,7 +112,7 @@ procedure TIniFileR.Reload;
 var
   slLines: TStringList;
 begin
-  if FCSReload.TryEnter then try
+  if TryEnterCriticalSection(FCSReload) then try
       if FileExistsUTF8(FileName) then
         if FileAgeUTF8(FileName) <> FFileAge then
         begin
@@ -126,7 +126,7 @@ begin
           end;
         end;
     finally
-      FCSReload.Release;
+      LeaveCriticalSection(FCSReload);
     end;
 end;
 
