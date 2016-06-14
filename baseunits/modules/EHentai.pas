@@ -19,10 +19,26 @@ const
 var
   onlogin: Boolean = False;
   locklogin: TRTLCriticalSection;
-  downloadoriginalimage: Boolean = False;
+  settingsimagesize: Integer = 0;
+  settingsimagesizestr: array [0..5] of string = (
+    'xr_a',
+    'xr_780',
+    'xr_980',
+    'xr_1280',
+    'xr_1600',
+    'xr_2400');
 
 resourcestring
   RS_DownloadOriginalImage = 'Download original image(require ExHentai account)';
+  RS_SettingsImageSize = 'Image size';
+  RS_SettingsImageSizeItems =
+    'Auto' + LineEnding +
+    '780x' + LineEnding +
+    '980x' + LineEnding +
+    '1280x' + LineEnding +
+    '1600x' + LineEnding +
+    '2400x' + LineEnding +
+    'Original';
 
 function ExHentaiLogin(const AHTTP: THTTPSendThread): Boolean;
 var
@@ -66,16 +82,24 @@ begin
 end;
 
 function GETWithLogin(const AHTTP: THTTPSendThread; const AURL, AWebsite: String): Boolean;
+var
+  ACookies: String;
 begin
   Result := False;
   if Account.Enabled[accname] then begin
     AHTTP.FollowRedirection := False;
-    AHTTP.Cookies.Text := Account.Cookies[accname];
+    if AHTTP.Cookies.Count > 0 then ACookies := AHTTP.Cookies.Text
+    else ACookies := '';
+    //AHTTP.Cookies.Text := Account.Cookies[accname];
+    AHTTP.Cookies.AddText(Account.Cookies[accname]);
     Result := AHTTP.GET(AURL);
     if Result and (AHTTP.ResultCode > 300) then begin
       Result := ExHentaiLogin(AHTTP);
       if Result then
+      begin
+        if ACookies <> '' then AHTTP.Cookies.AddText(ACookies);
         Result := AHTTP.GET(AURL);
+      end;
     end;
   end
   else
@@ -293,7 +317,7 @@ var
       s := StreamToString(DownloadThread.FHTTP.Document);
       query.ParseHTML(DownloadThread.FHTTP.Document);
       iurl := '';
-      if downloadoriginalimage and (Account.Status[accname] = asValid) then
+      if (settingsimagesize > High(settingsimagesizestr)) and (Account.Status[accname] = asValid) then
         iurl := query.XPathString('//a/@href[contains(.,"/fullimg.php")]');
       if iurl = '' then
         iurl := query.XPathString('//*[@id="img"]/@src');
@@ -361,6 +385,8 @@ begin
   if DownloadThread = nil then Exit;
   reconnect := DownloadThread.FHTTP.RetryCount;
   iurl := FillHost(Module.RootURL, AURL);
+  if settingsimagesize <= High(settingsimagesizestr) then
+    DownloadThread.FHTTP.Cookies.Values['uconfig'] := settingsimagesizestr[settingsimagesize];
   if GETWithLogin(DownloadThread.FHTTP, iurl, Module.Website) then begin
     query := TXQueryEngineHTML.Create(DownloadThread.FHTTP.Document);
     try
@@ -393,7 +419,7 @@ procedure RegisterModule;
 
 begin
   with AddWebsiteModule('E-Hentai', 'http://g.e-hentai.org') do
-    AddOptionCheckBox(@downloadoriginalimage, 'DownloadOriginalImage', @RS_DownloadOriginalImage);
+    AddOptionComboBox(@settingsimagesize, 'SettingsImageSize', @RS_SettingsImageSize, @RS_SettingsImageSizeItems);
   with AddWebsiteModule('ExHentai', 'http://exhentai.org') do begin
     AccountSupport := True;
     OnLogin := @ExHentaiLogin;
