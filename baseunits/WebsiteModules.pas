@@ -694,7 +694,7 @@ begin
             case OptionType of
               woCheckBox: PBoolean(BindValue)^ := ReadBool(Website, Name, PBoolean(BindValue)^);
               woEdit: PString(BindValue)^ := ReadString(Website, Name, PString(BindValue)^);
-              woSpinEdit: PInteger(BindValue)^ := ReadInteger(Website, Name, PInteger(BindValue)^);
+              woSpinEdit, woComboBox: PInteger(BindValue)^ := ReadInteger(Website, Name, PInteger(BindValue)^);
             end;
           end;
 end;
@@ -713,7 +713,7 @@ begin
             case OptionType of
               woCheckBox: WriteBool(Website, Name, PBoolean(BindValue)^);
               woEdit: WriteString(Website, Name, PString(BindValue)^);
-              woSpinEdit: WriteInteger(Website, Name, PInteger(BindValue)^);
+              woSpinEdit, woComboBox: WriteInteger(Website, Name, PInteger(BindValue)^);
             end;
           end;
   configfile.UpdateFile;
