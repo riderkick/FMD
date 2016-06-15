@@ -231,7 +231,7 @@ begin
             GetParams(DLChapters, FavoriteInfo.DownloadedChapterList);
             DLChapters.Sorted := True;
             for i := 0 to NewMangaInfo.chapterLinks.Count - 1 do
-              if DLChapters.IndexOf(NewMangaInfo.chapterLinks[i]) > -1 then
+              if DLChapters.IndexOf(NewMangaInfo.chapterLinks[i]) = -1 then
                 NewMangaInfoChaptersPos.Add(i);
           finally
             DLChapters.Free;
