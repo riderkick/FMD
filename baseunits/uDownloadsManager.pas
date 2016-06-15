@@ -383,8 +383,6 @@ var
 
   {$I includes/MangaGo/chapter_page_number.inc}
 
-  {$I includes/MangaInn/chapter_page_number.inc}
-
   {$I includes/MangaPark/chapter_page_number.inc}
 
   {$I includes/MangaTraders/chapter_page_number.inc}
@@ -453,9 +451,6 @@ begin
   begin
     if Task.Container.MangaSiteID = ANIMEA_ID then
       Result := GetAnimeAPageNumber
-    else
-    if Task.Container.MangaSiteID = MANGAINN_ID then
-      Result := GetMangaInnPageNumber
     else
     if Task.Container.MangaSiteID = MANGATRADERS_ID then
       Result := GetMangaTradersPageNumber
@@ -627,8 +622,6 @@ var
 
   {$I includes/MangaGo/image_url.inc}
 
-  {$I includes/MangaInn/image_url.inc}
-
   //{$I includes/MangaPark/image_url.inc}
 
   {$I includes/MangaREADER_POR/image_url.inc}
@@ -693,9 +686,6 @@ begin
     else
     if Task.Container.MangaSiteID = MANGATRADERS_ID then
       Result := GetMangaTradersImageURL
-    else
-    if Task.Container.MangaSiteID = MANGAINN_ID then
-      Result := GetMangaInnImageURL
     else
     if Task.Container.MangaSiteID = MANGA24H_ID then
       Result := GetManga24hImageURL

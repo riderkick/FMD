@@ -41,4 +41,5 @@ uses
   GMangaMe,
   SekaiManga,
   KuManga,
-  SenManga;
+  SenManga,
+  MangaInn;
