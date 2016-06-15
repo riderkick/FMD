@@ -4,12 +4,19 @@ Project page: https://github.com/riderkick/FMD
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.65.0 (16-06-2016)
+[*] Fixed check for new chapters
+[*] Tumangaonline: fixed get all chapters
+[*] MangaInn: rewrite all code
+[*] Various changes and bug fix
+Full changes: https://github.com/riderkick/FMD/compare/0.9.64.0...0.9.65.0
+
 0.9.64.0 (15-06-2016)
 [+] Show new chapters and status downloaded while checking favorites with icon and highlight
 [*] SenManga: fixed all
 [+] E-Hentai/ExHentai: replace option download original image with image size with combobox
 [*] Various changes and bug fix
-Full changes: https://github.com/riderkick/FMD/compare/0.9.62.0...0.9.63.0
+Full changes: https://github.com/riderkick/FMD/compare/0.9.63.0...0.9.64.0
 
 0.9.63.0 (11-06-2016)
 [*] Fixed an issue with CF
