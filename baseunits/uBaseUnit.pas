@@ -575,7 +575,7 @@ type
     genres,
     status,
     summary: String;
-    numChapter: Cardinal;
+    numChapter: Integer;
     chapterName,
     chapterLinks: TStringList;
     constructor Create;
@@ -616,7 +616,7 @@ type
     procedure Execute; override;
   public
     isSuccess, isDone: Boolean;
-    Retry: Cardinal;
+    Retry: Integer;
     URL, Path: String;
     constructor Create(CreateSuspended: Boolean);
   end;
@@ -737,7 +737,7 @@ function GetValuesFromString(Str: String; Sepr: Char): String;
 procedure InvertStrings(const St: TStringList); overload;
 procedure InvertStrings(const Sts: array of TStringList); overload;
 procedure TrimStrings(TheStrings: TStrings);
-procedure RemoveDuplicateStrings(Strs: array of TStringList; RemIndex: Cardinal = 0);
+procedure RemoveDuplicateStrings(Strs: array of TStringList; RemIndex: Integer = 0);
 
 procedure CleanHTMLComments(const Str: TStringList);
 function FixHTMLTagQuote(const s: String): String;
@@ -773,7 +773,7 @@ function TrimChar(const Source: String; const Chars: TSysCharSet): String;
 function TrimLeftChar(const Source: String; const Chars: TSysCharSet): String;
 function TrimRightChar(const Source: String; const Chars: TSysCharSet): String;
 
-function PrepareSummaryForHint(const Source: String; MaxLength: Cardinal = 80): String;
+function PrepareSummaryForHint(const Source: String; MaxLength: Integer = 80): String;
 procedure AddCommaString(var Dest: String; S: String);
 
 function StringOfString(c: String; l: Integer): String;
@@ -864,7 +864,6 @@ function MangaInfoStatusIfPos(const SearchStr, OngoingStr, CompletedStr: String)
 // cross platform funcs
 
 function fmdGetTempPath: String;
-function fmdGetTickCount: Cardinal;
 procedure fmdPowerOff;
 procedure fmdHibernate;
 
@@ -966,7 +965,7 @@ end;
 
 function UnicodeRemove(const S: String): String;
 var
-  i: Cardinal;
+  i: Integer;
 begin
   Result := S;
   for i := 1 to Length(Result) do
@@ -1018,7 +1017,7 @@ end;
 procedure CheckPath(const S: String);
 var
   wS, lcS, lcS2: String;
-  i, j: Word;
+  i, j: Integer;
 begin
   wS := s;
   lcS2 := '';
@@ -1703,7 +1702,7 @@ var
   sUtf8: String;
   sWide: WideString;
 
-  i, len: Cardinal;
+  i, len: Integer;
   ESC: String[2];
   CharCode: Integer;
   c: Char;
@@ -1847,8 +1846,7 @@ begin
   end;
 end;
 
-procedure RemoveDuplicateStrings(Strs: array of TStringList;
-  RemIndex: Cardinal);
+procedure RemoveDuplicateStrings(Strs: array of TStringList; RemIndex: Integer);
 var
   i, j, k: Integer;
 begin
@@ -2256,7 +2254,7 @@ end;
 
 function Find(const S: String; var List: TStringList; out index: Integer): Boolean;
 var
-  i: Cardinal;
+  i: Integer;
 begin
   Result := False;
   index := -1;
@@ -2289,7 +2287,7 @@ end;
 
 procedure GetParams(const output: TStrings; input: String);
 var
-  l: Word;
+  l: Integer;
 begin
   repeat
     l := Pos(SEPERATOR, input);
@@ -2303,7 +2301,7 @@ end;
 
 procedure GetParams(var output: TCardinalList; input: String);
 var
-  l: Word;
+  l: Integer;
 begin
   repeat
     l := Pos(SEPERATOR, input);
@@ -2317,7 +2315,7 @@ end;
 
 procedure GetParams(var output: TList; input: String);
 var
-  l: Word;
+  l: Integer;
 begin
   repeat
     l := Pos(SEPERATOR, input);
@@ -2332,7 +2330,7 @@ end;
 function ExtractParam(const output: TStrings; input, sep: String;
   WhiteSp: Boolean): Integer;
 var
-  l, lse: QWord;
+  l, lse: Integer;
   s: String;
 begin
   Result := 0;
@@ -2387,7 +2385,7 @@ end;
 
 function SetParams(input: TObject): String;
 var
-  i: Cardinal;
+  i: Integer;
 begin
   Result := '';
   if input is TStringList then
@@ -2417,7 +2415,7 @@ end;
 
 function SetParams(const input: array of String): String;
 var
-  i: Cardinal;
+  i: Integer;
 begin
   Result := '';
   if Length(input) = 0 then
@@ -2529,7 +2527,7 @@ end;
 
 function FixPath(const path: String): String;
 var
-  i: Cardinal;
+  i: Integer;
 begin
   Result := path;
   if Length(path) = 0 then
@@ -2629,7 +2627,7 @@ end;
 procedure CustomGenres(var output: TStringList; input: String);
 var
   s: String = '';
-  i: Word;
+  i: Integer;
 begin
   if Length(input) = 0 then
     Exit;
@@ -2742,12 +2740,13 @@ begin
   end;
 end;
 
-function PrepareSummaryForHint(const Source: String; MaxLength: Cardinal = 80): String;
+function PrepareSummaryForHint(const Source: String; MaxLength: Integer = 80): String;
 var
-  i: Cardinal = 1;
-  j: Cardinal = 1;
+  i, j: Integer;
 begin
   Result := Source;
+  i := 1;
+  j := 1;
   repeat
     if (j > MaxLength) and (Result[i] = ' ') then
     begin
@@ -3237,7 +3236,7 @@ end;
 
 function GetURLFromBitly(const URL: String): String;
 var
-  i: Cardinal;
+  i: Integer;
   httpSource: TStringList;
 begin
   Result := '';
@@ -3617,9 +3616,9 @@ end;
 
 procedure QuickSortChapters(var chapterList, linkList: TStringList);
 
-  procedure QSort(L, R: Cardinal);
+  procedure QSort(L, R: Integer);
   var
-    i, j: Cardinal;
+    i, j: Integer;
     X: String;
   begin
     X := chapterList.Strings[(L + R) div 2];
@@ -3656,9 +3655,9 @@ procedure QuickSortData(var merge: TStringList);
 var
   names, output: TStringList;
 
-  procedure QSort(L, R: Cardinal);
+  procedure QSort(L, R: Integer);
   var
-    i, j: Cardinal;
+    i, j: Integer;
     X: String;
   begin
     X := names.Strings[(L + R) div 2];
@@ -3686,7 +3685,7 @@ var
   end;
 
 var
-  i: Cardinal;
+  i: Integer;
 
 begin
   names := TStringList.Create;
@@ -3707,9 +3706,9 @@ procedure QuickSortDataWithWebID(var merge: TStringList; const webIDList: TByteL
 var
   names, output: TStringList;
 
-  procedure QSort(L, R: Cardinal);
+  procedure QSort(L, R: Integer);
   var
-    i, j: Cardinal;
+    i, j: Integer;
     X: String;
   begin
     X := names.Strings[(L + R) div 2];
@@ -3738,7 +3737,7 @@ var
   end;
 
 var
-  i: Cardinal;
+  i: Integer;
 
 begin
   names := TStringList.Create;
@@ -3942,7 +3941,7 @@ end;
 // OS dependent
 function fmdGetTempPath: String;
 var
-  l: Cardinal;
+  l: Integer;
 begin
 {$IFDEF WINDOWS}
   SetLength(Result, 4096);
@@ -3952,13 +3951,6 @@ begin
 {$IFDEF UNIX}
   Result := GetTempDir(False);
 {$ENDIF}
-end;
-
-function fmdGetTickCount: Cardinal;
-begin
- {$IFDEF WINDOWS}
-  Result := GetTickCount64;
- {$ENDIF}
 end;
 
 procedure fmdPowerOff;
