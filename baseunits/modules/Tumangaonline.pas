@@ -5,7 +5,7 @@ unit Tumangaonline;
 interface
 
 uses
-  Classes, SysUtils, WebsiteModules, uData, uBaseUnit, uDownloadsManager,
+  Classes, SysUtils, math, WebsiteModules, uData, uBaseUnit, uDownloadsManager,
   XQueryEngineHTML, httpsendthread, synautil, synacode, RegExpr;
 
 implementation
@@ -14,7 +14,8 @@ const
   apiurl = '/api/v1/';
   apiurlmangas = apiurl + 'mangas';
   apiurlimagenes = apiurl + 'imagenes';
-  dirurl = apiurlmangas + '?searchBy=nombre&sortDir=asc&sortedBy=nombre&itemsPerPage=1000&page=';
+  dirurl = apiurlmangas + '?searchBy=nombre&sortDir=asc&sortedBy=nombre&itemsPerPage=';
+  perpage = '1000';
   mangaurl = '/#!/biblioteca/mangas/';
   mangaurlpart = '/biblioteca/mangas/';
   imgurl = 'http://img1.tumangaonline.com';
@@ -25,12 +26,12 @@ begin
   Result := NET_PROBLEM;
   Page := 1;
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
-  if MangaInfo.FHTTP.GET(Module.RootURL + dirurl + '1') then
+  if MangaInfo.FHTTP.GET(Module.RootURL + dirurl + '1&page=1') then
   begin
     Result := NO_ERROR;
     with TXQueryEngineHTML.Create(MangaInfo.FHTTP.Document) do
       try
-        Page := StrToIntDef(XPathString('json(*).last_page'), 1);
+        Page := ceil(StrToIntDef(XPathString('json(*).total'), 1) / StrToInt(perpage));
       finally
         Free;
       end;
@@ -45,16 +46,16 @@ var
 begin
   Result := NET_PROBLEM;
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
-  if MangaInfo.FHTTP.GET(Module.RootURL + dirurl + IncStr(AURL)) then
+  if MangaInfo.FHTTP.GET(Module.RootURL + dirurl + perpage + '&page=' + IncStr(AURL)) then
   begin
     Result := NO_ERROR;
     with TXQueryEngineHTML.Create(MangaInfo.FHTTP.Document) do
       try
-        for v in XPath('json(*).data()/concat(id,"/",nombreUrl," ",nombre)') do
+        for v in XPath('json(*).data()/string-join((id,"/",nombreUrl,codepoints-to-string(10),nombre),"")') do
         begin
           s := v.toString;
-          ALinks.Add(mangaurl + SeparateLeft(s, ' '));
-          ANames.Add(SeparateRight(s, ' '));
+          ALinks.Add(mangaurl + SeparateLeft(s, #10));
+          ANames.Add(Trim(SeparateRight(s, #10)));
         end;
       finally
         Free;
