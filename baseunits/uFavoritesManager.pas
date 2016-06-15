@@ -916,26 +916,38 @@ end;
 procedure TFavoriteManager.Restore;
 var
   i, c: Integer;
+  s: TStringList;
 begin
   c := favoritesFile.ReadInteger('general', 'NumberOfFavorites', 0);
-  if c > 0 then
-    for i := 0 to c - 1 do
-    begin
+  if c = 0 then Exit;
+  s := TStringList.Create;
+  try
+    s.Sorted := True;
+    s.Duplicates := dupIgnore;
+    for i := 0 to c - 1 do begin
       Items.Add(TFavoriteContainer.Create);
       with Items.Last do begin
         Manager := Self;
         with favoritesFile, FavoriteInfo do begin
-          Title := ReadString(IntToStr(i), 'Title', '');
           currentChapter := ReadString(IntToStr(i), 'CurrentChapter', '0');
-          downloadedChapterList := ReadString(IntToStr(i), 'DownloadedChapterList', '');
+          Title := ReadString(IntToStr(i), 'Title', '');
           Website := ReadString(IntToStr(i), 'Website', '');
           SaveTo := CorrectPathSys(ReadString(IntToStr(i), 'SaveTo', ''));
           Link := ReadString(IntToStr(i), 'Link', '');
           Website := Website;
           Status := STATUS_IDLE;
+
+          downloadedChapterList := ReadString(IntToStr(i), 'DownloadedChapterList', '');
+          // remove duplicate
+          GetParams(s, DownloadedChapterList);
+          DownloadedChapterList := SetParams(s);
+          s.Clear;
         end;
       end;
     end;
+  finally
+    s.Free;
+  end;
 end;
 
 procedure TFavoriteManager.Backup;
