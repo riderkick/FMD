@@ -91,7 +91,6 @@ function GetInfo(const MangaInfo: TMangaInformation;
   const AURL: String; const Module: TModuleContainer): Integer;
 var
   v: IXQValue;
-  i: Integer;
   s: String;
 begin
   Result := NET_PROBLEM;
@@ -101,25 +100,35 @@ begin
     with MangaInfo.mangaInfo, TXQueryEngineHTML.Create(MangaInfo.FHTTP.Document) do
       try
         coverLink := XPathString('//div[@id="rightside"]//img/@src');
-        if title = '' then title := XPathString('//div[@id="leftside"]//a[@class="bigChar"]');
-        v := XPath('//div[@id="leftside"]//div[@class="barContent"]/div/p');
-        for i := 1 to v.Count do
+        if title = '' then
         begin
-          s := v.get(i).toString;
-          if Pos('Genres', s) = 1 then genres := SeparateRight(s, ':') else
-          if (Pos('Author', s) = 1) or (Pos('Writer', s) = 1) then authors := SeparateRight(s, ':') else
-          if Pos('Artist', s) = 1 then artists := SeparateRight(s, ':') else
-          if Pos('Status', s) = 1 then begin
-            if Pos('ONGOING', UpperCase(s)) > 0 then
-              status := '1'
-            else if Pos('COMPLETED', UpperCase(s)) > 0 then
-              status := '0';
-          end else
-          if Pos('Summary:', s) = 1 then summary := v.get(i + 1).toString;
+          title := XPathString('//title');
+          if title <> '' then
+          begin
+            if Pos('manga | Read', title) <> 0 then
+              title := SeparateLeft(title, 'manga | Read')
+            else if Pos('comic | Read', title) <> 0 then
+              title := SeparateLeft(title, 'comic | Read');
+          end;
         end;
+        genres := SeparateRight(XPathString('//div[@class="barContent"]/div/p[starts-with(.,"Genres:")]'), ':');
+        authors := SeparateRight(XPathString('//div[@class="barContent"]/div/p[starts-with(.,"Author:")]'), ':');
+        artists := SeparateRight(XPathString('//div[@class="barContent"]/div/p[starts-with(.,"Artist:")]'), ':');
+        status := MangaInfoStatusIfPos(XPathString(
+          '//div[@class="barContent"]/div/p[starts-with(.,"Status:")]'),
+          'Ongoing',
+          'Completed');
+        summary := XPathString('//div[@class="barContent"]/div/p[starts-with(.,"Summary:")]//following-sibling::p[1]');
         for v in XPath('//table[@class="listing"]/tbody/tr/td/a') do begin
           chapterLinks.Add(v.toNode.getAttribute('href'));
-          chapterName.Add(v.toString);
+          s := v.toNode.getAttribute('title');
+          if LeftStr(s, 5) = 'Read ' then
+            Delete(s, 1, 5);
+          if RightStr(s, 7) = ' online' then
+            SetLength(s, Length(s) - 7)
+          else if RightStr(s, 29) = ' comic online in high quality' then
+            SetLength(s, Length(s) - 29);
+          chapterName.Add(s);
         end;
         InvertStrings([chapterLinks, chapterName]);
       finally
