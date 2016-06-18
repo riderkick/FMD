@@ -4,6 +4,11 @@ Project page: https://github.com/riderkick/FMD
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.66.0 (18-06-2016)
+[*] KissManga: fixed manga info
+[+] Added LeoManga[ES]
+Full changes: https://github.com/riderkick/FMD/compare/0.9.65.0...0.9.66.0
+
 0.9.65.0 (16-06-2016)
 [*] Fixed check for new chapters
 [*] Tumangaonline: fixed get all chapters
