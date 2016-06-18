@@ -42,4 +42,5 @@ uses
   SekaiManga,
   KuManga,
   SenManga,
-  MangaInn;
+  MangaInn,
+  LeoManga;
