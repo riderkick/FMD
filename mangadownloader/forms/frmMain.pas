@@ -843,20 +843,16 @@ var
 
 function WndCallback(Ahwnd: HWND; uMsg: UINT; wParam: WParam; lParam: LParam): LRESULT; stdcall;
 begin
-  try
-    if uMsg = WM_DISPLAYCHANGE then
-    begin
-      Screen.UpdateMonitors;
-      Screen.UpdateScreen;
-      if Screen.MonitorCount < MainForm.Monitor.MonitorNum then
-        MainForm.DefaultMonitor := dmMainForm;
-      if (MainForm.Left > Screen.Width) or (MainForm.Top > Screen.Height) then
-        MainForm.MoveToDefaultPosition;
-    end
-    else
-      Result := CallWindowProc(PrevWndProc, Ahwnd, uMsg, WParam, LParam);
-  except
+  if uMsg = WM_DISPLAYCHANGE then
+  begin
+    Screen.UpdateMonitors;
+    Screen.UpdateScreen;
+    if Screen.MonitorCount < MainForm.Monitor.MonitorNum then
+      MainForm.DefaultMonitor := dmMainForm;
+    if (MainForm.Left > Screen.Width) or (MainForm.Top > Screen.Height) then
+      MainForm.MoveToDefaultPosition;
   end;
+  Result := CallWindowProc(PrevWndProc, Ahwnd, uMsg, WParam, LParam);
 end;
 {$endif}
 
@@ -1028,7 +1024,8 @@ procedure TMainForm.FormCreate(Sender: TObject);
 begin
   Randomize;
   {$ifdef windows}
-  PrevWndProc := Windows.WNDPROC(SetWindowLong(Self.Handle, GWL_WNDPROC, PtrInt(@WndCallback)));
+  PrevWndProc := windows.WNDPROC(GetWindowLong(Self.Handle, GWL_WNDPROC));
+  windows.SetWindowLong(Self.Handle, GWL_WNDPROC, PtrInt(@WndCallback));
   {$endif}
   SetLogFile(Format('%s\%s_LOG_%s.txt', ['log', ExtractFileNameOnly(ParamStrUTF8(0)),
     FormatDateTime('dd-mm-yyyy', Now)]));
@@ -1198,6 +1195,10 @@ end;
 
 procedure TMainForm.CloseNow;
 begin
+  {$ifdef windows}
+  if Assigned(PrevWndProc) then
+    windows.SetWindowLong(Self.Handle, GWL_WNDPROC, PtrInt(PrevWndProc));
+  {$endif}
   Writelog_D(Self.ClassName+'.CloseNow, terminating all threads and waitfor');
   FavoriteManager.StopChekForNewChapter(True);
   SilentThreadManager.StopAll(True);
