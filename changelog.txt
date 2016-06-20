@@ -4,6 +4,13 @@ Project page: https://github.com/riderkick/FMD
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.67.0 (18-06-2016)
+[*] MangaPark: rewrite all code
+[*] MangaBug: replaced with MangaIce
+[+] Added MangaJoy[EN]
+[*] Various changes and bug fix
+Full changes: https://github.com/riderkick/FMD/compare/0.9.66.0...0.9.67.0
+
 0.9.66.0 (18-06-2016)
 [*] KissManga: fixed manga info
 [+] Added LeoManga[ES]
