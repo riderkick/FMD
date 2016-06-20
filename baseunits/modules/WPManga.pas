@@ -325,7 +325,7 @@ begin
   AddWebsiteModule('MangaIndo', 'http://mangaindo.id');
   AddWebsiteModule('ReadHentaiManga', 'http://readhentaimanga.com');
   AddWebsiteModule('MangaHen', 'http://www.mangahen.com');
-  AddWebsiteModule('MangaBug', 'http://www.mangabug.com');
+  AddWebsiteModule('MangaIce', 'http://www.mangaice.com');
   AddWebsiteModule('MangaJoy', 'http://manga-joy.com');
 end;
 
