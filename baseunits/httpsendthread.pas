@@ -14,10 +14,11 @@ type
 
   THTTPSendThread = class(THTTPSend)
   private
-    fowner: TFMDThread;
-    fretrycount: Integer;
-    fgzip: Boolean;
-    ffollowredirection: Boolean;
+    FOwner: TFMDThread;
+    FRetryCount: Integer;
+    FGZip: Boolean;
+    FFollowRedirection: Boolean;
+    FAllowServerErrorResponse: Boolean;
     procedure SetTimeout(AValue: Integer);
     procedure OnOwnerTerminate(Sender: TObject);
   public
@@ -34,10 +35,11 @@ type
     procedure SetNoProxy;
     procedure Reset;
     property Timeout: Integer read FTimeout write SetTimeout;
-    property RetryCount: Integer read fretrycount write fretrycount;
-    property GZip: Boolean read fgzip write fgzip;
-    property FollowRedirection: Boolean read ffollowredirection write ffollowredirection;
-    property Thread: TFMDThread read fowner;
+    property RetryCount: Integer read FRetryCount write FRetryCount;
+    property GZip: Boolean read FGZip write FGZip;
+    property FollowRedirection: Boolean read FFollowRedirection write FFollowRedirection;
+    property AllowServerErrorResponse: Boolean read FAllowServerErrorResponse write FAllowServerErrorResponse;
+    property Thread: TFMDThread read FOwner;
   end;
 
   TKeyValuePair = array[0..1] of String;
@@ -183,16 +185,17 @@ begin
   Protocol := '1.1';
   Headers.NameValueSeparator := ':';
   Cookies.NameValueSeparator := '=';
-  fgzip := True;
-  ffollowredirection := True;
-  fretrycount := DefaultRetryCount;
+  FGZip := True;
+  FFollowRedirection := True;
+  FAllowServerErrorResponse := False;
+  FRetryCount := DefaultRetryCount;
   SetTimeout(DefaultTimeout);
   SetProxy(DefaultProxyType, DefaultProxyHost, DefaultProxyPort, DefaultProxyUser, DefaultProxyPass);
   Reset;
   if Assigned(AOwner) then
   begin
-    fowner := AOwner;
-    fowner.OnCustomTerminate := @OnOwnerTerminate;
+    FOwner := AOwner;
+    FOwner.OnCustomTerminate := @OnOwnerTerminate;
   end;
   EnterCriticalsection(CS_ALLHTTPSendThread);
   try
@@ -234,15 +237,16 @@ begin
   HTTPHeader.Assign(Headers);
   try
     // first request
-    while (not HTTPMethod(Method, rurl)) or (ResultCode = 500) do begin
+    while (not HTTPMethod(Method, rurl)) or
+      ((not FAllowServerErrorResponse) and (ResultCode > 500)) do begin
       if CheckTerminate then Exit;
-      if (fretrycount > -1) and (fretrycount <= counter) then Exit;
+      if (FRetryCount > -1) and (FRetryCount <= counter) then Exit;
       Inc(Counter);
       Headers.Assign(HTTPHeader);
     end;
 
     // redirection      '
-    if ffollowredirection then
+    if FFollowRedirection then
       while (ResultCode > 300) and (ResultCode < 400) do begin
         if CheckTerminate then Exit;
         HTTPHeader.Values['Referer'] := ' ' + rurl;
@@ -263,9 +267,10 @@ begin
         Clear;
         Headers.Assign(HTTPHeader);
         counter := 0;
-        while (not HTTPMethod('GET', rurl)) or (ResultCode > 500) do begin
+        while (not HTTPMethod('GET', rurl)) or
+          ((not FAllowServerErrorResponse) and (ResultCode > 500)) do begin
           if checkTerminate then Exit;
-          if (fretrycount > -1) and (fretrycount <= counter) then Exit;
+          if (FRetryCount > -1) and (FRetryCount <= counter) then Exit;
           Inc(counter);
           Clear;
           Headers.Assign(HTTPHeader);
@@ -342,8 +347,8 @@ end;
 function THTTPSendThread.ThreadTerminated: Boolean;
 begin
   Result := False;
-  if Assigned(fowner) then
-    Result := fowner.IsTerminated;
+  if Assigned(FOwner) then
+    Result := FOwner.IsTerminated;
 end;
 
 procedure THTTPSendThread.RemoveCookie(const CookieName: String);
@@ -407,7 +412,7 @@ begin
   Headers.Values['Accept'] := ' text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8';
   Headers.Values['Accept-Charset'] := ' utf8';
   Headers.Values['Accept-Language'] := ' en-US,en;q=0.8';
-  if fgzip then Headers.Values['Accept-Encoding'] := ' gzip, deflate';
+  if FGZip then Headers.Values['Accept-Encoding'] := ' gzip, deflate';
 end;
 
 initialization
