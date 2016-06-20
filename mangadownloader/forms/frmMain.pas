@@ -839,7 +839,7 @@ var
   UpdateStatusTextStyle: TTextStyle;
 
 {$ifdef windows}
-  PrevWndProc: WNDPROC;
+  PrevWndProc: windows.WNDPROC;
 
 function WndCallback(Ahwnd: HWND; uMsg: UINT; wParam: WParam; lParam: LParam): LRESULT; stdcall;
 begin
@@ -1024,8 +1024,8 @@ procedure TMainForm.FormCreate(Sender: TObject);
 begin
   Randomize;
   {$ifdef windows}
-  PrevWndProc := windows.WNDPROC(GetWindowLong(Self.Handle, GWL_WNDPROC));
-  windows.SetWindowLong(Self.Handle, GWL_WNDPROC, PtrInt(@WndCallback));
+  PrevWndProc := windows.WNDPROC(windows.GetWindowLongPtr(Self.Handle, GWL_WNDPROC));
+  windows.SetWindowLongPtr(Self.Handle, GWL_WNDPROC, PtrInt(@WndCallback));
   {$endif}
   SetLogFile(Format('%s\%s_LOG_%s.txt', ['log', ExtractFileNameOnly(ParamStrUTF8(0)),
     FormatDateTime('dd-mm-yyyy', Now)]));
@@ -1197,7 +1197,7 @@ procedure TMainForm.CloseNow;
 begin
   {$ifdef windows}
   if Assigned(PrevWndProc) then
-    windows.SetWindowLong(Self.Handle, GWL_WNDPROC, PtrInt(PrevWndProc));
+    windows.SetWindowLongPtr(Self.Handle, GWL_WNDPROC, PtrInt(PrevWndProc));
   {$endif}
   Writelog_D(Self.ClassName+'.CloseNow, terminating all threads and waitfor');
   FavoriteManager.StopChekForNewChapter(True);
