@@ -49,6 +49,8 @@ procedure SetDefaultProxyAndApply(const ProxyType, Host, Port, User, Pass: Strin
 procedure SetDefaultTimeoutAndApply(const ATimeout: Integer);
 procedure SetDefaultRetryCountAndApply(const ARetryCount: Integer);
 
+function MaybeEncodeURL(const AValue: String): String;
+
 var
   DefaultUserAgent: String =
   'Mozilla/5.0 (Windows NT 10.0; WOW64; rv:44.0) Gecko/20100101 Firefox/44.0';
@@ -148,6 +150,14 @@ begin
   end;
 end;
 
+function MaybeEncodeURL(const AValue: String): String;
+begin
+  Result := Trim(AValue);
+  if Result = '' then Exit;
+  if Length(DecodeURL(Result)) >= Length(Result) then
+    Result := EncodeURL(Result);
+end;
+
 { THTTPSendThread }
 
 procedure THTTPSendThread.SetTimeout(AValue: Integer);
@@ -218,7 +228,7 @@ var
   mstream: TMemoryStream;
 begin
   Result := False;
-  rurl := EncodeURL(DecodeURL(URL));
+  rurl := MaybeEncodeURL(URL);
   if Pos('HTTP/', Headers.Text) = 1 then Reset;
   HTTPHeader := TStringList.Create;
   HTTPHeader.Assign(Headers);
