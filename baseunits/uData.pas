@@ -777,8 +777,6 @@ var
 
   {$I includes/Fakku/directory_page_number.inc}
 
-  {$I includes/MangaPark/directory_page_number.inc}
-
   //{$I includes/MangaTraders/directory_page_number.inc}
 
   {$I includes/MangaGo/directory_page_number.inc}
@@ -861,9 +859,6 @@ begin
       else
       if WebsiteID = FAKKU_ID then
         Result := GetFakkuDirectoryPageNumber
-      else
-      if WebsiteID = MANGAPARK_ID then
-        Result := GetMangaParkDirectoryPageNumber
       else
       //if WebsiteID = MANGATRADERS_ID then
       //  Result := GetMangaTradersDirectoryPageNumber
@@ -976,8 +971,6 @@ var
   {$I includes/VnSharing/names_and_links.inc}
 
   {$I includes/Fakku/names_and_links.inc}
-
-  {$I includes/MangaPark/names_and_links.inc}
 
   {$I includes/MangaTraders/names_and_links.inc}
 
@@ -1094,9 +1087,6 @@ begin
     else
     if WebsiteID = FAKKU_ID then
       Result := FakkuGetNamesAndLinks
-    else
-    if WebsiteID = MANGAPARK_ID then
-      Result := MangaParkGetNamesAndLinks
     else
     if WebsiteID = MANGATRADERS_ID then
       Result := MangaTradersGetNamesAndLinks
@@ -1289,8 +1279,6 @@ var
 
   {$I includes/Fakku/manga_information.inc}
 
-  {$I includes/MangaPark/manga_information.inc}
-
   {$I includes/MangaTraders/manga_information.inc}
 
   {$I includes/Starkana/manga_information.inc}
@@ -1418,9 +1406,6 @@ begin
     else
     if WebsiteID = FAKKU_ID then
       Result := GetFakkuInfoFromURL
-    else
-    if WebsiteID = MANGAPARK_ID then
-      Result := GetMangaParkInfoFromURL
     else
     if WebsiteID = MANGATRADERS_ID then
       Result := GetMangaTradersInfoFromURL

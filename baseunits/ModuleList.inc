@@ -43,4 +43,5 @@ uses
   KuManga,
   SenManga,
   MangaInn,
-  LeoManga;
+  LeoManga,
+  MangaPark;

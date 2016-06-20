@@ -236,77 +236,75 @@ const
   VNSHARING_ID           = 3;
   FAKKU_ID               = 4;
   TRUYEN18_ID            = 5;
-  MANGAPARK_ID           = 6;
-  MANGATRADERS_ID        = 7;
-  TRUYENTRANHTUAN_ID     = 8;
-  TURKCRAFT_ID           = 9;
-  EATMANGA_ID            = 10;
-  STARKANA_ID            = 11;
-  BLOGTRUYEN_ID          = 12;
-  KOMIKID_ID             = 13;
-  ESMANGAHERE_ID         = 14;
-  ANIMEEXTREMIST_ID      = 15;
-  HUGEMANGA_ID           = 16;
-  S2SCAN_ID              = 17;
-  IMANHUA_ID             = 18;
-  MABUNS_ID              = 19;
-  MANGAESTA_ID           = 20;
-  CENTRALDEMANGAS_ID     = 21;
-  EGSCANS_ID             = 22;
-  MANGAAR_ID             = 23;
-  MANGAAE_ID             = 24;
-  ANIMESTORY_ID          = 25;
-  LECTUREENLIGNE_ID      = 26;
-  SCANMANGA_ID           = 27;
-  MANGAGO_ID             = 28;
-  DM5_ID                 = 29;
-  MANGACOW_ID            = 30;
-  KIVMANGA_ID            = 31;
-  MEINMANGA_ID           = 32;
-  MANGASPROJECT_ID       = 33;
-  MANGAREADER_POR_ID     = 34;
-  NINEMANGA_ID           = 35;
-  NINEMANGA_ES_ID        = 36;
-  NINEMANGA_CN_ID        = 37;
-  NINEMANGA_RU_ID        = 38;
-  NINEMANGA_DE_ID        = 39;
-  NINEMANGA_IT_ID        = 40;
-  NINEMANGA_BR_ID        = 41;
-  JAPANSHIN_ID           = 42;
-  JAPSCAN_ID             = 43;
-  CENTRUMMANGI_PL_ID     = 44;
-  MANGALIB_PL_ID         = 45;
-  ONEMANGA_ID            = 46;
-  MANGATOWN_ID           = 47;
-  MANGAOKU_ID            = 48;
-  MYREADINGMANGAINFO_ID  = 49;
-  IKOMIK_ID              = 50;
-  NHENTAI_ID             = 51;
-  MANGAMINT_ID           = 52;
-  UNIXMANGA_ID           = 53;
-  EXTREMEMANGAS_ID       = 54;
-  MANGAHOST_ID           = 55;
-  PORNCOMIX_ID           = 56;
-  PORNCOMIXRE_ID         = 57;
-  PORNCOMIXIC_ID         = 58;
-  XXCOMICS_ID            = 59;
-  XXCOMICSMT_ID          = 60;
-  XXCOMICS3D_ID          = 61;
-  PORNXXXCOMICS_ID       = 62;
-  MANGASEE_ID            = 63;
-  MANGAKU_ID             = 64;
-  MANGAAT_ID             = 65;
-  READMANGATODAY_ID      = 66;
-  DYNASTYSCANS_ID        = 67;
+  MANGATRADERS_ID        = 6;
+  TRUYENTRANHTUAN_ID     = 7;
+  TURKCRAFT_ID           = 8;
+  EATMANGA_ID            = 9;
+  STARKANA_ID            = 10;
+  BLOGTRUYEN_ID          = 11;
+  KOMIKID_ID             = 12;
+  ESMANGAHERE_ID         = 13;
+  ANIMEEXTREMIST_ID      = 14;
+  HUGEMANGA_ID           = 15;
+  S2SCAN_ID              = 16;
+  IMANHUA_ID             = 17;
+  MABUNS_ID              = 18;
+  MANGAESTA_ID           = 19;
+  CENTRALDEMANGAS_ID     = 20;
+  EGSCANS_ID             = 21;
+  MANGAAR_ID             = 22;
+  MANGAAE_ID             = 23;
+  ANIMESTORY_ID          = 24;
+  LECTUREENLIGNE_ID      = 25;
+  SCANMANGA_ID           = 26;
+  MANGAGO_ID             = 27;
+  DM5_ID                 = 28;
+  MANGACOW_ID            = 29;
+  KIVMANGA_ID            = 30;
+  MEINMANGA_ID           = 31;
+  MANGASPROJECT_ID       = 32;
+  MANGAREADER_POR_ID     = 33;
+  NINEMANGA_ID           = 34;
+  NINEMANGA_ES_ID        = 35;
+  NINEMANGA_CN_ID        = 36;
+  NINEMANGA_RU_ID        = 37;
+  NINEMANGA_DE_ID        = 38;
+  NINEMANGA_IT_ID        = 39;
+  NINEMANGA_BR_ID        = 40;
+  JAPANSHIN_ID           = 41;
+  JAPSCAN_ID             = 42;
+  CENTRUMMANGI_PL_ID     = 43;
+  MANGALIB_PL_ID         = 44;
+  ONEMANGA_ID            = 45;
+  MANGATOWN_ID           = 46;
+  MANGAOKU_ID            = 47;
+  MYREADINGMANGAINFO_ID  = 48;
+  IKOMIK_ID              = 49;
+  NHENTAI_ID             = 50;
+  MANGAMINT_ID           = 51;
+  UNIXMANGA_ID           = 52;
+  EXTREMEMANGAS_ID       = 53;
+  MANGAHOST_ID           = 54;
+  PORNCOMIX_ID           = 55;
+  PORNCOMIXRE_ID         = 56;
+  PORNCOMIXIC_ID         = 57;
+  XXCOMICS_ID            = 58;
+  XXCOMICSMT_ID          = 59;
+  XXCOMICS3D_ID          = 60;
+  PORNXXXCOMICS_ID       = 61;
+  MANGASEE_ID            = 62;
+  MANGAKU_ID             = 63;
+  MANGAAT_ID             = 64;
+  READMANGATODAY_ID      = 65;
+  DYNASTYSCANS_ID        = 66;
 
-  WebsiteRoots: array [0..67] of array [0..1] of String = (
+  WebsiteRoots: array [0..66] of array [0..1] of String = (
     ('AnimeA', 'http://manga.animea.net'),
     ('OurManga', 'http://www.ourmanga.com'),
     ('Manga24h', 'http://manga24h.com'),
     ('VnSharing', 'http://truyen.vnsharing.net'),
     ('Fakku', 'https://www.fakku.net'),
     ('Truyen18', 'http://www.truyen18.org'),
-    ('MangaPark', 'http://mangapark.me'),
     ('MangaTraders', 'http://mangatraders.org'),
     ('TruyenTranhTuan', 'http://truyentranhtuan.com'),
     ('Turkcraft', 'http://turkcraft.com'),
@@ -1137,8 +1135,7 @@ begin
     XXCOMICS3D_ID,
     PORNCOMIXRE_ID,
     PORNCOMIXIC_ID,
-    PORNXXXCOMICS_ID,
-    MANGAPARK_ID
+    PORNXXXCOMICS_ID
     ]);
 end;
 
