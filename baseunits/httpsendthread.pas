@@ -300,7 +300,7 @@ begin
         on E: Exception do
           WriteLog_E('HTTPRequest.WriteOutput.Error!', E);
       end;
-    Result := ResultCode < 500;
+    Result := Document.Size > 0;
   finally
     HTTPHeader.Free;
   end;
