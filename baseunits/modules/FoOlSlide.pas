@@ -18,7 +18,8 @@ const
   dirurl = '/directory/';
   dirurlreader = '/reader/directory/';
   dirurlfoolslide = '/foolslide/directory/';
-  dirurlslide = '/Slide/directory/';
+  dirurlslide = '/slide/directory/';
+  dirurlslideU = '/Slide/directory/';
   dirurlonline = '/online/directory/';
 
 function GETWithCookie(const AHTTP: THTTPSendThread; const AURL: String;
@@ -42,9 +43,11 @@ begin
   if (AWebsite = 'DejameProbar') or
      (AWebsite = 'MenudoFansub') or
      (AWebsite = 'NeoProjectScan') or
-     (AWebsite = 'SantosScan') or
      (AWebsite = 'SolitarioNoFansub') then
     Result := dirurlslide
+  else
+  if AWebsite = 'SantosScan' then
+    Result := dirurlslideU
   else
   if (AWebsite = 'Pzykosis666HFansub') or
      (AWebsite = 'SeinagiFansub') then
