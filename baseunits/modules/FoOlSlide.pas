@@ -18,7 +18,7 @@ const
   dirurl = '/directory/';
   dirurlreader = '/reader/directory/';
   dirurlfoolslide = '/foolslide/directory/';
-  dirurlslide = '/slide/directory/';
+  dirurlslide = '/Slide/directory/';
   dirurlonline = '/online/directory/';
 
 function GETWithCookie(const AHTTP: THTTPSendThread; const AURL: String;
