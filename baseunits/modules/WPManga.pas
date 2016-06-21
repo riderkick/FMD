@@ -145,7 +145,9 @@ var
       if summary = '' then
       begin
         summary := XPathString('//*[contains(@class,"mng_det")]//p');
-        if (summary <> '') and (Pos('name:', LowerCase(summary)) <> 0) then
+        if (summary <> '') and
+          ((Pos('name:', LowerCase(summary)) <> 0) or
+          (Pos('alternative name', LowerCase(summary)) = 1)) then
           summary := '';
       end;
       scanchapters;
