@@ -81,6 +81,11 @@ begin
               ALinks.Add(v.toNode.getAttribute('href'));
               ANames.Add(v.toString);
             end
+          else if (Module.Website = 'MangaJoy') then
+            for v in XPath('//*[@id="sct_manga_list"]//*[@class="det"]/h2/a[1]') do begin
+              ALinks.Add(v.toNode.getAttribute('href'));
+              ANames.Add(v.toString);
+            end
           else
             for v in XPath('//*[@id="sct_content"]//div[@class="det"]/a[1]') do begin
               ALinks.Add(v.toNode.getAttribute('href'));
