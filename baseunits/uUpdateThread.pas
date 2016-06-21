@@ -290,10 +290,8 @@ begin
   MainForm.sbUpdateList.Hide;
   MainForm.sbMain.SizeGrip := not MainForm.sbUpdateList.Visible;
   MainForm.isUpdating:=False;
-  if MainForm.isPendingExitCounter then begin
-    Writelog_D(Self.ClassName+', pending exit counter executed');
+  if MainForm.isPendingExitCounter then
     MainForm.DoExitWaitCounter;
-  end;
 end;
 
 procedure TUpdateListManagerThread.MainThreadRemoveFilter;
@@ -551,7 +549,6 @@ var
 begin
   if websites.Count = 0 then
     Exit;
-  Writelog_D(Self.ClassName+', thread started');
   try
     websitePtr := 0;
     if isDownloadFromServer then
@@ -578,9 +575,6 @@ begin
         Inc(websitePtr);
 
         cloghead:=Self.ClassName+', '+website+': ';
-        Writelog_D(cloghead+'update list started');
-        Writelog_D(cloghead+'sortedlist='+BoolToStr(SortedList,True)+'; '+'nomangainfo='+BoolToStr(NoMangaInfo,True));
-        Writelog_D(cloghead+'prepare database file');
         FStatus := RS_UpdatingList + Format(' [%d/%d] %s',
           [websitePtr, websites.Count, website]) + ' | ' + RS_Preparing + '...';
         Synchronize(MainThreadShowGetting);
@@ -604,7 +598,6 @@ begin
             mainDataProcess.CreateDatabase(twebsite);
           tempDataProcess.CreateDatabase(twebsitetemp);
 
-          Writelog_D(cloghead+'get number of directory page');
           // get directory page count
           directoryCount := 0;
           directoryCount2 := 0;
@@ -616,7 +609,6 @@ begin
           FIsPreListAvailable:=mainDataProcess.RecordCount>0;
           mainDataProcess.CloseTable;
 
-          Writelog_D(cloghead+'get names and links');
           // get names and links
           workPtr := 0;
           isFinishSearchingForNewManga := False;
@@ -657,7 +649,6 @@ begin
           // get manga info
           if tempDataProcess.RecordCount>0 then
           begin
-            Writelog_D(cloghead+'get info '+IntToStr(tempDataProcess.RecordCount));
             workPtr := 0;
             FCommitCount := 0;
             if NoMangaInfo or
@@ -683,28 +674,22 @@ begin
             else
               GetInfo(tempDataProcess.RecordCount, CS_INFO);
             mainDataProcess.Commit;
-            Writelog_D(cloghead+'get info finished '+IntToStr(workPtr));
 
-            if workPtr > 0 then
-              if not (Terminated and SortedList) then
-              begin
-                Writelog_D(cloghead+'saving data '+IntToStr(workPtr));
-                FStatus := RS_UpdatingList + Format(' [%d/%d] %s',
-                  [websitePtr, websites.Count, website]) + ' | ' + RS_SavingData + '...';
-                Synchronize(MainThreadShowGetting);
-                mainDataProcess.Sort;
-                mainDataProcess.Close;
-                Synchronize(RefreshList);
-              end
-              else
-                Writelog_D(cloghead+'sorted list, data abandoned');
+            if (workPtr > 0) and (not (Terminated and SortedList)) then
+            begin
+              FStatus := RS_UpdatingList + Format(' [%d/%d] %s',
+                [websitePtr, websites.Count, website]) + ' | ' + RS_SavingData + '...';
+              Synchronize(MainThreadShowGetting);
+              mainDataProcess.Sort;
+              mainDataProcess.Close;
+              Synchronize(RefreshList);
+            end;
           end;
         except
           on E: Exception do
             WriteLog_E(cloghead+'error occured!', E, Self);
         end;
 
-        Writelog_D(cloghead+'close database file');
         tempDataProcess.Close;
         mainDataProcess.Close;
         DeleteDBDataProcess(twebsite);
@@ -712,9 +697,7 @@ begin
 
         if Terminated then
           Break;
-        websites[websitePtr - 1] :=
-          UTF8Encode(#$2714 + WideString(websites[websitePtr - 1]));
-        Writelog_D(cloghead+'update list finished');
+        websites[websitePtr - 1] := UTF8Encode(#$2714) + websites[websitePtr - 1];
         FThreadAborted:=False;
       end;
   except
@@ -723,7 +706,6 @@ begin
   end;
   FThreadEndNormally:=True;
   Synchronize(MainThreadEndGetting);
-  Writelog_D(Self.ClassName+', thread ended');
 end;
 
 end.
