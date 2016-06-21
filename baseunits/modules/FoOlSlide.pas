@@ -56,7 +56,9 @@ end;
 function GetDirectoryPageNumber(const MangaInfo: TMangaInformation;
   var Page: Integer; const Module: TModuleContainer): Integer;
 var
+  v: IXQValue;
   s: String;
+  p: Integer;
 begin
   Result := NET_PROBLEM;
   Page := 1;
@@ -66,11 +68,23 @@ begin
     Result := NO_ERROR;
     with TXQueryEngineHTML.Create(MangaInfo.FHTTP.Document) do
       try
-        s := XPathString('//div[@class="next"]/a[contains(text(),"Last")]/@href');
-        if s <> '' then begin
-          s := ReplaceRegExpr('.*/(\d+)/$', s, '$1', True);
-          Page := StrToIntDef(s, 1);
-        end;
+        with TRegExpr.Create do
+          try
+            Expression := '/(\d+)/$';
+            for v in XPath('//*[@class="next"]/a/@href') do
+            begin
+              s := v.toString;
+              Exec(s);
+              if SubExprMatchCount > 0 then
+              begin
+                p := StrToIntDef(Match[1], -1);
+                if p > Page then
+                  Page := p;
+              end;
+            end;
+          finally
+            Free;
+          end;
       finally
         Free;
       end;
