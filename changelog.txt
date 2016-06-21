@@ -4,6 +4,23 @@ Project page: https://github.com/riderkick/FMD
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.69.0 (22-06-2016)
+[*] MangaJoy: fixed update list
+[+] Added DangoOnlineNoFansub[ES-SC]
+[+] Added DejameProbar[ES-SC]
+[+] Added HoshinoFansub[ES-SC]
+[+] Added MangaWorksFansub[ES-SC]
+[+] Added MasterPieceScans[ES-SC]
+[+] Added MenudoFansub[ES-SC]
+[+] Added NeoProjectScan[ES-SC]
+[+] Added Pzykosis666HFansub[ES-SC]
+[+] Added R15TeamScanlation[ES-SC]
+[+] Added SantosScan[ES-SC]
+[+] Added SeinagiFansub[ES-SC]
+[+] Added SeinagiAdultoFansub[ES-SC]
+[+] Added SolitarioNoFansub[ES-SC]
+Full changes: https://github.com/riderkick/FMD/compare/0.9.69.0...0.9.69.0
+
 0.9.68.0 (20-06-2016)
 [*] Fixed error at start
 Full changes: https://github.com/riderkick/FMD/compare/0.9.67.0...0.9.68.0
