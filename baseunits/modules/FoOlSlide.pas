@@ -16,8 +16,10 @@ var
 
 const
   dirurl = '/directory/';
-  yomangadirurl = '/reader/directory/';
-  onetimescansdirurl = '/foolslide/directory/';
+  dirurlreader = '/reader/directory/';
+  dirurlfoolslide = '/foolslide/directory/';
+  dirurlslide = '/slide/directory/';
+  dirurlonline = '/online/directory/';
 
 function GETWithCookie(const AHTTP: THTTPSendThread; const AURL: String;
   const Module: TModuleContainer): Boolean;
@@ -28,6 +30,29 @@ begin
     Result := AHTTP.GET(AURL);
 end;
 
+function GetDirUrl(const AWebsite: String): String;
+begin
+  if (AWebsite = 'YoManga') or
+     (AWebsite = 'GoManga') then
+    Result := dirurlreader
+  else
+  if AWebsite = 'OneTimeScans' then
+    Result := dirurlfoolslide
+  else
+  if (AWebsite = 'DejameProbar') or
+     (AWebsite = 'MenudoFansub') or
+     (AWebsite = 'NeoProjectScan') or
+     (AWebsite = 'SantosScan') or
+     (AWebsite = 'SolitarioNoFansub') then
+    Result := dirurlslide
+  else
+  if (AWebsite = 'Pzykosis666HFansub') or
+     (AWebsite = 'SeinagiFansub') then
+    Result := dirurlonline
+  else
+    Result := dirurl;
+end;
+
 function GetDirectoryPageNumber(const MangaInfo: TMangaInformation;
   var Page: Integer; const Module: TModuleContainer): Integer;
 var
@@ -36,14 +61,7 @@ begin
   Result := NET_PROBLEM;
   Page := 1;
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
-  if (Module.Website = 'YoManga') or
-    (Module.Website = 'GoManga') then
-    s := yomangadirurl
-  else if Module.Website = 'OneTimeScans' then
-    s := onetimescansdirurl
-  else
-    s := dirurl;
-  if GETWithCookie(MangaInfo.FHTTP, Module.RootURL + s, Module) then
+  if GETWithCookie(MangaInfo.FHTTP, Module.RootURL + GetDirUrl(Module.Website), Module) then
   begin
     Result := NO_ERROR;
     with TXQueryEngineHTML.Create(MangaInfo.FHTTP.Document) do
@@ -68,14 +86,7 @@ var
 begin
   Result := NET_PROBLEM;
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
-  if (Module.Website = 'YoManga') or
-    (Module.Website = 'GoManga') then
-    s := yomangadirurl
-  else if Module.Website = 'OneTimeScans' then
-    s := onetimescansdirurl
-  else
-    s := dirurl;
-  s := Module.RootURL + s;
+  s := Module.RootURL + GetDirUrl(Module.Website);
   if AURL <> '0' then s += IncStr(AURL) + '/';
   if GETWithCookie(MangaInfo.FHTTP, s, Module) then
   begin
@@ -226,7 +237,22 @@ begin
   AddWebsiteModule('RawYoManga', 'http://raws.yomanga.co');
   AddWebsiteModule('GoManga', 'http://gomanga.co');
   AddWebsiteModule('OneTimeScans', 'http://otscans.com');
-  AddWebsiteModule('SenseScans', 'http://reader.sensescans.com/');
+  AddWebsiteModule('SenseScans', 'http://reader.sensescans.com');
+
+  //es-san
+  AddWebsiteModule('DangoOnlineNoFansub', 'http://lector.dangolinenofansub.com');
+  AddWebsiteModule('DejameProbar', 'http://dejameprobar.es');
+  AddWebsiteModule('HoshinoFansub', 'http://manga.animefrontline.com');
+  AddWebsiteModule('MangaWorksFansub', 'http://lector.mangaworksfansub.net');
+  AddWebsiteModule('MasterPieceScans', 'http://reader.manga2me.net');
+  AddWebsiteModule('MenudoFansub', 'http://www.menudo-fansub.com');
+  AddWebsiteModule('NeoProjectScan', 'http://npscan.scans-es.com');
+  AddWebsiteModule('Pzykosis666HFansub', 'http://pzykosis666hfansub.com');
+  AddWebsiteModule('R15TeamScanlation', 'http://www.r15team.com');
+  AddWebsiteModule('SantosScan', 'http://santosfansub.com');
+  AddWebsiteModule('SeinagiFansub', 'http://seinagi.org');
+  AddWebsiteModule('SeinagiAdultoFansub', 'http://adulto.seinagi.org');
+  AddWebsiteModule('SolitarioNoFansub', 'http://snf.mangaea.net');
 end;
 
 initialization
