@@ -16,6 +16,20 @@ const
   dirURLreadhentaimanga = '/hentai-manga-list/all/any/last-added/';
   dirURLmangahen = '/manga_list/all/any/last-added/';
 
+function GetDirURL(const AWebsite: String): String;
+begin
+  if AWebsite = 'MangaIndo' then
+    Result := dirURLmangaindo
+  else
+  if AWebsite = 'ReadHentaiManga' then
+    Result := dirURLreadhentaimanga
+  else
+  if AWebsite = 'MangaHen' then
+    Result := dirURLmangahen
+  else
+    Result := dirURL;
+end;
+
 function GetDirectoryPageNumber(const MangaInfo: TMangaInformation; var Page: Integer;
   const Module: TModuleContainer): Integer;
 var
@@ -25,13 +39,9 @@ begin
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
   Result := NET_PROBLEM;
   with MangaInfo.FHTTP do begin
-    if Module.Website = 'MangaIndo' then s := dirURLmangaindo
-    else if Module.Website = 'ReadHentaiManga' then s := dirURLreadhentaimanga
-    else if Module.Website = 'MangaHen' then s := dirURLmangahen
-    else s := dirURL;
     if Module.Website = 'Manga-Joy' then
       AllowServerErrorResponse := True;
-    if GET(Module.RootURL + s) then begin
+    if GET(Module.RootURL + GetDirURL(Module.Website)) then begin
       Result := NO_ERROR;
       with TXQueryEngineHTML.Create(Document) do
         try
@@ -49,18 +59,13 @@ function GetNameAndLink(const MangaInfo: TMangaInformation; const ANames, ALinks
   const AURL: String; const Module: TModuleContainer): Integer;
 var
   v: IXQValue;
-  s: String;
 begin
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
   Result := NET_PROBLEM;
   with MangaInfo.FHTTP do begin
-    if Module.Website = 'MangaIndo' then s := dirURLmangaindo
-    else if Module.Website = 'ReadHentaiManga' then s := dirURLreadhentaimanga
-    else if Module.Website = 'MangaHen' then s := dirURLmangahen
-    else s := dirURL;
     if Module.Website = 'Manga-Joy' then
       AllowServerErrorResponse := True;
-    if GET(Module.RootURL + s + IncStr(AURL) + '/') then begin
+    if GET(Module.RootURL + GetDirURL(Module.Website) + IncStr(AURL) + '/') then begin
       Result := NO_ERROR;
       with TXQueryEngineHTML.Create(Document) do
         try

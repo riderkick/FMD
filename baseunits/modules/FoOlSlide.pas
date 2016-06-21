@@ -30,7 +30,7 @@ begin
     Result := AHTTP.GET(AURL);
 end;
 
-function GetDirUrl(const AWebsite: String): String;
+function GetDirURL(const AWebsite: String): String;
 begin
   if (AWebsite = 'YoManga') or
      (AWebsite = 'GoManga') then
@@ -57,13 +57,12 @@ function GetDirectoryPageNumber(const MangaInfo: TMangaInformation;
   var Page: Integer; const Module: TModuleContainer): Integer;
 var
   v: IXQValue;
-  s: String;
   p: Integer;
 begin
   Result := NET_PROBLEM;
   Page := 1;
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
-  if GETWithCookie(MangaInfo.FHTTP, Module.RootURL + GetDirUrl(Module.Website), Module) then
+  if GETWithCookie(MangaInfo.FHTTP, Module.RootURL + GetDirURL(Module.Website), Module) then
   begin
     Result := NO_ERROR;
     with TXQueryEngineHTML.Create(MangaInfo.FHTTP.Document) do
@@ -73,8 +72,7 @@ begin
             Expression := '/(\d+)/$';
             for v in XPath('//*[@class="next"]/a/@href') do
             begin
-              s := v.toString;
-              Exec(s);
+              Exec(v.toString);
               if SubExprMatchCount > 0 then
               begin
                 p := StrToIntDef(Match[1], -1);
@@ -100,7 +98,7 @@ var
 begin
   Result := NET_PROBLEM;
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
-  s := Module.RootURL + GetDirUrl(Module.Website);
+  s := Module.RootURL + GetDirURL(Module.Website);
   if AURL <> '0' then s += IncStr(AURL) + '/';
   if GETWithCookie(MangaInfo.FHTTP, s, Module) then
   begin
