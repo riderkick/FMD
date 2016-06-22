@@ -28,6 +28,10 @@ begin
   if Module.Website = 'YoManga' then
     Result := Cloudflare.GETCF(AHTTP, AURL, yomangacookies, yomangalockget)
   else
+  if (Module.Website = 'SeinagiAdultoFansub') and
+    (Pos(dirurl, AURL) = 0)then
+    Result := AHTTP.POST(AURL, 'adult=true')
+  else
     Result := AHTTP.GET(AURL);
 end;
 
@@ -122,12 +126,14 @@ function GetInfo(const MangaInfo: TMangaInformation;
   const AURL: String; const Module: TModuleContainer): Integer;
 var
   v: IXQValue;
+  netOK: Boolean;
 begin
   Result := NET_PROBLEM;
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
   with MangaInfo.FHTTP, MangaInfo.mangaInfo do
   begin
-    if GETWithCookie(MangaInfo.FHTTP, FillHost(Module.RootURL, AURL), Module) then
+    url := FillHost(Module.RootURL, AURL);
+    if GETWithCookie(MangaInfo.FHTTP, url, Module) then
     begin
       Result := NO_ERROR;
       with TXQueryEngineHTML.Create(Document) do
