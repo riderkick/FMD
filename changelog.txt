@@ -4,6 +4,11 @@ Project page: https://github.com/riderkick/FMD
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.70.0 (29-06-2016)
+[*] SeinagiAdultoFansub: fixed manga info and download
+[*] Fixed an issue with CF
+Full changes: https://github.com/riderkick/FMD/compare/0.9.69.0...0.9.70.0
+
 0.9.69.0 (22-06-2016)
 [*] MangaJoy: fixed update list
 [+] Added DangoOnlineNoFansub[ES-SC]
@@ -19,7 +24,7 @@ Changelog:
 [+] Added SeinagiFansub[ES-SC]
 [+] Added SeinagiAdultoFansub[ES-SC]
 [+] Added SolitarioNoFansub[ES-SC]
-Full changes: https://github.com/riderkick/FMD/compare/0.9.69.0...0.9.69.0
+Full changes: https://github.com/riderkick/FMD/compare/0.9.68.0...0.9.69.0
 
 0.9.68.0 (20-06-2016)
 [*] Fixed error at start
