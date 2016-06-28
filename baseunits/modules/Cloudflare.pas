@@ -141,6 +141,7 @@ begin
   Result := False;
   if AHTTP = nil then Exit;
   AHTTP.Cookies.Text := Cookie;
+  AHTTP.AllowServerErrorResponse := True;
   Result := AHTTP.GET(AURL);
   if (AHTTP.ResultCode > 500) and AntiBotActive(AHTTP) then begin
     if TryEnterCriticalsection(CS) > 0 then
@@ -166,6 +167,7 @@ begin
   Result := False;
   if AHTTP = nil then Exit;
   AHTTP.Cookies.Text := Cookie;
+  AHTTP.AllowServerErrorResponse := True;
   Result := AHTTP.GET(AURL);
   if (AHTTP.ResultCode > 500) and AntiBotActive(AHTTP) then begin
     Result := CFJS(AHTTP, AURL, Cookie);
