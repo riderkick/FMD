@@ -712,6 +712,9 @@ function PadZero(const S: String; ATotalWidth: Integer = 3;
 procedure PadZeros(S: TStrings; ATotalWidth: Integer = 3;
   PadAll: Boolean = False; StripZeros: Boolean = False);
 
+// RegExpr
+function RegExprGetMatch(const ARegExpr, AInputStr : RegExprString; const AMatchIdx: Integer): String;
+
 // maintain the order of strings by adding serialized number if necessary
 procedure SerializeAndMaintainNames(F: TStrings);
 
@@ -2022,6 +2025,21 @@ begin
   begin
     S[i] := PadZero(S[i], ATotalWidth, PadAll, StripZeros);
   end;
+end;
+
+function RegExprGetMatch(const ARegExpr, AInputStr : RegExprString;
+  const AMatchIdx: Integer): String;
+begin
+  Result := '';
+  if AMatchIdx < 0 then Exit;
+  with TRegExpr.Create do
+    try
+      Expression := ARegExpr;
+      if Exec(AInputStr) then
+        Result := Match[AMatchIdx];
+    finally
+      Free;
+    end;
 end;
 
 procedure SerializeAndMaintainNames(F: TStrings);
