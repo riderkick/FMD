@@ -16,8 +16,7 @@ const
   apiurlimagenes = apiurl + 'imagenes';
   dirurl = apiurlmangas + '?searchBy=nombre&sortDir=asc&sortedBy=nombre&itemsPerPage=';
   perpage = '1000';
-  mangaurl = '/#!/biblioteca/mangas/';
-  mangaurlpart = '/biblioteca/mangas/';
+  mangaurl = '/biblioteca/mangas/';
   imgurl = 'http://img1.tumangaonline.com';
 
 function GetDirectoryPageNumber(const MangaInfo: TMangaInformation; var Page: Integer;
@@ -74,19 +73,9 @@ begin
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
   with MangaInfo.mangaInfo, MangaInfo.FHTTP do
   begin
-    url := AURL;
-    mangaid := '';
-    if Pos(mangaurlpart, url) <> 0 then
-    begin
-      if Pos(mangaurl, AURL) = -1 then
-        url := StringReplace(url, mangaurlpart, mangaurl, [rfIgnoreCase]);
-      mangaid := SeparateRight(url, mangaurl);
-      if Pos('/', mangaid) <> 0 then
-        mangaid := SeparateLeft(mangaid, '/');
-    end;
-    if mangaid = '' then
-      Exit;
-    url := FillHost(Module.RootURL, url);
+    url := FillHost(Module.RootURL, AURL);
+    mangaid := RegExprGetMatch('/mangas/(\d+)/', url, 1);
+    if mangaid = '' then Exit;
     if GET(Module.RootURL + apiurlmangas + '/' + mangaid) then
     begin
       Result := NO_ERROR;
