@@ -89,7 +89,7 @@ begin
           for v in XPath('//table//tr/td/a[@class="chapterLink"]') do
           begin
             chapterLinks.Add(v.toNode.getAttribute('href'));
-            chapterName.Add(XPathStringAll('*', ' ', v.toNode));
+            chapterName.Add(XPathStringAll('*', ' ', v));
           end;
           InvertStrings([chapterLinks, chapterName]);
         finally

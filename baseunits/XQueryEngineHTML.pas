@@ -16,29 +16,43 @@ type
     FEngine: TXQueryEngine;
     FTreeParser: TTreeParser;
     function Eval(const Expression: String; const isCSS: Boolean = False;
-      const Tree: TTreeNode = nil): IXQValue;
+      const ContextItem: IXQValue = nil; const Tree: TTreeNode = nil): IXQValue;
+    function EvalStringAll(const Expression: String; const isCSS: Boolean;
+      const Separator: String = ', '; const ContextItem: IXQValue = nil): String; overload;
+    function EvalStringAll(const Expression: String; const isCSS: Boolean;
+      const Exc: array of String; const Separator: String = ', ';
+      const ContextItem: IXQValue = nil): String; overload;
+    procedure EvalStringAll(const Expression: String; const isCSS: Boolean;
+      const TheStrings: TStrings; ContextItem: IXQValue = nil); overload;
   public
     constructor Create(const HTML: String = ''); overload;
     constructor Create(const HTMLStream: TStream); overload;
     destructor Destroy; override;
     procedure ParseHTML(const HTML: String); overload;
     procedure ParseHTML(const HTMLStream: TStream); overload;
+    // xpath
     function XPath(const Expression: String; const Tree: TTreeNode = nil): IXQValue; inline;
+    function XPath(const Expression: String; const ContextItem: IXQValue): IXQValue; inline;
     function XPathString(const Expression: String; const Tree: TTreeNode = nil): String; inline;
+    function XPathString(const Expression: String; const ContextItem: IXQValue): String; inline;
     function XPathStringAll(const Expression: String; const Separator: String = ', ';
-      const Tree: TTreeNode = nil): String; overload;
+      const ContextItem: IXQValue = nil): String; overload; inline;
     function XPathStringAll(const Expression: String; const Exc: array of String;
-      const Separator: String = ', '; const Tree: TTreeNode = nil): String; overload;
+      const Separator: String = ', '; const ContextItem: IXQValue = nil): String; overload; inline;
     procedure XPathStringAll(const Expression: String; const TheStrings: TStrings;
-      const Tree: TTreeNode = nil); overload;
+      const ContextItem: IXQValue = nil); overload; inline;
+    // css
     function CSS(const Expression: String; const Tree: TTreeNode = nil): IXQValue; inline;
+    function CSS(const Expression: String; const ContextItem: IXQValue): IXQValue; inline;
     function CSSString(const Expression: String; const Tree: TTreeNode = nil): String; inline;
+    function CSSString(const Expression: String; const ContextItem: IXQValue): String; inline;
     function CSSStringAll(const Expression: String; const Separator: String = ', ';
-      const Tree: TTreeNode = nil): String; overload;
+      const ContextItem: IXQValue = nil): String; overload; inline;
     function CSSStringAll(const Expression: String; const Exc: array of String;
-      const Separator: String = ', '; const Tree: TTreeNode = nil): String; overload;
+      const Separator: String = ', '; const ContextItem: IXQValue = nil): String; overload; inline;
     procedure CSSStringAll(const Expression: String; const TheStrings: TStrings;
-      const Tree: TTreeNode = nil); overload;
+      const ContextItem: IXQValue = nil); overload; inline;
+
     property Engine: TXQueryEngine read FEngine;
     property TreeParser: TTreeParser read FTreeParser;
   end;
@@ -103,24 +117,64 @@ end;
 { TXQueryEngineHTML }
 
 function TXQueryEngineHTML.Eval(const Expression: String; const isCSS: Boolean;
-  const Tree: TTreeNode): IXQValue;
-var
-  t: TTreeNode;
+  const ContextItem: IXQValue; const Tree: TTreeNode): IXQValue;
 begin
   Result := xqvalue();
-  if Assigned(Tree) then
-    t := Tree
-  else
-    t := FTreeParser.getLastTree;
-  if Expression = '' then
-    Exit;
   try
-    if isCSS then
-      Result := FEngine.evaluateCSS3(Expression, t)
+    if Assigned(ContextItem) then
+    begin
+      if isCSS then
+        Result := FEngine.evaluateCSS3(Expression, ContextItem)
+      else
+        Result := FEngine.evaluateXPath3(Expression, ContextItem);
+    end
+    else if Assigned(Tree) then
+    begin
+      if isCSS then
+        Result := FEngine.evaluateCSS3(Expression, Tree)
+      else
+        Result := FEngine.evaluateXPath3(Expression, Tree);
+    end
     else
-      Result := FEngine.evaluateXPath3(Expression, t);
+    begin
+      if isCSS then
+        Result := FEngine.evaluateCSS3(Expression, FTreeParser.getLastTree)
+      else
+        Result := FEngine.evaluateXPath3(Expression, FTreeParser.getLastTree);
+    end;
   except
   end;
+end;
+
+function TXQueryEngineHTML.EvalStringAll(const Expression: String; const isCSS: Boolean;
+  const Separator: String; const ContextItem: IXQValue): String;
+var
+  v: IXQValue;
+begin
+  Result := '';
+  for v in Eval(Expression, isCSS, ContextItem) do
+    AddSeparatorString(Result, v.toString, Separator);
+end;
+
+function TXQueryEngineHTML.EvalStringAll(const Expression: String; const isCSS: Boolean;
+  const Exc: array of String; const Separator: String; const ContextItem: IXQValue
+  ): String;
+var
+  v: IXQValue;
+begin
+  Result := '';
+  for v in Eval(Expression, isCSS, ContextItem) do
+    if StringInArray(Trim(v.toString), Exc) = False then
+      AddSeparatorString(Result, v.toString, Separator);
+end;
+
+procedure TXQueryEngineHTML.EvalStringAll(const Expression: String; const isCSS: Boolean;
+  const TheStrings: TStrings; ContextItem: IXQValue);
+var
+  v: IXQValue;
+begin
+  for v in Eval(Expression, isCSS, ContextItem) do
+    TheStrings.Add(v.toString);
 end;
 
 constructor TXQueryEngineHTML.Create(const HTML: String);
@@ -169,82 +223,84 @@ end;
 
 function TXQueryEngineHTML.XPath(const Expression: String; const Tree: TTreeNode): IXQValue;
 begin
-  Result := Eval(Expression, False, Tree);
+  Result := Eval(Expression, False, nil, Tree);
+end;
+
+function TXQueryEngineHTML.XPath(const Expression: String; const ContextItem: IXQValue
+  ): IXQValue;
+begin
+  Result := Eval(Expression, False, ContextItem);
 end;
 
 function TXQueryEngineHTML.XPathString(const Expression: String; const Tree: TTreeNode): String;
 begin
-  Result := Eval(Expression, False, Tree).toString;
+  Result := Eval(Expression, False, nil, Tree).toString;
 end;
 
-function TXQueryEngineHTML.XPathStringAll(const Expression: String; const Separator: String;
-  const Tree: TTreeNode): String;
-var
-  v: IXQValue;
+function TXQueryEngineHTML.XPathString(const Expression: String;
+  const ContextItem: IXQValue): String;
 begin
-  Result := '';
-  for v in Eval(Expression, False, Tree) do
-    AddSeparatorString(Result, v.toString, Separator);
+  Result := Eval(Expression, False, ContextItem).toString;
 end;
 
-function TXQueryEngineHTML.XPathStringAll(const Expression: String; const Exc: array of String;
-  const Separator: String; const Tree: TTreeNode): String;
-var
-  v: IXQValue;
+function TXQueryEngineHTML.XPathStringAll(const Expression: String;
+  const Separator: String; const ContextItem: IXQValue): String;
 begin
-  Result := '';
-  for v in Eval(Expression, False, Tree) do
-    if StringInArray(Trim(v.toString), Exc) = False then
-      AddSeparatorString(Result, v.toString, Separator);
+  Result := EvalStringAll(Expression, False, Separator, ContextItem);
+end;
+
+function TXQueryEngineHTML.XPathStringAll(const Expression: String;
+  const Exc: array of String; const Separator: String; const ContextItem: IXQValue
+  ): String;
+begin
+  Result := EvalStringAll(Expression, False, Exc, Separator, ContextItem);
 end;
 
 procedure TXQueryEngineHTML.XPathStringAll(const Expression: String;
-  const TheStrings: TStrings; const Tree: TTreeNode);
-var
-  v: IXQValue;
+  const TheStrings: TStrings; const ContextItem: IXQValue);
 begin
-  for v in Eval(Expression, False, Tree) do
-    TheStrings.Add(v.toString);
+  EvalStringAll(Expression, False, TheStrings, ContextItem);
 end;
 
 function TXQueryEngineHTML.CSS(const Expression: String; const Tree: TTreeNode): IXQValue;
 begin
-  Result := Eval(Expression, True, Tree);
+  Result := Eval(Expression, True, nil, Tree);
+end;
+
+function TXQueryEngineHTML.CSS(const Expression: String; const ContextItem: IXQValue
+  ): IXQValue;
+begin
+  Result := Eval(Expression, True, ContextItem);
 end;
 
 function TXQueryEngineHTML.CSSString(const Expression: String; const Tree: TTreeNode): String;
 begin
-  Result := Eval(Expression, True, Tree).toString;
+  Result := Eval(Expression, True, nil, Tree).toString;
 end;
 
-function TXQueryEngineHTML.CSSStringAll(const Expression: String; const Separator: String;
-  const Tree: TTreeNode): String;
-var
-  v: IXQValue;
+function TXQueryEngineHTML.CSSString(const Expression: String;
+  const ContextItem: IXQValue): String;
 begin
-  Result := '';
-  for v in Eval(Expression, False, Tree) do
-    AddSeparatorString(Result, v.toString, Separator);
+  Result := Eval(Expression, True, ContextItem).toString;
 end;
 
-function TXQueryEngineHTML.CSSStringAll(const Expression: String; const Exc: array of String;
-  const Separator: String; const Tree: TTreeNode): String;
-var
-  v: IXQValue;
+function TXQueryEngineHTML.CSSStringAll(const Expression: String;
+  const Separator: String; const ContextItem: IXQValue): String;
 begin
-  Result := '';
-  for v in Eval(Expression, False, Tree) do
-    if StringInArray(Trim(v.toString), Exc) = False then
-      AddSeparatorString(Result, v.toString, Separator);
+  Result := EvalStringAll(Expression, True, Separator, ContextItem);
+end;
+
+function TXQueryEngineHTML.CSSStringAll(const Expression: String;
+  const Exc: array of String; const Separator: String; const ContextItem: IXQValue
+  ): String;
+begin
+  Result := EvalStringAll(Expression, True, Exc, Separator, ContextItem);
 end;
 
 procedure TXQueryEngineHTML.CSSStringAll(const Expression: String;
-  const TheStrings: TStrings; const Tree: TTreeNode);
-var
-  v: IXQValue;
+  const TheStrings: TStrings; const ContextItem: IXQValue);
 begin
-  for v in Eval(Expression, True, Tree) do
-    TheStrings.Add(v.toString);
+  EvalStringAll(Expression, True, TheStrings, ContextItem);
 end;
 
 end.
