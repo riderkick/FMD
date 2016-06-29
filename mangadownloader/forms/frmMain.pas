@@ -3560,7 +3560,7 @@ begin
   vtDownload.Header.SortDirection := TSortDirection(DLManager.SortDirection);
   vtDownload.Header.SortColumn := Column;
   DLManager.Sort(Column);
-  vtDownload.Repaint;
+  UpdateVtDownload;
 end;
 
 procedure TMainForm.vtDownloadKeyAction(Sender: TBaseVirtualTree;
