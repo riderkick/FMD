@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, math, WebsiteModules, uData, uBaseUnit, uDownloadsManager,
-  XQueryEngineHTML, httpsendthread, synautil, synacode, RegExpr;
+  XQueryEngineHTML, httpsendthread, synautil, RegExpr;
 
 implementation
 
@@ -65,8 +65,9 @@ end;
 function GetInfo(const MangaInfo: TMangaInformation; const AURL: String;
   const Module: TModuleContainer): Integer;
 var
-  v: IXQValue;
-  mangaid, purl, s, c: String;
+  v, x: IXQValue;
+  mangaid, purl: String;
+  s, cl, cn, vs: String;
   p, i: Integer;
 begin
   Result := NET_PROBLEM;
@@ -106,22 +107,20 @@ begin
                   ParseHTML(Document)
                 else
                   Break;
-              for v in XPath(
-                  'json(*).data()/string-join((' +
-                  '"?idManga=",idTomo,' +
-                  '"&idScanlation=",subidas/idScan,' +
-                  '"&numeroCapitulo=",numCapitulo,' +
-                  '"&visto=true",' +
-                  '"/",numCapitulo,"/",nombre),"")') do
+              for v in XPath('json(*).data()') do
               begin
-                s := v.toString;
-                chapterLinks.Add(apiurlimagenes + SeparateLeft(s, '/'));
-                s := SeparateRight(s, '/');
-                c := SeparateRight(s, '/');
-                s := SeparateLeft(s, '/');
-                if (c <> '') and (c <> 'null') then
-                  s := s + ' ' + c;
-                chapterName.Add(s);
+                cl := apiurlimagenes + XPathString('string-join(("?idManga=",idTomo,"&numeroCapitulo=",numCapitulo),"")', v);
+                vs := '&visto=' + XPathString('visto', v);
+                cn := Trim(XPathString('string-join((numCapitulo,nombre)," ")', v));
+                if RightStr(cn, 5) = ' null' then
+                  SetLength(cn, Length(cn) - 5);
+                for x in XPath('(subidas)()', v) do
+                begin
+                  chapterLinks.Add(cl + '&idScanlation='+ XPathString('idScan', x) + vs);
+                  s := XPathString('scanlation/nombre', x);
+                  if s <> '' then chapterName.Add(cn + ' [' + s + ']')
+                  else chapterName.Add(s);
+                end;
               end;
             end;
             InvertStrings([chapterLinks, chapterName]);
