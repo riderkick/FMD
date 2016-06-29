@@ -606,14 +606,7 @@ type
     procedure InitCheckboxes;
 
     // download task filters
-    procedure ShowTasks(Status: TDownloadStatusTypes = []);
-
-    procedure ShowTasksOnCertainDays(const L, H: longint);
-    procedure ShowTodayTasks;
-    procedure ShowYesterdayTasks;
-    procedure ShowOneWeekTasks;
-    procedure ShowOneMonthTasks;
-    procedure vtDownloadFilters;
+    procedure vtDownloadUpdateFilters(const RepaintTree: Boolean = True);
 
     procedure AddChapterNameToList;
 
@@ -648,7 +641,7 @@ type
     function SaveMangaOptions: String;
 
     procedure UpdateVtChapter;
-    procedure UpdateVtDownload;
+    procedure UpdateVtDownload; inline;
     procedure UpdateVtFavorites;
 
     // Load form information, like previous position, size, ...
@@ -1782,55 +1775,8 @@ begin
 end;
 
 procedure TMainForm.UpdatetvDownloadFilter;
-var
-  i,
-  LFinishedTasks,
-  LInProgressTasks,
-  LStoppedTasks,
-  LFailedTask: Integer;
 begin
-  LFinishedTasks := 0;
-  LInProgressTasks := 0;
-  LStoppedTasks := 0;
-  LFailedTask := 0;
 
-  if (Assigned(DLManager)) and (DLManager.Count > 0) then
-    for i := 0 to DLManager.Count - 1 do
-    begin
-      case DLManager.Items[i].Status of
-        STATUS_FINISH    : Inc(LFinishedTasks);
-        STATUS_DOWNLOAD,
-        STATUS_PREPARE,
-        STATUS_WAIT      : Inc(LInProgressTasks);
-        STATUS_STOP      : Inc(LStoppedTasks);
-        STATUS_PROBLEM,
-        STATUS_FAILED    : Inc(LFailedTask);
-      end;
-    end;
-
-  tvDownloadFilter.BeginUpdate;
-  with tvDownloadFilter do
-    try
-      // root
-      Items[0].Text := Format('%s (%d)', [RS_AllDownloads, vtDownload.RootNodeCount]);
-
-      // childs
-      Items[1].Text := Format('%s (%d)', [RS_Finish, LFinishedTasks]);
-      Items[2].Text := Format('%s (%d)', [RS_InProgress, LInProgressTasks]);
-      Items[3].Text := Format('%s (%d)', [RS_Stopped, LStoppedTasks]);
-      Items[4].Text := Format('%s (%d)', [RS_Failed, LFailedTask]);
-
-      // root
-      Items[5].Text := RS_History;
-
-      // childs
-      Items[6].Text := RS_Today;
-      Items[7].Text := RS_Yesterday;
-      Items[8].Text := RS_OneWeek;
-      Items[9].Text := RS_OneMonth;
-  finally
-    tvDownloadFilter.EndUpdate;
-  end;
 end;
 
 procedure TMainForm.GeneratetvDownloadFilterNodes;
@@ -3277,7 +3223,7 @@ end;
 
 procedure TMainForm.tvDownloadFilterSelectionChanged(Sender: TObject);
 begin
-  vtDownloadFilters;
+  vtDownloadUpdateFilters(False);
   pcMain.ActivePage := tsDownload;
   configfile.WriteInteger('general', 'DownloadFilterSelect',
     tvDownloadFilter.Selected.AbsoluteIndex);
@@ -3375,7 +3321,7 @@ begin
   end;
   ConTemp.Free;
   vtDownload.EndUpdate;
-  vtDownloadFilters;
+  vtDownloadUpdateFilters;
 end;
 
 procedure TMainForm.vtDownloadDragDrop(Sender : TBaseVirtualTree;
@@ -3851,108 +3797,117 @@ begin
     TCheckBox(pnGenres.Controls[i]).State := cbGrayed;
 end;
 
-procedure TMainForm.ShowTasks(Status: TDownloadStatusTypes);
+procedure TMainForm.vtDownloadUpdateFilters(const RepaintTree: Boolean);
 var
-  i: Cardinal;
-  xNode: PVirtualNode;
-  canExit: Boolean = False;
-begin
-  if vtDownload.RootNodeCount = 0 then
-    Exit;
-  xNode := vtDownload.GetLast;
-  for i := vtDownload.RootNodeCount - 1 downto 0 do
+  ACurrentJDN: LongInt;
+  LFinishedTasks,
+  LInProgressTasks,
+  LStoppedTasks,
+  LFailedTask: Integer;
+
+  procedure CountDownloadFilter(const Idx: Integer);
   begin
-    if Status = [] then
-      vtDownload.isVisible[xNode] := True
-    else
-      vtDownload.IsVisible[xNode] := DLManager.Items[i].Status in Status;
-    if canExit then
-      Exit;
-    if xNode = vtDownload.GetFirst then
-      canExit := True;
-    xNode := vtDownload.GetPrevious(xNode);
-    if xNode = vtDownload.GetFirst then
-      canExit := True;
-  end;
-end;
-
-procedure TMainForm.ShowTasksOnCertainDays(const L, H: longint);
-var
-  i: Cardinal;
-  jdn: longint;
-  xNode: PVirtualNode;
-  canExit: Boolean = False;
-  dt: TDateTime;
-  day, month, year: Word;
-begin
-  if vtDownload.RootNodeCount = 0 then
-    Exit;
-  if vtDownload.RootNodeCount <> DLManager.Count then
-    vtDownload.RootNodeCount := DLManager.Count;
-  xNode := vtDownload.GetLast;
-  for i := DLManager.Count-1 downto 0 do
-  begin
-    if i < DLManager.Count then
-    begin
-      dt := DLManager.Items[i].DownloadInfo.dateTime;
-      DecodeDate(dt, year, month, day);
-      jdn := DateToJDN(year, month, day);
-
-      if (jdn >= L) and (jdn <= H) then
-        vtDownload.isVisible[xNode] := True
-      else
-        vtDownload.isVisible[xNode] := False;
-
-      if canExit then
-        Exit;
-      if xNode = vtDownload.GetFirst then
-        canExit := True;
-      xNode := vtDownload.GetPrevious(xNode);
-      if xNode = vtDownload.GetFirst then
-        canExit := True;
+    case DLManager.Items[Idx].Status of
+      STATUS_FINISH    : Inc(LFinishedTasks);
+      STATUS_DOWNLOAD,
+      STATUS_PREPARE,
+      STATUS_WAIT      : Inc(LInProgressTasks);
+      STATUS_STOP      : Inc(LStoppedTasks);
+      STATUS_PROBLEM,
+      STATUS_FAILED    : Inc(LFailedTask);
     end;
   end;
-end;
 
-procedure TMainForm.ShowTodayTasks;
-begin
-  ShowTasksOnCertainDays(GetCurrentJDN, GetCurrentJDN);
-end;
-
-procedure TMainForm.ShowYesterdayTasks;
-begin
-  ShowTasksOnCertainDays(GetCurrentJDN - 1, GetCurrentJDN - 1);
-end;
-
-procedure TMainForm.ShowOneWeekTasks;
-begin
-  ShowTasksOnCertainDays(GetCurrentJDN - 7, GetCurrentJDN);
-end;
-
-procedure TMainForm.ShowOneMonthTasks;
-begin
-  ShowTasksOnCertainDays(GetCurrentJDN - 30, GetCurrentJDN);
-end;
-
-procedure TMainForm.vtDownloadFilters;
-begin
-  if (isRunDownloadFilter) or
-    (not Assigned(tvDownloadFilter.Selected)) then
-    Exit;
-  isRunDownloadFilter := True;
-  case tvDownloadFilter.Selected.AbsoluteIndex of
-    0, 5: ShowTasks;
-    1: ShowTasks([STATUS_FINISH]);
-    2: ShowTasks([STATUS_WAIT, STATUS_PREPARE, STATUS_DOWNLOAD, STATUS_COMPRESS]);
-    3: ShowTasks([STATUS_STOP]);
-    4: ShowTasks([STATUS_PROBLEM, STATUS_FAILED]);
-    6: ShowTodayTasks;
-    7: ShowYesterdayTasks;
-    8: ShowOneWeekTasks;
-    9: ShowOneMonthTasks;
+  procedure ShowTasks(Status: TDownloadStatusTypes = []);
+  var
+    xNode: PVirtualNode;
+  begin
+    xNode := vtDownload.GetFirst();
+    while Assigned(xNode) do
+    begin
+      if Status = [] then
+        vtDownload.IsVisible[xNode] := True
+      else
+        vtDownload.IsVisible[xNode] := DLManager.Items[xNode^.Index].Status in Status;
+      if RepaintTree then
+        CountDownloadFilter(xNode^.Index);
+      xNode := vtDownload.GetNext(xNode);
+    end;
   end;
-  UpdatetvDownloadFilter;
-  isRunDownloadFilter := False;
+
+  procedure ShowTasksOnCertainDays(const L, H: LongInt);
+  var
+    jdn: LongInt;
+    xNode: PVirtualNode;
+  begin
+    xNode := vtDownload.GetFirst();
+    while Assigned(xNode) do
+    begin
+      jdn := DateToJDN(DLManager.Items[xNode^.Index].DownloadInfo.DateTime);
+      vtDownload.IsVisible[xNode] := (jdn >= L) and (jdn <= H);
+      if RepaintTree then
+        CountDownloadFilter(xNode^.Index);
+      xNode := vtDownload.GetNext(xNode);
+    end;
+  end;
+
+begin
+  if tvDownloadFilter.Selected = nil then Exit;
+
+  LFinishedTasks := 0;
+  LInProgressTasks := 0;
+  LStoppedTasks := 0;
+  LFailedTask := 0;
+
+  vtDownload.BeginUpdate;
+  try
+    if vtDownload.RootNodeCount <> DLManager.Count then
+      vtDownload.RootNodeCount := DLManager.Count;
+
+    // filter download list
+    if tvDownloadFilter.Selected.AbsoluteIndex > 5 then
+      ACurrentJDN := DateToJDN(Now);
+    case tvDownloadFilter.Selected.AbsoluteIndex of
+      0, 5: ShowTasks;
+      1: ShowTasks([STATUS_FINISH]);
+      2: ShowTasks([STATUS_WAIT, STATUS_PREPARE, STATUS_DOWNLOAD, STATUS_COMPRESS]);
+      3: ShowTasks([STATUS_STOP]);
+      4: ShowTasks([STATUS_PROBLEM, STATUS_FAILED]);
+      6: ShowTasksOnCertainDays(ACurrentJDN, ACurrentJDN);
+      7: ShowTasksOnCertainDays(ACurrentJDN - 1, ACurrentJDN - 1);
+      8: ShowTasksOnCertainDays(ACurrentJDN - 7, ACurrentJDN);
+      9: ShowTasksOnCertainDays(ACurrentJDN - 30, ACurrentJDN);
+    end;
+  finally
+    vtDownload.EndUpdate;
+  end;
+
+  if not RepaintTree then Exit;
+
+  // update download filter treeview
+  tvDownloadFilter.BeginUpdate;
+  with tvDownloadFilter do
+    try
+      // root
+      Items[0].Text := Format('%s (%d)', [RS_AllDownloads, vtDownload.RootNodeCount]);
+
+      // childs
+      Items[1].Text := Format('%s (%d)', [RS_Finish, LFinishedTasks]);
+      Items[2].Text := Format('%s (%d)', [RS_InProgress, LInProgressTasks]);
+      Items[3].Text := Format('%s (%d)', [RS_Stopped, LStoppedTasks]);
+      Items[4].Text := Format('%s (%d)', [RS_Failed, LFailedTask]);
+
+      // root
+      Items[5].Text := RS_History;
+
+      // childs
+      Items[6].Text := RS_Today;
+      Items[7].Text := RS_Yesterday;
+      Items[8].Text := RS_OneWeek;
+      Items[9].Text := RS_OneMonth;
+  finally
+    tvDownloadFilter.EndUpdate;
+  end;
 end;
 
 procedure TMainForm.AddChapterNameToList;
@@ -4773,12 +4728,7 @@ end;
 
 procedure TMainForm.UpdateVtDownload;
 begin
-  if vtDownload.RootNodeCount <> DLManager.Count then
-    vtDownload.RootNodeCount := DLManager.Count;
-  // the reason we put vtDownloadFilters in here instead of in DLManager because
-  // the size of download list can change while this method is running
-  vtDownloadFilters;
-  vtDownload.Repaint;
+  vtDownloadUpdateFilters;
 end;
 
 procedure TMainForm.UpdateVtFavorites;
