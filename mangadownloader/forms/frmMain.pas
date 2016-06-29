@@ -591,8 +591,8 @@ type
     // check update
     CheckUpdateThread: TCheckUpdateThread;
 
-    // repaint treeview
-    procedure tvDownloadFilterRepaint;
+    // update download filter treeview
+    procedure UpdatetvDownloadFilter;
 
     // generate >> nodes
     procedure GeneratetvDownloadFilterNodes;
@@ -1781,14 +1781,19 @@ begin
   if FileExistsUTF8(CHANGELOG_FILE) then  mmChangelog.Lines.LoadFromFile(CHANGELOG_FILE);
 end;
 
-procedure TMainForm.tvDownloadFilterRepaint;
+procedure TMainForm.UpdatetvDownloadFilter;
 var
-  i: Cardinal;
-  LFinishedTasks: Cardinal = 0;
-  LInProgressTasks: Cardinal = 0;
-  LStoppedTasks: Cardinal = 0;
-  LFailedTask: Cardinal = 0;
+  i,
+  LFinishedTasks,
+  LInProgressTasks,
+  LStoppedTasks,
+  LFailedTask: Integer;
 begin
+  LFinishedTasks := 0;
+  LInProgressTasks := 0;
+  LStoppedTasks := 0;
+  LFailedTask := 0;
+
   if (Assigned(DLManager)) and (DLManager.Count > 0) then
     for i := 0 to DLManager.Count - 1 do
     begin
@@ -1803,24 +1808,28 @@ begin
       end;
     end;
 
-  with tvDownloadFilter do begin
-    // root
-    Items[0].Text := Format('%s (%d)', [RS_AllDownloads, vtDownload.RootNodeCount]);
+  tvDownloadFilter.BeginUpdate;
+  with tvDownloadFilter do
+    try
+      // root
+      Items[0].Text := Format('%s (%d)', [RS_AllDownloads, vtDownload.RootNodeCount]);
 
-    // childs
-    Items[1].Text := Format('%s (%d)', [RS_Finish, LFinishedTasks]);
-    Items[2].Text := Format('%s (%d)', [RS_InProgress, LInProgressTasks]);
-    Items[3].Text := Format('%s (%d)', [RS_Stopped, LStoppedTasks]);
-    Items[4].Text := Format('%s (%d)', [RS_Failed, LFailedTask]);
+      // childs
+      Items[1].Text := Format('%s (%d)', [RS_Finish, LFinishedTasks]);
+      Items[2].Text := Format('%s (%d)', [RS_InProgress, LInProgressTasks]);
+      Items[3].Text := Format('%s (%d)', [RS_Stopped, LStoppedTasks]);
+      Items[4].Text := Format('%s (%d)', [RS_Failed, LFailedTask]);
 
-    // root
-    Items[5].Text := RS_History;
+      // root
+      Items[5].Text := RS_History;
 
-    // childs
-    Items[6].Text := RS_Today;
-    Items[7].Text := RS_Yesterday;
-    Items[8].Text := RS_OneWeek;
-    Items[9].Text := RS_OneMonth;
+      // childs
+      Items[6].Text := RS_Today;
+      Items[7].Text := RS_Yesterday;
+      Items[8].Text := RS_OneWeek;
+      Items[9].Text := RS_OneMonth;
+  finally
+    tvDownloadFilter.EndUpdate;
   end;
 end;
 
@@ -3942,7 +3951,7 @@ begin
     8: ShowOneWeekTasks;
     9: ShowOneMonthTasks;
   end;
-  tvDownloadFilterRepaint;
+  UpdatetvDownloadFilter;
   isRunDownloadFilter := False;
 end;
 
@@ -4929,7 +4938,7 @@ begin
       rgDropTargetMode.ItemIndex := idxDropTargetMode;
       Self.Repaint;
       vtMangaList.Repaint;
-      tvDownloadFilterRepaint;
+      UpdatetvDownloadFilter;
 
       // refresh custom option
       WebsiteOptionCustomForm.CreateWebsiteOption;
