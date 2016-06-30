@@ -21,6 +21,19 @@ uses
   strutils;
 
 type
+  TDownloadStatusType = (
+    STATUS_STOP,
+    STATUS_WAIT,
+    STATUS_PREPARE,
+    STATUS_DOWNLOAD,
+    STATUS_FINISH,
+    STATUS_COMPRESS,
+    STATUS_PROBLEM,
+    STATUS_FAILED,
+    STATUS_NONE        // devault value oncreate, don't use
+    );
+  TDownloadStatusTypes = set of TDownloadStatusType;
+
   TDownloadManager = class;
   TTaskContainer = class;
   TTaskThread = class;
@@ -93,6 +106,8 @@ type
   TTaskContainer = class
   private
     FWebsite: String;
+    FStatus: TDownloadStatusType;
+    procedure SetStatus(AValue: TDownloadStatusType);
     procedure SetWebsite(AValue: String);
   public
     // critical section
@@ -117,7 +132,7 @@ type
     PageNumber: Integer;
     MangaSiteID: Cardinal;
     ModuleId: Integer;
-    Status: TDownloadStatusType;
+    //Status: TDownloadStatusType;
     ThreadState: Boolean;
     ChapterName,
     ChapterLinks,
@@ -133,6 +148,7 @@ type
     procedure IncReadCount(const ACount: Integer);
   public
     property Website: String read FWebsite write SetWebsite;
+    property Status: TDownloadStatusType read FStatus write SetStatus;
   end;
 
   TTaskContainers = TFPGList<TTaskContainer>;
@@ -147,12 +163,17 @@ type
   protected
     function GetTaskCount: Integer; inline;
     function GetTransferRate: Integer;
+    procedure ChangeStatusCount(const OldStatus, NewStatus: TDownloadStatusType);
   public
     CS_Task: TRTLCriticalSection;
     Items,
     ItemsActiveTask: TTaskContainers;
     isRunningBackup, isFinishTaskAccessed, isRunningBackupDownloadedChaptersList,
     isReadyForExit: Boolean;
+
+    // status count
+    CS_StatusCount: TRTLCriticalSection;
+    StatusCount: array [TDownloadStatusType] of Integer;
 
     compress, retryConnect,
     // max. active tasks
@@ -1413,6 +1434,14 @@ begin
   ModuleId := Modules.LocateModule(AValue);
 end;
 
+procedure TTaskContainer.SetStatus(AValue: TDownloadStatusType);
+begin
+  if FStatus = AValue then Exit;
+  if Assigned(Manager) then
+    Manager.ChangeStatusCount(FStatus, AValue);
+  FStatus := AValue;
+end;
+
 constructor TTaskContainer.Create;
 begin
   inherited Create;
@@ -1430,6 +1459,7 @@ begin
   CurrentPageNumber := 0;
   CurrentDownloadChapterPtr := 0;
   CustomFileName := OptionFilenameCustomRename;
+  FStatus := STATUS_NONE;
 end;
 
 destructor TTaskContainer.Destroy;
@@ -1487,7 +1517,22 @@ begin
   end;
 end;
 
+procedure TDownloadManager.ChangeStatusCount(const OldStatus,
+  NewStatus: TDownloadStatusType);
+begin
+  EnterCriticalsection(CS_StatusCount);
+  try
+    if StatusCount[OldStatus] > 0 then
+      Dec(StatusCount[OldStatus]);
+    Inc(StatusCount[NewStatus]);
+  finally
+    LeaveCriticalsection(CS_StatusCount);
+  end;
+end;
+
 constructor TDownloadManager.Create;
+var
+  ds: TDownloadStatusType;
 begin
   inherited Create;
   InitCriticalSection(CS_Task);
@@ -1507,6 +1552,10 @@ begin
   isRunningBackup := False;
   isRunningBackupDownloadedChaptersList := False;
   isReadyForExit := False;
+
+  InitCriticalSection(CS_StatusCount);
+  for ds := Low(StatusCount) to High(StatusCount) do
+    StatusCount[ds] := 0;
 end;
 
 destructor TDownloadManager.Destroy;
@@ -1526,6 +1575,7 @@ begin
   ItemsActiveTask.Free;
   DownloadedChapters.Free;
   DoneCriticalsection(CS_Task);
+  DoneCriticalsection(CS_StatusCount);
   inherited Destroy;
 end;
 
@@ -1706,7 +1756,10 @@ begin
   try
     Result := Items.Add(TTaskContainer.Create);
     with Items[Result] do
+    begin
       Manager := Self;
+      Status := STATUS_STOP;
+    end;
   finally
     LeaveCriticalSection(CS_Task);
   end;
@@ -1794,7 +1847,7 @@ begin
     CheckAndActiveTask
   else if MainForm.itRefreshDLInfo.Enabled = False then
     MainForm.itRefreshDLInfo.Enabled := True;
-  MainForm.vtDownloadFilters;
+  MainForm.UpdateVtDownload;
 end;
 
 procedure TDownloadManager.ActiveTask(const taskID: Integer);

@@ -591,9 +591,6 @@ type
     // check update
     CheckUpdateThread: TCheckUpdateThread;
 
-    // update download filter treeview
-    procedure UpdatetvDownloadFilter;
-
     // generate >> nodes
     procedure GeneratetvDownloadFilterNodes;
 
@@ -606,7 +603,8 @@ type
     procedure InitCheckboxes;
 
     // download task filters
-    procedure vtDownloadUpdateFilters(const RepaintTree: Boolean = True);
+    procedure tvDownloadFilterRefresh(const ResourceChanged: Boolean = False);
+    procedure vtDownloadUpdateFilters(const RefreshTree: Boolean = True);
 
     procedure AddChapterNameToList;
 
@@ -1772,11 +1770,6 @@ begin
   end;
   // load changelog.txt
   if FileExistsUTF8(CHANGELOG_FILE) then  mmChangelog.Lines.LoadFromFile(CHANGELOG_FILE);
-end;
-
-procedure TMainForm.UpdatetvDownloadFilter;
-begin
-
 end;
 
 procedure TMainForm.GeneratetvDownloadFilterNodes;
@@ -3797,31 +3790,52 @@ begin
     TCheckBox(pnGenres.Controls[i]).State := cbGrayed;
 end;
 
-procedure TMainForm.vtDownloadUpdateFilters(const RepaintTree: Boolean);
+procedure TMainForm.tvDownloadFilterRefresh(const ResourceChanged: Boolean);
+begin
+  // update download filter treeview
+  tvDownloadFilter.BeginUpdate;
+  with DLManager, tvDownloadFilter do
+    try
+      // root
+      Items[0].Text := Format('%s (%d)', [RS_AllDownloads, vtDownload.RootNodeCount]);
+
+      // childs
+      Items[1].Text := Format('%s (%d)', [RS_Finish, StatusCount[STATUS_FINISH]]);
+      Items[2].Text := Format('%s (%d)', [RS_InProgress,
+        StatusCount[STATUS_DOWNLOAD] +
+        StatusCount[STATUS_PREPARE] +
+        StatusCount[STATUS_WAIT]]);
+      Items[3].Text := Format('%s (%d)', [RS_Stopped, StatusCount[STATUS_STOP]]);
+      Items[4].Text := Format('%s (%d)', [RS_Failed,
+        StatusCount[STATUS_PROBLEM] +
+        StatusCount[STATUS_FAILED]]);
+
+      if ResourceChanged then
+      begin
+        // root
+        Items[5].Text := RS_History;
+
+        // childs
+        Items[6].Text := RS_Today;
+        Items[7].Text := RS_Yesterday;
+        Items[8].Text := RS_OneWeek;
+        Items[9].Text := RS_OneMonth;
+      end;
+    finally
+      tvDownloadFilter.EndUpdate;
+    end;
+end;
+
+procedure TMainForm.vtDownloadUpdateFilters(const RefreshTree: Boolean);
 var
   ACurrentJDN: LongInt;
-  LFinishedTasks,
-  LInProgressTasks,
-  LStoppedTasks,
-  LFailedTask: Integer;
-
-  procedure CountDownloadFilter(const Idx: Integer);
-  begin
-    case DLManager.Items[Idx].Status of
-      STATUS_FINISH    : Inc(LFinishedTasks);
-      STATUS_DOWNLOAD,
-      STATUS_PREPARE,
-      STATUS_WAIT      : Inc(LInProgressTasks);
-      STATUS_STOP      : Inc(LStoppedTasks);
-      STATUS_PROBLEM,
-      STATUS_FAILED    : Inc(LFailedTask);
-    end;
-  end;
 
   procedure ShowTasks(Status: TDownloadStatusTypes = []);
   var
     xNode: PVirtualNode;
   begin
+    if (Status = []) and (vtDownload.VisibleCount = vtDownload.RootNodeCount) then
+      Exit;
     xNode := vtDownload.GetFirst();
     while Assigned(xNode) do
     begin
@@ -3829,8 +3843,6 @@ var
         vtDownload.IsVisible[xNode] := True
       else
         vtDownload.IsVisible[xNode] := DLManager.Items[xNode^.Index].Status in Status;
-      if RepaintTree then
-        CountDownloadFilter(xNode^.Index);
       xNode := vtDownload.GetNext(xNode);
     end;
   end;
@@ -3845,19 +3857,12 @@ var
     begin
       jdn := DateToJDN(DLManager.Items[xNode^.Index].DownloadInfo.DateTime);
       vtDownload.IsVisible[xNode] := (jdn >= L) and (jdn <= H);
-      if RepaintTree then
-        CountDownloadFilter(xNode^.Index);
       xNode := vtDownload.GetNext(xNode);
     end;
   end;
 
 begin
   if tvDownloadFilter.Selected = nil then Exit;
-
-  LFinishedTasks := 0;
-  LInProgressTasks := 0;
-  LStoppedTasks := 0;
-  LFailedTask := 0;
 
   vtDownload.BeginUpdate;
   try
@@ -3882,32 +3887,8 @@ begin
     vtDownload.EndUpdate;
   end;
 
-  if not RepaintTree then Exit;
-
-  // update download filter treeview
-  tvDownloadFilter.BeginUpdate;
-  with tvDownloadFilter do
-    try
-      // root
-      Items[0].Text := Format('%s (%d)', [RS_AllDownloads, vtDownload.RootNodeCount]);
-
-      // childs
-      Items[1].Text := Format('%s (%d)', [RS_Finish, LFinishedTasks]);
-      Items[2].Text := Format('%s (%d)', [RS_InProgress, LInProgressTasks]);
-      Items[3].Text := Format('%s (%d)', [RS_Stopped, LStoppedTasks]);
-      Items[4].Text := Format('%s (%d)', [RS_Failed, LFailedTask]);
-
-      // root
-      Items[5].Text := RS_History;
-
-      // childs
-      Items[6].Text := RS_Today;
-      Items[7].Text := RS_Yesterday;
-      Items[8].Text := RS_OneWeek;
-      Items[9].Text := RS_OneMonth;
-  finally
-    tvDownloadFilter.EndUpdate;
-  end;
+  if RefreshTree then
+    tvDownloadFilterRefresh;
 end;
 
 procedure TMainForm.AddChapterNameToList;
@@ -4888,7 +4869,7 @@ begin
       rgDropTargetMode.ItemIndex := idxDropTargetMode;
       Self.Repaint;
       vtMangaList.Repaint;
-      UpdatetvDownloadFilter;
+      tvDownloadFilterRefresh(True);
 
       // refresh custom option
       WebsiteOptionCustomForm.CreateWebsiteOption;
