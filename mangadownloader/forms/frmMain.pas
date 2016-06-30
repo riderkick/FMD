@@ -1080,10 +1080,10 @@ begin
   if cbFilterStatus.Items.Count > 2 then
     cbFilterStatus.ItemIndex := 2;
 
-  vtDownload.NodeDataSize := SizeOf(TDownloadInfo) - 4;
-  vtDownload.RootNodeCount := DLManager.Count;
+  // show download list
+  UpdateVtDownload;
 
-  vtFavorites.NodeDataSize := SizeOf(TFavoriteInfo);
+  // show favorite list
   UpdateVtFavorites;
 
   InitCheckboxes;
