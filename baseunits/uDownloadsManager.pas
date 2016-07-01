@@ -1984,12 +1984,17 @@ procedure TDownloadManager.RemoveAllFinishedTasks;
 var
   i: Integer;
 begin
-  if Items.Count > 0 then begin
-    i := 0;
-    while i < Items.Count do
+  if Items.Count = 0 then Exit;
+  EnterCriticalsection(CS_Task);
+  try
+    for i := Items.Count - 1 downto 0 do
       if Items[i].Status = STATUS_FINISH then
+      begin
+        Items[i].Free;
         Items.Delete(i)
-      else Inc(i);
+      end;
+  finally
+    LeaveCriticalsection(CS_Task);
   end;
 end;
 
