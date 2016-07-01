@@ -164,6 +164,8 @@ type
     function GetTaskCount: Integer; inline;
     function GetTransferRate: Integer;
     procedure ChangeStatusCount(const OldStatus, NewStatus: TDownloadStatusType);
+    procedure DecStatusCount(const Status: TDownloadStatusType);
+    procedure IncStatusCount(const Status: TDownloadStatusType);
   public
     CS_Task: TRTLCriticalSection;
     Items,
@@ -1472,6 +1474,8 @@ begin
   FailedChapterName.Free;
   FailedChapterLinks.Free;
   DoneCriticalsection(CS_Container);
+  if Assigned(Manager) then
+    Manager.DecStatusCount(Status);
   inherited Destroy;
 end;
 
@@ -1522,9 +1526,31 @@ procedure TDownloadManager.ChangeStatusCount(const OldStatus,
 begin
   EnterCriticalsection(CS_StatusCount);
   try
+    if OldStatus = NewStatus then Exit;
     if StatusCount[OldStatus] > 0 then
       Dec(StatusCount[OldStatus]);
     Inc(StatusCount[NewStatus]);
+  finally
+    LeaveCriticalsection(CS_StatusCount);
+  end;
+end;
+
+procedure TDownloadManager.DecStatusCount(const Status: TDownloadStatusType);
+begin
+  EnterCriticalsection(CS_StatusCount);
+  try
+    if StatusCount[Status] > 0 then
+      Dec(StatusCount[Status]);
+  finally
+    LeaveCriticalsection(CS_StatusCount);
+  end;
+end;
+
+procedure TDownloadManager.IncStatusCount(const Status: TDownloadStatusType);
+begin
+  EnterCriticalsection(CS_StatusCount);
+  try
+    Inc(StatusCount[Status]);
   finally
     LeaveCriticalsection(CS_StatusCount);
   end;
