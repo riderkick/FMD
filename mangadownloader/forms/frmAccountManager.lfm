@@ -229,6 +229,10 @@ object AccountManagerForm: TAccountManagerForm
     Top = 8
     Width = 287
     Align = alClient
+    Colors.DropTargetBorderColor = clHotLight
+    Colors.FocusedSelectionBorderColor = clHotLight
+    Colors.SelectionRectangleBorderColor = clHotLight
+    Colors.UnfocusedSelectionBorderColor = clBtnShadow
     Header.AutoSizeIndex = 0
     Header.Columns = <    
       item

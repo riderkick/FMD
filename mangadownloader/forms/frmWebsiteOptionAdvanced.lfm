@@ -30,6 +30,10 @@ object WebsiteOptionAdvancedForm: TWebsiteOptionAdvancedForm
         Top = 6
         Width = 490
         Align = alClient
+        Colors.DropTargetBorderColor = clHotLight
+        Colors.FocusedSelectionBorderColor = clHotLight
+        Colors.SelectionRectangleBorderColor = clHotLight
+        Colors.UnfocusedSelectionBorderColor = clBtnShadow
         DefaultText = 'Node'
         Header.AutoSizeIndex = 0
         Header.Columns = <        
@@ -75,6 +79,10 @@ object WebsiteOptionAdvancedForm: TWebsiteOptionAdvancedForm
         Top = 6
         Width = 490
         Align = alClient
+        Colors.DropTargetBorderColor = clHotLight
+        Colors.FocusedSelectionBorderColor = clHotLight
+        Colors.SelectionRectangleBorderColor = clHotLight
+        Colors.UnfocusedSelectionBorderColor = clBtnShadow
         DefaultText = 'Node'
         Header.AutoSizeIndex = 0
         Header.Columns = <        
@@ -137,6 +145,10 @@ object WebsiteOptionAdvancedForm: TWebsiteOptionAdvancedForm
             Top = 6
             Width = 470
             Align = alClient
+            Colors.DropTargetBorderColor = clHotLight
+            Colors.FocusedSelectionBorderColor = clHotLight
+            Colors.SelectionRectangleBorderColor = clHotLight
+            Colors.UnfocusedSelectionBorderColor = clBtnShadow
             DefaultText = 'Node'
             Header.AutoSizeIndex = 0
             Header.Columns = <            
@@ -201,6 +213,10 @@ object WebsiteOptionAdvancedForm: TWebsiteOptionAdvancedForm
             Top = 6
             Width = 470
             Align = alClient
+            Colors.DropTargetBorderColor = clHotLight
+            Colors.FocusedSelectionBorderColor = clHotLight
+            Colors.SelectionRectangleBorderColor = clHotLight
+            Colors.UnfocusedSelectionBorderColor = clBtnShadow
             DefaultText = 'Node'
             Header.AutoSizeIndex = 0
             Header.Columns = <            
@@ -246,6 +262,10 @@ object WebsiteOptionAdvancedForm: TWebsiteOptionAdvancedForm
             Top = 6
             Width = 470
             Align = alClient
+            Colors.DropTargetBorderColor = clHotLight
+            Colors.FocusedSelectionBorderColor = clHotLight
+            Colors.SelectionRectangleBorderColor = clHotLight
+            Colors.UnfocusedSelectionBorderColor = clBtnShadow
             DefaultText = 'Node'
             Header.AutoSizeIndex = 0
             Header.Columns = <            
