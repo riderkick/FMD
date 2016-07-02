@@ -16,14 +16,20 @@ function GETCF(const AHTTP: THTTPSendThread; const AURL: String): Boolean; overl
 implementation
 
 const
-  MIN_WAIT_TIME = 4000;
+  MIN_WAIT_TIME = 5000;
   MAX_RETRY = 3;
 
 function AntiBotActive(const AHTTP: THTTPSendThread): Boolean;
 begin
   Result := False;
   if AHTTP = nil then Exit;
-  Result := Pos('URL=/cdn-cgi/', AHTTP.Headers.Values['Refresh']) > 0;
+  if AHTTP.ResultCode < 500 then Exit;
+  with TXQueryEngineHTML.Create(AHTTP.Document) do
+    try
+      Result := XPathString('//input[@name="jschl_vc"]/@value') <> '';
+    finally
+      Free;
+    end;
 end;
 
 function JSGetAnsweredURL(const Source, URL: String; var OMethod, OURL: String;
@@ -103,34 +109,33 @@ begin
   counter := 0;
   while counter < MAX_RETRY do begin
     Inc(counter);
-    if AntiBotActive(AHTTP) then begin
-      m := 'GET';
-      u := '';
-      h := AppendURLDelim(GetHostURL(AURL));
-      st := MIN_WAIT_TIME;
-      if JSGetAnsweredURL(StreamToString(AHTTP.Document), h, m, u, st) then
-        if (m <> '') and (u <> '') then begin
-          AHTTP.Reset;
-          AHTTP.Headers.Values['Referer'] := ' ' + AURL;
-          if st < MIN_WAIT_TIME then st := MIN_WAIT_TIME;
-          sc := 0;
-          while sc < st do begin
-            if AHTTP.ThreadTerminated then
-              Exit;
-            Inc(sc, 500);
-            Sleep(500);
-          end;
-          AHTTP.FollowRedirection := False;
-          if AHTTP.HTTPRequest(m, FillHost(h, u)) then
-            Result := AHTTP.Cookies.Values['cf_clearance'] <> '';
-          AHTTP.FollowRedirection := True;
-          if Result then Cookie := AHTTP.GetCookies;
+    m := 'GET';
+    u := '';
+    h := AppendURLDelim(GetHostURL(AURL));
+    st := MIN_WAIT_TIME;
+    if JSGetAnsweredURL(StreamToString(AHTTP.Document), h, m, u, st) then
+      if (m <> '') and (u <> '') then begin
+        AHTTP.Reset;
+        AHTTP.Headers.Values['Referer'] := ' ' + AURL;
+        if st < MIN_WAIT_TIME then st := MIN_WAIT_TIME;
+        sc := 0;
+        while sc < st do begin
+          if AHTTP.ThreadTerminated then
+            Exit;
+          Inc(sc, 500);
+          Sleep(500);
         end;
-    end;
+        AHTTP.FollowRedirection := False;
+        if AHTTP.HTTPRequest(m, FillHost(h, u)) then
+          Result := AHTTP.Cookies.Values['cf_clearance'] <> '';
+        AHTTP.FollowRedirection := True;
+        if Result then Cookie := AHTTP.GetCookies;
+      end;
     if Result then Exit
     else if counter < MAX_RETRY then begin
       AHTTP.Reset;
       Result := AHTTP.GET(AURL);
+      if not AntiBotActive(AHTTP) then Exit;
     end;
   end;
 end;
@@ -143,7 +148,7 @@ begin
   AHTTP.Cookies.Text := Cookie;
   AHTTP.AllowServerErrorResponse := True;
   Result := AHTTP.GET(AURL);
-  if (AHTTP.ResultCode > 500) and AntiBotActive(AHTTP) then begin
+  if AntiBotActive(AHTTP) then begin
     if TryEnterCriticalsection(CS) > 0 then
       try
         Result := CFJS(AHTTP, AURL, Cookie);
@@ -169,7 +174,7 @@ begin
   AHTTP.Cookies.Text := Cookie;
   AHTTP.AllowServerErrorResponse := True;
   Result := AHTTP.GET(AURL);
-  if (AHTTP.ResultCode > 500) and AntiBotActive(AHTTP) then begin
+  if AntiBotActive(AHTTP) then begin
     Result := CFJS(AHTTP, AURL, Cookie);
     Result := AHTTP.GET(AURL);
   end;
