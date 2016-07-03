@@ -3725,7 +3725,7 @@ begin
     if dataProcess.Value[Node^.Index, DATA_PARAM_STATUS] = MangaInfo_StatusCompleted then
       Brush.Color := CL_MNCompletedManga;
     if miHighlightNewManga.Checked and
-      (StrToIntDef(dataProcess.Value[Node^.Index, DATA_PARAM_JDN], 0) > (currentJDN - OptionNewMangaTime)) then
+      (dataProcess.ValueInt[Node^.Index, DATA_PARAM_JDN] > (currentJDN - OptionNewMangaTime)) then
         Brush.Color := CL_MNNewManga;
 
     if Brush.Color <> clNone then
@@ -3784,8 +3784,8 @@ procedure TMainForm.vtMangaListGetText(Sender: TBaseVirtualTree;
   var CellText: String);
 begin
   if Assigned(Node) then
-    CellText :=  Format('%s (%s)', [dataProcess.Value[Node^.Index, DATA_PARAM_TITLE],
-      dataProcess.Value[Node^.Index, DATA_PARAM_NUMCHAPTER]]);
+    CellText :=  Format('%s (%d)', [dataProcess.Value[Node^.Index, DATA_PARAM_TITLE],
+      dataProcess.ValueInt[Node^.Index, DATA_PARAM_NUMCHAPTER]]);
 end;
 
 procedure TMainForm.InitCheckboxes;

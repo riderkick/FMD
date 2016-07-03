@@ -53,6 +53,7 @@ type
     function InternalOpen(const FilePath: String = ''): Boolean;
     function GetWebsiteName(RecIndex: Integer): String;
     function GetValue(RecIndex, FieldIndex: Integer): String;
+    function GetValueInt(RecIndex, FieldIndex: Integer): Integer;
     procedure AttachAllSites;
     procedure DetachAllSites;
     function ExecuteDirect(SQL: String): Boolean;
@@ -105,7 +106,8 @@ type
     property FilterAllSites: Boolean read FFilterAllSites write FFilterAllSites;
     property SitesList: TStringList read FSitesList write FSitesList;
     property WebsiteName[RecIndex: Integer]: String read GetWebsiteName;
-    property Value[RecIndex, ParamNo: Integer]: String read GetValue;
+    property Value[RecIndex, FieldIndex: Integer]: String read GetValue; default;
+    property ValueInt[RecIndex, FieldIndex: Integer]: Integer read GetValueInt;
     property LinkCount: Integer read GetLinkCount;
     property Table: TSQLQuery read FQuery;
   end;
@@ -480,16 +482,23 @@ begin
   else
     Result:='';
   if FQuery.Active=False then Exit;
-  if FieldIndex>=FQuery.Fields.Count then Exit;
-  if (RecIndex<0) or (RecIndex>FRecordCount) then Exit;
   try
     FQuery.RecNo:=RecIndex+1;
     Result:=FQuery.Fields[FieldIndex].AsString;
   except
-    on E: Exception do
-      WriteLog_E(Self.ClassName+'['+Website+'].GetValue.Error!'+
-        ' RecIndex: '+IntToStr(RecIndex)+', FieldIndex: '+IntToStr(FieldIndex)+
-        ', RecordCount: '+IntToStr(FQuery.RecordCount), E, Self);
+  end;
+end;
+
+function TDBDataProcess.GetValueInt(RecIndex, FieldIndex: Integer): Integer;
+begin
+  Result:=0;
+  if FQuery.Active=False then Exit;
+  if not (FieldIndex in [DATA_PARAM_NUMCHAPTER,DATA_PARAM_JDN]) then
+    Exit;
+  try
+    FQuery.RecNo:=RecIndex+1;
+    Result:=FQuery.Fields[FieldIndex].AsInteger;
+  except
   end;
 end;
 
