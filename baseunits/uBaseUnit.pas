@@ -3822,12 +3822,17 @@ begin
 end;
 
 function MangaInfoStatusIfPos(const SearchStr, OngoingStr, CompletedStr: String): String;
+var
+  s, o, c: String;
 begin
   Result := '';
   if SearchStr = '' then Exit;
-  If Pos(OngoingStr, SearchStr) <> 0 then
+  s := LowerCase(SearchStr);
+  o := LowerCase(OngoingStr);
+  c := LowerCase(CompletedStr);
+  If Pos(o, s) <> 0 then
     Result := MangaInfo_StatusOngoing
-  else if Pos(CompletedStr, SearchStr) <> 0 then
+  else if Pos(c, s) <> 0 then
     Result := MangaInfo_StatusCompleted;
 end;
 
