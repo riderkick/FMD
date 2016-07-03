@@ -815,8 +815,6 @@ var
 
   {$I includes/PornComix/directory_page_number.inc}
 
-  {$I includes/MangaSee/directory_page_number.inc}
-
   {$I includes/MangaAt/directory_page_number.inc}
 
   {$I includes/ReadMangaToday/directory_page_number.inc}
@@ -928,9 +926,6 @@ begin
         (WebsiteID = PORNCOMIXIC_ID) or
         (WebsiteID = PORNXXXCOMICS_ID) then
         Result := GetPornComixDirectoryPageNumber(GetMangaSiteID(website))
-      else
-      if WebsiteID = MANGASEE_ID then
-        Result := GetMangaSeeDirectoryPageNumber
       else
       if WebsiteID = MANGAAT_ID then
         Result := GetMangaAtDirectoryPageNumber
@@ -1053,8 +1048,6 @@ var
   {$I includes/MangaHost/names_and_links.inc}
 
   {$I includes/PornComix/names_and_links.inc}
-
-  {$I includes/MangaSee/names_and_links.inc}
 
   {$I includes/MangaKu/names_and_links.inc}
 
@@ -1229,9 +1222,6 @@ begin
       (WebsiteID = PORNXXXCOMICS_ID) then
       Result := PornComixGetNamesAndLinks(GetMangaSiteID(website))
     else
-    if WebsiteID = MANGASEE_ID then
-      Result := MangaSeeGetNamesAndLinks
-    else
     if WebsiteID = MANGAKU_ID then
       Result := MangaKuGetNamesAndLinks
     else
@@ -1358,8 +1348,6 @@ var
   {$I includes/MangaHost/manga_information.inc}
 
   {$I includes/PornComix/manga_information.inc}
-
-  {$I includes/MangaSee/manga_information.inc}
 
   {$I includes/MangaKu/manga_information.inc}
 
@@ -1544,9 +1532,6 @@ begin
       (WebsiteID = PORNCOMIXIC_ID) or
       (WebsiteID = PORNXXXCOMICS_ID) then
       Result := GetPornComixInfoFromURL(GetMangaSiteID(website))
-    else
-    if WebsiteID = MANGASEE_ID then
-      Result := GetMangaSeeInfoFromURL
     else
     if WebsiteID = MANGAKU_ID then
       Result := GetMangaKuInfoFromURL

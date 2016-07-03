@@ -292,13 +292,12 @@ const
   XXCOMICSMT_ID          = 59;
   XXCOMICS3D_ID          = 60;
   PORNXXXCOMICS_ID       = 61;
-  MANGASEE_ID            = 62;
-  MANGAKU_ID             = 63;
-  MANGAAT_ID             = 64;
-  READMANGATODAY_ID      = 65;
-  DYNASTYSCANS_ID        = 66;
+  MANGAKU_ID             = 62;
+  MANGAAT_ID             = 63;
+  READMANGATODAY_ID      = 64;
+  DYNASTYSCANS_ID        = 65;
 
-  WebsiteRoots: array [0..66] of array [0..1] of String = (
+  WebsiteRoots: array [0..65] of array [0..1] of String = (
     ('AnimeA', 'http://manga.animea.net'),
     ('OurManga', 'http://www.ourmanga.com'),
     ('Manga24h', 'http://manga24h.com'),
@@ -361,7 +360,6 @@ const
     ('XXComicsMT', 'http://milftoon.xxcomics.net'),
     ('XXComics3D', 'http://3dincest.xxcomics.net'),
     ('PornXXXComics', 'http://pornxxxcomics.com'),
-    ('MangaSee', 'http://mangasee.co'),
     ('MangaKu', 'http://mangaku.web.id'),
     ('MangaAt', 'http://www.mangaat.com'),
     ('ReadMangaToday', 'http://www.readmanga.today'),

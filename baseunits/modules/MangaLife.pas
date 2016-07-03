@@ -15,143 +15,149 @@ uses
 
 const
   dirURL = '/directory/';
+  diralpha = '#ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  dirURLmangasee = '/directory.php';
+
+function GetDirectoryPageNumber(const MangaInfo: TMangaInformation;
+  var Page: Integer; const Module: TModuleContainer): Integer;
+begin
+  Result := NO_ERROR;
+  if Module.Website = 'MangaSee' then
+    Page := Length(diralpha)
+  else
+    Page := 1;
+end;
+
+function fixcleanurl(const u: string): string;
+begin
+  result:=u;
+  if pos('../',result)<>0 then
+    result:=stringreplace(result,'../','/',[]);
+end;
 
 function GetNameAndLink(const MangaInfo: TMangaInformation;
   const ANames, ALinks: TStringList; const AURL: String;
   const Module: TModuleContainer): Integer;
 var
-  Source: TStringList;
-  Query: TXQueryEngineHTML;
   v: IXQValue;
+  s: String;
 begin
-  if MangaInfo = nil then Exit(UNKNOWN_ERROR);
   Result := NET_PROBLEM;
-  Source := TStringList.Create;
-  try
-    if GetPage(MangaInfo.FHTTP, TObject(Source), Module.RootURL + dirURL, 3) then
-      if Source.Count > 0 then
-      begin
-        Result := NO_ERROR;
-        Query := TXQueryEngineHTML.Create(Source.Text);
-        try
-          for v in Query.XPath('//*[@id="content"]/p/a') do begin
-            ALinks.Add(TrimLeftChar(v.toNode.getAttribute('href'), ['.']));
-            ANames.Add(v.toString);
-          end;
-        finally
-          Query.Free;
+  s := Module.RootURL;
+  if Module.Website = 'MangaSee' then
+    s += dirURLmangasee
+  else
+    s+=dirURL;
+  //mangasee
+  if AURL <> '0' then
+    s += '?c=' + diralpha[StrToInt(AURL) + 1];
+  if MangaInfo.FHTTP.GET(s) then
+  begin
+    Result := NO_ERROR;
+    with TXQueryEngineHTML.Create(MangaInfo.FHTTP.Document) do
+      try
+        for v in XPath('//*[@id="content"]//a') do
+        begin
+          ALinks.Add(fixcleanurl(v.toNode.getAttribute('href')));
+          ANames.Add(v.toString);
         end;
-      end
-      else
-        Result := INFORMATION_NOT_FOUND;
-  finally
-    Source.Free;
+      finally
+        Free;
+      end;
   end;
+end;
+
+function fixchapterurl(const u: string): string;
+begin
+ result:=fixcleanurl(u);
+ if (pos('&page=1',result)<>0) or
+    (pos('/page-1',result)<>0) then
+   setlength(result,length(result)-7);
 end;
 
 function GetInfo(const MangaInfo: TMangaInformation;
   const AURL: String; const Module: TModuleContainer): Integer;
 var
-  Source: TStringList;
-  Query: TXQueryEngineHTML;
-  info: TMangaInfo;
   v: IXQValue;
   s: String;
 begin
-  if MangaInfo = nil then Exit(UNKNOWN_ERROR);
   Result := NET_PROBLEM;
-  info := MangaInfo.mangaInfo;
-  info.website := Module.Website;
-  info.url := AppendURLDelim(FillHost(Module.RootURL, AURL));
-  Source := TStringList.Create;
-  try
-    if MangaInfo.FHTTP.GET(info.url, TObject(Source)) then
-      if Source.Count > 0 then
-      begin
-        Result := NO_ERROR;
-        Query := TXQueryEngineHTML.Create(Source.Text);
+  if MangaInfo = nil then Exit(UNKNOWN_ERROR);
+  with MangaInfo.mangaInfo, MangaInfo.FHTTP do
+  begin
+    url := MaybeFillHost(Module.RootURL, AURL);
+    if GET(url) then begin
+      Result := NO_ERROR;
+      with TXQueryEngineHTML.Create(Document) do
         try
-          with info do begin
-            coverLink := Query.XPathString('//div[@class="well"]/div[1]/div/img/@src');
-            if coverLink <> '' then
-              coverLink := MaybeFillHost(Module.RootURL, coverLink);
-            title := Query.XPathString('//h1');
-            for v in Query.XPath('//span[@class="details hidden-xs"]/div') do begin
-              s := v.toString;
-              if Pos('Author:', s) = 1 then authors := SeparateRight(s, ':')
-              else if Pos('Artist:', s) = 1 then artists := SeparateRight(s, ':')
-              else if Pos('Genre:', s) = 1 then artists := SeparateRight(s, ':')
-              else if Pos('Scanlation Status:', s) = 1 then begin
-                if Pos('Ongoing', s) > 0 then status := '1'
-                else status := '0';
-              end;
-            end;
-            summary := Query.XPathString('//span[@class="details hidden-xs"]/div/div/div');
-            //chapters
-            for v in Query.XPath('//div[@class="list"]/div/div/a') do begin
-              s := v.toNode.getAttribute('href');
-              if RightStr(s, 6) = 'page-1' then SetLength(s, Length(s) - 6);
-              chapterLinks.Add(s);
-              chapterName.Add(v.toString);
-            end;
-            InvertStrings([chapterLinks, chapterName]);
+          coverLink := MaybeFillHost(Module.RootURL, XPathString('//meta[@property="og:image"]/@content'));
+          if title = '' then title := XPathString('//*[@class="row"]//h1');
+          authors := SeparateRight(XPathString('//*[@class="row"][starts-with(.,"Author:")]'), ':');
+          artists := SeparateRight(XPathString('//*[@class="row"][starts-with(.,"Artist:")]'), ':');
+          status := MangaInfoStatusIfPos(XPathString(
+            '//*[@class="row"][starts-with(.,"Scanlation Status:")]'),
+            'ongoing',
+            'completed');
+          genres := SeparateRight(XPathString('//*[@class="row"][starts-with(.,"Genre:")]'), ':');
+          summary := Trim(SeparateRight(XPathString('//*[@class="row"][starts-with(.,"Description:")]'), ':'));
+          if Module.Website = 'MangaSee' then
+            s := 'div.col-lg-12:nth-child(8)>div>div:nth-child(1)>a'
+          else
+            s := 'div.list>div>div>a';
+          for v in CSS(s) do
+          begin
+            chapterLinks.Add(fixchapterurl(v.toNode.getAttribute('href')));
+            chapterName.Add(v.toString);
           end;
+          InvertStrings([chapterLinks, chapterName]);
         finally
-          Query.Free;
+          Free;
         end;
-      end
-      else
-        Result := INFORMATION_NOT_FOUND;
-  finally
-    Source.Free;
+    end;
   end;
 end;
 
 function GetPageNumber(const DownloadThread: TDownloadThread;
   const AURL: String; const Module: TModuleContainer): Boolean;
-var
-  Source: TStringList;
-  Query: TXQueryEngineHTML;
-  Container: TTaskContainer;
-  v: IXQValue;
 begin
   Result := False;
   if DownloadThread = nil then Exit;
-  Container := DownloadThread.Task.Container;
-  with Container do begin
+  with DownloadThread.Task.Container, DownloadThread.FHTTP do
+  begin
     PageLinks.Clear;
     PageNumber := 0;
-    Source := TStringList.Create;
-    try
-      if GetPage(DownloadThread.FHTTP, TObject(Source),
-        AppendURLDelim(FillHost(Module.RootURL, AURL)), Manager.retryConnect) then
-        if Source.Count > 0 then
-        begin
-          Result := True;
-          Query := TXQueryEngineHTML.Create(Source.Text);
-          try
-            for v in Query.XPath('//*[@class="imagePage"]/img/@src') do
-              Container.PageLinks.Add(v.toString);
-          finally
-            Query.Free;
-          end;
+    if GET(fixchapterurl(MaybeFillHost(Module.RootURL, AURL))) then
+    begin
+      Result := True;
+      with TXQueryEngineHTML.Create(Document) do
+        try
+          XPathStringAll('//p/img/@src', PageLinks);
+        finally
+          Free;
         end;
-    finally
-      Source.Free;
     end;
   end;
 end;
 
 procedure RegisterModule;
-begin
-  with AddModule do
+
+  function AddWebsiteModule(AWebsite, ARootURL: String): TModuleContainer;
   begin
-    Website := 'MangaLife';
-    RootURL := 'http://manga.life';
-    OnGetNameAndLink := @GetNameAndLink;
-    OnGetInfo := @GetInfo;
-    OnGetPageNumber := @GetPageNumber;
+    Result := AddModule;
+    with Result do
+    begin
+      Website := AWebsite;
+      RootURL := ARootURL;
+      OnGetDirectoryPageNumber := @GetDirectoryPageNumber;
+      OnGetNameAndLink := @GetNameAndLink;
+      OnGetInfo := @GetInfo;
+      OnGetPageNumber := @GetPageNumber;
+    end;
   end;
+
+begin
+  AddWebsiteModule('MangaLife', 'http://manga.life');
+  AddWebsiteModule('MangaSee', 'http://mangasee.co');
 end;
 
 initialization

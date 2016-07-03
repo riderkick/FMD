@@ -452,8 +452,6 @@ var
 
   {$I includes/PornComix/chapter_page_number.inc}
 
-  {$I includes/MangaSee/chapter_page_number.inc}
-
   {$I includes/MangaKu/chapter_page_number.inc}
 
   {$I includes/MangaAt/chapter_page_number.inc}
@@ -580,9 +578,6 @@ begin
       (Task.Container.MangaSiteID = PORNCOMIXIC_ID) or
       (Task.Container.MangaSiteID = PORNXXXCOMICS_ID) then
       Result := GetPornComixPageNumber(Task.Container.MangaSiteID)
-    else
-    if Task.Container.MangaSiteID = MANGASEE_ID then
-      Result := GetMangaSeePageNumber
     else
     if Task.Container.MangaSiteID = MANGAKU_ID then
       Result := GetMangaKuPageNumber
