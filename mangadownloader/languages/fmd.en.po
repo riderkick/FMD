@@ -406,6 +406,26 @@ msgctxt "taccountsetform.label3.caption"
 msgid "Password"
 msgstr "Password"
 
+#: tcustomcolorform.caption
+msgid "CustomColorForm"
+msgstr "CustomColorForm"
+
+#: tcustomcolorform.tsbasiclist.caption
+msgid "Basic list"
+msgstr "Basic list"
+
+#: tcustomcolorform.tschapterlist.caption
+msgid "Chapter list"
+msgstr "Chapter list"
+
+#: tcustomcolorform.tsfavoritelist.caption
+msgid "Favorite list"
+msgstr "Favorite list"
+
+#: tcustomcolorform.tsmangalist.caption
+msgid "Manga list"
+msgstr "Manga list"
+
 #: tformdroptarget.miaddtofavorites.caption
 msgctxt "tformdroptarget.miaddtofavorites.caption"
 msgid "Add to favorites"

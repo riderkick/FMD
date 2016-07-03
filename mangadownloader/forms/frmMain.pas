@@ -22,7 +22,7 @@ uses
   TASources, TASeries, TATools, AnimatedGif, uBaseUnit, uDownloadsManager,
   uFavoritesManager, uUpdateThread, uUpdateDBThread, uSilentThread, uMisc,
   uGetMangaInfosThread, frmDropTarget, frmAccountManager, frmWebsiteOptionCustom,
-  frmWebsiteOptionAdvanced, CheckUpdate, accountmanagerdb, DBDataProcess,
+  frmWebsiteOptionAdvanced, frmCustomColor, CheckUpdate, accountmanagerdb, DBDataProcess,
   mangafoxwatermarkremover, SimpleTranslator, FMDOptions, httpsendthread, SimpleException,
   SimpleLogger;
 
@@ -478,9 +478,6 @@ type
     procedure tvDownloadFilterSelectionChanged(Sender: TObject);
     procedure UniqueInstanceFMDOtherInstance(Sender: TObject;
       ParamCount: Integer; Parameters: array of String);
-    procedure vtDownloadBeforeCellPaint(Sender: TBaseVirtualTree;
-      TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
-      CellPaintMode: TVTCellPaintMode; CellRect: TRect; var ContentRect: TRect);
     procedure vtDownloadColumnDblClick(Sender: TBaseVirtualTree;
       Column: TColumnIndex; Shift: TShiftState);
     procedure vtDownloadDragAllowed(Sender : TBaseVirtualTree;
@@ -1155,6 +1152,26 @@ begin
     BorderStyle := bsNone;
     Align := alClient;
     Show;
+  end;
+
+  CustomColorForm := TCustomColorForm.Create(Self);
+  with CustomColorForm do
+  begin
+    Parent := tsMisc;
+    BorderStyle := bsNone;
+    Align := alClient;
+    Show;
+    AddVT(Self.vtMangaList);
+    AddVT(Self.clbChapterList);
+    AddVT(Self.vtDownload);
+    AddVT(Self.vtFavorites);
+    AddVT(Self.vtOptionMangaSiteSelection);
+    AddVT(AccountManagerForm.vtAccountList);
+    AddVT(WebsiteOptionAdvancedForm.vtCookies);
+    AddVT(WebsiteOptionAdvancedForm.vtUserAgent);
+    AddVT(WebsiteOptionAdvancedForm.vtDownloadMaxThreadsPerTask);
+    AddVT(WebsiteOptionAdvancedForm.vtUpdateListDirectoryPageNumber);
+    AddVT(WebsiteOptionAdvancedForm.vtUpdateListNumberOfThreads);
   end;
 
   // load mangafox template
@@ -2158,7 +2175,7 @@ begin
   if Node^.Index>=Length(ChapterList) then Exit;
   if ChapterList[Node^.Index].Downloaded then
   begin
-    TargetCanvas.Brush.Color:=CL_HLGreenMarks;
+    TargetCanvas.Brush.Color:=CL_CHDownloaded;
     TargetCanvas.FillRect(CellRect);
   end;
 end;
@@ -3231,17 +3248,6 @@ begin
   BringToFront;
 end;
 
-procedure TMainForm.vtDownloadBeforeCellPaint(Sender: TBaseVirtualTree;
-  TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
-  CellPaintMode: TVTCellPaintMode; CellRect: TRect; var ContentRect: TRect);
-begin
-  if Column=TVirtualStringTree(Sender).Header.SortColumn then
-  begin
-    TargetCanvas.Brush.Color:=CL_BlueLight;
-    TargetCanvas.FillRect(CellRect);
-  end;
-end;
-
 procedure TMainForm.vtDownloadColumnDblClick(Sender: TBaseVirtualTree;
   Column: TColumnIndex; Shift: TShiftState);
 begin
@@ -3547,33 +3553,27 @@ procedure TMainForm.vtFavoritesBeforeCellPaint(Sender: TBaseVirtualTree;
   TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
   CellPaintMode: TVTCellPaintMode; CellRect: TRect; var ContentRect: TRect);
 
-  procedure FillRectBC(const AColor: TColor);
-  begin
-    TargetCanvas.Brush.Color := AColor;
-    TargetCanvas.FillRect(CellRect);
-  end;
-
 begin
-  if Column=TVirtualStringTree(Sender).Header.SortColumn then
-    FillRectBC(CL_BlueLight);
-
   with TargetCanvas, FavoriteManager.Items[Node^.Index] do
   begin
+    Brush.Color := clNone;
     if Trim(FavoriteInfo.Link) = '' then
-      FillRectBC(CL_HLRedMarks)
+      Brush.Color := CL_FVBrokenFavorite
     else
     if Status = STATUS_CHECKING then
-      FillRectBC(CL_HLYellowMarks)
+      Brush.Color := CL_FVChecking
     else
     if (Status = STATUS_CHECKED) and
       Assigned(NewMangaInfo) then
     begin
       if NewMangaInfoChaptersPos.Count > 0 then
-      FillRectBC(CL_HLBlueMarks)
+        Brush.Color := CL_FVNewChapterFound
       else
       if NewMangaInfo.status = MangaInfo_StatusCompleted then
-        FillRectBC(CL_HLGreenMarks);
+        Brush.Color := CL_FVCompletedManga;
     end;
+    if Brush.Color <> clNone then
+      FillRect(CellRect);
   end;
 end;
 
@@ -3719,12 +3719,18 @@ procedure TMainForm.vtMangaListBeforeCellPaint(Sender: TBaseVirtualTree;
   CellPaintMode: TVTCellPaintMode; CellRect: TRect; var ContentRect: TRect);
 begin
   if Node^.Index>=dataProcess.RecordCount then Exit;
-  if miHighlightNewManga.Checked then
-    if StrToIntDef(dataProcess.Value[Node^.Index, DATA_PARAM_JDN], 0) > (currentJDN - OptionNewMangaTime) then
-    begin
-      TargetCanvas.Brush.Color := CL_HLBlueMarks;
-      TargetCanvas.FillRect(CellRect);
-    end;
+  with TargetCanvas do
+  begin
+    Brush.Color := clNone;
+    if dataProcess.Value[Node^.Index, DATA_PARAM_STATUS] = MangaInfo_StatusCompleted then
+      Brush.Color := CL_MNCompletedManga;
+    if miHighlightNewManga.Checked and
+      (StrToIntDef(dataProcess.Value[Node^.Index, DATA_PARAM_JDN], 0) > (currentJDN - OptionNewMangaTime)) then
+        Brush.Color := CL_MNNewManga;
+
+    if Brush.Color <> clNone then
+      FillRect(CellRect);
+  end;
 end;
 
 procedure TMainForm.vtMangaListGetCursor(Sender: TBaseVirtualTree;
@@ -4210,7 +4216,7 @@ begin
     cbOptionShowDownloadMangalistDialog.Checked := ReadBool('dialogs', 'ShowDownloadMangalistDialog', True);
 
     // misc
-
+    frmCustomColor.LoadFromIniFile(configfile);
 
     // websites
     if Length(optionMangaSiteSelectionNodes) > 0 then
@@ -4333,7 +4339,7 @@ begin
       WriteBool('dialogs', 'ShowDownloadMangalistDialog', cbOptionShowDownloadMangalistDialog.Checked);
 
       // misc
-
+      frmCustomColor.SaveToIniFile(configfile);
     finally
       UpdateFile;
     end;
@@ -4463,6 +4469,7 @@ begin
     itCheckFav.Enabled := OptionAutoCheckFavInterval;
 
     //misc
+    frmCustomColor.Apply;
 
     //languages
     ApplyLanguage;

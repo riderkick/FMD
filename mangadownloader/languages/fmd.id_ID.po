@@ -398,6 +398,26 @@ msgctxt "taccountsetform.label3.caption"
 msgid "Password"
 msgstr "Kata kunci"
 
+#: tcustomcolorform.caption
+msgid "CustomColorForm"
+msgstr "CustomColorForm"
+
+#: tcustomcolorform.tsbasiclist.caption
+msgid "Basic list"
+msgstr "Semua daftar"
+
+#: tcustomcolorform.tschapterlist.caption
+msgid "Chapter list"
+msgstr "Daftar bab"
+
+#: tcustomcolorform.tsfavoritelist.caption
+msgid "Favorite list"
+msgstr "Daftar kesukaan"
+
+#: tcustomcolorform.tsmangalist.caption
+msgid "Manga list"
+msgstr "Daftar komik"
+
 #: tformdroptarget.miaddtofavorites.caption
 msgctxt "tformdroptarget.miaddtofavorites.caption"
 msgid "Add to favorites"

@@ -5,7 +5,7 @@ unit FMDOptions;
 interface
 
 uses
-  Classes, SysUtils, IniFiles, fileinfo, LazFileUtils, LazUTF8, FileUtil, Forms;
+  Classes, SysUtils, IniFiles, fileinfo, LazFileUtils, LazUTF8, FileUtil, Forms, Graphics;
 
 type
 
@@ -121,6 +121,25 @@ var
   OptionHTTPUseGzip: Boolean = True;
 
   OptionRemoveMangaNameFromChapter: Boolean = False;
+
+  //custom color
+  //basiclist
+  CL_BSNormalText: TColor = clWindowText;
+  CL_BSFocusedSelectionText: TColor = clHighlightText;
+  CL_BSUnfocesedSelectionText: TColor = clWindowText;
+
+  //mangalist color
+  CL_MNNewManga: TColor = $FDC594;
+  CL_MNCompletedManga: TColor = $B8FFB8;
+
+  //favoritelist color
+  CL_FVBrokenFavorite: TColor = $8080FF;
+  CL_FVChecking: TColor = $80EBFE;
+  CL_FVNewChapterFound: TColor = $FDC594;
+  CL_FVCompletedManga: TColor = $B8FFB8;
+
+  //chapterlist color
+  CL_CHDownloaded: TColor = $B8FFB8;
 
 // set base directory
 procedure SetFMDdirectory(const ADir: String);

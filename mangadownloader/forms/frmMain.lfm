@@ -36,13 +36,13 @@ object MainForm: TMainForm
     Height = 520
     Top = 11
     Width = 566
-    ActivePage = tsDownload
+    ActivePage = tsFavorites
     Align = alClient
     BorderSpacing.Top = 3
     BorderSpacing.Right = 4
     BorderSpacing.Bottom = 3
     ParentFont = False
-    TabIndex = 0
+    TabIndex = 3
     TabOrder = 0
     OnChange = pcMainChange
     object tsDownload: TTabSheet
@@ -116,7 +116,6 @@ object MainForm: TMainForm
         TreeOptions.MiscOptions = [toAcceptOLEDrop, toFullRepaintOnResize, toInitOnSave, toToggleOnDblClick, toWheelPanning, toFullRowDrag, toEditOnClick]
         TreeOptions.PaintOptions = [toHideFocusRect, toShowButtons, toShowDropmark, toShowVertGridLines, toThemeAware, toUseBlendedImages, toFullVertGridLines]
         TreeOptions.SelectionOptions = [toFullRowSelect, toMultiSelect]
-        OnBeforeCellPaint = vtDownloadBeforeCellPaint
         OnColumnDblClick = vtDownloadColumnDblClick
         OnDragAllowed = vtDownloadDragAllowed
         OnDragOver = vtDownloadDragOver
