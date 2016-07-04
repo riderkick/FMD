@@ -224,6 +224,8 @@ begin
       // check for new chapters
       if (not Terminated) and Assigned(NewMangaInfo) then
       begin
+        // update current chapters count immedietly
+        FavoriteInfo.CurrentChapter := IntToStr(NewMangaInfo.chapterLinks.Count);
         if NewMangaInfo.chapterLinks.Count > 0 then
           try
             DLChapters := TStringList.Create;
@@ -731,7 +733,6 @@ begin
                       Status := STATUS_STOP;
                     end;
                   end;
-                  FavoriteInfo.currentChapter := IntToStr(NewMangaInfoChaptersPos.Count);
                   // add to downloaded chapter list
                   FavoriteInfo.downloadedChapterList += SetParams(NewMangaInfo.chapterLinks);
                   // add to downloaded chapter list in downloadmanager
