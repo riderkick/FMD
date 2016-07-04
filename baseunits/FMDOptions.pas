@@ -137,6 +137,7 @@ var
   CL_FVChecking: TColor = $80EBFE;
   CL_FVNewChapterFound: TColor = $FDC594;
   CL_FVCompletedManga: TColor = $B8FFB8;
+  CL_FVEmptyChapters: TColor = $CCDDFF;
 
   //chapterlist color
   CL_CHDownloaded: TColor = $B8FFB8;

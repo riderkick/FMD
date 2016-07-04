@@ -3560,17 +3560,21 @@ begin
     if Trim(FavoriteInfo.Link) = '' then
       Brush.Color := CL_FVBrokenFavorite
     else
-    if Status = STATUS_CHECKING then
-      Brush.Color := CL_FVChecking
-    else
-    if (Status = STATUS_CHECKED) and
-      Assigned(NewMangaInfo) then
     begin
-      if NewMangaInfoChaptersPos.Count > 0 then
-        Brush.Color := CL_FVNewChapterFound
+      if FavoriteInfo.CurrentChapter = '0' then
+        Brush.Color := CL_FVEmptyChapters;
+      if Status = STATUS_CHECKING then
+        Brush.Color := CL_FVChecking
       else
-      if NewMangaInfo.status = MangaInfo_StatusCompleted then
-        Brush.Color := CL_FVCompletedManga;
+      if (Status = STATUS_CHECKED) and
+        Assigned(NewMangaInfo) then
+      begin
+        if NewMangaInfoChaptersPos.Count > 0 then
+          Brush.Color := CL_FVNewChapterFound
+        else
+        if NewMangaInfo.status = MangaInfo_StatusCompleted then
+          Brush.Color := CL_FVCompletedManga;
+      end;
     end;
     if Brush.Color <> clNone then
       FillRect(CellRect);

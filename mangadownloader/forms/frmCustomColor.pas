@@ -177,6 +177,7 @@ begin
     Add('CheckingColor', CL_FVChecking);
     Add('NewChapterFoundColor', CL_FVNewChapterFound);
     Add('CompletedSeriesColor', CL_FVCompletedManga);
+    Add('EmptyChapters', CL_FVEmptyChapters);
   end;
 
   ChapterListColor := TColorItems.Create;
@@ -248,6 +249,7 @@ begin
   CL_FVChecking := FavoriteListColors[1];
   CL_FVNewChapterFound := FavoriteListColors[2];
   CL_FVCompletedManga := FavoriteListColors[3];
+  CL_FVEmptyChapters := FavoriteListColors[4];
 
   //chapterlist
   CL_CHDownloaded := ChapterListColor[0];
