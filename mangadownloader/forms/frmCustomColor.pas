@@ -5,8 +5,8 @@ unit frmCustomColor;
 interface
 
 uses
-  Classes, SysUtils, fgl, Forms,
-  Graphics, Dialogs, ColorBox, ComCtrls, VirtualTrees, VTGraphics, FMDOptions, IniFiles;
+  Classes, SysUtils, fgl, Forms, Graphics, Dialogs, ColorBox, ComCtrls,
+  VirtualTrees, FMDOptions, IniFiles;
 
 type
   TColorItem = record
@@ -360,9 +360,9 @@ procedure TVTApplyList.VTOnBeforeCellPaint(Sender: TBaseVirtualTree;
 begin
   with VirtualTrees.TVirtualStringTree(Sender), TargetCanvas do
   begin
-    //if (Header.Columns.Count <> 0) and (Header.SortColumn = Column) then
-    //  Brush.Color := CL_BSSortedColumn
-    //else
+    if (Header.Columns.Count <> 0) and (Header.SortColumn = Column) then
+      Brush.Color := CL_BSSortedColumn
+    else
     if odd(Node^.Index) then
       Brush.Color := CL_BSOdd
     else
@@ -372,10 +372,6 @@ begin
     if Assigned(FVTList[Sender.Tag].BeforeCellPaint) then
       FVTList[Sender.Tag].BeforeCellPaint(Sender, TargetCanvas, Node, Column, CellPaintMode,
         CellRect, ContentRect);
-
-    if (Header.Columns.Count <> 0) and (Header.SortColumn = Column) then
-      VTGraphics.AlphaBlend(0, TargetCanvas.Handle, CellRect, Point(0, 0),
-        bmConstantAlphaAndColor, 128, ColorToRGB(CL_BSSortedColumn));
   end;
 end;
 
