@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, fgl, Forms,
-  Graphics, Dialogs, ColorBox, ComCtrls, VirtualTrees, FMDOptions, IniFiles;
+  Graphics, Dialogs, ColorBox, ComCtrls, VirtualTrees, VTGraphics, FMDOptions, IniFiles;
 
 type
   TColorItem = record
@@ -59,6 +59,9 @@ type
     procedure btColorsColorChanged(Sender: TObject);
     procedure CBColorsChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure VTBasicListBeforeCellPaint(Sender: TBaseVirtualTree; TargetCanvas: TCanvas;
+      Node: PVirtualNode; Column: TColumnIndex; CellPaintMode: TVTCellPaintMode;
+      CellRect: TRect; var ContentRect: TRect);
     procedure VTBasicListDrawText(Sender: TBaseVirtualTree; TargetCanvas: TCanvas;
       Node: PVirtualNode; Column: TColumnIndex; const CellText: String;
       const CellRect: TRect; var DefaultDraw: Boolean);
@@ -77,30 +80,36 @@ type
     { public declarations }
   end;
 
-  TVTList = specialize TFPGList<VirtualTrees.TVirtualStringTree>;
+  TVTList = record
+    VT: VirtualTrees.TVirtualStringTree;
+    PaintText: TVTPaintText;
+    BeforeCellPaint: TVTBeforeCellPaintEvent;
+  end;
 
   { TVTApplyList }
 
   TVTApplyList = class
   private
-    FVTList: TVTList;
+    FCount: Integer;
+    FVTList: array of TVTList;
     procedure VTOnPaintText(Sender: TBaseVirtualTree; const TargetCanvas: TCanvas;
       Node: PVirtualNode; Column: TColumnIndex;
       TextType: TVSTTextType);
-    procedure ApplyOnPaintText(Index: Integer);
+    procedure VTOnBeforeCellPaint(Sender: TBaseVirtualTree; TargetCanvas: TCanvas; Node: PVirtualNode;
+      Column: TColumnIndex; CellPaintMode: TVTCellPaintMode; CellRect: TRect; var ContentRect: TRect);
+    procedure InstallCustomColors(Index: Integer);
     function GetItems(Index: Integer): VirtualTrees.TVirtualStringTree;
     procedure SetItems(Index: Integer; AValue: VirtualTrees.TVirtualStringTree);
   public
     constructor Create;
     destructor Destroy; override;
+    function IndexOf(const AVT: VirtualTrees.TVirtualStringTree): Integer;
     procedure Add(const AVT: VirtualTrees.TVirtualStringTree);
-    procedure Remove(const AVT: VirtualTrees.TVirtualStringTree);
-    function Count: Integer;
     property Items[Index: Integer]: VirtualTrees.TVirtualStringTree read GetItems write SetItems; default;
+    property Count: Integer read FCount;
   end;
 
 procedure AddVT(const AVT: VirtualTrees.TVirtualStringTree);
-procedure RemoveVT(const AVT: VirtualTrees.TVirtualStringTree);
 procedure Apply;
 procedure LoadFromIniFile(const IniFile: TIniFile);
 procedure SaveToIniFile(const IniFile: TIniFile);
@@ -161,6 +170,9 @@ begin
     Add('NormalTextColor', clWindowText);
     Add('FocusedSelectionTextColor', clHighlightText);
     Add('UnfocusedSelectionTextColor', clWindowText);
+    Add('OddColor', CL_BSOdd);
+    Add('EvenColor', CL_BSEven);
+    Add('SortedColumnColor', CL_BSSortedColumn);
   end;
 
   MangaListColors := TColorItems.Create;
@@ -228,17 +240,15 @@ begin
   VTApplyList.Add(AVT);
 end;
 
-procedure RemoveVT(const AVT: VirtualTrees.TVirtualStringTree);
-begin
-  VTApplyList.Remove(AVT);
-end;
-
 procedure ApplyToFMDOptions;
 begin
   //basiclist
   CL_BSNormalText := BasicListColors[16];
   CL_BSFocusedSelectionText := BasicListColors[17];
   CL_BSUnfocesedSelectionText := BasicListColors[18];
+  CL_BSOdd := BasicListColors[19];
+  CL_BSEven := BasicListColors[20];
+  CL_BSSortedColumn := BasicListColors[21];
 
   //mangalist
   CL_MNNewManga := MangaListColors[0];
@@ -273,11 +283,13 @@ begin
   begin
     //basiclist
     for i := 0 to BasicListColors.Count - 1 do
-      BasicListColors[i] := StringToColor(ReadString('BasicListColors', BasicListColors.N[i], ColorToString(BasicListColors[i])));
+      BasicListColors[i] := StringToColor(ReadString('BasicListColors', BasicListColors.N[i],
+        ColorToString(BasicListColors[i])));
 
     //mangalist
     for i := 0 to MangaListColors.Count - 1 do
-      MangaListColors[i] := StringToColor(ReadString('MangaListColors', MangaListColors.N[i], ColorToString(MangaListColors[i])));
+      MangaListColors[i] := StringToColor(ReadString('MangaListColors', MangaListColors.N[i],
+        ColorToString(MangaListColors[i])));
 
     //favoritelist
     for i := 0 to FavoriteListColors.Count - 1 do
@@ -286,7 +298,8 @@ begin
 
     //chapterlist
     for i := 0 to ChapterListColor.Count - 1 do
-      ChapterListColor[i] := StringToColor(ReadString('ChapterListColor', ChapterListColor.N[i], ColorToString(ChapterListColor[i])));
+      ChapterListColor[i] := StringToColor(ReadString('ChapterListColor', ChapterListColor.N[i],
+        ColorToString(ChapterListColor[i])));
 
     ApplyToFMDOptions;
   end;
@@ -336,50 +349,93 @@ begin
     else
       Color := CL_BSNormalText;
   end;
+
+  if Assigned(FVTList[Sender.Tag].PaintText) then
+    FVTList[Sender.Tag].PaintText(Sender, TargetCanvas, Node, Column, TextType);
 end;
 
-procedure TVTApplyList.ApplyOnPaintText(Index: Integer);
+procedure TVTApplyList.VTOnBeforeCellPaint(Sender: TBaseVirtualTree;
+  TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
+  CellPaintMode: TVTCellPaintMode; CellRect: TRect; var ContentRect: TRect);
 begin
-  if not Assigned(FVTList[Index].OnPaintText) then
-    FVTList[Index].OnPaintText := @VTOnPaintText;
+  with VirtualTrees.TVirtualStringTree(Sender), TargetCanvas do
+  begin
+    //if (Header.Columns.Count <> 0) and (Header.SortColumn = Column) then
+    //  Brush.Color := CL_BSSortedColumn
+    //else
+    if odd(Node^.Index) then
+      Brush.Color := CL_BSOdd
+    else
+      Brush.Color := CL_BSEven;
+    FillRect(CellRect);
+
+    if Assigned(FVTList[Sender.Tag].BeforeCellPaint) then
+      FVTList[Sender.Tag].BeforeCellPaint(Sender, TargetCanvas, Node, Column, CellPaintMode,
+        CellRect, ContentRect);
+
+    if (Header.Columns.Count <> 0) and (Header.SortColumn = Column) then
+      VTGraphics.AlphaBlend(0, TargetCanvas.Handle, CellRect, Point(0, 0),
+        bmConstantAlphaAndColor, 128, ColorToRGB(CL_BSSortedColumn));
+  end;
+end;
+
+procedure TVTApplyList.InstallCustomColors(Index: Integer);
+begin
+  with FVTList[Index], VT do
+  begin
+    // save original event
+    PaintText := OnPaintText;
+    BeforeCellPaint := OnBeforeCellPaint;
+    // set custom event
+    OnPaintText := @VTOnPaintText;
+    OnBeforeCellPaint := @VTOnBeforeCellPaint;
+
+    // set addition option
+    LineStyle := lsSolid;
+  end;
 end;
 
 function TVTApplyList.GetItems(Index: Integer): VirtualTrees.TVirtualStringTree;
 begin
-  Result := FVTList[Index];
+  Result := FVTList[Index].VT;
 end;
 
 procedure TVTApplyList.SetItems(Index: Integer; AValue: VirtualTrees.TVirtualStringTree);
 begin
-  if FVTList[Index] <> AValue then
-    FVTList[Index] := AValue;
+  if FVTList[Index].VT <> AValue then
+    FVTList[Index].VT := AValue;
 end;
 
 constructor TVTApplyList.Create;
 begin
-  FVTList := TVTList.Create;
+  FCount := 0;
 end;
 
 destructor TVTApplyList.Destroy;
 begin
-  FVTList.Free;
+  SetLength(FVTList, 0);
   inherited Destroy;
+end;
+
+function TVTApplyList.IndexOf(const AVT: VirtualTrees.TVirtualStringTree): Integer;
+begin
+  Result := 0;
+  while (Result < FCount) and (FVTList[Result].VT <> AVT) do
+    Inc(Result);
+  if Result = FCount then
+    Result := -1;
 end;
 
 procedure TVTApplyList.Add(const AVT: VirtualTrees.TVirtualStringTree);
 begin
-  if FVTList.IndexOf(AVT) = -1 then
-    ApplyOnPaintText(FVTList.Add(AVT));
-end;
-
-procedure TVTApplyList.Remove(const AVT: VirtualTrees.TVirtualStringTree);
-begin
-
-end;
-
-function TVTApplyList.Count: Integer;
-begin
-  Result := FVTList.Count;
+  if IndexOf(AVT) = -1 then
+  begin
+    SetLength(FVTList, FCount + 1);
+    FVTList[FCount].VT := AVT;
+    AVT.Tag := FCount;
+    InstallCustomColors(FCount);
+    Inc(FCount);
+  end;
 end;
 
 { TVirtualStringTree }
@@ -448,6 +504,20 @@ begin
   VTMangaList.CI := MangaListColors;
   VTFavoriteList.CI := FavoriteListColors;
   VTChapterList.CI := ChapterListColor;
+end;
+
+procedure TCustomColorForm.VTBasicListBeforeCellPaint(Sender: TBaseVirtualTree;
+  TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
+  CellPaintMode: TVTCellPaintMode; CellRect: TRect; var ContentRect: TRect);
+begin
+  with VirtualTrees.TVirtualStringTree(Sender), TargetCanvas do
+  begin
+    if odd(Node^.Index) then
+      Brush.Color := BasicListColors[19]
+    else
+      Brush.Color := BasicListColors[20];
+    FillRect(CellRect);
+  end;
 end;
 
 procedure TCustomColorForm.CBColorsChange(Sender: TObject);

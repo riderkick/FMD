@@ -127,6 +127,9 @@ var
   CL_BSNormalText: TColor = clWindowText;
   CL_BSFocusedSelectionText: TColor = clHighlightText;
   CL_BSUnfocesedSelectionText: TColor = clWindowText;
+  CL_BSOdd: TColor = clBtnFace;
+  CL_BSEven: TColor = clWindow;
+  CL_BSSortedColumn: TColor = $CAFFFF;
 
   //mangalist color
   CL_MNNewManga: TColor = $FDC594;

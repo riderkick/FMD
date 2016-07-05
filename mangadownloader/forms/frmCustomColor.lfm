@@ -20,7 +20,7 @@ object CustomColorForm: TCustomColorForm
     Anchors = [akTop, akRight]
     ItemHeight = 16
     OnChange = CBColorsChange
-    TabOrder = 0
+    TabOrder = 1
   end
   object btColors: TColorButton
     AnchorSideLeft.Control = CBColors
@@ -48,7 +48,7 @@ object CustomColorForm: TCustomColorForm
     Align = alLeft
     Anchors = [akTop, akLeft, akRight, akBottom]
     TabIndex = 0
-    TabOrder = 1
+    TabOrder = 0
     object tsBasicList: TTabSheet
       Caption = 'Basic list'
       ClientHeight = 324
@@ -73,6 +73,7 @@ object CustomColorForm: TCustomColorForm
         TextMargin = 0
         TreeOptions.PaintOptions = [toHideFocusRect, toShowButtons, toShowDropmark, toThemeAware, toUseBlendedImages]
         TreeOptions.SelectionOptions = [toFullRowSelect]
+        OnBeforeCellPaint = VTBasicListBeforeCellPaint
         OnDrawText = VTBasicListDrawText
         OnFocusChanged = VTBasicListFocusChanged
         OnGetText = VTBasicListGetText
@@ -103,6 +104,7 @@ object CustomColorForm: TCustomColorForm
         TextMargin = 0
         TreeOptions.PaintOptions = [toHideFocusRect, toShowButtons, toShowDropmark, toThemeAware, toUseBlendedImages]
         TreeOptions.SelectionOptions = [toFullRowSelect]
+        OnBeforeCellPaint = VTBasicListBeforeCellPaint
         OnDrawText = VTBasicListDrawText
         OnFocusChanged = VTBasicListFocusChanged
         OnGetText = VTBasicListGetText
@@ -133,6 +135,7 @@ object CustomColorForm: TCustomColorForm
         TextMargin = 0
         TreeOptions.PaintOptions = [toHideFocusRect, toShowButtons, toShowDropmark, toThemeAware, toUseBlendedImages]
         TreeOptions.SelectionOptions = [toFullRowSelect]
+        OnBeforeCellPaint = VTBasicListBeforeCellPaint
         OnDrawText = VTBasicListDrawText
         OnFocusChanged = VTBasicListFocusChanged
         OnGetText = VTBasicListGetText
@@ -141,13 +144,13 @@ object CustomColorForm: TCustomColorForm
     end
     object tsChapterList: TTabSheet
       Caption = 'Chapter list'
-      ClientHeight = 308
-      ClientWidth = 343
+      ClientHeight = 324
+      ClientWidth = 351
       object VTChapterList: TVirtualStringTree
         Left = 0
-        Height = 308
+        Height = 324
         Top = 0
-        Width = 343
+        Width = 351
         Align = alClient
         Color = clWindow
         Colors.DropTargetBorderColor = clHotLight
@@ -163,6 +166,7 @@ object CustomColorForm: TCustomColorForm
         TextMargin = 0
         TreeOptions.PaintOptions = [toHideFocusRect, toShowButtons, toShowDropmark, toThemeAware, toUseBlendedImages]
         TreeOptions.SelectionOptions = [toFullRowSelect]
+        OnBeforeCellPaint = VTBasicListBeforeCellPaint
         OnDrawText = VTBasicListDrawText
         OnFocusChanged = VTBasicListFocusChanged
         OnGetText = VTBasicListGetText
