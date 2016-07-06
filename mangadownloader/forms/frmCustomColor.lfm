@@ -14,9 +14,9 @@ object CustomColorForm: TCustomColorForm
     AnchorSideRight.Control = btColors
     Left = 363
     Height = 22
-    Top = 32
+    Top = 22
     Width = 136
-    Style = [cbStandardColors, cbExtendedColors, cbSystemColors, cbCustomColor, cbPrettyNames]
+    Style = [cbStandardColors, cbExtendedColors, cbSystemColors, cbIncludeNone, cbCustomColor, cbPrettyNames]
     Anchors = [akTop, akRight]
     ItemHeight = 16
     OnChange = CBColorsChange
@@ -30,7 +30,7 @@ object CustomColorForm: TCustomColorForm
     AnchorSideBottom.Side = asrBottom
     Left = 503
     Height = 22
-    Top = 32
+    Top = 22
     Width = 24
     Anchors = [akTop, akRight, akBottom]
     BorderWidth = 2

@@ -5,7 +5,7 @@ unit frmCustomColor;
 interface
 
 uses
-  Classes, SysUtils, fgl, Forms, Graphics, Dialogs, ColorBox, ComCtrls,
+  Classes, SysUtils, Forms, Graphics, Dialogs, ColorBox, ComCtrls,
   VirtualTrees, FMDOptions, IniFiles;
 
 type
@@ -92,11 +92,13 @@ type
   private
     FCount: Integer;
     FVTList: array of TVTList;
+  private
     procedure VTOnPaintText(Sender: TBaseVirtualTree; const TargetCanvas: TCanvas;
       Node: PVirtualNode; Column: TColumnIndex;
       TextType: TVSTTextType);
     procedure VTOnBeforeCellPaint(Sender: TBaseVirtualTree; TargetCanvas: TCanvas; Node: PVirtualNode;
       Column: TColumnIndex; CellPaintMode: TVTCellPaintMode; CellRect: TRect; var ContentRect: TRect);
+  private
     procedure InstallCustomColors(Index: Integer);
     function GetItems(Index: Integer): VirtualTrees.TVirtualStringTree;
     procedure SetItems(Index: Integer; AValue: VirtualTrees.TVirtualStringTree);
@@ -354,24 +356,54 @@ begin
     FVTList[Sender.Tag].PaintText(Sender, TargetCanvas, Node, Column, TextType);
 end;
 
+function BlendColor(FG, BG: TColor; T: Byte): TColor;
+  function MixByte(B1, B2: Byte): Byte;
+  begin
+    Result := Byte(T * (B1 - B2) shr 8 + B2);
+  end;
+
+var
+  C1, C2: LongInt;
+begin
+  C1 := ColorToRGB(FG);
+  C2 := ColorToRGB(BG);
+  Result := (MixByte(Byte(C1 shr 16), Byte(C2 shr 16)) shl 16) +
+    (MixByte(Byte(C1 shr 8), Byte(C2 shr 8)) shl 8) +
+    MixByte(Byte(C1), Byte(C2));
+end;
+
 procedure TVTApplyList.VTOnBeforeCellPaint(Sender: TBaseVirtualTree;
   TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
   CellPaintMode: TVTCellPaintMode; CellRect: TRect; var ContentRect: TRect);
+var
+  isSortedColumn: Boolean;
 begin
   with VirtualTrees.TVirtualStringTree(Sender), TargetCanvas do
   begin
-    if (Header.Columns.Count <> 0) and (Header.SortColumn = Column) then
-      Brush.Color := CL_BSSortedColumn
-    else
-    if odd(Node^.Index) then
-      Brush.Color := CL_BSOdd
-    else
-      Brush.Color := CL_BSEven;
-    FillRect(CellRect);
+    if CellPaintMode = cpmPaint then
+    begin
+      if odd(Node^.Index) then
+        Brush.Color := CL_BSOdd
+      else
+        Brush.Color := CL_BSEven;
+      isSortedColumn := (Header.Columns.Count <> 0) and (Header.SortColumn = Column)
+        and (CL_BSSortedColumn <> clNone);
+      if (not isSortedColumn) and (Brush.Color <> clNone) then
+        FillRect(CellRect);
+    end;
 
     if Assigned(FVTList[Sender.Tag].BeforeCellPaint) then
       FVTList[Sender.Tag].BeforeCellPaint(Sender, TargetCanvas, Node, Column, CellPaintMode,
         CellRect, ContentRect);
+
+    if isSortedColumn and (CellPaintMode = cpmPaint) then
+    begin
+      Brush.Color := BlendColor(CL_BSSortedColumn, Brush.Color, SelectionBlendFactor);
+      FillRect(CellRect);
+      Pen.Color := CL_BSSortedColumn;
+      Line(CellRect.Left, CellRect.Top, CellRect.Left, CellRect.Bottom);
+      Line(CellRect.Right - 1, CellRect.Top, CellRect.Right - 1, CellRect.Bottom);
+    end;
   end;
 end;
 
@@ -379,15 +411,18 @@ procedure TVTApplyList.InstallCustomColors(Index: Integer);
 begin
   with FVTList[Index], VT do
   begin
+    // set addition option
+    LineStyle := lsSolid;
+    if Color = clDefault then
+      Color := clWindow;
+
     // save original event
     PaintText := OnPaintText;
     BeforeCellPaint := OnBeforeCellPaint;
+
     // set custom event
     OnPaintText := @VTOnPaintText;
     OnBeforeCellPaint := @VTOnBeforeCellPaint;
-
-    // set addition option
-    LineStyle := lsSolid;
   end;
 end;
 
