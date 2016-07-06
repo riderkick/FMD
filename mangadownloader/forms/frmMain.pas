@@ -2172,6 +2172,7 @@ procedure TMainForm.clbChapterListBeforeCellPaint(Sender: TBaseVirtualTree;
   TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
   CellPaintMode: TVTCellPaintMode; CellRect: TRect; var ContentRect: TRect);
 begin
+  if CellPaintMode <> cpmPaint then Exit;
   if Node^.Index>=Length(ChapterList) then Exit;
   if ChapterList[Node^.Index].Downloaded then
   begin
@@ -3554,6 +3555,7 @@ procedure TMainForm.vtFavoritesBeforeCellPaint(Sender: TBaseVirtualTree;
   CellPaintMode: TVTCellPaintMode; CellRect: TRect; var ContentRect: TRect);
 
 begin
+  if CellPaintMode <> cpmPaint then Exit;
   with TargetCanvas, FavoriteManager.Items[Node^.Index] do
   begin
     Brush.Color := clNone;
@@ -3722,6 +3724,7 @@ procedure TMainForm.vtMangaListBeforeCellPaint(Sender: TBaseVirtualTree;
   TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
   CellPaintMode: TVTCellPaintMode; CellRect: TRect; var ContentRect: TRect);
 begin
+  if CellPaintMode <> cpmPaint then Exit;
   if Node^.Index>=dataProcess.RecordCount then Exit;
   with TargetCanvas do
   begin
