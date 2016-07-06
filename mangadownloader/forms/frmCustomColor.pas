@@ -339,11 +339,12 @@ procedure TVTApplyList.VTOnPaintText(Sender: TBaseVirtualTree;
   const TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
   TextType: TVSTTextType);
 begin
-  with TargetCanvas.Font do
+  with VirtualTrees.TVirtualStringTree(Sender), TargetCanvas.Font do
   begin
-    if Sender.Selected[Node] then
+    if Selected[Node] and
+      ((toFullRowSelect in TreeOptions.SelectionOptions) or (FocusedColumn = Column)) then
     begin
-      if Sender.Focused then
+      if Focused then
         Color := CL_BSFocusedSelectionText
       else
         Color := CL_BSUnfocesedSelectionText;
