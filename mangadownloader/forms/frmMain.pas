@@ -667,8 +667,8 @@ type
     procedure SaveFormInformation;
 
     // drop target
-    procedure ShowDropTarget(const AShow: Boolean = True);
-    procedure SaveDropTargetFormInformation;
+    procedure ShowDropTarget(const AShow: Boolean);
+    procedure SaveDropTargetFormInformation(const isClose: Boolean = False);
 
     // load language from file
     procedure CollectLanguagesFromFiles;
@@ -4899,10 +4899,12 @@ begin
   end;
 end;
 
-procedure TMainForm.SaveDropTargetFormInformation;
+procedure TMainForm.SaveDropTargetFormInformation(const isClose: Boolean);
 begin
   with configfile do
   begin
+    if isClose then
+      WriteBool('droptarget', 'Show', False);
     WriteInteger('droptarget', 'Mode', rgDropTargetMode.ItemIndex);
     WriteInteger('droptarget', 'Opacity', frmDropTarget.FAlphaBlendValue);
     WriteInteger('droptarget', 'Width', frmDropTarget.FWidth);
