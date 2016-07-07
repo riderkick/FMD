@@ -1413,6 +1413,14 @@ msgstr "Daftar saja"
 msgid "Task + Data"
 msgstr "Daftar dan data"
 
+#: tmainform.midownloaddisable.caption
+msgid "Disable"
+msgstr "Matikan"
+
+#: tmainform.midownloadenable.caption
+msgid "Enable"
+msgstr "Nyalakan"
+
 #: tmainform.midownloadmergecompleted.caption
 msgid "Merge completed tasks"
 msgstr "Gabungkan unduhan selesai"
@@ -1879,6 +1887,10 @@ msgstr "Pilih situs web"
 #: udownloadsmanager.rs_compressing
 msgid "Compressing..."
 msgstr "Mengompresi..."
+
+#: udownloadsmanager.rs_disabled
+msgid "Disabled"
+msgstr "Dimatikan"
 
 #: udownloadsmanager.rs_downloading
 msgid "Downloading"

@@ -1432,6 +1432,14 @@ msgstr "Task only"
 msgid "Task + Data"
 msgstr "Task + Data"
 
+#: tmainform.midownloaddisable.caption
+msgid "Disable"
+msgstr "Disable"
+
+#: tmainform.midownloadenable.caption
+msgid "Enable"
+msgstr "Enable"
+
 #: tmainform.midownloadmergecompleted.caption
 msgid "Merge completed tasks"
 msgstr "Merge completed tasks"
@@ -1898,6 +1906,10 @@ msgstr "Select a website"
 #: udownloadsmanager.rs_compressing
 msgid "Compressing..."
 msgstr "Compressing..."
+
+#: udownloadsmanager.rs_disabled
+msgid "Disabled"
+msgstr "Disabled"
 
 #: udownloadsmanager.rs_downloading
 msgid "Downloading"

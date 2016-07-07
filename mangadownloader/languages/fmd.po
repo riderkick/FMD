@@ -1344,6 +1344,14 @@ msgstr ""
 msgid "Task + Data"
 msgstr ""
 
+#: tmainform.midownloaddisable.caption
+msgid "Disable"
+msgstr ""
+
+#: tmainform.midownloadenable.caption
+msgid "Enable"
+msgstr ""
+
 #: tmainform.midownloadmergecompleted.caption
 msgid "Merge completed tasks"
 msgstr ""
@@ -1807,6 +1815,10 @@ msgstr ""
 
 #: udownloadsmanager.rs_compressing
 msgid "Compressing..."
+msgstr ""
+
+#: udownloadsmanager.rs_disabled
+msgid "Disabled"
 msgstr ""
 
 #: udownloadsmanager.rs_downloading

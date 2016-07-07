@@ -107,6 +107,8 @@ type
   private
     FWebsite: String;
     FStatus: TDownloadStatusType;
+    FEnabled: Boolean;
+    procedure SetEnabled(AValue: Boolean);
     procedure SetStatus(AValue: TDownloadStatusType);
     procedure SetWebsite(AValue: String);
   public
@@ -149,6 +151,7 @@ type
   public
     property Website: String read FWebsite write SetWebsite;
     property Status: TDownloadStatusType read FStatus write SetStatus;
+    property Enabled: Boolean read FEnabled write SetEnabled;
   end;
 
   TTaskContainers = TFPGList<TTaskContainer>;
@@ -160,6 +163,7 @@ type
     FSortDirection: Boolean;
     FSortColumn: Integer;
     DownloadManagerFile: TIniFileRun;
+    function GetTask(const TaskId: Integer): TTaskContainer;
   protected
     function GetTaskCount: Integer; inline;
     function GetTransferRate: Integer;
@@ -176,6 +180,8 @@ type
     // status count
     CS_StatusCount: TRTLCriticalSection;
     StatusCount: array [TDownloadStatusType] of Integer;
+    // disabled count
+    DisabledCount: Integer;
 
     compress, retryConnect,
     // max. active tasks
@@ -225,6 +231,9 @@ type
     procedure RemoveAllFinishedTasks;
     // check status of task
     function TaskStatusPresent(Stats: TDownloadStatusTypes): Boolean;
+    // enable task
+    procedure EnableTask(const TaskId: Integer);
+    procedure DisableTask(const TaskId: Integer);
 
     // Sort
     procedure Sort(const AColumn: Integer);
@@ -232,6 +241,7 @@ type
     property SortDirection: Boolean read FSortDirection write FSortDirection;
     property SortColumn: Integer read FSortColumn write FSortColumn;
     property TransferRate: Integer read GetTransferRate;
+    property Task[const TaskId: Integer]: TTaskContainer read GetTask; default;
   end;
 
 resourcestring
@@ -244,6 +254,7 @@ resourcestring
   RS_Waiting = 'Waiting...';
   RS_Compressing = 'Compressing...';
   RS_Failed = 'Failed';
+  RS_Disabled = 'Disabled';
 
 implementation
 
@@ -1439,6 +1450,19 @@ begin
   FStatus := AValue;
 end;
 
+procedure TTaskContainer.SetEnabled(AValue: Boolean);
+begin
+  if FEnabled = AValue then Exit;
+  FEnabled := AValue;
+  if Assigned(Manager) then
+  begin
+    if Enabled then
+      Dec(Manager.DisabledCount)
+    else
+      Inc(Manager.DisabledCount);
+  end;
+end;
+
 constructor TTaskContainer.Create;
 begin
   inherited Create;
@@ -1457,6 +1481,7 @@ begin
   CurrentDownloadChapterPtr := 0;
   CustomFileName := OptionFilenameCustomRename;
   FStatus := STATUS_NONE;
+  FEnabled := True;
 end;
 
 destructor TTaskContainer.Destroy;
@@ -1485,6 +1510,11 @@ begin
 end;
 
 { TDownloadManager }
+
+function TDownloadManager.GetTask(const TaskId: Integer): TTaskContainer;
+begin
+  Result := Items[TaskId];
+end;
 
 function TDownloadManager.GetTaskCount: Integer;
 begin
@@ -1577,6 +1607,7 @@ begin
   InitCriticalSection(CS_StatusCount);
   for ds := Low(StatusCount) to High(StatusCount) do
     StatusCount[ds] := 0;
+  DisabledCount := 0;
 end;
 
 destructor TDownloadManager.Destroy;
@@ -1630,6 +1661,7 @@ begin
         DownloadInfo.SaveTo := CorrectPathSys(ReadString(tid, 'SaveTo', 'NULL'));
         DownloadInfo.Status := ReadString(tid, 'Status', 'NULL');
         DownloadInfo.Progress := ReadString(tid, 'Progress', 'NULL');
+        Enabled := ReadBool(tid, 'Enabled', True);
         if Pos('/', DownloadInfo.Progress) > 0 then
         begin
           DownCounter := StrToIntDef(ExtractWord(1, DownloadInfo.Progress, ['/']), 0);
@@ -1721,6 +1753,7 @@ begin
           WriteString(tid, 'SaveTo', DownloadInfo.SaveTo);
           WriteString(tid, 'Status', DownloadInfo.Status);
           WriteString(tid, 'Progress', DownloadInfo.Progress);
+          WriteBool(tid, 'Enabled', Enabled);
           WriteString(tid, 'DateTime', FloatToStr(DownloadInfo.dateTime, FMDFormatSettings));
           WriteString(tid, 'CustomFileName', CustomFileName);
           WriteString(tid, 'ChapterLinks', SetParams(ChapterLinks));
@@ -1835,6 +1868,7 @@ end;
 
 procedure TDownloadManager.SetTaskActive(const taskID: Integer);
 begin
+  if not Items[taskID].Enabled then Exit;
   with Items[taskID] do
     if not ThreadState then
     begin
@@ -1873,10 +1907,13 @@ end;
 
 procedure TDownloadManager.ActiveTask(const taskID: Integer);
 begin
-  with Items[taskID] do begin
-    if Status = STATUS_FINISH then Exit;
-    if not ThreadState then begin
-      if not (Status in [STATUS_DOWNLOAD, STATUS_PREPARE]) then begin
+  if not Items[taskID].Enabled then Exit;
+  if Items[taskID].Status = STATUS_FINISH then Exit;
+  with Items[taskID] do
+    if not ThreadState then
+    begin
+      if not (Status in [STATUS_DOWNLOAD, STATUS_PREPARE]) then
+      begin
         Status := STATUS_DOWNLOAD;
         DownloadInfo.Status := RS_Downloading;
       end;
@@ -1886,7 +1923,6 @@ begin
       ItemsActiveTask.Add(Task.Container);
       Task.Start;
     end;
-  end;
 end;
 
 procedure TDownloadManager.StopTask(const taskID: Integer;
@@ -1918,7 +1954,7 @@ begin
   begin
     for i := 0 to Items.Count - 1 do
       with Items[i] do
-        if (Status <> STATUS_FINISH) and (not ThreadState) then
+        if  Enabled and (Status <> STATUS_FINISH) and (not ThreadState) then
         begin
           Status := STATUS_WAIT;
           DownloadInfo.Status := RS_Waiting;
@@ -2009,6 +2045,30 @@ begin
         end;
     finally
       LeaveCriticalSection(CS_Task);
+    end;
+  end;
+end;
+
+procedure TDownloadManager.EnableTask(const TaskId: Integer);
+begin
+  If not Items[TaskId].Enabled then
+    Items[TaskId].Enabled := True;
+end;
+
+procedure TDownloadManager.DisableTask(const TaskId: Integer);
+begin
+  with Items[TaskId] do
+  begin
+    if ThreadState then
+      StopTask(TaskId, False);
+    if Enabled then
+    begin
+      if Status = STATUS_WAIT then
+      begin
+        Status := STATUS_STOP;
+        DownloadInfo.Status := RS_Stopped;
+      end;
+      Enabled := False;
     end;
   end;
 end;

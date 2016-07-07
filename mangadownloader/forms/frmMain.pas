@@ -74,6 +74,8 @@ type
     lbOptionMangaCustomRenameHint: TLabel;
     lbOptionMangaCustomRename: TLabel;
     MenuItem2: TMenuItem;
+    miDownloadEnable: TMenuItem;
+    miDownloadDisable: TMenuItem;
     miChapterListFilter: TMenuItem;
     mnFilterGenreAllIndeterminate: TMenuItem;
     mnFilterGenreAllCheck: TMenuItem;
@@ -421,6 +423,8 @@ type
     procedure miAbortSilentThreadClick(Sender: TObject);
     procedure miChapterListFilterClick(Sender: TObject);
     procedure miChapterListHideDownloadedClick(Sender: TObject);
+    procedure miDownloadDisableClick(Sender: TObject);
+    procedure miDownloadEnableClick(Sender: TObject);
     procedure miDownloadViewMangaInfoClick(Sender: TObject);
     procedure miChapterListHighlightClick(Sender: TObject);
     procedure miDownloadDeleteTaskClick(Sender: TObject);
@@ -508,6 +512,8 @@ type
     procedure vtDownloadKeyDown(Sender : TObject; var Key : Word;
       Shift : TShiftState);
     procedure vtDownloadKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure vtDownloadPaintText(Sender: TBaseVirtualTree; const TargetCanvas: TCanvas;
+      Node: PVirtualNode; Column: TColumnIndex; TextType: TVSTTextType);
     procedure vtFavoritesBeforeCellPaint(Sender: TBaseVirtualTree;
       TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
       CellPaintMode: TVTCellPaintMode; CellRect: TRect; var ContentRect: TRect);
@@ -1572,6 +1578,35 @@ begin
   FilterChapterList(edFilterMangaInfoChapters.Text, miChapterListHideDownloaded.Checked);
 end;
 
+procedure TMainForm.miDownloadDisableClick(Sender: TObject);
+var
+  Node: PVirtualNode;
+begin
+  if vtDownload.SelectedCount = 0 then Exit;
+  Node := vtDownload.GetFirstSelected();
+  while Assigned(Node) do
+  begin
+    DLManager.DisableTask(Node^.Index);
+    Node := vtDownload.GetNextSelected(Node);
+  end;
+  UpdateVtDownload;
+  DLManager.CheckAndActiveTask();
+end;
+
+procedure TMainForm.miDownloadEnableClick(Sender: TObject);
+var
+  Node: PVirtualNode;
+begin
+  if vtDownload.SelectedCount = 0 then Exit;
+  Node := vtDownload.GetFirstSelected();
+  while Assigned(Node) do
+  begin
+    DLManager.EnableTask(Node^.Index);
+    Node := vtDownload.GetNextSelected(Node);
+  end;
+  UpdateVtDownload;
+end;
+
 procedure TMainForm.miDownloadViewMangaInfoClick(Sender: TObject);
 begin
   if Assigned(vtDownload.FocusedNode) then
@@ -1790,59 +1825,45 @@ begin
 end;
 
 procedure TMainForm.GeneratetvDownloadFilterNodes;
+
+  function Add(const ParentNode: TTreeNode; const S: String;
+    const ImgIdx: Integer = -1): TTreeNode;
+  begin
+    if Assigned(ParentNode) then
+      Result := tvDownloadFilter.Items.AddChild(ParentNode, S)
+    else
+      Result := tvDownloadFilter.Items.Add(nil, S);
+    with Result do
+    begin
+      ImageIndex := ImgIdx;
+      SelectedIndex := ImgIdx;
+      StateIndex := ImgIdx;
+    end;
+  end;
+
+var
+  Node: TTreeNode;
+
 begin
   with tvDownloadFilter do begin
     Items.Clear;
 
-    // root
-    Items.Add(nil, RS_AllDownloads);
-    Items[0].ImageIndex := 4;
-    Items[0].SelectedIndex := 4;
-    Items[0].StateIndex := 4;
+    // download
+    Node := Add(nil, RS_AllDownloads, 4);
+    Add(Node, RS_Finish, 5);
+    Add(Node, RS_InProgress, 6);
+    Add(Node, RS_Stopped, 7);
+    Add(Node, RS_Failed, 16);
+    Add(Node, RS_Disabled, 22);
 
-    // childs
-    Items.AddChild(tvDownloadFilter.Items[0], RS_Finish);
-    Items[1].ImageIndex := 5;
-    Items[1].SelectedIndex := 5;
-    Items[1].StateIndex := 5;
-    Items.AddChild(tvDownloadFilter.Items[0], RS_InProgress);
-    Items[2].ImageIndex := 6;
-    Items[2].SelectedIndex := 6;
-    Items[2].StateIndex := 6;
-    Items.AddChild(tvDownloadFilter.Items[0], RS_Stopped);
-    Items[3].ImageIndex := 7;
-    Items[3].SelectedIndex := 7;
-    Items[3].StateIndex := 7;
-    Items.AddChild(tvDownloadFilter.Items[0], RS_Failed);
-    Items[4].ImageIndex := 16;
-    Items[4].SelectedIndex := 16;
-    Items[4].StateIndex := 16;
+    // history
+    Node := Add(nil, RS_History, 4);
+    Add(Node, RS_Today, 8);
+    Add(Node, RS_Yesterday, 8);
+    Add(Node, RS_OneWeek, 8);
+    Add(Node, RS_OneMonth, 8);
 
-    // root
-    Items.Add(nil, RS_History);
-    Items[5].ImageIndex := 4;
-    Items[5].SelectedIndex := 4;
-    Items[5].StateIndex := 4;
-
-    // childs
-    Items.AddChild(tvDownloadFilter.Items[5], RS_Today);
-    Items[6].ImageIndex := 8;
-    Items[6].SelectedIndex := 8;
-    Items[6].StateIndex := 8;
-    Items.AddChild(tvDownloadFilter.Items[5], RS_Yesterday);
-    Items[7].ImageIndex := 8;
-    Items[7].SelectedIndex := 8;
-    Items[7].StateIndex := 8;
-    Items.AddChild(tvDownloadFilter.Items[5], RS_OneWeek);
-    Items[8].ImageIndex := 8;
-    Items[8].SelectedIndex := 8;
-    Items[8].StateIndex := 8;
-    Items.AddChild(tvDownloadFilter.Items[5], RS_OneMonth);
-    Items[9].ImageIndex := 8;
-    Items[9].SelectedIndex := 8;
-    Items[9].StateIndex := 8;
-
-    Items[configfile.ReadInteger('general', 'DownloadFilterSelect',0)].Selected := True;
+    Items[configfile.ReadInteger('general', 'DownloadFilterSelect', 0)].Selected := True;
   end;
 end;
 
@@ -2901,51 +2922,44 @@ begin
 end;
 
 procedure TMainForm.pmDownloadPopup(Sender: TObject);
+var
+  iStop,
+  iResume,
+  iFinish,
+  iEnable,
+  iDisable: Boolean;
 
-  function FinishedTaskPresent: Boolean;
+  procedure ScanTasks;
   var
-    i: Integer;
+    Node: PVirtualNode;
   begin
-    Result := False;
-    with DLManager do begin
-      EnterCriticalSection(CS_Task);
-      try
-        for i := 0 to Count - 1 do
-          if Items[i].Status = STATUS_FINISH then
-          begin
-            Result := True;
-            Break;
-          end;
-      finally
-        LeaveCriticalSection(CS_Task);
-      end;
-    end;
-  end;
-
-  function SelectedTaskStatusPresent(Stats: TDownloadStatusTypes): Boolean;
-  var
-    xNode: PVirtualNode;
-  begin
-    Result := False;
-    if vtDownload.SelectedCount > 0 then
+    iStop := False;
+    iResume := False;
+    iFinish := False;
+    iEnable := False;
+    iDisable := False;
+    Node := vtDownload.GetFirstSelected();
+    while Assigned(Node) do
     begin
-      with DLManager do
+      if DLManager[Node^.Index].Enabled then
       begin
-        EnterCriticalSection(CS_Task);
-        try
-          xNode := vtDownload.GetFirstSelected;
-          repeat
-            if Items[xNode^.Index].Status in Stats then
-            begin
-              Result := True;
-              Break;
-            end;
-            xNode := vtDownload.GetNextSelected(xNode);
-          until xNode = nil;
-        finally
-          LeaveCriticalSection(CS_Task);
+        if not iDisable then
+          iDisable := True;
+        case DLManager[Node^.Index].Status of
+          STATUS_DOWNLOAD,
+          STATUS_PREPARE,
+          STATUS_WAIT     : if not iStop then iStop := True;
+          STATUS_STOP,
+          STATUS_FAILED,
+          STATUS_PROBLEM  : if not iResume then iResume := True;
+          STATUS_FINISH   : if not iFinish then iFinish := True;
         end;
-      end;
+      end
+      else if not iEnable then
+        iEnable := True;
+      if iStop and iResume and iStop and iEnable and iDisable then
+        Break;
+      Node := vtDownload.GetNextSelected(Node);
     end;
   end;
 
@@ -2958,38 +2972,30 @@ begin
       miDownloadDelete.Enabled := False;
       miDownloadDeleteTask.Enabled := False;
       miDownloadDeleteTaskData.Enabled := False;
-      miDownloadDeleteCompleted.Enabled := FinishedTaskPresent;
-      miDownloadMergeCompleted.Enabled := miDownloadDeleteCompleted.Enabled;
+      miDownloadDeleteCompleted.Enabled := False;
+      miDownloadMergeCompleted.Enabled := False;
       miDownloadViewMangaInfo.Enabled := False;
       miDownloadOpenFolder.Enabled := False;
       miDownloadOpenWith.Enabled := False;
-    end
-    else
-    if vtDownload.SelectedCount = 1 then
-    begin
-      miDownloadStop.Enabled := (Items[vtDownload.FocusedNode^.Index].Status in [STATUS_DOWNLOAD, STATUS_PREPARE, STATUS_WAIT]);
-      miDownloadResume.Enabled := (Items[vtDownload.FocusedNode^.Index].Status in [STATUS_STOP, STATUS_FAILED, STATUS_PROBLEM]);
-      miDownloadDelete.Enabled := True;
-      miDownloadDeleteTask.Enabled := True;
-      miDownloadDeleteTaskData.Enabled := True;
-      miDownloadDeleteCompleted.Enabled := FinishedTaskPresent;
-      miDownloadMergeCompleted.Enabled := miDownloadDeleteCompleted.Enabled;
-      miDownloadViewMangaInfo.Enabled := (Items[vtDownload.FocusedNode^.Index].DownloadInfo.Link <> '');
-      miDownloadOpenFolder.Enabled := True;
-      miDownloadOpenWith.Enabled := True;
+      miDownloadEnable.Enabled := False;
+      miDownloadDisable.Enabled := False;
     end
     else
     begin
-      miDownloadStop.Enabled := SelectedTaskStatusPresent([STATUS_DOWNLOAD, STATUS_PREPARE, STATUS_WAIT]);
-      miDownloadResume.Enabled := SelectedTaskStatusPresent([STATUS_STOP, STATUS_FAILED, STATUS_PROBLEM]);
+      ScanTasks;
+      miDownloadStop.Enabled := iStop;
+      miDownloadResume.Enabled := iResume;
       miDownloadDelete.Enabled := True;
       miDownloadDeleteTask.Enabled := True;
       miDownloadDeleteTaskData.Enabled := True;
-      miDownloadDeleteCompleted.Enabled := FinishedTaskPresent;
+      miDownloadDeleteCompleted.Enabled := iFinish;
       miDownloadMergeCompleted.Enabled := miDownloadDeleteCompleted.Enabled;
-      miDownloadViewMangaInfo.Enabled := False;
-      miDownloadOpenFolder.Enabled := False;
-      miDownloadOpenWith.Enabled := False;
+      miDownloadOpenWith.Enabled := vtDownload.SelectedCount = 1;
+      miDownloadOpenFolder.Enabled := miDownloadOpenWith.Enabled;
+      miDownloadViewMangaInfo.Enabled := miDownloadOpenFolder.Enabled and
+        (DLManager[vtDownload.FocusedNode^.Index].DownloadInfo.Link <> '');
+      miDownloadEnable.Enabled := iEnable;
+      miDownloadDisable.Enabled := iDisable;
     end;
   end;
 end;
@@ -3439,7 +3445,6 @@ procedure TMainForm.vtDownloadGetHint(Sender: TBaseVirtualTree;
 var
   l, i: Cardinal;
 begin
-  if Node^.Index>=DLManager.Count then Exit;
   with DLManager.Items[Node^.Index],DLManager.Items[Node^.Index].DownloadInfo do
     case Column of
       0: begin
@@ -3478,17 +3483,18 @@ procedure TMainForm.vtDownloadGetImageIndex(Sender: TBaseVirtualTree;
   Node: PVirtualNode; Kind: TVTImageKind; Column: TColumnIndex;
   var Ghosted: Boolean; var ImageIndex: Integer);
 begin
-  if (Node^.Index < DLManager.Count) and
-    (vtDownload.Header.Columns[Column].Position = 0) then
-    ImageIndex := Integer(DLManager.Items[Node^.Index].Status);
+  if vtDownload.Header.Columns[Column].Position = 0 then
+    if not DLManager[Node^.Index].Enabled then
+      ImageIndex := 8
+    else
+      ImageIndex := Integer(DLManager[Node^.Index].Status);
 end;
 
 procedure TMainForm.vtDownloadGetText(Sender: TBaseVirtualTree;
   Node: PVirtualNode; Column: TColumnIndex; TextType: TVSTTextType;
   var CellText: String);
 begin
-  if Node^.Index >= DLManager.Count then Exit;
-  with DLManager.Items[Node^.Index].DownloadInfo do
+  with DLManager[Node^.Index].DownloadInfo do
     case Column of
       0: CellText:=Title;
       1: CellText:=Status;
@@ -3548,6 +3554,14 @@ procedure TMainForm.vtDownloadKeyUp(Sender: TObject; var Key: Word; Shift: TShif
 begin
   if Key = VK_DELETE then
     miDownloadDeleteTaskClick(miDownloadDeleteTask);
+end;
+
+procedure TMainForm.vtDownloadPaintText(Sender: TBaseVirtualTree;
+  const TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
+  TextType: TVSTTextType);
+begin
+  if not DLManager[Node^.Index].Enabled then
+    TargetCanvas.Font.Color := TVirtualStringTree(Sender).Colors.DisabledColor;
 end;
 
 procedure TMainForm.vtFavoritesBeforeCellPaint(Sender: TBaseVirtualTree;
@@ -3822,17 +3836,18 @@ begin
       Items[4].Text := Format('%s (%d)', [RS_Failed,
         StatusCount[STATUS_PROBLEM] +
         StatusCount[STATUS_FAILED]]);
+      Items[5].Text := Format('%s (%d)', [RS_Disabled, DisabledCount]);
 
       if ResourceChanged then
       begin
         // root
-        Items[5].Text := RS_History;
+        Items[6].Text := RS_History;
 
         // childs
-        Items[6].Text := RS_Today;
-        Items[7].Text := RS_Yesterday;
-        Items[8].Text := RS_OneWeek;
-        Items[9].Text := RS_OneMonth;
+        Items[7].Text := RS_Today;
+        Items[8].Text := RS_Yesterday;
+        Items[9].Text := RS_OneWeek;
+        Items[10].Text := RS_OneMonth;
       end;
     finally
       tvDownloadFilter.EndUpdate;
@@ -3874,6 +3889,18 @@ var
     end;
   end;
 
+  procedure ShowDisabled;
+  var
+    xNode: PVirtualNode;
+  begin
+    xNode := vtDownload.GetFirst();
+    while Assigned(xNode) do
+    begin
+      vtDownload.IsVisible[xNode] := not DLManager[xNode^.Index].Enabled;
+      xNode := vtDownload.GetNext(xNode);
+    end;
+  end;
+
 begin
   if tvDownloadFilter.Selected = nil then Exit;
 
@@ -3886,15 +3913,17 @@ begin
     if tvDownloadFilter.Selected.AbsoluteIndex > 5 then
       ACurrentJDN := DateToJDN(Now);
     case tvDownloadFilter.Selected.AbsoluteIndex of
-      0, 5: ShowTasks;
+      0, 6: ShowTasks;
       1: ShowTasks([STATUS_FINISH]);
       2: ShowTasks([STATUS_WAIT, STATUS_PREPARE, STATUS_DOWNLOAD, STATUS_COMPRESS]);
       3: ShowTasks([STATUS_STOP]);
       4: ShowTasks([STATUS_PROBLEM, STATUS_FAILED]);
-      6: ShowTasksOnCertainDays(ACurrentJDN, ACurrentJDN);
-      7: ShowTasksOnCertainDays(ACurrentJDN - 1, ACurrentJDN - 1);
-      8: ShowTasksOnCertainDays(ACurrentJDN - 7, ACurrentJDN);
-      9: ShowTasksOnCertainDays(ACurrentJDN - 30, ACurrentJDN);
+      5: ShowDisabled;
+
+      7: ShowTasksOnCertainDays(ACurrentJDN, ACurrentJDN);
+      8: ShowTasksOnCertainDays(ACurrentJDN - 1, ACurrentJDN - 1);
+      9: ShowTasksOnCertainDays(ACurrentJDN - 7, ACurrentJDN);
+      10: ShowTasksOnCertainDays(ACurrentJDN - 30, ACurrentJDN);
     end;
   finally
     vtDownload.EndUpdate;
