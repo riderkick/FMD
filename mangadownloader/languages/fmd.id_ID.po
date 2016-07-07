@@ -267,13 +267,13 @@ msgstr "Satu minggu"
 
 #: frmmain.rs_optionfmddoitems
 msgid ""
-"Do nothing\n"
-"Exit FMD\n"
+"Nothing\n"
+"Exit\n"
 "Shutdown\n"
 "Hibernate\n"
 msgstr ""
 "Tidak ada\n"
-"Tutup FMD\n"
+"Keluar\n"
 "Matikan komputer\n"
 "Tidurkan komputer\n"
 
@@ -650,6 +650,7 @@ msgid "Regular Expression"
 msgstr "Regular Expression"
 
 #: tmainform.ckdroptarget.caption
+msgctxt "tmainform.ckdroptarget.caption"
 msgid "Show Drop Box"
 msgstr "Tampilkan kotak unduh"
 
@@ -1506,6 +1507,49 @@ msgstr "Unduh semua"
 #: tmainform.mimangalistviewinfos.caption
 msgid "View manga infos"
 msgstr "Lihat informasi komik"
+
+#: tmainform.mitrayafterdownloadfinish.caption
+msgid "After download finish"
+msgstr "Setelah download selesai"
+
+#: tmainform.mitrayexit.caption
+msgctxt "tmainform.mitrayexit.caption"
+msgid "Exit"
+msgstr "Keluar"
+
+#: tmainform.mitrayfinishexit.caption
+msgctxt "tmainform.mitrayfinishexit.caption"
+msgid "Exit"
+msgstr "Keluar"
+
+#: tmainform.mitrayfinishhibernate.caption
+msgid "Hibernate"
+msgstr "Tidurkan komputer"
+
+#: tmainform.mitrayfinishnothing.caption
+msgid "Nothing"
+msgstr "TIdak ada"
+
+#: tmainform.mitrayfinishshutdown.caption
+msgid "Shutdown"
+msgstr "Matikan komputer"
+
+#: tmainform.mitrayrestore.caption
+msgid "Restore"
+msgstr "Pulihkan"
+
+#: tmainform.mitrayresumeall.caption
+msgid "Resume all"
+msgstr "Lanjutkan semua"
+
+#: tmainform.mitrayshowdropbox.caption
+msgctxt "tmainform.mitrayshowdropbox.caption"
+msgid "Show Drop Box"
+msgstr "Tampilkan kotak unduh"
+
+#: tmainform.mitraystopall.caption
+msgid "Stop all"
+msgstr "Hentikan semua"
 
 #: tmainform.mndownload1click.caption
 msgid "Download all lists from server at once"

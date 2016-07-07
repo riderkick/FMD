@@ -73,7 +73,19 @@ type
     lbOptionFilenameCustomRename: TLabel;
     lbOptionMangaCustomRenameHint: TLabel;
     lbOptionMangaCustomRename: TLabel;
+    MenuItem10: TMenuItem;
+    miTrayExit: TMenuItem;
+    miTrayRestore: TMenuItem;
+    miTrayShowDropBox: TMenuItem;
+    MenuItem8: TMenuItem;
+    miTrayFinishNothing: TMenuItem;
+    miTrayFinishExit: TMenuItem;
+    miTrayFinishShutdown: TMenuItem;
     MenuItem2: TMenuItem;
+    miTrayFinishHibernate: TMenuItem;
+    miTrayAfterDownloadFinish: TMenuItem;
+    miTrayStopAll: TMenuItem;
+    miTrayResumeAll: TMenuItem;
     miDownloadEnable: TMenuItem;
     miDownloadDisable: TMenuItem;
     miChapterListFilter: TMenuItem;
@@ -91,6 +103,7 @@ type
     pcAbout: TPageControl;
     pmSbMain: TPopupMenu;
     pmFilterGenreAll: TPopupMenu;
+    pmTray: TPopupMenu;
     sbSaveTo: TScrollBox;
     sbWebsiteOptions: TScrollBox;
     tsWebsiteAdvanced: TTabSheet;
@@ -454,6 +467,9 @@ type
     procedure miDownloadOpenFolderClick(Sender: TObject);
     procedure miFavoritesOpenWithClick(Sender: TObject);
     procedure miDownloadOpenWithClick(Sender: TObject);
+    procedure miTrayExitClick(Sender: TObject);
+    procedure miTrayFinishNothingClick(Sender: TObject);
+    procedure miTrayShowDropBoxClick(Sender: TObject);
     procedure mnDownload1ClickClick(Sender: TObject);
     procedure mnFilterGenreAllCheckClick(Sender: TObject);
     procedure mnFilterGenreAllIndeterminateClick(Sender: TObject);
@@ -467,6 +483,7 @@ type
     procedure pmFavoritesPopup(Sender: TObject);
     procedure pmMangaListPopup(Sender: TObject);
     procedure pmSbMainPopup(Sender: TObject);
+    procedure pmTrayPopup(Sender: TObject);
     procedure rgOptionCompressSelectionChanged(Sender: TObject);
     procedure sbUpdateListDrawPanel(StatusBar: TStatusBar; Panel: TStatusPanel;
       const Rect: TRect);
@@ -645,9 +662,12 @@ type
     procedure UpdateVtDownload; inline;
     procedure UpdateVtFavorites;
 
-    // Load form information, like previous position, size, ...
+    // load form information, like previous position, size, ...
     procedure LoadFormInformation;
     procedure SaveFormInformation;
+
+    // drop target
+    procedure ShowDropTarget(const AShow: Boolean = True);
     procedure SaveDropTargetFormInformation;
 
     // load language from file
@@ -763,7 +783,7 @@ const
 
 resourcestring
   RS_FilterStatusItems = 'Completed'#13#10'Ongoing'#13#10'<none>';
-  RS_OptionFMDDoItems = 'Do nothing'#13#10'Exit FMD'#13#10'Shutdown'#13#10'Hibernate';
+  RS_OptionFMDDoItems = 'Nothing'#13#10'Exit'#13#10'Shutdown'#13#10'Hibernate';
   RS_DropTargetModeItems = 'Download all'#13#10'Add to favorites';
 
   RS_HintFavoriteProblem = 'There is a problem with this data!'#13#10
@@ -2913,6 +2933,25 @@ begin
       OpenWithExternalProgramChapters(DownloadInfo.SaveTo, ChapterName);
 end;
 
+procedure TMainForm.miTrayExitClick(Sender: TObject);
+begin
+  Self.Close;
+end;
+
+procedure TMainForm.miTrayFinishNothingClick(Sender: TObject);
+begin
+  if Sender is TMenuItem then
+  begin
+    OptionLetFMDDo := TFMDDo(TMenuItem(Sender).Tag);
+    configfile.WriteInteger('general', 'LetFMDDo', Integer(OptionLetFMDDo));
+  end;
+end;
+
+procedure TMainForm.miTrayShowDropBoxClick(Sender: TObject);
+begin
+  ShowDropTarget(TMenuItem(Sender).Checked);
+end;
+
 procedure TMainForm.pcMainChange(Sender: TObject);
 begin
   if pcMain.ActivePage = tsFavorites then
@@ -3115,6 +3154,20 @@ begin
   end
   else
     Abort;
+end;
+
+procedure TMainForm.pmTrayPopup(Sender: TObject);
+var
+  i: Integer;
+begin
+  with miTrayAfterDownloadFinish do
+    for i := 0 to Count - 1 do
+      if Items[i].Tag = Integer(OptionLetFMDDo) then
+      begin
+        Items[i].Checked := True;
+        Break;
+      end;
+  miTrayShowDropBox.Checked := Assigned(FormDropTarget);
 end;
 
 procedure TMainForm.rgOptionCompressSelectionChanged(Sender: TObject);
@@ -4449,19 +4502,7 @@ begin
 
     //view
     ToolBarDownload.Visible := cbOptionShowDownloadToolbar.Checked;
-    if ckDropTarget.Checked then
-    begin
-      if FormDropTarget = nil then
-        Application.CreateForm(TFormDropTarget, FormDropTarget);
-      frmDropTarget.OnDropChekout := @AddSilentThread;
-      frmDropTarget.FAlphaBlendValue := tbDropTargetOpacity.Position;
-      FormDropTarget.Show;
-    end
-    else
-    begin
-      if Assigned(FormDropTarget) then
-        FormDropTarget.Close;
-    end;
+    ShowDropTarget(ckDropTarget.Checked);
 
     //connection
     DLManager.maxDLTasks := seOptionMaxParallel.Value;
@@ -4840,11 +4881,28 @@ begin
   end;
 end;
 
+procedure TMainForm.ShowDropTarget(const AShow: Boolean);
+begin
+  configfile.WriteBool('droptarget', 'Show', AShow);
+  if AShow then
+  begin
+    if FormDropTarget = nil then
+      Application.CreateForm(TFormDropTarget, FormDropTarget);
+    frmDropTarget.OnDropChekout := @AddSilentThread;
+    frmDropTarget.FAlphaBlendValue := tbDropTargetOpacity.Position;
+    FormDropTarget.Show;
+  end
+  else
+  begin
+    if Assigned(FormDropTarget) then
+      FormDropTarget.Close;
+  end;
+end;
+
 procedure TMainForm.SaveDropTargetFormInformation;
 begin
   with configfile do
   begin
-    WriteBool('droptarget', 'Show', ckDropTarget.Checked);
     WriteInteger('droptarget', 'Mode', rgDropTargetMode.ItemIndex);
     WriteInteger('droptarget', 'Opacity', frmDropTarget.FAlphaBlendValue);
     WriteInteger('droptarget', 'Width', frmDropTarget.FWidth);

@@ -4936,10 +4936,11 @@ object MainForm: TMainForm
     BalloonFlags = bfInfo
     BalloonTimeout = 5000
     BalloonTitle = 'Free Manga Downloader'
+    PopUpMenu = pmTray
     Hint = 'Free Manga Downloader'
     OnDblClick = TrayIconDblClick
-    left = 32
-    top = 448
+    left = 288
+    top = 432
   end
   object pmUpdate: TPopupMenu
     ParentBidiMode = False
@@ -6523,6 +6524,69 @@ object MainForm: TMainForm
     object mnFilterGenreAllIndeterminate: TMenuItem
       Caption = 'Indeterminate all'
       OnClick = mnFilterGenreAllIndeterminateClick
+    end
+  end
+  object pmTray: TPopupMenu
+    OnPopup = pmTrayPopup
+    left = 341
+    top = 432
+    object miTrayResumeAll: TMenuItem
+      Caption = 'Resume all'
+      OnClick = tbDownloadResumeAllClick
+    end
+    object miTrayStopAll: TMenuItem
+      Caption = 'Stop all'
+      OnClick = tbDownloadStopAllClick
+    end
+    object miTrayAfterDownloadFinish: TMenuItem
+      Caption = 'After download finish'
+      object miTrayFinishNothing: TMenuItem
+        AutoCheck = True
+        Caption = 'Nothing'
+        RadioItem = True
+        OnClick = miTrayFinishNothingClick
+      end
+      object miTrayFinishExit: TMenuItem
+        Tag = 1
+        AutoCheck = True
+        Caption = 'Exit'
+        RadioItem = True
+        OnClick = miTrayFinishNothingClick
+      end
+      object miTrayFinishShutdown: TMenuItem
+        Tag = 2
+        AutoCheck = True
+        Caption = 'Shutdown'
+        RadioItem = True
+        OnClick = miTrayFinishNothingClick
+      end
+      object miTrayFinishHibernate: TMenuItem
+        Tag = 3
+        AutoCheck = True
+        Caption = 'Hibernate'
+        RadioItem = True
+        OnClick = miTrayFinishNothingClick
+      end
+    end
+    object MenuItem8: TMenuItem
+      Caption = '-'
+    end
+    object miTrayShowDropBox: TMenuItem
+      AutoCheck = True
+      Caption = 'Show Drop Box'
+      Checked = True
+      OnClick = miTrayShowDropBoxClick
+    end
+    object miTrayRestore: TMenuItem
+      Caption = 'Restore'
+      OnClick = TrayIconDblClick
+    end
+    object MenuItem10: TMenuItem
+      Caption = '-'
+    end
+    object miTrayExit: TMenuItem
+      Caption = 'Exit'
+      OnClick = miTrayExitClick
     end
   end
 end

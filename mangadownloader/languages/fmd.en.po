@@ -269,13 +269,13 @@ msgstr "One week"
 
 #: frmmain.rs_optionfmddoitems
 msgid ""
-"Do nothing\n"
-"Exit FMD\n"
+"Nothing\n"
+"Exit\n"
 "Shutdown\n"
 "Hibernate\n"
 msgstr ""
-"Do nothing\n"
-"Exit FMD\n"
+"Nothing\n"
+"Exit\n"
 "Shutdown\n"
 "Hibernate\n"
 
@@ -661,6 +661,7 @@ msgid "Regular Expression"
 msgstr "Regular Expression"
 
 #: tmainform.ckdroptarget.caption
+msgctxt "tmainform.ckdroptarget.caption"
 msgid "Show Drop Box"
 msgstr "Show Drop Box"
 
@@ -1525,6 +1526,49 @@ msgstr "Download all"
 #: tmainform.mimangalistviewinfos.caption
 msgid "View manga infos"
 msgstr "View manga infos"
+
+#: tmainform.mitrayafterdownloadfinish.caption
+msgid "After download finish"
+msgstr "After download finish"
+
+#: tmainform.mitrayexit.caption
+msgctxt "tmainform.mitrayexit.caption"
+msgid "Exit"
+msgstr "Exit"
+
+#: tmainform.mitrayfinishexit.caption
+msgctxt "tmainform.mitrayfinishexit.caption"
+msgid "Exit"
+msgstr "Exit"
+
+#: tmainform.mitrayfinishhibernate.caption
+msgid "Hibernate"
+msgstr "Hibernate"
+
+#: tmainform.mitrayfinishnothing.caption
+msgid "Nothing"
+msgstr "Nothing"
+
+#: tmainform.mitrayfinishshutdown.caption
+msgid "Shutdown"
+msgstr "Shutdown"
+
+#: tmainform.mitrayrestore.caption
+msgid "Restore"
+msgstr "Restore"
+
+#: tmainform.mitrayresumeall.caption
+msgid "Resume all"
+msgstr "Resume all"
+
+#: tmainform.mitrayshowdropbox.caption
+msgctxt "tmainform.mitrayshowdropbox.caption"
+msgid "Show Drop Box"
+msgstr "Show Drop Box"
+
+#: tmainform.mitraystopall.caption
+msgid "Stop all"
+msgstr "Stop all"
 
 #: tmainform.mndownload1click.caption
 msgid "Download all lists from server at once"

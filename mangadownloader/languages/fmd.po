@@ -236,8 +236,8 @@ msgstr ""
 
 #: frmmain.rs_optionfmddoitems
 msgid ""
-"Do nothing\n"
-"Exit FMD\n"
+"Nothing\n"
+"Exit\n"
 "Shutdown\n"
 "Hibernate\n"
 msgstr ""
@@ -615,6 +615,7 @@ msgid "Regular Expression"
 msgstr ""
 
 #: tmainform.ckdroptarget.caption
+msgctxt "tmainform.ckdroptarget.caption"
 msgid "Show Drop Box"
 msgstr ""
 
@@ -1436,6 +1437,49 @@ msgstr ""
 
 #: tmainform.mimangalistviewinfos.caption
 msgid "View manga infos"
+msgstr ""
+
+#: tmainform.mitrayafterdownloadfinish.caption
+msgid "After download finish"
+msgstr ""
+
+#: tmainform.mitrayexit.caption
+msgctxt "TMAINFORM.MITRAYEXIT.CAPTION"
+msgid "Exit"
+msgstr ""
+
+#: tmainform.mitrayfinishexit.caption
+msgctxt "tmainform.mitrayfinishexit.caption"
+msgid "Exit"
+msgstr ""
+
+#: tmainform.mitrayfinishhibernate.caption
+msgid "Hibernate"
+msgstr ""
+
+#: tmainform.mitrayfinishnothing.caption
+msgid "Nothing"
+msgstr ""
+
+#: tmainform.mitrayfinishshutdown.caption
+msgid "Shutdown"
+msgstr ""
+
+#: tmainform.mitrayrestore.caption
+msgid "Restore"
+msgstr ""
+
+#: tmainform.mitrayresumeall.caption
+msgid "Resume all"
+msgstr ""
+
+#: tmainform.mitrayshowdropbox.caption
+msgctxt "TMAINFORM.MITRAYSHOWDROPBOX.CAPTION"
+msgid "Show Drop Box"
+msgstr ""
+
+#: tmainform.mitraystopall.caption
+msgid "Stop all"
 msgstr ""
 
 #: tmainform.mndownload1click.caption
