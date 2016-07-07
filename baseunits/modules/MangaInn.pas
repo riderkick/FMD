@@ -111,7 +111,7 @@ begin
   begin
     s := MaybeFillHost(Module.RootURL, AURL);
     if DownloadThread.WorkId > 0 then
-      s += '/page_' + IntToStr(DownloadThread.WorkId);
+      s += '/page_' + IntToStr(DownloadThread.WorkId + 1);
     if GET(s) then
     begin
       Result := True;
