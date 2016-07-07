@@ -4,6 +4,13 @@ Project page: https://github.com/riderkick/FMD
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.74.0 (06-07-2016)
+[+] Added enable/disable task. Disabled task can't be resumed unless it's enabled manually, this task will be skipped on resume all.
+[+] Added tray icon popup menu. Resume all, Stop all, Action after download finish, Show drop box, Restore and Exit.
+[*] MangaInn: fixed incorrectly download second page and forth (#317)
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.73.0...0.9.74.0
+
 0.9.73.0 (06-07-2016)
 [+] Added custom color for favorite with empty chapters
 [*] Various changes
