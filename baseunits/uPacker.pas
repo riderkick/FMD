@@ -11,7 +11,7 @@ unit uPacker;
 interface
 
 uses
-  Classes, Zipper, zstream, SysUtils, uBaseUnit, uImg2Pdf, FileUtil, lazutf8classes,
+  Classes, Zipper, zstream, SysUtils, uBaseUnit, Img2Pdf, FileUtil, lazutf8classes,
   LazFileUtils, SimpleException, uMisc;
 
 type
@@ -82,7 +82,8 @@ begin
     pdf := TImg2Pdf.Create;
     try
       pdf.CompressionQuality := CompressionQuality;
-      pdf.Title := GetLastDir(Path);
+      pdf.Infos.Title := GetLastDir(Path);
+      pdf.Infos.Creator := ApplicationName;
       for i := 0 to FFileList.Count - 1 do
       begin
         try
