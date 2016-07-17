@@ -55,7 +55,7 @@ function MaybeEncodeURL(const AValue: String): String;
 
 var
   DefaultUserAgent: String =
-  'Mozilla/5.0 (Windows NT 10.0; WOW64; rv:44.0) Gecko/20100101 Firefox/44.0';
+    'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36';
   DefaultRetryCount: Integer = 0;
   DefaultTimeout: Integer = 15000;
   DefaultProxyType: String = '';
