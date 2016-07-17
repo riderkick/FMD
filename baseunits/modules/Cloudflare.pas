@@ -17,7 +17,6 @@ implementation
 
 const
   MIN_WAIT_TIME = 5000;
-  MAX_RETRY = 3;
 
 function AntiBotActive(const AHTTP: THTTPSendThread): Boolean;
 begin
@@ -101,13 +100,15 @@ end;
 function CFJS(const AHTTP: THTTPSendThread; AURL: String; var Cookie: String): Boolean;
 var
   m, u, h: String;
-  st, sc, counter: Integer;
+  st, sc, counter, maxretry: Integer;
 begin
   Result := False;
   if AHTTP = nil then Exit;
   if Cookie <> '' then AHTTP.Cookies.Text := Cookie;
   counter := 0;
-  while counter < MAX_RETRY do begin
+  maxretry := AHTTP.RetryCount;
+  AHTTP.RetryCount := 0;
+  while counter < maxretry do begin
     Inc(counter);
     m := 'GET';
     u := '';
@@ -121,7 +122,7 @@ begin
         sc := 0;
         while sc < st do begin
           if AHTTP.ThreadTerminated then
-            Exit;
+            Break;
           Inc(sc, 500);
           Sleep(500);
         end;
@@ -131,13 +132,14 @@ begin
         AHTTP.FollowRedirection := True;
         if Result then Cookie := AHTTP.GetCookies;
       end;
-    if Result then Exit
-    else if counter < MAX_RETRY then begin
+    if Result then Break
+    else if counter < maxretry then begin
       AHTTP.Reset;
       Result := AHTTP.GET(AURL);
-      if not AntiBotActive(AHTTP) then Exit;
+      if not AntiBotActive(AHTTP) then Break;
     end;
   end;
+  AHTTP.RetryCount := maxretry;
 end;
 
 function GETCF(const AHTTP: THTTPSendThread; const AURL: String; var Cookie: String;
