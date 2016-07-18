@@ -173,17 +173,16 @@ end;
 
 procedure TPageInfo.GetImageSize;
 var
-  AMS: TMemoryStreamUTF8;
+  AFS: TFileStreamUTF8;
   AImg: TImageData;
 begin
-  AMS := TMemoryStreamUTF8.Create;
+  AFS := TFileStreamUTF8.Create(FileName, fmOpenRead or fmShareDenyWrite);
   try
-    AMS.LoadFromFile(FileName);
-    Extension := LowerCase(DetermineStreamFormat(AMS));
+    Extension := LowerCase(DetermineStreamFormat(AFS));
     if Extension = '' then Exit;
     InitImage(AImg);
     try
-      if LoadImageFromStream(AMS, AImg) then
+      if LoadImageFromStream(AFS, AImg) then
       begin
         Width := AImg.Width;
         Height := AImg.Height;
@@ -192,7 +191,7 @@ begin
       FreeImage(AImg);
     end;
   finally
-    AMS.Free;
+    AFS.Free;
   end;
 end;
 
