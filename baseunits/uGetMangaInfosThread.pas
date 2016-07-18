@@ -68,13 +68,16 @@ procedure TGetMangaInfosThread.DoGetInfos;
     try
       FInfo.mangaInfo.website := Website;
       FInfo.mangaInfo.link := Link;
+      FInfo.mangaInfo.title := Title;
       FInfo.ModuleId := Modules.LocateModule(Website);
       if (FMangaListPos >= 0) and (MainForm.cbSelectManga.ItemIndex<>-1) and
         (website = MainForm.cbSelectManga.Items[MainForm.cbSelectManga.ItemIndex]) then
       begin
         filterPos := FMangaListPos;
-        FInfo.mangaInfo.title := MainForm.dataProcess.Value[filterPos, DATA_PARAM_TITLE];
-        FInfo.mangaInfo.link := MainForm.dataProcess.Value[filterPos, DATA_PARAM_LINK];
+        if FInfo.mangaInfo.title = '' then
+          FInfo.mangaInfo.title := MainForm.dataProcess.Value[filterPos, DATA_PARAM_TITLE];
+        if FInfo.mangaInfo.link = '' then
+          FInfo.mangaInfo.link := MainForm.dataProcess.Value[filterPos, DATA_PARAM_LINK];
         FInfo.mangaInfo.authors := MainForm.dataProcess.Value[filterPos, DATA_PARAM_AUTHORS];
         FInfo.mangaInfo.artists := MainForm.dataProcess.Value[filterPos, DATA_PARAM_ARTISTS];
         FInfo.mangaInfo.status := MainForm.dataProcess.Value[filterPos, DATA_PARAM_STATUS];
