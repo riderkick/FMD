@@ -50,7 +50,7 @@ type
     Filter: String;
     Stream: TMemoryStreamUTF8;
   public
-    procedure GetInfo;
+    procedure GetImageSize;
     procedure LoadImageData;
     procedure FlushImageData;
   end;
@@ -171,7 +171,7 @@ begin
   end;
 end;
 
-procedure TPageInfo.GetInfo;
+procedure TPageInfo.GetImageSize;
 var
   AMS: TMemoryStreamUTF8;
   AImg: TImageData;
@@ -179,7 +179,7 @@ begin
   AMS := TMemoryStreamUTF8.Create;
   try
     AMS.LoadFromFile(FileName);
-    Extension := LowerCase(DetermineFileFormat(FileName));
+    Extension := LowerCase(DetermineStreamFormat(AMS));
     if Extension = '' then Exit;
     InitImage(AImg);
     try
@@ -187,7 +187,6 @@ begin
       begin
         Width := AImg.Width;
         Height := AImg.Height;
-        ColorSpace := GetColorSpace(AImg);
       end;
     finally
       FreeImage(AImg);
@@ -210,6 +209,7 @@ begin
     Stream.LoadFromFile(FileName);
     InitImage(AImg);
     LoadImageFromStream(Stream, AImg);
+    ColorSpace := GetColorSpace(AImg);
     if Extension = 'jpg' then
       Filter := 'DCTDecode'
     else
@@ -300,7 +300,7 @@ begin
   if not FileExistsUTF8(AFileName) then Exit;
   P := TPageInfo.Create(Self);
   P.FileName := AFileName;
-  P.GetInfo;
+  P.GetImageSize;
   if P.Extension <> '' then
     Result := FPageInfos.Add(P)
   else
