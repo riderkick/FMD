@@ -74,6 +74,7 @@ type
     lbOptionMangaCustomRenameHint: TLabel;
     lbOptionMangaCustomRename: TLabel;
     MenuItem10: TMenuItem;
+    miDownloadDeleteTaskDataFavorite: TMenuItem;
     miTrayExit: TMenuItem;
     miTrayRestore: TMenuItem;
     miTrayShowDropBox: TMenuItem;
@@ -1669,7 +1670,8 @@ begin
       if vtDownload.Selected[xNode] then begin
         DLManager.StopTask(xNode^.Index, False, True);
         with DLManager.Items[xNode^.Index] do begin
-          if (Sender = miDownloadDeleteTaskData) and (ChapterName.Count > 0) then begin
+          if (Sender = miDownloadDeleteTaskData) or (Sender = miDownloadDeleteTaskDataFavorite)
+            and (ChapterName.Count > 0) then begin
             for i := 0 to ChapterName.Count - 1 do begin
               f := CleanAndExpandDirectory(DownloadInfo.SaveTo + ChapterName[i]);
               if FileExistsUTF8(f + '.zip') then
@@ -1683,6 +1685,25 @@ begin
             end;
             RemoveDirUTF8(DownloadInfo.SaveTo);
           end;
+          if (Sender = miDownloadDeleteTaskDataFavorite) and
+            (FavoriteManager.Items.Count <> 0) and
+            (FavoriteManager.isRunning = False) then
+            try
+              FavoriteManager.Lock;
+              for i := 0 to FavoriteManager.Count - 1 do
+              begin
+                if SameText(DLManager[xNode^.Index].DownloadInfo.Link, FavoriteManager[i].FavoriteInfo.Link)
+                  and SameText(DLManager[xNode^.Index].DownloadInfo.Website, FavoriteManager[i].FavoriteInfo.Website) then
+                  begin
+                    FavoriteManager.Items[i].Free;
+                    FavoriteManager.Items.Delete(i);
+                    UpdateVtFavorites;
+                    Break;
+                  end;
+              end;
+            finally
+              FavoriteManager.LockRelease;
+            end;
           DLManager.Items[xNode^.Index].Free;
           DLManager.Items.Delete(xNode^.Index);
         end;

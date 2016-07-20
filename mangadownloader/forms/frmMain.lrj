@@ -238,6 +238,7 @@
 {"hash":78392485,"name":"tmainform.midownloaddelete.caption","sourcebytes":[68,101,108,101,116,101],"value":"Delete"},
 {"hash":165093305,"name":"tmainform.midownloaddeletetask.caption","sourcebytes":[84,97,115,107,32,111,110,108,121],"value":"Task only"},
 {"hash":42869105,"name":"tmainform.midownloaddeletetaskdata.caption","sourcebytes":[84,97,115,107,32,43,32,68,97,116,97],"value":"Task + Data"},
+{"hash":267175541,"name":"tmainform.midownloaddeletetaskdatafavorite.caption","sourcebytes":[84,97,115,107,32,43,32,68,97,116,97,32,43,32,70,97,118,111,114,105,116,101],"value":"Task + Data + Favorite"},
 {"hash":235571507,"name":"tmainform.midownloaddeletecompleted.caption","sourcebytes":[68,101,108,101,116,101,32,97,108,108,32,99,111,109,112,108,101,116,101,100,32,116,97,115,107,115],"value":"Delete all completed tasks"},
 {"hash":180320563,"name":"tmainform.midownloadmergecompleted.caption","sourcebytes":[77,101,114,103,101,32,99,111,109,112,108,101,116,101,100,32,116,97,115,107,115],"value":"Merge completed tasks"},
 {"hash":27371647,"name":"tmainform.midownloadviewmangainfo.caption","sourcebytes":[86,105,101,119,32,109,97,110,103,97,32,105,110,102,111],"value":"View manga info"},

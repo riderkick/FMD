@@ -4259,6 +4259,10 @@ object MainForm: TMainForm
         Enabled = False
         OnClick = miDownloadDeleteTaskClick
       end
+      object miDownloadDeleteTaskDataFavorite: TMenuItem
+        Caption = 'Task + Data + Favorite'
+        OnClick = miDownloadDeleteTaskClick
+      end
     end
     object miDownloadDeleteCompleted: TMenuItem
       Caption = 'Delete all completed tasks'

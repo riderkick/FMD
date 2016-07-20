@@ -88,6 +88,7 @@ type
     FSortColumn: Integer;
     FSortDirection, FIsAuto, FIsRunning: Boolean;
     function GetFavoritesCount: Integer; inline;
+    function GetFavorite(const Index: Integer): TFavoriteContainer;
   public
     Items: TFavoriteContainers;
     favoritesFile: TIniFileRun;
@@ -136,6 +137,7 @@ type
     property SortColumn: Integer read FSortColumn write FSortColumn;
     property isAuto: Boolean read FIsAuto write FIsAuto;
     property isRunning: Boolean read FIsRunning write FIsRunning;
+    property Favorite[const Index: Integer]: TFavoriteContainer read GetFavorite; default;
   end;
 
 resourcestring
@@ -475,6 +477,11 @@ end;
 function TFavoriteManager.GetFavoritesCount: Integer;
 begin
   Result := Items.Count;
+end;
+
+function TFavoriteManager.GetFavorite(const Index: Integer): TFavoriteContainer;
+begin
+  Result := Items[Index];
 end;
 
 constructor TFavoriteManager.Create;

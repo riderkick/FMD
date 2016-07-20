@@ -1414,6 +1414,10 @@ msgstr "Daftar saja"
 msgid "Task + Data"
 msgstr "Daftar dan data"
 
+#: tmainform.midownloaddeletetaskdatafavorite.caption
+msgid "Task + Data + Favorite"
+msgstr "Daftar, data dan kesukaan"
+
 #: tmainform.midownloaddisable.caption
 msgid "Disable"
 msgstr "Matikan"
@@ -2094,4 +2098,3 @@ msgstr "Sinkronisasi data"
 #: uupdatethread.rs_updatinglist
 msgid "Updating list"
 msgstr "Memperbarui daftar"
-

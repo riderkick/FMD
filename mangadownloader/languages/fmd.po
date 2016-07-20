@@ -1345,6 +1345,10 @@ msgstr ""
 msgid "Task + Data"
 msgstr ""
 
+#: tmainform.midownloaddeletetaskdatafavorite.caption
+msgid "Task + Data + Favorite"
+msgstr ""
+
 #: tmainform.midownloaddisable.caption
 msgid "Disable"
 msgstr ""
