@@ -4813,8 +4813,14 @@ end;
 
 procedure TMainForm.UpdateVtChapter;
 begin
-  clbChapterList.Clear;
-  clbChapterList.RootNodeCount := Length(ChapterList);
+  if clbChapterList.RootNodeCount = Length(ChapterList) then
+    clbChapterList.Repaint
+  else
+  begin
+    clbChapterList.BeginUpdate;
+    clbChapterList.RootNodeCount := Length(ChapterList);
+    clbChapterList.EndUpdate;
+  end;
 end;
 
 procedure TMainForm.UpdateVtDownload;
@@ -4824,8 +4830,14 @@ end;
 
 procedure TMainForm.UpdateVtFavorites;
 begin
-  vtFavorites.Clear;
-  vtFavorites.RootNodeCount := FavoriteManager.Count;
+  if vtFavorites.RootNodeCount = FavoriteManager.Items.Count then
+    vtFavorites.Repaint
+  else
+  begin
+    vtFavorites.BeginUpdate;
+    vtFavorites.RootNodeCount := FavoriteManager.Count;
+    vtFavorites.EndUpdate;
+  end;
 end;
 
 procedure TMainForm.LoadFormInformation;
