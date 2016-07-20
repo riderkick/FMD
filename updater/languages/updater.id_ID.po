@@ -9,11 +9,11 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: id_ID\n"
-"X-Generator: Poedit 1.8.2\n"
+"X-Generator: Poedit 1.8.8\n"
 
 #: tfrmmain.caption
 msgid "Free Manga Downloader - Updater"
-msgstr ""
+msgstr "Free Manga Downloader - Updater"
 
 #: tfrmmain.lbfilesize.caption
 msgid "File size"
@@ -26,6 +26,10 @@ msgstr "Menunggu..."
 #: tfrmmain.lbtransferrate.caption
 msgid "Transfer rate"
 msgstr "Kecepatan"
+
+#: tfrmmessage.caption
+msgid "Help"
+msgstr "Bantuan"
 
 #: umain.rs_7znotfound
 msgid "Can't extract file because 7za.exe not found!"
@@ -102,4 +106,3 @@ msgstr "Membuka berkas [%s]..."
 #: umain.rs_waitmainapp
 msgid "Waiting main app to close..."
 msgstr "Menunggu aplikasi utama untuk berhenti..."
-

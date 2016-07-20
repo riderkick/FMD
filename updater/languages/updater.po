@@ -17,6 +17,10 @@ msgstr ""
 msgid "Transfer rate"
 msgstr ""
 
+#: tfrmmessage.caption
+msgid "Help"
+msgstr ""
+
 #: umain.rs_7znotfound
 msgid "Can't extract file because 7za.exe not found!"
 msgstr ""

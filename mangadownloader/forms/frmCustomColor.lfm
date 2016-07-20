@@ -68,6 +68,7 @@ object CustomColorForm: TCustomColorForm
         Header.AutoSizeIndex = 0
         Header.Columns = <>
         Header.DefaultHeight = 17
+        Header.Height = 17
         Header.MainColumn = -1
         TabOrder = 0
         TextMargin = 0
@@ -99,6 +100,7 @@ object CustomColorForm: TCustomColorForm
         Header.AutoSizeIndex = 0
         Header.Columns = <>
         Header.DefaultHeight = 17
+        Header.Height = 17
         Header.MainColumn = -1
         TabOrder = 0
         TextMargin = 0
@@ -130,6 +132,7 @@ object CustomColorForm: TCustomColorForm
         Header.AutoSizeIndex = 0
         Header.Columns = <>
         Header.DefaultHeight = 17
+        Header.Height = 17
         Header.MainColumn = -1
         TabOrder = 0
         TextMargin = 0
@@ -161,6 +164,7 @@ object CustomColorForm: TCustomColorForm
         Header.AutoSizeIndex = 0
         Header.Columns = <>
         Header.DefaultHeight = 17
+        Header.Height = 17
         Header.MainColumn = -1
         TabOrder = 0
         TextMargin = 0
