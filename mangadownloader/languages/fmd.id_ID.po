@@ -120,6 +120,10 @@ msgstr "Apakah Anda yakin Anda ingin menghapus kesukaan ini?"
 msgid "Are you sure you want to delete all finished tasks?"
 msgstr "Apakah Anda yakin Anda ingin menghapus semua unduhan yang sudah selesai?"
 
+#: frmmain.rs_dlgremoveitem
+msgid "Are you sure you want to delete this item(s)?"
+msgstr "Apakah Anda yakin ingin menghapus data ini?"
+
 #: frmmain.rs_dlgremovetask
 msgid "Are you sure you want to delete the task(s)?"
 msgstr "Apakah Anda yakin ingin menghapus unduhan ini?"
@@ -1502,6 +1506,11 @@ msgstr "Sorot komik baru"
 #: tmainform.mimangalistaddtofavorites.caption
 msgid "Add to Favorites"
 msgstr "Tambahkan ke kesukaan"
+
+#: tmainform.mimangalistdelete.caption
+msgctxt "tmainform.mimangalistdelete.caption"
+msgid "Delete"
+msgstr "Hapus"
 
 #: tmainform.mimangalistdownloadall.caption
 msgctxt "TMAINFORM.MIMANGALISTDOWNLOADALL.CAPTION"

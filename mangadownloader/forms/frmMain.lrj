@@ -263,6 +263,7 @@
 {"hash":169511027,"name":"tmainform.mimangalistviewinfos.caption","sourcebytes":[86,105,101,119,32,109,97,110,103,97,32,105,110,102,111,115],"value":"View manga infos"},
 {"hash":29393692,"name":"tmainform.mimangalistdownloadall.caption","sourcebytes":[68,111,119,110,108,111,97,100,32,97,108,108],"value":"Download all"},
 {"hash":215890979,"name":"tmainform.mimangalistaddtofavorites.caption","sourcebytes":[65,100,100,32,116,111,32,70,97,118,111,114,105,116,101,115],"value":"Add to Favorites"},
+{"hash":78392485,"name":"tmainform.mimangalistdelete.caption","sourcebytes":[68,101,108,101,116,101],"value":"Delete"},
 {"hash":175694497,"name":"tmainform.mihighlightnewmanga.caption","sourcebytes":[72,105,103,104,108,105,103,104,116,32,110,101,119,32,109,97,110,103,97],"value":"Highlight new manga"},
 {"hash":119443044,"name":"tmainform.mnupdatelist.caption","sourcebytes":[85,112,100,97,116,101,32,109,97,110,103,97,32,108,105,115,116],"value":"Update manga list"},
 {"hash":11631810,"name":"tmainform.mnupdatedownfromserver.caption","sourcebytes":[68,111,119,110,108,111,97,100,32,109,97,110,103,97,32,108,105,115,116,32,102,114,111,109,32,115,101,114,118,101,114],"value":"Download manga list from server"},

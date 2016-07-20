@@ -15,11 +15,6 @@ uses
 
 type
 
-  TSQLite3Connectionx = class(TSQLite3Connection)
-  public
-    property Handle read GetHandle;
-  end;
-
   { TDBDataProcess }
 
   TDBDataProcess = class(TObject)
@@ -93,6 +88,7 @@ type
       NumChapter: Integer; JDN: TDateTime): Boolean; overload;
     function UpdateData(Const Title, Link, Authors, Artists, Genres, Status, Summary: String;
       NumChapter: Integer; AWebsite: String = ''): Boolean;
+    function DeleteData(const RecIndex: Integer): Boolean;
     procedure Commit;
     procedure Rollback;
     procedure RemoveFilter;
@@ -109,6 +105,8 @@ type
     property Value[RecIndex, FieldIndex: Integer]: String read GetValue; default;
     property ValueInt[RecIndex, FieldIndex: Integer]: Integer read GetValueInt;
     property LinkCount: Integer read GetLinkCount;
+    property Connection: TSQLite3Connection read FConn;
+    property Transaction: TSQLTransaction read FTrans;
     property Table: TSQLQuery read FQuery;
   end;
 
@@ -587,7 +585,7 @@ end;
 constructor TDBDataProcess.Create;
 begin
   inherited Create;
-  FConn := TSQLite3Connectionx.Create(nil);
+  FConn := TSQLite3Connection.Create(nil);
   FTrans := TSQLTransaction.Create(nil);
   FQuery := TSQLQuery.Create(nil);
   FConn.Transaction := FTrans;
@@ -840,6 +838,18 @@ begin
          ' WHERE ("link"='+QuotedStr(Link)+');';
     FConn.ExecuteDirect(sql);
     Result:=True;
+  except
+  end;
+end;
+
+function TDBDataProcess.DeleteData(const RecIndex: Integer): Boolean;
+begin
+  Result := False;
+  try
+    FQuery.RecNo := RecIndex + 1;
+    FQuery.Delete;
+    Dec(FRecordCount);
+    Result := True;
   except
   end;
 end;

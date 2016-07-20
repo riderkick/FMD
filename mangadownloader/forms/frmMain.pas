@@ -74,6 +74,7 @@ type
     lbOptionMangaCustomRenameHint: TLabel;
     lbOptionMangaCustomRename: TLabel;
     MenuItem10: TMenuItem;
+    miMangaListDelete: TMenuItem;
     miDownloadDeleteTaskDataFavorite: TMenuItem;
     miTrayExit: TMenuItem;
     miTrayRestore: TMenuItem;
@@ -462,6 +463,7 @@ type
     procedure miDownloadDeleteCompletedClick(Sender: TObject);
     procedure miDownloadResumeClick(Sender: TObject);
     procedure miDownloadStopClick(Sender: TObject);
+    procedure miMangaListDeleteClick(Sender: TObject);
     procedure miMangaListDownloadAllClick(Sender: TObject);
     procedure miMangaListViewInfosClick(Sender: TObject);
     procedure miFavoritesOpenFolderClick(Sender: TObject);
@@ -792,6 +794,7 @@ resourcestring
   RS_DlgTitleExistInDLlist = 'This title are already in download list.'#13#10
                            + 'Do you want to download it anyway?';
   RS_DlgQuit = 'Are you sure you want to exit?';
+  RS_DlgRemoveItem = 'Are you sure you want to delete this item(s)?';
   RS_DlgRemoveTask = 'Are you sure you want to delete the task(s)?';
   RS_DlgRemoveFavorite = 'Are you sure you want to delete the favorite(s)?';
   RS_DlgURLNotSupport = 'URL not supported!';
@@ -2839,6 +2842,36 @@ begin
     end;
     DLManager.CheckAndActiveTask();
     UpdateVtDownload;
+  end;
+end;
+
+procedure TMainForm.miMangaListDeleteClick(Sender: TObject);
+var
+  Node: PVirtualNode;
+  DeleteCount: Integer;
+begin
+  if vtMangaList.SelectedCount = 0 then Exit;
+  if dataProcess.Table.Active = False then Exit;
+  if MessageDlg('', RS_DlgRemoveItem, mtConfirmation, [mbYes, mbNo], 0) = mrNo then Exit;
+  try
+    vtMangaList.BeginUpdate;
+    DeleteCount := 0;
+    Node := vtMangaList.GetPreviousSelected(nil);
+    while Assigned(Node) do
+    begin
+      if dataProcess.DeleteData(Node^.Index) then
+        Inc(DeleteCount);
+      Node := vtMangaList.GetPreviousSelected(Node);
+    end;
+    dataProcess.Table.ApplyUpdates;
+    dataProcess.Table.SQLTransaction.CommitRetaining;
+    if DeleteCount <> 0 then
+    begin
+      vtMangaList.ClearSelection;
+      vtMangaList.RootNodeCount := dataProcess.RecordCount;
+    end;
+  finally
+    vtMangaList.EndUpdate;
   end;
 end;
 

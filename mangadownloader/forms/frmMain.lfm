@@ -4928,6 +4928,10 @@ object MainForm: TMainForm
       SubMenuImages = IconList
       OnClick = miMangaListAddToFavoritesClick
     end
+    object miMangaListDelete: TMenuItem
+      Caption = 'Delete'
+      OnClick = miMangaListDeleteClick
+    end
     object miI2: TMenuItem
       Caption = '-'
     end

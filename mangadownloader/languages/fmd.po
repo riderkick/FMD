@@ -102,6 +102,10 @@ msgstr ""
 msgid "Are you sure you want to delete all finished tasks?"
 msgstr ""
 
+#: frmmain.rs_dlgremoveitem
+msgid "Are you sure you want to delete this item(s)?"
+msgstr ""
+
 #: frmmain.rs_dlgremovetask
 msgid "Are you sure you want to delete the task(s)?"
 msgstr ""
@@ -1432,6 +1436,11 @@ msgstr ""
 
 #: tmainform.mimangalistaddtofavorites.caption
 msgid "Add to Favorites"
+msgstr ""
+
+#: tmainform.mimangalistdelete.caption
+msgctxt "tmainform.mimangalistdelete.caption"
+msgid "Delete"
 msgstr ""
 
 #: tmainform.mimangalistdownloadall.caption
