@@ -3621,10 +3621,13 @@ procedure TMainForm.vtFavoritesBeforeCellPaint(Sender: TBaseVirtualTree;
   TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
   CellPaintMode: TVTCellPaintMode; CellRect: TRect; var ContentRect: TRect);
 
+var
+  C: TColor;
 begin
   if CellPaintMode <> cpmPaint then Exit;
   with TargetCanvas, FavoriteManager.Items[Node^.Index] do
   begin
+    C := Brush.Color;
     Brush.Color := clNone;
     if Trim(FavoriteInfo.Link) = '' then
       Brush.Color := CL_FVBrokenFavorite
@@ -3646,7 +3649,9 @@ begin
       end;
     end;
     if Brush.Color <> clNone then
-      FillRect(CellRect);
+      FillRect(CellRect)
+    else
+      Brush.Color := C;
   end;
 end;
 
