@@ -21,8 +21,8 @@ uses
   SysUtils, Classes, Graphics, Forms, lazutf8classes, LazUTF8, LazFileUtils,
   LConvEncoding, strutils, dateutils, fileinfo, base64, fpjson, jsonparser, jsonscanner,
   FastHTMLParser, fgl, RegExpr, synautil, httpsend, blcksock, ssl_openssl, synacode,
-  GZIPUtils, uFMDThread, uMisc, httpsendthread, FMDOptions, simplehtmltreeparser, xquery,
-  xquery_json, Imaging, ImagingTypes, ImagingExtras, SimpleException, SimpleLogger;
+  FPimage, GZIPUtils, uFMDThread, uMisc, httpsendthread, FMDOptions, simplehtmltreeparser,
+  xquery, xquery_json, ImgInfos, SimpleException, SimpleLogger;
 
 const
   JPG_HEADER: array[0..2] of Byte = ($FF, $D8, $FF);
@@ -830,8 +830,11 @@ function SaveImage(const mangaSiteID: Integer; URL: String;
 function ImageFileExist(const AFileName: String): Boolean;
 function FindImageFile(const AFileName: String): String;
 
-// load TImageData from file with UTF8 aware
-function LoadImageDataFromFileUTF8(const FileName: String; var Image: TImageData): Boolean;
+// load iamge from file with UTF8 aware
+function LoadImageFromFileUTF8(const FileName: String; var Image: TFPCustomImage): Boolean;
+
+// copy image from one image rect to dest point
+procedure CopyImageRect(const Source, Dest: TFPCustomImage; const DestX, DestY: Integer; const SourceRect: TRect);
 
 // merge 2 images to one
 function Merge2Image(const Directory, ImgName1, ImgName2, FinalName: String; const Landscape: Boolean = False): Boolean;
@@ -3268,7 +3271,7 @@ begin
   if Stream.Size = 0 then Exit;
   p := CleanAndExpandDirectory(Path);
   if ForceDirectoriesUTF8(p) then begin
-    f := DetermineStreamFormat(Stream);
+    f := GetImageStreamExt(Stream);
     if f = '' then Exit;
     f := p + FileName + '.' + f;
     if FileExistsUTF8(f) then DeleteFileUTF8(f);
@@ -3540,82 +3543,110 @@ begin
     end;
 end;
 
-function LoadImageDataFromFileUTF8(const FileName: String; var Image: TImageData): Boolean;
+function LoadImageFromFileUTF8(const FileName: String; var Image: TFPCustomImage): Boolean;
 var
-  f: TFileStreamUTF8;
+  fs: TFileStreamUTF8;
+  h: TFPCustomImageReaderClass;
+  r: TFPCustomImageReader;
 begin
   Result := False;
-  FreeImage(Image);
   if not FileExistsUTF8(FileName) then Exit;
-  f := TFileStreamUTF8.Create(FileName, fmOpenRead or fmShareDenyWrite);
+  h := GetImageFileReaderClass(FileName);
+  if h = nil then Exit;
+  r := h.Create;
+  fs := TFileStreamUTF8.Create(FileName, fmOpenRead or fmShareDenyWrite);
   try
-    Result := LoadImageFromStream(f, Image);
+    Image.LoadFromStream(fs, r);
+    Result := True;
   finally
-    f.Free;
+    r.Free;
+    fs.Free;
+  end;
+end;
+
+procedure CopyImageRect(const Source, Dest: TFPCustomImage; const DestX, DestY: Integer; const SourceRect: TRect);
+var
+  x, y, dx, dy: Integer;
+begin
+  dx := DestX;
+  dy := DestY;
+  for y := SourceRect.Top to SourceRect.Bottom -1 do
+  begin
+    for x := SourceRect.Left to SourceRect.Right - 1 do
+    begin
+      Dest.Colors[dx, dy] := Source.Colors[x, y];
+      Inc(dx);
+    end;
+    Inc(dy);
   end;
 end;
 
 function Merge2Image(const Directory, ImgName1, ImgName2, FinalName: String; const Landscape: Boolean): Boolean;
 var
-  dir, ext, fullImgName1, fullImgName2, fullFileName: String;
-  img1, img2, imgProc: TImageData;
-  fileStream: TFileStreamUTF8;
-  newWidth, newHeigth: LongInt;
+  D, AImgName1, AImgName2, AFinalName: String;
+  Img1, Img2, ImgNew: TFPCustomImage;
+  newWidth: Integer;
+  newHeigth: LongInt;
+  h: TFPCustomImageWriterClass;
+  w: TFPCustomImageWriter;
+  fs: TFileStreamUTF8;
 begin
   Result := False;
-  dir := CleanAndExpandDirectory(Directory);
-  if not DirectoryExistsUTF8(dir) then Exit;
-  fullImgName1 := dir + ImgName1;
-  fullImgName2 := dir + ImgName2;
-  if not (FileExistsUTF8(fullImgName1) and FileExistsUTF8(fullImgName2)) then Exit;
-  InitImage(img1);
-  InitImage(img2);
-  InitImage(imgProc);
+  if not DirectoryExistsUTF8(Directory) then Exit;
+  D := CleanAndExpandDirectory(Directory);
+  AImgName1 := D + ImgName1;
+  AImgName2 := D + ImgName2;
+  if not (FileExistsUTF8(AImgName1) and FileExistsUTF8(AImgName2)) then Exit;
+  Img1 := TFPMemoryImage.create(0,0);
+  Img2 := TFPMemoryImage.create(0,0);
   try
-    if LoadImageDataFromFileUTF8(fullImgName1, img1) and
-       LoadImageDataFromFileUTF8(fullImgName2, img2) then
+    if (LoadImageFromFileUTF8(AImgName1, Img1) and LoadImageFromFileUTF8(AImgName2, Img2)) then Exit;
+    if Landscape then
     begin
+      newWidth := img1.Width + img2.Width;
+      newHeigth := max(img1.Height, img2.Height);
+    end
+    else
+    begin
+      newWidth := max(img1.Width, img2.Width);
+      newHeigth := img1.Height + img2.Height;
+    end;
+
+    ImgNew := TFPMemoryImage.create(newWidth, newHeigth);
+    try
+      CopyImageRect(Img1, ImgNew, 0, 0, Rect(0, 0, Img1.Width, Img1.Height));
       if Landscape then
-      begin
-        newWidth := img1.Width + img2.Width;
-        newHeigth := max(img1.Height, img2.Height);
-      end
+        CopyImageRect(Img2, ImgNew, Img1.Width + 1, 0, Rect(0, 0, Img2.Width, Img2.Height))
       else
+        CopyImageRect(Img2, ImgNew, 0, Img1.Height + 1, Rect(0, 0, Img2.Width, Img2.Height));
+      AFinalName := D + FinalName;
+      if FileExistsUTF8(AFinalName) then
+        DeleteFileUTF8(AFinalName);
+      if not FileExistsUTF8(AFinalName) then
       begin
-        newWidth := max(img1.Width, img2.Width);
-        newHeigth := img1.Height + img2.Height;
-      end;
-      NewImage(newWidth, newHeigth, ifR8G8B8, imgProc);
-      CopyRect(img1, 0, 0, img1.Width, img1.Width, imgProc, 0, 0);
-      if Landscape then
-        CopyRect(img2, 0, 0, img2.Width, img2.Width, imgProc, img1.Width + 1, 0)
-      else
-        CopyRect(img2, 0, 0, img2.Width, img2.Width, imgProc, 0, img1.Height + 1);
-      fullFileName := dir + FinalName;
-      if FileExistsUTF8(fullFileName) then
-        DeleteFileUTF8(fullFileName);
-      if not FileExistsUTF8(fullFileName) then
-      begin
-        fileStream := TFileStreamUTF8.Create(fullFileName, fmCreate);
+        h := GetImageFileWriterClass(AImgName1);
+        if h = nil then Exit;
         try
-          ext := ExtractFileExt(fullFileName);
-          if ext <> '' then
-            SaveImageToStream(ext, fileStream, imgProc);
+          w := h.Create;
+          fs := TFileStreamUTF8.Create(AFinalName, fmCreate);
+          ImgNew.SaveToStream(fs, w);
+          Result := True;
         finally
-          fileStream.Free;
+          w.Free;
+          fs.Free;
         end;
-        Result := FileExistsUTF8(fullFileName);
         if Result then
         begin
-          DeleteFileUTF8(fullImgName1);
-          DeleteFileUTF8(fullImgName2);
+          DeleteFileUTF8(AImgName1);
+          DeleteFileUTF8(AImgName2);
         end;
       end;
+    finally
+      ImgNew.Free;
     end;
   finally
-    FreeImage(img1);
-    FreeImage(img2);
-    FreeImage(imgProc);
+    Img1.Free;
+    Img2.Free;
   end;
 end;
 
