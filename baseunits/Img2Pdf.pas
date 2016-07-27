@@ -1,21 +1,31 @@
-{ Img2Pdf
+{ Img2Pdf.pas
 
   Copyright (C) 2016
 
-  This source is free software; you can redistribute it and/or modify it under
-  the terms of the GNU General Public License as published by the Free
-  Software Foundation; either version 2 of the License, or (at your option)
-  any later version.
+  This library is free software; you can redistribute it and/or modify it
+  under the terms of the GNU Library General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or (at your
+  option) any later version with the following modification:
 
-  This code is distributed in the hope that it will be useful, but WITHOUT ANY
-  WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-  FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
-  details.
+  As a special exception, the copyright holders of this library give you
+  permission to link this library with independent modules to produce an
+  executable, regardless of the license terms of these independent modules,and
+  to copy and distribute the resulting executable under terms of your choice,
+  provided that you also meet, for each linked independent module, the terms
+  and conditions of the license of that module. An independent module is a
+  module which is not derived from or based on this library. If you modify
+  this library, you may extend this exception to your version of the library,
+  but you are not obligated to do so. If you do not wish to do so, delete this
+  exception statement from your version.
 
-  A copy of the GNU General Public License is available on the World Wide Web
-  at <http://www.gnu.org/copyleft/gpl.html>. You can also obtain it by writing
-  to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
-  MA 02111-1307, USA.
+  This program is distributed in the hope that it will be useful, but WITHOUT
+  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+  FITNESS FOR A PARTICULAR PURPOSE. See the GNU Library General Public License
+  for more details.
+
+  You should have received a copy of the GNU Library General Public License
+  along with this library; if not, write to the Free Software Foundation,
+  Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 }
 unit Img2Pdf;
 
@@ -24,11 +34,11 @@ unit Img2Pdf;
 interface
 
 uses
-  Classes, SysUtils, LazFileUtils, LazUTF8Classes,
-  Imaging, ImagingTypes, ImagingExtras, zstream;
+  Classes, SysUtils, LazFileUtils, LazUTF8Classes, FPimage, ImgInfos,
+  FPReadJPEG, FPWriteJPEG, FPReadPNG, JPEGLib, JdAPImin, JDataSrc, Jerror,
+  zstream;
 
 type
-  TPDFFloat = Single;
   TCompressionQuality = 0..100;
 
   TImg2PDF = class;
@@ -36,21 +46,21 @@ type
   { TPageInfo }
 
   TPageInfo = class
-  private
-    FOwner: TImg2PDF;
   public
     constructor Create(const AOwner: TImg2PDF);
     destructor Destroy; override;
   public
+    Owner: TImg2PDF;
     FileName: String;
-    Extension: String;
+    Ext: String;
     Width: Integer;
     Height: Integer;
+    BitsPerComponent: Integer;
     ColorSpace: String;
     Filter: String;
     Stream: TMemoryStreamUTF8;
   public
-    procedure GetImageSize;
+    procedure GetImageInfos;
     procedure LoadImageData;
     procedure FlushImageData;
   end;
@@ -88,11 +98,25 @@ type
 
 implementation
 
+type
+
+  { TFPReaderPNGInfo }
+
+  TFPReaderPNGInfo = class(TFPReaderPNG)
+  public
+    property Header;
+  end;
+
 const
   CRLF = #13#10;
   PDF_VERSION = '%PDF-1.3';
   PDF_FILE_END = '%%EOF';
   PDF_MAX_GEN_NUM = 65535;
+
+var
+  JPEGError: jpeg_error_mgr;
+
+{ TFPReaderPNGToPageInfo }
 
 function PDFString(const S: String): String;
 begin
@@ -117,11 +141,12 @@ end;
 
 constructor TPageInfo.Create(const AOwner: TImg2PDF);
 begin
-  FOwner := AOwner;
+  Owner := AOwner;
   FileName := '';
-  Extension := '';
+  Ext := '';
   Width := 0;
   Height := 0;
+  BitsPerComponent := 8;
   ColorSpace := '';
   Filter := '';
 end;
@@ -132,127 +157,233 @@ begin
   inherited Destroy;
 end;
 
-function GetColorSpace(const AImageData: TImageData): String;
+procedure TPageInfo.GetImageInfos;
 begin
-  case AImageData.Format of
-    ifIndex8: Result := 'Indexed';
-
-    ifGray8,
-    ifA8Gray8,
-    ifGray16,
-    ifGray32,
-    ifGray64,
-    ifA16Gray16: Result := 'DeviceGray';
-
-    ifX5R1G1B1,
-    ifR3G3B2,
-    ifR5G6B5,
-    ifA1R5G5B5,
-    ifA4R4G4B4,
-    ifX1R5G5B5,
-    ifX4R4G4B4,
-    ifR8G8B8,
-    ifA8R8G8B8,
-    ifX8R8G8B8,
-    ifR16G16B16,
-    ifA16R16G16B16,
-    ifB16G16R16,
-    ifA16B16G16R16,
-    ifR32F,
-    ifA32R32G32B32F,
-    ifA32B32G32R32F,
-    ifR16F,
-    ifA16R16G16B16F,
-    ifA16B16G16R16F,
-    ifR32G32B32F,
-    ifB32G32R32F: Result := 'DeviceRGB';
-    else
-      Result := '';
-  end;
+  Ext := GetImageFileSize(FileName, Width, Height);
 end;
 
-procedure TPageInfo.GetImageSize;
+procedure JPEGToPageInfo(const PageInfo: TPageInfo);
 var
   AFS: TFileStreamUTF8;
-  AImg: TImageData;
+  JDS: jpeg_decompress_struct;
 begin
-  AFS := TFileStreamUTF8.Create(FileName, fmOpenRead or fmShareDenyWrite);
+  PageInfo.Filter := 'DCTDecode';
   try
-    Extension := LowerCase(DetermineStreamFormat(AFS));
-    if Extension = '' then Exit;
-    InitImage(AImg);
+    AFS := TFileStreamUTF8.Create(PageInfo.FileName, fmOpenRead or fmShareDenyWrite);
+    FillChar(JDS, SizeOf(JDS), 0);
+    JDS.err := @JPEGError;
+    jpeg_CreateDecompress(@JDS, JPEG_LIB_VERSION, SizeOf(JDS));
     try
-      if LoadImageFromStream(AFS, AImg) then
-      begin
-        Width := AImg.Width;
-        Height := AImg.Height;
+      jpeg_stdio_src(@JDS, @AFS);
+      jpeg_read_header(@JDS, True);
+      case JDS.jpeg_color_space of
+        JCS_GRAYSCALE: PageInfo.ColorSpace := 'DeviceGray';
+        JCS_RGB: PageInfo.ColorSpace := 'DeviceRGB';
+        JCS_CMYK: PageInfo.ColorSpace := 'DeviceCMYK';
+        else
+          PageInfo.ColorSpace := 'DeviceRGB';
       end;
     finally
-      FreeImage(AImg);
+      jpeg_Destroy_Decompress(@JDS);
     end;
+    PageInfo.Stream.LoadFromStream(AFS);
   finally
     AFS.Free;
   end;
 end;
 
-procedure TPageInfo.LoadImageData;
+procedure JPEGCompressToPageInfo(const PageInfo: TPageInfo);
 var
-  AImg: TImageData;
-  ADefaultJpegQuality: LongInt;
-  AImgInfo: TImageFormatInfo;
-  i: Integer;
+  IMG: TFPMemoryImage;
+  RDR: TFPCustomImageReader;
+  AFS: TFileStreamUTF8;
+  WRT: TFPWriterJPEG;
 begin
-  if Assigned(Stream) then Exit;
-  Stream := TMemoryStreamUTF8.Create;
+  PageInfo.Filter := 'DCTDecode';
+  IMG := TFPMemoryImage.Create(0, 0);
   try
-    Stream.LoadFromFile(FileName);
-    InitImage(AImg);
-    LoadImageFromStream(Stream, AImg);
-    ColorSpace := GetColorSpace(AImg);
-    if Extension = 'jpg' then
-      Filter := 'DCTDecode'
-    else
-    begin
-      Stream.Clear;
-      if FOwner.CompressionQuality < 100 then
-      begin
-        //DCTDecode for jpg, convert to jpg for non jpg
-        Filter := 'DCTDecode';
-        ADefaultJpegQuality := Imaging.GetOption(ImagingJpegQuality);
-        try
-          Imaging.SetOption(ImagingJpegQuality, FOwner.CompressionQuality);
-          SaveImageToStream('jpg', Stream, AImg);
-        finally
-          Imaging.SetOption(ImagingJpegQuality, ADefaultJpegQuality);
-        end;
-      end
+    try
+      RDR := GetImageExtReaderClass(PageInfo.Ext).Create;
+      AFS := TFileStreamUTF8.Create(PageInfo.FileName, fmOpenRead or fmShareDenyWrite);
+      IMG.LoadFromStream(AFS, RDR);
+      if (RDR is TFPReaderJPEG) and TFPReaderJPEG(RDR).GrayScale then
+        PageInfo.ColorSpace := 'DeviceGray'
       else
-      begin
-        //FlateDecode
-        Filter := 'FlateDecode';
-        GetImageFormatInfo(AImg.Format, AImgInfo);
-        if (AImgInfo.IsIndexed) and (AImgInfo.PaletteEntries > 0) then begin
-          ColorSpace := 'Indexed /DeviceRGB ' + IntToStr(AImgInfo.PaletteEntries - 1) + ' <';
-          for i := 0 to AImgInfo.PaletteEntries - 1 do
-            with AImg.Palette^[i] do
-              ColorSpace += IntToHex(R, 2) + IntToHex(G, 2) + IntToHex(B, 2);
-          ColorSpace += '>';
-        end;
-        if ColorSpace = 'DeviceRGB' then
-          try
-            SwapChannels(AImg, ChannelRed, ChannelBlue);
-          except
+        PageInfo.ColorSpace := 'DeviceRGB';
+    finally
+      RDR.Free;
+      AFS.Free;
+    end;
+    WRT := TFPWriterJPEG.Create;
+    try
+      WRT.CompressionQuality := PageInfo.Owner.CompressionQuality;
+      WRT.GrayScale := (PageInfo.ColorSpace = 'DeviceGray');
+      IMG.SaveToStream(PageInfo.Stream, WRT);
+    finally
+      WRT.Free;
+    end;
+  finally
+    IMG.Free;
+  end;
+end;
+
+procedure PNGToPageInfo(const PageInfo: TPageInfo);
+var
+  AFS: TFileStreamUTF8;
+  IMG: TFPCustomImage;
+  RDR: TFPReaderPNGInfo;
+  AMS: TMemoryStreamUTF8;
+  X, Y: Integer;
+  CLW, C: TFPColor;
+begin
+  IMG := TFPMemoryImage.Create(0, 0);
+  try
+    try
+      RDR := TFPReaderPNGInfo.Create;
+      AFS := TFileStreamUTF8.Create(PageInfo.FileName, fmOpenRead or fmShareDenyWrite);
+      RDR.CheckContents(AFS);
+      if RDR.Header.ColorType = 3 then
+        IMG.UsePalette := True;
+      AFS.Position := 0;
+      IMG.LoadFromStream(AFS, RDR);
+
+      PageInfo.Filter := 'FlateDecode';
+      PageInfo.BitsPerComponent := RDR.Header.BitDepth;
+      if PageInfo.BitsPerComponent > 8 then
+        PageInfo.BitsPerComponent := 8;
+
+      AMS := TMemoryStreamUTF8.Create;
+      try
+        case RDR.Header.ColorType of
+          0, 4:
+          begin
+            PageInfo.ColorSpace := 'DeviceGray';
+            for Y := 0 to IMG.Height - 1 do
+              for X := 0 to IMG.Width - 1 do
+                AMS.WriteByte(IMG.Colors[X, Y].red shr 8);
           end;
-        with Tcompressionstream.Create(clmax, Stream, False) do
+          3:
+          begin
+            PageInfo.ColorSpace := 'Indexed /DeviceRGB';
+            if Assigned(IMG.Palette) then
+            begin
+              PageInfo.ColorSpace := PageInfo.ColorSpace + ' ' + IntToStr(IMG.Palette.Count) + ' <';
+              for X := 0 to IMG.Palette.Count - 1 do
+              begin
+                C := IMG.Palette.Color[X];
+                PageInfo.ColorSpace := PageInfo.ColorSpace +
+                  IntToHex(C.red shr 8, 2) + IntToHex(C.green shr 8, 2) + IntToHex(C.blue shr 8, 2);
+              end;
+              PageInfo.ColorSpace := PageInfo.ColorSpace + '>';
+            end;
+
+            for Y := 0 to IMG.Height - 1 do
+              for X := 0 to IMG.Width - 1 do
+                AMS.WriteByte(Byte(IMG.Pixels[X, Y]));
+          end;
+          else
+          begin
+            PageInfo.ColorSpace := 'DeviceRGB';
+            FillChar(CLW, SizeOf(CLW), $FF);
+            for Y := 0 to IMG.Height - 1 do
+              for X := 0 to IMG.Width - 1 do
+              begin
+                C := IMG.Colors[X, Y];
+                if C.alpha < $FFFF then
+                  C := AlphaBlend(CLW, C);
+                AMS.WriteByte(C.Red shr 8);
+                AMS.WriteByte(C.Green shr 8);
+                AMS.WriteByte(C.blue shr 8);
+              end;
+          end;
+        end;
+        with Tcompressionstream.Create(cldefault, PageInfo.Stream) do
           try
-            Write(AImg.Bits^, AImg.Size);
+            AMS.Position := 0;
+            Write(AMS.Memory^, AMS.Size);
+            flush;
           finally
             Free;
           end;
+      finally
+        AMS.Free;
       end;
+    finally
+      RDR.Free;
+      AFS.Free;
+    end
+  finally
+    IMG.Free;
+  end;
+end;
+
+procedure ImageToPageInfo(const PageInfo: TPageInfo);
+var
+  IMG: TFPCustomImage;
+  RDR: TFPCustomImageReader;
+  AFS: TFileStreamUTF8;
+  AMS: TMemoryStreamUTF8;
+  CLW, C: TFPColor;
+  X, Y: Integer;
+begin
+  PageInfo.Filter := 'FlateDecode';
+  PageInfo.ColorSpace := 'DeviceRGB';
+  IMG := TFPMemoryImage.Create(0, 0);
+  try
+    try
+      RDR := GetImageExtReaderClass(PageInfo.Ext).Create;
+      AFS := TFileStreamUTF8.Create(PageInfo.FileName, fmOpenRead or fmShareDenyWrite);
+      IMG.LoadFromStream(AFS, RDR);
+    finally
+      RDR.Free;
+      AFS.Free;
+    end;
+    AMS := TMemoryStreamUTF8.Create;
+    try
+      FillChar(CLW, SizeOf(CLW), $FF);
+      for Y := 0 to IMG.Height - 1 do
+        for X := 0 to IMG.Width - 1 do
+        begin
+          C := IMG.Colors[X, Y];
+          if C.alpha < $FFFF then
+            C := AlphaBlend(CLW, C);
+          AMS.WriteByte(C.Red shr 8);
+          AMS.WriteByte(C.Green shr 8);
+          AMS.WriteByte(C.blue shr 8);
+        end;
+      with Tcompressionstream.Create(cldefault, PageInfo.Stream) do
+        try
+          AMS.Position := 0;
+          Write(AMS.Memory^, AMS.Size);
+          flush;
+        finally
+          Free;
+        end;
+    finally
+      AMS.Free;
     end;
   finally
-    FreeImage(AImg);
+    IMG.Free;
+  end;
+end;
+
+procedure TPageInfo.LoadImageData;
+begin
+  if Assigned(Stream) then Exit;
+  if Ext = '' then Exit;
+  Stream := TMemoryStreamUTF8.Create;
+  try
+    if (Ext = 'jpg') and (Owner.CompressionQuality >= 75) then
+      JPEGToPageInfo(Self)
+    else
+    if Owner.CompressionQuality < 100 then
+      JPEGCompressToPageInfo(Self)
+    else
+    if Ext = 'png' then
+      PNGToPageInfo(Self)
+    else
+      ImageToPageInfo(Self);
+  except
   end;
 end;
 
@@ -299,8 +430,8 @@ begin
   if not FileExistsUTF8(AFileName) then Exit;
   P := TPageInfo.Create(Self);
   P.FileName := AFileName;
-  P.GetImageSize;
-  if P.Extension <> '' then
+  P.GetImageInfos;
+  if P.Ext <> '' then
     Result := FPageInfos.Add(P)
   else
     p.Free;
@@ -385,14 +516,17 @@ begin
         PDFWrite('/Width ' + IntToStr(PageInfo[i].Width));
         PDFWrite('/Height ' + IntToStr(PageInfo[i].Height));
         PDFWrite('/ColorSpace [/' + PageInfo[i].ColorSpace + ']');
-        PDFWrite('/BitsPerComponent 8');
+        PDFWrite('/BitsPerComponent ' + IntToStr(PageInfo[i].BitsPerComponent));
         PDFWrite('/Filter /' + PageInfo[i].Filter);
         PDFWrite('/Length ' + IntToStr(PageInfo[i].Stream.Size));
         PDFWrite('>>');
         PDFWrite('stream');
         PDFFlush;
-        PageInfo[i].Stream.Position := 0;
-        Stream.CopyFrom(PageInfo[i].Stream, PageInfo[i].Stream.Size);
+        if Assigned(PageInfo[i].Stream) then
+        begin
+          PageInfo[i].Stream.Position := 0;
+          Stream.CopyFrom(PageInfo[i].Stream, PageInfo[i].Stream.Size);
+        end;
         PDFWrite(CRLF + 'endstream');
         PDFWrite('endobj');
       finally
@@ -494,5 +628,9 @@ begin
     fs.Free;
   end;
 end;
+
+initialization
+  FillChar(JPEGError, SizeOf(JPEGError), 0);
+  jpeg_std_error(JPEGError);
 
 end.
