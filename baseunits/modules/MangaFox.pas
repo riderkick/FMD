@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, WebsiteModules, uData, uBaseUnit, uDownloadsManager,
-  XQueryEngineHTML, httpsendthread, mangafoxwatermarkremover;
+  XQueryEngineHTML, httpsendthread, MangaFoxWatermark;
 
 implementation
 
@@ -144,7 +144,7 @@ function AfterImageSaved(const AFilename: String; const Module: TModuleContainer
 begin
   Result := True;
   if removewatermark then
-    Result := mangafoxwatermarkremover.RemoveWatermark(AFilename, saveaspng);
+    Result := MangaFoxWatermark.RemoveWatermark(AFilename, saveaspng);
 end;
 
 procedure RegisterModule;

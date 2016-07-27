@@ -23,7 +23,7 @@ uses
   uFavoritesManager, uUpdateThread, uUpdateDBThread, uSilentThread, uMisc,
   uGetMangaInfosThread, frmDropTarget, frmAccountManager, frmWebsiteOptionCustom,
   frmWebsiteOptionAdvanced, frmCustomColor, CheckUpdate, accountmanagerdb, DBDataProcess,
-  mangafoxwatermarkremover, SimpleTranslator, FMDOptions, httpsendthread, SimpleException,
+  MangaFoxWatermark, SimpleTranslator, FMDOptions, httpsendthread, SimpleException,
   SimpleLogger;
 
 type
@@ -1205,7 +1205,7 @@ begin
   end;
 
   // load mangafox template
-  mangafoxwatermarkremover.LoadTemplate(MANGAFOXTEMPLATE_FOLDER);
+  MangaFoxWatermark.SetTemplateDirectory(MANGAFOXTEMPLATE_FOLDER);
 
   // load configfile
   isStartup := False;
