@@ -24,7 +24,6 @@ In order to build FMD from the source code, you must install Lazarus latest vers
  - RichMemo, https://sourceforge.net/projects/lazarus-ccr/
  - Virtual TreeView, https://sourceforge.net/projects/lazarus-ccr/
  - Synapse, http://synapse.ararat.cz/
- - Vampyre Imaging Library, http://imaginglib.sourceforge.net/
  - InternetTools, https://github.com/benibela/internettools
  - BESEN, https://github.com/BeRo1985/besen
 
