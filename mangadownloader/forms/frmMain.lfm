@@ -4114,8 +4114,8 @@ object MainForm: TMainForm
   object pmDownload: TPopupMenu
     Images = IconList
     OnPopup = pmDownloadPopup
-    left = 584
-    top = 180
+    left = 592
+    top = 184
     object miDownloadStop: TMenuItem
       Caption = 'Stop'
       Enabled = False
@@ -4445,8 +4445,8 @@ object MainForm: TMainForm
     end
   end
   object pmChapterList: TPopupMenu
-    left = 584
-    top = 212
+    left = 592
+    top = 224
     object miChapterListCheckSelected: TMenuItem
       Caption = 'Check selected'
       OnClick = miChapterListCheckSelectedClick
@@ -6567,13 +6567,6 @@ object MainForm: TMainForm
     Interval = 48
     OnTimer = tmAnimateMangaInfoTimer
     left = 336
-    top = 128
-  end
-  object tmStartup: TTimer
-    Enabled = False
-    Interval = 500
-    OnTimer = tmStartupTimer
-    left = 240
     top = 128
   end
   object tmRefreshDownloadsInfo: TTimer

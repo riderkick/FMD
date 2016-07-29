@@ -112,7 +112,6 @@ type
     tmBackup: TTimer;
     tmCheckFavorites: TTimer;
     tmRefreshDownloadsInfo: TTimer;
-    tmStartup: TTimer;
     tsWebsiteAdvanced: TTabSheet;
     tsWebsiteSelection: TTabSheet;
     tsWebsiteOptions: TTabSheet;
@@ -1284,7 +1283,6 @@ begin
   tmRefreshDownloadsInfo.Enabled := False;
   tmCheckFavorites.Enabled := False;
   tmAnimateMangaInfo.Enabled := False;
-  tmStartup.Enabled := False;
   tmExitCommand.Enabled := False;
 
   Writelog_D(Self.ClassName+'.CloseNow, backup all data to file');
@@ -1338,7 +1336,12 @@ begin
   if not isStartup then
   begin
     LoadFormInformation;
-    tmStartup.Enabled := True;
+    with TTimer.Create(nil) do
+    begin
+      OnTimer := @tmStartupTimer;
+      Interval := 1000;
+      Enabled := True;
+    end;
   end;
 end;
 
@@ -1513,7 +1516,6 @@ end;
 
 procedure TMainForm.tmStartupTimer(Sender: TObject);
 begin
-  tmStartup.Enabled := False;
   if not isStartup then
   begin
     isStartup := True;
@@ -1528,6 +1530,8 @@ begin
     end;
     DLManager.CheckAndActiveTaskAtStartup;
   end;
+  if Sender is TTimer then
+    TTimer(Sender).Free;
 end;
 
 procedure TMainForm.medURLCutClick(Sender: TObject);
