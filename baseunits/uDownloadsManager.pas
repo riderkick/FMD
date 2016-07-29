@@ -1848,12 +1848,12 @@ begin
   try
     if tcount > 0 then
     begin
-      if not MainForm.itRefreshDLInfo.Enabled then
-        MainForm.itRefreshDLInfo.Enabled := True;
+      if not MainForm.tmRefreshDownloadsInfo.Enabled then
+        MainForm.tmRefreshDownloadsInfo.Enabled := True;
     end
     else
     begin
-      MainForm.itRefreshDLInfo.Enabled := False;
+      MainForm.tmRefreshDownloadsInfo.Enabled := False;
       MainForm.UpdateVtDownload;
       if isCheckForFMDDo and (OptionLetFMDDo <> DO_NOTHING) then begin
         frmMain.DoAfterFMD := OptionLetFMDDo;
@@ -1900,8 +1900,8 @@ begin
   //force to check task if all task loaded is STATUS_WAIT
   if tcount = 0 then
     CheckAndActiveTask
-  else if MainForm.itRefreshDLInfo.Enabled = False then
-    MainForm.itRefreshDLInfo.Enabled := True;
+  else if MainForm.tmRefreshDownloadsInfo.Enabled = False then
+    MainForm.tmRefreshDownloadsInfo.Enabled := True;
   MainForm.UpdateVtDownload;
 end;
 

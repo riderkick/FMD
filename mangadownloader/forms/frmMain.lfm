@@ -13,7 +13,7 @@ object MainForm: TMainForm
   OnShow = FormShow
   OnWindowStateChange = FormWindowStateChange
   Position = poScreenCenter
-  LCLVersion = '1.7'
+  Visible = False
   object sbUpdateList: TStatusBar
     Left = 0
     Height = 30
@@ -4974,28 +4974,6 @@ object MainForm: TMainForm
       OnClick = mnDownload1ClickClick
     end
   end
-  object itAnimate: TIdleTimer
-    Enabled = False
-    Interval = 48
-    OnTimer = itAnimateTimer
-    left = 752
-    top = 72
-  end
-  object itCheckFav: TIdleTimer
-    Enabled = False
-    Interval = 600000
-    OnTimer = itCheckFavTimer
-    left = 696
-    top = 228
-  end
-  object itRefreshDLInfo: TIdleTimer
-    Enabled = False
-    OnTimer = itRefreshDLInfoTimer
-    OnStartTimer = itRefreshDLInfoStartTimer
-    OnStopTimer = itRefreshDLInfoStopTimer
-    left = 696
-    top = 168
-  end
   object IconList: TImageList
     left = 24
     top = 136
@@ -6479,24 +6457,11 @@ object MainForm: TMainForm
     left = 80
     top = 448
   end
-  object itStartup: TIdleTimer
+  object tmExitCommand: TTimer
     Enabled = False
-    Interval = 500
-    OnTimer = itStartupTimer
-    left = 648
-    top = 120
-  end
-  object tmBackup: TIdleTimer
-    Interval = 60000
-    OnTimer = tmBackupTimer
-    left = 696
-    top = 120
-  end
-  object itMonitor: TTimer
-    Enabled = False
-    OnTimer = itMonitorTimer
-    left = 648
-    top = 224
+    OnTimer = tmExitCommandTimer
+    left = 240
+    top = 184
   end
   object TransferRateGraphList: TListChartSource
     DataPoints.Strings = (
@@ -6596,5 +6561,40 @@ object MainForm: TMainForm
       Caption = 'Exit'
       OnClick = miTrayExitClick
     end
+  end
+  object tmAnimateMangaInfo: TTimer
+    Enabled = False
+    Interval = 48
+    OnTimer = tmAnimateMangaInfoTimer
+    left = 336
+    top = 128
+  end
+  object tmStartup: TTimer
+    Enabled = False
+    Interval = 500
+    OnTimer = tmStartupTimer
+    left = 240
+    top = 128
+  end
+  object tmRefreshDownloadsInfo: TTimer
+    Enabled = False
+    OnTimer = tmRefreshDownloadsInfoTimer
+    OnStartTimer = tmRefreshDownloadsInfoStartTimer
+    OnStopTimer = tmRefreshDownloadsInfoStopTimer
+    left = 240
+    top = 256
+  end
+  object tmBackup: TTimer
+    Interval = 120000
+    OnTimer = tmBackupTimer
+    left = 336
+    top = 184
+  end
+  object tmCheckFavorites: TTimer
+    Enabled = False
+    Interval = 600000
+    OnTimer = tmCheckFavoritesTimer
+    left = 376
+    top = 256
   end
 end

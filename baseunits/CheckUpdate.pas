@@ -62,7 +62,7 @@ begin
       begin
         frmMain.FUpdateURL := fUpdateURL;
         DoAfterFMD := DO_UPDATE;
-        MainForm.itMonitor.Enabled := True;
+        MainForm.tmExitCommand.Enabled := True;
       end
       else
         MainForm.btCheckLatestVersion.Caption := RS_BtnCheckUpdates;

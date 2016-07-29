@@ -108,6 +108,11 @@ type
     pmTray: TPopupMenu;
     sbSaveTo: TScrollBox;
     sbWebsiteOptions: TScrollBox;
+    tmAnimateMangaInfo: TTimer;
+    tmBackup: TTimer;
+    tmCheckFavorites: TTimer;
+    tmRefreshDownloadsInfo: TTimer;
+    tmStartup: TTimer;
     tsWebsiteAdvanced: TTabSheet;
     tsWebsiteSelection: TTabSheet;
     tsWebsiteOptions: TTabSheet;
@@ -130,8 +135,7 @@ type
     IconDL: TImageList;
     IconMed: TImageList;
     IconSmall: TImageList;
-    itMonitor: TTimer;
-    itStartup: TIdleTimer;
+    tmExitCommand: TTimer;
     lbDefaultDownloadPath: TLabel;
     lbDropTargetOpacity: TLabel;
     lbOptionExternalParams: TLabel;
@@ -239,9 +243,6 @@ type
     gbOptionRenaming: TGroupBox;
     gbOptionFavorites: TGroupBox;
     IconList: TImageList;
-    itRefreshDLInfo: TIdleTimer;
-    itCheckFav: TIdleTimer;
-    itAnimate: TIdleTimer;
     imCover: TImage;
     lbOptionChapterCustomRename: TLabel;
     lbOptionPDFQuality: TLabel;
@@ -338,7 +339,6 @@ type
     tbWebsitesExpandAll: TToolButton;
     ToolBarWebsites: TToolBar;
     tsView: TTabSheet;
-    tmBackup: TIdleTimer;
     ToolBarDownload: TToolBar;
     tbDownloadResumeAll: TToolButton;
     tbDownloadStopAll: TToolButton;
@@ -421,13 +421,13 @@ type
     procedure FormDestroy(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormWindowStateChange(Sender: TObject);
-    procedure itAnimateTimer(Sender: TObject);
-    procedure itCheckFavTimer(Sender: TObject);
-    procedure itMonitorTimer(Sender: TObject);
-    procedure itRefreshDLInfoStartTimer(Sender: TObject);
-    procedure itRefreshDLInfoStopTimer(Sender: TObject);
-    procedure itRefreshDLInfoTimer(Sender: TObject);
-    procedure itStartupTimer(Sender: TObject);
+    procedure tmAnimateMangaInfoTimer(Sender: TObject);
+    procedure tmCheckFavoritesTimer(Sender: TObject);
+    procedure tmExitCommandTimer(Sender: TObject);
+    procedure tmRefreshDownloadsInfoStartTimer(Sender: TObject);
+    procedure tmRefreshDownloadsInfoStopTimer(Sender: TObject);
+    procedure tmRefreshDownloadsInfoTimer(Sender: TObject);
+    procedure tmStartupTimer(Sender: TObject);
     procedure medURLCutClick(Sender: TObject);
     procedure medURLCopyClick(Sender: TObject);
     procedure medURLPasteClick(Sender: TObject);
@@ -1281,11 +1281,11 @@ begin
 
   Writelog_D(Self.ClassName+'.CloseNow, disabling all timer');
   tmBackup.Enabled := False;
-  itRefreshDLInfo.Enabled := False;
-  itCheckFav.Enabled := False;
-  itAnimate.Enabled := False;
-  itStartup.Enabled := False;
-  itMonitor.Enabled := False;
+  tmRefreshDownloadsInfo.Enabled := False;
+  tmCheckFavorites.Enabled := False;
+  tmAnimateMangaInfo.Enabled := False;
+  tmStartup.Enabled := False;
+  tmExitCommand.Enabled := False;
 
   Writelog_D(Self.ClassName+'.CloseNow, backup all data to file');
   //Backup data
@@ -1338,7 +1338,7 @@ begin
   if not isStartup then
   begin
     LoadFormInformation;
-    itStartup.Enabled := True;
+    tmStartup.Enabled := True;
   end;
 end;
 
@@ -1363,12 +1363,12 @@ begin
     PrevWindowState := WindowState;
 end;
 
-procedure TMainForm.itAnimateTimer(Sender: TObject);
+procedure TMainForm.tmAnimateMangaInfoTimer(Sender: TObject);
 begin
   gifWaiting.Update(pbWait.Canvas, gifWaitingRect);
 end;
 
-procedure TMainForm.itCheckFavTimer(Sender: TObject);
+procedure TMainForm.tmCheckFavoritesTimer(Sender: TObject);
 begin
   if IsDlgCounter then Exit;
   if OptionAutoCheckLatestVersion then
@@ -1453,9 +1453,9 @@ begin
   end;
 end;
 
-procedure TMainForm.itMonitorTimer(Sender: TObject);
+procedure TMainForm.tmExitCommandTimer(Sender: TObject);
 begin
-  itMonitor.Enabled := False;
+  tmExitCommand.Enabled := False;
   if DoAfterFMD <> DO_NOTHING then
   begin
     if DoAfterFMD in [DO_POWEROFF, DO_HIBERNATE, DO_EXIT] then
@@ -1489,7 +1489,7 @@ begin
   end;
 end;
 
-procedure TMainForm.itRefreshDLInfoStartTimer(Sender: TObject);
+procedure TMainForm.tmRefreshDownloadsInfoStartTimer(Sender: TObject);
 begin
   if Assigned(DLManager) then
   begin
@@ -1498,22 +1498,22 @@ begin
   end;
 end;
 
-procedure TMainForm.itRefreshDLInfoStopTimer(Sender: TObject);
+procedure TMainForm.tmRefreshDownloadsInfoStopTimer(Sender: TObject);
 begin
   TransferRateGraph.Visible := False;
   vtDownload.Repaint;
 end;
 
-procedure TMainForm.itRefreshDLInfoTimer(Sender: TObject);
+procedure TMainForm.tmRefreshDownloadsInfoTimer(Sender: TObject);
 begin
   if Assigned(DLManager) then
     TransferRateGraphAddItem(DLManager.TransferRate);
   vtDownload.Repaint;
 end;
 
-procedure TMainForm.itStartupTimer(Sender: TObject);
+procedure TMainForm.tmStartupTimer(Sender: TObject);
 begin
-  itStartup.Enabled := False;
+  tmStartup.Enabled := False;
   if not isStartup then
   begin
     isStartup := True;
@@ -4190,7 +4190,7 @@ begin
   clbChapterList.Clear;
   if Assigned(gifWaiting) then
   begin
-    itAnimate.Enabled := True;
+    tmAnimateMangaInfo.Enabled := True;
     pbWait.Visible := True;
   end;
   btDownload.Enabled := False;
@@ -4601,8 +4601,8 @@ begin
     OptionAutoCheckFavRemoveCompletedManga := cbOptionAutoCheckFavRemoveCompletedManga.Checked;
     OptionUpdateListNoMangaInfo := cbOptionUpdateListNoMangaInfo.Checked;
     OptionUpdateListRemoveDuplicateLocalData := cbOptionUpdateListRemoveDuplicateLocalData.Checked;
-    itCheckFav.Interval := OptionAutoCheckFavIntervalMinutes * 60000;
-    itCheckFav.Enabled := OptionAutoCheckFavInterval;
+    tmCheckFavorites.Interval := OptionAutoCheckFavIntervalMinutes * 60000;
+    tmCheckFavorites.Enabled := OptionAutoCheckFavInterval;
 
     //misc
     frmCustomColor.Apply;
@@ -5178,7 +5178,7 @@ begin
     Writelog_D(Self.ClassName+', Update thread still exist, pending exit counter');
     isPendingExitCounter:=True
   end
-  else itMonitor.Enabled:=True;
+  else tmExitCommand.Enabled:=True;
 end;
 
 procedure TMainForm.ExceptionHandler(Sender: TObject; E: Exception);
@@ -5190,6 +5190,8 @@ procedure TMainForm.tmBackupTimer(Sender: TObject);
 begin
   if not DLManager.isRunningBackup then
     DLManager.Backup;
+  if not FavoriteManager.isRunning then
+    FavoriteManager.Backup;
 end;
 
 procedure TMainForm.vtOptionMangaSiteSelectionChange(Sender : TBaseVirtualTree;

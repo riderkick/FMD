@@ -1,5 +1,4 @@
 {"version":1,"strings":[
-{"hash":57972706,"name":"tmainform.caption","sourcebytes":[70,114,101,101,32,77,97,110,103,97,32,68,111,119,110,108,111,97,100,101,114],"value":"Free Manga Downloader"},
 {"hash":240327891,"name":"tmainform.tsdownload.caption","sourcebytes":[68,111,119,110,108,111,97,100,115],"value":"Downloads"},
 {"hash":5473489,"name":"tmainform.vtdownload.header.columns[0].text","sourcebytes":[77,97,110,103,97],"value":"Manga"},
 {"hash":95062979,"name":"tmainform.vtdownload.header.columns[1].text","sourcebytes":[83,116,97,116,117,115],"value":"Status"},

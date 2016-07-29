@@ -192,7 +192,7 @@ begin
     MessageDlg('', RS_DlgCannotGetMangaInfo,
       mtInformation, [mbYes], 0);
     MainForm.rmInformation.Clear;
-    MainForm.itAnimate.Enabled := False;
+    MainForm.tmAnimateMangaInfo.Enabled := False;
     MainForm.pbWait.Visible := False;
     MainForm.imCover.Picture.Assign(nil);
   except
@@ -226,7 +226,7 @@ begin
   if IsFlushed then
     Exit;
   try
-    MainForm.itAnimate.Enabled := False;
+    MainForm.tmAnimateMangaInfo.Enabled := False;
     MainForm.pbWait.Visible := False;
     if FIsHasMangaCover then
     begin
