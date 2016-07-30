@@ -47,6 +47,10 @@ object MainForm: TMainForm
     OnChange = pcMainChange
     object tsDownload: TTabSheet
       Caption = 'Downloads'
+      ChildSizing.LeftRightSpacing = 4
+      ChildSizing.TopBottomSpacing = 4
+      ChildSizing.HorizontalSpacing = 4
+      ChildSizing.VerticalSpacing = 4
       ClientHeight = 492
       ClientWidth = 558
       object vtDownload: TVirtualStringTree
@@ -55,9 +59,6 @@ object MainForm: TMainForm
         Top = 32
         Width = 550
         Align = alClient
-        BorderSpacing.Left = 4
-        BorderSpacing.Right = 4
-        BorderSpacing.Bottom = 4
         Colors.DropTargetBorderColor = clHotLight
         Colors.FocusedSelectionBorderColor = clHotLight
         Colors.SelectionRectangleBorderColor = clHotLight
@@ -137,16 +138,15 @@ object MainForm: TMainForm
         Top = 4
         Width = 550
         Align = alTop
-        BorderSpacing.Around = 4
         BevelOuter = bvNone
         ClientHeight = 24
         ClientWidth = 550
         TabOrder = 1
         object TransferRateGraph: TChart
-          Left = 321
+          Left = 84
           Height = 24
           Top = 0
-          Width = 229
+          Width = 466
           AllowZoom = False
           AxisList = <          
             item
@@ -204,18 +204,18 @@ object MainForm: TMainForm
           Left = 0
           Height = 24
           Top = 0
-          Width = 321
+          Width = 84
           Align = alLeft
           AutoSize = True
           BevelOuter = bvNone
           ClientHeight = 24
-          ClientWidth = 321
+          ClientWidth = 84
           TabOrder = 1
           object ToolBarDownload: TToolBar
             Left = 0
             Height = 24
             Top = 0
-            Width = 321
+            Width = 84
             Align = alClient
             AutoSize = True
             ButtonHeight = 25
@@ -236,7 +236,7 @@ object MainForm: TMainForm
               OnClick = tbDownloadResumeAllClick
             end
             object tbDownloadStopAll: TToolButton
-              Left = 86
+              Left = 27
               Top = 0
               AutoSize = True
               Caption = 'Stop All'
@@ -244,14 +244,14 @@ object MainForm: TMainForm
               OnClick = tbDownloadStopAllClick
             end
             object ToolButton1: TToolButton
-              Left = 153
+              Left = 53
               Height = 25
               Top = 0
               Width = 5
               Style = tbsDivider
             end
             object tbDownloadDeleteCompleted: TToolButton
-              Left = 158
+              Left = 58
               Top = 0
               AutoSize = True
               Caption = 'Delete all completed tasks'
@@ -1797,62 +1797,20 @@ object MainForm: TMainForm
     end
     object tsFavorites: TTabSheet
       Caption = 'Favorites'
+      ChildSizing.LeftRightSpacing = 4
+      ChildSizing.TopBottomSpacing = 4
+      ChildSizing.HorizontalSpacing = 4
+      ChildSizing.VerticalSpacing = 4
       ClientHeight = 492
       ClientWidth = 558
-      object btFavoritesCheckNewChapter: TBitBtn
-        Left = 33
-        Height = 40
-        Top = 412
-        Width = 491
-        Anchors = [akLeft, akRight, akBottom]
-        Caption = 'Check for new chapter'
-        Glyph.Data = {
-          36040000424D3604000000000000360000002800000010000000100000000100
-          2000000000000004000064000000640000000000000000000000000000120000
-          002C00000087000000E7702E00C7702E00C7702E00C72C6662E8157882F21578
-          82F2157882F2157882F2157882F2107B87EA008398D00066779A000000090000
-          0016000000DB606060FFCA9764FFC5925FFFC5925FFF4C9590FF32C6D1FF29DB
-          E9FF28DAE9FF79EDF5FF28DAE9FF28DAE9FF1CC7D8EA0198AF9F000000000101
-          0100010101CE626262FFC89562FFBD8A57FFBF8C59FF95906EFF3CA8ACFF42D9
-          E0FF33D5DDFF000000FF33D5DDFF34D5DDFF0DACC1C7019EB63A010101000101
-          0100010101C9646464FFCA9764FFBE8B58FFC18E5BFFC18E5CFF509B94FF67D1
-          D7FF46D3D7FF75B4B5FF40D0D2FF40C3C6F901A4BC9801A2BA01010101000101
-          0100010101C5676767FFCD9A67FFBF8C59FFC4915EFFC4915EFF919778FF56B6
-          BAFF7CE4F1FF000000FF68D8E7FF38A6ABEE01A8C04301A7BF00010101000101
-          0100010101C16B6B6BFFD19E6BFFBF8C59FFC89562FFC89562FFC59563FF4FA3
-          9FFF90E3E9FF555555FF88E1E9FF2E8E8ADE01ABC40401ABC400010101000101
-          0100010101BE6E6E6EFFD4A16EFFBF8C59FFCB9865FFCB9865FFCB9865FF8F9F
-          83FF6BC5C6FFABF5FCFF6CC7C8FF636E48C38F4F0D008F4F0D00010101000101
-          0100010101BB727272FFD8A572FFBF8C59FFCF9C69FFCF9C69FFCF9C69FFC99D
-          6CFF50ACA8FFA2E5E7FF53AFABFF94500AA89B4B00009B4B0000010101000101
-          0100010101B8757575FFDBA875FFBE8B58FFD29F6CFFD29F6CFFD29F6CFFD29F
-          6CFF84A791FF3FA6A6FF8CAF99FF9E4D00A39E4D00009E4D0000010101000101
-          0100010101B5797979FFDFAC79FFBE8B58FFD6A370FFD6A370FFD6A370FFD6A3
-          70FFD6A370FFBE8B58FFDFAC79FFA14F00A1A14F0000A14F0000010101000101
-          0100010101B27C7C7CFFE2AF7CFFBC8956FFE3B07DFFE3B07DFFE3B07DFFE3B0
-          7DFFE3B07DFFBC8956FFE2AF7CFFA451009FA4510000A4510000010101000101
-          0100010101B07E7E7EFFE4B17EFFBB8855FFBB8855FFBB8855FFBB8855FFBB88
-          55FFBB8855FFBB8855FFE4B17EFFA653009DA6530000A6530000010101000101
-          0100010101AE808080FFEAB784FFE5B27FFFE5B27FFFE5B27FFFE5B27FFFE5B2
-          7FFFE5B27FFFE5B27FFFEAB784FFA854009BA8540000A8540000010101000101
-          0100010101AC555555FFCC9966FFCC9966FFCC9966FFCC9966FFCC9966FFCC99
-          66FFCC9966FFCC9966FFCC9966FFAA55009AAA550000AA550000040404000404
-          04000404048ABCBCABFFC1C1B1FFC7C7B9FFCFCFC3FFD7D7CDFFDFDFD7FFE8E8
-          E2FFEFEFECFFF7F7F4FFFCFCFCFF55552B6655552B0055552B00040404000404
-          0400040404460404048AAA550099AA550099AA550099AA550099AA550099AA55
-          0099AA550099AA550099AA550099AA550073AA550000AA550000
-        }
-        OnClick = btFavoritesCheckNewChapterClick
-        TabOrder = 1
-      end
       object vtFavorites: TVirtualStringTree
+        AnchorSideTop.Control = edFavoritesSearch
+        AnchorSideTop.Side = asrBottom
         Left = 4
-        Height = 401
-        Top = 4
+        Height = 373
+        Top = 32
         Width = 550
-        Align = alTop
         Anchors = [akTop, akLeft, akRight, akBottom]
-        BorderSpacing.Around = 4
         Colors.DropTargetBorderColor = clHotLight
         Colors.FocusedSelectionBorderColor = clHotLight
         Colors.SelectionRectangleBorderColor = clHotLight
@@ -2003,6 +1961,110 @@ object MainForm: TMainForm
         Visible = False
         OnClick = btCancelFavoritesCheckClick
       end
+      object btFavoritesCheckNewChapter: TBitBtn
+        Left = 33
+        Height = 40
+        Top = 412
+        Width = 491
+        Anchors = [akLeft, akRight, akBottom]
+        Caption = 'Check for new chapter'
+        Glyph.Data = {
+          36040000424D3604000000000000360000002800000010000000100000000100
+          2000000000000004000064000000640000000000000000000000000000120000
+          002C00000087000000E7702E00C7702E00C7702E00C72C6662E8157882F21578
+          82F2157882F2157882F2157882F2107B87EA008398D00066779A000000090000
+          0016000000DB606060FFCA9764FFC5925FFFC5925FFF4C9590FF32C6D1FF29DB
+          E9FF28DAE9FF79EDF5FF28DAE9FF28DAE9FF1CC7D8EA0198AF9F000000000101
+          0100010101CE626262FFC89562FFBD8A57FFBF8C59FF95906EFF3CA8ACFF42D9
+          E0FF33D5DDFF000000FF33D5DDFF34D5DDFF0DACC1C7019EB63A010101000101
+          0100010101C9646464FFCA9764FFBE8B58FFC18E5BFFC18E5CFF509B94FF67D1
+          D7FF46D3D7FF75B4B5FF40D0D2FF40C3C6F901A4BC9801A2BA01010101000101
+          0100010101C5676767FFCD9A67FFBF8C59FFC4915EFFC4915EFF919778FF56B6
+          BAFF7CE4F1FF000000FF68D8E7FF38A6ABEE01A8C04301A7BF00010101000101
+          0100010101C16B6B6BFFD19E6BFFBF8C59FFC89562FFC89562FFC59563FF4FA3
+          9FFF90E3E9FF555555FF88E1E9FF2E8E8ADE01ABC40401ABC400010101000101
+          0100010101BE6E6E6EFFD4A16EFFBF8C59FFCB9865FFCB9865FFCB9865FF8F9F
+          83FF6BC5C6FFABF5FCFF6CC7C8FF636E48C38F4F0D008F4F0D00010101000101
+          0100010101BB727272FFD8A572FFBF8C59FFCF9C69FFCF9C69FFCF9C69FFC99D
+          6CFF50ACA8FFA2E5E7FF53AFABFF94500AA89B4B00009B4B0000010101000101
+          0100010101B8757575FFDBA875FFBE8B58FFD29F6CFFD29F6CFFD29F6CFFD29F
+          6CFF84A791FF3FA6A6FF8CAF99FF9E4D00A39E4D00009E4D0000010101000101
+          0100010101B5797979FFDFAC79FFBE8B58FFD6A370FFD6A370FFD6A370FFD6A3
+          70FFD6A370FFBE8B58FFDFAC79FFA14F00A1A14F0000A14F0000010101000101
+          0100010101B27C7C7CFFE2AF7CFFBC8956FFE3B07DFFE3B07DFFE3B07DFFE3B0
+          7DFFE3B07DFFBC8956FFE2AF7CFFA451009FA4510000A4510000010101000101
+          0100010101B07E7E7EFFE4B17EFFBB8855FFBB8855FFBB8855FFBB8855FFBB88
+          55FFBB8855FFBB8855FFE4B17EFFA653009DA6530000A6530000010101000101
+          0100010101AE808080FFEAB784FFE5B27FFFE5B27FFFE5B27FFFE5B27FFFE5B2
+          7FFFE5B27FFFE5B27FFFEAB784FFA854009BA8540000A8540000010101000101
+          0100010101AC555555FFCC9966FFCC9966FFCC9966FFCC9966FFCC9966FFCC99
+          66FFCC9966FFCC9966FFCC9966FFAA55009AAA550000AA550000040404000404
+          04000404048ABCBCABFFC1C1B1FFC7C7B9FFCFCFC3FFD7D7CDFFDFDFD7FFE8E8
+          E2FFEFEFECFFF7F7F4FFFCFCFCFF55552B6655552B0055552B00040404000404
+          0400040404460404048AAA550099AA550099AA550099AA550099AA550099AA55
+          0099AA550099AA550099AA550099AA550073AA550000AA550000
+        }
+        OnClick = btFavoritesCheckNewChapterClick
+        TabOrder = 1
+      end
+      object edFavoritesSearch: TEdit
+        Left = 4
+        Height = 23
+        Top = 5
+        Width = 200
+        OnChange = edFavoritesSearchChange
+        TabOrder = 3
+        TextHint = 'Search favorites...'
+      end
+      object btFavoritesSearchClear: TSpeedButton
+        AnchorSideLeft.Control = edFavoritesSearch
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = edFavoritesSearch
+        AnchorSideBottom.Control = edFavoritesSearch
+        AnchorSideBottom.Side = asrBottom
+        Left = 208
+        Height = 23
+        Top = 5
+        Width = 23
+        Anchors = [akTop, akLeft, akBottom]
+        Glyph.Data = {
+          36040000424D3604000000000000360000002800000010000000100000000100
+          2000000000000004000064000000640000000000000000000000000000090000
+          00160000001A0000001A0000001A0000001A0000001A0000001A0000001A0000
+          001A0000001A0000001A0000001A0000001A0000001600000009000000120000
+          0E3300004A8300005DBC00005DCC00005DCC00005DCC00005DCC00005DCC0000
+          5DCC00005DCC00005DCC00005DBC00004A8300000E330000001200001D000000
+          6D73080893DD1010CCF91111D9FF1111D9FF1111D9FF1111D9FF1111D9FF1111
+          D9FF1111D9FF1111D9FF0F0FCCF9070792DD00006D7300001D0000007D000000
+          7DBA1616CBF91111D1FF1111D1FF1111B6FF1111D1FF1111D1FF1111D1FF1111
+          D1FF1111B6FF1111D1FF1111D1FF0F0FC8F900007DBA00007D00000084000000
+          84CC1C1CCEFF1111C8FF1111B2FFDCDCDCFF1111B2FF1111C8FF1111C8FF1111
+          B2FFEEEEEEFF1111B2FF1111C8FF1111C8FF000084CC00008400000089000000
+          89CC2222C8FF1111BEFFD1D1D1FFD6D6D6FFDCDCDCFF1111ADFF1111ADFFEAEA
+          EAFFEEEEEEFFEEEEEEFF1111BEFF1212BEFF000089CC0000890000008D000000
+          8DCC3434C7FF1212B4FF1111B4FFD1D1D1FFD6D6D6FFDCDCDCFFE2E2E2FFE6E6
+          E6FFEAEAEAFF1111B4FF1111B4FF1414B6FF00008DCC00008D00000092000000
+          92CC4646CEFF2626B5FF1414ABFF1111AAFFD1D1D1FFD6D6D6FFDCDCDCFFE2E2
+          E2FF1111AAFF1111AAFF1111AAFF1818B0FF000092CC00009200000096000000
+          96CC4A4AD2FF3333BBFF2E2EB8FF13139FFFCECECEFFD1D1D1FFD6D6D6FFDCDC
+          DCFF11119EFF1111A1FF1111A1FF1D1DACFF000096CC0000960000009A000000
+          9ACC5050D8FF3737BFFF2323ABFFFFFFFFFFF7F7F7FFE8E8E8FFDEDEDEFFDBDB
+          DBFFDDDDDDFF11119BFF1616A0FF2B2BB5FF00009ACC00009A0000009E000000
+          9ECC5A5AE2FF4242CAFFFFFFFFFFFFFFFFFFFFFFFFFF4242CAFF4242CAFFFFFF
+          FFFFFFFFFFFFFFFFFFFF4242CAFF4E4ED6FF00009ECC00009E000000A2000000
+          A2CC6262EAFF4F4FD7FF4F4FD7FFFFFFFFFF4F4FD7FF4F4FD7FF4F4FD7FF4F4F
+          D7FFFFFFFFFF4F4FD7FF4F4FD7FF5A5AE2FF0000A2CC0000A2000000A5000000
+          A5BA6060ECF95B5BE3FF5B5BE3FF5B5BE3FF5B5BE3FF5B5BE3FF5B5BE3FF5B5B
+          E3FF5B5BE3FF5B5BE3FF5B5BE3FF5B5BE7F90000A5BA0000A5000000A8000000
+          A8732A2AC7DD6363EFF96D6DF5FF6D6DF5FF6D6DF5FF6D6DF5FF6D6DF5FF6D6D
+          F5FF6D6DF5FF6C6CF4FF6262EEF92929C5DD0000A8730000A8000000A8000000
+          A90C0000AA730000AABA0000AACC0000AACC0000AACC0000AACC0000AACC0000
+          AACC0000AACC0000AACC0000AABA0000AA730000A90C0000A800FFFFFF00FFFF
+          FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+          FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00
+        }
+        OnClick = btFavoritesSearchClearClick
+      end
     end
     object tsOption: TTabSheet
       Caption = 'Options'
@@ -2013,10 +2075,10 @@ object MainForm: TMainForm
         Height = 415
         Top = 8
         Width = 539
-        ActivePage = tsGeneral
+        ActivePage = tsWebsites
         Anchors = [akTop, akLeft, akRight, akBottom]
         ParentFont = False
-        TabIndex = 0
+        TabIndex = 6
         TabOrder = 0
         object tsGeneral: TTabSheet
           Caption = 'General'
@@ -3932,7 +3994,7 @@ object MainForm: TMainForm
         OnClick = btUpdateListClick
         ShowCaption = False
       end
-      object edSearch: TEdit
+      object edMangaListSearch: TEdit
         AnchorSideLeft.Control = cbSelectManga
         AnchorSideTop.Control = cbSelectManga
         AnchorSideTop.Side = asrBottom
@@ -3943,15 +4005,15 @@ object MainForm: TMainForm
         Top = 31
         Width = 150
         Anchors = [akTop, akLeft, akRight]
-        OnChange = edSearchChange
-        OnKeyDown = edSearchKeyDown
+        OnChange = edMangaListSearchChange
+        OnKeyDown = edMangaListSearchKeyDown
         TabOrder = 2
         TextHint = 'Search title...'
       end
-      object btSearchClear: TSpeedButton
-        AnchorSideLeft.Control = edSearch
+      object btMangaListSearchClear: TSpeedButton
+        AnchorSideLeft.Control = edMangaListSearch
         AnchorSideLeft.Side = asrBottom
-        AnchorSideTop.Control = edSearch
+        AnchorSideTop.Control = edMangaListSearch
         AnchorSideTop.Side = asrCenter
         Left = 158
         Height = 23
@@ -3993,14 +4055,14 @@ object MainForm: TMainForm
           FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
           FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00
         }
-        OnClick = btSearchClearClick
+        OnClick = btMangaListSearchClearClick
         ShowCaption = False
       end
       object lbMode: TLabel
-        AnchorSideLeft.Control = edSearch
-        AnchorSideTop.Control = edSearch
+        AnchorSideLeft.Control = edMangaListSearch
+        AnchorSideTop.Control = edMangaListSearch
         AnchorSideTop.Side = asrBottom
-        AnchorSideRight.Control = edSearch
+        AnchorSideRight.Control = edMangaListSearch
         AnchorSideRight.Side = asrBottom
         Left = 4
         Height = 15

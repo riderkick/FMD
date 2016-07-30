@@ -43,7 +43,7 @@ type
     btOptionApply: TBitBtn;
     btReadOnline: TBitBtn;
     btRemoveFilter: TSpeedButton;
-    btSearchClear: TSpeedButton;
+    btMangaListSearchClear: TSpeedButton;
     btWebsitesSearchClear: TSpeedButton;
     btUpdateList: TSpeedButton;
     cbOptionAutoCheckFavStartup: TCheckBox;
@@ -64,6 +64,7 @@ type
     cbOptionProxyType: TComboBox;
     cbOptionOneInstanceOnly: TCheckBox;
     edFilterMangaInfoChapters: TEditButton;
+    edFavoritesSearch: TEdit;
     edOptionFilenameCustomRename: TEdit;
     edOptionDefaultPath: TDirectoryEdit;
     edOptionMangaCustomRename: TEdit;
@@ -108,6 +109,7 @@ type
     pmTray: TPopupMenu;
     sbSaveTo: TScrollBox;
     sbWebsiteOptions: TScrollBox;
+    btFavoritesSearchClear: TSpeedButton;
     tmAnimateMangaInfo: TTimer;
     tmBackup: TTimer;
     tmCheckFavorites: TTimer;
@@ -236,7 +238,7 @@ type
     edOptionPass: TEdit;
     edOptionPort: TEdit;
     edOptionUser: TEdit;
-    edSearch: TEdit;
+    edMangaListSearch: TEdit;
     gbDialogs: TGroupBox;
     gbOptionProxy: TGroupBox;
     gbOptionRenaming: TGroupBox;
@@ -376,9 +378,10 @@ type
     procedure btChecksClick(Sender: TObject);
     procedure btCheckLatestVersionClick(Sender: TObject);
     procedure btDonateClick(Sender: TObject);
+    procedure btFavoritesSearchClearClick(Sender: TObject);
     procedure btFavoritesImportClick(Sender: TObject);
     procedure btReadOnlineClick(Sender: TObject);
-    procedure btSearchClearClick(Sender: TObject);
+    procedure btMangaListSearchClearClick(Sender: TObject);
     procedure btUpdateListClick(Sender: TObject);
     procedure btVisitMyBlogClick(Sender: TObject);
     procedure btWebsitesSearchClearClick(Sender: TObject);
@@ -396,11 +399,12 @@ type
       var CellText: String);
     procedure clbChapterListInitNode(Sender: TBaseVirtualTree; ParentNode,
       Node: PVirtualNode; var InitialStates: TVirtualNodeInitStates);
+    procedure edFavoritesSearchChange(Sender: TObject);
     procedure edFilterMangaInfoChaptersButtonClick(Sender: TObject);
     procedure edFilterMangaInfoChaptersChange(Sender: TObject);
     procedure edSaveToAcceptDirectory(Sender: TObject; var Value: String);
-    procedure edSearchChange(Sender: TObject);
-    procedure edSearchKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState
+    procedure edMangaListSearchChange(Sender: TObject);
+    procedure edMangaListSearchKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState
       );
     procedure edURLButtonClick(Sender: TObject);
     procedure edURLKeyPress(Sender: TObject; var Key: Char);
@@ -903,8 +907,8 @@ begin
   with MainForm do
   begin
     vtMangaList.Cursor := crHourGlass;
-    vtMangaList.Clear;
     lbMode.Caption := RS_ModeSearching;
+    vtMangaList.BeginUpdate;
   end;
 end;
 
@@ -912,15 +916,14 @@ procedure TSearchDBThread.SyncAfterSearch;
 begin
   with MainForm do
   begin
+    vtMangaList.RootNodeCount := dataProcess.RecordCount;
+    vtMangaList.EndUpdate;
     if dataProcess.Filtered then
       lbMode.Caption := Format(RS_ModeFiltered, [dataProcess.RecordCount])
     else
       lbMode.Caption := Format(RS_ModeAll, [dataProcess.RecordCount]);
     LastSearchWeb := dataProcess.Website;
     LastSearchStr := UpCase(FSearchStr);
-    vtMangaList.BeginUpdate;
-    vtMangaList.RootNodeCount := dataProcess.RecordCount;
-    vtMangaList.EndUpdate;
     vtMangaList.Cursor := crDefault;
   end;
 end;
@@ -971,8 +974,8 @@ begin
   begin
     cbSelectManga.Enabled := Value;
     btUpdateList.Enabled := Value;
-    edSearch.Enabled := Value;
-    btSearchClear.Enabled := Value;
+    edMangaListSearch.Enabled := Value;
+    btMangaListSearchClear.Enabled := Value;
     btRemoveFilter.Enabled := Value;
   end;
 end;
@@ -992,7 +995,7 @@ procedure TOpenDBThread.SyncOpenFinish;
 begin
   with MainForm do
   begin
-    LastSearchStr := upcase(edSearch.Text);
+    LastSearchStr := upcase(edMangaListSearch.Text);
     LastSearchWeb := currentWebsite;
     if dataProcess.Filtered then
       lbMode.Caption := Format(RS_ModeFiltered, [dataProcess.RecordCount])
@@ -1014,8 +1017,8 @@ begin
     if MainForm.dataProcess <> nil then
     begin
       MainForm.dataProcess.Open(FWebsite);
-      if MainForm.edSearch.Text <> '' then
-        MainForm.dataProcess.Search(MainForm.edSearch.Text);
+      if MainForm.edMangaListSearch.Text <> '' then
+        MainForm.dataProcess.Search(MainForm.edMangaListSearch.Text);
     end;
     if not Terminated then
     Synchronize(@SyncOpenFinish);
@@ -1437,23 +1440,29 @@ end;
 procedure TMainForm.FilterChapterList(const SearchStr: String;
   const HideDownloaded: Boolean);
 var
-  xNode: PVirtualNode;
-  s: String;
+  Node: PVirtualNode;
+  S: String;
   isShow: Boolean;
 begin
   if clbChapterList.RootNodeCount = 0 then Exit;
-  xNode := clbChapterList.GetFirst();
-  s := lowerCase(SearchStr);
-  while Assigned(xNode) do
-  begin
-    isShow := True;
-    if HideDownloaded then
-      isShow := not ChapterList[xNode^.Index].Downloaded;
-    if isShow and (s <> '') then
-      isShow := Pos(s, LowerCase(ChapterList[xNode^.Index].Title)) <> 0;
-    clbChapterList.IsVisible[xNode] := isShow;
-    xNode := clbChapterList.GetNext(xNode);
-  end;
+  with clbChapterList do
+    try
+      BeginUpdate;
+      S := AnsiUpperCase(SearchStr);
+      Node := GetFirst();
+      while Assigned(Node) do
+      begin
+        isShow := True;
+        if HideDownloaded then
+          isShow := not ChapterList[Node^.Index].Downloaded;
+        if isShow and (S <> '') then
+          isShow := Pos(S, AnsiUpperCase(ChapterList[Node^.Index].Title)) <> 0;
+        IsVisible[Node] := isShow;
+        Node := GetNext(Node);
+      end;
+    finally
+      EndUpdate;
+    end;
 end;
 
 procedure TMainForm.tmExitCommandTimer(Sender: TObject);
@@ -2173,10 +2182,10 @@ begin
   OpenURL(mangaInfo.url);
 end;
 
-procedure TMainForm.btSearchClearClick(Sender: TObject);
+procedure TMainForm.btMangaListSearchClearClick(Sender: TObject);
 begin
-  edSearch.Tag := 1;
-  edSearch.Clear;
+  edMangaListSearch.Tag := 1;
+  edMangaListSearch.Clear;
 end;
 
 procedure TMainForm.btCheckLatestVersionClick(Sender: TObject);
@@ -2190,6 +2199,11 @@ end;
 procedure TMainForm.btDonateClick(Sender: TObject);
 begin
   OpenURL('https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=akarin.km@gmail.com&item_name=Donation+to+Free+Manga+Downloader');
+end;
+
+procedure TMainForm.btFavoritesSearchClearClick(Sender: TObject);
+begin
+  edFavoritesSearch.Clear;
 end;
 
 procedure TMainForm.btFavoritesImportClick(Sender: TObject);
@@ -2265,6 +2279,39 @@ procedure TMainForm.clbChapterListInitNode(Sender: TBaseVirtualTree;
   ParentNode, Node: PVirtualNode; var InitialStates: TVirtualNodeInitStates);
 begin
   if Assigned(Node) then Node^.CheckType:=ctCheckBox;
+end;
+
+procedure TMainForm.edFavoritesSearchChange(Sender: TObject);
+var
+  Node: PVirtualNode;
+  S: String;
+begin
+  if vtFavorites.RootNodeCount = 0 then Exit;
+  with vtFavorites do
+    try
+      BeginUpdate;
+      if (edFavoritesSearch.Text = '') and (VisibleCount <> RootNodeCount) then
+      begin
+        Node := GetFirst();
+        while Assigned(Node) do
+        begin
+          IsVisible[Node] := True;
+          Node := GetNext(Node);
+        end;
+      end
+      else
+      begin
+        S := AnsiUpperCase(edFavoritesSearch.Text);
+        Node := GetFirst();
+        while Assigned(Node) do
+        begin
+          IsVisible[Node] := Pos(S, AnsiUpperCase(FavoriteManager[Node^.Index].FavoriteInfo.Title)) > 0;
+          Node := GetNext(Node);
+        end;
+      end;
+    finally
+      EndUpdate;
+    end;
 end;
 
 procedure TMainForm.edFilterMangaInfoChaptersButtonClick(Sender: TObject);
@@ -2381,8 +2428,8 @@ begin
       dataProcess.RemoveFilter;
       vtMangaList.RootNodeCount := dataProcess.RecordCount;
       lbMode.Caption := Format(RS_ModeAll, [dataProcess.RecordCount]);
-      edSearch.Tag := -1;
-      edSearch.Clear;
+      edMangaListSearch.Tag := -1;
+      edMangaListSearch.Clear;
     except
       on E: Exception do
         ExceptionHandler(Self, E);
@@ -2449,8 +2496,8 @@ begin
       if cbSearchFromAllSites.Checked then
         dataProcess.SitesList.Assign(cbSelectManga.Items);
 
-      edSearch.Tag := -1;
-      edSearch.Clear;
+      edMangaListSearch.Tag := -1;
+      edMangaListSearch.Clear;
       vtMangaList.Clear;
 
       dataProcess.Filter(
@@ -4743,25 +4790,25 @@ begin
     end;
 end;
 
-procedure TMainForm.edSearchChange(Sender: TObject);
+procedure TMainForm.edMangaListSearchChange(Sender: TObject);
 begin
-  if edSearch.Tag = -1 then
+  if edMangaListSearch.Tag = -1 then
   begin
-    edSearch.Tag := 0;
+    edMangaListSearch.Tag := 0;
     LastSearchWeb := currentWebsite;
-    LastSearchStr := UpCase(edSearch.Text);
+    LastSearchStr := UpCase(edMangaListSearch.Text);
     Exit;
   end;
-  if (not cbOptionLiveSearch.Checked) and (edSearch.Tag = 0) then Exit;
-  if edSearch.Tag <> 0 then
-    edSearch.Tag := 0;
-  if (upcase(edSearch.Text) = LastSearchStr) and (currentWebsite = LastSearchWeb) then
+  if (not cbOptionLiveSearch.Checked) and (edMangaListSearch.Tag = 0) then Exit;
+  if edMangaListSearch.Tag <> 0 then
+    edMangaListSearch.Tag := 0;
+  if (upcase(edMangaListSearch.Text) = LastSearchStr) and (currentWebsite = LastSearchWeb) then
     Exit;
 
-  SearchDataDB(edSearch.Text);
+  SearchDataDB(edMangaListSearch.Text);
 
   //vtMangaList.Clear;
-  //dataProcess.Search(edSearch.Text);
+  //dataProcess.Search(edMangaListSearch.Text);
   //vtMangaList.RootNodeCount := dataProcess.RecordCount;
   //if dataProcess.Filtered then
   //  lbMode.Caption := Format(RS_ModeFiltered, [vtMangaList.RootNodeCount])
@@ -4769,17 +4816,17 @@ begin
   //  lbMode.Caption := Format(RS_ModeAll, [vtMangaList.RootNodeCount]);
 end;
 
-procedure TMainForm.edSearchKeyDown(Sender: TObject; var Key: Word;
+procedure TMainForm.edMangaListSearchKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
   if Key = VK_RETURN then
   begin
-    edSearch.Tag := 1;
-    edSearchChange(edSearch);
+    edMangaListSearch.Tag := 1;
+    edMangaListSearchChange(edMangaListSearch);
   end
   else
-  if edSearch.Tag <> 0 then
-    edSearch.Tag := 0;
+  if edMangaListSearch.Tag <> 0 then
+    edMangaListSearch.Tag := 0;
 end;
 
 procedure TMainForm.edURLButtonClick(Sender: TObject);

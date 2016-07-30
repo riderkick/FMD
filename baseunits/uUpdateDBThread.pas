@@ -43,7 +43,7 @@ begin
   try
     if MainForm.cbSelectManga.Items[MainForm.cbSelectManga.ItemIndex] = websiteName then
     begin
-      MainForm.edSearch.Clear;
+      MainForm.edMangaListSearch.Clear;
       MainForm.vtMangaList.Clear;
       MainForm.dataProcess.Close;
       ExtractFile;

@@ -936,6 +936,10 @@ msgstr ""
 msgid "Input custom genres, separated by comma"
 msgstr ""
 
+#: tmainform.edfavoritessearch.texthint
+msgid "Search favorites..."
+msgstr ""
+
 #: tmainform.edfilterartists.texthint
 msgctxt "tmainform.edfilterartists.texthint"
 msgid "Artist"
@@ -958,6 +962,11 @@ msgstr ""
 #: tmainform.edfiltertitle.texthint
 msgctxt "TMAINFORM.EDFILTERTITLE.TEXTHINT"
 msgid "Title"
+msgstr ""
+
+#: tmainform.edmangalistsearch.texthint
+msgctxt "tmainform.edmangalistsearch.texthint"
+msgid "Search title..."
 msgstr ""
 
 #: tmainform.edoptionchaptercustomrename.texthint
@@ -1008,11 +1017,6 @@ msgstr ""
 #: tmainform.edsaveto.texthint
 msgctxt "TMAINFORM.EDSAVETO.TEXTHINT"
 msgid "Save to"
-msgstr ""
-
-#: tmainform.edsearch.texthint
-msgctxt "tmainform.edsearch.texthint"
-msgid "Search title..."
 msgstr ""
 
 #: tmainform.edurl.texthint

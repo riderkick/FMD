@@ -973,6 +973,10 @@ msgstr "Biasanya melibatkan hubungan yang intim antara sesama perempuan."
 msgid "Input custom genres, separated by comma"
 msgstr "Masukan genre pilihan, dipisahkan dengan koma"
 
+#: tmainform.edfavoritessearch.texthint
+msgid "Search favorites..."
+msgstr "Cari kesukaan..."
+
 #: tmainform.edfilterartists.texthint
 msgctxt "tmainform.edfilterartists.texthint"
 msgid "Artist"
@@ -996,6 +1000,11 @@ msgstr "Bagian dari ringkasan"
 msgctxt "tmainform.edfiltertitle.texthint"
 msgid "Title"
 msgstr "Judul"
+
+#: tmainform.edmangalistsearch.texthint
+msgctxt "tmainform.edmangalistsearch.texthint"
+msgid "Search title..."
+msgstr "Cari nama komik..."
 
 #: tmainform.edoptionchaptercustomrename.texthint
 msgctxt "tmainform.edoptionchaptercustomrename.texthint"
@@ -1046,11 +1055,6 @@ msgstr "Nama user"
 msgctxt "tmainform.edsaveto.texthint"
 msgid "Save to"
 msgstr "Lokasi penyimpanan"
-
-#: tmainform.edsearch.texthint
-msgctxt "tmainform.edsearch.texthint"
-msgid "Search title..."
-msgstr "Cari nama komik..."
 
 #: tmainform.edurl.texthint
 msgid "Input URL here"
@@ -2102,4 +2106,3 @@ msgstr "Sinkronisasi data"
 #: uupdatethread.rs_updatinglist
 msgid "Updating list"
 msgstr "Memperbarui daftar"
-
