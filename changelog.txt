@@ -4,6 +4,14 @@ Project page: https://github.com/riderkick/FMD
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.75.0 (30-07-2016)
+[+] Added "Delete task + data + favorite" in download list popup menu
+[+] Added "Delete" in manga list popup menu
+[+] Added Favorite list search
+[+] Added Download list search
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.74.0...0.9.75.0
+
 0.9.74.0 (06-07-2016)
 [+] Added enable/disable task. Disabled task can't be resumed unless it's enabled manually, this task will be skipped on resume all.
 [+] Added tray icon popup menu. Resume all, Stop all, Action after download finish, Show drop box, Restore and Exit.
