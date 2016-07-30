@@ -54,11 +54,13 @@ object MainForm: TMainForm
       ClientHeight = 492
       ClientWidth = 558
       object vtDownload: TVirtualStringTree
+        AnchorSideTop.Control = edDownloadsSearch
+        AnchorSideTop.Side = asrBottom
         Left = 4
         Height = 456
-        Top = 32
-        Width = 550
-        Align = alClient
+        Top = 31
+        Width = 549
+        Anchors = [akTop, akLeft, akRight, akBottom]
         Colors.DropTargetBorderColor = clHotLight
         Colors.FocusedSelectionBorderColor = clHotLight
         Colors.SelectionRectangleBorderColor = clHotLight
@@ -133,20 +135,24 @@ object MainForm: TMainForm
         OnKeyUp = vtDownloadKeyUp
       end
       object pnDownloadToolbar: TPanel
-        Left = 4
+        AnchorSideLeft.Control = btDownloadsSearchClear
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = edDownloadsSearch
+        AnchorSideTop.Side = asrCenter
+        Left = 185
         Height = 24
-        Top = 4
-        Width = 550
-        Align = alTop
+        Top = 3
+        Width = 368
+        Anchors = [akTop, akLeft, akRight]
         BevelOuter = bvNone
         ClientHeight = 24
-        ClientWidth = 550
+        ClientWidth = 368
         TabOrder = 1
         object TransferRateGraph: TChart
-          Left = 84
+          Left = 321
           Height = 24
           Top = 0
-          Width = 466
+          Width = 47
           AllowZoom = False
           AxisList = <          
             item
@@ -204,18 +210,18 @@ object MainForm: TMainForm
           Left = 0
           Height = 24
           Top = 0
-          Width = 84
+          Width = 321
           Align = alLeft
           AutoSize = True
           BevelOuter = bvNone
           ClientHeight = 24
-          ClientWidth = 84
+          ClientWidth = 321
           TabOrder = 1
           object ToolBarDownload: TToolBar
             Left = 0
             Height = 24
             Top = 0
-            Width = 84
+            Width = 321
             Align = alClient
             AutoSize = True
             ButtonHeight = 25
@@ -236,7 +242,7 @@ object MainForm: TMainForm
               OnClick = tbDownloadResumeAllClick
             end
             object tbDownloadStopAll: TToolButton
-              Left = 27
+              Left = 86
               Top = 0
               AutoSize = True
               Caption = 'Stop All'
@@ -244,14 +250,14 @@ object MainForm: TMainForm
               OnClick = tbDownloadStopAllClick
             end
             object ToolButton1: TToolButton
-              Left = 53
+              Left = 153
               Height = 25
               Top = 0
               Width = 5
               Style = tbsDivider
             end
             object tbDownloadDeleteCompleted: TToolButton
-              Left = 58
+              Left = 158
               Top = 0
               AutoSize = True
               Caption = 'Delete all completed tasks'
@@ -260,6 +266,64 @@ object MainForm: TMainForm
             end
           end
         end
+      end
+      object edDownloadsSearch: TEdit
+        Left = 4
+        Height = 23
+        Top = 4
+        Width = 150
+        OnChange = edDownloadsSearchChange
+        TabOrder = 2
+        TextHint = 'Search downloads...'
+      end
+      object btDownloadsSearchClear: TSpeedButton
+        AnchorSideLeft.Control = edDownloadsSearch
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = edDownloadsSearch
+        AnchorSideBottom.Control = edDownloadsSearch
+        AnchorSideBottom.Side = asrBottom
+        Left = 158
+        Height = 23
+        Top = 4
+        Width = 23
+        Anchors = [akTop, akLeft, akBottom]
+        Glyph.Data = {
+          36040000424D3604000000000000360000002800000010000000100000000100
+          2000000000000004000064000000640000000000000000000000000000090000
+          00160000001A0000001A0000001A0000001A0000001A0000001A0000001A0000
+          001A0000001A0000001A0000001A0000001A0000001600000009000000120000
+          0E3300004A8300005DBC00005DCC00005DCC00005DCC00005DCC00005DCC0000
+          5DCC00005DCC00005DCC00005DBC00004A8300000E330000001200001D000000
+          6D73080893DD1010CCF91111D9FF1111D9FF1111D9FF1111D9FF1111D9FF1111
+          D9FF1111D9FF1111D9FF0F0FCCF9070792DD00006D7300001D0000007D000000
+          7DBA1616CBF91111D1FF1111D1FF1111B6FF1111D1FF1111D1FF1111D1FF1111
+          D1FF1111B6FF1111D1FF1111D1FF0F0FC8F900007DBA00007D00000084000000
+          84CC1C1CCEFF1111C8FF1111B2FFDCDCDCFF1111B2FF1111C8FF1111C8FF1111
+          B2FFEEEEEEFF1111B2FF1111C8FF1111C8FF000084CC00008400000089000000
+          89CC2222C8FF1111BEFFD1D1D1FFD6D6D6FFDCDCDCFF1111ADFF1111ADFFEAEA
+          EAFFEEEEEEFFEEEEEEFF1111BEFF1212BEFF000089CC0000890000008D000000
+          8DCC3434C7FF1212B4FF1111B4FFD1D1D1FFD6D6D6FFDCDCDCFFE2E2E2FFE6E6
+          E6FFEAEAEAFF1111B4FF1111B4FF1414B6FF00008DCC00008D00000092000000
+          92CC4646CEFF2626B5FF1414ABFF1111AAFFD1D1D1FFD6D6D6FFDCDCDCFFE2E2
+          E2FF1111AAFF1111AAFF1111AAFF1818B0FF000092CC00009200000096000000
+          96CC4A4AD2FF3333BBFF2E2EB8FF13139FFFCECECEFFD1D1D1FFD6D6D6FFDCDC
+          DCFF11119EFF1111A1FF1111A1FF1D1DACFF000096CC0000960000009A000000
+          9ACC5050D8FF3737BFFF2323ABFFFFFFFFFFF7F7F7FFE8E8E8FFDEDEDEFFDBDB
+          DBFFDDDDDDFF11119BFF1616A0FF2B2BB5FF00009ACC00009A0000009E000000
+          9ECC5A5AE2FF4242CAFFFFFFFFFFFFFFFFFFFFFFFFFF4242CAFF4242CAFFFFFF
+          FFFFFFFFFFFFFFFFFFFF4242CAFF4E4ED6FF00009ECC00009E000000A2000000
+          A2CC6262EAFF4F4FD7FF4F4FD7FFFFFFFFFF4F4FD7FF4F4FD7FF4F4FD7FF4F4F
+          D7FFFFFFFFFF4F4FD7FF4F4FD7FF5A5AE2FF0000A2CC0000A2000000A5000000
+          A5BA6060ECF95B5BE3FF5B5BE3FF5B5BE3FF5B5BE3FF5B5BE3FF5B5BE3FF5B5B
+          E3FF5B5BE3FF5B5BE3FF5B5BE3FF5B5BE7F90000A5BA0000A5000000A8000000
+          A8732A2AC7DD6363EFF96D6DF5FF6D6DF5FF6D6DF5FF6D6DF5FF6D6DF5FF6D6D
+          F5FF6D6DF5FF6C6CF4FF6262EEF92929C5DD0000A8730000A8000000A8000000
+          A90C0000AA730000AABA0000AACC0000AACC0000AACC0000AACC0000AACC0000
+          AACC0000AACC0000AACC0000AABA0000AA730000A90C0000A800FFFFFF00FFFF
+          FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+          FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00
+        }
+        OnClick = btDownloadsSearchClearClick
       end
     end
     object tsInformation: TTabSheet
@@ -1807,9 +1871,9 @@ object MainForm: TMainForm
         AnchorSideTop.Control = edFavoritesSearch
         AnchorSideTop.Side = asrBottom
         Left = 4
-        Height = 373
-        Top = 32
-        Width = 550
+        Height = 374
+        Top = 31
+        Width = 549
         Anchors = [akTop, akLeft, akRight, akBottom]
         Colors.DropTargetBorderColor = clHotLight
         Colors.FocusedSelectionBorderColor = clHotLight
@@ -2010,8 +2074,8 @@ object MainForm: TMainForm
       object edFavoritesSearch: TEdit
         Left = 4
         Height = 23
-        Top = 5
-        Width = 200
+        Top = 4
+        Width = 150
         OnChange = edFavoritesSearchChange
         TabOrder = 3
         TextHint = 'Search favorites...'
@@ -2022,9 +2086,9 @@ object MainForm: TMainForm
         AnchorSideTop.Control = edFavoritesSearch
         AnchorSideBottom.Control = edFavoritesSearch
         AnchorSideBottom.Side = asrBottom
-        Left = 208
+        Left = 158
         Height = 23
-        Top = 5
+        Top = 4
         Width = 23
         Anchors = [akTop, akLeft, akBottom]
         Glyph.Data = {

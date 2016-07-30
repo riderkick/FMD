@@ -973,7 +973,13 @@ msgstr "Biasanya melibatkan hubungan yang intim antara sesama perempuan."
 msgid "Input custom genres, separated by comma"
 msgstr "Masukan genre pilihan, dipisahkan dengan koma"
 
+#: tmainform.eddownloadssearch.texthint
+msgctxt "tmainform.eddownloadssearch.texthint"
+msgid "Search downloads..."
+msgstr "Cari unduhan..."
+
 #: tmainform.edfavoritessearch.texthint
+msgctxt "tmainform.edfavoritessearch.texthint"
 msgid "Search favorites..."
 msgstr "Cari kesukaan..."
 

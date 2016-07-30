@@ -936,7 +936,13 @@ msgstr ""
 msgid "Input custom genres, separated by comma"
 msgstr ""
 
+#: tmainform.eddownloadssearch.texthint
+msgctxt "tmainform.eddownloadssearch.texthint"
+msgid "Search downloads..."
+msgstr ""
+
 #: tmainform.edfavoritessearch.texthint
+msgctxt "tmainform.edfavoritessearch.texthint"
 msgid "Search favorites..."
 msgstr ""
 

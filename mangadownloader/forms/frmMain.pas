@@ -38,6 +38,7 @@ type
     btChecks: TSpeedButton;
     btDonate: TImage;
     btFavoritesImport: TBitBtn;
+    btDownloadsSearchClear: TSpeedButton;
     btFilter: TBitBtn;
     btFilterReset: TBitBtn;
     btOptionApply: TBitBtn;
@@ -63,6 +64,7 @@ type
     cbUseRegExpr: TCheckBox;
     cbOptionProxyType: TComboBox;
     cbOptionOneInstanceOnly: TCheckBox;
+    edDownloadsSearch: TEdit;
     edFilterMangaInfoChapters: TEditButton;
     edFavoritesSearch: TEdit;
     edOptionFilenameCustomRename: TEdit;
@@ -378,6 +380,7 @@ type
     procedure btChecksClick(Sender: TObject);
     procedure btCheckLatestVersionClick(Sender: TObject);
     procedure btDonateClick(Sender: TObject);
+    procedure btDownloadsSearchClearClick(Sender: TObject);
     procedure btFavoritesSearchClearClick(Sender: TObject);
     procedure btFavoritesImportClick(Sender: TObject);
     procedure btReadOnlineClick(Sender: TObject);
@@ -399,6 +402,7 @@ type
       var CellText: String);
     procedure clbChapterListInitNode(Sender: TBaseVirtualTree; ParentNode,
       Node: PVirtualNode; var InitialStates: TVirtualNodeInitStates);
+    procedure edDownloadsSearchChange(Sender: TObject);
     procedure edFavoritesSearchChange(Sender: TObject);
     procedure edFilterMangaInfoChaptersButtonClick(Sender: TObject);
     procedure edFilterMangaInfoChaptersChange(Sender: TObject);
@@ -2201,6 +2205,11 @@ begin
   OpenURL('https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=akarin.km@gmail.com&item_name=Donation+to+Free+Manga+Downloader');
 end;
 
+procedure TMainForm.btDownloadsSearchClearClick(Sender: TObject);
+begin
+  edDownloadsSearch.Clear;
+end;
+
 procedure TMainForm.btFavoritesSearchClearClick(Sender: TObject);
 begin
   edFavoritesSearch.Clear;
@@ -2279,6 +2288,40 @@ procedure TMainForm.clbChapterListInitNode(Sender: TBaseVirtualTree;
   ParentNode, Node: PVirtualNode; var InitialStates: TVirtualNodeInitStates);
 begin
   if Assigned(Node) then Node^.CheckType:=ctCheckBox;
+end;
+
+procedure TMainForm.edDownloadsSearchChange(Sender: TObject);
+var
+  Node: PVirtualNode;
+  S: String;
+begin
+  if vtDownload.RootNodeCount = 0 then Exit;
+  with vtDownload do
+    try
+      BeginUpdate;
+      if (edDownloadsSearch.Text = '') and (VisibleCount <> RootNodeCount) then
+      begin
+        Node := GetFirst();
+        while Assigned(Node) do
+        begin
+          IsVisible[Node] := DLManager[Node^.Index].Visible;
+          Node := GetNext(Node);
+        end;
+      end
+      else
+      begin
+        S := AnsiUpperCase(edDownloadsSearch.Text);
+        Node := GetFirst();
+        while Assigned(Node) do
+        begin
+          if DLManager[Node^.Index].Visible then
+            IsVisible[Node] := Pos(S, AnsiUpperCase(DLManager[Node^.Index].DownloadInfo.Title)) > 0;
+          Node := GetNext(Node);
+        end;
+      end;
+    finally
+      EndUpdate;
+    end;
 end;
 
 procedure TMainForm.edFavoritesSearchChange(Sender: TObject);
@@ -4021,19 +4064,23 @@ procedure TMainForm.vtDownloadUpdateFilters(const RefreshTree: Boolean);
 var
   ACurrentJDN: LongInt;
 
-  procedure ShowTasks(Status: TDownloadStatusTypes = []);
+  procedure ShowTasks(S: TDownloadStatusTypes = []);
   var
     xNode: PVirtualNode;
   begin
-    if (Status = []) and (vtDownload.VisibleCount = vtDownload.RootNodeCount) then
+    if (S = []) and (vtDownload.VisibleCount = vtDownload.RootNodeCount) then
       Exit;
     xNode := vtDownload.GetFirst();
     while Assigned(xNode) do
     begin
-      if Status = [] then
-        vtDownload.IsVisible[xNode] := True
-      else
-        vtDownload.IsVisible[xNode] := DLManager.Items[xNode^.Index].Status in Status;
+      with DLManager[xNode^.Index] do
+      begin
+        if S = [] then
+          Visible := True
+        else
+          Visible := Status in S;
+        vtDownload.IsVisible[xNode] := Visible;
+      end;
       xNode := vtDownload.GetNext(xNode);
     end;
   end;
@@ -4046,8 +4093,12 @@ var
     xNode := vtDownload.GetFirst();
     while Assigned(xNode) do
     begin
-      jdn := DateToJDN(DLManager.Items[xNode^.Index].DownloadInfo.DateTime);
-      vtDownload.IsVisible[xNode] := (jdn >= L) and (jdn <= H);
+      with DLManager.Items[xNode^.Index] do
+      begin
+        jdn := DateToJDN(DownloadInfo.DateTime);
+        Visible := (jdn >= L) and (jdn <= H);;
+        vtDownload.IsVisible[xNode] := Visible;
+      end;
       xNode := vtDownload.GetNext(xNode);
     end;
   end;
@@ -4059,7 +4110,11 @@ var
     xNode := vtDownload.GetFirst();
     while Assigned(xNode) do
     begin
-      vtDownload.IsVisible[xNode] := not DLManager[xNode^.Index].Enabled;
+      with DLManager.Items[xNode^.Index] do
+      begin
+        Visible := not Enabled;
+        vtDownload.IsVisible[xNode] := Visible;
+      end;
       xNode := vtDownload.GetNext(xNode);
     end;
   end;
@@ -4094,6 +4149,8 @@ begin
 
   if RefreshTree then
     tvDownloadFilterRefresh;
+  if edDownloadsSearch.Text <> '' then
+    edDownloadsSearchChange(edDownloadsSearch);
 end;
 
 procedure TMainForm.AddChapterNameToList;

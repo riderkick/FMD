@@ -10,6 +10,7 @@
 {"hash":204655756,"name":"tmainform.tbdownloadresumeall.caption","sourcebytes":[82,101,115,117,109,101,32,65,108,108],"value":"Resume All"},
 {"hash":190989196,"name":"tmainform.tbdownloadstopall.caption","sourcebytes":[83,116,111,112,32,65,108,108],"value":"Stop All"},
 {"hash":235571507,"name":"tmainform.tbdownloaddeletecompleted.caption","sourcebytes":[68,101,108,101,116,101,32,97,108,108,32,99,111,109,112,108,101,116,101,100,32,116,97,115,107,115],"value":"Delete all completed tasks"},
+{"hash":173363182,"name":"tmainform.eddownloadssearch.texthint","sourcebytes":[83,101,97,114,99,104,32,100,111,119,110,108,111,97,100,115,46,46,46],"value":"Search downloads..."},
 {"hash":221371535,"name":"tmainform.tsinformation.caption","sourcebytes":[77,97,110,103,97,32,73,110,102,111],"value":"Manga Info"},
 {"hash":60460069,"name":"tmainform.edurl.texthint","sourcebytes":[73,110,112,117,116,32,85,82,76,32,104,101,114,101],"value":"Input URL here"},
 {"hash":115683780,"name":"tmainform.btdownload.caption","sourcebytes":[68,111,119,110,108,111,97,100],"value":"Download"},

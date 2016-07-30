@@ -984,7 +984,14 @@ msgstr "This work usually involves intimate relationships between women."
 msgid "Input custom genres, separated by comma"
 msgstr "Input custom genres, separated by comma"
 
+#: tmainform.eddownloadssearch.texthint
+#| msgid "Search favorites..."
+msgctxt "tmainform.eddownloadssearch.texthint"
+msgid "Search downloads..."
+msgstr "Search downloads..."
+
 #: tmainform.edfavoritessearch.texthint
+msgctxt "tmainform.edfavoritessearch.texthint"
 msgid "Search favorites..."
 msgstr "Search favorites..."
 

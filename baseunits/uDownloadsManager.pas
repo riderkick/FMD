@@ -149,6 +149,7 @@ type
     destructor Destroy; override;
     procedure IncReadCount(const ACount: Integer);
   public
+    Visible: Boolean;
     property Website: String read FWebsite write SetWebsite;
     property Status: TDownloadStatusType read FStatus write SetStatus;
     property Enabled: Boolean read FEnabled write SetEnabled;
@@ -1482,6 +1483,7 @@ begin
   CustomFileName := OptionFilenameCustomRename;
   FStatus := STATUS_NONE;
   FEnabled := True;
+  Visible := True;
 end;
 
 destructor TTaskContainer.Destroy;
