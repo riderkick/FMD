@@ -1852,6 +1852,7 @@ begin
     begin
       if not MainForm.tmRefreshDownloadsInfo.Enabled then
         MainForm.tmRefreshDownloadsInfo.Enabled := True;
+      MainForm.UpdateVtDownload;
     end
     else
     begin
