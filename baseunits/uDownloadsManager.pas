@@ -164,6 +164,8 @@ type
     FSortDirection: Boolean;
     FSortColumn: Integer;
     DownloadManagerFile: TIniFileRun;
+    procedure AddItemsActiveTask(const Item: TTaskContainer);
+    procedure RemoveItemsActiveTask(const Item: TTaskContainer);
     function GetTask(const TaskId: Integer): TTaskContainer;
   protected
     function GetTaskCount: Integer; inline;
@@ -1396,14 +1398,9 @@ begin
   with Container do begin
     Container.ReadCount := 0;
     DownloadInfo.TransferRate := '';
+    Manager.RemoveItemsActiveTask(Container);
     ThreadState := False;
     Task := nil;
-    EnterCriticalSection(Manager.CS_Task);
-    try
-      Manager.ItemsActiveTask.Remove(Container);
-    finally
-      LeaveCriticalSection(Manager.CS_Task);
-    end;
     if not Manager.isReadyForExit then
     begin
       if Status <> STATUS_STOP then
@@ -1513,6 +1510,26 @@ end;
 
 { TDownloadManager }
 
+procedure TDownloadManager.AddItemsActiveTask(const Item: TTaskContainer);
+begin
+  EnterCriticalsection(CS_Task);
+  try
+    ItemsActiveTask.Add(Item);
+  finally
+    LeaveCriticalsection(CS_Task);
+  end;
+end;
+
+procedure TDownloadManager.RemoveItemsActiveTask(const Item: TTaskContainer);
+begin
+  EnterCriticalsection(CS_Task);
+  try
+    ItemsActiveTask.Remove(Item);
+  finally
+    LeaveCriticalsection(CS_Task);
+  end;
+end;
+
 function TDownloadManager.GetTask(const TaskId: Integer): TTaskContainer;
 begin
   Result := Items[TaskId];
@@ -1614,15 +1631,10 @@ end;
 
 destructor TDownloadManager.Destroy;
 begin
-  EnterCriticalSection(CS_Task);
-  try
-    while Items.Count > 0 do
-    begin
-      Items.Last.Free;
-      Items.Remove(Items.Last);
-    end;
-  finally
-    LeaveCriticalSection(CS_Task);
+  while Items.Count > 0 do
+  begin
+    Items.Last.Free;
+    Items.Remove(Items.Last);
   end;
   Items.Free;
   DownloadManagerFile.Free;
@@ -1923,7 +1935,7 @@ begin
       Modules.IncActiveTaskCount(ModuleId);
       Task := TTaskThread.Create;
       Task.Container := Items[taskID];
-      ItemsActiveTask.Add(Task.Container);
+      AddItemsActiveTask(Task.Container);
       Task.Start;
     end;
 end;
