@@ -228,7 +228,7 @@ begin
     if ML > 0 then
     begin
       Inc(Bit, ML);
-      ML := (ML * 2) + 1;
+      ML := ML + (R - Image.Width - ML);
     end;
     for Y := T to B - 1 do
     begin
@@ -436,7 +436,7 @@ begin
               Bit := TIMG.Bits;
             end;
           finally
-            Freemem(TIMG.Bits);
+            FreeMemAndNil(TIMG.Bits);
           end;
         end;
       if (BestValue >= MinPSNR) and (BestIndex <> -1) then
