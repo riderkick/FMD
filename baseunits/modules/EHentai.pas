@@ -286,8 +286,11 @@ begin
           if p > 1 then begin
             Dec(p);
             for i := 1 to p do
+            begin
+              if DownloadThread.IsTerminated then Break;
               if GETWithLogin(DownloadThread.FHTTP, rurl + '?p=' + IntToStr(i), Module.Website) then
                 GetImageLink;
+            end;
           end;
           SerializeAndMaintainNames(Filenames);
         end;
