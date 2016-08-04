@@ -1962,54 +1962,51 @@ begin
 end;
 
 function PadZero(const S: String; ATotalWidth: Integer; PadAll: Boolean; StripZero: Boolean): String;
-var
-  isnumber: Boolean;
-  n: String;
-  i: Integer;
 
-  procedure padn(var R: String);
+  function PadN(const SN: String): String;
   begin
-    if isnumber then
-    begin
-      if StripZero then
-        while (Length(n) > 0) and (n[1] = '0') do
-          Delete(n, 1, 1);
-      R := R + StringOfChar('0', ATotalWidth - Length(n)) + n;
-      n := '';
-      isnumber := False;
-    end;
+    Result := SN;
+    if StripZero and (Length(Result) > ATotalWidth) then
+      while (Result[1] = '0') and (Length(Result) > ATotalWidth) do
+        Delete(Result, 1, 1);
+    if Length(Result) < ATotalWidth then
+      Result := StringOfChar('0', ATotalWidth - Length(Result)) + Result;
   end;
 
+var
+  ls, i: Integer;
+  n: String;
 begin
-  if S = '' then Exit(S);
   Result := '';
-  isnumber := False;
+  if S = '' then Exit;
+  ls := Length(S);
+  i := 1;
   n := '';
-  for i := 1 to Length(S) do
-  begin
+  Result := '';
+  repeat
     if S[i] in ['0'..'9'] then
-    begin
-      n := n + S[i];
-      isnumber := True;
-    end
+      n := n + s[i]
     else
     begin
-      if isnumber then
+      if n <> '' then
       begin
-        padn(Result);
-        if not PadAll then
+        Result := Result + PadN(n);
+        n := '';
+        if PadAll then
         begin
-          Result := Result + S[i];
-          Break;
+          Result := Result + PadZero(Copy(S, i, ls), ATotalWidth, PadAll, StripZero);
+          i := ls;
         end;
+        Break;
       end;
       Result := Result + S[i];
     end;
-  end;
-  padn(Result);
-  Inc(i);
-  if i < Length(S) then
-    Result := Result + Copy(S, i, Length(S) - i + 1);
+    Inc(i);
+  until i > ls;
+  if n <> '' then
+    Result := Result + PadN(n);
+  if i < ls then
+    Result := Result + Copy(S, i, ls);
 end;
 
 procedure PadZeros(S: TStrings; ATotalWidth: Integer; PadAll: Boolean; StripZeros: Boolean);
