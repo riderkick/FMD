@@ -387,6 +387,7 @@ type
     procedure btCancelFavoritesCheckClick(Sender: TObject);
     procedure btChecksClick(Sender: TObject);
     procedure btCheckLatestVersionClick(Sender: TObject);
+    procedure btClearLogFileClick(Sender: TObject);
     procedure btDonateClick(Sender: TObject);
     procedure btDownloadsSearchClearClick(Sender: TObject);
     procedure btFavoritesSearchClearClick(Sender: TObject);
@@ -2209,6 +2210,18 @@ begin
     MessageDlg('', RS_DlgUpdaterIsRunning, mtInformation, [mbYes], 0)
   else
     CheckUpdateThread := TCheckUpdateThread.Create;
+end;
+
+procedure TMainForm.btClearLogFileClick(Sender: TObject);
+var
+  F: TextFile;
+begin
+  if FileExistsUTF8(edLogFileName.Text) then
+  begin
+    system.Assign(F, edLogFileName.Text);
+    Rewrite(F);
+    CloseFile(F);
+  end;
 end;
 
 procedure TMainForm.btDonateClick(Sender: TObject);
