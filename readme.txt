@@ -22,7 +22,7 @@ The Free Manga Downloader is a free open source application written in Object Pa
 
 In order to build FMD from the source code, you must install Lazarus latest version and Free Pascal Compiler v2.6.4. Then you must install the following 3rd party libraries and components:
  - RichMemo, https://sourceforge.net/projects/lazarus-ccr/
- - Virtual TreeView, https://sourceforge.net/projects/lazarus-ccr/
+ - Virtual TreeView, https://github.com/blikblum/VirtualTreeView-Lazarus/tree/lazarus-v4
  - Synapse, http://synapse.ararat.cz/
  - InternetTools, https://github.com/benibela/internettools
  - BESEN, https://github.com/BeRo1985/besen
