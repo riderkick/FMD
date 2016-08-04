@@ -267,7 +267,7 @@ begin
             PageInfo.ColorSpace := 'Indexed /DeviceRGB';
             if Assigned(IMG.Palette) then
             begin
-              PageInfo.ColorSpace := PageInfo.ColorSpace + ' ' + IntToStr(IMG.Palette.Count) + ' <';
+              PageInfo.ColorSpace := PageInfo.ColorSpace + ' ' + IntToStr(IMG.Palette.Count - 1) + ' <';
               for X := 0 to IMG.Palette.Count - 1 do
               begin
                 C := IMG.Palette.Color[X];
