@@ -703,14 +703,14 @@ function Base64Decode(const s: String): String;
 // StringUtils
 function PadZero(const S: String; ATotalWidth: Integer = 3;
   PadAll: Boolean = False; StripZero: Boolean = False): String;
-procedure PadZeros(S: TStrings; ATotalWidth: Integer = 3;
+procedure PadZeros(const S: TStrings; ATotalWidth: Integer = 3;
   PadAll: Boolean = False; StripZeros: Boolean = False);
 
 // RegExpr
 function RegExprGetMatch(const ARegExpr, AInputStr : RegExprString; const AMatchIdx: Integer): String;
 
 // maintain the order of strings by adding serialized number if necessary
-procedure SerializeAndMaintainNames(F: TStrings);
+procedure SerializeAndMaintainNames(const F: TStrings);
 
 function ShortenString(const S: String; const MaxWidth: Integer;
   const RightLength: Integer = 0; const EllipsisStr: String = '...'): String;
@@ -2009,15 +2009,18 @@ begin
     Result := Result + Copy(S, i, ls);
 end;
 
-procedure PadZeros(S: TStrings; ATotalWidth: Integer; PadAll: Boolean; StripZeros: Boolean);
+procedure PadZeros(const S: TStrings; ATotalWidth: Integer; PadAll: Boolean; StripZeros: Boolean);
 var
   i: Integer;
 begin
   if S = nil then Exit;
   if S.Count = 0 then Exit;
-  for i := 0 to S.Count - 1 do
-  begin
-    S[i] := PadZero(S[i], ATotalWidth, PadAll, StripZeros);
+  S.BeginUpdate;
+  try
+    for i := 0 to S.Count - 1 do
+      S[i] := PadZero(S[i], ATotalWidth, PadAll, StripZeros);
+  finally
+    S.EndUpdate;
   end;
 end;
 
@@ -2036,7 +2039,7 @@ begin
     end;
 end;
 
-procedure SerializeAndMaintainNames(F: TStrings);
+procedure SerializeAndMaintainNames(const F: TStrings);
 var
   s, so: TStringList;
   sameorder: Boolean;
@@ -2067,6 +2070,7 @@ begin
   if F = nil then Exit;
   if F.Count = 0 then Exit;
   s := TStringList.Create;
+  F.BeginUpdate;
   try
     //try sorting it
     s.AddStrings(F);
@@ -2106,6 +2110,7 @@ begin
       F.AddStrings(s);
     end;
   finally
+    F.EndUpdate;
     s.Free;
   end;
 end;
