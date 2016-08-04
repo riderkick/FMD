@@ -3429,7 +3429,6 @@ end;
 
 procedure TMainForm.tbDownloadResumeAllClick(Sender: TObject);
 begin
-  StrToInt('A');
   DLManager.StartAllTasks;
   UpdateVtDownload;
 end;
