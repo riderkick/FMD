@@ -4759,6 +4759,7 @@ begin
       Logger.Enabled := True;
       FileLogger := TFileChannel.Create(edLogFileName.Text, [fcoShowHeader, fcoShowPrefix, fcoShowTime]);
       Logger.Channels.Add(FileLogger);
+      Logger.Send(QuotedStrd(Application.Title)+' started with [PID:'+IntToStr(GetProcessID)+'] [HANDLE:'+IntToStr(GetCurrentProcess)+']');
       St := TStringList.Create;
       try
         St.AddText(SimpleException.GetApplicationInfo);
