@@ -438,15 +438,15 @@ msgstr "Unduh semua"
 
 #: tformlogger.btnclearlog.caption
 msgid "Clear"
-msgstr ""
+msgstr "Bersihkan"
 
 #: tformlogger.ckstayontop.caption
 msgid "Stay on top"
-msgstr ""
+msgstr "Tetap di atas"
 
 #: tformlogger.lbloglimit.caption
 msgid "Log limit"
-msgstr ""
+msgstr "Batasi log"
 
 #: timportfavorites.btcancel.caption
 msgctxt "timportfavorites.btcancel.caption"
@@ -491,7 +491,7 @@ msgstr "Periksa versi terbaru"
 
 #: tmainform.btclearlogfile.caption
 msgid "Clear log file"
-msgstr ""
+msgstr "Bersihkan berkas log"
 
 #: tmainform.btdownload.caption
 msgctxt "tmainform.btdownload.caption"
@@ -518,7 +518,7 @@ msgstr "Atur Ulang"
 
 #: tmainform.btopenlog.caption
 msgid "Open log"
-msgstr ""
+msgstr "Buka log"
 
 #: tmainform.btoptionapply.caption
 msgid "Apply"
@@ -675,7 +675,7 @@ msgstr "Tampilkan kotak unduh"
 
 #: tmainform.ckenablelogging.caption
 msgid "Enable logging"
-msgstr ""
+msgstr "Aktifkan logging"
 
 #: tmainform.ckfilteraction.caption
 msgid "Action"
@@ -1185,7 +1185,7 @@ msgstr "Judul"
 
 #: tmainform.lblogfilename.caption
 msgid "Log file:"
-msgstr ""
+msgstr "Berkas log:"
 
 #: tmainform.lbmode.caption
 msgid "Mode: Show all (0)"
@@ -1692,7 +1692,7 @@ msgstr "Koneksi"
 
 #: tmainform.tscustomcolor.caption
 msgid "Custom color"
-msgstr ""
+msgstr "Kustomisasi warna"
 
 #: tmainform.tsdialogs.caption
 msgid "Dialogs"
@@ -1727,7 +1727,7 @@ msgstr "Informasi Komik"
 
 #: tmainform.tslog.caption
 msgid "Log"
-msgstr ""
+msgstr "Log"
 
 #: tmainform.tsmangalist.caption
 msgid "Manga List"
@@ -2148,4 +2148,3 @@ msgstr "Sinkronisasi data"
 #: uupdatethread.rs_updatinglist
 msgid "Updating list"
 msgstr "Memperbarui daftar"
-
