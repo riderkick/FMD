@@ -38,7 +38,8 @@ end;
 function GetDirURL(const AWebsite: String): String;
 begin
   if (AWebsite = 'YoManga') or
-     (AWebsite = 'GoManga') then
+     (AWebsite = 'GoManga') or
+     (AWebsite = 'TripleSevenScan') then
     Result := dirurlreader
   else
   if AWebsite = 'OneTimeScans' then
@@ -273,6 +274,7 @@ begin
   AddWebsiteModule('SeinagiFansub', 'http://seinagi.org');
   AddWebsiteModule('SeinagiAdultoFansub', 'http://adulto.seinagi.org');
   AddWebsiteModule('SolitarioNoFansub', 'http://snf.mangaea.net');
+  AddWebsiteModule('TripleSevenScan', 'http://triplesevenscans.com')
 end;
 
 initialization
