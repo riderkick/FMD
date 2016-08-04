@@ -502,11 +502,14 @@ begin
       FileName := ParamStrUTF8(0);
       if FileName = '' then
         FileName := Application.ExeName;
-      Enabled := True;
-      if VersionStrings.Count <> 0 then
-      begin
-        AFileVersion := VersionStrings.Values['fileversion'];
-        AProductVersion := VersionStrings.Values['productversion'];
+      try
+        Enabled := True;
+        if VersionStrings.Count <> 0 then
+        begin
+          AFileVersion := VersionStrings.Values['fileversion'];
+          AProductVersion := VersionStrings.Values['productversion'];
+        end;
+      except
       end;
     finally
       Free;
