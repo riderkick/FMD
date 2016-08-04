@@ -200,30 +200,33 @@
         <FormatVersion Value="1"/>
       </local>
     </RunParams>
-    <RequiredPackages Count="7">
+    <RequiredPackages Count="8">
       <Item1>
-        <PackageName Value="BESENPkg"/>
+        <PackageName Value="multiloglaz"/>
       </Item1>
       <Item2>
-        <PackageName Value="laz_synapse"/>
+        <PackageName Value="BESENPkg"/>
       </Item2>
       <Item3>
-        <PackageName Value="internettools"/>
+        <PackageName Value="laz_synapse"/>
       </Item3>
       <Item4>
-        <PackageName Value="TAChartLazarusPkg"/>
+        <PackageName Value="internettools"/>
       </Item4>
       <Item5>
-        <PackageName Value="richmemopackage"/>
+        <PackageName Value="TAChartLazarusPkg"/>
       </Item5>
       <Item6>
-        <PackageName Value="virtualtreeview_package"/>
+        <PackageName Value="richmemopackage"/>
       </Item6>
       <Item7>
-        <PackageName Value="LCL"/>
+        <PackageName Value="virtualtreeview_package"/>
       </Item7>
+      <Item8>
+        <PackageName Value="LCL"/>
+      </Item8>
     </RequiredPackages>
-    <Units Count="12">
+    <Units Count="13">
       <Unit0>
         <Filename Value="md.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -305,6 +308,12 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
       </Unit11>
+      <Unit12>
+        <Filename Value="forms\frmLogger.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="FormLogger"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit12>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

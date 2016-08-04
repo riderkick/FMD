@@ -26,6 +26,7 @@ In order to build FMD from the source code, you must install Lazarus latest vers
  - Synapse, http://synapse.ararat.cz/
  - InternetTools, https://github.com/benibela/internettools
  - BESEN, https://github.com/BeRo1985/besen
+ - MultiLog, https://github.com/blikblum/multilog
 
 After everything is installed, open the file md.lpi by using Lazarus IDE, select Run->Build to build the source code. If everything is ok, the binary file should be in FMD_source_code_folder/bin
 

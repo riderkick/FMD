@@ -1,21 +1,31 @@
 { SimpleException Class
 
-  Copyright (C) 2014 Nur Cholif
+  Copyright (C) 2014-2016 Nur Cholif
 
-  This source is free software; you can redistribute it and/or modify it under
-  the terms of the GNU General Public License as published by the Free
-  Software Foundation; either version 2 of the License, or (at your option)
-  any later version.
+  This library is free software; you can redistribute it and/or modify it
+  under the terms of the GNU Library General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or (at your
+  option) any later version with the following modification:
 
-  This code is distributed in the hope that it will be useful, but WITHOUT ANY
-  WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-  FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
-  details.
+  As a special exception, the copyright holders of this library give you
+  permission to link this library with independent modules to produce an
+  executable, regardless of the license terms of these independent modules,and
+  to copy and distribute the resulting executable under terms of your choice,
+  provided that you also meet, for each linked independent module, the terms
+  and conditions of the license of that module. An independent module is a
+  module which is not derived from or based on this library. If you modify
+  this library, you may extend this exception to your version of the library,
+  but you are not obligated to do so. If you do not wish to do so, delete this
+  exception statement from your version.
 
-  A copy of the GNU General Public License is available on the World Wide Web
-  at <http://www.gnu.org/copyleft/gpl.html>. You can also obtain it by writing
-  to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
-  MA 02111-1307, USA.
+  This program is distributed in the hope that it will be useful, but WITHOUT
+  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+  FITNESS FOR A PARTICULAR PURPOSE. See the GNU Library General Public License
+  for more details.
+
+  You should have received a copy of the GNU Library General Public License
+  along with this library; if not, write to the Free Software Foundation,
+  Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 }
 
 unit SimpleException;
@@ -26,9 +36,9 @@ interface
 
 uses
   Classes, SysUtils, LazFileUtils, LazUTF8, Forms, Controls, LCLVersion,
-  SimpleExceptionForm, SimpleLogger,
+  SimpleExceptionForm,
   {$IFDEF WINDOWS}
-  windows, win32proc,
+  Windows, win32proc,
   {$ENDIF}
   {$IFDEF LINUX}
   elfreader,
@@ -36,7 +46,8 @@ uses
   {$IF DEFINED(DARWIN) OR DEFINED(MACOS)}
   machoreader,
   {$ENDIF}
-  fileinfo;
+  fileinfo,
+  MultiLog;
 
 type
 
@@ -44,58 +55,53 @@ type
 
   TSimpleException = class
   private
-    FAppInfo_comments,
-    FAppInfo_companyname,
-    FAppInfo_filedescription,
-    FAppInfo_fileversion,
-    FAppInfo_internalname,
-    FAppInfo_legalcopyright,
-    FAppInfo_legaltrademarks,
-    FAppInfo_originalfilename,
-    FAppInfo_productname,
-    FAppInfo_productversion: String;
-    FAppVerInfo: TStringList;
-    FOSversion: string;
+    FLogFileName: String;
     FLastSender: TObject;
     FLastException: Exception;
+    FApplicationInfo,
     FLastReport: String;
     FMaxStackCount: Integer;
     FSimpleCriticalSection: TRTLCriticalSection;
     FDefaultAppFlags: TApplicationFlags;
     FUnhandled: Boolean;
-    function OSVer: String;
+    procedure SetLogFileName(const AValue: String);
     procedure SetMaxStackCount(AMaxStackCount: Integer);
   protected
-    function ExceptionHeaderMessage: string;
+    function ExceptionHeaderMessage: String;
+    function GetStackTraceStr: String;
     procedure CreateExceptionReport;
-    procedure SaveLogToFile(LogMsg: string);
+    procedure SaveLogToFile(const LogMsg: String);
     procedure CallExceptionHandler;
     procedure ExceptionHandler;
-    procedure UnhandledException(Obj : TObject; Addr: CodePointer; FrameCount: Longint; Frames: PCodePointer);
+    procedure UnhandledException(Obj: TObject; Addr: CodePointer; FrameCount: LongInt;
+      Frames: PCodePointer);
   public
-    LogFilename: String;
-    IgnoredExceptionList: TStringlist;
+    IgnoredExceptionList: TStringList;
+    property ApplicationInfo: String read FApplicationInfo;
+    property LogFileName: String read FLogFileName write SetLogFileName;
     property MaxStackCount: Integer read FMaxStackCount write SetMaxStackCount;
     property LastSender: TObject read FLastSender;
     property LastException: Exception read FLastException;
     property LastReport: String read FLastReport;
     procedure SimpleExceptionHandler(Sender: TObject; E: Exception);
     procedure SimpleExceptionHandlerSaveLogOnly(Sender: TObject; E: Exception);
-    constructor Create(Filename: string = '');
+    constructor Create(const FileName: String = '');
     destructor Destroy; override;
   end;
 
+function GetApplicationInfo: String;
 function AddIgnoredException(const EClassName: String): Boolean;
 function RemoveIgnoredClass(const EClassName: String): Boolean;
 procedure SetMaxStackCount(const ACount: Integer);
 procedure ClearIgnoredException;
 procedure ExceptionHandle(Sender: TObject; E: Exception);
 procedure ExceptionHandleSaveLogOnly(Sender: TObject; E: Exception);
-procedure InitSimpleExceptionHandler(const LogFilename: String = '');
+procedure InitSimpleExceptionHandler(const LogFileName: String = '');
+procedure SetLogFileName(const LogFileName: String);
 procedure DoneSimpleExceptionHandler;
 
 var
-  MyException: TSimpleException;
+  MainExceptionHandler: TSimpleException;
 
 resourcestring
   SExceptionDialogTitle = 'Exception Info';
@@ -108,65 +114,95 @@ resourcestring
 
 implementation
 
-procedure SetMaxStackCount(const ACount : Integer);
+type
+
+  { TLoggerException }
+
+  TLoggerException = class helper for TLogger
+  public
+    procedure SendExceptionStr(const AText: String; AExceptionStr: String);
+  end;
+
+
+procedure SetMaxStackCount(const ACount: Integer);
 begin
-  if MyException <> nil then
-    MyException.MaxStackCount := ACount;
+  if MainExceptionHandler <> nil then
+    MainExceptionHandler.MaxStackCount := ACount;
 end;
 
-function AddIgnoredException(const EClassName : String) : Boolean;
+function GetApplicationInfo: String;
+begin
+  Result := '';
+  if Assigned(MainExceptionHandler) then
+    Result := MainExceptionHandler.ApplicationInfo;
+end;
+
+function AddIgnoredException(const EClassName: String): Boolean;
 begin
   Result := False;
-  if MyException <> nil then
-    if MyException.IgnoredExceptionList.IndexOf(EClassName) < 0 then
+  if MainExceptionHandler <> nil then
+    if MainExceptionHandler.IgnoredExceptionList.IndexOf(EClassName) < 0 then
     begin
       Result := True;
-      MyException.IgnoredExceptionList.Add(EClassName);
+      MainExceptionHandler.IgnoredExceptionList.Add(EClassName);
     end;
 end;
 
-function RemoveIgnoredClass(const EClassName : String) : Boolean;
+function RemoveIgnoredClass(const EClassName: String): Boolean;
 begin
   Result := False;
-  if MyException <> nil then
-    if MyException.IgnoredExceptionList.IndexOf(EClassName) > -1 then
+  if MainExceptionHandler <> nil then
+    if MainExceptionHandler.IgnoredExceptionList.IndexOf(EClassName) > -1 then
     begin
       Result := True;
-      MyException.IgnoredExceptionList.Delete(
-        MyException.IgnoredExceptionList.IndexOf(EClassName));
+      MainExceptionHandler.IgnoredExceptionList.Delete(
+        MainExceptionHandler.IgnoredExceptionList.IndexOf(EClassName));
     end;
 end;
 
 procedure ClearIgnoredException;
 begin
-  if MyException <> nil then
-    MyException.IgnoredExceptionList.Clear;
+  if MainExceptionHandler <> nil then
+    MainExceptionHandler.IgnoredExceptionList.Clear;
 end;
 
 procedure ExceptionHandle(Sender: TObject; E: Exception);
 begin
-  if not Assigned(MyException) then
+  if not Assigned(MainExceptionHandler) then
     InitSimpleExceptionHandler;
-  MyException.SimpleExceptionHandler(Sender, E);
+  MainExceptionHandler.SimpleExceptionHandler(Sender, E);
 end;
 
 procedure ExceptionHandleSaveLogOnly(Sender: TObject; E: Exception);
 begin
-  if not Assigned(MyException) then
+  if not Assigned(MainExceptionHandler) then
     InitSimpleExceptionHandler;
-  MyException.SimpleExceptionHandlerSaveLogOnly(Sender, E);
+  MainExceptionHandler.SimpleExceptionHandlerSaveLogOnly(Sender, E);
 end;
 
-procedure InitSimpleExceptionHandler(const LogFilename : String);
+procedure InitSimpleExceptionHandler(const LogFileName: String);
 begin
-  if MyException = nil then
-    MyException := TSimpleException.Create(LogFilename);
+  if MainExceptionHandler = nil then
+    MainExceptionHandler := TSimpleException.Create(LogFilename);
+end;
+
+procedure SetLogFileName(const LogFileName: String);
+begin
+  if MainExceptionHandler <> nil then
+    MainExceptionHandler.LogFileName := LogFileName;
 end;
 
 procedure DoneSimpleExceptionHandler;
 begin
-  if MyException <> nil then
-    FreeAndNil(MyException);
+  if MainExceptionHandler <> nil then
+    FreeAndNil(MainExceptionHandler);
+end;
+
+{ TLoggerException }
+
+procedure TLoggerException.SendExceptionStr(const AText: String; AExceptionStr: String);
+begin
+  SendBuffer(ltException, AText, AExceptionStr[1], Length(AExceptionStr));
 end;
 
 { TSimpleException }
@@ -174,16 +210,28 @@ end;
 procedure TSimpleException.SetMaxStackCount(AMaxStackCount: Integer);
 begin
   if FMaxStackCount <> AMaxStackCount then
+  begin
     if AMaxStackCount < 1 then
       FMaxStackCount := 1
     else
+    if AMaxStackCount > 255 then
+      FMaxStackCount := 255
+    else
       FMaxStackCount := AMaxStackCount;
+  end;
 end;
 
-function TSimpleException.OSVer: String;
+procedure TSimpleException.SetLogFileName(const AValue: String);
+begin
+  if FLogFileName = AValue then Exit;
+  FLogFileName := AValue;
+end;
+
+function GetOSVer: String;
 {$IFDEF WINDOWS}
 var
   wdir: array [0..MAX_PATH] of Char;
+
   function WinLater: String;
   begin
     if (Win32MajorVersion = 6) and (Win32MinorVersion = 3) then
@@ -220,7 +268,7 @@ begin
     else
       Result := WinLater;
   end;
-  Initialize(wdir);
+  FillChar({%H-}wdir, SizeOf(wdir), 0);
   GetWindowsDirectory(PChar(wdir), MAX_PATH);
   if DirectoryExists(wdir + '\SysWOW64') then
     Result := Result + ' 64-bit';
@@ -233,25 +281,26 @@ begin
     if (IgnoredExceptionList.IndexOf(FLastException.ClassName) > -1) then
       Exit;
   with TSimpleExceptionForm.Create(nil) do try
-    MemoExceptionLog.Lines.Text := FLastReport;
-    if Assigned(FLastException) then
-      LabelExceptionMessage.Caption := FLastException.Message;
-    if FUnhandled then
-    begin
-      CheckBoxIgnoreException.Visible := False;
-      ButtonContinue.Visible := False;
+      MemoExceptionLog.Lines.Text := FLastReport;
+      if Assigned(FLastException) then
+        LabelExceptionMessage.Caption := FLastException.Message;
+      if FUnhandled then
+      begin
+        CheckBoxIgnoreException.Visible := False;
+        ButtonContinue.Visible := False;
+      end;
+      if ShowModal = mrIgnore then
+        AddIgnoredException(FLastException.ClassName);
+    finally
+      Free;
     end;
-    if ShowModal = mrIgnore then
-      AddIgnoredException(FLastException.ClassName);
-  finally
-    Free;
-  end;
 end;
 
 procedure TSimpleException.UnhandledException(Obj: TObject; Addr: CodePointer;
-  FrameCount: Longint; Frames: PCodePointer);
+  FrameCount: LongInt; Frames: PCodePointer);
 var
   i: Integer;
+  S: String;
 begin
   EnterCriticalSection(FSimpleCriticalSection);
   try
@@ -268,13 +317,18 @@ begin
       FLastReport := ExceptionHeaderMessage;
       if Obj is TObject then
         FLastReport := FLastReport +
-        'Sender Class      : ' + Obj.ClassName + LineEnding;
+          'Sender Class      : ' + Obj.ClassName + LineEnding;
       FLastReport := FLastReport +
-        'Exception Address : $' + SimpleBackTraceStr(Addr) + LineEnding;
+        'Exception Address : $' + BackTraceStrFunc(Addr) + LineEnding;
+      S := '';
       if FrameCount > 0 then
-        for i := 0 to FrameCount-1 do
-          FLastReport := FLastReport + '  ' + SimpleBackTraceStr(Frames[i]) + LineEnding;
-      SaveLogToFile(FLastReport);
+        for i := 0 to FrameCount - 1 do
+          S := S + '  ' + BackTraceStrFunc(Frames[i]) + LineEnding;
+      FLastReport := FLastReport + S;
+      if Logger.Enabled then
+        Logger.SendExceptionStr('Unhandled Exception occured at $' + BackTraceStrFunc(Addr), S)
+      else
+        SaveLogToFile(FLastReport);
       CallExceptionHandler;
     end;
   finally
@@ -282,7 +336,9 @@ begin
   end;
 end;
 
-function TSimpleException.ExceptionHeaderMessage: string;
+function TSimpleException.ExceptionHeaderMessage: String;
+var
+  i: Integer;
 begin
   try
     if FUnhandled then
@@ -290,61 +346,77 @@ begin
     else
       Result := 'Program exception!';
     Result := Result + LineEnding +
-      'Application       : ' + Application.Title + LineEnding +
-      'Version           : ' + FAppInfo_fileversion + LineEnding +
-      'Product Version   : ' + FAppInfo_productversion + LineEnding +
-      'FPC Version       : ' + {$i %FPCVERSION%} + LineEnding +
-      'LCL Version       : ' + LCLVersion.lcl_version + LineEnding +
-      'Target CPU_OS     : ' + {$i %FPCTARGETCPU%} +'_' + {$i %FPCTARGETOS%} +LineEnding +
-      'Host Machine      : ' + FOSversion + LineEnding +
-      'Path              : ' + ParamStrUTF8(0) + LineEnding +
-      'Proccess Id       : ' + IntToStr(GetProcessID) + LineEnding +
-      'Thread Id         : ' + IntToStr(GetThreadID) + LineEnding +
-      'Time              : ' + DateTimeToStr(Now) + LineEnding;
+      FApplicationInfo + LineEnding +
+      'Thread ID         : ' + IntToStr(GetThreadID) + LineEnding +
+      'Time              : ' + FormatDateTime('dd/mm/yyyy hh:nn:ss.zzz', Now) + LineEnding;
     if IgnoredExceptionList.Count > 0 then
-      Result := Result +
-        'Ignored Exception : ' + IgnoredExceptionList.DelimitedText + LineEnding;
+    begin
+      Result := Result + 'Ignored Exception : ' + IgnoredExceptionList[0];
+      for i := 1 to IgnoredExceptionList.Count - 1 do
+        Result := Result + ', ' + IgnoredExceptionList[i];
+      Result := Result + LineEnding;
+    end;
   except
     Result := '';
   end;
 end;
 
-procedure TSimpleException.CreateExceptionReport;
+function TSimpleException.GetStackTraceStr: String;
+var
+  Frames: PPointer;
+  i, AMaxStackCount: Integer;
 begin
+  Result := '';
   try
-    FLastReport := ExceptionHeaderMessage;
-    if Assigned(FLastSender) then
-      FLastReport := FLastReport +
-        'Sender Class      : ' + FLastSender.ClassName + LineEnding;
-    if Assigned(FLastException) then
-    begin
-      FLastReport := FLastReport +
-        'Exception Class   : ' + FLastException.ClassName + LineEnding +
-        'Message           : ' + FLastException.Message + LineEnding;
-    end;
-    FLastReport := FLastReport + GetStackTraceInfo + LineEnding;
+    Result := BackTraceStrFunc(ExceptAddr);
+    Frames := ExceptFrames;
+    if ExceptFrameCount > FMaxStackCount then
+      AMaxStackCount := FMaxStackCount
+    else
+      AMaxStackCount := ExceptFrameCount;
+    for i := 0 to AMaxStackCount - 1 do
+      Result := Result + (LineEnding + BackTraceStrFunc(Frames[i]));
   except
-    on E: Exception do
-    begin
-      FLastReport := 'Failed to create exception FLastReport!' + LineEnding +
-        FLastReport + LineEnding;
-      if Assigned(LastSender) then
-        FLastReport := FLastReport + 'Sender Class: ' + LastSender.ClassName + LineEnding;
-      FLastReport := FLastReport + E.ClassName + ': ' + E.Message;
-    end;
   end;
-  SaveLogToFile(FLastReport);
 end;
 
-procedure TSimpleException.SaveLogToFile(LogMsg: string);
+procedure TSimpleException.CreateExceptionReport;
+var
+  S: String;
+begin
+  S := '';
+  FLastReport := ExceptionHeaderMessage;
+  if Assigned(FLastSender) then
+    FLastReport := FLastReport +
+      'Sender Class      : ' + FLastSender.ClassName + LineEnding;
+  if Assigned(FLastException) then
+  begin
+    FLastReport := FLastReport +
+      'Exception Class   : ' + FLastException.ClassName + LineEnding +
+      'Message           : ' + FLastException.Message + LineEnding;
+  end;
+  S := GetStackTraceStr;
+  FLastReport := FLastReport + S;
+  if Logger.Enabled then
+  begin
+    if Assigned(FLastException) then
+      Logger.SendExceptionStr(FLastException.ClassName + ' - ' + FLastException.Message, S)
+    else
+      Logger.SendExceptionStr('Program exception!', S);
+  end
+  else
+    SaveLogToFile(FLastReport);
+end;
+
+procedure TSimpleException.SaveLogToFile(const LogMsg: String);
 var
   f: TextFile;
 begin
-  if LogFilename <> '' then
+  if LogFileName <> '' then
   begin
-    AssignFile(f, LogFilename);
+    AssignFile(f, LogFileName);
     try
-      if FileExistsUTF8(LogFilename) then
+      if FileExistsUTF8(LogFileName) then
         Append(f)
       else
         Rewrite(f);
@@ -353,7 +425,6 @@ begin
       CloseFile(f);
     end;
   end;
-  WriteLog_E('From ExceptionHandler:'#13#10+LogMsg);
 end;
 
 procedure TSimpleException.CallExceptionHandler;
@@ -367,7 +438,10 @@ begin
         TThread.Synchronize((Sender as TThread), @ExceptionHandler)
       {$ENDIF}
     except
-      SaveLogToFile(SCantHandleException);
+      if Logger.Enabled then
+        Logger.SendError(SCantHandleException)
+      else
+        SaveLogToFile(SCantHandleException);
     end
   else
     ExceptionHandler;
@@ -405,63 +479,54 @@ begin
   end;
 end;
 
-Procedure CatchUnhandledExcept(Obj : TObject; Addr: CodePointer; FrameCount: Longint; Frames: PCodePointer);
+procedure CatchUnhandledExcept(Obj: TObject; Addr: CodePointer; FrameCount: LongInt; Frames: PCodePointer);
 begin
-  if Assigned(MyException) then
-    MyException.UnhandledException(Obj, Addr, FrameCount, Frames);
+  if Assigned(MainExceptionHandler) then
+    MainExceptionHandler.UnhandledException(Obj, Addr, FrameCount, Frames);
 end;
 
-constructor TSimpleException.Create(Filename : string);
+constructor TSimpleException.Create(const FileName: String);
 var
-  i: Integer;
+  AFileVersion, AProductVersion: String;
 begin
   inherited Create;
-  InitCriticalSection(FSimpleCriticalSection);
-  if Trim(Filename) <> '' then
-    LogFilename := Filename
+  if Trim(FileName) <> '' then
+    LogFileName := FileName
   else
-    LogFilename := ExtractFileNameOnly(Application.ExeName) + '.log';
-  FMaxStackCount := 20;
-  FAppVerInfo := TStringList.Create;
+    LogFileName := ChangeFileExt(Application.ExeName, '.log');
+  InitCriticalSection(FSimpleCriticalSection);
   IgnoredExceptionList := TStringList.Create;
-  FOSversion := OSVer;
+  FMaxStackCount := 20;
   with TFileVersionInfo.Create(nil) do
     try
-      try
-        fileName := ParamStrUTF8(0);
-        if fileName = '' then
-          fileName := Application.ExeName;
-        {$IF FPC_FULLVERSION >= 20701}
-        ReadFileInfo;
-        {$ENDIF}
-        if VersionStrings.Count > 0 then
-        begin
-        {$IF FPC_FULLVERSION >= 20701}
-          FAppVerInfo.Assign(VersionStrings);
-        {$ELSE}
-          for i := 0 to VersionStrings.Count - 1 do
-            FAppVerInfo.Add(VersionCategories.Strings[i] + '=' +
-              VersionStrings.Strings[i]);
-        {$ENDIF}
-          for i := 0 to FAppVerInfo.Count - 1 do
-            FAppVerInfo.Strings[i] :=
-              LowerCase(FAppVerInfo.Names[i]) + '=' + FAppVerInfo.ValueFromIndex[i];
-          FAppInfo_comments := FAppVerInfo.Values['comments'];
-          FAppInfo_companyname := FAppVerInfo.Values['companyname'];
-          FAppInfo_filedescription := FAppVerInfo.Values['filedescription'];
-          FAppInfo_fileversion := FAppVerInfo.Values['fileversion'];
-          FAppInfo_internalname := FAppVerInfo.Values['internalname'];
-          FAppInfo_legalcopyright := FAppVerInfo.Values['legalcopyright'];
-          FAppInfo_legaltrademarks := FAppVerInfo.Values['legaltrademarks'];
-          FAppInfo_originalfilename := FAppVerInfo.Values['originalfilename'];
-          FAppInfo_productname := FAppVerInfo.Values['productname'];
-          FAppInfo_productversion := FAppVerInfo.Values['productversion'];
-        end;
-      except
+      FileName := ParamStrUTF8(0);
+      if FileName = '' then
+        FileName := Application.ExeName;
+      Enabled := True;
+      if VersionStrings.Count <> 0 then
+      begin
+        AFileVersion := VersionStrings.Values['fileversion'];
+        AProductVersion := VersionStrings.Values['productversion'];
       end;
     finally
       Free;
     end;
+  FApplicationInfo :=
+    'Application       : ' + Application.Title + LineEnding;
+  if AFileVersion <> '' then
+    FApplicationInfo := FApplicationInfo +
+      'Version           : ' + AFileVersion + LineEnding;
+  if AProductVersion <> '' then
+    FApplicationInfo := FApplicationInfo +
+      'Product Version   : ' + AProductVersion + LineEnding;
+  FApplicationInfo := FApplicationInfo +
+    'Host Machine      : ' + GetOSVer + LineEnding +
+    'Target CPU_OS     : ' + {$i %FPCTARGETCPU%} +'_' + {$i %FPCTARGETOS%} +LineEnding +
+    'FPC Version       : ' + {$i %FPCVERSION%} +LineEnding +
+    'LCL Version       : ' + LCLVersion.lcl_version + LineEnding +
+    'Path              : ' + ParamStrUTF8(0) + LineEnding +
+    'Process ID        : ' + IntToStr(GetProcessID) + LineEnding +
+    'MainThread ID     : ' + IntToStr(MainThreadID);
   if Assigned(Application) then
   begin
     FDefaultAppFlags := Application.Flags;
@@ -479,10 +544,11 @@ begin
     Application.Flags := FDefaultAppFlags;
   end;
   IgnoredExceptionList.Free;
-  FAppVerInfo.Free;
   DoneCriticalsection(FSimpleCriticalSection);
   inherited Destroy;
 end;
+
+initialization
 
 finalization
   DoneSimpleExceptionHandler;
