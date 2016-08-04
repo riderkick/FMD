@@ -436,6 +436,18 @@ msgctxt "tformdroptarget.midownloadall.caption"
 msgid "Download all"
 msgstr "Unduh semua"
 
+#: tformlogger.btnclearlog.caption
+msgid "Clear"
+msgstr ""
+
+#: tformlogger.ckstayontop.caption
+msgid "Stay on top"
+msgstr ""
+
+#: tformlogger.lbloglimit.caption
+msgid "Log limit"
+msgstr ""
+
 #: timportfavorites.btcancel.caption
 msgctxt "timportfavorites.btcancel.caption"
 msgid "Cancel"
@@ -477,6 +489,10 @@ msgctxt "tmainform.btchecklatestversion.caption"
 msgid "Check for latest version"
 msgstr "Periksa versi terbaru"
 
+#: tmainform.btclearlogfile.caption
+msgid "Clear log file"
+msgstr ""
+
 #: tmainform.btdownload.caption
 msgctxt "tmainform.btdownload.caption"
 msgid "Download"
@@ -499,6 +515,10 @@ msgstr "Saring"
 #: tmainform.btfilterreset.caption
 msgid "Reset value"
 msgstr "Atur Ulang"
+
+#: tmainform.btopenlog.caption
+msgid "Open log"
+msgstr ""
 
 #: tmainform.btoptionapply.caption
 msgid "Apply"
@@ -652,6 +672,10 @@ msgstr "Regular Expression"
 msgctxt "tmainform.ckdroptarget.caption"
 msgid "Show Drop Box"
 msgstr "Tampilkan kotak unduh"
+
+#: tmainform.ckenablelogging.caption
+msgid "Enable logging"
+msgstr ""
 
 #: tmainform.ckfilteraction.caption
 msgid "Action"
@@ -1159,6 +1183,10 @@ msgctxt "tmainform.lbfiltertitle.caption"
 msgid "Title"
 msgstr "Judul"
 
+#: tmainform.lblogfilename.caption
+msgid "Log file:"
+msgstr ""
+
 #: tmainform.lbmode.caption
 msgid "Mode: Show all (0)"
 msgstr "Mode: Tampilkan semua (0)"
@@ -1662,6 +1690,10 @@ msgstr "Catatan perubahan"
 msgid "Connections"
 msgstr "Koneksi"
 
+#: tmainform.tscustomcolor.caption
+msgid "Custom color"
+msgstr ""
+
 #: tmainform.tsdialogs.caption
 msgid "Dialogs"
 msgstr "Dialog"
@@ -1692,6 +1724,10 @@ msgstr "Umum"
 #: tmainform.tsinformation.caption
 msgid "Manga Info"
 msgstr "Informasi Komik"
+
+#: tmainform.tslog.caption
+msgid "Log"
+msgstr ""
 
 #: tmainform.tsmangalist.caption
 msgid "Manga List"
@@ -2112,3 +2148,4 @@ msgstr "Sinkronisasi data"
 #: uupdatethread.rs_updatinglist
 msgid "Updating list"
 msgstr "Memperbarui daftar"
+

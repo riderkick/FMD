@@ -21,8 +21,8 @@ uses
   SysUtils, Classes, Graphics, Forms, lazutf8classes, LazUTF8, LazFileUtils,
   LConvEncoding, strutils, dateutils, fileinfo, base64, fpjson, jsonparser, jsonscanner,
   FastHTMLParser, fgl, RegExpr, synautil, httpsend, blcksock, ssl_openssl, synacode,
-  FPimage, GZIPUtils, uFMDThread, uMisc, httpsendthread, FMDOptions, simplehtmltreeparser,
-  xquery, xquery_json, ImgInfos, SimpleException, SimpleLogger;
+  MultiLog, FPimage, GZIPUtils, uFMDThread, uMisc, httpsendthread, FMDOptions,
+  simplehtmltreeparser, xquery, xquery_json, ImgInfos, SimpleException;
 
 const
   JPG_HEADER: array[0..2] of Byte = ($FF, $D8, $FF);
@@ -3226,7 +3226,7 @@ begin
         HTTP.Document.SaveToStream(TStream(output));
     except
       on E: Exception do
-        WriteLog_E('GetPage.WriteOutput.Error!', E);
+        Logger.SendException('GetPage.WriteOutput.Error!', E);
     end;
     Result := True;
   end
@@ -3284,7 +3284,7 @@ begin
       end;
     except
       on E: Exception do
-        WriteLog_E('SaveImageStreamToFile.WriteToFile Failed! ' + f, E);
+        Logger.SendException('SaveImageStreamToFile.WriteToFile Failed! ' + f, E);
     end;
     if FileExistsUTF8(f) then
     begin
@@ -3294,7 +3294,7 @@ begin
           FileSetDateUTF8(f, Age);
         except
           on E: Exception do
-            WriteLog_E('SaveImageStreamToFile.FileSetDate Error! ' + f, E);
+            Logger.SendException('SaveImageStreamToFile.FileSetDate Error! ' + f, E);
         end;
     end;
   end;

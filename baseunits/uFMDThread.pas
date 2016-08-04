@@ -11,7 +11,7 @@ unit uFMDThread;
 interface
 
 uses
-  Classes, SysUtils, SimpleLogger;
+  Classes, SysUtils;
 
 type
 
@@ -22,8 +22,6 @@ type
     FOnCustomTerminate: TNotifyEvent;
     function GetTerminated: Boolean;
     procedure CallCustomTerminate;
-  protected
-    procedure DoTerminate; override;
   public
     constructor Create(CreateSuspended: Boolean = True);
     procedure Terminate;
@@ -41,13 +39,6 @@ end;
 procedure TFMDThread.CallCustomTerminate;
 begin
   FOnCustomTerminate(Self);
-end;
-
-procedure TFMDThread.DoTerminate;
-begin
-  if (FatalException <> nil) and (FatalException is Exception) then
-    WriteLog_E('TFMDThread.FatalException!', Exception(FatalException), Self);
-  inherited DoTerminate;
 end;
 
 constructor TFMDThread.Create(CreateSuspended: Boolean = True);

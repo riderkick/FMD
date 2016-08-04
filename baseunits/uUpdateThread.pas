@@ -12,7 +12,7 @@ interface
 
 uses
   Classes, SysUtils, typinfo, uData, LazFileUtils, uBaseUnit, uFMDThread, uMisc,
-  WebsiteModules, DBDataProcess, SimpleTranslator, FMDOptions, httpsendthread;
+  WebsiteModules, DBDataProcess, SimpleTranslator, FMDOptions, httpsendthread, MultiLog;
 
 type
   TUpdateListManagerThread = class;
@@ -95,7 +95,7 @@ resourcestring
 implementation
 
 uses
-  frmMain, Dialogs, ComCtrls, Forms, Controls, SimpleLogger;
+  frmMain, Dialogs, ComCtrls, Forms, Controls;
 
 { TUpdateListThread }
 
@@ -349,8 +349,8 @@ end;
 
 destructor TUpdateListManagerThread.Destroy;
 begin
-  if FThreadAborted then WriteLog_W(Self.ClassName+', thread aborted by user?');
-  if not FThreadEndNormally then WriteLog_W(Self.ClassName+', thread doesn''t end normally, ended by user?');
+  if FThreadAborted then Logger.SendWarning(Self.ClassName+', thread aborted by user?');
+  if not FThreadEndNormally then Logger.SendWarning(Self.ClassName+', thread doesn''t end normally, ended by user?');
   websites.Free;
   mainDataProcess.Close;
   tempDataProcess.Close;
@@ -687,7 +687,7 @@ begin
           end;
         except
           on E: Exception do
-            WriteLog_E(cloghead+'error occured!', E, Self);
+            Logger.SendException(cloghead + 'error occured!', E);
         end;
 
         tempDataProcess.Close;

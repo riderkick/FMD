@@ -15,7 +15,7 @@ interface
 
 uses
   Classes, SysUtils, uBaseUnit, uFMDThread, DBDataProcess, FMDOptions, httpsendthread,
-  FileUtil, LazFileUtils, SimpleLogger, strutils, dateutils, RegExpr, httpsend;
+  FileUtil, LazFileUtils, strutils, dateutils, RegExpr, httpsend, MultiLog;
 
 type
 
@@ -658,7 +658,7 @@ begin
     end;
   except
     on E: Exception do
-      WriteLog_E('TDataProcess.Filter.Error!', E, Self);
+      Logger.SendException(Self.ClassName + '.Filter.Error!', E);
   end;
   regx.Free;
 end;
@@ -667,6 +667,7 @@ function TDataProcess.Search(AMangaName: String): Boolean;
 var
   i: Cardinal;
 begin
+  Result := False;
   searchPos.Clear;
   if filterPos.Count <= 0 then
     Exit;

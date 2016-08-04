@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, httpsend, synautil, synacode, ssl_openssl, blcksock,
-  uFMDThread, GZIPUtils, Graphics, SimpleLogger, RegExpr;
+  uFMDThread, GZIPUtils, Graphics, RegExpr;
 
 type
 
@@ -292,19 +292,16 @@ begin
       mstream.Free;
     end;
     if Assigned(Response) then
-      try
-        if Response is TStringList then
-          TStringList(Response).LoadFromStream(Document)
-        else
-        if Response is TPicture then
-          TPicture(Response).LoadFromStream(Document)
-        else
-        if Response is TStream then
-          Document.SaveToStream(TStream(Response));
-      except
-        on E: Exception do
-          WriteLog_E('HTTPRequest.WriteOutput.Error!', E);
-      end;
+    begin
+      if Response is TStringList then
+        TStringList(Response).LoadFromStream(Document)
+      else
+      if Response is TPicture then
+        TPicture(Response).LoadFromStream(Document)
+      else
+      if Response is TStream then
+        Document.SaveToStream(TStream(Response));
+    end;
     Result := Document.Size > 0;
   finally
     HTTPHeader.Free;

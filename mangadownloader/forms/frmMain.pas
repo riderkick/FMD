@@ -18,13 +18,13 @@ uses
   {$endif}
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, LCLType, ExtCtrls,
   ComCtrls, Buttons, Spin, Menus, VirtualTrees, RichMemo, IniFiles, simpleipc, lclproc,
-  types, strutils, LCLIntf, DefaultTranslator, EditBtn, FileUtil, LazUTF8Classes, TAGraph,
-  TASources, TASeries, TATools, AnimatedGif, uBaseUnit, uDownloadsManager,
-  uFavoritesManager, uUpdateThread, uUpdateDBThread, uSilentThread, uMisc,
-  uGetMangaInfosThread, frmDropTarget, frmAccountManager, frmWebsiteOptionCustom,
-  frmWebsiteOptionAdvanced, frmCustomColor, CheckUpdate, accountmanagerdb, DBDataProcess,
-  MangaFoxWatermark, SimpleTranslator, FMDOptions, httpsendthread, SimpleException,
-  SimpleLogger;
+  types, strutils, LCLIntf, DefaultTranslator, EditBtn, MultiLog, FileChannel, FileUtil,
+  LazUTF8Classes, TAGraph, TASources, TASeries, TATools, AnimatedGif, uBaseUnit,
+  uDownloadsManager, uFavoritesManager, uUpdateThread, uUpdateDBThread, uSilentThread,
+  uMisc, uGetMangaInfosThread, frmDropTarget, frmAccountManager, frmWebsiteOptionCustom,
+  frmWebsiteOptionAdvanced, frmCustomColor, frmLogger, CheckUpdate, accountmanagerdb,
+  DBDataProcess, MangaFoxWatermark, SimpleTranslator, FMDOptions, httpsendthread,
+  SimpleException;
 
 type
 
@@ -32,6 +32,8 @@ type
 
   TMainForm = class(TForm)
     appPropertiesMain: TApplicationProperties;
+    btOpenLog: TBitBtn;
+    btClearLogFile: TBitBtn;
     btAddToFavorites: TBitBtn;
     btCancelFavoritesCheck: TSpeedButton;
     btAbortCheckLatestVersion: TSpeedButton;
@@ -64,6 +66,7 @@ type
     cbUseRegExpr: TCheckBox;
     cbOptionProxyType: TComboBox;
     cbOptionOneInstanceOnly: TCheckBox;
+    ckEnableLogging: TCheckBox;
     edDownloadsSearch: TEdit;
     edFilterMangaInfoChapters: TEditButton;
     edFavoritesSearch: TEdit;
@@ -72,6 +75,8 @@ type
     edOptionMangaCustomRename: TEdit;
     edSaveTo: TDirectoryEdit;
     edURL: TEditButton;
+    edLogFileName: TFileNameEdit;
+    lbLogFileName: TLabel;
     lbOptionFilenameCustomRenameHint: TLabel;
     lbOptionFilenameCustomRename: TLabel;
     lbOptionMangaCustomRenameHint: TLabel;
@@ -100,6 +105,7 @@ type
     miChapterListHideDownloaded: TMenuItem;
     miAbortSilentThread: TMenuItem;
     mmChangelog: TMemo;
+    pcMisc: TPageControl;
     pcWebsiteOptions: TPageControl;
     Panel1: TPanel;
     Panel2: TPanel;
@@ -112,6 +118,8 @@ type
     sbSaveTo: TScrollBox;
     sbWebsiteOptions: TScrollBox;
     btFavoritesSearchClear: TSpeedButton;
+    tsCustomColor: TTabSheet;
+    tsLog: TTabSheet;
     tmAnimateMangaInfo: TTimer;
     tmBackup: TTimer;
     tmCheckFavorites: TTimer;
@@ -383,6 +391,7 @@ type
     procedure btDownloadsSearchClearClick(Sender: TObject);
     procedure btFavoritesSearchClearClick(Sender: TObject);
     procedure btFavoritesImportClick(Sender: TObject);
+    procedure btOpenLogClick(Sender: TObject);
     procedure btReadOnlineClick(Sender: TObject);
     procedure btMangaListSearchClearClick(Sender: TObject);
     procedure btUpdateListClick(Sender: TObject);
@@ -863,6 +872,9 @@ var
   // ...
   UpdateStatusTextStyle: TTextStyle;
 
+  // file logger
+  FileLogger: TFileChannel;
+
 {$ifdef windows}
   PrevWndProc: windows.WNDPROC;
 
@@ -1051,12 +1063,8 @@ begin
   PrevWndProc := windows.WNDPROC(windows.GetWindowLongPtr(Self.Handle, GWL_WNDPROC));
   windows.SetWindowLongPtr(Self.Handle, GWL_WNDPROC, PtrInt(@WndCallback));
   {$endif}
-  SetLogFile(Format('%s\%s_LOG_%s.txt', ['log', ExtractFileNameOnly(ParamStrUTF8(0)),
-    FormatDateTime('dd-mm-yyyy', Now)]));
-  Writelog_I(['Starting ',QuotedStrd(Application.Title),' [PID:',GetProcessID,'] [HANDLE:',IntToStr(GetCurrentProcess),']']);
+  Logger.Enabled := False;
   InitSimpleExceptionHandler;
-  AddIgnoredException('EImagingError');
-  AddIgnoredException('ERegExpr');
   btAbortUpdateList.Parent := sbUpdateList;
   isRunDownloadFilter := False;
   isUpdating := False;
@@ -1193,7 +1201,7 @@ begin
   CustomColorForm := TCustomColorForm.Create(Self);
   with CustomColorForm do
   begin
-    Parent := tsMisc;
+    Parent := tsCustomColor;
     BorderStyle := bsNone;
     Align := alClient;
     Show;
@@ -1210,6 +1218,9 @@ begin
     AddVT(WebsiteOptionAdvancedForm.vtUpdateListNumberOfThreads);
   end;
 
+  // logger
+  FormLogger := TFormLogger.Create(Self);
+
   // load mangafox template
   MangaFoxWatermark.SetTemplateDirectory(MANGAFOXTEMPLATE_FOLDER);
 
@@ -1223,12 +1234,12 @@ end;
 
 procedure TMainForm.FormClose(Sender: TObject; var CloseAction: TCloseAction);
 begin
-  Writelog_D(Self.ClassName+'.FormClose action');
+  Logger.Send(Self.ClassName+'.FormClose');
   if cbOptionShowQuitDialog.Checked and (DoAfterFMD = DO_NOTHING) then
   begin
     if MessageDlg('', RS_DlgQuit, mtConfirmation, [mbYes, mbNo], 0) <> mrYes then
     begin
-      Writelog_D(Self.ClassName+'.FormClose aborted');
+      Logger.Send(Self.ClassName+'.FormClose aborted!');
       CloseAction := caNone;
       Exit;
     end;
@@ -1243,56 +1254,56 @@ begin
   if Assigned(PrevWndProc) then
     windows.SetWindowLongPtr(Self.Handle, GWL_WNDPROC, PtrInt(PrevWndProc));
   {$endif}
-  Writelog_D(Self.ClassName+'.CloseNow, terminating all threads and waitfor');
+  Logger.Send(Self.ClassName+'.CloseNow, terminating all threads and waitfor');
   FavoriteManager.StopChekForNewChapter(True);
   SilentThreadManager.StopAll(True);
   DLManager.StopAllDownloadTasksForExit;
   //Terminating all threads and wait for it
   if Assigned(CheckUpdateThread) then
   begin
-    Writelog_D(Self.ClassName+'.CloseNow, terminating CheckUpdateThread');
+    Logger.Send(Self.ClassName+'.CloseNow, terminating CheckUpdateThread');
     CheckUpdateThread.Terminate;
     CheckUpdateThread.WaitFor;
-    Writelog_D(Self.ClassName+'.CloseNow, CheckUpdateThread terminated');
+    Logger.Send(Self.ClassName+'.CloseNow, CheckUpdateThread terminated');
   end;
   if Assigned(SearchDBThread) then
   begin
-    Writelog_D(Self.ClassName+'.CloseNow, terminating SearchDBThread');
+    Logger.Send(Self.ClassName+'.CloseNow, terminating SearchDBThread');
     SearchDBThread.Terminate;
     SearchDBThread.WaitFor;
-    Writelog_D(Self.ClassName+'.CloseNow, SearchDBThread terminated');
+    Logger.Send(Self.ClassName+'.CloseNow, SearchDBThread terminated');
   end;
   if Assigned(OpenDBThread) then
   begin
-    Writelog_D(Self.ClassName+'.CloseNow, terminating OpenDBThread');
+    Logger.Send(Self.ClassName+'.CloseNow, terminating OpenDBThread');
     OpenDBThread.Terminate;
     OpenDBThread.WaitFor;
-    Writelog_D(Self.ClassName+'.CloseNow, OpenDBThread terminated');
+    Logger.Send(Self.ClassName+'.CloseNow, OpenDBThread terminated');
   end;
   if isGetMangaInfos then
   begin
-    Writelog_D(Self.ClassName+'.CloseNow, terminating GetInfosThread');
+    Logger.Send(Self.ClassName+'.CloseNow, terminating GetInfosThread');
     GetInfosThread.IsFlushed := True;
     GetInfosThread.Terminate;
     GetInfosThread.WaitFor;
-    Writelog_D(Self.ClassName+'.CloseNow, GetInfosThread terminated');
+    Logger.Send(Self.ClassName+'.CloseNow, GetInfosThread terminated');
   end;
   if isUpdating then
   begin
-    Writelog_D(Self.ClassName+'.CloseNow, terminating UpdateListThread');
+    Logger.Send(Self.ClassName+'.CloseNow, terminating UpdateListThread');
     updateList.Terminate;
     updateList.WaitFor;
-    Writelog_D(Self.ClassName+'.CloseNow, UpdateListThread terminated');
+    Logger.Send(Self.ClassName+'.CloseNow, UpdateListThread terminated');
   end;
 
-  Writelog_D(Self.ClassName+'.CloseNow, disabling all timer');
+  Logger.Send(Self.ClassName+'.CloseNow, disabling all timer');
   tmBackup.Enabled := False;
   tmRefreshDownloadsInfo.Enabled := False;
   tmCheckFavorites.Enabled := False;
   tmAnimateMangaInfo.Enabled := False;
   tmExitCommand.Enabled := False;
 
-  Writelog_D(Self.ClassName+'.CloseNow, backup all data to file');
+  Logger.Send(Self.ClassName+'.CloseNow, backup all data to file');
   //Backup data
   DLManager.Backup;
   isExiting := True;
@@ -1300,7 +1311,7 @@ begin
   SaveOptions;
   SaveFormInformation;
 
-  Writelog_D(Self.ClassName+'.CloseNow, closing other forms');
+  Logger.Send(Self.ClassName+'.CloseNow, closing other forms');
   //embed form
   if Assigned(AccountManagerForm) then
     AccountManagerForm.Close;
@@ -1310,7 +1321,7 @@ begin
 
   if FMDInstance <> nil then
   begin
-    Writelog_D(Self.ClassName+'.CloseNow, stop ipc server');
+    Logger.Send(Self.ClassName+'.CloseNow, stop ipc server');
     FMDInstance.StopServer;
     FreeAndNil(FMDInstance);
   end;
@@ -1319,7 +1330,7 @@ end;
 
 procedure TMainForm.FormDestroy(Sender: TObject);
 begin
-  Writelog_D(Self.ClassName+'.FormDestroy, freeing all objects');
+  Logger.Send(Self.ClassName+'.FormDestroy, freeing all objects');
   SetLength(optionMangaSiteSelectionNodes, 0);
   SetLength(ChapterList, 0);
   FreeAndNil(mangaInfo);
@@ -1333,9 +1344,9 @@ begin
   FreeAndNil(mangaCover);
 
   if isNormalExit then
-    Writelog_I(QuotedStrd(Application.Title)+' exit normally [PID:'+IntToStr(GetProcessID)+'] [HANDLE:'+IntToStr(GetCurrentProcess)+']')
+    Logger.Send(QuotedStrd(Application.Title)+' exit normally [PID:'+IntToStr(GetProcessID)+'] [HANDLE:'+IntToStr(GetCurrentProcess)+']')
   else
-    Writelog_W(QuotedStrd(Application.Title)+' doesn''t exit normally [PID:'+IntToStr(GetProcessID)+'] [HANDLE:'+IntToStr(GetCurrentProcess)+']');
+    Logger.SendWarning(QuotedStrd(Application.Title)+' doesn''t exit normally [PID:'+IntToStr(GetProcessID)+'] [HANDLE:'+IntToStr(GetCurrentProcess)+']');
 end;
 
 procedure TMainForm.FormShow(Sender: TObject);
@@ -2222,6 +2233,11 @@ begin
   finally
     Free;
   end;
+end;
+
+procedure TMainForm.btOpenLogClick(Sender: TObject);
+begin
+  FormLogger.Show;
 end;
 
 procedure TMainForm.btChecksClick(Sender: TObject);
@@ -3400,6 +3416,7 @@ end;
 
 procedure TMainForm.tbDownloadResumeAllClick(Sender: TObject);
 begin
+  StrToInt('A');
   DLManager.StartAllTasks;
   UpdateVtDownload;
 end;
@@ -4473,6 +4490,10 @@ begin
 
     // misc
     frmCustomColor.LoadFromIniFile(configfile);
+    ckEnableLogging.Checked := ReadBool('logger', 'Enabled', False);
+    edLogFileName.Text := ReadString('logger', 'LogFileName', '');
+    if edLogFileName.Text = '' then
+      edLogFileName.Text := ChangeFileExt(Application.ExeName, '.log');
 
     // websites
     if Length(optionMangaSiteSelectionNodes) > 0 then
@@ -4596,6 +4617,10 @@ begin
 
       // misc
       frmCustomColor.SaveToIniFile(configfile);
+      WriteBool('logger', 'Enabled', ckEnableLogging.Checked);
+      if edLogFileName.Text = '' then
+        edLogFileName.Text := ChangeFileExt(Application.ExeName, '.log');
+      WriteString('logger', 'LogFileName', edLogFileName.Text);
     finally
       UpdateFile;
     end;
@@ -4608,6 +4633,7 @@ var
   i: Integer;
   isStillHaveCurrentWebsite: Boolean = False;
   data: PSingleItem;
+  St: TStringList;
 begin
   try
     // general
@@ -4714,6 +4740,27 @@ begin
 
     //misc
     frmCustomColor.Apply;
+    SimpleException.SetLogFileName(edLogFileName.Text);
+    if ckEnableLogging.Checked and (not Logger.Enabled) then
+    begin
+      Logger.Enabled := True;
+      FileLogger := TFileChannel.Create(edLogFileName.Text, [fcoShowHeader, fcoShowPrefix, fcoShowTime]);
+      Logger.Channels.Add(FileLogger);
+      St := TStringList.Create;
+      try
+        St.AddText(SimpleException.GetApplicationInfo);
+        Logger.Send('Application info', St);
+      finally
+        St.Free;
+      end;
+    end
+    else
+    if (not ckEnableLogging.Checked) and (Logger.Enabled) then
+    begin
+      Logger.Enabled := False;
+      Logger.Channels.Remove(FileLogger);
+      FreeAndNil(FileLogger);
+    end;
 
     //languages
     ApplyLanguage;
@@ -5281,9 +5328,9 @@ end;
 
 procedure TMainForm.DoExitWaitCounter;
 begin
-  Writelog_D(Self.ClassName+', Execute exit counter');
+  Logger.Send(Self.ClassName+', Execute exit counter');
   if isUpdating then begin
-    Writelog_D(Self.ClassName+', Update thread still exist, pending exit counter');
+    Logger.Send(Self.ClassName+', Update thread still exist, pending exit counter');
     isPendingExitCounter:=True
   end
   else tmExitCommand.Enabled:=True;

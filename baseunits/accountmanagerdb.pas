@@ -10,7 +10,7 @@ unit accountmanagerdb;
 interface
 
 uses
-  Classes, SysUtils, LazFileUtils, SimpleLogger, base64, sqlite3conn,
+  Classes, SysUtils, LazFileUtils, MultiLog, base64, sqlite3conn,
   sqldb, db;
 
 type
@@ -226,7 +226,7 @@ begin
     Result := fconn.Connected;
   except
     on E: Exception do
-      WriteLog_E('TAccountManager.InternalOpenDB.Failed, ' + ffilename, E, Self);
+      Logger.SendException('TAccountManager.InternalOpenDB.Failed, ' + ffilename, E);
   end;
 end;
 
@@ -242,7 +242,7 @@ begin
     Result := True;
   except
     on E: Exception do
-      WriteLog_E('TAccountManager.CreateDBTable.Failed, ' + ffilename, E, Self);
+      Logger.SendException('TAccountManager.CreateDBTable.Failed, ' + ffilename, E);
   end;
 end;
 
@@ -259,7 +259,7 @@ begin
     Result := fquery.Active;
   except
     on E: Exception do
-      WriteLog_E('TAccountManager.OpenDBTable.Failed, ' + ffilename, E, Self);
+      Logger.SendException('TAccountManager.OpenDBTable.Failed, ' + ffilename, E);
   end;
   if Result then ConvertNewTable;
 end;
@@ -468,7 +468,7 @@ begin
     fconn.ExecuteDirect('VACUUM');
   except
     on E: Exception do
-      WriteLog_E('TAccountManager.Vacuum.Failed!', E, Self);
+      Logger.SendException('TAccountManager.Vacuum.Failed!', E);
   end;
   fconn.ExecuteDirect('BEGIN TRANSACTION');
   fquery.Open;
@@ -517,7 +517,7 @@ begin
     GetRecordCount;
   except
     on E: Exception do
-      WriteLog_E('TAccountManager.Save.Failed, ' + ffilename, E, Self);
+      Logger.SendException('TAccountManager.Save.Failed, ' + ffilename, E);
   end;
 end;
 
@@ -540,7 +540,7 @@ begin
     Result := True;
   except
     on E: Exception do
-      WriteLog_E('TAccountManager.AddAccount.Failed, ' + AName, E, Self);
+      Logger.SendException('TAccountManager.AddAccount.Failed, ' + AName, E);
   end;
 end;
 
@@ -558,7 +558,7 @@ begin
     end;
   except
     on E: Exception do
-      WriteLog_E('TAccountManager.DeleteAccount.Failed, ' + AName, E, Self);
+      Logger.SendException('TAccountManager.DeleteAccount.Failed, ' + AName, E);
   end;
 end;
 
@@ -576,7 +576,7 @@ begin
     end;
   except
     on E: Exception do
-      WriteLog_E('TAccountManager.DeleteAccount.Failed, ' + IntToStr(RecIndex), E, Self);
+      Logger.SendException('TAccountManager.DeleteAccount.Failed, ' + IntToStr(RecIndex), E);
   end;
 end;
 

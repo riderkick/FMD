@@ -401,6 +401,18 @@ msgctxt "TFORMDROPTARGET.MIDOWNLOADALL.CAPTION"
 msgid "Download all"
 msgstr ""
 
+#: tformlogger.btnclearlog.caption
+msgid "Clear"
+msgstr ""
+
+#: tformlogger.ckstayontop.caption
+msgid "Stay on top"
+msgstr ""
+
+#: tformlogger.lbloglimit.caption
+msgid "Log limit"
+msgstr ""
+
 #: timportfavorites.btcancel.caption
 msgctxt "TIMPORTFAVORITES.BTCANCEL.CAPTION"
 msgid "Cancel"
@@ -442,6 +454,10 @@ msgctxt "TMAINFORM.BTCHECKLATESTVERSION.CAPTION"
 msgid "Check for latest version"
 msgstr ""
 
+#: tmainform.btclearlogfile.caption
+msgid "Clear log file"
+msgstr ""
+
 #: tmainform.btdownload.caption
 msgctxt "tmainform.btdownload.caption"
 msgid "Download"
@@ -463,6 +479,10 @@ msgstr ""
 
 #: tmainform.btfilterreset.caption
 msgid "Reset value"
+msgstr ""
+
+#: tmainform.btopenlog.caption
+msgid "Open log"
 msgstr ""
 
 #: tmainform.btoptionapply.caption
@@ -616,6 +636,10 @@ msgstr ""
 #: tmainform.ckdroptarget.caption
 msgctxt "tmainform.ckdroptarget.caption"
 msgid "Show Drop Box"
+msgstr ""
+
+#: tmainform.ckenablelogging.caption
+msgid "Enable logging"
 msgstr ""
 
 #: tmainform.ckfilteraction.caption
@@ -1113,6 +1137,10 @@ msgctxt "tmainform.lbfiltertitle.caption"
 msgid "Title"
 msgstr ""
 
+#: tmainform.lblogfilename.caption
+msgid "Log file:"
+msgstr ""
+
 #: tmainform.lbmode.caption
 msgid "Mode: Show all (0)"
 msgstr ""
@@ -1593,6 +1621,10 @@ msgstr ""
 msgid "Connections"
 msgstr ""
 
+#: tmainform.tscustomcolor.caption
+msgid "Custom color"
+msgstr ""
+
 #: tmainform.tsdialogs.caption
 msgid "Dialogs"
 msgstr ""
@@ -1622,6 +1654,10 @@ msgstr ""
 
 #: tmainform.tsinformation.caption
 msgid "Manga Info"
+msgstr ""
+
+#: tmainform.tslog.caption
+msgid "Log"
 msgstr ""
 
 #: tmainform.tsmangalist.caption

@@ -444,6 +444,18 @@ msgctxt "tformdroptarget.midownloadall.caption"
 msgid "Download all"
 msgstr "Download all"
 
+#: tformlogger.btnclearlog.caption
+msgid "Clear"
+msgstr ""
+
+#: tformlogger.ckstayontop.caption
+msgid "Stay on top"
+msgstr ""
+
+#: tformlogger.lbloglimit.caption
+msgid "Log limit"
+msgstr ""
+
 #: timportfavorites.btcancel.caption
 msgctxt "TIMPORTFAVORITES.BTCANCEL.CAPTION"
 msgid "Cancel"
@@ -486,6 +498,10 @@ msgctxt "tmainform.btchecklatestversion.caption"
 msgid "Check for latest version"
 msgstr "Check for latest version"
 
+#: tmainform.btclearlogfile.caption
+msgid "Clear log file"
+msgstr ""
+
 #: tmainform.btdownload.caption
 msgctxt "tmainform.btdownload.caption"
 msgid "Download"
@@ -508,6 +524,10 @@ msgstr "Filter"
 #: tmainform.btfilterreset.caption
 msgid "Reset value"
 msgstr "Reset value"
+
+#: tmainform.btopenlog.caption
+msgid "Open log"
+msgstr ""
 
 #: tmainform.btoptionapply.caption
 msgid "Apply"
@@ -663,6 +683,10 @@ msgstr "Regular Expression"
 msgctxt "tmainform.ckdroptarget.caption"
 msgid "Show Drop Box"
 msgstr "Show Drop Box"
+
+#: tmainform.ckenablelogging.caption
+msgid "Enable logging"
+msgstr ""
 
 #: tmainform.ckfilteraction.caption
 msgid "Action"
@@ -1174,6 +1198,10 @@ msgctxt "tmainform.lbfiltertitle.caption"
 msgid "Title"
 msgstr "Title"
 
+#: tmainform.lblogfilename.caption
+msgid "Log file:"
+msgstr ""
+
 #: tmainform.lbmode.caption
 #| msgid "Mode: Show All (0)"
 msgid "Mode: Show all (0)"
@@ -1681,6 +1709,10 @@ msgstr "Changelog"
 msgid "Connections"
 msgstr "Connections"
 
+#: tmainform.tscustomcolor.caption
+msgid "Custom color"
+msgstr ""
+
 #: tmainform.tsdialogs.caption
 msgid "Dialogs"
 msgstr "Dialogs"
@@ -1711,6 +1743,10 @@ msgstr "General"
 #: tmainform.tsinformation.caption
 msgid "Manga Info"
 msgstr "Manga Info"
+
+#: tmainform.tslog.caption
+msgid "Log"
+msgstr ""
 
 #: tmainform.tsmangalist.caption
 msgid "Manga List"
@@ -2131,3 +2167,4 @@ msgstr "Synchronizing data"
 #: uupdatethread.rs_updatinglist
 msgid "Updating list"
 msgstr "Updating list"
+

@@ -16,8 +16,8 @@ interface
 
 uses
   LazFileUtils, FastHTMLParser, HTMLUtil, SynaCode, RegExpr, Classes, SysUtils,
-  ExtCtrls, typinfo, fgl, blcksock, uBaseUnit, uPacker, uFMDThread, uMisc,
-  DownloadedChaptersDB, FMDOptions, httpsendthread, SimpleLogger, dateutils,
+  ExtCtrls, typinfo, fgl, blcksock, MultiLog, uBaseUnit, uPacker, uFMDThread, uMisc,
+  DownloadedChaptersDB, FMDOptions, httpsendthread, dateutils,
   strutils;
 
 type
@@ -1140,7 +1140,7 @@ procedure TTaskThread.Execute;
         Inc(c);
     end;
     if c > 0 then begin
-      WriteLog_W(Format('%s, checkforfinish failed=%d/%d "%s" > "%s"',
+      Logger.SendWarning(Format('%s, checkforfinish failed=%d/%d "%s" > "%s"',
         [Self.ClassName,
         c,
         Container.PageLinks.Count,
@@ -1330,7 +1330,7 @@ begin
           Container.Status := STATUS_FAILED;
       end
       else begin
-        WriteLog_W(Format('%s, failed download image PageLinks=%d "%s" > "%s"',
+        Logger.SendWarning(Format('%s, failed download image PageLinks=%d "%s" > "%s"',
           [Self.ClassName,
           Container.PageLinks.Count,
           Container.DownloadInfo.Title,

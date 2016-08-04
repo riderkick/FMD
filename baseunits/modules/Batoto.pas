@@ -6,8 +6,8 @@ interface
 
 uses
   Classes, SysUtils, WebsiteModules, uData, uBaseUnit, uDownloadsManager,
-  accountmanagerdb, XQueryEngineHTML, httpsendthread, dateutils, SimpleLogger,
-  synautil;
+  accountmanagerdb, XQueryEngineHTML, httpsendthread, dateutils,
+  synautil, MultiLog;
 
 implementation
 
@@ -46,7 +46,7 @@ begin
       Account.Status[modulename] := asChecking;
       Reset;
       Cookies.Clear;
-      Writelog_V('Batoto, login: get login form');
+      Logger.Send('Batoto, login: get login form');
       if GET(urlroot) then begin
         loginform := THTMLForm.Create;
         query := TXQueryEngineHTML.Create(Document);
@@ -62,26 +62,26 @@ begin
             end;
             Clear;
             Headers.Values['Referer'] := ' https://bato.to/';
-            Writelog_V('Batoto, login: send authentification');
+            Logger.Send('Batoto, login: send authentification');
             if POST(urllogin, loginform.GetData) then begin
               if ResultCode = 200 then begin
                 Result := Cookies.Values['pass_hash'] <> '';
                 if Result then begin
-                  Writelog_V('Batoto, login: success');
+                  Logger.Send('Batoto, login: success');
                   Account.Cookies[modulename] := GetCookies;
                   Account.Status[modulename] := asValid;
                 end else begin
-                  Writelog_V('Batoto, login: failed, wrong user/password?');
+                  Logger.SendError('Batoto, login: failed, wrong user/password?');
                   Account.Status[modulename] := asInvalid;
                 end;
                 Account.Save;
               end
               else
-                Writelog_V(['Batoto, login: failed, unexpected server reply: ',
-                  ResultCode, ' ', ResultString]);
+                Logger.SendError('Batoto, login: failed, unexpected server reply: ' +
+                  IntToStr(ResultCode) + ' ' + ResultString);
             end
             else
-              Writelog_V('Batoto, login: connection failed');
+              Logger.SendError('Batoto, login: connection failed');
           end;
         finally
           query.Free;
