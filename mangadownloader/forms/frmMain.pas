@@ -1697,54 +1697,53 @@ begin
       Exit;
   EnterCriticalSection(DLManager.CS_Task);
   try
-    xNode := vtDownload.GetLast();
+    xNode := vtDownload.GetPreviousSelected(nil);
     while Assigned(xNode) do begin
-      if vtDownload.Selected[xNode] then begin
-        DLManager.StopTask(xNode^.Index, False, True);
-        with DLManager.Items[xNode^.Index] do begin
-          if (Sender = miDownloadDeleteTaskData) or (Sender = miDownloadDeleteTaskDataFavorite)
-            and (ChapterName.Count > 0) then begin
-            for i := 0 to ChapterName.Count - 1 do begin
-              f := CleanAndExpandDirectory(DownloadInfo.SaveTo + ChapterName[i]);
-              if FileExistsUTF8(f + '.zip') then
-                DeleteFileUTF8(f + '.zip')
-              else if FileExistsUTF8(f + '.cbz') then
-                DeleteFileUTF8(f + '.cbz')
-              else if FileExistsUTF8(f + '.pdf') then
-                DeleteFileUTF8(f + '.pdf')
-              else if DirectoryExistsUTF8(f) then
-                DeleteDirectory(f, False);
-            end;
-            RemoveDirUTF8(DownloadInfo.SaveTo);
+      DLManager.StopTask(xNode^.Index, False, True);
+      with DLManager.Items[xNode^.Index] do begin
+        if (Sender = miDownloadDeleteTaskData) or (Sender = miDownloadDeleteTaskDataFavorite)
+          and (ChapterName.Count > 0) then begin
+          for i := 0 to ChapterName.Count - 1 do begin
+            f := CleanAndExpandDirectory(DownloadInfo.SaveTo + ChapterName[i]);
+            if FileExistsUTF8(f + '.zip') then
+              DeleteFileUTF8(f + '.zip')
+            else if FileExistsUTF8(f + '.cbz') then
+              DeleteFileUTF8(f + '.cbz')
+            else if FileExistsUTF8(f + '.pdf') then
+              DeleteFileUTF8(f + '.pdf')
+            else if DirectoryExistsUTF8(f) then
+              DeleteDirectory(f, False);
           end;
-          if (Sender = miDownloadDeleteTaskDataFavorite) and
-            (FavoriteManager.Items.Count <> 0) and
-            (FavoriteManager.isRunning = False) then
-            try
-              FavoriteManager.Lock;
-              for i := 0 to FavoriteManager.Count - 1 do
-              begin
-                if SameText(DLManager[xNode^.Index].DownloadInfo.Link, FavoriteManager[i].FavoriteInfo.Link)
-                  and SameText(DLManager[xNode^.Index].DownloadInfo.Website, FavoriteManager[i].FavoriteInfo.Website) then
-                  begin
-                    FavoriteManager.Items[i].Free;
-                    FavoriteManager.Items.Delete(i);
-                    UpdateVtFavorites;
-                    Break;
-                  end;
-              end;
-            finally
-              FavoriteManager.LockRelease;
-            end;
-          DLManager.Items[xNode^.Index].Free;
-          DLManager.Items.Delete(xNode^.Index);
+          RemoveDirUTF8(DownloadInfo.SaveTo);
         end;
+        if (Sender = miDownloadDeleteTaskDataFavorite) and
+          (FavoriteManager.Items.Count <> 0) and
+          (FavoriteManager.isRunning = False) then
+          try
+            FavoriteManager.Lock;
+            for i := 0 to FavoriteManager.Count - 1 do
+            begin
+              if SameText(DLManager[xNode^.Index].DownloadInfo.Link, FavoriteManager[i].FavoriteInfo.Link)
+                and SameText(DLManager[xNode^.Index].DownloadInfo.Website, FavoriteManager[i].FavoriteInfo.Website) then
+                begin
+                  FavoriteManager.Items[i].Free;
+                  FavoriteManager.Items.Delete(i);
+                  UpdateVtFavorites;
+                  Break;
+                end;
+            end;
+          finally
+            FavoriteManager.LockRelease;
+          end;
+        DLManager.Items[xNode^.Index].Free;
+        DLManager.Items.Delete(xNode^.Index);
       end;
       xNode := vtDownload.GetPreviousSelected(xNode);
     end;
   finally
     LeaveCriticalSection(DLManager.CS_Task);
   end;
+  vtDownload.ClearSelection;
   DLManager.CheckAndActiveTask;
   UpdateVtDownload;
 end;
