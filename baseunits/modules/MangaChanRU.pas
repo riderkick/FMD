@@ -144,7 +144,7 @@ begin
   with AddModule do
   begin
     Website := 'MangaChanRU';
-    RootURL := 'http://mangachan.ru';
+    RootURL := 'http://mangachan.me';
     SortedList := True;
     OnGetDirectoryPageNumber := @GetDirectoryPageNumber;
     OnGetNameAndLink := @GetNameAndLink;
