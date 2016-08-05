@@ -235,6 +235,7 @@ var
   AMS: TMemoryStreamUTF8;
   X, Y: Integer;
   CLW, C: TFPColor;
+  isGrayScale: Boolean;
 begin
   IMG := TFPMemoryImage.Create(0, 0);
   try
@@ -264,16 +265,34 @@ begin
           end;
           3:
           begin
-            PageInfo.ColorSpace := 'Indexed /DeviceRGB';
+            PageInfo.ColorSpace := 'Indexed ';
             if Assigned(IMG.Palette) then
             begin
-              PageInfo.ColorSpace := PageInfo.ColorSpace + ' ' + IntToStr(IMG.Palette.Count - 1) + ' <';
+              isGrayScale := True;
               for X := 0 to IMG.Palette.Count - 1 do
               begin
                 C := IMG.Palette.Color[X];
-                PageInfo.ColorSpace := PageInfo.ColorSpace +
-                  IntToHex(C.red shr 8, 2) + IntToHex(C.green shr 8, 2) + IntToHex(C.blue shr 8, 2);
+                if (C.red <> C.green) or (C.red <> C.blue) or (C.green <> C.blue) then
+                begin
+                  isGrayScale := False;
+                  Break;
+                end;
               end;
+              if isGrayScale then
+                PageInfo.ColorSpace := PageInfo.ColorSpace + '/DeviceGray'
+              else
+                PageInfo.ColorSpace := PageInfo.ColorSpace + '/DeviceRGB';
+              PageInfo.ColorSpace := PageInfo.ColorSpace + ' ' + IntToStr(IMG.Palette.Count - 1) + ' <';
+              if isGrayScale then
+                for X := 0 to IMG.Palette.Count - 1 do
+                  PageInfo.ColorSpace := PageInfo.ColorSpace + IntToHex(IMG.Palette.Color[X].red shr 8, 2)
+              else
+                for X := 0 to IMG.Palette.Count - 1 do
+                begin
+                  C := IMG.Palette.Color[X];
+                  PageInfo.ColorSpace := PageInfo.ColorSpace +
+                    IntToHex(C.red shr 8, 2) + IntToHex(C.green shr 8, 2) + IntToHex(C.blue shr 8, 2);
+                end;
               PageInfo.ColorSpace := PageInfo.ColorSpace + '>';
             end;
 
