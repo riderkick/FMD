@@ -5,7 +5,7 @@ unit FMDOptions;
 interface
 
 uses
-  Classes, SysUtils, IniFiles, fileinfo, LazFileUtils, LazUTF8, FileUtil, Forms, Graphics;
+  Classes, SysUtils, IniFiles, fileinfo, FileUtil, Forms, Graphics, LazFileUtils, LazUTF8;
 
 type
 
