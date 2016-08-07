@@ -4,6 +4,18 @@ Project page: https://github.com/riderkick/FMD
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.76.0 (07-08-2016)
+[*] Fixed download tree status not updating
+[+] Added Log form, Options > Misc > Log
+[+] Added TripleSevenScan[EN]
+[*] MangaFox: fixed remove watermark
+[*] E-Hentai/ExHentai: fixed download causing by incorrect filenames
+[*] Fixed export to PDF issue with indexed PNG images
+[+] Added HentaiChanRU[H], YaoiChanRU[H]
+[*] GameofScanlation: fixed download embedded base64 images
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.75.0...0.9.76.0
+
 0.9.75.0 (30-07-2016)
 [+] Added "Delete task + data + favorite" in download list popup menu
 [+] Added "Delete" in manga list popup menu
