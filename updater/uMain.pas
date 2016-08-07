@@ -10,9 +10,9 @@ uses
   cmem,
   {$endif}
   Classes, SysUtils, zipper, FileUtil, LazFileUtils, LazUTF8, LazUTF8Classes,
-  Forms, Dialogs, ComCtrls, StdCtrls, Clipbrd, ExtCtrls, DefaultTranslator,
-  RegExpr, IniFiles, SimpleException, uMisc, httpsend, blcksock, ssl_openssl,
-  ssl_openssl_lib, synacode, uFMDThread, SimpleTranslator, httpsendthread;
+  Forms, Dialogs, ComCtrls, StdCtrls, ExtCtrls, RegExpr, IniFiles, blcksock,
+  ssl_openssl, ssl_openssl_lib, synacode, uFMDThread, httpsendthread, uMisc,
+  SimpleTranslator;
 
 type
 
@@ -25,16 +25,15 @@ type
     lbFileSizeValue: TLabel;
     lbStatus: TLabel;
     lbTransferRateValue: TLabel;
-    pbDownload :TProgressBar;
+    pbDownload: TProgressBar;
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
-    procedure FormCreate(Sender :TObject);
+    procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
-    procedure FormShow(Sender :TObject);
+    procedure FormShow(Sender: TObject);
     procedure itMonitorTimer(Sender: TObject);
   private
     { private declarations }
   public
-    procedure ExceptionHandler(Sender: TObject; E: Exception);
     { public declarations }
   end;
 
@@ -42,30 +41,30 @@ type
 
   TDownloadThread = class(TFMDThread)
   private
-    FTotalSize, FCurrentSize :integer;
-    FHTTP                    :THTTPSendThread;
-    FStatus                  :string;
-    FProgress                :string;
-    FErrorMessage            :string;
-    UZip                     :TUnZipper;
+    FTotalSize, FCurrentSize: Integer;
+    FHTTP: THTTPSendThread;
+    FStatus: String;
+    FProgress: String;
+    FErrorMessage: String;
+    UZip: TUnZipper;
   protected
-    procedure SockOnStatus(Sender :TObject; Reason :THookSocketReason;
-      const Value :string);
-    procedure UZipOnStartFile(Sender :TObject; const AFileName :string);
+    procedure SockOnStatus(Sender: TObject; Reason: THookSocketReason;
+      const Value: String);
+    procedure UZipOnStartFile(Sender: TObject; const AFileName: String);
     procedure MainThreadUpdateStatus;
     procedure MainThreadUpdateProgress;
     procedure MainThreadUpdateProgressLabel;
     procedure MainThreadErrorGetting;
-    procedure UpdateStatus(AStatus :string);
-    procedure ShowErrorMessage(AMessage :string);
+    procedure UpdateStatus(AStatus: String);
+    procedure ShowErrorMessage(AMessage: String);
     procedure Execute; override;
     procedure OnThreadTerminate(Sender: TObject);
   public
-    URL      :string;
-    FileName :string;
-    DirPath  :string;
-    MaxRetry :cardinal;
-    Extract  :boolean;
+    URL: String;
+    FileName: String;
+    DirPath: String;
+    MaxRetry: Cardinal;
+    Extract: Boolean;
     constructor Create;
     destructor Destroy; override;
   end;
@@ -73,30 +72,30 @@ type
 procedure IncReadCount(const ACount: Int64);
 
 var
-  frmMain      :TfrmMain;
-  dl           :TDownloadThread;
-  isDownload   :boolean = False;
-  ReadCount    :Integer = 0;
-  CS_ReadCount :TRTLCriticalSection;
+  frmMain: TfrmMain;
+  dl: TDownloadThread;
+  isDownload: Boolean = False;
+  ReadCount: Integer = 0;
+  CS_ReadCount: TRTLCriticalSection;
 
-  _UpdApp    :boolean = False;
-  _Extract   :boolean = False;
-  _NoError   :boolean = False;
-  _URL       :string = '';
-  _MaxRetry  :cardinal = 1;
-  _LaunchApp :string = '';
+  _UpdApp: Boolean = False;
+  _Extract: Boolean = False;
+  _NoError: Boolean = False;
+  _URL: String = '';
+  _MaxRetry: Cardinal = 1;
+  _LaunchApp: String = '';
 
-  ProxyType :string;
-  ProxyHost :string;
-  ProxyPort :string;
-  ProxyUser :string;
-  ProxyPass :string;
+  ProxyType: String;
+  ProxyHost: String;
+  ProxyPort: String;
+  ProxyUser: String;
+  ProxyPass: String;
 
 const
   Symbols: array [0..10] of Char =
     ('\', '/', ':', '*', '?', '"', '<', '>', '|', #9, ';');
 
-  mf_data_link = 'https://www.mediafire.com/folder/fwa8eomz80uk1/Data';
+  UA_CURL = 'curl/7.42.1';
 
 resourcestring
   RS_InvalidURL = 'Invalid URL!';
@@ -121,7 +120,8 @@ resourcestring
 
 implementation
 
-uses uMessage;
+uses
+  uMessage;
 
 {$R *.lfm}
 
@@ -162,7 +162,7 @@ begin
   FHTTP := THTTPSendThread.Create(Self);
   FHTTP.Sock.OnStatus := @SockOnStatus;
   FHTTP.Timeout := 10000;
-  FHTTP.SetProxy(ProxyType,ProxyHost,ProxyPort,ProxyUser,ProxyPass);
+  FHTTP.SetProxy(ProxyType, ProxyHost, ProxyPort, ProxyUser, ProxyPass);
   FTotalSize := 0;
   FCurrentSize := 0;
   URL := '';
@@ -184,13 +184,13 @@ begin
   frmMain.lbStatus.Caption := FStatus;
 end;
 
-procedure TDownloadThread.UpdateStatus(AStatus :string);
+procedure TDownloadThread.UpdateStatus(AStatus: String);
 begin
   FStatus := AStatus;
   Synchronize(@MainThreadUpdateStatus);
 end;
 
-procedure TDownloadThread.ShowErrorMessage(AMessage: string);
+procedure TDownloadThread.ShowErrorMessage(AMessage: String);
 begin
   FErrorMessage := AMessage;
   Synchronize(@MainThreadErrorGetting);
@@ -199,7 +199,7 @@ end;
 procedure TDownloadThread.MainThreadUpdateProgress;
 var
   barPos: Integer;
-  prgText: string;
+  prgText: String;
 begin
   if Terminated then Exit;
   if FCurrentSize > 0 then
@@ -231,19 +231,19 @@ begin
       mtError, [mbOK], 0);
 end;
 
-procedure TDownloadThread.SockOnStatus(Sender :TObject; Reason :THookSocketReason;
-  const Value :string);
+procedure TDownloadThread.SockOnStatus(Sender: TObject; Reason: THookSocketReason;
+  const Value: String);
 begin
   if Terminated then Exit;
   if FHTTP.Headers.IndexOfName('Content-Length') > -1 then
     FTotalSize := StrToIntDef(FHTTP.Headers.Values['Content-Length'], 0);
   case Reason of
-    HR_Connect :FCurrentSize := 0;
-    HR_ReadCount :
-      begin
-        Inc(FCurrentSize, StrToIntDef(Value, 0));
-        IncReadCount(StrToIntDef(Value, 0));
-      end;
+    HR_Connect: FCurrentSize := 0;
+    HR_ReadCount:
+    begin
+      Inc(FCurrentSize, StrToIntDef(Value, 0));
+      IncReadCount(StrToIntDef(Value, 0));
+    end;
   end;
   Synchronize(@MainThreadUpdateProgress);
 end;
@@ -253,7 +253,7 @@ begin
   frmMain.lbFileSizeValue.Caption := FProgress;
 end;
 
-procedure TDownloadThread.UZipOnStartFile(Sender :TObject; const AFileName :string);
+procedure TDownloadThread.UZipOnStartFile(Sender: TObject; const AFileName: String);
 begin
   if FileExistsUTF8(AFileName) then
     DeleteFileUTF8(AFileName);
@@ -262,17 +262,17 @@ end;
 
 procedure TDownloadThread.Execute;
 var
-  sf             : Boolean = False;
-  regx           : TRegExpr;
-  i, ctry        : Cardinal;
+  sf: Boolean = False;
+  regx: TRegExpr;
+  i, ctry: Cardinal;
   Sza,
   rurl,
   fname,
   sproject,
   sdir,
-  s, sfile       : String;
+  s, sfile: String;
   st, HTTPHeaders: TStringList;
-  filestream     : TFileStreamUTF8;
+  filestream: TFileStreamUTF8;
 begin
   URL := EncodeURL(DecodeURL(Trim(URL)));
   HTTPHeaders := TStringList.Create;
@@ -306,10 +306,10 @@ begin
       sfile := regx.Replace(URL, '$3', True);
       if FileName = '' then
         FileName := sfile;
-      if Pos('https://',LowerCase(URL)) = 1 then
+      if Pos('https://', LowerCase(URL)) = 1 then
         rurl := 'https://'
       else
-        rurl:='http://';
+        rurl := 'http://';
       rurl := rurl + 'sourceforge.net/projects/' + sproject + '/files/' +
         sdir + '/' + sfile + '/download';
     end
@@ -395,7 +395,7 @@ begin
         else
         if (FHTTP.ResultCode >= 400) and (FHTTP.ResultCode < 500) then
         begin
-          if ctry>=MaxRetry then
+          if ctry >= MaxRetry then
           begin
             UpdateStatus(RS_FileNotFound);
             ShowErrorMessage(RS_FileNotFound + LineEnding + LineEnding +
@@ -404,8 +404,8 @@ begin
             Break;
           end;
           //try to load previous url, in case it was temporary url
-          if ctry>0 then begin
-            rurl:=URL;
+          if ctry > 0 then begin
+            rurl := URL;
             FHTTP.Cookies.Clear;
           end;
           Inc(ctry);
@@ -454,20 +454,20 @@ begin
         Sza := GetCurrentDirUTF8 + DirectorySeparator + '7za.exe';
         if _UpdApp and
           FileExistsUTF8(GetCurrentDirUTF8 + DirectorySeparator + '7za.exe') then
-          begin
-            st := TStringList.Create;
-            try
-              FindAllFiles(st, GetCurrentDirUTF8, '*.dbg', False);
-              if st.Count > 0 then
-                for i := 0 to st.Count - 1 do
-                  DeleteFileUTF8(st[i]);
-            finally
-              st.Free;
-            end;
-            CopyFile(GetCurrentDirUTF8 + DirectorySeparator + '7za.exe',
-              GetCurrentDirUTF8 + DirectorySeparator + 'old_7za.exe');
-            Sza := GetCurrentDirUTF8 + DirectorySeparator + 'old_7za.exe';
+        begin
+          st := TStringList.Create;
+          try
+            FindAllFiles(st, GetCurrentDirUTF8, '*.dbg', False);
+            if st.Count > 0 then
+              for i := 0 to st.Count - 1 do
+                DeleteFileUTF8(st[i]);
+          finally
+            st.Free;
           end;
+          CopyFile(GetCurrentDirUTF8 + DirectorySeparator + '7za.exe',
+            GetCurrentDirUTF8 + DirectorySeparator + 'old_7za.exe');
+          Sza := GetCurrentDirUTF8 + DirectorySeparator + 'old_7za.exe';
+        end;
         if Pos('.zip', LowerCase(FileName)) <> 0 then
         begin
           UZip := TUnZipper.Create;
@@ -505,8 +505,6 @@ begin
     if (not Self.Terminated) and _UpdApp and (_LaunchApp <> '') then
       RunExternalProcess(_LaunchApp, [''], True, False);
   except
-    on E: Exception do
-      frmMain.ExceptionHandler(Self, E);
   end;
   regx.Free;
   HTTPHeaders.Free;
@@ -529,12 +527,11 @@ begin
   CloseAction := caFree;
 end;
 
-procedure TfrmMain.FormCreate(Sender :TObject);
+procedure TfrmMain.FormCreate(Sender: TObject);
 var
-  config :TIniFile;
+  config: TIniFile;
 begin
   Randomize;
-  InitSimpleExceptionHandler(ChangeFileExt(Application.ExeName, '.log'));
   SimpleTranslator.LangDir := CleanAndExpandDirectory(GetCurrentDirUTF8) + 'languages';
   SimpleTranslator.LangAppName := 'updater';
   SimpleTranslator.CollectLanguagesFiles;
@@ -568,11 +565,11 @@ begin
   DoneCriticalsection(CS_ReadCount);
 end;
 
-procedure TfrmMain.FormShow(Sender :TObject);
+procedure TfrmMain.FormShow(Sender: TObject);
 var
-  s :string;
-  i :Integer;
-  sh :boolean = False;
+  s: String;
+  i: Integer;
+  sh: Boolean = False;
 begin
   if Paramcount > 0 then
   begin
@@ -656,13 +653,8 @@ begin
   else
   begin
     itMonitor.Enabled := False;
-    Self.Close
+    Self.Close;
   end;
-end;
-
-procedure TfrmMain.ExceptionHandler(Sender : TObject; E : Exception);
-begin
-  SimpleException.ExceptionHandle(Sender, E);
 end;
 
 end.

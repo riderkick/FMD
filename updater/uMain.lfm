@@ -14,6 +14,7 @@ object frmMain: TfrmMain
   OnShow = FormShow
   Position = poOwnerFormCenter
   LCLVersion = '1.7'
+  Visible = False
   object pbDownload: TProgressBar
     Left = 8
     Height = 20
