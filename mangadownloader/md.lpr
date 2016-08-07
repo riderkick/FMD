@@ -12,8 +12,8 @@ uses
   cthreads,
  {$ENDIF} {$ENDIF}
   Interfaces, // this includes the LCL widgetset
-  Forms, multiloglaz, LazFileUtils, IniFiles, simpleipc, sqlite3dyn, FMDOptions,
-  uBaseUnit, frmMain, frmLogger;
+  Forms, LazFileUtils, IniFiles, simpleipc, sqlite3dyn, FMDOptions,
+  uBaseUnit, frmMain;
 
 var
   CheckInstance: Boolean = True;
