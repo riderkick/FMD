@@ -112,7 +112,15 @@ begin
       with TXQueryEngineHTML.Create(Document) do
         try
           for v in XPath('//div[@class="chapterPages"]//img/@src') do
-            PageLinks.Add(MaybeFillHost(Module.RootURL, v.toString));
+          begin
+            s := v.toString;
+            if SaveImageBase64StringToFile(s,
+              DownloadThread.Task.Container.CurrentWorkingDir,
+              DownloadThread.Task.GetFileName(PageLinks.Count)) then
+              PageLinks.Add('D')
+            else
+              PageLinks.Add(MaybeFillHost(Module.RootURL, s));
+          end;
         finally
           Free;
         end;
