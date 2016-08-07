@@ -241,7 +241,6 @@ begin
   mangalistfile := TIniFile.Create(MANGALIST_FILE);
   GetAvailableWebsite;
   configfile := TIniFileRun.Create(CONFIG_FILE);
-  configfile.Options := configfile.Options - [ifoStripQuotes];
   advancedfile := TIniFileRun.Create(CONFIG_ADVANCED);
 end;
 
