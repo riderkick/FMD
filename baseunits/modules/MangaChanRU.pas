@@ -140,17 +140,25 @@ begin
 end;
 
 procedure RegisterModule;
-begin
-  with AddModule do
+
+  procedure AddWebsiteModule(const AWebsite, ARootURL: String);
   begin
-    Website := 'MangaChanRU';
-    RootURL := 'http://mangachan.me';
-    SortedList := True;
-    OnGetDirectoryPageNumber := @GetDirectoryPageNumber;
-    OnGetNameAndLink := @GetNameAndLink;
-    OnGetInfo := @GetInfo;
-    OnGetPageNumber := @GetPageNumber;
+    with AddModule do
+    begin
+      Website := AWebsite;
+      RootURL := ARootURL;
+      SortedList := True;
+      OnGetDirectoryPageNumber := @GetDirectoryPageNumber;
+      OnGetNameAndLink := @GetNameAndLink;
+      OnGetInfo := @GetInfo;
+      OnGetPageNumber := @GetPageNumber;
+    end;
   end;
+
+begin
+  AddWebsiteModule('MangaChanRU', 'http://mangachan.me');
+  AddWebsiteModule('HentaiChanRU', 'http://hentaichan.me');
+  AddWebsiteModule('YaoiChanRU', 'http://yaoichan.me');
 end;
 
 initialization
