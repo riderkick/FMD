@@ -815,6 +815,9 @@ function GetURLFromBitly(const URL: String): String;
 function SaveImageStreamToFile(Stream: TMemoryStream; Path, FileName: String; Age: LongInt = 0): String; overload;
 function SaveImageStreamToFile(AHTTP: THTTPSend; Path, FileName: String): String; overload;
 
+// detect and save image from base64 string
+function SaveImageBase64StringToFile(const S, Path, FileName: String): Boolean;
+
 // Download an image from url and save it to a specific location.
 function SaveImage(const AHTTP: THTTPSend; const mangaSiteID: Integer; URL: String;
   const Path, Name: String; var SavedFilename: String; const Reconnect: Integer = 0): Boolean; overload;
@@ -3317,6 +3320,28 @@ begin
     except
     end;
   Result := SaveImageStreamToFile(AHTTP.Document, Path, FileName, lastmodified);
+end;
+
+function SaveImageBase64StringToFile(const S, Path, FileName: String): Boolean;
+var
+  ES: String;
+  i: Integer;
+  MS: TMemoryStream;
+begin
+  Result := False;
+  if S = '' then Exit;
+  ES := AnsiLowerCase(Copy(S, 1, 100));
+  if Pos('data:image/', ES) <> 1 then Exit;
+  i := Pos('base64,', ES);
+  if i = 0 then Exit;
+  ES := Base64Decode(Copy(S, i + 7, Length(S)));
+  MS := TMemoryStream.Create;
+  try
+    MS.Write(ES[1], Length(ES));
+    Result := SaveImageStreamToFile(MS, Path, FileName) <> '';
+  finally
+    MS.Free;
+  end;
 end;
 
 function SaveImage(const AHTTP: THTTPSend; const mangaSiteID: Integer;
