@@ -138,7 +138,7 @@ procedure OverwriteDBDataProcess(const AWebsite, NWebsite: String);
 implementation
 
 uses
-  uBaseUnit, uData, uMisc;
+  uBaseUnit, uData;
 
 function NaturalCompareCallback({%H-}user: pointer; len1: longint;
   data1: pointer; len2: longint; data2: pointer): longint; cdecl;

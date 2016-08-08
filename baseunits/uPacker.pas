@@ -12,7 +12,7 @@ interface
 
 uses
   Classes, Zipper, zstream, SysUtils, uBaseUnit, Img2Pdf, FileUtil, lazutf8classes,
-  LazFileUtils, SimpleException, uMisc;
+  LazFileUtils, SimpleException;
 
 type
   TPackerFormat = (pfZIP, pfCBZ, pfPDF);

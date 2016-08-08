@@ -15,7 +15,7 @@ interface
 
 uses
   Classes, SysUtils, uBaseUnit, DBDataProcess, FMDOptions, httpsendthread,
-  LazFileUtils, strutils, dateutils, RegExpr, httpsend, MultiLog;
+  LazFileUtils, strutils, RegExpr, httpsend, MultiLog;
 
 type
 
@@ -117,7 +117,7 @@ implementation
 
 uses
   Dialogs, fpJSON, JSONParser, jsonscanner, FastHTMLParser, HTMLUtil,
-  SynaCode, uMisc, frmMain, WebsiteModules;
+  SynaCode, frmMain, WebsiteModules;
 
 // ----- TDataProcess -----
 
@@ -708,7 +708,7 @@ end;
 procedure TDataProcess.Sort;
 begin
   //QuickSortData(data);
-  uMisc.QuickSortNaturalPart(Data, SEPERATOR, DATA_PARAM_TITLE);
+  QuickSortNaturalPart(Data, SEPERATOR, DATA_PARAM_TITLE);
 end;
 
 { TMangaInformation }

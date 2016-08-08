@@ -22,7 +22,7 @@ uses
   LConvEncoding, strutils, dateutils, base64, fpjson, jsonparser, jsonscanner,
   FastHTMLParser, fgl, RegExpr, synautil, httpsend, blcksock, ssl_openssl, synacode,
   MultiLog, FPimage, GZIPUtils, uMisc, httpsendthread, FMDOptions,
-  simplehtmltreeparser, xquery, xquery_json, ImgInfos;
+  simplehtmltreeparser, xquery, xquery_json, ImgInfos, NaturalSortUnit;
 
 const
   JPG_HEADER: array[0..2] of Byte = ($FF, $D8, $FF);
@@ -842,10 +842,18 @@ procedure CopyImageRect(const Source, Dest: TFPCustomImage; const DestX, DestY: 
 // merge 2 images to one
 function Merge2Image(const Directory, ImgName1, ImgName2, FinalName: String; const Landscape: Boolean = False): Boolean;
 
+// sort
 procedure QuickSortChapters(var chapterList, linkList: TStringList);
 procedure QuickSortData(var merge: TStringList);
 // This method uses to sort the data. Use when we load all the lists.
 procedure QuickSortDataWithWebID(var merge: TStringList; const webIDList: TByteList);
+
+function NaturalCompareStr(Str1, Str2: String): Integer; inline;
+function NaturalCustomSort(List: TStringList; Index1, Index2: Integer): Integer; inline;
+procedure QuickSortNaturalPart(var Alist: TStringList; Separator: String;
+  PartIndex: Integer);
+
+function GetStringPart(const S, Sep: String; PartIndex: Integer): String;
 
 
 function GetCurrentJDN: Longint;
@@ -3814,6 +3822,95 @@ begin
   QSort(0, names.Count - 1);
   output.Free;
   names.Free;
+end;
+
+function NaturalCompareStr(Str1, Str2: String): Integer;
+begin
+  Result := NaturalSortUnit.UTF8LogicalCompareText(Str1, Str2);
+end;
+
+function NaturalCustomSort(List: TStringList; Index1, Index2: Integer): Integer;
+begin
+  Result := NaturalCompareStr(List[Index1], List[Index2]);
+end;
+
+procedure QuickSortNaturalPart(var Alist: TStringList; Separator: String;
+  PartIndex: Integer);
+
+  function CompareFn(Index1, Index2: Integer): Integer;
+  begin
+    Result := NaturalCompareStr(getStringPart(Alist[Index1], Separator, PartIndex),
+      getStringPart(Alist[Index2], Separator, PartIndex));
+  end;
+
+  procedure QSort(L, R: Integer);
+  var
+    Pivot, vL, vR: Integer;
+  begin
+    if R - L <= 1 then begin // a little bit of time saver
+      if L < R then
+        if CompareFn(L, R) > 0 then
+          Alist.Exchange(L, R);
+
+      Exit;
+    end;
+
+    vL := L;
+    vR := R;
+
+    Pivot := L + Random(R - L); // they say random is best
+
+    while vL < vR do begin
+      while (vL < Pivot) and (CompareFn(vL, Pivot) <= 0) do
+        Inc(vL);
+
+      while (vR > Pivot) and (CompareFn(vR, Pivot) > 0) do
+        Dec(vR);
+
+      Alist.Exchange(vL, vR);
+
+      if Pivot = vL then // swap pivot if we just hit it from one side
+        Pivot := vR
+      else if Pivot = vR then
+        Pivot := vL;
+    end;
+
+    if Pivot - 1 >= L then
+      QSort(L, Pivot - 1);
+    if Pivot + 1 <= R then
+      QSort(Pivot + 1, R);
+  end;
+
+begin
+  if Alist.Count < 2 then Exit;
+  Alist.BeginUpdate;
+  try
+    QSort(0, Alist.Count - 1);
+  finally
+    Alist.EndUpdate;
+  end;
+end;
+
+function GetStringPart(const S, Sep: String; PartIndex: Integer): String;
+var
+  i, j, lpos, rpos: Integer;
+begin
+  lpos := 1;
+  rpos := 1;
+  Result := '';
+
+  for i := 0 to partIndex do
+  begin
+    j := PosEx(Sep, S, rpos);
+    if (j > 0) then
+    begin
+      lpos := rpos;
+      rpos := j + Length(Sep);
+    end
+    else
+      Break;
+  end;
+  Result := Copy(S, lpos, rpos - lpos - Length(Sep));
 end;
 
 function DateToJDN(const year, month, day: Word): Longint;

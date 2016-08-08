@@ -12,7 +12,7 @@ interface
 
 uses
   Classes, SysUtils, fgl, Dialogs, IniFiles, lazutf8classes, LazFileUtils,
-  uBaseUnit, uData, uDownloadsManager, uMisc, WebsiteModules,
+  uBaseUnit, uData, uDownloadsManager, WebsiteModules,
   FMDOptions, httpsendthread, SimpleException;
 
 type

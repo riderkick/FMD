@@ -10,22 +10,10 @@ uses
   {$else}
   UTF8Process,
   {$endif}
-  Classes, SysUtils, Graphics, LazFileUtils, strutils, IniFiles,
-  NaturalSortUnit;
+  Classes, SysUtils, strutils;
 
 type
   TArrayOfString = array of String;
-
-  TIniFileR = class(TMemIniFile)
-  private
-    FCSReload: TRTLCriticalSection;
-    FFileAge: Longint;
-  public
-    constructor Create(const AFileName: String; AEscapeLineFeeds: Boolean = False);
-      override;
-    destructor Destroy; override;
-    procedure Reload;
-  end;
 
 //String utils
 procedure VolumeChapterPadZero(var S: String; VolLength, ChapLength: Integer);
@@ -39,22 +27,12 @@ function BrackTextQuoted(const S: Integer): String; overload; inline;
 function StringToASCII(S: String): String;
 function StringToHex(S: String): String;
 
-procedure QuickSortNaturalPart(var Alist: TStringList; Separator: String;
-  PartIndex: Integer);
-
-//Images
-function MangaFoxRemoveWatermarks(const Filename: String): Boolean;
-
 //Searching
 function FindStrLinear(aList: TStrings; aValue: String): Boolean;
 function FindStrLinearPos(aList: TStrings; aValue: String): Integer;
 
 //formatting
 function FormatByteSize(const bytes: Longint; persecond: Boolean = False): String;
-
-//sorting
-function NaturalCompareStr(Str1, Str2: String): Integer; inline;
-function NaturalCustomSort(List: TStringList; Index1, Index2: Integer): Integer; inline;
 
 //run external process
 function RunExternalProcessAsAdmin(Exe, Params: String; ShowWind: Boolean = True;
@@ -92,43 +70,6 @@ var
   DEFAULT_UA: String = UA_CHROME;
 
 implementation
-
-{ TIniFileR }
-
-constructor TIniFileR.Create(const AFileName: String; AEscapeLineFeeds: Boolean = False);
-begin
-  inherited Create(AFileName, AEscapeLineFeeds);
-  InitCriticalSection(FCSReload);
-  FFileAge := FileAge(Self.FileName);
-end;
-
-destructor TIniFileR.Destroy;
-begin
-  DoneCriticalsection(FCSReload);
-  inherited Destroy;
-end;
-
-procedure TIniFileR.Reload;
-var
-  slLines: TStringList;
-begin
-  if TryEnterCriticalSection(FCSReload) then try
-      if FileExistsUTF8(FileName) then
-        if FileAgeUTF8(FileName) <> FFileAge then
-        begin
-          slLines := TStringList.Create;
-          try
-            FFileAge := FileAge(FileName);
-            slLines.LoadFromFile(FileName);
-            SetStrings(slLines);
-          finally
-            slLines.Free;
-          end;
-        end;
-    finally
-      LeaveCriticalSection(FCSReload);
-    end;
-end;
 
 { uMisc }
 
@@ -333,119 +274,6 @@ function padZeros(const S: String; VolLength, ChapLength: Integer): String;
 begin
   Result := S;
   VolumeChapterPadZero(Result, VolLength, ChapLength);
-end;
-
-//loading directly from stream accepted as raw (file become bigger)
-//Not all mangafox image has watermarks, old manga doesn't have watermarks
-//recognizing by file age or by scanning images manually.
-function MangaFoxRemoveWatermarks(const Filename: String): Boolean;
-var
-  fpic: TPicture;
-begin
-  Result := False;
-  Exit; //Disable for a moment
-  fpic := TPicture.Create;
-  try
-    fpic.LoadFromFile(Filename);
-    if fpic.Bitmap.Height < 100 then
-      Exit;
-    fpic.Bitmap.Height := fpic.Bitmap.Height - 90;// crop by 90px
-    if FileExistsUTF8(Filename) then
-      DeleteFileUTF8(Filename);
-    fpic.SaveToFile(Filename);
-    Result := True;
-  finally
-    fpic.Free;
-  end;
-end;
-
-function getStringPart(const txt, sep: String; partIndex: Cardinal): String;
-var
-  i, j, lpos, rpos: Integer;
-begin
-  lpos := 1;
-  rpos := 1;
-  Result := '';
-
-  for i := 0 to partIndex do
-  begin
-    j := PosEx(sep, txt, rpos);
-    if (j > 0) then
-    begin
-      lpos := rpos;
-      rpos := j + Length(sep);
-    end
-    else
-      Break;
-  end;
-  Result := Copy(txt, lpos, rpos - lpos - Length(sep));
-end;
-
-function NaturalCompareStr(Str1, Str2: String): Integer;
-begin
-  Result := NaturalSortUnit.UTF8LogicalCompareText(Str1, Str2);
-end;
-
-function NaturalCustomSort(List: TStringList; Index1, Index2: Integer): Integer;
-begin
-  Result := NaturalCompareStr(List[Index1], List[Index2]);
-end;
-
-procedure QuickSortNaturalPart(var Alist: TStringList; Separator: String;
-  PartIndex: Integer);
-
-  function CompareFn(Index1, Index2: Integer): Integer;
-  begin
-    Result := NaturalCompareStr(getStringPart(Alist[Index1], Separator, PartIndex),
-      getStringPart(Alist[Index2], Separator, PartIndex));
-  end;
-
-  procedure QSort(L, R: Integer);
-  var
-    Pivot, vL, vR: Integer;
-  begin
-    if R - L <= 1 then begin // a little bit of time saver
-      if L < R then
-        if CompareFn(L, R) > 0 then
-          Alist.Exchange(L, R);
-
-      Exit;
-    end;
-
-    vL := L;
-    vR := R;
-
-    Pivot := L + Random(R - L); // they say random is best
-
-    while vL < vR do begin
-      while (vL < Pivot) and (CompareFn(vL, Pivot) <= 0) do
-        Inc(vL);
-
-      while (vR > Pivot) and (CompareFn(vR, Pivot) > 0) do
-        Dec(vR);
-
-      Alist.Exchange(vL, vR);
-
-      if Pivot = vL then // swap pivot if we just hit it from one side
-        Pivot := vR
-      else if Pivot = vR then
-        Pivot := vL;
-    end;
-
-    if Pivot - 1 >= L then
-      QSort(L, Pivot - 1);
-    if Pivot + 1 <= R then
-      QSort(Pivot + 1, R);
-  end;
-
-begin
-  if Alist.Count < 2 then Exit;
-  Alist.BeginUpdate;
-  try
-    QSort(0, Alist.Count - 1);
-  finally
-    Alist.EndUpdate;
-  end;
 end;
 
 function FindStrLinearPos(aList: TStrings; aValue: String): Integer;
