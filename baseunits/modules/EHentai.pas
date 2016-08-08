@@ -253,7 +253,7 @@ var
       for x in XPath('//div[@id="gdt"]//a') do
       begin
         PageContainerLinks.Add(x.toNode.getAttribute('href'));
-        Filenames.Add(ExtractFileNameOnly(Trim(SeparateRight(
+        FileNames.Add(ExtractFileNameOnly(Trim(SeparateRight(
           XPathString('img/@title', x.toNode), ':'))));
       end;
       while PageLinks.Count < PageContainerLinks.Count do
@@ -292,7 +292,16 @@ begin
                 GetImageLink;
             end;
           end;
-          SerializeAndMaintainNames(Filenames);
+          SerializeAndMaintainNames(FileNames);
+          // check the max length of filenames, serialize the filenames if it's exceds available space
+          p := 0;
+          for i := 0 to FileNames.Count - 1 do
+          begin
+            if Length(FileNames[i]) > p then
+              p := Length(FileNames[i]);
+          end;
+          if p > Task.CurrentMaxFileNameLength then
+            FileNames.Clear;
         end;
       finally
         query.Free;
