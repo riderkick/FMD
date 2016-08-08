@@ -115,7 +115,7 @@ begin
           begin
             s := v.toString;
             if SaveImageBase64StringToFile(s,
-              DownloadThread.Task.Container.CurrentWorkingDir,
+              DownloadThread.Task.CurrentWorkingDir,
               DownloadThread.Task.GetFileName(PageLinks.Count)) then
               PageLinks.Add('D')
             else

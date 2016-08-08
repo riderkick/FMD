@@ -57,7 +57,7 @@
           SaveImage(
             Task.Container.MangaSiteID,
             GetVal(parse[i], 'src'),
-            Task.Container.CurrentWorkingDir,
+            Task.CurrentWorkingDir,
             Format('%.3d', [WorkId + 1]) +
             '_' + IntToStr(prefix),
             Task.Container.Manager.retryConnect);
@@ -78,7 +78,7 @@
     begin
       imageName := Format('%.3d', [WorkId + 1]);
       Merge2Image(
-        Task.Container.CurrentWorkingDir,
+        Task.CurrentWorkingDir,
         imageName + '_' + IntToStr(prefix - 2) + '.jpg',
         imageName + '_' + IntToStr(prefix - 1) + '.jpg',
         imageName + '.jpg');

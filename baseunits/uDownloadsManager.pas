@@ -79,6 +79,12 @@ type
   TTaskThread = class(TFMDThread)
   private
     FCheckAndActiveTaskFlag: Boolean;
+    FCurrentWorkingDir: String;
+    {$IFDEF Windows}
+    FCurrentMaxFileNameLength: Integer;
+    {$ENDIF}
+    FCurrentCustomFileName: String;
+    procedure SetCurrentWorkingDir(AValue: String);
   protected
     procedure CheckOut;
     procedure MainThreadCompressRepaint;
@@ -99,6 +105,10 @@ type
     constructor Create;
     destructor Destroy; override;
     function GetFileName(const AWorkId: Integer): String;
+    property CurrentWorkingDir: String read FCurrentWorkingDir write SetCurrentWorkingDir;
+    property CurrentMaxFileNameLength: Integer read FCurrentMaxFileNameLength;
+    // current custom filename with only %FILENAME% left intact
+    property CurrentCustomFileName: String read FCurrentCustomFileName write FCurrentCustomFileName;
   end;
 
   { TTaskContainer }
@@ -121,10 +131,6 @@ type
     // download manager
     Manager: TDownloadManager;
     DownloadInfo: TDownloadInfo;
-    // current working dir, save to + chapter name
-    CurrentWorkingDir: String;
-    // current custom filename with only %FILENAME% left intact
-    CurrentCustomFileName: String;
     // current link index
     CurrentPageNumber,
     // current chapter index
@@ -142,7 +148,7 @@ type
     FailedChapterLinks,
     PageContainerLinks,
     PageLinks: TStringList;
-    Filenames: TStringList;
+    FileNames: TStringList;
     // custom filename
     CustomFileName: String;
     constructor Create;
@@ -857,6 +863,9 @@ begin
   Threads := TDownloadThreads.Create;
   FCheckAndActiveTaskFlag := True;
   httpCookies := '';
+  FCurrentWorkingDir := '';
+  FCurrentCustomFileName := '';
+  FCurrentMaxFileNameLength := 0;
 end;
 
 destructor TTaskThread.Destroy;
@@ -868,15 +877,15 @@ end;
 function TTaskThread.GetFileName(const AWorkId: Integer): String;
 begin
   Result := '';
-  if (Container.Filenames.Count = Container.PageLinks.Count) and
-    (AWorkId < Container.Filenames.Count) then
-    Result := Container.Filenames[AWorkId];
+  if (Container.FileNames.Count = Container.PageLinks.Count) and
+    (AWorkId < Container.FileNames.Count) then
+    Result := Container.FileNames[AWorkId];
   if Result = '' then
     Result := Format('%.3d', [AWorkId + 1]);
-  Result := StringReplace(Container.CurrentCustomFileName, CR_FILENAME, Result, [rfReplaceAll]);
+  Result := StringReplace(CurrentCustomFileName, CR_FILENAME, Result, [rfReplaceAll]);
   {$IFDEF WINDOWS}
-  if Length(Container.CurrentWorkingDir + Result) > FMDMaxImageFilePath then
-    Result := ShortenString(Result, FMDMaxImageFilePath - Length(Container.CurrentWorkingDir), 4, '');
+  if Length(Result) > FCurrentMaxFileNameLength then
+    Result := ShortenString(Result, FCurrentMaxFileNameLength, 4, '');
   {$ENDIF}
 end;
 
@@ -905,12 +914,12 @@ begin
         3: uPacker.Format := pfPDF;
       end;
       uPacker.CompressionQuality := OptionPDFQuality;
-      uPacker.Path := Container.CurrentWorkingDir;
+      uPacker.Path := CurrentWorkingDir;
       uPacker.FileName := Container.DownloadInfo.SaveTo +
         Container.ChapterName[Container.CurrentDownloadChapterPtr];
       for i := 0 to Container.PageLinks.Count - 1 do
       begin
-        s := FindImageFile(Container.CurrentWorkingDir + GetFileName(i));
+        s := FindImageFile(CurrentWorkingDir + GetFileName(i));
         if s <> '' then
           uPacker.FileList.Add(s);
       end;
@@ -964,7 +973,7 @@ begin
   Result := True;
 
   // check download path
-  if not ForceDirectoriesUTF8(Task.Container.CurrentWorkingDir) then
+  if not ForceDirectoriesUTF8(Task.CurrentWorkingDir) then
   begin
     Task.Container.Status := STATUS_FAILED;
     Task.Container.DownloadInfo.Status := RS_FailedToCreateDir;
@@ -1005,7 +1014,7 @@ begin
         Result := Modules.DownloadImage(
           Self,
           workURL,
-          Task.Container.CurrentWorkingDir,
+          Task.CurrentWorkingDir,
           workFilename,
           Task.Container.ModuleId);
     end
@@ -1017,7 +1026,7 @@ begin
         FHTTP,
         Task.Container.MangaSiteID,
         workURL,
-        Task.Container.CurrentWorkingDir,
+        Task.CurrentWorkingDir,
         workFilename,
         savedFilename,
         Task.Container.Manager.retryConnect);
@@ -1030,6 +1039,15 @@ begin
     if Modules.ModuleAvailable(Task.Container.ModuleId, MMAfterImageSaved) then
       Modules.AfterImageSaved(savedFilename, Task.Container.ModuleId);
   end;
+end;
+
+procedure TTaskThread.SetCurrentWorkingDir(AValue: String);
+begin
+  if FCurrentWorkingDir = AValue then Exit;
+  FCurrentWorkingDir := CorrectPathSys(AValue);
+  {$IFDEF Windows}
+  FCurrentMaxFileNameLength := FMDMaxImageFilePath - Length(FCurrentWorkingDir);
+  {$ENDIF}
 end;
 
 procedure TTaskThread.CheckOut;
@@ -1180,11 +1198,11 @@ begin
 
       //check path
       if OptionGenerateChapterFolder then
-        Container.CurrentWorkingDir := CorrectPathSys(Container.DownloadInfo.SaveTo +
-          Container.ChapterName[Container.CurrentDownloadChapterPtr])
+        CurrentWorkingDir := Container.DownloadInfo.SaveTo +
+          Container.ChapterName[Container.CurrentDownloadChapterPtr]
       else
-        Container.CurrentWorkingDir := CorrectPathSys(Container.DownloadInfo.SaveTo);
-      if not ForceDirectoriesUTF8(Container.CurrentWorkingDir) then
+        CurrentWorkingDir := Container.DownloadInfo.SaveTo;
+      if not ForceDirectoriesUTF8(CurrentWorkingDir) then
       begin
         Container.Status := STATUS_FAILED;
         Container.DownloadInfo.Status := RS_FailedToCreateDir;
@@ -1196,7 +1214,7 @@ begin
         Modules.TaskStart(Container, Container.ModuleId);
 
       // set current working custom filename
-      Container.CurrentCustomFileName :=  CustomRename(Container.CustomFileName,
+      CurrentCustomFileName :=  CustomRename(Container.CustomFileName,
         Container.DownloadInfo.Website,
         Container.DownloadInfo.Title,
         '',
@@ -1236,7 +1254,7 @@ begin
       begin
         for j := 0 to Container.PageLinks.Count - 1 do
         begin
-          if ImageFileExist(Container.CurrentWorkingDir + GetFileName(j)) then
+          if ImageFileExist(CurrentWorkingDir + GetFileName(j)) then
             Container.PageLinks[j] := 'D'
           else
           if Container.PageLinks[j] = 'D' then
@@ -1472,7 +1490,7 @@ begin
   FailedChapterLinks := TStringList.Create;
   PageLinks := TStringList.Create;
   PageContainerLinks := TStringList.Create;
-  Filenames := TStringList.Create;
+  FileNames := TStringList.Create;
   ReadCount := 0;
   WorkCounter := 0;
   CurrentPageNumber := 0;
@@ -1485,7 +1503,7 @@ end;
 
 destructor TTaskContainer.Destroy;
 begin
-  Filenames.Free;
+  FileNames.Free;
   PageContainerLinks.Free;
   PageLinks.Free;
   ChapterName.Free;
@@ -1695,7 +1713,7 @@ begin
         s := ReadString(tid, 'PageContainerLinks', '');
         if s <> '' then GetParams(PageContainerLinks, s);
         s := ReadString(tid, 'Filenames', '');
-        if s <> '' then GetParams(Filenames, s);
+        if s <> '' then GetParams(FileNames, s);
         j := ReadInteger(tid, 'TaskStatus', -1);
         if j >= 0 then
           Status := TDownloadStatusType(j)
@@ -1780,8 +1798,8 @@ begin
             WriteString(tid, 'PageLinks', SetParams(PageLinks));
           if PageContainerLinks.Count > 0 then
             WriteString(tid, 'PageContainerLinks', SetParams(PageContainerLinks));
-          if Filenames.Count > 0 then
-            WriteString(tid, 'Filenames', SetParams(Filenames));
+          if FileNames.Count > 0 then
+            WriteString(tid, 'Filenames', SetParams(FileNames));
           WriteString(tid, 'TaskStatus', GetEnumName(TypeInfo(TDownloadStatusType), Integer(Status)));
           WriteInteger(tid, 'ChapterPtr', CurrentDownloadChapterPtr);
           WriteInteger(tid, 'NumberOfPages', PageNumber);
