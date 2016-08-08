@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, httpsend, synautil, synacode, ssl_openssl, blcksock,
-  GZIPUtils, Graphics, RegExpr;
+  GZIPUtils, RegExpr;
 
 type
 
@@ -327,9 +327,6 @@ begin
     begin
       if Response is TStringList then
         TStringList(Response).LoadFromStream(Document)
-      else
-      if Response is TPicture then
-        TPicture(Response).LoadFromStream(Document)
       else
       if Response is TStream then
         Document.SaveToStream(TStream(Response));

@@ -155,7 +155,9 @@ begin
       if OptionEnableLoadCover and (Trim(FInfo.mangaInfo.coverLink) <> '') then
       begin
         FInfo.FHTTP.Document.Clear;
-        FIsHasMangaCover := FInfo.FHTTP.GET(FInfo.mangaInfo.coverLink, FCover);
+        FIsHasMangaCover := FInfo.FHTTP.GET(FInfo.mangaInfo.coverLink);
+        if FIsHasMangaCover then
+          FCover.LoadFromStream(FInfo.FHTTP.Document);
       end
       else
         FIsHasMangaCover := False;
