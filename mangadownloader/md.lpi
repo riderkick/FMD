@@ -63,7 +63,7 @@
             <CustomOptions Value="-dMANGADOWNLOADER
 -dDOWNLOADER
 -dSELFUPDATE
--dRELEASEWIN64"/>
+-dMULTILOG"/>
           </Other>
         </CompilerOptions>
       </Item2>
@@ -104,7 +104,7 @@
             <CustomOptions Value="-dMANGADOWNLOADER
 -dDOWNLOADER
 -dSELFUPDATE
--dDEBUGWIN32"/>
+-dMULTILOG"/>
           </Other>
         </CompilerOptions>
       </Item3>
@@ -142,7 +142,7 @@
             <CustomOptions Value="-dMANGADOWNLOADER
 -dDOWNLOADER
 -dSELFUPDATE
--dDEBUGWIN64"/>
+-dMULTILOG"/>
           </Other>
         </CompilerOptions>
       </Item4>
@@ -176,11 +176,8 @@
             <CustomOptions Value="-dMANGADOWNLOADER
 -dDOWNLOADER
 -dSELFUPDATE
--dLOGACTIVE
--dTRAPLAZLOGGER
--dSENDTOLAZLOGGER
--dDEBUGWIN32
--dDEBUGLEAKS"/>
+-dDEBUGLEAKS
+-dMULTILOG"/>
             <ExecuteAfter>
               <Command Value="cmd.exe /c copy /y languages\*.po ..\bin\languages\"/>
             </ExecuteAfter>
@@ -357,7 +354,7 @@
       <CustomOptions Value="-dMANGADOWNLOADER
 -dDOWNLOADER
 -dSELFUPDATE
--dRELEASEWIN32"/>
+-dMULTILOG"/>
     </Other>
   </CompilerOptions>
   <Debugging>

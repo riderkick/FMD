@@ -46,8 +46,11 @@ uses
   {$IF DEFINED(DARWIN) OR DEFINED(MACOS)}
   machoreader,
   {$ENDIF}
-  fileinfo,
-  MultiLog;
+  fileinfo
+  {$IFDEF MULTILOG}
+  ,MultiLog
+  {$ENDIF}
+  ;
 
 type
 
@@ -114,6 +117,7 @@ resourcestring
 
 implementation
 
+{$IFDEF MULTILOG}
 type
 
   { TLoggerException }
@@ -122,6 +126,14 @@ type
   public
     procedure SendExceptionStr(const AText: String; AExceptionStr: String);
   end;
+
+{ TLoggerException }
+
+procedure TLoggerException.SendExceptionStr(const AText: String; AExceptionStr: String);
+begin
+  SendBuffer(ltException, AText, AExceptionStr[1], Length(AExceptionStr));
+end;
+{$ENDIF}
 
 
 procedure SetMaxStackCount(const ACount: Integer);
@@ -196,13 +208,6 @@ procedure DoneSimpleExceptionHandler;
 begin
   if MainExceptionHandler <> nil then
     FreeAndNil(MainExceptionHandler);
-end;
-
-{ TLoggerException }
-
-procedure TLoggerException.SendExceptionStr(const AText: String; AExceptionStr: String);
-begin
-  SendBuffer(ltException, AText, AExceptionStr[1], Length(AExceptionStr));
 end;
 
 { TSimpleException }
@@ -325,9 +330,11 @@ begin
         for i := 0 to FrameCount - 1 do
           S := S + '  ' + BackTraceStrFunc(Frames[i]) + LineEnding;
       FLastReport := FLastReport + S;
+      {$IFDEF MULTILOG}
       if Logger.Enabled then
         Logger.SendExceptionStr('Unhandled Exception occured at $' + BackTraceStrFunc(Addr), S)
       else
+      {$ENDIF}
         SaveLogToFile(FLastReport);
       CallExceptionHandler;
     end;
@@ -397,6 +404,7 @@ begin
   end;
   S := GetStackTraceStr;
   FLastReport := FLastReport + S;
+  {$IFDEF MULTILOG}
   if Logger.Enabled then
   begin
     if Assigned(FLastException) then
@@ -405,6 +413,7 @@ begin
       Logger.SendExceptionStr('Program exception!', S);
   end
   else
+  {$ENDIF}
     SaveLogToFile(FLastReport);
 end;
 
@@ -438,9 +447,11 @@ begin
         TThread.Synchronize((Sender as TThread), @ExceptionHandler)
       {$ENDIF}
     except
+      {$IFDEF MULTILOG}
       if Logger.Enabled then
         Logger.SendError(SCantHandleException)
       else
+      {$ENDIF}
         SaveLogToFile(SCantHandleException);
     end
   else
