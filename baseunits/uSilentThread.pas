@@ -15,7 +15,7 @@ unit uSilentThread;
 interface
 
 uses
-  Classes, SysUtils, fgl, uBaseUnit, uData, uFMDThread, uDownloadsManager,
+  SysUtils, fgl, uBaseUnit, uData, uDownloadsManager,
   WebsiteModules, FMDOptions, httpsendthread, LazFileUtils;
 
 type
@@ -36,7 +36,7 @@ type
 
   { TSilentThread }
 
-  TSilentThread = class(TFMDThread)
+  TSilentThread = class(THTTPThread)
   protected
     FSavePath: String;
     Info: TMangaInformation;
@@ -63,7 +63,7 @@ type
 
   { TSilentThreadManagerThread }
 
-  TSilentThreadManagerThread = class(TFMDThread)
+  TSilentThreadManagerThread = class(THTTPThread)
   protected
     procedure Checkout;
     procedure Execute; override;

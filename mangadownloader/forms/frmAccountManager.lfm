@@ -15,6 +15,7 @@ object AccountManagerForm: TAccountManagerForm
   OnDestroy = FormDestroy
   OnShow = FormShow
   LCLVersion = '1.7'
+  Visible = False
   object pnBtContainer: TPanel
     Left = 299
     Height = 300

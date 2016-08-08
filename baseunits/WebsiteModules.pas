@@ -11,7 +11,7 @@ interface
 
 uses
   Classes, SysUtils, uData, uDownloadsManager, FMDOptions, httpsendthread,
-  RegExpr, IniFiles;
+  RegExpr;
 
 const
   MODULE_NOT_FOUND = -1;

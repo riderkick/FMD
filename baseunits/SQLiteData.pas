@@ -5,7 +5,7 @@ unit SQLiteData;
 interface
 
 uses
-  Classes, SysUtils, LazFileUtils, strutils, sqlite3conn, sqldb, DB;
+  SysUtils, LazFileUtils, strutils, sqlite3conn, sqldb;
 
 type
 

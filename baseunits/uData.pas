@@ -14,8 +14,8 @@ unit uData;
 interface
 
 uses
-  Classes, SysUtils, uBaseUnit, uFMDThread, DBDataProcess, FMDOptions, httpsendthread,
-  FileUtil, LazFileUtils, strutils, dateutils, RegExpr, httpsend, MultiLog;
+  Classes, SysUtils, uBaseUnit, DBDataProcess, FMDOptions, httpsendthread,
+  LazFileUtils, strutils, dateutils, RegExpr, httpsend, MultiLog;
 
 type
 
@@ -89,7 +89,7 @@ type
 
     procedure OnTag(NoCaseTag, ActualTag: String);
     procedure OnText(Text: String);
-    constructor Create(AOwnerThread: TFMDThread = nil; CreateInfo: Boolean = True);
+    constructor Create(AOwnerThread: THTTPThread = nil; CreateInfo: Boolean = True);
     destructor Destroy; override;
     procedure ClearInfo;
     function GetDirectoryPage(var Page: Integer; const website: String): Byte;
@@ -116,7 +116,7 @@ var
 implementation
 
 uses
-  Dialogs, fpJSON, JSONParser, jsonscanner, IniFiles, FastHTMLParser, HTMLUtil,
+  Dialogs, fpJSON, JSONParser, jsonscanner, FastHTMLParser, HTMLUtil,
   SynaCode, uMisc, frmMain, WebsiteModules;
 
 // ----- TDataProcess -----
@@ -713,7 +713,7 @@ end;
 
 { TMangaInformation }
 
-constructor TMangaInformation.Create(AOwnerThread: TFMDThread; CreateInfo: Boolean);
+constructor TMangaInformation.Create(AOwnerThread: THTTPThread; CreateInfo: Boolean);
 begin
   inherited Create;
   FHTTP := THTTPSendThread.Create(AOwnerThread);

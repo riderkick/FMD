@@ -18,11 +18,11 @@ uses
   {$else}
   UTF8Process,
   {$endif}
-  SysUtils, Classes, Graphics, Forms, lazutf8classes, LazUTF8, LazFileUtils,
-  LConvEncoding, strutils, dateutils, fileinfo, base64, fpjson, jsonparser, jsonscanner,
+  SysUtils, Classes, Graphics, lazutf8classes, LazFileUtils,
+  LConvEncoding, strutils, dateutils, base64, fpjson, jsonparser, jsonscanner,
   FastHTMLParser, fgl, RegExpr, synautil, httpsend, blcksock, ssl_openssl, synacode,
-  MultiLog, FPimage, GZIPUtils, uFMDThread, uMisc, httpsendthread, FMDOptions,
-  simplehtmltreeparser, xquery, xquery_json, ImgInfos, SimpleException;
+  MultiLog, FPimage, GZIPUtils, uMisc, httpsendthread, FMDOptions,
+  simplehtmltreeparser, xquery, xquery_json, ImgInfos;
 
 const
   JPG_HEADER: array[0..2] of Byte = ($FF, $D8, $FF);
@@ -867,7 +867,7 @@ procedure fmdHibernate;
 implementation
 
 uses
-  {$IFDEF DOWNLOADER}frmMain, WebsiteModules;{$ENDIF}
+  {$IFDEF DOWNLOADER}WebsiteModules;{$ENDIF}
 
 {$IFDEF WINDOWS}
 // thanks Leledumbo for the code

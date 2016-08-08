@@ -12,7 +12,7 @@ interface
 
 uses
   Classes, SysUtils, fgl, Dialogs, IniFiles, lazutf8classes, LazFileUtils,
-  FileUtil, uBaseUnit, uData, uDownloadsManager, uFMDThread, uMisc, WebsiteModules,
+  uBaseUnit, uData, uDownloadsManager, uMisc, WebsiteModules,
   FMDOptions, httpsendthread, SimpleException;
 
 type
@@ -22,7 +22,7 @@ type
 
   { TFavoriteThread }
 
-  TFavoriteThread = class(TFMDThread)
+  TFavoriteThread = class(THTTPThread)
   protected
     procedure SyncStatus;
     procedure Execute; override;
@@ -38,7 +38,7 @@ type
 
   { TFavoriteTask }
 
-  TFavoriteTask = class(TFMDThread)
+  TFavoriteTask = class(THTTPThread)
   private
     FBtnCaption: String;
     FPendingCount: Integer;

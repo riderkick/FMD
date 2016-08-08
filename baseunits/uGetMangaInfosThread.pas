@@ -16,13 +16,13 @@ unit uGetMangaInfosThread;
 interface
 
 uses
-  SysUtils, Graphics, Dialogs, uBaseUnit, uData, uFMDThread, FMDOptions;
+  SysUtils, Graphics, Dialogs, uBaseUnit, uData, httpsendthread, FMDOptions;
 
 type
 
   { TGetMangaInfosThread }
 
-  TGetMangaInfosThread = class(TFMDThread)
+  TGetMangaInfosThread = class(THTTPThread)
   protected
     FMangaListPos: Integer;
     FCover: TPicture;

@@ -11,7 +11,7 @@ unit uUpdateThread;
 interface
 
 uses
-  Classes, SysUtils, typinfo, uData, LazFileUtils, uBaseUnit, uFMDThread, uMisc,
+  Classes, SysUtils, typinfo, uData, LazFileUtils, uBaseUnit, uMisc,
   WebsiteModules, DBDataProcess, SimpleTranslator, FMDOptions, httpsendthread, MultiLog;
 
 type
@@ -19,7 +19,7 @@ type
 
   { TUpdateListThread }
 
-  TUpdateListThread = class(TFMDThread)
+  TUpdateListThread = class(THTTPThread)
   protected
     Info: TMangaInformation;
     checkStyle: TCheckStyleType;
@@ -36,7 +36,7 @@ type
 
   { TUpdateListManagerThread }
 
-  TUpdateListManagerThread = class(TFMDThread)
+  TUpdateListManagerThread = class(THTTPThread)
   private
     FStatus: String;
     FCommitCount: Integer;
@@ -95,7 +95,7 @@ resourcestring
 implementation
 
 uses
-  frmMain, Dialogs, ComCtrls, Forms, Controls;
+  frmMain, Dialogs, ComCtrls;
 
 { TUpdateListThread }
 

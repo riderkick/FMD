@@ -16,9 +16,8 @@ interface
 
 uses
   LazFileUtils, FastHTMLParser, HTMLUtil, SynaCode, RegExpr, Classes, SysUtils,
-  ExtCtrls, typinfo, fgl, blcksock, MultiLog, uBaseUnit, uPacker, uFMDThread, uMisc,
-  DownloadedChaptersDB, FMDOptions, httpsendthread, dateutils,
-  strutils;
+  ExtCtrls, typinfo, fgl, blcksock, MultiLog, uBaseUnit, uPacker, uMisc,
+  DownloadedChaptersDB, FMDOptions, httpsendthread, dateutils, strutils;
 
 type
   TDownloadStatusType = (
@@ -40,7 +39,7 @@ type
 
   { TDownloadThread }
 
-  TDownloadThread = class(TFMDThread)
+  TDownloadThread = class(THTTPThread)
   private
     parse: TStringList;
   public
@@ -76,7 +75,7 @@ type
 
   { TTaskThread }
 
-  TTaskThread = class(TFMDThread)
+  TTaskThread = class(THTTPThread)
   private
     FCheckAndActiveTaskFlag: Boolean;
     FCurrentWorkingDir: String;
