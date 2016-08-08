@@ -1084,7 +1084,12 @@ begin
 
   // remove old updater
   if FileExistsUTF8(FMD_DIRECTORY + 'old_updater.exe') then
-    DeleteFileUTF8(FMD_DIRECTORY + 'old_updater.exe');
+  begin
+    if FileExistsUTF8(FMD_DIRECTORY + 'updater.exe') then
+      DeleteFileUTF8(FMD_DIRECTORY + 'old_updater.exe')
+    else
+      RenameFileUTF8(FMD_DIRECTORY + 'old_updater.exe', FMD_DIRECTORY + 'updater.exe');
+  end;
 
   // TrayIcon
   TrayIcon.Icon.Assign(Application.Icon);
