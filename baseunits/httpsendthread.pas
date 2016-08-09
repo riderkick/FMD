@@ -183,6 +183,7 @@ end;
 constructor THTTPThread.Create(CreateSuspended: Boolean);
 begin
   inherited Create(CreateSuspended);
+  FreeOnTerminate := True;
 end;
 
 procedure THTTPThread.Terminate;
