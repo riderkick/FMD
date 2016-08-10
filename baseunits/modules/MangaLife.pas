@@ -22,7 +22,7 @@ function GetDirectoryPageNumber(const MangaInfo: TMangaInformation;
   var Page: Integer; const Module: TModuleContainer): Integer;
 begin
   Result := NO_ERROR;
-  if Module.Website = 'MangaSee' then
+  if (Module.Website = 'MangaSee') or (Module.Website = 'MangaTraders') then
     Page := Length(diralpha)
   else
     Page := 1;
@@ -30,9 +30,10 @@ end;
 
 function fixcleanurl(const u: string): string;
 begin
-  result:=u;
-  if pos('../',result)<>0 then
-    result:=stringreplace(result,'../','/',[]);
+  Result := u;
+  if Result = '' then Exit;
+  while Result[1] = '.' do
+    Delete(Result, 1, 1);
 end;
 
 function GetNameAndLink(const MangaInfo: TMangaInformation;
@@ -48,9 +49,15 @@ begin
     s += dirURLmangasee
   else
     s+=dirURL;
-  //mangasee
   if AURL <> '0' then
-    s += '?c=' + diralpha[StrToInt(AURL) + 1];
+  begin
+    if Module.Website = 'MangaSee' then
+      s += '?c='
+    else
+    if Module.Website = 'MangaTraders' then
+      s += '?start=';
+    s += diralpha[StrToIntDef(AURL, 0) + 1]
+  end;
   if MangaInfo.FHTTP.GET(s) then
   begin
     Result := NO_ERROR;
@@ -80,6 +87,7 @@ function GetInfo(const MangaInfo: TMangaInformation;
 var
   v: IXQValue;
   s: String;
+  i: Integer;
 begin
   Result := NET_PROBLEM;
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
@@ -100,16 +108,25 @@ begin
             'completed');
           genres := SeparateRight(XPathString('//*[@class="row"][starts-with(.,"Genre:")]'), ':');
           summary := Trim(SeparateRight(XPathString('//*[@class="row"][starts-with(.,"Description:")]'), ':'));
-          if Module.Website = 'MangaSee' then
-            s := 'div.col-lg-12:nth-child(8)>div>div:nth-child(1)>a'
+          if Module.Website = 'MangaTraders' then
+            v := XPath('//div[@class="well"]/div[@class="row"]/div/a[contains(@href,"/read-online/") and not(@class)]')
           else
-            s := 'div.list>div>div>a';
-          for v in CSS(s) do
           begin
-            chapterLinks.Add(fixchapterurl(v.toNode.getAttribute('href')));
-            chapterName.Add(v.toString);
+            if Module.Website = 'MangaSee' then
+              s := 'div.col-lg-12:nth-child(8)>div>div:nth-child(1)>a'
+            else
+              s := 'div.list>div>div>a';
+            v := CSS(s)
           end;
-          InvertStrings([chapterLinks, chapterName]);
+          if v.Count > 0 then
+          begin
+            for i := 1 to v.Count do
+            begin
+              chapterLinks.Add(fixchapterurl(v.get(i).toNode.getAttribute('href')));
+              chapterName.Add(v.get(i).toString);
+            end;
+            InvertStrings([chapterLinks, chapterName]);
+          end;
         finally
           Free;
         end;
@@ -158,6 +175,7 @@ procedure RegisterModule;
 begin
   AddWebsiteModule('MangaLife', 'http://manga.life');
   AddWebsiteModule('MangaSee', 'http://mangasee.co');
+  AddWebsiteModule('MangaTraders', 'http://mangatraders.org')
 end;
 
 initialization

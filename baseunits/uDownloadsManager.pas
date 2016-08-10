@@ -425,8 +425,6 @@ var
 
   {$I includes/MangaGo/chapter_page_number.inc}
 
-  {$I includes/MangaTraders/chapter_page_number.inc}
-
   {$I includes/MeinManga/chapter_page_number.inc}
 
   {$I includes/S2Scans/chapter_page_number.inc}
@@ -489,9 +487,6 @@ begin
   begin
     if Task.Container.MangaSiteID = ANIMEA_ID then
       Result := GetAnimeAPageNumber
-    else
-    if Task.Container.MangaSiteID = MANGATRADERS_ID then
-      Result := GetMangaTradersPageNumber
     else
     if Task.Container.MangaSiteID = STARKANA_ID then
       Result := GetStarkanaPageNumber
@@ -658,8 +653,6 @@ var
 
   {$I includes/MangasPROJECT/image_url.inc}
 
-  {$I includes/MangaTraders/image_url.inc}
-
   {$I includes/ScanManga/image_url.inc}
 
   {$I includes/Starkana/image_url.inc}
@@ -713,9 +706,6 @@ begin
   begin
     if Task.Container.MangaSiteID = ANIMEA_ID then
       Result := GetAnimeAImageURL
-    else
-    if Task.Container.MangaSiteID = MANGATRADERS_ID then
-      Result := GetMangaTradersImageURL
     else
     if Task.Container.MangaSiteID = MANGA24H_ID then
       Result := GetManga24hImageURL
