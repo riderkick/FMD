@@ -66,9 +66,19 @@ procedure SetDefaultRetryCountAndApply(const ARetryCount: Integer);
 
 function MaybeEncodeURL(const AValue: String): String;
 
+const
+  UserAgentSynapse = 'Mozilla/4.0 (compatible; Synapse)';
+  UserAgentCURL = 'curl/7.42.1';
+  UserAgentGooglebot = 'Mozilla/5.0 (compatible; Googlebot/2.1;  http://www.google.com/bot.html)';
+  UserAgentInternetExplorer = 'Mozilla/5.0 (compatible; WOW64; MSIE 10.0; Windows NT 6.2)';
+  UserAgentFirefox = 'Mozilla/5.0 (Windows NT 10.0; WOW64; rv:48.0) Gecko/20100101 Firefox/48.0';
+  UserAgentChrome =
+    'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36';
+  UserAgentOpera =
+    'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.82 Safari/537.36 OPR/39.0.2256.48';
+
 var
-  DefaultUserAgent: String =
-    'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36';
+  DefaultUserAgent: String = UserAgentChrome;
   DefaultRetryCount: Integer = 0;
   DefaultTimeout: Integer = 15000;
   DefaultProxyType: String = '';
