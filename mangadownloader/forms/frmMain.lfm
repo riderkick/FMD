@@ -5,8 +5,6 @@ object MainForm: TMainForm
   Width = 771
   ActiveControl = pcMain
   Caption = 'Free Manga Downloader'
-  ChildSizing.LeftRightSpacing = 4
-  ChildSizing.TopBottomSpacing = 4
   ClientHeight = 587
   ClientWidth = 771
   OnClose = FormClose
@@ -18,10 +16,10 @@ object MainForm: TMainForm
   LCLVersion = '1.7'
   Visible = False
   object sbUpdateList: TStatusBar
-    Left = 4
+    Left = 0
     Height = 30
-    Top = 553
-    Width = 763
+    Top = 557
+    Width = 771
     AutoSize = False
     Panels = <    
       item
@@ -36,8 +34,8 @@ object MainForm: TMainForm
   end
   object pcMain: TPageControl
     Left = 201
-    Height = 512
-    Top = 15
+    Height = 520
+    Top = 11
     Width = 566
     ActivePage = tsDownload
     Align = alClient
@@ -54,13 +52,13 @@ object MainForm: TMainForm
       ChildSizing.TopBottomSpacing = 4
       ChildSizing.HorizontalSpacing = 4
       ChildSizing.VerticalSpacing = 4
-      ClientHeight = 484
+      ClientHeight = 492
       ClientWidth = 558
       object vtDownload: TVirtualStringTree
         AnchorSideTop.Control = edDownloadsSearch
         AnchorSideTop.Side = asrBottom
         Left = 4
-        Height = 448
+        Height = 456
         Top = 31
         Width = 549
         Anchors = [akTop, akLeft, akRight, akBottom]
@@ -4071,18 +4069,18 @@ object MainForm: TMainForm
     end
   end
   object pnMainTop: TPanel
-    Left = 4
+    Left = 0
     Height = 8
-    Top = 4
-    Width = 763
+    Top = 0
+    Width = 771
     Align = alTop
     TabOrder = 1
     Visible = False
   end
   object pcLeft: TPageControl
     Left = 4
-    Height = 510
-    Top = 16
+    Height = 518
+    Top = 12
     Width = 195
     ActivePage = tsMangaList
     Align = alLeft
@@ -4098,7 +4096,7 @@ object MainForm: TMainForm
       ChildSizing.TopBottomSpacing = 4
       ChildSizing.HorizontalSpacing = 4
       ChildSizing.VerticalSpacing = 4
-      ClientHeight = 482
+      ClientHeight = 490
       ClientWidth = 187
       object vtMangaList: TVirtualStringTree
         AnchorSideLeft.Control = lbMode
@@ -4107,7 +4105,7 @@ object MainForm: TMainForm
         AnchorSideRight.Control = btRemoveFilter
         AnchorSideRight.Side = asrBottom
         Left = 4
-        Height = 393
+        Height = 401
         Top = 85
         Width = 179
         Anchors = [akTop, akLeft, akRight, akBottom]
@@ -4410,10 +4408,10 @@ object MainForm: TMainForm
     end
   end
   object sbMain: TStatusBar
-    Left = 4
+    Left = 0
     Height = 23
-    Top = 530
-    Width = 763
+    Top = 534
+    Width = 771
     Panels = <    
       item
         Width = 195
@@ -4426,8 +4424,8 @@ object MainForm: TMainForm
   end
   object spMainSplitter: TSplitter
     Left = 199
-    Height = 518
-    Top = 12
+    Height = 526
+    Top = 8
     Width = 2
     OnMoved = spMainSplitterMoved
   end
