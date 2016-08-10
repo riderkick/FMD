@@ -881,8 +881,8 @@ end;
 procedure TTaskThread.MainThreadCompressRepaint;
 begin
   Container.DownloadInfo.Status :=
-    Format('%s (%d/%d)', [RS_Compressing, Container.CurrentDownloadChapterPtr +
-    1, Container.ChapterLinks.Count]);
+    Format('[%d/%d] %s', [Container.CurrentDownloadChapterPtr + 1,
+    Container.ChapterLinks.Count, RS_Compressing]);
   MainForm.vtDownload.Repaint;
 end;
 
@@ -1223,10 +1223,10 @@ begin
         Container.DownloadInfo.iProgress := 0;
         Container.DownloadInfo.Progress := '0/0';
         Container.DownloadInfo.Status :=
-          Format('%s (%d/%d [%s])',
-          [RS_Preparing,
-          Container.CurrentDownloadChapterPtr + 1,
+          Format('[%d/%d] %s (%s)',
+          [Container.CurrentDownloadChapterPtr + 1,
           Container.ChapterLinks.Count,
+          RS_Preparing,
           Container.ChapterName[Container.CurrentDownloadChapterPtr]]);
         Container.Status := STATUS_PREPARE;
         CheckOut;
@@ -1311,10 +1311,10 @@ begin
           Format('%d/%d', [Container.DownCounter, Container.PageNumber]);
         Container.Status := STATUS_DOWNLOAD;
         Container.DownloadInfo.Status :=
-          Format('%s (%d/%d) [%s]',
-          [RS_Downloading,
-          Container.CurrentDownloadChapterPtr + 1,
+          Format('[%d/%d] %s (%s)',
+          [Container.CurrentDownloadChapterPtr + 1,
           Container.ChapterLinks.Count,
+          RS_Downloading,
           Container.ChapterName[Container.CurrentDownloadChapterPtr]]);
         while Container.WorkCounter < Container.PageLinks.Count do
         begin
@@ -1425,8 +1425,8 @@ begin
         begin
           Status := STATUS_STOP;
           DownloadInfo.Status :=
-            Format('%s (%d/%d)', [RS_Stopped, CurrentDownloadChapterPtr +
-            1, ChapterLinks.Count]);
+            Format('[%d/%d] %s', [CurrentDownloadChapterPtr + 1,
+            ChapterLinks.Count, RS_Stopped]);
           FCheckAndActiveTaskFlag := False;
         end;
         Synchronize(SyncStop);
