@@ -298,10 +298,16 @@ begin
           with TRegExpr.Create do
             try
               Expression := '(?ig)^(\w+://)?([^/]*\.\w+)?(\:\d+)?(/?.*)$';
-              if Replace(s, '$1', True) = '' then begin
-                if s[1] <> '/' then s := '/' + s;
+              if Replace(s, '$1', True) = '' then
+              begin
+                while s[1] = '.' do
+                  Delete(s, 1, 1);
+                if (s <> '') and (s[1] <> '/') then
+                  s := '/' + s;
                 rurl := Replace(rurl, '$1$2$3', True) + s;
-              end else rurl := s;
+              end
+              else
+                rurl := s;
             finally
               Free;
             end;
