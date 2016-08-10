@@ -1102,8 +1102,11 @@ begin
   filepath := DATA_FOLDER + FWebsite + DBDATA_EXT;
   if FileExistsUTF8(filepath) then
     DeleteFileUTF8(filepath);
-  InternalOpen(filepath);
-  CreateTable;
+  if ForceDirectoriesUTF8(DATA_FOLDER) then
+  begin
+    InternalOpen(filepath);
+    CreateTable;
+  end;
 end;
 
 procedure TDBDataProcess.GetFieldNames(List: TStringList);
