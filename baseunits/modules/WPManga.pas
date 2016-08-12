@@ -201,10 +201,13 @@ begin
           pagecount := StrToIntDef(s, 1);
           if pagecount > 1 then
             for i := 2 to pagecount do
+            begin
+              if MangaInfo.FHTTP.Thread.IsTerminated then Break;
               if GET(url + 'chapter-list/' + IntToStr(i) + '/') then begin
                 query.ParseHTML(StreamToString(Document));
                 scanchapters;
               end;
+            end;
         end;
         if Module.Website <> 'EyeOnManga' then
           InvertStrings([chapterLinks, chapterName]);
