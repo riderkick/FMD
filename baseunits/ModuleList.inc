@@ -45,4 +45,5 @@ uses
   MangaInn,
   LeoManga,
   MangaPark,
-  MangaIndo;
+  MangaIndo,
+  FunManga;
