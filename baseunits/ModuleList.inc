@@ -46,4 +46,5 @@ uses
   LeoManga,
   MangaPark,
   MangaIndo,
-  FunManga;
+  FunManga,
+  SundayWebry;
