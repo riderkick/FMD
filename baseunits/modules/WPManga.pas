@@ -12,15 +12,11 @@ implementation
 
 const
   dirURL = '/manga-list/all/any/last-added/';
-  dirURLmangaindo = '/daftar-manga/all/any/last-added/';
   dirURLreadhentaimanga = '/hentai-manga-list/all/any/last-added/';
   dirURLmangahen = '/manga_list/all/any/last-added/';
 
 function GetDirURL(const AWebsite: String): String;
 begin
-  if AWebsite = 'MangaIndo' then
-    Result := dirURLmangaindo
-  else
   if AWebsite = 'ReadHentaiManga' then
     Result := dirURLreadhentaimanga
   else
@@ -69,13 +65,7 @@ begin
       Result := NO_ERROR;
       with TXQueryEngineHTML.Create(Document) do
         try
-          if Module.Website = 'MangaIndo' then begin
-            for v in XPath('//*[@id="sct_content"]//div[@class="node"]/a[1]/@href') do
-              ALinks.Add(v.toString);
-            for v in XPath('//*[@id="sct_content"]//div[@class="node"]/div[1]') do
-              ANames.Add(v.toString);
-          end
-          else if Module.Website = 'ReadHentaiManga' then
+          if Module.Website = 'ReadHentaiManga' then
             for v in XPath('//*[@id="content"]//*[@id="center"]/a') do begin
               ALinks.Add(v.toNode.getAttribute('href'));
               ANames.Add(v.toNode.getAttribute('title'));
@@ -159,24 +149,6 @@ var
     end;
   end;
 
-  procedure scaninfomangaindo;
-  begin
-    with MangaInfo.mangaInfo, query do begin
-      summary := XPathString('//*[@class="wpm_pag mng_det"]/p[1]');
-      authors := getwpmangavalue('Penulis');
-      artists := getwpmangavalue('Seniman');
-      genres := getwpmangavalue('Kategori');
-      status := getwpmangavalue('Status');
-      if status <> '' then begin
-        status := LowerCase(status);
-        if Pos('berjalan', status) > 0 then status := '1'
-        else if Pos('tamat', status) > 0 then status := '0'
-        else status := '';
-      end;
-    end;
-    scanchapters;
-  end;
-
 begin
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
   Result := NET_PROBLEM;
@@ -193,8 +165,7 @@ begin
         coverLink := query.XPathString('//img[starts-with(@class,"cvr")]/@src');
         if coverLink <> '' then coverLink := MaybeFillHost(Module.RootURL, coverLink);
         title := query.XPathString('//*[@itemprop="itemreviewed"]');
-        if Module.Website = 'MangaIndo' then scaninfomangaindo
-        else scaninfo;
+        scaninfo;
         s := query.XPathString('//*[@class="pgg"]/li[last()]/a/@href');
         if s <> '' then begin
           s := ReplaceRegExpr('^.*\/(\d+)/.*$', s, '$1', True);
@@ -212,8 +183,7 @@ begin
         if Module.Website <> 'EyeOnManga' then
           InvertStrings([chapterLinks, chapterName]);
         { add missing chapter number }
-        //if (Module.Website = 'EyeOnManga') or
-        //  (Module.Website = 'MangaIndo') and
+        //if (Module.Website = 'EyeOnManga') and
         //  (chapterName.Count > 0) then
         //  for i := 0 to chapterName.Count - 1 do
         //    chapterName[i] := 'Ch.' + IncStr(i) + ' ' + chapterName[i];
@@ -337,7 +307,6 @@ begin
   AddWebsiteModule('MangaBoom', 'http://www.mangaboom.com');
   AddWebsiteModule('Authrone', 'http://www.authrone.com');
   AddWebsiteModule('EyeOnManga', 'http://www.eyeonmanga.com');
-  AddWebsiteModule('MangaIndo', 'http://mangaindo.id');
   AddWebsiteModule('ReadHentaiManga', 'http://readhentaimanga.com');
   AddWebsiteModule('MangaHen', 'http://www.mangahen.com');
   AddWebsiteModule('MangaIce', 'http://www.mangaice.com');
