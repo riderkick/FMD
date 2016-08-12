@@ -398,10 +398,6 @@ msgctxt "taccountsetform.label3.caption"
 msgid "Password"
 msgstr "Kata kunci"
 
-#: tcustomcolorform.caption
-msgid "CustomColorForm"
-msgstr "CustomColorForm"
-
 #: tcustomcolorform.tsbasiclist.caption
 msgid "Basic list"
 msgstr "Semua daftar"

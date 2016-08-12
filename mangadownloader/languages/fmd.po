@@ -363,10 +363,6 @@ msgctxt "TACCOUNTSETFORM.LABEL3.CAPTION"
 msgid "Password"
 msgstr ""
 
-#: tcustomcolorform.caption
-msgid "CustomColorForm"
-msgstr ""
-
 #: tcustomcolorform.tsbasiclist.caption
 msgid "Basic list"
 msgstr ""
