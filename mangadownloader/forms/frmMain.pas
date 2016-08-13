@@ -5184,6 +5184,8 @@ var
   idxDropTargetMode: Integer;
 begin
   if AvailableLanguages.Count = 0 then Exit;
+  if cbLanguages.ItemIndex < 0 then Exit;
+  if cbLanguages.ItemIndex >= AvailableLanguages.Count then Exit;
   if SimpleTranslator.LastSelected <> AvailableLanguages.Names[cbLanguages.ItemIndex] then
   begin
     // TCombobox.Items will be cleared upon changing language,
