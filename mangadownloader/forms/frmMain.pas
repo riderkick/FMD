@@ -1709,7 +1709,7 @@ begin
         if (Sender = miDownloadDeleteTaskData) or (Sender = miDownloadDeleteTaskDataFavorite)
           and (ChapterName.Count > 0) then begin
           for i := 0 to ChapterName.Count - 1 do begin
-            f := CleanAndExpandDirectory(DownloadInfo.SaveTo + ChapterName[i]);
+            f := CorrectPathSys(DownloadInfo.SaveTo + ChapterName[i]);
             if FileExistsUTF8(f + '.zip') then
               DeleteFileUTF8(f + '.zip')
             else if FileExistsUTF8(f + '.cbz') then
