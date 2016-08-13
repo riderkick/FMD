@@ -2697,6 +2697,8 @@ begin
 end;
 
 procedure TMainForm.miFavoritesChangeSaveToClick(Sender: TObject);
+var
+  s: String;
 begin
   if FavoriteManager.isRunning then
   begin
@@ -2706,11 +2708,19 @@ begin
   end;
   if not Assigned(vtFavorites.FocusedNode) then
     Exit;
-  if InputQuery('', RS_DlgTypeInNewSavePath,
-    FavoriteManager.Items[vtFavorites.FocusedNode^.Index].FavoriteInfo.SaveTo) then
+  s := '';
+  with TSelectDirectoryDialog.Create(Self) do
+    try
+      InitialDir := FavoriteManager.Items[vtFavorites.FocusedNode^.Index].FavoriteInfo.SaveTo;
+      if Execute then
+        s := FileName;
+    finally
+      Free;
+    end;
+
+  if s <> '' then
   begin
-    FavoriteManager.Items[vtFavorites.FocusedNode^.Index].FavoriteInfo.SaveTo :=
-      CorrectFilePath(FavoriteManager.Items[vtFavorites.FocusedNode^.Index].FavoriteInfo.SaveTo);
+    FavoriteManager.Items[vtFavorites.FocusedNode^.Index].FavoriteInfo.SaveTo := CorrectFilePath(s);
     UpdateVtFavorites;
     FavoriteManager.Backup;
   end;
