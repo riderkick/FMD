@@ -571,28 +571,40 @@ type
 
   PDownloadInfo = ^TDownloadInfo;
 
+  { TDownloadInfo }
+
   TDownloadInfo = record
+  private
+    FSaveTo: String;
+    procedure SetSaveTo(AValue: String);
+  public
     Website,
     Link,
     Title,
-    SaveTo,
     Status,
     Progress,
     TransferRate: String;
     DateTime: TDateTime;
     iProgress: Integer;
+    property SaveTo: String read FSaveTo write SetSaveTo;
   end;
 
   PFavoriteInfo = ^TFavoriteInfo;
 
+  { TFavoriteInfo }
+
   TFavoriteInfo = record
+  private
+    FSaveTo: String;
+    procedure SetSaveTo(AValue: String);
+  public
     Website,
     Title,
     Link,
-    SaveTo,
     Numbering,
     DownloadedChapterList,
     CurrentChapter: String;
+    property SaveTo: String read FSaveTo write SetSaveTo;
   end;
 
   TCardinalList = TFPGList<Cardinal>;
@@ -3995,6 +4007,22 @@ begin
     Result := MangaInfo_StatusOngoing
   else if Pos(c, s) <> 0 then
     Result := MangaInfo_StatusCompleted;
+end;
+
+{ TFavoriteInfo }
+
+procedure TFavoriteInfo.SetSaveTo(AValue: String);
+begin
+  if FSaveTo = AValue then Exit;
+  FSaveTo := CorrectPathSys(AValue);
+end;
+
+{ TDownloadInfo }
+
+procedure TDownloadInfo.SetSaveTo(AValue: String);
+begin
+  if FSaveTo = AValue then Exit;
+  FSaveTo := CorrectPathSys(AValue);
 end;
 
 { THTMLForm }

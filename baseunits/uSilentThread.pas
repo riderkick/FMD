@@ -374,7 +374,7 @@ begin
             '',
             OptionChangeUnicodeCharacter);
       end;
-      DLManager.Items[p].downloadInfo.SaveTo := CorrectPathSys(FSavePath);
+      DLManager.Items[p].downloadInfo.SaveTo := FSavePath;
 
       UpdateVtDownload;
       DLManager.CheckAndActiveTask(False);

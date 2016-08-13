@@ -940,7 +940,7 @@ begin
           currentChapter := ReadString(IntToStr(i), 'CurrentChapter', '0');
           Title := ReadString(IntToStr(i), 'Title', '');
           Website := ReadString(IntToStr(i), 'Website', '');
-          SaveTo := CorrectPathSys(ReadString(IntToStr(i), 'SaveTo', ''));
+          SaveTo := ReadString(IntToStr(i), 'SaveTo', '');
           Link := ReadString(IntToStr(i), 'Link', '');
           Website := Website;
           Status := STATUS_IDLE;

@@ -2012,7 +2012,7 @@ begin
       '',
       '',
       OptionChangeUnicodeCharacter);
-  DLManager.Items[pos].DownloadInfo.SaveTo := CleanAndExpandDirectory(s);
+  DLManager.Items[pos].DownloadInfo.SaveTo := s;
   UpdateVtDownload;
 
   DLManager.CheckAndActiveTask;
@@ -2720,7 +2720,7 @@ begin
 
   if s <> '' then
   begin
-    FavoriteManager.Items[vtFavorites.FocusedNode^.Index].FavoriteInfo.SaveTo := CorrectFilePath(s);
+    FavoriteManager.Items[vtFavorites.FocusedNode^.Index].FavoriteInfo.SaveTo := s;
     UpdateVtFavorites;
     FavoriteManager.Backup;
   end;

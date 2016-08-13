@@ -1693,7 +1693,7 @@ begin
         DownloadInfo.Website := ReadString(tid, 'Website', 'NULL');
         DownloadInfo.Link := ReadString(tid, 'Link', '');
         DownloadInfo.Title := ReadString(tid, 'Title', 'NULL');
-        DownloadInfo.SaveTo := CorrectPathSys(ReadString(tid, 'SaveTo', 'NULL'));
+        DownloadInfo.SaveTo := ReadString(tid, 'SaveTo', 'NULL');
         DownloadInfo.Status := ReadString(tid, 'Status', 'NULL');
         DownloadInfo.Progress := ReadString(tid, 'Progress', 'NULL');
         Enabled := ReadBool(tid, 'Enabled', True);
