@@ -1193,6 +1193,7 @@ begin
         CurrentWorkingDir := Container.DownloadInfo.SaveTo;
       if not ForceDirectoriesUTF8(CurrentWorkingDir) then
       begin
+        Logger.SendError(Format('Failed to create dir(%d) = %s', [Length(CurrentWorkingDir), CurrentWorkingDir]));
         Container.Status := STATUS_FAILED;
         Container.DownloadInfo.Status := RS_FailedToCreateDir;
         SyncShowBaloon;
