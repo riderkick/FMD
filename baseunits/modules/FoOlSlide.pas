@@ -28,8 +28,9 @@ begin
   if Module.Website = 'YoManga' then
     Result := Cloudflare.GETCF(AHTTP, AURL, yomangacookies, yomangalockget)
   else
-  if (Module.Website = 'SeinagiAdultoFansub') and
-    (Pos(dirurl, AURL) = 0)then
+  if ((Module.Website = 'SeinagiAdultoFansub') or
+      (Module.Website = 'TripleSevenScan'))
+    and (Pos(dirurl, AURL) = 0)then
     Result := AHTTP.POST(AURL, 'adult=true')
   else
     Result := AHTTP.GET(AURL);
