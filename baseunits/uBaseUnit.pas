@@ -1893,14 +1893,23 @@ begin
 end;
 
 function CorrectPathSys(const Path: String): String;
+{$IFDEF WINDOWS}
+var
+  s: UnicodeString;
+{$ENDIF}
 begin
+  Result := FixWhiteSpace(Path);
   {$IFDEF WINDOWS}
-  Result := RemovePathDelim(CleanAndExpandFilename(GetForcedPathDelims(Path)));
+  Result := RemovePathDelim(CleanAndExpandFilename(GetForcedPathDelims(Result)));
   Result := TrimRightChar(Result, ['.']);
-  if Length(Result) > MAX_PATHDIR then
-    SetLength(Result, MAX_PATHDIR);
+  s := UTF8Decode(Result);
+  if Length(s) > MAX_PATHDIR then
+  begin
+    SetLength(s, MAX_PATHDIR);
+    Result := UTF8Encode(s);
+  end;
   {$ELSE}
-  Result := CleanAndExpandFilename(GetForcedPathDelims(Path));
+  s := CleanAndExpandFilename(GetForcedPathDelims(Path));
   {$ENDIF}
   Result := AppendPathDelim(Trim(Result));
 end;

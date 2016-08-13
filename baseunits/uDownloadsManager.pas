@@ -864,6 +864,10 @@ begin
 end;
 
 function TTaskThread.GetFileName(const AWorkId: Integer): String;
+{$IFDEF WINDOWS}
+var
+  s: UnicodeString;
+{$ENDIF}
 begin
   Result := '';
   if (Container.FileNames.Count = Container.PageLinks.Count) and
@@ -873,8 +877,12 @@ begin
     Result := Format('%.3d', [AWorkId + 1]);
   Result := StringReplace(CurrentCustomFileName, CR_FILENAME, Result, [rfReplaceAll]);
   {$IFDEF WINDOWS}
-  if Length(Result) > FCurrentMaxFileNameLength then
-    Result := ShortenString(Result, FCurrentMaxFileNameLength, 4, '');
+  s := UTF8Decode(Result);
+  if Length(s) > FCurrentMaxFileNameLength then
+  begin
+    Delete(s, 1, Length(s) - FCurrentMaxFileNameLength);
+    Result := UTF8Encode(s);
+  end;
   {$ENDIF}
 end;
 
@@ -1031,11 +1039,16 @@ begin
 end;
 
 procedure TTaskThread.SetCurrentWorkingDir(AValue: String);
+{$IFDEF WINDOWS}
+var
+  s: UnicodeString;
+{$ENDIF}
 begin
   if FCurrentWorkingDir = AValue then Exit;
   FCurrentWorkingDir := CorrectPathSys(AValue);
   {$IFDEF Windows}
-  FCurrentMaxFileNameLength := FMDMaxImageFilePath - Length(FCurrentWorkingDir);
+  s := UTF8Decode(FCurrentWorkingDir);
+  FCurrentMaxFileNameLength := FMDMaxImageFilePath - Length(s);
   {$ENDIF}
 end;
 
