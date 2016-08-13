@@ -1899,10 +1899,10 @@ begin
   Result := TrimRightChar(Result, ['.']);
   if Length(Result) > MAX_PATHDIR then
     SetLength(Result, MAX_PATHDIR);
-  Result := AppendPathDelim(Result);
   {$ELSE}
-  Result := CleanAndExpandDirectory(GetForcedPathDelims(Path));
+  Result := CleanAndExpandFilename(GetForcedPathDelims(Path));
   {$ENDIF}
+  Result := AppendPathDelim(Trim(Result));
 end;
 
 function RemovePathDelim(const Path: string): string;
