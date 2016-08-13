@@ -1909,7 +1909,7 @@ begin
     Result := UTF8Encode(s);
   end;
   {$ELSE}
-  s := CleanAndExpandFilename(GetForcedPathDelims(Path));
+  Result := CleanAndExpandFilename(GetForcedPathDelims(Path));
   {$ENDIF}
   Result := AppendPathDelim(Trim(Result));
 end;
