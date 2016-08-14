@@ -68,6 +68,7 @@ type
 
   TModuleContainer = class
   private
+    FID: Integer;
     FTotalDirectory: Integer;
     procedure SetTotalDirectory(AValue: Integer);
     procedure AddOption(const AOptionType: TWebsiteOptionType;
@@ -100,6 +101,7 @@ type
     constructor Create;
     destructor Destroy; override;
   public
+    property ID: Integer read FID;
     property TotalDirectory: Integer read FTotalDirectory write SetTotalDirectory;
     procedure AddOptionCheckBox(const ABindValue: PBoolean; const AName: String;
       const ACaption: PString);
@@ -270,6 +272,7 @@ end;
 
 constructor TModuleContainer.Create;
 begin
+  FID := -1;
   MaxTaskLimit := 0;
   MaxConnectionLimit := 0;
   ActiveTaskCount := 0;
@@ -355,8 +358,8 @@ function TWebsiteModules.AddModule: TModuleContainer;
 begin
   EnterCriticalsection(FCSModules);
   try
-    FModuleList.Add(TModuleContainer.Create);
-    Result := TModuleContainer(FModuleList.Last);
+    Result := TModuleContainer.Create;
+    Result.FID := FModuleList.Add(Result);
   finally
     LeaveCriticalsection(FCSModules);
   end;
