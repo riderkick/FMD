@@ -38,6 +38,7 @@ type
     procedure Execute; override;
     procedure DoGetInfos;
 
+    procedure MainThreadSyncInfos;
     procedure MainThreadShowInfos;
     procedure MainThreadShowCover;
     procedure MainThreadShowCannotGetInfo;
@@ -76,8 +77,7 @@ procedure TGetMangaInfosThread.DoGetInfos;
         filterPos := FMangaListPos;
         if FInfo.mangaInfo.title = '' then
           FInfo.mangaInfo.title := MainForm.dataProcess.Value[filterPos, DATA_PARAM_TITLE];
-        if FInfo.mangaInfo.link = '' then
-          FInfo.mangaInfo.link := MainForm.dataProcess.Value[filterPos, DATA_PARAM_LINK];
+        FInfo.mangaInfo.link := MainForm.dataProcess.Value[filterPos, DATA_PARAM_LINK];
         FInfo.mangaInfo.authors := MainForm.dataProcess.Value[filterPos, DATA_PARAM_AUTHORS];
         FInfo.mangaInfo.artists := MainForm.dataProcess.Value[filterPos, DATA_PARAM_ARTISTS];
         FInfo.mangaInfo.status := MainForm.dataProcess.Value[filterPos, DATA_PARAM_STATUS];
@@ -129,8 +129,7 @@ procedure TGetMangaInfosThread.DoGetInfos;
                 MainForm.DataProcess.Value[filterPos, DATA_PARAM_SUMMARY];
           end;
 
-          FInfo.SyncInfoToData(MainForm.DataProcess);
-          MainForm.dataProcess.Commit;
+          Synchronize(MainThreadSyncInfos);
         end;
       end;
       Result := True;
@@ -167,6 +166,12 @@ begin
     on E: Exception do
       MainForm.ExceptionHandler(Self, E);
   end;
+end;
+
+procedure TGetMangaInfosThread.MainThreadSyncInfos;
+begin
+  FInfo.SyncInfoToData(MainForm.DataProcess);
+  MainForm.dataProcess.Commit;
 end;
 
 procedure TGetMangaInfosThread.DoTerminate;
