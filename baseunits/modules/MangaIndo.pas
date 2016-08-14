@@ -72,7 +72,7 @@ begin
           authors := Trim(SeparateRight(XPathString('//div[@id="main"]//div[@class="entry-content"]/p/text()[starts-with(.,"Author:")]'),':'));
           genres := Trim(SeparateRight(XPathString('//div[@id="main"]//div[@class="entry-content"]/p/text()[starts-with(.,"Genre:")]'),':'));
           status := MangaInfoStatusIfPos(XPathString(
-            '//div[@id="main"]//div[@class="entry-content"]/p/text()[starts-with(.,"Genre:")]'),
+            '//div[@id="main"]//div[@class="entry-content"]/p/text()[starts-with(.,"Episode:")]'),
             'Ongoing',
             'Completed');
           summary := Trim(SeparateRight(XPathString('//div[@id="main"]//div[@class="entry-content"]/p[starts-with(.,"Synopsis:")]'), ':'));
