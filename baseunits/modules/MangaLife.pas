@@ -17,12 +17,16 @@ const
   dirURL = '/directory/';
   diralpha = '#ABCDEFGHIJKLMNOPQRSTUVWXYZ';
   dirURLmangasee = '/directory.php';
+var
+  MMangaSee,
+  MMangaTraders: TModuleContainer;
 
 function GetDirectoryPageNumber(const MangaInfo: TMangaInformation;
   var Page: Integer; const Module: TModuleContainer): Integer;
 begin
   Result := NO_ERROR;
-  if (Module.Website = 'MangaSee') or (Module.Website = 'MangaTraders') then
+  if (Module = MMangaSee) or
+     (Module = MMangaTraders) then
     Page := Length(diralpha)
   else
     Page := 1;
@@ -45,16 +49,16 @@ var
 begin
   Result := NET_PROBLEM;
   s := Module.RootURL;
-  if Module.Website = 'MangaSee' then
+  if Module = MMangaSee then
     s += dirURLmangasee
   else
     s+=dirURL;
   if AURL <> '0' then
   begin
-    if Module.Website = 'MangaSee' then
+    if Module = MMangaSee then
       s += '?c='
     else
-    if Module.Website = 'MangaTraders' then
+    if Module = MMangaTraders then
       s += '?start=';
     s += diralpha[StrToIntDef(AURL, 0) + 1]
   end;
@@ -94,6 +98,8 @@ begin
   with MangaInfo.mangaInfo, MangaInfo.FHTTP do
   begin
     url := MaybeFillHost(Module.RootURL, AURL);
+    if (Module = MMangaTraders) and (Pos('?series=', url) <> 0) then
+      url := Module.RootURL + '/read-online/' + SeparateRight(url, '?series=');
     if GET(url) then begin
       Result := NO_ERROR;
       with TXQueryEngineHTML.Create(Document) do
@@ -174,8 +180,8 @@ procedure RegisterModule;
 
 begin
   AddWebsiteModule('MangaLife', 'http://manga.life');
-  AddWebsiteModule('MangaSee', 'http://mangasee.co');
-  AddWebsiteModule('MangaTraders', 'http://mangatraders.org')
+  MMangaSee := AddWebsiteModule('MangaSee', 'http://mangasee.co');
+  MMangaTraders := AddWebsiteModule('MangaTraders', 'http://mangatraders.org');
 end;
 
 initialization
