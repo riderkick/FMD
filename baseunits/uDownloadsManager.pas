@@ -1283,10 +1283,10 @@ begin
         Container.DownloadInfo.Progress :=
           Format('%d/%d', [Container.DownCounter, Container.PageNumber]);
         Container.DownloadInfo.Status :=
-          Format('%s (%d/%d [%s])',
-          [RS_Preparing,
-          Container.CurrentDownloadChapterPtr + 1,
+          Format('[%d/%d] %s (%s)',
+          [Container.CurrentDownloadChapterPtr + 1,
           Container.ChapterLinks.Count,
+          RS_Preparing,
           Container.ChapterName[Container.CurrentDownloadChapterPtr]]);
         Container.Status := STATUS_PREPARE;
         while Container.WorkCounter < Container.PageNumber do
