@@ -16,6 +16,7 @@ type
   private
     FOnCustomTerminate: TNotifyEvent;
     function GetTerminated: Boolean;
+    procedure CallOnCustomTerminate;
   public
     constructor Create(CreateSuspended: Boolean = True);
     procedure Terminate;
@@ -190,6 +191,11 @@ begin
   Result := Self.Terminated;
 end;
 
+procedure THTTPThread.CallOnCustomTerminate;
+begin
+  FOnCustomTerminate(Self);
+end;
+
 constructor THTTPThread.Create(CreateSuspended: Boolean);
 begin
   inherited Create(CreateSuspended);
@@ -200,7 +206,7 @@ procedure THTTPThread.Terminate;
 begin
   inherited Terminate;
   if Assigned(FOnCustomTerminate) then
-    FOnCustomTerminate(Self);
+    Synchronize(@CallOnCustomTerminate);
 end;
 
 { THTTPSendThread }
