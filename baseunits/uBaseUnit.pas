@@ -1838,9 +1838,13 @@ var
   i: Integer;
 begin
   Result := input;
-  for i := 1 to Length(Result) do
+  if Result = '' then Exit;
+  i := 1;
+  while i <= Length(Result) do
     if CharInSet(Result[i], Symbols) then
-      Result[i] := '_';
+      Delete(Result, i, 1)
+    else
+      Inc(i);
 end;
 
 procedure InvertStrings(const Sts: array of TStringList);
