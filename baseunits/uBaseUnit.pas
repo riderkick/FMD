@@ -2478,11 +2478,18 @@ begin
 end;
 
 function FixWhiteSpace(const S: String): String;
+const
+  R: array [0..1] of string = (
+    #$C2#$A0,     // no-break space  / &nbsp  U+00A0 #160
+    #$EF#$BB#$BF  // zero width no-break / BOM U+FEFF
+    );
+var
+  v: String;
 begin
   Result := S;
   if Result = '' then Exit;
-  while Pos(#$C2#$A0, Result) > 0 do
-    Result := StringReplace(Result, #$C2#$A0, ' ', [rfReplaceAll]);
+  for v in R do
+    Result := StringReplace(Result, v, '', [rfReplaceAll]);
 end;
 
 function CleanString(const S: String): String;

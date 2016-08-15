@@ -655,7 +655,7 @@ type
     procedure AddSilentThread(URL: string); overload;
 
     // Add text to TRichMemo
-    procedure AddTextToInfo(title, infoText: String);
+    procedure AddTextToInfo(const ATitle, AValue: String);
 
     // fill edSaveTo with default path
     procedure FilledSaveTo;
@@ -4273,37 +4273,29 @@ begin
   AddSilentThread(URL,mt);
 end;
 
-procedure TMainForm.AddTextToInfo(title, infoText: String);
+procedure TMainForm.AddTextToInfo(const ATitle, AValue: String);
 var
+  p: Integer;
   fp: TFontParams;
-  cp, np: Integer;
-  fn: String;
+  s: string;
 begin
-  infoText := Trim(infoText);
-  if infoText <> '' then
-    with rmInformation do
-    begin
-      if Trim(Lines.Text) <> '' then
-        Lines.Add('');
-      SelStart := UTF8Length(Lines.Text);
-      cp := SelStart;
-      GetTextAttributes(cp, fp);
-      fn := rmInformation.Font.Name;
-      fp.Style := [fsBold, fsUnderline];
-      fp.Name := fn;
-      Inc(fp.Size);
-      Lines.Add(title);
-      SelStart := UTF8Length(Lines.Text);
-      np := SelStart;
-      SetTextAttributes(cp, np - cp, fp);
-      if title = RS_InfoSummary then
-        infoText := Trim(StringBreaks(infoText));
-      Lines.Add(infoText);
-      fp.Style := [];
-      fp.Name := fn;
-      Dec(fp.Size);
-      SetTextAttributes(np, UTF8Length(Lines.Text) - np, fp);
-    end;
+  s := Trim(FixWhiteSpace(AValue));
+  if s = '' then Exit;
+  if ATitle = RS_InfoSummary then
+    s := Trim(StringBreaks(s));
+  with rmInformation do
+  begin
+    ReadOnly := False;
+    if Lines.Count > 0 then
+      Lines.Add('');
+    p := SelStart;
+    GetTextAttributes(p, fp);
+    Lines.Add(ATitle);
+    Lines.Add(s);
+    fp.Style := [fsBold, fsUnderline];
+    Inc(fp.Size);
+    SetTextAttributes(p, Length(ATitle), fp);
+  end;
 end;
 
 procedure TMainForm.FilledSaveTo;
