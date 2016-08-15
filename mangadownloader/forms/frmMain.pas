@@ -681,6 +681,7 @@ type
     procedure UpdateVtChapter;
     procedure UpdateVtDownload; inline;
     procedure UpdateVtFavorites;
+    procedure UpdateVtMangaListFilterStatus;
 
     // load form information, like previous position, size, ...
     procedure LoadFormInformation;
@@ -935,10 +936,7 @@ begin
   begin
     vtMangaList.RootNodeCount := dataProcess.RecordCount;
     vtMangaList.EndUpdate;
-    if dataProcess.Filtered then
-      lbMode.Caption := Format(RS_ModeFiltered, [dataProcess.RecordCount])
-    else
-      lbMode.Caption := Format(RS_ModeAll, [dataProcess.RecordCount]);
+    UpdateVtMangaListFilterStatus;
     LastSearchWeb := dataProcess.Website;
     LastSearchStr := UpCase(FSearchStr);
     vtMangaList.Cursor := crDefault;
@@ -3006,6 +3004,7 @@ begin
     begin
       vtMangaList.ClearSelection;
       vtMangaList.RootNodeCount := dataProcess.RecordCount;
+      UpdateVtMangaListFilterStatus;
     end;
   finally
     vtMangaList.EndUpdate;
@@ -5053,6 +5052,14 @@ begin
     vtFavorites.RootNodeCount := FavoriteManager.Count;
     vtFavorites.EndUpdate;
   end;
+end;
+
+procedure TMainForm.UpdateVtMangaListFilterStatus;
+begin
+  if dataProcess.Filtered then
+    lbMode.Caption := Format(RS_ModeFiltered, [dataProcess.RecordCount])
+  else
+    lbMode.Caption := Format(RS_ModeAll, [dataProcess.RecordCount]);
 end;
 
 procedure TMainForm.LoadFormInformation;
