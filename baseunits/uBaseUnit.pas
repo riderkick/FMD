@@ -653,7 +653,7 @@ type
   end;
 
 // Remove Unicode
-function UnicodeRemove(const S: String): String;
+function ReplaceUnicodeChar(const S, ReplaceStr: String): String;
 // Check a directory to see if it's empty (return TRUE) or not
 function IsDirectoryEmpty(const ADir: String): Boolean;
 function CheckRedirect(const HTTP: THTTPSend): String;
@@ -786,8 +786,9 @@ function IncStr(const I: Integer; N: Integer = 1): String; overload; inline;
 function GetHeaderValue(const AHeaders: TStrings; HName: String): String;
 
 // custom rename feature
-function CustomRename(const AString, AWebsite, AMangaName, AAuthor, AArtist,
-  AChapter, ANumbering: String; const ARemoveUnicode: Boolean;
+function CustomRename(const AString, AWebsite, AMangaName, AAuthor, AArtist, AChapter, ANumbering: String;
+  const AReplaceUnicode: Boolean;
+  const AReplaceUnicodeStr: String;
   const AFilename: String = ''): String;
 
 // Get substring from source
@@ -979,19 +980,24 @@ end;
 
 {$ENDIF}
 
-function UnicodeRemove(const S: String): String;
+function ReplaceUnicodeChar(const S, ReplaceStr: String): String;
 var
   i: Integer;
+  s1, s2, sr: UnicodeString;
 begin
   Result := S;
-  for i := 1 to Length(Result) do
+  if Result = '' then Exit;
+  s1 := UTF8Decode(S);
+  s2 := UTF8Decode(ReplaceStr);
+  sr := '';
+  for i := 1 to Length(s1) do
   begin
-    if (Byte(Result[i]) < 31) or (Byte(Result[i]) > 127) then
-    begin
-      Delete(Result, i, 1);
-      Insert('_', Result, i);
-    end;
+    if (Ord(s1[i]) < 31) or (Ord(s1[i]) > 127) then
+      sr := sr + s2
+    else
+      sr := sr + s1[i];
   end;
+  Result := UTF8Encode(sr);
 end;
 
 function IsDirectoryEmpty(const ADir: String): Boolean;
@@ -2199,8 +2205,10 @@ begin
   end;
 end;
 
-function CustomRename(const AString, AWebsite, AMangaName, AAuthor, AArtist, AChapter,
-  ANumbering: String; const ARemoveUnicode: Boolean; const AFilename: String): String;
+function CustomRename(const AString, AWebsite, AMangaName, AAuthor, AArtist, AChapter, ANumbering: String;
+  const AReplaceUnicode: Boolean;
+  const AReplaceUnicodeStr: String;
+  const AFilename: String): String;
 
   function FixStringLocal(const S: String): String;
   begin
@@ -2209,8 +2217,8 @@ function CustomRename(const AString, AWebsite, AMangaName, AAuthor, AArtist, ACh
     // remove unaccepted character (Windows)
     Result := RemoveSymbols(Result);
     // strip unicode character
-    if ARemoveUnicode then
-      Result := UnicodeRemove(Result);
+    if AReplaceUnicode then
+      Result := ReplaceUnicodeChar(Result, AReplaceUnicodeStr);
   end;
 
 var

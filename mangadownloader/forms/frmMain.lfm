@@ -13,7 +13,6 @@ object MainForm: TMainForm
   OnShow = FormShow
   OnWindowStateChange = FormWindowStateChange
   Position = poScreenCenter
-  LCLVersion = '1.7'
   Visible = False
   object sbUpdateList: TStatusBar
     Left = 0
@@ -2133,11 +2132,11 @@ object MainForm: TMainForm
     end
     object tsOption: TTabSheet
       Caption = 'Options'
-      ClientHeight = 484
+      ClientHeight = 492
       ClientWidth = 558
       object pnOptions: TPageControl
         Left = 8
-        Height = 407
+        Height = 415
         Top = 8
         Width = 539
         ActivePage = tsGeneral
@@ -2151,7 +2150,7 @@ object MainForm: TMainForm
           ChildSizing.TopBottomSpacing = 8
           ChildSizing.HorizontalSpacing = 4
           ChildSizing.VerticalSpacing = 4
-          ClientHeight = 379
+          ClientHeight = 387
           ClientWidth = 531
           object cbOptionMinimizeToTray: TCheckBox
             AnchorSideLeft.Control = seOptionNewMangaTime
@@ -2791,22 +2790,22 @@ object MainForm: TMainForm
         end
         object tsSaveTo: TTabSheet
           Caption = 'Save to'
-          ClientHeight = 379
+          ClientHeight = 387
           ClientWidth = 531
           object sbSaveTo: TScrollBox
             Left = 0
-            Height = 379
+            Height = 387
             Top = 0
             Width = 531
             HorzScrollBar.Page = 198
-            VertScrollBar.Page = 379
+            VertScrollBar.Page = 387
             Align = alClient
             BorderStyle = bsNone
             ChildSizing.LeftRightSpacing = 4
             ChildSizing.TopBottomSpacing = 8
             ChildSizing.HorizontalSpacing = 4
             ChildSizing.VerticalSpacing = 4
-            ClientHeight = 379
+            ClientHeight = 387
             ClientWidth = 514
             TabOrder = 0
             object rgOptionCompress: TRadioGroup
@@ -2870,10 +2869,11 @@ object MainForm: TMainForm
               object cbOptionChangeUnicodeCharacter: TCheckBox
                 Left = 4
                 Height = 19
+                Hint = 'Enable this if you have problem with unicode character in path.'
                 Top = 4
-                Width = 494
-                Align = alTop
-                Caption = 'Change all all unicode symbols to "_" (choose this when you have problem with unicode path)'
+                Width = 200
+                Caption = 'Replace all unicode character with'
+                OnChange = cbOptionChangeUnicodeCharacterChange
                 ParentFont = False
                 TabOrder = 0
               end
@@ -3102,6 +3102,17 @@ object MainForm: TMainForm
                 BorderSpacing.Top = 10
                 Caption = 'Filename:'
                 ParentColor = False
+              end
+              object edOptionChangeUnicodeCharacterStr: TEdit
+                AnchorSideLeft.Control = cbOptionChangeUnicodeCharacter
+                AnchorSideLeft.Side = asrBottom
+                AnchorSideTop.Control = cbOptionChangeUnicodeCharacter
+                Left = 208
+                Height = 23
+                Top = 4
+                Width = 80
+                Enabled = False
+                TabOrder = 11
               end
             end
             object lbDefaultDownloadPath: TLabel
@@ -3817,7 +3828,7 @@ object MainForm: TMainForm
       object btOptionApply: TBitBtn
         Left = 8
         Height = 45
-        Top = 426
+        Top = 434
         Width = 125
         Anchors = [akLeft, akBottom]
         AutoSize = True

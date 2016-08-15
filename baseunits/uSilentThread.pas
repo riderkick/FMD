@@ -335,7 +335,8 @@ begin
                           Info.mangaInfo.artists,
                           Info.mangaInfo.chapterName.Strings[i],
                           Format('%.4d', [i + 1]),
-                          OptionChangeUnicodeCharacter);
+                          OptionChangeUnicodeCharacter,
+                          OptionChangeUnicodeCharacterStr);
         DLManager.Items[p].chapterName.Add(s);
         DLManager.Items[p].chapterLinks.Add(
           Info.mangaInfo.chapterLinks.Strings[i]);
@@ -372,7 +373,8 @@ begin
             info.mangaInfo.artists,
             '',
             '',
-            OptionChangeUnicodeCharacter);
+            OptionChangeUnicodeCharacter,
+            OptionChangeUnicodeCharacterStr);
       end;
       DLManager.Items[p].downloadInfo.SaveTo := FSavePath;
 
@@ -465,7 +467,8 @@ begin
           info.mangaInfo.artists,
           '',
           '',
-          OptionChangeUnicodeCharacter);
+          OptionChangeUnicodeCharacter,
+          OptionChangeUnicodeCharacterStr);
       s2 := '';
       if (Info.mangaInfo.numChapter > 0) then
       begin

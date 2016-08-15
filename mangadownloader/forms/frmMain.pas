@@ -70,6 +70,7 @@ type
     edDownloadsSearch: TEdit;
     edFilterMangaInfoChapters: TEditButton;
     edFavoritesSearch: TEdit;
+    edOptionChangeUnicodeCharacterStr: TEdit;
     edOptionFilenameCustomRename: TEdit;
     edOptionDefaultPath: TDirectoryEdit;
     edOptionMangaCustomRename: TEdit;
@@ -400,6 +401,7 @@ type
     procedure btWebsitesSearchClearClick(Sender: TObject);
     procedure cbAddAsStoppedChange(Sender: TObject);
     procedure cbOptionAutoCheckFavIntervalChange(Sender: TObject);
+    procedure cbOptionChangeUnicodeCharacterChange(Sender: TObject);
     procedure cbOptionDigitChapterChange(Sender: TObject);
     procedure cbOptionDigitVolumeChange(Sender: TObject);
     procedure cbOptionGenerateMangaFolderChange(Sender: TObject);
@@ -1971,7 +1973,8 @@ begin
         mangaInfo.artists,
         mangaInfo.chapterName.Strings[xNode^.Index],
         Format('%.4d', [xNode^.Index + 1]),
-        OptionChangeUnicodeCharacter);
+        OptionChangeUnicodeCharacter,
+        OptionChangeUnicodeCharacterStr);
       DLManager.Items[pos].ChapterName.Add(s);
       DLManager.Items[pos].ChapterLinks.Add(
         mangaInfo.chapterLinks.Strings[xNode^.Index]);
@@ -2009,7 +2012,8 @@ begin
       mangaInfo.artists,
       '',
       '',
-      OptionChangeUnicodeCharacter);
+      OptionChangeUnicodeCharacter,
+      OptionChangeUnicodeCharacterStr);
   DLManager.Items[pos].DownloadInfo.SaveTo := s;
   UpdateVtDownload;
 
@@ -2040,7 +2044,8 @@ begin
           mangaInfo.artists,
           '',
           '',
-          OptionChangeUnicodeCharacter);
+          OptionChangeUnicodeCharacter,
+          OptionChangeUnicodeCharacterStr);
 
     // downloaded chapters
     s2 := '';
@@ -2176,6 +2181,11 @@ procedure TMainForm.cbOptionAutoCheckFavIntervalChange(Sender: TObject);
 begin
   seOptionAutoCheckFavIntervalMinutes.Enabled := cbOptionAutoCheckFavInterval.Checked;
   lbOptionAutoCheckFavIntervalMinutes.Enabled := cbOptionAutoCheckFavInterval.Checked;
+end;
+
+procedure TMainForm.cbOptionChangeUnicodeCharacterChange(Sender: TObject);
+begin
+  edOptionChangeUnicodeCharacterStr.Enabled := cbOptionChangeUnicodeCharacter.Checked;
 end;
 
 procedure TMainForm.cbOptionDigitChapterChange(Sender: TObject);
@@ -4476,6 +4486,7 @@ begin
     seOptionPDFQuality.Value := ReadInteger('saveto', 'PDFQuality', 100);
     rgOptionCompress.ItemIndex := ReadInteger('saveto', 'Compress', 0);
     cbOptionChangeUnicodeCharacter.Checked := ReadBool('saveto', 'ChangeUnicodeCharacter', False);
+    edOptionChangeUnicodeCharacterStr.Text := ReadString('saveto', 'ChangeUnicodeCharacterStr', OptionChangeUnicodeCharacterStr);
     cbOptionRemoveMangaNameFromChapter.Checked := ReadBool('saveto', 'RemoveMangaNameFromChapter', False);
     cbOptionGenerateMangaFolder.Checked := ReadBool('saveto', 'GenerateMangaFolder', True);
     edOptionMangaCustomRename.Text := ReadString('saveto', 'MangaCustomRename', DEFAULT_MANGA_CUSTOMRENAME);
@@ -4605,6 +4616,7 @@ begin
       edOptionDefaultPath.Text := CleanAndExpandDirectory(edOptionDefaultPath.Text);
       WriteString('saveto', 'SaveTo', edOptionDefaultPath.Text);
       WriteBool('saveto', 'ChangeUnicodeCharacter', cbOptionChangeUnicodeCharacter.Checked);
+      WriteString('saveto', 'ChangeUnicodeCharacterStr', edOptionChangeUnicodeCharacterStr.Text);
       WriteBool('saveto', 'GenerateMangaFolder', cbOptionGenerateMangaFolder.Checked);
       if Trim(edOptionMangaCustomRename.Text) = '' then
         edOptionMangaCustomRename.Text := DEFAULT_MANGA_CUSTOMRENAME;
@@ -4739,6 +4751,7 @@ begin
     OptionPDFQuality := seOptionPDFQuality.Value;
     DLManager.compress := rgOptionCompress.ItemIndex;
     OptionChangeUnicodeCharacter := cbOptionChangeUnicodeCharacter.Checked;
+    OptionChangeUnicodeCharacterStr := edOptionChangeUnicodeCharacterStr.Text;
     OptionRemoveMangaNameFromChapter := cbOptionRemoveMangaNameFromChapter.Checked;
     OptionGenerateMangaFolder := cbOptionGenerateMangaFolder.Checked;
     OptionMangaCustomRename := edOptionMangaCustomRename.Text;

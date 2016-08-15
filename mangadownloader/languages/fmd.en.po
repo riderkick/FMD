@@ -586,9 +586,14 @@ msgid "Auto check for latest version "
 msgstr "Auto check for latest version "
 
 #: tmainform.cboptionchangeunicodecharacter.caption
+#| msgid "Change all all character to"
 msgctxt "tmainform.cboptionchangeunicodecharacter.caption"
-msgid "Change all all unicode symbols to \"_\" (choose this when you have problem with unicode path)"
-msgstr "Change all all unicode symbols to \"_\" (choose this when you have problem with unicode path)"
+msgid "Replace all unicode character with"
+msgstr "Replace all unicode character with"
+
+#: tmainform.cboptionchangeunicodecharacter.hint
+msgid "Enable this if you have problem with unicode character in path."
+msgstr "Enable this if you have problem with unicode character in path."
 
 #: tmainform.cboptiondigitchapter.caption
 msgid "Chapter"
@@ -2159,4 +2164,3 @@ msgstr "Synchronizing data"
 #: uupdatethread.rs_updatinglist
 msgid "Updating list"
 msgstr "Updating list"
-

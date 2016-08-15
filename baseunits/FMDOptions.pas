@@ -91,6 +91,7 @@ var
   OptionLetFMDDo: TFMDDo = DO_NOTHING;
 
   OptionChangeUnicodeCharacter: Boolean = False;
+  OptionChangeUnicodeCharacterStr: String = '_';
   OptionGenerateMangaFolder: Boolean = False;
   OptionMangaCustomRename: String;
   OptionGenerateChapterFolder: Boolean = True;

@@ -726,7 +726,8 @@ begin
                         NewMangaInfo.artists,
                         NewMangaInfo.chapterName[NewMangaInfoChaptersPos[j]],
                         Format('%.4d', [NewMangaInfoChaptersPos[j] + 1]),
-                        OptionChangeUnicodeCharacter));
+                        OptionChangeUnicodeCharacter,
+                        OptionChangeUnicodeCharacterStr));
                     end;
 
                     if LNCResult = ncrDownload then

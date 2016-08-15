@@ -576,8 +576,12 @@ msgstr "Otomatis periksa versi terbaru"
 
 #: tmainform.cboptionchangeunicodecharacter.caption
 msgctxt "tmainform.cboptionchangeunicodecharacter.caption"
-msgid "Change all all unicode symbols to \"_\" (choose this when you have problem with unicode path)"
-msgstr "Ubah semua simbol unicode menjadi \"_\" (pilih ini ketika Anda memiliki masalah dengan lokasi unicode)"
+msgid "Replace all unicode character with"
+msgstr "Ubah semua simbol unicode menjadi"
+
+#: tmainform.cboptionchangeunicodecharacter.hint
+msgid "Enable this if you have problem with unicode character in path."
+msgstr "Aktifkan pilihan ini jika anda mengalami masalah dengan karakter unicode pada path."
 
 #: tmainform.cboptiondigitchapter.caption
 msgid "Chapter"
@@ -2140,4 +2144,3 @@ msgstr "Sinkronisasi data"
 #: uupdatethread.rs_updatinglist
 msgid "Updating list"
 msgstr "Memperbarui daftar"
-

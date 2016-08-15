@@ -541,7 +541,11 @@ msgstr ""
 
 #: tmainform.cboptionchangeunicodecharacter.caption
 msgctxt "TMAINFORM.CBOPTIONCHANGEUNICODECHARACTER.CAPTION"
-msgid "Change all all unicode symbols to \"_\" (choose this when you have problem with unicode path)"
+msgid "Replace all unicode character with"
+msgstr ""
+
+#: tmainform.cboptionchangeunicodecharacter.hint
+msgid "Enable this if you have problem with unicode character in path."
 msgstr ""
 
 #: tmainform.cboptiondigitchapter.caption
