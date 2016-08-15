@@ -309,6 +309,7 @@
         <Filename Value="forms\frmLogger.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="FormLogger"/>
+        <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
       </Unit12>
     </Units>

@@ -405,6 +405,11 @@ msgstr ""
 msgid "Log limit"
 msgstr ""
 
+#: tformlogger.micopy.caption
+msgctxt "tformlogger.micopy.caption"
+msgid "Copy"
+msgstr ""
+
 #: timportfavorites.btcancel.caption
 msgctxt "TIMPORTFAVORITES.BTCANCEL.CAPTION"
 msgid "Cancel"
@@ -1302,6 +1307,7 @@ msgid "Delete"
 msgstr ""
 
 #: tmainform.medurlcopy.caption
+msgctxt "tmainform.medurlcopy.caption"
 msgid "Copy"
 msgstr ""
 

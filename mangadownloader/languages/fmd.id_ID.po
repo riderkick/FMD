@@ -440,6 +440,11 @@ msgstr "Tetap di atas"
 msgid "Log limit"
 msgstr "Batasi log"
 
+#: tformlogger.micopy.caption
+msgctxt "tformlogger.micopy.caption"
+msgid "Copy"
+msgstr "Copy"
+
 #: timportfavorites.btcancel.caption
 msgctxt "timportfavorites.btcancel.caption"
 msgid "Cancel"
@@ -1371,6 +1376,7 @@ msgid "Delete"
 msgstr "Hapus"
 
 #: tmainform.medurlcopy.caption
+msgctxt "tmainform.medurlcopy.caption"
 msgid "Copy"
 msgstr "Salin"
 
