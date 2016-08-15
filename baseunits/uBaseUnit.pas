@@ -789,7 +789,7 @@ function GetHeaderValue(const AHeaders: TStrings; HName: String): String;
 function CustomRename(const AString, AWebsite, AMangaName, AAuthor, AArtist, AChapter, ANumbering: String;
   const AReplaceUnicode: Boolean;
   const AReplaceUnicodeStr: String;
-  const AFilename: String = ''): String;
+  const AFileName: String = ''): String;
 
 // Get substring from source
 function GetString(const Source, sStart, sEnd: String): String;
@@ -2209,10 +2209,11 @@ begin
   end;
 end;
 
-function CustomRename(const AString, AWebsite, AMangaName, AAuthor, AArtist, AChapter, ANumbering: String;
+function CustomRename(const AString, AWebsite, AMangaName, AAuthor, AArtist, AChapter,
+  ANumbering: String;
   const AReplaceUnicode: Boolean;
   const AReplaceUnicodeStr: String;
-  const AFilename: String): String;
+  const AFileName: String): String;
 
   function FixStringLocal(const S: String): String;
   begin
@@ -2234,9 +2235,7 @@ begin
   if AChapter <> '' then begin
     // numbering/index
     if (Pos(CR_NUMBERING, Result) = 0) and (Pos(CR_CHAPTER, Result) = 0) then
-      Result := ANumbering + Result
-    else
-      Result := Result;
+      Result := ANumbering + Result;
     if AWebsite = WebsiteRoots[FAKKU_ID, 0] then
     begin
       if Pos('%NUMBERING% - ', Result) > 0 then
@@ -2276,8 +2275,7 @@ begin
   Result := StringReplaceBrackets(Result, CR_MANGA, FixStringLocal(AMangaName), [rfReplaceAll]);
   Result := StringReplaceBrackets(Result, CR_AUTHOR, FixStringLocal(AAuthor), [rfReplaceAll]);
   Result := StringReplaceBrackets(Result, CR_ARTIST, FixStringLocal(AArtist), [rfReplaceAll]);
-  Result := StringReplaceBrackets(Result, CR_FILENAME, FixStringLocal(AFilename), [rfReplaceAll]);
-
+  Result := StringReplaceBrackets(Result, CR_FILENAME, FixStringLocal(AFileName), [rfReplaceAll]);
   if Result = '' then Result := FixStringLocal(AMangaName);
 
   if Result = '' then Exit;

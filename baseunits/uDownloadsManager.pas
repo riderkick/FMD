@@ -1225,6 +1225,7 @@ begin
         Container.ChapterName[Container.CurrentDownloadChapterPtr],
         '',
         OptionChangeUnicodeCharacter,
+        OptionChangeUnicodeCharacterStr,
         CR_FILENAME);
 
       // Get page number.
