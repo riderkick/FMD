@@ -65,32 +65,35 @@ function GetInfo(const MangaInfo: TMangaInformation;
   const AURL: String; const Module: TModuleContainer): Integer;
 var
   v: IXQValue;
-  s: String;
 begin
   Result := NET_PROBLEM;
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
-  with MangaInfo.FHTTP, MangaInfo.mangaInfo do begin
-    if GET(FillHost(Module.RootURL, AURL)) then begin
+  with MangaInfo.FHTTP, MangaInfo.mangaInfo do
+  begin
+    if GET(FillHost(Module.RootURL, AURL)) then
+    begin
       Result := NO_ERROR;
       with TXQueryEngineHTML.Create(Document) do
         try
-          coverLink := XPathString('//*[@id="manga_images"]//img[@id="cover"]/@src');
-          if coverLink <> '' then coverLink := MaybeFillHost(Module.RootURL, coverLink);
+          coverLink := MaybeFillHost(Module.RootURL, XPathString('//img[@id="cover"]/@src'));
           if title = '' then title := XPathString('//*[@class="name_row"]/h1');
-          authors := XPathString('//table[@class="mangatitle"]/tbody/tr[starts-with(.,"Автор")]/td[2]');
-          genres := XPathString('//table[@class="mangatitle"]/tbody/tr[starts-with(.,"Тип")]/td[2]');
-          AddCommaString(genres, XPathString(
-            '//table[@class="mangatitle"]/tbody/tr[starts-with(.,"Тэги")]/td[2]'));
-          s := XPathString('//table[@class="mangatitle"]/tbody/tr[starts-with(.,"Загружено")]/td[2]');
-          if s <> '' then begin
-            if Pos('продолжается', s) > 0 then status := '1'
-            else status := '0';
-          end;
+          authors := XPathString('//*[@class="item" and contains(.,"Автор")]/following-sibling::*[1]');
+          genres := XPathString('//*[@class="item" and contains(.,"Тэги")]/following-sibling::*[1]');
+          status := MangaInfoStatusIfPos(
+            XPathString('//*[@class="item" and contains(.,"Загружено")]/following-sibling::*[1]'),
+            'продолжается',
+            '');
           summary := XPathString('//*[@id="description"]/text()');
-          for v in XPath('//table[@class="table_cha"]//tr/td/*[@class="manga"]/a') do begin
+          for v in XPath('//*[@class="table_cha"]//*[@class="manga"]/a') do begin
             chapterLinks.Add(v.toNode.getAttribute('href'));
             chapterName.Add(v.toString);
           end;
+          if chapterLinks.Count = 0 then
+            for v in XPath('//a[.="Читать онлайн"]') do
+            begin
+              chapterLinks.Add(v.toNode.getAttribute('href'));
+              chapterName.Add(title);
+            end;
           InvertStrings([chapterLinks, chapterName]);
         finally
           Free;
