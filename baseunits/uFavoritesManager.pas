@@ -732,12 +732,12 @@ begin
 
                     if LNCResult = ncrDownload then
                     begin
-                      DownloadInfo.Status := Format('[%d/%d] %s',[1,ChapterLinks.Count,RS_Waiting]);
+                      DownloadInfo.Status := Format('[%d/%d] %s',[0,ChapterLinks.Count,RS_Waiting]);
                       Status := STATUS_WAIT;
                     end
                     else
                     begin
-                      DownloadInfo.Status := Format('[%d/%d] %s',[1,ChapterLinks.Count,RS_Stopped]);
+                      DownloadInfo.Status := Format('[%d/%d] %s',[0,ChapterLinks.Count,RS_Stopped]);
                       Status := STATUS_STOP;
                     end;
                   end;

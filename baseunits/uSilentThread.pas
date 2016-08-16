@@ -345,11 +345,11 @@ begin
       if cbAddAsStopped.Checked then
       begin
         DLManager.Items[p].Status := STATUS_STOP;
-        DLManager.Items[p].downloadInfo.Status := Format('[%d/%d] %s',[1,DLManager[p].ChapterLinks.Count,RS_Stopped]);
+        DLManager.Items[p].downloadInfo.Status := Format('[%d/%d] %s',[0,DLManager[p].ChapterLinks.Count,RS_Stopped]);
       end
       else
       begin
-        DLManager.Items[p].downloadInfo.Status := Format('[%d/%d] %s',[1,DLManager[p].ChapterLinks.Count,RS_Waiting]);
+        DLManager.Items[p].downloadInfo.Status := Format('[%d/%d] %s',[0,DLManager[p].ChapterLinks.Count,RS_Waiting]);
         DLManager.Items[p].Status := STATUS_WAIT;
       end;
 
