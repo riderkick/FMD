@@ -1183,6 +1183,8 @@ begin
   Container.ThreadState := True;
   Container.DownloadInfo.TransferRate := FormatByteSize(Container.ReadCount, true);
   try
+    if (Container.Website = '') and (Container.DownloadInfo.Website <> '') then
+      Container.Website := Container.DownloadInfo.Website;
     if Container.ModuleId > -1 then
       DynamicPageLink := Modules.Module[Container.ModuleId].DynamicPageLink
     else
@@ -1495,6 +1497,9 @@ begin
   PageLinks := TStringList.Create;
   PageContainerLinks := TStringList.Create;
   FileNames := TStringList.Create;
+  FWebsite := '';
+  ModuleId := -1;
+  MangaSiteID := High(WebsiteRoots) + 1;
   ReadCount := 0;
   WorkCounter := 0;
   CurrentPageNumber := 0;
