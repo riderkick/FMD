@@ -1955,7 +1955,7 @@ var
   links,names:TStrings;
   node:PVirtualNode;
   s:String;
-  c,p,i,j,k:Integer;
+  c,p,r,i,j,k,l:Integer;
 begin
   if clbChapterList.CheckedCount = 0 then
     Exit;
@@ -2000,20 +2000,32 @@ begin
           OptionChangeUnicodeCharacterStr);
       c:=1;
       p:=links.Count;
+      if btDownload.Tag>=links.Count then
+      begin
+        c:=links.Count;
+        p:=1;
+      end
+      else
       if btDownload.Tag>1 then
       begin
         c:=btDownload.Tag;
-        p:=links.Count div btDownload.Tag;
+        p:=links.Count div c;
+        r:=links.Count mod c;
       end;
       btDownload.Tag:=0;
       k:=0;
       for i:=1 to c do
       begin
+        if i<=r then
+          l:=p+1
+        else
         if i=c then
-          p:=links.Count-k;
+          l:=links.Count-k
+        else
+          l:=p;
         with DLManager[DLManager.AddTask] do
         begin
-          for j:=1 to p do
+          for j:=1 to l do
           begin
             ChapterLinks.Add(links[k]);
             ChapterName.Add(names[k]);
