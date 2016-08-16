@@ -681,10 +681,11 @@ function FillURLProtocol(const AProtocol, AURL: String): String;
 // Fill in website host if it's not present
 function FillMangaSiteHost(const MangaID: Cardinal; URL: String): String; overload;
 function FillMangaSiteHost(const Website, URL: String): String; overload;
-function FillHost(const Host, URL: String): String;
-function MaybeFillHost(const Host, URL: String): String;
 
 // modify url
+procedure SplitURL(const URL: String; out Host, Path: String);
+function FillHost(const Host, URL: String): String;
+function MaybeFillHost(const Host, URL: String): String;
 function GetHostURL(URL: String): String;
 function RemoveHostFromURL(URL: String): String;
 procedure RemoveHostFromURLs(const URLs: TStringList);
@@ -1266,129 +1267,123 @@ begin
   Result := FillMangaSiteHost(GetMangaSiteID(Website), URL);
 end;
 
+function poschar(const c:char;const s:string;const offset:cardinal=1):integer;
+var
+  i:integer;
+begin
+  for i:=offset to length(s) do
+    if s[i]=c then Exit(i);
+  Result:=0;
+end;
+
+procedure SplitURL(const URL: String; out Host, Path: String);
+var
+  p: Integer;
+begin
+  Host:='';
+  Path:='';
+  if URL='' then Exit;
+  p:=poschar('.',URL);
+  if (p<>0) and (p<Length(URL)) then
+  begin
+    p:=poschar('/',URL,p);
+    if p<>0 then Host:=Copy(URL,1,p-1)
+    else
+    begin
+      Host:=URL;
+      Exit;
+    end;
+  end;
+  if Host<>'' then
+  begin
+    while (Length(Host)>0) and (Host[1] in [':','/']) do
+      Delete(Host,1,1);
+    if Pos('://',Host)=0 then
+      Host:='http://'+Host;
+  end;
+  if p<>0 then
+    Path:=Copy(URL,p,Length(URL))
+  else
+    Path:=URL;
+  if Path<>'' then
+  begin
+    while Pos('//',Path)<>0 do Path:=StringReplace(Path,'//','/',[rfReplaceAll]);
+    if Path='/' then Path:=''
+    else if Path[1]<>'/' then Path:='/'+Path;
+  end;
+end;
+
 function FillHost(const Host, URL: String): String;
 var
-  tu: String;
+  H,P: String;
 begin
-  Result := CleanURL(URL);
-  if Host = '' then Exit;
-  if Pos(Host, URL) = 1 then Exit;
-  if Pos('://', URL) = 0 then
-  begin
-    Result := RemoveURLDelim(Host) + AppendURLDelimLeft(Result);
-    Exit;
-  end;
-  with TRegExpr.Create do
-    try
-      Expression := REGEX_HOST;
-      tu := Replace(Result, '$4', True);
-      if tu <> '' then
-        Result := RemoveURLDelim(Host) + AppendURLDelimLeft(tu);
-    finally
-      Free;
-    end;
+  SplitURL(URL,H,P);
+  Result:=RemoveURLDelim(Host)+P;
 end;
 
 function MaybeFillHost(const Host, URL: String): String;
 var
-  tu: String;
+  H,P: String;
 begin
-  Result := CleanURL(URL);
-  if Host = '' then Exit;
-  if URL = '' then Exit;
-  if Pos(Host, URL) = 1 then Exit;
-  if Pos('://', URL) = 0 then
-  begin
-    Result := RemoveURLDelim(Host) + AppendURLDelimLeft(Result);
-    Exit;
-  end;
-  with TRegExpr.Create do
-    try
-      Expression := REGEX_HOST;
-      if Replace(Result, '$2', True) = '' then
-      begin
-        tu := Replace(Result, '$4', True);
-        if tu <> '' then
-          Result := RemoveURLDelim(Host) + AppendURLDelimLeft(tu);
-      end;
-    finally
-      Free;
-    end;
+  SplitURL(URL,H,P);
+  Result:=Host+P;
+  if H='' then Result:=RemoveURLDelim(Host)+P
+  else Result:=URL;
 end;
 
 function GetHostURL(URL: String): String;
+var
+  H,P: String;
 begin
-  Result := URL;
-  if URL = '' then Exit;
-  Result := ReplaceRegExpr(REGEX_HOST, Result, '$1$2', True);
+  SplitURL(URL,H,P);
+  Result:=H;
 end;
 
 function RemoveHostFromURL(URL: String): String;
+var
+  H,P: String;
 begin
-  Result := ReplaceRegExpr(REGEX_HOST, URL, '$4', True);
-  if Result = '' then
-    Result := URL;
-  if (Result <> '') and (Result[1] <> '/') then
-    Result := '/' + Result;
+  SplitURL(URL,H,P);
+  Result:=P;
 end;
 
 procedure RemoveHostFromURLs(const URLs: TStringList);
 var
   i: Integer;
-  s: String;
+  H,P: String;
 begin
-  if URLs = nil then Exit;
-  if URLs.Count > 0 then
-    with TRegExpr.Create do
-      try
-        Expression := REGEX_HOST;
-        for i := 0 to URLs.Count - 1 do
-        begin
-          URLs[i] := Trim(URLs[i]);
-          s := Replace(URLs[i], '$4', True);
-          if s = '' then
-            s := URLs[i];
-          if (s <> '') and (s[1] <> '/') then
-            s := '/' + s;
-          URLs[i] := s;
-        end;
-      finally
-        Free;
-      end;
+  if URLs=nil then Exit;
+  if URLs.Count=0 then Exit;
+  for i:=0 to URLs.Count-1 do
+  begin
+    SplitURL(URLs[i],H,P);
+    URLs[i]:=P;
+  end;
 end;
 
 procedure RemoveHostFromURLsPair(const URLs, Names: TStringList);
 var
   i: Integer;
-  s: String;
+  H,P: String;
 begin
-  if (URLs = nil) or (Names = nil) then Exit;
-  if (URLs.Count <> Names.Count) then Exit;
-  if URLs.Count > 0 then
-    with TRegExpr.Create do
-      try
-        Expression := REGEX_HOST;
-        i := 0;
-        while i < URLs.Count do
-        begin
-          URLs[i] := Trim(URLs[i]);
-          s := Replace(URLs[i], '$4', True);
-          if s = '' then
-            s := URLs[i];
-          if (s <> '') and (s[1] <> '/') then
-            s := '/' + s;
-          URLs[i] := s;
-          if (URLs[i] = '') or (URLs[i] = '/') then
-          begin
-            URLs.Delete(i);
-            Names.Delete(i);
-          end
-          else
-            Inc(i);
-        end;
-      finally
-        Free;
-      end;
+  if (URLs= nil) or (Names=nil) then Exit;
+  if (URLs.Count<>Names.Count) then Exit;
+  if URLs.Count=0 then Exit;
+  i:=0;
+  while i<URLs.Count do
+  begin
+    SplitURL(URLs[i],H,P);
+    if P<>'' then
+    begin
+      URLs[i]:=P;
+      Inc(i);
+    end
+    else
+    begin
+      URLs.Delete(i);
+      Names.Delete(i);
+    end;
+  end;
 end;
 
 procedure ParseJSONArray(const S, Path: String; var OutArray: TStringList);
