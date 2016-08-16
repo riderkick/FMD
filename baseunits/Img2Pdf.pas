@@ -170,7 +170,7 @@ begin
   PageInfo.Filter := 'DCTDecode';
   try
     AFS := TFileStreamUTF8.Create(PageInfo.FileName, fmOpenRead or fmShareDenyWrite);
-    FillChar(JDS, SizeOf(JDS), 0);
+    FillChar(JDS{%H-}, SizeOf(JDS), 0);
     JDS.err := @JPEGError;
     jpeg_CreateDecompress(@JDS, JPEG_LIB_VERSION, SizeOf(JDS));
     try
@@ -217,7 +217,9 @@ begin
     WRT := TFPWriterJPEG.Create;
     try
       WRT.CompressionQuality := PageInfo.Owner.CompressionQuality;
+      {$IF (FPC_FULLVERSION >= 30101)}
       WRT.GrayScale := (PageInfo.ColorSpace = 'DeviceGray');
+      {$ENDIF}
       IMG.SaveToStream(PageInfo.Stream, WRT);
     finally
       WRT.Free;
@@ -303,7 +305,7 @@ begin
           else
           begin
             PageInfo.ColorSpace := 'DeviceRGB';
-            FillChar(CLW, SizeOf(CLW), $FF);
+            FillChar(CLW{%H-}, SizeOf(CLW), $FF);
             for Y := 0 to IMG.Height - 1 do
               for X := 0 to IMG.Width - 1 do
               begin
@@ -359,7 +361,7 @@ begin
     end;
     AMS := TMemoryStreamUTF8.Create;
     try
-      FillChar(CLW, SizeOf(CLW), $FF);
+      FillChar(CLW{%H-}, SizeOf(CLW), $FF);
       for Y := 0 to IMG.Height - 1 do
         for X := 0 to IMG.Width - 1 do
         begin
