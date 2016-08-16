@@ -86,7 +86,6 @@ type
     procedure SetCurrentWorkingDir(AValue: String);
   protected
     procedure CheckOut;
-    procedure MainThreadCompressRepaint;
     procedure Execute; override;
     procedure DoTerminate; override;
     procedure Compress;
@@ -886,14 +885,6 @@ begin
   {$ENDIF}
 end;
 
-procedure TTaskThread.MainThreadCompressRepaint;
-begin
-  Container.DownloadInfo.Status :=
-    Format('[%d/%d] %s', [Container.CurrentDownloadChapterPtr + 1,
-    Container.ChapterLinks.Count, RS_Compressing]);
-  MainForm.vtDownload.Repaint;
-end;
-
 procedure TTaskThread.Compress;
 var
   uPacker: TPacker;
@@ -902,7 +893,9 @@ var
 begin
   if (Container.Manager.compress >= 1) then
   begin
-    Synchronize(MainThreadCompressRepaint);
+    Container.DownloadInfo.Status :=
+      Format('[%d/%d] %s', [Container.CurrentDownloadChapterPtr + 1,
+      Container.ChapterLinks.Count, RS_Compressing]);
     uPacker := TPacker.Create;
     try
       case Container.Manager.compress of
