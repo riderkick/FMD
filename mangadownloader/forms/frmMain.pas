@@ -70,13 +70,14 @@ type
     edDownloadsSearch: TEdit;
     edFilterMangaInfoChapters: TEditButton;
     edFavoritesSearch: TEdit;
+    edLogFileName: TEditButton;
     edOptionChangeUnicodeCharacterStr: TEdit;
+    edOptionDefaultPath: TEditButton;
+    edOptionExternalPath: TEditButton;
     edOptionFilenameCustomRename: TEdit;
-    edOptionDefaultPath: TDirectoryEdit;
     edOptionMangaCustomRename: TEdit;
-    edSaveTo: TDirectoryEdit;
+    edSaveTo: TEditButton;
     edURL: TEditButton;
-    edLogFileName: TFileNameEdit;
     lbLogFileName: TLabel;
     lbOptionFilenameCustomRenameHint: TLabel;
     lbOptionFilenameCustomRename: TLabel;
@@ -140,7 +141,6 @@ type
     TransferRateGraph: TChart;
     ckDropTarget: TCheckBox;
     edOptionExternalParams: TEdit;
-    edOptionExternalPath: TFileNameEdit;
     edWebsitesSearch: TEdit;
     gbDropTarget: TGroupBox;
     gbOptionExternal: TGroupBox;
@@ -418,10 +418,13 @@ type
     procedure edFavoritesSearchChange(Sender: TObject);
     procedure edFilterMangaInfoChaptersButtonClick(Sender: TObject);
     procedure edFilterMangaInfoChaptersChange(Sender: TObject);
-    procedure edSaveToAcceptDirectory(Sender: TObject; var Value: String);
+    procedure edLogFileNameButtonClick(Sender: TObject);
     procedure edMangaListSearchChange(Sender: TObject);
     procedure edMangaListSearchKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState
       );
+    procedure edOptionDefaultPathButtonClick(Sender: TObject);
+    procedure edOptionExternalPathButtonClick(Sender: TObject);
+    procedure edSaveToButtonClick(Sender: TObject);
     procedure edURLButtonClick(Sender: TObject);
     procedure edURLKeyPress(Sender: TObject; var Key: Char);
     procedure edWebsitesSearchChange(Sender: TObject);
@@ -2408,9 +2411,16 @@ begin
   FilterChapterList(edFilterMangaInfoChapters.Text, miChapterListHideDownloaded.Checked);
 end;
 
-procedure TMainForm.edSaveToAcceptDirectory(Sender: TObject; var Value: String);
+procedure TMainForm.edLogFileNameButtonClick(Sender: TObject);
 begin
-  Value := CleanAndExpandDirectory(Value);
+  with TOpenDialog.Create(nil) do
+    try
+      InitialDir := ExtractFileDir(edLogFileName.Text);
+      if Execute then
+        edLogFileName.Text := FileName;
+    finally
+      Free;
+    end;
 end;
 
 procedure TMainForm.edURLKeyPress(Sender: TObject; var Key: Char);
@@ -4441,7 +4451,7 @@ begin
     cbOptionLiveSearch.Checked := ReadBool('general', 'LiveSearch', True);
     cbOptionMinimizeToTray.Checked := ReadBool('general', 'MinimizeToTray', False);
     cbOptionLetFMDDo.ItemIndex := ReadInteger('general', 'LetFMDDo', 0);
-    edOptionExternalPath.FileName := ReadString('general', 'ExternalProgramPath', '');
+    edOptionExternalPath.Text := ReadString('general', 'ExternalProgramPath', '');
     edOptionExternalParams.Text := ReadString('general', 'ExternalProgramParams', DEFAULT_EXPARAM);
     miChapterListHideDownloaded.Checked := ReadBool('general', 'ChapterListHideDownloaded', False);
     cbAddAsStopped.Checked := ReadBool('general', 'AddAsStopped', False);
@@ -4578,7 +4588,7 @@ begin
         WriteString('languages', 'Selected', AvailableLanguages.Names[cbLanguages.ItemIndex]);
       WriteBool('general', 'MinimizeToTray', cbOptionMinimizeToTray.Checked);
       WriteInteger('general', 'LetFMDDo', cbOptionLetFMDDo.ItemIndex);
-      WriteString('general', 'ExternalProgramPath', edOptionExternalPath.FileName);
+      WriteString('general', 'ExternalProgramPath', edOptionExternalPath.Text);
       WriteString('general', 'ExternalProgramParams', edOptionExternalParams.Text);
       WriteBool('general', 'ChapterListHideDownloaded', miChapterListHideDownloaded.Checked);
       WriteBool('general', 'AddAsStopped', cbAddAsStopped.Checked);
@@ -4962,6 +4972,42 @@ begin
   else
   if edMangaListSearch.Tag <> 0 then
     edMangaListSearch.Tag := 0;
+end;
+
+procedure TMainForm.edOptionDefaultPathButtonClick(Sender: TObject);
+begin
+  with TSelectDirectoryDialog.Create(nil) do
+    try
+      InitialDir := edOptionDefaultPath.Text;
+      if Execute then
+        edOptionDefaultPath.Text := CleanAndExpandDirectory(FileName);
+    finally
+      Free;
+    end;
+end;
+
+procedure TMainForm.edOptionExternalPathButtonClick(Sender: TObject);
+begin
+  with TOpenDialog.Create(nil) do
+    try
+      InitialDir := ExtractFileDir(edOptionExternalPath.Text);
+      if Execute then
+        edOptionExternalPath.Text := FileName;
+    finally
+      Free;
+    end;
+end;
+
+procedure TMainForm.edSaveToButtonClick(Sender: TObject);
+begin
+  with TSelectDirectoryDialog.Create(nil) do
+    try
+      InitialDir := edSaveTo.Text;
+      if Execute then
+        edSaveTo.Text := CleanAndExpandDirectory(FileName);
+    finally
+      Free;
+    end;
 end;
 
 procedure TMainForm.edURLButtonClick(Sender: TObject);

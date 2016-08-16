@@ -13,7 +13,6 @@ object MainForm: TMainForm
   OnShow = FormShow
   OnWindowStateChange = FormWindowStateChange
   Position = poScreenCenter
-  LCLVersion = '1.7'
   Visible = False
   object sbUpdateList: TStatusBar
     Left = 0
@@ -37,13 +36,13 @@ object MainForm: TMainForm
     Height = 520
     Top = 11
     Width = 566
-    ActivePage = tsInformation
+    ActivePage = tsDownload
     Align = alClient
     BorderSpacing.Top = 3
     BorderSpacing.Right = 4
     BorderSpacing.Bottom = 3
     ParentFont = False
-    TabIndex = 1
+    TabIndex = 0
     TabOrder = 0
     OnChange = pcMainChange
     object tsDownload: TTabSheet
@@ -757,60 +756,6 @@ object MainForm: TMainForm
             ParentColor = False
             ParentFont = False
           end
-          object edSaveTo: TDirectoryEdit
-            AnchorSideLeft.Control = lbSaveTo
-            AnchorSideTop.Control = btReadOnline
-            AnchorSideRight.Control = btDownload
-            Left = 0
-            Height = 23
-            Top = 159
-            Width = 334
-            OnAcceptDirectory = edSaveToAcceptDirectory
-            ShowHidden = False
-            ButtonWidth = 23
-            Glyph.Data = {
-              36040000424D3604000000000000360000002800000010000000100000000100
-              2000000000000004000064000000640000000000000000000000000000000000
-              0000002E45000064970000629300005E8E30005C8C7C00598792000000070028
-              3C00005B8900005B8900005B8900002E45000000000000000000000000000000
-              0000002E450000659950006497991C7AA9C052A5CDE0005B89C10000001A0028
-              3C07005B8900005B8900005B8900002E45000000000000000000000000110000
-              002400466A983590BDF269B8DDFA82CBECFF85CEEEFF005C8BEF005079C40050
-              79C4005D8CBE005D8CBE005D8CBE00466A980000002400000011000000090000
-              0012006699B288D0EFFF7FCAE9FF7FCAE9FF87D0EFFF267DA9FF7FBCDBFF7FBC
-              DBFF8DD1F3FF8DD1F3FF90D4F5FF006699B20042634D00000009000000000054
-              7E00006FA7A48AD3F0FF82CDEBFF82CDEBFF8AD3F0FF267EABFF7CB9D8FF7CB9
-              D8FF8ACEF0FF8ACEF0FF8FD3F4FFF4B62EFF006FA7A400547E00005782000073
-              AC000073AC9E8ED6F2FF87D0EDFF87D0EDFF8ED6F2FF2882AFFF7DBAD8FF7DBA
-              D8FF8BCFF1FF8BCFF1FF91D5F5FFFEC941FF0073AC9E0073AC000076B0000076
-              B0000076B09B92DAF4FF8BD4F0FF8BD4F0FF92DAF4FF2B85B3FF7FBCDAFF7FBC
-              DAFF8DD1F3FF8DD1F3FF93D7F6FFEBEBDDFF0076B09B0076B0000078B4000078
-              B4000078B49797DEF6FF90D8F2FF90D8F2FF97DEF6FF2D89B7FF80BDDCFF80BD
-              DCFF8FD3F5FF8FD3F5FF95D9F8FFF5F5EEFF0078B4970078B400007BB800007B
-              B800007BB8949BE1F7FF94DBF4FF94DBF4FF9BE1F7FF308DBCFF81BEDDFF81BE
-              DDFF90D4F6FF90D4F6FF97DBF9FFFEFEFDFF007BB894007BB800007DBB00007D
-              BB00007DBB909EE5F9FF98DFF6FF98DFF6FF9EE5F9FF3290C0FF83C0DFFF83C0
-              DFFF92D6F8FF92D6F8FF99DDFAFF007DBB90007DBB33007CBA00007FBF00007F
-              BF00007FBF8DA3E8FBFF9DE3F9FF9DE3F9FFA3E8FBFF3594C5FF85C2E1FF85C2
-              E1FF94D8FAFF94D8FAFF9BDFFCFF007FBF8D007FBE00007EBD000082C2000082
-              C2000082C28AA6EBFCFFA1E6FBFFA1E6FBFFA6EBFCFF3C9DCFFF87C4E2FF87C4
-              E2FF96DAFCFF96DAFCFF9EE2FDFF0082C28A0082C2000082C2000084C5000084
-              C5000084C587A9EEFDFFA4E9FCFFA4E9FCFFAAEFFDFF42A1D1FF90D1F1FF96DA
-              FBFF97DBFDFF97DBFDFF9FE3FEFF0084C5870084C5000084C5000085C8000085
-              C8000085C885ADF1FFFFABEFFEFF95E2F8FF6EC9EDFF48A9D9FF98DCFEFF98DC
-              FEFF98DCFEFF98DCFEFFA1E5FFFF0085C8850085C8000085C8000087CA000087
-              CA000087CA8388DCF4FF60C0E9FF5FBFEAFF80D3F4FF9CE3FDFFA2E6FFFFA2E6
-              FFFFA2E6FFFFA2E6FFFFA6EAFFFF0087CA830087CA000087CA000087CB000087
-              CB000088CC610088CC810088CC810088CC810088CC810088CC810088CC810088
-              CC810088CC810088CC810088CC810088CC610087CB000087CB00
-            }
-            NumGlyphs = 1
-            Anchors = [akTop, akLeft, akRight]
-            MaxLength = 0
-            ParentFont = False
-            TabOrder = 5
-            TextHint = 'Save to'
-          end
           object edFilterMangaInfoChapters: TEditButton
             Left = 0
             Height = 23
@@ -858,27 +803,81 @@ object MainForm: TMainForm
             OnButtonClick = edFilterMangaInfoChaptersButtonClick
             OnChange = edFilterMangaInfoChaptersChange
             PasswordChar = #0
-            TabOrder = 6
+            TabOrder = 5
             TextHint = 'Filter'
             Visible = False
+          end
+          object edSaveTo: TEditButton
+            AnchorSideLeft.Control = lbSaveTo
+            AnchorSideTop.Control = btReadOnline
+            AnchorSideRight.Control = btDownload
+            Left = 0
+            Height = 23
+            Top = 159
+            Width = 334
+            Anchors = [akTop, akLeft, akRight]
+            ButtonWidth = 23
+            Glyph.Data = {
+              36040000424D3604000000000000360000002800000010000000100000000100
+              2000000000000004000064000000640000000000000000000000000000000000
+              0000002E45000064970000629300005E8E30005C8C7C00598792000000070028
+              3C00005B8900005B8900005B8900002E45000000000000000000000000000000
+              0000002E450000659950006497991C7AA9C052A5CDE0005B89C10000001A0028
+              3C07005B8900005B8900005B8900002E45000000000000000000000000110000
+              002400466A983590BDF269B8DDFA82CBECFF85CEEEFF005C8BEF005079C40050
+              79C4005D8CBE005D8CBE005D8CBE00466A980000002400000011000000090000
+              0012006699B288D0EFFF7FCAE9FF7FCAE9FF87D0EFFF267DA9FF7FBCDBFF7FBC
+              DBFF8DD1F3FF8DD1F3FF90D4F5FF006699B20042634D00000009000000000054
+              7E00006FA7A48AD3F0FF82CDEBFF82CDEBFF8AD3F0FF267EABFF7CB9D8FF7CB9
+              D8FF8ACEF0FF8ACEF0FF8FD3F4FFF4B62EFF006FA7A400547E00005782000073
+              AC000073AC9E8ED6F2FF87D0EDFF87D0EDFF8ED6F2FF2882AFFF7DBAD8FF7DBA
+              D8FF8BCFF1FF8BCFF1FF91D5F5FFFEC941FF0073AC9E0073AC000076B0000076
+              B0000076B09B92DAF4FF8BD4F0FF8BD4F0FF92DAF4FF2B85B3FF7FBCDAFF7FBC
+              DAFF8DD1F3FF8DD1F3FF93D7F6FFEBEBDDFF0076B09B0076B0000078B4000078
+              B4000078B49797DEF6FF90D8F2FF90D8F2FF97DEF6FF2D89B7FF80BDDCFF80BD
+              DCFF8FD3F5FF8FD3F5FF95D9F8FFF5F5EEFF0078B4970078B400007BB800007B
+              B800007BB8949BE1F7FF94DBF4FF94DBF4FF9BE1F7FF308DBCFF81BEDDFF81BE
+              DDFF90D4F6FF90D4F6FF97DBF9FFFEFEFDFF007BB894007BB800007DBB00007D
+              BB00007DBB909EE5F9FF98DFF6FF98DFF6FF9EE5F9FF3290C0FF83C0DFFF83C0
+              DFFF92D6F8FF92D6F8FF99DDFAFF007DBB90007DBB33007CBA00007FBF00007F
+              BF00007FBF8DA3E8FBFF9DE3F9FF9DE3F9FFA3E8FBFF3594C5FF85C2E1FF85C2
+              E1FF94D8FAFF94D8FAFF9BDFFCFF007FBF8D007FBE00007EBD000082C2000082
+              C2000082C28AA6EBFCFFA1E6FBFFA1E6FBFFA6EBFCFF3C9DCFFF87C4E2FF87C4
+              E2FF96DAFCFF96DAFCFF9EE2FDFF0082C28A0082C2000082C2000084C5000084
+              C5000084C587A9EEFDFFA4E9FCFFA4E9FCFFAAEFFDFF42A1D1FF90D1F1FF96DA
+              FBFF97DBFDFF97DBFDFF9FE3FEFF0084C5870084C5000084C5000085C8000085
+              C8000085C885ADF1FFFFABEFFEFF95E2F8FF6EC9EDFF48A9D9FF98DCFEFF98DC
+              FEFF98DCFEFF98DCFEFFA1E5FFFF0085C8850085C8000085C8000087CA000087
+              CA000087CA8388DCF4FF60C0E9FF5FBFEAFF80D3F4FF9CE3FDFFA2E6FFFFA2E6
+              FFFFA2E6FFFFA2E6FFFFA6EAFFFF0087CA830087CA000087CA000087CB000087
+              CB000088CC610088CC810088CC810088CC810088CC810088CC810088CC810088
+              CC810088CC810088CC810088CC810088CC610087CB000087CB00
+            }
+            MaxLength = 0
+            NumGlyphs = 1
+            OnButtonClick = edSaveToButtonClick
+            ParentFont = False
+            PasswordChar = #0
+            TabOrder = 6
+            TextHint = 'Save to'
           end
         end
       end
     end
     object tsFilter: TTabSheet
       Caption = 'Filter'
-      ClientHeight = 484
+      ClientHeight = 492
       ClientWidth = 558
       object sbFilter: TScrollBox
         Left = 0
-        Height = 484
+        Height = 492
         Top = 0
         Width = 558
         HorzScrollBar.Page = 488
         VertScrollBar.Page = 416
         Align = alClient
         BorderStyle = bsNone
-        ClientHeight = 484
+        ClientHeight = 492
         ClientWidth = 558
         TabOrder = 0
         object pnCustomGenre: TPanel
@@ -2216,13 +2215,49 @@ object MainForm: TMainForm
               Caption = 'Open manga by using external program:'
               ParentColor = False
             end
-            object edOptionExternalPath: TFileNameEdit
+            object lbOptionExternalParams: TLabel
+              Left = 4
+              Height = 15
+              Top = 50
+              Width = 508
+              Align = alTop
+              Caption = 'Parameters:'
+              ParentColor = False
+            end
+            object edOptionExternalParams: TEdit
+              AnchorSideLeft.Control = lbOptionExternalParams
+              AnchorSideTop.Control = lbOptionExternalParams
+              AnchorSideTop.Side = asrBottom
+              Left = 4
+              Height = 23
+              Top = 69
+              Width = 481
+              Anchors = [akTop, akLeft, akRight]
+              TabOrder = 0
+              TextHint = 'External program parameters'
+            end
+            object lbOptionExternalParamsHint: TLabel
+              AnchorSideLeft.Control = edOptionExternalParams
+              AnchorSideLeft.Side = asrBottom
+              AnchorSideTop.Control = edOptionExternalParams
+              AnchorSideTop.Side = asrCenter
+              Left = 489
+              Height = 15
+              Top = 73
+              Width = 13
+              Caption = '[?]'
+              Font.Color = clBlue
+              ParentColor = False
+              ParentFont = False
+              ParentShowHint = False
+              ShowHint = True
+            end
+            object edOptionExternalPath: TEditButton
               Left = 4
               Height = 23
               Top = 23
               Width = 508
-              FilterIndex = 0
-              HideDirectories = False
+              Align = alTop
               ButtonWidth = 23
               Glyph.Data = {
                 36040000424D3604000000000000360000002800000010000000100000000100
@@ -2260,48 +2295,12 @@ object MainForm: TMainForm
                 CB000088CC610088CC810088CC810088CC810088CC810088CC810088CC810088
                 CC810088CC810088CC810088CC810088CC610087CB000087CB00
               }
-              NumGlyphs = 1
-              Align = alTop
               MaxLength = 0
+              NumGlyphs = 1
+              OnButtonClick = edOptionExternalPathButtonClick
+              PasswordChar = #0
               TabOrder = 1
               TextHint = 'External program path'
-            end
-            object lbOptionExternalParams: TLabel
-              Left = 4
-              Height = 15
-              Top = 50
-              Width = 508
-              Align = alTop
-              Caption = 'Parameters:'
-              ParentColor = False
-            end
-            object edOptionExternalParams: TEdit
-              AnchorSideLeft.Control = lbOptionExternalParams
-              AnchorSideTop.Control = lbOptionExternalParams
-              AnchorSideTop.Side = asrBottom
-              Left = 4
-              Height = 23
-              Top = 69
-              Width = 481
-              Anchors = [akTop, akLeft, akRight]
-              TabOrder = 0
-              TextHint = 'External program parameters'
-            end
-            object lbOptionExternalParamsHint: TLabel
-              AnchorSideLeft.Control = edOptionExternalParams
-              AnchorSideLeft.Side = asrBottom
-              AnchorSideTop.Control = edOptionExternalParams
-              AnchorSideTop.Side = asrCenter
-              Left = 489
-              Height = 15
-              Top = 73
-              Width = 13
-              Caption = '[?]'
-              Font.Color = clBlue
-              ParentColor = False
-              ParentFont = False
-              ParentShowHint = False
-              ShowHint = True
             end
           end
           object lbOptionLanguage: TLabel
@@ -2394,7 +2393,7 @@ object MainForm: TMainForm
           ChildSizing.TopBottomSpacing = 8
           ChildSizing.HorizontalSpacing = 4
           ChildSizing.VerticalSpacing = 4
-          ClientHeight = 379
+          ClientHeight = 387
           ClientWidth = 531
           object cbOptionShowDownloadToolbar: TCheckBox
             Left = 4
@@ -2841,7 +2840,7 @@ object MainForm: TMainForm
               )
               OnSelectionChanged = rgOptionCompressSelectionChanged
               ParentFont = False
-              TabOrder = 2
+              TabOrder = 1
             end
             object gbOptionRenaming: TGroupBox
               AnchorSideLeft.Control = lbDefaultDownloadPath
@@ -2864,7 +2863,7 @@ object MainForm: TMainForm
               ClientHeight = 282
               ClientWidth = 502
               ParentFont = False
-              TabOrder = 4
+              TabOrder = 3
               object cbOptionChangeUnicodeCharacter: TCheckBox
                 Left = 4
                 Height = 19
@@ -3124,13 +3123,75 @@ object MainForm: TMainForm
               ParentColor = False
               ParentFont = False
             end
-            object edOptionDefaultPath: TDirectoryEdit
+            object Panel8: TPanel
+              Left = 4
+              Height = 0
+              Top = 54
+              Width = 506
+              Align = alTop
+              AutoSize = True
+              BevelOuter = bvNone
+              TabOrder = 0
+            end
+            object lbOptionPDFQualityHint: TLabel
+              AnchorSideLeft.Control = lbOptionPDFQuality
+              AnchorSideLeft.Side = asrBottom
+              AnchorSideTop.Control = lbOptionPDFQuality
+              Left = 181
+              Height = 15
+              Top = 122
+              Width = 13
+              BorderSpacing.Left = 4
+              Caption = '[?]'
+              Enabled = False
+              Font.Color = clBlue
+              ParentColor = False
+              ParentFont = False
+              ParentShowHint = False
+              ShowHint = True
+            end
+            object seOptionPDFQuality: TSpinEdit
+              AnchorSideLeft.Control = lbDefaultDownloadPath
+              AnchorSideTop.Control = rgOptionCompress
+              AnchorSideTop.Side = asrBottom
+              Left = 4
+              Height = 23
+              Hint = '100 = FlateEncode (lossless), lower = DCTEncode (lossy)'
+              Top = 118
+              Width = 50
+              BorderSpacing.Top = 4
+              Enabled = False
+              MinValue = 5
+              ParentFont = False
+              ParentShowHint = False
+              ShowHint = True
+              TabOrder = 2
+              Value = 100
+            end
+            object lbOptionPDFQuality: TLabel
+              AnchorSideLeft.Control = seOptionPDFQuality
+              AnchorSideLeft.Side = asrBottom
+              AnchorSideTop.Control = seOptionPDFQuality
+              AnchorSideTop.Side = asrCenter
+              Left = 58
+              Height = 15
+              Hint = '100 = FlateEncode (lossless), lower = DCTEncode (lossy)'
+              Top = 122
+              Width = 119
+              BorderSpacing.Left = 4
+              Caption = 'PDF compression level'
+              Enabled = False
+              ParentColor = False
+              ParentFont = False
+              ParentShowHint = False
+              ShowHint = True
+            end
+            object edOptionDefaultPath: TEditButton
               Left = 4
               Height = 23
               Top = 27
               Width = 506
-              OnAcceptDirectory = edSaveToAcceptDirectory
-              ShowHidden = False
+              Align = alTop
               ButtonWidth = 23
               Glyph.Data = {
                 36040000424D3604000000000000360000002800000010000000100000000100
@@ -3168,75 +3229,13 @@ object MainForm: TMainForm
                 CB000088CC610088CC810088CC810088CC810088CC810088CC810088CC810088
                 CC810088CC810088CC810088CC810088CC610087CB000087CB00
               }
-              NumGlyphs = 1
-              Align = alTop
               MaxLength = 0
+              NumGlyphs = 1
+              OnButtonClick = edOptionDefaultPathButtonClick
               ParentFont = False
-              TabOrder = 0
+              PasswordChar = #0
+              TabOrder = 4
               TextHint = 'Default download path'
-            end
-            object Panel8: TPanel
-              Left = 4
-              Height = 0
-              Top = 54
-              Width = 506
-              Align = alTop
-              AutoSize = True
-              BevelOuter = bvNone
-              TabOrder = 1
-            end
-            object lbOptionPDFQualityHint: TLabel
-              AnchorSideLeft.Control = lbOptionPDFQuality
-              AnchorSideLeft.Side = asrBottom
-              AnchorSideTop.Control = lbOptionPDFQuality
-              Left = 181
-              Height = 15
-              Top = 122
-              Width = 13
-              BorderSpacing.Left = 4
-              Caption = '[?]'
-              Enabled = False
-              Font.Color = clBlue
-              ParentColor = False
-              ParentFont = False
-              ParentShowHint = False
-              ShowHint = True
-            end
-            object seOptionPDFQuality: TSpinEdit
-              AnchorSideLeft.Control = lbDefaultDownloadPath
-              AnchorSideTop.Control = rgOptionCompress
-              AnchorSideTop.Side = asrBottom
-              Left = 4
-              Height = 23
-              Hint = '100 = FlateEncode (lossless), lower = DCTEncode (lossy)'
-              Top = 118
-              Width = 50
-              BorderSpacing.Top = 4
-              Enabled = False
-              MinValue = 5
-              ParentFont = False
-              ParentShowHint = False
-              ShowHint = True
-              TabOrder = 3
-              Value = 100
-            end
-            object lbOptionPDFQuality: TLabel
-              AnchorSideLeft.Control = seOptionPDFQuality
-              AnchorSideLeft.Side = asrBottom
-              AnchorSideTop.Control = seOptionPDFQuality
-              AnchorSideTop.Side = asrCenter
-              Left = 58
-              Height = 15
-              Hint = '100 = FlateEncode (lossless), lower = DCTEncode (lossy)'
-              Top = 122
-              Width = 119
-              BorderSpacing.Left = 4
-              Caption = 'PDF compression level'
-              Enabled = False
-              ParentColor = False
-              ParentFont = False
-              ParentShowHint = False
-              ShowHint = True
             end
           end
         end
@@ -3627,11 +3626,11 @@ object MainForm: TMainForm
           ChildSizing.TopBottomSpacing = 8
           ChildSizing.HorizontalSpacing = 4
           ChildSizing.VerticalSpacing = 4
-          ClientHeight = 379
+          ClientHeight = 387
           ClientWidth = 531
           object pcMisc: TPageControl
             Left = 4
-            Height = 363
+            Height = 371
             Top = 8
             Width = 523
             ActivePage = tsCustomColor
@@ -3649,7 +3648,7 @@ object MainForm: TMainForm
               ChildSizing.TopBottomSpacing = 4
               ChildSizing.HorizontalSpacing = 4
               ChildSizing.VerticalSpacing = 4
-              ClientHeight = 335
+              ClientHeight = 343
               ClientWidth = 515
               object ckEnableLogging: TCheckBox
                 Left = 4
@@ -3659,60 +3658,8 @@ object MainForm: TMainForm
                 Caption = 'Enable logging'
                 TabOrder = 0
               end
-              object edLogFileName: TFileNameEdit
-                AnchorSideLeft.Control = ckEnableLogging
-                AnchorSideTop.Control = lbLogFileName
-                AnchorSideTop.Side = asrBottom
-                Left = 4
-                Height = 23
-                Top = 46
-                Width = 506
-                FilterIndex = 0
-                HideDirectories = False
-                ButtonWidth = 23
-                Glyph.Data = {
-                  36040000424D3604000000000000360000002800000010000000100000000100
-                  2000000000000004000064000000640000000000000000000000000000000000
-                  0000002E45000064970000629300005E8E30005C8C7C005884950000001F0000
-                  001A0000001A0000001A0000001A0000001A0000001A00000011000000000000
-                  0000002E450000659950006497991C7AA9C052A5CDE0075477E225250A932B2B
-                  0C8A2D2D0D872D2D0D872D2D0D872D2D0D872D2D0D8723230B6A000000110000
-                  002400466A983590BDF269B8DDFA82CBECFF85CEEEFF4186A8FFE5E5E5FFE5E5
-                  E4FFFEFEFDFFFEFEFCFFFDFDFAFFFCFCF9FFFEFEF9FF3B3B1B88000000090000
-                  0012006699B288D0EFFF7FCAE9FF7FCAE9FF87D0EFFF4489ACFFE4E4E4FFE3E3
-                  E2FFFCFCFBFFFBFBF8FFFAFAF6FFF8F8F4FFFBFBF5FF4F4F2C7D000000000054
-                  7E00006FA7A48AD3F0FF82CDEBFF82CDEBFF8AD3F0FF468BAFFFB7B7A8FFB6B6
-                  A7FFDBDBCAFFD1D1C0FFF8F8F4FFF7F7F1FFFAFAF4FF58583276005782000073
-                  AC000073AC9E8ED6F2FF87D0EDFF87D0EDFF8ED6F2FF488FB2FFD5D5C6FFD4D4
-                  C5FFEBEBDAFFE9E9D8FFF7F7F1FFF5F5EFFFFAFAF2FF5D5D37740076B0000076
-                  B0000076B09B92DAF4FF8BD4F0FF8BD4F0FF92DAF4FF4C92B6FFB5B5A6FFC4C4
-                  B4FFC7C7B6FFD6D6C5FFD4D4C3FFCACAB9FFF8F8EEFF62623C720078B4000078
-                  B4000078B49797DEF6FF90D8F2FF90D8F2FF97DEF6FF4F96B8FFD3D3C4FFD1D1
-                  C2FFE7E7D6FFE5E5D4FFE4E4D3FFE2E2D1FFF6F6E8FF67674070007BB800007B
-                  B800007BB8949BE1F7FF94DBF4FF94DBF4FF9BE1F7FF5299BCFFB3B3A3FFC0C0
-                  B1FFC3C3B2FFC2C2B1FFC0C0AFFFBEBEADFFF3F3E3FF6C6C446E007DBB00007D
-                  BB00007DBB909EE5F9FF98DFF6FF98DFF6FF9EE5F9FF569CBFFFCFCFC0FFCECE
-                  BEFFE4E4D3FFF0F0E6FFEBEBDDFFE7E7D6FFF2F2E1FF7171486C007FBF00007F
-                  BF00007FBF8DA3E8FBFF9DE3F9FF9DE3F9FFA3E8FBFF589FC2FFAFAFA0FFBDBD
-                  AEFFC8C8B7FFEBEBDDFFA4A493FFA4A493FFA4A493FF4949257C0082C2000082
-                  C2000082C28AA6EBFCFFA1E6FBFFA1E6FBFFA6EBFCFF62A8C9FFDBDBD4FFD8D8
-                  CFFFEBEBDDFFE7E7D6FFB6B6A5FFFFFFFFFF79795069797950250084C5000084
-                  C5000084C587A9EEFDFFA4E9FCFFA4E9FCFFAAEFFDFF6DAFCDFFEDEDE4FFF4F4
-                  E7FFF4F4E3FFF2F2E1FFC2C2B1FF467F85B87C7C5225797950000085C8000085
-                  C8000085C885ADF1FFFFABEFFEFF94E2F8FF6EC8EDFF4397B9FF8EB7BAFF8EB7
-                  BAFF8EB7BAFF8EB7BAFF93BCBBFF1B84B0963E818E003D7F8C000087CA000087
-                  CA000087CA8388DBF4FF60C1E9FF5FBFEAFF80D3F4FF9CE3FDFFA2E6FFFFA2E6
-                  FFFFA2E6FFFFA2E6FFFFA6EAFFFF0087CA830087CA000087CA000087CB000087
-                  CB000088CC610088CC810088CC810088CC810088CC810088CC810088CC810088
-                  CC810088CC810088CC810088CC810088CC610087CB000087CB00
-                }
-                NumGlyphs = 1
-                Anchors = [akTop, akLeft, akRight]
-                MaxLength = 0
-                TabOrder = 1
-              end
               object btClearLogFile: TBitBtn
-                AnchorSideLeft.Control = edLogFileName
+                AnchorSideLeft.Control = ckEnableLogging
                 AnchorSideTop.Control = edLogFileName
                 AnchorSideTop.Side = asrBottom
                 Left = 4
@@ -3758,7 +3705,7 @@ object MainForm: TMainForm
                   FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00
                 }
                 OnClick = btClearLogFileClick
-                TabOrder = 2
+                TabOrder = 1
               end
               object lbLogFileName: TLabel
                 AnchorSideLeft.Control = ckEnableLogging
@@ -3818,6 +3765,58 @@ object MainForm: TMainForm
                   FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00
                 }
                 OnClick = btOpenLogClick
+                TabOrder = 2
+              end
+              object edLogFileName: TEditButton
+                AnchorSideLeft.Control = ckEnableLogging
+                AnchorSideTop.Control = lbLogFileName
+                AnchorSideTop.Side = asrBottom
+                Left = 4
+                Height = 23
+                Top = 46
+                Width = 506
+                Anchors = [akTop, akLeft, akRight]
+                ButtonWidth = 23
+                Glyph.Data = {
+                  36040000424D3604000000000000360000002800000010000000100000000100
+                  2000000000000004000064000000640000000000000000000000000000000000
+                  0000002E45000064970000629300005E8E30005C8C7C005884950000001F0000
+                  001A0000001A0000001A0000001A0000001A0000001A00000011000000000000
+                  0000002E450000659950006497991C7AA9C052A5CDE0075477E225250A932B2B
+                  0C8A2D2D0D872D2D0D872D2D0D872D2D0D872D2D0D8723230B6A000000110000
+                  002400466A983590BDF269B8DDFA82CBECFF85CEEEFF4186A8FFE5E5E5FFE5E5
+                  E4FFFEFEFDFFFEFEFCFFFDFDFAFFFCFCF9FFFEFEF9FF3B3B1B88000000090000
+                  0012006699B288D0EFFF7FCAE9FF7FCAE9FF87D0EFFF4489ACFFE4E4E4FFE3E3
+                  E2FFFCFCFBFFFBFBF8FFFAFAF6FFF8F8F4FFFBFBF5FF4F4F2C7D000000000054
+                  7E00006FA7A48AD3F0FF82CDEBFF82CDEBFF8AD3F0FF468BAFFFB7B7A8FFB6B6
+                  A7FFDBDBCAFFD1D1C0FFF8F8F4FFF7F7F1FFFAFAF4FF58583276005782000073
+                  AC000073AC9E8ED6F2FF87D0EDFF87D0EDFF8ED6F2FF488FB2FFD5D5C6FFD4D4
+                  C5FFEBEBDAFFE9E9D8FFF7F7F1FFF5F5EFFFFAFAF2FF5D5D37740076B0000076
+                  B0000076B09B92DAF4FF8BD4F0FF8BD4F0FF92DAF4FF4C92B6FFB5B5A6FFC4C4
+                  B4FFC7C7B6FFD6D6C5FFD4D4C3FFCACAB9FFF8F8EEFF62623C720078B4000078
+                  B4000078B49797DEF6FF90D8F2FF90D8F2FF97DEF6FF4F96B8FFD3D3C4FFD1D1
+                  C2FFE7E7D6FFE5E5D4FFE4E4D3FFE2E2D1FFF6F6E8FF67674070007BB800007B
+                  B800007BB8949BE1F7FF94DBF4FF94DBF4FF9BE1F7FF5299BCFFB3B3A3FFC0C0
+                  B1FFC3C3B2FFC2C2B1FFC0C0AFFFBEBEADFFF3F3E3FF6C6C446E007DBB00007D
+                  BB00007DBB909EE5F9FF98DFF6FF98DFF6FF9EE5F9FF569CBFFFCFCFC0FFCECE
+                  BEFFE4E4D3FFF0F0E6FFEBEBDDFFE7E7D6FFF2F2E1FF7171486C007FBF00007F
+                  BF00007FBF8DA3E8FBFF9DE3F9FF9DE3F9FFA3E8FBFF589FC2FFAFAFA0FFBDBD
+                  AEFFC8C8B7FFEBEBDDFFA4A493FFA4A493FFA4A493FF4949257C0082C2000082
+                  C2000082C28AA6EBFCFFA1E6FBFFA1E6FBFFA6EBFCFF62A8C9FFDBDBD4FFD8D8
+                  CFFFEBEBDDFFE7E7D6FFB6B6A5FFFFFFFFFF79795069797950250084C5000084
+                  C5000084C587A9EEFDFFA4E9FCFFA4E9FCFFAAEFFDFF6DAFCDFFEDEDE4FFF4F4
+                  E7FFF4F4E3FFF2F2E1FFC2C2B1FF467F85B87C7C5225797950000085C8000085
+                  C8000085C885ADF1FFFFABEFFEFF94E2F8FF6EC8EDFF4397B9FF8EB7BAFF8EB7
+                  BAFF8EB7BAFF8EB7BAFF93BCBBFF1B84B0963E818E003D7F8C000087CA000087
+                  CA000087CA8388DBF4FF60C1E9FF5FBFEAFF80D3F4FF9CE3FDFFA2E6FFFFA2E6
+                  FFFFA2E6FFFFA2E6FFFFA6EAFFFF0087CA830087CA000087CA000087CB000087
+                  CB000088CC610088CC810088CC810088CC810088CC810088CC810088CC810088
+                  CC810088CC810088CC810088CC810088CC610087CB000087CB00
+                }
+                MaxLength = 0
+                NumGlyphs = 1
+                OnButtonClick = edLogFileNameButtonClick
+                PasswordChar = #0
                 TabOrder = 3
               end
             end
