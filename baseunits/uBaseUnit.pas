@@ -690,6 +690,7 @@ function GetHostURL(URL: String): String;
 function RemoveHostFromURL(URL: String): String;
 procedure RemoveHostFromURLs(const URLs: TStringList);
 procedure RemoveHostFromURLsPair(const URLs, Names: TStringList);
+function EncodeCriticalURLElements(const URL: String): String;
 
 //JSON
 procedure ParseJSONArray(const S, Path: String; var OutArray: TStringList);
@@ -1384,6 +1385,14 @@ begin
       Names.Delete(i);
     end;
   end;
+end;
+
+function EncodeCriticalURLElements(const URL: String): String;
+var
+  H,P: String;
+begin
+  SplitURL(URL,H,P);
+  Result:=H+EncodeTriplet(P,'%',URLSpecialChar+URLFullSpecialChar-['/']);
 end;
 
 procedure ParseJSONArray(const S, Path: String; var OutArray: TStringList);
