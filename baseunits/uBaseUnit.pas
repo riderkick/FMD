@@ -683,7 +683,6 @@ function FillMangaSiteHost(const MangaID: Cardinal; URL: String): String; overlo
 function FillMangaSiteHost(const Website, URL: String): String; overload;
 
 // modify url
-procedure SplitURL(const URL: String; out Host, Path: String);
 function FillHost(const Host, URL: String): String;
 function MaybeFillHost(const Host, URL: String): String;
 function GetHostURL(URL: String): String;
@@ -1266,52 +1265,6 @@ begin
   Result := URL;
   if Website = '' then Exit(URL);
   Result := FillMangaSiteHost(GetMangaSiteID(Website), URL);
-end;
-
-function poschar(const c:char;const s:string;const offset:cardinal=1):integer;
-var
-  i:integer;
-begin
-  for i:=offset to length(s) do
-    if s[i]=c then Exit(i);
-  Result:=0;
-end;
-
-procedure SplitURL(const URL: String; out Host, Path: String);
-var
-  p: Integer;
-begin
-  Host:='';
-  Path:='';
-  if URL='' then Exit;
-  p:=poschar('.',URL);
-  if (p<>0) and (p<Length(URL)) then
-  begin
-    p:=poschar('/',URL,p);
-    if p<>0 then Host:=Copy(URL,1,p-1)
-    else
-    begin
-      Host:=URL;
-      Exit;
-    end;
-  end;
-  if Host<>'' then
-  begin
-    while (Length(Host)>0) and (Host[1] in [':','/']) do
-      Delete(Host,1,1);
-    if Pos('://',Host)=0 then
-      Host:='http://'+Host;
-  end;
-  if p<>0 then
-    Path:=Copy(URL,p,Length(URL))
-  else
-    Path:=URL;
-  if Path<>'' then
-  begin
-    while Pos('//',Path)<>0 do Path:=StringReplace(Path,'//','/',[rfReplaceAll]);
-    if Path='/' then Path:=''
-    else if Path[1]<>'/' then Path:='/'+Path;
-  end;
 end;
 
 function FillHost(const Host, URL: String): String;

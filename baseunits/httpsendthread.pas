@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, httpsend, synautil, synacode, ssl_openssl, blcksock,
-  GZIPUtils, RegExpr;
+  GZIPUtils;
 
 type
 
@@ -66,6 +66,7 @@ procedure SetDefaultTimeoutAndApply(const ATimeout: Integer);
 procedure SetDefaultRetryCountAndApply(const ARetryCount: Integer);
 
 function MaybeEncodeURL(const AValue: String): String;
+procedure SplitURL(const URL: String; out Host, Path: String);
 
 const
   UserAgentSynapse = 'Mozilla/4.0 (compatible; Synapse)';
@@ -93,6 +94,52 @@ implementation
 var
   ALLHTTPSendThread: TFPList;
   CS_ALLHTTPSendThread: TRTLCriticalSection;
+
+function poschar(const c:char;const s:string;const offset:cardinal=1):integer;
+var
+  i:integer;
+begin
+  for i:=offset to length(s) do
+    if s[i]=c then Exit(i);
+  Result:=0;
+end;
+
+procedure SplitURL(const URL: String; out Host, Path: String);
+var
+  p: Integer;
+begin
+  Host:='';
+  Path:='';
+  if URL='' then Exit;
+  p:=poschar('.',URL);
+  if (p<>0) and (p<Length(URL)) then
+  begin
+    p:=poschar('/',URL,p);
+    if p<>0 then Host:=Copy(URL,1,p-1)
+    else
+    begin
+      Host:=URL;
+      Exit;
+    end;
+  end;
+  if Host<>'' then
+  begin
+    while (Length(Host)<>0) and (Host[1] in ['.',':','/']) do
+      Delete(Host,1,1);
+    if Pos('://',Host)=0 then
+      Host:='http://'+Host;
+  end;
+  if p<>0 then
+    Path:=Copy(URL,p,Length(URL))
+  else
+    Path:=URL;
+  if Path<>'' then
+  begin
+    while Pos('//',Path)<>0 do Path:=StringReplace(Path,'//','/',[rfReplaceAll]);
+    if Path='/' then Path:=''
+    else if Path[1]<>'/' then Path:='/'+Path;
+  end;
+end;
 
 function KeyVal(const AKey, AValue: String): TKeyValuePair;
 begin
@@ -275,7 +322,7 @@ function THTTPSendThread.HTTPRequest(const Method, URL: String; const Response: 
 
 var
   counter: Integer = 0;
-  rurl, s: String;
+  rurl, s, h, p: String;
   HTTPHeader: TStringList;
   mstream: TMemoryStream;
 begin
@@ -300,23 +347,13 @@ begin
         if CheckTerminate then Exit;
         HTTPHeader.Values['Referer'] := ' ' + rurl;
         s := Trim(Headers.Values['Location']);
-        if s <> '' then begin
-          with TRegExpr.Create do
-            try
-              Expression := '(?ig)^(\w+://)?([^/]*\.\w+)?(\:\d+)?(/?.*)$';
-              if Replace(s, '$1', True) = '' then
-              begin
-                while s[1] = '.' do
-                  Delete(s, 1, 1);
-                if (s <> '') and (s[1] <> '/') then
-                  s := '/' + s;
-                rurl := Replace(rurl, '$1$2$3', True) + s;
-              end
-              else
-                rurl := s;
-            finally
-              Free;
-            end;
+        if s<>'' then
+        begin
+          SplitURL(s,h,p);
+          s:=p;
+          if h='' then
+            SplitURL(rurl,h,p);
+          rurl:=h+s;
         end;
 
         Clear;
