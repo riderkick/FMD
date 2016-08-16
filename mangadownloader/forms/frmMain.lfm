@@ -13,7 +13,6 @@ object MainForm: TMainForm
   OnShow = FormShow
   OnWindowStateChange = FormWindowStateChange
   Position = poScreenCenter
-  LCLVersion = '1.7'
   Visible = False
   object sbUpdateList: TStatusBar
     Left = 0
@@ -907,6 +906,7 @@ object MainForm: TMainForm
               1000AE752E00E79C3D00E79C3D00E79C3D00E99E4099E99E40CCE99E40CCE99E
               4099E79C3D00E79C3D00E79C3D00AE752E003A271000FFFFFF00
             }
+            OnClick = btDownloadSplitClick
           end
         end
       end

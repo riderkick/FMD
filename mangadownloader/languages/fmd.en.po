@@ -105,6 +105,10 @@ msgstr "Cannot connect to the server."
 msgid "Cannot get manga info. Please check your internet connection and try it again."
 msgstr "Cannot get manga info. Please check your internet connection and try it again."
 
+#: frmmain.rs_dlgdownloadcount
+msgid "Download count:"
+msgstr "Download count:"
+
 #: frmmain.rs_dlgmangalistselect
 msgid "You must choose at least 1 manga website!"
 msgstr "You must choose at least 1 manga website!"
@@ -128,6 +132,11 @@ msgstr "Are you sure you want to delete this item(s)?"
 #: frmmain.rs_dlgremovetask
 msgid "Are you sure you want to delete the task(s)?"
 msgstr "Are you sure you want to delete the task(s)?"
+
+#: frmmain.rs_dlgsplitdownload
+msgctxt "frmmain.rs_dlgsplitdownload"
+msgid "Split download"
+msgstr "Split download"
 
 #: frmmain.rs_dlgtitleexistindllist
 msgid ""
@@ -299,6 +308,10 @@ msgstr "Path to the software (e.g. C:\\MangaDownloader)"
 #: frmmain.rs_today
 msgid "Today"
 msgstr "Today"
+
+#: frmmain.rs_wronginput
+msgid "Invalid input!"
+msgstr "Invalid input!"
 
 #: frmmain.rs_yesterday
 msgid "Yesterday"
@@ -497,6 +510,7 @@ msgid "Download"
 msgstr "Download"
 
 #: tmainform.btdownloadsplit.hint
+msgctxt "tmainform.btdownloadsplit.hint"
 msgid "Split download"
 msgstr "Split download"
 
@@ -2153,4 +2167,3 @@ msgstr "Synchronizing data"
 #: uupdatethread.rs_updatinglist
 msgid "Updating list"
 msgstr "Updating list"
-

@@ -104,6 +104,10 @@ msgstr "Tidak dapat terhubung ke server."
 msgid "Cannot get manga info. Please check your internet connection and try it again."
 msgstr "Tidak bisa mendapatkan informasi komik. Silakan periksa koneksi internet Anda dan coba lagi."
 
+#: frmmain.rs_dlgdownloadcount
+msgid "Download count:"
+msgstr "Jumlah unduhan:"
+
 #: frmmain.rs_dlgmangalistselect
 msgid "You must choose at least 1 manga website!"
 msgstr "Anda harus memilih minimal 1 situs komik!"
@@ -127,6 +131,11 @@ msgstr "Apakah Anda yakin ingin menghapus data ini?"
 #: frmmain.rs_dlgremovetask
 msgid "Are you sure you want to delete the task(s)?"
 msgstr "Apakah Anda yakin ingin menghapus unduhan ini?"
+
+#: frmmain.rs_dlgsplitdownload
+msgctxt "frmmain.rs_dlgsplitdownload"
+msgid "Split download"
+msgstr "Pecah unduhan"
 
 #: frmmain.rs_dlgtitleexistindllist
 msgid ""
@@ -297,6 +306,10 @@ msgstr "Path ke perangkat lunak (misalnya C:\\MangaDownloader)"
 #: frmmain.rs_today
 msgid "Today"
 msgstr "Hari ini"
+
+#: frmmain.rs_wronginput
+msgid "Invalid input!"
+msgstr "Input salah!"
 
 #: frmmain.rs_yesterday
 msgid "Yesterday"
@@ -488,6 +501,7 @@ msgid "Download"
 msgstr "Unduh"
 
 #: tmainform.btdownloadsplit.hint
+msgctxt "tmainform.btdownloadsplit.hint"
 msgid "Split download"
 msgstr "Pecah unduhan"
 
@@ -2133,4 +2147,3 @@ msgstr "Sinkronisasi data"
 #: uupdatethread.rs_updatinglist
 msgid "Updating list"
 msgstr "Memperbarui daftar"
-

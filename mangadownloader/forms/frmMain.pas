@@ -388,6 +388,7 @@ type
     procedure btCheckLatestVersionClick(Sender: TObject);
     procedure btClearLogFileClick(Sender: TObject);
     procedure btDonateClick(Sender: TObject);
+    procedure btDownloadSplitClick(Sender: TObject);
     procedure btFavoritesImportClick(Sender: TObject);
     procedure btOpenLogClick(Sender: TObject);
     procedure btReadOnlineClick(Sender: TObject);
@@ -827,6 +828,9 @@ resourcestring
   RS_DlgMangaListSelect = 'You must choose at least 1 manga website!';
   RS_DlgCannotGetMangaInfo = 'Cannot get manga info. Please check your internet connection and try it again.';
   RS_DlgCannotConnectToServer = 'Cannot connect to the server.';
+  RS_DlgSplitDownload = 'Split download';
+  RS_DlgDownloadCount = 'Download count:';
+  RS_WrongInput = 'Invalid input!';
   RS_LblOptionExternalParamsHint = '%s : Path to the manga'#13#10+
                                    '%s : Chapter filename'#13#10+
                                    #13#10+
@@ -1144,6 +1148,7 @@ begin
 
   // read online
   btDownload.Enabled := False;
+  btDownloadSplit.Enabled := btDownload.Enabled;
   btReadOnline.Enabled := False;
   btAddToFavorites.Enabled := False;
 
@@ -1947,84 +1952,102 @@ end;
 
 procedure TMainForm.btDownloadClick(Sender: TObject);
 var
-  s: String;
-  i, pos: Integer;
-  isCreate: Boolean = False;
-  xNode: PVirtualNode;
+  links,names:TStrings;
+  node:PVirtualNode;
+  s:String;
+  c,p,i,j,k:Integer;
 begin
   if clbChapterList.CheckedCount = 0 then
     Exit;
-  Pos := -1;
-  xNode := clbChapterList.GetFirstChecked;
-  for i := 0 to clbChapterList.CheckedCount - 1 do
-  begin
-    if (xNode^.CheckState = csCheckedNormal) and (vsVisible in xNode^.States) then
+  links:=TStringList.Create;
+  names:=TStringList.Create;
+  try
+    node:=clbChapterList.GetFirstChecked();
+    while Assigned(node) do
     begin
-      if not isCreate then
+      if (vsVisible in node^.States) then
       begin
-        pos := DLManager.AddTask;
-        isCreate := True;
+        links.Add(mangaInfo.chapterLinks[node^.Index]);
+        s:=CustomRename(OptionChapterCustomRename,
+          mangaInfo.website,
+          mangaInfo.title,
+          mangaInfo.authors,
+          mangaInfo.artists,
+          mangaInfo.chapterName[node^.Index],
+          Format('%.4d',[node^.Index+1]),
+          OptionChangeUnicodeCharacter,
+          OptionChangeUnicodeCharacterStr);
+        names.Add(s);
+        ChapterList[node^.Index].Downloaded:=True;
+        clbChapterList.ReinitNode(node,False);
       end;
-      DLManager.Items[pos].Website := mangaInfo.website;
-      // generate chapter folder name
-      s := CustomRename(OptionChapterCustomRename,
-        mangaInfo.website,
-        mangaInfo.title,
-        mangaInfo.authors,
-        mangaInfo.artists,
-        mangaInfo.chapterName.Strings[xNode^.Index],
-        Format('%.4d', [xNode^.Index + 1]),
-        OptionChangeUnicodeCharacter,
-        OptionChangeUnicodeCharacterStr);
-      DLManager.Items[pos].ChapterName.Add(s);
-      DLManager.Items[pos].ChapterLinks.Add(
-        mangaInfo.chapterLinks.Strings[xNode^.Index]);
-      ChapterList[xNode^.Index].Downloaded := True;
-      clbChapterList.ReinitNode(xNode, False);
+      node:=clbChapterList.GetNextChecked(node);
     end;
-    xNode := clbChapterList.GetNextChecked(xNode);
+    clbChapterList.Repaint;
+    if links.Count<>0 then
+    begin
+      s:=edSaveTo.Text;
+      if OptionGenerateMangaFolder then
+        s:=AppendPathDelim(s)+CustomRename(
+          OptionMangaCustomRename,
+          mangaInfo.website,
+          mangaInfo.title,
+          mangaInfo.authors,
+          mangaInfo.artists,
+          '',
+          '',
+          OptionChangeUnicodeCharacter,
+          OptionChangeUnicodeCharacterStr);
+      c:=1;
+      p:=links.Count;
+      if btDownload.Tag>1 then
+      begin
+        c:=btDownload.Tag;
+        p:=links.Count div btDownload.Tag;
+      end;
+      btDownload.Tag:=0;
+      k:=0;
+      for i:=1 to c do
+      begin
+        if i=c then
+          p:=links.Count-k;
+        with DLManager[DLManager.AddTask] do
+        begin
+          for j:=1 to p do
+          begin
+            ChapterLinks.Add(links[k]);
+            ChapterName.Add(names[k]);
+            Inc(k);
+          end;
+          if cbAddAsStopped.Checked then
+          begin
+            DownloadInfo.Status:=RS_Stopped;
+            Status:=STATUS_STOP;
+          end
+          else
+          begin
+            DownloadInfo.Status:=RS_Waiting;
+            Status:=STATUS_WAIT;
+          end;
+          Website:=mangaInfo.website;
+          DownloadInfo.Website:=mangaInfo.website;
+          DownloadInfo.Link:=mangaInfo.url;
+          DownloadInfo.Title:=mangaInfo.title;
+          DownloadInfo.DateTime:=Now;
+          DownloadInfo.SaveTo:=s;
+          CurrentDownloadChapterPtr:=0;
+        end;
+      end;
+      DLManager.DownloadedChapters.Chapters[mangaInfo.website+mangaInfo.link]:=links.Text;
+      FavoriteManager.AddToDownloadedChaptersList(mangaInfo.website,mangaInfo.link,links);
+      DLManager.CheckAndActiveTask;
+      pcMain.ActivePage:=tsDownload;
+      UpdateVtDownload;
+    end;
+  finally
+    links.Free;
+    names.Free;
   end;
-  if not isCreate then
-    Exit;
-  if cbAddAsStopped.Checked then
-  begin
-    DLManager.Items[pos].DownloadInfo.Status := RS_Stopped;
-    DLManager.Items[pos].Status := STATUS_STOP;
-  end
-  else
-  begin
-    DLManager.Items[pos].DownloadInfo.Status := RS_Waiting;
-    DLManager.Items[pos].Status := STATUS_WAIT;
-  end;
-  DLManager.Items[pos].CurrentDownloadChapterPtr := 0;
-  DLManager.Items[pos].DownloadInfo.Website := mangaInfo.website;
-  DLManager.Items[pos].DownloadInfo.Link := mangaInfo.url;
-  DLManager.Items[pos].DownloadInfo.Title := mangaInfo.title;
-  DLManager.Items[pos].DownloadInfo.DateTime := Now;
-
-  // save to
-  s := edSaveTo.Text;
-  if OptionGenerateMangaFolder then
-    s := AppendPathDelim(s) + CustomRename(
-      OptionMangaCustomRename,
-      mangaInfo.website,
-      mangaInfo.title,
-      mangaInfo.authors,
-      mangaInfo.artists,
-      '',
-      '',
-      OptionChangeUnicodeCharacter,
-      OptionChangeUnicodeCharacterStr);
-  DLManager.Items[pos].DownloadInfo.SaveTo := s;
-  UpdateVtDownload;
-
-  DLManager.CheckAndActiveTask;
-  DLManager.DownloadedChapters.Chapters[mangaInfo.website + mangaInfo.link]:=
-    DLManager.Items[pos].ChapterLinks.Text;
-  FavoriteManager.AddToDownloadedChaptersList(
-    mangaInfo.website, mangaInfo.link, DLManager.Items[pos].ChapterLinks);
-  clbChapterList.Repaint;
-  pcMain.ActivePage := tsDownload;
 end;
 
 procedure TMainForm.btAddToFavoritesClick(Sender: TObject);
@@ -2235,6 +2258,24 @@ end;
 procedure TMainForm.btDonateClick(Sender: TObject);
 begin
   OpenURL('https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=akarin.km@gmail.com&item_name=Donation+to+Free+Manga+Downloader');
+end;
+
+procedure TMainForm.btDownloadSplitClick(Sender: TObject);
+var
+  s:String='';
+  c:Integer=-1;
+begin
+  if InputQuery(RS_DlgSplitDownload,RS_DlgDownloadCount,s) and (s<>'') then
+  begin
+    c:=StrToIntDef(s,-1);
+    if c<=0 then
+      MessageDlg(RS_WrongInput,mtError,[mbOK],0)
+    else
+    begin
+      btDownload.Tag:=c;
+      btDownloadClick(btDownload);
+    end;
+  end;
 end;
 
 procedure TMainForm.btFavoritesImportClick(Sender: TObject);
@@ -4354,6 +4395,7 @@ begin
     pbWait.Visible := True;
   end;
   btDownload.Enabled := False;
+  btDownloadSplit.Enabled := btDownload.Enabled;
   btReadOnline.Enabled := True;
   DisableAddToFavorites(AWebsite);
   //check if manga already in FavoriteManager list
@@ -4415,6 +4457,7 @@ begin
   edFilterMangaInfoChaptersChange(nil);
 
   btDownload.Enabled := (clbChapterList.RootNodeCount > 0);
+  btDownloadSplit.Enabled := btDownload.Enabled;
   btReadOnline.Enabled := (mangaInfo.link <> '');
   DisableAddToFavorites(website);
 
@@ -5018,6 +5061,7 @@ var
   regx: TRegExpr;
 begin
   btDownload.Enabled := False;
+  btDownloadSplit.Enabled := btDownload.Enabled;
   btAddToFavorites.Enabled := False;
   btReadOnline.Enabled := False;
 
