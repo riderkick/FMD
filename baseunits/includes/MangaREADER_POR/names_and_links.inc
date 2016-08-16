@@ -23,7 +23,11 @@
       if Copy(s, 1, 3) = UTF8BOM then
         Delete(s, 1, 3);
     end;
+    {$IF (FPC_FULLVERSION >= 30101)}
     parser := TJSONParser.Create(s, [joUTF8]);
+    {$ELSE}
+    parser := TJSONParser.Create(s, True);
+    {$ENDIF}
     try
       Data := parser.Parse;
       try

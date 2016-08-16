@@ -1399,7 +1399,11 @@ var
   i: Integer;
 begin
   OutArray.BeginUpdate;
-  P := TJSONParser.Create(Trim(S), jsonscanner.DefaultOptions);
+  {$IF (FPC_FULLVERSION >= 30101)}
+  P := TJSONParser.Create(Trim(S), [joUTF8]);
+  {$ELSE}
+  P := TJSONParser.Create(Trim(S), True);
+  {$ENDIF}
   try
     D := P.Parse;
     try

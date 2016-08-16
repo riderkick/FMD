@@ -18,7 +18,7 @@ uses
   {$endif}
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, LCLType, ExtCtrls,
   ComCtrls, Buttons, Spin, Menus, VirtualTrees, RichMemo, IniFiles, simpleipc, lclproc,
-  types, strutils, LCLIntf, DefaultTranslator, EditBtn, MultiLog, FileChannel, FileUtil,
+  types, LCLIntf, DefaultTranslator, EditBtn, MultiLog, FileChannel, FileUtil,
   LazUTF8Classes, TAGraph, TASources, TASeries, TATools, AnimatedGif, uBaseUnit,
   uDownloadsManager, uFavoritesManager, uUpdateThread, uUpdateDBThread, uSilentThread,
   uMisc, uGetMangaInfosThread, frmDropTarget, frmAccountManager, frmWebsiteOptionCustom,
