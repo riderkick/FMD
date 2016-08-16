@@ -1,0 +1,4 @@
+{"version":1,"strings":[
+{"hash":44537492,"name":"tshutdowncounterform.btabort.caption","sourcebytes":[38,65,98,111,114,116],"value":"&Abort"},
+{"hash":177511,"name":"tshutdowncounterform.btnow.caption","sourcebytes":[38,78,111,119],"value":"&Now"}
+]}

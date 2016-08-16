@@ -15,6 +15,7 @@ object FormLogger: TFormLogger
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   Position = poMainFormCenter
+  LCLVersion = '1.7'
   Visible = False
   object tvLog: TLogTreeView
     Left = 6

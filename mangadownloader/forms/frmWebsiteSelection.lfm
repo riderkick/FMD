@@ -13,6 +13,7 @@ object WebsiteSelectionForm: TWebsiteSelectionForm
   ClientWidth = 310
   Position = poMainFormCenter
   LCLVersion = '1.7'
+  Visible = False
   object cbWebsites: TComboBox
     Left = 10
     Height = 23

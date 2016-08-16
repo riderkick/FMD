@@ -330,10 +330,6 @@ msgstr ""
 msgid "Ok"
 msgstr ""
 
-#: taccountsetform.caption
-msgid "Account"
-msgstr ""
-
 #: taccountsetform.ckshowpassword.caption
 msgid "Show password"
 msgstr ""
@@ -420,10 +416,6 @@ msgctxt "timportfavorites.btimport.caption"
 msgid "&OK"
 msgstr ""
 
-#: timportfavorites.caption
-msgid "Import list ..."
-msgstr ""
-
 #: timportfavorites.cbsoftware.text
 msgid "Domdomsoft Manga Downloader"
 msgstr ""
@@ -458,6 +450,10 @@ msgstr ""
 #: tmainform.btdownload.caption
 msgctxt "tmainform.btdownload.caption"
 msgid "Download"
+msgstr ""
+
+#: tmainform.btdownloadsplit.hint
+msgid "Split download"
 msgstr ""
 
 #: tmainform.btfavoriteschecknewchapter.caption
@@ -1778,10 +1774,6 @@ msgctxt "TNEWCHAPTER.BTQUEUE.CAPTION"
 msgid "&Add to queue"
 msgstr ""
 
-#: tnewchapter.caption
-msgid "New Chapter Notification"
-msgstr ""
-
 #: tshutdowncounterform.btabort.caption
 msgid "&Abort"
 msgstr ""
@@ -1790,21 +1782,12 @@ msgstr ""
 msgid "&Now"
 msgstr ""
 
-#: tshutdowncounterform.caption
-msgctxt "TSHUTDOWNCOUNTERFORM.CAPTION"
-msgid "Free Manga Downloader"
-msgstr ""
-
 #: tupdatedialogform.btnlater.caption
 msgid "&Later"
 msgstr ""
 
 #: tupdatedialogform.btnupdate.caption
 msgid "&Update"
-msgstr ""
-
-#: tupdatedialogform.caption
-msgid "New Version Found"
 msgstr ""
 
 #: tupdatedialogform.lbmessage.caption

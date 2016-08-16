@@ -370,10 +370,6 @@ msgstr "Cancel"
 msgid "Ok"
 msgstr "Ok"
 
-#: taccountsetform.caption
-msgid "Account"
-msgstr "Account"
-
 #: taccountsetform.ckshowpassword.caption
 msgid "Show password"
 msgstr "Show password"
@@ -463,10 +459,6 @@ msgctxt "timportfavorites.btimport.caption"
 msgid "&OK"
 msgstr "&OK"
 
-#: timportfavorites.caption
-msgid "Import list ..."
-msgstr "Import list ..."
-
 #: timportfavorites.cbsoftware.text
 msgid "Domdomsoft Manga Downloader"
 msgstr "Domdomsoft Manga Downloader"
@@ -503,6 +495,10 @@ msgstr "Clear log file"
 msgctxt "tmainform.btdownload.caption"
 msgid "Download"
 msgstr "Download"
+
+#: tmainform.btdownloadsplit.hint
+msgid "Split download"
+msgstr "Split download"
 
 #: tmainform.btfavoriteschecknewchapter.caption
 msgctxt "tmainform.btfavoriteschecknewchapter.caption"
@@ -1867,10 +1863,6 @@ msgctxt "TNEWCHAPTER.BTQUEUE.CAPTION"
 msgid "&Add to queue"
 msgstr "&Add to queue"
 
-#: tnewchapter.caption
-msgid "New Chapter Notification"
-msgstr "New Chapter Notification"
-
 #: tshutdowncounterform.btabort.caption
 msgid "&Abort"
 msgstr "&Abort"
@@ -1879,11 +1871,6 @@ msgstr "&Abort"
 msgid "&Now"
 msgstr "&Now"
 
-#: tshutdowncounterform.caption
-msgctxt "TSHUTDOWNCOUNTERFORM.CAPTION"
-msgid "Free Manga Downloader"
-msgstr "Free Manga Downloader"
-
 #: tupdatedialogform.btnlater.caption
 msgid "&Later"
 msgstr "&Later"
@@ -1891,10 +1878,6 @@ msgstr "&Later"
 #: tupdatedialogform.btnupdate.caption
 msgid "&Update"
 msgstr "&Update"
-
-#: tupdatedialogform.caption
-msgid "New Version Found"
-msgstr "New Version Found"
 
 #: tupdatedialogform.lbmessage.caption
 msgid ""
@@ -2170,3 +2153,4 @@ msgstr "Synchronizing data"
 #: uupdatethread.rs_updatinglist
 msgid "Updating list"
 msgstr "Updating list"
+

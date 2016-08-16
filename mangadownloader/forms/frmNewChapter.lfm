@@ -15,6 +15,7 @@ object NewChapter: TNewChapter
   OnCreate = FormCreate
   Position = poDesktopCenter
   LCLVersion = '1.7'
+  Visible = False
   object lbNotification: TLabel
     Left = 8
     Height = 1
