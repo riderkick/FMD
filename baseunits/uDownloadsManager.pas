@@ -1392,7 +1392,7 @@ begin
     else
     begin
       Container.Status := STATUS_FINISH;
-      Container.DownloadInfo.Status := RS_Finish;
+      Container.DownloadInfo.Status := Format('[%d/%d] %s',[Container.ChapterLinks.Count,Container.ChapterLinks.Count,RS_Finish]);
       Container.DownloadInfo.Progress := '';
     end;
     Synchronize(SyncShowBaloon);
@@ -1434,7 +1434,7 @@ begin
            (FailedChapterLinks.Count = 0) then
         begin
           Status := STATUS_FINISH;
-          DownloadInfo.Status := RS_Finish;
+          DownloadInfo.Status := Format('[%d/%d] %s',[Container.ChapterLinks.Count,Container.ChapterLinks.Count,RS_Finish]);
           DownloadInfo.Progress := '';
         end
         else
@@ -1737,7 +1737,7 @@ begin
         PageNumber := ReadInteger(tid, 'NumberOfPages', 0);
         CurrentPageNumber := ReadInteger(tid, 'CurrentPage', 0);
         if Status = STATUS_COMPRESS then
-          DownloadInfo.Status := RS_Waiting;
+          DownloadInfo.Status := Format('[%d/%d] %s',[CurrentDownloadChapterPtr+1,ChapterLinks.Count,RS_Waiting]);
         s := ReadString(tid, 'DateTime', '');
         //for old config
         if (Pos('/', s) > 0) or (Pos('\', s) > 0) then
@@ -1915,7 +1915,7 @@ begin
     if not ThreadState then
     begin
       Status := STATUS_WAIT;
-      DownloadInfo.Status := RS_Waiting;
+      DownloadInfo.Status := Format('[%d/%d] %s',[CurrentDownloadChapterPtr+1,ChapterLinks.Count,RS_Waiting]);
     end;
 end;
 
@@ -1937,7 +1937,7 @@ begin
         else
         begin
           Status := STATUS_WAIT;
-          DownloadInfo.Status := RS_Waiting;
+          DownloadInfo.Status := Format('[%d/%d] %s',[CurrentDownloadChapterPtr+1,ChapterLinks.Count,RS_Waiting]);
         end;
   //force to check task if all task loaded is STATUS_WAIT
   if tcount = 0 then
@@ -1975,7 +1975,7 @@ begin
     if Status = STATUS_WAIT then
     begin
       Status := STATUS_STOP;
-      DownloadInfo.Status := RS_Stopped;
+      DownloadInfo.Status := Format('[%d/%d] %s',[CurrentDownloadChapterPtr+1,ChapterLinks.Count,RS_Stopped]);
     end
     else if ThreadState then
     begin
@@ -1999,7 +1999,7 @@ begin
         if  Enabled and (Status <> STATUS_FINISH) and (not ThreadState) then
         begin
           Status := STATUS_WAIT;
-          DownloadInfo.Status := RS_Waiting;
+          DownloadInfo.Status := Format('[%d/%d] %s',[CurrentDownloadChapterPtr+1,ChapterLinks.Count,RS_Waiting]);
         end;
     CheckAndActiveTask;
   end;
@@ -2108,7 +2108,7 @@ begin
       if Status = STATUS_WAIT then
       begin
         Status := STATUS_STOP;
-        DownloadInfo.Status := RS_Stopped;
+        DownloadInfo.Status := Format('[%d/%d] %s',[CurrentDownloadChapterPtr+1,ChapterLinks.Count,RS_Stopped]);
       end;
       Enabled := False;
     end;
