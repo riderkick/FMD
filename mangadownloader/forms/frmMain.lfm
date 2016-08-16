@@ -54,7 +54,6 @@ object MainForm: TMainForm
       ClientHeight = 492
       ClientWidth = 558
       object vtDownload: TVirtualStringTree
-        AnchorSideTop.Control = edDownloadsSearch
         AnchorSideTop.Side = asrBottom
         Left = 4
         Height = 456
@@ -135,24 +134,23 @@ object MainForm: TMainForm
         OnKeyUp = vtDownloadKeyUp
       end
       object pnDownloadToolbar: TPanel
-        AnchorSideLeft.Control = btDownloadsSearchClear
+        AnchorSideLeft.Control = edDownloadsSearch
         AnchorSideLeft.Side = asrBottom
-        AnchorSideTop.Control = edDownloadsSearch
         AnchorSideTop.Side = asrCenter
-        Left = 185
+        Left = 158
         Height = 24
         Top = 3
-        Width = 368
+        Width = 395
         Anchors = [akTop, akLeft, akRight]
         BevelOuter = bvNone
         ClientHeight = 24
-        ClientWidth = 368
+        ClientWidth = 395
         TabOrder = 1
         object TransferRateGraph: TChart
           Left = 321
           Height = 24
           Top = 0
-          Width = 47
+          Width = 74
           AllowZoom = False
           AxisList = <          
             item
@@ -267,26 +265,12 @@ object MainForm: TMainForm
           end
         end
       end
-      object edDownloadsSearch: TEdit
+      object edDownloadsSearch: TEditButton
         Left = 4
         Height = 23
         Top = 4
         Width = 150
-        OnChange = edDownloadsSearchChange
-        TabOrder = 2
-        TextHint = 'Search downloads...'
-      end
-      object btDownloadsSearchClear: TSpeedButton
-        AnchorSideLeft.Control = edDownloadsSearch
-        AnchorSideLeft.Side = asrBottom
-        AnchorSideTop.Control = edDownloadsSearch
-        AnchorSideBottom.Control = edDownloadsSearch
-        AnchorSideBottom.Side = asrBottom
-        Left = 158
-        Height = 23
-        Top = 4
-        Width = 23
-        Anchors = [akTop, akLeft, akBottom]
+        ButtonWidth = 23
         Glyph.Data = {
           36040000424D3604000000000000360000002800000010000000100000000100
           2000000000000004000064000000640000000000000000000000FFFFFF00FFFF
@@ -323,7 +307,13 @@ object MainForm: TMainForm
           FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
           FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00
         }
-        OnClick = btDownloadsSearchClearClick
+        MaxLength = 0
+        NumGlyphs = 1
+        OnButtonClick = edDownloadsSearchButtonClick
+        OnChange = edDownloadsSearchChange
+        PasswordChar = #0
+        TabOrder = 2
+        TextHint = 'Search downloads...'
       end
     end
     object tsInformation: TTabSheet
@@ -335,8 +325,8 @@ object MainForm: TMainForm
         Height = 492
         Top = 0
         Width = 558
-        HorzScrollBar.Page = 327
-        VertScrollBar.Page = 482
+        HorzScrollBar.Page = 316
+        VertScrollBar.Page = 417
         Align = alClient
         BorderStyle = bsNone
         ChildSizing.LeftRightSpacing = 4
@@ -497,12 +487,14 @@ object MainForm: TMainForm
           ClientWidth = 550
           TabOrder = 2
           object clbChapterList: TVirtualStringTree
+            AnchorSideLeft.Control = edFilterMangaInfoChapters
             AnchorSideTop.Control = edFilterMangaInfoChapters
-            AnchorSideBottom.Control = lbSaveTo
+            AnchorSideRight.Control = btChecks
+            AnchorSideBottom.Control = btDownload
             Left = 0
-            Height = 136
+            Height = 125
             Top = 0
-            Width = 516
+            Width = 520
             Anchors = [akTop, akLeft, akRight, akBottom]
             Colors.DropTargetBorderColor = clHotLight
             Colors.FocusedSelectionBorderColor = clHotLight
@@ -528,15 +520,15 @@ object MainForm: TMainForm
             OnInitNode = clbChapterListInitNode
           end
           object btDownload: TBitBtn
-            AnchorSideTop.Control = btReadOnline
-            AnchorSideRight.Control = btReadOnline
+            AnchorSideLeft.Control = btAddToFavorites
+            AnchorSideTop.Control = btDownloadSplit
+            AnchorSideRight.Control = btDownloadSplit
             AnchorSideBottom.Control = btReadOnline
-            AnchorSideBottom.Side = asrBottom
-            Left = 338
+            Left = 420
             Height = 26
-            Top = 159
+            Top = 129
             Width = 100
-            Anchors = [akTop, akRight, akBottom]
+            Anchors = [akLeft, akRight, akBottom]
             AutoSize = True
             Caption = 'Download'
             Glyph.Data = {
@@ -580,14 +572,15 @@ object MainForm: TMainForm
           end
           object cbAddAsStopped: TCheckBox
             AnchorSideLeft.Control = edSaveTo
-            AnchorSideTop.Control = edSaveTo
-            AnchorSideTop.Side = asrBottom
+            AnchorSideTop.Control = btAddToFavorites
             AnchorSideRight.Control = edSaveTo
             AnchorSideRight.Side = asrBottom
+            AnchorSideBottom.Control = btAddToFavorites
+            AnchorSideBottom.Side = asrBottom
             Left = 0
             Height = 19
-            Top = 186
-            Width = 334
+            Top = 189
+            Width = 416
             Anchors = [akTop, akLeft, akRight]
             Caption = 'Add to download list as stopped task'
             OnChange = cbAddAsStoppedChange
@@ -595,14 +588,16 @@ object MainForm: TMainForm
             TabOrder = 3
           end
           object btReadOnline: TBitBtn
-            AnchorSideTop.Control = edSaveTo
+            AnchorSideLeft.Control = btAddToFavorites
+            AnchorSideTop.Control = btDownload
             AnchorSideRight.Control = btChecks
             AnchorSideRight.Side = asrBottom
-            Left = 442
+            AnchorSideBottom.Control = btAddToFavorites
+            Left = 420
             Height = 26
             Top = 159
-            Width = 108
-            Anchors = [akRight, akBottom]
+            Width = 130
+            Anchors = [akLeft, akRight, akBottom]
             AutoSize = True
             Caption = 'Read online'
             Glyph.Data = {
@@ -648,10 +643,11 @@ object MainForm: TMainForm
             AnchorSideLeft.Control = clbChapterList
             AnchorSideLeft.Side = asrBottom
             AnchorSideTop.Control = clbChapterList
-            Left = 520
-            Height = 30
+            Left = 524
+            Height = 26
             Top = 0
-            Width = 30
+            Width = 26
+            Anchors = [akTop, akRight]
             Glyph.Data = {
               36040000424D3604000000000000360000002800000010000000100000000100
               2000000000000004000064000000640000000000000000000000000000090000
@@ -694,13 +690,13 @@ object MainForm: TMainForm
             AnchorSideLeft.Control = btDownload
             AnchorSideTop.Control = btReadOnline
             AnchorSideTop.Side = asrBottom
-            AnchorSideRight.Control = btReadOnline
+            AnchorSideRight.Control = btChecks
             AnchorSideRight.Side = asrBottom
-            Left = 338
+            Left = 420
             Height = 26
             Top = 189
-            Width = 212
-            Anchors = [akTop, akLeft, akRight, akBottom]
+            Width = 130
+            Anchors = [akRight, akBottom]
             AutoSize = True
             Caption = 'Add to favorites'
             Glyph.Data = {
@@ -744,8 +740,7 @@ object MainForm: TMainForm
           end
           object lbSaveTo: TLabel
             AnchorSideLeft.Control = clbChapterList
-            AnchorSideTop.Control = clbChapterList
-            AnchorSideTop.Side = asrBottom
+            AnchorSideTop.Control = btDownload
             AnchorSideBottom.Control = edSaveTo
             Left = 0
             Height = 15
@@ -810,11 +805,12 @@ object MainForm: TMainForm
           object edSaveTo: TEditButton
             AnchorSideLeft.Control = lbSaveTo
             AnchorSideTop.Control = btReadOnline
-            AnchorSideRight.Control = btDownload
+            AnchorSideRight.Control = btReadOnline
+            AnchorSideBottom.Control = cbAddAsStopped
             Left = 0
             Height = 23
             Top = 159
-            Width = 334
+            Width = 416
             Anchors = [akTop, akLeft, akRight]
             ButtonWidth = 23
             Glyph.Data = {
@@ -860,6 +856,56 @@ object MainForm: TMainForm
             PasswordChar = #0
             TabOrder = 6
             TextHint = 'Save to'
+          end
+          object btDownloadSplit: TSpeedButton
+            AnchorSideLeft.Control = btDownload
+            AnchorSideLeft.Side = asrBottom
+            AnchorSideTop.Control = btDownload
+            AnchorSideRight.Control = btChecks
+            AnchorSideRight.Side = asrBottom
+            AnchorSideBottom.Control = btReadOnline
+            Left = 524
+            Height = 26
+            Hint = 'Split download'
+            Top = 129
+            Width = 26
+            Anchors = [akTop, akRight, akBottom]
+            Glyph.Data = {
+              36040000424D3604000000000000360000002800000010000000100000000100
+              2000000000000004000064000000640000000000000000000000FFFFFF000000
+              000800000010000000170000001A00000016000000120000000E0000000E0000
+              0012000000160000001A000000180000001000000008FFFFFF00FFFFFF000000
+              00100000001F64330270984D02CC64330270000000230000001B0000001C0000
+              002364330270984D02CC643302710000002000000010FFFFFF00FFFFFF002815
+              0200753D045C9C5105CCFFB811FF9C5105CC753D045C2815020028150200753D
+              045C9C5105CCFFB508FF9C5105CC753D045C28150200FFFFFF00FFFFFF00A257
+              0A5CA15609CCFFB917FFFFB201FFFFB814FFA15609CCA1560948A1560948A156
+              09CCFFB60DFFFFB201FFFFB50BFFA15609CCA2570A5CFFFFFF00FFFFFF00BF74
+              1599BF7415CCBF7415CCFBC23EFFBF7415CCBF7415CCBF741566BF741566BF74
+              15CCBF7415CCFABA27FFBF7415CCBF7415CCBF741599FFFFFF00FFFFFF00BF74
+              1500BB701500AD6212C9F2BC49FDB36A18D0B2671320BF741500BF741500B267
+              1320B36916D0F0B435FDAD6212C9BB701500BF741500FFFFFF00FFFFFF00BA6F
+              1700B4691700B46917B4E3AA46F4C6842DDBB56A185EB56A1800B56A1800B56A
+              185EC58128DBE1A53BF6B46917B9B4691700BA6F1700FFFFFF00FFFFFF00BA6F
+              1C00BA6F1C00BA6F1C86D59A45E6DAA24CEFBA6F1CB8BE731F0ABE731F0ABA6F
+              1CB8D89D45EFD3963FE8BA6F1C8CBA6F1C00BA6F1C00FFFFFF00FFFFFF00C075
+              2000C0752000C176213CC7802CD2EDC577FECD8C39D9C1772271C1772270CC89
+              37D9E7BB6DFFC8822ED4C0762148BF752000BF752000FFFFFF00FFFFFF00C77C
+              2500C77C2500C77C2502C97E27A1DCA452E6E9BE70F6C97E27C6C97E27C6E6B8
+              6AF6DAA050E9C97E27ACC77C2505C77C2500C77C2500FFFFFF00FFFFFF00CC81
+              2900CC812900CC812900CF842C2CD18831CDF2C679FBDC9D49DBDB9B47DCE6B8
+              6BFCD28932CFCE832C36CD822B00CD822B00CD822B00FFFFFF00FFFFFF00D489
+              3000D4893000D4893000D4893000D68B3190E9B461E6EEB86AF4EEB869F4EAB3
+              61E7D68B3197D3882F00D2872F00D2872F00D2872F00FFFFFF00FFFFFF00DA8F
+              3400DA8F3400DA8F3400DA8F3400DB903547E4A44DD8F6C679FEF5C679FEE4A4
+              4DD8DB903549DA8F3400DA8F3400DA8F3400DA8F3400FFFFFF00FFFFFF00E196
+              3900E1963900E1963900E1963900E1963917E39B3FCFFCD488FFFCD387FFE39C
+              40CFE1963918E1963900E1963900E1963900E1963900FFFFFF00FFFFFF00E69B
+              3D00E69B3D00E69B3D00E69B3D00E69B3D04E69B3DCCFFE094FFFFDF93FFE69B
+              3DCCE69B3D04E69B3D00E69B3D00E69B3D00E69B3D00FFFFFF00FFFFFF003A27
+              1000AE752E00E79C3D00E79C3D00E79C3D00E99E4099E99E40CCE99E40CCE99E
+              4099E79C3D00E79C3D00E79C3D00AE752E003A271000FFFFFF00
+            }
           end
         end
       end
@@ -1863,13 +1909,12 @@ object MainForm: TMainForm
       ChildSizing.TopBottomSpacing = 4
       ChildSizing.HorizontalSpacing = 4
       ChildSizing.VerticalSpacing = 4
-      ClientHeight = 484
+      ClientHeight = 492
       ClientWidth = 558
       object vtFavorites: TVirtualStringTree
-        AnchorSideTop.Control = edFavoritesSearch
         AnchorSideTop.Side = asrBottom
         Left = 4
-        Height = 366
+        Height = 374
         Top = 31
         Width = 549
         Anchors = [akTop, akLeft, akRight, akBottom]
@@ -1934,7 +1979,7 @@ object MainForm: TMainForm
       object btFavoritesImport: TBitBtn
         Left = 33
         Height = 24
-        Top = 450
+        Top = 458
         Width = 491
         Anchors = [akLeft, akRight, akBottom]
         Caption = 'Import list'
@@ -1981,7 +2026,7 @@ object MainForm: TMainForm
       object btCancelFavoritesCheck: TSpeedButton
         Left = 490
         Height = 40
-        Top = 404
+        Top = 412
         Width = 34
         Anchors = [akRight, akBottom]
         Glyph.Data = {
@@ -2026,7 +2071,7 @@ object MainForm: TMainForm
       object btFavoritesCheckNewChapter: TBitBtn
         Left = 33
         Height = 40
-        Top = 404
+        Top = 412
         Width = 491
         Anchors = [akLeft, akRight, akBottom]
         Caption = 'Check for new chapter'
@@ -2069,26 +2114,12 @@ object MainForm: TMainForm
         OnClick = btFavoritesCheckNewChapterClick
         TabOrder = 1
       end
-      object edFavoritesSearch: TEdit
+      object edFavoritesSearch: TEditButton
         Left = 4
         Height = 23
         Top = 4
         Width = 150
-        OnChange = edFavoritesSearchChange
-        TabOrder = 3
-        TextHint = 'Search favorites...'
-      end
-      object btFavoritesSearchClear: TSpeedButton
-        AnchorSideLeft.Control = edFavoritesSearch
-        AnchorSideLeft.Side = asrBottom
-        AnchorSideTop.Control = edFavoritesSearch
-        AnchorSideBottom.Control = edFavoritesSearch
-        AnchorSideBottom.Side = asrBottom
-        Left = 158
-        Height = 23
-        Top = 4
-        Width = 23
-        Anchors = [akTop, akLeft, akBottom]
+        ButtonWidth = 23
         Glyph.Data = {
           36040000424D3604000000000000360000002800000010000000100000000100
           2000000000000004000064000000640000000000000000000000FFFFFF00FFFF
@@ -2125,7 +2156,13 @@ object MainForm: TMainForm
           FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
           FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00
         }
-        OnClick = btFavoritesSearchClearClick
+        MaxLength = 0
+        NumGlyphs = 1
+        OnButtonClick = edFavoritesSearchButtonClick
+        OnChange = edFavoritesSearchChange
+        PasswordChar = #0
+        TabOrder = 3
+        TextHint = 'Search favorites...'
       end
     end
     object tsOption: TTabSheet
@@ -2499,11 +2536,11 @@ object MainForm: TMainForm
         end
         object tsConnections: TTabSheet
           Caption = 'Connections'
-          ClientHeight = 379
+          ClientHeight = 387
           ClientWidth = 531
           object sbDownloadConnections: TScrollBox
             Left = 0
-            Height = 379
+            Height = 387
             Top = 0
             Width = 531
             HorzScrollBar.Page = 455
@@ -2514,7 +2551,7 @@ object MainForm: TMainForm
             ChildSizing.TopBottomSpacing = 8
             ChildSizing.HorizontalSpacing = 4
             ChildSizing.VerticalSpacing = 4
-            ClientHeight = 379
+            ClientHeight = 387
             ClientWidth = 531
             TabOrder = 0
             object cbOptionUseProxy: TCheckBox
@@ -3245,7 +3282,7 @@ object MainForm: TMainForm
           ChildSizing.TopBottomSpacing = 8
           ChildSizing.HorizontalSpacing = 4
           ChildSizing.VerticalSpacing = 4
-          ClientHeight = 379
+          ClientHeight = 387
           ClientWidth = 531
           object cbOptionAutoCheckLatestVersion: TCheckBox
             Left = 4
@@ -3372,7 +3409,7 @@ object MainForm: TMainForm
           ChildSizing.TopBottomSpacing = 8
           ChildSizing.HorizontalSpacing = 4
           ChildSizing.VerticalSpacing = 4
-          ClientHeight = 379
+          ClientHeight = 387
           ClientWidth = 531
           object gbDialogs: TGroupBox
             Left = 4
@@ -3427,11 +3464,11 @@ object MainForm: TMainForm
           ChildSizing.TopBottomSpacing = 8
           ChildSizing.HorizontalSpacing = 4
           ChildSizing.VerticalSpacing = 4
-          ClientHeight = 379
+          ClientHeight = 387
           ClientWidth = 531
           object pcWebsiteOptions: TPageControl
             Left = 4
-            Height = 363
+            Height = 371
             Top = 8
             Width = 523
             ActivePage = tsWebsiteSelection
@@ -3440,11 +3477,11 @@ object MainForm: TMainForm
             TabOrder = 0
             object tsWebsiteSelection: TTabSheet
               Caption = 'Websites'
-              ClientHeight = 335
+              ClientHeight = 343
               ClientWidth = 515
               object vtOptionMangaSiteSelection: TVirtualStringTree
                 Left = 0
-                Height = 300
+                Height = 308
                 Top = 35
                 Width = 515
                 Align = alClient
@@ -3487,23 +3524,56 @@ object MainForm: TMainForm
                 ClientHeight = 23
                 ClientWidth = 509
                 TabOrder = 1
-                object edWebsitesSearch: TEdit
+                object pnlWebsitesToolRight: TPanel
+                  Left = 339
+                  Height = 23
+                  Top = 0
+                  Width = 170
+                  Align = alRight
+                  AutoSize = True
+                  BevelOuter = bvNone
+                  ClientHeight = 23
+                  ClientWidth = 170
+                  TabOrder = 0
+                  object ToolBarWebsites: TToolBar
+                    Left = 0
+                    Height = 22
+                    Top = 0
+                    Width = 170
+                    AutoSize = True
+                    EdgeBorders = []
+                    Images = IconList
+                    List = True
+                    ParentFont = False
+                    ShowCaptions = True
+                    TabOrder = 0
+                    Transparent = True
+                    object tbWebsitesExpandAll: TToolButton
+                      Left = 1
+                      Top = 0
+                      AutoSize = True
+                      Caption = 'Expand All'
+                      ImageIndex = 17
+                      OnClick = tbWebsitesExpandAllClick
+                    end
+                    object tbWebsitesCollapseAll: TToolButton
+                      Left = 82
+                      Top = 0
+                      AutoSize = True
+                      Caption = 'Collapse All'
+                      ImageIndex = 18
+                      OnClick = tbWebsitesCollapseAllClick
+                    end
+                  end
+                end
+                object edWebsitesSearch: TEditButton
                   Left = 0
                   Height = 23
                   Top = 0
                   Width = 184
                   Align = alLeft
                   BorderSpacing.Right = 2
-                  OnChange = edWebsitesSearchChange
-                  TabOrder = 0
-                  TextHint = 'Search website...'
-                end
-                object btWebsitesSearchClear: TSpeedButton
-                  Left = 188
-                  Height = 23
-                  Top = 0
-                  Width = 22
-                  Align = alLeft
+                  ButtonWidth = 23
                   Glyph.Data = {
                     36040000424D3604000000000000360000002800000010000000100000000100
                     2000000000000004000064000000640000000000000000000000FFFFFF00FFFF
@@ -3540,49 +3610,13 @@ object MainForm: TMainForm
                     FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
                     FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00
                   }
-                  OnClick = btWebsitesSearchClearClick
-                end
-                object pnlWebsitesToolRight: TPanel
-                  Left = 339
-                  Height = 23
-                  Top = 0
-                  Width = 170
-                  Align = alRight
-                  AutoSize = True
-                  BevelOuter = bvNone
-                  ClientHeight = 23
-                  ClientWidth = 170
+                  MaxLength = 0
+                  NumGlyphs = 1
+                  OnButtonClick = edWebsitesSearchButtonClick
+                  OnChange = edWebsitesSearchChange
+                  PasswordChar = #0
                   TabOrder = 1
-                  object ToolBarWebsites: TToolBar
-                    Left = 0
-                    Height = 22
-                    Top = 0
-                    Width = 170
-                    AutoSize = True
-                    EdgeBorders = []
-                    Images = IconList
-                    List = True
-                    ParentFont = False
-                    ShowCaptions = True
-                    TabOrder = 0
-                    Transparent = True
-                    object tbWebsitesExpandAll: TToolButton
-                      Left = 1
-                      Top = 0
-                      AutoSize = True
-                      Caption = 'Expand All'
-                      ImageIndex = 17
-                      OnClick = tbWebsitesExpandAllClick
-                    end
-                    object tbWebsitesCollapseAll: TToolButton
-                      Left = 82
-                      Top = 0
-                      AutoSize = True
-                      Caption = 'Collapse All'
-                      ImageIndex = 18
-                      OnClick = tbWebsitesCollapseAllClick
-                    end
-                  end
+                  TextHint = 'Search website...'
                 end
               end
             end
@@ -3877,12 +3911,12 @@ object MainForm: TMainForm
       Caption = 'About'
       ChildSizing.LeftRightSpacing = 4
       ChildSizing.TopBottomSpacing = 8
-      ClientHeight = 484
+      ClientHeight = 492
       ClientWidth = 558
       object btCheckLatestVersion: TBitBtn
         Left = 25
         Height = 40
-        Top = 433
+        Top = 441
         Width = 208
         Anchors = [akLeft, akBottom]
         Caption = 'Check for latest version'
@@ -3928,7 +3962,7 @@ object MainForm: TMainForm
       object btAbortCheckLatestVersion: TSpeedButton
         Left = 193
         Height = 40
-        Top = 433
+        Top = 441
         Width = 40
         Anchors = [akLeft, akBottom]
         Glyph.Data = {
@@ -3973,7 +4007,7 @@ object MainForm: TMainForm
       object btVisitMyBlog: TBitBtn
         Left = 249
         Height = 40
-        Top = 433
+        Top = 441
         Width = 208
         Anchors = [akLeft, akBottom]
         Caption = 'Visit my blog'
@@ -4018,7 +4052,7 @@ object MainForm: TMainForm
       end
       object pcAbout: TPageControl
         Left = 4
-        Height = 414
+        Height = 422
         Top = 8
         Width = 550
         ActivePage = tsAboutText
@@ -4028,11 +4062,11 @@ object MainForm: TMainForm
         TabOrder = 2
         object tsAboutText: TTabSheet
           Caption = 'About FMD'
-          ClientHeight = 386
+          ClientHeight = 394
           ClientWidth = 542
           object rmAbout: TRichMemo
             Left = 2
-            Height = 380
+            Height = 388
             Top = 4
             Width = 536
             Align = alClient

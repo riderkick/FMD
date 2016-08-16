@@ -40,14 +40,12 @@ type
     btChecks: TSpeedButton;
     btDonate: TImage;
     btFavoritesImport: TBitBtn;
-    btDownloadsSearchClear: TSpeedButton;
     btFilter: TBitBtn;
     btFilterReset: TBitBtn;
     btOptionApply: TBitBtn;
     btReadOnline: TBitBtn;
     btRemoveFilter: TSpeedButton;
     btMangaListSearchClear: TSpeedButton;
-    btWebsitesSearchClear: TSpeedButton;
     btUpdateList: TSpeedButton;
     cbOptionAutoCheckFavStartup: TCheckBox;
     cbOptionAutoCheckFavInterval: TCheckBox;
@@ -67,9 +65,9 @@ type
     cbOptionProxyType: TComboBox;
     cbOptionOneInstanceOnly: TCheckBox;
     ckEnableLogging: TCheckBox;
-    edDownloadsSearch: TEdit;
+    edDownloadsSearch: TEditButton;
+    edFavoritesSearch: TEditButton;
     edFilterMangaInfoChapters: TEditButton;
-    edFavoritesSearch: TEdit;
     edLogFileName: TEditButton;
     edOptionChangeUnicodeCharacterStr: TEdit;
     edOptionDefaultPath: TEditButton;
@@ -78,6 +76,7 @@ type
     edOptionMangaCustomRename: TEdit;
     edSaveTo: TEditButton;
     edURL: TEditButton;
+    edWebsitesSearch: TEditButton;
     lbLogFileName: TLabel;
     lbOptionFilenameCustomRenameHint: TLabel;
     lbOptionFilenameCustomRename: TLabel;
@@ -119,7 +118,7 @@ type
     pmTray: TPopupMenu;
     sbSaveTo: TScrollBox;
     sbWebsiteOptions: TScrollBox;
-    btFavoritesSearchClear: TSpeedButton;
+    btDownloadSplit: TSpeedButton;
     tsCustomColor: TTabSheet;
     tsLog: TTabSheet;
     tmAnimateMangaInfo: TTimer;
@@ -141,7 +140,6 @@ type
     TransferRateGraph: TChart;
     ckDropTarget: TCheckBox;
     edOptionExternalParams: TEdit;
-    edWebsitesSearch: TEdit;
     gbDropTarget: TGroupBox;
     gbOptionExternal: TGroupBox;
     IconDL: TImageList;
@@ -390,15 +388,12 @@ type
     procedure btCheckLatestVersionClick(Sender: TObject);
     procedure btClearLogFileClick(Sender: TObject);
     procedure btDonateClick(Sender: TObject);
-    procedure btDownloadsSearchClearClick(Sender: TObject);
-    procedure btFavoritesSearchClearClick(Sender: TObject);
     procedure btFavoritesImportClick(Sender: TObject);
     procedure btOpenLogClick(Sender: TObject);
     procedure btReadOnlineClick(Sender: TObject);
     procedure btMangaListSearchClearClick(Sender: TObject);
     procedure btUpdateListClick(Sender: TObject);
     procedure btVisitMyBlogClick(Sender: TObject);
-    procedure btWebsitesSearchClearClick(Sender: TObject);
     procedure cbAddAsStoppedChange(Sender: TObject);
     procedure cbOptionAutoCheckFavIntervalChange(Sender: TObject);
     procedure cbOptionChangeUnicodeCharacterChange(Sender: TObject);
@@ -414,7 +409,9 @@ type
       var CellText: String);
     procedure clbChapterListInitNode(Sender: TBaseVirtualTree; ParentNode,
       Node: PVirtualNode; var InitialStates: TVirtualNodeInitStates);
+    procedure edDownloadsSearchButtonClick(Sender: TObject);
     procedure edDownloadsSearchChange(Sender: TObject);
+    procedure edFavoritesSearchButtonClick(Sender: TObject);
     procedure edFavoritesSearchChange(Sender: TObject);
     procedure edFilterMangaInfoChaptersButtonClick(Sender: TObject);
     procedure edFilterMangaInfoChaptersChange(Sender: TObject);
@@ -427,6 +424,7 @@ type
     procedure edSaveToButtonClick(Sender: TObject);
     procedure edURLButtonClick(Sender: TObject);
     procedure edURLKeyPress(Sender: TObject; var Key: Char);
+    procedure edWebsitesSearchButtonClick(Sender: TObject);
     procedure edWebsitesSearchChange(Sender: TObject);
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCreate(Sender: TObject);
@@ -2170,11 +2168,6 @@ begin
   OpenURL('http://akarink.wordpress.com/');
 end;
 
-procedure TMainForm.btWebsitesSearchClearClick(Sender: TObject);
-begin
-  edWebsitesSearch.Clear;
-end;
-
 procedure TMainForm.cbAddAsStoppedChange(Sender: TObject);
 begin
   configfile.WriteBool('general', 'AddAsStopped', cbAddAsStopped.Checked);
@@ -2242,16 +2235,6 @@ end;
 procedure TMainForm.btDonateClick(Sender: TObject);
 begin
   OpenURL('https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=akarin.km@gmail.com&item_name=Donation+to+Free+Manga+Downloader');
-end;
-
-procedure TMainForm.btDownloadsSearchClearClick(Sender: TObject);
-begin
-  edDownloadsSearch.Clear;
-end;
-
-procedure TMainForm.btFavoritesSearchClearClick(Sender: TObject);
-begin
-  edFavoritesSearch.Clear;
 end;
 
 procedure TMainForm.btFavoritesImportClick(Sender: TObject);
@@ -2334,6 +2317,11 @@ begin
   if Assigned(Node) then Node^.CheckType:=ctCheckBox;
 end;
 
+procedure TMainForm.edDownloadsSearchButtonClick(Sender: TObject);
+begin
+  edDownloadsSearch.Clear;
+end;
+
 procedure TMainForm.edDownloadsSearchChange(Sender: TObject);
 var
   Node: PVirtualNode;
@@ -2366,6 +2354,11 @@ begin
     finally
       EndUpdate;
     end;
+end;
+
+procedure TMainForm.edFavoritesSearchButtonClick(Sender: TObject);
+begin
+  edFavoritesSearch.Clear;
 end;
 
 procedure TMainForm.edFavoritesSearchChange(Sender: TObject);
@@ -2427,6 +2420,11 @@ procedure TMainForm.edURLKeyPress(Sender: TObject; var Key: Char);
 begin
   if Key = #13 then
     edURLButtonClick(edURL);
+end;
+
+procedure TMainForm.edWebsitesSearchButtonClick(Sender: TObject);
+begin
+  edWebsitesSearch.Clear;
 end;
 
 procedure TMainForm.edWebsitesSearchChange(Sender: TObject);
