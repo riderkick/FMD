@@ -13,6 +13,7 @@ object MainForm: TMainForm
   OnShow = FormShow
   OnWindowStateChange = FormWindowStateChange
   Position = poScreenCenter
+  ShowHint = True
   Visible = False
   object sbUpdateList: TStatusBar
     Left = 0

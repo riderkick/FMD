@@ -1242,6 +1242,11 @@ begin
   LoadMangaOptions;
   LoadOptions;
   ApplyOptions;
+
+  // hint
+  ShowHint := True;
+  Application.HintPause := 500;
+  Application.HintHidePause := 3000;
 end;
 
 procedure TMainForm.FormClose(Sender: TObject; var CloseAction: TCloseAction);
