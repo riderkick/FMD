@@ -4,6 +4,18 @@ Project page: https://github.com/riderkick/FMD
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.78.0 (17-08-2016)
+[*] Fixed various issue with unicode path and filename
+[*] TripleSevenScan: fixed accept adult warning
+[*] MangaIndo: fixed manga info
+[*] MangaChanRU/HentaiChanRU/YaoiChanRU: fixed manga info and empty chapters
+[+] Added custom text to be used to replace unicode character
+[+] Added context menu to copy log message
+[*] MangaStream: fixed an issue with some chapters
+[+] Added split download feature
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.77.0...0.9.78.0
+
 0.9.77.0 (13-08-2016)
 [*] MangaTraders: rewrite all code
 [*] MangaIndo: rewrite all code
