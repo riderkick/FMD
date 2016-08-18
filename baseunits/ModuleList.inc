@@ -47,4 +47,5 @@ uses
   MangaPark,
   MangaIndo,
   FunManga,
-  SundayWebry;
+  SundayWebry,
+  Komikid;

@@ -414,8 +414,6 @@ var
 
   {$I includes/Kivmanga/chapter_page_number.inc}
 
-  {$I includes/Komikid/chapter_page_number.inc}
-
   {$I includes/MangaAe/chapter_page_number.inc}
 
   {$I includes/MangaAr/chapter_page_number.inc}
@@ -507,9 +505,6 @@ begin
     else
     if Task.Container.MangaSiteID = ANIMEEXTREMIST_ID then
       Result := GetAnimeExtremistPageNumber
-    else
-    if Task.Container.MangaSiteID = KOMIKID_ID then
-      Result := GetKomikidPageNumber
     else
     if Task.Container.MangaSiteID = HUGEMANGA_ID then
       Result := GetHugeMangaPageNumber
@@ -632,8 +627,6 @@ var
 
   {$I includes/Kivmanga/image_url.inc}
 
-  {$I includes/Komikid/image_url.inc}
-
   {$I includes/Mabuns/image_url.inc}
 
   {$I includes/Manga24h/image_url.inc}
@@ -732,9 +725,6 @@ begin
     else
     if Task.Container.MangaSiteID = ANIMEEXTREMIST_ID then
       Result := GetAnimeExtremistImageURL
-    else
-    if Task.Container.MangaSiteID = KOMIKID_ID then
-      Result := GetKomikidImageURL
     else
     if Task.Container.MangaSiteID = MABUNS_ID then
       Result := GetMabunsImageURL
