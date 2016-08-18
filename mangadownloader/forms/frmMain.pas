@@ -2005,6 +2005,7 @@ begin
           OptionChangeUnicodeCharacterStr);
       c:=1;
       p:=links.Count;
+      r:=0;
       if btDownload.Tag>=links.Count then
       begin
         c:=links.Count;
