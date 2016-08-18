@@ -1280,7 +1280,6 @@ var
   H,P: String;
 begin
   SplitURL(URL,H,P);
-  Result:=Host+P;
   if H='' then Result:=RemoveURLDelim(Host)+P
   else Result:=URL;
 end;
