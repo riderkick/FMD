@@ -4,6 +4,12 @@ Project page: https://github.com/riderkick/FMD
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.79.0 (18-08-2016)
+[*] Fixed an error when creating download task
+[*] Fixed empty chapters with some website
+[*] Komikid: rewrite all code
+Full changes: https://github.com/riderkick/FMD/compare/0.9.78.0...0.9.79.0
+
 0.9.78.0 (17-08-2016)
 [*] Fixed various issue with unicode path and filename
 [*] TripleSevenScan: fixed accept adult warning
