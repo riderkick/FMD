@@ -66,7 +66,7 @@ procedure SetDefaultTimeoutAndApply(const ATimeout: Integer);
 procedure SetDefaultRetryCountAndApply(const ARetryCount: Integer);
 
 function MaybeEncodeURL(const AValue: String): String;
-procedure SplitURL(const URL: String; out Host, Path: String);
+procedure SplitURL(URL: String; out Host, Path: String);
 
 const
   UserAgentSynapse = 'Mozilla/4.0 (compatible; Synapse)';
@@ -104,41 +104,65 @@ begin
   Result:=0;
 end;
 
-procedure SplitURL(const URL: String; out Host, Path: String);
+procedure SplitURL(URL: String; out Host, Path: String);
+
+procedure cleanuri(var u:string);
+begin
+  while (Length(u)<>0) and (u[1] in ['.',':','/']) do
+    Delete(u,1,1);
+end;
+
 var
-  p: Integer;
+  prot,port: String;
+  p,q: Integer;
 begin
   Host:='';
   Path:='';
+  URL:=Trim(URL);
   if URL='' then Exit;
+  prot:='';
+  port:='';
+  p:=poschar(':',URL);
+  if (p<>0) and (p<Length(URL)) and (URL[P+1]='/') then
+  begin
+    prot:=Copy(URL,1,p-1);
+    Delete(URL,1,p);
+  end;
+  p:=poschar(':',URL);
+  if (p<>0) and (p<Length(URL)) and (URL[P+1] in ['0'..'9']) then
+  begin
+    for q:=p+1 to Length(URL) do
+      if not (URL[q] in ['0'..'9']) then Break;
+    if q=Length(URL) then Inc(q);
+    port:=Copy(URL,p+1,q-p-1);
+    delete(URL,p,q-p);
+  end;
+  cleanuri(URL);
   p:=poschar('.',URL);
+  if (p<>0) and (p>poschar('/',URL)) then p:=0;
   if (p<>0) and (p<Length(URL)) then
   begin
     p:=poschar('/',URL,p);
-    if p<>0 then Host:=Copy(URL,1,p-1)
+    if p<>0 then
+    begin
+      Host:=Copy(URL,1,p-1);
+      Delete(URL,1,p-1);
+      cleanuri(URL);
+    end
     else
     begin
       Host:=URL;
-      Exit;
+      URL:='';
     end;
   end;
   if Host<>'' then
   begin
-    while (Length(Host)<>0) and (Host[1] in ['.',':','/']) do
-      Delete(Host,1,1);
-    if Pos('://',Host)=0 then
-      Host:='http://'+Host;
+    if prot<>'' then Host:=prot+'://'+Host
+    else Host:='http://'+Host;
+    if port<>'' then Host:=Host+':'+port;
   end;
-  if p<>0 then
-    Path:=Copy(URL,p,Length(URL))
-  else
-    Path:=URL;
-  if Path<>'' then
-  begin
-    while Pos('//',Path)<>0 do Path:=StringReplace(Path,'//','/',[rfReplaceAll]);
-    if Path='/' then Path:=''
-    else if Path[1]<>'/' then Path:='/'+Path;
-  end;
+  if URL='' then Exit;
+  Path:='/'+URL;
 end;
 
 function KeyVal(const AKey, AValue: String): TKeyValuePair;
