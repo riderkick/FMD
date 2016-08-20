@@ -4,6 +4,10 @@ Project page: https://github.com/riderkick/FMD
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.80.0 (20-08-2016)
+[*] Tsumino: fixed download
+Full changes: https://github.com/riderkick/FMD/compare/0.9.79.0...0.9.80.0
+
 0.9.79.0 (18-08-2016)
 [*] Fixed an error when creating download task
 [*] Fixed empty chapters with some website
