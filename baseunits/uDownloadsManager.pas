@@ -956,7 +956,10 @@ begin
   if not ForceDirectoriesUTF8(Task.CurrentWorkingDir) then
   begin
     Task.Container.Status := STATUS_FAILED;
-    Task.Container.DownloadInfo.Status := RS_FailedToCreateDir;
+    Task.Container.DownloadInfo.Status := Format('[%d/%d] %s', [
+      Task.Container.CurrentDownloadChapterPtr,
+      Task.Container.ChapterLinks.Count,
+      RS_FailedToCreateDir]);
     Result := False;
     Exit;
   end;
@@ -1193,7 +1196,10 @@ begin
       begin
         Logger.SendError(Format('Failed to create dir(%d) = %s', [Length(CurrentWorkingDir), CurrentWorkingDir]));
         Container.Status := STATUS_FAILED;
-        Container.DownloadInfo.Status := RS_FailedToCreateDir;
+        Container.DownloadInfo.Status := Format('[%d/%d] %s', [
+          Container.CurrentDownloadChapterPtr,
+          Container.ChapterLinks.Count,
+          RS_FailedToCreateDir]);
         SyncShowBaloon;
         Exit;
       end;
@@ -1363,7 +1369,10 @@ begin
     if Container.FailedChapterLinks.Count > 0 then
     begin
       Container.Status := STATUS_FAILED;
-      Container.DownloadInfo.Status := RS_FailedTryResumeTask;
+      Container.DownloadInfo.Status := Format('[%d/%d] %s', [
+        Container.CurrentDownloadChapterPtr,
+        Container.ChapterLinks.Count,
+        RS_FailedTryResumeTask]);
       Container.DownloadInfo.Progress := '';
       Container.CurrentDownloadChapterPtr := 0;
 
