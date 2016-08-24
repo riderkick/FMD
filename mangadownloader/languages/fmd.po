@@ -372,6 +372,10 @@ msgctxt "TACCOUNTSETFORM.LABEL3.CAPTION"
 msgid "Password"
 msgstr ""
 
+#: tcustomcolorform.caption
+msgid "CustomColorForm"
+msgstr ""
+
 #: tcustomcolorform.tsbasiclist.caption
 msgid "Basic list"
 msgstr ""
@@ -517,6 +521,10 @@ msgstr ""
 
 #: tmainform.btvisitmyblog.caption
 msgid "Visit my blog"
+msgstr ""
+
+#: tmainform.caption
+msgid "Free Manga Downloader"
 msgstr ""
 
 #: tmainform.cbaddasstopped.caption

@@ -484,6 +484,9 @@ begin
     LineStyle := lsSolid;
     if Color = clDefault then
       Color := clWindow;
+    LineStyle:=lsDotted;
+    Header.Options:=Header.Options+[hoHotTrack];
+    TreeOptions.PaintOptions:=TreeOptions.PaintOptions+[toUseExplorerTheme,toHotTrack];
 
     // save original event
     PaintText := OnPaintText;

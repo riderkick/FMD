@@ -407,6 +407,10 @@ msgctxt "taccountsetform.label3.caption"
 msgid "Password"
 msgstr "Kata kunci"
 
+#: tcustomcolorform.caption
+msgid "CustomColorForm"
+msgstr "CustomColorForm"
+
 #: tcustomcolorform.tsbasiclist.caption
 msgid "Basic list"
 msgstr "Semua daftar"
@@ -553,6 +557,10 @@ msgstr "Perbarui daftar komik"
 #: tmainform.btvisitmyblog.caption
 msgid "Visit my blog"
 msgstr "Kunjungi blog"
+
+#: tmainform.caption
+msgid "Free Manga Downloader"
+msgstr "Free Manga Downloader"
 
 #: tmainform.cbaddasstopped.caption
 msgid "Add to download list as stopped task"

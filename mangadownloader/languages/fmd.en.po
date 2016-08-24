@@ -415,6 +415,10 @@ msgctxt "taccountsetform.label3.caption"
 msgid "Password"
 msgstr "Password"
 
+#: tcustomcolorform.caption
+msgid "CustomColorForm"
+msgstr "CustomColorForm"
+
 #: tcustomcolorform.tsbasiclist.caption
 msgid "Basic list"
 msgstr "Basic list"
@@ -562,6 +566,10 @@ msgstr "Update manga list"
 #: tmainform.btvisitmyblog.caption
 msgid "Visit my blog"
 msgstr "Visit my blog"
+
+#: tmainform.caption
+msgid "Free Manga Downloader"
+msgstr "Free Manga Downloader"
 
 #: tmainform.cbaddasstopped.caption
 msgid "Add to download list as stopped task"
