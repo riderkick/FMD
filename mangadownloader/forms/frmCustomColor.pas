@@ -173,7 +173,7 @@ begin
     Add('UnfocusedSelectionColor', clBtnFace);
     Add('UnfocusedSelectionBorderColor', clBtnShadow);
     Add('NormalTextColor', clWindowText);
-    Add('FocusedSelectionTextColor', clHighlightText);
+    Add('FocusedSelectionTextColor', clWindowText);
     Add('UnfocusedSelectionTextColor', clWindowText);
     Add('OddColor', CL_BSOdd);
     Add('EvenColor', CL_BSEven);
