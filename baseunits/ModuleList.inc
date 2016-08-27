@@ -48,4 +48,5 @@ uses
   MangaIndo,
   FunManga,
   SundayWebry,
-  Komikid;
+  Komikid,
+  MangaOnlineTo;
