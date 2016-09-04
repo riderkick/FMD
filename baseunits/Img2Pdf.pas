@@ -251,9 +251,7 @@ begin
       IMG.LoadFromStream(AFS, RDR);
 
       PageInfo.Filter := 'FlateDecode';
-      PageInfo.BitsPerComponent := RDR.Header.BitDepth;
-      if PageInfo.BitsPerComponent > 8 then
-        PageInfo.BitsPerComponent := 8;
+      PageInfo.BitsPerComponent := 8;
 
       AMS := TMemoryStreamUTF8.Create;
       try
