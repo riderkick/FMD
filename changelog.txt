@@ -4,6 +4,12 @@ Project page: https://github.com/riderkick/FMD
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.83.0 (06-09-2016)
+[*] Fixed an issue when saving to pdf
+[*] Hentai2Read: fixed manga info
+[+] Added MyMangaMe[EN]
+Full changes: https://github.com/riderkick/FMD/compare/0.9.82.0...0.9.83.0
+
 0.9.82.0 (28-08-2016)
 [+] Added MangaOnlineTo[EN]
 Full changes: https://github.com/riderkick/FMD/compare/0.9.81.0...0.9.82.0
