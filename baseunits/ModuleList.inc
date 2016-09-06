@@ -49,4 +49,5 @@ uses
   FunManga,
   SundayWebry,
   Komikid,
-  MangaOnlineTo;
+  MangaOnlineTo,
+  MyMangaMe;
