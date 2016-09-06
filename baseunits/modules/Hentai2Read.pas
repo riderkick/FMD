@@ -54,7 +54,7 @@ begin
         for v in XPath('//*[@class="img-overlay text-center"]/a') do
         begin
           ALinks.Add(v.toNode.getAttribute('href'));
-          ANames.Add(v.toString);
+          ANames.Add(XPathString('h2/@data-title', v));
         end;
       finally
         Free;
@@ -79,13 +79,8 @@ begin
       Result := NO_ERROR;
       with TXQueryEngineHTML.Create(Document) do
         try
-          coverLink := XPathString('//img[@class="img-responsive border-black-op"]/@src');
-          if coverLink <> '' then
-            coverLink := TrimLeftChar(coverLink, ['/']);
-          if coverlink <> '' then
-            coverLink := MaybeFillHost(cdnurl, coverLink);
-          if title = '' then
-            title := XPathString('//h3/a/text()');
+          coverLink := MaybeFillHost(cdnurl, XPathString('//img[@class="img-responsive border-black-op"]/@src'));
+          title := XPathString('//title/substring-before(.," Hentai - Read ")');
           authors := XPathStringAll(
             '//ul[@class="list list-simple-mini"]/li[starts-with(.,"Author")]/*[position()>1]',
             ['-']);
@@ -108,7 +103,7 @@ begin
           for v in XPath('//ul[starts-with(@class,"nav-chapters")]/li/a') do
           begin
             chapterLinks.Add(v.toNode.getAttribute('href'));
-            chapterName.Add(XPathString('text()', v.toNode));
+            chapterName.Add(XPathString('string-join(text()," ")', v.toNode));
           end;
           InvertStrings([chapterLinks, chapterName]);
         finally
