@@ -48,6 +48,8 @@ uses
   MangaIndo,
   FunManga,
   SundayWebry,
+  TonarinoYoungJump,
+  Comico,  
   Komikid,
   MangaOnlineTo,
   MyMangaMe;
