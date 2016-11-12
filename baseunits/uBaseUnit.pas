@@ -236,68 +236,66 @@ const
   VNSHARING_ID           = 3;
   FAKKU_ID               = 4;
   TRUYEN18_ID            = 5;
-
   TRUYENTRANHTUAN_ID     = 6;
   TURKCRAFT_ID           = 7;
   EATMANGA_ID            = 8;
   STARKANA_ID            = 9;
   BLOGTRUYEN_ID          = 10;
-  KOMIKID_ID             = 11;
-  ESMANGAHERE_ID         = 12;
-  ANIMEEXTREMIST_ID      = 13;
-  HUGEMANGA_ID           = 14;
-  S2SCAN_ID              = 15;
-  IMANHUA_ID             = 16;
-  MABUNS_ID              = 17;
-  MANGAESTA_ID           = 18;
-  CENTRALDEMANGAS_ID     = 19;
-  EGSCANS_ID             = 20;
-  MANGAAR_ID             = 21;
-  MANGAAE_ID             = 22;
-  ANIMESTORY_ID          = 23;
-  LECTUREENLIGNE_ID      = 24;
-  SCANMANGA_ID           = 25;
-  MANGAGO_ID             = 26;
-  DM5_ID                 = 27;
-  MANGACOW_ID            = 28;
-  KIVMANGA_ID            = 29;
-  MEINMANGA_ID           = 30;
-  MANGASPROJECT_ID       = 31;
-  MANGAREADER_POR_ID     = 32;
-  NINEMANGA_ID           = 33;
-  NINEMANGA_ES_ID        = 34;
-  NINEMANGA_CN_ID        = 35;
-  NINEMANGA_RU_ID        = 36;
-  NINEMANGA_DE_ID        = 37;
-  NINEMANGA_IT_ID        = 38;
-  NINEMANGA_BR_ID        = 39;
-  JAPANSHIN_ID           = 40;
-  JAPSCAN_ID             = 41;
-  CENTRUMMANGI_PL_ID     = 42;
-  MANGALIB_PL_ID         = 43;
-  ONEMANGA_ID            = 44;
-  MANGATOWN_ID           = 45;
-  MANGAOKU_ID            = 46;
-  MYREADINGMANGAINFO_ID  = 47;
-  IKOMIK_ID              = 48;
-  NHENTAI_ID             = 49;
-  MANGAMINT_ID           = 50;
-  UNIXMANGA_ID           = 51;
-  EXTREMEMANGAS_ID       = 52;
-  MANGAHOST_ID           = 53;
-  PORNCOMIX_ID           = 54;
-  PORNCOMIXRE_ID         = 55;
-  PORNCOMIXIC_ID         = 56;
-  XXCOMICS_ID            = 57;
-  XXCOMICSMT_ID          = 58;
-  XXCOMICS3D_ID          = 59;
-  PORNXXXCOMICS_ID       = 60;
-  MANGAKU_ID             = 61;
-  MANGAAT_ID             = 62;
-  READMANGATODAY_ID      = 63;
-  DYNASTYSCANS_ID        = 64;
+  ESMANGAHERE_ID         = 11;
+  ANIMEEXTREMIST_ID      = 12;
+  HUGEMANGA_ID           = 13;
+  S2SCAN_ID              = 14;
+  IMANHUA_ID             = 15;
+  MABUNS_ID              = 16;
+  MANGAESTA_ID           = 17;
+  CENTRALDEMANGAS_ID     = 18;
+  EGSCANS_ID             = 19;
+  MANGAAR_ID             = 20;
+  MANGAAE_ID             = 21;
+  ANIMESTORY_ID          = 22;
+  LECTUREENLIGNE_ID      = 23;
+  SCANMANGA_ID           = 24;
+  MANGAGO_ID             = 25;
+  DM5_ID                 = 26;
+  MANGACOW_ID            = 27;
+  KIVMANGA_ID            = 28;
+  MEINMANGA_ID           = 29;
+  MANGASPROJECT_ID       = 30;
+  MANGAREADER_POR_ID     = 31;
+  NINEMANGA_ID           = 32;
+  NINEMANGA_ES_ID        = 33;
+  NINEMANGA_CN_ID        = 34;
+  NINEMANGA_RU_ID        = 35;
+  NINEMANGA_DE_ID        = 36;
+  NINEMANGA_IT_ID        = 37;
+  NINEMANGA_BR_ID        = 38;
+  JAPANSHIN_ID           = 39;
+  JAPSCAN_ID             = 40;
+  CENTRUMMANGI_PL_ID     = 41;
+  MANGALIB_PL_ID         = 42;
+  ONEMANGA_ID            = 43;
+  MANGATOWN_ID           = 44;
+  MANGAOKU_ID            = 45;
+  MYREADINGMANGAINFO_ID  = 46;
+  IKOMIK_ID              = 47;
+  NHENTAI_ID             = 48;
+  MANGAMINT_ID           = 49;
+  UNIXMANGA_ID           = 50;
+  EXTREMEMANGAS_ID       = 51;
+  MANGAHOST_ID           = 52;
+  PORNCOMIX_ID           = 53;
+  PORNCOMIXRE_ID         = 54;
+  PORNCOMIXIC_ID         = 55;
+  XXCOMICS_ID            = 56;
+  XXCOMICSMT_ID          = 57;
+  XXCOMICS3D_ID          = 58;
+  PORNXXXCOMICS_ID       = 59;
+  MANGAKU_ID             = 60;
+  MANGAAT_ID             = 61;
+  READMANGATODAY_ID      = 62;
+  DYNASTYSCANS_ID        = 63;
 
-  WebsiteRoots: array [0..64] of array [0..1] of String = (
+  WebsiteRoots: array [0..63] of array [0..1] of String = (
     ('AnimeA', 'http://manga.animea.net'),
     ('OurManga', 'http://www.ourmanga.com'),
     ('Manga24h', 'http://manga24h.com'),
@@ -309,7 +307,6 @@ const
     ('EatManga', 'http://eatmanga.com'),
     ('Starkana', 'http://starkana.jp'),
     ('BlogTruyen', 'http://blogtruyen.com'),
-    ('Komikid', 'http://www.komikid.com'),
     ('ESMangaHere', 'http://es.mangahere.co'),
     ('AnimExtremist', 'http://www.animextremist.com'),
     ('HugeManga', 'http://hugemanga.com'),
@@ -396,8 +393,6 @@ const
   BLOGTRUYEN_BROWSER = '/danhsach/tatca';
   BLOGTRUYEN_JS_BROWSER = '/ListStory/GetListStory/';
   BLOGTRUYEN_POST_FORM = 'Url=tatca&OrderBy=1&PageIndex=';
-
-  KOMIKID_BROWSER = '/daftar.php';
 
   ESMANGAHERE_BROWSER = '/mangalist/';
 
@@ -571,28 +566,40 @@ type
 
   PDownloadInfo = ^TDownloadInfo;
 
+  { TDownloadInfo }
+
   TDownloadInfo = record
+  private
+    FSaveTo: String;
+    procedure SetSaveTo(AValue: String);
+  public
     Website,
     Link,
     Title,
-    SaveTo,
     Status,
     Progress,
     TransferRate: String;
     DateTime: TDateTime;
     iProgress: Integer;
+    property SaveTo: String read FSaveTo write SetSaveTo;
   end;
 
   PFavoriteInfo = ^TFavoriteInfo;
 
+  { TFavoriteInfo }
+
   TFavoriteInfo = record
+  private
+    FSaveTo: String;
+    procedure SetSaveTo(AValue: String);
+  public
     Website,
     Title,
     Link,
-    SaveTo,
     Numbering,
     DownloadedChapterList,
     CurrentChapter: String;
+    property SaveTo: String read FSaveTo write SetSaveTo;
   end;
 
   TCardinalList = TFPGList<Cardinal>;
@@ -641,7 +648,7 @@ type
   end;
 
 // Remove Unicode
-function UnicodeRemove(const S: String): String;
+function ReplaceUnicodeChar(const S, ReplaceStr: String): String;
 // Check a directory to see if it's empty (return TRUE) or not
 function IsDirectoryEmpty(const ADir: String): Boolean;
 function CheckRedirect(const HTTP: THTTPSend): String;
@@ -669,14 +676,15 @@ function FillURLProtocol(const AProtocol, AURL: String): String;
 // Fill in website host if it's not present
 function FillMangaSiteHost(const MangaID: Cardinal; URL: String): String; overload;
 function FillMangaSiteHost(const Website, URL: String): String; overload;
-function FillHost(const Host, URL: String): String;
-function MaybeFillHost(const Host, URL: String): String;
 
 // modify url
+function FillHost(const Host, URL: String): String;
+function MaybeFillHost(const Host, URL: String): String;
 function GetHostURL(URL: String): String;
 function RemoveHostFromURL(URL: String): String;
 procedure RemoveHostFromURLs(const URLs: TStringList);
 procedure RemoveHostFromURLsPair(const URLs, Names: TStringList);
+function EncodeCriticalURLElements(const URL: String): String;
 
 //JSON
 procedure ParseJSONArray(const S, Path: String; var OutArray: TStringList);
@@ -774,9 +782,10 @@ function IncStr(const I: Integer; N: Integer = 1): String; overload; inline;
 function GetHeaderValue(const AHeaders: TStrings; HName: String): String;
 
 // custom rename feature
-function CustomRename(const AString, AWebsite, AMangaName, AAuthor, AArtist,
-  AChapter, ANumbering: String; const ARemoveUnicode: Boolean;
-  const AFilename: String = ''): String;
+function CustomRename(const AString, AWebsite, AMangaName, AAuthor, AArtist, AChapter, ANumbering: String;
+  const AReplaceUnicode: Boolean;
+  const AReplaceUnicodeStr: String;
+  const AFileName: String = ''): String;
 
 // Get substring from source
 function GetString(const Source, sStart, sEnd: String): String;
@@ -967,19 +976,24 @@ end;
 
 {$ENDIF}
 
-function UnicodeRemove(const S: String): String;
+function ReplaceUnicodeChar(const S, ReplaceStr: String): String;
 var
   i: Integer;
+  s1, s2, sr: UnicodeString;
 begin
   Result := S;
-  for i := 1 to Length(Result) do
+  if Result = '' then Exit;
+  s1 := UTF8Decode(S);
+  s2 := UTF8Decode(ReplaceStr);
+  sr := '';
+  for i := 1 to Length(s1) do
   begin
-    if (Byte(Result[i]) < 31) or (Byte(Result[i]) > 127) then
-    begin
-      Delete(Result, i, 1);
-      Insert('_', Result, i);
-    end;
+    if (Ord(s1[i]) < 31) or (Ord(s1[i]) > 127) then
+      sr := sr + s2
+    else
+      sr := sr + s1[i];
   end;
+  Result := UTF8Encode(sr);
 end;
 
 function IsDirectoryEmpty(const ADir: String): Boolean;
@@ -1250,127 +1264,82 @@ end;
 
 function FillHost(const Host, URL: String): String;
 var
-  tu: String;
+  H,P: String;
 begin
-  Result := CleanURL(URL);
-  if Host = '' then Exit;
-  if Pos(Host, URL) = 1 then Exit;
-  if Pos('://', URL) = 0 then
-  begin
-    Result := RemoveURLDelim(Host) + AppendURLDelimLeft(Result);
-    Exit;
-  end;
-  with TRegExpr.Create do
-    try
-      Expression := REGEX_HOST;
-      tu := Replace(Result, '$4', True);
-      if tu <> '' then
-        Result := RemoveURLDelim(Host) + AppendURLDelimLeft(tu);
-    finally
-      Free;
-    end;
+  SplitURL(URL,H,P);
+  Result:=RemoveURLDelim(Host)+P;
 end;
 
 function MaybeFillHost(const Host, URL: String): String;
 var
-  tu: String;
+  H,P: String;
 begin
-  Result := CleanURL(URL);
-  if Host = '' then Exit;
-  if URL = '' then Exit;
-  if Pos(Host, URL) = 1 then Exit;
-  if Pos('://', URL) = 0 then
-  begin
-    Result := RemoveURLDelim(Host) + AppendURLDelimLeft(Result);
-    Exit;
-  end;
-  with TRegExpr.Create do
-    try
-      Expression := REGEX_HOST;
-      if Replace(Result, '$2', True) = '' then
-      begin
-        tu := Replace(Result, '$4', True);
-        if tu <> '' then
-          Result := RemoveURLDelim(Host) + AppendURLDelimLeft(tu);
-      end;
-    finally
-      Free;
-    end;
+  SplitURL(URL,H,P);
+  if H='' then Result:=RemoveURLDelim(Host)+P
+  else Result:=URL;
 end;
 
 function GetHostURL(URL: String): String;
+var
+  H,P: String;
 begin
-  Result := URL;
-  if URL = '' then Exit;
-  Result := ReplaceRegExpr(REGEX_HOST, Result, '$1$2', True);
+  SplitURL(URL,H,P);
+  Result:=H;
 end;
 
 function RemoveHostFromURL(URL: String): String;
+var
+  H,P: String;
 begin
-  Result := ReplaceRegExpr(REGEX_HOST, URL, '$4', True);
-  if Result = '' then
-    Result := URL;
-  if (Result <> '') and (Result[1] <> '/') then
-    Result := '/' + Result;
+  SplitURL(URL,H,P);
+  Result:=P;
 end;
 
 procedure RemoveHostFromURLs(const URLs: TStringList);
 var
   i: Integer;
-  s: String;
+  H,P: String;
 begin
-  if URLs = nil then Exit;
-  if URLs.Count > 0 then
-    with TRegExpr.Create do
-      try
-        Expression := REGEX_HOST;
-        for i := 0 to URLs.Count - 1 do
-        begin
-          URLs[i] := Trim(URLs[i]);
-          s := Replace(URLs[i], '$4', True);
-          if s = '' then
-            s := URLs[i];
-          if (s <> '') and (s[1] <> '/') then
-            s := '/' + s;
-          URLs[i] := s;
-        end;
-      finally
-        Free;
-      end;
+  if URLs=nil then Exit;
+  if URLs.Count=0 then Exit;
+  for i:=0 to URLs.Count-1 do
+  begin
+    SplitURL(URLs[i],H,P);
+    URLs[i]:=P;
+  end;
 end;
 
 procedure RemoveHostFromURLsPair(const URLs, Names: TStringList);
 var
   i: Integer;
-  s: String;
+  H,P: String;
 begin
-  if (URLs = nil) or (Names = nil) then Exit;
-  if (URLs.Count <> Names.Count) then Exit;
-  if URLs.Count > 0 then
-    with TRegExpr.Create do
-      try
-        Expression := REGEX_HOST;
-        i := 0;
-        while i < URLs.Count do
-        begin
-          URLs[i] := Trim(URLs[i]);
-          s := Replace(URLs[i], '$4', True);
-          if s = '' then
-            s := URLs[i];
-          if (s <> '') and (s[1] <> '/') then
-            s := '/' + s;
-          URLs[i] := s;
-          if (URLs[i] = '') or (URLs[i] = '/') then
-          begin
-            URLs.Delete(i);
-            Names.Delete(i);
-          end
-          else
-            Inc(i);
-        end;
-      finally
-        Free;
-      end;
+  if (URLs= nil) or (Names=nil) then Exit;
+  if (URLs.Count<>Names.Count) then Exit;
+  if URLs.Count=0 then Exit;
+  i:=0;
+  while i<URLs.Count do
+  begin
+    SplitURL(URLs[i],H,P);
+    if P<>'' then
+    begin
+      URLs[i]:=P;
+      Inc(i);
+    end
+    else
+    begin
+      URLs.Delete(i);
+      Names.Delete(i);
+    end;
+  end;
+end;
+
+function EncodeCriticalURLElements(const URL: String): String;
+var
+  H,P: String;
+begin
+  SplitURL(URL,H,P);
+  Result:=H+EncodeTriplet(P,'%',URLSpecialChar+URLFullSpecialChar-['/']);
 end;
 
 procedure ParseJSONArray(const S, Path: String; var OutArray: TStringList);
@@ -1381,7 +1350,11 @@ var
   i: Integer;
 begin
   OutArray.BeginUpdate;
-  P := TJSONParser.Create(Trim(S), jsonscanner.DefaultOptions);
+  {$IF (FPC_FULLVERSION >= 30101)}
+  P := TJSONParser.Create(Trim(S), [joUTF8]);
+  {$ELSE}
+  P := TJSONParser.Create(Trim(S), True);
+  {$ENDIF}
   try
     D := P.Parse;
     try
@@ -1820,9 +1793,13 @@ var
   i: Integer;
 begin
   Result := input;
-  for i := 1 to Length(Result) do
+  if Result = '' then Exit;
+  i := 1;
+  while i <= Length(Result) do
     if CharInSet(Result[i], Symbols) then
-      Result[i] := '_';
+      Delete(Result, i, 1)
+    else
+      Inc(i);
 end;
 
 procedure InvertStrings(const Sts: array of TStringList);
@@ -1893,16 +1870,25 @@ begin
 end;
 
 function CorrectPathSys(const Path: String): String;
+{$IFDEF WINDOWS}
+var
+  s: UnicodeString;
+{$ENDIF}
 begin
+  Result := FixWhiteSpace(Path);
   {$IFDEF WINDOWS}
-  Result := RemovePathDelim(CleanAndExpandFilename(GetForcedPathDelims(Path)));
+  Result := RemovePathDelim(CleanAndExpandFilename(GetForcedPathDelims(Result)));
   Result := TrimRightChar(Result, ['.']);
-  if Length(Result) > MAX_PATHDIR then
-    SetLength(Result, MAX_PATHDIR);
-  Result := AppendPathDelim(Result);
+  s := UTF8Decode(Result);
+  if Length(s) > MAX_PATHDIR then
+  begin
+    SetLength(s, MAX_PATHDIR);
+    Result := UTF8Encode(s);
+  end;
   {$ELSE}
-  Result := CleanAndExpandDirectory(GetForcedPathDelims(Path));
+  Result := CleanAndExpandFilename(GetForcedPathDelims(Path));
   {$ENDIF}
+  Result := AppendPathDelim(Trim(Result));
 end;
 
 function RemovePathDelim(const Path: string): string;
@@ -2179,7 +2165,10 @@ begin
 end;
 
 function CustomRename(const AString, AWebsite, AMangaName, AAuthor, AArtist, AChapter,
-  ANumbering: String; const ARemoveUnicode: Boolean; const AFilename: String): String;
+  ANumbering: String;
+  const AReplaceUnicode: Boolean;
+  const AReplaceUnicodeStr: String;
+  const AFileName: String): String;
 
   function FixStringLocal(const S: String): String;
   begin
@@ -2188,8 +2177,8 @@ function CustomRename(const AString, AWebsite, AMangaName, AAuthor, AArtist, ACh
     // remove unaccepted character (Windows)
     Result := RemoveSymbols(Result);
     // strip unicode character
-    if ARemoveUnicode then
-      Result := UnicodeRemove(Result);
+    if AReplaceUnicode then
+      Result := ReplaceUnicodeChar(Result, AReplaceUnicodeStr);
   end;
 
 var
@@ -2201,9 +2190,7 @@ begin
   if AChapter <> '' then begin
     // numbering/index
     if (Pos(CR_NUMBERING, Result) = 0) and (Pos(CR_CHAPTER, Result) = 0) then
-      Result := ANumbering + Result
-    else
-      Result := Result;
+      Result := ANumbering + Result;
     if AWebsite = WebsiteRoots[FAKKU_ID, 0] then
     begin
       if Pos('%NUMBERING% - ', Result) > 0 then
@@ -2243,8 +2230,7 @@ begin
   Result := StringReplaceBrackets(Result, CR_MANGA, FixStringLocal(AMangaName), [rfReplaceAll]);
   Result := StringReplaceBrackets(Result, CR_AUTHOR, FixStringLocal(AAuthor), [rfReplaceAll]);
   Result := StringReplaceBrackets(Result, CR_ARTIST, FixStringLocal(AArtist), [rfReplaceAll]);
-  Result := StringReplaceBrackets(Result, CR_FILENAME, FixStringLocal(AFilename), [rfReplaceAll]);
-
+  Result := StringReplaceBrackets(Result, CR_FILENAME, FixStringLocal(AFileName), [rfReplaceAll]);
   if Result = '' then Result := FixStringLocal(AMangaName);
 
   if Result = '' then Exit;
@@ -2445,11 +2431,18 @@ begin
 end;
 
 function FixWhiteSpace(const S: String): String;
+const
+  R: array [0..1] of string = (
+    #$C2#$A0,     // no-break space  / &nbsp  U+00A0 #160
+    #$EF#$BB#$BF  // zero width no-break / BOM U+FEFF
+    );
+var
+  v: String;
 begin
   Result := S;
   if Result = '' then Exit;
-  while Pos(#$C2#$A0, Result) > 0 do
-    Result := StringReplace(Result, #$C2#$A0, ' ', [rfReplaceAll]);
+  for v in R do
+    Result := StringReplace(Result, v, '', [rfReplaceAll]);
 end;
 
 function CleanString(const S: String): String;
@@ -3986,6 +3979,22 @@ begin
     Result := MangaInfo_StatusOngoing
   else if Pos(c, s) <> 0 then
     Result := MangaInfo_StatusCompleted;
+end;
+
+{ TFavoriteInfo }
+
+procedure TFavoriteInfo.SetSaveTo(AValue: String);
+begin
+  if FSaveTo = AValue then Exit;
+  FSaveTo := CorrectPathSys(AValue);
+end;
+
+{ TDownloadInfo }
+
+procedure TDownloadInfo.SetSaveTo(AValue: String);
+begin
+  if FSaveTo = AValue then Exit;
+  FSaveTo := CorrectPathSys(AValue);
 end;
 
 { THTMLForm }

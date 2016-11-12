@@ -726,17 +726,18 @@ begin
                         NewMangaInfo.artists,
                         NewMangaInfo.chapterName[NewMangaInfoChaptersPos[j]],
                         Format('%.4d', [NewMangaInfoChaptersPos[j] + 1]),
-                        OptionChangeUnicodeCharacter));
+                        OptionChangeUnicodeCharacter,
+                        OptionChangeUnicodeCharacterStr));
                     end;
 
                     if LNCResult = ncrDownload then
                     begin
-                      DownloadInfo.Status := RS_Waiting;
+                      DownloadInfo.Status := Format('[%d/%d] %s',[0,ChapterLinks.Count,RS_Waiting]);
                       Status := STATUS_WAIT;
                     end
                     else
                     begin
-                      DownloadInfo.Status := RS_Stopped;
+                      DownloadInfo.Status := Format('[%d/%d] %s',[0,ChapterLinks.Count,RS_Stopped]);
                       Status := STATUS_STOP;
                     end;
                   end;
@@ -940,7 +941,7 @@ begin
           currentChapter := ReadString(IntToStr(i), 'CurrentChapter', '0');
           Title := ReadString(IntToStr(i), 'Title', '');
           Website := ReadString(IntToStr(i), 'Website', '');
-          SaveTo := CorrectPathSys(ReadString(IntToStr(i), 'SaveTo', ''));
+          SaveTo := ReadString(IntToStr(i), 'SaveTo', '');
           Link := ReadString(IntToStr(i), 'Link', '');
           Website := Website;
           Status := STATUS_IDLE;

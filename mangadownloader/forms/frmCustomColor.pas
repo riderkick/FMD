@@ -5,7 +5,7 @@ unit frmCustomColor;
 interface
 
 uses
-  Classes, SysUtils, Forms, Graphics, Dialogs, ColorBox, ComCtrls,
+  Classes, SysUtils, Types, Forms, Graphics, Dialogs, ColorBox, ComCtrls,
   VirtualTrees, FMDOptions, IniFiles;
 
 type
@@ -173,7 +173,7 @@ begin
     Add('UnfocusedSelectionColor', clBtnFace);
     Add('UnfocusedSelectionBorderColor', clBtnShadow);
     Add('NormalTextColor', clWindowText);
-    Add('FocusedSelectionTextColor', clHighlightText);
+    Add('FocusedSelectionTextColor', clWindowText);
     Add('UnfocusedSelectionTextColor', clWindowText);
     Add('OddColor', CL_BSOdd);
     Add('EvenColor', CL_BSEven);
@@ -432,7 +432,7 @@ begin
       begin
         AColumnRect := R;
         AColumnRect.Left := Header.Columns[i].Left;
-        AColumnRect.Width := Header.Columns[i].Width - 1;
+        AColumnRect.Right := AColumnRect.Left + (Header.Columns[i].Width - 1);
         if toShowVertGridLines in TreeOptions.PaintOptions then
         begin
           TargetCanvas.Pen.Color := Colors.GridLineColor;
@@ -462,7 +462,7 @@ begin
         begin
           AColumnRect := R;
           AColumnRect.Left := Header.Columns[i].Left;
-          AColumnRect.Width := Header.Columns[i].Width - 1;
+          AColumnRect.Right := AColumnRect.Left + (Header.Columns[i].Width - 1);
           TargetCanvas.FillRect(AColumnRect);
           if toShowVertGridLines in TreeOptions.PaintOptions then
             TargetCanvas.Line(AColumnRect.Right, AColumnRect.Top, AColumnRect.Right, AColumnRect.Bottom);
@@ -484,6 +484,9 @@ begin
     LineStyle := lsSolid;
     if Color = clDefault then
       Color := clWindow;
+    LineStyle:=lsDotted;
+    Header.Options:=Header.Options+[hoHotTrack];
+    TreeOptions.PaintOptions:=TreeOptions.PaintOptions+[toUseExplorerTheme,toHotTrack];
 
     // save original event
     PaintText := OnPaintText;
@@ -686,9 +689,9 @@ begin
   begin
     // box color rect
     ABoxRect := CellRect;
-    ABoxRect.Inflate(-2, -2);
+    InflateRect(ABoxRect, -2, -2);
     ABoxRect.Left := CellRect.Left;
-    ABoxRect.Width := ABoxRect.Height;
+    ABoxRect.Right := ABoxRect.Left + (ABoxRect.Bottom - ABoxRect.Top);
     // text rect
     ATextRect := CellRect;
     ATextRect.Left := ABoxRect.Right + 4;
@@ -700,7 +703,7 @@ begin
     // extra border
     Brush.Style := bsClear;
     Pen.Color := clWhite;
-    ABoxRect.Inflate(-1, -1);
+    InflateRect(ABoxRect, -1, -1);
     Rectangle(ABoxRect);
     // text
     TextRect(ATextRect, ATextRect.Left, 0, CellText, TextStyleLeftCenter);

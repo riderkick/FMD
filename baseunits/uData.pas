@@ -965,8 +965,6 @@ var
 
   {$I includes/TruyenTranhTuan/names_and_links.inc}
 
-  {$I includes/Komikid/names_and_links.inc}
-
   {$I includes/Mabuns/names_and_links.inc}
 
   {$I includes/MangaEsta/names_and_links.inc}
@@ -1104,9 +1102,6 @@ begin
     else
     if WebsiteID = ANIMEEXTREMIST_ID then
       Result := AnimeExtremistGetNamesAndLinks
-    else
-    if WebsiteID = KOMIKID_ID then
-      Result := KomikidGetNamesAndLinks
     else
     if WebsiteID = MABUNS_ID then
       Result := MabunsGetNamesAndLinks
@@ -1272,8 +1267,6 @@ var
 
   {$I includes/TruyenTranhTuan/manga_information.inc}
 
-  {$I includes/Komikid/manga_information.inc}
-
   {$I includes/Mabuns/manga_information.inc}
 
   {$I includes/MangaEsta/manga_information.inc}
@@ -1410,9 +1403,6 @@ begin
     else
     if WebsiteID = ANIMEEXTREMIST_ID then
       Result := GetAnimeExtremistInfoFromURL
-    else
-    if WebsiteID = KOMIKID_ID then
-      Result := GetKomikidInfoFromURL
     else
     if WebsiteID = MABUNS_ID then
       Result := GetMabunsInfoFromURL

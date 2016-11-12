@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, WebsiteModules, uData, uBaseUnit, uDownloadsManager,
-  XQueryEngineHTML, httpsendthread, synautil, RegExpr;
+  XQueryEngineHTML, httpsendthread, synautil,synacode, RegExpr;
 
 implementation
 
@@ -92,40 +92,25 @@ end;
 function GetPageNumber(const DownloadThread: TDownloadThread;
   const AURL: String; const Module: TModuleContainer): Boolean;
 var
-  source: TStringList;
-  i, pgLast: Integer;
-  thumbUrl: String;
+  bookid: String;
+  v: IXQValue;
 begin
   Result := False;
   if DownloadThread = nil then Exit;
   with DownloadThread.FHTTP, DownloadThread.Task.Container do begin
     PageLinks.Clear;
     PageNumber := 0;
-    if GET(FillHost(Module.RootURL, AURL)) then begin
+    bookid := RegExprGetMatch('(?i)/info/(\d+)/?',AURL,1);
+    Headers.Values['Referer'] := ' ' + Module.RootURL + '/Read/View/' + bookid;
+    if POST(Module.RootURL + '/Read/Load', 'q=' + bookid) then begin
       Result := True;
-      source := TStringList.Create;
-      try
-        source.LoadFromStream(Document);
-        pgLast := 0;
-        thumbUrl := '';
-        if source.Count > 0 then
-          for i := 0 to source.Count - 1 do begin
-            if Pos('var pgLast', source[i]) > 0 then
-              pgLast := StrToIntDef(GetValuesFromString(source[i], '='), 0)
-            else if Pos('var thumbUrl', source[i]) > 0 then begin
-              thumbUrl := GetValuesFromString(source[i], '=');
-              Break;
-            end;
-          end;
-        if (pgLast > 0) and (thumbUrl <> '') then begin
-          thumbUrl := ReplaceRegExpr('(?i)/Thumb(/\d+/)[9]+', thumbUrl, '/Image$1', True);
-          thumbUrl := AppendURLDelim(FillHost(Module.RootURL, thumbUrl));
-          for i := 1 to pgLast do
-            PageLinks.Add(thumbUrl + IntToStr(i));
+      with TXQueryEngineHTML.Create(Document) do
+        try
+          for v in XPath('json(*).reader_page_urls()') do
+            PageLinks.Add(Module.RootURL + '/Image/Object?name=' + EncodeURLElement(v.toString));
+        finally
+          Free;
         end;
-      finally
-        source.Free;
-      end;
     end;
   end;
 end;

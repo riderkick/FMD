@@ -86,6 +86,10 @@ msgstr ""
 msgid "Cannot get manga info. Please check your internet connection and try it again."
 msgstr ""
 
+#: frmmain.rs_dlgdownloadcount
+msgid "Download count:"
+msgstr ""
+
 #: frmmain.rs_dlgmangalistselect
 msgid "You must choose at least 1 manga website!"
 msgstr ""
@@ -108,6 +112,11 @@ msgstr ""
 
 #: frmmain.rs_dlgremovetask
 msgid "Are you sure you want to delete the task(s)?"
+msgstr ""
+
+#: frmmain.rs_dlgsplitdownload
+msgctxt "frmmain.rs_dlgsplitdownload"
+msgid "Split download"
 msgstr ""
 
 #: frmmain.rs_dlgtitleexistindllist
@@ -263,6 +272,10 @@ msgstr ""
 msgid "Today"
 msgstr ""
 
+#: frmmain.rs_wronginput
+msgid "Invalid input!"
+msgstr ""
+
 #: frmmain.rs_yesterday
 msgid "Yesterday"
 msgstr ""
@@ -328,10 +341,6 @@ msgstr ""
 
 #: taccountsetform.btok.caption
 msgid "Ok"
-msgstr ""
-
-#: taccountsetform.caption
-msgid "Account"
 msgstr ""
 
 #: taccountsetform.ckshowpassword.caption
@@ -409,6 +418,11 @@ msgstr ""
 msgid "Log limit"
 msgstr ""
 
+#: tformlogger.micopy.caption
+msgctxt "tformlogger.micopy.caption"
+msgid "Copy"
+msgstr ""
+
 #: timportfavorites.btcancel.caption
 msgctxt "TIMPORTFAVORITES.BTCANCEL.CAPTION"
 msgid "Cancel"
@@ -417,10 +431,6 @@ msgstr ""
 #: timportfavorites.btimport.caption
 msgctxt "timportfavorites.btimport.caption"
 msgid "&OK"
-msgstr ""
-
-#: timportfavorites.caption
-msgid "Import list ..."
 msgstr ""
 
 #: timportfavorites.cbsoftware.text
@@ -457,6 +467,11 @@ msgstr ""
 #: tmainform.btdownload.caption
 msgctxt "tmainform.btdownload.caption"
 msgid "Download"
+msgstr ""
+
+#: tmainform.btdownloadsplit.hint
+msgctxt "tmainform.btdownloadsplit.hint"
+msgid "Split download"
 msgstr ""
 
 #: tmainform.btfavoriteschecknewchapter.caption
@@ -508,6 +523,10 @@ msgstr ""
 msgid "Visit my blog"
 msgstr ""
 
+#: tmainform.caption
+msgid "Free Manga Downloader"
+msgstr ""
+
 #: tmainform.cbaddasstopped.caption
 msgid "Add to download list as stopped task"
 msgstr ""
@@ -545,7 +564,11 @@ msgstr ""
 
 #: tmainform.cboptionchangeunicodecharacter.caption
 msgctxt "TMAINFORM.CBOPTIONCHANGEUNICODECHARACTER.CAPTION"
-msgid "Change all all unicode symbols to \"_\" (choose this when you have problem with unicode path)"
+msgid "Replace all unicode character with"
+msgstr ""
+
+#: tmainform.cboptionchangeunicodecharacter.hint
+msgid "Enable this if you have problem with unicode character in path."
 msgstr ""
 
 #: tmainform.cboptiondigitchapter.caption
@@ -1302,6 +1325,7 @@ msgid "Delete"
 msgstr ""
 
 #: tmainform.medurlcopy.caption
+msgctxt "tmainform.medurlcopy.caption"
 msgid "Copy"
 msgstr ""
 
@@ -1772,10 +1796,6 @@ msgctxt "TNEWCHAPTER.BTQUEUE.CAPTION"
 msgid "&Add to queue"
 msgstr ""
 
-#: tnewchapter.caption
-msgid "New Chapter Notification"
-msgstr ""
-
 #: tshutdowncounterform.btabort.caption
 msgid "&Abort"
 msgstr ""
@@ -1784,21 +1804,12 @@ msgstr ""
 msgid "&Now"
 msgstr ""
 
-#: tshutdowncounterform.caption
-msgctxt "TSHUTDOWNCOUNTERFORM.CAPTION"
-msgid "Free Manga Downloader"
-msgstr ""
-
 #: tupdatedialogform.btnlater.caption
 msgid "&Later"
 msgstr ""
 
 #: tupdatedialogform.btnupdate.caption
 msgid "&Update"
-msgstr ""
-
-#: tupdatedialogform.caption
-msgid "New Version Found"
 msgstr ""
 
 #: tupdatedialogform.lbmessage.caption

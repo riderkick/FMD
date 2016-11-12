@@ -15,7 +15,11 @@
       Exit;
     end;
     sstream := TStringStream.Create(Source.Text);
+    {$IF (FPC_FULLVERSION >= 30101)}
     parser := TJSONParser.Create(sstream, [joUTF8]);
+    {$ELSE}
+    parser := TJSONParser.Create(sstream, True);
+    {$ENDIF}
     try
       Data := Parser.Parse;
       if Data <> nil then

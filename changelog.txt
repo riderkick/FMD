@@ -4,6 +4,50 @@ Project page: https://github.com/riderkick/FMD
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.83.0 (06-09-2016)
+[*] Fixed an issue when saving to pdf
+[*] Hentai2Read: fixed manga info
+[+] Added MyMangaMe[EN]
+Full changes: https://github.com/riderkick/FMD/compare/0.9.82.0...0.9.83.0
+
+0.9.82.0 (28-08-2016)
+[+] Added MangaOnlineTo[EN]
+Full changes: https://github.com/riderkick/FMD/compare/0.9.81.0...0.9.82.0
+
+0.9.81.0 (21-08-2016)
+[*] Tumangaonline: fixed download
+Full changes: https://github.com/riderkick/FMD/compare/0.9.80.0...0.9.81.0
+
+0.9.80.0 (20-08-2016)
+[*] Tsumino: fixed download
+Full changes: https://github.com/riderkick/FMD/compare/0.9.79.0...0.9.80.0
+
+0.9.79.0 (18-08-2016)
+[*] Fixed an error when creating download task
+[*] Fixed empty chapters with some website
+[*] Komikid: rewrite all code
+Full changes: https://github.com/riderkick/FMD/compare/0.9.78.0...0.9.79.0
+
+0.9.78.0 (17-08-2016)
+[*] Fixed various issue with unicode path and filename
+[*] TripleSevenScan: fixed accept adult warning
+[*] MangaIndo: fixed manga info
+[*] MangaChanRU/HentaiChanRU/YaoiChanRU: fixed manga info and empty chapters
+[+] Added custom text to be used to replace unicode character
+[+] Added context menu to copy log message
+[*] MangaStream: fixed an issue with some chapters
+[+] Added split download feature
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.77.0...0.9.78.0
+
+0.9.77.0 (13-08-2016)
+[*] MangaTraders: rewrite all code
+[*] MangaIndo: rewrite all code
+[+] MangaJoy replaced with FunManga[EN]
+[+] Added SundayWebry[RAW]
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.76.0...0.9.77.0
+
 0.9.76.0 (07-08-2016)
 [*] Fixed download tree status not updating
 [+] Added Log form, Options > Misc > Log

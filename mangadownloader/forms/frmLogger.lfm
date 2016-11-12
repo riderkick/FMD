@@ -3,6 +3,7 @@ object FormLogger: TFormLogger
   Height = 283
   Top = 0
   Width = 457
+  ActiveControl = tvLog
   Caption = 'Log'
   ChildSizing.LeftRightSpacing = 6
   ChildSizing.TopBottomSpacing = 6
@@ -14,6 +15,7 @@ object FormLogger: TFormLogger
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   Position = poMainFormCenter
+  LCLVersion = '1.7'
   Visible = False
   object tvLog: TLogTreeView
     Left = 6
@@ -24,12 +26,13 @@ object FormLogger: TFormLogger
     Anchors = [akTop, akLeft, akRight, akBottom]
     DefaultItemHeight = 18
     HotTrack = True
+    PopupMenu = pmLog
     ReadOnly = True
     ScrollBars = ssAutoBoth
     ShowTime = True
     TabOrder = 0
     TimeFormat = 'hh:nn:ss:zzz'
-    Options = [tvoAutoItemHeight, tvoHideSelection, tvoHotTrack, tvoKeepCollapsedNodes, tvoReadOnly, tvoShowButtons, tvoShowLines, tvoShowRoot, tvoToolTips, tvoThemedDraw]
+    Options = [tvoAllowMultiselect, tvoAutoItemHeight, tvoHideSelection, tvoHotTrack, tvoKeepCollapsedNodes, tvoReadOnly, tvoShowButtons, tvoShowLines, tvoShowRoot, tvoToolTips, tvoThemedDraw]
   end
   object ckStayOnTop: TCheckBox
     Left = 6
@@ -119,5 +122,14 @@ object FormLogger: TFormLogger
     OnTimer = tmClearLogTimer
     left = 288
     top = 80
+  end
+  object pmLog: TPopupMenu
+    OnPopup = pmLogPopup
+    left = 48
+    top = 147
+    object miCopy: TMenuItem
+      Caption = 'Copy'
+      OnClick = miCopyClick
+    end
   end
 end

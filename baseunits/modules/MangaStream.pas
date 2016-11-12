@@ -86,12 +86,10 @@ begin
               s := v.toNode.getAttribute('href');
               if (Length(s) > 2) and (RightStr(s, 2) = '/1') then
                 SetLength(s, Length(s) - 2);
-              chapterLinks.Add(s);
+              chapterLinks.Add(EncodeCriticalURLElements(s));
               chapterName.Add(v.toString);
             end;
-            //invert chapters
-            if chapterLinks.Count > 0 then
-              InvertStrings([chapterLinks, chapterName]);
+            InvertStrings([chapterLinks, chapterName]);
           end;
         finally
           Parser.Free;

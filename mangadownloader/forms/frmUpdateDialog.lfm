@@ -13,6 +13,7 @@ object UpdateDialogForm: TUpdateDialogForm
   ClientWidth = 488
   Position = poOwnerFormCenter
   LCLVersion = '1.7'
+  Visible = False
   object mmLog: TMemo
     Left = 8
     Height = 336

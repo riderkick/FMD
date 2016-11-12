@@ -324,7 +324,7 @@ var
   i: Integer;
 begin
   for i := Low(FTemplates) to High(FTemplates) do
-    FreeMemAndNil(FTemplates[i].Bits);
+    Freemem(FTemplates[i].Bits);
   SetLength(FTemplates, 0);
   FCleared := True;
 end;
@@ -436,7 +436,7 @@ begin
               Bit := TIMG.Bits;
             end;
           finally
-            FreeMemAndNil(TIMG.Bits);
+            Freemem(TIMG.Bits);
           end;
         end;
       if (BestValue >= MinPSNR) and (BestIndex <> -1) then
@@ -460,9 +460,11 @@ begin
             try
               Writer := Handler.WriterClass.Create;
               FileStream := TFileStreamUTF8.Create(NewFileName, fmCreate);
+              {$IF (FPC_FULLVERSION >= 30101)}
               if Writer is TFPWriterJPEG then
                 TFPWriterJPEG(Writer).GrayScale := GrayScale
               else
+              {$ENDIF}
               if Writer is TFPWriterPNG then
               begin
                 if GrayScale then

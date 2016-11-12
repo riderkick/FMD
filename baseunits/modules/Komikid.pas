@@ -1,4 +1,4 @@
-unit MangaHere;
+unit Komikid;
 
 {$mode objfpc}{$H+}
 
@@ -11,8 +11,7 @@ uses
 implementation
 
 const
-  dirurl = '/mangalist/';
-  imagepath = '//*[@id="viewer"]//img[@id="image"]/@src';
+  dirurl = '/changeMangaList?type=text';
 
 function GetNameAndLink(const MangaInfo: TMangaInformation;
   const ANames, ALinks: TStringList; const AURL: String;
@@ -20,14 +19,13 @@ function GetNameAndLink(const MangaInfo: TMangaInformation;
 var
   v: IXQValue;
 begin
-  if MangaInfo = nil then Exit(UNKNOWN_ERROR);
   Result := NET_PROBLEM;
   if MangaInfo.FHTTP.GET(Module.RootURL + dirurl) then
   begin
     Result := NO_ERROR;
     with TXQueryEngineHTML.Create(MangaInfo.FHTTP.Document) do
       try
-        for v in XPath('//a[@class="manga_info"]') do
+        for v in XPath('//ul[@class="manga-list"]/li/a') do
         begin
           ALinks.Add(v.toNode.getAttribute('href'));
           ANames.Add(v.toString);
@@ -48,25 +46,24 @@ begin
   with MangaInfo.mangaInfo, MangaInfo.FHTTP do
   begin
     url := MaybeFillHost(Module.RootURL, AURL);
-    if GET(url) then
-    begin
+    if GET(url) then begin
       Result := NO_ERROR;
       with TXQueryEngineHTML.Create(Document) do
         try
-          coverLink := MaybeFillHost(Module.RootURL, XPathString('//*[@class="manga_detail"]//img[@class="img"]/@src'));
-          if title = '' then title := XPathString('//h1[@class="title"]');
-          authors := SeparateRight(XPathString('//*[@class="detail_topText"]/li[starts-with(.,"Author")]'), ':');
-          artists := SeparateRight(XPathString('//*[@class="detail_topText"]/li[starts-with(.,"Artist")]'), ':');
-          genres := SeparateRight(XPathString('//*[@class="detail_topText"]/li[starts-with(.,"Genre")]'), ':');
+          coverLink := MaybeFillHost(Module.RootURL, XPathString('//div[@class="content"]//img/@src'));
+          if title = '' then title := XPathString('//div[@class="content"]//h5');
+          authors := XPathStringAll('//dl[@class="dl-horizontal"]/dt[starts-with(.,"Author")]/following-sibling::dd[1]/*');
+          artists := XPathString('//dl[@class="dl-horizontal"]/dt[starts-with(.,"Artist")]/following-sibling::dd[1]');
+          genres := XPathStringAll('//dl[@class="dl-horizontal"]/dt[starts-with(.,"Categories")]/following-sibling::dd[1]/*');
           status := MangaInfoStatusIfPos(XPathString(
-            '//*[@class="detail_topText"]/li[starts-with(.,"Status")]'),
+            '//dl[@class="dl-horizontal"]/dt[starts-with(.,"Status")]/following-sibling::dd[1]'),
             'Ongoing',
             'Completed');
-          summary := XPathString('//*[@class="detail_topText"]/li/p[@id="show"]/text()');
-          for v in XPath('//*[@class="detail_list"]/ul/li/span[@class="left"]') do
+          summary := XPathString('//*[@class="well"]/p');
+          for v in XPath('//ul[@class="chapters"]/li/h5') do
           begin
             chapterLinks.Add(XPathString('a/@href', v));
-            chapterName.Add(XPathString('string-join((a,span,text()[3])," ")', v));
+            chapterName.Add(XPathString('a||": "||em', v));
           end;
           InvertStrings([chapterLinks, chapterName]);
         finally
@@ -81,7 +78,7 @@ function GetPageNumber(const DownloadThread: TDownloadThread;
 begin
   Result := False;
   if DownloadThread = nil then Exit;
-  with DownloadThread, FHTTP, Task.Container do
+  with DownloadThread.Task.Container, DownloadThread.FHTTP do
   begin
     PageLinks.Clear;
     PageNumber := 0;
@@ -90,33 +87,7 @@ begin
       Result := True;
       with TXQueryEngineHTML.Create(Document) do
         try
-          PageNumber := XPath('(//span[@class="right"]/select)[1]/option').Count;
-          PageLinks.Add(XPathString(imagepath));
-        finally
-          Free;
-        end;
-    end;
-  end;
-end;
-
-function GetImageURL(const DownloadThread: TDownloadThread;
-  const AURL: String; const Module: TModuleContainer): Boolean;
-var
-  s: String;
-begin
-  Result := False;
-  if DownloadThread = nil then Exit;
-  with DownloadThread, FHTTP, Task.Container do
-  begin
-    s := AppendURLDelim(MaybeFillHost(Module.RootURL, AURL));
-    if WorkId > 0 then
-      s := s + IncStr(WorkId) + '.html';
-    if GET(s) then
-    begin
-      Result := True;
-      with TXQueryEngineHTML.Create(Document) do
-        try
-          PageLinks[WorkId] := XPathString(imagepath);
+          XPathStringAll('//*[@id="all"]/img/@data-src', PageLinks);
         finally
           Free;
         end;
@@ -128,12 +99,11 @@ procedure RegisterModule;
 begin
   with AddModule do
   begin
-    Website := 'MangaHere';
-    RootURL := 'http://www.mangahere.co';
+    Website := 'Komikid';
+    RootURL := 'http://www.komikid.com';
     OnGetNameAndLink := @GetNameAndLink;
     OnGetInfo := @GetInfo;
     OnGetPageNumber := @GetPageNumber;
-    OnGetImageURL := @GetImageURL;
   end;
 end;
 

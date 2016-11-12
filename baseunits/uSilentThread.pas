@@ -335,7 +335,8 @@ begin
                           Info.mangaInfo.artists,
                           Info.mangaInfo.chapterName.Strings[i],
                           Format('%.4d', [i + 1]),
-                          OptionChangeUnicodeCharacter);
+                          OptionChangeUnicodeCharacter,
+                          OptionChangeUnicodeCharacterStr);
         DLManager.Items[p].chapterName.Add(s);
         DLManager.Items[p].chapterLinks.Add(
           Info.mangaInfo.chapterLinks.Strings[i]);
@@ -344,11 +345,11 @@ begin
       if cbAddAsStopped.Checked then
       begin
         DLManager.Items[p].Status := STATUS_STOP;
-        DLManager.Items[p].downloadInfo.Status := RS_Stopped;
+        DLManager.Items[p].downloadInfo.Status := Format('[%d/%d] %s',[0,DLManager[p].ChapterLinks.Count,RS_Stopped]);
       end
       else
       begin
-        DLManager.Items[p].downloadInfo.Status := RS_Waiting;
+        DLManager.Items[p].downloadInfo.Status := Format('[%d/%d] %s',[0,DLManager[p].ChapterLinks.Count,RS_Waiting]);
         DLManager.Items[p].Status := STATUS_WAIT;
       end;
 
@@ -372,9 +373,10 @@ begin
             info.mangaInfo.artists,
             '',
             '',
-            OptionChangeUnicodeCharacter);
+            OptionChangeUnicodeCharacter,
+            OptionChangeUnicodeCharacterStr);
       end;
-      DLManager.Items[p].downloadInfo.SaveTo := CorrectPathSys(FSavePath);
+      DLManager.Items[p].downloadInfo.SaveTo := FSavePath;
 
       UpdateVtDownload;
       DLManager.CheckAndActiveTask(False);
@@ -465,7 +467,8 @@ begin
           info.mangaInfo.artists,
           '',
           '',
-          OptionChangeUnicodeCharacter);
+          OptionChangeUnicodeCharacter,
+          OptionChangeUnicodeCharacterStr);
       s2 := '';
       if (Info.mangaInfo.numChapter > 0) then
       begin

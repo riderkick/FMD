@@ -7,6 +7,7 @@ object WebsiteOptionAdvancedForm: TWebsiteOptionAdvancedForm
   ClientWidth = 510
   OnCreate = FormCreate
   LCLVersion = '1.7'
+  Visible = False
   object pcAdvanced: TPageControl
     Left = 0
     Height = 307

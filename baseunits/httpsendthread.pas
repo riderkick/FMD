@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, httpsend, synautil, synacode, ssl_openssl, blcksock,
-  GZIPUtils, RegExpr;
+  GZIPUtils;
 
 type
 
@@ -16,6 +16,7 @@ type
   private
     FOnCustomTerminate: TNotifyEvent;
     function GetTerminated: Boolean;
+    procedure CallOnCustomTerminate;
   public
     constructor Create(CreateSuspended: Boolean = True);
     procedure Terminate;
@@ -65,6 +66,7 @@ procedure SetDefaultTimeoutAndApply(const ATimeout: Integer);
 procedure SetDefaultRetryCountAndApply(const ARetryCount: Integer);
 
 function MaybeEncodeURL(const AValue: String): String;
+procedure SplitURL(URL: String; out Host, Path: String);
 
 const
   UserAgentSynapse = 'Mozilla/4.0 (compatible; Synapse)';
@@ -92,6 +94,76 @@ implementation
 var
   ALLHTTPSendThread: TFPList;
   CS_ALLHTTPSendThread: TRTLCriticalSection;
+
+function poschar(const c:char;const s:string;const offset:cardinal=1):integer;
+var
+  i:integer;
+begin
+  for i:=offset to length(s) do
+    if s[i]=c then Exit(i);
+  Result:=0;
+end;
+
+procedure SplitURL(URL: String; out Host, Path: String);
+
+procedure cleanuri(var u:string);
+begin
+  while (Length(u)<>0) and (u[1] in ['.',':','/']) do
+    Delete(u,1,1);
+end;
+
+var
+  prot,port: String;
+  p,q: Integer;
+begin
+  Host:='';
+  Path:='';
+  URL:=Trim(URL);
+  if URL='' then Exit;
+  prot:='';
+  port:='';
+  p:=poschar(':',URL);
+  if (p<>0) and (p<Length(URL)) and (URL[P+1]='/') then
+  begin
+    prot:=Copy(URL,1,p-1);
+    Delete(URL,1,p);
+  end;
+  p:=poschar(':',URL);
+  if (p<>0) and (p<Length(URL)) and (URL[P+1] in ['0'..'9']) then
+  begin
+    for q:=p+1 to Length(URL) do
+      if not (URL[q] in ['0'..'9']) then Break;
+    if q=Length(URL) then Inc(q);
+    port:=Copy(URL,p+1,q-p-1);
+    delete(URL,p,q-p);
+  end;
+  cleanuri(URL);
+  p:=poschar('.',URL);
+  if (p<>0) and (p>poschar('/',URL)) then p:=0;
+  if (p<>0) and (p<Length(URL)) then
+  begin
+    p:=poschar('/',URL,p);
+    if p<>0 then
+    begin
+      Host:=Copy(URL,1,p-1);
+      Delete(URL,1,p-1);
+      cleanuri(URL);
+    end
+    else
+    begin
+      Host:=URL;
+      URL:='';
+    end;
+  end;
+  if Host<>'' then
+  begin
+    if prot<>'' then Host:=prot+'://'+Host
+    else Host:='http://'+Host;
+    if port<>'' then Host:=Host+':'+port;
+  end;
+  if URL='' then Exit;
+  Path:='/'+URL;
+end;
 
 function KeyVal(const AKey, AValue: String): TKeyValuePair;
 begin
@@ -190,6 +262,11 @@ begin
   Result := Self.Terminated;
 end;
 
+procedure THTTPThread.CallOnCustomTerminate;
+begin
+  FOnCustomTerminate(Self);
+end;
+
 constructor THTTPThread.Create(CreateSuspended: Boolean);
 begin
   inherited Create(CreateSuspended);
@@ -200,7 +277,7 @@ procedure THTTPThread.Terminate;
 begin
   inherited Terminate;
   if Assigned(FOnCustomTerminate) then
-    FOnCustomTerminate(Self);
+    Synchronize(@CallOnCustomTerminate);
 end;
 
 { THTTPSendThread }
@@ -269,7 +346,7 @@ function THTTPSendThread.HTTPRequest(const Method, URL: String; const Response: 
 
 var
   counter: Integer = 0;
-  rurl, s: String;
+  rurl, s, h, p: String;
   HTTPHeader: TStringList;
   mstream: TMemoryStream;
 begin
@@ -294,23 +371,13 @@ begin
         if CheckTerminate then Exit;
         HTTPHeader.Values['Referer'] := ' ' + rurl;
         s := Trim(Headers.Values['Location']);
-        if s <> '' then begin
-          with TRegExpr.Create do
-            try
-              Expression := '(?ig)^(\w+://)?([^/]*\.\w+)?(\:\d+)?(/?.*)$';
-              if Replace(s, '$1', True) = '' then
-              begin
-                while s[1] = '.' do
-                  Delete(s, 1, 1);
-                if (s <> '') and (s[1] <> '/') then
-                  s := '/' + s;
-                rurl := Replace(rurl, '$1$2$3', True) + s;
-              end
-              else
-                rurl := s;
-            finally
-              Free;
-            end;
+        if s<>'' then
+        begin
+          SplitURL(s,h,p);
+          s:=p;
+          if h='' then
+            SplitURL(rurl,h,p);
+          rurl:=h+s;
         end;
 
         Clear;

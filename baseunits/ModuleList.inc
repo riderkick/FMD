@@ -44,4 +44,10 @@ uses
   SenManga,
   MangaInn,
   LeoManga,
-  MangaPark;
+  MangaPark,
+  MangaIndo,
+  FunManga,
+  SundayWebry,
+  Komikid,
+  MangaOnlineTo,
+  MyMangaMe;

@@ -65,9 +65,8 @@ end;
 function GetInfo(const MangaInfo: TMangaInformation; const AURL: String;
   const Module: TModuleContainer): Integer;
 var
-  v, x: IXQValue;
-  mangaid, purl: String;
-  s, cl, cn, vs: String;
+  v: IXQValue;
+  s, mangaid, purl: String;
   p, i: Integer;
 begin
   Result := NET_PROBLEM;
@@ -109,18 +108,8 @@ begin
                   Break;
               for v in XPath('json(*).data()') do
               begin
-                cl := apiurlimagenes + XPathString('string-join(("?idManga=",idTomo,"&numeroCapitulo=",numCapitulo),"")', v);
-                vs := '&visto=' + XPathString('visto', v);
-                cn := Trim(XPathString('string-join((numCapitulo,nombre)," ")', v));
-                if RightStr(cn, 5) = ' null' then
-                  SetLength(cn, Length(cn) - 5);
-                for x in XPath('(subidas)()', v) do
-                begin
-                  chapterLinks.Add(cl + '&idScanlation='+ XPathString('idScan', x) + vs);
-                  s := XPathString('scanlation/nombre', x);
-                  if s <> '' then chapterName.Add(cn + ' [' + s + ']')
-                  else chapterName.Add(s);
-                end;
+                chapterLinks.Add(apiurlimagenes + XPathString('"?idManga="||tomo/idManga||"&idScanlation="||subidas/idScan||"&numeroCapitulo="||numCapitulo||"&visto=true"', v));
+                chapterName.Add(XPathString('string-join((numCapitulo,nombre)," ")', v));
               end;
             end;
             InvertStrings([chapterLinks, chapterName]);
@@ -150,7 +139,7 @@ begin
       with TXQueryEngineHTML.Create(Document) do
         try
           s := imgurl + '/subidas/' +
-            XPathString('json(*)/concat(capitulo/idTomo,"/",capitulo/numCapitulo,"/",idScan)') + '/';
+            XPathString('json(*)/string-join((capitulo/tomo/idManga,capitulo/numCapitulo,idScan),"/")') + '/';
           for v in XPath('json((json(*).imagenes))()') do
             PageLinks.Add(s + v.toString);
         finally

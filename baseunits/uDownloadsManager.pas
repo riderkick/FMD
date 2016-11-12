@@ -86,7 +86,6 @@ type
     procedure SetCurrentWorkingDir(AValue: String);
   protected
     procedure CheckOut;
-    procedure MainThreadCompressRepaint;
     procedure Execute; override;
     procedure DoTerminate; override;
     procedure Compress;
@@ -415,8 +414,6 @@ var
 
   {$I includes/Kivmanga/chapter_page_number.inc}
 
-  {$I includes/Komikid/chapter_page_number.inc}
-
   {$I includes/MangaAe/chapter_page_number.inc}
 
   {$I includes/MangaAr/chapter_page_number.inc}
@@ -508,9 +505,6 @@ begin
     else
     if Task.Container.MangaSiteID = ANIMEEXTREMIST_ID then
       Result := GetAnimeExtremistPageNumber
-    else
-    if Task.Container.MangaSiteID = KOMIKID_ID then
-      Result := GetKomikidPageNumber
     else
     if Task.Container.MangaSiteID = HUGEMANGA_ID then
       Result := GetHugeMangaPageNumber
@@ -633,8 +627,6 @@ var
 
   {$I includes/Kivmanga/image_url.inc}
 
-  {$I includes/Komikid/image_url.inc}
-
   {$I includes/Mabuns/image_url.inc}
 
   {$I includes/Manga24h/image_url.inc}
@@ -733,9 +725,6 @@ begin
     else
     if Task.Container.MangaSiteID = ANIMEEXTREMIST_ID then
       Result := GetAnimeExtremistImageURL
-    else
-    if Task.Container.MangaSiteID = KOMIKID_ID then
-      Result := GetKomikidImageURL
     else
     if Task.Container.MangaSiteID = MABUNS_ID then
       Result := GetMabunsImageURL
@@ -864,6 +853,10 @@ begin
 end;
 
 function TTaskThread.GetFileName(const AWorkId: Integer): String;
+{$IFDEF WINDOWS}
+var
+  s: UnicodeString;
+{$ENDIF}
 begin
   Result := '';
   if (Container.FileNames.Count = Container.PageLinks.Count) and
@@ -873,17 +866,13 @@ begin
     Result := Format('%.3d', [AWorkId + 1]);
   Result := StringReplace(CurrentCustomFileName, CR_FILENAME, Result, [rfReplaceAll]);
   {$IFDEF WINDOWS}
-  if Length(Result) > FCurrentMaxFileNameLength then
-    Result := ShortenString(Result, FCurrentMaxFileNameLength, 4, '');
+  s := UTF8Decode(Result);
+  if Length(s) > FCurrentMaxFileNameLength then
+  begin
+    Delete(s, 1, Length(s) - FCurrentMaxFileNameLength);
+    Result := UTF8Encode(s);
+  end;
   {$ENDIF}
-end;
-
-procedure TTaskThread.MainThreadCompressRepaint;
-begin
-  Container.DownloadInfo.Status :=
-    Format('[%d/%d] %s', [Container.CurrentDownloadChapterPtr + 1,
-    Container.ChapterLinks.Count, RS_Compressing]);
-  MainForm.vtDownload.Repaint;
 end;
 
 procedure TTaskThread.Compress;
@@ -894,7 +883,9 @@ var
 begin
   if (Container.Manager.compress >= 1) then
   begin
-    Synchronize(MainThreadCompressRepaint);
+    Container.DownloadInfo.Status :=
+      Format('[%d/%d] %s', [Container.CurrentDownloadChapterPtr + 1,
+      Container.ChapterLinks.Count, RS_Compressing]);
     uPacker := TPacker.Create;
     try
       case Container.Manager.compress of
@@ -965,7 +956,10 @@ begin
   if not ForceDirectoriesUTF8(Task.CurrentWorkingDir) then
   begin
     Task.Container.Status := STATUS_FAILED;
-    Task.Container.DownloadInfo.Status := RS_FailedToCreateDir;
+    Task.Container.DownloadInfo.Status := Format('[%d/%d] %s', [
+      Task.Container.CurrentDownloadChapterPtr,
+      Task.Container.ChapterLinks.Count,
+      RS_FailedToCreateDir]);
     Result := False;
     Exit;
   end;
@@ -1031,11 +1025,16 @@ begin
 end;
 
 procedure TTaskThread.SetCurrentWorkingDir(AValue: String);
+{$IFDEF WINDOWS}
+var
+  s: UnicodeString;
+{$ENDIF}
 begin
   if FCurrentWorkingDir = AValue then Exit;
   FCurrentWorkingDir := CorrectPathSys(AValue);
   {$IFDEF Windows}
-  FCurrentMaxFileNameLength := FMDMaxImageFilePath - Length(FCurrentWorkingDir);
+  s := UTF8Decode(FCurrentWorkingDir);
+  FCurrentMaxFileNameLength := FMDMaxImageFilePath - Length(s);
   {$ENDIF}
 end;
 
@@ -1170,6 +1169,8 @@ begin
   Container.ThreadState := True;
   Container.DownloadInfo.TransferRate := FormatByteSize(Container.ReadCount, true);
   try
+    if (Container.Website = '') and (Container.DownloadInfo.Website <> '') then
+      Container.Website := Container.DownloadInfo.Website;
     if Container.ModuleId > -1 then
       DynamicPageLink := Modules.Module[Container.ModuleId].DynamicPageLink
     else
@@ -1193,8 +1194,12 @@ begin
         CurrentWorkingDir := Container.DownloadInfo.SaveTo;
       if not ForceDirectoriesUTF8(CurrentWorkingDir) then
       begin
+        Logger.SendError(Format('Failed to create dir(%d) = %s', [Length(CurrentWorkingDir), CurrentWorkingDir]));
         Container.Status := STATUS_FAILED;
-        Container.DownloadInfo.Status := RS_FailedToCreateDir;
+        Container.DownloadInfo.Status := Format('[%d/%d] %s', [
+          Container.CurrentDownloadChapterPtr,
+          Container.ChapterLinks.Count,
+          RS_FailedToCreateDir]);
         SyncShowBaloon;
         Exit;
       end;
@@ -1211,6 +1216,7 @@ begin
         Container.ChapterName[Container.CurrentDownloadChapterPtr],
         '',
         OptionChangeUnicodeCharacter,
+        OptionChangeUnicodeCharacterStr,
         CR_FILENAME);
 
       // Get page number.
@@ -1269,10 +1275,10 @@ begin
         Container.DownloadInfo.Progress :=
           Format('%d/%d', [Container.DownCounter, Container.PageNumber]);
         Container.DownloadInfo.Status :=
-          Format('%s (%d/%d [%s])',
-          [RS_Preparing,
-          Container.CurrentDownloadChapterPtr + 1,
+          Format('[%d/%d] %s (%s)',
+          [Container.CurrentDownloadChapterPtr + 1,
           Container.ChapterLinks.Count,
+          RS_Preparing,
           Container.ChapterName[Container.CurrentDownloadChapterPtr]]);
         Container.Status := STATUS_PREPARE;
         while Container.WorkCounter < Container.PageNumber do
@@ -1363,7 +1369,10 @@ begin
     if Container.FailedChapterLinks.Count > 0 then
     begin
       Container.Status := STATUS_FAILED;
-      Container.DownloadInfo.Status := RS_FailedTryResumeTask;
+      Container.DownloadInfo.Status := Format('[%d/%d] %s', [
+        Container.CurrentDownloadChapterPtr,
+        Container.ChapterLinks.Count,
+        RS_FailedTryResumeTask]);
       Container.DownloadInfo.Progress := '';
       Container.CurrentDownloadChapterPtr := 0;
 
@@ -1375,7 +1384,7 @@ begin
     else
     begin
       Container.Status := STATUS_FINISH;
-      Container.DownloadInfo.Status := RS_Finish;
+      Container.DownloadInfo.Status := Format('[%d/%d] %s',[Container.ChapterLinks.Count,Container.ChapterLinks.Count,RS_Finish]);
       Container.DownloadInfo.Progress := '';
     end;
     Synchronize(SyncShowBaloon);
@@ -1417,7 +1426,7 @@ begin
            (FailedChapterLinks.Count = 0) then
         begin
           Status := STATUS_FINISH;
-          DownloadInfo.Status := RS_Finish;
+          DownloadInfo.Status := Format('[%d/%d] %s',[Container.ChapterLinks.Count,Container.ChapterLinks.Count,RS_Finish]);
           DownloadInfo.Progress := '';
         end
         else
@@ -1480,6 +1489,9 @@ begin
   PageLinks := TStringList.Create;
   PageContainerLinks := TStringList.Create;
   FileNames := TStringList.Create;
+  FWebsite := '';
+  ModuleId := -1;
+  MangaSiteID := High(WebsiteRoots) + 1;
   ReadCount := 0;
   WorkCounter := 0;
   CurrentPageNumber := 0;
@@ -1679,7 +1691,7 @@ begin
         DownloadInfo.Website := ReadString(tid, 'Website', 'NULL');
         DownloadInfo.Link := ReadString(tid, 'Link', '');
         DownloadInfo.Title := ReadString(tid, 'Title', 'NULL');
-        DownloadInfo.SaveTo := CorrectPathSys(ReadString(tid, 'SaveTo', 'NULL'));
+        DownloadInfo.SaveTo := ReadString(tid, 'SaveTo', 'NULL');
         DownloadInfo.Status := ReadString(tid, 'Status', 'NULL');
         DownloadInfo.Progress := ReadString(tid, 'Progress', 'NULL');
         Enabled := ReadBool(tid, 'Enabled', True);
@@ -1717,7 +1729,7 @@ begin
         PageNumber := ReadInteger(tid, 'NumberOfPages', 0);
         CurrentPageNumber := ReadInteger(tid, 'CurrentPage', 0);
         if Status = STATUS_COMPRESS then
-          DownloadInfo.Status := RS_Waiting;
+          DownloadInfo.Status := Format('[%d/%d] %s',[CurrentDownloadChapterPtr+1,ChapterLinks.Count,RS_Waiting]);
         s := ReadString(tid, 'DateTime', '');
         //for old config
         if (Pos('/', s) > 0) or (Pos('\', s) > 0) then
@@ -1895,7 +1907,7 @@ begin
     if not ThreadState then
     begin
       Status := STATUS_WAIT;
-      DownloadInfo.Status := RS_Waiting;
+      DownloadInfo.Status := Format('[%d/%d] %s',[CurrentDownloadChapterPtr+1,ChapterLinks.Count,RS_Waiting]);
     end;
 end;
 
@@ -1917,7 +1929,7 @@ begin
         else
         begin
           Status := STATUS_WAIT;
-          DownloadInfo.Status := RS_Waiting;
+          DownloadInfo.Status := Format('[%d/%d] %s',[CurrentDownloadChapterPtr+1,ChapterLinks.Count,RS_Waiting]);
         end;
   //force to check task if all task loaded is STATUS_WAIT
   if tcount = 0 then
@@ -1955,7 +1967,7 @@ begin
     if Status = STATUS_WAIT then
     begin
       Status := STATUS_STOP;
-      DownloadInfo.Status := RS_Stopped;
+      DownloadInfo.Status := Format('[%d/%d] %s',[CurrentDownloadChapterPtr+1,ChapterLinks.Count,RS_Stopped]);
     end
     else if ThreadState then
     begin
@@ -1979,7 +1991,7 @@ begin
         if  Enabled and (Status <> STATUS_FINISH) and (not ThreadState) then
         begin
           Status := STATUS_WAIT;
-          DownloadInfo.Status := RS_Waiting;
+          DownloadInfo.Status := Format('[%d/%d] %s',[CurrentDownloadChapterPtr+1,ChapterLinks.Count,RS_Waiting]);
         end;
     CheckAndActiveTask;
   end;
@@ -2088,7 +2100,7 @@ begin
       if Status = STATUS_WAIT then
       begin
         Status := STATUS_STOP;
-        DownloadInfo.Status := RS_Stopped;
+        DownloadInfo.Status := Format('[%d/%d] %s',[CurrentDownloadChapterPtr+1,ChapterLinks.Count,RS_Stopped]);
       end;
       Enabled := False;
     end;

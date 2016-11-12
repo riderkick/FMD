@@ -104,6 +104,10 @@ msgstr "Tidak dapat terhubung ke server."
 msgid "Cannot get manga info. Please check your internet connection and try it again."
 msgstr "Tidak bisa mendapatkan informasi komik. Silakan periksa koneksi internet Anda dan coba lagi."
 
+#: frmmain.rs_dlgdownloadcount
+msgid "Download count:"
+msgstr "Jumlah unduhan:"
+
 #: frmmain.rs_dlgmangalistselect
 msgid "You must choose at least 1 manga website!"
 msgstr "Anda harus memilih minimal 1 situs komik!"
@@ -127,6 +131,11 @@ msgstr "Apakah Anda yakin ingin menghapus data ini?"
 #: frmmain.rs_dlgremovetask
 msgid "Are you sure you want to delete the task(s)?"
 msgstr "Apakah Anda yakin ingin menghapus unduhan ini?"
+
+#: frmmain.rs_dlgsplitdownload
+msgctxt "frmmain.rs_dlgsplitdownload"
+msgid "Split download"
+msgstr "Pecah unduhan"
 
 #: frmmain.rs_dlgtitleexistindllist
 msgid ""
@@ -298,6 +307,10 @@ msgstr "Path ke perangkat lunak (misalnya C:\\MangaDownloader)"
 msgid "Today"
 msgstr "Hari ini"
 
+#: frmmain.rs_wronginput
+msgid "Invalid input!"
+msgstr "Input salah!"
+
 #: frmmain.rs_yesterday
 msgid "Yesterday"
 msgstr "Kemarin"
@@ -364,10 +377,6 @@ msgstr "Batal"
 #: taccountsetform.btok.caption
 msgid "Ok"
 msgstr "Ok"
-
-#: taccountsetform.caption
-msgid "Account"
-msgstr "Akun"
 
 #: taccountsetform.ckshowpassword.caption
 msgid "Show password"
@@ -444,6 +453,11 @@ msgstr "Tetap di atas"
 msgid "Log limit"
 msgstr "Batasi log"
 
+#: tformlogger.micopy.caption
+msgctxt "tformlogger.micopy.caption"
+msgid "Copy"
+msgstr "Copy"
+
 #: timportfavorites.btcancel.caption
 msgctxt "timportfavorites.btcancel.caption"
 msgid "Cancel"
@@ -453,10 +467,6 @@ msgstr "Batal"
 msgctxt "timportfavorites.btimport.caption"
 msgid "&OK"
 msgstr "&OK"
-
-#: timportfavorites.caption
-msgid "Import list ..."
-msgstr "Impor daftar ..."
 
 #: timportfavorites.cbsoftware.text
 msgid "Domdomsoft Manga Downloader"
@@ -493,6 +503,11 @@ msgstr "Bersihkan berkas log"
 msgctxt "tmainform.btdownload.caption"
 msgid "Download"
 msgstr "Unduh"
+
+#: tmainform.btdownloadsplit.hint
+msgctxt "tmainform.btdownloadsplit.hint"
+msgid "Split download"
+msgstr "Pecah unduhan"
 
 #: tmainform.btfavoriteschecknewchapter.caption
 msgctxt "tmainform.btfavoriteschecknewchapter.caption"
@@ -543,6 +558,10 @@ msgstr "Perbarui daftar komik"
 msgid "Visit my blog"
 msgstr "Kunjungi blog"
 
+#: tmainform.caption
+msgid "Free Manga Downloader"
+msgstr "Free Manga Downloader"
+
 #: tmainform.cbaddasstopped.caption
 msgid "Add to download list as stopped task"
 msgstr "Tambahkan ke daftar unduhan tanpa dimulai"
@@ -580,8 +599,12 @@ msgstr "Otomatis periksa versi terbaru"
 
 #: tmainform.cboptionchangeunicodecharacter.caption
 msgctxt "tmainform.cboptionchangeunicodecharacter.caption"
-msgid "Change all all unicode symbols to \"_\" (choose this when you have problem with unicode path)"
-msgstr "Ubah semua simbol unicode menjadi \"_\" (pilih ini ketika Anda memiliki masalah dengan lokasi unicode)"
+msgid "Replace all unicode character with"
+msgstr "Ubah semua simbol unicode menjadi"
+
+#: tmainform.cboptionchangeunicodecharacter.hint
+msgid "Enable this if you have problem with unicode character in path."
+msgstr "Aktifkan pilihan ini jika anda mengalami masalah dengan karakter unicode pada path."
 
 #: tmainform.cboptiondigitchapter.caption
 msgid "Chapter"
@@ -1371,6 +1394,7 @@ msgid "Delete"
 msgstr "Hapus"
 
 #: tmainform.medurlcopy.caption
+msgctxt "tmainform.medurlcopy.caption"
 msgid "Copy"
 msgstr "Salin"
 
@@ -1841,10 +1865,6 @@ msgctxt "tnewchapter.btqueue.caption"
 msgid "&Add to queue"
 msgstr "&Tambahkan ke antrian"
 
-#: tnewchapter.caption
-msgid "New Chapter Notification"
-msgstr "Pemberitahuan bab baru"
-
 #: tshutdowncounterform.btabort.caption
 msgid "&Abort"
 msgstr "&Batalkan"
@@ -1853,11 +1873,6 @@ msgstr "&Batalkan"
 msgid "&Now"
 msgstr "&Sekarang"
 
-#: tshutdowncounterform.caption
-msgctxt "tshutdowncounterform.caption"
-msgid "Free Manga Downloader"
-msgstr "Free Manga Downloader"
-
 #: tupdatedialogform.btnlater.caption
 msgid "&Later"
 msgstr "&Nanti saja"
@@ -1865,10 +1880,6 @@ msgstr "&Nanti saja"
 #: tupdatedialogform.btnupdate.caption
 msgid "&Update"
 msgstr "&Perbarui"
-
-#: tupdatedialogform.caption
-msgid "New Version Found"
-msgstr "Versi baru ditemukan"
 
 #: tupdatedialogform.lbmessage.caption
 msgid ""
@@ -2144,4 +2155,3 @@ msgstr "Sinkronisasi data"
 #: uupdatethread.rs_updatinglist
 msgid "Updating list"
 msgstr "Memperbarui daftar"
-

@@ -13,6 +13,7 @@ object AccountSetForm: TAccountSetForm
   ClientWidth = 269
   Position = poMainFormCenter
   LCLVersion = '1.7'
+  Visible = False
   object cbWebsiteName: TComboBox
     Left = 8
     Height = 23

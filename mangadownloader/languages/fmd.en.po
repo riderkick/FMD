@@ -105,6 +105,10 @@ msgstr "Cannot connect to the server."
 msgid "Cannot get manga info. Please check your internet connection and try it again."
 msgstr "Cannot get manga info. Please check your internet connection and try it again."
 
+#: frmmain.rs_dlgdownloadcount
+msgid "Download count:"
+msgstr "Download count:"
+
 #: frmmain.rs_dlgmangalistselect
 msgid "You must choose at least 1 manga website!"
 msgstr "You must choose at least 1 manga website!"
@@ -128,6 +132,11 @@ msgstr "Are you sure you want to delete this item(s)?"
 #: frmmain.rs_dlgremovetask
 msgid "Are you sure you want to delete the task(s)?"
 msgstr "Are you sure you want to delete the task(s)?"
+
+#: frmmain.rs_dlgsplitdownload
+msgctxt "frmmain.rs_dlgsplitdownload"
+msgid "Split download"
+msgstr "Split download"
 
 #: frmmain.rs_dlgtitleexistindllist
 msgid ""
@@ -300,6 +309,10 @@ msgstr "Path to the software (e.g. C:\\MangaDownloader)"
 msgid "Today"
 msgstr "Today"
 
+#: frmmain.rs_wronginput
+msgid "Invalid input!"
+msgstr "Invalid input!"
+
 #: frmmain.rs_yesterday
 msgid "Yesterday"
 msgstr "Yesterday"
@@ -369,10 +382,6 @@ msgstr "Cancel"
 #: taccountsetform.btok.caption
 msgid "Ok"
 msgstr "Ok"
-
-#: taccountsetform.caption
-msgid "Account"
-msgstr "Account"
 
 #: taccountsetform.ckshowpassword.caption
 msgid "Show password"
@@ -452,6 +461,11 @@ msgstr "Stay on top"
 msgid "Log limit"
 msgstr "Log limit"
 
+#: tformlogger.micopy.caption
+msgctxt "tformlogger.micopy.caption"
+msgid "Copy"
+msgstr "Copy"
+
 #: timportfavorites.btcancel.caption
 msgctxt "TIMPORTFAVORITES.BTCANCEL.CAPTION"
 msgid "Cancel"
@@ -461,10 +475,6 @@ msgstr "Cancel"
 msgctxt "timportfavorites.btimport.caption"
 msgid "&OK"
 msgstr "&OK"
-
-#: timportfavorites.caption
-msgid "Import list ..."
-msgstr "Import list ..."
 
 #: timportfavorites.cbsoftware.text
 msgid "Domdomsoft Manga Downloader"
@@ -502,6 +512,11 @@ msgstr "Clear log file"
 msgctxt "tmainform.btdownload.caption"
 msgid "Download"
 msgstr "Download"
+
+#: tmainform.btdownloadsplit.hint
+msgctxt "tmainform.btdownloadsplit.hint"
+msgid "Split download"
+msgstr "Split download"
 
 #: tmainform.btfavoriteschecknewchapter.caption
 msgctxt "tmainform.btfavoriteschecknewchapter.caption"
@@ -552,6 +567,10 @@ msgstr "Update manga list"
 msgid "Visit my blog"
 msgstr "Visit my blog"
 
+#: tmainform.caption
+msgid "Free Manga Downloader"
+msgstr "Free Manga Downloader"
+
 #: tmainform.cbaddasstopped.caption
 msgid "Add to download list as stopped task"
 msgstr "Add to download list as stopped task"
@@ -590,9 +609,14 @@ msgid "Auto check for latest version "
 msgstr "Auto check for latest version "
 
 #: tmainform.cboptionchangeunicodecharacter.caption
+#| msgid "Change all all character to"
 msgctxt "tmainform.cboptionchangeunicodecharacter.caption"
-msgid "Change all all unicode symbols to \"_\" (choose this when you have problem with unicode path)"
-msgstr "Change all all unicode symbols to \"_\" (choose this when you have problem with unicode path)"
+msgid "Replace all unicode character with"
+msgstr "Replace all unicode character with"
+
+#: tmainform.cboptionchangeunicodecharacter.hint
+msgid "Enable this if you have problem with unicode character in path."
+msgstr "Enable this if you have problem with unicode character in path."
 
 #: tmainform.cboptiondigitchapter.caption
 msgid "Chapter"
@@ -1389,6 +1413,7 @@ msgid "Delete"
 msgstr "Delete"
 
 #: tmainform.medurlcopy.caption
+msgctxt "tmainform.medurlcopy.caption"
 msgid "Copy"
 msgstr "Copy"
 
@@ -1860,10 +1885,6 @@ msgctxt "TNEWCHAPTER.BTQUEUE.CAPTION"
 msgid "&Add to queue"
 msgstr "&Add to queue"
 
-#: tnewchapter.caption
-msgid "New Chapter Notification"
-msgstr "New Chapter Notification"
-
 #: tshutdowncounterform.btabort.caption
 msgid "&Abort"
 msgstr "&Abort"
@@ -1872,11 +1893,6 @@ msgstr "&Abort"
 msgid "&Now"
 msgstr "&Now"
 
-#: tshutdowncounterform.caption
-msgctxt "TSHUTDOWNCOUNTERFORM.CAPTION"
-msgid "Free Manga Downloader"
-msgstr "Free Manga Downloader"
-
 #: tupdatedialogform.btnlater.caption
 msgid "&Later"
 msgstr "&Later"
@@ -1884,10 +1900,6 @@ msgstr "&Later"
 #: tupdatedialogform.btnupdate.caption
 msgid "&Update"
 msgstr "&Update"
-
-#: tupdatedialogform.caption
-msgid "New Version Found"
-msgstr "New Version Found"
 
 #: tupdatedialogform.lbmessage.caption
 msgid ""
@@ -2163,4 +2175,3 @@ msgstr "Synchronizing data"
 #: uupdatethread.rs_updatinglist
 msgid "Updating list"
 msgstr "Updating list"
-

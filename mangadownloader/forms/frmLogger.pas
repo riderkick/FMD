@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls, Spin,
-  ExtCtrls, Buttons, LogTreeView, MultiLog;
+  ExtCtrls, Buttons, Menus, Clipbrd, ComCtrls, LogTreeView, MultiLog;
 
 type
 
@@ -16,6 +16,8 @@ type
     btnClearLog: TBitBtn;
     ckStayOnTop: TCheckBox;
     lbLogLimit: TLabel;
+    miCopy: TMenuItem;
+    pmLog: TPopupMenu;
     seLogLimit: TSpinEdit;
     tmClearLog: TTimer;
     tvLog: TLogTreeView;
@@ -24,6 +26,8 @@ type
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
+    procedure miCopyClick(Sender: TObject);
+    procedure pmLogPopup(Sender: TObject);
     procedure tmClearLogTimer(Sender: TObject);
   private
     { private declarations }
@@ -80,5 +84,38 @@ begin
   Logger.Channels.Remove(tvLog.Channel);
 end;
 
-end.
+procedure TFormLogger.miCopyClick(Sender: TObject);
 
+  procedure GetItemsText(const T: TTreeNode; var S: String; const Indent: Integer = 0);
+  var
+    i: Integer;
+  begin
+    if S <> '' then
+      S := S + LineEnding;
+    S := S + StringOfChar(' ', Indent) + T.Text;
+    if T.Count > 0 then
+      for i := 0 to T.Count - 1 do
+      begin
+        S := S + LineEnding + StringOfChar(' ', Indent + 2) + T.Items[i].Text;
+        if T.Items[i].Count > 0 then
+          GetItemsText(T.Items[i], S, Indent + 2);
+      end;
+  end;
+
+var
+  s: String;
+  i: Integer;
+begin
+  if tvLog.SelectionCount = 0 then Exit;
+  s := '';
+  for i := 0 to tvLog.SelectionCount - 1 do
+    GetItemsText(tvLog.Selections[i], s);
+  Clipboard.AsText := s;
+end;
+
+procedure TFormLogger.pmLogPopup(Sender: TObject);
+begin
+  miCopy.Enabled := tvLog.SelectionCount > 0;
+end;
+
+end.

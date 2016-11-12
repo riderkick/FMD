@@ -40,13 +40,17 @@ uses
 
 type
   PImageHandlerRec = ^TImageHandlerRec;
+  TCheckImageStreamFunc = function(const Stream: TStream): Boolean;
+  TGetImageStreamSizeProc = procedure(const Stream: TStream; out Width, Height: Integer);
   TImageHandlerRec = record
-    Ext: String;
-    WExt: String;
     ReaderClass: TFPCustomImageReaderClass;
     WriterClass: TFPCustomImageWriterClass;
-    Reader: TFPCustomImageReader
+    CheckImageStream: TCheckImageStreamFunc;
+    GetImageStreamSize: TGetImageStreamSizeProc;
+    Ext: String;
+    WExt: String;
   end;
+
 
   { TimageHandlerMgr }
 
@@ -58,8 +62,12 @@ type
   public
     constructor Create;
     destructor Destroy; override;
-    procedure Add(const ReaderClass: TFPCustomImageReaderClass; const WriterClass: TFPCustomImageWriterClass;
-      const Ext: String; WExt: String = '');
+    procedure Add(const ReaderClass: TFPCustomImageReaderClass;
+      const WriterClass: TFPCustomImageWriterClass;
+      const CheckImageStreamFunc: TCheckImageStreamFunc;
+      const GetImageStreamSizeProc: TGetImageStreamSizeProc;
+      const Ext: String;
+      const WExt: String = '');
     function GetImageHandlerByStream(const Stream: TStream): PImageHandlerRec;
     function GetImageHandlerByFile(const FileName: String): PImageHandlerRec;
     function GetImageHandlerByExt(const Ext: String): PImageHandlerRec;
@@ -181,18 +189,16 @@ begin
 end;
 
 destructor TimageHandlerMgr.Destroy;
-var
-  i: Integer;
 begin
-  if Length(FList) <> 0 then
-    for i := High(FList) downto Low(FList) do
-      Flist[i].Reader.Free;
   SetLength(Flist, 0);
   inherited Destroy;
 end;
 
 procedure TimageHandlerMgr.Add(const ReaderClass: TFPCustomImageReaderClass;
-  const WriterClass: TFPCustomImageWriterClass; const Ext: String; WExt: String);
+  const WriterClass: TFPCustomImageWriterClass;
+  const CheckImageStreamFunc: TCheckImageStreamFunc;
+  const GetImageStreamSizeProc: TGetImageStreamSizeProc; const Ext: String;
+  const WExt: String);
 var
   i: Integer;
 begin
@@ -200,7 +206,8 @@ begin
   SetLength(FList, i + 1);
   FList[i].ReaderClass := ReaderClass;
   FList[i].WriterClass := WriterClass;
-  FList[i].Reader := ReaderClass.Create;
+  FList[i].CheckImageStream := CheckImageStreamFunc;
+  FList[i].GetImageStreamSize := GetImageStreamSizeProc;
   FList[i].Ext := Ext;
   if WExt <> '' then
     FList[i].WExt := WExt
@@ -218,10 +225,10 @@ begin
   if Stream.Size = 0 then Exit;
   P := Stream.Position;
   try
-    for i := 0 to Length(Flist) - 1 do
+    for i := Low(FList) to High(Flist) do
     begin
       Stream.Position := 0;
-      if FList[i].Reader.CheckContents(Stream) then
+      if FList[i].CheckImageStream(Stream) then
       begin
         Result := @FList[i];
         Break;
@@ -273,18 +280,13 @@ function TimageHandlerMgr.GetImageStreamSize(const Stream: TStream; out Width,
   Height: Integer): String;
 var
   H: PImageHandlerRec;
-  S: TPoint;
 begin
   Width := 0;
   Height := 0;
   H := GetImageHandlerByStream(Stream);
   Result := H^.Ext;
-  if Assigned(H^.Reader) then
-  begin
-    S := H^.Reader.ImageSize(Stream);
-    Width := S.x;
-    Height := S.y;
-  end;
+  if Assigned(H^.GetImageStreamSize) then
+    H^.GetImageStreamSize(Stream, Width, Height);
 end;
 
 function TimageHandlerMgr.GetImageFileSize(const FileName: String; out Width,
@@ -345,13 +347,238 @@ begin
   Result := GetImageHandlerByExt(Ext)^.WExt;
 end;
 
+function JPEGCheckImageStream(const Stream: TStream): Boolean;
+var
+  Hdr: Word = 0;
+begin
+  Result := (Stream.Read(Hdr, 2) = 2) and (Hdr = $D8FF);
+end;
+
+procedure JPEGGetImageSize(const Stream: TStream; out Width, Height: Integer);
+var
+  B: Byte = 0;
+  W: Word = 0;
+begin
+  if Stream.Seek(2, soFromBeginning) <> 2 then Exit;
+  if Stream.Read(B, 1) <> 1 then Exit;
+  while (Stream.Position < Stream.Size) and (B = $FF) do
+  begin
+    Stream.Read(B, 1);
+    case B of
+      $C0..$C3:
+      begin
+        Stream.Seek(3, soFromCurrent);
+        Stream.Read(W, 2);
+        Height := Swap(W);
+        Stream.Read(W, 2);
+        Width := Swap(W);
+        Stream.Read(B, 1);
+        Exit;
+      end;
+      $FF:
+        Stream.Read(B, 1);
+      $D0..$D9, $01:
+      begin
+        Stream.Seek(1, soFromCurrent);
+        Stream.Read(B, 1);
+      end;
+      else
+      begin
+        Stream.Read(W, 2);
+        Stream.Seek(Swap(W) - 2, soFromCurrent);
+        Stream.Read(B, 1);
+      end;
+    end;
+  end;
+end;
+
+function PNGCheckImageStream(const Stream: TStream): Boolean;
+var
+  Hdr: array[0..7] of Char = (' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ');
+begin
+  Result := (Stream.Read(Hdr, 8) = 8) and (Hdr = #137'PNG'#13#10#26#10);
+end;
+
+procedure PNGGetImageSize(const Stream: TStream; out Width, Height: Integer);
+var
+  W: Word = 0;
+  H: Word = 0;
+begin
+  if not ((Stream.Seek(18, soFromBeginning) = 18)
+    and (Stream.Read(W, 2) = 2)
+    and (Stream.Seek(2, soFromCurrent) = 22)
+    and (Stream.Read(H, 2) = 2)) then Exit;
+  {$IFDEF ENDIAN_LITTLE}
+  W := Swap(W);
+  H := Swap(H);
+  {$ENDIF}
+  Width := W;
+  Height := H;
+end;
+
+function GIFCheckImageStream(const Stream: TStream): Boolean;
+var
+  Hdr: array[0..5] of Char = (' ', ' ', ' ', ' ', ' ', ' ');
+begin
+  Result := (Stream.Read(Hdr, 6) = 6) and ((Hdr = 'GIF87a') or (Hdr = 'GIF89a'));
+end;
+
+procedure GIFGetImageSize(const Stream: TStream; out Width, Height: Integer);
+type
+  TGifHeader = packed record
+    Sig: array[0..5] of Char;
+    ScreenWidth,
+    ScreenHeight: Word;
+    PackedBit,
+    BackgroundColor,
+    AspectRatio: Byte;
+  end;
+  TGifImageDescriptor = packed record
+    Left,
+    Top,
+    Width,
+    Height: Word;
+    PackedBit: Byte;
+  end;
+var
+  Hdr: TGifHeader;
+  Des: TGifImageDescriptor;
+  PalleteSize: Integer = 0;
+  C: Byte = 0;
+begin
+  FillChar(Hdr{%H-}, SizeOf(Hdr), 0);
+  if Stream.Read(Hdr, SizeOf(TGifHeader)) <> SizeOf(TGifHeader) then Exit;
+  if (Hdr.PackedBit and $80) <> 0 then
+  begin
+    PalleteSize := 3 * (1 shl (Hdr.Packedbit and 7 + 1));
+    if Stream.Seek(PalleteSize, soFromCurrent) <> SizeOf(TGifHeader) + PalleteSize then Exit;
+  end;
+  FillChar(Des{%H-}, SizeOf(TGifImageDescriptor), 0);
+  while Stream.Position < Stream.Size do
+  begin
+    Stream.Read(C, 1);
+    if C = $2C then
+    begin
+      if Stream.Read(Des, SizeOf(TGifImageDescriptor)) <> SizeOf(TGifImageDescriptor) then Exit;
+      {$IFDEF ENDIAN_BIG}
+      Des.Width := LEtoN(Width);
+      Des.Height := LEtoN(Height);
+      {$ENDIF}
+      Width := Des.Width;
+      Height := Des.Height;
+      Break;
+    end;
+  end;
+end;
+
+function BMPCheckImageStream(const Stream: TStream): Boolean;
+var
+  Hdr: Word = 0;
+begin
+  Result := (Stream.Read(Hdr, 2) = 2) and (Hdr = 19778);
+end;
+
+procedure BMPGetImageSize(const Stream: TStream; out Width, Height: Integer);
+var
+  W: LongInt = 0;
+  H: LongInt = 0;
+begin
+  if not ((Stream.Seek(18, soFromBeginning) = 18)
+    and (Stream.Read(W, 4) = 4)
+    and (Stream.Read(H, 4) = 4)) then Exit;
+  Width := LEtoN(W);
+  Height := abs(LEtoN(H));
+end;
+
+function FixEndian(const W: Word; const BE: Boolean): Word; overload;
+begin
+  if BE then
+    Result := BEtoN(W)
+  else
+    Result := LEtoN(W);
+end;
+
+function TIFFCheckImageStream(const Stream: TStream): Boolean;
+var
+  Hdr: array[0..1] of Char = (' ', ' ');
+  Sig: Word = 0;
+  BE: Boolean = False;
+
+  function CheckHdr: Boolean;
+  begin
+    Result := True;
+    if Hdr = 'II' then BE := False
+    else if Hdr = 'MM' then BE := True
+    else Result := False;
+  end;
+
+begin
+  Result := (Stream.Read(Hdr, 2) = 2) and CheckHdr
+    and (Stream.Read(Sig, 2) = 2) and (FixEndian(Sig, BE) = 42);
+end;
+
+function FixEndian(const W: DWord; const BE: Boolean): DWord; overload;
+begin
+  if BE then
+    Result := BEtoN(W)
+  else
+    Result := LEtoN(W);
+end;
+
+procedure TIFFGetImageSize(const Stream: TStream; out Width, Height: Integer);
+type
+  TIDF_Field = packed record
+    Tag,
+    FieldType: Word;
+    ValCount,
+    ValOffset: DWord;
+  end;
+var
+  Hdr: array[0..1] of Char = (' ', ' ');
+  BE: Boolean = False;
+  Imgs: Word = 0;
+  Field: TIDF_Field;
+  i: Word;
+
+  function CheckHdr: Boolean;
+  begin
+    Result := True;
+    if Hdr = 'II' then BE := False
+    else if Hdr = 'MM' then BE := True
+    else Result := False;
+  end;
+
+  function ReadDir: Boolean;
+  begin
+    Result := Stream.Read(Field, SizeOf(TIDF_Field)) = SizeOf(TIDF_Field);
+    if not Result then Exit;
+    Field.Tag := FixEndian(Field.Tag, BE);
+    Field.ValOffset := FixEndian(Field.ValOffset, BE);
+  end;
+
+begin
+  if not ((Stream.Read(Hdr, 2) = 2) and CheckHdr) then Exit;
+  if Stream.Seek(6, soFromCurrent) <> 8 then Exit;
+  if Stream.Read(Imgs, 2) <> 2 then Exit;
+  Imgs := FixEndian(Imgs, BE);
+  FillChar(Field{%H-}, SizeOf(TIDF_Field), 0);
+  for i := 1 to Imgs do
+  begin
+    if not ReadDir then Exit;
+    case Field.Tag of
+      $0100: Width := Field.ValOffset;
+      $0101: Height := Field.ValOffset;
+    end;
+  end;
+end;
+
 initialization
   ImageHandlerMgr := TimageHandlerMgr.Create;
-  ImageHandlerMgr.Add(TFPReaderJPEG, TFPWriterJPEG, 'jpg');
-  ImageHandlerMgr.Add(TFPReaderPNG, TFPWriterPNG, 'png');
-  ImageHandlerMgr.Add(TFPReaderGif, TFPWriterPNG, 'gif', 'png');
-  ImageHandlerMgr.Add(TFPReaderBMP, TFPWriterBMP, 'bmp');
-  ImageHandlerMgr.Add(TFPReaderTiff, TFPWriterTiff, 'tif');
+  ImageHandlerMgr.Add(TFPReaderJPEG, TFPWriterJPEG, @JPEGCheckImageStream, @JPEGGetImageSize, 'jpg');
+  ImageHandlerMgr.Add(TFPReaderPNG, TFPWriterPNG, @PNGCheckImageStream, @PNGGetImageSize, 'png');
+  ImageHandlerMgr.Add(TFPReaderGif, TFPWriterPNG, @GIFCheckImageStream, @GIFGetImageSize, 'gif', 'png');
+  ImageHandlerMgr.Add(TFPReaderBMP, TFPWriterBMP, @BMPCheckImageStream, @BMPGetImageSize, 'bmp');
+  ImageHandlerMgr.Add(TFPReaderTiff, TFPWriterTiff, @TIFFCheckImageStream, @TIFFGetImageSize, 'tif');
 
 finalization
   ImageHandlerMgr.Free;

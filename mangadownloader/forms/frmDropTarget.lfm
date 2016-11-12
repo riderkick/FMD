@@ -19,6 +19,7 @@ object FormDropTarget: TFormDropTarget
   OnMouseUp = FormMouseUp
   OnShow = FormShow
   LCLVersion = '1.7'
+  Visible = False
   object shBorder: TShape
     Left = 0
     Height = 156
