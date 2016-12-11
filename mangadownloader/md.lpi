@@ -199,10 +199,10 @@
     </RunParams>
     <RequiredPackages Count="8">
       <Item1>
-        <PackageName Value="multiloglaz"/>
+        <PackageName Value="BESENPkg"/>
       </Item1>
       <Item2>
-        <PackageName Value="BESENPkg"/>
+        <PackageName Value="multiloglaz"/>
       </Item2>
       <Item3>
         <PackageName Value="laz_synapse"/>

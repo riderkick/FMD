@@ -1021,7 +1021,7 @@ var
 
   {$I includes/OneManga/names_and_links.inc}
 
-  {$I includes/MangaTown/names_and_links.inc}
+ {$I includes/MangaTown/names_and_links.inc}
 
   {$I includes/MangaOku/names_and_links.inc}
 
@@ -1172,7 +1172,7 @@ begin
     if WebsiteID = ONEMANGA_ID then
       Result := OneMangaGetNamesAndLinks
     else
-    if WebsiteID = MANGATOWN_ID then
+   if WebsiteID = MANGATOWN_ID then
       Result := MangaTownGetNamesAndLinks
     else
     if WebsiteID = MANGAOKU_ID then
@@ -1311,7 +1311,7 @@ var
 
   {$I includes/OneManga/manga_information.inc}
 
-  {$I includes/MangaTown/manga_information.inc}
+ {$I includes/MangaTown/manga_information.inc}
 
   {$I includes/MangaOku/manga_information.inc}
 

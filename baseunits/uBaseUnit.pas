@@ -3040,7 +3040,7 @@ begin
   begin
     HTTP := THTTPSend.Create;
     HTTP.Timeout := DefaultTimeout;
-    HTTP.Sock.ConnectionTimeout := DefaultTimeout;
+ //   HTTP.Sock.ConnectionTimeout := DefaultTimeout;
     HTTP.Sock.SetTimeout(DefaultTimeout);
   end;
   HTTP.Headers.NameValueSeparator := ':';
@@ -3397,7 +3397,7 @@ begin
   begin
     HTTP := THTTPSend.Create;
     HTTP.Timeout := DefaultTimeout;
-    HTTP.Sock.ConnectionTimeout := DefaultTimeout;
+ //   HTTP.Sock.ConnectionTimeout := DefaultTimeout;
     HTTP.Sock.SetTimeout(DefaultTimeout);
   end;
   HTTP.Headers.NameValueSeparator := ':';

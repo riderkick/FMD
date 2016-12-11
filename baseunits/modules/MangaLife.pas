@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, WebsiteModules, uData, uBaseUnit, uDownloadsManager,
-  XQueryEngineHTML, httpsendthread;
+  XQueryEngineHTML, httpsendthread, Dialogs;
 
 implementation
 
@@ -99,7 +99,7 @@ begin
   begin
     url := MaybeFillHost(Module.RootURL, AURL);
     if (Module = MMangaTraders) and (Pos('?series=', url) <> 0) then
-      url := Module.RootURL + '/read-online/' + SeparateRight(url, '?series=');
+      url := Module.RootURL + '/manga/' + SeparateRight(url, '?series=');
     if GET(url) then begin
       Result := NO_ERROR;
       with TXQueryEngineHTML.Create(Document) do
@@ -115,7 +115,7 @@ begin
           genres := SeparateRight(XPathString('//*[@class="row"][starts-with(.,"Genre:")]'), ':');
           summary := Trim(SeparateRight(XPathString('//*[@class="row"][starts-with(.,"Description:")]'), ':'));
           if Module.Website = 'MangaTraders' then
-            v := XPath('//div[@class="well"]/div[@class="row"]/div/a[contains(@href,"/read-online/") and not(@class)]')
+            v := XPath('//a[@clas="chapterLink list-group-item"]')
           else
           begin
             if Module.Website = 'MangaSee' then
@@ -128,10 +128,10 @@ begin
           begin
             for i := 1 to v.Count do
             begin
-              chapterLinks.Add(fixchapterurl(v.get(i).toNode.getAttribute('href')));
-              chapterName.Add(v.get(i).toString);
+              chapterLinks.Add(v.toNode.getAttribute('href'));
+              chapterName.Add(v.toString);
             end;
-            InvertStrings([chapterLinks, chapterName]);
+ //           InvertStrings([chapterLinks, chapterName]);
           end;
         finally
           Free;
@@ -179,9 +179,9 @@ procedure RegisterModule;
   end;
 
 begin
-  AddWebsiteModule('MangaLife', 'http://manga.life');
-  MMangaSee := AddWebsiteModule('MangaSee', 'http://mangasee.co');
-  MMangaTraders := AddWebsiteModule('MangaTraders', 'http://mangatraders.org');
+  AddWebsiteModule('MangaLife', 'http://mangalife.org');
+  MMangaSee := AddWebsiteModule('MangaSee', 'http://mangaseeonline.net');
+  MMangaTraders := AddWebsiteModule('MangaTraders', 'http://mangatraders.biz');
 end;
 
 initialization
