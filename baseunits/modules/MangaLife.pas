@@ -78,33 +78,21 @@ begin
   end;
 end;
 
-function fixchapterurl(const u: string): string;
-begin
- result:=fixcleanurl(u);
- if (pos('&page=1',result)<>0) or
-    (pos('/page-1',result)<>0) then
-   setlength(result,length(result)-7);
-end;
-
 function GetInfo(const MangaInfo: TMangaInformation;
   const AURL: String; const Module: TModuleContainer): Integer;
 var
   v: IXQValue;
-  s: String;
-  i: Integer;
 begin
   Result := NET_PROBLEM;
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
   with MangaInfo.mangaInfo, MangaInfo.FHTTP do
   begin
-    url := MaybeFillHost(Module.RootURL, AURL);
-    if (Module = MMangaTraders) and (Pos('?series=', url) <> 0) then
-      url := Module.RootURL + '/manga/' + SeparateRight(url, '?series=');
+    url := RemoveURLDelim(FillHost(Module.RootURL, AURL));
     if GET(url) then begin
       Result := NO_ERROR;
       with TXQueryEngineHTML.Create(Document) do
         try
-          coverLink := MaybeFillHost(Module.RootURL, XPathString('//meta[@property="og:image"]/@content'));
+         coverLink := MaybeFillHost(Module.RootURL, XPathString('//meta[@property="og:image"]/@content'));
           if title = '' then title := XPathString('//*[@class="row"]//h1');
           authors := SeparateRight(XPathString('//*[@class="row"][starts-with(.,"Author:")]'), ':');
           artists := SeparateRight(XPathString('//*[@class="row"][starts-with(.,"Artist:")]'), ':');
@@ -114,24 +102,10 @@ begin
             'completed');
           genres := SeparateRight(XPathString('//*[@class="row"][starts-with(.,"Genre:")]'), ':');
           summary := Trim(SeparateRight(XPathString('//*[@class="row"][starts-with(.,"Description:")]'), ':'));
-          if Module.Website = 'MangaTraders' then
-            v := XPath('//a[@clas="chapterLink list-group-item"]')
-          else
+          for v in XPath('//div[@class="list chapter-list"]/a') do
           begin
-            if Module.Website = 'MangaSee' then
-              s := 'div.col-lg-12:nth-child(8)>div>div:nth-child(1)>a'
-            else
-              s := 'div.list>div>div>a';
-            v := CSS(s)
-          end;
-          if v.Count > 0 then
-          begin
-            for i := 1 to v.Count do
-            begin
-              chapterLinks.Add(v.toNode.getAttribute('href'));
-              chapterName.Add(v.toString);
-            end;
- //           InvertStrings([chapterLinks, chapterName]);
+            chapterLinks.Add(v.toNode.getAttribute('href'));
+            chapterName.Add(v.toString);
           end;
         finally
           Free;
@@ -142,19 +116,22 @@ end;
 
 function GetPageNumber(const DownloadThread: TDownloadThread;
   const AURL: String; const Module: TModuleContainer): Boolean;
+var
+  v: IXQValue;
 begin
   Result := False;
   if DownloadThread = nil then Exit;
-  with DownloadThread.Task.Container, DownloadThread.FHTTP do
+  with DownloadThread.FHTTP, DownloadThread.Task.Container do
   begin
     PageLinks.Clear;
     PageNumber := 0;
-    if GET(fixchapterurl(MaybeFillHost(Module.RootURL, AURL))) then
+    if GET(FillHost(Module.RootURL, AURL)) then
     begin
       Result := True;
       with TXQueryEngineHTML.Create(Document) do
         try
-          XPathStringAll('//p/img/@src', PageLinks);
+          for v in XPath('//img[@class="CurImage"]') do
+            PageLinks.Add(v.toNode.getAttribute('src'));
         finally
           Free;
         end;
