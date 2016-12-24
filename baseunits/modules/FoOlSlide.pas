@@ -40,6 +40,7 @@ function GetDirURL(const AWebsite: String): String;
 begin
   if (AWebsite = 'YoManga') or
      (AWebsite = 'GoManga') or
+     (AWebsite = 'Jaiminisbox') or
      (AWebsite = 'TripleSevenScan') then
     Result := dirurlreader
   else
@@ -260,6 +261,8 @@ begin
   AddWebsiteModule('GoManga', 'http://gomanga.co');
   AddWebsiteModule('OneTimeScans', 'http://otscans.com');
   AddWebsiteModule('SenseScans', 'http://reader.sensescans.com');
+  AddWebsiteModule('Jaiminisbox', 'https://jaiminisbox.com');
+  AddWebsiteModule('PowerManga', 'http://read.powermanga.org');
 
   //es-san
   AddWebsiteModule('DangoOnlineNoFansub', 'http://lector.dangolinenofansub.com');
