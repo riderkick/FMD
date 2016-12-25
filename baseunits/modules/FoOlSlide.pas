@@ -250,6 +250,8 @@ procedure RegisterModule;
   end;
 
 begin
+  AddWebsiteModule('PowerManga', 'http://read.powermanga.org');
+
   AddWebsiteModule('Shoujosense', 'http://reader.shoujosense.com');
   with AddWebsiteModule('YoManga', 'http://yomanga.co') do
   begin
@@ -262,7 +264,6 @@ begin
   AddWebsiteModule('OneTimeScans', 'http://otscans.com');
   AddWebsiteModule('SenseScans', 'http://reader.sensescans.com');
   AddWebsiteModule('Jaiminisbox', 'https://jaiminisbox.com');
-  AddWebsiteModule('PowerManga', 'http://read.powermanga.org');
 
   //es-san
   AddWebsiteModule('DangoOnlineNoFansub', 'http://lector.dangolinenofansub.com');
