@@ -17,6 +17,7 @@ var
 const
   dirurl = '/directory/';
   dirurlreader = '/reader/directory/';
+  dirurlreaderlist = '/reader/list/';
   dirurlfoolslide = '/foolslide/directory/';
   dirurlslide = '/slide/directory/';
   dirurlslideU = '/Slide/directory/';
@@ -43,6 +44,9 @@ begin
      (AWebsite = 'Jaiminisbox') or
      (AWebsite = 'TripleSevenScan') then
     Result := dirurlreader
+  else
+  if AWebsite = 'KireiCake' then
+    Result := dirurlreaderlist
   else
   if AWebsite = 'OneTimeScans' then
     Result := dirurlfoolslide
@@ -264,6 +268,7 @@ begin
   AddWebsiteModule('OneTimeScans', 'http://otscans.com');
   AddWebsiteModule('SenseScans', 'http://reader.sensescans.com');
   AddWebsiteModule('Jaiminisbox', 'https://jaiminisbox.com');
+  AddWebsiteModule('KireiCake', 'https://reader.kireicake.com');
 
   //es-san
   AddWebsiteModule('DangoOnlineNoFansub', 'http://lector.dangolinenofansub.com');

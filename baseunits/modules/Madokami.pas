@@ -12,7 +12,7 @@ implementation
 
 const
   modulename = 'Madokami';
-  urlroot = 'https://manga.madokami.com';
+  urlroot = 'https://manga.madokami.al';
   madokamidirlist: array [0..12] of String = (
     '/Manga/%23%20-%20F',
     '/Manga/G%20-%20M',

@@ -50,6 +50,7 @@ uses
   Komikid,
   MangaOnlineTo,
   MyMangaMe,
+  ReadComics,
   // Raw Official
   SundayWebEvery,
   TonarinoYoungJump,
