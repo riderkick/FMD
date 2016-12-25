@@ -84,9 +84,7 @@ function GetPageNumber(const DownloadThread: TDownloadThread;
   const AURL: String; const Module: TModuleContainer): Boolean;
 var
   v: IXQValue;
-  url,json_url: String;
-  jData : TJSONData;
-  jObject : TJSONObject;
+  url,json_url,s: String;
 begin
   Result := False;
   if DownloadThread = nil then Exit;
@@ -108,9 +106,13 @@ begin
               begin
                   with TXQueryEngineHTML.Create(Document) do
 
-              for v in XPath('//*') do
-              showMessage(v.toString);
-                //PageLinks.Add(v.toString);
+                  s := XPathString('//*');
+                            if s <> '' then
+                            begin
+                              s := GetBetween('{', '}', s);
+                              ParseHTML(s);
+                              XPathStringAll('json(*)()', PageLinks);
+                  end;
               end;
         finally
           Free;
