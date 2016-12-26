@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, WebsiteModules, uData, uBaseUnit, uDownloadsManager,
-  XQueryEngineHTML, httpsendthread, MangaFoxWatermark;
+  XQueryEngineHTML, httpsendthread, MangaFoxWatermark,Dialogs;
 
 implementation
 
@@ -40,16 +40,17 @@ begin
   end;
 end;
 
-function GetInfo(const MangaInfo: TMangaInformation; const AURL: String;
-  const Module: TModuleContainer): Integer;
+function GetInfo(const MangaInfo: TMangaInformation;
+  const AURL: String; const Module: TModuleContainer): Integer;
 var
   v: IXQValue;
-  s: String;
+  s,chapter_title: String;
 begin
   Result := NET_PROBLEM;
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
-  with MangaInfo.mangaInfo, MangaInfo.FHTTP do begin
-    url := FillHost(Module.RootURL, AURL);
+  with MangaInfo.mangaInfo, MangaInfo.FHTTP do
+  begin
+    url := RemoveURLDelim(FillHost(Module.RootURL, AURL));
     if GET(url) then begin
       Result := NO_ERROR;
       with TXQueryEngineHTML.Create(Document) do
@@ -62,19 +63,22 @@ begin
             if RightStr(title, 6) = ' Manga' then
               SetLength(title, Length(title) - 6);
           end;
+          status := MangaInfoStatusIfPos(
+            XPathString('//div[@id="series_info"]/div[5]/span'),
+            'Ongoing',
+            'Complete');
           authors := XPathString('//div[@id="title"]/table/tbody/tr[2]/td[2]');
           artists := XPathString('//div[@id="title"]/table/tbody/tr[2]/td[3]');
           genres := XPathString('//div[@id="title"]/table/tbody/tr[2]/td[4]');
           summary := XPathString('//p[@class="summary"]');
-          for v in XPath('//ul[@class="chlist"]/li') do
-          begin
-            s := XPathString('div/*/a[@class="tips"]/@href', v.toNode);
-            if RightStr(s, 6) = '1.html' then
-              SetLength(s, Length(s) - 6);
-            chapterLinks.Add(s);
-            chapterName.Add(Trim(XPathString('div/*/a[@class="tips"]', v.toNode) + ' ' +
-              XPathString('div/*/span[@class="title nowrap"]', v.toNode)));
-          end;
+          for v in XPath('//div/*/a[@class="tips"]') do
+            begin
+               s := v.toNode.getAttribute('href');
+                s := StringReplace(s, '1.html', '', [rfReplaceAll]);
+                chapterLinks.Add(s);
+                chapter_title := v.toString;
+                chapterName.Add(chapter_title);
+            end;
           InvertStrings([chapterLinks, chapterName]);
         finally
           Free;
@@ -167,3 +171,4 @@ initialization
   RegisterModule;
 
 end.
+
