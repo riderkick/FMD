@@ -310,6 +310,7 @@ begin
   AddWebsiteModule('ReadHentaiManga', 'http://readhentaimanga.com');
   AddWebsiteModule('MangaHen', 'http://www.mangahen.com');
   AddWebsiteModule('MangaIce', 'http://www.mangaice.com');
+  AddWebsiteModule('MangaCow', 'http://mngcow.co');
 end;
 
 initialization
