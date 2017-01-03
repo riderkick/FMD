@@ -5,9 +5,9 @@ Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
 0.9.84.0 (25-12-2016)
-[*] Fixed an issue when saving to pdf
 [*] MangaFox: fixed manga info and Status
 [*] MangaTown: fixed Image Url
+[*] Removed MangaCow and Moved to WPManga
 [+] Added Tonari no Young Jump, Comico, NewType and fixed Sunday Web Every[JP]
 [+] Added PowerManga, Jaiminisbox, KireiCake and ReadComics[EN]
 [*] Fixed Madokami Url
