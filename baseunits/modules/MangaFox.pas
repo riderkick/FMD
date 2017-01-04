@@ -66,10 +66,10 @@ begin
           genres := XPathString('//div[@id="title"]/table/tbody/tr[2]/td[4]');
           summary := XPathString('//p[@class="summary"]');
           status := MangaInfoStatusIfPos(XPathString('//div[@id="series_info"]/div[5]/span'));
-          for v in XPath('//div/*/a[@class="tips"]') do
+          for v in XPath('//ul[@class="chlist"]/li/div/*[self::h3 or self::h4]') do
           begin
-            chapterLinks.Add(StringReplace(v.toNode.getAttribute('href'), '1.html', '', [rfReplaceAll]));
-            chapterName.Add(v.toString);
+            chapterLinks.Add(StringReplace(XPathString('a/@href', v), '1.html', '', [rfReplaceAll]));
+            chapterName.Add(XPathString('string-join(*/text()," ")', v));
           end;
           InvertStrings([chapterLinks, chapterName]);
         finally
