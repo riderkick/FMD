@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, WebsiteModules, uData, uBaseUnit, uDownloadsManager,
-  XQueryEngineHTML, httpsendthread, Dialogs;
+  XQueryEngineHTML;
 
 implementation
 
@@ -59,7 +59,7 @@ begin
       s += '?c='
     else
     if Module = MMangaTraders then
-      s += '?start=';
+      s += '?q=';
     s += diralpha[StrToIntDef(AURL, 0) + 1]
   end;
   if MangaInfo.FHTTP.GET(s) then
