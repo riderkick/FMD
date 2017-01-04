@@ -66,6 +66,7 @@ begin
           artists := XPathString('//div[@id="title"]/table/tbody/tr[2]/td[3]');
           genres := XPathString('//div[@id="title"]/table/tbody/tr[2]/td[4]');
           summary := XPathString('//p[@class="summary"]');
+          status := MangaInfoStatusIfPos(XPathString('//div[@id="series_info"]/div[5]/span'));
           for v in XPath('//ul[@class="chlist"]/li') do
           begin
             s := XPathString('div/*/a[@class="tips"]/@href', v.toNode);
