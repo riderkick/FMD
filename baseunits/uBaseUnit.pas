@@ -872,7 +872,8 @@ function JDNToDate(const JDN: Longint): TDate;
 {function  ConvertInt32ToStr(const aValue: Cardinal)  : String;
 function  ConvertStrToInt32(const aStr  : String): Cardinal;}
 procedure TransferMangaInfo(var dest: TMangaInfo; const Source: TMangaInfo);
-function MangaInfoStatusIfPos(const SearchStr, OngoingStr, CompletedStr: String): String;
+function MangaInfoStatusIfPos(const SearchStr: String; const OngoingStr: String = 'Ongoing';
+    const CompletedStr: String = 'Completed'): String;
 
 // cross platform funcs
 
@@ -3966,7 +3967,8 @@ begin
   dest.chapterLinks.Assign(Source.chapterLinks);
 end;
 
-function MangaInfoStatusIfPos(const SearchStr, OngoingStr, CompletedStr: String): String;
+function MangaInfoStatusIfPos(const SearchStr: String; const OngoingStr: String;
+  const CompletedStr: String): String;
 var
   s, o, c: String;
 begin

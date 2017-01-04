@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, WebsiteModules, uData, uBaseUnit, uDownloadsManager,
-  XQueryEngineHTML, httpsendthread, MangaFoxWatermark,Dialogs;
+  XQueryEngineHTML, httpsendthread, MangaFoxWatermark;
 
 implementation
 
@@ -40,17 +40,15 @@ begin
   end;
 end;
 
-function GetInfo(const MangaInfo: TMangaInformation;
-  const AURL: String; const Module: TModuleContainer): Integer;
+function GetInfo(const MangaInfo: TMangaInformation; const AURL: String;
+  const Module: TModuleContainer): Integer;
 var
   v: IXQValue;
-  s,chapter_title: String;
 begin
   Result := NET_PROBLEM;
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
-  with MangaInfo.mangaInfo, MangaInfo.FHTTP do
-  begin
-    url := RemoveURLDelim(FillHost(Module.RootURL, AURL));
+  with MangaInfo.mangaInfo, MangaInfo.FHTTP do begin
+    url := FillHost(Module.RootURL, AURL);
     if GET(url) then begin
       Result := NO_ERROR;
       with TXQueryEngineHTML.Create(Document) do
@@ -63,22 +61,16 @@ begin
             if RightStr(title, 6) = ' Manga' then
               SetLength(title, Length(title) - 6);
           end;
-          status := MangaInfoStatusIfPos(
-            XPathString('//div[@id="series_info"]/div[5]/span'),
-            'Ongoing',
-            'Complete');
           authors := XPathString('//div[@id="title"]/table/tbody/tr[2]/td[2]');
           artists := XPathString('//div[@id="title"]/table/tbody/tr[2]/td[3]');
           genres := XPathString('//div[@id="title"]/table/tbody/tr[2]/td[4]');
           summary := XPathString('//p[@class="summary"]');
+          status := MangaInfoStatusIfPos(XPathString('//div[@id="series_info"]/div[5]/span'));
           for v in XPath('//div/*/a[@class="tips"]') do
-            begin
-               s := v.toNode.getAttribute('href');
-                s := StringReplace(s, '1.html', '', [rfReplaceAll]);
-                chapterLinks.Add(s);
-                chapter_title := v.toString;
-                chapterName.Add(chapter_title);
-            end;
+          begin
+            chapterLinks.Add(StringReplace(v.toNode.getAttribute('href'), '1.html', '', [rfReplaceAll]));
+            chapterName.Add(v.toString);
+          end;
           InvertStrings([chapterLinks, chapterName]);
         finally
           Free;
@@ -171,4 +163,3 @@ initialization
   RegisterModule;
 
 end.
-
