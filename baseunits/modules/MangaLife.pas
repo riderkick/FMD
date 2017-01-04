@@ -94,14 +94,15 @@ begin
         try
          coverLink := MaybeFillHost(Module.RootURL, XPathString('//meta[@property="og:image"]/@content'));
           if title = '' then title := XPathString('//*[@class="row"]//h1');
-          authors := SeparateRight(XPathString('//*[@class="row"][starts-with(.,"Author:")]'), ':');
-          artists := SeparateRight(XPathString('//*[@class="row"][starts-with(.,"Artist:")]'), ':');
-          status := MangaInfoStatusIfPos(XPathString(
-            '//*[@class="row"][starts-with(.,"Scanlation Status:")]'),
-            'ongoing',
-            'completed');
-          genres := SeparateRight(XPathString('//*[@class="row"][starts-with(.,"Genre:")]'), ':');
-          summary := Trim(SeparateRight(XPathString('//*[@class="row"][starts-with(.,"Description:")]'), ':'));
+          authors := SeparateRight(XPathString('//*[@class="row"][starts-with(.,"Author")]'), ':');
+          artists := SeparateRight(XPathString('//*[@class="row"][starts-with(.,"Artist")]'), ':');
+          status := XPathString('//*[@class="row"][starts-with(.,"Scanlation Status")]');
+          if status = '' then
+            status := XPathString('//*[@class="row"][starts-with(.,"Status")]');
+          if status <> '' then
+            status := MangaInfoStatusIfPos(status);
+          genres := SeparateRight(XPathString('//*[@class="row"][starts-with(.,"Genre")]'), ':');
+          summary := Trim(SeparateRight(XPathString('//*[@class="row"][starts-with(.,"Description")]'), ':'));
           for v in XPath('//div[@class="list chapter-list"]/a') do
           begin
             chapterLinks.Add(v.toNode.getAttribute('href'));
