@@ -17,6 +17,7 @@ var
 const
   dirurl = '/directory/';
   dirurlreader = '/reader/directory/';
+  dirurlreaderlist = '/reader/list/';
   dirurlfoolslide = '/foolslide/directory/';
   dirurlslide = '/slide/directory/';
   dirurlslideU = '/Slide/directory/';
@@ -40,8 +41,12 @@ function GetDirURL(const AWebsite: String): String;
 begin
   if (AWebsite = 'YoManga') or
      (AWebsite = 'GoManga') or
+     (AWebsite = 'Jaiminisbox') or
      (AWebsite = 'TripleSevenScan') then
     Result := dirurlreader
+  else
+  if AWebsite = 'KireiCake' then
+    Result := dirurlreaderlist
   else
   if AWebsite = 'OneTimeScans' then
     Result := dirurlfoolslide
@@ -249,6 +254,8 @@ procedure RegisterModule;
   end;
 
 begin
+  AddWebsiteModule('PowerManga', 'http://read.powermanga.org');
+
   AddWebsiteModule('Shoujosense', 'http://reader.shoujosense.com');
   with AddWebsiteModule('YoManga', 'http://yomanga.co') do
   begin
@@ -260,6 +267,8 @@ begin
   AddWebsiteModule('GoManga', 'http://gomanga.co');
   AddWebsiteModule('OneTimeScans', 'http://otscans.com');
   AddWebsiteModule('SenseScans', 'http://reader.sensescans.com');
+  AddWebsiteModule('Jaiminisbox', 'https://jaiminisbox.com');
+  AddWebsiteModule('KireiCake', 'https://reader.kireicake.com');
 
   //es-san
   AddWebsiteModule('DangoOnlineNoFansub', 'http://lector.dangolinenofansub.com');

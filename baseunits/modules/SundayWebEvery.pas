@@ -1,12 +1,10 @@
-unit SundayWebry;
-
-{$mode objfpc}{$H+}
+unit SundayWebEvery;
 
 interface
 
 uses
   Classes, SysUtils, WebsiteModules, uData, uBaseUnit, uDownloadsManager,
-  XQueryEngineHTML, httpsendthread, synautil, RegExpr;
+  XQueryEngineHTML, httpsendthread, synautil, RegExpr, Dialogs;
 
 implementation
 
@@ -87,7 +85,9 @@ var
   i, j, bi, bv: Integer;
   key: String;
   v, x: IXQValue;
+  data: IXQValue;
   regx: TRegExpr;
+  s: String;
 begin
   Result := False;
   if DownloadThread = nil then Exit;
@@ -122,33 +122,17 @@ begin
         if GET(key + 'episode.json') then
         begin
           with TXQueryEngineHTML.Create(Document) do
-            try
-              { h1536, h128, h1024
-                the available res is varie for every page/image, some only had h1024
-                try to get the biggest available }
-              regx.Expression := '^.*-h(\d+)\.jpe?g';
-              for v in XPath('json(*).pages().files') do
-              begin
-                x := XPath('*', v);
-                if x.Count > 0 then
-                begin
-                  bi := 1;
-                  bv := 0;
-                  for i := 1 to x.Count do
-                  begin
-                    j := StrToIntDef(regx.Replace(x.get(i).toString, '$1', True), 0);
-                    if j > bv then
-                    begin
-                      bv := j;
-                      bi := i;
-                    end;
-                  end;
-                  PageLinks.Add(key + x.get(bi).toString);
-                end;
-              end;
-            finally
-              Free;
-            end;
+
+          { h1536, h128, h1024
++                the available res is varie for every page/image, some only had h1024
++                try to get the biggest available }
+
+
+      for data in XPath('json(*).pages()/files/h1536.jpeg') do
+           PageLinks.Add(key + data.toString);
+
+
+
         end;
       end;
       regx.Free;
@@ -160,7 +144,7 @@ procedure RegisterModule;
 begin
   with AddModule do
   begin
-    Website := 'SundayWebry';
+    Website := 'SundayWebEvery';
     RootURL := 'https://www.sunday-webry.com';
     OnGetNameAndLink := @GetNameAndLink;
     OnGetInfo := @GetInfo;

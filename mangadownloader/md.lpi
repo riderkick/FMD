@@ -18,7 +18,7 @@
     <VersionInfo>
       <UseVersionInfo Value="True"/>
       <MinorVersionNr Value="9"/>
-      <RevisionNr Value="83"/>
+      <RevisionNr Value="84"/>
       <Attributes pvaPrivateBuild="True"/>
       <StringTable Comments="https://github.com/riderkick/FMD" FileDescription="Free Manga Downloader" LegalCopyright="©2015-2016" OriginalFilename="fmd.exe" ProductName="Free Manga Downloader" ProductVersion="$BuildMode()" PrivateBuild="riderkick"/>
     </VersionInfo>
@@ -199,10 +199,10 @@
     </RunParams>
     <RequiredPackages Count="8">
       <Item1>
-        <PackageName Value="multiloglaz"/>
+        <PackageName Value="BESENPkg"/>
       </Item1>
       <Item2>
-        <PackageName Value="BESENPkg"/>
+        <PackageName Value="multiloglaz"/>
       </Item2>
       <Item3>
         <PackageName Value="laz_synapse"/>

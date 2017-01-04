@@ -47,7 +47,13 @@ uses
   MangaPark,
   MangaIndo,
   FunManga,
-  SundayWebry,
   Komikid,
   MangaOnlineTo,
-  MyMangaMe;
+  MyMangaMe,
+  ReadComics,
+  // Raw Official
+  SundayWebEvery,
+  TonarinoYoungJump,
+  YoungAceUp,
+  NewType,
+  Comico;

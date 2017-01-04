@@ -796,8 +796,6 @@ var
 
   {$I includes/JapanShin/directory_page_number.inc}
 
-  {$I includes/Mangacow/directory_page_number.inc}
-
   {$I includes/OneManga/directory_page_number.inc}
 
   {$I includes/MangaTown/directory_page_number.inc}
@@ -889,9 +887,6 @@ begin
       else
       if WebsiteID = JAPANSHIN_ID then
         Result := GetJapanShinDirectoryPageNumber
-      else
-      if WebsiteID = MANGACOW_ID then
-        Result := GetMangaCowDirectoryPageNumber
       else
       if WebsiteID = ONEMANGA_ID then
         Result := GetOneMangaDirectoryPageNumber
@@ -987,8 +982,6 @@ var
 
   {$I includes/Turkcraft/names_and_links.inc}
 
-  {$I includes/Mangacow/names_and_links.inc}
-
   {$I includes/Starkana/names_and_links.inc}
 
   {$I includes/EatManga/names_and_links.inc}
@@ -1021,7 +1014,7 @@ var
 
   {$I includes/OneManga/names_and_links.inc}
 
-  {$I includes/MangaTown/names_and_links.inc}
+ {$I includes/MangaTown/names_and_links.inc}
 
   {$I includes/MangaOku/names_and_links.inc}
 
@@ -1136,9 +1129,6 @@ begin
     if WebsiteID = TURKCRAFT_ID then
       Result := TurkcraftGetNamesAndLinks
     else
-    if WebsiteID = MANGACOW_ID then
-      Result := MangaCowGetNamesAndLinks
-    else
     if WebsiteID = KIVMANGA_ID then
       Result := KivmangaGetNamesAndLinks
     else
@@ -1172,7 +1162,7 @@ begin
     if WebsiteID = ONEMANGA_ID then
       Result := OneMangaGetNamesAndLinks
     else
-    if WebsiteID = MANGATOWN_ID then
+   if WebsiteID = MANGATOWN_ID then
       Result := MangaTownGetNamesAndLinks
     else
     if WebsiteID = MANGAOKU_ID then
@@ -1287,8 +1277,6 @@ var
 
   {$I includes/CentralDeMangas/manga_information.inc}
 
-  {$I includes/Mangacow/manga_information.inc}
-
   {$I includes/BlogTruyen/manga_information.inc}
 
   {$I includes/MeinManga/manga_information.inc}
@@ -1311,7 +1299,7 @@ var
 
   {$I includes/OneManga/manga_information.inc}
 
-  {$I includes/MangaTown/manga_information.inc}
+ {$I includes/MangaTown/manga_information.inc}
 
   {$I includes/MangaOku/manga_information.inc}
 
@@ -1433,9 +1421,6 @@ begin
     else
     if WebsiteID = CENTRALDEMANGAS_ID then
       Result := GetCentralDeMangasInfoFromURL
-    else
-    if WebsiteID = MANGACOW_ID then
-      Result := GetMangaCowInfoFromURL
     else
     if WebsiteID = BLOGTRUYEN_ID then
       Result := GetBlogTruyenInfoFromURL

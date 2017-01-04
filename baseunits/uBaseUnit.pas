@@ -342,7 +342,7 @@ const
     ('OneManga', 'http://www.onemanga2.com'),
     ('MangaTown', 'http://www.mangatown.com'),
     ('MangaOku', 'http://www.mangaoku.net'),
-    ('MyReadingMangaInfo', 'http://myreadingmanga.info'),
+    ('MyReadingMangaInfo', 'https://myreadingmanga.info'),
     ('I-Komik', 'http://www.i-komik.com'),
     ('NHentai', 'http://nhentai.net'),
     ('MangaMint', 'http://www.mangamint.com'),
@@ -3041,7 +3041,7 @@ begin
   begin
     HTTP := THTTPSend.Create;
     HTTP.Timeout := DefaultTimeout;
-    HTTP.Sock.ConnectionTimeout := DefaultTimeout;
+ //   HTTP.Sock.ConnectionTimeout := DefaultTimeout;
     HTTP.Sock.SetTimeout(DefaultTimeout);
   end;
   HTTP.Headers.NameValueSeparator := ':';
@@ -3398,7 +3398,7 @@ begin
   begin
     HTTP := THTTPSend.Create;
     HTTP.Timeout := DefaultTimeout;
-    HTTP.Sock.ConnectionTimeout := DefaultTimeout;
+ //   HTTP.Sock.ConnectionTimeout := DefaultTimeout;
     HTTP.Sock.SetTimeout(DefaultTimeout);
   end;
   HTTP.Headers.NameValueSeparator := ':';

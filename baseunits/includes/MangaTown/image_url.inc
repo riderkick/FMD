@@ -28,7 +28,7 @@
     begin
       for i := 0 to parse.Count - 1 do
       begin
-        if (Pos('<img', parse[i]) > 0) and (Pos('onerror=', parse[i]) > 0) then
+        if (Pos('<img', parse[i]) > 0) and (Pos('alt=', parse[i]) > 0) then
         begin
           Task.Container.PageLinks[WorkId] := GetVal(parse[i], 'src');
           Break;
