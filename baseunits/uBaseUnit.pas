@@ -869,7 +869,7 @@ function JDNToDate(const JDN: Longint): TDate;
 function  ConvertStrToInt32(const aStr  : String): Cardinal;}
 procedure TransferMangaInfo(var dest: TMangaInfo; const Source: TMangaInfo);
 function MangaInfoStatusIfPos(const SearchStr: String; const OngoingStr: String = 'Ongoing';
-    const CompletedStr: String = 'Completed'): String;
+    const CompletedStr: String = 'Complete'): String;
 
 // cross platform funcs
 
