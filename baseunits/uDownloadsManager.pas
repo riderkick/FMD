@@ -418,8 +418,6 @@ var
 
   {$I includes/MangaAr/chapter_page_number.inc}
 
-  {$I includes/Mangacow/chapter_page_number.inc}
-
   {$I includes/MangaGo/chapter_page_number.inc}
 
   {$I includes/MeinManga/chapter_page_number.inc}
@@ -517,9 +515,6 @@ begin
     else
     if Task.Container.MangaSiteID = MANGAAE_ID then
       Result := GetMangaAePageNumber
-    else
-    if Task.Container.MangaSiteID = MANGACOW_ID then
-      Result := GetMangaCowPageNumber
     else
     if Task.Container.MangaSiteID = KIVMANGA_ID then
       Result := GetKivmangaPageNumber
@@ -634,8 +629,6 @@ var
   {$I includes/MangaAe/image_url.inc}
 
   {$I includes/MangaAr/image_url.inc}
-
-  {$I includes/Mangacow/image_url.inc}
 
   {$I includes/MangaEsta/image_url.inc}
 
@@ -752,9 +745,6 @@ begin
     else
     if Task.Container.MangaSiteID = CENTRALDEMANGAS_ID then
       Result := GetCentralDeMangasImageURL
-    else
-    if Task.Container.MangaSiteID = MANGACOW_ID then
-      Result := GetMangaCowImageURL
     else
     if Task.Container.MangaSiteID = TRUYENTRANHTUAN_ID then
       Result := GetTruyenTranhTuanImageURL
