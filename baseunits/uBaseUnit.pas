@@ -877,6 +877,10 @@ function fmdGetTempPath: String;
 procedure fmdPowerOff;
 procedure fmdHibernate;
 
+// logger
+procedure SendLog(const AText: String); overload; inline;
+procedure SendLog(const AText, AValue: String); overload; inline;
+
 implementation
 
 uses
@@ -4148,6 +4152,16 @@ begin
   {$IFDEF WINDOWS}
   SetSuspendState(True, False, False);
   {$ENDIF}
+end;
+
+procedure SendLog(const AText: String);
+begin
+  Logger.Send(AText);
+end;
+
+procedure SendLog(const AText, AValue: String);
+begin
+  Logger.Send(AText, AValue);
 end;
 
 function HeaderByName(const AHeaders: TStrings; const AHeaderName: String): String;
