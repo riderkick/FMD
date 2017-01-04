@@ -4,13 +4,14 @@ Project page: https://github.com/riderkick/FMD
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
-0.9.84.0 (25-12-2016)
+0.9.84.0 (04-01-2017)
 [*] MangaFox: fixed manga info and Status
 [*] MangaTown: fixed Image Url
 [*] Removed MangaCow and Moved to WPManga
 [+] Added Tonari no Young Jump, Comico, NewType and fixed Sunday Web Every[JP]
 [+] Added PowerManga, Jaiminisbox, KireiCake and ReadComics[EN]
 [*] Fixed Madokami Url
+[*] Fixed 8Muses
 Full changes: https://github.com/riderkick/FMD/compare/0.9.82.0...0.9.83.0
 
 0.9.83.0 (06-09-2016)
