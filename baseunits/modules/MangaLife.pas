@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, WebsiteModules, uData, uBaseUnit, uDownloadsManager,
-  XQueryEngineHTML;
+  XQueryEngineHTML, accountmanagerdb, httpsendthread, synacode;
 
 implementation
 
@@ -20,6 +20,69 @@ const
 var
   MMangaSee,
   MMangaTraders: TModuleContainer;
+  MangaTradersLockLogin: TRTLCriticalSection;
+  MangaTradersOnLogin: Boolean;
+
+function MangaTradersLogin(const AHTTP: THTTPSendThread): Boolean;
+var
+  s: String;
+begin
+  Result := False;
+  if Account.Enabled[MMangaTraders.Website] = False then Exit;
+  if TryEnterCriticalsection(MangaTradersLockLogin) > 0 then
+    try
+      MangaTradersOnLogin := True;
+      Account.Status[MMangaTraders.Website] := asChecking;
+      SendLog('MangaTraders: post login');
+      s :=
+        'EmailAddress=' + EncodeURLElement(Account.Username[MMangaTraders.Website]) +
+        '&Password=' + EncodeURLElement(Account.Password[MMangaTraders.Website]) +
+        '&RememberMe=1';
+      AHTTP.Headers.Clear;
+      if AHTTP.POST(MMangaTraders.RootURL + '/auth/process.login.php', s) then
+      begin
+        s := StreamToString(AHTTP.Document);
+        SendLog('MangaTraders: login result = ' + s);
+        if LowerCase(s) = 'ok' then
+        begin
+          Account.Status[MMangaTraders.Website] := asValid;
+          Account.Cookies[MMangaTraders.Website] := AHTTP.Cookies.Text;
+        end
+        else
+          Account.Status[MMangaTraders.Website] := asInvalid;
+      end
+      else
+        Account.Status[MMangaTraders.Website] := asUnknown;
+      Result := Account.Status[MMangaTraders.Website] = asValid;
+    finally
+      MangaTradersOnLogin := False;
+      LeaveCriticalsection(MangaTradersLockLogin);
+    end
+  else
+  begin
+    while MangaTradersOnLogin do Sleep(1000);
+    Result := Account.Status[MMangaTraders.Website] = asValid;
+    if Result then
+      AHTTP.Cookies.Text := Account.Cookies[MMangaTraders.Website];
+  end;
+end;
+
+function GETMangaTraders(const AHTTP: THTTPSendThread; const AURL: String): Boolean;
+var
+  accstat: TAccountStatus;
+begin
+  Result := False;
+  if Account.Enabled[MMangaTraders.Website] then
+  begin
+    accstat := Account.Status[MMangaTraders.Website];
+    if accstat = asValid then
+      AHTTP.Cookies.AddText(Account.Cookies[MMangaTraders.Website])
+    else
+    if accstat in [asChecking, asUnknown] then
+      Result := MangaTradersLogin(AHTTP);
+  end;
+  Result := AHTTP.GET(AURL);
+end;
 
 function GetDirectoryPageNumber(const MangaInfo: TMangaInformation;
   var Page: Integer; const Module: TModuleContainer): Integer;
@@ -82,17 +145,22 @@ function GetInfo(const MangaInfo: TMangaInformation;
   const AURL: String; const Module: TModuleContainer): Integer;
 var
   v: IXQValue;
+  r: Boolean;
 begin
   Result := NET_PROBLEM;
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
   with MangaInfo.mangaInfo, MangaInfo.FHTTP do
   begin
     url := RemoveURLDelim(FillHost(Module.RootURL, AURL));
-    if GET(url) then begin
+    if Module = MMangaTraders then
+      r := GETMangaTraders(MangaInfo.FHTTP, url)
+    else
+      r := GET(url);
+    if r then begin
       Result := NO_ERROR;
       with TXQueryEngineHTML.Create(Document) do
         try
-         coverLink := MaybeFillHost(Module.RootURL, XPathString('//meta[@property="og:image"]/@content'));
+          coverLink := MaybeFillHost(Module.RootURL, XPathString('//meta[@property="og:image"]/@content'));
           if title = '' then title := XPathString('//*[@class="row"]//h1');
           authors := SeparateRight(XPathString('//*[@class="row"][starts-with(.,"Author")]'), ':');
           artists := SeparateRight(XPathString('//*[@class="row"][starts-with(.,"Artist")]'), ':');
@@ -160,9 +228,15 @@ begin
   AddWebsiteModule('MangaLife', 'http://mangalife.org');
   MMangaSee := AddWebsiteModule('MangaSee', 'http://mangaseeonline.net');
   MMangaTraders := AddWebsiteModule('MangaTraders', 'http://mangatraders.biz');
+  MMangaTraders.AccountSupport := True;
+  MMangaTraders.OnLogin := @MangaTradersLogin;
 end;
 
 initialization
+  InitCriticalSection(MangaTradersLockLogin);
   RegisterModule;
+
+finalization
+  DoneCriticalsection(MangaTradersLockLogin);
 
 end.
