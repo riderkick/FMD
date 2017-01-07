@@ -163,11 +163,12 @@ begin
             status := MangaInfoStatusIfPos(status);
           genres := SeparateRight(XPathString('//*[@class="row"][starts-with(.,"Genre")]'), ':');
           summary := Trim(SeparateRight(XPathString('//*[@class="row"][starts-with(.,"Description")]'), ':'));
-          for v in XPath('//div[@class="list chapter-list"]/a') do
+          for v in XPath('//div[@class="list chapter-list"]//a') do
           begin
             chapterLinks.Add(v.toNode.getAttribute('href'));
-            chapterName.Add(v.toString);
+            chapterName.Add(XPathString('span[@class="chapterLabel"]', v));
           end;
+          InvertStrings([chapterLinks, chapterName]);
         finally
           Free;
         end;
