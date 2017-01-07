@@ -4,6 +4,11 @@ Project page: https://github.com/riderkick/FMD
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.85.0 (future)
+[*] MangaFox: fixed missing chapter title
+[*] MangaLife, MangaSee, MangaTraders: fixed all, MangaTraders require account
+Full changes: https://github.com/riderkick/FMD/compare/0.9.84.0...0.9.85.0
+
 0.9.84.0 (04-01-2017)
 [*] MangaFox: fixed manga info and Status
 [*] MangaTown: fixed Image Url
@@ -12,7 +17,7 @@ Changelog:
 [+] Added PowerManga, Jaiminisbox, KireiCake and ReadComics[EN]
 [*] Fixed Madokami Url
 [*] Fixed 8Muses
-Full changes: https://github.com/riderkick/FMD/compare/0.9.82.0...0.9.83.0
+Full changes: https://github.com/riderkick/FMD/compare/0.9.83.0...0.9.84.0
 
 0.9.83.0 (06-09-2016)
 [*] Fixed an issue when saving to pdf
