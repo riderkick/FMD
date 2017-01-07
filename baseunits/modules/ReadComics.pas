@@ -28,7 +28,7 @@ begin
     Result := NO_ERROR;
     with TXQueryEngineHTML.Create(MangaInfo.FHTTP.Document) do
       try
-        for v in XPath('//div[@class="serie-box"]/li/a') do
+        for v in XPath('//div[@class="serie-box"]/*/li/a') do
         begin
           ALinks.Add(v.toNode.getAttribute('href'));
           ANames.Add(v.toString);
