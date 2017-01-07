@@ -16,7 +16,7 @@ uses
 const
   dirURL = '/directory/';
   diralpha = '#ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-  dirURLmangasee = '/directory.php';
+
 var
   MMangaSee,
   MMangaTraders: TModuleContainer;
@@ -88,11 +88,10 @@ function GetDirectoryPageNumber(const MangaInfo: TMangaInformation;
   var Page: Integer; const Module: TModuleContainer): Integer;
 begin
   Result := NO_ERROR;
-  if (Module = MMangaSee) or
-     (Module = MMangaTraders) then
+  if Module = MMangaTraders then
     Page := Length(diralpha)
   else
-    Page := 1;
+    page := 1;
 end;
 
 function fixcleanurl(const u: string): string;
@@ -111,19 +110,12 @@ var
   s: String;
 begin
   Result := NET_PROBLEM;
-  s := Module.RootURL;
-  if Module = MMangaSee then
-    s += dirURLmangasee
-  else
-    s+=dirURL;
+  s := Module.RootURL + dirURL;
   if AURL <> '0' then
   begin
-    if Module = MMangaSee then
-      s += '?c='
-    else
     if Module = MMangaTraders then
       s += '?q=';
-    s += diralpha[StrToIntDef(AURL, 0) + 1]
+    s += diralpha[StrToIntDef(AURL, 0) + 1];
   end;
   if MangaInfo.FHTTP.GET(s) then
   begin
