@@ -138,6 +138,7 @@ function GetInfo(const MangaInfo: TMangaInformation;
 var
   v: IXQValue;
   r: Boolean;
+  s: String;
 begin
   Result := NET_PROBLEM;
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
@@ -165,7 +166,10 @@ begin
           summary := Trim(SeparateRight(XPathString('//*[@class="row"][starts-with(.,"Description")]'), ':'));
           for v in XPath('//div[@class="list chapter-list"]//a') do
           begin
-            chapterLinks.Add(v.toNode.getAttribute('href'));
+            s := v.toNode.getAttribute('href');
+            if Pos('-page-1', s) > 0 then
+              s := StringReplace(s, '-page-1', '', []);
+            chapterLinks.Add(s);
             chapterName.Add(XPathString('span[@class="chapterLabel"]', v));
           end;
           InvertStrings([chapterLinks, chapterName]);
@@ -192,8 +196,7 @@ begin
       Result := True;
       with TXQueryEngineHTML.Create(Document) do
         try
-          for v in XPath('//img[@class="CurImage"]') do
-            PageLinks.Add(v.toNode.getAttribute('src'));
+          XPathStringAll('//*[@class="image-container"]//img/@src', PageLinks);
         finally
           Free;
         end;
