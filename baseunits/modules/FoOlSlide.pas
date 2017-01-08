@@ -17,7 +17,6 @@ var
 const
   dirurl = '/directory/';
   dirurlreader = '/reader/directory/';
-  dirurlreaderlist = '/reader/list/';
   dirurlfoolslide = '/foolslide/directory/';
   dirurlslide = '/slide/directory/';
   dirurlslideU = '/Slide/directory/';
@@ -44,9 +43,6 @@ begin
      (AWebsite = 'Jaiminisbox') or
      (AWebsite = 'TripleSevenScan') then
     Result := dirurlreader
-  else
-  if AWebsite = 'KireiCake' then
-    Result := dirurlreaderlist
   else
   if AWebsite = 'OneTimeScans' then
     Result := dirurlfoolslide
