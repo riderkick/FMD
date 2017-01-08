@@ -4,9 +4,12 @@ Project page: https://github.com/riderkick/FMD
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
-0.9.85.0 (future)
+0.9.85.0 (08-01-2017)
 [*] MangaFox: fixed missing chapter title
 [*] MangaLife, MangaSee, MangaTraders: fixed all, MangaTraders require account
+[*] KireiCake: Fixed manga list
+[*] ReadComic: Fixed manga list
+[*] Fixed CF issue #433
 Full changes: https://github.com/riderkick/FMD/compare/0.9.84.0...0.9.85.0
 
 0.9.84.0 (04-01-2017)
