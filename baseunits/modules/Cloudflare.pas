@@ -108,14 +108,16 @@ begin
   counter := 0;
   maxretry := AHTTP.RetryCount;
   AHTTP.RetryCount := 0;
-  while counter < maxretry do begin
+  while True do
+  begin
     Inc(counter);
     m := 'GET';
     u := '';
     h := AppendURLDelim(GetHostURL(AURL));
     st := MIN_WAIT_TIME;
     if JSGetAnsweredURL(StreamToString(AHTTP.Document), h, m, u, st) then
-      if (m <> '') and (u <> '') then begin
+      if (m <> '') and (u <> '') then
+      begin
         AHTTP.Reset;
         AHTTP.Headers.Values['Referer'] := ' ' + AURL;
         if st < MIN_WAIT_TIME then st := MIN_WAIT_TIME;
@@ -132,12 +134,15 @@ begin
         AHTTP.FollowRedirection := True;
         if Result then Cookie := AHTTP.GetCookies;
       end;
-    if Result then Break
-    else if counter < maxretry then begin
-      AHTTP.Reset;
-      Result := AHTTP.GET(AURL);
-      if not AntiBotActive(AHTTP) then Break;
+    if AHTTP.RetryCount <> 0 then
+    begin
+      maxretry := AHTTP.RetryCount;
+      AHTTP.RetryCount := 0;
     end;
+    if Result then Break;
+    if (maxretry > -1) and (maxretry <= counter) then Break;
+    AHTTP.Reset;
+    AHTTP.GET(AURL);
   end;
   AHTTP.RetryCount := maxretry;
 end;
