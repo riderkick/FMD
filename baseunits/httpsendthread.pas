@@ -69,15 +69,14 @@ function MaybeEncodeURL(const AValue: String): String;
 procedure SplitURL(URL: String; out Host, Path: String);
 
 const
-  UserAgentSynapse = 'Mozilla/4.0 (compatible; Synapse)';
-  UserAgentCURL = 'curl/7.42.1';
+  UserAgentSynapse   = 'Mozilla/4.0 (compatible; Synapse)';
+  UserAgentCURL      = 'curl/7.52.1';
   UserAgentGooglebot = 'Mozilla/5.0 (compatible; Googlebot/2.1;  http://www.google.com/bot.html)';
-  UserAgentInternetExplorer = 'Mozilla/5.0 (compatible; WOW64; MSIE 10.0; Windows NT 6.2)';
-  UserAgentFirefox = 'Mozilla/5.0 (Windows NT 10.0; WOW64; rv:48.0) Gecko/20100101 Firefox/48.0';
-  UserAgentChrome =
-    'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36';
-  UserAgentOpera =
-    'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.82 Safari/537.36 OPR/39.0.2256.48';
+  UserAgentMSIE      = 'Mozilla/5.0 (Windows NT 10.0; Win64; Trident/7.0; rv:11.0) like Gecko';
+  UserAgentFirefox   = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:50.0) Gecko/20100101 Firefox/50.0';
+  UserAgentChrome    = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36';
+  UserAgentOpera     = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36 OPR/42.0.2393.94';
+  UserAgentEdge      = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.79 Safari/537.36 Edge/14.14393';
 
 var
   DefaultUserAgent: String = UserAgentChrome;
