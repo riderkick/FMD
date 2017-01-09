@@ -1920,7 +1920,7 @@ msgstr "Unduhan"
 
 #: twebsiteoptionadvancedform.tsmaxthreadspertask.caption
 msgid "Max threads per task"
-msgstr "Max jumlah threafs per unduhan"
+msgstr "Max jumlah threads per unduhan"
 
 #: twebsiteoptionadvancedform.tsnumberofthreads.caption
 msgid "Number of threads"
