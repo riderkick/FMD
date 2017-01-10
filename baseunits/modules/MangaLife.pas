@@ -18,7 +18,6 @@ const
   diralpha = '#ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
 var
-  MMangaSee,
   MMangaTraders: TModuleContainer;
   MangaTradersLockLogin: TRTLCriticalSection;
   MangaTradersOnLogin: Boolean;
@@ -108,6 +107,7 @@ function GetNameAndLink(const MangaInfo: TMangaInformation;
 var
   v: IXQValue;
   s: String;
+  i: Integer;
 begin
   Result := NET_PROBLEM;
   s := Module.RootURL + dirURL;
@@ -130,6 +130,9 @@ begin
       finally
         Free;
       end;
+    if (Module = MMangaTraders) and (ALinks.Count > 0) then
+      for i := 0 to ALinks.Count - 1 do
+        ALinks[i] := StringReplace(ALinks[1], '/series/', '/manga/', []);
   end;
 end;
 
@@ -153,8 +156,23 @@ begin
       Result := NO_ERROR;
       with TXQueryEngineHTML.Create(Document) do
         try
-          coverLink := MaybeFillHost(Module.RootURL, XPathString('//meta[@property="og:image"]/@content'));
+          if (Module = MMangaTraders) and (Pos('/series/', url) > 0) then
+          begin
+            s := XPathString('//div[@class="alert alert-success startReading"]/a/@href');
+            if Pos('/manga/', s) > 0 then
+            begin
+              s := MaybeFillHost(Module.RootURL, s);
+              url := s;
+              if GET(url) then
+                ParseHTML(Document)
+              else
+                r := False;
+            end
+            else
+              r := False;
+          end;
           if title = '' then title := XPathString('//*[@class="row"]//h1');
+          coverLink := MaybeFillHost(Module.RootURL, XPathString('//meta[@property="og:image"]/@content'));
           authors := SeparateRight(XPathString('//*[@class="row"][starts-with(.,"Author")]'), ':');
           artists := SeparateRight(XPathString('//*[@class="row"][starts-with(.,"Artist")]'), ':');
           status := XPathString('//*[@class="row"][starts-with(.,"Scanlation Status")]');
@@ -164,15 +182,18 @@ begin
             status := MangaInfoStatusIfPos(status);
           genres := SeparateRight(XPathString('//*[@class="row"][starts-with(.,"Genre")]'), ':');
           summary := Trim(SeparateRight(XPathString('//*[@class="row"][starts-with(.,"Description")]'), ':'));
-          for v in XPath('//div[@class="list chapter-list"]//a') do
+          if r then
           begin
-            s := v.toNode.getAttribute('href');
-            if Pos('-page-1', s) > 0 then
-              s := StringReplace(s, '-page-1', '', []);
-            chapterLinks.Add(s);
-            chapterName.Add(XPathString('span[@class="chapterLabel"]', v));
+            for v in XPath('//div[@class="list chapter-list"]//a') do
+            begin
+              s := v.toNode.getAttribute('href');
+              if Pos('-page-1', s) > 0 then
+                s := StringReplace(s, '-page-1', '', []);
+              chapterLinks.Add(s);
+              chapterName.Add(XPathString('span[@class="chapterLabel"]', v));
+            end;
+            InvertStrings([chapterLinks, chapterName]);
           end;
-          InvertStrings([chapterLinks, chapterName]);
         finally
           Free;
         end;
@@ -182,8 +203,6 @@ end;
 
 function GetPageNumber(const DownloadThread: TDownloadThread;
   const AURL: String; const Module: TModuleContainer): Boolean;
-var
-  v: IXQValue;
 begin
   Result := False;
   if DownloadThread = nil then Exit;
@@ -222,7 +241,7 @@ procedure RegisterModule;
 
 begin
   AddWebsiteModule('MangaLife', 'http://mangalife.org');
-  MMangaSee := AddWebsiteModule('MangaSee', 'http://mangaseeonline.net');
+  AddWebsiteModule('MangaSee', 'http://mangaseeonline.net');
   MMangaTraders := AddWebsiteModule('MangaTraders', 'http://mangatraders.biz');
   MMangaTraders.AccountSupport := True;
   MMangaTraders.OnLogin := @MangaTradersLogin;
