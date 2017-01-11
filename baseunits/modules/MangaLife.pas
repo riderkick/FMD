@@ -132,7 +132,8 @@ begin
       end;
     if (Module = MMangaTraders) and (ALinks.Count > 0) then
       for i := 0 to ALinks.Count - 1 do
-        ALinks[i] := StringReplace(ALinks[1], '/series/', '/manga/', []);
+        if Pos('/series/', ALinks[i]) <> 0 then
+          ALinks[i] := StringReplace(ALinks[i], '/series/', '/manga/', []);
   end;
 end;
 
@@ -156,10 +157,16 @@ begin
       Result := NO_ERROR;
       with TXQueryEngineHTML.Create(Document) do
         try
-          if (Module = MMangaTraders) and (Pos('/series/', url) > 0) then
+          title := XPathString('//*[@class="row"]//h1');
+          if ResultCode = 404 then
+          begin
+            status := '-1';
+            Exit;
+          end;
+          if (Module = MMangaTraders) and (Pos('/series/', url) <> 0) then
           begin
             s := XPathString('//div[@class="alert alert-success startReading"]/a/@href');
-            if Pos('/manga/', s) > 0 then
+            if Pos('/manga/', s) <> 0 then
             begin
               s := MaybeFillHost(Module.RootURL, s);
               url := s;
@@ -171,7 +178,6 @@ begin
             else
               r := False;
           end;
-          if title = '' then title := XPathString('//*[@class="row"]//h1');
           coverLink := MaybeFillHost(Module.RootURL, XPathString('//meta[@property="og:image"]/@content'));
           authors := SeparateRight(XPathString('//*[@class="row"][starts-with(.,"Author")]'), ':');
           artists := SeparateRight(XPathString('//*[@class="row"][starts-with(.,"Artist")]'), ':');
@@ -187,7 +193,7 @@ begin
             for v in XPath('//div[@class="list chapter-list"]//a') do
             begin
               s := v.toNode.getAttribute('href');
-              if Pos('-page-1', s) > 0 then
+              if Pos('-page-1', s) <> 0 then
                 s := StringReplace(s, '-page-1', '', []);
               chapterLinks.Add(s);
               chapterName.Add(XPathString('span[@class="chapterLabel"]', v));
