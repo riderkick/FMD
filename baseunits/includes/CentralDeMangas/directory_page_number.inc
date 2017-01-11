@@ -26,7 +26,7 @@
       if (Pos('/mangas/list/*/', parse[i]) > 0) then
       begin
         s := TrimRight(TrimLeft(GetString(parse[i], '/mangas/list/*/', '">')));
-        page := StrToInt(s);
+        APage := StrToInt(s);
         Result := NO_ERROR;
         Exit;
       end;

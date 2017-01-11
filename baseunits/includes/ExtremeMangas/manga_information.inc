@@ -5,8 +5,8 @@
     regxp: TRegExpr;
   begin
     mangaInfo.website := WebsiteRoots[EXTREMEMANGAS_ID, 0];
-    mangaInfo.url := FillMangaSiteHost(EXTREMEMANGAS_ID, URL);
-    if not GetPage(TObject(Source), mangaInfo.url, Reconnect) then
+    mangaInfo.url := FillMangaSiteHost(EXTREMEMANGAS_ID, AURL);
+    if not GetPage(TObject(Source), mangaInfo.url, AReconnect) then
     begin
       Result := NET_PROBLEM;
       Source.Free;

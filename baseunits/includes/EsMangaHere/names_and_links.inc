@@ -26,8 +26,8 @@
       if Pos('manga_info', parse[i]) <> 0 then
       begin
         Result := NO_ERROR;
-        names.Add(StringFilter(GetString(parse[i], 'rel="', '" href')));
-        links.Add(StringReplace(GetString(parse[i], 'href="', '">'),
+        ANames.Add(StringFilter(GetString(parse[i], 'rel="', '" href')));
+        ALinks.Add(StringReplace(GetString(parse[i], 'href="', '">'),
           WebsiteRoots[ESMANGAHERE_ID, 1], '', []));
       end;
     end;

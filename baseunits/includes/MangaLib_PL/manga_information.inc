@@ -7,10 +7,10 @@
     isExtractChapter: Boolean = False;
   begin
     mangaInfo.website := WebsiteRoots[MANGALIB_PL_ID, 0];
-    mangaInfo.url := FillMangaSiteHost(MANGALIB_PL_ID, URL);
+    mangaInfo.url := FillMangaSiteHost(MANGALIB_PL_ID, AURL);
     s := mangaInfo.url;
 
-    if not GetPage(TObject(Source), s, Reconnect) then
+    if not GetPage(TObject(Source), s, AReconnect) then
     begin
       Result := NET_PROBLEM;
       Source.Free;
@@ -25,11 +25,11 @@
         if (Pos('<form ', Source[i]) > 0) and
           (Pos('name="confirm_', Source[i]) > 0) then
         begin
-          if (Length(URL) > 1) and
-            (URL[1] = '/') then
-            s := Copy(URL, 2, Length(URL) - 1)
+          if (Length(AURL) > 1) and
+            (AURL[1] = '/') then
+            s := Copy(AURL, 2, Length(AURL) - 1)
           else
-            s := URL;
+            s := AURL;
           s := WebsiteRoots[MANGALIB_PL_ID, 1] + '/page/' +
             GetVal(Source[i], 'name') + '?backlink=' + s;
           cf := True;
@@ -40,7 +40,7 @@
       begin
         MANGALIB_PL_COOKIES := FHTTP.Cookies.Text;
         Source.Clear;
-        if not GetPage(TObject(Source), s, Reconnect) then
+        if not GetPage(TObject(Source), s, AReconnect) then
         begin
           Result := NET_PROBLEM;
           Source.Free;

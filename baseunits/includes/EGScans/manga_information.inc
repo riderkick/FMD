@@ -5,8 +5,8 @@
     i: Cardinal;
   begin
     mangaInfo.website := WebsiteRoots[EGSCANS_ID, 0];
-    mangaInfo.url :=FillMangaSiteHost(EGSCANS_ID, '/' + URL);
-    if not GetPage(TObject(Source), mangaInfo.url, Reconnect) then
+    mangaInfo.url :=FillMangaSiteHost(EGSCANS_ID, '/' + AURL);
+    if not GetPage(TObject(Source), mangaInfo.url, AReconnect) then
     begin
       Result := NET_PROBLEM;
       Source.Free;
@@ -57,7 +57,7 @@
         (Pos('<option value="', parse[i]) > 0) then
       begin
         Inc(mangaInfo.numChapter);
-        s := '/' + URL + '/' + StringReplace(GetVal(parse[i], 'value'), WebsiteRoots[EGSCANS_ID, 1], '', []);
+        s := '/' + AURL + '/' + StringReplace(GetVal(parse[i], 'value'), WebsiteRoots[EGSCANS_ID, 1], '', []);
         mangaInfo.chapterLinks.Add(s);
         s := RemoveSymbols(TrimLeft(TrimRight(parse[i + 1])));
         mangaInfo.chapterName.Add(StringFilter(StringFilter(HTMLEntitiesFilter(s))));

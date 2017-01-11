@@ -3,8 +3,8 @@
     i: Integer;
   begin
     mangaInfo.website := WebsiteRoots[NHENTAI_ID, 0];
-    mangaInfo.url := FillMangaSiteHost(NHENTAI_ID, URL);
-    if not GetPage(TObject(Source), mangaInfo.url, Reconnect) then
+    mangaInfo.url := FillMangaSiteHost(NHENTAI_ID, AURL);
+    if not GetPage(TObject(Source), mangaInfo.url, AReconnect) then
     begin
       Result := NET_PROBLEM;
       Source.Free;
@@ -80,7 +80,7 @@
 
     mangaInfo.status := '0';
     mangaInfo.numChapter := 1;
-    mangaInfo.chapterLinks.Add(URL);
+    mangaInfo.chapterLinks.Add(AURL);
     mangaInfo.chapterName.Add(mangaInfo.title);
 
     if mangaInfo.chapterName.Count > 1 then

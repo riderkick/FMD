@@ -6,10 +6,10 @@
     isExtractChapters: Boolean = False;
     isExtractSummary: Boolean = False;
   begin
-    // patchURL:= UTF8ToANSI(URL);
+    // patchURL:= UTF8ToANSI(AURL);
     // Insert('comics/', patchURL, 10);
-    mangaInfo.url := FillMangaSiteHost(MANGA24H_ID, URL);
-    if not GetPage(TObject(Source), mangaInfo.url, Reconnect) then
+    mangaInfo.url := FillMangaSiteHost(MANGA24H_ID, AURL);
+    if not GetPage(TObject(Source), mangaInfo.url, AReconnect) then
     begin
       Result := NET_PROBLEM;
       Source.Free;

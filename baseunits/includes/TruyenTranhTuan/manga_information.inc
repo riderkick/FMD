@@ -5,8 +5,8 @@
     isExtractGenres: Boolean = False;
     i, j: Cardinal;
   begin
-    mangaInfo.url := FillMangaSiteHost(TRUYENTRANHTUAN_ID, URL);// + '&confirm=yes';
-    if not GetPage(TObject(Source), mangaInfo.url, Reconnect) then
+    mangaInfo.url := FillMangaSiteHost(TRUYENTRANHTUAN_ID, AURL);// + '&confirm=yes';
+    if not GetPage(TObject(Source), mangaInfo.url, AReconnect) then
     begin
       Result := NET_PROBLEM;
       Source.Free;

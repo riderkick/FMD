@@ -8,8 +8,8 @@
     regx: TRegExpr;
 
   begin
-    mangaInfo.url := FillMangaSiteHost(JAPSCAN_ID, URL);
-    if not GetPage(TObject(Source), mangaInfo.url, Reconnect) then
+    mangaInfo.url := FillMangaSiteHost(JAPSCAN_ID, AURL);
+    if not GetPage(TObject(Source), mangaInfo.url, AReconnect) then
     begin
       Result := NET_PROBLEM;
       Source.Free;

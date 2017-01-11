@@ -6,7 +6,7 @@
   begin
     Result := INFORMATION_NOT_FOUND;
     if not GetPage(TObject(Source), WebsiteRoots[MANGAMINT_ID, 1] +
-      '/directory?page=' + IntToStr(StrToInt(URL) + 1), 1) then
+      '/directory?page=' + IntToStr(StrToInt(AURL) + 1), 1) then
     begin
       Result := NET_PROBLEM;
       Source.Free;
@@ -41,8 +41,8 @@
             if (GetTagName(parse[i]) = 'a') and (GetVal(parse[i], 'class') = 'cover') then
               if GetTagName(parse[i + 1]) = 'img' then
               begin
-                links.Add(GetVal(parse[i], 'href'));
-                names.Add(CommonStringFilter(
+                ALinks.Add(GetVal(parse[i], 'href'));
+                ANames.Add(CommonStringFilter(
                   regx.Replace(Trim(GetVal(parse[i + 1], 'title')), '', False)));
               end;
           end;

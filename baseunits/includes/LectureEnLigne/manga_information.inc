@@ -4,8 +4,8 @@
     isExtractChapter: Boolean = False;
     i, j: Integer;
   begin
-    mangaInfo.url := FillMangaSiteHost(LECTUREENLIGNE_ID, URL);
-    if not GetPage(TObject(Source), mangaInfo.url, Reconnect) then
+    mangaInfo.url := FillMangaSiteHost(LECTUREENLIGNE_ID, AURL);
+    if not GetPage(TObject(Source), mangaInfo.url, AReconnect) then
     begin
       Result := NET_PROBLEM;
       Source.Free;

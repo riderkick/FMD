@@ -4,7 +4,7 @@
     s: string;
   begin
     Result := INFORMATION_NOT_FOUND;
-    i := StrToIntDef(URL, 0);
+    i := StrToIntDef(AURL, 0);
     if i >= Length(DYNASTYSCANS_BROWSER) then
     begin
       Source.Free;
@@ -26,8 +26,8 @@
         if GetTagName(parse[i]) = 'dd' then
           if GetTagName(parse[i+1]) = 'a' then
           begin
-            links.Add(GetVal(parse[i+1], 'href'));
-            names.Add(CommonStringFilter(parse[i+2]));
+            ALinks.Add(GetVal(parse[i+1], 'href'));
+            ANames.Add(CommonStringFilter(parse[i+2]));
           end;
 
     Result := NO_ERROR;

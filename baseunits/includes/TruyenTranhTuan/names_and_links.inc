@@ -28,10 +28,10 @@
       begin
         Result := NO_ERROR;
         s := StringFilter(TrimLeft(TrimRight(parse[i + 2])));
-        names.Add(HTMLEntitiesFilter(s));
+        ANames.Add(HTMLEntitiesFilter(s));
         s := GetVal(parse[i + 1], 'href');
         s := StringReplace(s, WebsiteRoots[TRUYENTRANHTUAN_ID, 1], '', []);
-        links.Add(s);
+        ALinks.Add(s);
       end;
     end;
     Source.Free;

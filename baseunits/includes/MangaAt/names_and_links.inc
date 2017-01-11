@@ -4,7 +4,7 @@
   begin
     Result := INFORMATION_NOT_FOUND;
     if not GetPage(TObject(Source), WebsiteRoots[MANGAAT_ID, 1] +
-      '/manga/page:' + IntToStr(StrToInt(URL) + 1), 1) then
+      '/manga/page:' + IntToStr(StrToInt(AURL) + 1), 1) then
     begin
       Result := NET_PROBLEM;
       Source.Free;
@@ -27,8 +27,8 @@
         if (GetTagName(parse[i]) = 'a') and
           (GetVal(parse[i], 'class') = 'manga') then
         begin
-          links.Add(GetVal(parse[i], 'href'));
-          names.Add(CommonStringFilter(parse[i + 1]));
+          ALinks.Add(GetVal(parse[i], 'href'));
+          ANames.Add(CommonStringFilter(parse[i + 1]));
         end;
       end;
 

@@ -4,12 +4,12 @@
     i, j, SiteID: Cardinal;
     s: String;
   begin
-    SiteID := GetMangaSiteID(website);
+    SiteID := GetMangaSiteID(AWebsite);
     mangaInfo.website := WebsiteRoots[SiteID, 0];
-    mangaInfo.url := StringReplace(FillMangaSiteHost(SiteID, URL), '?waring=1', '',
+    mangaInfo.url := StringReplace(FillMangaSiteHost(SiteID, AURL), '?waring=1', '',
       [rfIgnoreCase, rfReplaceAll]);
 
-    if not GetPage(TObject(Source), mangaInfo.url + '?waring=1', Reconnect) then
+    if not GetPage(TObject(Source), mangaInfo.url + '?waring=1', AReconnect) then
     begin
       Result := NET_PROBLEM;
       Source.Free;

@@ -27,10 +27,10 @@
       begin
         Result := NO_ERROR;
         s := StringFilter(TrimLeft(TrimRight(parse[i + 3])));
-        names.Add(HTMLEntitiesFilter(s));
+        ANames.Add(HTMLEntitiesFilter(s));
         s := StringReplace(GetVal(parse[i + 6], 'href'),
           WebsiteRoots[MABUNS_ID, 1], '', []);
-        links.Add(s);
+        ALinks.Add(s);
       end;
     end;
     Source.Free;

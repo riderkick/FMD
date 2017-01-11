@@ -8,8 +8,8 @@
     s := WebsiteRoots[MangaID, 1] + '/';
     if MangaID = PORNCOMIXRE_ID then
       s := s + 'online/';
-    if URL <> '0' then
-      s := s + 'page/' + IntToStr(StrToInt(URL) + 1) + '/';
+    if AURL <> '0' then
+      s := s + 'page/' + IntToStr(StrToInt(AURL) + 1) + '/';
     if not GetPage(TObject(Source), s, 0) then
     begin
       Result := NET_PROBLEM;
@@ -37,10 +37,10 @@
           s := GetVal(parse[i + 2], 'href');
           if regx.Exec(s) then
           begin
-            links.Add(s);
-            names.Add(CommonStringFilter(GetVal(parse[i + 2], 'title')));
-            if names[names.Count - 1] = '' then
-              names[names.Count - 1] := 'Untitled_' + IntToStr(Random(99999));
+            ALinks.Add(s);
+            ANames.Add(CommonStringFilter(GetVal(parse[i + 2], 'title')));
+            if ANames[ANames.Count - 1] = '' then
+              ANames[ANames.Count - 1] := 'Untitled_' + IntToStr(Random(99999));
           end;
         end;
       end;

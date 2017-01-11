@@ -4,8 +4,8 @@
     isExtractGenres: Boolean = False;
     i, j: Cardinal;
   begin
-    mangaInfo.url := FillMangaSiteHost(SCANMANGA_ID, URL);
-    if not GetPage(TObject(Source), mangaInfo.url, Reconnect) then
+    mangaInfo.url := FillMangaSiteHost(SCANMANGA_ID, AURL);
+    if not GetPage(TObject(Source), mangaInfo.url, AReconnect) then
     begin
       Result := NET_PROBLEM;
       Source.Free;

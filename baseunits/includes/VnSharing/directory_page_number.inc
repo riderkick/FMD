@@ -27,7 +27,7 @@
       begin
         s := GetVal(parse[i - 1], 'page');
         SetLength(s, Length(s) - 1);
-        Page := StrToInt(s);
+        APage := StrToInt(s);
         Result := NO_ERROR;
         Source.Free;
         Exit;

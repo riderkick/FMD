@@ -7,9 +7,9 @@
     Result := INFORMATION_NOT_FOUND;
     stream := TStringStream.Create('');
     s := WebsiteRoots[BLOGTRUYEN_ID, 1] + BLOGTRUYEN_JS_BROWSER;
-    s := BLOGTRUYEN_POST_FORM + IntToStr(StrToInt(URL) + 1);
+    s := BLOGTRUYEN_POST_FORM + IntToStr(StrToInt(AURL) + 1);
     while not HttpPostURL(WebsiteRoots[BLOGTRUYEN_ID, 1] + BLOGTRUYEN_JS_BROWSER,
-        BLOGTRUYEN_POST_FORM + IntToStr(StrToInt(URL) + 1), stream) do
+        BLOGTRUYEN_POST_FORM + IntToStr(StrToInt(AURL) + 1), stream) do
       Sleep(32);
     Source.Text := stream.DataString;
     stream.Free;
@@ -31,8 +31,8 @@
         Result := NO_ERROR;
         s := StringFilter(TrimLeft(
           TrimRight(GetString(parse[i + 2], 'title="truyện tranh ', '">'))));
-        names.Add(HTMLEntitiesFilter(s));
-        links.Add(GetVal(parse[i + 2], 'href="'));
+        ANames.Add(HTMLEntitiesFilter(s));
+        ALinks.Add(GetVal(parse[i + 2], 'href="'));
       end;
     end;
     Source.Free;

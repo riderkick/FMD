@@ -26,7 +26,7 @@
       if (Pos('class="pagination"', parse[i]) <> 0) then
       begin
         s := TrimLeft(TrimRight(GetVal(parse[i], 'total')));
-        Page := StrToInt(s);
+        APage := StrToInt(s);
         Result := NO_ERROR;
         Source.Free;
         Exit;

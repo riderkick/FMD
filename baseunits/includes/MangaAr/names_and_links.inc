@@ -34,10 +34,10 @@
         begin
           s := GetVal(parse[i], 'href');
           s := StringReplace(s, WebsiteRoots[MANGAAR_ID, 1], '', []);
-          links.Add(s);
+          ALinks.Add(s);
           s := Trim(StringFilter(parse[i + 1]));
           s := HTMLEntitiesFilter(s);
-          names.Add(s);
+          ANames.Add(s);
         end;
       end;
     end;

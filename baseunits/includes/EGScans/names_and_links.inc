@@ -5,7 +5,7 @@
   begin
     Result := INFORMATION_NOT_FOUND;
     if not GetPage(TObject(Source), WebsiteRoots[EGSCANS_ID, 1] +
-      EGSCANS_BROWSER + '/' + IntToStr(StrToInt(URL) + 1) + '/', 0) then
+      EGSCANS_BROWSER + '/' + IntToStr(StrToInt(AURL) + 1) + '/', 0) then
     begin
       Result := NET_PROBLEM;
       Source.Free;
@@ -29,11 +29,11 @@
       begin
         Result := NO_ERROR;
         s := StringFilter(TrimLeft(TrimRight(parse[i + 1])));
-        names.Add(HTMLEntitiesFilter(s));
+        ANames.Add(HTMLEntitiesFilter(s));
         s := StringReplace(GetVal(parse[i],
           'value="'),
           WebsiteRoots[S2SCAN_ID, 1], '', []);
-        links.Add(s);
+        ALinks.Add(s);
       end;
       if Pos('<select name="manga"', parse[i]) > 0 then
         Break;

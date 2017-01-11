@@ -5,7 +5,7 @@
   begin
     Result := INFORMATION_NOT_FOUND;
     if not GetPage(TObject(Source), WebsiteRoots[MANGAGO_ID, 1] +
-      MANGAGO_BROWSER + IntToStr(StrToInt(URL) + 1) + '/', 0) then
+      MANGAGO_BROWSER + IntToStr(StrToInt(AURL) + 1) + '/', 0) then
     begin
       Result := NET_PROBLEM;
       Source.Free;
@@ -28,10 +28,10 @@
       begin
         Result := NO_ERROR;
         s := StringFilter(TrimLeft(TrimRight(parse[i + 2])));
-        names.Add(HTMLEntitiesFilter(s));
+        ANames.Add(HTMLEntitiesFilter(s));
         s := GetVal(parse[i + 1], 'href');
         s := StringReplace(s, WebsiteRoots[MANGAGO_ID, 1], '', []);
-        links.Add(s);
+        ALinks.Add(s);
       end;
     end;
     Source.Free;

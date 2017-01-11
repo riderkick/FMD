@@ -3,8 +3,8 @@
     i, j: Cardinal;
   begin
     mangaInfo.website := WebsiteRoots[ESMANGAHERE_ID, 0];
-    mangaInfo.url := FillMangaSiteHost(ESMANGAHERE_ID, URL);
-    if not GetPage(TObject(Source), mangaInfo.url, Reconnect) then
+    mangaInfo.url := FillMangaSiteHost(ESMANGAHERE_ID, AURL);
+    if not GetPage(TObject(Source), mangaInfo.url, AReconnect) then
     begin
       Result := NET_PROBLEM;
       Source.Free;

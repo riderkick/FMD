@@ -4,7 +4,7 @@
   begin
     Result := INFORMATION_NOT_FOUND;
     if not GetPage(TObject(Source), WebsiteRoots[ONEMANGA_ID, 1] +
-      ONEMANGA_BROWSER + IntToStr(StrToInt(URL) + 1) + '/', 0) then
+      ONEMANGA_BROWSER + IntToStr(StrToInt(AURL) + 1) + '/', 0) then
     begin
       Result := NET_PROBLEM;
       Source.Free;
@@ -27,8 +27,8 @@
         if Pos('<a ', parse[i + 2]) > 0 then
         begin
           Result := NO_ERROR;
-          names.Add(Trim(HTMLEntitiesFilter(StringFilter(Trim(parse[i + 3])))));
-          links.Add(StringReplace(GetVal(parse[i + 2], 'href'),
+          ANames.Add(Trim(HTMLEntitiesFilter(StringFilter(Trim(parse[i + 3])))));
+          ALinks.Add(StringReplace(GetVal(parse[i + 2], 'href'),
             WebsiteRoots[ONEMANGA_ID, 1], '', [rfIgnoreCase]));
         end;
     end;

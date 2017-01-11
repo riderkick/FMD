@@ -19,8 +19,8 @@
     end;
 
   begin
-    mangaInfo.url := FillMangaSiteHost(MEINMANGA_ID, URL);
-    if not GetPage(TObject(Source), mangaInfo.url, Reconnect) then
+    mangaInfo.url := FillMangaSiteHost(MEINMANGA_ID, AURL);
+    if not GetPage(TObject(Source), mangaInfo.url, AReconnect) then
     begin
       Result := NET_PROBLEM;
       Source.Free;
@@ -72,7 +72,7 @@
       if (mangaInfo.title = '') and (Pos('class="chrname"', parse[i]) <> 0) then
         mangaInfo.title := Trim(StringFilter(parse[i + 1]));
 
-      // Get chapter title and url
+      // Get chapter title and AURL
       GetChapterTitleAndChapterURL;
 
       // get authors
@@ -129,7 +129,7 @@
       for j := 0 to URLs.Count - 1 do
       begin
         Source := TStringList.Create;
-        if not GetPage(TObject(Source), URLs[j], Reconnect) then
+        if not GetPage(TObject(Source), URLs[j], AReconnect) then
         begin
           Result := NET_PROBLEM;
           Source.Free;

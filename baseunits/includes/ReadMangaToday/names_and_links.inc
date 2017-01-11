@@ -5,7 +5,7 @@
   begin
     Result := INFORMATION_NOT_FOUND;
     s := WebsiteRoots[READMANGATODAY_ID, 1] + '/manga-list';
-    i := StrToIntDef(URL, 0);
+    i := StrToIntDef(AURL, 0);
     if i > 0 then
       s := s + '/' + ALPHA_LIST[i+1];
     if not GetPage(TObject(Source), s, 1) then
@@ -22,8 +22,8 @@
         if (GetTagName(parse[i]) = 'span') and
           (GetVal(parse[i], 'class') = 'manga-item') then
         begin
-          links.Add(GetVal(parse[i+4], 'href'));
-          names.Add(CommonStringFilter(parse[i+5]));
+          ALinks.Add(GetVal(parse[i+4], 'href'));
+          ANames.Add(CommonStringFilter(parse[i+5]));
         end;
 
     Result := NO_ERROR;

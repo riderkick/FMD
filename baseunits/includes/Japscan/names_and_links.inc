@@ -20,16 +20,16 @@
     if parse.Count = 0 then
       Exit;
 
-    links.Clear;
-    names.Clear;
+    ALinks.Clear;
+    ANames.Clear;
     for i := 0 to parse.Count - 1 do
     begin
       if (Pos('class="cell', parse[i]) > 0) then
         if (Pos(' href="/mangas/', parse[i + 1]) > 0) then
         begin
           Result := NO_ERROR;
-          links.Add(GetVal(parse[i + 1], 'href'));
-          names.Add(Trim(parse[i + 2]));
+          ALinks.Add(GetVal(parse[i + 1], 'href'));
+          ANames.Add(Trim(parse[i + 2]));
         end;
     end;
   end;

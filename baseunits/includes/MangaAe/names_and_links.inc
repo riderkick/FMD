@@ -6,7 +6,7 @@
   begin
     Result := INFORMATION_NOT_FOUND;
     if not GetPage(TObject(Source), WebsiteRoots[MANGAAE_ID, 1] +
-      MANGAAE_BROWSER + 'page:' + IntToStr(StrToInt(URL) + 1), 0) then
+      MANGAAE_BROWSER + 'page:' + IntToStr(StrToInt(AURL) + 1), 0) then
     begin
       Result := NET_PROBLEM;
       Source.Free;
@@ -36,8 +36,8 @@
             s := GetVal(parse[i], 'href');
             if regx.Exec(s) then
             begin
-              links.Add(s);
-              names.Add(CommonStringFilter(parse[i + 1]));
+              ALinks.Add(s);
+              ANames.Add(CommonStringFilter(parse[i + 1]));
             end;
           end;
         end;

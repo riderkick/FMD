@@ -29,10 +29,10 @@
         Result := NO_ERROR;
         s := StringFilter(TrimLeft(
           TrimRight(GetVal(parse[i + 3], 'title'))));
-        names.Add(HTMLEntitiesFilter(s));
+        ANames.Add(HTMLEntitiesFilter(s));
         s := StringReplace(GetVal(parse[i + 2], 'href'),
           WebsiteRoots[MANGAESTA_ID, 1], '', []);
-        links.Add(s);
+        ALinks.Add(s);
       end;
     end;
     Source.Free;

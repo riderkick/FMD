@@ -4,8 +4,8 @@
     isExtractChapters: Boolean = False;
   begin
     mangaInfo.website := WebsiteRoots[UNIXMANGA_ID, 0];
-    mangaInfo.url := FillMangaSiteHost(UNIXMANGA_ID, URL);
-    if not GetPage(TObject(Source), mangaInfo.url, Reconnect) then
+    mangaInfo.url := FillMangaSiteHost(UNIXMANGA_ID, AURL);
+    if not GetPage(TObject(Source), mangaInfo.url, AReconnect) then
     begin
       Result := NET_PROBLEM;
       Source.Free;

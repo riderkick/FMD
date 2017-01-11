@@ -37,9 +37,9 @@
           (Pos('/scanlation/Josei.html', s) = 0) and
           (Pos('/scanlation/Seinen.html', s) = 0) then
         begin
-          links.Add(StringReplace(s, WebsiteRoots[SCANMANGA_ID, 1], '', []));
+          ALinks.Add(StringReplace(s, WebsiteRoots[SCANMANGA_ID, 1], '', []));
           s := StringFilter(parse[i + 2]);
-          names.Add(HTMLEntitiesFilter(s));
+          ANames.Add(HTMLEntitiesFilter(s));
         end;
       end;
     end;

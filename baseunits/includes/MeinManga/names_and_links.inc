@@ -29,10 +29,10 @@
       begin
         Result := NO_ERROR;
         s := GetVal(parse[i], 'href');
-        links.Add(s);
+        ALinks.Add(s);
         s := StringFilter(Trim(parse[i + 1]));
         s := StringReplace(s, WebsiteRoots[MEINMANGA_ID, 1], '', []);
-        names.Add(HTMLEntitiesFilter(s));
+        ANames.Add(HTMLEntitiesFilter(s));
       end;
     end;
     Source.Free;

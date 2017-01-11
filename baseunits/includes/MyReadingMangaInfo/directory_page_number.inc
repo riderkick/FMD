@@ -3,7 +3,7 @@
     i, j: Cardinal;
     isGetLastPage: Boolean = False;
   begin
-    Page := 0;
+    APage := 0;
     Result := INFORMATION_NOT_FOUND;
     if not GetPage(TObject(Source), WebsiteRoots[MYREADINGMANGAINFO_ID, 1] + '/', 0) then
     begin
@@ -32,7 +32,7 @@
           if (Pos('<a', parse[j]) > 0) and (Pos('/page/', parse[j]) > 0) then
           begin
             Result := NO_ERROR;
-            Page := StrToIntDef(Trim(parse[j + 1]), 1);
+            APage := StrToIntDef(Trim(parse[j + 1]), 1);
             isGetLastPage := True;
             Break;
           end;

@@ -6,7 +6,7 @@
     Result := INFORMATION_NOT_FOUND;
     if not GetPage(TObject(Source),
       WebsiteRoots[JAPANSHIN_ID, 1] + JAPANSHIN_BROWSER +
-      IntToStr(StrToInt(URL) + 1) + '/',
+      IntToStr(StrToInt(AURL) + 1) + '/',
       0) then
     begin
       Result := NET_PROBLEM;
@@ -32,9 +32,9 @@
       begin
         Result := NO_ERROR;
         s := GetVal(parse[i], 'href');
-        links.Add(StringReplace(s, WebsiteRoots[JAPANSHIN_ID, 1], '', [rfIgnoreCase]));
+        ALinks.Add(StringReplace(s, WebsiteRoots[JAPANSHIN_ID, 1], '', [rfIgnoreCase]));
         s := Trim(HTMLEntitiesFilter(StringFilter(parse[i + 1])));
-        names.Add(s);
+        ANames.Add(s);
       end;
     end;
     Source.Free;

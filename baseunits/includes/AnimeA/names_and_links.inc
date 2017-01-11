@@ -4,7 +4,7 @@
   begin
     Result := INFORMATION_NOT_FOUND;
     if not GetPage(TObject(Source), WebsiteRoots[ANIMEA_ID, 1] +
-      ANIMEA_BROWSER + URL, 0) then
+      ANIMEA_BROWSER + AURL, 0) then
     begin
       Result := NET_PROBLEM;
       Source.Free;
@@ -15,8 +15,8 @@
       if Pos('manga_img', Source[i]) <> 0 then
       begin
         Result := NO_ERROR;
-        links.Add(GetString(Source[i], '"', '"'));
-        names.Add(GetString(Source[i], 'title="', ' Manga"'));
+        ALinks.Add(GetString(Source[i], '"', '"'));
+        ANames.Add(GetString(Source[i], 'title="', ' Manga"'));
       end;
     end;
     Source.Free;

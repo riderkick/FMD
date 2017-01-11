@@ -3,7 +3,7 @@
     i: Cardinal;
   begin
     Result := INFORMATION_NOT_FOUND;
-    i := StrToInt(URL);
+    i := StrToInt(AURL);
     if i = 0 then
     begin
       if not GetPage(TObject(Source), WebsiteRoots[FAKKU_ID, 1] + FAKKU_BROWSER, 0) then
@@ -39,8 +39,8 @@
       if Pos('class="content-title"', parse[i]) > 0 then
       begin
         Result := NO_ERROR;
-        names.Add(Trim(GetVal(parse[i], 'title')));
-        links.Add(StringReplace(GetVal(parse[i], 'href'),
+        ANames.Add(Trim(GetVal(parse[i], 'title')));
+        ALinks.Add(StringReplace(GetVal(parse[i], 'href'),
           WebsiteRoots[FAKKU_ID, 1], '', []));
       end;
     end;

@@ -38,8 +38,8 @@
             for i := 0 to Data.Count - 1 do
             begin
               jobject := TJSONObject(Data.Items[i]);
-              names.Add(jobject.Strings['title']);
-              links.Add(StringReplace(jobject.Strings['serie_url'],
+              ANames.Add(jobject.Strings['title']);
+              ALinks.Add(StringReplace(jobject.Strings['serie_url'],
                 WebsiteRoots[MANGAREADER_POR_ID, 1], '', []));
             end;
           end;

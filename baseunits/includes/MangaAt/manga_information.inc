@@ -4,8 +4,8 @@
     i, j: Integer;
   begin
     mangaInfo.website := WebsiteRoots[MANGAAT_ID, 0];
-    mangaInfo.url := FillMangaSiteHost(MANGAAT_ID, URL);
-    if not GetPage(TObject(Source), mangaInfo.url, Reconnect) then
+    mangaInfo.url := FillMangaSiteHost(MANGAAT_ID, AURL);
+    if not GetPage(TObject(Source), mangaInfo.url, AReconnect) then
     begin
       Result := NET_PROBLEM;
       Source.Free;

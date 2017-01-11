@@ -26,8 +26,8 @@
         (Pos('title=', parse[i]) > 0) and (Pos('<a ', parse[i]) > 0) then
       begin
         Result := NO_ERROR;
-        names.Add(Trim(HTMLEntitiesFilter(StringFilter(Trim(parse[i + 1])))));
-        links.Add(Trim(StringReplace(GetVal(parse[i], 'href'), WebsiteRoots[UNIXMANGA_ID, 1], '', [rfIgnoreCase])));
+        ANames.Add(Trim(HTMLEntitiesFilter(StringFilter(Trim(parse[i + 1])))));
+        ALinks.Add(Trim(StringReplace(GetVal(parse[i], 'href'), WebsiteRoots[UNIXMANGA_ID, 1], '', [rfIgnoreCase])));
       end;
     end;
   end;

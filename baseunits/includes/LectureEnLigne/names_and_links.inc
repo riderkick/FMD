@@ -4,7 +4,7 @@
   begin
     Result := INFORMATION_NOT_FOUND;
     if not GetPage(TObject(Source), WebsiteRoots[LECTUREENLIGNE_ID, 1] +
-      LECTUREENLIGNE_BROWSER + '&p=' + IntToStr(StrToInt(URL) + 1), 0) then
+      LECTUREENLIGNE_BROWSER + '&p=' + IntToStr(StrToInt(AURL) + 1), 0) then
     begin
       Result := NET_PROBLEM;
       Source.Free;
@@ -27,16 +27,16 @@
       if (Pos('option value=', parse[i]) > 0) then
       begin
         Result:= NO_ERROR;
-        names.Add(Trim(HTMLEntitiesFilter(StringFilter(parse[i+1]))));
-        links.Add(StringReplace(GetVal(parse[i], 'value'), WebsiteRoots[LECTUREENLIGNE_ID,1], '', []));
+        ANames.Add(Trim(HTMLEntitiesFilter(StringFilter(parse[i+1]))));
+        ALinks.Add(StringReplace(GetVal(parse[i], 'value'), WebsiteRoots[LECTUREENLIGNE_ID,1], '', []));
       end;
       }
       if (Pos('class="infoImages"', parse[i]) > 0) and
         (Pos('href="', parse[i]) > 0) then
       begin
         Result := NO_ERROR;
-        names.Add(Trim(HTMLEntitiesFilter(StringFilter(parse[i + 1]))));
-        links.Add('/' + GetVal(parse[i], 'href'));
+        ANames.Add(Trim(HTMLEntitiesFilter(StringFilter(parse[i + 1]))));
+        ALinks.Add('/' + GetVal(parse[i], 'href'));
       end;
     end;
     Source.Free;

@@ -35,17 +35,17 @@
       if isExtractMangas and (Pos('<option', parse[i]) > 0) then
       begin
         s := Trim(HTMLEntitiesFilter(StringFilter(parse[i + 1])));
-        names.Add(s);
+        ANames.Add(s);
         s := TrimChar(GetVal(parse[i], 'value'), ['/']);
         s := '/' + s + '/';
-        links.Add(s);
+        ALinks.Add(s);
       end;
     end;
     // index 0 isn't manga
-    if links.Count > 0 then
-      if links[0] = '/0/' then
+    if ALinks.Count > 0 then
+      if ALinks[0] = '/0/' then
       begin
-        links.Delete(0);
-        names.Delete(0);
+        ALinks.Delete(0);
+        ANames.Delete(0);
       end;
   end;

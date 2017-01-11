@@ -26,7 +26,7 @@
       for i := parse.Count - 1 downto 0 do
         if (GetTagName(parse[i]) = 'li') and (GetVal(parse[i], 'class') = 'pager-last last') then
         begin
-          Page := StrToIntDef(
+          APage := StrToIntDef(
             ReplaceRegExpr('^.*\?page=(\d+)$', GetVal(parse[i + 1], 'href'), '$1', True), 1);
           Break;
         end;

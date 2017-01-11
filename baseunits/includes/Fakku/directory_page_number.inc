@@ -27,7 +27,7 @@
         'Last Page') then
       begin
         s := TrimRight(TrimLeft(GetString(parse[i], '/page/', '"')));
-        Page := StrToInt(s);
+        APage := StrToInt(s);
         Result := NO_ERROR;
         Source.Free;
         Exit;

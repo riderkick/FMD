@@ -31,8 +31,8 @@
     end;
 
   begin
-    mangaInfo.url := FillMangaSiteHost(MANGAREADER_POR_ID, URL);
-    if not GetPage(TObject(Source), mangaInfo.url, Reconnect) then
+    mangaInfo.url := FillMangaSiteHost(MANGAREADER_POR_ID, AURL);
+    if not GetPage(TObject(Source), mangaInfo.url, AReconnect) then
     begin
       Result := NET_PROBLEM;
       Source.Free;
@@ -149,7 +149,7 @@
         Source.Clear;
         s := mangaInfo.url + '/' + IntToStr(n);
         if not GetPage(TObject(Source), mangaInfo.url + '/page/' +
-          IntToStr(n), Reconnect) then
+          IntToStr(n), AReconnect) then
         begin
           Result := NET_PROBLEM;
           Source.Free;

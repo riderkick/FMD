@@ -4,8 +4,8 @@
     hs: String = '';
   begin
     mangaInfo.website := WebsiteRoots[DYNASTYSCANS_ID, 0];
-    mangaInfo.url := FillMangaSiteHost(DYNASTYSCANS_ID, URL);
-    if not GetPage(TObject(Source), mangaInfo.url, Reconnect) then
+    mangaInfo.url := FillMangaSiteHost(DYNASTYSCANS_ID, AURL);
+    if not GetPage(TObject(Source), mangaInfo.url, AReconnect) then
     begin
       Result := NET_PROBLEM;
       Source.Free;

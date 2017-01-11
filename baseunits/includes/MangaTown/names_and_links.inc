@@ -5,7 +5,7 @@
   begin
     Result := INFORMATION_NOT_FOUND;
     if not GetPage(TObject(Source), WebsiteRoots[MANGATOWN_ID, 1] +
-      MANGATOWN_BROWSER + IntToStr(StrToInt(URL) + 1) + '.htm?name.az', 0) then
+      MANGATOWN_BROWSER + IntToStr(StrToInt(AURL) + 1) + '.htm?name.az', 0) then
     begin
       Result := NET_PROBLEM;
       Source.Free;
@@ -29,10 +29,10 @@
       begin
         Result := NO_ERROR;
         s := Trim(HTMLEntitiesFilter(StringFilter(GetVal(parse[i + 2], 'title'))));
-        names.Add(s);
+        ANames.Add(s);
         s := GetVal(parse[i + 2], 'href');
         s := StringReplace(s, WebsiteRoots[MANGATOWN_ID, 1], '', [rfIgnoreCase]);
-        links.Add(s);
+        ALinks.Add(s);
       end;
     end;
     Source.Free;

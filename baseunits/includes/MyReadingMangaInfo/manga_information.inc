@@ -7,8 +7,8 @@
     isExtractChapters: Boolean = False;
   begin
     mangaInfo.website := WebsiteRoots[MYREADINGMANGAINFO_ID, 0];
-    mangaInfo.url := FillMangaSiteHost(MYREADINGMANGAINFO_ID, URL);
-    if not GetPage(TObject(Source), mangaInfo.url, Reconnect) then
+    mangaInfo.url := FillMangaSiteHost(MYREADINGMANGAINFO_ID, AURL);
+    if not GetPage(TObject(Source), mangaInfo.url, AReconnect) then
     begin
       Result := NET_PROBLEM;
       Source.Free;
@@ -114,7 +114,7 @@
 
     //chapter 1
     Inc(mangaInfo.numChapter);
-    mangaInfo.chapterLinks.Insert(0, URL);
+    mangaInfo.chapterLinks.Insert(0, AURL);
     if mangaInfo.numChapter = 1 then
       mangaInfo.chapterName.Insert(0, mangaInfo.title)
     else

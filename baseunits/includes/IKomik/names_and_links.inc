@@ -4,7 +4,7 @@
   begin
     Result := INFORMATION_NOT_FOUND;
     if not GetPage(TObject(Source), WebsiteRoots[IKOMIK_ID, 1] + IKOMIK_BROWSER +
-      'page-' + IntToStr(StrToInt(URL) + 1) + '/', 0) then
+      'page-' + IntToStr(StrToInt(AURL) + 1) + '/', 0) then
     begin
       Result := NET_PROBLEM;
       Source.Free;
@@ -26,8 +26,8 @@
       if (Pos('class="list"', parse[i]) > 0) and (Pos('<a', parse[i]) > 0) then
       begin
         Result := NO_ERROR;
-        names.Add(Trim(HTMLEntitiesFilter(StringFilter(Trim(parse[i + 1])))));
-        links.Add(StringReplace(GetVal(parse[i], 'href'), WebsiteRoots[IKOMIK_ID, 1], '', [rfIgnoreCase]));
+        ANames.Add(Trim(HTMLEntitiesFilter(StringFilter(Trim(parse[i + 1])))));
+        ALinks.Add(StringReplace(GetVal(parse[i], 'href'), WebsiteRoots[IKOMIK_ID, 1], '', [rfIgnoreCase]));
       end;
     end;
     Source.Free;

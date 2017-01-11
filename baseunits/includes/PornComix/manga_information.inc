@@ -5,8 +5,8 @@
     isExtractGenres: Boolean = False;
   begin
     mangaInfo.website := WebsiteRoots[MangaID, 0];
-    mangaInfo.url := FillMangaSiteHost(MangaID, URL);
-    if not GetPage(TObject(Source), mangaInfo.url, Reconnect) then
+    mangaInfo.url := FillMangaSiteHost(MangaID, AURL);
+    if not GetPage(TObject(Source), mangaInfo.url, AReconnect) then
     begin
       Result := NET_PROBLEM;
       Source.Free;
@@ -65,7 +65,7 @@
     mangaInfo.status := '0';
 
     //single chapter
-    mangaInfo.chapterLinks.Add(URL);
+    mangaInfo.chapterLinks.Add(AURL);
     mangaInfo.chapterName.Add(mangaInfo.title);
 
     Result := NO_ERROR;

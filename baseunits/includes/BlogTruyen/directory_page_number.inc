@@ -26,7 +26,7 @@
       if (Pos('[cuối]', parse[i]) > 0) then
       begin
         s := TrimRight(TrimLeft(GetString(parse[i - 1], 'LoadPage(', ')')));
-        Page := StrToInt(s);
+        APage := StrToInt(s);
         Result := NO_ERROR;
         Source.Free;
         Exit;

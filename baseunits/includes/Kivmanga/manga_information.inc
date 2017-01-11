@@ -4,8 +4,8 @@
     isExtractChapter: Boolean = False;
     i, j: Cardinal;
   begin
-    mangaInfo.url := FillMangaSiteHost(KIVMANGA_ID, URL);
-    if not GetPage(TObject(Source), mangaInfo.url, Reconnect) then
+    mangaInfo.url := FillMangaSiteHost(KIVMANGA_ID, AURL);
+    if not GetPage(TObject(Source), mangaInfo.url, AReconnect) then
     begin
       Result := NET_PROBLEM;
       Source.Free;
@@ -47,7 +47,7 @@
       if (isExtractChapter) and (Pos('option value=', parse[i]) > 0) then
       begin
         Inc(mangaInfo.numChapter);
-        s := URL + '/' + GetVal(parse[i], 'value');
+        s := AURL + '/' + GetVal(parse[i], 'value');
         mangaInfo.chapterLinks.Add(s);
         s := RemoveSymbols(TrimLeft(TrimRight(parse[i + 1])));
         mangaInfo.chapterName.Add(StringFilter(StringFilter(HTMLEntitiesFilter(s))));

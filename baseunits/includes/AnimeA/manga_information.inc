@@ -5,8 +5,8 @@
     s: String;
   begin
     mangaInfo.website := WebsiteRoots[ANIMEA_ID, 0];
-    mangaInfo.url := FillMangaSiteHost(ANIMEA_ID, URL + ANIMEA_SKIP);
-    if not GetPage(TObject(Source), mangaInfo.url, Reconnect) then
+    mangaInfo.url := FillMangaSiteHost(ANIMEA_ID, AURL + ANIMEA_SKIP);
+    if not GetPage(TObject(Source), mangaInfo.url, AReconnect) then
     begin
       Result := NET_PROBLEM;
       Source.Free;

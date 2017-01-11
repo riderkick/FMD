@@ -30,8 +30,8 @@
       begin
         if (GetTagName(parse[i]) = 'a') and (GetVal(parse[i], 'class') = 'screenshot') then
         begin
-          links.Add(GetVal(parse[i], 'href'));
-          names.Add(CommonStringFilter(parse[i + 1]));
+          ALinks.Add(GetVal(parse[i], 'href'));
+          ANames.Add(CommonStringFilter(parse[i + 1]));
         end;
       end;
 

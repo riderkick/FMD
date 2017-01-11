@@ -29,9 +29,9 @@
       begin
         Result := NO_ERROR;
         s := StringFilter(parse[i + 2]);
-        names.Add(HTMLEntitiesFilter(s));
+        ANames.Add(HTMLEntitiesFilter(s));
         s := GetVal(parse[i + 1], 'href');
-        links.Add(s);
+        ALinks.Add(s);
       end;
     end;
     Source.Free;

@@ -5,7 +5,7 @@
   begin
     Result := INFORMATION_NOT_FOUND;
     if not GetPage(TObject(Source), WebsiteRoots[MYREADINGMANGAINFO_ID, 1] +
-      '/page/' + IntToStr(StrToInt(URL) + 1) + '/', 0) then
+      '/page/' + IntToStr(StrToInt(AURL) + 1) + '/', 0) then
     begin
       Result := NET_PROBLEM;
       Source.Free;
@@ -28,10 +28,10 @@
       begin
         Result := NO_ERROR;
         s := Trim(HTMLEntitiesFilter(StringFilter(Trim(parse[i + 2]))));
-        names.Add(s);
+        ANames.Add(s);
         s := GetVal(parse[i + 1], 'href');
         s := StringReplace(s, WebsiteRoots[MYREADINGMANGAINFO_ID, 1], '', [rfIgnoreCase]);
-        links.Add(s);
+        ALinks.Add(s);
       end;
     end;
     Source.Free;

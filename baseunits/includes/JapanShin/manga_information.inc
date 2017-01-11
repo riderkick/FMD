@@ -4,7 +4,7 @@
   begin
     mangaInfo.website := WebsiteRoots[JAPANSHIN_ID, 0];
     Result := INFORMATION_NOT_FOUND;
-    if not GetPage(TObject(Source), FillMangaSiteHost(JAPANSHIN_ID, URL), Reconnect) then
+    if not GetPage(TObject(Source), FillMangaSiteHost(JAPANSHIN_ID, AURL), AReconnect) then
     begin
       Result := NET_PROBLEM;
       Source.Free;

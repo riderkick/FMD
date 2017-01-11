@@ -4,8 +4,8 @@
     isExtractChapters: Boolean = False;
   begin
     mangaInfo.website := WebsiteRoots[MANGAMINT_ID, 0];
-    mangaInfo.url := FillMangaSiteHost(MANGAMINT_ID, URL);
-    if not GetPage(TObject(Source), mangaInfo.url, Reconnect) then
+    mangaInfo.url := FillMangaSiteHost(MANGAMINT_ID, AURL);
+    if not GetPage(TObject(Source), mangaInfo.url, AReconnect) then
     begin
       Result := NET_PROBLEM;
       Source.Free;
@@ -100,7 +100,7 @@
       begin
         isExtractChapters := False;
         Source.Clear;
-        if GetPage(TObject(Source), mangaInfo.url + '?page=' + IntToStr(j), Reconnect) then
+        if GetPage(TObject(Source), mangaInfo.url + '?page=' + IntToStr(j), AReconnect) then
         begin
           parse.Clear;
           Parser := THTMLParser.Create(Source.Text);

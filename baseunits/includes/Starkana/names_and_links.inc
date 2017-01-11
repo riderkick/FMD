@@ -25,8 +25,8 @@
     begin
       if (Pos('style="float:right;', parse[i]) > 0) then
       begin
-        links.Add(GetVal(parse[i + 2], 'href'));
-        names.Add(CommonStringFilter(parse[i + 3]));
+        ALinks.Add(GetVal(parse[i + 2], 'href'));
+        ANames.Add(CommonStringFilter(parse[i + 3]));
       end;
     end;
     Result := NO_ERROR;

@@ -88,26 +88,26 @@ type
     ModuleId: Integer;
 
     procedure OnTag(NoCaseTag, ActualTag: String);
-    procedure OnText(Text: String);
-    constructor Create(AOwnerThread: THTTPThread = nil; CreateInfo: Boolean = True);
+    procedure OnText(AText: String);
+    constructor Create(AOwnerThread: THTTPThread = nil; ACreateInfo: Boolean = True);
     destructor Destroy; override;
     procedure ClearInfo;
-    function GetDirectoryPage(var Page: Integer; const website: String): Byte;
-    function GetNameAndLink(const names, links: TStringList; const website, URL: String): Byte;
-    function GetInfoFromURL(const website, URL: String; const Reconnect: Integer = 0): Byte;
-    procedure SyncInfoToData(const DataProcess: TDataProcess; const index: Cardinal); overload;
-    procedure SyncInfoToData(const DataProcess: TDBDataProcess); overload;
-    procedure SyncMinorInfoToData(const DataProcess: TDataProcess; const index: Cardinal);
+    function GetDirectoryPage(var APage: Integer; const AWebsite: String): Byte;
+    function GetNameAndLink(const ANames, ALinks: TStringList; const AWebsite, AURL: String): Byte;
+    function GetInfoFromURL(const AWebsite, AURL: String; const AReconnect: Integer = 0): Byte;
+    procedure SyncInfoToData(const ADataProcess: TDataProcess; const AIndex: Cardinal); overload;
+    procedure SyncInfoToData(const ADataProcess: TDBDataProcess); overload;
+    procedure SyncMinorInfoToData(const ADataProcess: TDataProcess; const AIndex: Cardinal);
 
     // Only use this function for getting manga infos for the first time
-    procedure AddInfoToDataWithoutBreak(const Name, link: String; const DataProcess: TDataProcess);
+    procedure AddInfoToDataWithoutBreak(const AName, ALink: String; const ADataProcess: TDataProcess);
     // Only use this function for update manga list
-    procedure AddInfoToData(const Name, link: String; const DataProcess: TDataProcess);
+    procedure AddInfoToData(const AName, Alink: String; const ADataProcess: TDataProcess);
       overload;
     // to add data to TDBDataProcess
-    procedure AddInfoToData(const Title, Link: String; const DataProcess: TDBDataProcess); overload;
+    procedure AddInfoToData(const ATitle, ALink: String; const ADataProcess: TDBDataProcess); overload;
     //wrapper
-    function GetPage(var output: TObject; URL: String; const Reconnect: Integer = 0): Boolean; inline;
+    function GetPage(var AOutput: TObject; AURL: String; const AReconnect: Integer = 0): Boolean; inline;
   end;
 
 var
@@ -713,13 +713,13 @@ end;
 
 { TMangaInformation }
 
-constructor TMangaInformation.Create(AOwnerThread: THTTPThread; CreateInfo: Boolean);
+constructor TMangaInformation.Create(AOwnerThread: THTTPThread; ACreateInfo: Boolean);
 begin
   inherited Create;
   FHTTP := THTTPSendThread.Create(AOwnerThread);
   FHTTP.Headers.NameValueSeparator := ':';
   parse := TStringList.Create;
-  if CreateInfo then
+  if ACreateInfo then
     mangaInfo := TMangaInfo.Create;
   isGetByUpdater := False;
   ModuleId := -1;
@@ -757,12 +757,12 @@ begin
   parse.Add(ActualTag);
 end;
 
-procedure TMangaInformation.OnText(Text: String);
+procedure TMangaInformation.OnText(AText: String);
 begin
-  parse.Add(Text);
+  parse.Add(AText);
 end;
 
-function TMangaInformation.GetDirectoryPage(var Page: Integer; const website: String): Byte;
+function TMangaInformation.GetDirectoryPage(var APage: Integer; const AWebsite: String): Byte;
 var
   s: String;
   p: Integer;
@@ -819,29 +819,29 @@ var
   {$I includes/Dynasty-Scans/directory_page_number.inc}
 
 begin
-  Page := 0;
+  APage := 0;
 
   //load User-Agent from advancedfile
-  AdvanceLoadHTTPConfig(FHTTP, website);
+  AdvanceLoadHTTPConfig(FHTTP, AWebsite);
 
   //load pagenumber_config if available
-  p := advancedfile.ReadInteger('UpdateListDirectoryPageNumber', website, -1);
+  p := advancedfile.ReadInteger('UpdateListDirectoryPageNumber', AWebsite, -1);
 
   if p > 0 then
   begin
-    Page := p;
+    APage := p;
     BROWSER_INVERT := True;
   end
   else
   begin
     BROWSER_INVERT := False;
     if ModuleId < 0 then
-      ModuleId := Modules.LocateModule(website);
+      ModuleId := Modules.LocateModule(AWebsite);
     if Modules.ModuleAvailable(ModuleId, MMGetDirectoryPageNumber) then
-      Result := Modules.GetDirectoryPageNumber(Self, Page, ModuleId)
+      Result := Modules.GetDirectoryPageNumber(Self, APage, ModuleId)
     else
     begin
-      WebsiteID := GetMangaSiteID(website);
+      WebsiteID := GetMangaSiteID(AWebsite);
       Source := TStringList.Create;
       if WebsiteID = ANIMEA_ID then
         Result := GetAnimeADirectoryPageNumber
@@ -916,7 +916,7 @@ begin
         (WebsiteID = PORNCOMIXRE_ID) or
         (WebsiteID = PORNCOMIXIC_ID) or
         (WebsiteID = PORNXXXCOMICS_ID) then
-        Result := GetPornComixDirectoryPageNumber(GetMangaSiteID(website))
+        Result := GetPornComixDirectoryPageNumber(GetMangaSiteID(AWebsite))
       else
       if WebsiteID = MANGAAT_ID then
         Result := GetMangaAtDirectoryPageNumber
@@ -929,18 +929,18 @@ begin
       else
       begin
         Result := NO_ERROR;
-        Page := 1;
+        APage := 1;
         Source.Free;
       end;
     end;
 
-    if page < 1 then
-      Page := 1;
+    if APage < 1 then
+      APage := 1;
   end;
 end;
 
-function TMangaInformation.GetNameAndLink(const names, links: TStringList;
-  const website, URL: String): Byte;
+function TMangaInformation.GetNameAndLink(const ANames, ALinks: TStringList;
+  const AWebsite, AURL: String): Byte;
 var
   Source: TStringList;
   Parser: THTMLParser;
@@ -1044,15 +1044,15 @@ var
 
 begin
   //load User-Agent from advancedfile
-  AdvanceLoadHTTPConfig(FHTTP, website);
+  AdvanceLoadHTTPConfig(FHTTP, AWebsite);
 
   if ModuleId < 0 then
-    ModuleId := Modules.LocateModule(website);
+    ModuleId := Modules.LocateModule(AWebsite);
   if Modules.ModuleAvailable(ModuleId, MMGetNameAndLink) then
-    Result := Modules.GetNameAndLink(Self, names, links, URL, ModuleId)
+    Result := Modules.GetNameAndLink(Self, ANames, ALinks, AURL, ModuleId)
   else
   begin
-    WebsiteID := GetMangaSiteID(website);
+    WebsiteID := GetMangaSiteID(AWebsite);
     Source := TStringList.Create;
     if WebsiteID = ANIMEA_ID then
       Result := AnimeAGetNamesAndLinks
@@ -1196,7 +1196,7 @@ begin
       (WebsiteID = PORNCOMIXRE_ID) or
       (WebsiteID = PORNCOMIXIC_ID) or
       (WebsiteID = PORNXXXCOMICS_ID) then
-      Result := PornComixGetNamesAndLinks(GetMangaSiteID(website))
+      Result := PornComixGetNamesAndLinks(GetMangaSiteID(AWebsite))
     else
     if WebsiteID = MANGAKU_ID then
       Result := MangaKuGetNamesAndLinks
@@ -1216,12 +1216,12 @@ begin
     end;
   end;
 
-  //remove host from url
-  if links.Count > 0 then
-    RemoveHostFromURLsPair(links, names);
+  //remove host from AURL
+  if ALinks.Count > 0 then
+    RemoveHostFromURLsPair(ALinks, ANames);
 end;
 
-function TMangaInformation.GetInfoFromURL(const website, URL: String; const Reconnect: Integer): Byte;
+function TMangaInformation.GetInfoFromURL(const AWebsite, AURL: String; const AReconnect: Integer): Byte;
 var
   s, s2: String;
   j, k: Integer;
@@ -1328,30 +1328,30 @@ var
   {$I includes/Dynasty-Scans/manga_information.inc}
 
 begin
-  if Trim(URL) = '' then
+  if Trim(AURL) = '' then
     Exit(INFORMATION_NOT_FOUND);
 
   //load User-Agent from advancedfile
-  AdvanceLoadHTTPConfig(FHTTP, website);
+  AdvanceLoadHTTPConfig(FHTTP, AWebsite);
 
-  mangaInfo.website := website;
+  mangaInfo.website := AWebsite;
   mangaInfo.coverLink := '';
   mangaInfo.numChapter := 0;
   mangaInfo.chapterName.Clear;
   mangaInfo.chapterLinks.Clear;
 
   if ModuleId < 0 then
-    ModuleId := Modules.LocateModule(website);
+    ModuleId := Modules.LocateModule(AWebsite);
   if Modules.ModuleAvailable(ModuleId, MMGetInfo) then begin
-    mangaInfo.url := FillHost(Modules.Module[ModuleId].RootURL, URL);
-    Result := Modules.GetInfo(Self, URL, ModuleId);
+    mangaInfo.url := FillHost(Modules.Module[ModuleId].RootURL, AURL);
+    Result := Modules.GetInfo(Self, AURL, ModuleId);
   end
   else
   begin
-    WebsiteID := GetMangaSiteID(website);
+    WebsiteID := GetMangaSiteID(AWebsite);
     if WebsiteID > High(WebsiteRoots) then
       Exit(INFORMATION_NOT_FOUND);
-    mangaInfo.url := FillMangaSiteHost(WebsiteID, URL);
+    mangaInfo.url := FillMangaSiteHost(WebsiteID, AURL);
     Source := TStringList.Create;
     if WebsiteID = ANIMEA_ID then
       Result := GetAnimeAInfoFromURL
@@ -1492,7 +1492,7 @@ begin
       (WebsiteID = PORNCOMIXRE_ID) or
       (WebsiteID = PORNCOMIXIC_ID) or
       (WebsiteID = PORNXXXCOMICS_ID) then
-      Result := GetPornComixInfoFromURL(GetMangaSiteID(website))
+      Result := GetPornComixInfoFromURL(GetMangaSiteID(AWebsite))
     else
     if WebsiteID = MANGAKU_ID then
       Result := GetMangaKuInfoFromURL
@@ -1606,45 +1606,45 @@ begin
   end;
 end;
 
-procedure TMangaInformation.SyncMinorInfoToData(const DataProcess: TDataProcess; const index: Cardinal);
+procedure TMangaInformation.SyncMinorInfoToData(const ADataProcess: TDataProcess; const AIndex: Cardinal);
 begin
   // sync info to data
   {$IFDEF DOWNLOADER}
-  if not dataProcess.isFilterAllSites then
+  if not ADataProcess.isFilterAllSites then
   {$ENDIF}
-    DataProcess.Data.Strings[index] := SetParams(
-      [DataProcess.Param[index, DATA_PARAM_TITLE],
-      DataProcess.Param[index, DATA_PARAM_LINK],
-      DataProcess.Param[index, DATA_PARAM_AUTHORS],
-      DataProcess.Param[index, DATA_PARAM_ARTISTS],
-      DataProcess.Param[index, DATA_PARAM_GENRES],
+    ADataProcess.Data.Strings[AIndex] := SetParams(
+      [ADataProcess.Param[AIndex, DATA_PARAM_TITLE],
+      ADataProcess.Param[AIndex, DATA_PARAM_LINK],
+      ADataProcess.Param[AIndex, DATA_PARAM_AUTHORS],
+      ADataProcess.Param[AIndex, DATA_PARAM_ARTISTS],
+      ADataProcess.Param[AIndex, DATA_PARAM_GENRES],
       mangaInfo.status,
-      DataProcess.Param[index, DATA_PARAM_SUMMARY],
+      ADataProcess.Param[AIndex, DATA_PARAM_SUMMARY],
       IntToStr(mangaInfo.numChapter),
       {$IFDEF DOWNLOADER}
-      DataProcess.Param[index, DATA_PARAM_JDN],
+      ADataProcess.Param[AIndex, DATA_PARAM_JDN],
       {$ELSE}
       '0',
       {$ENDIF}
       '0']);
   // then break it into parts
-  dataProcess.BreakDataToParts(index);
+  ADataProcess.BreakDataToParts(AIndex);
 end;
 
-procedure TMangaInformation.SyncInfoToData(const DataProcess: TDataProcess; const index: Cardinal);
+procedure TMangaInformation.SyncInfoToData(const ADataProcess: TDataProcess; const AIndex: Cardinal);
 begin
   // sync info to data
   {$IFDEF DOWNLOADER}
-  if not dataProcess.isFilterAllSites then
+  if not ADataProcess.isFilterAllSites then
   {$ENDIF}
   begin
     if Trim(mangaInfo.title) = '' then
-      mangaInfo.title := DataProcess.Param[index, DATA_PARAM_TITLE];
-    DataProcess.Data.Strings[index] := SetParams(
-      //[DataProcess.Param[index, DATA_PARAM_TITLE],
+      mangaInfo.title := ADataProcess.Param[AIndex, DATA_PARAM_TITLE];
+    ADataProcess.Data.Strings[AIndex] := SetParams(
+      //[ADataProcess.Param[AIndex, DATA_PARAM_TITLE],
       //sync title as well, some site possible to change title or when mangainfo script not work
       [mangaInfo.title,
-      DataProcess.Param[index, DATA_PARAM_LINK],
+      ADataProcess.Param[AIndex, DATA_PARAM_LINK],
       mangaInfo.authors,
       mangaInfo.artists,
       mangaInfo.genres,
@@ -1652,37 +1652,37 @@ begin
       StringFilter(mangaInfo.summary),
       IntToStr(mangaInfo.numChapter),
       {$IFDEF DOWNLOADER}
-      DataProcess.Param[index, DATA_PARAM_JDN],
+      ADataProcess.Param[AIndex, DATA_PARAM_JDN],
       {$ELSE}
       '0',
       {$ENDIF}
       '0']);
   end;
   // then break it into parts
-  dataProcess.BreakDataToParts(index);
+  ADataProcess.BreakDataToParts(AIndex);
 end;
 
-procedure TMangaInformation.SyncInfoToData(const DataProcess: TDBDataProcess);
+procedure TMangaInformation.SyncInfoToData(const ADataProcess: TDBDataProcess);
 begin
-  if Assigned(DataProcess) then
+  if Assigned(ADataProcess) then
     with mangaInfo do
-      DataProcess.UpdateData(title, link, authors, artists, genres, status, summary,
+      ADataProcess.UpdateData(title, link, authors, artists, genres, status, summary,
         numChapter, website);
 end;
 
-procedure TMangaInformation.AddInfoToDataWithoutBreak(const Name, link: String;
-  const DataProcess: TDataProcess);
+procedure TMangaInformation.AddInfoToDataWithoutBreak(const AName, ALink: String;
+  const ADataProcess: TDataProcess);
 var
   S: String;
 begin
   if mangaInfo.title <> '' then
     S := mangaInfo.title
   else
-    S := Name;
+    S := AName;
 
-  DataProcess.Data.Add(RemoveStringBreaks(SetParams([
+  ADataProcess.Data.Add(RemoveStringBreaks(SetParams([
     S,
-    link,
+    ALink,
     mangaInfo.authors,
     mangaInfo.artists,
     mangaInfo.genres,
@@ -1698,16 +1698,16 @@ begin
     ])));
 end;
 
-procedure TMangaInformation.AddInfoToData(const Name, link: String; const DataProcess: TDataProcess);
+procedure TMangaInformation.AddInfoToData(const AName, Alink: String; const ADataProcess: TDataProcess);
 var
   l: TStringList;
 begin
   l := TStringList.Create;
-  DataProcess.Data.Add(
+  ADataProcess.Data.Add(
     RemoveStringBreaks(
     SetParams(
-    [Name,
-    link,
+    [AName,
+    Alink,
     mangaInfo.authors,
     mangaInfo.artists,
     mangaInfo.genres,
@@ -1716,37 +1716,37 @@ begin
     IntToStr(mangaInfo.numChapter),
     IntToStr(GetCurrentJDN),
     '0'])));
-  GetParams(l, DataProcess.Data.Strings[DataProcess.Data.Count - 1]);
-  DataProcess.title.Add(l.Strings[DATA_PARAM_TITLE]);
-  DataProcess.link.Add(l.Strings[DATA_PARAM_LINK]);
-  DataProcess.authors.Add(l.Strings[DATA_PARAM_AUTHORS]);
-  DataProcess.artists.Add(l.Strings[DATA_PARAM_ARTISTS]);
-  DataProcess.genres.Add(l.Strings[DATA_PARAM_GENRES]);
-  DataProcess.status.Add(l.Strings[DATA_PARAM_STATUS]);
-  DataProcess.summary.Add(l.Strings[DATA_PARAM_SUMMARY]);
+  GetParams(l, ADataProcess.Data.Strings[ADataProcess.Data.Count - 1]);
+  ADataProcess.title.Add(l.Strings[DATA_PARAM_TITLE]);
+  ADataProcess.link.Add(l.Strings[DATA_PARAM_LINK]);
+  ADataProcess.authors.Add(l.Strings[DATA_PARAM_AUTHORS]);
+  ADataProcess.artists.Add(l.Strings[DATA_PARAM_ARTISTS]);
+  ADataProcess.genres.Add(l.Strings[DATA_PARAM_GENRES]);
+  ADataProcess.status.Add(l.Strings[DATA_PARAM_STATUS]);
+  ADataProcess.summary.Add(l.Strings[DATA_PARAM_SUMMARY]);
   {$IFDEF DOWNLOADER}
-  DataProcess.jdn.Add(Pointer(StrToInt(l.Strings[DATA_PARAM_JDN])));
+  ADataProcess.jdn.Add(Pointer(StrToInt(l.Strings[DATA_PARAM_JDN])));
   {$ELSE}
   DataProcess.jdn.Add(Pointer(StrToInt('0')));
   {$ENDIF}
   l.Free;
 end;
 
-procedure TMangaInformation.AddInfoToData(const Title, Link: String; const DataProcess: TDBDataProcess);
+procedure TMangaInformation.AddInfoToData(const ATitle, ALink: String; const ADataProcess: TDBDataProcess);
 begin
-  if Assigned(DataProcess) then
+  if Assigned(ADataProcess) then
   begin
-    if (mangaInfo.title = '') and (Title <> '') then mangaInfo.title := Title;
-    if (mangaInfo.link = '') and (Link <> '') then mangaInfo.link := Link;
+    if (mangaInfo.title = '') and (ATitle <> '') then mangaInfo.title := ATitle;
+    if (mangaInfo.link = '') and (ALink <> '') then mangaInfo.link := ALink;
     with mangaInfo do
-      DataProcess.AddData(title, link, authors, artists, genres, status,
+      ADataProcess.AddData(title, link, authors, artists, genres, status,
         StringBreaks(summary), numChapter, Now);
   end;
 end;
 
-function TMangaInformation.GetPage(var output: TObject; URL: String; const Reconnect: Integer): Boolean;
+function TMangaInformation.GetPage(var AOutput: TObject; AURL: String; const AReconnect: Integer): Boolean;
 begin
-  Result := uBaseUnit.GetPage(FHTTP, output, URL, Reconnect);
+  Result := uBaseUnit.GetPage(FHTTP, AOutput, AURL, AReconnect);
 end;
 
 end.

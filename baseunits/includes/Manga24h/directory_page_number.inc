@@ -26,7 +26,7 @@
       if (Pos('Pages (', parse[i]) > 0) then
       begin
         s := GetString(parse[i], 'Pages (', ')');
-        Page := StrToInt(s);
+        APage := StrToInt(s);
         Result := NO_ERROR;
         Source.Free;
         Exit;

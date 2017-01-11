@@ -4,9 +4,9 @@
 
   begin
     Result := INFORMATION_NOT_FOUND;
-    SiteID := GetMangaSiteID(website);
+    SiteID := GetMangaSiteID(AWebsite);
     if not GetPage(TObject(Source), WebsiteRoots[SiteID, 1] +
-      NINEMANGA_BROWSER + '&page=' + IntToStr(StrToIntDef(URL, 0) + 1) + '.html', 0) then
+      NINEMANGA_BROWSER + '&page=' + IntToStr(StrToIntDef(AURL, 0) + 1) + '.html', 0) then
     begin
       Result := NET_PROBLEM;
       Source.Free;
@@ -28,10 +28,10 @@
       if (Pos('class="bookname"', parse[i]) > 0) then
       begin
         Result := NO_ERROR;
-        links.Add(
+        ALinks.Add(
           StringReplace(GetVal(parse[i], 'href'),
           WebsiteRoots[SiteID, 1], '', [rfReplaceAll]));
-        names.Add(HTMLEntitiesFilter(StringFilter(Trim(parse[i + 1]))));
+        ANames.Add(HTMLEntitiesFilter(StringFilter(Trim(parse[i + 1]))));
       end;
     end;
     Source.Free;

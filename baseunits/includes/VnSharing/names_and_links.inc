@@ -7,7 +7,7 @@
     Result := INFORMATION_NOT_FOUND;
     // bad code
     if not GetPage(TObject(Source), WebsiteRoots[VNSHARING_ID, 1] +
-      VNSHARING_BROWSER + '?page=' + IntToStr(StrToInt(URL) + 1), 0) then
+      VNSHARING_BROWSER + '?page=' + IntToStr(StrToInt(AURL) + 1), 0) then
     begin
       Result := NET_PROBLEM;
       Source.Free;
@@ -38,9 +38,9 @@
         // if s <> '/Truyen/Tenki-Yohou-no-Koibito?id=506' then
         if s <> '/Truyen/Bakuman-Fantasy-Weirdos?id=6238' then
         begin
-          links.Add(s);
+          ALinks.Add(s);
           s := StringFilter(TrimLeft(TrimRight(parse[i + 1])));
-          names.Add(HTMLEntitiesFilter(s));
+          ANames.Add(HTMLEntitiesFilter(s));
         end;
       end;
     end;

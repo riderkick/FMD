@@ -4,8 +4,8 @@
     isExtractSummary: Boolean = False;
     i: Cardinal;
   begin
-    mangaInfo.url := FillMangaSiteHost(FAKKU_ID, URL);
-    if not GetPage(TObject(Source), mangaInfo.url, Reconnect) then
+    mangaInfo.url := FillMangaSiteHost(FAKKU_ID, AURL);
+    if not GetPage(TObject(Source), mangaInfo.url, AReconnect) then
     begin
       Result := NET_PROBLEM;
       Source.Free;

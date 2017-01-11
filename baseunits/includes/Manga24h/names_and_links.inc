@@ -5,7 +5,7 @@
   begin
     Result := INFORMATION_NOT_FOUND;
     if not GetPage(TObject(Source), WebsiteRoots[MANGA24H_ID, 1] +
-      MANGA24H_BROWSER + IntToStr(StrToInt(URL) + 1), 0) then
+      MANGA24H_BROWSER + IntToStr(StrToInt(AURL) + 1), 0) then
     begin
       Result := NET_PROBLEM;
       Source.Free;
@@ -30,8 +30,8 @@
       begin
         Result := NO_ERROR;
         s := StringFilter(TrimLeft(TrimRight(parse[i + 1])));
-        names.Add(s);
-        links.Add('/' + StringReplace(GetVal(parse[i - 1], 'href'), WebsiteRoots[MANGA24H_ID, 1], '', []));
+        ANames.Add(s);
+        ALinks.Add('/' + StringReplace(GetVal(parse[i - 1], 'href'), WebsiteRoots[MANGA24H_ID, 1], '', []));
       end;
     end;
     Source.Free;

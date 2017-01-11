@@ -16,7 +16,7 @@
     Parser.OnFoundText := OnText;
     Parser.Exec;
     Parser.Free;
-    Page := 1;
+    APage := 1;
     if parse.Count > 0 then
       for i := 0 to parse.Count - 1 do
       begin
@@ -28,8 +28,8 @@
         begin
           s := ReplaceRegExpr('^.*/page\:(\d+)$', GetVal(parse[i], 'href'), '$1', True);
           p := StrToIntDef(s, 0);
-          if p > Page then
-            Page := p;
+          if p > APage then
+            APage := p;
         end;
       end;
     Result := NO_ERROR;
