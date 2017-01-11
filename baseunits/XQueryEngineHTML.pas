@@ -41,6 +41,8 @@ type
       const Separator: String = ', '; const ContextItem: IXQValue = nil): String; overload; inline;
     procedure XPathStringAll(const Expression: String; const TheStrings: TStrings;
       const ContextItem: IXQValue = nil); overload; inline;
+    procedure XPathHREFAll(const Expression: String; const ALinks, ATexts: TStrings;
+      const ContextItem: IXQValue = nil);
     // css
     function CSS(const Expression: String; const Tree: TTreeNode = nil): IXQValue; inline;
     function CSS(const Expression: String; const ContextItem: IXQValue): IXQValue; inline;
@@ -260,6 +262,18 @@ procedure TXQueryEngineHTML.XPathStringAll(const Expression: String;
   const TheStrings: TStrings; const ContextItem: IXQValue);
 begin
   EvalStringAll(Expression, False, TheStrings, ContextItem);
+end;
+
+procedure TXQueryEngineHTML.XPathHREFAll(const Expression: String;
+  const ALinks, ATexts: TStrings; const ContextItem: IXQValue);
+var
+  v: IXQValue;
+begin
+  for v in Eval(Expression, False, ContextItem) do
+  begin
+    ALinks.Add(v.toNode.getAttribute('href'));
+    ATexts.Add(v.toString);
+  end;
 end;
 
 function TXQueryEngineHTML.CSS(const Expression: String; const Tree: TTreeNode): IXQValue;
