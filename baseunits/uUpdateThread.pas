@@ -216,6 +216,7 @@ begin
       CS_INFO:
       begin
         Info.mangaInfo.title:=title;
+        Info.mangaInfo.link:=link;
         if link<>'' then begin
           Info.GetInfoFromURL(manager.website,link,DefaultRetryCount);
           // status = '-1' mean it's not exist and shouldn't be saved to database
