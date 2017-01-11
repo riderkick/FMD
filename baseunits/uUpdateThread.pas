@@ -218,7 +218,8 @@ begin
         Info.mangaInfo.title:=title;
         if link<>'' then begin
           Info.GetInfoFromURL(manager.website,link,DefaultRetryCount);
-          if not Terminated then
+          // status = '-1' mean it's not exist and shouldn't be saved to database
+          if (not Terminated) and (Info.mangaInfo.status <> '-1') then
           begin
             EnterCriticalSection(manager.CS_AddInfoToData);
             try
