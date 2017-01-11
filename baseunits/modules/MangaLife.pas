@@ -107,7 +107,6 @@ function GetNameAndLink(const MangaInfo: TMangaInformation;
 var
   v: IXQValue;
   s: String;
-  i: Integer;
 begin
   Result := NET_PROBLEM;
   s := Module.RootURL + dirURL;
@@ -130,10 +129,6 @@ begin
       finally
         Free;
       end;
-    if (Module = MMangaTraders) and (ALinks.Count > 0) then
-      for i := 0 to ALinks.Count - 1 do
-        if Pos('/series/', ALinks[i]) <> 0 then
-          ALinks[i] := StringReplace(ALinks[i], '/series/', '/manga/', []);
   end;
 end;
 
@@ -169,8 +164,7 @@ begin
             if Pos('/manga/', s) <> 0 then
             begin
               s := MaybeFillHost(Module.RootURL, s);
-              url := s;
-              if GET(url) then
+              if GET(s) then
                 ParseHTML(Document)
               else
                 r := False;
