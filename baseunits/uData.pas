@@ -1006,8 +1006,6 @@ var
 
   {$I includes/JapanShin/names_and_links.inc}
 
-  {$I includes/Japscan/names_and_links.inc}
-
   {$I includes/CentrumMangi_PL/names_and_links.inc}
 
   {$I includes/MangaLib_PL/names_and_links.inc}
@@ -1150,9 +1148,6 @@ begin
     if WebsiteID = JAPANSHIN_ID then
       Result := JapanShinGetNamesAndLinks
     else
-    if WebsiteID = JAPSCAN_ID then
-      Result := JapscanNamesAndLinks
-    else
     if WebsiteID = CENTRUMMANGI_PL_ID then
       Result := CentrumMangi_PLGetNamesAndLinks
     else
@@ -1290,8 +1285,6 @@ var
   {$I includes/NineManga/manga_information.inc}
 
   {$I includes/JapanShin/manga_information.inc}
-
-  {$I includes/Japscan/manga_information.inc}
 
   {$I includes/CentrumMangi_PL/manga_information.inc}
 
@@ -1445,9 +1438,6 @@ begin
     else
     if WebsiteID = JAPANSHIN_ID then
       Result := GetJapanShinInfoFromURL
-    else
-    if WebsiteID = JAPSCAN_ID then
-      Result := GetJapscanInfoFromURL
     else
     if WebsiteID = CENTRUMMANGI_PL_ID then
       Result := GetCentrumMangi_PLInfoFromURL

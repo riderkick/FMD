@@ -270,32 +270,32 @@ const
   NINEMANGA_IT_ID        = 36;
   NINEMANGA_BR_ID        = 37;
   JAPANSHIN_ID           = 38;
-  JAPSCAN_ID             = 39;
-  CENTRUMMANGI_PL_ID     = 40;
-  MANGALIB_PL_ID         = 41;
-  ONEMANGA_ID            = 42;
-  MANGATOWN_ID           = 43;
-  MANGAOKU_ID            = 44;
-  MYREADINGMANGAINFO_ID  = 45;
-  IKOMIK_ID              = 46;
-  NHENTAI_ID             = 47;
-  MANGAMINT_ID           = 48;
-  UNIXMANGA_ID           = 49;
-  EXTREMEMANGAS_ID       = 50;
-  MANGAHOST_ID           = 51;
-  PORNCOMIX_ID           = 52;
-  PORNCOMIXRE_ID         = 53;
-  PORNCOMIXIC_ID         = 54;
-  XXCOMICS_ID            = 55;
-  XXCOMICSMT_ID          = 56;
-  XXCOMICS3D_ID          = 57;
-  PORNXXXCOMICS_ID       = 58;
-  MANGAKU_ID             = 59;
-  MANGAAT_ID             = 60;
-  READMANGATODAY_ID      = 61;
-  DYNASTYSCANS_ID        = 62;
 
-  WebsiteRoots: array [0..62] of array [0..1] of String = (
+  CENTRUMMANGI_PL_ID     = 39;
+  MANGALIB_PL_ID         = 40;
+  ONEMANGA_ID            = 41;
+  MANGATOWN_ID           = 42;
+  MANGAOKU_ID            = 43;
+  MYREADINGMANGAINFO_ID  = 44;
+  IKOMIK_ID              = 45;
+  NHENTAI_ID             = 46;
+  MANGAMINT_ID           = 47;
+  UNIXMANGA_ID           = 48;
+  EXTREMEMANGAS_ID       = 49;
+  MANGAHOST_ID           = 50;
+  PORNCOMIX_ID           = 51;
+  PORNCOMIXRE_ID         = 52;
+  PORNCOMIXIC_ID         = 53;
+  XXCOMICS_ID            = 54;
+  XXCOMICSMT_ID          = 55;
+  XXCOMICS3D_ID          = 56;
+  PORNXXXCOMICS_ID       = 57;
+  MANGAKU_ID             = 58;
+  MANGAAT_ID             = 59;
+  READMANGATODAY_ID      = 60;
+  DYNASTYSCANS_ID        = 61;
+
+  WebsiteRoots: array [0..61] of array [0..1] of String = (
     ('AnimeA', 'http://manga.animea.net'),
     ('OurManga', 'http://www.ourmanga.com'),
     ('Manga24h', 'http://manga24h.com'),
@@ -335,7 +335,6 @@ const
     ('NineManga_IT', 'http://it.ninemanga.com'),
     ('NineManga_BR', 'http://br.ninemanga.com'),
     ('Japan-Shin', 'http://www.japan-shin.com'),
-    ('Japscan', 'http://www.japscan.com'),
     ('Centrum-Mangi_PL', 'http://centrum-mangi.pl'),
     ('Manga-Lib_PL', 'http://www.manga-lib.pl/index.php'),
     ('OneManga', 'http://www.onemanga2.com'),
@@ -435,7 +434,6 @@ const
     '/search/?name_sel=contain&wd=&author_sel=contain&author=&artist_sel=contain&artist=&category_id=&out_category_id=&completed_series=either';
 
   JAPANSHIN_BROWSER = '/lectureenligne/reader/list/';
-  JAPSCAN_BROWSER = '/mangas/';
 
   CENTRUMMANGI_PL_BROWSER = '/spis/';
 
