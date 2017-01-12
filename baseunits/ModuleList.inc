@@ -53,6 +53,7 @@ uses
   ReadComics,
   MangaCool,
   JapScan,
+  MangaGo,
   // Raw Official
   SundayWebEvery,
   TonarinoYoungJump,
