@@ -778,8 +778,6 @@ var
 
   {$I includes/Fakku/directory_page_number.inc}
 
-  {$I includes/MangaGo/directory_page_number.inc}
-
   {$I includes/BlogTruyen/directory_page_number.inc}
 
   {$I includes/S2Scans/directory_page_number.inc}
@@ -854,9 +852,6 @@ begin
       else
       if WebsiteID = FAKKU_ID then
         Result := GetFakkuDirectoryPageNumber
-      else
-      if WebsiteID = MANGAGO_ID then
-        Result := GetMangaGoDirectoryPageNumber
       else
       if WebsiteID = BLOGTRUYEN_ID then
         Result := GetBlogTruyenDirectoryPageNumber
@@ -986,8 +981,6 @@ var
 
   {$I includes/EatManga/names_and_links.inc}
 
-  {$I includes/MangaGo/names_and_links.inc}
-
   {$I includes/S2Scans/names_and_links.inc}
 
   {$I includes/EGScans/names_and_links.inc}
@@ -1069,9 +1062,6 @@ begin
     else
     if WebsiteID = EATMANGA_ID then
       Result := EatMangaGetNamesAndLinks
-    else
-    if WebsiteID = MANGAGO_ID then
-      Result := MangaGoGetNamesAndLinks
     else
     if WebsiteID = S2SCAN_ID then
       Result := S2ScanGetNamesAndLinks
@@ -1248,8 +1238,6 @@ var
 
   {$I includes/EGScans/manga_information.inc}
 
-  {$I includes/MangaGo/manga_information.inc}
-
   {$I includes/TruyenTranhTuan/manga_information.inc}
 
   {$I includes/Mabuns/manga_information.inc}
@@ -1363,9 +1351,6 @@ begin
     else
     if WebsiteID = EATMANGA_ID then
       Result := GetEatMangaInfoFromURL
-    else
-    if WebsiteID = MANGAGO_ID then
-      Result := GetMangaGoInfoFromURL
     else
     if WebsiteID = S2SCAN_ID then
       Result := GetS2scanInfoFromURL

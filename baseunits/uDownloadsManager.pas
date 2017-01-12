@@ -418,8 +418,6 @@ var
 
   {$I includes/MangaAr/chapter_page_number.inc}
 
-  {$I includes/MangaGo/chapter_page_number.inc}
-
   {$I includes/MeinManga/chapter_page_number.inc}
 
   {$I includes/S2Scans/chapter_page_number.inc}
@@ -486,9 +484,6 @@ begin
     else
     if Task.Container.MangaSiteID = EATMANGA_ID then
       Result := GetEatMangaPageNumber
-    else
-    if Task.Container.MangaSiteID = MANGAGO_ID then
-      Result := GetMangaGoPageNumber
     else
     if Task.Container.MangaSiteID = S2SCAN_ID then
       Result := GetS2scanPageNumber
@@ -627,8 +622,6 @@ var
 
   {$I includes/MangaEsta/image_url.inc}
 
-  {$I includes/MangaGo/image_url.inc}
-
   {$I includes/MangaREADER_POR/image_url.inc}
 
   {$I includes/MangasPROJECT/image_url.inc}
@@ -699,9 +692,6 @@ begin
     else
     if Task.Container.MangaSiteID = EATMANGA_ID then
       Result := GetEatMangaImageURL
-    else
-    if Task.Container.MangaSiteID = MANGAGO_ID then
-      Result := GetMangaGoImageURL
     else
     if Task.Container.MangaSiteID = EGSCANS_ID then
       Result := GetEGScansImageURL
