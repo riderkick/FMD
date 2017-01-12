@@ -47,7 +47,7 @@ begin
             title := GetString(title, 'Lecture En Ligne Des Chapitres ', ' | Japscan.Com');
           authors := XPathString('//div[@class="table"]/div[@class="row"]/div[1]');
           genres := XPathString('//div[@class="table"]/div[@class="row"]/div[4]');
-          summary := XPathString('//div[@id="synopsis"]/text()');
+          summary := XPathString('//div[@id="synopsis"]/string-join(text(),codepoints-to-string(10))');
           status := MangaInfoStatusIfPos(XPathString('//div[@class="table"]/div[@class="row"]/div[6]'), 'En Cours', 'Terminé');
           for v in XPath('//*[@id="liste_chapitres"]/ul/li/a') do
           begin
