@@ -52,6 +52,7 @@ uses
   MyMangaMe,
   ReadComics,
   MangaCool,
+  JapScan,
   // Raw Official
   SundayWebEvery,
   TonarinoYoungJump,
