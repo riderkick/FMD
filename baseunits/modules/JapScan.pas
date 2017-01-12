@@ -105,7 +105,7 @@ procedure RegisterModule;
 begin
   with AddModule do
   begin
-    Website := 'JapScan';
+    Website := 'Japscan';
     RootURL := 'http://www.japscan.com';
     OnGetNameAndLink := @GetNameAndLink;
     OnGetInfo := @GetInfo;
