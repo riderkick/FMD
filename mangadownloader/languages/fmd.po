@@ -523,10 +523,6 @@ msgstr ""
 msgid "Visit my blog"
 msgstr ""
 
-#: tmainform.caption
-msgid "Free Manga Downloader"
-msgstr ""
-
 #: tmainform.cbaddasstopped.caption
 msgid "Add to download list as stopped task"
 msgstr ""

@@ -558,10 +558,6 @@ msgstr "Perbarui daftar komik"
 msgid "Visit my blog"
 msgstr "Kunjungi blog"
 
-#: tmainform.caption
-msgid "Free Manga Downloader"
-msgstr "Free Manga Downloader"
-
 #: tmainform.cbaddasstopped.caption
 msgid "Add to download list as stopped task"
 msgstr "Tambahkan ke daftar unduhan tanpa dimulai"
@@ -2155,3 +2151,4 @@ msgstr "Sinkronisasi data"
 #: uupdatethread.rs_updatinglist
 msgid "Updating list"
 msgstr "Memperbarui daftar"
+
