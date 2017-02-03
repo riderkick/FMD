@@ -3231,7 +3231,6 @@ procedure TMainForm.pmDownloadPopup(Sender: TObject);
 var
   iStop,
   iResume,
-  //iFinish,
   iEnable,
   iDisable: Boolean;
 
@@ -3241,7 +3240,6 @@ var
   begin
     iStop := False;
     iResume := False;
-    //iFinish := False;
     iEnable := False;
     iDisable := False;
     Node := vtDownload.GetFirstSelected();
@@ -3258,7 +3256,6 @@ var
           STATUS_STOP,
           STATUS_FAILED,
           STATUS_PROBLEM  : if not iResume then iResume := True;
-          //STATUS_FINISH   : if not iFinish then iFinish := True;
         end;
       end
       else if not iEnable then
@@ -3280,8 +3277,6 @@ begin
       miDownloadDelete.Enabled := False;
       miDownloadDeleteTask.Enabled := False;
       miDownloadDeleteTaskData.Enabled := False;
-      //miDownloadDeleteCompleted.Enabled := False;
-      //miDownloadMergeCompleted.Enabled := False;
       miDownloadViewMangaInfo.Enabled := False;
       miDownloadOpenFolder.Enabled := False;
       miDownloadOpenWith.Enabled := False;
@@ -3296,8 +3291,6 @@ begin
       miDownloadDelete.Enabled := True;
       miDownloadDeleteTask.Enabled := True;
       miDownloadDeleteTaskData.Enabled := True;
-      //miDownloadDeleteCompleted.Enabled := iFinish;
-      //miDownloadMergeCompleted.Enabled := miDownloadDeleteCompleted.Enabled;
       miDownloadOpenWith.Enabled := vtDownload.SelectedCount = 1;
       miDownloadOpenFolder.Enabled := miDownloadOpenWith.Enabled;
       miDownloadViewMangaInfo.Enabled := miDownloadOpenFolder.Enabled and
