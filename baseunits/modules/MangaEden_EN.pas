@@ -1,4 +1,4 @@
-unit MangaEden;
+unit MangaEden_EN;
 
 {$mode objfpc}{$H+}
 
@@ -11,9 +11,8 @@ uses
 implementation
 
 const
-  dirurls: array[0..1] of String = (
-    '/en/en-directory/',
-    '/en/it-directory/'
+  dirurls: array[0..0] of String = (
+    '/en/en-directory/'
     );
 
 function GetDirectoryPageNumber(const MangaInfo: TMangaInformation; var Page: Integer;
@@ -194,8 +193,8 @@ procedure RegisterModule;
   end;
 
 begin
-  AddWebsiteModule('MangaEden', 'http://www.mangaeden.com');
-  AddWebsiteModule('PervEden', 'http://www.perveden.com');
+  AddWebsiteModule('MangaEden_EN', 'http://www.mangaeden.com');
+  AddWebsiteModule('PervEden_EN', 'http://www.perveden.com');
 end;
 
 initialization
