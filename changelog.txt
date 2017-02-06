@@ -4,6 +4,13 @@ Project page: https://github.com/riderkick/FMD
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.89.0 (06-02-2017)
+[*] E-Hentai: fixed root url
+[*] Split MangeEden_IT and PervEden_IT
+[+] Added Polish language, thanks to grzesjam
+[+] Added options to open favorites at startup
+Full changes: https://github.com/riderkick/FMD/compare/0.9.88.0...0.9.89.0
+
 0.9.88.0 (21-01-2017)
 [+] Added GoodManga[EN]
 Full changes: https://github.com/riderkick/FMD/compare/0.9.87.0...0.9.88.0
