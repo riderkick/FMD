@@ -5177,7 +5177,10 @@ begin
     pcLeft.Width := ReadInteger('form', 'MainSplitter', 195);
     sbMain.Panels[0].Width := pcLeft.Width + 4;
 
-    pcMain.PageIndex := ReadInteger('form', 'pcMainPageIndex', 0);
+    if ReadInteger('update', 'AutoCheckFavStartup', 0) = 1 then
+      pcMain.PageIndex := 3
+    else
+      pcMain.PageIndex := ReadInteger('form', 'pcMainPageIndex', 0);
 
     Left := ReadInteger('form', 'MainFormLeft', MainForm.Left);
     Top := ReadInteger('form', 'MainFormTop', MainForm.Top);
