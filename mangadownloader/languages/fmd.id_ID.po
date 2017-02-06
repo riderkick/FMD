@@ -593,6 +593,10 @@ msgctxt "tmainform.cboptionautochecklatestversion.caption"
 msgid "Auto check for latest version "
 msgstr "Otomatis periksa versi terbaru"
 
+#: tmainform.cboptionautoopenfavstartup.caption
+msgid "Open Favorites at startup"
+msgstr "Buka Kesukaan saat program dimulai"
+
 #: tmainform.cboptionchangeunicodecharacter.caption
 msgctxt "tmainform.cboptionchangeunicodecharacter.caption"
 msgid "Replace all unicode character with"

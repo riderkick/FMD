@@ -604,6 +604,10 @@ msgctxt "tmainform.cboptionautochecklatestversion.caption"
 msgid "Auto check for latest version "
 msgstr "Automatyczne sprawdzanie aktualizacji"
 
+#: tmainform.cboptionautoopenfavstartup.caption
+msgid "Open Favorites at startup"
+msgstr ""
+
 #: tmainform.cboptionchangeunicodecharacter.caption
 #| msgid "Change all all character to"
 msgctxt "tmainform.cboptionchangeunicodecharacter.caption"
@@ -2173,3 +2177,4 @@ msgstr "Synchronizacja danych"
 #: uupdatethread.rs_updatinglist
 msgid "Updating list"
 msgstr "Aktualizacja listy"
+

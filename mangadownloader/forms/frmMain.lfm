@@ -14,7 +14,6 @@ object MainForm: TMainForm
   OnWindowStateChange = FormWindowStateChange
   Position = poScreenCenter
   ShowHint = True
-  LCLVersion = '1.7'
   Visible = False
   object sbUpdateList: TStatusBar
     Left = 0
@@ -2580,7 +2579,7 @@ object MainForm: TMainForm
               Left = 4
               Height = 105
               Top = 155
-              Width = 403
+              Width = 402
               AutoSize = True
               Caption = 'Proxy config'
               ChildSizing.LeftRightSpacing = 4
@@ -2590,7 +2589,7 @@ object MainForm: TMainForm
               ChildSizing.Layout = cclLeftToRightThenTopToBottom
               ChildSizing.ControlsPerLine = 4
               ClientHeight = 85
-              ClientWidth = 399
+              ClientWidth = 398
               Enabled = False
               ParentFont = False
               TabOrder = 1
@@ -2598,13 +2597,13 @@ object MainForm: TMainForm
                 Left = 4
                 Height = 23
                 Top = 4
-                Width = 26
+                Width = 25
                 Caption = 'Host'
                 ParentColor = False
                 ParentFont = False
               end
               object edOptionHost: TEdit
-                Left = 34
+                Left = 33
                 Height = 23
                 Top = 4
                 Width = 150
@@ -2619,7 +2618,7 @@ object MainForm: TMainForm
               object lbOptionUser: TLabel
                 AnchorSideLeft.Side = asrBottom
                 AnchorSideTop.Side = asrBottom
-                Left = 188
+                Left = 187
                 Height = 23
                 Top = 4
                 Width = 53
@@ -2629,7 +2628,7 @@ object MainForm: TMainForm
               object edOptionUser: TEdit
                 AnchorSideLeft.Side = asrBottom
                 AnchorSideTop.Side = asrBottom
-                Left = 245
+                Left = 244
                 Height = 23
                 Top = 4
                 Width = 150
@@ -2645,12 +2644,12 @@ object MainForm: TMainForm
                 Left = 4
                 Height = 23
                 Top = 31
-                Width = 26
+                Width = 25
                 Caption = 'Port'
                 ParentColor = False
               end
               object edOptionPort: TEdit
-                Left = 34
+                Left = 33
                 Height = 23
                 Top = 31
                 Width = 150
@@ -2664,7 +2663,7 @@ object MainForm: TMainForm
               object lbOptionPass: TLabel
                 AnchorSideLeft.Side = asrBottom
                 AnchorSideTop.Side = asrBottom
-                Left = 188
+                Left = 187
                 Height = 23
                 Top = 31
                 Width = 53
@@ -2674,7 +2673,7 @@ object MainForm: TMainForm
               object edOptionPass: TEdit
                 AnchorSideLeft.Side = asrBottom
                 AnchorSideTop.Side = asrBottom
-                Left = 245
+                Left = 244
                 Height = 23
                 Top = 31
                 Width = 150
@@ -2689,12 +2688,12 @@ object MainForm: TMainForm
                 Left = 4
                 Height = 23
                 Top = 58
-                Width = 26
+                Width = 25
                 Caption = 'Type'
                 ParentColor = False
               end
               object cbOptionProxyType: TComboBox
-                Left = 34
+                Left = 33
                 Height = 23
                 Top = 58
                 Width = 150
@@ -3301,7 +3300,7 @@ object MainForm: TMainForm
           end
           object gbOptionFavorites: TGroupBox
             Left = 4
-            Height = 143
+            Height = 166
             Top = 31
             Width = 523
             Align = alTop
@@ -3311,7 +3310,7 @@ object MainForm: TMainForm
             ChildSizing.TopBottomSpacing = 4
             ChildSizing.HorizontalSpacing = 4
             ChildSizing.VerticalSpacing = 4
-            ClientHeight = 123
+            ClientHeight = 146
             ClientWidth = 519
             ParentFont = False
             TabOrder = 1
@@ -3322,8 +3321,9 @@ object MainForm: TMainForm
               Width = 511
               Align = alTop
               Caption = 'Auto check for new chapter at startup'
+              OnChange = cbOptionAutoCheckFavStartupChange
               ParentFont = False
-              TabOrder = 3
+              TabOrder = 0
             end
             object seOptionAutoCheckFavIntervalMinutes: TSpinEdit
               AnchorSideLeft.Control = cbOptionAutoCheckFavInterval
@@ -3331,12 +3331,12 @@ object MainForm: TMainForm
               AnchorSideTop.Side = asrBottom
               Left = 4
               Height = 23
-              Top = 50
+              Top = 73
               Width = 58
               MaxValue = 1440
               MinValue = 1
               OnChange = seOptionAutoCheckFavIntervalMinutesChange
-              TabOrder = 0
+              TabOrder = 3
               Value = 1
             end
             object lbOptionAutoCheckFavIntervalMinutes: TLabel
@@ -3346,7 +3346,7 @@ object MainForm: TMainForm
               AnchorSideTop.Side = asrCenter
               Left = 66
               Height = 15
-              Top = 54
+              Top = 77
               Width = 243
               Caption = 'Auto check for new chapter every %d minutes'
               ParentColor = False
@@ -3357,10 +3357,10 @@ object MainForm: TMainForm
               AnchorSideTop.Side = asrBottom
               Left = 4
               Height = 19
-              Top = 100
+              Top = 123
               Width = 298
               Caption = 'Automatic remove completed manga from Favorites'
-              TabOrder = 1
+              TabOrder = 5
             end
             object cbOptionAutoCheckFavDownload: TCheckBox
               AnchorSideLeft.Control = seOptionAutoCheckFavIntervalMinutes
@@ -3368,28 +3368,38 @@ object MainForm: TMainForm
               AnchorSideTop.Side = asrBottom
               Left = 4
               Height = 19
-              Top = 77
+              Top = 100
               Width = 242
               Caption = 'Automatic download after finish checking'
               ParentFont = False
-              TabOrder = 2
+              TabOrder = 4
             end
             object cbOptionAutoCheckFavInterval: TCheckBox
               Left = 4
               Height = 19
-              Top = 27
+              Top = 50
               Width = 511
               Align = alTop
               Caption = 'Auto check for new chapter in an interval'
               OnChange = cbOptionAutoCheckFavIntervalChange
               ParentFont = False
-              TabOrder = 4
+              TabOrder = 2
+            end
+            object cbOptionAutoOpenFavStartup: TCheckBox
+              Left = 4
+              Height = 19
+              Top = 27
+              Width = 511
+              Align = alTop
+              Caption = 'Open Favorites at startup'
+              ParentFont = False
+              TabOrder = 1
             end
           end
           object cbOptionUpdateListNoMangaInfo: TCheckBox
             Left = 4
             Height = 19
-            Top = 178
+            Top = 201
             Width = 523
             Align = alTop
             Caption = 'Don''t load manga information when updating list (filter will be not work!)'
@@ -3399,7 +3409,7 @@ object MainForm: TMainForm
           object cbOptionUpdateListRemoveDuplicateLocalData: TCheckBox
             Left = 4
             Height = 19
-            Top = 201
+            Top = 224
             Width = 523
             Align = alTop
             Caption = 'Remove duplicate local data when updating manga list'

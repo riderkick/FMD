@@ -558,6 +558,10 @@ msgctxt "TMAINFORM.CBOPTIONAUTOCHECKLATESTVERSION.CAPTION"
 msgid "Auto check for latest version "
 msgstr ""
 
+#: tmainform.cboptionautoopenfavstartup.caption
+msgid "Open Favorites at startup"
+msgstr ""
+
 #: tmainform.cboptionchangeunicodecharacter.caption
 msgctxt "TMAINFORM.CBOPTIONCHANGEUNICODECHARACTER.CAPTION"
 msgid "Replace all unicode character with"

@@ -51,6 +51,7 @@ type
     cbOptionAutoCheckFavInterval: TCheckBox;
     cbOptionAutoCheckFavDownload: TCheckBox;
     cbOptionAutoCheckFavRemoveCompletedManga: TCheckBox;
+    cbOptionAutoOpenFavStartup: TCheckBox;
     cbOptionEnableLoadCover: TCheckBox;
     cbOptionGenerateChapterFolder: TCheckBox;
     cbOptionRemoveMangaNameFromChapter: TCheckBox;
@@ -397,6 +398,7 @@ type
     procedure btVisitMyBlogClick(Sender: TObject);
     procedure cbAddAsStoppedChange(Sender: TObject);
     procedure cbOptionAutoCheckFavIntervalChange(Sender: TObject);
+    procedure cbOptionAutoCheckFavStartupChange(Sender: TObject);
     procedure cbOptionChangeUnicodeCharacterChange(Sender: TObject);
     procedure cbOptionDigitChapterChange(Sender: TObject);
     procedure cbOptionDigitVolumeChange(Sender: TObject);
@@ -2218,6 +2220,11 @@ procedure TMainForm.cbOptionAutoCheckFavIntervalChange(Sender: TObject);
 begin
   seOptionAutoCheckFavIntervalMinutes.Enabled := cbOptionAutoCheckFavInterval.Checked;
   lbOptionAutoCheckFavIntervalMinutes.Enabled := cbOptionAutoCheckFavInterval.Checked;
+end;
+
+procedure TMainForm.cbOptionAutoCheckFavStartupChange(Sender: TObject);
+begin
+  cbOptionAutoOpenFavStartup.Enabled := cbOptionAutoCheckFavStartup.Checked;
 end;
 
 procedure TMainForm.cbOptionChangeUnicodeCharacterChange(Sender: TObject);
@@ -4565,6 +4572,8 @@ begin
     // update
     cbOptionAutoCheckLatestVersion.Checked := ReadBool('update', 'AutoCheckLatestVersion', True);
     cbOptionAutoCheckFavStartup.Checked := ReadBool('update', 'AutoCheckFavStartup', True);
+    cbOptionAutoCheckFavStartupChange(cbOptionAutoCheckFavStartup);
+    cbOptionAutoOpenFavStartup.Checked := ReadBool('update', 'AutoOpenFavStartup', True);
     cbOptionAutoCheckFavInterval.Checked := ReadBool('update', 'AutoCheckFavInterval', True);
     seOptionAutoCheckFavIntervalMinutes.Value := ReadInteger('update', 'AutoCheckFavIntervalMinutes', 60);
     lbOptionAutoCheckFavIntervalMinutes.Caption := Format(RS_LblAutoCheckNewChapterMinute, [seOptionAutoCheckFavIntervalMinutes.Value]);
@@ -4695,6 +4704,7 @@ begin
       // update
       WriteBool('update', 'AutoCheckLatestVersion', cbOptionAutoCheckLatestVersion.Checked);
       WriteBool('update', 'AutoCheckFavStartup', cbOptionAutoCheckFavStartup.Checked);
+      WriteBool('update', 'AutoOpenFavStartup', cbOptionAutoOpenFavStartup.Checked);
       WriteBool('update', 'AutoCheckFavInterval', cbOptionAutoCheckFavInterval.Checked);
       WriteInteger('update', 'AutoCheckFavIntervalMinutes', seOptionAutoCheckFavIntervalMinutes.Value);
       WriteInteger('update', 'NewMangaTime', seOptionNewMangaTime.Value);
@@ -5177,7 +5187,10 @@ begin
     pcLeft.Width := ReadInteger('form', 'MainSplitter', 195);
     sbMain.Panels[0].Width := pcLeft.Width + 4;
 
-    pcMain.PageIndex := ReadInteger('form', 'pcMainPageIndex', 0);
+    if cbOptionAutoCheckFavStartup.Checked and cbOptionAutoOpenFavStartup.Checked then
+      pcMain.ActivePage := tsFavorites
+    else
+      pcMain.PageIndex := ReadInteger('form', 'pcMainPageIndex', 0);
 
     Left := ReadInteger('form', 'MainFormLeft', MainForm.Left);
     Top := ReadInteger('form', 'MainFormTop', MainForm.Top);
