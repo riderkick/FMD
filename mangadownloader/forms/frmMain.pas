@@ -4354,16 +4354,19 @@ begin
     s := Trim(StringBreaks(s));
   with rmInformation do
   begin
-    ReadOnly := False;
     if Lines.Count > 0 then
       Lines.Add('');
     p := SelStart;
     GetTextAttributes(p, fp);
-    Lines.Add(ATitle);
-    Lines.Add(s);
-    fp.Style := [fsBold, fsUnderline];
+    fp.Style += [fsBold, fsUnderline];
     Inc(fp.Size);
-    SetTextAttributes(p, Length(ATitle), fp);
+    SetTextAttributes(p, 0, fp);
+    Lines.Add(ATitle);
+    p := SelStart;
+    fp.Style -= [fsBold, fsUnderline];
+    Dec(fp.Size);
+    SetTextAttributes(p, 0, fp);
+    Lines.Add(s);
   end;
 end;
 
@@ -4454,10 +4457,10 @@ begin
     else
       edURL.Text := mangaInfo.url;
 
-    AddTextToInfo(RS_InfoTitle, mangaInfo.title + LineEnding);
-    AddTextToInfo(RS_InfoAuthors, mangaInfo.authors + LineEnding);
-    AddTextToInfo(RS_InfoArtists, mangaInfo.artists + LineEnding);
-    AddTextToInfo(RS_InfoGenres, mangaInfo.genres + LineEnding);
+    AddTextToInfo(RS_InfoTitle, mangaInfo.title);
+    AddTextToInfo(RS_InfoAuthors, mangaInfo.authors);
+    AddTextToInfo(RS_InfoArtists, mangaInfo.artists);
+    AddTextToInfo(RS_InfoGenres, mangaInfo.genres);
     i := StrToIntDef(mangaInfo.status, -1);
     if (i > -1) and (i < cbFilterStatus.Items.Count) then
       AddTextToInfo(RS_InfoStatus, cbFilterStatus.Items[i]);

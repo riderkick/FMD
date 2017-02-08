@@ -14,6 +14,7 @@ object MainForm: TMainForm
   OnWindowStateChange = FormWindowStateChange
   Position = poScreenCenter
   ShowHint = True
+  LCLVersion = '1.7'
   Visible = False
   object sbUpdateList: TStatusBar
     Left = 0
