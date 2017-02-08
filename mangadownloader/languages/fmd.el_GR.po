@@ -608,6 +608,10 @@ msgctxt "tmainform.cboptionautochecklatestversion.caption"
 msgid "Auto check for latest version "
 msgstr "Αυτόματος έλεγχος για την τελευταία έκδοση"
 
+#: tmainform.cboptionautoopenfavstartup.caption
+msgid "Open Favorites at startup"
+msgstr ""
+
 #: tmainform.cboptionchangeunicodecharacter.caption
 #| msgid "Change all all character to"
 msgctxt "tmainform.cboptionchangeunicodecharacter.caption"
@@ -725,7 +729,7 @@ msgid "Contains content that is suitable only for adults. Titles in this categor
 msgstr ""
 "Περιέχει περιεχόμενο που είναι κατάλληλο μόνο για ενήλικες.\n"
 " Οι τίτλοι σε αυτή την κατηγορία μπορεί να περιέχουν σκηνές παρατεταμένης έντονης \n"
-"βίας ή/και γραφικά με σεξουαλικό περιεχόμενο και γυμνό."
+"βίας ή/και γραφικά με σεξουαλικό περιεχόμενο και γυμνό.\n"
 
 #: tmainform.ckfilteradventure.caption
 msgid "Adventure"
@@ -736,7 +740,7 @@ msgid "If a character in the story goes on a trip or along that line, your best 
 msgstr ""
 "Αν ένας χαρακτήρας στην ιστορία πηγαίνει σε ταξίδι ή κατά μήκος αυτής της γραμμής, \n"
 "το πιθανότερο είναι ότι πρόκειται για μια περιπέτεια manga. Ειδάλλως, είναι στο χέρι σας\n"
-" να αποφασίσετε γι αυτή την περίπτωση."
+" να αποφασίσετε γι αυτή την περίπτωση.\n"
 
 #: tmainform.ckfiltercomedy.caption
 msgid "Comedy"
@@ -770,7 +774,7 @@ msgstr "Ecchi"
 msgid "Possibly the line between hentai and non-hentai, ecchi usually refers to fanservice put in to attract a certain group of fans."
 msgstr ""
 "Ενδεχομένως η γραμμή μεταξύ Hentai και μη-Hentai, το Ecchi συνήθως αναφέρεται \n"
-"σε υπηρεσία οπαδών που θέλει να προσελκύσει μια συγκεκριμένη ομάδα οπαδών."
+"σε υπηρεσία οπαδών που θέλει να προσελκύσει μια συγκεκριμένη ομάδα οπαδών.\n"
 
 #: tmainform.ckfilterfantasy.caption
 msgid "Fantasy"
@@ -801,7 +805,7 @@ msgid "A series involving one male character and many female characters (usually
 msgstr ""
 "Μια σειρά που περιλαμβάνει έναν αρσενικό χαρακτήρα και πολλούς γυναικείους \n"
 "(συνήθως έλκονται από τον αρσενικό χαρακτήρα). \n"
-"Το Reverse Harem είναι όταν τα φύλα αντιστρέφονται."
+"Το Reverse Harem είναι όταν τα φύλα αντιστρέφονται.\n"
 
 #: tmainform.ckfilterhentai.caption
 msgctxt "tmainform.ckfilterhentai.caption"
@@ -829,7 +833,7 @@ msgstr "Horror"
 msgid "A painful emotion of fear, dread, and abhorrence; a shuddering with terror and detestation; the feeling inspired by something frightful and shocking."
 msgstr ""
 "Ένα οδυνηρό συναίσθημα φόβου, τρόμου και αποστροφής. Ένα ανατριχιαστικό με τρόμο \n"
-"και αποστροφή. Το αίσθημα που είναι εμπνευσμένο από κάτι τρομακτικό και συγκλονιστικό."
+"και αποστροφή. Το αίσθημα που είναι εμπνευσμένο από κάτι τρομακτικό και συγκλονιστικό.\n"
 
 #: tmainform.ckfilterjosei.caption
 msgid "Josei"
@@ -840,7 +844,7 @@ msgid "Literally \"Woman\". Targets women 18-30. Female equivalent to seinen. Un
 msgstr ""
 "Κυριολεκτικά «Γυναίκα». Απευθύνεται σε γυναίκες 18-30. Ισοδύναμο με το θηλυκό. \n"
 "Σε αντίθεση με το Shoujo το ειδύλλιο είναι πιο ρεαλιστικό και λιγότερο εξιδανικευμένο. \n"
-"Η αφήγηση είναι πιο σαφής και ώριμη."
+"Η αφήγηση είναι πιο σαφής και ώριμη.\n"
 
 #: tmainform.ckfilterlolicon.caption
 msgid "Lolicon"
@@ -859,7 +863,7 @@ msgid "As the name suggests, anything martial arts related. Any of several arts 
 msgstr ""
 "Όπως υποδηλώνει το όνομα, οτιδήποτε σχετικό με πολεμικές τέχνες. \n"
 "Οποιεσδήποτε από τις διάφορες τέχνες μάχης ή αυτοάμυνας, όπως αϊκίντο, \n"
-"καράτε, τζούντο, τάε κβον ντο ή κέντο κ.ά."
+"καράτε, τζούντο, τάε κβον ντο ή κέντο κ.ά.\n"
 
 #: tmainform.ckfiltermature.caption
 msgid "Mature"
@@ -870,7 +874,7 @@ msgid "Contains subject matter which may be too extreme for people under the age
 msgstr ""
 "Περιέχει θέμα το οποίο μπορεί να είναι πολύ ακραίο για άτομα κάτω των 17 ετών. \n"
 "Οι τίτλοι σε αυτή την κατηγορία μπορεί να περιέχουν έντονη βία, έντονη αιματοχυσία, \n"
-"σεξουαλικό περιεχόμενο και σκληρή γλώσσα."
+"σεξουαλικό περιεχόμενο και σκληρή γλώσσα.\n"
 
 #: tmainform.ckfiltermecha.caption
 msgid "Mecha"
@@ -880,7 +884,7 @@ msgstr "Mecha"
 msgid "A work involving and usually concentrating on all types of large robotic machines."
 msgstr ""
 "Ένα έργο που περιλαμβάνει και συνήθως επικεντρώνεται σε όλους \n"
-"τους τύπους των μεγάλων ρομποτικών μηχανημάτων."
+"τους τύπους των μεγάλων ρομποτικών μηχανημάτων.\n"
 
 #: tmainform.ckfiltermusical.caption
 msgctxt "tmainform.ckfiltermusical.caption"
@@ -900,7 +904,7 @@ msgstr "Mystery"
 msgid "Usually an unexplained event occurs, and the main protagonist attempts to find out what caused it."
 msgstr ""
 "Συνήθως συμβαίνει κάποιο ανεξήγητο γεγονός και ο κεντρικός \n"
-"πρωταγωνιστής προσπαθεί να ανακαλύψει τι το προκάλεσε."
+"πρωταγωνιστής προσπαθεί να ανακαλύψει τι το προκάλεσε.\n"
 
 #: tmainform.ckfilterpsychological.caption
 msgid "Psychological"
@@ -910,7 +914,7 @@ msgstr "Psychological"
 msgid "Usually deals with the philosophy of a state of mind, in most cases detailing abnormal psychology."
 msgstr ""
 "Συνήθως ασχολείται με τη φιλοσοφία μιας κατάστασης του μυαλού. \n"
-"Στις περισσότερες περιπτώσεις σε μια ανώμαλη ψυχολογική κατάσταση."
+"Στις περισσότερες περιπτώσεις σε μια ανώμαλη ψυχολογική κατάσταση.\n"
 
 #: tmainform.ckfilterromance.caption
 msgid "Romance"
@@ -920,7 +924,7 @@ msgstr "Romance"
 msgid "Any love related story. We will define love as between man and woman in this case. Other than that, it is up to your own imagination of what love is."
 msgstr ""
 "Οποιαδήποτε ιστορία σχετική με αγάπη. Εμείς θεωρούμε την αγάπη μεταξύ άνδρα και γυναίκας. \n"
-"Εκτός από αυτήν, είναι θέμα της φαντασίας σας ποια αγάπη μπορεί να είναι."
+"Εκτός από αυτήν, είναι θέμα της φαντασίας σας ποια αγάπη μπορεί να είναι.\n"
 
 #: tmainform.ckfilterschoollife.caption
 msgid "School Life"
@@ -938,7 +942,7 @@ msgstr "Sci-Fi"
 msgid "Short for science fiction, these works involve twists on technology and other science related phenomena which are contrary or stretches of the modern day scientific world."
 msgstr ""
 "Τα έργα αυτά αφορούν ανατροπές στην τεχνολογία και σε άλλα φαινόμενα σχετικά με την επιστήμη \n"
-"που είναι αντίθετα ή παραποιιημένα τμήματα του σύγχρονου επιστημονικού κόσμου."
+"που είναι αντίθετα ή παραποιιημένα τμήματα του σύγχρονου επιστημονικού κόσμου.\n"
 
 #: tmainform.ckfilterseinen.caption
 msgid "Seinen"
@@ -949,7 +953,7 @@ msgid "From Google: Seinen means 'young Man'. Manga and anime that specifically 
 msgstr ""
 "Seinen σημαίνει «νέος άνθρωπος». Τα manga και anime που στοχεύουν ειδικά σε νεαρά ενήλικα αρσενικά,\n"
 " ηλικίας μεταξύ 18 και 25 ετών. Οι ιστορίες αυτές εμφανίζουν φοιτητές Πανεπιστημίου και άτομα από τον \n"
-"κόσμο της εργασίας. Σε γενικές γραμμές οι ιστορίες αυτές ασχολούνται με θέματα της ενήλικης ζωής."
+"κόσμο της εργασίας. Σε γενικές γραμμές οι ιστορίες αυτές ασχολούνται με θέματα της ενήλικης ζωής.\n"
 
 #: tmainform.ckfiltershotacon.caption
 msgid "Shotacon"
@@ -967,7 +971,7 @@ msgstr "Shoujo"
 msgid "A work intended and primarily written for females. Usually involves a lot of romance and strong character development."
 msgstr ""
 "Ένα έργο που προορίζεται και είναι κυρίως γραμμένο για γυναίκες. \n"
-"Συνήθως περιλαμβάνει ειδύλλια και ανάπτυξη ισχυρού χαρακτήρα."
+"Συνήθως περιλαμβάνει ειδύλλια και ανάπτυξη ισχυρού χαρακτήρα.\n"
 
 #: tmainform.ckfiltershoujoai.caption
 msgid "Shoujo Ai"
@@ -978,7 +982,7 @@ msgctxt "TMAINFORM.CKFILTERSHOUJOAI.HINT"
 msgid "Often synonymous with yuri, this can be thought of as somewhat less extreme. \"Girl''s Love\", so to speak."
 msgstr ""
 "Συχνά συνώνυμη με το Yuri. Αυτό μπορεί να θεωρηθεί ως κάπως λιγότερο ακραίο. \n"
-"Μπορείτε να το πείτε και «Έρωτας κοριτσιών»."
+"Μπορείτε να το πείτε και «Έρωτας κοριτσιών».\n"
 
 #: tmainform.ckfiltershounen.caption
 msgid "Shounen"
@@ -989,7 +993,7 @@ msgctxt "tmainform.ckfiltershounen.hint"
 msgid "A work intended and primarily written for males. These works usually involve fighting and/or violence."
 msgstr ""
 "Ένα έργο που προορίζεται και είναι γραμμένο κυρίως για άνδρες. \n"
-"Τα έργα αυτά αφορούν συνήθως σκηνές μάχης ή/και βία."
+"Τα έργα αυτά αφορούν συνήθως σκηνές μάχης ή/και βία.\n"
 
 #: tmainform.ckfiltershounenai.caption
 msgid "Shounen Ai"
@@ -999,7 +1003,7 @@ msgstr "Shounen Ai"
 msgid "Often synonymous with yaoi, this can be thought of as somewhat less extreme. \"Boy''s Love\", so to speak"
 msgstr ""
 "Συχνά συνώνυμη με το Yaoi. Αυτό μπορεί να θεωρηθεί ως κάπως λιγότερο ακραίο. \n"
-"Μπορείτε να το πείτε και «Έρωτας αγοριών»."
+"Μπορείτε να το πείτε και «Έρωτας αγοριών».\n"
 
 #: tmainform.ckfiltersliceoflife.caption
 msgid "Slice of Life"
@@ -1011,7 +1015,7 @@ msgstr ""
 "Όπως υποδηλώνει το όνομα, το είδος αυτό αντιπροσωπεύει καθημερινές δοκιμασίες \n"
 "από έναν ή περισσότερους χαρακτήρες. Αυτές οι προκλήσεις / εκδηλώσεις θα μπορούσαν \n"
 "τεχνικά να συμβούν στην πραγματική ζωή και εμφανίζονται συχνά, αν όχι συνεχώς, σε \n"
-"έναν κόσμο που αντικατοπτρίζει τις δικές μας ζωές."
+"έναν κόσμο που αντικατοπτρίζει τις δικές μας ζωές.\n"
 
 #: tmainform.ckfiltersmut.caption
 msgid "Smut"
@@ -1029,7 +1033,7 @@ msgstr "Sports"
 msgid "As the name suggests, anything sports related. Baseball, basketball, hockey, soccer, golf, and racing just to name a few."
 msgstr ""
 "Όπως υποδηλώνει το όνομα, οτιδήποτε σχετικό με αθλήματα. \n"
-"Για παράδειγμα μπέιζμπολ, μπάσκετ, χόκεϊ, ποδόσφαιρο, γκολφ και μηχανοκίνητα."
+"Για παράδειγμα μπέιζμπολ, μπάσκετ, χόκεϊ, ποδόσφαιρο, γκολφ και μηχανοκίνητα.\n"
 
 #: tmainform.ckfiltersupernatural.caption
 msgid "Supernatural"
@@ -1039,7 +1043,7 @@ msgstr "Supernatural"
 msgid "Usually entails amazing and unexplained powers or events which defy the laws of physics."
 msgstr ""
 "Συνήθως συνεπάγεται εκπληκτικές και ανεξήγητες δυνάμεις ή γεγονότα \n"
-"τα οποία αψηφούν τους νόμους της φυσικής."
+"τα οποία αψηφούν τους νόμους της φυσικής.\n"
 
 #: tmainform.ckfiltertragedy.caption
 msgid "Tragedy"
