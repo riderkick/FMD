@@ -280,19 +280,12 @@ const
   UNIXMANGA_ID           = 47;
   EXTREMEMANGAS_ID       = 48;
   MANGAHOST_ID           = 49;
-  PORNCOMIX_ID           = 50;
-  PORNCOMIXRE_ID         = 51;
-  PORNCOMIXIC_ID         = 52;
-  XXCOMICS_ID            = 53;
-  XXCOMICSMT_ID          = 54;
-  XXCOMICS3D_ID          = 55;
-  PORNXXXCOMICS_ID       = 56;
-  MANGAKU_ID             = 57;
-  MANGAAT_ID             = 58;
-  READMANGATODAY_ID      = 59;
-  DYNASTYSCANS_ID        = 60;
+  MANGAKU_ID             = 50;
+  MANGAAT_ID             = 51;
+  READMANGATODAY_ID      = 52;
+  DYNASTYSCANS_ID        = 53;
 
-  WebsiteRoots: array [0..60] of array [0..1] of String = (
+  WebsiteRoots: array [0..53] of array [0..1] of String = (
     ('AnimeA', 'http://manga.animea.net'),
     ('OurManga', 'http://www.ourmanga.com'),
     ('Manga24h', 'http://manga24h.com'),
@@ -343,13 +336,6 @@ const
     ('UnixManga', 'http://unixmanga.co'),
     ('ExtremeMangas', 'http://www.extrememangas.com'),
     ('MangaHost', 'http://br.mangahost.com'),
-    ('PornComix', 'http://porncomix.wf'),
-    ('PornComixRE', 'http://porncomix.re'),
-    ('PornComixIC', 'http://incest.porncomix.re'),
-    ('XXComics', 'http://gallery.xxcomics.net'),
-    ('XXComicsMT', 'http://milftoon.xxcomics.net'),
-    ('XXComics3D', 'http://3dincest.xxcomics.net'),
-    ('PornXXXComics', 'http://pornxxxcomics.com'),
     ('MangaKu', 'http://mangaku.web.id'),
     ('MangaAt', 'http://www.mangaat.com'),
     ('ReadMangaToday', 'http://www.readmanga.today'),
@@ -1144,14 +1130,7 @@ begin
     NINEMANGA_BR_ID,
     ONEMANGA_ID,
     MYREADINGMANGAINFO_ID,
-    NHENTAI_ID,
-    PORNCOMIX_ID,
-    XXCOMICS_ID,
-    XXCOMICSMT_ID,
-    XXCOMICS3D_ID,
-    PORNCOMIXRE_ID,
-    PORNCOMIXIC_ID,
-    PORNXXXCOMICS_ID
+    NHENTAI_ID
     ]);
 end;
 
@@ -1168,14 +1147,7 @@ begin
   Result := SitesMemberOf(website, [
     FAKKU_ID,
     MYREADINGMANGAINFO_ID,
-    NHENTAI_ID,
-    PORNCOMIX_ID,
-    XXCOMICS_ID,
-    XXCOMICSMT_ID,
-    XXCOMICS3D_ID,
-    PORNCOMIXRE_ID,
-    PORNCOMIXIC_ID,
-    PORNXXXCOMICS_ID
+    NHENTAI_ID
     ]);
 end;
 
@@ -1204,14 +1176,7 @@ begin
   Result := False;
   Result := SitesMemberOf(website, [
     MEINMANGA_ID,
-    IKOMIK_ID,
-    PORNCOMIX_ID,
-    XXCOMICS_ID,
-    XXCOMICSMT_ID,
-    XXCOMICS3D_ID,
-    PORNCOMIXRE_ID,
-    PORNCOMIXIC_ID,
-    PORNXXXCOMICS_ID
+    IKOMIK_ID
     ]);
 end;
 
@@ -1221,12 +1186,7 @@ begin
   Result := SitesMemberOf(website, [
     FAKKU_ID,
     MYREADINGMANGAINFO_ID,
-    NHENTAI_ID,
-    PORNCOMIX_ID,
-    XXCOMICS_ID,
-    XXCOMICSMT_ID,
-    XXCOMICS3D_ID,
-    PORNCOMIXRE_ID
+    NHENTAI_ID
     ]);
 end;
 

@@ -808,8 +808,6 @@ var
 
   {$I includes/MangaHost/directory_page_number.inc}
 
-  {$I includes/PornComix/directory_page_number.inc}
-
   {$I includes/MangaAt/directory_page_number.inc}
 
   {$I includes/ReadMangaToday/directory_page_number.inc}
@@ -903,15 +901,6 @@ begin
       else
       if WebsiteID = MANGAHOST_ID then
         Result := GetMangaHostDirectoryPageNumber
-      else
-      if (WebsiteID = PORNCOMIX_ID) or
-        (WebsiteID = XXCOMICS_ID) or
-        (WebsiteID = XXCOMICSMT_ID) or
-        (WebsiteID = XXCOMICS3D_ID) or
-        (WebsiteID = PORNCOMIXRE_ID) or
-        (WebsiteID = PORNCOMIXIC_ID) or
-        (WebsiteID = PORNXXXCOMICS_ID) then
-        Result := GetPornComixDirectoryPageNumber(GetMangaSiteID(AWebsite))
       else
       if WebsiteID = MANGAAT_ID then
         Result := GetMangaAtDirectoryPageNumber
@@ -1022,8 +1011,6 @@ var
   {$I includes/ExtremeMangas/names_and_links.inc}
 
   {$I includes/MangaHost/names_and_links.inc}
-
-  {$I includes/PornComix/names_and_links.inc}
 
   {$I includes/MangaKu/names_and_links.inc}
 
@@ -1174,15 +1161,6 @@ begin
     if WebsiteID = MANGAHOST_ID then
       Result := MangaHostGetNamesAndLinks
     else
-    if (WebsiteID = PORNCOMIX_ID) or
-      (WebsiteID = XXCOMICS_ID) or
-      (WebsiteID = XXCOMICSMT_ID) or
-      (WebsiteID = XXCOMICS3D_ID) or
-      (WebsiteID = PORNCOMIXRE_ID) or
-      (WebsiteID = PORNCOMIXIC_ID) or
-      (WebsiteID = PORNXXXCOMICS_ID) then
-      Result := PornComixGetNamesAndLinks(GetMangaSiteID(AWebsite))
-    else
     if WebsiteID = MANGAKU_ID then
       Result := MangaKuGetNamesAndLinks
     else
@@ -1297,8 +1275,6 @@ var
   {$I includes/ExtremeMangas/manga_information.inc}
 
   {$I includes/MangaHost/manga_information.inc}
-
-  {$I includes/PornComix/manga_information.inc}
 
   {$I includes/MangaKu/manga_information.inc}
 
@@ -1459,15 +1435,6 @@ begin
     else
     if WebsiteID = MANGAHOST_ID then
       Result := GetMangaHostInfoFromURL
-    else
-    if (WebsiteID = PORNCOMIX_ID) or
-      (WebsiteID = XXCOMICS_ID) or
-      (WebsiteID = XXCOMICSMT_ID) or
-      (WebsiteID = XXCOMICS3D_ID) or
-      (WebsiteID = PORNCOMIXRE_ID) or
-      (WebsiteID = PORNCOMIXIC_ID) or
-      (WebsiteID = PORNXXXCOMICS_ID) then
-      Result := GetPornComixInfoFromURL(GetMangaSiteID(AWebsite))
     else
     if WebsiteID = MANGAKU_ID then
       Result := GetMangaKuInfoFromURL

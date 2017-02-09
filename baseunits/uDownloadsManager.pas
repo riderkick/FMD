@@ -458,8 +458,6 @@ var
 
   {$I includes/MangaHost/chapter_page_number.inc}
 
-  {$I includes/PornComix/chapter_page_number.inc}
-
   {$I includes/MangaKu/chapter_page_number.inc}
 
   {$I includes/MangaAt/chapter_page_number.inc}
@@ -563,15 +561,6 @@ begin
     if Task.Container.MangaSiteID = MANGAHOST_ID then
       Result := GetMangaHostPageNumber
     else
-    if (Task.Container.MangaSiteID = PORNCOMIX_ID) or
-      (Task.Container.MangaSiteID = XXCOMICS_ID) or
-      (Task.Container.MangaSiteID = XXCOMICSMT_ID) or
-      (Task.Container.MangaSiteID = XXCOMICS3D_ID) or
-      (Task.Container.MangaSiteID = PORNCOMIXRE_ID) or
-      (Task.Container.MangaSiteID = PORNCOMIXIC_ID) or
-      (Task.Container.MangaSiteID = PORNXXXCOMICS_ID) then
-      Result := GetPornComixPageNumber(Task.Container.MangaSiteID)
-    else
     if Task.Container.MangaSiteID = MANGAKU_ID then
       Result := GetMangaKuPageNumber
     else
@@ -663,8 +652,6 @@ var
   {$I includes/UnixManga/image_url.inc}
 
   {$I includes/MangaHost/image_url.inc}
-
-  {$I includes/PornComix/image_url.inc}
 
   {$I includes/MangaAt/image_url.inc}
 
@@ -788,15 +775,6 @@ begin
     else
     if Task.Container.MangaSiteID = MANGAHOST_ID then
       Result := GetMangaHostImageURL
-    else
-    if (Task.Container.MangaSiteID = PORNCOMIX_ID) or
-      (Task.Container.MangaSiteID = XXCOMICS_ID) or
-      (Task.Container.MangaSiteID = XXCOMICSMT_ID) or
-      (Task.Container.MangaSiteID = XXCOMICS3D_ID) or
-      (Task.Container.MangaSiteID = PORNCOMIXRE_ID) or
-      (Task.Container.MangaSiteID = PORNCOMIXIC_ID) or
-      (Task.Container.MangaSiteID = PORNXXXCOMICS_ID) then
-      Result := GetPornComixImageURL
     else
     if Task.Container.MangaSiteID = MANGAAT_ID then
       Result := GetMangaAtImageURL;
