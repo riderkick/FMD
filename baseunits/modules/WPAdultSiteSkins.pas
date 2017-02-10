@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, WebsiteModules, uData, uBaseUnit, uDownloadsManager,
-  XQueryEngineHTML, httpsendthread, synautil;
+  XQueryEngineHTML, httpsendthread, synautil, ImageHoster;
 
 implementation
 
@@ -93,7 +93,7 @@ begin
       with TXQueryEngineHTML.Create(Document) do
       try
         XPathStringAll('//div[@class="single-post"]//dl[@class="gallery-item"]/dt/a/@href', PageContainerLinks);
-        XPathStringAll('//div[@class="single-post"]/p//a[./img]/@href', PageContainerLinks);
+        XPathStringAll('//div[@class="single-post"]/p//a[./img[not(data-lazy-src)]]/@href', PageContainerLinks);
         if PageContainerLinks.Count = 0 then
           for v in XPath('//div[@class="single-post"]/p//img[not(@data-lazy-src)]/@src') do
             PageLinks.Add(MaybeFillHost(Module.RootURL, v.toString))
@@ -108,23 +108,31 @@ end;
 
 function GetImageURL(const DownloadThread: TDownloadThread; const AURL: String;
   const Module: TModuleContainer): Boolean;
+var
+  s: String;
 begin
   Result := False;
   if DownloadThread = nil then Exit;
   with DownloadThread.Task.Container, DownloadThread.FHTTP do begin
     if DownloadThread.WorkId >= PageContainerLinks.Count then Exit;
+    s := ImageHoster.GetImageHoster(DownloadThread.FHTTP, MaybeFillHost(Module.RootURL, PageContainerLinks[DownloadThread.WorkId]));
+    if s = '' then
     if GET(MaybeFillHost(Module.RootURL, PageContainerLinks[DownloadThread.WorkId])) then
     begin
-      Result := True;
       with TXQueryEngineHTML.Create(Document) do
         try
-          PageLinks[DownloadThread.WorkId] :=
-            MaybeFillHost(Module.RootURL, XPathString('//div[@class="attachment-image"]//img/@src'));
+          s := MaybeFillHost(Module.RootURL, XPathString('//div[@class="attachment-image"]//img/@src'));
         finally
           Free;
         end;
     end;
+    if s <> '' then
+    begin
+      Result := True;
+      PageLinks[DownloadThread.WorkId] := s;
+    end;
   end;
+
 end;
 
 procedure RegisterModule;
