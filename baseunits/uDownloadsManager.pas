@@ -83,7 +83,9 @@ type
     FCurrentMaxFileNameLength: Integer;
     {$ENDIF}
     FCurrentCustomFileName: String;
+    FIsForDelete: Boolean;
     procedure SetCurrentWorkingDir(AValue: String);
+    procedure SetIsForDelete(AValue: Boolean);
   protected
     procedure CheckOut;
     procedure Execute; override;
@@ -107,6 +109,7 @@ type
     property CurrentMaxFileNameLength: Integer read FCurrentMaxFileNameLength;
     // current custom filename with only %FILENAME% left intact
     property CurrentCustomFileName: String read FCurrentCustomFileName write FCurrentCustomFileName;
+    property IsForDelete: Boolean read FIsForDelete write SetIsForDelete;
   end;
 
   { TTaskContainer }
@@ -178,7 +181,8 @@ type
     procedure DecStatusCount(const Status: TDownloadStatusType);
     procedure IncStatusCount(const Status: TDownloadStatusType);
   public
-    CS_Task: TRTLCriticalSection;
+    CS_Task,
+    CS_ItemsActiveTask: TRTLCriticalSection;
     Items,
     ItemsActiveTask: TTaskContainers;
     isRunningBackup, isFinishTaskAccessed, isRunningBackupDownloadedChaptersList,
@@ -788,6 +792,7 @@ begin
   inherited Create(True);
   Threads := TDownloadThreads.Create;
   FCheckAndActiveTaskFlag := True;
+  FIsForDelete := False;
   httpCookies := '';
   FCurrentWorkingDir := '';
   FCurrentCustomFileName := '';
@@ -984,6 +989,12 @@ begin
   s := UTF8Decode(FCurrentWorkingDir);
   FCurrentMaxFileNameLength := FMDMaxImageFilePath - Length(s);
   {$ENDIF}
+end;
+
+procedure TTaskThread.SetIsForDelete(AValue: Boolean);
+begin
+  if FIsForDelete = AValue then Exit;
+  FIsForDelete := AValue;
 end;
 
 procedure TTaskThread.CheckOut;
@@ -1356,17 +1367,17 @@ begin
       UnlockCreateConnection;
     end;
     while Threads.Count > 0 do
-      Sleep(100);
+      Sleep(32);
   end;
   Modules.DecActiveTaskCount(Container.ModuleId);
   with Container do begin
-    Container.ReadCount := 0;
-    DownloadInfo.TransferRate := '';
-    Manager.RemoveItemsActiveTask(Container);
     ThreadState := False;
+    Manager.RemoveItemsActiveTask(Container);
     Task := nil;
-    if not Manager.isReadyForExit then
+    if not (IsForDelete or Manager.isReadyForExit) then
     begin
+      Container.ReadCount := 0;
+      DownloadInfo.TransferRate := '';
       if Status <> STATUS_STOP then
       begin
         if (WorkCounter >= PageLinks.Count) and
@@ -1479,21 +1490,21 @@ end;
 
 procedure TDownloadManager.AddItemsActiveTask(const Item: TTaskContainer);
 begin
-  EnterCriticalsection(CS_Task);
+  EnterCriticalsection(CS_ItemsActiveTask);
   try
     ItemsActiveTask.Add(Item);
   finally
-    LeaveCriticalsection(CS_Task);
+    LeaveCriticalsection(CS_ItemsActiveTask);
   end;
 end;
 
 procedure TDownloadManager.RemoveItemsActiveTask(const Item: TTaskContainer);
 begin
-  EnterCriticalsection(CS_Task);
+  EnterCriticalsection(CS_ItemsActiveTask);
   try
     ItemsActiveTask.Remove(Item);
   finally
-    LeaveCriticalsection(CS_Task);
+    LeaveCriticalsection(CS_ItemsActiveTask);
   end;
 end;
 
@@ -1513,7 +1524,7 @@ var
 begin
   Result := 0;
   if ItemsActiveTask.Count = 0 then Exit;
-  EnterCriticalSection(CS_Task);
+  EnterCriticalSection(CS_ItemsActiveTask);
   try
     for i := 0 to ItemsActiveTask.Count - 1 do
       with ItemsActiveTask[i] do
@@ -1528,7 +1539,7 @@ begin
         end;
       end;
   finally
-    LeaveCriticalSection(CS_Task);
+    LeaveCriticalSection(CS_ItemsActiveTask);
   end;
 end;
 
@@ -1573,6 +1584,7 @@ var
 begin
   inherited Create;
   InitCriticalSection(CS_Task);
+  InitCriticalSection(CS_ItemsActiveTask);
   ForceDirectoriesUTF8(WORK_FOLDER);
   DownloadManagerFile := TIniFileRun.Create(WORK_FILE);
   DownloadedChapters := TDownloadedChaptersDB.Create;
@@ -1607,6 +1619,7 @@ begin
   DownloadManagerFile.Free;
   ItemsActiveTask.Free;
   DownloadedChapters.Free;
+  DoneCriticalsection(CS_ItemsActiveTask);
   DoneCriticalsection(CS_Task);
   DoneCriticalsection(CS_StatusCount);
   inherited Destroy;

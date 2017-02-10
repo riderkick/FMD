@@ -1713,12 +1713,30 @@ begin
     if MessageDlg('', RS_DlgRemoveTask,
       mtConfirmation, [mbYes, mbNo], 0) <> mrYes then
       Exit;
-  EnterCriticalSection(DLManager.CS_Task);
+  vtDownload.BeginUpdate;
   try
+    EnterCriticalSection(DLManager.CS_Task);
+    // stop selected nodes
     xNode := vtDownload.GetPreviousSelected(nil);
-    while Assigned(xNode) do begin
-      DLManager.StopTask(xNode^.Index, False, True);
-      with DLManager.Items[xNode^.Index] do begin
+    while Assigned(xNode) do
+    begin
+      with DLManager.Items[xNode^.Index] do
+        if ThreadState then
+        begin
+          Task.IsForDelete := True;
+          Task.Terminate;
+        end;
+      xNode := vtDownload.GetPreviousSelected(xNode);
+    end;
+    // cleaning the data
+    xNode := vtDownload.GetPreviousSelected(nil);
+    while Assigned(xNode) do
+    begin
+      Exclude(xNode^.States, vsSelected);
+      with DLManager.Items[xNode^.Index] do
+      begin
+        if ThreadState then
+          Task.WaitFor;
         if (Sender = miDownloadDeleteTaskData) or (Sender = miDownloadDeleteTaskDataFavorite)
           and (ChapterName.Count > 0) then begin
           for i := 0 to ChapterName.Count - 1 do begin
@@ -1753,7 +1771,7 @@ begin
           finally
             FavoriteManager.LockRelease;
           end;
-        DLManager.Items[xNode^.Index].Free;
+        Free;
         DLManager.Items.Delete(xNode^.Index);
       end;
       xNode := vtDownload.GetPreviousSelected(xNode);
@@ -1761,9 +1779,12 @@ begin
   finally
     LeaveCriticalSection(DLManager.CS_Task);
   end;
-  vtDownload.ClearSelection;
-  DLManager.CheckAndActiveTask;
+  if vtDownload.RootNodeCount <> DLManager.Items.Count then
+    vtDownload.RootNodeCount := DLManager.Items.Count;
+  vtDownload.EndUpdate;
   UpdateVtDownload;
+  DLManager.CheckAndActiveTask();
+  Exit;
 end;
 
 procedure TMainForm.miDownloadMergeCompletedClick(Sender: TObject);
