@@ -64,7 +64,7 @@ begin
       with TXQueryEngineHTML.Create(Document) do
         try
           coverLink := XPathString('//div[@class="single-post"]//img[starts-with(@class,"attachment-") and not(@data-lazy-src)]/@src');
-          if coverLink = '' then coverLink := XPathString('//div[@class="single-post"]/p/img/@src');
+          if coverLink = '' then coverLink := XPathString('//div[@class="single-post"]/p//img[not(@data-lazy-src)]/@src');
           if coverLink <> '' then coverLink := MaybeFillHost(Module.RootURL, coverLink);
           if title = '' then title := XPathString('//div[@class="posts"]/h2[@class="post-title"][1]');
           chapterLinks.Add(url);
@@ -93,8 +93,9 @@ begin
       with TXQueryEngineHTML.Create(Document) do
       try
         XPathStringAll('//div[@class="single-post"]//dl[@class="gallery-item"]/dt/a/@href', PageContainerLinks);
+        XPathStringAll('//div[@class="single-post"]/p//a[./img]/@href', PageContainerLinks);
         if PageContainerLinks.Count = 0 then
-          for v in XPath('//div[@class="single-post"]/p/img/@src') do
+          for v in XPath('//div[@class="single-post"]/p//img[not(@data-lazy-src)]/@src') do
             PageLinks.Add(MaybeFillHost(Module.RootURL, v.toString))
         else
           PageNumber := PageContainerLinks.Count;
@@ -111,6 +112,7 @@ begin
   Result := False;
   if DownloadThread = nil then Exit;
   with DownloadThread.Task.Container, DownloadThread.FHTTP do begin
+    if DownloadThread.WorkId >= PageContainerLinks.Count then Exit;
     if GET(MaybeFillHost(Module.RootURL, PageContainerLinks[DownloadThread.WorkId])) then
     begin
       Result := True;
