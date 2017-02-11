@@ -1779,8 +1779,7 @@ begin
   finally
     LeaveCriticalSection(DLManager.CS_Task);
   end;
-  if vtDownload.RootNodeCount <> DLManager.Items.Count then
-    vtDownload.RootNodeCount := DLManager.Items.Count;
+  vtDownload.RootNodeCount := DLManager.Items.Count;
   vtDownload.EndUpdate;
   UpdateVtDownload;
   DLManager.CheckAndActiveTask();
