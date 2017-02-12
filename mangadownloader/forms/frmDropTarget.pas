@@ -256,7 +256,7 @@ begin
   FHeight := Height;
   FLeft := Left;
   FTop := Top;
-  MainForm.SaveDropTargetFormInformation(True);
+  MainForm.SaveDropTargetFormInformation;
   CloseAction := caFree;
 end;
 

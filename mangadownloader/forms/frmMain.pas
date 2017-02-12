@@ -695,7 +695,7 @@ type
 
     // drop target
     procedure ShowDropTarget(const AShow: Boolean);
-    procedure SaveDropTargetFormInformation(const isClose: Boolean = False);
+    procedure SaveDropTargetFormInformation;
 
     // load language from file
     procedure CollectLanguagesFromFiles;
@@ -4684,7 +4684,8 @@ begin
       // view
       WriteBool('view', 'ShowDownloadsToolbar', cbOptionShowDownloadToolbar.Checked);
       WriteBool('view', 'LoadMangaCover', cbOptionEnableLoadCover.Checked);
-      SaveDropTargetFormInformation;
+      if not (isExiting and Assigned(FormDropTarget)) then
+        SaveDropTargetFormInformation;
 
       // connections
       WriteInteger('connections', 'NumberOfTasks', seOptionMaxParallel.Value);
@@ -5285,6 +5286,7 @@ end;
 
 procedure TMainForm.ShowDropTarget(const AShow: Boolean);
 begin
+  ckDropTarget.Checked := AShow;
   configfile.WriteBool('droptarget', 'Show', AShow);
   if AShow then
   begin
@@ -5301,12 +5303,11 @@ begin
   end;
 end;
 
-procedure TMainForm.SaveDropTargetFormInformation(const isClose: Boolean);
+procedure TMainForm.SaveDropTargetFormInformation;
 begin
   with configfile do
   begin
-    if isClose then
-      WriteBool('droptarget', 'Show', False);
+    WriteBool('droptarget', 'Show', ckDropTarget.Checked);
     WriteInteger('droptarget', 'Mode', rgDropTargetMode.ItemIndex);
     WriteInteger('droptarget', 'Opacity', frmDropTarget.FAlphaBlendValue);
     WriteInteger('droptarget', 'Width', frmDropTarget.FWidth);
