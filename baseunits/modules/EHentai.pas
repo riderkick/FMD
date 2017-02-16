@@ -88,9 +88,12 @@ begin
   Result := False;
   if Account.Enabled[accname] then begin
     AHTTP.FollowRedirection := False;
-    if AHTTP.Cookies.Count > 0 then ACookies := AHTTP.Cookies.Text
-    else ACookies := '';
-    //AHTTP.Cookies.Text := Account.Cookies[accname];
+    // force no warning
+    AHTTP.Cookies.Values['nw'] := '1';
+    if AHTTP.Cookies.Count > 0 then
+      ACookies := AHTTP.Cookies.Text
+    else
+      ACookies := '';
     AHTTP.Cookies.AddText(Account.Cookies[accname]);
     Result := AHTTP.GET(AURL);
     if Result and (AHTTP.ResultCode > 300) then begin
@@ -161,54 +164,41 @@ var
   v: IXQValue;
 
   procedure ScanParse;
-  var
-    getOK: Boolean;
   begin
-    getOK := True;
-    // check content warning
-    if Pos('Content Warning', query.XPathString('//div/h1')) > 0 then
-    begin
-      getOK := GETWithLogin(MangaInfo.FHTTP, MangaInfo.mangaInfo.url + '?nw=session', Module.Website);
-      if getOK then
-        query.ParseHTML(StreamToString(MangaInfo.FHTTP.Document));
-    end;
-    if getOK then
-    begin
-      with MangaInfo.mangaInfo do begin
-        //title
-        title := Query.XPathString('//*[@id="gn"]');
-        //cover
-        coverLink := Query.XPathString('//*[@id="gd1"]/img/@src');
-        //artists
-        artists := '';
-        for v in Query.XPath('//a[starts-with(@id,"ta_artist")]') do
-          AddCommaString(artists, v.toString);
-        //genres
-        genres := '';
-        for v in Query.XPath(
-            '//a[starts-with(@id,"ta_")and(not(starts-with(@id,"ta_artist")))]') do
-          AddCommaString(genres, v.toString);
-        //chapter
-        if title <> '' then begin
-          chapterLinks.Add(url);
-          chapterName.Add(title);
-        end;
-        //status
-        with TRegExpr.Create do
-          try
-            Expression := '(?i)[\[\(\{](wip|ongoing)[\]\)\}]';
-            if Exec(title) then
-              status := '1'
-            else
-            begin
-              Expression := '(?i)[\[\(\{]completed[\]\)\}]';
-              if Exec(title) then
-                status := '0';
-            end;
-          finally
-            Free;
-          end;
+    with MangaInfo.mangaInfo do begin
+      //title
+      title := Query.XPathString('//*[@id="gn"]');
+      //cover
+      coverLink := Query.XPathString('//*[@id="gd1"]/img/@src');
+      //artists
+      artists := '';
+      for v in Query.XPath('//a[starts-with(@id,"ta_artist")]') do
+        AddCommaString(artists, v.toString);
+      //genres
+      genres := '';
+      for v in Query.XPath(
+          '//a[starts-with(@id,"ta_")and(not(starts-with(@id,"ta_artist")))]') do
+        AddCommaString(genres, v.toString);
+      //chapter
+      if title <> '' then begin
+        chapterLinks.Add(url);
+        chapterName.Add(title);
       end;
+      //status
+      with TRegExpr.Create do
+        try
+          Expression := '(?i)[\[\(\{](wip|ongoing)[\]\)\}]';
+          if Exec(title) then
+            status := '1'
+          else
+          begin
+            Expression := '(?i)[\[\(\{]completed[\]\)\}]';
+            if Exec(title) then
+              status := '0';
+          end;
+        finally
+          Free;
+        end;
     end;
   end;
 
