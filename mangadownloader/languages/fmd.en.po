@@ -567,6 +567,10 @@ msgstr "Update manga list"
 msgid "Visit my blog"
 msgstr "Visit my blog"
 
+#: tmainform.caption
+msgid "Free Manga Downloader"
+msgstr ""
+
 #: tmainform.cbaddasstopped.caption
 msgid "Add to download list as stopped task"
 msgstr "Add to download list as stopped task"
@@ -670,6 +674,10 @@ msgstr "Download manga list if empty"
 #: tmainform.cboptionshowdownloadtoolbar.caption
 msgid "Show downloads toolbar"
 msgstr "Show downloads toolbar"
+
+#: tmainform.cboptionshowdownloadtoolbardeleteall.caption
+msgid "Show \"Delete all completed tasks\" in downloads toolbar"
+msgstr "Show \"Delete all completed tasks\" in downloads toolbar"
 
 #: tmainform.cboptionshowquitdialog.caption
 msgid "Exit FMD"

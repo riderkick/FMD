@@ -15,7 +15,6 @@ object MainForm: TMainForm
   Position = poScreenCenter
   ShowHint = True
   LCLVersion = '1.7'
-  Visible = False
   object sbUpdateList: TStatusBar
     Left = 0
     Height = 30
@@ -38,13 +37,13 @@ object MainForm: TMainForm
     Height = 520
     Top = 11
     Width = 566
-    ActivePage = tsDownload
+    ActivePage = tsOption
     Align = alClient
     BorderSpacing.Top = 3
     BorderSpacing.Right = 4
     BorderSpacing.Bottom = 3
     ParentFont = False
-    TabIndex = 0
+    TabIndex = 4
     TabOrder = 0
     OnChange = pcMainChange
     object tsDownload: TTabSheet
@@ -249,7 +248,7 @@ object MainForm: TMainForm
               ImageIndex = 7
               OnClick = tbDownloadStopAllClick
             end
-            object ToolButton1: TToolButton
+            object tbSeparator1: TToolButton
               Left = 153
               Height = 25
               Top = 0
@@ -2179,10 +2178,10 @@ object MainForm: TMainForm
         Height = 415
         Top = 8
         Width = 539
-        ActivePage = tsGeneral
+        ActivePage = tsView
         Anchors = [akTop, akLeft, akRight, akBottom]
         ParentFont = False
-        TabIndex = 0
+        TabIndex = 1
         TabOrder = 0
         object tsGeneral: TTabSheet
           Caption = 'General'
@@ -2531,12 +2530,22 @@ object MainForm: TMainForm
           object cbOptionEnableLoadCover: TCheckBox
             Left = 4
             Height = 19
-            Top = 200
+            Top = 223
             Width = 523
             Align = alTop
             Caption = 'Enable load manga cover'
             ParentFont = False
             TabOrder = 2
+          end
+          object cbOptionShowDownloadToolbarDeleteAll: TCheckBox
+            Left = 4
+            Height = 19
+            Top = 200
+            Width = 523
+            Align = alTop
+            Caption = 'Show "Delete all completed tasks" in downloads toolbar'
+            ParentFont = False
+            TabOrder = 3
           end
         end
         object tsConnections: TTabSheet

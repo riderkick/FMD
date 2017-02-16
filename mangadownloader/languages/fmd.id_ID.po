@@ -558,6 +558,10 @@ msgstr "Perbarui daftar komik"
 msgid "Visit my blog"
 msgstr "Kunjungi blog"
 
+#: tmainform.caption
+msgid "Free Manga Downloader"
+msgstr ""
+
 #: tmainform.cbaddasstopped.caption
 msgid "Add to download list as stopped task"
 msgstr "Tambahkan ke daftar unduhan tanpa dimulai"
@@ -658,6 +662,10 @@ msgstr "Unduh daftar komik jika kosong"
 #: tmainform.cboptionshowdownloadtoolbar.caption
 msgid "Show downloads toolbar"
 msgstr "Tampilkan toolbar unduhan"
+
+#: tmainform.cboptionshowdownloadtoolbardeleteall.caption
+msgid "Show \"Delete all completed tasks\" in downloads toolbar"
+msgstr "Tampilkan \"Hapus semua unduhan selesai\" di toolbar unduhan"
 
 #: tmainform.cboptionshowquitdialog.caption
 msgid "Exit FMD"

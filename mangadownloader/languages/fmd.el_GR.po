@@ -571,6 +571,10 @@ msgstr "Ενημέρωση λίστας manga"
 msgid "Visit my blog"
 msgstr "Επίσκεψη στο blog μου"
 
+#: tmainform.caption
+msgid "Free Manga Downloader"
+msgstr ""
+
 #: tmainform.cbaddasstopped.caption
 msgid "Add to download list as stopped task"
 msgstr "Προσθήκη στη λίστα λήψης ως διακοπείσα εργασία"
@@ -674,6 +678,10 @@ msgstr "Λήψη λίστας manga εάν είναι κενή"
 #: tmainform.cboptionshowdownloadtoolbar.caption
 msgid "Show downloads toolbar"
 msgstr "Εμφάνιση εργαλειοθήκης λήψεων"
+
+#: tmainform.cboptionshowdownloadtoolbardeleteall.caption
+msgid "Show \"Delete all completed tasks\" in downloads toolbar"
+msgstr ""
 
 #: tmainform.cboptionshowquitdialog.caption
 msgid "Exit FMD"

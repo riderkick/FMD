@@ -1,4 +1,5 @@
 {"version":1,"strings":[
+{"hash":57972706,"name":"tmainform.caption","sourcebytes":[70,114,101,101,32,77,97,110,103,97,32,68,111,119,110,108,111,97,100,101,114],"value":"Free Manga Downloader"},
 {"hash":240327891,"name":"tmainform.tsdownload.caption","sourcebytes":[68,111,119,110,108,111,97,100,115],"value":"Downloads"},
 {"hash":5473489,"name":"tmainform.vtdownload.header.columns[0].text","sourcebytes":[77,97,110,103,97],"value":"Manga"},
 {"hash":95062979,"name":"tmainform.vtdownload.header.columns[1].text","sourcebytes":[83,116,97,116,117,115],"value":"Status"},
@@ -151,6 +152,7 @@
 {"hash":107454697,"name":"tmainform.lbdroptargetopacity.caption","sourcebytes":[79,112,97,99,105,116,121],"value":"Opacity"},
 {"hash":345509,"name":"tmainform.rgdroptargetmode.caption","sourcebytes":[77,111,100,101],"value":"Mode"},
 {"hash":117603058,"name":"tmainform.cboptionenableloadcover.caption","sourcebytes":[69,110,97,98,108,101,32,108,111,97,100,32,109,97,110,103,97,32,99,111,118,101,114],"value":"Enable load manga cover"},
+{"hash":150918338,"name":"tmainform.cboptionshowdownloadtoolbardeleteall.caption","sourcebytes":[83,104,111,119,32,34,68,101,108,101,116,101,32,97,108,108,32,99,111,109,112,108,101,116,101,100,32,116,97,115,107,115,34,32,105,110,32,100,111,119,110,108,111,97,100,115,32,116,111,111,108,98,97,114],"value":"Show \"Delete all completed tasks\" in downloads toolbar"},
 {"hash":199270675,"name":"tmainform.tsconnections.caption","sourcebytes":[67,111,110,110,101,99,116,105,111,110,115],"value":"Connections"},
 {"hash":125299305,"name":"tmainform.cboptionuseproxy.caption","sourcebytes":[85,115,101,32,112,114,111,120,121],"value":"Use proxy"},
 {"hash":66921287,"name":"tmainform.gboptionproxy.caption","sourcebytes":[80,114,111,120,121,32,99,111,110,102,105,103],"value":"Proxy config"},

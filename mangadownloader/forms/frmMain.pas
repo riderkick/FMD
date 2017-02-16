@@ -57,6 +57,7 @@ type
     cbOptionRemoveMangaNameFromChapter: TCheckBox;
     cbOptionShowDownloadMangalistDialog: TCheckBox;
     cbOptionShowDownloadToolbar: TCheckBox;
+    cbOptionShowDownloadToolbarDeleteAll: TCheckBox;
     cbOptionUpdateListNoMangaInfo: TCheckBox;
     cbOptionDigitVolume: TCheckBox;
     cbOptionDigitChapter: TCheckBox;
@@ -353,7 +354,7 @@ type
     ToolBarDownload: TToolBar;
     tbDownloadResumeAll: TToolButton;
     tbDownloadStopAll: TToolButton;
-    ToolButton1: TToolButton;
+    tbSeparator1: TToolButton;
     tbDownloadDeleteCompleted: TToolButton;
     tvDownloadFilter: TTreeView;
     tsDownloadFilter: TTabSheet;
@@ -4544,6 +4545,7 @@ begin
 
     // view
     cbOptionShowDownloadToolbar.Checked := ReadBool('view', 'ShowDownloadsToolbar', True);
+    cbOptionShowDownloadToolbarDeleteAll.Checked := ReadBool('view', 'ShowDownloadsToolbarDeleteAll', False);
     cbOptionEnableLoadCover.Checked := ReadBool('view', 'LoadMangaCover', True);
     ckDropTarget.Checked := ReadBool('droptarget', 'Show', False);
     frmDropTarget.FWidth := ReadInteger('droptarget', 'Width', frmDropTarget.FWidth);
@@ -4683,6 +4685,7 @@ begin
 
       // view
       WriteBool('view', 'ShowDownloadsToolbar', cbOptionShowDownloadToolbar.Checked);
+      WriteBool('view', 'ShowDownloadsToolbarDeleteAll', cbOptionShowDownloadToolbarDeleteAll.Checked);
       WriteBool('view', 'LoadMangaCover', cbOptionEnableLoadCover.Checked);
       if not (isExiting and Assigned(FormDropTarget)) then
         SaveDropTargetFormInformation;
@@ -4822,6 +4825,8 @@ begin
 
     //view
     ToolBarDownload.Visible := cbOptionShowDownloadToolbar.Checked;
+    tbDownloadDeleteCompleted.Visible := cbOptionShowDownloadToolbarDeleteAll.Checked;
+    tbSeparator1.Visible := tbDownloadDeleteCompleted.Visible;
     ShowDropTarget(ckDropTarget.Checked);
 
     //connection
