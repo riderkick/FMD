@@ -418,7 +418,7 @@ procedure RegisterModule;
       Website := AWebsite;
       RootURL := ARootURL;
       MaxTaskLimit := 1;
-      MaxConnectionLimit := 4;
+      MaxConnectionLimit := 2;
       SortedList := True;
       DynamicPageLink := True;
       OnGetDirectoryPageNumber := @GetDirectoryPageNumber;
