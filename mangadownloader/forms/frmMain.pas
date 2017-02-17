@@ -4464,11 +4464,11 @@ begin
   pcMain.ActivePage := tsInformation;
   FilledSaveTo;
 
+  imCover.Picture.Assign(nil);
+
   with rmInformation do
   begin
-    imCover.Picture.Assign(nil);
     Clear;
-
     if (GetInfosThread <> nil) and
       ((GetInfosThread.MangaListPos > -1) or (GetInfosThread.MangaListPos = -2)) then
     begin
@@ -4477,7 +4477,6 @@ begin
     end
     else
       edURL.Text := mangaInfo.url;
-
     AddTextToInfo(RS_InfoTitle, mangaInfo.title);
     AddTextToInfo(RS_InfoAuthors, mangaInfo.authors);
     AddTextToInfo(RS_InfoArtists, mangaInfo.artists);
@@ -4487,7 +4486,9 @@ begin
       AddTextToInfo(RS_InfoStatus, cbFilterStatus.Items[i]);
     AddTextToInfo(RS_InfoSummary, mangaInfo.summary);
     CaretPos := Point(0, 0);
+    Repaint;
   end;
+
   SetLength(ChapterList, mangaInfo.chapterName.Count);
   for i := 0 to mangaInfo.chapterName.Count - 1 do
   begin
