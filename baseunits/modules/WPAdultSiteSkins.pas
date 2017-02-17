@@ -58,7 +58,7 @@ begin
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
   with MangaInfo.mangaInfo, MangaInfo.FHTTP do
   begin
-    url := RemoveURLDelim(FillHost(Module.RootURL, AURL));
+    url := MaybeFillHost(Module.RootURL, AURL);
     if GET(url) then begin
       Result := NO_ERROR;
       with TXQueryEngineHTML.Create(Document) do
@@ -87,7 +87,7 @@ begin
   begin
     PageLinks.Clear;
     PageNumber := 0;
-    if GET(RemoveURLDelim(FillHost(Module.RootURL, AURL))) then
+    if GET(MaybeFillHost(Module.RootURL, AURL)) then
     begin
       Result := True;
       with TXQueryEngineHTML.Create(Document) do
