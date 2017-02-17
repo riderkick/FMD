@@ -1865,7 +1865,7 @@ procedure TDownloadManager.SetTaskActive(const taskID: Integer);
 begin
   if not Items[taskID].Enabled then Exit;
   with Items[taskID] do
-    if not ThreadState then
+    if not (ThreadState or (Status in [STATUS_FINISH, STATUS_WAIT])) then
     begin
       Status := STATUS_WAIT;
       DownloadInfo.Status := Format('[%d/%d] %s',[CurrentDownloadChapterPtr+1,ChapterLinks.Count,RS_Waiting]);
