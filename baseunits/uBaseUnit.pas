@@ -751,6 +751,8 @@ procedure AddCommaString(var Dest: String; S: String);
 function StringOfString(c: String; l: Integer): String;
 function IncStr(const S: String; N: Integer = 1): String; overload;
 function IncStr(const I: Integer; N: Integer = 1): String; overload; inline;
+function StringIn(const AText: String; const AValues: array of String): Boolean;
+function TextIn(const AText: String; const AValues: array of String): Boolean;
 
 //get heaader value from THTTPSend.Headers
 function GetHeaderValue(const AHeaders: TStrings; HName: String): String;
@@ -1875,6 +1877,26 @@ end;
 function IncStr(const I: Integer; N: Integer): String;
 begin
   Result := IntToStr(I + N);
+end;
+
+function StringIn(const AText: String; const AValues: array of String): Boolean;
+var
+  i: Integer;
+begin
+  for i := Low(AValues) to High(AValues) do
+    if AValues[i] = AText then
+      Exit(True);
+  Result := False;
+end;
+
+function TextIn(const AText: String; const AValues: array of String): Boolean;
+var
+  i: Integer;
+begin
+  for i := Low(AValues) to High(AValues) do
+    if SameText(AValues[i], AText) then
+      Exit(True);
+  Result := False;
 end;
 
 function GetHeaderValue(const AHeaders: TStrings; HName: String): String;
