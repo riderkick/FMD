@@ -20,6 +20,7 @@
       <Linking>
         <Debugging>
           <GenerateDebugInfo Value="False"/>
+          <TrashVariables Value="True"/>
         </Debugging>
       </Linking>
     </CompilerOptions>

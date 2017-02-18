@@ -1,4 +1,4 @@
-unit Komikid;
+unit myMangaReaderCMS;
 
 {$mode objfpc}{$H+}
 
@@ -10,26 +10,18 @@ uses
 
 implementation
 
-const
-  dirurl = '/changeMangaList?type=text';
-
 function GetNameAndLink(const MangaInfo: TMangaInformation;
   const ANames, ALinks: TStringList; const AURL: String;
   const Module: TModuleContainer): Integer;
-var
-  v: IXQValue;
 begin
   Result := NET_PROBLEM;
-  if MangaInfo.FHTTP.GET(Module.RootURL + dirurl) then
+  if MangaInfo = nil then Exit(UNKNOWN_ERROR);
+  if MangaInfo.FHTTP.GET(Module.RootURL + '/changeMangaList?type=text') then
   begin
     Result := NO_ERROR;
     with TXQueryEngineHTML.Create(MangaInfo.FHTTP.Document) do
       try
-        for v in XPath('//ul[@class="manga-list"]/li/a') do
-        begin
-          ALinks.Add(v.toNode.getAttribute('href'));
-          ANames.Add(v.toString);
-        end;
+        XPathHREFAll('//li/a', ALinks, ANames);
       finally
         Free;
       end;
@@ -50,20 +42,21 @@ begin
       Result := NO_ERROR;
       with TXQueryEngineHTML.Create(Document) do
         try
-          coverLink := MaybeFillHost(Module.RootURL, XPathString('//div[@class="content"]//img/@src'));
-          if title = '' then title := XPathString('//div[@class="content"]//h5');
-          authors := XPathStringAll('//dl[@class="dl-horizontal"]/dt[starts-with(.,"Author")]/following-sibling::dd[1]/*');
-          artists := XPathString('//dl[@class="dl-horizontal"]/dt[starts-with(.,"Artist")]/following-sibling::dd[1]');
-          genres := XPathStringAll('//dl[@class="dl-horizontal"]/dt[starts-with(.,"Categories")]/following-sibling::dd[1]/*');
-          status := MangaInfoStatusIfPos(XPathString(
-            '//dl[@class="dl-horizontal"]/dt[starts-with(.,"Status")]/following-sibling::dd[1]'),
-            'Ongoing',
-            'Completed');
-          summary := XPathString('//*[@class="well"]/p');
+          coverLink := XPathString('//div[@class="boxed"]/img/@src');
+          if coverLink <> '' then coverLink := MaybeFillHost(Module.RootURL, coverLink);
+          if title = '' then title := XPathString('//h2[@class="widget-title"]');
+          if Module.Website = 'MangaDenizi' then
+            status := MangaInfoStatusIfPos(XPathString('//dt[.="Durum:"]/following-sibling::dd[1]'), 'Devam Ediyor', 'Tamamlandı')
+          else
+            status := MangaInfoStatusIfPos(XPathString('//dt[.=("Status","Estado")]/following-sibling::dd[1]'));
+          authors := XPathStringAll('//dt[.=("Author(s)","Yazar & Çizer:","Autor(es)")]/following-sibling::dd[1]/string-join(*,", ")');
+          artists := XPathStringAll('//dt[.="Artist(s)"]/following-sibling::dd[1]/string-join(*,", ")');
+          genres := XPathStringAll('//dt[.=("Categories","Kategoriler:","Categorías")]/following-sibling::dd[1]/string-join(*,", ")');
+          summary := XPathString('//div[@class="well"]/p');
           for v in XPath('//ul[@class="chapters"]/li/h5') do
           begin
             chapterLinks.Add(XPathString('a/@href', v));
-            chapterName.Add(XPathString('a||": "||em', v));
+            chapterName.Add(XPathString('normalize-space(.)', v));
           end;
           InvertStrings([chapterLinks, chapterName]);
         finally
@@ -87,7 +80,7 @@ begin
       Result := True;
       with TXQueryEngineHTML.Create(Document) do
         try
-          XPathStringAll('//*[@id="all"]/img/@data-src', PageLinks);
+          XPathStringAll('//div[@id="all"]/img/@data-src', PageLinks);
         finally
           Free;
         end;
@@ -96,15 +89,24 @@ begin
 end;
 
 procedure RegisterModule;
-begin
-  with AddModule do
+
+ function AddWebsiteModule(const AWebsite, ARootURL: String): TModuleContainer;
   begin
-    Website := 'Komikid';
-    RootURL := 'http://www.komikid.com';
-    OnGetNameAndLink := @GetNameAndLink;
-    OnGetInfo := @GetInfo;
-    OnGetPageNumber := @GetPageNumber;
+    Result := AddModule;
+    with Result do
+    begin
+      Website := AWebsite;
+      RootURL := ARootURL;
+      OnGetNameAndLink := @GetNameAndLink;
+      OnGetInfo := @GetInfo;
+      OnGetPageNumber := @GetPageNumber;
+    end;
   end;
+
+begin
+  AddWebsiteModule('Komikid', 'http://www.komikid.com');
+  AddWebsiteModule('MangaDenizi', 'http://www.mangadenizi.com');
+  AddWebsiteModule('MangaDoor', 'http://mangadoor.com');
 end;
 
 initialization
