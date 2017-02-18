@@ -10,55 +10,23 @@ uses
 
 implementation
 
-const
-  dirurl = '/mangas';
-
-function GetDirectoryPageNumber(const MangaInfo: TMangaInformation;
-  var Page: Integer; const Module: TModuleContainer): Integer;
-var
-  s: String;
-begin
-  Result := NET_PROBLEM;
-  Page := 1;
-  if MangaInfo = nil then Exit(UNKNOWN_ERROR);
-  if MangaInfo.FHTTP.GET(Module.RootURL + dirurl) then
-  begin
-    Result := NO_ERROR;
-    with TXQueryEngineHTML.Create(MangaInfo.FHTTP.Document) do
-      try
-        s := XPathString('//ul[starts-with(@class,"pagination")]/li[last()-1]/a/@href');
-        if Pos('page=', s) <> 0 then
-        begin
-          s := SeparateRight(s, 'page=');
-          Page := StrToIntDef(s, 1);
-        end;
-      finally
-        Free;
-      end;
-  end;
-end;
-
 function GetNameAndLink(const MangaInfo: TMangaInformation;
   const ANames, ALinks: TStringList; const AURL: String;
   const Module: TModuleContainer): Integer;
 var
   v: IXQValue;
-  s: String;
 begin
   Result := NET_PROBLEM;
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
-  s := Module.RootURL + dirurl;
-  if AURL <> '0' then
-    s := s + '?&page=' + IncStr(AURL);
-  if MangaInfo.FHTTP.GET(s) then
+  if MangaInfo.FHTTP.GET(Module.RootURL + '/mangas') then
   begin
     Result := NO_ERROR;
     with TXQueryEngineHTML.Create(MangaInfo.FHTTP.Document) do
       try
-        for v in XPath('//dd[@class="small-dd"]/a') do
+        for v in XPath('//div[@class="row"]//a[./div[@class="manga-cover-container"]]') do
         begin
           ALinks.Add(v.toNode.getAttribute('href'));
-          ANames.Add(v.toString);
+          ANames.Add(XPathString('div/span[@class="info-item info-title"]', v));
         end;
       finally
         Free;
@@ -160,7 +128,6 @@ begin
   begin
     Website := 'GManga';
     RootURL := 'http://gmanga.me';
-    OnGetDirectoryPageNumber := @GetDirectoryPageNumber;
     OnGetNameAndLink := @GetNameAndLink;
     OnGetInfo := @GetInfo;
     OnGetPageNumber := @GetPageNumber;
