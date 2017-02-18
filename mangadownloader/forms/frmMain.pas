@@ -4467,27 +4467,29 @@ begin
   imCover.Picture.Assign(nil);
 
   with rmInformation do
-  begin
-    Clear;
-    if (GetInfosThread <> nil) and
-      ((GetInfosThread.MangaListPos > -1) or (GetInfosThread.MangaListPos = -2)) then
-    begin
-      mangaInfo.title := title;
-      mangaInfo.link := link;
-    end
-    else
-      edURL.Text := mangaInfo.url;
-    AddTextToInfo(RS_InfoTitle, mangaInfo.title);
-    AddTextToInfo(RS_InfoAuthors, mangaInfo.authors);
-    AddTextToInfo(RS_InfoArtists, mangaInfo.artists);
-    AddTextToInfo(RS_InfoGenres, mangaInfo.genres);
-    i := StrToIntDef(mangaInfo.status, -1);
-    if (i > -1) and (i < cbFilterStatus.Items.Count) then
-      AddTextToInfo(RS_InfoStatus, cbFilterStatus.Items[i]);
-    AddTextToInfo(RS_InfoSummary, mangaInfo.summary);
-    CaretPos := Point(0, 0);
-    Repaint;
-  end;
+    try
+      Lines.BeginUpdate;
+      Lines.Clear;
+      if (GetInfosThread <> nil) and
+        ((GetInfosThread.MangaListPos > -1) or (GetInfosThread.MangaListPos = -2)) then
+      begin
+        mangaInfo.title := title;
+        mangaInfo.link := link;
+      end
+      else
+        edURL.Text := mangaInfo.url;
+      AddTextToInfo(RS_InfoTitle, mangaInfo.title);
+      AddTextToInfo(RS_InfoAuthors, mangaInfo.authors);
+      AddTextToInfo(RS_InfoArtists, mangaInfo.artists);
+      AddTextToInfo(RS_InfoGenres, mangaInfo.genres);
+      i := StrToIntDef(mangaInfo.status, -1);
+      if (i > -1) and (i < cbFilterStatus.Items.Count) then
+        AddTextToInfo(RS_InfoStatus, cbFilterStatus.Items[i]);
+      AddTextToInfo(RS_InfoSummary, mangaInfo.summary);
+      CaretPos := Point(0, 0);
+    finally
+      Lines.EndUpdate;
+    end;
 
   SetLength(ChapterList, mangaInfo.chapterName.Count);
   for i := 0 to mangaInfo.chapterName.Count - 1 do
