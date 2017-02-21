@@ -4,6 +4,13 @@ Project page: https://github.com/riderkick/FMD
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.92.0 (21-02-2017)
+[+] Added MangaDoor[ES]
+[+] Added HentaiRead[H]
+[*] Replace MangaHen with MangaSpy
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.91.0...0.9.92.0
+
 0.9.91.0 (16-02-2017)
 [*] E-Hentai: fixed loading "Content Warning"
 Full changes: https://github.com/riderkick/FMD/compare/0.9.90.0...0.9.91.0
