@@ -108,10 +108,9 @@ begin
                 chapterName.Add(s);
               end;
               if Thread.IsTerminated then Break;
-              s := XPathString('//*[@class="pgg"]//*[./a[@class="sel"]]/following-sibling::*[./a]/a/@href');
-              if s <> '' then
-                Break
-              else if GET(MaybeFillHost(Module.RootURL, s)) then
+              s := Trim(XPathString('//*[@class="pgg"]//*[./a[@class="sel"]]/following-sibling::*[./a]/a/@href'));
+              if s = '' then Break;
+              if GET(MaybeFillHost(Module.RootURL, s)) then
                 ParseHTML(Document)
               else
                 Break;
