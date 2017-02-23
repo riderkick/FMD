@@ -775,6 +775,7 @@ procedure GetParams(var output: TCardinalList; input: String); overload;
 procedure GetParams(var output: TList; input: String); overload;
 function ExtractParam(const output: TStrings; input, sep: String;
   WhiteSp: Boolean = True): Integer;
+function GetParams(const input: String): String; overload;
 
 function RemoveDuplicateNumbersInString(const AString: String): String;
 // Set param from input
@@ -2332,6 +2333,11 @@ begin
   until l = 0;
   if Length(input) > 0 then
     output.Add(input);
+end;
+
+function GetParams(const input: String): String;
+begin
+  Result := StringReplace(input, SEPERATOR, LineEnding, [rfReplaceAll]);
 end;
 
 function RemoveDuplicateNumbersInString(const AString: String): String;
