@@ -13,7 +13,7 @@ interface
 uses
   Classes, SysUtils, fgl, Dialogs, IniFiles, lazutf8classes, LazFileUtils,
   uBaseUnit, uData, uDownloadsManager, WebsiteModules,
-  FMDOptions, httpsendthread, SimpleException;
+  FMDOptions, httpsendthread, FavoritesDB, SimpleException;
 
 type
   TFavoriteManager = class;
@@ -85,13 +85,14 @@ type
   TFavoriteManager = class
   private
     CS_Favorites: TRTLCriticalSection;
+    FFavoritesDB: TFavoritesDB;
     FSortColumn: Integer;
     FSortDirection, FIsAuto, FIsRunning: Boolean;
     function GetFavoritesCount: Integer; inline;
     function GetFavorite(const Index: Integer): TFavoriteContainer;
+    function ConvertToDB: Boolean;
   public
     Items: TFavoriteContainers;
-    favoritesFile: TIniFileRun;
     taskthread: TFavoriteTask;
     DLManager: TDownloadManager;
     OnUpdateFavorite: procedure of object;
@@ -106,21 +107,21 @@ type
 
     // Show notification form after checking completed
     procedure ShowResult;
-    // Return true if a manga exist in FFavorites
+    // Return true if a manga exist in favorites
     function IsMangaExist(const ATitle, AWebsite: String): Boolean;
     function IsMangaExistURL(const AWebsite, AURL: String): Boolean;
     // Add new manga to the list
     procedure Add(const ATitle, ACurrentChapter, ADownloadedChapterList, AWebsite, ASaveTo, ALink: String);
-    // Merge manga information with a title that already exist in FFavorites
+    // Merge manga information with a title that already exist in favorites
     procedure AddMerge(const ATitle, ACurrentChapter, ADownloadedChapterList, AWebsite,
       ASaveTo, ALink: String);
-    // Merge a FFavorites.ini with another FFavorites.ini
+    // Merge a favorites.ini with another favorites.ini
     procedure MergeWith(const APath: String);
     // Remove a manga from FFavorites
     procedure Remove(const Pos: Integer; const isBackup: Boolean = True);
-    // Restore information from FFavorites.ini
+    // Restore information from favorites.db
     procedure Restore;
-    // Backup to FFavorites.ini
+    // Backup to favorites.db
     procedure Backup;
     // Add FFavorites downloadedchapterlist
     procedure AddToDownloadedChaptersList(const AWebsite, ALink, AValue: String);
@@ -484,21 +485,55 @@ begin
   Result := Items[Index];
 end;
 
+function TFavoriteManager.ConvertToDB: Boolean;
+var
+  i: Integer;
+  s: String;
+begin
+  Result := False;
+  if not FileExistsUTF8(FAVORITES_FILE) then Exit;
+  with TIniFile.Create(FAVORITES_FILE) do
+  try
+    i := ReadInteger('general', 'NumberOfFavorites', 0);
+    if i = 0 then Exit;
+    for i := 0 to i - 1 do
+    begin
+      s := IntToStr(i);
+      FFavoritesDB.Add(
+        i,
+        ReadString(s, 'Website', ''),
+        ReadString(s, 'Link', ''),
+        ReadString(s, 'Title', ''),
+        ReadString(s, 'CurrentChapter', ''),
+        ReadString(s, 'DownloadedChapterList', ''),
+        ReadString(s, 'SaveTo', '')
+      );
+    end;
+    FFavoritesDB.Commit;
+    Result := True;
+  finally
+    Free;
+  end;
+  if Result then
+    DeleteFileUTF8(FAVORITES_FILE);
+end;
+
 constructor TFavoriteManager.Create;
 begin
   inherited Create;
   ForceDirectoriesUTF8(WORK_FOLDER);
   InitCriticalSection(CS_Favorites);
   isRunning := False;
-  favoritesFile := TIniFileRun.Create(FAVORITES_FILE);
-  Items := TFavoriteContainers.Create;
+  Items := TFavoriteContainers.Create;;
+  FFavoritesDB := TFavoritesDB.Create(FAVORITESDB_FILE);
+  FFavoritesDB.Open(False);
+  ConvertToDB;
   Restore;
 end;
 
 destructor TFavoriteManager.Destroy;
 begin
   Backup;
-  favoritesFile.Free;
   if Items.Count > 0 then begin
     StopChekForNewChapter;
     while Items.Count > 0 do begin
@@ -507,6 +542,7 @@ begin
     end;
   end;
   Items.Free;
+  FFavoritesDB.Free;
   DoneCriticalsection(CS_Favorites);
   inherited Destroy;
 end;
@@ -912,6 +948,8 @@ begin
   begin
     EnterCriticalsection(CS_Favorites);
     try
+      with Items[Pos].FavoriteInfo do
+        FFavoritesDB.Delete(Website, Link);
       Items[Pos].Free;
       Items.Delete(Pos);
       if isBackup then
@@ -923,65 +961,53 @@ begin
 end;
 
 procedure TFavoriteManager.Restore;
-var
-  i, c: Integer;
-  s: TStringList;
 begin
-  c := favoritesFile.ReadInteger('general', 'NumberOfFavorites', 0);
-  if c = 0 then Exit;
-  s := TStringList.Create;
-  try
-    s.Sorted := True;
-    s.Duplicates := dupIgnore;
-    for i := 0 to c - 1 do begin
-      Items.Add(TFavoriteContainer.Create);
-      with Items.Last do begin
-        Manager := Self;
-        with favoritesFile, FavoriteInfo do begin
-          currentChapter := ReadString(IntToStr(i), 'CurrentChapter', '0');
-          Title := ReadString(IntToStr(i), 'Title', '');
-          Website := ReadString(IntToStr(i), 'Website', '');
-          SaveTo := ReadString(IntToStr(i), 'SaveTo', '');
-          Link := ReadString(IntToStr(i), 'Link', '');
-          Website := Website;
-          Status := STATUS_IDLE;
-
-          downloadedChapterList := ReadString(IntToStr(i), 'DownloadedChapterList', '');
-          // remove duplicate
-          GetParams(s, DownloadedChapterList);
-          DownloadedChapterList := SetParams(s);
-          s.Clear;
+  if not FFavoritesDB.Connection.Connected then Exit;
+  if FFavoritesDB.OpenTable then
+    try
+      with FFavoritesDB.Table do
+      begin
+        First;
+        while not EOF do
+        begin
+          Items.Add(TFavoriteContainer.Create);
+          with Items.Last, FavoriteInfo do
+            begin
+              Manager := Self;
+              Status := STATUS_IDLE;
+              Website := Fields[2].AsString;
+              Link := Fields[3].AsString;
+              Title := Fields[4].AsString;
+              CurrentChapter := Fields[5].AsString;
+              DownloadedChapterList := Fields[6].AsString;
+              SaveTo := Fields[7].AsString;
+            end;
+          Next;
         end;
       end;
+    finally
+      FFavoritesDB.CloseTable;
     end;
-  finally
-    s.Free;
-  end;
 end;
 
 procedure TFavoriteManager.Backup;
 var
   i: Integer;
 begin
-  with favoritesFile do begin
-    // delete old info
-    if ReadInteger('general', 'NumberOfFavorites', 0) > 0 then
-      for i := 0 to ReadInteger('general', 'NumberOfFavorites', 0) - 1 do
-        EraseSection(IntToStr(i));
-
-    WriteInteger('general', 'NumberOfFavorites', Items.Count);
-    if Items.Count > 0 then
-      for i := 0 to Items.Count - 1 do
-        with Items[i].FavoriteInfo do begin
-          WriteString(IntToStr(i), 'Title', Title);
-          WriteString(IntToStr(i), 'CurrentChapter', currentChapter);
-          WriteString(IntToStr(i), 'DownloadedChapterList', downloadedChapterList);
-          WriteString(IntToStr(i), 'Website', Website);
-          WriteString(IntToStr(i), 'SaveTo', SaveTo);
-          WriteString(IntToStr(i), 'Link', Link);
-        end;
-    UpdateFile;
-  end;
+  if not FFavoritesDB.Connection.Connected then Exit;
+  if Items.Count > 0 then
+    for i := 0 to Items.Count - 1 do
+      with Items[i].FavoriteInfo do
+        FFavoritesDB.Add(
+          i,
+          Website,
+          Link,
+          Title,
+          CurrentChapter,
+          DownloadedChapterList,
+          SaveTo
+        );
+    FFavoritesDB.Commit;
 end;
 
 procedure TFavoriteManager.AddToDownloadedChaptersList(const AWebsite, ALink, AValue: String);

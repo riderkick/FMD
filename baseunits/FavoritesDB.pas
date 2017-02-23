@@ -13,76 +13,108 @@ type
 
   TFavoritesDB = class(TSQliteData)
   private
+    FCommitCount: Integer;
+    FAutoCommitCount: Integer;
+    procedure SetAutoCommitCount(AValue: Integer);
   public
-    constructor Create;
-    function Add(const AWebsiteLink: string; const AOrder: Integer;
-      const AWebsite, ALink, ATitle, ASaveTo, ACurrentChapter, ADownloadedChapterList: string): Boolean;
-    procedure Delete(const AWebsiteLink: string);
+    constructor Create(const AFilename: String);
+    function Add(const AOrder: Integer; const AWebsite, ALink,
+      ATitle, ACurrentChapter, ADownloadedChapterList, ASaveTo: String): Boolean;
+    procedure Delete(const AWebsite, ALink: String);
+    procedure Commit; override;
+    property AutoCommitCount: Integer read FAutoCommitCount write SetAutoCommitCount;
   end;
 
 implementation
 
 { TFavoritesDB }
 
-constructor TFavoritesDB.Create;
+procedure TFavoritesDB.SetAutoCommitCount(AValue: Integer);
+begin
+  if FAutoCommitCount = AValue then Exit;
+  FAutoCommitCount := AValue;
+end;
+
+constructor TFavoritesDB.Create(const AFilename: String);
 begin
   inherited Create;
+  FCommitCount := 0;
+  FAutoCommitCount := 500;
+  Filename := AFilename;
   TableName := 'favorites';
   CreateParams :=
+    '"order" INTEGER,' +
     '"websitelink" VARCHAR(3000) NOT NULL PRIMARY KEY,' +
-    '"order" INTEGER',
-    '"website" TEXT',
-    '"link" TEXT',
-    '"title" TEXT',
-    '"saveto" TEXT',
-    '"currentchapter" TEXT',
-    '"downloadedchapterlist" TEXT';
+    '"website" TEXT,' +
+    '"link" TEXT,' +
+    '"title" TEXT,' +
+    '"currentchapter" TEXT,' +
+    '"downloadedchapterlist" TEXT,' +
+    '"saveto" TEXT';
   SelectParams :=
-    'SELECT * FROM "favorites" ORDER BY "order"');
+    'SELECT * FROM "favorites" ORDER BY "order"';
   {
     CREATE TABLE "favorites" (
-      "websitelink" VARCHAR(3000) NOT NULL PRIMARY KEY,
       "order" TEXT,
+      "websitelink" VARCHAR(3000) NOT NULL PRIMARY KEY,
       "website" TEXT,
       "link" TEXT,
       "title" TEXT,
-      "saveto" TEXT,
       "currentchapter" TEXT,
-      "downloadedchapterlist" TEXT
+      "downloadedchapterlist" TEXT,
+      "saveto" TEXT
       );
   }
 end;
 
-function TFavoritesDB.Add(const AWebsiteLink: string; const AOrder: Integer;
-  const AWebsite, ALink, ATitle, ASaveTo, ACurrentChapter, ADownloadedChapterList: string): Boolean;
+function TFavoritesDB.Add(const AOrder: Integer; const AWebsite, ALink, ATitle,
+  ACurrentChapter, ADownloadedChapterList, ASaveTo: String): Boolean;
 begin
   Result := False;
-  if AWebsiteLink = '' then Exit;
+  if (AWebsite = '') or (ALink = '') then Exit;
   if not Connection.Connected then Exit;
   try
     Connection.ExecuteDirect('INSERT OR REPLACE INTO "favorites" ('+
-      '"websitelink", "order", "website", "link", "title", "saveto", "currentchapter", "downloadedchapterlist")'+
+      '"order","websitelink","website","link","title","currentchapter","downloadedchapterlist","saveto")'+
       ' VALUES ("' +
-      AWebsiteLink + '","' +
       IntToStr(AOrder) + '","' +
+      AWebsite + ALink + '","' +
       AWebsite + '","' +
       ALink + '","' +
       ATitle + '","' +
-      ASaveTo + '","' +
       ACurrentChapter  + '","' +
-      ADownloadedChapterList + '")');
+      ADownloadedChapterList + '","' +
+      ASaveTo + '")');
     Result := True;
+    Inc(FCommitCount);
+    if FCommitCount >= FAutoCommitCount then
+      Commit;
   except
   end;
 end;
 
-procedure TFavoritesDB.Delete(const AWebsiteLink: string);
+procedure TFavoritesDB.Delete(const AWebsite, ALink: String);
 begin
-  if AWebsiteLink = '' then Exit;
+  if (AWebsite = '') or (ALink = '') then Exit;
   if not Connection.Connected then Exit;
   try
-    Connection.ExecuteDirect('DELETE FROM "favorites" WHERE "AWebsiteLink"="' + AWebsiteLink + '"');
+    Connection.ExecuteDirect(
+      'DELETE FROM "favorites" WHERE "websitelink"="' + AWebsite + ALink + '"');
+    Inc(FCommitCount);
+    if FCommitCount >= FAutoCommitCount then
+      Commit;
   except
+  end;
+end;
+
+procedure TFavoritesDB.Commit;
+begin
+  if not Connection.Connected then Exit;
+  try
+    Transaction.Commit;
+    FCommitCount := 0;
+  except
+    Transaction.Rollback;
   end;
 end;
 
