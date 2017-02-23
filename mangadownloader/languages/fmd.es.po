@@ -651,6 +651,10 @@ msgstr "HTTP"
 msgid "Remove manga name from chapter"
 msgstr "Remover Nombre del Manga del Capitulo"
 
+#: tmainform.cboptionshowballoonhint.caption
+msgid "Show balloon hint"
+msgstr ""
+
 #: tmainform.cboptionshowdeletetaskdialog.caption
 msgid "Delete task/favorite"
 msgstr "Borrar Tarea/Favorito"

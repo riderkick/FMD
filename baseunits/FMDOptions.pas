@@ -91,6 +91,7 @@ var
 
   OptionLetFMDDo: TFMDDo = DO_NOTHING;
 
+  // saveto
   OptionChangeUnicodeCharacter: Boolean = False;
   OptionChangeUnicodeCharacterStr: String = '_';
   OptionGenerateMangaFolder: Boolean = False;
@@ -105,13 +106,14 @@ var
   OptionConvertDigitChapterLength: Integer;
 
   OptionPDFQuality: Cardinal = 95;
-  OptionUpdateListNoMangaInfo: Boolean = False;
-  OptionUpdateListRemoveDuplicateLocalData: Boolean = False;
 
   OptionMaxThreads: Integer = 1;
 
+  // view
   OptionEnableLoadCover: Boolean = False;
+  OptionShowBalloonHint: Boolean = True;
 
+  // updates
   OptionAutoCheckLatestVersion: Boolean = True;
   OptionAutoCheckFavStartup: Boolean = True;
   OptionAutoCheckFavInterval: Boolean = True;
@@ -119,6 +121,8 @@ var
   OptionNewMangaTime: Cardinal = 1;
   OptionAutoCheckFavDownload: Boolean = False;
   OptionAutoCheckFavRemoveCompletedManga: Boolean = False;
+  OptionUpdateListNoMangaInfo: Boolean = False;
+  OptionUpdateListRemoveDuplicateLocalData: Boolean = False;
 
   OptionHTTPUseGzip: Boolean = True;
 

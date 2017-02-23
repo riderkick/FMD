@@ -86,6 +86,7 @@ type
     FIsForDelete: Boolean;
     procedure SetCurrentWorkingDir(AValue: String);
     procedure SetIsForDelete(AValue: Boolean);
+    procedure SyncShowBallonHint;
   protected
     procedure CheckOut;
     procedure Execute; override;
@@ -93,7 +94,7 @@ type
     procedure Compress;
     procedure SyncStop;
     // show notification when download completed
-    procedure SyncShowBaloon;
+    procedure ShowBalloonHint;
   public
     //additional parameter
     httpCookies: String;
@@ -870,28 +871,10 @@ begin
   Container.Manager.CheckAndActiveTask(FCheckAndActiveTaskFlag);
 end;
 
-procedure TTaskThread.SyncShowBaloon;
+procedure TTaskThread.ShowBalloonHint;
 begin
-  with MainForm.TrayIcon, Container.DownloadInfo do
-  begin
-    if Container.Status = STATUS_FAILED then
-    begin
-      BalloonFlags := bfError;
-      BalloonHint := QuotedStrd(Title);
-      if Status = '' then
-        BalloonHint := BalloonHint + ' - ' + RS_Failed
-      else
-        BalloonHint := BalloonHint + LineEnding + Status;
-    end
-    else
-    if Container.Status = STATUS_FINISH then
-    begin
-      BalloonFlags := bfInfo;
-      BalloonHint :=
-        '"' + Container.DownloadInfo.title + '" - ' + RS_Finish;
-    end;
-    ShowBalloonHint;
-  end;
+  if OptionShowBalloonHint then
+    Synchronize(SyncShowBallonHint);
 end;
 
 function TDownloadThread.DownloadImage: Boolean;
@@ -995,6 +978,30 @@ procedure TTaskThread.SetIsForDelete(AValue: Boolean);
 begin
   if FIsForDelete = AValue then Exit;
   FIsForDelete := AValue;
+end;
+
+procedure TTaskThread.SyncShowBallonHint;
+begin
+  with MainForm.TrayIcon, Container.DownloadInfo do
+  begin
+    if Container.Status = STATUS_FAILED then
+    begin
+      BalloonFlags := bfError;
+      BalloonHint := QuotedStrd(Title);
+      if Status = '' then
+        BalloonHint := BalloonHint + ' - ' + RS_Failed
+      else
+        BalloonHint := BalloonHint + LineEnding + Status;
+    end
+    else
+    if Container.Status = STATUS_FINISH then
+    begin
+      BalloonFlags := bfInfo;
+      BalloonHint :=
+        '"' + Container.DownloadInfo.title + '" - ' + RS_Finish;
+    end;
+    ShowBalloonHint;
+  end;
 end;
 
 procedure TTaskThread.CheckOut;
@@ -1159,7 +1166,7 @@ begin
           Container.CurrentDownloadChapterPtr,
           Container.ChapterLinks.Count,
           RS_FailedToCreateDir]);
-        SyncShowBaloon;
+        ShowBalloonHint;
         Exit;
       end;
 
@@ -1346,7 +1353,7 @@ begin
       Container.DownloadInfo.Status := Format('[%d/%d] %s',[Container.ChapterLinks.Count,Container.ChapterLinks.Count,RS_Finish]);
       Container.DownloadInfo.Progress := '';
     end;
-    Synchronize(SyncShowBaloon);
+    ShowBalloonHint;
   except
     on E: Exception do
       MainForm.ExceptionHandler(Self, E);
