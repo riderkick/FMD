@@ -38,10 +38,8 @@ type
     procedure SetOnError(AValue: TExceptionEvent);
     procedure SetSelectParams(AValue: String);
   protected
+    function OpenDB: Boolean; virtual;
     function CreateDB: Boolean; virtual;
-    function CreateDBTable: Boolean; virtual;
-    function InternalOpenDB: Boolean; virtual;
-    function OpenDBTable: Boolean; virtual;
     function ConvertNewTableIF: Boolean; virtual;
     procedure DoConvertNewTable;
     procedure GetRecordCount; virtual;
@@ -51,9 +49,13 @@ type
   public
     constructor Create;
     destructor Destroy; override;
-    function Open: Boolean;
+    function Open(const AOpenTable: Boolean = True): Boolean;
+    function OpenTable: Boolean; virtual;
     procedure Close;
+    procedure CloseTable;
     procedure Refresh(RecheckDataCount: Boolean = False);
+    procedure Commit; virtual;
+    procedure CommitRetaining; virtual;
     procedure Save;
     function Connected: Boolean; inline;
     property Connection: TSQLite3ConnectionH read FConn;
@@ -68,9 +70,11 @@ type
     property OnError: TExceptionEvent read FOnError write SetOnError;
   end;
 
+  function QuotedStrd(const S: string): string; inline;
+
 implementation
 
-function QuotedStrd(const S: String): String;
+function QuotedStrd(const S: string): string;
 begin
   Result := AnsiQuotedStr(S, '"');
 end;
@@ -114,33 +118,7 @@ begin
   FSelectParams := AValue;
 end;
 
-function TSQliteData.CreateDB: Boolean;
-begin
-  Result := False;
-  if FFilename = '' then Exit;
-  if FileExistsUTF8(ffilename) then DeleteFileUTF8(FFilename);
-  Result := CreateDBTable;
-end;
-
-function TSQliteData.CreateDBTable: Boolean;
-begin
-  Result := False;
-  if FTableName = '' then Exit;
-  if FCreateParams = '' then Exit;
-  if InternalOpenDB = False then Exit;
-  try
-    FConn.ExecuteDirect('DROP TABLE IF EXISTS ' + QuotedStrd(FTableName));
-    FConn.ExecuteDirect('CREATE TABLE ' + QuotedStrd(FTableName) + #13#10 +
-      '(' + FCreateParams + ')');
-    FTrans.Commit;
-    Result := OpenDBTable;
-  except
-    on E: Exception do
-      DoOnError(E);
-  end;
-end;
-
-function TSQliteData.InternalOpenDB: Boolean;
+function TSQliteData.OpenDB: Boolean;
 begin
   Result := False;
   if FFilename = '' then Exit;
@@ -148,30 +126,25 @@ begin
     FConn.DatabaseName := FFilename;
     FConn.Connected := True;
     FTrans.Active := True;
-    Result := FConn.Connected;
-  finally
-    Result := FConn.Connected;
+  except
   end;
+  Result := FConn.Connected;
 end;
 
-function TSQliteData.OpenDBTable: Boolean;
+function TSQliteData.CreateDB: Boolean;
 begin
   Result := False;
-  if InternalOpenDB = False then Exit;
+  if (FTableName = '') or (FCreateParams = '') then Exit;
+  if not FConn.Connected then
+    if not OpenDB then Exit;
   try
-    if FQuery.Active then FQuery.Close;
-    if FSelectParams <> '' then
-      FQuery.SQL.Text := FSelectParams
-    else
-      FQuery.SQL.Text := 'SELECT * FROM ' + QuotedStrd(FTableName);
-    FQuery.Open;
-    GetRecordCount;
+    FConn.ExecuteDirect('DROP TABLE IF EXISTS ' + QuotedStrd(FTableName));
+    FConn.ExecuteDirect('CREATE TABLE ' + QuotedStrd(FTableName) + #13#10 +
+      '(' + FCreateParams + ')');
+    FTrans.Commit;
+    Result := True;
   except
-    on E: Exception do
-      DoOnError(E);
   end;
-  Result := FQuery.Active;
-  if Result then DoConvertNewTable;
 end;
 
 function TSQliteData.ConvertNewTableIF: Boolean;
@@ -208,7 +181,8 @@ end;
 
 procedure TSQliteData.GetRecordCount;
 begin
-  if FQuery.Active then begin
+  if FQuery.Active then
+  begin
     FQuery.Last;
     FRecordCount := FQuery.RecordCount;
     FQuery.Refresh;
@@ -231,7 +205,7 @@ procedure TSQliteData.Vacuum;
 var
   qactive: Boolean;
 begin
-  if FConn.Connected = False then Exit;
+  if not FConn.Connected then Exit;
   try
     qactive := FQuery.Active;
     if FQuery.Active then FQuery.Close;
@@ -274,15 +248,36 @@ begin
   inherited Destroy;
 end;
 
-function TSQliteData.Open: Boolean;
+function TSQliteData.Open(const AOpenTable: Boolean): Boolean;
 begin
   Result := False;
-  if FFilename = '' then Exit;
-  if FCreateParams = '' then Exit;
-  if not FileExistsUTF8(FFilename) then
-    Result := CreateDBTable
+  if (FFilename = '') or (FCreateParams = '') then Exit;
+  if FileExistsUTF8(FFilename) then
+    Result := OpenDB
   else
-    Result := OpenDBTable;
+    Result := CreateDB;
+  if Result and AOpenTable then
+    Result := OpenTable;
+end;
+
+function TSQliteData.OpenTable: Boolean;
+begin
+  Result := False;
+  if not FConn.Connected then Exit;
+  try
+    if FQuery.Active then FQuery.Close;
+    if FSelectParams <> '' then
+      FQuery.SQL.Text := FSelectParams
+    else
+      FQuery.SQL.Text := 'SELECT * FROM ' + QuotedStrd(FTableName);
+    FQuery.Open;
+    GetRecordCount;
+  except
+    on E: Exception do
+      DoOnError(E);
+  end;
+  Result := FQuery.Active;
+  if Result then DoConvertNewTable;
 end;
 
 procedure TSQliteData.Close;
@@ -291,9 +286,21 @@ begin
   try
     Save;
     Vacuum;
-    FQuery.Close;
+    CloseTable;
     FTrans.Active := False;
     FConn.Close;
+  except
+    on E: Exception do
+      DoOnError(E);
+  end;
+end;
+
+procedure TSQliteData.CloseTable;
+begin
+  if not FConn.Connected then Exit;
+  if not FQuery.Active then Exit;
+  try
+    FQuery.Close;
     FRecordCount := 0;
   except
     on E: Exception do
@@ -312,11 +319,31 @@ begin
     GetRecordCount;
 end;
 
+procedure TSQliteData.Commit;
+begin
+  if not FConn.Connected then Exit;
+  try
+    Transaction.Commit;
+  except
+    Transaction.Rollback;
+  end;
+end;
+
+procedure TSQliteData.CommitRetaining;
+begin
+  if not FConn.Connected then Exit;
+  try
+    Transaction.CommitRetaining;
+  except
+    Transaction.RollbackRetaining;
+  end;
+end;
+
 procedure TSQliteData.Save;
 var
   qactive: Boolean;
 begin
-  if FConn.Connected = False then Exit;
+  if not FConn.Connected then Exit;
   try
     qactive := FQuery.Active;
     if FQuery.Active then
