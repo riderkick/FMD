@@ -29,12 +29,14 @@ type
     FFilename: String;
     FTableName: String;
     FCreateParams: String;
+    FSelectParams: String;
     FRecordCount: Integer;
     procedure DoOnError(E: Exception);
     function GetAutoApplyUpdates: Boolean;
     procedure SetAutoApplyUpdates(AValue: Boolean);
     procedure SetCreateParams(AValue: String);
     procedure SetOnError(AValue: TExceptionEvent);
+    procedure SetSelectParams(AValue: String);
   protected
     function CreateDB: Boolean; virtual;
     function CreateDBTable: Boolean; virtual;
@@ -53,12 +55,14 @@ type
     procedure Close;
     procedure Refresh(RecheckDataCount: Boolean = False);
     procedure Save;
-    function Connected: Boolean;
+    function Connected: Boolean; inline;
     property Connection: TSQLite3ConnectionH read FConn;
+    property Transaction: TSQLTransaction read FTrans;
     property Table: TSQLQuery read FQuery;
     property Filename: String read FFilename write FFilename;
     property TableName: String read FTableName write FTableName;
     property CreateParams: String read FCreateParams write SetCreateParams;
+    property SelectParams: String read FSelectParams write SetSelectParams;
     property RecordCount: Integer read FRecordCount;
     property AutoApplyUpdates: Boolean read GetAutoApplyUpdates write SetAutoApplyUpdates;
     property OnError: TExceptionEvent read FOnError write SetOnError;
@@ -95,8 +99,7 @@ end;
 procedure TSQliteData.SetCreateParams(AValue: String);
 begin
   if FCreateParams = AValue then Exit;
-  FCreateParams := Trim(AValue);
-  FCreateParams := TrimSet(FCreateParams, ['(', ')', ';']);
+  FCreateParams := TrimSet(Trim(AValue), ['(', ')', ';']);
 end;
 
 procedure TSQliteData.SetOnError(AValue: TExceptionEvent);
@@ -105,12 +108,18 @@ begin
   FOnError := AValue;
 end;
 
+procedure TSQliteData.SetSelectParams(AValue: String);
+begin
+  if FSelectParams = AValue then Exit;
+  FSelectParams := AValue;
+end;
+
 function TSQliteData.CreateDB: Boolean;
 begin
   Result := False;
   if FFilename = '' then Exit;
   if FileExistsUTF8(ffilename) then DeleteFileUTF8(FFilename);
-  CreateDBTable;
+  Result := CreateDBTable;
 end;
 
 function TSQliteData.CreateDBTable: Boolean;
@@ -151,7 +160,10 @@ begin
   if InternalOpenDB = False then Exit;
   try
     if FQuery.Active then FQuery.Close;
-    FQuery.SQL.Text := 'SELECT * FROM ' + QuotedStrd(FTableName);
+    if FSelectParams <> '' then
+      FQuery.SQL.Text := FSelectParams
+    else
+      FQuery.SQL.Text := 'SELECT * FROM ' + QuotedStrd(FTableName);
     FQuery.Open;
     GetRecordCount;
   except
