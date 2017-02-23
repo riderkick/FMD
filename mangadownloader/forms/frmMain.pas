@@ -3856,6 +3856,7 @@ procedure TMainForm.vtDownloadHeaderClick(Sender: TVTHeader;
   Column: TColumnIndex; Button: TMouseButton; Shift: TShiftState; X, Y: Integer
   );
 begin
+  if Button <> mbLeft then Exit;
   if DLManager.Count < 2 then Exit;
   if (Column = 2) or (Column = 3) then Exit;
   if DLManager.SortColumn = Column then
@@ -4036,6 +4037,7 @@ procedure TMainForm.vtFavoritesHeaderClick(Sender: TVTHeader;
   Column: TColumnIndex; Button: TMouseButton; Shift: TShiftState; X, Y: Integer
   );
 begin
+  if Button <> mbLeft then Exit;
   if FavoriteManager.isRunning then Exit;
   if FavoriteManager.Count < 2 then Exit;
   if Column = 0 then Exit;
