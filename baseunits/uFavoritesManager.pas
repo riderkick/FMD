@@ -233,7 +233,7 @@ begin
           try
             DLChapters := TStringList.Create;
             DLChapters.Sorted := False;
-            GetParams(DLChapters, FavoriteInfo.DownloadedChapterList);
+            DLChapters.Text := FavoriteInfo.DownloadedChapterList;
             DLChapters.Sorted := True;
             for i := 0 to NewMangaInfo.chapterLinks.Count - 1 do
               if DLChapters.IndexOf(NewMangaInfo.chapterLinks[i]) = -1 then
@@ -505,7 +505,7 @@ begin
         ReadString(s, 'Link', ''),
         ReadString(s, 'Title', ''),
         ReadString(s, 'CurrentChapter', ''),
-        ReadString(s, 'DownloadedChapterList', ''),
+        GetParams(ReadString(s, 'DownloadedChapterList', '')),
         ReadString(s, 'SaveTo', '')
       );
     end;
@@ -778,7 +778,7 @@ begin
                     end;
                   end;
                   // add to downloaded chapter list
-                  FavoriteInfo.downloadedChapterList += SetParams(NewMangaInfo.chapterLinks);
+                  FavoriteInfo.downloadedChapterList := NewMangaInfo.chapterLinks.Text;
                   // add to downloaded chapter list in downloadmanager
                   DLManager.DownloadedChapters.Chapters[FavoriteInfo.Website + FavoriteInfo.Link] :=
                     NewMangaInfo.chapterLinks.Text;
@@ -1014,15 +1014,13 @@ procedure TFavoriteManager.AddToDownloadedChaptersList(const AWebsite, ALink, AV
 var
   st: TStringList;
 begin
-  if (AWebsite <> '') and (ALink <> '') and (AValue <> '') then
-  begin
-    st := TStringList.Create;
-    try
-      GetParams(st, AValue);
-      AddToDownloadedChaptersList(AWebsite, ALink, st);
-    finally
-      St.Free;
-    end;
+  if (AWebsite = '') or (ALink = '') or (AValue = '') then Exit;
+  st := TStringList.Create;
+  try
+    st.Text := AValue;
+    AddToDownloadedChaptersList(AWebsite, ALink, st);
+  finally
+    st.Free;
   end;
 end;
 
@@ -1047,7 +1045,7 @@ begin
             if SameText(AWebsite, Website) and SameText(Alink, Link) then
             begin
               p := i;
-              GetParams(dlCh, downloadedChapterList);
+              dlCh.Text := DownloadedChapterList;
               Break;
             end;
 
@@ -1069,7 +1067,7 @@ begin
 
         //merge the links
         with Items[p].FavoriteInfo do begin
-          downloadedChapterList := downloadedChapterList + SetParams(ch);
+          DownloadedChapterList += ch.Text;
           currentChapter := IntToStr(dlCh.Count + ch.Count);
         end;
         MainForm.UpdateVtFavorites;
