@@ -710,6 +710,8 @@ procedure InvertStrings(const St: TStringList); overload;
 procedure InvertStrings(const Sts: array of TStringList); overload;
 procedure TrimStrings(TheStrings: TStrings);
 procedure RemoveDuplicateStrings(Strs: array of TStringList; RemIndex: Integer = 0);
+function MergeCaseInsensitive(Strs: array of String): String; overload;
+function MergeCaseInsensitive(Strs: array of TStrings): String; overload;
 
 procedure CleanHTMLComments(const Str: TStringList);
 function FixHTMLTagQuote(const s: String): String;
@@ -1804,6 +1806,44 @@ begin
         Inc(j);
     end;
     Inc(i);
+  end;
+end;
+
+function MergeCaseInsensitive(Strs: array of String): String;
+var
+  s: TStringList;
+  i: Integer;
+begin
+  if Length(Strs) = 0 then Exit;
+  s := TStringList.Create;
+  try
+    s.CaseSensitive := False;
+    s.Duplicates := dupIgnore;
+    s.Sorted := True;
+    for i := Low(Strs) to High(Strs) do
+      s.AddText(Strs[i]);
+    Result := s.Text;
+  finally
+    s.Free;
+  end;
+end;
+
+function MergeCaseInsensitive(Strs: array of TStrings): String;
+var
+  s: TStringList;
+  i: Integer;
+begin
+  if Length(Strs) = 0 then Exit;
+  s := TStringList.Create;
+  try
+    s.CaseSensitive := False;
+    s.sorted := True;
+    s.Duplicates := dupIgnore;
+    for i := Low(Strs) to High(Strs) do
+      s.AddText(Strs[i].Text);
+    Result := s.Text;
+  finally
+    s.Free;
   end;
 end;
 
