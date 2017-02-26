@@ -1456,7 +1456,8 @@ begin
   end;
 
   with mangaInfo do begin
-    if mangaInfo.link = '' then mangaInfo.link := RemoveHostFromURL(mangaInfo.url);
+    if link = '' then
+      link := RemoveHostFromURL(mangaInfo.url);
 
     // cleanup info
     coverLink := CleanURL(coverLink);

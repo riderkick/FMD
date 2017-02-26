@@ -86,7 +86,6 @@ procedure TGetMangaInfosThread.DoGetInfos;
         FInfo.mangaInfo.genres := MainForm.dataProcess.Value[filterPos, DATA_PARAM_GENRES];
         FNumChapter := StrToIntDef(MainForm.dataProcess.Value[filterPos, DATA_PARAM_NUMCHAPTER], 0);
       end;
-
       FInfo.isGenerateFolderChapterName := OptionGenerateMangaFolder;
       FInfo.isRemoveUnicode := OptionChangeUnicodeCharacter;
 
@@ -223,7 +222,7 @@ begin
           dataProcess.Refresh;
           vtMangaList.EndUpdate;
         end;
-      ShowInformation(FTitle, FWebsite, FLink);
+      ShowInformation(mangaInfo.title, mangaInfo.website, mangaInfo.link);
     end;
   except
     on E: Exception do

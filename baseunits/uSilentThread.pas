@@ -443,8 +443,7 @@ end;
 
 procedure TSilentAddToFavThread.MainThreadAfterChecking;
 var
-  s, s2: String;
-  i: Integer;
+  s: String;
 begin
   try
     with MainForm do
@@ -469,17 +468,12 @@ begin
           '',
           OptionChangeUnicodeCharacter,
           OptionChangeUnicodeCharacterStr);
-      s2 := '';
-      if (Info.mangaInfo.numChapter > 0) then
-      begin
-        for i := 0 to Info.mangaInfo.numChapter - 1 do
-          s2 := s2 + Info.mangaInfo.chapterLinks.Strings[i] + SEPERATOR;
-      end;
+
       if Trim(title) = '' then
         title := Info.mangaInfo.title;
       FavoriteManager.Add(title,
         IntToStr(Info.mangaInfo.numChapter),
-        s2,
+        info.mangaInfo.chapterLinks.Text,
         website,
         CorrectPathSys(s),
         URL);

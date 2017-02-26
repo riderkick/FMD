@@ -2073,7 +2073,8 @@ begin
           end;
           Website:=mangaInfo.website;
           DownloadInfo.Website:=mangaInfo.website;
-          DownloadInfo.Link:=mangaInfo.url;
+          DownloadInfo.Link:=mangaInfo.link;
+          SendLog('addedlink='+DownloadInfo.Link);
           DownloadInfo.Title:=mangaInfo.title;
           DownloadInfo.DateTime:=Now;
           DownloadInfo.SaveTo:=s;
@@ -2094,8 +2095,7 @@ end;
 
 procedure TMainForm.btAddToFavoritesClick(Sender: TObject);
 var
-  s, s2: String;
-  i: Integer;
+  s: String;
 begin
   if mangaInfo.title <> '' then
   begin
@@ -2113,13 +2113,7 @@ begin
           OptionChangeUnicodeCharacter,
           OptionChangeUnicodeCharacterStr);
 
-    // downloaded chapters
-    s2 := '';
-    if mangaInfo.numChapter > 0 then
-      for i := 0 to mangaInfo.numChapter - 1 do
-        s2 := s2 + mangaInfo.chapterLinks.Strings[i] + SEPERATOR;
-
-    FavoriteManager.Add(mangaInfo.title, IntToStr(mangaInfo.numChapter), s2,
+    FavoriteManager.Add(mangaInfo.title, IntToStr(mangaInfo.numChapter), mangaInfo.chapterLinks.Text,
       mangaInfo.website, CleanAndExpandDirectory(s), mangaInfo.link);
     vtFavorites.NodeDataSize := SizeOf(TFavoriteInfo);
     UpdateVtFavorites;

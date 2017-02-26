@@ -124,9 +124,7 @@ type
     // Backup to favorites.db
     procedure Backup;
     // Add FFavorites downloadedchapterlist
-    procedure AddToDownloadedChaptersList(const AWebsite, ALink, AValue: String);
-      overload;
-    procedure AddToDownloadedChaptersList(const AWebsite, Alink: String; AValue: TStrings); overload;
+    procedure AddToDownloadedChaptersList(const AWebsite, ALink: String; const AValue: TStrings);
     // sorting
     procedure Sort(const AColumn: Integer);
     // critical section
@@ -776,13 +774,11 @@ begin
                       DownloadInfo.Status := Format('[%d/%d] %s',[0,ChapterLinks.Count,RS_Stopped]);
                       Status := STATUS_STOP;
                     end;
+                    // add to downloaded chapter list
+                    FavoriteInfo.downloadedChapterList := MergeCaseInsensitive([FavoriteInfo.DownloadedChapterList, chapterLinks.Text]);
+                    // add to downloaded chapter list in downloadmanager
+                    DLManager.DownloadedChapters.Chapters[FavoriteInfo.Website + FavoriteInfo.Link] := chapterLinks.Text;
                   end;
-                  // add to downloaded chapter list
-                  FavoriteInfo.downloadedChapterList := NewMangaInfo.chapterLinks.Text;
-                  // add to downloaded chapter list in downloadmanager
-                  DLManager.DownloadedChapters.Chapters[FavoriteInfo.Website + FavoriteInfo.Link] :=
-                    NewMangaInfo.chapterLinks.Text;
-
                   // free unused objects
                   FreeAndNil(NewMangaInfo);
                   FreeAndNil(NewMangaInfoChaptersPos);
@@ -1010,73 +1006,23 @@ begin
     FFavoritesDB.Commit;
 end;
 
-procedure TFavoriteManager.AddToDownloadedChaptersList(const AWebsite, ALink, AValue: String);
+procedure TFavoriteManager.AddToDownloadedChaptersList(const AWebsite,
+  ALink: String; const AValue: TStrings);
 var
-  st: TStringList;
+  i: Integer;
 begin
-  if (AWebsite = '') or (ALink = '') or (AValue = '') then Exit;
-  st := TStringList.Create;
+  if (Items.Count = 0) or (AWebsite = '') or (ALink = '') or (AValue.Count = 0) then Exit;
   try
-    st.Text := AValue;
-    AddToDownloadedChaptersList(AWebsite, ALink, st);
-  finally
-    st.Free;
-  end;
-end;
-
-procedure TFavoriteManager.AddToDownloadedChaptersList(const AWebsite, Alink: String; AValue: TStrings);
-var
-  i, p, q: Integer;
-  Ch, dlCh: TStringList;
-begin
-  if Count = 0 then
-    Exit;
-  if (AWebsite <> '') and (Alink <> '') and (AValue.Count > 0) then
-  begin
-    Ch := TStringList.Create;
-    dlCh := TStringList.Create;
     EnterCriticalsection(CS_Favorites);
-    try
-      p := -1;
-      //locate the link
-      if Items.Count > 1 then
-        for i := 0 to Items.Count - 1 do
-          with Items[i].FavoriteInfo do
-            if SameText(AWebsite, Website) and SameText(Alink, Link) then
-            begin
-              p := i;
-              dlCh.Text := DownloadedChapterList;
-              Break;
-            end;
-
-      //if found the FavoriteItem
-      if p > -1 then
-      begin
-        //remove if links found on downloadedchapterlist
-        Ch.Assign(AValue);
-        if dlCh.Count > 0 then
+    for i := 0 to Items.Count - 1 do
+      with Items[i].FavoriteInfo do
+        if SameText(AWebsite, Website) and SameText(ALink, Link) then
         begin
-          dlCh.Sorted := True;
-          i := 0;
-          while i < Ch.Count do
-            if dlCh.Find(Ch[i], q) then
-              Ch.Delete(i)
-            else
-              Inc(i);
+          DownloadedChapterList := MergeCaseInsensitive([DownloadedChapterList, AValue.Text]);
+          Break;
         end;
-
-        //merge the links
-        with Items[p].FavoriteInfo do begin
-          DownloadedChapterList += ch.Text;
-          currentChapter := IntToStr(dlCh.Count + ch.Count);
-        end;
-        MainForm.UpdateVtFavorites;
-      end;
-    finally
-      LeaveCriticalsection(CS_Favorites);
-    end;
-    dlCh.Free;
-    Ch.Free;
+  finally
+    LeaveCriticalsection(CS_Favorites);
   end;
 end;
 
