@@ -65,7 +65,7 @@ begin
     Connection.ExecuteDirect('INSERT OR REPLACE INTO "favorites" ('+
       '"websitelink","order","website","link","title","currentchapter","downloadedchapterlist","saveto")'+
       ' VALUES ("' +
-      AWebsite + ALink + '","' +
+      LowerCase(AWebsite + ALink) + '","' +
       IntToStr(AOrder) + '","' +
       AWebsite + '","' +
       ALink + '","' +
@@ -87,7 +87,7 @@ begin
   if not Connection.Connected then Exit;
   try
     Connection.ExecuteDirect(
-      'DELETE FROM "favorites" WHERE "websitelink"="' + AWebsite + ALink + '"');
+      'DELETE FROM "favorites" WHERE "websitelink"="' + LowerCase(AWebsite + ALink) + '"');
     Inc(FCommitCount);
     if FCommitCount >= FAutoCommitCount then
       Commit;
