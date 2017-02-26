@@ -85,7 +85,7 @@ type
     function AddData(Const Title, Link, Authors, Artists, Genres, Status, Summary: String;
       NumChapter, JDN: Integer): Boolean; overload;
     function AddData(Const Title, Link, Authors, Artists, Genres, Status, Summary: String;
-      NumChapter: Integer; JDN: TDateTime): Boolean; overload;
+      NumChapter: Integer; JDN: TDateTime): Boolean; overload; inline;
     function UpdateData(Const Title, Link, Authors, Artists, Genres, Status, Summary: String;
       NumChapter: Integer; AWebsite: String = ''): Boolean;
     function DeleteData(const RecIndex: Integer): Boolean;
@@ -111,22 +111,21 @@ type
   end;
 
 const
-  DBDataProcessParam = 'title,link,authors,artists,genres,status,summary,numchapter,jdn';
+  DBDataProcessParam = '"link","title","authors","artists","genres","status","summary","numchapter","jdn"';
   DBDataProcessParams: array [0..8] of ShortString =
-    ('title', 'link', 'authors', 'artists', 'genres', 'status',
+    ('link', 'title', 'authors', 'artists', 'genres', 'status',
     'summary', 'numchapter', 'jdn');
   DBTempFieldWebsiteIndex = Length(DBDataProcessParams);
-  DBDataProccesCreateParam = '('#13#10 +
-    '"title" TEXT,'#13#10 +
-    '"link" TEXT NOT NULL PRIMARY KEY,'#13#10 +
-    '"authors" TEXT,'#13#10 +
-    '"artists" TEXT,'#13#10 +
-    '"genres" TEXT,'#13#10 +
-    '"status" TEXT,'#13#10 +
-    '"summary" TEXT,'#13#10 +
-    '"numchapter" INTEGER,'#13#10 +
-    '"jdn" INTEGER'#13#10 +
-    ');';
+  DBDataProccesCreateParam =
+    '"link" TEXT NOT NULL PRIMARY KEY,' +
+    '"title" TEXT,' +
+    '"authors" TEXT,' +
+    '"artists" TEXT,' +
+    '"genres" TEXT,' +
+    '"status" TEXT,' +
+    '"summary" TEXT,' +
+    '"numchapter" INTEGER,' +
+    '"jdn" INTEGER';
 
 function DBDataFilePath(const AWebsite: String): String;
 procedure ConvertDataProccessToDB(AWebsite: String; DeleteOriginal: Boolean = False);
@@ -308,8 +307,8 @@ begin
   if FConn.Connected then
   begin
     FConn.ExecuteDirect('DROP TABLE IF EXISTS ' + QuotedStrd(FTableName));
-    FConn.ExecuteDirect('CREATE TABLE ' + QuotedStrd(FTableName) + #13#10 +
-      DBDataProccesCreateParam);
+    FConn.ExecuteDirect('CREATE TABLE ' + QuotedStrd(FTableName) + ' (' +
+      DBDataProccesCreateParam + ');');
     FTrans.Commit;
   end;
 end;
@@ -317,7 +316,8 @@ end;
 procedure TDBDataProcess.ConvertNewTable;
 begin
   if FQuery.Active = False then Exit;
-  if (FieldTypeNames[FQuery.FieldByName('title').DataType] <> Fieldtypenames[ftMemo]) or
+  if  (FQuery.Fields[0].FieldName <> 'link') or
+      (FieldTypeNames[FQuery.FieldByName('title').DataType] <> Fieldtypenames[ftMemo]) or
       (FieldTypeNames[FQuery.FieldByName('link').DataType] <> Fieldtypenames[ftMemo]) or
       (FieldTypeNames[FQuery.FieldByName('authors').DataType] <> Fieldtypenames[ftMemo]) or
       (FieldTypeNames[FQuery.FieldByName('artists').DataType] <> Fieldtypenames[ftMemo]) or
@@ -328,8 +328,8 @@ begin
       FQuery.Close;
       with fconn do begin
         ExecuteDirect('DROP TABLE IF EXISTS '+QuotedStr('temp'+FTableName));
-        ExecuteDirect('CREATE TABLE '+QuotedStrd('temp'+FTableName)+#13#10+DBDataProccesCreateParam);
-        ExecuteDirect('INSERT INTO '+QuotedStrd('temp'+FTableName)+' SELECT * FROM '+QuotedStrd(FTableName));
+        ExecuteDirect('CREATE TABLE '+QuotedStrd('temp'+FTableName)+ ' (' + DBDataProccesCreateParam + ')');
+        ExecuteDirect('INSERT INTO '+QuotedStrd('temp'+FTableName)+' ('+DBDataProcessParam+') SELECT ' + DBDataProcessParam + ' FROM '+QuotedStrd(FTableName));
         ExecuteDirect('DROP TABLE '+QuotedStrd(FTableName));
         ExecuteDirect('ALTER TABLE '+QuotedStrd('temp'+FTableName)+' RENAME TO '+QuotedStrd(FTableName));
       end;
@@ -793,8 +793,8 @@ begin
   try
     FConn.ExecuteDirect(
       'INSERT INTO '+QuotedStrd(FTableName)+' ('+DBDataProcessParam+') VALUES ('+
-      QuotedStr(Title)+', '+
       QuotedStr(Link)+', '+
+      QuotedStr(Title)+', '+
       QuotedStr(Authors)+', '+
       QuotedStr(Artists)+', '+
       QuotedStr(Genres)+', '+
@@ -1089,6 +1089,7 @@ begin
       end;
     end;
     Result := FFiltered;
+    Result := FFiltered;
   end;
 end;
 
@@ -1142,13 +1143,10 @@ begin
     with FConn do
       try
         ExecuteDirect('DROP TABLE IF EXISTS ' + QuotedStrd(FTableName + '_ordered'));
-        ExecuteDirect('CREATE TABLE ' + QuotedStrd(FTableName + '_ordered') +
-          DBDataProccesCreateParam);
-        ExecuteDirect('INSERT INTO '+QuotedStrd(FTableName + '_ordered') +
-          ' SELECT * FROM ' + QuotedStrd(FTableName) + ' ORDER BY "title" COLLATE NATCMP');
+        ExecuteDirect('CREATE TABLE ' + QuotedStrd(FTableName + '_ordered') + ' (' + DBDataProccesCreateParam +')');
+        ExecuteDirect('INSERT INTO '+QuotedStrd(FTableName + '_ordered') + ' (' + DBDataProcessParam + ') SELECT '+ DBDataProcessParam +' FROM ' + QuotedStrd(FTableName) + ' ORDER BY "title" COLLATE NATCMP');
         ExecuteDirect('DROP TABLE ' + QuotedStrd(FTableName));
-        ExecuteDirect('ALTER TABLE ' + QuotedStrd(FTableName + '_ordered') +
-          'RENAME TO ' + QuotedStrd(FTableName));
+        ExecuteDirect('ALTER TABLE ' + QuotedStrd(FTableName + '_ordered') + ' RENAME TO ' + QuotedStrd(FTableName));
         FTrans.Commit;
         VacuumTable;
       except

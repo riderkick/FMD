@@ -31,8 +31,8 @@ const
 
   UTF8BOM = #$EF#$BB#$BF;
 
-  DATA_PARAM_TITLE      = 0;
-  DATA_PARAM_LINK       = 1;
+  DATA_PARAM_LINK       = 0;
+  DATA_PARAM_TITLE      = 1;
   DATA_PARAM_AUTHORS    = 2;
   DATA_PARAM_ARTISTS    = 3;
   DATA_PARAM_GENRES     = 4;

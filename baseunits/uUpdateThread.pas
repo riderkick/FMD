@@ -477,8 +477,8 @@ begin
           Modules.IncActiveConnectionCount(ModuleId);
           i:=threads.Add(TUpdateListThread.Create);
           if cs=CS_INFO then begin
-            TUpdateListThread(threads[i]).title:=tempDataProcess.Value[workPtr,0];
-            TUpdateListThread(threads[i]).link:=tempDataProcess.Value[workPtr,1];
+            TUpdateListThread(threads[i]).title:=tempDataProcess.Value[workPtr,DATA_PARAM_TITLE];
+            TUpdateListThread(threads[i]).link:=tempDataProcess.Value[workPtr,DATA_PARAM_LINK];
           end;
           TUpdateListThread(threads[i]).checkStyle:=cs;
           TUpdateListThread(threads[i]).manager:=Self;
@@ -508,7 +508,7 @@ begin
             CS_DIRECTORY_PAGE_2:
               s := s + ' | ' + RS_LookingForNewTitleFromAnotherDirectory + '...';
             CS_INFO:
-              s := Format('%s | %s "%s"', [s, RS_GettingInfo, tempDataProcess.Value[workPtr-1,0]]);
+              s := Format('%s | %s "%s"', [s, RS_GettingInfo, tempDataProcess.Value[workPtr-1,DATA_PARAM_TITLE]]);
           end;
           FStatus := s;
           MainForm.ulWorkPtr := workPtr + 1;
@@ -660,8 +660,8 @@ begin
               for k:=0 to tempDataProcess.RecordCount-1 do
               begin
                 mainDataProcess.AddData(
-                  tempDataProcess.Value[k,0],
-                  tempDataProcess.Value[k,1],
+                  tempDataProcess.Value[k,DATA_PARAM_TITLE],
+                  tempDataProcess.Value[k,DATA_PARAM_LINK],
                   '',
                   '',
                   '',
