@@ -43,8 +43,8 @@ begin
   Filename := AFilename;
   TableName := 'favorites';
   CreateParams :=
-    '"order" INTEGER,' +
     '"websitelink" VARCHAR(3000) NOT NULL PRIMARY KEY,' +
+    '"order" INTEGER,' +
     '"website" TEXT,' +
     '"link" TEXT,' +
     '"title" TEXT,' +
@@ -53,18 +53,6 @@ begin
     '"saveto" TEXT';
   SelectParams :=
     'SELECT * FROM "favorites" ORDER BY "order"';
-  {
-    CREATE TABLE "favorites" (
-      "order" TEXT,
-      "websitelink" VARCHAR(3000) NOT NULL PRIMARY KEY,
-      "website" TEXT,
-      "link" TEXT,
-      "title" TEXT,
-      "currentchapter" TEXT,
-      "downloadedchapterlist" TEXT,
-      "saveto" TEXT
-      );
-  }
 end;
 
 function TFavoritesDB.Add(const AOrder: Integer; const AWebsite, ALink, ATitle,
@@ -75,10 +63,10 @@ begin
   if not Connection.Connected then Exit;
   try
     Connection.ExecuteDirect('INSERT OR REPLACE INTO "favorites" ('+
-      '"order","websitelink","website","link","title","currentchapter","downloadedchapterlist","saveto")'+
+      '"websitelink","order","website","link","title","currentchapter","downloadedchapterlist","saveto")'+
       ' VALUES ("' +
-      IntToStr(AOrder) + '","' +
       AWebsite + ALink + '","' +
+      IntToStr(AOrder) + '","' +
       AWebsite + '","' +
       ALink + '","' +
       ATitle + '","' +
