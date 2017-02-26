@@ -22,6 +22,7 @@ type
 
   TSQliteData = class
   private
+    FAutoVacuum: Boolean;
     FConn: TSQLite3ConnectionH;
     FOnError: TExceptionEvent;
     FTrans: TSQLTransaction;
@@ -34,6 +35,7 @@ type
     procedure DoOnError(E: Exception);
     function GetAutoApplyUpdates: Boolean;
     procedure SetAutoApplyUpdates(AValue: Boolean);
+    procedure SetAutoVacuum(AValue: Boolean);
     procedure SetCreateParams(AValue: String);
     procedure SetOnError(AValue: TExceptionEvent);
     procedure SetSelectParams(AValue: String);
@@ -67,6 +69,7 @@ type
     property SelectParams: String read FSelectParams write SetSelectParams;
     property RecordCount: Integer read FRecordCount;
     property AutoApplyUpdates: Boolean read GetAutoApplyUpdates write SetAutoApplyUpdates;
+    property AutoVacuum: Boolean read FAutoVacuum write SetAutoVacuum;
     property OnError: TExceptionEvent read FOnError write SetOnError;
   end;
 
@@ -98,6 +101,12 @@ begin
     FQuery.Options := FQuery.Options + [sqoAutoApplyUpdates]
   else
     FQuery.Options := FQuery.Options - [sqoAutoApplyUpdates];
+end;
+
+procedure TSQliteData.SetAutoVacuum(AValue: Boolean);
+begin
+  if FAutoVacuum = AValue then Exit;
+  FAutoVacuum := AValue;
 end;
 
 procedure TSQliteData.SetCreateParams(AValue: String);
@@ -233,6 +242,7 @@ begin
   FQuery.DataBase := FTrans.DataBase;
   FQuery.Transaction := FTrans;
   AutoApplyUpdates := True;
+  FAutoVacuum := True;
   FRecordCount := 0;
   FFilename := '';
   FTableName := 'maintable';
@@ -285,7 +295,8 @@ begin
   if not FConn.Connected then Exit;
   try
     Save;
-    Vacuum;
+    if FAutoVacuum then
+      Vacuum;
     CloseTable;
     FTrans.Active := False;
     FConn.Close;
