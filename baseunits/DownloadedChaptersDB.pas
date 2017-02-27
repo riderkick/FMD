@@ -53,10 +53,6 @@ begin
 end;
 
 procedure TDownloadedChaptersDB.SetChapters(const AWebsiteLink: String; AValue: String);
-var
-  dc, ds: TStringList;
-  c, s: String;
-  i: Integer;
 begin
   if AWebsiteLink = '' then Exit;
   if AValue = '' then Exit;
@@ -80,48 +76,6 @@ begin
       except
         CancelUpdates;
       end;
-
-      //  c := AValue;
-      //  s := Fields[1].AsString;
-      //  if c = s then Exit;
-      //  dc := TStringList.Create;
-      //  ds := TStringList.Create;
-      //  try
-      //    dc.AddText(c);
-      //    ds.CaseSensitive := False;
-      //    ds.Duplicates := dupIgnore;
-      //    ds.Sorted := True;
-      //    ds.AddText(s);
-      //    for i := 0 to dc.Count - 1 do
-      //    begin
-      //      dc[i] := Trim(dc[i]);
-      //      if dc[i] <> '' then
-      //        ds.Add(dc[i]);
-      //    end;
-      //    Edit;
-      //    try
-      //      Fields[1].AsString := ds.Text;
-      //      Post;
-      //    except
-      //      CancelUpdates;
-      //    end;
-      //  finally
-      //    dc.Free;
-      //    ds.Free;
-      //  end;
-      //end
-      //else
-      //begin
-      //  Append;
-      //  try
-      //    Fields[0].AsString := LowerCase(AWebsiteLink);
-      //    Fields[1].AsString := AValue;
-      //    Post;
-      //    IncRecordCount;
-      //  except
-      //    CancelUpdates;
-      //  end;
-      //end;
     finally
       LeaveCriticalsection(locklocate);
     end;
@@ -136,6 +90,8 @@ begin
   CreateParams :=
     'websitelink VARCHAR(3000) NOT NULL PRIMARY KEY,' +
     'chapters TEXT';
+  FieldsParams := '"websitelink","chapters"';
+  SelectParams := 'SELECT ' + FieldsParams + ' FROM "' + TableName + '"';
 end;
 
 destructor TDownloadedChaptersDB.Destroy;

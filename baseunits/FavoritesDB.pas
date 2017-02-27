@@ -51,8 +51,8 @@ begin
     '"currentchapter" TEXT,' +
     '"downloadedchapterlist" TEXT,' +
     '"saveto" TEXT';
-  SelectParams :=
-    'SELECT * FROM "favorites" ORDER BY "order"';
+  FieldsParams := '"websitelink","order","website","link","title","currentchapter","downloadedchapterlist","saveto"';
+  SelectParams := 'SELECT ' + FieldsParams + ' FROM "'+TableName+'" ORDER BY "order"';
 end;
 
 function TFavoritesDB.Add(const AOrder: Integer; const AWebsite, ALink, ATitle,
@@ -62,9 +62,9 @@ begin
   if (AWebsite = '') or (ALink = '') then Exit;
   if not Connection.Connected then Exit;
   try
-    Connection.ExecuteDirect('INSERT OR REPLACE INTO "favorites" ('+
-      '"websitelink","order","website","link","title","currentchapter","downloadedchapterlist","saveto")'+
-      ' VALUES ("' +
+    Connection.ExecuteDirect('INSERT OR REPLACE INTO "favorites" (' +
+      FieldsParams +
+      ') VALUES ("' +
       LowerCase(AWebsite + ALink) + '","' +
       IntToStr(AOrder) + '","' +
       AWebsite + '","' +

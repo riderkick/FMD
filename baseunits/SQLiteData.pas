@@ -24,6 +24,7 @@ type
   private
     FAutoVacuum: Boolean;
     FConn: TSQLite3ConnectionH;
+    FFieldsParams: String;
     FOnError: TExceptionEvent;
     FTrans: TSQLTransaction;
     FQuery: TSQLQuery;
@@ -37,6 +38,7 @@ type
     procedure SetAutoApplyUpdates(AValue: Boolean);
     procedure SetAutoVacuum(AValue: Boolean);
     procedure SetCreateParams(AValue: String);
+    procedure SetFieldsParams(AValue: String);
     procedure SetOnError(AValue: TExceptionEvent);
     procedure SetSelectParams(AValue: String);
   protected
@@ -67,6 +69,7 @@ type
     property TableName: String read FTableName write FTableName;
     property CreateParams: String read FCreateParams write SetCreateParams;
     property SelectParams: String read FSelectParams write SetSelectParams;
+    property FieldsParams: String read FFieldsParams write SetFieldsParams;
     property RecordCount: Integer read FRecordCount;
     property AutoApplyUpdates: Boolean read GetAutoApplyUpdates write SetAutoApplyUpdates;
     property AutoVacuum: Boolean read FAutoVacuum write SetAutoVacuum;
@@ -115,6 +118,12 @@ begin
   FCreateParams := TrimSet(Trim(AValue), ['(', ')', ';']);
 end;
 
+procedure TSQliteData.SetFieldsParams(AValue: String);
+begin
+  if FFieldsParams = AValue then Exit;
+  FFieldsParams := AValue;
+end;
+
 procedure TSQliteData.SetOnError(AValue: TExceptionEvent);
 begin
   if FOnError = AValue then Exit;
@@ -148,8 +157,7 @@ begin
     if not OpenDB then Exit;
   try
     FConn.ExecuteDirect('DROP TABLE IF EXISTS ' + QuotedStrd(FTableName));
-    FConn.ExecuteDirect('CREATE TABLE ' + QuotedStrd(FTableName) + #13#10 +
-      '(' + FCreateParams + ')');
+    FConn.ExecuteDirect('CREATE TABLE ' + QuotedStrd(FTableName) + ' (' + FCreateParams + ')');
     FTrans.Commit;
     Result := True;
   except
@@ -173,12 +181,10 @@ begin
     with FConn do
     begin
       ExecuteDirect('DROP TABLE IF EXISTS ' + QuotedStrd('temp' + FTableName));
-      ExecuteDirect('CREATE TABLE ' + QuotedStrd('temp' + FTableName) + #13#10 + FCreateParams);
-      ExecuteDirect('INSERT INTO ' + QuotedStrd('temp' + FTableName) + ' SELECT * FROM ' +
-        QuotedStrd(FTableName));
+      ExecuteDirect('CREATE TABLE ' + QuotedStrd('temp' + FTableName) + ' (' + (FCreateParams) + ')');
+      ExecuteDirect('INSERT INTO ' + QuotedStrd('temp' + FTableName) + ' (' + FieldsParams + ') SELECT ' + FieldsParams + ' FROM ' + QuotedStrd(FTableName));
       ExecuteDirect('DROP TABLE ' + QuotedStrd(FTableName));
-      ExecuteDirect('ALTER TABLE ' + QuotedStrd('temp' + FTableName) + ' RENAME TO ' +
-        QuotedStrd(FTableName));
+      ExecuteDirect('ALTER TABLE ' + QuotedStrd('temp' + FTableName) + ' RENAME TO ' + QuotedStrd(FTableName));
     end;
     FTrans.Commit;
     if qactive <> FQuery.Active then
