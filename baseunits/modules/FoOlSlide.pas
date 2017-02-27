@@ -21,6 +21,7 @@ const
   dirurlslide = '/slide/directory/';
   dirurlslideU = '/Slide/directory/';
   dirurlonline = '/online/directory/';
+  dirurlhelvetica = '/r/directory/';    
 
 function GETWithCookie(const AHTTP: THTTPSendThread; const AURL: String;
   const Module: TModuleContainer): Boolean;
@@ -59,6 +60,9 @@ begin
   if (AWebsite = 'Pzykosis666HFansub') or
      (AWebsite = 'SeinagiFansub') then
     Result := dirurlonline
+  else
+  if(AWebsite = 'HelveticaScans') then
+    Result := dirurlhelvetica     
   else
     Result := dirurl;
 end;
@@ -265,6 +269,7 @@ begin
   AddWebsiteModule('SenseScans', 'http://reader.sensescans.com');
   AddWebsiteModule('Jaiminisbox', 'https://jaiminisbox.com');
   AddWebsiteModule('KireiCake', 'https://reader.kireicake.com');
+  AddWebsiteModule('HelveticaScans', 'http://helveticascans.com');    
 
   //es-san
   AddWebsiteModule('DangoOnlineNoFansub', 'http://lector.dangolinenofansub.com');
