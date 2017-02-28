@@ -53,8 +53,8 @@ type
   public
     constructor Create;
     destructor Destroy; override;
-    function Open(const AOpenTable: Boolean = True): Boolean;
-    function OpenTable: Boolean; virtual;
+    function Open(const AOpenTable: Boolean = True; const AGetRecordCount: Boolean = True): Boolean;
+    function OpenTable(const AGetRecordCount: Boolean = True): Boolean; virtual;
     procedure Close;
     procedure CloseTable;
     procedure Refresh(RecheckDataCount: Boolean = False);
@@ -76,14 +76,7 @@ type
     property OnError: TExceptionEvent read FOnError write SetOnError;
   end;
 
-  function QuotedStrd(const S: string): string; inline;
-
 implementation
-
-function QuotedStrd(const S: string): string;
-begin
-  Result := AnsiQuotedStr(S, '"');
-end;
 
 { TSQliteData }
 
@@ -156,8 +149,8 @@ begin
   if not FConn.Connected then
     if not OpenDB then Exit;
   try
-    FConn.ExecuteDirect('DROP TABLE IF EXISTS ' + QuotedStrd(FTableName));
-    FConn.ExecuteDirect('CREATE TABLE ' + QuotedStrd(FTableName) + ' (' + FCreateParams + ')');
+    FConn.ExecuteDirect('DROP TABLE IF EXISTS "' + FTableName + '"');
+    FConn.ExecuteDirect('CREATE TABLE "' + FTableName + '" (' + FCreateParams + ')');
     FTrans.Commit;
     Result := True;
   except
@@ -180,11 +173,11 @@ begin
     if FQuery.Active then FQuery.Close;
     with FConn do
     begin
-      ExecuteDirect('DROP TABLE IF EXISTS ' + QuotedStrd('temp' + FTableName));
-      ExecuteDirect('CREATE TABLE ' + QuotedStrd('temp' + FTableName) + ' (' + (FCreateParams) + ')');
-      ExecuteDirect('INSERT INTO ' + QuotedStrd('temp' + FTableName) + ' (' + FieldsParams + ') SELECT ' + FieldsParams + ' FROM ' + QuotedStrd(FTableName));
-      ExecuteDirect('DROP TABLE ' + QuotedStrd(FTableName));
-      ExecuteDirect('ALTER TABLE ' + QuotedStrd('temp' + FTableName) + ' RENAME TO ' + QuotedStrd(FTableName));
+      ExecuteDirect('DROP TABLE IF EXISTS "temp' + FTableName + '"');
+      ExecuteDirect('CREATE TABLE "temp' + FTableName + '" (' + FCreateParams + ')');
+      ExecuteDirect('INSERT INTO "temp' + FTableName + '" (' + FieldsParams + ') SELECT ' + FieldsParams + ' FROM "' + FTableName + '"');
+      ExecuteDirect('DROP TABLE "' + FTableName + '"');
+      ExecuteDirect('ALTER TABLE "temp' + FTableName + '" RENAME TO "' + FTableName + '"');
     end;
     FTrans.Commit;
     if qactive <> FQuery.Active then
@@ -264,7 +257,8 @@ begin
   inherited Destroy;
 end;
 
-function TSQliteData.Open(const AOpenTable: Boolean): Boolean;
+function TSQliteData.Open(const AOpenTable: Boolean;
+  const AGetRecordCount: Boolean): Boolean;
 begin
   Result := False;
   if (FFilename = '') or (FCreateParams = '') then Exit;
@@ -273,10 +267,10 @@ begin
   else
     Result := CreateDB;
   if Result and AOpenTable then
-    Result := OpenTable;
+    Result := OpenTable(AGetRecordCount);
 end;
 
-function TSQliteData.OpenTable: Boolean;
+function TSQliteData.OpenTable(const AGetRecordCount: Boolean): Boolean;
 begin
   Result := False;
   if not FConn.Connected then Exit;
@@ -285,9 +279,12 @@ begin
     if FSelectParams <> '' then
       FQuery.SQL.Text := FSelectParams
     else
-      FQuery.SQL.Text := 'SELECT * FROM ' + QuotedStrd(FTableName);
+      FQuery.SQL.Text := 'SELECT * FROM "' + FTableName + '"';
     FQuery.Open;
-    GetRecordCount;
+    if AGetRecordCount then
+      GetRecordCount
+    else
+      FRecordCount := FQuery.RecordCount;
   except
     on E: Exception do
       DoOnError(E);
@@ -333,7 +330,9 @@ begin
   else
     FQuery.Open;
   if RecheckDataCount then
-    GetRecordCount;
+    GetRecordCount
+  else
+    FRecordCount := FQuery.RecordCount;
 end;
 
 procedure TSQliteData.Commit;
