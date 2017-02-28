@@ -63,7 +63,6 @@ type
       const Path, Name: String; const Reconnect: Integer = 0): Boolean; overload;
 
     procedure Execute; override;
-    procedure DoTerminate; override;
   public
     FHTTP: THTTPSendThread;
     Task: TTaskThread;
@@ -78,6 +77,7 @@ type
 
   TTaskThread = class(THTTPThread)
   private
+    FCS_THREADS: TRTLCriticalSection;
     FCheckAndActiveTaskFlag: Boolean;
     FCurrentWorkingDir: String;
     {$IFDEF Windows}
@@ -91,7 +91,6 @@ type
   protected
     procedure CheckOut;
     procedure Execute; override;
-    procedure DoTerminate; override;
     procedure Compress;
     procedure SyncStop;
     // show notification when download completed
@@ -312,6 +311,13 @@ end;
 
 destructor TDownloadThread.Destroy;
 begin
+  EnterCriticalsection(Task.FCS_THREADS);
+  try
+    Modules.DecActiveConnectionCount(Task.Container.ModuleId);
+    Task.Threads.Remove(Self);
+  finally
+    LeaveCriticalsection(Task.FCS_THREADS);
+  end;
   FHTTP.Free;
   inherited Destroy;
 end;
@@ -392,18 +398,6 @@ begin
       MainForm.ExceptionHandler(Self, E);
     end;
   end;
-end;
-
-procedure TDownloadThread.DoTerminate;
-begin
-  LockCreateConnection;
-  try
-    Modules.DecActiveConnectionCount(Task.Container.ModuleId);
-    Task.Threads.Remove(Self);
-  finally
-    UnlockCreateConnection;
-  end;
-  inherited DoTerminate;
 end;
 
 function TDownloadThread.GetPageNumberFromURL(const URL: String): Boolean;
@@ -796,6 +790,7 @@ end;
 constructor TTaskThread.Create;
 begin
   inherited Create(True);
+  InitCriticalSection(FCS_THREADS);
   Threads := TDownloadThreads.Create;
   FCheckAndActiveTaskFlag := True;
   FIsForDelete := False;
@@ -806,8 +801,56 @@ begin
 end;
 
 destructor TTaskThread.Destroy;
+var
+  i: Integer;
 begin
+  EnterCriticalsection(FCS_THREADS);
+  try
+    if Threads.Count > 0 then
+      for i := 0 to Threads.Count - 1 do
+        Threads[i].Terminate;
+  finally
+    LeaveCriticalsection(FCS_THREADS);
+  end;
+  while Threads.Count > 0 do
+    Sleep(32);
+
+  Modules.DecActiveTaskCount(Container.ModuleId);
+  with Container do
+  begin
+    ThreadState := False;
+    Manager.RemoveItemsActiveTask(Container);
+    Task := nil;
+    if not (IsForDelete or Manager.isReadyForExit) then
+    begin
+      Container.ReadCount := 0;
+      DownloadInfo.TransferRate := '';
+      if Status <> STATUS_STOP then
+      begin
+        if (WorkCounter >= PageLinks.Count) and
+           (CurrentDownloadChapterPtr >= ChapterLinks.Count) and
+           (FailedChapterLinks.Count = 0) then
+        begin
+          Status := STATUS_FINISH;
+          DownloadInfo.Status := Format('[%d/%d] %s',[Container.ChapterLinks.Count,Container.ChapterLinks.Count,RS_Finish]);
+          DownloadInfo.Progress := '';
+        end
+        else
+        if not (Status in [STATUS_FAILED, STATUS_PROBLEM]) then
+        begin
+          Status := STATUS_STOP;
+          DownloadInfo.Status :=
+            Format('[%d/%d] %s', [CurrentDownloadChapterPtr + 1,
+            ChapterLinks.Count, RS_Stopped]);
+          FCheckAndActiveTaskFlag := False;
+        end;
+        if not isExiting then
+          Synchronize(SyncStop);
+      end;
+    end;
+  end;
   Threads.Free;
+  DoneCriticalsection(FCS_THREADS);
   inherited Destroy;
 end;
 
@@ -1061,7 +1104,7 @@ begin
 
   if (not Terminated) and (Threads.Count < currentMaxThread) then
   begin
-    LockCreateConnection;
+    EnterCriticalsection(FCS_THREADS);
     try
       if Modules.ActiveConnectionCount[Container.ModuleId] >= currentMaxThread then Exit;
       Modules.IncActiveConnectionCount(Container.ModuleId);
@@ -1077,7 +1120,7 @@ begin
       if Flag = CS_GETPAGELINK then
         Container.CurrentPageNumber := InterLockedIncrement(Container.CurrentPageNumber);
     finally
-      UnlockCreateConnection;
+      LeaveCriticalsection(FCS_THREADS);
     end;
   end;
 end;
@@ -1363,57 +1406,6 @@ begin
     on E: Exception do
       MainForm.ExceptionHandler(Self, E);
   end;
-end;
-
-procedure TTaskThread.DoTerminate;
-var
-  i: Integer;
-begin
-  if Threads.Count > 0 then
-  begin
-    LockCreateConnection;
-    try
-      for i := 0 to Threads.Count - 1 do
-        TDownloadThread(Threads[i]).Terminate;
-    finally
-      UnlockCreateConnection;
-    end;
-    while Threads.Count > 0 do
-      Sleep(32);
-  end;
-  Modules.DecActiveTaskCount(Container.ModuleId);
-  with Container do begin
-    ThreadState := False;
-    Manager.RemoveItemsActiveTask(Container);
-    Task := nil;
-    if not (IsForDelete or Manager.isReadyForExit) then
-    begin
-      Container.ReadCount := 0;
-      DownloadInfo.TransferRate := '';
-      if Status <> STATUS_STOP then
-      begin
-        if (WorkCounter >= PageLinks.Count) and
-           (CurrentDownloadChapterPtr >= ChapterLinks.Count) and
-           (FailedChapterLinks.Count = 0) then
-        begin
-          Status := STATUS_FINISH;
-          DownloadInfo.Status := Format('[%d/%d] %s',[Container.ChapterLinks.Count,Container.ChapterLinks.Count,RS_Finish]);
-          DownloadInfo.Progress := '';
-        end
-        else
-        if not (Status in [STATUS_FAILED, STATUS_PROBLEM]) then
-        begin
-          Status := STATUS_STOP;
-          DownloadInfo.Status :=
-            Format('[%d/%d] %s', [CurrentDownloadChapterPtr + 1,
-            ChapterLinks.Count, RS_Stopped]);
-          FCheckAndActiveTaskFlag := False;
-        end;
-        Synchronize(SyncStop);
-      end;
-    end;
-  end;
-  inherited DoTerminate;
 end;
 
 { TTaskContainer }
