@@ -4424,7 +4424,9 @@ begin
   // terminate exisiting getmangainfo thread
   if Assigned(GetInfosThread) then
     try
-      { TODO -oriderkick : Access violation on terminate }
+      { TODO -oriderkick : Access violation on terminate
+        if terminating thread while starting download cover
+      }
       GetInfosThread.Terminate;
       GetInfosThread.WaitFor;
     except
