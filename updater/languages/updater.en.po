@@ -11,6 +11,10 @@ msgstr ""
 "Language: en\n"
 "X-Generator: Poedit 1.8.8\n"
 
+#: tfrmmain.caption
+msgid "Free Manga Downloader - Updater"
+msgstr ""
+
 #: tfrmmain.lbfilesize.caption
 msgid "File size"
 msgstr "File size"

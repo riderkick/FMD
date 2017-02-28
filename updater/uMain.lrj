@@ -1,4 +1,5 @@
 {"version":1,"strings":[
+{"hash":193843458,"name":"tfrmmain.caption","sourcebytes":[70,114,101,101,32,77,97,110,103,97,32,68,111,119,110,108,111,97,100,101,114,32,45,32,85,112,100,97,116,101,114],"value":"Free Manga Downloader - Updater"},
 {"hash":131060021,"name":"tfrmmain.lbtransferrate.caption","sourcebytes":[84,114,97,110,115,102,101,114,32,114,97,116,101],"value":"Transfer rate"},
 {"hash":41414149,"name":"tfrmmain.lbfilesize.caption","sourcebytes":[70,105,108,101,32,115,105,122,101],"value":"File size"},
 {"hash":184637710,"name":"tfrmmain.lbstatus.caption","sourcebytes":[87,97,105,116,105,110,103,46,46,46],"value":"Waiting..."}

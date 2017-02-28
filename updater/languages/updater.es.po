@@ -11,6 +11,10 @@ msgstr ""
 "Language: es\n"
 "X-Generator: Poedit 1.8.11\n"
 
+#: tfrmmain.caption
+msgid "Free Manga Downloader - Updater"
+msgstr ""
+
 #: tfrmmain.lbfilesize.caption
 msgid "File size"
 msgstr "Tamaño del Archivo"
@@ -102,3 +106,4 @@ msgstr "Extrayendo Archivo [%s]..."
 #: umain.rs_waitmainapp
 msgid "Waiting main app to close..."
 msgstr "Esperando Aplicación Principal que se Cierre..."
+

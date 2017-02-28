@@ -58,7 +58,6 @@ type
     procedure UpdateStatus(AStatus: String);
     procedure ShowErrorMessage(AMessage: String);
     procedure Execute; override;
-    procedure OnThreadTerminate(Sender: TObject);
   public
     URL: String;
     FileName: String;
@@ -91,11 +90,14 @@ var
   ProxyUser: String;
   ProxyPass: String;
 
+
 const
   Symbols: array [0..10] of Char =
     ('\', '/', ':', '*', '?', '"', '<', '>', '|', #9, ';');
 
   UA_CURL = 'curl/7.42.1';
+
+  CONFIG_FILE = 'config/config.ini';
 
 resourcestring
   RS_InvalidURL = 'Invalid URL!';
@@ -510,11 +512,6 @@ begin
   HTTPHeaders.Free;
 end;
 
-procedure TDownloadThread.OnThreadTerminate(Sender: TObject);
-begin
-  FHTTP.Sock.AbortSocket;
-end;
-
 { TfrmMain }
 
 procedure TfrmMain.FormClose(Sender: TObject; var CloseAction: TCloseAction);
@@ -528,8 +525,6 @@ begin
 end;
 
 procedure TfrmMain.FormCreate(Sender: TObject);
-var
-  config: TIniFile;
 begin
   Randomize;
   SimpleTranslator.LangDir := CleanAndExpandDirectory(GetCurrentDirUTF8) + 'languages';
@@ -537,27 +532,29 @@ begin
   SimpleTranslator.CollectLanguagesFiles;
   InitCriticalSection(CS_ReadCount);
   //load proxy config from fmd
-  config := TIniFile.Create('config/config.ini');
-  try
-    if config.ReadBool('connections', 'UseProxy', False) then
-    begin
-      ProxyType := config.ReadString('connections', 'ProxyType', 'HTTP');
-      ProxyHost := config.ReadString('connections', 'Host', '');
-      ProxyPort := config.ReadString('connections', 'Port', '');
-      ProxyUser := config.ReadString('connections', 'User', '');
-      ProxyPass := config.ReadString('connections', 'Pass', '');
-    end
-    else
-    begin
-      ProxyType := '';
-      ProxyHost := '';
-      ProxyPort := '';
-      ProxyUser := '';
-      ProxyPass := '';
+  if not FileExistsUTF8(CONFIG_FILE) then Exit;
+  with TIniFile.Create(CONFIG_FILE) do
+    try
+      SimpleTranslator.SetLang(ReadString('languages', 'Selected', 'en'), 'updater');
+      if ReadBool('connections', 'UseProxy', False) then
+      begin
+        ProxyType := ReadString('connections', 'ProxyType', 'HTTP');
+        ProxyHost := ReadString('connections', 'Host', '');
+        ProxyPort := ReadString('connections', 'Port', '');
+        ProxyUser := ReadString('connections', 'User', '');
+        ProxyPass := ReadString('connections', 'Pass', '');
+      end
+      else
+      begin
+        ProxyType := '';
+        ProxyHost := '';
+        ProxyPort := '';
+        ProxyUser := '';
+        ProxyPass := '';
+      end;
+    finally
+      Free;
     end;
-  finally
-    FreeAndNil(config);
-  end;
 end;
 
 procedure TfrmMain.FormDestroy(Sender: TObject);
@@ -600,7 +597,7 @@ begin
         else if s = '-l' then
           _LaunchApp := ParamStrUTF8(i + 1)
         else if (LowerCase(s) = '--lang') then
-          SimpleTranslator.SetLang(ParamStrUTF8(i + 1));
+          SimpleTranslator.SetLang(ParamStrUTF8(i + 1), 'updater');
       end;
     end;
   end;
