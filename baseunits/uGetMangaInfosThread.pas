@@ -34,9 +34,7 @@ type
     // Flush this thread, means that the result will not be shown.
     FIsFlushed: Boolean;
 
-    procedure DoTerminate; override;
     procedure Execute; override;
-    procedure DoGetInfos;
 
     procedure MainThreadSyncInfos;
     procedure MainThreadShowInfos;
@@ -58,7 +56,13 @@ implementation
 uses
   frmMain, WebsiteModules;
 
-procedure TGetMangaInfosThread.DoGetInfos;
+procedure TGetMangaInfosThread.MainThreadSyncInfos;
+begin
+  FInfo.SyncInfoToData(MainForm.DataProcess);
+  MainForm.dataProcess.Commit;
+end;
+
+procedure TGetMangaInfosThread.Execute;
 
   function GetMangaInfo: Boolean;
   var
@@ -139,15 +143,17 @@ procedure TGetMangaInfosThread.DoGetInfos;
   end;
 
 begin
+  MainForm.isGetMangaInfos := True;
   try
     if not GetMangaInfo then
     begin
-      if not Self.Terminated then
+      if not (Terminated or isExiting) then
         Synchronize(MainThreadShowCannotGetInfo);
     end
     else
     begin
-      Synchronize(MainThreadShowInfos);
+      if not (Terminated or isExiting) then
+        Synchronize(MainThreadShowInfos);
       FCover.Clear;
       // If there's cover then we will load it to the TPicture component.
       if OptionEnableLoadCover and (Trim(FInfo.mangaInfo.coverLink) <> '') then
@@ -162,31 +168,9 @@ begin
       end
       else
         FIsHasMangaCover := False;
-      Synchronize(MainThreadShowCover);
+      if not (Terminated or isExiting) then
+        Synchronize(MainThreadShowCover);
     end;
-  except
-    on E: Exception do
-      MainForm.ExceptionHandler(Self, E);
-  end;
-end;
-
-procedure TGetMangaInfosThread.MainThreadSyncInfos;
-begin
-  FInfo.SyncInfoToData(MainForm.DataProcess);
-  MainForm.dataProcess.Commit;
-end;
-
-procedure TGetMangaInfosThread.DoTerminate;
-begin
-  Modules.DecActiveConnectionCount(FInfo.ModuleId);
-  inherited DoTerminate;
-end;
-
-procedure TGetMangaInfosThread.Execute;
-begin
-  MainForm.isGetMangaInfos := True;
-  try
-    DoGetInfos;
   except
     on E: Exception do
       MainForm.ExceptionHandler(Self, E);
@@ -263,6 +247,7 @@ end;
 
 destructor TGetMangaInfosThread.Destroy;
 begin
+  Modules.DecActiveConnectionCount(FInfo.ModuleId);
   FInfo.Free;
   FCover := nil;
   if not IsFlushed then

@@ -1315,7 +1315,7 @@ begin
     OpenDBThread.WaitFor;
     Logger.Send(Self.ClassName+'.CloseNow, OpenDBThread terminated');
   end;
-  if isGetMangaInfos then
+  if isGetMangaInfos and Assigned(GetInfosThread) then
   begin
     Logger.Send(Self.ClassName+'.CloseNow, terminating GetInfosThread');
     GetInfosThread.IsFlushed := True;
