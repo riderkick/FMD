@@ -513,7 +513,7 @@ begin
     Free;
   end;
   if Result then
-    DeleteFileUTF8(FAVORITES_FILE);
+    Result := DeleteFileUTF8(FAVORITES_FILE);
 end;
 
 constructor TFavoriteManager.Create;
@@ -524,7 +524,7 @@ begin
   isRunning := False;
   Items := TFavoriteContainers.Create;;
   FFavoritesDB := TFavoritesDB.Create(FAVORITESDB_FILE);
-  FFavoritesDB.Open(False);
+  FFavoritesDB.Open(False, False);
   ConvertToDB;
   Restore;
 end;
@@ -959,27 +959,24 @@ end;
 procedure TFavoriteManager.Restore;
 begin
   if not FFavoritesDB.Connection.Connected then Exit;
-  if FFavoritesDB.OpenTable then
+  if FFavoritesDB.OpenTable(False) then
     try
-      with FFavoritesDB.Table do
+      FFavoritesDB.Table.First;
+      while not FFavoritesDB.Table.EOF do
       begin
-        First;
-        while not EOF do
-        begin
-          Items.Add(TFavoriteContainer.Create);
-          with Items.Last, FavoriteInfo do
-            begin
-              Manager := Self;
-              Status := STATUS_IDLE;
-              Website := Fields[2].AsString;
-              Link := Fields[3].AsString;
-              Title := Fields[4].AsString;
-              CurrentChapter := Fields[5].AsString;
-              DownloadedChapterList := Fields[6].AsString;
-              SaveTo := Fields[7].AsString;
-            end;
-          Next;
-        end;
+        Items.Add(TFavoriteContainer.Create);
+        with Items.Last, FavoriteInfo, FFavoritesDB.Table do
+          begin
+            Manager := Self;
+            Status := STATUS_IDLE;
+            Website := Fields[2].AsString;
+            Link := Fields[3].AsString;
+            Title := Fields[4].AsString;
+            CurrentChapter := Fields[5].AsString;
+            DownloadedChapterList := Fields[6].AsString;
+            SaveTo := Fields[7].AsString;
+          end;
+        FFavoritesDB.Table.Next;
       end;
     finally
       FFavoritesDB.CloseTable;
