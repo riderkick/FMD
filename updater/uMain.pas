@@ -12,7 +12,7 @@ uses
   Classes, SysUtils, zipper, FileUtil, LazFileUtils, LazUTF8, LazUTF8Classes,
   Forms, Dialogs, ComCtrls, StdCtrls, ExtCtrls, RegExpr, IniFiles, blcksock,
   ssl_openssl, ssl_openssl_lib, synacode, httpsendthread, uMisc,
-  SimpleTranslator;
+  SimpleTranslator, SimpleException;
 
 type
 
@@ -507,6 +507,8 @@ begin
     if (not Self.Terminated) and _UpdApp and (_LaunchApp <> '') then
       RunExternalProcess(_LaunchApp, [''], True, False);
   except
+    on E: Exception do
+      ExceptionHandle(Self, E);
   end;
   regx.Free;
   HTTPHeaders.Free;
@@ -516,17 +518,24 @@ end;
 
 procedure TfrmMain.FormClose(Sender: TObject; var CloseAction: TCloseAction);
 begin
+  try
   if isDownload then
   begin
     dl.Terminate;
     dl.WaitFor;
   end;
   CloseAction := caFree;
+  except
+    on E: Exception do
+      ExceptionHandle(Self, E);
+  end;
 end;
 
 procedure TfrmMain.FormCreate(Sender: TObject);
 begin
   Randomize;
+  InitSimpleExceptionHandler;
+  try
   SimpleTranslator.LangDir := CleanAndExpandDirectory(GetCurrentDirUTF8) + 'languages';
   SimpleTranslator.LangAppName := 'updater';
   SimpleTranslator.CollectLanguagesFiles;
@@ -555,6 +564,10 @@ begin
     finally
       Free;
     end;
+  except
+    on E: Exception do
+      ExceptionHandle(Self, E);
+  end;
 end;
 
 procedure TfrmMain.FormDestroy(Sender: TObject);
@@ -568,6 +581,7 @@ var
   i: Integer;
   sh: Boolean = False;
 begin
+  try
   if Paramcount > 0 then
   begin
     for i := 1 to Paramcount do
@@ -632,6 +646,10 @@ begin
       MessageDlg(Application.Title, RS_InvalidURL, mtError, [mbOK], 0);
       Self.Close;
     end;
+  end;
+  except
+    on E: Exception do
+      ExceptionHandle(Self, E);
   end;
 end;
 
