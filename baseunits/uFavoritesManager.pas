@@ -23,15 +23,17 @@ type
   { TFavoriteThread }
 
   TFavoriteThread = class(THTTPThread)
+  private
+    FMangaInformation: TMangaInformation;
   protected
     procedure SyncStatus;
     procedure Execute; override;
-    procedure DoTerminate; override;
   public
     WorkId: Cardinal;
     Task: TFavoriteTask;
     Container: TfavoriteContainer;
     constructor Create;
+    destructor Destroy; override;
   end;
 
   TFavoriteThreads = TFPGList<TFavoriteThread>;
@@ -48,7 +50,6 @@ type
     procedure SyncUpdateBtnCaption;
     procedure Checkout;
     procedure Execute; override;
-    procedure DoTerminate; override;
   public
     CS_Threads: TRTLCriticalSection;
     Manager: TFavoriteManager;
@@ -93,7 +94,7 @@ type
     function ConvertToDB: Boolean;
   public
     Items: TFavoriteContainers;
-    taskthread: TFavoriteTask;
+    TaskThread: TFavoriteTask;
     DLManager: TDownloadManager;
     OnUpdateFavorite: procedure of object;
     OnUpdateDownload: procedure of object;
@@ -209,24 +210,14 @@ begin
   with Container do
     try
       // get new manga info
-      with TMangaInformation.Create(Self) do
-        try
-          isGetByUpdater := False;
-          mangaInfo.title := FavoriteInfo.Title;
-          GetInfoFromURL(FavoriteInfo.Website, FavoriteInfo.Link, DefaultRetryCount);
-          if not Terminated then
-          begin
-            NewMangaInfoChaptersPos := TCardinalList.Create;
-            NewMangaInfo := mangaInfo;
-            mangaInfo := nil;
-          end;
-        finally
-          Free;
-        end;
-
-      // check for new chapters
-      if (not Terminated) and Assigned(NewMangaInfo) then
+      FMangaInformation.isGetByUpdater := False;
+      FMangaInformation.mangaInfo.title := FavoriteInfo.Title;
+      FMangaInformation.GetInfoFromURL(FavoriteInfo.Website, FavoriteInfo.Link, DefaultRetryCount);
+      if not Terminated then
       begin
+        NewMangaInfo := FMangaInformation.mangaInfo;
+        FMangaInformation.mangaInfo := nil;
+        NewMangaInfoChaptersPos := TCardinalList.Create;
         // update current chapters count immedietly
         FavoriteInfo.CurrentChapter := IntToStr(NewMangaInfo.chapterLinks.Count);
         if NewMangaInfo.chapterLinks.Count > 0 then
@@ -256,42 +247,39 @@ begin
     end;
 end;
 
-procedure TFavoriteThread.DoTerminate;
-begin
-  EnterCriticalsection(Container.Manager.CS_Favorites);
-  try
-    if Terminated then
-    begin
-      Container.Status := STATUS_IDLE;
-      // free unused objects
-      if Assigned(Container.NewMangaInfo) then
-      begin
-        FreeAndNil(Container.NewMangaInfo);
-        FreeAndNil(Container.NewMangaInfoChaptersPos);
-      end;
-    end
-    else
-      Container.Status := STATUS_CHECKED;
-    Container.Thread := nil;
-
-    EnterCriticalsection(Task.CS_Threads);
-    try
-      Modules.DecActiveConnectionCount(Container.ModuleId);
-      Task.Threads.Remove(Self);
-    finally
-      LeaveCriticalsection(Task.CS_Threads);
-    end;
-  finally
-    LeaveCriticalsection(Container.Manager.CS_Favorites);
-  end;
-  if not Terminated then
-    Synchronize(SyncStatus);
-  inherited DoTerminate;
-end;
-
 constructor TFavoriteThread.Create;
 begin
   inherited Create(True);
+  FMangaInformation := TMangaInformation.Create(Self);
+end;
+
+destructor TFavoriteThread.Destroy;
+begin
+  if Terminated then
+  begin
+    Container.Status := STATUS_IDLE;
+    // free unused objects
+    if Assigned(Container.NewMangaInfo) then
+    begin
+      FreeAndNil(Container.NewMangaInfo);
+      FreeAndNil(Container.NewMangaInfoChaptersPos);
+    end;
+  end
+  else
+    Container.Status := STATUS_CHECKED;
+  Container.Thread := nil;
+
+  EnterCriticalsection(Task.CS_Threads);
+  try
+    Modules.DecActiveConnectionCount(Container.ModuleId);
+    Task.Threads.Remove(Self);
+  finally
+    LeaveCriticalsection(Task.CS_Threads);
+  end;
+  FMangaInformation.Free;
+  if not Terminated then
+    Synchronize(SyncStatus);
+  inherited Destroy;
 end;
 
 { TFavoriteTask }
@@ -315,13 +303,6 @@ begin
       btCancelFavoritesCheck.Width + 6;
     btFavoritesCheckNewChapter.Caption := RS_BtnCheckFavorites;
     vtFavorites.Repaint;
-  end;
-  try
-    EnterCriticalsection(Manager.CS_Favorites);
-    Manager.isRunning := False;
-    Manager.taskthread := nil;
-  finally
-    LeaveCriticalsection(Manager.CS_Favorites);
   end;
 end;
 
@@ -404,7 +385,20 @@ begin
   end;
 end;
 
-procedure TFavoriteTask.DoTerminate;
+procedure TFavoriteTask.UpdateBtnCaption(Cap: String);
+begin
+  FBtnCaption := Cap;
+  Synchronize(SyncUpdateBtnCaption);
+end;
+
+constructor TFavoriteTask.Create;
+begin
+  inherited Create(True);
+  InitCriticalSection(CS_Threads);
+  Threads := TFavoriteThreads.Create;
+end;
+
+destructor TFavoriteTask.Destroy;
 var
   i: Integer;
 begin
@@ -427,10 +421,7 @@ begin
     LeaveCriticalsection(CS_Threads);
   end;
   while Threads.Count > 0 do
-    Sleep(100);
-
-  // reset the ui
-  Synchronize(SyncFinishChecking);
+    Sleep(32);
 
   if (not Terminated) and (not isDlgCounter) then
     Synchronize(Manager.ShowResult)
@@ -441,35 +432,29 @@ begin
     try
       for i := 0 to Manager.Items.Count - 1 do
         with Manager.Items[i] do
+        begin
           if Assigned(NewMangaInfo) then
-          begin
             FreeAndNil(NewMangaInfo);
+          if Assigned(NewMangaInfoChaptersPos) then
             FreeAndNil(NewMangaInfoChaptersPos);
-          end;
+        end;
     finally
       LeaveCriticalsection(Manager.CS_Favorites);
     end;
   end;
-  inherited DoTerminate;
-end;
 
-procedure TFavoriteTask.UpdateBtnCaption(Cap: String);
-begin
-  FBtnCaption := Cap;
-  Synchronize(SyncUpdateBtnCaption);
-end;
-
-constructor TFavoriteTask.Create;
-begin
-  inherited Create(True);
-  InitCriticalSection(CS_Threads);
-  Threads := TFavoriteThreads.Create;
-end;
-
-destructor TFavoriteTask.Destroy;
-begin
   Threads.Free;
-  DoneCriticalsection(CS_Threads);
+  try
+    EnterCriticalsection(Manager.CS_Favorites);
+    Manager.isRunning := False;
+    Manager.TaskThread := nil;
+  finally
+    LeaveCriticalsection(Manager.CS_Favorites);
+  end;
+
+  // reset the ui
+  if not isExiting then
+    Synchronize(SyncFinishChecking);
   inherited Destroy;
 end;
 
@@ -532,14 +517,15 @@ begin
 end;
 
 destructor TFavoriteManager.Destroy;
+var
+  i: Integer;
 begin
   Backup;
-  if Items.Count > 0 then begin
+  if Items.Count > 0 then
+  begin
     StopChekForNewChapter;
-    while Items.Count > 0 do begin
-      Items.Last.Free;
-      Items.Remove(Items.Last);
-    end;
+    for i := 0 to Items.Count - 1 do
+      Items[i].Free;
   end;
   Items.Free;
   FFavoritesDB.Free;
@@ -559,8 +545,8 @@ begin
         if Status = STATUS_IDLE then
         begin
           Status := STATUS_CHECK;
-          if Assigned(taskthread) then
-            taskthread.FPendingCount := InterLockedIncrement(taskthread.FPendingCount);
+          if Assigned(TaskThread) then
+            TaskThread.FPendingCount := InterLockedIncrement(TaskThread.FPendingCount);
         end;
     end
     else
@@ -581,11 +567,11 @@ begin
         LeaveCriticalsection(CS_Favorites);
       end;
     end;
-    if taskthread = nil then
+    if TaskThread = nil then
     begin
-      taskthread := TFavoriteTask.Create;
-      taskthread.Manager := Self;
-      taskthread.Start;
+      TaskThread := TFavoriteTask.Create;
+      TaskThread.Manager := Self;
+      TaskThread.Start;
     end;
   except
     on E: Exception do
@@ -595,26 +581,27 @@ end;
 
 procedure TFavoriteManager.StopChekForNewChapter(WaitFor: Boolean; FavoriteIndex: Integer);
 begin
-  if isRunning then
-    if FavoriteIndex > -1 then
-    begin
-      with Items[FavoriteIndex] do begin
-        if Thread <> nil then
-        begin
-          Thread.Terminate;
-          if WaitFor then
-            Thread.WaitFor;
-        end;
-        if Status <> STATUS_IDLE then
-          Status := STATUS_IDLE;
+  if not isRunning then Exit;
+  if FavoriteIndex > -1 then
+  begin
+    with Items[FavoriteIndex] do begin
+      if Thread <> nil then
+      begin
+        Thread.Terminate;
+        if WaitFor then
+          Thread.WaitFor;
       end;
-    end
-    else
-    begin
-      taskthread.Terminate;
-      if WaitFor then
-        taskthread.WaitFor;
+      if Status <> STATUS_IDLE then
+        Status := STATUS_IDLE;
     end;
+  end
+  else
+  if Assigned(TaskThread) then
+  begin
+    TaskThread.Terminate;
+    if WaitFor then
+      TaskThread.WaitFor;
+  end;
 end;
 
 procedure TFavoriteManager.ShowResult;
