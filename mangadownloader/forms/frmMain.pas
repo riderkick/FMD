@@ -632,9 +632,8 @@ type
     gifWaiting: TAnimatedGif;
     gifWaitingRect: TRect;
 
-    // doing stuff like get manga info, compress, ...
+    // get manga info
     GetInfosThread: TGetMangaInfosThread;
-    isGetMangaInfos: Boolean;
 
     // check update
     CheckUpdateThread: TCheckUpdateThread;
@@ -1078,7 +1077,6 @@ begin
   btAbortUpdateList.Parent := sbUpdateList;
   isRunDownloadFilter := False;
   isUpdating := False;
-  isGetMangaInfos := False;
   isPendingExitCounter:=False;
   isNormalExit:=False;
   DoAfterFMD := DO_NOTHING;
@@ -1315,10 +1313,9 @@ begin
     OpenDBThread.WaitFor;
     Logger.Send(Self.ClassName+'.CloseNow, OpenDBThread terminated');
   end;
-  if isGetMangaInfos and Assigned(GetInfosThread) then
+  if Assigned(GetInfosThread) then
   begin
     Logger.Send(Self.ClassName+'.CloseNow, terminating GetInfosThread');
-    GetInfosThread.IsFlushed := True;
     GetInfosThread.Terminate;
     GetInfosThread.WaitFor;
     Logger.Send(Self.ClassName+'.CloseNow, GetInfosThread terminated');
@@ -4420,8 +4417,15 @@ var
   i: Integer;
 begin
   if (AURL = '') or (AWebsite = '') then Exit;
-  TURL := Trim(AURL);
 
+  // terminate exisiting getmangainfo thread
+  if Assigned(GetInfosThread) then
+  begin
+    GetInfosThread.Terminate;
+    GetInfosThread.WaitFor;
+  end;
+
+  TURL := Trim(AURL);
   // fix url
   i := Modules.LocateModule(AWebsite);
   if i > -1 then
@@ -4429,12 +4433,6 @@ begin
   else
     TURL := FillMangaSiteHost(AWebsite, TURL);
 
-  // terminate exisiting getmangainfo thread
-  if isGetMangaInfos then
-  begin
-    GetInfosThread.IsFlushed := True;
-    GetInfosThread.Terminate;
-  end;
 
   // set the UI
   pcMain.ActivePage := tsInformation;
@@ -4459,6 +4457,8 @@ begin
     btAddToFavorites.Enabled := not FavoriteManager.IsMangaExist(ATitle, AWebsite);
 
   // start the thread
+  while Assigned(GetInfosThread) do
+    Sleep(32);
   GetInfosThread := TGetMangaInfosThread.Create;
   GetInfosThread.MangaListPos := AMangaListPos;
   GetInfosThread.Title := ATitle;
