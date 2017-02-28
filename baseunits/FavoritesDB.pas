@@ -42,6 +42,7 @@ begin
   FAutoCommitCount := 500;
   Filename := AFilename;
   TableName := 'favorites';
+  Table.PacketRecords := 1;
   CreateParams :=
     '"websitelink" VARCHAR(3000) NOT NULL PRIMARY KEY,' +
     '"order" INTEGER,' +
