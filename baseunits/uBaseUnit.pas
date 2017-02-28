@@ -482,6 +482,7 @@ var
 
   Revision: Cardinal;
   currentJDN: Integer;
+  isExiting: Boolean = False;
 type
   TArrayOfString = array of String;
 
