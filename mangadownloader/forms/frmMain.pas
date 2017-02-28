@@ -618,7 +618,7 @@ type
     ulTotalPtr, ulWorkPtr: Integer;
     optionMangaSiteSelectionNodes: array of PVirtualNode;
     LastSearchStr, LastSearchWeb: String;
-    isStartup, isExiting, isRunDownloadFilter, isUpdating, isPendingExitCounter,
+    isStartup, isRunDownloadFilter, isUpdating, isPendingExitCounter,
     isNormalExit: Boolean;
     FavoriteManager: TFavoriteManager;
     dataProcess: TDBDataProcess;
@@ -1078,7 +1078,6 @@ begin
   btAbortUpdateList.Parent := sbUpdateList;
   isRunDownloadFilter := False;
   isUpdating := False;
-  isExiting := False;
   isGetMangaInfos := False;
   isPendingExitCounter:=False;
   isNormalExit:=False;
@@ -1271,14 +1270,29 @@ end;
 
 procedure TMainForm.CloseNow;
 begin
+  isExiting := True;
   {$ifdef windows}
   if Assigned(PrevWndProc) then
     windows.SetWindowLongPtr(Self.Handle, GWL_WNDPROC, PtrInt(PrevWndProc));
   {$endif}
-  Logger.Send(Self.ClassName+'.CloseNow, terminating all threads and waitfor');
-  FavoriteManager.StopChekForNewChapter(True);
-  SilentThreadManager.StopAll(True);
-  DLManager.StopAllDownloadTasksForExit;
+  if FavoriteManager.isRunning then
+  begin
+    Logger.Send(Self.ClassName+'.CloseNow, terminating check favorites threads');
+    FavoriteManager.StopChekForNewChapter(True);
+    Logger.Send(Self.ClassName+'.CloseNow, check favorites threads terminated');
+  end;
+  if SilentThreadManager.Count > 0 then
+  begin
+    Logger.Send(Self.ClassName+'.CloseNow, terminating silentthreads');
+    SilentThreadManager.StopAll(True);
+    Logger.Send(Self.ClassName+'.CloseNow, silentthreads terminated');
+  end;
+  if DLManager.ItemsActiveTask.Count > 0 then
+  begin
+    Logger.Send(Self.ClassName+'.CloseNow, terminating downloads threads');
+    DLManager.StopAllDownloadTasksForExit;
+    Logger.Send(Self.ClassName+'.CloseNow, downlads threads terminated');
+  end;
   //Terminating all threads and wait for it
   if Assigned(CheckUpdateThread) then
   begin
@@ -1324,11 +1338,12 @@ begin
   tmAnimateMangaInfo.Enabled := False;
   tmExitCommand.Enabled := False;
 
-  Logger.Send(Self.ClassName+'.CloseNow, backup all data to file');
   //Backup data
+  Logger.Send(Self.ClassName+'.CloseNow, backup downloads');
   DLManager.Backup;
-  isExiting := True;
+  Logger.Send(Self.ClassName+'.CloseNow, backup favorites');
   FavoriteManager.Backup;
+  Logger.Send(Self.ClassName+'.CloseNow, backup all data to file');
   SaveOptions;
   SaveFormInformation;
 
@@ -3432,7 +3447,7 @@ procedure TMainForm.pmSbMainPopup(Sender: TObject);
 begin
   if Assigned(SilentThreadManager) then
   begin
-    if SilentThreadManager.ItemCount = 0 then
+    if SilentThreadManager.Count = 0 then
       Abort;
   end
   else
