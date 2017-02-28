@@ -15,9 +15,10 @@ unit uDownloadsManager;
 interface
 
 uses
-  LazFileUtils, FastHTMLParser, HTMLUtil, SynaCode, RegExpr, Classes, SysUtils,
-  ExtCtrls, typinfo, fgl, blcksock, MultiLog, uBaseUnit, uPacker, uMisc,
-  DownloadedChaptersDB, FMDOptions, httpsendthread, dateutils, strutils;
+  LazFileUtils, FastHTMLParser, HTMLUtil, SynaCode, RegExpr, IniFiles, Classes,
+  SysUtils, ExtCtrls, typinfo, fgl, blcksock, MultiLog, uBaseUnit, uPacker,
+  uMisc, DownloadedChaptersDB, FMDOptions, httpsendthread, DownloadsDB,
+  dateutils, strutils;
 
 type
   TDownloadStatusType = (
@@ -124,6 +125,7 @@ type
     procedure SetStatus(AValue: TDownloadStatusType);
     procedure SetWebsite(AValue: String);
   public
+    DlId: Integer;
     // critical section
     CS_Container: TRTLCriticalSection;
     // read count for transfer rate
@@ -171,10 +173,11 @@ type
   private
     FSortDirection: Boolean;
     FSortColumn: Integer;
-    DownloadManagerFile: TIniFileRun;
+    FDownloadsDB: TDownloadsDB;
     procedure AddItemsActiveTask(const Item: TTaskContainer);
     procedure RemoveItemsActiveTask(const Item: TTaskContainer);
     function GetTask(const TaskId: Integer): TTaskContainer;
+    function ConvertToDB: Boolean;
   protected
     function GetTaskCount: Integer; inline;
     function GetTransferRate: Integer;
@@ -1446,6 +1449,7 @@ end;
 constructor TTaskContainer.Create;
 begin
   inherited Create;
+  DlId := -1;
   InitCriticalSection(CS_Container);
   ThreadState := False;
   ChapterLinks := TStringList.Create;
@@ -1593,7 +1597,6 @@ begin
   InitCriticalSection(CS_Task);
   InitCriticalSection(CS_ItemsActiveTask);
   ForceDirectoriesUTF8(WORK_FOLDER);
-  DownloadManagerFile := TIniFileRun.Create(WORK_FILE);
   DownloadedChapters := TDownloadedChaptersDB.Create;
   DownloadedChapters.Filename := DOWNLOADEDCHAPTERSDB_FILE;
   DownloadedChapters.OnError := MainForm.ExceptionHandler;
@@ -1613,6 +1616,8 @@ begin
   for ds := Low(StatusCount) to High(StatusCount) do
     StatusCount[ds] := 0;
   DisabledCount := 0;
+  FDownloadsDB := TDownloadsDB.Create(WORK_FILEDB);
+  FDownloadsDB.Open(True, False);
 end;
 
 destructor TDownloadManager.Destroy;
@@ -1623,160 +1628,145 @@ begin
     Items.Remove(Items.Last);
   end;
   Items.Free;
-  DownloadManagerFile.Free;
   ItemsActiveTask.Free;
   DownloadedChapters.Free;
+  FDownloadsDB.Free;
   DoneCriticalsection(CS_ItemsActiveTask);
   DoneCriticalsection(CS_Task);
   DoneCriticalsection(CS_StatusCount);
   inherited Destroy;
 end;
 
-procedure TDownloadManager.Restore;
+function TDownloadManager.ConvertToDB: Boolean;
 var
-  tid, s: String;
-  tmp, i, j: Integer;
+  i, d: Integer;
+  s: String;
 begin
-  EnterCriticalSection(CS_Task);
+  Result := False;
+  if not FileExistsUTF8(WORK_FILE) then Exit;
+  with TIniFile.Create(WORK_FILE) do
   try
-    while Items.Count > 0 do
+    i := ReadInteger('general', 'NumberOfTasks', 0);
+    if i = 0 then Exit;
+    for i := 0 to i - 1 do
     begin
-      Items.Last.Free;
-      Items.Remove(Items.Last);
+      d := -1;
+      s := 'task' + IntToStr(i);
+      FDownloadsDB.Add(d,
+        ReadBool(s, 'Enabled', True),
+        i,
+        ReadInteger(s, 'TaskStatus', 0),
+        ReadInteger(s, 'ChapterPtr', 0),
+        ReadInteger(s, 'NumberOfPages', 0),
+        ReadInteger(s, 'CurrentPage', 0),
+        ReadString(s, 'Website', ''),
+        ReadString(s, 'Link', ''),
+        ReadString(s, 'Title', ''),
+        ReadString(s, 'Status', ''),
+        ReadString(s, 'Progress', ''),
+        ReadString(s, 'SaveTo', ''),
+        StrToFloatDef(ReadString(s, 'DateTime', ''), Now, FMDFormatSettings),
+        ReadString(s, 'ChapterLinks', ''),
+        ReadString(s, 'ChapterName', ''),
+        ReadString(s, 'PageLinks', ''),
+        ReadString(s, 'PageContainerLinks', ''),
+        ReadString(s, 'Filenames', ''),
+        ReadString(s, 'CustomFileName', DEFAULT_FILENAME_CUSTOMRENAME),
+        ReadString(s, 'FailedChapterLinks', ''),
+        ReadString(s, 'FailedChapterName', ''));
     end;
+    FDownloadsDB.Commit;
+    FDownloadsDB.Refresh(False);
+    Result := True;
+  finally
+    Free;
+  end;
+  if Result then
+    Result := DeleteFileUTF8(WORK_FILE);
+end;
 
-    tmp := DownloadManagerFile.ReadInteger('general', 'NumberOfTasks', 0);
-    if tmp = 0 then
-      Exit;
-    for i := 0 to tmp - 1 do
+procedure TDownloadManager.Restore;
+begin
+  if not FDownloadsDB.Connected then Exit;
+  if not FDownloadsDB.Table.Active then Exit;
+  ConvertToDB;
+  if FDownloadsDB.RecordCount = 0 then Exit;
+  try
+    EnterCriticalsection(CS_Task);
+    FDownloadsDB.Table.First;
+    while not FDownloadsDB.Table.EOF do
     begin
-      // restore download task from file
       Items.Add(TTaskContainer.Create);
-      with DownloadManagerFile, Items.Last do
+      with Items.Last, FDownloadsDB.Table do
       begin
-        tid := 'task' + IntToStr(i);
         Manager := Self;
-        DownloadInfo.Website := ReadString(tid, 'Website', 'NULL');
-        DownloadInfo.Link := ReadString(tid, 'Link', '');
-        DownloadInfo.Title := ReadString(tid, 'Title', 'NULL');
-        DownloadInfo.SaveTo := ReadString(tid, 'SaveTo', 'NULL');
-        DownloadInfo.Status := ReadString(tid, 'Status', 'NULL');
-        DownloadInfo.Progress := ReadString(tid, 'Progress', 'NULL');
-        Enabled := ReadBool(tid, 'Enabled', True);
-        if Pos('/', DownloadInfo.Progress) > 0 then
-        begin
-          DownCounter := StrToIntDef(ExtractWord(1, DownloadInfo.Progress, ['/']), 0);
-          PageNumber := StrToIntDef(ExtractWord(2, DownloadInfo.Progress, ['/']), 0);
-        end;
-        CustomFileName := ReadString(tid, 'CustomFileName', DEFAULT_FILENAME_CUSTOMRENAME);
-        s := ReadString(tid, 'ChapterLinks', '');
-        if s <> '' then GetParams(ChapterLinks, s);
-        s := ReadString(tid, 'ChapterName', '');
-        if s <> '' then GetParams(ChapterName, s);
-        s := ReadString(tid, 'FailedChapterLinks', '');
-        if s <> '' then GetParams(FailedChapterLinks, s);
-        s := ReadString(tid, 'FailedChapterName', '');
-        if s <> '' then GetParams(FailedChapterName, s);
-        s := ReadString(tid, 'PageLinks', '');
-        if s <> '' then GetParams(PageLinks, s);
-        s := ReadString(tid, 'PageContainerLinks', '');
-        if s <> '' then GetParams(PageContainerLinks, s);
-        s := ReadString(tid, 'Filenames', '');
-        if s <> '' then GetParams(FileNames, s);
-        j := ReadInteger(tid, 'TaskStatus', -1);
-        if j >= 0 then
-          Status := TDownloadStatusType(j)
-        else
-        begin
-          s := ReadString(tid, 'TaskStatus', 'STATUS_STOP');
-          Status := TDownloadStatusType(GetEnumValue(TypeInfo(TDownloadStatusType), s));
-          if Status = STATUS_COMPRESS then
-            Status := STATUS_WAIT;
-        end;
-        CurrentDownloadChapterPtr := ReadInteger(tid, 'ChapterPtr', 0);
-        PageNumber := ReadInteger(tid, 'NumberOfPages', 0);
-        CurrentPageNumber := ReadInteger(tid, 'CurrentPage', 0);
-        if Status = STATUS_COMPRESS then
-          DownloadInfo.Status := Format('[%d/%d] %s',[CurrentDownloadChapterPtr+1,ChapterLinks.Count,RS_Waiting]);
-        s := ReadString(tid, 'DateTime', '');
-        //for old config
-        if (Pos('/', s) > 0) or (Pos('\', s) > 0) then
-          DownloadInfo.dateTime := StrToDateDef(s, Now)
-        else
-        begin
-          s := StringReplace(s, ',', FMDFormatSettings.DecimalSeparator, [rfReplaceAll]);
-          s := StringReplace(s, '.', FMDFormatSettings.DecimalSeparator, [rfReplaceAll]);
-          DownloadInfo.dateTime := StrToFloatDef(s, Now, FMDFormatSettings);
-        end;
-        if DownloadInfo.dateTime > Now then DownloadInfo.dateTime := Now;
-
-        Website := DownloadInfo.Website;
-        ThreadState := False;
-
-        //validating
-        if (CurrentDownloadChapterPtr > 0) and (CurrentDownloadChapterPtr >= ChapterLinks.Count) then
-          CurrentDownloadChapterPtr := ChapterLinks.Count - 1;
+        DlId                      := Fields[0].AsInteger;
+        Enabled                   := Fields[1].AsBoolean;
+        Status                    := TDownloadStatusType(Fields[3].AsInteger);
+        CurrentDownloadChapterPtr := Fields[4].AsInteger;
+        PageNumber                := Fields[5].AsInteger;
+        CurrentPageNumber         := Fields[6].AsInteger;
+        Website                   := Fields[7].AsString;
+        DownloadInfo.Website      := Fields[7].AsString;
+        DownloadInfo.Link         := Fields[8].AsString;
+        DownloadInfo.Title        := Fields[9].AsString;
+        DownloadInfo.Status       := Fields[10].AsString;
+        DownloadInfo.Progress     := Fields[11].AsString;
+        DownloadInfo.SaveTo       := Fields[12].AsString;
+        DownloadInfo.DateTime     := Fields[13].AsDateTime;
+        ChapterLinks.Text         := Fields[14].AsString;
+        ChapterName.Text          := Fields[15].AsString;
+        PageLinks.Text            := Fields[16].AsString;
+        PageContainerLinks.Text   := Fields[17].AsString;
+        FileNames.Text            := Fields[18].AsString;
+        CustomFileName            := Fields[19].AsString;
+        FailedChapterLinks.Text   := Fields[20].AsString;
+        FailedChapterName.Text    := Fields[21].AsString;
       end;
+      FDownloadsDB.Table.Next;
     end;
   finally
-    LeaveCriticalSection(CS_Task);
+    LeaveCriticalsection(CS_Task);
   end;
 end;
 
 procedure TDownloadManager.Backup;
 var
   i: Integer;
-  tid: String;
 begin
-  if isRunningBackup then
-    Exit;
-
+  if isRunningBackup then Exit;
+  if Items.Count = 0 then Exit;
+  if not FDownloadsDB.Connected then Exit;
   isRunningBackup := True;
   EnterCriticalSection(CS_Task);
-  with DownloadManagerFile do
   try
-    // Erase all sections
-    for i := 0 to ReadInteger('general', 'NumberOfTasks', 0) do
-      EraseSection('task' + IntToStr(i));
-    EraseSection('general');
-
-    // backup
-    if Items.Count > 0 then
-    begin
-      WriteInteger('general', 'NumberOfTasks', Items.Count);
-      for i := 0 to Items.Count - 1 do
+    for i := 0 to Items.Count - 1 do
+      with Items[i] do
       begin
-        tid := 'task' + IntToStr(i);
-        with Items[i] do begin
-          WriteString(tid, 'Website', DownloadInfo.Website);
-          WriteString(tid, 'Link', DownloadInfo.Link);
-          WriteString(tid, 'Title', DownloadInfo.Title);
-          WriteString(tid, 'SaveTo', DownloadInfo.SaveTo);
-          WriteString(tid, 'Status', DownloadInfo.Status);
-          WriteString(tid, 'Progress', DownloadInfo.Progress);
-          WriteBool(tid, 'Enabled', Enabled);
-          WriteString(tid, 'DateTime', FloatToStr(DownloadInfo.dateTime, FMDFormatSettings));
-          WriteString(tid, 'CustomFileName', CustomFileName);
-          WriteString(tid, 'ChapterLinks', SetParams(ChapterLinks));
-          WriteString(tid, 'ChapterName', SetParams(ChapterName));
-          if FailedChapterLinks.Count > 0 then
-            WriteString(tid, 'FailedChapterLinks', SetParams(FailedChapterLinks));
-          if FailedChapterName.Count > 0 then
-            WriteString(tid, 'FailedChapterName', SetParams(FailedChapterName));
-          if PageLinks.Count > 0 then
-            WriteString(tid, 'PageLinks', SetParams(PageLinks));
-          if PageContainerLinks.Count > 0 then
-            WriteString(tid, 'PageContainerLinks', SetParams(PageContainerLinks));
-          if FileNames.Count > 0 then
-            WriteString(tid, 'Filenames', SetParams(FileNames));
-          WriteString(tid, 'TaskStatus', GetEnumName(TypeInfo(TDownloadStatusType), Integer(Status)));
-          WriteInteger(tid, 'ChapterPtr', CurrentDownloadChapterPtr);
-          WriteInteger(tid, 'NumberOfPages', PageNumber);
-          WriteInteger(tid, 'CurrentPage', CurrentPageNumber);
-        end;
+        FDownloadsDB.Add(DlId,
+          Enabled,
+          i,
+          Integer(Status),
+          CurrentDownloadChapterPtr,
+          PageNumber,
+          CurrentPageNumber,
+          Website,
+          DownloadInfo.Link,
+          DownloadInfo.Title,
+          DownloadInfo.Status,
+          DownloadInfo.Progress,
+          DownloadInfo.SaveTo,
+          DownloadInfo.DateTime,
+          ChapterLinks.Text,
+          ChapterName.Text,
+          PageLinks.Text,
+          PageContainerLinks.Text,
+          FileNames.Text,
+          CustomFileName,
+          FailedChapterLinks.Text,
+          FailedChapterName.Text);
       end;
-    end;
-    UpdateFile;
+    FDownloadsDB.Commit;
   finally
     LeaveCriticalSection(CS_Task);
   end;
