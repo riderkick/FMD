@@ -30,12 +30,9 @@ type
     FInfo: TMangaInformation;
     FNumChapter: Cardinal;
     // Return TRUE if we can load manga cover.
-    FIsHasMangaCover,
+    FIsHasMangaCover: Boolean;
     // Flush this thread, means that the result will not be shown.
-    FIsFlushed: Boolean;
-
     procedure Execute; override;
-
     procedure MainThreadSyncInfos;
     procedure MainThreadShowInfos;
     procedure MainThreadShowCover;
@@ -43,11 +40,9 @@ type
   public
     constructor Create;
     destructor Destroy; override;
-
     property Title: String read FTitle write FTitle;
     property Website: String read FWebsite write FWebsite;
     property Link: String read FLink write FLink;
-    property IsFlushed: Boolean read FIsFlushed write FIsFlushed;
     property MangaListPos: Integer read FMangaListPos write FMangaListPos;
   end;
 
@@ -105,7 +100,7 @@ procedure TGetMangaInfosThread.Execute;
 
       infob := FInfo.GetInfoFromURL(Website, Link, 0);
 
-      if Self.Terminated then Exit;
+      if Terminated or isExiting then Exit;
       if infob <> NO_ERROR then Exit;
 
       //set back if title changed
@@ -132,7 +127,8 @@ procedure TGetMangaInfosThread.Execute;
                 MainForm.DataProcess.Value[filterPos, DATA_PARAM_SUMMARY];
           end;
 
-          Synchronize(MainThreadSyncInfos);
+          if not (Terminated or isExiting) then
+            Synchronize(MainThreadSyncInfos);
         end;
       end;
       Result := True;
@@ -143,7 +139,6 @@ procedure TGetMangaInfosThread.Execute;
   end;
 
 begin
-  MainForm.isGetMangaInfos := True;
   try
     if not GetMangaInfo then
     begin
@@ -179,67 +174,46 @@ end;
 
 procedure TGetMangaInfosThread.MainThreadShowCannotGetInfo;
 begin
-  if IsFlushed then
-    Exit;
-  try
-    MessageDlg('', RS_DlgCannotGetMangaInfo,
-      mtInformation, [mbYes], 0);
-    MainForm.rmInformation.Clear;
-    MainForm.tmAnimateMangaInfo.Enabled := False;
-    MainForm.pbWait.Visible := False;
-    MainForm.imCover.Picture.Assign(nil);
-  except
-    on E: Exception do
-      MainForm.ExceptionHandler(Self, E);
-  end;
+  MessageDlg('', RS_DlgCannotGetMangaInfo,
+    mtInformation, [mbYes], 0);
+  MainForm.rmInformation.Clear;
+  MainForm.tmAnimateMangaInfo.Enabled := False;
+  MainForm.pbWait.Visible := False;
+  MainForm.imCover.Picture.Assign(nil);
 end;
 
 procedure TGetMangaInfosThread.MainThreadShowInfos;
 begin
-  if IsFlushed then Exit;
-  try
-    TransferMangaInfo(MainForm.mangaInfo, FInfo.mangaInfo);
-    with MainForm do begin
-      if (FMangaListPos > -1) and dataProcess.WebsiteLoaded(Website) then
-        begin
-          vtMangaList.BeginUpdate;
-          dataProcess.Refresh;
-          vtMangaList.EndUpdate;
-        end;
-      ShowInformation(mangaInfo.title, mangaInfo.website, mangaInfo.link);
-    end;
-  except
-    on E: Exception do
-      MainForm.ExceptionHandler(Self, E);
+  TransferMangaInfo(MainForm.mangaInfo, FInfo.mangaInfo);
+  with MainForm do begin
+    if (FMangaListPos > -1) and dataProcess.WebsiteLoaded(Website) then
+      begin
+        vtMangaList.BeginUpdate;
+        dataProcess.Refresh;
+        vtMangaList.EndUpdate;
+      end;
+    ShowInformation(mangaInfo.title, mangaInfo.website, mangaInfo.link);
   end;
 end;
 
 procedure TGetMangaInfosThread.MainThreadShowCover;
 begin
-  if IsFlushed then
-    Exit;
-  try
-    MainForm.tmAnimateMangaInfo.Enabled := False;
-    MainForm.pbWait.Visible := False;
-    if FIsHasMangaCover then
-    begin
-      try
-        MainForm.imCover.Picture.Assign(FCover);
-      except
-        on E: Exception do ;
-      end;
-      FCover.Clear;
+  MainForm.tmAnimateMangaInfo.Enabled := False;
+  MainForm.pbWait.Visible := False;
+  if FIsHasMangaCover then
+  begin
+    try
+      MainForm.imCover.Picture.Assign(FCover);
+    except
+      on E: Exception do ;
     end;
-  except
-    on E: Exception do
-      MainForm.ExceptionHandler(Self, E);
+    FCover.Clear;
   end;
 end;
 
 constructor TGetMangaInfosThread.Create;
 begin
   inherited Create(True);
-  FIsFlushed := False;
   FInfo := TMangaInformation.Create(Self);
   FCover := MainForm.mangaCover;
   FMangaListPos := -1;
@@ -250,8 +224,7 @@ begin
   Modules.DecActiveConnectionCount(FInfo.ModuleId);
   FInfo.Free;
   FCover := nil;
-  if not IsFlushed then
-    MainForm.isGetMangaInfos := False;
+  MainForm.GetInfosThread := nil;
   inherited Destroy;
 end;
 
