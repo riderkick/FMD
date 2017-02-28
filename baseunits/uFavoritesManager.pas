@@ -117,6 +117,8 @@ type
       ASaveTo, ALink: String);
     // Merge a favorites.ini with another favorites.ini
     procedure MergeWith(const APath: String);
+    // Free then delete favorite without any check, use with caution
+    procedure FreeAndDelete(const Pos: Integer);
     // Remove a manga from FFavorites
     procedure Remove(const Pos: Integer; const isBackup: Boolean = True);
     // Restore information from favorites.db
@@ -691,10 +693,7 @@ begin
               if Assigned(NewMangaInfo) and
                 (NewMangaInfoChaptersPos.Count = 0) and
                 (NewMangaInfo.status = MangaInfo_StatusCompleted) then
-              begin
-                Items[i].Free;
-                Items.Delete(i);
-              end
+                FreeAndDelete(i)
               else
                 Inc(i);
             end;
@@ -938,16 +937,21 @@ begin
   isRunning := False;
 end;
 
+procedure TFavoriteManager.FreeAndDelete(const Pos: Integer);
+begin
+  with Items[Pos].FavoriteInfo do
+    FFavoritesDB.Delete(Website, Link);
+  Items[Pos].Free;
+  Items.Delete(Pos);
+end;
+
 procedure TFavoriteManager.Remove(const Pos: Integer; const isBackup: Boolean);
 begin
   if (not isRunning) and (Pos < Items.Count) then
   begin
     EnterCriticalsection(CS_Favorites);
     try
-      with Items[Pos].FavoriteInfo do
-        FFavoritesDB.Delete(Website, Link);
-      Items[Pos].Free;
-      Items.Delete(Pos);
+      FreeAndDelete(Pos);
       if isBackup then
         Backup;
     finally

@@ -1764,9 +1764,7 @@ begin
               if SameText(DLManager[xNode^.Index].DownloadInfo.Link, FavoriteManager[i].FavoriteInfo.Link)
                 and SameText(DLManager[xNode^.Index].DownloadInfo.Website, FavoriteManager[i].FavoriteInfo.Website) then
                 begin
-                  FavoriteManager.Items[i].Free;
-                  FavoriteManager.Items.Delete(i);
-                  UpdateVtFavorites;
+                  FavoriteManager.FreeAndDelete(i);
                   Break;
                 end;
             end;
@@ -1783,6 +1781,7 @@ begin
   end;
   vtDownload.RootNodeCount := DLManager.Items.Count;
   vtDownload.EndUpdate;
+  UpdateVtFavorites;
   UpdateVtDownload;
   DLManager.CheckAndActiveTask();
   Exit;
