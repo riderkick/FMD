@@ -1771,8 +1771,7 @@ begin
           finally
             FavoriteManager.LockRelease;
           end;
-        Free;
-        DLManager.Items.Delete(xNode^.Index);
+        DLManager.FreeAndDelete(xNode^.Index);
       end;
       xNode := vtDownload.GetPreviousSelected(xNode);
     end;

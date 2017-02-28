@@ -240,8 +240,10 @@ type
     procedure StopAllTasks;
     // Stop all download task inside a task before terminate the program.
     procedure StopAllDownloadTasksForExit;
+    // Free then delete task without any check, use with caution
+    procedure FreeAndDelete(const TaskId: Integer);
     // Remove a task from list.
-    procedure RemoveTask(const taskID: Integer);
+    procedure RemoveTask(const TaskID: Integer);
     // Remove all finished tasks.
     procedure RemoveAllFinishedTasks;
     // check status of task
@@ -1986,17 +1988,23 @@ begin
   end;
 end;
 
-procedure TDownloadManager.RemoveTask(const taskID: Integer);
+procedure TDownloadManager.FreeAndDelete(const TaskId: Integer);
+begin
+  FDownloadsDB.Delete(Items[TaskID].DlId);
+  Items[TaskID].Free;
+  Items.Delete(taskID);
+end;
+
+procedure TDownloadManager.RemoveTask(const TaskID: Integer);
 begin
   EnterCriticalSection(CS_Task);
   try
-    with Items[taskID] do
+    with Items[TaskID] do
       if ThreadState then begin
         Task.Terminate;
         Task.WaitFor;
       end;
-    Items[taskID].Free;
-    Items.Delete(taskID);
+    FreeAndDelete(TaskID);
   finally
     LeaveCriticalSection(CS_Task);
   end;
@@ -2012,10 +2020,7 @@ begin
   try
     for i := Items.Count - 1 downto 0 do
       if Items[i].Status = STATUS_FINISH then
-      begin
-        Items[i].Free;
-        Items.Delete(i)
-      end;
+        FreeAndDelete(i);
   finally
     LeaveCriticalsection(CS_Task);
   end;
