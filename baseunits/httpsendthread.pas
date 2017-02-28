@@ -128,6 +128,7 @@ begin
     Delete(URL,1,p);
   end;
   p:=poschar(':',URL);
+  q:=0;
   if (p<>0) and (p<Length(URL)) and (URL[P+1] in ['0'..'9']) then
   begin
     for q:=p+1 to Length(URL) do
