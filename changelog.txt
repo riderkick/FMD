@@ -4,6 +4,16 @@ Project page: https://github.com/riderkick/FMD
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.94.0 (28-02-2017)
+[!+] Favorites and Downloads now saved in SQLite database file
+     WARNING: Please backup your favorites.ini and works.ini before update
+[*] Sorted downloads and favorites only allowed with left click
+[*] Fixed various issue with downloaded chapter list
+[*] Hentai2Read: fixed download
+[+] Added HelveticaScans[EN-SC]
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.93.0...0.9.94.0
+
 0.9.93.0 (22-02-2017)
 [*] WPManga: Fixed memory leak
 Full changes: https://github.com/riderkick/FMD/compare/0.9.92.0...0.9.93.0
