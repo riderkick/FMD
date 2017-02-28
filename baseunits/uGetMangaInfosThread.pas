@@ -147,22 +147,20 @@ begin
     end
     else
     begin
-      if not (Terminated or isExiting) then
-        Synchronize(MainThreadShowInfos);
+      if Terminated or isExiting then Exit;
+      Synchronize(MainThreadShowInfos);
       FCover.Clear;
       // If there's cover then we will load it to the TPicture component.
       if OptionEnableLoadCover and (Trim(FInfo.mangaInfo.coverLink) <> '') then
-      begin
-        FInfo.FHTTP.Document.Clear;
-        FIsHasMangaCover := FInfo.FHTTP.GET(FInfo.mangaInfo.coverLink);
-        if FIsHasMangaCover then
-          try
+        try
+          FInfo.FHTTP.Document.Clear;
+          if FInfo.FHTTP.GET(FInfo.mangaInfo.coverLink) then
+          begin
             FCover.LoadFromStream(FInfo.FHTTP.Document);
-          except
+            FIsHasMangaCover := True;
           end;
-      end
-      else
-        FIsHasMangaCover := False;
+        except
+        end;
       if not (Terminated or isExiting) then
         Synchronize(MainThreadShowCover);
     end;
@@ -216,15 +214,16 @@ begin
   inherited Create(True);
   FInfo := TMangaInformation.Create(Self);
   FCover := MainForm.mangaCover;
+  FIsHasMangaCover := False;
   FMangaListPos := -1;
 end;
 
 destructor TGetMangaInfosThread.Destroy;
 begin
   Modules.DecActiveConnectionCount(FInfo.ModuleId);
-  FInfo.Free;
-  FCover := nil;
   MainForm.GetInfosThread := nil;
+  FCover := nil;
+  FInfo.Free;
   inherited Destroy;
 end;
 

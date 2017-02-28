@@ -1316,8 +1316,11 @@ begin
   if Assigned(GetInfosThread) then
   begin
     Logger.Send(Self.ClassName+'.CloseNow, terminating GetInfosThread');
-    GetInfosThread.Terminate;
-    GetInfosThread.WaitFor;
+    try
+      GetInfosThread.Terminate;
+      GetInfosThread.WaitFor;
+    except
+    end;
     Logger.Send(Self.ClassName+'.CloseNow, GetInfosThread terminated');
   end;
   if isUpdating then
@@ -4420,10 +4423,12 @@ begin
 
   // terminate exisiting getmangainfo thread
   if Assigned(GetInfosThread) then
-  begin
-    GetInfosThread.Terminate;
-    GetInfosThread.WaitFor;
-  end;
+    try
+      { TODO -oriderkick : Access violation on terminate }
+      GetInfosThread.Terminate;
+      GetInfosThread.WaitFor;
+    except
+    end;
 
   TURL := Trim(AURL);
   // fix url
@@ -4457,8 +4462,6 @@ begin
     btAddToFavorites.Enabled := not FavoriteManager.IsMangaExist(ATitle, AWebsite);
 
   // start the thread
-  while Assigned(GetInfosThread) do
-    Sleep(32);
   GetInfosThread := TGetMangaInfosThread.Create;
   GetInfosThread.MangaListPos := AMangaListPos;
   GetInfosThread.Title := ATitle;
@@ -4480,14 +4483,7 @@ begin
     try
       Lines.BeginUpdate;
       Lines.Clear;
-      if (GetInfosThread <> nil) and
-        ((GetInfosThread.MangaListPos > -1) or (GetInfosThread.MangaListPos = -2)) then
-      begin
-        mangaInfo.title := title;
-        mangaInfo.link := link;
-      end
-      else
-        edURL.Text := mangaInfo.url;
+      edURL.Text := mangaInfo.url;
       AddTextToInfo(RS_InfoTitle, mangaInfo.title);
       AddTextToInfo(RS_InfoAuthors, mangaInfo.authors);
       AddTextToInfo(RS_InfoArtists, mangaInfo.artists);
