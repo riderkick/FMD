@@ -1706,6 +1706,8 @@ begin
         DownloadInfo.Title        := Fields[9].AsString;
         DownloadInfo.Status       := Fields[10].AsString;
         DownloadInfo.Progress     := Fields[11].AsString;
+        if Pos('/', DownloadInfo.Progress) <> 0 then
+          DownCounter := StrToIntDef(Trim(ExtractWord(1, DownloadInfo.Progress, ['/'])), 0);
         DownloadInfo.SaveTo       := Fields[12].AsString;
         DownloadInfo.DateTime     := Fields[13].AsDateTime;
         ChapterLinks.Text         := Fields[14].AsString;
