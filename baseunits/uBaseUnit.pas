@@ -778,7 +778,7 @@ procedure GetParams(var output: TCardinalList; input: String); overload;
 procedure GetParams(var output: TList; input: String); overload;
 function ExtractParam(const output: TStrings; input, sep: String;
   WhiteSp: Boolean = True): Integer;
-function GetParams(const input: String): String; overload;
+function GetParams(const input: String): String; overload; inline;
 
 function RemoveDuplicateNumbersInString(const AString: String): String;
 // Set param from input
