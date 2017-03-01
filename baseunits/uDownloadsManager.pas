@@ -1660,14 +1660,14 @@ begin
         ReadString(s, 'Progress', ''),
         ReadString(s, 'SaveTo', ''),
         StrToFloatDef(ReadString(s, 'DateTime', ''), Now, FMDFormatSettings),
-        ReadString(s, 'ChapterLinks', ''),
-        ReadString(s, 'ChapterName', ''),
-        ReadString(s, 'PageLinks', ''),
-        ReadString(s, 'PageContainerLinks', ''),
-        ReadString(s, 'Filenames', ''),
+        GetParams(ReadString(s, 'ChapterLinks', '')),
+        GetParams(ReadString(s, 'ChapterName', '')),
+        GetParams(ReadString(s, 'PageLinks', '')),
+        GetParams(ReadString(s, 'PageContainerLinks', '')),
+        GetParams(ReadString(s, 'Filenames', '')),
         ReadString(s, 'CustomFileName', DEFAULT_FILENAME_CUSTOMRENAME),
-        ReadString(s, 'FailedChapterLinks', ''),
-        ReadString(s, 'FailedChapterName', ''));
+        GetParams(ReadString(s, 'FailedChapterLinks', '')),
+        GetParams(ReadString(s, 'FailedChapterName', '')));
     end;
     FDownloadsDB.Commit;
     FDownloadsDB.Refresh(False);
