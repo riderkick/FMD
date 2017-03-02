@@ -347,8 +347,6 @@ const
   ANIMEA_BROWSER = '/browse.html?page=';
   ANIMEA_SKIP = '?skip=1';
 
-  OURMANGA_BROWSER = '/directory/';
-
   MANGA24H_BROWSER = '/manga/update/page/';
 
   VNSHARING_BROWSER = '/DanhSach';
@@ -358,8 +356,6 @@ const
 
   TRUYEN18_ROOT = 'http://www.truyen18.org';
   TRUYEN18_BROWSER = '/moi-dang/danhsach';
-
-  MANGATRADERS_BROWSER = '/directory/';
 
   TRUYENTRANHTUAN_BROWSER = '/danh-sach-truyen';
 
