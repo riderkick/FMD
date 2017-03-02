@@ -5194,11 +5194,9 @@ end;
 procedure TMainForm.edURLButtonClick(Sender: TObject);
 var
   i: Integer;
-  webid: Cardinal;
   website,
   host,
   link: String;
-  regx: TRegExpr;
 begin
   btDownload.Enabled := False;
   btDownloadSplit.Enabled := btDownload.Enabled;
@@ -5206,51 +5204,32 @@ begin
   btReadOnline.Enabled := False;
 
   website := '';
-  host := '';
-  link := '';
-  edURL.Text := FixURL(edURL.Text);
+  SplitURL(edURL.Text, host, link);
 
-  regx := TRegExpr.Create;
-  try
-    regx.Expression := '^https?\://';
-    if not (regx.Exec(edURL.Text)) then
-      edURL.Text := 'http://' + edURL.Text;
-
-    regx.Expression := REGEX_HOST;
-    if regx.Exec(edURL.Text) then
+  if (host <> '') and (link <> '') then
+  begin
+    host := LowerCase(host);
+    i := Modules.LocateModuleByHost(host);
+    if i <> -1 then
     begin
-      host := regx.Replace(edURL.Text, '$2', True);
-      link := regx.Replace(edURL.Text, '$4', True);
-    end;
-
-    if (host <> '') and (link <> '') then
+      website := Modules.Module[i].Website;
+      edURL.Text := FillHost(Modules.Module[i].RootURL, link);
+    end
+    else
     begin
-      host := LowerCase(host);
-      i := Modules.LocateModuleByHost(host);
-      if i > -1 then
+      i := LocateMangaSiteID(host);
+      if i <> -1 then
       begin
-        website := Modules.Module[i].Website;
-        edURL.Text := FillHost(Modules.Module[i].RootURL, link);
-      end
-      else
-      begin
-        for i := Low(WebsiteRoots) to High(WebsiteRoots) do
-          if Pos(host, WebsiteRoots[i, 1]) > 0 then
-          begin
-            webid := i;
-            website := WebsiteRoots[i, 0];
-            Break;
-          end;
-        if website <> '' then
-          edURL.Text := FillMangaSiteHost(webid, link);
+        website := WebsiteRoots[i, 0];
+        edURL.Text := FillMangaSiteHost(i, link);
       end;
     end;
-  finally
-    regx.Free;
   end;
 
   if (website = '') or (link = '') then
   begin
+    tmAnimateMangaInfo.Enabled := False;
+    pbWait.Visible := False;
     MessageDlg('', RS_DlgURLNotSupport, mtInformation, [mbYes], 0);
     Exit;
   end;
