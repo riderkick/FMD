@@ -632,6 +632,7 @@ function CorrectFilePath(const APath: String): String;
 function CorrectURL(const URL: String): String;
 procedure CheckPath(const S: String);
 
+function LocateMangaSiteID(const URL: String): Integer;
 function GetMangaSiteID(const Name: String): Integer;
 function GetMangaSiteName(const ID: Cardinal): String;
 function GetMangaSiteRoot(const Website: String): String; overload;
@@ -1061,14 +1062,40 @@ begin
   end;
 end;
 
+function LocateMangaSiteID(const URL: String): Integer;
+
+  function PosMangaSite(const s: String): Integer;
+  var
+    i: Integer;
+  begin
+    for i := Low(WebsiteRoots) to High(WebsiteRoots) do
+      if Pos(s, LowerCase(WebsiteRoots[i, 1])) <> 0 then
+        Exit(i);
+    Result := -1;
+  end;
+
+var
+  h, p: String;
+begin
+  Result := -1;
+  h := LowerCase(URL);
+  Result := PosMangaSite(h);
+  if Result = -1 then
+  begin
+    SplitURL(h, h, p, False, False);
+    if h = '' then Exit;
+    Result := PosMangaSite(h);
+  end;
+end;
+
 function GetMangaSiteID(const Name: String): Integer;
 var
   i: Integer;
 begin
-  Result := High(WebsiteRoots) + 1;
   for i := Low(WebsiteRoots) to High(WebsiteRoots) do
     if SameText(Name, WebsiteRoots[i, 0]) then
       Exit(i);
+  Result := -1;
 end;
 
 function GetMangaSiteName(const ID: Cardinal): String;
@@ -1081,10 +1108,10 @@ function GetMangaSiteRoot(const Website: String): String;
 var
   i: Integer;
 begin
-  Result := '';
   for i := Low(WebsiteRoots) to High(WebsiteRoots) do
     if Website = WebsiteRoots[i, 0] then
       Exit(WebsiteRoots[i, 1]);
+  Result := '';
 end;
 
 function GetMangaSiteRoot(const MangaID: Cardinal): String;
