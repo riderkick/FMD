@@ -1649,7 +1649,7 @@ begin
       FDownloadsDB.Add(d,
         ReadBool(s, 'Enabled', True),
         i,
-        ReadInteger(s, 'TaskStatus', 0),
+        GetEnumValue(TypeInfo(TDownloadStatusType), ReadString(s, 'TaskStatus', GetEnumName(TypeInfo(TDownloadStatusType), 0))),
         ReadInteger(s, 'ChapterPtr', 0),
         ReadInteger(s, 'NumberOfPages', 0),
         ReadInteger(s, 'CurrentPage', 0),
