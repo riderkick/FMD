@@ -1453,6 +1453,10 @@ msgstr "Desfazer"
 msgid "Abort"
 msgstr "Abortar"
 
+#: tmainform.michapterlistascending.caption
+msgid "Ascending"
+msgstr ""
+
 #: tmainform.michapterlistcheckall.caption
 msgctxt "tmainform.michapterlistcheckall.caption"
 msgid "Check all"
@@ -1461,6 +1465,10 @@ msgstr "Marca tudo"
 #: tmainform.michapterlistcheckselected.caption
 msgid "Check selected"
 msgstr "Marcar selecionado"
+
+#: tmainform.michapterlistdescending.caption
+msgid "Descending"
+msgstr ""
 
 #: tmainform.michapterlistfilter.caption
 msgctxt "tmainform.michapterlistfilter.caption"

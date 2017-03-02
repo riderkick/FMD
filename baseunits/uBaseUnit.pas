@@ -511,6 +511,7 @@ type
   PChapterStateItem = ^TChapterStateItem;
 
   TChapterStateItem = record
+    Index: Integer;
     Title,
     Link: String;
     Downloaded: Boolean;

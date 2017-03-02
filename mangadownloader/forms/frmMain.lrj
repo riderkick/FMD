@@ -264,6 +264,8 @@
 {"hash":15962307,"name":"tmainform.michapterlisthighlight.caption","sourcebytes":[72,105,103,104,108,105,103,104,116,32,100,111,119,110,108,111,97,100,101,100,32,99,104,97,112,116,101,114,115],"value":"Highlight downloaded chapters"},
 {"hash":112147507,"name":"tmainform.michapterlisthidedownloaded.caption","sourcebytes":[72,105,100,101,32,100,111,119,110,108,111,97,100,101,100,32,99,104,97,112,116,101,114,115],"value":"Hide downloaded chapters"},
 {"hash":80755394,"name":"tmainform.michapterlistfilter.caption","sourcebytes":[70,105,108,116,101,114],"value":"Filter"},
+{"hash":163899607,"name":"tmainform.michapterlistascending.caption","sourcebytes":[65,115,99,101,110,100,105,110,103],"value":"Ascending"},
+{"hash":163579095,"name":"tmainform.michapterlistdescending.caption","sourcebytes":[68,101,115,99,101,110,100,105,110,103],"value":"Descending"},
 {"hash":165778738,"name":"tmainform.mifavoriteschecknewchapter.caption","sourcebytes":[67,104,101,99,107,32,102,111,114,32,110,101,119,32,99,104,97,112,116,101,114],"value":"Check for new chapter"},
 {"hash":222540418,"name":"tmainform.mifavoritesstopchecknewchapter.caption","sourcebytes":[83,116,111,112,32,99,104,101,99,107,32,102,111,114,32,110,101,119,32,99,104,97,112,116,101,114],"value":"Stop check for new chapter"},
 {"hash":27371647,"name":"tmainform.mifavoritesviewinfos.caption","sourcebytes":[86,105,101,119,32,109,97,110,103,97,32,105,110,102,111],"value":"View manga info"},

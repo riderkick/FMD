@@ -37,13 +37,13 @@ object MainForm: TMainForm
     Height = 520
     Top = 11
     Width = 566
-    ActivePage = tsDownload
+    ActivePage = tsInformation
     Align = alClient
     BorderSpacing.Top = 3
     BorderSpacing.Right = 4
     BorderSpacing.Bottom = 3
     ParentFont = False
-    TabIndex = 0
+    TabIndex = 1
     TabOrder = 0
     OnChange = pcMainChange
     object tsDownload: TTabSheet
@@ -515,7 +515,7 @@ object MainForm: TMainForm
             TextMargin = 0
             TreeOptions.AutoOptions = [toAutoDropExpand, toAutoScrollOnExpand, toAutoTristateTracking]
             TreeOptions.MiscOptions = [toAcceptOLEDrop, toCheckSupport, toFullRepaintOnResize, toGridExtensions, toInitOnSave, toToggleOnDblClick, toWheelPanning, toEditOnClick]
-            TreeOptions.PaintOptions = [toHideFocusRect, toShowButtons, toShowDropmark, toThemeAware, toUseBlendedImages]
+            TreeOptions.PaintOptions = [toHideFocusRect, toShowButtons, toShowDropmark, toShowVertGridLines, toThemeAware, toUseBlendedImages]
             TreeOptions.SelectionOptions = [toFullRowSelect, toMultiSelect]
             OnBeforeCellPaint = clbChapterListBeforeCellPaint
             OnGetText = clbChapterListGetText
@@ -4884,6 +4884,21 @@ object MainForm: TMainForm
       AutoCheck = True
       Caption = 'Filter'
       OnClick = miChapterListFilterClick
+    end
+    object MenuItem11: TMenuItem
+      Caption = '-'
+    end
+    object miChapterListAscending: TMenuItem
+      Caption = 'Ascending'
+      RadioItem = True
+      ShowAlwaysCheckable = True
+      OnClick = miChapterListAscendingClick
+    end
+    object miChapterListDescending: TMenuItem
+      Caption = 'Descending'
+      RadioItem = True
+      ShowAlwaysCheckable = True
+      OnClick = miChapterListAscendingClick
     end
   end
   object pmFavorites: TPopupMenu

@@ -86,6 +86,9 @@ type
     lbOptionMangaCustomRenameHint: TLabel;
     lbOptionMangaCustomRename: TLabel;
     MenuItem10: TMenuItem;
+    MenuItem11: TMenuItem;
+    miChapterListDescending: TMenuItem;
+    miChapterListAscending: TMenuItem;
     miMangaListDelete: TMenuItem;
     miDownloadDeleteTaskDataFavorite: TMenuItem;
     miTrayExit: TMenuItem;
@@ -446,6 +449,7 @@ type
     procedure FormDestroy(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormWindowStateChange(Sender: TObject);
+    procedure miChapterListAscendingClick(Sender: TObject);
     procedure tmAnimateMangaInfoTimer(Sender: TObject);
     procedure tmCheckFavoritesTimer(Sender: TObject);
     procedure tmExitCommandTimer(Sender: TObject);
@@ -1420,6 +1424,61 @@ begin
     PrevWindowState := WindowState;
 end;
 
+procedure TMainForm.miChapterListAscendingClick(Sender: TObject);
+var
+  i, j, f: Integer;
+  t: TChapterStateItem;
+  Node, FNode: PVirtualNode;
+  c: array of TCheckState;
+begin
+  if not (Sender is TMenuItem) then Exit;
+  if TMenuItem(Sender).Checked then Exit;
+  TMenuItem(Sender).Checked := True;
+  configfile.WriteBool('general', 'SortChapterListAscending', miChapterListAscending.Checked);
+  if Length(ChapterList) <> 0 then
+  begin
+    // invert chapterlist
+    for i := Low(ChapterList) to (High(ChapterList) div 2) do
+    begin
+      j := High(ChapterList) - i;
+      t := ChapterList[i];
+      ChapterList[i] := ChapterList[j];
+      ChapterList[j] := t;
+    end;
+    // rearrange checked state and focused
+    if (clbChapterList.CheckedCount <> 0 ) or (clbChapterList.SelectedCount <> 0) then
+    begin
+      FNode := nil;
+      if Assigned(clbChapterList.FocusedNode) then
+        f := clbChapterList.FocusedNode^.Index
+      else
+        f := -1;
+      SetLength(c, clbChapterList.RootNodeCount);
+      Node := clbChapterList.GetFirst();
+      while Assigned(Node) do
+      begin
+        c[Node^.Index] := Node^.CheckState;
+        Node := clbChapterList.GetNext(Node);
+      end;
+      i := Low(c);
+      Node := clbChapterList.GetLast();
+      while Assigned(Node) do
+      begin
+        if i = f then
+          FNode := Node;
+        Node^.CheckState := c[i];
+        Inc(i);
+        Node := clbChapterList.GetPrevious(Node);
+      end;
+      SetLength(c, 0);
+      if Assigned(FNode) then
+        clbChapterList.FocusedNode := FNode
+    end;
+    clbChapterList.ClearSelection;
+    clbChapterList.Repaint;
+  end;
+end;
+
 procedure TMainForm.tmAnimateMangaInfoTimer(Sender: TObject);
 begin
   gifWaiting.Update(pbWait.Canvas, gifWaitingRect);
@@ -2009,14 +2068,14 @@ begin
     begin
       if (vsVisible in node^.States) then
       begin
-        links.Add(mangaInfo.chapterLinks[node^.Index]);
+        links.Add(ChapterList[node^.Index].Link);
         s:=CustomRename(OptionChapterCustomRename,
           mangaInfo.website,
           mangaInfo.title,
           mangaInfo.authors,
           mangaInfo.artists,
-          mangaInfo.chapterName[node^.Index],
-          Format('%.4d',[node^.Index+1]),
+          ChapterList[node^.Index].Title,
+          Format('%.4d',[ChapterList[node^.Index].Index]),
           OptionChangeUnicodeCharacter,
           OptionChangeUnicodeCharacterStr);
         names.Add(s);
@@ -2403,7 +2462,7 @@ begin
   if Length(ChapterList)=1 then
     CellText:=ChapterList[Node^.Index].Title
   else
-    CellText:=Format('%.4d - %s',[Node^.Index+1,ChapterList[Node^.Index].Title]);
+    CellText:=Format('%.4d - %s',[ChapterList[Node^.Index].Index, ChapterList[Node^.Index].Title]);
 end;
 
 procedure TMainForm.clbChapterListInitNode(Sender: TBaseVirtualTree;
@@ -4474,7 +4533,7 @@ end;
 
 procedure TMainForm.ShowInformation(const title, website, link: String);
 var
-  i: Integer;
+  i, j: Integer;
 begin
   pcMain.ActivePage := tsInformation;
   FilledSaveTo;
@@ -4500,12 +4559,25 @@ begin
     end;
 
   SetLength(ChapterList, mangaInfo.chapterName.Count);
-  for i := 0 to mangaInfo.chapterName.Count - 1 do
+  if Length(ChapterList) <> 0 then
   begin
-    ChapterList[i].Title := mangaInfo.chapterName[i];
-    ChapterList[i].Link := mangaInfo.chapterLinks[i];
-    ChapterList[i].Downloaded := False;
+    if miChapterListAscending.Checked then
+      j := 0
+    else
+      j := High(ChapterList);
+    for i := low(ChapterList) to High(ChapterList) do
+    begin
+      ChapterList[i].Index := j + 1;
+      ChapterList[i].Title := mangaInfo.chapterName[j];
+      ChapterList[i].Link := mangaInfo.chapterLinks[j];
+      ChapterList[i].Downloaded := False;
+      if miChapterListAscending.Checked then
+        Inc(j)
+      else
+        Dec(j);
+    end;
   end;
+
   miChapterListHighlightClick(nil);
   UpdateVtChapter;
   miChapterListHideDownloadedClick(nil);
@@ -4553,6 +4625,8 @@ begin
     cbAddAsStopped.Checked := ReadBool('general', 'AddAsStopped', False);
     miHighLightNewManga.Checked := ReadBool('general', 'HighlightNewManga', True);
     miChapterListHighlight.Checked := ReadBool('general', 'HighlightDownloadedChapters', True);
+    miChapterListAscending.Checked := ReadBool('general', 'SortChapterListAscending', True);
+    miChapterListDescending.Checked := not miChapterListAscending.Checked;
 
     // view
     cbOptionShowDownloadToolbar.Checked := ReadBool('view', 'ShowDownloadsToolbar', True);

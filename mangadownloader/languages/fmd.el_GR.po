@@ -1508,6 +1508,10 @@ msgstr "Αναίρεση"
 msgid "Abort"
 msgstr "Ματαίωση"
 
+#: tmainform.michapterlistascending.caption
+msgid "Ascending"
+msgstr ""
+
 #: tmainform.michapterlistcheckall.caption
 msgctxt "tmainform.michapterlistcheckall.caption"
 msgid "Check all"
@@ -1516,6 +1520,10 @@ msgstr "Σήμανση όλων"
 #: tmainform.michapterlistcheckselected.caption
 msgid "Check selected"
 msgstr "Σήμανση επιλεγμένων"
+
+#: tmainform.michapterlistdescending.caption
+msgid "Descending"
+msgstr ""
 
 #: tmainform.michapterlistfilter.caption
 msgctxt "tmainform.michapterlistfilter.caption"
