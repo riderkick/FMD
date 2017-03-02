@@ -4582,7 +4582,7 @@ begin
   UpdateVtChapter;
   miChapterListHideDownloadedClick(nil);
   edFilterMangaInfoChaptersChange(nil);
-  if (clbChapterList.RootNodeCount <>) 0 and miChapterListAscending.Checked then
+  if (clbChapterList.RootNodeCount <> 0) and miChapterListAscending.Checked then
     clbChapterList.FocusedNode := clbChapterList.GetLast();
 
   btDownload.Enabled := (clbChapterList.RootNodeCount > 0);
