@@ -380,34 +380,28 @@ begin
 end;
 
 function TWebsiteModules.LocateModuleByHost(const AHost: String): Integer;
+
+  function PosModule(const s: String): Integer;
+  var
+    i: Integer;
+  begin
+    for i := 0 to FModuleList.Count - 1 do
+      if Pos(s, LowerCase(TModuleContainer(FModuleList[i]).RootURL)) <> 0 then
+        Exit(i);
+    Result := -1;
+  end;
 var
-  i: Integer;
-  h: String;
+  h, p: String;
 begin
   Result := -1;
-  if FModuleList.Count > 0 then
+  if FModuleList.Count = 0 then Exit;
+  h := LowerCase(AHost);
+  Result := PosModule(h);
+  if Result = -1 then
   begin
-    h := LowerCase(AHost);
-    for i := 0 to FModuleList.Count - 1 do
-      if Pos(h, LowerCase(TModuleContainer(FModuleList[i]).RootURL)) <> 0 then
-      begin
-        Result := i;
-        Break;
-      end;
-    if Result = -1 then
-      with TRegExpr.Create do
-        try
-          Expression := REGEX_HOST;
-          for i := 0 to FModuleList.Count - 1 do
-            if Pos(LowerCase(Replace(TModuleContainer(FModuleList[i]).RootURL,
-              '$2', True)), h) <> 0 then
-            begin
-              Result := i;
-              Break;
-            end;
-        finally
-          Free;
-        end;
+    SplitURL(h, h, p, False, False);
+    if h = '' then Exit;
+    Result := PosModule(h);
   end;
 end;
 
