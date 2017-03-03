@@ -468,9 +468,10 @@ end;
 
 function THTTPSendThread.ThreadTerminated: Boolean;
 begin
-  Result := False;
   if Assigned(FOwner) then
-    Result := FOwner.IsTerminated;
+    Result := FOwner.IsTerminated
+  else
+    Result := False;
 end;
 
 procedure THTTPSendThread.RemoveCookie(const CookieName: String);

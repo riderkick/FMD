@@ -123,8 +123,7 @@ begin
         if st < MIN_WAIT_TIME then st := MIN_WAIT_TIME;
         sc := 0;
         while sc < st do begin
-          if AHTTP.ThreadTerminated then
-            Break;
+          if AHTTP.ThreadTerminated then Break;
           Inc(sc, 500);
           Sleep(500);
         end;
@@ -140,6 +139,7 @@ begin
       AHTTP.RetryCount := 0;
     end;
     if Result then Break;
+    if AHTTP.ThreadTerminated then Break;
     if (maxretry > -1) and (maxretry <= counter) then Break;
     AHTTP.Reset;
     AHTTP.GET(AURL);
