@@ -5,7 +5,7 @@ unit FavoritesDB;
 interface
 
 uses
-  Classes, SysUtils, SQLiteData;
+  Classes, SysUtils, SQLiteData, uBaseUnit;
 
 type
 
@@ -79,6 +79,8 @@ begin
     if FCommitCount >= FAutoCommitCount then
       Commit;
   except
+    on E: Exception do
+      SendLogException(ClassName + '.Add failed!', E);
   end;
 end;
 
@@ -93,6 +95,8 @@ begin
     if FCommitCount >= FAutoCommitCount then
       Commit;
   except
+    on E: Exception do
+      SendLogException(ClassName + '.Delete failed!', E);
   end;
 end;
 
@@ -103,7 +107,11 @@ begin
     Transaction.Commit;
     FCommitCount := 0;
   except
-    Transaction.Rollback;
+    on E: Exception do
+      begin
+        Transaction.Rollback;
+        SendLogException(ClassName + '.Commit failed! Rollback!', E);
+      end;
   end;
 end;
 
