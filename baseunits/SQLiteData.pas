@@ -180,8 +180,8 @@ begin
   if not FConn.Connected then
     if not OpenDB then Exit;
   try
-    FConn.ExecuteDirect('DROP TABLE IF EXISTS "' + FTableName + '"');
-    FConn.ExecuteDirect('CREATE TABLE "' + FTableName + '" (' + FCreateParams + ')');
+    FConn.ExecuteDirect('DROP TABLE IF EXISTS ' + QuotedStrD(FTableName));
+    FConn.ExecuteDirect('CREATE TABLE ' + QuotedStrD(FTableName) + ' (' + FCreateParams + ')');
     FTrans.Commit;
     Result := True;
   except
@@ -204,11 +204,11 @@ begin
     if FQuery.Active then FQuery.Close;
     with FConn do
     begin
-      ExecuteDirect('DROP TABLE IF EXISTS "temp' + FTableName + '"');
-      ExecuteDirect('CREATE TABLE "temp' + FTableName + '" (' + FCreateParams + ')');
-      ExecuteDirect('INSERT INTO "temp' + FTableName + '" (' + FieldsParams + ') SELECT ' + FieldsParams + ' FROM "' + FTableName + '"');
-      ExecuteDirect('DROP TABLE "' + FTableName + '"');
-      ExecuteDirect('ALTER TABLE "temp' + FTableName + '" RENAME TO "' + FTableName + '"');
+      ExecuteDirect('DROP TABLE IF EXISTS ' + QuotedStrD('temp' + FTableName));
+      ExecuteDirect('CREATE TABLE ' + QuotedStrD('temp' + FTableName) + ' (' + FCreateParams + ')');
+      ExecuteDirect('INSERT INTO ' + QuotedStrD('temp' + FTableName) + ' (' + FieldsParams + ') SELECT ' + FieldsParams + ' FROM "' + FTableName + '"');
+      ExecuteDirect('DROP TABLE ' + QuotedStrD(FTableName));
+      ExecuteDirect('ALTER TABLE ' + QuotedStrD('temp' + FTableName) + ' RENAME TO ' + QuotedStrD(FTableName));
     end;
     FTrans.Commit;
     if qactive <> FQuery.Active then
@@ -310,7 +310,7 @@ begin
     if FSelectParams <> '' then
       FQuery.SQL.Text := FSelectParams
     else
-      FQuery.SQL.Text := 'SELECT * FROM "' + FTableName + '"';
+      FQuery.SQL.Text := 'SELECT * FROM ' + QuotedStrD(FTableName);
     FQuery.Open;
     if AGetRecordCount then
       GetRecordCount
