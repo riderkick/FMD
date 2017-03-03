@@ -76,10 +76,18 @@ type
     property OnError: TExceptionEvent read FOnError write SetOnError;
   end;
 
+function QuotedStr(const S: Integer): String; overload; inline;
 function QuotedStr(const S: Boolean): String; overload; inline;
 function QuotedStr(const S: TDateTime): String; overload; inline;
+function QuotedStrD(const S: String): String; overload; inline;
+function QuotedStrD(const S: Integer): String; overload; inline;
 
 implementation
+
+function QuotedStr(const S: Integer): String;
+begin
+  Result := AnsiQuotedStr(IntToStr(S), '''');
+end;
 
 function QuotedStr(const S: Boolean): String;
 begin
@@ -89,6 +97,16 @@ end;
 function QuotedStr(const S: TDateTime): String;
 begin
   Result := AnsiQuotedStr(FormatDateTime('yyyy-mm-dd hh:mm:ss', S), '''');
+end;
+
+function QuotedStrD(const S: String): String;
+begin
+  Result := AnsiQuotedStr(S, '"');
+end;
+
+function QuotedStrD(const S: Integer): String;
+begin
+  Result := AnsiQuotedStr(IntToStr(S), '"');
 end;
 
 { TSQliteData }
