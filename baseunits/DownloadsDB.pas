@@ -96,7 +96,7 @@ begin
     '"failedchapterlinks" TEXT,' +
     '"failedchapternames" TEXT';
   FieldsParams := '"dlid","enabled","order","taskstatus","chapterptr","numberofpages","currentpage","website","link","title","status","progress","saveto","datetime","chapterslinks","chaptersnames","pagelinks","pagecontainerlinks","filenames","customfilenames","failedchapterlinks","failedchapternames"';
-  SelectParams := 'SELECT ' + FieldsParams + ' FROM "'+TableName+'" ORDER BY "order"';
+  SelectParams := 'SELECT ' + FieldsParams + ' FROM '+QuotedStrD(TableName)+' ORDER BY "order"';
 end;
 
 function TDownloadsDB.Add(var Adlid: Integer;
@@ -113,28 +113,28 @@ begin
   try
     if Adlid <> -1 then
       Connection.ExecuteDirect('UPDATE "downloads" SET ' +
-        '"enabled"="' +            BoolToStr(Aenabled, '1', '0') + '",' +
-        '"order"="' +              IntToStr(Aorder) + '",' +
-        '"taskstatus"="' +         IntToStr(Ataskstatus) + '",' +
-        '"chapterptr"="' +         IntToStr(Achapterptr) + '",' +
-        '"numberofpages"="' +      IntToStr(Anumberofpages) + '",' +
-        '"currentpage"="' +        IntToStr(Acurrentpage) + '",' +
-        '"website"="' +            Awebsite + '",' +
-        '"link"="' +               Alink + '",' +
-        '"title"="' +              Atitle + '",' +
-        '"status"="' +             Astatus + '",' +
-        '"progress"="' +           Aprogress + '",' +
-        '"saveto"="' +             Asaveto + '",' +
-        '"datetime"="' +           FormatDateTime('yyyy-mm-dd hh:mm:ss', Adatetime) + '",' +
-        '"chapterslinks"="' +      Achapterslinks + '",' +
-        '"chaptersnames"="' +      Achaptersnames + '",' +
-        '"pagelinks"="' +          Apagelinks + '",' +
-        '"pagecontainerlinks"="' + Apagecontainerlinks + '",' +
-        '"filenames"="' +          Afilenames + '",' +
-        '"customfilenames"="' +    Acustomfilenames + '",' +
-        '"failedchapterlinks"="' + Afailedchapterslinks + '",' +
-        '"failedchapternames"="' + Afailedchaptersnames + '"' +
-        ' WHERE "dlid"="' + IntToStr(Adlid) + '"')
+        '"enabled"=' +            QuotedStr(Aenabled) + ', ' +
+        '"order"=' +              QuotedStr(Aorder) + ', ' +
+        '"taskstatus"=' +         QuotedStr(Ataskstatus) + ',' +
+        '"chapterptr"=' +         QuotedStr(Achapterptr) + ',' +
+        '"numberofpages"=' +      QuotedStr(Anumberofpages) + ',' +
+        '"currentpage"=' +        QuotedStr(Acurrentpage) + ',' +
+        '"website"=' +            QuotedStr(Awebsite) + ', ' +
+        '"link"=' +               QuotedStr(Alink) + ', ' +
+        '"title"=' +              QuotedStr(Atitle) + ', ' +
+        '"status"=' +             QuotedStr(Astatus) + ', ' +
+        '"progress"=' +           QuotedStr(Aprogress) + ', ' +
+        '"saveto"=' +             QuotedStr(Asaveto) + ', ' +
+        '"datetime"=' +           QuotedStr(Adatetime) + ', ' +
+        '"chapterslinks"=' +      QuotedStr(Achapterslinks) + ', ' +
+        '"chaptersnames"=' +      QuotedStr(Achaptersnames) + ', ' +
+        '"pagelinks"=' +          QuotedStr(Apagelinks) + ', ' +
+        '"pagecontainerlinks"=' + QuotedStr(Apagecontainerlinks) + ', ' +
+        '"filenames"=' +          QuotedStr(Afilenames) + ', ' +
+        '"customfilenames"=' +    QuotedStr(Acustomfilenames) + ', ' +
+        '"failedchapterlinks"=' + QuotedStr(Afailedchapterslinks) + ', ' +
+        '"failedchapternames"=' + QuotedStr(Afailedchaptersnames) +
+        ' WHERE "dlid"=' + QuotedStr(Adlid))
     else
       with Table do
       begin
@@ -168,6 +168,8 @@ begin
     if FCommitCount >= FAutoCommitCount then
       Commit;
   except
+    on E: Exception do
+      SendLogException(ClassName + '.Add failed!', E);
   end;
 end;
 
@@ -177,11 +179,13 @@ begin
   if not Connection.Connected then Exit;
   try
     Connection.ExecuteDirect(
-      'DELETE FROM "downloads" WHERE "dlid"="' + IntToStr(ADlId) + '"');
+      'DELETE FROM "downloads" WHERE "dlid"=' + QuotedStr(ADlId));
     Inc(FCommitCount);
     if FCommitCount >= FAutoCommitCount then
       Commit;
   except
+    on E: Exception do
+      SendLogException(ClassName + '.Delete failed!', E);
   end;
 end;
 
@@ -192,7 +196,11 @@ begin
     Transaction.Commit;
     FCommitCount := 0;
   except
-    Transaction.Rollback;
+    on E: Exception do
+      begin
+        Transaction.Rollback;
+        SendLogException(ClassName + '.Commit failed! Rollback!', E);
+      end;
   end;
 end;
 
