@@ -862,6 +862,7 @@ procedure fmdHibernate;
 // logger
 procedure SendLog(const AText: String); overload; inline;
 procedure SendLog(const AText, AValue: String); overload; inline;
+procedure SendLogException(const AText: String; AException: Exception); inline;
 
 implementation
 
@@ -4207,6 +4208,11 @@ end;
 procedure SendLog(const AText, AValue: String);
 begin
   Logger.Send(AText, AValue);
+end;
+
+procedure SendLogException(const AText: String; AException: Exception);
+begin
+  Logger.SendException(AText, AException);
 end;
 
 function HeaderByName(const AHeaders: TStrings; const AHeaderName: String): String;
