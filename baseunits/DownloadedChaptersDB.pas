@@ -88,10 +88,10 @@ begin
   AutoApplyUpdates := True;
   TableName := 'downloadedchapters';
   CreateParams :=
-    'websitelink VARCHAR(3000) NOT NULL PRIMARY KEY,' +
-    'chapters TEXT';
+    '"websitelink" VARCHAR(3000) NOT NULL PRIMARY KEY,' +
+    '"chapters" TEXT';
   FieldsParams := '"websitelink","chapters"';
-  SelectParams := 'SELECT ' + FieldsParams + ' FROM "' + TableName + '"';
+  SelectParams := 'SELECT ' + FieldsParams + ' FROM ' + QuotedStrD(TableName);
 end;
 
 destructor TDownloadedChaptersDB.Destroy;
@@ -128,7 +128,7 @@ begin
       i := 0;
     while i < dc.Count - 2 do
     begin
-      Chapters[dc[i]] := StringReplace(dc[i + 1], '!%~', LineEnding, [rfReplaceAll]);
+      Chapters[dc[i]] := GetParams(dc[i + 1]);
       Inc(i, 2);
     end;
     Result := True;
