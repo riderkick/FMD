@@ -30,6 +30,30 @@ type
     property AutoCommitCount: Integer read FAutoCommitCount write SetAutoCommitCount;
   end;
 
+const
+  f_dlid               = 0;
+  f_enabled            = 1;
+  f_order              = 2;
+  f_taskstatus         = 3;
+  f_chapterptr         = 4;
+  f_numberofpages      = 5;
+  f_currentpage        = 6;
+  f_website            = 7;
+  f_link               = 8;
+  f_title              = 9;
+  f_status             = 10;
+  f_progress           = 11;
+  f_saveto             = 12;
+  f_datetime           = 13;
+  f_chapterslinks      = 14;
+  f_chaptersnames      = 15;
+  f_pagelinks          = 16;
+  f_pagecontainerlinks = 17;
+  f_filenames          = 18;
+  f_customfilenames    = 19;
+  f_failedchapterlinks = 20;
+  f_failedchapternames = 21;
+
 implementation
 
 { TDownloadsDB }
@@ -115,29 +139,29 @@ begin
       with Table do
       begin
         Append;
-        Fields[1].AsBoolean   := Aenabled;
-        Fields[2].AsInteger   := Aorder;
-        Fields[3].AsInteger   := Ataskstatus;
-        Fields[4].AsInteger   := Achapterptr;
-        Fields[5].AsInteger   := Anumberofpages;
-        Fields[6].AsInteger   := Acurrentpage;
-        Fields[7].AsString    := Awebsite;
-        Fields[8].AsString    := Alink;
-        Fields[9].AsString    := Atitle;
-        Fields[10].AsString   := Astatus;
-        Fields[11].AsString   := Aprogress;
-        Fields[12].AsString   := Asaveto;
-        Fields[13].AsDateTime := Adatetime;
-        Fields[14].AsString   := Achapterslinks;
-        Fields[15].AsString   := Achaptersnames;
-        Fields[16].AsString   := Apagelinks;
-        Fields[17].AsString   := Apagecontainerlinks;
-        Fields[18].AsString   := Afilenames;
-        Fields[19].AsString   := Acustomfilenames;
-        Fields[20].AsString   := Afailedchapterslinks;
-        Fields[21].AsString   := Afailedchaptersnames;
+        Fields[f_enabled           ].AsBoolean   := Aenabled;
+        Fields[f_order             ].AsInteger   := Aorder;
+        Fields[f_taskstatus        ].AsInteger   := Ataskstatus;
+        Fields[f_chapterptr        ].AsInteger   := Achapterptr;
+        Fields[f_numberofpages     ].AsInteger   := Anumberofpages;
+        Fields[f_currentpage       ].AsInteger   := Acurrentpage;
+        Fields[f_website           ].AsString    := Awebsite;
+        Fields[f_link              ].AsString    := Alink;
+        Fields[f_title             ].AsString    := Atitle;
+        Fields[f_status            ].AsString    := Astatus;
+        Fields[f_progress          ].AsString    := Aprogress;
+        Fields[f_saveto            ].AsString    := Asaveto;
+        Fields[f_datetime          ].AsDateTime  := Adatetime;
+        Fields[f_chapterslinks     ].AsString    := Achapterslinks;
+        Fields[f_chaptersnames     ].AsString    := Achaptersnames;
+        Fields[f_pagelinks         ].AsString    := Apagelinks;
+        Fields[f_pagecontainerlinks].AsString    := Apagecontainerlinks;
+        Fields[f_filenames         ].AsString    := Afilenames;
+        Fields[f_customfilenames   ].AsString    := Acustomfilenames;
+        Fields[f_failedchapterlinks].AsString    := Afailedchapterslinks;
+        Fields[f_failedchapternames].AsString    := Afailedchaptersnames;
         Post;
-        Adlid := Fields[0].AsInteger;
+        Adlid := Fields[f_dlid].AsInteger;
       end;
     Result := True;
     Inc(FCommitCount);
