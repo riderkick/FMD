@@ -699,8 +699,8 @@ function TitleCase(const S: string): string;
 function StringReplaceBrackets(const S, OldPattern, NewPattern: String; Flags: TReplaceFlags): String;
 function StreamToString(const Stream: TStream): String; inline;
 function GetRightValue(const Name, s: String): String;
-function QuotedStrd(const S: String): String; overload; inline;
-function QuotedStrd(const S: Integer): String; overload; inline;
+function QuotedStrD(const S: String): String; overload; inline;
+function QuotedStrD(const S: Integer): String; overload; inline;
 function BracketStr(const S: String): String; inline;
 function RandomString(SLength: Integer; ONumber: Boolean = False;
   OSymbol: Boolean = False; OSpace: Boolean = False): String;
@@ -1502,14 +1502,14 @@ begin
     Result := Trim(Copy(s, i + Length(Name), Length(s)));
 end;
 
-function QuotedStrd(const S: String): String;
+function QuotedStrD(const S: String): String;
 begin
   Result := AnsiQuotedStr(S, '"');
 end;
 
-function QuotedStrd(const S: Integer): String;
+function QuotedStrD(const S: Integer): String;
 begin
-  Result := QuotedStrd(IntToStr(S));
+  Result := AnsiQuotedStr(IntToStr(S), '"');
 end;
 
 function BracketStr(const S: String): String;
