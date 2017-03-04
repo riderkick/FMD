@@ -112,6 +112,7 @@ begin
   if not Connection.Connected then Exit;
   try
     if Adlid <> -1 then
+    begin
       Connection.ExecuteDirect('UPDATE "downloads" SET ' +
         '"enabled"=' +            QuotedStr(Aenabled) + ', ' +
         '"order"=' +              QuotedStr(Aorder) + ', ' +
@@ -134,10 +135,17 @@ begin
         '"customfilenames"=' +    QuotedStr(Acustomfilenames) + ', ' +
         '"failedchapterlinks"=' + QuotedStr(Afailedchapterslinks) + ', ' +
         '"failedchapternames"=' + QuotedStr(Afailedchaptersnames) +
-        ' WHERE "dlid"=' + QuotedStr(Adlid))
+        ' WHERE "dlid"=' + QuotedStr(Adlid));
+      Inc(FCommitCount);
+      if FCommitCount >= FAutoCommitCount then
+        Commit;
+      Result := True;
+    end
     else
       with Table do
       begin
+        if FCommitCount <> 0 then
+          Commit;
         Append;
         Fields[f_enabled           ].AsBoolean   := Aenabled;
         Fields[f_order             ].AsInteger   := Aorder;
@@ -162,11 +170,8 @@ begin
         Fields[f_failedchapternames].AsString    := Afailedchaptersnames;
         Post;
         Adlid := Fields[f_dlid].AsInteger;
+        Result := Adlid <> -1;
       end;
-    Result := True;
-    Inc(FCommitCount);
-    if FCommitCount >= FAutoCommitCount then
-      Commit;
   except
     on E: Exception do
       SendLogException(ClassName + '.Add failed!', E);
@@ -194,7 +199,8 @@ begin
   if not Connection.Connected then Exit;
   try
     Transaction.Commit;
-    FCommitCount := 0;
+    if FCommitCount <> 0 then
+      FCommitCount := 0;
   except
     on E: Exception do
       begin
