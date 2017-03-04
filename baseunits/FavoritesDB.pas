@@ -22,6 +22,8 @@ type
       ATitle, ACurrentChapter, ADownloadedChapterList, ASaveTo: String): Boolean;
     procedure Delete(const AWebsite, ALink: String);
     procedure Commit; override;
+    function Open: Boolean;
+    procedure Close; override;
     property AutoCommitCount: Integer read FAutoCommitCount write SetAutoCommitCount;
   end;
 
@@ -102,6 +104,7 @@ end;
 
 procedure TFavoritesDB.Commit;
 begin
+  if FCommitCount = 0 then Exit;
   if not Connection.Connected then Exit;
   try
     Transaction.Commit;
@@ -113,6 +116,17 @@ begin
         SendLogException(ClassName + '.Commit failed! Rollback!', E);
       end;
   end;
+end;
+
+function TFavoritesDB.Open: Boolean;
+begin
+  Result := inherited Open(False, False);
+end;
+
+procedure TFavoritesDB.Close;
+begin
+  Commit;
+  inherited Close;
 end;
 
 end.
