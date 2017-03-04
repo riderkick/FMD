@@ -157,6 +157,7 @@ type
     constructor Create;
     destructor Destroy; override;
     procedure IncReadCount(const ACount: Integer);
+    procedure SaveToDB;
   public
     Visible: Boolean;
     property Website: String read FWebsite write SetWebsite;
@@ -1489,6 +1490,32 @@ begin
   finally
     LeaveCriticalSection(CS_Container);
   end;
+end;
+
+procedure TTaskContainer.SaveToDB;
+begin
+  Manager.FDownloadsDB.Add(DlId,
+    Enabled,
+    Manager.Items.IndexOf(Self),
+    Integer(Status),
+    CurrentDownloadChapterPtr,
+    PageNumber,
+    CurrentPageNumber,
+    Website,
+    DownloadInfo.Link,
+    DownloadInfo.Title,
+    DownloadInfo.Status,
+    DownloadInfo.Progress,
+    DownloadInfo.SaveTo,
+    DownloadInfo.DateTime,
+    ChapterLinks.Text,
+    ChapterName.Text,
+    PageLinks.Text,
+    PageContainerLinks.Text,
+    FileNames.Text,
+    CustomFileName,
+    FailedChapterLinks.Text,
+    FailedChapterName.Text);
 end;
 
 { TDownloadManager }
