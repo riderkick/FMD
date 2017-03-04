@@ -157,7 +157,7 @@ type
     constructor Create;
     destructor Destroy; override;
     procedure IncReadCount(const ACount: Integer);
-    procedure SaveToDB;
+    procedure SaveToDB(const AOrder: Integer = -1);
   public
     Visible: Boolean;
     property Website: String read FWebsite write SetWebsite;
@@ -1492,11 +1492,17 @@ begin
   end;
 end;
 
-procedure TTaskContainer.SaveToDB;
+procedure TTaskContainer.SaveToDB(const AOrder: Integer);
+var
+  i: Integer;
 begin
+  if AOrder = -1 then
+    i := Manager.Items.IndexOf(Self)
+  else
+    i := AOrder;
   Manager.FDownloadsDB.Add(DlId,
     Enabled,
-    Manager.Items.IndexOf(Self),
+    i,
     Integer(Status),
     CurrentDownloadChapterPtr,
     PageNumber,
@@ -1638,7 +1644,7 @@ begin
     StatusCount[ds] := 0;
   DisabledCount := 0;
   FDownloadsDB := TDownloadsDB.Create(WORK_FILEDB);
-  FDownloadsDB.Open(True, False);
+  FDownloadsDB.Open;
 end;
 
 destructor TDownloadManager.Destroy;
@@ -1708,49 +1714,53 @@ end;
 
 procedure TDownloadManager.Restore;
 begin
-  if not FDownloadsDB.Connected then Exit;
-  if not FDownloadsDB.Table.Active then Exit;
+  if not FDownloadsDB.Connection.Connected then Exit;
   ConvertToDB;
-  if FDownloadsDB.RecordCount = 0 then Exit;
+  if FDownloadsDB.OpenTable(False) then
   try
+    if FDownloadsDB.RecordCount = 0 then Exit;
     EnterCriticalsection(CS_Task);
-    FDownloadsDB.Table.First;
-    while not FDownloadsDB.Table.EOF do
-    begin
-      Items.Add(TTaskContainer.Create);
-      with Items.Last, FDownloadsDB.Table do
-      begin
-        Manager := Self;
-        DlId                      := Fields[f_dlid].AsInteger;
-        Enabled                   := Fields[f_enabled].AsBoolean;
-        Status                    := TDownloadStatusType(Fields[f_taskstatus].AsInteger);
-        CurrentDownloadChapterPtr := Fields[f_chapterptr].AsInteger;
-        PageNumber                := Fields[f_numberofpages].AsInteger;
-        CurrentPageNumber         := Fields[f_currentpage].AsInteger;
-        Website                   := Fields[f_website].AsString;
-        DownloadInfo.Website      := Website;
-        DownloadInfo.Link         := Fields[f_link].AsString;
-        DownloadInfo.Title        := Fields[f_title].AsString;
-        DownloadInfo.Status       := Fields[f_status].AsString;
-        DownloadInfo.Progress     := Fields[f_progress].AsString;
-        if Pos('/', DownloadInfo.Progress) <> 0 then
-          DownCounter := StrToIntDef(Trim(ExtractWord(1, DownloadInfo.Progress, ['/'])), 0);
-        DownloadInfo.SaveTo       := Fields[f_saveto].AsString;
-        DownloadInfo.DateTime     := Fields[f_datetime].AsDateTime;
-        ChapterLinks.Text         := Fields[f_chapterslinks].AsString;
-        ChapterName.Text          := Fields[f_chaptersnames].AsString;
-        PageLinks.Text            := Fields[f_pagelinks].AsString;
-        PageContainerLinks.Text   := Fields[f_pagecontainerlinks].AsString;
-        FileNames.Text            := Fields[f_filenames].AsString;
-        CustomFileName            := Fields[f_customfilenames].AsString;
-        FailedChapterLinks.Text   := Fields[f_failedchapterlinks].AsString;
-        FailedChapterName.Text    := Fields[f_failedchapternames].AsString;
+      try
+        FDownloadsDB.Table.First;
+        while not FDownloadsDB.Table.EOF do
+        begin
+          Items.Add(TTaskContainer.Create);
+          with Items.Last, FDownloadsDB.Table do
+          begin
+            Manager := Self;
+            DlId                      := Fields[f_dlid].AsInteger;
+            Enabled                   := Fields[f_enabled].AsBoolean;
+            Status                    := TDownloadStatusType(Fields[f_taskstatus].AsInteger);
+            CurrentDownloadChapterPtr := Fields[f_chapterptr].AsInteger;
+            PageNumber                := Fields[f_numberofpages].AsInteger;
+            CurrentPageNumber         := Fields[f_currentpage].AsInteger;
+            Website                   := Fields[f_website].AsString;
+            DownloadInfo.Website      := Website;
+            DownloadInfo.Link         := Fields[f_link].AsString;
+            DownloadInfo.Title        := Fields[f_title].AsString;
+            DownloadInfo.Status       := Fields[f_status].AsString;
+            DownloadInfo.Progress     := Fields[f_progress].AsString;
+            if Pos('/', DownloadInfo.Progress) <> 0 then
+              DownCounter := StrToIntDef(Trim(ExtractWord(1, DownloadInfo.Progress, ['/'])), 0);
+            DownloadInfo.SaveTo       := Fields[f_saveto].AsString;
+            DownloadInfo.DateTime     := Fields[f_datetime].AsDateTime;
+            ChapterLinks.Text         := Fields[f_chapterslinks].AsString;
+            ChapterName.Text          := Fields[f_chaptersnames].AsString;
+            PageLinks.Text            := Fields[f_pagelinks].AsString;
+            PageContainerLinks.Text   := Fields[f_pagecontainerlinks].AsString;
+            FileNames.Text            := Fields[f_filenames].AsString;
+            CustomFileName            := Fields[f_customfilenames].AsString;
+            FailedChapterLinks.Text   := Fields[f_failedchapterlinks].AsString;
+            FailedChapterName.Text    := Fields[f_failedchapternames].AsString;
+          end;
+          FDownloadsDB.Table.Next;
+        end;
+      finally
+        LeaveCriticalsection(CS_Task);
       end;
-      FDownloadsDB.Table.Next;
+    finally
+      FDownloadsDB.CloseTable;
     end;
-  finally
-    LeaveCriticalsection(CS_Task);
-  end;
 end;
 
 procedure TDownloadManager.Backup;
@@ -1759,7 +1769,7 @@ var
 begin
   if isRunningBackup then Exit;
   if Items.Count = 0 then Exit;
-  if not FDownloadsDB.Connected then Exit;
+  if not FDownloadsDB.Connection.Connected then Exit;
   isRunningBackup := True;
   EnterCriticalSection(CS_Task);
   try
