@@ -5,7 +5,7 @@ unit DownloadsDB;
 interface
 
 uses
-  Classes, SysUtils, SQLiteData, uBaseUnit;
+  Classes, SysUtils, SQLiteData, uBaseUnit, sqlite3dyn;
 
 type
 
@@ -18,6 +18,7 @@ type
     procedure SetAutoCommitCount(AValue: Integer);
   public
     constructor Create(const AFilename: String);
+    function Open: Boolean;
     function Add(var Adlid: Integer;
       const Aenabled: Boolean;
       const Aorder, Ataskstatus, Achapterptr, Anumberofpages, Acurrentpage: Integer;
@@ -27,6 +28,7 @@ type
         Afailedchapterslinks, Afailedchaptersnames: String): Boolean;
     procedure Delete(const ADlId: Integer);
     procedure Commit; override;
+    procedure Close; override;
     property AutoCommitCount: Integer read FAutoCommitCount write SetAutoCommitCount;
   end;
 
@@ -99,6 +101,11 @@ begin
   SelectParams := 'SELECT ' + FieldsParams + ' FROM '+QuotedStrD(TableName)+' ORDER BY "order"';
 end;
 
+function TDownloadsDB.Open: Boolean;
+begin
+  Result := inherited Open(False, False);
+end;
+
 function TDownloadsDB.Add(var Adlid: Integer;
   const Aenabled: Boolean;
   const Aorder, Ataskstatus, Achapterptr, Anumberofpages, Acurrentpage: Integer;
@@ -108,11 +115,37 @@ function TDownloadsDB.Add(var Adlid: Integer;
     Afailedchapterslinks, Afailedchaptersnames: String): Boolean;
 begin
   Result := False;
-  if (AWebsite = '') or (ALink = '') then Exit;
   if not Connection.Connected then Exit;
   try
-    if Adlid <> -1 then
+    if Adlid = -1 then
     begin
+      Connection.ExecuteDirect('INSERT INTO "downloads" ("enabled","order","taskstatus","chapterptr","numberofpages","currentpage","website","link","title","status","progress","saveto","datetime","chapterslinks","chaptersnames","pagelinks","pagecontainerlinks","filenames","customfilenames","failedchapterlinks","failedchapternames")' +
+        ' VALUES (' +
+        QuotedStr(Aenabled) + ', ' +
+        QuotedStr(Aorder) + ', ' +
+        QuotedStr(Ataskstatus) + ',' +
+        QuotedStr(Achapterptr) + ',' +
+        QuotedStr(Anumberofpages) + ',' +
+        QuotedStr(Acurrentpage) + ',' +
+        QuotedStr(Awebsite) + ', ' +
+        QuotedStr(Alink) + ', ' +
+        QuotedStr(Atitle) + ', ' +
+        QuotedStr(Astatus) + ', ' +
+        QuotedStr(Aprogress) + ', ' +
+        QuotedStr(Asaveto) + ', ' +
+        QuotedStr(Adatetime) + ', ' +
+        QuotedStr(Achapterslinks) + ', ' +
+        QuotedStr(Achaptersnames) + ', ' +
+        QuotedStr(Apagelinks) + ', ' +
+        QuotedStr(Apagecontainerlinks) + ', ' +
+        QuotedStr(Afilenames) + ', ' +
+        QuotedStr(Acustomfilenames) + ', ' +
+        QuotedStr(Afailedchapterslinks) + ', ' +
+        QuotedStr(Afailedchaptersnames) +
+        ')');
+      Adlid := Connection.GetInsertID;
+    end
+    else
       Connection.ExecuteDirect('UPDATE "downloads" SET ' +
         '"enabled"=' +            QuotedStr(Aenabled) + ', ' +
         '"order"=' +              QuotedStr(Aorder) + ', ' +
@@ -136,45 +169,10 @@ begin
         '"failedchapterlinks"=' + QuotedStr(Afailedchapterslinks) + ', ' +
         '"failedchapternames"=' + QuotedStr(Afailedchaptersnames) +
         ' WHERE "dlid"=' + QuotedStr(Adlid));
-      Inc(FCommitCount);
-      if FCommitCount >= FAutoCommitCount then
-        Commit;
-      Result := True;
-    end
-    else
-      with Table do
-      begin
-        if FCommitCount <> 0 then
-          Commit;
-        Append;
-        Fields[f_enabled           ].AsBoolean   := Aenabled;
-        Fields[f_order             ].AsInteger   := Aorder;
-        Fields[f_taskstatus        ].AsInteger   := Ataskstatus;
-        Fields[f_chapterptr        ].AsInteger   := Achapterptr;
-        Fields[f_numberofpages     ].AsInteger   := Anumberofpages;
-        Fields[f_currentpage       ].AsInteger   := Acurrentpage;
-        Fields[f_website           ].AsString    := Awebsite;
-        Fields[f_link              ].AsString    := Alink;
-        Fields[f_title             ].AsString    := Atitle;
-        Fields[f_status            ].AsString    := Astatus;
-        Fields[f_progress          ].AsString    := Aprogress;
-        Fields[f_saveto            ].AsString    := Asaveto;
-        Fields[f_datetime          ].AsDateTime  := Adatetime;
-        Fields[f_chapterslinks     ].AsString    := Achapterslinks;
-        Fields[f_chaptersnames     ].AsString    := Achaptersnames;
-        Fields[f_pagelinks         ].AsString    := Apagelinks;
-        Fields[f_pagecontainerlinks].AsString    := Apagecontainerlinks;
-        Fields[f_filenames         ].AsString    := Afilenames;
-        Fields[f_customfilenames   ].AsString    := Acustomfilenames;
-        Fields[f_failedchapterlinks].AsString    := Afailedchapterslinks;
-        Fields[f_failedchapternames].AsString    := Afailedchaptersnames;
-        Post;
-        Adlid := Fields[f_dlid].AsInteger;
-        Result := Adlid <> -1;
-        if not Result then
-          SendLogWarning(ClassName + '.Add seems to be failed! ' +
-            Format('id=%d; ord=%d; title=%s; website=%s', [Adlid, Aorder, Atitle, Awebsite]));
-      end;
+    Inc(FCommitCount);
+    if FCommitCount >= FAutoCommitCount then
+      Commit;
+    Result := True;
   except
     on E: Exception do
       SendLogException(ClassName + '.Add failed!', E);
@@ -202,8 +200,7 @@ begin
   if not Connection.Connected then Exit;
   try
     Transaction.Commit;
-    if FCommitCount <> 0 then
-      FCommitCount := 0;
+    FCommitCount := 0;
   except
     on E: Exception do
       begin
@@ -211,6 +208,13 @@ begin
         SendLogException(ClassName + '.Commit failed! Rollback!', E);
       end;
   end;
+end;
+
+procedure TDownloadsDB.Close;
+begin
+  if FCommitCount <> 0 then
+    Commit;
+  inherited Close;
 end;
 
 end.
