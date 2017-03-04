@@ -2146,7 +2146,6 @@ begin
           Website:=mangaInfo.website;
           DownloadInfo.Website:=mangaInfo.website;
           DownloadInfo.Link:=mangaInfo.link;
-          SendLog('addedlink='+DownloadInfo.Link);
           DownloadInfo.Title:=mangaInfo.title;
           DownloadInfo.DateTime:=Now;
           DownloadInfo.SaveTo:=s;
@@ -4475,7 +4474,6 @@ end;
 procedure TMainForm.ViewMangaInfo(const AURL, AWebsite, ATitle: String;
   const AMangaListPos: Integer);
 var
-  TURL: String;
   i: Integer;
 begin
   if (AURL = '') or (AWebsite = '') then Exit;
@@ -4491,18 +4489,13 @@ begin
     except
     end;
 
-  TURL := Trim(AURL);
-  // fix url
-  i := Modules.LocateModule(AWebsite);
-  if i > -1 then
-    TURL := FillHost(Modules.Module[i].RootURL, TURL)
-  else
-    TURL := FillMangaSiteHost(AWebsite, TURL);
-
-
   // set the UI
+  i := Modules.LocateModule(AWebsite);
+  if i <> -1 then
+    edURL.Text := FillHost(Modules.Module[i].RootURL, AURL)
+  else
+    edURL.Text := FillMangaSiteHost(AWebsite, AURL);
   pcMain.ActivePage := tsInformation;
-  edURL.Text := TURL;
   imCover.Picture.Assign(nil);
   rmInformation.Clear;
   rmInformation.Lines.Add(RS_Loading);
@@ -4527,7 +4520,7 @@ begin
   GetInfosThread.MangaListPos := AMangaListPos;
   GetInfosThread.Title := ATitle;
   GetInfosThread.Website := AWebsite;
-  GetInfosThread.Link := TURL;
+  GetInfosThread.Link := AURL;
   GetInfosThread.Start;
 end;
 
@@ -5213,18 +5206,12 @@ begin
     host := LowerCase(host);
     i := Modules.LocateModuleByHost(host);
     if i <> -1 then
-    begin
-      website := Modules.Module[i].Website;
-      edURL.Text := FillHost(Modules.Module[i].RootURL, link);
-    end
+      website := Modules.Module[i].Website
     else
     begin
       i := LocateMangaSiteID(host);
       if i <> -1 then
-      begin
         website := WebsiteRoots[i, 0];
-        edURL.Text := FillMangaSiteHost(i, link);
-      end;
     end;
   end;
 
