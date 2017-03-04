@@ -520,7 +520,6 @@ destructor TFavoriteManager.Destroy;
 var
   i: Integer;
 begin
-  Backup;
   if Items.Count > 0 then
   begin
     StopChekForNewChapter;
