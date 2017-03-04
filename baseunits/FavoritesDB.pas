@@ -104,7 +104,6 @@ end;
 
 procedure TFavoritesDB.Commit;
 begin
-  if FCommitCount = 0 then Exit;
   if not Connection.Connected then Exit;
   try
     Transaction.Commit;
@@ -125,7 +124,8 @@ end;
 
 procedure TFavoritesDB.Close;
 begin
-  Commit;
+  if FCommitCount <> 0 then
+    Commit;
   inherited Close;
 end;
 
