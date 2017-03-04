@@ -511,7 +511,7 @@ begin
   isRunning := False;
   Items := TFavoriteContainers.Create;;
   FFavoritesDB := TFavoritesDB.Create(FAVORITESDB_FILE);
-  FFavoritesDB.Open(False, False);
+  FFavoritesDB.Open;
   ConvertToDB;
   Restore;
 end;
@@ -952,22 +952,28 @@ begin
   if not FFavoritesDB.Connection.Connected then Exit;
   if FFavoritesDB.OpenTable(False) then
     try
-      FFavoritesDB.Table.First;
-      while not FFavoritesDB.Table.EOF do
-      begin
-        Items.Add(TFavoriteContainer.Create);
-        with Items.Last, FavoriteInfo, FFavoritesDB.Table do
-          begin
-            Manager := Self;
-            Status := STATUS_IDLE;
-            Website := Fields[2].AsString;
-            Link := Fields[3].AsString;
-            Title := Fields[4].AsString;
-            CurrentChapter := Fields[5].AsString;
-            DownloadedChapterList := Fields[6].AsString;
-            SaveTo := Fields[7].AsString;
-          end;
-        FFavoritesDB.Table.Next;
+      if FFavoritesDB.Table.RecordCount = 0 then Exit;
+      EnterCriticalsection(CS_Favorites);
+      try
+        FFavoritesDB.Table.First;
+        while not FFavoritesDB.Table.EOF do
+        begin
+          Items.Add(TFavoriteContainer.Create);
+          with Items.Last, FavoriteInfo, FFavoritesDB.Table do
+            begin
+              Manager := Self;
+              Status := STATUS_IDLE;
+              Website := Fields[2].AsString;
+              Link := Fields[3].AsString;
+              Title := Fields[4].AsString;
+              CurrentChapter := Fields[5].AsString;
+              DownloadedChapterList := Fields[6].AsString;
+              SaveTo := Fields[7].AsString;
+            end;
+          FFavoritesDB.Table.Next;
+        end;
+      finally
+        LeaveCriticalsection(CS_Favorites);
       end;
     finally
       FFavoritesDB.CloseTable;
