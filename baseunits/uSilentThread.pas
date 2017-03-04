@@ -378,6 +378,7 @@ begin
             OptionChangeUnicodeCharacterStr);
       end;
       DLManager.Items[p].downloadInfo.SaveTo := FSavePath;
+      DLManager.Items[p].SaveToDB(p);
 
       UpdateVtDownload;
       DLManager.CheckAndActiveTask(False);
