@@ -612,6 +612,7 @@ var
   LNCResult: TNewChapterResult = ncrCancel;
   newChapterListStr: String = '';
   removeListStr: String = '';
+  newdl: LongInt;
 begin
   if isDlgCounter then Exit;
   if (Self.DLManager = nil) and Assigned(MainForm.DLManager) then
@@ -723,8 +724,8 @@ begin
                 (NewMangaInfoChaptersPos.Count > 0) then
                 try
                   EnterCriticalSection(DLManager.CS_Task);
-                  DLManager.Items.Add(TTaskContainer.Create);
-                  with DLManager.Items.Last do
+                  newdl := DLManager.Items.Add(TTaskContainer.Create);
+                  with DLManager.Items[newdl] do
                   begin
                     Manager := DLManager;
                     CurrentDownloadChapterPtr := 0;
@@ -759,6 +760,7 @@ begin
                       DownloadInfo.Status := Format('[%d/%d] %s',[0,ChapterLinks.Count,RS_Stopped]);
                       Status := STATUS_STOP;
                     end;
+                    SaveToDB(newdl);
                     // add to downloaded chapter list
                     FavoriteInfo.downloadedChapterList := MergeCaseInsensitive([FavoriteInfo.DownloadedChapterList, chapterLinks.Text]);
                     // add to downloaded chapter list in downloadmanager
