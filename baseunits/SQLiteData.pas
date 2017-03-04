@@ -53,14 +53,14 @@ type
   public
     constructor Create;
     destructor Destroy; override;
-    function Open(const AOpenTable: Boolean = True; const AGetRecordCount: Boolean = True): Boolean;
+    function Open(const AOpenTable: Boolean = True; const AGetRecordCount: Boolean = True): Boolean; virtual;
     function OpenTable(const AGetRecordCount: Boolean = True): Boolean; virtual;
-    procedure Close;
-    procedure CloseTable;
-    procedure Refresh(RecheckDataCount: Boolean = False);
+    procedure Close; virtual;
+    procedure CloseTable; virtual;
+    procedure Refresh(RecheckDataCount: Boolean = False); virtual;
     procedure Commit; virtual;
     procedure CommitRetaining; virtual;
-    procedure Save;
+    procedure Save; virtual;
     function Connected: Boolean; inline;
     property Connection: TSQLite3ConnectionH read FConn;
     property Transaction: TSQLTransaction read FTrans;
