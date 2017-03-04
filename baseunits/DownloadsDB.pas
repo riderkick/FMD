@@ -171,6 +171,9 @@ begin
         Post;
         Adlid := Fields[f_dlid].AsInteger;
         Result := Adlid <> -1;
+        if not Result then
+          SendLogWarning(ClassName + '.Add seems to be failed! ' +
+            Format('id=%d; ord=%d; title=%s; website=%s', [Adlid, Aorder, Atitle, Awebsite]));
       end;
   except
     on E: Exception do
