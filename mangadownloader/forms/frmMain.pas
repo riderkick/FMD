@@ -2056,7 +2056,7 @@ var
   links,names:TStrings;
   node:PVirtualNode;
   s:String;
-  c,p,r,i,j,k,l:Integer;
+  c,p,r,i,j,k,l, newdl:Integer;
 begin
   if clbChapterList.CheckedCount = 0 then
     Exit;
@@ -2125,7 +2125,8 @@ begin
           l:=links.Count-k
         else
           l:=p;
-        with DLManager[DLManager.AddTask] do
+        newdl := DLManager.AddTask;
+        with DLManager[newdl] do
         begin
           for j:=1 to l do
           begin
@@ -2150,6 +2151,7 @@ begin
           DownloadInfo.DateTime:=Now;
           DownloadInfo.SaveTo:=s;
           CurrentDownloadChapterPtr:=0;
+          SaveToDB(newdl);
         end;
       end;
       DLManager.DownloadedChapters.Chapters[mangaInfo.website+mangaInfo.link]:=links.Text;
