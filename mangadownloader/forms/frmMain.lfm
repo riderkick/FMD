@@ -4476,7 +4476,6 @@ object MainForm: TMainForm
         Align = alClient
         AutoExpand = True
         DefaultItemHeight = 18
-        ExpandSignSize = 16
         Images = IconList
         ReadOnly = True
         TabOrder = 0
