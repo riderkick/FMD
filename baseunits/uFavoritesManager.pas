@@ -75,6 +75,7 @@ type
     Status: TFavoriteStatusType;
     constructor Create;
     destructor Destroy; override;
+    procedure SaveToDB(const AOrder: Integer = -1);
     property ModuleId: Integer read FModuleId;
     property Website: String read FWebsite write SetWebsite;
   end;
@@ -189,6 +190,26 @@ begin
     NewMangaInfoChaptersPos.Free;
   end;
   inherited Destroy;
+end;
+
+procedure TFavoriteContainer.SaveToDB(const AOrder: Integer);
+var
+  i: Integer;
+begin
+  if AOrder = -1 then
+    i := Manager.Items.IndexOf(Self)
+  else
+    i := AOrder;
+  with FavoriteInfo do
+    Manager.FFavoritesDB.Add(
+      i,
+      Website,
+      Link,
+      Title,
+      CurrentChapter,
+      DownloadedChapterList,
+      SaveTo
+      );
 end;
 
 { TFavoriteThread }
@@ -830,12 +851,14 @@ end;
 
 procedure TFavoriteManager.Add(const ATitle, ACurrentChapter, ADownloadedChapterList,
   AWebsite, ASaveTo, ALink: String);
+var
+  newfv: Integer;
 begin
   if IsMangaExist(ATitle, AWebsite) then Exit;
   EnterCriticalsection(CS_Favorites);
   try
-    Items.Add(TFavoriteContainer.Create);
-    with Items.Last do begin
+    newfv := Items.Add(TFavoriteContainer.Create);
+    with Items[newfv] do begin
       Manager := Self;
       Website := AWebsite;
       with FavoriteInfo do begin
@@ -846,12 +869,10 @@ begin
         DownloadedChapterList := ADownloadedChapterList;
       end;
       Status := STATUS_IDLE;
+      SaveToDB(newfv);
     end;
     if not isRunning then
-    begin
       Sort(SortColumn);
-      Backup;
-    end;
   finally
     LeaveCriticalsection(CS_Favorites);
   end;
@@ -987,18 +1008,14 @@ var
 begin
   if not FFavoritesDB.Connection.Connected then Exit;
   if Items.Count > 0 then
-    for i := 0 to Items.Count - 1 do
-      with Items[i].FavoriteInfo do
-        FFavoritesDB.Add(
-          i,
-          Website,
-          Link,
-          Title,
-          CurrentChapter,
-          DownloadedChapterList,
-          SaveTo
-        );
-    FFavoritesDB.Commit;
+    try
+      EnterCriticalsection(CS_Favorites);
+      for i := 0 to Items.Count - 1 do
+        Items[i].SaveToDB(i);
+      FFavoritesDB.Commit;
+    finally
+      LeaveCriticalsection(CS_Favorites);
+    end;
 end;
 
 procedure TFavoriteManager.AddToDownloadedChaptersList(const AWebsite,
