@@ -593,7 +593,7 @@ begin
       try
         for i := 0 to Items.Count - 1 do
           with Items[i] do
-            if (Status = STATUS_IDLE) and (Trim(FavoriteInfo.Link) <> '') then
+            if FEnabled and (Status = STATUS_IDLE) and (Trim(FavoriteInfo.Link) <> '') then
               Status := STATUS_CHECK;
       finally
         LeaveCriticalsection(CS_Favorites);
