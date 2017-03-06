@@ -4274,7 +4274,7 @@ end;
 
 procedure TMainForm.vtDownloadUpdateFilters(const RefreshTree: Boolean);
 var
-  ACurrentJDN: LongInt;
+  ACurrentJDN: Integer;
 
   procedure ShowTasks(S: TDownloadStatusTypes = []);
   var
@@ -4297,9 +4297,9 @@ var
     end;
   end;
 
-  procedure ShowTasksOnCertainDays(const L, H: LongInt);
+  procedure ShowTasksOnCertainDays(const L, H: Integer);
   var
-    jdn: LongInt;
+    jdn: Integer;
     xNode: PVirtualNode;
   begin
     xNode := vtDownload.GetFirst();
