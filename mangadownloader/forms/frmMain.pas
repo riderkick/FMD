@@ -1948,18 +1948,14 @@ procedure TMainForm.miFavoritesStopCheckNewChapterClick(Sender: TObject);
 var
   xNode: PVirtualNode;
 begin
-  if vtFavorites.SelectedCount > 0 then
+  if vtFavorites.SelectedCount = 0 then Exit;
+  xNode := vtFavorites.GetFirstSelected;
+  while Assigned(xNode) do
   begin
-    xNode := vtFavorites.GetFirstSelected;
-    repeat
-      if Assigned(xNode) then
-      begin
-        FavoriteManager.StopChekForNewChapter(False, xNode^.Index);
-        xNode := vtFavorites.GetNextSelected(xNode);
-      end;
-    until xNode = nil;
-    vtFavorites.Repaint;
+    FavoriteManager.StopChekForNewChapter(False, xNode^.Index);
+    xNode := vtFavorites.GetNextSelected(xNode);
   end;
+  UpdateVtFavorites;
 end;
 
 procedure TMainForm.miFavoritesViewInfosClick(Sender: TObject);

@@ -364,8 +364,8 @@ begin
           try
             Modules.IncActiveConnectionCount(ModuleId);
             Status := STATUS_CHECKING;
-            Threads.Add(TFavoriteThread.Create);
-            Thread := Threads.Last;
+            Thread := TFavoriteThread.Create;
+            Threads.Add(Thread);
             Thread.Task := Self;
             Thread.Container := Manager.Items[i];
             Thread.WorkId := i;
