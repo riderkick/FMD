@@ -92,7 +92,7 @@ begin
   if not Connection.Connected then Exit;
   try
     Connection.ExecuteDirect(
-      'DELETE FROM "favorites" WHERE "websitelink"="\' + QuotedStr(LowerCase(AWebsite + ALink)));
+      'DELETE FROM "favorites" WHERE "websitelink"=' + QuotedStr(LowerCase(AWebsite + ALink)));
     Inc(FCommitCount);
     if FCommitCount >= FAutoCommitCount then
       Commit;
