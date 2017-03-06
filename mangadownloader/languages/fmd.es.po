@@ -1496,10 +1496,12 @@ msgid "Task + Data + Favorite"
 msgstr "Tarea + Datos + Favorito"
 
 #: tmainform.midownloaddisable.caption
+msgctxt "tmainform.midownloaddisable.caption"
 msgid "Disable"
 msgstr "Deshabilitar"
 
 #: tmainform.midownloadenable.caption
+msgctxt "tmainform.midownloadenable.caption"
 msgid "Enable"
 msgstr "Habilitar"
 
@@ -1548,10 +1550,22 @@ msgctxt "TMAINFORM.MIFAVORITESDELETE.CAPTION"
 msgid "Delete"
 msgstr "Eliminar"
 
+#: tmainform.mifavoritesdisable.caption
+#, fuzzy
+msgctxt "tmainform.mifavoritesdisable.caption"
+msgid "Disable"
+msgstr "Deshabilitar"
+
 #: tmainform.mifavoritesdownloadall.caption
 msgctxt "tmainform.mifavoritesdownloadall.caption"
 msgid "Download all"
 msgstr "Descargar Todo"
+
+#: tmainform.mifavoritesenable.caption
+#, fuzzy
+msgctxt "tmainform.mifavoritesenable.caption"
+msgid "Enable"
+msgstr "Habilitar"
 
 #: tmainform.mifavoritesopenfolder.caption
 msgctxt "TMAINFORM.MIFAVORITESOPENFOLDER.CAPTION"

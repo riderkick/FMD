@@ -268,6 +268,8 @@
 {"hash":163579095,"name":"tmainform.michapterlistdescending.caption","sourcebytes":[68,101,115,99,101,110,100,105,110,103],"value":"Descending"},
 {"hash":165778738,"name":"tmainform.mifavoriteschecknewchapter.caption","sourcebytes":[67,104,101,99,107,32,102,111,114,32,110,101,119,32,99,104,97,112,116,101,114],"value":"Check for new chapter"},
 {"hash":222540418,"name":"tmainform.mifavoritesstopchecknewchapter.caption","sourcebytes":[83,116,111,112,32,99,104,101,99,107,32,102,111,114,32,110,101,119,32,99,104,97,112,116,101,114],"value":"Stop check for new chapter"},
+{"hash":79984933,"name":"tmainform.mifavoritesenable.caption","sourcebytes":[69,110,97,98,108,101],"value":"Enable"},
+{"hash":185170277,"name":"tmainform.mifavoritesdisable.caption","sourcebytes":[68,105,115,97,98,108,101],"value":"Disable"},
 {"hash":27371647,"name":"tmainform.mifavoritesviewinfos.caption","sourcebytes":[86,105,101,119,32,109,97,110,103,97,32,105,110,102,111],"value":"View manga info"},
 {"hash":29393692,"name":"tmainform.mifavoritesdownloadall.caption","sourcebytes":[68,111,119,110,108,111,97,100,32,97,108,108],"value":"Download all"},
 {"hash":78392485,"name":"tmainform.mifavoritesdelete.caption","sourcebytes":[68,101,108,101,116,101],"value":"Delete"},

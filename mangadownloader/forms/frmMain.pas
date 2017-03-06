@@ -87,6 +87,8 @@ type
     lbOptionMangaCustomRename: TLabel;
     MenuItem10: TMenuItem;
     MenuItem11: TMenuItem;
+    miFavoritesEnable: TMenuItem;
+    miFavoritesDisable: TMenuItem;
     miChapterListDescending: TMenuItem;
     miChapterListAscending: TMenuItem;
     miMangaListDelete: TMenuItem;
@@ -450,6 +452,7 @@ type
     procedure FormShow(Sender: TObject);
     procedure FormWindowStateChange(Sender: TObject);
     procedure miChapterListAscendingClick(Sender: TObject);
+    procedure miFavoritesEnableClick(Sender: TObject);
     procedure tmAnimateMangaInfoTimer(Sender: TObject);
     procedure tmCheckFavoritesTimer(Sender: TObject);
     procedure tmExitCommandTimer(Sender: TObject);
@@ -467,7 +470,6 @@ type
     procedure miAbortSilentThreadClick(Sender: TObject);
     procedure miChapterListFilterClick(Sender: TObject);
     procedure miChapterListHideDownloadedClick(Sender: TObject);
-    procedure miDownloadDisableClick(Sender: TObject);
     procedure miDownloadEnableClick(Sender: TObject);
     procedure miDownloadViewMangaInfoClick(Sender: TObject);
     procedure miChapterListHighlightClick(Sender: TObject);
@@ -584,6 +586,9 @@ type
       Column: TColumnIndex; TextType: TVSTTextType; var CellText: String);
     procedure vtFavoritesHeaderClick(Sender: TVTHeader; Column: TColumnIndex;
       Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+    procedure vtFavoritesPaintText(Sender: TBaseVirtualTree;
+      const TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
+      TextType: TVSTTextType);
     procedure vtMangaListChange(Sender: TBaseVirtualTree; Node: PVirtualNode);
     procedure vtMangaListColumnDblClick(Sender: TBaseVirtualTree;
       Column: TColumnIndex; Shift: TShiftState);
@@ -1479,6 +1484,22 @@ begin
   end;
 end;
 
+procedure TMainForm.miFavoritesEnableClick(Sender: TObject);
+var
+  Node: PVirtualNode;
+begin
+  if vtFavorites.SelectedCount = 0 then Exit;
+  Node := vtFavorites.GetFirstSelected();
+  while Assigned(Node) do
+  begin
+    if Sender = miFavoritesDisable then
+      FavoriteManager.StopChekForNewChapter(False, Node^.Index);
+    FavoriteManager[Node^.Index].Enabled := (Sender = miFavoritesEnable);
+    Node := vtFavorites.GetNextSelected(Node);
+  end;
+  UpdateVtFavorites;
+end;
+
 procedure TMainForm.tmAnimateMangaInfoTimer(Sender: TObject);
 begin
   gifWaiting.Update(pbWait.Canvas, gifWaitingRect);
@@ -1725,21 +1746,6 @@ begin
   FilterChapterList(edFilterMangaInfoChapters.Text, miChapterListHideDownloaded.Checked);
 end;
 
-procedure TMainForm.miDownloadDisableClick(Sender: TObject);
-var
-  Node: PVirtualNode;
-begin
-  if vtDownload.SelectedCount = 0 then Exit;
-  Node := vtDownload.GetFirstSelected();
-  while Assigned(Node) do
-  begin
-    DLManager.DisableTask(Node^.Index);
-    Node := vtDownload.GetNextSelected(Node);
-  end;
-  UpdateVtDownload;
-  DLManager.CheckAndActiveTask();
-end;
-
 procedure TMainForm.miDownloadEnableClick(Sender: TObject);
 var
   Node: PVirtualNode;
@@ -1748,7 +1754,10 @@ begin
   Node := vtDownload.GetFirstSelected();
   while Assigned(Node) do
   begin
-    DLManager.EnableTask(Node^.Index);
+    if Sender = miDownloadEnable then
+      DLManager.EnableTask(Node^.Index)
+    else
+      DLManager.DisableTask(Node^.Index);
     Node := vtDownload.GetNextSelected(Node);
   end;
   UpdateVtDownload;
@@ -3410,34 +3419,39 @@ begin
 end;
 
 procedure TMainForm.pmFavoritesPopup(Sender: TObject);
+var
+  iCheck,
+  iStop,
+  iEnable,
+  iDisable: Boolean;
 
-  function SelectedStatusPresent(Stats: TFavoriteStatusTypes): Boolean;
+  procedure ScanFavs;
   var
-    xNode: PVirtualNode;
+    Node: PVirtualNode;
   begin
-    Result := False;
-    with FavoriteManager do
+    iCheck := False;
+    iStop := False;
+    iEnable := False;
+    iDisable := False;
+    Node := vtFavorites.GetFirstSelected();
+    while Assigned(Node) do
     begin
-      if vtFavorites.SelectedCount > 0 then
+      if FavoriteManager[Node^.Index].Enabled then
       begin
-        Lock;
-        try
-          xNode := vtFavorites.GetFirstSelected;
-          repeat
-            if Assigned(xNode) then
-            begin
-              if FavoriteManager.Items[xNode^.Index].Status in Stats then
-              begin
-                Result := True;
-                Break;
-              end;
-              xNode := vtFavorites.GetNextSelected(xNode);
-            end;
-          until xNode = nil;
-        finally
-          LockRelease;
+        if not iDisable then
+          iDisable := True;
+        case FavoriteManager[Node^.Index].Status of
+          STATUS_IDLE      : if not iCheck then iCheck := True;
+          STATUS_CHECK,
+          STATUS_CHECKING,
+          STATUS_CHECKED   : if not iStop then iStop := True;
         end;
-      end;
+      end
+      else if not iEnable then
+        iEnable := True;
+      if iEnable and iDisable and iCheck and iStop then
+        Break;
+      Node := vtFavorites.GetNextSelected(Node);
     end;
   end;
 
@@ -3446,37 +3460,38 @@ begin
   begin
     miFavoritesViewInfos.Enabled := False;
     miFavoritesDownloadAll.Enabled := False;
+    miFavoritesEnable.Enabled := False;
+    miFavoritesDisable.Enabled := False;
     miFavoritesDelete.Enabled := False;
     miFavoritesChangeSaveTo.Enabled := False;
     miFavoritesOpenFolder.Enabled := False;
     miFavoritesOpenWith.Enabled := False;
   end
   else
-  if vtFavorites.SelectedCount = 1 then
   begin
-    miFavoritesCheckNewChapter.Visible := SelectedStatusPresent([STATUS_IDLE]);
-    miFavoritesStopCheckNewChapter.Visible :=
-      SelectedStatusPresent([STATUS_CHECK, STATUS_CHECKING]);
-    miFavoritesViewInfos.Enabled := True;
-    miFavoritesDownloadAll.Enabled := (Trim(FavoriteManager.Items[
-      vtFavorites.FocusedNode^.Index].FavoriteInfo.Link) <> '');
-    miFavoritesDelete.Enabled := True;
-    miFavoritesChangeSaveTo.Enabled := True;
-    miFavoritesOpenFolder.Enabled :=
-      DirectoryExistsUTF8(FavoriteManager.Items[vtFavorites.FocusedNode^.Index].FavoriteInfo.SaveTo);
-    miFavoritesOpenWith.Enabled := miFavoritesOpenFolder.Enabled;
-  end
-  else
-  begin
-    miFavoritesCheckNewChapter.Visible := SelectedStatusPresent([STATUS_IDLE]);
-    miFavoritesStopCheckNewChapter.Visible :=
-      SelectedStatusPresent([STATUS_CHECK, STATUS_CHECKING]);
-    miFavoritesViewInfos.Enabled := False;
-    miFavoritesDownloadAll.Enabled := True;
-    miFavoritesDelete.Enabled := True;
-    miFavoritesChangeSaveTo.Enabled := False;
-    miFavoritesOpenFolder.Enabled := False;
-    miFavoritesOpenWith.Enabled := False;
+    ScanFavs;
+    miFavoritesCheckNewChapter.Visible := iCheck;
+    miFavoritesStopCheckNewChapter.Visible := iStop;
+    miFavoritesEnable.Visible := iEnable;
+    miFavoritesDisable.Visible := iDisable;
+    if vtFavorites.SelectedCount = 1 then
+    begin
+      miFavoritesViewInfos.Enabled := True;
+      miFavoritesDownloadAll.Enabled := (Trim(FavoriteManager[vtFavorites.FocusedNode^.Index].FavoriteInfo.Link) <> '');
+      miFavoritesDelete.Enabled := True;
+      miFavoritesChangeSaveTo.Enabled := True;
+      miFavoritesOpenFolder.Enabled := DirectoryExistsUTF8(FavoriteManager.Items[vtFavorites.FocusedNode^.Index].FavoriteInfo.SaveTo);
+      miFavoritesOpenWith.Enabled := miFavoritesOpenFolder.Enabled;
+    end
+    else
+    begin
+      miFavoritesViewInfos.Enabled := False;
+      miFavoritesDownloadAll.Enabled := True;
+      miFavoritesDelete.Enabled := True;
+      miFavoritesChangeSaveTo.Enabled := False;
+      miFavoritesOpenFolder.Enabled := False;
+      miFavoritesOpenWith.Enabled := False;
+    end;
   end;
   if FavoriteManager.isRunning then
   begin
@@ -4122,6 +4137,14 @@ begin
     UpdateVtFavorites;
     FavoriteManager.isRunning := False;
   end;
+end;
+
+procedure TMainForm.vtFavoritesPaintText(Sender: TBaseVirtualTree;
+  const TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
+  TextType: TVSTTextType);
+begin
+  if not FavoriteManager[Node^.Index].Enabled then
+    TargetCanvas.Font.Color := TVirtualStringTree(Sender).Colors.DisabledColor;
 end;
 
 procedure TMainForm.vtMangaListChange(Sender: TBaseVirtualTree; Node: PVirtualNode);

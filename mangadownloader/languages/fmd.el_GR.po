@@ -1571,10 +1571,12 @@ msgid "Task + Data + Favorite"
 msgstr "Εργασία + Δεδομένα + Αγαπημένο"
 
 #: tmainform.midownloaddisable.caption
+msgctxt "tmainform.midownloaddisable.caption"
 msgid "Disable"
 msgstr "Απενεργοποίηση"
 
 #: tmainform.midownloadenable.caption
+msgctxt "tmainform.midownloadenable.caption"
 msgid "Enable"
 msgstr "Ενεργοποίηση"
 
@@ -1623,10 +1625,22 @@ msgctxt "TMAINFORM.MIFAVORITESDELETE.CAPTION"
 msgid "Delete"
 msgstr "Διαγραφή"
 
+#: tmainform.mifavoritesdisable.caption
+#, fuzzy
+msgctxt "tmainform.mifavoritesdisable.caption"
+msgid "Disable"
+msgstr "Απενεργοποίηση"
+
 #: tmainform.mifavoritesdownloadall.caption
 msgctxt "tmainform.mifavoritesdownloadall.caption"
 msgid "Download all"
 msgstr "Λήψη όλων"
+
+#: tmainform.mifavoritesenable.caption
+#, fuzzy
+msgctxt "tmainform.mifavoritesenable.caption"
+msgid "Enable"
+msgstr "Ενεργοποίηση"
 
 #: tmainform.mifavoritesopenfolder.caption
 msgctxt "TMAINFORM.MIFAVORITESOPENFOLDER.CAPTION"

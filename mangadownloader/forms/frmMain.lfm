@@ -1975,6 +1975,7 @@ object MainForm: TMainForm
         OnDragDrop = vtFavoritesDragDrop
         OnFocusChanged = vtDownloadFocusChanged
         OnGetText = vtFavoritesGetText
+        OnPaintText = vtFavoritesPaintText
         OnGetImageIndex = vtFavoritesGetImageIndex
         OnGetHint = vtFavoritesGetHint
         OnHeaderClick = vtFavoritesHeaderClick
@@ -4606,7 +4607,7 @@ object MainForm: TMainForm
     object miDownloadDisable: TMenuItem
       Caption = 'Disable'
       ShowAlwaysCheckable = True
-      OnClick = miDownloadDisableClick
+      OnClick = miDownloadEnableClick
     end
     object miDownloadDelete: TMenuItem
       Caption = 'Delete'
@@ -4986,6 +4987,14 @@ object MainForm: TMainForm
       }
       ImageIndex = 7
       OnClick = miFavoritesStopCheckNewChapterClick
+    end
+    object miFavoritesEnable: TMenuItem
+      Caption = 'Enable'
+      OnClick = miFavoritesEnableClick
+    end
+    object miFavoritesDisable: TMenuItem
+      Caption = 'Disable'
+      OnClick = miFavoritesEnableClick
     end
     object miFavoritesViewInfos: TMenuItem
       Caption = 'View manga info'
