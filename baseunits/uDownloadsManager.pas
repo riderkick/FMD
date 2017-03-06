@@ -1770,35 +1770,11 @@ begin
   if isRunningBackup then Exit;
   if Items.Count = 0 then Exit;
   if not FDownloadsDB.Connection.Connected then Exit;
-  isRunningBackup := True;
-  EnterCriticalSection(CS_Task);
   try
+    EnterCriticalSection(CS_Task);
+    isRunningBackup := True;
     for i := 0 to Items.Count - 1 do
-      with Items[i] do
-      begin
-        FDownloadsDB.Add(DlId,
-          Enabled,
-          i,
-          Integer(Status),
-          CurrentDownloadChapterPtr,
-          PageNumber,
-          CurrentPageNumber,
-          Website,
-          DownloadInfo.Link,
-          DownloadInfo.Title,
-          DownloadInfo.Status,
-          DownloadInfo.Progress,
-          DownloadInfo.SaveTo,
-          DownloadInfo.DateTime,
-          ChapterLinks.Text,
-          ChapterName.Text,
-          PageLinks.Text,
-          PageContainerLinks.Text,
-          FileNames.Text,
-          CustomFileName,
-          FailedChapterLinks.Text,
-          FailedChapterName.Text);
-      end;
+      Items[i].SaveToDB(i);
     FDownloadsDB.Commit;
   finally
     LeaveCriticalSection(CS_Task);
