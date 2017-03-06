@@ -1501,7 +1501,7 @@ begin
   else
     i := AOrder;
   Manager.FDownloadsDB.Add(DlId,
-    Enabled,
+    FEnabled,
     i,
     Integer(Status),
     CurrentDownloadChapterPtr,

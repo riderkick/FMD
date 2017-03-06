@@ -63,8 +63,10 @@ type
 
   TFavoriteContainer = class
   private
+    FEnabled: Boolean;
     FModuleId: Integer;
     FWebsite: String;
+    procedure SetEnabled(AValue: Boolean);
     procedure SetWebsite(AValue: String);
   public
     FavoriteInfo: TFavoriteInfo;
@@ -78,6 +80,7 @@ type
     procedure SaveToDB(const AOrder: Integer = -1);
     property ModuleId: Integer read FModuleId;
     property Website: String read FWebsite write SetWebsite;
+    property Enabled: Boolean read FEnabled write SetEnabled;
   end;
 
   TFavoriteContainers = TFPGList<TFavoriteContainer>;
@@ -171,9 +174,16 @@ begin
   FModuleId := Modules.LocateModule(FavoriteInfo.Website);
 end;
 
+procedure TFavoriteContainer.SetEnabled(AValue: Boolean);
+begin
+  if FEnabled = AValue then Exit;
+  FEnabled := AValue;
+end;
+
 constructor TFavoriteContainer.Create;
 begin
   FModuleId := -1;
+  FEnabled := True;
 end;
 
 destructor TFavoriteContainer.Destroy;
@@ -203,6 +213,7 @@ begin
   with FavoriteInfo do
     Manager.FFavoritesDB.Add(
       i,
+      FEnabled,
       Website,
       Link,
       Title,
@@ -507,6 +518,7 @@ begin
       s := IntToStr(i);
       FFavoritesDB.Add(
         i,
+        True,
         ReadString(s, 'Website', ''),
         ReadString(s, 'Link', ''),
         ReadString(s, 'Title', ''),
@@ -983,14 +995,15 @@ begin
           Items.Add(TFavoriteContainer.Create);
           with Items.Last, FavoriteInfo, FFavoritesDB.Table do
             begin
-              Manager := Self;
-              Status := STATUS_IDLE;
-              Website := Fields[2].AsString;
-              Link := Fields[3].AsString;
-              Title := Fields[4].AsString;
-              CurrentChapter := Fields[5].AsString;
-              DownloadedChapterList := Fields[6].AsString;
-              SaveTo := Fields[7].AsString;
+              Manager               := Self;
+              Status                := STATUS_IDLE;
+              Enabled               := Fields[f_enabled].AsBoolean;
+              Website               := Fields[f_website].AsString;
+              Link                  := Fields[f_link].AsString;
+              Title                 := Fields[f_title].AsString;
+              CurrentChapter        := Fields[f_currentchapter].AsString;
+              DownloadedChapterList := Fields[f_downloadedchapterlist].AsString;
+              SaveTo                := Fields[f_saveto].AsString;
             end;
           FFavoritesDB.Table.Next;
         end;
