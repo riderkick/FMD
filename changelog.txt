@@ -4,16 +4,22 @@ Project page: https://github.com/riderkick/FMD
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.98.0 (06-03-2017)
+[*] Fixed various issue with downloads and favorites
+[*] Added enable/disable favorites
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.97.0...0.9.98.0
+
 0.9.97.0 (03-03-2017)
 [*] Fixed save and restore downloads
-[*] Various changes and bug fixed
+[*] Various changes and bug fixes
 Full changes: https://github.com/riderkick/FMD/compare/0.9.96.0...0.9.97.0
 
 0.9.96.0 (02-03-2017)
 [+] Added option to sort chapter list in mangainfo
 [*] Auto scroll chapter list to the bottom if sort is ascending
 [*] Fixed convert old downloads data before 0.9.94.0
-[*] Various changes and bug fixed
+[*] Various changes and bug fixes
 Full changes: https://github.com/riderkick/FMD/compare/0.9.95.0...0.9.96.0
 
 0.9.95.0 (29-02-2017)
