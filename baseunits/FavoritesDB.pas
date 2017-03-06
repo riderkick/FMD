@@ -55,7 +55,7 @@ begin
     '"downloadedchapterlist" TEXT,' +
     '"saveto" TEXT';
   FieldsParams := '"websitelink","order","website","link","title","currentchapter","downloadedchapterlist","saveto"';
-  SelectParams := 'SELECT ' + FieldsParams + ' FROM "'+TableName+'" ORDER BY "order"';
+  SelectParams := 'SELECT ' + FieldsParams + ' FROM ' + QuotedStrD(TableName) + ' ORDER BY "order"';
 end;
 
 function TFavoritesDB.Add(const AOrder: Integer; const AWebsite, ALink, ATitle,
@@ -67,15 +67,15 @@ begin
   try
     Connection.ExecuteDirect('INSERT OR REPLACE INTO "favorites" (' +
       FieldsParams +
-      ') VALUES ("' +
-      LowerCase(AWebsite + ALink) + '","' +
-      IntToStr(AOrder) + '","' +
-      AWebsite + '","' +
-      ALink + '","' +
-      ATitle + '","' +
-      ACurrentChapter  + '","' +
-      ADownloadedChapterList + '","' +
-      ASaveTo + '")');
+      ') VALUES (' +
+      QuotedStr(LowerCase(AWebsite + ALink)) + ', ' +
+      QuotedStr(AOrder) + ', ' +
+      QuotedStr(AWebsite) + ', ' +
+      QuotedStr(ALink) + ', ' +
+      QuotedStr(ATitle) + ', ' +
+      QuotedStr(ACurrentChapter)  + ', ' +
+      QuotedStr(ADownloadedChapterList) + ', ' +
+      QuotedStr(ASaveTo) + ')');
     Result := True;
     Inc(FCommitCount);
     if FCommitCount >= FAutoCommitCount then
@@ -92,7 +92,7 @@ begin
   if not Connection.Connected then Exit;
   try
     Connection.ExecuteDirect(
-      'DELETE FROM "favorites" WHERE "websitelink"="' + LowerCase(AWebsite + ALink) + '"');
+      'DELETE FROM "favorites" WHERE "websitelink"="\' + QuotedStr(LowerCase(AWebsite + ALink)));
     Inc(FCommitCount);
     if FCommitCount >= FAutoCommitCount then
       Commit;
