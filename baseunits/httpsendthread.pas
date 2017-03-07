@@ -136,8 +136,8 @@ begin
   begin
     prot:=Copy(iurl,1,p-1);
     Delete(iurl,1,p);
+    p:=poschar(':',iurl);
   end;
-  p:=poschar(':',iurl);
   q:=0;
   if (p<>0) and (p<Length(iurl)) and (iurl[P+1] in ['0'..'9']) then
   begin
@@ -150,22 +150,23 @@ begin
   cleanuri(iurl);
   p:=poschar('.',iurl);
   q:=poschar('/',iurl);
-  if (q<>0) and (p<>0) and (p>q) then p:=0;
   if (p<>0) and (p<Length(iurl)) then
-  begin
-    p:=poschar('/',iurl,p);
-    if p<>0 then
+    if p<q then
     begin
-      AHost:=Copy(iurl,1,p-1);
-      Delete(iurl,1,p-1);
+      AHost:=Copy(iurl,1,q-1);
+      Delete(iurl,1,q-1);
       cleanuri(iurl);
     end
     else
+    if q=0 then
     begin
-      AHost:=iurl;
-      iurl:='';
+      q:=poschar('.',iurl,p+1);
+      if (q<>0) and (q<Length(iurl)) then
+      begin
+        AHost:=iurl;
+        iurl:='';
+      end;
     end;
-  end;
   if (AHost='') and (iurl<>'') and ((prot<>'') or (port<>'')) then
   begin
     AHost:=iurl;
