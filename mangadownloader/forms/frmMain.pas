@@ -785,6 +785,9 @@ var
   IsDlgCounter: Boolean = False;
   FUpdateURL: String;
 
+  // file logger
+  FileLogger: TFileChannel;
+
 const
   CL_HLBlueMarks        = $FDC594;
   CL_HLGreenMarks       = $B8FFB8;
@@ -892,9 +895,6 @@ var
 
   // ...
   UpdateStatusTextStyle: TTextStyle;
-
-  // file logger
-  FileLogger: TFileChannel;
 
 {$ifdef windows}
   PrevWndProc: windows.WNDPROC;
@@ -1081,8 +1081,6 @@ begin
   PrevWndProc := windows.WNDPROC(windows.GetWindowLongPtr(Self.Handle, GWL_WNDPROC));
   windows.SetWindowLongPtr(Self.Handle, GWL_WNDPROC, PtrInt(@WndCallback));
   {$endif}
-  Logger.Enabled := False;
-  InitSimpleExceptionHandler;
   btAbortUpdateList.Parent := sbUpdateList;
   isRunDownloadFilter := False;
   isUpdating := False;
@@ -4978,6 +4976,7 @@ begin
     //misc
     frmCustomColor.Apply;
     SimpleException.SetLogFileName(edLogFileName.Text);
+
     if ckEnableLogging.Checked and (not Logger.Enabled) then
     begin
       Logger.Enabled := True;
