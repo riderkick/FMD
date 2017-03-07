@@ -855,6 +855,7 @@ procedure fmdHibernate;
 // logger
 procedure SendLog(const AText: String); overload; inline;
 procedure SendLog(const AText, AValue: String); overload; inline;
+procedure SendLog(const AText: String; AValue: TStrings); overload; inline;
 procedure SendLogError(const AText: String); overload; inline;
 procedure SendLogWarning(const AText: String); overload; inline;
 procedure SendLogException(const AText: String; AException: Exception); inline;
@@ -4205,6 +4206,11 @@ begin
 end;
 
 procedure SendLog(const AText, AValue: String);
+begin
+  Logger.Send(AText, AValue);
+end;
+
+procedure SendLog(const AText: String; AValue: TStrings);
 begin
   Logger.Send(AText, AValue);
 end;
