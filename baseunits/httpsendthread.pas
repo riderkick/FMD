@@ -123,6 +123,14 @@ begin
   if iurl='' then Exit;
   prot:='';
   port:='';
+  if iurl[1] = '/' then
+    if Length(iurl) = 1 then Exit
+    else
+    if iurl[2] <> '/' then
+    begin
+      APath := iurl;
+      Exit;
+    end;
   p:=poschar(':',iurl);
   if (p<>0) and (p<Length(iurl)) and (iurl[P+1]='/') then
   begin
