@@ -946,10 +946,6 @@ var
 
   {$I includes/Mabuns/names_and_links.inc}
 
-  {$I includes/MangaEsta/names_and_links.inc}
-
-  {$I includes/HugeManga/names_and_links.inc}
-
   {$I includes/AnimeStory/names_and_links.inc}
 
   {$I includes/LectureEnLigne/names_and_links.inc}
@@ -1073,12 +1069,6 @@ begin
     else
     if WebsiteID = MABUNS_ID then
       Result := MabunsGetNamesAndLinks
-    else
-    if WebsiteID = MANGAESTA_ID then
-      Result := MangaEstaGetNamesAndLinks
-    else
-    if WebsiteID = HUGEMANGA_ID then
-      Result := HugeMangaGetNamesAndLinks
     else
     if WebsiteID = ANIMESTORY_ID then
       Result := AnimeStoryGetNamesAndLinks
@@ -1220,10 +1210,6 @@ var
 
   {$I includes/Mabuns/manga_information.inc}
 
-  {$I includes/MangaEsta/manga_information.inc}
-
-  {$I includes/HugeManga/manga_information.inc}
-
   {$I includes/AnimeStory/manga_information.inc}
 
   {$I includes/LectureEnLigne/manga_information.inc}
@@ -1348,12 +1334,6 @@ begin
     else
     if WebsiteID = MABUNS_ID then
       Result := GetMabunsInfoFromURL
-    else
-    if WebsiteID = MANGAESTA_ID then
-      Result := GetMangaEstaInfoFromURL
-    else
-    if WebsiteID = HUGEMANGA_ID then
-      Result := GetHugeMangaInfoFromURL
     else
     if WebsiteID = ANIMESTORY_ID then
       Result := GetAnimeStoryInfoFromURL
