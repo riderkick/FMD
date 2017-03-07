@@ -27,7 +27,6 @@ type
     manager: TUpdateListManagerThread;
 
     procedure Execute; override;
-    procedure DoTerminate; override;
   public
     title, link: String;
     constructor Create;
@@ -59,7 +58,9 @@ type
     procedure GetInfo(const limit: Integer; const cs: TCheckStyleType);
     procedure DoTerminate; override;
   public
-    CS_AddInfoToData, CS_AddNamesAndLinks: TRTLCriticalSection;
+    CS_Threads,
+    CS_AddInfoToData,
+    CS_AddNamesAndLinks: TRTLCriticalSection;
     isFinishSearchingForNewManga, isDownloadFromServer, isDoneUpdateNecessary: Boolean;
     mainDataProcess: TDBDataProcess;
     tempDataProcess: TDBDataProcess;
@@ -69,7 +70,7 @@ type
     workPtr, directoryCount,
     // for fakku's doujinshi only
     directoryCount2, numberOfThreads, websitePtr: Integer;
-    threads: TFPList;
+    Threads: TFPList;
     SortedList, NoMangaInfo: Boolean;
     constructor Create;
     destructor Destroy; override;
@@ -106,6 +107,13 @@ end;
 
 destructor TUpdateListThread.Destroy;
 begin
+  Modules.DecActiveConnectionCount(manager.ModuleId);
+  EnterCriticalsection(manager.CS_Threads);
+  try
+    manager.Threads.Remove(Self);
+  finally
+    LeaveCriticalsection(manager.CS_Threads);
+  end;
   if Assigned(Info) then
     Info.Free;
   inherited Destroy;
@@ -250,18 +258,6 @@ begin
   end;
 end;
 
-procedure TUpdateListThread.DoTerminate;
-begin
-  LockCreateConnection;
-  try
-    Modules.DecActiveConnectionCount(manager.ModuleId);
-    manager.threads.Remove(Self);
-  finally
-    UnlockCreateConnection
-  end;
-  inherited DoTerminate;
-end;
-
 { TUpdateListManagerThread }
 
 procedure TUpdateListManagerThread.MainThreadStatusRepaint;
@@ -331,6 +327,7 @@ end;
 constructor TUpdateListManagerThread.Create;
 begin
   inherited Create(True);
+  InitCriticalSection(CS_Threads);
   InitCriticalSection(CS_AddInfoToData);
   InitCriticalSection(CS_AddNamesAndLinks);
   FreeOnTerminate := True;
@@ -340,7 +337,7 @@ begin
   mainDataProcess := TDBDataProcess.Create;
   tempDataProcess := TDBDataProcess.Create;
 
-  threads := TFPList.Create;
+  Threads := TFPList.Create;
   SortedList := False;
   NoMangaInfo := False;
   ModuleId := -1;
@@ -360,10 +357,11 @@ begin
   DeleteDBDataProcess(twebsitetemp);
   mainDataProcess.Free;
   tempDataProcess.Free;
-  threads.Free;
+  Threads.Free;
   MainForm.isUpdating := False;
   DoneCriticalsection(CS_AddInfoToData);
   DoneCriticalsection(CS_AddNamesAndLinks);
+  DoneCriticalsection(CS_Threads);
   inherited Destroy;
 end;
 
@@ -423,7 +421,7 @@ procedure TUpdateListManagerThread.GetInfo(const limit: Integer;
 
   procedure WaitForThreads;
   begin
-    while (not Terminated) and (threads.Count > 0) do
+    while (not Terminated) and (Threads.Count > 0) do
       Sleep(SOCKHEARTBEATRATE);
   end;
 
@@ -466,27 +464,27 @@ begin
         while (not Terminated) and (Modules.ActiveConnectionCount[ModuleId] >= numberOfThreads) do
           Sleep(SOCKHEARTBEATRATE)
       else
-        while (not Terminated) and (threads.Count >= numberOfThreads) do
+        while (not Terminated) and (Threads.Count >= numberOfThreads) do
           Sleep(SOCKHEARTBEATRATE);
 
-      if (not Terminated) and (threads.Count < numberOfThreads) then
+      if (not Terminated) and (Threads.Count < numberOfThreads) then
       begin
-        LockCreateConnection;
+        EnterCriticalsection(CS_Threads);
         try
           if Modules.ActiveConnectionCount[ModuleId] >= numberOfThreads then Exit;
           Modules.IncActiveConnectionCount(ModuleId);
-          i:=threads.Add(TUpdateListThread.Create);
+          i:=Threads.Add(TUpdateListThread.Create);
           if cs=CS_INFO then begin
-            TUpdateListThread(threads[i]).title:=tempDataProcess.Value[workPtr,DATA_PARAM_TITLE];
-            TUpdateListThread(threads[i]).link:=tempDataProcess.Value[workPtr,DATA_PARAM_LINK];
+            TUpdateListThread(Threads[i]).title:=tempDataProcess.Value[workPtr,DATA_PARAM_TITLE];
+            TUpdateListThread(Threads[i]).link:=tempDataProcess.Value[workPtr,DATA_PARAM_LINK];
           end;
-          TUpdateListThread(threads[i]).checkStyle:=cs;
-          TUpdateListThread(threads[i]).manager:=Self;
-          TUpdateListThread(threads[i]).workPtr:=Self.workPtr;
-          TUpdateListThread(threads[i]).Start;
+          TUpdateListThread(Threads[i]).checkStyle:=cs;
+          TUpdateListThread(Threads[i]).manager:=Self;
+          TUpdateListThread(Threads[i]).workPtr:=Self.workPtr;
+          TUpdateListThread(Threads[i]).Start;
           Inc(workPtr);
           s := RS_UpdatingList + Format(' [%d/%d] %s | [T:%d] [%d/%d]',
-            [websitePtr, websites.Count, website, threads.Count, workPtr, limit]);
+            [websitePtr, websites.Count, website, Threads.Count, workPtr, limit]);
 
           case cs of
             CS_DIRECTORY_COUNT:
@@ -514,7 +512,7 @@ begin
           MainForm.ulWorkPtr := workPtr + 1;
           Synchronize(MainThreadShowGetting);
         finally
-          UnlockCreateConnection;
+          LeaveCriticalsection(CS_Threads);
         end;
       end;
     end;
@@ -529,18 +527,16 @@ procedure TUpdateListManagerThread.DoTerminate;
 var
   i: Integer;
 begin
-  if threads.Count > 0 then
-  begin
-    LockCreateConnection;
-    try
-      for i := 0 to threads.Count - 1 do
-        TUpdateListThread(threads[i]).Terminate;
-    finally
-      UnlockCreateConnection;
-    end;
-    while threads.Count > 0 do
-      Sleep(SOCKHEARTBEATRATE);
+  EnterCriticalsection(CS_Threads);
+  try
+    if Threads.Count > 0 then
+      for i := 0 to Threads.Count - 1 do
+        TUpdateListThread(Threads[i]).Terminate;
+  finally
+    LeaveCriticalsection(CS_Threads);
   end;
+    while Threads.Count > 0 do
+      Sleep(SOCKHEARTBEATRATE);
   inherited DoTerminate;
 end;
 
@@ -647,7 +643,6 @@ begin
           Synchronize(MainThreadShowGetting);
 
           tempDataProcess.OpenTable('', True);
-
           // get manga info
           if tempDataProcess.RecordCount>0 then
           begin
