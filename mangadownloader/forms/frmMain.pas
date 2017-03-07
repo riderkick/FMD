@@ -3466,10 +3466,10 @@ begin
   else
   begin
     ScanFavs;
-    miFavoritesCheckNewChapter.Visible := iCheck;
-    miFavoritesStopCheckNewChapter.Visible := iStop;
-    miFavoritesEnable.Visible := iEnable;
-    miFavoritesDisable.Visible := iDisable;
+    miFavoritesCheckNewChapter.Enabled := iCheck;
+    miFavoritesStopCheckNewChapter.Enabled := iStop;
+    miFavoritesEnable.Enabled := iEnable;
+    miFavoritesDisable.Enabled := iDisable;
     if vtFavorites.SelectedCount = 1 then
     begin
       miFavoritesViewInfos.Enabled := True;
