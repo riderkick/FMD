@@ -1254,7 +1254,7 @@ var
   H,P: String;
 begin
   SplitURL(URL,H,P);
-  if H='' then Result:=RemoveURLDelim(Host)+P
+  if (H='') and (P<>'') then Result:=RemoveURLDelim(Host)+P
   else Result:=URL;
 end;
 
