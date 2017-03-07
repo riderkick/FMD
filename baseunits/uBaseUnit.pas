@@ -18,10 +18,10 @@ uses
   {$else}
   UTF8Process,
   {$endif}
-  SysUtils, Classes, Graphics, lazutf8classes, LazFileUtils,
-  LConvEncoding, strutils, dateutils, base64, fpjson, jsonparser, jsonscanner,
-  FastHTMLParser, fgl, RegExpr, synautil, httpsend, blcksock, ssl_openssl, synacode,
-  MultiLog, FPimage, GZIPUtils, uMisc, httpsendthread, FMDOptions,
+  SysUtils, Classes, Graphics, lazutf8classes, LazFileUtils, LConvEncoding,
+  strutils, dateutils, variants, base64, fpjson, jsonparser, jsonscanner,
+  FastHTMLParser, fgl, RegExpr, synautil, httpsend, blcksock, ssl_openssl,
+  synacode, MultiLog, FPimage, GZIPUtils, uMisc, httpsendthread, FMDOptions,
   simplehtmltreeparser, xquery, xquery_json, ImgInfos, NaturalSortUnit;
 
 const
@@ -855,6 +855,7 @@ procedure fmdHibernate;
 // logger
 procedure SendLog(const AText: String); overload; inline;
 procedure SendLog(const AText, AValue: String); overload; inline;
+procedure SendLog(const AText: String; const AValue: Variant); overload; inline;
 procedure SendLog(const AText: String; AValue: TStrings); overload; inline;
 procedure SendLogError(const AText: String); overload; inline;
 procedure SendLogWarning(const AText: String); overload; inline;
@@ -4208,6 +4209,11 @@ end;
 procedure SendLog(const AText, AValue: String);
 begin
   Logger.Send(AText, AValue);
+end;
+
+procedure SendLog(const AText: String; const AValue: Variant);
+begin
+  Logger.Send(AText, VarToStr(AValue));
 end;
 
 procedure SendLog(const AText: String; AValue: TStrings);
