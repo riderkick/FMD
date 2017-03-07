@@ -55,6 +55,7 @@ uses
   JapScan,
   MangaGo,
   GoodManga,
+  MangaZuki,
   // Raw Official
   SundayWebEvery,
   TonarinoYoungJump,

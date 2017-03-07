@@ -17,15 +17,12 @@ function GetDirectoryPageNumber(const MangaInfo: TMangaInformation;
   var Page: Integer; const Module: TModuleContainer): Integer;
 begin
   Result := NET_PROBLEM;
-  Page := 1;
-  if MangaInfo = nil then Exit(UNKNOWN_ERROR);
   if MangaInfo.FHTTP.GET(Module.RootURL + dirurl) then
   begin
     Result := NO_ERROR;
     with TXQueryEngineHTML.Create(MangaInfo.FHTTP.Document) do
       try
-        Page := StrToIntDef(SeparateRight(
-          XPathString('//ul[@class="pagination pagination-separated"]/li[last()]/a/@href'), '?page'), 1);
+        Page := StrToIntDef(XPathString('(//ul[contains(@class,"pagination")]//a)[last()]/replace(@href,"^.*page=(\d+)\??.*$","$1")'), 1);
       finally
         Free;
       end;
@@ -35,25 +32,14 @@ end;
 function GetNameAndLink(const MangaInfo: TMangaInformation;
   const ANames, ALinks: TStringList; const AURL: String;
   const Module: TModuleContainer): Integer;
-var
-  v: IXQValue;
-  s: String;
 begin
   Result := NET_PROBLEM;
-  if MangaInfo = nil then Exit(UNKNOWN_ERROR);
-  s := Module.RootURL + dirurl;
-  if AURL <> '0' then
-    s += '?page=' + IncStr(AURL);
-  if MangaInfo.FHTTP.GET(s) then
+  if MangaInfo.FHTTP.GET(Module.RootURL + dirurl + '?page=' + IncStr(AURL)) then
   begin
     Result := NO_ERROR;
     with TXQueryEngineHTML.Create(MangaInfo.FHTTP.Document) do
       try
-        for v in XPath('//div[@class="col-lg-3 col-sm-6"]//div[@class="caption"]//a') do
-        begin
-          ALinks.Add(v.toNode.getAttribute('href'));
-          ANames.Add(v.toString);
-        end;
+        XPathHREFAll('//*[@class="row"]//*[@class="caption"]//a', ALinks, ANames);
       finally
         Free;
       end;
@@ -64,24 +50,33 @@ function GetInfo(const MangaInfo: TMangaInformation;
   const AURL: String; const Module: TModuleContainer): Integer;
 var
   v: IXQValue;
+  s: String;
 begin
   Result := NET_PROBLEM;
-  if MangaInfo = nil then Exit(UNKNOWN_ERROR);
   with MangaInfo.mangaInfo, MangaInfo.FHTTP do
   begin
-    url := RemoveURLDelim(FillHost(Module.RootURL, AURL));
+    url := MaybeFillHost(Module.RootURL, AURL);
     if GET(url) then begin
       Result := NO_ERROR;
       with TXQueryEngineHTML.Create(Document) do
         try
-          coverLink := XPathString('//img[@class="img-circle"]/@src');
+          coverLink := XPathString('//*[@class="profile-thumb"]/img/@src');
           if coverLink <> '' then coverLink := MaybeFillHost(Module.RootURL, coverLink);
-          if title = '' then title := XPathString('//div[@class="media-body"]/h1');
-          summary := XPathString('//div[@class="media-body"]/h1/small');
-          for v in XPath('//table[@id="chapter-list"]//tr/td/a') do
+          if title = '' then title := XPathString('//div[@class="media-body"]/h1/text()');
+          summary := XPathString('//h6[text()="Synopsis"]/following-sibling::p');
+          while True do
           begin
-            chapterLinks.Add(v.toNode.getAttribute('href'));
-            chapterName.Add(v.toString);
+            for v in XPath('//ul[contains(@class,"media-list")]/li/a') do
+            begin
+              chapterLinks.Add(v.toNode.getAttribute('href'));
+              chapterName.Add(XPathString('.//h6/text()', v));
+            end;
+            s := XPathString('//ul[contains(@class,"pagination")]/li[@class="next"]/a/@href');
+            if s = '' then Break;
+            if GET(MaybeFillHost(Module.RootURL, s)) then
+              ParseHTML(Document)
+            else Break;
+            if ThreadTerminated then Break;
           end;
         finally
           Free;
@@ -93,22 +88,18 @@ end;
 function GetPageNumber(const DownloadThread: TDownloadThread;
   const AURL: String; const Module: TModuleContainer): Boolean;
 var
-  s: String;
   v: IXQValue;       
 begin
   Result := False;
-  if DownloadThread = nil then Exit;
   with DownloadThread.Task.Container, DownloadThread.FHTTP do
   begin
-    PageLinks.Clear;
-    PageNumber := 0;
     if GET(RemoveURLDelim(FillHost(Module.RootURL, AURL))) then
     begin
       Result := True;
       with TXQueryEngineHTML.Create(Document) do
         try
-          for v in XPath('//div [@class="content-wrapper"]//img') do
-            PageLinks.Add(v.toNode.getAttribute('src'));
+          for v in XPath('//*[@class="content-wrapper"]/*[@class="row"]/img') do
+            PageLinks.Add(MaybeFillHost(Module.RootURL, v.toNode.getAttribute('src')));
         finally
           Free;
         end;
