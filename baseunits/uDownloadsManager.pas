@@ -1688,7 +1688,6 @@ begin
         GetParams(ReadString(s, 'FailedChapterName', '')));
     end;
     FDownloadsDB.Commit;
-    FDownloadsDB.Refresh(False);
     Result := True;
   finally
     Free;
