@@ -1174,10 +1174,6 @@ msgstr "Προσαρμ. μετονομασία"
 msgid "Proxy password"
 msgstr "Κωδικός μεσολαβητή"
 
-#: tmainform.edoptionport.texthint
-msgid "Proxy Port"
-msgstr "Θύρα μεσολαβητή"
-
 #: tmainform.edoptionuser.texthint
 msgid "Proxy username"
 msgstr "Όνομα χρήστη μεσολαβητή"

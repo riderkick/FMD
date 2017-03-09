@@ -1067,10 +1067,6 @@ msgstr ""
 msgid "Proxy password"
 msgstr ""
 
-#: tmainform.edoptionport.texthint
-msgid "Proxy Port"
-msgstr ""
-
 #: tmainform.edoptionuser.texthint
 msgid "Proxy username"
 msgstr ""

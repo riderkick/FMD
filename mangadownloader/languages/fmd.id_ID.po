@@ -1104,10 +1104,6 @@ msgstr "Ubah nama kustom"
 msgid "Proxy password"
 msgstr "Kata kunci"
 
-#: tmainform.edoptionport.texthint
-msgid "Proxy Port"
-msgstr "Port"
-
 #: tmainform.edoptionuser.texthint
 msgid "Proxy username"
 msgstr "Nama user"
@@ -2187,3 +2183,4 @@ msgstr "Sinkronisasi data"
 #: uupdatethread.rs_updatinglist
 msgid "Updating list"
 msgstr "Memperbarui daftar"
+

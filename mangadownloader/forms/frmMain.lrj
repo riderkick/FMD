@@ -162,7 +162,6 @@
 {"hash":164185077,"name":"tmainform.lboptionuser.caption","sourcebytes":[85,115,101,114,110,97,109,101],"value":"Username"},
 {"hash":11073157,"name":"tmainform.edoptionuser.texthint","sourcebytes":[80,114,111,120,121,32,117,115,101,114,110,97,109,101],"value":"Proxy username"},
 {"hash":358036,"name":"tmainform.lboptionport.caption","sourcebytes":[80,111,114,116],"value":"Port"},
-{"hash":263204852,"name":"tmainform.edoptionport.texthint","sourcebytes":[80,114,111,120,121,32,80,111,114,116],"value":"Proxy Port"},
 {"hash":145417188,"name":"tmainform.lboptionpass.caption","sourcebytes":[80,97,115,115,119,111,114,100],"value":"Password"},
 {"hash":29717652,"name":"tmainform.edoptionpass.texthint","sourcebytes":[80,114,111,120,121,32,112,97,115,115,119,111,114,100],"value":"Proxy password"},
 {"hash":376933,"name":"tmainform.lboptionproxytype.caption","sourcebytes":[84,121,112,101],"value":"Type"},

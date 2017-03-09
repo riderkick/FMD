@@ -2599,35 +2599,42 @@ object MainForm: TMainForm
               Left = 4
               Height = 105
               Top = 155
-              Width = 402
+              Width = 426
               AutoSize = True
               Caption = 'Proxy config'
               ChildSizing.LeftRightSpacing = 4
               ChildSizing.TopBottomSpacing = 4
-              ChildSizing.HorizontalSpacing = 4
-              ChildSizing.VerticalSpacing = 4
-              ChildSizing.Layout = cclLeftToRightThenTopToBottom
-              ChildSizing.ControlsPerLine = 4
+              ChildSizing.HorizontalSpacing = 12
+              ChildSizing.VerticalSpacing = 12
               ClientHeight = 85
-              ClientWidth = 398
+              ClientWidth = 422
               Enabled = False
               ParentFont = False
               TabOrder = 1
               object lbOptionHost: TLabel
+                AnchorSideLeft.Control = lbOptionProxyType
+                AnchorSideTop.Control = lbOptionProxyType
+                AnchorSideTop.Side = asrBottom
                 Left = 4
-                Height = 23
-                Top = 4
+                Height = 15
+                Top = 35
                 Width = 25
                 Caption = 'Host'
                 ParentColor = False
                 ParentFont = False
               end
               object edOptionHost: TEdit
-                Left = 33
+                AnchorSideLeft.Control = cbOptionProxyType
+                AnchorSideTop.Control = lbOptionHost
+                AnchorSideTop.Side = asrCenter
+                AnchorSideRight.Control = cbOptionProxyType
+                AnchorSideRight.Side = asrBottom
+                Left = 41
                 Height = 23
-                Top = 4
+                Top = 31
                 Width = 150
-                Constraints.MinWidth = 150
+                Anchors = [akTop, akLeft, akRight]
+                AutoSize = False
                 Font.CharSet = ANSI_CHARSET
                 Font.Height = -12
                 Font.Name = 'Default'
@@ -2636,40 +2643,22 @@ object MainForm: TMainForm
                 TextHint = 'Proxy host/IP'
               end
               object lbOptionUser: TLabel
+                AnchorSideLeft.Control = cbOptionProxyType
                 AnchorSideLeft.Side = asrBottom
-                AnchorSideTop.Side = asrBottom
-                Left = 187
-                Height = 23
-                Top = 4
+                AnchorSideTop.Control = lbOptionHost
+                Left = 203
+                Height = 15
+                Top = 35
                 Width = 53
                 Caption = 'Username'
                 ParentColor = False
               end
               object edOptionUser: TEdit
+                AnchorSideLeft.Control = lbOptionUser
                 AnchorSideLeft.Side = asrBottom
-                AnchorSideTop.Side = asrBottom
-                Left = 244
-                Height = 23
-                Top = 4
-                Width = 150
-                Constraints.MinWidth = 150
-                Font.CharSet = ANSI_CHARSET
-                Font.Height = -12
-                Font.Name = 'Default'
-                ParentFont = False
-                TabOrder = 2
-                TextHint = 'Proxy username'
-              end
-              object lbOptionPort: TLabel
-                Left = 4
-                Height = 23
-                Top = 31
-                Width = 25
-                Caption = 'Port'
-                ParentColor = False
-              end
-              object edOptionPort: TEdit
-                Left = 33
+                AnchorSideTop.Control = lbOptionUser
+                AnchorSideTop.Side = asrCenter
+                Left = 268
                 Height = 23
                 Top = 31
                 Width = 150
@@ -2678,44 +2667,64 @@ object MainForm: TMainForm
                 Font.Name = 'Default'
                 ParentFont = False
                 TabOrder = 1
-                TextHint = 'Proxy Port'
+                TextHint = 'Proxy username'
+              end
+              object lbOptionPort: TLabel
+                AnchorSideLeft.Control = lbOptionHost
+                AnchorSideTop.Control = lbOptionHost
+                AnchorSideTop.Side = asrBottom
+                Left = 4
+                Height = 15
+                Top = 62
+                Width = 22
+                Caption = 'Port'
+                ParentColor = False
               end
               object lbOptionPass: TLabel
-                AnchorSideLeft.Side = asrBottom
+                AnchorSideLeft.Control = lbOptionUser
+                AnchorSideTop.Control = lbOptionUser
                 AnchorSideTop.Side = asrBottom
-                Left = 187
-                Height = 23
-                Top = 31
-                Width = 53
+                Left = 203
+                Height = 15
+                Top = 62
+                Width = 50
                 Caption = 'Password'
                 ParentColor = False
               end
               object edOptionPass: TEdit
-                AnchorSideLeft.Side = asrBottom
-                AnchorSideTop.Side = asrBottom
-                Left = 244
+                AnchorSideLeft.Control = edOptionUser
+                AnchorSideTop.Control = lbOptionPass
+                AnchorSideTop.Side = asrCenter
+                AnchorSideRight.Control = edOptionUser
+                AnchorSideRight.Side = asrBottom
+                Left = 268
                 Height = 23
-                Top = 31
+                Top = 58
                 Width = 150
+                Anchors = [akTop, akLeft, akRight]
                 Font.CharSet = ANSI_CHARSET
                 Font.Height = -12
                 Font.Name = 'Default'
                 ParentFont = False
-                TabOrder = 3
+                TabOrder = 2
                 TextHint = 'Proxy password'
               end
               object lbOptionProxyType: TLabel
                 Left = 4
-                Height = 23
-                Top = 58
+                Height = 15
+                Top = 8
                 Width = 25
                 Caption = 'Type'
                 ParentColor = False
               end
               object cbOptionProxyType: TComboBox
-                Left = 33
+                AnchorSideLeft.Control = lbOptionProxyType
+                AnchorSideLeft.Side = asrBottom
+                AnchorSideTop.Control = lbOptionProxyType
+                AnchorSideTop.Side = asrCenter
+                Left = 41
                 Height = 23
-                Top = 58
+                Top = 4
                 Width = 150
                 ItemHeight = 15
                 ItemIndex = 0
@@ -2725,8 +2734,25 @@ object MainForm: TMainForm
                   'SOCKS5'
                 )
                 Style = csDropDownList
-                TabOrder = 4
+                TabOrder = 3
                 Text = 'HTTP'
+              end
+              object edOptionPort: TSpinEdit
+                AnchorSideLeft.Control = edOptionHost
+                AnchorSideTop.Control = lbOptionPort
+                AnchorSideTop.Side = asrCenter
+                Left = 41
+                Height = 23
+                Top = 58
+                Width = 67
+                Font.CharSet = ANSI_CHARSET
+                Font.Height = -12
+                Font.Name = 'Default'
+                MaxValue = 999999
+                MinValue = 1
+                ParentFont = False
+                TabOrder = 4
+                Value = 8080
               end
             end
             object seOptionMaxParallel: TSpinEdit

@@ -1119,10 +1119,6 @@ msgstr "Renomear personalizado"
 msgid "Proxy password"
 msgstr "Senha do proxy"
 
-#: tmainform.edoptionport.texthint
-msgid "Proxy Port"
-msgstr "Porta proxy"
-
 #: tmainform.edoptionuser.texthint
 msgid "Proxy username"
 msgstr "Nome de usuário Proxy"

@@ -1119,10 +1119,6 @@ msgstr "Custom rename"
 msgid "Proxy password"
 msgstr "Proxy password"
 
-#: tmainform.edoptionport.texthint
-msgid "Proxy Port"
-msgstr "Proxy Port"
-
 #: tmainform.edoptionuser.texthint
 msgid "Proxy username"
 msgstr "Proxy username"
@@ -2207,3 +2203,4 @@ msgstr "Synchronizing data"
 #: uupdatethread.rs_updatinglist
 msgid "Updating list"
 msgstr "Updating list"
+

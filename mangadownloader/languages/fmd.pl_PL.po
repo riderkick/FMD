@@ -1119,10 +1119,6 @@ msgstr "Zmień nazwę"
 msgid "Proxy password"
 msgstr "hasło proxy"
 
-#: tmainform.edoptionport.texthint
-msgid "Proxy Port"
-msgstr "Port proxy"
-
 #: tmainform.edoptionuser.texthint
 msgid "Proxy username"
 msgstr "nazwa użytkownika Proxy"

@@ -101,12 +101,8 @@ msgid "Cannot connect to the server."
 msgstr "No se puede conectar con el servidor"
 
 #: frmmain.rs_dlgcannotgetmangainfo
-msgid ""
-"Cannot get manga info. Please check your internet connection and try it "
-"again."
-msgstr ""
-"No se puede obtener la información del manga. Por favor revisa tu conexión a "
-"internet e inténtalo de nuevo."
+msgid "Cannot get manga info. Please check your internet connection and try it again."
+msgstr "No se puede obtener la información del manga. Por favor revisa tu conexión a internet e inténtalo de nuevo."
 
 #: frmmain.rs_dlgdownloadcount
 msgid "Download count:"
@@ -612,8 +608,7 @@ msgstr "Reemplazar todo Carácter Unicode con"
 
 #: tmainform.cboptionchangeunicodecharacter.hint
 msgid "Enable this if you have problem with unicode character in path."
-msgstr ""
-"Habilitar Esto si Tienes Algún Problema con Caracteres Unicode en la Ruta"
+msgstr "Habilitar Esto si Tienes Algún Problema con Caracteres Unicode en la Ruta"
 
 #: tmainform.cboptiondigitchapter.caption
 msgid "Chapter"
@@ -674,25 +669,19 @@ msgstr "Mostrar Barra de Herramientas de Descargas"
 
 #: tmainform.cboptionshowdownloadtoolbardeleteall.caption
 msgid "Show \"Delete all completed tasks\" in downloads toolbar"
-msgstr ""
-"Mostrar \"Eliminar Todas las Tareas Completadas\" en la Barra de "
-"Herramientas de Descargas"
+msgstr "Mostrar \"Eliminar Todas las Tareas Completadas\" en la Barra de Herramientas de Descargas"
 
 #: tmainform.cboptionshowquitdialog.caption
 msgid "Exit FMD"
 msgstr "Salir de FMD"
 
 #: tmainform.cboptionupdatelistnomangainfo.caption
-msgid ""
-"Don't load manga information when updating list (filter will be not work!)"
-msgstr ""
-"No Cargar la Información del Manga Cuando se Actualice la Lista (El Filtro "
-"no Funcionará)"
+msgid "Don't load manga information when updating list (filter will be not work!)"
+msgstr "No Cargar la Información del Manga Cuando se Actualice la Lista (El Filtro no Funcionará)"
 
 #: tmainform.cboptionupdatelistremoveduplicatelocaldata.caption
 msgid "Remove duplicate local data when updating manga list"
-msgstr ""
-"Remover los Datos Locales Duplicados Cuando se Actualiza la Lista de Manga"
+msgstr "Remover los Datos Locales Duplicados Cuando se Actualiza la Lista de Manga"
 
 #: tmainform.cboptionuseproxy.caption
 msgid "Use proxy"
@@ -724,52 +713,32 @@ msgid "Action"
 msgstr "Acción"
 
 #: tmainform.ckfilteraction.hint
-msgid ""
-"A work typically depicting fighting, violence, chaos, and fast paced motion."
-msgstr ""
-"Un trabajo que típicamente demuestra peleas, violencia, caos, y ritmo de "
-"rápido movimiento."
+msgid "A work typically depicting fighting, violence, chaos, and fast paced motion."
+msgstr "Un trabajo que típicamente demuestra peleas, violencia, caos, y ritmo de rápido movimiento."
 
 #: tmainform.ckfilteradult.caption
 msgid "Adult"
 msgstr "Adulto"
 
 #: tmainform.ckfilteradult.hint
-msgid ""
-"Contains content that is suitable only for adults. Titles in this category "
-"may include prolonged scenes of intense violence and/or graphic sexual "
-"content and nudity."
-msgstr ""
-"Contiene contenido que es apropiado solo para adultos. Los títulos en esta "
-"categoría pueden incluir prolongadas escenas de intensa violencia y/o "
-"contenido sexual gráfico o desnudez."
+msgid "Contains content that is suitable only for adults. Titles in this category may include prolonged scenes of intense violence and/or graphic sexual content and nudity."
+msgstr "Contiene contenido que es apropiado solo para adultos. Los títulos en esta categoría pueden incluir prolongadas escenas de intensa violencia y/o contenido sexual gráfico o desnudez."
 
 #: tmainform.ckfilteradventure.caption
 msgid "Adventure"
 msgstr "Aventura"
 
 #: tmainform.ckfilteradventure.hint
-msgid ""
-"If a character in the story goes on a trip or along that line, your best bet "
-"is that it is an adventure manga. Otherwise, it's up to your personal "
-"prejudice on this case."
-msgstr ""
-"Si un personaje en la historia va en un viaje o siguiendo esa línea, mejor "
-"apuesta a que es un manga de aventura. De otro modo, es a tu prejuicio "
-"personal en este caso."
+msgid "If a character in the story goes on a trip or along that line, your best bet is that it is an adventure manga. Otherwise, it's up to your personal prejudice on this case."
+msgstr "Si un personaje en la historia va en un viaje o siguiendo esa línea, mejor apuesta a que es un manga de aventura. De otro modo, es a tu prejuicio personal en este caso."
 
 #: tmainform.ckfiltercomedy.caption
 msgid "Comedy"
 msgstr "Comedia"
 
 #: tmainform.ckfiltercomedy.hint
-msgid ""
-"A dramatic work that is light and often humorous or satirical in tone and "
-"that usually contains a happy resolution of the thematic conflict."
-msgstr ""
-"Un trabajo dramático que es iluminado y muy seguido en un tono humorístico o "
-"satírico y que usualmente contiene una feliz resolución del conflicto "
-"temático."
+msgid "A dramatic work that is light and often humorous or satirical in tone and that usually contains a happy resolution of the thematic conflict."
+msgstr "Un trabajo dramático que es iluminado y muy seguido en un tono humorístico o satírico y que usualmente contiene una feliz resolución del conflicto temático."
 
 #: tmainform.ckfilterdoujinshi.caption
 msgid "Doujinshi"
@@ -784,36 +753,24 @@ msgid "Drama"
 msgstr "Drama"
 
 #: tmainform.ckfilterdrama.hint
-msgid ""
-"A work meant to bring on an emotional response, such as instilling sadness "
-"or tension."
-msgstr ""
-"Un trabajo que pretende traer una respuesta emocional, tales como inculcar "
-"la tristeza o tensión."
+msgid "A work meant to bring on an emotional response, such as instilling sadness or tension."
+msgstr "Un trabajo que pretende traer una respuesta emocional, tales como inculcar la tristeza o tensión."
 
 #: tmainform.ckfilterechi.caption
 msgid "Ecchi"
 msgstr "Ecchi"
 
 #: tmainform.ckfilterechi.hint
-msgid ""
-"Possibly the line between hentai and non-hentai, ecchi usually refers to "
-"fanservice put in to attract a certain group of fans."
-msgstr ""
-"Posiblemente la línea entre lo hentai y no-hentai, ecchi usualmente se "
-"refiere a fanservice puesto para atraer un cierto grupo de fans."
+msgid "Possibly the line between hentai and non-hentai, ecchi usually refers to fanservice put in to attract a certain group of fans."
+msgstr "Posiblemente la línea entre lo hentai y no-hentai, ecchi usualmente se refiere a fanservice puesto para atraer un cierto grupo de fans."
 
 #: tmainform.ckfilterfantasy.caption
 msgid "Fantasy"
 msgstr "Fantasía"
 
 #: tmainform.ckfilterfantasy.hint
-msgid ""
-"Anything that involves, but not limited to, magic, dream world, and fairy "
-"tales."
-msgstr ""
-"Cualquier cosa que involucre, pero no limitado a, magia, mundo de ensueño, y "
-"cuentos de hadas."
+msgid "Anything that involves, but not limited to, magic, dream world, and fairy tales."
+msgstr "Cualquier cosa que involucre, pero no limitado a, magia, mundo de ensueño, y cuentos de hadas."
 
 #: tmainform.ckfiltergenderbender.caption
 msgid "Gender Bender"
@@ -832,14 +789,8 @@ msgid "Harem"
 msgstr "Harem"
 
 #: tmainform.ckfilterharem.hint
-msgid ""
-"A series involving one male character and many female characters (usually "
-"attracted to the male character). A Reverse Harem is when the genders are "
-"reversed."
-msgstr ""
-"Una serie que envuelve un personaje masculino y muchos personajes femeninos "
-"(generalmente atraídos por el personaje masculino). Un Harem inverso es "
-"cuando los sexos se invierten."
+msgid "A series involving one male character and many female characters (usually attracted to the male character). A Reverse Harem is when the genders are reversed."
+msgstr "Una serie que envuelve un personaje masculino y muchos personajes femeninos (generalmente atraídos por el personaje masculino). Un Harem inverso es cuando los sexos se invierten."
 
 #: tmainform.ckfilterhentai.caption
 msgctxt "tmainform.ckfilterhentai.caption"
@@ -864,26 +815,16 @@ msgid "Horror"
 msgstr "Horror"
 
 #: tmainform.ckfilterhorror.hint
-msgid ""
-"A painful emotion of fear, dread, and abhorrence; a shuddering with terror "
-"and detestation; the feeling inspired by something frightful and shocking."
-msgstr ""
-"Una dolorosa emoción  de miedo, temor y repugnancia; un estremecimiento de "
-"terror y odio; el sentimiento inspirado por algo terrible e impactante."
+msgid "A painful emotion of fear, dread, and abhorrence; a shuddering with terror and detestation; the feeling inspired by something frightful and shocking."
+msgstr "Una dolorosa emoción  de miedo, temor y repugnancia; un estremecimiento de terror y odio; el sentimiento inspirado por algo terrible e impactante."
 
 #: tmainform.ckfilterjosei.caption
 msgid "Josei"
 msgstr "Josei"
 
 #: tmainform.ckfilterjosei.hint
-msgid ""
-"Literally \"Woman\". Targets women 18-30. Female equivalent to seinen. "
-"Unlike shoujo the romance is more realistic and less idealized. The "
-"storytelling is more explicit and mature."
-msgstr ""
-"Literalmente \"mujer\". Dirigido a las mujeres de 18-30. Femenino "
-"equivalente al seinen. A diferencia de shoujo el romance es más realista y "
-"menos idealizado. La narración es más explícita y madura."
+msgid "Literally \"Woman\". Targets women 18-30. Female equivalent to seinen. Unlike shoujo the romance is more realistic and less idealized. The storytelling is more explicit and mature."
+msgstr "Literalmente \"mujer\". Dirigido a las mujeres de 18-30. Femenino equivalente al seinen. A diferencia de shoujo el romance es más realista y menos idealizado. La narración es más explícita y madura."
 
 #: tmainform.ckfilterlolicon.caption
 msgid "Lolicon"
@@ -898,40 +839,24 @@ msgid "Martial Arts"
 msgstr "Artes Marciales"
 
 #: tmainform.ckfiltermartialarts.hint
-msgid ""
-"As the name suggests, anything martial arts related. Any of several arts of "
-"combat or self-defense, such as aikido, karate, judo, or taekwondo, kendo, "
-"fencing, and so on and so forth."
-msgstr ""
-"Como su nombre indica, cualquier cosa relacionada artes marciales. "
-"Cualquiera de los diversos artes de combate o de autodefensa, como el "
-"aikido, karate, judo, o el taekwondo, kendo, la esgrima, y así sucesivamente."
+msgid "As the name suggests, anything martial arts related. Any of several arts of combat or self-defense, such as aikido, karate, judo, or taekwondo, kendo, fencing, and so on and so forth."
+msgstr "Como su nombre indica, cualquier cosa relacionada artes marciales. Cualquiera de los diversos artes de combate o de autodefensa, como el aikido, karate, judo, o el taekwondo, kendo, la esgrima, y así sucesivamente."
 
 #: tmainform.ckfiltermature.caption
 msgid "Mature"
 msgstr "Maduro"
 
 #: tmainform.ckfiltermature.hint
-msgid ""
-"Contains subject matter which may be too extreme for people under the age of "
-"17. Titles in this category may contain intense violence, blood and gore, "
-"sexual content and/or strong language."
-msgstr ""
-"Contiene temas que pueden ser demasiado extremos para las personas menores "
-"de 17. Los títulos de esta categoría pueden contener violencia intensa, "
-"sangre y gore, contenido sexual y/o lenguaje fuerte."
+msgid "Contains subject matter which may be too extreme for people under the age of 17. Titles in this category may contain intense violence, blood and gore, sexual content and/or strong language."
+msgstr "Contiene temas que pueden ser demasiado extremos para las personas menores de 17. Los títulos de esta categoría pueden contener violencia intensa, sangre y gore, contenido sexual y/o lenguaje fuerte."
 
 #: tmainform.ckfiltermecha.caption
 msgid "Mecha"
 msgstr "Mecha"
 
 #: tmainform.ckfiltermecha.hint
-msgid ""
-"A work involving and usually concentrating on all types of large robotic "
-"machines."
-msgstr ""
-"Un trabajo que involucra y por lo general se concentra en todos los tipos de "
-"grandes máquinas robóticas."
+msgid "A work involving and usually concentrating on all types of large robotic machines."
+msgstr "Un trabajo que involucra y por lo general se concentra en todos los tipos de grandes máquinas robóticas."
 
 #: tmainform.ckfiltermusical.caption
 msgctxt "tmainform.ckfiltermusical.caption"
@@ -948,37 +873,24 @@ msgid "Mystery"
 msgstr "Misterio"
 
 #: tmainform.ckfiltermystery.hint
-msgid ""
-"Usually an unexplained event occurs, and the main protagonist attempts to "
-"find out what caused it."
-msgstr ""
-"Por lo general, se produce un acontecimiento inexplicable, y el protagonista "
-"intenta averiguar cuál fue la causa."
+msgid "Usually an unexplained event occurs, and the main protagonist attempts to find out what caused it."
+msgstr "Por lo general, se produce un acontecimiento inexplicable, y el protagonista intenta averiguar cuál fue la causa."
 
 #: tmainform.ckfilterpsychological.caption
 msgid "Psychological"
 msgstr "Psicológico"
 
 #: tmainform.ckfilterpsychological.hint
-msgid ""
-"Usually deals with the philosophy of a state of mind, in most cases "
-"detailing abnormal psychology."
-msgstr ""
-"Por lo general lidia con la filosofía de un estado de la mente, en la "
-"mayoría de los casos que detallan la psicología anormal."
+msgid "Usually deals with the philosophy of a state of mind, in most cases detailing abnormal psychology."
+msgstr "Por lo general lidia con la filosofía de un estado de la mente, en la mayoría de los casos que detallan la psicología anormal."
 
 #: tmainform.ckfilterromance.caption
 msgid "Romance"
 msgstr "Romance"
 
 #: tmainform.ckfilterromance.hint
-msgid ""
-"Any love related story. We will define love as between man and woman in this "
-"case. Other than that, it is up to your own imagination of what love is."
-msgstr ""
-"Cualquier historia relacionada con el amor. Vamos a definir el amor como "
-"entre el hombre y la mujer en este caso. Aparte de eso, le corresponde tu "
-"propia imaginación de lo que es el amor."
+msgid "Any love related story. We will define love as between man and woman in this case. Other than that, it is up to your own imagination of what love is."
+msgstr "Cualquier historia relacionada con el amor. Vamos a definir el amor como entre el hombre y la mujer en este caso. Aparte de eso, le corresponde tu propia imaginación de lo que es el amor."
 
 #: tmainform.ckfilterschoollife.caption
 msgid "School Life"
@@ -986,41 +898,23 @@ msgstr "Vida Escolar"
 
 #: tmainform.ckfilterschoollife.hint
 msgid "Having a major setting of the story deal with some type of school."
-msgstr ""
-"Tener un escenario importante de la historia ocupado con algún tipo de "
-"escuela."
+msgstr "Tener un escenario importante de la historia ocupado con algún tipo de escuela."
 
 #: tmainform.ckfilterscifi.caption
 msgid "Sci-Fi"
 msgstr "Sci-Fi (Ciencia Ficción)"
 
 #: tmainform.ckfilterscifi.hint
-msgid ""
-"Short for science fiction, these works involve twists on technology and "
-"other science related phenomena which are contrary or stretches of the "
-"modern day scientific world."
-msgstr ""
-"Abreviatura de ciencia ficción, estos trabajos implican giros en la "
-"tecnología y otros fenómenos relacionados con la ciencia y que sean "
-"contrarias o tramos del mundo científico de hoy en día."
+msgid "Short for science fiction, these works involve twists on technology and other science related phenomena which are contrary or stretches of the modern day scientific world."
+msgstr "Abreviatura de ciencia ficción, estos trabajos implican giros en la tecnología y otros fenómenos relacionados con la ciencia y que sean contrarias o tramos del mundo científico de hoy en día."
 
 #: tmainform.ckfilterseinen.caption
 msgid "Seinen"
 msgstr "Seinen"
 
 #: tmainform.ckfilterseinen.hint
-msgid ""
-"From Google: Seinen means 'young Man'. Manga and anime that specifically "
-"targets young adult males around the ages of 18 to 25 are seinen titles. The "
-"stories in seinen works appeal to university students and those in the "
-"working world. Typically the story lines deal with the issues of adulthood."
-msgstr ""
-"De Google: Seinen significa 'hombre joven'. Manga y anime que se dirige "
-"específicamente a los varones adultos jóvenes en torno a las edades de 18 a "
-"25 años son títulos seinen. Las historias en las obras seinen apelan a los "
-"estudiantes universitarios y los que están en el mundo laboral. Por lo "
-"general las líneas de la historia se ocupan de los problemas de la edad "
-"adulta."
+msgid "From Google: Seinen means 'young Man'. Manga and anime that specifically targets young adult males around the ages of 18 to 25 are seinen titles. The stories in seinen works appeal to university students and those in the working world. Typically the story lines deal with the issues of adulthood."
+msgstr "De Google: Seinen significa 'hombre joven'. Manga y anime que se dirige específicamente a los varones adultos jóvenes en torno a las edades de 18 a 25 años son títulos seinen. Las historias en las obras seinen apelan a los estudiantes universitarios y los que están en el mundo laboral. Por lo general las líneas de la historia se ocupan de los problemas de la edad adulta."
 
 #: tmainform.ckfiltershotacon.caption
 msgid "Shotacon"
@@ -1028,20 +922,15 @@ msgstr "Shotacon"
 
 #: tmainform.ckfiltershotacon.hint
 msgid "Representing a sexual attraction to young or under-age boys."
-msgstr ""
-"Representa una atracción sexual hacia los niños jóvenes o menores de edad."
+msgstr "Representa una atracción sexual hacia los niños jóvenes o menores de edad."
 
 #: tmainform.ckfiltershoujo.caption
 msgid "Shoujo"
 msgstr "Shoujo"
 
 #: tmainform.ckfiltershoujo.hint
-msgid ""
-"A work intended and primarily written for females. Usually involves a lot of "
-"romance and strong character development."
-msgstr ""
-"Un trabajo destinado y dirigido principalmente a las mujeres. Por lo "
-"general, implica mucho romance y fuerte desarrollo de los personajes."
+msgid "A work intended and primarily written for females. Usually involves a lot of romance and strong character development."
+msgstr "Un trabajo destinado y dirigido principalmente a las mujeres. Por lo general, implica mucho romance y fuerte desarrollo de los personajes."
 
 #: tmainform.ckfiltershoujoai.caption
 msgid "Shoujo Ai"
@@ -1049,12 +938,8 @@ msgstr "Shoujo Ai"
 
 #: tmainform.ckfiltershoujoai.hint
 msgctxt "TMAINFORM.CKFILTERSHOUJOAI.HINT"
-msgid ""
-"Often synonymous with yuri, this can be thought of as somewhat less extreme. "
-"\"Girl''s Love\", so to speak."
-msgstr ""
-"A menudo sinónimo de yuri, esto puede ser considerado como algo menos "
-"extremo. \"Amor de Chicas\", por así decirlo."
+msgid "Often synonymous with yuri, this can be thought of as somewhat less extreme. \"Girl''s Love\", so to speak."
+msgstr "A menudo sinónimo de yuri, esto puede ser considerado como algo menos extremo. \"Amor de Chicas\", por así decirlo."
 
 #: tmainform.ckfiltershounen.caption
 msgid "Shounen"
@@ -1062,77 +947,48 @@ msgstr "Shounen"
 
 #: tmainform.ckfiltershounen.hint
 msgctxt "tmainform.ckfiltershounen.hint"
-msgid ""
-"A work intended and primarily written for males. These works usually involve "
-"fighting and/or violence."
-msgstr ""
-"Un trabajo destinado y dirigido principalmente a los varones. Estas trabajos "
-"involucran generalmente la lucha y/o violencia."
+msgid "A work intended and primarily written for males. These works usually involve fighting and/or violence."
+msgstr "Un trabajo destinado y dirigido principalmente a los varones. Estas trabajos involucran generalmente la lucha y/o violencia."
 
 #: tmainform.ckfiltershounenai.caption
 msgid "Shounen Ai"
 msgstr "Shounen Ai"
 
 #: tmainform.ckfiltershounenai.hint
-msgid ""
-"Often synonymous with yaoi, this can be thought of as somewhat less extreme. "
-"\"Boy''s Love\", so to speak"
-msgstr ""
-"A menudo sinónimo de yaoi, esto puede ser pensado como algo menos extremo. "
-"\"Amor de Chicos\", por así decirlo"
+msgid "Often synonymous with yaoi, this can be thought of as somewhat less extreme. \"Boy''s Love\", so to speak"
+msgstr "A menudo sinónimo de yaoi, esto puede ser pensado como algo menos extremo. \"Amor de Chicos\", por así decirlo"
 
 #: tmainform.ckfiltersliceoflife.caption
 msgid "Slice of Life"
 msgstr "Recuentos de la Vida"
 
 #: tmainform.ckfiltersliceoflife.hint
-msgid ""
-"As the name suggests, this genre represents day-to-day tribulations of one/"
-"many character(s). These challenges/events could technically happen in real "
-"life and are often -if not all the time- set in the present timeline in a "
-"world that mirrors our own."
-msgstr ""
-"Como su nombre indica, este género representa el día a día tribulaciones de "
-"uno/muchos personaje(s). Estos desafíos/eventos podrían ocurrir técnicamente "
-"en la vida real y no son a menudo -si todo el tiempo-, establecido en la "
-"presente línea de tiempo en un mundo que refleja al nuestro."
+msgid "As the name suggests, this genre represents day-to-day tribulations of one/many character(s). These challenges/events could technically happen in real life and are often -if not all the time- set in the present timeline in a world that mirrors our own."
+msgstr "Como su nombre indica, este género representa el día a día tribulaciones de uno/muchos personaje(s). Estos desafíos/eventos podrían ocurrir técnicamente en la vida real y no son a menudo -si todo el tiempo-, establecido en la presente línea de tiempo en un mundo que refleja al nuestro."
 
 #: tmainform.ckfiltersmut.caption
 msgid "Smut"
 msgstr "Smut (Atrevido)"
 
 #: tmainform.ckfiltersmut.hint
-msgid ""
-"Deals with series that are considered profane or offensive, particularly "
-"with regards to sexual content."
-msgstr ""
-"Se ocupa de series que se consideran profanas u ofensivas, sobre todo en lo "
-"que respecta a contenido sexual."
+msgid "Deals with series that are considered profane or offensive, particularly with regards to sexual content."
+msgstr "Se ocupa de series que se consideran profanas u ofensivas, sobre todo en lo que respecta a contenido sexual."
 
 #: tmainform.ckfiltersports.caption
 msgid "Sports"
 msgstr "Deportes"
 
 #: tmainform.ckfiltersports.hint
-msgid ""
-"As the name suggests, anything sports related. Baseball, basketball, hockey, "
-"soccer, golf, and racing just to name a few."
-msgstr ""
-"Como su nombre sugiere, cualquier cosa relacionado con el deporte. Béisbol, "
-"baloncesto, hockey, fútbol, golf, y las carreras sólo para nombrar unos "
-"pocos."
+msgid "As the name suggests, anything sports related. Baseball, basketball, hockey, soccer, golf, and racing just to name a few."
+msgstr "Como su nombre sugiere, cualquier cosa relacionado con el deporte. Béisbol, baloncesto, hockey, fútbol, golf, y las carreras sólo para nombrar unos pocos."
 
 #: tmainform.ckfiltersupernatural.caption
 msgid "Supernatural"
 msgstr "Sobrenatural"
 
 #: tmainform.ckfiltersupernatural.hint
-msgid ""
-"Usually entails amazing and unexplained powers or events which defy the laws "
-"of physics."
-msgstr ""
-"Por lo general, implica sorprendentes e inexplicables poderes y eventos que "
-"desafían las leyes de la física."
+msgid "Usually entails amazing and unexplained powers or events which defy the laws of physics."
+msgstr "Por lo general, implica sorprendentes e inexplicables poderes y eventos que desafían las leyes de la física."
 
 #: tmainform.ckfiltertragedy.caption
 msgid "Tragedy"
@@ -1247,10 +1103,6 @@ msgstr "Nombre Personalizado"
 #: tmainform.edoptionpass.texthint
 msgid "Proxy password"
 msgstr "Contraseña de Proxy"
-
-#: tmainform.edoptionport.texthint
-msgid "Proxy Port"
-msgstr "Puerto de Proxy"
 
 #: tmainform.edoptionuser.texthint
 msgid "Proxy username"
@@ -1402,8 +1254,7 @@ msgstr ""
 "%NUMBERING% : Numeración\n"
 "\n"
 "Nota:\n"
-"El Nombre de la Carpeta del Capítulo debe tener al menos %CHAPTER% o "
-"%NUMBERING%.\n"
+"El Nombre de la Carpeta del Capítulo debe tener al menos %CHAPTER% o %NUMBERING%.\n"
 
 #: tmainform.lboptionconnectiontimeout.caption
 msgid "Connection timeout (seconds)"
@@ -1494,11 +1345,8 @@ msgid "Number of downloaded tasks at the same time (Max: 8)"
 msgstr "Numero de Tareas de Descargas al Mismo Tiempo (Max: 8)"
 
 #: tmainform.lboptionmaxretry.caption
-msgid ""
-"Number of retry times if tasks have download problems (-1 = always retry)"
-msgstr ""
-"Numero de Reintentos si la Tarea Tiene Problemas de Descarga (-1 = siempre "
-"reintenta)"
+msgid "Number of retry times if tasks have download problems (-1 = always retry)"
+msgstr "Numero de Reintentos si la Tarea Tiene Problemas de Descarga (-1 = siempre reintenta)"
 
 #: tmainform.lboptionmaxthread.caption
 msgid "Number of downloaded files per task at the same time (Max: 32)"
@@ -2126,40 +1974,32 @@ msgid "Cookies"
 msgstr "Cookies"
 
 #: twebsiteoptionadvancedform.vtdownloadmaxthreadspertask.header.columns[0].text
-msgctxt ""
-"twebsiteoptionadvancedform.vtdownloadmaxthreadspertask.header.columns[0].text"
+msgctxt "twebsiteoptionadvancedform.vtdownloadmaxthreadspertask.header.columns[0].text"
 msgid "Website"
 msgstr "Sitio Web"
 
 #: twebsiteoptionadvancedform.vtdownloadmaxthreadspertask.header.columns[1].text
-msgctxt ""
-"twebsiteoptionadvancedform.vtdownloadmaxthreadspertask.header.columns[1].text"
+msgctxt "twebsiteoptionadvancedform.vtdownloadmaxthreadspertask.header.columns[1].text"
 msgid "Value"
 msgstr "Valor"
 
 #: twebsiteoptionadvancedform.vtupdatelistdirectorypagenumber.header.columns[0].text
-msgctxt ""
-"twebsiteoptionadvancedform.vtupdatelistdirectorypagenumber.header.columns[0]."
-"text"
+msgctxt "twebsiteoptionadvancedform.vtupdatelistdirectorypagenumber.header.columns[0].text"
 msgid "Website"
 msgstr "Sitio Web"
 
 #: twebsiteoptionadvancedform.vtupdatelistdirectorypagenumber.header.columns[1].text
-msgctxt ""
-"twebsiteoptionadvancedform.vtupdatelistdirectorypagenumber.header.columns[1]."
-"text"
+msgctxt "twebsiteoptionadvancedform.vtupdatelistdirectorypagenumber.header.columns[1].text"
 msgid "Value"
 msgstr "Valor"
 
 #: twebsiteoptionadvancedform.vtupdatelistnumberofthreads.header.columns[0].text
-msgctxt ""
-"twebsiteoptionadvancedform.vtupdatelistnumberofthreads.header.columns[0].text"
+msgctxt "twebsiteoptionadvancedform.vtupdatelistnumberofthreads.header.columns[0].text"
 msgid "Website"
 msgstr "Sitio Web"
 
 #: twebsiteoptionadvancedform.vtupdatelistnumberofthreads.header.columns[1].text
-msgctxt ""
-"twebsiteoptionadvancedform.vtupdatelistnumberofthreads.header.columns[1].text"
+msgctxt "twebsiteoptionadvancedform.vtupdatelistnumberofthreads.header.columns[1].text"
 msgid "Value"
 msgstr "Valor"
 
@@ -2343,3 +2183,4 @@ msgstr "Sincronizando Datos"
 #: uupdatethread.rs_updatinglist
 msgid "Updating list"
 msgstr "Actualizando Lista"
+
