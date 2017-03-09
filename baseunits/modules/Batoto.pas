@@ -326,6 +326,13 @@ begin
   end;
 end;
 
+function BeforeDownloadImage(const DownloadThread: TDownloadThread;
+    var AURL: String; const Module: TModuleContainer): Boolean;
+begin
+  AURL := FillHost('http://' + serverselectionvalue[serverselection] + '.bato.to', AURL);
+  Result := True;
+end;
+
 procedure RegisterModule;
 begin
   with AddModule do
@@ -341,6 +348,7 @@ begin
     OnGetInfo := @GetInfo;
     OnGetPageNumber := @GetPageNumber;
     OnGetImageURL := @GetImageURL;
+    OnBeforeDownloadImage := @BeforeDownloadImage;
     OnLogin := @Login;
     AddOptionCheckBox(@showalllang,'ShowAllLang', @RS_ShowAllLang);
     AddOptionCheckBox(@showscangroup,'ShowScanGroup', @RS_ShowScanGroup);
