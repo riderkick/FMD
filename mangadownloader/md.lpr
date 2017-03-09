@@ -5,9 +5,6 @@ program md;
 {$DEFINE MANGADOWNLOADER}
 
 uses
- {$IFDEF DEBUGLEAKS}
-  SysUtils,
- {$ENDIF}
  {$IFDEF UNIX} {$IFDEF UseCThreads}
   cthreads,
  {$ENDIF} {$ENDIF}
