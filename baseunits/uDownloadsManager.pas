@@ -943,34 +943,30 @@ begin
 
   FHTTP.Clear;
 
-  // call beforedownloadimage if available
-  if Modules.ModuleAvailable(Task.Container.ModuleId, MMBeforeDownloadImage) then
-    Result := Modules.BeforeDownloadImage(Self, workURL, Task.Container.ModuleId);
-
   // prepare filename
   workFilename := Task.GetFileName(WorkId);
 
   // download image
   savedFilename := '';
+
+  if Modules.ModuleAvailable(Task.Container.ModuleId, MMDownloadImage) and
+    (Task.Container.PageNumber = Task.Container.PageContainerLinks.Count) and
+    (WorkId < Task.Container.PageContainerLinks.Count) then
+      workURL := Task.Container.PageContainerLinks[WorkId];
+
+  // call beforedownloadimage if available
+  if Modules.ModuleAvailable(Task.Container.ModuleId, MMBeforeDownloadImage) then
+    Result := Modules.BeforeDownloadImage(Self, workURL, Task.Container.ModuleId);
+
   if Result then
   begin
     if Modules.ModuleAvailable(Task.Container.ModuleId, MMDownloadImage) then
-    begin
-      workURL := '';
-      if (Task.Container.PageNumber = Task.Container.PageContainerLinks.Count)
-        and (WorkId < Task.Container.PageContainerLinks.Count) then
-        workURL := Task.Container.PageContainerLinks[WorkId]
-      else if WorkId < Task.Container.PageLinks.Count then
-        workURL := Task.Container.PageLinks[WorkId];
-
-      if workURL <> '' then
         Result := Modules.DownloadImage(
           Self,
           workURL,
           Task.CurrentWorkingDir,
           workFilename,
-          Task.Container.ModuleId);
-    end
+          Task.Container.ModuleId)
     else
     if Task.Container.MangaSiteID = MEINMANGA_ID then
       Result := GetMeinMangaImageURL
