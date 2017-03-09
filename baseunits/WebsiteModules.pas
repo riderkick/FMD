@@ -41,7 +41,7 @@ type
     const AURL: String; const Module: TModuleContainer): Boolean;
 
   TOnBeforeDownloadImage = function(const DownloadThread: TDownloadThread;
-    const AURL: String; const Module: TModuleContainer): Boolean;
+    var AURL: String; const Module: TModuleContainer): Boolean;
 
   TOnDownloadImage = function(const DownloadThread: TDownloadThread;
     const AURL, APath, AName: String; const Module: TModuleContainer): Boolean;
@@ -177,9 +177,9 @@ type
       const AURL, AWebsite: String): Boolean; overload;
 
     function BeforeDownloadImage(const DownloadThread: TDownloadThread;
-      const AURL: String; const ModuleId: Integer): Boolean; overload;
+      var AURL: String; const ModuleId: Integer): Boolean; overload;
     function BeforeDownloadImage(const DownloadThread: TDownloadThread;
-      const AURL, AWebsite: String): Boolean; overload;
+      var AURL, AWebsite: String): Boolean; overload;
 
     function DownloadImage(const DownloadThread: TDownloadThread;
       const AURL, APath, AName: String; const ModuleId: Integer): Boolean; overload;
@@ -553,7 +553,7 @@ begin
 end;
 
 function TWebsiteModules.BeforeDownloadImage(
-  const DownloadThread: TDownloadThread; const AURL: String;
+  const DownloadThread: TDownloadThread; var AURL: String;
   const ModuleId: Integer): Boolean;
 begin
   Result := False;
@@ -564,7 +564,7 @@ begin
 end;
 
 function TWebsiteModules.BeforeDownloadImage(
-  const DownloadThread: TDownloadThread; const AURL, AWebsite: String): Boolean;
+  const DownloadThread: TDownloadThread; var AURL, AWebsite: String): Boolean;
 begin
   Result := BeforeDownloadImage(DownloadThread, AURL, LocateModule(AWebsite));
 end;
