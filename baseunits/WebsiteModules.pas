@@ -195,7 +195,7 @@ type
     procedure LockModules;
     procedure UnlockModules;
 
-    property Module[const ModuleId: Integer]: TModuleContainer read GetModule;
+    property Module[const ModuleId: Integer]: TModuleContainer read GetModule; default;
     property Count: Integer read GetCount;
     property Website[const ModuleId: Integer]: String read GetWebsite;
 
