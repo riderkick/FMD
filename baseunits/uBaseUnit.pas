@@ -643,7 +643,8 @@ function FillMangaSiteHost(const MangaID: Cardinal; URL: String): String; overlo
 function FillMangaSiteHost(const Website, URL: String): String; overload;
 
 // modify url
-function FillHost(const Host, URL: String): String;
+function FillHost(const Host, URL: String): String; overload;
+function FillHost(const Host: String; const URLs: TStrings): String; overload;
 function MaybeFillHost(const Host, URL: String): String;
 function GetHostURL(URL: String): String;
 function RemoveHostFromURL(URL: String): String;
@@ -1247,6 +1248,18 @@ var
 begin
   SplitURL(URL,H,P);
   Result:=RemoveURLDelim(Host)+P;
+end;
+
+function FillHost(const Host: String; const URLs: TStrings): String;
+var
+  i: Integer;
+  H,P: String;
+begin
+  for i:=0 to URLs.Count-1 do
+  begin
+    SplitURL(URLs[i],H,P);
+    URLs[i]:=RemoveURLDelim(Host)+P;
+  end;
 end;
 
 function MaybeFillHost(const Host, URL: String): String;
