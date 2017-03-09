@@ -25,10 +25,27 @@ var
   locklogin: TRTLCriticalSection;
   showalllang: Boolean = False;
   showscangroup: Boolean = False;
+  serverselection: Integer = 0;
+
+const
+  serverselectionvalue : array [0..4] of String = (
+    'img',
+    'img3',
+    'img4',
+    'cdn',
+    'cdn2'
+    );
 
 resourcestring
   RS_ShowAllLang = 'Show all language';
   RS_ShowScanGroup = 'Show scanlation group';
+  RS_ServerSelection = 'Server selection:';
+  RS_ServerSelectionItems =
+    'Auto' + LineEnding +
+    'Image Server EU' + LineEnding +
+    'Image Server NA' + LineEnding +
+    'CDN (default)' + LineEnding +
+    'CDN2 (testing)';
 
 function Login(const AHTTP: THTTPSendThread): Boolean;
 var
@@ -295,6 +312,8 @@ begin
       IntToStr(DownloadThread.WorkId + 1);
     Headers.Values['Referer'] := ' ' + Module.RootURL + '/reader';
     Cookies.Text := Account.Cookies['Batoto'];
+    if serverselection <> 0 then
+      Cookies.Values['server_selection'] := serverselectionvalue[serverselection];
     if GET(rurl) then begin
       Result := True;
       with TXQueryEngineHTML.Create(Document) do
@@ -325,6 +344,7 @@ begin
     OnLogin := @Login;
     AddOptionCheckBox(@showalllang,'ShowAllLang', @RS_ShowAllLang);
     AddOptionCheckBox(@showscangroup,'ShowScanGroup', @RS_ShowScanGroup);
+    AddOptionComboBox(@serverselection,'ServerSelection', @RS_ServerSelection, @RS_ServerSelectionItems);
   end;
 end;
 
