@@ -56,6 +56,7 @@ uses
   MangaGo,
   GoodManga,
   MangaZuki,
+  MangaShiro,
   // Raw Official
   SundayWebEvery,
   TonarinoYoungJump,
