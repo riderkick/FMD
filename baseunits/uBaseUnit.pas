@@ -245,45 +245,44 @@ const
   ANIMEEXTREMIST_ID      = 12;
   S2SCAN_ID              = 13;
   IMANHUA_ID             = 14;
-  MABUNS_ID              = 15;
-  CENTRALDEMANGAS_ID     = 16;
-  EGSCANS_ID             = 17;
-  MANGAAR_ID             = 18;
-  MANGAAE_ID             = 19;
-  ANIMESTORY_ID          = 20;
-  LECTUREENLIGNE_ID      = 21;
-  SCANMANGA_ID           = 22;
-  DM5_ID                 = 23;
-  KIVMANGA_ID            = 24;
-  MEINMANGA_ID           = 25;
-  MANGASPROJECT_ID       = 26;
-  MANGAREADER_POR_ID     = 27;
-  NINEMANGA_ID           = 28;
-  NINEMANGA_ES_ID        = 29;
-  NINEMANGA_CN_ID        = 30;
-  NINEMANGA_RU_ID        = 31;
-  NINEMANGA_DE_ID        = 32;
-  NINEMANGA_IT_ID        = 33;
-  NINEMANGA_BR_ID        = 34;
-  JAPANSHIN_ID           = 35;
-  CENTRUMMANGI_PL_ID     = 36;
-  MANGALIB_PL_ID         = 37;
-  ONEMANGA_ID            = 38;
-  MANGATOWN_ID           = 39;
-  MANGAOKU_ID            = 40;
-  MYREADINGMANGAINFO_ID  = 41;
-  IKOMIK_ID              = 42;
-  NHENTAI_ID             = 43;
-  MANGAMINT_ID           = 44;
-  UNIXMANGA_ID           = 45;
-  EXTREMEMANGAS_ID       = 46;
-  MANGAHOST_ID           = 47;
-  MANGAKU_ID             = 48;
-  MANGAAT_ID             = 49;
-  READMANGATODAY_ID      = 50;
-  DYNASTYSCANS_ID        = 51;
+  CENTRALDEMANGAS_ID     = 15;
+  EGSCANS_ID             = 16;
+  MANGAAR_ID             = 17;
+  MANGAAE_ID             = 18;
+  ANIMESTORY_ID          = 19;
+  LECTUREENLIGNE_ID      = 20;
+  SCANMANGA_ID           = 21;
+  DM5_ID                 = 22;
+  KIVMANGA_ID            = 23;
+  MEINMANGA_ID           = 24;
+  MANGASPROJECT_ID       = 25;
+  MANGAREADER_POR_ID     = 26;
+  NINEMANGA_ID           = 27;
+  NINEMANGA_ES_ID        = 28;
+  NINEMANGA_CN_ID        = 29;
+  NINEMANGA_RU_ID        = 30;
+  NINEMANGA_DE_ID        = 31;
+  NINEMANGA_IT_ID        = 32;
+  NINEMANGA_BR_ID        = 33;
+  JAPANSHIN_ID           = 34;
+  CENTRUMMANGI_PL_ID     = 35;
+  MANGALIB_PL_ID         = 36;
+  ONEMANGA_ID            = 37;
+  MANGATOWN_ID           = 38;
+  MANGAOKU_ID            = 39;
+  MYREADINGMANGAINFO_ID  = 40;
+  IKOMIK_ID              = 41;
+  NHENTAI_ID             = 42;
+  MANGAMINT_ID           = 43;
+  UNIXMANGA_ID           = 44;
+  EXTREMEMANGAS_ID       = 45;
+  MANGAHOST_ID           = 46;
+  MANGAKU_ID             = 47;
+  MANGAAT_ID             = 48;
+  READMANGATODAY_ID      = 49;
+  DYNASTYSCANS_ID        = 50;
 
-  WebsiteRoots: array [0..51] of array [0..1] of String = (
+  WebsiteRoots: array [0..50] of array [0..1] of String = (
     ('AnimeA', 'http://manga.animea.net'),
     ('OurManga', 'http://www.ourmanga.com'),
     ('Manga24h', 'http://manga24h.com'),
@@ -299,7 +298,6 @@ const
     ('AnimExtremist', 'http://www.animextremist.com'),
     ('S2Scans', 'http://reader.s2smanga.com'),
     ('imanhua', 'http://www.imanhua.com'),
-    ('Mabuns', 'http://www.mabuns.web.id'),
     ('CentralDeMangas', 'http://centraldemangas.com.br'),
     ('EGScans', 'http://read.egscans.com'),
     ('MangaAr', 'http://manga-ar.net'),
@@ -371,8 +369,6 @@ const
   ANIMEEXTREMIST_BROWSER = '/mangas.htm?ord=todos';
 
   IMANHUA_BROWSER = '/all.html';
-
-  MABUNS_BROWSER = '/p/mabuns-manga-list.html';
 
   CENTRALDEMANGAS_BROWSER = '/mangas/list/*';
 
