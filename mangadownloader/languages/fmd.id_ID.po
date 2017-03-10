@@ -12,6 +12,24 @@ msgstr ""
 "X-Generator: Poedit 1.8.12\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
+#: batoto.rs_serverselection
+msgid "Image server:"
+msgstr "Server gambar:"
+
+#: batoto.rs_serverselectionitems
+msgid ""
+"Auto\n"
+"Image Server EU\n"
+"Image Server NA\n"
+"CDN (default)\n"
+"CDN2 (testing)\n"
+msgstr ""
+"Otomatis\n"
+"Image Server EU\n"
+"Image Server NA\n"
+"CDN (default)\n"
+"CDN2 (testing)\n"
+
 #: batoto.rs_showalllang
 msgid "Show all language"
 msgstr "Tampilkan semua bahasa"
@@ -2183,4 +2201,3 @@ msgstr "Sinkronisasi data"
 #: uupdatethread.rs_updatinglist
 msgid "Updating list"
 msgstr "Memperbarui daftar"
-

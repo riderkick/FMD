@@ -12,6 +12,24 @@ msgstr ""
 "X-Generator: Poedit 1.8.12\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+#: batoto.rs_serverselection
+msgid "Image server:"
+msgstr "Image server:"
+
+#: batoto.rs_serverselectionitems
+msgid ""
+"Auto\n"
+"Image Server EU\n"
+"Image Server NA\n"
+"CDN (default)\n"
+"CDN2 (testing)\n"
+msgstr ""
+"Auto\n"
+"Image Server EU\n"
+"Image Server NA\n"
+"CDN (default)\n"
+"CDN2 (testing)\n"
+
 #: batoto.rs_showalllang
 msgid "Show all language"
 msgstr "Show all language"
@@ -1231,7 +1249,6 @@ msgid "Log file:"
 msgstr "Log file:"
 
 #: tmainform.lbmode.caption
-#| msgid "Mode: Show All (0)"
 msgid "Mode: Show all (0)"
 msgstr "Mode: Show all (0)"
 
@@ -2203,4 +2220,3 @@ msgstr "Synchronizing data"
 #: uupdatethread.rs_updatinglist
 msgid "Updating list"
 msgstr "Updating list"
-

@@ -9,8 +9,21 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: pl_PL\n"
-"X-Generator: Poedit 1.7.4\n"
+"X-Generator: Poedit 1.8.12\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: batoto.rs_serverselection
+msgid "Image server:"
+msgstr ""
+
+#: batoto.rs_serverselectionitems
+msgid ""
+"Auto\n"
+"Image Server EU\n"
+"Image Server NA\n"
+"CDN (default)\n"
+"CDN2 (testing)\n"
+msgstr ""
 
 #: batoto.rs_showalllang
 msgid "Show all language"
@@ -1231,7 +1244,6 @@ msgid "Log file:"
 msgstr "Plik logów:"
 
 #: tmainform.lbmode.caption
-#| msgid "Mode: Show All (0)"
 msgid "Mode: Show all (0)"
 msgstr "Tryb: Pokaż wszystko (0)"
 
@@ -1568,7 +1580,6 @@ msgid "Delete"
 msgstr "Usuń"
 
 #: tmainform.mifavoritesdisable.caption
-#, fuzzy
 msgctxt "tmainform.mifavoritesdisable.caption"
 msgid "Disable"
 msgstr "Wyłącz"
@@ -1579,7 +1590,6 @@ msgid "Download all"
 msgstr "Pobierz wszystko"
 
 #: tmainform.mifavoritesenable.caption
-#, fuzzy
 msgctxt "tmainform.mifavoritesenable.caption"
 msgid "Enable"
 msgstr "Włącz"

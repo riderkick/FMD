@@ -9,12 +9,23 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: en_US\n"
-"X-Generator: Poedit 1.8.8\n"
+"X-Generator: Poedit 1.8.12\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Poedit-Language: Greek\n"
-"X-Poedit-Country: GREECE\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-Bookmarks: -1,-1,-1,-1,-1,-1,-1,29,-1,-1\n"
+
+#: batoto.rs_serverselection
+msgid "Image server:"
+msgstr ""
+
+#: batoto.rs_serverselectionitems
+msgid ""
+"Auto\n"
+"Image Server EU\n"
+"Image Server NA\n"
+"CDN (default)\n"
+"CDN2 (testing)\n"
+msgstr ""
 
 #: batoto.rs_showalllang
 msgid "Show all language"
@@ -1286,7 +1297,6 @@ msgid "Log file:"
 msgstr "Αρχείο καταγραφής:"
 
 #: tmainform.lbmode.caption
-#| msgid "Mode: Show All (0)"
 msgid "Mode: Show all (0)"
 msgstr "Λειτ.: Εμφάνιση όλων (0)"
 
@@ -1622,7 +1632,6 @@ msgid "Delete"
 msgstr "Διαγραφή"
 
 #: tmainform.mifavoritesdisable.caption
-#, fuzzy
 msgctxt "tmainform.mifavoritesdisable.caption"
 msgid "Disable"
 msgstr "Απενεργοποίηση"
@@ -1633,7 +1642,6 @@ msgid "Download all"
 msgstr "Λήψη όλων"
 
 #: tmainform.mifavoritesenable.caption
-#, fuzzy
 msgctxt "tmainform.mifavoritesenable.caption"
 msgid "Enable"
 msgstr "Ενεργοποίηση"

@@ -1,6 +1,19 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=UTF-8"
 
+#: batoto.rs_serverselection
+msgid "Image server:"
+msgstr ""
+
+#: batoto.rs_serverselectionitems
+msgid ""
+"Auto\n"
+"Image Server EU\n"
+"Image Server NA\n"
+"CDN (default)\n"
+"CDN2 (testing)\n"
+msgstr ""
+
 #: batoto.rs_showalllang
 msgid "Show all language"
 msgstr ""

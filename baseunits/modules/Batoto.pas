@@ -39,7 +39,7 @@ const
 resourcestring
   RS_ShowAllLang = 'Show all language';
   RS_ShowScanGroup = 'Show scanlation group';
-  RS_ServerSelection = 'Server selection:';
+  RS_ServerSelection = 'Image server:';
   RS_ServerSelectionItems =
     'Auto' + LineEnding +
     'Image Server EU' + LineEnding +
