@@ -66,6 +66,8 @@ type
 
 function XPathString(const Expression, HTMLString: String): String; overload;
 function XPathString(const Expression: String; const HTMLStream: TStream): String; overload;
+procedure XPathHREFAll(const Expression: String; const HTMLStream: TStream; const ALinks, ATexts: TStrings);
+procedure XPathHREFtitleAll(const Expression: String; const HTMLStream: TStream; const ALinks, ATitles: TStrings);
 
 implementation
 
@@ -116,6 +118,28 @@ end;
 function XPathString(const Expression: String; const HTMLStream: TStream): String;
 begin
   Result := XPathString(Expression, StreamToString(HTMLStream));
+end;
+
+procedure XPathHREFAll(const Expression: String; const HTMLStream: TStream;
+  const ALinks, ATexts: TStrings);
+begin
+  with TXQueryEngineHTML.Create(HTMLStream) do
+    try
+      XPathHREFAll(Expression, ALinks, ATexts);
+    finally
+      Free;
+    end;
+end;
+
+procedure XPathHREFtitleAll(const Expression: String;
+  const HTMLStream: TStream; const ALinks, ATitles: TStrings);
+begin
+  with TXQueryEngineHTML.Create(HTMLStream) do
+    try
+      XPathHREFtitleAll(Expression, ALinks, ATitles);
+    finally
+      Free;
+    end;
 end;
 
 { TXQueryEngineHTML }
