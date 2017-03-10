@@ -107,6 +107,7 @@ begin
   AddWebsiteModule('Komikid', 'http://www.komikid.com');
   AddWebsiteModule('MangaDenizi', 'http://www.mangadenizi.com');
   AddWebsiteModule('MangaDoor', 'http://mangadoor.com');
+  AddWebsiteModule('MangaID', 'http://mangaid.co');
 end;
 
 initialization
