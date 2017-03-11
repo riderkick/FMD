@@ -160,7 +160,7 @@ procedure RegisterModule;
 
 begin
   AddWebsiteModule('MangaChanRU', 'http://mangachan.me');
-  AddWebsiteModule('HentaiChanRU', 'http://hentaichan.me');
+  AddWebsiteModule('HentaiChanRU', 'http://henchan.me');
   AddWebsiteModule('YaoiChanRU', 'http://yaoichan.me');
 end;
 
