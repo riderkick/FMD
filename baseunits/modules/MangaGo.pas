@@ -31,12 +31,7 @@ begin
   if GETWithCookie(MangaInfo.FHTTP, Module.RootURL + dirurl + '1/') then
   begin
     Result := NO_ERROR;
-    with TXQueryEngineHTML.Create(MangaInfo.FHTTP.Document) do
-      try
-        Page := XPath('//div[@class="pagination"]//ol/li//select/option').Count;
-      finally
-        Free;
-      end;
+    Page := StrToIntDef(XPathString('count(//div[@class="pagination"]//ol/li//select/option)', MangaInfo.FHTTP.Document), 1);
   end;
 end;
 
@@ -48,12 +43,7 @@ begin
   if GETWithCookie(MangaInfo.FHTTP, Module.RootURL + dirurl + IncStr(AURL) + '/') then
   begin
     Result := NO_ERROR;
-    with TXQueryEngineHTML.Create(MangaInfo.FHTTP.Document) do
-      try
-        XPathHREFtitleAll('//div[@class="directory_left"]//li/h3/a', ALinks, ANames);
-      finally
-        Free;
-      end;
+    XPathHREFtitleAll('//div[@class="directory_left"]//li/h3/a', MangaInfo.FHTTP.Document, ALinks, ANames);
   end;
 end;
 
@@ -99,16 +89,9 @@ begin
     if GETWithCookie(DownloadThread.FHTTP, MaybeFillHost(Module.RootURL, AURL)) then
     begin
       Result := True;
-      s := XPathString('//script[contains(.,"imgsrcs = new Array")]', Document);
+      s := XPathString('//script[contains(.,"imgsrcs")]/substring-before(substring-after(substring-before(.,"imgsrcs"),"''"),"''")', Document);
       if s <> '' then
-      begin
-        s := GetString(s, 'new Array(', ');');
-        s := StringReplace(s, ''',''', LineEnding, [rfReplaceAll]);
-        s := StringReplace(s, '''', '', [rfReplaceAll]);
-        s := StringReplace(s, '","', LineEnding, [rfReplaceAll]);
-        s := StringReplace(s, '"', '', [rfReplaceAll]);
-        PageLinks.Text := s;
-      end;
+        PageLinks.CommaText := s
     end;
   end;
 end;
