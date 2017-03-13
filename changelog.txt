@@ -4,6 +4,11 @@ Project page: https://github.com/riderkick/FMD
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.102.0 (13-03-2017)
+[*] MangaGo: fixed download
+[*] ReadMangaToday: rewrite all codes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.101.0...0.9.102.0
+
 0.9.101.0 (10-03-2017)
 [+] Batoto: added option to select the image server to download
 [*] MangaIndo: rewrite all codes
