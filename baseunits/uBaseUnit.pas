@@ -279,10 +279,9 @@ const
   MANGAHOST_ID           = 46;
   MANGAKU_ID             = 47;
   MANGAAT_ID             = 48;
-  READMANGATODAY_ID      = 49;
-  DYNASTYSCANS_ID        = 50;
+  DYNASTYSCANS_ID        = 49;
 
-  WebsiteRoots: array [0..50] of array [0..1] of String = (
+  WebsiteRoots: array [0..49] of array [0..1] of String = (
     ('AnimeA', 'http://manga.animea.net'),
     ('OurManga', 'http://www.ourmanga.com'),
     ('Manga24h', 'http://manga24h.com'),
@@ -332,7 +331,6 @@ const
     ('MangaHost', 'http://br.mangahost.com'),
     ('MangaKu', 'http://mangaku.web.id'),
     ('MangaAt', 'http://www.mangaat.com'),
-    ('ReadMangaToday', 'http://www.readmanga.today'),
     ('Dynasty-Scans', 'http://dynasty-scans.com')
     );
 

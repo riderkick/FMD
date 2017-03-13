@@ -810,8 +810,6 @@ var
 
   {$I includes/MangaAt/directory_page_number.inc}
 
-  {$I includes/ReadMangaToday/directory_page_number.inc}
-
   {$I includes/Dynasty-Scans/directory_page_number.inc}
 
 begin
@@ -904,9 +902,6 @@ begin
       else
       if WebsiteID = MANGAAT_ID then
         Result := GetMangaAtDirectoryPageNumber
-      else
-      if WebsiteID = READMANGATODAY_ID then
-        Result := GetReadMangaTodayDirectoryPageNumber
       else
       if WebsiteID = DYNASTYSCANS_ID then
         Result := GetDynastyScansDirectoryPageNumber
@@ -1009,8 +1004,6 @@ var
   {$I includes/MangaKu/names_and_links.inc}
 
   {$I includes/MangaAt/names_and_links.inc}
-
-  {$I includes/ReadMangaToday/names_and_links.inc}
 
   {$I includes/Dynasty-Scans/names_and_links.inc}
 
@@ -1152,9 +1145,6 @@ begin
     if WebsiteID = MANGAAT_ID then
       Result := MangaAtGetNamesAndLinks
     else
-    if WebsiteID = READMANGATODAY_ID then
-      Result := ReadMangaTodayGetNamesAndLinks
-    else
     if WebsiteID = DYNASTYSCANS_ID then
       Result := DynastyScansGetNamesAndLinks
     else
@@ -1258,8 +1248,6 @@ var
   {$I includes/MangaKu/manga_information.inc}
 
   {$I includes/MangaAt/manga_information.inc}
-
-  {$I includes/ReadMangaToday/manga_information.inc}
 
   {$I includes/Dynasty-Scans/manga_information.inc}
 
@@ -1411,9 +1399,6 @@ begin
     else
     if WebsiteID = MANGAAT_ID then
       Result := GetMangaAtInfoFromURL
-    else
-    if WebsiteID = READMANGATODAY_ID then
-      Result := GetReadMangaTodayInfoFromURL
     else
     if WebsiteID = DYNASTYSCANS_ID then
       Result := GetDynastyScansInfoFromURL

@@ -57,6 +57,7 @@ uses
   GoodManga,
   MangaZuki,
   MangaShiro,
+  ReadMangaToday,
   // Raw Official
   SundayWebEvery,
   TonarinoYoungJump,
