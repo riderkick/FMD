@@ -106,9 +106,6 @@ end;
 
 function GetPageNumber(const DownloadThread: TDownloadThread;
   const AURL: String; const Module: TModuleContainer): Boolean;
-var
-  query: TXQueryEngineHTML;
-  v: IXQValue;
 begin
   Result := False;
   if DownloadThread = nil then Exit;
@@ -117,15 +114,7 @@ begin
     PageNumber := 0;
     if GET(FillHost(Module.RootURL, AURL)) then begin
       Result := True;
-      query := TXQueryEngineHTML.Create;
-      try
-        query.ParseHTML(StreamToString(Document));
-        for v in query.XPath(
-            '//div[@id="image"]/div/img[@class="real img-responsive"][@id!="imagem-forum"]/@data-lazy') do
-          PageLinks.Add(v.toString);
-      finally
-        query.Free;
-      end;
+      XPathStringAll('//*[@id="image"]//img[contains(@data-lazy,"/leitor/")]/@data-lazy', Document, PageLinks);
     end;
   end;
 end;
