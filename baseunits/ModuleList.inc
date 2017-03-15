@@ -58,6 +58,7 @@ uses
   MangaZuki,
   MangaShiro,
   ReadMangaToday,
+  MangaOnlineBR,
   // Raw Official
   SundayWebEvery,
   TonarinoYoungJump,
