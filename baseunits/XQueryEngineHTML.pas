@@ -128,6 +128,7 @@ begin
     try
       XPathStringAll(Expression, TheStrings);
     finally
+      Free;
     end;
 end;
 
