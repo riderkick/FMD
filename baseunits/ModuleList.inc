@@ -59,6 +59,7 @@ uses
   MangaShiro,
   ReadMangaToday,
   MangaOnlineBR,
+  HentaiFox,
   // Raw Official
   SundayWebEvery,
   TonarinoYoungJump,
