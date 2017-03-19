@@ -141,7 +141,7 @@ type
     WorkCounter,
     DownCounter,
     PageNumber: Integer;
-    MangaSiteID: Cardinal;
+    MangaSiteID: Integer;
     ModuleId: Integer;
     //Status: TDownloadStatusType;
     ThreadState: Boolean;
