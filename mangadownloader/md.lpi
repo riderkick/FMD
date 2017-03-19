@@ -200,6 +200,7 @@
     <RequiredPackages Count="8">
       <Item1>
         <PackageName Value="BESENPkg"/>
+        <DefaultFilename Value="..\3rd\BESENPkg.lpk" Prefer="True"/>
       </Item1>
       <Item2>
         <PackageName Value="multiloglaz"/>
@@ -209,6 +210,7 @@
       </Item3>
       <Item4>
         <PackageName Value="internettools"/>
+        <DefaultFilename Value="..\3rd\internettools\internettools.lpk" Prefer="True"/>
       </Item4>
       <Item5>
         <PackageName Value="TAChartLazarusPkg"/>
