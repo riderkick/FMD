@@ -53,7 +53,7 @@ begin
           artists := XPathStringAll('//dt[.="Artist(s)"]/following-sibling::dd[1]/string-join(*,", ")');
           genres := XPathStringAll('//dt[.=("Categories","Kategoriler:","Categorías")]/following-sibling::dd[1]/string-join(*,", ")');
           summary := XPathString('//div[@class="well"]/p');
-          for v in XPath('//ul[@class="chapters"]/li/h5') do
+          for v in XPath('//ul[@class="chapters"]/li/*[self::h5 or self::h3]') do
           begin
             chapterLinks.Add(XPathString('a/@href', v));
             chapterName.Add(XPathString('normalize-space(.)', v));
