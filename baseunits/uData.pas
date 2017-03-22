@@ -768,7 +768,7 @@ var
   p: Integer;
   Source: TStringList;
   Parser: THTMLParser;
-  WebsiteID: Cardinal;
+  MangaSiteID: Integer;
 
   {$I includes/AnimeA/directory_page_number.inc}
 
@@ -835,75 +835,75 @@ begin
       Result := Modules.GetDirectoryPageNumber(Self, APage, ModuleId)
     else
     begin
-      WebsiteID := GetMangaSiteID(AWebsite);
+      MangaSiteID := GetMangaSiteID(AWebsite);
       Source := TStringList.Create;
-      if WebsiteID = ANIMEA_ID then
+      if MangaSiteID = ANIMEA_ID then
         Result := GetAnimeADirectoryPageNumber
       else
-      if WebsiteID = MANGA24H_ID then
+      if MangaSiteID = MANGA24H_ID then
         Result := GetManga24hDirectoryPageNumber
       else
-      if WebsiteID = VNSHARING_ID then
+      if MangaSiteID = VNSHARING_ID then
         Result := GetVnSharingDirectoryPageNumber
       else
-      if WebsiteID = FAKKU_ID then
+      if MangaSiteID = FAKKU_ID then
         Result := GetFakkuDirectoryPageNumber
       else
-      if WebsiteID = BLOGTRUYEN_ID then
+      if MangaSiteID = BLOGTRUYEN_ID then
         Result := GetBlogTruyenDirectoryPageNumber
       else
-      if WebsiteID = S2SCAN_ID then
+      if MangaSiteID = S2SCAN_ID then
         Result := GetS2ScanDirectoryPageNumber
       else
-      if WebsiteID = LECTUREENLIGNE_ID then
+      if MangaSiteID = LECTUREENLIGNE_ID then
         Result := GetLectureEnLigneDirectoryPageNumber
       else
-      if WebsiteID = MANGAAE_ID then
+      if MangaSiteID = MANGAAE_ID then
         Result := GetMangaAeDirectoryPageNumber
       else
-      if WebsiteID = CENTRALDEMANGAS_ID then
+      if MangaSiteID = CENTRALDEMANGAS_ID then
         Result := GetCentralDeMangasDirectoryPageNumber
       else
-      if WebsiteID = DM5_ID then
+      if MangaSiteID = DM5_ID then
         Result := GetDM5DirectoryPageNumber
       else
-      if (WebsiteID = NINEMANGA_ID) or
-        (WebsiteID = NINEMANGA_ES_ID) or
-        (WebsiteID = NINEMANGA_CN_ID) or
-        (WebsiteID = NINEMANGA_RU_ID) or
-        (WebsiteID = NINEMANGA_DE_ID) or
-        (WebsiteID = NINEMANGA_IT_ID) or
-        (WebsiteID = NINEMANGA_BR_ID) then
+      if (MangaSiteID = NINEMANGA_ID) or
+        (MangaSiteID = NINEMANGA_ES_ID) or
+        (MangaSiteID = NINEMANGA_CN_ID) or
+        (MangaSiteID = NINEMANGA_RU_ID) or
+        (MangaSiteID = NINEMANGA_DE_ID) or
+        (MangaSiteID = NINEMANGA_IT_ID) or
+        (MangaSiteID = NINEMANGA_BR_ID) then
         Result := GetNineMangaDirectoryPageNumber
       else
-      if WebsiteID = JAPANSHIN_ID then
+      if MangaSiteID = JAPANSHIN_ID then
         Result := GetJapanShinDirectoryPageNumber
       else
-      if WebsiteID = ONEMANGA_ID then
+      if MangaSiteID = ONEMANGA_ID then
         Result := GetOneMangaDirectoryPageNumber
       else
-      if WebsiteID = MANGATOWN_ID then
+      if MangaSiteID = MANGATOWN_ID then
         Result := GetMangaTownDirectoryPageNumber
       else
-      if WebsiteID = MYREADINGMANGAINFO_ID then
+      if MangaSiteID = MYREADINGMANGAINFO_ID then
         Result := GetMyReadingMangaInfoDirectoryPageNumber
       else
-      if WebsiteID = IKOMIK_ID then
+      if MangaSiteID = IKOMIK_ID then
         Result := GetIKomikDirectoryPageNumber
       else
-      if WebsiteID = NHENTAI_ID then
+      if MangaSiteID = NHENTAI_ID then
         Result := GetNHentaiDirectoryPageNumber
       else
-      if WebsiteID = MANGAMINT_ID then
+      if MangaSiteID = MANGAMINT_ID then
         Result := GetMangaMintDirectoryPageNumber
       else
-      if WebsiteID = MANGAHOST_ID then
+      if MangaSiteID = MANGAHOST_ID then
         Result := GetMangaHostDirectoryPageNumber
       else
-      if WebsiteID = MANGAAT_ID then
+      if MangaSiteID = MANGAAT_ID then
         Result := GetMangaAtDirectoryPageNumber
       else
-      if WebsiteID = DYNASTYSCANS_ID then
+      if MangaSiteID = DYNASTYSCANS_ID then
         Result := GetDynastyScansDirectoryPageNumber
       else
       begin
@@ -923,7 +923,7 @@ function TMangaInformation.GetNameAndLink(const ANames, ALinks: TStringList;
 var
   Source: TStringList;
   Parser: THTMLParser;
-  WebsiteID: Cardinal;
+  MangaSiteID: Integer;
 
   {$I includes/AnimeA/names_and_links.inc}
 
@@ -1017,135 +1017,135 @@ begin
     Result := Modules.GetNameAndLink(Self, ANames, ALinks, AURL, ModuleId)
   else
   begin
-    WebsiteID := GetMangaSiteID(AWebsite);
+    MangaSiteID := GetMangaSiteID(AWebsite);
     Source := TStringList.Create;
-    if WebsiteID = ANIMEA_ID then
+    if MangaSiteID = ANIMEA_ID then
       Result := AnimeAGetNamesAndLinks
     else
-    if WebsiteID = MANGA24H_ID then
+    if MangaSiteID = MANGA24H_ID then
       Result := Manga24hGetNamesAndLinks
     else
-    if WebsiteID = VNSHARING_ID then
+    if MangaSiteID = VNSHARING_ID then
       Result := VnSharingGetNamesAndLinks
     else
-    if WebsiteID = FAKKU_ID then
+    if MangaSiteID = FAKKU_ID then
       Result := FakkuGetNamesAndLinks
     else
-    if WebsiteID = STARKANA_ID then
+    if MangaSiteID = STARKANA_ID then
       Result := StarkanaGetNamesAndLinks
     else
-    if WebsiteID = EATMANGA_ID then
+    if MangaSiteID = EATMANGA_ID then
       Result := EatMangaGetNamesAndLinks
     else
-    if WebsiteID = S2SCAN_ID then
+    if MangaSiteID = S2SCAN_ID then
       Result := S2ScanGetNamesAndLinks
     else
-    if WebsiteID = EGSCANS_ID then
+    if MangaSiteID = EGSCANS_ID then
       Result := EGScansGetNamesAndLinks
     else
-    if WebsiteID = MEINMANGA_ID then
+    if MangaSiteID = MEINMANGA_ID then
       Result := MeinMangaGetNamesAndLinks
     else
-    if WebsiteID = BLOGTRUYEN_ID then
+    if MangaSiteID = BLOGTRUYEN_ID then
       Result := BlogTruyenGetNamesAndLinks
     else
-    if WebsiteID = TRUYENTRANHTUAN_ID then
+    if MangaSiteID = TRUYENTRANHTUAN_ID then
       Result := TruyenTranhTuanGetNamesAndLinks
     else
-    if WebsiteID = ESMANGAHERE_ID then
+    if MangaSiteID = ESMANGAHERE_ID then
       Result := EsMangaHereGetNamesAndLinks
     else
-    if WebsiteID = ANIMEEXTREMIST_ID then
+    if MangaSiteID = ANIMEEXTREMIST_ID then
       Result := AnimeExtremistGetNamesAndLinks
     else
-    if WebsiteID = ANIMESTORY_ID then
+    if MangaSiteID = ANIMESTORY_ID then
       Result := AnimeStoryGetNamesAndLinks
     else
-    if WebsiteID = LECTUREENLIGNE_ID then
+    if MangaSiteID = LECTUREENLIGNE_ID then
       Result := LectureEnLigneGetNamesAndLinks
     else
-    if WebsiteID = SCANMANGA_ID then
+    if MangaSiteID = SCANMANGA_ID then
       Result := ScanMangaGetNamesAndLinks
     else
-    if WebsiteID = MANGAAR_ID then
+    if MangaSiteID = MANGAAR_ID then
       Result := MangaArGetNamesAndLinks
     else
-    if WebsiteID = MANGAAE_ID then
+    if MangaSiteID = MANGAAE_ID then
       Result := MangaAeGetNamesAndLinks
     else
-    if WebsiteID = CENTRALDEMANGAS_ID then
+    if MangaSiteID = CENTRALDEMANGAS_ID then
       Result := CentralDeMangasGetNamesAndLinks
     else
-    if WebsiteID = IMANHUA_ID then
+    if MangaSiteID = IMANHUA_ID then
       Result := imanhuaGetNamesAndLinks
     else
-    if WebsiteID = TURKCRAFT_ID then
+    if MangaSiteID = TURKCRAFT_ID then
       Result := TurkcraftGetNamesAndLinks
     else
-    if WebsiteID = KIVMANGA_ID then
+    if MangaSiteID = KIVMANGA_ID then
       Result := KivmangaGetNamesAndLinks
     else
-    if WebsiteID = MANGASPROJECT_ID then
+    if MangaSiteID = MANGASPROJECT_ID then
       Result := MangasPROJECTGetNamesAndLinks
     else
-    if WebsiteID = MANGAREADER_POR_ID then
+    if MangaSiteID = MANGAREADER_POR_ID then
       Result := MangaREADER_PORGetNamesAndLinks
     else
-    if (WebsiteID = NINEMANGA_ID) or
-      (WebsiteID = NINEMANGA_ES_ID) or
-      (WebsiteID = NINEMANGA_CN_ID) or
-      (WebsiteID = NINEMANGA_RU_ID) or
-      (WebsiteID = NINEMANGA_DE_ID) or
-      (WebsiteID = NINEMANGA_IT_ID) or
-      (WebsiteID = NINEMANGA_BR_ID) then
+    if (MangaSiteID = NINEMANGA_ID) or
+      (MangaSiteID = NINEMANGA_ES_ID) or
+      (MangaSiteID = NINEMANGA_CN_ID) or
+      (MangaSiteID = NINEMANGA_RU_ID) or
+      (MangaSiteID = NINEMANGA_DE_ID) or
+      (MangaSiteID = NINEMANGA_IT_ID) or
+      (MangaSiteID = NINEMANGA_BR_ID) then
       Result := NineMangaGetNamesAndLinks
     else
-    if WebsiteID = JAPANSHIN_ID then
+    if MangaSiteID = JAPANSHIN_ID then
       Result := JapanShinGetNamesAndLinks
     else
-    if WebsiteID = CENTRUMMANGI_PL_ID then
+    if MangaSiteID = CENTRUMMANGI_PL_ID then
       Result := CentrumMangi_PLGetNamesAndLinks
     else
-    if WebsiteID = MANGALIB_PL_ID then
+    if MangaSiteID = MANGALIB_PL_ID then
       Result := MangaLib_PLGetNamesAndLinks
     else
-    if WebsiteID = ONEMANGA_ID then
+    if MangaSiteID = ONEMANGA_ID then
       Result := OneMangaGetNamesAndLinks
     else
-   if WebsiteID = MANGATOWN_ID then
+   if MangaSiteID = MANGATOWN_ID then
       Result := MangaTownGetNamesAndLinks
     else
-    if WebsiteID = MANGAOKU_ID then
+    if MangaSiteID = MANGAOKU_ID then
       Result := MangaOkuGetNamesAndLinks
     else
-    if WebsiteID = MYREADINGMANGAINFO_ID then
+    if MangaSiteID = MYREADINGMANGAINFO_ID then
       Result := MyReadingMangaInfoNamesAndLinks
     else
-    if WebsiteID = IKOMIK_ID then
+    if MangaSiteID = IKOMIK_ID then
       Result := IKomikNamesAndLinks
     else
-    if WebsiteID = NHENTAI_ID then
+    if MangaSiteID = NHENTAI_ID then
       Result := NHentaiNamesAndLinks
     else
-    if WebsiteID = MANGAMINT_ID then
+    if MangaSiteID = MANGAMINT_ID then
       Result := MangaMintGetNamesAndLinks
     else
-    if WebsiteID = UNIXMANGA_ID then
+    if MangaSiteID = UNIXMANGA_ID then
       Result := UnixMangaNamesAndLinks
     else
-    if WebsiteID = EXTREMEMANGAS_ID then
+    if MangaSiteID = EXTREMEMANGAS_ID then
       Result := ExtremeMangasNamesAndLinks
     else
-    if WebsiteID = MANGAHOST_ID then
+    if MangaSiteID = MANGAHOST_ID then
       Result := MangaHostGetNamesAndLinks
     else
-    if WebsiteID = MANGAKU_ID then
+    if MangaSiteID = MANGAKU_ID then
       Result := MangaKuGetNamesAndLinks
     else
-    if WebsiteID = MANGAAT_ID then
+    if MangaSiteID = MANGAAT_ID then
       Result := MangaAtGetNamesAndLinks
     else
-    if WebsiteID = DYNASTYSCANS_ID then
+    if MangaSiteID = DYNASTYSCANS_ID then
       Result := DynastyScansGetNamesAndLinks
     else
     begin
@@ -1166,7 +1166,7 @@ var
   del: Boolean;
   Source: TStringList;
   Parser: THTMLParser;
-  WebsiteID: Cardinal;
+  MangaSiteID: Integer;
 
   {$I includes/AnimeA/manga_information.inc}
 
@@ -1272,135 +1272,135 @@ begin
   end
   else
   begin
-    WebsiteID := GetMangaSiteID(AWebsite);
-    if WebsiteID > High(WebsiteRoots) then
+    MangaSiteID := GetMangaSiteID(AWebsite);
+    if MangaSiteID > High(WebsiteRoots) then
       Exit(INFORMATION_NOT_FOUND);
-    mangaInfo.url := FillMangaSiteHost(WebsiteID, AURL);
+    mangaInfo.url := FillMangaSiteHost(MangaSiteID, AURL);
     Source := TStringList.Create;
-    if WebsiteID = ANIMEA_ID then
+    if MangaSiteID = ANIMEA_ID then
       Result := GetAnimeAInfoFromURL
     else
-    if WebsiteID = MANGA24H_ID then
+    if MangaSiteID = MANGA24H_ID then
       Result := GetManga24hInfoFromURL
     else
-    if WebsiteID = VNSHARING_ID then
+    if MangaSiteID = VNSHARING_ID then
       Result := GetVnSharingInfoFromURL
     else
-    if WebsiteID = FAKKU_ID then
+    if MangaSiteID = FAKKU_ID then
       Result := GetFakkuInfoFromURL
     else
-    if WebsiteID = STARKANA_ID then
+    if MangaSiteID = STARKANA_ID then
       Result := GetStarkanaInfoFromURL
     else
-    if WebsiteID = EATMANGA_ID then
+    if MangaSiteID = EATMANGA_ID then
       Result := GetEatMangaInfoFromURL
     else
-    if WebsiteID = S2SCAN_ID then
+    if MangaSiteID = S2SCAN_ID then
       Result := GetS2scanInfoFromURL
     else
-    if WebsiteID = EGSCANS_ID then
+    if MangaSiteID = EGSCANS_ID then
       Result := GetEGScansInfoFromURL
     else
-    if WebsiteID = TRUYENTRANHTUAN_ID then
+    if MangaSiteID = TRUYENTRANHTUAN_ID then
       Result := GetTruyenTranhTuanInfoFromURL
     else
-    if WebsiteID = MEINMANGA_ID then
+    if MangaSiteID = MEINMANGA_ID then
       Result := GetMeinMangaInfoFromURL
     else
-    if WebsiteID = ESMANGAHERE_ID then
+    if MangaSiteID = ESMANGAHERE_ID then
       Result := GetEsMangaHereInfoFromURL
     else
-    if WebsiteID = ANIMEEXTREMIST_ID then
+    if MangaSiteID = ANIMEEXTREMIST_ID then
       Result := GetAnimeExtremistInfoFromURL
     else
-    if WebsiteID = ANIMESTORY_ID then
+    if MangaSiteID = ANIMESTORY_ID then
       Result := GetAnimeStoryInfoFromURL
     else
-    if WebsiteID = LECTUREENLIGNE_ID then
+    if MangaSiteID = LECTUREENLIGNE_ID then
       Result := GetLectureEnLigneInfoFromURL
     else
-    if WebsiteID = SCANMANGA_ID then
+    if MangaSiteID = SCANMANGA_ID then
       Result := GetScanMangaInfoFromURL
     else
-    if WebsiteID = TURKCRAFT_ID then
+    if MangaSiteID = TURKCRAFT_ID then
       Result := GetTurkcraftInfoFromURL
     else
-    if WebsiteID = MANGAAR_ID then
+    if MangaSiteID = MANGAAR_ID then
       Result := GetMangaArInfoFromURL
     else
-    if WebsiteID = MANGAAE_ID then
+    if MangaSiteID = MANGAAE_ID then
       Result := GetMangaAeInfoFromURL
     else
-    if WebsiteID = CENTRALDEMANGAS_ID then
+    if MangaSiteID = CENTRALDEMANGAS_ID then
       Result := GetCentralDeMangasInfoFromURL
     else
-    if WebsiteID = BLOGTRUYEN_ID then
+    if MangaSiteID = BLOGTRUYEN_ID then
       Result := GetBlogTruyenInfoFromURL
     else
-    if WebsiteID = KIVMANGA_ID then
+    if MangaSiteID = KIVMANGA_ID then
       Result := GetKivmangaInfoFromURL
     else
-    if WebsiteID = MANGASPROJECT_ID then
+    if MangaSiteID = MANGASPROJECT_ID then
       Result := GetMangasPROJECTInfoFromURL
     else
-    if WebsiteID = MANGAREADER_POR_ID then
+    if MangaSiteID = MANGAREADER_POR_ID then
       Result := GetMangaREADER_PORInfoFromURL
     else
-    if (WebsiteID = NINEMANGA_ID) or
-      (WebsiteID = NINEMANGA_ES_ID) or
-      (WebsiteID = NINEMANGA_CN_ID) or
-      (WebsiteID = NINEMANGA_RU_ID) or
-      (WebsiteID = NINEMANGA_DE_ID) or
-      (WebsiteID = NINEMANGA_IT_ID) or
-      (WebsiteID = NINEMANGA_BR_ID) then
+    if (MangaSiteID = NINEMANGA_ID) or
+      (MangaSiteID = NINEMANGA_ES_ID) or
+      (MangaSiteID = NINEMANGA_CN_ID) or
+      (MangaSiteID = NINEMANGA_RU_ID) or
+      (MangaSiteID = NINEMANGA_DE_ID) or
+      (MangaSiteID = NINEMANGA_IT_ID) or
+      (MangaSiteID = NINEMANGA_BR_ID) then
       Result := GetNineMangaInfoFromURL
     else
-    if WebsiteID = JAPANSHIN_ID then
+    if MangaSiteID = JAPANSHIN_ID then
       Result := GetJapanShinInfoFromURL
     else
-    if WebsiteID = CENTRUMMANGI_PL_ID then
+    if MangaSiteID = CENTRUMMANGI_PL_ID then
       Result := GetCentrumMangi_PLInfoFromURL
     else
-    if WebsiteID = MANGALIB_PL_ID then
+    if MangaSiteID = MANGALIB_PL_ID then
       Result := GetMangaLib_PLInfoFromURL
     else
-    if WebsiteID = ONEMANGA_ID then
+    if MangaSiteID = ONEMANGA_ID then
       Result := GetOneMangaInfoFromURL
     else
-    if WebsiteID = MANGATOWN_ID then
+    if MangaSiteID = MANGATOWN_ID then
       Result := GetMangaTownInfoFromURL
     else
-    if WebsiteID = MANGAOKU_ID then
+    if MangaSiteID = MANGAOKU_ID then
       Result := GetMangaOkuInfoFromURL
     else
-    if WebsiteID = MYREADINGMANGAINFO_ID then
+    if MangaSiteID = MYREADINGMANGAINFO_ID then
       Result := GetMyReadingMangaInfoInfoFromURL
     else
-    if WebsiteID = IKOMIK_ID then
+    if MangaSiteID = IKOMIK_ID then
       Result := GetIKomikInfoFromURL
     else
-    if WebsiteID = NHENTAI_ID then
+    if MangaSiteID = NHENTAI_ID then
       Result := GetNHentaiInfoFromURL
     else
-    if WebsiteID = MANGAMINT_ID then
+    if MangaSiteID = MANGAMINT_ID then
       Result := GetMangaMintInfoFromURL
     else
-    if WebsiteID = UNIXMANGA_ID then
+    if MangaSiteID = UNIXMANGA_ID then
       Result := GetUnixMangaInfoFromURL
     else
-    if WebsiteID = EXTREMEMANGAS_ID then
+    if MangaSiteID = EXTREMEMANGAS_ID then
       Result := GetExtremeMangasInfoFromURL
     else
-    if WebsiteID = MANGAHOST_ID then
+    if MangaSiteID = MANGAHOST_ID then
       Result := GetMangaHostInfoFromURL
     else
-    if WebsiteID = MANGAKU_ID then
+    if MangaSiteID = MANGAKU_ID then
       Result := GetMangaKuInfoFromURL
     else
-    if WebsiteID = MANGAAT_ID then
+    if MangaSiteID = MANGAAT_ID then
       Result := GetMangaAtInfoFromURL
     else
-    if WebsiteID = DYNASTYSCANS_ID then
+    if MangaSiteID = DYNASTYSCANS_ID then
       Result := GetDynastyScansInfoFromURL
     else
     begin
