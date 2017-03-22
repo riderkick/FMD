@@ -10,11 +10,12 @@ unit CheckUpdate;
 interface
 
 uses
-  Classes, SysUtils, Forms, Controls, uBaseUnit, FMDOptions, httpsendthread;
+  Classes, SysUtils, Forms, Controls, uBaseUnit, FMDOptions, httpsendthread,
+  BaseThread;
 
 type
 
-  TCheckUpdateThread = class(THTTPThread)
+  TCheckUpdateThread = class(TBaseThread)
   private
     FHTTP: THTTPSendThread;
     fNewVersionNumber, fUpdateURL, fChangelog: String;

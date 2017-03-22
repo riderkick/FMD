@@ -12,14 +12,15 @@ interface
 
 uses
   Classes, SysUtils, typinfo, uData, LazFileUtils, uBaseUnit, uMisc,
-  WebsiteModules, DBDataProcess, SimpleTranslator, FMDOptions, httpsendthread, MultiLog;
+  WebsiteModules, DBDataProcess, SimpleTranslator, FMDOptions, httpsendthread,
+  BaseThread, MultiLog;
 
 type
   TUpdateListManagerThread = class;
 
   { TUpdateListThread }
 
-  TUpdateListThread = class(THTTPThread)
+  TUpdateListThread = class(TBaseThread)
   protected
     Info: TMangaInformation;
     checkStyle: TCheckStyleType;
@@ -35,7 +36,7 @@ type
 
   { TUpdateListManagerThread }
 
-  TUpdateListManagerThread = class(THTTPThread)
+  TUpdateListManagerThread = class(TBaseThread)
   private
     FStatus: String;
     FCommitCount: Integer;

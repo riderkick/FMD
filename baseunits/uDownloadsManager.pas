@@ -18,7 +18,7 @@ uses
   LazFileUtils, FastHTMLParser, HTMLUtil, SynaCode, RegExpr, IniFiles, Classes,
   SysUtils, ExtCtrls, typinfo, fgl, blcksock, MultiLog, uBaseUnit, uPacker,
   uMisc, DownloadedChaptersDB, FMDOptions, httpsendthread, DownloadsDB,
-  dateutils, strutils;
+  BaseThread, dateutils, strutils;
 
 type
   TDownloadStatusType = (
@@ -40,7 +40,7 @@ type
 
   { TDownloadThread }
 
-  TDownloadThread = class(THTTPThread)
+  TDownloadThread = class(TBaseThread)
   private
     parse: TStringList;
   public
@@ -75,7 +75,7 @@ type
 
   { TTaskThread }
 
-  TTaskThread = class(THTTPThread)
+  TTaskThread = class(TBaseThread)
   private
     FCS_THREADS: TRTLCriticalSection;
     FCheckAndActiveTaskFlag: Boolean;

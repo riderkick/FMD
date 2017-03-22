@@ -15,7 +15,7 @@ interface
 
 uses
   Classes, SysUtils, uBaseUnit, DBDataProcess, FMDOptions, httpsendthread,
-  LazFileUtils, strutils, RegExpr, httpsend, MultiLog;
+  BaseThread, LazFileUtils, strutils, RegExpr, httpsend, MultiLog;
 
 type
 
@@ -89,7 +89,7 @@ type
 
     procedure OnTag(NoCaseTag, ActualTag: String);
     procedure OnText(AText: String);
-    constructor Create(AOwnerThread: THTTPThread = nil; ACreateInfo: Boolean = True);
+    constructor Create(AOwnerThread: TBaseThread = nil; ACreateInfo: Boolean = True);
     destructor Destroy; override;
     procedure ClearInfo;
     function GetDirectoryPage(var APage: Integer; const AWebsite: String): Byte;
@@ -713,7 +713,7 @@ end;
 
 { TMangaInformation }
 
-constructor TMangaInformation.Create(AOwnerThread: THTTPThread; ACreateInfo: Boolean);
+constructor TMangaInformation.Create(AOwnerThread: TBaseThread; ACreateInfo: Boolean);
 begin
   inherited Create;
   FHTTP := THTTPSendThread.Create(AOwnerThread);

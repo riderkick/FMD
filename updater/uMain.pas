@@ -11,7 +11,7 @@ uses
   {$endif}
   Classes, SysUtils, zipper, FileUtil, LazFileUtils, LazUTF8, LazUTF8Classes,
   Forms, Dialogs, ComCtrls, StdCtrls, ExtCtrls, RegExpr, IniFiles, blcksock,
-  ssl_openssl, ssl_openssl_lib, synacode, httpsendthread, uMisc,
+  ssl_openssl, ssl_openssl_lib, synacode, httpsendthread, uMisc, BaseThread,
   SimpleTranslator, SimpleException;
 
 type
@@ -39,7 +39,7 @@ type
 
   { TDownloadThread }
 
-  TDownloadThread = class(THTTPThread)
+  TDownloadThread = class(TBaseThread)
   private
     FTotalSize, FCurrentSize: Integer;
     FHTTP: THTTPSendThread;

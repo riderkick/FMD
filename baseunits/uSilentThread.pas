@@ -16,7 +16,7 @@ interface
 
 uses
   SysUtils, fgl, uBaseUnit, uData, uDownloadsManager,
-  WebsiteModules, FMDOptions, httpsendthread, LazFileUtils;
+  WebsiteModules, FMDOptions, httpsendthread, BaseThread, LazFileUtils;
 
 type
 
@@ -36,7 +36,7 @@ type
 
   { TSilentThread }
 
-  TSilentThread = class(THTTPThread)
+  TSilentThread = class(TBaseThread)
   protected
     FSavePath: String;
     Info: TMangaInformation;
@@ -62,7 +62,7 @@ type
 
   { TSilentThreadManagerThread }
 
-  TSilentThreadManagerThread = class(THTTPThread)
+  TSilentThreadManagerThread = class(TBaseThread)
   protected
     procedure Checkout;
     procedure Execute; override;

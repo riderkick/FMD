@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, Buttons,
   ExtCtrls, VirtualTrees, accountmanagerdb, WebsiteModules,
-  FMDOptions, HTTPSendThread, frmAccountSet, SimpleException;
+  FMDOptions, HTTPSendThread, BaseThread, frmAccountSet, SimpleException;
 
 type
 
@@ -58,7 +58,7 @@ type
 
   { TAccountCheckThread }
 
-  TAccountCheckThread = class(THTTPThread)
+  TAccountCheckThread = class(TBaseThread)
   private
     fwebsite: String;
     fhttp: THTTPSendThread;
