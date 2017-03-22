@@ -6,29 +6,15 @@ interface
 
 uses
   Classes, SysUtils, httpsend, synautil, synacode, ssl_openssl, blcksock,
-  GZIPUtils;
+  GZIPUtils, BaseThread;
 
 type
-
-  { THTTPThread }
-
-  THTTPThread = class(TThread)
-  private
-    FOnCustomTerminate: TNotifyEvent;
-    function GetTerminated: Boolean;
-    procedure CallOnCustomTerminate; inline;
-  public
-    constructor Create(CreateSuspended: Boolean = True);
-    procedure Terminate;
-    property IsTerminated: Boolean read GetTerminated;
-    property OnCustomTerminate: TNotifyEvent read FOnCustomTerminate write FOnCustomTerminate;
-  end;
 
   { THTTPSendThread }
 
   THTTPSendThread = class(THTTPSend)
   private
-    FOwner: THTTPThread;
+    FOwner: TBaseThread;
     FRetryCount: Integer;
     FGZip: Boolean;
     FFollowRedirection: Boolean;
@@ -36,7 +22,7 @@ type
     procedure SetTimeout(AValue: Integer);
     procedure OnOwnerTerminate(Sender: TObject);
   public
-    constructor Create(AOwner: THTTPThread = nil);
+    constructor Create(AOwner: TBaseThread = nil);
     destructor Destroy; override;
     function HTTPRequest(const Method, URL: String; const Response: TObject = nil): Boolean;
     function HEAD(const URL: String; const Response: TObject = nil): Boolean;
@@ -53,7 +39,7 @@ type
     property GZip: Boolean read FGZip write FGZip;
     property FollowRedirection: Boolean read FFollowRedirection write FFollowRedirection;
     property AllowServerErrorResponse: Boolean read FAllowServerErrorResponse write FAllowServerErrorResponse;
-    property Thread: THTTPThread read FOwner;
+    property Thread: TBaseThread read FOwner;
   end;
 
   TKeyValuePair = array[0..1] of String;
@@ -276,31 +262,6 @@ begin
     Result := EncodeURL(Result);
 end;
 
-{ THTTPThread }
-
-function THTTPThread.GetTerminated: Boolean;
-begin
-  Result := Self.Terminated;
-end;
-
-procedure THTTPThread.CallOnCustomTerminate;
-begin
-  FOnCustomTerminate(Self);
-end;
-
-constructor THTTPThread.Create(CreateSuspended: Boolean);
-begin
-  inherited Create(CreateSuspended);
-  FreeOnTerminate := True;
-end;
-
-procedure THTTPThread.Terminate;
-begin
-  inherited Terminate;
-  if Assigned(FOnCustomTerminate) then
-    FOnCustomTerminate(Self);
-end;
-
 { THTTPSendThread }
 
 procedure THTTPSendThread.SetTimeout(AValue: Integer);
@@ -317,7 +278,7 @@ begin
   Sock.AbortSocket;
 end;
 
-constructor THTTPSendThread.Create(AOwner: THTTPThread);
+constructor THTTPSendThread.Create(AOwner: TBaseThread);
 begin
   inherited Create;
   KeepAlive := True;
