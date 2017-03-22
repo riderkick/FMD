@@ -65,8 +65,6 @@ end;
 
 function GetPageNumber(const DownloadThread: TDownloadThread; const AURL: String;
   const Module: TModuleContainer): Boolean;
-var
-  s: String;
 begin
   Result := False;
   if DownloadThread = nil then Exit;
