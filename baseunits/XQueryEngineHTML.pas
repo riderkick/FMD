@@ -5,7 +5,7 @@ unit XQueryEngineHTML;
 interface
 
 uses
-  Classes, SysUtils, xquery, xquery_json, simplehtmltreeparser;
+  Classes, SysUtils, xquery, xquery_json, simplehtmltreeparser, BaseThread;
 
 type
 
@@ -13,10 +13,15 @@ type
 
   TXQueryEngineHTML = class
   private
+    FIsMainThread: Boolean;
     FEngine: TXQueryEngine;
     FTreeParser: TTreeParser;
     function Eval(const Expression: String; const isCSS: Boolean = False;
       const ContextItem: IXQValue = nil; const Tree: TTreeNode = nil): IXQValue;
+    function EvalString(const Expression: String; const isCSS: Boolean = False;
+      const ContextItem: IXQValue = nil; const Tree: TTreeNode = nil): String;
+    function EvalCount(const Expression: String; const isCSS: Boolean = False;
+      const ContextItem: IXQValue = nil; const Tree: TTreeNode = nil): Integer;
     function EvalStringAll(const Expression: String; const isCSS: Boolean;
       const Separator: String = ', '; const ContextItem: IXQValue = nil): String; overload;
     function EvalStringAll(const Expression: String; const isCSS: Boolean;
@@ -35,6 +40,8 @@ type
     function XPath(const Expression: String; const ContextItem: IXQValue): IXQValue; inline;
     function XPathString(const Expression: String; const Tree: TTreeNode = nil): String; inline;
     function XPathString(const Expression: String; const ContextItem: IXQValue): String; inline;
+    function XPathCount(const Expression: String; const Tree: TTreeNode = nil): Integer; inline;
+    function XPathCount(const Expression: String; const ContextItem: IXQValue): Integer; inline;
     function XPathStringAll(const Expression: String; const Separator: String = ', ';
       const ContextItem: IXQValue = nil): String; overload; inline;
     function XPathStringAll(const Expression: String; const Exc: array of String;
@@ -66,7 +73,7 @@ type
 
 function XPathString(const Expression, HTMLString: String): String; overload;
 function XPathString(const Expression: String; const HTMLStream: TStream): String; overload;
-function XPathCount(const Expression: String; const HTMLStream: TStream): Integer; overload;
+function XPathCount(const Expression: String; const HTMLStream: TStream): Integer;
 procedure XPathStringAll(const Expression: String; const HTMLStream: TStream; const TheStrings: TStrings);
 procedure XPathHREFAll(const Expression: String; const HTMLStream: TStream; const ALinks, ATexts: TStrings);
 procedure XPathHREFtitleAll(const Expression: String; const HTMLStream: TStream; const ALinks, ATitles: TStrings);
@@ -111,7 +118,7 @@ begin
   Result := '';
   with TXQueryEngineHTML.Create(HTMLString) do
     try
-      Result := XPath(Expression).toString;
+      Result := XPathString(Expression);
     finally
       Free;
     end;
@@ -127,7 +134,7 @@ begin
   Result := 0;
   with TXQueryEngineHTML.Create(HTMLStream) do
     try
-      Result := XPath(Expression).Count;
+      Result := XPathCount(Expression);
     finally
       Free;
     end;
@@ -198,41 +205,95 @@ begin
   end;
 end;
 
-function TXQueryEngineHTML.EvalStringAll(const Expression: String; const isCSS: Boolean;
-  const Separator: String; const ContextItem: IXQValue): String;
+function TXQueryEngineHTML.EvalString(const Expression: String;
+  const isCSS: Boolean; const ContextItem: IXQValue; const Tree: TTreeNode
+  ): String;
 var
   v: IXQValue;
 begin
+  v := Eval(Expression, isCSS, ContextItem, Tree);
+  Result := v.toString;
+  v := nil;
+end;
+
+function TXQueryEngineHTML.EvalCount(const Expression: String;
+  const isCSS: Boolean; const ContextItem: IXQValue; const Tree: TTreeNode
+  ): Integer;
+var
+  v: IXQValue;
+begin
+  v := Eval(Expression, isCSS, ContextItem, Tree);
+  Result := v.Count;
+  v := nil;
+end;
+
+function TXQueryEngineHTML.EvalStringAll(const Expression: String; const isCSS: Boolean;
+  const Separator: String; const ContextItem: IXQValue): String;
+var
+  v, x: IXQValue;
+  i: Integer;
+begin
   Result := '';
-  for v in Eval(Expression, isCSS, ContextItem) do
-    AddSeparatorString(Result, v.toString, Separator);
+  v := Eval(Expression, isCSS, ContextItem);
+  for i := 1 to v.Count do
+  begin
+    x := v.get(i);
+    AddSeparatorString(Result, x.toString, Separator);
+  end;
+  x := nil;
+  v := nil;
 end;
 
 function TXQueryEngineHTML.EvalStringAll(const Expression: String; const isCSS: Boolean;
   const Exc: array of String; const Separator: String; const ContextItem: IXQValue
   ): String;
 var
-  v: IXQValue;
+  v, x: IXQValue;
+  i: Integer;
 begin
   Result := '';
-  for v in Eval(Expression, isCSS, ContextItem) do
-    if StringInArray(Trim(v.toString), Exc) = False then
-      AddSeparatorString(Result, v.toString, Separator);
+  v := Eval(Expression, isCSS, ContextItem);
+  for i := 1 to v.Count do
+  begin
+    x := v.get(i);
+    if not StringInArray(Trim(x.toString), Exc) then
+      AddSeparatorString(Result, x.toString, Separator);
+  end;
+  x := nil;
+  v := nil;
 end;
 
 procedure TXQueryEngineHTML.EvalStringAll(const Expression: String; const isCSS: Boolean;
   const TheStrings: TStrings; ContextItem: IXQValue);
 var
-  v: IXQValue;
+  v, x: IXQValue;
+  i: Integer;
 begin
-  for v in Eval(Expression, isCSS, ContextItem) do
-    TheStrings.Add(v.toString);
+  v := Eval(Expression, isCSS, ContextItem);
+  for i := 1 to v.Count do
+  begin
+    x := v.get(i);
+    TheStrings.Add(x.toString);
+  end;
+  x := nil;
+  v := nil;
 end;
 
 constructor TXQueryEngineHTML.Create(const HTML: String);
+var
+  ct: TThread;
 begin
+  FIsMainThread := GetThreadID = MainThreadID;
   FEngine := TXQueryEngine.Create;
   FTreeParser := TTreeParser.Create;
+  if not FIsMainThread then
+  begin
+    ct := TThread.CurrentThread;
+    if ct is TBaseThread then
+      TBaseThread(ct).ObjectList.Add(FEngine)
+    else
+      FIsMainThread := True;
+  end;
   with FTreeParser do
   begin
     parsingModel := pmHTML;
@@ -257,7 +318,10 @@ end;
 
 destructor TXQueryEngineHTML.Destroy;
 begin
-  FEngine.Free;
+  if FIsMainThread then
+    FEngine.Free
+  else
+    FEngine := nil;
   FTreeParser.Free;
   inherited Destroy;
 end;
@@ -286,13 +350,25 @@ end;
 
 function TXQueryEngineHTML.XPathString(const Expression: String; const Tree: TTreeNode): String;
 begin
-  Result := Eval(Expression, False, nil, Tree).toString;
+  Result := EvalString(Expression, False, nil, Tree);
 end;
 
 function TXQueryEngineHTML.XPathString(const Expression: String;
   const ContextItem: IXQValue): String;
 begin
-  Result := Eval(Expression, False, ContextItem).toString;
+  Result := EvalString(Expression, False, ContextItem);
+end;
+
+function TXQueryEngineHTML.XPathCount(const Expression: String;
+  const Tree: TTreeNode): Integer;
+begin
+  Result := EvalCount(Expression, False, nil, Tree);
+end;
+
+function TXQueryEngineHTML.XPathCount(const Expression: String;
+  const ContextItem: IXQValue): Integer;
+begin
+  Result := EvalCount(Expression, False, ContextItem);
 end;
 
 function TXQueryEngineHTML.XPathStringAll(const Expression: String;
@@ -317,25 +393,35 @@ end;
 procedure TXQueryEngineHTML.XPathHREFAll(const Expression: String;
   const ALinks, ATexts: TStrings; const ContextItem: IXQValue);
 var
-  v: IXQValue;
+  v, x: IXQValue;
+  i: Integer;
 begin
-  for v in Eval(Expression, False, ContextItem) do
+  v := Eval(Expression, False, ContextItem);
+  for i := 1  to v.Count  do
   begin
-    ALinks.Add(v.toNode.getAttribute('href'));
-    ATexts.Add(v.toString);
+    x := v.get(i);
+    ALinks.Add(x.toNode.getAttribute('href'));
+    ATexts.Add(x.toString);
   end;
+  x := nil;
+  v := nil;
 end;
 
 procedure TXQueryEngineHTML.XPathHREFtitleAll(const Expression: String;
   const ALinks, ATitles: TStrings; const ContextItem: IXQValue);
 var
-  v: IXQValue;
+  v, x: IXQValue;
+  i: Integer;
 begin
-  for v in Eval(Expression, False, ContextItem) do
+  v := Eval(Expression, False, ContextItem);
+  for i := 1 to v.Count do
   begin
-    ALinks.Add(v.toNode.getAttribute('href'));
-    ATitles.Add(v.toNode.getAttribute('title'));
+    x := v.get(i);
+    ALinks.Add(x.toNode.getAttribute('href'));
+    ATitles.Add(x.toNode.getAttribute('title'));
   end;
+  x := nil;
+  v := nil;
 end;
 
 function TXQueryEngineHTML.CSS(const Expression: String; const Tree: TTreeNode): IXQValue;
@@ -351,13 +437,13 @@ end;
 
 function TXQueryEngineHTML.CSSString(const Expression: String; const Tree: TTreeNode): String;
 begin
-  Result := Eval(Expression, True, nil, Tree).toString;
+  Result := EvalString(Expression, True, nil, Tree);
 end;
 
 function TXQueryEngineHTML.CSSString(const Expression: String;
   const ContextItem: IXQValue): String;
 begin
-  Result := Eval(Expression, True, ContextItem).toString;
+  Result := EvalString(Expression, True, ContextItem);
 end;
 
 function TXQueryEngineHTML.CSSStringAll(const Expression: String;
