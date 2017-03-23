@@ -22,12 +22,7 @@ begin
   if MangaInfo.FHTTP.GET(Module.RootURL + dirurl + '1') then
   begin
     Result := NO_ERROR;
-    with TXQueryEngineHTML.Create(MangaInfo.FHTTP.Document) do
-      try
-        page := XPath('//div/a[@class="btn btn-sm btn-icon"]').Count;
-      finally
-        Free;
-      end;
+    Page := XPathCount('//div/a[@class="btn btn-sm btn-icon"]', MangaInfo.FHTTP.Document);
   end;
 end;
 
@@ -42,16 +37,7 @@ begin
   if MangaInfo.FHTTP.GET(Module.RootURL + dirurl + IncStr(AURL)) then
   begin
     Result := NO_ERROR;
-    with TXQueryEngineHTML.Create(MangaInfo.FHTTP.Document) do
-      try
-        for v in XPath('//div[@class="row"]/div/div/a') do
-        begin
-          ALinks.Add(v.toNode.getAttribute('href'));
-          ANames.Add(v.toString);
-        end;
-      finally
-        Free;
-      end;
+    XPathHREFAll('//div[@class="row"]/div/div/a', MangaInfo.FHTTP.Document, ALinks, ANames);
   end;
 end;
 
@@ -72,6 +58,8 @@ begin
         try
           coverLink := XPathString('//div[@class="mangas"]/div[@class="manga"]/img/@src');
           if coverLink <> '' then coverLink := MaybeFillHost(Module.RootURL, coverLink);
+          if (coverLink <> '') and (LeftStr(coverLink, 2) = '//') then
+            coverLink := 'https:' + coverLink;
           if title = '' then title := SeparateRight(XPathString('//ul[@class="lead"]/li[starts-with(.,"Name: ")]'), ': ');
           s := XPathString('//ul[@class="lead"]/li[starts-with(.,"Status: ")]');
           if Pos('Ongoing', s) > 0 then
@@ -138,6 +126,8 @@ end;
 
 function GetImageURL(const DownloadThread: TDownloadThread;
   const AURL: String; const Module: TModuleContainer): Boolean;
+var
+  s: String;
 begin
   Result := False;
   if DownloadThread = nil then Exit;
@@ -146,12 +136,10 @@ begin
     if GET(FillHost(Module.RootURL, AURL) + IncStr(DownloadThread.WorkId)) then
     begin
       Result := True;
-      with TXQueryEngineHTML.Create(Document) do
-        try
-          PageLinks[DownloadThread.WorkId] := XPathString('//img[@id="img-content"]/@src');
-        finally
-          Free;
-        end;
+      s := XPathString('//img[@id="img-content"]/@src', Document);
+      if LeftStr(s, 2) = '//' then
+        s := 'https:' + s;
+      PageLinks[DownloadThread.WorkId] := s;
     end;
   end;
 end;
@@ -161,7 +149,7 @@ begin
   with AddModule do
   begin
     Website := 'HeyManga';
-    RootURL := 'http://www.heymanga.xyz';
+    RootURL := 'https://www.heymanga.me';
     OnGetDirectoryPageNumber := @GetDirectoryPageNumber;
     OnGetNameAndLink := @GetNameAndLink;
     OnGetInfo := @GetInfo;
