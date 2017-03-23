@@ -6,13 +6,16 @@ interface
 
 uses
   Classes, SysUtils, WebsiteModules, uData, uBaseUnit, uDownloadsManager,
-  XQueryEngineHTML, httpsendthread, Cloudflare, RegExpr, synautil;
+  XQueryEngineHTML, httpsendthread, BaseCrypto, Cloudflare, RegExpr, synautil;
 
 implementation
 
 const
   kissmangadirurl = '/MangaList/Newest';
   readcomiconlinedirurl = '/ComicList/Newest';
+
+  kissmangaiv: array[0..15] of byte = ($a5, $e8, $e2, $e9, $c2, $72, $1b, $e0, $a8, $4a, $d6, $60, $c4, $72, $c1, $f3);
+  kissmangakey='mshsdf832nsdbash20asdmnasdbasd612basd';
 
 var
   kissmangacookies: String = '';
@@ -156,11 +159,14 @@ begin
         if source.Count > 0 then
           for i := 0 to source.Count - 1 do begin
             if Pos('lstImages.push', source[i]) > 0 then
-              PageLinks.Add(GetBetween('.push("', '");', source[i]));
+              PageLinks.Add(GetBetween('("', '")', source[i]));
           end;
       finally
         source.Free;
       end;
+      if (PageLinks.Count <> 0) and (Module.Website = 'KissManga') then
+        for i := 0 to PageLinks.Count - 1 do
+          PageLinks[i] := AESDecryptCBCSHA256Base64Pkcs7(PageLinks[i], kissmangakey, kissmangaiv);
     end;
   end;
 end;
