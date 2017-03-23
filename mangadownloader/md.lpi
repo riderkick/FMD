@@ -228,33 +228,36 @@
         <FormatVersion Value="1"/>
       </local>
     </RunParams>
-    <RequiredPackages Count="8">
+    <RequiredPackages Count="9">
       <Item1>
-        <PackageName Value="BESENPkg"/>
-        <DefaultFilename Value="..\3rd\BESENPkg.lpk" Prefer="True"/>
+        <PackageName Value="dcpcrypt"/>
       </Item1>
       <Item2>
-        <PackageName Value="multiloglaz"/>
+        <PackageName Value="BESENPkg"/>
+        <DefaultFilename Value="..\3rd\BESENPkg.lpk" Prefer="True"/>
       </Item2>
       <Item3>
-        <PackageName Value="laz_synapse"/>
+        <PackageName Value="multiloglaz"/>
       </Item3>
       <Item4>
-        <PackageName Value="internettools"/>
-        <DefaultFilename Value="..\3rd\internettools\internettools.lpk" Prefer="True"/>
+        <PackageName Value="laz_synapse"/>
       </Item4>
       <Item5>
-        <PackageName Value="TAChartLazarusPkg"/>
+        <PackageName Value="internettools"/>
+        <DefaultFilename Value="..\3rd\internettools\internettools.lpk" Prefer="True"/>
       </Item5>
       <Item6>
-        <PackageName Value="richmemopackage"/>
+        <PackageName Value="TAChartLazarusPkg"/>
       </Item6>
       <Item7>
-        <PackageName Value="virtualtreeview_package"/>
+        <PackageName Value="richmemopackage"/>
       </Item7>
       <Item8>
-        <PackageName Value="LCL"/>
+        <PackageName Value="virtualtreeview_package"/>
       </Item8>
+      <Item9>
+        <PackageName Value="LCL"/>
+      </Item9>
     </RequiredPackages>
     <Units Count="13">
       <Unit0>
