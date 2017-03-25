@@ -7,12 +7,33 @@ interface
 uses
   Classes, SysUtils, base64, DCPrijndael, DCPsha256;
 
+procedure HexToBytes(const h: String; var o :TBytes);
+function BytesToHex(const h: TBytes): String;
 function Pkcs7AddPad(const s: String): String;
 function Pkcs7RemovePad(const s: String): String;
-function AESEncrpytCBCSHA256Base64Pkcs7(const s, key: String; const IV): string;
-function AESDecryptCBCSHA256Base64Pkcs7(const s, key: String; const IV): string;
+function AESEncrpytCBCSHA256Base64Pkcs7(const s, key, iv: String): string;
+function AESDecryptCBCSHA256Base64Pkcs7(const s, key, iv: String): string;
 
 implementation
+
+procedure HexToBytes(const h: String; var o :TBytes);
+var
+  i, l: Integer;
+begin
+  l:=Length(h) div 2;
+  SetLength(o,l);
+  for i:=Low(o) to High(o) do
+    o[i]:=Byte(StrToInt('$'+Copy(h,(i*2)+1,2)));
+end;
+
+function BytesToHex(const h: TBytes): String;
+var
+  i: Integer;
+begin
+  Result:='';
+  for i:=Low(h) to High(h) do
+    Result+=hexStr(h[i],2);
+end;
 
 // Pkcs7 padding described in RFC 5652 https://tools.ietf.org/html/rfc5652#section-6.3
 function Pkcs7AddPad(const s: String): String;
@@ -31,15 +52,17 @@ begin
   SetLength(Result,Length(Result)-Ord(Result[Length(Result)]));
 end;
 
-function AESEncrpytCBCSHA256Base64Pkcs7(const s, key: String; const IV): string;
+function AESEncrpytCBCSHA256Base64Pkcs7(const s, key, iv: String): string;
 var
   i: String;
+  ivb: TBytes;
 begin
   Result:='';
   with TDCP_rijndael.Create(nil) do
     try
       InitStr(key,TDCP_sha256);
-      SetIV(IV);
+      HexToBytes(iv,ivb);
+      SetIV(ivb[0]);
       i:=Pkcs7AddPad(s);
       SetLength(Result,Length(i));
       EncryptCBC(i[1],Result[1],Length(i));
@@ -50,15 +73,17 @@ begin
     end;
 end;
 
-function AESDecryptCBCSHA256Base64Pkcs7(const s, key: String; const IV): string;
+function AESDecryptCBCSHA256Base64Pkcs7(const s, key, iv: String): string;
 var
   i: String;
+  ivb: TBytes;
 begin
   Result:='';
   with TDCP_rijndael.Create(nil) do
     try
       InitStr(key,TDCP_sha256);
-      SetIV(IV);
+      HexToBytes(iv,ivb);
+      SetIV(ivb[0]);
       i:=DecodeStringBase64(s);
       SetLength(Result,Length(i));
       DecryptCBC(i[1],Result[1],Length(i));
