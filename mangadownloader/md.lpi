@@ -215,6 +215,9 @@
           </Other>
         </CompilerOptions>
       </Item5>
+      <SharedMatrixOptions Count="1">
+        <Item1 ID="931960419235" Targets="FCL,LazUtils,LCLBase,LCL,TAChartLazarusPkg,richmemopackage,virtualtreeview_package,multiloglaz,laz_synase,BESENPkg,internettools,dcpcrypt" Modes="Win64 Debug,Win32 Debug,Win32 Debug Leaks" Value="-O3 -g- -CX -XX -Xs"/>
+      </SharedMatrixOptions>
     </BuildModes>
     <PublishOptions>
       <Version Value="2"/>
