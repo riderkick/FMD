@@ -347,6 +347,14 @@ msgstr "System will hibernate in %d second."
 msgid "System will shutdown in %d second."
 msgstr "System will shutdown in %d second."
 
+#: kissmanga.rs_kissmanga_initvector
+msgid "Initialization Vector:"
+msgstr "Initialization Vector:"
+
+#: kissmanga.rs_kissmanga_key
+msgid "Key:"
+msgstr "Key:"
+
 #: mangafox.rs_removewatermark
 msgid "Remove watermark"
 msgstr "Remove watermark"

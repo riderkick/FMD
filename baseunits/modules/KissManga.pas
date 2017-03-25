@@ -14,14 +14,18 @@ const
   kissmangadirurl = '/MangaList/Newest';
   readcomiconlinedirurl = '/ComicList/Newest';
 
-  kissmangaiv: array[0..15] of byte = ($a5, $e8, $e2, $e9, $c2, $72, $1b, $e0, $a8, $4a, $d6, $60, $c4, $72, $c1, $f3);
-  kissmangakey='mshsdf832nsdbash20asdmnasdbasd612basd';
-
 var
   kissmangacookies: String = '';
   kissmangalockget: TRTLCriticalSection;
   readcomiconlinecookies: String = '';
   readcomiconlinelockget: TRTLCriticalSection;
+
+  kissmangaiv: String ='a5e8e2e9c2721be0a84ad660c472c1f3';
+  kissmangakey: String ='mshsdf832nsdbash20asdmnasdbasd612basd';
+
+resourcestring
+  RS_KissManga_Key = 'Key:';
+  RS_KissManga_InitVector = 'Initialization Vector:';
 
 function GETWithCookie(const AHTTP: THTTPSendThread; const AURL: String;
   const Module: TModuleContainer): Boolean;
@@ -173,9 +177,10 @@ end;
 
 procedure RegisterModule;
 
-  procedure AddWebsiteModule(AWebsite, ARootURL: String);
+  function AddWebsiteModule(AWebsite, ARootURL: String): TModuleContainer;
   begin
-    with AddModule do
+    Result := AddModule;
+    with Result do
     begin
       Website := AWebsite;
       RootURL := ARootURL;
@@ -188,7 +193,11 @@ procedure RegisterModule;
   end;
 
 begin
-  AddWebsiteModule('KissManga', 'http://kissmanga.com');
+  with AddWebsiteModule('KissManga', 'http://kissmanga.com') do
+  begin
+    AddOptionEdit(@kissmangakey,'Key',@RS_KissManga_Key);
+    AddOptionEdit(@kissmangaiv,'IV',@RS_KissManga_InitVector);
+  end;
   AddWebsiteModule('ReadComicOnline', 'http://readcomiconline.to');
 end;
 

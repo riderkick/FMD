@@ -344,6 +344,14 @@ msgstr "Το σύστημα θα αδρανοποιηθεί σε %d δευτερ
 msgid "System will shutdown in %d second."
 msgstr "Το σύστημα θα τερματιστεί σε %d δευτερόλεπτα."
 
+#: kissmanga.rs_kissmanga_initvector
+msgid "Initialization Vector:"
+msgstr ""
+
+#: kissmanga.rs_kissmanga_key
+msgid "Key:"
+msgstr ""
+
 #: mangafox.rs_removewatermark
 msgid "Remove watermark"
 msgstr "Αφαίρεση υδατογραφήματος"
