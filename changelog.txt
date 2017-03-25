@@ -4,6 +4,10 @@ Project page: https://github.com/riderkick/FMD
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.107.0 (25-03-2017)
+[*] KissManga: added option to add custom key and iv #538
+Full changes: https://github.com/riderkick/FMD/compare/0.9.106.0...0.9.107.0
+
 0.9.106.0 (23-03-2017)
 [*] KissManga: fixed download
 [*] HeyManga: fixed download
