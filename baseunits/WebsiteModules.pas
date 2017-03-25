@@ -391,7 +391,7 @@ function TWebsiteModules.LocateModuleByHost(const AHost: String): Integer;
     Result := -1;
   end;
 var
-  h, p: String;
+  h: String;
 begin
   Result := -1;
   if FModuleList.Count = 0 then Exit;
@@ -399,7 +399,7 @@ begin
   Result := PosModule(h);
   if Result = -1 then
   begin
-    SplitURL(h, h, p, False, False);
+    SplitURL(h, @h, nil, False, False);
     if h = '' then Exit;
     Result := PosModule(h);
   end;

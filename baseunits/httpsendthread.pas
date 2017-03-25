@@ -52,7 +52,7 @@ procedure SetDefaultTimeoutAndApply(const ATimeout: Integer);
 procedure SetDefaultRetryCountAndApply(const ARetryCount: Integer);
 
 function MaybeEncodeURL(const AValue: String): String;
-procedure SplitURL(const AURL: String; var AHost, APath: String;
+procedure SplitURL(const AURL: String; const AHost, APath: PString;
   const AIncludeProtocol: Boolean = True; const AIncludePort: Boolean = True);
 
 const
@@ -90,7 +90,7 @@ begin
   Result:=0;
 end;
 
-procedure SplitURL(const AURL: String; var AHost, APath: String;
+procedure SplitURL(const AURL: String; const AHost, APath: PString;
   const AIncludeProtocol: Boolean; const AIncludePort: Boolean);
 
 procedure cleanuri(var u:string);
@@ -100,27 +100,30 @@ begin
 end;
 
 var
-  iurl,prot,port: String;
+  iurl,ihost,ipath,iproto,iport: String;
   p,q: Integer;
 begin
-  AHost:='';
-  APath:='';
+  if (AHost=nil) and (APath=nil) then Exit;
+  if Assigned(AHost) then AHost^:='';
+  if Assigned(APath) then APath^:='';
   iurl:=Trim(AURL);
   if iurl='' then Exit;
-  prot:='';
-  port:='';
-  if iurl[1] = '/' then
-    if Length(iurl) = 1 then Exit
+  ihost:='';
+  ipath:='';
+  iproto:='';
+  iport:='';
+  if iurl[1]='/' then
+    if Length(iurl)=1 then Exit
     else
-    if iurl[2] <> '/' then
+    if iurl[2]<>'/' then
     begin
-      APath := iurl;
+      if Assigned(APath) then APath^:=iurl;
       Exit;
     end;
   p:=poschar(':',iurl);
   if (p<>0) and (p<Length(iurl)) and (iurl[P+1]='/') then
   begin
-    prot:=Copy(iurl,1,p-1);
+    iproto:=Copy(iurl,1,p-1);
     Delete(iurl,1,p);
     p:=poschar(':',iurl);
   end;
@@ -130,7 +133,7 @@ begin
     for q:=p+1 to Length(iurl) do
       if not (iurl[q] in ['0'..'9']) then Break;
     if q=Length(iurl) then Inc(q);
-    port:=Copy(iurl,p+1,q-p-1);
+    iport:=Copy(iurl,p+1,q-p-1);
     delete(iurl,p,q-p);
   end;
   cleanuri(iurl);
@@ -139,7 +142,7 @@ begin
   if (p<>0) and (p<Length(iurl)) then
     if p<q then
     begin
-      AHost:=Copy(iurl,1,q-1);
+      ihost:=Copy(iurl,1,q-1);
       Delete(iurl,1,q-1);
       cleanuri(iurl);
     end
@@ -149,27 +152,29 @@ begin
       q:=poschar('.',iurl,p+1);
       if (q<>0) and (q<Length(iurl)) then
       begin
-        AHost:=iurl;
+        ihost:=iurl;
         iurl:='';
       end;
     end;
-  if (AHost='') and (iurl<>'') and ((prot<>'') or (port<>'')) then
+  if (ihost='') and (iurl<>'') and ((iproto<>'') or (iport<>'')) then
   begin
-    AHost:=iurl;
+    ihost:=iurl;
     iurl:='';
   end;
-  if AHost<>'' then
+  if ihost<>'' then
   begin
     if AIncludeProtocol then
     begin
-      if prot<>'' then AHost:=prot+'://'+AHost
-      else AHost:='http://'+AHost;
+      if iproto<>'' then ihost:=iproto+'://'+ihost
+      else ihost:='http://'+ihost;
     end;
-    if AIncludePort and (port<>'') then
-      AHost:=AHost+':'+port;
+    if AIncludePort and (iport<>'') then
+      ihost:=ihost+':'+iport;
   end;
   if iurl<>'' then
-    APath:='/'+iurl;
+    ipath:='/'+iurl;
+  if Assigned(AHost) then AHost^:=ihost;
+  if Assigned(APath) then APath^:=ipath;
 end;
 
 function KeyVal(const AKey, AValue: String): TKeyValuePair;
@@ -355,10 +360,10 @@ begin
         s := Trim(Headers.Values['Location']);
         if s<>'' then
         begin
-          SplitURL(s,h,p);
+          SplitURL(s,@h,@p);
           s:=p;
           if h='' then
-            SplitURL(rurl,h,p);
+            SplitURL(rurl,@h,@p);
           rurl:=h+s;
         end;
 

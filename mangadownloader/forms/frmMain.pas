@@ -5219,7 +5219,7 @@ begin
   btReadOnline.Enabled := False;
 
   website := '';
-  SplitURL(edURL.Text, host, link);
+  SplitURL(edURL.Text, @host, @link);
 
   if (host <> '') and (link <> '') then
   begin

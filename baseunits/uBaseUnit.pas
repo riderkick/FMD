@@ -1064,14 +1064,14 @@ function LocateMangaSiteID(const URL: String): Integer;
   end;
 
 var
-  h, p: String;
+  h: String;
 begin
   Result := -1;
   h := LowerCase(URL);
   Result := PosMangaSite(h);
   if Result = -1 then
   begin
-    SplitURL(h, h, p, False, False);
+    SplitURL(h, @h, nil, False, False);
     if h = '' then Exit;
     Result := PosMangaSite(h);
   end;
@@ -1238,80 +1238,63 @@ end;
 
 function FillHost(const Host, URL: String): String;
 var
-  H,P: String;
+  P: String;
 begin
-  SplitURL(URL,H,P);
+  SplitURL(URL,nil,@P);
   Result:=RemoveURLDelim(Host)+P;
 end;
 
 function FillHost(const Host: String; const URLs: TStrings): String;
 var
   i: Integer;
-  H,P: String;
 begin
+  if (URLs=nil) or (URLs.Count=0) then Exit;
   for i:=0 to URLs.Count-1 do
-  begin
-    SplitURL(URLs[i],H,P);
-    URLs[i]:=RemoveURLDelim(Host)+P;
-  end;
+    URLs[i]:=FillHost(Host,URLs[i]);
 end;
 
 function MaybeFillHost(const Host, URL: String): String;
 var
   H,P: String;
 begin
-  SplitURL(URL,H,P);
+  SplitURL(URL,@H,@P);
   if (H='') and (P<>'') then Result:=RemoveURLDelim(Host)+P
   else Result:=URL;
 end;
 
 function GetHostURL(URL: String): String;
 var
-  H,P: String;
+  H: String;
 begin
-  SplitURL(URL,H,P);
+  SplitURL(URL,@H,nil);
   Result:=H;
 end;
 
 function RemoveHostFromURL(URL: String): String;
-var
-  H,P: String;
 begin
-  SplitURL(URL,H,P);
-  Result:=P;
+  SplitURL(URL,nil,@Result);
 end;
 
 procedure RemoveHostFromURLs(const URLs: TStringList);
 var
   i: Integer;
-  H,P: String;
 begin
-  if URLs=nil then Exit;
-  if URLs.Count=0 then Exit;
+  if (URLs=nil) or (URLs.Count=0) then Exit;
   for i:=0 to URLs.Count-1 do
-  begin
-    SplitURL(URLs[i],H,P);
-    URLs[i]:=P;
-  end;
+    URLs[i]:=RemoveHostFromURL(URLs[i]);
 end;
 
 procedure RemoveHostFromURLsPair(const URLs, Names: TStringList);
 var
   i: Integer;
-  H,P: String;
 begin
-  if (URLs= nil) or (Names=nil) then Exit;
-  if (URLs.Count<>Names.Count) then Exit;
-  if URLs.Count=0 then Exit;
+  if (URLs=nil) or (Names=nil) or (URLs.Count<>Names.Count) or (URLs.Count=0) then Exit;
   i:=0;
   while i<URLs.Count do
   begin
-    SplitURL(URLs[i],H,P);
-    if P<>'' then
-    begin
-      URLs[i]:=P;
-      Inc(i);
-    end
+    URLs[i]:=RemoveHostFromURL(URLs[i]);
+    if URLs[i]<>'' then
+      Inc(i)
     else
     begin
       URLs.Delete(i);
@@ -1324,7 +1307,7 @@ function EncodeCriticalURLElements(const URL: String): String;
 var
   H,P: String;
 begin
-  SplitURL(URL,H,P);
+  SplitURL(URL,@H,@P);
   Result:=H+EncodeTriplet(P,'%',URLSpecialChar+URLFullSpecialChar-['/']);
 end;
 
