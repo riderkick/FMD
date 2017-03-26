@@ -155,10 +155,10 @@ begin
   with DownloadThread.FHTTP, DownloadThread.Task.Container do begin
     PageLinks.Clear;
     PageNumber := 0;
-    if GETWithCookie(DownloadThread.FHTTP, FillHost(Module.RootURL, AURL), Module) then begin
-      Result := True;
-      source := TStringList.Create;
+    if GETWithCookie(DownloadThread.FHTTP, FillHost(Module.RootURL, AURL), Module) then
       try
+        Result := True;
+        source := TStringList.Create;
         source.LoadFromStream(Document);
         if source.Count > 0 then
           for i := 0 to source.Count - 1 do begin
@@ -168,10 +168,106 @@ begin
       finally
         source.Free;
       end;
-      if (PageLinks.Count <> 0) and (Module.Website = 'KissManga') then
-        for i := 0 to PageLinks.Count - 1 do
-          PageLinks[i] := AESDecryptCBCSHA256Base64Pkcs7(PageLinks[i], kissmangakey, kissmangaiv);
-    end;
+  end;
+end;
+
+function KissMangaGetPageNumber(const DownloadThread: TDownloadThread;
+  const AURL: String; const Module: TModuleContainer): Boolean;
+var
+  source: TStringList;
+  i, chkop, ivp: Integer;
+  chkos, chko1, chko2, key, iv, s: String;
+  chkoa: Boolean;
+begin
+  Result := False;
+  if DownloadThread = nil then Exit;
+  with DownloadThread.FHTTP, DownloadThread.Task.Container do begin
+    PageLinks.Clear;
+    PageNumber := 0;
+    if GETWithCookie(DownloadThread.FHTTP, FillHost(Module.RootURL, AURL), Module) then
+      try
+        Result := True;
+        chkop := -1;
+        ivp := -1;
+        chkos := '';
+        chko1 := '';
+        chko2 := '';
+        key := '';
+        iv := '';
+        s := '';
+        chkoa := False;
+        source := TStringList.Create;
+        source.LoadFromStream(Document);
+        if source.Count <> 0 then
+          for i := 0 to source.Count - 1 do
+          begin
+            if Pos('lstImages.push', source[i]) <> 0 then
+              PageLinks.Add(GetBetween('("', '")', source[i]))
+            else if (Pos('chko', source[i]) <> 0) and (Pos('=', source[i]) <> 0) then
+              chko2 += GetBetween('["', '"]', source[i]);
+          end;
+        if PageLinks.Count <> 0 then
+        begin
+          if GETWithCookie(DownloadThread.FHTTP, Module.RootURL + '/Scripts/lo.js', Module) then
+          begin
+            source.Text := StringReplace(StreamToString(Document), ';', LineEnding, [rfReplaceAll]);
+            if source.Count <> 0 then
+            begin
+              for i := 0 to source.Count - 1 do
+                if (Pos('boxzq', source[i]) <> 0) and (Pos('=', source[i]) <> 0) then
+                  ivp := StrToIntDef(GetBetween('[',']', source[i]), -1)
+                else if (Pos('chko', source[i]) <> 0) and (Pos('=', source[i]) <> 0) then
+                begin
+                  chkos := GetBetween('=','[',source[i]);
+                  chkop := StrToIntDef(GetBetween('[',']', source[i]), -1);
+                  chkoa := Pos('chko+', StringReplace(source[i], ' ', '', [rfReplaceAll])) <> 0;
+                  Break;
+                end;
+              if (chkos <> '') and (chkop <> -1) then
+              begin
+                for i := 0 to source.Count - 1 do
+                  if Pos(chkos, source[i]) <> 0 then
+                  begin
+                    s := GetBetween('[', ']',source[i]);
+                    Break;
+                  end;
+                if s <> '' then
+                begin
+                  source.CommaText := s;
+                  if chkop < source.Count then
+                    chko1 := source[chkop];
+                  if (ivp <> -1) and (ivp < source.Count) then
+                    iv := JSHexToStr(source[ivp]);
+                end;
+              end;
+            end;
+          end;
+          if (chko1 <> '') or (chko2 <> '') then
+          begin
+            if chkoa then
+              chko2 := chko1 + chko2;
+            if chko2 = '' then
+              chko2 := chko1;
+            key := JSHexToStr(chko2);
+            if iv = '' then
+              iv := kissmangaiv;
+            s := AESDecryptCBCSHA256Base64Pkcs7(PageLinks[0], key, iv);
+            if Pos('://', s) = 0 then
+            begin
+              key := kissmangakey;
+              iv := kissmangaiv;
+            end;
+          end;
+          s := AESDecryptCBCSHA256Base64Pkcs7(PageLinks[0], key, iv);
+          if Pos('://', s) = 0 then
+            PageLinks.Clear;
+          if PageLinks.Count <> 0 then
+            for i := 0 to PageLinks.Count - 1 do
+              PageLinks[i] := AESDecryptCBCSHA256Base64Pkcs7(PageLinks[i], key, iv);
+        end;
+      finally
+        source.Free;
+      end;
   end;
 end;
 
@@ -195,6 +291,7 @@ procedure RegisterModule;
 begin
   with AddWebsiteModule('KissManga', 'http://kissmanga.com') do
   begin
+    OnGetPageNumber := @KissMangaGetPageNumber;
     AddOptionEdit(@kissmangakey,'Key',@RS_KissManga_Key);
     AddOptionEdit(@kissmangaiv,'IV',@RS_KissManga_InitVector);
   end;
