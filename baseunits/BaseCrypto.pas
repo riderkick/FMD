@@ -7,14 +7,26 @@ interface
 uses
   Classes, SysUtils, base64, DCPrijndael, DCPsha256;
 
+function HexToStr(const h: String): String;
 procedure HexToBytes(const h: String; var o :TBytes);
 function BytesToHex(const h: TBytes): String;
+function JSHexToStr(const h: String): String;
+
 function Pkcs7AddPad(const s: String): String;
 function Pkcs7RemovePad(const s: String): String;
 function AESEncrpytCBCSHA256Base64Pkcs7(const s, key, iv: String): string;
 function AESDecryptCBCSHA256Base64Pkcs7(const s, key, iv: String): string;
 
 implementation
+
+function HexToStr(const h: String): String;
+var
+  i: Integer;
+begin
+  SetLength(Result,Length(h) div 2);
+  for i:=1 to Length(Result) do
+    Result[i]:=Char(StrToInt('$'+Copy(h,(i*2)-1,2)));
+end;
 
 procedure HexToBytes(const h: String; var o :TBytes);
 var
@@ -33,6 +45,11 @@ begin
   Result:='';
   for i:=Low(h) to High(h) do
     Result+=hexStr(h[i],2);
+end;
+
+function JSHexToStr(const h: String): String;
+begin
+  Result := HexToStr(StringReplace(h, '\x', '', [rfIgnoreCase, rfReplaceAll]));
 end;
 
 // Pkcs7 padding described in RFC 5652 https://tools.ietf.org/html/rfc5652#section-6.3
@@ -59,6 +76,7 @@ var
 begin
   Result:='';
   with TDCP_rijndael.Create(nil) do
+  begin
     try
       InitStr(key,TDCP_sha256);
       HexToBytes(iv,ivb);
@@ -68,9 +86,10 @@ begin
       EncryptCBC(i[1],Result[1],Length(i));
       Burn;
       Result:=EncodeStringBase64(Result);
-    finally
-      Free;
+    except
     end;
+    Free;
+  end;
 end;
 
 function AESDecryptCBCSHA256Base64Pkcs7(const s, key, iv: String): string;
@@ -80,6 +99,7 @@ var
 begin
   Result:='';
   with TDCP_rijndael.Create(nil) do
+  begin
     try
       InitStr(key,TDCP_sha256);
       HexToBytes(iv,ivb);
@@ -89,9 +109,10 @@ begin
       DecryptCBC(i[1],Result[1],Length(i));
       Burn;
       Result:=Pkcs7RemovePad(Result);
-    finally
-      Free;
+    except
     end;
+    Free;
+  end;
 end;
 
 end.
