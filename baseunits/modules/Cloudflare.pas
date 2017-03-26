@@ -16,7 +16,7 @@ function GETCF(const AHTTP: THTTPSendThread; const AURL: String): Boolean; overl
 implementation
 
 const
-  MIN_WAIT_TIME = 5000;
+  MIN_WAIT_TIME = 4000;
 
 function AntiBotActive(const AHTTP: THTTPSendThread): Boolean;
 begin
@@ -124,8 +124,8 @@ begin
         sc := 0;
         while sc < st do begin
           if AHTTP.ThreadTerminated then Break;
-          Inc(sc, 500);
-          Sleep(500);
+          Inc(sc, 250);
+          Sleep(250);
         end;
         AHTTP.FollowRedirection := False;
         if AHTTP.HTTPRequest(m, FillHost(h, u)) then
