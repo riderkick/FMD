@@ -273,7 +273,7 @@ begin
   for i := 1 to v.Count do
   begin
     x := v.get(i);
-    TheStrings.Add(x.toString);
+    TheStrings.Add(Trim(x.toString));
   end;
   x := nil;
   v := nil;
@@ -401,7 +401,7 @@ begin
   begin
     x := v.get(i);
     ALinks.Add(x.toNode.getAttribute('href'));
-    ATexts.Add(x.toString);
+    ATexts.Add(Trim(x.toString));
   end;
   x := nil;
   v := nil;
