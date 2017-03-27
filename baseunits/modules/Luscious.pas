@@ -17,7 +17,7 @@ function GetDirectoryPageNumber(const MangaInfo: TMangaInformation;
   var Page: Integer; const Module: TModuleContainer): Integer;
 begin
   Result := NET_PROBLEM;
-  if MangaInfo.FHTTP.GET(Module.RootURL + dirurl + '/') then
+  if MangaInfo.FHTTP.GET(Module.RootURL + dirurl + '1/') then
   begin
     Result := NO_ERROR;
     Page := StrToIntDef(TrimChar(XPathString('//*[@class="pagination"]/*[@class="last"]/a/@href/substring-after(.,"/new/page")', MangaInfo.FHTTP.Document), ['/']), 1);
@@ -29,7 +29,7 @@ function GetNameAndLink(const MangaInfo: TMangaInformation;
   const Module: TModuleContainer): Integer;
 begin
   Result := NET_PROBLEM;
-  if MangaInfo.FHTTP.GET(Module.RootURL + '/page/' + IncStr(AURL) + '/') then
+  if MangaInfo.FHTTP.GET(Module.RootURL + dirurl + IncStr(AURL) + '/') then
   begin
     Result := NO_ERROR;
     XPathHREFtitleAll('//*[@id="albums_wrapper"]//*[@class="item_cover"]/a', MangaInfo.FHTTP.Document, ALinks, ANames);
