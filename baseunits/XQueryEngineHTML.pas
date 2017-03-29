@@ -5,7 +5,7 @@ unit XQueryEngineHTML;
 interface
 
 uses
-  Classes, SysUtils, xquery, xquery_json, simplehtmltreeparser, BaseThread;
+  Classes, SysUtils, xquery, xquery_json, simplehtmltreeparser;
 
 type
 
@@ -13,15 +13,14 @@ type
 
   TXQueryEngineHTML = class
   private
-    FIsMainThread: Boolean;
     FEngine: TXQueryEngine;
     FTreeParser: TTreeParser;
     function Eval(const Expression: String; const isCSS: Boolean = False;
       const ContextItem: IXQValue = nil; const Tree: TTreeNode = nil): IXQValue;
     function EvalString(const Expression: String; const isCSS: Boolean = False;
-      const ContextItem: IXQValue = nil; const Tree: TTreeNode = nil): String;
+      const ContextItem: IXQValue = nil; const Tree: TTreeNode = nil): String; inline;
     function EvalCount(const Expression: String; const isCSS: Boolean = False;
-      const ContextItem: IXQValue = nil; const Tree: TTreeNode = nil): Integer;
+      const ContextItem: IXQValue = nil; const Tree: TTreeNode = nil): Integer; inline;
     function EvalStringAll(const Expression: String; const isCSS: Boolean;
       const Separator: String = ', '; const ContextItem: IXQValue = nil): String; overload;
     function EvalStringAll(const Expression: String; const isCSS: Boolean;
@@ -208,92 +207,52 @@ end;
 function TXQueryEngineHTML.EvalString(const Expression: String;
   const isCSS: Boolean; const ContextItem: IXQValue; const Tree: TTreeNode
   ): String;
-var
-  v: IXQValue;
 begin
-  v := Eval(Expression, isCSS, ContextItem, Tree);
-  Result := v.toString;
-  v := nil;
+  Result := Eval(Expression, isCSS, ContextItem, Tree).toString;
 end;
 
 function TXQueryEngineHTML.EvalCount(const Expression: String;
   const isCSS: Boolean; const ContextItem: IXQValue; const Tree: TTreeNode
   ): Integer;
-var
-  v: IXQValue;
 begin
-  v := Eval(Expression, isCSS, ContextItem, Tree);
-  Result := v.Count;
-  v := nil;
+  Result := Eval(Expression, isCSS, ContextItem, Tree).Count;
 end;
 
 function TXQueryEngineHTML.EvalStringAll(const Expression: String; const isCSS: Boolean;
   const Separator: String; const ContextItem: IXQValue): String;
 var
-  v, x: IXQValue;
-  i: Integer;
+  v: IXQValue;
 begin
   Result := '';
-  v := Eval(Expression, isCSS, ContextItem);
-  for i := 1 to v.Count do
-  begin
-    x := v.get(i);
-    AddSeparatorString(Result, x.toString, Separator);
-  end;
-  x := nil;
-  v := nil;
+  for v in Eval(Expression, isCSS, ContextItem) do
+    AddSeparatorString(Result, v.toString, Separator);
 end;
 
 function TXQueryEngineHTML.EvalStringAll(const Expression: String; const isCSS: Boolean;
   const Exc: array of String; const Separator: String; const ContextItem: IXQValue
   ): String;
 var
-  v, x: IXQValue;
-  i: Integer;
+  v: IXQValue;
 begin
   Result := '';
-  v := Eval(Expression, isCSS, ContextItem);
-  for i := 1 to v.Count do
-  begin
-    x := v.get(i);
-    if not StringInArray(Trim(x.toString), Exc) then
-      AddSeparatorString(Result, x.toString, Separator);
-  end;
-  x := nil;
-  v := nil;
+  for v in Eval(Expression, isCSS, ContextItem) do
+    if not StringInArray(Trim(v.toString), Exc) then
+      AddSeparatorString(Result, v.toString, Separator);
 end;
 
 procedure TXQueryEngineHTML.EvalStringAll(const Expression: String; const isCSS: Boolean;
   const TheStrings: TStrings; ContextItem: IXQValue);
 var
-  v, x: IXQValue;
-  i: Integer;
+  v: IXQValue;
 begin
-  v := Eval(Expression, isCSS, ContextItem);
-  for i := 1 to v.Count do
-  begin
-    x := v.get(i);
-    TheStrings.Add(Trim(x.toString));
-  end;
-  x := nil;
-  v := nil;
+  for v in Eval(Expression, isCSS, ContextItem) do
+    TheStrings.Add(Trim(v.toString));
 end;
 
 constructor TXQueryEngineHTML.Create(const HTML: String);
-var
-  ct: TThread;
 begin
-  FIsMainThread := GetThreadID = MainThreadID;
   FEngine := TXQueryEngine.Create;
   FTreeParser := TTreeParser.Create;
-  if not FIsMainThread then
-  begin
-    ct := TThread.CurrentThread;
-    if ct is TBaseThread then
-      TBaseThread(ct).ObjectList.Add(FEngine)
-    else
-      FIsMainThread := True;
-  end;
   with FTreeParser do
   begin
     parsingModel := pmHTML;
@@ -318,10 +277,7 @@ end;
 
 destructor TXQueryEngineHTML.Destroy;
 begin
-  if FIsMainThread then
-    FEngine.Free
-  else
-    FEngine := nil;
+  FEngine.Free;
   FTreeParser.Free;
   inherited Destroy;
 end;
@@ -393,35 +349,25 @@ end;
 procedure TXQueryEngineHTML.XPathHREFAll(const Expression: String;
   const ALinks, ATexts: TStrings; const ContextItem: IXQValue);
 var
-  v, x: IXQValue;
-  i: Integer;
+  v: IXQValue;
 begin
-  v := Eval(Expression, False, ContextItem);
-  for i := 1  to v.Count  do
+  for v in Eval(Expression, False, ContextItem) do
   begin
-    x := v.get(i);
-    ALinks.Add(x.toNode.getAttribute('href'));
-    ATexts.Add(Trim(x.toString));
+    ALinks.Add(v.toNode.getAttribute('href'));
+    ATexts.Add(Trim(v.toString));
   end;
-  x := nil;
-  v := nil;
 end;
 
 procedure TXQueryEngineHTML.XPathHREFtitleAll(const Expression: String;
   const ALinks, ATitles: TStrings; const ContextItem: IXQValue);
 var
-  v, x: IXQValue;
-  i: Integer;
+  v: IXQValue;
 begin
-  v := Eval(Expression, False, ContextItem);
-  for i := 1 to v.Count do
+  for v in Eval(Expression, False, ContextItem) do
   begin
-    x := v.get(i);
-    ALinks.Add(x.toNode.getAttribute('href'));
-    ATitles.Add(x.toNode.getAttribute('title'));
+    ALinks.Add(v.toNode.getAttribute('href'));
+    ATitles.Add(v.toNode.getAttribute('title'));
   end;
-  x := nil;
-  v := nil;
 end;
 
 function TXQueryEngineHTML.CSS(const Expression: String; const Tree: TTreeNode): IXQValue;
