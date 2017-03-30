@@ -178,6 +178,13 @@ var
   i, chkop, ivp: Integer;
   chkos, chko1, chko2, key, iv, s: String;
   chkoa: Boolean;
+
+  function testkeyiv: Boolean;
+  begin
+    if DownloadThread.Task.Container.PageLinks.Count=0 then Exit(False);
+    Result:=Pos('://',AESDecryptCBCSHA256Base64Pkcs7(DownloadThread.Task.Container.PageLinks[0],key,iv))<>0;
+  end;
+
 begin
   Result := False;
   if DownloadThread = nil then Exit;
@@ -204,7 +211,7 @@ begin
             PageLinks.Add(GetBetween('("', '")', source[i]))
           else if (Pos('chko', source[i]) <> 0) and (Pos('=', source[i]) <> 0) then
           begin
-            chko2 += GetBetween('["', '"]', source[i]);
+            chko2 := GetBetween('["', '"]', source[i]);
             chkoa := Pos('chko+', StringReplace(source[i], ' ', '', [rfReplaceAll])) <> 0;
           end;
         end;
@@ -243,25 +250,31 @@ begin
 
           if (chko1 <> '') or (chko2 <> '') then
           begin
+            chko1 := JSHexToStr(chko1);
+            chko2 := JSHexToStr(chko2);
             if chkoa then
               chko2 := chko1 + chko2;
             if chko2 = '' then
               chko2 := chko1;
-            key := JSHexToStr(chko2);
+            key := chko2;
             if iv = '' then
               iv := kissmangaiv;
-            s := AESDecryptCBCSHA256Base64Pkcs7(PageLinks[0], key, iv);
-            if Pos('://', s) = 0 then
+            if not testkeyiv then
             begin
               key := kissmangakey;
               iv := kissmangaiv;
+              if not testkeyiv then
+                PageLinks.Clear;
             end;
+          end
+          else
+            if not testkeyiv then
+              PageLinks.Clear;
+          if PageLinks.Count <> 0 then
+          begin
+            for i := 0 to PageLinks.Count - 1 do
+              PageLinks[i] := AESDecryptCBCSHA256Base64Pkcs7(PageLinks[i], key, iv);
           end;
-          s := AESDecryptCBCSHA256Base64Pkcs7(PageLinks[0], key, iv);
-          if Pos('://', s) = 0 then
-            PageLinks.Clear;
-          for i := 0 to PageLinks.Count - 1 do
-            PageLinks[i] := AESDecryptCBCSHA256Base64Pkcs7(PageLinks[i], key, iv);
         end;
       finally
         source.Free;
