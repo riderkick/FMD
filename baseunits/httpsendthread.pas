@@ -6,7 +6,39 @@ interface
 
 uses
   Classes, SysUtils, httpsend, synautil, synacode, ssl_openssl, blcksock,
-  GZIPUtils, BaseThread;
+  GZIPUtils, BaseThread, dateutils;
+
+const
+
+  HTTPFormatSettings :TFormatSettings = (
+    CurrencyFormat            :1;
+    NegCurrFormat             :5;
+    ThousandSeparator         :',';
+    DecimalSeparator          :'.';
+    CurrencyDecimals          :2;
+    DateSeparator             :'/';
+    TimeSeparator             :':';
+    ListSeparator             :',';
+    CurrencyString            :'$';
+    ShortDateFormat           :'m/d/y';
+    LongDateFormat            :'dd" "mmmm" "yyyy';
+    TimeAMString              :'AM';
+    TimePMString              :'PM';
+    ShortTimeFormat           :'hh:nn';
+    LongTimeFormat            :'hh:nn:ss';
+    ShortMonthNames           :('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+                                'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec');
+    LongMonthNames            :('January', 'February', 'March', 'April', 'May',
+                                'June', 'July', 'August', 'September', 'October',
+                                'November', 'December');
+    ShortDayNames             :('Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat');
+    LongDayNames              :('Sunday', 'Monday', 'Tuesday', 'Wednesday',
+                                'Thursday', 'Friday', 'Saturday');
+    TwoDigitYearCenturyWindow :50;
+  );
+
+  // https://tools.ietf.org/html/rfc2616#section-3.3.1
+  HTTPCookieExpiresFormat = 'ddd, dd-mmm-yy hh:nn:ss';
 
 type
 
@@ -19,11 +51,15 @@ type
     FGZip: Boolean;
     FFollowRedirection: Boolean;
     FAllowServerErrorResponse: Boolean;
+    FCookiesExpires: TDateTime;
     procedure SetTimeout(AValue: Integer);
     procedure OnOwnerTerminate(Sender: TObject);
+  protected
+    procedure ParseCookiesExpires;
   public
     constructor Create(AOwner: TBaseThread = nil);
     destructor Destroy; override;
+    function HTTPMethod(const Method, URL: string): Boolean;
     function HTTPRequest(const Method, URL: String; const Response: TObject = nil): Boolean;
     function HEAD(const URL: String; const Response: TObject = nil): Boolean;
     function GET(const URL: String; const Response: TObject = nil): Boolean;
@@ -40,6 +76,7 @@ type
     property FollowRedirection: Boolean read FFollowRedirection write FFollowRedirection;
     property AllowServerErrorResponse: Boolean read FAllowServerErrorResponse write FAllowServerErrorResponse;
     property Thread: TBaseThread read FOwner;
+    property CookiesExpires: TDateTime read FCookiesExpires;
   end;
 
   TKeyValuePair = array[0..1] of String;
@@ -284,6 +321,30 @@ begin
   Sock.AbortSocket;
 end;
 
+procedure THTTPSendThread.ParseCookiesExpires;
+var
+  i, p: Integer;
+  c: TDateTime;
+  s: String;
+begin
+  FCookiesExpires := 0.0;
+  for i := 0 to FHeaders.Count-1 do
+    if Pos('set-cookie', LowerCase(FHeaders[i])) = 1 then
+    begin
+      s := SeparateRight(FHeaders[i], ':');
+      p := Pos('expires', lowercase(s));
+      if p <> 0 then
+      begin
+        s := Copy(s, p, Length(s));
+        s := SeparateLeft(SeparateRight(s,'='),';');
+        s := Trim(SeparateLeft(s, 'GMT'));
+        c := ScanDateTime(HTTPCookieExpiresFormat, s, HTTPFormatSettings);
+        if (FCookiesExpires = 0.0) or (c < FCookiesExpires) then
+          FCookiesExpires := c;
+      end;
+    end;
+end;
+
 constructor THTTPSendThread.Create(AOwner: TBaseThread);
 begin
   inherited Create;
@@ -322,6 +383,13 @@ begin
     LeaveCriticalsection(CS_ALLHTTPSendThread);
   end;
   inherited Destroy;
+end;
+
+function THTTPSendThread.HTTPMethod(const Method, URL: string): Boolean;
+begin
+  FCookiesExpires := 0.0;
+  Result := inherited HTTPMethod(Method, URL);
+  ParseCookiesExpires;
 end;
 
 function THTTPSendThread.HTTPRequest(const Method, URL: String; const Response: TObject): Boolean;
