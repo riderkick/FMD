@@ -174,13 +174,19 @@ function KissMangaGetPageNumber(const DownloadThread: TDownloadThread;
 var
   source: TStringList;
   i, chkop, ivp: Integer;
-  chkos, chko1, chko2, key, iv, s: String;
+  chkos, chko1, chko2, civ, key, iv: String;
   chkoa: Boolean;
+  s: String;
 
-  function testkeyiv: Boolean;
+  function testkeyiv(const akey, aiv: string): Boolean;
   begin
     if DownloadThread.Task.Container.PageLinks.Count=0 then Exit(False);
-    Result:=Pos('://',AESDecryptCBCSHA256Base64Pkcs7(DownloadThread.Task.Container.PageLinks[0],key,iv))<>0;
+    Result:=Pos('://',AESDecryptCBCSHA256Base64Pkcs7(DownloadThread.Task.Container.PageLinks[0],akey,aiv))<>0;
+    if Result then
+    begin
+      key := akey;
+      iv := aiv;
+    end;
   end;
 
 begin
@@ -197,6 +203,7 @@ begin
         chkos := '';
         chko1 := '';
         chko2 := '';
+        civ := '';
         key := '';
         iv := '';
         s := '';
@@ -241,32 +248,26 @@ begin
                 if chkop < source.Count then
                   chko1 := source[chkop];
                 if (ivp <> -1) and (ivp < source.Count) then
-                  iv := JSHexToStr(source[ivp]);
+                  civ := JSHexToStr(source[ivp]);
               end;
             end;
           end;
-
           if (chko1 <> '') or (chko2 <> '') then
           begin
             chko1 := JSHexToStr(chko1);
             chko2 := JSHexToStr(chko2);
-            if chkoa then
-              chko2 := chko1 + chko2;
-            if chko2 = '' then
-              chko2 := chko1;
-            key := chko2;
-            if iv = '' then
-              iv := kissmangaiv;
-            if not testkeyiv then
-            begin
-              key := kissmangakey;
-              iv := kissmangaiv;
-              if not testkeyiv then
-                PageLinks.Clear;
-            end;
+            if civ = '' then
+              civ := kissmangaiv;
+            // test all possibilities
+            if not testkeyiv(chko1, civ) then
+            if not testkeyiv(chko2, civ) then
+            if not testkeyiv(chko1+chko2, civ) then
+            if not testkeyiv(chko2+chko1, civ) then
+            if not testkeyiv(kissmangakey, kissmangaiv) then
+              PageLinks.Clear;
           end
           else
-            if not testkeyiv then
+            if not testkeyiv(kissmangakey, kissmangaiv) then
               PageLinks.Clear;
           if PageLinks.Count <> 0 then
           begin
