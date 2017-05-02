@@ -11,8 +11,7 @@ uses
 implementation
 
 var
-  yomangalockget: TRTLCriticalSection;
-  yomangacookies: String;
+  yomangacf: TCFProps;
 
 const
   dirurl = '/directory/';
@@ -27,7 +26,7 @@ function GETWithCookie(const AHTTP: THTTPSendThread; const AURL: String;
   const Module: TModuleContainer): Boolean;
 begin
   if Module.Website = 'YoManga' then
-    Result := Cloudflare.GETCF(AHTTP, AURL, yomangacookies, yomangalockget)
+    Result := Cloudflare.GETCF(AHTTP, AURL, yomangacf)
   else
   if ((Module.Website = 'SeinagiAdultoFansub') or
       (Module.Website = 'TripleSevenScan'))
@@ -289,10 +288,10 @@ begin
 end;
 
 initialization
-  InitCriticalSection(yomangalockget);
+  yomangacf := TCFProps.Create;
   RegisterModule;
 
 finalization
-  DoneCriticalsection(yomangalockget);
+  yomangacf.Free;
 
 end.

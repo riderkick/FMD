@@ -11,15 +11,14 @@ uses
 implementation
 
 var
-  cookies: String;
-  lockget: TRTLCriticalSection;
+  mangagocf: TCFProps;
 
 const
   dirurl= '/list/directory/all/';
 
 function GETWithCookie(const AHTTP: THTTPSendThread; const AURL: String): Boolean;
 begin
-  Result := Cloudflare.GETCF(AHTTP, AURL, cookies, lockget)
+  Result := Cloudflare.GETCF(AHTTP, AURL, mangagocf)
 end;
 
 function GetDirectoryPageNumber(const MangaInfo: TMangaInformation;
@@ -110,10 +109,10 @@ begin
 end;
 
 initialization
-  InitCriticalSection(lockget);
+  mangagocf := TCFProps.Create;
   RegisterModule;
 
 finalization
-  DoneCriticalsection(lockget);
+  mangagocf.Free;
 
 end.

@@ -13,12 +13,11 @@ implementation
 const
   dirurl = '/projects/';
 var
-  goscookies: String = '';
-  goslockget: TRTLCriticalSection;
+  goscf: TCFProps;
 
 function GETWithCookie(const AHTTP: THTTPSendThread; const AURL: String): Boolean;
 begin
-  Result := Cloudflare.GETCF(AHTTP, AURL, goscookies, goslockget);
+  Result := Cloudflare.GETCF(AHTTP, AURL, goscf);
 end;
 
 function GetNameAndLink(const MangaInfo: TMangaInformation;
@@ -136,8 +135,8 @@ begin
   with DownloadThread.Task.Container, DownloadThread.FHTTP do
     if CurrentDownloadChapterPtr < ChapterLinks.Count then begin
       Headers.Values['Referer'] := ' ' + FillHost(Module.RootURL, ChapterLinks[CurrentDownloadChapterPtr]);
-      Cookies.Text := goscookies;
-      if (goscookies = '') or (HEAD(AURL) and (ResultCode = 503)) then
+      Cookies.Text := goscf.Cookies;
+      if (goscf.Cookies = '') or (HEAD(AURL) and (ResultCode = 503)) then
         Result := GETWithCookie(DownloadThread.FHTTP, Module.RootURL)
       else
         Result := True;
@@ -158,10 +157,10 @@ begin
 end;
 
 initialization
-  InitCriticalSection(goslockget);
+  goscf := TCFProps.Create;
   RegisterModule;
 
 finalization
-  DoneCriticalsection(goslockget);
+  goscf.Free;
 
 end.

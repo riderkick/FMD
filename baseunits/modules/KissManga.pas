@@ -15,10 +15,8 @@ const
   readcomiconlinedirurl = '/ComicList/Newest';
 
 var
-  kissmangacookies: String = '';
-  kissmangalockget: TRTLCriticalSection;
-  readcomiconlinecookies: String = '';
-  readcomiconlinelockget: TRTLCriticalSection;
+  kissmangacf: TCFProps;
+  readcomiconlinecf: TCFProps;
 
   kissmangaiv: String ='a5e8e2e9c2721be0a84ad660c472c1f3';
   kissmangakey: String ='mshsdf832nsdbash20asdmnasdbasd612basd';
@@ -31,9 +29,9 @@ function GETWithCookie(const AHTTP: THTTPSendThread; const AURL: String;
   const Module: TModuleContainer): Boolean;
 begin
   if Module.Website = 'KissManga' then
-    Result := Cloudflare.GETCF(AHTTP, AURL, kissmangacookies, kissmangalockget)
+    Result := Cloudflare.GETCF(AHTTP, AURL, kissmangacf)
   else if Module.Website = 'ReadComicOnline' then
-    Result := Cloudflare.GETCF(AHTTP, AURL, readcomiconlinecookies, readcomiconlinelockget);
+    Result := Cloudflare.GETCF(AHTTP, AURL, readcomiconlinecf);
 end;
 
 function GetDirectoryPageNumber(const MangaInfo: TMangaInformation;
@@ -310,12 +308,12 @@ begin
 end;
 
 initialization
-  InitCriticalSection(kissmangalockget);
-  InitCriticalSection(readcomiconlinelockget);
+  kissmangacf := TCFProps.Create;
+  readcomiconlinecf := TCFProps.Create;
   RegisterModule;
 
 finalization
-  DoneCriticalsection(kissmangalockget);
-  DoneCriticalsection(readcomiconlinelockget);
+  kissmangacf.Free;
+  readcomiconlinecf.Free;
 
 end.
