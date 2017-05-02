@@ -5,13 +5,24 @@ unit Cloudflare;
 interface
 
 uses
-  Classes, SysUtils, uBaseUnit, XQueryEngineHTML, httpsendthread, BESEN, BESENValue,
-  RegExpr;
+  Classes, SysUtils, uBaseUnit, XQueryEngineHTML, httpsendthread, synautil,
+  BESEN, BESENValue, RegExpr, dateutils;
 
-function GETCF(const AHTTP: THTTPSendThread; const AURL: String; var Cookie: String;
-  var CS: TRTLCriticalSection): Boolean; overload;
-function GETCF(const AHTTP: THTTPSendThread; const AURL: String; var Cookie: String): Boolean; overload;
-function GETCF(const AHTTP: THTTPSendThread; const AURL: String): Boolean; overload;
+type
+
+  { TCFProps }
+
+  TCFProps = class
+  public
+    Cookies: String;
+    Expires: TDateTime;
+    CS: TRTLCriticalSection;
+    constructor Create;
+    destructor Destroy; override;
+    procedure Reset;
+  end;
+
+function GETCF(const AHTTP: THTTPSendThread; const AURL: String; const CFProps: TCFProps): Boolean;
 
 implementation
 
@@ -97,7 +108,7 @@ begin
   Result := True;
 end;
 
-function CFJS(const AHTTP: THTTPSendThread; AURL: String; var Cookie: String): Boolean;
+function CFJS(const AHTTP: THTTPSendThread; AURL: String; var Cookie: String; var Expires: TDateTime): Boolean;
 var
   m, u, h: String;
   st, sc, counter, maxretry: Integer;
@@ -129,9 +140,15 @@ begin
         end;
         AHTTP.FollowRedirection := False;
         if AHTTP.HTTPRequest(m, FillHost(h, u)) then
+        begin
           Result := AHTTP.Cookies.Values['cf_clearance'] <> '';
+          if Result then
+          begin
+            Cookie := AHTTP.GetCookies;
+            Expires := AHTTP.CookiesExpires;
+          end;
+        end;
         AHTTP.FollowRedirection := True;
-        if Result then Cookie := AHTTP.GetCookies;
       end;
     if AHTTP.RetryCount <> 0 then
     begin
@@ -147,52 +164,56 @@ begin
   AHTTP.RetryCount := maxretry;
 end;
 
-function GETCF(const AHTTP: THTTPSendThread; const AURL: String; var Cookie: String;
-  var CS: TRTLCriticalSection): Boolean;
+function GETCF(const AHTTP: THTTPSendThread; const AURL: String; const CFProps: TCFProps): Boolean;
 begin
   Result := False;
   if AHTTP = nil then Exit;
-  AHTTP.Cookies.Text := Cookie;
+  if (CFProps.Expires <> 0.0) and (Now > CFProps.Expires) then
+    CFProps.Reset;
+  AHTTP.Cookies.Text := CFProps.Cookies;
   AHTTP.AllowServerErrorResponse := True;
   Result := AHTTP.GET(AURL);
   if AntiBotActive(AHTTP) then begin
-    if TryEnterCriticalsection(CS) > 0 then
+    if TryEnterCriticalsection(CFProps.CS) > 0 then
       try
-        Result := CFJS(AHTTP, AURL, Cookie);
+        Result := CFJS(AHTTP, AURL, CFProps.Cookies, CFProps.Expires);
+        // reduce the expires by 1 hour, usually it is 24 hours or 16 hours
+        // in case of the different between local and server time
+        if Result then
+          CFProps.Expires := IncHour(CFProps.Expires, -1);
       finally
-        LeaveCriticalsection(CS);
+        LeaveCriticalsection(CFProps.CS);
       end
     else
       try
-        EnterCriticalsection(CS);
-        AHTTP.Cookies.Text := Cookie;
+        EnterCriticalsection(CFProps.CS);
+        AHTTP.Cookies.Text := CFProps.Cookies;
       finally
-        LeaveCriticalsection(CS);
+        LeaveCriticalsection(CFProps.CS);
       end;
     if not AHTTP.ThreadTerminated then
       Result := AHTTP.GET(AURL);
   end;
 end;
 
-function GETCF(const AHTTP: THTTPSendThread; const AURL: String; var Cookie: String): Boolean;
+{ TCFProps }
+
+constructor TCFProps.Create;
 begin
-  Result := False;
-  if AHTTP = nil then Exit;
-  AHTTP.Cookies.Text := Cookie;
-  AHTTP.AllowServerErrorResponse := True;
-  Result := AHTTP.GET(AURL);
-  if AntiBotActive(AHTTP) then begin
-    Result := CFJS(AHTTP, AURL, Cookie);
-    Result := AHTTP.GET(AURL);
-  end;
+  Reset;
+  InitCriticalSection(CS);
 end;
 
-function GETCF(const AHTTP: THTTPSendThread; const AURL: String): Boolean;
-var
-  Cookie: String;
+destructor TCFProps.Destroy;
 begin
-  Cookie := '';
-  Result := GETCF(AHTTP, AURL, Cookie);
+  DoneCriticalsection(CS);
+  inherited Destroy;
+end;
+
+procedure TCFProps.Reset;
+begin
+  Cookies := '';
+  Expires := 0.0;
 end;
 
 end.
