@@ -338,9 +338,13 @@ begin
         s := Copy(s, p, Length(s));
         s := SeparateLeft(SeparateRight(s,'='),';');
         s := Trim(SeparateLeft(s, 'GMT'));
-        c := ScanDateTime(HTTPCookieExpiresFormat, s, HTTPFormatSettings);
-        if (FCookiesExpires = 0.0) or (c < FCookiesExpires) then
-          FCookiesExpires := c;
+        c := 0.0;
+        try
+          c := ScanDateTime(HTTPCookieExpiresFormat, s, HTTPFormatSettings);
+          if (FCookiesExpires = 0.0) or (c < FCookiesExpires) then
+            FCookiesExpires := c;
+        except
+        end;
       end;
     end;
 end;
