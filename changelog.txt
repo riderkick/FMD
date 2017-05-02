@@ -4,6 +4,11 @@ Project page: https://github.com/riderkick/FMD
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.110.0 (02-05-2017)
+[*] CF: fixed expired cookies
+[*] KissManga: fixed download
+Full changes: https://github.com/riderkick/FMD/compare/0.9.109.0...0.9.110.0
+
 0.9.109.0 (30-03-2017)
 [*] KissManga: fixed download
 Full changes: https://github.com/riderkick/FMD/compare/0.9.108.0...0.9.109.0
