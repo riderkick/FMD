@@ -277,7 +277,7 @@ begin
   AddWebsiteModule('MangaWorksFansub', 'http://lector.mangaworksfansub.net');
   AddWebsiteModule('MasterPieceScans', 'http://reader.manga2me.net');
   AddWebsiteModule('MenudoFansub', 'http://www.menudo-fansub.com');
-  AddWebsiteModule('NeoProjectScan', 'http://npscan.scans-es.com');
+  AddWebsiteModule('NeoProjectScan', 'http://npscan.mangaea.net');
   AddWebsiteModule('Pzykosis666HFansub', 'http://pzykosis666hfansub.com');
   AddWebsiteModule('R15TeamScanlation', 'http://www.r15team.com');
   AddWebsiteModule('SantosScan', 'http://santosfansub.com');
