@@ -158,7 +158,7 @@ begin
   with AddModule do
   begin
     Website := 'MangaKoi';
-    RootURL := 'http://www.mangakoi.com';
+    RootURL := 'http://www.mangahome.com';
     OnGetDirectoryPageNumber := @GetDirectoryPageNumber;
     OnGetNameAndLink := @GetNameAndLink;
     OnGetInfo := @GetInfo;
