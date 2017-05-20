@@ -87,7 +87,7 @@ begin
   with AddModule do
   begin
     Website := 'UnionMangas';
-    RootURL := 'http://unionmangas.com.br';
+    RootURL := 'http://unionmangas.net';
     OnGetDirectoryPageNumber := @GetDirectoryPageNumber;
     OnGetNameAndLink := @GetNameAndLink;
     OnGetInfo := @GetInfo;
