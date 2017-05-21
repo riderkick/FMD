@@ -114,7 +114,7 @@ begin
       Result := True;
       with TXQueryEngineHTML.Create(Document) do
         try
-          PageNumber := XPath('//select[@id="page_list"]/option').Count - 1;
+          PageNumber := XPath('//select[@id="fuzetsu_list"]/option').Count - 1;
           for v in XPath('//picture/img') do
             PageLinks.Add(v.toNode.getAttribute('src'));
         finally
