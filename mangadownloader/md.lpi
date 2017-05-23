@@ -18,9 +18,9 @@
     <VersionInfo>
       <UseVersionInfo Value="True"/>
       <MinorVersionNr Value="9"/>
-      <RevisionNr Value="110"/>
+      <RevisionNr Value="111"/>
       <Attributes pvaPrivateBuild="True"/>
-      <StringTable Comments="https://github.com/riderkick/FMD" FileDescription="Free Manga Downloader" LegalCopyright="©2015-2016" OriginalFilename="fmd.exe" ProductName="Free Manga Downloader" ProductVersion="$BuildMode()" PrivateBuild="riderkick"/>
+      <StringTable Comments="https://github.com/riderkick/FMD" FileDescription="Free Manga Downloader" LegalCopyright="©2015-2017" OriginalFilename="fmd.exe" ProductName="Free Manga Downloader" ProductVersion="$BuildMode()" PrivateBuild="riderkick"/>
     </VersionInfo>
     <BuildModes Count="5">
       <Item1 Name="Win32" Default="True"/>
