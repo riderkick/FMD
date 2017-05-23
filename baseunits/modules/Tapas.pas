@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, WebsiteModules, uData, uBaseUnit, uDownloadsManager,
-  XQueryEngineHTML, httpsendthread, Cloudflare, synautil, RegExpr;
+  XQueryEngineHTML, httpsendthread, Cloudflare, RegExpr;
 
 implementation
 
@@ -15,39 +15,6 @@ const
   
 var
   tapascf: TCFProps;
-
-function Split(const str: string; const separator: string): TStringList;
-var
-  strline, strfield: string;
-  list: TStringList;
-begin
-  strline := str;
-  list := TStringList.Create;
-  repeat
-    if Pos(separator, strline) > 0 then
-    begin
-      strfield := Copy(strline, 1, Pos(separator, strline) - 1);
-      strline := Copy(strline, Pos(separator, strline) + 1,
-Length(strline) - pos(separator,strline));
-    end
-    else
-    begin
-      strfield := strline;
-      strline := '';
-    end;
-    list.Add(strfield);
-  until strline = '';
-  Result := list;
-end;
-
-function SubString(const str: string; const delimFrom: string; const delimTo:
-  string): string;
-var
-  s: string;
-begin
-  s := copy(str, Pos(delimFrom, str) + Length(delimFrom));
-  Result := copy(s, 0, Pos(delimTo, s) - 1);
-end;
 
 function GETWithCookie(const AHTTP: THTTPSendThread; const AURL: String):
  Boolean;
@@ -103,9 +70,7 @@ end;
 function GetInfo(const MangaInfo: TMangaInformation;
   const AURL: String; const Module: TModuleContainer): Integer;
 var
-  s: String;
-  caps: TStringList;
-  cap: String;
+  v: IXQValue;
 begin
   Result := NET_PROBLEM;
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
@@ -114,29 +79,17 @@ begin
     with MangaInfo.mangaInfo, TXQueryEngineHTML.Create(MangaInfo.FHTTP.Document) do
       try
         coverLink := XPathString('//a[@id="series-thumb"]/img/@src');
-        if coverLink = '' then
-        begin
-          s := SubString(XPathString('//body'), '<div class="inner has-thumb">', '</div>');
-          coverLink := SubString(s, '<img src="', '"');
-        end;
-
-        if title = '' then
-        begin
-          title := XPathString('//a[@class="series-header-title"]/text()');
-        end;
-        genres := XPathString('//div[@class="tags"]');
+        if coverLink = '' then coverLink := XPathString('//script[contains(.,"has-thumb")]/substring-before(substring-after(.,"src="""),"""")');
+        if title = '' then title := XPathString('//a[@class="series-header-title"]/text()');
+        genres := XPathString('//div[@class="tags"]/string-join(./*,", ")');
         authors := XPathString('//a[@class="name"]/span/text()');
         summary := XPathString('//span[@id="series-desc-body"]');
-        summary := StringReplace(summary, 
-                '                                                    ', '', [rfReplaceAll]);
-        
-        s := XPathString('//body');
-        s := SubString(s, 'var _data', '}],');
-        caps := TStringList.Create;
-        caps := Split(s, '},{');
-        for cap in caps do begin
-          chapterLinks.Add('https://tapas.io/episode/' + SubString(cap, '"id":', ','));
-          chapterName.Add(SubString(cap, '"title":"', '","thumbUrl":"'));
+        while Pos('  ', summary) <> 0 do
+          summary := StringReplace(summary, '  ', ' ', [rfReplaceAll]);
+        for v in XPath('json(//script[contains(.,"var _data")]/concat(substring-before(substring-after(.,"episodeList :"),"]"),"]"))()') do
+        begin
+          chapterLinks.Add(Module.RootURL + '/episode/' + XPathString('./id', v));
+          chapterName.Add(XPathString('./title', v));
         end;
       finally
         Free;
