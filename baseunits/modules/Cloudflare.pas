@@ -177,10 +177,10 @@ begin
     if TryEnterCriticalsection(CFProps.CS) > 0 then
       try
         Result := CFJS(AHTTP, AURL, CFProps.Cookies, CFProps.Expires);
-        // reduce the expires by 1 hour, usually it is 24 hours or 16 hours
+        // reduce the expires by 5 minutes, usually it is 24 hours or 16 hours
         // in case of the different between local and server time
         if Result then
-          CFProps.Expires := IncHour(CFProps.Expires, -1);
+          CFProps.Expires := IncMinute(CFProps.Expires, -5);
       finally
         LeaveCriticalsection(CFProps.CS);
       end
