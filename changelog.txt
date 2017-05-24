@@ -6,6 +6,7 @@ Changelog:
 
 0.9.111.0 (23-05-2017)
 [*] Added Tapas
+[*] Tumangaonline: fixed all
 [*] Various changes and bug fixes
 Full changes: https://github.com/riderkick/FMD/compare/0.9.110.0...0.9.111.0
 
