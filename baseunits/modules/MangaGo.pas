@@ -88,7 +88,7 @@ begin
     if GETWithCookie(DownloadThread.FHTTP, MaybeFillHost(Module.RootURL, AURL)) then
     begin
       Result := True;
-      s := XPathString('//script[contains(.,"imgsrcs")]/substring-before(substring-after(substring-before(.,"imgsrcs"),"''"),"''")', Document);
+      s := XPathString('//script[contains(.,"imgsrcs")]/substring-before(substring-after(substring-before(.,"imgsrcs"),"= ''"),"''")', Document);
       if s <> '' then
         PageLinks.CommaText := s
     end;
