@@ -100,6 +100,8 @@ function GetPageNumber(const DownloadThread: TDownloadThread;
   const AURL: String; const Module: TModuleContainer): Boolean;
 var
   v: IXQValue;
+  galleryid: Integer;
+  subdomain: String;
 begin
   Result := False;
   if DownloadThread = nil then Exit;
@@ -112,7 +114,19 @@ begin
         try
           for v in XPath('//div[@class="img-url"]') do
             PageLinks.Add(FillURLProtocol('https://', v.toString));
-          PageNumber := PageLinks.Count
+          PageNumber := PageLinks.Count;
+          // https://ltn.hitomi.la/reader.js
+          if PageLinks.Count <> 0 then
+          begin
+            galleryid := -1;
+            subdomain := '';
+            galleryid := StrToIntDef(ReplaceRegExpr('(?i)^.*reader/(\d+).*$', AURL, '$1', True), -1);
+            if galleryid <> -1 then
+            begin
+              subdomain := 'https://' + Char(97 + (galleryid mod 2)) + 'a.hitomi.la';
+              FillHost(subdomain, PageLinks);
+            end;
+          end;
         finally
           Free;
         end;
