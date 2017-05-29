@@ -4,9 +4,15 @@ Project page: https://github.com/riderkick/FMD
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.112.0 (29-05-2017)
+[*] HitomiLa: fixed download
+[*] MangaGo: fixed download
+Full changes: https://github.com/riderkick/FMD/compare/0.9.111.0...0.9.112.0
+
 0.9.111.0 (23-05-2017)
 [*] Added Tapas
 [*] Tumangaonline: fixed all
+[*] NeoProjectScan: fixed domain
 [*] Various changes and bug fixes
 Full changes: https://github.com/riderkick/FMD/compare/0.9.110.0...0.9.111.0
 
