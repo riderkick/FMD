@@ -48,6 +48,15 @@ begin
           authors := XPathString('//div[@id="title"]/table/tbody/tr[2]/td[2]');
           artists := XPathString('//div[@id="title"]/table/tbody/tr[2]/td[3]');
           genres := XPathString('//div[@id="title"]/table/tbody/tr[2]/td[4]');
+          s := XPathString('//div[@id="series_info"]/div[5]/span');
+          if s <> '' then
+          begin
+            s := LowerCase(s);
+            if Pos('ongoing', s) > 0 then
+              status := '1'
+            else if Pos('completed', s) > 0 then
+              status := '0';
+          end;
           summary := XPathString('//p[@class="summary"]');
           status := MangaInfoStatusIfPos(XPathString('//div[@id="series_info"]/div[5]/span'));
           for v in XPath('//ul[@class="chlist"]/li/div/*[self::h3 or self::h4]') do
