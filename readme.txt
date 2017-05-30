@@ -10,7 +10,7 @@ Content:
 
 ---------------------------------
 
-FMD homesite is at http://sourceforge.net/projects/fmd/ or http://akarink.wordpress.com
+FMD homesite is at https://sourceforge.net/projects/newfmd/ or http://akarink.wordpress.com
 
 ---------------------------------
 
