@@ -17,7 +17,7 @@ begin
   if MangaInfo.FHTTP.GET(Module.RootURL) then
   begin
     Result := NO_ERROR;
-    Page := StrToIntDef(XPathString('//*[contains(@class,"pager")]/a[last()]', MangaInfo.FHTTP.Document), 1);
+    Page := StrToIntDef(XPathString('//*[@class="pagination"]/li[last()-1]', MangaInfo.FHTTP.Document), 1);
   end;
 end;
 
@@ -28,15 +28,15 @@ var
   v: IXQValue;
 begin
   Result := NET_PROBLEM;
-  if MangaInfo.FHTTP.GET(Module.RootURL + '/browse/search/1/' + IncStr(AURL) + '.html') then
+  if MangaInfo.FHTTP.GET(Module.RootURL + '/browse/newest?page=' + IncStr(AURL)) then
   begin
     Result := NO_ERROR;
     with TXQueryEngineHTML.Create(MangaInfo.FHTTP.Document) do
       try
-        for v in XPath('//*[@class="gallery-list"]/li//a') do
+        for v in XPath('//*[@class="gallery-listing"]/*[@class="row"]/a') do
         begin
           ALinks.Add(v.toNode.getAttribute('href'));
-          ANames.Add(XPathString('.//*[@class="title"]//h2/text()[1]', v));
+          ANames.Add(XPathString('.//*[@class="title"]/text()[1]', v));
         end;
       finally
         Free;
@@ -56,11 +56,12 @@ begin
       Result := NO_ERROR;
       with TXQueryEngineHTML.Create(Document) do
         try
-          coverLink := MaybeFillHost(Module.RootURL, XPathString('//*[@class="gallery-cover"]//img/@src'));
-          if title = '' then title := XPathString('//*[@class="gallery-info"]/h1');
-          artists := XPathString('//*[@class="table-info"]//tr/td[starts-with(.,"Artist")]/following-sibling::td[1]/string-join(.//a,", ")');
-          genres := XPathString('//*[@class="table-info"]/string-join(.//tr/td//a,", ")');
-          XPathHREFAll('//*[@class="table-data"]//tr/td[2]/a', chapterLinks, chapterName);
+          coverLink := MaybeFillHost(Module.RootURL, XPathString('//*[@class="cover"]//img/@src'));
+          if title = '' then title := XPathString('//*[@class="gallery-info"]//*[@class="title"]');
+          artists := XPathString('//*[@class="gallery-info"]//*[@class="table"]//tr/td[starts-with(.,"Artist")]/following-sibling::td[1]/string-join(.//a,", ")');
+          genres := XPathString('//*[@class="gallery-info"]//*[@class="table"]/string-join(.//tr/td//a,", ")');
+          chapterLinks.Add(XPathString('//a[@class="read-more"]/@href'));
+          chapterName.Add(title);
         finally
           Free;
         end;
@@ -80,7 +81,7 @@ begin
     if GET(MaybeFillHost(Module.RootURL, AURL)) then
     begin
       Result := True;
-      XPathStringAll('json(//script[contains(.,"chapter_page")]/substring-before(substring-after(.,"= "),";"))//chapter_image', Document, PageLinks);
+      XPathStringAll('json(//script[contains(.,"var chapters")]/substring-before(substring-after(.,"= "),";"))//image', Document, PageLinks);
     end;
   end;
 end;
@@ -90,7 +91,7 @@ begin
   with AddModule do
   begin
     Website := 'Pururin';
-    RootURL := 'https://pururin.us';
+    RootURL := 'https://www.pururin.us';
     SortedList := True;
     OnGetDirectoryPageNumber := @GetDirectoryPageNumber;
     OnGetNameAndLink := @GetNameAndLink;
