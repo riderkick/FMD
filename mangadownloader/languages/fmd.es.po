@@ -581,7 +581,7 @@ msgstr "Visitar mi blog"
 
 #: tmainform.caption
 msgid "Free Manga Downloader"
-msgstr "Free Manga Downloader"
+msgstr ""
 
 #: tmainform.cbaddasstopped.caption
 msgid "Add to download list as stopped task"
@@ -1772,23 +1772,23 @@ msgctxt "tmainform.tsdownload.caption"
 msgid "Downloads"
 msgstr "Descargas"
 
-#: tmainform.tsdownloadfilter.caption
-msgid ">>"
-msgstr ">>"
-
 #: tmainform.tsfavorites.caption
 msgctxt "tmainform.tsfavorites.caption"
 msgid "Favorites"
 msgstr "Favoritos"
 
-#: tmainform.tsfilter.caption
-msgctxt "tmainform.tsfilter.caption"
-msgid "Filter"
-msgstr "Filtro"
-
 #: tmainform.tsgeneral.caption
 msgid "General"
 msgstr "General"
+
+#: tmainform.tsinfofilteradv.caption
+msgctxt "tmainform.tsinfofilteradv.caption"
+msgid "Filter"
+msgstr "Filtro"
+
+#: tmainform.tsinfomanga.caption
+msgid "Info"
+msgstr ""
 
 #: tmainform.tsinformation.caption
 msgid "Manga Info"
@@ -1797,10 +1797,6 @@ msgstr "Información del Manga"
 #: tmainform.tslog.caption
 msgid "Log"
 msgstr "Registro"
-
-#: tmainform.tsmangalist.caption
-msgid "Manga List"
-msgstr "Lista de Manga"
 
 #: tmainform.tsmisc.caption
 msgid "Misc"
@@ -2204,4 +2200,3 @@ msgstr "Sincronizando Datos"
 #: uupdatethread.rs_updatinglist
 msgid "Updating list"
 msgstr "Actualizando Lista"
-

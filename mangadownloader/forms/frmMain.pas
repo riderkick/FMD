@@ -16,15 +16,16 @@ uses
   {$else}
   FakeActiveX,
   {$endif}
-  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, LCLType, ExtCtrls,
-  ComCtrls, Buttons, Spin, Menus, VirtualTrees, RichMemo, IniFiles, simpleipc, lclproc,
-  types, LCLIntf, DefaultTranslator, EditBtn, MultiLog, FileChannel, FileUtil,
-  LazUTF8Classes, TAGraph, TASources, TASeries, TATools, AnimatedGif, uBaseUnit,
-  uDownloadsManager, uFavoritesManager, uUpdateThread, uUpdateDBThread, uSilentThread,
-  uMisc, uGetMangaInfosThread, frmDropTarget, frmAccountManager, frmWebsiteOptionCustom,
-  frmWebsiteOptionAdvanced, frmCustomColor, frmLogger, CheckUpdate, accountmanagerdb,
-  DBDataProcess, MangaFoxWatermark, SimpleTranslator, FMDOptions, httpsendthread,
-  SimpleException;
+  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, LCLType,
+  ExtCtrls, ComCtrls, Buttons, Spin, Menus, VirtualTrees, RichMemo, IniFiles,
+  simpleipc, lclproc, types, LCLIntf, DefaultTranslator, EditBtn, PairSplitter,
+  MultiLog, FileChannel, FileUtil, LazUTF8Classes, TAGraph, TASources, TASeries,
+  TATools, AnimatedGif, uBaseUnit, uDownloadsManager, uFavoritesManager,
+  uUpdateThread, uUpdateDBThread, uSilentThread, uMisc, uGetMangaInfosThread,
+  frmDropTarget, frmAccountManager, frmWebsiteOptionCustom,
+  frmWebsiteOptionAdvanced, frmCustomColor, frmLogger, CheckUpdate,
+  accountmanagerdb, DBDataProcess, MangaFoxWatermark, SimpleTranslator,
+  FMDOptions, httpsendthread, SimpleException;
 
 type
 
@@ -114,6 +115,13 @@ type
     miChapterListHideDownloaded: TMenuItem;
     miAbortSilentThread: TMenuItem;
     mmChangelog: TMemo;
+    pcInfo: TPageControl;
+    psInfo: TPairSplitter;
+    pssInfoList: TPairSplitterSide;
+    pssInfo: TPairSplitterSide;
+    psDownloads: TPairSplitter;
+    pssDownloadsFilter: TPairSplitterSide;
+    pssDownloads: TPairSplitterSide;
     pcMisc: TPageControl;
     pcWebsiteOptions: TPageControl;
     Panel1: TPanel;
@@ -127,6 +135,8 @@ type
     sbSaveTo: TScrollBox;
     sbWebsiteOptions: TScrollBox;
     btDownloadSplit: TSpeedButton;
+    tsInfoManga: TTabSheet;
+    tsinfoFilterAdv: TTabSheet;
     tsCustomColor: TTabSheet;
     tsLog: TTabSheet;
     tmAnimateMangaInfo: TTimer;
@@ -314,10 +324,9 @@ type
     miDownloadResume: TMenuItem;
     miDownloadDelete: TMenuItem;
     miChapterListUncheckAll: TMenuItem;
-    pcLeft: TPageControl;
     pbWait: TPaintBox;
     pmChapterList: TPopupMenu;
-    pnOptions: TPageControl;
+    pcOptions: TPageControl;
     pnChapterList: TPanel;
     pnFilter: TPanel;
     pnGenres: TPanel;
@@ -363,8 +372,6 @@ type
     tbSeparator1: TToolButton;
     tbDownloadDeleteCompleted: TToolButton;
     tvDownloadFilter: TTreeView;
-    tsDownloadFilter: TTabSheet;
-    tsMangaList: TTabSheet;
     tsMisc: TTabSheet;
     tsUpdate: TTabSheet;
     tsAbout: TTabSheet;
@@ -376,7 +383,6 @@ type
     tsSaveTo: TTabSheet;
     tsConnections: TTabSheet;
     tsOption: TTabSheet;
-    tsFilter: TTabSheet;
     tsInformation: TTabSheet;
     tsDownload: TTabSheet;
     clbChapterList: TVirtualStringTree;
@@ -1018,7 +1024,7 @@ procedure TOpenDBThread.SyncOpenStart;
 begin
   with MainForm do
   begin
-    ChangeAllCursor(tsMangaList, crHourGlass);
+    ChangeAllCursor(pssInfoList, crHourGlass);
     SetControlEnabled(False);
     lbMode.Caption := RS_Loading;
     vtMangaList.Clear;
@@ -1039,7 +1045,7 @@ begin
     vtMangaList.BeginUpdate;
     vtMangaList.RootNodeCount := dataProcess.RecordCount;
     vtMangaList.EndUpdate;
-    ChangeAllCursor(tsMangaList, crDefault);
+    ChangeAllCursor(pssInfoList, crDefault);
   end;
 end;
 
@@ -5289,8 +5295,8 @@ var
 begin
   with configfile do
   begin
-    pcLeft.Width := ReadInteger('form', 'MainSplitter', 195);
-    sbMain.Panels[0].Width := pcLeft.Width + 4;
+    psDownloads.Position := ReadInteger('form', 'DownloadsSplitter', psDownloads.Position);
+    psInfo.Position := ReadInteger('form', 'MangaInfoSplitter', psInfo.Position);
 
     if cbOptionAutoCheckFavStartup.Checked and cbOptionAutoOpenFavStartup.Checked then
       pcMain.ActivePage := tsFavorites
@@ -5336,7 +5342,8 @@ var
 begin
   with configfile do
   begin
-    WriteInteger('form', 'MainSplitter', pcLeft.Width);
+    WriteInteger('form', 'DownloadsSplitter', psDownloads.Position);
+    WriteInteger('form', 'MangaInfoSplitter', psInfo.Position);
     WriteInteger('form', 'pcMainPageIndex', pcMain.PageIndex);
     WriteInteger('form', 'SelectManga', cbSelectManga.ItemIndex);
     WriteBool('form', 'MainFormMaximized', (WindowState = wsMaximized));

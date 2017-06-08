@@ -1703,22 +1703,22 @@ msgctxt "tmainform.tsdownload.caption"
 msgid "Downloads"
 msgstr ""
 
-#: tmainform.tsdownloadfilter.caption
-msgid ">>"
-msgstr ""
-
 #: tmainform.tsfavorites.caption
 msgctxt "tmainform.tsfavorites.caption"
 msgid "Favorites"
 msgstr ""
 
-#: tmainform.tsfilter.caption
-msgctxt "tmainform.tsfilter.caption"
+#: tmainform.tsgeneral.caption
+msgid "General"
+msgstr ""
+
+#: tmainform.tsinfofilteradv.caption
+msgctxt "tmainform.tsinfofilteradv.caption"
 msgid "Filter"
 msgstr ""
 
-#: tmainform.tsgeneral.caption
-msgid "General"
+#: tmainform.tsinfomanga.caption
+msgid "Info"
 msgstr ""
 
 #: tmainform.tsinformation.caption
@@ -1727,10 +1727,6 @@ msgstr ""
 
 #: tmainform.tslog.caption
 msgid "Log"
-msgstr ""
-
-#: tmainform.tsmangalist.caption
-msgid "Manga List"
 msgstr ""
 
 #: tmainform.tsmisc.caption

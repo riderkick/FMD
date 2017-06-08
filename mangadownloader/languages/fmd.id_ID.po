@@ -586,7 +586,7 @@ msgstr "Kunjungi blog"
 
 #: tmainform.caption
 msgid "Free Manga Downloader"
-msgstr "Free Manga Downloader"
+msgstr ""
 
 #: tmainform.cbaddasstopped.caption
 msgid "Add to download list as stopped task"
@@ -1777,23 +1777,23 @@ msgctxt "tmainform.tsdownload.caption"
 msgid "Downloads"
 msgstr "Unduhan"
 
-#: tmainform.tsdownloadfilter.caption
-msgid ">>"
-msgstr ">>"
-
 #: tmainform.tsfavorites.caption
 msgctxt "tmainform.tsfavorites.caption"
 msgid "Favorites"
 msgstr "Kesukaan"
 
-#: tmainform.tsfilter.caption
-msgctxt "tmainform.tsfilter.caption"
-msgid "Filter"
-msgstr "Saring"
-
 #: tmainform.tsgeneral.caption
 msgid "General"
 msgstr "Umum"
+
+#: tmainform.tsinfofilteradv.caption
+msgctxt "tmainform.tsinfofilteradv.caption"
+msgid "Filter"
+msgstr "Saring"
+
+#: tmainform.tsinfomanga.caption
+msgid "Info"
+msgstr "Info"
 
 #: tmainform.tsinformation.caption
 msgid "Manga Info"
@@ -1802,10 +1802,6 @@ msgstr "Informasi Komik"
 #: tmainform.tslog.caption
 msgid "Log"
 msgstr "Log"
-
-#: tmainform.tsmangalist.caption
-msgid "Manga List"
-msgstr "Daftar Komik"
 
 #: tmainform.tsmisc.caption
 msgid "Misc"

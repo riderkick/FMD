@@ -1793,23 +1793,23 @@ msgctxt "tmainform.tsdownload.caption"
 msgid "Downloads"
 msgstr "Pobrane"
 
-#: tmainform.tsdownloadfilter.caption
-msgid ">>"
-msgstr ">>"
-
 #: tmainform.tsfavorites.caption
 msgctxt "tmainform.tsfavorites.caption"
 msgid "Favorites"
 msgstr "Ulubione"
 
-#: tmainform.tsfilter.caption
-msgctxt "tmainform.tsfilter.caption"
-msgid "Filter"
-msgstr "Filtr"
-
 #: tmainform.tsgeneral.caption
 msgid "General"
 msgstr "Główne"
+
+#: tmainform.tsinfofilteradv.caption
+msgctxt "tmainform.tsinfofilteradv.caption"
+msgid "Filter"
+msgstr "Filtr"
+
+#: tmainform.tsinfomanga.caption
+msgid "Info"
+msgstr ""
 
 #: tmainform.tsinformation.caption
 msgid "Manga Info"
@@ -1818,10 +1818,6 @@ msgstr "Informacje o mandze"
 #: tmainform.tslog.caption
 msgid "Log"
 msgstr "Log"
-
-#: tmainform.tsmangalist.caption
-msgid "Manga List"
-msgstr "Lista Mang"
 
 #: tmainform.tsmisc.caption
 msgid "Misc"
@@ -2225,4 +2221,3 @@ msgstr "Synchronizacja danych"
 #: uupdatethread.rs_updatinglist
 msgid "Updating list"
 msgstr "Aktualizacja listy"
-

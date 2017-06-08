@@ -1844,23 +1844,23 @@ msgctxt "tmainform.tsdownload.caption"
 msgid "Downloads"
 msgstr "Λήψεις"
 
-#: tmainform.tsdownloadfilter.caption
-msgid ">>"
-msgstr ">>"
-
 #: tmainform.tsfavorites.caption
 msgctxt "tmainform.tsfavorites.caption"
 msgid "Favorites"
 msgstr "Αγαπημένα"
 
-#: tmainform.tsfilter.caption
-msgctxt "tmainform.tsfilter.caption"
-msgid "Filter"
-msgstr "Φίλτρο"
-
 #: tmainform.tsgeneral.caption
 msgid "General"
 msgstr "Γενικές"
+
+#: tmainform.tsinfofilteradv.caption
+msgctxt "tmainform.tsinfofilteradv.caption"
+msgid "Filter"
+msgstr "Φίλτρο"
+
+#: tmainform.tsinfomanga.caption
+msgid "Info"
+msgstr ""
 
 #: tmainform.tsinformation.caption
 msgid "Manga Info"
@@ -1869,10 +1869,6 @@ msgstr "Πληροφορίες manga"
 #: tmainform.tslog.caption
 msgid "Log"
 msgstr "Αρχείο καταγραφής"
-
-#: tmainform.tsmangalist.caption
-msgid "Manga List"
-msgstr "Λίστα Manga"
 
 #: tmainform.tsmisc.caption
 msgid "Misc"
@@ -2276,4 +2272,3 @@ msgstr "Συγχρονισμός δεδομένων"
 #: uupdatethread.rs_updatinglist
 msgid "Updating list"
 msgstr "Ενημέρωση λίστας"
-
