@@ -9,6 +9,10 @@
       <Title Value="Free Manga Downloader"/>
       <ResourceType Value="res"/>
       <UseXPManifest Value="True"/>
+      <XPManifest>
+        <TextName Value="fmd.free"/>
+        <TextDesc Value="Free Manga Downloader"/>
+      </XPManifest>
       <Icon Value="0"/>
     </General>
     <i18n>
@@ -18,7 +22,7 @@
     <VersionInfo>
       <UseVersionInfo Value="True"/>
       <MinorVersionNr Value="9"/>
-      <RevisionNr Value="112"/>
+      <RevisionNr Value="113"/>
       <Attributes pvaPrivateBuild="True"/>
       <StringTable Comments="https://github.com/riderkick/FMD" FileDescription="Free Manga Downloader" LegalCopyright="©2015-2017" OriginalFilename="fmd.exe" ProductName="Free Manga Downloader" ProductVersion="$BuildMode()" PrivateBuild="riderkick"/>
     </VersionInfo>
