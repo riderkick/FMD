@@ -16,9 +16,10 @@ object MainForm: TMainForm
   ShowHint = True
   LCLVersion = '1.9.0.0'
   object sbUpdateList: TStatusBar
+    AnchorSideBottom.Control = sbMain
     Left = 0
     Height = 30
-    Top = 557
+    Top = 534
     Width = 771
     AutoSize = False
     Panels = <    
@@ -4569,7 +4570,7 @@ object MainForm: TMainForm
   object sbMain: TStatusBar
     Left = 0
     Height = 23
-    Top = 534
+    Top = 564
     Width = 771
     Panels = <    
       item
