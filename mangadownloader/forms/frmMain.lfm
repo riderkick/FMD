@@ -174,21 +174,26 @@ object MainForm: TMainForm
             AnchorSideLeft.Control = edDownloadsSearch
             AnchorSideLeft.Side = asrBottom
             AnchorSideTop.Control = edDownloadsSearch
-            AnchorSideTop.Side = asrCenter
+            AnchorSideRight.Control = vtDownload
+            AnchorSideRight.Side = asrBottom
+            AnchorSideBottom.Control = edDownloadsSearch
+            AnchorSideBottom.Side = asrBottom
             Left = 154
-            Height = 24
-            Top = -1
-            Width = 457
+            Height = 25
+            Top = 0
+            Width = 402
             Anchors = [akTop, akLeft, akRight]
             BevelOuter = bvNone
-            ClientHeight = 24
-            ClientWidth = 457
+            ClientHeight = 25
+            ClientWidth = 402
             TabOrder = 1
             object TransferRateGraph: TChart
+              AnchorSideRight.Side = asrBottom
+              AnchorSideBottom.Side = asrBottom
               Left = 321
-              Height = 24
+              Height = 25
               Top = 0
-              Width = 136
+              Width = 81
               AllowZoom = False
               AxisList = <              
                 item
@@ -214,7 +219,7 @@ object MainForm: TMainForm
               Legend.Frame.Visible = False
               Legend.MarginX = 0
               Legend.MarginY = 0
-              Legend.Spacing = 0
+              Legend.Spacing = 2
               Legend.SymbolWidth = 0
               Legend.UseSidebar = False
               Legend.Visible = True
@@ -244,21 +249,20 @@ object MainForm: TMainForm
             end
             object pnDownloadToolbarLeft: TPanel
               Left = 0
-              Height = 24
+              Height = 25
               Top = 0
               Width = 321
               Align = alLeft
               AutoSize = True
               BevelOuter = bvNone
-              ClientHeight = 24
+              ClientHeight = 25
               ClientWidth = 321
               TabOrder = 1
               object ToolBarDownload: TToolBar
                 Left = 0
-                Height = 24
+                Height = 25
                 Top = 0
                 Width = 321
-                Align = alClient
                 AutoSize = True
                 ButtonHeight = 25
                 ButtonWidth = 23
