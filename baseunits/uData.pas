@@ -957,8 +957,6 @@ var
 
   {$I includes/Starkana/names_and_links.inc}
 
-  {$I includes/EatManga/names_and_links.inc}
-
   {$I includes/S2Scans/names_and_links.inc}
 
   {$I includes/EGScans/names_and_links.inc}
@@ -1033,9 +1031,6 @@ begin
     else
     if MangaSiteID = STARKANA_ID then
       Result := StarkanaGetNamesAndLinks
-    else
-    if MangaSiteID = EATMANGA_ID then
-      Result := EatMangaGetNamesAndLinks
     else
     if MangaSiteID = S2SCAN_ID then
       Result := S2ScanGetNamesAndLinks
@@ -1185,8 +1180,6 @@ var
 
   {$I includes/Starkana/manga_information.inc}
 
-  {$I includes/EatManga/manga_information.inc}
-
   {$I includes/S2Scans/manga_information.inc}
 
   {$I includes/EGScans/manga_information.inc}
@@ -1291,9 +1284,6 @@ begin
     else
     if MangaSiteID = STARKANA_ID then
       Result := GetStarkanaInfoFromURL
-    else
-    if MangaSiteID = EATMANGA_ID then
-      Result := GetEatMangaInfoFromURL
     else
     if MangaSiteID = S2SCAN_ID then
       Result := GetS2scanInfoFromURL

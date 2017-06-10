@@ -238,50 +238,49 @@ const
   TRUYEN18_ID            = 5;
   TRUYENTRANHTUAN_ID     = 6;
   TURKCRAFT_ID           = 7;
-  EATMANGA_ID            = 8;
-  STARKANA_ID            = 9;
-  BLOGTRUYEN_ID          = 10;
-  ESMANGAHERE_ID         = 11;
-  ANIMEEXTREMIST_ID      = 12;
-  S2SCAN_ID              = 13;
-  IMANHUA_ID             = 14;
-  CENTRALDEMANGAS_ID     = 15;
-  EGSCANS_ID             = 16;
-  MANGAAR_ID             = 17;
-  MANGAAE_ID             = 18;
-  ANIMESTORY_ID          = 19;
-  LECTUREENLIGNE_ID      = 20;
-  SCANMANGA_ID           = 21;
-  DM5_ID                 = 22;
-  KIVMANGA_ID            = 23;
-  MEINMANGA_ID           = 24;
-  MANGASPROJECT_ID       = 25;
-  MANGAREADER_POR_ID     = 26;
-  NINEMANGA_ID           = 27;
-  NINEMANGA_ES_ID        = 28;
-  NINEMANGA_CN_ID        = 29;
-  NINEMANGA_RU_ID        = 30;
-  NINEMANGA_DE_ID        = 31;
-  NINEMANGA_IT_ID        = 32;
-  NINEMANGA_BR_ID        = 33;
-  JAPANSHIN_ID           = 34;
-  CENTRUMMANGI_PL_ID     = 35;
-  MANGALIB_PL_ID         = 36;
-  ONEMANGA_ID            = 37;
-  MANGATOWN_ID           = 38;
-  MANGAOKU_ID            = 39;
-  MYREADINGMANGAINFO_ID  = 40;
-  IKOMIK_ID              = 41;
-  NHENTAI_ID             = 42;
-  MANGAMINT_ID           = 43;
-  UNIXMANGA_ID           = 44;
-  EXTREMEMANGAS_ID       = 45;
-  MANGAHOST_ID           = 46;
-  MANGAKU_ID             = 47;
-  MANGAAT_ID             = 48;
-  DYNASTYSCANS_ID        = 49;
+  STARKANA_ID            = 8;
+  BLOGTRUYEN_ID          = 9;
+  ESMANGAHERE_ID         = 10;
+  ANIMEEXTREMIST_ID      = 11;
+  S2SCAN_ID              = 12;
+  IMANHUA_ID             = 13;
+  CENTRALDEMANGAS_ID     = 14;
+  EGSCANS_ID             = 15;
+  MANGAAR_ID             = 16;
+  MANGAAE_ID             = 17;
+  ANIMESTORY_ID          = 18;
+  LECTUREENLIGNE_ID      = 19;
+  SCANMANGA_ID           = 20;
+  DM5_ID                 = 21;
+  KIVMANGA_ID            = 22;
+  MEINMANGA_ID           = 23;
+  MANGASPROJECT_ID       = 24;
+  MANGAREADER_POR_ID     = 25;
+  NINEMANGA_ID           = 26;
+  NINEMANGA_ES_ID        = 27;
+  NINEMANGA_CN_ID        = 28;
+  NINEMANGA_RU_ID        = 29;
+  NINEMANGA_DE_ID        = 30;
+  NINEMANGA_IT_ID        = 31;
+  NINEMANGA_BR_ID        = 32;
+  JAPANSHIN_ID           = 33;
+  CENTRUMMANGI_PL_ID     = 34;
+  MANGALIB_PL_ID         = 35;
+  ONEMANGA_ID            = 36;
+  MANGATOWN_ID           = 37;
+  MANGAOKU_ID            = 38;
+  MYREADINGMANGAINFO_ID  = 39;
+  IKOMIK_ID              = 40;
+  NHENTAI_ID             = 41;
+  MANGAMINT_ID           = 42;
+  UNIXMANGA_ID           = 43;
+  EXTREMEMANGAS_ID       = 44;
+  MANGAHOST_ID           = 45;
+  MANGAKU_ID             = 46;
+  MANGAAT_ID             = 47;
+  DYNASTYSCANS_ID        = 48;
 
-  WebsiteRoots: array [0..49] of array [0..1] of String = (
+  WebsiteRoots: array [0..48] of array [0..1] of String = (
     ('AnimeA', 'http://manga.animea.net'),
     ('OurManga', 'http://www.ourmanga.com'),
     ('Manga24h', 'http://manga24h.com'),
@@ -290,7 +289,6 @@ const
     ('Truyen18', 'http://www.truyen18.org'),
     ('TruyenTranhTuan', 'http://truyentranhtuan.com'),
     ('Turkcraft', 'http://turkcraft.com'),
-    ('EatManga', 'http://eatmanga.com'),
     ('Starkana', 'http://starkana.jp'),
     ('BlogTruyen', 'http://blogtruyen.com'),
     ('ESMangaHere', 'http://es.mangahere.co'),
@@ -352,9 +350,6 @@ const
   TRUYENTRANHTUAN_BROWSER = '/danh-sach-truyen';
 
   TURKCRAFT_BROWSER = '/';
-
-  EATMANGA_BROWSER = '/Manga-Scan/';
-  EATMANGA_maxDLTask: Cardinal = 1;
 
   STARKANA_BROWSER = '/manga/list';
 
