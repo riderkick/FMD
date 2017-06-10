@@ -4,7 +4,12 @@ Project page: https://github.com/riderkick/FMD
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
-0.9.113.0 (08-07-2017)
+0.9.114.0 (10-06-2017)
+[*] EatManga: fixed all
+[*] Fixed layout
+Full changes: https://github.com/riderkick/FMD/compare/0.9.113.0...0.9.114.0
+
+0.9.113.0 (08-06-2017)
 [*] Pururin: fixed all
 [*] Layout changes
 Full changes: https://github.com/riderkick/FMD/compare/0.9.112.0...0.9.113.0
