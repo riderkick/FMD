@@ -32,17 +32,19 @@ begin
     url := MaybeFillHost(Module.RootURL, AURL);
     if GET(url) then begin
       Result := NO_ERROR;
-      XPathHREFAll('//ul[@id="updates"]/li[not(./div[2]/span[starts-with(.,"in ")])]/div[1]/a', Document, chapterLinks, chapterName);
-      InvertStrings([chapterLinks, chapterName]);
+      with TXQueryEngineHTML.Create(Document) do try
+        if title = '' then title := XPathString('//title/substring-before(.," Manga Releases - Read ")');
+        XPathHREFAll('//ul[@id="updates"]/li[not(./div[2]/span[starts-with(.,"in ")])]/div[1]/a', chapterLinks, chapterName);
+        InvertStrings([chapterLinks, chapterName]);
+      finally
+        Free;
+      end;
     end;
   end;
 end;
 
 function GetPageNumber(const DownloadThread: TDownloadThread;
   const AURL: String; const Module: TModuleContainer): Boolean;
-var
-  a, c: String;
-  v: IXQValue;
 begin
   Result := False;
   if DownloadThread = nil then Exit;
