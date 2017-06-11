@@ -93,6 +93,7 @@ begin
     OnGetInfo := @GetInfo;
     OnGetPageNumber := @GetPageNumber;
     OnGetImageURL := @GetImageURL;
+    TotalDirectory := Length(ALPHA_LIST_UP);
   end;
 end;
 

@@ -16,7 +16,7 @@ unit uGetMangaInfosThread;
 interface
 
 uses
-  SysUtils, Graphics, Dialogs, uBaseUnit, uData, httpsendthread, FMDOptions,
+  SysUtils, Graphics, Dialogs, uBaseUnit, uData, FMDOptions,
   BaseThread;
 
 type
@@ -50,12 +50,12 @@ type
 implementation
 
 uses
-  frmMain, WebsiteModules;
+  frmMain, WebsiteModules, FMDVars;
 
 procedure TGetMangaInfosThread.MainThreadSyncInfos;
 begin
-  FInfo.SyncInfoToData(MainForm.DataProcess);
-  MainForm.dataProcess.Commit;
+  FInfo.SyncInfoToData(DataProcess);
+  dataProcess.Commit;
 end;
 
 procedure TGetMangaInfosThread.Execute;
@@ -76,15 +76,15 @@ procedure TGetMangaInfosThread.Execute;
       begin
         filterPos := FMangaListPos;
         if FInfo.mangaInfo.title = '' then
-          FInfo.mangaInfo.title := MainForm.dataProcess.Value[filterPos, DATA_PARAM_TITLE];
-        FInfo.mangaInfo.link := MainForm.dataProcess.Value[filterPos, DATA_PARAM_LINK];
-        FInfo.mangaInfo.authors := MainForm.dataProcess.Value[filterPos, DATA_PARAM_AUTHORS];
-        FInfo.mangaInfo.artists := MainForm.dataProcess.Value[filterPos, DATA_PARAM_ARTISTS];
-        FInfo.mangaInfo.status := MainForm.dataProcess.Value[filterPos, DATA_PARAM_STATUS];
-        FInfo.mangaInfo.summary := MainForm.dataProcess.Value[filterPos, DATA_PARAM_SUMMARY];
-        FInfo.mangaInfo.numChapter := StrToIntDef(MainForm.dataProcess.Value[filterPos, DATA_PARAM_NUMCHAPTER], 0);
-        FInfo.mangaInfo.genres := MainForm.dataProcess.Value[filterPos, DATA_PARAM_GENRES];
-        FNumChapter := StrToIntDef(MainForm.dataProcess.Value[filterPos, DATA_PARAM_NUMCHAPTER], 0);
+          FInfo.mangaInfo.title := dataProcess.Value[filterPos, DATA_PARAM_TITLE];
+        FInfo.mangaInfo.link := dataProcess.Value[filterPos, DATA_PARAM_LINK];
+        FInfo.mangaInfo.authors := dataProcess.Value[filterPos, DATA_PARAM_AUTHORS];
+        FInfo.mangaInfo.artists := dataProcess.Value[filterPos, DATA_PARAM_ARTISTS];
+        FInfo.mangaInfo.status := dataProcess.Value[filterPos, DATA_PARAM_STATUS];
+        FInfo.mangaInfo.summary := dataProcess.Value[filterPos, DATA_PARAM_SUMMARY];
+        FInfo.mangaInfo.numChapter := StrToIntDef(dataProcess.Value[filterPos, DATA_PARAM_NUMCHAPTER], 0);
+        FInfo.mangaInfo.genres := dataProcess.Value[filterPos, DATA_PARAM_GENRES];
+        FNumChapter := StrToIntDef(dataProcess.Value[filterPos, DATA_PARAM_NUMCHAPTER], 0);
       end;
       FInfo.isGenerateFolderChapterName := OptionGenerateMangaFolder;
       FInfo.isRemoveUnicode := OptionChangeUnicodeCharacter;
@@ -110,22 +110,18 @@ procedure TGetMangaInfosThread.Execute;
 
       if FMangaListPos >= 0 then
       begin
-        if MainForm.dataProcess.WebsiteLoaded(Website) then
+        if dataProcess.WebsiteLoaded(Website) then
         begin
           if SitesWithoutInformation(website) then
           begin
             if FInfo.mangaInfo.authors = '' then
-              FInfo.mangaInfo.authors :=
-                MainForm.DataProcess.Value[filterPos, DATA_PARAM_AUTHORS];
+              FInfo.mangaInfo.authors := DataProcess.Value[filterPos, DATA_PARAM_AUTHORS];
             if FInfo.mangaInfo.artists = '' then
-              FInfo.mangaInfo.artists :=
-                MainForm.DataProcess.Value[filterPos, DATA_PARAM_ARTISTS];
+              FInfo.mangaInfo.artists := DataProcess.Value[filterPos, DATA_PARAM_ARTISTS];
             if FInfo.mangaInfo.genres = '' then
-              FInfo.mangaInfo.genres :=
-                MainForm.DataProcess.Value[filterPos, DATA_PARAM_GENRES];
+              FInfo.mangaInfo.genres := DataProcess.Value[filterPos, DATA_PARAM_GENRES];
             if FInfo.mangaInfo.summary = '' then
-              FInfo.mangaInfo.summary :=
-                MainForm.DataProcess.Value[filterPos, DATA_PARAM_SUMMARY];
+              FInfo.mangaInfo.summary := DataProcess.Value[filterPos, DATA_PARAM_SUMMARY];
           end;
 
           if not (Terminated or isExiting) then
@@ -183,7 +179,7 @@ end;
 
 procedure TGetMangaInfosThread.MainThreadShowInfos;
 begin
-  TransferMangaInfo(MainForm.mangaInfo, FInfo.mangaInfo);
+  TransferMangaInfo(mangaInfo, FInfo.mangaInfo);
   with MainForm do begin
     if (FMangaListPos > -1) and dataProcess.WebsiteLoaded(Website) then
       begin
@@ -222,7 +218,7 @@ end;
 destructor TGetMangaInfosThread.Destroy;
 begin
   Modules.DecActiveConnectionCount(FInfo.ModuleId);
-  MainForm.GetInfosThread := nil;
+  GetInfosThread := nil;
   FCover := nil;
   FInfo.Free;
   inherited Destroy;

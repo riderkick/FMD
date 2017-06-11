@@ -332,7 +332,8 @@ const
     ('Dynasty-Scans', 'http://dynasty-scans.com')
     );
 
-  ALPHA_LIST = '#abcdefghijklmnopqrstuvwxyz';
+  ALPHA_LIST    = '#abcdefghijklmnopqrstuvwxyz';
+  ALPHA_LIST_UP = '#ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
   ANIMEA_BROWSER = '/browse.html?page=';
   ANIMEA_SKIP = '?skip=1';

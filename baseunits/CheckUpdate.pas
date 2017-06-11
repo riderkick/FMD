@@ -38,7 +38,7 @@ resourcestring
 implementation
 
 uses
-  frmMain, frmUpdateDialog;
+  frmMain, frmUpdateDialog, FMDVars;
 
 { TCheckUpdateThread }
 
@@ -61,7 +61,7 @@ begin
       end;
       if ShowModal = mrYes then
       begin
-        frmMain.FUpdateURL := fUpdateURL;
+        FUpdateURL := fUpdateURL;
         DoAfterFMD := DO_UPDATE;
         MainForm.tmExitCommand.Enabled := True;
       end
@@ -137,7 +137,7 @@ end;
 destructor TCheckUpdateThread.Destroy;
 begin
   FHTTP.Free;
-  MainForm.CheckUpdateThread := nil;
+  CheckUpdateThread := nil;
   inherited Destroy;
 end;
 

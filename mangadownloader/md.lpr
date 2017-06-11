@@ -10,7 +10,8 @@ uses
  {$ENDIF} {$ENDIF}
   Interfaces, // this includes the LCL widgetset
   Forms, LazFileUtils, IniFiles, simpleipc, sqlite3dyn, FMDOptions, uBaseUnit,
-  SimpleException, Classes, windows, sysutils, frmMain, MultiLog, FileChannel;
+  FMDVars, SimpleException, Classes, windows, sysutils, frmMain, MultiLog,
+  FileChannel;
 
 var
   CheckInstance: Boolean = True;
@@ -66,7 +67,7 @@ begin
     if EnableLogging then
     begin
       Logger.Enabled := True;
-      frmMain.FileLogger := TFileChannel.Create(LogFileName, [fcoShowHeader, fcoShowPrefix, fcoShowTime]);
+      FileLogger := TFileChannel.Create(LogFileName, [fcoShowHeader, fcoShowPrefix, fcoShowTime]);
       Logger.Channels.Add(FileLogger);
       Logger.Send(QuotedStrd(Application.Title)+' started with [PID:'+IntToStr(GetProcessID)+'] [HANDLE:'+IntToStr(GetCurrentProcess)+']');
       s := TStringList.Create;

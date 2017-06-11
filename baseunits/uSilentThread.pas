@@ -105,7 +105,7 @@ resourcestring
 implementation
 
 uses
-  frmMain;
+  frmMain, FMDVars;
 
 { TSilentThreadManagerThread }
 
@@ -171,7 +171,7 @@ procedure TSilentThreadManager.Add(AType: TMetaDataType;
   AWebsite, AManga, AURL: String; ASavePath: String = '');
 begin
   if not ((AType = MD_AddToFavorites) and
-    (MainForm.FavoriteManager.IsMangaExist(AManga, AWebsite))) then
+    (FavoriteManager.IsMangaExist(AManga, AWebsite))) then
   begin
     EnterCriticalsection(FCS_META);
     try

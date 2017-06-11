@@ -276,7 +276,7 @@ resourcestring
 implementation
 
 uses
-  frmMain, WebsiteModules;
+  frmMain, WebsiteModules, FMDVars;
 
 function IntToStr(Value: Cardinal): String;
 begin
@@ -1817,7 +1817,7 @@ begin
       MainForm.tmRefreshDownloadsInfo.Enabled := False;
       MainForm.UpdateVtDownload;
       if isCheckForFMDDo and (OptionLetFMDDo <> DO_NOTHING) then begin
-        frmMain.DoAfterFMD := OptionLetFMDDo;
+        DoAfterFMD := OptionLetFMDDo;
         MainForm.DoExitWaitCounter;
       end;
     end;

@@ -36,7 +36,7 @@ type
 implementation
 
 uses
-  frmMain, Dialogs, ComCtrls;
+  frmMain, FMDVars, Dialogs, ComCtrls;
 
 procedure TUpdateDBThread.MainThreadRefreshList;
 begin
@@ -45,14 +45,14 @@ begin
     begin
       MainForm.edMangaListSearch.Clear;
       MainForm.vtMangaList.Clear;
-      MainForm.dataProcess.Close;
+      dataProcess.Close;
       ExtractFile;
       MainForm.OpenDataDB(websiteName);
     end
     else
     begin
-      if MainForm.dataProcess.WebsiteLoaded(websiteName) then
-        MainForm.dataProcess.RemoveFilter;
+      if dataProcess.WebsiteLoaded(websiteName) then
+        dataProcess.RemoveFilter;
       ExtractFile;
     end;
   except
@@ -121,7 +121,7 @@ begin
   MainForm.sbUpdateList.Panels[0].Text := '';
   MainForm.sbUpdateList.Hide;
   MainForm.sbMain.SizeGrip := not MainForm.sbUpdateList.Visible;
-  MainForm.isUpdating := False;
+  isUpdating := False;
 end;
 
 procedure TUpdateDBThread.MainThreadCannotConnectToServer;

@@ -101,7 +101,7 @@ resourcestring
 implementation
 
 uses
-  frmMain, Dialogs, ComCtrls;
+  frmMain, FMDVars, Dialogs, ComCtrls;
 
 { TUpdateListThread }
 
@@ -292,8 +292,8 @@ begin
   mainForm.sbUpdateList.Panels[0].Style := psText;
   MainForm.sbUpdateList.Hide;
   MainForm.sbMain.SizeGrip := not MainForm.sbUpdateList.Visible;
-  MainForm.isUpdating:=False;
-  if MainForm.isPendingExitCounter then
+  isUpdating:=False;
+  if isPendingExitCounter then
     MainForm.DoExitWaitCounter;
 end;
 
@@ -364,7 +364,7 @@ begin
   mainDataProcess.Free;
   tempDataProcess.Free;
   Threads.Free;
-  MainForm.isUpdating := False;
+  isUpdating := False;
   DoneCriticalsection(FCS_CurrentGetInfoLimit);
   DoneCriticalsection(CS_AddInfoToData);
   DoneCriticalsection(CS_AddNamesAndLinks);
@@ -439,8 +439,8 @@ begin
   try
     FCurrentGetInfoLimit := limit;
     while (not Terminated) and (workPtr < FCurrentGetInfoLimit) do begin
-      if MainForm.ulTotalPtr <> FCurrentGetInfoLimit then
-        MainForm.ulTotalPtr := FCurrentGetInfoLimit;
+      if ulTotalPtr <> FCurrentGetInfoLimit then
+        ulTotalPtr := FCurrentGetInfoLimit;
       mt := advancedfile.ReadInteger('UpdateListNumberOfThreads', website, -1);
       if mt > 0 then
       begin
@@ -518,7 +518,7 @@ begin
               s := Format('%s | %s "%s"', [s, RS_GettingInfo, tempDataProcess.Value[workPtr-1,DATA_PARAM_TITLE]]);
           end;
           FStatus := s;
-          MainForm.ulWorkPtr := workPtr + 1;
+          ulWorkPtr := workPtr + 1;
           Synchronize(MainThreadShowGetting);
         finally
           LeaveCriticalsection(CS_Threads);
@@ -602,12 +602,12 @@ begin
         try
           DeleteDBDataProcess(twebsite);
           DeleteDBDataProcess(twebsitetemp);
-          if (MainForm.dataProcess.Website = website) and
-            (MainForm.dataProcess.Connected) then
-            MainForm.dataProcess.Backup(twebsite)
+          if (dataProcess.Website = website) and
+            (dataProcess.Connected) then
+            dataProcess.Backup(twebsite)
           else
           begin
-            if MainForm.dataProcess.WebsiteLoaded(website) then
+            if dataProcess.WebsiteLoaded(website) then
               Synchronize(MainThreadRemoveFilter);
             CopyDBDataProcess(website, twebsite);
           end;

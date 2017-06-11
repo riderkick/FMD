@@ -162,7 +162,7 @@ resourcestring
 implementation
 
 uses
-  frmMain, frmNewChapter;
+  frmMain, frmNewChapter, FMDVars;
 
 { TFavoriteContainer }
 
@@ -648,8 +648,8 @@ var
   newdl: LongInt;
 begin
   if isDlgCounter then Exit;
-  if (Self.DLManager = nil) and Assigned(MainForm.DLManager) then
-    Self.DLManager := MainForm.DLManager;
+  if (Self.DLManager = nil) and Assigned(DLManager) then
+    Self.DLManager := DLManager;
   if Self.DLManager = nil then Exit;
 
   EnterCriticalsection(CS_Favorites);

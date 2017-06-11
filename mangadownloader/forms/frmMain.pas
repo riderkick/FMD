@@ -630,28 +630,15 @@ type
     procedure FMDInstanceReceiveMsg(Sender: TObject);
     procedure ClearChapterListState;
   public
-    ulTotalPtr, ulWorkPtr: Integer;
     optionMangaSiteSelectionNodes: array of PVirtualNode;
     LastSearchStr, LastSearchWeb: String;
-    isStartup, isRunDownloadFilter, isUpdating, isPendingExitCounter,
-    isNormalExit: Boolean;
-    FavoriteManager: TFavoriteManager;
-    dataProcess: TDBDataProcess;
-    mangaInfo: TMangaInfo;
+
+    // state of chapterlist in mangainfo
     ChapterList: array of TChapterStateItem;
-    DLManager: TDownloadManager;
-    updateDB: TUpdateDBThread;
-    updateList: TUpdateListManagerThread;
-    SilentThreadManager: TSilentThreadManager;
+
     // animation gif
     gifWaiting: TAnimatedGif;
     gifWaitingRect: TRect;
-
-    // get manga info
-    GetInfosThread: TGetMangaInfosThread;
-
-    // check update
-    CheckUpdateThread: TCheckUpdateThread;
 
     // generate >> nodes
     procedure GeneratetvDownloadFilterNodes;
@@ -781,18 +768,7 @@ type
   procedure AdvanceLoadHTTPConfig(const HTTP: THTTPSendThread; Website: String);
 
 var
-  //Instance
-  FMDInstance: TSimpleIPCServer;
-
   MainForm: TMainForm;
-
-  // update fmd through main thread
-  DoAfterFMD: TFMDDo;
-  IsDlgCounter: Boolean = False;
-  FUpdateURL: String;
-
-  // file logger
-  FileLogger: TFileChannel;
 
 const
   CL_HLBlueMarks        = $FDC594;
@@ -889,8 +865,8 @@ implementation
 {$R *.lfm}
 
 uses
-  frmImportFavorites, frmShutdownCounter, WebsiteModules, RegExpr, Clipbrd,
-  LazFileUtils, LazUTF8;
+  frmImportFavorites, frmShutdownCounter, WebsiteModules, FMDVars, RegExpr,
+  Clipbrd, LazFileUtils, LazUTF8;
 
 var
   // thread for open db
@@ -970,13 +946,13 @@ end;
 
 procedure TSearchDBThread.Execute;
 begin
-  if MainForm.dataProcess <> nil then
+  if dataProcess <> nil then
   begin
     Synchronize(@SyncBeforeSearch);
     while FNewSearch do
     begin
       FNewSearch := False;
-      MainForm.dataProcess.Search(FSearchStr);
+      dataProcess.Search(FSearchStr);
     end;
     if not Terminated then
       Synchronize(@SyncAfterSearch);
@@ -1051,14 +1027,14 @@ end;
 
 procedure TOpenDBThread.Execute;
 begin
-  if (FWebsite <> '') and (MainForm.dataProcess <> nil) then
+  if (FWebsite <> '') and (dataProcess <> nil) then
   begin
     Synchronize(@SyncOpenStart);
-    if MainForm.dataProcess <> nil then
+    if dataProcess <> nil then
     begin
-      MainForm.dataProcess.Open(FWebsite);
-      if MainForm.edMangaListSearch.Text <> '' then
-        MainForm.dataProcess.Search(MainForm.edMangaListSearch.Text);
+      dataProcess.Open(FWebsite);
+      if FormMain.edMangaListSearch.Text <> '' then
+        dataProcess.Search(MainForm.edMangaListSearch.Text);
     end;
     if not Terminated then
     Synchronize(@SyncOpenFinish);
@@ -1083,6 +1059,7 @@ end;
 procedure TMainForm.FormCreate(Sender: TObject);
 begin
   Randomize;
+  FormMain := Self;
   {$ifdef windows}
   PrevWndProc := windows.WNDPROC(windows.GetWindowLongPtr(Self.Handle, GWL_WNDPROC));
   windows.SetWindowLongPtr(Self.Handle, GWL_WNDPROC, PtrInt(@WndCallback));
@@ -1126,7 +1103,7 @@ begin
 
   // favorites
   FavoriteManager := TFavoriteManager.Create;
-  FavoriteManager.DLManager := Self.DLManager;
+  FavoriteManager.DLManager := DLManager;
   FavoriteManager.OnUpdateFavorite := @UpdateVtFavorites;
   FavoriteManager.OnUpdateDownload := @UpdateVtDownload;
 
@@ -1669,8 +1646,8 @@ begin
       btCheckLatestVersionClick(btCheckLatestVersion);
     if OptionAutoCheckFavStartup then
     begin
-      MainForm.FavoriteManager.isAuto := True;
-      MainForm.FavoriteManager.CheckForNewChapter;
+      FavoriteManager.isAuto := True;
+      FavoriteManager.CheckForNewChapter;
     end;
     DLManager.CheckAndActiveTaskAtStartup;
   end;

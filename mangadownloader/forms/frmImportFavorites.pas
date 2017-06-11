@@ -43,7 +43,7 @@ resourcestring
 implementation
 
 uses
-  frmMain, uSilentThread;
+  frmMain, uSilentThread, FMDVars;
 
 {$R *.lfm}
 
@@ -111,7 +111,7 @@ begin
 
         if webs <> '' then
         begin
-          MainForm.SilentThreadManager.Add(
+          SilentThreadManager.Add(
             MD_AddToFavorites,
             webs,
             mangaList[i],
@@ -151,7 +151,7 @@ end;
 
 procedure TImportFavorites.FMDHandle;
 begin
-  MainForm.FavoriteManager.MergeWith(CleanAndExpandDirectory(edPath.Text) + 'works/favorites.ini');
+  FavoriteManager.MergeWith(CleanAndExpandDirectory(edPath.Text) + 'works/favorites.ini');
 
   MessageDlg('', RS_ImportCompleted,
                  mtConfirmation, [mbYes], 0)
