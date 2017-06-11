@@ -10,9 +10,6 @@ uses
 
 implementation
 
-var
-  yomangacf: TCFProps;
-
 const
   dirurl = '/directory/';
   dirurlreader = '/reader/directory/';
@@ -25,9 +22,6 @@ const
 function GETWithCookie(const AHTTP: THTTPSendThread; const AURL: String;
   const Module: TModuleContainer): Boolean;
 begin
-  if Module.Website = 'YoManga' then
-    Result := Cloudflare.GETCF(AHTTP, AURL, yomangacf)
-  else
   if ((Module.Website = 'SeinagiAdultoFansub') or
       (Module.Website = 'TripleSevenScan'))
     and (Pos(dirurl, AURL) = 0)then
@@ -38,8 +32,7 @@ end;
 
 function GetDirURL(const AWebsite: String): String;
 begin
-  if (AWebsite = 'YoManga') or
-     (AWebsite = 'GoManga') or
+  if (AWebsite = 'GoManga') or
      (AWebsite = 'Jaiminisbox') or
      (AWebsite = 'TripleSevenScan') then
     Result := dirurlreader
@@ -226,15 +219,6 @@ begin
   end;
 end;
 
-function DownloadImageWithCookie(const DownloadThread: TDownloadThread;
-  const AURL, APath, AName: String; const Module: TModuleContainer): Boolean;
-begin
-  Result := False;
-  if DownloadThread = nil then Exit;
-  if GETWithCookie(DownloadThread.FHTTP, AURL, Module) then
-    SaveImageStreamToFile(DownloadThread.FHTTP, APath, AName);
-end;
-
 procedure RegisterModule;
 
   function AddWebsiteModule(AWebsite, ARootURL: String): TModuleContainer;
@@ -256,13 +240,6 @@ begin
   AddWebsiteModule('PowerManga', 'http://read.powermanga.org');
 
   AddWebsiteModule('Shoujosense', 'http://reader.shoujosense.com');
-  with AddWebsiteModule('YoManga', 'http://yomanga.co') do
-  begin
-    MaxTaskLimit := 1;
-    MaxConnectionLimit := 4;
-    OnDownloadImage := @DownloadImageWithCookie;
-  end;
-  AddWebsiteModule('RawYoManga', 'http://raws.yomanga.co');
   AddWebsiteModule('GoManga', 'http://gomanga.co');
   AddWebsiteModule('OneTimeScans', 'http://otscans.com');
   AddWebsiteModule('SenseScans', 'http://reader.sensescans.com');
@@ -288,10 +265,6 @@ begin
 end;
 
 initialization
-  yomangacf := TCFProps.Create;
   RegisterModule;
-
-finalization
-  yomangacf.Free;
 
 end.
