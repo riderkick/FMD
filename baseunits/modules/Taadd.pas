@@ -10,15 +10,35 @@ uses
 
 implementation
 
+uses FMDVars;
+
 function GetNameAndLink(const MangaInfo: TMangaInformation;
   const ANames, ALinks: TStringList; const AURL: String;
   const Module: TModuleContainer): Integer;
+var
+  s: String;
+  v: IXQValue;
+  i, x: Integer;
 begin
   Result := NET_PROBLEM;
-  if MangaInfo.FHTTP.GET(Module.RootURL + '/list/New-Book/') then
+  if Module.CurrentDirectoryIndex = 0 then
+    s := '0-9'
+  else
+    s := ALPHA_LIST_UP[Module.CurrentDirectoryIndex + 1];
+  if MangaInfo.FHTTP.GET(Module.RootURL + '/category/' + s + '_views_'+ IncStr(AURL) + '.html') then
   begin
     Result := NO_ERROR;
-    XPathHREFtitleAll('//*[@class="clistChr"]/ul/li/div/h2/a', MangaInfo.FHTTP.Document, ALinks, ANames);
+    with TXQueryEngineHTML.Create(MangaInfo.FHTTP.Document) do try
+      i := 1;
+      for v in XPath('//*[@class="clistChr"]//span[@class="pagetor"]//text()') do begin
+        x := StrToIntDef(v.toString, 1);
+        if x > i then i := x;
+      end;
+      updateList.CurrentDirectoryPageNumber := i;
+      XPathHREFtitleAll('//*[@class="clistChr"]/ul/li/div/h2/a', ALinks, ANames);
+    finally
+      Free;
+    end;
   end;
 end;
 
