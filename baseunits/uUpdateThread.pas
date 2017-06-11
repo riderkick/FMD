@@ -433,12 +433,13 @@ procedure TUpdateListManagerThread.GetInfo(const limit: Integer;
   end;
 
 var
-  mt, i: Integer;
+  mt, i, plimit: Integer;
   s: String;
 begin
   try
     FCurrentGetInfoLimit := limit;
-    while (not Terminated) and (workPtr < FCurrentGetInfoLimit) do begin
+    while workPtr < FCurrentGetInfoLimit do begin
+      if Terminated then Break;
       if ulTotalPtr <> FCurrentGetInfoLimit then
         ulTotalPtr := FCurrentGetInfoLimit;
       mt := advancedfile.ReadInteger('UpdateListNumberOfThreads', website, -1);
@@ -476,7 +477,8 @@ begin
         while (not Terminated) and (Threads.Count >= numberOfThreads) do
           Sleep(SOCKHEARTBEATRATE);
 
-      if (not Terminated) and (Threads.Count < numberOfThreads) then
+      if Terminated then Break;
+      if Threads.Count < numberOfThreads then
       begin
         EnterCriticalsection(CS_Threads);
         try
@@ -522,6 +524,18 @@ begin
           Synchronize(MainThreadShowGetting);
         finally
           LeaveCriticalsection(CS_Threads);
+        end;
+      end;
+      // wait for threads and new data
+      if workPtr >= FCurrentGetInfoLimit then
+      begin
+        plimit := FCurrentGetInfoLimit;
+        while Threads.Count > 0 do
+        begin
+          if Terminated then Break;
+          // if limit changed, break and continue the loop with new limit
+          if FCurrentGetInfoLimit <> plimit then Break;
+          Sleep(SOCKHEARTBEATRATE);
         end;
       end;
     end;
@@ -635,7 +649,7 @@ begin
             with Modules.Module[ModuleId] do
             begin
               j := Low(TotalDirectoryPage);
-              while j < High(TotalDirectoryPage) do
+              while j <= High(TotalDirectoryPage) do
               begin
                 workPtr := 0;
                 isFinishSearchingForNewManga := False;
