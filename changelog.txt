@@ -4,6 +4,12 @@ Project page: https://github.com/riderkick/FMD
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.115.0 (11-06-2017)
+[+] Added Taadd[EN]
+[-] Fakku: removed, not free anymore
+[-] Yomanga: removed, website down
+Full changes: https://github.com/riderkick/FMD/compare/0.9.114.0...0.9.115.0
+
 0.9.114.0 (10-06-2017)
 [*] EatManga: fixed all
 [*] Fixed layout
@@ -20,7 +26,7 @@ Full changes: https://github.com/riderkick/FMD/compare/0.9.112.0...0.9.113.0
 Full changes: https://github.com/riderkick/FMD/compare/0.9.111.0...0.9.112.0
 
 0.9.111.0 (23-05-2017)
-[*] Added Tapas
+[+] Added Tapas
 [*] Tumangaonline: fixed all
 [*] NeoProjectScan: fixed domain
 [*] Various changes and bug fixes
