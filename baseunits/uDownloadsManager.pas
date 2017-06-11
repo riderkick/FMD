@@ -583,8 +583,6 @@ var
 
   {$I includes/EsMangaHere/image_url.inc}
 
-  {$I includes/Fakku/image_url.inc}
-
   {$I includes/Kivmanga/image_url.inc}
 
   {$I includes/Manga24h/image_url.inc}
@@ -652,9 +650,6 @@ begin
     else
     if Task.Container.MangaSiteID = VNSHARING_ID then
       Result := GetVnSharingImageURL
-    else
-    if Task.Container.MangaSiteID = FAKKU_ID then
-      Result := GetFakkuImageURL
     else
     if Task.Container.MangaSiteID = STARKANA_ID then
       Result := GetStarkanaImageURL

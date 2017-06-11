@@ -71,9 +71,10 @@ type
     websites: TStringList;
     website, twebsite, twebsitetemp: String;
     ModuleId: Integer;
-    workPtr, directoryCount,
-    // for fakku's doujinshi only
-    directoryCount2, numberOfThreads, websitePtr: Integer;
+    directoryCount,
+    workPtr,
+    websitePtr,
+    numberOfThreads: Integer;
     Threads: TFPList;
     SortedList, NoMangaInfo: Boolean;
     constructor Create;
@@ -150,20 +151,11 @@ begin
           end;
         end
         else
-        if manager.website = WebsiteRoots[FAKKU_ID, 0] then
-        begin
-          FAKKU_BROWSER := FAKKU_BROWSER_1;
-          info.GetDirectoryPage(manager.directoryCount, manager.website);
-
-          FAKKU_BROWSER := FAKKU_BROWSER_2;
-          info.GetDirectoryPage(manager.directoryCount2, manager.website);
-        end
-        else
           info.GetDirectoryPage(manager.directoryCount, manager.website);
       end;
 
       //get names and links
-      CS_DIRECTORY_PAGE, CS_DIRECTORY_PAGE_2:
+      CS_DIRECTORY_PAGE:
       begin
         names := TStringList.Create;
         links := TStringList.Create;
@@ -176,26 +168,8 @@ begin
             else
             if checkStyle = CS_DIRECTORY_PAGE then
               workPtr := manager.directoryCount - workPtr - 1
-            else
-            if checkStyle = CS_DIRECTORY_PAGE_2 then
-              workPtr := manager.directoryCount2 - workPtr - 1;
           end;
-          if manager.website = WebsiteRoots[FAKKU_ID, 0] then
-          begin
-            if checkStyle = CS_DIRECTORY_PAGE then
-            begin
-              FAKKU_BROWSER := FAKKU_BROWSER_1;
-              Info.GetNameAndLink(names, links, manager.website, IntToStr(workPtr));
-            end
-            else
-            if checkStyle = CS_DIRECTORY_PAGE_2 then
-            begin
-              FAKKU_BROWSER := FAKKU_BROWSER_2;
-              Info.GetNameAndLink(names, links, manager.website, IntToStr(workPtr));
-            end;
-          end
-          else
-            Info.GetNameAndLink(names, links, manager.website, IntToStr(workPtr));
+          Info.GetNameAndLink(names, links, manager.website, IntToStr(workPtr));
 
           //if website has sorted list by latest added
           //we will stop at first found against current db
@@ -462,7 +436,7 @@ begin
         numberOfThreads := 1;  //default
 
       // Finish searching for new series
-      if (cs in [CS_DIRECTORY_PAGE, CS_DIRECTORY_PAGE_2]) and
+      if (cs = CS_DIRECTORY_PAGE) and
         (isFinishSearchingForNewManga) then
       begin
         WaitForThreads;
@@ -514,8 +488,6 @@ begin
                     s += Format(' %d/%d', [CurrentDirectoryIndex + 1, TotalDirectory]);
                 s += '...';
               end;
-            CS_DIRECTORY_PAGE_2:
-              s := s + ' | ' + RS_LookingForNewTitleFromAnotherDirectory + '...';
             CS_INFO:
               s := Format('%s | %s "%s"', [s, RS_GettingInfo, tempDataProcess.Value[workPtr-1,DATA_PARAM_TITLE]]);
           end;
@@ -632,7 +604,6 @@ begin
 
           // get directory page count
           directoryCount := 0;
-          directoryCount2 := 0;
           workPtr := 0;
           GetInfo(1, CS_DIRECTORY_COUNT);
           if Terminated then Break;
@@ -658,18 +629,6 @@ begin
                 Inc(j);
               end;
             end;
-          end
-          else
-          if website = WebsiteRoots[FAKKU_ID, 0] then
-          begin
-            if directoryCount = 0 then
-              directoryCount := 1;
-            GetInfo(directoryCount, CS_DIRECTORY_PAGE);
-            workPtr := 0;
-            isFinishSearchingForNewManga := False;
-            if directoryCount2 = 0 then
-              directoryCount2 := 1;
-            GetInfo(directoryCount2, CS_DIRECTORY_PAGE_2);
           end
           else
             GetInfo(directoryCount, CS_DIRECTORY_PAGE);

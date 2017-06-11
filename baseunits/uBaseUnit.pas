@@ -234,58 +234,56 @@ const
   OURMANGA_ID            = 1;
   MANGA24H_ID            = 2;
   VNSHARING_ID           = 3;
-  FAKKU_ID               = 4;
-  TRUYEN18_ID            = 5;
-  TRUYENTRANHTUAN_ID     = 6;
-  TURKCRAFT_ID           = 7;
-  STARKANA_ID            = 8;
-  BLOGTRUYEN_ID          = 9;
-  ESMANGAHERE_ID         = 10;
-  ANIMEEXTREMIST_ID      = 11;
-  S2SCAN_ID              = 12;
-  IMANHUA_ID             = 13;
-  CENTRALDEMANGAS_ID     = 14;
-  EGSCANS_ID             = 15;
-  MANGAAR_ID             = 16;
-  MANGAAE_ID             = 17;
-  ANIMESTORY_ID          = 18;
-  LECTUREENLIGNE_ID      = 19;
-  SCANMANGA_ID           = 20;
-  DM5_ID                 = 21;
-  KIVMANGA_ID            = 22;
-  MEINMANGA_ID           = 23;
-  MANGASPROJECT_ID       = 24;
-  MANGAREADER_POR_ID     = 25;
-  NINEMANGA_ID           = 26;
-  NINEMANGA_ES_ID        = 27;
-  NINEMANGA_CN_ID        = 28;
-  NINEMANGA_RU_ID        = 29;
-  NINEMANGA_DE_ID        = 30;
-  NINEMANGA_IT_ID        = 31;
-  NINEMANGA_BR_ID        = 32;
-  JAPANSHIN_ID           = 33;
-  CENTRUMMANGI_PL_ID     = 34;
-  MANGALIB_PL_ID         = 35;
-  ONEMANGA_ID            = 36;
-  MANGATOWN_ID           = 37;
-  MANGAOKU_ID            = 38;
-  MYREADINGMANGAINFO_ID  = 39;
-  IKOMIK_ID              = 40;
-  NHENTAI_ID             = 41;
-  MANGAMINT_ID           = 42;
-  UNIXMANGA_ID           = 43;
-  EXTREMEMANGAS_ID       = 44;
-  MANGAHOST_ID           = 45;
-  MANGAKU_ID             = 46;
-  MANGAAT_ID             = 47;
-  DYNASTYSCANS_ID        = 48;
+  TRUYEN18_ID            = 4;
+  TRUYENTRANHTUAN_ID     = 5;
+  TURKCRAFT_ID           = 6;
+  STARKANA_ID            = 7;
+  BLOGTRUYEN_ID          = 8;
+  ESMANGAHERE_ID         = 9;
+  ANIMEEXTREMIST_ID      = 10;
+  S2SCAN_ID              = 11;
+  IMANHUA_ID             = 12;
+  CENTRALDEMANGAS_ID     = 13;
+  EGSCANS_ID             = 14;
+  MANGAAR_ID             = 15;
+  MANGAAE_ID             = 16;
+  ANIMESTORY_ID          = 17;
+  LECTUREENLIGNE_ID      = 18;
+  SCANMANGA_ID           = 19;
+  DM5_ID                 = 20;
+  KIVMANGA_ID            = 21;
+  MEINMANGA_ID           = 22;
+  MANGASPROJECT_ID       = 23;
+  MANGAREADER_POR_ID     = 24;
+  NINEMANGA_ID           = 25;
+  NINEMANGA_ES_ID        = 26;
+  NINEMANGA_CN_ID        = 27;
+  NINEMANGA_RU_ID        = 28;
+  NINEMANGA_DE_ID        = 29;
+  NINEMANGA_IT_ID        = 30;
+  NINEMANGA_BR_ID        = 31;
+  JAPANSHIN_ID           = 32;
+  CENTRUMMANGI_PL_ID     = 33;
+  MANGALIB_PL_ID         = 34;
+  ONEMANGA_ID            = 35;
+  MANGATOWN_ID           = 36;
+  MANGAOKU_ID            = 37;
+  MYREADINGMANGAINFO_ID  = 38;
+  IKOMIK_ID              = 39;
+  NHENTAI_ID             = 40;
+  MANGAMINT_ID           = 41;
+  UNIXMANGA_ID           = 42;
+  EXTREMEMANGAS_ID       = 43;
+  MANGAHOST_ID           = 44;
+  MANGAKU_ID             = 45;
+  MANGAAT_ID             = 46;
+  DYNASTYSCANS_ID        = 47;
 
-  WebsiteRoots: array [0..48] of array [0..1] of String = (
+  WebsiteRoots: array [0..47] of array [0..1] of String = (
     ('AnimeA', 'http://manga.animea.net'),
     ('OurManga', 'http://www.ourmanga.com'),
     ('Manga24h', 'http://manga24h.com'),
     ('VnSharing', 'http://truyen.vnsharing.net'),
-    ('Fakku', 'https://www.fakku.net'),
     ('Truyen18', 'http://www.truyen18.org'),
     ('TruyenTranhTuan', 'http://truyentranhtuan.com'),
     ('Turkcraft', 'http://turkcraft.com'),
@@ -341,9 +339,6 @@ const
   MANGA24H_BROWSER = '/manga/update/page/';
 
   VNSHARING_BROWSER = '/DanhSach';
-
-  FAKKU_BROWSER_1 = '/manga/newest';
-  FAKKU_BROWSER_2 = '/doujinshi/newest';
 
   TRUYEN18_ROOT = 'http://www.truyen18.org';
   TRUYEN18_BROWSER = '/moi-dang/danhsach';
@@ -450,8 +445,6 @@ var
   // Sites var
   BROWSER_INVERT: Boolean = False;
 
-  FAKKU_BROWSER: String = '/manga/newest';
-
   MANGALIB_PL_COOKIES: String;
 
   //------------------------------------------
@@ -464,8 +457,7 @@ var
 type
   TArrayOfString = array of String;
 
-  TCheckStyleType = (CS_DIRECTORY_COUNT, CS_DIRECTORY_PAGE,
-    CS_DIRECTORY_PAGE_2, CS_INFO);
+  TCheckStyleType = (CS_DIRECTORY_COUNT, CS_DIRECTORY_PAGE, CS_INFO);
   TFlagType = (CS_GETPAGENUMBER, CS_GETPAGELINK, CS_DOWNLOAD);
 
   TFavoriteStatusType = (STATUS_IDLE, STATUS_CHECK, STATUS_CHECKING, STATUS_CHECKED);
@@ -1139,7 +1131,6 @@ begin
     Exit;
   end;
   Result := SitesMemberOf(website, [
-    FAKKU_ID,
     NINEMANGA_ID,
     NINEMANGA_ES_ID,
     NINEMANGA_CN_ID,
@@ -1164,7 +1155,6 @@ begin
     Exit;
   end;
   Result := SitesMemberOf(website, [
-    FAKKU_ID,
     MYREADINGMANGAINFO_ID,
     NHENTAI_ID
     ]);
@@ -1202,7 +1192,6 @@ function SitesWithSingleChapter(const website: String): Boolean;
 begin
   Result := False;
   Result := SitesMemberOf(website, [
-    FAKKU_ID,
     MYREADINGMANGAINFO_ID,
     NHENTAI_ID
     ]);
@@ -2219,15 +2208,7 @@ begin
     // numbering/index
     if (Pos(CR_NUMBERING, Result) = 0) and (Pos(CR_CHAPTER, Result) = 0) then
       Result := ANumbering + Result;
-    if AWebsite = WebsiteRoots[FAKKU_ID, 0] then
-    begin
-      if Pos('%NUMBERING% - ', Result) > 0 then
-        Result := StringReplaceBrackets(Result, CR_NUMBERING + ' - ', '', [rfReplaceAll])
-      else
-        Result := StringReplaceBrackets(Result, CR_NUMBERING, '', [rfReplaceAll]);
-    end
-    else
-      Result := StringReplaceBrackets(Result, CR_NUMBERING, ANumbering, [rfReplaceAll]);
+    Result := StringReplaceBrackets(Result, CR_NUMBERING, ANumbering, [rfReplaceAll]);
 
     // pad number
     fchapter := Trim(AChapter);
@@ -2246,12 +2227,8 @@ begin
 
     Result := StringReplaceBrackets(Result, CR_CHAPTER, fchapter, [rfReplaceAll]);
 
-    if Result = '' then begin
-      if AWebsite = WebsiteRoots[FAKKU_ID, 0] then
-        Result := fchapter
-      else
-        Result := ANumbering;
-    end;
+    if Result = '' then
+      Result := ANumbering;
   end;
 
   Result := StringReplaceBrackets(Result, CR_WEBSITE, FixStringLocal(AWebsite), [rfReplaceAll]);

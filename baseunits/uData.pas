@@ -776,8 +776,6 @@ var
 
   {$I includes/VnSharing/directory_page_number.inc}
 
-  {$I includes/Fakku/directory_page_number.inc}
-
   {$I includes/BlogTruyen/directory_page_number.inc}
 
   {$I includes/S2Scans/directory_page_number.inc}
@@ -845,9 +843,6 @@ begin
       else
       if MangaSiteID = VNSHARING_ID then
         Result := GetVnSharingDirectoryPageNumber
-      else
-      if MangaSiteID = FAKKU_ID then
-        Result := GetFakkuDirectoryPageNumber
       else
       if MangaSiteID = BLOGTRUYEN_ID then
         Result := GetBlogTruyenDirectoryPageNumber
@@ -934,8 +929,6 @@ var
   {$I includes/Manga24h/names_and_links.inc}
 
   {$I includes/VnSharing/names_and_links.inc}
-
-  {$I includes/Fakku/names_and_links.inc}
 
   {$I includes/TruyenTranhTuan/names_and_links.inc}
 
@@ -1025,9 +1018,6 @@ begin
     else
     if MangaSiteID = VNSHARING_ID then
       Result := VnSharingGetNamesAndLinks
-    else
-    if MangaSiteID = FAKKU_ID then
-      Result := FakkuGetNamesAndLinks
     else
     if MangaSiteID = STARKANA_ID then
       Result := StarkanaGetNamesAndLinks
@@ -1176,8 +1166,6 @@ var
 
   {$I includes/VnSharing/manga_information.inc}
 
-  {$I includes/Fakku/manga_information.inc}
-
   {$I includes/Starkana/manga_information.inc}
 
   {$I includes/S2Scans/manga_information.inc}
@@ -1278,9 +1266,6 @@ begin
     else
     if MangaSiteID = VNSHARING_ID then
       Result := GetVnSharingInfoFromURL
-    else
-    if MangaSiteID = FAKKU_ID then
-      Result := GetFakkuInfoFromURL
     else
     if MangaSiteID = STARKANA_ID then
       Result := GetStarkanaInfoFromURL
