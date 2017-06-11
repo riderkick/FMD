@@ -43,6 +43,9 @@ type
     FThreadAborted,
     FThreadEndNormally,
     FIsPreListAvailable: Boolean;
+    FCurrentGetInfoLimit: Integer;
+    FCS_CurrentGetInfoLimit: TRTLCriticalSection;
+    procedure SetCurrentDirectoryPageNumber(AValue: Integer);
   protected
     procedure Execute; override;
     {$IFNDEF DOWNLOADER}
@@ -76,6 +79,7 @@ type
     constructor Create;
     destructor Destroy; override;
     procedure CheckCommit(const CommitCount: Integer = 32);
+    property CurrentDirectoryPageNumber: Integer read FCurrentGetInfoLimit write SetCurrentDirectoryPageNumber;
   end;
   
 resourcestring
@@ -331,6 +335,7 @@ begin
   InitCriticalSection(CS_Threads);
   InitCriticalSection(CS_AddInfoToData);
   InitCriticalSection(CS_AddNamesAndLinks);
+  InitCriticalSection(FCS_CurrentGetInfoLimit);
   FreeOnTerminate := True;
 
   websites := TStringList.Create;
@@ -360,6 +365,7 @@ begin
   tempDataProcess.Free;
   Threads.Free;
   MainForm.isUpdating := False;
+  DoneCriticalsection(FCS_CurrentGetInfoLimit);
   DoneCriticalsection(CS_AddInfoToData);
   DoneCriticalsection(CS_AddNamesAndLinks);
   DoneCriticalsection(CS_Threads);
@@ -430,9 +436,11 @@ var
   mt, i: Integer;
   s: String;
 begin
-  MainForm.ulTotalPtr := limit;
   try
-    while (not Terminated) and (workPtr < limit) do begin
+    FCurrentGetInfoLimit := limit;
+    while (not Terminated) and (workPtr < FCurrentGetInfoLimit) do begin
+      if MainForm.ulTotalPtr <> FCurrentGetInfoLimit then
+        MainForm.ulTotalPtr := FCurrentGetInfoLimit;
       mt := advancedfile.ReadInteger('UpdateListNumberOfThreads', website, -1);
       if mt > 0 then
       begin
@@ -457,7 +465,7 @@ begin
         (isFinishSearchingForNewManga) then
       begin
         WaitForThreads;
-        workPtr := limit;
+        workPtr := FCurrentGetInfoLimit;
         Exit;
       end;
 
@@ -485,12 +493,12 @@ begin
           TUpdateListThread(Threads[i]).Start;
           Inc(workPtr);
           s := RS_UpdatingList + Format(' [%d/%d] %s | [T:%d] [%d/%d]',
-            [websitePtr, websites.Count, website, Threads.Count, workPtr, limit]);
+            [websitePtr, websites.Count, website, Threads.Count, workPtr, FCurrentGetInfoLimit]);
 
           case cs of
             CS_DIRECTORY_COUNT:
               begin
-                if limit = 1 then
+                if FCurrentGetInfoLimit = 1 then
                   s := RS_UpdatingList + Format(' [%d/%d] ', [websitePtr, websites.Count]) +
                     website + ' | ' + RS_GettingDirectory + '...'
                 else
@@ -539,6 +547,17 @@ begin
     while Threads.Count > 0 do
       Sleep(SOCKHEARTBEATRATE);
   inherited DoTerminate;
+end;
+
+procedure TUpdateListManagerThread.SetCurrentDirectoryPageNumber(AValue: Integer);
+begin
+  if FCurrentGetInfoLimit = AValue then Exit;
+  try
+    EnterCriticalsection(FCS_CurrentGetInfoLimit);
+    FCurrentGetInfoLimit := AValue;
+  finally
+    LeaveCriticalsection(FCS_CurrentGetInfoLimit);
+  end;
 end;
 
 procedure TUpdateListManagerThread.Execute;
@@ -614,12 +633,16 @@ begin
           if ModuleId <> -1 then
           begin
             with Modules.Module[ModuleId] do
-            for j := Low(TotalDirectoryPage) to High(TotalDirectoryPage) do
             begin
-              workPtr := 0;
-              isFinishSearchingForNewManga := False;
-              CurrentDirectoryIndex := j;
-              GetInfo(TotalDirectoryPage[j], CS_DIRECTORY_PAGE);
+              j := Low(TotalDirectoryPage);
+              while j < High(TotalDirectoryPage) do
+              begin
+                workPtr := 0;
+                isFinishSearchingForNewManga := False;
+                CurrentDirectoryIndex := j;
+                GetInfo(TotalDirectoryPage[j], CS_DIRECTORY_PAGE);
+                Inc(j);
+              end;
             end;
           end
           else
