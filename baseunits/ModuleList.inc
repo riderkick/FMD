@@ -53,6 +53,7 @@ uses
   MangaOnlineBR,
   Tapas,
   EatManga,
+  Taadd,
   // Raw Official
   SundayWebEvery,
   TonarinoYoungJump,
