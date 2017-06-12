@@ -268,18 +268,17 @@ const
   ONEMANGA_ID            = 35;
   MANGATOWN_ID           = 36;
   MANGAOKU_ID            = 37;
-  MYREADINGMANGAINFO_ID  = 38;
-  IKOMIK_ID              = 39;
-  NHENTAI_ID             = 40;
-  MANGAMINT_ID           = 41;
-  UNIXMANGA_ID           = 42;
-  EXTREMEMANGAS_ID       = 43;
-  MANGAHOST_ID           = 44;
-  MANGAKU_ID             = 45;
-  MANGAAT_ID             = 46;
-  DYNASTYSCANS_ID        = 47;
+  IKOMIK_ID              = 38;
+  NHENTAI_ID             = 39;
+  MANGAMINT_ID           = 40;
+  UNIXMANGA_ID           = 41;
+  EXTREMEMANGAS_ID       = 42;
+  MANGAHOST_ID           = 43;
+  MANGAKU_ID             = 44;
+  MANGAAT_ID             = 45;
+  DYNASTYSCANS_ID        = 46;
 
-  WebsiteRoots: array [0..47] of array [0..1] of String = (
+  WebsiteRoots: array [0..46] of array [0..1] of String = (
     ('AnimeA', 'http://manga.animea.net'),
     ('OurManga', 'http://www.ourmanga.com'),
     ('Manga24h', 'http://manga24h.com'),
@@ -318,7 +317,6 @@ const
     ('OneManga', 'http://www.onemanga2.com'),
     ('MangaTown', 'http://www.mangatown.com'),
     ('MangaOku', 'http://www.mangaoku.net'),
-    ('MyReadingMangaInfo', 'https://myreadingmanga.info'),
     ('I-Komik', 'http://www.i-komik.com'),
     ('NHentai', 'http://nhentai.net'),
     ('MangaMint', 'http://www.mangamint.com'),
@@ -1139,7 +1137,6 @@ begin
     NINEMANGA_IT_ID,
     NINEMANGA_BR_ID,
     ONEMANGA_ID,
-    MYREADINGMANGAINFO_ID,
     NHENTAI_ID
     ]);
 end;
@@ -1155,7 +1152,6 @@ begin
     Exit;
   end;
   Result := SitesMemberOf(website, [
-    MYREADINGMANGAINFO_ID,
     NHENTAI_ID
     ]);
 end;
@@ -1192,7 +1188,6 @@ function SitesWithSingleChapter(const website: String): Boolean;
 begin
   Result := False;
   Result := SitesMemberOf(website, [
-    MYREADINGMANGAINFO_ID,
     NHENTAI_ID
     ]);
 end;

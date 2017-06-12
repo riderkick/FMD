@@ -445,8 +445,6 @@ var
 
   {$I includes/MangaOku/chapter_page_number.inc}
 
-  {$I includes/MyReadingMangaInfo/chapter_page_number.inc}
-
   {$I includes/IKomik/chapter_page_number.inc}
 
   {$I includes/NHentai/chapter_page_number.inc}
@@ -532,9 +530,6 @@ begin
     else
     if Task.Container.MangaSiteID = MANGAOKU_ID then
       Result := GetMangaOkuPageNumber
-    else
-    if Task.Container.MangaSiteID = MYREADINGMANGAINFO_ID then
-      Result := GetMyReadingMangaInfoPageNumber
     else
     if Task.Container.MangaSiteID = IKOMIK_ID then
       Result := GetIKomikPageNumber

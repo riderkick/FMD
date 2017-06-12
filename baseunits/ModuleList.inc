@@ -70,4 +70,5 @@ uses
   HentaiCafe,
   Hentai2Read,
   HentaiFox,
-  Pururin;
+  Pururin,
+  MyReadingManga;

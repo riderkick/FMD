@@ -796,8 +796,6 @@ var
 
   {$I includes/MangaTown/directory_page_number.inc}
 
-  {$I includes/MyReadingMangaInfo/directory_page_number.inc}
-
   {$I includes/IKomik/directory_page_number.inc}
 
   {$I includes/NHentai/directory_page_number.inc}
@@ -879,9 +877,6 @@ begin
       else
       if MangaSiteID = MANGATOWN_ID then
         Result := GetMangaTownDirectoryPageNumber
-      else
-      if MangaSiteID = MYREADINGMANGAINFO_ID then
-        Result := GetMyReadingMangaInfoDirectoryPageNumber
       else
       if MangaSiteID = IKOMIK_ID then
         Result := GetIKomikDirectoryPageNumber
@@ -977,8 +972,6 @@ var
  {$I includes/MangaTown/names_and_links.inc}
 
   {$I includes/MangaOku/names_and_links.inc}
-
-  {$I includes/MyReadingMangaInfo/names_and_links.inc}
 
   {$I includes/IKomik/names_and_links.inc}
 
@@ -1103,9 +1096,6 @@ begin
     if MangaSiteID = MANGAOKU_ID then
       Result := MangaOkuGetNamesAndLinks
     else
-    if MangaSiteID = MYREADINGMANGAINFO_ID then
-      Result := MyReadingMangaInfoNamesAndLinks
-    else
     if MangaSiteID = IKOMIK_ID then
       Result := IKomikNamesAndLinks
     else
@@ -1211,8 +1201,6 @@ var
  {$I includes/MangaTown/manga_information.inc}
 
   {$I includes/MangaOku/manga_information.inc}
-
-  {$I includes/MyReadingMangaInfo/manga_information.inc}
 
   {$I includes/IKomik/manga_information.inc}
 
@@ -1347,9 +1335,6 @@ begin
     else
     if MangaSiteID = MANGAOKU_ID then
       Result := GetMangaOkuInfoFromURL
-    else
-    if MangaSiteID = MYREADINGMANGAINFO_ID then
-      Result := GetMyReadingMangaInfoInfoFromURL
     else
     if MangaSiteID = IKOMIK_ID then
       Result := GetIKomikInfoFromURL
