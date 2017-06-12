@@ -54,6 +54,7 @@ uses
   Tapas,
   EatManga,
   Taadd,
+  NineManga,
   // Raw Official
   SundayWebEvery,
   TonarinoYoungJump,

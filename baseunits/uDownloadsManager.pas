@@ -429,8 +429,6 @@ var
 
   {$I includes/AnimeA/chapter_page_number.inc}
 
-  {$I includes/NineManga/chapter_page_number.inc}
-
   {$I includes/LectureEnLigne/chapter_page_number.inc}
 
   {$I includes/JapanShin/chapter_page_number.inc}
@@ -500,15 +498,6 @@ begin
     else
     if Task.Container.MangaSiteID = KIVMANGA_ID then
       Result := GetKivmangaPageNumber
-    else
-    if (Task.Container.MangaSiteID = NINEMANGA_ID) or
-      (Task.Container.MangaSiteID = NINEMANGA_ES_ID) or
-      (Task.Container.MangaSiteID = NINEMANGA_CN_ID) or
-      (Task.Container.MangaSiteID = NINEMANGA_RU_ID) or
-      (Task.Container.MangaSiteID = NINEMANGA_DE_ID) or
-      (Task.Container.MangaSiteID = NINEMANGA_IT_ID) or
-      (Task.Container.MangaSiteID = NINEMANGA_BR_ID) then
-      Result := GetNineMangaPageNumber
     else
     if Task.Container.MangaSiteID = LECTUREENLIGNE_ID then
       Result := GetLectureEnLignePageNumber
@@ -602,8 +591,6 @@ var
 
   {$I includes/AnimeA/image_url.inc}
 
-  {$I includes/NineManga/image_url.inc}
-
   {$I includes/LectureEnLigne/image_url.inc}
 
   {$I includes/JapanShin/image_url.inc}
@@ -690,15 +677,6 @@ begin
     else
     if Task.Container.MangaSiteID = MANGAREADER_POR_ID then
       Result := GetMangaREADER_PORImageURL
-    else
-    if (Task.Container.MangaSiteID = NINEMANGA_ID) or
-      (Task.Container.MangaSiteID = NINEMANGA_ES_ID) or
-      (Task.Container.MangaSiteID = NINEMANGA_CN_ID) or
-      (Task.Container.MangaSiteID = NINEMANGA_RU_ID) or
-      (Task.Container.MangaSiteID = NINEMANGA_DE_ID) or
-      (Task.Container.MangaSiteID = NINEMANGA_IT_ID) or
-      (Task.Container.MangaSiteID = NINEMANGA_BR_ID) then
-      Result := GetNineMangaImageURL
     else
     if Task.Container.MangaSiteID = LECTUREENLIGNE_ID then
       Result := GeLectureEnligneImageURL

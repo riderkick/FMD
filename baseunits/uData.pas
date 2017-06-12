@@ -788,8 +788,6 @@ var
 
   {$I includes/DM5/directory_page_number.inc}
 
-  {$I includes/NineManga/directory_page_number.inc}
-
   {$I includes/JapanShin/directory_page_number.inc}
 
   {$I includes/OneManga/directory_page_number.inc}
@@ -859,15 +857,6 @@ begin
       else
       if MangaSiteID = DM5_ID then
         Result := GetDM5DirectoryPageNumber
-      else
-      if (MangaSiteID = NINEMANGA_ID) or
-        (MangaSiteID = NINEMANGA_ES_ID) or
-        (MangaSiteID = NINEMANGA_CN_ID) or
-        (MangaSiteID = NINEMANGA_RU_ID) or
-        (MangaSiteID = NINEMANGA_DE_ID) or
-        (MangaSiteID = NINEMANGA_IT_ID) or
-        (MangaSiteID = NINEMANGA_BR_ID) then
-        Result := GetNineMangaDirectoryPageNumber
       else
       if MangaSiteID = JAPANSHIN_ID then
         Result := GetJapanShinDirectoryPageNumber
@@ -958,8 +947,6 @@ var
   {$I includes/MangasPROJECT/names_and_links.inc}
 
   {$I includes/MangaREADER_POR/names_and_links.inc}
-
-  {$I includes/NineManga/names_and_links.inc}
 
   {$I includes/JapanShin/names_and_links.inc}
 
@@ -1068,15 +1055,6 @@ begin
     else
     if MangaSiteID = MANGAREADER_POR_ID then
       Result := MangaREADER_PORGetNamesAndLinks
-    else
-    if (MangaSiteID = NINEMANGA_ID) or
-      (MangaSiteID = NINEMANGA_ES_ID) or
-      (MangaSiteID = NINEMANGA_CN_ID) or
-      (MangaSiteID = NINEMANGA_RU_ID) or
-      (MangaSiteID = NINEMANGA_DE_ID) or
-      (MangaSiteID = NINEMANGA_IT_ID) or
-      (MangaSiteID = NINEMANGA_BR_ID) then
-      Result := NineMangaGetNamesAndLinks
     else
     if MangaSiteID = JAPANSHIN_ID then
       Result := JapanShinGetNamesAndLinks
@@ -1187,8 +1165,6 @@ var
   {$I includes/MangasPROJECT/manga_information.inc}
 
   {$I includes/MangaREADER_POR/manga_information.inc}
-
-  {$I includes/NineManga/manga_information.inc}
 
   {$I includes/JapanShin/manga_information.inc}
 
@@ -1308,15 +1284,6 @@ begin
     else
     if MangaSiteID = MANGAREADER_POR_ID then
       Result := GetMangaREADER_PORInfoFromURL
-    else
-    if (MangaSiteID = NINEMANGA_ID) or
-      (MangaSiteID = NINEMANGA_ES_ID) or
-      (MangaSiteID = NINEMANGA_CN_ID) or
-      (MangaSiteID = NINEMANGA_RU_ID) or
-      (MangaSiteID = NINEMANGA_DE_ID) or
-      (MangaSiteID = NINEMANGA_IT_ID) or
-      (MangaSiteID = NINEMANGA_BR_ID) then
-      Result := GetNineMangaInfoFromURL
     else
     if MangaSiteID = JAPANSHIN_ID then
       Result := GetJapanShinInfoFromURL

@@ -255,30 +255,23 @@ const
   MEINMANGA_ID           = 22;
   MANGASPROJECT_ID       = 23;
   MANGAREADER_POR_ID     = 24;
-  NINEMANGA_ID           = 25;
-  NINEMANGA_ES_ID        = 26;
-  NINEMANGA_CN_ID        = 27;
-  NINEMANGA_RU_ID        = 28;
-  NINEMANGA_DE_ID        = 29;
-  NINEMANGA_IT_ID        = 30;
-  NINEMANGA_BR_ID        = 31;
-  JAPANSHIN_ID           = 32;
-  CENTRUMMANGI_PL_ID     = 33;
-  MANGALIB_PL_ID         = 34;
-  ONEMANGA_ID            = 35;
-  MANGATOWN_ID           = 36;
-  MANGAOKU_ID            = 37;
-  IKOMIK_ID              = 38;
-  NHENTAI_ID             = 39;
-  MANGAMINT_ID           = 40;
-  UNIXMANGA_ID           = 41;
-  EXTREMEMANGAS_ID       = 42;
-  MANGAHOST_ID           = 43;
-  MANGAKU_ID             = 44;
-  MANGAAT_ID             = 45;
-  DYNASTYSCANS_ID        = 46;
+  JAPANSHIN_ID           = 25;
+  CENTRUMMANGI_PL_ID     = 26;
+  MANGALIB_PL_ID         = 27;
+  ONEMANGA_ID            = 28;
+  MANGATOWN_ID           = 29;
+  MANGAOKU_ID            = 30;
+  IKOMIK_ID              = 31;
+  NHENTAI_ID             = 32;
+  MANGAMINT_ID           = 33;
+  UNIXMANGA_ID           = 34;
+  EXTREMEMANGAS_ID       = 35;
+  MANGAHOST_ID           = 36;
+  MANGAKU_ID             = 37;
+  MANGAAT_ID             = 38;
+  DYNASTYSCANS_ID        = 39;
 
-  WebsiteRoots: array [0..46] of array [0..1] of String = (
+  WebsiteRoots: array [0..39] of array [0..1] of String = (
     ('AnimeA', 'http://manga.animea.net'),
     ('OurManga', 'http://www.ourmanga.com'),
     ('Manga24h', 'http://manga24h.com'),
@@ -304,13 +297,6 @@ const
     ('MeinManga', 'http://www.meinmanga.com/'),
     ('MangasPROJECT', 'http://mangaproject.xpg.uol.com.br'),
     ('MangaREADER_POR', 'http://www.mangareader.com.br'),
-    ('NineManga', 'http://www.ninemanga.com'),
-    ('NineManga_ES', 'http://es.ninemanga.com'),
-    ('NineManga_CN', 'http://cn.ninemanga.com'),
-    ('NineManga_RU', 'http://ru.ninemanga.com'),
-    ('NineManga_DE', 'http://de.ninemanga.com'),
-    ('NineManga_IT', 'http://it.ninemanga.com'),
-    ('NineManga_BR', 'http://br.ninemanga.com'),
     ('Japan-Shin', 'http://www.japan-shin.com'),
     ('Centrum-Mangi_PL', 'http://centrum-mangi.pl'),
     ('Manga-Lib_PL', 'http://www.manga-lib.pl/index.php'),
@@ -380,9 +366,6 @@ const
   MANGASPROJECT_BROWSER = '/AJAX/listaMangas/all';
 
   MANGAREADER_POR_BROWSER = '/AJAX/listaMangas/all';
-
-  NINEMANGA_BROWSER =
-    '/search/?name_sel=contain&wd=&author_sel=contain&author=&artist_sel=contain&artist=&category_id=&out_category_id=&completed_series=either';
 
   JAPANSHIN_BROWSER = '/lectureenligne/reader/list/';
 
@@ -1129,13 +1112,6 @@ begin
     Exit;
   end;
   Result := SitesMemberOf(website, [
-    NINEMANGA_ID,
-    NINEMANGA_ES_ID,
-    NINEMANGA_CN_ID,
-    NINEMANGA_RU_ID,
-    NINEMANGA_DE_ID,
-    NINEMANGA_IT_ID,
-    NINEMANGA_BR_ID,
     ONEMANGA_ID,
     NHENTAI_ID
     ]);
