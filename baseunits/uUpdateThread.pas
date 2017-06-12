@@ -306,17 +306,16 @@ end;
 constructor TUpdateListManagerThread.Create;
 begin
   inherited Create(True);
+  FreeOnTerminate := True;
+
   InitCriticalSection(CS_Threads);
   InitCriticalSection(CS_AddInfoToData);
   InitCriticalSection(CS_AddNamesAndLinks);
   InitCriticalSection(FCS_CurrentGetInfoLimit);
-  FreeOnTerminate := True;
 
   websites := TStringList.Create;
-
   mainDataProcess := TDBDataProcess.Create;
   tempDataProcess := TDBDataProcess.Create;
-
   Threads := TFPList.Create;
   SortedList := False;
   NoMangaInfo := False;
@@ -324,6 +323,7 @@ begin
   FThreadEndNormally:=False;
   FThreadAborted:=False;
   FIsPreListAvailable:=False;
+  FCurrentGetInfoLimit := 1;
 end;
 
 destructor TUpdateListManagerThread.Destroy;
@@ -537,7 +537,7 @@ end;
 
 procedure TUpdateListManagerThread.SetCurrentDirectoryPageNumber(AValue: Integer);
 begin
-  if FCurrentGetInfoLimit = AValue then Exit;
+  if AValue < FCurrentGetInfoLimit then Exit;
   try
     EnterCriticalsection(FCS_CurrentGetInfoLimit);
     FCurrentGetInfoLimit := AValue;
