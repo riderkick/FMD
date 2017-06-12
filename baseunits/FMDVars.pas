@@ -24,7 +24,7 @@ var
   // update fmd through main thread
   DoAfterFMD: TFMDDo;
   IsDlgCounter: Boolean = False;
-  FUpdateURL: String;
+  UpdateURL: String;
 
   // file logger
   FileLogger: TFileChannel;

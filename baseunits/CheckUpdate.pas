@@ -61,7 +61,7 @@ begin
       end;
       if ShowModal = mrYes then
       begin
-        FUpdateURL := fUpdateURL;
+        UpdateURL := fUpdateURL;
         DoAfterFMD := DO_UPDATE;
         MainForm.tmExitCommand.Enabled := True;
       end
