@@ -4,7 +4,7 @@ Project page: https://github.com/riderkick/FMD
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
-0.9.117.0 (future)
+0.9.118.0 (future)
 [*] Madokami: fixed all
 [-] MangaKoi: removed
 [+] Added MangaHome[EN]
@@ -17,6 +17,7 @@ Changelog:
 [*] TruyenTranhTuan: fixed all
 [-] Manga24H: removed
 [*] BlogTruyen: fixed all
+[*] KuManga: fixed all
 Full changes: https://github.com/riderkick/FMD/compare/0.9.117.0...0.9.118.0
 
 0.9.117.0 (12-06-2017)

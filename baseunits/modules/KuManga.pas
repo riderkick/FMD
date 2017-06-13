@@ -64,8 +64,6 @@ end;
 
 function GetInfo(const MangaInfo: TMangaInformation;
   const AURL: String; const Module: TModuleContainer): Integer;
-var
-  v: IXQValue;
 begin
   Result := NET_PROBLEM;
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
@@ -76,20 +74,15 @@ begin
       Result := NO_ERROR;
       with TXQueryEngineHTML.Create(Document) do
         try
-          coverLink := XPathString('//div[@class="row"]/img/@src');
+          coverLink := XPathString('//div[@class="row"]//img/@src');
           if coverLink <> '' then coverLink := MaybeFillHost(Module.RootURL, coverLink);
-          if title = '' then title := XPathString('//h2');
-          summary := XPathString('//div[@id="info"]/div[1]/div[1]/div[1]/div[2]');
-          genres := XPathStringAll('//div[@id="info"]/div[1]/div[1]/div[1]/div[3]/a');
-          authors := XPathString('//div[@id="info"]/div[1]/div[2]/div[1]/div[2]/p[2]/a');
-          status := MangaInfoStatusIfPos(
-            XPathString('//div[@id="info"]/div[1]/div[2]/div[1]/div[2]/p[3]/span'), 'Activo', 'Completo');
-          for v in XPath('//div[@id="info"]/div[2]//table/tbody/tr/td/a') do
-          begin
-            chapterLinks.Add(StringReplace(v.toNode.getAttribute('href'),
-              '/c/', '/leer/', [rfIgnoreCase]));
-            chapterName.Add(v.toString);
-          end;
+          if title = '' then title := XPathString('//h1');
+          summary := XPathString('//*[@class="infom"]/div/div[1]/p');
+          authors := XPathString('//*[@class="infom"]/div/div[2]//p[contains(.,"Autor") and not(contains(.,"No Disponible"))]/substring-after(normalize-space(.),": ")');
+          artists := XPathString('//*[@class="infom"]/div/div[2]//p[contains(.,"Artist") and not(contains(.,"No Disponible"))]/substring-after(normalize-space(.),": ")');
+          status := MangaInfoStatusIfPos(XPathString('//*[@class="infom"]/div/div[2]//p[contains(.,"Estado")]'), 'Activo', 'Finalizado');
+          genres := XPathString('//*[@class="panel-footer" and contains(.,"Géneros")]/string-join(.//a,", ")');
+          XPathHREFAll('//table//tr/td/a', chapterLinks, chapterName);
           InvertStrings([chapterLinks, chapterName]);
         finally
           Free;
@@ -101,9 +94,8 @@ end;
 function GetPageNumber(const DownloadThread: TDownloadThread;
   const AURL: String; const Module: TModuleContainer): Boolean;
 var
-  source: TStringList;
-  i, p: Integer;
-  s: String;
+  pages: Integer;
+  pageFormat, pageFormat2: String;
 begin
   Result := False;
   if DownloadThread = nil then Exit;
@@ -111,38 +103,22 @@ begin
   begin
     PageLinks.Clear;
     PageNumber := 0;
-    if GET(FillHost(Module.RootURL, AURL)) then
+    if GET(MaybeFillHost(Module.RootURL, AURL.Replace('/c/','/leer/'))) then
     begin
       Result := True;
-      source := TStringList.Create;
-      try
-        source.LoadFromStream(Document);
-        if source.Count > 0 then
-          for i := 0 to source.Count - 1 do
-            if Pos('konekomangareader(''setup'',{', source[i]) <> 0 then
-            begin
-              s := GetBetween('.konekomangareader(''setup'',{', '});', source[i]);
-              Break;
-            end;
+      with TXQueryEngineHTML.Create(Document) do try
+        pageFormat := XPathString('//script[contains(.,"konekomangareader")]/substring-before(substring-after(substring-after(.,"setup"),","),");")');
+        if pageFormat <> '' then begin
+          ParseHTML(pageFormat);
+          pages := StrToIntDef(XPathString('json(*)//pages'), 0);
+          pageFormat := XPathString('substring-before(json(*)//pageFormat,"{pnumber}")');
+          pageFormat2 := XPathString('substring-after(json(*)//pageFormat,"{pnumber}")');
+          if pageFormat <> '' then
+            for pages := 1 to pages do
+              PageLinks.Add(pageFormat + IntToStr(pages) + pageFormat2);
+        end;
       finally
-        source.Free;
-      end;
-      if s <> '' then
-      begin
-        s := '{' + s + '}';
-        with TXQueryEngineHTML.Create(s) do
-          try
-            p := StrToIntDef(XPathString('json(*).pages'), 0);
-            if p > 0 then
-            begin
-              s := XPathString('json(*).pageFormat');
-              if Pos('{pnumber}', s) <> 0 then
-                for i := 1 to p do
-                  PageLinks.Add(StringReplace(s, '{pnumber}', IntToStr(i), [rfReplaceAll]));
-            end;
-          finally
-            Free;
-          end;
+        Free;
       end;
     end;
   end;
