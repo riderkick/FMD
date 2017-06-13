@@ -77,6 +77,8 @@ type
   { TMangaInformation }
 
   TMangaInformation = class(TObject)
+  private
+    FOwner: TBaseThread;
   public
     isGetByUpdater: Boolean;
     mangaInfo: TMangaInfo;
@@ -108,6 +110,7 @@ type
     procedure AddInfoToData(const ATitle, ALink: String; const ADataProcess: TDBDataProcess); overload;
     //wrapper
     function GetPage(var AOutput: TObject; AURL: String; const AReconnect: Integer = 0): Boolean; inline;
+    property Thread: TBaseThread read FOwner;
   end;
 
 var
@@ -716,6 +719,7 @@ end;
 constructor TMangaInformation.Create(AOwnerThread: TBaseThread; ACreateInfo: Boolean);
 begin
   inherited Create;
+  FOwner := AOwnerThread;
   FHTTP := THTTPSendThread.Create(AOwnerThread);
   FHTTP.Headers.NameValueSeparator := ':';
   parse := TStringList.Create;
