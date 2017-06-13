@@ -18,6 +18,7 @@ Changelog:
 [-] Manga24H: removed
 [*] BlogTruyen: fixed all
 [*] KuManga: fixed all
+[*] LeoManga: fixed all
 Full changes: https://github.com/riderkick/FMD/compare/0.9.117.0...0.9.118.0
 
 0.9.117.0 (12-06-2017)
