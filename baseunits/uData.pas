@@ -913,8 +913,6 @@ var
 
   {$I includes/VnSharing/names_and_links.inc}
 
-  {$I includes/TruyenTranhTuan/names_and_links.inc}
-
   {$I includes/AnimeStory/names_and_links.inc}
 
   {$I includes/LectureEnLigne/names_and_links.inc}
@@ -1010,9 +1008,6 @@ begin
     else
     if MangaSiteID = BLOGTRUYEN_ID then
       Result := BlogTruyenGetNamesAndLinks
-    else
-    if MangaSiteID = TRUYENTRANHTUAN_ID then
-      Result := TruyenTranhTuanGetNamesAndLinks
     else
     if MangaSiteID = ESMANGAHERE_ID then
       Result := EsMangaHereGetNamesAndLinks
@@ -1134,8 +1129,6 @@ var
 
   {$I includes/EGScans/manga_information.inc}
 
-  {$I includes/TruyenTranhTuan/manga_information.inc}
-
   {$I includes/AnimeStory/manga_information.inc}
 
   {$I includes/LectureEnLigne/manga_information.inc}
@@ -1231,9 +1224,6 @@ begin
     else
     if MangaSiteID = EGSCANS_ID then
       Result := GetEGScansInfoFromURL
-    else
-    if MangaSiteID = TRUYENTRANHTUAN_ID then
-      Result := GetTruyenTranhTuanInfoFromURL
     else
     if MangaSiteID = MEINMANGA_ID then
       Result := GetMeinMangaInfoFromURL

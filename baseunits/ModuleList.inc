@@ -56,6 +56,7 @@ uses
   Taadd,
   NineManga,
   MangaTail,
+  TruyenTranhTuan,
   // Raw Official
   SundayWebEvery,
   TonarinoYoungJump,

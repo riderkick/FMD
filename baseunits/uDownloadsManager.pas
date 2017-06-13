@@ -578,8 +578,6 @@ var
 
   {$I includes/Starkana/image_url.inc}
 
-  {$I includes/TruyenTranhTuan/image_url.inc}
-
   {$I includes/Turkcraft/image_url.inc}
 
   {$I includes/VnSharing/image_url.inc}
@@ -655,9 +653,6 @@ begin
     else
     if Task.Container.MangaSiteID = CENTRALDEMANGAS_ID then
       Result := GetCentralDeMangasImageURL
-    else
-    if Task.Container.MangaSiteID = TRUYENTRANHTUAN_ID then
-      Result := GetTruyenTranhTuanImageURL
     else
     if Task.Container.MangaSiteID = BLOGTRUYEN_ID then
       Result := GetBlogTruyenImageURL
