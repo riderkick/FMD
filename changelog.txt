@@ -15,6 +15,7 @@ Changelog:
 [*] Manga-Tr: fixed all
 [*] GManga: fixed all
 [*] TruyenTranhTuan: fixed all
+[-] Manga24H: removed
 Full changes: https://github.com/riderkick/FMD/compare/0.9.117.0...0.9.118.0
 
 0.9.117.0 (12-06-2017)
