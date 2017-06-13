@@ -668,6 +668,10 @@ msgstr "Automatyczne generowanie folderu używając nazwy mangi"
 msgid "Enable live search (slow on long list)"
 msgstr "Włącz wyszukiwanie na żywo (wolne w przypadku długiej lisy)"
 
+#: tmainform.cboptionminimizeonstart.caption
+msgid "Minimize on start"
+msgstr ""
+
 #: tmainform.cboptionminimizetotray.caption
 msgid "Minimize to tray"
 msgstr "Zminimalizuj do zasobnika"
@@ -2221,3 +2225,4 @@ msgstr "Synchronizacja danych"
 #: uupdatethread.rs_updatinglist
 msgid "Updating list"
 msgstr "Aktualizacja listy"
+

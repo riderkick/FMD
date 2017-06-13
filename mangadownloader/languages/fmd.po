@@ -621,6 +621,10 @@ msgstr ""
 msgid "Enable live search (slow on long list)"
 msgstr ""
 
+#: tmainform.cboptionminimizeonstart.caption
+msgid "Minimize on start"
+msgstr ""
+
 #: tmainform.cboptionminimizetotray.caption
 msgid "Minimize to tray"
 msgstr ""

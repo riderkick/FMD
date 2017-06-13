@@ -54,6 +54,7 @@ type
     cbOptionAutoCheckFavRemoveCompletedManga: TCheckBox;
     cbOptionAutoOpenFavStartup: TCheckBox;
     cbOptionEnableLoadCover: TCheckBox;
+    cbOptionMinimizeOnStart: TCheckBox;
     cbOptionShowBalloonHint: TCheckBox;
     cbOptionGenerateChapterFolder: TCheckBox;
     cbOptionRemoveMangaNameFromChapter: TCheckBox;
@@ -1233,6 +1234,10 @@ begin
   LoadMangaOptions;
   LoadOptions;
   ApplyOptions;
+
+  // minimize on start
+  if cbOptionMinimizeOnStart.Checked then
+    Application.ShowMainForm := False;
 
   // hint
   ShowHint := True;
@@ -4614,6 +4619,7 @@ begin
     // general
     cbOptionOneInstanceOnly.Checked := ReadBool('general', 'OneInstanceOnly', True);
     cbOptionLiveSearch.Checked := ReadBool('general', 'LiveSearch', True);
+    cbOptionMinimizeOnStart.Checked := ReadBool('general', 'MinimizeOnStart', False);
     cbOptionMinimizeToTray.Checked := ReadBool('general', 'MinimizeToTray', False);
     cbOptionLetFMDDo.ItemIndex := ReadInteger('general', 'LetFMDDo', 0);
     edOptionExternalPath.Text := ReadString('general', 'ExternalProgramPath', '');
@@ -4757,6 +4763,7 @@ begin
       WriteBool('general', 'OneInstanceOnly', cbOptionOneInstanceOnly.Checked);
       if cbLanguages.ItemIndex > -1 then
         WriteString('languages', 'Selected', AvailableLanguages.Names[cbLanguages.ItemIndex]);
+      WriteBool('general', 'MinimizeOnStart', cbOptionMinimizeOnStart.Checked);
       WriteBool('general', 'MinimizeToTray', cbOptionMinimizeToTray.Checked);
       WriteInteger('general', 'LetFMDDo', cbOptionLetFMDDo.ItemIndex);
       WriteString('general', 'ExternalProgramPath', edOptionExternalPath.Text);

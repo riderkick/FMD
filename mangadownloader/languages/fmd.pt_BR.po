@@ -668,6 +668,10 @@ msgstr "Auto-gerar pasta com o nome do mangá"
 msgid "Enable live search (slow on long list)"
 msgstr "Habilitar buscar em tempo real (lento em lista longas)"
 
+#: tmainform.cboptionminimizeonstart.caption
+msgid "Minimize on start"
+msgstr ""
+
 #: tmainform.cboptionminimizetotray.caption
 msgid "Minimize to tray"
 msgstr "Minimizar para bandeja"
@@ -2219,3 +2223,4 @@ msgstr "Sincronizando dados"
 #: uupdatethread.rs_updatinglist
 msgid "Updating list"
 msgstr "Atualizando a lista"
+

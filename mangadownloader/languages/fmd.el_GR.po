@@ -670,6 +670,10 @@ msgstr "Αυτόματη δημιουργία φακέλου βάσει του �
 msgid "Enable live search (slow on long list)"
 msgstr "Ενεργοποίηση ζωντανής αναζήτησης (αργή σε μεγάλη λίστα)"
 
+#: tmainform.cboptionminimizeonstart.caption
+msgid "Minimize on start"
+msgstr ""
+
 #: tmainform.cboptionminimizetotray.caption
 msgid "Minimize to tray"
 msgstr "Ελαχιστοποίηση στην περιοχή ειδοποιήσεωνMinimize to tray"
@@ -2272,3 +2276,4 @@ msgstr "Συγχρονισμός δεδομένων"
 #: uupdatethread.rs_updatinglist
 msgid "Updating list"
 msgstr "Ενημέρωση λίστας"
+

@@ -586,7 +586,7 @@ msgstr "Kunjungi blog"
 
 #: tmainform.caption
 msgid "Free Manga Downloader"
-msgstr ""
+msgstr "Free Manga Downloader"
 
 #: tmainform.cbaddasstopped.caption
 msgid "Add to download list as stopped task"
@@ -660,6 +660,10 @@ msgstr "Buat otomatis folder berdasarkan nama komik"
 #: tmainform.cboptionlivesearch.caption
 msgid "Enable live search (slow on long list)"
 msgstr "Aktifkan pencarian langsung (lambat dengan daftar yang panjang)"
+
+#: tmainform.cboptionminimizeonstart.caption
+msgid "Minimize on start"
+msgstr "Kecilkan ke penampan saat dimulai"
 
 #: tmainform.cboptionminimizetotray.caption
 msgid "Minimize to tray"

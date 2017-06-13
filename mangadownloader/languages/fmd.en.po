@@ -673,6 +673,10 @@ msgstr "Auto generate folder based on manga's name"
 msgid "Enable live search (slow on long list)"
 msgstr "Enable live search (slow on long list)"
 
+#: tmainform.cboptionminimizeonstart.caption
+msgid "Minimize on start"
+msgstr "Minimize on start"
+
 #: tmainform.cboptionminimizetotray.caption
 msgid "Minimize to tray"
 msgstr "Minimize to tray"

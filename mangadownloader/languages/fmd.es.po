@@ -656,6 +656,10 @@ msgstr "Auto Generar Folder Basado en Nombre del Manga"
 msgid "Enable live search (slow on long list)"
 msgstr "Habilitar Búsqueda en Directo (Lento en Lista Larga)"
 
+#: tmainform.cboptionminimizeonstart.caption
+msgid "Minimize on start"
+msgstr ""
+
 #: tmainform.cboptionminimizetotray.caption
 msgid "Minimize to tray"
 msgstr "Minimizar a Bandeja"
@@ -2200,3 +2204,4 @@ msgstr "Sincronizando Datos"
 #: uupdatethread.rs_updatinglist
 msgid "Updating list"
 msgstr "Actualizando Lista"
+
