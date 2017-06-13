@@ -10,23 +10,23 @@ uses
 
 implementation
 
+uses FMDVars;
+
 const
   modulename = 'Madokami';
   urlroot = 'https://manga.madokami.al';
-  madokamidirlist: array [0..12] of String = (
-    '/Manga/%23%20-%20F',
-    '/Manga/G%20-%20M',
-    '/Manga/N%20-%20Z',
+  madokamilist = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ_';
+  madokamiotherlist: array [0..9] of String = (
     '/Manga/_Autouploads/AutoUploaded%20from%20Assorted%20Sources',
     '/Manga/_Autouploads/ComicWalker',
+    '/Manga/Oneshots',
     '/Manga/Non-English/Bahasa%20Indonesia',
     '/Manga/Non-English/Brazilian%20Portuguese',
+    '/Manga/Non-English/Deutsch',
     '/Manga/Non-English/Fran%C3%A7ais',
     '/Manga/Non-English/Italian',
     '/Manga/Non-English/Russian',
-    '/Manga/Non-English/Spanish',
-    '/Manga/_Doujinshi',
-    '/Raws'
+    '/Manga/Non-English/Spanish'
     );
 
 var
@@ -101,37 +101,84 @@ function GetDirectoryPageNumber(const MangaInfo: TMangaInformation;
   var Page: Integer; const Module: TModuleContainer): Integer;
 begin
   Result := NO_ERROR;
-  Page := Length(madokamidirlist);
+  if Module.CurrentDirectoryIndex = 0 then
+    Page := Length(madokamilist)
+  else
+    Page := Length(madokamiotherlist);
 end;
 
 function GetNameAndLink(const MangaInfo: TMangaInformation;
   const ANames, ALinks: TStringList; const AURL: String;
   const Module: TModuleContainer): Integer;
+
+  procedure GetList;
+  var
+    v: IXQValue;
+    s: String;
+  begin
+    with TXQueryEngineHTML.Create(MangaInfo.FHTTP.Document) do try
+      for v in XPath('//table[@id="index-table"]/tbody/tr/td[1]/a') do
+      begin
+        s := v.toString;
+        if Length(s) > 1 then
+        begin
+          if s[Length(s)] = '/' then
+            SetLength(s, Length(s) - 1);
+          if LowerCase(LeftStr(s, 4)) = '.txt' then
+            s := '';
+        end;
+        if s <> '' then
+        begin
+          ALinks.Add(v.toNode.getAttribute('href'));
+          ANames.Add(s);
+        end;
+      end;
+    finally
+      Free;
+    end;
+  end;
+
 var
-  v: IXQValue;
-  currentdir: Integer;
-  s: String;
+  currentdir, i, j: Integer;
+  u: String;
+  l1, l2: TStringList;
 begin
   Result := NET_PROBLEM;
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
   currentdir := StrToIntDef(AURL, 0);
-  if currentdir > Length(madokamidirlist) then Exit;
-  if MangaInfo.FHTTP.GET(Module.RootURL + madokamidirlist[currentdir]) then begin
+  u := Module.RootURL;
+  if Module.CurrentDirectoryIndex = 0 then begin
+    Inc(currentdir);
+    u += '/Manga/' + madokamilist[currentdir]
+  end
+  else
+    u += madokamiotherlist[currentdir];
+  if GETWithLogin(MangaInfo.FHTTP, u) then begin
     Result := NO_ERROR;
-    with TXQueryEngineHTML.Create(MangaInfo.FHTTP.Document) do
+    if Module.CurrentDirectoryIndex = 0 then begin
+      l1 := TStringList.Create;
+      l2 := TStringList.Create;
       try
-        for v in XPath('//table[@id="index-table"]/tbody/tr/td[1]/a') do
-        begin
-          ALinks.Add(v.toNode.getAttribute('href'));
-          s := v.toString;
-          if Length(s) > 1 then
-            if s[Length(s)] = '/' then
-              SetLength(s, Length(s) - 1);
-          ANames.Add(s);
+        XPathStringAll('//table[@id="index-table"]/tbody/tr/td[1]/a/@href', MangaInfo.FHTTP.Document, l1);
+        for i := 0 to l1.Count - 1 do begin
+          if MangaInfo.Thread.IsTerminated then Break;
+          if GETWithLogin(MangaInfo.FHTTP, MaybeFillHost(Module.RootURL, l1[i]))  then begin
+            XPathStringAll('//table[@id="index-table"]/tbody/tr/td[1]/a/@href', MangaInfo.FHTTP.Document, l2);
+            for j := 0 to l2.Count - 1 do begin
+              if MangaInfo.Thread.IsTerminated then Break;
+              if GETWithLogin(MangaInfo.FHTTP, MaybeFillHost(Module.RootURL, l2[j]))  then begin
+                GetList;
+              end;
+            end;
+          end;
         end;
       finally
-        Free;
+        l1.Free;
+        l2.Free;
       end;
+    end
+    else
+      GetList;
   end;
 end;
 
@@ -228,6 +275,7 @@ begin
     AccountSupport := True;
     MaxTaskLimit := 1;
     MaxConnectionLimit := 4;
+    TotalDirectory := 2;
     OnGetDirectoryPageNumber := @GetDirectoryPageNumber;
     OnGetNameAndLink := @GetNameAndLink;
     OnGetInfo := @GetInfo;
