@@ -236,46 +236,44 @@ const
   TRUYEN18_ID            = 3;
   TURKCRAFT_ID           = 4;
   STARKANA_ID            = 5;
-  BLOGTRUYEN_ID          = 6;
-  ESMANGAHERE_ID         = 7;
-  ANIMEEXTREMIST_ID      = 8;
-  S2SCAN_ID              = 9;
-  IMANHUA_ID             = 10;
-  CENTRALDEMANGAS_ID     = 11;
-  EGSCANS_ID             = 12;
-  MANGAAR_ID             = 13;
-  MANGAAE_ID             = 14;
-  ANIMESTORY_ID          = 15;
-  LECTUREENLIGNE_ID      = 16;
-  SCANMANGA_ID           = 17;
-  DM5_ID                 = 18;
-  KIVMANGA_ID            = 19;
-  MEINMANGA_ID           = 20;
-  MANGASPROJECT_ID       = 21;
-  MANGAREADER_POR_ID     = 22;
-  JAPANSHIN_ID           = 23;
-  CENTRUMMANGI_PL_ID     = 24;
-  MANGALIB_PL_ID         = 25;
-  ONEMANGA_ID            = 26;
-  MANGATOWN_ID           = 27;
-  MANGAOKU_ID            = 28;
-  IKOMIK_ID              = 29;
-  NHENTAI_ID             = 30;
-  UNIXMANGA_ID           = 31;
-  EXTREMEMANGAS_ID       = 32;
-  MANGAHOST_ID           = 33;
-  MANGAKU_ID             = 34;
-  MANGAAT_ID             = 35;
-  DYNASTYSCANS_ID        = 36;
+  ESMANGAHERE_ID         = 6;
+  ANIMEEXTREMIST_ID      = 7;
+  S2SCAN_ID              = 8;
+  IMANHUA_ID             = 9;
+  CENTRALDEMANGAS_ID     = 10;
+  EGSCANS_ID             = 11;
+  MANGAAR_ID             = 12;
+  MANGAAE_ID             = 13;
+  ANIMESTORY_ID          = 14;
+  LECTUREENLIGNE_ID      = 15;
+  SCANMANGA_ID           = 16;
+  DM5_ID                 = 17;
+  KIVMANGA_ID            = 18;
+  MEINMANGA_ID           = 19;
+  MANGASPROJECT_ID       = 20;
+  MANGAREADER_POR_ID     = 21;
+  JAPANSHIN_ID           = 22;
+  CENTRUMMANGI_PL_ID     = 23;
+  MANGALIB_PL_ID         = 24;
+  ONEMANGA_ID            = 25;
+  MANGATOWN_ID           = 26;
+  MANGAOKU_ID            = 27;
+  IKOMIK_ID              = 28;
+  NHENTAI_ID             = 29;
+  UNIXMANGA_ID           = 30;
+  EXTREMEMANGAS_ID       = 31;
+  MANGAHOST_ID           = 32;
+  MANGAKU_ID             = 33;
+  MANGAAT_ID             = 34;
+  DYNASTYSCANS_ID        = 35;
 
-  WebsiteRoots: array [0..36] of array [0..1] of String = (
+  WebsiteRoots: array [0..35] of array [0..1] of String = (
     ('AnimeA', 'http://manga.animea.net'),
     ('OurManga', 'http://www.ourmanga.com'),
     ('VnSharing', 'http://truyen.vnsharing.net'),
     ('Truyen18', 'http://www.truyen18.org'),
     ('Turkcraft', 'http://turkcraft.com'),
     ('Starkana', 'http://starkana.jp'),
-    ('BlogTruyen', 'http://blogtruyen.com'),
     ('ESMangaHere', 'http://es.mangahere.co'),
     ('AnimExtremist', 'http://www.animextremist.com'),
     ('S2Scans', 'http://reader.s2smanga.com'),
@@ -322,10 +320,6 @@ const
   TURKCRAFT_BROWSER = '/';
 
   STARKANA_BROWSER = '/manga/list';
-
-  BLOGTRUYEN_BROWSER = '/danhsach/tatca';
-  BLOGTRUYEN_JS_BROWSER = '/ListStory/GetListStory/';
-  BLOGTRUYEN_POST_FORM = 'Url=tatca&OrderBy=1&PageIndex=';
 
   ESMANGAHERE_BROWSER = '/mangalist/';
 

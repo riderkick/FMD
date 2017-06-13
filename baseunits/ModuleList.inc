@@ -57,6 +57,7 @@ uses
   NineManga,
   MangaTail,
   TruyenTranhTuan,
+  BlogTruyen,
   // Raw Official
   SundayWebEvery,
   TonarinoYoungJump,

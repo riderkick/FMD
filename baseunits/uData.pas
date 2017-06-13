@@ -778,8 +778,6 @@ var
 
   {$I includes/VnSharing/directory_page_number.inc}
 
-  {$I includes/BlogTruyen/directory_page_number.inc}
-
   {$I includes/S2Scans/directory_page_number.inc}
 
   {$I includes/LectureEnLigne/directory_page_number.inc}
@@ -836,9 +834,6 @@ begin
       else
       if MangaSiteID = VNSHARING_ID then
         Result := GetVnSharingDirectoryPageNumber
-      else
-      if MangaSiteID = BLOGTRUYEN_ID then
-        Result := GetBlogTruyenDirectoryPageNumber
       else
       if MangaSiteID = S2SCAN_ID then
         Result := GetS2ScanDirectoryPageNumber
@@ -928,8 +923,6 @@ var
 
   {$I includes/EGScans/names_and_links.inc}
 
-  {$I includes/BlogTruyen/names_and_links.inc}
-
   {$I includes/Kivmanga/names_and_links.inc}
 
   {$I includes/MeinManga/names_and_links.inc}
@@ -995,9 +988,6 @@ begin
     else
     if MangaSiteID = MEINMANGA_ID then
       Result := MeinMangaGetNamesAndLinks
-    else
-    if MangaSiteID = BLOGTRUYEN_ID then
-      Result := BlogTruyenGetNamesAndLinks
     else
     if MangaSiteID = ESMANGAHERE_ID then
       Result := EsMangaHereGetNamesAndLinks
@@ -1131,8 +1121,6 @@ var
 
   {$I includes/CentralDeMangas/manga_information.inc}
 
-  {$I includes/BlogTruyen/manga_information.inc}
-
   {$I includes/MeinManga/manga_information.inc}
 
   {$I includes/KivManga/manga_information.inc}
@@ -1239,9 +1227,6 @@ begin
     else
     if MangaSiteID = CENTRALDEMANGAS_ID then
       Result := GetCentralDeMangasInfoFromURL
-    else
-    if MangaSiteID = BLOGTRUYEN_ID then
-      Result := GetBlogTruyenInfoFromURL
     else
     if MangaSiteID = KIVMANGA_ID then
       Result := GetKivmangaInfoFromURL

@@ -554,8 +554,6 @@ var
 
   {$I includes/AnimExtremist/image_url.inc}
 
-  {$I includes/BlogTruyen/image_url.inc}
-
   {$I includes/CentralDeMangas/image_url.inc}
 
   {$I includes/EGScans/image_url.inc}
@@ -648,9 +646,6 @@ begin
     else
     if Task.Container.MangaSiteID = CENTRALDEMANGAS_ID then
       Result := GetCentralDeMangasImageURL
-    else
-    if Task.Container.MangaSiteID = BLOGTRUYEN_ID then
-      Result := GetBlogTruyenImageURL
     else
     if Task.Container.MangaSiteID = KIVMANGA_ID then
       Result := GetKivmangaImageURL
