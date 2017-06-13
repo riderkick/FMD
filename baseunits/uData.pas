@@ -776,8 +776,6 @@ var
 
   {$I includes/AnimeA/directory_page_number.inc}
 
-  {$I includes/Manga24h/directory_page_number.inc}
-
   {$I includes/VnSharing/directory_page_number.inc}
 
   {$I includes/BlogTruyen/directory_page_number.inc}
@@ -835,9 +833,6 @@ begin
       Source := TStringList.Create;
       if MangaSiteID = ANIMEA_ID then
         Result := GetAnimeADirectoryPageNumber
-      else
-      if MangaSiteID = MANGA24H_ID then
-        Result := GetManga24hDirectoryPageNumber
       else
       if MangaSiteID = VNSHARING_ID then
         Result := GetVnSharingDirectoryPageNumber
@@ -908,8 +903,6 @@ var
   {$I includes/EsMangaHere/names_and_links.inc}
 
   {$I includes/AnimExtremist/names_and_links.inc}
-
-  {$I includes/Manga24h/names_and_links.inc}
 
   {$I includes/VnSharing/names_and_links.inc}
 
@@ -987,9 +980,6 @@ begin
     Source := TStringList.Create;
     if MangaSiteID = ANIMEA_ID then
       Result := AnimeAGetNamesAndLinks
-    else
-    if MangaSiteID = MANGA24H_ID then
-      Result := Manga24hGetNamesAndLinks
     else
     if MangaSiteID = VNSHARING_ID then
       Result := VnSharingGetNamesAndLinks
@@ -1119,8 +1109,6 @@ var
 
   {$I includes/AnimExtremist/manga_information.inc}
 
-  {$I includes/Manga24h/manga_information.inc}
-
   {$I includes/VnSharing/manga_information.inc}
 
   {$I includes/Starkana/manga_information.inc}
@@ -1209,9 +1197,6 @@ begin
     Source := TStringList.Create;
     if MangaSiteID = ANIMEA_ID then
       Result := GetAnimeAInfoFromURL
-    else
-    if MangaSiteID = MANGA24H_ID then
-      Result := GetManga24hInfoFromURL
     else
     if MangaSiteID = VNSHARING_ID then
       Result := GetVnSharingInfoFromURL

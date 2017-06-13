@@ -564,8 +564,6 @@ var
 
   {$I includes/Kivmanga/image_url.inc}
 
-  {$I includes/Manga24h/image_url.inc}
-
   {$I includes/MangaAe/image_url.inc}
 
   {$I includes/MangaAr/image_url.inc}
@@ -617,9 +615,6 @@ begin
   begin
     if Task.Container.MangaSiteID = ANIMEA_ID then
       Result := GetAnimeAImageURL
-    else
-    if Task.Container.MangaSiteID = MANGA24H_ID then
-      Result := GetManga24hImageURL
     else
     if Task.Container.MangaSiteID = VNSHARING_ID then
       Result := GetVnSharingImageURL

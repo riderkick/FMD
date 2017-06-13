@@ -232,47 +232,45 @@ const
 
   ANIMEA_ID              = 0;
   OURMANGA_ID            = 1;
-  MANGA24H_ID            = 2;
-  VNSHARING_ID           = 3;
-  TRUYEN18_ID            = 4;
-  TURKCRAFT_ID           = 5;
-  STARKANA_ID            = 6;
-  BLOGTRUYEN_ID          = 7;
-  ESMANGAHERE_ID         = 8;
-  ANIMEEXTREMIST_ID      = 9;
-  S2SCAN_ID              = 10;
-  IMANHUA_ID             = 11;
-  CENTRALDEMANGAS_ID     = 12;
-  EGSCANS_ID             = 13;
-  MANGAAR_ID             = 14;
-  MANGAAE_ID             = 15;
-  ANIMESTORY_ID          = 16;
-  LECTUREENLIGNE_ID      = 17;
-  SCANMANGA_ID           = 18;
-  DM5_ID                 = 19;
-  KIVMANGA_ID            = 20;
-  MEINMANGA_ID           = 21;
-  MANGASPROJECT_ID       = 22;
-  MANGAREADER_POR_ID     = 23;
-  JAPANSHIN_ID           = 24;
-  CENTRUMMANGI_PL_ID     = 25;
-  MANGALIB_PL_ID         = 26;
-  ONEMANGA_ID            = 27;
-  MANGATOWN_ID           = 28;
-  MANGAOKU_ID            = 29;
-  IKOMIK_ID              = 30;
-  NHENTAI_ID             = 31;
-  UNIXMANGA_ID           = 32;
-  EXTREMEMANGAS_ID       = 33;
-  MANGAHOST_ID           = 34;
-  MANGAKU_ID             = 35;
-  MANGAAT_ID             = 36;
-  DYNASTYSCANS_ID        = 37;
+  VNSHARING_ID           = 2;
+  TRUYEN18_ID            = 3;
+  TURKCRAFT_ID           = 4;
+  STARKANA_ID            = 5;
+  BLOGTRUYEN_ID          = 6;
+  ESMANGAHERE_ID         = 7;
+  ANIMEEXTREMIST_ID      = 8;
+  S2SCAN_ID              = 9;
+  IMANHUA_ID             = 10;
+  CENTRALDEMANGAS_ID     = 11;
+  EGSCANS_ID             = 12;
+  MANGAAR_ID             = 13;
+  MANGAAE_ID             = 14;
+  ANIMESTORY_ID          = 15;
+  LECTUREENLIGNE_ID      = 16;
+  SCANMANGA_ID           = 17;
+  DM5_ID                 = 18;
+  KIVMANGA_ID            = 19;
+  MEINMANGA_ID           = 20;
+  MANGASPROJECT_ID       = 21;
+  MANGAREADER_POR_ID     = 22;
+  JAPANSHIN_ID           = 23;
+  CENTRUMMANGI_PL_ID     = 24;
+  MANGALIB_PL_ID         = 25;
+  ONEMANGA_ID            = 26;
+  MANGATOWN_ID           = 27;
+  MANGAOKU_ID            = 28;
+  IKOMIK_ID              = 29;
+  NHENTAI_ID             = 30;
+  UNIXMANGA_ID           = 31;
+  EXTREMEMANGAS_ID       = 32;
+  MANGAHOST_ID           = 33;
+  MANGAKU_ID             = 34;
+  MANGAAT_ID             = 35;
+  DYNASTYSCANS_ID        = 36;
 
-  WebsiteRoots: array [0..37] of array [0..1] of String = (
+  WebsiteRoots: array [0..36] of array [0..1] of String = (
     ('AnimeA', 'http://manga.animea.net'),
     ('OurManga', 'http://www.ourmanga.com'),
-    ('Manga24h', 'http://manga24h.com'),
     ('VnSharing', 'http://truyen.vnsharing.net'),
     ('Truyen18', 'http://www.truyen18.org'),
     ('Turkcraft', 'http://turkcraft.com'),
@@ -315,8 +313,6 @@ const
 
   ANIMEA_BROWSER = '/browse.html?page=';
   ANIMEA_SKIP = '?skip=1';
-
-  MANGA24H_BROWSER = '/manga/update/page/';
 
   VNSHARING_BROWSER = '/DanhSach';
 
