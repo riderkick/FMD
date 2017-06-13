@@ -64,6 +64,7 @@ type
     function HEAD(const URL: String; const Response: TObject = nil): Boolean;
     function GET(const URL: String; const Response: TObject = nil): Boolean;
     function POST(const URL: String; const POSTData: String = ''; const Response: TObject = nil): Boolean;
+    function XHR(const URL: String; const Response: TObject = nil): Boolean;
     function GetCookies: String;
     function ThreadTerminated: Boolean;
     procedure RemoveCookie(const CookieName: String);
@@ -500,6 +501,14 @@ begin
   if (MimeType = 'text/html') or (MimeType = '') then
     MimeType := 'application/x-www-form-urlencoded';
   Result := HTTPRequest('POST', URL, Response);
+end;
+
+function THTTPSendThread.XHR(const URL: String; const Response: TObject
+  ): Boolean;
+begin
+  if Pos('HTTP/', Headers.Text) = 1 then Reset;
+  Headers.Add('X-Requested-With: XMLHttpRequest');
+  Result := GET(URL, Response);
 end;
 
 function THTTPSendThread.GetCookies: String;
