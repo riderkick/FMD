@@ -447,8 +447,6 @@ var
 
   {$I includes/NHentai/chapter_page_number.inc}
 
-  {$I includes/MangaMint/chapter_page_number.inc}
-
   {$I includes/UnixManga/chapter_page_number.inc}
 
   {$I includes/ExtremeMangas/chapter_page_number.inc}
@@ -525,9 +523,6 @@ begin
     else
     if Task.Container.MangaSiteID = NHENTAI_ID then
       Result := GetNHentaiPageNumber
-    else
-    if Task.Container.MangaSiteID = MANGAMINT_ID then
-      Result := GetMangaMintPageNumber
     else
     if Task.Container.MangaSiteID = UNIXMANGA_ID then
       Result := GetUnixMangaPageNumber
@@ -608,8 +603,6 @@ var
   {$I includes/IKomik/image_url.inc}
 
   {$I includes/NHentai/image_url.inc}
-
-  {$I includes/MangaMint/image_url.inc}
 
   {$I includes/UnixManga/image_url.inc}
 
@@ -704,9 +697,6 @@ begin
     else
     if Task.Container.MangaSiteID = NHENTAI_ID then
       Result := GetNHentaiImageURL
-    else
-    if Task.Container.MangaSiteID = MANGAMINT_ID then
-      Result := GetMangaMintImageURL
     else
     if Task.Container.MangaSiteID = UNIXMANGA_ID then
       Result := GetUnixMangaImageURL

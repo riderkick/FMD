@@ -4,6 +4,15 @@ Project page: https://github.com/riderkick/FMD
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.117.0 (future)
+[*] Madokami: fixed
+[-] MangaKoi: removed
+[+] Added MangaHome[EN]
+[-] MangaMint: removed
+[+] Added MangaTail[EN]
+[+] Added MangaSail[EN]
+Full changes: https://github.com/riderkick/FMD/compare/0.9.118.0...0.9.118.0
+
 0.9.117.0 (12-06-2017)
 [*] Fixed empty update url, you may need to download this version manually
 Full changes: https://github.com/riderkick/FMD/compare/0.9.116.0...0.9.117.0

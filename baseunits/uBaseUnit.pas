@@ -263,15 +263,14 @@ const
   MANGAOKU_ID            = 30;
   IKOMIK_ID              = 31;
   NHENTAI_ID             = 32;
-  MANGAMINT_ID           = 33;
-  UNIXMANGA_ID           = 34;
-  EXTREMEMANGAS_ID       = 35;
-  MANGAHOST_ID           = 36;
-  MANGAKU_ID             = 37;
-  MANGAAT_ID             = 38;
-  DYNASTYSCANS_ID        = 39;
+  UNIXMANGA_ID           = 33;
+  EXTREMEMANGAS_ID       = 34;
+  MANGAHOST_ID           = 35;
+  MANGAKU_ID             = 36;
+  MANGAAT_ID             = 37;
+  DYNASTYSCANS_ID        = 38;
 
-  WebsiteRoots: array [0..39] of array [0..1] of String = (
+  WebsiteRoots: array [0..38] of array [0..1] of String = (
     ('AnimeA', 'http://manga.animea.net'),
     ('OurManga', 'http://www.ourmanga.com'),
     ('Manga24h', 'http://manga24h.com'),
@@ -305,7 +304,6 @@ const
     ('MangaOku', 'http://www.mangaoku.net'),
     ('I-Komik', 'http://www.i-komik.com'),
     ('NHentai', 'http://nhentai.net'),
-    ('MangaMint', 'http://www.mangamint.com'),
     ('UnixManga', 'http://unixmanga.co'),
     ('ExtremeMangas', 'http://www.extrememangas.com'),
     ('MangaHost', 'http://br.mangahost.com'),
