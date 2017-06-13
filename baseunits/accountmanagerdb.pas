@@ -204,7 +204,7 @@ end;
 
 procedure TAccountManager.SetStatus(AName: string; AValue: TAccountStatus);
 begin
-  SetValueInteger(AName, 'status', Integer(AValue));
+  SetValueString(AName, 'status', IntToStr(Integer(AValue)));
 end;
 
 function TAccountManager.CreateDB: Boolean;
@@ -364,7 +364,11 @@ begin
       fquery.Fields[FieldIndex].AsString := encode(AValue)
     else
       fquery.Fields[FieldIndex].AsString := decode(AValue);
-    fquery.Post;
+    try
+      fquery.Post;
+    except
+      fquery.Cancel;
+    end;
   finally
     LeaveCriticalsection(locklocate);
   end;
@@ -380,7 +384,11 @@ begin
     fquery.RecNo := RecIndex + 1;
     fquery.Edit;
     fquery.Fields[FieldIndex].AsBoolean := AValue;
-    fquery.Post;
+    try
+      fquery.Post;
+    except
+      fquery.Cancel;
+    end;
   finally
     LeaveCriticalsection(locklocate);
   end;
@@ -396,7 +404,11 @@ begin
     fquery.RecNo := RecIndex + 1;
     fquery.Edit;
     fquery.Fields[FieldIndex].AsInteger := AValue;
-    fquery.Post;
+    try
+      fquery.Post;
+    except
+      fquery.Cancel;
+    end;
   finally
     LeaveCriticalsection(locklocate);
   end;
@@ -410,7 +422,11 @@ begin
     if fquery.Locate('aname', AName, []) then begin
       fquery.Edit;
       fquery.FieldByName(AField).AsString := AValue;
-      fquery.Post;
+      try
+        fquery.Post;
+      except
+        fquery.Cancel;
+      end;
     end;
   finally
     LeaveCriticalsection(locklocate);
@@ -426,7 +442,11 @@ begin
     if fquery.Locate('aname', AName, []) then begin
       fquery.Edit;
       fquery.FieldByName(AField).AsBoolean := AValue;
-      fquery.Post;
+      try
+        fquery.Post;
+      except
+        fquery.Cancel;
+      end;
     end;
   finally
     LeaveCriticalsection(locklocate);
@@ -442,7 +462,11 @@ begin
     if fquery.Locate('aname', AName, []) then begin
       fquery.Edit;
       fquery.FieldByName(AField).AsInteger := AValue;
-      fquery.Post;
+      try
+        fquery.Post;
+      except
+        fquery.Cancel;
+      end;
     end;
   finally
     LeaveCriticalsection(locklocate);
