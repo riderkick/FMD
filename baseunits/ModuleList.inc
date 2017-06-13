@@ -16,7 +16,7 @@ uses
   KissManga,
   UnionMangas,
   MangaStreamTo,
-  MangaKoi,
+  MangaHome,
   GameofScanlation,
   Hakihome,
   MangaChanRU,

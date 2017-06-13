@@ -1,4 +1,4 @@
-unit MangaKoi;
+unit MangaHome;
 
 {$mode objfpc}{$H+}
 
@@ -157,7 +157,7 @@ procedure RegisterModule;
 begin
   with AddModule do
   begin
-    Website := 'MangaKoi';
+    Website := 'MangaHome';
     RootURL := 'http://www.mangahome.com';
     OnGetDirectoryPageNumber := @GetDirectoryPageNumber;
     OnGetNameAndLink := @GetNameAndLink;
