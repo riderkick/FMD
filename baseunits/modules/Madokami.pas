@@ -30,6 +30,7 @@ const
     );
 
 var
+  madokamiauth: String = '';
   locklogin: TRTLCriticalSection;
 
 function Login(const AHTTP: THTTPSendThread): Boolean;
@@ -42,10 +43,9 @@ begin
       Account.Status[modulename] := asChecking;
       AHTTP.Reset;
       AHTTP.Cookies.Clear;
-      AHTTP.Headers.Values['Authorization'] :=
-        ' Basic ' + Base64Encode(Account.Username[modulename] +
-        ':' + Account.Password[modulename]);
-      if AHTTP.GET(urlroot + '/login') then begin
+      madokamiauth := 'Authorization: Basic ' + Base64Encode(Account.Username[modulename] + ':' + Account.Password[modulename]);
+      AHTTP.Headers.Add(madokamiauth);
+      if AHTTP.GET(urlroot) then begin
         //Result := AHTTP.Cookies.Values['laravel_session'] <> '';
         Result := (AHTTP.ResultCode < 400) and (AHTTP.Headers.Values['WWW-Authenticate'] = '');
         if Result then begin
@@ -73,10 +73,21 @@ begin
   AHTTP.Reset;
 end;
 
+procedure SetAuth(const AHTTP: THTTPSendThread);
+begin
+  AHTTP.Cookies.Text := Account.Cookies[modulename];
+  if AHTTP.Cookies.Count <> 0 then
+  begin
+    if madokamiauth = '' then
+      madokamiauth := 'Authorization: Basic ' + Base64Encode(Account.Username[modulename] + ':' + Account.Password[modulename]);
+    AHTTP.Headers.Add(madokamiauth);
+  end;
+end;
+
 function GETWithLogin(const AHTTP: THTTPSendThread; AURL: String): Boolean;
 begin
   Result := False;
-  AHTTP.Cookies.Text := Account.Cookies[modulename];
+  SetAuth(AHTTP);
   AHTTP.FollowRedirection := False;
   Result := AHTTP.GET(AURL);
   if (AHTTP.ResultCode > 400) and (AHTTP.Headers.Values['WWW-Authenticate'] = ' Basic') then
@@ -132,7 +143,7 @@ var
 begin
   Result := NET_PROBLEM;
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
-  if MangaInfo.FHTTP.GET(FillHost(Module.RootURL, AURL)) then begin
+  if GETWithLogin(MangaInfo.FHTTP, MaybeFillHost(Module.RootURL, AURL)) then begin
     Result := NO_ERROR;
     with MangaInfo.mangaInfo, TXQueryEngineHTML.Create(MangaInfo.FHTTP.Document) do
       try
