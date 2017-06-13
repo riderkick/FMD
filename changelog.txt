@@ -5,14 +5,16 @@ Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
 0.9.117.0 (future)
-[*] Madokami: fixed
+[*] Madokami: fixed all
 [-] MangaKoi: removed
 [+] Added MangaHome[EN]
 [-] MangaMint: removed
 [+] Added MangaTail[EN]
 [+] Added MangaSail[EN]
 [+] Added option to minimize on start
-Full changes: https://github.com/riderkick/FMD/compare/0.9.118.0...0.9.118.0
+[*] Manga-Tr: fixed all
+[*] GManga: fixed all
+Full changes: https://github.com/riderkick/FMD/compare/0.9.117.0...0.9.118.0
 
 0.9.117.0 (12-06-2017)
 [*] Fixed empty update url, you may need to download this version manually
