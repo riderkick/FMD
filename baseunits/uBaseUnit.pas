@@ -591,8 +591,9 @@ function FillMangaSiteHost(const Website, URL: String): String; overload;
 
 // modify url
 function FillHost(const Host, URL: String): String; overload;
-function FillHost(const Host: String; const URLs: TStrings): String; overload;
-function MaybeFillHost(const Host, URL: String): String;
+procedure FillHost(const Host: String; const URLs: TStrings); overload;
+function MaybeFillHost(const Host, URL: String): String; overload;
+procedure MaybeFillHost(const Host: String; const URLs: TStrings); overload;
 function GetHostURL(URL: String): String;
 function RemoveHostFromURL(URL: String): String;
 procedure RemoveHostFromURLs(const URLs: TStringList);
@@ -1184,7 +1185,7 @@ begin
   Result:=RemoveURLDelim(Host)+P;
 end;
 
-function FillHost(const Host: String; const URLs: TStrings): String;
+procedure FillHost(const Host: String; const URLs: TStrings);
 var
   i: Integer;
 begin
@@ -1200,6 +1201,15 @@ begin
   SplitURL(URL,@H,@P);
   if (H='') and (P<>'') then Result:=RemoveURLDelim(Host)+P
   else Result:=URL;
+end;
+
+procedure MaybeFillHost(const Host: String; const URLs: TStrings);
+var
+  i: Integer;
+begin
+  if (URLs=nil) or (URLs.Count=0) then Exit;
+  for i:=0 to URLs.Count-1 do
+    URLs[i]:=MaybeFillHost(Host,URLs[i]);
 end;
 
 function GetHostURL(URL: String): String;
