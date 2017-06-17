@@ -618,8 +618,10 @@ function ConvertCharsetToUTF8(S: String): String; overload;
 procedure ConvertCharsetToUTF8(S: TStrings); overload;
 
 // encode/decode
-function Base64Encode(const s: String): String;
-function Base64Decode(const s: String): String;
+function Base64Encode(const s: String): String; overload;
+function Base64Decode(const s: String): String; overload;
+function Base64Encode(const TheStream: TStream): Boolean ; overload;
+function Base64Decode(const TheStream: TStream): Boolean ; overload;
 
 // StringUtils
 function PadZero(const S: String; ATotalWidth: Integer = 3;
@@ -1937,6 +1939,63 @@ function Base64Decode(const s: String): String;
 begin
   if s = '' then Exit(s);
   Result := DecodeStringBase64(s);
+end;
+
+function Base64Encode(const TheStream: TStream): Boolean;
+var
+  OutStream: TMemoryStream;
+  Encoder: TBase64EncodingStream;
+begin
+  Result := False;
+  if TheStream = nil then Exit;
+  if TheStream.Size = 0 then Exit;
+  OutStream := TMemoryStream.Create;
+  try
+    Encoder := TBase64EncodingStream.Create(OutStream);
+    try
+      TheStream.Position := 0;
+      Encoder.CopyFrom(TheStream, TheStream.Size);
+      Encoder.Flush;
+      TheStream.Position := 0;
+      TheStream.Size := 0;
+      OutStream.Position := 0;
+      TheStream.CopyFrom(OutStream, OutStream.Size);
+      Result := True;
+    finally
+      Encoder.Free;
+    end;
+  finally
+    OutStream.Free;
+  end;
+end;
+
+function Base64Decode(const TheStream: TStream): Boolean;
+var
+  Decoder: TBase64DecodingStream;
+  InStream: TMemoryStream;
+begin
+  Result := False;
+  if TheStream = nil then Exit;
+  if TheStream.Size = 0 then Exit;
+  InStream := TMemoryStream.Create;
+  try
+    TheStream.Position := 0;
+    InStream.CopyFrom(TheStream, TheStream.Size);
+    try
+      InStream.Position := 0;
+      Decoder := TBase64DecodingStream.Create(InStream);
+      if Decoder.Size > 0 then begin
+        TheStream.Position := 0;
+        TheStream.Size := 0;
+        TheStream.CopyFrom(Decoder, Decoder.Size);
+        Result := True;
+      end;
+    except
+    end;
+    Decoder.Free;
+  finally
+    InStream.Free;
+  end;
 end;
 
 function PadZero(const S: String; ATotalWidth: Integer; PadAll: Boolean; StripZero: Boolean): String;
