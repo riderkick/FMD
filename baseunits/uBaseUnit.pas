@@ -729,6 +729,10 @@ function SetParams(const input: array of String): String; overload;
 
 procedure CustomGenres(var output: TStringList; input: String);
 
+//parse google result urls
+function GoogleResultURL(const AURL: String): String;
+procedure GoogleResultURLs(const AURLs: TStrings);
+
 // deal with sourceforge URL.
 function SourceForgeURL(URL: String): String;
 // Get HTML source code from a URL.
@@ -2877,6 +2881,28 @@ begin
     HTMLBody.Free;
   end;
   Result := URL;
+end;
+
+function GoogleResultURL(const AURL: String): String;
+begin
+  Result := AURL;
+  if Pos('google.', LowerCase(AURL)) = 0 then Exit;
+  Result := DecodeURL(ReplaceRegExpr('(?i)^.*google\..*\&url=([^\&]+)\&?.*$', AURL, '$1', True));
+end;
+
+procedure GoogleResultURLs(const AURLs: TStrings);
+var
+  i: Integer;
+begin
+  if AURLs.Count = 0 then Exit;
+  if Pos('google.', LowerCase(AURLs.Text)) = 0 then Exit;
+  with TRegExpr.Create('(?i)^.*google\..*\&url=([^\&]+)\&?.*$') do try
+    for i := 0 to AURLs.Count - 1 do
+      if Pos('google.', LowerCase(AURLs[i])) <> 0 then
+        AURLs[i] := DecodeURL(Replace(AURLs[i], '$1', True));
+  finally
+    Free;
+  end;
 end;
 
 function SourceForgeURL(URL: String): String;
