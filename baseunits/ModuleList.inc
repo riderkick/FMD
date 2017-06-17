@@ -64,6 +64,7 @@ uses
   YoungAceUp,
   NewType,
   Comico,
+  Shogakukan,
   // Adult
   WPAdultSiteSkins,
   EHentai,
