@@ -4387,6 +4387,7 @@ begin
     URls.Text := URL;
     if URls.Count > 0 then
     begin
+      GoogleResultURLs(URls);
       SilentThreadManager.BeginAdd;
       with TRegExpr.Create do
       try
