@@ -1,0 +1,108 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Project-Id-Version: 0.9.118.0\n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: Tokc.D.K. <tokcdk@gmail.com>\n"
+"Language-Team: TokcDK\n"
+"MIME-Version: 1.0\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: ru_RU\n"
+"X-Generator: Poedit 2.0.2\n"
+
+#: tfrmmain.caption
+msgid "Free Manga Downloader - Updater"
+msgstr "Free Manga Downloader - Обновление"
+
+#: tfrmmain.lbfilesize.caption
+msgid "File size"
+msgstr "Размер файла"
+
+#: tfrmmain.lbstatus.caption
+msgid "Waiting..."
+msgstr "Ожидание..."
+
+#: tfrmmain.lbtransferrate.caption
+msgid "Transfer rate"
+msgstr "Скорость передачи"
+
+#: tfrmmessage.caption
+msgid "Help"
+msgstr "Помощь"
+
+#: umain.rs_7znotfound
+msgid "Can't extract file because 7za.exe not found!"
+msgstr "Не удалось извлечь файл, т.к. 7za.exe не найден!"
+
+#: umain.rs_anerroroccured
+msgid "An error occured when trying to download file."
+msgstr "При загрузке файла произошла ошибка."
+
+#: umain.rs_downloading
+msgid "Downloading [%s]..."
+msgstr "Загружается [%s]..."
+
+#: umain.rs_errorcheckantivirus
+msgid "Error saving file, check your AntiVirus!"
+msgstr "Ошбка сохранения файла, проверьте свой антивирус!"
+
+#: umain.rs_faileddownloadpage
+msgid "Failed downloading file!"
+msgstr "Не удалось загрузить файл!"
+
+#: umain.rs_failedloadpage
+msgid "Failed loading page!"
+msgstr "Не удалось загрузить страницу!"
+
+#: umain.rs_filenotfound
+msgid "File not found!"
+msgstr "Файл не найден!"
+
+#: umain.rs_finished
+msgid "Finished."
+msgstr "Завершено."
+
+#: umain.rs_invalidurl
+msgid "Invalid URL!"
+msgstr "Неверный адрес!"
+
+#: umain.rs_loadingpage
+msgid "Loading page..."
+msgstr "Загрузка страницы..."
+
+#: umain.rs_redirected
+msgid "Redirected..."
+msgstr "Перенаправлено..."
+
+#: umain.rs_response
+msgid "Response"
+msgstr "Ответ"
+
+#: umain.rs_retrydownloading
+msgid "Retry downloading[%d] [%s]..."
+msgstr "Попытка загрузки[%d] [%s]..."
+
+#: umain.rs_retryloadpage
+msgid "Retry loading page[%d]..."
+msgstr "Попытка загрузки страницы[%d]..."
+
+#: umain.rs_savefile
+msgid "Saving file... "
+msgstr "Сохранение файла... "
+
+#: umain.rs_servererror
+msgid "Server response error!"
+msgstr "Ошибка ответа сервера!"
+
+#: umain.rs_unknown
+msgid "(unknown)"
+msgstr "(неизвестно)"
+
+#: umain.rs_unpackfile
+msgid "Unpacking file [%s]..."
+msgstr "Распаковка файла [%s]..."
+
+#: umain.rs_waitmainapp
+msgid "Waiting main app to close..."
+msgstr "Ожидание закрытия основного приложения..."
