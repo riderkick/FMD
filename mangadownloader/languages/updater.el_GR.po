@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
-"Project-Id-Version: Free Manga Downloader 0.9.85\n"
+"Project-Id-Version: Free Manga Downloader 0.9.118\n"
 "POT-Creation-Date: \n"
 "PO-Revision-Date: \n"
 "Last-Translator: geogeo.gr <geogeo.gr@gmail.com>\n"
@@ -14,6 +14,10 @@ msgstr ""
 "X-Poedit-Language: Greek\n"
 "X-Poedit-Country: GREECE\n"
 "X-Poedit-SourceCharset: UTF-8\n"
+
+#: tfrmmain.caption
+msgid "Free Manga Downloader - Updater"
+msgstr "Free Manga Downloader - Ενημέρωση"
 
 #: tfrmmain.lbfilesize.caption
 msgid "File size"
