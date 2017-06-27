@@ -215,7 +215,7 @@ begin
       Result := True;
       with TXQueryEngineHTML.Create(Document) do
         try
-          XPathStringAll('//*[@class="image-container"]//img/@src', PageLinks);
+          XPathStringAll('//*[contains(@class,"image-container")]//img/@src', PageLinks);
         finally
           Free;
         end;
