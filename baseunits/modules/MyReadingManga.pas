@@ -89,7 +89,7 @@ begin
     if GETWithCookie(DownloadThread.FHTTP, MaybeFillHost(Module.RootURL, AURL)) then
     begin
       Result := True;
-      XPathStringAll('//*[contains(@class,"entry-content")]/div/img/@src', Document, PageLinks);
+      XPathStringAll('//*[contains(@class,"entry-content")]//div//img/@src', Document, PageLinks);
     end;
   end;
 end;
