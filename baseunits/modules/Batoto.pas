@@ -152,14 +152,14 @@ begin
 end;
 
 function GetDirectoryPageNumber(const MangaInfo: TMangaInformation;
-  var Page: Integer; const Module: TModuleContainer): Integer;
+  var Page: Integer; const WorkPtr: Integer; const Module: TModuleContainer): Integer;
 var
   s: String;
 begin
   Result := NET_PROBLEM;
   Page := 1;
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
-  if MangaInfo.FHTTP.GET(Module.RootURL + dirurls[Module.CurrentDirectoryIndex] +
+  if MangaInfo.FHTTP.GET(Module.RootURL + dirurls[WorkPtr] +
     dirparam + IntToStr(perpage))
   then begin
     Result := NO_ERROR;

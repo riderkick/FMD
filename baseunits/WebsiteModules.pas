@@ -29,7 +29,7 @@ type
   TOnBeforeUpdateList = function(const Module: TModuleContainer): Boolean;
   TOnAfterUpdateList = function(const Module: TModuleContainer): Boolean;
   TOnGetDirectoryPageNumber = function(const MangaInfo: TMangaInformation;
-    var Page: Integer; const Module: TModuleContainer): Integer;
+    var Page: Integer; const WorkPtr: Integer; const Module: TModuleContainer): Integer;
   TOnGetNameAndLink = function(const MangaInfo: TMangaInformation;
     const ANames, ALinks: TStringList; const AURL: String;
     const Module: TModuleContainer): Integer;
@@ -151,9 +151,9 @@ type
     function BeforeUpdateList(const ModuleId: Integer): Boolean;
     function AfterUpdateList(const ModuleId: Integer): Boolean;
     function GetDirectoryPageNumber(const MangaInfo: TMangaInformation;
-      var Page: Integer; const ModuleId: Integer): Integer; overload;
+      var Page: Integer; const WorkPtr: Integer; const ModuleId: Integer): Integer; overload;
     function GetDirectoryPageNumber(const MangaInfo: TMangaInformation;
-      var Page: Integer; const AWebsite: String): Integer; overload;
+      var Page: Integer; const WorkPtr: Integer; const AWebsite: String): Integer; overload;
 
     function GetNameAndLink(const MangaInfo: TMangaInformation;
       const ANames, ALinks: TStringList; const AURL: String;
@@ -477,22 +477,22 @@ begin
 end;
 
 function TWebsiteModules.GetDirectoryPageNumber(
-  const MangaInfo: TMangaInformation; var Page: Integer; const ModuleId: Integer
-  ): Integer;
+  const MangaInfo: TMangaInformation; var Page: Integer; const WorkPtr: Integer;
+  const ModuleId: Integer): Integer;
 begin
   Page := 1;
   Result := MODULE_NOT_FOUND;
   if (ModuleId < 0) or (ModuleId >= FModuleList.Count) then Exit;
-  if Assigned(TModuleContainer(FModuleList[ModuleId]).OnGetDirectoryPageNumber) then
-    Result := TModuleContainer(FModuleList[ModuleId]).OnGetDirectoryPageNumber(
-      MangaInfo, Page, TModuleContainer(FModuleList[ModuleId]));
+  with TModuleContainer(FModuleList[ModuleId]) do
+    if Assigned(OnGetDirectoryPageNumber) then
+      Result := OnGetDirectoryPageNumber(MangaInfo, Page, WorkPtr,TModuleContainer(FModuleList[ModuleId]));
 end;
 
 function TWebsiteModules.GetDirectoryPageNumber(
-  const MangaInfo: TMangaInformation; var Page: Integer; const AWebsite: String
-  ): Integer;
+  const MangaInfo: TMangaInformation; var Page: Integer; const WorkPtr: Integer;
+  const AWebsite: String): Integer;
 begin
-  Result := GetDirectoryPageNumber(MangaInfo, Page, LocateModule(AWebsite));
+  Result := GetDirectoryPageNumber(MangaInfo, Page, WorkPtr, LocateModule(AWebsite));
 end;
 
 function TWebsiteModules.GetNameAndLink(const MangaInfo: TMangaInformation;

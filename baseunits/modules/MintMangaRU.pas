@@ -15,7 +15,7 @@ const
   perpage = 70;
 
 function GetDirectoryPageNumber(const MangaInfo: TMangaInformation;
-  var Page: Integer; const Module: TModuleContainer): Integer;
+  var Page: Integer; const WorkPtr: Integer; const Module: TModuleContainer): Integer;
 var
   s: String;
 begin

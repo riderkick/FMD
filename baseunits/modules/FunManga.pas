@@ -15,7 +15,7 @@ const
   diralpha = '#abcdefghijklmnopqrstuvwxyz';
 
 function GetDirectoryPageNumber(const MangaInfo: TMangaInformation;
-  var Page: Integer; const Module: TModuleContainer): Integer;
+  var Page: Integer; const WorkPtr: Integer; const Module: TModuleContainer): Integer;
 begin
   Result := NO_ERROR;
   Page := Length(diralpha);

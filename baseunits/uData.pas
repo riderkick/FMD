@@ -120,7 +120,7 @@ implementation
 
 uses
   Dialogs, fpJSON, JSONParser, jsonscanner, FastHTMLParser, HTMLUtil,
-  SynaCode, frmMain, WebsiteModules;
+  SynaCode, frmMain, WebsiteModules, uUpdateThread;
 
 // ----- TDataProcess -----
 
@@ -824,7 +824,7 @@ begin
     if ModuleId < 0 then
       ModuleId := Modules.LocateModule(AWebsite);
     if Modules.ModuleAvailable(ModuleId, MMGetDirectoryPageNumber) then
-      Result := Modules.GetDirectoryPageNumber(Self, APage, ModuleId)
+      Result := Modules.GetDirectoryPageNumber(Self, APage, TUpdateListThread(Thread).workPtr, ModuleId)
     else
     begin
       MangaSiteID := GetMangaSiteID(AWebsite);

@@ -25,7 +25,7 @@ begin
   Result := '/' + Result + '/all/any/last-added/';
 end;
 
-function GetDirectoryPageNumber(const MangaInfo: TMangaInformation; var Page: Integer;
+function GetDirectoryPageNumber(const MangaInfo: TMangaInformation; var Page: Integer; const WorkPtr: Integer;
   const Module: TModuleContainer): Integer;
 begin
   Page := 1;

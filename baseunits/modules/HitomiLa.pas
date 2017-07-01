@@ -11,7 +11,7 @@ uses
 implementation
 
 function GetDirectoryPageNumber(const MangaInfo: TMangaInformation;
-  var Page: Integer; const Module: TModuleContainer): Integer;
+  var Page: Integer; const WorkPtr: Integer; const Module: TModuleContainer): Integer;
 var
   source: TStringList;
   i: Integer;

@@ -15,7 +15,7 @@ uses RegExpr, synacode;
 const
   dirurl = '/ajax/Search/AjaxLoadListManga?key=tatca&orderBy=1&p=';
 
-function GetDirectoryPageNumber(const MangaInfo: TMangaInformation; var Page: Integer;
+function GetDirectoryPageNumber(const MangaInfo: TMangaInformation; var Page: Integer; const WorkPtr: Integer;
   const Module: TModuleContainer): Integer;
 begin
   Result := NET_PROBLEM;

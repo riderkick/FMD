@@ -14,7 +14,7 @@ const
   dirurl = '/c/-/albums/frontpage/0/t/manga/sorted/new/page/';
 
 function GetDirectoryPageNumber(const MangaInfo: TMangaInformation;
-  var Page: Integer; const Module: TModuleContainer): Integer;
+  var Page: Integer; const WorkPtr: Integer; const Module: TModuleContainer): Integer;
 begin
   Result := NET_PROBLEM;
   if MangaInfo.FHTTP.GET(Module.RootURL + dirurl + '1/') then

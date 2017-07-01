@@ -18,7 +18,7 @@ const
   dirurldataend = '&RawSearch=&SortOptions=Newest&PageMinimum=1&PageMaximum=10000&RateMinimum=0&RateMaximum=5';
 
 function GetDirectoryPageNumber(const MangaInfo: TMangaInformation;
-  var Page: Integer; const Module: TModuleContainer): Integer;
+  var Page: Integer; const WorkPtr: Integer; const Module: TModuleContainer): Integer;
 begin
   Result := NET_PROBLEM;
   Page := 1;

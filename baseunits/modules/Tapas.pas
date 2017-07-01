@@ -22,7 +22,7 @@ begin
   Result := Cloudflare.GETCF(AHTTP, AURL, tapascf)
 end;
 
-function GetDirectoryPageNumber(const MangaInfo: TMangaInformation; var Page: Integer;
+function GetDirectoryPageNumber(const MangaInfo: TMangaInformation; var Page: Integer; const WorkPtr: Integer;
   const Module: TModuleContainer): Integer;
 var
   s: String;

@@ -14,7 +14,7 @@ const
   dirurl = '/search?orderby=add';
 
 function GetDirectoryPageNumber(const MangaInfo: TMangaInformation;
-  var Page: Integer; const Module: TModuleContainer): Integer;
+  var Page: Integer; const WorkPtr: Integer; const Module: TModuleContainer): Integer;
 begin
   Result := NET_PROBLEM;
   Page := 1;

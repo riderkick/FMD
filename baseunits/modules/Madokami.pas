@@ -127,16 +127,13 @@ begin
 end;
 
 function GetDirectoryPageNumber(const MangaInfo: TMangaInformation;
-  var Page: Integer; const Module: TModuleContainer): Integer;
-var
-  workPtr: Integer;
+  var Page: Integer; const WorkPtr: Integer; const Module: TModuleContainer): Integer;
 begin
   Result := NO_ERROR;
-  workPtr := TUpdateListThread(MangaInfo.Thread).workPtr;
   if  workPtr < Length(madokamilist) then begin
-    if GETWithLogin(MangaInfo.FHTTP, Module.RootURL + '/Manga/' + madokamilist[workPtr+1]) then begin
-      XPathStringAll('//table[@id="index-table"]/tbody/tr/td[1]/a/@href', MangaInfo.FHTTP.Document, madokamiulist[workPtr]);
-      Page := madokamiulist[workPtr].Count;
+    if GETWithLogin(MangaInfo.FHTTP, Module.RootURL + '/Manga/' + madokamilist[WorkPtr+1]) then begin
+      XPathStringAll('//table[@id="index-table"]/tbody/tr/td[1]/a/@href', MangaInfo.FHTTP.Document, madokamiulist[WorkPtr]);
+      Page := madokamiulist[WorkPtr].Count;
     end;
   end
   else

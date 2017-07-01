@@ -16,7 +16,7 @@ const
   readURL = 'http://readms.com';
 
 function GetDirectoryPageNumber(const MangaInfo: TMangaInformation;
-  var Page: Integer; const Module: TModuleContainer): Integer;
+  var Page: Integer; const WorkPtr: Integer; const Module: TModuleContainer): Integer;
 begin
   Page := 1;
   Result := NO_ERROR;
