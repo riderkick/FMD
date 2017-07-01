@@ -23,12 +23,11 @@ type
   TUpdateListThread = class(TBaseThread)
   protected
     Info: TMangaInformation;
-    checkStyle: TCheckStyleType;
-    workPtr: Integer;
-    manager: TUpdateListManagerThread;
-
     procedure Execute; override;
   public
+    checkStyle: TCheckStyleType;
+    manager: TUpdateListManagerThread;
+    workPtr: Integer;
     title, link: String;
     constructor Create;
     destructor Destroy; override;
@@ -141,15 +140,8 @@ begin
     case CheckStyle of
       CS_DIRECTORY_COUNT:
       begin
-        if manager.ModuleId > -1 then
-        begin
-          with Modules.Module[manager.ModuleId] do
-          for i := Low(TotalDirectoryPage) to High(TotalDirectoryPage) do
-          begin
-            CurrentDirectoryIndex := i;
-            info.GetDirectoryPage(TotalDirectoryPage[i], manager.website);
-          end;
-        end
+        if manager.ModuleId <> -1 then
+          info.GetDirectoryPage(Modules[manager.ModuleId].TotalDirectoryPage[workPtr], manager.website)
         else
           info.GetDirectoryPage(manager.directoryCount, manager.website);
       end;
@@ -605,8 +597,18 @@ begin
           // get directory page count
           directoryCount := 0;
           workPtr := 0;
-          GetInfo(1, CS_DIRECTORY_COUNT);
-          if Terminated then Break;
+          if ModuleId <> -1 then begin
+            Modules.BeforeUpdateList(ModuleId);
+            GetInfo(Modules[ModuleId].TotalDirectory, CS_DIRECTORY_COUNT);
+          end
+          else
+            GetInfo(1, CS_DIRECTORY_COUNT);
+
+          if Terminated then begin
+            if ModuleId <> -1 then
+              Modules.AfterUpdateList(ModuleId);
+            Break;
+          end;
 
           mainDataProcess.OpenTable('',True);
           FIsPreListAvailable:=mainDataProcess.RecordCount>0;
@@ -627,12 +629,15 @@ begin
                 CurrentDirectoryIndex := j;
                 GetInfo(TotalDirectoryPage[j], CS_DIRECTORY_PAGE);
                 Inc(j);
+                if Terminated then Break;
               end;
             end;
           end
           else
             GetInfo(directoryCount, CS_DIRECTORY_PAGE);
 
+          if ModuleId <> -1 then
+            Modules.BeforeUpdateList(ModuleId);
           if Terminated then Break;
 
           FStatus := RS_UpdatingList + Format(' [%d/%d] %s',
