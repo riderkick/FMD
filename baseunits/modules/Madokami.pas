@@ -32,6 +32,7 @@ const
 var
   madokamiauth: String = '';
   locklogin: TRTLCriticalSection;
+  madokamiulist: array of TStrings;
 
 function Login(const AHTTP: THTTPSendThread): Boolean;
 begin
@@ -97,14 +98,49 @@ begin
   end;
 end;
 
+procedure ClearMadokamiUlist;
+var
+  i: Integer;
+begin
+  if Length(madokamiulist) <> 0 then begin
+    for i := Low(madokamiulist) to High(madokamiulist) do
+      FreeAndNil(madokamiulist[i]);
+    SetLength(madokamiulist, 0);
+  end;
+end;
+
+function BeforeUpdateList(const Module: TModuleContainer): Boolean;
+var
+  i: Integer;
+begin
+  Result := True;
+  ClearMadokamiUlist;
+  SetLength(madokamiulist, Length(madokamilist));
+  for i := Low(madokamiulist) to High(madokamiulist) do
+    madokamiulist[i] := TStringList.Create;
+end;
+
+function AfterUpdateList(const Module: TModuleContainer): Boolean;
+begin
+  Result := True;
+  ClearMadokamiUlist;
+end;
+
 function GetDirectoryPageNumber(const MangaInfo: TMangaInformation;
   var Page: Integer; const Module: TModuleContainer): Integer;
+var
+  workPtr: Integer;
 begin
   Result := NO_ERROR;
-  if Module.CurrentDirectoryIndex = 0 then
-    Page := Length(madokamilist)
+  workPtr := TUpdateListThread(MangaInfo.Thread).workPtr;
+  if  workPtr < Length(madokamilist) then begin
+    if GETWithLogin(MangaInfo.FHTTP, Module.RootURL + '/Manga/' + madokamilist[workPtr+1]) then begin
+      XPathStringAll('//table[@id="index-table"]/tbody/tr/td[1]/a/@href', MangaInfo.FHTTP.Document, madokamiulist[workPtr]);
+      Page := madokamiulist[workPtr].Count;
+    end;
+  end
   else
-    Page := Length(madokamiotherlist);
+    Page := 1;
 end;
 
 function GetNameAndLink(const MangaInfo: TMangaInformation;
@@ -139,42 +175,30 @@ function GetNameAndLink(const MangaInfo: TMangaInformation;
   end;
 
 var
-  currentdir, i, j: Integer;
+  workPtr, i: Integer;
   u: String;
-  l1, l2: TStringList;
+  l1: TStrings;
 begin
   Result := NET_PROBLEM;
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
-  currentdir := StrToIntDef(AURL, 0);
-  u := Module.RootURL;
-  if Module.CurrentDirectoryIndex = 0 then begin
-    Inc(currentdir);
-    u += '/Manga/' + madokamilist[currentdir]
-  end
+  workPtr := StrToIntDef(AURL, 0);
+  if Module.CurrentDirectoryIndex < Length(madokamilist) then
+    u := MaybeFillHost(Module.RootURL, madokamiulist[Module.CurrentDirectoryIndex][workPtr])
   else
-    u += madokamiotherlist[currentdir];
+    u := Module.RootURL + madokamiotherlist[Module.CurrentDirectoryIndex-Length(madokamilist)];
   if GETWithLogin(MangaInfo.FHTTP, u) then begin
     Result := NO_ERROR;
-    if Module.CurrentDirectoryIndex = 0 then begin
+    if Module.CurrentDirectoryIndex < Length(madokamilist) then begin
       l1 := TStringList.Create;
-      l2 := TStringList.Create;
       try
         XPathStringAll('//table[@id="index-table"]/tbody/tr/td[1]/a/@href', MangaInfo.FHTTP.Document, l1);
         for i := 0 to l1.Count - 1 do begin
           if MangaInfo.Thread.IsTerminated then Break;
-          if GETWithLogin(MangaInfo.FHTTP, MaybeFillHost(Module.RootURL, l1[i]))  then begin
-            XPathStringAll('//table[@id="index-table"]/tbody/tr/td[1]/a/@href', MangaInfo.FHTTP.Document, l2);
-            for j := 0 to l2.Count - 1 do begin
-              if MangaInfo.Thread.IsTerminated then Break;
-              if GETWithLogin(MangaInfo.FHTTP, MaybeFillHost(Module.RootURL, l2[j]))  then begin
-                GetList;
-              end;
-            end;
-          end;
+          if GETWithLogin(MangaInfo.FHTTP, MaybeFillHost(Module.RootURL, l1[i]))  then
+            GetList;
         end;
       finally
         l1.Free;
-        l2.Free;
       end;
     end
     else
@@ -273,9 +297,11 @@ begin
     Website := modulename;
     RootURL := urlroot;
     AccountSupport := True;
-    MaxTaskLimit := 1;
-    MaxConnectionLimit := 4;
-    TotalDirectory := 2;
+    //MaxTaskLimit := 1;
+    //MaxConnectionLimit := 4;
+    TotalDirectory := Length(madokamilist) + Length(madokamiotherlist);
+    OnBeforeUpdateList := @BeforeUpdateList;
+    OnAfterUpdateList := @AfterUpdateList;
     OnGetDirectoryPageNumber := @GetDirectoryPageNumber;
     OnGetNameAndLink := @GetNameAndLink;
     OnGetInfo := @GetInfo;
@@ -290,6 +316,7 @@ initialization
   RegisterModule;
 
 finalization
+  ClearMadokamiUlist;
   DoneCriticalsection(locklogin);
 
 end.
