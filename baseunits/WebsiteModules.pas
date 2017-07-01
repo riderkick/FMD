@@ -26,6 +26,8 @@ type
 
   TModuleContainer = class;
 
+  TOnBeforeUpdateList = function(const Module: TModuleContainer): Boolean;
+  TOnAfterUpdateList = function(const Module: TModuleContainer): Boolean;
   TOnGetDirectoryPageNumber = function(const MangaInfo: TMangaInformation;
     var Page: Integer; const Module: TModuleContainer): Integer;
   TOnGetNameAndLink = function(const MangaInfo: TMangaInformation;
@@ -88,6 +90,8 @@ type
     TotalDirectoryPage: array of Integer;
     CurrentDirectoryIndex: Integer;
     OptionList: array of TWebsiteOptionItem;
+    OnBeforeUpdateList: TOnBeforeUpdateList;
+    OnAfterUpdateList: TOnAfterUpdateList;
     OnGetDirectoryPageNumber: TOnGetDirectoryPageNumber;
     OnGetNameAndLink: TOnGetNameAndLink;
     OnGetInfo: TOnGetInfo;
@@ -144,6 +148,8 @@ type
     function ModuleAvailable(const AWebsite: String;
       var OutIndex: Integer): Boolean; overload;
 
+    function BeforeUpdateList(const ModuleId: Integer): Boolean;
+    function AfterUpdateList(const ModuleId: Integer): Boolean;
     function GetDirectoryPageNumber(const MangaInfo: TMangaInformation;
       var Page: Integer; const ModuleId: Integer): Integer; overload;
     function GetDirectoryPageNumber(const MangaInfo: TMangaInformation;
@@ -450,6 +456,24 @@ function TWebsiteModules.ModuleAvailable(const AWebsite: String;
 begin
   OutIndex := LocateModule(AWebsite);
   Result := OutIndex > -1;
+end;
+
+function TWebsiteModules.BeforeUpdateList(const ModuleId: Integer): Boolean;
+begin
+  Result := False;
+  if (ModuleId < 0) or (ModuleId >= FModuleList.Count) then Exit;
+  with TModuleContainer(FModuleList[ModuleId]) do
+    if Assigned(OnBeforeUpdateList) then
+      Result := OnBeforeUpdateList(TModuleContainer(FModuleList[ModuleId]));
+end;
+
+function TWebsiteModules.AfterUpdateList(const ModuleId: Integer): Boolean;
+begin
+  Result := False;
+  if (ModuleId < 0) or (ModuleId >= FModuleList.Count) then Exit;
+  with TModuleContainer(FModuleList[ModuleId]) do
+    if Assigned(OnAfterUpdateList) then
+      Result := OnAfterUpdateList(TModuleContainer(FModuleList[ModuleId]));
 end;
 
 function TWebsiteModules.GetDirectoryPageNumber(
