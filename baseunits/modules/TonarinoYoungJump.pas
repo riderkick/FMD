@@ -4,42 +4,26 @@ interface
 
 uses
   Classes, SysUtils, WebsiteModules, uData, uBaseUnit, uDownloadsManager,
-  XQueryEngineHTML, httpsendthread, synautil, RegExpr, Dialogs;
+  XQueryEngineHTML;
 
 implementation
-
-const
-  dirurl = '/comics/';
 
 function GetNameAndLink(const MangaInfo: TMangaInformation;
   const ANames, ALinks: TStringList; const AURL: String;
   const Module: TModuleContainer): Integer;
-var
-  v: IXQValue;
 begin
   Result := NET_PROBLEM;
-  if MangaInfo.FHTTP.GET(Module.RootURL + dirurl) then
+  if MangaInfo.FHTTP.GET(Module.RootURL + '/comics/') then
   begin
     Result := NO_ERROR;
-    with TXQueryEngineHTML.Create(MangaInfo.FHTTP.Document) do
-      try
-        for v in XPath('//ul[@class="manga-list__list"]/li/h4/a') do
-        begin
-          ALinks.Add(v.toNode.getAttribute('href'));
-          ANames.Add(v.toString);
-        end;
-      finally
-        Free;
-      end;
+    XPathHREFAll('//ul[@class="manga-list__list"]/li/h4/a', MangaInfo.FHTTP.Document, ALinks, ANames);
   end;
 end;
 
 function GetInfo(const MangaInfo: TMangaInformation;
   const AURL: String; const Module: TModuleContainer): Integer;
 var
-  s, n: String;
   v: IXQValue;
-  i: Integer;
 begin
   Result := NET_PROBLEM;
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
@@ -56,11 +40,12 @@ begin
           summary := XPathString('//*[@class="single-story"]/p');
           { there is no chapter list?
             assuming the first chapter link in manga info is always the last chapters }
-            for v in XPath('//a[@class="single"]') do
-            begin
-              chapterLinks.Add(v.toNode.getAttribute('href'));
-              chapterName.Add(v.toString);
-            end
+          for v in XPath('//li/a[contains(@class,"single")]') do
+          begin
+            chapterLinks.Add(v.toNode.getAttribute('href'));
+            chapterName.Add(XPathString('./text()[1]', v));
+          end;
+          InvertStrings([chapterLinks, chapterName]);
         finally
           Free;
         end;
@@ -70,9 +55,6 @@ end;
 
 function GetPageNumber(const DownloadThread: TDownloadThread;
   const AURL: String; const Module: TModuleContainer): Boolean;
-var
-  v: IXQValue;
-  ViewerURL: String;
 begin
   Result := False;
   if DownloadThread = nil then Exit;
@@ -80,17 +62,10 @@ begin
   begin
     PageLinks.Clear;
     PageNumber := 0;
-    ViewerURL := 'http://viewer.tonarinoyj.jp';
-    if GET(FillHost(ViewerURL, AURL)) then
+    if GET(MaybeFillHost('http://viewer.tonarinoyj.jp', AURL)) then
     begin
       Result := True;
-      with TXQueryEngineHTML.Create(Document) do
-        try
-          for v in XPath('//img[@class="js-page-image"]') do
-            PageLinks.Add(v.toNode.getAttribute('src'));
-        finally
-          Free;
-        end;
+      XPathStringAll('//img[@class="js-page-image"]/@src', Document, PageLinks);
     end;
   end;
 end;
