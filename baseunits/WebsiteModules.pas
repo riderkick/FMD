@@ -236,9 +236,6 @@ implementation
 
 {$I ModuleList.inc}
 
-const
-  REGEX_HOST = '(?ig)^(\w+://)?([^/]*\.\w+)?(\:\d+)?(/?.*)$';
-
 var
   CS_Connection: TRTLCriticalSection;
 
