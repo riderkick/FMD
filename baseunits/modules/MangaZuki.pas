@@ -78,6 +78,7 @@ begin
             else Break;
             if ThreadTerminated then Break;
           end;
+          InvertStrings([chapterLinks, chapterName]);
         finally
           Free;
         end;
