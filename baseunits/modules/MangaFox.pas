@@ -80,13 +80,23 @@ end;
 
 function GetImageURL(const DownloadThread: TDownloadThread; const AURL: String;
   const Module: TModuleContainer): Boolean;
+var
+  s: String;
 begin
   Result := False;
   if DownloadThread = nil then Exit;
   with DownloadThread.Task.Container, DownloadThread.FHTTP do begin
     if GET(MaybeFillHost(Module.RootURL, AURL) + IncStr(DownloadThread.WorkId) + '.html') then begin
       Result := True;
-      PageLinks[DownloadThread.WorkId] := XPathString('//div[@class="read_img"]//img[@id="image"]/@src', Document);
+      s := XPathString('//div[@class="read_img"]//img[@id="image"]/@src', Document);
+      PageLinks[DownloadThread.WorkId] := s;
+      // remove invalid last invalid page
+      if (DownloadThread.WorkId = PageLinks.Count - 1) and
+        (RightStr(LowerCase(RemovePathDelim(s)), 10) = 'compressed') then
+      begin
+        PageLinks.Delete(DownloadThread.WorkId);
+        PageNumber := PageLinks.Count;
+      end;
     end;
   end;
 end;
