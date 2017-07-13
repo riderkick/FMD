@@ -67,7 +67,7 @@ msgstr ""
 "1280x\n"
 "1600x\n"
 "2400x\n"
-"Αρχική\n"
+"Αρχικό\n"
 
 #: frmaccountmanager.rs_accountdeleteconfirmation
 msgid "Are you sure you want to delete this account?"
