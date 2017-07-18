@@ -176,6 +176,8 @@ begin
   if AntiBotActive(AHTTP) then begin
     if TryEnterCriticalsection(CFProps.CS) > 0 then
       try
+        CFProps.Cookies := '';
+        AHTTP.Cookies.Clear;
         Result := CFJS(AHTTP, AURL, CFProps.Cookies, CFProps.Expires);
         // reduce the expires by 5 minutes, usually it is 24 hours or 16 hours
         // in case of the different between local and server time
