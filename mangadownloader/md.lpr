@@ -5,28 +5,34 @@ program md;
 {$DEFINE MANGADOWNLOADER}
 
 uses
-  {$IFDEF DEBUGLEAKS}
-  heaptrc, SysUtils,
-  {$ENDIF}
-  {$DEFINE UseCThreads}
-  {$IFDEF UNIX}
-    {$IFDEF UseCThreads}
-    cthreads,
-    {$ENDIF}
-  {$ENDIF}
-  Forms, Interfaces, FileUtil,simpleipc, IniFiles,
-  uBaseUnit, frmMain, frmImportList, frmShutdownCounter, frmUpdateDialog;
+ {$IFDEF UNIX} {$IFDEF UseCThreads}
+  cthreads,
+ {$ENDIF} {$ENDIF}
+  Interfaces, // this includes the LCL widgetset
+  Forms, LazFileUtils, IniFiles, simpleipc, sqlite3dyn, FMDOptions, uBaseUnit,
+  FMDVars, SimpleException, Classes, windows, sysutils, frmMain, MultiLog,
+  FileChannel;
 
 var
   CheckInstance: Boolean = True;
   AllowedToRun: Boolean = True;
+  EnableLogging: Boolean = False;
+  LogFileName: String = '';
+  s: TStringList;
 
 {$R *.res}
 
 begin
-  with TIniFile.Create(CorrectFilePath(GetCurrentDirUTF8) + CONFIG_FOLDER + CONFIG_FILE) do
+  with TIniFile.Create(CONFIG_FILE) do
     try
       CheckInstance := ReadBool('general', 'OneInstanceOnly', True);
+      EnableLogging := ReadBool('logger', 'Enabled', False);
+      if EnableLogging then
+      begin
+        LogFileName := ReadString('logger', 'LogFileName', '');
+        if LogFileName = '' then
+          LogFileName := ChangeFileExt(Application.ExeName, '.log');
+      end;
     finally
       Free;
     end;
@@ -50,12 +56,29 @@ begin
   if AllowedToRun then
   begin
     {$IFDEF DEBUGLEAKS}
-    if FileExists(ChangeFileExt(Application.ExeName, '.trc')) then
-      DeleteFile(ChangeFileExt(Application.ExeName, '.trc'));
+    if FileExistsUTF8(ChangeFileExt(Application.ExeName, '.trc')) then
+      DeleteFileUTF8(ChangeFileExt(Application.ExeName, '.trc'));
     SetHeapTraceOutput(ChangeFileExt(Application.ExeName, '.trc'));
     {$ENDIF DEBUGLEAKS}
     Application.Title := 'Free Manga Downloader';
     RequireDerivedFormResource := True;
+    Logger.Enabled := False;
+    InitSimpleExceptionHandler;
+    if EnableLogging then
+    begin
+      Logger.Enabled := True;
+      FileLogger := TFileChannel.Create(LogFileName, [fcoShowHeader, fcoShowPrefix, fcoShowTime]);
+      Logger.Channels.Add(FileLogger);
+      Logger.Send(QuotedStrd(Application.Title)+' started with [PID:'+IntToStr(GetProcessID)+'] [HANDLE:'+IntToStr(GetCurrentProcess)+']');
+      s := TStringList.Create;
+      try
+        s.AddText(SimpleException.GetApplicationInfo);
+        Logger.Send('Application info', s);
+      finally
+        s.Free;
+      end;
+    end;
+    sqlite3dyn.SQLiteDefaultLibrary := CleanAndExpandDirectory(GetCurrentDirUTF8) + 'sqlite3.dll';
     Application.Initialize;
     Application.CreateForm(TMainForm, MainForm);
     Application.Run;

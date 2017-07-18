@@ -4,7 +4,7 @@
   begin
     Result := INFORMATION_NOT_FOUND;
     if not GetPage(TObject(Source), WebsiteRoots[S2SCAN_ID, 1] +
-      '/directory/' + '/' + IntToStr(StrToInt(URL)+1) + '/', 0) then
+      '/directory/' + '/' + IntToStr(StrToInt(AURL)+1) + '/', 0) then
     begin
       Result := NET_PROBLEM;
       Source.Free;
@@ -27,8 +27,8 @@
         if (GetTagName(parse[i]) = 'div') and (GetVal(parse[i], 'class') = 'group') then
           if GetTagName(parse[i + 5]) = 'a' then
           begin
-            names.Add(GetVal(parse[i + 5], 'title'));
-            links.Add(GetVal(parse[i + 5], 'href'));
+            ANames.Add(GetVal(parse[i + 5], 'title'));
+            ALinks.Add(GetVal(parse[i + 5], 'href'));
           end;
       end;
     Source.Free;

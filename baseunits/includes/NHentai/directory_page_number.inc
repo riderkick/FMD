@@ -2,7 +2,7 @@
   var
     i: Integer;
   begin
-    Page := 0;
+    APage := 0;
     Result := INFORMATION_NOT_FOUND;
     if not GetPage(TObject(Source), WebsiteRoots[NHENTAI_ID, 1] + '/', 0) then
     begin
@@ -27,7 +27,7 @@
         (Pos('class="last"', parse[i]) > 0) then
       begin
         Result := NO_ERROR;
-        Page := StrToIntDef(ReplaceRegExpr('^.*\?page=(\d+).*$', GetVal(parse[i], 'href'), '$1', True), 1);
+        APage := StrToIntDef(ReplaceRegExpr('^.*\?page=(\d+).*$', GetVal(parse[i], 'href'), '$1', True), 1);
         Break;
       end;
     end;

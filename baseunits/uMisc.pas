@@ -1,170 +1,77 @@
-unit  uMisc;
+unit uMisc;
 
 {$mode objfpc}{$H+}
 
 interface
 
 uses
-  Classes, SysUtils, Graphics, strutils, syncobjs, IniFiles;
+  {$ifdef windows}
+  ShellApi, Windows,
+  {$else}
+  UTF8Process,
+  {$endif}
+  Classes, SysUtils, strutils;
 
 type
-  TIniFileR = class(TMemIniFile)
-  private
-    FCSReload: TCriticalSection;
-    FFileAge: longint;
-  public
-    constructor Create(const AFileName: String; AEscapeLineFeeds: Boolean = False);
-      override;
-    destructor Destroy; override;
-    procedure Reload;
-  end;
-
-  TLogType = (LOG_debug, LOG_info, LOG_warning, LOG_error);
+  TArrayOfString = array of String;
 
 //String utils
-procedure padZero(var S: String; VolLength, ChapLength: Integer);
-function padZeros(const S: String; VolLength, ChapLength: Integer): String;
-function BrackText(const S: String): String; overload;
-function BrackText(const S: Integer): String; overload;
-function BrackSquareText(const S: String): String; overload;
-function BrackSquareText(const S: Integer): String; overload;
-function BrackTextQuoted(const S: String): String; overload;
-function BrackTextQuoted(const S: Integer): String; overload;
+procedure VolumeChapterPadZero(var S: String; VolLength, ChapLength: Integer);
+function padZeros(const S: String; VolLength, ChapLength: Integer): String; inline;
+function BrackText(const S: String): String; overload; inline;
+function BrackText(const S: Integer): String; overload; inline;
+function BrackSquareText(const S: String): String; overload; inline;
+function BrackSquareText(const S: Integer): String; overload; inline;
+function BrackTextQuoted(const S: String): String; overload; inline;
+function BrackTextQuoted(const S: Integer): String; overload; inline;
 function StringToASCII(S: String): String;
 function StringToHex(S: String): String;
-
-function AnsiNaturalCompare(const str1, str2: String;
-  vCaseSensitive: Boolean = False): Integer;
-procedure QuickSortNaturalPart(var Alist: TStringList; Separator: String;
-  PartIndex: Integer);
-
-//Images
-function MangaFoxRemoveWatermarks(const Filename: String): Boolean;
-
-//Logging
-procedure WriteLog(msg: String; logType: TLogType = LOG_debug);
-procedure WriteOtherLog(msg: String);
 
 //Searching
 function FindStrLinear(aList: TStrings; aValue: String): Boolean;
 function FindStrLinearPos(aList: TStrings; aValue: String): Integer;
 
-//misc
+//formatting
+function FormatByteSize(const bytes: Longint; persecond: Boolean = False): String;
 
-var
-  CS_LOG, CS_OTHERLOG: TCriticalSection;
+//run external process
+function RunExternalProcessAsAdmin(Exe, Params: String; ShowWind: Boolean = True;
+  isPersistent: Boolean = True): Boolean;
+function RunExternalProcess(Exe: String; Params: array of String; ShowWind: Boolean = True;
+  isPersistent: Boolean = True): Boolean; overload;
+function RunExternalProcess(Exe, Params: String; ShowWind: Boolean = True;
+  isPersistent: Boolean = True): Boolean; overload;
+function RunExternalProcess(CommandLine: String; ShowWind: Boolean = True;
+  isPersistent: Boolean = True): Boolean; overload;
+
+//stringutils
+procedure ParseCommandLine(const cmd: String; var Output: TStrings;
+  AStripQuotes: Boolean = False);
+function ParsedCommandLine(const cmd: String): TArrayOfString;
+function StringsToArray(const S: TStrings): TArrayOfString;
+function StringsToCommandLine(const S: TStrings): String; overload;
+function StringsToCommandLine(const S: array of String): String; overload;
+procedure DeleteArrayOfString(var TheStrings: TArrayOfString; Index: Integer);
 
 const
-  fLogFile = 'fmd_log.txt';
-  fOtherLogFile = 'fmd_otherLog.txt';
-
-  UA_CURL      = 'curl/7.42.1';
-  UA_MSIE      = 'Mozilla/5.0 (compatible; WOW64; MSIE 10.0; Windows NT 6.2)';
-  UA_FIREFOX   = 'Mozilla/5.0 (Windows NT 6.3; WOW64; rv:37.0) Gecko/20100101 Firefox/37.0';
-  UA_CHROME    = 'Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.135 Safari/537.36';
-  UA_OPERA     = 'Mozilla/5.0 (Windows NT 6.3; WOW64; rv:37.0) Gecko/20100101 Firefox/37.0';
+  UA_SYNAPSE = 'Mozilla/4.0 (compatible; Synapse)';
+  UA_CURL = 'curl/7.42.1';
   UA_GOOGLEBOT = 'Mozilla/5.0 (compatible; Googlebot/2.1;  http://www.google.com/bot.html)';
+  UA_MSIE = 'Mozilla/5.0 (compatible; WOW64; MSIE 10.0; Windows NT 6.2)';
+  UA_FIREFOX = 'Mozilla/5.0 (Windows NT 6.3; WOW64; rv:39.0) Gecko/20100101 Firefox/39.0';
+  UA_CHROME =
+    'Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.125 Safari/537.36';
+  UA_OPERA =
+    'Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.130 Safari/537.36 OPR/30.0.1835.125';
 
   RANDOM_SLEEP = 3000;
 
+var
+  DEFAULT_UA: String = UA_CHROME;
+
 implementation
 
-{ TIniFileR }
-
-constructor TIniFileR.Create(const AFileName: String; AEscapeLineFeeds: Boolean = False);
-begin
-  inherited Create(AFileName, AEscapeLineFeeds);
-  FCSReload := TCriticalSection.Create;
-  FFileAge := FileAge(Self.FileName);
-end;
-
-destructor TIniFileR.Destroy;
-begin
-  FCSReload.Free;
-  inherited Destroy;
-end;
-
-procedure TIniFileR.Reload;
-var
-  slLines: TStringList;
-begin
-  if FCSReload.TryEnter then try
-    if FileExists(FileName) then
-      if FileAge(FileName) <> FFileAge then
-      begin
-        slLines := TStringList.Create;
-        try
-          FFileAge := FileAge(FileName);
-          slLines.LoadFromFile(FileName);
-          SetStrings(slLines);
-        finally
-          slLines.Free;
-        end;
-      end;
-  finally
-    FCSReload.Release;
-  end;
-end;
-
 { uMisc }
-
-procedure WriteLog(msg: String; logType: TLogType = LOG_debug);
-{$IFDEF LOGACTIVE}
-var
-  s: String;
-  f: TextFile;
-{$ENDIF}
-begin
-  {$IFDEF LOGACTIVE}
-  CS_LOG.Acquire;
-  try
-    s := FormatDateTime('dd/mm/yyyy|hh:nn:ss.zzz ', Now);
-    case logType of
-      LOG_debug: s := s + '[D]';
-      LOG_info: s := s + '[I]';
-      LOG_warning: s := s + '[W]';
-      LOG_error: s := s + '[E]';
-    end;
-    AssignFile(f, fLogFile);
-    try
-      if FileExists(fLogFile) then
-        Append(f)
-      else
-        Rewrite(f);
-      WriteLn(f, s + ' ' + msg);
-    finally
-      CloseFile(f);
-    end;
-  finally
-    CS_LOG.Release;
-  end;
-  {$ENDIF}
-end;
-
-procedure WriteOtherLog(msg: String);
-{$IFDEF LOGACTIVE}
-var
-  f: TextFile;
-{$ENDIF}
-begin
-  {$IFDEF LOGACTIVE}
-  CS_OTHERLOG.Acquire;
-  try
-    AssignFile(f, fOtherLogFile);
-    try
-      if FileExists(fOtherLogFile) then
-        Append(f)
-      else
-        Rewrite(f);
-      WriteLn(f, msg);
-    finally
-      CloseFile(f);
-    end;
-  finally
-    CS_OTHERLOG.Release;
-  end;
-  {$ENDIF}
-end;
 
 function BrackText(const S: String): String;
 begin
@@ -186,21 +93,21 @@ begin
   Result := BrackText(IntToStr(S));
 end;
 
-function BrackTextQuoted(const S : String) : String;
+function BrackTextQuoted(const S: String): String;
 begin
   Result := BrackText(QuotedStr(S));
 end;
 
-function BrackTextQuoted(const S : Integer) : String;
+function BrackTextQuoted(const S: Integer): String;
 begin
   Result := BrackText(QuotedStr(IntToStr(S)));
 end;
 
-function StringToASCII(S : String) : String;
+function StringToASCII(S: String): String;
 var
   i: Integer;
 begin
-  Result:='#0';
+  Result := '#0';
   if Length(S) > 0 then
   begin
     Result := '';
@@ -209,11 +116,11 @@ begin
   end;
 end;
 
-function StringToHex(S : String) : String;
+function StringToHex(S: String): String;
 var
   i: Integer;
 begin
-  Result:='#0';
+  Result := '#0';
   if Length(S) > 0 then
   begin
     Result := '';
@@ -222,13 +129,13 @@ begin
   end;
 end;
 
-procedure padZero(var S: String; VolLength, ChapLength: Integer);
+procedure VolumeChapterPadZero(var S: String; VolLength, ChapLength: Integer);
 
   procedure searchChap(var i, cstart, clength: Integer; var t: String);
   var
     j: Integer;
   begin
-    for  j := i to Length(t) do
+    for j := i to Length(t) do
     begin
       if (cstart = -1) and (t[j] in ['0'..'9']) then
         cstart := j
@@ -249,6 +156,14 @@ var
   vol: Boolean = False;
   cha: Boolean = False;
 begin
+  cstart := 0;
+  vstart := 0;
+  clength := 0;
+  vlength := 0;
+  vp := 0;
+  c := '';
+  v := '';
+
   t := S;
   i := 1;
 
@@ -270,7 +185,7 @@ begin
     vlength := 1;
     if vol then
     begin
-      for  i := Pos('VOL', upcase(t)) to Length(t) do
+      for i := Pos('VOL', upcase(t)) to Length(t) do
       begin
         if (vstart = -1) and (t[i] in ['0'..'9']) then
           vstart := i
@@ -358,277 +273,7 @@ end;
 function padZeros(const S: String; VolLength, ChapLength: Integer): String;
 begin
   Result := S;
-  padZero(Result, VolLength, ChapLength);
-end;
-
-//loading directly from stream accepted as raw (file become bigger)
-//Not all mangafox image has watermarks, old manga doesn't have watermarks
-//recognizing by file age or by scanning images manually.
-function MangaFoxRemoveWatermarks(const Filename: String): Boolean;
-var
-  fpic: TPicture;
-begin
-  Result := False;
-  Exit; //Disable for a moment
-  fpic := TPicture.Create;
-  try
-    fpic.LoadFromFile(Filename);
-    if fpic.Bitmap.Height < 100 then
-      Exit;
-    fpic.Bitmap.Height := fpic.Bitmap.Height - 90;// crop by 90px
-    if FileExists(Filename) then
-      DeleteFile(Filename);
-    fpic.SaveToFile(Filename);
-    Result := True;
-  finally
-    fpic.Free;
-  end;
-end;
-
-function getStringPart(const txt, sep: String; partIndex: Cardinal): String;
-var
-  i, j, lpos, rpos: Integer;
-begin
-  lpos := 1;
-  rpos := 1;
-  Result := '';
-
-  for i := 0 to partIndex do
-  begin
-    j := PosEx(sep, txt, rpos);
-    if (j > 0) then
-    begin
-      lpos := rpos;
-      rpos := j + Length(sep);
-    end
-    else
-      Break;
-  end;
-  Result := Copy(txt, lpos, rpos - lpos - Length(sep));
-end;
-
-function AnsiNaturalCompare(const str1, str2: String;
-  vCaseSensitive: Boolean = False): Integer;
-  //Credits to engkin (http://forum.lazarus.freepascal.org/index.php?action=profile;u=52702)
-  //http://forum.lazarus.freepascal.org/index.php/topic,24450.45.html
-  //v3.5
-var
-  l1, l2, l: Integer;          //Str length
-  n1, n2: QWord{int64};     //numrical part
-  nl: Integer;
-  nl1, nl2: Integer;             //length of numrical part
-  d: smallint;            //PtrInt;?
-  pc: PChar;               //temp var
-  pc1, pc2: PChar;
-  pb1: PByte absolute pc1;  //to get pc1^ as a byte
-  pb2: PByte absolute pc2;  //to get pc2^ as a byte
-  pe1, pe2: PChar;               //pointer to end of str
-  sign: Integer;
-  sum1, sum2: DWord;      //sum of non-numbers. More caps gives a smaller sum
-
-  function lowcase(const c: Char): Byte;
-  begin
-    if (c in ['A'..'Z']) then
-      Result := byte(c) + 32
-    else
-      Result := byte(c);
-  end;
-
-  function CorrectedResult(vRes: Integer): Integer; inline;
-  begin
-    //to correct the result when we switch vars due for
-    //pc1, pe1 need to point at shorter string, always
-    Result := sign * vRes;
-  end;
-
-begin
-  l1 := Length(str1);
-  l2 := Length(str2);
-
-  //Any empty str?
-  if (l1 = 0) and (l2 = 0) then
-    Exit(0);
-  if (l1 = 0) then
-    Exit(-1);
-  if (l2 = 0) then
-    Exit(1);
-
-  //pc1, pe1 point at the shorter string, always
-  if l1 <= l2 then
-  begin
-    pc1 := @str1[1];
-    pc2 := @str2[1];
-
-    sign := 1;
-  end
-  else
-  begin
-    pc1 := @str2[1];
-    pc2 := @str1[1];
-
-    l := l1;
-    l1 := l2;
-    l2 := l;
-
-    sign := -1;
-  end;
-
-  //end of strs
-  pe1 := pc1 + l1;
-  pe2 := pc2 + l2;
-
-  sum1 := 0;
-  sum2 := 0;
-
-  nl1 := 0;
-  nl2 := 0;
-
-  while (pc1 < pe1) do
-  begin
-    if not (pc1^ in ['0'..'9']) or not (pc2^ in ['0'..'9']) then
-    begin
-      //Compare non-numbers
-      if vCaseSensitive then
-        d := pb1^ - pb2^
-      else
-        d := lowcase(pc1^) - lowcase(pc2^);//}
-
-      if (d <> 0) then
-        Exit(CorrectedResult(d));
-      sum1 := sum1 + pb1^;
-      sum2 := sum2 + pb2^;
-    end
-    else
-    begin
-      //Convert a section of str1 to a number (correct for 16 digits)
-      n1 := 0;
-      nl1 := 0;
-      repeat
-        n1 := (n1 shl 4) or (pb1^ - Ord('0'));
-        Inc(pb1);
-        Inc(nl1);
-      until (pc1 >= pe1) or not (pc1^ in ['0'..'9']);
-
-      //Convert a section of str2 to a number (correct for 16 digits)
-      n2 := 0;
-      nl2 := 0;
-      repeat
-        n2 := (n2 shl 4) or (pb2^ - Ord('0'));
-        Inc(pb2);
-        Inc(nl2);
-      until (pc2 >= pe2) or not (pc2^ in ['0'..'9']);
-
-      //Compare numbers naturally
-{      d := n1 - n2;
-      if d <> 0 then
-         exit(CorrectedResult(d))//}
-      if n1 > n2 then
-        Exit(CorrectedResult(1))
-      else if n1 < n2 then
-        Exit(CorrectedResult(-1))
-      else
-      begin
-        //Switch to shortest string based of remaining characters
-        if (pe1 - pc1) > (pe2 - pc2) then
-        begin
-          pc := pc1;
-          pc1 := pc2;
-          pc2 := pc;
-
-          pc := pe1;
-          pe1 := pe2;
-          pe2 := pc;
-
-          nl := nl1;
-          nl1 := nl2;
-          nl2 := nl;
-
-          nl := sum1;
-          sum1 := sum2;
-          sum2 := nl;
-
-          sign := -sign;
-        end;
-        Continue;
-      end;
-    end;
-    Inc(pc1);
-    Inc(pc2);
-  end;
-  //str with longer remaining part is bigger (abc1z>abc1)
-  //Result := CorrectedResult((pe1 - pc1) - (pe2 - pc2));
-  Result := (pe1 - pc1) - (pe2 - pc2);
-  if Result = 0 then
-  begin
-    //if strs are naturllay identical then:
-    //consider str with longer last numerical section to be bigger (a01bc0001>a001bc1)
-    Result := CorrectedResult(nl1 - nl2);
-    if Result = 0 then
-      //if strs are naturllay identical and last numerical sections have same length then:
-      //consider str with more capital letters smaller (aBc001d>aBC001D)
-      Result := CorrectedResult(sum1 - sum2);
-  end
-  else
-    Result := CorrectedResult(Result);
-end;
-
-procedure QuickSortNaturalPart(var Alist: TStringList; Separator: String;
-  PartIndex: Integer);
-
-  procedure QuickSort(L, R: Integer);
-  var
-    Pivot, vL, vR: Integer;
-    PivotStr: String;
-  begin
-    if R - L <= 1 then
-    begin // a little bit of time saver
-      if L < R then
-        if AnsiNaturalCompare(getStringPart(Alist.Strings[L], Separator, PartIndex),
-          getStringPart(Alist.Strings[R], Separator, PartIndex)) > 0 then
-          Alist.Exchange(L, R);
-      Exit;
-    end;
-    vL := L;
-    vR := R;
-    Pivot := L + Random(R - L); // they say random is best
-    PivotStr := getStringPart(Alist.Strings[Pivot], Separator, PartIndex);
-    while vL < vR do
-    begin
-      while (vL < Pivot) and (AnsiNaturalCompare(
-          getStringPart(Alist.Strings[vL], Separator, PartIndex), PivotStr) <= 0) do
-        Inc(vL);
-      while (vR > Pivot) and (AnsiNaturalCompare(
-          getStringPart(Alist.Strings[vR], Separator, PartIndex), PivotStr) > 0) do
-        Dec(vR);
-      Alist.Exchange(vL, vR);
-      if Pivot = vL then // swap pivot if we just hit it from one side
-      begin
-        Pivot := vR;
-        PivotStr := getStringPart(Alist.Strings[Pivot], Separator, PartIndex);
-      end
-      else
-      if Pivot = vR then
-      begin
-        Pivot := vL;
-        PivotStr := getStringPart(Alist.Strings[Pivot], Separator, PartIndex);
-      end;
-    end;
-    if Pivot - 1 >= L then
-      QuickSort(L, Pivot - 1);
-    if Pivot + 1 <= R then
-      QuickSort(Pivot + 1, R);
-  end;
-
-begin
-  if (Alist.Count > 0) then
-  begin
-    try
-      Alist.BeginUpdate;
-      QuickSort(0, Alist.Count - 1);
-    finally
-      Alist.EndUpdate;
-    end;
-  end;
+  VolumeChapterPadZero(Result, VolLength, ChapLength);
 end;
 
 function FindStrLinearPos(aList: TStrings; aValue: String): Integer;
@@ -654,18 +299,370 @@ begin
     Result := False;
 end;
 
-initialization
-  CS_LOG := TCriticalSection.Create;
-  CS_OTHERLOG := TCriticalSection.Create;
-  {$IFDEF LOGACTIVE}
-  WriteLog('Starting FMD', LOG_Info);
-  {$ENDIF}
+function FormatByteSize(const bytes: Longint; persecond: Boolean = False): String;
+const
+  B = 1;
+  KB = 1024 * B;
+  MB = 1024 * KB;
+  GB = 1024 * MB;
+begin
+  if bytes > GB then
+    Result := FormatFloat('#.## GB', bytes / GB)
+  else
+  if bytes > MB then
+    Result := FormatFloat('#.## MB', bytes / MB)
+  else
+  if bytes > KB then
+    Result := FormatFloat('#.## KB', bytes / KB)
+  else
+  if bytes = 0 then
+  begin
+    if persecond then
+      Result := '0 B'
+    else
+      Result := '0 bytes';
+  end
+  else
+  begin
+    if persecond then
+      Result := FormatFloat('#.## B', bytes)
+    else
+      Result := FormatFloat('#.## bytes', bytes);
+  end;
+  if persecond then
+    Result := Result + 'ps';
+end;
 
-finalization
-  {$IFDEF LOGACTIVE}
-  WriteLog('FMD exit normally', LOG_Info);
+
+function RunExternalProcessAsAdmin(Exe, Params: String; ShowWind: Boolean;
+  isPersistent: Boolean): Boolean;
+var
+ {$IFDEF WINDOWS}
+  SEInfo: TSHELLEXECUTEINFOW;
+ {$ELSE}
+  Process: TProcessUTF8;
+  pr: TStringList;
+ {$ENDIF}
+begin
+  {$IFDEF WINDOWS}
+  Initialize(SEInfo);
+  FillChar(SEInfo, SizeOf(SEInfo), 0);
+  SEInfo.cbSize := SizeOf(SEInfo);
+  with SEInfo do begin
+    wnd := 0;
+    fMask := SEE_MASK_FLAG_DDEWAIT or SEE_MASK_FLAG_NO_UI;
+    if isPersistent then
+      fMask := fMask or SEE_MASK_NOCLOSEPROCESS;
+    lpVerb := 'runas';
+    lpFile := PWideChar(UTF8Decode(Exe));
+    lpParameters := PWideChar(UTF8Decode(Params));
+    if ShowWind then
+      nShow := SW_SHOWNORMAL
+    else
+      nShow := SW_HIDE;
+  end;
+  Result := ShellExecuteExW(@SEInfo);
+  if isPersistent then
+    WaitForSingleObject(SEInfo.hProcess, INFINITE);
+  {$ELSE}
+  Process := TProcessUTF8.Create(nil);
+  try
+    Process.Executable := Exe;
+    pr := TStringList.Create;
+    try
+      ParseCommandLine(Params, TStrings(pr), True);
+      Process.Parameters.Assign(pr);
+    finally
+      pr.Free;
+    end;
+    Process.Execute;
+  finally
+    Process.Free;
+  end;
   {$ENDIF}
-  FreeAndNil(CS_OTHERLOG);
-  FreeAndNil(CS_LOG);
+end;
+
+{$ifdef windows}
+function WinRunProcessA(Exe, Params: String; ShowWind: Boolean; isPersistent: Boolean): Boolean;
+var
+  SEInfo: TSHELLEXECUTEINFOA;
+begin
+  Initialize(SEInfo);
+  FillChar(SEInfo, SizeOf(SEInfo), 0);
+  SEInfo.cbSize := SizeOf(TSHELLEXECUTEINFOA);
+  with SEInfo do begin
+    wnd := 0;
+    fMask := SEE_MASK_FLAG_DDEWAIT or SEE_MASK_FLAG_NO_UI;
+    if isPersistent then
+      fMask := fMask or SEE_MASK_NOCLOSEPROCESS;
+    lpFile := PChar(Utf8ToAnsi(Exe));
+    lpParameters := PChar(Utf8ToAnsi(Params));
+    if ShowWind then
+      nShow := SW_SHOWNORMAL
+    else
+      nShow := SW_HIDE;
+  end;
+  Result := ShellExecuteExA(@SEInfo);
+  if isPersistent then
+    WaitForSingleObject(SEInfo.hProcess, INFINITE);
+end;
+
+function WinRunProcessW(Exe, Params: String; ShowWind: Boolean; isPersistent: Boolean): Boolean;
+var
+  SEInfo: TSHELLEXECUTEINFOW;
+begin
+  Initialize(SEInfo);
+  FillChar(SEInfo, SizeOf(SEInfo), 0);
+  SEInfo.cbSize := SizeOf(TSHELLEXECUTEINFOW);
+  with SEInfo do begin
+    wnd := 0;
+    fMask := SEE_MASK_FLAG_DDEWAIT or SEE_MASK_FLAG_NO_UI;
+    if isPersistent then
+      fMask := fMask or SEE_MASK_NOCLOSEPROCESS;
+    lpFile := PWideChar(UTF8Decode(Exe));
+    lpParameters := PWideChar(UTF8Decode(Params));
+    if ShowWind then
+      nShow := SW_SHOWNORMAL
+    else
+      nShow := SW_HIDE;
+  end;
+  Result := ShellApi.ShellExecuteExW(@SEInfo);
+  if isPersistent then
+    WaitForSingleObject(SEInfo.hProcess, INFINITE);
+end;
+
+{$endif}
+
+function RunExternalProcess(Exe: String; Params: array of String;
+  ShowWind: Boolean; isPersistent: Boolean): Boolean;
+{$ifndef windows}
+var
+  Process: TProcessUTF8;
+  I: Integer;
+{$endif}
+begin
+  if Trim(Exe) = '' then Exit(False);
+  Result := True;
+  {$ifdef windows}
+  if Win32Platform = VER_PLATFORM_WIN32_NT then
+    Result := WinRunProcessW(Exe, StringsToCommandLine(Params), ShowWind, isPersistent)
+  else
+    Result := WinRunProcessA(Exe, StringsToCommandLine(Params), ShowWind, isPersistent);
+  {$else}
+  Process := TProcessUTF8.Create(nil);
+  try
+    Process.InheritHandles := isPersistent;
+    Process.Executable := Exe;
+    Process.Parameters.AddStrings(Params);
+    if isPersistent then
+      Process.Options := Process.Options + [poWaitOnExit]
+    else
+      Process.Options := [];
+    if ShowWind then
+      Process.ShowWindow := swoShow
+    else
+      Process.ShowWindow := swoHIDE;
+    // Copy default environment variables including DISPLAY variable for GUI application to work
+    for I := 0 to GetEnvironmentVariableCount - 1 do
+      Process.Environment.Add(GetEnvironmentString(I));
+    Process.Execute;
+  except
+    on E: Exception do
+    begin
+      WriteLog_E('RunExternalProcess.Error '#13#10 +
+        'Executable: ' + Exe + #13#10 +
+        'Parameters: ' + StringsToCommandLine(Params) + #13#10 +
+        'Message   : ' + E.Message + #13#10 +
+        GetStackTraceInfo);
+    end;
+  end;
+  Process.Free;
+ {$endif}
+end;
+
+function RunExternalProcess(Exe, Params: String; ShowWind: Boolean;
+  isPersistent: Boolean): Boolean;
+begin
+  if Trim(Exe) = '' then Exit(False);
+  {$ifdef windows}
+  if Win32Platform = VER_PLATFORM_WIN32_NT then
+    Result := WinRunProcessW(Exe, Params, ShowWind, isPersistent)
+  else
+    Result := WinRunProcessA(Exe, Params, ShowWind, isPersistent);
+  {$else}
+  Result := RunExternalProcess(Exe, ParsedCommandLine(Params), ShowWind, isPersistent);
+  {$endif}
+end;
+
+function RunExternalProcess(CommandLine: String; ShowWind: Boolean;
+  isPersistent: Boolean): Boolean;
+var
+  s: String;
+  sa: TArrayOfString;
+begin
+  if Trim(CommandLine) = '' then Exit(False);
+  try
+    sa := ParsedCommandLine(CommandLine);
+    s := sa[Low(sa)];
+    DeleteArrayOfString(sa, Low(sa));
+    {$ifdef windows}
+    if Win32Platform = VER_PLATFORM_WIN32_NT then
+      Result := WinRunProcessW(s, StringsToCommandLine(sa), ShowWind, isPersistent)
+    else
+      Result := WinRunProcessA(s, StringsToCommandLine(sa), ShowWind, isPersistent);
+    {$else}
+    Result := RunExternalProcess(s, sa, ShowWind, isPersistent);
+    {$endif}
+  finally
+    SetLength(sa, 0);
+  end;
+end;
+
+procedure ParseCommandLine(const cmd: String; var Output: TStrings;
+  AStripQuotes: Boolean = False);
+var
+  s, cl: String;
+  cq: Integer;
+  acl, lq: Boolean;
+
+  procedure Addcl;
+  begin
+    if cl <> '' then
+    begin
+      if AStripQuotes and (Length(cl) > 1) then
+      begin
+        if cl[1] = '"' then
+          Delete(cl, 1, 1);
+        if cl[Length(cl)] = '"' then
+          Delete(cl, Length(cl), 1);
+      end;
+      Output.Add(cl);
+      cl := '';
+      acl := False;
+    end;
+  end;
+
+begin
+  if not Assigned(Output) then Exit;
+  Output.Clear;
+  Output.BeginUpdate;
+  try
+    s := cmd;
+    cl := '';
+    cq := 0;
+    lq := False;
+    while s <> '' do
+    begin
+      acl := True;
+      if s[1] = '"' then
+      begin
+        Inc(cq);
+        lq := True;
+      end
+      else
+      begin
+        if s[1] = ' ' then
+        begin
+          if cq > 0 then
+          begin
+            if (not odd(cq)) and lq then
+            begin
+              cq := 0;
+              Addcl;
+            end;
+          end
+          else
+            Addcl;
+        end;
+        lq := False;
+      end;
+      if acl then
+        cl := cl + s[1];
+      Delete(s, 1, 1);
+    end;
+    Addcl;
+  finally
+    Output.EndUpdate;
+  end;
+end;
+
+function ParsedCommandLine(const cmd: String): TArrayOfString;
+var
+  ts: TStrings;
+begin
+  if cmd = '' then Exit;
+  ts := TStringList.Create;
+  try
+    ParseCommandLine(cmd, ts, True);
+    Result := StringsToArray(ts);
+  finally
+    ts.Free;
+  end;
+end;
+
+function StringsToArray(const S: TStrings): TArrayOfString;
+var
+  i: Integer;
+begin
+  SetLength(Result, 0);
+  if not Assigned(S) then Exit;
+  if S.Count = 0 then Exit;
+  SetLength(Result, S.Count);
+  for i := 0 to S.Count - 1 do
+    Result[i] := S[i];
+end;
+
+function StringsToCommandLine(const S: TStrings): String;
+var
+  i: Integer;
+begin
+  Result := '';
+  if S.Count > 0 then
+  begin
+    for i := 0 to S.Count - 1 do
+    begin
+      if Pos(' ', S[i]) <> 0 then
+        Result := Result + '"' + S[i] + '" '
+      else
+        Result := Result + S[i] + ' ';
+    end;
+    Result := Trim(Result);
+  end;
+end;
+
+function StringsToCommandLine(const S: array of String): String;
+var
+  i: Integer;
+begin
+  Result := '';
+  if Length(S) > 0 then
+  begin
+    for i := Low(S) to High(S) do
+    begin
+      if (Pos(' ', S[i]) <> 0) and
+        ((LeftStr(S[i], 1) <> '"') and (RightStr(S[i], 1) <> '"')) then
+        Result := Result + '"' + S[i] + '" '
+      else
+        Result := Result + S[i] + ' ';
+    end;
+    Result := Trim(Result);
+  end;
+end;
+
+procedure DeleteArrayOfString(var TheStrings: TArrayOfString; Index: Integer);
+var
+  i: Integer;
+begin
+  if (Index < Low(TheStrings)) and (Index > High(TheStrings)) then Exit;
+  if Length(TheStrings) > 0 then
+  begin
+    if Index < High(TheStrings) then
+    begin
+      for i := Index to High(TheStrings) - 1 do
+        TheStrings[i] := TheStrings[i + 1];
+    end;
+    SetLength(TheStrings, Length(TheStrings) - 1);
+  end;
+end;
 
 end.

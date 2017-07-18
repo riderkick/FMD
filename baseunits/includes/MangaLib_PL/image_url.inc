@@ -6,11 +6,11 @@
     cf: Boolean = False;
   begin
     l := TStringList.Create;
-    s := FillMangaSiteHost(MANGALIB_PL_ID, URL) + ',' + IntToStr(workCounter + 1);
+    s := FillMangaSiteHost(MANGALIB_PL_ID, URL) + ',' + IntToStr(WorkId + 1);
 
     Result := GetPage(TObject(l),
       s,
-      manager.container.Manager.retryConnect);
+      Task.Container.Manager.retryConnect);
 
     //check confirm
     if l.Count > 0 then
@@ -37,7 +37,7 @@
         l.Clear;
         Result := GetPage(TObject(l),
           s,
-          manager.container.Manager.retryConnect);
+          Task.Container.Manager.retryConnect);
       end;
     end;
 
@@ -51,9 +51,9 @@
     begin
       for i := 0 to parse.Count - 1 do
         if (Pos('<img ', parse[i]) > 0) and
-          (Pos('id="img_curr"', parse.Strings[i]) > 0) then
+          (Pos('id="img_curr"', parse[i]) > 0) then
         begin
-          manager.container.PageLinks[workCounter] := GetVal(parse[i], 'src');
+          Task.Container.PageLinks[WorkId] := GetVal(parse[i], 'src');
           Break;
         end;
     end;

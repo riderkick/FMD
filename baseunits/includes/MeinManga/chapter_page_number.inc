@@ -1,7 +1,7 @@
   function GetMeinMangaPageNumber: Boolean;
   var
     s: String;
-    i: Cardinal;
+    i: Integer;
     l: TStringList;
   begin
     l := TStringList.Create;
@@ -9,7 +9,7 @@
     s := DecodeUrl(FillMangaSiteHost(MEINMANGA_ID, URL));
     Result := GetPage(TObject(l),
       s,
-      manager.container.Manager.retryConnect);
+      Task.Container.Manager.retryConnect);
     Parser := THTMLParser.Create(PChar(l.Text));
     Parser.OnFoundTag := OnTag;
     Parser.OnFoundText := OnText;
@@ -17,20 +17,20 @@
     Parser.Free;
     if parse.Count > 0 then
     begin
-      manager.container.PageNumber := 0;
-      manager.container.PageLinks.Clear;
+      Task.Container.PageNumber := 0;
+      Task.container.PageLinks.Clear;
       for i := parse.Count - 1 downto 0 do
       begin
-        if (Pos('</select>', parse.Strings[i]) > 0) then
+        if (Pos('</select>', parse[i]) > 0) then
         begin
-          manager.container.PageNumber :=
-            StrToInt(TrimLeft(TrimRight(parse.Strings[i - 3])));
+          Task.Container.PageNumber :=
+            StrToInt(TrimLeft(TrimRight(parse[i - 3])));
           Break;
         end;
       end;
-      if manager.container.PageNumber > 0 then
-        for i := 0 to manager.container.PageNumber - 1 do
-          manager.container.pageLinks.Add(s + IntToStr(i + 1) + '.html');
+      if Task.Container.PageNumber > 0 then
+        for i := 0 to Task.Container.PageNumber - 1 do
+          Task.Container.pageLinks.Add(s + IntToStr(i + 1) + '.html');
     end;
     parse.Free;
     l.Free;

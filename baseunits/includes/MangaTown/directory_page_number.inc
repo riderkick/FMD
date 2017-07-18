@@ -3,7 +3,7 @@
     i: Cardinal;
     isExtractPage: Boolean = False;
   begin
-    Page := 0;
+    APage := 0;
     Result := INFORMATION_NOT_FOUND;
     if not GetPage(TObject(Source), WebsiteRoots[MANGATOWN_ID, 1] +
       MANGATOWN_BROWSER + '?name.az', 0) then
@@ -33,7 +33,7 @@
       if isExtractPage and
         (Pos('<option', parse[i]) > 0) then
       begin
-        Inc(Page);
+        Inc(APage);
         Result := NO_ERROR;
       end;
     end;

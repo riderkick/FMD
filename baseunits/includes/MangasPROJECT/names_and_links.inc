@@ -15,7 +15,11 @@
       Exit;
     end;
     sstream := TStringStream.Create(Source.Text);
-    parser := TJSONParser.Create(sstream);
+    {$IF (FPC_FULLVERSION >= 30101)}
+    parser := TJSONParser.Create(sstream, [joUTF8]);
+    {$ELSE}
+    parser := TJSONParser.Create(sstream, True);
+    {$ENDIF}
     try
       Data := Parser.Parse;
       if Data <> nil then
@@ -25,8 +29,8 @@
           Result := NO_ERROR;
           for i := 0 to Data.Count - 1 do
           begin
-            names.Add(Data.Items[i].Items[0].AsString);
-            links.Add(StringReplace(Data.Items[i].Items[2].AsString,
+            ANames.Add(Data.Items[i].Items[0].AsString);
+            ALinks.Add(StringReplace(Data.Items[i].Items[2].AsString,
               WebsiteRoots[MangasPROJECT_ID, 1], '', []));
           end;
         end;

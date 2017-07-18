@@ -25,7 +25,7 @@
         if Pos('Last »»', parse[i]) > 0 then
           if GetTagName(parse[i - 1]) = 'a' then
           begin
-            Page := StrToIntDef(ReplaceRegExpr(
+            APage := StrToIntDef(ReplaceRegExpr(
               '^.*/(\d+)/$', GetVal(parse[i - 1], 'href'), '$1', True), 1);
             Break;
           end;

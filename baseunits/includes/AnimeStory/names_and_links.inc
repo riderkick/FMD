@@ -24,14 +24,14 @@
     end;
     for i := 0 to parse.Count - 1 do
     begin
-      if (Pos('class="left"', parse.Strings[i]) > 0) and
-        (Pos('href=', parse.Strings[i + 1]) > 0) then
+      if (Pos('class="left"', parse[i]) > 0) and
+        (Pos('href=', parse[i + 1]) > 0) then
       begin
         Result := NO_ERROR;
-        s := StringFilter(parse.Strings[i + 2]);
-        names.Add(HTMLEntitiesFilter(s));
-        s := GetAttributeValue(GetTagAttribute(parse.Strings[i + 1], 'href='));
-        links.Add(s);
+        s := StringFilter(parse[i + 2]);
+        ANames.Add(HTMLEntitiesFilter(s));
+        s := GetVal(parse[i + 1], 'href');
+        ALinks.Add(s);
       end;
     end;
     Source.Free;

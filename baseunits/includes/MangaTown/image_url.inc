@@ -5,12 +5,10 @@
     s: String;
   begin
     l := TStringList.Create;
-    s := FillMangaSiteHost(MANGATOWN_ID, URL);
-    if Length(s) > 0 then
-      if s[Length(s)] <> '/' then
-         s := s + '/';
-    s := s + IntToStr(workCounter + 1) + '.html';
-    Result := GetPage(TObject(l), s , manager.container.Manager.retryConnect);
+    s := AppendURLDelim(FillMangaSiteHost(MANGATOWN_ID, URL));
+    if WorkId > 0 then
+      s := s + IncStr(WorkId) + '.html';
+    Result := GetPage(TObject(l), s , Task.Container.Manager.retryConnect);
 
     if Self.Terminated then
     begin
@@ -30,9 +28,9 @@
     begin
       for i := 0 to parse.Count - 1 do
       begin
-        if (Pos('<img', parse[i]) > 0) and (Pos('onerror=', parse[i]) > 0) then
+        if (Pos('<img', parse[i]) > 0) and (Pos('alt=', parse[i]) > 0) then
         begin
-          manager.container.PageLinks[workCounter] := GetVal(parse[i], 'src');
+          Task.Container.PageLinks[WorkId] := GetVal(parse[i], 'src');
           Break;
         end;
       end;

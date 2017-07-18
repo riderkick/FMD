@@ -6,8 +6,8 @@
     i: Cardinal;
   begin
     mangaInfo.website := WebsiteRoots[MANGATOWN_ID, 0];
-    mangaInfo.url := FillMangaSiteHost(MANGATOWN_ID, URL);
-    if not GetPage(TObject(Source), mangaInfo.url, Reconnect) then
+    mangaInfo.url := FillMangaSiteHost(MANGATOWN_ID, AURL);
+    if not GetPage(TObject(Source), mangaInfo.url, AReconnect) then
     begin
       Result := NET_PROBLEM;
       Source.Free;
@@ -36,7 +36,7 @@
 
       // get title
       if (i + 1 < parse.Count - 1) then
-        if (Pos('class="title-top"', parse.Strings[i]) > 0) and (mangaInfo.title = '') then
+        if (Pos('class="title-top"', parse[i]) > 0) and (mangaInfo.title = '') then
           mangaInfo.title := Trim(StringFilter(parse[i + 1]));
 
       // get genres
@@ -75,7 +75,7 @@
 
       // get summary
       if (i + 1 < parse.Count - 1) then
-        if (Pos('<span', parse.Strings[i]) > 0) and (Pos('id="show"', parse[i]) > 0) then
+        if (Pos('<span', parse[i]) > 0) and (Pos('id="show"', parse[i]) > 0) then
           mangaInfo.summary := Trim(HTMLEntitiesFilter(StringFilter(parse[i + 1])));
 
       //get chapter links and names

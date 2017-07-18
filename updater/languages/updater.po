@@ -1,24 +1,24 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=UTF-8"
 
-#: tfrmmain.btdownload.caption
-msgid "Download"
-msgstr ""
-
 #: tfrmmain.caption
 msgid "Free Manga Downloader - Updater"
 msgstr ""
 
-#: tfrmmain.lbfilename.caption
-msgid "Filename"
+#: tfrmmain.lbfilesize.caption
+msgid "File size"
 msgstr ""
 
 #: tfrmmain.lbstatus.caption
 msgid "Waiting..."
 msgstr ""
 
-#: tfrmmain.lburl.caption
-msgid "URL"
+#: tfrmmain.lbtransferrate.caption
+msgid "Transfer rate"
+msgstr ""
+
+#: tfrmmessage.caption
+msgid "Help"
 msgstr ""
 
 #: umain.rs_7znotfound
@@ -47,17 +47,6 @@ msgstr ""
 
 #: umain.rs_filenotfound
 msgid "File not found!"
-msgstr ""
-
-#: umain.rs_filenotfound_mfdatalink
-msgid ""
-"File not found!\n"
-"This site probably have been added to unofficial build.\n"
-"\n"
-"Remedy:\n"
-"Build you manga list from scratch or download manually from this link:\n"
-"%s\n"
-"Link copied to clipboard!\n"
 msgstr ""
 
 #: umain.rs_finished
@@ -94,6 +83,10 @@ msgstr ""
 
 #: umain.rs_servererror
 msgid "Server response error!"
+msgstr ""
+
+#: umain.rs_unknown
+msgid "(unknown)"
 msgstr ""
 
 #: umain.rs_unpackfile

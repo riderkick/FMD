@@ -23,14 +23,14 @@
       Exit;
     end;
 
-    Page := 1;
+    APage := 1;
     for i := parse.Count - 1 downto 2 do
     begin                      
       if (Pos('<a', parse[i]) > 0) and (Pos('class="last', parse[i]) > 0) then
       begin
         p := StrToIntDef(ReplaceRegExpr('^.*/(\d+)$', GetVal(parse[i], 'href'), '$1', True), 0);
-        if Page < p then
-          Page := p;
+        if APage < p then
+          APage := p;
         Break;
       end;
     end;

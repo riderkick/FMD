@@ -5,8 +5,8 @@
     isExtractChapters: Boolean = False;
   begin
     mangaInfo.website := WebsiteRoots[MANGAOKU_ID, 0];
-    mangaInfo.url := FillMangaSiteHost(MANGAOKU_ID, URL);
-    if not GetPage(TObject(Source), mangaInfo.url, Reconnect) then
+    mangaInfo.url := FillMangaSiteHost(MANGAOKU_ID, AURL);
+    if not GetPage(TObject(Source), mangaInfo.url, AReconnect) then
     begin
       Result := NET_PROBLEM;
       Source.Free;
@@ -41,7 +41,7 @@
         s := Trim(TrimChar(s, ['-']));
         mangaInfo.chapterName.Add(s);
         s := TrimChar(GetVal(parse[i], 'value'), ['/']);
-        s := URL + s + '/';
+        s := AURL + s + '/';
         mangaInfo.chapterLinks.Add(s);
       end;
     end;

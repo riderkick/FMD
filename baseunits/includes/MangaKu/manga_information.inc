@@ -5,11 +5,11 @@
     isExtractChapter: Boolean = False;
   begin
     mangaInfo.website := WebsiteRoots[MANGAKU_ID, 0];
-    mangaInfo.url := FillMangaSiteHost(MANGAKU_ID, URL);
+    mangaInfo.url := FillMangaSiteHost(MANGAKU_ID, AURL);
     if mangaInfo.url <> '' then
       if mangaInfo.url[Length(mangaInfo.url)] <> '/' then
         mangaInfo.url := mangaInfo.url + '/';
-    if not GetPage(TObject(Source), mangaInfo.url, Reconnect) then
+    if not GetPage(TObject(Source), mangaInfo.url, AReconnect) then
     begin
       Result := NET_PROBLEM;
       Source.Free;

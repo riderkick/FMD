@@ -6,8 +6,8 @@
     isExtractChapter: Boolean = False;
   begin
     mangaInfo.website := WebsiteRoots[CENTRUMMANGI_PL_ID, 0];
-    mangaInfo.url := FillMangaSiteHost(CENTRUMMANGI_PL_ID, URL);
-    if not GetPage(TObject(Source), mangaInfo.url, Reconnect) then
+    mangaInfo.url := FillMangaSiteHost(CENTRUMMANGI_PL_ID, AURL);
+    if not GetPage(TObject(Source), mangaInfo.url, AReconnect) then
     begin
       Result := NET_PROBLEM;
       Source.Free;

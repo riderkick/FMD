@@ -1,0 +1,5 @@
+{"version":1,"strings":[
+{"hash":29393692,"name":"tformdroptarget.midownloadall.caption","sourcebytes":[68,111,119,110,108,111,97,100,32,97,108,108],"value":"Download all"},
+{"hash":215882787,"name":"tformdroptarget.miaddtofavorites.caption","sourcebytes":[65,100,100,32,116,111,32,102,97,118,111,114,105,116,101,115],"value":"Add to favorites"},
+{"hash":44709525,"name":"tformdroptarget.miclose.caption","sourcebytes":[38,67,108,111,115,101],"value":"&Close"}
+]}

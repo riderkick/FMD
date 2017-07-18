@@ -9,27 +9,27 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: id_ID\n"
-"X-Generator: Poedit 1.7.6\n"
-
-#: tfrmmain.btdownload.caption
-msgid "Download"
-msgstr "Unduh"
+"X-Generator: Poedit 1.8.8\n"
 
 #: tfrmmain.caption
 msgid "Free Manga Downloader - Updater"
-msgstr "Free Manga Downloader - Pembaruan"
+msgstr ""
 
-#: tfrmmain.lbfilename.caption
-msgid "Filename"
-msgstr "Nama Berkas"
+#: tfrmmain.lbfilesize.caption
+msgid "File size"
+msgstr "Ukuran"
 
 #: tfrmmain.lbstatus.caption
 msgid "Waiting..."
 msgstr "Menunggu..."
 
-#: tfrmmain.lburl.caption
-msgid "URL"
-msgstr "URL"
+#: tfrmmain.lbtransferrate.caption
+msgid "Transfer rate"
+msgstr "Kecepatan"
+
+#: tfrmmessage.caption
+msgid "Help"
+msgstr "Bantuan"
 
 #: umain.rs_7znotfound
 msgid "Can't extract file because 7za.exe not found!"
@@ -53,28 +53,11 @@ msgstr "Gagal mengunduh berkas!"
 
 #: umain.rs_failedloadpage
 msgid "Failed loading page!"
-msgstr "Gagal mengambil halaman!"
+msgstr "Gagal memuat halaman!"
 
 #: umain.rs_filenotfound
 msgid "File not found!"
 msgstr "Berkas tidak ditemukan!"
-
-#: umain.rs_filenotfound_mfdatalink
-msgid ""
-"File not found!\n"
-"This site probably have been added to unofficial build.\n"
-"\n"
-"Remedy:\n"
-"Build you manga list from scratch or download manually from this link:\n"
-"%s\n"
-"Link copied to clipboard!\n"
-msgstr ""
-"Berkas tidak ditemukan\n"
-"Kemungkinan situs ini telah ditambahkan ke versi tidak resmi.\n"
-"\n"
-"Buat sendiri list kamu dari awal atau coba download dari link ini:\n"
-"%s\n"
-"Link sudah disalin ke clipboard!\n"
 
 #: umain.rs_finished
 msgid "Finished."
@@ -86,7 +69,7 @@ msgstr "URL tidak valid!"
 
 #: umain.rs_loadingpage
 msgid "Loading page..."
-msgstr "Mebuka halaman..."
+msgstr "Memuat halaman..."
 
 #: umain.rs_redirected
 msgid "Redirected..."
@@ -102,7 +85,7 @@ msgstr "Mencoba mengunduh[%d] [%s]..."
 
 #: umain.rs_retryloadpage
 msgid "Retry loading page[%d]..."
-msgstr "Mencoba mebuka halaman[%d]..."
+msgstr "Mencoba memuat halaman[%d]..."
 
 #: umain.rs_savefile
 msgid "Saving file... "
@@ -112,6 +95,10 @@ msgstr "Menyimpan berkas..."
 msgid "Server response error!"
 msgstr "Terjadi kesalahan pada server!"
 
+#: umain.rs_unknown
+msgid "(unknown)"
+msgstr "(tidak diketahui)"
+
 #: umain.rs_unpackfile
 msgid "Unpacking file [%s]..."
 msgstr "Membuka berkas [%s]..."
@@ -119,3 +106,4 @@ msgstr "Membuka berkas [%s]..."
 #: umain.rs_waitmainapp
 msgid "Waiting main app to close..."
 msgstr "Menunggu aplikasi utama untuk berhenti..."
+

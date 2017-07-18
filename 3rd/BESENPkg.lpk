@@ -1,0 +1,428 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <Package Version="4">
+    <PathDelim Value="\"/>
+    <Name Value="BESENPkg"/>
+    <CompilerOptions>
+      <Version Value="11"/>
+      <PathDelim Value="\"/>
+      <SearchPaths>
+        <IncludeFiles Value="BESEN\src"/>
+        <OtherUnitFiles Value="BESEN\src"/>
+        <UnitOutputDirectory Value="BESEN\lib\$(TargetCPU)-$(TargetOS)"/>
+      </SearchPaths>
+      <CodeGeneration>
+        <SmartLinkUnit Value="True"/>
+        <Optimizations>
+          <OptimizationLevel Value="3"/>
+        </Optimizations>
+      </CodeGeneration>
+      <Linking>
+        <Debugging>
+          <GenerateDebugInfo Value="False"/>
+        </Debugging>
+      </Linking>
+    </CompilerOptions>
+    <Files Count="97">
+      <Item1>
+        <Filename Value="BESEN\src\BESEN.inc"/>
+        <Type Value="Include"/>
+      </Item1>
+      <Item2>
+        <Filename Value="BESEN\src\BESEN.pas"/>
+        <UnitName Value="BESEN"/>
+      </Item2>
+      <Item3>
+        <Filename Value="BESEN\src\BESENArrayUtils.pas"/>
+        <UnitName Value="BESENArrayUtils"/>
+      </Item3>
+      <Item4>
+        <Filename Value="BESEN\src\BESENASTNodes.pas"/>
+        <UnitName Value="BESENASTNodes"/>
+      </Item4>
+      <Item5>
+        <Filename Value="BESEN\src\BESENBaseObject.pas"/>
+        <UnitName Value="BESENBaseObject"/>
+      </Item5>
+      <Item6>
+        <Filename Value="BESEN\src\BESENCharset.pas"/>
+        <UnitName Value="BESENCharset"/>
+      </Item6>
+      <Item7>
+        <Filename Value="BESEN\src\BESENCode.pas"/>
+        <UnitName Value="BESENCode"/>
+      </Item7>
+      <Item8>
+        <Filename Value="BESEN\src\BESENCodeContext.pas"/>
+        <UnitName Value="BESENCodeContext"/>
+      </Item8>
+      <Item9>
+        <Filename Value="BESEN\src\BESENCodeGeneratorContext.pas"/>
+        <UnitName Value="BESENCodeGeneratorContext"/>
+      </Item9>
+      <Item10>
+        <Filename Value="BESEN\src\BESENCodeJIT.pas"/>
+        <UnitName Value="BESENCodeJIT"/>
+      </Item10>
+      <Item11>
+        <Filename Value="BESEN\src\BESENCodeJITx64.pas"/>
+        <UnitName Value="BESENCodeJITx64"/>
+      </Item11>
+      <Item12>
+        <Filename Value="BESEN\src\BESENCodeJITx86.pas"/>
+        <UnitName Value="BESENCodeJITx86"/>
+      </Item12>
+      <Item13>
+        <Filename Value="BESEN\src\BESENCodeSnapshot.pas"/>
+        <UnitName Value="BESENCodeSnapshot"/>
+      </Item13>
+      <Item14>
+        <Filename Value="BESEN\src\BESENCollector.pas"/>
+        <UnitName Value="BESENCollector"/>
+      </Item14>
+      <Item15>
+        <Filename Value="BESEN\src\BESENCollectorObject.pas"/>
+        <UnitName Value="BESENCollectorObject"/>
+      </Item15>
+      <Item16>
+        <Filename Value="BESEN\src\BESENCompiler.pas"/>
+        <UnitName Value="BESENCompiler"/>
+      </Item16>
+      <Item17>
+        <Filename Value="BESEN\src\BESENConstants.pas"/>
+        <UnitName Value="BESENConstants"/>
+      </Item17>
+      <Item18>
+        <Filename Value="BESEN\src\BESENContext.pas"/>
+        <UnitName Value="BESENContext"/>
+      </Item18>
+      <Item19>
+        <Filename Value="BESEN\src\BESENDateUtils.pas"/>
+        <UnitName Value="BESENDateUtils"/>
+      </Item19>
+      <Item20>
+        <Filename Value="BESEN\src\BESENDeclarativeEnvironmentRecord.pas"/>
+        <UnitName Value="BESENDeclarativeEnvironmentRecord"/>
+      </Item20>
+      <Item21>
+        <Filename Value="BESEN\src\BESENDecompiler.pas"/>
+        <UnitName Value="BESENDecompiler"/>
+      </Item21>
+      <Item22>
+        <Filename Value="BESEN\src\BESENDoubleList.pas"/>
+        <UnitName Value="BESENDoubleList"/>
+      </Item22>
+      <Item23>
+        <Filename Value="BESEN\src\BESENEnvironmentRecord.pas"/>
+        <UnitName Value="BESENEnvironmentRecord"/>
+      </Item23>
+      <Item24>
+        <Filename Value="BESEN\src\BESENErrors.pas"/>
+        <UnitName Value="BESENErrors"/>
+      </Item24>
+      <Item25>
+        <Filename Value="BESEN\src\BESENEvalCache.pas"/>
+        <UnitName Value="BESENEvalCache"/>
+      </Item25>
+      <Item26>
+        <Filename Value="BESEN\src\BESENEvalCacheItem.pas"/>
+        <UnitName Value="BESENEvalCacheItem"/>
+      </Item26>
+      <Item27>
+        <Filename Value="BESEN\src\BESENGarbageCollector.pas"/>
+        <UnitName Value="BESENGarbageCollector"/>
+      </Item27>
+      <Item28>
+        <Filename Value="BESEN\src\BESENGlobals.pas"/>
+        <UnitName Value="BESENGlobals"/>
+      </Item28>
+      <Item29>
+        <Filename Value="BESEN\src\BESENHashMap.pas"/>
+        <UnitName Value="BESENHashMap"/>
+      </Item29>
+      <Item30>
+        <Filename Value="BESEN\src\BESENHashUtils.pas"/>
+        <UnitName Value="BESENHashUtils"/>
+      </Item30>
+      <Item31>
+        <Filename Value="BESEN\src\BESENInt64SelfBalancedTree.pas"/>
+        <UnitName Value="BESENInt64SelfBalancedTree"/>
+      </Item31>
+      <Item32>
+        <Filename Value="BESEN\src\BESENIntegerList.pas"/>
+        <UnitName Value="BESENIntegerList"/>
+      </Item32>
+      <Item33>
+        <Filename Value="BESEN\src\BESENKeyIDManager.pas"/>
+        <UnitName Value="BESENKeyIDManager"/>
+      </Item33>
+      <Item34>
+        <Filename Value="BESEN\src\BESENLexer.pas"/>
+        <UnitName Value="BESENLexer"/>
+      </Item34>
+      <Item35>
+        <Filename Value="BESEN\src\BESENLexicalEnvironment.pas"/>
+        <UnitName Value="BESENLexicalEnvironment"/>
+      </Item35>
+      <Item36>
+        <Filename Value="BESEN\src\BESENLocale.pas"/>
+        <UnitName Value="BESENLocale"/>
+      </Item36>
+      <Item37>
+        <Filename Value="BESEN\src\BESENNativeCodeMemoryManager.pas"/>
+        <UnitName Value="BESENNativeCodeMemoryManager"/>
+      </Item37>
+      <Item38>
+        <Filename Value="BESEN\src\BESENNativeObject.pas"/>
+        <UnitName Value="BESENNativeObject"/>
+      </Item38>
+      <Item39>
+        <Filename Value="BESEN\src\BESENNumberUtils.pas"/>
+        <UnitName Value="BESENNumberUtils"/>
+      </Item39>
+      <Item40>
+        <Filename Value="BESEN\src\BESENObject.pas"/>
+        <UnitName Value="BESENObject"/>
+      </Item40>
+      <Item41>
+        <Filename Value="BESEN\src\BESENObjectArgGetterFunction.pas"/>
+        <UnitName Value="BESENObjectArgGetterFunction"/>
+      </Item41>
+      <Item42>
+        <Filename Value="BESEN\src\BESENObjectArgSetterFunction.pas"/>
+        <UnitName Value="BESENObjectArgSetterFunction"/>
+      </Item42>
+      <Item43>
+        <Filename Value="BESEN\src\BESENObjectArray.pas"/>
+        <UnitName Value="BESENObjectArray"/>
+      </Item43>
+      <Item44>
+        <Filename Value="BESEN\src\BESENObjectArrayConstructor.pas"/>
+        <UnitName Value="BESENObjectArrayConstructor"/>
+      </Item44>
+      <Item45>
+        <Filename Value="BESEN\src\BESENObjectArrayPrototype.pas"/>
+        <UnitName Value="BESENObjectArrayPrototype"/>
+      </Item45>
+      <Item46>
+        <Filename Value="BESEN\src\BESENObjectBindingFunction.pas"/>
+        <UnitName Value="BESENObjectBindingFunction"/>
+      </Item46>
+      <Item47>
+        <Filename Value="BESEN\src\BESENObjectBoolean.pas"/>
+        <UnitName Value="BESENObjectBoolean"/>
+      </Item47>
+      <Item48>
+        <Filename Value="BESEN\src\BESENObjectBooleanConstructor.pas"/>
+        <UnitName Value="BESENObjectBooleanConstructor"/>
+      </Item48>
+      <Item49>
+        <Filename Value="BESEN\src\BESENObjectBooleanPrototype.pas"/>
+        <UnitName Value="BESENObjectBooleanPrototype"/>
+      </Item49>
+      <Item50>
+        <Filename Value="BESEN\src\BESENObjectConsole.pas"/>
+        <UnitName Value="BESENObjectConsole"/>
+      </Item50>
+      <Item51>
+        <Filename Value="BESEN\src\BESENObjectConstructor.pas"/>
+        <UnitName Value="BESENObjectConstructor"/>
+      </Item51>
+      <Item52>
+        <Filename Value="BESEN\src\BESENObjectDate.pas"/>
+        <UnitName Value="BESENObjectDate"/>
+      </Item52>
+      <Item53>
+        <Filename Value="BESEN\src\BESENObjectDateConstructor.pas"/>
+        <UnitName Value="BESENObjectDateConstructor"/>
+      </Item53>
+      <Item54>
+        <Filename Value="BESEN\src\BESENObjectDatePrototype.pas"/>
+        <UnitName Value="BESENObjectDatePrototype"/>
+      </Item54>
+      <Item55>
+        <Filename Value="BESEN\src\BESENObjectDeclaredFunction.pas"/>
+        <UnitName Value="BESENObjectDeclaredFunction"/>
+      </Item55>
+      <Item56>
+        <Filename Value="BESEN\src\BESENObjectEnvironmentRecord.pas"/>
+        <UnitName Value="BESENObjectEnvironmentRecord"/>
+      </Item56>
+      <Item57>
+        <Filename Value="BESEN\src\BESENObjectError.pas"/>
+        <UnitName Value="BESENObjectError"/>
+      </Item57>
+      <Item58>
+        <Filename Value="BESEN\src\BESENObjectErrorConstructor.pas"/>
+        <UnitName Value="BESENObjectErrorConstructor"/>
+      </Item58>
+      <Item59>
+        <Filename Value="BESEN\src\BESENObjectErrorPrototype.pas"/>
+        <UnitName Value="BESENObjectErrorPrototype"/>
+      </Item59>
+      <Item60>
+        <Filename Value="BESEN\src\BESENObjectFunction.pas"/>
+        <UnitName Value="BESENObjectFunction"/>
+      </Item60>
+      <Item61>
+        <Filename Value="BESEN\src\BESENObjectFunctionArguments.pas"/>
+        <UnitName Value="BESENObjectFunctionArguments"/>
+      </Item61>
+      <Item62>
+        <Filename Value="BESEN\src\BESENObjectFunctionConstructor.pas"/>
+        <UnitName Value="BESENObjectFunctionConstructor"/>
+      </Item62>
+      <Item63>
+        <Filename Value="BESEN\src\BESENObjectFunctionPrototype.pas"/>
+        <UnitName Value="BESENObjectFunctionPrototype"/>
+      </Item63>
+      <Item64>
+        <Filename Value="BESEN\src\BESENObjectGlobal.pas"/>
+        <UnitName Value="BESENObjectGlobal"/>
+      </Item64>
+      <Item65>
+        <Filename Value="BESEN\src\BESENObjectJSON.pas"/>
+        <UnitName Value="BESENObjectJSON"/>
+      </Item65>
+      <Item66>
+        <Filename Value="BESEN\src\BESENObjectMath.pas"/>
+        <UnitName Value="BESENObjectMath"/>
+      </Item66>
+      <Item67>
+        <Filename Value="BESEN\src\BESENObjectNativeFunction.pas"/>
+        <UnitName Value="BESENObjectNativeFunction"/>
+      </Item67>
+      <Item68>
+        <Filename Value="BESEN\src\BESENObjectNumber.pas"/>
+        <UnitName Value="BESENObjectNumber"/>
+      </Item68>
+      <Item69>
+        <Filename Value="BESEN\src\BESENObjectNumberConstructor.pas"/>
+        <UnitName Value="BESENObjectNumberConstructor"/>
+      </Item69>
+      <Item70>
+        <Filename Value="BESEN\src\BESENObjectNumberPrototype.pas"/>
+        <UnitName Value="BESENObjectNumberPrototype"/>
+      </Item70>
+      <Item71>
+        <Filename Value="BESEN\src\BESENObjectPropertyDescriptor.pas"/>
+        <UnitName Value="BESENObjectPropertyDescriptor"/>
+      </Item71>
+      <Item72>
+        <Filename Value="BESEN\src\BESENObjectPrototype.pas"/>
+        <UnitName Value="BESENObjectPrototype"/>
+      </Item72>
+      <Item73>
+        <Filename Value="BESEN\src\BESENObjectRegExp.pas"/>
+        <UnitName Value="BESENObjectRegExp"/>
+      </Item73>
+      <Item74>
+        <Filename Value="BESEN\src\BESENObjectRegExpConstructor.pas"/>
+        <UnitName Value="BESENObjectRegExpConstructor"/>
+      </Item74>
+      <Item75>
+        <Filename Value="BESEN\src\BESENObjectRegExpPrototype.pas"/>
+        <UnitName Value="BESENObjectRegExpPrototype"/>
+      </Item75>
+      <Item76>
+        <Filename Value="BESEN\src\BESENObjectString.pas"/>
+        <UnitName Value="BESENObjectString"/>
+      </Item76>
+      <Item77>
+        <Filename Value="BESEN\src\BESENObjectStringConstructor.pas"/>
+        <UnitName Value="BESENObjectStringConstructor"/>
+      </Item77>
+      <Item78>
+        <Filename Value="BESEN\src\BESENObjectStringPrototype.pas"/>
+        <UnitName Value="BESENObjectStringPrototype"/>
+      </Item78>
+      <Item79>
+        <Filename Value="BESEN\src\BESENObjectThrowTypeErrorFunction.pas"/>
+        <UnitName Value="BESENObjectThrowTypeErrorFunction"/>
+      </Item79>
+      <Item80>
+        <Filename Value="BESEN\src\BESENOpcodes.pas"/>
+        <UnitName Value="BESENOpcodes"/>
+      </Item80>
+      <Item81>
+        <Filename Value="BESEN\src\BESENParser.pas"/>
+        <UnitName Value="BESENParser"/>
+      </Item81>
+      <Item82>
+        <Filename Value="BESEN\src\BESENPointerList.pas"/>
+        <UnitName Value="BESENPointerList"/>
+      </Item82>
+      <Item83>
+        <Filename Value="BESEN\src\BESENPointerSelfBalancedTree.pas"/>
+        <UnitName Value="BESENPointerSelfBalancedTree"/>
+      </Item83>
+      <Item84>
+        <Filename Value="BESEN\src\BESENRandomGenerator.pas"/>
+        <UnitName Value="BESENRandomGenerator"/>
+      </Item84>
+      <Item85>
+        <Filename Value="BESEN\src\BESENRegExp.pas"/>
+        <UnitName Value="BESENRegExp"/>
+      </Item85>
+      <Item86>
+        <Filename Value="BESEN\src\BESENRegExpCache.pas"/>
+        <UnitName Value="BESENRegExpCache"/>
+      </Item86>
+      <Item87>
+        <Filename Value="BESEN\src\BESENScope.pas"/>
+        <UnitName Value="BESENScope"/>
+      </Item87>
+      <Item88>
+        <Filename Value="BESEN\src\BESENSelfBalancedTree.pas"/>
+        <UnitName Value="BESENSelfBalancedTree"/>
+      </Item88>
+      <Item89>
+        <Filename Value="BESEN\src\BESENStringList.pas"/>
+        <UnitName Value="BESENStringList"/>
+      </Item89>
+      <Item90>
+        <Filename Value="BESEN\src\BESENStringTree.pas"/>
+        <UnitName Value="BESENStringTree"/>
+      </Item90>
+      <Item91>
+        <Filename Value="BESEN\src\BESENStringUtils.pas"/>
+        <UnitName Value="BESENStringUtils"/>
+      </Item91>
+      <Item92>
+        <Filename Value="BESEN\src\BESENTypes.pas"/>
+        <UnitName Value="BESENTypes"/>
+      </Item92>
+      <Item93>
+        <Filename Value="BESEN\src\BESENUnicodeTables.pas"/>
+        <UnitName Value="BESENUnicodeTables"/>
+      </Item93>
+      <Item94>
+        <Filename Value="BESEN\src\BESENUtils.pas"/>
+        <UnitName Value="BESENUtils"/>
+      </Item94>
+      <Item95>
+        <Filename Value="BESEN\src\BESENValue.pas"/>
+        <UnitName Value="BESENValue"/>
+      </Item95>
+      <Item96>
+        <Filename Value="BESEN\src\BESENValueContainer.pas"/>
+        <UnitName Value="BESENValueContainer"/>
+      </Item96>
+      <Item97>
+        <Filename Value="BESEN\src\BESENVersionConstants.pas"/>
+        <UnitName Value="BESENVersionConstants"/>
+      </Item97>
+    </Files>
+    <RequiredPkgs Count="1">
+      <Item1>
+        <PackageName Value="FCL"/>
+      </Item1>
+    </RequiredPkgs>
+    <UsageOptions>
+      <UnitPath Value="$(PkgOutDir)"/>
+    </UsageOptions>
+    <PublishOptions>
+      <Version Value="2"/>
+    </PublishOptions>
+  </Package>
+</CONFIG>

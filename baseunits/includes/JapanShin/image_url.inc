@@ -5,8 +5,8 @@
   begin
     l := TStringList.Create;
     Result := GetPage(TObject(l),
-      FillMangaSiteHost(JAPANSHIN_ID, URL) + '/page/' + IntToStr(workCounter),
-      manager.container.Manager.retryConnect);
+      FillMangaSiteHost(JAPANSHIN_ID, URL) + '/page/' + IntToStr(WorkId),
+      Task.Container.Manager.retryConnect);
 
     if Self.Terminated then
     begin
@@ -24,11 +24,11 @@
     if parse.Count > 0 then
     begin
       for i := 0 to parse.Count - 1 do
-        if (Pos('<img', parse.Strings[i]) > 0) and
-          (Pos('class="open"', parse.Strings[i]) > 0) then
+        if (Pos('<img', parse[i]) > 0) and
+          (Pos('class="open"', parse[i]) > 0) then
         begin
-          manager.container.PageLinks.Strings[workCounter] :=
-            GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src='));
+          Task.Container.PageLinks[WorkId] :=
+            GetVal(parse[i], 'src');
           Break;
         end;
     end;

@@ -1,0 +1,5 @@
+{"version":1,"strings":[
+{"hash":60067406,"name":"tupdatedialogform.lbmessage.caption","sourcebytes":[78,101,119,32,118,101,114,115,105,111,110,32,102,111,117,110,100,33,32,68,111,32,121,111,117,32,119,97,110,116,32,116,111,32,117,112,100,97,116,101,32,110,111,119,63,13,10,70,77,68,32,119,105,108,108,32,98,101,32,99,108,111,115,101,100,32,116,111,32,102,105,110,105,115,104,32,116,104,101,32,117,112,100,97,116,101,46],"value":"New version found! Do you want to update now?\r\nFMD will be closed to finish the update."},
+{"hash":197568645,"name":"tupdatedialogform.btnupdate.caption","sourcebytes":[38,85,112,100,97,116,101],"value":"&Update"},
+{"hash":45255362,"name":"tupdatedialogform.btnlater.caption","sourcebytes":[38,76,97,116,101,114],"value":"&Later"}
+]}

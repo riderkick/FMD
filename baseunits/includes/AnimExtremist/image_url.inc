@@ -6,10 +6,10 @@
   begin
     l := TStringList.Create;
     s := DecodeUrl(StringReplace(FillMangaSiteHost(ANIMEEXTREMIST_ID, URL),
-      '.html', '', []) + '-' + IntToStr(workCounter + 1) + '.html');
+      '.html', '', []) + '-' + IntToStr(WorkId + 1) + '.html');
     Result := GetPage(TObject(l),
       s,
-      manager.container.Manager.retryConnect);
+      Task.Container.Manager.retryConnect);
     parse := TStringList.Create;
     Parser := THTMLParser.Create(PChar(l.Text));
     Parser.OnFoundTag := OnTag;
@@ -20,11 +20,11 @@
     if parse.Count > 0 then
     begin
       for i := 0 to parse.Count - 1 do
-        if (Pos('id="photo"', parse.Strings[i]) > 0) then
+        if (Pos('id="photo"', parse[i]) > 0) then
         begin
-          s := GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src='));
-          manager.container.pageLinks.Strings[workCounter] :=
-            GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src='));
+          s := GetVal(parse[i], 'src');
+          Task.Container.pageLinks[WorkId] :=
+            GetVal(parse[i], 'src');
           Break;
         end;
     end;

@@ -13,7 +13,7 @@
     s := s + '/1.html';
     Result := GetPage(TObject(l),
       s,
-      manager.container.Manager.retryConnect);
+      Task.Container.Manager.retryConnect);
 
     Parser := THTMLParser.Create(PChar(l.Text));
     Parser.OnFoundTag := OnTag;
@@ -30,7 +30,7 @@
         if isGetPageNumber and (GetTagName(parse[i]) = '/select') then
           Break;
         if isGetPageNumber and (GetTagName(parse[i]) = 'option') then
-          Inc(manager.container.PageNumber);
+          Inc(Task.Container.PageNumber);
       end;
     parse.Free;
     l.Free;

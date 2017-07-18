@@ -22,22 +22,22 @@
     begin
       for i := 0 to parse.Count - 1 do
       begin
-        if (Pos('<tbody>', parse.Strings[i]) > 0) then
+        if (Pos('<tbody>', parse[i]) > 0) then
           isExtractMangaList := True;
-        if (Pos('</tbody>', parse.Strings[i]) > 0) then
+        if (Pos('</tbody>', parse[i]) > 0) then
         begin
           isExtractMangaList := False;
           Break;
         end;
 
-        if isExtractMangaList and (Pos('href=', parse.Strings[i]) > 0) then
+        if isExtractMangaList and (Pos('href=', parse[i]) > 0) then
         begin
-          s := GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href='));
+          s := GetVal(parse[i], 'href');
           s := StringReplace(s, WebsiteRoots[MANGAAR_ID, 1], '', []);
-          links.Add(s);
-          s := Trim(StringFilter(parse.Strings[i + 1]));
+          ALinks.Add(s);
+          s := Trim(StringFilter(parse[i + 1]));
           s := HTMLEntitiesFilter(s);
-          names.Add(s);
+          ANames.Add(s);
         end;
       end;
     end;

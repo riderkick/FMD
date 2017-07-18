@@ -6,7 +6,7 @@
     Result := INFORMATION_NOT_FOUND;
     if not GetPage(TObject(Source),
       WebsiteRoots[JAPANSHIN_ID, 1] + JAPANSHIN_BROWSER +
-      IntToStr(StrToInt(URL) + 1) + '/',
+      IntToStr(StrToInt(AURL) + 1) + '/',
       0) then
     begin
       Result := NET_PROBLEM;
@@ -26,15 +26,15 @@
     end;
     for i := 0 to parse.Count - 1 do
     begin
-      if (Pos('<a', parse.Strings[i]) > 0) and
-        (Pos('/reader/series/', parse.Strings[i]) > 0) and
-        (Pos('title="', parse.Strings[i]) > 0) then
+      if (Pos('<a', parse[i]) > 0) and
+        (Pos('/reader/series/', parse[i]) > 0) and
+        (Pos('title="', parse[i]) > 0) then
       begin
         Result := NO_ERROR;
-        s := GetAttributeValue(GetTagAttribute(parse.Strings[i], 'href='));
-        links.Add(StringReplace(s, WebsiteRoots[JAPANSHIN_ID, 1], '', [rfIgnoreCase]));
-        s := Trim(HTMLEntitiesFilter(StringFilter(parse.Strings[i + 1])));
-        names.Add(s);
+        s := GetVal(parse[i], 'href');
+        ALinks.Add(StringReplace(s, WebsiteRoots[JAPANSHIN_ID, 1], '', [rfIgnoreCase]));
+        s := Trim(HTMLEntitiesFilter(StringFilter(parse[i + 1])));
+        ANames.Add(s);
       end;
     end;
     Source.Free;

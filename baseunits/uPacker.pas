@@ -11,158 +11,162 @@ unit uPacker;
 interface
 
 uses
-  Classes, FileUtil, Zipper, SysUtils, uBaseUnit, uImg2Pdf;
+  Classes, Zipper, zstream, SysUtils, uBaseUnit, Img2Pdf, FileUtil, lazutf8classes,
+  LazFileUtils, SimpleException;
 
 type
+  TPackerFormat = (pfZIP, pfCBZ, pfPDF);
+
+  { TPacker }
+
   TPacker = class
   protected
-    list: TStringList;
-    procedure OnFileFound(FileIterator: TFileIterator);
-  public
-    ext, Path: String;
-    CompressionQuality: Cardinal;
+    FSavedFileName, FExt: String;
+    FFileList: TStringList;
+    procedure FileFound(FileIterator: TFileIterator);
     procedure DoZipCbz;
     procedure DoPdf;
-    procedure Execute;
+  public
+    Path,
+    FileName: String;
+    Format: TPackerFormat;
+    CompressionQuality: Cardinal;
+    function Execute: Boolean;
+    property FileList: TStringList read FFileList;
+  public
+    constructor Create;
+    destructor Destroy; override;
   end;
 
 implementation
 
-uses
-  lazutf8classes, uMisc;
-
-procedure TPacker.OnFileFound(FileIterator: TFileIterator);
+procedure TPacker.FileFound(FileIterator: TFileIterator);
 begin
-  list.Add(FileIterator.Filename);
+  FFileList.Add(FileIterator.Filename);
 end;
 
 procedure TPacker.DoZipCbz;
 var
-  s, fPath: String;
-  searcher: TFileSearcher;
-  Zip: TZipper;
-  i: Cardinal;
-  fstream: TFileStreamUTF8;
+  i: Integer;
 begin
-  try
-    fPath := Trim(Path);
-    RenameFileUTF8(Path, fPath);
-    list := TStringList.Create;
-    searcher := TFileSearcher.Create;
-    searcher.OnFileFound := OnFileFound;
-    searcher.Search(fPath, '*.jpg;*.jpeg;*.png;*.gif;*.db', False, False);
-
-    if list.Count > 0 then
-    begin
-      Zip := TZipper.Create;
+  with TZipper.Create do
+    try
       try
-        Zip.FileName := fPath + ext;
-        for i := 0 to list.Count - 1 do
+        FileName := FSavedFileName;
+        for i := 0 to FFileList.Count - 1 do
+          with Entries.AddFileEntry(FFileList[i]) do
+          begin
+            CompressionLevel := clnone;
+            ArchiveFileName := ExtractFileName(FFileList[i]);
+          end;
+        ZipAllFiles;
+      except
+        on E: Exception do
         begin
-          s := list[i];
-          {$IFDEF WINDOWS}
-          s := StringReplace(s, '/', '\', [rfReplaceAll]);
-          {$ENDIF}
-          Zip.Entries.AddFileEntry(TFileStreamUTF8.Create(s, fmOpenRead),
-            ExtractFileName(s));
+          E.Message := 'DoZipCbz.Exception'#13#10 + E.Message;
+          SimpleException.ExceptionHandleSaveLogOnly(Self, E);
         end;
-        fstream := TFileStreamUTF8.Create(fPath + ext, fmCreate);
-        try
-          Zip.SaveToStream(fstream);
-        finally
-          fstream.Free;
-        end;
-
-        for i := 0 to list.Count - 1 do
-        begin
-          Zip.Entries[i].Stream.Free;
-        end;
-      finally
-        Zip.Free;
       end;
-
-      //for i := 0 to list.Count - 1 do
-      //begin
-      //  DeleteFileUTF8(list[i]);
-      //end;
-      if DeleteDirectory(fPath, False) then
-        RemoveDirUTF8(fPath);
-      RenameFileUTF8(fPath + ext, Path + ext);
+    finally
+      Free;
     end;
-    searcher.Free;
-    list.Free;
-  except
-    on E: Exception do
-    begin
-      WriteLog('DoZipCbz.E:' + E.ClassName + '=' + E.Message, LOG_error);
-      //MainForm.ExceptLogMain.ExceptionHandler(Self, E);
-    end;
-  end;
 end;
 
 procedure TPacker.DoPdf;
 var
-  s, fPath: String;
-  searcher: TFileSearcher;
   pdf: TImg2Pdf;
   i: Cardinal;
   fstream: TFileStreamUTF8;
 begin
   try
-    // Path:= FixPath(Path);
-    fPath := Trim(Path);
-    RenameFileUTF8(Path, fPath);
-    list := TStringList.Create;
-    searcher := TFileSearcher.Create;
-    searcher.OnFileFound := OnFileFound;
-    searcher.Search(fPath, '*.jpg;*.jpeg;*.png;*.gif', False, False);
-
-    if list.Count <> 0 then
-    begin
-      pdf := TImg2Pdf.Create;
+    pdf := TImg2Pdf.Create;
+    try
       pdf.CompressionQuality := CompressionQuality;
-      pdf.Title := GetLastDir(Path);
-      // pdf.FileName:= fPath+ext;
-      for i := 0 to list.Count - 1 do
+      pdf.Infos.Title := GetLastDir(Path);
+      pdf.Infos.Creator := ApplicationName;
+      for i := 0 to FFileList.Count - 1 do
       begin
-        s := list[i];
-        {$IFDEF WINDOWS}
-        s := StringReplace(s, '/', '\', [rfReplaceAll]);
-        {$ENDIF}
-        // add image to PDF
-        pdf.AddImage(s);
+        try
+          pdf.AddImage(FFileList[i]);
+        except
+        end;
       end;
 
-      fstream := TFileStreamUTF8.Create(fPath + ext, fmCreate);
-      pdf.SaveToStream(fstream);
-      fstream.Free;
+      fstream := TFileStreamUTF8.Create(FSavedFileName, fmCreate);
+      try
+        pdf.SaveToStream(fstream);
+      finally
+        fstream.Free;
+      end;
+    finally
       pdf.Free;
-      //searcher.Search(fPath, '*.db', False, False);
-      //for i := 0 to list.Count - 1 do
-      //  DeleteFileUTF8(list.Strings[i]);
-      if DeleteDirectory(fPath, False) then
-        RemoveDirUTF8(fPath);
-      RenameFileUTF8(fPath + ext, Path + ext);
     end;
-    searcher.Free;
-    list.Free;
   except
     on E: Exception do
     begin
-      WriteLog('DoPdf.E:' + E.ClassName + '=' + E.Message, LOG_error);
-      //MainForm.ExceptLogMain.ExceptionHandler(nil, E);
+      E.Message := 'DoPdf.Exception'#13#10 + E.Message;
+      SimpleException.ExceptionHandleSaveLogOnly(Self, E);
     end;
   end;
 end;
 
-procedure TPacker.Execute;
+function TPacker.Execute: Boolean;
+var
+  i: Integer;
 begin
-  if (ext = '.zip') or (ext = '.cbz') then
+  Result := False;
+  Path := CleanAndExpandDirectory(Path);
+
+  if FFileList.Count = 0 then
   begin
-    DoZipCbz;
-  end
+    if DirectoryExistsUTF8(Path) = False then Exit;
+    with TFileSearcher.Create do
+      try
+        OnFileFound := FileFound;
+        Search(Self.Path, '*.jpg;*.png;*.gif', False, False);
+      finally
+        Free;
+      end;
+  end;
+
+  if FFileList.Count = 0 then Exit;
+
+  FFileList.CustomSort(NaturalCustomSort);
+  case Format of
+    pfZIP: FExt := '.zip';
+    pfCBZ: FExt := '.cbz';
+    pfPDF: FExt := '.pdf';
+  end;
+  if FileName <> '' then
+    FSavedFileName := FileName + FExt
   else
-    DoPdf;
+    FSavedFileName := TrimAndExpandFilename(Path) + FExt;
+  if FileExistsUTF8(FSavedFileName) then
+    if DeleteFileUTF8(FSavedFileName) = False then
+      Exit;
+  case Format of
+    pfZIP, pfCBZ: DoZipCbz;
+    pfPDF: DoPdf;
+  end;
+  Result := FileExistsUTF8(FSavedFileName);
+  if Result then
+  begin
+    for i := 0 to FFileList.Count - 1 do
+      DeleteFileUTF8(FFileList[i]);
+    if IsDirectoryEmpty(Path) then
+      RemoveDirUTF8(Path);
+  end;
+end;
+
+constructor TPacker.Create;
+begin
+  FFileList := TStringList.Create;
+end;
+
+destructor TPacker.Destroy;
+begin
+  FFileList.Free;
+  inherited Destroy;
 end;
 
 end.

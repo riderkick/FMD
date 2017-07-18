@@ -5,8 +5,8 @@
     i: Cardinal;
   begin
     mangaInfo.website := WebsiteRoots[EGSCANS_ID, 0];
-    mangaInfo.url :=FillMangaSiteHost(EGSCANS_ID, '/' + URL);
-    if not GetPage(TObject(Source), mangaInfo.url, Reconnect) then
+    mangaInfo.url :=FillMangaSiteHost(EGSCANS_ID, '/' + AURL);
+    if not GetPage(TObject(Source), mangaInfo.url, AReconnect) then
     begin
       Result := NET_PROBLEM;
       Source.Free;
@@ -37,30 +37,29 @@
     begin
       // get chapter name and links
       if (not isExtractChapter) and
-        (Pos('<span>', parse.Strings[i]) > 0) and
-        (Pos('Chapter', parse.Strings[i + 1]) > 0) then
+        (Pos('<span>', parse[i]) > 0) and
+        (Pos('Chapter', parse[i + 1]) > 0) then
         isExtractChapter := True;
 
       if (isExtractChapter) and
-        (Pos('</span>', parse.Strings[i]) > 0) then
+        (Pos('</span>', parse[i]) > 0) then
         isExtractChapter := False;
 
       // get manga name
-      if (mangaInfo.title = '') and (Pos('content="Read ', parse.Strings[i]) > 0) then
-        mangaInfo.title := GetString(parse.Strings[i], '~!@content="Read ',
+      if (mangaInfo.title = '') and (Pos('content="Read ', parse[i]) > 0) then
+        mangaInfo.title := GetString(parse[i], '~!@content="Read ',
           ' Manga Online"');
 
-   { if (isExtractChapter) AND (Pos('</select>', parse.Strings[i])>0) then
+   { if (isExtractChapter) AND (Pos('</select>', parse[i])>0) then
       break; }
 
       if (isExtractChapter) and
-        (Pos('<option value="', parse.Strings[i]) > 0) then
+        (Pos('<option value="', parse[i]) > 0) then
       begin
         Inc(mangaInfo.numChapter);
-        s := '/' + URL + '/' + StringReplace(GetAttributeValue(
-          GetTagAttribute(parse.Strings[i], 'value=')), WebsiteRoots[EGSCANS_ID, 1], '', []);
+        s := '/' + AURL + '/' + StringReplace(GetVal(parse[i], 'value'), WebsiteRoots[EGSCANS_ID, 1], '', []);
         mangaInfo.chapterLinks.Add(s);
-        s := RemoveSymbols(TrimLeft(TrimRight(parse.Strings[i + 1])));
+        s := RemoveSymbols(TrimLeft(TrimRight(parse[i + 1])));
         mangaInfo.chapterName.Add(StringFilter(StringFilter(HTMLEntitiesFilter(s))));
       end;
     end;

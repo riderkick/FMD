@@ -4,11 +4,11 @@
     l: TStringList;
     s: String;
   begin
-    manager.container.PageNumber := 0;
+    Task.Container.PageNumber := 0;
     l := TStringList.Create;
     parse := TStringList.Create;
     s := FillMangaSiteHost(UNIXMANGA_ID, URL);
-    Result := GetPage(TObject(l), s, manager.container.Manager.retryConnect);
+    Result := GetPage(TObject(l), s, Task.Container.Manager.retryConnect);
 
     Parser := THTMLParser.Create(PChar(l.Text));
     Parser.OnFoundTag := OnTag;
@@ -18,15 +18,15 @@
     l.Free;
     if parse.Count > 0 then
     begin
-      manager.container.PageNumber := 0;
-      manager.container.PageLinks.Clear;
-      manager.container.PageContainerLinks.Clear;
+      Task.Container.PageNumber := 0;
+      Task.Container.PageLinks.Clear;
+      Task.Container.PageContainerLinks.Clear;
       for i := 0 to parse.Count - 1 do
       begin
         if (Pos('class="td2"', parse[i]) > 0) and (Pos('<A', parse[i]) > 0) then
-          manager.container.PageContainerLinks.Add(EncodeURL(GetVal(parse[i], 'HREF')));
+          Task.Container.PageContainerLinks.Add(EncodeURL(GetVal(parse[i], 'HREF')));
       end;
-      manager.container.PageNumber := manager.container.PageContainerLinks.Count;
+      Task.Container.PageNumber := Task.Container.PageContainerLinks.Count;
     end;
     parse.Free;
   end;

@@ -4,12 +4,12 @@ object frmMessage: TfrmMessage
   Top = 235
   Width = 642
   BorderIcons = [biSystemMenu]
-  Caption = 'frmMessage'
+  Caption = 'Help'
   ClientHeight = 239
   ClientWidth = 642
   FormStyle = fsSystemStayOnTop
   Position = poDesktopCenter
-  LCLVersion = '1.5'
+  LCLVersion = '1.7'
   object mmMessage: TMemo
     Left = 0
     Height = 239

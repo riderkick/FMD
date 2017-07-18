@@ -10,7 +10,7 @@
     s := DecodeUrl(FillMangaSiteHost(CENTRUMMANGI_PL_ID, URL));
     Result := GetPage(TObject(l),
       s,
-      manager.container.Manager.retryConnect);
+      Task.Container.Manager.retryConnect);
     Parser := THTMLParser.Create(PChar(l.Text));
     Parser.OnFoundTag := OnTag;
     Parser.OnFoundText := OnText;
@@ -18,14 +18,14 @@
     Parser.Free;
     if parse.Count > 0 then
     begin
-      manager.container.PageNumber := 0;
+      Task.Container.PageNumber := 0;
       for i := 0 to parse.Count - 1 do
       begin
-        if (Pos('</select>', parse.Strings[i]) > 0) then
+        if (Pos('</select>', parse[i]) > 0) then
           if Count > 0 then
           begin
-            s := parse.Strings[i - 2];
-            manager.container.PageNumber := StrToInt(TrimLeft(TrimRight(s)));
+            s := parse[i - 2];
+            Task.Container.PageNumber := StrToInt(TrimLeft(TrimRight(s)));
             Break;
           end
           else

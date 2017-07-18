@@ -12,7 +12,7 @@ interface
 
 uses
   Classes, Forms, StdCtrls,
-  Buttons;
+  Buttons, DefaultTranslator, ExtCtrls;
 
 type
 
@@ -26,6 +26,7 @@ type
     btQueue: TBitBtn;
     lbNotification: TLabel;
     mmMemo  : TMemo;
+    pnBottom: TPanel;
     procedure btCancelClick(Sender: TObject);
     procedure btDownloadClick(Sender: TObject);
     procedure btQueueClick(Sender: TObject);
@@ -43,18 +44,11 @@ implementation
 
 {$R *.lfm}
 
-uses
-  uBaseUnit;
-
 { TNewChapter }
 
 procedure TNewChapter.FormCreate(Sender: TObject);
 begin
-  btDownload.Caption:= stDownload;
-  btQueue   .Caption:= stAddToQueue;
-  btCancel  .Caption:= stCancel;
-  Caption           := stNewChapterNotification;
-  FFormResult       := ncrCancel;
+  FFormResult := ncrCancel;
 end;
 
 procedure TNewChapter.btDownloadClick(Sender: TObject);

@@ -31,9 +31,9 @@
         if (Pos('<td style="width:45%;text-align: left;">', parse[i]) > 0) then
         begin
           Result := NO_ERROR;
-          links.Add(StringReplace(GetVal(parse[i + 1], 'href'),
+          ALinks.Add(StringReplace(GetVal(parse[i + 1], 'href'),
             WebsiteRoots[CENTRUMMANGI_PL_ID, 1], '', [rfIgnoreCase]));
-          names.Add(Trim(HTMLEntitiesFilter(StringFilter(parse[i + 2]))));
+          ANames.Add(Trim(HTMLEntitiesFilter(StringFilter(parse[i + 2]))));
         end;
 
         //if isExtractItem then
@@ -42,8 +42,8 @@
         //     (Pos('/spis/', parse[i]) = 0) then
         //  begin
         //    Result := NO_ERROR;
-        //    links.Add(StringReplace(GetVal(parse[i], 'href'), WebsiteRoots[CENTRUMMANGI_PL_ID, 1], '', [rfIgnoreCase]));
-        //    names.Add(Trim(HTMLEntitiesFilter(StringFilter(parse[i + 1]))));
+        //    ALinks.Add(StringReplace(GetVal(parse[i], 'href'), WebsiteRoots[CENTRUMMANGI_PL_ID, 1], '', [rfIgnoreCase]));
+        //    ANames.Add(Trim(HTMLEntitiesFilter(StringFilter(parse[i + 1]))));
         //  end;
         //end;
       end;

@@ -11,7 +11,7 @@
     s := DecodeUrl(FillMangaSiteHost(MANGALIB_PL_ID, URL));
     Result := GetPage(TObject(l),
       s,
-      manager.container.Manager.retryConnect);
+      Task.Container.Manager.retryConnect);
 
     //check confirm
     if l.Count > 0 then
@@ -38,7 +38,7 @@
         l.Clear;
         Result := GetPage(TObject(l),
           s,
-          manager.container.Manager.retryConnect);
+          Task.Container.Manager.retryConnect);
       end;
     end;
 
@@ -47,10 +47,10 @@
     Parser.OnFoundText := OnText;
     Parser.Exec;
     Parser.Free;
-    manager.container.PageNumber := 0;
+    Task.Container.PageNumber := 0;
     if parse.Count > 0 then
     begin
-      manager.container.PageNumber := 0;
+      Task.Container.PageNumber := 0;
       for i := 0 to parse.Count - 1 do
       begin
         if (Pos('<select ', parse[i]) > 0) and
@@ -64,7 +64,7 @@
         end;
         if isExtractPage and
           (Pos('<option ', parse[i]) > 0) then
-          Inc(manager.container.PageNumber);
+          Inc(Task.Container.PageNumber);
       end;
     end;
     parse.Free;

@@ -8,18 +8,18 @@
     try
       Result := GetPage(TObject(l),
         FillMangaSiteHost(S2SCAN_ID, URL) + 'page/1',
-        manager.container.Manager.retryConnect);
+        Task.Container.Manager.retryConnect);
 
       if l.Count > 0 then
       begin
-        manager.container.PageLinks.Clear;
+        Task.Container.PageLinks.Clear;
         for i := 0 to l.Count - 1 do
         begin
           if Pos('var pages = [', l[i]) > 0 then
           begin
             s := StringReplace(l[i], 'var pages = [', '[', []);
             s := Trim(TrimChar(s, [';']));
-            ParseJSONArray(s, 'url', manager.container.PageLinks);
+            ParseJSONArray(s, 'url', Task.Container.PageLinks);
             Break;
           end;
         end;

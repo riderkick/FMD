@@ -5,7 +5,7 @@
   begin
     Result := INFORMATION_NOT_FOUND;
     if not GetPage(TObject(Source), WebsiteRoots[CENTRALDEMANGAS_ID, 1] +
-      CENTRALDEMANGAS_BROWSER + '/' + IntToStr(StrToInt(URL) + 1), 0) then
+      CENTRALDEMANGAS_BROWSER + '/' + IntToStr(StrToInt(AURL) + 1), 0) then
     begin
       Result := NET_PROBLEM;
       Source.Free;
@@ -24,15 +24,15 @@
     end;
     for i := 0 to parse.Count - 1 do
     begin
-      if (Pos('/mangas/info/', parse.Strings[i]) > 0) and
-        (Pos('<td>', parse.Strings[i - 1]) > 0) then
+      if (Pos('/mangas/info/', parse[i]) > 0) and
+        (Pos('<td>', parse[i - 1]) > 0) then
       begin
         Result := NO_ERROR;
-        s := StringFilter(parse.Strings[i + 1]);
-        names.Add(HTMLEntitiesFilter(s));
-        s := StringReplace(GetString(parse.Strings[i], 'href="', '"'),
+        s := StringFilter(parse[i + 1]);
+        ANames.Add(HTMLEntitiesFilter(s));
+        s := StringReplace(GetString(parse[i], 'href="', '"'),
           WebsiteRoots[CENTRALDEMANGAS_ID, 1], '', []);
-        links.Add(s);
+        ALinks.Add(s);
       end;
     end;
     Source.Free;

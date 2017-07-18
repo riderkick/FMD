@@ -25,21 +25,21 @@
     for i := 0 to parse.Count - 1 do
     begin
       if (i + 4 < parse.Count - 1) and
-        (Pos('<li>', parse.Strings[i]) > 0) and
-        (Pos('</a>', parse.Strings[i + 3]) > 0) and
-        (Pos('</li>', parse.Strings[i + 4]) > 0) then
+        (Pos('<li>', parse[i]) > 0) and
+        (Pos('</a>', parse[i + 3]) > 0) and
+        (Pos('</li>', parse[i + 4]) > 0) then
       begin
         Result := NO_ERROR;
-        s := GetAttributeValue(GetTagAttribute(parse.Strings[i + 1], 'href='));
+        s := GetVal(parse[i + 1], 'href');
         if (Length(s) > 1) and
           (Pos('/scanlation/Shonen.html', s) = 0) and
           (Pos('/scanlation/Shojo.html', s) = 0) and
           (Pos('/scanlation/Josei.html', s) = 0) and
           (Pos('/scanlation/Seinen.html', s) = 0) then
         begin
-          links.Add(StringReplace(s, WebsiteRoots[SCANMANGA_ID, 1], '', []));
-          s := StringFilter(parse.Strings[i + 2]);
-          names.Add(HTMLEntitiesFilter(s));
+          ALinks.Add(StringReplace(s, WebsiteRoots[SCANMANGA_ID, 1], '', []));
+          s := StringFilter(parse[i + 2]);
+          ANames.Add(HTMLEntitiesFilter(s));
         end;
       end;
     end;

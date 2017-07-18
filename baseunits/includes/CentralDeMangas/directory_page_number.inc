@@ -23,10 +23,10 @@
     end;
     for i := parse.Count - 1 downto 2 do
     begin
-      if (Pos('/mangas/list/*/', parse.Strings[i]) > 0) then
+      if (Pos('/mangas/list/*/', parse[i]) > 0) then
       begin
-        s := TrimRight(TrimLeft(GetString(parse.Strings[i], '/mangas/list/*/', '">')));
-        page := StrToInt(s);
+        s := TrimRight(TrimLeft(GetString(parse[i], '/mangas/list/*/', '">')));
+        APage := StrToInt(s);
         Result := NO_ERROR;
         Exit;
       end;

@@ -25,7 +25,7 @@
       if Pos('Last', parse[i]) > 0 then
         if (Pos('<a ', parse[i - 1]) > 0) and (Pos('</a', parse[i + 1]) > 0) then
         begin
-          Page := StrToIntDef(ReplaceRegExpr('^.*\/(\d+)\/$',
+          APage := StrToIntDef(ReplaceRegExpr('^.*\/(\d+)\/$',
             GetVal(parse[i - 1], 'href'), '$1', True), 1);
           Result := NO_ERROR;
           Break;

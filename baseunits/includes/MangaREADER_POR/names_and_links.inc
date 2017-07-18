@@ -23,7 +23,11 @@
       if Copy(s, 1, 3) = UTF8BOM then
         Delete(s, 1, 3);
     end;
-    parser := TJSONParser.Create(s);
+    {$IF (FPC_FULLVERSION >= 30101)}
+    parser := TJSONParser.Create(s, [joUTF8]);
+    {$ELSE}
+    parser := TJSONParser.Create(s, True);
+    {$ENDIF}
     try
       Data := parser.Parse;
       try
@@ -34,8 +38,8 @@
             for i := 0 to Data.Count - 1 do
             begin
               jobject := TJSONObject(Data.Items[i]);
-              names.Add(jobject.Strings['title']);
-              links.Add(StringReplace(jobject.Strings['serie_url'],
+              ANames.Add(jobject.Strings['title']);
+              ALinks.Add(StringReplace(jobject.Strings['serie_url'],
                 WebsiteRoots[MANGAREADER_POR_ID, 1], '', []));
             end;
           end;

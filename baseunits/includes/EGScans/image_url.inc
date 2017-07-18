@@ -5,10 +5,10 @@
     l: TStringList;
   begin
     l := TStringList.Create;
-    s := DecodeUrl(FillMangaSiteHost(EGSCANS_ID, URL) + '/' + IntToStr(workCounter + 1));
+    s := DecodeUrl(FillMangaSiteHost(EGSCANS_ID, URL) + '/' + IntToStr(WorkId + 1));
     Result := GetPage(TObject(l),
       s,
-      manager.container.manager.retryConnect);
+      Task.Container.manager.retryConnect);
     parse := TStringList.Create;
     Parser := THTMLParser.Create(PChar(l.Text));
     Parser.OnFoundTag := OnTag;
@@ -18,12 +18,12 @@
 
     if parse.Count > 0 then
     begin
-      manager.container.PageLinks.Clear;
+      Task.Container.PageLinks.Clear;
       for i := 0 to parse.Count - 1 do
-        if (Pos('<img ondragstart', parse.Strings[i]) > 0) then
+        if (Pos('<img ondragstart', parse[i]) > 0) then
         begin
-          manager.container.PageLinks.Add(WebsiteRoots[EGSCANS_ID, 1] +
-            '/' + EncodeURL(GetAttributeValue(GetTagAttribute(parse.Strings[i], 'src='))));
+          Task.Container.PageLinks.Add(WebsiteRoots[EGSCANS_ID, 1] +
+            '/' + EncodeURL(GetVal(parse[i], 'src')));
         end;
     end;
     parse.Free;

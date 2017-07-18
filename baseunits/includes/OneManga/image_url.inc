@@ -6,10 +6,10 @@
   begin
     l := TStringList.Create;
     s := FillMangaSiteHost(ONEMANGA_ID, URL);
-    s := s + IntToStr(workCounter + 1) + '/';
+    s := s + IntToStr(WorkId + 1) + '/';
     Result := GetPage(TObject(l),
       s,
-      manager.container.Manager.retryConnect);
+      Task.Container.Manager.retryConnect);
     parse := TStringList.Create;
     Parser := THTMLParser.Create(PChar(l.Text));
     Parser.OnFoundTag := OnTag;
@@ -22,7 +22,7 @@
         if (Pos('<img ', parse[i]) > 0) and
           (Pos('class="manga-page"', parse[i]) > 0) then
         begin
-          manager.container.PageLinks[workCounter] := GetVal(parse[i], 'src');
+          Task.Container.PageLinks[WorkId] := GetVal(parse[i], 'src');
           Break;
         end;
     parse.Free;

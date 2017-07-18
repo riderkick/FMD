@@ -23,9 +23,9 @@
         if (Pos('itemprop="name"', parse[i]) > 0) then
         begin
           Result := NO_ERROR;
-          links.Add(StringReplace(GetVal(parse[i - 1], 'href'),
+          ALinks.Add(StringReplace(GetVal(parse[i - 1], 'href'),
             WebsiteRoots[MANGALIB_PL_ID, 1], '', [rfIgnoreCase]));
-          names.Add(Trim(HTMLEntitiesFilter(StringFilter(parse[i + 1]))));
+          ANames.Add(Trim(HTMLEntitiesFilter(StringFilter(parse[i + 1]))));
         end;
       end;
     end;

@@ -1,12 +1,867 @@
 Free Manga Downloader
 Project page: https://github.com/riderkick/FMD
 
-For manga list data check:
-https://bintray.com/riderkick/FMD/data/all/#files
-https://www.mediafire.com/folder/3ccy2c7g36hp3/Fmd
-
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
+
+0.9.118.0 (14-06-2017)
+[*] Madokami: fixed all
+[-] MangaKoi: removed
+[+] Added MangaHome[EN]
+[-] MangaMint: removed
+[+] Added MangaTail[EN]
+[+] Added MangaSail[EN]
+[+] Added option to minimize on start
+[*] Manga-Tr: fixed all
+[*] GManga: fixed all
+[*] TruyenTranhTuan: fixed all
+[-] Manga24H: removed
+[*] BlogTruyen: fixed all
+[*] KuManga: fixed all
+[*] LeoManga: fixed all
+Full changes: https://github.com/riderkick/FMD/compare/0.9.117.0...0.9.118.0
+
+0.9.117.0 (12-06-2017)
+[*] Fixed empty update url, you may need to download this version manually
+Full changes: https://github.com/riderkick/FMD/compare/0.9.116.0...0.9.117.0
+
+0.9.116.0 (12-06-2017)
+[*] NineManga: fixed all
+[*] MyReadingManga: fixed all
+Full changes: https://github.com/riderkick/FMD/compare/0.9.115.0...0.9.116.0
+
+0.9.115.0 (11-06-2017)
+[+] Added Taadd[EN]
+[-] Fakku: removed, not free anymore
+[-] Yomanga: removed, website down
+Full changes: https://github.com/riderkick/FMD/compare/0.9.114.0...0.9.115.0
+
+0.9.114.0 (10-06-2017)
+[*] EatManga: fixed all
+[*] Fixed layout
+Full changes: https://github.com/riderkick/FMD/compare/0.9.113.0...0.9.114.0
+
+0.9.113.0 (08-06-2017)
+[*] Pururin: fixed all
+[*] Layout changes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.112.0...0.9.113.0
+
+0.9.112.0 (29-05-2017)
+[*] HitomiLa: fixed download
+[*] MangaGo: fixed download
+Full changes: https://github.com/riderkick/FMD/compare/0.9.111.0...0.9.112.0
+
+0.9.111.0 (23-05-2017)
+[+] Added Tapas
+[*] Tumangaonline: fixed all
+[*] NeoProjectScan: fixed domain
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.110.0...0.9.111.0
+
+0.9.110.0 (02-05-2017)
+[*] CF: fixed expired cookies
+[*] KissManga: fixed download
+Full changes: https://github.com/riderkick/FMD/compare/0.9.109.0...0.9.110.0
+
+0.9.109.0 (30-03-2017)
+[*] KissManga: fixed download
+Full changes: https://github.com/riderkick/FMD/compare/0.9.108.0...0.9.109.0
+
+0.9.108.0 (27-03-2017)
+[*] KissManga: fixed download
+[*] Luscious: rewrite all
+[+] Added Pururin[H]
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.107.0...0.9.108.0
+
+0.9.107.0 (25-03-2017)
+[*] KissManga: added option to add custom key and iv #538
+Full changes: https://github.com/riderkick/FMD/compare/0.9.106.0...0.9.107.0
+
+0.9.106.0 (23-03-2017)
+[*] KissManga: fixed download
+[*] HeyManga: fixed download
+Full changes: https://github.com/riderkick/FMD/compare/0.9.105.0...0.9.106.0
+
+0.9.105.0 (22-03-2017)
+[*] Fixed memory leak
+[+] Added FallenAngelsScan[EN-SC]
+Full changes: https://github.com/riderkick/FMD/compare/0.9.104.0...0.9.105.0
+
+0.9.104.0 (16-03-2017)
+[+] Added HentaiFox[H]
+[*] Fixed memory leak
+Full changes: https://github.com/riderkick/FMD/compare/0.9.103.0...0.9.104.0
+
+0.9.103.0 (15-03-2017)
+[+] Added MangaOnlineBR[PT]
+[*] UnionMangas: exclude banner
+Full changes: https://github.com/riderkick/FMD/compare/0.9.102.0...0.9.103.0
+
+0.9.102.0 (13-03-2017)
+[*] MangaGo: fixed download
+[*] ReadMangaToday: rewrite all codes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.101.0...0.9.102.0
+
+0.9.101.0 (10-03-2017)
+[+] Batoto: added option to select the image server to download
+[*] MangaIndo: rewrite all codes
+[+] Added MangaID[ID]
+[+] Added MangaShiro[ID]
+[-] Mabuns: removed
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.100.0...0.9.101.0
+
+0.9.100.0 (08-03-2017)
+[*] Minor bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.99.0...0.9.100.0
+
+0.9.99.0 (08-03-2017)
+[+] Added MangaZuki[EN-SC]
+[-] HugeManga and MangaEsta were removed because the website is dead
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.98.0...0.9.99.0
+
+0.9.98.0 (06-03-2017)
+[*] Fixed various issue with downloads and favorites
+[*] Added enable/disable favorites
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.97.0...0.9.98.0
+
+0.9.97.0 (03-03-2017)
+[*] Fixed save and restore downloads
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.96.0...0.9.97.0
+
+0.9.96.0 (02-03-2017)
+[+] Added option to sort chapter list in mangainfo
+[*] Auto scroll chapter list to the bottom if sort is ascending
+[*] Fixed convert old downloads data before 0.9.94.0
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.95.0...0.9.96.0
+
+0.9.95.0 (29-02-2017)
+[*] Fixed various issue when terminating threads/closing app
+[*] Fixed updater
+Full changes: https://github.com/riderkick/FMD/compare/0.9.94.0...0.9.95.0
+
+0.9.94.0 (28-02-2017)
+[!+] Favorites and Downloads now saved in SQLite database file
+     WARNING: Please backup your favorites.ini and works.ini before update
+[*] Sorted downloads and favorites only allowed with left click
+[*] Fixed various issue with downloaded chapter list
+[*] Hentai2Read: fixed download
+[+] Added HelveticaScans[EN-SC]
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.93.0...0.9.94.0
+
+0.9.93.0 (22-02-2017)
+[*] WPManga: Fixed memory leak
+Full changes: https://github.com/riderkick/FMD/compare/0.9.92.0...0.9.93.0
+
+0.9.92.0 (21-02-2017)
+[+] Added MangaDoor[ES]
+[+] Added HentaiRead[H]
+[*] Replace MangaHen with MangaSpy
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.91.0...0.9.92.0
+
+0.9.91.0 (16-02-2017)
+[*] E-Hentai: fixed loading "Content Warning"
+Full changes: https://github.com/riderkick/FMD/compare/0.9.90.0...0.9.91.0
+
+0.9.90.0 (16-02-2017)
+[+] Added Portuguese (Brazil) translation by Havokdan
+[+] Added Greek translation by geogeo_gr
+[*] Fixed error when removing running download task
+[*] Fixed shop drop box at startup
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.89.0...0.9.90.0
+
+0.9.89.0 (06-02-2017)
+[*] E-Hentai: fixed root url
+[*] Split MangeEden_IT and PervEden_IT
+[+] Added Polish language, thanks to grzesjam
+[+] Added options to open favorites at startup
+Full changes: https://github.com/riderkick/FMD/compare/0.9.88.0...0.9.89.0
+
+0.9.88.0 (21-01-2017)
+[+] Added GoodManga[EN]
+Full changes: https://github.com/riderkick/FMD/compare/0.9.87.0...0.9.88.0
+
+0.9.87.0 (12-01-2017)
+[*] MangaTraders: fixed manga list
+[*] Japscan: rewrite all codes
+[*] MangaGo: rewrite all codes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.86.0...0.9.87.0
+
+0.9.86.0 (11-01-2017)
+[+] Added MangaCool[EN]
+[*] MangaTraders: fixed issue #437
+Full changes: https://github.com/riderkick/FMD/compare/0.9.85.0...0.9.86.0
+
+0.9.85.0 (08-01-2017)
+[*] MangaFox: fixed missing chapter title
+[*] MangaLife, MangaSee, MangaTraders: fixed all, MangaTraders require account
+[*] KireiCake: Fixed manga list
+[*] ReadComic: Fixed manga list
+[*] Fixed CF issue #433
+Full changes: https://github.com/riderkick/FMD/compare/0.9.84.0...0.9.85.0
+
+0.9.84.0 (04-01-2017)
+[*] MangaFox: fixed manga info and Status
+[*] MangaTown: fixed Image Url
+[*] Removed MangaCow and Moved to WPManga
+[+] Added Tonari no Young Jump, Comico, NewType and fixed Sunday Web Every[JP]
+[+] Added PowerManga, Jaiminisbox, KireiCake and ReadComics[EN]
+[*] Fixed Madokami Url
+[*] Fixed 8Muses
+Full changes: https://github.com/riderkick/FMD/compare/0.9.83.0...0.9.84.0
+
+0.9.83.0 (06-09-2016)
+[*] Fixed an issue when saving to pdf
+[*] Hentai2Read: fixed manga info
+[+] Added MyMangaMe[EN]
+Full changes: https://github.com/riderkick/FMD/compare/0.9.82.0...0.9.83.0
+
+0.9.82.0 (28-08-2016)
+[+] Added MangaOnlineTo[EN]
+Full changes: https://github.com/riderkick/FMD/compare/0.9.81.0...0.9.82.0
+
+0.9.81.0 (21-08-2016)
+[*] Tumangaonline: fixed download
+Full changes: https://github.com/riderkick/FMD/compare/0.9.80.0...0.9.81.0
+
+0.9.80.0 (20-08-2016)
+[*] Tsumino: fixed download
+Full changes: https://github.com/riderkick/FMD/compare/0.9.79.0...0.9.80.0
+
+0.9.79.0 (18-08-2016)
+[*] Fixed an error when creating download task
+[*] Fixed empty chapters with some website
+[*] Komikid: rewrite all code
+Full changes: https://github.com/riderkick/FMD/compare/0.9.78.0...0.9.79.0
+
+0.9.78.0 (17-08-2016)
+[*] Fixed various issue with unicode path and filename
+[*] TripleSevenScan: fixed accept adult warning
+[*] MangaIndo: fixed manga info
+[*] MangaChanRU/HentaiChanRU/YaoiChanRU: fixed manga info and empty chapters
+[+] Added custom text to be used to replace unicode character
+[+] Added context menu to copy log message
+[*] MangaStream: fixed an issue with some chapters
+[+] Added split download feature
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.77.0...0.9.78.0
+
+0.9.77.0 (13-08-2016)
+[*] MangaTraders: rewrite all code
+[*] MangaIndo: rewrite all code
+[+] MangaJoy replaced with FunManga[EN]
+[+] Added SundayWebry[RAW]
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.76.0...0.9.77.0
+
+0.9.76.0 (07-08-2016)
+[*] Fixed download tree status not updating
+[+] Added Log form, Options > Misc > Log
+[+] Added TripleSevenScan[EN]
+[*] MangaFox: fixed remove watermark
+[*] E-Hentai/ExHentai: fixed download causing by incorrect filenames
+[*] Fixed export to PDF issue with indexed PNG images
+[+] Added HentaiChanRU[H], YaoiChanRU[H]
+[*] GameofScanlation: fixed download embedded base64 images
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.75.0...0.9.76.0
+
+0.9.75.0 (30-07-2016)
+[+] Added "Delete task + data + favorite" in download list popup menu
+[+] Added "Delete" in manga list popup menu
+[+] Added Favorite list search
+[+] Added Download list search
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.74.0...0.9.75.0
+
+0.9.74.0 (06-07-2016)
+[+] Added enable/disable task. Disabled task can't be resumed unless it's enabled manually, this task will be skipped on resume all.
+[+] Added tray icon popup menu. Resume all, Stop all, Action after download finish, Show drop box, Restore and Exit.
+[*] MangaInn: fixed incorrectly download second page and forth (#317)
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.73.0...0.9.74.0
+
+0.9.73.0 (06-07-2016)
+[+] Added custom color for favorite with empty chapters
+[*] Various changes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.72.0...0.9.73.0
+
+0.9.72.0 (04-07-2016)
+[*] Fixed CF
+[+] Added custom color options for list, Options > Misc
+[*] MangaSee, MangaLife: rewrite all code
+Full changes: https://github.com/riderkick/FMD/compare/0.9.71.0...0.9.72.0
+
+0.9.71.0 (01-07-2016)
+[*] Tumangaonline: show all available chapter with scanlation name, fixed download
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.70.0...0.9.71.0
+
+0.9.70.0 (29-06-2016)
+[*] SeinagiAdultoFansub: fixed manga info and download
+[*] Fixed an issue with CF
+Full changes: https://github.com/riderkick/FMD/compare/0.9.69.0...0.9.70.0
+
+0.9.69.0 (22-06-2016)
+[*] MangaJoy: fixed update list
+[+] Added DangoOnlineNoFansub[ES-SC]
+[+] Added DejameProbar[ES-SC]
+[+] Added HoshinoFansub[ES-SC]
+[+] Added MangaWorksFansub[ES-SC]
+[+] Added MasterPieceScans[ES-SC]
+[+] Added MenudoFansub[ES-SC]
+[+] Added NeoProjectScan[ES-SC]
+[+] Added Pzykosis666HFansub[ES-SC]
+[+] Added R15TeamScanlation[ES-SC]
+[+] Added SantosScan[ES-SC]
+[+] Added SeinagiFansub[ES-SC]
+[+] Added SeinagiAdultoFansub[ES-SC]
+[+] Added SolitarioNoFansub[ES-SC]
+Full changes: https://github.com/riderkick/FMD/compare/0.9.68.0...0.9.69.0
+
+0.9.68.0 (20-06-2016)
+[*] Fixed error at start
+Full changes: https://github.com/riderkick/FMD/compare/0.9.67.0...0.9.68.0
+
+0.9.67.0 (20-06-2016)
+[*] MangaPark: rewrite all code
+[*] MangaBug: replaced with MangaIce
+[+] Added MangaJoy[EN]
+[*] Various changes and bug fix
+Full changes: https://github.com/riderkick/FMD/compare/0.9.66.0...0.9.67.0
+
+0.9.66.0 (18-06-2016)
+[*] KissManga: fixed manga info
+[+] Added LeoManga[ES]
+Full changes: https://github.com/riderkick/FMD/compare/0.9.65.0...0.9.66.0
+
+0.9.65.0 (16-06-2016)
+[*] Fixed check for new chapters
+[*] Tumangaonline: fixed get all chapters
+[*] MangaInn: rewrite all code
+[*] Various changes and bug fix
+Full changes: https://github.com/riderkick/FMD/compare/0.9.64.0...0.9.65.0
+
+0.9.64.0 (15-06-2016)
+[+] Show new chapters and status downloaded while checking favorites with icon and highlight
+[*] SenManga: fixed all
+[+] E-Hentai/ExHentai: replace option download original image with image size with combobox
+[*] Various changes and bug fix
+Full changes: https://github.com/riderkick/FMD/compare/0.9.63.0...0.9.64.0
+
+0.9.63.0 (11-06-2016)
+[*] Fixed an issue with CF
+Full changes: https://github.com/riderkick/FMD/compare/0.9.62.0...0.9.63.0
+
+0.9.62.0 (09-06-2016)
+[*] Fixed various path issue (#275, #276, #279)
+[+] Added OneTimeScans[EN-SC]
+[+] Added SenseScan[EN-SC]
+[+] Added KuManga[ES]
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.61.0...0.9.62.0
+
+0.9.61.0 (05-06-2016)
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.60.0...0.9.61.0
+
+0.9.60.0 (03-06-2016)
+[*] ReadComicOnline: fixed domain
+[*] Fixed various path issue
+[+] Added option for custom filename
+[+] Added option to disable auto generate chapter folder
+[+] Added popup menu to check/uncheck/indeterminate all genres in filter
+[+] Added filter chapter list in mangainfo, activate via popup menu on chapter list
+[*] Double click on "Save to" column on download list/favorite list will open folder
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.59.0...0.9.60.0
+
+0.9.59.0 (30-05-2016)
+[+] Added SekaiManga[ES]
+Full changes: https://github.com/riderkick/FMD/compare/0.9.58.0...0.9.59.0
+
+0.9.58.0 (29-05-2016)
+[*] Batoto: fixed download
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.57.0...0.9.58.0
+
+0.9.57.0 (28-05-2016)
+[*] Fixed incorrectly store full path inside archive (zip/cbz)
+[+] Added GManga[AR]
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.56.0...0.9.57.0
+
+0.9.56.0 (25-05-2016)
+[*] YoManga: fixed download
+[*] HeyManga: fixed download
+[*] Webtoons: download original images (#254)
+[+] Added MangaSaurus[EN]
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.55.0...0.9.56.0
+
+0.9.55.0 (20-05-2016)
+[*] Tumangaonline: rewrite all code, require new manga list
+[*] Yomanga: fixed blocked by cf
+[*] GameofScanlation: fixed download
+[-] MangaVadisi and MangaFrame removed
+[+] Added MangaDenizi[TR]
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.54.0...0.9.55.0
+
+0.9.54.0 (09-05-2016)
+[*] Manga-Tr: fixed get image url
+[+] Added Puzzmos[TR]
+[+] Added WebtoonTr[TR]
+Full changes: https://github.com/riderkick/FMD/compare/0.9.53.0...0.9.54.0
+
+0.9.53.0 (08-05-2016)
+[*] Tsumino: fixed update list
+Full changes: https://github.com/riderkick/FMD/compare/0.9.52.0...0.9.53.0
+
+0.9.52.0 (07-05-2016)
+[*] Added HeyManga[EN]
+[*] HitomiLa: fixed update list
+Full changes: https://github.com/riderkick/FMD/compare/0.9.51.0...0.9.52.0
+
+0.9.51.0 (13-04-2016)
+[*] Fixed restore window position
+[*] MangaEden/PerEven: rewrite all script
+[*] MangaHere: fixed missing genres
+[*] Hentai2Read: fixed update list
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.50.0...0.9.51.0
+
+0.9.50.0 (11-04-2016)
+[*] Added GoManga[EN]
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.49.0...0.9.50.0
+
+0.9.49.0 (08-04-2016)
+[*] Preserve file last modified date from server
+[*] Added more website advanced option
+[*] HitomiLa: fix info
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.48.0...0.9.49.0
+
+0.9.48.0 (02-04-2016)
+[*] E-Hentai/ExHentai: Fixed filename serialized several times
+[+] Added ReadComicOnline[EN]
+[*] Website specific option moved to Options > Websites > Options
+[+] Added website specific cookies and user agent, Options > Websites > Advanced
+[*] Changed double click behaviour on download list and favorite list to "Open ..."
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.47.0...0.9.48.0
+ 
+0.9.47.0 (30-03-2016)
+[*] Fixed crash with clean install without works folder (#222)
+Full changes: https://github.com/riderkick/FMD/compare/0.9.46.0...0.9.47.0
+
+0.9.46.0 (27-03-2016)
+[*] Downloaded Chapters now using SQLite3 database
+[*] Config, Downloads and Favorites using temporary file at runtime (#218)
+Full changes: https://github.com/riderkick/FMD/compare/0.9.45.0...0.9.46.0
+
+0.9.45.0 (25-03-2016)
+[*] E-Hentai/ExHentai: fixed file naming problem (#217)
+[*] E-Hentai/ExHentai: fixed get another image url when failed (#213)
+Full changes: https://github.com/riderkick/FMD/compare/0.9.44.0...0.9.45.0
+
+0.9.44.0 (24-03-2016)
+[*] MangaFox: fixed downloaded chapters incorrectly recognized as new chapter
+[*] WPManga: fixed mangainfo and get image url
+[*] SenManga: fixed get image url
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.43.0...0.9.44.0
+
+0.9.43.0 (23-03-2016)
+[*] Fixed download sometimes failed when max connection limit = 1
+[*] 8Muses: faster get image url
+[*] E-Hentai/ExHentai: use original filename if available
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.42.0...0.9.43.0
+
+0.9.42.0 (22-03-2016)
+[+] Added option to hide downloaded chapter. chapter list > right click > hide downloaded chapter
+[*] Fixed various form layout
+[*] Hentai2Read: fixed chapter list order
+[*] MangaFox: fixed only show last 10 chapter
+[*] Various changes and bug fixes
+
+0.9.41.0 (18-03-2016)
+[*] MangaFox: fixed remove watermark and rewrite all code
+[*] Tsumino: fixed get image url
+[*] Fixed mainform's components layout
+[*] Various changes and bug fixes
+
+0.9.40.0 (12-03-2016)
+[+] Added Tumangaonline[ES]
+[*] Various changes and bug fixes
+
+0.9.39.0 (10-03-2016)
+[*] Hentai2Read: rewrite all script
+[*] Various changes and bug fixes
+
+0.9.38.0 (04-03-2016)
+[+] Added MangaBackup[EN]
+[*] GameofScanlation: fix get image url
+[*] Various changes and bug fixes
+
+0.9.37.0 (28-02-2016)
+[*] Madokami: fix login
+[*] SubManga: rewrite all script
+[+] Added show password checkbox in add account dialog
+[*] Various changes and bug fixes
+
+0.9.36.0 (27-02-2016)
+[+] Added Tsumino[H], require cookie in advanced.ini
+
+0.9.35.2 (25-02-2016)
+[*] GameofScanlation: rewrite all script
+[-] LoneManga: removed, website redirected to GameofScanlation
+[*] Various changes and bug fixes
+
+0.9.35.1 (21-02-2016)
+[*] Updater: fix download manga list from server
+
+0.9.35.0 (21-02-2016)
+[*] Added Webtoons[EN]
+[*] Various changes and bug fixes
+
+0.9.34.0 (15-02-2016)
+[*] AcademyVN: rewrite all script
+[*] Various changes and bug fixes
+
+0.9.33.0 (11-02-2016)
+[-] MangaCap: removed, website offline
+[+] E-Hentai/ExHentai: added option to download original image if available
+[+] Added MangaChanRU[RU]
+[+] Added MintMangaRU[RU]
+[+] Added ReadMangaRU[RU]
+[*] Various changes and bug fixes
+
+0.9.32.3 (05-02-2016)
+[*] Various changes and bug fixes
+
+0.9.32.2 (03-02-2016)
+[*] E-Hentai/ExHentai: fix incorrect page number
+[*] Various changes and bug fixes
+
+0.9.32.1 (02-02-2016)
+[*] Hakihome: rewrite all script
+[*] Various changes and bug fixes
+
+0.9.32.0 (01-02-2016)
+[*] Updater: various fix
+[+] Added option to show/hide dialog download manga list from server when local database empty
+[*] RedHawkScan: Removed, website offline
+[*] Change manga list download url to new location
+[*] Various changes and bug fixes
+
+0.9.31.3 (28-01-2016)
+[*] Fix save as pdf issue with indexed images
+[*] Updater, fix download manga list always failed (403 Forbidden)
+[*] Various changes and bug fixes
+
+0.9.31.2 (24-01-2016)
+[*] Fix remove mangafox watermark (file IO error when using multiple threads)
+[*] Various changes and bug fixes
+
+0.9.31.1 (21-01-2016)
+[*] Fix double URL encoding
+[*] Various changes
+
+0.9.31.0 (19-01-2016)
+[+] Download list: Assign CTRL+Home to move item to top and CTRL+End to move item to bottom
+[+] Download list and Favorite list now accept url(s) via drag n drop
+[*] Updater: fix various issue
+[*] Various changes and bug fixes
+
+0.9.30.0 (17-01-2016)
+[*] E-Hentai/ExHentai: fix incorrect page links/page number
+[*] Batoto: various fix
+[*] Fix filter "Search only new manga"
+[*] Fix various issue on "Update manga list"
+[+] Added MangaKoi[EN]
+[+] Added YoManga[EN-SC]
+[+] Added RawYoManga[RAW]
+[+] Added GameofScanlation[EN-SC]
+[*] Various changes and bug fixes
+
+0.9.29.1 (11-01-2016)
+[!*] Fix empty user-agent if it's not defined in advanced.ini (causing connection issue)
+
+0.9.29.0 (10-01-2016)
+[*] KissManga: rewrite all script
+[*] RawSenManga: rewrite all script (load full chapter list via one of chapter link https://github.com/riderkick/FMD/issues/146)
+[*] UnionMangas: rewrite all script
+[-] Pururin: drop support
+[+] MangaFox: added option to save as PNG on remove watermark
+[*] PecintaKomik: rewrite all script
+[*] Various changes and bug fixes
+
+0.9.28.0 (29-12-2015)
+[+] Added Manga folder custom rename. Options > Save to
+[*] Madokami: rewrite and add account support
+[*] Fix load user-agent from advanced.ini
+[*] Fix "Run out of memory" when updating long manga list
+[*] Various changes and bug fixes
+
+0.9.27.0 (26-12-2015)
+[+] Added Remove MangaFox watermark feature. Options > Misc
+[*] Batoto: fix add language and scan group to chapter title
+[*] Various changes and bug fixes
+
+0.9.26.0 (23-12-2015)
+[*] Batoto: fix login
+[*] ExHentai: fix login
+[+] Added HitomiLa[H]
+[+] Added HentaiCafe[H]
+[+] Added Manga-Tr[TR]
+[*] Madokami: fix image url
+[*] Various changes and bug fixes
+
+0.9.25.0 (21-12-2015)
+[+] Added 8Muses[H] (no list, use drop box)
+[+] Added Account Manager, Options > Accounts
+[+] Batoto, add account support
+[-] Drop support for Manga2u
+[+] Added MangaHen[EN]
+[+] Added ExHentai[H] with account support
+[+] Added MangaBug[EN]
+[*] Various changes and bug fixes
+
+0.9.24.1 (25-11-2015)
+[*] Fix fmd freeze
+
+0.9.24.0 (25-11-2015)
+[*] E-Hentai: get new image url if failed
+[*] MangaHere: rewrite all script
+[+] Added option to remove manga name in chapter name
+[*] MangaLife: fix manga info
+[*] NHentai: fix image url
+[*] MangaTown: fix image url
+[*] Fakku: fix image url
+[*] MangaEden: fix page number
+[*] Various changes and bug fixes
+
+0.9.23.0 (26-08-2015)
+[*] E-Hentai: fix image URL on multiple page
+[-] Drop support for SenMangaRAW
+[+] Added MangaLife(EN)
+[+] Added Luscious(H)
+[*] Various changes and bug fixes
+
+0.9.22.1 (21-08-2015)
+[*] E-Hentai: fix image url
+[*] MangaIndo: remove automatically added chapter number
+[*] ReadHentaiManga: fix image url
+[*] Fix cover image sometimes failed to load
+
+0.9.22.0 (19-08-2015)
+[*] Fix various bug on filter
+[*] WP-Manga: rewrite all script
+[*] Added MangaIndo(ID)
+[*] Various changes and bug fixes
+
+0.9.21.8 (16-08-2015)
+[*] Fix high cpu usage while updating manga list
+
+0.9.21.7 (16-08-2015)
+[*] Various changes and bug fixes
+
+0.9.21.6 (11-08-2015)
+[*] Doujin-Moe: reset image url every task start, fix expired url
+[*] Fix empty website when adding a favorite
+[*] Fix filter custom genres incorrectly treats whitespaces as separator
+[*] Various changes
+
+0.9.21.5 (10-08-2015)
+[*] Fix remove multiple task
+[*] Fix timer auto check favorites on interval not enabled if auto check new version not enabled
+[*] Fix auto download new chapters in favorites always failed
+[*] Various changes and bug fixes
+
+0.9.21.4 (10-08-2015)
+[*] Various changes and bug fixes
+
+0.9.21.3 (09-08-2015)
+[*] Fix favoritemanager doesn't showing the result when new chapter found
+[*] Fix per item favorite check
+
+0.9.21.2 (08-08-2015)
+[*] Fix access violation when trying to download new chapter from favorites
+[*] Fix option "Automatic download after finish checking" (favorites) doesn't stored properly
+
+0.9.21.1 (08-08-2015)
+[*] Minor bug fixes
+
+0.9.21.0 (08-08-2015)
+[+] Add button to abort check new version
+[*] Minor UI changes
+[*] Batoto: limit task to 1 and concurrent connection to 4
+[+] Added Doujin-Moe (H)
+[*] Various changes and bug fixes
+
+0.9.20.0 (02-08-2015)
+[*] Mangacan: rewrite all script
+[*] PecintaKomik: rewrite all script
+[*] Various changes and bug fixes
+
+0.9.19.7 (30-07-2015)
+[*] Minor bug fixes
+
+0.9.19.6 (30-07-2015)
+[*] Fix no manga folder when adding favorites from drop box
+[*] Fix drop box issue with chrome
+
+0.9.19.5 (30-07-2015)
+[*] MangaFox: rewrite all script
+[*] Fix drop box range check error
+
+0.9.19.4 (28-07-2015)
+[+] Added changelog tab
+[+] Support multiple url on drop box
+[+] Added popup menu to change drop box mode
+[+] Added popup menu to abort loading thread (download all/add to favorites)
+[*] Various changes and bug fixes
+
+0.9.19.3 (27-07-2015)
+[*] Various changes and bug fixes
+
+0.9.19.2 (26-07-2015)
+[*] Batoto: rewrite all script
+[*] Various changes and bug fixes
+
+0.9.19.1 (26-07-2015)
+[*] Fix updater not closed after launching fmd. 
+    For previous version just close FMD after update, it will also close the updater.
+
+0.9.19.0 (26-07-2015)
+[+] Mangalist data now using sqlite3, existing data will be automatically converted. 
+    BUGS EXPECTED!
+[*] Opening mangalist will be executed in separated thread, access to mangalist will be blocked until the process finish
+[*] Search mangalist will be executed in separated thread, eleminate lag when searching large mangalist
+[+] Added Soujosense (EN)
+[+] Added mh160 (CN)
+[*] Fix freeze in the middle of shutdown counter
+[*] Fix Readmanga.today
+[*] Fix various issue with unicode path
+[*] Various changes and bug fixes
+
+0.9.18.2 (05-07-2015)
+[*] Minor bug fixes
+
+0.9.18.1 (05-07-2015)
+[!*] Fix connection closed forcefully when timeout reached
+
+0.9.18.0 (04-07-2015)
+[+] Added check/stop favorite per item
+[+] Added transfer rate graph in download toolbar
+[*] Various changes and bug fixes
+
+0.9.17.1 (26-06-2015)
+[+] Added "Failed" on download filter
+[*] "Delete task + data", only remove chapters that exist in the task
+[*] Fix EyeOnManga can't get names and links on update list
+[*] Various changes and bug fixes
+
+0.9.17.0 (19-06-2015)
+[+] Added MangaCap, Authrone, EyeOnManga(EN)
+[+] Added MangaBoom(TH)
+[+] Added search websites on websites selection
+[+?] Added connection timeout setting
+[*] Various changes and bug fixes
+
+0.9.16.6 (13-06-2015)
+[*] Various changes and minor bug fixes
+
+0.9.16.5 (12-06-2015)
+[*] Minor bug fixes
+
+0.9.16.4 (12-06-2015)
+[*] Fix "Open with.." with unicode character
+
+0.9.16.3 (11-06-2015)
+[*] Minor bug fixes
+
+0.9.16.2 (10-06-2015)
+[*] Fix updater can't download manga list from server
+[*] Fix open with external program, program path and parameter now separated
+[*] Fix Madokami can't download images
+[*] Various changes and bug fixes
+
+0.9.16.1 (09-06-2015)
+[!] Fix FMD not closed when updating. 
+    - This bug prevent updater to overwrite the existing file.
+    - You may have to download manually this version.
+
+0.9.16.0 (09-06-2015)
+[+] Added Madokami (EN)
+[*] Fix compress to pdf
+[*] Various changes and bug fixes
+
+0.9.15.0 (07-06-2015)
+[+] Added LoneManga(EN)
+[+] Added Dynasty-Scans(EN-SC)
+[+] Added option to show/hide downloads toolbar
+[+] Added button to expand/collapse websites selection
+[*] Updater, enable minimize button
+[*] Fix update dialog stay on top
+[*?] Fix launch external program
+[*] Various changes and bug fixes
+
+0.9.14.1 (31-5-2015)
+[*] Fix can't download images from imgur(kissmanga)
+[*] Fix "delete task + data"
+[*] Various changes and bug fixes
+
+0.9.14.0 (30-5-2015)
+[+] Added ReadMangaToday(EN)
+[*] Various changes and bug fixes
+
+0.9.13.1 (26-5-2015)
+[*] Various changes and bug fixes
+
+0.9.13.0 (26-5-2015)
+[+] Added Drop box for download all/add to favorites 
+    You can drag the url from browser to this box to download all the capter
+[*] Various changes
+
+0.9.12.2 (25-5-2015)
+[*] AcademyVN: fix manga info
+[*] Various changes and bug fixes
+
+0.9.12.1 (25-5-2015)
+[*] Various changes and bug fixes
+
+0.9.12.0 (24-5-2015)
+[+] Add download speed (per task and total)
+[+] Add favorites check status per item (icon and higlight color on favorites list)
+[*] Fix strange behavious when deleting multiple task
+[*] Fix can't stop favorites
+[*] Various changes and bug fixes
+
+0.9.11.3 (21-5-2015)
+[!*] Fix high cpu usage when checking favorites
+[!*] Fix crash when delete running task
+
+0.9.11.2 (21-5-2015)
+[*] MangaFox: fix mangainfo, no chapters for licensed manga
+
+0.9.11.1 (21-5-2015)
+[*] Various changes and minor bug fixes
+
+0.9.11.0 (19-5-2015)
+[!*] Change translation with gettext, all previous translation will be loss, only English and Indonesian available
+[*] Various changes for stability and bug fixes
 
 0.9.10.4 (14-5-2015)
 [+] Add setting for User-Agent via advanced.ini, example available in advanced_temp.ini

@@ -6,8 +6,8 @@
     isExtractGenres : Boolean = False;
   begin
     mangaInfo.website := WebsiteRoots[MANGAAE_ID, 0];
-    mangaInfo.url := FillMangaSiteHost(MANGAAE_ID, URL);
-    if not GetPage(TObject(Source), EncodeURL(mangaInfo.url), Reconnect) then
+    mangaInfo.url := FillMangaSiteHost(MANGAAE_ID, AURL);
+    if not GetPage(TObject(Source), EncodeURL(mangaInfo.url), AReconnect) then
     begin
       Result := NET_PROBLEM;
       Source.Free;
@@ -59,10 +59,10 @@
 
         // status
         if (i + 4 < parse.Count) and
-          (Pos('الحالة :', parse.Strings[i]) <> 0) and
-          (Pos('</h3', parse.Strings[i + 1]) <> 0) then
+          (Pos('الحالة :', parse[i]) <> 0) and
+          (Pos('</h3', parse[i + 1]) <> 0) then
         begin
-          if (Pos('مستمرة', parse.Strings[i + 4]) <> 0) then
+          if (Pos('مستمرة', parse[i + 4]) <> 0) then
             mangaInfo.status := '1'   // ongoing
           else
             mangaInfo.status := '0';  // completed

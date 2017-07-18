@@ -25,7 +25,7 @@
 
     if parse.Count > 0 then
     begin
-      Page := 0;
+      APage := 0;
       regx := TRegExpr.Create;
       try
         regx.Expression := '^.*/manga/page\:(\d+)$';
@@ -36,8 +36,8 @@
             s := GetVal(parse[i], 'href');
             s := regx.Replace(s, '$1', True);
             p := StrToIntDef(s, 0);
-            if p > Page then
-              Page := p;
+            if p > APage then
+              APage := p;
           end;
       finally
         regx.Free;

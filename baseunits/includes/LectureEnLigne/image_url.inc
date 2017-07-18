@@ -7,11 +7,11 @@
     s := DecodeUrl(FillMangaSiteHost(LECTUREENLIGNE_ID, URL));
     if Pos('.htm', s) > 0 then
       s := ReplaceRegExpr('/\d+\.html?$', s, '', False);
-    s := s + '/' + IntToStr(workCounter + 1) + '.html';
+    s := s + '/' + IntToStr(WorkId + 1) + '.html';
     l := TStringList.Create;
     Result := GetPage(TObject(l),
       s,
-      manager.container.Manager.retryConnect);
+      Task.Container.Manager.retryConnect);
     parse := TStringList.Create;
     Parser := THTMLParser.Create(PChar(l.Text));
     Parser.OnFoundTag := OnTag;
@@ -24,7 +24,7 @@
         if (GetTagName(parse[i]) = 'img') and
           (GetVal(parse[i], 'id') = 'image') then
         begin
-          manager.container.PageLinks[workCounter] := GetVal(parse[i], 'src');
+          Task.Container.PageLinks[WorkId] := GetVal(parse[i], 'src');
           Break;
         end;
     parse.Free;

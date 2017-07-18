@@ -7,8 +7,8 @@
     Result := GetPage(TObject(l),
       FillMangaSiteHost(ANIMEA_ID,
       StringReplace(URL, '.html', '', []) +
-      '-page-' + IntToStr(workCounter + 1) + '.html'),
-      manager.container.Manager.retryConnect);
+      '-page-' + IntToStr(WorkId + 1) + '.html'),
+      Task.Container.Manager.retryConnect);
 
     parse := TStringList.Create;
     Parser := THTMLParser.Create(PChar(l.Text));
@@ -24,7 +24,7 @@
         if (Pos('<img', parse[i]) > 0) and
           (Pos('class="scanmr"', parse[i]) > 0) and
           (Pos('id="scanmr"', parse[i])> 0) then
-          manager.container.PageLinks[workCounter] := GetVal(parse[i], 'src');
+          Task.Container.PageLinks[WorkId] := GetVal(parse[i], 'src');
       end;
     end;
     parse.Free;

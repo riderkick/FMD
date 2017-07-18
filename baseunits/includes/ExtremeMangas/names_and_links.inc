@@ -41,10 +41,10 @@
         if isExtractNames and (Pos('<a', parse[i]) > 0) then
         begin
           Result := NO_ERROR;
-          names.Add(Trim(HTMLEntitiesFilter(StringFilter(Trim(parse[i + 1])))));
+          ANames.Add(Trim(HTMLEntitiesFilter(StringFilter(Trim(parse[i + 1])))));
           s := Trim(StringReplace(GetVal(parse[i], 'href'), WebsiteRoots[EXTREMEMANGAS_ID, 1], '', [rfIgnoreCase]));
           s := Trim(regxp.Replace(s, '/', False));
-          links.Add(s);
+          ALinks.Add(s);
         end;
     end;
     regxp.Free;

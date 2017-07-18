@@ -11,15 +11,20 @@ unit uUpdateDBThread;
 interface
 
 uses
-  Classes, SysUtils, uData, uBaseUnit;
+  Classes, SysUtils, uBaseUnit, uMisc, SimpleTranslator, FMDOptions,
+  LazFileUtils;
 
 type
+
+  { TUpdateDBThread }
+
   TUpdateDBThread = class(TThread)
   protected
     procedure MainThreadShowGetting;
     procedure MainThreadShowEndGetting;
     procedure MainThreadCannotConnectToServer;
     procedure MainThreadRefreshList;
+    procedure ExtractFile;
     procedure Execute; override;
   public
     websiteName: String;
@@ -31,22 +36,24 @@ type
 implementation
 
 uses
-  frmMain, Dialogs, ComCtrls;
+  frmMain, FMDVars, Dialogs, ComCtrls;
 
 procedure TUpdateDBThread.MainThreadRefreshList;
 begin
   try
     if MainForm.cbSelectManga.Items[MainForm.cbSelectManga.ItemIndex] = websiteName then
     begin
-      MainForm.edSearch.Clear;
-      MainForm.dataProcess.RemoveFilter;
-      MainForm.dataProcess.Free;
-      MainForm.dataProcess := TDataProcess.Create;
-      MainForm.dataProcess.LoadFromFile(websiteName);
+      MainForm.edMangaListSearch.Clear;
       MainForm.vtMangaList.Clear;
-      MainForm.vtMangaList.RootNodeCount := MainForm.dataProcess.filterPos.Count;
-      MainForm.lbMode.Caption :=
-        Format(stModeAll, [MainForm.dataProcess.filterPos.Count]);
+      dataProcess.Close;
+      ExtractFile;
+      MainForm.OpenDataDB(websiteName);
+    end
+    else
+    begin
+      if dataProcess.WebsiteLoaded(websiteName) then
+        dataProcess.RemoveFilter;
+      ExtractFile;
     end;
   except
     on E: Exception do
@@ -54,6 +61,33 @@ begin
   end;
 
   MainThreadShowEndGetting;
+end;
+
+procedure TUpdateDBThread.ExtractFile;
+var
+  Sza, datapath, filepath: String;
+begin
+  Sza := FMD_DIRECTORY + ZIP_EXE;
+  if not FileExistsUTF8(Sza) then Exit;
+
+  datapath := DATA_FOLDER;
+  filepath := datapath + websiteName;
+  if FileExistsUTF8(filepath + '.7z') then
+     filepath += '.7z'
+  else
+  if FileExistsUTF8(filepath + '.zip') then
+    filepath += '.zip';
+
+  if FileExistsUTF8(filepath) then
+  begin
+    if FileExistsUTF8(datapath + websiteName + DBDATA_EXT) then
+      DeleteFileUTF8(datapath + websiteName + DBDATA_EXT);
+    if FileExistsUTF8(datapath + websiteName + DATA_EXT) then
+      DeleteFileUTF8(datapath + websiteName + DATA_EXT);
+    RunExternalProcess(Sza, ['x', filepath, '-o' +
+      AnsiQuotedStr(datapath, '"'), '-aoa'], False, True);
+    DeleteFileUTF8(filepath);
+  end
 end;
 
 constructor TUpdateDBThread.Create;
@@ -87,33 +121,25 @@ begin
   MainForm.sbUpdateList.Panels[0].Text := '';
   MainForm.sbUpdateList.Hide;
   MainForm.sbMain.SizeGrip := not MainForm.sbUpdateList.Visible;
-  MainForm.isUpdating := False;
+  isUpdating := False;
 end;
 
 procedure TUpdateDBThread.MainThreadCannotConnectToServer;
 begin
-  MessageDlg('', stDlgUpdaterCannotConnectToServer, mtInformation, [mbYes], 0);
+  MessageDlg('', RS_DlgCannotConnectToServer, mtInformation, [mbYes], 0);
 end;
 
 procedure TUpdateDBThread.Execute;
 begin
   try
     Synchronize(MainThreadShowGetting);
-    {$IFDEF USEADMIN}
-    fmdRunAsAdmin(fmdDirectory + 'updater.exe', '-x -r 3 -d ' +
-      GetMangaDatabaseURL(websiteName), True);
-    {$ELSE}
-    RunExternalProcess(fmdDirectory + 'updater.exe', ['-x', '-r' , '3', '-d',
-      GetMangaDatabaseURL(websiteName)]);
-    {$ENDIF}
-    if FileExists(fmdDirectory + DATA_FOLDER + websiteName + '.dat') then
-    begin
-      Synchronize(MainThreadRefreshList);
-    end
+    RunExternalProcess(FMD_DIRECTORY + UPDATER_EXE, ['-r' , '3', '-d',
+      GetMangaDatabaseURL(websiteName), '--lang', SimpleTranslator.LastSelected]);
+    if FileExistsUTF8(DATA_FOLDER + websiteName + '.7z') or
+      FileExistsUTF8(DATA_FOLDER + websiteName + '.zip') then
+      Synchronize(MainThreadRefreshList)
     else
-    begin
       Synchronize(MainThreadShowEndGetting);
-    end;
   except
     on E: Exception do
       MainForm.ExceptionHandler(Self, E);
