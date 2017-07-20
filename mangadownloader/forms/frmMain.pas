@@ -1228,6 +1228,15 @@ begin
   // load mangafox template
   MangaFoxWatermark.SetTemplateDirectory(MANGAFOXTEMPLATE_FOLDER);
 
+  // hint
+  ShowHint := True;
+  Application.HintPause := 500;
+  Application.HintHidePause := 3000;
+
+  // transfer rate graph
+  TransferRateGraphList.DataPoints.NameValueSeparator := '|';
+  TransferRateGraph.Visible := False;
+
   // load configfile
   isStartup := False;
   CollectLanguagesFromFiles;
@@ -1238,11 +1247,6 @@ begin
   // minimize on start
   if cbOptionMinimizeOnStart.Checked then
     Application.ShowMainForm := False;
-
-  // hint
-  ShowHint := True;
-  Application.HintPause := 500;
-  Application.HintHidePause := 3000;
 end;
 
 procedure TMainForm.FormClose(Sender: TObject; var CloseAction: TCloseAction);
@@ -1622,9 +1626,11 @@ procedure TMainForm.tmRefreshDownloadsInfoStartTimer(Sender: TObject);
 begin
   if Assigned(DLManager) then
   begin
-    TransferRateGraphInit(round(TransferRateGraph.Width/4));
+    TransferRateGraphInit(round(TransferRateGraph.Width/4)+1);
     TransferRateGraph.Visible := True;
-  end;
+  end
+  else
+    tmRefreshDownloadsInfo.Enabled := False;
 end;
 
 procedure TMainForm.tmRefreshDownloadsInfoStopTimer(Sender: TObject);
@@ -5553,13 +5559,9 @@ var
   i: Integer;
 begin
   TransferRateGraphList.Clear;
-  TransferRateGraphList.DataPoints.NameValueSeparator := '|';
   TransferRateGraphArea.Legend.Format := FormatByteSize(0, True);
-  if xCount=0 then
-    TransferRateGraphInit
-  else
-    for i:=1 to xCount do
-      TransferRateGraphList.DataPoints.Add(IntToStr(i)+'|0|?|');
+  for i:=1 to xCount do
+    TransferRateGraphList.DataPoints.Add(IntToStr(i)+'|0|?|');
 end;
 
 procedure TMainForm.TransferRateGraphAddItem(TransferRate: Integer);
@@ -5569,12 +5571,9 @@ begin
   TransferRateGraphArea.Legend.Format := FormatByteSize(TransferRate, True);
   with TransferRateGraphList.DataPoints do
   begin
-    if Count=0 then
-      TransferRateGraphInit;
-    for i := 0 to Count - 1 do
-      if i < Count - 1 then
-        Strings[i] := Format('%d|%s', [i+1, ValueFromIndex[i+1]]);
-    Strings[Count-1] := Format('%d|%d|?|',[Count,TransferRate]);
+    for i := 0 to Count - 2 do
+      Strings[i] := IntToStr(i+1)+'|'+ValueFromIndex[i+1];
+    Strings[Count-1] := IntToStr(Count)+'|'+IntToStr(TransferRate)+'|?|';
   end;
 end;
 
