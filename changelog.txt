@@ -4,6 +4,10 @@ Project page: https://github.com/riderkick/FMD
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.119.0 (21-07-2017)
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.118.0...0.9.119.0
+
 0.9.118.0 (14-06-2017)
 [*] Madokami: fixed all
 [-] MangaKoi: removed
