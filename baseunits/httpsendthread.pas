@@ -42,6 +42,10 @@ const
 
 type
 
+  THTTPSendThread = class;
+
+  THTTPMethodEvent = procedure(const AHTTP: THTTPSendThread; var Method, URL: String);
+
   { THTTPSendThread }
 
   THTTPSendThread = class(THTTPSend)
@@ -71,6 +75,7 @@ type
     procedure SetProxy(const ProxyType, Host, Port, User, Pass: String);
     procedure GetProxy(var ProxyType, Host, Port, User, Pass: String);
     procedure SetNoProxy;
+    procedure SetDefaultProxy;
     procedure Reset;
     property Timeout: Integer read FTimeout write SetTimeout;
     property RetryCount: Integer read FRetryCount write FRetryCount;
@@ -79,6 +84,9 @@ type
     property AllowServerErrorResponse: Boolean read FAllowServerErrorResponse write FAllowServerErrorResponse;
     property Thread: TBaseThread read FOwner;
     property CookiesExpires: TDateTime read FCookiesExpires;
+  public
+    BeforeHTTPMethod: THTTPMethodEvent;
+    AfterHTTPMethod: THTTPMethodEvent;
   end;
 
   TKeyValuePair = array[0..1] of String;
@@ -372,6 +380,8 @@ begin
     FOwner := AOwner;
     FOwner.OnCustomTerminate := @OnOwnerTerminate;
   end;
+  BeforeHTTPMethod := nil;
+  AfterHTTPMethod := nil;
   EnterCriticalsection(CS_ALLHTTPSendThread);
   try
     ALLHTTPSendThread.Add(Self);
@@ -392,10 +402,18 @@ begin
 end;
 
 function THTTPSendThread.HTTPMethod(const Method, URL: string): Boolean;
+var
+  amethod, aurl: String;
 begin
+  amethod:=Method;
+  aurl:=URL;
+  if Assigned(BeforeHTTPMethod) then
+    BeforeHTTPMethod(Self, amethod, aurl);
   FCookiesExpires := 0.0;
-  Result := inherited HTTPMethod(Method, URL);
+  Result := inherited HTTPMethod(amethod, aurl);
   ParseCookiesExpires;
+  if Assigned(BeforeHTTPMethod) then
+    BeforeHTTPMethod(Self, amethod, aurl);
 end;
 
 function THTTPSendThread.HTTPRequest(const Method, URL: String; const Response: TObject): Boolean;
@@ -617,6 +635,11 @@ end;
 procedure THTTPSendThread.SetNoProxy;
 begin
   SetProxy('', '', '', '', '');
+end;
+
+procedure THTTPSendThread.SetDefaultProxy;
+begin
+  SetProxy(DefaultProxyType, DefaultProxyHost, DefaultProxyPort, DefaultProxyUser, DefaultProxyPass);
 end;
 
 procedure THTTPSendThread.Reset;
