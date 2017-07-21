@@ -587,7 +587,7 @@ begin
   begin
     ProxyType := 'HTTP';
     Host := ProxyHost;
-    Port := ProxyPass;
+    Port := ProxyPort;
     User := ProxyUser;
     Pass := ProxyPass;
   end
