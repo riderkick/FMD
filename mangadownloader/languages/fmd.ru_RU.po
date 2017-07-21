@@ -352,6 +352,10 @@ msgstr "Вектор инициализации:"
 msgid "Key:"
 msgstr "Ключ:"
 
+#: kissmanga.rs_kissmanga_usegoogledcp
+msgid "Use Google DCP"
+msgstr ""
+
 #: mangafox.rs_removewatermark
 msgid "Remove watermark"
 msgstr "Удалить водяные знаки"
@@ -2208,3 +2212,4 @@ msgstr "Синхронизацияе данных"
 #: uupdatethread.rs_updatinglist
 msgid "Updating list"
 msgstr "Обновление списка"
+

@@ -353,6 +353,10 @@ msgstr "Initialization Vector:"
 msgid "Key:"
 msgstr "Key:"
 
+#: kissmanga.rs_kissmanga_usegoogledcp
+msgid "Use Google DCP"
+msgstr ""
+
 #: mangafox.rs_removewatermark
 msgid "Remove watermark"
 msgstr "Hapus watermark"
@@ -2209,3 +2213,4 @@ msgstr "Sinkronisasi data"
 #: uupdatethread.rs_updatinglist
 msgid "Updating list"
 msgstr "Memperbarui daftar"
+

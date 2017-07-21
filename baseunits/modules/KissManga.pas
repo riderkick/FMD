@@ -6,7 +6,8 @@ interface
 
 uses
   Classes, SysUtils, WebsiteModules, uData, uBaseUnit, uDownloadsManager,
-  XQueryEngineHTML, httpsendthread, BaseCrypto, Cloudflare, RegExpr, synautil;
+  XQueryEngineHTML, httpsendthread, BaseCrypto, Cloudflare, GoogleDCP, RegExpr,
+  synautil;
 
 implementation
 
@@ -20,16 +21,25 @@ var
 
   kissmangaiv: String ='a5e8e2e9c2721be0a84ad660c472c1f3';
   kissmangakey: String ='mshsdf832nsdbash20asdmnasdbasd612basd';
+  kissmangausegoogledcp: Boolean = True;
 
 resourcestring
   RS_KissManga_Key = 'Key:';
   RS_KissManga_InitVector = 'Initialization Vector:';
+  RS_KissManga_UseGoogleDCP = 'Use Google DCP';
 
 function GETWithCookie(const AHTTP: THTTPSendThread; const AURL: String;
   const Module: TModuleContainer): Boolean;
 begin
-  if Module.Website = 'KissManga' then
-    Result := Cloudflare.GETCF(AHTTP, AURL, kissmangacf)
+  if Module.Website = 'KissManga' then begin
+    if kissmangausegoogledcp then
+    begin
+      SetGoogleDCP(AHTTP);
+      Result := AHTTP.GET(AURL);
+    end
+    else
+      Result := Cloudflare.GETCF(AHTTP, AURL, kissmangacf);
+  end
   else if Module.Website = 'ReadComicOnline' then
     Result := Cloudflare.GETCF(AHTTP, AURL, readcomiconlinecf);
 end;
@@ -175,7 +185,6 @@ var
   source: TStringList;
   i, chkop, ivp: Integer;
   chkos, chko1, chko2, civ, key, iv: String;
-  chkoa: Boolean;
   s: String;
 
   function testkeyiv(const akey, aiv: string): Boolean;
@@ -207,7 +216,6 @@ begin
         key := '';
         iv := '';
         s := '';
-        chkoa := False;
         source := TStringList.Create;
         source.LoadFromStream(Document);
         for i := 0 to source.Count - 1 do
@@ -215,10 +223,7 @@ begin
           if Pos('lstImages.push', source[i]) <> 0 then
             PageLinks.Add(GetBetween('("', '")', source[i]))
           else if (Pos('chko', source[i]) <> 0) and (Pos('=', source[i]) <> 0) then
-          begin
             chko2 := GetBetween('["', '"]', source[i]);
-            chkoa := Pos('chko+', StringReplace(source[i], ' ', '', [rfReplaceAll])) <> 0;
-          end;
         end;
         if PageLinks.Count <> 0 then
         begin
@@ -304,6 +309,7 @@ begin
     OnGetPageNumber := @KissMangaGetPageNumber;
     AddOptionEdit(@kissmangakey,'Key',@RS_KissManga_Key);
     AddOptionEdit(@kissmangaiv,'IV',@RS_KissManga_InitVector);
+    AddOptionCheckBox(@kissmangausegoogledcp,'UseGoogleDCP',@RS_KissManga_UseGoogleDCP);
   end;
   AddWebsiteModule('ReadComicOnline', 'http://readcomiconline.to');
 end;
