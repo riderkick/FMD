@@ -48,6 +48,7 @@
               <OptimizationLevel Value="4"/>
               <VariablesInRegisters Value="True"/>
             </Optimizations>
+            <SmallerCode Value="True"/>
           </CodeGeneration>
           <Linking>
             <Debugging>
@@ -377,6 +378,7 @@
         <OptimizationLevel Value="4"/>
         <VariablesInRegisters Value="True"/>
       </Optimizations>
+      <SmallerCode Value="True"/>
     </CodeGeneration>
     <Linking>
       <Debugging>
