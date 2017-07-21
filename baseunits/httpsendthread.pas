@@ -69,6 +69,7 @@ type
     function ThreadTerminated: Boolean;
     procedure RemoveCookie(const CookieName: String);
     procedure SetProxy(const ProxyType, Host, Port, User, Pass: String);
+    procedure GetProxy(var ProxyType, Host, Port, User, Pass: String);
     procedure SetNoProxy;
     procedure Reset;
     property Timeout: Integer read FTimeout write SetTimeout;
@@ -577,6 +578,39 @@ begin
       SocksUsername := User;
       SocksPassword := Pass;
     end;
+  end;
+end;
+
+procedure THTTPSendThread.GetProxy(var ProxyType, Host, Port, User, Pass: String);
+begin
+  if ProxyHost <> '' then
+  begin
+    ProxyType := 'HTTP';
+    Host := ProxyHost;
+    Port := ProxyPass;
+    User := ProxyUser;
+    Pass := ProxyPass;
+  end
+  else
+  if Sock.SocksIP <> '' then
+    with Sock do
+    begin
+      if SocksType = ST_Socks5 then
+        ProxyType := 'SOCKS5'
+      else
+        ProxyType := 'SOCKS4';
+      Host := SocksIP;
+      Port := SocksPort;
+      User := SocksUsername;
+      Pass := SocksPassword;
+    end
+  else
+  begin
+    ProxyType := '';
+    Host := '';
+    Port := '';
+    User := '';
+    Pass := '';
   end;
 end;
 
