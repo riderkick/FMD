@@ -91,7 +91,8 @@ begin
   SetAuth(AHTTP);
   AHTTP.FollowRedirection := False;
   Result := AHTTP.GET(AURL);
-  if (AHTTP.ResultCode > 400) and (AHTTP.Headers.Values['WWW-Authenticate'] = ' Basic') then
+  if ((AHTTP.ResultCode > 400) and (AHTTP.Headers.Values['WWW-Authenticate'] = ' Basic')) or
+    (Pos('/login',AHTTP.Headers.Values['Location']) <> 0) then
   begin
     if Login(AHTTP) then
       Result := AHTTP.GET(AURL);
