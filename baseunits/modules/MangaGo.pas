@@ -76,8 +76,6 @@ end;
 
 function GetPageNumber(const DownloadThread: TDownloadThread;
   const AURL: String; const Module: TModuleContainer): Boolean;
-var
-  s: String;
 begin
   Result := False;
   if DownloadThread = nil then Exit;
@@ -88,9 +86,7 @@ begin
     if GETWithCookie(DownloadThread.FHTTP, MaybeFillHost(Module.RootURL, AURL)) then
     begin
       Result := True;
-      s := XPathString('//script[contains(.,"imgsrcs")]/substring-before(substring-after(substring-before(.,"imgsrcs"),"= ''"),"''")', Document);
-      if s <> '' then
-        PageLinks.CommaText := s
+      PageLinks.CommaText := XPathString('//script[contains(.,"imgsrcs")]/replace(substring-before(substring-after(.,"("),")"),"''","")', Document);
     end;
   end;
 end;
