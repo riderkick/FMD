@@ -928,7 +928,7 @@ begin
   begin
     vtMangaList.Cursor := crHourGlass;
     lbMode.Caption := RS_ModeSearching;
-    vtMangaList.BeginUpdate;
+    vtMangaList.RootNodeCount := 0;
   end;
 end;
 
@@ -937,7 +937,6 @@ begin
   with MainForm do
   begin
     vtMangaList.RootNodeCount := dataProcess.RecordCount;
-    vtMangaList.EndUpdate;
     UpdateVtMangaListFilterStatus;
     LastSearchWeb := dataProcess.Website;
     LastSearchStr := UpCase(FSearchStr);
