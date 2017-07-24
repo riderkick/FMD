@@ -41,12 +41,14 @@
             <TargetCPU Value="x86_64"/>
             <TargetOS Value="win64"/>
             <Optimizations>
-              <OptimizationLevel Value="3"/>
+              <OptimizationLevel Value="4"/>
             </Optimizations>
+            <SmallerCode Value="True"/>
           </CodeGeneration>
           <Linking>
             <Debugging>
               <GenerateDebugInfo Value="False"/>
+              <StripSymbols Value="True"/>
             </Debugging>
             <LinkSmart Value="True"/>
             <Options>
@@ -173,12 +175,14 @@
       <TargetCPU Value="i386"/>
       <TargetOS Value="win32"/>
       <Optimizations>
-        <OptimizationLevel Value="3"/>
+        <OptimizationLevel Value="4"/>
       </Optimizations>
+      <SmallerCode Value="True"/>
     </CodeGeneration>
     <Linking>
       <Debugging>
         <GenerateDebugInfo Value="False"/>
+        <StripSymbols Value="True"/>
       </Debugging>
       <LinkSmart Value="True"/>
       <Options>
