@@ -445,9 +445,9 @@ begin
       Headers.Assign(HTTPHeader);
     end;
 
-    // redirection      '
+    // redirection, only 301, 302, 303
     if FFollowRedirection then
-      while (ResultCode > 300) and (ResultCode < 400) do begin
+      while (ResultCode > 300) and (ResultCode < 304) do begin
         if CheckTerminate then Exit;
         HTTPHeader.Values['Referer'] := ' ' + rurl;
         s := Trim(Headers.Values['Location']);
