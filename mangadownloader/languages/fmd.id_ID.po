@@ -81,6 +81,7 @@ msgid "Unknown"
 msgstr "Tidak diketahui"
 
 #: frmaccountmanager.rs_valid
+msgctxt "frmaccountmanager.rs_valid"
 msgid "OK"
 msgstr "OK"
 
@@ -1922,6 +1923,16 @@ msgstr "&Unduh"
 msgctxt "tnewchapter.btqueue.caption"
 msgid "&Add to queue"
 msgstr "&Tambahkan ke antrian"
+
+#: tselectdirectoryform.btok.caption
+#, fuzzy
+msgctxt "tselectdirectoryform.btok.caption"
+msgid "OK"
+msgstr "OK"
+
+#: tselectdirectoryform.caption
+msgid "Select directory"
+msgstr ""
 
 #: tshutdowncounterform.btabort.caption
 msgid "&Abort"

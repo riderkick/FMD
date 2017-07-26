@@ -80,6 +80,7 @@ msgid "Unknown"
 msgstr "Неизвестный"
 
 #: frmaccountmanager.rs_valid
+msgctxt "frmaccountmanager.rs_valid"
 msgid "OK"
 msgstr "OK"
 
@@ -1921,6 +1922,16 @@ msgstr "Загрузить"
 msgctxt "TNEWCHAPTER.BTQUEUE.CAPTION"
 msgid "&Add to queue"
 msgstr "Добавить в очередь"
+
+#: tselectdirectoryform.btok.caption
+#, fuzzy
+msgctxt "tselectdirectoryform.btok.caption"
+msgid "OK"
+msgstr "OK"
+
+#: tselectdirectoryform.caption
+msgid "Select directory"
+msgstr ""
 
 #: tshutdowncounterform.btabort.caption
 msgid "&Abort"

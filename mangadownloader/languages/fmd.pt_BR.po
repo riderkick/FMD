@@ -77,6 +77,7 @@ msgid "Unknown"
 msgstr "Desconhecido"
 
 #: frmaccountmanager.rs_valid
+msgctxt "frmaccountmanager.rs_valid"
 msgid "OK"
 msgstr "OK"
 
@@ -1936,6 +1937,16 @@ msgstr "&Baixar"
 msgctxt "TNEWCHAPTER.BTQUEUE.CAPTION"
 msgid "&Add to queue"
 msgstr "&Adic. à fila"
+
+#: tselectdirectoryform.btok.caption
+#, fuzzy
+msgctxt "tselectdirectoryform.btok.caption"
+msgid "OK"
+msgstr "OK"
+
+#: tselectdirectoryform.caption
+msgid "Select directory"
+msgstr ""
 
 #: tshutdowncounterform.btabort.caption
 msgid "&Abort"

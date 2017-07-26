@@ -86,6 +86,7 @@ msgid "Unknown"
 msgstr "Άγνωστο"
 
 #: frmaccountmanager.rs_valid
+msgctxt "frmaccountmanager.rs_valid"
 msgid "OK"
 msgstr "Εντάξει"
 
@@ -1996,6 +1997,16 @@ msgstr "&Λήψη"
 msgctxt "TNEWCHAPTER.BTQUEUE.CAPTION"
 msgid "&Add to queue"
 msgstr "&Προσθήκη στην ουρά"
+
+#: tselectdirectoryform.btok.caption
+#, fuzzy
+msgctxt "tselectdirectoryform.btok.caption"
+msgid "OK"
+msgstr "Εντάξει"
+
+#: tselectdirectoryform.caption
+msgid "Select directory"
+msgstr ""
 
 #: tshutdowncounterform.btabort.caption
 msgid "&Abort"
