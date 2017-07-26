@@ -19,9 +19,6 @@ const
   NET_PROBLEM = 1;
   INFORMATION_NOT_FOUND = 2;
 
-  MAX_TASKLIMIT = 8;
-  MAX_CONNECTIONPERHOSTLIMIT = 32;
-
 type
 
   TModuleContainer = class;

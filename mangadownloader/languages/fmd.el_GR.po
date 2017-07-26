@@ -1448,7 +1448,9 @@ msgstr ""
 "Το όνομα φακέλου Manga πρέπει να έχει τουλάχιστον %MANGA%.\n"
 
 #: tmainform.lboptionmaxparallel.caption
-msgid "Number of downloaded tasks at the same time (Max: 8)"
+#, fuzzy
+#| msgid "Number of downloaded tasks at the same time (Max: 8)"
+msgid "Number of downloaded tasks at the same time"
 msgstr "Αριθμός ταυτόχρονων εργασιών λήψης (Μέγ.: 8)"
 
 #: tmainform.lboptionmaxretry.caption
@@ -1457,7 +1459,9 @@ msgid "Number of retry times if tasks have download problems (-1 = always retry)
 msgstr "Αριθμός επαναλήψεων αν οι εργασίες έχουν προβλήματα λήψης (-1 = συνεχής επανάληψη)"
 
 #: tmainform.lboptionmaxthread.caption
-msgid "Number of downloaded files per task at the same time (Max: 32)"
+#, fuzzy
+#| msgid "Number of downloaded files per task at the same time (Max: 32)"
+msgid "Number of downloaded files per task at the same time"
 msgstr "Αριθμός ταυτόχρονα ληφθέντων αρχείων ανά εργασία (Μέγ: 32)"
 
 #: tmainform.lboptionnewmangatime.caption

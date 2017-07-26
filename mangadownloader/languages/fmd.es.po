@@ -1371,7 +1371,9 @@ msgstr ""
 "El Nombre del la Carpeta del Manga debe tener al menos %MANGA%.\n"
 
 #: tmainform.lboptionmaxparallel.caption
-msgid "Number of downloaded tasks at the same time (Max: 8)"
+#, fuzzy
+#| msgid "Number of downloaded tasks at the same time (Max: 8)"
+msgid "Number of downloaded tasks at the same time"
 msgstr "Numero de Tareas de Descargas al Mismo Tiempo (Max: 8)"
 
 #: tmainform.lboptionmaxretry.caption
@@ -1379,7 +1381,9 @@ msgid "Number of retry times if tasks have download problems (-1 = always retry)
 msgstr "Numero de Reintentos si la Tarea Tiene Problemas de Descarga (-1 = siempre reintenta)"
 
 #: tmainform.lboptionmaxthread.caption
-msgid "Number of downloaded files per task at the same time (Max: 32)"
+#, fuzzy
+#| msgid "Number of downloaded files per task at the same time (Max: 32)"
+msgid "Number of downloaded files per task at the same time"
 msgstr "Numero de Archivos Descargados por Tarea al Mismo Tiempo (Max: 32)"
 
 #: tmainform.lboptionnewmangatime.caption

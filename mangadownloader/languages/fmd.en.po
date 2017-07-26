@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: en_US\n"
-"X-Generator: Poedit 1.8.12\n"
+"X-Generator: Poedit 2.0.1\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: batoto.rs_serverselection
@@ -358,7 +358,7 @@ msgstr "Key:"
 
 #: kissmanga.rs_kissmanga_usegoogledcp
 msgid "Use Google DCP"
-msgstr ""
+msgstr "Use Google DCP"
 
 #: mangafox.rs_removewatermark
 msgid "Remove watermark"
@@ -1393,8 +1393,9 @@ msgstr ""
 "Manga folder name must have at least %MANGA%.\n"
 
 #: tmainform.lboptionmaxparallel.caption
-msgid "Number of downloaded tasks at the same time (Max: 8)"
-msgstr "Number of downloaded tasks at the same time (Max: 8)"
+#| msgid "Number of downloaded tasks at the same time (Max: 8)"
+msgid "Number of downloaded tasks at the same time"
+msgstr "Number of downloaded tasks at the same time"
 
 #: tmainform.lboptionmaxretry.caption
 #| msgid "Number of retry times if tasks have download problems (0 = always retry)"
@@ -1402,8 +1403,9 @@ msgid "Number of retry times if tasks have download problems (-1 = always retry)
 msgstr "Number of retry times if tasks have download problems (-1 = always retry)"
 
 #: tmainform.lboptionmaxthread.caption
-msgid "Number of downloaded files per task at the same time (Max: 32)"
-msgstr "Number of downloaded files per task at the same time (Max: 32)"
+#| msgid "Number of downloaded files per task at the same time (Max: 32)"
+msgid "Number of downloaded files per task at the same time"
+msgstr "Number of downloaded files per task at the same time"
 
 #: tmainform.lboptionnewmangatime.caption
 msgid "New manga based on  it's update time (days)"
@@ -1944,14 +1946,13 @@ msgid "&Add to queue"
 msgstr "&Add to queue"
 
 #: tselectdirectoryform.btok.caption
-#, fuzzy
 msgctxt "tselectdirectoryform.btok.caption"
 msgid "OK"
 msgstr "OK"
 
 #: tselectdirectoryform.caption
 msgid "Select directory"
-msgstr ""
+msgstr "Select directory"
 
 #: tshutdowncounterform.btabort.caption
 msgid "&Abort"
@@ -2243,4 +2244,3 @@ msgstr "Synchronizing data"
 #: uupdatethread.rs_updatinglist
 msgid "Updating list"
 msgstr "Updating list"
-

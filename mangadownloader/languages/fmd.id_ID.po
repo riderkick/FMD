@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: id_ID\n"
-"X-Generator: Poedit 1.8.12\n"
+"X-Generator: Poedit 2.0.1\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #: batoto.rs_serverselection
@@ -1376,16 +1376,16 @@ msgstr ""
 "Nama folder komik setidaknya harus meiliki %MANGA%\n"
 
 #: tmainform.lboptionmaxparallel.caption
-msgid "Number of downloaded tasks at the same time (Max: 8)"
-msgstr "Jumlah unduhan aktif pada waktu yang sama (Max: 8)"
+msgid "Number of downloaded tasks at the same time"
+msgstr "Jumlah unduhan aktif pada waktu yang sama"
 
 #: tmainform.lboptionmaxretry.caption
 msgid "Number of retry times if tasks have download problems (-1 = always retry)"
 msgstr "Jumlah pengulangan jika unduhan memiliki masalah (-1 = selalu coba lagi)"
 
 #: tmainform.lboptionmaxthread.caption
-msgid "Number of downloaded files per task at the same time (Max: 32)"
-msgstr "Jumlah koneksi per unduhan pada waktu yang sama (Max: 32)"
+msgid "Number of downloaded files per task at the same time"
+msgstr "Jumlah koneksi per unduhan pada waktu yang sama"
 
 #: tmainform.lboptionnewmangatime.caption
 msgid "New manga based on  it's update time (days)"
@@ -1925,7 +1925,6 @@ msgid "&Add to queue"
 msgstr "&Tambahkan ke antrian"
 
 #: tselectdirectoryform.btok.caption
-#, fuzzy
 msgctxt "tselectdirectoryform.btok.caption"
 msgid "OK"
 msgstr "OK"
@@ -2224,4 +2223,3 @@ msgstr "Sinkronisasi data"
 #: uupdatethread.rs_updatinglist
 msgid "Updating list"
 msgstr "Memperbarui daftar"
-
