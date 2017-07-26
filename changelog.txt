@@ -4,6 +4,12 @@ Project page: https://github.com/riderkick/FMD
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.120.0 (future)
+[*] Added support for relative path
+[*] Increased task/connection limit for win32 to 16/64 and win64 to 64/256
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.119.0...0.9.120.0
+
 0.9.119.0 (21-07-2017)
 [+] Added shogakukan
 [+] Added Russian translation by TokcDK
