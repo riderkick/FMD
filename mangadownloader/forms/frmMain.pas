@@ -2183,7 +2183,7 @@ begin
           OptionChangeUnicodeCharacterStr);
 
     FavoriteManager.Add(mangaInfo.title, IntToStr(mangaInfo.numChapter), mangaInfo.chapterLinks.Text,
-      mangaInfo.website, CleanAndExpandDirectory(s), mangaInfo.link);
+      mangaInfo.website, s, mangaInfo.link);
     vtFavorites.NodeDataSize := SizeOf(TFavoriteInfo);
     UpdateVtFavorites;
     btAddToFavorites.Enabled := False;
@@ -3267,14 +3267,14 @@ end;
 procedure TMainForm.miFavoritesOpenFolderClick(Sender: TObject);
 begin
   if Assigned(vtFavorites.FocusedNode) then
-    OpenDocument(ChompPathDelim(
+    OpenDocument(CleanAndExpandFilename(
       FavoriteManager.Items[vtFavorites.FocusedNode^.Index].FavoriteInfo.SaveTo));
 end;
 
 procedure TMainForm.miDownloadOpenFolderClick(Sender: TObject);
 begin
   if Assigned(vtDownload.FocusedNode) then
-    OpenDocument(ChompPathDelim(
+    OpenDocument(CleanAndExpandFilename(
       DLManager.Items[vtDownload.FocusedNode^.Index].DownloadInfo.SaveTo));
 end;
 
@@ -4479,9 +4479,7 @@ begin
     edSaveTo.Text := Trim(configfile.ReadString('saveto', 'SaveTo', DEFAULT_PATH));
     if edSaveTo.Text = '' then
       edSaveTo.Text := DEFAULT_PATH;
-  end
-  else
-    edSaveTo.Text := CleanAndExpandDirectory(edSaveTo.Text);
+  end;
 end;
 
 procedure TMainForm.ViewMangaInfo(const AURL, AWebsite, ATitle: String;
@@ -4802,7 +4800,6 @@ begin
       // saveto
       if Trim(edOptionDefaultPath.Text) = '' then
         edOptionDefaultPath.Text := DEFAULT_PATH;
-      edOptionDefaultPath.Text := CleanAndExpandDirectory(edOptionDefaultPath.Text);
       WriteString('saveto', 'SaveTo', edOptionDefaultPath.Text);
       WriteBool('saveto', 'ChangeUnicodeCharacter', cbOptionChangeUnicodeCharacter.Checked);
       WriteString('saveto', 'ChangeUnicodeCharacterStr', edOptionChangeUnicodeCharacterStr.Text);
@@ -5172,7 +5169,7 @@ begin
     try
       InitialDir := edOptionDefaultPath.Text;
       if Execute then
-        edOptionDefaultPath.Text := CleanAndExpandDirectory(FileName);
+        edOptionDefaultPath.Text := FileName;
     finally
       Free;
     end;
@@ -5196,7 +5193,7 @@ begin
     try
       InitialDir := edSaveTo.Text;
       if Execute then
-        edSaveTo.Text := CleanAndExpandDirectory(FileName);
+        edSaveTo.Text := FileName;
     finally
       Free;
     end;

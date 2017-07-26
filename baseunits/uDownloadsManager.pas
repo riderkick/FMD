@@ -806,11 +806,10 @@ begin
       end;
       uPacker.CompressionQuality := OptionPDFQuality;
       uPacker.Path := CurrentWorkingDir;
-      uPacker.FileName := Container.DownloadInfo.SaveTo +
-        Container.ChapterName[Container.CurrentDownloadChapterPtr];
+      uPacker.FileName := RemovePathDelim(uPacker.Path);
       for i := 0 to Container.PageLinks.Count - 1 do
       begin
-        s := FindImageFile(CurrentWorkingDir + GetFileName(i));
+        s := FindImageFile(uPacker.Path + GetFileName(i));
         if s <> '' then
           uPacker.FileList.Add(s);
       end;
@@ -1107,10 +1106,10 @@ begin
 
       //check path
       if OptionGenerateChapterFolder then
-        CurrentWorkingDir := Container.DownloadInfo.SaveTo +
-          Container.ChapterName[Container.CurrentDownloadChapterPtr]
+        CurrentWorkingDir := CleanAndExpandDirectory(Container.DownloadInfo.SaveTo) +
+          AppendPathDelim(Container.ChapterName[Container.CurrentDownloadChapterPtr])
       else
-        CurrentWorkingDir := Container.DownloadInfo.SaveTo;
+        CurrentWorkingDir := CleanAndExpandDirectory(Container.DownloadInfo.SaveTo);
       if not ForceDirectoriesUTF8(CurrentWorkingDir) then
       begin
         Logger.SendError(Format('Failed to create dir(%d) = %s', [Length(CurrentWorkingDir), CurrentWorkingDir]));

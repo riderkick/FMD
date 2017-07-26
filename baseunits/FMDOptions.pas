@@ -272,7 +272,7 @@ procedure SetAppDataDirectory(const ADir: String);
 begin
   APPDATA_DIRECTORY := CleanAndExpandDirectory(ADir);
 
-  DEFAULT_PATH := APPDATA_DIRECTORY + 'downloads' + PathDelim;
+  DEFAULT_PATH := 'downloads' + PathDelim;
 
   CONFIG_FOLDER := APPDATA_DIRECTORY + 'config' + PathDelim;
   CONFIG_FILE := CONFIG_FOLDER + 'config.ini';

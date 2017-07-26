@@ -4047,7 +4047,7 @@ end;
 procedure TFavoriteInfo.SetSaveTo(AValue: String);
 begin
   if FSaveTo = AValue then Exit;
-  FSaveTo := CorrectPathSys(AValue);
+  FSaveTo := AValue;
 end;
 
 { TDownloadInfo }
@@ -4055,7 +4055,7 @@ end;
 procedure TDownloadInfo.SetSaveTo(AValue: String);
 begin
   if FSaveTo = AValue then Exit;
-  FSaveTo := CorrectPathSys(AValue);
+  FSaveTo := AValue;
 end;
 
 { THTMLForm }

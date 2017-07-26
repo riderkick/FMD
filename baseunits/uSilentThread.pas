@@ -466,14 +466,13 @@ begin
           '',
           OptionChangeUnicodeCharacter,
           OptionChangeUnicodeCharacterStr);
-
       if Trim(title) = '' then
         title := Info.mangaInfo.title;
       FavoriteManager.Add(title,
         IntToStr(Info.mangaInfo.numChapter),
         info.mangaInfo.chapterLinks.Text,
         website,
-        CorrectPathSys(s),
+        s,
         URL);
       UpdateVtFavorites;
     end;
