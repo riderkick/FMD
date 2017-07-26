@@ -146,30 +146,8 @@ function GetNameAndLink(const MangaInfo: TMangaInformation;
   const Module: TModuleContainer): Integer;
 
   procedure GetList;
-  var
-    v: IXQValue;
-    s: String;
   begin
-    with TXQueryEngineHTML.Create(MangaInfo.FHTTP.Document) do try
-      for v in XPath('//table[@id="index-table"]/tbody/tr/td[1]/a') do
-      begin
-        s := v.toString;
-        if Length(s) > 1 then
-        begin
-          if s[Length(s)] = '/' then
-            SetLength(s, Length(s) - 1);
-          if LowerCase(LeftStr(s, 4)) = '.txt' then
-            s := '';
-        end;
-        if s <> '' then
-        begin
-          ALinks.Add(v.toNode.getAttribute('href'));
-          ANames.Add(s);
-        end;
-      end;
-    finally
-      Free;
-    end;
+    XPathHREFAll('//table[@id="index-table"]/tbody/tr/td[1]/a[not(ends-with(.,".txt") or ends-with(.,".zip") or ends-with(.,".rar"))]', MangaInfo.FHTTP.Document, ALinks, ANames);
   end;
 
 var
