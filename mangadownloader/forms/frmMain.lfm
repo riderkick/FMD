@@ -4606,14 +4606,14 @@ object MainForm: TMainForm
     OnMoved = spMainSplitterMoved
   end
   object dlgSaveTo: TSelectDirectoryDialog
-    Left = 80
-    Top = 408
+    left = 80
+    top = 408
   end
   object pmDownload: TPopupMenu
     Images = IconList
     OnPopup = pmDownloadPopup
-    Left = 592
-    Top = 184
+    left = 592
+    top = 184
     object miDownloadStop: TMenuItem
       Caption = 'Stop'
       Enabled = False
@@ -4943,8 +4943,8 @@ object MainForm: TMainForm
     end
   end
   object pmChapterList: TPopupMenu
-    Left = 592
-    Top = 224
+    left = 592
+    top = 224
     object miChapterListCheckSelected: TMenuItem
       Caption = 'Check selected'
       OnClick = miChapterListCheckSelectedClick
@@ -5002,8 +5002,8 @@ object MainForm: TMainForm
   object pmFavorites: TPopupMenu
     Images = IconList
     OnPopup = pmFavoritesPopup
-    Left = 520
-    Top = 212
+    left = 520
+    top = 212
     object miFavoritesCheckNewChapter: TMenuItem
       Caption = 'Check for new chapter'
       Bitmap.Data = {
@@ -5321,8 +5321,8 @@ object MainForm: TMainForm
   object pmMangaList: TPopupMenu
     Images = IconList
     OnPopup = pmMangaListPopup
-    Left = 382
-    Top = 238
+    left = 382
+    top = 238
     object miMangaListViewInfos: TMenuItem
       Caption = 'View manga infos'
       Bitmap.Data = {
@@ -5468,13 +5468,13 @@ object MainForm: TMainForm
     PopUpMenu = pmTray
     Hint = 'Free Manga Downloader'
     OnDblClick = TrayIconDblClick
-    Left = 288
-    Top = 432
+    left = 288
+    top = 432
   end
   object pmUpdate: TPopupMenu
     ParentBidiMode = False
-    Left = 382
-    Top = 110
+    left = 382
+    top = 110
     object mnUpdateList: TMenuItem
       Caption = 'Update manga list'
       OnClick = mnUpdateListClick
@@ -5496,8 +5496,8 @@ object MainForm: TMainForm
     end
   end
   object IconList: TImageList
-    Left = 278
-    Top = 102
+    left = 278
+    top = 102
     Bitmap = {
       4C691700000010000000100000004F4F4F005050500052525200535353005454
       54155555553E555555555555556355555563555555555555553E545454155353
@@ -6239,8 +6239,8 @@ object MainForm: TMainForm
     }
   end
   object IconDL: TImageList
-    Left = 278
-    Top = 150
+    left = 278
+    top = 150
     Bitmap = {
       4C69090000001000000010000000FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
       FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
@@ -6536,8 +6536,8 @@ object MainForm: TMainForm
   object IconMed: TImageList
     Height = 48
     Width = 48
-    Left = 328
-    Top = 238
+    left = 328
+    top = 238
     Bitmap = {
       4C69010000003000000030000000FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
       FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
@@ -6831,8 +6831,8 @@ object MainForm: TMainForm
     }
   end
   object IconSmall: TImageList
-    Left = 27
-    Top = 328
+    left = 27
+    top = 328
     Bitmap = {
       4C69030000001000000010000000FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
       FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
@@ -6935,8 +6935,8 @@ object MainForm: TMainForm
   end
   object pmEditURL: TPopupMenu
     OnPopup = pmEditURLPopup
-    Left = 592
-    Top = 136
+    left = 592
+    top = 136
     object medURLUndo: TMenuItem
       Caption = 'Undo'
       OnClick = medURLUndoClick
@@ -6975,38 +6975,38 @@ object MainForm: TMainForm
   object appPropertiesMain: TApplicationProperties
     CaptureExceptions = False
     OnShowHint = appPropertiesMainShowHint
-    Left = 80
-    Top = 448
+    left = 80
+    top = 448
   end
   object tmExitCommand: TTimer
     Enabled = False
     OnTimer = tmExitCommandTimer
-    Left = 560
-    Top = 472
+    left = 560
+    top = 472
   end
   object TransferRateGraphList: TListChartSource
     DataPoints.Strings = (
       '1|0|?|'
     )
-    Left = 504
-    Top = 120
+    left = 504
+    top = 120
   end
   object TransferRateToolset: TChartToolset
-    Left = 464
-    Top = 120
+    left = 464
+    top = 120
   end
   object pmSbMain: TPopupMenu
     OnPopup = pmSbMainPopup
-    Left = 152
-    Top = 376
+    left = 152
+    top = 376
     object miAbortSilentThread: TMenuItem
       Caption = 'Abort'
       OnClick = miAbortSilentThreadClick
     end
   end
   object pmFilterGenreAll: TPopupMenu
-    Left = 520
-    Top = 168
+    left = 520
+    top = 168
     object mnFilterGenreAllCheck: TMenuItem
       Caption = 'Check all'
       OnClick = mnFilterGenreAllCheckClick
@@ -7022,8 +7022,8 @@ object MainForm: TMainForm
   end
   object pmTray: TPopupMenu
     OnPopup = pmTrayPopup
-    Left = 341
-    Top = 432
+    left = 341
+    top = 432
     object miTrayResumeAll: TMenuItem
       Caption = 'Resume all'
       OnClick = tbDownloadResumeAllClick
@@ -7087,28 +7087,28 @@ object MainForm: TMainForm
     Enabled = False
     Interval = 48
     OnTimer = tmAnimateMangaInfoTimer
-    Left = 656
-    Top = 416
+    left = 656
+    top = 416
   end
   object tmRefreshDownloadsInfo: TTimer
     Enabled = False
     OnTimer = tmRefreshDownloadsInfoTimer
     OnStartTimer = tmRefreshDownloadsInfoStartTimer
     OnStopTimer = tmRefreshDownloadsInfoStopTimer
-    Left = 440
-    Top = 472
+    left = 440
+    top = 472
   end
   object tmBackup: TTimer
     Interval = 120000
     OnTimer = tmBackupTimer
-    Left = 656
-    Top = 472
+    left = 656
+    top = 472
   end
   object tmCheckFavorites: TTimer
     Enabled = False
     Interval = 600000
     OnTimer = tmCheckFavoritesTimer
-    Left = 480
-    Top = 472
+    left = 480
+    top = 472
   end
 end

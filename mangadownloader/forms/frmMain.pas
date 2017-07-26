@@ -866,8 +866,8 @@ implementation
 {$R *.lfm}
 
 uses
-  frmImportFavorites, frmShutdownCounter, WebsiteModules, FMDVars, RegExpr,
-  Clipbrd, LazFileUtils, LazUTF8;
+  frmImportFavorites, frmShutdownCounter, frmSelectDirectory, WebsiteModules,
+  FMDVars, RegExpr, Clipbrd, LazFileUtils, LazUTF8;
 
 var
   // thread for open db
@@ -2876,14 +2876,13 @@ begin
   if not Assigned(vtFavorites.FocusedNode) then
     Exit;
   s := '';
-  with TSelectDirectoryDialog.Create(Self) do
-    try
-      InitialDir := FavoriteManager.Items[vtFavorites.FocusedNode^.Index].FavoriteInfo.SaveTo;
-      if Execute then
-        s := FileName;
-    finally
-      Free;
-    end;
+  with TSelectDirectoryForm.Create(Self) do try
+    dePath.Directory := FavoriteManager.Items[vtFavorites.FocusedNode^.Index].FavoriteInfo.SaveTo;
+    if ShowModal = mrOK then
+      s := dePath.Directory;
+  finally
+    Free;
+  end;
 
   if s <> '' then
   begin
