@@ -1781,7 +1781,7 @@ procedure TMainForm.miDownloadDeleteTaskClick(Sender: TObject);
 var
   xNode: PVirtualNode;
   i: Integer;
-  f: String;
+  f, d: String;
 begin
   if vtDownload.SelectedCount = 0 then Exit;
   if DLManager.Count = 0 then Exit;
@@ -1814,9 +1814,14 @@ begin
         if ThreadState then
           Task.WaitFor;
         if (Sender = miDownloadDeleteTaskData) or (Sender = miDownloadDeleteTaskDataFavorite)
-          and (ChapterName.Count > 0) then begin
+          and (ChapterName.Count > 0) then
+        begin
+          d := CleanAndExpandDirectory(DownloadInfo.SaveTo);
           for i := 0 to ChapterName.Count - 1 do begin
-            f := CorrectPathSys(DownloadInfo.SaveTo + ChapterName[i]);
+            f := CorrectPathSys(d + ChapterName[i]);
+            if DirectoryExistsUTF8(f) then
+              DeleteDirectory(f, False);
+            f := RemovePathDelim(f);
             if FileExistsUTF8(f + '.zip') then
               DeleteFileUTF8(f + '.zip')
             else if FileExistsUTF8(f + '.cbz') then
@@ -1826,7 +1831,7 @@ begin
             else if DirectoryExistsUTF8(f) then
               DeleteDirectory(f, False);
           end;
-          RemoveDirUTF8(DownloadInfo.SaveTo);
+          RemoveDirUTF8(d);
         end;
         if (Sender = miDownloadDeleteTaskDataFavorite) and
           (FavoriteManager.Items.Count <> 0) and
