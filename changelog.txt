@@ -4,6 +4,11 @@ Project page: https://github.com/riderkick/FMD
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.121.0 (28-07.2017)
+[*] Mangago: fixed download
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.120.0...0.9.121.0
+
 0.9.120.0 (26-07.2017)
 [*] Added support for relative path
 [*] Increased task/connection limit for win32 to 16/64 and win64 to 64/256
