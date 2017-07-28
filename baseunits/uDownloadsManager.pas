@@ -706,7 +706,9 @@ begin
   httpCookies := '';
   FCurrentWorkingDir := '';
   FCurrentCustomFileName := '';
+  {$IFDEF WINDOWS}
   FCurrentMaxFileNameLength := 0;
+  {$ENDIF}
 end;
 
 destructor TTaskThread.Destroy;
@@ -806,7 +808,8 @@ begin
       end;
       uPacker.CompressionQuality := OptionPDFQuality;
       uPacker.Path := CurrentWorkingDir;
-      uPacker.FileName := RemovePathDelim(uPacker.Path);
+      uPacker.FileName := RemovePathDelim(CorrectPathSys(AppendPathDelim(Container.DownloadInfo.SaveTo) +
+        Container.ChapterName[Container.CurrentDownloadChapterPtr]));
       for i := 0 to Container.PageLinks.Count - 1 do
       begin
         s := FindImageFile(uPacker.Path + GetFileName(i));
@@ -1106,10 +1109,10 @@ begin
 
       //check path
       if OptionGenerateChapterFolder then
-        CurrentWorkingDir := CleanAndExpandDirectory(Container.DownloadInfo.SaveTo) +
+        CurrentWorkingDir := AppendPathDelim(Container.DownloadInfo.SaveTo) +
           AppendPathDelim(Container.ChapterName[Container.CurrentDownloadChapterPtr])
       else
-        CurrentWorkingDir := CleanAndExpandDirectory(Container.DownloadInfo.SaveTo);
+        CurrentWorkingDir := Container.DownloadInfo.SaveTo;
       if not ForceDirectoriesUTF8(CurrentWorkingDir) then
       begin
         Logger.SendError(Format('Failed to create dir(%d) = %s', [Length(CurrentWorkingDir), CurrentWorkingDir]));
