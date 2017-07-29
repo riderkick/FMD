@@ -782,8 +782,6 @@ var
 
   {$I includes/LectureEnLigne/directory_page_number.inc}
 
-  {$I includes/MangaAe/directory_page_number.inc}
-
   {$I includes/CentralDeMangas/directory_page_number.inc}
 
   {$I includes/DM5/directory_page_number.inc}
@@ -840,9 +838,6 @@ begin
       else
       if MangaSiteID = LECTUREENLIGNE_ID then
         Result := GetLectureEnLigneDirectoryPageNumber
-      else
-      if MangaSiteID = MANGAAE_ID then
-        Result := GetMangaAeDirectoryPageNumber
       else
       if MangaSiteID = CENTRALDEMANGAS_ID then
         Result := GetCentralDeMangasDirectoryPageNumber
@@ -908,8 +903,6 @@ var
   {$I includes/ScanManga/names_and_links.inc}
 
   {$I includes/MangaAr/names_and_links.inc}
-
-  {$I includes/MangaAe/names_and_links.inc}
 
   {$I includes/CentralDeMangas/names_and_links.inc}
 
@@ -1006,9 +999,6 @@ begin
     else
     if MangaSiteID = MANGAAR_ID then
       Result := MangaArGetNamesAndLinks
-    else
-    if MangaSiteID = MANGAAE_ID then
-      Result := MangaAeGetNamesAndLinks
     else
     if MangaSiteID = CENTRALDEMANGAS_ID then
       Result := CentralDeMangasGetNamesAndLinks
@@ -1117,8 +1107,6 @@ var
 
   {$I includes/MangaAr/manga_information.inc}
 
-  {$I includes/MangaAe/manga_information.inc}
-
   {$I includes/CentralDeMangas/manga_information.inc}
 
   {$I includes/MeinManga/manga_information.inc}
@@ -1221,9 +1209,6 @@ begin
     else
     if MangaSiteID = MANGAAR_ID then
       Result := GetMangaArInfoFromURL
-    else
-    if MangaSiteID = MANGAAE_ID then
-      Result := GetMangaAeInfoFromURL
     else
     if MangaSiteID = CENTRALDEMANGAS_ID then
       Result := GetCentralDeMangasInfoFromURL

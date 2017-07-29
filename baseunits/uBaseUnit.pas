@@ -243,31 +243,30 @@ const
   CENTRALDEMANGAS_ID     = 10;
   EGSCANS_ID             = 11;
   MANGAAR_ID             = 12;
-  MANGAAE_ID             = 13;
-  ANIMESTORY_ID          = 14;
-  LECTUREENLIGNE_ID      = 15;
-  SCANMANGA_ID           = 16;
-  DM5_ID                 = 17;
-  KIVMANGA_ID            = 18;
-  MEINMANGA_ID           = 19;
-  MANGASPROJECT_ID       = 20;
-  MANGAREADER_POR_ID     = 21;
-  JAPANSHIN_ID           = 22;
-  CENTRUMMANGI_PL_ID     = 23;
-  MANGALIB_PL_ID         = 24;
-  ONEMANGA_ID            = 25;
-  MANGATOWN_ID           = 26;
-  MANGAOKU_ID            = 27;
-  IKOMIK_ID              = 28;
-  NHENTAI_ID             = 29;
-  UNIXMANGA_ID           = 30;
-  EXTREMEMANGAS_ID       = 31;
-  MANGAHOST_ID           = 32;
-  MANGAKU_ID             = 33;
-  MANGAAT_ID             = 34;
-  DYNASTYSCANS_ID        = 35;
+  ANIMESTORY_ID          = 13;
+  LECTUREENLIGNE_ID      = 14;
+  SCANMANGA_ID           = 15;
+  DM5_ID                 = 16;
+  KIVMANGA_ID            = 17;
+  MEINMANGA_ID           = 18;
+  MANGASPROJECT_ID       = 19;
+  MANGAREADER_POR_ID     = 20;
+  JAPANSHIN_ID           = 21;
+  CENTRUMMANGI_PL_ID     = 22;
+  MANGALIB_PL_ID         = 23;
+  ONEMANGA_ID            = 24;
+  MANGATOWN_ID           = 25;
+  MANGAOKU_ID            = 26;
+  IKOMIK_ID              = 27;
+  NHENTAI_ID             = 28;
+  UNIXMANGA_ID           = 29;
+  EXTREMEMANGAS_ID       = 30;
+  MANGAHOST_ID           = 31;
+  MANGAKU_ID             = 32;
+  MANGAAT_ID             = 33;
+  DYNASTYSCANS_ID        = 34;
 
-  WebsiteRoots: array [0..35] of array [0..1] of String = (
+  WebsiteRoots: array [0..34] of array [0..1] of String = (
     ('AnimeA', 'http://manga.animea.net'),
     ('OurManga', 'http://www.ourmanga.com'),
     ('VnSharing', 'http://truyen.vnsharing.net'),
@@ -281,7 +280,6 @@ const
     ('CentralDeMangas', 'http://centraldemangas.com.br'),
     ('EGScans', 'http://read.egscans.com'),
     ('MangaAr', 'http://manga-ar.net'),
-    ('MangaAe', 'http://www.manga.ae'),
     ('AnimeStory', 'http://www.anime-story.com'),
     ('Lecture-En-Ligne', 'http://www.lecture-en-ligne.com'),
     ('ScanManga', 'http://www.scan-manga.com'),
@@ -332,8 +330,6 @@ const
   EGSCANS_BROWSER = '/';
 
   MANGAAR_BROWSER = '/manga/';
-
-  MANGAAE_BROWSER = '/manga/';
 
   ANIMESTORY_BROWSER = '/mangas/';
 
