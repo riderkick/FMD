@@ -22,6 +22,12 @@ type
     procedure Reset;
   end;
 
+  { THTTPSendThreadHelper }
+
+  THTTPSendThreadHelper = class helper for THTTPSendThread
+    function GETCF(const AURL: String; const CFProps: TCFProps): Boolean;
+  end;
+
 function GETCF(const AHTTP: THTTPSendThread; const AURL: String; const CFProps: TCFProps): Boolean;
 
 implementation
@@ -216,6 +222,13 @@ procedure TCFProps.Reset;
 begin
   Cookies := '';
   Expires := 0.0;
+end;
+
+{ THTTPSendThreadHelper }
+
+function THTTPSendThreadHelper.GETCF(const AURL: String; const CFProps: TCFProps): Boolean;
+begin
+  Cloudflare.GETCF(Self, AURL, CFProps);
 end;
 
 end.
