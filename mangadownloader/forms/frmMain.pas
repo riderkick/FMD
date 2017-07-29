@@ -2564,7 +2564,7 @@ procedure TMainForm.edLogFileNameButtonClick(Sender: TObject);
 begin
   with TOpenDialog.Create(nil) do
     try
-      InitialDir := ExtractFileDir(edLogFileName.Text);
+      InitialDir := ExtractFileDir(ExpandFileName(edLogFileName.Text));
       if Execute then
         edLogFileName.Text := FileName;
     finally
@@ -4716,7 +4716,7 @@ begin
     ckEnableLogging.Checked := ReadBool('logger', 'Enabled', False);
     edLogFileName.Text := ReadString('logger', 'LogFileName', '');
     if edLogFileName.Text = '' then
-      edLogFileName.Text := ChangeFileExt(Application.ExeName, '.log');
+      edLogFileName.Text := ChangeFileExt(ExtractFileNameOnly(Application.ExeName), '.log');
 
     // websites
     if Length(optionMangaSiteSelectionNodes) > 0 then
@@ -4847,7 +4847,7 @@ begin
       frmCustomColor.SaveToIniFile(configfile);
       WriteBool('logger', 'Enabled', ckEnableLogging.Checked);
       if edLogFileName.Text = '' then
-        edLogFileName.Text := ChangeFileExt(Application.ExeName, '.log');
+        edLogFileName.Text := ChangeFileExt(ExtractFileNameOnly(Application.ExeName), '.log');
       WriteString('logger', 'LogFileName', edLogFileName.Text);
     finally
       UpdateFile;
