@@ -93,6 +93,7 @@ type
     procedure Execute; override;
     procedure Compress;
     procedure SyncStop;
+    procedure StatusFailedToCreateDir;
     // show notification when download completed
     procedure ShowBalloonHint;
   public
@@ -830,6 +831,16 @@ begin
   Container.Manager.CheckAndActiveTask(FCheckAndActiveTaskFlag);
 end;
 
+procedure TTaskThread.StatusFailedToCreateDir;
+begin
+  Logger.SendError(Format('Failed to create dir(%d) = %s', [Length(CurrentWorkingDir), CurrentWorkingDir]));
+  Container.Status := STATUS_FAILED;
+  Container.DownloadInfo.Status := Format('[%d/%d] %s (%d) %s', [
+    Container.CurrentDownloadChapterPtr,
+    Container.ChapterLinks.Count,
+    RS_FailedToCreateDir, Length(CurrentWorkingDir), LineEnding + CurrentWorkingDir]);
+end;
+
 procedure TTaskThread.ShowBalloonHint;
 begin
   if OptionShowBalloonHint then
@@ -850,11 +861,7 @@ begin
   // check download path
   if not ForceDirectoriesUTF8(Task.CurrentWorkingDir) then
   begin
-    Task.Container.Status := STATUS_FAILED;
-    Task.Container.DownloadInfo.Status := Format('[%d/%d] %s', [
-      Task.Container.CurrentDownloadChapterPtr,
-      Task.Container.ChapterLinks.Count,
-      RS_FailedToCreateDir]);
+    Task.StatusFailedToCreateDir;
     Result := False;
     Exit;
   end;
@@ -1115,12 +1122,7 @@ begin
         CurrentWorkingDir := Container.DownloadInfo.SaveTo;
       if not ForceDirectoriesUTF8(CurrentWorkingDir) then
       begin
-        Logger.SendError(Format('Failed to create dir(%d) = %s', [Length(CurrentWorkingDir), CurrentWorkingDir]));
-        Container.Status := STATUS_FAILED;
-        Container.DownloadInfo.Status := Format('[%d/%d] %s', [
-          Container.CurrentDownloadChapterPtr,
-          Container.ChapterLinks.Count,
-          RS_FailedToCreateDir]);
+        StatusFailedToCreateDir;
         ShowBalloonHint;
         Exit;
       end;
