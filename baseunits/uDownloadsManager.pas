@@ -799,7 +799,7 @@ begin
       end;
       uPacker.CompressionQuality := OptionPDFQuality;
       uPacker.Path := CurrentWorkingDir;
-      uPacker.FileName := RemovePathDelim(CorrectPathSys(AppendPathDelim(Container.DownloadInfo.SaveTo) +
+      uPacker.FileName := RemovePathDelim(CorrectPathSys(CorrectPathSys(Container.DownloadInfo.SaveTo) +
         Container.ChapterName[Container.CurrentDownloadChapterPtr]));
       for i := 0 to Container.PageLinks.Count - 1 do
       begin
@@ -1106,8 +1106,8 @@ begin
 
       //check path
       if OptionGenerateChapterFolder then
-        CurrentWorkingDir := AppendPathDelim(Container.DownloadInfo.SaveTo) +
-          AppendPathDelim(Container.ChapterName[Container.CurrentDownloadChapterPtr])
+        CurrentWorkingDir := CorrectPathSys(Container.DownloadInfo.SaveTo) +
+          Container.ChapterName[Container.CurrentDownloadChapterPtr]
       else
         CurrentWorkingDir := Container.DownloadInfo.SaveTo;
       if not ForceDirectoriesUTF8(CurrentWorkingDir) then

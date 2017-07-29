@@ -1816,7 +1816,7 @@ begin
         if (Sender = miDownloadDeleteTaskData) or (Sender = miDownloadDeleteTaskDataFavorite)
           and (ChapterName.Count > 0) then
         begin
-          d := CleanAndExpandDirectory(DownloadInfo.SaveTo);
+          d := CorrectPathSys(DownloadInfo.SaveTo);
           for i := 0 to ChapterName.Count - 1 do begin
             f := CorrectPathSys(d + ChapterName[i]);
             if DirectoryExistsUTF8(f) then
@@ -3271,14 +3271,14 @@ end;
 procedure TMainForm.miFavoritesOpenFolderClick(Sender: TObject);
 begin
   if Assigned(vtFavorites.FocusedNode) then
-    OpenDocument(CleanAndExpandFilename(
+    OpenDocument(CorrectPathSys(
       FavoriteManager.Items[vtFavorites.FocusedNode^.Index].FavoriteInfo.SaveTo));
 end;
 
 procedure TMainForm.miDownloadOpenFolderClick(Sender: TObject);
 begin
   if Assigned(vtDownload.FocusedNode) then
-    OpenDocument(CleanAndExpandFilename(
+    OpenDocument(CorrectPathSys(
       DLManager.Items[vtDownload.FocusedNode^.Index].DownloadInfo.SaveTo));
 end;
 

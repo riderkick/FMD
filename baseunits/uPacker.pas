@@ -115,7 +115,7 @@ var
   i: Integer;
 begin
   Result := False;
-  Path := CleanAndExpandDirectory(Path);
+  Path := CorrectPathSys(Path);
 
   if FFileList.Count = 0 then
   begin

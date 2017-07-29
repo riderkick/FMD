@@ -933,7 +933,7 @@ var
   searchRec: TSearchRec;
 begin
   try
-    Result := (FindFirstUTF8(CleanAndExpandDirectory(ADir) + '*.*',
+    Result := (FindFirstUTF8(CorrectPathSys(ADir) + '*.*',
       faAnyFile{$ifdef unix} or faSymLink{$endif unix}, searchRec) = 0) and
       (FindNextUTF8(searchRec) = 0) and
       (FindNextUTF8(searchRec) <> 0);
@@ -3330,7 +3330,7 @@ begin
   Result := '';
   if Stream = nil then Exit;
   if Stream.Size = 0 then Exit;
-  p := CleanAndExpandDirectory(Path);
+  p := CorrectPathSys(Path);
   if ForceDirectoriesUTF8(p) then begin
     f := GetImageStreamExt(Stream);
     if f = '' then Exit;
@@ -3433,7 +3433,7 @@ begin
   // Check to see if a file with similar name was already exist. If so then we
   // skip the download process.
   if Trim(URL) = 'D' then Exit(True);
-  s := CleanAndExpandDirectory(Path) + Name;
+  s := CorrectPathSys(Path) + Name;
   if ImageFileExist(s) then
     Exit(True);
 
@@ -3676,7 +3676,7 @@ var
 begin
   Result := False;
   if not DirectoryExistsUTF8(Directory) then Exit;
-  D := CleanAndExpandDirectory(Directory);
+  D := CorrectPathSys(Directory);
   AImgName1 := D + ImgName1;
   AImgName2 := D + ImgName2;
   if not (FileExistsUTF8(AImgName1) and FileExistsUTF8(AImgName2)) then Exit;
