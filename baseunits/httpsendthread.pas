@@ -54,6 +54,7 @@ type
     FRetryCount: Integer;
     FGZip: Boolean;
     FFollowRedirection: Boolean;
+    FMaxRedirect: Integer;
     FAllowServerErrorResponse: Boolean;
     FCookiesExpires: TDateTime;
     procedure SetTimeout(AValue: Integer);
@@ -84,6 +85,7 @@ type
     property AllowServerErrorResponse: Boolean read FAllowServerErrorResponse write FAllowServerErrorResponse;
     property Thread: TBaseThread read FOwner;
     property CookiesExpires: TDateTime read FCookiesExpires;
+    property MaxRedirect: Integer read FMaxRedirect write FMaxRedirect;
   public
     BeforeHTTPMethod: THTTPMethodEvent;
     AfterHTTPMethod: THTTPMethodEvent;
@@ -372,6 +374,7 @@ begin
   FFollowRedirection := True;
   FAllowServerErrorResponse := False;
   FRetryCount := DefaultRetryCount;
+  FMaxRedirect := 5;
   SetTimeout(DefaultTimeout);
   SetProxy(DefaultProxyType, DefaultProxyHost, DefaultProxyPort, DefaultProxyUser, DefaultProxyPass);
   Reset;
@@ -426,6 +429,7 @@ function THTTPSendThread.HTTPRequest(const Method, URL: String; const Response: 
 
 var
   counter: Integer = 0;
+  redirectcounter: Integer = 0;
   rurl, s, h, p: String;
   HTTPHeader: TStringList;
   mstream: TMemoryStream;
@@ -449,6 +453,9 @@ begin
     if FFollowRedirection then
       while (ResultCode > 300) and (ResultCode < 304) do begin
         if CheckTerminate then Exit;
+        // break too many redirect
+        if redirectcounter >= FMaxRedirect then Exit
+        else Inc(redirectcounter);
         HTTPHeader.Values['Referer'] := ' ' + rurl;
         s := Trim(Headers.Values['Location']);
         if s<>'' then
