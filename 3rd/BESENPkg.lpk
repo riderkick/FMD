@@ -11,17 +11,9 @@
         <OtherUnitFiles Value="BESEN\src"/>
         <UnitOutputDirectory Value="BESEN\lib\$(TargetCPU)-$(TargetOS)"/>
       </SearchPaths>
-      <CodeGeneration>
-        <SmartLinkUnit Value="True"/>
-        <Optimizations>
-          <OptimizationLevel Value="3"/>
-        </Optimizations>
-      </CodeGeneration>
-      <Linking>
-        <Debugging>
-          <GenerateDebugInfo Value="False"/>
-        </Debugging>
-      </Linking>
+      <Other>
+        <CustomOptions Value="-CX -Os4 -Xs -XX -g-"/>
+      </Other>
     </CompilerOptions>
     <Files Count="97">
       <Item1>
