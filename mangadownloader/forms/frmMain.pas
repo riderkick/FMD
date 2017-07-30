@@ -22,10 +22,9 @@ uses
   MultiLog, FileChannel, FileUtil, LazUTF8Classes, TAGraph, TASources, TASeries,
   TATools, AnimatedGif, uBaseUnit, uDownloadsManager, uFavoritesManager,
   uUpdateThread, uUpdateDBThread, uSilentThread, uMisc, uGetMangaInfosThread,
-  frmDropTarget, frmAccountManager, frmWebsiteOptionCustom,
-  frmWebsiteOptionAdvanced, frmCustomColor, frmLogger, CheckUpdate,
-  accountmanagerdb, DBDataProcess, MangaFoxWatermark, SimpleTranslator,
-  FMDOptions, httpsendthread, SimpleException;
+  frmDropTarget, frmAccountManager, frmWebsiteOptionCustom, frmWebsiteOptionAdvanced,
+  frmCustomColor, frmLogger, CheckUpdate, accountmanagerdb, DBDataProcess, MangaFoxWatermark,
+  SimpleTranslator, FMDOptions, httpsendthread, SimpleException;
 
 type
 
@@ -116,6 +115,7 @@ type
     miChapterListHideDownloaded: TMenuItem;
     miAbortSilentThread: TMenuItem;
     mmChangelog: TMemo;
+    pnAboutComp: TPanel;
     pcInfo: TPageControl;
     psInfo: TPairSplitter;
     pssInfoList: TPairSplitterSide;
@@ -867,7 +867,8 @@ implementation
 
 uses
   frmImportFavorites, frmShutdownCounter, frmSelectDirectory, WebsiteModules,
-  FMDVars, RegExpr, Clipbrd, LazFileUtils, LazUTF8;
+  FMDVars, RegExpr, Clipbrd, InterfaceBase, LazFileUtils,
+  LazUTF8{$IF FPC_FULLVERSION >= 30101}, LCLPlatformDef{$ENDIF};
 
 var
   // thread for open db
@@ -1969,6 +1970,21 @@ begin
 end;
 
 procedure TMainForm.LoadAbout;
+
+  procedure addaboutcomp(const ACaption, AValue: String);
+
+    function addaboutcomplbl(const ACaption: String): TLabel;
+    begin
+      Result := TLabel.Create(Self);
+      Result.Parent := pnAboutComp;
+      Result.Caption := ACaption;
+    end;
+
+  begin
+    addaboutcomplbl(ACaption);
+    addaboutcomplbl(AValue).Font.Style := [fsBold];
+  end;
+
 var
   i: Integer;
   fs: TFileStreamUTF8;
@@ -2006,7 +2022,14 @@ begin
     end;
   end;
   // load changelog.txt
-  if FileExistsUTF8(CHANGELOG_FILE) then  mmChangelog.Lines.LoadFromFile(CHANGELOG_FILE);
+  if FileExistsUTF8(CHANGELOG_FILE) then mmChangelog.Lines.LoadFromFile(CHANGELOG_FILE);
+
+  // compiler info
+  addaboutcomp('FPC Version', {$I %FPCVERSION%});
+  addaboutcomp('LCL Version', LCLVersion);
+  addaboutcomp('WidgetSet', LCLPlatformDirNames[WidgetSet.LCLPlatform]);
+  addaboutcomp('Target CPU-OS', {$I %FPCTARGETCPU%} + '-' + {$I %FPCTARGETOS%});
+  addaboutcomp('Build Time', {$I %DATE%} + ' ' + {$I %TIME%});
 end;
 
 procedure TMainForm.GeneratetvDownloadFilterNodes;

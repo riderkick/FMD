@@ -35,8 +35,7 @@ unit SimpleException;
 interface
 
 uses
-  Classes, SysUtils, LazFileUtils, LazUTF8, Forms, Controls, LCLVersion,
-  SimpleExceptionForm,
+  Classes, SysUtils, LazFileUtils, LazUTF8, Forms, Controls, SimpleExceptionForm,
   {$IFDEF WINDOWS}
   Windows, win32proc,
   {$ENDIF}
@@ -116,6 +115,8 @@ resourcestring
   SCantHandleException = 'Can''t handle exception';
 
 implementation
+
+uses InterfaceBase, LCLVersion{$IF FPC_FULLVERSION >= 30101}, LCLPlatformDef{$ENDIF};
 
 {$IFDEF MULTILOG}
 type
@@ -535,9 +536,11 @@ begin
       'Product Version   : ' + AProductVersion + LineEnding;
   FApplicationInfo := FApplicationInfo +
     'Host Machine      : ' + GetOSVer + LineEnding +
-    'Target CPU_OS     : ' + {$i %FPCTARGETCPU%} +'_' + {$i %FPCTARGETOS%} +LineEnding +
-    'FPC Version       : ' + {$i %FPCVERSION%} +LineEnding +
+    'FPC Version       : ' + {$I %FPCVERSION%} + LineEnding +
     'LCL Version       : ' + LCLVersion.lcl_version + LineEnding +
+    'WidgetSet         : ' + LCLPlatformDirNames[WidgetSet.LCLPlatform] + LineEnding +
+    'Target CPU-OS     : ' + {$I %FPCTARGETCPU%} + '-' + {$I %FPCTARGETOS%} + LineEnding +
+    'Build Time        : ' + {$I %DATE%} + ' ' + {$I %TIME%} + LineEnding +
     'Path              : ' + ParamStrUTF8(0) + LineEnding +
     'Process ID        : ' + IntToStr(GetProcessID) + LineEnding +
     'MainThread ID     : ' + IntToStr(MainThreadID);
