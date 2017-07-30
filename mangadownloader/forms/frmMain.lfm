@@ -4557,9 +4557,9 @@ object MainForm: TMainForm
             Align = alBottom
             AutoSize = True
             BevelOuter = bvNone
-            ChildSizing.HorizontalSpacing = 8
+            ChildSizing.HorizontalSpacing = 4
             ChildSizing.Layout = cclLeftToRightThenTopToBottom
-            ChildSizing.ControlsPerLine = 2
+            ChildSizing.ControlsPerLine = 10
             TabOrder = 1
           end
         end

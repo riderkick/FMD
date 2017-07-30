@@ -1981,8 +1981,12 @@ procedure TMainForm.LoadAbout;
     end;
 
   begin
-    addaboutcomplbl(ACaption);
-    addaboutcomplbl(AValue).Font.Style := [fsBold];
+    addaboutcomplbl(ACaption + ':');
+    with addaboutcomplbl(AValue) do
+    begin
+      Font.Style := [fsBold];
+      BorderSpacing.Right := 16;
+    end;
   end;
 
 var
