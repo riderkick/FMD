@@ -867,8 +867,7 @@ implementation
 
 uses
   frmImportFavorites, frmShutdownCounter, frmSelectDirectory, WebsiteModules,
-  FMDVars, RegExpr, Clipbrd, InterfaceBase, LazFileUtils,
-  LazUTF8{$IF FPC_FULLVERSION >= 30101}, LCLPlatformDef{$ENDIF};
+  FMDVars, RegExpr, Clipbrd, LazFileUtils, LazUTF8;
 
 var
   // thread for open db
@@ -2029,11 +2028,11 @@ begin
   if FileExistsUTF8(CHANGELOG_FILE) then mmChangelog.Lines.LoadFromFile(CHANGELOG_FILE);
 
   // compiler info
-  addaboutcomp('FPC Version', {$I %FPCVERSION%});
-  addaboutcomp('LCL Version', LCLVersion);
-  addaboutcomp('WidgetSet', LCLPlatformDirNames[WidgetSet.LCLPlatform]);
-  addaboutcomp('Target CPU-OS', {$I %FPCTARGETCPU%} + '-' + {$I %FPCTARGETOS%});
-  addaboutcomp('Build Time', {$I %DATE%} + ' ' + {$I %TIME%});
+  addaboutcomp('FPC Version', GetFPCVersion);
+  addaboutcomp('LCL Version', GetLCLVersion);
+  addaboutcomp('WidgetSet', GetWidgetSetName);
+  addaboutcomp('Target CPU-OS', GetTargetCPU_OS);
+  addaboutcomp('Build Time', GetBuildTime);
 end;
 
 procedure TMainForm.GeneratetvDownloadFilterNodes;
