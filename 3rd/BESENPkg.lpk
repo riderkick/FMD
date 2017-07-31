@@ -12,7 +12,7 @@
         <UnitOutputDirectory Value="BESEN\lib\$(TargetCPU)-$(TargetOS)"/>
       </SearchPaths>
       <Other>
-        <CustomOptions Value="-CX -Os4 -Xs -XX -g-"/>
+        <CustomOptions Value="-CX -O3 -Xs -XX -g-"/>
       </Other>
     </CompilerOptions>
     <Files Count="97">
