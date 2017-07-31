@@ -50,13 +50,10 @@ begin
       Result := NO_ERROR;
       with TXQueryEngineHTML.Create(Document) do
         try
-          coverLink := MaybeFillHost(Module.RootURL, XPathString('//img[@itemprop="image"]/@src'));
-          if title = '' then
-          begin
-            title := XPathString('//title');
-            if Pos(' - Read ', title) <> 0 then
-              title := Trim(GetBetween(' - Read ', ' Online For Free', title));
-          end;
+          coverLink := XPathString('//img[@itemprop="image"]/resolve-uri(@src)');
+          title := XPathString('//title');
+          if Pos(' - Read ', title) <> 0 then
+            title := Trim(GetBetween(' - Read ', ' Online For Free', title));
           status := MangaInfoStatusIfPos(
             XPathString('//*[@class="RedHeadLabel"][starts-with(.,"Status")]/following-sibling::*[1]'),
             'Ongoing',
@@ -65,10 +62,10 @@ begin
           artists := XPathString('//*[@class="RedHeadLabel"][starts-with(.,"Artist(s)")]/following-sibling::*[1]');
           genres := XPathString('//*[@class="RedHeadLabel"][starts-with(.,"Genre(s)")]/following-sibling::*[1]');
           summary := Trim(XPathString('//*[@class="RedHeadLabel"][starts-with(.,"Summary")]/following-sibling::*'));
-          for v in XPath('//tr/td[1]/span/a') do
+          for v in XPath('//div[@class="content"]/div[@class="divThickBorder"][3]/table//td[1]/span/a') do
           begin
             chapterLinks.Add(v.toNode.getAttribute('href'));
-            chapterName.Add(v.toString);
+            chapterName.Add(Trim(title + ' : ' + XPathString('./text()', v)));
           end;
         finally
           Free;
@@ -130,7 +127,7 @@ begin
   with AddModule do
   begin
     Website := 'MangaInn';
-    RootURL := 'http://www.mangainn.me';
+    RootURL := 'http://www.mangainn.net';
     OnGetNameAndLink := @GetNameAndLink;
     OnGetInfo := @GetInfo;
     OnGetPageNumber := @GetPageNumber;
