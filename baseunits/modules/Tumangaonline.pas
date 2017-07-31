@@ -83,7 +83,7 @@ begin
   with MangaInfo.mangaInfo, MangaInfo.FHTTP do
   begin
     url := FillHost(Module.RootURL, AURL);
-    mangaid := RegExprGetMatch('/mangas/(\d+)/', url, 1);
+    mangaid := RegExprGetMatch('/\w+/(\d+)/\w+', url, 1);
     if mangaid = '' then Exit;
     if GETWithCookie(MangaInfo.FHTTP, Module.RootURL + apiurlmangas + '/' + mangaid) then
     begin
@@ -93,11 +93,7 @@ begin
           coverLink := XPathString('json(*).imageUrl');
           if coverLink <> '' then coverLink := MaybeFillHost(imgurl, coverLink);
           if title = '' then title := XPathString('json(*).nombre');
-          s := XPathString('json(*).estado');
-          if Pos('Activo', s) <> 0 then
-            status := '1'
-          else if Pos('Finalizado', s) <> 0 then
-            status := '0';
+          status := MangaInfoStatusIfPos(XPathString('json(*).estado'), 'Activo', 'Finalizado');
           summary := XPathString('json(*).info.sinopsis');
           genres := XPathStringAll('json(*).generos().genero');
           AddCommaString(genres, XPathStringAll('json(*).categorias().categoria'));
