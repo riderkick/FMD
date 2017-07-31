@@ -221,7 +221,7 @@
         </CompilerOptions>
       </Item5>
       <SharedMatrixOptions Count="1">
-        <Item1 ID="939088584661" Targets="LazControls,TAChartLazarusPkg" Modes="Win32 Debug Leaks,Win64 Debug,Win32 Debug,Win64,Win32" Value="-CX -Os4 -Xs -XX -g-"/>
+        <Item1 ID="939088584661" Targets="LazControls,TAChartLazarusPkg" Modes="Win32 Debug Leaks,Win64 Debug,Win32 Debug,Win64,Win32" Value="-CX -O3 -Xs -XX -g-"/>
       </SharedMatrixOptions>
     </BuildModes>
     <PublishOptions>
@@ -252,7 +252,7 @@
       </Item4>
       <Item5>
         <PackageName Value="internettools"/>
-        <DefaultFilename Value="..\3rd\internettools\internettools.lpk" Prefer="True"/>
+        <DefaultFilename Value="..\3rd\internettools.lpk" Prefer="True"/>
       </Item5>
       <Item6>
         <PackageName Value="TAChartLazarusPkg"/>
