@@ -9,10 +9,6 @@
       <Title Value="Free Manga Downloader"/>
       <ResourceType Value="res"/>
       <UseXPManifest Value="True"/>
-      <XPManifest>
-        <TextName Value="fmd.free"/>
-        <TextDesc Value="Free Manga Downloader"/>
-      </XPManifest>
       <Icon Value="0"/>
     </General>
     <i18n>
@@ -26,7 +22,7 @@
       <Attributes pvaPrivateBuild="True"/>
       <StringTable Comments="https://github.com/riderkick/FMD" FileDescription="Free Manga Downloader" LegalCopyright="©2015-2017" OriginalFilename="fmd.exe" ProductName="Free Manga Downloader" ProductVersion="$BuildMode()" PrivateBuild="riderkick"/>
     </VersionInfo>
-    <BuildModes Count="5">
+    <BuildModes Count="6">
       <Item1 Name="Win32" Default="True"/>
       <Item2 Name="Win64">
         <CompilerOptions>
@@ -220,6 +216,55 @@
           </Other>
         </CompilerOptions>
       </Item5>
+      <Item6 Name="Win64 Debug Leaks">
+        <CompilerOptions>
+          <Version Value="11"/>
+          <PathDelim Value="\"/>
+          <Target>
+            <Filename Value="..\bin\fmd"/>
+          </Target>
+          <SearchPaths>
+            <IncludeFiles Value="$(ProjOutDir);..\baseunits\includes\AnimeA;..\baseunits\includes\AnimeStory;..\baseunits\includes\AnimExtremist;..\baseunits\includes\CentralDeMangas;..\baseunits\includes\EGScans;..\baseunits\includes\EsMangaHere;..\baseunits\includes\Kivmanga;..\baseunits\includes\LectureEnLigne;..\baseunits\includes\MangaAr;..\baseunits\includes\S2scans;..\baseunits\includes\ScanManga;..\baseunits\includes\Starkana;..\baseunits\includes\Turkcraft;..\baseunits\includes\VnSharing;..\baseunits\includes\MeinManga;..\baseunits\includes\MangaREADER_POR;..\baseunits\includes\MangasPROJECT"/>
+            <OtherUnitFiles Value="..\baseunits;..\baseunits\animatedgifs;..\baseunits\SimpleException;..\baseunits\modules;..\baseunits\extras;forms"/>
+            <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
+          </SearchPaths>
+          <Parsing>
+            <SyntaxOptions>
+              <IncludeAssertionCode Value="True"/>
+            </SyntaxOptions>
+          </Parsing>
+          <CodeGeneration>
+            <Checks>
+              <IOChecks Value="True"/>
+              <RangeChecks Value="True"/>
+              <OverflowChecks Value="True"/>
+              <StackChecks Value="True"/>
+            </Checks>
+            <TargetCPU Value="x86_64"/>
+            <TargetOS Value="win64"/>
+            <Optimizations>
+              <VariablesInRegisters Value="True"/>
+            </Optimizations>
+          </CodeGeneration>
+          <Linking>
+            <Debugging>
+              <DebugInfoType Value="dsDwarf3"/>
+              <UseHeaptrc Value="True"/>
+              <UseExternalDbgSyms Value="True"/>
+            </Debugging>
+          </Linking>
+          <Other>
+            <CustomOptions Value="-dMANGADOWNLOADER
+-dDOWNLOADER
+-dSELFUPDATE
+-dDEBUGLEAKS
+-dMULTILOG"/>
+            <ExecuteAfter>
+              <Command Value="cmd.exe /c copy /y languages\*.po ..\bin\languages\"/>
+            </ExecuteAfter>
+          </Other>
+        </CompilerOptions>
+      </Item6>
       <SharedMatrixOptions Count="1">
         <Item1 ID="939088584661" Targets="LazControls,TAChartLazarusPkg" Modes="Win32 Debug Leaks,Win64 Debug,Win32 Debug,Win64,Win32" Value="-CX -O3 -Xs -XX -g-"/>
       </SharedMatrixOptions>
