@@ -35,21 +35,21 @@ unit SimpleException;
 interface
 
 uses
-  Classes, SysUtils, LazFileUtils, LazUTF8, Forms, Controls, SimpleExceptionForm,
+  Classes, SysUtils, LazFileUtils, LazUTF8, Forms, Controls, SimpleExceptionForm
   {$IFDEF WINDOWS}
-  Windows, win32proc,
+  , Windows, win32proc
   {$ENDIF}
   {$IFDEF LINUX}
-  elfreader,
+  , elfreader
   {$ENDIF}
   {$IF DEFINED(DARWIN) OR DEFINED(MACOS)}
-  machoreader,
+  , machoreader
   {$ENDIF}
-  fileinfo
+  , fileinfo
   {$IFDEF MULTILOG}
-  ,MultiLog
+  , MultiLog
   {$ENDIF}
-  ;
+  , LCLVersion;
 
 type
 
@@ -123,7 +123,7 @@ resourcestring
 
 implementation
 
-uses InterfaceBase, LCLVersion{$IF FPC_FULLVERSION >= 30101}, LCLPlatformDef{$ENDIF};
+uses InterfaceBase {$IF LCL_FULLVERSION >= 1080000}, LCLPlatformDef{$ENDIF};
 
 {$IFDEF MULTILOG}
 type
@@ -222,7 +222,7 @@ begin
     lpNoGUI       : Result := 'NoGUI';
     lpCocoa       : Result := 'Cocoa';
     lpCustomDrawn : Result := 'Custom Drawn';
-    {$IF FPC_FULLVERSION >= 30101}
+    {$IF LCL_FULLVERSION >= 1080000}
     lpQt5         : Result := 'Qt5';
     lpMUI         : Result := 'MUI';
     {$ENDIF}

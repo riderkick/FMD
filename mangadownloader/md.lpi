@@ -266,7 +266,7 @@
         </CompilerOptions>
       </Item6>
       <SharedMatrixOptions Count="1">
-        <Item1 ID="939088584661" Targets="LazControls,TAChartLazarusPkg" Modes="Win32 Debug Leaks,Win64 Debug,Win32 Debug,Win64,Win32" Value="-CX -O3 -Xs -XX -g-"/>
+        <Item1 ID="939088584661" Targets="LazControls,TAChartLazarusPkg" Modes="Win64 Debug,Win32 Debug,Win64,Win32,Win32 Debug Leaks,Win64 Debug Leaks" Value="-CX -O3 -Xs -XX -g-"/>
       </SharedMatrixOptions>
     </BuildModes>
     <PublishOptions>
