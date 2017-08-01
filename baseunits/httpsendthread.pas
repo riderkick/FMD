@@ -323,6 +323,7 @@ procedure THTTPSendThread.SetTimeout(AValue: Integer);
 begin
   if FTimeout = AValue then Exit;
   FTimeout := AValue;
+  Sock.ConnectionTimeout := FTimeout;
   Sock.SocksTimeout := FTimeout;
   Sock.SetTimeout(FTimeout);
 end;
