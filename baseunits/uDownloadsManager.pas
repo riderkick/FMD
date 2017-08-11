@@ -94,6 +94,7 @@ type
     procedure Compress;
     procedure SyncStop;
     procedure StatusFailedToCreateDir;
+    function FailedChaptersExist: Boolean;
     // show notification when download completed
     procedure ShowBalloonHint;
   public
@@ -148,8 +149,7 @@ type
     ThreadState: Boolean;
     ChapterName,
     ChapterLinks,
-    FailedChapterName,
-    FailedChapterLinks,
+    ChaptersStatus,
     PageContainerLinks,
     PageLinks: TStringList;
     FileNames: TStringList;
@@ -731,7 +731,7 @@ begin
       begin
         if (WorkCounter >= PageLinks.Count) and
            (CurrentDownloadChapterPtr >= ChapterLinks.Count) and
-           (FailedChapterLinks.Count = 0) then
+           (not FailedChaptersExist) then
         begin
           Status := STATUS_FINISH;
           DownloadInfo.Status := Format('[%d/%d] %s',[Container.ChapterLinks.Count,Container.ChapterLinks.Count,RS_Finish]);
@@ -829,6 +829,15 @@ begin
     Container.CurrentDownloadChapterPtr,
     Container.ChapterLinks.Count,
     RS_FailedToCreateDir, Length(CurrentWorkingDir), LineEnding + CurrentWorkingDir]);
+end;
+
+function TTaskThread.FailedChaptersExist: Boolean;
+var
+  i: Integer;
+begin
+  for i := 0 to Container.ChaptersStatus.Count - 1 do
+    if Container.ChaptersStatus[i] = 'F' then Exit(True);
+  Result := False;
 end;
 
 procedure TTaskThread.ShowBalloonHint;
@@ -1099,8 +1108,17 @@ begin
     if Trim(Container.CustomFileName) = '' then
       Container.CustomFileName := DEFAULT_FILENAME_CUSTOMRENAME;
 
+    while Container.ChaptersStatus.Count < Container.ChapterLinks.Count do
+      Container.ChaptersStatus.Add('P');
+    if Container.CurrentDownloadChapterPtr > 1 then
+      for j := 0 to Container.CurrentDownloadChapterPtr - 1 do
+        Container.ChaptersStatus[j] := 'D';
+
     while Container.CurrentDownloadChapterPtr < Container.ChapterLinks.Count do
     begin
+      while Container.ChaptersStatus[Container.CurrentDownloadChapterPtr] = 'D' do
+        Inc(Container.CurrentDownloadChapterPtr);
+
       WaitForThreads;
       if Terminated then Exit;
 
@@ -1264,13 +1282,10 @@ begin
         Container.Status := STATUS_FAILED;
       end;
 
-      if (Container.Status = STATUS_FAILED) and
-        (not FindStrLinear(Container.FailedChapterLinks,
-        Container.ChapterName[Container.CurrentDownloadChapterPtr])) then
-      begin
-        Container.FailedChapterName.Add(Container.ChapterName[Container.CurrentDownloadChapterPtr]);
-        Container.FailedChapterLinks.Add(Container.ChapterLinks[Container.CurrentDownloadChapterPtr]);
-      end;
+      if Container.Status = STATUS_FAILED  then
+        Container.ChaptersStatus[Container.CurrentDownloadChapterPtr] := 'F'
+      else
+        Container.ChaptersStatus[Container.CurrentDownloadChapterPtr] := 'D';
 
       Container.CurrentPageNumber := 0;
       Container.PageLinks.Clear;
@@ -1279,7 +1294,7 @@ begin
         InterLockedIncrement(Container.CurrentDownloadChapterPtr);
     end;
 
-    if Container.FailedChapterLinks.Count > 0 then
+    if FailedChaptersExist then
     begin
       Container.Status := STATUS_FAILED;
       Container.DownloadInfo.Status := Format('[%d/%d] %s', [
@@ -1288,11 +1303,6 @@ begin
         RS_FailedTryResumeTask]);
       Container.DownloadInfo.Progress := '';
       Container.CurrentDownloadChapterPtr := 0;
-
-      Container.ChapterName.Assign(Container.FailedChapterName);
-      Container.ChapterLinks.Assign(Container.FailedChapterLinks);
-      Container.FailedChapterName.Clear;
-      Container.FailedChapterLinks.Clear;
     end
     else
     begin
@@ -1347,8 +1357,7 @@ begin
   ThreadState := False;
   ChapterLinks := TStringList.Create;
   ChapterName := TStringList.Create;
-  FailedChapterName := TStringList.Create;
-  FailedChapterLinks := TStringList.Create;
+  ChaptersStatus := TStringList.Create;
   PageLinks := TStringList.Create;
   PageContainerLinks := TStringList.Create;
   FileNames := TStringList.Create;
@@ -1372,8 +1381,7 @@ begin
   PageLinks.Free;
   ChapterName.Free;
   ChapterLinks.Free;
-  FailedChapterName.Free;
-  FailedChapterLinks.Free;
+  ChaptersStatus.Free;
   DoneCriticalsection(CS_Container);
   if Assigned(Manager) then
     Manager.DecStatusCount(Status);
@@ -1418,8 +1426,7 @@ begin
     PageContainerLinks.Text,
     FileNames.Text,
     CustomFileName,
-    FailedChapterLinks.Text,
-    FailedChapterName.Text);
+    ChaptersStatus.Text);
 end;
 
 { TDownloadManager }
@@ -1591,14 +1598,13 @@ begin
         ReadString(s, 'Progress', ''),
         ReadString(s, 'SaveTo', ''),
         StrToFloatDef(ReadString(s, 'DateTime', ''), Now, FMDFormatSettings),
-        GetParams(ReadString(s, 'ChapterLinks', '')),
-        GetParams(ReadString(s, 'ChapterName', '')),
+        GetParams(ReadString(s, 'ChapterLinks', '') + ReadString(s, 'FailedChapterLinks', '')),
+        GetParams(ReadString(s, 'ChapterName', '') + ReadString(s, 'FailedChapterName', '')),
         GetParams(ReadString(s, 'PageLinks', '')),
         GetParams(ReadString(s, 'PageContainerLinks', '')),
         GetParams(ReadString(s, 'Filenames', '')),
         ReadString(s, 'CustomFileName', DEFAULT_FILENAME_CUSTOMRENAME),
-        GetParams(ReadString(s, 'FailedChapterLinks', '')),
-        GetParams(ReadString(s, 'FailedChapterName', '')));
+        '');
     end;
     FDownloadsDB.Commit;
     Result := True;
@@ -1647,8 +1653,7 @@ begin
             PageContainerLinks.Text   := Fields[f_pagecontainerlinks].AsString;
             FileNames.Text            := Fields[f_filenames].AsString;
             CustomFileName            := Fields[f_customfilenames].AsString;
-            FailedChapterLinks.Text   := Fields[f_failedchapterlinks].AsString;
-            FailedChapterName.Text    := Fields[f_failedchapternames].AsString;
+            ChaptersStatus.Text       := Fields[f_chaptersstatus].AsString;
           end;
           FDownloadsDB.Table.Next;
         end;
