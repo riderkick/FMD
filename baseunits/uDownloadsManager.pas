@@ -1057,6 +1057,7 @@ procedure TTaskThread.Execute;
   function CheckForFinish: Boolean;
   var
     i, c: Integer;
+    sf: String;
   begin
     if Container.PageLinks.Count > 0 then
       Result := True
@@ -1067,18 +1068,20 @@ procedure TTaskThread.Execute;
     end;
 
     c := 0;
+    sf := '';
     for i := 0 to Container.PageLinks.Count - 1 do
-    begin
       if Trim(Container.PageLinks[i]) <> 'D' then
+      begin
         Inc(c);
-    end;
+        sf += Container.PageLinks[i] + LineEnding;
+      end;
     if c > 0 then begin
       Logger.SendWarning(Format('%s, checkforfinish failed=%d/%d "%s" > "%s"',
         [Self.ClassName,
         c,
         Container.PageLinks.Count,
         Container.DownloadInfo.Title,
-        Container.ChapterName[Container.CurrentDownloadChapterPtr]]));
+        Container.ChapterLinks[Container.CurrentDownloadChapterPtr]]) + LineEnding + Trim(sf));
       Result := False;
     end;
   end;
