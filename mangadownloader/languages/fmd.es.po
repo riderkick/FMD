@@ -1,13 +1,13 @@
 msgid ""
 msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
-"Project-Id-Version: FMD Español 2.0.1\n"
+"Project-Id-Version: FMD Español 2.0.2\n"
 "POT-Creation-Date: \n"
 "PO-Revision-Date: \n"
 "Language-Team: Mariolr\n"
 "MIME-Version: 1.0\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.8.12\n"
+"X-Generator: Poedit 2.0.3\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "Last-Translator: Mariolr\n"
 "Language: es_419\n"
@@ -24,6 +24,11 @@ msgid ""
 "CDN (default)\n"
 "CDN2 (testing)\n"
 msgstr ""
+"Auto\n"
+"Imagen de Servidor EU\n"
+"Imagen de Servidor NA\n"
+"CDN (Por Defecto)\n"
+"CDN2 (Pruebando)\n"
 
 #: batoto.rs_showalllang
 msgid "Show all language"
@@ -343,15 +348,15 @@ msgstr "Sistema se Apagará en %d segundos."
 
 #: kissmanga.rs_kissmanga_initvector
 msgid "Initialization Vector:"
-msgstr ""
+msgstr "Inicialización del Vector:"
 
 #: kissmanga.rs_kissmanga_key
 msgid "Key:"
-msgstr ""
+msgstr "Llave:"
 
 #: kissmanga.rs_kissmanga_usegoogledcp
 msgid "Use Google DCP"
-msgstr ""
+msgstr "Usar Google DCP"
 
 #: mangafox.rs_removewatermark
 msgid "Remove watermark"
@@ -586,7 +591,7 @@ msgstr "Visitar mi blog"
 
 #: tmainform.caption
 msgid "Free Manga Downloader"
-msgstr ""
+msgstr "Free Manga Downloader"
 
 #: tmainform.cbaddasstopped.caption
 msgid "Add to download list as stopped task"
@@ -663,7 +668,7 @@ msgstr "Habilitar Búsqueda en Directo (Lento en Lista Larga)"
 
 #: tmainform.cboptionminimizeonstart.caption
 msgid "Minimize on start"
-msgstr ""
+msgstr "Minimizar al Iniciar"
 
 #: tmainform.cboptionminimizetotray.caption
 msgid "Minimize to tray"
@@ -1371,20 +1376,16 @@ msgstr ""
 "El Nombre del la Carpeta del Manga debe tener al menos %MANGA%.\n"
 
 #: tmainform.lboptionmaxparallel.caption
-#, fuzzy
-#| msgid "Number of downloaded tasks at the same time (Max: 8)"
 msgid "Number of downloaded tasks at the same time"
-msgstr "Numero de Tareas de Descargas al Mismo Tiempo (Max: 8)"
+msgstr "Numero de Tareas de Descargas al Mismo Tiempo"
 
 #: tmainform.lboptionmaxretry.caption
 msgid "Number of retry times if tasks have download problems (-1 = always retry)"
 msgstr "Numero de Reintentos si la Tarea Tiene Problemas de Descarga (-1 = siempre reintenta)"
 
 #: tmainform.lboptionmaxthread.caption
-#, fuzzy
-#| msgid "Number of downloaded files per task at the same time (Max: 32)"
 msgid "Number of downloaded files per task at the same time"
-msgstr "Numero de Archivos Descargados por Tarea al Mismo Tiempo (Max: 32)"
+msgstr "Numero de Archivos Descargados por Tarea al Mismo Tiempo"
 
 #: tmainform.lboptionnewmangatime.caption
 msgid "New manga based on  it's update time (days)"
@@ -1420,10 +1421,6 @@ msgstr "Tipo"
 #: tmainform.lboptionrenamedigits.caption
 msgid "Rename  digits"
 msgstr "Renombrar Dígitos"
-
-#: tmainform.lboptionretryfailedtask.caption
-msgid "Number of retry times if task failed"
-msgstr ""
 
 #: tmainform.lboptionuser.caption
 msgctxt "tmainform.lboptionuser.caption"
@@ -1805,7 +1802,7 @@ msgstr "Filtro"
 
 #: tmainform.tsinfomanga.caption
 msgid "Info"
-msgstr ""
+msgstr "Información"
 
 #: tmainform.tsinformation.caption
 msgid "Manga Info"
@@ -1928,14 +1925,13 @@ msgid "&Add to queue"
 msgstr "&Agregar a Cola"
 
 #: tselectdirectoryform.btok.caption
-#, fuzzy
 msgctxt "tselectdirectoryform.btok.caption"
 msgid "OK"
 msgstr "OK"
 
 #: tselectdirectoryform.caption
 msgid "Select directory"
-msgstr ""
+msgstr "Seleccionar Directorio"
 
 #: tshutdowncounterform.btabort.caption
 msgid "&Abort"
