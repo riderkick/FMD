@@ -1499,6 +1499,10 @@ msgstr "Τύπος"
 msgid "Rename  digits"
 msgstr "Μετονομασία ψηφίων"
 
+#: tmainform.lboptionretryfailedtask.caption
+msgid "Number of retry times if task failed"
+msgstr ""
+
 #: tmainform.lboptionuser.caption
 msgctxt "tmainform.lboptionuser.caption"
 msgid "Username"

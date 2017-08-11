@@ -1442,6 +1442,10 @@ msgstr "Type"
 msgid "Rename  digits"
 msgstr "Rename  digits"
 
+#: tmainform.lboptionretryfailedtask.caption
+msgid "Number of retry times if task failed"
+msgstr "Number of retry times if task failed"
+
 #: tmainform.lboptionuser.caption
 msgctxt "tmainform.lboptionuser.caption"
 msgid "Username"
@@ -2244,4 +2248,3 @@ msgstr "Synchronizing data"
 #: uupdatethread.rs_updatinglist
 msgid "Updating list"
 msgstr "Updating list"
-

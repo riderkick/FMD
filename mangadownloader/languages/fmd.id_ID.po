@@ -356,7 +356,7 @@ msgstr "Key:"
 
 #: kissmanga.rs_kissmanga_usegoogledcp
 msgid "Use Google DCP"
-msgstr ""
+msgstr "Gunakan Google DCP"
 
 #: mangafox.rs_removewatermark
 msgid "Remove watermark"
@@ -1422,6 +1422,10 @@ msgstr "Tipe"
 msgid "Rename  digits"
 msgstr "Ganti nama digit"
 
+#: tmainform.lboptionretryfailedtask.caption
+msgid "Number of retry times if task failed"
+msgstr "Jumlah pengulangan pada tugas unduhan yang memiliki masalah"
+
 #: tmainform.lboptionuser.caption
 msgctxt "tmainform.lboptionuser.caption"
 msgid "Username"
@@ -1931,7 +1935,7 @@ msgstr "OK"
 
 #: tselectdirectoryform.caption
 msgid "Select directory"
-msgstr ""
+msgstr "Pilih direktori"
 
 #: tshutdowncounterform.btabort.caption
 msgid "&Abort"
@@ -2223,4 +2227,3 @@ msgstr "Sinkronisasi data"
 #: uupdatethread.rs_updatinglist
 msgid "Updating list"
 msgstr "Memperbarui daftar"
-

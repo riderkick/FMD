@@ -1444,6 +1444,10 @@ msgstr "Type"
 msgid "Rename  digits"
 msgstr "Rename  digits"
 
+#: tmainform.lboptionretryfailedtask.caption
+msgid "Number of retry times if task failed"
+msgstr ""
+
 #: tmainform.lboptionuser.caption
 msgctxt "tmainform.lboptionuser.caption"
 msgid "Username"

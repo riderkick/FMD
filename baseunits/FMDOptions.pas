@@ -122,7 +122,12 @@ var
 
   OptionPDFQuality: Cardinal = 95;
 
+  // connections
+  OptionMaxParallel: Integer = 1;
   OptionMaxThreads: Integer = 1;
+  OptionMaxRetry: Integer = 5;
+  OptionConnectionTimeout: Integer = 30;
+  OptionRetryFailedTask: Integer = 1;
 
   // view
   OptionEnableLoadCover: Boolean = False;

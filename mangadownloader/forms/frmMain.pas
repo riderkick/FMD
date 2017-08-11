@@ -82,6 +82,7 @@ type
     edURL: TEditButton;
     edWebsitesSearch: TEditButton;
     lbLogFileName: TLabel;
+    lbOptionRetryFailedTask: TLabel;
     lbOptionFilenameCustomRenameHint: TLabel;
     lbOptionFilenameCustomRename: TLabel;
     lbOptionMangaCustomRenameHint: TLabel;
@@ -136,6 +137,7 @@ type
     sbSaveTo: TScrollBox;
     sbWebsiteOptions: TScrollBox;
     btDownloadSplit: TSpeedButton;
+    seOptionRetryFailedTask: TSpinEdit;
     tsInfoManga: TTabSheet;
     tsinfoFilterAdv: TTabSheet;
     tsCustomColor: TTabSheet;
@@ -4679,10 +4681,13 @@ begin
     tbDropTargetOpacity.Position := ReadInteger('droptarget', 'Opacity', 255);
 
     // connection
-    seOptionMaxParallel.Value := ReadInteger('connections', 'NumberOfTasks', 1);
-    seOptionMaxThread.Value := ReadInteger('connections', 'NumberOfThreadsPerTask', 1);
-    seOptionMaxRetry.Value := ReadInteger('connections', 'Retry', 5);;
-    seOptionConnectionTimeout.Value := ReadInteger('connections', 'ConnectionTimeout', 30);
+    seOptionMaxParallel.Value := ReadInteger('connections', 'NumberOfTasks', OptionMaxParallel);
+    seOptionMaxThread.Value := ReadInteger('connections', 'NumberOfThreadsPerTask', OptionMaxThreads);
+    seOptionMaxRetry.Value := ReadInteger('connections', 'Retry', OptionMaxRetry);;
+    seOptionConnectionTimeout.Value := ReadInteger('connections', 'ConnectionTimeout', OptionConnectionTimeout);
+    seOptionRetryFailedTask.Value := ReadInteger('connections', 'NumberOfAutoRetryFailedTask', OptionRetryFailedTask);
+
+    // proxy
     cbOptionUseProxy.Checked := ReadBool('connections', 'UseProxy', False);
     cbOptionProxyType.Text := ReadString('connections', 'ProxyType', 'HTTP');
     edOptionHost.Text := ReadString('connections', 'Host', '');
@@ -4820,6 +4825,9 @@ begin
       WriteInteger('connections', 'NumberOfThreadsPerTask', seOptionMaxThread.Value);
       WriteInteger('connections', 'Retry', seOptionMaxRetry.Value);
       WriteInteger('connections', 'ConnectionTimeout', seOptionConnectionTimeout.Value);
+      WriteInteger('connections', 'NumberOfAutoRetryFailedTask', seOptionRetryFailedTask.Value);
+
+      // proxy
       WriteBool('connections', 'UseProxy', cbOptionUseProxy.Checked);
       WriteString('connections', 'ProxyType', cbOptionProxyType.Text);
       WriteString('connections', 'Host', edOptionHost.Text);
@@ -4955,12 +4963,16 @@ begin
     OptionShowBalloonHint := cbOptionShowBalloonHint.Checked;
 
     //connection
-    DLManager.maxDLTasks := seOptionMaxParallel.Value;
-    DLManager.maxDLThreadsPerTask := seOptionMaxThread.Value;
-    DLManager.retryConnect := seOptionMaxRetry.Value;
+    OptionMaxParallel := seOptionMaxParallel.Value;
     OptionMaxThreads := seOptionMaxThread.Value;
-    SetDefaultTimeoutAndApply(seOptionConnectionTimeout.Value * 1000);
-    SetDefaultRetryCountAndApply(seOptionMaxRetry.Value);
+    OptionMaxRetry := seOptionMaxRetry.Value;
+    DLManager.RetryConnect := OptionMaxRetry;
+    SetDefaultRetryCountAndApply(OptionMaxRetry);
+    OptionConnectionTimeout := seOptionConnectionTimeout.Value;
+    SetDefaultTimeoutAndApply(OptionConnectionTimeout * 1000);
+    OptionRetryFailedTask := seOptionRetryFailedTask.Value;
+
+    // proxy
     if cbOptionUseProxy.Checked then
       SetDefaultProxyAndApply(cbOptionProxyType.Text, edOptionHost.Text,
         edOptionPort.Text, edOptionUser.Text, edOptionPass.Text)
@@ -4969,7 +4981,7 @@ begin
 
     //saveto
     OptionPDFQuality := seOptionPDFQuality.Value;
-    DLManager.compress := rgOptionCompress.ItemIndex;
+    DLManager.CompressType := rgOptionCompress.ItemIndex;
     OptionChangeUnicodeCharacter := cbOptionChangeUnicodeCharacter.Checked;
     OptionChangeUnicodeCharacterStr := edOptionChangeUnicodeCharacterStr.Text;
     OptionRemoveMangaNameFromChapter := cbOptionRemoveMangaNameFromChapter.Checked;

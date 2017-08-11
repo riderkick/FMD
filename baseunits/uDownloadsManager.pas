@@ -91,9 +91,10 @@ type
   protected
     procedure CheckOut;
     procedure Execute; override;
-    procedure Compress;
+    function Compress: Boolean;
     procedure SyncStop;
     procedure StatusFailedToCreateDir;
+    function FirstFailedChapters: Integer;
     function FailedChaptersExist: Boolean;
     // show notification when download completed
     procedure ShowBalloonHint;
@@ -197,13 +198,9 @@ type
     CS_StatusCount: TRTLCriticalSection;
     StatusCount: array [TDownloadStatusType] of Integer;
     // disabled count
-    DisabledCount: Integer;
-
-    compress, retryConnect,
-    // max. active tasks
-    maxDLTasks,
-    // max. download threads per task
-    maxDLThreadsPerTask: Integer;
+    DisabledCount,
+    CompressType,
+    RetryConnect: Integer;
 
     //downloaded chapter list database
     DownloadedChapters: TDownloadedChaptersDB;
@@ -779,20 +776,21 @@ begin
   {$ENDIF}
 end;
 
-procedure TTaskThread.Compress;
+function TTaskThread.Compress: Boolean;
 var
   uPacker: TPacker;
   i: Integer;
   s: String;
 begin
-  if (Container.Manager.compress >= 1) then
+  Result := True;
+  if (Container.Manager.CompressType >= 1) then
   begin
     Container.DownloadInfo.Status :=
       Format('[%d/%d] %s', [Container.CurrentDownloadChapterPtr + 1,
       Container.ChapterLinks.Count, RS_Compressing]);
     uPacker := TPacker.Create;
     try
-      case Container.Manager.compress of
+      case Container.Manager.CompressType of
         1: uPacker.Format := pfZIP;
         2: uPacker.Format := pfCBZ;
         3: uPacker.Format := pfPDF;
@@ -807,7 +805,7 @@ begin
         if s <> '' then
           uPacker.FileList.Add(s);
       end;
-      uPacker.Execute;
+      Result := uPacker.Execute;
     except
       on E: Exception do
         MainForm.ExceptionHandler(Self, E);
@@ -831,13 +829,18 @@ begin
     RS_FailedToCreateDir, Length(CurrentWorkingDir), LineEnding + CurrentWorkingDir]);
 end;
 
-function TTaskThread.FailedChaptersExist: Boolean;
+function TTaskThread.FirstFailedChapters: Integer;
 var
   i: Integer;
 begin
   for i := 0 to Container.ChaptersStatus.Count - 1 do
-    if Container.ChaptersStatus[i] = 'F' then Exit(True);
-  Result := False;
+    if Container.ChaptersStatus[i] = 'F' then Exit(i);
+  Result := -1;
+end;
+
+function TTaskThread.FailedChaptersExist: Boolean;
+begin
+  Result := FirstFailedChapters <> -1;
 end;
 
 procedure TTaskThread.ShowBalloonHint;
@@ -909,7 +912,7 @@ begin
         Task.CurrentWorkingDir,
         workFilename,
         savedFilename,
-        Task.Container.Manager.retryConnect);
+        Task.Container.Manager.RetryConnect);
   end;
   if Terminated then Exit(False);
   if Result then
@@ -987,9 +990,9 @@ begin
     if Modules.MaxConnectionLimit[Container.ModuleId] > 0 then
       currentMaxThread := Modules.MaxConnectionLimit[Container.ModuleId]
     else
-      currentMaxThread := Container.Manager.maxDLThreadsPerTask;
-    if currentMaxThread > Container.Manager.maxDLThreadsPerTask then
-      currentMaxThread := Container.Manager.maxDLThreadsPerTask;
+      currentMaxThread := OptionMaxThreads;
+    if currentMaxThread > OptionMaxThreads then
+      currentMaxThread := OptionMaxThreads;
   end;
 
   if Container.PageLinks.Count > 0 then
@@ -1095,6 +1098,7 @@ procedure TTaskThread.Execute;
 var
   j: Integer;
   DynamicPageLink: Boolean;
+  FailedRetryCount: Integer = 0;
 begin
   Container.ThreadState := True;
   Container.DownloadInfo.TransferRate := FormatByteSize(Container.ReadCount, true);
@@ -1271,7 +1275,8 @@ begin
         begin
           Container.Status := STATUS_COMPRESS;
           Container.DownloadInfo.Progress := '';
-          Compress;
+          if not Compress then
+            Container.Status := STATUS_FAILED;
         end
         else
           Container.Status := STATUS_FAILED;
@@ -1295,6 +1300,16 @@ begin
       Container.PageContainerLinks.Clear;
       Container.CurrentDownloadChapterPtr :=
         InterLockedIncrement(Container.CurrentDownloadChapterPtr);
+
+      if (Container.CurrentDownloadChapterPtr = Container.ChapterLinks.Count) and
+         (FailedRetryCount < OptionRetryFailedTask) then
+      begin
+        Container.CurrentDownloadChapterPtr := FirstFailedChapters;
+        if container.CurrentDownloadChapterPtr <> -1 then
+          Inc(FailedRetryCount)
+        else
+          Container.CurrentDownloadChapterPtr := Container.ChapterLinks.Count;
+      end;
     end;
 
     if FailedChaptersExist then
@@ -1736,10 +1751,10 @@ begin
       if Items[i].ThreadState then
         Inc(tcount);
 
-    if tcount < maxDLTasks then
+    if tcount < OptionMaxParallel then
       for i := 0 to Items.Count - 1 do
         with Items[i] do
-          if (tcount < maxDLTasks) and
+          if (tcount < OptionMaxParallel) and
             (Status = STATUS_WAIT) and
             Modules.CanCreateTask(ModuleId) then
           begin
@@ -1792,7 +1807,7 @@ begin
   for i := 0 to Items.Count - 1 do
     with Items[i] do
       if Status in [STATUS_DOWNLOAD, STATUS_PREPARE] then
-        if (tcount < maxDLTasks) and
+        if (tcount < OptionMaxParallel) and
           Modules.CanCreateTask(ModuleId) then
         begin
           Inc(tcount);
