@@ -4895,7 +4895,6 @@ var
   i: Integer;
   isStillHaveCurrentWebsite: Boolean = False;
   data: PSingleItem;
-  St: TStringList;
 begin
   try
     // general
@@ -5023,13 +5022,7 @@ begin
       else
         Logger.SendError('Log file error ' + MainExceptionHandler.LogFileStatus + '"' + edLogFileName.Text + '"');
       Logger.Send(QuotedStrd(Application.Title)+' started with [PID:'+IntToStr(GetProcessID)+'] [HANDLE:'+IntToStr(GetCurrentProcess)+']');
-      St := TStringList.Create;
-      try
-        St.AddText(SimpleException.GetApplicationInfo);
-        Logger.Send('Application info', St);
-      finally
-        St.Free;
-      end;
+      Logger.SendStrings('Application info', SimpleException.GetApplicationInfo);
     end
     else
     if (not ckEnableLogging.Checked) and (Logger.Enabled) then

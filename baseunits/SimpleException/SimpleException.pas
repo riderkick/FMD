@@ -118,6 +118,17 @@ procedure DoneSimpleExceptionHandler;
 var
   MainExceptionHandler: TSimpleException;
 
+{$IFDEF MULTILOG}
+type
+  { TLoggerException }
+
+  TLoggerException = class helper for TLogger
+  public
+    procedure SendExceptionStr(const AText: String; AExceptionStr: String);
+    procedure SendStrings(const AText: String; AValue: String);
+  end;
+{$ENDIF}
+
 resourcestring
   SExceptionDialogTitle = 'Exception Info';
   SExceptionCaption = 'An error occured during program execution:';
@@ -132,23 +143,18 @@ implementation
 uses InterfaceBase {$IF LCL_FULLVERSION >= 1080000}, LCLPlatformDef{$ENDIF};
 
 {$IFDEF MULTILOG}
-type
-
-  { TLoggerException }
-
-  TLoggerException = class helper for TLogger
-  public
-    procedure SendExceptionStr(const AText: String; AExceptionStr: String);
-  end;
-
 { TLoggerException }
 
 procedure TLoggerException.SendExceptionStr(const AText: String; AExceptionStr: String);
 begin
   SendBuffer(ltException, AText, AExceptionStr[1], Length(AExceptionStr));
 end;
-{$ENDIF}
 
+procedure TLoggerException.SendStrings(const AText: String; AValue: String);
+begin
+  SendBuffer(ltStrings, AText, AValue[1], Length(AValue));
+end;
+{$ENDIF}
 
 procedure SetMaxStackCount(const ACount: Integer);
 begin
