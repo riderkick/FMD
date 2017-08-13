@@ -6,12 +6,9 @@ interface
 
 uses
   Classes, SysUtils, WebsiteModules, uData, uBaseUnit, uDownloadsManager,
-  XQueryEngineHTML, httpsendthread, synautil;
+  XQueryEngineHTML, synautil;
 
 implementation
-
-const
-  dirurl = '/MangaList';
 
 function GetNameAndLink(const MangaInfo: TMangaInformation;
   const ANames, ALinks: TStringList; const AURL: String;
@@ -20,7 +17,7 @@ var
   v: IXQValue;
 begin
   Result := NET_PROBLEM;
-  if MangaInfo.FHTTP.GET(Module.RootURL + dirurl) then
+  if MangaInfo.FHTTP.GET(Module.RootURL + '/MangaList') then
   begin
     Result := NO_ERROR;
     with TXQueryEngineHTML.Create(MangaInfo.FHTTP.Document) do
@@ -38,8 +35,6 @@ end;
 
 function GetInfo(const MangaInfo: TMangaInformation;
   const AURL: String; const Module: TModuleContainer): Integer;
-var
-  v: IXQValue;
 begin
   Result := NET_PROBLEM;
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
@@ -62,11 +57,7 @@ begin
           artists := XPathString('//*[@class="RedHeadLabel"][starts-with(.,"Artist(s)")]/following-sibling::*[1]');
           genres := XPathString('//*[@class="RedHeadLabel"][starts-with(.,"Genre(s)")]/following-sibling::*[1]');
           summary := Trim(XPathString('//*[@class="RedHeadLabel"][starts-with(.,"Summary")]/following-sibling::*'));
-          for v in XPath('//div[@class="content"]/div[@class="divThickBorder"][3]/table//td[1]/span/a') do
-          begin
-            chapterLinks.Add(v.toNode.getAttribute('href'));
-            chapterName.Add(Trim(title + ' : ' + XPathString('./text()', v)));
-          end;
+          XPathHREFAll('//div[@class="content"]/div[@class="divThickBorder"][3]/table//td[1]/span/a', chapterLinks, chapterName);
         finally
           Free;
         end;
