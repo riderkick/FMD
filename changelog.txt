@@ -4,6 +4,12 @@ Project page: https://github.com/riderkick/FMD
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.123.0 (13-08-2017)
+[+] Added option for auto retry failed task
+[*] MangaInn: fixed chapter name
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.123.0...0.9.123.0
+
 0.9.122.0 (02-08-2017)
 [*] MangaAe: fixed all
 [*] Tumangaonline: fixed load manhwa
