@@ -57,7 +57,10 @@ type
 
   TSimpleException = class
   private
+    FLogFileHandle: TextFile;
     FLogFileName: String;
+    FLogFileOK: Boolean;
+    FLogFileStatus: String;
     FLastSender: TObject;
     FLastException: Exception;
     FApplicationInfo,
@@ -81,6 +84,8 @@ type
     IgnoredExceptionList: TStringList;
     property ApplicationInfo: String read FApplicationInfo;
     property LogFileName: String read FLogFileName write SetLogFileName;
+    property LogFileOK: Boolean read FLogFileOK;
+    property LogFileStatus: String read FLogFileStatus;
     property MaxStackCount: Integer read FMaxStackCount write SetMaxStackCount;
     property LastSender: TObject read FLastSender;
     property LastException: Exception read FLastException;
@@ -91,6 +96,7 @@ type
     destructor Destroy; override;
   end;
 
+function GetIOResultStr(const AIOResult: Word): String;
 function GetOSVer: String;
 function GetFPCVersion: String;
 function GetLCLVersion: String;
@@ -148,6 +154,43 @@ procedure SetMaxStackCount(const ACount: Integer);
 begin
   if MainExceptionHandler <> nil then
     MainExceptionHandler.MaxStackCount := ACount;
+end;
+
+function GetIOResultStr(const AIOResult: Word): String;
+begin
+  Result := IntToStr(AIOResult) + ': ';
+  case AIOResult of
+    0  : Result := Result + 'OK.';
+    2  : Result := Result + 'File not found.';
+    3  : Result := Result + 'Path not found.';
+    4  : Result := Result + 'Too many open files.';
+    5  : Result := Result + 'Access denied.';
+    6  : Result := Result + 'Invalid file handle.';
+    12 : Result := Result + 'Invalid file-access mode.';
+    15 : Result := Result + 'Invalid disk number.';
+    16 : Result := Result + 'Cannot remove current directory.';
+    17 : Result := Result + 'Cannot rename across volumes.';
+    100: Result := Result + 'Error when reading from disk.';
+    101: Result := Result + 'Error when writing to disk.';
+    102: Result := Result + 'File not assigned.';
+    103: Result := Result + 'File not open.';
+    104: Result := Result + 'File not opened for input.';
+    105: Result := Result + 'File not opened for output.';
+    106: Result := Result + 'Invalid number.';
+    150: Result := Result + 'Disk is write protected.';
+    151: Result := Result + 'Unknown device.';
+    152: Result := Result + 'Drive not ready.';
+    153: Result := Result + 'Unknown command.';
+    154: Result := Result + 'CRC check failed.';
+    155: Result := Result + 'Invalid drive specified..';
+    156: Result := Result + 'Seek error on disk.';
+    157: Result := Result + 'Invalid media type.';
+    158: Result := Result + 'Sector not found.';
+    159: Result := Result + 'Printer out of paper.';
+    160: Result := Result + 'Error when writing to device.';
+    161: Result := Result + 'Error when reading from device.';
+    162: Result := Result + 'Hardware failure.';
+  end;
 end;
 
 function GetOSVer: String;
@@ -324,9 +367,29 @@ begin
 end;
 
 procedure TSimpleException.SetLogFileName(const AValue: String);
+var
+  ir: Word;
+  fe: Boolean;
 begin
   if FLogFileName = AValue then Exit;
   FLogFileName := AValue;
+  AssignFile(FLogFileHandle, FLogFileName);
+  fe := FileExistsUTF8(FLogFileName);
+  if fe then
+  {$I-}
+    Append(FLogFileHandle)
+  else
+    Rewrite(FLogFileHandle);
+  {$I+}
+  ir := IOResult;
+  if ir = 0 then
+  begin
+    CloseFile(FLogFileHandle);
+    if not fe then
+      Erase(FLogFileHandle);
+  end;
+  FLogFileOK := ir = 0;
+  FLogFileStatus := GetIOResultStr(ir);
 end;
 
 procedure TSimpleException.ExceptionHandler;
@@ -468,20 +531,26 @@ end;
 
 procedure TSimpleException.SaveLogToFile(const LogMsg: String);
 var
-  f: TextFile;
+  ir: Word;
 begin
-  if LogFileName <> '' then
+  if FLogFileName = '' then Exit;
+  if FileExistsUTF8(FLogFileName) then
+  {$I-}
+    Append(FLogFileHandle)
+  else
+    Rewrite(FLogFileHandle);
+  {$I+}
+  ir := IOResult;
+  if ir = 0 then
   begin
-    AssignFile(f, LogFileName);
-    try
-      if FileExistsUTF8(LogFileName) then
-        Append(f)
-      else
-        Rewrite(f);
-      WriteLn(f, LogMsg);
-    finally
-      CloseFile(f);
-    end;
+    WriteLn(FLogFileHandle, LogMsg);
+    CloseFile(FLogFileHandle);
+  end
+  else
+  begin
+    FLastReport := 'Failed to write exception message to "' + (FLogFileName) + '"' + LineEnding +
+      '  ' + GetIOResultStr(ir) + LineEnding +
+      FLastReport;
   end;
 end;
 
@@ -550,10 +619,11 @@ var
   AFileVersion, AProductVersion: String;
 begin
   inherited Create;
+  FLogFileName := '';
+  FLogFileOK := False;
+  FLogFileStatus := '';
   if Trim(FileName) <> '' then
-    LogFileName := FileName
-  else
-    LogFileName := ChangeFileExt(Application.ExeName, '.log');
+    LogFileName := FileName;
   InitCriticalSection(FSimpleCriticalSection);
   IgnoredExceptionList := TStringList.Create;
   FMaxStackCount := 20;

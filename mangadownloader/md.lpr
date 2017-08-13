@@ -63,13 +63,16 @@ begin
     Application.Title := 'Free Manga Downloader';
     RequireDerivedFormResource := True;
     Logger.Enabled := False;
-    InitSimpleExceptionHandler;
+    InitSimpleExceptionHandler(LogFileName);
     if EnableLogging then
     begin
       Logger.Enabled := True;
-      FileLogger := TFileChannel.Create(LogFileName, [fcoShowHeader, fcoShowPrefix, fcoShowTime]);
-      Logger.Channels.Add(FileLogger);
-      Logger.Send(QuotedStrd(Application.Title)+' started with [PID:'+IntToStr(GetProcessID)+'] [HANDLE:'+IntToStr(GetCurrentProcess)+']');
+      if MainExceptionHandler.LogFileOK then
+      begin
+        FileLogger := TFileChannel.Create(LogFileName, [fcoShowHeader, fcoShowPrefix, fcoShowTime]);
+        Logger.Channels.Add(FileLogger);
+        Logger.Send(QuotedStrd(Application.Title)+' started with [PID:'+IntToStr(GetProcessID)+'] [HANDLE:'+IntToStr(GetCurrentProcess)+']');
+      end;
       s := TStringList.Create;
       try
         s.AddText(SimpleException.GetApplicationInfo);

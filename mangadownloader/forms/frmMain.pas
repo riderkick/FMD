@@ -5015,8 +5015,13 @@ begin
     if ckEnableLogging.Checked and (not Logger.Enabled) then
     begin
       Logger.Enabled := True;
-      FileLogger := TFileChannel.Create(edLogFileName.Text, [fcoShowHeader, fcoShowPrefix, fcoShowTime]);
-      Logger.Channels.Add(FileLogger);
+      if MainExceptionHandler.LogFileOK then
+      begin
+        FileLogger := TFileChannel.Create(edLogFileName.Text, [fcoShowHeader, fcoShowPrefix, fcoShowTime]);
+        Logger.Channels.Add(FileLogger);
+      end
+      else
+        Logger.SendError('Log file error ' + MainExceptionHandler.LogFileStatus + '"' + edLogFileName.Text + '"');
       Logger.Send(QuotedStrd(Application.Title)+' started with [PID:'+IntToStr(GetProcessID)+'] [HANDLE:'+IntToStr(GetCurrentProcess)+']');
       St := TStringList.Create;
       try
@@ -5030,8 +5035,11 @@ begin
     if (not ckEnableLogging.Checked) and (Logger.Enabled) then
     begin
       Logger.Enabled := False;
-      Logger.Channels.Remove(FileLogger);
-      FreeAndNil(FileLogger);
+      if Assigned(FileLogger) then
+      begin
+        Logger.Channels.Remove(FileLogger);
+        FreeAndNil(FileLogger);
+      end;
     end;
 
     //languages
