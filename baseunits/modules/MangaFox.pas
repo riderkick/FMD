@@ -53,7 +53,7 @@ begin
           for v in XPath('//ul[@class="chlist"]/li/div/*[self::h3 or self::h4]') do
           begin
             chapterLinks.Add(StringReplace(XPathString('a/@href', v), '1.html', '', [rfReplaceAll]));
-            chapterName.Add(XPathString('string-join(*/text()," ")', v));
+            chapterName.Add(XPathString('string-join(.//*[not(contains(@class,"newch"))]/text()," ")', v));
           end;
           InvertStrings([chapterLinks, chapterName]);
         finally
