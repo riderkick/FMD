@@ -8,13 +8,13 @@ msgstr ""
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: pt_BR\n"
-"X-Generator: Poedit 1.8.12\n"
+"Language: pt-BR\n"
+"X-Generator: Poedit 2.0.1\n"
 "Plural-Forms: \n"
 
 #: batoto.rs_serverselection
 msgid "Image server:"
-msgstr ""
+msgstr "Servidor da imagem:"
 
 #: batoto.rs_serverselectionitems
 msgid ""
@@ -23,7 +23,7 @@ msgid ""
 "Image Server NA\n"
 "CDN (default)\n"
 "CDN2 (testing)\n"
-msgstr ""
+msgstr "Auto\nServidor da Imagem EU\nServidor da Imagem NA\nCDN (padrão)\nCDN2 (testando)\n"
 
 #: batoto.rs_showalllang
 msgid "Show all language"
@@ -51,14 +51,7 @@ msgid ""
 "1600x\n"
 "2400x\n"
 "Original\n"
-msgstr ""
-"Auto\n"
-"780x\n"
-"980x\n"
-"1280x\n"
-"1600x\n"
-"2400x\n"
-"Original\n"
+msgstr "Auto\n780x\n980x\n1280x\n1600x\n2400x\nOriginal\n"
 
 #: frmaccountmanager.rs_accountdeleteconfirmation
 msgid "Are you sure you want to delete this account?"
@@ -156,9 +149,7 @@ msgstr "Dividir download"
 msgid ""
 "This title are already in download list.\n"
 "Do you want to download it anyway?\n"
-msgstr ""
-"Este título já está na lista de download.\n"
-"Você quer baixá-lo mesmo assim\n"
+msgstr "Este título já está na lista de download.\nVocê quer baixá-lo mesmo assim?\n"
 
 #: frmmain.rs_dlgtypeinnewchapter
 msgid "Type in new chapter:"
@@ -184,19 +175,14 @@ msgstr "URL não suportada!"
 msgid ""
 "Download all\n"
 "Add to favorites\n"
-msgstr ""
-"Baixar tudo\n"
-"Adicionar aos favoritos\n"
+msgstr "Baixar tudo\nAdicionar aos favoritos\n"
 
 #: frmmain.rs_filterstatusitems
 msgid ""
 "Completed\n"
 "Ongoing\n"
 "<none>\n"
-msgstr ""
-"Completo\n"
-"Em Andamento\n"
-"<vazio>\n"
+msgstr "Completo\nEm Andamento\n<vazio>\n"
 
 #: frmmain.rs_fmdalreadyrunning
 msgid "Free Manga Downloader already running!"
@@ -206,9 +192,7 @@ msgstr "Free Manga Downloader já está em execução!"
 msgid ""
 "There is a problem with this data!\n"
 "Removing and re-adding this data may fix the problem.\n"
-msgstr ""
-"Há um problema com estes dados!\n"
-"Removendo e re-adicionando estes dados pode corrigir o problema.\n"
+msgstr "Há um problema com estes dados!\nRemovendo e re-adicionando estes dados pode corrigir o problema.\n"
 
 #: frmmain.rs_history
 msgid "History"
@@ -262,11 +246,7 @@ msgid ""
 "%s : Chapter filename\n"
 "\n"
 "Example : \"%s%s\"\n"
-msgstr ""
-"%s : Caminho para o mangá\n"
-"%s : Nome do capítulo\n"
-"\n"
-"Examplo : \"%s%s\"\n"
+msgstr "%s : Caminho para o mangá\n%s : Nome do capítulo\n\nExamplo : \"%s%s\"\n"
 
 #: frmmain.rs_loading
 msgid "Loading ..."
@@ -300,11 +280,7 @@ msgid ""
 "Exit\n"
 "Shutdown\n"
 "Hibernate\n"
-msgstr ""
-"Nada\n"
-"Sair\n"
-"Desligar\n"
-"Hibernar\n"
+msgstr "Nada\nSair\nDesligar\nHibernar\n"
 
 #: frmmain.rs_selected
 msgid "Selected: %d"
@@ -345,15 +321,15 @@ msgstr "Sistema irá desligar em %d segundos."
 
 #: kissmanga.rs_kissmanga_initvector
 msgid "Initialization Vector:"
-msgstr ""
+msgstr "Vetor de Inicialização:"
 
 #: kissmanga.rs_kissmanga_key
 msgid "Key:"
-msgstr ""
+msgstr "Chave:"
 
 #: kissmanga.rs_kissmanga_usegoogledcp
 msgid "Use Google DCP"
-msgstr ""
+msgstr "Usar Google DCP"
 
 #: mangafox.rs_removewatermark
 msgid "Remove watermark"
@@ -595,7 +571,7 @@ msgstr "Visite meu blog"
 
 #: tmainform.caption
 msgid "Free Manga Downloader"
-msgstr ""
+msgstr "Free Manga Downloader"
 
 #: tmainform.cbaddasstopped.caption
 msgid "Add to download list as stopped task"
@@ -675,7 +651,7 @@ msgstr "Habilitar buscar em tempo real (lento em lista longas)"
 
 #: tmainform.cboptionminimizeonstart.caption
 msgid "Minimize on start"
-msgstr ""
+msgstr "Minimizar ao iniciar"
 
 #: tmainform.cboptionminimizetotray.caption
 msgid "Minimize to tray"
@@ -695,7 +671,7 @@ msgstr "Remover nome do mangá do capítulo"
 
 #: tmainform.cboptionshowballoonhint.caption
 msgid "Show balloon hint"
-msgstr ""
+msgstr "Exibir dicas em balões"
 
 #: tmainform.cboptionshowdeletetaskdialog.caption
 msgid "Delete task/favorite"
@@ -711,7 +687,7 @@ msgstr "Exibir Barra de Ferramentas de Downloads"
 
 #: tmainform.cboptionshowdownloadtoolbardeleteall.caption
 msgid "Show \"Delete all completed tasks\" in downloads toolbar"
-msgstr ""
+msgstr "Exibir \"Apagar todas tarefas concluídas\" na barra de ferramentas"
 
 #: tmainform.cboptionshowquitdialog.caption
 msgid "Exit FMD"
@@ -822,9 +798,7 @@ msgstr "Troca de Sexo"
 msgid ""
 "Girls dressing up as guys, guys dressing up as girls.\n"
 "Guys turning into girls, girls turning into guys.\n"
-msgstr ""
-"Meninas vestindo-se como caras, caras vestir-se como meninas.r\n"
-"Rapazes se transformando em garotas, garotas se transformando em caras\n"
+msgstr "Meninas vestindo-se como caras, caras vestir-se como meninas.\nRapazes se transformando em garotas, garotas se transformando em caras.\n"
 
 #: tmainform.ckfilterharem.caption
 msgid "Harem"
@@ -1231,16 +1205,7 @@ msgid ""
 "- Separate multiple genres with ','.\n"
 "- Exclude a genre by placing '!' or '-' at the beginning of a genre.\n"
 "- Example: Adventure,!Ecchi,Comedy.\n"
-msgstr ""
-"Géneros:r\n"
-"- Marcado: Inclua este gênero.r\n"
-"- Desmarcado: exclua esse gênero.r\n"
-"- Cinzento: Não importa.r\n"
-"r\n"
-"Géneros Personalizados:r\n"
-"- Separar vários gêneros com ','.r\n"
-"- Excluir um gênero colocando '!' Ou '-' no início de um gênero.r\n"
-"- Exemplo: Aventura, Ecchi, Comédia.\n"
+msgstr "Géneros:\n- Marcado: Inclua este gênero.\n- Desmarcado: exclua esse gênero.\n- Cinzento: Não importa.\n\nGéneros Personalizados:\n- Separar vários gêneros com ','.\n- Excluir um gênero colocando '!' Ou '-' no início de um gênero.\n- Exemplo: Aventura, Ecchi, Comédia.\n"
 
 #: tmainform.lbfilterstatus.caption
 msgctxt "TMAINFORM.LBFILTERSTATUS.CAPTION"
@@ -1292,16 +1257,7 @@ msgid ""
 "\n"
 "Note:\n"
 "Chapter folder name must have at least %CHAPTER% or %NUMBERING%.\n"
-msgstr ""
-"%WEBSITE% : Nome doWebsite\n"
-"%MANGA% : Título do Mangá\n"
-"%CHAPTER% : Título do capítulo\n"
-"%AUTHOR% : Autor\n"
-"%ARTIST% : Artista\n"
-"%NUMBERING% : Número\n"
-"\n"
-"Nota:\n"
-"O nome da pasta do capítulo deve ter pelo menos %CHAPTER% ou %NUMBERING%.\n"
+msgstr "%WEBSITE% : Nome doWebsite\n%MANGA% : Título do Mangá\n%CHAPTER% : Título do capítulo\n%AUTHOR% : Autor\n%ARTIST% : Artista\n%NUMBERING% : Número\n\nNota:\nO nome da pasta do capítulo deve ter pelo menos %CHAPTER% ou %NUMBERING%.\n"
 
 #: tmainform.lboptionconnectiontimeout.caption
 msgid "Connection timeout (seconds)"
@@ -1338,14 +1294,7 @@ msgid ""
 "\n"
 "Note:\n"
 "Filename must have at least %FILENAME%\n"
-msgstr ""
-"%WEBSITE% : Nome do Website\n"
-"%MANGA% : Título do Mangá\n"
-"%CHAPTER% : Título do Capítulo\n"
-"%FILENAME% : Nome do arquivo\n"
-"\n"
-"Nota:\n"
-"Nome do arquivo deve ter pelo menos %FILENAME%\n"
+msgstr "%WEBSITE% : Nome do Website\n%MANGA% : Título do Mangá\n%CHAPTER% : Título do Capítulo\n%FILENAME% : Nome do arquivo\n\nNota:\nNome do arquivo deve ter pelo menos %FILENAME%\n"
 
 #: tmainform.lboptionhost.caption
 msgid "Host"
@@ -1378,20 +1327,12 @@ msgid ""
 "\n"
 "Note:\n"
 "Manga folder name must have at least %MANGA%.\n"
-msgstr ""
-"%WEBSITE% : Nome do Website\n"
-"%MANGA% : Título do Mangá\n"
-"%AUTHOR% : Autor\n"
-"%ARTIST% : Artista\n"
-"\n"
-"Nota:\n"
-"Nome da pasta Manga deve ter pelo menos %MANGA%.\n"
+msgstr "%WEBSITE% : Nome do Website\n%MANGA% : Título do Mangá\n%AUTHOR% : Autor\n%ARTIST% : Artista\n\nNota:\nNome da pasta Manga deve ter pelo menos %MANGA%.\n"
 
 #: tmainform.lboptionmaxparallel.caption
-#, fuzzy
 #| msgid "Number of downloaded tasks at the same time (Max: 8)"
 msgid "Number of downloaded tasks at the same time"
-msgstr "Número de tarefas de download ao mesmo tempo (Máx: 8)"
+msgstr "Número de tarefas baixadas ao mesmo tempo"
 
 #: tmainform.lboptionmaxretry.caption
 #| msgid "Number of retry times if tasks have download problems (0 = always retry)"
@@ -1399,10 +1340,9 @@ msgid "Number of retry times if tasks have download problems (-1 = always retry)
 msgstr "Número de tentativas de repetição se as tarefas tiverem problemas de download (-1 = sempre tentar novamente)"
 
 #: tmainform.lboptionmaxthread.caption
-#, fuzzy
 #| msgid "Number of downloaded files per task at the same time (Max: 32)"
 msgid "Number of downloaded files per task at the same time"
-msgstr "Número de arquivos baixados por tarefa ao mesmo tempo (Máx: 32)"
+msgstr "Número de arquivos baixados por tarefa ao mesmo tempo"
 
 #: tmainform.lboptionnewmangatime.caption
 msgid "New manga based on  it's update time (days)"
@@ -1441,7 +1381,7 @@ msgstr "Renomear dígitos"
 
 #: tmainform.lboptionretryfailedtask.caption
 msgid "Number of retry times if task failed"
-msgstr ""
+msgstr "Número de tentativas se a tarefa falhar"
 
 #: tmainform.lboptionuser.caption
 msgctxt "tmainform.lboptionuser.caption"
@@ -1488,7 +1428,7 @@ msgstr "Abortar"
 
 #: tmainform.michapterlistascending.caption
 msgid "Ascending"
-msgstr ""
+msgstr "Ascendente"
 
 #: tmainform.michapterlistcheckall.caption
 msgctxt "tmainform.michapterlistcheckall.caption"
@@ -1501,7 +1441,7 @@ msgstr "Marcar selecionado"
 
 #: tmainform.michapterlistdescending.caption
 msgid "Descending"
-msgstr ""
+msgstr "Descendente"
 
 #: tmainform.michapterlistfilter.caption
 msgctxt "tmainform.michapterlistfilter.caption"
@@ -1824,7 +1764,7 @@ msgstr "Filtros"
 
 #: tmainform.tsinfomanga.caption
 msgid "Info"
-msgstr ""
+msgstr "Info"
 
 #: tmainform.tsinformation.caption
 msgid "Manga Info"
@@ -1947,14 +1887,13 @@ msgid "&Add to queue"
 msgstr "&Adic. à fila"
 
 #: tselectdirectoryform.btok.caption
-#, fuzzy
 msgctxt "tselectdirectoryform.btok.caption"
 msgid "OK"
 msgstr "OK"
 
 #: tselectdirectoryform.caption
 msgid "Select directory"
-msgstr ""
+msgstr "Selecionar Diretório"
 
 #: tshutdowncounterform.btabort.caption
 msgid "&Abort"
@@ -1976,9 +1915,7 @@ msgstr "&Atualizar"
 msgid ""
 "New version found! Do you want to update now?\n"
 "FMD will be closed to finish the update.\n"
-msgstr ""
-"Nova versão encontrada! Você quer atualizar agora?\n"
-"FMD irá fechar para terminar a atualização.\n"
+msgstr "Nova versão encontrada! Você quer atualizar agora?\nFMD irá fechar para terminar a atualização.\n"
 
 #: twebsiteoptionadvancedform.menuitem1.caption
 msgctxt "twebsiteoptionadvancedform.menuitem1.caption"
@@ -2246,4 +2183,3 @@ msgstr "Sincronizando dados"
 #: uupdatethread.rs_updatinglist
 msgid "Updating list"
 msgstr "Atualizando a lista"
-
