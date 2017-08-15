@@ -18,7 +18,7 @@ begin
   if MangaInfo.FHTTP.GET(Module.RootURL + '/daftar-manga/') then
   begin
     Result := NO_ERROR;
-    XPathHREFAll('//*[@class="azindex"]//li/a', MangaInfo.FHTTP.Document, ALinks, ANames);
+    XPathHREFAll('//*[@class="soralist"]//a', MangaInfo.FHTTP.Document, ALinks, ANames);
   end;
 end;
 
@@ -34,13 +34,13 @@ begin
       Result := NO_ERROR;
       with TXQueryEngineHTML.Create(Document) do
         try
-          coverLink := MaybeFillHost(Module.RootURL, XPathString('//*[@class="imganime"]//img/substring-before(substring-after(@style,"(''"),"'')")'));
-          if title = '' then title := XPathString('//*[@class="infos9" and starts-with(.,"Judul")]/text()');
-          authors := XPathString('//*[@class="infos9" and starts-with(.,"Produser")]/text()');
-          genres := XPathString('//*[@class="infos9" and starts-with(.,"Genre")]/text()');
-          status := MangaInfoStatusIfPos(XPathString('//*[@class="infos9" and starts-with(.,"Status")]/text()'));
-          summary := XPathString('//*[@class="deskripsi"]/string-join(text(),"")');
-          XPathHREFtitleAll('//*[@class="chapter-list"]//li[@class="anilist"]/div[2]/a', chapterLinks, chapterName);
+          coverLink := MaybeFillHost(Module.RootURL, XPathString('//div[@class="imgdesc"]/img/@src'));
+          if title = '' then title := XPathString('//h1[@itemprop="name"]');
+          authors := XPathString('//div[@class="listinfo"]//li[starts-with(.,"Author")]/substring-after(.,":")');
+          genres := XPathString('//div[@class="listinfo"]//li[starts-with(.,"Genre")]/substring-after(.,":")');
+          status := MangaInfoStatusIfPos(XPathString('//div[@class="listinfo"]//li[starts-with(.,"Status")]'));
+          summary := XPathString('//*[@class="desc"]/string-join(.//text(),"")');
+          XPathHREFAll('//div[@class="cl"]//li/span[1]/a', chapterLinks, chapterName);
           InvertStrings([chapterLinks, chapterName]);
         finally
           Free;
@@ -61,7 +61,7 @@ begin
     if GET(MaybeFillHost(Module.RootURL, AURL)) then
     begin
       Result := True;
-      XPathStringAll('//*[@class="readmanga"]//img/@src', Document, PageLinks);
+      XPathStringAll('//*[@id="readerarea"]//img/@src', Document, PageLinks);
     end;
   end;
 end;
