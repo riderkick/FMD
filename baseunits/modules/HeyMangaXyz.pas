@@ -29,8 +29,6 @@ end;
 function GetNameAndLink(const MangaInfo: TMangaInformation;
   const ANames, ALinks: TStringList; const AURL: String;
   const Module: TModuleContainer): Integer;
-var
-  v: IXQValue;
 begin
   Result := NET_PROBLEM;
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
@@ -100,47 +98,37 @@ end;
 
 function GetPageNumber(const DownloadThread: TDownloadThread;
   const AURL: String; const Module: TModuleContainer): Boolean;
-var
-  v: IXQValue;
 begin
-  Result := False;
-  if DownloadThread = nil then Exit;
-  with DownloadThread.FHTTP, DownloadThread.Task.Container do
-  begin
+  with DownloadThread, DownloadThread.Task.Container do begin
     PageLinks.Clear;
-    PageNumber := 0;
-    if GET(FillHost(Module.RootURL, AURL) + '1') then
-    begin
-      Result := True;
-      with TXQueryEngineHTML.Create(Document) do
-        try
-          PageNumber := XPath('//select[@id="fuzetsu_list"]/option').Count - 1;
-          for v in XPath('//picture/img') do
-            PageLinks.Add(v.toNode.getAttribute('src'));
-        finally
-          Free;
-        end;
-    end;
+    Result := FHTTP.GET(FillHost(Module.RootURL, AURL) + '1');
+    if not Result then Exit;
+    XPathStringAll('//select[@id="fuzetsu_list"]/option[@value]/concat('+ QuotedStr(AURL) +',@value)', FHTTP.Document, PageLinks);
   end;
 end;
 
-function GetImageURL(const DownloadThread: TDownloadThread;
-  const AURL: String; const Module: TModuleContainer): Boolean;
-var
-  s: String;
+function DownloadImage(const DownloadThread: TDownloadThread;
+  const AURL, APath, AName: String; const Module: TModuleContainer): Boolean;
+
+  function downloadandsave(u: String): Boolean;
+  begin
+    if u = '' then Exit(False);
+    if LeftStr(u, 2) = '//' then u := 'https:' + u;
+    Result := DownloadThread.FHTTP.GET(u);
+    if Result then
+      Result := SaveImageStreamToFile(DownloadThread.FHTTP, APath, AName) <> '';
+  end;
+
 begin
   Result := False;
-  if DownloadThread = nil then Exit;
-  with DownloadThread.Task.Container, DownloadThread.FHTTP do
-  begin
-    if GET(FillHost(Module.RootURL, AURL) + IncStr(DownloadThread.WorkId)) then
-    begin
-      Result := True;
-      s := XPathString('//img[@id="img-content"]/@src', Document);
-      if LeftStr(s, 2) = '//' then
-        s := 'https:' + s;
-      PageLinks[DownloadThread.WorkId] := s;
-    end;
+  if not DownloadThread.FHTTP.GET(FillHost(Module.RootURL, AURL)) then Exit;
+  with TXQueryEngineHTML.Create(DownloadThread.FHTTP.Document) do
+  try
+    Result := downloadandsave(XPathString('//img[@id="img-content"]/@src'));
+    if (Result = False) and (DownloadThread.IsTerminated = False)  then
+      Result := downloadandsave(XPathString('//img[@id="img-content"]/@onerror/substring-before(substring-after(.,"''"),"''")'));
+  finally
+    Free;
   end;
 end;
 
@@ -154,7 +142,7 @@ begin
     OnGetNameAndLink := @GetNameAndLink;
     OnGetInfo := @GetInfo;
     OnGetPageNumber := @GetPageNumber;
-    OnGetImageURL := @GetImageURL;
+    OnDownloadImage := @DownloadImage;
   end;
 end;
 
