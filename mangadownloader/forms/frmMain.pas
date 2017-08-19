@@ -5027,12 +5027,12 @@ begin
     else
     if (not ckEnableLogging.Checked) and (Logger.Enabled) then
     begin
-      Logger.Enabled := False;
       if Assigned(FileLogger) then
       begin
         Logger.Channels.Remove(FileLogger);
         FreeAndNil(FileLogger);
       end;
+      Logger.Enabled := False;
     end;
 
     //languages

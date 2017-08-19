@@ -377,7 +377,7 @@ var
   ir: Word;
   fe: Boolean;
 begin
-  if FLogFileName = AValue then Exit;
+  // always check for log file in case something changed at runtime (permission/disk removed)
   FLogFileName := AValue;
   AssignFile(FLogFileHandle, FLogFileName);
   fe := FileExistsUTF8(FLogFileName);
