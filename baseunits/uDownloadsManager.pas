@@ -98,6 +98,8 @@ type
     function FailedChaptersExist: Boolean;
     // show notification when download completed
     procedure ShowBalloonHint;
+    // general exception info
+    function GetExceptionInfo: String;
   public
     //additional parameter
     httpCookies: String;
@@ -385,15 +387,7 @@ begin
   except
     on E: Exception do
     begin
-      E.Message := E.Message + LineEnding +
-        '  In TDownloadThread.Execute : ' + GetEnumName(TypeInfo(TFlagType), Integer(Task.Flag)) +
-        LineEnding +
-        '  Website : ' + Task.Container.DownloadInfo.Website + LineEnding +
-        '  URL     : ' + FillMangaSiteHost(Task.Container.MangaSiteID,
-        Task.Container.ChapterLinks[Task.Container.CurrentDownloadChapterPtr]) + LineEnding +
-        '  Title   : ' + Task.Container.DownloadInfo.title + LineEnding +
-        '  Chapter : ' + Task.Container.ChapterName[Task.Container.CurrentDownloadChapterPtr] +
-        LineEnding;
+      E.Message := E.Message + LineEnding + '  In TDownloadThread.Execute' + LineEnding + Task.GetExceptionInfo;
       MainForm.ExceptionHandler(Self, E);
     end;
   end;
@@ -808,7 +802,10 @@ begin
       Result := uPacker.Execute;
     except
       on E: Exception do
+      begin
+        E.Message := E.Message + LineEnding + '  In TTaskThread.Compress' + LineEnding + GetExceptionInfo;
         MainForm.ExceptionHandler(Self, E);
+      end;
     end;
     uPacker.Free;
   end;
@@ -847,6 +844,16 @@ procedure TTaskThread.ShowBalloonHint;
 begin
   if OptionShowBalloonHint then
     Synchronize(SyncShowBallonHint);
+end;
+
+function TTaskThread.GetExceptionInfo: String;
+begin
+  Result :=
+    '  Flag        : ' + GetEnumName(TypeInfo(TFlagType), Integer(Flag)) + LineEnding +
+    '  Website     : ' + Container.DownloadInfo.Website + LineEnding +
+    '  Title       : ' + Container.DownloadInfo.title + LineEnding +
+    '  Chapterlink : ' + Container.ChapterLinks[Container.CurrentDownloadChapterPtr] + LineEnding +
+    '  Chaptername : ' + Container.ChapterName[Container.CurrentDownloadChapterPtr] + LineEnding;
 end;
 
 function TDownloadThread.DownloadImage: Boolean;
@@ -976,6 +983,7 @@ var
 begin
   if Terminated then Exit;
 
+  try
   //load advanced config if any
   mt := advancedfile.ReadInteger('DownloadMaxThreadsPerTask',
     Container.DownloadInfo.Website, -1);
@@ -1019,9 +1027,8 @@ begin
       Sleep(SOCKHEARTBEATRATE);
 
   if (not Terminated) and (Threads.Count < currentMaxThread) then
-  begin
-    EnterCriticalsection(FCS_THREADS);
     try
+      EnterCriticalsection(FCS_THREADS);
       if Modules.ActiveConnectionCount[Container.ModuleId] >= currentMaxThread then Exit;
       Modules.IncActiveConnectionCount(Container.ModuleId);
       Threads.Add(TDownloadThread.Create);
@@ -1037,6 +1044,13 @@ begin
         Container.CurrentPageNumber := InterLockedIncrement(Container.CurrentPageNumber);
     finally
       LeaveCriticalsection(FCS_THREADS);
+    end;
+
+  except
+    on E: Exception do
+    begin
+      E.Message := E.Message + LineEnding + '  In TTaskThread.Checkout' + LineEnding + GetExceptionInfo;
+      MainForm.ExceptionHandler(Self, E);
     end;
   end;
 end;
@@ -1333,7 +1347,10 @@ begin
     ShowBalloonHint;
   except
     on E: Exception do
+    begin
+      E.Message := E.Message + LineEnding + '  In TTaskThread.Execute' + LineEnding + GetExceptionInfo;
       MainForm.ExceptionHandler(Self, E);
+    end;
   end;
 end;
 
