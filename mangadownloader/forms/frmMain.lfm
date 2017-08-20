@@ -2561,7 +2561,7 @@ object MainForm: TMainForm
       ClientWidth = 761
       object pcOptions: TPageControl
         Left = 0
-        Height = 420
+        Height = 400
         Top = 4
         Width = 761
         ActivePage = tsGeneral
@@ -2576,7 +2576,7 @@ object MainForm: TMainForm
           ChildSizing.TopBottomSpacing = 8
           ChildSizing.HorizontalSpacing = 4
           ChildSizing.VerticalSpacing = 4
-          ClientHeight = 392
+          ClientHeight = 372
           ClientWidth = 753
           object cbOptionMinimizeToTray: TCheckBox
             AnchorSideLeft.Control = seOptionNewMangaTime
@@ -2833,7 +2833,7 @@ object MainForm: TMainForm
           ChildSizing.TopBottomSpacing = 8
           ChildSizing.HorizontalSpacing = 4
           ChildSizing.VerticalSpacing = 4
-          ClientHeight = 392
+          ClientHeight = 372
           ClientWidth = 753
           object cbOptionShowDownloadToolbar: TCheckBox
             Left = 4
@@ -2959,31 +2959,31 @@ object MainForm: TMainForm
         end
         object tsConnections: TTabSheet
           Caption = 'Connections'
-          ClientHeight = 392
+          ClientHeight = 372
           ClientWidth = 753
           object sbDownloadConnections: TScrollBox
             Left = 0
-            Height = 392
+            Height = 372
             Top = 0
             Width = 753
             HorzScrollBar.Page = 455
-            VertScrollBar.Page = 295
+            VertScrollBar.Page = 334
             Align = alClient
             BorderStyle = bsNone
             ChildSizing.LeftRightSpacing = 4
             ChildSizing.TopBottomSpacing = 8
             ChildSizing.HorizontalSpacing = 4
             ChildSizing.VerticalSpacing = 4
-            ClientHeight = 392
+            ClientHeight = 372
             ClientWidth = 753
             TabOrder = 0
             object cbOptionUseProxy: TCheckBox
-              AnchorSideLeft.Control = seOptionRetryFailedTask
-              AnchorSideTop.Control = seOptionRetryFailedTask
+              AnchorSideLeft.Control = ckOptionsAlwaysStartTaskFromFailedChapters
+              AnchorSideTop.Control = ckOptionsAlwaysStartTaskFromFailedChapters
               AnchorSideTop.Side = asrBottom
               Left = 4
               Height = 19
-              Top = 159
+              Top = 198
               Width = 71
               BorderSpacing.Top = 20
               Caption = 'Use proxy'
@@ -2997,7 +2997,7 @@ object MainForm: TMainForm
               AnchorSideTop.Side = asrBottom
               Left = 4
               Height = 105
-              Top = 182
+              Top = 221
               Width = 426
               AutoSize = True
               Caption = 'Proxy config'
@@ -3299,26 +3299,38 @@ object MainForm: TMainForm
               TabOrder = 6
               Value = 1
             end
+            object ckOptionsAlwaysStartTaskFromFailedChapters: TCheckBox
+              AnchorSideLeft.Control = seOptionRetryFailedTask
+              AnchorSideTop.Control = seOptionRetryFailedTask
+              AnchorSideTop.Side = asrBottom
+              Left = 4
+              Height = 19
+              Top = 159
+              Width = 216
+              BorderSpacing.Top = 20
+              Caption = 'Always start task from failed chapters'
+              TabOrder = 7
+            end
           end
         end
         object tsSaveTo: TTabSheet
           Caption = 'Save to'
-          ClientHeight = 392
+          ClientHeight = 372
           ClientWidth = 753
           object sbSaveTo: TScrollBox
             Left = 0
-            Height = 392
+            Height = 372
             Top = 0
             Width = 753
             HorzScrollBar.Page = 198
-            VertScrollBar.Page = 392
+            VertScrollBar.Page = 372
             Align = alClient
             BorderStyle = bsNone
             ChildSizing.LeftRightSpacing = 4
             ChildSizing.TopBottomSpacing = 8
             ChildSizing.HorizontalSpacing = 4
             ChildSizing.VerticalSpacing = 4
-            ClientHeight = 392
+            ClientHeight = 372
             ClientWidth = 736
             TabOrder = 0
             object rgOptionCompress: TRadioGroup

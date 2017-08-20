@@ -1071,6 +1071,12 @@ msgstr "Yuri"
 msgid "This work usually involves intimate relationships between women."
 msgstr "This work usually involves intimate relationships between women."
 
+#: tmainform.ckoptionsalwaysstarttaskfromfailedchapters.caption
+#| msgid "Always start from failed chapters when task start"
+msgctxt "tmainform.ckoptionsalwaysstarttaskfromfailedchapters.caption"
+msgid "Always start task from failed chapters"
+msgstr "Always start task from failed chapters"
+
 #: tmainform.edcustomgenres.texthint
 msgid "Input custom genres, separated by comma"
 msgstr "Input custom genres, separated by comma"

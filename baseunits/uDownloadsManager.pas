@@ -1120,6 +1120,9 @@ begin
     while Container.ChaptersStatus.Count < Container.ChapterLinks.Count do
       Container.ChaptersStatus.Add('P');
 
+    if OptionAlwaysStartTaskFromFailedChapters and (Container.CurrentDownloadChapterPtr <> 0) then
+      Container.CurrentDownloadChapterPtr := 0;
+
     while Container.CurrentDownloadChapterPtr < Container.ChapterLinks.Count do
     begin
       while Container.ChaptersStatus[Container.CurrentDownloadChapterPtr] = 'D' do

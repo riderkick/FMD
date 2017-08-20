@@ -1058,6 +1058,11 @@ msgstr "Юри"
 msgid "This work usually involves intimate relationships between women."
 msgstr "Обычно связано с интимными отношениями между женщинами."
 
+#: tmainform.ckoptionsalwaysstarttaskfromfailedchapters.caption
+msgctxt "tmainform.ckoptionsalwaysstarttaskfromfailedchapters.caption"
+msgid "Always start task from failed chapters"
+msgstr ""
+
 #: tmainform.edcustomgenres.texthint
 msgid "Input custom genres, separated by comma"
 msgstr "Ввод пользовательских жанров, разделенных запятой"

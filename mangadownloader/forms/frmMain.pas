@@ -68,6 +68,7 @@ type
     cbUseRegExpr: TCheckBox;
     cbOptionProxyType: TComboBox;
     cbOptionOneInstanceOnly: TCheckBox;
+    ckOptionsAlwaysStartTaskFromFailedChapters: TCheckBox;
     ckEnableLogging: TCheckBox;
     edDownloadsSearch: TEditButton;
     edFavoritesSearch: TEditButton;
@@ -4686,6 +4687,7 @@ begin
     seOptionMaxRetry.Value := ReadInteger('connections', 'Retry', OptionMaxRetry);;
     seOptionConnectionTimeout.Value := ReadInteger('connections', 'ConnectionTimeout', OptionConnectionTimeout);
     seOptionRetryFailedTask.Value := ReadInteger('connections', 'NumberOfAutoRetryFailedTask', OptionRetryFailedTask);
+    ckOptionsAlwaysStartTaskFromFailedChapters.Checked := ReadBool('connections', 'AlwaysStartFromFailedChapters', OptionAlwaysStartTaskFromFailedChapters);
 
     // proxy
     cbOptionUseProxy.Checked := ReadBool('connections', 'UseProxy', False);
@@ -4826,6 +4828,7 @@ begin
       WriteInteger('connections', 'Retry', seOptionMaxRetry.Value);
       WriteInteger('connections', 'ConnectionTimeout', seOptionConnectionTimeout.Value);
       WriteInteger('connections', 'NumberOfAutoRetryFailedTask', seOptionRetryFailedTask.Value);
+      WriteBool('connections', 'AlwaysRetruFailedChaptersOnStart', ckOptionsAlwaysStartTaskFromFailedChapters.Checked);
 
       // proxy
       WriteBool('connections', 'UseProxy', cbOptionUseProxy.Checked);
@@ -4970,6 +4973,7 @@ begin
     OptionConnectionTimeout := seOptionConnectionTimeout.Value;
     SetDefaultTimeoutAndApply(OptionConnectionTimeout * 1000);
     OptionRetryFailedTask := seOptionRetryFailedTask.Value;
+    OptionAlwaysStartTaskFromFailedChapters := ckOptionsAlwaysStartTaskFromFailedChapters.Checked;
 
     // proxy
     if cbOptionUseProxy.Checked then
