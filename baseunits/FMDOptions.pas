@@ -128,7 +128,7 @@ var
   OptionMaxRetry: Integer = 5;
   OptionConnectionTimeout: Integer = 30;
   OptionRetryFailedTask: Integer = 1;
-  OptionAlwaysStartTaskFromFailedChapters: Boolean = False;
+  OptionAlwaysStartTaskFromFailedChapters: Boolean = True;
 
   // view
   OptionEnableLoadCover: Boolean = False;
