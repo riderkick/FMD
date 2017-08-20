@@ -2353,11 +2353,12 @@ object MainForm: TMainForm
       end
       object btFavoritesImport: TBitBtn
         AnchorSideTop.Control = edFavoritesSearch
+        AnchorSideTop.Side = asrCenter
         AnchorSideRight.Control = vtFavorites
         AnchorSideRight.Side = asrBottom
         Left = 661
         Height = 26
-        Top = 4
+        Top = 2
         Width = 100
         Anchors = [akTop, akRight]
         AutoSize = True
@@ -2403,16 +2404,16 @@ object MainForm: TMainForm
         TabOrder = 2
       end
       object btCancelFavoritesCheck: TSpeedButton
+        AnchorSideLeft.Control = btFavoritesCheckNewChapter
         AnchorSideLeft.Side = asrBottom
         AnchorSideTop.Control = btFavoritesCheckNewChapter
-        AnchorSideRight.Control = btFavoritesImport
         AnchorSideBottom.Control = btFavoritesCheckNewChapter
         AnchorSideBottom.Side = asrBottom
-        Left = 641
+        Left = 321
         Height = 26
-        Top = 4
+        Top = 2
         Width = 20
-        Anchors = [akTop, akRight, akBottom]
+        Anchors = [akTop, akLeft, akBottom]
         AutoSize = True
         Glyph.Data = {
           36040000424D3604000000000000360000002800000010000000100000000100
@@ -2454,15 +2455,17 @@ object MainForm: TMainForm
         OnClick = btCancelFavoritesCheckClick
       end
       object btFavoritesCheckNewChapter: TBitBtn
-        AnchorSideLeft.Control = btCancelFavoritesCheck
+        AnchorSideLeft.Control = edFavoritesSearch
+        AnchorSideLeft.Side = asrBottom
         AnchorSideTop.Control = edFavoritesSearch
+        AnchorSideTop.Side = asrCenter
         AnchorSideRight.Control = btCancelFavoritesCheck
-        Left = 476
+        Left = 156
         Height = 26
-        Top = 4
+        Top = 2
         Width = 165
-        Anchors = [akTop, akRight]
         AutoSize = True
+        BorderSpacing.Left = 6
         Caption = 'Check for new chapter'
         Glyph.Data = {
           36040000424D3604000000000000360000002800000010000000100000000100
