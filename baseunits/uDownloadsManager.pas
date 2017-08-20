@@ -1115,11 +1115,10 @@ begin
     if Trim(Container.CustomFileName) = '' then
       Container.CustomFileName := DEFAULT_FILENAME_CUSTOMRENAME;
 
+    while container.ChaptersStatus.Count < Container.CurrentDownloadChapterPtr - 1 do
+      Container.ChaptersStatus.Add('D');
     while Container.ChaptersStatus.Count < Container.ChapterLinks.Count do
       Container.ChaptersStatus.Add('P');
-    if Container.CurrentDownloadChapterPtr > 1 then
-      for j := 0 to Container.CurrentDownloadChapterPtr - 1 do
-        Container.ChaptersStatus[j] := 'D';
 
     while Container.CurrentDownloadChapterPtr < Container.ChapterLinks.Count do
     begin
