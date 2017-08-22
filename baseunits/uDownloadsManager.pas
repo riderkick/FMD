@@ -912,7 +912,7 @@ begin
     if Task.Container.MangaSiteID = MEINMANGA_ID then
       Result := GetMeinMangaImageURL
     else
-      Result := uBaseUnit.SaveImage(FHTTP, workURL, Task.CurrentWorkingDir, workFilename, savedFilename);
+      Result := uBaseUnit.DownloadAndSaveImage(FHTTP, workURL, Task.CurrentWorkingDir, workFilename, savedFilename);
   end;
   if Terminated then Exit(False);
   if Result then
