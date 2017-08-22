@@ -83,21 +83,19 @@ begin
     if GET(MaybeFillHost(Module.RootURL, AURL)) then
     begin
       Result := True;
-      with TXQueryEngineHTML.Create(Document) do
-        try
-          v := XPath('//img[@id="image"]');
-          dataimg := v.toNode.getAttribute('data-img');
-          imgurl := v.toNode.getAttribute('src');
-          if Pos(dataimg, imgurl) <> 0 then
-          begin
-            imgurl := StringReplace(imgurl, dataimg, '', []);
-            for v in XPath('//select[@id="pages"]/option/@data-img') do
-              PageLinks.Add(imgurl + v.toString);
-          end;
-        finally
-          Free;
-        end;
+      XPathStringAll('//select[@id="pages"]/option/@data-img', Document, PageLinks);
     end;
+  end;
+end;
+
+function DownloadImage(const DownloadThread: TDownloadThread;
+  const AURL, APath, AName: String; const Module: TModuleContainer): Boolean;
+begin
+  Result := False;
+  with DownloadThread, DownloadThread.FHTTP, DownloadThread.Task.Container do
+  begin
+    if GET(AppendURLDelim(FillHost(Module.RootURL, ChapterLinks[CurrentDownloadChapterPtr])) + IncStr(WorkId) + '.html') then
+      Result := DownloadAndSaveImage(FHTTP, XPathString('//img[@id="image"]/@src', Document), APath, AName);
   end;
 end;
 
@@ -110,6 +108,7 @@ begin
     OnGetNameAndLink := @GetNameAndLink;
     OnGetInfo := @GetInfo;
     OnGetPageNumber := @GetPageNumber;
+    OnDownloadImage := @DownloadImage;
   end;
 end;
 
