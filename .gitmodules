@@ -5,6 +5,6 @@
 	shallow = true
 [submodule "3rd/internettools"]
 	path = 3rd/internettools
-	url = https://github.com/benibela/internettools
+	url = https://github.com/benibela/internettools.git
 	ignore = dirty
 	shallow = true
