@@ -393,6 +393,7 @@ object SimpleExceptionForm: TSimpleExceptionForm
     ParentColor = False
     TabOrder = 1
     object CheckBoxIgnoreException: TCheckBox
+      AnchorSideLeft.Control = PanelBottom
       AnchorSideTop.Control = ButtonDetails
       AnchorSideTop.Side = asrCenter
       AnchorSideRight.Control = ButtonDetails
@@ -406,7 +407,7 @@ object SimpleExceptionForm: TSimpleExceptionForm
     object ButtonDetails: TBitBtn
       AnchorSideTop.Control = ButtonTerminate
       AnchorSideRight.Control = ButtonTerminate
-      Left = 191
+      Left = 190
       Height = 26
       Top = 6
       Width = 117
@@ -420,7 +421,7 @@ object SimpleExceptionForm: TSimpleExceptionForm
     object ButtonTerminate: TBitBtn
       AnchorSideTop.Control = ButtonContinue
       AnchorSideRight.Control = ButtonContinue
-      Left = 308
+      Left = 307
       Height = 26
       Top = 6
       Width = 136
@@ -433,7 +434,10 @@ object SimpleExceptionForm: TSimpleExceptionForm
       TabOrder = 2
     end
     object ButtonContinue: TBitBtn
-      Left = 444
+      AnchorSideTop.Control = PanelBottom
+      AnchorSideRight.Control = PanelBottom
+      AnchorSideRight.Side = asrBottom
+      Left = 443
       Height = 26
       Top = 6
       Width = 131
@@ -458,7 +462,7 @@ object SimpleExceptionForm: TSimpleExceptionForm
       Top = 38
       Width = 568
       Anchors = [akTop, akLeft, akRight, akBottom]
-      BorderSpacing.Around = 6
+      BorderSpacing.Top = 6
       Font.Height = -12
       Font.Name = 'Courier New'
       Lines.Strings = (
