@@ -62,7 +62,7 @@ begin
         try
           coverLink := XPathString('//*[@class="profile-thumb"]/img/@src');
           if coverLink <> '' then coverLink := MaybeFillHost(Module.RootURL, coverLink);
-          if title = '' then title := XPathString('//div[@class="media-body"]/h1/text()');
+          if title = '' then title := XPathString('//div[@class="media-body"]/h2/text()');
           summary := XPathString('//h6[text()="Synopsis"]/following-sibling::p');
           while True do
           begin
