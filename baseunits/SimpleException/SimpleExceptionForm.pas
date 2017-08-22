@@ -74,10 +74,6 @@ begin
     ClientHeight := expandedheight
   else
     ClientHeight := normalheight;
-  //if ClientHeight <= PanelCenter.Top + PanelCenter.ChildSizing.TopBottomSpacing then
-  //  ClientHeight := PanelTop.Height + PanelBottom.Height + 200
-  //else
-  //  ClientHeight := PanelTop.Height + PanelBottom.Height;
 end;
 
 procedure TSimpleExceptionForm.ButtonTerminateClick(Sender: TObject);
