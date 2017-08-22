@@ -758,6 +758,8 @@ function SaveImage(const AHTTP: THTTPSend; URL: String;
 function SaveImage(const mangaSiteID: Integer; URL: String;
   const Path, Name: String; var SavedFilename: String; const Reconnect: Integer = 0): Boolean;
   overload; inline;
+function SaveImage(const AHTTP: THTTPSendThread; const AURL, APath, AFileName: String; var ASavedFileName: String): Boolean; overload;
+function SaveImage(const AHTTP: THTTPSendThread; const AURL, APath, AFileName: String): Boolean; overload;
 
 // check file exist with known extensions. AFilename is a filename without extensions
 function ImageFileExist(const AFileName: String): Boolean;
@@ -3606,6 +3608,24 @@ function SaveImage(const mangaSiteID: Integer; URL: String; const Path,
   Name: String; var SavedFilename: String; const Reconnect: Integer): Boolean;
 begin
   Result := SaveImage(nil, mangaSiteID, URL, Path, Name, SavedFilename, Reconnect);
+end;
+
+function SaveImage(const AHTTP: THTTPSendThread; const AURL, APath,
+  AFileName: String; var ASavedFileName: String): Boolean;
+begin
+  Result := False;
+  if AHTTP.GET(AURL) then
+  begin
+    ASavedFileName := SaveImageStreamToFile(AHTTP, APath, AFileName);
+    Result := ASavedFileName <> '';
+  end;
+end;
+
+function SaveImage(const AHTTP: THTTPSendThread; const AURL, APath, AFileName: String): Boolean;
+begin
+  Result := False;
+  if AHTTP.GET(AURL) then
+    Result := SaveImageStreamToFile(AHTTP, APath, AFileName) <> '';
 end;
 
 function ImageFileExist(const AFileName: String): Boolean;
