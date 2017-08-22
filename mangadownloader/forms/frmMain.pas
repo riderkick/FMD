@@ -1870,7 +1870,7 @@ end;
 
 procedure TMainForm.miDownloadMergeCompletedClick(Sender: TObject);
 var
-  i, j: Cardinal;
+  i, j: Integer;
   ic, jc: TTaskContainer;
   // merge all finished tasks that have same manga name, website and directory
 begin
@@ -3392,8 +3392,8 @@ var
   end;
 
 begin
-  miDownloadDeleteCompleted.Enabled := True;
-  miDownloadMergeCompleted.Enabled := True;
+  miDownloadDeleteCompleted.Enabled := DLManager.Count > 0;
+  miDownloadMergeCompleted.Enabled := miDownloadDeleteCompleted.Enabled;
   with DLManager do begin
     if vtDownload.SelectedCount = 0 then
     begin
