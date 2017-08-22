@@ -61,6 +61,7 @@ begin
         try
           coverLink := MaybeFillHost(Module.RootURL, XPathString('//div[@class="left cover"]/img/@src'));
           title := XPathString('//h1');
+          if RightStr(title, 6) = ' manga' then SetLength(title, Length(title) - 6);
           status := MangaInfoStatusIfPos(XPathString('//div[@class="manga_right"]//td/label[.="Status:"]/following-sibling::*/text()'));
           authors := XPathString('//div[@class="manga_right"]//td/label[.="Author:"]/string-join(following-sibling::*/text(),", ")');
           genres := XPathString('//div[@class="manga_right"]//td/label[.="Genre(s):"]/string-join(following-sibling::*/text(),", ")');
