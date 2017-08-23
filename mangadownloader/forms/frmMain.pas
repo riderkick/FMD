@@ -3960,14 +3960,14 @@ procedure TMainForm.vtDownloadHeaderClick(Sender: TVTHeader;
   );
 begin
   if Button <> mbLeft then Exit;
-  if DLManager.Count < 2 then Exit;
   if (Column = 2) or (Column = 3) then Exit;
   if DLManager.SortColumn = Column then
     DLManager.SortDirection := not DLManager.SortDirection;
   DLManager.SortColumn := Column;
   vtDownload.Header.SortDirection := TSortDirection(DLManager.SortDirection);
   vtDownload.Header.SortColumn := Column;
-  DLManager.Sort(Column);
+  if DLManager.Count > 1 then
+    DLManager.Sort(Column);
   UpdateVtDownload;
 end;
 
@@ -4142,21 +4142,18 @@ procedure TMainForm.vtFavoritesHeaderClick(Sender: TVTHeader;
 begin
   if Button <> mbLeft then Exit;
   if FavoriteManager.isRunning then Exit;
-  if FavoriteManager.Count < 2 then Exit;
   if Column = 0 then Exit;
   FavoriteManager.isRunning := True;
-  try
-    if FavoriteManager.SortColumn = Column then
-      FavoriteManager.sortDirection := not FavoriteManager.sortDirection
-    else
-      FavoriteManager.SortColumn := Column;
-    vtFavorites.Header.SortColumn := Column;
-    vtFavorites.Header.SortDirection := TSortDirection(FavoriteManager.sortDirection);
+  if FavoriteManager.SortColumn = Column then
+    FavoriteManager.sortDirection := not FavoriteManager.sortDirection
+  else
+    FavoriteManager.SortColumn := Column;
+  vtFavorites.Header.SortColumn := Column;
+  vtFavorites.Header.SortDirection := TSortDirection(FavoriteManager.sortDirection);
+  if FavoriteManager.Count > 1 then
     FavoriteManager.Sort(Column);
-  finally
-    UpdateVtFavorites;
-    FavoriteManager.isRunning := False;
-  end;
+  UpdateVtFavorites;
+  FavoriteManager.isRunning := False;
 end;
 
 procedure TMainForm.vtFavoritesPaintText(Sender: TBaseVirtualTree;
