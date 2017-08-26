@@ -158,10 +158,15 @@ begin
   Result := NET_PROBLEM;
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
   workPtr := StrToIntDef(AURL, 0);
+  u := '';
   if Module.CurrentDirectoryIndex < Length(madokamilist) then
-    u := MaybeFillHost(Module.RootURL, madokamiulist[Module.CurrentDirectoryIndex][workPtr])
+  begin
+    if workPtr < madokamiulist[Module.CurrentDirectoryIndex].Count then
+      u := MaybeFillHost(Module.RootURL, madokamiulist[Module.CurrentDirectoryIndex][workPtr]);
+  end
   else
     u := Module.RootURL + madokamiotherlist[Module.CurrentDirectoryIndex-Length(madokamilist)];
+  if u = '' then Exit;
   if GETWithLogin(MangaInfo.FHTTP, u) then begin
     Result := NO_ERROR;
     if Module.CurrentDirectoryIndex < Length(madokamilist) then begin
