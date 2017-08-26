@@ -33,6 +33,8 @@ type
     CompressionQuality: Cardinal;
     function Execute: Boolean;
     property FileList: TStringList read FFileList;
+    property SavedFileName: String read FSavedFileName;
+    property Ext: String read FExt;
   public
     constructor Create;
     destructor Destroy; override;
@@ -161,6 +163,11 @@ end;
 constructor TPacker.Create;
 begin
   FFileList := TStringList.Create;
+  FSavedFileName := '';
+  FExt := '';
+  Path := '';
+  FileName := '';
+  Format := pfZIP;
 end;
 
 destructor TPacker.Destroy;
