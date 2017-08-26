@@ -126,6 +126,7 @@ type
   public
     procedure SendExceptionStr(const AText: String; AExceptionStr: String);
     procedure SendStrings(const AText: String; AValue: String);
+    procedure SendWarningStrings(const AText: String; AValue: String);
   end;
 {$ENDIF}
 
@@ -154,6 +155,13 @@ procedure TLoggerException.SendStrings(const AText: String; AValue: String);
 begin
   SendBuffer(ltStrings, AText, AValue[1], Length(AValue));
 end;
+
+procedure TLoggerException.SendWarningStrings(const AText: String;
+  AValue: String);
+begin
+  SendBuffer(ltWarning, AText, AValue[1], Length(AValue));
+end;
+
 {$ENDIF}
 
 procedure SetMaxStackCount(const ACount: Integer);
