@@ -4,6 +4,16 @@ Project page: https://github.com/riderkick/FMD
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.125.0 (26-08-2017)
+[*] Japscan: fixed download
+[*] MangaZuki: fixed title
+[*] MangaGo: fixed title
+[*] HeyManga: fixed download
+[*] Fixed failed chapter(s) always marked as finished
+[+] Added option to always start task from failed chapter if any
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.124.0...0.9.125.0
+
 0.9.124.0 (16-08-2017)
 [*] MangaShiro: fixed all
 [*] MangaFox: remove "new" from chapter's title
