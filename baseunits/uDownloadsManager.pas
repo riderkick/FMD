@@ -276,7 +276,7 @@ resourcestring
 implementation
 
 uses
-  frmMain, WebsiteModules, FMDVars;
+  frmMain, WebsiteModules, FMDVars, SimpleException;
 
 function IntToStr(Value: Cardinal): String;
 begin
@@ -800,6 +800,8 @@ begin
           uPacker.FileList.Add(s);
       end;
       Result := uPacker.Execute;
+      if not Result then
+        Logger.SendWarning(Self.ClassName+', failed to compress. '+uPacker.SavedFileName);
     except
       on E: Exception do
       begin
@@ -1254,7 +1256,7 @@ begin
       // If Container doesn't have any image, we will skip the loop. Otherwise
       // download them
       Container.PageNumber := Container.PageLinks.Count;
-      if (Container.PageLinks.Count > 0) then
+      if Container.PageLinks.Count > 0 then
       begin
         Flag := CS_DOWNLOAD;
         Container.WorkCounter := 0;
@@ -1288,15 +1290,25 @@ begin
             Container.Status := STATUS_FAILED;
         end
         else
+        begin
           Container.Status := STATUS_FAILED;
+          Logger.SendWarningStrings(Format('%s, download failed. "%s" "%s" "%s"',
+            [Self.ClassName,
+             Container.DownloadInfo.Title,
+             Container.ChapterName[Container.CurrentDownloadChapterPtr],
+             Container.ChapterLinks[Container.CurrentDownloadChapterPtr]
+            ]), Container.PageLinks.Text);
+        end;
       end
-      else begin
-        Logger.SendWarning(Format('%s, failed download image PageLinks=%d "%s" > "%s"',
-          [Self.ClassName,
-          Container.PageLinks.Count,
-          Container.DownloadInfo.Title,
-          Container.ChapterName[Container.CurrentDownloadChapterPtr]]));
+      else
+      begin
         Container.Status := STATUS_FAILED;
+        Logger.SendWarning(Format('%s, pagelinks is empty. "%s" "%s" "%s"',
+          [Self.ClassName,
+           Container.DownloadInfo.Title,
+           Container.ChapterName[Container.CurrentDownloadChapterPtr],
+           Container.ChapterLinks[Container.CurrentDownloadChapterPtr]
+          ]));
       end;
 
       if Container.Status = STATUS_FAILED  then
