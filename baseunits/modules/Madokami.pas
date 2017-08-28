@@ -33,6 +33,7 @@ var
   madokamiauth: String = '';
   locklogin: TRTLCriticalSection;
   madokamiulist: array of TStrings;
+  accountexist: Boolean = False;
 
 function Login(const AHTTP: THTTPSendThread): Boolean;
 begin
@@ -115,6 +116,8 @@ var
   i: Integer;
 begin
   Result := True;
+  accountexist := Account.Username[modulename] <> '';
+  if not accountexist then Exit;
   ClearMadokamiUlist;
   SetLength(madokamiulist, Length(madokamilist));
   for i := Low(madokamiulist) to High(madokamiulist) do
@@ -124,6 +127,7 @@ end;
 function AfterUpdateList(const Module: TModuleContainer): Boolean;
 begin
   Result := True;
+  if not accountexist then Exit;
   ClearMadokamiUlist;
 end;
 
@@ -131,6 +135,7 @@ function GetDirectoryPageNumber(const MangaInfo: TMangaInformation;
   var Page: Integer; const WorkPtr: Integer; const Module: TModuleContainer): Integer;
 begin
   Result := NO_ERROR;
+  if not accountexist then Exit;
   if  workPtr < Length(madokamilist) then begin
     if GETWithLogin(MangaInfo.FHTTP, Module.RootURL + '/Manga/' + madokamilist[WorkPtr+1]) then begin
       XPathStringAll('//table[@id="index-table"]/tbody/tr/td[1]/a/@href', MangaInfo.FHTTP.Document, madokamiulist[WorkPtr]);
@@ -156,6 +161,7 @@ var
   l1: TStrings;
 begin
   Result := NET_PROBLEM;
+  if not accountexist then Exit;
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
   workPtr := StrToIntDef(AURL, 0);
   u := '';
