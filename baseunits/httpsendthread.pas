@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, httpsend, synautil, synacode, ssl_openssl, blcksock,
-  GZIPUtils, BaseThread, dateutils;
+  GZIPUtils, BaseThread, dateutils, strutils;
 
 const
 
@@ -436,7 +436,9 @@ var
   mstream: TMemoryStream;
 begin
   Result := False;
-  rurl := MaybeEncodeURL(URL);
+  rurl := TrimRight(TrimLeftSet(URL, [':', '/', #0..' ']));
+  if rurl = '' then Exit;
+  rurl := MaybeEncodeURL(rurl);
   if Pos('HTTP/', Headers.Text) = 1 then Reset;
   HTTPHeader := TStringList.Create;
   HTTPHeader.Assign(Headers);
