@@ -90,12 +90,16 @@ begin
       Result := True;
       s := XPathString('//div[@class="read_img"]//img[@id="image"]/@src', Document);
       PageLinks[DownloadThread.WorkId] := s;
-      // remove invalid last invalid page
-      if (DownloadThread.WorkId = PageLinks.Count - 1) and
-        (RightStr(LowerCase(RemovePathDelim(s)), 10) = 'compressed') then
+      // remove invalid last page
+      if DownloadThread.WorkId = PageLinks.Count - 1 then
       begin
-        PageLinks.Delete(DownloadThread.WorkId);
-        PageNumber := PageLinks.Count;
+        s := LowerCase(RemovePathDelim(s));
+        if (RightStr(s, 10) = 'compressed') or
+          (Pos('/compressed?', s) <> 0) then
+        begin
+          PageLinks.Delete(DownloadThread.WorkId);
+          PageNumber := PageLinks.Count;
+        end;
       end;
     end;
   end;
