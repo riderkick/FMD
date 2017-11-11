@@ -93,38 +93,27 @@ begin
 end;
 
 procedure TCheckUpdateThread.Execute;
-var
-  l: TStringList;
-  updateFound: Boolean = False;
 begin
+  fNewVersionNumber := '';
+  fUpdateURL := '';
+  fChangelog := '';
   Synchronize(@SyncStartUpdate);
-  l := TStringList.Create;
-  try
-    fNewVersionNumber := FMD_VERSION_NUMBER;
-    fUpdateURL := '';
-    if not Terminated and
-      GetPage(FHTTP, TObject(l), UPDATE_URL + 'update', 3) then
-      if l.Count > 1 then
-      begin
-        l.NameValueSeparator := '=';
-        if Trim(l.Values['VERSION']) <> FMD_VERSION_NUMBER then
-        begin
-          fNewVersionNumber := Trim(l.Values['VERSION']);
-          fUpdateURL := Trim(l.Values[UpperCase(FMD_TARGETOS)]);
-          if fUpdateURL <> '' then
-            updateFound := True;
-          FHTTP.Clear;
-          l.Clear;
-          if not Terminated and
-            GetPage(FHTTP, TObject(l), UPDATE_URL + 'changelog.txt', 3) then
-            fChangelog := l.Text;
-        end;
-      end;
+  if not Terminated and FHTTP.Get(UPDATE_URL + 'update') then
+  with TStringList.Create do try
+    LoadFromStream(FHTTP.Document);
+    if Count <> 0 then begin
+      NameValueSeparator := '=';
+      fNewVersionNumber := Trim(Values['VERSION']);
+      if fNewVersionNumber <> FMD_VERSION_NUMBER then
+        fUpdateURL := Trim(Values[UpperCase(FMD_TARGETOS)]);
+    end;
   finally
-    l.Free;
+    Free;
   end;
+  if not Terminated and (fUpdateURL <> '') and FHTTP.Get(UPDATE_URL + 'changelog.txt') then
+    fChangelog := StreamToString(FHTTP.Document);
   Synchronize(@SyncEndUpdate);
-  if not Terminated and updateFound and (not isDlgCounter) then
+  if not Terminated and (fUpdateURL <> '') and (not isDlgCounter) then
     Synchronize(@MainThreadUpdate);
 end;
 

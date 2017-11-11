@@ -340,7 +340,7 @@ begin
         {$ENDIF}
           for i := 0 to AppVerInfo.Count - 1 do
             AppVerInfo.Strings[i] := LowerCase(AppVerInfo.Names[i]) + '=' + AppVerInfo.ValueFromIndex[i];
-          Result := AppVerInfo.Values['fileversion'];
+          Result := Trim(AppVerInfo.Values['fileversion']);
         end;
       except
       end;
