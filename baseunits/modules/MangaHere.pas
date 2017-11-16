@@ -90,7 +90,7 @@ begin
       Result := True;
       with TXQueryEngineHTML.Create(Document) do
         try
-          PageNumber := XPath('(//span[@class="right"]/select)[1]/option').Count;
+          PageNumber := XPath('(//span[@class="right"]/select)[1]/option[not(.="Featured")]').Count;
           PageLinks.Add(XPathString(imagepath));
         finally
           Free;
@@ -108,6 +108,12 @@ begin
   if DownloadThread = nil then Exit;
   with DownloadThread, FHTTP, Task.Container do
   begin
+    if (WorkId = PageLinks.Count - 1) and (Pos('/featured.', AURL) <> 0) then
+    begin
+      PageLinks.Delete(WorkId);
+      Exit;
+    end;
+
     s := AppendURLDelim(MaybeFillHost(Module.RootURL, AURL));
     if WorkId > 0 then
       s := s + IncStr(WorkId) + '.html';
