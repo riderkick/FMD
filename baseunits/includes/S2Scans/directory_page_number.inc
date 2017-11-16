@@ -12,8 +12,8 @@
 
     Parser := THTMLParser.Create(PChar(Source.Text));
     try
-      Parser.OnFoundTag := OnTag;
-      Parser.OnFoundText := OnText;
+      Parser.OnFoundTag := @OnTag;
+      Parser.OnFoundText := @OnText;
       parse.Clear;
       Parser.Exec;
     finally

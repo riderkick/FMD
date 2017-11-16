@@ -14,8 +14,8 @@
     parse := TStringList.Create;
     Parser := THTMLParser.Create(PChar(l.Text));
     try
-      Parser.OnFoundTag := OnTag;
-      Parser.OnFoundText := OnText;
+      Parser.OnFoundTag := @OnTag;
+      Parser.OnFoundText := @OnText;
       Parser.Exec;
     finally
       Parser.Free;

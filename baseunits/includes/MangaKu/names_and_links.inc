@@ -18,8 +18,8 @@
     parse.Clear;
     Parser := THTMLParser.Create(s);
     try
-      Parser.OnFoundTag := OnTag;
-      Parser.OnFoundText := OnText;
+      Parser.OnFoundTag := @OnTag;
+      Parser.OnFoundText := @OnText;
     finally
       Parser.Exec;
     end;

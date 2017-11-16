@@ -6,7 +6,7 @@
 
 unit uDownloadsManager;
 
-{$mode delphi}
+{$mode objfpc}{$H+}
 
 {$IF FPC_FULLVERSION >= 20701}
   {$DEFINE FPC271}
@@ -71,7 +71,7 @@ type
     destructor Destroy; override;
   end;
 
-  TDownloadThreads = TFPGList<TDownloadThread>;
+  TDownloadThreads = specialize TFPGList<TDownloadThread>;
 
   { TTaskThread }
 
@@ -169,7 +169,7 @@ type
     property Enabled: Boolean read FEnabled write SetEnabled;
   end;
 
-  TTaskContainers = TFPGList<TTaskContainer>;
+  TTaskContainers = specialize TFPGList<TTaskContainer>;
 
   { TDownloadManager }
 
@@ -307,7 +307,7 @@ begin
   inherited Create(True);
   FHTTP := THTTPSendThread.Create(Self);
   FHTTP.Headers.NameValueSeparator := ':';
-  FHTTP.Sock.OnStatus := SockOnStatus;
+  FHTTP.Sock.OnStatus := @SockOnStatus;
 end;
 
 destructor TDownloadThread.Destroy;
@@ -738,7 +738,7 @@ begin
           FCheckAndActiveTaskFlag := False;
         end;
         if not isExiting then
-          Synchronize(SyncStop);
+          Synchronize(@SyncStop);
       end;
     end;
   end;
@@ -845,7 +845,7 @@ end;
 procedure TTaskThread.ShowBalloonHint;
 begin
   if OptionShowBalloonHint then
-    Synchronize(SyncShowBallonHint);
+    Synchronize(@SyncShowBallonHint);
 end;
 
 function TTaskThread.GetExceptionInfo: String;
@@ -1573,7 +1573,7 @@ begin
   ForceDirectoriesUTF8(WORK_FOLDER);
   DownloadedChapters := TDownloadedChaptersDB.Create;
   DownloadedChapters.Filename := DOWNLOADEDCHAPTERSDB_FILE;
-  DownloadedChapters.OnError := MainForm.ExceptionHandler;
+  DownloadedChapters.OnError := @MainForm.ExceptionHandler;
   DownloadedChapters.Open;
   if FileExistsUTF8(DOWNLOADEDCHAPTERS_FILE) then
     if DownloadedChapters.ImportFromIni(DOWNLOADEDCHAPTERS_FILE) then
@@ -2066,7 +2066,7 @@ begin
   EnterCriticalSection(CS_Task);
   try
     SortColumn := AColumn;
-    Items.Sort(CompareTaskContainer);
+    Items.Sort(@CompareTaskContainer);
   finally
     LeaveCriticalSection(CS_Task);
   end;

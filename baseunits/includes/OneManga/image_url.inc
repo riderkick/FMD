@@ -12,8 +12,8 @@
       Task.Container.Manager.retryConnect);
     parse := TStringList.Create;
     Parser := THTMLParser.Create(PChar(l.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText := OnText;
+    Parser.OnFoundTag := @OnTag;
+    Parser.OnFoundText := @OnText;
     Parser.Exec;
     Parser.Free;
 

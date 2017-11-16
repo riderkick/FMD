@@ -30,8 +30,8 @@
     // parsing the HTML source
     parse.Clear;
     Parser := THTMLParser.Create(PChar(Source.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText := OnText;
+    Parser.OnFoundTag := @OnTag;
+    Parser.OnFoundText := @OnText;
     Parser.Exec;
 
     Parser.Free;
@@ -138,8 +138,8 @@
 
         parse.Clear;
         Parser := THTMLParser.Create(PChar(Source.Text));
-        Parser.OnFoundTag := OnTag;
-        Parser.OnFoundText := OnText;
+        Parser.OnFoundTag := @OnTag;
+        Parser.OnFoundText := @OnText;
         Parser.Exec;
 
         Parser.Free;

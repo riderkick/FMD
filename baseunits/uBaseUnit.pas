@@ -6,7 +6,7 @@
 
 unit uBaseUnit;
 
-{$mode delphi}
+{$mode objfpc}{$H+}
 {$MACRO ON}
 {$DEFINE DOWNLOADER}
 
@@ -476,19 +476,15 @@ type
   { TDownloadInfo }
 
   TDownloadInfo = record
-  private
-    FSaveTo: String;
-    procedure SetSaveTo(AValue: String);
-  public
     Website,
     Link,
     Title,
+    SaveTo,
     Status,
     Progress,
     TransferRate: String;
     DateTime: TDateTime;
     iProgress: Integer;
-    property SaveTo: String read FSaveTo write SetSaveTo;
   end;
 
   PFavoriteInfo = ^TFavoriteInfo;
@@ -496,21 +492,17 @@ type
   { TFavoriteInfo }
 
   TFavoriteInfo = record
-  private
-    FSaveTo: String;
-    procedure SetSaveTo(AValue: String);
-  public
     Website,
     Title,
     Link,
+    SaveTo,
     Numbering,
     DownloadedChapterList,
     CurrentChapter: String;
-    property SaveTo: String read FSaveTo write SetSaveTo;
   end;
 
-  TCardinalList = TFPGList<Cardinal>;
-  TByteList = TFPGList<Byte>;
+  TCardinalList = specialize TFPGList<Cardinal>;
+  TByteList = specialize TFPGList<Byte>;
 
   TDownloadPageThread = class(TThread)
   protected
@@ -4058,22 +4050,6 @@ begin
     Result := MangaInfo_StatusCompleted;
 end;
 
-{ TFavoriteInfo }
-
-procedure TFavoriteInfo.SetSaveTo(AValue: String);
-begin
-  if FSaveTo = AValue then Exit;
-  FSaveTo := AValue;
-end;
-
-{ TDownloadInfo }
-
-procedure TDownloadInfo.SetSaveTo(AValue: String);
-begin
-  if FSaveTo = AValue then Exit;
-  FSaveTo := AValue;
-end;
-
 { THTMLForm }
 
 constructor THTMLForm.Create;
@@ -4150,8 +4126,8 @@ begin
   Output.BeginUpdate;
   parser := THTMLParser.Create(PChar(FRaw));
   try
-    parser.OnFoundTag := FoundTag;
-    parser.OnFoundText := FoundText;
+    parser.OnFoundTag := @FoundTag;
+    parser.OnFoundText := @FoundText;
     parser.Exec;
   finally
     parser.Free;

@@ -10,8 +10,8 @@
       DecodeUrl(FillMangaSiteHost(MANGAHOST_ID, URL)),
       Task.Container.Manager.retryConnect);
     Parser := THTMLParser.Create(PChar(l.Text));
-    Parser.OnFoundTag := OnTag;
-    Parser.OnFoundText := OnText;
+    Parser.OnFoundTag := @OnTag;
+    Parser.OnFoundText := @OnText;
     Parser.Exec;
     Parser.Free;
     if parse.Count > 0 then

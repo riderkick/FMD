@@ -6,7 +6,7 @@
 
 unit uData;
 
-{$mode delphi}
+{$mode objfpc}{$H+}
 {$DEFINE DOWNLOADER}
 
 // This unit contains all necessary functions for data processing
@@ -48,9 +48,9 @@ type
     //     it's for faster filter
     procedure BreakDataToParts(const i: Cardinal);
 
-    function LoadFromFile(const website: String): Boolean;
+    function LoadFromFile(const awebsite: String): Boolean;
     function LoadFromAllFiles(const websiteList: TStringList): Boolean;
-    procedure SaveToFile(const website: String); overload;
+    procedure SaveToFile(const awebsite: String); overload;
     procedure SaveToFile; overload;
 
     function CanFilter(const checkedGenres, uncheckedGenres: TStringList;
@@ -243,13 +243,13 @@ begin
   end;
 end;
 
-function TDataProcess.LoadFromFile(const website: String): Boolean;
+function TDataProcess.LoadFromFile(const awebsite: String): Boolean;
 var
   id, i: Cardinal;
   l: TStringList;
-  Filename: String;
+  afilename: String;
 begin
-  Filename := DATA_FOLDER + website;
+  afilename := DATA_FOLDER + awebsite;
 
   Data.Clear;
   searchPos.Clear;
@@ -265,14 +265,14 @@ begin
   summary.Clear;
   jdn.Clear;
 
-  if not FileExistsUTF8(Filename + DATA_EXT) then
+  if not FileExistsUTF8(afilename + DATA_EXT) then
     Exit(False);
   l := TStringList.Create;
   try
-    Self.Filename := Filename;
+    Self.Filename := afilename;
 
-    Data.LoadFromFile(Filename + DATA_EXT);
-    id := GetMangaSiteID(website);
+    Data.LoadFromFile(afilename + DATA_EXT);
+    id := GetMangaSiteID(awebsite);
 
     if Data.Count > 0 then
     begin
@@ -311,7 +311,7 @@ function TDataProcess.LoadFromAllFiles(const websiteList: TStringList): Boolean;
 var
   id, j, i: Cardinal;
   l: TStringList;
-  Filename: String;
+  afilename: String;
 begin
   if websiteList.Count = 0 then
     Exit(False);
@@ -333,12 +333,12 @@ begin
   try
     for i := 0 to websiteList.Count - 1 do
     begin
-      Filename := DATA_FOLDER + websiteList.Strings[i];
+      afilename := DATA_FOLDER + websiteList.Strings[i];
       id := GetMangaSiteID(websiteList.Strings[i]);
-      if not FileExistsUTF8(Filename + DATA_EXT) then
+      if not FileExistsUTF8(afilename + DATA_EXT) then
         continue;
       l.Clear;
-      l.LoadFromFile(Filename + DATA_EXT);
+      l.LoadFromFile(afilename + DATA_EXT);
 
       if l.Count <> 0 then
       begin
@@ -379,13 +379,13 @@ begin
   Result := True;
 end;
 
-procedure TDataProcess.SaveToFile(const website: String);
+procedure TDataProcess.SaveToFile(const awebsite: String);
 begin
   if Data.Count = 0 then
     Exit;
   //QuickSortData(Data);
   ForceDirectoriesUTF8(DATA_FOLDER);
-  Data.SaveToFile(DATA_FOLDER + website + DATA_EXT);
+  Data.SaveToFile(DATA_FOLDER + awebsite + DATA_EXT);
 end;
 
 procedure TDataProcess.SaveToFile;

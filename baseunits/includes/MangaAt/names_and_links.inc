@@ -14,8 +14,8 @@
     parse.Clear;
     Parser := THTMLParser.Create(FixHTMLTagQuote(Source.Text));
     try
-      Parser.OnFoundTag := OnTag;
-      Parser.OnFoundText := OnText;
+      Parser.OnFoundTag := @OnTag;
+      Parser.OnFoundText := @OnText;
     finally
       Parser.Exec;
     end;
