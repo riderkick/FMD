@@ -4,6 +4,10 @@ Project page: https://github.com/riderkick/FMD
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.127.0 (19-11-2017)
+[*] MangaFox, MangaHere: exclude ads page
+Full changes: https://github.com/riderkick/FMD/compare/0.9.126.0...0.9.127.0
+
 0.9.126.0 (29-08-2017)
 [*] Madokami: fixed update list
 [*] Fixed download issue with some website
