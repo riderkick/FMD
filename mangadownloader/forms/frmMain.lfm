@@ -2830,6 +2830,14 @@ object MainForm: TMainForm
             ParentFont = False
             TabOrder = 7
           end
+          object cbOptionDeleteCompletedTasksOnClose: TCheckBox
+            Left = 4
+            Height = 19
+            Top = 248
+            Width = 189
+            Caption = 'Delete completed tasks on close'
+            TabOrder = 8
+          end
         end
         object tsView: TTabSheet
           Caption = 'View'
