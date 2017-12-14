@@ -9,8 +9,10 @@ uses
 
 function HexToStr(const h: String): String;
 procedure HexToBytes(const h: String; var o :TBytes);
-function BytesToHex(const h: TBytes): String;
+function BytesToHex(const b: TBytes): String;
+function BytesToString(const b: TBytes): String;
 function JSHexToStr(const h: String): String;
+function StrToHexStr(const s: String): String;
 
 function Pkcs7AddPad(const s: String): String;
 function Pkcs7RemovePad(const s: String): String;
@@ -38,18 +40,33 @@ begin
     o[i]:=Byte(StrToInt('$'+Copy(h,(i*2)+1,2)));
 end;
 
-function BytesToHex(const h: TBytes): String;
+function BytesToHex(const b: TBytes): String;
 var
   i: Integer;
 begin
   Result:='';
-  for i:=Low(h) to High(h) do
-    Result+=hexStr(h[i],2);
+  for i:=Low(b) to High(b) do
+    Result+=IntToHex(b[i],2);
+end;
+
+function BytesToString(const b: TBytes): String;
+var
+  i: Integer;
+begin
+  Result:='';
+  for i:=Low(b) to High(b) do
+    Result+=Char(b[i]);
 end;
 
 function JSHexToStr(const h: String): String;
 begin
   Result := HexToStr(StringReplace(h, '\x', '', [rfIgnoreCase, rfReplaceAll]));
+end;
+
+function StrToHexStr(const s: String): String;
+begin
+  SetLength(Result, Length(s) * 2);
+  BinToHex(@s[1],@Result[1],Length(s));
 end;
 
 // Pkcs7 padding described in RFC 5652 https://tools.ietf.org/html/rfc5652#section-6.3
@@ -94,7 +111,7 @@ end;
 
 function AESDecryptCBCSHA256Base64Pkcs7(const s, key, iv: String): string;
 var
-  i: String;
+  data: String;
   ivb: TBytes;
 begin
   Result:='';
@@ -104,9 +121,9 @@ begin
       InitStr(key,TDCP_sha256);
       HexToBytes(iv,ivb);
       SetIV(ivb[0]);
-      i:=DecodeStringBase64(s);
-      SetLength(Result,Length(i));
-      DecryptCBC(i[1],Result[1],Length(i));
+      data:=DecodeStringBase64(s);
+      SetLength(Result,Length(data));
+      DecryptCBC(data[1],Result[1],Length(data));
       Burn;
       Result:=Pkcs7RemovePad(Result);
     except
