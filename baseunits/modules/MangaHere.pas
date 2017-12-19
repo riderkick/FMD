@@ -54,7 +54,7 @@ begin
       with TXQueryEngineHTML.Create(Document) do
         try
           coverLink := MaybeFillHost(Module.RootURL, XPathString('//*[@class="manga_detail"]//img[@class="img"]/@src'));
-          if title = '' then title := XPathString('//h1[@class="title"]');
+          if title = '' then title := XPathString('//meta[@property="og:title"]/@content');
           authors := SeparateRight(XPathString('//*[@class="detail_topText"]/li[starts-with(.,"Author")]'), ':');
           artists := SeparateRight(XPathString('//*[@class="detail_topText"]/li[starts-with(.,"Artist")]'), ':');
           genres := SeparateRight(XPathString('//*[@class="detail_topText"]/li[starts-with(.,"Genre")]'), ':');
