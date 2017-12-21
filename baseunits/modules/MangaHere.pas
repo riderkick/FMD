@@ -135,7 +135,7 @@ begin
   with AddModule do
   begin
     Website := 'MangaHere';
-    RootURL := 'http://www.mangahere.co';
+    RootURL := 'http://www.mangahere.cc';
     OnGetNameAndLink := @GetNameAndLink;
     OnGetInfo := @GetInfo;
     OnGetPageNumber := @GetPageNumber;
