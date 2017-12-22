@@ -51,7 +51,10 @@ begin
           end
           else begin
             chapterLinks.Add(url);
-            chapterName.Add(title + ' - ' + s);
+            if s <> '' then
+              chapterName.Add(title + ' - ' + s)
+            else
+              chapterName.Add(title);
           end;
         finally
           Free;
@@ -82,8 +85,10 @@ begin
             s := v.toString;
             if s <> '' then
             begin
-              s := StringReplace(s, '/th/', '/fu/', [rfIgnoreCase]);
+              s := StringReplace(s, '/th/', '/fm/', [rfIgnoreCase]);
               s := MaybeFillHost(Module.RootURL, s);
+              if Pos('//', s) = 1 then
+                s := 'https:' + s;
               PageLinks.Add(s);
             end;
           end;
