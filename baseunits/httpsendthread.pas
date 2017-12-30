@@ -50,6 +50,7 @@ type
 
   THTTPSendThread = class(THTTPSend)
   private
+    FURL: String;
     FOwner: TBaseThread;
     FRetryCount: Integer;
     FGZip: Boolean;
@@ -89,6 +90,7 @@ type
   public
     BeforeHTTPMethod: THTTPMethodEvent;
     AfterHTTPMethod: THTTPMethodEvent;
+    property LastURL: String read FURL;
   end;
 
   TKeyValuePair = array[0..1] of String;
@@ -431,20 +433,20 @@ function THTTPSendThread.HTTPRequest(const Method, URL: String; const Response: 
 var
   counter: Integer = 0;
   redirectcounter: Integer = 0;
-  rurl, s, h, p: String;
+  s, h, p: String;
   HTTPHeader: TStringList;
   mstream: TMemoryStream;
 begin
   Result := False;
-  rurl := TrimRight(TrimLeftSet(URL, [':', '/', #0..' ']));
-  if rurl = '' then Exit;
-  rurl := MaybeEncodeURL(rurl);
+  FURL := TrimRight(TrimLeftSet(URL, [':', '/', #0..' ']));
+  if FURL = '' then Exit;
+  FURL := MaybeEncodeURL(FURL);
   if Pos('HTTP/', Headers.Text) = 1 then Reset;
   HTTPHeader := TStringList.Create;
   HTTPHeader.Assign(Headers);
   try
     // first request
-    while (not HTTPMethod(Method, rurl)) or
+    while (not HTTPMethod(Method, FURL)) or
       ((not FAllowServerErrorResponse) and (ResultCode > 500)) do begin
       if CheckTerminate then Exit;
       if (FRetryCount > -1) and (FRetryCount <= counter) then Exit;
@@ -459,21 +461,21 @@ begin
         // break too many redirect
         if redirectcounter >= FMaxRedirect then Exit
         else Inc(redirectcounter);
-        HTTPHeader.Values['Referer'] := ' ' + rurl;
+        HTTPHeader.Values['Referer'] := ' ' + FURL;
         s := Trim(Headers.Values['Location']);
         if s<>'' then
         begin
           SplitURL(s,@h,@p);
           s:=p;
           if h='' then
-            SplitURL(rurl,@h,@p);
-          rurl:=h+s;
+            SplitURL(FURL,@h,@p);
+          FURL:=h+s;
         end;
 
         Clear;
         Headers.Assign(HTTPHeader);
         counter := 0;
-        while (not HTTPMethod('GET', rurl)) or
+        while (not HTTPMethod('GET', FURL)) or
           ((not FAllowServerErrorResponse) and (ResultCode > 500)) do begin
           if checkTerminate then Exit;
           if (FRetryCount > -1) and (FRetryCount <= counter) then Exit;
