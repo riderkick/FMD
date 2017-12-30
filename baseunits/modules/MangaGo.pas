@@ -78,7 +78,7 @@ end;
 function GetPageNumber(const DownloadThread: TDownloadThread;
   const AURL: String; const Module: TModuleContainer): Boolean;
 var
-  s: String;
+  s, rurl: String;
 begin
   Result := False;
   if DownloadThread = nil then Exit;
@@ -86,7 +86,8 @@ begin
   begin
     PageLinks.Clear;
     PageNumber := 0;
-    if GETWithCookie(DownloadThread.FHTTP, MaybeFillHost(Module.RootURL, AURL)) then
+    rurl := MaybeFillHost(Module.RootURL, AURL);
+    if GETWithCookie(DownloadThread.FHTTP, rurl) then
     begin
       Result := True;
       s := XPathString('//script[contains(.,"imgsrcs")]', Document);
@@ -97,9 +98,21 @@ begin
           s := GetString(s, ' = ''', ''';');
         s:=StringReplace(s, '''', '', [rfReplaceAll]);
         PageLinks.CommaText := s;
+        if LastURL <> rurl then
+          PageContainerLinks.Text := LastURL;
       end;
     end;
   end;
+end;
+
+function BeforeDownloadImage(const DownloadThread: TDownloadThread;
+  var AURL: String; const Module: TModuleContainer): Boolean;
+begin
+  Result := True;
+  if DownloadThread = nil then Exit;
+  with DownloadThread.Task.Container do
+    if PageContainerLinks.Count <> 0 then
+      DownloadThread.FHTTP.Headers.Values['Referer'] := ' ' + PageContainerLinks[0];
 end;
 
 procedure RegisterModule;
@@ -112,6 +125,7 @@ begin
     OnGetNameAndLink := @GetNameAndLink;
     OnGetInfo := @GetInfo;
     OnGetPageNumber := @GetPageNumber;
+    OnBeforeDownloadImage := @BeforeDownloadImage;
   end;
 end;
 
