@@ -4,6 +4,10 @@ Project page: https://github.com/riderkick/FMD
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.129.0 (02-01-2018)
+[*] MangaGo: fixed download
+Full changes: https://github.com/riderkick/FMD/compare/0.9.128.0...0.9.129.0
+
 0.9.128.0 (15-12-2017)
 Full changes: https://github.com/riderkick/FMD/compare/0.9.127.0...0.9.128.0
 
