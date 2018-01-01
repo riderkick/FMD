@@ -273,13 +273,18 @@ begin
           end
           else
             if not testkeyiv(kissmangakey, kissmangaiv) then
+            begin
+              SendLog('KissManga, failed to decrypt. chko1='+chko1+'; chko2= '+chko2+'; iv='+civ+'; '+AURL, PageLinks);
               PageLinks.Clear;
+            end;
           if PageLinks.Count <> 0 then
           begin
             for i := 0 to PageLinks.Count - 1 do
               PageLinks[i] := AESDecryptCBCSHA256Base64Pkcs7(PageLinks[i], key, iv);
           end;
-        end;
+        end
+        else
+          SendLogError('KissManga, image list empty. '+AURL);
       finally
         source.Free;
       end;
