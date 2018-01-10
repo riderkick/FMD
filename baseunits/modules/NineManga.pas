@@ -115,7 +115,6 @@ begin
     if GET(MaybeFillHost(Module.RootURL, s)) then
     begin
       Result := True;
-      cookie := Cookies.Text;
       PageLinks[DownloadThread.WorkId] := XPathString('//img[contains(@class,"manga_pic")]/@src', Document);
     end;
   end;
