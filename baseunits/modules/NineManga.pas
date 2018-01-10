@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, WebsiteModules, uData, uBaseUnit, uDownloadsManager,
-  XQueryEngineHTML;
+  XQueryEngineHTML, RegExpr;
 
 implementation
 
@@ -86,11 +86,16 @@ end;
 
 function GetImageURL(const DownloadThread: TDownloadThread; const AURL: String;
   const Module: TModuleContainer): Boolean;
+var
+  s: String;
 begin
   Result := False;
   if DownloadThread = nil then Exit;
+  s := AURL;
+  s := ReplaceRegExpr('\.html?$', s, '', False);
+  s := s + '-' + IncStr(DownloadThread.WorkId) + '.html';
   with DownloadThread.Task.Container, DownloadThread.FHTTP do begin
-    if GET(AppendURLDelim(MaybeFillHost(Module.RootURL, AURL)) + 'page-' + IncStr(DownloadThread.WorkId)) then
+    if GET(MaybeFillHost(Module.RootURL, s)) then
     begin
       Result := True;
       PageLinks[DownloadThread.WorkId] := XPathString('//img[contains(@class,"manga_pic")]/@src', Document);
