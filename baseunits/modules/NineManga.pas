@@ -12,6 +12,9 @@ implementation
 
 uses FMDVars;
 
+var
+  cookie: String;
+
 function GetNameAndLink(const MangaInfo: TMangaInformation;
   const ANames, ALinks: TStringList; const AURL: String;
   const Module: TModuleContainer): Integer;
@@ -48,7 +51,6 @@ begin
   begin
     url := MaybeFillHost(Module.RootURL, AURL);
     s := url;
-    if Pos('waring=1', s) = 0 then s += '?waring=1';
     if GET(s) then begin
       Result := NO_ERROR;
       with TXQueryEngineHTML.Create(Document) do try
@@ -87,17 +89,33 @@ end;
 function GetImageURL(const DownloadThread: TDownloadThread; const AURL: String;
   const Module: TModuleContainer): Boolean;
 var
-  s: String;
+  s, ref: String;
 begin
   Result := False;
   if DownloadThread = nil then Exit;
+
   s := AURL;
   s := ReplaceRegExpr('\.html?$', s, '', False);
+  if DownloadThread.WorkId = 0 then
+    ref := AURL
+  else
+    ref := s + '-' + IntToStr(DownloadThread.WorkId) + '.html';
   s := s + '-' + IncStr(DownloadThread.WorkId) + '.html';
+  ref := MaybeFillHost(module.RootURL, ref);
+
+  if cookie = '' then
+  begin
+    if DownloadThread.FHTTP.GET(Module.RootURL) then
+       cookie := DownloadThread.FHTTP.Cookies.Text;
+  end;
+
   with DownloadThread.Task.Container, DownloadThread.FHTTP do begin
+    Cookies.Text := cookie;
+    Headers.Values['Referer'] := ref;
     if GET(MaybeFillHost(Module.RootURL, s)) then
     begin
       Result := True;
+      cookie := Cookies.Text;
       PageLinks[DownloadThread.WorkId] := XPathString('//img[contains(@class,"manga_pic")]/@src', Document);
     end;
   end;
@@ -129,6 +147,7 @@ begin
 end;
 
 initialization
+  cookie := '';
   RegisterModule;
 
 end.
