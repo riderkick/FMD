@@ -240,7 +240,7 @@ procedure RegisterModule;
   end;
 
 begin
-  AddWebsiteModule('MangaLife', 'http://mangalife.org');
+  AddWebsiteModule('MangaLife', 'http://mangalife.us');
   AddWebsiteModule('MangaSee', 'http://mangaseeonline.us');
   MMangaTraders := AddWebsiteModule('MangaTraders', 'http://mangatraders.biz');
   MMangaTraders.AccountSupport := True;
