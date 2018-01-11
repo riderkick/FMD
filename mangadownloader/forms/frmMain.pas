@@ -3395,7 +3395,7 @@ begin
   miDownloadDeleteCompleted.Enabled := DLManager.Count > 0;
   miDownloadMergeCompleted.Enabled := miDownloadDeleteCompleted.Enabled;
   with DLManager do begin
-    if vtDownload.SelectedCount = 0 then
+    if (vtDownload.SelectedCount = 0) or (vtDownload.FocusedNode = nil) then
     begin
       miDownloadStop.Enabled := False;
       miDownloadResume.Enabled := False;
