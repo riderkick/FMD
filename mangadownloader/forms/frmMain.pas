@@ -683,7 +683,7 @@ type
 
     // Load config from config.ini
     procedure LoadOptions;
-    procedure SaveOptions;
+    procedure SaveOptions(const AShowDialog: Boolean = False);
     procedure ApplyOptions;
 
     // Load config from mangalist.ini
@@ -4185,7 +4185,7 @@ end;
 
 procedure TMainForm.btOptionApplyClick(Sender: TObject);
 begin
-  SaveOptions;
+  SaveOptions(True);
   ApplyOptions;
   if not Self.Focused then Self.SetFocus;
 end;
@@ -4778,14 +4778,14 @@ begin
   end;
 end;
 
-procedure TMainForm.SaveOptions;
+procedure TMainForm.SaveOptions(const AShowDialog: Boolean);
 var
   s: String;
 begin
   if Length(optionMangaSiteSelectionNodes) > 0 then
   begin
     s := SaveMangaOptions;
-    if s = '' then
+    if (s = '') and AShowDialog then
     begin
       MessageDlg('', RS_DlgMangaListSelect,
         mtConfirmation, [mbYes], 0);
