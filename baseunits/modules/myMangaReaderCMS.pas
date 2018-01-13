@@ -111,6 +111,7 @@ begin
   AddWebsiteModule('MangaDoor', 'http://mangadoor.com');
   AddWebsiteModule('MangaID', 'http://mangaid.co');
   AddWebsiteModule('FallenAngelsScans','http://manga.fascans.com');
+  AddWebsiteModule('MangaDesu','http://mangadesu.net/');
 end;
 
 initialization
