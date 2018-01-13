@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, WebsiteModules, uData, uBaseUnit, uDownloadsManager,
-  XQueryEngineHTML, synautil;
+  XQueryEngineHTML, synautil, FMDVars;
 
 implementation
 
@@ -14,27 +14,21 @@ function GetNameAndLink(const MangaInfo: TMangaInformation;
   const ANames, ALinks: TStringList; const AURL: String;
   const Module: TModuleContainer): Integer;
 var
-  v: IXQValue;
   s: String;
 begin
   Result := NET_PROBLEM;
-  for s in ['a'..'z', '#'] do
+  s := ALPHA_LIST[Module.CurrentDirectoryIndex + 1];
+  if MangaInfo.FHTTP.GET(Module.RootURL + '/manga-list/' + s) then
   begin
-    if MangaInfo.FHTTP.GET(Module.RootURL + '/manga-list/' + s) then
-    begin
-      with TXQueryEngineHTML.Create(MangaInfo.FHTTP.Document) do
-        try
-          for v in XPath('//ul[contains(@class, "manga-list")]/li/a') do
-          begin
-            ALinks.Add(v.toNode.getAttribute('href'));
-            ANames.Add(v.toString);
-          end;
-        finally
-          Free;
-        end;
-    end;
+    Result := NO_ERROR;
+    with TXQueryEngineHTML.Create(MangaInfo.FHTTP.Document) do
+      try
+        updateList.CurrentDirectoryPageNumber := 1;
+        XPathHREFAll('//ul[contains(@class, "manga-list")]/li/a', ALinks, ANames);
+      finally
+        Free;
+      end;
   end;
-  Result := NO_ERROR;
 end;
 
 function GetInfo(const MangaInfo: TMangaInformation;
@@ -115,6 +109,7 @@ begin
     OnGetNameAndLink := @GetNameAndLink;
     OnGetInfo := @GetInfo;
     OnGetPageNumber := @GetPageNumber;
+    TotalDirectory := Length(ALPHA_LIST);
   end;
 end;
 
