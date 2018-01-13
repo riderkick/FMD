@@ -13,9 +13,13 @@ implementation
 function GetNameAndLink(const MangaInfo: TMangaInformation;
   const ANames, ALinks: TStringList; const AURL: String;
   const Module: TModuleContainer): Integer;
+var
+  dirurl: String;
 begin
   Result := NET_PROBLEM;
-  if MangaInfo.FHTTP.GET(Module.RootURL + '/daftar-manga/') then
+  dirurl := '/daftar-manga/';
+  if Module.Website = 'Subapics' then dirurl := '/manga-list/';
+  if MangaInfo.FHTTP.GET(Module.RootURL + dirurl) then
   begin
     Result := NO_ERROR;
     XPathHREFAll('//*[@class="soralist"]//a', MangaInfo.FHTTP.Document, ALinks, ANames);
@@ -67,15 +71,23 @@ begin
 end;
 
 procedure RegisterModule;
-begin
-  with AddModule do
+
+  function AddWebsiteModule(const AWebsite, ARootURL: String): TModuleContainer;
   begin
-    Website := 'MangaShiro';
-    RootURL := 'http://mangashiro.net';
-    OnGetNameAndLink := @GetNameAndLink;
-    OnGetInfo := @GetInfo;
-    OnGetPageNumber := @GetPageNumber;
+    Result := AddModule;
+    with Result do
+    begin
+      Website := AWebsite;
+      RootURL := ARootURL;
+      OnGetNameAndLink := @GetNameAndLink;
+      OnGetInfo := @GetInfo;
+      OnGetPageNumber := @GetPageNumber;
+    end;
   end;
+
+begin
+  AddWebsiteModule('MangaShiro', 'http://mangashiro.net');
+  AddWebsiteModule('Subapics', 'http://subapics.com/');
 end;
 
 initialization
