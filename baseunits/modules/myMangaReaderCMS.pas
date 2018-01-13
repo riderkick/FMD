@@ -81,6 +81,8 @@ begin
       with TXQueryEngineHTML.Create(Document) do
         try
           XPathStringAll('//div[@id="all"]/img/@data-src', PageLinks);
+          if PageLinks.Count = 0 then
+             XPathStringAll('//div[@id="all"]/img/@src', PageLinks);
         finally
           Free;
         end;
