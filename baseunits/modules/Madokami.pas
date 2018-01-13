@@ -222,7 +222,7 @@ begin
         if chapterName.Count > 0 then
           with TRegExpr.Create do
             try
-              Expression := '\.\w+';
+              Expression := '\.\w+\s*$';
               for i := 0 to chapterName.Count - 1 do
                 chapterName[i] := Replace(chapterName[i], '', False);
             finally
