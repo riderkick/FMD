@@ -11,7 +11,7 @@ uses
 implementation
 
 const
-  dirurl = '/series';
+  dirurl = '/manga-list';
 
 function GetDirectoryPageNumber(const MangaInfo: TMangaInformation;
   var Page: Integer; const WorkPtr: Integer; const Module: TModuleContainer): Integer;
@@ -22,7 +22,7 @@ begin
     Result := NO_ERROR;
     with TXQueryEngineHTML.Create(MangaInfo.FHTTP.Document) do
       try
-        Page := StrToIntDef(XPathString('(//ul[contains(@class,"pagination")]//a)[last()]/replace(@href,"^.*page=(\d+)\??.*$","$1")'), 1);
+        Page := StrToIntDef(XPathString('(//ul[contains(@class,"pagination")]//a)[last()-1]/replace(@href,"^.*page=(\d+)$","$1")'), 1);
       finally
         Free;
       end;
@@ -39,7 +39,7 @@ begin
     Result := NO_ERROR;
     with TXQueryEngineHTML.Create(MangaInfo.FHTTP.Document) do
       try
-        XPathHREFAll('//*[@class="row"]//*[@class="caption"]//a', ALinks, ANames);
+        XPathHREFAll('//*[@class="row"]//a[@class="chart-title"]', ALinks, ANames);
       finally
         Free;
       end;
@@ -60,24 +60,11 @@ begin
       Result := NO_ERROR;
       with TXQueryEngineHTML.Create(Document) do
         try
-          coverLink := XPathString('//*[@class="profile-thumb"]/img/@src');
+          coverLink := XPathString('//meta[@itemprop="photo"]/@content');
           if coverLink <> '' then coverLink := MaybeFillHost(Module.RootURL, coverLink);
-          if title = '' then title := XPathString('//div[@class="media-body"]/h2/text()');
-          summary := XPathString('//h6[text()="Synopsis"]/following-sibling::p');
-          while True do
-          begin
-            for v in XPath('//ul[contains(@class,"media-list")]/li/a') do
-            begin
-              chapterLinks.Add(v.toNode.getAttribute('href'));
-              chapterName.Add(XPathString('.//h6/text()', v));
-            end;
-            s := XPathString('//ul[contains(@class,"pagination")]/li[@class="next"]/a/@href');
-            if s = '' then Break;
-            if GET(MaybeFillHost(Module.RootURL, s)) then
-              ParseHTML(Document)
-            else Break;
-            if ThreadTerminated then Break;
-          end;
+          if title = '' then title := XPathString('//div[@class="container"]/div[@class="row"]/div/h2');
+          summary := XPathString('//h5[text()="Summary"]/following-sibling::*');
+          XPathHREFAll('//ul[@class="chapters"]/li/h3/a', chapterLinks, chapterName);
           InvertStrings([chapterLinks, chapterName]);
         finally
           Free;
@@ -99,8 +86,8 @@ begin
       Result := True;
       with TXQueryEngineHTML.Create(Document) do
         try
-          for v in XPath('//*[@class="content-wrapper"]/*[@class="row"]/img') do
-            PageLinks.Add(MaybeFillHost(Module.RootURL, v.toNode.getAttribute('src')));
+          for v in XPath('//div[@id="all"]/img/@data-src') do
+            PageLinks.Add(MaybeFillHost(Module.RootURL, Trim(v.toString)));
         finally
           Free;
         end;
