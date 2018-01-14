@@ -180,6 +180,10 @@ begin
           s := XPathString('//script[contains(.,"var pages")]');
           if s <> '' then begin
             s := GetBetween('var pages = ', ';', s);
+            if Pos('atob("', s) > 0 then begin
+               s := GetBetween('atob("', '")', s);
+               s := Base64Decode(s);
+            end;
             try
               ParseHTML(s);
               for v in XPath('json(*)()("url")') do
