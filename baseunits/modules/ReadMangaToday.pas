@@ -93,7 +93,7 @@ begin
   with AddModule do
   begin
     Website := 'ReadMangaToday';
-    RootURL := 'http://www.readmanga.today';
+    RootURL := 'https://www.readmng.com';
     OnGetDirectoryPageNumber := @GetDirectoryPageNumber;
     OnGetNameAndLink := @GetNameAndLink;
     OnGetInfo := @GetInfo;
