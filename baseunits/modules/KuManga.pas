@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, Math, WebsiteModules, uData, uBaseUnit, uDownloadsManager,
-  XQueryEngineHTML, httpsendthread, synautil;
+  XQueryEngineHTML, httpsendthread, synautil, URIParser;
 
 implementation
 
@@ -64,15 +64,22 @@ end;
 
 function GetInfo(const MangaInfo: TMangaInformation;
   const AURL: String; const Module: TModuleContainer): Integer;
+var
+  lastPage, i, totalChapters, perPage: Integer;
+  s: String;
+  tmp: TStringList;
+  uri: TURI;
 begin
   Result := NET_PROBLEM;
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
-  with MangaInfo.mangaInfo, MangaInfo.FHTTP do
+  with MangaInfo.mangaInfo do
   begin
     url := FillHost(Module.RootURL, AURL);
-    if GET(url) then begin
+    if MangaInfo.FHTTP.GET(url) then begin
       Result := NO_ERROR;
-      with TXQueryEngineHTML.Create(Document) do
+      tmp := TStringList.Create;
+      lastPage := 0;
+      with TXQueryEngineHTML.Create(MangaInfo.FHTTP.Document) do
         try
           coverLink := XPathString('//div[@class="row"]//img/@src');
           if coverLink <> '' then coverLink := MaybeFillHost(Module.RootURL, coverLink);
@@ -82,11 +89,37 @@ begin
           artists := XPathString('//*[@class="infom"]/div/div[2]//p[contains(.,"Artist") and not(contains(.,"No Disponible"))]/substring-after(normalize-space(.),": ")');
           status := MangaInfoStatusIfPos(XPathString('//*[@class="infom"]/div/div[2]//p[contains(.,"Estado")]'), 'Activo', 'Finalizado');
           genres := XPathString('//*[@class="panel-footer" and contains(.,"Géneros")]/string-join(.//a,", ")');
-          XPathHREFAll('//table//tr/td/a', chapterLinks, chapterName);
-          InvertStrings([chapterLinks, chapterName]);
+          XPathHREFAll('//table[contains(@class, "table")]//h4[@class="title"]/a', chapterLinks, chapterName);
+
+          s := XPathString('//script[contains(., "php_pagination")]');
+          if s <> '' then begin
+            s := GetBetween('php_pagination(', ');', s);
+            tmp.Delimiter := ',';
+            tmp.DelimitedText := s;
+            totalChapters := StrToIntDef(tmp[4], 0);
+            perPage := StrToIntDef(tmp[5], 1);
+            lastPage := Math.ceil(float(totalChapters) / float(perPage));
+          end;
         finally
+          tmp.Free;
           Free;
         end;
+
+      for i := 2 to lastPage do begin
+        uri := ParseURI(url);
+        uri.Path := uri.Path + 'p/' + IntToStr(i);
+        s := EncodeURI(uri);
+        if MangaInfo.FHTTP.GET(s) then begin
+           with TXQueryEngineHTML.Create(MangaInfo.FHTTP.Document) do
+           try
+             XPathHREFAll('//table[contains(@class, "table")]//h4[@class="title"]/a', chapterLinks, chapterName);
+           finally
+             Free;
+           end;
+        end;
+      end;
+
+      InvertStrings([chapterLinks, chapterName]);
     end;
   end;
 end;
@@ -109,6 +142,7 @@ begin
       with TXQueryEngineHTML.Create(Document) do try
         pageFormat := XPathString('//script[contains(.,"konekomangareader")]/substring-before(substring-after(substring-after(.,"setup"),","),");")');
         if pageFormat <> '' then begin
+          pageFormat := ReplaceString(pageFormat, ':remote', ':''remote''');
           ParseHTML(pageFormat);
           pages := StrToIntDef(XPathString('json(*)//pages'), 0);
           pageFormat := XPathString('substring-before(json(*)//pageFormat,"{pnumber}")');
