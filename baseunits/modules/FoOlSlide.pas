@@ -36,7 +36,8 @@ begin
   if (AWebsite = 'GoManga') or
      (AWebsite = 'Jaiminisbox') or
      (AWebsite = 'TripleSevenScan') or
-     (AWebsite = 'DokiFansubs') then
+     (AWebsite = 'DokiFansubs') or
+     (AWebsite = 'AtelierDuNoir') then
     Result := dirurlreader
   else
   if AWebsite = 'OneTimeScans' then
@@ -113,10 +114,13 @@ begin
     Result := NO_ERROR;
     with TXQueryEngineHTML.Create(MangaInfo.FHTTP.Document) do
       try
-        for v in XPath('//div[@class="list series"]/div/div[@class="title"]/a') do begin
-          ALinks.Add(v.toNode.getAttribute('href'));
-          ANames.Add(v.toString);
-        end;
+        if Module.Website = 'AtelierDuNoir' then
+          for v in XPath('//div[@class="caption"]') do begin
+            ALinks.Add(XPathString('div/a/@href', v));
+            ANames.Add(XPathString('h4', v));
+          end
+        else
+          XPathHREFAll('//div[@class="list series"]/div/div[@class="title"]/a', ALinks, ANames);
       finally
         Free;
       end;
@@ -139,7 +143,9 @@ begin
       with TXQueryEngineHTML.Create(Document) do
         try
           coverLink := XPathString('//div[@class="thumbnail"]/img/@src');
-          if title = '' then title := XPathString('//h1[@class="title"]');
+          if title = '' then
+            if Module.Website = 'AtelierDuNoir' then title := XPathString('//div[@class="section-headline"]//h3')
+            else title := XPathString('//h1[@class="title"]');
           authors := TrimLeftChar(XPathString(
             '//div[@class="info"]/*[contains(text(),"Author")]/following-sibling::text()[1]'), [':', ' ']);
           artists := TrimLeftChar(XPathString(
@@ -253,6 +259,7 @@ begin
   AddWebsiteModule('HelveticaScans', 'http://helveticascans.com');
   AddWebsiteModule('WhiteoutScans', 'http://reader.whiteoutscans.com');
   AddWebsiteModule('DokiFansubs', 'https://kobato.hologfx.com');
+  AddWebsiteModule('AtelierDuNoir', 'http://atelierdunoir.org');
 
   //es-san
   AddWebsiteModule('DangoOnlineNoFansub', 'http://lector.dangolinenofansub.com');
