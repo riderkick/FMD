@@ -310,7 +310,7 @@
         <DefaultFilename Value="..\3rd\internettools\internettools.lpk" Prefer="True"/>
       </Item9>
     </RequiredPackages>
-    <Units Count="14">
+    <Units Count="15">
       <Unit0>
         <Filename Value="md.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -405,6 +405,13 @@
         <ComponentName Value="SelectDirectoryForm"/>
         <ResourceBaseClass Value="Form"/>
       </Unit13>
+      <Unit14>
+        <Filename Value="forms\frmTransferFavorites.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="TransferFavoritesForm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit14>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

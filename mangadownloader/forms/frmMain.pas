@@ -23,7 +23,7 @@ uses
   TATools, AnimatedGif, uBaseUnit, uDownloadsManager, uFavoritesManager,
   uUpdateThread, uUpdateDBThread, uSilentThread, uMisc, uGetMangaInfosThread,
   frmDropTarget, frmAccountManager, frmWebsiteOptionCustom, frmWebsiteOptionAdvanced,
-  frmCustomColor, frmLogger, CheckUpdate, accountmanagerdb, DBDataProcess, MangaFoxWatermark,
+  frmCustomColor, frmLogger, frmTransferFavorites, CheckUpdate, accountmanagerdb, DBDataProcess, MangaFoxWatermark,
   SimpleTranslator, FMDOptions, httpsendthread, SimpleException;
 
 type
@@ -90,6 +90,7 @@ type
     lbOptionMangaCustomRename: TLabel;
     MenuItem10: TMenuItem;
     MenuItem11: TMenuItem;
+    miTransferWebsite: TMenuItem;
     miFavoritesEnable: TMenuItem;
     miFavoritesDisable: TMenuItem;
     miChapterListDescending: TMenuItem;
@@ -463,6 +464,7 @@ type
     procedure FormWindowStateChange(Sender: TObject);
     procedure miChapterListAscendingClick(Sender: TObject);
     procedure miFavoritesEnableClick(Sender: TObject);
+    procedure miTransferWebsiteClick(Sender: TObject);
     procedure tmAnimateMangaInfoTimer(Sender: TObject);
     procedure tmCheckFavoritesTimer(Sender: TObject);
     procedure tmExitCommandTimer(Sender: TObject);
@@ -1498,6 +1500,24 @@ begin
     Node := vtFavorites.GetNextSelected(Node);
   end;
   UpdateVtFavorites;
+end;
+
+procedure TMainForm.miTransferWebsiteClick(Sender: TObject);
+var
+  Node: PVirtualNode;
+begin
+  with TTransferFavoritesForm.Create(nil) do
+  try
+    Node := vtFavorites.GetFirstSelected();
+    while Assigned(Node) do
+    begin
+      Favs.Add(FavoriteManager.Items[Node^.Index]);
+      Node := vtFavorites.GetNextSelected(Node);
+    end;
+    ShowModal;
+  finally
+    Free;
+  end;
 end;
 
 procedure TMainForm.tmAnimateMangaInfoTimer(Sender: TObject);
@@ -3494,6 +3514,7 @@ begin
     miFavoritesChangeSaveTo.Enabled := False;
     miFavoritesOpenFolder.Enabled := False;
     miFavoritesOpenWith.Enabled := False;
+    miTransferWebsite.Enabled := False;
   end
   else
   begin
@@ -3502,6 +3523,7 @@ begin
     miFavoritesStopCheckNewChapter.Enabled := iStop;
     miFavoritesEnable.Enabled := iEnable;
     miFavoritesDisable.Enabled := iDisable;
+    miTransferWebsite.Enabled := True;
     if vtFavorites.SelectedCount = 1 then
     begin
       miFavoritesViewInfos.Enabled := True;
@@ -3525,6 +3547,7 @@ begin
   begin
     miFavoritesDelete.Enabled := False;
     miFavoritesChangeSaveTo.Enabled := False;
+    miTransferWebsite.Enabled := False;
   end;
 end;
 

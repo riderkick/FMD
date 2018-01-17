@@ -74,6 +74,7 @@ msgid "Checking"
 msgstr "Checking"
 
 #: frmaccountmanager.rs_invalid
+msgctxt "frmaccountmanager.rs_invalid"
 msgid "Invalid"
 msgstr "Invalid"
 
@@ -465,6 +466,15 @@ msgstr "Favorite list"
 #: tcustomcolorform.tsmangalist.caption
 msgid "Manga list"
 msgstr "Manga list"
+
+#: tform1.caption
+msgid "Form1"
+msgstr ""
+
+#: tform1.lbtransferto.caption
+msgctxt "tform1.lbtransferto.caption"
+msgid "Transfer to"
+msgstr ""
 
 #: tformdroptarget.miaddtofavorites.caption
 msgctxt "tformdroptarget.miaddtofavorites.caption"
@@ -1668,6 +1678,10 @@ msgstr "Download all"
 msgid "View manga infos"
 msgstr "View manga infos"
 
+#: tmainform.mitransferwebsite.caption
+msgid "Transfer website"
+msgstr ""
+
 #: tmainform.mitrayafterdownloadfinish.caption
 msgid "After download finish"
 msgstr "After download finish"
@@ -1972,6 +1986,58 @@ msgstr "&Abort"
 msgid "&Now"
 msgstr "&Now"
 
+#: ttransferfavoritesform.btcancel.caption
+#, fuzzy
+msgctxt "ttransferfavoritesform.btcancel.caption"
+msgid "Cancel"
+msgstr "Cancel"
+
+#: ttransferfavoritesform.btok.caption
+#, fuzzy
+msgctxt "ttransferfavoritesform.btok.caption"
+msgid "OK"
+msgstr "OK"
+
+#: ttransferfavoritesform.caption
+msgid "Transfer Favorites"
+msgstr ""
+
+#: ttransferfavoritesform.ckcleardownloadedchapters.caption
+msgid "Clear downloaded chapter list and reload from server"
+msgstr ""
+
+#: ttransferfavoritesform.lbtransferto.caption
+msgctxt "ttransferfavoritesform.lbtransferto.caption"
+msgid "Transfer to"
+msgstr ""
+
+#: ttransferfavoritesform.rball.caption
+msgid "All"
+msgstr ""
+
+#: ttransferfavoritesform.rbinvalid.caption
+#, fuzzy
+msgctxt "ttransferfavoritesform.rbinvalid.caption"
+msgid "Invalid"
+msgstr "Invalid"
+
+#: ttransferfavoritesform.rbvalid.caption
+msgid "Valid"
+msgstr ""
+
+#: ttransferfavoritesform.vtfavs.header.columns[1].text
+#, fuzzy
+#| msgid "Website"
+msgctxt "ttransferfavoritesform.vtfavs.header.columns[1].text"
+msgid "Title"
+msgstr "Website"
+
+#: ttransferfavoritesform.vtfavs.header.columns[2].text
+#, fuzzy
+msgctxt "ttransferfavoritesform.vtfavs.header.columns[2].text"
+msgid "Website"
+msgstr "Website"
+
 #: tupdatedialogform.btnlater.caption
 msgid "&Later"
 msgstr "&Later"
@@ -2254,3 +2320,4 @@ msgstr "Synchronizing data"
 #: uupdatethread.rs_updatinglist
 msgid "Updating list"
 msgstr "Updating list"
+

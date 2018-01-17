@@ -1,0 +1,12 @@
+{"version":1,"strings":[
+{"hash":102089683,"name":"ttransferfavoritesform.caption","sourcebytes":[84,114,97,110,115,102,101,114,32,70,97,118,111,114,105,116,101,115],"value":"Transfer Favorites"},
+{"hash":160944127,"name":"ttransferfavoritesform.lbtransferto.caption","sourcebytes":[84,114,97,110,115,102,101,114,32,116,111],"value":"Transfer to"},
+{"hash":5966629,"name":"ttransferfavoritesform.vtfavs.header.columns[1].text","sourcebytes":[84,105,116,108,101],"value":"Title"},
+{"hash":230269173,"name":"ttransferfavoritesform.vtfavs.header.columns[2].text","sourcebytes":[87,101,98,115,105,116,101],"value":"Website"},
+{"hash":1339,"name":"ttransferfavoritesform.btok.caption","sourcebytes":[79,75],"value":"OK"},
+{"hash":77089212,"name":"ttransferfavoritesform.btcancel.caption","sourcebytes":[67,97,110,99,101,108],"value":"Cancel"},
+{"hash":18476,"name":"ttransferfavoritesform.rball.caption","sourcebytes":[65,108,108],"value":"All"},
+{"hash":6062836,"name":"ttransferfavoritesform.rbvalid.caption","sourcebytes":[86,97,108,105,100],"value":"Valid"},
+{"hash":6062756,"name":"ttransferfavoritesform.rbinvalid.caption","sourcebytes":[73,110,118,97,108,105,100],"value":"Invalid"},
+{"hash":231329170,"name":"ttransferfavoritesform.ckcleardownloadedchapters.caption","sourcebytes":[67,108,101,97,114,32,100,111,119,110,108,111,97,100,101,100,32,99,104,97,112,116,101,114,32,108,105,115,116,32,97,110,100,32,114,101,108,111,97,100,32,102,114,111,109,32,115,101,114,118,101,114],"value":"Clear downloaded chapter list and reload from server"}
+]}

@@ -273,6 +273,7 @@
 {"hash":185170277,"name":"tmainform.mifavoritesdisable.caption","sourcebytes":[68,105,115,97,98,108,101],"value":"Disable"},
 {"hash":27371647,"name":"tmainform.mifavoritesviewinfos.caption","sourcebytes":[86,105,101,119,32,109,97,110,103,97,32,105,110,102,111],"value":"View manga info"},
 {"hash":29393692,"name":"tmainform.mifavoritesdownloadall.caption","sourcebytes":[68,111,119,110,108,111,97,100,32,97,108,108],"value":"Download all"},
+{"hash":136379477,"name":"tmainform.mitransferwebsite.caption","sourcebytes":[84,114,97,110,115,102,101,114,32,119,101,98,115,105,116,101],"value":"Transfer website"},
 {"hash":78392485,"name":"tmainform.mifavoritesdelete.caption","sourcebytes":[68,101,108,101,116,101],"value":"Delete"},
 {"hash":94036626,"name":"tmainform.mifavoriteschangecurrentchapter.caption","sourcebytes":[67,104,97,110,103,101,32,34,67,117,114,114,101,110,116,32,99,104,97,112,116,101,114,34],"value":"Change \"Current chapter\""},
 {"hash":202687490,"name":"tmainform.mifavoriteschangesaveto.caption","sourcebytes":[67,104,97,110,103,101,32,34,83,97,118,101,32,116,111,34],"value":"Change \"Save to\""},

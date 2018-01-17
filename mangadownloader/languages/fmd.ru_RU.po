@@ -72,6 +72,7 @@ msgid "Checking"
 msgstr "Проверка"
 
 #: frmaccountmanager.rs_invalid
+msgctxt "frmaccountmanager.rs_invalid"
 msgid "Invalid"
 msgstr "Неверный"
 
@@ -456,6 +457,15 @@ msgstr "Список избранного"
 #: tcustomcolorform.tsmangalist.caption
 msgid "Manga list"
 msgstr "Список манги"
+
+#: tform1.caption
+msgid "Form1"
+msgstr ""
+
+#: tform1.lbtransferto.caption
+msgctxt "tform1.lbtransferto.caption"
+msgid "Transfer to"
+msgstr ""
 
 #: tformdroptarget.miaddtofavorites.caption
 msgctxt "TFORMDROPTARGET.MIADDTOFAVORITES.CAPTION"
@@ -1649,6 +1659,10 @@ msgstr "Загрузить все"
 msgid "View manga infos"
 msgstr "Информация о манге"
 
+#: tmainform.mitransferwebsite.caption
+msgid "Transfer website"
+msgstr ""
+
 #: tmainform.mitrayafterdownloadfinish.caption
 msgid "After download finish"
 msgstr "После завершения загрузки:"
@@ -1953,6 +1967,58 @@ msgstr "Прервать"
 #: tshutdowncounterform.btnow.caption
 msgid "&Now"
 msgstr "Сейчас"
+
+#: ttransferfavoritesform.btcancel.caption
+#, fuzzy
+msgctxt "ttransferfavoritesform.btcancel.caption"
+msgid "Cancel"
+msgstr "Отмена"
+
+#: ttransferfavoritesform.btok.caption
+#, fuzzy
+msgctxt "ttransferfavoritesform.btok.caption"
+msgid "OK"
+msgstr "OK"
+
+#: ttransferfavoritesform.caption
+msgid "Transfer Favorites"
+msgstr ""
+
+#: ttransferfavoritesform.ckcleardownloadedchapters.caption
+msgid "Clear downloaded chapter list and reload from server"
+msgstr ""
+
+#: ttransferfavoritesform.lbtransferto.caption
+msgctxt "ttransferfavoritesform.lbtransferto.caption"
+msgid "Transfer to"
+msgstr ""
+
+#: ttransferfavoritesform.rball.caption
+msgid "All"
+msgstr ""
+
+#: ttransferfavoritesform.rbinvalid.caption
+#, fuzzy
+msgctxt "ttransferfavoritesform.rbinvalid.caption"
+msgid "Invalid"
+msgstr "Неверный"
+
+#: ttransferfavoritesform.rbvalid.caption
+msgid "Valid"
+msgstr ""
+
+#: ttransferfavoritesform.vtfavs.header.columns[1].text
+#, fuzzy
+#| msgid "Website"
+msgctxt "ttransferfavoritesform.vtfavs.header.columns[1].text"
+msgid "Title"
+msgstr "Сайт"
+
+#: ttransferfavoritesform.vtfavs.header.columns[2].text
+#, fuzzy
+msgctxt "ttransferfavoritesform.vtfavs.header.columns[2].text"
+msgid "Website"
+msgstr "Сайт"
 
 #: tupdatedialogform.btnlater.caption
 msgid "&Later"

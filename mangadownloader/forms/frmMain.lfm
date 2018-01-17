@@ -5235,6 +5235,10 @@ object MainForm: TMainForm
       ImageIndex = 1
       OnClick = miFavoritesDownloadAllClick
     end
+    object miTransferWebsite: TMenuItem
+      Caption = 'Transfer website'
+      OnClick = miTransferWebsiteClick
+    end
     object MenuItem7: TMenuItem
       Caption = '-'
     end
