@@ -566,8 +566,12 @@ type
       var Ghosted: Boolean; var ImageIndex: Integer);
     procedure vtDownloadGetText(Sender: TBaseVirtualTree; Node: PVirtualNode;
       Column: TColumnIndex; TextType: TVSTTextType; var CellText: String);
+    {$if VTMajorVersion < 5}
     procedure vtDownloadHeaderClick(Sender: TVTHeader; Column: TColumnIndex;
       Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+    {$else}
+    procedure vtDownloadHeaderClick(Sender: TVTHeader; HitInfo: TVTHeaderHitInfo);
+    {$endif}
     procedure vtDownloadKeyAction(Sender: TBaseVirtualTree; var CharCode: Word;
       var Shift: TShiftState; var DoDefault: Boolean);
     procedure vtDownloadKeyDown(Sender : TObject; var Key : Word;
@@ -594,8 +598,12 @@ type
       var Ghosted: Boolean; var ImageIndex: Integer);
     procedure vtFavoritesGetText(Sender: TBaseVirtualTree; Node: PVirtualNode;
       Column: TColumnIndex; TextType: TVSTTextType; var CellText: String);
+    {$if VTMajorVersion < 5}
     procedure vtFavoritesHeaderClick(Sender: TVTHeader; Column: TColumnIndex;
       Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+    {$else}
+    procedure vtFavoritesHeaderClick(Sender: TVTHeader; HitInfo: TVTHeaderHitInfo);
+    {$endif}
     procedure vtFavoritesPaintText(Sender: TBaseVirtualTree;
       const TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
       TextType: TVSTTextType);
@@ -3955,10 +3963,21 @@ begin
     end;
 end;
 
+{$if VTMajorVersion < 5}
 procedure TMainForm.vtDownloadHeaderClick(Sender: TVTHeader;
   Column: TColumnIndex; Button: TMouseButton; Shift: TShiftState; X, Y: Integer
   );
+{$else}
+procedure TMainForm.vtDownloadHeaderClick(Sender: TVTHeader; HitInfo: TVTHeaderHitInfo);
+var
+  Column: TColumnIndex;
+  Button: TMouseButton;
+{$endif}
 begin
+  {$if VTMajorVersion >= 5}
+  Column := HitInfo.Column;
+  Button := HitInfo.Button;
+  {$endif}
   if Button <> mbLeft then Exit;
   if (Column = 2) or (Column = 3) then Exit;
   if DLManager.SortColumn = Column then
@@ -4136,10 +4155,21 @@ begin
     end;
 end;
 
+{$if VTMajorVersion < 5}
 procedure TMainForm.vtFavoritesHeaderClick(Sender: TVTHeader;
   Column: TColumnIndex; Button: TMouseButton; Shift: TShiftState; X, Y: Integer
   );
+{$else}
+procedure TMainForm.vtFavoritesHeaderClick(Sender: TVTHeader; HitInfo: TVTHeaderHitInfo);
+var
+  Column: TColumnIndex;
+  Button: TMouseButton;
+{$endif}
 begin
+  {$if VTMajorVersion >= 5}
+  Column := HitInfo.Column;
+  Button := HitInfo.Button;
+  {$endif}
   if Button <> mbLeft then Exit;
   if FavoriteManager.isRunning then Exit;
   if Column = 0 then Exit;

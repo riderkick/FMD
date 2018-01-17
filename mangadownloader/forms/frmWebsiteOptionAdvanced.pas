@@ -55,8 +55,12 @@ type
       var NodeDataSize: Integer);
     procedure vtCookiesGetText(Sender: TBaseVirtualTree; Node: PVirtualNode;
       Column: TColumnIndex; TextType: TVSTTextType; var CellText: String);
+    {$if VTMajorVersion < 5}
     procedure vtCookiesHeaderClick(Sender: TVTHeader; Column: TColumnIndex;
       Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+    {$else}
+    procedure vtCookiesHeaderClick(Sender: TVTHeader; HitInfo: TVTHeaderHitInfo);
+    {$endif}
     procedure vtCookiesKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure vtCookiesNewText(Sender: TBaseVirtualTree; Node: PVirtualNode;
       Column: TColumnIndex; const NewText: String);
@@ -183,9 +187,19 @@ begin
   end;
 end;
 
+{$if VTMajorVersion < 5}
 procedure TWebsiteOptionAdvancedForm.vtCookiesHeaderClick(Sender: TVTHeader;
-  Column: TColumnIndex; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+  Column: TColumnIndex; Button: TMouseButton; Shift: TShiftState; X, Y: Integer
+  );
+{$else}
+procedure TWebsiteOptionAdvancedForm.vtCookiesHeaderClick(Sender: TVTHeader; HitInfo: TVTHeaderHitInfo);
+var
+  Column: TColumnIndex;
+{$endif}
 begin
+  {$if VTMajorVersion >= 5}
+  Column := HitInfo.Column;
+  {$endif}
   Sender.SortColumn := Column;
   if Sender.SortDirection = sdAscending then
     Sender.SortDirection := sdDescending

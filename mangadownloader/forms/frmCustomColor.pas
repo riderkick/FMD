@@ -486,7 +486,9 @@ begin
       Color := clWindow;
     LineStyle:=lsDotted;
     Header.Options:=Header.Options+[hoHotTrack];
+    {$if VTMajorVersion < 5}
     TreeOptions.PaintOptions:=TreeOptions.PaintOptions+[toUseExplorerTheme,toHotTrack];
+    {$endif}
 
     // save original event
     PaintText := OnPaintText;
