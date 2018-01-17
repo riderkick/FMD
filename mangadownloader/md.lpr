@@ -81,7 +81,8 @@ begin
         s.Free;
       end;
     end;
-    sqlite3dyn.SQLiteDefaultLibrary := CleanAndExpandDirectory(GetCurrentDirUTF8) + 'sqlite3.dll';
+    if FileExists(FMD_DIRECTORY + 'sqlite3.dll') then
+      sqlite3dyn.SQLiteDefaultLibrary := FMD_DIRECTORY + 'sqlite3.dll';
     Application.Initialize;
     Application.CreateForm(TMainForm, MainForm);
     Application.Run;

@@ -556,7 +556,7 @@ begin
       tdir := LangDir
     else
     begin
-      tdir := CleanAndExpandDirectory(GetCurrentDirUTF8);
+      tdir := ExtractFilePath(Application.ExeName);
       lauto := True;
     end;
   end;
@@ -647,7 +647,7 @@ var
   procedure FindLCLFile;
   var
     i: Integer;
-    s: string;
+    l, s: string;
   begin
     if LangDir <> '' then
     begin
@@ -665,9 +665,10 @@ var
     end;
     if lcllangpath = '' then
     begin
+      l := ExtractFilePath(Application.ExeName);
       for i := Low(ldir) to High(ldir) do
       begin
-        lcllangdir := GetCurrentDirUTF8 + PathDelim + ldir[i];
+        lcllangdir := l + ldir[i];
         s := lcllangdir + 'lclstrconsts.' + lcllang;
         if FileExistsUTF8(s + '.po') then
         begin

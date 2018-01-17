@@ -5441,7 +5441,7 @@ var
   i: Integer;
 begin
   cbLanguages.Items.Clear;
-  SimpleTranslator.LangDir := CleanAndExpandDirectory(GetCurrentDirUTF8) + 'languages';
+  SimpleTranslator.LangDir := FMD_DIRECTORY + 'languages';
   SimpleTranslator.LangAppName := 'fmd';
   SimpleTranslator.CollectLanguagesFiles;
   if SimpleTranslator.AvailableLanguages.Count > 0 then

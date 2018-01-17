@@ -355,8 +355,8 @@ begin
   FMD_VERSION_NUMBER := GetCurrentBinVersion;
   AvailableWebsite := TStringList.Create;
   AvailableWebsite.Sorted := True;
-  SetFMDdirectory(GetCurrentDirUTF8);
-  SetAppDataDirectory(GetCurrentDirUTF8);
+  SetFMDdirectory(ExtractFilePath(Application.ExeName));
+  SetAppDataDirectory(FMD_DIRECTORY);
 end;
 
 procedure doFinalization;
