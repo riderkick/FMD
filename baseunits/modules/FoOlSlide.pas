@@ -242,14 +242,14 @@ procedure RegisterModule;
 
 begin
   AddWebsiteModule('PowerManga', 'http://read.powermanga.org');
-
   AddWebsiteModule('Shoujosense', 'http://reader.shoujosense.com');
   AddWebsiteModule('GoManga', 'http://gomanga.co');
   AddWebsiteModule('OneTimeScans', 'http://otscans.com');
   AddWebsiteModule('SenseScans', 'http://reader.sensescans.com');
   AddWebsiteModule('Jaiminisbox', 'https://jaiminisbox.com');
   AddWebsiteModule('KireiCake', 'https://reader.kireicake.com');
-  AddWebsiteModule('HelveticaScans', 'http://helveticascans.com');    
+  AddWebsiteModule('HelveticaScans', 'http://helveticascans.com');
+  AddWebsiteModule('WhiteoutScans', 'http://reader.whiteoutscans.com');
 
   //es-san
   AddWebsiteModule('DangoOnlineNoFansub', 'http://lector.dangolinenofansub.com');
