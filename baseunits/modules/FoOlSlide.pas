@@ -23,7 +23,8 @@ function GETWithCookie(const AHTTP: THTTPSendThread; const AURL: String;
   const Module: TModuleContainer): Boolean;
 begin
   if ((Module.Website = 'SeinagiAdultoFansub') or
-      (Module.Website = 'TripleSevenScan'))
+      (Module.Website = 'TripleSevenScan') or
+      (Module.Website = 'DokiFansubs'))
     and (Pos(dirurl, AURL) = 0)then
     Result := AHTTP.POST(AURL, 'adult=true')
   else
@@ -34,7 +35,8 @@ function GetDirURL(const AWebsite: String): String;
 begin
   if (AWebsite = 'GoManga') or
      (AWebsite = 'Jaiminisbox') or
-     (AWebsite = 'TripleSevenScan') then
+     (AWebsite = 'TripleSevenScan') or
+     (AWebsite = 'DokiFansubs') then
     Result := dirurlreader
   else
   if AWebsite = 'OneTimeScans' then
@@ -250,6 +252,7 @@ begin
   AddWebsiteModule('KireiCake', 'https://reader.kireicake.com');
   AddWebsiteModule('HelveticaScans', 'http://helveticascans.com');
   AddWebsiteModule('WhiteoutScans', 'http://reader.whiteoutscans.com');
+  AddWebsiteModule('DokiFansubs', 'https://kobato.hologfx.com');
 
   //es-san
   AddWebsiteModule('DangoOnlineNoFansub', 'http://lector.dangolinenofansub.com');
