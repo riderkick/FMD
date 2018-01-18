@@ -349,6 +349,22 @@ msgstr "Sistema irá hibernar em %d segundos."
 msgid "System will shutdown in %d second."
 msgstr "Sistema irá desligar em %d segundos."
 
+#: frmtransferfavorites.rs_all
+msgctxt "frmtransferfavorites.rs_all"
+msgid "All"
+msgstr ""
+
+#: frmtransferfavorites.rs_invalid
+#, fuzzy
+msgctxt "frmtransferfavorites.rs_invalid"
+msgid "Invalid"
+msgstr "Inválido"
+
+#: frmtransferfavorites.rs_valid
+msgctxt "frmtransferfavorites.rs_valid"
+msgid "Valid"
+msgstr ""
+
 #: kissmanga.rs_kissmanga_initvector
 msgid "Initialization Vector:"
 msgstr "Vetor de Inicialização:"
@@ -2011,6 +2027,7 @@ msgid "Transfer to"
 msgstr ""
 
 #: ttransferfavoritesform.rball.caption
+msgctxt "ttransferfavoritesform.rball.caption"
 msgid "All"
 msgstr ""
 
@@ -2021,6 +2038,7 @@ msgid "Invalid"
 msgstr "Inválido"
 
 #: ttransferfavoritesform.rbvalid.caption
+msgctxt "ttransferfavoritesform.rbvalid.caption"
 msgid "Valid"
 msgstr ""
 

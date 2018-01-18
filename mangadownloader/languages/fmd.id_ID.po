@@ -347,6 +347,22 @@ msgstr "Komputer akan dihibernasi dalam %d detik"
 msgid "System will shutdown in %d second."
 msgstr "Komputer akan dimatikan dalam %d detik"
 
+#: frmtransferfavorites.rs_all
+msgctxt "frmtransferfavorites.rs_all"
+msgid "All"
+msgstr ""
+
+#: frmtransferfavorites.rs_invalid
+#, fuzzy
+msgctxt "frmtransferfavorites.rs_invalid"
+msgid "Invalid"
+msgstr "Tidak valid"
+
+#: frmtransferfavorites.rs_valid
+msgctxt "frmtransferfavorites.rs_valid"
+msgid "Valid"
+msgstr ""
+
 #: kissmanga.rs_kissmanga_initvector
 msgid "Initialization Vector:"
 msgstr "Initialization Vector:"
@@ -1990,6 +2006,7 @@ msgid "Transfer to"
 msgstr ""
 
 #: ttransferfavoritesform.rball.caption
+msgctxt "ttransferfavoritesform.rball.caption"
 msgid "All"
 msgstr ""
 
@@ -2000,6 +2017,7 @@ msgid "Invalid"
 msgstr "Tidak valid"
 
 #: ttransferfavoritesform.rbvalid.caption
+msgctxt "ttransferfavoritesform.rbvalid.caption"
 msgid "Valid"
 msgstr ""
 

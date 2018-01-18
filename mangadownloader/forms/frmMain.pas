@@ -1511,7 +1511,7 @@ begin
     Node := vtFavorites.GetFirstSelected();
     while Assigned(Node) do
     begin
-      Favs.Add(FavoriteManager.Items[Node^.Index]);
+      AddFav(FavoriteManager.Items[Node^.Index]);
       Node := vtFavorites.GetNextSelected(Node);
     end;
     ShowModal;
