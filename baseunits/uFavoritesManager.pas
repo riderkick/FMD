@@ -982,6 +982,8 @@ begin
 end;
 
 procedure TFavoriteManager.Restore;
+var
+  t: TFavoriteContainer;
 begin
   if not FFavoritesDB.Connection.Connected then Exit;
   if FFavoritesDB.OpenTable(False) then
@@ -992,19 +994,21 @@ begin
         FFavoritesDB.Table.First;
         while not FFavoritesDB.Table.EOF do
         begin
-          Items.Add(TFavoriteContainer.Create);
-          with Items.Last, FavoriteInfo, FFavoritesDB.Table do
+          t := TFavoriteContainer.Create;
+          with t, FavoriteInfo, FFavoritesDB.Table do
             begin
               Manager               := Self;
               Status                := STATUS_IDLE;
               Enabled               := Fields[f_enabled].AsBoolean;
               Website               := Fields[f_website].AsString;
+              t.Website             := Website;
               Link                  := Fields[f_link].AsString;
               Title                 := Fields[f_title].AsString;
               CurrentChapter        := Fields[f_currentchapter].AsString;
               DownloadedChapterList := Fields[f_downloadedchapterlist].AsString;
               SaveTo                := Fields[f_saveto].AsString;
             end;
+          Items.Add(t);
           FFavoritesDB.Table.Next;
         end;
       finally
