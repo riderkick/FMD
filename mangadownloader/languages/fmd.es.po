@@ -1641,9 +1641,18 @@ msgctxt "TMAINFORM.MIFAVORITESOPENWITH.CAPTION"
 msgid "Open ..."
 msgstr "Abrir ..."
 
+#: tmainform.mifavoritesrename.caption
+msgid "Rename"
+msgstr ""
+
 #: tmainform.mifavoritesstopchecknewchapter.caption
 msgid "Stop check for new chapter"
 msgstr "Detener Revisar si hay  Nuevo Capitulo"
+
+#: tmainform.mifavoritestransferwebsite.caption
+msgctxt "tmainform.mifavoritestransferwebsite.caption"
+msgid "Transfer website"
+msgstr ""
 
 #: tmainform.mifavoritesviewinfos.caption
 msgctxt "TMAINFORM.MIFAVORITESVIEWINFOS.CAPTION"
@@ -1671,10 +1680,6 @@ msgstr "Descargar Todo"
 #: tmainform.mimangalistviewinfos.caption
 msgid "View manga infos"
 msgstr "Ver Información del Manga"
-
-#: tmainform.mitransferwebsite.caption
-msgid "Transfer website"
-msgstr ""
 
 #: tmainform.mitrayafterdownloadfinish.caption
 msgid "After download finish"

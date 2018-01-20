@@ -1719,9 +1719,18 @@ msgctxt "TMAINFORM.MIFAVORITESOPENWITH.CAPTION"
 msgid "Open ..."
 msgstr "Άνοιγμα..."
 
+#: tmainform.mifavoritesrename.caption
+msgid "Rename"
+msgstr ""
+
 #: tmainform.mifavoritesstopchecknewchapter.caption
 msgid "Stop check for new chapter"
 msgstr "Διακοπή ελέγχου για νέα κεφάλαια"
+
+#: tmainform.mifavoritestransferwebsite.caption
+msgctxt "tmainform.mifavoritestransferwebsite.caption"
+msgid "Transfer website"
+msgstr ""
 
 #: tmainform.mifavoritesviewinfos.caption
 msgctxt "TMAINFORM.MIFAVORITESVIEWINFOS.CAPTION"
@@ -1749,10 +1758,6 @@ msgstr "Λήψη όλων"
 #: tmainform.mimangalistviewinfos.caption
 msgid "View manga infos"
 msgstr "Προβολή πρηροφοριών manga"
-
-#: tmainform.mitransferwebsite.caption
-msgid "Transfer website"
-msgstr ""
 
 #: tmainform.mitrayafterdownloadfinish.caption
 msgid "After download finish"

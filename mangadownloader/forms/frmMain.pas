@@ -90,7 +90,8 @@ type
     lbOptionMangaCustomRename: TLabel;
     MenuItem10: TMenuItem;
     MenuItem11: TMenuItem;
-    miTransferWebsite: TMenuItem;
+    miFavoritesRename: TMenuItem;
+    miFavoritesTransferWebsite: TMenuItem;
     miFavoritesEnable: TMenuItem;
     miFavoritesDisable: TMenuItem;
     miChapterListDescending: TMenuItem;
@@ -464,7 +465,8 @@ type
     procedure FormWindowStateChange(Sender: TObject);
     procedure miChapterListAscendingClick(Sender: TObject);
     procedure miFavoritesEnableClick(Sender: TObject);
-    procedure miTransferWebsiteClick(Sender: TObject);
+    procedure miFavoritesRenameClick(Sender: TObject);
+    procedure miFavoritesTransferWebsiteClick(Sender: TObject);
     procedure tmAnimateMangaInfoTimer(Sender: TObject);
     procedure tmCheckFavoritesTimer(Sender: TObject);
     procedure tmExitCommandTimer(Sender: TObject);
@@ -1502,7 +1504,26 @@ begin
   UpdateVtFavorites;
 end;
 
-procedure TMainForm.miTransferWebsiteClick(Sender: TObject);
+procedure TMainForm.miFavoritesRenameClick(Sender: TObject);
+var
+  node: PVirtualNode;
+  t: TFavoriteContainer;
+  tt: String;
+begin
+  node := vtFavorites.GetFirstSelected();
+  if Assigned(node) then
+  begin
+    t := FavoriteManager.Items[node^.Index];
+    tt := t.FavoriteInfo.Title;
+    if InputQuery('', RS_InfoTitle, tt) then
+    begin
+      t.FavoriteInfo.Title := tt;
+      t.SaveToDB();
+    end;
+  end;
+end;
+
+procedure TMainForm.miFavoritesTransferWebsiteClick(Sender: TObject);
 var
   Node: PVirtualNode;
   sm, i: Integer;
@@ -3539,7 +3560,8 @@ begin
     miFavoritesChangeSaveTo.Enabled := False;
     miFavoritesOpenFolder.Enabled := False;
     miFavoritesOpenWith.Enabled := False;
-    miTransferWebsite.Enabled := False;
+    miFavoritesTransferWebsite.Enabled := False;
+    miFavoritesRename.Enabled := False;
   end
   else
   begin
@@ -3548,7 +3570,7 @@ begin
     miFavoritesStopCheckNewChapter.Enabled := iStop;
     miFavoritesEnable.Enabled := iEnable;
     miFavoritesDisable.Enabled := iDisable;
-    miTransferWebsite.Enabled := True;
+    miFavoritesTransferWebsite.Enabled := True;
     if vtFavorites.SelectedCount = 1 then
     begin
       miFavoritesViewInfos.Enabled := True;
@@ -3557,6 +3579,7 @@ begin
       miFavoritesChangeSaveTo.Enabled := True;
       miFavoritesOpenFolder.Enabled := DirectoryExistsUTF8(FavoriteManager.Items[vtFavorites.FocusedNode^.Index].FavoriteInfo.SaveTo);
       miFavoritesOpenWith.Enabled := miFavoritesOpenFolder.Enabled;
+      miFavoritesRename.Enabled := True;
     end
     else
     begin
@@ -3566,13 +3589,14 @@ begin
       miFavoritesChangeSaveTo.Enabled := False;
       miFavoritesOpenFolder.Enabled := False;
       miFavoritesOpenWith.Enabled := False;
+      miFavoritesRename.Enabled := False;
     end;
   end;
   if FavoriteManager.isRunning then
   begin
     miFavoritesDelete.Enabled := False;
     miFavoritesChangeSaveTo.Enabled := False;
-    miTransferWebsite.Enabled := False;
+    miFavoritesTransferWebsite.Enabled := False;
   end;
 end;
 
