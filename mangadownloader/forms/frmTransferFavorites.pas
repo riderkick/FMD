@@ -143,7 +143,6 @@ begin
       while Assigned(node) do
       begin
         data := Owner.vtFavs.GetNodeData(node);
-        writeln(data^.Fav.Website+' <-> '+db.Website);
         if data^.Fav.Website = db.Website then
           setvalid
         else
@@ -152,7 +151,6 @@ begin
             db.Table.SQL.Text := 'SELECT link FROM ' + AnsiQuotedStr(db.TableName, '"') +
               ' WHERE title LIKE '+AnsiQuotedStr(data^.Fav.FavoriteInfo.Title, '"') + ' COLLATE NOCASE;';
             db.Table.Open;
-            writeln('locate>');
             if db.Table.RecNo > 0 then
               setvalid(db.Table.Fields[0].AsString)
             else
@@ -206,8 +204,38 @@ begin
 end;
 
 procedure TTransferFavoritesForm.btOKClick(Sender: TObject);
+var
+  Node: PVirtualNode;
+  Data: PFavContainer;
+  dc: String;
 begin
-  Close;
+  Node := vtFavs.GetFirst();
+  while Assigned(Node) do
+  begin
+    Data := vtFavs.GetNodeData(Node);
+    // add new item and remove the old one
+    if Data^.NewLink <> '' then
+    begin
+      with Data^.Fav.FavoriteInfo do
+      begin
+        if ckClearDownloadedChapters.Checked then
+          dc := ''
+        else
+          dc := DownloadedChapterList;
+        FavoriteManager.Add(
+          Title,
+          CurrentChapter,
+          dc,
+          cbWebsites.
+          Text,
+          SaveTo,
+          Data^.NewLink);
+      end;
+      FavoriteManager.Remove(Data^.Fav, False);
+    end;
+    Node := vtFavs.GetNext(Node);
+  end;
+  ModalResult := mrOK;
 end;
 
 procedure TTransferFavoritesForm.cbWebsitesChange(Sender: TObject);
@@ -219,7 +247,7 @@ end;
 
 procedure TTransferFavoritesForm.btCancelClick(Sender: TObject);
 begin
-  Close;
+  ModalResult := mrCancel;
 end;
 
 procedure TTransferFavoritesForm.vtFavsFreeNode(Sender: TBaseVirtualTree; Node: PVirtualNode);

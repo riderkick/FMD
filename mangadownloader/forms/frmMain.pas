@@ -1514,7 +1514,8 @@ begin
       AddFav(FavoriteManager.Items[Node^.Index]);
       Node := vtFavorites.GetNextSelected(Node);
     end;
-    ShowModal;
+    if ShowModal = mrOK then
+      UpdateVtFavorites;
   finally
     Free;
   end;
