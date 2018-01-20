@@ -1552,6 +1552,7 @@ end;
 procedure TMainForm.tmCheckFavoritesTimer(Sender: TObject);
 begin
   if IsDlgCounter then Exit;
+  tmCheckFavorites.Enabled := False;
   if OptionAutoCheckLatestVersion then
     btCheckLatestVersionClick(btCheckLatestVersion);
   FavoriteManager.isAuto := True;

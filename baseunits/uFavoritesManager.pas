@@ -348,6 +348,8 @@ begin
       btCancelFavoritesCheck.Width + 6;
     btFavoritesCheckNewChapter.Caption := RS_BtnCheckFavorites;
     vtFavorites.Repaint;
+    if OptionAutoCheckFavInterval and (not tmCheckFavorites.Enabled) then
+      tmCheckFavorites.Enabled := True;
   end;
 end;
 
