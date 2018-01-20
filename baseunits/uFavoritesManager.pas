@@ -69,6 +69,7 @@ type
     procedure SetEnabled(AValue: Boolean);
     procedure SetWebsite(AValue: String);
   public
+    Tag: Integer;
     FavoriteInfo: TFavoriteInfo;
     NewMangaInfo: TMangaInfo;
     NewMangaInfoChaptersPos: TCardinalList;
@@ -186,6 +187,7 @@ constructor TFavoriteContainer.Create;
 begin
   FModuleId := -1;
   FEnabled := True;
+  Tag := 0;
 end;
 
 destructor TFavoriteContainer.Destroy;
@@ -255,6 +257,14 @@ begin
         // update current chapters count immedietly
         FavoriteInfo.CurrentChapter := IntToStr(NewMangaInfo.chapterLinks.Count);
         if NewMangaInfo.chapterLinks.Count > 0 then
+        begin
+          // tag 100 for transfer favorite, add all chapter to downloaded chapter list
+          if Container.Tag = 100 then
+          begin
+            FavoriteInfo.DownloadedChapterList := NewMangaInfo.chapterLinks.Text;
+            Container.Tag := 0;
+          end
+          else
           try
             DLChapters := TStringList.Create;
             DLChapters.Sorted := False;
@@ -266,6 +276,7 @@ begin
           finally
             DLChapters.Free;
           end;
+        end;
 
         // free unneeded objects
         if (NewMangaInfoChaptersPos.Count = 0) and

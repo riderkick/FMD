@@ -208,6 +208,7 @@ var
   Node: PVirtualNode;
   Data: PFavContainer;
   dc: String;
+  t: TFavoriteContainer;
 begin
   Node := vtFavs.GetFirst();
   while Assigned(Node) do
@@ -231,7 +232,11 @@ begin
           SaveTo,
           Data^.NewLink);
       end;
-      FavoriteManager.Remove(Data^.Fav, False);
+      t := FavoriteManager.Items.Last;
+      FavoriteManager.FreeAndDelete(Data^.Fav);
+      Data^.Fav := t;
+      if ckClearDownloadedChapters.Checked then
+        t.Tag := 100; // get new chapterlist
     end;
     Node := vtFavs.GetNext(Node);
   end;

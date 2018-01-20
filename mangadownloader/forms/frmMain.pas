@@ -1505,17 +1505,40 @@ end;
 procedure TMainForm.miTransferWebsiteClick(Sender: TObject);
 var
   Node: PVirtualNode;
+  sm, i: Integer;
+  Data: PFavContainer;
 begin
   with TTransferFavoritesForm.Create(nil) do
   try
-    Node := vtFavorites.GetFirstSelected();
-    while Assigned(Node) do
-    begin
-      AddFav(FavoriteManager.Items[Node^.Index]);
-      Node := vtFavorites.GetNextSelected(Node);
+    FavoriteManager.isRunning := True;
+    sm := mrNone;
+    try
+      Node := vtFavorites.GetFirstSelected();
+      while Assigned(Node) do
+      begin
+        AddFav(FavoriteManager.Items[Node^.Index]);
+        Node := vtFavorites.GetNextSelected(Node);
+      end;
+      sm := ShowModal;
+    finally
+      FavoriteManager.isRunning := False;
     end;
-    if ShowModal = mrOK then
+    if sm = mrOK then
+    begin
       UpdateVtFavorites;
+      i := 0;
+      Node := vtFavs.GetFirst();
+      while Assigned(Node) do
+      begin
+        Data := vtFavs.GetNodeData(Node);
+        for i := i to FavoriteManager.Count - 1 do
+        begin
+          if Data^.Fav = FavoriteManager.Items[i] then
+            FavoriteManager.CheckForNewChapter(i);
+        end;
+        Node := vtFavs.GetNext(Node);
+      end;
+    end;
   finally
     Free;
   end;
