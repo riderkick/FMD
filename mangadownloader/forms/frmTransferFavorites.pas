@@ -116,6 +116,20 @@ var
   db: TDBDataProcess;
   node: PVirtualNode;
   data: PFavContainer;
+
+  procedure setvalid(const nl: String = '');
+  begin
+    Inc(Owner.FValidCount);
+    data^.NewLink := nl;
+    data^.State := 1;
+  end;
+  procedure setinvalid;
+  begin
+    Inc(Owner.FInvalidCount);
+    data^.NewLink := '';
+    data^.State := 2;
+  end;
+
 begin
   Synchronize(@SyncBegin);
   Owner.FValidCount := 0;
@@ -129,24 +143,23 @@ begin
       while Assigned(node) do
       begin
         data := Owner.vtFavs.GetNodeData(node);
-        try
-          db.Table.SQL.Text := 'SELECT link FROM ' + AnsiQuotedStr(db.TableName, '"') +
-            ' WHERE title LIKE '+AnsiQuotedStr(data^.Fav.FavoriteInfo.Title, '"') + ' COLLATE NOCASE;';
-          db.Table.Open;
-          if db.Table.RecNo > 0 then
-          begin
-            Inc(Owner.FValidCount);
-            data^.NewLink := db.Table.Fields[0].AsString;
-            data^.State := 1;
-          end
-          else
-          begin
-            Inc(Owner.FInvalidCount);
-            data^.NewLink := '';
-            data^.State := 2;
+        writeln(data^.Fav.Website+' <-> '+db.Website);
+        if data^.Fav.Website = db.Website then
+          setvalid
+        else
+        begin
+          try
+            db.Table.SQL.Text := 'SELECT link FROM ' + AnsiQuotedStr(db.TableName, '"') +
+              ' WHERE title LIKE '+AnsiQuotedStr(data^.Fav.FavoriteInfo.Title, '"') + ' COLLATE NOCASE;';
+            db.Table.Open;
+            writeln('locate>');
+            if db.Table.RecNo > 0 then
+              setvalid(db.Table.Fields[0].AsString)
+            else
+              setinvalid;
+          except
           end;
           db.Table.Close;
-        except
         end;
         node := Owner.vtFavs.GetNext(node);
       end;
