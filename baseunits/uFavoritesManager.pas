@@ -123,9 +123,11 @@ type
     // Merge a favorites.ini with another favorites.ini
     procedure MergeWith(const APath: String);
     // Free then delete favorite without any check, use with caution
-    procedure FreeAndDelete(const Pos: Integer);
+    procedure FreeAndDelete(const Pos: Integer); overload;
+    procedure FreeAndDelete(const T: TFavoriteContainer); overload;
     // Remove a manga from FFavorites
-    procedure Remove(const Pos: Integer; const isBackup: Boolean = True);
+    procedure Remove(const Pos: Integer; const isBackup: Boolean = True); overload;
+    procedure Remove(const T: TFavoriteContainer; const isBackup: Boolean = True); overload;
     // Restore information from favorites.db
     procedure Restore;
     // Backup to favorites.db
@@ -966,6 +968,14 @@ begin
   Items.Delete(Pos);
 end;
 
+procedure TFavoriteManager.FreeAndDelete(const T: TFavoriteContainer);
+begin
+  with T.FavoriteInfo do
+    FFavoritesDB.Delete(Website, Link);
+  T.Free;
+  Items.Remove(T);
+end;
+
 procedure TFavoriteManager.Remove(const Pos: Integer; const isBackup: Boolean);
 begin
   if (not isRunning) and (Pos < Items.Count) then
@@ -973,6 +983,21 @@ begin
     EnterCriticalsection(CS_Favorites);
     try
       FreeAndDelete(Pos);
+      if isBackup then
+        Backup;
+    finally
+      LeaveCriticalsection(CS_Favorites);
+    end;
+  end;
+end;
+
+procedure TFavoriteManager.Remove(const T: TFavoriteContainer; const isBackup: Boolean);
+begin
+  if not isRunning then
+  begin
+    EnterCriticalsection(CS_Favorites);
+    try
+      FreeAndDelete(T);
       if isBackup then
         Backup;
     finally
