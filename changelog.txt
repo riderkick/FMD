@@ -4,6 +4,27 @@ Project page: https://github.com/riderkick/FMD
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.130.0 (-2018)
+[+] Added transfer favorites
+[+] Added rename favorites
+[+] Added Subapics [ID]
+[+] Added MangaDesu [ID]
+[+] Added MangaKita [ID]
+[+] Added Whiteoutscans [EN-SC]
+[+] Added DokiFansubs [EN-SC]
+[*] NineManga: fixed all
+[*] MangaInn: fixed all
+[*] MangaLife: fixed domain
+[*] MangaId: fixed download
+[*] Madokami: fixed chapter title
+[*] Jaiminisbox: fixed downoad
+[*] MangaPark: fixed title
+[*] Tsumanga: fixed update list
+[*] Kumanga: fixed all
+[*] RawSenManga: fixed all
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.129.0...0.9.130.0
+
 0.9.129.0 (02-01-2018)
 [*] MangaGo: fixed download
 Full changes: https://github.com/riderkick/FMD/compare/0.9.128.0...0.9.129.0
