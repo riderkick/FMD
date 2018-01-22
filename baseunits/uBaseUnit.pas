@@ -448,6 +448,18 @@ type
     Downloaded: Boolean;
   end;
 
+  PBaseMangaInfo = ^TBaseMangaInfo;
+
+  TBaseMangaInfo = record
+    title,
+    authors,
+    artists,
+    genres,
+    status,
+    summary: String;
+    numChapter: Integer;
+  end;
+
   PMangaInfo = ^TMangaInfo;
 
   { TMangaInfo }
@@ -790,6 +802,10 @@ function  ConvertStrToInt32(const aStr  : String): Cardinal;}
 procedure TransferMangaInfo(var dest: TMangaInfo; const Source: TMangaInfo);
 function MangaInfoStatusIfPos(const SearchStr: String; const OngoingStr: String = 'Ongoing';
     const CompletedStr: String = 'Complete'): String;
+
+procedure GetBaseMangaInfo(const M: TMangaInfo; var B: TBaseMangaInfo);
+// fill empty manga info
+procedure FillBaseMangaInfo(const M: TMangaInfo; var B: TBaseMangaInfo);
 
 // cross platform funcs
 
@@ -4048,6 +4064,28 @@ begin
     Result := MangaInfo_StatusOngoing
   else if Pos(c, s) <> 0 then
     Result := MangaInfo_StatusCompleted;
+end;
+
+procedure GetBaseMangaInfo(const M: TMangaInfo; var B: TBaseMangaInfo);
+begin
+  B.title := M.title;
+  B.authors := M.authors;
+  B.artists := M.artists;
+  B.genres := M.genres;
+  B.status := M.status;
+  B.summary := M.summary;
+  B.numChapter := M.numChapter;
+end;
+
+procedure FillBaseMangaInfo(const M: TMangaInfo; var B: TBaseMangaInfo);
+begin
+  if Trim(M.title) = '' then M.title := B.title;
+  if Trim(M.authors) = '' then M.authors := B.authors;
+  if Trim(M.artists) = '' then M.artists := B.artists;
+  if Trim(M.genres) = '' then M.genres := B.genres;
+  if Trim(M.status) = '' then M.status := B.status;
+  if Trim(M.summary) = '' then M.summary := B.summary;
+  if M.numChapter = 0 then M.numChapter := B.numChapter;
 end;
 
 { THTMLForm }
