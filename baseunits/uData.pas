@@ -1079,6 +1079,7 @@ var
   Source: TStringList;
   Parser: THTMLParser;
   MangaSiteID: Integer;
+  bmangaInfo: TBaseMangaInfo;
 
   {$I includes/AnimeA/manga_information.inc}
 
@@ -1151,6 +1152,8 @@ begin
 
   //load User-Agent from advancedfile
   AdvanceLoadHTTPConfig(FHTTP, AWebsite);
+
+  GetBaseMangaInfo(mangaInfo, bmangaInfo);
 
   mangaInfo.website := AWebsite;
   mangaInfo.coverLink := '';
@@ -1289,14 +1292,15 @@ begin
     summary := CleanMultilinedString(FixWhiteSpace(summary));
 
     // fix info
-    if title = '' then
-      title := 'N/A';
     if (LeftStr(authors, 1) = '<') or (authors = '-') or (authors = ':') then
       authors := '';
     if (LeftStr(artists, 1) = '<') or (artists = '-') or (artists = ':') then
       artists := '';
     if (summary = '-') or (summary = ':') then
       summary := '';
+    if title = '' then
+      title := 'N/A';
+    FillBaseMangaInfo(mangaInfo, bmangaInfo);
 
     // cleanup chapters
     if chapterLinks.Count > 0 then begin
