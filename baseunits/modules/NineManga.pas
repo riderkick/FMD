@@ -42,16 +42,30 @@ end;
 
 function GetInfo(const MangaInfo: TMangaInformation;
   const AURL: String; const Module: TModuleContainer): Integer;
-var
-  s: String;
+
+  function GetWithWarning(var url: String; const MangaInfo: TMangaInformation): Boolean;
+  var
+    w: String;
+  begin
+    Result := False;
+    if MangaInfo.FHTTP.GET(url) then begin
+      w := XPathString('//script[contains(., ''is_warning = "1"'')]', MangaInfo.FHTTP.Document);
+      if (w = '') or (Pos('waring=1', url) > 0) then
+        Result := True
+      else begin
+        url += '?waring=1';
+        Result := MangaInfo.FHTTP.GET(url);
+      end;
+    end;
+  end;
+
 begin
   Result := NET_PROBLEM;
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
   with MangaInfo.mangaInfo, MangaInfo.FHTTP do
   begin
     url := MaybeFillHost(Module.RootURL, AURL);
-    s := url;
-    if GET(s) then begin
+    if GetWithWarning(url, MangaInfo) then begin
       Result := NO_ERROR;
       with TXQueryEngineHTML.Create(Document) do try
         coverLink := XPathString('//*[@class="bookface"]/img/@src');
