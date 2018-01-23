@@ -352,10 +352,9 @@ msgstr "System will shutdown in %d second."
 #: frmtransferfavorites.rs_all
 msgctxt "frmtransferfavorites.rs_all"
 msgid "All"
-msgstr ""
+msgstr "All"
 
 #: frmtransferfavorites.rs_invalid
-#, fuzzy
 msgctxt "frmtransferfavorites.rs_invalid"
 msgid "Invalid"
 msgstr "Invalid"
@@ -363,7 +362,7 @@ msgstr "Invalid"
 #: frmtransferfavorites.rs_valid
 msgctxt "frmtransferfavorites.rs_valid"
 msgid "Valid"
-msgstr ""
+msgstr "Valid"
 
 #: kissmanga.rs_kissmanga_initvector
 msgid "Initialization Vector:"
@@ -482,15 +481,6 @@ msgstr "Favorite list"
 #: tcustomcolorform.tsmangalist.caption
 msgid "Manga list"
 msgstr "Manga list"
-
-#: tform1.caption
-msgid "Form1"
-msgstr ""
-
-#: tform1.lbtransferto.caption
-msgctxt "tform1.lbtransferto.caption"
-msgid "Transfer to"
-msgstr ""
 
 #: tformdroptarget.miaddtofavorites.caption
 msgctxt "tformdroptarget.miaddtofavorites.caption"
@@ -1665,7 +1655,7 @@ msgstr "Open ..."
 
 #: tmainform.mifavoritesrename.caption
 msgid "Rename"
-msgstr ""
+msgstr "Rename"
 
 #: tmainform.mifavoritesstopchecknewchapter.caption
 msgid "Stop check for new chapter"
@@ -1674,7 +1664,7 @@ msgstr "Stop check for new chapter"
 #: tmainform.mifavoritestransferwebsite.caption
 msgctxt "tmainform.mifavoritestransferwebsite.caption"
 msgid "Transfer website"
-msgstr ""
+msgstr "Transfer website"
 
 #: tmainform.mifavoritesviewinfos.caption
 msgctxt "TMAINFORM.MIFAVORITESVIEWINFOS.CAPTION"
@@ -2021,24 +2011,23 @@ msgstr "OK"
 
 #: ttransferfavoritesform.caption
 msgid "Transfer Favorites"
-msgstr ""
+msgstr "Transfer Favorites"
 
 #: ttransferfavoritesform.ckcleardownloadedchapters.caption
 msgid "Clear downloaded chapter list and reload from server"
-msgstr ""
+msgstr "Clear downloaded chapter list and reload from server"
 
 #: ttransferfavoritesform.lbtransferto.caption
 msgctxt "ttransferfavoritesform.lbtransferto.caption"
 msgid "Transfer to"
-msgstr ""
+msgstr "Transfer to"
 
 #: ttransferfavoritesform.rball.caption
 msgctxt "ttransferfavoritesform.rball.caption"
 msgid "All"
-msgstr ""
+msgstr "All"
 
 #: ttransferfavoritesform.rbinvalid.caption
-#, fuzzy
 msgctxt "ttransferfavoritesform.rbinvalid.caption"
 msgid "Invalid"
 msgstr "Invalid"
@@ -2046,7 +2035,7 @@ msgstr "Invalid"
 #: ttransferfavoritesform.rbvalid.caption
 msgctxt "ttransferfavoritesform.rbvalid.caption"
 msgid "Valid"
-msgstr ""
+msgstr "Valid"
 
 #: ttransferfavoritesform.vtfavs.header.columns[1].text
 #, fuzzy
