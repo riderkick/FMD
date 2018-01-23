@@ -4,6 +4,12 @@
     l: TStringList;
     s: String;
   begin
+    if (WorkId = Task.Container.PageLinks.Count - 1) and (Pos('/featured.', URL) <> 0) then
+    begin
+      Task.Container.PageLinks.Delete(WorkId);
+      Exit;
+    end;
+
     l := TStringList.Create;
     s := AppendURLDelim(FillMangaSiteHost(MANGATOWN_ID, URL));
     if WorkId > 0 then

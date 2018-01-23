@@ -30,7 +30,8 @@
           Break;
         end;
         if isExtractPage and
-          (Pos('<option', parse[i]) > 0) then
+          (Pos('<option', parse[i]) > 0) and
+          (Pos('featured', parse[i]) = 0) then
         begin
           Inc(Task.Container.PageNumber);
         end;
