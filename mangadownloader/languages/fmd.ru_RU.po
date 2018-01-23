@@ -349,18 +349,17 @@ msgstr "Система выключится через %d секунд."
 #: frmtransferfavorites.rs_all
 msgctxt "frmtransferfavorites.rs_all"
 msgid "All"
-msgstr ""
+msgstr "Все"
 
 #: frmtransferfavorites.rs_invalid
-#, fuzzy
 msgctxt "frmtransferfavorites.rs_invalid"
 msgid "Invalid"
-msgstr "Неверный"
+msgstr "Нельзя перенести"
 
 #: frmtransferfavorites.rs_valid
 msgctxt "frmtransferfavorites.rs_valid"
 msgid "Valid"
-msgstr ""
+msgstr "Можно перенести"
 
 #: kissmanga.rs_kissmanga_initvector
 msgid "Initialization Vector:"
@@ -473,15 +472,6 @@ msgstr "Список избранного"
 #: tcustomcolorform.tsmangalist.caption
 msgid "Manga list"
 msgstr "Список манги"
-
-#: tform1.caption
-msgid "Form1"
-msgstr ""
-
-#: tform1.lbtransferto.caption
-msgctxt "tform1.lbtransferto.caption"
-msgid "Transfer to"
-msgstr ""
 
 #: tformdroptarget.miaddtofavorites.caption
 msgctxt "TFORMDROPTARGET.MIADDTOFAVORITES.CAPTION"
@@ -1646,7 +1636,7 @@ msgstr "Открыть..."
 
 #: tmainform.mifavoritesrename.caption
 msgid "Rename"
-msgstr ""
+msgstr "Переименовать"
 
 #: tmainform.mifavoritesstopchecknewchapter.caption
 msgid "Stop check for new chapter"
@@ -1655,7 +1645,7 @@ msgstr "Не проверять на новые главы"
 #: tmainform.mifavoritestransferwebsite.caption
 msgctxt "tmainform.mifavoritestransferwebsite.caption"
 msgid "Transfer website"
-msgstr ""
+msgstr "Перенести на другой сайт"
 
 #: tmainform.mifavoritesviewinfos.caption
 msgctxt "TMAINFORM.MIFAVORITESVIEWINFOS.CAPTION"
@@ -1990,55 +1980,34 @@ msgid "&Now"
 msgstr "Сейчас"
 
 #: ttransferfavoritesform.btcancel.caption
-#, fuzzy
 msgctxt "ttransferfavoritesform.btcancel.caption"
 msgid "Cancel"
 msgstr "Отмена"
 
 #: ttransferfavoritesform.btok.caption
-#, fuzzy
 msgctxt "ttransferfavoritesform.btok.caption"
 msgid "OK"
 msgstr "OK"
 
 #: ttransferfavoritesform.caption
 msgid "Transfer Favorites"
-msgstr ""
+msgstr "Перенос на другой сайт"
 
 #: ttransferfavoritesform.ckcleardownloadedchapters.caption
 msgid "Clear downloaded chapter list and reload from server"
-msgstr ""
+msgstr "Очистить скачанные главы и заново загрузить с сервера"
 
 #: ttransferfavoritesform.lbtransferto.caption
 msgctxt "ttransferfavoritesform.lbtransferto.caption"
 msgid "Transfer to"
-msgstr ""
-
-#: ttransferfavoritesform.rball.caption
-msgctxt "ttransferfavoritesform.rball.caption"
-msgid "All"
-msgstr ""
-
-#: ttransferfavoritesform.rbinvalid.caption
-#, fuzzy
-msgctxt "ttransferfavoritesform.rbinvalid.caption"
-msgid "Invalid"
-msgstr "Неверный"
-
-#: ttransferfavoritesform.rbvalid.caption
-msgctxt "ttransferfavoritesform.rbvalid.caption"
-msgid "Valid"
-msgstr ""
+msgstr "Перенести на"
 
 #: ttransferfavoritesform.vtfavs.header.columns[1].text
-#, fuzzy
-#| msgid "Website"
 msgctxt "ttransferfavoritesform.vtfavs.header.columns[1].text"
 msgid "Title"
-msgstr "Сайт"
+msgstr "Название"
 
 #: ttransferfavoritesform.vtfavs.header.columns[2].text
-#, fuzzy
 msgctxt "ttransferfavoritesform.vtfavs.header.columns[2].text"
 msgid "Website"
 msgstr "Сайт"
