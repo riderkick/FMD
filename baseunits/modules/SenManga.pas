@@ -52,7 +52,7 @@ begin
     Result := NO_ERROR;
     with TXQueryEngineHTML.Create(MangaInfo.FHTTP.Document) do
       try
-        for v in XPath('//*[@id="search-results"]/*[@class="media_box"]/*[@class="media-body"]/a') do
+        for v in XPath('//*[@id="search-results"]/*[contains(@class, "media_box")]/*[contains(@class, "media-body")]/a') do
         begin
           ALinks.Add(v.toNode.getAttribute('href'));
           ANames.Add(v.toString);
