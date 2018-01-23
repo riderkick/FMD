@@ -4,7 +4,7 @@ Project page: https://github.com/riderkick/FMD
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
-0.9.130.0 (-2018)
+0.9.130.0 (23-01-2018)
 [+] Added transfer favorites
 [+] Added rename favorites
 [+] Added Subapics [ID]
@@ -22,6 +22,7 @@ Changelog:
 [*] Tsumanga: fixed update list
 [*] Kumanga: fixed all
 [*] RawSenManga: fixed all
+[*] SenManga: fixed all
 [*] Various changes and bug fixes
 Full changes: https://github.com/riderkick/FMD/compare/0.9.129.0...0.9.130.0
 
