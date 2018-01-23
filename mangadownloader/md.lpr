@@ -19,6 +19,9 @@ var
   EnableLogging: Boolean = False;
   LogFileName: String = '';
   s: TStringList;
+  {$IFDEF DEBUGLEAKS}
+  trcfile: String;
+  {$ENDIF DEBUGLEAKS}
 
 {$R *.res}
 
@@ -28,11 +31,7 @@ begin
       CheckInstance := ReadBool('general', 'OneInstanceOnly', True);
       EnableLogging := ReadBool('logger', 'Enabled', False);
       if EnableLogging then
-      begin
-        LogFileName := ReadString('logger', 'LogFileName', '');
-        if LogFileName = '' then
-          LogFileName := ChangeFileExt(Application.ExeName, '.log');
-      end;
+        LogFileName := ExpandFileNameUTF8(ReadString('logger', 'LogFileName', DEFAULT_LOG_FILE), FMD_DIRECTORY);
     finally
       Free;
     end;
@@ -56,9 +55,10 @@ begin
   if AllowedToRun then
   begin
     {$IFDEF DEBUGLEAKS}
-    if FileExistsUTF8(ChangeFileExt(Application.ExeName, '.trc')) then
-      DeleteFileUTF8(ChangeFileExt(Application.ExeName, '.trc'));
-    SetHeapTraceOutput(ChangeFileExt(Application.ExeName, '.trc'));
+    trcfile := FMD_DIRECTORY + FMD_EXENAME + '.trc';
+    if FileExistsUTF8(trcfile) then
+      DeleteFileUTF8(trcfile);
+    SetHeapTraceOutput(trcfile);
     {$ENDIF DEBUGLEAKS}
     Application.Title := 'Free Manga Downloader';
     RequireDerivedFormResource := True;

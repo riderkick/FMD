@@ -4852,7 +4852,7 @@ begin
     ckEnableLogging.Checked := ReadBool('logger', 'Enabled', False);
     edLogFileName.Text := ReadString('logger', 'LogFileName', '');
     if edLogFileName.Text = '' then
-      edLogFileName.Text := ChangeFileExt(ExtractFileNameOnly(Application.ExeName), '.log');
+      edLogFileName.Text := DEFAULT_LOG_FILE;
 
     // websites
     if Length(optionMangaSiteSelectionNodes) > 0 then
@@ -4987,7 +4987,7 @@ begin
       frmCustomColor.SaveToIniFile(configfile);
       WriteBool('logger', 'Enabled', ckEnableLogging.Checked);
       if edLogFileName.Text = '' then
-        edLogFileName.Text := ChangeFileExt(ExtractFileNameOnly(Application.ExeName), '.log');
+        edLogFileName.Text := DEFAULT_LOG_FILE;
       WriteString('logger', 'LogFileName', edLogFileName.Text);
     finally
       UpdateFile;

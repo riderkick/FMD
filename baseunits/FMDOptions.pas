@@ -64,6 +64,7 @@ const
 var
   FMD_VERSION_NUMBER,
   FMD_DIRECTORY,
+  FMD_EXENAME,
   APPDATA_DIRECTORY,
   DEFAULT_PATH,
   WORK_FOLDER,
@@ -85,6 +86,7 @@ var
   IMAGE_FOLDER,
   LANGUAGE_FILE,
   CHANGELOG_FILE,
+  DEFAULT_LOG_FILE,
   README_FILE,
   EXTRAS_FOLDER,
   MANGAFOXTEMPLATE_FOLDER: String;
@@ -274,6 +276,7 @@ end;
 procedure SetFMDdirectory(const ADir: String);
 begin
   FMD_DIRECTORY := CleanAndExpandDirectory(ADir);
+  FMD_EXENAME := ExtractFileNameOnly(Application.ExeName);
 
   CONFIG_FOLDER := FMD_DIRECTORY + 'config' + PathDelim;
   REVISION_FILE := CONFIG_FOLDER + 'revision.ini';
@@ -286,6 +289,7 @@ begin
   README_FILE := FMD_DIRECTORY + 'readme.rtf';
   EXTRAS_FOLDER := FMD_DIRECTORY + 'extras' + PathDelim;
   MANGAFOXTEMPLATE_FOLDER := EXTRAS_FOLDER + 'mangafoxtemplate' + PathDelim;
+  DEFAULT_LOG_FILE := FMD_DIRECTORY + FMD_EXENAME + '.log';
 end;
 
 procedure SetAppDataDirectory(const ADir: String);

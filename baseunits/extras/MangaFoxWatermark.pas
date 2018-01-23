@@ -73,9 +73,9 @@ type
     MinWhiteBorder: Integer;
     constructor Create;
     destructor Destroy; override;
-    function LoadTemplate(const Directory: String = ''): Integer;
+    function LoadTemplate(const ADirectory: String = ''): Integer;
     procedure ClearTemplate;
-    function RemoveWatermark(const FileName: String; const SaveAsPNG: Boolean = False): Boolean;
+    function RemoveWatermark(const AFileName: String; const SaveAsPNG: Boolean = False): Boolean;
     property TemplateDirectory: String read FTemplateDirectory write FTemplateDirectory;
     property TemplateCount: Integer read GetTemplateCount;
     property Template[const Index: Integer]: POneBitImage read GetTemplate;
@@ -290,7 +290,7 @@ begin
   DoneCriticalsection(FCS_RemoveWatermark);
 end;
 
-function TWatermarkRemover.LoadTemplate(const Directory: String): Integer;
+function TWatermarkRemover.LoadTemplate(const ADirectory: String): Integer;
 var
   Files: TStrings;
   D: String;
@@ -298,8 +298,8 @@ var
 begin
   Result := 0;
   FCleared := False;
-  if (Directory <> '') and (Directory <> FTemplateDirectory) then
-    FTemplateDirectory := Directory;
+  if (ADirectory <> '') and (ADirectory <> FTemplateDirectory) then
+    FTemplateDirectory := ADirectory;
   if FTemplateDirectory = '' then Exit;
   D := CleanAndExpandDirectory(FTemplateDirectory);
   if not DirectoryExistsUTF8(D) then Exit;
@@ -355,7 +355,7 @@ begin
     Result := 10 * log10(sqr(255) / MSE);
 end;
 
-function TWatermarkRemover.RemoveWatermark(const FileName: String;
+function TWatermarkRemover.RemoveWatermark(const AFileName: String;
   const SaveAsPNG: Boolean): Boolean;
 var
   Handler: TImageHandlerRec;
@@ -380,14 +380,14 @@ begin
       LoadTemplate;
     end;
     if TemplateCount = 0 then Exit;
-    Handler := GetImageHandlerByFile(FileName);
+    Handler := GetImageHandlerByFile(AFileName);
     if Handler.Ext = '' then Exit;
     Image := TFPMemoryImage.Create(0, 0);
     try
       GrayScale := False;
       try
         Reader := Handler.ReaderClass.Create;
-        FileStream := TFileStreamUTF8.Create(FileName, fmOpenRead or fmShareDenyWrite);
+        FileStream := TFileStreamUTF8.Create(AFileName, fmOpenRead or fmShareDenyWrite);
         Image.LoadFromStream(FileStream, Reader);
         if Reader is TFPReaderJPEG then
           GrayScale := TFPReaderJPEG(Reader).GrayScale;
@@ -450,9 +450,9 @@ begin
             Handler.WriterClass := TFPWriterPNG;
             Handler.WExt := 'png';
           end;
-          NewFileName := ExtractFileNameWithoutExt(FileName) + '.' + Handler.WExt;
-          if FileExistsUTF8(FileName) then
-            DeleteFileUTF8(FileName);
+          NewFileName := ExtractFileNameWithoutExt(AFileName) + '.' + Handler.WExt;
+          if FileExistsUTF8(AFileName) then
+            DeleteFileUTF8(AFileName);
           if FileExistsUTF8(NewFileName) then
             DeleteFileUTF8(NewFileName);
           if not FileExistsUTF8(NewFileName) then

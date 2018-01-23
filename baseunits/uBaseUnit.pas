@@ -18,7 +18,7 @@ uses
   {$else}
   UTF8Process,
   {$endif}
-  SysUtils, Classes, Graphics, lazutf8classes, LazFileUtils, LConvEncoding,
+  SysUtils, Classes, Graphics, lazutf8classes, LazFileUtils, LConvEncoding, LazUtils,
   strutils, dateutils, variants, base64, fpjson, jsonparser, jsonscanner,
   FastHTMLParser, fgl, RegExpr, synautil, httpsend, blcksock, ssl_openssl,
   synacode, MultiLog, FPimage, GZIPUtils, uMisc, httpsendthread, FMDOptions,
@@ -1851,7 +1851,7 @@ var
 begin
   Result := FixWhiteSpace(Path);
   {$IFDEF WINDOWS}
-  Result := RemovePathDelim(CleanAndExpandFilename(GetForcedPathDelims(Result)));
+  Result := RemovePathDelim(ExpandFileNameUTF8(TrimFilename(GetForcedPathDelims(Result)), FMD_DIRECTORY));
   Result := TrimRightChar(Result, ['.']);
   s := UTF8Decode(Result);
   if Length(s) > MAX_PATHDIR then
@@ -1860,7 +1860,7 @@ begin
     Result := UTF8Encode(s);
   end;
   {$ELSE}
-  Result := CleanAndExpandFilename(GetForcedPathDelims(Path));
+  Result := ExpandFileNameUTF8(TrimFilename(Path), FMD_DIRECTORY);
   {$ENDIF}
   Result := AppendPathDelim(Trim(Result));
 end;
