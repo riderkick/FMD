@@ -60,6 +60,7 @@ uses
   TruyenTranhTuan,
   BlogTruyen,
   MangaAe,
+  Mangadex,
   // Raw Official
   SundayWebEvery,
   TonarinoYoungJump,

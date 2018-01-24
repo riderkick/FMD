@@ -15,10 +15,12 @@ msgid ""
 msgstr ""
 
 #: batoto.rs_showalllang
+msgctxt "batoto.rs_showalllang"
 msgid "Show all language"
 msgstr ""
 
 #: batoto.rs_showscangroup
+msgctxt "batoto.rs_showscangroup"
 msgid "Show scanlation group"
 msgstr ""
 
@@ -332,6 +334,16 @@ msgstr ""
 
 #: kissmanga.rs_kissmanga_usegoogledcp
 msgid "Use Google DCP"
+msgstr ""
+
+#: mangadex.rs_showalllang
+msgctxt "mangadex.rs_showalllang"
+msgid "Show all language"
+msgstr ""
+
+#: mangadex.rs_showscangroup
+msgctxt "mangadex.rs_showscangroup"
+msgid "Show scanlation group"
 msgstr ""
 
 #: mangafox.rs_removewatermark

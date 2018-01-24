@@ -31,10 +31,12 @@ msgstr ""
 "CDN2 (testing)\n"
 
 #: batoto.rs_showalllang
+msgctxt "batoto.rs_showalllang"
 msgid "Show all language"
 msgstr "Show all language"
 
 #: batoto.rs_showscangroup
+msgctxt "batoto.rs_showscangroup"
 msgid "Show scanlation group"
 msgstr "Show scanlation group"
 
@@ -375,6 +377,16 @@ msgstr "Key:"
 #: kissmanga.rs_kissmanga_usegoogledcp
 msgid "Use Google DCP"
 msgstr "Use Google DCP"
+
+#: mangadex.rs_showalllang
+msgctxt "mangadex.rs_showalllang"
+msgid "Show all language"
+msgstr "Show all language"
+
+#: mangadex.rs_showscangroup
+msgctxt "mangadex.rs_showscangroup"
+msgid "Show scanlation group"
+msgstr "Show scanlation group"
 
 #: mangafox.rs_removewatermark
 msgid "Remove watermark"

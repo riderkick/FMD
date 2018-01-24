@@ -30,10 +30,12 @@ msgstr ""
 "CDN2 (тестовый)\n"
 
 #: batoto.rs_showalllang
+msgctxt "batoto.rs_showalllang"
 msgid "Show all language"
 msgstr "Показать все языки"
 
 #: batoto.rs_showscangroup
+msgctxt "batoto.rs_showscangroup"
 msgid "Show scanlation group"
 msgstr "Показать группу сканирования"
 
@@ -372,6 +374,16 @@ msgstr "Ключ:"
 #: kissmanga.rs_kissmanga_usegoogledcp
 msgid "Use Google DCP"
 msgstr ""
+
+#: mangadex.rs_showalllang
+msgctxt "mangadex.rs_showalllang"
+msgid "Show all language"
+msgstr "Показать все языки"
+
+#: mangadex.rs_showscangroup
+msgctxt "mangadex.rs_showscangroup"
+msgid "Show scanlation group"
+msgstr "Показать группу сканирования"
 
 #: mangafox.rs_removewatermark
 msgid "Remove watermark"

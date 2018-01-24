@@ -35,10 +35,12 @@ msgstr ""
 "CDN2 (δοκιμαστικά)\n"
 
 #: batoto.rs_showalllang
+msgctxt "batoto.rs_showalllang"
 msgid "Show all language"
 msgstr "Εμφάνιση όλων των γλωσσών"
 
 #: batoto.rs_showscangroup
+msgctxt "batoto.rs_showscangroup"
 msgid "Show scanlation group"
 msgstr "Εμφάνιση ομάδας scanlation"
 
@@ -380,6 +382,16 @@ msgstr "Κλειδί:"
 #: kissmanga.rs_kissmanga_usegoogledcp
 msgid "Use Google DCP"
 msgstr ""
+
+#: mangadex.rs_showalllang
+msgctxt "mangadex.rs_showalllang"
+msgid "Show all language"
+msgstr "Εμφάνιση όλων των γλωσσών"
+
+#: mangadex.rs_showscangroup
+msgctxt "mangadex.rs_showscangroup"
+msgid "Show scanlation group"
+msgstr "Εμφάνιση ομάδας scanlation"
 
 #: mangafox.rs_removewatermark
 msgid "Remove watermark"
