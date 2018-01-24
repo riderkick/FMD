@@ -1,0 +1,108 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Project-Id-Version: The Free Manga Downloader\n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: Tmp341\n"
+"MIME-Version: 1.0\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: tr\n"
+"X-Generator: Poedit 2.0.3\n"
+
+#: tfrmmain.caption
+msgid "Free Manga Downloader - Updater"
+msgstr "Free Manga Downloader - Güncelleyici"
+
+#: tfrmmain.lbfilesize.caption
+msgid "File size"
+msgstr "Dosya boyutu"
+
+#: tfrmmain.lbstatus.caption
+msgid "Waiting..."
+msgstr "Bekliyor..."
+
+#: tfrmmain.lbtransferrate.caption
+msgid "Transfer rate"
+msgstr "Transfer oranı"
+
+#: tfrmmessage.caption
+msgid "Help"
+msgstr "Yardım"
+
+#: umain.rs_7znotfound
+msgid "Can't extract file because 7za.exe not found!"
+msgstr "Çıkarılamıyor, çünkü 7za.exe bulunamadı!"
+
+#: umain.rs_anerroroccured
+msgid "An error occured when trying to download file."
+msgstr "Dosyayı indirmeye çalışırken bir hata ile karşılaşıldı."
+
+#: umain.rs_downloading
+msgid "Downloading [%s]..."
+msgstr "İndiriliyor [%s]..."
+
+#: umain.rs_errorcheckantivirus
+msgid "Error saving file, check your AntiVirus!"
+msgstr "Dosya kaydedilirken hata, AntiVirus programınızı kontrol edin!"
+
+#: umain.rs_faileddownloadpage
+msgid "Failed downloading file!"
+msgstr "Dosyayı indirme başarısız!"
+
+#: umain.rs_failedloadpage
+msgid "Failed loading page!"
+msgstr "Sayfayı yükleme başarısız!"
+
+#: umain.rs_filenotfound
+msgid "File not found!"
+msgstr "Dosya bulunamadı!"
+
+#: umain.rs_finished
+msgid "Finished."
+msgstr "Tamamlandı."
+
+#: umain.rs_invalidurl
+msgid "Invalid URL!"
+msgstr "Geçersiz URL!"
+
+#: umain.rs_loadingpage
+msgid "Loading page..."
+msgstr "Sayfa yükleniyor..."
+
+#: umain.rs_redirected
+msgid "Redirected..."
+msgstr "Yeniden yönlendirildi..."
+
+#: umain.rs_response
+msgid "Response"
+msgstr "Cevap"
+
+#: umain.rs_retrydownloading
+msgid "Retry downloading[%d] [%s]..."
+msgstr "İndirmeyi tekrar dene[%d] [%s]..."
+
+#: umain.rs_retryloadpage
+msgid "Retry loading page[%d]..."
+msgstr "Sayfayı yüklemeyi yeniden dene[%d]..."
+
+#: umain.rs_savefile
+msgid "Saving file... "
+msgstr "Dosya kaydediliyor... "
+
+#: umain.rs_servererror
+msgid "Server response error!"
+msgstr "Sunucudan cevap alınamadı!"
+
+#: umain.rs_unknown
+msgid "(unknown)"
+msgstr "(bilinmeyen)"
+
+#: umain.rs_unpackfile
+msgid "Unpacking file [%s]..."
+msgstr "Dosya çıkartılıyor [%s]..."
+
+#: umain.rs_waitmainapp
+msgid "Waiting main app to close..."
+msgstr "Uygulamanın kapanması bekleniyor..."
