@@ -3,7 +3,7 @@ object WebsiteSelectionForm: TWebsiteSelectionForm
   Height = 75
   Top = 182
   Width = 310
-  BorderStyle = bsSizeToolWin
+  BorderStyle = bsDialog
   Caption = 'Select a website'
   ChildSizing.LeftRightSpacing = 10
   ChildSizing.TopBottomSpacing = 10

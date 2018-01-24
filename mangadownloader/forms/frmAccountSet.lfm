@@ -3,6 +3,7 @@ object AccountSetForm: TAccountSetForm
   Height = 234
   Top = 229
   Width = 269
+  BorderStyle = bsDialog
   ActiveControl = cbWebsiteName
   Caption = 'Account'
   ChildSizing.LeftRightSpacing = 8

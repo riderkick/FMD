@@ -26,6 +26,7 @@ var
 {$R *.res}
 
 begin
+  Application.Scaled := True;
   with TIniFile.Create(CONFIG_FILE) do
     try
       CheckInstance := ReadBool('general', 'OneInstanceOnly', True);

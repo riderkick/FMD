@@ -2285,6 +2285,7 @@ object MainForm: TMainForm
       ClientHeight = 498
       ClientWidth = 761
       object vtFavorites: TVirtualStringTree
+        AnchorSideTop.Control = edFavoritesSearch
         AnchorSideTop.Side = asrBottom
         Left = 0
         Height = 463
@@ -2292,6 +2293,7 @@ object MainForm: TMainForm
         Width = 761
         Align = alBottom
         Anchors = [akTop, akLeft, akRight, akBottom]
+        BorderSpacing.Top = 3
         Colors.DropTargetBorderColor = clHotLight
         Colors.FocusedSelectionBorderColor = clHotLight
         Colors.SelectionRectangleBorderColor = clHotLight
@@ -4417,11 +4419,14 @@ object MainForm: TMainForm
       ClientHeight = 498
       ClientWidth = 761
       object btCheckLatestVersion: TBitBtn
+        AnchorSideTop.Control = pcAbout
+        AnchorSideTop.Side = asrBottom  
         Left = 0
         Height = 40
         Top = 447
         Width = 208
-        Anchors = [akLeft, akBottom]
+        BorderSpacing.Top = 3
+        Anchors = [akTop, akLeft, akBottom]
         Caption = 'Check for latest version'
         Glyph.Data = {
           36040000424D3604000000000000360000002800000010000000100000000100
@@ -4465,11 +4470,12 @@ object MainForm: TMainForm
       object btAbortCheckLatestVersion: TSpeedButton
         AnchorSideLeft.Control = btCheckLatestVersion
         AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = btCheckLatestVersion
         Left = 212
         Height = 40
         Top = 447
         Width = 40
-        Anchors = [akLeft, akBottom]
+        Anchors = [akTop, akLeft, akBottom]
         BorderSpacing.Left = 4
         Glyph.Data = {
           36040000424D3604000000000000360000002800000010000000100000000100
@@ -4513,7 +4519,7 @@ object MainForm: TMainForm
       object btVisitMyBlog: TBitBtn
         AnchorSideLeft.Control = btAbortCheckLatestVersion
         AnchorSideLeft.Side = asrBottom
-        AnchorSideTop.Control = btAbortCheckLatestVersion
+        AnchorSideTop.Control = btCheckLatestVersion
         Left = 256
         Height = 40
         Top = 447

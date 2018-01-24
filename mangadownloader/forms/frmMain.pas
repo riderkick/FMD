@@ -1196,6 +1196,8 @@ begin
     ChildSizing.LeftRightSpacing := 0;
     ChildSizing.TopBottomSpacing := 0;
     Show;
+    if Screen.PixelsPerInch > 96 then
+      AutoAdjustLayout(lapAutoAdjustForDPI, Screen.PixelsPerInch, 96, 0, 0);
   end;
 
   WebsiteOptionCustomForm := TCustomOptionForm.Create(Self);
@@ -1205,6 +1207,8 @@ begin
     BorderStyle := bsNone;
     Align := alClient;
     Show;
+    if Screen.PixelsPerInch > 96 then
+      AutoAdjustLayout(lapAutoAdjustForDPI, Screen.PixelsPerInch, 96, 0, 0);
   end;
 
   WebsiteOptionAdvancedForm := TWebsiteOptionAdvancedForm.Create(Self);
@@ -1214,6 +1218,8 @@ begin
     BorderStyle := bsNone;
     Align := alClient;
     Show;
+    if Screen.PixelsPerInch > 96 then
+      AutoAdjustLayout(lapAutoAdjustForDPI, Screen.PixelsPerInch, 96, 0, 0);
   end;
 
   CustomColorForm := TCustomColorForm.Create(Self);
@@ -1223,6 +1229,8 @@ begin
     BorderStyle := bsNone;
     Align := alClient;
     Show;
+    if Screen.PixelsPerInch > 96 then
+      AutoAdjustLayout(lapAutoAdjustForDPI, Screen.PixelsPerInch, 96, 0, 0);
     AddVT(Self.vtMangaList);
     AddVT(Self.clbChapterList);
     AddVT(Self.vtDownload);
