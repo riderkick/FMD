@@ -882,7 +882,8 @@ implementation
 
 uses
   frmImportFavorites, frmShutdownCounter, frmSelectDirectory, WebsiteModules,
-  FMDVars, RegExpr, sqlite3dyn, Clipbrd, ssl_openssl_lib, LazFileUtils, LazUTF8;
+  FMDVars, RegExpr, sqlite3dyn, Clipbrd, ssl_openssl_lib, LazFileUtils, LazUTF8,
+  webp;
 
 var
   // thread for open db
@@ -2122,6 +2123,8 @@ begin
   if SQLiteLibraryHandle <> 0 then try addaboutcomp('SQLite Version', sqlite3_version()); except end;
   if SSLLibHandle = 0 then InitSSLInterface;
   if SSLLibHandle <> 0 then try addaboutcomp('OpenSSL Version', SSLeayversion(0)); except end;
+  if WebPLibHandle = 0 then InitWebPModule;
+  if WebPLibHandle <> 0 then try addaboutcomp('WebP Version', WebPGetVersion); except end;
 end;
 
 procedure TMainForm.GeneratetvDownloadFilterNodes;
