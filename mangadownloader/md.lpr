@@ -10,8 +10,8 @@ uses
  {$ENDIF} {$ENDIF}
   Interfaces, // this includes the LCL widgetset
   Forms, LazFileUtils, IniFiles, simpleipc, sqlite3dyn, FMDOptions, uBaseUnit,
-  FMDVars, SimpleException, Classes, windows, sysutils, frmMain, MultiLog,
-  FileChannel;
+  FMDVars, webp, SimpleException, Classes, windows, sysutils, frmMain, MultiLog,
+  FileChannel, ssl_openssl_lib;
 
 var
   CheckInstance: Boolean = True;
@@ -82,8 +82,16 @@ begin
         s.Free;
       end;
     end;
-    if FileExists(FMD_DIRECTORY + 'sqlite3.dll') then
-      sqlite3dyn.SQLiteDefaultLibrary := FMD_DIRECTORY + 'sqlite3.dll';
+
+    if FileExists(FMD_DIRECTORY + Sqlite3Lib) then
+      SQLiteDefaultLibrary := FMD_DIRECTORY + Sqlite3Lib;
+    if FileExists(FMD_DIRECTORY + DLLSSLName) then
+      DLLSSLName := FMD_DIRECTORY + DLLSSLName;
+    if FileExists(FMD_DIRECTORY + DLLUtilName) then
+      DLLUtilName := FMD_DIRECTORY + DLLUtilName;
+    if FileExists(FMD_DIRECTORY + DLLWebPName) then
+      DLLWebPName := FMD_DIRECTORY + DLLWebPName;
+
     Application.Initialize;
     Application.CreateForm(TMainForm, MainForm);
     Application.Run;
