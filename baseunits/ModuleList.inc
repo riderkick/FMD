@@ -61,6 +61,7 @@ uses
   BlogTruyen,
   MangaAe,
   Mangadex,
+  MangaTube,
   // Raw Official
   SundayWebEvery,
   TonarinoYoungJump,
