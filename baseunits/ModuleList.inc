@@ -64,6 +64,7 @@ uses
   MangaTube,
   WieManga,
   Mangaf,
+  LHTranslation,
   // Raw Official
   SundayWebEvery,
   TonarinoYoungJump,
