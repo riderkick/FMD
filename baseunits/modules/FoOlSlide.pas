@@ -260,6 +260,7 @@ begin
   AddWebsiteModule('WhiteoutScans', 'http://reader.whiteoutscans.com');
   AddWebsiteModule('DokiFansubs', 'https://kobato.hologfx.com');
   AddWebsiteModule('AtelierDuNoir', 'http://atelierdunoir.org');
+  AddWebsiteModule('ChampionScans', 'http://reader.championscans.com');
 
   //es-san
   AddWebsiteModule('DangoOnlineNoFansub', 'http://lector.dangolinenofansub.com');
