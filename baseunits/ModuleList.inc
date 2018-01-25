@@ -62,6 +62,7 @@ uses
   MangaAe,
   Mangadex,
   MangaTube,
+  WieManga,
   // Raw Official
   SundayWebEvery,
   TonarinoYoungJump,
