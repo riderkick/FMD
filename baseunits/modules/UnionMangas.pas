@@ -77,7 +77,7 @@ begin
     PageNumber := 0;
     if GET(FillHost(Module.RootURL, AURL)) then begin
       Result := True;
-      XPathStringAll('//img[contains(@class, "")]/@src', Document, PageLinks);
+      XPathStringAll('//img[contains(@class, "img-manga")]/@src', Document, PageLinks);
     end;
   end;
 end;
