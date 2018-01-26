@@ -77,7 +77,7 @@ begin
     PageNumber := 0;
     if GET(FillHost(Module.RootURL, AURL)) then begin
       Result := True;
-      XPathStringAll('//*[@id="image"]//img[contains(@data-lazy,"/leitor/")]/@data-lazy', Document, PageLinks);
+      XPathStringAll('//img[contains(@class, "")]/@src', Document, PageLinks);
     end;
   end;
 end;
