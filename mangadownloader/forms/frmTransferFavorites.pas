@@ -28,6 +28,7 @@ type
     procedure btOKClick(Sender: TObject);
     procedure cbWebsitesChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure rbAllChange(Sender: TObject);
     procedure vtFavsFreeNode(Sender: TBaseVirtualTree; Node: PVirtualNode);
@@ -186,6 +187,11 @@ begin
   FAllCount := 0;
   FValidCount := 0;
   FInvalidCount := 0;
+end;
+
+procedure TTransferFavoritesForm.FormDestroy(Sender: TObject);
+begin
+  frmCustomColor.RemoveVT(vtFavs);
 end;
 
 procedure TTransferFavoritesForm.FormShow(Sender: TObject);

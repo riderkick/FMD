@@ -1237,12 +1237,6 @@ begin
     AddVT(Self.vtDownload);
     AddVT(Self.vtFavorites);
     AddVT(Self.vtOptionMangaSiteSelection);
-    AddVT(AccountManagerForm.vtAccountList);
-    AddVT(WebsiteOptionAdvancedForm.vtCookies);
-    AddVT(WebsiteOptionAdvancedForm.vtUserAgent);
-    AddVT(WebsiteOptionAdvancedForm.vtDownloadMaxThreadsPerTask);
-    AddVT(WebsiteOptionAdvancedForm.vtUpdateListDirectoryPageNumber);
-    AddVT(WebsiteOptionAdvancedForm.vtUpdateListNumberOfThreads);
   end;
 
   // logger
@@ -1389,6 +1383,12 @@ end;
 procedure TMainForm.FormDestroy(Sender: TObject);
 begin
   Logger.Send(Self.ClassName+'.FormDestroy, freeing all objects');
+  RemoveVT(vtMangaList);
+  RemoveVT(clbChapterList);
+  RemoveVT(vtDownload);
+  RemoveVT(vtFavorites);
+  RemoveVT(vtOptionMangaSiteSelection);
+
   SetLength(optionMangaSiteSelectionNodes, 0);
   SetLength(ChapterList, 0);
   FreeAndNil(mangaInfo);

@@ -98,7 +98,7 @@ resourcestring
 
 implementation
 
-uses frmMain;
+uses frmMain, frmCustomColor;
 
 var
   Websites, WebsitesAvailable: TStringlist;
@@ -340,10 +340,12 @@ begin
     Websites.Sorted := True;
   end;
   LoadForm;
+  AddVT(vtAccountList);
 end;
 
 procedure TAccountManagerForm.FormDestroy(Sender: TObject);
 begin
+  RemoveVT(vtAccountList);
   if Assigned(Websites) then Websites.Free;
   if Assigned(WebsitesAvailable) then WebsitesAvailable.Free;
   if Assigned(AccountThreadList) then AccountThreadList.Free;

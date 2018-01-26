@@ -41,6 +41,7 @@ type
     vtUpdateListNumberOfThreads: TVirtualStringTree;
     vtUserAgent: TVirtualStringTree;
     procedure FormCreate(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
     procedure MenuItem1Click(Sender: TObject);
     procedure MenuItem2Click(Sender: TObject);
     procedure MenuItem4Click(Sender: TObject);
@@ -66,8 +67,8 @@ type
       Column: TColumnIndex; const NewText: String);
   private
     { private declarations }
-    procedure LoadFromFileToVT(const AVT: TVirtualStringTree; const ASection: String);
-    procedure GetWebsite(const AVT: TVirtualStringTree; const S: TStrings);
+    procedure LoadFromFileToVT(const AVT: VirtualTrees.TVirtualStringTree; const ASection: String);
+    procedure GetWebsite(const AVT: VirtualTrees.TVirtualStringTree; const S: TStrings);
   public
     { public declarations }
   end;
@@ -77,17 +78,33 @@ var
 
 implementation
 
+uses frmCustomColor;
+
 {$R *.lfm}
 
 { TWebsiteOptionAdvancedForm }
 
 procedure TWebsiteOptionAdvancedForm.FormCreate(Sender: TObject);
 begin
+  AddVT(vtCookies);
+  AddVT(vtUserAgent);
+  AddVT(vtDownloadMaxThreadsPerTask);
+  AddVT(vtUpdateListDirectoryPageNumber);
+  AddVT(vtUpdateListNumberOfThreads);
   LoadFromFileToVT(vtCookies, 'Cookies');
   LoadFromFileToVT(vtUserAgent, 'UserAgent');
   LoadFromFileToVT(vtDownloadMaxThreadsPerTask, 'DownloadMaxThreadsPerTask');
   LoadFromFileToVT(vtUpdateListDirectoryPageNumber, 'UpdateListDirectoryPageNumber');
   LoadFromFileToVT(vtUpdateListNumberOfThreads, 'UpdateListNumberOfThreads');
+end;
+
+procedure TWebsiteOptionAdvancedForm.FormDestroy(Sender: TObject);
+begin
+  RemoveVT(vtCookies);
+  RemoveVT(vtUserAgent);
+  RemoveVT(vtDownloadMaxThreadsPerTask);
+  RemoveVT(vtUpdateListDirectoryPageNumber);
+  RemoveVT(vtUpdateListNumberOfThreads);
 end;
 
 procedure TWebsiteOptionAdvancedForm.MenuItem1Click(Sender: TObject);
@@ -231,8 +248,7 @@ begin
   end;
 end;
 
-procedure TWebsiteOptionAdvancedForm.LoadFromFileToVT(const AVT: TVirtualStringTree;
-  const ASection: String);
+procedure TWebsiteOptionAdvancedForm.LoadFromFileToVT(const AVT: VirtualTrees.TVirtualStringTree; const ASection: String);
 var
   s: TStringList;
   i: Integer;
@@ -270,8 +286,7 @@ begin
   end;
 end;
 
-procedure TWebsiteOptionAdvancedForm.GetWebsite(const AVT: TVirtualStringTree;
-  const S: TStrings);
+procedure TWebsiteOptionAdvancedForm.GetWebsite(const AVT: VirtualTrees.TVirtualStringTree; const S: TStrings);
 var
   Data: PNameValue;
   Node: PVirtualNode;
