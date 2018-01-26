@@ -5404,10 +5404,14 @@ end;
 
 procedure TMainForm.edURLKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
 begin
-  if (ssCtrl in Shift) and (ssShift in Shift) and (Key = VK_V) then
+  if (ssCtrl in Shift) and (ssShift in Shift) then
   begin
+    if Key = VK_V then
+      medURLPasteandgoClick(medURLPasteandgo)
+    else
+    if Key = VK_C then
+      Clipboard.AsText := edURL.Text;
     Key := 0;
-    medURLPasteandgoClick(medURLPasteandgo);
   end;
 end;
 
