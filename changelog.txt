@@ -4,6 +4,25 @@ Project page: https://github.com/riderkick/FMD
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.131.0 (xx-xx-2018)
+[+] Added LHTranslation [EN-SC]
+[+] Added ChampionScans [EN-SC]
+[+] Added Mangaf [AR]
+[+] Added WieManga [DE]
+[+] Added MangaTube [DE]
+[+] Added AtelierDuNoir [EN-SC]
+[+] Added MangaDex [EN]
+[+] Added MangaHub [RU]
+[+] Added Turkish translation by Tmp341
+[+] Added WebP codec library (libwebp)
+[+] Enabled high DPI awareness
+[*] MangaTown, exclude ads page
+[*] MangaChan, fix domain
+[*] UnionMangas, fix download
+[*] Update localization [EN, RU]
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.130.0...0.9.131.0
+
 0.9.130.0 (23-01-2018)
 [+] Added transfer favorites
 [+] Added rename favorites
