@@ -765,6 +765,7 @@ object MainForm: TMainForm
                     MaxLength = 0
                     NumGlyphs = 1
                     OnButtonClick = edURLButtonClick
+                    OnKeyDown = edURLKeyDown
                     OnKeyPress = edURLKeyPress
                     PasswordChar = #0
                     PopupMenu = pmEditURL

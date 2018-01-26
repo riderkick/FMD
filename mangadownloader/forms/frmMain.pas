@@ -445,6 +445,7 @@ type
     procedure edOptionExternalPathButtonClick(Sender: TObject);
     procedure edSaveToButtonClick(Sender: TObject);
     procedure edURLButtonClick(Sender: TObject);
+    procedure edURLKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure edURLKeyPress(Sender: TObject; var Key: Char);
     procedure edWebsitesSearchButtonClick(Sender: TObject);
     procedure edWebsitesSearchChange(Sender: TObject);
@@ -1768,7 +1769,8 @@ end;
 
 procedure TMainForm.medURLPasteandgoClick(Sender: TObject);
 begin
-  edURL.Text := Clipboard.AsText;
+  edURL.Clear;
+  edURL.PasteFromClipboard;
   edURLButtonClick(edURL);
 end;
 
@@ -5398,6 +5400,15 @@ begin
   end;
 
   ViewMangaInfo(link, website, '');
+end;
+
+procedure TMainForm.edURLKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+begin
+  if (ssCtrl in Shift) and (ssShift in Shift) and (Key = VK_V) then
+  begin
+    Key := 0;
+    medURLPasteandgoClick(medURLPasteandgo);
+  end;
 end;
 
 procedure TMainForm.UpdateVtChapter;
