@@ -1,5 +1,5 @@
-VERSION=0.9.130.0
-WIN32=https://sourceforge.net/projects/newfmd/files/0.9.130.0/fmd_0.9.130.0.7z/download
-WIN64=https://sourceforge.net/projects/newfmd/files/0.9.130.0/fmd_0.9.130.0_Win64.7z/download
-; WIN32=https://github.com/riderkick/FMD/releases/download/0.9.130.0/fmd_0.9.130.0.7z
-; WIN64=https://github.com/riderkick/FMD/releases/download/0.9.130.0/fmd_0.9.130.0_Win64.7z
+VERSION=0.9.131.0
+WIN32=https://sourceforge.net/projects/newfmd/files/0.9.131.0/fmd_0.9.131.0.7z/download
+WIN64=https://sourceforge.net/projects/newfmd/files/0.9.131.0/fmd_0.9.131.0_Win64.7z/download
+; WIN32=https://github.com/riderkick/FMD/releases/download/0.9.131.0/fmd_0.9.131.0.7z
+; WIN64=https://github.com/riderkick/FMD/releases/download/0.9.131.0/fmd_0.9.131.0_Win64.7z
