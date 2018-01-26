@@ -65,6 +65,7 @@ uses
   WieManga,
   Mangaf,
   LHTranslation,
+  MangaRock,
   // Raw Official
   SundayWebEvery,
   TonarinoYoungJump,

@@ -22,7 +22,8 @@ uses
   strutils, dateutils, variants, base64, fpjson, jsonparser, jsonscanner,
   FastHTMLParser, fgl, RegExpr, synautil, httpsend, blcksock, ssl_openssl,
   synacode, MultiLog, FPimage, GZIPUtils, uMisc, httpsendthread, FMDOptions,
-  simplehtmltreeparser, xquery, xquery_json, ImgInfos, NaturalSortUnit;
+  simplehtmltreeparser, xquery, xquery_json, ImgInfos, NaturalSortUnit,
+  MemBitmap, FPWritePNG;
 
 const
   JPG_HEADER: array[0..2] of Byte = ($FF, $D8, $FF);
@@ -748,6 +749,8 @@ function GetURLFromBitly(const URL: String): String;
 // try to save tmemorystream to file, return the saved filename if success, otherwise return empty string
 function SaveImageStreamToFile(Stream: TMemoryStream; Path, FileName: String; Age: LongInt = 0): String; overload;
 function SaveImageStreamToFile(AHTTP: THTTPSend; Path, FileName: String): String; overload;
+
+function SaveImageAsPngFile(image: TMemBitmap; Path, FileName: String): String;
 
 // detect and save image from base64 string
 function SaveImageBase64StringToFile(const S, Path, FileName: String): Boolean;
@@ -3408,6 +3411,37 @@ begin
   finally
     MS.Free;
   end;
+end;
+
+function SaveImageAsPngFile(image: TMemBitmap; Path, FileName: String): String;
+var
+  p, f: String;
+  fs: TFileStreamUTF8;
+  writer: TFPWriterPNG;
+begin
+  Result := '';
+  if image = nil then Exit;
+  p := CorrectPathSys(Path);
+  if ForceDirectoriesUTF8(p) then begin
+    f := p + FileName + '.png';
+    if FileExistsUTF8(f) then DeleteFileUTF8(f);
+    try
+      fs := TFileStreamUTF8.Create(f, fmCreate);
+      writer := TFPWriterPNG.Create;
+      writer.Indexed := false;
+      writer.UseAlpha := image.HasTransparentPixels;
+      try
+        image.SaveToStream(fs, writer);
+      finally
+        writer.Free;
+        fs.Free;
+      end;
+    except
+      on E: Exception do
+        Logger.SendException('SaveImageAsPngFile Failed! ' + f, E);
+    end;
+  end;
+  if FileExistsUTF8(f) then Result := f;
 end;
 
 function SaveImage(const AHTTP: THTTPSend; const mangaSiteID: Integer;

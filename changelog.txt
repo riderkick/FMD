@@ -5,6 +5,7 @@ Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
 0.9.131.0 (xx-xx-2018)
+[+] Added Mangarock [EN]
 [+] Added LHTranslation [EN-SC]
 [+] Added ChampionScans [EN-SC]
 [+] Added Mangaf [AR]
