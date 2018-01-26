@@ -104,46 +104,29 @@ function GetNameAndLink(const MangaInfo: TMangaInformation;
   const ANames, ALinks: TStringList; const AURL: String;
   const Module: TModuleContainer): Integer;
 var
-  s: String;
+  s, p: String;
 begin
   Result := NET_PROBLEM;
-  s := IntToStr(StrToInt(AURL) * PerPage);
+  if Module.CurrentDirectoryIndex = 0 then
+    s := '~'
+  else
+    s := ALPHA_LIST_UP[Module.CurrentDirectoryIndex + 1];
+  p := IntToStr(StrToInt(AURL) * PerPage);
   MangaInfo.FHTTP.Cookies.Values['mangadex_h_toggle'] := '1';
-  // FIXME: /titles shows titles in alphabetical order rather than last updated
-  // maybe it will be changed in future
-  if MangaInfo.FHTTP.GET(Module.RootURL + '/titles/' + s) then
+  if MangaInfo.FHTTP.GET(Module.RootURL + '/titles/' + s + '/' + p) then
   begin
     Result := NO_ERROR;
     with TXQueryEngineHTML.Create(MangaInfo.FHTTP.Document) do
       try
-        updateList.CurrentDirectoryPageNumber := 1;
-        XPathHREFAll('//table/tbody/tr/td[2]/a', ALinks, ANames);
-      finally
-        Free;
-      end;
-  end;
-end;
-
-function GetDirectoryPageNumber(const MangaInfo: TMangaInformation;
-  var Page: Integer; const WorkPtr: Integer; const Module: TModuleContainer): Integer;
-var
-  s: String;
-begin
-  Result := NET_PROBLEM;
-  Page := 1;
-  if MangaInfo = nil then Exit(UNKNOWN_ERROR);
-  MangaInfo.FHTTP.Cookies.Values['mangadex_h_toggle'] := '1';
-  // FIXME: /titles shows titles in alphabetical order rather than last updated
-  // maybe it will be changed in future
-  if MangaInfo.FHTTP.GET(Module.RootURL + '/titles') then begin
-    Result := NO_ERROR;
-    with TXQueryEngineHTML.Create(MangaInfo.FHTTP.Document) do
-      try
-        s := XPathString('//li[@class="paging"]/a[contains(span/@title, "last")]/@href');
-        if s <> '' then begin
-          s := ReplaceRegExpr('^.+\/(\d+)$', s, '$1', True);
-          Page := (StrToIntDef(s, 0) div PerPage) + 1;
+        if AURL = '0' then begin
+          updateList.CurrentDirectoryPageNumber := 1;
+          s := XPathString('//li[@class="paging"]/a[contains(span/@title, "last")]/@href');
+          if s <> '' then begin
+            s := ReplaceRegExpr('^.+\/(\d+)$', s, '$1', True);
+            updateList.CurrentDirectoryPageNumber := (StrToIntDef(s, 0) div PerPage) + 1;
+          end;
         end;
+        XPathHREFAll('//table/tbody/tr/td[2]/a', ALinks, ANames);
       finally
         Free;
       end;
@@ -155,10 +138,10 @@ begin
   with AddModule do begin
     Website := 'Mangadex';
     RootURL := 'https://mangadex.com';
+    TotalDirectory := Length(ALPHA_LIST_UP);
     OnGetInfo := @GetInfo;
     OnGetPageNumber := @GetPageNumber;
     OnGetNameAndLink := @GetNameAndLink;
-    OnGetDirectoryPageNumber := @GetDirectoryPageNumber;
     AddOptionCheckBox(@showalllang,'ShowAllLang', @RS_ShowAllLang);
     AddOptionCheckBox(@showscangroup,'ShowScanGroup', @RS_ShowScanGroup);
   end;
