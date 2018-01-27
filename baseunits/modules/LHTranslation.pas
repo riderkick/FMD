@@ -35,6 +35,7 @@ begin
             chapterLinks.Add(v.toNode.getAttribute('href'));
             chapterName.Add(Trim(ReplaceString(v.toString, title, '')));
           end;
+          InvertStrings([chapterLinks, chapterName]);
         finally
           Free;
         end;
