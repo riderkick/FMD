@@ -310,6 +310,10 @@ msgid ""
 "CBZ\n"
 "PDF\n"
 msgstr ""
+"Hiçbiri\n"
+"ZIP\n"
+"CBZ\n"
+"PDF\n"
 
 #: frmmain.rs_optionfmddoitems
 msgid ""
@@ -505,7 +509,7 @@ msgstr "Manga Listesi"
 
 #: tform1.caption
 msgid "Form1"
-msgstr ""
+msgstr "Form1"
 
 #: tform1.lbtransferto.caption
 #, fuzzy
@@ -1120,7 +1124,7 @@ msgstr "Bu çalışmalar genellikle kadınlar arası yakın ilişki barındırı
 
 #: tmainform.ckoptionsalwaysstarttaskfromfailedchapters.caption
 msgid "Always start task from failed chapters"
-msgstr ""
+msgstr "Görevi her zaman başarısız bölümlerden başlat"
 
 #: tmainform.edcustomgenres.texthint
 msgid "Input custom genres, separated by comma"
@@ -1497,7 +1501,7 @@ msgstr "Basamakları  yeniden adlandır"
 
 #: tmainform.lboptionretryfailedtask.caption
 msgid "Number of retry times if task failed"
-msgstr ""
+msgstr "Görev başarısız olunca yeniden deneme sayısı"
 
 #: tmainform.lboptionuser.caption
 msgctxt "tmainform.lboptionuser.caption"
@@ -2019,7 +2023,7 @@ msgstr "Tamam"
 
 #: tselectdirectoryform.caption
 msgid "Select directory"
-msgstr ""
+msgstr "Yolu seç"
 
 #: tshutdowncounterform.btabort.caption
 msgid "&Abort"
@@ -2359,4 +2363,3 @@ msgstr "Veri eşitleniyor"
 #: uupdatethread.rs_updatinglist
 msgid "Updating list"
 msgstr "Liste güncelleniyor"
-
