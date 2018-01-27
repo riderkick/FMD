@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, WebsiteModules, uData, uBaseUnit, uDownloadsManager,
-  XQueryEngineHTML, httpsendthread, synautil, RegExpr, URIParser, FMDVars;
+  XQueryEngineHTML, httpsendthread, synautil, RegExpr, FMDVars;
 
 implementation
 
@@ -72,9 +72,8 @@ end;
 function GetPageNumber(const DownloadThread: TDownloadThread; const AURL: String;
   const Module: TModuleContainer): Boolean;
 var
-  uri: TURI;
-  s: String;
-  i: Integer;
+  s, dataurl, server, pages: String;
+  v: IXQValue;
 begin
   Result := False;
   if DownloadThread = nil then Exit;
@@ -86,13 +85,13 @@ begin
       Result := True;
       with TXQueryEngineHTML.Create(Document) do
       try
-        s := MaybeFillHost(Module.RootURL, XPathString('//img[@id="current_page"]/@src'));
-        PageNumber:= XPathCount('//select[@id="jump_page"]/option');
-        uri := ParseURI(s);
-        for i := 1 to PageNumber do begin
-          uri.Document := IntToStr(i) + ExtractFileExt(uri.Document);
-          PageLinks.Add(EncodeURI(uri));
-        end;
+        s := XPathString('//script[contains(., "var page_array")]');
+        dataurl := GetBetween('var dataurl = ''', ''';', s);
+        server := GetBetween('var server = ''', ''';', s);
+        pages := '[' + GetBetween('var page_array = [', '];', s) + ']';
+        ParseHTML(pages);
+        for v in XPath('json(*)()') do
+          PageLinks.Add(MaybeFillHost(Module.RootURL, server + dataurl + '/' + v.toString));
       finally
         Free;
       end;
