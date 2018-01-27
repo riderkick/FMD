@@ -299,6 +299,14 @@ msgstr "За месяц"
 msgid "One week"
 msgstr "За неделю"
 
+#: frmmain.rs_optioncompress
+msgid ""
+"None\n"
+"ZIP\n"
+"CBZ\n"
+"PDF\n"
+msgstr ""
+
 #: frmmain.rs_optionfmddoitems
 msgid ""
 "Nothing\n"
@@ -484,6 +492,16 @@ msgstr "Список избранного"
 #: tcustomcolorform.tsmangalist.caption
 msgid "Manga list"
 msgstr "Список манги"
+
+#: tform1.caption
+msgid "Form1"
+msgstr ""
+
+#: tform1.lbtransferto.caption
+#, fuzzy
+msgctxt "tform1.lbtransferto.caption"
+msgid "Transfer to"
+msgstr "Перенести на"
 
 #: tformdroptarget.miaddtofavorites.caption
 msgctxt "TFORMDROPTARGET.MIADDTOFAVORITES.CAPTION"
@@ -2013,6 +2031,24 @@ msgstr "Очистить скачанные главы и заново загр�
 msgctxt "ttransferfavoritesform.lbtransferto.caption"
 msgid "Transfer to"
 msgstr "Перенести на"
+
+#: ttransferfavoritesform.rball.caption
+#, fuzzy
+msgctxt "ttransferfavoritesform.rball.caption"
+msgid "All"
+msgstr "Все"
+
+#: ttransferfavoritesform.rbinvalid.caption
+#, fuzzy
+msgctxt "ttransferfavoritesform.rbinvalid.caption"
+msgid "Invalid"
+msgstr "Нельзя перенести"
+
+#: ttransferfavoritesform.rbvalid.caption
+#, fuzzy
+msgctxt "ttransferfavoritesform.rbvalid.caption"
+msgid "Valid"
+msgstr "Можно перенести"
 
 #: ttransferfavoritesform.vtfavs.header.columns[1].text
 msgctxt "ttransferfavoritesform.vtfavs.header.columns[1].text"

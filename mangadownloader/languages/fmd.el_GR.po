@@ -306,6 +306,14 @@ msgstr "Ένας μήνας"
 msgid "One week"
 msgstr "Μια εβδομάδα"
 
+#: frmmain.rs_optioncompress
+msgid ""
+"None\n"
+"ZIP\n"
+"CBZ\n"
+"PDF\n"
+msgstr ""
+
 #: frmmain.rs_optionfmddoitems
 msgid ""
 "Nothing\n"

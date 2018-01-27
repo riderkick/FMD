@@ -824,6 +824,7 @@ resourcestring
   RS_FilterStatusItems = 'Completed'#13#10'Ongoing'#13#10'<none>';
   RS_OptionFMDDoItems = 'Nothing'#13#10'Exit'#13#10'Shutdown'#13#10'Hibernate';
   RS_DropTargetModeItems = 'Download all'#13#10'Add to favorites';
+  RS_OptionCompress = 'None'#13#10'ZIP'#13#10'CBZ'#13#10'PDF';
 
   RS_HintFavoriteProblem = 'There is a problem with this data!'#13#10
                          + 'Removing and re-adding this data may fix the problem.';
@@ -5592,7 +5593,8 @@ var
   idxFilterStatus,
   idxOptionLetFMDDo,
   idxOptionProxyType,
-  idxDropTargetMode: Integer;
+  idxDropTargetMode,
+  idxOptionCompress: Integer;
 begin
   if AvailableLanguages.Count = 0 then Exit;
   if cbLanguages.ItemIndex < 0 then Exit;
@@ -5608,6 +5610,7 @@ begin
     idxOptionLetFMDDo := cbOptionLetFMDDo.ItemIndex;
     idxOptionProxyType := cbOptionProxyType.ItemIndex;
     idxDropTargetMode := rgDropTargetMode.ItemIndex;
+    idxOptionCompress := rgOptionCompress.ItemIndex;
     if SimpleTranslator.SetLangByIndex(cbLanguages.ItemIndex) then
     begin
       // assign new value
@@ -5618,6 +5621,7 @@ begin
       cbFilterStatus.Items.Text := RS_FilterStatusItems;
       cbOptionLetFMDDo.Items.Text := RS_OptionFMDDoItems;
       rgDropTargetMode.Items.Text := RS_DropTargetModeItems;
+      rgOptionCompress.Items.Text := RS_OptionCompress;
 
       // restore ItemIndex
       cbSelectManga.ItemIndex:=idxSelectManga;
@@ -5626,6 +5630,7 @@ begin
       cbOptionLetFMDDo.ItemIndex := idxOptionLetFMDDo;
       cbOptionProxyType.ItemIndex := idxOptionProxyType;
       rgDropTargetMode.ItemIndex := idxDropTargetMode;
+      rgOptionCompress.ItemIndex := idxOptionCompress;
       Self.Repaint;
       vtMangaList.Repaint;
       tvDownloadFilterRefresh(True);
