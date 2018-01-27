@@ -60,7 +60,7 @@ msgid ""
 "2400x\n"
 "Original\n"
 msgstr ""
-"Oto\n"
+"Otomatik\n"
 "780x\n"
 "980x\n"
 "1280x\n"
@@ -368,7 +368,7 @@ msgstr "Geçerli"
 
 #: kissmanga.rs_kissmanga_initvector
 msgid "Initialization Vector:"
-msgstr "Başlatma Vektörü:"
+msgstr "Başlatma Vektörü (IV):"
 
 #: kissmanga.rs_kissmanga_key
 msgid "Key:"
@@ -645,27 +645,27 @@ msgstr "Sadece yeni manga ara"
 #: tmainform.cboptionautocheckfavdownload.caption
 msgctxt "tmainform.cboptionautocheckfavdownload.caption"
 msgid "Automatic download after finish checking"
-msgstr "Kontrol bittikten sonra oto indir"
+msgstr "Kontrol bittikten sonra otomatik indir"
 
 #: tmainform.cboptionautocheckfavinterval.caption
 msgid "Auto check for new chapter in an interval"
-msgstr "Beklerken yeni bölümleri oto kontrol et"
+msgstr "Beklerken yeni bölümleri otomatik kontrol et"
 
 #: tmainform.cboptionautocheckfavremovecompletedmanga.caption
 msgctxt "tmainform.cboptionautocheckfavremovecompletedmanga.caption"
 msgid "Automatic remove completed manga from Favorites"
-msgstr "Tamamlanmış mangayı Favorilerden oto kaldır"
+msgstr "Tamamlanmış mangayı Favorilerden otomatik kaldır"
 
 #: tmainform.cboptionautocheckfavstartup.caption
 #| msgid "Automatic check for new chapter at startup"
 msgid "Auto check for new chapter at startup"
-msgstr "Başlangıça yeni bölümleri oto kontrol et"
+msgstr "Başlangıça yeni bölümleri otomatik kontrol et"
 
 #: tmainform.cboptionautochecklatestversion.caption
 #| msgid "Check for new version "
 msgctxt "tmainform.cboptionautochecklatestversion.caption"
 msgid "Auto check for latest version "
-msgstr "Son sürümü oto kontrol et "
+msgstr "Son sürümü otomatik kontrol et "
 
 #: tmainform.cboptionautoopenfavstartup.caption
 msgid "Open Favorites at startup"
@@ -675,7 +675,7 @@ msgstr "Başlangıçta Favorileri aç"
 #| msgid "Change all all character to"
 msgctxt "tmainform.cboptionchangeunicodecharacter.caption"
 msgid "Replace all unicode character with"
-msgstr "Tüm Unicode karakteri şununla değiştir"
+msgstr "Tüm Unicode karakterleri şununla değiştir"
 
 #: tmainform.cboptionchangeunicodecharacter.hint
 msgid "Enable this if you have problem with unicode character in path."
@@ -695,12 +695,12 @@ msgstr "Manga afişini yüklemeyi aç"
 
 #: tmainform.cboptiongeneratechapterfolder.caption
 msgid "Auto generate chapter folder"
-msgstr "Bölüm klasörünü oto oluştur"
+msgstr "Bölüm klasörünü otomatik oluştur"
 
 #: tmainform.cboptiongeneratemangafolder.caption
 msgctxt "tmainform.cboptiongeneratemangafolder.caption"
 msgid "Auto generate folder based on manga's name"
-msgstr "Klasörü manga adına göre oto oluştur"
+msgstr "Klasörü manga adına göre otomatik oluştur"
 
 #: tmainform.cboptionlivesearch.caption
 msgid "Enable live search (slow on long list)"
@@ -744,7 +744,7 @@ msgstr "İndirmeler araç çubuğunu göster"
 
 #: tmainform.cboptionshowdownloadtoolbardeleteall.caption
 msgid "Show \"Delete all completed tasks\" in downloads toolbar"
-msgstr "\"Tüm tamamlanmış görevleri sili\" indirmeler araç çubuğunda göster"
+msgstr "\"Tüm tamamlanmış görevleri sil\" seçeneğini indirmeler araç çubuğunda göster"
 
 #: tmainform.cboptionshowquitdialog.caption
 msgid "Exit FMD"
@@ -1224,7 +1224,7 @@ msgstr "Vekil ayarları"
 
 #: tmainform.gboptionrenaming.caption
 msgid "Renaming"
-msgstr "Yeniden adlandırılıyor"
+msgstr "Yeniden adlandırma"
 
 #: tmainform.lbdefaultdownloadpath.caption
 msgid "Choose the default download path:"
@@ -1382,7 +1382,7 @@ msgstr ""
 
 #: tmainform.lboptionhost.caption
 msgid "Host"
-msgstr "Sunucu"
+msgstr "Host"
 
 #: tmainform.lboptionlanguage.caption
 msgid "Language:"
@@ -1435,7 +1435,7 @@ msgstr "Tek görev başına aynı anda indirilmiş dosya sayısı (Maks: 32)"
 
 #: tmainform.lboptionnewmangatime.caption
 msgid "New manga based on  it's update time (days)"
-msgstr "Güncelleme süresine (günler) göre  yeni manga"
+msgstr "Manga güncelleme süresine göre yeni manga (gün bazlı)"
 
 #: tmainform.lboptionpass.caption
 msgctxt "tmainform.lboptionpass.caption"
@@ -1902,7 +1902,7 @@ msgstr "Ayarlar"
 #: tmainform.tswebsites.caption
 msgctxt "tmainform.tswebsites.caption"
 msgid "Websites"
-msgstr "Websiteleri"
+msgstr "Websiteler"
 
 #: tmainform.tswebsiteselection.caption
 msgctxt "tmainform.tswebsiteselection.caption"
