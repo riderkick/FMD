@@ -112,12 +112,12 @@ var
   Data: PNameValue;
   Node: PVirtualNode;
 begin
-  if Screen.ActiveControl is TVirtualStringTree then
+  if Screen.ActiveControl is VirtualTrees.TVirtualStringTree then
     with TWebsiteSelectionForm.Create(Self) do
       try
-        GetWebsite(TVirtualStringTree(Screen.ActiveControl), cbWebsites.Items);
+        GetWebsite(VirtualTrees.TVirtualStringTree(Screen.ActiveControl), cbWebsites.Items);
         if (ShowModal = mrOk) and (cbWebsites.Text <> '') then
-          with TVirtualStringTree(Screen.ActiveControl) do
+          with VirtualTrees.TVirtualStringTree(Screen.ActiveControl) do
           begin
             Node := AddChild(nil);
             Data := GetNodeData(Node);
@@ -132,8 +132,8 @@ end;
 
 procedure TWebsiteOptionAdvancedForm.MenuItem2Click(Sender: TObject);
 begin
-  if Screen.ActiveControl is TVirtualStringTree then
-    with TVirtualStringTree(Screen.ActiveControl) do
+  if Screen.ActiveControl is VirtualTrees.TVirtualStringTree then
+    with VirtualTrees.TVirtualStringTree(Screen.ActiveControl) do
       EditNode(FocusedNode, 1);
 end;
 
@@ -141,8 +141,8 @@ procedure TWebsiteOptionAdvancedForm.MenuItem4Click(Sender: TObject);
 var
   Data: PNameValue;
 begin
-  if Screen.ActiveControl is TVirtualStringTree then
-    with TVirtualStringTree(Screen.ActiveControl) do
+  if Screen.ActiveControl is VirtualTrees.TVirtualStringTree then
+    with VirtualTrees.TVirtualStringTree(Screen.ActiveControl) do
     begin
       Data := GetNodeData(FocusedNode);
       advancedfile.DeleteKey(DefaultText, Data^.Name);
@@ -228,8 +228,8 @@ end;
 procedure TWebsiteOptionAdvancedForm.vtCookiesKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
-  if not (Sender is TVirtualStringTree) then Exit;
-  with TVirtualStringTree(Sender) do
+  if not (Sender is VirtualTrees.TVirtualStringTree) then Exit;
+  with VirtualTrees.TVirtualStringTree(Sender) do
     if (Key = VK_RETURN) and (FocusedColumn <> 0) then
       EditNode(FocusedNode, FocusedColumn);
 end;
@@ -244,7 +244,7 @@ begin
   if Data^.Value <> NewText then
   begin
     Data^.Value := NewText;
-    advancedfile.WriteString(TVirtualStringTree(Sender).DefaultText, Data^.Name, NewText);
+    advancedfile.WriteString(VirtualTrees.TVirtualStringTree(Sender).DefaultText, Data^.Name, NewText);
   end;
 end;
 
