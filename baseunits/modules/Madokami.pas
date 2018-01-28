@@ -268,13 +268,11 @@ begin
 end;
 
 function DownloadImage(const DownloadThread: TDownloadThread;
-  const AURL, APath, AName: String; const Module: TModuleContainer): Boolean;
+  const AURL: String; const Module: TModuleContainer): Boolean;
 begin
   Result := False;
   if DownloadThread = nil then Exit;
-  if GETWithLogin(DownloadThread.FHTTP, AURL) then begin
-    SaveImageStreamToFile(DownloadThread.FHTTP, APath, AName);
-  end;
+  Result := GETWithLogin(DownloadThread.FHTTP, AURL);
 end;
 
 procedure RegisterModule;

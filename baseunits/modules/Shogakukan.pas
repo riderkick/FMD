@@ -64,7 +64,7 @@ begin
 end;
 
 function DownloadImage(const DownloadThread: TDownloadThread;
-  const AURL, APath, AName: String; const Module: TModuleContainer): Boolean;
+  const AURL: String; const Module: TModuleContainer): Boolean;
 begin
   Result := False;
   if DownloadThread = nil then Exit;
@@ -75,8 +75,7 @@ begin
       Headers.Add('Referer: ' + Module.RootURL + '/' + PageContainerLinks[1] + '?page=' + IntToStr(WorkId));
     if POST(Module.RootURL + '/imgDeliver?gcode=' + PageContainerLinks[0],
       'base64=1&vsid=' + PageContainerLinks[1] + '&trgCode=' + PageLinks[WorkId]) then
-      if Base64Decode(Document) then
-        Result := SaveImageStreamToFile(DownloadThread.FHTTP, APath, AName) <> '';
+      Result := Base64Decode(Document);
   end;
 end;
 

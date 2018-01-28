@@ -301,7 +301,7 @@ begin
 end;
 
 function DownloadImage(const DownloadThread: TDownloadThread;
-  const AURL, APath, AName: String; const Module: TModuleContainer): Boolean;
+  const AURL: String; const Module: TModuleContainer): Boolean;
 var
   query: TXQueryEngineHTML;
   iurl: String;
@@ -326,7 +326,7 @@ var
       if iurl = '' then
         iurl := query.XPathString('//a/img/@src[not(contains(.,"ehgt.org/"))]');
       if iurl <> '' then
-        Result := SaveImage(DownloadThread.FHTTP, iurl, APath, AName);
+        Result := GETWithLogin(DownloadThread.FHTTP, iurl, Module.Website);
       if DownloadThread.IsTerminated then Break;
       if rcount >= reconnect then Break;
       if not Result then begin

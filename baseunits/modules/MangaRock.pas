@@ -121,7 +121,7 @@ begin
 end;
 
 function DownloadImage(const DownloadThread: TDownloadThread;
-  const AURL, APath, AName: String; const Module: TModuleContainer): Boolean;
+  const AURL: String; const Module: TModuleContainer): Boolean;
 var
   decoded: TMemoryStream;
   img: TMemBitmap;
@@ -135,7 +135,7 @@ begin
     try
       decoded := DecryptImage(DownloadThread.FHTTP.Document);
       img := WebPToMemBitmap(decoded);
-      Result := SaveImageAsPngFile(img, APath, AName) <> '';
+      //Result := SaveImageAsPngFile(img, APath, AName) <> '';
     finally
       img.Free;
       decoded.Free;

@@ -91,13 +91,9 @@ begin
 end;
 
 function DownloadImage(const DownloadThread: TDownloadThread;
-  const AURL, APath, AName: String; const Module: TModuleContainer): Boolean;
+  const AURL: String; const Module: TModuleContainer): Boolean;
 begin
-  if DownloadThread.FHTTP.GETCF(AURL, cf) then begin
-    Result := SaveImageStreamToFile(DownloadThread.FHTTP, APath, AName) <> '';
-  end
-  else
-    Result := False;
+  Result := DownloadThread.FHTTP.GETCF(AURL, cf);
 end;
 
 procedure RegisterModule;

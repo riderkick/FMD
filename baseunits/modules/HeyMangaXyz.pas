@@ -108,15 +108,13 @@ begin
 end;
 
 function DownloadImage(const DownloadThread: TDownloadThread;
-  const AURL, APath, AName: String; const Module: TModuleContainer): Boolean;
+  const AURL: String; const Module: TModuleContainer): Boolean;
 
   function downloadandsave(u: String): Boolean;
   begin
     if u = '' then Exit(False);
     if LeftStr(u, 2) = '//' then u := 'https:' + u;
     Result := DownloadThread.FHTTP.GET(u);
-    if Result then
-      Result := SaveImageStreamToFile(DownloadThread.FHTTP, APath, AName) <> '';
   end;
 
 begin

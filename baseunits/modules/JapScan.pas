@@ -89,13 +89,13 @@ begin
 end;
 
 function DownloadImage(const DownloadThread: TDownloadThread;
-  const AURL, APath, AName: String; const Module: TModuleContainer): Boolean;
+  const AURL: String; const Module: TModuleContainer): Boolean;
 begin
   Result := False;
   with DownloadThread, DownloadThread.FHTTP, DownloadThread.Task.Container do
   begin
     if GET(AppendURLDelim(FillHost(Module.RootURL, ChapterLinks[CurrentDownloadChapterPtr])) + IncStr(WorkId) + '.html') then
-      Result := DownloadAndSaveImage(FHTTP, XPathString('//img[@id="image"]/@src', Document), APath, AName);
+      Result := GET(XPathString('//img[@id="image"]/@src', Document));
   end;
 end;
 

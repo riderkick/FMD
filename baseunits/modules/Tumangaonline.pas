@@ -155,12 +155,11 @@ begin
 end;
 
 function DownloadImageWithCookie(const DownloadThread: TDownloadThread;
-  const AURL, APath, AName: String; const Module: TModuleContainer): Boolean;
+  const AURL: String; const Module: TModuleContainer): Boolean;
 begin
   Result := False;
   if DownloadThread = nil then Exit;
-  if GETWithCookie(DownloadThread.FHTTP, AURL) then
-    result := SaveImageStreamToFile(DownloadThread.FHTTP, APath, AName) <> '';
+  Result := GETWithCookie(DownloadThread.FHTTP, AURL);
 end;
 
 procedure RegisterModule;
