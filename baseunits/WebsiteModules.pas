@@ -43,7 +43,10 @@ type
     var AURL: String; const Module: TModuleContainer): Boolean;
 
   TOnDownloadImage = function(const DownloadThread: TDownloadThread;
-    const AURL, APath, AName: String; const Module: TModuleContainer): Boolean;
+    const AURL: String; const Module: TModuleContainer): Boolean;
+
+  TOnSaveImage = function(const AHTTP: THTTPSendThread;
+    const APath, AName: String; const Module: TModuleContainer): String;
 
   TOnAfterImageSaved = function(const AFilename: String; const Module: TModuleContainer): Boolean;
 
@@ -51,7 +54,7 @@ type
 
   TModuleMethod = (MMGetDirectoryPageNumber, MMGetNameAndLink, MMGetInfo,
     MMTaskStart, MMGetPageNumber, MMGetImageURL, MMBeforeDownloadImage,
-    MMDownloadImage, MMAfterImageSaved, MMLogin);
+    MMDownloadImage, MMSaveImage, MMAfterImageSaved, MMLogin);
 
   TWebsiteOptionType = (woCheckBox, woEdit, woSpinEdit, woComboBox);
 
@@ -97,6 +100,7 @@ type
     OnGetImageURL: TOnGetImageURL;
     OnBeforeDownloadImage: TOnBeforeDownloadImage;
     OnDownloadImage: TOnDownloadImage;
+    OnSaveImage: TOnSaveImage;
     OnAfterImageSaved: TOnAfterImageSaved;
     OnLogin: TOnLogin;
     constructor Create;
@@ -150,50 +154,55 @@ type
     function GetDirectoryPageNumber(const MangaInfo: TMangaInformation;
       var Page: Integer; const WorkPtr: Integer; const ModuleId: Integer): Integer; overload;
     function GetDirectoryPageNumber(const MangaInfo: TMangaInformation;
-      var Page: Integer; const WorkPtr: Integer; const AWebsite: String): Integer; overload;
+      var Page: Integer; const WorkPtr: Integer; const AWebsite: String): Integer; overload; inline;
 
     function GetNameAndLink(const MangaInfo: TMangaInformation;
       const ANames, ALinks: TStringList; const AURL: String;
       const ModuleId: Integer): Integer; overload;
     function GetNameAndLink(const MangaInfo: TMangaInformation;
       const ANames, ALinks: TStringList;
-      const AURL, AWebsite: String): Integer; overload;
+      const AURL, AWebsite: String): Integer; overload; inline;
 
     function GetInfo(const MangaInfo: TMangaInformation; const AURL: String;
       const ModuleId: Integer): Integer; overload;
     function GetInfo(const MangaInfo: TMangaInformation;
-      const AURL, AWebsite: String): Integer; overload;
+      const AURL, AWebsite: String): Integer; overload; inline;
 
     function TaskStart(const Task: TTaskContainer;
       const ModuleId: Integer): Boolean; overload;
     function TaskStart(const Task: TTaskContainer;
-      const AWebsite: String): Boolean; overload;
+      const AWebsite: String): Boolean; overload; inline;
 
     function GetPageNumber(const DownloadThread: TDownloadThread;
       const AURL: String; const ModuleId: Integer): Boolean; overload;
     function GetPageNumber(const DownloadThread: TDownloadThread;
-      const AURL, AWebsite: String): Boolean; overload;
+      const AURL, AWebsite: String): Boolean; overload; inline;
 
     function GetImageURL(const DownloadThread: TDownloadThread;
       const AURL: String; const ModuleId: Integer): Boolean; overload;
     function GetImageURL(const DownloadThread: TDownloadThread;
-      const AURL, AWebsite: String): Boolean; overload;
+      const AURL, AWebsite: String): Boolean; overload; inline;
 
     function BeforeDownloadImage(const DownloadThread: TDownloadThread;
       var AURL: String; const ModuleId: Integer): Boolean; overload;
     function BeforeDownloadImage(const DownloadThread: TDownloadThread;
-      var AURL, AWebsite: String): Boolean; overload;
+      var AURL, AWebsite: String): Boolean; overload; inline;
 
     function DownloadImage(const DownloadThread: TDownloadThread;
-      const AURL, APath, AName: String; const ModuleId: Integer): Boolean; overload;
+      const AURL: String; const ModuleId: Integer): Boolean; overload;
     function DownloadImage(const DownloadThread: TDownloadThread;
-      const AURL, APath, AName, AWebsite: String): Boolean; overload;
+      const AURL, AWebsite: String): Boolean; overload; inline;
+
+    function SaveImage(const AHTTP: THTTPSendThread;
+      const APath, AName: String; const ModuleId: Integer): String; overload;
+    function SaveImage(const AHTTP: THTTPSendThread;
+      const APath, AName, AWebsite: String): String; overload; inline;
 
     function AfterImageSaved(const AFilename: String; const ModuleId: Integer): Boolean; overload;
-    function AfterImageSaved(const AFilename, AWebsite: String): Boolean; overload;
+    function AfterImageSaved(const AFilename, AWebsite: String): Boolean; overload; inline;
 
     function Login(const AHTTP: THTTPSendThread; const ModuleId: Integer): Boolean; overload;
-    function Login(const AHTTP: THTTPSendThread; const AWebsite: String): Boolean; overload;
+    function Login(const AHTTP: THTTPSendThread; const AWebsite: String): Boolean; overload; inline;
 
     procedure LockModules;
     procedure UnlockModules;
@@ -588,19 +597,35 @@ begin
 end;
 
 function TWebsiteModules.DownloadImage(const DownloadThread: TDownloadThread;
-  const AURL, APath, AName: String; const ModuleId: Integer): Boolean;
+  const AURL: String; const ModuleId: Integer): Boolean;
 begin
   Result := False;
   if (ModuleId < 0) or (ModuleId >= FModuleList.Count) then Exit;
   if Assigned(TModuleContainer(FModuleList[ModuleId]).OnDownloadImage) then
     Result := TModuleContainer(FModuleList[ModuleId]).OnDownloadImage(
-      DownloadThread, AURL, APath, AName, TModuleContainer(FModuleList[ModuleId]));
+      DownloadThread, AURL, TModuleContainer(FModuleList[ModuleId]));
 end;
 
 function TWebsiteModules.DownloadImage(const DownloadThread: TDownloadThread;
-  const AURL, APath, AName, AWebsite: String): Boolean;
+  const AURL, AWebsite: String): Boolean;
 begin
-  Result := DownloadImage(DownloadThread, AURL, APath, AName, LocateModule(AWebsite));
+  Result := DownloadImage(DownloadThread, AURL, LocateModule(AWebsite));
+end;
+
+function TWebsiteModules.SaveImage(const AHTTP: THTTPSendThread;
+  const APath, AName: String; const ModuleId: Integer): String;
+begin
+  Result := '';
+  if (ModuleId < 0) or (ModuleId >= FModuleList.Count) then Exit;
+  if Assigned(TModuleContainer(FModuleList[ModuleId]).OnSaveImage) then
+    Result := TModuleContainer(FModuleList[ModuleId]).OnSaveImage(
+      AHTTP, APath, AName, TModuleContainer(FModuleList[ModuleId]));
+end;
+
+function TWebsiteModules.SaveImage(const AHTTP: THTTPSendThread;
+  const APath, AName, AWebsite: String): String;
+begin
+  Result := SaveImage(AHTTP, APath, AName, LocateModule(AWebsite));
 end;
 
 function TWebsiteModules.AfterImageSaved(const AFilename: String;
@@ -611,7 +636,6 @@ begin
   if Assigned(TModuleContainer(FModuleList[ModuleId]).OnAfterImageSaved) then
     Result := TModuleContainer(FModuleList[ModuleId]).OnAfterImageSaved(AFilename,
       TModuleContainer(FModuleList[ModuleId]));
-
 end;
 
 function TWebsiteModules.AfterImageSaved(const AFilename, AWebsite: String

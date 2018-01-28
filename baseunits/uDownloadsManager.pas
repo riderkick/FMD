@@ -897,12 +897,13 @@ begin
     (WorkId < Task.Container.PageContainerLinks.Count) then
       workURL := Task.Container.PageContainerLinks[WorkId];
 
-  // call beforedownloadimage if available
+  // OnBeforeDownloadImage
   if Modules.ModuleAvailable(Task.Container.ModuleId, MMBeforeDownloadImage) then
     Result := Modules.BeforeDownloadImage(Self, workURL, Task.Container.ModuleId);
 
   if Result then
   begin
+    // OnDownloadImage
     if Modules.ModuleAvailable(Task.Container.ModuleId, MMDownloadImage) then
         Result := Modules.DownloadImage(
           Self,
@@ -914,13 +915,31 @@ begin
     if Task.Container.MangaSiteID = MEINMANGA_ID then
       Result := GetMeinMangaImageURL
     else
-      Result := uBaseUnit.DownloadAndSaveImage(FHTTP, workURL, Task.CurrentWorkingDir, workFilename, savedFilename);
+      Result := FHTTP.GET(workURL);
   end;
+
+  if Result then
+  begin
+    savedFilename := FindImageFile(Task.CurrentWorkingDir + workFilename);
+    Result := savedFilename <> '';
+    if not Result then
+    begin
+      if Modules.ModuleAvailable(Task.Container.ModuleId, MMSaveImage) then
+        savedFilename := Modules.SaveImage(FHTTP, Task.CurrentWorkingDir, workFilename, Task.Container.ModuleId)
+      else
+        savedFilename := SaveImageStreamToFile(FHTTP, Task.CurrentWorkingDir, workFilename);
+      Result := savedFilename <> '';
+    end;
+  end;
+
+  if Result then
+    Result := FileExistsUTF8(savedFilename);
+
   if Terminated then Exit(False);
   if Result then
   begin
     Task.Container.PageLinks[WorkId] := 'D';
-
+    // OnAfterImageSaved
     if Modules.ModuleAvailable(Task.Container.ModuleId, MMAfterImageSaved) then
       Modules.AfterImageSaved(savedFilename, Task.Container.ModuleId);
   end;
