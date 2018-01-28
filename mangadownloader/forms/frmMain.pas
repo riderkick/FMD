@@ -2337,7 +2337,10 @@ procedure TMainForm.appPropertiesMainShowHint(var HintStr: String;
   var CanShow: Boolean; var HintInfo: THintInfo);
 begin
   if HintInfo.HintControl = vtMangaList then
+  begin
     HintInfo.HintMaxWidth := 500;
+    HintInfo.HideTimeout := 300000;
+  end;
   if HintInfo.HintControl = sbUpdateList then
     if isUpdating then
       HintStr := Trim(updateList.websites.Text)
