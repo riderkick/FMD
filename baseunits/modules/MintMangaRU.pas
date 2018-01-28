@@ -154,6 +154,14 @@ begin
   end;
 end;
 
+function BeforeDownloadImage(const DownloadThread: TDownloadThread;
+  var AURL: String; const Module: TModuleContainer): Boolean;
+begin
+  Result := True;
+  if DownloadThread = nil then Exit;
+  DownloadThread.FHTTP.Headers.Values['Referer'] := ' ' + Module.RootURL;
+end;
+
 procedure RegisterModule;
 
   function AddWebsiteModule(AWebsite, ARootURL: String): TModuleContainer;
@@ -167,6 +175,7 @@ procedure RegisterModule;
       OnGetNameAndLink := @GetNameAndLink;
       OnGetInfo := @GetInfo;
       OnGetPageNumber := @GetPageNumber;
+      OnBeforeDownloadImage := @BeforeDownloadImage;
     end;
   end;
 
