@@ -905,12 +905,7 @@ begin
   begin
     // OnDownloadImage
     if Modules.ModuleAvailable(Task.Container.ModuleId, MMDownloadImage) then
-        Result := Modules.DownloadImage(
-          Self,
-          workURL,
-          Task.CurrentWorkingDir,
-          workFilename,
-          Task.Container.ModuleId)
+      Result := Modules.DownloadImage(Self, workURL, Task.Container.ModuleId)
     else
     if Task.Container.MangaSiteID = MEINMANGA_ID then
       Result := GetMeinMangaImageURL
