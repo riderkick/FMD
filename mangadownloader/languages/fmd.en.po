@@ -502,16 +502,6 @@ msgstr "Favorite list"
 msgid "Manga list"
 msgstr "Manga list"
 
-#: tform1.caption
-msgid "Form1"
-msgstr ""
-
-#: tform1.lbtransferto.caption
-#, fuzzy
-msgctxt "tform1.lbtransferto.caption"
-msgid "Transfer to"
-msgstr "Transfer to"
-
 #: tformdroptarget.miaddtofavorites.caption
 msgctxt "tformdroptarget.miaddtofavorites.caption"
 msgid "Add to favorites"

@@ -493,16 +493,6 @@ msgstr "Список избранного"
 msgid "Manga list"
 msgstr "Список манги"
 
-#: tform1.caption
-msgid "Form1"
-msgstr ""
-
-#: tform1.lbtransferto.caption
-#, fuzzy
-msgctxt "tform1.lbtransferto.caption"
-msgid "Transfer to"
-msgstr "Перенести на"
-
 #: tformdroptarget.miaddtofavorites.caption
 msgctxt "TFORMDROPTARGET.MIADDTOFAVORITES.CAPTION"
 msgid "Add to favorites"
