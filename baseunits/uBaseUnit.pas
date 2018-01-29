@@ -286,7 +286,7 @@ const
     ('ScanManga', 'http://www.scan-manga.com'),
     ('DM5', 'http://www.dm5.com'),
     ('KivManga', 'http://www.kivmanga.com'),
-    ('MeinManga', 'http://www.meinmanga.com/'),
+    ('MeinManga', 'http://www.meinmanga.com'),
     ('MangasPROJECT', 'http://mangaproject.xpg.uol.com.br'),
     ('MangaREADER_POR', 'http://www.mangareader.com.br'),
     ('Japan-Shin', 'http://www.japan-shin.com'),

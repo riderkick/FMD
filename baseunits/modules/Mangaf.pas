@@ -105,7 +105,7 @@ begin
   with AddModule do
   begin
     Website := 'Mangaf';
-    RootURL := 'http://mangaf.co/';
+    RootURL := 'http://mangaf.co';
     TotalDirectory := 3;
     OnGetNameAndLink := @GetNameAndLink;
     OnGetInfo := @GetInfo;
