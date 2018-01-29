@@ -243,6 +243,7 @@ begin
   AddWebsiteModule('MangaIce', 'http://www.mangaice.com');
   AddWebsiteModule('MangaCow', 'http://mngcow.co');
   AddWebsiteModule('HentaiRead', 'http://hentairead.com');
+  AddWebsiteModule('MangaDeep', 'http://www.mangadeep.com');
 end;
 
 initialization
