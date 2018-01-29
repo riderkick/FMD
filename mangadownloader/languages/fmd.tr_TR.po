@@ -1438,8 +1438,6 @@ msgstr ""
 "Manga klasörü adı en azından %MANGA% içermelidir.\n"
 
 #: tmainform.lboptionmaxparallel.caption
-#, fuzzy
-#| msgid "Number of downloaded tasks at the same time (Max: 8)"
 msgid "Number of downloaded tasks at the same time"
 msgstr "Eşzamanlı indirilen görev sayısı (Maks: 8)"
 
@@ -1449,8 +1447,6 @@ msgid "Number of retry times if tasks have download problems (-1 = always retry)
 msgstr "İndirmede sorun varsa tekrar deneme sayısı (-1 = sürekli yeniden dene)"
 
 #: tmainform.lboptionmaxthread.caption
-#, fuzzy
-#| msgid "Number of downloaded files per task at the same time (Max: 32)"
 msgid "Number of downloaded files per task at the same time"
 msgstr "Tek görev başına aynı anda indirilmiş dosya sayısı (Maks: 32)"
 
@@ -1932,7 +1928,7 @@ msgstr "Websiteler"
 #: tmainform.tswebsiteselection.caption
 msgctxt "tmainform.tswebsiteselection.caption"
 msgid "Websites"
-msgstr "Websiteleri"
+msgstr "Websiteler"
 
 #: tmainform.vtdownload.header.columns[0].text
 msgid "Manga"
@@ -2006,7 +2002,6 @@ msgid "&Add to queue"
 msgstr "&Sıraya ekle"
 
 #: tselectdirectoryform.btok.caption
-#, fuzzy
 msgctxt "tselectdirectoryform.btok.caption"
 msgid "OK"
 msgstr "Tamam"
