@@ -689,7 +689,7 @@ type
 
     // View manga information
     procedure ViewMangaInfo(const AURL, AWebsite, ATitle: String;
-      const AMangaListPos: Integer = -1);
+      const AMangaListNode: PVirtualNode = nil);
 
     // Show manga information
     procedure ShowInformation(const title, website, link: String);
@@ -3396,7 +3396,7 @@ begin
   if Assigned(vtMangaList.FocusedNode) then
   begin
     data := vtMangaList.GetNodeData(vtMangaList.FocusedNode);
-    ViewMangaInfo(data^.link, data^.website, data^.title, vtMangaList.FocusedNode^.Index);
+    ViewMangaInfo(data^.link, data^.website, data^.title, vtMangaList.FocusedNode);
   end;
 end;
 
@@ -4378,7 +4378,8 @@ begin
     begin
       HintText += LineEnding2 + RS_InfoStatus + LineEnding;
       if status = '0' then
-        HintText += cbFilterStatus.Items[0];
+        HintText += cbFilterStatus.Items[0]
+      else
       if status = '1' then
         HintText += cbFilterStatus.Items[1]
       else
@@ -4651,7 +4652,7 @@ begin
 end;
 
 procedure TMainForm.ViewMangaInfo(const AURL, AWebsite, ATitle: String;
-  const AMangaListPos: Integer);
+  const AMangaListNode: PVirtualNode);
 var
   i: Integer;
 begin
@@ -4696,7 +4697,7 @@ begin
 
   // start the thread
   GetInfosThread := TGetMangaInfosThread.Create;
-  GetInfosThread.MangaListPos := AMangaListPos;
+  GetInfosThread.MangaListNode := AMangaListNode;
   GetInfosThread.Title := ATitle;
   GetInfosThread.Website := AWebsite;
   GetInfosThread.Link := AURL;
