@@ -1537,7 +1537,7 @@ end;
 procedure TMainForm.miFavoritesTransferWebsiteClick(Sender: TObject);
 var
   Node: PVirtualNode;
-  sm, i: Integer;
+  sm: Integer;
   Data: PFavContainer;
 begin
   with TTransferFavoritesForm.Create(nil) do
@@ -1558,17 +1558,16 @@ begin
     if sm = mrOK then
     begin
       UpdateVtFavorites;
-      i := 0;
-      Node := vtFavs.GetFirst();
-      while Assigned(Node) do
+      if ckClearDownloadedChapters.Checked then
       begin
-        Data := vtFavs.GetNodeData(Node);
-        for i := i to FavoriteManager.Count - 1 do
+        Node := vtFavs.GetFirst();
+        while Assigned(Node) do
         begin
-          if Data^.Fav = FavoriteManager.Items[i] then
-            FavoriteManager.CheckForNewChapter(i);
+          Data := vtFavs.GetNodeData(Node);
+          if Data^.NewLink <> '' then
+            FavoriteManager.CheckForNewChapter(FavoriteManager.Items.IndexOf(Data^.Fav));
+          Node := vtFavs.GetNext(Node);
         end;
-        Node := vtFavs.GetNext(Node);
       end;
     end;
   finally

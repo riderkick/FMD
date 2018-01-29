@@ -26,7 +26,7 @@ type
     vtFavs: TVirtualStringTree;
     procedure btCancelClick(Sender: TObject);
     procedure btOKClick(Sender: TObject);
-    procedure cbWebsitesChange(Sender: TObject);
+    procedure cbWebsitesEditingDone(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -40,8 +40,9 @@ type
   private
     FAllCount,
     FValidCount,
-    FInvalidCount: Integer;
-    FLastFilter: Integer;
+    FInvalidCount,
+    FLastFilter,
+    FLastWebsiteSelect: Integer;
     procedure UpdateFilterCount;
     procedure FilterState(const AState: Integer = 0);
     procedure FindMatchTitle;
@@ -118,19 +119,6 @@ var
   node: PVirtualNode;
   data: PFavContainer;
 
-  procedure setvalid(const nl: String = '');
-  begin
-    Inc(Owner.FValidCount);
-    data^.NewLink := nl;
-    data^.State := 1;
-  end;
-  procedure setinvalid;
-  begin
-    Inc(Owner.FInvalidCount);
-    data^.NewLink := '';
-    data^.State := 2;
-  end;
-
 begin
   Synchronize(@SyncBegin);
   Owner.FValidCount := 0;
@@ -145,7 +133,10 @@ begin
       begin
         data := Owner.vtFavs.GetNodeData(node);
         if data^.Fav.Website = db.Website then
-          setvalid
+        begin
+          data^.NewLink := '';
+          data^.State := 0;
+        end
         else
         begin
           try
@@ -153,9 +144,17 @@ begin
               ' WHERE title LIKE '+AnsiQuotedStr(data^.Fav.FavoriteInfo.Title, '"') + ' COLLATE NOCASE;';
             db.Table.Open;
             if db.Table.RecNo > 0 then
-              setvalid(db.Table.Fields[0].AsString)
+            begin
+              data^.NewLink := db.Table.Fields[0].AsString;
+              data^.State := 1;
+              Inc(Owner.FValidCount);
+            end
             else
-              setinvalid;
+            begin
+              data^.NewLink := '';
+              data^.State := 2;
+              Inc(Owner.FInvalidCount);
+            end;
           except
           end;
           db.Table.Close;
@@ -187,6 +186,7 @@ begin
   FAllCount := 0;
   FValidCount := 0;
   FInvalidCount := 0;
+  FLastWebsiteSelect := -1;
 end;
 
 procedure TTransferFavoritesForm.FormDestroy(Sender: TObject);
@@ -249,10 +249,8 @@ begin
   ModalResult := mrOK;
 end;
 
-procedure TTransferFavoritesForm.cbWebsitesChange(Sender: TObject);
+procedure TTransferFavoritesForm.cbWebsitesEditingDone(Sender: TObject);
 begin
-  if not FileExists(DATA_FOLDER + cbWebsites.Text + DBDATA_EXT) then
-    Exit;
   FindMatchTitle;
 end;
 
@@ -277,7 +275,10 @@ var
 begin
   if Column <> 0 then Exit;
   Data := Sender.GetNodeData(Node);
-  ImageIndex := Data^.State;
+  if Data^.State = 0 then
+    ImageIndex := -1
+  else
+    ImageIndex := Data^.State;
 end;
 
 procedure TTransferFavoritesForm.vtFavsGetNodeDataSize(Sender: TBaseVirtualTree; var NodeDataSize: Integer);
@@ -330,6 +331,10 @@ end;
 
 procedure TTransferFavoritesForm.FindMatchTitle;
 begin
+  if FLastWebsiteSelect = cbWebsites.ItemIndex then Exit;
+  FLastWebsiteSelect := cbWebsites.ItemIndex;
+  if not FileExists(DATA_FOLDER + cbWebsites.Text + DBDATA_EXT) then
+    Exit;
   with TFindMatchDBThread.Create(cbWebsites.Text) do
   begin
     Owner := Self;

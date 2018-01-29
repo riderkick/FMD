@@ -25,8 +25,9 @@ object TransferFavoritesForm: TTransferFavoritesForm
     Width = 164
     AutoComplete = True
     AutoCompleteText = [cbactEnabled, cbactEndOfLineComplete, cbactSearchAscending]
+    AutoDropDown = True
     ItemHeight = 15
-    OnChange = cbWebsitesChange
+    OnEditingDone = cbWebsitesEditingDone
     TabOrder = 0
   end
   object lbTransferTo: TLabel
@@ -246,8 +247,8 @@ object TransferFavoritesForm: TTransferFavoritesForm
     Width = 16
   end
   object imgsState: TImageList
-    left = 326
-    top = 32
+    Left = 326
+    Top = 32
     Bitmap = {
       4C690300000010000000100000001975BA001975BA001770B7900B56A4C60142
       96CC003F94CC002A80CC00166BCC021C70CB072D7DC80D4390C51259A3C1176C
@@ -346,6 +347,9 @@ object TransferFavoritesForm: TTransferFavoritesForm
       002D0000001800000004FFFFFF00FFFFFF00000000020000000C000000160000
       001A0000001A0000001A0000001A0000001A0000001A0000001A0000001A0000
       00170000000C00000002FFFFFF00
+    }
+    BitmapAdv = {
+      4C6900000000
     }
   end
 end
