@@ -746,11 +746,18 @@ function GetPage(var output: TObject; URL: String; const Reconnect: Integer = 0)
 // Get url from a bitly url.
 function GetURLFromBitly(const URL: String): String;
 
+// convert webp
+function WebPToPNGStream(const AStream: TMemoryStream): Boolean;
+function WebPToJpegStream(const AStream: TMemoryStream): Boolean;
+
+// check and convert known file
+
+function ConvertKnownImageFormat(const AStream: TMemoryStream): Boolean;
+
 // try to save tmemorystream to file, return the saved filename if success, otherwise return empty string
 function SaveImageStreamToFile(Stream: TMemoryStream; Path, FileName: String; Age: LongInt = 0): String; overload;
 function SaveImageStreamToFile(AHTTP: THTTPSend; Path, FileName: String): String; overload;
 
-function SaveImageAsPngFile(image: TMemBitmap; Path, FileName: String): String;
 
 // detect and save image from base64 string
 function SaveImageBase64StringToFile(const S, Path, FileName: String): Boolean;
@@ -828,7 +835,7 @@ procedure SendLogException(const AText: String; AException: Exception); inline;
 implementation
 
 uses
-  {$IFDEF DOWNLOADER}WebsiteModules;{$ENDIF}
+  {$IFDEF DOWNLOADER}WebsiteModules, webp, FPWriteJPEG;{$ENDIF}
 
 {$IFDEF WINDOWS}
 // thanks Leledumbo for the code
@@ -3334,8 +3341,85 @@ begin
   httpSource.Free;
 end;
 
-function SaveImageStreamToFile(Stream: TMemoryStream; Path, FileName: String; Age: LongInt
-  ): String;
+function WebPToPNGStream(const AStream: TMemoryStream): Boolean;
+var
+  mem: TMemBitmap;
+  writer: TFPWriterPNG;
+begin
+  Result := False;
+  mem := nil;
+  try
+    mem := WebPToMemBitmap(AStream);
+    if Assigned(mem) then
+    try
+      writer := TFPWriterPNG.create;
+      writer.Indexed := False;
+      writer.UseAlpha := mem.HasTransparentPixels;
+      mem.SaveToStream(AStream, writer);
+      Result := True;
+    finally
+      writer.Free;
+    end;
+  finally
+    if Assigned(mem) then
+      mem.Free;
+  end;
+end;
+
+function WebPToJpegStream(const AStream: TMemoryStream): Boolean;
+var
+  mem: TMemBitmap;
+  writer: TFPWriterJPEG;
+begin
+  Result := False;
+  mem := nil;
+  try
+    mem := WebPToMemBitmap(AStream);
+    if Assigned(mem) then
+    try
+      writer := TFPWriterJPEG.create;
+      writer.CompressionQuality := 80;
+      mem.SaveToStream(AStream, writer);
+      Result := True;
+    finally
+      writer.Free;
+    end;
+  finally
+    if Assigned(mem) then
+      mem.Free;
+  end;
+end;
+
+function IsWebPStream(const AStream: TMemoryStream): Boolean;
+var
+  hdr: array[0..3] of Char;
+begin
+  Result := False;
+  AStream.Position := 0;
+  if AStream.Read(hdr, 4) = 4 then
+  begin
+    if hdr = 'RIFF' then
+    begin
+      AStream.Seek(4, soFromCurrent);
+      if AStream.Read(hdr, 4) = 4 then
+      begin
+        if hdr = 'WEBP' then
+          Result := True;
+      end;
+    end;
+  end;
+end;
+
+function ConvertKnownImageFormat(const AStream: TMemoryStream): Boolean;
+begin
+  Result := False;
+  // webp
+  if IsWebPStream(AStream) then
+    Result := WebPToPNGStream(AStream);
+    //Result := WebPToJpegStream(AStream);
+end;
+
+function SaveImageStreamToFile(Stream: TMemoryStream; Path, FileName: String; Age: LongInt): String;
 var
   p, f: String;
   fs: TFileStreamUTF8;
@@ -3346,13 +3430,19 @@ begin
   p := CorrectPathSys(Path);
   if ForceDirectoriesUTF8(p) then begin
     f := GetImageStreamExt(Stream);
+    if f = '' then
+    begin
+      if ConvertKnownImageFormat(Stream) then
+        f := GetImageStreamExt(Stream);
+    end;
     if f = '' then Exit;
     f := p + FileName + '.' + f;
     if FileExistsUTF8(f) then DeleteFileUTF8(f);
     try
       fs := TFileStreamUTF8.Create(f, fmCreate);
       try
-        Stream.SaveToStream(fs);
+        Stream.Position := 0;
+        fs.CopyFrom(Stream, Stream.Size);
       finally
         fs.Free;
       end;
@@ -3411,37 +3501,6 @@ begin
   finally
     MS.Free;
   end;
-end;
-
-function SaveImageAsPngFile(image: TMemBitmap; Path, FileName: String): String;
-var
-  p, f: String;
-  fs: TFileStreamUTF8;
-  writer: TFPWriterPNG;
-begin
-  Result := '';
-  if image = nil then Exit;
-  p := CorrectPathSys(Path);
-  if ForceDirectoriesUTF8(p) then begin
-    f := p + FileName + '.png';
-    if FileExistsUTF8(f) then DeleteFileUTF8(f);
-    try
-      fs := TFileStreamUTF8.Create(f, fmCreate);
-      writer := TFPWriterPNG.Create;
-      writer.Indexed := false;
-      writer.UseAlpha := image.HasTransparentPixels;
-      try
-        image.SaveToStream(fs, writer);
-      finally
-        writer.Free;
-        fs.Free;
-      end;
-    except
-      on E: Exception do
-        Logger.SendException('SaveImageAsPngFile Failed! ' + f, E);
-    end;
-  end;
-  if FileExistsUTF8(f) then Result := f;
 end;
 
 function SaveImage(const AHTTP: THTTPSend; const mangaSiteID: Integer;

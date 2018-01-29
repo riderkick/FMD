@@ -124,23 +124,21 @@ function DownloadImage(const DownloadThread: TDownloadThread;
   const AURL: String; const Module: TModuleContainer): Boolean;
 var
   decoded: TMemoryStream;
-  img: TMemBitmap;
 begin
   decoded := nil;
-  img := nil;
   Result := False;
   if DownloadThread = nil then Exit;
-  if DownloadThread.FHTTP.GET(AURL) then
-  begin
-    try
-      decoded := DecryptImage(DownloadThread.FHTTP.Document);
-      img := WebPToMemBitmap(decoded);
-      //Result := SaveImageAsPngFile(img, APath, AName) <> '';
-    finally
-      img.Free;
-      decoded.Free;
-    end;
-  end;
+  with DownloadThread.FHTTP do
+    if GET(AURL) then
+      try
+        decoded := DecryptImage(Document);
+        Document.Size := decoded.Size;
+        Document.Position := 0;
+        decoded.SaveToStream(Document);
+        Result := True;
+      finally
+        decoded.Free;
+      end;
 end;
 
 function GetNameAndLink(const MangaInfo: TMangaInformation; const ANames, ALinks: TStringList;
