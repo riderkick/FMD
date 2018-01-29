@@ -239,8 +239,6 @@ begin
   AddWebsiteModule('Authrone', 'http://www.authrone.com');
   AddWebsiteModule('EyeOnManga', 'http://www.eyeonmanga.com');
   AddWebsiteModule('ReadHentaiManga', 'http://readhentaimanga.com');
-  AddWebsiteModule('MangaSpy', 'http://www.mangaspy.com');
-  AddWebsiteModule('MangaIce', 'http://www.mangaice.com');
   AddWebsiteModule('MangaCow', 'http://mngcow.co');
   AddWebsiteModule('HentaiRead', 'http://hentairead.com');
   AddWebsiteModule('MangaDeep', 'http://www.mangadeep.com');
