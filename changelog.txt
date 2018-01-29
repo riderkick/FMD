@@ -4,7 +4,7 @@ Project page: https://github.com/riderkick/FMD
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
-0.9.132.0 (--2018)
+0.9.132.0 (29-01-2018)
 [*] LHTranslation, fix chapter order
 [*] Mangadex, fix download
 [*] Various changes and bug fixes
