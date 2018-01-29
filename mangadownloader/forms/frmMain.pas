@@ -618,14 +618,17 @@ type
     procedure vtMangaListBeforeCellPaint(Sender: TBaseVirtualTree;
       TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
       CellPaintMode: TVTCellPaintMode; CellRect: TRect; var ContentRect: TRect);
-    procedure vtMangaListGetCursor(Sender: TBaseVirtualTree;
-      var ACursor: TCursor);
+    procedure vtMangaListFreeNode(Sender: TBaseVirtualTree; Node: PVirtualNode);
     procedure vtMangaListGetHint(Sender: TBaseVirtualTree; Node: PVirtualNode;
       Column: TColumnIndex; var LineBreakStyle: TVTTooltipLineBreakStyle;
       var HintText: String);
+    procedure vtMangaListGetNodeDataSize(Sender: TBaseVirtualTree;
+      var NodeDataSize: Integer);
     procedure vtMangaListGetText(Sender: TBaseVirtualTree; Node: PVirtualNode;
       Column: TColumnIndex; TextType: TVSTTextType; var CellText: String);
     procedure tmBackupTimer(Sender: TObject);
+    procedure vtMangaListInitNode(Sender: TBaseVirtualTree; ParentNode,
+      Node: PVirtualNode; var InitialStates: TVirtualNodeInitStates);
     procedure vtOptionMangaSiteSelectionChange(Sender : TBaseVirtualTree;
       Node : PVirtualNode);
     procedure vtOptionMangaSiteSelectionFocusChanged(Sender : TBaseVirtualTree;
@@ -780,6 +783,22 @@ type
     constructor Create(const ASearchStr: String);
     destructor Destroy; override;
     procedure NewSearch(const ASearchStr: String);
+  end;
+
+  PMangaInfoData = ^TMangaInfoData;
+
+  TMangaInfoData = record
+    website,
+    link,
+    title,
+    titleformat,
+    authors,
+    artists,
+    genres,
+    status,
+    summary: String;
+    numchapter,
+    jdn: Integer;
   end;
 
   procedure AdvanceLoadHTTPConfig(const HTTP: THTTPSendThread; Website: String);
@@ -1036,9 +1055,7 @@ begin
     else
       lbMode.Caption := Format(RS_ModeAll, [dataProcess.RecordCount]);
     SetControlEnabled(True);
-    vtMangaList.BeginUpdate;
     vtMangaList.RootNodeCount := dataProcess.RecordCount;
-    vtMangaList.EndUpdate;
     ChangeAllCursor(pssInfoList, crDefault);
   end;
 end;
@@ -1055,7 +1072,7 @@ begin
         dataProcess.Search(MainForm.edMangaListSearch.Text);
     end;
     if not Terminated then
-    Synchronize(@SyncOpenFinish);
+      Synchronize(@SyncOpenFinish);
   end;
 end;
 
@@ -2917,22 +2934,17 @@ end;
 
 procedure TMainForm.miMangaListAddToFavoritesClick(Sender: TObject);
 var
-  i: Cardinal;
   xNode: PVirtualNode;
+  data: PMangaInfoData;
 begin
   if vtMangaList.SelectedCount = 0 then Exit;
   SilentThreadManager.BeginAdd;
   try
     xNode := vtMangaList.GetFirstSelected;
-    for i := 0 to vtMangaList.SelectedCount - 1 do
+    while Assigned(xNode) do
     begin
-      if vtMangaList.Selected[xNode] then
-      begin
-        SilentThreadManager.Add(MD_AddToFavorites,
-          dataProcess.WebsiteName[xNode^.Index],
-          DataProcess.Value[xNode^.Index, DATA_PARAM_TITLE],
-          DataProcess.Value[xNode^.Index, DATA_PARAM_LINK]);
-      end;
+      data := vtMangaList.GetNodeData(xNode);
+      SilentThreadManager.Add(MD_AddToFavorites, data^.website, data^.title, data^.link);
       xNode := vtMangaList.GetNextSelected(xNode);
     end;
   finally
@@ -3311,9 +3323,10 @@ procedure TMainForm.miMangaListDownloadAllClick(Sender: TObject);
 var
   xNode: PVirtualNode;
   AllowedToCreate, YesAll, NoAll : Boolean;
-  i, j: Integer;
+  i: Integer;
   mResult: TModalResult;
   mBtns: TMsgDlgButtons;
+  data: PMangaInfoData;
 begin
   if vtMangaList.SelectedCount = 0 then Exit;
 
@@ -3327,52 +3340,46 @@ begin
       mBtns := [mbYes, mbNo, mbYesToAll, mbNoToAll];
 
     xNode := vtMangaList.GetFirstSelected;
-    for i := 0 to vtMangaList.SelectedCount - 1 do
+    while Assigned(xNode) do
     begin
-      if vtMangaList.Selected[xNode] then
-      begin
-        AllowedToCreate := True;
-        if DLManager.Count > 0 then
-          for j := 0 to DLManager.Count - 1 do
-            if dataProcess.Value[xNode^.Index, DATA_PARAM_TITLE] =
-              DLManager.Items[j].DownloadInfo.title then
+      data := vtMangaList.GetNodeData(xNode);
+      AllowedToCreate := True;
+      if DLManager.Count > 0 then
+        for i := 0 to DLManager.Count - 1 do
+          if data^.title = DLManager.Items[i].DownloadInfo.title then
+          begin
+            if YesAll then
+              AllowedToCreate := True
+            else if NoAll then
+              AllowedToCreate := False
+            else
             begin
-              if YesAll then
-                AllowedToCreate := True
-              else if NoAll then
-                AllowedToCreate := False
-              else
-              begin
-                pcMain.ActivePage := tsDownload;
-                mResult := MessageDlg('', DLManager.Items[j].DownloadInfo.title +
-                  LineEnding + LineEnding + RS_DlgTitleExistInDLlist, mtConfirmation,
-                    mBtns, 0);
-                case mResult of
-                  mrYes : AllowedToCreate := True;
-                  mrNo  : AllowedToCreate := False;
-                  mrYesToAll :
-                    begin
-                      YesAll := True;
-                      NoAll := False;
-                      AllowedToCreate := True;
-                    end;
-                  mrNoToAll :
-                    begin
-                      YesAll := False;
-                      NoAll := True;
-                      AllowedToCreate := False;
-                    end;
-                end;
+              pcMain.ActivePage := tsDownload;
+              mResult := MessageDlg('', DLManager.Items[i].DownloadInfo.title +
+                LineEnding + LineEnding + RS_DlgTitleExistInDLlist, mtConfirmation,
+                  mBtns, 0);
+              case mResult of
+                mrYes : AllowedToCreate := True;
+                mrNo  : AllowedToCreate := False;
+                mrYesToAll :
+                  begin
+                    YesAll := True;
+                    NoAll := False;
+                    AllowedToCreate := True;
+                  end;
+                mrNoToAll :
+                  begin
+                    YesAll := False;
+                    NoAll := True;
+                    AllowedToCreate := False;
+                  end;
               end;
-              Break;
             end;
+            Break;
+          end;
 
-        if AllowedToCreate then
-          SilentThreadManager.Add(MD_DownloadAll,
-            dataProcess.WebsiteName[xNode^.Index],
-            dataProcess.Value[xNode^.Index, DATA_PARAM_TITLE],
-            dataProcess.Value[xNode^.Index, DATA_PARAM_LINK]);
-      end;
+      if AllowedToCreate then
+        SilentThreadManager.Add(MD_DownloadAll, data^.website, data^.title, data^.link);
       xNode := vtMangaList.GetNextSelected(xNode);
     end;
   except
@@ -3383,12 +3390,14 @@ begin
 end;
 
 procedure TMainForm.miMangaListViewInfosClick(Sender: TObject);
+var
+  data: PMangaInfoData;
 begin
   if Assigned(vtMangaList.FocusedNode) then
-    ViewMangaInfo(DataProcess.Value[vtMangaList.FocusedNode^.Index, DATA_PARAM_LINK],
-      DataProcess.WebsiteName[vtMangaList.FocusedNode^.Index],
-      DataProcess.Value[vtMangaList.FocusedNode^.Index, DATA_PARAM_TITLE],
-      vtMangaList.FocusedNode^.Index);
+  begin
+    data := vtMangaList.GetNodeData(vtMangaList.FocusedNode);
+    ViewMangaInfo(data^.link, data^.website, data^.title, vtMangaList.FocusedNode^.Index);
+  end;
 end;
 
 procedure TMainForm.miFavoritesOpenFolderClick(Sender: TObject);
@@ -4317,76 +4326,83 @@ end;
 procedure TMainForm.vtMangaListBeforeCellPaint(Sender: TBaseVirtualTree;
   TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
   CellPaintMode: TVTCellPaintMode; CellRect: TRect; var ContentRect: TRect);
+var
+  data: PMangaInfoData;
 begin
   if CellPaintMode <> cpmPaint then Exit;
-  if Node^.Index>=dataProcess.RecordCount then Exit;
   with TargetCanvas do
   begin
     Brush.Color := clNone;
-    if dataProcess.Value[Node^.Index, DATA_PARAM_STATUS] = MangaInfo_StatusCompleted then
+    data := Sender.GetNodeData(Node);
+    if data^.status = MangaInfo_StatusCompleted then
       Brush.Color := CL_MNCompletedManga;
-    if miHighlightNewManga.Checked and
-      (dataProcess.ValueInt[Node^.Index, DATA_PARAM_JDN] > (currentJDN - OptionNewMangaTime)) then
+    if miHighlightNewManga.Checked and (data^.jdn > OptionJDNNewMangaTime) then
+    begin
+      if Brush.Color <> clNone then
+        Brush.Color := Brush.Color + CL_MNNewManga
+      else
         Brush.Color := CL_MNNewManga;
-
+    end;
     if Brush.Color <> clNone then
       FillRect(CellRect);
   end;
 end;
 
-procedure TMainForm.vtMangaListGetCursor(Sender: TBaseVirtualTree;
-  var ACursor: TCursor);
+procedure TMainForm.vtMangaListFreeNode(Sender: TBaseVirtualTree; Node: PVirtualNode);
+var
+  data: PMangaInfoData;
 begin
-  ACursor := Sender.Cursor;
+  data := Sender.GetNodeData(Node);
+  Finalize(data^);
 end;
 
 procedure TMainForm.vtMangaListGetHint(Sender: TBaseVirtualTree;
   Node: PVirtualNode; Column: TColumnIndex; var LineBreakStyle: TVTTooltipLineBreakStyle;
   var HintText: String);
 var
-  LPos: Integer;
-  s: String;
+  data: PMangaInfoData;
 begin
-  s := '';
-  LPos := Node^.Index;
-  with dataProcess do
+  data := Sender.GetNodeData(Node);
+  with data^ do
   begin
-    if FilterAllSites then
-      s := s + RS_InfoWebsite + LineEnding +
-        dataProcess.WebsiteName[LPos] + LineEnding + LineEnding;
-    if Trim(Value[LPos, DATA_PARAM_TITLE]) <> '' then
-      s := s + RS_InfoTitle + LineEnding + Value[LPos, DATA_PARAM_TITLE];
-    if Trim(Value[LPos, DATA_PARAM_AUTHORS]) <> '' then
-      s := s + LineEnding + LineEnding + RS_InfoAuthors + LineEnding +
-        Value[LPos, DATA_PARAM_AUTHORS];
-    if Trim(Value[LPos, DATA_PARAM_ARTISTS]) <> '' then
-      s := s + LineEnding + LineEnding + RS_InfoArtists + LineEnding +
-        Value[LPos, DATA_PARAM_ARTISTS];
-    if Trim(Value[LPos, DATA_PARAM_GENRES]) <> '' then
-      s := s + LineEnding + LineEnding + RS_InfoGenres + LineEnding +
-        Value[LPos, DATA_PARAM_GENRES];
-    if Trim(Value[LPos, DATA_PARAM_STATUS]) <> '' then
+    if dataProcess.FilterAllSites then
+      HintText += RS_InfoWebsite + LineEnding + website + LineEnding2;
+    HintText += RS_InfoTitle + LineEnding + title;
+    if authors <> '' then
+      HintText += LineEnding2 + RS_InfoAuthors + LineEnding + authors;
+    if artists <> '' then
+      HintText += LineEnding2 + RS_InfoArtists + LineEnding + artists;
+    if genres <> '' then
+      HintText += LineEnding2 + RS_InfoGenres + LineEnding + genres;
+    if status <> '' then
     begin
-      s := s + LineEnding + LineEnding + RS_InfoStatus + LineEnding;
-      if Value[LPos, DATA_PARAM_STATUS] = '0' then
-        s := s + cbFilterStatus.Items[0]
+      HintText += LineEnding2 + RS_InfoStatus + LineEnding;
+      if status = '0' then
+        HintText += cbFilterStatus.Items[0];
+      if status = '1' then
+        HintText += cbFilterStatus.Items[1]
       else
-        s := s + cbFilterStatus.Items[1];
+        HintText += status;
     end;
-    if Trim(Value[LPos, DATA_PARAM_SUMMARY]) <> '' then
-      s := s + LineEnding + LineEnding + RS_InfoSummary + LineEnding +
-        StringBreaks(dataProcess.Value[LPos, DATA_PARAM_SUMMARY]);
+    if summary <> '' then
+      HintText += LineEnding2 + RS_InfoSummary + LineEnding + summary;
   end;
-  HintText := s;
+end;
+
+procedure TMainForm.vtMangaListGetNodeDataSize(Sender: TBaseVirtualTree;
+  var NodeDataSize: Integer);
+begin
+  NodeDataSize := SizeOf(TMangaInfoData);
 end;
 
 procedure TMainForm.vtMangaListGetText(Sender: TBaseVirtualTree;
   Node: PVirtualNode; Column: TColumnIndex; TextType: TVSTTextType;
   var CellText: String);
+var
+  data: PMangaInfoData;
 begin
-  if Assigned(Node) then
-    CellText :=  Format('%s (%d)', [dataProcess.Value[Node^.Index, DATA_PARAM_TITLE],
-      dataProcess.ValueInt[Node^.Index, DATA_PARAM_NUMCHAPTER]]);
+  data := Sender.GetNodeData(Node);
+  CellText := data^.titleformat;
 end;
 
 procedure TMainForm.InitCheckboxes;
@@ -5123,6 +5139,7 @@ begin
     OptionAutoCheckFavInterval := cbOptionAutoCheckFavInterval.Checked;
     OptionAutoCheckFavIntervalMinutes := seOptionAutoCheckFavIntervalMinutes.Value;
     OptionNewMangaTime := seOptionNewMangaTime.Value;
+    OptionJDNNewMangaTime := currentJDN - OptionNewMangaTime;
     OptionAutoCheckFavDownload := cbOptionAutoCheckFavDownload.Checked;
     OptionAutoCheckFavRemoveCompletedManga := cbOptionAutoCheckFavRemoveCompletedManga.Checked;
     OptionUpdateListNoMangaInfo := cbOptionUpdateListNoMangaInfo.Checked;
@@ -5777,6 +5794,29 @@ begin
     DLManager.Backup;
   if not FavoriteManager.isRunning then
     FavoriteManager.Backup;
+end;
+
+procedure TMainForm.vtMangaListInitNode(Sender: TBaseVirtualTree; ParentNode,
+  Node: PVirtualNode; var InitialStates: TVirtualNodeInitStates);
+var
+  data: PMangaInfoData;
+begin
+  data := Sender.GetNodeData(Node);
+  with data^ do
+  begin
+    link := dataProcess.Value[Node^.Index, DATA_PARAM_LINK];
+    title := dataProcess.Value[Node^.Index, DATA_PARAM_TITLE];
+    authors := dataProcess.Value[Node^.Index, DATA_PARAM_AUTHORS];
+    artists := dataProcess.Value[Node^.Index, DATA_PARAM_ARTISTS];
+    genres := dataProcess.Value[Node^.Index, DATA_PARAM_GENRES];
+    status := dataProcess.Value[Node^.Index, DATA_PARAM_STATUS];
+    numchapter := dataProcess.ValueInt[Node^.Index, DATA_PARAM_NUMCHAPTER];
+    jdn := dataProcess.ValueInt[Node^.Index, DATA_PARAM_JDN];
+    website := dataProcess.WebsiteName[Node^.Index];
+    titleformat := title + ' (' + IntToStr(numchapter) + ')';
+    if dataProcess.FilterAllSites then
+      titleformat += ' [' + website + ']';
+  end;
 end;
 
 procedure TMainForm.vtOptionMangaSiteSelectionChange(Sender : TBaseVirtualTree;

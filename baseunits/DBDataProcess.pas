@@ -64,11 +64,11 @@ type
     function Search(ATitle: String): Boolean;
     function CanFilter(const checkedGenres, uncheckedGenres: TStringList;
       const stTitle, stAuthors, stArtists, stStatus, stSummary: String;
-      const {%H-}minusDay: Cardinal;
+      const {%H-}minusDay: Integer;
       const haveAllChecked, searchNewManga: Boolean): Boolean;
     function Filter(const checkedGenres, uncheckedGenres: TStringList;
       const stTitle, stAuthors, stArtists, stStatus, stSummary: String;
-      const minusDay: Cardinal; const haveAllChecked, searchNewManga: Boolean;
+      const minusDay: Integer; const haveAllChecked, searchNewManga: Boolean;
       useRegExpr: Boolean = False): Boolean;
     function WebsiteLoaded(const AWebsite: String): Boolean;
     function LinkExist(ALink: String): Boolean;
@@ -459,10 +459,7 @@ end;
 function TDBDataProcess.GetWebsiteName(RecIndex: Integer): String;
 begin
   Result:=FWebsite;
-  if FQuery.Active=False then Exit;
-  if DBTempFieldWebsiteIndex>=FQuery.Fields.Count then Exit;
-  if (RecIndex<0) or (RecIndex>FRecordCount) then Exit;
-  if FAttachedSites.Count>0 then
+  if FAllSitesAttached then
     try
       FQuery.RecNo:=RecIndex+1;
       Result:=FQuery.Fields[DBTempFieldWebsiteIndex].AsString;
@@ -944,7 +941,7 @@ end;
 
 function TDBDataProcess.CanFilter(const checkedGenres, uncheckedGenres: TStringList;
   const stTitle, stAuthors, stArtists, stStatus, stSummary: String;
-  const minusDay: Cardinal; const haveAllChecked, searchNewManga: Boolean): Boolean;
+  const minusDay: Integer; const haveAllChecked, searchNewManga: Boolean): Boolean;
 begin
   Result := False;
   if not FQuery.Active then
@@ -965,7 +962,7 @@ end;
 
 function TDBDataProcess.Filter(const checkedGenres, uncheckedGenres: TStringList;
   const stTitle, stAuthors, stArtists, stStatus, stSummary: String;
-  const minusDay: Cardinal; const haveAllChecked, searchNewManga: Boolean;
+  const minusDay: Integer; const haveAllChecked, searchNewManga: Boolean;
   useRegExpr: Boolean): Boolean;
 var
   tsql: String;

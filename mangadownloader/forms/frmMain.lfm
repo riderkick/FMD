@@ -417,9 +417,11 @@ object MainForm: TMainForm
             OnBeforeCellPaint = vtMangaListBeforeCellPaint
             OnChange = vtMangaListChange
             OnColumnDblClick = vtMangaListColumnDblClick
-            OnGetCursor = vtMangaListGetCursor
+            OnFreeNode = vtMangaListFreeNode
             OnGetText = vtMangaListGetText
             OnGetHint = vtMangaListGetHint
+            OnGetNodeDataSize = vtMangaListGetNodeDataSize
+            OnInitNode = vtMangaListInitNode
           end
           object btAbortUpdateList: TSpeedButton
             Left = 104
@@ -6310,6 +6312,9 @@ object MainForm: TMainForm
       FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
       FF00FFFFFF00FFFFFF00FFFFFF00
     }
+    BitmapAdv = {
+      4C6900000000
+    }
   end
   object IconDL: TImageList
     left = 278
@@ -6604,6 +6609,9 @@ object MainForm: TMainForm
       FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
       FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
       FF00FFFFFF00FFFFFF00FFFFFF00
+    }
+    BitmapAdv = {
+      4C6900000000
     }
   end
   object IconMed: TImageList
@@ -6902,6 +6910,9 @@ object MainForm: TMainForm
       FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
       FF00FFFFFF00FFFFFF00FFFFFF00
     }
+    BitmapAdv = {
+      4C6900000000
+    }
   end
   object IconSmall: TImageList
     left = 27
@@ -7004,6 +7015,9 @@ object MainForm: TMainForm
       FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
       FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
       FF00FFFFFF00FFFFFF00FFFFFF00
+    }
+    BitmapAdv = {
+      4C6900000000
     }
   end
   object pmEditURL: TPopupMenu
