@@ -3303,15 +3303,17 @@ begin
     while Assigned(Node) do
     begin
       if dataProcess.DeleteData(Node^.Index) then
+      begin
         Inc(DeleteCount);
-      Node := vtMangaList.GetPreviousSelected(Node);
+        vtMangaList.DeleteNode(Node);
+      end;
+      Node := vtMangaList.GetPreviousSelected(nil);
     end;
     dataProcess.Table.ApplyUpdates;
     dataProcess.Table.SQLTransaction.CommitRetaining;
     if DeleteCount <> 0 then
     begin
       vtMangaList.ClearSelection;
-      vtMangaList.RootNodeCount := dataProcess.RecordCount;
       UpdateVtMangaListFilterStatus;
     end;
   finally
