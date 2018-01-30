@@ -239,7 +239,6 @@ const
   S2SCAN_ID              = 8;
   CENTRALDEMANGAS_ID     = 10;
   EGSCANS_ID             = 11;
-  MANGAAR_ID             = 12;
   ANIMESTORY_ID          = 13;
   LECTUREENLIGNE_ID      = 14;
   SCANMANGA_ID           = 15;
@@ -274,7 +273,7 @@ const
     ('', ''),
     ('CentralDeMangas', 'http://centraldemangas.com.br'),
     ('EGScans', 'http://read.egscans.com'),
-    ('MangaAr', 'http://manga-ar.net'),
+    ('', ''),
     ('AnimeStory', 'http://www.anime-story.com'),
     ('Lecture-En-Ligne', 'http://www.lecture-en-ligne.com'),
     ('ScanManga', 'http://www.scan-manga.com'),
@@ -318,8 +317,6 @@ const
   CENTRALDEMANGAS_BROWSER = '/mangas/list/*';
 
   EGSCANS_BROWSER = '/';
-
-  MANGAAR_BROWSER = '/manga/';
 
   ANIMESTORY_BROWSER = '/mangas/';
 

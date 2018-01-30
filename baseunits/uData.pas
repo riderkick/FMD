@@ -900,8 +900,6 @@ var
 
   {$I includes/ScanManga/names_and_links.inc}
 
-  {$I includes/MangaAr/names_and_links.inc}
-
   {$I includes/CentralDeMangas/names_and_links.inc}
 
   {$I includes/Turkcraft/names_and_links.inc}
@@ -987,9 +985,6 @@ begin
     else
     if MangaSiteID = SCANMANGA_ID then
       Result := ScanMangaGetNamesAndLinks
-    else
-    if MangaSiteID = MANGAAR_ID then
-      Result := MangaArGetNamesAndLinks
     else
     if MangaSiteID = CENTRALDEMANGAS_ID then
       Result := CentralDeMangasGetNamesAndLinks
@@ -1089,8 +1084,6 @@ var
 
   {$I includes/Turkcraft/manga_information.inc}
 
-  {$I includes/MangaAr/manga_information.inc}
-
   {$I includes/CentralDeMangas/manga_information.inc}
 
   {$I includes/MeinManga/manga_information.inc}
@@ -1187,9 +1180,6 @@ begin
     else
     if MangaSiteID = TURKCRAFT_ID then
       Result := GetTurkcraftInfoFromURL
-    else
-    if MangaSiteID = MANGAAR_ID then
-      Result := GetMangaArInfoFromURL
     else
     if MangaSiteID = CENTRALDEMANGAS_ID then
       Result := GetCentralDeMangasInfoFromURL
