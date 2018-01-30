@@ -244,7 +244,6 @@ const
   ANIMESTORY_ID          = 13;
   LECTUREENLIGNE_ID      = 14;
   SCANMANGA_ID           = 15;
-  DM5_ID                 = 16;
   KIVMANGA_ID            = 17;
   MEINMANGA_ID           = 18;
   MANGASPROJECT_ID       = 19;
@@ -280,7 +279,7 @@ const
     ('AnimeStory', 'http://www.anime-story.com'),
     ('Lecture-En-Ligne', 'http://www.lecture-en-ligne.com'),
     ('ScanManga', 'http://www.scan-manga.com'),
-    ('DM5', 'http://www.dm5.com'),
+    ('', ''),
     ('KivManga', 'http://www.kivmanga.com'),
     ('MeinManga', 'http://www.meinmanga.com'),
     ('MangasPROJECT', 'http://mangaproject.xpg.uol.com.br'),
@@ -330,8 +329,6 @@ const
   LECTUREENLIGNE_BROWSER = '/index.php?page=liste&ordre=titre';
 
   SCANMANGA_BROWSER = '/scanlation/liste_des_mangas.html';
-
-  DM5_BROWSER = '/manhua-new';
 
   KIVMANGA_BROWSER = '/';
 

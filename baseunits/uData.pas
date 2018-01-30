@@ -792,8 +792,6 @@ var
 
   {$I includes/CentralDeMangas/directory_page_number.inc}
 
-  {$I includes/DM5/directory_page_number.inc}
-
   {$I includes/JapanShin/directory_page_number.inc}
 
   {$I includes/OneManga/directory_page_number.inc}
@@ -846,9 +844,6 @@ begin
       else
       if MangaSiteID = CENTRALDEMANGAS_ID then
         Result := GetCentralDeMangasDirectoryPageNumber
-      else
-      if MangaSiteID = DM5_ID then
-        Result := GetDM5DirectoryPageNumber
       else
       if MangaSiteID = JAPANSHIN_ID then
         Result := GetJapanShinDirectoryPageNumber
