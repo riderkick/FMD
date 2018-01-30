@@ -36,16 +36,15 @@ const
   MIN_WAIT_TIME = 4000;
 
 function AntiBotActive(const AHTTP: THTTPSendThread): Boolean;
+var
+  s: String;
 begin
   Result := False;
   if AHTTP = nil then Exit;
   if AHTTP.ResultCode < 500 then Exit;
-  with TXQueryEngineHTML.Create(AHTTP.Document) do
-    try
-      Result := XPathString('//input[@name="jschl_vc"]/@value') <> '';
-    finally
-      Free;
-    end;
+  s := StreamToString(AHTTP.Document);
+  Result := Pos('name="jschl_vc"',s) <> 0;
+  s := '';
 end;
 
 function JSGetAnsweredURL(const Source, URL: String; var OMethod, OURL: String;
