@@ -96,16 +96,23 @@ begin
 end;
 
 procedure RegisterModule;
-begin
-  with AddModule do
+
+  function AddWebsiteModule(AWebsite, ARootURL: String): TModuleContainer;
   begin
-    Website := 'MangaZuki';
-    RootURL := 'https://mangazuki.co';
-    OnGetDirectoryPageNumber := @GetDirectoryPageNumber;
-    OnGetNameAndLink := @GetNameAndLink;
-    OnGetInfo := @GetInfo;
-    OnGetPageNumber := @GetPageNumber;
+    Result := AddModule;
+    with Result do begin
+      Website := AWebsite;
+      RootURL := ARootURL;
+      OnGetDirectoryPageNumber := @GetDirectoryPageNumber;
+      OnGetNameAndLink := @GetNameAndLink;
+      OnGetInfo := @GetInfo;
+      OnGetPageNumber := @GetPageNumber;
+    end;
   end;
+
+begin
+  AddWebsiteModule('MangaZuki', 'https://mangazuki.co');
+  AddWebsiteModule('MangaZukiRaws', 'https://raws.mangazuki.co');
 end;
 
 initialization
