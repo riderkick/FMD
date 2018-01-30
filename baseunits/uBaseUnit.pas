@@ -285,7 +285,7 @@ const
     ('MangaREADER_POR', 'http://www.mangareader.com.br'),
     ('Japan-Shin', 'http://www.japan-shin.com'),
     ('', ''),
-    ('Manga-Lib_PL', 'http://www.manga-lib.pl/index.php'),
+    ('', ''),
     ('OneManga', 'http://www.onemanga2.com'),
     ('MangaTown', 'http://www.mangatown.com'),
     ('MangaOku', 'http://www.mangaoku.net'),
