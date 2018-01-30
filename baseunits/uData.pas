@@ -784,8 +784,6 @@ var
   Parser: THTMLParser;
   MangaSiteID: Integer;
 
-  {$I includes/AnimeA/directory_page_number.inc}
-
   {$I includes/VnSharing/directory_page_number.inc}
 
   {$I includes/S2Scans/directory_page_number.inc}
@@ -837,9 +835,6 @@ begin
     begin
       MangaSiteID := GetMangaSiteID(AWebsite);
       Source := TStringList.Create;
-      if MangaSiteID = ANIMEA_ID then
-        Result := GetAnimeADirectoryPageNumber
-      else
       if MangaSiteID = VNSHARING_ID then
         Result := GetVnSharingDirectoryPageNumber
       else
@@ -897,8 +892,6 @@ var
   Source: TStringList;
   Parser: THTMLParser;
   MangaSiteID: Integer;
-
-  {$I includes/AnimeA/names_and_links.inc}
 
   {$I includes/EsMangaHere/names_and_links.inc}
 
@@ -974,9 +967,6 @@ begin
   begin
     MangaSiteID := GetMangaSiteID(AWebsite);
     Source := TStringList.Create;
-    if MangaSiteID = ANIMEA_ID then
-      Result := AnimeAGetNamesAndLinks
-    else
     if MangaSiteID = VNSHARING_ID then
       Result := VnSharingGetNamesAndLinks
     else
@@ -1091,8 +1081,6 @@ var
   MangaSiteID: Integer;
   bmangaInfo: TBaseMangaInfo;
 
-  {$I includes/AnimeA/manga_information.inc}
-
   // due to its weird designs, this will take a lot of work (and time) for it to
   // work property
 
@@ -1184,9 +1172,6 @@ begin
       Exit(INFORMATION_NOT_FOUND);
     mangaInfo.url := FillMangaSiteHost(MangaSiteID, AURL);
     Source := TStringList.Create;
-    if MangaSiteID = ANIMEA_ID then
-      Result := GetAnimeAInfoFromURL
-    else
     if MangaSiteID = VNSHARING_ID then
       Result := GetVnSharingInfoFromURL
     else

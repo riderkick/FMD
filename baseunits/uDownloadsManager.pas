@@ -428,8 +428,6 @@ var
 
   {$I includes/Turkcraft/chapter_page_number.inc}
 
-  {$I includes/AnimeA/chapter_page_number.inc}
-
   {$I includes/LectureEnLigne/chapter_page_number.inc}
 
   {$I includes/JapanShin/chapter_page_number.inc}
@@ -468,9 +466,6 @@ begin
     Result := Modules.GetPageNumber(Self, URL, Task.Container.ModuleId)
   else
   begin
-    if Task.Container.MangaSiteID = ANIMEA_ID then
-      Result := GetAnimeAPageNumber
-    else
     if Task.Container.MangaSiteID = STARKANA_ID then
       Result := GetStarkanaPageNumber
     else
@@ -574,8 +569,6 @@ var
 
   {$I includes/VnSharing/image_url.inc}
 
-  {$I includes/AnimeA/image_url.inc}
-
   {$I includes/LectureEnLigne/image_url.inc}
 
   {$I includes/JapanShin/image_url.inc}
@@ -607,9 +600,6 @@ begin
     Result := Modules.GetImageURL(Self, URL, Task.Container.ModuleId)
   else
   begin
-    if Task.Container.MangaSiteID = ANIMEA_ID then
-      Result := GetAnimeAImageURL
-    else
     if Task.Container.MangaSiteID = VNSHARING_ID then
       Result := GetVnSharingImageURL
     else

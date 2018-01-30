@@ -229,7 +229,6 @@ const
   // common regex to split host/url
   REGEX_HOST = '(?ig)^(\w+://)?([^/]*\.\w+)?(\:\d+)?(/?.*)$';
 
-  ANIMEA_ID              = 0;
   OURMANGA_ID            = 1;
   VNSHARING_ID           = 2;
   TRUYEN18_ID            = 3;
@@ -266,7 +265,7 @@ const
   DYNASTYSCANS_ID        = 34;
 
   WebsiteRoots: array [0..34] of array [0..1] of String = (
-    ('AnimeA', 'http://manga.animea.net'),
+    ('', ''),
     ('OurManga', 'http://www.ourmanga.com'),
     ('VnSharing', 'http://truyen.vnsharing.net'),
     ('Truyen18', 'http://www.truyen18.org'),
@@ -305,9 +304,6 @@ const
 
   ALPHA_LIST    = '#abcdefghijklmnopqrstuvwxyz';
   ALPHA_LIST_UP = '#ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-
-  ANIMEA_BROWSER = '/browse.html?page=';
-  ANIMEA_SKIP = '?skip=1';
 
   VNSHARING_BROWSER = '/DanhSach';
 
