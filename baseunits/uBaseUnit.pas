@@ -250,7 +250,6 @@ const
   MANGASPROJECT_ID       = 19;
   MANGAREADER_POR_ID     = 20;
   JAPANSHIN_ID           = 21;
-  CENTRUMMANGI_PL_ID     = 22;
   MANGALIB_PL_ID         = 23;
   ONEMANGA_ID            = 24;
   MANGATOWN_ID           = 25;
@@ -287,7 +286,7 @@ const
     ('MangasPROJECT', 'http://mangaproject.xpg.uol.com.br'),
     ('MangaREADER_POR', 'http://www.mangareader.com.br'),
     ('Japan-Shin', 'http://www.japan-shin.com'),
-    ('Centrum-Mangi_PL', 'http://centrum-mangi.pl'),
+    ('', ''),
     ('Manga-Lib_PL', 'http://www.manga-lib.pl/index.php'),
     ('OneManga', 'http://www.onemanga2.com'),
     ('MangaTown', 'http://www.mangatown.com'),
@@ -343,8 +342,6 @@ const
   MANGAREADER_POR_BROWSER = '/AJAX/listaMangas/all';
 
   JAPANSHIN_BROWSER = '/lectureenligne/reader/list/';
-
-  CENTRUMMANGI_PL_BROWSER = '/spis/';
 
   MANGALIB_PL_BROWSER = '/manga/directory';
 
