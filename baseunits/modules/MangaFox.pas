@@ -117,7 +117,7 @@ begin
   with AddModule do
   begin
     Website := 'MangaFox';
-    RootURL := 'http://mangafox.la';
+    RootURL := 'http://fanfox.net';
     OnGetNameAndLink := @GetNameAndLink;
     OnGetInfo := @GetInfo;
     OnGetPageNumber := @GetPageNumber;
