@@ -177,8 +177,8 @@
             <Filename Value="..\bin\fmd"/>
           </Target>
           <SearchPaths>
-            <IncludeFiles Value="$(ProjOutDir);..\baseunits\includes\AnimeA;..\baseunits\includes\AnimeStory;..\baseunits\includes\AnimExtremist;..\baseunits\includes\CentralDeMangas;..\baseunits\includes\EGScans;..\baseunits\includes\EsMangaHere;..\baseunits\includes\Kivmanga;..\baseunits\includes\LectureEnLigne;..\baseunits\includes\MangaAr;..\baseunits\includes\S2scans;..\baseunits\includes\ScanManga;..\baseunits\includes\Starkana;..\baseunits\includes\Turkcraft;..\baseunits\includes\VnSharing;..\baseunits\includes\MeinManga;..\baseunits\includes\MangaREADER_POR;..\baseunits\includes\MangasPROJECT"/>
-            <OtherUnitFiles Value="..\baseunits;..\baseunits\animatedgifs;..\baseunits\SimpleException;..\baseunits\modules;..\baseunits\extras;forms"/>
+            <IncludeFiles Value="$(ProjOutDir);..\baseunits\includes\AnimeA;..\baseunits\includes\AnimeStory;..\baseunits\includes\AnimExtremist;..\baseunits\includes\CentralDeMangas;..\baseunits\includes\EGScans;..\baseunits\includes\EsMangaHere;..\baseunits\includes\Kivmanga;..\baseunits\includes\LectureEnLigne;..\baseunits\includes\MangaAr;..\baseunits\includes\S2scans;..\baseunits\includes\ScanManga;..\baseunits\includes\Starkana;..\baseunits\includes\Turkcraft;..\baseunits\includes\VnSharing;..\baseunits\includes\MeinManga;..\baseunits\includes\MangaREADER_POR;..\baseunits\includes\MangasPROJECT;..\3rd\BESEN\src;..\3rd\internettools\data"/>
+            <OtherUnitFiles Value="..\baseunits;..\baseunits\animatedgifs;..\baseunits\SimpleException;..\baseunits\modules;..\baseunits\extras;..\3rd\BESEN\src;..\3rd\internettools\data;..\3rd\internettools\internet;..\3rd\internettools\system;..\3rd\internettools\import\flre\src;forms"/>
             <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
           </SearchPaths>
           <Parsing>
@@ -210,7 +210,19 @@
 -dDOWNLOADER
 -dSELFUPDATE
 -dDEBUGLEAKS
--dMULTILOG"/>
+-dMULTILOG
+-uUSE_BBFLRE_UNICODE
+-dUSE_SOROKINS_REGEX
+-dUSE_BBFULL_UNICODE"/>
+            <OtherDefines Count="7">
+              <Define0 Value="MANGADOWNLOADER"/>
+              <Define1 Value="DOWNLOADER"/>
+              <Define2 Value="SELFUPDATE"/>
+              <Define3 Value="DEBUGLEAKS"/>
+              <Define4 Value="MULTILOG"/>
+              <Define5 Value="USE_SOROKINS_REGEX"/>
+              <Define6 Value="USE_BBFULL_UNICODE"/>
+            </OtherDefines>
             <ExecuteAfter>
               <Command Value="cmd.exe /c copy /y languages\*.po ..\bin\languages\"/>
             </ExecuteAfter>
