@@ -201,8 +201,8 @@ msgid ""
 "<none>\n"
 msgstr ""
 "Завершено\n"
-"Постоянный\n"
-"<none>\n"
+"Онгоинг\n"
+"<нет>\n"
 
 #: frmmain.rs_fmdalreadyrunning
 msgid "Free Manga Downloader already running!"
@@ -306,6 +306,10 @@ msgid ""
 "CBZ\n"
 "PDF\n"
 msgstr ""
+"Как есть\n"
+"ZIP\n"
+"CBZ\n"
+"PDF\n"
 
 #: frmmain.rs_optionfmddoitems
 msgid ""
@@ -381,7 +385,7 @@ msgstr "Ключ:"
 
 #: kissmanga.rs_kissmanga_usegoogledcp
 msgid "Use Google DCP"
-msgstr ""
+msgstr "Использовать Google DCP"
 
 #: mangadex.rs_showalllang
 msgctxt "mangadex.rs_showalllang"
@@ -541,11 +545,11 @@ msgstr "Domdomsoft Manga Downloader"
 #: timportfavorites.edpath.texthint
 msgctxt "TIMPORTFAVORITES.EDPATH.TEXTHINT"
 msgid "Path to the software (e.g. C:\\MangaDownloader)"
-msgstr "Путь к программному обеспечению (например, C: \\ MangaDownloader)"
+msgstr "Путь к программе (пример: C:\\MangaDownloader)"
 
 #: timportfavorites.lbselectsoftware.caption
 msgid "Software:"
-msgstr "Программное обеспечение:"
+msgstr "Программа:"
 
 #: tmainform.btabortupdatelist.hint
 msgid "Abort update list"
@@ -634,7 +638,7 @@ msgstr "Добавить в список загрузки как останов�
 
 #: tmainform.cbfilterstatus.text
 msgid "<none>"
-msgstr "<none>"
+msgstr "<нет>"
 
 #: tmainform.cbonlynew.caption
 msgid "Search only new manga"
@@ -784,7 +788,7 @@ msgstr "Экшен"
 
 #: tmainform.ckfilteraction.hint
 msgid "A work typically depicting fighting, violence, chaos, and fast paced motion."
-msgstr "Работа, обычно изображающая бой, насилие, хаос и быстрое движение."
+msgstr "Работы жанра обычно изображают бой, насилие, хаос и быстрое движение."
 
 #: tmainform.ckfilteradult.caption
 msgid "Adult"
@@ -808,7 +812,7 @@ msgstr "Юмор"
 
 #: tmainform.ckfiltercomedy.hint
 msgid "A dramatic work that is light and often humorous or satirical in tone and that usually contains a happy resolution of the thematic conflict."
-msgstr "Драматическая работа, легкая и часто юмористическая или сатирическая по тону и, обычно, содержащая счастливое разрешение тематического конфликта."
+msgstr "Драматическая работа, легкая и часто юмористическая или сатирическая по тону и, обычно, содержит счастливое разрешение тематического конфликта."
 
 #: tmainform.ckfilterdoujinshi.caption
 msgid "Doujinshi"
@@ -816,7 +820,7 @@ msgstr "Додзинси"
 
 #: tmainform.ckfilterdoujinshi.hint
 msgid "Fan based work inpspired by official manga/anime."
-msgstr "Фанатская работа, вдохновленная официальной мангой/аниме."
+msgstr "Фанатские работы, вдохновленные официальной мангой/аниме."
 
 #: tmainform.ckfilterdrama.caption
 msgid "Drama"
@@ -824,7 +828,7 @@ msgstr "Драма"
 
 #: tmainform.ckfilterdrama.hint
 msgid "A work meant to bring on an emotional response, such as instilling sadness or tension."
-msgstr "Работа, призванная вызвать эмоциональный отклик, например, внушить печаль или напряжение."
+msgstr "Работы жанра призванны вызвать эмоциональный отклик, например, внушить печаль или напряжение."
 
 #: tmainform.ckfilterechi.caption
 msgid "Ecchi"
@@ -918,7 +922,7 @@ msgstr "Зрелые"
 
 #: tmainform.ckfiltermature.hint
 msgid "Contains subject matter which may be too extreme for people under the age of 17. Titles in this category may contain intense violence, blood and gore, sexual content and/or strong language."
-msgstr "Содержит субъекта, который может быть слишком экстремальным для людей в возрасте до 17 лет. Работы в этой категории могут содержать много насилия, крови, сексуального контента и/или резких слов."
+msgstr "Содержит материаллы, которые могут быть слишком экстремальными для несовершеннолетних. Работы в этой категории могут содержать много насилия, крови, сексуального контента и/или резких слов."
 
 #: tmainform.ckfiltermecha.caption
 msgid "Mecha"
@@ -926,7 +930,7 @@ msgstr "Меха"
 
 #: tmainform.ckfiltermecha.hint
 msgid "A work involving and usually concentrating on all types of large robotic machines."
-msgstr "Работа, включающая и обычно концентрирующаяся на всех типах крупных роботизированных машин."
+msgstr "Работы жанра, включают и обычно концентрируются на всех типах крупных роботизированных машин."
 
 #: tmainform.ckfiltermusical.caption
 msgctxt "tmainform.ckfiltermusical.caption"
@@ -1000,7 +1004,7 @@ msgstr "Сёдзе"
 
 #: tmainform.ckfiltershoujo.hint
 msgid "A work intended and primarily written for females. Usually involves a lot of romance and strong character development."
-msgstr "Работа, нацеленная и предназначенная в основном для женщин. Обычно включает в себя много романтики и сильного развития персонажа."
+msgstr "Работы жанра нацелены и предназначены, в основном, для женщин. Обычно включает в себя много романтики и сильного развития персонажа."
 
 #: tmainform.ckfiltershoujoai.caption
 msgid "Shoujo Ai"
@@ -1009,7 +1013,7 @@ msgstr "Сёдзе-ай"
 #: tmainform.ckfiltershoujoai.hint
 msgctxt "TMAINFORM.CKFILTERSHOUJOAI.HINT"
 msgid "Often synonymous with yuri, this can be thought of as somewhat less extreme. \"Girl''s Love\", so to speak."
-msgstr "Часто синонимом Юри, это можно считать несколько менее экстремальным. «Девичья любовь», так сказать."
+msgstr "Часто ассоциируется с Юри, можно считать несколько менее экстремальным. «Девичья любовь», так сказать."
 
 #: tmainform.ckfiltershounen.caption
 msgid "Shounen"
@@ -1018,7 +1022,7 @@ msgstr "Сёнэн"
 #: tmainform.ckfiltershounen.hint
 msgctxt "tmainform.ckfiltershounen.hint"
 msgid "A work intended and primarily written for males. These works usually involve fighting and/or violence."
-msgstr "Работа, нацеленная и предназначенная в основном для мужчин. Обычно эти работы связаны с борьбой и/или насилием."
+msgstr "Работы жанра нацелены и предназначены, в основном, для мужчин. Обычно связано с борьбой и/или насилием."
 
 #: tmainform.ckfiltershounenai.caption
 msgid "Shounen Ai"
@@ -1026,7 +1030,7 @@ msgstr "Сёнэн-ай"
 
 #: tmainform.ckfiltershounenai.hint
 msgid "Often synonymous with yaoi, this can be thought of as somewhat less extreme. \"Boy''s Love\", so to speak"
-msgstr "Часто синонимом яоя, это можно считать несколько менее экстремальным. «Мужская любовь», так сказать"
+msgstr "Часто ассоциируется с Яоем, можно считать несколько менее экстремальным. «Мужская любовь», так сказать"
 
 #: tmainform.ckfiltersliceoflife.caption
 msgid "Slice of Life"
@@ -1097,7 +1101,7 @@ msgstr "Обычно связано с интимными отношениями
 #: tmainform.ckoptionsalwaysstarttaskfromfailedchapters.caption
 msgctxt "tmainform.ckoptionsalwaysstarttaskfromfailedchapters.caption"
 msgid "Always start task from failed chapters"
-msgstr ""
+msgstr "Всегда запускать задачу с неудавшихся частей"
 
 #: tmainform.edcustomgenres.texthint
 msgid "Input custom genres, separated by comma"
@@ -1111,7 +1115,7 @@ msgstr "Поиск загрузок..."
 #: tmainform.edfavoritessearch.texthint
 msgctxt "tmainform.edfavoritessearch.texthint"
 msgid "Search favorites..."
-msgstr "Поиск избранного..."
+msgstr "Поиск в избранном..."
 
 #: tmainform.edfilterartists.texthint
 msgctxt "tmainform.edfilterartists.texthint"
@@ -1416,20 +1420,16 @@ msgstr ""
 "Имя папки манги должно содержать как минимум %MANGA%.\n"
 
 #: tmainform.lboptionmaxparallel.caption
-#, fuzzy
-#| msgid "Number of downloaded tasks at the same time (Max: 8)"
 msgid "Number of downloaded tasks at the same time"
-msgstr "Количество загружаемых задач одновременно (максимум: 8)"
+msgstr "Количество одновременно загружаемых задач"
 
 #: tmainform.lboptionmaxretry.caption
 msgid "Number of retry times if tasks have download problems (-1 = always retry)"
 msgstr "Количество повторных попыток, если задачи имеют проблемы с загрузкой (-1 = всегда повторять)"
 
 #: tmainform.lboptionmaxthread.caption
-#, fuzzy
-#| msgid "Number of downloaded files per task at the same time (Max: 32)"
 msgid "Number of downloaded files per task at the same time"
-msgstr "Количество загружаемых файлов за одну задачу одновременно (максимум: 32)"
+msgstr "Количество одновременно загружаемых файлов на одну задачу"
 
 #: tmainform.lboptionnewmangatime.caption
 msgid "New manga based on  it's update time (days)"
@@ -1468,7 +1468,7 @@ msgstr "Переименовать цифры"
 
 #: tmainform.lboptionretryfailedtask.caption
 msgid "Number of retry times if task failed"
-msgstr ""
+msgstr "Количество попыток при ошибке в задаче"
 
 #: tmainform.lboptionuser.caption
 msgctxt "tmainform.lboptionuser.caption"
@@ -1926,7 +1926,7 @@ msgstr "Прогресс"
 #: tmainform.vtdownload.header.columns[3].text
 msgctxt "tmainform.vtdownload.header.columns[3].text"
 msgid "Transfer rate"
-msgstr "Скоростъ передачи данных"
+msgstr "Скоростъ загрузки"
 
 #: tmainform.vtdownload.header.columns[4].text
 msgctxt "tmainform.vtdownload.header.columns[4].text"
@@ -1982,14 +1982,13 @@ msgid "&Add to queue"
 msgstr "Добавить в очередь"
 
 #: tselectdirectoryform.btok.caption
-#, fuzzy
 msgctxt "tselectdirectoryform.btok.caption"
 msgid "OK"
 msgstr "OK"
 
 #: tselectdirectoryform.caption
 msgid "Select directory"
-msgstr ""
+msgstr "Выбрать папку"
 
 #: tshutdowncounterform.btabort.caption
 msgid "&Abort"
@@ -2023,22 +2022,19 @@ msgid "Transfer to"
 msgstr "Перенести на"
 
 #: ttransferfavoritesform.rball.caption
-#, fuzzy
 msgctxt "ttransferfavoritesform.rball.caption"
 msgid "All"
 msgstr "Все"
 
 #: ttransferfavoritesform.rbinvalid.caption
-#, fuzzy
 msgctxt "ttransferfavoritesform.rbinvalid.caption"
 msgid "Invalid"
-msgstr "Нельзя перенести"
+msgstr "Неподтвержденное"
 
 #: ttransferfavoritesform.rbvalid.caption
-#, fuzzy
 msgctxt "ttransferfavoritesform.rbvalid.caption"
 msgid "Valid"
-msgstr "Можно перенести"
+msgstr "Подтвержденное"
 
 #: ttransferfavoritesform.vtfavs.header.columns[1].text
 msgctxt "ttransferfavoritesform.vtfavs.header.columns[1].text"
@@ -2278,7 +2274,7 @@ msgstr "Найдена новая версия!"
 
 #: uupdatethread.rs_dlghasnewmanga
 msgid "%s has %d new manga(s)"
-msgstr "%s имеет %d новой манги"
+msgstr "%s имеет %d новых частей манги"
 
 #: uupdatethread.rs_gettingdirectory
 msgid "Getting directory"
@@ -2332,4 +2328,3 @@ msgstr "Синхронизацияе данных"
 #: uupdatethread.rs_updatinglist
 msgid "Updating list"
 msgstr "Обновление списка"
-
