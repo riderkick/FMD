@@ -257,7 +257,6 @@ const
   EXTREMEMANGAS_ID       = 30;
   MANGAHOST_ID           = 31;
   MANGAKU_ID             = 32;
-  MANGAAT_ID             = 33;
   DYNASTYSCANS_ID        = 34;
 
   WebsiteRoots: array [0..34] of array [0..1] of String = (
@@ -294,7 +293,7 @@ const
     ('ExtremeMangas', 'http://www.extrememangas.com'),
     ('MangaHost', 'http://br.mangahost.com'),
     ('MangaKu', 'http://mangaku.web.id'),
-    ('MangaAt', 'http://www.mangaat.com'),
+    ('', ''),
     ('Dynasty-Scans', 'http://dynasty-scans.com')
     );
 

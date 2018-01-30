@@ -450,8 +450,6 @@ var
 
   {$I includes/MangaKu/chapter_page_number.inc}
 
-  {$I includes/MangaAt/chapter_page_number.inc}
-
   {$I includes/Dynasty-Scans/chapter_page_number.inc}
 
 begin
@@ -522,9 +520,6 @@ begin
     if Task.Container.MangaSiteID = MANGAKU_ID then
       Result := GetMangaKuPageNumber
     else
-    if Task.Container.MangaSiteID = MANGAAT_ID then
-      Result := GetMangaAtPageNumber
-    else
     if Task.Container.MangaSiteID = DYNASTYSCANS_ID then
       Result := GetDynastyScansPageNumber;
   end;
@@ -579,8 +574,6 @@ var
   {$I includes/UnixManga/image_url.inc}
 
   {$I includes/MangaHost/image_url.inc}
-
-  {$I includes/MangaAt/image_url.inc}
 
 begin
   Result := False;
@@ -653,10 +646,7 @@ begin
       Result := GetUnixMangaImageURL
     else
     if Task.Container.MangaSiteID = MANGAHOST_ID then
-      Result := GetMangaHostImageURL
-    else
-    if Task.Container.MangaSiteID = MANGAAT_ID then
-      Result := GetMangaAtImageURL;
+      Result := GetMangaHostImageURL;
   end;
 end;
 
