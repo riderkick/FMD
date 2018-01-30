@@ -237,7 +237,6 @@ const
   ESMANGAHERE_ID         = 6;
   ANIMEEXTREMIST_ID      = 7;
   S2SCAN_ID              = 8;
-  IMANHUA_ID             = 9;
   CENTRALDEMANGAS_ID     = 10;
   EGSCANS_ID             = 11;
   MANGAAR_ID             = 12;
@@ -272,7 +271,7 @@ const
     ('ESMangaHere', 'http://es.mangahere.co'),
     ('AnimExtremist', 'http://www.animextremist.com'),
     ('S2Scans', 'http://reader.s2smanga.com'),
-    ('imanhua', 'http://www.imanhua.com'),
+    ('', ''),
     ('CentralDeMangas', 'http://centraldemangas.com.br'),
     ('EGScans', 'http://read.egscans.com'),
     ('MangaAr', 'http://manga-ar.net'),
@@ -315,8 +314,6 @@ const
   ESMANGAHERE_BROWSER = '/mangalist/';
 
   ANIMEEXTREMIST_BROWSER = '/mangas.htm?ord=todos';
-
-  IMANHUA_BROWSER = '/all.html';
 
   CENTRALDEMANGAS_BROWSER = '/mangas/list/*';
 

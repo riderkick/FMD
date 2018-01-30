@@ -904,8 +904,6 @@ var
 
   {$I includes/CentralDeMangas/names_and_links.inc}
 
-  {$I includes/Imanhua/names_and_links.inc}
-
   {$I includes/Turkcraft/names_and_links.inc}
 
   {$I includes/Starkana/names_and_links.inc}
@@ -995,9 +993,6 @@ begin
     else
     if MangaSiteID = CENTRALDEMANGAS_ID then
       Result := CentralDeMangasGetNamesAndLinks
-    else
-    if MangaSiteID = IMANHUA_ID then
-      Result := imanhuaGetNamesAndLinks
     else
     if MangaSiteID = TURKCRAFT_ID then
       Result := TurkcraftGetNamesAndLinks
