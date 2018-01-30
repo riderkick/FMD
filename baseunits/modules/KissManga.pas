@@ -198,6 +198,13 @@ var
     end;
   end;
 
+  procedure testkeyivlast;
+  begin
+    if testkeyiv(kissmangakey, kissmangaiv) then Exit;
+    SendLog('KissManga, failed to decrypt. chko1='+chko1+'; chko2= '+chko2+'; iv='+civ+'; '+ AURL, DownloadThread.Task.Container.PageLinks);
+    DownloadThread.Task.Container.PageLinks.Clear;
+  end;
+
 begin
   Result := False;
   if DownloadThread = nil then Exit;
@@ -268,15 +275,10 @@ begin
             if not testkeyiv(chko2, civ) then
             if not testkeyiv(chko1+chko2, civ) then
             if not testkeyiv(chko2+chko1, civ) then
-            if not testkeyiv(kissmangakey, kissmangaiv) then
-              PageLinks.Clear;
+              testkeyivlast;
           end
           else
-            if not testkeyiv(kissmangakey, kissmangaiv) then
-            begin
-              SendLog('KissManga, failed to decrypt. chko1='+chko1+'; chko2= '+chko2+'; iv='+civ+'; '+AURL, PageLinks);
-              PageLinks.Clear;
-            end;
+            testkeyivlast;
           if PageLinks.Count <> 0 then
           begin
             for i := 0 to PageLinks.Count - 1 do
