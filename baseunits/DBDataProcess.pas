@@ -35,7 +35,9 @@ type
     FSQLSelect: String;
     FFilterSQL: String;
     FLinks: TStringList;
+    FRecNo: Integer;
     function GetLinkCount: Integer;
+    procedure ResetRecNo(Dataset: TDataSet);
   protected
     procedure CreateTable;
     procedure ConvertNewTable;
@@ -302,6 +304,11 @@ begin
     Result := 0;
 end;
 
+procedure TDBDataProcess.ResetRecNo(Dataset: TDataSet);
+begin
+  FRecNo := 0;
+end;
+
 procedure TDBDataProcess.CreateTable;
 begin
   if FConn.Connected then
@@ -478,7 +485,17 @@ begin
     Result:='';
   if FQuery.Active=False then Exit;
   try
-    FQuery.RecNo:=RecIndex+1;
+    if FRecNo<>RecIndex then
+    begin
+      if FRecNo=RecIndex+1 then
+        FQuery.Prior
+      else
+      if FRecNo=RecIndex-1 then
+        FQuery.Next
+      else
+        FQuery.RecNo:=RecIndex+1;
+      FRecNo:=RecIndex;
+    end;
     Result:=FQuery.Fields[FieldIndex].AsString;
   except
   end;
@@ -491,7 +508,17 @@ begin
   if not (FieldIndex in [DATA_PARAM_NUMCHAPTER,DATA_PARAM_JDN]) then
     Exit;
   try
-    FQuery.RecNo:=RecIndex+1;
+    if FRecNo<>RecIndex then
+    begin
+      if FRecNo=RecIndex+1 then
+        FQuery.Prior
+      else
+      if FRecNo=RecIndex-1 then
+        FQuery.Next
+      else
+        FQuery.RecNo:=RecIndex+1;
+      FRecNo:=RecIndex;
+    end;
     Result:=FQuery.Fields[FieldIndex].AsInteger;
   except
   end;
@@ -601,6 +628,13 @@ begin
   FFilterApplied := False;
   FFilterSQL := '';
   FAllSitesAttached := False;
+
+  ResetRecNo(nil);
+  FQuery.AfterOpen := @ResetRecNo;
+  FQuery.AfterInsert := @ResetRecNo;
+  FQuery.AfterDelete := @ResetRecNo;
+  FQuery.AfterEdit := @ResetRecNo;
+  FQuery.AfterRefresh := @ResetRecNo;
 end;
 
 destructor TDBDataProcess.Destroy;
