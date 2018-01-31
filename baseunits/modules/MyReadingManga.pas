@@ -10,21 +10,13 @@ uses
 
 implementation
 
-uses Cloudflare, httpsendthread;
-
-var
-  myreadingmangacf: TCFProps;
-
-function GETWithCookie(const AHTTP: THTTPSendThread; const AURL: String): Boolean;
-begin
-  Result := Cloudflare.GETCF(AHTTP, AURL, myreadingmangacf)
-end;
+uses httpsendthread;
 
 function GetDirectoryPageNumber(const MangaInfo: TMangaInformation; var Page: Integer; const WorkPtr: Integer;
   const Module: TModuleContainer): Integer;
 begin
   Result := NET_PROBLEM;
-  if GETWithCookie(MangaInfo.FHTTP, Module.RootURL) then begin
+  if MangaInfo.FHTTP.GET(Module.RootURL) then begin
     Result := NO_ERROR;
     Page := StrToIntDef(XPathString('//*[contains(@class,"archive-pagination")]/ul/li[last()-1]', MangaInfo.FHTTP.Document), 1);
   end;
@@ -35,7 +27,7 @@ function GetNameAndLink(const MangaInfo: TMangaInformation;
   const Module: TModuleContainer): Integer;
 begin
   Result := NET_PROBLEM;
-  if GETWithCookie(MangaInfo.FHTTP, Module.RootURL + '/page/' + IncStr(AURL) + '/') then
+  if MangaInfo.FHTTP.GET(Module.RootURL + '/page/' + IncStr(AURL) + '/') then
   begin
     Result := NO_ERROR;
     XPathHREFAll('//h2[@class="entry-title"]/a', MangaInfo.FHTTP.Document, ALinks, ANames);
@@ -52,7 +44,7 @@ begin
   with MangaInfo.mangaInfo, MangaInfo.FHTTP do
   begin
     url := MaybeFillHost(Module.RootURL, AURL);
-    if GETWithCookie(MangaInfo.FHTTP, url) then begin
+    if GET(url) then begin
       Result := NO_ERROR;
       with TXQueryEngineHTML.Create(Document) do try
         title := XPathString('//*[contains(@class,"entry-content")]/h2');
@@ -86,7 +78,7 @@ begin
   begin
     PageLinks.Clear;
     PageNumber := 0;
-    if GETWithCookie(DownloadThread.FHTTP, MaybeFillHost(Module.RootURL, AURL)) then
+    if GET(MaybeFillHost(Module.RootURL, AURL)) then
     begin
       Result := True;
       XPathStringAll('//*[contains(@class,"entry-content")]//div//img/@src', Document, PageLinks);
@@ -109,10 +101,6 @@ begin
 end;
 
 initialization
-  myreadingmangacf := TCFProps.Create;
   RegisterModule;
-
-finalization
-  myreadingmangacf.Free;
 
 end.

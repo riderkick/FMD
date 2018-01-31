@@ -6,19 +6,12 @@ interface
 
 uses
   Classes, SysUtils, WebsiteModules, uData, uBaseUnit, uDownloadsManager,
-  XQueryEngineHTML, httpsendthread, RegExpr, synautil, Cloudflare;
+  XQueryEngineHTML, httpsendthread, RegExpr, synautil;
 
 implementation
 
 const
   dirurl = '/projects/';
-var
-  goscf: TCFProps;
-
-function GETWithCookie(const AHTTP: THTTPSendThread; const AURL: String): Boolean;
-begin
-  Result := Cloudflare.GETCF(AHTTP, AURL, goscf);
-end;
 
 function GetNameAndLink(const MangaInfo: TMangaInformation;
   const ANames, ALinks: TStringList; const AURL: String;
@@ -28,7 +21,7 @@ var
 begin
   Result := NET_PROBLEM;
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
-  if GETWithCookie(MangaInfo.FHTTP, Module.RootURL + dirurl) then begin
+  if MangaInfo.FHTTP.GET(Module.RootURL + dirurl) then begin
     Result := NO_ERROR;
     with TXQueryEngineHTML.Create(MangaInfo.FHTTP.Document) do
       try
@@ -63,7 +56,7 @@ begin
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
   with MangaInfo.FHTTP, MangaInfo.mangaInfo do begin
     url := AppendURLDelim(FillHost(Module.RootURL, AURL));
-    if GETWithCookie(MangaInfo.FHTTP, url) then begin
+    if MangaInfo.FHTTP.GET(url) then begin
       Result := NO_ERROR;
       query := TXQueryEngineHTML.Create(Document);
       try
@@ -106,7 +99,7 @@ begin
     PageNumber := 0;
     s := ReplaceRegExpr('/\?\w+.*$', AURL, '/', False);
     s := AppendURLDelim(FillHost(Module.RootURL, s)) + '?chapter_view=fullstrip';
-    if GETWithCookie(DownloadThread.FHTTP, s) then begin
+    if DownloadThread.FHTTP.GET(s) then begin
       Result := True;
       with TXQueryEngineHTML.Create(Document) do
         try
@@ -135,11 +128,6 @@ begin
   with DownloadThread.Task.Container, DownloadThread.FHTTP do
     if CurrentDownloadChapterPtr < ChapterLinks.Count then begin
       Headers.Values['Referer'] := ' ' + FillHost(Module.RootURL, ChapterLinks[CurrentDownloadChapterPtr]);
-      Cookies.Text := goscf.Cookies;
-      if (goscf.Cookies = '') or (HEAD(AURL) and (ResultCode = 503)) then
-        Result := GETWithCookie(DownloadThread.FHTTP, Module.RootURL)
-      else
-        Result := True;
     end;
 end;
 
@@ -157,10 +145,6 @@ begin
 end;
 
 initialization
-  goscf := TCFProps.Create;
   RegisterModule;
-
-finalization
-  goscf.Free;
 
 end.

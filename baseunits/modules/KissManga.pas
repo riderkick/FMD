@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, WebsiteModules, uData, uBaseUnit, uDownloadsManager,
-  XQueryEngineHTML, httpsendthread, BaseCrypto, Cloudflare, GoogleDCP, RegExpr,
+  XQueryEngineHTML, httpsendthread, BaseCrypto, GoogleDCP, RegExpr,
   synautil;
 
 implementation
@@ -16,9 +16,6 @@ const
   readcomiconlinedirurl = '/ComicList/Newest';
 
 var
-  kissmangacf: TCFProps;
-  readcomiconlinecf: TCFProps;
-
   kissmangaiv: String ='a5e8e2e9c2721be0a84ad660c472c1f3';
   kissmangakey: String ='mshsdf832nsdbash20asdmnasdbasd612basd';
   kissmangausegoogledcp: Boolean = True;
@@ -31,17 +28,9 @@ resourcestring
 function GETWithCookie(const AHTTP: THTTPSendThread; const AURL: String;
   const Module: TModuleContainer): Boolean;
 begin
-  if Module.Website = 'KissManga' then begin
-    if kissmangausegoogledcp then
-    begin
-      SetGoogleDCP(AHTTP);
-      Result := AHTTP.GET(AURL);
-    end
-    else
-      Result := Cloudflare.GETCF(AHTTP, AURL, kissmangacf);
-  end
-  else if Module.Website = 'ReadComicOnline' then
-    Result := Cloudflare.GETCF(AHTTP, AURL, readcomiconlinecf);
+  if (Module.Website = 'KissManga') and kissmangausegoogledcp then
+    SetGoogleDCP(AHTTP);
+  Result := AHTTP.GET(AURL);
 end;
 
 function GetDirectoryPageNumber(const MangaInfo: TMangaInformation;
@@ -322,12 +311,8 @@ begin
 end;
 
 initialization
-  kissmangacf := TCFProps.Create;
-  readcomiconlinecf := TCFProps.Create;
   RegisterModule;
 
 finalization
-  kissmangacf.Free;
-  readcomiconlinecf.Free;
 
 end.

@@ -10,8 +10,8 @@ unit WebsiteModules;
 interface
 
 uses
-  Classes, SysUtils, uData, uDownloadsManager, FMDOptions, httpsendthread,
-  RegExpr;
+  Classes, SysUtils, uData, uDownloadsManager, FMDOptions, httpsendthread, LazLogger,
+  Cloudflare, RegExpr;
 
 const
   MODULE_NOT_FOUND = -1;
@@ -72,6 +72,11 @@ type
   private
     FID: Integer;
     FTotalDirectory: Integer;
+    FCloudflareCF: TCFProps;
+    FCloudflareEnabled: Boolean;
+    procedure SetCloudflareEnabled(AValue: Boolean);
+    procedure CheckCloudflareEnabled(const AHTTP: THTTPSendThread);
+    function CloudflareHTTPRequest(const AHTTP: THTTPSendThread; const Method, URL: String; const Response: TObject = nil): Boolean;
     procedure SetTotalDirectory(AValue: Integer);
     procedure AddOption(const AOptionType: TWebsiteOptionType;
       const ABindValue: Pointer; const AName: String; const ACaption: PString);
@@ -116,6 +121,7 @@ type
       const ACaption: PString);
     procedure AddOptionComboBox(const ABindValue: PInteger; const AName: String;
       const ACaption, AItems: PString);
+    property CloudflareEnabled: Boolean read FCloudflareEnabled write SetCloudflareEnabled;
   end;
 
   { TWebsiteModules }
@@ -267,6 +273,32 @@ begin
       Inc(i);
 end;
 
+procedure TModuleContainer.SetCloudflareEnabled(AValue: Boolean);
+begin
+  if FCloudflareEnabled = AValue then Exit;
+  FCloudflareEnabled := AValue;
+  if FCloudflareEnabled then
+    FCloudflareCF := TCFProps.Create
+  else
+  begin
+    FCloudflareCF.Free;
+    FCloudflareCF := nil;
+  end;
+end;
+
+procedure TModuleContainer.CheckCloudflareEnabled(const AHTTP: THTTPSendThread);
+begin
+  if FCloudflareEnabled then
+    if AHTTP.OnHTTPRequest <> @CloudflareHTTPRequest then
+      AHTTP.OnHTTPRequest := @CloudflareHTTPRequest;
+end;
+
+function TModuleContainer.CloudflareHTTPRequest(const AHTTP: THTTPSendThread;
+  const Method, URL: String; const Response: TObject): Boolean;
+begin
+  Result := Cloudflare.GETCF(AHTTP, URL, FCloudflareCF);
+end;
+
 procedure TModuleContainer.SetTotalDirectory(AValue: Integer);
 var
   i: Integer;
@@ -293,12 +325,15 @@ begin
   DynamicPageLink := False;
   TotalDirectory := 1;
   CurrentDirectoryIndex := 0;
+  CloudflareEnabled := True;
 end;
 
 destructor TModuleContainer.Destroy;
 begin
   SetLength(TotalDirectoryPage, 0);
   SetLength(OptionList,0);
+  if Assigned(FCloudflareCF) then
+    FCloudflareCF.Free;
   inherited Destroy;
 end;
 
@@ -488,7 +523,10 @@ begin
   if (ModuleId < 0) or (ModuleId >= FModuleList.Count) then Exit;
   with TModuleContainer(FModuleList[ModuleId]) do
     if Assigned(OnGetDirectoryPageNumber) then
+    begin
+      CheckCloudflareEnabled(MangaInfo.FHTTP);
       Result := OnGetDirectoryPageNumber(MangaInfo, Page, WorkPtr,TModuleContainer(FModuleList[ModuleId]));
+    end;
 end;
 
 function TWebsiteModules.GetDirectoryPageNumber(
@@ -520,9 +558,12 @@ function TWebsiteModules.GetInfo(const MangaInfo: TMangaInformation;
 begin
   Result := MODULE_NOT_FOUND;
   if (ModuleId < 0) or (ModuleId >= FModuleList.Count) then Exit;
-  if Assigned(TModuleContainer(FModuleList[ModuleId]).OnGetInfo) then
-    Result := TModuleContainer(FModuleList[ModuleId]).OnGetInfo(
-      MangaInfo, AURL, TModuleContainer(FModuleList[ModuleId]));
+  with TModuleContainer(FModuleList[ModuleId]) do
+    if Assigned(OnGetInfo) then
+    begin
+      CheckCloudflareEnabled(MangaInfo.FHTTP);
+      Result := OnGetInfo(MangaInfo, AURL, TModuleContainer(FModuleList[ModuleId]));
+    end;
 end;
 
 function TWebsiteModules.GetInfo(const MangaInfo: TMangaInformation;

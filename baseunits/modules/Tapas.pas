@@ -6,21 +6,12 @@ interface
 
 uses
   Classes, SysUtils, WebsiteModules, uData, uBaseUnit, uDownloadsManager,
-  XQueryEngineHTML, httpsendthread, Cloudflare, RegExpr;
+  XQueryEngineHTML, httpsendthread, RegExpr;
 
 implementation
 
 const
   dirurl = '/comics?sortType=TITLE&browse=ALL';
-  
-var
-  tapascf: TCFProps;
-
-function GETWithCookie(const AHTTP: THTTPSendThread; const AURL: String):
- Boolean;
-begin
-  Result := Cloudflare.GETCF(AHTTP, AURL, tapascf)
-end;
 
 function GetDirectoryPageNumber(const MangaInfo: TMangaInformation; var Page: Integer; const WorkPtr: Integer;
   const Module: TModuleContainer): Integer;
@@ -74,7 +65,7 @@ var
 begin
   Result := NET_PROBLEM;
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
-  if GETWithCookie(MangaInfo.FHTTP, FillHost(Module.RootURL, AURL)) then begin
+  if MangaInfo.FHTTP.GET(FillHost(Module.RootURL, AURL)) then begin
     Result := NO_ERROR;
     with MangaInfo.mangaInfo, TXQueryEngineHTML.Create(MangaInfo.FHTTP.Document) do
       try
@@ -154,10 +145,6 @@ begin
 end;
 
 initialization
-  tapascf := TCFProps.Create;
   RegisterModule;
-
-finalization
-  tapascf.Free;
 
 end.

@@ -6,12 +6,9 @@ interface
 
 uses
   Classes, SysUtils, WebsiteModules, uData, uBaseUnit, uDownloadsManager,
-  XQueryEngineHTML, Cloudflare;
+  XQueryEngineHTML;
 
 implementation
-
-var
-  cf: TCFProps;
 
 const
   dirurl = '/manga';
@@ -22,7 +19,7 @@ begin
   Result := NET_PROBLEM;
   Page := 1;
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
-  if MangaInfo.FHTTP.GETCF(Module.RootURL + dirurl, cf) then begin
+  if MangaInfo.FHTTP.GET(Module.RootURL + dirurl) then begin
     Result := NO_ERROR;
     Page := XPathCount('//div[@class="pagination"]/a', MangaInfo.FHTTP.Document);
   end;
@@ -33,7 +30,7 @@ function GetNameAndLink(const MangaInfo: TMangaInformation;
   const Module: TModuleContainer): Integer;
 begin
   Result := NET_PROBLEM;
-  if MangaInfo.FHTTP.GETCF(Module.RootURL + dirurl + '/page:' + IncStr(AURL), cf) then
+  if MangaInfo.FHTTP.GET(Module.RootURL + dirurl + '/page:' + IncStr(AURL)) then
   begin
     Result := NO_ERROR;
     XPathHREFAll('//div[@id="mangadirectory"]/div[@class="mangacontainer"]/a[2]', MangaInfo.FHTTP.Document, ALinks, ANames);
@@ -48,7 +45,7 @@ begin
   with MangaInfo.mangaInfo, MangaInfo.FHTTP do
   begin
     url := MaybeFillHost(Module.RootURL, AURL);
-    if GETCF(url, cf) then begin
+    if GET(url) then begin
       Result := NO_ERROR;
       with TXQueryEngineHTML.Create(Document) do try
         coverLink := XPathString('//img[@class="manga-cover"]/resolve-uri(@src)');
@@ -82,18 +79,12 @@ begin
     u := RemoveURLDelim(MaybeFillHost(Module.RootURL, AURL));
     if RightStr(u, 2) = '/1' then Delete(u, Length(u)-2, 2);
     u += '/0/full';
-    if GETCF(u, cf) then
+    if GET(u) then
     begin
       Result := True;
       XPathStringAll('//*[@id="showchaptercontainer"]//img/resolve-uri(@src)', Document, PageLinks);
     end;
   end;
-end;
-
-function DownloadImage(const DownloadThread: TDownloadThread;
-  const AURL: String; const Module: TModuleContainer): Boolean;
-begin
-  Result := DownloadThread.FHTTP.GETCF(AURL, cf);
 end;
 
 procedure RegisterModule;
@@ -106,15 +97,10 @@ begin
     OnGetNameAndLink := @GetNameAndLink;
     OnGetInfo := @GetInfo;
     OnGetPageNumber := @GetPageNumber;
-    OnDownloadImage := @DownloadImage;
   end;
 end;
 
 initialization
-  cf := TCFProps.Create;
   RegisterModule;
-
-finalization
-  cf.Free;
 
 end.

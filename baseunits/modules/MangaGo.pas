@@ -6,20 +6,12 @@ interface
 
 uses
   Classes, SysUtils, WebsiteModules, uData, uBaseUnit, uDownloadsManager,
-  XQueryEngineHTML, httpsendthread, Cloudflare;
+  XQueryEngineHTML, httpsendthread;
 
 implementation
 
-var
-  mangagocf: TCFProps;
-
 const
   dirurl= '/list/directory/all/';
-
-function GETWithCookie(const AHTTP: THTTPSendThread; const AURL: String): Boolean;
-begin
-  Result := Cloudflare.GETCF(AHTTP, AURL, mangagocf)
-end;
 
 function GetDirectoryPageNumber(const MangaInfo: TMangaInformation;
   var Page: Integer; const WorkPtr: Integer; const Module: TModuleContainer): Integer;
@@ -27,7 +19,7 @@ begin
   Result := NET_PROBLEM;
   Page := 1;
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
-  if GETWithCookie(MangaInfo.FHTTP, Module.RootURL + dirurl + '1/') then
+  if Mangainfo.FHTTP.GET(Module.RootURL + dirurl + '1/') then
   begin
     Result := NO_ERROR;
     Page := StrToIntDef(XPathString('count(//div[@class="pagination"]//ol/li//select/option)', MangaInfo.FHTTP.Document), 1);
@@ -39,7 +31,7 @@ function GetNameAndLink(const MangaInfo: TMangaInformation;
   const Module: TModuleContainer): Integer;
 begin
   Result := NET_PROBLEM;
-  if GETWithCookie(MangaInfo.FHTTP, Module.RootURL + dirurl + IncStr(AURL) + '/') then
+  if MangaInfo.FHTTP.GET(Module.RootURL + dirurl + IncStr(AURL) + '/') then
   begin
     Result := NO_ERROR;
     XPathHREFtitleAll('//div[@class="directory_left"]//li/h3/a', MangaInfo.FHTTP.Document, ALinks, ANames);
@@ -54,7 +46,7 @@ begin
   with MangaInfo.mangaInfo, MangaInfo.FHTTP do
   begin
     url := MaybeFillHost(Module.RootURL, AURL);
-    if GETWithCookie(MangaInfo.FHTTP, url) then
+    if GET(url) then
     begin
       Result := NO_ERROR;
       with TXQueryEngineHTML.Create(Document) do
@@ -87,7 +79,7 @@ begin
     PageLinks.Clear;
     PageNumber := 0;
     rurl := MaybeFillHost(Module.RootURL, AURL);
-    if GETWithCookie(DownloadThread.FHTTP, rurl) then
+    if GET(rurl) then
     begin
       Result := True;
       s := XPathString('//script[contains(.,"imgsrcs")]', Document);
@@ -130,10 +122,6 @@ begin
 end;
 
 initialization
-  mangagocf := TCFProps.Create;
   RegisterModule;
-
-finalization
-  mangagocf.Free;
 
 end.

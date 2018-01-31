@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, math, WebsiteModules, uData, uBaseUnit, uDownloadsManager,
-  XQueryEngineHTML, httpsendthread, Cloudflare, synautil, RegExpr;
+  XQueryEngineHTML, httpsendthread, synautil, RegExpr;
 
 implementation
 
@@ -19,22 +19,13 @@ const
   mangaurl = '/biblioteca/mangas/';
   imgurl = 'https://img1.tumangaonline.com';
 
-var
-  tumangacf: TCFProps;
-
-function GETWithCookie(const AHTTP: THTTPSendThread; const AURL: String):
- Boolean;
-begin
-  Result := Cloudflare.GETCF(AHTTP, AURL, tumangacf);
-end;
-
 function GetDirectoryPageNumber(const MangaInfo: TMangaInformation; var Page: Integer; const WorkPtr: Integer;
   const Module: TModuleContainer): Integer;
 begin
   Result := NET_PROBLEM;
   Page := 1;
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
-  if GETWithCookie(MangaInfo.FHTTP, Module.RootURL + dirurl + '1&page=1') then
+  if MangaInfo.FHTTP.GET(Module.RootURL + dirurl + '1&page=1') then
   begin
     Result := NO_ERROR;
     with TXQueryEngineHTML.Create(MangaInfo.FHTTP.Document) do
@@ -54,7 +45,7 @@ var
 begin
   Result := NET_PROBLEM;
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
-  if GETWithCookie(MangaInfo.FHTTP, Module.RootURL + dirurl + perpage + '&page=' + IncStr(AURL)) then
+  if MangaInfo.FHTTP.GET(Module.RootURL + dirurl + perpage + '&page=' + IncStr(AURL)) then
   begin
     Result := NO_ERROR;
     with TXQueryEngineHTML.Create(MangaInfo.FHTTP.Document) do
@@ -85,7 +76,7 @@ begin
     url := FillHost(Module.RootURL, AURL);
     mangaid := RegExprGetMatch('/\w+/(\d+)/\w+', url, 1);
     if mangaid = '' then Exit;
-    if GETWithCookie(MangaInfo.FHTTP, Module.RootURL + apiurlmangas + '/' + mangaid) then
+    if GET(Module.RootURL + apiurlmangas + '/' + mangaid) then
     begin
       Result := NO_ERROR;
       with TXQueryEngineHTML.Create(Document) do
@@ -138,7 +129,7 @@ begin
   begin
     PageLinks.Clear;
     PageNumber := 0;
-    if GETWithCookie(DownloadThread.FHTTP, FillHost(Module.RootURL, AURL)) then
+    if GET(FillHost(Module.RootURL, AURL)) then
     begin
       Result := True;
       with TXQueryEngineHTML.Create(Document) do
@@ -154,14 +145,6 @@ begin
   end;
 end;
 
-function DownloadImageWithCookie(const DownloadThread: TDownloadThread;
-  const AURL: String; const Module: TModuleContainer): Boolean;
-begin
-  Result := False;
-  if DownloadThread = nil then Exit;
-  Result := GETWithCookie(DownloadThread.FHTTP, AURL);
-end;
-
 procedure RegisterModule;
 begin
   with AddModule do begin
@@ -173,15 +156,10 @@ begin
     OnGetNameAndLink := @GetNameAndLink;
     OnGetInfo := @GetInfo;
     OnGetPageNumber := @GetPageNumber;
-    OnDownloadImage := @DownloadImageWithCookie;
   end;
 end;
 
 initialization
-  tumangacf := TCFProps.Create;
   RegisterModule;
-
-finalization
-  tumangacf.Free;
 
 end.
