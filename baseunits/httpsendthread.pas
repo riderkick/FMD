@@ -46,6 +46,8 @@ type
 
   THTTPMethodEvent = procedure(const AHTTP: THTTPSendThread; var Method, URL: String);
 
+  THTTPRequestEvent = function(const AHTTP: THTTPSendThread; const Method, URL: String; const Response: TObject = nil): Boolean of object;
+
   { THTTPSendThread }
 
   THTTPSendThread = class(THTTPSend)
@@ -62,6 +64,7 @@ type
     procedure OnOwnerTerminate(Sender: TObject);
   protected
     procedure ParseCookiesExpires;
+    function InternalHTTPRequest(const Method, URL: String; const Response: TObject = nil): Boolean;
   public
     constructor Create(AOwner: TBaseThread = nil);
     destructor Destroy; override;
@@ -90,6 +93,7 @@ type
   public
     BeforeHTTPMethod: THTTPMethodEvent;
     AfterHTTPMethod: THTTPMethodEvent;
+    OnHTTPRequest: THTTPRequestEvent;
     property LastURL: String read FURL;
   end;
 
@@ -364,6 +368,15 @@ begin
     end;
 end;
 
+function THTTPSendThread.InternalHTTPRequest(const Method, URL: String;
+  const Response: TObject): Boolean;
+begin
+  if Assigned(OnHTTPRequest) then
+    Result := OnHTTPRequest(Self, Method, URL, Response)
+  else
+    Result := HTTPRequest(Method, URL, Response);
+end;
+
 constructor THTTPSendThread.Create(AOwner: TBaseThread);
 begin
   inherited Create;
@@ -388,6 +401,7 @@ begin
   end;
   BeforeHTTPMethod := nil;
   AfterHTTPMethod := nil;
+  OnHTTPRequest := nil;
   EnterCriticalsection(CS_ALLHTTPSendThread);
   try
     ALLHTTPSendThread.Add(Self);
@@ -515,12 +529,12 @@ end;
 
 function THTTPSendThread.HEAD(const URL: String; const Response: TObject): Boolean;
 begin
-  Result := HTTPRequest('HEAD', URL, Response);
+  Result := InternalHTTPRequest('HEAD', URL, Response);
 end;
 
 function THTTPSendThread.GET(const URL: String; const Response: TObject): Boolean;
 begin
-  Result := HTTPRequest('GET', URL, Response);
+  Result := InternalHTTPRequest('GET', URL, Response);
 end;
 
 function THTTPSendThread.POST(const URL: String; const POSTData: String; const Response: TObject): Boolean;
@@ -531,7 +545,7 @@ begin
   end;
   if (MimeType = 'text/html') or (MimeType = '') then
     MimeType := 'application/x-www-form-urlencoded';
-  Result := HTTPRequest('POST', URL, Response);
+  Result := InternalHTTPRequest('POST', URL, Response);
 end;
 
 function THTTPSendThread.XHR(const URL: String; const Response: TObject
