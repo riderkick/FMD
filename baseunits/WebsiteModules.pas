@@ -542,9 +542,12 @@ function TWebsiteModules.GetNameAndLink(const MangaInfo: TMangaInformation;
 begin
   Result := MODULE_NOT_FOUND;
   if (ModuleId < 0) or (ModuleId >= FModuleList.Count) then Exit;
-  if Assigned(TModuleContainer(FModuleList[ModuleId]).OnGetNameAndLink) then
-    Result := TModuleContainer(FModuleList[ModuleId]).OnGetNameAndLink(
-      MangaInfo, ANames, ALinks, AURL, TModuleContainer(FModuleList[ModuleId]));
+  with TModuleContainer(FModuleList[ModuleId]) do
+  if Assigned(OnGetNameAndLink) then
+  begin
+    CheckCloudflareEnabled(MangaInfo.FHTTP);
+    Result := OnGetNameAndLink(MangaInfo, ANames, ALinks, AURL, TModuleContainer(FModuleList[ModuleId]));
+  end;
 end;
 
 function TWebsiteModules.GetNameAndLink(const MangaInfo: TMangaInformation;
@@ -593,9 +596,12 @@ function TWebsiteModules.GetPageNumber(const DownloadThread: TDownloadThread;
 begin
   Result := False;
   if (ModuleId < 0) or (ModuleId >= FModuleList.Count) then Exit;
-  if Assigned(TModuleContainer(FModuleList[ModuleId]).OnGetPageNumber) then
-    Result := TModuleContainer(FModuleList[ModuleId]).OnGetPageNumber(
-      DownloadThread, AURL, TModuleContainer(FModuleList[ModuleId]));
+  with TModuleContainer(FModuleList[ModuleId]) do
+    if Assigned(OnGetPageNumber) then
+    begin
+      CheckCloudflareEnabled(DownloadThread.FHTTP);
+      Result := OnGetPageNumber(DownloadThread, AURL, TModuleContainer(FModuleList[ModuleId]));
+    end;
 end;
 
 function TWebsiteModules.GetPageNumber(const DownloadThread: TDownloadThread;
@@ -609,9 +615,12 @@ function TWebsiteModules.GetImageURL(const DownloadThread: TDownloadThread;
 begin
   Result := False;
   if (ModuleId < 0) or (ModuleId >= FModuleList.Count) then Exit;
-  if Assigned(TModuleContainer(FModuleList[ModuleId]).OnGetImageURL) then
-    Result := TModuleContainer(FModuleList[ModuleId]).OnGetImageURL(
-      DownloadThread, AURL, TModuleContainer(FModuleList[ModuleId]));
+  with TModuleContainer(FModuleList[ModuleId]) do
+    if Assigned(OnGetImageURL) then
+    begin
+      CheckCloudflareEnabled(DownloadThread.FHTTP);
+      Result := OnGetImageURL(DownloadThread, AURL, TModuleContainer(FModuleList[ModuleId]));
+    end;
 end;
 
 function TWebsiteModules.GetImageURL(const DownloadThread: TDownloadThread;
@@ -626,9 +635,12 @@ function TWebsiteModules.BeforeDownloadImage(
 begin
   Result := False;
   if (ModuleId < 0) or (ModuleId >= FModuleList.Count) then Exit;
-  if Assigned(TModuleContainer(FModuleList[ModuleId]).OnBeforeDownloadImage) then
-    Result := TModuleContainer(FModuleList[ModuleId]).OnBeforeDownloadImage(
-      DownloadThread, AURL, TModuleContainer(FModuleList[ModuleId]));
+  with TModuleContainer(FModuleList[ModuleId]) do
+    if Assigned(OnBeforeDownloadImage) then
+    begin
+      CheckCloudflareEnabled(DownloadThread.FHTTP);
+      Result := OnBeforeDownloadImage(DownloadThread, AURL, TModuleContainer(FModuleList[ModuleId]));
+    end;
 end;
 
 function TWebsiteModules.BeforeDownloadImage(
@@ -642,9 +654,12 @@ function TWebsiteModules.DownloadImage(const DownloadThread: TDownloadThread;
 begin
   Result := False;
   if (ModuleId < 0) or (ModuleId >= FModuleList.Count) then Exit;
-  if Assigned(TModuleContainer(FModuleList[ModuleId]).OnDownloadImage) then
-    Result := TModuleContainer(FModuleList[ModuleId]).OnDownloadImage(
-      DownloadThread, AURL, TModuleContainer(FModuleList[ModuleId]));
+  with TModuleContainer(FModuleList[ModuleId]) do
+    if Assigned(OnDownloadImage) then
+    begin
+      CheckCloudflareEnabled(DownloadThread.FHTTP);
+      Result := OnDownloadImage(DownloadThread, AURL, TModuleContainer(FModuleList[ModuleId]));
+    end;
 end;
 
 function TWebsiteModules.DownloadImage(const DownloadThread: TDownloadThread;
@@ -658,9 +673,12 @@ function TWebsiteModules.SaveImage(const AHTTP: THTTPSendThread;
 begin
   Result := '';
   if (ModuleId < 0) or (ModuleId >= FModuleList.Count) then Exit;
-  if Assigned(TModuleContainer(FModuleList[ModuleId]).OnSaveImage) then
-    Result := TModuleContainer(FModuleList[ModuleId]).OnSaveImage(
-      AHTTP, APath, AName, TModuleContainer(FModuleList[ModuleId]));
+  with TModuleContainer(FModuleList[ModuleId]) do
+    if Assigned(OnSaveImage) then
+    begin
+      CheckCloudflareEnabled(AHTTP);
+      Result := OnSaveImage(AHTTP, APath, AName, TModuleContainer(FModuleList[ModuleId]));
+    end;
 end;
 
 function TWebsiteModules.SaveImage(const AHTTP: THTTPSendThread;
@@ -690,8 +708,12 @@ function TWebsiteModules.Login(const AHTTP: THTTPSendThread;
 begin
   Result := False;
   if (ModuleId < 0) or (ModuleId >= FModuleList.Count) then Exit;
-  if Assigned(TModuleContainer(FModuleList[ModuleId]).OnLogin) then
-    Result := TModuleContainer(FModuleList[ModuleId]).OnLogin(AHTTP);
+  with TModuleContainer(FModuleList[ModuleId]) do
+    if Assigned(OnLogin) then
+    begin
+      CheckCloudflareEnabled(AHTTP);
+      Result := OnLogin(AHTTP);
+    end;
 end;
 
 function TWebsiteModules.Login(const AHTTP: THTTPSendThread;
