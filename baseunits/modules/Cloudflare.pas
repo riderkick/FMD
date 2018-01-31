@@ -14,7 +14,7 @@ type
 
   TCFProps = class
   public
-    Cookies: TStringList;
+    cf_clearance: string;
     Expires: TDateTime;
     CS: TRTLCriticalSection;
     constructor Create;
@@ -115,7 +115,7 @@ begin
   Result := True;
 end;
 
-function CFJS(const AHTTP: THTTPSendThread; AURL: String; const Cookies: TStringList; var Expires: TDateTime): Boolean;
+function CFJS(const AHTTP: THTTPSendThread; AURL: String; var Acf_clearance: String; var AExpires: TDateTime): Boolean;
 var
   m, u, h: String;
   st, sc, counter, maxretry: Integer;
@@ -147,13 +147,10 @@ begin
         AHTTP.FollowRedirection := False;
         if AHTTP.HTTPRequest(m, FillHost(h, u)) then
         begin
-          Result := AHTTP.Cookies.Values['cf_clearance'] <> '';
+          Acf_clearance := AHTTP.Cookies.Values['cf_clearance'];
+          Result := Acf_clearance <> '';
           if Result then
-          begin
-            Cookies.Clear;
-            Cookies.AddStrings(AHTTP.Cookies);
-            Expires := AHTTP.CookiesExpires;
-          end;
+            AExpires := AHTTP.CookiesExpires;
         end;
         AHTTP.FollowRedirection := True;
       end;
@@ -177,7 +174,7 @@ begin
   if AHTTP = nil then Exit;
   if (CFProps.Expires <> 0.0) and (Now > CFProps.Expires) then
     CFProps.Reset;
-  CFProps.AddCookiesTo(CFProps.Cookies);
+  CFProps.AddCookiesTo(AHTTP.Cookies);
   AHTTP.AllowServerErrorResponse := True;
   Result := AHTTP.HTTPRequest('GET', AURL);
   if AntiBotActive(AHTTP) then begin
@@ -185,7 +182,7 @@ begin
       try
         CFProps.Reset;
         //AHTTP.Cookies.Clear;
-        Result := CFJS(AHTTP, AURL, CFProps.Cookies, CFProps.Expires);
+        Result := CFJS(AHTTP, AURL, CFProps.cf_clearance, CFProps.Expires);
         // reduce the expires by 5 minutes, usually it is 24 hours or 16 hours
         // in case of the different between local and server time
         if Result then
@@ -210,13 +207,11 @@ end;
 constructor TCFProps.Create;
 begin
   InitCriticalSection(CS);
-  Cookies := TStringList.Create;
   Reset;
 end;
 
 destructor TCFProps.Destroy;
 begin
-  Cookies.Free;
   DoneCriticalsection(CS);
   inherited Destroy;
 end;
@@ -225,7 +220,7 @@ procedure TCFProps.Reset;
 begin
   if TryEnterCriticalsection(CS) <> 0 then
     try
-      Cookies.Clear;
+      cf_clearance := '';
       Expires := 0.0;
     finally
       LeaveCriticalsection(CS);
@@ -233,12 +228,9 @@ begin
 end;
 
 procedure TCFProps.AddCookiesTo(const ACookies: TStringList);
-var
-  i: Integer;
 begin
-  if Cookies.Count <> 0 then
-    for i := 0 to Cookies.Count - 1 do
-      ACookies.Values[Cookies.Names[i]] := Cookies.ValueFromIndex[i];
+  if cf_clearance <> '' then
+    ACookies.Values['cf_clearance'] := cf_clearance;
 end;
 
 { THTTPSendThreadHelper }
