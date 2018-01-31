@@ -122,6 +122,7 @@ type
     procedure AddOptionComboBox(const ABindValue: PInteger; const AName: String;
       const ACaption, AItems: PString);
     property CloudflareEnabled: Boolean read FCloudflareEnabled write SetCloudflareEnabled;
+    procedure PrepareHTTP(const AHTTP: THTTPSendThread);
   end;
 
   { TWebsiteModules }
@@ -363,6 +364,11 @@ begin
     Items := AItems;
 end;
 
+procedure TModuleContainer.PrepareHTTP(const AHTTP: THTTPSendThread);
+begin
+  CheckCloudflareEnabled(AHTTP);
+end;
+
 procedure TModuleContainer.AddOption(const AOptionType: TWebsiteOptionType;
   const ABindValue: Pointer; const AName: String; const ACaption: PString);
 begin
@@ -523,10 +529,7 @@ begin
   if (ModuleId < 0) or (ModuleId >= FModuleList.Count) then Exit;
   with TModuleContainer(FModuleList[ModuleId]) do
     if Assigned(OnGetDirectoryPageNumber) then
-    begin
-      CheckCloudflareEnabled(MangaInfo.FHTTP);
       Result := OnGetDirectoryPageNumber(MangaInfo, Page, WorkPtr,TModuleContainer(FModuleList[ModuleId]));
-    end;
 end;
 
 function TWebsiteModules.GetDirectoryPageNumber(
@@ -544,10 +547,7 @@ begin
   if (ModuleId < 0) or (ModuleId >= FModuleList.Count) then Exit;
   with TModuleContainer(FModuleList[ModuleId]) do
   if Assigned(OnGetNameAndLink) then
-  begin
-    CheckCloudflareEnabled(MangaInfo.FHTTP);
     Result := OnGetNameAndLink(MangaInfo, ANames, ALinks, AURL, TModuleContainer(FModuleList[ModuleId]));
-  end;
 end;
 
 function TWebsiteModules.GetNameAndLink(const MangaInfo: TMangaInformation;
@@ -563,10 +563,7 @@ begin
   if (ModuleId < 0) or (ModuleId >= FModuleList.Count) then Exit;
   with TModuleContainer(FModuleList[ModuleId]) do
     if Assigned(OnGetInfo) then
-    begin
-      CheckCloudflareEnabled(MangaInfo.FHTTP);
       Result := OnGetInfo(MangaInfo, AURL, TModuleContainer(FModuleList[ModuleId]));
-    end;
 end;
 
 function TWebsiteModules.GetInfo(const MangaInfo: TMangaInformation;
@@ -598,10 +595,7 @@ begin
   if (ModuleId < 0) or (ModuleId >= FModuleList.Count) then Exit;
   with TModuleContainer(FModuleList[ModuleId]) do
     if Assigned(OnGetPageNumber) then
-    begin
-      CheckCloudflareEnabled(DownloadThread.FHTTP);
       Result := OnGetPageNumber(DownloadThread, AURL, TModuleContainer(FModuleList[ModuleId]));
-    end;
 end;
 
 function TWebsiteModules.GetPageNumber(const DownloadThread: TDownloadThread;
@@ -617,10 +611,7 @@ begin
   if (ModuleId < 0) or (ModuleId >= FModuleList.Count) then Exit;
   with TModuleContainer(FModuleList[ModuleId]) do
     if Assigned(OnGetImageURL) then
-    begin
-      CheckCloudflareEnabled(DownloadThread.FHTTP);
       Result := OnGetImageURL(DownloadThread, AURL, TModuleContainer(FModuleList[ModuleId]));
-    end;
 end;
 
 function TWebsiteModules.GetImageURL(const DownloadThread: TDownloadThread;
@@ -637,10 +628,7 @@ begin
   if (ModuleId < 0) or (ModuleId >= FModuleList.Count) then Exit;
   with TModuleContainer(FModuleList[ModuleId]) do
     if Assigned(OnBeforeDownloadImage) then
-    begin
-      CheckCloudflareEnabled(DownloadThread.FHTTP);
       Result := OnBeforeDownloadImage(DownloadThread, AURL, TModuleContainer(FModuleList[ModuleId]));
-    end;
 end;
 
 function TWebsiteModules.BeforeDownloadImage(
@@ -656,10 +644,7 @@ begin
   if (ModuleId < 0) or (ModuleId >= FModuleList.Count) then Exit;
   with TModuleContainer(FModuleList[ModuleId]) do
     if Assigned(OnDownloadImage) then
-    begin
-      CheckCloudflareEnabled(DownloadThread.FHTTP);
       Result := OnDownloadImage(DownloadThread, AURL, TModuleContainer(FModuleList[ModuleId]));
-    end;
 end;
 
 function TWebsiteModules.DownloadImage(const DownloadThread: TDownloadThread;
@@ -675,10 +660,7 @@ begin
   if (ModuleId < 0) or (ModuleId >= FModuleList.Count) then Exit;
   with TModuleContainer(FModuleList[ModuleId]) do
     if Assigned(OnSaveImage) then
-    begin
-      CheckCloudflareEnabled(AHTTP);
       Result := OnSaveImage(AHTTP, APath, AName, TModuleContainer(FModuleList[ModuleId]));
-    end;
 end;
 
 function TWebsiteModules.SaveImage(const AHTTP: THTTPSendThread;
@@ -710,10 +692,7 @@ begin
   if (ModuleId < 0) or (ModuleId >= FModuleList.Count) then Exit;
   with TModuleContainer(FModuleList[ModuleId]) do
     if Assigned(OnLogin) then
-    begin
-      CheckCloudflareEnabled(AHTTP);
       Result := OnLogin(AHTTP);
-    end;
 end;
 
 function TWebsiteModules.Login(const AHTTP: THTTPSendThread;

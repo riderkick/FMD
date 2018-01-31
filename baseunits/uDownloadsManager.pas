@@ -43,6 +43,8 @@ type
   TDownloadThread = class(TBaseThread)
   private
     parse: TStringList;
+    FTask: TTaskThread;
+    procedure SetTask(AValue: TTaskThread);
   public
     // Get download link from URL
     function GetLinkPageFromURL(const URL: String): Boolean;
@@ -65,10 +67,10 @@ type
     procedure Execute; override;
   public
     FHTTP: THTTPSendThread;
-    Task: TTaskThread;
     WorkId: Integer;
     constructor Create;
     destructor Destroy; override;
+    property Task: TTaskThread read FTask write SetTask;
   end;
 
   TDownloadThreads = specialize TFPGList<TDownloadThread>;
@@ -284,6 +286,15 @@ begin
 end;
 
 { TDownloadThread }
+
+procedure TDownloadThread.SetTask(AValue: TTaskThread);
+begin
+  if FTask = AValue then Exit;
+  FTask := AValue;
+  with FTask.Container do
+    if ModuleId<>-1 then
+      WebsiteModules.Modules[ModuleId].PrepareHTTP(FHTTP);
+end;
 
 procedure TDownloadThread.OnTag(NoCaseTag, ActualTag: String);
 begin

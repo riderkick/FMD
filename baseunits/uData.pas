@@ -79,6 +79,8 @@ type
   TMangaInformation = class(TObject)
   private
     FOwner: TBaseThread;
+    FModuleId: Integer;
+    procedure SetModuleId(AValue: Integer);
   public
     isGetByUpdater: Boolean;
     mangaInfo: TMangaInfo;
@@ -87,7 +89,6 @@ type
     isRemoveUnicode: Boolean;
     RemoveHostFromChapterLinks: Boolean;
     FHTTP: THTTPSendThread;
-    ModuleId: Integer;
 
     procedure OnTag(NoCaseTag, ActualTag: String);
     procedure OnText(AText: String);
@@ -111,6 +112,7 @@ type
     //wrapper
     function GetPage(var AOutput: TObject; AURL: String; const AReconnect: Integer = 0): Boolean; inline;
     property Thread: TBaseThread read FOwner;
+    property ModuleId: Integer read FModuleId write SetModuleId;
   end;
 
 var
@@ -754,6 +756,14 @@ begin
   mangaInfo.website := '';
   mangaInfo.chapterName.Clear;
   mangaInfo.chapterLinks.Clear;
+end;
+
+procedure TMangaInformation.SetModuleId(AValue: Integer);
+begin
+  if FModuleId = AValue then Exit;
+  FModuleId := AValue;
+  if (FModuleId <> -1) and Assigned(FHTTP) then
+    WebsiteModules.Modules[FModuleId].PrepareHTTP(FHTTP);
 end;
 
 procedure TMangaInformation.OnTag(NoCaseTag, ActualTag: String);
