@@ -63,6 +63,8 @@ begin
         finally
           Free;
         end;
+      Reset;
+      Headers.Values['Referer'] := url;
     end;
   end;
 end;
