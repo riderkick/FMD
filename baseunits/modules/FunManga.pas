@@ -117,7 +117,7 @@ begin
   with AddModule do
   begin
     Website := 'FunManga';
-    RootURL := 'http://funmanga.com';
+    RootURL := 'http://www.funmanga.com';
     OnGetDirectoryPageNumber := @GetDirectoryPageNumber;
     OnGetNameAndLink := @GetNameAndLink;
     OnGetInfo := @GetInfo;
