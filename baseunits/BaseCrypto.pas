@@ -5,7 +5,7 @@ unit BaseCrypto;
 interface
 
 uses
-  Classes, SysUtils, base64, DCPrijndael, DCPsha256;
+  Classes, SysUtils, base64, DCPrijndael, DCPsha256, DCPmd5, Math;
 
 function HexToStr(const h: String): String;
 procedure HexToBytes(const h: String; var o :TBytes);
@@ -18,6 +18,7 @@ function Pkcs7AddPad(const s: String): String;
 function Pkcs7RemovePad(const s: String): String;
 function AESEncrpytCBCSHA256Base64Pkcs7(const s, key, iv: String): string;
 function AESDecryptCBCSHA256Base64Pkcs7(const s, key, iv: String): string;
+function AESDecryptCBCMD5Base64ZerosPadding(const s, key, iv: String): String;
 
 implementation
 
@@ -129,6 +130,45 @@ begin
     except
     end;
     Free;
+  end;
+end;
+
+function AESDecryptCBCMD5Base64ZerosPadding(const s, key, iv: String): String;
+var
+  keyHash: array[0 .. 15] of Byte;
+  ivBytes: array[0 .. 15] of Byte;
+  keyBytes: array[0 .. 31] of Byte;
+  i: Integer;
+  data: String;
+begin
+  Result := '';
+
+  with TDCP_md5.Create(nil) do
+  begin
+    Init;
+    UpdateStr(key);
+    Final(keyHash);
+  end;
+
+  data := LowerCase(StrToHexStr(BytesToString(keyHash)));
+  for i := 0 to 31 do
+    keyBytes[i] := Byte(data[i + 1]);
+
+  FillChar(ivBytes, 16, 0);
+  for i := 0 to Min(16, Length(iv)) - 1 do
+    ivBytes[i] := Byte(iv[i + 1]);
+
+  with TDCP_rijndael.Create(nil) do
+  begin
+    try
+      Init(keyBytes, 32*8, @ivBytes[0]);
+      data := DecodeStringBase64(s);
+      SetLength(Result,Length(data));
+      DecryptCBC(data[1],Result[1],Length(data));
+      Burn;
+    finally
+      Free;
+    end;
   end;
 end;
 
