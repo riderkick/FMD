@@ -25,6 +25,8 @@ begin
   Result := NET_PROBLEM;
   Page := 1;
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
+  MangaInfo.FHTTP.Headers.Values['Referer'] := Module.RootURL;
+  MangaInfo.FHTTP.Headers.Values['Cache-Mode'] := 'no-cache';
   if MangaInfo.FHTTP.GET(Module.RootURL + dirurl + '1&page=1') then
   begin
     Result := NO_ERROR;
@@ -45,6 +47,8 @@ var
 begin
   Result := NET_PROBLEM;
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
+  MangaInfo.FHTTP.Headers.Values['Referer'] := Module.RootURL;
+  MangaInfo.FHTTP.Headers.Values['Cache-Mode'] := 'no-cache';
   if MangaInfo.FHTTP.GET(Module.RootURL + dirurl + perpage + '&page=' + IncStr(AURL)) then
   begin
     Result := NO_ERROR;
@@ -76,6 +80,8 @@ begin
     url := FillHost(Module.RootURL, AURL);
     mangaid := RegExprGetMatch('/\w+/(\d+)/\w+', url, 1);
     if mangaid = '' then Exit;
+    Headers.Values['Referer'] := url;
+    Headers.Values['Cache-Mode'] := 'no-cache';
     if GET(Module.RootURL + apiurlmangas + '/' + mangaid) then
     begin
       Result := NO_ERROR;
@@ -91,21 +97,32 @@ begin
           artists := XPathStringAll('json(*).artistas().artista');
           authors := XPathStringAll('json(*).autores().autor');
           purl := Module.RootURL + apiurlmangas + '/' + mangaid + '/capitulos?tomo=-1&page=';
+          Reset;
+          Headers.Values['Referer'] := url;
+          Headers.Values['Cache-Mode'] := 'no-cache';
           if GET(purl + '1') then
           begin
             ParseHTML(Document);
             p := StrToIntDef(XPathString('json(*).last_page'), 1);
             for i := 1 to p do
             begin
-              if i > 1 then
+              if i > 1 then begin
+                Reset;
+                Headers.Values['Referer'] := url;
+                Headers.Values['Cache-Mode'] := 'no-cache';
                 if GET(purl + IntToStr(i)) then
                   ParseHTML(Document)
                 else
                   Break;
+              end;
               for v in XPath('json(*).data()') do
               begin
                 chapterLinks.Add(apiurlimagenes + XPathString('"?idManga="||tomo/idManga||"&idScanlation="||subidas/idScan||"&numeroCapitulo="||numCapitulo||"&visto=true"', v));
-                chapterName.Add(XPathString('string-join((numCapitulo,nombre)," ")', v));
+                s := v.getProperty('nombre').toString;
+                if s = 'null' then s := '';
+                if s <> '' then s := ' ' + s;
+                s := v.getProperty('numCapitulo').toString + s;
+                chapterName.Add(s);
               end;
             end;
             InvertStrings([chapterLinks, chapterName]);
@@ -129,6 +146,8 @@ begin
   begin
     PageLinks.Clear;
     PageNumber := 0;
+    Headers.Values['Referer'] := Module.RootURL;
+    Headers.Values['Cache-Mode'] := 'no-cache';
     if GET(FillHost(Module.RootURL, AURL)) then
     begin
       Result := True;
