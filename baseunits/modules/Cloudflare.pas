@@ -14,12 +14,13 @@ type
 
   TCFProps = class
   public
-    Cookies: String;
+    Cookies: TStringList;
     Expires: TDateTime;
     CS: TRTLCriticalSection;
     constructor Create;
     destructor Destroy; override;
     procedure Reset;
+    procedure AddCookiesTo(const ACookies: TStringList);
   end;
 
   { THTTPSendThreadHelper }
@@ -114,14 +115,13 @@ begin
   Result := True;
 end;
 
-function CFJS(const AHTTP: THTTPSendThread; AURL: String; var Cookie: String; var Expires: TDateTime): Boolean;
+function CFJS(const AHTTP: THTTPSendThread; AURL: String; const Cookies: TStringList; var Expires: TDateTime): Boolean;
 var
   m, u, h: String;
   st, sc, counter, maxretry: Integer;
 begin
   Result := False;
   if AHTTP = nil then Exit;
-  if Cookie <> '' then AHTTP.Cookies.Text := Cookie;
   counter := 0;
   maxretry := AHTTP.RetryCount;
   AHTTP.RetryCount := 0;
@@ -150,7 +150,8 @@ begin
           Result := AHTTP.Cookies.Values['cf_clearance'] <> '';
           if Result then
           begin
-            Cookie := AHTTP.GetCookies;
+            Cookies.Clear;
+            Cookies.AddStrings(AHTTP.Cookies);
             Expires := AHTTP.CookiesExpires;
           end;
         end;
@@ -165,7 +166,7 @@ begin
     if AHTTP.ThreadTerminated then Break;
     if (maxretry > -1) and (maxretry <= counter) then Break;
     AHTTP.Reset;
-    AHTTP.GET(AURL);
+    AHTTP.HTTPRequest('GET', AURL);
   end;
   AHTTP.RetryCount := maxretry;
 end;
@@ -176,14 +177,14 @@ begin
   if AHTTP = nil then Exit;
   if (CFProps.Expires <> 0.0) and (Now > CFProps.Expires) then
     CFProps.Reset;
-  AHTTP.Cookies.Text := CFProps.Cookies;
+  CFProps.AddCookiesTo(CFProps.Cookies);
   AHTTP.AllowServerErrorResponse := True;
-  Result := AHTTP.GET(AURL);
+  Result := AHTTP.HTTPRequest('GET', AURL);
   if AntiBotActive(AHTTP) then begin
     if TryEnterCriticalsection(CFProps.CS) > 0 then
       try
-        CFProps.Cookies := '';
-        AHTTP.Cookies.Clear;
+        CFProps.Reset;
+        //AHTTP.Cookies.Clear;
         Result := CFJS(AHTTP, AURL, CFProps.Cookies, CFProps.Expires);
         // reduce the expires by 5 minutes, usually it is 24 hours or 16 hours
         // in case of the different between local and server time
@@ -195,12 +196,12 @@ begin
     else
       try
         EnterCriticalsection(CFProps.CS);
-        AHTTP.Cookies.Text := CFProps.Cookies;
+        CFProps.AddCookiesTo(AHTTP.Cookies);
       finally
         LeaveCriticalsection(CFProps.CS);
       end;
     if not AHTTP.ThreadTerminated then
-      Result := AHTTP.GET(AURL);
+      Result := AHTTP.HTTPRequest('GET', AURL);
   end;
 end;
 
@@ -208,27 +209,43 @@ end;
 
 constructor TCFProps.Create;
 begin
-  Reset;
   InitCriticalSection(CS);
+  Cookies := TStringList.Create;
+  Reset;
 end;
 
 destructor TCFProps.Destroy;
 begin
+  Cookies.Free;
   DoneCriticalsection(CS);
   inherited Destroy;
 end;
 
 procedure TCFProps.Reset;
 begin
-  Cookies := '';
-  Expires := 0.0;
+  if TryEnterCriticalsection(CS) <> 0 then
+    try
+      Cookies.Clear;
+      Expires := 0.0;
+    finally
+      LeaveCriticalsection(CS);
+    end;
+end;
+
+procedure TCFProps.AddCookiesTo(const ACookies: TStringList);
+var
+  i: Integer;
+begin
+  if Cookies.Count <> 0 then
+    for i := 0 to Cookies.Count - 1 do
+      ACookies.Values[Cookies.Names[i]] := Cookies.ValueFromIndex[i];
 end;
 
 { THTTPSendThreadHelper }
 
 function THTTPSendThreadHelper.GETCF(const AURL: String; const CFProps: TCFProps): Boolean;
 begin
-  Cloudflare.GETCF(Self, AURL, CFProps);
+  Result := Cloudflare.GETCF(Self, AURL, CFProps);
 end;
 
 end.
