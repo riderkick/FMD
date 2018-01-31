@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, WebsiteModules, uData, uBaseUnit, uDownloadsManager,
-  XQueryEngineHTML;
+  XQueryEngineHTML, strutils;
 
 implementation
 
@@ -77,7 +77,7 @@ begin
     PageLinks.Clear;
     PageNumber := 0;
     u := RemoveURLDelim(MaybeFillHost(Module.RootURL, AURL));
-    if RightStr(u, 2) = '/1' then Delete(u, Length(u)-2, 2);
+    if AnsiEndsStr('/1', u) then u := AnsiLeftStr(u, Length(u)-2);
     u += '/0/full';
     if GET(u) then
     begin
