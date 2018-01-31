@@ -29,7 +29,7 @@ type
     function GETCF(const AURL: String; const CFProps: TCFProps): Boolean;
   end;
 
-function GETCF(const AHTTP: THTTPSendThread; const AURL: String; const CFProps: TCFProps): Boolean;
+function GETCF(const AHTTP: THTTPSendThread; const Method, AURL: String; const CFProps: TCFProps): Boolean;
 
 implementation
 
@@ -168,7 +168,7 @@ begin
   AHTTP.RetryCount := maxretry;
 end;
 
-function GETCF(const AHTTP: THTTPSendThread; const AURL: String; const CFProps: TCFProps): Boolean;
+function GETCF(const AHTTP: THTTPSendThread; const Method, AURL: String; const CFProps: TCFProps): Boolean;
 begin
   Result := False;
   if AHTTP = nil then Exit;
@@ -176,7 +176,7 @@ begin
     CFProps.Reset;
   CFProps.AddCookiesTo(AHTTP.Cookies);
   AHTTP.AllowServerErrorResponse := True;
-  Result := AHTTP.HTTPRequest('GET', AURL);
+  Result := AHTTP.HTTPRequest(Method, AURL);
   if AntiBotActive(AHTTP) then begin
     if TryEnterCriticalsection(CFProps.CS) > 0 then
       try
@@ -198,7 +198,7 @@ begin
         LeaveCriticalsection(CFProps.CS);
       end;
     if not AHTTP.ThreadTerminated then
-      Result := AHTTP.HTTPRequest('GET', AURL);
+      Result := AHTTP.HTTPRequest(Method, AURL);
   end;
 end;
 
@@ -237,7 +237,7 @@ end;
 
 function THTTPSendThreadHelper.GETCF(const AURL: String; const CFProps: TCFProps): Boolean;
 begin
-  Result := Cloudflare.GETCF(Self, AURL, CFProps);
+  Result := Cloudflare.GETCF(Self, 'GET', AURL, CFProps);
 end;
 
 end.

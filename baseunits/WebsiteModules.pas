@@ -297,7 +297,7 @@ end;
 function TModuleContainer.CloudflareHTTPRequest(const AHTTP: THTTPSendThread;
   const Method, URL: String; const Response: TObject): Boolean;
 begin
-  Result := Cloudflare.GETCF(AHTTP, URL, FCloudflareCF);
+  Result := Cloudflare.GETCF(AHTTP, Method, URL, FCloudflareCF);
 end;
 
 procedure TModuleContainer.SetTotalDirectory(AValue: Integer);
