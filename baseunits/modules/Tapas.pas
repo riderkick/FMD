@@ -62,6 +62,7 @@ function GetInfo(const MangaInfo: TMangaInformation;
   const AURL: String; const Module: TModuleContainer): Integer;
 var
   v: IXQValue;
+  locked: String;
 begin
   Result := NET_PROBLEM;
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
@@ -80,7 +81,9 @@ begin
         for v in XPath('json(//script[contains(.,"var _data")]/concat(substring-before(substring-after(.,"episodeList :"),"]"),"]"))()') do
         begin
           chapterLinks.Add(Module.RootURL + '/episode/' + XPathString('./id', v));
-          chapterName.Add(XPathString('./title', v));
+          locked := '';
+          if XPathString('./locked', v) = 'true' then locked := ' [locked]';
+          chapterName.Add(XPathString('./title', v) + locked);
         end;
       finally
         Free;
