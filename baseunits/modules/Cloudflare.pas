@@ -42,6 +42,7 @@ begin
   Result := False;
   if AHTTP = nil then Exit;
   if AHTTP.ResultCode < 500 then Exit;
+  if Pos('text/html', AHTTP.Headers.Values['Content-Type']) = 0 then Exit;
   s := StreamToString(AHTTP.Document);
   Result := Pos('name="jschl_vc"',s) <> 0;
   s := '';
