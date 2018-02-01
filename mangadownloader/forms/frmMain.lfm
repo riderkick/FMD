@@ -4422,13 +4422,12 @@ object MainForm: TMainForm
       ClientHeight = 498
       ClientWidth = 761
       object btCheckLatestVersion: TBitBtn
-        AnchorSideTop.Control = pcAbout
-        AnchorSideTop.Side = asrBottom
+        AnchorSideTop.Side = asrTop
         Left = 0
         Height = 40
-        Top = 447
+        Top = 452
         Width = 208
-        Anchors = [akTop, akLeft, akBottom]
+        Anchors = [akLeft, akBottom]
         BorderSpacing.Top = 3
         Caption = 'Check for latest version'
         Glyph.Data = {
