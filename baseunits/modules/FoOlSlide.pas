@@ -146,6 +146,8 @@ begin
           if title = '' then
             if Module.Website = 'AtelierDuNoir' then title := XPathString('//div[@class="section-headline"]//h3')
             else title := XPathString('//h1[@class="title"]');
+          if Pos('emailprotected', title) > 0 then
+            title := Trim(SeparateLeft(XPathString('//title'), '::'));
           authors := TrimLeftChar(XPathString(
             '//div[@class="info"]/*[contains(text(),"Author")]/following-sibling::text()[1]'), [':', ' ']);
           artists := TrimLeftChar(XPathString(

@@ -38,6 +38,8 @@ begin
       with TXQueryEngineHTML.Create(Document) do
         try
           if title = '' then title := XPathString('//h3[@class="panel-title"]/text()');
+          if Pos('emailprotected', title) > 0 then
+            title := Trim(ReplaceString(XPathString('//title'), '(Manga) - MangaDex', ''));
           coverLink := MaybeFillHost(Module.RootURL, XPathString('//img[@alt="Manga image"]/@src'));
           authors := XPathString('//th[contains(., "Author")]/following-sibling::td/a');
           artists := XPathString('//th[contains(., "Artist")]/following-sibling::td/a');
