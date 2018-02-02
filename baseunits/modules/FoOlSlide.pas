@@ -261,6 +261,7 @@ begin
   AddWebsiteModule('DokiFansubs', 'https://kobato.hologfx.com');
   AddWebsiteModule('AtelierDuNoir', 'http://atelierdunoir.org');
   AddWebsiteModule('ChampionScans', 'http://reader.championscans.com');
+  AddWebsiteModule('WorldThree', 'http://www.slide.world-three.org');
 
   //es-san
   AddWebsiteModule('DangoOnlineNoFansub', 'http://lector.dangolinenofansub.com');
