@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils, WebsiteModules, uData, uBaseUnit, uDownloadsManager,
   XQueryEngineHTML, httpsendthread, BaseCrypto, synautil, Graphics,
-  Interfaces, Math, RegExpr, strutils;
+  Interfaces, Math, RegExpr, strutils, JSUnpack;
 
 implementation
 
@@ -79,7 +79,7 @@ begin
   end;
 end;
 
-function DecryptScript(script: String): String;
+function ReplaceHex(script: String): String;
 var
   rg: TRegExpr;
   c: Char;
@@ -103,12 +103,71 @@ begin
   end;
 end;
 
+function GetScriptText(script: String): String;
+begin
+  Result := SeparateRight(script, '(''');
+  Result := SeparateLeft(Result, ''',');
+end;
+
+function GetA(script: String): Integer;
+var s: String;
+begin
+  s := SeparateRight(script, ''',');
+  s := SeparateLeft(s, ',');
+  Result := StrToIntDef(s, 1);
+end;
+
+function GetC(script: String): Integer;
+var s: String;
+begin
+  s := SeparateRight(script, ''',');
+  s := SeparateRight(s, ',');
+  s := SeparateLeft(s, ',');
+  Result := StrToIntDef(s, 1);
+end;
+
+function GetWords(script: String): String;
+var s: String;
+begin
+  s := SeparateRight(script, '(''');
+  s := SeparateRight(s, ',"');
+  Result := SeparateLeft(s, '"');
+end;
+
+function GetSeparator(script: String): String;
+var
+  s: String;
+begin
+  s := ReplaceHex(script);
+  s := s.Substring(RPos('split', s));
+  Result := GetBetween('(', ')', s);
+  Result := ReplaceString(Result, '''', '');
+  Result := ReplaceString(Result, '"', '');
+end;
+
+function DecryptScript(script: String): String;
+var
+  u: TJSUnpack36;
+  words, sep, text: String;
+begin
+  Result := '';
+  u := TJSUnpack36.Create;
+  try
+    text := ReplaceHex(GetScriptText(script));
+    words := ReplaceHex(GetWords(script));
+    sep := GetSeparator(script);
+    Result := u.Unpack(text, GetA(script), GetC(script), words.Split(sep));
+  finally
+    u.Free;
+  end;
+end;
+
 function GetKey(script: String): String;
 var
   rg: TRegExpr;
 begin
   Result := '';
-  rg := TRegExpr.Create('body\s+ready\s+(\S+)');
+  rg := TRegExpr.Create('\=\s*["'']@(.+?)!["'']');
   try
     if rg.Exec(script) then
       Result := '@' + rg.Match[1] + '!';
