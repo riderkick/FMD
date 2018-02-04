@@ -185,7 +185,7 @@ function GetPageNumber(const DownloadThread: TDownloadThread;
   const AURL: String; const Module: TModuleContainer): Boolean;
 var
   s, rurl, script: String;
-  i: Integer;
+  i, cnt: Integer;
   a: TStringArray;
   t: TStringList;
 begin
@@ -199,9 +199,15 @@ begin
     if not GET(rurl) then Exit;
 
     Result := True;
-    s := XPathString('//script[contains(.,"imgsrcs")]', Document);
-    if s = '' then Exit;
+    with TXQueryEngineHTML.Create(Document) do
+      try
+        cnt := XPathCount('//ul[@id="dropdown-menu-page"]/li/a');
+        s := XPathString('//script[contains(.,"imgsrcs")]');
+      finally
+        Free;
+      end;
 
+    if s = '' then Exit;
     if Pos('imgsrcs = new Array', s) <> 0 then
       s := GetString(s, '(', ')')
     else
@@ -225,7 +231,7 @@ begin
     end;
 
     a := s.Split([',']);
-    for i := 0 to Length(a) - 1 do
+    for i := 0 to cnt - 1 do
       PageLinks.Add(SeparateRight(a[i], '//'));
   end;
 end;
