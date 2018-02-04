@@ -178,14 +178,24 @@ begin
 end;
 
 procedure TGetMangaInfosThread.MainThreadShowInfos;
+var node: PVirtualNode;
 begin
   TransferMangaInfo(mangaInfo, FInfo.mangaInfo);
   with MainForm do begin
     if Assigned(FMangaListNode) and dataProcess.WebsiteLoaded(Website) then
       begin
         vtMangaList.BeginUpdate;
-        dataProcess.Refresh;
+        dataProcess.Refresh(dataProcess.Filtered);
         vtMangaList.ReinitNode(FMangaListNode, False);
+        if dataProcess.Filtered then begin
+          node := vtMangaList.GetNextVisible(FMangaListNode, False);
+          while Assigned(node) do begin
+            vtMangaList.ReinitNode(node, False);
+            node := vtMangaList.GetNextVisible(node, False);
+          end;
+          vtMangaList.RootNodeCount := dataProcess.RecordCount;
+          MainForm.UpdateVtMangaListFilterStatus;
+        end;
         vtMangaList.EndUpdate;
       end;
     ShowInformation(mangaInfo.title, mangaInfo.website, mangaInfo.link);

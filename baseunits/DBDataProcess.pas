@@ -799,8 +799,11 @@ procedure TDBDataProcess.Refresh(RecheckDataCount: Boolean);
 begin
   if FConn.Connected then
   begin
-    if FQuery.Active then
-      FQuery.Refresh
+    if FQuery.Active then begin
+      if RecheckDataCount then
+        GetRecordCount;
+      FQuery.Refresh;
+    end
     else
     if Trim(FQuery.SQL.Text) <> '' then
     begin
