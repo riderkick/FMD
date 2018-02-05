@@ -399,7 +399,7 @@ var
   i: Integer;
 begin
   if FModuleList.Count > 0 then
-    for i := 0 to FModuleList.Count - 1 do
+    for i := FModuleList.Count - 1 downto 0 do
       TModuleContainer(FModuleList[i]).Free;
   FModuleList.Free;
   DoneCriticalsection(FCSModules);
@@ -423,7 +423,7 @@ var
 begin
   Result := -1;
   if FModuleList.Count > 0 then
-    for i := 0 to FModuleList.Count - 1 do
+    for i := FModuleList.Count - 1 downto 0 do
       if SameText(TModuleContainer(FModuleList[i]).Website, AWebsite) then
       begin
         Result := i;
@@ -437,7 +437,7 @@ function TWebsiteModules.LocateModuleByHost(const AHost: String): Integer;
   var
     i: Integer;
   begin
-    for i := 0 to FModuleList.Count - 1 do
+    for i := FModuleList.Count - 1 downto 0 do
       if Pos(s, LowerCase(TModuleContainer(FModuleList[i]).RootURL)) <> 0 then
         Exit(i);
     Result := -1;
