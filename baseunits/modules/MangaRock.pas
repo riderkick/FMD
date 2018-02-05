@@ -11,12 +11,12 @@ uses
 implementation
 
 var
-  mangaList: TStringList;
+  mangaList: TStringList = nil;
 
 const
   ModuleApiUrl: String = 'https://api.mangarockhd.com';
   DirRequest: String = '{"status":"all","genres":{},"rank":"all","order":"name"}';
-  PerPage = 100;
+  PerPage = 500;
 
 function DecryptImage(const imageData: TStream): TMemoryStream;
 var
@@ -144,41 +144,33 @@ end;
 function GetNameAndLink(const MangaInfo: TMangaInformation; const ANames, ALinks: TStringList;
   const AURL: String; const Module: TModuleContainer): Integer;
 var
-  index, i, ubound: Integer;
-  request: String;
-  query: TXQueryEngineHTML;
-  v: TXQProperty;
-  name, link: string;
-  obj: IXQValue;
+  offset, i, ubound: Integer;
+  request, name: String;
 begin
   Result := NET_PROBLEM;
   if (MangaInfo = nil) or (mangaList = nil) then Exit(UNKNOWN_ERROR);
 
-  index := StrToInt(AURL);
-  ubound := Min((index + 1) * PerPage - 1, mangaList.Count - 1);
-  request := '"' + mangaList[index * PerPage] + '"';
-  for i := index * PerPage + 1 to ubound do
-    request := request + ',"' + mangaList[i] + '"';
-  request := '[' + request + ']';
+  offset := StrToInt(AURL) * PerPage;
+  ubound := Min(offset + PerPage - 1, mangaList.Count - 1);
+  request := '["' + mangaList[offset] + '"';
+  for i := offset + 1 to ubound do
+    request += ',"' + mangaList[i] + '"';
+  request += ']';
 
   MangaInfo.FHTTP.MimeType := 'application/json';
   if MangaInfo.FHTTP.POST(ModuleApiUrl + '/meta', request) then
   begin
     Result := NO_ERROR;
-    query := TXQueryEngineHTML.Create(MangaInfo.FHTTP.Document);
-    for i := index * PerPage + 1 to ubound do
-    begin
-      name := query.XPathString('json(*).data("' + mangaList[i] + '").name');
-      ANames.Add(name);
-      ALinks.Add(Module.RootURL + '/manga/' + mangaList[i]);
-    end;
-    query.Free;
-  end;
-
-  if ubound = mangaList.Count - 1 then
-  begin
-     mangaList.Free;
-     mangaList := nil;
+    with TXQueryEngineHTML.Create(MangaInfo.FHTTP.Document) do
+      try
+        for i := offset to ubound do begin
+          name := XPathString('json(*).data("' + mangaList[i] + '").name');
+          ANames.Add(name);
+          ALinks.Add(Module.RootURL + '/manga/' + mangaList[i]);
+        end;
+      finally
+        Free;
+      end;
   end;
 end;
 
@@ -191,7 +183,7 @@ begin
   if MangaInfo.FHTTP.POST(ModuleApiUrl + '/query/web400/mrs_filter', DirRequest) then
   begin
     Result := NO_ERROR;
-    mangaList := TStringList.Create;
+    mangaList.Clear;
     with TXQueryEngineHTML.Create(MangaInfo.FHTTP.Document) do
       try
         XPathStringAll('json(*).data()', mangaList);
@@ -219,6 +211,7 @@ begin
 end;
 
 initialization
+  mangaList := TStringList.Create;
   RegisterModule;
 
 finalization
