@@ -904,7 +904,11 @@ implementation
 uses
   frmImportFavorites, frmShutdownCounter, frmSelectDirectory, WebsiteModules,
   FMDVars, RegExpr, sqlite3dyn, Clipbrd, ssl_openssl_lib, LazFileUtils, LazUTF8,
-  webp;
+  webp
+  {$ifdef USE_LUA_MODULE}
+  ,LuaWebsiteModules
+  {$endif}
+  ;
 
 var
   // thread for open db
@@ -1754,6 +1758,12 @@ begin
   if not isStartup then
   begin
     isStartup := True;
+
+    {$ifdef USE_LUA_MODULE}
+    //load lua modules
+    ScanLuaWebsiteModulesFile;
+    {$endif}
+
     if cbSelectManga.ItemIndex > -1 then
       OpenDataDB(cbSelectManga.Items[cbSelectManga.ItemIndex]);
     if OptionAutoCheckLatestVersion then

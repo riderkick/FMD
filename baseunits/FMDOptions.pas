@@ -89,7 +89,8 @@ var
   DEFAULT_LOG_FILE,
   README_FILE,
   EXTRAS_FOLDER,
-  MANGAFOXTEMPLATE_FOLDER: String;
+  MANGAFOXTEMPLATE_FOLDER,
+  LUA_WEBSITEMODULE_FOLDER: String;
 
   // ini files
   revisionfile,
@@ -279,6 +280,7 @@ begin
   FMD_DIRECTORY := CleanAndExpandDirectory(ADir);
   FMD_EXENAME := ExtractFileNameOnly(Application.ExeName);
 
+  LUA_WEBSITEMODULE_FOLDER := FMD_DIRECTORY + 'lua' + PathDelim + 'modules';
   CONFIG_FOLDER := FMD_DIRECTORY + 'config' + PathDelim;
   REVISION_FILE := CONFIG_FOLDER + 'revision.ini';
   UPDATE_FILE := CONFIG_FOLDER + 'updates.ini';
