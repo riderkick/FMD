@@ -47,7 +47,7 @@ resourcestring
     'CDN (default)' + LineEnding +
     'CDN2 (testing)';
 
-function Login(const AHTTP: THTTPSendThread): Boolean;
+function Login(const AHTTP: THTTPSendThread; const Module: TModuleContainer): Boolean;
 var
   query: TXQueryEngineHTML;
   loginform: THTMLForm;
@@ -121,7 +121,7 @@ begin
   end;
 end;
 
-function GETWithLogin(const AHTTP: THTTPSendThread; const AURL: String): Boolean;
+function GETWithLogin(const AHTTP: THTTPSendThread; const AURL: String; const Module: TModuleContainer): Boolean;
 var
   s: String;
 begin
@@ -138,7 +138,7 @@ begin
     s := StreamToString(AHTTP.Document);
     Result := (Pos('class=''logged_in''', s) > 0) or (Pos('class="logged_in"', s) > 0);
     if not Result then begin
-      Result := Login(AHTTP);
+      Result := Login(AHTTP, Module);
       if Result then
         Result := AHTTP.GET(AURL)
       else
@@ -212,7 +212,7 @@ begin
   with MangaInfo.mangaInfo do begin
     website := modulename;
     url := FillHost(urlroot, AURL);
-    if GETWithLogin(MangaInfo.FHTTP, url) then begin
+    if GETWithLogin(MangaInfo.FHTTP, url, Module) then begin
       Result := NO_ERROR;
       with TXQueryEngineHTML.Create(MangaInfo.FHTTP.Document) do
         try

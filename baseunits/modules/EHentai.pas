@@ -40,7 +40,7 @@ resourcestring
     '2400x' + LineEnding +
     'Original';
 
-function ExHentaiLogin(const AHTTP: THTTPSendThread): Boolean;
+function ExHentaiLogin(const AHTTP: THTTPSendThread; const Module: TModuleContainer): Boolean;
 var
   s: String;
 begin
@@ -81,7 +81,7 @@ begin
   end;
 end;
 
-function GETWithLogin(const AHTTP: THTTPSendThread; const AURL, AWebsite: String): Boolean;
+function GETWithLogin(const AHTTP: THTTPSendThread; const AURL: String; const Module: TModuleContainer): Boolean;
 var
   ACookies: String;
 begin
@@ -97,7 +97,7 @@ begin
     AHTTP.Cookies.AddText(Account.Cookies[accname]);
     Result := AHTTP.GET(AURL);
     if Result and (AHTTP.ResultCode > 300) then begin
-      Result := ExHentaiLogin(AHTTP);
+      Result := ExHentaiLogin(AHTTP, Module);
       if Result then
       begin
         if ACookies <> '' then AHTTP.Cookies.AddText(ACookies);
@@ -117,7 +117,7 @@ begin
   Result := NET_PROBLEM;
   Page := 1;
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
-  if GETWithLogin(MangaInfo.FHTTP, Module.RootURL + '/?' + dirURL, Module.Website) then begin
+  if GETWithLogin(MangaInfo.FHTTP, Module.RootURL + '/?' + dirURL, Module) then begin
     Result := NO_ERROR;
     query := TXQueryEngineHTML.Create;
     try
@@ -141,7 +141,7 @@ begin
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
   if AURL = '0' then rurl := Module.RootURL + '/?' + dirURL
   else rurl := Module.RootURL + '/?page=' + IncStr(AURL) + '&' + dirURL;
-  if GETWithLogin(MangaInfo.FHTTP, rurl, Module.Website) then begin
+  if GETWithLogin(MangaInfo.FHTTP, rurl, Module) then begin
     Result := NO_ERROR;
     query := TXQueryEngineHTML.Create;
     try
@@ -209,7 +209,7 @@ begin
     website := Module.Website;
     url := ReplaceRegExpr('/\?\w+.*$', AURL, '/', False);
     url := AppendURLDelim(FillHost(Module.RootURL, url));
-    if GETWithLogin(MangaInfo.FHTTP, url, Module.Website) then begin
+    if GETWithLogin(MangaInfo.FHTTP, url, Module) then begin
       Result := NO_ERROR;
       // if there is only 1 line, it's banned message!
       //if Source.Count = 1 then
@@ -261,14 +261,14 @@ begin
     PageNumber := 0;
     rurl := ReplaceRegExpr('/\?\w+.*$', AURL, '/', False);
     rurl := AppendURLDelim(FillHost(Module.RootURL, rurl));
-    if GETWithLogin(DownloadThread.FHTTP, rurl, Module.Website) then begin
+    if GETWithLogin(DownloadThread.FHTTP, rurl, Module) then begin
       Result := True;
       query := TXQueryEngineHTML.Create;
       try
         getOK := True;
         //check content warning
         if Pos('Content Warning', query.XPathString('//div/h1')) > 0 then
-          getOK := GETWithLogin(DownloadThread.FHTTP, rurl + '?nw=session', Module.Website);
+          getOK := GETWithLogin(DownloadThread.FHTTP, rurl + '?nw=session', Module);
         if getOK then begin
           GetImageLink;
           //get page count
@@ -278,7 +278,7 @@ begin
             for i := 1 to p do
             begin
               if DownloadThread.IsTerminated then Break;
-              if GETWithLogin(DownloadThread.FHTTP, rurl + '?p=' + IntToStr(i), Module.Website) then
+              if GETWithLogin(DownloadThread.FHTTP, rurl + '?p=' + IntToStr(i), Module) then
                 GetImageLink;
             end;
           end;
@@ -326,7 +326,7 @@ var
       if iurl = '' then
         iurl := query.XPathString('//a/img/@src[not(contains(.,"ehgt.org/"))]');
       if iurl <> '' then
-        Result := GETWithLogin(DownloadThread.FHTTP, iurl, Module.Website);
+        Result := GETWithLogin(DownloadThread.FHTTP, iurl, Module);
       if DownloadThread.IsTerminated then Break;
       if rcount >= reconnect then Break;
       if not Result then begin
@@ -376,7 +376,7 @@ var
             nls := nls + '&nl=' + nl;
           iurl := iurl + nls;
         end;
-        if not GETWithLogin(DownloadThread.FHTTP, iurl, Module.Website) then Break;
+        if not GETWithLogin(DownloadThread.FHTTP, iurl, Module) then Break;
         Inc(rcount);
       end;
     end;
@@ -389,7 +389,7 @@ begin
   iurl := FillHost(Module.RootURL, AURL);
   if settingsimagesize <= High(settingsimagesizestr) then
     DownloadThread.FHTTP.Cookies.Values['uconfig'] := settingsimagesizestr[settingsimagesize];
-  if GETWithLogin(DownloadThread.FHTTP, iurl, Module.Website) then begin
+  if GETWithLogin(DownloadThread.FHTTP, iurl, Module) then begin
     query := TXQueryEngineHTML.Create(DownloadThread.FHTTP.Document);
     try
       Result := DoDownloadImage;

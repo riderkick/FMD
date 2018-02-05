@@ -50,7 +50,7 @@ type
 
   TOnAfterImageSaved = function(const AFilename: String; const Module: TModuleContainer): Boolean;
 
-  TOnLogin = function(const AHTTP: THTTPSendThread): Boolean;
+  TOnLogin = function(const AHTTP: THTTPSendThread; const Module: TModuleContainer): Boolean;
 
   TModuleMethod = (MMGetDirectoryPageNumber, MMGetNameAndLink, MMGetInfo,
     MMTaskStart, MMGetPageNumber, MMGetImageURL, MMBeforeDownloadImage,
@@ -81,6 +81,8 @@ type
     procedure AddOption(const AOptionType: TWebsiteOptionType;
       const ABindValue: Pointer; const AName: String; const ACaption: PString);
   public
+    Tag: Integer;
+    TagPtr: Pointer;
     Website: String;
     RootURL: String;
     MaxTaskLimit: Integer;
@@ -692,7 +694,7 @@ begin
   if (ModuleId < 0) or (ModuleId >= FModuleList.Count) then Exit;
   with TModuleContainer(FModuleList[ModuleId]) do
     if Assigned(OnLogin) then
-      Result := OnLogin(AHTTP);
+      Result := OnLogin(AHTTP, TModuleContainer(FModuleList[ModuleId]));
 end;
 
 function TWebsiteModules.Login(const AHTTP: THTTPSendThread;

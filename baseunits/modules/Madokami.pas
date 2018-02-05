@@ -35,7 +35,7 @@ var
   madokamiulist: array of TStrings;
   accountexist: Boolean = False;
 
-function Login(const AHTTP: THTTPSendThread): Boolean;
+function Login(const AHTTP: THTTPSendThread; const Module: TModuleContainer): Boolean;
 begin
   Result := False;
   if Account.Enabled[modulename] = False then Exit;
@@ -86,7 +86,7 @@ begin
   end;
 end;
 
-function GETWithLogin(const AHTTP: THTTPSendThread; AURL: String): Boolean;
+function GETWithLogin(const AHTTP: THTTPSendThread; AURL: String; const Module: TModuleContainer): Boolean;
 begin
   Result := False;
   SetAuth(AHTTP);
@@ -95,7 +95,7 @@ begin
   if ((AHTTP.ResultCode > 400) and (AHTTP.Headers.Values['WWW-Authenticate'] = ' Basic')) or
     (Pos('/login',AHTTP.Headers.Values['Location']) <> 0) then
   begin
-    if Login(AHTTP) then
+    if Login(AHTTP, Module) then
       Result := AHTTP.GET(AURL);
   end;
 end;
@@ -137,7 +137,7 @@ begin
   Result := NO_ERROR;
   if not accountexist then Exit;
   if  workPtr < Length(madokamilist) then begin
-    if GETWithLogin(MangaInfo.FHTTP, Module.RootURL + '/Manga/' + madokamilist[WorkPtr+1]) then begin
+    if GETWithLogin(MangaInfo.FHTTP, Module.RootURL + '/Manga/' + madokamilist[WorkPtr+1], Module) then begin
       XPathStringAll('//table[@id="index-table"]/tbody/tr/td[1]/a/@href', MangaInfo.FHTTP.Document, madokamiulist[WorkPtr]);
       Page := madokamiulist[WorkPtr].Count;
     end;
@@ -173,7 +173,7 @@ begin
   else
     u := Module.RootURL + madokamiotherlist[Module.CurrentDirectoryIndex-Length(madokamilist)];
   if u = '' then Exit;
-  if GETWithLogin(MangaInfo.FHTTP, u) then begin
+  if GETWithLogin(MangaInfo.FHTTP, u, Module) then begin
     Result := NO_ERROR;
     if Module.CurrentDirectoryIndex < Length(madokamilist) then begin
       l1 := TStringList.Create;
@@ -181,7 +181,7 @@ begin
         XPathStringAll('//table[@id="index-table"]/tbody/tr/td[1]/a/@href', MangaInfo.FHTTP.Document, l1);
         for i := 0 to l1.Count - 1 do begin
           if MangaInfo.Thread.IsTerminated then Break;
-          if GETWithLogin(MangaInfo.FHTTP, MaybeFillHost(Module.RootURL, l1[i]))  then
+          if GETWithLogin(MangaInfo.FHTTP, MaybeFillHost(Module.RootURL, l1[i]), Module)  then
             GetList;
         end;
       finally
@@ -201,7 +201,7 @@ var
 begin
   Result := NET_PROBLEM;
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
-  if GETWithLogin(MangaInfo.FHTTP, MaybeFillHost(Module.RootURL, AURL)) then begin
+  if GETWithLogin(MangaInfo.FHTTP, MaybeFillHost(Module.RootURL, AURL), Module) then begin
     Result := NO_ERROR;
     with MangaInfo.mangaInfo, TXQueryEngineHTML.Create(MangaInfo.FHTTP.Document) do
       try
@@ -245,7 +245,7 @@ begin
   with DownloadThread.Task.Container do begin
     PageLinks.Clear;
     PageNumber := 0;
-    if GETWithLogin(DownloadThread.FHTTP, FillHost(Module.RootURL, AURL)) then begin
+    if GETWithLogin(DownloadThread.FHTTP, FillHost(Module.RootURL, AURL), Module) then begin
       Result := True;
       with TXQueryEngineHTML.Create(DownloadThread.FHTTP.Document) do
         try
@@ -272,7 +272,7 @@ function DownloadImage(const DownloadThread: TDownloadThread;
 begin
   Result := False;
   if DownloadThread = nil then Exit;
-  Result := GETWithLogin(DownloadThread.FHTTP, AURL);
+  Result := GETWithLogin(DownloadThread.FHTTP, AURL, Module);
 end;
 
 procedure RegisterModule;

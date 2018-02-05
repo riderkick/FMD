@@ -22,7 +22,7 @@ var
   MangaTradersLockLogin: TRTLCriticalSection;
   MangaTradersOnLogin: Boolean;
 
-function MangaTradersLogin(const AHTTP: THTTPSendThread): Boolean;
+function MangaTradersLogin(const AHTTP: THTTPSendThread; const Module: TModuleContainer): Boolean;
 var
   s: String;
 begin
@@ -66,7 +66,7 @@ begin
   end;
 end;
 
-function GETMangaTraders(const AHTTP: THTTPSendThread; const AURL: String): Boolean;
+function GETMangaTraders(const AHTTP: THTTPSendThread; const AURL: String; const Module: TModuleContainer): Boolean;
 var
   accstat: TAccountStatus;
 begin
@@ -78,7 +78,7 @@ begin
       AHTTP.Cookies.AddText(Account.Cookies[MMangaTraders.Website])
     else
     if accstat in [asChecking, asUnknown] then
-      Result := MangaTradersLogin(AHTTP);
+      Result := MangaTradersLogin(AHTTP, Module);
   end;
   Result := AHTTP.GET(AURL);
 end;
@@ -145,7 +145,7 @@ begin
   begin
     url := RemoveURLDelim(FillHost(Module.RootURL, AURL));
     if Module = MMangaTraders then
-      r := GETMangaTraders(MangaInfo.FHTTP, url)
+      r := GETMangaTraders(MangaInfo.FHTTP, url, Module)
     else
       r := GET(url);
     if r then begin
