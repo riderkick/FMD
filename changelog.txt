@@ -5,6 +5,8 @@ Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
 0.9.133.0 (xx-xx-2018)
+[+] Added left download toolbar to move selected download(s)
+[*] View manga info preserve saveto location from download or favorite
 [+] Added WorldThree [EN-SC]
 [+] Added PsychoPlay [EN-SC]
 [+] Added MangaZukiRaws [Raws]
