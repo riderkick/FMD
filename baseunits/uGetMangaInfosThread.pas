@@ -198,7 +198,7 @@ begin
         end;
         vtMangaList.EndUpdate;
       end;
-    ShowInformation(mangaInfo.title, mangaInfo.website, mangaInfo.link);
+    ShowInformation;
   end;
 end;
 

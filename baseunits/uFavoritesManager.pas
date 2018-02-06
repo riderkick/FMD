@@ -114,8 +114,10 @@ type
     // Show notification form after checking completed
     procedure ShowResult;
     // Return true if a manga exist in favorites
-    function IsMangaExist(const ATitle, AWebsite: String): Boolean;
-    function IsMangaExistURL(const AWebsite, AURL: String): Boolean;
+    function LocateManga(const ATitle, AWebsite: String): TFavoriteContainer;
+    function IsMangaExist(const ATitle, AWebsite: String): Boolean; inline;
+    function LocateMangaByLink(const AWebsite, ALink: String): TFavoriteContainer;
+    function IsMangaExistLink(const AWebsite, ALink: String): Boolean; inline;
     // Add new manga to the list
     procedure Add(const ATitle, ACurrentChapter, ADownloadedChapterList, AWebsite, ASaveTo, ALink: String);
     // Merge manga information with a title that already exist in favorites
@@ -852,28 +854,38 @@ begin
   end;
 end;
 
-function TFavoriteManager.IsMangaExist(const ATitle, AWebsite: String): Boolean;
+function TFavoriteManager.LocateManga(const ATitle, AWebsite: String): TFavoriteContainer;
 var
   i: Integer;
 begin
-  Result := False;
-  if Items.Count > 0 then
+  Result := nil;
+  if Items.Count <> 0 then
     for i := 0 to Items.Count - 1 do
       with Items[i].FavoriteInfo do
         if SameText(ATitle, Title) and SameText(AWebsite, Website) then
-          Exit(True);
+          Exit(Items[i]);
 end;
 
-function TFavoriteManager.IsMangaExistURL(const AWebsite, AURL: String): Boolean;
+function TFavoriteManager.IsMangaExist(const ATitle, AWebsite: String): Boolean;
+begin
+  Result := LocateManga(ATitle, AWebsite) <> nil;
+end;
+
+function TFavoriteManager.LocateMangaByLink(const AWebsite, ALink: String): TFavoriteContainer;
 var
   i: Integer;
 begin
-  Result := False;
-  if Items.Count > 0 then
+  Result := nil;
+  if Items.Count <> 0 then
     for i := 0 to Items.Count - 1 do
       with Items[i].FavoriteInfo do
-        if SameText(AWebsite, Website) and SameText(AURL, Link) then
-          Exit(True);
+        if SameText(AWebsite, Website) and SameText(ALink, Link) then
+          Exit(Items[i]);
+end;
+
+function TFavoriteManager.IsMangaExistLink(const AWebsite, ALink: String): Boolean;
+begin
+  Result := LocateMangaByLink(AWebsite, ALink) <> nil;
 end;
 
 procedure TFavoriteManager.Add(const ATitle, ACurrentChapter, ADownloadedChapterList,

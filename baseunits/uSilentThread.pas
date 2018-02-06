@@ -362,7 +362,7 @@ begin
 
       if FSavePath = '' then
       begin
-        FilledSaveTo;
+        FillSaveTo;
         FSavePath := edSaveTo.Text;
         // save to
         if OptionGenerateMangaFolder then
@@ -450,7 +450,7 @@ begin
         title := Info.mangaInfo.title;
       if FSavePath = '' then
       begin
-        FilledSaveTo;
+        FillSaveTo;
         s := edSaveTo.Text;
       end
       else

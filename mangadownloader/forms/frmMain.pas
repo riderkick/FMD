@@ -651,7 +651,10 @@ type
     procedure ClearChapterListState;
   public
     optionMangaSiteSelectionNodes: array of PVirtualNode;
-    LastSearchStr, LastSearchWeb: String;
+    LastSearchStr: String;
+    LastSearchWeb: String;
+    LastUserPickedSaveTo: String;
+    LastViewMangaInfoSender: TObject;
 
     // state of chapterlist in mangainfo
     ChapterList: array of TChapterStateItem;
@@ -685,14 +688,14 @@ type
     procedure AddTextToInfo(const ATitle, AValue: String);
 
     // fill edSaveTo with default path
-    procedure FilledSaveTo;
+    procedure FillSaveTo;
 
     // View manga information
-    procedure ViewMangaInfo(const AURL, AWebsite, ATitle: String;
-      const AMangaListNode: PVirtualNode = nil);
+    procedure ViewMangaInfo(const ALink, AWebsite, ATitle, ASaveTo: String;
+      const ASender: TObject; const AMangaListNode: PVirtualNode = nil);
 
     // Show manga information
-    procedure ShowInformation(const title, website, link: String);
+    procedure ShowInformation;
 
     // get manga list from server
     procedure RunGetList;
@@ -1873,7 +1876,7 @@ procedure TMainForm.miDownloadViewMangaInfoClick(Sender: TObject);
 begin
   if Assigned(vtDownload.FocusedNode) then
     with DLManager.Items[vtDownload.FocusedNode^.Index].DownloadInfo do
-      ViewMangaInfo(Link, Website, Title);
+      ViewMangaInfo(Link, Website, Title, SaveTo, miDownloadViewMangaInfo);
 end;
 
 procedure TMainForm.miChapterListHighlightClick(Sender: TObject);
@@ -2073,7 +2076,7 @@ procedure TMainForm.miFavoritesViewInfosClick(Sender: TObject);
 begin
   if Assigned(vtFavorites.FocusedNode) then
     with FavoriteManager.Items[vtFavorites.FocusedNode^.Index].FavoriteInfo do
-      ViewMangaInfo(Link, Website, Title);
+      ViewMangaInfo(Link, Website, Title, SaveTo, miFavoritesViewInfos);
 end;
 
 procedure TMainForm.miHighlightNewMangaClick(Sender: TObject);
@@ -2236,7 +2239,10 @@ begin
     if links.Count<>0 then
     begin
       s:=edSaveTo.Text;
-      if OptionGenerateMangaFolder then
+      if OptionGenerateMangaFolder and
+        not((LastViewMangaInfoSender = miDownloadViewMangaInfo) or
+            (LastViewMangaInfoSender = miFavoritesViewInfos)) // ignore custom saveto options
+        then
         s:=AppendPathDelim(s)+CustomRename(
           OptionMangaCustomRename,
           mangaInfo.website,
@@ -3402,14 +3408,10 @@ begin
 end;
 
 procedure TMainForm.miMangaListViewInfosClick(Sender: TObject);
-var
-  data: PMangaInfoData;
 begin
   if Assigned(vtMangaList.FocusedNode) then
-  begin
-    data := vtMangaList.GetNodeData(vtMangaList.FocusedNode);
-    ViewMangaInfo(data^.link, data^.website, data^.title, vtMangaList.FocusedNode);
-  end;
+    with PMangaInfoData(vtMangaList.GetNodeData(vtMangaList.FocusedNode))^ do
+      ViewMangaInfo(link, website, title, '', miMangaListViewInfos, vtMangaList.FocusedNode);
 end;
 
 procedure TMainForm.miFavoritesOpenFolderClick(Sender: TObject);
@@ -4653,29 +4655,27 @@ begin
   end;
 end;
 
-procedure TMainForm.FilledSaveTo;
+procedure TMainForm.FillSaveTo;
 begin
-  if Trim(edSaveTo.Text) = '' then
-  begin
-    edSaveTo.Text := Trim(configfile.ReadString('saveto', 'SaveTo', DEFAULT_PATH));
-    if edSaveTo.Text = '' then
-      edSaveTo.Text := DEFAULT_PATH;
-  end;
+  if Trim(edSaveTo.Text) <> '' then Exit;
+  if LastUserPickedSaveTo = '' then
+    LastUserPickedSaveTo := Trim(configfile.ReadString('saveto', 'SaveTo', DEFAULT_PATH));
+  if LastUserPickedSaveTo = '' then
+    LastUserPickedSaveTo := DEFAULT_PATH;
+  edSaveTo.Text := LastUserPickedSaveTo;
 end;
 
-procedure TMainForm.ViewMangaInfo(const AURL, AWebsite, ATitle: String;
-  const AMangaListNode: PVirtualNode);
+procedure TMainForm.ViewMangaInfo(const ALink, AWebsite, ATitle, ASaveTo: String;
+  const ASender: TObject; const AMangaListNode: PVirtualNode);
 var
   i: Integer;
+  fav: TFavoriteContainer;
 begin
-  if (AURL = '') or (AWebsite = '') then Exit;
+  if (ALink = '') or (AWebsite = '') then Exit;
 
   // terminate exisiting getmangainfo thread
   if Assigned(GetInfosThread) then
     try
-      { TODO -oriderkick : Access violation on terminate
-        if terminating thread while starting download cover
-      }
       GetInfosThread.Terminate;
       GetInfosThread.WaitFor;
     except
@@ -4684,9 +4684,9 @@ begin
   // set the UI
   i := Modules.LocateModule(AWebsite);
   if i <> -1 then
-    edURL.Text := FillHost(Modules.Module[i].RootURL, AURL)
+    edURL.Text := FillHost(Modules.Module[i].RootURL, ALink)
   else
-    edURL.Text := FillMangaSiteHost(AWebsite, AURL);
+    edURL.Text := FillMangaSiteHost(AWebsite, ALink);
   pcMain.ActivePage := tsInformation;
   imCover.Picture.Assign(nil);
   rmInformation.Clear;
@@ -4700,28 +4700,43 @@ begin
   btDownload.Enabled := False;
   btDownloadSplit.Enabled := btDownload.Enabled;
   btReadOnline.Enabled := True;
+
+  // set saveto
+  edSaveTo.Text := ASaveTo;
+  LastViewMangaInfoSender := ASender;
+  if edSaveTo.Text = '' then
+    FillSaveTo;
+
   DisableAddToFavorites(AWebsite);
   //check if manga already in FavoriteManager list
-  if btAddToFavorites.Enabled and
-    (ATitle <> '') and
-    (FavoriteManager.Count > 0) then
-    btAddToFavorites.Enabled := not FavoriteManager.IsMangaExist(ATitle, AWebsite);
+  if btAddToFavorites.Enabled and not(LastViewMangaInfoSender = miFavoritesViewInfos) then
+  begin
+    fav := FavoriteManager.LocateMangaByLink(AWebsite, ALink);
+    if fav <> nil then
+    begin
+      btAddToFavorites.Enabled := False;
+      if LastViewMangaInfoSender <> miDownloadViewMangaInfo then
+      begin
+        edSaveTo.Text := fav.FavoriteInfo.SaveTo;
+        LastViewMangaInfoSender := miFavoritesViewInfos;
+      end;
+    end;
+  end;
 
   // start the thread
   GetInfosThread := TGetMangaInfosThread.Create;
   GetInfosThread.MangaListNode := AMangaListNode;
   GetInfosThread.Title := ATitle;
   GetInfosThread.Website := AWebsite;
-  GetInfosThread.Link := AURL;
+  GetInfosThread.Link := ALink;
   GetInfosThread.Start;
 end;
 
-procedure TMainForm.ShowInformation(const title, website, link: String);
+procedure TMainForm.ShowInformation;
 var
   i, j: Integer;
 begin
   pcMain.ActivePage := tsInformation;
-  FilledSaveTo;
 
   imCover.Picture.Assign(nil);
 
@@ -4773,11 +4788,6 @@ begin
   btDownload.Enabled := (clbChapterList.RootNodeCount > 0);
   btDownloadSplit.Enabled := btDownload.Enabled;
   btReadOnline.Enabled := (mangaInfo.link <> '');
-  DisableAddToFavorites(website);
-
-  //check if manga already in FavoriteManager list
-  if btAddToFavorites.Enabled and (FavoriteManager.Count > 0) then
-    btAddToFavorites.Enabled := not FavoriteManager.IsMangaExist(mangaInfo.title, website);
 end;
 
 procedure TMainForm.RunGetList;
@@ -5432,7 +5442,7 @@ begin
     Exit;
   end;
 
-  ViewMangaInfo(link, website, '');
+  ViewMangaInfo(link, website, '', '', edURL);
 end;
 
 procedure TMainForm.edURLKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
