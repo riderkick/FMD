@@ -144,11 +144,13 @@ begin
   Result := '';
 
   with TDCP_md5.Create(nil) do
-  begin
-    Init;
-    UpdateStr(key);
-    Final(keyHash);
-  end;
+    try
+      Init;
+      UpdateStr(key);
+      Final(keyHash);
+    finally
+      Free;
+    end;
 
   data := LowerCase(StrToHexStr(BytesToString(keyHash)));
   for i := 0 to 31 do
@@ -159,7 +161,6 @@ begin
     ivBytes[i] := Byte(iv[i + 1]);
 
   with TDCP_rijndael.Create(nil) do
-  begin
     try
       Init(keyBytes, 32*8, @ivBytes[0]);
       data := DecodeStringBase64(s);
@@ -169,7 +170,6 @@ begin
     finally
       Free;
     end;
-  end;
 end;
 
 end.
