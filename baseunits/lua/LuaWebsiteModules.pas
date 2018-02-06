@@ -211,9 +211,9 @@ begin
     l := LuaNewBaseState;
     try
       luaPushMe(l);
+      luaPushObject(L, DownloadThread.Task.Container, 'task');
       luaPushObject(l, DownloadThread.FHTTP, 'http');
       luaPushStringGlobal(l, 'url', AURL);
-      luaPushObject(L, DownloadThread.Task.Container, 'task');
 
       if luaL_dofile(l, PChar(Filename)) <> 0 then
         raise Exception.Create('');
@@ -237,6 +237,7 @@ begin
     l := LuaNewBaseState;
     try
       luaPushMe(l);
+      luaPushObject(L, DownloadThread.Task.Container, 'task');
       luaPushObject(l, DownloadThread.FHTTP, 'http');
       luaPushStringGlobal(l, 'url', AURL);
 
@@ -262,6 +263,7 @@ begin
     l := LuaNewBaseState;
     try
       luaPushMe(l);
+      luaPushObject(L, DownloadThread.Task.Container, 'task');
       luaPushObject(l, DownloadThread.FHTTP, 'http');
       luaPushStringGlobal(l, 'url', AURL);
 
@@ -287,6 +289,7 @@ begin
     l := LuaNewBaseState;
     try
       luaPushMe(l);
+      luaPushObject(L, DownloadThread.Task.Container, 'task');
       luaPushObject(l, DownloadThread.FHTTP, 'http');
       luaPushStringGlobal(l, 'url', AURL);
 
