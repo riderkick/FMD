@@ -1153,7 +1153,6 @@ begin
 
   // downloadmanager
   DLManager := TDownloadManager.Create;
-  DLManager.Restore;
 
   // favorites
   FavoriteManager := TFavoriteManager.Create;
@@ -1176,12 +1175,6 @@ begin
 
   if cbFilterStatus.Items.Count > 2 then
     cbFilterStatus.ItemIndex := 2;
-
-  // show download list
-  UpdateVtDownload;
-
-  // show favorite list
-  UpdateVtFavorites;
 
   InitCheckboxes;
 
@@ -1453,7 +1446,7 @@ begin
     with TTimer.Create(nil) do
     begin
       OnTimer := @tmStartupTimer;
-      Interval := 1000;
+      Interval := 32;
       Enabled := True;
     end;
   end;
@@ -1806,6 +1799,13 @@ begin
     //load lua modules
     ScanLuaWebsiteModulesFile;
     {$endif}
+
+    //restore everything after all modules loaded
+    DLManager.Restore;
+    UpdateVtDownload;
+
+    FavoriteManager.Restore;
+    UpdateVtFavorites;
 
     if cbSelectManga.ItemIndex > -1 then
       OpenDataDB(cbSelectManga.Items[cbSelectManga.ItemIndex]);

@@ -563,7 +563,6 @@ begin
   FFavoritesDB := TFavoritesDB.Create(FAVORITESDB_FILE);
   FFavoritesDB.Open;
   ConvertToDB;
-  Restore;
 end;
 
 destructor TFavoriteManager.Destroy;
