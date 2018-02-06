@@ -127,7 +127,7 @@ begin
   u := TUserData(luaClassGetObject(L));
   case lua_gettop(L) of
     3: u.XPathHREFAll(lua_tostring(L, 1), TStrings(luaGetUserData(L, 2)),
-        TStrings(luaGetUserData(L, 2)));
+        TStrings(luaGetUserData(L, 3)));
     4: u.XPathHREFAll(lua_tostring(L, 1), TStrings(luaGetUserData(L, 2)),
         TStrings(luaGetUserData(L, 3)), TLuaIXQValue(luaGetUserData(L, 4)).FIXQValue)
   end;
@@ -141,7 +141,7 @@ begin
   u := TUserData(luaClassGetObject(L));
   case lua_gettop(L) of
     3: u.XPathHREFtitleAll(lua_tostring(L, 1), TStrings(luaGetUserData(L, 2)),
-        TStrings(luaGetUserData(L, 2)));
+        TStrings(luaGetUserData(L, 3)));
     4: u.XPathHREFtitleAll(lua_tostring(L, 1), TStrings(luaGetUserData(L, 2)),
         TStrings(luaGetUserData(L, 3)), TLuaIXQValue(luaGetUserData(L, 4)).FIXQValue)
   end;

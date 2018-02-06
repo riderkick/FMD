@@ -139,7 +139,7 @@ begin
       luaPushObject(l, MangaInfo.FHTTP, 'http');
       luaPushStringGlobal(L, 'url', AURL);
       luaPushObject(l, ANames, 'names');
-      luaPushObject(l, ANames, 'links');
+      luaPushObject(l, ALinks, 'links');
 
       if luaL_dofile(l, PChar(Filename)) <> 0 then
         raise Exception.Create('');
@@ -239,6 +239,7 @@ begin
       luaPushMe(l);
       luaPushObject(L, DownloadThread.Task.Container, 'task');
       luaPushObject(l, DownloadThread.FHTTP, 'http');
+      luaPushIntegerGlobal(l, 'workid', DownloadThread.WorkId);
       luaPushStringGlobal(l, 'url', AURL);
 
       if luaL_dofile(l, PChar(Filename)) <> 0 then
