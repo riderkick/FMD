@@ -116,15 +116,19 @@ begin
   TStringList(TUserData(luaClassGetObject(L))).Sort;
 end;
 
+function strings_clear(L: Plua_State): Integer; cdecl;
+begin
+  Result := 0;
+  TUserData(luaClassGetObject(L)).Clear;
+end;
+
 const
-  constructs: packed array [0..4] of luaL_Reg = (
+  constructs: packed array [0..2] of luaL_Reg = (
     (name: 'New'; func: @strings_create),
     (name: 'Create'; func: @strings_create),
-    (name: 'new'; func: @strings_create),
-    (name: 'create'; func: @strings_create),
     (name: nil; func: nil)
     );
-  methods: packed array [0..9] of luaL_Reg = (
+  methods: packed array [0..10] of luaL_Reg = (
     (name: 'LoadFromFile'; func: @strings_loadfromfile),
     (name: 'SetText'; func: @strings_settext),
     (name: 'GetText'; func: @strings_gettext),
@@ -134,6 +138,7 @@ const
     (name: 'Set'; func: @strings_set),
     (name: 'GetCount'; func: @strings_getcount),
     (name: 'Sort'; func: @strings_sort),
+    (name: 'Clear'; func: @strings_clear),
     (name: nil; func: nil)
     );
   props: packed array[0..4] of lual_Reg_prop = (
