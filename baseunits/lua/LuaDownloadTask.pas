@@ -17,9 +17,9 @@ procedure luaDownloadTaskMetaTable(L: Plua_State; Obj: Pointer;
 begin
   with TTaskContainer(Obj) do
   begin
-    luaClassAddObject(L, ChapterName, MetaTable, 'chapterName');
-    luaClassAddObject(L, ChapterLinks, MetaTable, 'chapterLinks');
-    luaClassAddObject(L, PageContainerLinks, MetaTable, 'chapterLinks');
+    luaClassAddObject(L, PageLinks, MetaTable, 'PageLinks');
+    luaClassAddObject(L, PageContainerLinks, MetaTable, 'PageContainerLinks');
+    luaClassAddIntegerProperty(L, MetaTable, 'PageNumber', @PageNumber);
   end;
 end;
 
