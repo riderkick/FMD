@@ -1,16 +1,5 @@
 msgid ""
-msgstr ""
-"Content-Type: text/plain; charset=UTF-8\n"
-"Project-Id-Version: \n"
-"POT-Creation-Date: \n"
-"PO-Revision-Date: \n"
-"Last-Translator: \n"
-"Language-Team: \n"
-"MIME-Version: 1.0\n"
-"Content-Transfer-Encoding: 8bit\n"
-"Language: en_US\n"
-"X-Generator: Poedit 2.0.1\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+msgstr "Content-Type: text/plain; charset=UTF-8"
 
 #: batoto.rs_serverselection
 msgid "Image server:"
@@ -45,7 +34,6 @@ msgid "Download original image(require ExHentai account)"
 msgstr "Download original image(require ExHentai account)"
 
 #: ehentai.rs_settingsimagesize
-#| msgid "Image size"
 msgid "Image size:"
 msgstr "Image size:"
 
@@ -289,7 +277,6 @@ msgid "Mode: Filtered (%d)"
 msgstr "Mode: Filtered (%d)"
 
 #: frmmain.rs_modesearching
-#| msgid "Searching..."
 msgctxt "frmmain.rs_modesearching"
 msgid "Mode: Searching..."
 msgstr "Mode: Searching..."
@@ -309,6 +296,10 @@ msgid ""
 "CBZ\n"
 "PDF\n"
 msgstr ""
+"None\n"
+"ZIP\n"
+"CBZ\n"
+"PDF\n"
 
 #: frmmain.rs_optionfmddoitems
 msgid ""
@@ -424,25 +415,22 @@ msgid "Refresh"
 msgstr "Refresh"
 
 #: taccountmanagerform.vtaccountlist.header.columns[1].text
-#| msgid "Username"
-msgctxt "taccountmanagerform.vtaccountlist.header.columns[1].text"
+msgctxt "TACCOUNTMANAGERFORM.VTACCOUNTLIST.HEADER.COLUMNS[1].TEXT"
 msgid "Website"
 msgstr "Website"
 
 #: taccountmanagerform.vtaccountlist.header.columns[2].text
-#| msgid "Status"
-msgctxt "taccountmanagerform.vtaccountlist.header.columns[2].text"
+msgctxt "TACCOUNTMANAGERFORM.VTACCOUNTLIST.HEADER.COLUMNS[2].TEXT"
 msgid "Username"
 msgstr "Username"
 
 #: taccountmanagerform.vtaccountlist.header.columns[3].text
-#| msgid "Status"
-msgctxt "taccountmanagerform.vtaccountlist.header.columns[3].text"
+msgctxt "TACCOUNTMANAGERFORM.VTACCOUNTLIST.HEADER.COLUMNS[3].TEXT"
 msgid "Status"
 msgstr "Status"
 
 #: taccountsetform.btcancel.caption
-msgctxt "taccountsetform.btcancel.caption"
+msgctxt "TACCOUNTSETFORM.BTCANCEL.CAPTION"
 msgid "Cancel"
 msgstr "Cancel"
 
@@ -455,30 +443,27 @@ msgid "Show password"
 msgstr "Show password"
 
 #: taccountsetform.edpassword.texthint
-msgctxt "taccountsetform.edpassword.texthint"
+msgctxt "TACCOUNTSETFORM.EDPASSWORD.TEXTHINT"
 msgid "Password"
 msgstr "Password"
 
 #: taccountsetform.edusername.texthint
-#| msgid "Status"
-msgctxt "taccountsetform.edusername.texthint"
+msgctxt "TACCOUNTSETFORM.EDUSERNAME.TEXTHINT"
 msgid "Username"
 msgstr "Username"
 
 #: taccountsetform.label1.caption
-#| msgid "Username"
-msgctxt "taccountsetform.label1.caption"
+msgctxt "TACCOUNTSETFORM.LABEL1.CAPTION"
 msgid "Website"
 msgstr "Website"
 
 #: taccountsetform.label2.caption
-#| msgid "Status"
-msgctxt "taccountsetform.label2.caption"
+msgctxt "TACCOUNTSETFORM.LABEL2.CAPTION"
 msgid "Username"
 msgstr "Username"
 
 #: taccountsetform.label3.caption
-msgctxt "taccountsetform.label3.caption"
+msgctxt "TACCOUNTSETFORM.LABEL3.CAPTION"
 msgid "Password"
 msgstr "Password"
 
@@ -503,7 +488,7 @@ msgid "Manga list"
 msgstr "Manga list"
 
 #: tformdroptarget.miaddtofavorites.caption
-msgctxt "tformdroptarget.miaddtofavorites.caption"
+msgctxt "TFORMDROPTARGET.MIADDTOFAVORITES.CAPTION"
 msgid "Add to favorites"
 msgstr "Add to favorites"
 
@@ -512,7 +497,7 @@ msgid "&Close"
 msgstr "&Close"
 
 #: tformdroptarget.midownloadall.caption
-msgctxt "tformdroptarget.midownloadall.caption"
+msgctxt "TFORMDROPTARGET.MIDOWNLOADALL.CAPTION"
 msgid "Download all"
 msgstr "Download all"
 
@@ -548,7 +533,7 @@ msgid "Domdomsoft Manga Downloader"
 msgstr "Domdomsoft Manga Downloader"
 
 #: timportfavorites.edpath.texthint
-msgctxt "timportfavorites.edpath.texthint"
+msgctxt "TIMPORTFAVORITES.EDPATH.TEXTHINT"
 msgid "Path to the software (e.g. C:\\MangaDownloader)"
 msgstr "Path to the software (e.g. C:\\MangaDownloader)"
 
@@ -566,8 +551,7 @@ msgid "Add to favorites"
 msgstr "Add to favorites"
 
 #: tmainform.btchecklatestversion.caption
-#| msgid "Check for new version"
-msgctxt "tmainform.btchecklatestversion.caption"
+msgctxt "TMAINFORM.BTCHECKLATESTVERSION.CAPTION"
 msgid "Check for latest version"
 msgstr "Check for latest version"
 
@@ -651,7 +635,7 @@ msgid "Search only new manga"
 msgstr "Search only new manga"
 
 #: tmainform.cboptionautocheckfavdownload.caption
-msgctxt "tmainform.cboptionautocheckfavdownload.caption"
+msgctxt "TMAINFORM.CBOPTIONAUTOCHECKFAVDOWNLOAD.CAPTION"
 msgid "Automatic download after finish checking"
 msgstr "Automatic download after finish checking"
 
@@ -660,18 +644,16 @@ msgid "Auto check for new chapter in an interval"
 msgstr "Auto check for new chapter in an interval"
 
 #: tmainform.cboptionautocheckfavremovecompletedmanga.caption
-msgctxt "tmainform.cboptionautocheckfavremovecompletedmanga.caption"
+msgctxt "TMAINFORM.CBOPTIONAUTOCHECKFAVREMOVECOMPLETEDMANGA.CAPTION"
 msgid "Automatic remove completed manga from Favorites"
 msgstr "Automatic remove completed manga from Favorites"
 
 #: tmainform.cboptionautocheckfavstartup.caption
-#| msgid "Automatic check for new chapter at startup"
 msgid "Auto check for new chapter at startup"
 msgstr "Auto check for new chapter at startup"
 
 #: tmainform.cboptionautochecklatestversion.caption
-#| msgid "Check for new version "
-msgctxt "tmainform.cboptionautochecklatestversion.caption"
+msgctxt "TMAINFORM.CBOPTIONAUTOCHECKLATESTVERSION.CAPTION"
 msgid "Auto check for latest version "
 msgstr "Auto check for latest version "
 
@@ -680,8 +662,7 @@ msgid "Open Favorites at startup"
 msgstr "Open Favorites at startup"
 
 #: tmainform.cboptionchangeunicodecharacter.caption
-#| msgid "Change all all character to"
-msgctxt "tmainform.cboptionchangeunicodecharacter.caption"
+msgctxt "TMAINFORM.CBOPTIONCHANGEUNICODECHARACTER.CAPTION"
 msgid "Replace all unicode character with"
 msgstr "Replace all unicode character with"
 
@@ -706,7 +687,7 @@ msgid "Auto generate chapter folder"
 msgstr "Auto generate chapter folder"
 
 #: tmainform.cboptiongeneratemangafolder.caption
-msgctxt "tmainform.cboptiongeneratemangafolder.caption"
+msgctxt "TMAINFORM.CBOPTIONGENERATEMANGAFOLDER.CAPTION"
 msgid "Auto generate folder based on manga's name"
 msgstr "Auto generate folder based on manga's name"
 
@@ -753,6 +734,10 @@ msgstr "Show downloads toolbar"
 #: tmainform.cboptionshowdownloadtoolbardeleteall.caption
 msgid "Show \"Delete all completed tasks\" in downloads toolbar"
 msgstr "Show \"Delete all completed tasks\" in downloads toolbar"
+
+#: tmainform.cboptionshowdownloadtoolbarleft.caption
+msgid "Show left downloads toolbar"
+msgstr "Show left downloads toolbar"
 
 #: tmainform.cboptionshowquitdialog.caption
 msgid "Exit FMD"
@@ -1108,7 +1093,6 @@ msgid "This work usually involves intimate relationships between women."
 msgstr "This work usually involves intimate relationships between women."
 
 #: tmainform.ckoptionsalwaysstarttaskfromfailedchapters.caption
-#| msgid "Always start from failed chapters when task start"
 msgctxt "tmainform.ckoptionsalwaysstarttaskfromfailedchapters.caption"
 msgid "Always start task from failed chapters"
 msgstr "Always start task from failed chapters"
@@ -1118,7 +1102,6 @@ msgid "Input custom genres, separated by comma"
 msgstr "Input custom genres, separated by comma"
 
 #: tmainform.eddownloadssearch.texthint
-#| msgid "Search favorites..."
 msgctxt "tmainform.eddownloadssearch.texthint"
 msgid "Search downloads..."
 msgstr "Search downloads..."
@@ -1139,7 +1122,7 @@ msgid "Author"
 msgstr "Author"
 
 #: tmainform.edfiltermangainfochapters.texthint
-msgctxt "tmainform.edfiltermangainfochapters.texthint"
+msgctxt "TMAINFORM.EDFILTERMANGAINFOCHAPTERS.TEXTHINT"
 msgid "Filter"
 msgstr "Filter"
 
@@ -1158,7 +1141,7 @@ msgid "Search title..."
 msgstr "Search title..."
 
 #: tmainform.edoptionchaptercustomrename.texthint
-msgctxt "tmainform.edoptionchaptercustomrename.texthint"
+msgctxt "TMAINFORM.EDOPTIONCHAPTERCUSTOMRENAME.TEXTHINT"
 msgid "Custom rename"
 msgstr "Custom rename"
 
@@ -1167,19 +1150,17 @@ msgid "Default download path"
 msgstr "Default download path"
 
 #: tmainform.edoptionexternalparams.texthint
-#| msgid "External program parameters"
-msgctxt "tmainform.edoptionexternalparams.texthint"
+msgctxt "TMAINFORM.EDOPTIONEXTERNALPARAMS.TEXTHINT"
 msgid "External program parameters"
 msgstr "External program parameters"
 
 #: tmainform.edoptionexternalpath.texthint
-#| msgid "External program parameters"
-msgctxt "tmainform.edoptionexternalpath.texthint"
+msgctxt "TMAINFORM.EDOPTIONEXTERNALPATH.TEXTHINT"
 msgid "External program path"
 msgstr "External program path"
 
 #: tmainform.edoptionfilenamecustomrename.texthint
-msgctxt "tmainform.edoptionfilenamecustomrename.texthint"
+msgctxt "TMAINFORM.EDOPTIONFILENAMECUSTOMRENAME.TEXTHINT"
 msgid "Custom rename"
 msgstr "Custom rename"
 
@@ -1188,7 +1169,7 @@ msgid "Proxy host/IP"
 msgstr "Proxy host/IP"
 
 #: tmainform.edoptionmangacustomrename.texthint
-msgctxt "tmainform.edoptionmangacustomrename.texthint"
+msgctxt "TMAINFORM.EDOPTIONMANGACUSTOMRENAME.TEXTHINT"
 msgid "Custom rename"
 msgstr "Custom rename"
 
@@ -1210,8 +1191,7 @@ msgid "Input URL here"
 msgstr "Input URL here"
 
 #: tmainform.edwebsitessearch.texthint
-#| msgid "Search..."
-msgctxt "tmainform.edwebsitessearch.texthint"
+msgctxt "TMAINFORM.EDWEBSITESSEARCH.TEXTHINT"
 msgid "Search website..."
 msgstr "Search website..."
 
@@ -1312,23 +1292,22 @@ msgid "Mode: Show all (0)"
 msgstr "Mode: Show all (0)"
 
 #: tmainform.lboptionautocheckfavintervalminutes.caption
-msgctxt "tmainform.lboptionautocheckfavintervalminutes.caption"
+msgctxt "TMAINFORM.LBOPTIONAUTOCHECKFAVINTERVALMINUTES.CAPTION"
 msgid "Auto check for new chapter every %d minutes"
 msgstr "Auto check for new chapter every %d minutes"
 
 #: tmainform.lboptionchaptercustomrename.caption
-#| msgid "Chapter folder name:"
-msgctxt "tmainform.lboptionchaptercustomrename.caption"
+msgctxt "TMAINFORM.LBOPTIONCHAPTERCUSTOMRENAME.CAPTION"
 msgid "Chapter name:"
 msgstr "Chapter name:"
 
 #: tmainform.lboptionchaptercustomrenamehint.caption
-msgctxt "tmainform.lboptionchaptercustomrenamehint.caption"
+msgctxt "TMAINFORM.LBOPTIONCHAPTERCUSTOMRENAMEHINT.CAPTION"
 msgid "[?]"
 msgstr "[?]"
 
 #: tmainform.lboptionchaptercustomrenamehint.hint
-msgctxt "tmainform.lboptionchaptercustomrenamehint.hint"
+msgctxt "TMAINFORM.LBOPTIONCHAPTERCUSTOMRENAMEHINT.HINT"
 msgid ""
 "%WEBSITE% : Website name\n"
 "%MANGA% : Manga title\n"
@@ -1363,7 +1342,7 @@ msgid "Parameters:"
 msgstr "Parameters:"
 
 #: tmainform.lboptionexternalparamshint.caption
-msgctxt "tmainform.lboptionexternalparamshint.caption"
+msgctxt "TMAINFORM.LBOPTIONEXTERNALPARAMSHINT.CAPTION"
 msgid "[?]"
 msgstr "[?]"
 
@@ -1372,7 +1351,7 @@ msgid "Filename:"
 msgstr "Filename:"
 
 #: tmainform.lboptionfilenamecustomrenamehint.caption
-msgctxt "tmainform.lboptionfilenamecustomrenamehint.caption"
+msgctxt "TMAINFORM.LBOPTIONFILENAMECUSTOMRENAMEHINT.CAPTION"
 msgid "[?]"
 msgstr "[?]"
 
@@ -1407,12 +1386,12 @@ msgid "After download finish:"
 msgstr "After download finish:"
 
 #: tmainform.lboptionmangacustomrename.caption
-msgctxt "tmainform.lboptionmangacustomrename.caption"
+msgctxt "TMAINFORM.LBOPTIONMANGACUSTOMRENAME.CAPTION"
 msgid "Manga folder name:"
 msgstr "Manga folder name:"
 
 #: tmainform.lboptionmangacustomrenamehint.caption
-msgctxt "tmainform.lboptionmangacustomrenamehint.caption"
+msgctxt "TMAINFORM.LBOPTIONMANGACUSTOMRENAMEHINT.CAPTION"
 msgid "[?]"
 msgstr "[?]"
 
@@ -1435,17 +1414,14 @@ msgstr ""
 "Manga folder name must have at least %MANGA%.\n"
 
 #: tmainform.lboptionmaxparallel.caption
-#| msgid "Number of downloaded tasks at the same time (Max: 8)"
 msgid "Number of downloaded tasks at the same time"
 msgstr "Number of downloaded tasks at the same time"
 
 #: tmainform.lboptionmaxretry.caption
-#| msgid "Number of retry times if tasks have download problems (0 = always retry)"
 msgid "Number of retry times if tasks have download problems (-1 = always retry)"
 msgstr "Number of retry times if tasks have download problems (-1 = always retry)"
 
 #: tmainform.lboptionmaxthread.caption
-#| msgid "Number of downloaded files per task at the same time (Max: 32)"
 msgid "Number of downloaded files per task at the same time"
 msgstr "Number of downloaded files per task at the same time"
 
@@ -1468,7 +1444,7 @@ msgid "100 = FlateEncode (lossless), lower = DCTEncode (lossy)"
 msgstr "100 = FlateEncode (lossless), lower = DCTEncode (lossy)"
 
 #: tmainform.lboptionpdfqualityhint.caption
-msgctxt "tmainform.lboptionpdfqualityhint.caption"
+msgctxt "TMAINFORM.LBOPTIONPDFQUALITYHINT.CAPTION"
 msgid "[?]"
 msgstr "[?]"
 
@@ -1549,7 +1525,7 @@ msgid "Descending"
 msgstr "Descending"
 
 #: tmainform.michapterlistfilter.caption
-msgctxt "tmainform.michapterlistfilter.caption"
+msgctxt "TMAINFORM.MICHAPTERLISTFILTER.CAPTION"
 msgid "Filter"
 msgstr "Filter"
 
@@ -1558,7 +1534,6 @@ msgid "Hide downloaded chapters"
 msgstr "Hide downloaded chapters"
 
 #: tmainform.michapterlisthighlight.caption
-#| msgid "Highlight download chapters"
 msgid "Highlight downloaded chapters"
 msgstr "Highlight downloaded chapters"
 
@@ -1639,7 +1614,7 @@ msgid "Change \"Save to\""
 msgstr "Change \"Save to\""
 
 #: tmainform.mifavoriteschecknewchapter.caption
-msgctxt "tmainform.mifavoriteschecknewchapter.caption"
+msgctxt "TMAINFORM.MIFAVORITESCHECKNEWCHAPTER.CAPTION"
 msgid "Check for new chapter"
 msgstr "Check for new chapter"
 
@@ -1718,7 +1693,7 @@ msgid "After download finish"
 msgstr "After download finish"
 
 #: tmainform.mitrayexit.caption
-msgctxt "tmainform.mitrayexit.caption"
+msgctxt "TMAINFORM.MITRAYEXIT.CAPTION"
 msgid "Exit"
 msgstr "Exit"
 
@@ -1748,7 +1723,7 @@ msgid "Resume all"
 msgstr "Resume all"
 
 #: tmainform.mitrayshowdropbox.caption
-msgctxt "tmainform.mitrayshowdropbox.caption"
+msgctxt "TMAINFORM.MITRAYSHOWDROPBOX.CAPTION"
 msgid "Show Drop Box"
 msgstr "Show Drop Box"
 
@@ -1761,7 +1736,7 @@ msgid "Download all lists from server at once"
 msgstr "Download all lists from server at once"
 
 #: tmainform.mnfiltergenreallcheck.caption
-msgctxt "tmainform.mnfiltergenreallcheck.caption"
+msgctxt "TMAINFORM.MNFILTERGENREALLCHECK.CAPTION"
 msgid "Check all"
 msgstr "Check all"
 
@@ -1770,7 +1745,7 @@ msgid "Indeterminate all"
 msgstr "Indeterminate all"
 
 #: tmainform.mnfiltergenrealluncheck.caption
-msgctxt "tmainform.mnfiltergenrealluncheck.caption"
+msgctxt "TMAINFORM.MNFILTERGENREALLUNCHECK.CAPTION"
 msgid "Uncheck all"
 msgstr "Uncheck all"
 
@@ -1786,6 +1761,10 @@ msgstr "Download manga list from server"
 msgctxt "TMAINFORM.MNUPDATELIST.CAPTION"
 msgid "Update manga list"
 msgstr "Update manga list"
+
+#: tmainform.pndownloadlist.caption
+msgid "pnDownloadList"
+msgstr "pnDownloadList"
 
 #: tmainform.rball.caption
 msgid "Have all genre checked"
@@ -1820,6 +1799,22 @@ msgstr "Resume All"
 #: tmainform.tbdownloadstopall.caption
 msgid "Stop All"
 msgstr "Stop All"
+
+#: tmainform.tbmidownloadmovebottom.hint
+msgid "Move selected item(s) to bottom"
+msgstr "Move selected item(s) to bottom"
+
+#: tmainform.tbmidownloadmovedown.hint
+msgid "Move selected item(s) down"
+msgstr "Move selected item(s) down"
+
+#: tmainform.tbmidownloadmovetop.hint
+msgid "Move selected item(s) to top"
+msgstr "Move selected item(s) to top"
+
+#: tmainform.tbmidownloadmoveup.hint
+msgid "Move selected item(s) up"
+msgstr "Move selected item(s) up"
 
 #: tmainform.tbwebsitescollapseall.caption
 msgid "Collapse All"
@@ -1915,7 +1910,7 @@ msgid "Advanced"
 msgstr "Advanced"
 
 #: tmainform.tswebsiteoptions.caption
-msgctxt "tmainform.tswebsiteoptions.caption"
+msgctxt "TMAINFORM.TSWEBSITEOPTIONS.CAPTION"
 msgid "Options"
 msgstr "Options"
 
@@ -1925,7 +1920,7 @@ msgid "Websites"
 msgstr "Websites"
 
 #: tmainform.tswebsiteselection.caption
-msgctxt "tmainform.tswebsiteselection.caption"
+msgctxt "TMAINFORM.TSWEBSITESELECTION.CAPTION"
 msgid "Websites"
 msgstr "Websites"
 
@@ -2018,13 +2013,11 @@ msgid "&Now"
 msgstr "&Now"
 
 #: ttransferfavoritesform.btcancel.caption
-#, fuzzy
 msgctxt "ttransferfavoritesform.btcancel.caption"
 msgid "Cancel"
 msgstr "Cancel"
 
 #: ttransferfavoritesform.btok.caption
-#, fuzzy
 msgctxt "ttransferfavoritesform.btok.caption"
 msgid "OK"
 msgstr "OK"
@@ -2058,14 +2051,11 @@ msgid "Valid"
 msgstr "Valid"
 
 #: ttransferfavoritesform.vtfavs.header.columns[1].text
-#, fuzzy
-#| msgid "Website"
 msgctxt "ttransferfavoritesform.vtfavs.header.columns[1].text"
 msgid "Title"
-msgstr "Website"
+msgstr "Title"
 
 #: ttransferfavoritesform.vtfavs.header.columns[2].text
-#, fuzzy
 msgctxt "ttransferfavoritesform.vtfavs.header.columns[2].text"
 msgid "Website"
 msgstr "Website"
@@ -2087,17 +2077,17 @@ msgstr ""
 "FMD will be closed to finish the update.\n"
 
 #: twebsiteoptionadvancedform.menuitem1.caption
-msgctxt "twebsiteoptionadvancedform.menuitem1.caption"
+msgctxt "TWEBSITEOPTIONADVANCEDFORM.MENUITEM1.CAPTION"
 msgid "Add"
 msgstr "Add"
 
 #: twebsiteoptionadvancedform.menuitem2.caption
-msgctxt "twebsiteoptionadvancedform.menuitem2.caption"
+msgctxt "TWEBSITEOPTIONADVANCEDFORM.MENUITEM2.CAPTION"
 msgid "Edit"
 msgstr "Edit"
 
 #: twebsiteoptionadvancedform.menuitem4.caption
-msgctxt "twebsiteoptionadvancedform.menuitem4.caption"
+msgctxt "TWEBSITEOPTIONADVANCEDFORM.MENUITEM4.CAPTION"
 msgid "Delete"
 msgstr "Delete"
 
@@ -2111,7 +2101,7 @@ msgid "Directory page number"
 msgstr "Directory page number"
 
 #: twebsiteoptionadvancedform.tsdownloads.caption
-msgctxt "twebsiteoptionadvancedform.tsdownloads.caption"
+msgctxt "TWEBSITEOPTIONADVANCEDFORM.TSDOWNLOADS.CAPTION"
 msgid "Downloads"
 msgstr "Downloads"
 
@@ -2133,17 +2123,17 @@ msgid "User Agent"
 msgstr "User Agent"
 
 #: twebsiteoptionadvancedform.vtcookies.header.columns[0].text
-msgctxt "twebsiteoptionadvancedform.vtcookies.header.columns[0].text"
+msgctxt "TWEBSITEOPTIONADVANCEDFORM.VTCOOKIES.HEADER.COLUMNS[0].TEXT"
 msgid "Website"
 msgstr "Website"
 
 #: twebsiteoptionadvancedform.vtcookies.header.columns[1].text
-msgctxt "twebsiteoptionadvancedform.vtcookies.header.columns[1].text"
+msgctxt "TWEBSITEOPTIONADVANCEDFORM.VTCOOKIES.HEADER.COLUMNS[1].TEXT"
 msgid "Cookies"
 msgstr "Cookies"
 
 #: twebsiteoptionadvancedform.vtdownloadmaxthreadspertask.header.columns[0].text
-msgctxt "twebsiteoptionadvancedform.vtdownloadmaxthreadspertask.header.columns[0].text"
+msgctxt "TWEBSITEOPTIONADVANCEDFORM.VTDOWNLOADMAXTHREADSPERTASK.HEADER.COLUMNS[0].TEXT"
 msgid "Website"
 msgstr "Website"
 
@@ -2153,32 +2143,32 @@ msgid "Value"
 msgstr "Value"
 
 #: twebsiteoptionadvancedform.vtupdatelistdirectorypagenumber.header.columns[0].text
-msgctxt "twebsiteoptionadvancedform.vtupdatelistdirectorypagenumber.header.columns[0].text"
+msgctxt "TWEBSITEOPTIONADVANCEDFORM.VTUPDATELISTDIRECTORYPAGENUMBER.HEADER.COLUMNS[0].TEXT"
 msgid "Website"
 msgstr "Website"
 
 #: twebsiteoptionadvancedform.vtupdatelistdirectorypagenumber.header.columns[1].text
-msgctxt "twebsiteoptionadvancedform.vtupdatelistdirectorypagenumber.header.columns[1].text"
+msgctxt "TWEBSITEOPTIONADVANCEDFORM.VTUPDATELISTDIRECTORYPAGENUMBER.HEADER.COLUMNS[1].TEXT"
 msgid "Value"
 msgstr "Value"
 
 #: twebsiteoptionadvancedform.vtupdatelistnumberofthreads.header.columns[0].text
-msgctxt "twebsiteoptionadvancedform.vtupdatelistnumberofthreads.header.columns[0].text"
+msgctxt "TWEBSITEOPTIONADVANCEDFORM.VTUPDATELISTNUMBEROFTHREADS.HEADER.COLUMNS[0].TEXT"
 msgid "Website"
 msgstr "Website"
 
 #: twebsiteoptionadvancedform.vtupdatelistnumberofthreads.header.columns[1].text
-msgctxt "twebsiteoptionadvancedform.vtupdatelistnumberofthreads.header.columns[1].text"
+msgctxt "TWEBSITEOPTIONADVANCEDFORM.VTUPDATELISTNUMBEROFTHREADS.HEADER.COLUMNS[1].TEXT"
 msgid "Value"
 msgstr "Value"
 
 #: twebsiteoptionadvancedform.vtuseragent.header.columns[0].text
-msgctxt "twebsiteoptionadvancedform.vtuseragent.header.columns[0].text"
+msgctxt "TWEBSITEOPTIONADVANCEDFORM.VTUSERAGENT.HEADER.COLUMNS[0].TEXT"
 msgid "Website"
 msgstr "Website"
 
 #: twebsiteoptionadvancedform.vtuseragent.header.columns[1].text
-msgctxt "twebsiteoptionadvancedform.vtuseragent.header.columns[1].text"
+msgctxt "TWEBSITEOPTIONADVANCEDFORM.VTUSERAGENT.HEADER.COLUMNS[1].TEXT"
 msgid "User Agent"
 msgstr "User Agent"
 

@@ -759,6 +759,10 @@ msgstr "İndirmeler araç çubuğunu göster"
 msgid "Show \"Delete all completed tasks\" in downloads toolbar"
 msgstr "\"Tüm tamamlanmış görevleri sil\" seçeneğini indirmeler araç çubuğunda göster"
 
+#: tmainform.cboptionshowdownloadtoolbarleft.caption
+msgid "Show left downloads toolbar"
+msgstr ""
+
 #: tmainform.cboptionshowquitdialog.caption
 msgid "Exit FMD"
 msgstr "FMD'den çık"
@@ -1788,6 +1792,10 @@ msgctxt "TMAINFORM.MNUPDATELIST.CAPTION"
 msgid "Update manga list"
 msgstr "Manga listesini güncelle"
 
+#: tmainform.pndownloadlist.caption
+msgid "pnDownloadList"
+msgstr ""
+
 #: tmainform.rball.caption
 msgid "Have all genre checked"
 msgstr "Tüm türleri seç"
@@ -1821,6 +1829,22 @@ msgstr "Tümüne Devam Et"
 #: tmainform.tbdownloadstopall.caption
 msgid "Stop All"
 msgstr "Tümünü Durdur"
+
+#: tmainform.tbmidownloadmovebottom.hint
+msgid "Move selected item(s) to bottom"
+msgstr ""
+
+#: tmainform.tbmidownloadmovedown.hint
+msgid "Move selected item(s) down"
+msgstr ""
+
+#: tmainform.tbmidownloadmovetop.hint
+msgid "Move selected item(s) to top"
+msgstr ""
+
+#: tmainform.tbmidownloadmoveup.hint
+msgid "Move selected item(s) up"
+msgstr ""
 
 #: tmainform.tbwebsitescollapseall.caption
 msgid "Collapse All"
@@ -2348,3 +2372,4 @@ msgstr "Veri eşitleniyor"
 #: uupdatethread.rs_updatinglist
 msgid "Updating list"
 msgstr "Liste güncelleniyor"
+

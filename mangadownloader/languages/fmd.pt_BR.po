@@ -754,6 +754,10 @@ msgstr "Exibir Barra de Ferramentas de Downloads"
 msgid "Show \"Delete all completed tasks\" in downloads toolbar"
 msgstr "Exibir \"Apagar todas tarefas concluídas\" na barra de ferramentas"
 
+#: tmainform.cboptionshowdownloadtoolbarleft.caption
+msgid "Show left downloads toolbar"
+msgstr ""
+
 #: tmainform.cboptionshowquitdialog.caption
 msgid "Exit FMD"
 msgstr "Sair do FMD"
@@ -1787,6 +1791,10 @@ msgctxt "TMAINFORM.MNUPDATELIST.CAPTION"
 msgid "Update manga list"
 msgstr "Atualizar lista de mangá"
 
+#: tmainform.pndownloadlist.caption
+msgid "pnDownloadList"
+msgstr ""
+
 #: tmainform.rball.caption
 msgid "Have all genre checked"
 msgstr "Todos os gêneros marcados"
@@ -1820,6 +1828,22 @@ msgstr "Resumir Tudo"
 #: tmainform.tbdownloadstopall.caption
 msgid "Stop All"
 msgstr "Parar Tudo"
+
+#: tmainform.tbmidownloadmovebottom.hint
+msgid "Move selected item(s) to bottom"
+msgstr ""
+
+#: tmainform.tbmidownloadmovedown.hint
+msgid "Move selected item(s) down"
+msgstr ""
+
+#: tmainform.tbmidownloadmovetop.hint
+msgid "Move selected item(s) to top"
+msgstr ""
+
+#: tmainform.tbmidownloadmoveup.hint
+msgid "Move selected item(s) up"
+msgstr ""
 
 #: tmainform.tbwebsitescollapseall.caption
 msgid "Collapse All"

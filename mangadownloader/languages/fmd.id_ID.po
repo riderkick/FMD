@@ -743,6 +743,10 @@ msgstr "Tampilkan toolbar unduhan"
 msgid "Show \"Delete all completed tasks\" in downloads toolbar"
 msgstr "Tampilkan \"Hapus semua unduhan selesai\" di toolbar unduhan"
 
+#: tmainform.cboptionshowdownloadtoolbarleft.caption
+msgid "Show left downloads toolbar"
+msgstr ""
+
 #: tmainform.cboptionshowquitdialog.caption
 msgid "Exit FMD"
 msgstr "Tutup FMD"
@@ -1766,6 +1770,10 @@ msgctxt "TMAINFORM.MNUPDATELIST.CAPTION"
 msgid "Update manga list"
 msgstr "Perbarui daftar komik"
 
+#: tmainform.pndownloadlist.caption
+msgid "pnDownloadList"
+msgstr ""
+
 #: tmainform.rball.caption
 msgid "Have all genre checked"
 msgstr "Memiliki semua genre yang dicentang"
@@ -1799,6 +1807,22 @@ msgstr "Lanjutkan semua"
 #: tmainform.tbdownloadstopall.caption
 msgid "Stop All"
 msgstr "Hentikan semua"
+
+#: tmainform.tbmidownloadmovebottom.hint
+msgid "Move selected item(s) to bottom"
+msgstr ""
+
+#: tmainform.tbmidownloadmovedown.hint
+msgid "Move selected item(s) down"
+msgstr ""
+
+#: tmainform.tbmidownloadmovetop.hint
+msgid "Move selected item(s) to top"
+msgstr ""
+
+#: tmainform.tbmidownloadmoveup.hint
+msgid "Move selected item(s) up"
+msgstr ""
 
 #: tmainform.tbwebsitescollapseall.caption
 msgid "Collapse All"

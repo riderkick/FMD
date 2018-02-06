@@ -745,6 +745,10 @@ msgstr "Показать панель загрузок"
 msgid "Show \"Delete all completed tasks\" in downloads toolbar"
 msgstr "Показать \"Удалить все завершенные задачи\" в панели загрузки"
 
+#: tmainform.cboptionshowdownloadtoolbarleft.caption
+msgid "Show left downloads toolbar"
+msgstr ""
+
 #: tmainform.cboptionshowquitdialog.caption
 msgid "Exit FMD"
 msgstr "Выход из программы"
@@ -1768,6 +1772,10 @@ msgctxt "TMAINFORM.MNUPDATELIST.CAPTION"
 msgid "Update manga list"
 msgstr "Обновить список манги"
 
+#: tmainform.pndownloadlist.caption
+msgid "pnDownloadList"
+msgstr ""
+
 #: tmainform.rball.caption
 msgid "Have all genre checked"
 msgstr "Содержит все отмеченные жанры"
@@ -1801,6 +1809,22 @@ msgstr "Продолжить все"
 #: tmainform.tbdownloadstopall.caption
 msgid "Stop All"
 msgstr "Остановить все"
+
+#: tmainform.tbmidownloadmovebottom.hint
+msgid "Move selected item(s) to bottom"
+msgstr ""
+
+#: tmainform.tbmidownloadmovedown.hint
+msgid "Move selected item(s) down"
+msgstr ""
+
+#: tmainform.tbmidownloadmovetop.hint
+msgid "Move selected item(s) to top"
+msgstr ""
+
+#: tmainform.tbmidownloadmoveup.hint
+msgid "Move selected item(s) up"
+msgstr ""
 
 #: tmainform.tbwebsitescollapseall.caption
 msgid "Collapse All"
@@ -2328,3 +2352,4 @@ msgstr "Синхронизацияе данных"
 #: uupdatethread.rs_updatinglist
 msgid "Updating list"
 msgstr "Обновление списка"
+

@@ -59,6 +59,7 @@ type
     cbOptionRemoveMangaNameFromChapter: TCheckBox;
     cbOptionShowDownloadMangalistDialog: TCheckBox;
     cbOptionShowDownloadToolbar: TCheckBox;
+    cbOptionShowDownloadToolbarLeft: TCheckBox;
     cbOptionShowDownloadToolbarDeleteAll: TCheckBox;
     cbOptionUpdateListNoMangaInfo: TCheckBox;
     cbOptionDigitVolume: TCheckBox;
@@ -82,6 +83,7 @@ type
     edSaveTo: TEditButton;
     edURL: TEditButton;
     edWebsitesSearch: TEditButton;
+    IconDLLeft: TImageList;
     lbLogFileName: TLabel;
     lbOptionRetryFailedTask: TLabel;
     lbOptionFilenameCustomRenameHint: TLabel;
@@ -119,6 +121,7 @@ type
     miChapterListHideDownloaded: TMenuItem;
     miAbortSilentThread: TMenuItem;
     mmChangelog: TMemo;
+    pnDownloadList: TPanel;
     pnAboutComp: TPanel;
     pcInfo: TPageControl;
     psInfo: TPairSplitter;
@@ -141,6 +144,11 @@ type
     sbWebsiteOptions: TScrollBox;
     btDownloadSplit: TSpeedButton;
     seOptionRetryFailedTask: TSpinEdit;
+    ToolBarDownloadLeft: TToolBar;
+    tbmiDownloadMoveTop: TToolButton;
+    tbmiDownloadMoveUp: TToolButton;
+    tbmiDownloadMoveDown: TToolButton;
+    tbmiDownloadMoveBottom: TToolButton;
     tsInfoManga: TTabSheet;
     tsinfoFilterAdv: TTabSheet;
     tsCustomColor: TTabSheet;
@@ -468,6 +476,10 @@ type
     procedure miFavoritesEnableClick(Sender: TObject);
     procedure miFavoritesRenameClick(Sender: TObject);
     procedure miFavoritesTransferWebsiteClick(Sender: TObject);
+    procedure tbmiDownloadMoveBottomClick(Sender: TObject);
+    procedure tbmiDownloadMoveDownClick(Sender: TObject);
+    procedure tbmiDownloadMoveTopClick(Sender: TObject);
+    procedure tbmiDownloadMoveUpClick(Sender: TObject);
     procedure tmAnimateMangaInfoTimer(Sender: TObject);
     procedure tmCheckFavoritesTimer(Sender: TObject);
     procedure tmExitCommandTimer(Sender: TObject);
@@ -1597,6 +1609,34 @@ begin
   finally
     Free;
   end;
+end;
+
+procedure TMainForm.tbmiDownloadMoveTopClick(Sender: TObject);
+begin
+  if vtDownload.SelectedCount = 0 then Exit;
+  vtDownloadMoveItems(0, dmAbove);
+end;
+
+procedure TMainForm.tbmiDownloadMoveUpClick(Sender: TObject);
+var
+  p: Cardinal;
+begin
+  if vtDownload.SelectedCount = 0 then Exit;
+  p := vtDownload.GetFirstSelected()^.Index;
+  if p > 0 then
+    vtDownloadMoveItems(p - 1, dmAbove);
+end;
+
+procedure TMainForm.tbmiDownloadMoveDownClick(Sender: TObject);
+begin
+  if vtDownload.SelectedCount = 0 then Exit;
+  vtDownloadMoveItems(vtDownload.GetFirstSelected()^.Index, dmBelow);
+end;
+
+procedure TMainForm.tbmiDownloadMoveBottomClick(Sender: TObject);
+begin
+  if vtDownload.SelectedCount = 0 then Exit;
+    vtDownloadMoveItems(vtDownload.RootNodeCount - 1, dmBelow);
 end;
 
 procedure TMainForm.tmAnimateMangaInfoTimer(Sender: TObject);
@@ -4828,6 +4868,7 @@ begin
 
     // view
     cbOptionShowDownloadToolbar.Checked := ReadBool('view', 'ShowDownloadsToolbar', True);
+    cbOptionShowDownloadToolbarLeft.Checked := ReadBool('view', 'ShowDownloadsToolbarLeft', True);
     cbOptionShowDownloadToolbarDeleteAll.Checked := ReadBool('view', 'ShowDownloadsToolbarDeleteAll', False);
     cbOptionEnableLoadCover.Checked := ReadBool('view', 'LoadMangaCover', True);
     cbOptionShowBalloonHint.Checked := ReadBool('view', 'ShowBalloonHint', OptionShowBalloonHint);
@@ -4974,6 +5015,7 @@ begin
 
       // view
       WriteBool('view', 'ShowDownloadsToolbar', cbOptionShowDownloadToolbar.Checked);
+      WriteBool('view', 'ShowDownloadsToolbarLeft', cbOptionShowDownloadToolbarLeft.Checked);
       WriteBool('view', 'ShowDownloadsToolbarDeleteAll', cbOptionShowDownloadToolbarDeleteAll.Checked);
       WriteBool('view', 'LoadMangaCover', cbOptionEnableLoadCover.Checked);
       WriteBool('view', 'ShowBalloonHint', cbOptionShowBalloonHint.Checked);
@@ -5117,6 +5159,7 @@ begin
 
     //view
     ToolBarDownload.Visible := cbOptionShowDownloadToolbar.Checked;
+    ToolBarDownloadLeft.Visible := cbOptionShowDownloadToolbarLeft.Checked;
     tbDownloadDeleteCompleted.Visible := cbOptionShowDownloadToolbarDeleteAll.Checked;
     tbSeparator1.Visible := tbDownloadDeleteCompleted.Visible;
     ShowDropTarget(ckDropTarget.Checked);
