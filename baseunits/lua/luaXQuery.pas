@@ -54,7 +54,7 @@ var
 begin
   u := TUserData(luaClassGetObject(L));
   if lua_gettop(L) = 2 then
-    x := u.XPath(lua_tostring(L, 1), IXQValue(PPointer(lua_touserdata(L, 2))^))
+    x := u.XPath(lua_tostring(L, 1), TLuaIXQValue(PPointer(lua_touserdata(L, 2))^).FIXQValue)
   else
     x := u.XPath(lua_tostring(L, 1));
   luaIXQValuePush(L, TLuaIXQValue.Create(x));
@@ -82,7 +82,7 @@ begin
   case lua_gettop(L) of
     2: u.XPathStringAll(lua_tostring(L, 1), TStrings(PPointer(lua_touserdata(L, 2))^));
     3: u.XPathStringAll(lua_tostring(L, 1), TStrings(PPointer(lua_touserdata(L, 2))^),
-        IXQValue(PPointer(lua_touserdata(L, 2))^));
+        TLuaIXQValue(PPointer(lua_touserdata(L, 2))^).FIXQValue);
   end;
   Result := 0;
 end;
@@ -97,7 +97,7 @@ begin
         TStrings(PPointer(lua_touserdata(L, 3))^));
     4: u.XPathHREFAll(lua_tostring(L, 1), TStrings(PPointer(lua_touserdata(L, 2))^),
         TStrings(PPointer(lua_touserdata(L, 3))^),
-        IXQValue(PPointer(lua_touserdata(L, 4))^))
+        TLuaIXQValue(PPointer(lua_touserdata(L, 4))^).FIXQValue)
   end;
   Result := 0;
 end;
@@ -112,7 +112,7 @@ begin
         TStrings(PPointer(lua_touserdata(L, 3))^));
     4: u.XPathHREFtitleAll(lua_tostring(L, 1), TStrings(PPointer(lua_touserdata(L, 2))^),
         TStrings(PPointer(lua_touserdata(L, 3))^),
-        IXQValue(PPointer(lua_touserdata(L, 4))^))
+        TLuaIXQValue(PPointer(lua_touserdata(L, 4))^).FIXQValue)
   end;
   Result := 0;
 end;
