@@ -108,7 +108,7 @@ begin
       else
       if lua_isuserdata(L, 2) then
       begin
-        u.XPathStringAll(lua_tostring(L, 1), TStrings(PPointer(lua_touserdata(L, 2))^),
+        u.XPathStringAll(lua_tostring(L, 1), TStrings(luaGetUserData(L, 2)),
           TLuaIXQValue(luaGetUserData(L, 3)).FIXQValue);
         Result := 0;
       end;
@@ -140,8 +140,8 @@ var
 begin
   u := TUserData(luaClassGetObject(L));
   case lua_gettop(L) of
-    3: u.XPathHREFtitleAll(lua_tostring(L, 1), TStrings(PPointer(lua_touserdata(L, 2))^),
-        TStrings(PPointer(lua_touserdata(L, 3))^));
+    3: u.XPathHREFtitleAll(lua_tostring(L, 1), TStrings(luaGetUserData(L, 2)),
+        TStrings(luaGetUserData(L, 2)));
     4: u.XPathHREFtitleAll(lua_tostring(L, 1), TStrings(luaGetUserData(L, 2)),
         TStrings(luaGetUserData(L, 3)), TLuaIXQValue(luaGetUserData(L, 4)).FIXQValue)
   end;
