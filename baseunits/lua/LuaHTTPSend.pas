@@ -86,8 +86,8 @@ begin
   begin
     luaClassAddFunction(L, MetaTable, UserData, methods);
     luaClassAddProperty(L, MetaTable, UserData, props);
-    luaClassAddObject(L, Headers, MetaTable, 'Headers');
-    luaClassAddObject(L, Cookies, MetaTable, 'Cookies');
+    luaClassAddObject(L, MetaTable, Headers, 'Headers');
+    luaClassAddObject(L, MetaTable, Cookies, 'Cookies');
   end;
 end;
 

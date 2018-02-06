@@ -536,7 +536,7 @@ begin
     luaClassAddStringProperty(L, MetaTable, 'OnAfterImageSaved', @OnAfterImageSaved);
     luaClassAddStringProperty(L, MetaTable, 'OnLogin', @OnLogin);
     luaClassAddStringProperty(L, MetaTable, 'LastUpdated', @LastUpdated);
-    luaClassAddObject(L, Storage, MetaTable, 'Storage');
+    luaClassAddObject(L, MetaTable, Storage, 'Storage');
   end;
 end;
 

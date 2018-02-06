@@ -29,8 +29,8 @@ procedure luaClassRegister(C: TClass; AddMetaTable: TluaClassAddMetaTable;
   AddLib: TLuaClassRegisterLib = nil);
 
 function luaNewUserData(L: Plua_State; Obj: Pointer): Integer;
-procedure luaClassNewUserData(L: Plua_State; Obj: Pointer;
-  var MetaTable, UserData: Integer; AutoFree: Boolean = False);
+procedure luaClassNewUserData(L: Plua_State; var MetaTable, UserData: Integer;
+  Obj: Pointer; AutoFree: Boolean = False);
 
 function luaClassGetClosure(L: Plua_State): Pointer;
 function luaClassGetObject(L: Plua_State): Pointer; inline;
@@ -62,7 +62,7 @@ procedure luaClassAddIntegerProperty(L: Plua_State; MetaTable: Integer;
   Name: PAnsiChar; P: Pointer); overload;
 procedure luaClassAddBooleanProperty(L: Plua_State; MetaTable: Integer;
   Name: PAnsiChar; P: Pointer); overload;
-procedure luaClassAddObject(L: Plua_State; Obj: TObject; MetaTable: Integer;
+procedure luaClassAddObject(L: Plua_State; MetaTable: Integer; Obj: TObject;
   Name: String; AddMetaTable: TluaClassAddMetaTable = nil);
 
 implementation
@@ -273,8 +273,8 @@ begin
   Result := lua_gettop(L);
 end;
 
-procedure luaClassNewUserData(L: Plua_State; Obj: Pointer;
-  var MetaTable, UserData: Integer; AutoFree: Boolean);
+procedure luaClassNewUserData(L: Plua_State; var MetaTable, UserData: Integer;
+  Obj: Pointer; AutoFree: Boolean);
 begin
   UserData := luaNewUserData(L, Obj);
   lua_newtable(L);
@@ -312,7 +312,7 @@ var
 begin
   if Obj = nil then
     Exit;
-  luaClassNewUserData(L, Obj, m, u, AutoFree);
+  luaClassNewUserData(L, m, u, Obj, AutoFree);
   AddMetaTable(L, Obj, m, u);
   lua_setmetatable(L, u);
   if Name <> '' then
@@ -509,8 +509,8 @@ begin
   luaClassAddVariable(L, MetaTable, Name, P, @luaclass_bool_get, @luaclass_bool_set);
 end;
 
-procedure luaClassAddObject(L: Plua_State; Obj: TObject; MetaTable: Integer;
-  Name: String; AddMetaTable: TluaClassAddMetaTable);
+procedure luaClassAddObject(L: Plua_State; MetaTable: Integer; Obj: TObject; Name: String;
+  AddMetaTable: TluaClassAddMetaTable);
 var
   m, u: Integer;
 begin
@@ -519,7 +519,7 @@ begin
   if AddMetaTable = nil then
     Exit;
   lua_pushstring(L, PAnsiChar(AnsiLowerCase(Name)));
-  luaClassNewUserData(L, Obj, m, u, False);
+  luaClassNewUserData(L, m, u, Obj, False);
   AddMetaTable(L, Obj, m, u);
   lua_setmetatable(L, u);
   lua_rawset(L, MetaTable);

@@ -29,8 +29,8 @@ begin
     luaClassAddStringProperty(L, MetaTable, 'summary', @summary);
     luaClassAddStringProperty(L, MetaTable, 'summary', @summary);
     luaClassAddIntegerProperty(L, MetaTable, 'numChapter', @numChapter);
-    luaClassAddObject(L, chapterName, MetaTable, 'chapterNames');
-    luaClassAddObject(L, chapterLinks, MetaTable, 'chapterLinks');
+    luaClassAddObject(L, MetaTable, chapterName, 'chapterNames');
+    luaClassAddObject(L, MetaTable, chapterLinks, 'chapterLinks');
   end;
 end;
 
