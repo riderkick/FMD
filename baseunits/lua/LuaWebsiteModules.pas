@@ -213,6 +213,7 @@ begin
       luaPushMe(l);
       luaPushObject(l, DownloadThread.FHTTP, 'http');
       luaPushStringGlobal(l, 'url', AURL);
+      luaPushObject(L, DownloadThread.Task.Container, 'task');
 
       if luaL_dofile(l, PChar(Filename)) <> 0 then
         raise Exception.Create('');
