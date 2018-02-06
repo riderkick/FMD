@@ -38,7 +38,7 @@ var
 begin
   Result := 0;
   for i := 1 to lua_gettop(L) do
-    InvertStrings(TStringList(PPointer(lua_touserdata(L, i))^));
+    InvertStrings(TStringList(luaGetUserData(L, i)));
 end;
 
 function lua_mangainfostatusifpos(L: Plua_State): Integer; cdecl;

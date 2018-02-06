@@ -7,8 +7,8 @@ interface
 uses
   Classes, SysUtils, lua53, XQueryEngineHTML, xquery;
 
-procedure luaXQueryPush(L: Plua_State; Obj: TXQueryEngineHTML;
-  Name: String = ''; AutoFree: Boolean = False); inline;
+procedure luaXQueryPush(L: Plua_State; Obj: TXQueryEngineHTML; Name: String = '';
+  AutoFree: Boolean = False); inline;
 
 implementation
 
@@ -54,7 +54,7 @@ var
 begin
   u := TUserData(luaClassGetObject(L));
   if lua_gettop(L) = 2 then
-    x := u.XPath(lua_tostring(L, 1), TLuaIXQValue(PPointer(lua_touserdata(L, 2))^).FIXQValue)
+    x := u.XPath(lua_tostring(L, 1), TLuaIXQValue(luaGetUserData(L, 2)).FIXQValue)
   else
     x := u.XPath(lua_tostring(L, 1));
   luaIXQValuePush(L, TLuaIXQValue.Create(x));
@@ -68,7 +68,7 @@ begin
   u := TUserData(luaClassGetObject(L));
   if lua_gettop(L) = 2 then
     lua_pushstring(L, u.XPathString(lua_tostring(L, 1),
-      TLuaIXQValue(PPointer(lua_touserdata(L, 2))^).FIXQValue))
+      TLuaIXQValue(luaGetUserData(L, 2)).FIXQValue))
   else
     lua_pushstring(L, u.XPathString(lua_tostring(L, 1)));
   Result := 1;
@@ -77,14 +77,47 @@ end;
 function xquery_xpathstringall(L: Plua_State): Integer; cdecl;
 var
   u: TUserData;
+  t: Integer;
 begin
   u := TUserData(luaClassGetObject(L));
-  case lua_gettop(L) of
-    2: u.XPathStringAll(lua_tostring(L, 1), TStrings(PPointer(lua_touserdata(L, 2))^));
-    3: u.XPathStringAll(lua_tostring(L, 1), TStrings(PPointer(lua_touserdata(L, 2))^),
-        TLuaIXQValue(PPointer(lua_touserdata(L, 2))^).FIXQValue);
-  end;
-  Result := 0;
+  t := lua_gettop(L);
+  if t > 1 then
+    if t = 2 then
+    begin
+      if lua_isstring(L, 2) then
+      begin
+        lua_pushstring(L, u.XPathStringAll(lua_tostring(L, 1), lua_tostring(L, 2)));
+        Result := 1;
+      end
+      else
+      if lua_isuserdata(L, 2) then
+      begin
+        u.XPathStringAll(lua_tostring(L, 1), TStrings(luaGetUserData(L, 2)));
+        Result := 0;
+      end;
+    end
+    else
+    if t = 3 then
+    begin
+      if lua_isstring(L, 2) then
+      begin
+        lua_pushstring(L, u.XPathStringAll(lua_tostring(L, 1), lua_tostring(L, 2),
+          TLuaIXQValue(luaGetUserData(L, 3)).FIXQValue));
+        Result := 1;
+      end
+      else
+      if lua_isuserdata(L, 2) then
+      begin
+        u.XPathStringAll(lua_tostring(L, 1), TStrings(PPointer(lua_touserdata(L, 2))^),
+          TLuaIXQValue(luaGetUserData(L, 3)).FIXQValue);
+        Result := 0;
+      end;
+    end
+    else
+    begin
+      lua_pushstring(L, u.XPathStringAll(lua_tostring(L, 1)));
+      Result := 1;
+    end;
 end;
 
 function xquery_xpathhrefall(L: Plua_State): Integer; cdecl;
@@ -93,11 +126,10 @@ var
 begin
   u := TUserData(luaClassGetObject(L));
   case lua_gettop(L) of
-    3: u.XPathHREFAll(lua_tostring(L, 1), TStrings(PPointer(lua_touserdata(L, 2))^),
-        TStrings(PPointer(lua_touserdata(L, 3))^));
-    4: u.XPathHREFAll(lua_tostring(L, 1), TStrings(PPointer(lua_touserdata(L, 2))^),
-        TStrings(PPointer(lua_touserdata(L, 3))^),
-        TLuaIXQValue(PPointer(lua_touserdata(L, 4))^).FIXQValue)
+    3: u.XPathHREFAll(lua_tostring(L, 1), TStrings(luaGetUserData(L, 2)),
+        TStrings(luaGetUserData(L, 2)));
+    4: u.XPathHREFAll(lua_tostring(L, 1), TStrings(luaGetUserData(L, 2)),
+        TStrings(luaGetUserData(L, 3)), TLuaIXQValue(luaGetUserData(L, 4)).FIXQValue)
   end;
   Result := 0;
 end;
@@ -110,9 +142,8 @@ begin
   case lua_gettop(L) of
     3: u.XPathHREFtitleAll(lua_tostring(L, 1), TStrings(PPointer(lua_touserdata(L, 2))^),
         TStrings(PPointer(lua_touserdata(L, 3))^));
-    4: u.XPathHREFtitleAll(lua_tostring(L, 1), TStrings(PPointer(lua_touserdata(L, 2))^),
-        TStrings(PPointer(lua_touserdata(L, 3))^),
-        TLuaIXQValue(PPointer(lua_touserdata(L, 4))^).FIXQValue)
+    4: u.XPathHREFtitleAll(lua_tostring(L, 1), TStrings(luaGetUserData(L, 2)),
+        TStrings(luaGetUserData(L, 3)), TLuaIXQValue(luaGetUserData(L, 4)).FIXQValue)
   end;
   Result := 0;
 end;
@@ -139,8 +170,8 @@ begin
   luaClassAddFunction(L, MetaTable, UserData, methods);
 end;
 
-procedure luaXQueryPush(L: Plua_State; Obj: TXQueryEngineHTML;
-  Name: String; AutoFree: Boolean);
+procedure luaXQueryPush(L: Plua_State; Obj: TXQueryEngineHTML; Name: String;
+  AutoFree: Boolean);
 begin
   luaClassPushObject(L, Obj, Name, AutoFree, @luaXQueryAddMetaTable);
 end;
