@@ -64,12 +64,6 @@
               </Win32>
             </Options>
           </Linking>
-          <Other>
-            <CustomOptions Value="-dMANGADOWNLOADER
--dDOWNLOADER
--dSELFUPDATE
--dMULTILOG"/>
-          </Other>
         </CompilerOptions>
       </Item2>
       <Item3 Name="Win32 Debug">
@@ -115,10 +109,6 @@
             <CompilerMessages>
               <IgnoredMessages idx4079="True"/>
             </CompilerMessages>
-            <CustomOptions Value="-dMANGADOWNLOADER
--dDOWNLOADER
--dSELFUPDATE
--dMULTILOG"/>
           </Other>
         </CompilerOptions>
       </Item3>
@@ -161,12 +151,6 @@
               </Win32>
             </Options>
           </Linking>
-          <Other>
-            <CustomOptions Value="-dMANGADOWNLOADER
--dDOWNLOADER
--dSELFUPDATE
--dMULTILOG"/>
-          </Other>
         </CompilerOptions>
       </Item4>
       <Item5 Name="Win32 Debug Leaks">
@@ -204,13 +188,13 @@
               <UseHeaptrc Value="True"/>
               <UseExternalDbgSyms Value="True"/>
             </Debugging>
+            <Options>
+              <Win32>
+                <GraphicApplication Value="True"/>
+              </Win32>
+            </Options>
           </Linking>
           <Other>
-            <CustomOptions Value="-dMANGADOWNLOADER
--dDOWNLOADER
--dSELFUPDATE
--dDEBUGLEAKS
--dMULTILOG"/>
             <OtherDefines Count="7">
               <Define0 Value="MANGADOWNLOADER"/>
               <Define1 Value="DOWNLOADER"/>
@@ -261,22 +245,29 @@
               <UseHeaptrc Value="True"/>
               <UseExternalDbgSyms Value="True"/>
             </Debugging>
+            <Options>
+              <Win32>
+                <GraphicApplication Value="True"/>
+              </Win32>
+            </Options>
           </Linking>
           <Other>
-            <CustomOptions Value="-dMANGADOWNLOADER
--dDOWNLOADER
--dSELFUPDATE
--dDEBUGLEAKS
--dMULTILOG"/>
             <ExecuteAfter>
               <Command Value="cmd.exe /c copy /y languages\*.po ..\bin\languages\"/>
             </ExecuteAfter>
           </Other>
         </CompilerOptions>
       </Item6>
-      <SharedMatrixOptions Count="2">
-        <Item1 ID="939088584661" Targets="LazControls,TAChartLazarusPkg" Modes="Win64 Debug,Win32 Debug,Win64,Win32,Win32 Debug Leaks,Win64 Debug Leaks" Value="-CX -O3 -Xs -XX -g-"/>
-        <Item2 ID="127282585717" Targets="internettools" Modes="Win32,Win64,Win32 Debug,Win64 Debug,Win64 Debug Leaks,Win32 Debug Leaks" Value="-CX -O3 -Xs -XX -g- -uUSE_FLRE_WITH_CACHE -dUSE_SOROKINS_REGEX -uUSE_BBFLRE_UNICODE -dUSE_BBFULL_UNICODE"/>
+      <SharedMatrixOptions Count="9">
+        <Item1 ID="465017374973" Modes="Win32,Win64 Debug Leaks,Win32 Debug Leaks,Win64 Debug,Win32 Debug,Win64" Value="-dMANGADOWNLOADER -dDOWNLOADER -dSELFUPDATE -dMULTILOG"/>
+        <Item2 ID="534084266787" Modes="Win64 Debug Leaks,Win32 Debug Leaks" Value="-dDEBUGLEAKS -WC"/>
+        <Item3 ID="951904047630" Value="-uUSE_FLRE_WITH_CACHE -dUSE_SOROKINS_REGEX -uUSE_BBFLRE_UNICODE -dUSE_BBFULL_UNICODE"/>
+        <Item4 ID="140379931701" Value="-Fi..\3rd\BESEN\src -Fi..\3rd\internettools\data -Fu..\3rd\BESEN\src -Fu..\3rd\internettools\data -Fu..\3rd\internettools\internet -Fu..\3rd\internettools\system -Fu..\3rd\internettools\import\flre\src"/>
+        <Item5 ID="729045573668" Modes="Win32 Debug Leaks,Win64 Debug Leaks,Win32,Win64,Win32 Debug,Win64 Debug" Value="-Fu..\baseunits\lua -Fu..\baseunits\pcre"/>
+        <Item6 ID="200657967120" Modes="Win32 Debug Leaks,Win64 Debug Leaks,Win64 Debug,Win32 Debug,Win64,Win32" Value="-dUSE_LUA_MODULE"/>
+        <Item7 ID="915259842272" Modes="Win32 Debug Leaks,Win64 Debug Leaks" Value="-dDEVBUILD"/>
+        <Item8 ID="939088584661" Targets="LazControls,TAChartLazarusPkg" Modes="Win64 Debug,Win32 Debug,Win64,Win32,Win32 Debug Leaks,Win64 Debug Leaks" Value="-CX -O3 -Xs -XX -g-"/>
+        <Item9 ID="127282585717" Targets="internettools" Modes="Win32,Win64,Win32 Debug,Win64 Debug,Win64 Debug Leaks,Win32 Debug Leaks" Value="-CX -O3 -Xs -XX -g- -uUSE_FLRE_WITH_CACHE -dUSE_SOROKINS_REGEX -uUSE_BBFLRE_UNICODE -dUSE_BBFULL_UNICODE"/>
       </SharedMatrixOptions>
     </BuildModes>
     <PublishOptions>
@@ -466,10 +457,6 @@
       <CompilerMessages>
         <IgnoredMessages idx5028="True"/>
       </CompilerMessages>
-      <CustomOptions Value="-dMANGADOWNLOADER
--dDOWNLOADER
--dSELFUPDATE
--dMULTILOG"/>
     </Other>
   </CompilerOptions>
   <Debugging>
