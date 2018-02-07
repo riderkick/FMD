@@ -1,5 +1,4 @@
 uses
-  FoOlSlide,
   WPManga,
   myMangaReaderCMS,
   Batoto,
