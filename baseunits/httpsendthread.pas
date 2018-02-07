@@ -357,15 +357,12 @@ begin
         s := Copy(s, p, Length(s));
         s := SeparateLeft(SeparateRight(s,'='),';');
         s := Trim(SeparateLeft(s, 'GMT'));
-        c := 0.0;
-        try
-          c := UniversalTimeToLocal(ScanDateTime(HTTPCookieExpiresFormat, s, HTTPFormatSettings));
-          if (FCookiesExpires = 0.0) or (c < FCookiesExpires) then
-            FCookiesExpires := c;
-        except
-        end;
+        c := DecodeRfcDateTime(s);
+        if (FCookiesExpires = 0.0) or (c < FCookiesExpires) then
+          FCookiesExpires := c;
       end;
     end;
+  write
 end;
 
 function THTTPSendThread.InternalHTTPRequest(const Method, URL: String;

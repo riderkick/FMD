@@ -3472,10 +3472,7 @@ begin
   s := Trim(AHTTP.Headers.Values['last-modified']);
   lastmodified := 0;
   if s <> '' then
-    try
-      lastmodified := DateTimeToFileDate(ScanDateTime(HTTPDateTimeFormatStr, s, FMDFormatSettings));
-    except
-    end;
+    lastmodified := DateTimeToFileDate(DecodeRfcDateTime(s));
   Result := SaveImageStreamToFile(AHTTP.Document, Path, FileName, lastmodified);
 end;
 
