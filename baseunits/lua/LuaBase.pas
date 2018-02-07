@@ -16,7 +16,7 @@ function LuaNewBaseState: Plua_State;
 function LuaCallFunction(L: Plua_State; AFuncName: String): Boolean;
 
 function LuaDumpFileToStream(L: Plua_State; AFilename: String;
-  AStripDebug: Boolean = True): TMemoryStream;
+  AStripDebug: Boolean = False): TMemoryStream;
 function LuaLoadFromStream(L: Plua_State; AStream: TMemoryStream; AName: PAnsiChar): Integer;
 
 implementation
