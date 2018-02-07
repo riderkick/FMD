@@ -29,7 +29,7 @@ type
     function GETCF(const AURL: String; const CFProps: TCFProps): Boolean;
   end;
 
-function GETCF(const AHTTP: THTTPSendThread; const Method, AURL: String; const CFProps: TCFProps): Boolean;
+function CFRequest(const AHTTP: THTTPSendThread; const Method, AURL: String; const Response: TObject; const CFProps: TCFProps): Boolean;
 
 implementation
 
@@ -168,7 +168,7 @@ begin
   AHTTP.RetryCount := maxretry;
 end;
 
-function GETCF(const AHTTP: THTTPSendThread; const Method, AURL: String; const CFProps: TCFProps): Boolean;
+function CFRequest(const AHTTP: THTTPSendThread; const Method, AURL: String; const Response: TObject; const CFProps: TCFProps): Boolean;
 begin
   Result := False;
   if AHTTP = nil then Exit;
@@ -200,6 +200,12 @@ begin
     if not AHTTP.ThreadTerminated then
       Result := AHTTP.HTTPRequest(Method, AURL);
   end;
+  if Assigned(Response) then
+    if Response is TStringList then
+      TStringList(Response).LoadFromStream(AHTTP.Document)
+    else
+    if Response is TStream then
+      AHTTP.Document.SaveToStream(TStream(Response));
 end;
 
 { TCFProps }
@@ -237,7 +243,7 @@ end;
 
 function THTTPSendThreadHelper.GETCF(const AURL: String; const CFProps: TCFProps): Boolean;
 begin
-  Result := Cloudflare.GETCF(Self, 'GET', AURL, CFProps);
+  Result := Cloudflare.CFRequest(Self, 'GET', AURL, nil, CFProps);
 end;
 
 end.
