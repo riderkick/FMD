@@ -761,7 +761,7 @@ msgstr "\"Tüm tamamlanmış görevleri sil\" seçeneğini indirmeler araç çub
 
 #: tmainform.cboptionshowdownloadtoolbarleft.caption
 msgid "Show left downloads toolbar"
-msgstr ""
+msgstr "Sol indirmeler araç çubuğunu göster"
 
 #: tmainform.cboptionshowquitdialog.caption
 msgid "Exit FMD"
@@ -1794,7 +1794,7 @@ msgstr "Manga listesini güncelle"
 
 #: tmainform.pndownloadlist.caption
 msgid "pnDownloadList"
-msgstr ""
+msgstr "pnİndirmeListesi"
 
 #: tmainform.rball.caption
 msgid "Have all genre checked"
@@ -1832,19 +1832,19 @@ msgstr "Tümünü Durdur"
 
 #: tmainform.tbmidownloadmovebottom.hint
 msgid "Move selected item(s) to bottom"
-msgstr ""
+msgstr "Seçilen içerik(ler)i en alta taşı"
 
 #: tmainform.tbmidownloadmovedown.hint
 msgid "Move selected item(s) down"
-msgstr ""
+msgstr "Seçilen içerik(ler)i alta taşı"
 
 #: tmainform.tbmidownloadmovetop.hint
 msgid "Move selected item(s) to top"
-msgstr ""
+msgstr "Seçilen içerik(ler)i en üste taşı"
 
 #: tmainform.tbmidownloadmoveup.hint
 msgid "Move selected item(s) up"
-msgstr ""
+msgstr "Seçilen içerik(ler)i üste taşı"
 
 #: tmainform.tbwebsitescollapseall.caption
 msgid "Collapse All"
