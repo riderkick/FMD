@@ -15,6 +15,10 @@ function LuaDoFile(AFilename: String; AFuncName: String = ''): Plua_State;
 function LuaNewBaseState: Plua_State;
 function LuaCallFunction(L: Plua_State; AFuncName: String): Boolean;
 
+function LuaDumpFileToStream(L: Plua_State; AFilename: String;
+  AStripDebug: Boolean = True): TMemoryStream;
+function LuaLoadFromStream(L: Plua_State; AStream: TMemoryStream; AName: PAnsiChar): Integer;
+
 implementation
 
 uses
@@ -79,6 +83,57 @@ begin
   if lua_pcall(L, 0, -1, 0) <> 0 then
     raise Exception.Create('');
   Result := True;
+end;
+
+function _luawriter(L: Plua_State; const p: Pointer; sz: size_t; ud: Pointer): Integer; cdecl;
+begin
+  if TMemoryStream(ud).Write(p^, sz) <> sz then
+    Result := 1
+  else
+    Result := 0;
+end;
+
+function LuaDumpFileToStream(L: Plua_State; AFilename: String;
+  AStripDebug: Boolean): TMemoryStream;
+var
+  strip: Integer;
+begin
+  if not FileExists(AFilename) then
+    Exit;
+  Result := TMemoryStream.Create;
+  try
+    if luaL_loadfile(L, PChar(AFilename)) <> 0 then
+      raise Exception.Create('');
+    if AStripDebug then
+      strip := 0
+    else
+      strip := 1;
+    if lua_dump(L, @_luawriter, Result, strip) <> 0 then
+      raise Exception.Create('');
+  except
+    Result.Free;
+    Result := nil;
+    Logger.SendError(lua_tostring(L, -1));
+  end;
+end;
+
+function _luareader(L: Plua_State; ud: Pointer; sz: Psize_t): PAnsiChar; cdecl;
+var
+  m: TMemoryStream;
+begin
+  m := TMemoryStream(ud);
+  if m.Size = 0 then
+  begin
+    Result := nil;
+    Exit;
+  end;
+  Result := PAnsiChar(m.Memory);
+  sz^ := m.Size;
+end;
+
+function LuaLoadFromStream(L: Plua_State; AStream: TMemoryStream; AName: PAnsiChar): Integer;
+begin
+  Result := lua_load(L, @_luareader, AStream, AName, 'b');
 end;
 
 end.
