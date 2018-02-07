@@ -54,6 +54,42 @@ begin
   Result := 1;
 end;
 
+function lua_appendurldelim(L: Plua_State): Integer; cdecl;
+begin
+  lua_pushstring(L, AppendURLDelim(lua_tostring(L, 1)));
+  Result := 1;
+end;
+
+function lua_removeurldelim(L: Plua_State): Integer; cdecl;
+begin
+  lua_pushstring(L, RemoveURLDelim(lua_tostring(L, 1)));
+  Result := 1;
+end;
+
+function lua_appendurldelimleft(L: Plua_State): Integer; cdecl;
+begin
+  lua_pushstring(L, AppendURLDelimLeft(lua_tostring(L, 1)));
+  Result := 1;
+end;
+
+function lua_removeurldelimleft(L: Plua_State): Integer; cdecl;
+begin
+  lua_pushstring(L, RemoveURLDelimLeft(lua_tostring(L, 1)));
+  Result := 1;
+end;
+
+function lua_encodebase64(L: Plua_State): Integer; cdecl;
+begin
+  lua_pushstring(L, Base64Decode(lua_tostring(L, 1)));
+  Result := 1;
+end;
+
+function lua_decodebase64(L: Plua_State): Integer; cdecl;
+begin
+  lua_pushstring(L, Base64Encode(lua_tostring(L, 1)));
+  Result := 1;
+end;
+
 procedure luaBaseUnitRegister(L: Plua_State);
 begin
   luaPushFunctionGlobal(L, 'Pos', @lua_pos);
@@ -61,6 +97,12 @@ begin
   luaPushFunctionGlobal(L, 'MaybeFillHost', @lua_maybefillhost);
   luaPushFunctionGlobal(L, 'InvertStrings', @lua_invertstrings);
   luaPushFunctionGlobal(L, 'MangaInfoStatusIfPos', @lua_mangainfostatusifpos);
+  luaPushFunctionGlobal(L, 'AppendURLDelim', @lua_appendurldelim);
+  luaPushFunctionGlobal(L, 'AppendURLDelimleft', @lua_appendurldelimleft);
+  luaPushFunctionGlobal(L, 'RemoveURLDelim', @lua_removeurldelim);
+  luaPushFunctionGlobal(L, 'RemoveURLDelimLeft', @lua_removeurldelimleft);
+  luaPushFunctionGlobal(L, 'EncodeBase64', @lua_encodebase64);
+  luaPushFunctionGlobal(L, 'DecodeBase64', @lua_decodebase64);
 end;
 
 end.
