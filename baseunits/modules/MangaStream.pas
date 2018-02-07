@@ -12,9 +12,6 @@ implementation
 uses
   simplehtmltreeparser, xquery, RegExpr;
 
-const
-  readURL = 'http://readms.com';
-
 function GetDirectoryPageNumber(const MangaInfo: TMangaInformation;
   var Page: Integer; const WorkPtr: Integer; const Module: TModuleContainer): Integer;
 begin
@@ -118,7 +115,7 @@ begin
   Container.PageNumber := 0;
   Source := TStringList.Create;
   try
-    if GetPage(DownloadThread.FHTTP, TObject(Source), FillHost(readURL, AURL + '/1'),
+    if GetPage(DownloadThread.FHTTP, TObject(Source), FillHost(Module.RootURL, AURL + '/1'),
       Container.Manager.retryConnect) then
       if Source.Count > 0 then
       begin
@@ -154,7 +151,7 @@ begin
     Source := TStringList.Create;
     try
       if GetPage(DownloadThread.FHTTP, TObject(Source),
-        AppendURLDelim(FillHost(readURL, AURL)) +
+        AppendURLDelim(FillHost(Module.RootURL, AURL)) +
         IncStr(DownloadThread.WorkId), Manager.retryConnect) then
         if Source.Count > 0 then
         begin
@@ -179,7 +176,7 @@ begin
   with AddModule do
   begin
     Website := 'MangaStream';
-    RootURL := 'http://mangastream.com';
+    RootURL := 'https://readms.net';
     OnGetDirectoryPageNumber := @GetDirectoryPageNumber;
     OnGetNameAndLink := @GetNameAndLink;
     OnGetInfo := @GetInfo;
