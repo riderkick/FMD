@@ -680,6 +680,7 @@ type
 
     // load about information
     procedure LoadAbout;
+    procedure AddToAboutStatus(const ACaption, AValue: String);
 
     procedure CloseNow;
 
@@ -1800,6 +1801,8 @@ begin
     ScanLuaWebsiteModulesFile;
     {$endif}
 
+    AddToAboutStatus('Modules', IntToStr(Modules.Count));
+
     //restore everything after all modules loaded
     DLManager.Restore;
     UpdateVtDownload;
@@ -2127,25 +2130,6 @@ begin
 end;
 
 procedure TMainForm.LoadAbout;
-
-  procedure addaboutcomp(const ACaption, AValue: String);
-
-    function addaboutcomplbl(const ACaption: String): TLabel;
-    begin
-      Result := TLabel.Create(Self);
-      Result.Parent := pnAboutComp;
-      Result.Caption := ACaption;
-    end;
-
-  begin
-    addaboutcomplbl(ACaption + ':');
-    with addaboutcomplbl(AValue) do
-    begin
-      Font.Style := [fsBold];
-      BorderSpacing.Right := 16;
-    end;
-  end;
-
 var
   i: Integer;
   fs: TFileStreamUTF8;
@@ -2186,17 +2170,35 @@ begin
   if FileExistsUTF8(CHANGELOG_FILE) then mmChangelog.Lines.LoadFromFile(CHANGELOG_FILE);
 
   // compiler info
-  addaboutcomp('FPC Version', GetFPCVersion);
-  addaboutcomp('LCL Version', GetLCLVersion);
-  addaboutcomp('WidgetSet', GetWidgetSetName);
-  addaboutcomp('Target CPU-OS', GetTargetCPU_OS);
-  addaboutcomp('Build Time', GetBuildTime);
+  AddToAboutStatus('FPC Version', GetFPCVersion);
+  AddToAboutStatus('LCL Version', GetLCLVersion);
+  AddToAboutStatus('WidgetSet', GetWidgetSetName);
+  AddToAboutStatus('Target CPU-OS', GetTargetCPU_OS);
+  AddToAboutStatus('Build Time', GetBuildTime);
   if SQLiteLibraryHandle = 0 then InitializeSqlite();
-  if SQLiteLibraryHandle <> 0 then try addaboutcomp('SQLite Version', sqlite3_version()); except end;
+  if SQLiteLibraryHandle <> 0 then try AddToAboutStatus('SQLite Version', sqlite3_version()); except end;
   if SSLLibHandle = 0 then InitSSLInterface;
-  if SSLLibHandle <> 0 then try addaboutcomp('OpenSSL Version', SSLeayversion(0)); except end;
+  if SSLLibHandle <> 0 then try AddToAboutStatus('OpenSSL Version', SSLeayversion(0)); except end;
   if WebPLibHandle = 0 then InitWebPModule;
-  if WebPLibHandle <> 0 then try addaboutcomp('WebP Version', WebPGetVersion); except end;
+  if WebPLibHandle <> 0 then try AddToAboutStatus('WebP Version', WebPGetVersion); except end;
+end;
+
+procedure TMainForm.AddToAboutStatus(const ACaption, AValue: String);
+
+  function addaboutcomplbl(const ACaption: String): TLabel;
+  begin
+    Result := TLabel.Create(Self);
+    Result.Parent := pnAboutComp;
+    Result.Caption := ACaption;
+  end;
+
+begin
+  addaboutcomplbl(ACaption + ':');
+  with addaboutcomplbl(AValue) do
+  begin
+    Font.Style := [fsBold];
+    BorderSpacing.Right := 16;
+  end;
 end;
 
 procedure TMainForm.GeneratetvDownloadFilterNodes;
