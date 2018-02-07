@@ -22,7 +22,7 @@ function LuaLoadFromStream(L: Plua_State; AStream: TMemoryStream; AName: PAnsiCh
 implementation
 
 uses
-  LuaClass, luaStrings, LuaBaseUnit, LuaRegex, MultiLog;
+  LuaClass, luaStrings, LuaBaseUnit, LuaRegex, LuaSynaUtil, MultiLog;
 
 function luabase_print(L: Plua_State): Integer; cdecl;
 var
@@ -38,6 +38,7 @@ begin
   lua_register(L, 'print', @luabase_print);
   luaRegexRegister(L);
   luaBaseUnitRegister(L);
+  luaSynaUtilRegister(L);
   luaClassRegisterAll(L);
 end;
 
