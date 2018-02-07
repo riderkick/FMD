@@ -9,8 +9,8 @@ uses
   cthreads,
  {$ENDIF} {$ENDIF}
   Interfaces, // this includes the LCL widgetset
-  Forms, LazFileUtils, IniFiles, simpleipc, sqlite3dyn, FMDOptions, uBaseUnit,
-  FMDVars, webp, SimpleException, Classes, windows, sysutils, frmMain, MultiLog,
+  Forms, LazFileUtils, IniFiles, simpleipc, sqlite3dyn, FMDOptions, uBaseUnit, FMDVars, webp,
+  LuaWebsiteModules, SimpleException, Classes, windows, sysutils, frmMain, MultiLog,
   FileChannel, ssl_openssl_lib;
 
 var
@@ -22,10 +22,19 @@ var
   {$IFDEF DEBUGLEAKS}
   trcfile: String;
   {$ENDIF DEBUGLEAKS}
+  i: Integer;
+  p: String;
 
 {$R *.res}
 
 begin
+  for i := 1 to ParamCount-1 do
+  begin
+    p := AnsiLowerCase(ParamStr(i));
+    if p = '--lua-dofile' then
+       LuaWebsiteModules.AlwaysLoadLuaFromFile := True;
+  end;
+
   Application.Scaled := True;
   with TIniFile.Create(CONFIG_FILE) do
     try

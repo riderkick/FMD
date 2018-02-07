@@ -70,6 +70,7 @@ procedure ScanLuaWebsiteModulesFile;
 
 var
   LuaWebsiteModulesManager: TLuaWebsiteModulesManager;
+  AlwaysLoadLuaFromFile: Boolean = {$ifdef DEVBUILD}True{$else}False{$endif};
 
 implementation
 
@@ -569,9 +570,13 @@ end;
 
 function TLuaWebsiteModule.LuaDoMe(L: Plua_State): Integer;
 begin
-  Result := LuaLoadFromStream(L, Container.ByteCode, PChar(Container.FileName));
-  if Result <> 0 then
+  if AlwaysLoadLuaFromFile then
+    Result := luaL_loadfile(L, PChar(Container.FileName))
+  else
+    Result := LuaLoadFromStream(L, Container.ByteCode, PChar(Container.FileName));
+  if Result = 0 then
     Result := lua_pcall(L, 0, 0, 0);
+  writeln(LuaStackToString(L));
 end;
 
 procedure luaWebsiteModuleAddMetaTable(L: Plua_State; Obj: Pointer;

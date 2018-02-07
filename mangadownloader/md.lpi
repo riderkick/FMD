@@ -211,6 +211,15 @@
 -dSELFUPDATE
 -dDEBUGLEAKS
 -dMULTILOG"/>
+            <OtherDefines Count="7">
+              <Define0 Value="MANGADOWNLOADER"/>
+              <Define1 Value="DOWNLOADER"/>
+              <Define2 Value="SELFUPDATE"/>
+              <Define3 Value="DEBUGLEAKS"/>
+              <Define4 Value="MULTILOG"/>
+              <Define5 Value="USE_SOROKINS_REGEX"/>
+              <Define6 Value="USE_BBFULL_UNICODE"/>
+            </OtherDefines>
             <ExecuteAfter>
               <Command Value="cmd.exe /c copy /y languages\*.po ..\bin\languages\"/>
             </ExecuteAfter>
