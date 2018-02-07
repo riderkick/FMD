@@ -66,6 +66,7 @@ uses
   LHTranslation,
   MangaRock,
   PsychoPlay,
+  Lhscans,
   // Raw Official
   SundayWebEvery,
   TonarinoYoungJump,
