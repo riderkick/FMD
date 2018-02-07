@@ -101,8 +101,6 @@ begin
   luaPushFunctionGlobal(L, 'AppendURLDelimleft', @lua_appendurldelimleft);
   luaPushFunctionGlobal(L, 'RemoveURLDelim', @lua_removeurldelim);
   luaPushFunctionGlobal(L, 'RemoveURLDelimLeft', @lua_removeurldelimleft);
-  luaPushFunctionGlobal(L, 'EncodeBase64', @lua_encodebase64);
-  luaPushFunctionGlobal(L, 'DecodeBase64', @lua_decodebase64);
 end;
 
 end.
