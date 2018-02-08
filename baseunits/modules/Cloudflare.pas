@@ -23,12 +23,6 @@ type
     procedure AddCookiesTo(const ACookies: TStringList);
   end;
 
-  { THTTPSendThreadHelper }
-
-  THTTPSendThreadHelper = class helper for THTTPSendThread
-    function GETCF(const AURL: String; const CFProps: TCFProps): Boolean;
-  end;
-
 function CFRequest(const AHTTP: THTTPSendThread; const Method, AURL: String; const Response: TObject; const CFProps: TCFProps): Boolean;
 
 implementation
@@ -237,13 +231,6 @@ procedure TCFProps.AddCookiesTo(const ACookies: TStringList);
 begin
   if cf_clearance <> '' then
     ACookies.Values['cf_clearance'] := cf_clearance;
-end;
-
-{ THTTPSendThreadHelper }
-
-function THTTPSendThreadHelper.GETCF(const AURL: String; const CFProps: TCFProps): Boolean;
-begin
-  Result := Cloudflare.CFRequest(Self, 'GET', AURL, nil, CFProps);
 end;
 
 end.
