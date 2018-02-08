@@ -78,15 +78,9 @@ begin
   Result := 1;
 end;
 
-function lua_encodebase64(L: Plua_State): Integer; cdecl;
+function lua_regexprgetmatch(L: Plua_State): Integer; cdecl;
 begin
-  lua_pushstring(L, Base64Decode(lua_tostring(L, 1)));
-  Result := 1;
-end;
-
-function lua_decodebase64(L: Plua_State): Integer; cdecl;
-begin
-  lua_pushstring(L, Base64Encode(lua_tostring(L, 1)));
+  lua_pushstring(L, RegExprGetMatch(lua_tostring(L, 1), lua_tostring(L, 2), lua_tointeger(L, 3)));
   Result := 1;
 end;
 
@@ -101,6 +95,7 @@ begin
   luaPushFunctionGlobal(L, 'AppendURLDelimleft', @lua_appendurldelimleft);
   luaPushFunctionGlobal(L, 'RemoveURLDelim', @lua_removeurldelim);
   luaPushFunctionGlobal(L, 'RemoveURLDelimLeft', @lua_removeurldelimleft);
+  luaPushFunctionGlobal(L, 'RegExprGetMatch', @lua_regexprgetmatch);
 end;
 
 end.
