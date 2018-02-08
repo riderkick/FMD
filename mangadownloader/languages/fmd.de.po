@@ -1793,10 +1793,6 @@ msgctxt "TMAINFORM.MNUPDATELIST.CAPTION"
 msgid "Update manga list"
 msgstr "Aktualisiere Manga-Liste"
 
-#: tmainform.pndownloadlist.caption
-msgid "pnDownloadList"
-msgstr ""
-
 #: tmainform.rball.caption
 msgid "Have all genre checked"
 msgstr "Have all genre checked"

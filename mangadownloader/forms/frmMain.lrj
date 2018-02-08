@@ -5,7 +5,6 @@
 {"hash":190989196,"name":"tmainform.tbdownloadstopall.caption","sourcebytes":[83,116,111,112,32,65,108,108],"value":"Stop All"},
 {"hash":235571507,"name":"tmainform.tbdownloaddeletecompleted.caption","sourcebytes":[68,101,108,101,116,101,32,97,108,108,32,99,111,109,112,108,101,116,101,100,32,116,97,115,107,115],"value":"Delete all completed tasks"},
 {"hash":173363182,"name":"tmainform.eddownloadssearch.texthint","sourcebytes":[83,101,97,114,99,104,32,100,111,119,110,108,111,97,100,115,46,46,46],"value":"Search downloads..."},
-{"hash":131060932,"name":"tmainform.pndownloadlist.caption","sourcebytes":[112,110,68,111,119,110,108,111,97,100,76,105,115,116],"value":"pnDownloadList"},
 {"hash":14216608,"name":"tmainform.tbmidownloadmovetop.hint","sourcebytes":[77,111,118,101,32,115,101,108,101,99,116,101,100,32,105,116,101,109,40,115,41,32,116,111,32,116,111,112],"value":"Move selected item(s) to top"},
 {"hash":160874656,"name":"tmainform.tbmidownloadmoveup.hint","sourcebytes":[77,111,118,101,32,115,101,108,101,99,116,101,100,32,105,116,101,109,40,115,41,32,117,112],"value":"Move selected item(s) up"},
 {"hash":113368910,"name":"tmainform.tbmidownloadmovedown.hint","sourcebytes":[77,111,118,101,32,115,101,108,101,99,116,101,100,32,105,116,101,109,40,115,41,32,100,111,119,110],"value":"Move selected item(s) down"},

@@ -289,7 +289,6 @@ object MainForm: TMainForm
             Width = 556
             Align = alClient
             Anchors = [akTop, akLeft, akRight]
-            Caption = 'pnDownloadList'
             ClientHeight = 464
             ClientWidth = 556
             TabOrder = 1
