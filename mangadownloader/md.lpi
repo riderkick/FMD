@@ -73,7 +73,8 @@
             <Filename Value="..\bin\fmd"/>
           </Target>
           <SearchPaths>
-            <IncludeFiles Value="$(ProjOutDir)"/>
+            <IncludeFiles Value="$(ProjOutDir);..\baseunits\includes\AnimeA;..\baseunits\includes\AnimeStory;..\baseunits\includes\AnimExtremist;..\baseunits\includes\CentralDeMangas;..\baseunits\includes\EGScans;..\baseunits\includes\EsMangaHere;..\baseunits\includes\Kivmanga;..\baseunits\includes\LectureEnLigne;..\baseunits\includes\MangaAr;..\baseunits\includes\S2scans;..\baseunits\includes\ScanManga;..\baseunits\includes\Starkana;..\baseunits\includes\Turkcraft;..\baseunits\includes\VnSharing;..\baseunits\includes\MeinManga;..\baseunits\includes\MangaREADER_POR;..\baseunits\includes\MangasPROJECT"/>
+            <OtherUnitFiles Value="..\baseunits;..\baseunits\animatedgifs;..\baseunits\SimpleException;..\baseunits\modules;..\baseunits\extras;..\baseunits\lua;forms"/>
             <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
           </SearchPaths>
           <Parsing>
