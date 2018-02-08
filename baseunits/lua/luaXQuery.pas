@@ -44,7 +44,7 @@ begin
     u.ParseHTML(lua_tostring(L, 1))
   else
   if lua_isuserdata(L, 1) then
-    u.ParseHTML(lua_tostring(L, 1));
+    u.ParseHTML(TStream(lua_touserdata(L, 1)));
 end;
 
 function xquery_xpath(L: Plua_State): Integer; cdecl;
