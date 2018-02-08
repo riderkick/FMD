@@ -32,11 +32,18 @@ begin
   Result := 1;
 end;
 
+function lua_replacestring(L: Plua_State): Integer; cdecl;
+begin
+  lua_pushstring(L, ReplaceString(lua_tostring(L, 1), lua_tostring(L, 2), lua_tostring(L, 3)));
+  Result := 1;
+end;
+
 procedure luaSynaUtilRegister(L: Plua_State);
 begin
   luaPushFunctionGlobal(L, 'GetBetween', @lua_getbetween);
   luaPushFunctionGlobal(L, 'SeparateLeft', @lua_separateleft);
   luaPushFunctionGlobal(L, 'SeparateRight', @lua_separateright);
+  luaPushFunctionGlobal(L, 'ReplaceString', @lua_replacestring);
 end;
 
 end.
