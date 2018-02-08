@@ -4,6 +4,10 @@ Project page: https://github.com/riderkick/FMD
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.134.0 (08-02-2018)
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.133.0...0.9.134.0
+
 0.9.133.0 (07-02-2018)
 [+] Added left download toolbar to move selected download(s). Options > View
 [*] View manga info preserve saveto location from download or favorite
