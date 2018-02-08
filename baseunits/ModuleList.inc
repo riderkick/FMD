@@ -62,7 +62,6 @@ uses
   MangaTube,
   WieManga,
   Mangaf,
-  LHTranslation,
   MangaRock,
   PsychoPlay,
   Lhscans,
