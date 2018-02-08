@@ -65,6 +65,7 @@ uses
   PsychoPlay,
   Mangakakalot,
   Lhscans,
+  MangaWindow,
   // Raw Official
   SundayWebEvery,
   TonarinoYoungJump,
