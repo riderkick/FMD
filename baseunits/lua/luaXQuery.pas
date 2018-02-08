@@ -160,7 +160,7 @@ const
     (name: 'XPathString'; func: @xquery_xpathstring),
     (name: 'XpathStringAll'; func: @xquery_xpathstringall),
     (name: 'XpathHREFAll'; func: @xquery_xpathhrefall),
-    (name: 'XpathHREFTitle'; func: @xquery_xpathhreftitleall),
+    (name: 'XpathHREFTitleAll'; func: @xquery_xpathhreftitleall),
     (name: nil; func: nil)
     );
 
