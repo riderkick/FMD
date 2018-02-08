@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils, lua53, RegExpr;
 
-procedure luaRegexRegister(L: Plua_State);
+procedure luaRegExprRegister(L: Plua_State);
 
 implementation
 
@@ -26,7 +26,7 @@ begin
   Result := 1;
 end;
 
-procedure luaRegexRegister(L: Plua_State);
+procedure luaRegExprRegister(L: Plua_State);
 begin
   luaPushFunctionGlobal(L, 'ExecRegExpr', @re_exec);
   luaPushFunctionGlobal(L, 'ReplaceRegExpr', @re_replace);

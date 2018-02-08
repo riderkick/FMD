@@ -37,8 +37,8 @@ procedure LuaBaseRegister(L: Plua_State);
 begin
   lua_register(L, 'print', @luabase_print);
 
-  luaRegexRegister(L);
   luaBaseUnitRegister(L);
+  luaRegExprRegister(L);
   luaSynaUtilRegister(L);
   luaSynaCodeRegister(L);
 
