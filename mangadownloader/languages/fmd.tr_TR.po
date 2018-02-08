@@ -13,34 +13,6 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 
-#: batoto.rs_serverselection
-msgid "Image server:"
-msgstr "Resim sunucusu:"
-
-#: batoto.rs_serverselectionitems
-msgid ""
-"Auto\n"
-"Image Server EU\n"
-"Image Server NA\n"
-"CDN (default)\n"
-"CDN2 (testing)\n"
-msgstr ""
-"Otomatik\n"
-"Resim Sunucusu AB\n"
-"Resim Sunucusu KA\n"
-"CDN (varsayılan)\n"
-"CDN2 (test)\n"
-
-#: batoto.rs_showalllang
-msgctxt "batoto.rs_showalllang"
-msgid "Show all language"
-msgstr "Tüm dilleri göster"
-
-#: batoto.rs_showscangroup
-msgctxt "batoto.rs_showscangroup"
-msgid "Show scanlation group"
-msgstr "Scanlation grubunu göster"
-
 #: ehentai.rs_downloadoriginalimage
 msgid "Download original image(require ExHentai account)"
 msgstr "Orijinal resmi indir(ExHentai hesabı gerektirir)"

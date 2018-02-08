@@ -11,34 +11,6 @@ msgstr ""
 "Language: ru_RU\n"
 "X-Generator: Poedit 2.0.2\n"
 
-#: batoto.rs_serverselection
-msgid "Image server:"
-msgstr "Сервер изображения:"
-
-#: batoto.rs_serverselectionitems
-msgid ""
-"Auto\n"
-"Image Server EU\n"
-"Image Server NA\n"
-"CDN (default)\n"
-"CDN2 (testing)\n"
-msgstr ""
-"Авто\n"
-"Сервер изображения EU\n"
-"Сервер изображения NA\n"
-"CDN (по умолч.)\n"
-"CDN2 (тестовый)\n"
-
-#: batoto.rs_showalllang
-msgctxt "batoto.rs_showalllang"
-msgid "Show all language"
-msgstr "Показать все языки"
-
-#: batoto.rs_showscangroup
-msgctxt "batoto.rs_showscangroup"
-msgid "Show scanlation group"
-msgstr "Показать группу сканирования"
-
 #: ehentai.rs_downloadoriginalimage
 msgid "Download original image(require ExHentai account)"
 msgstr "Загрузить оригинальное изображение(треб. аккаунт ExHentai)"

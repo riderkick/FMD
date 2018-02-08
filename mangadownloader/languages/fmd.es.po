@@ -12,34 +12,6 @@ msgstr ""
 "Last-Translator: Mariolr\n"
 "Language: es_419\n"
 
-#: batoto.rs_serverselection
-msgid "Image server:"
-msgstr ""
-
-#: batoto.rs_serverselectionitems
-msgid ""
-"Auto\n"
-"Image Server EU\n"
-"Image Server NA\n"
-"CDN (default)\n"
-"CDN2 (testing)\n"
-msgstr ""
-"Auto\n"
-"Imagen de Servidor EU\n"
-"Imagen de Servidor NA\n"
-"CDN (Por Defecto)\n"
-"CDN2 (Pruebando)\n"
-
-#: batoto.rs_showalllang
-msgctxt "batoto.rs_showalllang"
-msgid "Show all language"
-msgstr "Mostrar todos los idiomas"
-
-#: batoto.rs_showscangroup
-msgctxt "batoto.rs_showscangroup"
-msgid "Show scanlation group"
-msgstr "Mostrar Grupo de Scanlation"
-
 #: ehentai.rs_downloadoriginalimage
 msgid "Download original image(require ExHentai account)"
 msgstr "Descargar imagen original (require una cuenta ExHentai)"

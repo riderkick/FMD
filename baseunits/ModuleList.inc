@@ -1,7 +1,6 @@
 uses
   WPManga,
   myMangaReaderCMS,
-  Batoto,
   MangaFox,
   Mangacan,
   PecintaKomik,
