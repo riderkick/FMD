@@ -113,9 +113,9 @@ begin
     lua_getfield(L, -1, '__defaultget'); // default get[] from metatable
     if lua_iscfunction(L, -1) then
     begin
-      lua_pushvalue(L, 1); // userdata
+      //lua_pushvalue(L, 1); // userdata ; already in closure
       lua_pushvalue(L, 2); // key
-      lua_call(L, 2, 1);
+      lua_call(L, 1, 1);
     end
     else
     if lua_isnil(L, -1) then // no default get
@@ -150,10 +150,10 @@ begin
     lua_getfield(L, -1, '__defaultset'); // default get from metatable
     if lua_iscfunction(L, -1) then
     begin
-      lua_pushvalue(L, 1); // userdata
+      //lua_pushvalue(L, 1); // userdata ; already in closure
       lua_pushvalue(L, 2); // key
       lua_pushvalue(L, 3); // data
-      lua_call(L, 3, 1);
+      lua_call(L, 2, 1);
     end
     else
     if lua_isnil(L, -1) then // no default get
