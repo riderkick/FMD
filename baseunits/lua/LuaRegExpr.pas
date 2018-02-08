@@ -1,4 +1,4 @@
-unit LuaRegex;
+unit LuaRegExpr;
 
 {$mode objfpc}{$H+}
 
