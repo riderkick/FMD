@@ -6,7 +6,6 @@ uses
   Mangacan,
   PecintaKomik,
   MangaReader,
-  MangaStream,
   MangaLife,
   MangaHere,
   MangaTr,
