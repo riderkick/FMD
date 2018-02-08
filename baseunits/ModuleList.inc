@@ -64,6 +64,7 @@ uses
   Mangaf,
   MangaRock,
   PsychoPlay,
+  Mangakakalot,
   Lhscans,
   // Raw Official
   SundayWebEvery,
