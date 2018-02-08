@@ -747,7 +747,7 @@ msgstr "Показать \"Удалить все завершенные зада
 
 #: tmainform.cboptionshowdownloadtoolbarleft.caption
 msgid "Show left downloads toolbar"
-msgstr ""
+msgstr "Показать дополнительную панель загрузок"
 
 #: tmainform.cboptionshowquitdialog.caption
 msgid "Exit FMD"
@@ -1774,7 +1774,7 @@ msgstr "Обновить список манги"
 
 #: tmainform.pndownloadlist.caption
 msgid "pnDownloadList"
-msgstr ""
+msgstr "pnDownloadList"
 
 #: tmainform.rball.caption
 msgid "Have all genre checked"
@@ -1812,19 +1812,19 @@ msgstr "Остановить все"
 
 #: tmainform.tbmidownloadmovebottom.hint
 msgid "Move selected item(s) to bottom"
-msgstr ""
+msgstr "Переместить выбранные элементы в конец списка"
 
 #: tmainform.tbmidownloadmovedown.hint
 msgid "Move selected item(s) down"
-msgstr ""
+msgstr "Сдвинуть выбранные элементы вниз"
 
 #: tmainform.tbmidownloadmovetop.hint
 msgid "Move selected item(s) to top"
-msgstr ""
+msgstr "Переместить выбранные элементы в начало списка"
 
 #: tmainform.tbmidownloadmoveup.hint
 msgid "Move selected item(s) up"
-msgstr ""
+msgstr "Сдвинуть выбранные элементы вверх"
 
 #: tmainform.tbwebsitescollapseall.caption
 msgid "Collapse All"
