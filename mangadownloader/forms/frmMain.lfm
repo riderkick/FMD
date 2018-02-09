@@ -3917,7 +3917,7 @@ object MainForm: TMainForm
                 Left = 134
                 Height = 23
                 Top = 29
-                Width = 85
+                Width = 100
                 ItemHeight = 15
                 ItemIndex = 1
                 Items.Strings = (
