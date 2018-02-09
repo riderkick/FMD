@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
-"Project-Id-Version: \n"
+"Project-Id-Version: Free Manga Downloader 0.9.135\n"
 "POT-Creation-Date: \n"
 "PO-Revision-Date: \n"
 "Last-Translator: Tmp341 <tmp341@gmail.com>\n"
@@ -322,6 +322,9 @@ msgid ""
 "PNG\n"
 "Jpeg\n"
 msgstr ""
+"WebP\n"
+"PNG\n"
+"Jpeg\n"
 
 #: frmmain.rs_webppnglevel
 msgid ""
@@ -330,6 +333,10 @@ msgid ""
 "Default\n"
 "Maximum\n"
 msgstr ""
+"Hiçbiri\n"
+"En hızlı\n"
+"Varsayılan\n"
+"Maksimum\n"
 
 #: frmmain.rs_wronginput
 msgid "Invalid input!"
@@ -780,11 +787,11 @@ msgstr "Düzenli İfadeler"
 
 #: tmainform.cbwebpconvertto.text
 msgid "PNG"
-msgstr ""
+msgstr "PNG"
 
 #: tmainform.cbwebppngcompressionlevel.text
 msgid "Fastest"
-msgstr ""
+msgstr "En hızlı"
 
 #: tmainform.ckdroptarget.caption
 msgctxt "tmainform.ckdroptarget.caption"
@@ -1244,7 +1251,7 @@ msgstr "Yeniden adlandırma"
 
 #: tmainform.gbwebp.caption
 msgid "WebP"
-msgstr ""
+msgstr "WebP"
 
 #: tmainform.lbdefaultdownloadpath.caption
 msgid "Choose the default download path:"
@@ -1503,15 +1510,15 @@ msgstr "Şuraya kaydet:"
 
 #: tmainform.lbwebpconvertto.caption
 msgid "Save WebP to"
-msgstr ""
+msgstr "WebP'yi şuraya kaydet"
 
 #: tmainform.lbwebpjpegquality.caption
 msgid "Jpeg quality"
-msgstr ""
+msgstr "JPEG kalitesi"
 
 #: tmainform.lbwebppngcompressionlevel.caption
 msgid "PNG Compression level"
-msgstr ""
+msgstr "PNG Sıkıştırma seviyesi"
 
 #: tmainform.medturldelete.caption
 msgctxt "TMAINFORM.MEDTURLDELETE.CAPTION"
