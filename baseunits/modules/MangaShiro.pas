@@ -89,6 +89,7 @@ begin
   AddWebsiteModule('MangaShiro', 'http://mangashiro.net');
   AddWebsiteModule('Subapics', 'http://subapics.com');
   AddWebsiteModule('MangaKita', 'http://www.mangakita.net');
+  AddWebsiteModule('Mangavy', 'https://mangavy.com');
 end;
 
 initialization
