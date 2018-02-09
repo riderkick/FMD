@@ -315,6 +315,21 @@ msgstr "Διαδρομή του προγράμματος (π.χ. C:\\MangaDownlo
 msgid "Today"
 msgstr "Σήμερα"
 
+#: frmmain.rs_webpconvertto
+msgid ""
+"WebP\n"
+"PNG\n"
+"Jpeg\n"
+msgstr ""
+
+#: frmmain.rs_webppnglevel
+msgid ""
+"None\n"
+"Fastest\n"
+"Default\n"
+"Maximum\n"
+msgstr ""
+
 #: frmmain.rs_wronginput
 msgid "Invalid input!"
 msgstr "Μη έγκυρη εισαγωγή!"
@@ -762,6 +777,14 @@ msgstr "Για περισσότερους ιστότοπους manga, παρακ
 #: tmainform.cbuseregexpr.caption
 msgid "Regular Expression"
 msgstr "Κανονική έκφραση"
+
+#: tmainform.cbwebpconvertto.text
+msgid "PNG"
+msgstr ""
+
+#: tmainform.cbwebppngcompressionlevel.text
+msgid "Fastest"
+msgstr ""
 
 #: tmainform.ckdroptarget.caption
 msgctxt "tmainform.ckdroptarget.caption"
@@ -1271,6 +1294,10 @@ msgstr "Ρυθμίσεις διακομιστή μεσολάβησης"
 msgid "Renaming"
 msgstr "Μετονομασία"
 
+#: tmainform.gbwebp.caption
+msgid "WebP"
+msgstr ""
+
 #: tmainform.lbdefaultdownloadpath.caption
 msgid "Choose the default download path:"
 msgstr "Καθορίστε την προεπιλεγμένη διαδρομή λήψης:"
@@ -1529,6 +1556,18 @@ msgstr "Όνομα χρήστη"
 #: tmainform.lbsaveto.caption
 msgid "Save to:"
 msgstr "Αποθήκευση σε:"
+
+#: tmainform.lbwebpconvertto.caption
+msgid "Save WebP to"
+msgstr ""
+
+#: tmainform.lbwebpjpegquality.caption
+msgid "Jpeg quality"
+msgstr ""
+
+#: tmainform.lbwebppngcompressionlevel.caption
+msgid "PNG Compression level"
+msgstr ""
 
 #: tmainform.medturldelete.caption
 msgctxt "TMAINFORM.MEDTURLDELETE.CAPTION"

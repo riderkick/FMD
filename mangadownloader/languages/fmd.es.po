@@ -309,6 +309,21 @@ msgstr "Ruta al Software (e.g. C:\\MangaDownloader)"
 msgid "Today"
 msgstr "Hoy"
 
+#: frmmain.rs_webpconvertto
+msgid ""
+"WebP\n"
+"PNG\n"
+"Jpeg\n"
+msgstr ""
+
+#: frmmain.rs_webppnglevel
+msgid ""
+"None\n"
+"Fastest\n"
+"Default\n"
+"Maximum\n"
+msgstr ""
+
 #: frmmain.rs_wronginput
 msgid "Invalid input!"
 msgstr "Entrada no valida!"
@@ -746,6 +761,14 @@ msgstr "Para más Sitios de Mangas, Ve a Opciones->Sitios Manga"
 #: tmainform.cbuseregexpr.caption
 msgid "Regular Expression"
 msgstr "Regular Expresión"
+
+#: tmainform.cbwebpconvertto.text
+msgid "PNG"
+msgstr ""
+
+#: tmainform.cbwebppngcompressionlevel.text
+msgid "Fastest"
+msgstr ""
 
 #: tmainform.ckdroptarget.caption
 msgctxt "tmainform.ckdroptarget.caption"
@@ -1200,6 +1223,10 @@ msgstr "Configuración de Proxy"
 msgid "Renaming"
 msgstr "Renombrando"
 
+#: tmainform.gbwebp.caption
+msgid "WebP"
+msgstr ""
+
 #: tmainform.lbdefaultdownloadpath.caption
 msgid "Choose the default download path:"
 msgstr "Escoger la Ruta de Descarga por Defecto:"
@@ -1452,6 +1479,18 @@ msgstr "Usuario"
 #: tmainform.lbsaveto.caption
 msgid "Save to:"
 msgstr "Guardar en:"
+
+#: tmainform.lbwebpconvertto.caption
+msgid "Save WebP to"
+msgstr ""
+
+#: tmainform.lbwebpjpegquality.caption
+msgid "Jpeg quality"
+msgstr ""
+
+#: tmainform.lbwebppngcompressionlevel.caption
+msgid "PNG Compression level"
+msgstr ""
 
 #: tmainform.medturldelete.caption
 msgctxt "TMAINFORM.MEDTURLDELETE.CAPTION"

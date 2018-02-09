@@ -274,6 +274,21 @@ msgstr ""
 msgid "Today"
 msgstr ""
 
+#: frmmain.rs_webpconvertto
+msgid ""
+"WebP\n"
+"PNG\n"
+"Jpeg\n"
+msgstr ""
+
+#: frmmain.rs_webppnglevel
+msgid ""
+"None\n"
+"Fastest\n"
+"Default\n"
+"Maximum\n"
+msgstr ""
+
 #: frmmain.rs_wronginput
 msgid "Invalid input!"
 msgstr ""
@@ -709,6 +724,14 @@ msgstr ""
 
 #: tmainform.cbuseregexpr.caption
 msgid "Regular Expression"
+msgstr ""
+
+#: tmainform.cbwebpconvertto.text
+msgid "PNG"
+msgstr ""
+
+#: tmainform.cbwebppngcompressionlevel.text
+msgid "Fastest"
 msgstr ""
 
 #: tmainform.ckdroptarget.caption
@@ -1162,6 +1185,10 @@ msgstr ""
 msgid "Renaming"
 msgstr ""
 
+#: tmainform.gbwebp.caption
+msgid "WebP"
+msgstr ""
+
 #: tmainform.lbdefaultdownloadpath.caption
 msgid "Choose the default download path:"
 msgstr ""
@@ -1381,6 +1408,18 @@ msgstr ""
 
 #: tmainform.lbsaveto.caption
 msgid "Save to:"
+msgstr ""
+
+#: tmainform.lbwebpconvertto.caption
+msgid "Save WebP to"
+msgstr ""
+
+#: tmainform.lbwebpjpegquality.caption
+msgid "Jpeg quality"
+msgstr ""
+
+#: tmainform.lbwebppngcompressionlevel.caption
+msgid "PNG Compression level"
 msgstr ""
 
 #: tmainform.medturldelete.caption

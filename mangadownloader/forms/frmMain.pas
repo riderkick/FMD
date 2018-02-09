@@ -71,6 +71,8 @@ type
     cbOptionOneInstanceOnly: TCheckBox;
     ckOptionsAlwaysStartTaskFromFailedChapters: TCheckBox;
     ckEnableLogging: TCheckBox;
+    cbWebPConvertTo: TComboBox;
+    cbWebPPNGCompressionLevel: TComboBox;
     edDownloadsSearch: TEditButton;
     edFavoritesSearch: TEditButton;
     edFilterMangaInfoChapters: TEditButton;
@@ -83,13 +85,18 @@ type
     edSaveTo: TEditButton;
     edURL: TEditButton;
     edWebsitesSearch: TEditButton;
+    gbWebP: TGroupBox;
     IconDLLeft: TImageList;
+    lbWebPPNGCompressionLevel: TLabel;
+    lbWebPJpegQuality: TLabel;
+    lbWebPConvertTo: TLabel;
     lbLogFileName: TLabel;
     lbOptionRetryFailedTask: TLabel;
     lbOptionFilenameCustomRenameHint: TLabel;
     lbOptionFilenameCustomRename: TLabel;
     lbOptionMangaCustomRenameHint: TLabel;
     lbOptionMangaCustomRename: TLabel;
+    MainMenu1: TMainMenu;
     MenuItem10: TMenuItem;
     MenuItem11: TMenuItem;
     miFavoritesRename: TMenuItem;
@@ -144,6 +151,7 @@ type
     sbWebsiteOptions: TScrollBox;
     btDownloadSplit: TSpeedButton;
     seOptionRetryFailedTask: TSpinEdit;
+    seWebPJpegQuality: TSpinEdit;
     ToolBarDownloadLeft: TToolBar;
     tbmiDownloadMoveTop: TToolButton;
     tbmiDownloadMoveUp: TToolButton;
@@ -860,6 +868,8 @@ resourcestring
   RS_OptionFMDDoItems = 'Nothing'#13#10'Exit'#13#10'Shutdown'#13#10'Hibernate';
   RS_DropTargetModeItems = 'Download all'#13#10'Add to favorites';
   RS_OptionCompress = 'None'#13#10'ZIP'#13#10'CBZ'#13#10'PDF';
+  RS_WebPConvertTo = 'WebP'#13#10'PNG'#13#10'Jpeg';
+  RS_WebPPNGLevel = 'None'#13#10'Fastest'#13#10'Default'#13#10'Maximum';
 
   RS_HintFavoriteProblem = 'There is a problem with this data!'#13#10
                          + 'Removing and re-adding this data may fix the problem.';
@@ -4924,6 +4934,9 @@ begin
     edOptionFilenameCustomRename.Text := ReadString('saveto', 'FilenameCustomRename', DEFAULT_FILENAME_CUSTOMRENAME);
     if Trim(edOptionFilenameCustomRename.Text) = '' then
       edOptionFilenameCustomRename.Text := DEFAULT_FILENAME_CUSTOMRENAME;
+    cbWebPConvertTo.ItemIndex := ReadInteger('saveto', 'ConvertWebP', OptionWebPConvertTo);
+    cbWebPPNGCompressionLevel.ItemIndex := ReadInteger('saveto', 'WebPPNGLevel', OptionWebPPNGLevel);
+    seWebPJpegQuality.Value := ReadInteger('saveto', 'WebPJpegQuality', OptionWebPJpegQuality);
 
     // update
     cbOptionAutoCheckLatestVersion.Checked := ReadBool('update', 'AutoCheckLatestVersion', True);
@@ -5064,6 +5077,9 @@ begin
       if Trim(edOptionFilenameCustomRename.Text) = '' then
         edOptionFilenameCustomRename.Text := DEFAULT_FILENAME_CUSTOMRENAME;
       WriteString('saveto', 'FilenameCustomRename', edOptionFilenameCustomRename.Text);
+      WriteInteger('saveto', 'ConvertWebP', cbWebPConvertTo.ItemIndex);
+      WriteInteger('saveto', 'WebPPNGLevel', cbWebPPNGCompressionLevel.ItemIndex);
+      WriteInteger('saveto', 'WebPJpegQuality', seWebPJpegQuality.Value);
 
       // update
       WriteBool('update', 'AutoCheckLatestVersion', cbOptionAutoCheckLatestVersion.Checked);
@@ -5200,6 +5216,9 @@ begin
     OptionConvertDigitVolumeLength := seOptionDigitVolume.Value;
     OptionConvertDigitChapter := cbOptionDigitChapter.Checked;
     OptionConvertDigitChapterLength := seOptionDigitChapter.Value;
+    OptionWebPConvertTo := cbWebPConvertTo.ItemIndex;
+    OptionWebPPNGLevel := cbWebPPNGCompressionLevel.ItemIndex;
+    OptionWebPJpegQuality := seWebPJpegQuality.Value;
 
     //update
     OptionAutoCheckLatestVersion := cbOptionAutoCheckLatestVersion.Checked;
@@ -5681,7 +5700,9 @@ var
   idxOptionLetFMDDo,
   idxOptionProxyType,
   idxDropTargetMode,
-  idxOptionCompress: Integer;
+  idxOptionCompress,
+  idxOptionWebPConvertTo,
+  idxOptionWebPPNGLevel: Integer;
 begin
   if AvailableLanguages.Count = 0 then Exit;
   if cbLanguages.ItemIndex < 0 then Exit;
@@ -5698,6 +5719,8 @@ begin
     idxOptionProxyType := cbOptionProxyType.ItemIndex;
     idxDropTargetMode := rgDropTargetMode.ItemIndex;
     idxOptionCompress := rgOptionCompress.ItemIndex;
+    idxOptionWebPConvertTo := cbWebPConvertTo.ItemIndex;
+    idxOptionWebPPNGLevel := cbWebPPNGCompressionLevel.ItemIndex;
     if SimpleTranslator.SetLangByIndex(cbLanguages.ItemIndex) then
     begin
       // assign new value
@@ -5709,6 +5732,8 @@ begin
       cbOptionLetFMDDo.Items.Text := RS_OptionFMDDoItems;
       rgDropTargetMode.Items.Text := RS_DropTargetModeItems;
       rgOptionCompress.Items.Text := RS_OptionCompress;
+      cbWebPConvertTo.Items.Text := RS_WebPConvertTo;
+      cbWebPConvertTo.Items.Text := RS_WebPPNGLevel;
 
       // restore ItemIndex
       cbSelectManga.ItemIndex:=idxSelectManga;
@@ -5718,6 +5743,8 @@ begin
       cbOptionProxyType.ItemIndex := idxOptionProxyType;
       rgDropTargetMode.ItemIndex := idxDropTargetMode;
       rgOptionCompress.ItemIndex := idxOptionCompress;
+      cbWebPConvertTo.ItemIndex := idxOptionWebPConvertTo;
+      cbWebPPNGCompressionLevel.ItemIndex := idxOptionWebPPNGLevel;
       Self.Repaint;
       vtMangaList.Repaint;
       tvDownloadFilterRefresh(True);

@@ -23,7 +23,7 @@ uses
   FastHTMLParser, fgl, RegExpr, synautil, httpsend, blcksock, ssl_openssl,
   synacode, MultiLog, FPimage, GZIPUtils, uMisc, httpsendthread, FMDOptions,
   simplehtmltreeparser, xquery, xquery_json, ImgInfos, NaturalSortUnit,
-  MemBitmap, FPWritePNG;
+  MemBitmap, FPWritePNG, zstream;
 
 const
   LineEnding2 = LineEnding + LineEnding;
@@ -728,8 +728,8 @@ function GetPage(var output: TObject; URL: String; const Reconnect: Integer = 0)
 function GetURLFromBitly(const URL: String): String;
 
 // convert webp
-function WebPToPNGStream(const AStream: TMemoryStream): Boolean;
-function WebPToJpegStream(const AStream: TMemoryStream): Boolean;
+function WebPToPNGStream(const AStream: TMemoryStream; const ALevel: Tcompressionlevel = clfastest): Boolean;
+function WebPToJpegStream(const AStream: TMemoryStream; const AQuality: Integer = 80): Boolean;
 
 // check and convert known file
 
@@ -816,7 +816,7 @@ procedure SendLogException(const AText: String; AException: Exception); inline;
 implementation
 
 uses
-  {$IFDEF DOWNLOADER}WebsiteModules, webp, FPWriteJPEG, zstream;{$ENDIF}
+  {$IFDEF DOWNLOADER}WebsiteModules, webp, FPWriteJPEG;{$ENDIF}
 
 {$IFDEF WINDOWS}
 // thanks Leledumbo for the code
@@ -3322,7 +3322,8 @@ begin
   httpSource.Free;
 end;
 
-function WebPToPNGStream(const AStream: TMemoryStream): Boolean;
+function WebPToPNGStream(const AStream: TMemoryStream;
+  const ALevel: Tcompressionlevel): Boolean;
 var
   mem: TMemBitmap;
   writer: TFPWriterPNG;
@@ -3336,7 +3337,7 @@ begin
       writer := TFPWriterPNG.create;
       writer.Indexed := False;
       writer.UseAlpha := mem.HasTransparentPixels;
-      writer.CompressionLevel := zstream.clfastest;
+      writer.CompressionLevel := ALevel;
       mem.SaveToStream(AStream, writer);
       Result := True;
     finally
@@ -3348,7 +3349,8 @@ begin
   end;
 end;
 
-function WebPToJpegStream(const AStream: TMemoryStream): Boolean;
+function WebPToJpegStream(const AStream: TMemoryStream; const AQuality: Integer
+  ): Boolean;
 var
   mem: TMemBitmap;
   writer: TFPWriterJPEG;
@@ -3360,7 +3362,7 @@ begin
     if Assigned(mem) then
     try
       writer := TFPWriterJPEG.create;
-      writer.CompressionQuality := 80;
+      writer.CompressionQuality := AQuality;
       mem.SaveToStream(AStream, writer);
       Result := True;
     finally
@@ -3411,12 +3413,14 @@ begin
   if Stream.Size = 0 then Exit;
   p := CorrectPathSys(Path);
   if ForceDirectoriesUTF8(p) then begin
-    f := GetImageStreamExt(Stream);
-    if f = '' then
-    begin
-      if ConvertKnownImageFormat(Stream) then
-        f := GetImageStreamExt(Stream);
-    end;
+    if IsWebPStream(Stream) then
+      case OptionWebPConvertTo of
+        0: f := 'webp';
+        1: if WebPToPNGStream(Stream, Tcompressionlevel(OptionWebPPNGLevel)) then f := 'png';
+        2: if WebPToJpegStream(Stream, OptionWebPJpegQuality) then f := 'jpg';
+      end
+    else
+      f := GetImageStreamExt(Stream);
     if f = '' then Exit;
     f := p + FileName + '.' + f;
     if FileExistsUTF8(f) then DeleteFileUTF8(f);

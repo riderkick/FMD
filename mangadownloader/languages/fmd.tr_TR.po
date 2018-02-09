@@ -316,6 +316,21 @@ msgstr "Yazılım yolu (mesela c:\\MangaDownloader)"
 msgid "Today"
 msgstr "Bugün"
 
+#: frmmain.rs_webpconvertto
+msgid ""
+"WebP\n"
+"PNG\n"
+"Jpeg\n"
+msgstr ""
+
+#: frmmain.rs_webppnglevel
+msgid ""
+"None\n"
+"Fastest\n"
+"Default\n"
+"Maximum\n"
+msgstr ""
+
 #: frmmain.rs_wronginput
 msgid "Invalid input!"
 msgstr "Geçersiz giriş!"
@@ -762,6 +777,14 @@ msgstr "Daha fazla manga sitesi için, lütfen Ayarlar->Manga siteleri'ne gidin"
 #: tmainform.cbuseregexpr.caption
 msgid "Regular Expression"
 msgstr "Düzenli İfadeler"
+
+#: tmainform.cbwebpconvertto.text
+msgid "PNG"
+msgstr ""
+
+#: tmainform.cbwebppngcompressionlevel.text
+msgid "Fastest"
+msgstr ""
 
 #: tmainform.ckdroptarget.caption
 msgctxt "tmainform.ckdroptarget.caption"
@@ -1219,6 +1242,10 @@ msgstr "Vekil ayarları"
 msgid "Renaming"
 msgstr "Yeniden adlandırma"
 
+#: tmainform.gbwebp.caption
+msgid "WebP"
+msgstr ""
+
 #: tmainform.lbdefaultdownloadpath.caption
 msgid "Choose the default download path:"
 msgstr "Varsayılan indirme yolunu seç:"
@@ -1473,6 +1500,18 @@ msgstr "Kullanıcı adı"
 #: tmainform.lbsaveto.caption
 msgid "Save to:"
 msgstr "Şuraya kaydet:"
+
+#: tmainform.lbwebpconvertto.caption
+msgid "Save WebP to"
+msgstr ""
+
+#: tmainform.lbwebpjpegquality.caption
+msgid "Jpeg quality"
+msgstr ""
+
+#: tmainform.lbwebppngcompressionlevel.caption
+msgid "PNG Compression level"
+msgstr ""
 
 #: tmainform.medturldelete.caption
 msgctxt "TMAINFORM.MEDTURLDELETE.CAPTION"
