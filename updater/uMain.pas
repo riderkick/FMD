@@ -90,14 +90,18 @@ var
   ProxyUser: String;
   ProxyPass: String;
 
+  FMD_DIR: String;
+  CONFIG_DIR: String;
+  LANGUAGES_DIR: String;
+  CONFIG_FILE: String;
+  SZA: String;
+  OSZA: String;
 
 const
   Symbols: array [0..10] of Char =
     ('\', '/', ':', '*', '?', '"', '<', '>', '|', #9, ';');
 
   UA_CURL = 'curl/7.42.1';
-
-  CONFIG_FILE = 'config/config.ini';
 
 resourcestring
   RS_InvalidURL = 'Invalid URL!';
@@ -267,7 +271,7 @@ var
   sf: Boolean = False;
   regx: TRegExpr;
   i, ctry: Cardinal;
-  Sza,
+  csza,
   rurl,
   fname,
   sproject,
@@ -428,7 +432,7 @@ begin
       (FHTTP.ResultCode >= 100) and (FHTTP.ResultCode < 300) and
       (FCurrentSize >= FTotalSize) then
     begin
-      fname := DirPath + DirectorySeparator + FileName;
+      fname := DirPath + FileName;
       if FileExistsUTF8(fname) then
         DeleteFileUTF8(fname);
 
@@ -453,54 +457,53 @@ begin
         ssl_openssl_lib.DestroySSLInterface;
 
         UpdateStatus(Format(RS_UnpackFile, [fname]));
-        Sza := GetCurrentDirUTF8 + DirectorySeparator + '7za.exe';
         if _UpdApp and
-          FileExistsUTF8(GetCurrentDirUTF8 + DirectorySeparator + '7za.exe') then
+          FileExistsUTF8(SZA) then
         begin
           st := TStringList.Create;
           try
-            FindAllFiles(st, GetCurrentDirUTF8, '*.dbg', False);
+            FindAllFiles(st, FMD_DIR, '*.dbg', False);
             if st.Count > 0 then
               for i := 0 to st.Count - 1 do
                 DeleteFileUTF8(st[i]);
           finally
             st.Free;
           end;
-          CopyFile(GetCurrentDirUTF8 + DirectorySeparator + '7za.exe',
-            GetCurrentDirUTF8 + DirectorySeparator + 'old_7za.exe');
-          Sza := GetCurrentDirUTF8 + DirectorySeparator + 'old_7za.exe';
+          if FileExistsUTF8(OSZA) then
+            DeleteFileUTF8(OSZA);
+          CopyFile(SZA, OSZA);
+          csza := OSZA;
         end;
         if Pos('.zip', LowerCase(FileName)) <> 0 then
         begin
           UZip := TUnZipper.Create;
           UZip.OnStartFile := @UZipOnStartFile;
           try
-            UZip.FileName := DirPath + DirectorySeparator + FileName;
+            UZip.FileName := DirPath + FileName;
             UZip.OutputPath := Dirpath;
             UZip.Examine;
             UZip.UnZipAllFiles;
           finally
             UZip.Free;
-            DeleteFileUTF8(DirPath + DirectorySeparator + FileName);
+            DeleteFileUTF8(DirPath + FileName);
           end;
         end
         else
         begin
-          if FileExistsUTF8(Sza) then
+          if FileExistsUTF8(csza) then
           begin
-            RunExternalProcess(Sza, ['x', fname, '-o' +
+            RunExternalProcess(csza, ['x', fname, '-o' +
               AnsiQuotedStr(DirPath, '"'), '-aoa'], False, True);
             DeleteFileUTF8(fname);
           end
           else
             ShowErrorMessage(RS_7zNotFound);
         end;
-        if FileExistsUTF8(GetCurrentDirUTF8 + DirectorySeparator + 'old_7za.exe') then
-          if FileExistsUTF8(GetCurrentDirUTF8 + DirectorySeparator + '7za.exe') then
-            DeleteFileUTF8(GetCurrentDirUTF8 + DirectorySeparator + 'old_7za.exe')
+        if FileExistsUTF8(OSZA) then
+          if FileExistsUTF8(SZA) then
+            DeleteFileUTF8(OSZA)
           else
-            RenameFileUTF8(GetCurrentDirUTF8 + DirectorySeparator + 'old_7za.exe',
-              GetCurrentDirUTF8 + DirectorySeparator + '7za.exe');
+            RenameFileUTF8(OSZA, SZA);
       end;
     end;
     UpdateStatus(RS_Finished);
@@ -534,9 +537,16 @@ end;
 procedure TfrmMain.FormCreate(Sender: TObject);
 begin
   Randomize;
+  FMD_DIR := CleanAndExpandDirectory(ExtractFilePath(Application.ExeName));
+  CONFIG_DIR := FMD_DIR + 'config';
+  LANGUAGES_DIR := FMD_DIR + 'languages';
+  CONFIG_FILE := CONFIG_DIR + PathDelim + 'config.ini';
+  SZA := FMD_DIR + '7za.exe';
+  SZA := FMD_DIR + 'old_7za.exe';
+
   InitSimpleExceptionHandler;
   try
-  SimpleTranslator.LangDir := CleanAndExpandDirectory(GetCurrentDirUTF8) + 'languages';
+  SimpleTranslator.LangDir := LANGUAGES_DIR;
   SimpleTranslator.LangAppName := 'updater';
   SimpleTranslator.CollectLanguagesFiles;
   InitCriticalSection(CS_ReadCount);
@@ -634,9 +644,9 @@ begin
       dl.URL := _URL;
       dl.MaxRetry := _MaxRetry;
       if _UpdApp then
-        dl.DirPath := GetCurrentDirUTF8
+        dl.DirPath := FMD_DIR
       else
-        dl.DirPath := CleanAndExpandDirectory(GetCurrentDirUTF8) + 'data';
+        dl.DirPath := FMD_DIR + 'data' + PathDelim;
       dl.Extract := _Extract;
       dl.Start;
       itMonitor.Enabled := True;
