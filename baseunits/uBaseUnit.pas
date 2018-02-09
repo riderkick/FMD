@@ -731,10 +731,6 @@ function GetURLFromBitly(const URL: String): String;
 function WebPToPNGStream(const AStream: TMemoryStream; const ALevel: Tcompressionlevel = clfastest): Boolean;
 function WebPToJpegStream(const AStream: TMemoryStream; const AQuality: Integer = 80): Boolean;
 
-// check and convert known file
-
-function ConvertKnownImageFormat(const AStream: TMemoryStream): Boolean;
-
 // try to save tmemorystream to file, return the saved filename if success, otherwise return empty string
 function SaveImageStreamToFile(Stream: TMemoryStream; Path, FileName: String; Age: LongInt = 0): String; overload;
 function SaveImageStreamToFile(AHTTP: THTTPSend; Path, FileName: String): String; overload;
@@ -3374,35 +3370,6 @@ begin
   end;
 end;
 
-function IsWebPStream(const AStream: TMemoryStream): Boolean;
-var
-  hdr: array[0..3] of Char;
-begin
-  Result := False;
-  AStream.Position := 0;
-  if AStream.Read(hdr, 4) = 4 then
-  begin
-    if hdr = 'RIFF' then
-    begin
-      AStream.Seek(4, soFromCurrent);
-      if AStream.Read(hdr, 4) = 4 then
-      begin
-        if hdr = 'WEBP' then
-          Result := True;
-      end;
-    end;
-  end;
-end;
-
-function ConvertKnownImageFormat(const AStream: TMemoryStream): Boolean;
-begin
-  Result := False;
-  // webp
-  if IsWebPStream(AStream) then
-    Result := WebPToPNGStream(AStream);
-    //Result := WebPToJpegStream(AStream);
-end;
-
 function SaveImageStreamToFile(Stream: TMemoryStream; Path, FileName: String; Age: LongInt): String;
 var
   p, f: String;
@@ -3413,14 +3380,13 @@ begin
   if Stream.Size = 0 then Exit;
   p := CorrectPathSys(Path);
   if ForceDirectoriesUTF8(p) then begin
-    if IsWebPStream(Stream) then
+    f := GetImageStreamExt(Stream);
+    if f = 'webp' then
       case OptionWebPConvertTo of
-        0: f := 'webp';
-        1: if WebPToPNGStream(Stream, Tcompressionlevel(OptionWebPPNGLevel)) then f := 'png';
-        2: if WebPToJpegStream(Stream, OptionWebPJpegQuality) then f := 'jpg';
-      end
-    else
-      f := GetImageStreamExt(Stream);
+        1: if WebPToPNGStream(Stream, Tcompressionlevel(OptionWebPPNGLevel)) then f := 'png' else f := '';
+        2: if WebPToJpegStream(Stream, OptionWebPJpegQuality) then f := 'jpg' else f := '';
+      end;
+
     if f = '' then Exit;
     f := p + FileName + '.' + f;
     if FileExistsUTF8(f) then DeleteFileUTF8(f);
