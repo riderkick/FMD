@@ -125,7 +125,7 @@ begin
     with TFileSearcher.Create do
       try
         OnFileFound := FileFound;
-        Search(Self.Path, '*.jpg;*.png;*.gif', False, False);
+        Search(Self.Path, '*.jpg;*.png;*.gif;*.webp', False, False);
       finally
         Free;
       end;

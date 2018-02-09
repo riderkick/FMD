@@ -360,7 +360,7 @@ const
   MangaInfo_StatusOngoing = '1';
 
   FMDSupportedOutputExt: array[0..2] of ShortString = ('.zip', '.cbz', '.pdf');
-  FMDImageFileExt: array[0..2] of ShortString = ('.png', '.gif', '.jpg');
+  FMDImageFileExt: array[0..3] of ShortString = ('.png', '.gif', '.jpg', '.webp');
   {$ifdef windows}
   // MAX_PATH = 260
   // MAX_PATH - 12 - 1
