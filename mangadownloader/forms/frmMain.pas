@@ -5733,7 +5733,7 @@ begin
       rgDropTargetMode.Items.Text := RS_DropTargetModeItems;
       rgOptionCompress.Items.Text := RS_OptionCompress;
       cbWebPConvertTo.Items.Text := RS_WebPConvertTo;
-      cbWebPConvertTo.Items.Text := RS_WebPPNGLevel;
+      cbWebPPNGCompressionLevel.Items.Text := RS_WebPPNGLevel;
 
       // restore ItemIndex
       cbSelectManga.ItemIndex:=idxSelectManga;
