@@ -12,7 +12,8 @@ function getWithCookie(lurl)
         ['SeinagiAdultoFansub'] = true,
         ['TripleSevenScan'] = true,
         ['DokiFansubs'] = true,
-        ['RavensScans'] = true
+        ['RavensScans'] = true,
+        ['YamiTenshiNoFansub'] = true
     }
     if needCookie[module.website] and Pos(dirurl, lurl) then
         return http.post(lurl, 'adult=true')
@@ -214,4 +215,5 @@ function Init()
     AddWebsiteModule('RavensScans', 'http://ravens-scans.com')
     AddWebsiteModule('KirishimaFansub', 'http://lector.kirishimafansub.com')
     AddWebsiteModule('NoraNoFansub', 'https://www.noranofansub.com')
+    AddWebsiteModule('YamiTenshiNoFansub', 'http://lector.ytnofan.com')
 end
