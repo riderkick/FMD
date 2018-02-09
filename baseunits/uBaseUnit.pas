@@ -3336,7 +3336,7 @@ begin
       writer := TFPWriterPNG.create;
       writer.Indexed := False;
       writer.UseAlpha := mem.HasTransparentPixels;
-      writer.CompressionLevel := zstream.clnone;
+      writer.CompressionLevel := zstream.clfastest;
       mem.SaveToStream(AStream, writer);
       Result := True;
     finally
