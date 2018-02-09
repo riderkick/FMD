@@ -5,12 +5,14 @@ local dirurlslide = '/slide/directory/'
 local dirurlslideU = '/Slide/directory/'
 local dirurlonline = '/online/directory/'
 local dirurlhelvetica = '/r/directory/'
+local dirurllector = '/lector/directory/'
 
 function getWithCookie(lurl)
     local needCookie = {
         ['SeinagiAdultoFansub'] = true,
         ['TripleSevenScan'] = true,
-        ['DokiFansubs'] = true
+        ['DokiFansubs'] = true,
+        ['RavensScans'] = true
     }
     if needCookie[module.website] and Pos(dirurl, lurl) then
         return http.post(lurl, 'adult=true')
@@ -34,7 +36,8 @@ function getdirurl(website)
         ['SantosScan'] = dirurlslideU,
         ['Pzykosis666HFansub'] = dirurlonline,
         ['SeinagiFansub'] = dirurlonline,
-        ['HelveticaScans'] = dirurlhelvetica
+        ['HelveticaScans'] = dirurlhelvetica,
+        ['RavensScans'] = dirurllector
     }    
     if dirs[website] ~= nil then
         return dirs[website]
@@ -207,4 +210,5 @@ function Init()
     AddWebsiteModule('SeinagiAdultoFansub', 'http://adulto.seinagi.org')
     AddWebsiteModule('SolitarioNoFansub', 'http://snf.mangaea.net')
     AddWebsiteModule('TripleSevenScan', 'http://triplesevenscans.com')
+    AddWebsiteModule('RavensScans', 'http://ravens-scans.com')
 end
