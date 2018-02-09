@@ -442,6 +442,9 @@ begin
     if Ext = 'png' then
       PNGToPageInfo(Self)
     else
+    if Ext = 'webp' then
+      WEBPToPageInfo(Self)
+    else
       ImageToPageInfo(Self);
   except
   end;
