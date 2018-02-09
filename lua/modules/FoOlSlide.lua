@@ -211,4 +211,5 @@ function Init()
     AddWebsiteModule('SolitarioNoFansub', 'http://snf.mangaea.net')
     AddWebsiteModule('TripleSevenScan', 'http://triplesevenscans.com')
     AddWebsiteModule('RavensScans', 'http://ravens-scans.com')
+    AddWebsiteModule('KirishimaFansub', 'http://lector.kirishimafansub.com')
 end
