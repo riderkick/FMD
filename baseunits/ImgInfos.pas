@@ -572,6 +572,45 @@ begin
   end;
 end;
 
+function WEBPCheckImageStream(const Stream: TStream): Boolean;
+var
+  Hdr: array[0..3] of Char = (#0, #0, #0, #0);
+begin
+  Result := (Stream.Read(Hdr, 4) = 4) and (Hdr = 'RIFF') and
+    (Stream.Seek(4, soFromCurrent) = 8) and
+    (Stream.Read(Hdr, 4) = 4) and (Hdr = 'WEBP');
+end;
+
+procedure WEBPGetImageSize(const Stream: TStream; out Width, Height: Integer);
+var
+  Hdr: array[0..3] of Byte = (0, 0, 0, 0);
+begin
+  Width := 0;
+  Height := 0;
+  if (Stream.Seek(12, soFromBeginning) <> 12) or
+    (stream.Read(Hdr, 4) <> 4) then Exit;
+  // "VP8 "
+  if Hdr[3] = $20 then
+  begin
+    // https://tools.ietf.org/html/rfc6386#page-30
+    // 7 byte + 3 byte signature 9D 01 2A
+    Stream.Seek(10, soFromCurrent);
+    Stream.Read(Width, 2);
+    Stream.Read(Height, 2);
+  end
+  else
+  // "VP8L"
+  if Hdr[3] = $4C then
+  begin
+    // https://developers.google.com/speed/webp/docs/webp_lossless_bitstream_specification
+    // 4 byte + 1 byte signature 2F
+    Stream.Seek(5, soFromCurrent);
+    Stream.Read(Hdr, 4);
+    Width := (((Hdr[1] and $3F) shl 8) or Hdr[0]) + 1;
+    Height := (((Hdr[3] and $F) shl 10) or (Hdr[2] shl 2) or ((Hdr[1] and $C0) shr 6)) + 1;
+  end;
+end;
+
 initialization
   ImageHandlerMgr := TimageHandlerMgr.Create;
   ImageHandlerMgr.Add(TFPReaderJPEG, TFPWriterJPEG, @JPEGCheckImageStream, @JPEGGetImageSize, 'jpg');
@@ -579,6 +618,7 @@ initialization
   ImageHandlerMgr.Add(TFPReaderGif, TFPWriterPNG, @GIFCheckImageStream, @GIFGetImageSize, 'gif', 'png');
   ImageHandlerMgr.Add(TFPReaderBMP, TFPWriterBMP, @BMPCheckImageStream, @BMPGetImageSize, 'bmp');
   ImageHandlerMgr.Add(TFPReaderTiff, TFPWriterTiff, @TIFFCheckImageStream, @TIFFGetImageSize, 'tif');
+  ImageHandlerMgr.Add(nil, nil, @WEBPCheckImageStream, @WEBPGetImageSize, 'webp');
 
 finalization
   ImageHandlerMgr.Free;
