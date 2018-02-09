@@ -22,7 +22,7 @@ function GetPageNumber()
 end
 
 function GetImageURL()
-  if http.get(MaybeFillHost(module.rooturl,url)) then
+  if http.get(MaybeFillHost(module.rooturl,url):gsub('/1$','')..'/'..tostring(workid+1)) then
     x=TXQuery.Create(http.Document)
     task.pagelinks[workid]=x.xpathstring('//img[@id="manga-page"]/@src')
     return true
