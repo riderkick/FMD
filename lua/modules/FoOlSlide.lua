@@ -37,7 +37,8 @@ function getdirurl(website)
         ['Pzykosis666HFansub'] = dirurlonline,
         ['SeinagiFansub'] = dirurlonline,
         ['HelveticaScans'] = dirurlhelvetica,
-        ['RavensScans'] = dirurllector
+        ['RavensScans'] = dirurllector,
+        ['NoraNoFansub'] = dirurllector
     }    
     if dirs[website] ~= nil then
         return dirs[website]
@@ -212,4 +213,5 @@ function Init()
     AddWebsiteModule('TripleSevenScan', 'http://triplesevenscans.com')
     AddWebsiteModule('RavensScans', 'http://ravens-scans.com')
     AddWebsiteModule('KirishimaFansub', 'http://lector.kirishimafansub.com')
+    AddWebsiteModule('NoraNoFansub', 'https://www.noranofansub.com')
 end
