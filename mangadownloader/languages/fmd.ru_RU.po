@@ -318,6 +318,9 @@ msgid ""
 "PNG\n"
 "Jpeg\n"
 msgstr ""
+"WebP\n"
+"PNG\n"
+"Jpeg\n"
 
 #: frmmain.rs_webppnglevel
 msgid ""
@@ -326,6 +329,10 @@ msgid ""
 "Default\n"
 "Maximum\n"
 msgstr ""
+"Без компрессии\n"
+"Скоростной\n"
+"Средний\n"
+"Максимальный\n"
 
 #: frmmain.rs_wronginput
 msgid "Invalid input!"
@@ -766,11 +773,11 @@ msgstr "Регулярное выражение (regexp)"
 
 #: tmainform.cbwebpconvertto.text
 msgid "PNG"
-msgstr ""
+msgstr "PNG"
 
 #: tmainform.cbwebppngcompressionlevel.text
 msgid "Fastest"
-msgstr ""
+msgstr "Скоростной"
 
 #: tmainform.ckdroptarget.caption
 msgctxt "tmainform.ckdroptarget.caption"
@@ -1227,7 +1234,7 @@ msgstr "Переименовать"
 
 #: tmainform.gbwebp.caption
 msgid "WebP"
-msgstr ""
+msgstr "WebP"
 
 #: tmainform.lbdefaultdownloadpath.caption
 msgid "Choose the default download path:"
@@ -1484,15 +1491,15 @@ msgstr "Сохранить в:"
 
 #: tmainform.lbwebpconvertto.caption
 msgid "Save WebP to"
-msgstr ""
+msgstr "Сохранить WebP как"
 
 #: tmainform.lbwebpjpegquality.caption
 msgid "Jpeg quality"
-msgstr ""
+msgstr "Качество Jpeg"
 
 #: tmainform.lbwebppngcompressionlevel.caption
 msgid "PNG Compression level"
-msgstr ""
+msgstr "Уровень компрессии PNG"
 
 #: tmainform.medturldelete.caption
 msgctxt "TMAINFORM.MEDTURLDELETE.CAPTION"
