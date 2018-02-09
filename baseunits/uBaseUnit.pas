@@ -816,7 +816,7 @@ procedure SendLogException(const AText: String; AException: Exception); inline;
 implementation
 
 uses
-  {$IFDEF DOWNLOADER}WebsiteModules, webp, FPWriteJPEG;{$ENDIF}
+  {$IFDEF DOWNLOADER}WebsiteModules, webp, FPWriteJPEG, zstream;{$ENDIF}
 
 {$IFDEF WINDOWS}
 // thanks Leledumbo for the code
@@ -3336,6 +3336,7 @@ begin
       writer := TFPWriterPNG.create;
       writer.Indexed := False;
       writer.UseAlpha := mem.HasTransparentPixels;
+      writer.CompressionLevel := zstream.clnone;
       mem.SaveToStream(AStream, writer);
       Result := True;
     finally
