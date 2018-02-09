@@ -24,13 +24,21 @@ implementation
 uses
   LuaClass, luaStrings, LuaBaseUnit, LuaRegExpr, LuaSynaUtil, LuaSynaCode, MultiLog;
 
+var
+  printcs: TRTLCriticalSection;
+
 function luabase_print(L: Plua_State): Integer; cdecl;
 var
   i: Integer;
 begin
   Result := 0;
-  for i := 1 to lua_gettop(L) do
-    Logger.Send(lua_tostring(L, i));
+  EnterCriticalsection(printcs);
+  try
+    for i := 1 to lua_gettop(L) do
+      Logger.Send(lua_tostring(L, i));
+  finally
+    LeaveCriticalsection(printcs);
+  end;
 end;
 
 procedure LuaBaseRegister(L: Plua_State);
@@ -139,5 +147,11 @@ function LuaLoadFromStream(L: Plua_State; AStream: TMemoryStream; AName: PAnsiCh
 begin
   Result := lua_load(L, @_luareader, AStream, AName, 'b');
 end;
+
+initialization
+  InitCriticalSection(printcs);
+
+finalization
+  DoneCriticalsection(printcs);
 
 end.
