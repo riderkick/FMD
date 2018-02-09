@@ -46,7 +46,7 @@ end
 function getinfo()
     local lurl = MaybeFillHost(module.rooturl, url)
     local result = net_error
-    if http.get(lurl) then
+    if getWithCookie(lurl) then
         x = TXQuery.Create(http.document)
         mangainfo.coverlink = x.xpathstring('//div[@class="thumbnail"]/img/@src')
         if mangainfo.title == '' then
