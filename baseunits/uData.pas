@@ -786,19 +786,9 @@ var
 
   {$I includes/VnSharing/directory_page_number.inc}
 
-  {$I includes/S2Scans/directory_page_number.inc}
-
-  {$I includes/LectureEnLigne/directory_page_number.inc}
-
   {$I includes/CentralDeMangas/directory_page_number.inc}
 
-  {$I includes/JapanShin/directory_page_number.inc}
-
-  {$I includes/OneManga/directory_page_number.inc}
-
   {$I includes/MangaTown/directory_page_number.inc}
-
-  {$I includes/IKomik/directory_page_number.inc}
 
   {$I includes/NHentai/directory_page_number.inc}
 
@@ -834,26 +824,11 @@ begin
       if MangaSiteID = VNSHARING_ID then
         Result := GetVnSharingDirectoryPageNumber
       else
-      if MangaSiteID = S2SCAN_ID then
-        Result := GetS2ScanDirectoryPageNumber
-      else
-      if MangaSiteID = LECTUREENLIGNE_ID then
-        Result := GetLectureEnLigneDirectoryPageNumber
-      else
       if MangaSiteID = CENTRALDEMANGAS_ID then
         Result := GetCentralDeMangasDirectoryPageNumber
       else
-      if MangaSiteID = JAPANSHIN_ID then
-        Result := GetJapanShinDirectoryPageNumber
-      else
-      if MangaSiteID = ONEMANGA_ID then
-        Result := GetOneMangaDirectoryPageNumber
-      else
       if MangaSiteID = MANGATOWN_ID then
         Result := GetMangaTownDirectoryPageNumber
-      else
-      if MangaSiteID = IKOMIK_ID then
-        Result := GetIKomikDirectoryPageNumber
       else
       if MangaSiteID = NHENTAI_ID then
         Result := GetNHentaiDirectoryPageNumber
@@ -883,15 +858,11 @@ var
   Parser: THTMLParser;
   MangaSiteID: Integer;
 
-  {$I includes/EsMangaHere/names_and_links.inc}
-
   {$I includes/AnimExtremist/names_and_links.inc}
 
   {$I includes/VnSharing/names_and_links.inc}
 
   {$I includes/AnimeStory/names_and_links.inc}
-
-  {$I includes/LectureEnLigne/names_and_links.inc}
 
   {$I includes/ScanManga/names_and_links.inc}
 
@@ -899,35 +870,17 @@ var
 
   {$I includes/Turkcraft/names_and_links.inc}
 
-  {$I includes/Starkana/names_and_links.inc}
-
-  {$I includes/S2Scans/names_and_links.inc}
-
   {$I includes/EGScans/names_and_links.inc}
-
-  {$I includes/Kivmanga/names_and_links.inc}
-
-  {$I includes/MeinManga/names_and_links.inc}
 
   {$I includes/MangasPROJECT/names_and_links.inc}
 
   {$I includes/MangaREADER_POR/names_and_links.inc}
 
-  {$I includes/JapanShin/names_and_links.inc}
-
-  {$I includes/OneManga/names_and_links.inc}
-
   {$I includes/MangaTown/names_and_links.inc}
 
   {$I includes/MangaOku/names_and_links.inc}
 
-  {$I includes/IKomik/names_and_links.inc}
-
   {$I includes/NHentai/names_and_links.inc}
-
-  {$I includes/UnixManga/names_and_links.inc}
-
-  {$I includes/ExtremeMangas/names_and_links.inc}
 
   {$I includes/MangaHost/names_and_links.inc}
 
@@ -950,29 +903,14 @@ begin
     if MangaSiteID = VNSHARING_ID then
       Result := VnSharingGetNamesAndLinks
     else
-    if MangaSiteID = STARKANA_ID then
-      Result := StarkanaGetNamesAndLinks
-    else
-    if MangaSiteID = S2SCAN_ID then
-      Result := S2ScanGetNamesAndLinks
-    else
     if MangaSiteID = EGSCANS_ID then
       Result := EGScansGetNamesAndLinks
-    else
-    if MangaSiteID = MEINMANGA_ID then
-      Result := MeinMangaGetNamesAndLinks
-    else
-    if MangaSiteID = ESMANGAHERE_ID then
-      Result := EsMangaHereGetNamesAndLinks
     else
     if MangaSiteID = ANIMEEXTREMIST_ID then
       Result := AnimeExtremistGetNamesAndLinks
     else
     if MangaSiteID = ANIMESTORY_ID then
       Result := AnimeStoryGetNamesAndLinks
-    else
-    if MangaSiteID = LECTUREENLIGNE_ID then
-      Result := LectureEnLigneGetNamesAndLinks
     else
     if MangaSiteID = SCANMANGA_ID then
       Result := ScanMangaGetNamesAndLinks
@@ -983,20 +921,11 @@ begin
     if MangaSiteID = TURKCRAFT_ID then
       Result := TurkcraftGetNamesAndLinks
     else
-    if MangaSiteID = KIVMANGA_ID then
-      Result := KivmangaGetNamesAndLinks
-    else
     if MangaSiteID = MANGASPROJECT_ID then
       Result := MangasPROJECTGetNamesAndLinks
     else
     if MangaSiteID = MANGAREADER_POR_ID then
       Result := MangaREADER_PORGetNamesAndLinks
-    else
-    if MangaSiteID = JAPANSHIN_ID then
-      Result := JapanShinGetNamesAndLinks
-    else
-    if MangaSiteID = ONEMANGA_ID then
-      Result := OneMangaGetNamesAndLinks
     else
    if MangaSiteID = MANGATOWN_ID then
       Result := MangaTownGetNamesAndLinks
@@ -1004,17 +933,8 @@ begin
     if MangaSiteID = MANGAOKU_ID then
       Result := MangaOkuGetNamesAndLinks
     else
-    if MangaSiteID = IKOMIK_ID then
-      Result := IKomikNamesAndLinks
-    else
     if MangaSiteID = NHENTAI_ID then
       Result := NHentaiNamesAndLinks
-    else
-    if MangaSiteID = UNIXMANGA_ID then
-      Result := UnixMangaNamesAndLinks
-    else
-    if MangaSiteID = EXTREMEMANGAS_ID then
-      Result := ExtremeMangasNamesAndLinks
     else
     if MangaSiteID = MANGAHOST_ID then
       Result := MangaHostGetNamesAndLinks
@@ -1049,21 +969,13 @@ var
   // due to its weird designs, this will take a lot of work (and time) for it to
   // work property
 
-  {$I includes/EsMangaHere/manga_information.inc}
-
   {$I includes/AnimExtremist/manga_information.inc}
 
   {$I includes/VnSharing/manga_information.inc}
 
-  {$I includes/Starkana/manga_information.inc}
-
-  {$I includes/S2Scans/manga_information.inc}
-
   {$I includes/EGScans/manga_information.inc}
 
   {$I includes/AnimeStory/manga_information.inc}
-
-  {$I includes/LectureEnLigne/manga_information.inc}
 
   {$I includes/ScanManga/manga_information.inc}
 
@@ -1071,29 +983,15 @@ var
 
   {$I includes/CentralDeMangas/manga_information.inc}
 
-  {$I includes/MeinManga/manga_information.inc}
-
-  {$I includes/KivManga/manga_information.inc}
-
   {$I includes/MangasPROJECT/manga_information.inc}
 
   {$I includes/MangaREADER_POR/manga_information.inc}
-
-  {$I includes/JapanShin/manga_information.inc}
-
-  {$I includes/OneManga/manga_information.inc}
 
   {$I includes/MangaTown/manga_information.inc}
 
   {$I includes/MangaOku/manga_information.inc}
 
-  {$I includes/IKomik/manga_information.inc}
-
   {$I includes/NHentai/manga_information.inc}
-
-  {$I includes/UnixManga/manga_information.inc}
-
-  {$I includes/ExtremeMangas/manga_information.inc}
 
   {$I includes/MangaHost/manga_information.inc}
 
@@ -1132,29 +1030,14 @@ begin
     if MangaSiteID = VNSHARING_ID then
       Result := GetVnSharingInfoFromURL
     else
-    if MangaSiteID = STARKANA_ID then
-      Result := GetStarkanaInfoFromURL
-    else
-    if MangaSiteID = S2SCAN_ID then
-      Result := GetS2scanInfoFromURL
-    else
     if MangaSiteID = EGSCANS_ID then
       Result := GetEGScansInfoFromURL
-    else
-    if MangaSiteID = MEINMANGA_ID then
-      Result := GetMeinMangaInfoFromURL
-    else
-    if MangaSiteID = ESMANGAHERE_ID then
-      Result := GetEsMangaHereInfoFromURL
     else
     if MangaSiteID = ANIMEEXTREMIST_ID then
       Result := GetAnimeExtremistInfoFromURL
     else
     if MangaSiteID = ANIMESTORY_ID then
       Result := GetAnimeStoryInfoFromURL
-    else
-    if MangaSiteID = LECTUREENLIGNE_ID then
-      Result := GetLectureEnLigneInfoFromURL
     else
     if MangaSiteID = SCANMANGA_ID then
       Result := GetScanMangaInfoFromURL
@@ -1165,20 +1048,11 @@ begin
     if MangaSiteID = CENTRALDEMANGAS_ID then
       Result := GetCentralDeMangasInfoFromURL
     else
-    if MangaSiteID = KIVMANGA_ID then
-      Result := GetKivmangaInfoFromURL
-    else
     if MangaSiteID = MANGASPROJECT_ID then
       Result := GetMangasPROJECTInfoFromURL
     else
     if MangaSiteID = MANGAREADER_POR_ID then
       Result := GetMangaREADER_PORInfoFromURL
-    else
-    if MangaSiteID = JAPANSHIN_ID then
-      Result := GetJapanShinInfoFromURL
-    else
-    if MangaSiteID = ONEMANGA_ID then
-      Result := GetOneMangaInfoFromURL
     else
     if MangaSiteID = MANGATOWN_ID then
       Result := GetMangaTownInfoFromURL
@@ -1186,17 +1060,8 @@ begin
     if MangaSiteID = MANGAOKU_ID then
       Result := GetMangaOkuInfoFromURL
     else
-    if MangaSiteID = IKOMIK_ID then
-      Result := GetIKomikInfoFromURL
-    else
     if MangaSiteID = NHENTAI_ID then
       Result := GetNHentaiInfoFromURL
-    else
-    if MangaSiteID = UNIXMANGA_ID then
-      Result := GetUnixMangaInfoFromURL
-    else
-    if MangaSiteID = EXTREMEMANGAS_ID then
-      Result := GetExtremeMangasInfoFromURL
     else
     if MangaSiteID = MANGAHOST_ID then
       Result := GetMangaHostInfoFromURL

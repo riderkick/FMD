@@ -229,61 +229,35 @@ const
   // common regex to split host/url
   REGEX_HOST = '(?ig)^(\w+://)?([^/]*\.\w+)?(\:\d+)?(/?.*)$';
 
-  OURMANGA_ID            = 0;
-  VNSHARING_ID           = 1;
-  TRUYEN18_ID            = 2;
-  TURKCRAFT_ID           = 3;
-  STARKANA_ID            = 4;
-  ESMANGAHERE_ID         = 5;
-  ANIMEEXTREMIST_ID      = 6;
-  S2SCAN_ID              = 7;
-  CENTRALDEMANGAS_ID     = 8;
-  EGSCANS_ID             = 9;
-  ANIMESTORY_ID          = 10;
-  LECTUREENLIGNE_ID      = 11;
-  SCANMANGA_ID           = 12;
-  KIVMANGA_ID            = 13;
-  MEINMANGA_ID           = 14;
-  MANGASPROJECT_ID       = 15;
-  MANGAREADER_POR_ID     = 16;
-  JAPANSHIN_ID           = 17;
-  ONEMANGA_ID            = 18;
-  MANGATOWN_ID           = 19;
-  MANGAOKU_ID            = 20;
-  IKOMIK_ID              = 21;
-  NHENTAI_ID             = 22;
-  UNIXMANGA_ID           = 23;
-  EXTREMEMANGAS_ID       = 24;
-  MANGAHOST_ID           = 25;
-  MANGAKU_ID             = 26;
-  DYNASTYSCANS_ID        = 27;
+  VNSHARING_ID           = 0;
+  TURKCRAFT_ID           = 1;
+  ANIMEEXTREMIST_ID      = 2;
+  CENTRALDEMANGAS_ID     = 3;
+  EGSCANS_ID             = 4;
+  ANIMESTORY_ID          = 5;
+  SCANMANGA_ID           = 6;
+  MANGASPROJECT_ID       = 7;
+  MANGAREADER_POR_ID     = 8;
+  MANGATOWN_ID           = 9;
+  MANGAOKU_ID            = 10;
+  NHENTAI_ID             = 11;
+  MANGAHOST_ID           = 12;
+  MANGAKU_ID             = 13;
+  DYNASTYSCANS_ID        = 14;
 
-  WebsiteRoots: array [0..27] of array [0..1] of String = (
-    ('OurManga', 'http://www.ourmanga.com'),
+  WebsiteRoots: array [0..14] of array [0..1] of String = (
     ('VnSharing', 'http://truyen.vnsharing.net'),
-    ('Truyen18', 'http://www.truyen18.org'),
     ('Turkcraft', 'http://turkcraft.com'),
-    ('Starkana', 'http://starkana.jp'),
-    ('ESMangaHere', 'http://es.mangahere.co'),
     ('AnimExtremist', 'http://www.animextremist.com'),
-    ('S2Scans', 'http://reader.s2smanga.com'),
     ('CentralDeMangas', 'http://centraldemangas.com.br'),
     ('EGScans', 'http://read.egscans.com'),
     ('AnimeStory', 'http://www.anime-story.com'),
-    ('Lecture-En-Ligne', 'http://www.lecture-en-ligne.com'),
     ('ScanManga', 'http://www.scan-manga.com'),
-    ('KivManga', 'http://www.kivmanga.com'),
-    ('MeinManga', 'http://www.meinmanga.com'),
     ('MangasPROJECT', 'http://mangaproject.xpg.uol.com.br'),
     ('MangaREADER_POR', 'http://www.mangareader.com.br'),
-    ('Japan-Shin', 'http://www.japan-shin.com'),
-    ('OneManga', 'http://www.onemanga2.com'),
     ('MangaTown', 'http://www.mangatown.com'),
     ('MangaOku', 'http://www.mangaoku.net'),
-    ('I-Komik', 'http://www.i-komik.com'),
     ('NHentai', 'http://nhentai.net'),
-    ('UnixManga', 'http://unixmanga.co'),
-    ('ExtremeMangas', 'http://www.extrememangas.com'),
     ('MangaHost', 'http://br.mangahost.com'),
     ('MangaKu', 'http://mangaku.web.id'),
     ('Dynasty-Scans', 'http://dynasty-scans.com')
@@ -294,14 +268,7 @@ const
 
   VNSHARING_BROWSER = '/DanhSach';
 
-  TRUYEN18_ROOT = 'http://www.truyen18.org';
-  TRUYEN18_BROWSER = '/moi-dang/danhsach';
-
   TURKCRAFT_BROWSER = '/';
-
-  STARKANA_BROWSER = '/manga/list';
-
-  ESMANGAHERE_BROWSER = '/mangalist/';
 
   ANIMEEXTREMIST_BROWSER = '/mangas.htm?ord=todos';
 
@@ -311,33 +278,15 @@ const
 
   ANIMESTORY_BROWSER = '/mangas/';
 
-  LECTUREENLIGNE_BROWSER = '/index.php?page=liste&ordre=titre';
-
   SCANMANGA_BROWSER = '/scanlation/liste_des_mangas.html';
-
-  KIVMANGA_BROWSER = '/';
-
-  MEINMANGA_BROWSER = '/directory/all/';
 
   MANGASPROJECT_BROWSER = '/AJAX/listaMangas/all';
 
   MANGAREADER_POR_BROWSER = '/AJAX/listaMangas/all';
 
-  JAPANSHIN_BROWSER = '/lectureenligne/reader/list/';
-
-  MANGALIB_PL_BROWSER = '/manga/directory';
-
-  ONEMANGA_BROWSER = '/manga-list/all/any/last-added/';
-
   MANGATOWN_BROWSER = '/directory/';
 
-  IKOMIK_BROWSER = '/manga-directory/';
-
   UNIONMANGAS_BROWSER = '/mangas';
-
-  UNIXMANGA_BROWSER = '/onlinereading/manga-lists.html';
-
-  EXTREMEMANGAS_BROWSER = '/2013/04/lista-de-mangas.html';
 
   MANGAHOST_BROWSER = '/mangas';
 
@@ -1086,7 +1035,6 @@ begin
     Exit;
   end;
   Result := SitesMemberOf(website, [
-    ONEMANGA_ID,
     NHENTAI_ID
     ]);
 end;
@@ -1119,19 +1067,13 @@ begin
   Result := SitesMemberOf(website, [
     MANGASPROJECT_ID,
     TURKCRAFT_ID,
-    KIVMANGA_ID,
-    MANGAOKU_ID,
-    UNIXMANGA_ID
+    MANGAOKU_ID
     ]);
 end;
 
 function SitesWithoutReferer(const website: String): Boolean;
 begin
   Result := False;
-  Result := SitesMemberOf(website, [
-    MEINMANGA_ID,
-    IKOMIK_ID
-    ]);
 end;
 
 function SitesWithSingleChapter(const website: String): Boolean;
@@ -3160,9 +3102,6 @@ begin
     HTTPHeader.Delete(HTTPHeader.IndexOfName('Content-Type'));
   end;
 
-  if Pos(WebsiteRoots[MEINMANGA_ID, 1], URL) > 0 then
-    HTTPHeader.Values['Accept-Charset'] := ' utf8'
-  else
   if (Pos('imgmega.com/', URL) > 0) then
   begin
     s := ReplaceRegExpr('^.*\w+\.\w+/(\w+)/.*$', URL, '$1', True);

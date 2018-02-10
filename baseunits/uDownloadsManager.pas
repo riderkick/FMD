@@ -414,35 +414,13 @@ var
 
   {$I includes/EGScans/chapter_page_number.inc}
 
-  {$I includes/EsMangaHere/chapter_page_number.inc}
-
-  {$I includes/Kivmanga/chapter_page_number.inc}
-
-  {$I includes/MeinManga/chapter_page_number.inc}
-
-  {$I includes/S2Scans/chapter_page_number.inc}
-
-  {$I includes/Starkana/chapter_page_number.inc}
-
   {$I includes/Turkcraft/chapter_page_number.inc}
-
-  {$I includes/LectureEnLigne/chapter_page_number.inc}
-
-  {$I includes/JapanShin/chapter_page_number.inc}
-
-  {$I includes/OneManga/chapter_page_number.inc}
 
   {$I includes/MangaTown/chapter_page_number.inc}
 
   {$I includes/MangaOku/chapter_page_number.inc}
 
-  {$I includes/IKomik/chapter_page_number.inc}
-
   {$I includes/NHentai/chapter_page_number.inc}
-
-  {$I includes/UnixManga/chapter_page_number.inc}
-
-  {$I includes/ExtremeMangas/chapter_page_number.inc}
 
   {$I includes/MangaHost/chapter_page_number.inc}
 
@@ -458,18 +436,6 @@ begin
     Result := Modules.GetPageNumber(Self, URL, Task.Container.ModuleId)
   else
   begin
-    if Task.Container.MangaSiteID = STARKANA_ID then
-      Result := GetStarkanaPageNumber
-    else
-    if Task.Container.MangaSiteID = S2SCAN_ID then
-      Result := GetS2scanPageNumber
-    else
-    if Task.Container.MangaSiteID = MEINMANGA_ID then
-      Result := GetMeinMangaPageNumber
-    else
-    if Task.Container.MangaSiteID = ESMANGAHERE_ID then
-      Result := GetEsMangaHerePageNumber
-    else
     if Task.Container.MangaSiteID = ANIMEEXTREMIST_ID then
       Result := GetAnimeExtremistPageNumber
     else
@@ -479,35 +445,14 @@ begin
     if Task.Container.MangaSiteID = TURKCRAFT_ID then
       Result := GetTurkcraftPageNumber
     else
-    if Task.Container.MangaSiteID = KIVMANGA_ID then
-      Result := GetKivmangaPageNumber
-    else
-    if Task.Container.MangaSiteID = LECTUREENLIGNE_ID then
-      Result := GetLectureEnLignePageNumber
-    else
-    if Task.Container.MangaSiteID = JAPANSHIN_ID then
-      Result := GetJapanShinPageNumber
-    else
-    if Task.Container.MangaSiteID = ONEMANGA_ID then
-      Result := GetOneMangaPageNumber
-    else
     if Task.Container.MangaSiteID = MANGATOWN_ID then
       Result := GetMangaTownPageNumber
     else
     if Task.Container.MangaSiteID = MANGAOKU_ID then
       Result := GetMangaOkuPageNumber
     else
-    if Task.Container.MangaSiteID = IKOMIK_ID then
-      Result := GetIKomikPageNumber
-    else
     if Task.Container.MangaSiteID = NHENTAI_ID then
       Result := GetNHentaiPageNumber
-    else
-    if Task.Container.MangaSiteID = UNIXMANGA_ID then
-      Result := GetUnixMangaPageNumber
-    else
-    if Task.Container.MangaSiteID = EXTREMEMANGAS_ID then
-      Result := GetExtremeMangasPageNumber
     else
     if Task.Container.MangaSiteID = MANGAHOST_ID then
       Result := GetMangaHostPageNumber
@@ -534,37 +479,21 @@ var
 
   {$I includes/EGScans/image_url.inc}
 
-  {$I includes/EsMangaHere/image_url.inc}
-
-  {$I includes/Kivmanga/image_url.inc}
-
   {$I includes/MangaREADER_POR/image_url.inc}
 
   {$I includes/MangasPROJECT/image_url.inc}
 
   {$I includes/ScanManga/image_url.inc}
 
-  {$I includes/Starkana/image_url.inc}
-
   {$I includes/Turkcraft/image_url.inc}
 
   {$I includes/VnSharing/image_url.inc}
-
-  {$I includes/LectureEnLigne/image_url.inc}
-
-  {$I includes/JapanShin/image_url.inc}
-
-  {$I includes/OneManga/image_url.inc}
 
   {$I includes/MangaTown/image_url.inc}
 
   {$I includes/MangaOku/image_url.inc}
 
-  {$I includes/IKomik/image_url.inc}
-
   {$I includes/NHentai/image_url.inc}
-
-  {$I includes/UnixManga/image_url.inc}
 
   {$I includes/MangaHost/image_url.inc}
 
@@ -578,14 +507,8 @@ begin
     if Task.Container.MangaSiteID = VNSHARING_ID then
       Result := GetVnSharingImageURL
     else
-    if Task.Container.MangaSiteID = STARKANA_ID then
-      Result := GetStarkanaImageURL
-    else
     if Task.Container.MangaSiteID = EGSCANS_ID then
       Result := GetEGScansImageURL
-    else
-    if Task.Container.MangaSiteID = ESMANGAHERE_ID then
-      Result := GetEsMangaHereImageURL
     else
     if Task.Container.MangaSiteID = ANIMEEXTREMIST_ID then
       Result := GetAnimeExtremistImageURL
@@ -602,23 +525,11 @@ begin
     if Task.Container.MangaSiteID = CENTRALDEMANGAS_ID then
       Result := GetCentralDeMangasImageURL
     else
-    if Task.Container.MangaSiteID = KIVMANGA_ID then
-      Result := GetKivmangaImageURL
-    else
     if Task.Container.MangaSiteID = MANGASPROJECT_ID then
       Result := GetMangasPROJECTImageURL
     else
     if Task.Container.MangaSiteID = MANGAREADER_POR_ID then
       Result := GetMangaREADER_PORImageURL
-    else
-    if Task.Container.MangaSiteID = LECTUREENLIGNE_ID then
-      Result := GeLectureEnligneImageURL
-    else
-    if Task.Container.MangaSiteID = JAPANSHIN_ID then
-      Result := GetJapanShinImageURL
-    else
-    if Task.Container.MangaSiteID = ONEMANGA_ID then
-      Result := GetOneMangaImageURL
     else
     if Task.Container.MangaSiteID = MANGATOWN_ID then
       Result := GetMangaTownImageURL
@@ -626,14 +537,8 @@ begin
     if Task.Container.MangaSiteID = MANGAOKU_ID then
       Result := GetMangaOkuImageURL
     else
-    if Task.Container.MangaSiteID = IKOMIK_ID then
-      Result := GetIKomikImageURL
-    else
     if Task.Container.MangaSiteID = NHENTAI_ID then
       Result := GetNHentaiImageURL
-    else
-    if Task.Container.MangaSiteID = UNIXMANGA_ID then
-      Result := GetUnixMangaImageURL
     else
     if Task.Container.MangaSiteID = MANGAHOST_ID then
       Result := GetMangaHostImageURL;
@@ -827,9 +732,6 @@ var
   workFilename,
   workURL,
   savedFilename: String;
-
-  {$I includes/MeinManga/image_url.inc}
-
 begin
   Result := True;
 
@@ -870,9 +772,6 @@ begin
     // OnDownloadImage
     if Modules.ModuleAvailable(Task.Container.ModuleId, MMDownloadImage) then
       Result := Modules.DownloadImage(Self, workURL, Task.Container.ModuleId)
-    else
-    if Task.Container.MangaSiteID = MEINMANGA_ID then
-      Result := GetMeinMangaImageURL
     else
       Result := FHTTP.GET(workURL);
   end;

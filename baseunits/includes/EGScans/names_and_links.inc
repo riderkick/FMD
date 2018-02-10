@@ -30,9 +30,6 @@
         Result := NO_ERROR;
         s := StringFilter(TrimLeft(TrimRight(parse[i + 1])));
         ANames.Add(HTMLEntitiesFilter(s));
-        s := StringReplace(GetVal(parse[i],
-          'value="'),
-          WebsiteRoots[S2SCAN_ID, 1], '', []);
         ALinks.Add(s);
       end;
       if Pos('<select name="manga"', parse[i]) > 0 then
