@@ -13,7 +13,8 @@ function getWithCookie(lurl)
         ['TripleSevenScan'] = true,
         ['DokiFansubs'] = true,
         ['RavensScans'] = true,
-        ['YamiTenshiNoFansub'] = true
+        ['YamiTenshiNoFansub'] = true,
+        ['S2Scans'] = true
     }
     if needCookie[module.website] and Pos(dirurl, lurl) then
         return http.post(lurl, 'adult=true')
@@ -199,6 +200,7 @@ function Init()
     AddWebsiteModule('AtelierDuNoir', 'http://atelierdunoir.org')
     AddWebsiteModule('ChampionScans', 'http://reader.championscans.com')
     AddWebsiteModule('WorldThree', 'http://www.slide.world-three.org')
+    AddWebsiteModule('S2Scans', 'https://reader.s2smanga.com')
     
     -- es-sc
     AddWebsiteModule('DangoOnlineNoFansub', 'http://lector.dangolinenofansub.com')
