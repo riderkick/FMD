@@ -412,8 +412,6 @@ var
 
   {$I includes/AnimExtremist/chapter_page_number.inc}
 
-  {$I includes/EGScans/chapter_page_number.inc}
-
   {$I includes/Turkcraft/chapter_page_number.inc}
 
   {$I includes/MangaTown/chapter_page_number.inc}
@@ -477,8 +475,6 @@ var
 
   {$I includes/CentralDeMangas/image_url.inc}
 
-  {$I includes/EGScans/image_url.inc}
-
   {$I includes/MangaREADER_POR/image_url.inc}
 
   {$I includes/MangasPROJECT/image_url.inc}
@@ -506,9 +502,6 @@ begin
   begin
     if Task.Container.MangaSiteID = VNSHARING_ID then
       Result := GetVnSharingImageURL
-    else
-    if Task.Container.MangaSiteID = EGSCANS_ID then
-      Result := GetEGScansImageURL
     else
     if Task.Container.MangaSiteID = ANIMEEXTREMIST_ID then
       Result := GetAnimeExtremistImageURL

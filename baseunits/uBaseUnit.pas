@@ -233,24 +233,22 @@ const
   TURKCRAFT_ID           = 1;
   ANIMEEXTREMIST_ID      = 2;
   CENTRALDEMANGAS_ID     = 3;
-  EGSCANS_ID             = 4;
-  ANIMESTORY_ID          = 5;
-  SCANMANGA_ID           = 6;
-  MANGASPROJECT_ID       = 7;
-  MANGAREADER_POR_ID     = 8;
-  MANGATOWN_ID           = 9;
-  MANGAOKU_ID            = 10;
-  NHENTAI_ID             = 11;
-  MANGAHOST_ID           = 12;
-  MANGAKU_ID             = 13;
-  DYNASTYSCANS_ID        = 14;
+  ANIMESTORY_ID          = 4;
+  SCANMANGA_ID           = 5;
+  MANGASPROJECT_ID       = 6;
+  MANGAREADER_POR_ID     = 7;
+  MANGATOWN_ID           = 8;
+  MANGAOKU_ID            = 9;
+  NHENTAI_ID             = 10;
+  MANGAHOST_ID           = 11;
+  MANGAKU_ID             = 12;
+  DYNASTYSCANS_ID        = 13;
 
-  WebsiteRoots: array [0..14] of array [0..1] of String = (
+  WebsiteRoots: array [0..13] of array [0..1] of String = (
     ('VnSharing', 'http://truyen.vnsharing.net'),
     ('Turkcraft', 'http://turkcraft.com'),
     ('AnimExtremist', 'http://www.animextremist.com'),
     ('CentralDeMangas', 'http://centraldemangas.com.br'),
-    ('EGScans', 'http://read.egscans.com'),
     ('AnimeStory', 'http://www.anime-story.com'),
     ('ScanManga', 'http://www.scan-manga.com'),
     ('MangasPROJECT', 'http://mangaproject.xpg.uol.com.br'),
@@ -273,8 +271,6 @@ const
   ANIMEEXTREMIST_BROWSER = '/mangas.htm?ord=todos';
 
   CENTRALDEMANGAS_BROWSER = '/mangas/list/*';
-
-  EGSCANS_BROWSER = '/';
 
   ANIMESTORY_BROWSER = '/mangas/';
 

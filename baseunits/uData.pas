@@ -870,8 +870,6 @@ var
 
   {$I includes/Turkcraft/names_and_links.inc}
 
-  {$I includes/EGScans/names_and_links.inc}
-
   {$I includes/MangasPROJECT/names_and_links.inc}
 
   {$I includes/MangaREADER_POR/names_and_links.inc}
@@ -902,9 +900,6 @@ begin
     Source := TStringList.Create;
     if MangaSiteID = VNSHARING_ID then
       Result := VnSharingGetNamesAndLinks
-    else
-    if MangaSiteID = EGSCANS_ID then
-      Result := EGScansGetNamesAndLinks
     else
     if MangaSiteID = ANIMEEXTREMIST_ID then
       Result := AnimeExtremistGetNamesAndLinks
@@ -973,8 +968,6 @@ var
 
   {$I includes/VnSharing/manga_information.inc}
 
-  {$I includes/EGScans/manga_information.inc}
-
   {$I includes/AnimeStory/manga_information.inc}
 
   {$I includes/ScanManga/manga_information.inc}
@@ -1029,9 +1022,6 @@ begin
     Source := TStringList.Create;
     if MangaSiteID = VNSHARING_ID then
       Result := GetVnSharingInfoFromURL
-    else
-    if MangaSiteID = EGSCANS_ID then
-      Result := GetEGScansInfoFromURL
     else
     if MangaSiteID = ANIMEEXTREMIST_ID then
       Result := GetAnimeExtremistInfoFromURL
