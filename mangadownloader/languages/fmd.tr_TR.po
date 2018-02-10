@@ -1124,7 +1124,7 @@ msgstr "Görevi her zaman başarısız bölümlerden başlat"
 
 #: tmainform.edcustomgenres.texthint
 msgid "Input custom genres, separated by comma"
-msgstr "Kişisel demogrofi ekle, virgülle ayrılmış"
+msgstr "Kişisel tür ekle, virgülle ayırarak"
 
 #: tmainform.eddownloadssearch.texthint
 #| msgid "Search favorites..."
@@ -1493,7 +1493,7 @@ msgstr "Tip"
 
 #: tmainform.lboptionrenamedigits.caption
 msgid "Rename  digits"
-msgstr "Basamakları  yeniden adlandır"
+msgstr "Yeniden adlandırma basamak sayısı"
 
 #: tmainform.lboptionretryfailedtask.caption
 msgid "Number of retry times if task failed"
@@ -2307,7 +2307,7 @@ msgstr "Tamamlanmış manga kaldırılacak:"
 
 #: ufavoritesmanager.rs_lblnewchapterfound
 msgid "Found %d new chapter from %d manga(s):"
-msgstr "%d yeni bölüm bulundu %d manga(larından)sından:"
+msgstr "%d yeni bölüm bulundu %d mangadan:"
 
 #: usilentthread.rs_silentthreadloadstatus
 msgid "Loading: %d/%d"
