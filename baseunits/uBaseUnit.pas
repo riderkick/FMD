@@ -3383,8 +3383,8 @@ begin
     f := GetImageStreamExt(Stream);
     if f = 'webp' then
       case OptionWebPConvertTo of
-        1: if WebPToPNGStream(Stream, Tcompressionlevel(OptionWebPPNGLevel)) then f := 'png' else f := '';
-        2: if WebPToJpegStream(Stream, OptionWebPJpegQuality) then f := 'jpg' else f := '';
+        1: if WebPToPNGStream(Stream, Tcompressionlevel(OptionWebPPNGLevel)) then f := 'png';
+        2: if WebPToJpegStream(Stream, OptionWebPJpegQuality) then f := 'jpg';
       end;
 
     if f = '' then Exit;
