@@ -229,38 +229,36 @@ const
   // common regex to split host/url
   REGEX_HOST = '(?ig)^(\w+://)?([^/]*\.\w+)?(\:\d+)?(/?.*)$';
 
-  OURMANGA_ID            = 1;
-  VNSHARING_ID           = 2;
-  TRUYEN18_ID            = 3;
-  TURKCRAFT_ID           = 4;
-  STARKANA_ID            = 5;
-  ESMANGAHERE_ID         = 6;
-  ANIMEEXTREMIST_ID      = 7;
-  S2SCAN_ID              = 8;
-  CENTRALDEMANGAS_ID     = 10;
-  EGSCANS_ID             = 11;
-  ANIMESTORY_ID          = 13;
-  LECTUREENLIGNE_ID      = 14;
-  SCANMANGA_ID           = 15;
-  KIVMANGA_ID            = 17;
-  MEINMANGA_ID           = 18;
-  MANGASPROJECT_ID       = 19;
-  MANGAREADER_POR_ID     = 20;
-  JAPANSHIN_ID           = 21;
-  MANGALIB_PL_ID         = 23;
-  ONEMANGA_ID            = 24;
-  MANGATOWN_ID           = 25;
-  MANGAOKU_ID            = 26;
-  IKOMIK_ID              = 27;
-  NHENTAI_ID             = 28;
-  UNIXMANGA_ID           = 29;
-  EXTREMEMANGAS_ID       = 30;
-  MANGAHOST_ID           = 31;
-  MANGAKU_ID             = 32;
-  DYNASTYSCANS_ID        = 34;
+  OURMANGA_ID            = 0;
+  VNSHARING_ID           = 1;
+  TRUYEN18_ID            = 2;
+  TURKCRAFT_ID           = 3;
+  STARKANA_ID            = 4;
+  ESMANGAHERE_ID         = 5;
+  ANIMEEXTREMIST_ID      = 6;
+  S2SCAN_ID              = 7;
+  CENTRALDEMANGAS_ID     = 8;
+  EGSCANS_ID             = 9;
+  ANIMESTORY_ID          = 10;
+  LECTUREENLIGNE_ID      = 11;
+  SCANMANGA_ID           = 12;
+  KIVMANGA_ID            = 13;
+  MEINMANGA_ID           = 14;
+  MANGASPROJECT_ID       = 15;
+  MANGAREADER_POR_ID     = 16;
+  JAPANSHIN_ID           = 17;
+  ONEMANGA_ID            = 18;
+  MANGATOWN_ID           = 19;
+  MANGAOKU_ID            = 20;
+  IKOMIK_ID              = 21;
+  NHENTAI_ID             = 22;
+  UNIXMANGA_ID           = 23;
+  EXTREMEMANGAS_ID       = 24;
+  MANGAHOST_ID           = 25;
+  MANGAKU_ID             = 26;
+  DYNASTYSCANS_ID        = 27;
 
-  WebsiteRoots: array [0..34] of array [0..1] of String = (
-    ('', ''),
+  WebsiteRoots: array [0..27] of array [0..1] of String = (
     ('OurManga', 'http://www.ourmanga.com'),
     ('VnSharing', 'http://truyen.vnsharing.net'),
     ('Truyen18', 'http://www.truyen18.org'),
@@ -269,21 +267,16 @@ const
     ('ESMangaHere', 'http://es.mangahere.co'),
     ('AnimExtremist', 'http://www.animextremist.com'),
     ('S2Scans', 'http://reader.s2smanga.com'),
-    ('', ''),
     ('CentralDeMangas', 'http://centraldemangas.com.br'),
     ('EGScans', 'http://read.egscans.com'),
-    ('', ''),
     ('AnimeStory', 'http://www.anime-story.com'),
     ('Lecture-En-Ligne', 'http://www.lecture-en-ligne.com'),
     ('ScanManga', 'http://www.scan-manga.com'),
-    ('', ''),
     ('KivManga', 'http://www.kivmanga.com'),
     ('MeinManga', 'http://www.meinmanga.com'),
     ('MangasPROJECT', 'http://mangaproject.xpg.uol.com.br'),
     ('MangaREADER_POR', 'http://www.mangareader.com.br'),
     ('Japan-Shin', 'http://www.japan-shin.com'),
-    ('', ''),
-    ('', ''),
     ('OneManga', 'http://www.onemanga2.com'),
     ('MangaTown', 'http://www.mangatown.com'),
     ('MangaOku', 'http://www.mangaoku.net'),
@@ -293,7 +286,6 @@ const
     ('ExtremeMangas', 'http://www.extrememangas.com'),
     ('MangaHost', 'http://br.mangahost.com'),
     ('MangaKu', 'http://mangaku.web.id'),
-    ('', ''),
     ('Dynasty-Scans', 'http://dynasty-scans.com')
     );
 
@@ -387,8 +379,6 @@ const
 var
   // Sites var
   BROWSER_INVERT: Boolean = False;
-
-  MANGALIB_PL_COOKIES: String;
 
   //------------------------------------------
 
@@ -3172,24 +3162,6 @@ begin
 
   if Pos(WebsiteRoots[MEINMANGA_ID, 1], URL) > 0 then
     HTTPHeader.Values['Accept-Charset'] := ' utf8'
-  else
-  if Pos(WebsiteRoots[MANGALIB_PL_ID, 1], URL) > 0 then
-  begin
-    if MANGALIB_PL_COOKIES <> '' then
-      HTTP.Cookies.Text := MANGALIB_PL_COOKIES;
-    if (Pos('/page/confirm_', URL) > 0) then
-    begin
-      s := ReplaceRegExpr('^.*/confirm_(.+)\?backlink.*$', URL, '$1', True) + '=1';
-      meth := 'POST';
-      HTTP.Document.Clear;
-      HTTP.Document.Position := 0;
-      HTTP.Document.Write(PChar(s)^, Length(s));
-      HTTP.Protocol := '1.1';
-      HTTP.MimeType := 'application/x-www-form-urlencoded';
-      HTTPHeader.Values['Referer'] := ' ' + URL;
-      HTTPHeader.Values['Accept'] := ' text/html';
-    end;
-  end
   else
   if (Pos('imgmega.com/', URL) > 0) then
   begin

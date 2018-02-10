@@ -430,8 +430,6 @@ var
 
   {$I includes/JapanShin/chapter_page_number.inc}
 
-  {$I includes/MangaLib_PL/chapter_page_number.inc}
-
   {$I includes/OneManga/chapter_page_number.inc}
 
   {$I includes/MangaTown/chapter_page_number.inc}
@@ -489,9 +487,6 @@ begin
     else
     if Task.Container.MangaSiteID = JAPANSHIN_ID then
       Result := GetJapanShinPageNumber
-    else
-    if Task.Container.MangaSiteID = MANGALIB_PL_ID then
-      Result := GetMangaLib_PLPageNumber
     else
     if Task.Container.MangaSiteID = ONEMANGA_ID then
       Result := GetOneMangaPageNumber
@@ -559,8 +554,6 @@ var
 
   {$I includes/JapanShin/image_url.inc}
 
-  {$I includes/MangaLib_PL/image_url.inc}
-
   {$I includes/OneManga/image_url.inc}
 
   {$I includes/MangaTown/image_url.inc}
@@ -623,9 +616,6 @@ begin
     else
     if Task.Container.MangaSiteID = JAPANSHIN_ID then
       Result := GetJapanShinImageURL
-    else
-    if Task.Container.MangaSiteID = MANGALIB_PL_ID then
-      Result := GetMangaLib_PLImageURL
     else
     if Task.Container.MangaSiteID = ONEMANGA_ID then
       Result := GetOneMangaImageURL
