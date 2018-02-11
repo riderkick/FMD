@@ -139,6 +139,8 @@ begin
   with AddModule do begin
     Website := 'Mangadex';
     RootURL := 'https://mangadex.com';
+    MaxTaskLimit := 4;
+    MaxConnectionLimit := 4;
     TotalDirectory := Length(ALPHA_LIST_UP);
     OnGetInfo := @GetInfo;
     OnGetPageNumber := @GetPageNumber;
