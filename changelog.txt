@@ -8,6 +8,7 @@ Changelog:
 [*] Fixed updater can't find 7za.exe, you need to download this release manually
 [*] Update Turkish localization
 [*] Update Indonesian localization
+[*] Update Russian localization
 [*] Various changes and bug fixes
 Full changes: https://github.com/riderkick/FMD/compare/0.9.136.0...0.9.137.0
 

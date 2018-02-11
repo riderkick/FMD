@@ -72,7 +72,6 @@ msgid "List of unimported manga"
 msgstr "Список неимпортированной манги"
 
 #: frmluamodulesupdater.rs_checking
-#, fuzzy
 msgctxt "frmluamodulesupdater.rs_checking"
 msgid "Checking..."
 msgstr "Проверка..."
@@ -80,35 +79,35 @@ msgstr "Проверка..."
 #: frmluamodulesupdater.rs_checkupdate
 msgctxt "frmluamodulesupdater.rs_checkupdate"
 msgid "Check update"
-msgstr ""
+msgstr "Проверить обновления"
 
 #: frmluamodulesupdater.rs_finishchecking
 msgid "Finish checking"
-msgstr ""
+msgstr "Проверено"
 
 #: frmluamodulesupdater.rs_finishdownload
 msgid "Finish download"
-msgstr ""
+msgstr "Скачано"
 
 #: frmluamodulesupdater.rs_modulesupdatedrestart
 msgid "Modules updated, restart now?"
-msgstr ""
+msgstr "Модули обновлены, перезапустить программу сейчас?"
 
 #: frmluamodulesupdater.rs_modulesupdatedtitle
 msgid "Modules updated!"
-msgstr ""
+msgstr "Модули обновлены!"
 
 #: frmluamodulesupdater.rs_newupdatefoundlostchanges
 msgid "Modules update found, any local changes will be lost, procced?"
-msgstr ""
+msgstr "Найдено обновление модулей, все локальные изменения модулей будут перезаписаны, продолжить?"
 
 #: frmluamodulesupdater.rs_newupdatefoundtitle
 msgid "Modules update found!"
-msgstr ""
+msgstr "Найдено обновление модулей!"
 
 #: frmluamodulesupdater.rs_startdownloading
 msgid "Downloading..."
-msgstr ""
+msgstr "Скачивание..."
 
 #: frmmain.rs_alldownloads
 msgid "All downloads"
@@ -588,19 +587,19 @@ msgstr "Программа:"
 #: tluamodulesupdaterform.btcheckupdate.caption
 msgctxt "tluamodulesupdaterform.btcheckupdate.caption"
 msgid "Check update"
-msgstr ""
+msgstr "Проверить обновления"
 
 #: tluamodulesupdaterform.vtluamodulesrepos.header.columns[0].text
 msgid "Filename"
-msgstr ""
+msgstr "Файл"
 
 #: tluamodulesupdaterform.vtluamodulesrepos.header.columns[1].text
 msgid "Last modified"
-msgstr ""
+msgstr "Изменен"
 
 #: tluamodulesupdaterform.vtluamodulesrepos.header.columns[2].text
 msgid "Last message"
-msgstr ""
+msgstr "Описание изменения"
 
 #: tmainform.btabortupdatelist.hint
 msgid "Abort update list"
@@ -1992,7 +1991,7 @@ msgstr "Расширенные"
 
 #: tmainform.tswebsitemodules.caption
 msgid "Modules"
-msgstr ""
+msgstr "Модули"
 
 #: tmainform.tswebsiteoptions.caption
 msgctxt "TMAINFORM.TSWEBSITEOPTIONS.CAPTION"
