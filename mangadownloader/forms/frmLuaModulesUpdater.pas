@@ -687,13 +687,26 @@ begin
     FRepos := FOwner.Repos.Clone;
     foundupdate := SyncRepos(FRepos, FReposUp);
 
-    // look for previously failed download
+    // look for missing local files
     for i := 0 to FRepos.Items.Count - 1 do
-      if FRepos[i].flag = fFailedDownload then
+    begin
+      m := FRepos[i];
+      if not FileExists(LUA_WEBSITEMODULE_FOLDER + m.name) then
       begin
-        foundupdate := True;
-        break;
+        m.flag := fFailedDownload;
+        if foundupdate <> True then
+          foundupdate := True;
       end;
+    end;
+
+    // look for previously failed download
+    if not foundupdate then
+      for i := 0 to FRepos.Items.Count - 1 do
+        if FRepos[i].flag = fFailedDownload then
+        begin
+          foundupdate := True;
+          break;
+        end;
 
     Synchronize(@SyncFinishChecking);
     if foundupdate and (not Terminated) then
