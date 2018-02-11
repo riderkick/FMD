@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
-"Project-Id-Version: Free Manga Downloader 0.9.135\n"
+"Project-Id-Version: Free Manga Downloader 0.9.136\n"
 "POT-Creation-Date: \n"
 "PO-Revision-Date: \n"
 "Last-Translator: Tmp341 <tmp341@gmail.com>\n"
@@ -75,7 +75,6 @@ msgid "List of unimported manga"
 msgstr "İçe aktarılmayan manga listesi"
 
 #: frmluamodulesupdater.rs_checking
-#, fuzzy
 msgctxt "frmluamodulesupdater.rs_checking"
 msgid "Checking..."
 msgstr "Kontrol ediliyor..."
@@ -83,35 +82,35 @@ msgstr "Kontrol ediliyor..."
 #: frmluamodulesupdater.rs_checkupdate
 msgctxt "frmluamodulesupdater.rs_checkupdate"
 msgid "Check update"
-msgstr ""
+msgstr "Güncellemelere bak"
 
 #: frmluamodulesupdater.rs_finishchecking
 msgid "Finish checking"
-msgstr ""
+msgstr "Kontrolü durdur"
 
 #: frmluamodulesupdater.rs_finishdownload
 msgid "Finish download"
-msgstr ""
+msgstr "İndirmeyi durdur"
 
 #: frmluamodulesupdater.rs_modulesupdatedrestart
 msgid "Modules updated, restart now?"
-msgstr ""
+msgstr "Modüller güncellendi, yeniden başlasın mı?"
 
 #: frmluamodulesupdater.rs_modulesupdatedtitle
 msgid "Modules updated!"
-msgstr ""
+msgstr "Modüller güncellendi!"
 
 #: frmluamodulesupdater.rs_newupdatefoundlostchanges
 msgid "Modules update found, any local changes will be lost, procced?"
-msgstr ""
+msgstr "Modül güncellemeleri bulundu, herhangi bir yerel değişim kaybolacaktır, devam edilsin mi?"
 
 #: frmluamodulesupdater.rs_newupdatefoundtitle
 msgid "Modules update found!"
-msgstr ""
+msgstr "Modül güncellemeleri bulundu!"
 
 #: frmluamodulesupdater.rs_startdownloading
 msgid "Downloading..."
-msgstr ""
+msgstr "İndiriliyor..."
 
 #: frmmain.rs_alldownloads
 msgid "All downloads"
@@ -598,19 +597,19 @@ msgstr "Yazılım:"
 #: tluamodulesupdaterform.btcheckupdate.caption
 msgctxt "tluamodulesupdaterform.btcheckupdate.caption"
 msgid "Check update"
-msgstr ""
+msgstr "Güncellemelere bak"
 
 #: tluamodulesupdaterform.vtluamodulesrepos.header.columns[0].text
 msgid "Filename"
-msgstr ""
+msgstr "Dosya adı"
 
 #: tluamodulesupdaterform.vtluamodulesrepos.header.columns[1].text
 msgid "Last modified"
-msgstr ""
+msgstr "Son değişim"
 
 #: tluamodulesupdaterform.vtluamodulesrepos.header.columns[2].text
 msgid "Last message"
-msgstr ""
+msgstr "Son mesaj"
 
 #: tmainform.btabortupdatelist.hint
 msgid "Abort update list"
@@ -1567,7 +1566,7 @@ msgstr "Şuraya kaydet:"
 
 #: tmainform.lbwebpconvertto.caption
 msgid "Save WebP to"
-msgstr "WebP'yi şuraya kaydet"
+msgstr "WebP'yi şöyle kaydet"
 
 #: tmainform.lbwebpjpegquality.caption
 msgid "Jpeg quality"
@@ -2012,7 +2011,7 @@ msgstr "Gelişmiş"
 
 #: tmainform.tswebsitemodules.caption
 msgid "Modules"
-msgstr ""
+msgstr "Modüller"
 
 #: tmainform.tswebsiteoptions.caption
 msgctxt "tmainform.tswebsiteoptions.caption"
