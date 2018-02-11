@@ -173,7 +173,7 @@ begin
                 for i:=0 to links.Count-1 do begin
                   if manager.mainDataProcess.AddData(names[i],links[i],'','','','','',0,0) then
                     manager.tempDataProcess.AddData(names[i],links[i],'','','','','',0,0)
-                  else if (manager.isFinishSearchingForNewManga=False) and manager.SortedList then
+                  else if (manager.isFinishSearchingForNewManga=False) and manager.SortedList and (not BROWSER_INVERT) then
                     manager.isFinishSearchingForNewManga:=True;
                 end;
                 manager.mainDataProcess.Rollback;
