@@ -64,7 +64,7 @@ begin
             s := RegExprGetMatch('number_since\=(\d+)\&', s, 1);
             lastChapter += StrToIntDef(s, 0);
           end;
-          episode := XPathString('//section[contains(@class, "viewer")]/@data-episode-id');
+          episode := RegExprGetMatch('episode\/(\d+)', AURL, 1);
         finally
           Free;
         end;
