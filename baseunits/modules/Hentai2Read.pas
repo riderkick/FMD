@@ -9,7 +9,7 @@ uses
   XQueryEngineHTML, httpsendthread, synautil;
 
 const
-  dirurl = '/hentai-list/all/any/last-added/';
+  dirurl = '/hentai-list/all/any/all/last-added';
   cdnurl = 'http://static.hentaicdn.com/hentai';
 
 implementation
@@ -45,7 +45,7 @@ begin
     Exit(UNKNOWN_ERROR);
   s := Module.RootURL + dirurl;
   if AURL <> '0' then
-    s := s + IncStr(AURL) + '/';
+    s := s + '/' + IncStr(AURL) + '/';
   if MangaInfo.FHTTP.GET(s) then
   begin
     Result := NO_ERROR;
@@ -85,7 +85,7 @@ begin
           artists := XPathStringAll('//ul[contains(@class,"list-simple-mini")]/li[starts-with(.,"Artist")]/a');
           genres := XPathStringAll('//ul[contains(@class,"list-simple-mini")]/li/a');
           summary := XPathStringAll('//ul[contains(@class,"list-simple-mini")]/li[starts-with(.,"Storyline")]/*[position()>1]');
-          for v in XPath('//ul[starts-with(@class,"nav-chapters")]/li/a') do
+          for v in XPath('//ul[contains(@class,"nav-chapters")]/li/div/a') do
           begin
             chapterLinks.Add(v.toNode.getAttribute('href'));
             chapterName.Add(XPathString('string-join(text()," ")', v.toNode));
@@ -119,7 +119,7 @@ begin
             for v in XPath('json(//script[contains(.,"images'' :")]/substring-before(substring-after(.,"images'' : "),"]")||"]")()') do
               PageLinks.Add(cdnurl + v.toString);
             if PageLinks.Count = 0 then
-              PageNumber := XPath('(//ul[@class="dropdown-menu text-center list-inline"])[1]/li').Count;
+              PageNumber := XPath('(//li[contains(@class, "pageDropdown")])[1]/ul/li').Count;
           finally
             Free;
           end;
