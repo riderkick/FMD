@@ -349,11 +349,12 @@ begin
       m := Add(o.Get('name', ''));
       m.sha := o.Get('sha', '');
       m.download_url := o.Get('download_url', '');
-      m.size := o.Get('asize', 0);
+      m.size := o.Get('size', 0);
       m.last_modified := JSONToDateTime(o.Get('last_modified', ''));
       m.last_message := o.Get('last_message', '');
       m.flag := TLuaModuleRepoFlag(o.Get('flag', 0));
-      if not FileExists(LUA_WEBSITEMODULE_FOLDER + m.name) then
+      if (m.flag <> fFailedDownload) and
+        (not FileExists(LUA_WEBSITEMODULE_FOLDER + m.name)) then
         m.flag := fFailedDownload;
     end;
   finally
@@ -703,26 +704,20 @@ begin
     FRepos := FOwner.Repos.Clone;
     foundupdate := SyncRepos(FRepos, FReposUp);
 
-    // look for missing local files
+    // look for missing local files and previously failed download
     for i := 0 to FRepos.Items.Count - 1 do
     begin
       m := FRepos[i];
-      if not FileExists(LUA_WEBSITEMODULE_FOLDER + m.name) then
+      if m.flag = fFailedDownload then
+         foundupdate := True
+      else
+      if (not (m.flag in [fNew, fUpdate])) and
+        (not FileExists(LUA_WEBSITEMODULE_FOLDER + m.name)) then
       begin
         m.flag := fFailedDownload;
-        if foundupdate <> True then
-          foundupdate := True;
+        foundupdate := True;
       end;
     end;
-
-    // look for previously failed download
-    if not foundupdate then
-      for i := 0 to FRepos.Items.Count - 1 do
-        if FRepos[i].flag = fFailedDownload then
-        begin
-          foundupdate := True;
-          break;
-        end;
 
     Synchronize(@SyncFinishChecking);
 
